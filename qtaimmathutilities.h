@@ -25,7 +25,6 @@
 #define QTAIMMATHUTILITIES_H
 
 #include <QtGlobal>
-#include <QVector3D>
 
 #include <Eigen/Eigen>
 

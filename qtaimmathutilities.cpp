@@ -32,25 +32,25 @@ namespace Avogadro {
   {
     SelfAdjointEigenSolver<Matrix<qreal,3,3> > eigensolver(A);
     return eigensolver.eigenvalues();
-  };
+  }
   
   Matrix<qreal,3,3> QTAIMMathUtilities::eigenvectorsOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A )
   {
     SelfAdjointEigenSolver<Matrix<qreal,3,3> > eigensolver(A);
     return eigensolver.eigenvectors();
-  };
+  }
   
   Matrix<qreal,4,1> QTAIMMathUtilities::eigenvaluesOfASymmetricFourByFourMatrix( Matrix<qreal,4,4> A )
   {
     SelfAdjointEigenSolver<Matrix<qreal,4,4> > eigensolver(A);
     return eigensolver.eigenvalues();
-  };
+  }
   
   Matrix<qreal,4,4> QTAIMMathUtilities::eigenvectorsOfASymmetricFourByFourMatrix( Matrix<qreal,4,4> A )
   {
     SelfAdjointEigenSolver<Matrix<qreal,4,4> > eigensolver(A);
     return eigensolver.eigenvectors();
-  };
+  }
   
   qint64 QTAIMMathUtilities::signOfARealNumber( qreal x )
   {
@@ -65,7 +65,7 @@ namespace Avogadro {
     else
     {
       return -1;
-    };
+    }
   }
   
   qint64 QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A )
@@ -76,7 +76,7 @@ namespace Avogadro {
     return QTAIMMathUtilities::signOfARealNumber(eigenvalues(0)) +
       QTAIMMathUtilities::signOfARealNumber(eigenvalues(1)) +
       QTAIMMathUtilities::signOfARealNumber(eigenvalues(2));
-  };
+  }
   
   qreal QTAIMMathUtilities::ellipticityOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A )
   {
@@ -84,14 +84,14 @@ namespace Avogadro {
     Matrix<qreal,3,1> eigenvalues=eigensolver.eigenvalues();
     
     return (eigenvalues(0)/eigenvalues(1)) - 1.0 ;
-  };
+  }
   
   qreal QTAIMMathUtilities::distance( Matrix<qreal,3,1> a, Matrix<qreal,3,1> b  )
   {
     return sqrt( pow(a(0)-b(0),2) +
                  pow(a(1)-b(1),2) +
                  pow(a(2)-b(2),2) );
-  };
+  }
   
   Matrix<qreal,3,1> QTAIMMathUtilities::sphericalToCartesian( Matrix<qreal,3,1> rtp, Matrix<qreal,3,1> x0y0z0 )
   {
@@ -113,14 +113,14 @@ namespace Avogadro {
                            r*costheta        + z0);
     
     return xyz;
-  };
+  }
   
   Matrix<qreal,3,1> QTAIMMathUtilities::sphericalToCartesian( Matrix<qreal,3,1> rtp )
   {
     Matrix<qreal,3,1> x0y0z0(0.,0.,0.);
     
     return  QTAIMMathUtilities::sphericalToCartesian( rtp, x0y0z0 );
-  };
+  }
   
   Matrix<qreal,3,1> QTAIMMathUtilities::cartesianToSpherical( Matrix<qreal,3,1> xyz, Matrix<qreal,3,1> x0y0z0 )
   {
@@ -154,14 +154,14 @@ namespace Avogadro {
     }
     
     return rtp;
-  };
+  }
   
   Matrix<qreal,3,1> QTAIMMathUtilities::cartesianToSpherical( Matrix<qreal,3,1> xyz )
   {
     Matrix<qreal,3,1> x0y0z0(0.,0.,0.);
     
     return  QTAIMMathUtilities::cartesianToSpherical( xyz, x0y0z0 );
-  };
+  }
 
 
   // Cerjan-Miller-Baker-Popelier Methods
@@ -217,7 +217,7 @@ namespace Avogadro {
 
     return value;
 
-  };
+  }
 
   Matrix<qreal,3,1> QTAIMMathUtilities::minusOneSignatureLocatorGradient( Matrix<qreal,3,1> g, Matrix<qreal,3,3> H )
   {
@@ -266,7 +266,7 @@ namespace Avogadro {
 
     return value;
 
-  };
+  }
 
   Matrix<qreal,3,1> QTAIMMathUtilities::plusOneSignatureLocatorGradient( Matrix<qreal,3,1> g, Matrix<qreal,3,3> H )
   {
@@ -315,7 +315,7 @@ namespace Avogadro {
 
     return value;
 
-  };
+  }
 
   Matrix<qreal,3,1> QTAIMMathUtilities::plusThreeSignatureLocatorGradient( Matrix<qreal,3,1> g, Matrix<qreal,3,3> H )
   {
@@ -365,6 +365,6 @@ namespace Avogadro {
 
     return value;
 
-  };
+  }
 
-}
+} // namespace Avogadro

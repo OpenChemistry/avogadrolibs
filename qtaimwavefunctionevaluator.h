@@ -54,11 +54,17 @@ namespace Avogadro
     const Matrix<qreal,3,4> gradientAndHessianOfElectronDensity(const Matrix<qreal,3,1> xyz);
     const qreal laplacianOfElectronDensity(const Matrix<qreal,3,1> xyz);
     const qreal electronDensityLaplacian(const Matrix<qreal,3,1> xyz) {return laplacianOfElectronDensity(xyz);}
+    const Matrix<qreal,3,1> gradientOfElectronDensityLaplacian(const Matrix<qreal,3,1> xyz);
+    const Matrix<qreal,3,3> hessianOfElectronDensityLaplacian(const Matrix<qreal,3,1> xyz);
+    const Matrix<qreal,3,4> gradientAndHessianOfElectronDensityLaplacian(const Matrix<qreal,3,1> xyz);
+    const qreal kineticEnergyDensityG(const Matrix<qreal,3,1> xyz);
+    const qreal kineticEnergyDensityK(const Matrix<qreal,3,1> xyz);
+    const Matrix<qreal,3,3> quantumStressTensor(const Matrix<qreal,3,1> xyz);
 
   private:
-    qint64 nmo;   // m_numberOfMolecularOrbitals;
-    qint64 nprim; // m_numberOfGaussianPrimitives;
-    qint64 nnuc;  // m_numberOfNuclei;
+    qint64 nmo;
+    qint64 nprim;
+    qint64 nnuc;
 //    qint64 noccmo; // number of (significantly) occupied molecular orbitals
     Matrix<qreal,Dynamic,1> nucxcoord;
     Matrix<qreal,Dynamic,1> nucycoord;
@@ -79,54 +85,6 @@ namespace Avogadro
 
     qreal cutoff;
 
-    Matrix<qreal,Dynamic,1> xx0;
-    Matrix<qreal,Dynamic,1> yy0;
-    Matrix<qreal,Dynamic,1> zz0;
-
-    Matrix<qint64,Dynamic,1> aax0;
-    Matrix<qint64,Dynamic,1> aay0;
-    Matrix<qint64,Dynamic,1> aaz0;
-    Matrix<qint64,Dynamic,1> aax1;
-    Matrix<qint64,Dynamic,1> aay1;
-    Matrix<qint64,Dynamic,1> aaz1;
-    Matrix<qint64,Dynamic,1> aax2;
-    Matrix<qint64,Dynamic,1> aay2;
-    Matrix<qint64,Dynamic,1> aaz2;
-
-    Matrix<qreal,Dynamic,1> ax0;
-    Matrix<qreal,Dynamic,1> ay0;
-    Matrix<qreal,Dynamic,1> az0;
-    Matrix<qreal,Dynamic,1> ax1;
-    Matrix<qreal,Dynamic,1> ay1;
-    Matrix<qreal,Dynamic,1> az1;
-    Matrix<qreal,Dynamic,1> ax2;
-    Matrix<qreal,Dynamic,1> ay2;
-    Matrix<qreal,Dynamic,1> az2;
-
-    Matrix<qreal,Dynamic,1> b0;
-    Matrix<qreal,Dynamic,1> b0arg;
-
-    Matrix<qreal,Dynamic,1> bx0;
-    Matrix<qreal,Dynamic,1> by0;
-    Matrix<qreal,Dynamic,1> bz0;
-    Matrix<qreal,Dynamic,1> bx1;
-    Matrix<qreal,Dynamic,1> by1;
-    Matrix<qreal,Dynamic,1> bz1;
-    Matrix<qreal,Dynamic,1> bx2;
-    Matrix<qreal,Dynamic,1> by2;
-    Matrix<qreal,Dynamic,1> bz2;
-
-    Matrix<qreal,Dynamic,1> dg000;
-    Matrix<qreal,Dynamic,1> dg100;
-    Matrix<qreal,Dynamic,1> dg010;
-    Matrix<qreal,Dynamic,1> dg001;
-    Matrix<qreal,Dynamic,1> dg200;
-    Matrix<qreal,Dynamic,1> dg110;
-    Matrix<qreal,Dynamic,1> dg101;
-    Matrix<qreal,Dynamic,1> dg020;
-    Matrix<qreal,Dynamic,1> dg011;
-    Matrix<qreal,Dynamic,1> dg002;
-
     Matrix<qreal,Dynamic,1> cdg000;
     Matrix<qreal,Dynamic,1> cdg100;
     Matrix<qreal,Dynamic,1> cdg010;
@@ -137,6 +95,31 @@ namespace Avogadro
     Matrix<qreal,Dynamic,1> cdg020;
     Matrix<qreal,Dynamic,1> cdg011;
     Matrix<qreal,Dynamic,1> cdg002;
+    Matrix<qreal,Dynamic,1> cdg300;
+    Matrix<qreal,Dynamic,1> cdg120;
+    Matrix<qreal,Dynamic,1> cdg102;
+    Matrix<qreal,Dynamic,1> cdg210;
+    Matrix<qreal,Dynamic,1> cdg030;
+    Matrix<qreal,Dynamic,1> cdg012;
+    Matrix<qreal,Dynamic,1> cdg201;
+    Matrix<qreal,Dynamic,1> cdg021;
+    Matrix<qreal,Dynamic,1> cdg003;
+    Matrix<qreal,Dynamic,1> cdg111;
+    Matrix<qreal,Dynamic,1> cdg400;
+    Matrix<qreal,Dynamic,1> cdg220;
+    Matrix<qreal,Dynamic,1> cdg202;
+    Matrix<qreal,Dynamic,1> cdg310;
+    Matrix<qreal,Dynamic,1> cdg130;
+    Matrix<qreal,Dynamic,1> cdg112;
+    Matrix<qreal,Dynamic,1> cdg301;
+    Matrix<qreal,Dynamic,1> cdg121;
+    Matrix<qreal,Dynamic,1> cdg103;
+    Matrix<qreal,Dynamic,1> cdg040;
+    Matrix<qreal,Dynamic,1> cdg022;
+    Matrix<qreal,Dynamic,1> cdg211;
+    Matrix<qreal,Dynamic,1> cdg031;
+    Matrix<qreal,Dynamic,1> cdg013;
+    Matrix<qreal,Dynamic,1> cdg004;
 
   };
 
