@@ -9,6 +9,7 @@ set(qtaimextension_SRCS
   qtaimwavefunction.cpp
   qtaimwavefunctionevaluator.cpp
   qtaimodeintegrator.cpp
+  qtaimcriticalpointlocator.cpp
   )
 
 avogadro_plugin_nogl(qtaimextension 
