@@ -383,7 +383,7 @@ namespace Avogadro
     for( qint64 n=0 ; n < results.length() ; ++n )
     {
 
-      bool correctSignature = results.at(n).at(0).toBool();
+      // bool correctSignature = results.at(n).at(0).toBool();
 
       QVector3D result(
           results.at(n).at(1).toReal(),

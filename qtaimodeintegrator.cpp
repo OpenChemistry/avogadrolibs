@@ -198,10 +198,11 @@ namespace Avogadro
 
     } // ODE step
 
-    qDebug() << "Error in ODE integrator. Should not reach this point.";
-    qDebug() << "Current FLAG: " << flag;
-    exit(1);
-    return QVector3D(0.,0.,0.); // suppress warning
+// TODO ECB Figure this out.  Should not be here, yet this is necessary for ODE to work.
+//    qDebug() << "Error in ODE integrator. Should not reach this point.";
+//    qDebug() << "Current FLAG: " << flag;
+//    exit(1);
+//    return QVector3D(0.,0.,0.); // suppress warning
   }
 
   void QTAIMODEIntegrator::r8_f ( qreal t, qreal y[], qreal yp[] )
