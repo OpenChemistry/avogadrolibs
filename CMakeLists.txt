@@ -6,6 +6,9 @@ set(PLUGIN_TARGET extensions)
 
 set(qtaimextension_SRCS
   qtaimmathutilities.cpp
+  qtaimwavefunction.cpp
+  qtaimwavefunctionevaluator.cpp
+  qtaimodeintegrator.cpp
   )
 
 avogadro_plugin_nogl(qtaimextension 
