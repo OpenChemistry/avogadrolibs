@@ -25,6 +25,7 @@
 #include "qtaimcriticalpointlocator.h"
 #include "qtaimwavefunction.h"
 #include "qtaimodeintegrator.h"
+#include "qtaimlsodaintegrator.h"
 #include "qtaimmathutilities.h"
 
 #include <Eigen/Eigen>
@@ -72,7 +73,8 @@ namespace Avogadro
 
     if( wfn.nuclearCharge(nucleus) < 4 )
     {
-      QTAIMODEIntegrator ode(eval,QTAIMODEIntegrator::CMBPMinusThreeGradientInElectronDensity);
+//      QTAIMODEIntegrator ode(eval,QTAIMODEIntegrator::CMBPMinusThreeGradientInElectronDensity);
+      QTAIMLSODAIntegrator ode(eval,QTAIMLSODAIntegrator::CMBPMinusThreeGradientInElectronDensity);
       result=ode.integrate(x0y0z0);
     }
     else
@@ -154,7 +156,8 @@ namespace Avogadro
     QList<QVector3D> ncpList;
 
     QVector3D result;
-    QTAIMODEIntegrator ode(eval,QTAIMODEIntegrator::CMBPMinusOneGradientInElectronDensity);
+//    QTAIMODEIntegrator ode(eval,QTAIMODEIntegrator::CMBPMinusOneGradientInElectronDensity);
+    QTAIMLSODAIntegrator ode(eval,QTAIMLSODAIntegrator::CMBPMinusOneGradientInElectronDensity);
     result=ode.integrate(x0y0z0);
     Matrix<qreal,3,1> xyz; xyz << result.x(), result.y(), result.z();
 
@@ -192,12 +195,14 @@ namespace Avogadro
                                     result.y() - smallStep*highestEigenvectorOfHessian(1),
                                     result.z() - smallStep*highestEigenvectorOfHessian(2) );
 
-    QTAIMODEIntegrator forwardODE(eval,QTAIMODEIntegrator::SteepestAscentPathInElectronDensity);
+//    QTAIMODEIntegrator forwardODE(eval,QTAIMODEIntegrator::SteepestAscentPathInElectronDensity);
+    QTAIMLSODAIntegrator forwardODE(eval,QTAIMLSODAIntegrator::SteepestAscentPathInElectronDensity);
     forwardODE.setBetaSpheres( betaSpheres );
     QVector3D forwardEndpoint=forwardODE.integrate(forwardStartingPoint);
     QList<QVector3D> forwardPath=forwardODE.path();
 
-    QTAIMODEIntegrator backwardODE(eval,QTAIMODEIntegrator::SteepestAscentPathInElectronDensity);
+//    QTAIMODEIntegrator backwardODE(eval,QTAIMODEIntegrator::SteepestAscentPathInElectronDensity);
+    QTAIMLSODAIntegrator backwardODE(eval,QTAIMLSODAIntegrator::SteepestAscentPathInElectronDensity);
     backwardODE.setBetaSpheres( betaSpheres );
     QVector3D backwardEndpoint=backwardODE.integrate(backwardStartingPoint);
     QList<QVector3D> backwardPath=backwardODE.path();
@@ -383,7 +388,7 @@ namespace Avogadro
     for( qint64 n=0 ; n < results.length() ; ++n )
     {
 
-      // bool correctSignature = results.at(n).at(0).toBool();
+      bool correctSignature = results.at(n).at(0).toBool();
 
       QVector3D result(
           results.at(n).at(1).toReal(),
