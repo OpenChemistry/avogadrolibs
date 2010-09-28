@@ -26,7 +26,7 @@
    Based on codes written by Herman Watts, Lawrence Shampine, and John Burkardt.
 */
 
-#include "QTAIMODEIntegrator.h"
+#include "qtaimodeintegrator.h"
 
 namespace Avogadro
 {
@@ -280,11 +280,11 @@ namespace Avogadro
     }
 
     qreal normGradient=sqrt( gradient(0)*gradient(0) + gradient(1)*gradient(1) + gradient(2)*gradient(2)  );
-    
+
     yp[0]= gradient(0) / normGradient;
     yp[1]= gradient(1) / normGradient;
     yp[2]= gradient(2) / normGradient;
-    
+
   }
 
   //****************************************************************************80

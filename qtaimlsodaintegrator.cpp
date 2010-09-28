@@ -45,7 +45,7 @@ Wolfram Research, Inc.
 tam@wri.com
 */
 
-#include "QTAIMLSODAIntegrator.h"
+#include "qtaimlsodaintegrator.h"
 
 namespace Avogadro
 {
@@ -123,9 +123,9 @@ namespace Avogadro
       rtol[1] = 0.0;
       rtol[2] = 0.0;
       rtol[3] = 0.0;
-      atol[1] = 1.0E-4;
-      atol[2] = 1.0E-4;
-      atol[3] = 1.0E-4;
+      atol[1] = 5.0E-5;
+      atol[2] = 5.0E-5;
+      atol[3] = 5.0E-5;
       itask = 1;
       istate = 1;
       iopt = 0;
@@ -144,27 +144,30 @@ namespace Avogadro
         return QVector3D(y[1],y[2],y[3]);
       }
 
-      if( m_betaSpheres.length() > 0 )
+      if( m_mode == QTAIMLSODAIntegrator::SteepestAscentPathInElectronDensity)
       {
-        for( qint64 n=0 ; n < m_betaSpheres.length() ; ++n )
+        if( m_betaSpheres.length() > 0 )
         {
-          Matrix<qreal,3,1> a(y[1],y[2],y[3]);
-          Matrix<qreal,3,1> b(m_betaSpheres.at(n).first.x(),
-                              m_betaSpheres.at(n).first.y(),
-                              m_betaSpheres.at(n).first.z() );
-
-          qreal distance=QTAIMMathUtilities::distance(a,b);
-
-          if( distance < m_betaSpheres.at(n).second )
+          for( qint64 n=0 ; n < m_betaSpheres.length() ; ++n )
           {
-            m_status=0;
-            m_associatedSphere=n;
-            return QVector3D( m_betaSpheres.at(n).first.x(),
-                              m_betaSpheres.at(n).first.y(),
-                              m_betaSpheres.at(n).first.z() );
+            Matrix<qreal,3,1> a(y[1],y[2],y[3]);
+            Matrix<qreal,3,1> b(m_betaSpheres.at(n).first.x(),
+                                m_betaSpheres.at(n).first.y(),
+                                m_betaSpheres.at(n).first.z() );
+
+            qreal distance=QTAIMMathUtilities::distance(a,b);
+
+            if( distance < m_betaSpheres.at(n).second )
+            {
+              m_status=0;
+              m_associatedSphere=n;
+              return QVector3D( m_betaSpheres.at(n).first.x(),
+                                m_betaSpheres.at(n).first.y(),
+                                m_betaSpheres.at(n).first.z() );
+            }
           }
-        }
-      } // beta spheres
+        } // beta spheres
+      }
 
     } // ode step
 
@@ -1075,62 +1078,62 @@ namespace Avogadro
         nyh = n;
         lenyh = 1 + max( mxordn, mxords );
 
-        yh = ( double ** ) malloc( ( 1 + lenyh ) * sizeof( *yh ) );
+        yh = ( double ** ) qMalloc( ( 1 + lenyh ) * sizeof( *yh ) );
         if ( yh == NULL ) {
            printf( "lsoda -- insufficient memory for your problem\n" );
            terminate( istate );
            return;
         }
         for ( i = 1 ; i <= lenyh ; i++ )
-           yh[i] = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
+           yh[i] = ( double * ) qMalloc( ( 1 + nyh ) * sizeof( double ) );
 
-        wm = ( double ** ) malloc( ( 1 + nyh ) * sizeof( *wm ) );
+        wm = ( double ** ) qMalloc( ( 1 + nyh ) * sizeof( *wm ) );
         if ( wm == NULL ) {
-           free( yh );
+           qFree( yh );
            printf( "lsoda -- insufficient memory for your problem\n" );
            terminate( istate );
            return;
         }
         for ( i = 1 ; i <= nyh ; i++ )
-           wm[i] = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
+           wm[i] = ( double * ) qMalloc( ( 1 + nyh ) * sizeof( double ) );
 
-        ewt = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
+        ewt = ( double * ) qMalloc( ( 1 + nyh ) * sizeof( double ) );
         if ( ewt == NULL ) {
-           free( yh );
-           free( wm );
+           qFree( yh );
+           qFree( wm );
            printf( "lsoda -- insufficient memory for your problem\n" );
            terminate( istate );
            return;
         }
 
-        savf = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
+        savf = ( double * ) qMalloc( ( 1 + nyh ) * sizeof( double ) );
         if ( savf == NULL ) {
-           free( yh );
-           free( wm );
-           free( ewt );
+           qFree( yh );
+           qFree( wm );
+           qFree( ewt );
            printf( "lsoda -- insufficient memory for your problem\n" );
            terminate( istate );
            return;
         }
 
-        acor = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
+        acor = ( double * ) qMalloc( ( 1 + nyh ) * sizeof( double ) );
         if ( acor == NULL ) {
-           free( yh );
-           free( wm );
-           free( ewt );
-           free( savf );
+           qFree( yh );
+           qFree( wm );
+           qFree( ewt );
+           qFree( savf );
            printf( "lsoda -- insufficient memory for your problem\n" );
            terminate( istate );
            return;
         }
 
-        ipvt = ( int * ) malloc( ( 1 + nyh ) * sizeof( int ) );
+        ipvt = ( int * ) qMalloc( ( 1 + nyh ) * sizeof( int ) );
         if ( ipvt == NULL ) {
-           free( yh );
-           free( wm );
-           free( ewt );
-           free( savf );
-           free( acor );
+           qFree( yh );
+           qFree( wm );
+           qFree( ewt );
+           qFree( savf );
+           qFree( acor );
            printf( "lsoda -- insufficient memory for your problem\n" );
            terminate( istate );
            return;
@@ -2793,12 +2796,12 @@ namespace Avogadro
 
   void QTAIMLSODAIntegrator::freevectors()
   {
-     free( yh );
-     free( wm );
-     free( ewt );
-     free( savf );
-     free( acor );
-     free( ipvt );
+     qFree( yh );
+     qFree( wm );
+     qFree( ewt );
+     qFree( savf );
+     qFree( acor );
+     qFree( ipvt );
   }     /*   end freevectors   */
 
 } // namespace Avogadro

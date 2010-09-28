@@ -121,13 +121,13 @@ namespace Avogadro
     {
       QString line( fileContentsByLine.first().mid(20,-1) );
 
-      qint64 counter=0;      
+      qint64 counter=0;
       while( counter < line.length() )
       {
         centerAssignmentsList.append( line.mid(counter,3).toLongLong() );
         counter=counter+3;
       }
-      
+
       fileContentsByLine.removeFirst();
     }
 
@@ -274,7 +274,7 @@ namespace Avogadro
     }
     m_maximumAngularMomentumExceeded=false;
 
-    
+
     QList<qreal> exponentsList;
 
     while( fileContentsByLine.first().startsWith("EXPONENTS")  )

@@ -22,8 +22,8 @@
   02110-1301, USA.
 **********************************************************************/
 
-#ifndef QTAIMINITIALVALUEODEINTEGRATOR_H
-#define QTAIMINITIALVALUEODEINTEGRATOR_H
+#ifndef QTAIMODEINTEGRATOR_H
+#define QTAIMODEINTEGRATOR_H
 
 #include <QDebug>
 #include <QObject>
@@ -107,4 +107,4 @@ namespace Avogadro {
 
 } // namespace Avogadro
 
-#endif // QTAIMINITIALVALUEODEINTEGRATOR_H
+#endif // QTAIMODEINTEGRATOR_H

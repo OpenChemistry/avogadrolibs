@@ -158,7 +158,7 @@ namespace Avogadro
     bool m_ioError;
     bool m_tooManyNuclei;
     bool m_maximumAngularMomentumExceeded;
-    
+
     QString m_fileName;
     QString m_comment;
 

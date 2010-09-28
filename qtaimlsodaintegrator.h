@@ -40,8 +40,6 @@
 #include <cstdio>
 #include <cmath>
 
-#include <sys/malloc.h>
-
 namespace Avogadro {
 
   class QTAIMLSODAIntegrator : public QObject

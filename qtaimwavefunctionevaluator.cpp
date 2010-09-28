@@ -94,7 +94,7 @@ namespace Avogadro
 
   const qreal QTAIMWavefunctionEvaluator::molecularOrbital( const qint64 mo, const Matrix<qreal,3,1> xyz )
   {
-    
+
     qreal value=0.0;
 
     for( qint64 p=0 ; p < nprim ; ++p )
@@ -103,7 +103,7 @@ namespace Avogadro
       qreal yy0 = xyz(1) - Y0(p);
       qreal zz0 = xyz(2) - Z0(p);
 
-      qreal b0arg = -alpha(p)*(xx0*xx0 + yy0*yy0 + zz0*zz0 ); 
+      qreal b0arg = -alpha(p)*(xx0*xx0 + yy0*yy0 + zz0*zz0 );
 
       if( b0arg > cutoff )
       {
@@ -119,7 +119,7 @@ namespace Avogadro
       }
 
     }
-    
+
     return value;
 
   }
@@ -137,7 +137,7 @@ namespace Avogadro
       qreal zz0 = xyz(2) - Z0(p);
 
       qreal b0arg = -alpha(p)*(xx0*xx0 + yy0*yy0 + zz0*zz0 );
-      
+
       if( b0arg > cutoff )
       {
         qreal ax0 = pow( xx0, xamom(p) );
@@ -185,7 +185,7 @@ namespace Avogadro
       qreal zz0 = xyz(2) - Z0(p);
 
       qreal b0arg = -alpha(p)*(xx0*xx0 + yy0*yy0 + zz0*zz0 );
-      
+
       if( b0arg > cutoff )
       {
         qint64 aax0=1;
@@ -240,13 +240,13 @@ namespace Avogadro
         {
           az1=aaz1*pow(zz0,zamom(p)-1);
         }
-       
+
         qreal b0 = exp(b0arg);
 
         qreal bx1= -2*alpha(p)*xx0;
         qreal by1= -2*alpha(p)*yy0;
         qreal bz1= -2*alpha(p)*zz0;
-        
+
         qreal dg000 = ax0*ay0*az0*b0;
         qreal dg100 = ay0*az0*b0*(ax1+ax0*bx1);
         qreal dg010 = ax0*az0*b0*(ay1+ay0*by1);
@@ -300,7 +300,7 @@ namespace Avogadro
       qreal zz0 = xyz(2) - Z0(p);
 
       qreal b0arg = -alpha(p)*(xx0*xx0 + yy0*yy0 + zz0*zz0 );
-      
+
       if( b0arg > cutoff )
       {
         qint64 aax0=1;
@@ -312,7 +312,7 @@ namespace Avogadro
         qint64 aax2=xamom(p)*(xamom(p)-1);
         qint64 aay2=yamom(p)*(yamom(p)-1);
         qint64 aaz2=zamom(p)*(zamom(p)-1);
-        
+
         qreal ax0 = aax0*pow( xx0, xamom(p) );
         qreal ay0 = aay0*pow( yy0, yamom(p) );
         qreal az0 = aaz0*pow( zz0, zamom(p) );
@@ -400,7 +400,7 @@ namespace Avogadro
         {
           az2=aaz2*pow(zz0,zamom(p)-2);
         }
-        
+
         qreal b0 = exp(b0arg);
 
         qreal bx1 = -2*alpha(p)*xx0;
@@ -409,7 +409,7 @@ namespace Avogadro
         qreal bx2 = -2*alpha(p) + 4*(pow(alpha(p),2) * pow(xx0,2));
         qreal by2 = -2*alpha(p) + 4*(pow(alpha(p),2) * pow(yy0,2));
         qreal bz2 = -2*alpha(p) + 4*(pow(alpha(p),2) * pow(zz0,2));
-        
+
         qreal dg000 = ax0*ay0*az0*b0;
         qreal dg100 = ay0*az0*b0*(ax1+ax0*bx1);
         qreal dg010 = ax0*az0*b0*(ay1+ay0*by1);
@@ -483,7 +483,7 @@ namespace Avogadro
       qreal zz0 = xyz(2) - Z0(p);
 
       qreal b0arg = -alpha(p)*(xx0*xx0 + yy0*yy0 + zz0*zz0 );
-      
+
       if( b0arg > cutoff )
       {
         qint64 aax0=1;
@@ -495,7 +495,7 @@ namespace Avogadro
         qint64 aax2=xamom(p)*(xamom(p)-1);
         qint64 aay2=yamom(p)*(yamom(p)-1);
         qint64 aaz2=zamom(p)*(zamom(p)-1);
-        
+
         qreal ax0 = aax0*pow( xx0, xamom(p) );
         qreal ay0 = aay0*pow( yy0, yamom(p) );
         qreal az0 = aaz0*pow( zz0, zamom(p) );
@@ -583,7 +583,7 @@ namespace Avogadro
         {
           az2=aaz2*pow(zz0,zamom(p)-2);
         }
-        
+
         qreal b0 = exp(b0arg);
 
         qreal bx1 = -2*alpha(p)*xx0;
@@ -592,7 +592,7 @@ namespace Avogadro
         qreal bx2 = -2*alpha(p) + 4*(pow(alpha(p),2) * pow(xx0,2));
         qreal by2 = -2*alpha(p) + 4*(pow(alpha(p),2) * pow(yy0,2));
         qreal bz2 = -2*alpha(p) + 4*(pow(alpha(p),2) * pow(zz0,2));
-        
+
         qreal dg000 = ax0*ay0*az0*b0;
         qreal dg100 = ay0*az0*b0*(ax1+ax0*bx1);
         qreal dg010 = ax0*az0*b0*(ay1+ay0*by1);
@@ -655,7 +655,7 @@ namespace Avogadro
     value(0,3) = hValue(0,2);
     value(1,3) = hValue(1,2);
     value(2,3) = hValue(2,2);
-    
+
     return value;
 
   }
@@ -682,7 +682,7 @@ namespace Avogadro
       qreal zz0 = xyz(2) - Z0(p);
 
       qreal b0arg = -alpha(p)*(xx0*xx0 + yy0*yy0 + zz0*zz0 );
-      
+
       if( b0arg > cutoff )
       {
         qint64 aax0=1;
@@ -694,7 +694,7 @@ namespace Avogadro
         qint64 aax2=xamom(p)*(xamom(p)-1);
         qint64 aay2=yamom(p)*(yamom(p)-1);
         qint64 aaz2=zamom(p)*(zamom(p)-1);
-        
+
         qreal ax0 = aax0*pow( xx0, xamom(p) );
         qreal ay0 = aay0*pow( yy0, yamom(p) );
         qreal az0 = aaz0*pow( zz0, zamom(p) );
@@ -782,7 +782,7 @@ namespace Avogadro
         {
           az2=aaz2*pow(zz0,zamom(p)-2);
         }
-        
+
         qreal b0 = exp(b0arg);
 
         qreal bx1 = -2*alpha(p)*xx0;
@@ -791,7 +791,7 @@ namespace Avogadro
         qreal bx2 = -2*alpha(p) + 4*(pow(alpha(p),2) * pow(xx0,2));
         qreal by2 = -2*alpha(p) + 4*(pow(alpha(p),2) * pow(yy0,2));
         qreal bz2 = -2*alpha(p) + 4*(pow(alpha(p),2) * pow(zz0,2));
-        
+
         qreal dg000 = ax0*ay0*az0*b0;
         qreal dg100 = ay0*az0*b0*(ax1+ax0*bx1);
         qreal dg010 = ax0*az0*b0*(ay1+ay0*by1);
@@ -862,7 +862,7 @@ namespace Avogadro
       qreal zz0 = xyz(2) - Z0(p);
 
       qreal b0arg = -alpha(p)*(xx0*xx0 + yy0*yy0 + zz0*zz0 );
-      
+
       if( b0arg > cutoff )
       {
         qint64 aax0=1;
@@ -965,7 +965,7 @@ namespace Avogadro
         {
           az2=aaz2*pow(zz0,zamom(p)-2);
         }
-        
+
         qreal ax3;
         qreal ay3;
         qreal az3;
@@ -1903,7 +1903,7 @@ namespace Avogadro
     return value;
 
   }
-  
+
   const qreal QTAIMWavefunctionEvaluator::kineticEnergyDensityG(Matrix<qreal,3,1> xyz)
   {
 

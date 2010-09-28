@@ -422,7 +422,7 @@ namespace Avogadro
     QString nuclearCriticalPointsFileName=QTAIMCriticalPointLocator::temporaryFileName();
     QFile nuclearCriticalPointsFile(nuclearCriticalPointsFileName);
     nuclearCriticalPointsFile.open(QIODevice::WriteOnly);
-    QDataStream nuclearCriticalPointsOut(&nuclearCriticalPointsFile);    
+    QDataStream nuclearCriticalPointsOut(&nuclearCriticalPointsFile);
     nuclearCriticalPointsOut << m_nuclearCriticalPoints;
     nuclearCriticalPointsFile.close();
 

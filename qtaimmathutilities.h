@@ -31,7 +31,7 @@
 using namespace Eigen;
 
 namespace Avogadro {
-  
+
   class QTAIMMathUtilities
   {
   public:
@@ -39,16 +39,16 @@ namespace Avogadro {
     static Matrix<qreal,3,3> eigenvectorsOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A );
     static Matrix<qreal,4,1> eigenvaluesOfASymmetricFourByFourMatrix( Matrix<qreal,4,4> A );
     static Matrix<qreal,4,4> eigenvectorsOfASymmetricFourByFourMatrix( Matrix<qreal,4,4> A );
-    
+
     static qint64 signOfARealNumber( qreal x );
     static qint64 signatureOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A );
     static qreal ellipticityOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A );
-    
+
     static qreal distance( Matrix<qreal,3,1> a, Matrix<qreal,3,1> b  );
-    
+
     static Matrix<qreal,3,1> sphericalToCartesian( Matrix<qreal,3,1> rtp, Matrix<qreal,3,1> x0y0z0 );
     static Matrix<qreal,3,1> sphericalToCartesian( Matrix<qreal,3,1> rtp );
-    
+
     static Matrix<qreal,3,1> cartesianToSpherical( Matrix<qreal,3,1> xyz, Matrix<qreal,3,1> x0y0z0 );
     static Matrix<qreal,3,1> cartesianToSpherical( Matrix<qreal,3,1> xyz );
 
@@ -62,9 +62,9 @@ namespace Avogadro {
     static Matrix<qreal,3,1> minusOneSignatureLocatorGradient  ( Matrix<qreal,3,1> g, Matrix<qreal,3,3> H );
     static Matrix<qreal,3,1> plusOneSignatureLocatorGradient   ( Matrix<qreal,3,1> g, Matrix<qreal,3,3> H );
     static Matrix<qreal,3,1> plusThreeSignatureLocatorGradient ( Matrix<qreal,3,1> g, Matrix<qreal,3,3> H );
-    
+
   };
-  
+
 } // namespace Avogadro
 
 #endif // QTAIMMATHUTILITIES_H
