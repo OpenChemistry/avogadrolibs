@@ -21,7 +21,7 @@ set(qtaimextension_SRCS
 #  qtaimdialog.ui
 #)
 
-avogadro_plugin_nogl(qtaimextension 
+avogadro_plugin_nogl(qtaimextension
   "${qtaimextension_SRCS}"
 #  "${qtaimextension_UIS}"
  )
