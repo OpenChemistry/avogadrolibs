@@ -30,7 +30,7 @@
 
 namespace Avogadro
 {
-  QTAIMODEIntegrator::QTAIMODEIntegrator(QTAIMWavefunctionEvaluator &eval, const qint64 mode, QObject *parent) : QObject(parent)
+  QTAIMODEIntegrator::QTAIMODEIntegrator(QTAIMWavefunctionEvaluator &eval, const qint64 mode)
   {
     m_eval=&eval;
     m_mode=mode;

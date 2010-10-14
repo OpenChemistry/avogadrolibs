@@ -26,7 +26,6 @@
 #define QTAIMLSODAINTEGRATOR_H
 
 #include <QDebug>
-#include <QObject>
 #include <QList>
 #include <QVector3D>
 #include <QPair>
@@ -42,9 +41,8 @@
 
 namespace Avogadro {
 
-  class QTAIMLSODAIntegrator : public QObject
+  class QTAIMLSODAIntegrator
   {
-    Q_OBJECT
 
   public:
     enum
@@ -60,7 +58,7 @@ namespace Avogadro {
       CMBPPlusThreeGradientInElectronDensityLaplacian=8
     };
 
-    explicit QTAIMLSODAIntegrator(QTAIMWavefunctionEvaluator &eval, const qint64 mode, QObject *parent = 0);
+    explicit QTAIMLSODAIntegrator(QTAIMWavefunctionEvaluator &eval, const qint64 mode);
 
     QVector3D integrate(QVector3D x0y0z0);
 

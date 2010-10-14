@@ -40,12 +40,11 @@ namespace Avogadro
 
   class QTAIMWavefunctionEvaluator;
 
-  class QTAIMWavefunction : public QObject
+  class QTAIMWavefunction
   {
-    Q_OBJECT
 
   public:
-    explicit QTAIMWavefunction(QObject *parent = 0);
+    explicit QTAIMWavefunction();
 
     void saveToBinaryFile(const QString &fileName)
     {

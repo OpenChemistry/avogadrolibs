@@ -32,7 +32,7 @@
 
 namespace Avogadro
 {
-  QTAIMWavefunction::QTAIMWavefunction(QObject *parent) : QObject(parent)
+  QTAIMWavefunction::QTAIMWavefunction()
   {
     m_initializationSuccessful = false;
   }

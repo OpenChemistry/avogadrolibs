@@ -49,15 +49,13 @@ tam@wri.com
 
 namespace Avogadro
 {
-  QTAIMLSODAIntegrator::QTAIMLSODAIntegrator(QTAIMWavefunctionEvaluator &eval, const qint64 mode, QObject *parent) : QObject(parent)
+  QTAIMLSODAIntegrator::QTAIMLSODAIntegrator(QTAIMWavefunctionEvaluator &eval, const qint64 mode)
   {
     m_eval=&eval;
     m_mode=mode;
 
     m_betaSpheres.empty();
     m_associatedSphere=0;
-
-
 
   }
 
