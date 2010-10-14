@@ -25,8 +25,6 @@
 #ifndef QTAIMWAVEFUNCTIONEVALUATOR_H
 #define QTAIMWAVEFUNCTIONEVALUATOR_H
 
-#include <QObject>
-
 #include "qtaimwavefunction.h"
 
 #include <Eigen/Eigen>
@@ -38,14 +36,12 @@ namespace Avogadro
 
   class QTAIMWavefunction;
 
-  class QTAIMWavefunctionEvaluator : public QObject
+  class QTAIMWavefunctionEvaluator
   {
-    Q_OBJECT
-
   public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    explicit QTAIMWavefunctionEvaluator(QTAIMWavefunction &wfn, QObject *parent = 0);
+    explicit QTAIMWavefunctionEvaluator(QTAIMWavefunction &wfn);
 
     const qreal molecularOrbital(const qint64 mo, const Matrix<qreal,3,1> xyz);
     const qreal electronDensity(const Matrix<qreal,3,1> xyz);
@@ -62,64 +58,64 @@ namespace Avogadro
     const Matrix<qreal,3,3> quantumStressTensor(const Matrix<qreal,3,1> xyz);
 
   private:
-    qint64 nmo;
-    qint64 nprim;
-    qint64 nnuc;
-//    qint64 noccmo; // number of (significantly) occupied molecular orbitals
-    Matrix<qreal,Dynamic,1> nucxcoord;
-    Matrix<qreal,Dynamic,1> nucycoord;
-    Matrix<qreal,Dynamic,1> nuczcoord;
-    Matrix<qint64,Dynamic,1> nucz;
-    Matrix<qreal,Dynamic,1> X0;
-    Matrix<qreal,Dynamic,1> Y0;
-    Matrix<qreal,Dynamic,1> Z0;
-    Matrix<qint64,Dynamic,1> xamom;
-    Matrix<qint64,Dynamic,1> yamom;
-    Matrix<qint64,Dynamic,1> zamom;
-    Matrix<qreal,Dynamic,1> alpha;
-    Matrix<qreal,Dynamic,1> occno;
-    Matrix<qreal,Dynamic,1> orbe;
-    Matrix<qreal,Dynamic,Dynamic,RowMajor> coef;
-    qreal totalEnergy;
-    qreal virialRatio;
+    qint64 m_nmo;
+    qint64 m_nprim;
+    qint64 m_nnuc;
+//    qint64 m_noccmo; // number of (significantly) occupied molecular orbitals
+    Matrix<qreal,Dynamic,1> m_nucxcoord;
+    Matrix<qreal,Dynamic,1> m_nucycoord;
+    Matrix<qreal,Dynamic,1> m_nuczcoord;
+    Matrix<qint64,Dynamic,1> m_nucz;
+    Matrix<qreal,Dynamic,1> m_X0;
+    Matrix<qreal,Dynamic,1> m_Y0;
+    Matrix<qreal,Dynamic,1> m_Z0;
+    Matrix<qint64,Dynamic,1> m_xamom;
+    Matrix<qint64,Dynamic,1> m_yamom;
+    Matrix<qint64,Dynamic,1> m_zamom;
+    Matrix<qreal,Dynamic,1> m_alpha;
+    Matrix<qreal,Dynamic,1> m_occno;
+    Matrix<qreal,Dynamic,1> m_orbe;
+    Matrix<qreal,Dynamic,Dynamic,RowMajor> m_coef;
+    qreal m_totalEnergy;
+    qreal m_virialRatio;
 
-    qreal cutoff;
+    qreal m_cutoff;
 
-    Matrix<qreal,Dynamic,1> cdg000;
-    Matrix<qreal,Dynamic,1> cdg100;
-    Matrix<qreal,Dynamic,1> cdg010;
-    Matrix<qreal,Dynamic,1> cdg001;
-    Matrix<qreal,Dynamic,1> cdg200;
-    Matrix<qreal,Dynamic,1> cdg110;
-    Matrix<qreal,Dynamic,1> cdg101;
-    Matrix<qreal,Dynamic,1> cdg020;
-    Matrix<qreal,Dynamic,1> cdg011;
-    Matrix<qreal,Dynamic,1> cdg002;
-    Matrix<qreal,Dynamic,1> cdg300;
-    Matrix<qreal,Dynamic,1> cdg120;
-    Matrix<qreal,Dynamic,1> cdg102;
-    Matrix<qreal,Dynamic,1> cdg210;
-    Matrix<qreal,Dynamic,1> cdg030;
-    Matrix<qreal,Dynamic,1> cdg012;
-    Matrix<qreal,Dynamic,1> cdg201;
-    Matrix<qreal,Dynamic,1> cdg021;
-    Matrix<qreal,Dynamic,1> cdg003;
-    Matrix<qreal,Dynamic,1> cdg111;
-    Matrix<qreal,Dynamic,1> cdg400;
-    Matrix<qreal,Dynamic,1> cdg220;
-    Matrix<qreal,Dynamic,1> cdg202;
-    Matrix<qreal,Dynamic,1> cdg310;
-    Matrix<qreal,Dynamic,1> cdg130;
-    Matrix<qreal,Dynamic,1> cdg112;
-    Matrix<qreal,Dynamic,1> cdg301;
-    Matrix<qreal,Dynamic,1> cdg121;
-    Matrix<qreal,Dynamic,1> cdg103;
-    Matrix<qreal,Dynamic,1> cdg040;
-    Matrix<qreal,Dynamic,1> cdg022;
-    Matrix<qreal,Dynamic,1> cdg211;
-    Matrix<qreal,Dynamic,1> cdg031;
-    Matrix<qreal,Dynamic,1> cdg013;
-    Matrix<qreal,Dynamic,1> cdg004;
+    Matrix<qreal,Dynamic,1> m_cdg000;
+    Matrix<qreal,Dynamic,1> m_cdg100;
+    Matrix<qreal,Dynamic,1> m_cdg010;
+    Matrix<qreal,Dynamic,1> m_cdg001;
+    Matrix<qreal,Dynamic,1> m_cdg200;
+    Matrix<qreal,Dynamic,1> m_cdg110;
+    Matrix<qreal,Dynamic,1> m_cdg101;
+    Matrix<qreal,Dynamic,1> m_cdg020;
+    Matrix<qreal,Dynamic,1> m_cdg011;
+    Matrix<qreal,Dynamic,1> m_cdg002;
+    Matrix<qreal,Dynamic,1> m_cdg300;
+    Matrix<qreal,Dynamic,1> m_cdg120;
+    Matrix<qreal,Dynamic,1> m_cdg102;
+    Matrix<qreal,Dynamic,1> m_cdg210;
+    Matrix<qreal,Dynamic,1> m_cdg030;
+    Matrix<qreal,Dynamic,1> m_cdg012;
+    Matrix<qreal,Dynamic,1> m_cdg201;
+    Matrix<qreal,Dynamic,1> m_cdg021;
+    Matrix<qreal,Dynamic,1> m_cdg003;
+    Matrix<qreal,Dynamic,1> m_cdg111;
+    Matrix<qreal,Dynamic,1> m_cdg400;
+    Matrix<qreal,Dynamic,1> m_cdg220;
+    Matrix<qreal,Dynamic,1> m_cdg202;
+    Matrix<qreal,Dynamic,1> m_cdg310;
+    Matrix<qreal,Dynamic,1> m_cdg130;
+    Matrix<qreal,Dynamic,1> m_cdg112;
+    Matrix<qreal,Dynamic,1> m_cdg301;
+    Matrix<qreal,Dynamic,1> m_cdg121;
+    Matrix<qreal,Dynamic,1> m_cdg103;
+    Matrix<qreal,Dynamic,1> m_cdg040;
+    Matrix<qreal,Dynamic,1> m_cdg022;
+    Matrix<qreal,Dynamic,1> m_cdg211;
+    Matrix<qreal,Dynamic,1> m_cdg031;
+    Matrix<qreal,Dynamic,1> m_cdg013;
+    Matrix<qreal,Dynamic,1> m_cdg004;
 
   };
 
