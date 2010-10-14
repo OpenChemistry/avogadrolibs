@@ -317,7 +317,7 @@ namespace Avogadro
 }
 
 
-  QTAIMCriticalPointLocator::QTAIMCriticalPointLocator( QTAIMWavefunction &wfn, QObject *parent) : QObject(parent)
+  QTAIMCriticalPointLocator::QTAIMCriticalPointLocator( QTAIMWavefunction &wfn)
   {
     m_wfn=&wfn;
 

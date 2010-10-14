@@ -26,7 +26,6 @@
 #define QTAIMCRITICALPOINTLOCATOR_H
 
 #include <QDebug>
-#include <QObject>
 #include <QList>
 #include <QVector3D>
 #include <QPair>
@@ -37,12 +36,11 @@
 
 namespace Avogadro {
 
-  class QTAIMCriticalPointLocator : public QObject
+  class QTAIMCriticalPointLocator
   {
-    Q_OBJECT
 
   public:
-    explicit QTAIMCriticalPointLocator(QTAIMWavefunction &wfn, QObject *parent = 0);
+    explicit QTAIMCriticalPointLocator(QTAIMWavefunction &wfn);
     void locateNuclearCriticalPoints();
     void locateBondCriticalPoints();
 
