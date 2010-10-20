@@ -23,6 +23,7 @@
 **********************************************************************/
 
 #include <cmath>
+#include <Eigen/QR>
 
 #include "qtaimmathutilities.h"
 

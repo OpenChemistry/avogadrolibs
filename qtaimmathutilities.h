@@ -26,7 +26,7 @@
 
 #include <QtGlobal>
 
-#include <Eigen/Eigen>
+#include <Eigen/Core>
 
 using namespace Eigen;
 

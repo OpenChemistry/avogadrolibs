@@ -28,7 +28,7 @@
 #include "qtaimlsodaintegrator.h"
 #include "qtaimmathutilities.h"
 
-#include <Eigen/Eigen>
+#include <Eigen/Core>
 
 #include <QList>
 

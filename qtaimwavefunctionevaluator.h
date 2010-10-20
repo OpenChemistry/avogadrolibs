@@ -27,7 +27,7 @@
 
 #include "qtaimwavefunction.h"
 
-#include <Eigen/Eigen>
+#include <Eigen/Core>
 
 using namespace Eigen;
 

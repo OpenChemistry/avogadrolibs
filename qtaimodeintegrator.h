@@ -30,7 +30,7 @@
 #include <QVector3D>
 #include <QPair>
 
-#include <Eigen/Eigen>
+#include <Eigen/Core>
 
 #include "qtaimwavefunction.h"
 #include "qtaimwavefunctionevaluator.h"
