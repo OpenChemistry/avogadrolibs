@@ -152,6 +152,9 @@ namespace Avogadro {
     double **yh, **wm, *ewt, *savf, *acor;
     int *ipvt;
 
+    int m_lenyh;
+    int m_nyh;
+
   };
 
 } // namespace Avogadro

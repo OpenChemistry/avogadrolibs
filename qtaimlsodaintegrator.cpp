@@ -138,7 +138,7 @@ namespace Avogadro
 //      printf (" at t= %12.4e y= %14.6e %14.6e %14.6e\n", t,y[1],y[2],y[3]);
       if (istate <= 0)
       {
-//        printf("error istate = %d\n",istate);
+//        printf("error istate = %d\n",istate)
         return QVector3D(y[1],y[2],y[3]);
       }
 
@@ -1075,6 +1075,9 @@ namespace Avogadro
         meth = 1;
         nyh = n;
         lenyh = 1 + max( mxordn, mxords );
+
+        m_lenyh=lenyh;
+        m_nyh=nyh;
 
         yh = ( double ** ) qMalloc( ( 1 + lenyh ) * sizeof( *yh ) );
         if ( yh == NULL ) {
@@ -2772,7 +2775,6 @@ namespace Avogadro
 
   }      /*   end orderswitch   */
 
-
   void QTAIMLSODAIntegrator::resetcoeff()
   /*
      The el vector and related constants are reset
@@ -2791,15 +2793,25 @@ namespace Avogadro
 
   }     /*   end resetcoeff   */
 
-
   void QTAIMLSODAIntegrator::freevectors()
   {
-     qFree( yh );
-     qFree( wm );
-     qFree( ewt );
-     qFree( savf );
-     qFree( acor );
-     qFree( ipvt );
+    int i;
+    for( i=1; i<= m_lenyh ; ++i )
+    {
+      qFree( yh[i] );
+    }
+    qFree( yh );
+
+    for( i=1; i<= m_nyh ; ++i )
+    {
+      qFree( wm[i] );
+    }
+    qFree( wm );
+
+    qFree( ewt );
+    qFree( savf );
+    qFree( acor );
+    qFree( ipvt );
   }     /*   end freevectors   */
 
 } // namespace Avogadro

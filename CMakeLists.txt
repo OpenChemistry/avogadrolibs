@@ -14,7 +14,7 @@ set(qtaimextension_SRCS
     qtaimmathutilities.cpp
     qtaimodeintegrator.cpp
     qtaimlsodaintegrator.cpp
-#    qtaimintegrator.cpp
+    qtaimcubature.cpp
 )
 
 #set(qtaim_UIS

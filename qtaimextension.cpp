@@ -47,6 +47,7 @@
 #include "qtaimwavefunction.h"
 #include "qtaimwavefunctionevaluator.h"
 #include "qtaimcriticalpointlocator.h"
+#include "qtaimcubature.h"
 
 #include <QTime>
 
@@ -121,37 +122,37 @@ namespace Avogadro
     QTime timer;
     timer.start();
 
+    QString fileName = QFileDialog::getOpenFileName(
+        new QWidget,
+        tr("Open WFN File"),
+        QDir::homePath(),
+        tr("WFN files (*.wfn);;All files (*.*)") );
+
+    if(fileName.isNull())
+    {
+      qDebug() << "No such file.";
+      return 0;
+    }
+
+    // Instantiate a Wavefunction
+
+    QTAIMWavefunction wfn;
+    bool success=wfn.initializeWithWFNFile(fileName);
+
+    if(!success)
+    {
+      qDebug() << "Error reading WFN file.";
+      return 0;
+    }
+
+    m_molecule->clear();
+
+    // Instantiate an Evaluator
+    QTAIMWavefunctionEvaluator eval(wfn);
+
     switch ( i ) {
     case FirstAction: // Molecular Graph
     {
-      QString fileName = QFileDialog::getOpenFileName(
-          new QWidget,
-          tr("Open WFN File"),
-          QDir::homePath(),
-          tr("WFN files (*.wfn);;All files (*.*)") );
-
-      if(fileName.isNull())
-      {
-        qDebug() << "No such file.";
-        return 0;
-      }
-
-      // Instantiate a Wavefunction
-
-      QTAIMWavefunction wfn;
-      bool success=wfn.initializeWithWFNFile(fileName);
-
-      if(!success)
-      {
-        qDebug() << "Error reading WFN file.";
-        return 0;
-      }
-
-      m_molecule->clear();
-
-      // Instantiate an Evaluator
-      QTAIMWavefunctionEvaluator eval(wfn);
-
       // Instantiate a Critical Point Locator
       QTAIMCriticalPointLocator cpl(wfn);
 
@@ -279,7 +280,20 @@ namespace Avogadro
       break;
       case SecondAction:
       // perform second action
-      qDebug() << "Not Implemented: Come back tomorrow.";
+      {
+
+        // Electron Density
+        qint64 mode=0;
+
+        // All Atomic Basins
+        QList<qint64> basins;
+        for( qint64 i=0 ; i < wfn.numberOfNuclei() ; ++i )
+        {
+          basins.append(i);
+        }
+
+        QTAIMCubature cub(wfn,mode,basins);
+      }
       break;
     }
 

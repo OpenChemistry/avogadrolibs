@@ -1,4 +1,4 @@
-/**********************************************************************
+   /**********************************************************************
   QTAIM - Extension for Quantum Theory of Atoms In Molecules Analysis
 
   Copyright (C) 2010 Eric C. Brown

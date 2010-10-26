@@ -72,8 +72,8 @@ namespace Avogadro
     switch (m_mode)
     {
     case SteepestAscentPathInElectronDensity:
-      abserr =      sqrt ( r8_epsilon ( ) );
-      relerr =      sqrt ( r8_epsilon ( ) );
+      abserr = 1.e-5;   //  sqrt ( r8_epsilon ( ) );
+      relerr = 1.e10;   //  sqrt ( r8_epsilon ( ) );
       t_start = 0.0;
       t_stop  = 10.0;
       n_step  = t_stop * 20;
