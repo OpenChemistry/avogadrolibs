@@ -1404,14 +1404,11 @@ void property_v(unsigned int ndim, unsigned int npts, const double *xyz, void *p
     results=future.results();
   }
 
-  //  qDebug() << "RESULTS" << results;
-
   // harvest results
   for(qint64 i=0; i<npts; ++i )
   {
     for(qint64 m=0; m<nmode ; ++m )
     {
-      // TODO Check this carefully.
       fval[m*nmode+i]=results.at(i).at(m).toDouble();
     }
   }
