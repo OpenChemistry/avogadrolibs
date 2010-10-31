@@ -104,6 +104,7 @@ int adapt_integrate_v(unsigned int fdim, integrand_v f, void *fdata,
 
 #include "qtaimwavefunction.h"
 #include "qtaimwavefunctionevaluator.h"
+#include "qtaimcriticalpointlocator.h"
 #include "qtaimodeintegrator.h"
 #include "qtaimlsodaintegrator.h"
 #include "qtaimmathutilities.h"
@@ -132,6 +133,8 @@ namespace Avogadro
 
     QString m_temporaryFileName;
     QString temporaryFileName();
+
+
 
   };
 

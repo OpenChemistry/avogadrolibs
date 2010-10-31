@@ -201,7 +201,6 @@ namespace Avogadro
       cpl.locateBondCriticalPoints();
 
       QList<QVector3D> bcpList=cpl.bondCriticalPoints();
-
       QList<QList<QVector3D> > bondPathList=cpl.bondPaths();
       QList<QPair<qint64,qint64> > bondedAtomsList=cpl.bondedAtoms();
 

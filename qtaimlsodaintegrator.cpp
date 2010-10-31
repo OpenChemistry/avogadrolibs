@@ -1,5 +1,5 @@
 /**********************************************************************
-  QTAIM - Extension for Quantum Theory of Atoms In Molecules Analysis
+  QTAIM - Extension for Quantum Theory of Atoms In Molecules Analysisf
 
   Copyright (C) 2010 Eric C. Brown
 
@@ -108,22 +108,22 @@ namespace Avogadro
     m_path.clear();
     m_path.append(QVector3D(y[1],y[2],y[3]));
 
-    for (t0=0.0; t0 < 10.0; t0=t0+0.1)
+    for (t0=0.0; t0 < 10.0; t0=t0+0.05)
     {
 
       iwork1= iwork2= iwork5= iwork6= iwork7= iwork8= iwork9= 0;
       rwork1= rwork5= rwork6= rwork7= 0.0;
 
       t = t0;
-      tout = t0+0.1;
+      tout = t0+0.05;
       itol = 2;
       rtol[0] = 0.0; atol[0] = 0.0;
       rtol[1] = 0.0;
       rtol[2] = 0.0;
       rtol[3] = 0.0;
-      atol[1] = 5.0E-5;
-      atol[2] = 5.0E-5;
-      atol[3] = 5.0E-5;
+      atol[1] = 1.0E-5;
+      atol[2] = 1.0E-5;
+      atol[3] = 1.0E-5;
       itask = 1;
       istate = 1;
       iopt = 0;
@@ -1488,11 +1488,10 @@ namespace Avogadro
               jstart = -1;
               if ( ixpr ) {
                  if ( meth == 2 )
-                    printf( "lsoda -- a switch to the stiff method has occurred\n " );
+                    qDebug() << "lsoda -- a switch to the stiff method has occurred";
                  if ( meth == 1 )
-                    printf( "lsoda -- a switch to the nonstiff method has occurred\n" );
-                 printf( "         at t = %g, tentative step size h = %g, step nst = %d\n",
-                    tn, h, nst );
+                    qDebug() << "lsoda -- a switch to the nonstiff method has occurred";
+                    qDebug() << "         at t = "<< tn << ", tentative step size h = " << h << ", step nst = " << nst;
               }
            }         /*   end if ( meth != mused )   */
   /*
