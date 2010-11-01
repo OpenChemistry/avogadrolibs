@@ -35,6 +35,8 @@ namespace Avogadro {
   class QTAIMMathUtilities
   {
   public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
     static Matrix<qreal,3,1> eigenvaluesOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A );
     static Matrix<qreal,3,3> eigenvectorsOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A );
     static Matrix<qreal,4,1> eigenvaluesOfASymmetricFourByFourMatrix( Matrix<qreal,4,4> A );
@@ -51,7 +53,6 @@ namespace Avogadro {
 
     static Matrix<qreal,3,1> cartesianToSpherical( Matrix<qreal,3,1> xyz, Matrix<qreal,3,1> x0y0z0 );
     static Matrix<qreal,3,1> cartesianToSpherical( Matrix<qreal,3,1> xyz );
-
 
     // Cerjan-Miller-Baker-Popelier Methods
 

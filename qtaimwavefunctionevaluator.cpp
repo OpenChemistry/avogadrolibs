@@ -107,9 +107,9 @@ namespace Avogadro
 
       if( b0arg > m_cutoff )
       {
-        qreal ax0 = pow( xx0, m_xamom(p) );
-        qreal ay0 = pow( yy0, m_yamom(p) );
-        qreal az0 = pow( zz0, m_zamom(p) );
+        qreal ax0 = ipow( xx0, m_xamom(p) );
+        qreal ay0 = ipow( yy0, m_yamom(p) );
+        qreal az0 = ipow( zz0, m_zamom(p) );
 
         qreal b0 = exp( b0arg );
 
@@ -140,9 +140,9 @@ namespace Avogadro
 
       if( b0arg > m_cutoff )
       {
-        qreal ax0 = pow( xx0, m_xamom(p) );
-        qreal ay0 = pow( yy0, m_yamom(p) );
-        qreal az0 = pow( zz0, m_zamom(p) );
+        qreal ax0 = ipow( xx0, m_xamom(p) );
+        qreal ay0 = ipow( yy0, m_yamom(p) );
+        qreal az0 = ipow( zz0, m_zamom(p) );
 
         qreal b0 = exp(b0arg);
 
@@ -159,7 +159,7 @@ namespace Avogadro
     value=0.0;
     for( qint64 m=0 ; m < m_nmo ; ++m )
     {
-      value += m_occno(m)*pow(m_cdg000(m),2);
+      value += m_occno(m)*ipow(m_cdg000(m),2);
     }
 
     return value;
@@ -195,9 +195,9 @@ namespace Avogadro
         qint64 aay1=m_yamom(p);
         qint64 aaz1=m_zamom(p);
 
-        qreal ax0 = aax0*pow( xx0, m_xamom(p) );
-        qreal ay0 = aay0*pow( yy0, m_yamom(p) );
-        qreal az0 = aaz0*pow( zz0, m_zamom(p) );
+        qreal ax0 = aax0*ipow( xx0, m_xamom(p) );
+        qreal ay0 = aay0*ipow( yy0, m_yamom(p) );
+        qreal az0 = aaz0*ipow( zz0, m_zamom(p) );
 
         qreal ax1;
         qreal ay1;
@@ -212,7 +212,7 @@ namespace Avogadro
         }
         else
         {
-          ax1=aax1*pow(xx0,m_xamom(p)-1);
+          ax1=aax1*ipow(xx0,m_xamom(p)-1);
         }
 
         if     ( m_yamom(p) <  1 )
@@ -225,7 +225,7 @@ namespace Avogadro
         }
         else
         {
-          ay1=aay1*pow(yy0,m_yamom(p)-1);
+          ay1=aay1*ipow(yy0,m_yamom(p)-1);
         }
 
         if     ( m_zamom(p) <  1 )
@@ -238,7 +238,7 @@ namespace Avogadro
         }
         else
         {
-          az1=aaz1*pow(zz0,m_zamom(p)-1);
+          az1=aaz1*ipow(zz0,m_zamom(p)-1);
         }
 
         qreal b0 = exp(b0arg);
@@ -313,9 +313,9 @@ namespace Avogadro
         qint64 aay2=m_yamom(p)*(m_yamom(p)-1);
         qint64 aaz2=m_zamom(p)*(m_zamom(p)-1);
 
-        qreal ax0 = aax0*pow( xx0, m_xamom(p) );
-        qreal ay0 = aay0*pow( yy0, m_yamom(p) );
-        qreal az0 = aaz0*pow( zz0, m_zamom(p) );
+        qreal ax0 = aax0*ipow( xx0, m_xamom(p) );
+        qreal ay0 = aay0*ipow( yy0, m_yamom(p) );
+        qreal az0 = aaz0*ipow( zz0, m_zamom(p) );
 
         qreal ax1;
         qreal ay1;
@@ -330,7 +330,7 @@ namespace Avogadro
         }
         else
         {
-          ax1=aax1*pow(xx0,m_xamom(p)-1);
+          ax1=aax1*ipow(xx0,m_xamom(p)-1);
         }
 
         if     ( m_yamom(p) <  1 )
@@ -343,7 +343,7 @@ namespace Avogadro
         }
         else
         {
-          ay1=aay1*pow(yy0,m_yamom(p)-1);
+          ay1=aay1*ipow(yy0,m_yamom(p)-1);
         }
 
         if     ( m_zamom(p) <  1 )
@@ -356,7 +356,7 @@ namespace Avogadro
         }
         else
         {
-          az1=aaz1*pow(zz0,m_zamom(p)-1);
+          az1=aaz1*ipow(zz0,m_zamom(p)-1);
         }
 
         qreal ax2;
@@ -372,7 +372,7 @@ namespace Avogadro
         }
         else
         {
-          ax2=aax2*pow(xx0,m_xamom(p)-2);
+          ax2=aax2*ipow(xx0,m_xamom(p)-2);
         }
 
         if     ( m_yamom(p) <  2 )
@@ -385,7 +385,7 @@ namespace Avogadro
         }
         else
         {
-          ay2=aay2*pow(yy0,m_yamom(p)-2);
+          ay2=aay2*ipow(yy0,m_yamom(p)-2);
         }
 
         if     ( m_zamom(p) <  2 )
@@ -398,7 +398,7 @@ namespace Avogadro
         }
         else
         {
-          az2=aaz2*pow(zz0,m_zamom(p)-2);
+          az2=aaz2*ipow(zz0,m_zamom(p)-2);
         }
 
         qreal b0 = exp(b0arg);
@@ -406,9 +406,9 @@ namespace Avogadro
         qreal bx1 = -2*m_alpha(p)*xx0;
         qreal by1 = -2*m_alpha(p)*yy0;
         qreal bz1 = -2*m_alpha(p)*zz0;
-        qreal bx2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(xx0,2));
-        qreal by2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(yy0,2));
-        qreal bz2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(zz0,2));
+        qreal bx2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(xx0,2));
+        qreal by2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(yy0,2));
+        qreal bz2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(zz0,2));
 
         qreal dg000 = ax0*ay0*az0*b0;
         qreal dg100 = ay0*az0*b0*(ax1+ax0*bx1);
@@ -441,9 +441,9 @@ namespace Avogadro
     value.setZero();
     for( qint64 m=0 ; m < m_nmo ; ++m )
     {
-      value(0,0) += 2*m_occno(m)*(pow(m_cdg100(m),2)+m_cdg000(m)*m_cdg200(m));
-      value(1,1) += 2*m_occno(m)*(pow(m_cdg010(m),2)+m_cdg000(m)*m_cdg020(m));
-      value(2,2) += 2*m_occno(m)*(pow(m_cdg001(m),2)+m_cdg000(m)*m_cdg002(m));
+      value(0,0) += 2*m_occno(m)*(ipow(m_cdg100(m),2)+m_cdg000(m)*m_cdg200(m));
+      value(1,1) += 2*m_occno(m)*(ipow(m_cdg010(m),2)+m_cdg000(m)*m_cdg020(m));
+      value(2,2) += 2*m_occno(m)*(ipow(m_cdg001(m),2)+m_cdg000(m)*m_cdg002(m));
       value(0,1) += 2*m_occno(m)*(m_cdg100(m)*m_cdg010(m)+m_cdg000(m)*m_cdg110(m));
       value(0,2) += 2*m_occno(m)*(m_cdg100(m)*m_cdg001(m)+m_cdg000(m)*m_cdg101(m));
       value(1,2) += 2*m_occno(m)*(m_cdg010(m)*m_cdg001(m)+m_cdg000(m)*m_cdg011(m));
@@ -496,9 +496,9 @@ namespace Avogadro
         qint64 aay2=m_yamom(p)*(m_yamom(p)-1);
         qint64 aaz2=m_zamom(p)*(m_zamom(p)-1);
 
-        qreal ax0 = aax0*pow( xx0, m_xamom(p) );
-        qreal ay0 = aay0*pow( yy0, m_yamom(p) );
-        qreal az0 = aaz0*pow( zz0, m_zamom(p) );
+        qreal ax0 = aax0*ipow( xx0, m_xamom(p) );
+        qreal ay0 = aay0*ipow( yy0, m_yamom(p) );
+        qreal az0 = aaz0*ipow( zz0, m_zamom(p) );
 
         qreal ax1;
         qreal ay1;
@@ -513,7 +513,7 @@ namespace Avogadro
         }
         else
         {
-          ax1=aax1*pow(xx0,m_xamom(p)-1);
+          ax1=aax1*ipow(xx0,m_xamom(p)-1);
         }
 
         if     ( m_yamom(p) <  1 )
@@ -526,7 +526,7 @@ namespace Avogadro
         }
         else
         {
-          ay1=aay1*pow(yy0,m_yamom(p)-1);
+          ay1=aay1*ipow(yy0,m_yamom(p)-1);
         }
 
         if     ( m_zamom(p) <  1 )
@@ -539,7 +539,7 @@ namespace Avogadro
         }
         else
         {
-          az1=aaz1*pow(zz0,m_zamom(p)-1);
+          az1=aaz1*ipow(zz0,m_zamom(p)-1);
         }
 
         qreal ax2;
@@ -555,7 +555,7 @@ namespace Avogadro
         }
         else
         {
-          ax2=aax2*pow(xx0,m_xamom(p)-2);
+          ax2=aax2*ipow(xx0,m_xamom(p)-2);
         }
 
         if     ( m_yamom(p) <  2 )
@@ -568,7 +568,7 @@ namespace Avogadro
         }
         else
         {
-          ay2=aay2*pow(yy0,m_yamom(p)-2);
+          ay2=aay2*ipow(yy0,m_yamom(p)-2);
         }
 
         if     ( m_zamom(p) <  2 )
@@ -581,7 +581,7 @@ namespace Avogadro
         }
         else
         {
-          az2=aaz2*pow(zz0,m_zamom(p)-2);
+          az2=aaz2*ipow(zz0,m_zamom(p)-2);
         }
 
         qreal b0 = exp(b0arg);
@@ -589,9 +589,9 @@ namespace Avogadro
         qreal bx1 = -2*m_alpha(p)*xx0;
         qreal by1 = -2*m_alpha(p)*yy0;
         qreal bz1 = -2*m_alpha(p)*zz0;
-        qreal bx2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(xx0,2));
-        qreal by2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(yy0,2));
-        qreal bz2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(zz0,2));
+        qreal bx2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(xx0,2));
+        qreal by2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(yy0,2));
+        qreal bz2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(zz0,2));
 
         qreal dg000 = ax0*ay0*az0*b0;
         qreal dg100 = ay0*az0*b0*(ax1+ax0*bx1);
@@ -632,9 +632,9 @@ namespace Avogadro
     hValue.setZero();
     for( qint64 m=0 ; m < m_nmo ; ++m )
     {
-      hValue(0,0) += 2*m_occno(m)*(pow(m_cdg100(m),2)+m_cdg000(m)*m_cdg200(m));
-      hValue(1,1) += 2*m_occno(m)*(pow(m_cdg010(m),2)+m_cdg000(m)*m_cdg020(m));
-      hValue(2,2) += 2*m_occno(m)*(pow(m_cdg001(m),2)+m_cdg000(m)*m_cdg002(m));
+      hValue(0,0) += 2*m_occno(m)*(ipow(m_cdg100(m),2)+m_cdg000(m)*m_cdg200(m));
+      hValue(1,1) += 2*m_occno(m)*(ipow(m_cdg010(m),2)+m_cdg000(m)*m_cdg020(m));
+      hValue(2,2) += 2*m_occno(m)*(ipow(m_cdg001(m),2)+m_cdg000(m)*m_cdg002(m));
       hValue(0,1) += 2*m_occno(m)*(m_cdg100(m)*m_cdg010(m)+m_cdg000(m)*m_cdg110(m));
       hValue(0,2) += 2*m_occno(m)*(m_cdg100(m)*m_cdg001(m)+m_cdg000(m)*m_cdg101(m));
       hValue(1,2) += 2*m_occno(m)*(m_cdg010(m)*m_cdg001(m)+m_cdg000(m)*m_cdg011(m));
@@ -695,9 +695,9 @@ namespace Avogadro
         qint64 aay2=m_yamom(p)*(m_yamom(p)-1);
         qint64 aaz2=m_zamom(p)*(m_zamom(p)-1);
 
-        qreal ax0 = aax0*pow( xx0, m_xamom(p) );
-        qreal ay0 = aay0*pow( yy0, m_yamom(p) );
-        qreal az0 = aaz0*pow( zz0, m_zamom(p) );
+        qreal ax0 = aax0*ipow( xx0, m_xamom(p) );
+        qreal ay0 = aay0*ipow( yy0, m_yamom(p) );
+        qreal az0 = aaz0*ipow( zz0, m_zamom(p) );
 
         qreal ax1;
         qreal ay1;
@@ -712,7 +712,7 @@ namespace Avogadro
         }
         else
         {
-          ax1=aax1*pow(xx0,m_xamom(p)-1);
+          ax1=aax1*ipow(xx0,m_xamom(p)-1);
         }
 
         if     ( m_yamom(p) <  1 )
@@ -725,7 +725,7 @@ namespace Avogadro
         }
         else
         {
-          ay1=aay1*pow(yy0,m_yamom(p)-1);
+          ay1=aay1*ipow(yy0,m_yamom(p)-1);
         }
 
         if     ( m_zamom(p) <  1 )
@@ -738,7 +738,7 @@ namespace Avogadro
         }
         else
         {
-          az1=aaz1*pow(zz0,m_zamom(p)-1);
+          az1=aaz1*ipow(zz0,m_zamom(p)-1);
         }
 
         qreal ax2;
@@ -754,7 +754,7 @@ namespace Avogadro
         }
         else
         {
-          ax2=aax2*pow(xx0,m_xamom(p)-2);
+          ax2=aax2*ipow(xx0,m_xamom(p)-2);
         }
 
         if     ( m_yamom(p) <  2 )
@@ -767,7 +767,7 @@ namespace Avogadro
         }
         else
         {
-          ay2=aay2*pow(yy0,m_yamom(p)-2);
+          ay2=aay2*ipow(yy0,m_yamom(p)-2);
         }
 
         if     ( m_zamom(p) <  2 )
@@ -780,7 +780,7 @@ namespace Avogadro
         }
         else
         {
-          az2=aaz2*pow(zz0,m_zamom(p)-2);
+          az2=aaz2*ipow(zz0,m_zamom(p)-2);
         }
 
         qreal b0 = exp(b0arg);
@@ -788,9 +788,9 @@ namespace Avogadro
         qreal bx1 = -2*m_alpha(p)*xx0;
         qreal by1 = -2*m_alpha(p)*yy0;
         qreal bz1 = -2*m_alpha(p)*zz0;
-        qreal bx2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(xx0,2));
-        qreal by2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(yy0,2));
-        qreal bz2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(zz0,2));
+        qreal bx2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(xx0,2));
+        qreal by2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(yy0,2));
+        qreal bz2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(zz0,2));
 
         qreal dg000 = ax0*ay0*az0*b0;
         qreal dg100 = ay0*az0*b0*(ax1+ax0*bx1);
@@ -817,9 +817,9 @@ namespace Avogadro
     value=0.0;
     for( qint64 m=0 ; m < m_nmo ; ++m )
     {
-      value +=    2*m_occno(m)*(pow(m_cdg100(m),2)+m_cdg000(m)*m_cdg200(m))
-                 +2*m_occno(m)*(pow(m_cdg010(m),2)+m_cdg000(m)*m_cdg020(m))
-                 +2*m_occno(m)*(pow(m_cdg001(m),2)+m_cdg000(m)*m_cdg002(m));
+      value +=    2*m_occno(m)*(ipow(m_cdg100(m),2)+m_cdg000(m)*m_cdg200(m))
+                 +2*m_occno(m)*(ipow(m_cdg010(m),2)+m_cdg000(m)*m_cdg020(m))
+                 +2*m_occno(m)*(ipow(m_cdg001(m),2)+m_cdg000(m)*m_cdg002(m));
     }
 
     return value;
@@ -878,9 +878,9 @@ namespace Avogadro
         qint64 aay3=m_yamom(p)*(m_yamom(p)-1)*(m_yamom(p)-2);
         qint64 aaz3=m_zamom(p)*(m_zamom(p)-1)*(m_zamom(p)-2);
 
-        qreal ax0 = aax0*pow( xx0, m_xamom(p) );
-        qreal ay0 = aay0*pow( yy0, m_yamom(p) );
-        qreal az0 = aaz0*pow( zz0, m_zamom(p) );
+        qreal ax0 = aax0*ipow( xx0, m_xamom(p) );
+        qreal ay0 = aay0*ipow( yy0, m_yamom(p) );
+        qreal az0 = aaz0*ipow( zz0, m_zamom(p) );
 
         qreal ax1;
         qreal ay1;
@@ -895,7 +895,7 @@ namespace Avogadro
         }
         else
         {
-          ax1=aax1*pow(xx0,m_xamom(p)-1);
+          ax1=aax1*ipow(xx0,m_xamom(p)-1);
         }
 
         if     ( m_yamom(p) <  1 )
@@ -908,7 +908,7 @@ namespace Avogadro
         }
         else
         {
-          ay1=aay1*pow(yy0,m_yamom(p)-1);
+          ay1=aay1*ipow(yy0,m_yamom(p)-1);
         }
 
         if     ( m_zamom(p) <  1 )
@@ -921,7 +921,7 @@ namespace Avogadro
         }
         else
         {
-          az1=aaz1*pow(zz0,m_zamom(p)-1);
+          az1=aaz1*ipow(zz0,m_zamom(p)-1);
         }
 
         qreal ax2;
@@ -937,7 +937,7 @@ namespace Avogadro
         }
         else
         {
-          ax2=aax2*pow(xx0,m_xamom(p)-2);
+          ax2=aax2*ipow(xx0,m_xamom(p)-2);
         }
 
         if     ( m_yamom(p) <  2 )
@@ -950,7 +950,7 @@ namespace Avogadro
         }
         else
         {
-          ay2=aay2*pow(yy0,m_yamom(p)-2);
+          ay2=aay2*ipow(yy0,m_yamom(p)-2);
         }
 
         if     ( m_zamom(p) <  2 )
@@ -963,7 +963,7 @@ namespace Avogadro
         }
         else
         {
-          az2=aaz2*pow(zz0,m_zamom(p)-2);
+          az2=aaz2*ipow(zz0,m_zamom(p)-2);
         }
 
         qreal ax3;
@@ -979,7 +979,7 @@ namespace Avogadro
         }
         else
         {
-          ax3=aax3*pow(xx0,m_xamom(p)-3);
+          ax3=aax3*ipow(xx0,m_xamom(p)-3);
         }
 
         if     ( m_yamom(p) <  3 )
@@ -992,7 +992,7 @@ namespace Avogadro
         }
         else
         {
-          ay3=aay3*pow(yy0,m_yamom(p)-3);
+          ay3=aay3*ipow(yy0,m_yamom(p)-3);
         }
 
         if     ( m_zamom(p) <  3 )
@@ -1005,7 +1005,7 @@ namespace Avogadro
         }
         else
         {
-          az3=aaz3*pow(zz0,m_zamom(p)-3);
+          az3=aaz3*ipow(zz0,m_zamom(p)-3);
         }
 
         qreal b0 = exp(b0arg);
@@ -1013,12 +1013,12 @@ namespace Avogadro
         qreal bx1 = -2*m_alpha(p)*xx0;
         qreal by1 = -2*m_alpha(p)*yy0;
         qreal bz1 = -2*m_alpha(p)*zz0;
-        qreal bx2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(xx0,2));
-        qreal by2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(yy0,2));
-        qreal bz2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(zz0,2));
-        qreal bx3 = (12*pow(m_alpha(p),2)*xx0)-(8*pow(m_alpha(p),3) * pow(xx0,3));
-        qreal by3 = (12*pow(m_alpha(p),2)*yy0)-(8*pow(m_alpha(p),3) * pow(yy0,3));
-        qreal bz3 = (12*pow(m_alpha(p),2)*zz0)-(8*pow(m_alpha(p),3) * pow(zz0,3));
+        qreal bx2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(xx0,2));
+        qreal by2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(yy0,2));
+        qreal bz2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(zz0,2));
+        qreal bx3 = (12*ipow(m_alpha(p),2)*xx0)-(8*ipow(m_alpha(p),3) * ipow(xx0,3));
+        qreal by3 = (12*ipow(m_alpha(p),2)*yy0)-(8*ipow(m_alpha(p),3) * ipow(yy0,3));
+        qreal bz3 = (12*ipow(m_alpha(p),2)*zz0)-(8*ipow(m_alpha(p),3) * ipow(zz0,3));
 
         qreal dg000 = ax0*ay0*az0*b0;
         qreal dg100 = ay0*az0*b0*(ax1+ax0*bx1);
@@ -1170,9 +1170,9 @@ namespace Avogadro
         qint64 aay4=m_yamom(p)*(m_yamom(p)-1)*(m_yamom(p)-2)*(m_xamom(p)-3);
         qint64 aaz4=m_zamom(p)*(m_zamom(p)-1)*(m_zamom(p)-2)*(m_xamom(p)-3);
 
-        qreal ax0 = aax0*pow( xx0, m_xamom(p) );
-        qreal ay0 = aay0*pow( yy0, m_yamom(p) );
-        qreal az0 = aaz0*pow( zz0, m_zamom(p) );
+        qreal ax0 = aax0*ipow( xx0, m_xamom(p) );
+        qreal ay0 = aay0*ipow( yy0, m_yamom(p) );
+        qreal az0 = aaz0*ipow( zz0, m_zamom(p) );
 
         qreal ax1;
         qreal ay1;
@@ -1187,7 +1187,7 @@ namespace Avogadro
         }
         else
         {
-          ax1=aax1*pow(xx0,m_xamom(p)-1);
+          ax1=aax1*ipow(xx0,m_xamom(p)-1);
         }
 
         if     ( m_yamom(p) <  1 )
@@ -1200,7 +1200,7 @@ namespace Avogadro
         }
         else
         {
-          ay1=aay1*pow(yy0,m_yamom(p)-1);
+          ay1=aay1*ipow(yy0,m_yamom(p)-1);
         }
 
         if     ( m_zamom(p) <  1 )
@@ -1213,7 +1213,7 @@ namespace Avogadro
         }
         else
         {
-          az1=aaz1*pow(zz0,m_zamom(p)-1);
+          az1=aaz1*ipow(zz0,m_zamom(p)-1);
         }
 
         qreal ax2;
@@ -1229,7 +1229,7 @@ namespace Avogadro
         }
         else
         {
-          ax2=aax2*pow(xx0,m_xamom(p)-2);
+          ax2=aax2*ipow(xx0,m_xamom(p)-2);
         }
 
         if     ( m_yamom(p) <  2 )
@@ -1242,7 +1242,7 @@ namespace Avogadro
         }
         else
         {
-          ay2=aay2*pow(yy0,m_yamom(p)-2);
+          ay2=aay2*ipow(yy0,m_yamom(p)-2);
         }
 
         if     ( m_zamom(p) <  2 )
@@ -1255,7 +1255,7 @@ namespace Avogadro
         }
         else
         {
-          az2=aaz2*pow(zz0,m_zamom(p)-2);
+          az2=aaz2*ipow(zz0,m_zamom(p)-2);
         }
 
         qreal ax3;
@@ -1271,7 +1271,7 @@ namespace Avogadro
         }
         else
         {
-          ax3=aax3*pow(xx0,m_xamom(p)-3);
+          ax3=aax3*ipow(xx0,m_xamom(p)-3);
         }
 
         if     ( m_yamom(p) <  3 )
@@ -1284,7 +1284,7 @@ namespace Avogadro
         }
         else
         {
-          ay3=aay3*pow(yy0,m_yamom(p)-3);
+          ay3=aay3*ipow(yy0,m_yamom(p)-3);
         }
 
         if     ( m_zamom(p) <  3 )
@@ -1297,7 +1297,7 @@ namespace Avogadro
         }
         else
         {
-          az3=aaz3*pow(zz0,m_zamom(p)-3);
+          az3=aaz3*ipow(zz0,m_zamom(p)-3);
         }
 
         qreal ax4;
@@ -1313,7 +1313,7 @@ namespace Avogadro
         }
         else
         {
-          ax4=aax4*pow(xx0,m_xamom(p)-4);
+          ax4=aax4*ipow(xx0,m_xamom(p)-4);
         }
 
         if     ( m_yamom(p) <  4 )
@@ -1326,7 +1326,7 @@ namespace Avogadro
         }
         else
         {
-          ay4=aay4*pow(yy0,m_yamom(p)-4);
+          ay4=aay4*ipow(yy0,m_yamom(p)-4);
         }
 
         if     ( m_zamom(p) <  4 )
@@ -1339,7 +1339,7 @@ namespace Avogadro
         }
         else
         {
-          az4=aaz4*pow(zz0,m_zamom(p)-4);
+          az4=aaz4*ipow(zz0,m_zamom(p)-4);
         }
 
         qreal b0 = exp(b0arg);
@@ -1347,15 +1347,15 @@ namespace Avogadro
         qreal bx1 = -2*m_alpha(p)*xx0;
         qreal by1 = -2*m_alpha(p)*yy0;
         qreal bz1 = -2*m_alpha(p)*zz0;
-        qreal bx2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(xx0,2));
-        qreal by2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(yy0,2));
-        qreal bz2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(zz0,2));
-        qreal bx3 = (12*pow(m_alpha(p),2)*xx0)-(8*pow(m_alpha(p),3) * pow(xx0,3));
-        qreal by3 = (12*pow(m_alpha(p),2)*yy0)-(8*pow(m_alpha(p),3) * pow(yy0,3));
-        qreal bz3 = (12*pow(m_alpha(p),2)*zz0)-(8*pow(m_alpha(p),3) * pow(zz0,3));
-        qreal bx4 = (12*pow(m_alpha(p),2))-(48*pow(m_alpha(p),3) * pow(xx0,2))+(16*pow(m_alpha(p),4) * pow(xx0,4));
-        qreal by4 = (12*pow(m_alpha(p),2))-(48*pow(m_alpha(p),3) * pow(yy0,2))+(16*pow(m_alpha(p),4) * pow(yy0,4));
-        qreal bz4 = (12*pow(m_alpha(p),2))-(48*pow(m_alpha(p),3) * pow(zz0,2))+(16*pow(m_alpha(p),4) * pow(zz0,4));
+        qreal bx2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(xx0,2));
+        qreal by2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(yy0,2));
+        qreal bz2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(zz0,2));
+        qreal bx3 = (12*ipow(m_alpha(p),2)*xx0)-(8*ipow(m_alpha(p),3) * ipow(xx0,3));
+        qreal by3 = (12*ipow(m_alpha(p),2)*yy0)-(8*ipow(m_alpha(p),3) * ipow(yy0,3));
+        qreal bz3 = (12*ipow(m_alpha(p),2)*zz0)-(8*ipow(m_alpha(p),3) * ipow(zz0,3));
+        qreal bx4 = (12*ipow(m_alpha(p),2))-(48*ipow(m_alpha(p),3) * ipow(xx0,2))+(16*ipow(m_alpha(p),4) * ipow(xx0,4));
+        qreal by4 = (12*ipow(m_alpha(p),2))-(48*ipow(m_alpha(p),3) * ipow(yy0,2))+(16*ipow(m_alpha(p),4) * ipow(yy0,4));
+        qreal bz4 = (12*ipow(m_alpha(p),2))-(48*ipow(m_alpha(p),3) * ipow(zz0,2))+(16*ipow(m_alpha(p),4) * ipow(zz0,4));
 
         qreal dg000 = ax0*ay0*az0*b0;
         qreal dg100 = ay0*az0*b0*(ax1+ax0*bx1);
@@ -1452,18 +1452,18 @@ namespace Avogadro
     qreal deriv112=zero;
     for( qint64 m=0 ; m < m_nmo ; ++m )
     {
-      deriv400+=(m_occno(m)*(6*pow(m_cdg200(m),2)+8*m_cdg100(m)*m_cdg300(m)+2*m_cdg000(m)*m_cdg400(m)));
-      deriv040+=(m_occno(m)*(6*pow(m_cdg020(m),2)+8*m_cdg010(m)*m_cdg030(m)+2*m_cdg000(m)*m_cdg040(m)));
-      deriv004+=(m_occno(m)*(6*pow(m_cdg002(m),2)+8*m_cdg001(m)*m_cdg003(m)+2*m_cdg000(m)*m_cdg004(m)));
+      deriv400+=(m_occno(m)*(6*ipow(m_cdg200(m),2)+8*m_cdg100(m)*m_cdg300(m)+2*m_cdg000(m)*m_cdg400(m)));
+      deriv040+=(m_occno(m)*(6*ipow(m_cdg020(m),2)+8*m_cdg010(m)*m_cdg030(m)+2*m_cdg000(m)*m_cdg040(m)));
+      deriv004+=(m_occno(m)*(6*ipow(m_cdg002(m),2)+8*m_cdg001(m)*m_cdg003(m)+2*m_cdg000(m)*m_cdg004(m)));
       deriv310+=(m_occno(m)*(2*(3*m_cdg110(m)*m_cdg200(m)+3*m_cdg100(m)*m_cdg210(m)+m_cdg010(m)*m_cdg300(m)+m_cdg000(m)*m_cdg310(m))));
       deriv301+=(m_occno(m)*(2*(3*m_cdg101(m)*m_cdg200(m)+3*m_cdg100(m)*m_cdg201(m)+m_cdg001(m)*m_cdg300(m)+m_cdg000(m)*m_cdg301(m))));
       deriv130+=(m_occno(m)*(2*(m_cdg030(m)*m_cdg100(m)+3*m_cdg020(m)*m_cdg110(m)+3*m_cdg010(m)*m_cdg120(m)+m_cdg000(m)*m_cdg130(m))));
       deriv031+=(m_occno(m)*(2*(3*m_cdg011(m)*m_cdg020(m)+3*m_cdg010(m)*m_cdg021(m)+m_cdg001(m)*m_cdg030(m)+m_cdg000(m)*m_cdg031(m))));
       deriv103+=(m_occno(m)*(2*(m_cdg003(m)*m_cdg100(m)+3*m_cdg002(m)*m_cdg101(m)+3*m_cdg001(m)*m_cdg102(m)+m_cdg000(m)*m_cdg103(m))));
       deriv013+=(m_occno(m)*(2*(m_cdg003(m)*m_cdg010(m)+3*m_cdg002(m)*m_cdg011(m)+3*m_cdg001(m)*m_cdg012(m)+m_cdg000(m)*m_cdg013(m))));
-      deriv220+=(m_occno(m)*(2*(2*pow(m_cdg110(m),2)+2*m_cdg100(m)*m_cdg120(m)+m_cdg020(m)*m_cdg200(m)+2*m_cdg010(m)*m_cdg210(m)+m_cdg000(m)*m_cdg220(m))));
-      deriv202+=(m_occno(m)*(2*(2*pow(m_cdg101(m),2)+2*m_cdg100(m)*m_cdg102(m)+m_cdg002(m)*m_cdg200(m)+2*m_cdg001(m)*m_cdg201(m)+m_cdg000(m)*m_cdg202(m))));
-      deriv022+=(m_occno(m)*(2*(2*pow(m_cdg011(m),2)+2*m_cdg010(m)*m_cdg012(m)+m_cdg002(m)*m_cdg020(m)+2*m_cdg001(m)*m_cdg021(m)+m_cdg000(m)*m_cdg022(m))));
+      deriv220+=(m_occno(m)*(2*(2*ipow(m_cdg110(m),2)+2*m_cdg100(m)*m_cdg120(m)+m_cdg020(m)*m_cdg200(m)+2*m_cdg010(m)*m_cdg210(m)+m_cdg000(m)*m_cdg220(m))));
+      deriv202+=(m_occno(m)*(2*(2*ipow(m_cdg101(m),2)+2*m_cdg100(m)*m_cdg102(m)+m_cdg002(m)*m_cdg200(m)+2*m_cdg001(m)*m_cdg201(m)+m_cdg000(m)*m_cdg202(m))));
+      deriv022+=(m_occno(m)*(2*(2*ipow(m_cdg011(m),2)+2*m_cdg010(m)*m_cdg012(m)+m_cdg002(m)*m_cdg020(m)+2*m_cdg001(m)*m_cdg021(m)+m_cdg000(m)*m_cdg022(m))));
       deriv211+=(m_occno(m)*(2*(2*m_cdg101(m)*m_cdg110(m)+2*m_cdg100(m)*m_cdg111(m)+m_cdg011(m)*m_cdg200(m)+m_cdg010(m)*m_cdg201(m)+m_cdg001(m)*m_cdg210(m)+m_cdg000(m)*m_cdg211(m))));
       deriv121+=(m_occno(m)*(2*(m_cdg021(m)*m_cdg100(m)+m_cdg020(m)*m_cdg101(m)+2*m_cdg011(m)*m_cdg110(m)+2*m_cdg010(m)*m_cdg111(m)+m_cdg001(m)*m_cdg120(m)+m_cdg000(m)*m_cdg121(m))));
       deriv112+=(m_occno(m)*(2*(m_cdg012(m)*m_cdg100(m)+2*m_cdg011(m)*m_cdg101(m)+m_cdg010(m)*m_cdg102(m)+m_cdg002(m)*m_cdg110(m)+2*m_cdg001(m)*m_cdg111(m)+m_cdg000(m)*m_cdg112(m))));
@@ -1555,9 +1555,9 @@ namespace Avogadro
         qint64 aay4=m_yamom(p)*(m_yamom(p)-1)*(m_yamom(p)-2)*(m_xamom(p)-3);
         qint64 aaz4=m_zamom(p)*(m_zamom(p)-1)*(m_zamom(p)-2)*(m_xamom(p)-3);
 
-        qreal ax0 = aax0*pow( xx0, m_xamom(p) );
-        qreal ay0 = aay0*pow( yy0, m_yamom(p) );
-        qreal az0 = aaz0*pow( zz0, m_zamom(p) );
+        qreal ax0 = aax0*ipow( xx0, m_xamom(p) );
+        qreal ay0 = aay0*ipow( yy0, m_yamom(p) );
+        qreal az0 = aaz0*ipow( zz0, m_zamom(p) );
 
         qreal ax1;
         qreal ay1;
@@ -1572,7 +1572,7 @@ namespace Avogadro
         }
         else
         {
-          ax1=aax1*pow(xx0,m_xamom(p)-1);
+          ax1=aax1*ipow(xx0,m_xamom(p)-1);
         }
 
         if     ( m_yamom(p) <  1 )
@@ -1585,7 +1585,7 @@ namespace Avogadro
         }
         else
         {
-          ay1=aay1*pow(yy0,m_yamom(p)-1);
+          ay1=aay1*ipow(yy0,m_yamom(p)-1);
         }
 
         if     ( m_zamom(p) <  1 )
@@ -1598,7 +1598,7 @@ namespace Avogadro
         }
         else
         {
-          az1=aaz1*pow(zz0,m_zamom(p)-1);
+          az1=aaz1*ipow(zz0,m_zamom(p)-1);
         }
 
         qreal ax2;
@@ -1614,7 +1614,7 @@ namespace Avogadro
         }
         else
         {
-          ax2=aax2*pow(xx0,m_xamom(p)-2);
+          ax2=aax2*ipow(xx0,m_xamom(p)-2);
         }
 
         if     ( m_yamom(p) <  2 )
@@ -1627,7 +1627,7 @@ namespace Avogadro
         }
         else
         {
-          ay2=aay2*pow(yy0,m_yamom(p)-2);
+          ay2=aay2*ipow(yy0,m_yamom(p)-2);
         }
 
         if     ( m_zamom(p) <  2 )
@@ -1640,7 +1640,7 @@ namespace Avogadro
         }
         else
         {
-          az2=aaz2*pow(zz0,m_zamom(p)-2);
+          az2=aaz2*ipow(zz0,m_zamom(p)-2);
         }
 
         qreal ax3;
@@ -1656,7 +1656,7 @@ namespace Avogadro
         }
         else
         {
-          ax3=aax3*pow(xx0,m_xamom(p)-3);
+          ax3=aax3*ipow(xx0,m_xamom(p)-3);
         }
 
         if     ( m_yamom(p) <  3 )
@@ -1669,7 +1669,7 @@ namespace Avogadro
         }
         else
         {
-          ay3=aay3*pow(yy0,m_yamom(p)-3);
+          ay3=aay3*ipow(yy0,m_yamom(p)-3);
         }
 
         if     ( m_zamom(p) <  3 )
@@ -1682,7 +1682,7 @@ namespace Avogadro
         }
         else
         {
-          az3=aaz3*pow(zz0,m_zamom(p)-3);
+          az3=aaz3*ipow(zz0,m_zamom(p)-3);
         }
 
         qreal ax4;
@@ -1698,7 +1698,7 @@ namespace Avogadro
         }
         else
         {
-          ax4=aax4*pow(xx0,m_xamom(p)-4);
+          ax4=aax4*ipow(xx0,m_xamom(p)-4);
         }
 
         if     ( m_yamom(p) <  4 )
@@ -1711,7 +1711,7 @@ namespace Avogadro
         }
         else
         {
-          ay4=aay4*pow(yy0,m_yamom(p)-4);
+          ay4=aay4*ipow(yy0,m_yamom(p)-4);
         }
 
         if     ( m_zamom(p) <  4 )
@@ -1724,7 +1724,7 @@ namespace Avogadro
         }
         else
         {
-          az4=aaz4*pow(zz0,m_zamom(p)-4);
+          az4=aaz4*ipow(zz0,m_zamom(p)-4);
         }
 
         qreal b0 = exp(b0arg);
@@ -1732,15 +1732,15 @@ namespace Avogadro
         qreal bx1 = -2*m_alpha(p)*xx0;
         qreal by1 = -2*m_alpha(p)*yy0;
         qreal bz1 = -2*m_alpha(p)*zz0;
-        qreal bx2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(xx0,2));
-        qreal by2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(yy0,2));
-        qreal bz2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(zz0,2));
-        qreal bx3 = (12*pow(m_alpha(p),2)*xx0)-(8*pow(m_alpha(p),3) * pow(xx0,3));
-        qreal by3 = (12*pow(m_alpha(p),2)*yy0)-(8*pow(m_alpha(p),3) * pow(yy0,3));
-        qreal bz3 = (12*pow(m_alpha(p),2)*zz0)-(8*pow(m_alpha(p),3) * pow(zz0,3));
-        qreal bx4 = (12*pow(m_alpha(p),2))-(48*pow(m_alpha(p),3) * pow(xx0,2))+(16*pow(m_alpha(p),4) * pow(xx0,4));
-        qreal by4 = (12*pow(m_alpha(p),2))-(48*pow(m_alpha(p),3) * pow(yy0,2))+(16*pow(m_alpha(p),4) * pow(yy0,4));
-        qreal bz4 = (12*pow(m_alpha(p),2))-(48*pow(m_alpha(p),3) * pow(zz0,2))+(16*pow(m_alpha(p),4) * pow(zz0,4));
+        qreal bx2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(xx0,2));
+        qreal by2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(yy0,2));
+        qreal bz2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(zz0,2));
+        qreal bx3 = (12*ipow(m_alpha(p),2)*xx0)-(8*ipow(m_alpha(p),3) * ipow(xx0,3));
+        qreal by3 = (12*ipow(m_alpha(p),2)*yy0)-(8*ipow(m_alpha(p),3) * ipow(yy0,3));
+        qreal bz3 = (12*ipow(m_alpha(p),2)*zz0)-(8*ipow(m_alpha(p),3) * ipow(zz0,3));
+        qreal bx4 = (12*ipow(m_alpha(p),2))-(48*ipow(m_alpha(p),3) * ipow(xx0,2))+(16*ipow(m_alpha(p),4) * ipow(xx0,4));
+        qreal by4 = (12*ipow(m_alpha(p),2))-(48*ipow(m_alpha(p),3) * ipow(yy0,2))+(16*ipow(m_alpha(p),4) * ipow(yy0,4));
+        qreal bz4 = (12*ipow(m_alpha(p),2))-(48*ipow(m_alpha(p),3) * ipow(zz0,2))+(16*ipow(m_alpha(p),4) * ipow(zz0,4));
 
         qreal dg000 = ax0*ay0*az0*b0;
         qreal dg100 = ay0*az0*b0*(ax1+ax0*bx1);
@@ -1856,18 +1856,18 @@ namespace Avogadro
       deriv102+=(m_occno(m)*( 2*(m_cdg002(m)*m_cdg100(m)+2*m_cdg001(m)*m_cdg101(m)+m_cdg000(m)*m_cdg102(m)) ));
       deriv012+=(m_occno(m)*( 2*(m_cdg002(m)*m_cdg010(m)+2*m_cdg001(m)*m_cdg011(m)+m_cdg000(m)*m_cdg012(m)) ));
       // deriv111+=(m_occno(m)*( 2*(m_cdg011(m)*m_cdg100(m)+m_cdg010(m)*m_cdg101(m)+m_cdg001(m)*m_cdg110(m)+m_cdg000(m)*m_cdg111(m)) ));
-      deriv400+=(m_occno(m)*(6*pow(m_cdg200(m),2)+8*m_cdg100(m)*m_cdg300(m)+2*m_cdg000(m)*m_cdg400(m)));
-      deriv040+=(m_occno(m)*(6*pow(m_cdg020(m),2)+8*m_cdg010(m)*m_cdg030(m)+2*m_cdg000(m)*m_cdg040(m)));
-      deriv004+=(m_occno(m)*(6*pow(m_cdg002(m),2)+8*m_cdg001(m)*m_cdg003(m)+2*m_cdg000(m)*m_cdg004(m)));
+      deriv400+=(m_occno(m)*(6*ipow(m_cdg200(m),2)+8*m_cdg100(m)*m_cdg300(m)+2*m_cdg000(m)*m_cdg400(m)));
+      deriv040+=(m_occno(m)*(6*ipow(m_cdg020(m),2)+8*m_cdg010(m)*m_cdg030(m)+2*m_cdg000(m)*m_cdg040(m)));
+      deriv004+=(m_occno(m)*(6*ipow(m_cdg002(m),2)+8*m_cdg001(m)*m_cdg003(m)+2*m_cdg000(m)*m_cdg004(m)));
       deriv310+=(m_occno(m)*(2*(3*m_cdg110(m)*m_cdg200(m)+3*m_cdg100(m)*m_cdg210(m)+m_cdg010(m)*m_cdg300(m)+m_cdg000(m)*m_cdg310(m))));
       deriv301+=(m_occno(m)*(2*(3*m_cdg101(m)*m_cdg200(m)+3*m_cdg100(m)*m_cdg201(m)+m_cdg001(m)*m_cdg300(m)+m_cdg000(m)*m_cdg301(m))));
       deriv130+=(m_occno(m)*(2*(m_cdg030(m)*m_cdg100(m)+3*m_cdg020(m)*m_cdg110(m)+3*m_cdg010(m)*m_cdg120(m)+m_cdg000(m)*m_cdg130(m))));
       deriv031+=(m_occno(m)*(2*(3*m_cdg011(m)*m_cdg020(m)+3*m_cdg010(m)*m_cdg021(m)+m_cdg001(m)*m_cdg030(m)+m_cdg000(m)*m_cdg031(m))));
       deriv103+=(m_occno(m)*(2*(m_cdg003(m)*m_cdg100(m)+3*m_cdg002(m)*m_cdg101(m)+3*m_cdg001(m)*m_cdg102(m)+m_cdg000(m)*m_cdg103(m))));
       deriv013+=(m_occno(m)*(2*(m_cdg003(m)*m_cdg010(m)+3*m_cdg002(m)*m_cdg011(m)+3*m_cdg001(m)*m_cdg012(m)+m_cdg000(m)*m_cdg013(m))));
-      deriv220+=(m_occno(m)*(2*(2*pow(m_cdg110(m),2)+2*m_cdg100(m)*m_cdg120(m)+m_cdg020(m)*m_cdg200(m)+2*m_cdg010(m)*m_cdg210(m)+m_cdg000(m)*m_cdg220(m))));
-      deriv202+=(m_occno(m)*(2*(2*pow(m_cdg101(m),2)+2*m_cdg100(m)*m_cdg102(m)+m_cdg002(m)*m_cdg200(m)+2*m_cdg001(m)*m_cdg201(m)+m_cdg000(m)*m_cdg202(m))));
-      deriv022+=(m_occno(m)*(2*(2*pow(m_cdg011(m),2)+2*m_cdg010(m)*m_cdg012(m)+m_cdg002(m)*m_cdg020(m)+2*m_cdg001(m)*m_cdg021(m)+m_cdg000(m)*m_cdg022(m))));
+      deriv220+=(m_occno(m)*(2*(2*ipow(m_cdg110(m),2)+2*m_cdg100(m)*m_cdg120(m)+m_cdg020(m)*m_cdg200(m)+2*m_cdg010(m)*m_cdg210(m)+m_cdg000(m)*m_cdg220(m))));
+      deriv202+=(m_occno(m)*(2*(2*ipow(m_cdg101(m),2)+2*m_cdg100(m)*m_cdg102(m)+m_cdg002(m)*m_cdg200(m)+2*m_cdg001(m)*m_cdg201(m)+m_cdg000(m)*m_cdg202(m))));
+      deriv022+=(m_occno(m)*(2*(2*ipow(m_cdg011(m),2)+2*m_cdg010(m)*m_cdg012(m)+m_cdg002(m)*m_cdg020(m)+2*m_cdg001(m)*m_cdg021(m)+m_cdg000(m)*m_cdg022(m))));
       deriv211+=(m_occno(m)*(2*(2*m_cdg101(m)*m_cdg110(m)+2*m_cdg100(m)*m_cdg111(m)+m_cdg011(m)*m_cdg200(m)+m_cdg010(m)*m_cdg201(m)+m_cdg001(m)*m_cdg210(m)+m_cdg000(m)*m_cdg211(m))));
       deriv121+=(m_occno(m)*(2*(m_cdg021(m)*m_cdg100(m)+m_cdg020(m)*m_cdg101(m)+2*m_cdg011(m)*m_cdg110(m)+2*m_cdg010(m)*m_cdg111(m)+m_cdg001(m)*m_cdg120(m)+m_cdg000(m)*m_cdg121(m))));
       deriv112+=(m_occno(m)*(2*(m_cdg012(m)*m_cdg100(m)+2*m_cdg011(m)*m_cdg101(m)+m_cdg010(m)*m_cdg102(m)+m_cdg002(m)*m_cdg110(m)+2*m_cdg001(m)*m_cdg111(m)+m_cdg000(m)*m_cdg112(m))));
@@ -1933,9 +1933,9 @@ namespace Avogadro
         qint64 aay1=m_yamom(p);
         qint64 aaz1=m_zamom(p);
 
-        qreal ax0 = aax0*pow( xx0, m_xamom(p) );
-        qreal ay0 = aay0*pow( yy0, m_yamom(p) );
-        qreal az0 = aaz0*pow( zz0, m_zamom(p) );
+        qreal ax0 = aax0*ipow( xx0, m_xamom(p) );
+        qreal ay0 = aay0*ipow( yy0, m_yamom(p) );
+        qreal az0 = aaz0*ipow( zz0, m_zamom(p) );
 
         qreal ax1;
         qreal ay1;
@@ -1950,7 +1950,7 @@ namespace Avogadro
         }
         else
         {
-          ax1=aax1*pow(xx0,m_xamom(p)-1);
+          ax1=aax1*ipow(xx0,m_xamom(p)-1);
         }
 
         if     ( m_yamom(p) <  1 )
@@ -1963,7 +1963,7 @@ namespace Avogadro
         }
         else
         {
-          ay1=aay1*pow(yy0,m_yamom(p)-1);
+          ay1=aay1*ipow(yy0,m_yamom(p)-1);
         }
 
         if     ( m_zamom(p) <  1 )
@@ -1976,7 +1976,7 @@ namespace Avogadro
         }
         else
         {
-          az1=aaz1*pow(zz0,m_zamom(p)-1);
+          az1=aaz1*ipow(zz0,m_zamom(p)-1);
         }
 
         qreal b0 = exp(b0arg);
@@ -2004,7 +2004,7 @@ namespace Avogadro
     value=zero;
     for( qint64 m=0 ; m < m_nmo ; ++m )
     {
-      value += (0.5)*(m_occno(m)*(pow(m_cdg100(m),2)+pow(m_cdg010(m),2)+pow(m_cdg001(m),2)));
+      value += (0.5)*(m_occno(m)*(ipow(m_cdg100(m),2)+ipow(m_cdg010(m),2)+ipow(m_cdg001(m),2)));
     }
 
     return value;
@@ -2043,9 +2043,9 @@ namespace Avogadro
         qint64 aay2=m_yamom(p)*(m_yamom(p)-1);
         qint64 aaz2=m_zamom(p)*(m_zamom(p)-1);
 
-        qreal ax0 = aax0*pow( xx0, m_xamom(p) );
-        qreal ay0 = aay0*pow( yy0, m_yamom(p) );
-        qreal az0 = aaz0*pow( zz0, m_zamom(p) );
+        qreal ax0 = aax0*ipow( xx0, m_xamom(p) );
+        qreal ay0 = aay0*ipow( yy0, m_yamom(p) );
+        qreal az0 = aaz0*ipow( zz0, m_zamom(p) );
 
         qreal ax1;
         qreal ay1;
@@ -2060,7 +2060,7 @@ namespace Avogadro
         }
         else
         {
-          ax1=aax1*pow(xx0,m_xamom(p)-1);
+          ax1=aax1*ipow(xx0,m_xamom(p)-1);
         }
 
         if     ( m_yamom(p) <  1 )
@@ -2073,7 +2073,7 @@ namespace Avogadro
         }
         else
         {
-          ay1=aay1*pow(yy0,m_yamom(p)-1);
+          ay1=aay1*ipow(yy0,m_yamom(p)-1);
         }
 
         if     ( m_zamom(p) <  1 )
@@ -2086,7 +2086,7 @@ namespace Avogadro
         }
         else
         {
-          az1=aaz1*pow(zz0,m_zamom(p)-1);
+          az1=aaz1*ipow(zz0,m_zamom(p)-1);
         }
 
         qreal ax2;
@@ -2102,7 +2102,7 @@ namespace Avogadro
         }
         else
         {
-          ax2=aax2*pow(xx0,m_xamom(p)-2);
+          ax2=aax2*ipow(xx0,m_xamom(p)-2);
         }
 
         if     ( m_yamom(p) <  2 )
@@ -2115,7 +2115,7 @@ namespace Avogadro
         }
         else
         {
-          ay2=aay2*pow(yy0,m_yamom(p)-2);
+          ay2=aay2*ipow(yy0,m_yamom(p)-2);
         }
 
         if     ( m_zamom(p) <  2 )
@@ -2128,7 +2128,7 @@ namespace Avogadro
         }
         else
         {
-          az2=aaz2*pow(zz0,m_zamom(p)-2);
+          az2=aaz2*ipow(zz0,m_zamom(p)-2);
         }
 
         qreal b0 = exp(b0arg);
@@ -2136,9 +2136,9 @@ namespace Avogadro
         qreal bx1 = -2*m_alpha(p)*xx0;
         qreal by1 = -2*m_alpha(p)*yy0;
         qreal bz1 = -2*m_alpha(p)*zz0;
-        qreal bx2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(xx0,2));
-        qreal by2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(yy0,2));
-        qreal bz2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(zz0,2));
+        qreal bx2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(xx0,2));
+        qreal by2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(yy0,2));
+        qreal bz2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(zz0,2));
 
         qreal dg000 = ax0*ay0*az0*b0;
         qreal dg200 = ay0*az0*b0*(ax2+2*ax1*bx1+ax0*bx2);
@@ -2204,9 +2204,9 @@ namespace Avogadro
         qint64 aay2=m_yamom(p)*(m_yamom(p)-1);
         qint64 aaz2=m_zamom(p)*(m_zamom(p)-1);
 
-        qreal ax0 = aax0*pow( xx0, m_xamom(p) );
-        qreal ay0 = aay0*pow( yy0, m_yamom(p) );
-        qreal az0 = aaz0*pow( zz0, m_zamom(p) );
+        qreal ax0 = aax0*ipow( xx0, m_xamom(p) );
+        qreal ay0 = aay0*ipow( yy0, m_yamom(p) );
+        qreal az0 = aaz0*ipow( zz0, m_zamom(p) );
 
         qreal ax1;
         qreal ay1;
@@ -2221,7 +2221,7 @@ namespace Avogadro
         }
         else
         {
-          ax1=aax1*pow(xx0,m_xamom(p)-1);
+          ax1=aax1*ipow(xx0,m_xamom(p)-1);
         }
 
         if     ( m_yamom(p) <  1 )
@@ -2234,7 +2234,7 @@ namespace Avogadro
         }
         else
         {
-          ay1=aay1*pow(yy0,m_yamom(p)-1);
+          ay1=aay1*ipow(yy0,m_yamom(p)-1);
         }
 
         if     ( m_zamom(p) <  1 )
@@ -2247,7 +2247,7 @@ namespace Avogadro
         }
         else
         {
-          az1=aaz1*pow(zz0,m_zamom(p)-1);
+          az1=aaz1*ipow(zz0,m_zamom(p)-1);
         }
 
         qreal ax2;
@@ -2263,7 +2263,7 @@ namespace Avogadro
         }
         else
         {
-          ax2=aax2*pow(xx0,m_xamom(p)-2);
+          ax2=aax2*ipow(xx0,m_xamom(p)-2);
         }
 
         if     ( m_yamom(p) <  2 )
@@ -2276,7 +2276,7 @@ namespace Avogadro
         }
         else
         {
-          ay2=aay2*pow(yy0,m_yamom(p)-2);
+          ay2=aay2*ipow(yy0,m_yamom(p)-2);
         }
 
         if     ( m_zamom(p) <  2 )
@@ -2289,7 +2289,7 @@ namespace Avogadro
         }
         else
         {
-          az2=aaz2*pow(zz0,m_zamom(p)-2);
+          az2=aaz2*ipow(zz0,m_zamom(p)-2);
         }
 
         qreal b0 = exp(b0arg);
@@ -2297,9 +2297,9 @@ namespace Avogadro
         qreal bx1 = -2*m_alpha(p)*xx0;
         qreal by1 = -2*m_alpha(p)*yy0;
         qreal bz1 = -2*m_alpha(p)*zz0;
-        qreal bx2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(xx0,2));
-        qreal by2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(yy0,2));
-        qreal bz2 = -2*m_alpha(p) + 4*(pow(m_alpha(p),2) * pow(zz0,2));
+        qreal bx2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(xx0,2));
+        qreal by2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(yy0,2));
+        qreal bz2 = -2*m_alpha(p) + 4*(ipow(m_alpha(p),2) * ipow(zz0,2));
 
         qreal dg000 = ax0*ay0*az0*b0;
         qreal dg100 = ay0*az0*b0*(ax1+ax0*bx1);
@@ -2332,12 +2332,12 @@ namespace Avogadro
     value.setZero();
     for( qint64 m=0 ; m < m_nmo ; ++m )
     {
-      value(0,0)+=(m_occno(m)*(2*m_cdg000(m)*m_cdg200(m)-2*pow(m_cdg100(m),2)));
+      value(0,0)+=(m_occno(m)*(2*m_cdg000(m)*m_cdg200(m)-2*ipow(m_cdg100(m),2)));
       value(0,1)+=(m_occno(m)*(2*m_cdg000(m)*m_cdg110(m)-2*m_cdg100(m)*m_cdg010(m)));
       value(0,2)+=(m_occno(m)*(2*m_cdg000(m)*m_cdg101(m)-2*m_cdg100(m)*m_cdg001(m)));
-      value(1,1)+=(m_occno(m)*(2*m_cdg000(m)*m_cdg020(m)-2*pow(m_cdg010(m),2)));
+      value(1,1)+=(m_occno(m)*(2*m_cdg000(m)*m_cdg020(m)-2*ipow(m_cdg010(m),2)));
       value(1,2)+=(m_occno(m)*(2*m_cdg000(m)*m_cdg011(m)-2*m_cdg010(m)*m_cdg001(m)));
-      value(2,2)+=(m_occno(m)*(2*m_cdg000(m)*m_cdg002(m)-2*pow(m_cdg001(m),2) ));
+      value(2,2)+=(m_occno(m)*(2*m_cdg000(m)*m_cdg002(m)-2*ipow(m_cdg001(m),2) ));
     }
     value(1,0)=value(0,1);
     value(2,0)=value(0,2);

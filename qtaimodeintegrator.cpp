@@ -824,7 +824,7 @@ namespace Avogadro
       return 8;
     }
 
-    mflag = abs ( flag );
+    mflag = (qint64) abs ( (long) flag );
     //
     //  Is this a continuation call?
     //
@@ -842,7 +842,7 @@ namespace Avogadro
         if ( kflag == 3 )
         {
           flag = flag_save;
-          mflag = abs ( flag );
+          mflag = (qint64) abs ( (long) flag );
         }
         else if ( init == 0 )
         {
@@ -871,7 +871,7 @@ namespace Avogadro
           flag = flag_save;
           if ( kflag == 3 )
           {
-            mflag = abs ( flag );
+            mflag = (qint64) abs ( (long) flag );
           }
         }
         else if ( flag == 4 )
@@ -880,7 +880,7 @@ namespace Avogadro
           flag = flag_save;
           if ( kflag == 3 )
           {
-            mflag = abs ( flag );
+            mflag = (qint64) abs ( (long) flag );
           }
         }
         else if ( flag == 5 && 0.0 < abserr )
@@ -888,7 +888,7 @@ namespace Avogadro
           flag = flag_save;
           if ( kflag == 3 )
           {
-            mflag = abs ( flag );
+            mflag = (qint64) abs ( (long) flag );
           }
         }
         //

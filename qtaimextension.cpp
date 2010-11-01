@@ -166,15 +166,15 @@ namespace Avogadro
       const qreal convertBohrToAngstroem=0.529177249;
 
       // Nuclear Critical Points
-      for( qint64 ncp=0 ; ncp < ncpList.length() ; ++ncp )
+      for( qint64 n=0 ; n < ncpList.length() ; ++n )
       {
-        QVector3D thisNuclearCriticalPoint=ncpList.at(ncp);
+        QVector3D thisNuclearCriticalPoint=ncpList.at(n);
 
         qreal x=thisNuclearCriticalPoint.x() * convertBohrToAngstroem;
         qreal y=thisNuclearCriticalPoint.y() * convertBohrToAngstroem;
         qreal z=thisNuclearCriticalPoint.z() * convertBohrToAngstroem;
 
-        int Z=(int) wfn.nuclearCharge(ncp);
+        int Z=(int) wfn.nuclearCharge(n);
 
         QTAIMNuclearCriticalPoint *ncp=m_molecule->addNuclearCriticalPoint();
         ncp->setPos( Eigen::Vector3d(x,y,z) );
