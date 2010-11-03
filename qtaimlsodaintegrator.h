@@ -154,7 +154,6 @@ namespace Avogadro {
 
     int m_lenyh;
     int m_nyh;
-
   };
 
 } // namespace Avogadro

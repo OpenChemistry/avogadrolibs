@@ -1227,11 +1227,11 @@ QList<QVariant> QTAIMEvaluateProperty(QList<QVariant> variantList)
 
       if( wfn.nuclearCharge(i) <= 4 )
       {
-        thisBetaSphere.second=0.15;
+        thisBetaSphere.second=0.10;
       }
       else
       {
-        thisBetaSphere.second=0.75;
+        thisBetaSphere.second=0.10;
       }
       betaSpheres.append(thisBetaSphere);
     }
@@ -1415,6 +1415,824 @@ void property_v(unsigned int ndim, unsigned int npts, const double *xyz, void *p
 
 }
 
+// TODO: Consider QVariantList. For now, mimic what is known to work.
+// This version performs integration in Spherical Polar Coordinates.
+// Note that the basin limits are not explicitly determined.
+QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
+{
+  /*
+     Order of variantList:
+     QString wfnFileName
+     qreal r0
+     qreal t0
+     qreal p0
+     qint64 nncp
+     qint64 xncp1
+     qint64 yncp1
+     qint64 zncp1
+     qint64 xncp2
+     qint64 yncp2
+     qint64 zncp2
+     ...
+     qint64 nmode
+     qint64 mode1
+     qint64 mode2
+     ...
+     qint64 nbasin
+     qint64 basin1
+     qint64 basin2
+     ...
+  */
+  qint64 counter=0;
+  QString wfnFileName=variantList.at(counter).toString(); counter++;
+  qreal r0=variantList.at(counter).toDouble(); counter++;
+  qreal t0=variantList.at(counter).toDouble(); counter++;
+  qreal p0=variantList.at(counter).toDouble(); counter++;
+
+  qint64 nncp=variantList.at(counter).toLongLong(); counter++;
+  QList<QVector3D> ncpList;
+  for( qint64 n=0 ; n < nncp ; ++n )
+  {
+    qreal x=variantList.at(counter).toDouble(); counter++;
+    qreal y=variantList.at(counter).toDouble(); counter++;
+    qreal z=variantList.at(counter).toDouble(); counter++;
+
+    ncpList.append(QVector3D(x,y,z));
+  }
+
+  qint64 nmode=variantList.at(counter).toLongLong(); counter++;
+  QList<qint64> modeList;
+  for( qint64 m=0 ; m < nmode ; ++m )
+  {
+    qint64 mode=variantList.at(counter).toLongLong(); counter++;
+    modeList.append(mode);
+  }
+
+  qint64 nbasin=variantList.at(counter).toLongLong(); counter++;
+  QList<qint64> basinList;
+  for( qint64 b=0 ; b < nbasin ; ++b )
+  {
+    qint64 basin=variantList.at(counter).toLongLong(); counter++;
+    basinList.append(basin);
+  }
+  QSet<qint64> basinSet=basinList.toSet();
+
+  Matrix<qreal,3,1> r0t0p0;
+  r0t0p0 << r0, t0, p0;
+  Matrix<qreal,3,1> origin;
+  origin <<
+      ncpList.at(basinList.at(0)).x(),
+      ncpList.at(basinList.at(0)).y(),
+      ncpList.at(basinList.at(0)).z();
+
+  Matrix<qreal,3,1> x0y0z0=Avogadro::QTAIMMathUtilities::sphericalToCartesian(r0t0p0, origin );
+
+  qreal x0=x0y0z0(0);
+  qreal y0=x0y0z0(1);
+  qreal z0=x0y0z0(2);
+
+  Avogadro::QTAIMWavefunction wfn;
+  wfn.loadFromBinaryFile(wfnFileName);
+
+  Avogadro::QTAIMWavefunctionEvaluator eval(wfn);
+
+  QList<QVariant> valueList;
+
+  double initialElectronDensity=eval.electronDensity( Eigen::Vector3d(x0,y0,z0) );
+
+  // if less than some small value, then return zero for all integrands.
+  if( initialElectronDensity < 1.e-5 )
+  {
+    for( qint64 m=0; m < nmode ; ++m )
+    {
+      qreal zero=0.0;
+      valueList.append(zero);
+    }
+  }
+  else
+  {
+    QList<QPair<QVector3D,qreal> > betaSpheres;
+    for( qint64 i=0 ; i < nncp ; ++i )
+    {
+      QPair<QVector3D,qreal> thisBetaSphere;
+      thisBetaSphere.first=QVector3D(ncpList.at(i).x(), ncpList.at(i).y(),ncpList.at(i).z());
+
+      if( wfn.nuclearCharge(i) <= 4 )
+      {
+        thisBetaSphere.second=0.10;
+      }
+      else
+      {
+        thisBetaSphere.second=0.10;
+      }
+      betaSpheres.append(thisBetaSphere);
+    }
+
+    Avogadro::QTAIMLSODAIntegrator ode(eval,0);
+    //  Avogadro::QTAIMODEIntegrator ode(eval,0);
+
+    ode.setBetaSpheres(betaSpheres);
+
+    QVector3D endpoint=ode.integrate(QVector3D(x0,y0,z0));
+    // QList<QVector3D> path=ode.path();
+
+#define HUGE_REAL_NUMBER 1.e20
+    qreal smallestDistance=HUGE_REAL_NUMBER;
+    qint64 smallestDistanceIndex=-1;
+
+    for( qint64 n=0 ; n < betaSpheres.length()  ; ++n )
+    {
+      Matrix<qreal,3,1> a(endpoint.x(),endpoint.y(),endpoint.z());
+      Matrix<qreal,3,1> b(betaSpheres.at(n).first.x(),
+                          betaSpheres.at(n).first.y(),
+                          betaSpheres.at(n).first.z());
+
+      qreal distance=Avogadro::QTAIMMathUtilities::distance(a,b);
+
+      if( distance < smallestDistance )
+      {
+        smallestDistance = distance;
+        smallestDistanceIndex=n;
+      }
+    }
+    qint64 nucleusIndex=smallestDistanceIndex;
+
+    if( basinSet.contains(nucleusIndex) )
+    {
+//      if(nucleusIndex==0)
+//      {
+//        QFile file("/scratch/brown/0.txt");
+//        file.open(QIODevice::WriteOnly | QIODevice::Append);
+//        QTextStream out(&file);
+//        out << x0 << " " << y0 << " " << z0 << "\n";
+////        out << r0 << " " << t0 << " " << p0 << "\n";
+//        file.close();
+//      }
+      for( qint64 m=0 ; m < nmode ; ++m )
+      {
+        if( modeList.at(m) == 0 )
+        {
+          valueList.append(
+
+              r0*r0*sin(t0)*eval.electronDensity( Eigen::Vector3d(x0,y0,z0) )
+
+              );
+        }
+        else
+        {
+          qDebug() << "mode not defined";
+          qreal zero=0.0;
+          valueList.append(zero);
+        }
+      }
+    }
+    else
+    {
+      for(qint64 m=0 ; m < nmode ; ++m)
+      {
+        qreal zero=0.0;
+        valueList.append(zero);
+      }
+    }
+  }
+
+  return valueList;
+
+}
+
+void property_v_rtp(unsigned int ndim, unsigned int npts, const double *xyz, void *param,
+                unsigned int fdim, double *fval)
+{
+
+  QVariantList *paramVariantListPtr = (QVariantList *)param;
+  QVariantList paramVariantList=*paramVariantListPtr;
+
+  qint64 counter=0;
+  QString wfnFileName=paramVariantList.at(counter).toString(); counter++;
+
+  qint64 nncp=paramVariantList.at(counter).toLongLong(); counter++;
+  QList<QVector3D> ncpList;
+  for( qint64 i=0 ; i < nncp ; ++i )
+  {
+    qreal x=paramVariantList.at(counter).toDouble(); counter++;
+    qreal y=paramVariantList.at(counter).toDouble(); counter++;
+    qreal z=paramVariantList.at(counter).toDouble(); counter++;
+
+    ncpList.append(QVector3D(x,y,z));
+  }
+  qint64 nmode=1;
+  qint64 mode=paramVariantList.at(counter).toLongLong(); counter++;
+  QList<qint64> basinList;
+  for( qint64 i=counter ; i < paramVariantList.length() ; ++i )
+  {
+    basinList.append( paramVariantList.at(i).toLongLong()  );
+    counter++;
+  }
+  qint64 nbasin=basinList.length();
+
+  // prepare input
+
+  QList<QList<QVariant> > inputList;
+
+  for(unsigned int i=0 ; i < npts ; ++i )
+  {
+
+    double x0=xyz[i*3+0];
+    double y0=xyz[i*3+1];
+    double z0=xyz[i*3+2];
+
+    QList<QVariant> variantList;
+
+    variantList.append(wfnFileName);
+
+    variantList.append(x0);
+    variantList.append(y0);
+    variantList.append(z0);
+
+    variantList.append(nncp);
+    for(qint64 n=0; n < nncp ; ++n)
+    {
+      variantList.append(ncpList.at(n).x());
+      variantList.append(ncpList.at(n).y());
+      variantList.append(ncpList.at(n).z());
+    }
+
+    variantList.append(nmode); // for now, one mode
+    for( qint64 m=0 ; m<nmode ; ++m)
+    {
+      variantList.append(mode);
+    }
+
+    qint64 nbasin=basinList.length();
+    variantList.append(nbasin);
+    for(qint64 b=0 ; b<basinList.length() ; ++b)
+    {
+      variantList.append(basinList.at(b));
+    }
+
+    inputList.append(variantList);
+
+  }
+
+  // calculate
+
+  QProgressDialog dialog;
+  dialog.setWindowTitle("QTAIM");
+  dialog.setLabelText(QString("Atomic Basin Integration"));
+
+  QFutureWatcher<void> futureWatcher;
+  QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
+  QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
+  QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int,int)), &dialog, SLOT(setRange(int,int)));
+  QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
+
+  QFuture<QList<QVariant> > future=QtConcurrent::mapped(inputList, QTAIMEvaluatePropertyRTP);
+  futureWatcher.setFuture(future);
+  dialog.exec();
+  futureWatcher.waitForFinished();
+
+  QList<QList<QVariant> > results;
+  if( futureWatcher.future().isCanceled() )
+  {
+    results.clear();
+  }
+  else
+  {
+    results=future.results();
+  }
+
+  // harvest results
+  for(qint64 i=0; i<npts; ++i )
+  {
+    for(qint64 m=0; m<nmode ; ++m )
+    {
+      fval[m*nmode+i]=results.at(i).at(m).toDouble();
+    }
+  }
+
+}
+
+void property_r(unsigned int ndim, const double *xyz, void *param,
+                unsigned int fdim, double *fval)
+{
+
+  ndim=ndim;
+  fdim=fdim;
+
+  QVariantList *paramVariantListPtr = (QVariantList *)param;
+  QVariantList paramVariantList=*paramVariantListPtr;
+
+  qint64 counter=0;
+  QString wfnFileName=paramVariantList.at(counter).toString(); counter++;
+
+  qreal r=xyz[0];
+  qreal t=paramVariantList.at(counter).toDouble(); counter++;
+  qreal p=paramVariantList.at(counter).toDouble(); counter++;
+
+  qint64 nncp=paramVariantList.at(counter).toLongLong(); counter++;
+  QList<QVector3D> ncpList;
+  for( qint64 i=0 ; i < nncp ; ++i )
+  {
+    qreal x=paramVariantList.at(counter).toDouble(); counter++;
+    qreal y=paramVariantList.at(counter).toDouble(); counter++;
+    qreal z=paramVariantList.at(counter).toDouble(); counter++;
+
+    ncpList.append(QVector3D(x,y,z));
+  }
+  qint64 nmode=1;
+  qint64 mode=paramVariantList.at(counter).toLongLong(); counter++;
+  QList<qint64> basinList;
+  for( qint64 i=counter ; i < paramVariantList.length() ; ++i )
+  {
+    basinList.append( paramVariantList.at(i).toLongLong()  );
+    counter++;
+  }
+  qint64 nbasin=basinList.length();
+
+  Matrix<qreal,3,1> rtp;
+  rtp << r, t, p;
+  Matrix<qreal,3,1> origin;
+  origin <<
+      ncpList.at(basinList.at(0)).x(),
+      ncpList.at(basinList.at(0)).y(),
+      ncpList.at(basinList.at(0)).z();
+
+  Matrix<qreal,3,1> XYZ=Avogadro::QTAIMMathUtilities::sphericalToCartesian(rtp, origin );
+
+  qreal x=XYZ(0);
+  qreal y=XYZ(1);
+  qreal z=XYZ(2);
+
+  // This routine reads the wavefunction file repeatedly.
+  // Let's hope that this time is dwarfed by the time
+  // taken to delineate the atomic basins in the calling routine.
+  Avogadro::QTAIMWavefunction wfn;
+  wfn.loadFromBinaryFile(wfnFileName);
+  Avogadro::QTAIMWavefunctionEvaluator eval(wfn);
+
+  for(qint64 m=0; m<nmode ; ++m )
+  {
+    if( mode==0 )
+    {
+      fval[m]=r*r*eval.electronDensity( Eigen::Vector3d(x,y,z) );
+    }
+  }
+
+}
+
+QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
+{
+
+  /*
+     Order of variantList:
+     QString wfnFileName
+     qreal t
+     qreal p
+     qint64 nncp
+     qint64 xncp1
+     qint64 yncp1
+     qint64 zncp1
+     qint64 xncp2
+     qint64 yncp2
+     qint64 zncp2
+     ...
+     qint64 nmode
+     qint64 mode1
+     qint64 mode2
+     ...
+     qint64 nbasin
+     qint64 basin1
+     qint64 basin2
+     ...
+  */
+  qint64 counter=0;
+  QString wfnFileName=variantList.at(counter).toString(); counter++;
+  qreal t=variantList.at(counter).toDouble(); counter++;
+  qreal p=variantList.at(counter).toDouble(); counter++;
+
+  qint64 nncp=variantList.at(counter).toLongLong(); counter++;
+  QList<QVector3D> ncpList;
+  for( qint64 n=0 ; n < nncp ; ++n )
+  {
+    qreal x=variantList.at(counter).toDouble(); counter++;
+    qreal y=variantList.at(counter).toDouble(); counter++;
+    qreal z=variantList.at(counter).toDouble(); counter++;
+
+    ncpList.append(QVector3D(x,y,z));
+  }
+
+  qint64 nmode=variantList.at(counter).toLongLong(); counter++;
+  QList<qint64> modeList;
+  for( qint64 m=0 ; m < nmode ; ++m )
+  {
+    qint64 mode=variantList.at(counter).toLongLong(); counter++;
+    modeList.append(mode);
+  }
+
+  qint64 nbasin=variantList.at(counter).toLongLong(); counter++;
+  QList<qint64> basinList;
+  for( qint64 b=0 ; b < nbasin ; ++b )
+  {
+    qint64 basin=variantList.at(counter).toLongLong(); counter++;
+    basinList.append(basin);
+  }
+  QSet<qint64> basinSet=basinList.toSet();
+
+  Avogadro::QTAIMWavefunction wfn;
+  wfn.loadFromBinaryFile(wfnFileName);
+  Avogadro::QTAIMWavefunctionEvaluator eval(wfn);
+
+  // Set up steepest ascent integrator and beta spheres
+  QList<QPair<QVector3D,qreal> > betaSpheres;
+  for( qint64 i=0 ; i < nncp ; ++i )
+  {
+    QPair<QVector3D,qreal> thisBetaSphere;
+    thisBetaSphere.first=QVector3D(ncpList.at(i).x(), ncpList.at(i).y(),ncpList.at(i).z());
+
+    if( wfn.nuclearCharge(i) <= 4 )
+    {
+      thisBetaSphere.second=0.10;
+    }
+    else
+    {
+      thisBetaSphere.second=0.10;
+    }
+    betaSpheres.append(thisBetaSphere);
+  }
+
+  Avogadro::QTAIMLSODAIntegrator ode(eval,0);
+  //  Avogadro::QTAIMODEIntegrator ode(eval,0);
+
+  ode.setBetaSpheres(betaSpheres);
+
+  // Determine radial basin limit via bisection
+  // Bisection Algorithm courtesey of Wikipedia
+
+  qint64 thisBasin=basinList.at(0);
+  Matrix<qreal,3,1> origin;
+  origin <<
+      ncpList.at(thisBasin).x(),
+      ncpList.at(thisBasin).y(),
+      ncpList.at(thisBasin).z();
+
+  const qreal rmin=betaSpheres.at(thisBasin).second;
+  const qreal rmax=8.0;
+  const qreal epsilon=1.e-3;
+
+  qreal left=rmin;
+  qreal right=rmax;
+
+  Matrix<qreal,3,1> rtpl;
+  rtpl << left, t, p;
+  Matrix<qreal,3,1> xyzl=Avogadro::QTAIMMathUtilities::sphericalToCartesian(rtpl, origin);
+
+  qreal fleft;
+  qreal x=xyzl(0);
+  qreal y=xyzl(1);
+  qreal z=xyzl(2);
+  qreal leftElectronDensity=eval.electronDensity( Eigen::Vector3d(x,y,z) );
+
+  if( leftElectronDensity < 1.e-5 )
+  {
+    fleft=-1.0;
+  }
+  else
+  {
+    QVector3D endpoint=ode.integrate(QVector3D(x,y,z));
+
+#define HUGE_REAL_NUMBER 1.e20
+    qreal smallestDistance=HUGE_REAL_NUMBER;
+    qint64 smallestDistanceIndex=-1;
+
+    for( qint64 n=0 ; n < betaSpheres.length()  ; ++n )
+    {
+      Matrix<qreal,3,1> a(endpoint.x(),endpoint.y(),endpoint.z());
+      Matrix<qreal,3,1> b(betaSpheres.at(n).first.x(),
+                          betaSpheres.at(n).first.y(),
+                          betaSpheres.at(n).first.z());
+
+      qreal distance=Avogadro::QTAIMMathUtilities::distance(a,b);
+
+      if( distance < smallestDistance )
+      {
+        smallestDistance = distance;
+        smallestDistanceIndex=n;
+      }
+    }
+    qint64 nucleusIndex=smallestDistanceIndex;
+
+    if( thisBasin == nucleusIndex )
+    {
+      fleft=leftElectronDensity;
+    }
+    else
+    {
+      fleft=-1.0;
+    }
+  }
+
+
+  Matrix<qreal,3,1> rtpr;
+  rtpr << right, t, p;
+  Matrix<qreal,3,1> xyzr=Avogadro::QTAIMMathUtilities::sphericalToCartesian(rtpr, origin);
+
+  qreal fright;
+  x=xyzr(0);
+  y=xyzr(1);
+  z=xyzr(2);
+  qreal rightElectronDensity=eval.electronDensity( Eigen::Vector3d(x,y,z) );
+
+  if( rightElectronDensity < 1.e-5 )
+  {
+    fright=-1.0;
+  }
+  else
+  {
+    QVector3D endpoint=ode.integrate(QVector3D(x,y,z));
+
+#define HUGE_REAL_NUMBER 1.e20
+    qreal smallestDistance=HUGE_REAL_NUMBER;
+    qint64 smallestDistanceIndex=-1;
+
+    for( qint64 n=0 ; n < betaSpheres.length()  ; ++n )
+    {
+      Matrix<qreal,3,1> a(endpoint.x(),endpoint.y(),endpoint.z());
+      Matrix<qreal,3,1> b(betaSpheres.at(n).first.x(),
+                          betaSpheres.at(n).first.y(),
+                          betaSpheres.at(n).first.z());
+
+      qreal distance=Avogadro::QTAIMMathUtilities::distance(a,b);
+
+      if( distance < smallestDistance )
+      {
+        smallestDistance = distance;
+        smallestDistanceIndex=n;
+      }
+    }
+    qint64 nucleusIndex=smallestDistanceIndex;
+
+    if( thisBasin == nucleusIndex )
+    {
+      fright=rightElectronDensity;
+    }
+    else
+    {
+      fright=-1.0;
+    }
+  }
+
+  if( fleft > 0.0 && fright > 0.0)
+  {
+    qDebug() << "error in bisection: both values positive.";
+  }
+
+  qreal rf;
+  while( fabs(right-left) > 2.0 * epsilon )
+  {
+
+    qreal midpoint = (right + left) / 2.0;
+    rf=midpoint;
+
+//    qDebug() << left << midpoint << right ;
+
+    Matrix<qreal,3,1> rtpm;
+    rtpm << midpoint, t, p;
+    Matrix<qreal,3,1> xyzm=Avogadro::QTAIMMathUtilities::sphericalToCartesian(rtpm, origin);
+
+    qreal fmidpoint;
+    x=xyzm(0);
+    y=xyzm(1);
+    z=xyzm(2);
+    qreal midpointElectronDensity=eval.electronDensity( Eigen::Vector3d(x,y,z) );
+
+    if( midpointElectronDensity < 1.e-5 )
+    {
+      fmidpoint=-1.0;
+    }
+    else
+    {
+      QVector3D endpoint=ode.integrate(QVector3D(x,y,z));
+
+#define HUGE_REAL_NUMBER 1.e20
+      qreal smallestDistance=HUGE_REAL_NUMBER;
+      qint64 smallestDistanceIndex=-1;
+
+      for( qint64 n=0 ; n < betaSpheres.length()  ; ++n )
+      {
+        Matrix<qreal,3,1> a(endpoint.x(),endpoint.y(),endpoint.z());
+        Matrix<qreal,3,1> b(betaSpheres.at(n).first.x(),
+                            betaSpheres.at(n).first.y(),
+                            betaSpheres.at(n).first.z());
+
+        qreal distance=Avogadro::QTAIMMathUtilities::distance(a,b);
+
+        if( distance < smallestDistance )
+        {
+          smallestDistance = distance;
+          smallestDistanceIndex=n;
+        }
+      }
+      qint64 nucleusIndex=smallestDistanceIndex;
+
+      if( thisBasin == nucleusIndex )
+      {
+        fmidpoint=midpointElectronDensity;
+      }
+      else
+      {
+        fmidpoint=-1.0;
+      }
+    }
+
+    if( (fleft * fmidpoint) < 0 )
+    {
+      right=midpoint;
+      fright=fmidpoint;
+    }
+    else if ( (fright * fmidpoint) < 0 )
+    {
+      left=midpoint;
+      fleft=fmidpoint;
+    }
+    else
+    {
+      goto endOfBisection;
+    }
+
+  }
+  endOfBisection:
+
+
+
+  // Integration over r
+  unsigned int fdim=1;
+  double *val;
+  double *err;
+  val = (double *) qMalloc(sizeof(double) * fdim);
+  err = (double *) qMalloc(sizeof(double) * fdim);
+
+  double tol=1.e-6;
+  unsigned int maxEval=0;
+
+  unsigned int dim=1;
+
+  double *xmin;
+  double *xmax;
+  xmin = (double *) qMalloc(dim * sizeof(double));
+  xmax = (double *) qMalloc(dim * sizeof(double));
+
+  xmin[0] = 0.0;
+  xmax[0] = rf;
+
+  QVariantList paramVariantList;
+  paramVariantList.append(wfnFileName);
+  paramVariantList.append(t);
+  paramVariantList.append(p);
+  paramVariantList.append(ncpList.length()); // number of nuclear critical points
+  for( qint64 j=0 ; j < ncpList.length() ; ++j)
+  {
+    paramVariantList.append(ncpList.at(j).x() );
+    paramVariantList.append(ncpList.at(j).y() );
+    paramVariantList.append(ncpList.at(j).z() );
+  }
+  paramVariantList.append(0); // mode
+  paramVariantList.append( basinList.at(0) ); // basin
+
+//  qDebug() << "Into R with rf=" << rf;
+  adapt_integrate(fdim, property_r, &paramVariantList,
+                  dim, xmin, xmax,
+                  maxEval, tol, 0,
+                  val, err);
+//  qDebug() << "Out of R with val=" << val[0] << "err=" << err[0];
+  qreal Rval=val[0];
+  qreal Rerr=err[0];
+
+  qFree(xmin);
+  qFree(xmax);
+  qFree(val);
+  qFree(err);
+
+  QList<QVariant> variantList;
+
+  variantList.append(sin(t)*Rval);
+
+//  qDebug() << rf << t << p << sin(t) * Rval;
+
+  return variantList;
+
+}
+
+
+void property_v_tp(unsigned int ndim, unsigned int npts, const double *xyz, void *param,
+                unsigned int fdim, double *fval)
+{
+
+  QVariantList *paramVariantListPtr = (QVariantList *)param;
+  QVariantList paramVariantList=*paramVariantListPtr;
+
+  qint64 counter=0;
+  QString wfnFileName=paramVariantList.at(counter).toString(); counter++;
+
+  qint64 nncp=paramVariantList.at(counter).toLongLong(); counter++;
+  QList<QVector3D> ncpList;
+  for( qint64 i=0 ; i < nncp ; ++i )
+  {
+    qreal x=paramVariantList.at(counter).toDouble(); counter++;
+    qreal y=paramVariantList.at(counter).toDouble(); counter++;
+    qreal z=paramVariantList.at(counter).toDouble(); counter++;
+
+    ncpList.append(QVector3D(x,y,z));
+  }
+  qint64 nmode=1;
+  qint64 mode=paramVariantList.at(counter).toLongLong(); counter++;
+  QList<qint64> basinList;
+  for( qint64 i=counter ; i < paramVariantList.length() ; ++i )
+  {
+    basinList.append( paramVariantList.at(i).toLongLong()  );
+    counter++;
+  }
+  qint64 nbasin=basinList.length();
+
+  // prepare input
+
+  QList<QList<QVariant> > inputList;
+
+  for(unsigned int i=0 ; i < npts ; ++i )
+  {
+
+    double t=xyz[i*2+0];
+    double p=xyz[i*2+1];
+
+    QList<QVariant> variantList;
+
+    variantList.append(wfnFileName);
+
+    variantList.append(t);
+    variantList.append(p);
+
+    variantList.append(nncp);
+    for(qint64 n=0; n < nncp ; ++n)
+    {
+      variantList.append(ncpList.at(n).x());
+      variantList.append(ncpList.at(n).y());
+      variantList.append(ncpList.at(n).z());
+    }
+
+    variantList.append(nmode); // for now, one mode
+    for( qint64 m=0 ; m<nmode ; ++m)
+    {
+      variantList.append(mode);
+    }
+
+    qint64 nbasin=basinList.length();
+    variantList.append(nbasin);
+    for(qint64 b=0 ; b<basinList.length() ; ++b)
+    {
+      variantList.append(basinList.at(b));
+    }
+
+    inputList.append(variantList);
+
+  }
+
+  // calculate
+
+  QProgressDialog dialog;
+  dialog.setWindowTitle("QTAIM");
+  dialog.setLabelText(QString("Atomic Basin Integration"));
+
+  QFutureWatcher<void> futureWatcher;
+  QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
+  QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
+  QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int,int)), &dialog, SLOT(setRange(int,int)));
+  QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
+
+  QFuture<QList<QVariant> > future=QtConcurrent::mapped(inputList, QTAIMEvaluatePropertyTP);
+  futureWatcher.setFuture(future);
+  dialog.exec();
+  futureWatcher.waitForFinished();
+
+  QList<QList<QVariant> > results;
+  if( futureWatcher.future().isCanceled() )
+  {
+    results.clear();
+  }
+  else
+  {
+    results=future.results();
+  }
+
+  // harvest results
+  //  qDebug() << "results=" << results;
+  for(qint64 i=0; i < npts ; ++i)
+  {
+    for(qint64 m=0; m<nmode ; ++m )
+    {
+      fval[m*nmode+i]=results.at(i).at(m).toDouble();
+    }
+  }
+}
+
 namespace Avogadro
 {
 
@@ -1437,58 +2255,138 @@ namespace Avogadro
     // QLists of results
     QList<QVector3D> ncpList=cpl.nuclearCriticalPoints();
 
-    unsigned int fdim=1;
-    unsigned int dim=3;
+    double tol=1.e-2;
+    unsigned int maxEval=0;
 
+    bool threeDimensionalIntegration=false;
+    bool cartesianIntegrationLimits=false;
+
+    unsigned int fdim=1;
     double *val;
     double *err;
     val = (double *) qMalloc(sizeof(double) * fdim);
     err = (double *) qMalloc(sizeof(double) * fdim);
 
-    double *xmin;
-    double *xmax;
-    xmin = (double *) qMalloc(dim * sizeof(double));
-    xmax = (double *) qMalloc(dim * sizeof(double));
-
-    double tol=5.e-2;
-    unsigned int maxEval=0;
-
     for( qint64 i=0 ; i < m_basins.length() ; ++i)
     {
-
-      // shift origin of the integration to the nuclear coordinates of the ith nucleus.
-
-      xmin[0]= -8. + ncpList.at(i).x();
-      xmax[0]=  8. + ncpList.at(i).x();
-      xmin[1]= -8. + ncpList.at(i).y();
-      xmax[1]=  8. + ncpList.at(i).y();
-      xmin[2]= -8. + ncpList.at(i).z();
-      xmax[2]=  8. + ncpList.at(i).z();
-
-      QVariantList paramVariantList;
-      paramVariantList.append(m_temporaryFileName);
-
-      paramVariantList.append(ncpList.length()); // number of nuclear critical points
-      for( qint64 j=0 ; j < ncpList.length() ; ++j)
+      if(threeDimensionalIntegration)
       {
-        paramVariantList.append(ncpList.at(j).x() );
-        paramVariantList.append(ncpList.at(j).y() );
-        paramVariantList.append(ncpList.at(j).z() );
-      }
-      paramVariantList.append(0); // mode
-      paramVariantList.append( basins.at(i) ); // basin
 
-      adapt_integrate_v(fdim, property_v, &paramVariantList,
-                        dim, xmin, xmax,
-                        maxEval, tol, 0,
-                        val, err);
+        unsigned int dim=3;
+
+        double *xmin;
+        double *xmax;
+        xmin = (double *) qMalloc(dim * sizeof(double));
+        xmax = (double *) qMalloc(dim * sizeof(double));
+
+        if(cartesianIntegrationLimits)
+        {
+
+          // shift origin of the integration to the nuclear coordinates of the ith nucleus.
+
+          xmin[0]= -8. + ncpList.at(i).x();
+          xmax[0]=  8. + ncpList.at(i).x();
+          xmin[1]= -8. + ncpList.at(i).y();
+          xmax[1]=  8. + ncpList.at(i).y();
+          xmin[2]= -8. + ncpList.at(i).z();
+          xmax[2]=  8. + ncpList.at(i).z();
+
+          QVariantList paramVariantList;
+          paramVariantList.append(m_temporaryFileName);
+
+          paramVariantList.append(ncpList.length()); // number of nuclear critical points
+          for( qint64 j=0 ; j < ncpList.length() ; ++j)
+          {
+            paramVariantList.append(ncpList.at(j).x() );
+            paramVariantList.append(ncpList.at(j).y() );
+            paramVariantList.append(ncpList.at(j).z() );
+          }
+          paramVariantList.append(0); // mode
+          paramVariantList.append( basins.at(i) ); // basin
+
+          adapt_integrate_v(fdim, property_v, &paramVariantList,
+                            dim, xmin, xmax,
+                            maxEval, tol, 0,
+                            val, err);
+
+        }
+        else
+        {
+          const qreal pi=4.0*atan(1.0);
+
+          xmin[0]=  0.;
+          xmax[0]=  8.;
+          xmin[1]=  0.;
+          xmax[1]=  pi;
+          xmin[2]=  0.;
+          xmax[2]=  2.0*pi;
+
+          QVariantList paramVariantList;
+          paramVariantList.append(m_temporaryFileName);
+
+          paramVariantList.append(ncpList.length()); // number of nuclear critical points
+          for( qint64 j=0 ; j < ncpList.length() ; ++j)
+          {
+            paramVariantList.append(ncpList.at(j).x() );
+            paramVariantList.append(ncpList.at(j).y() );
+            paramVariantList.append(ncpList.at(j).z() );
+          }
+          paramVariantList.append(0); // mode
+          paramVariantList.append( basins.at(i) ); // basin
+
+          adapt_integrate_v(fdim, property_v_rtp, &paramVariantList,
+                            dim, xmin, xmax,
+                            maxEval, tol, 0,
+                            val, err);
+        }
+
+        qFree(xmin);
+        qFree(xmax);
+
+      }
+      else
+      {
+        unsigned int dim=2;
+
+        double *xmin;
+        double *xmax;
+        xmin = (double *) qMalloc(dim * sizeof(double));
+        xmax = (double *) qMalloc(dim * sizeof(double));
+
+        const qreal pi=4.0*atan(1.0);
+
+        xmin[0]=  0.;
+        xmax[0]=  pi;
+        xmin[1]=  0.;
+        xmax[1]=  2.0*pi;
+
+        QVariantList paramVariantList;
+        paramVariantList.append(m_temporaryFileName);
+
+        paramVariantList.append(ncpList.length()); // number of nuclear critical points
+        for( qint64 j=0 ; j < ncpList.length() ; ++j)
+        {
+          paramVariantList.append(ncpList.at(j).x() );
+          paramVariantList.append(ncpList.at(j).y() );
+          paramVariantList.append(ncpList.at(j).z() );
+        }
+        paramVariantList.append(0); // mode
+        paramVariantList.append( basins.at(i) ); // basin
+
+        adapt_integrate_v(fdim, property_v_tp, &paramVariantList,
+                          dim, xmin, xmax,
+                          maxEval, tol, 0,
+                          val, err);
+
+        qFree(xmin);
+        qFree(xmax);
+
+      }
 
       qDebug() <<"basin=" << basins.at(i) <<  "value= " << val[0] << "err=" << err[0];
 
     }
 
-    qFree(xmin);
-    qFree(xmax);
     qFree(val);
     qFree(err);
   }

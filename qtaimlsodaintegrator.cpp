@@ -1,5 +1,5 @@
 /**********************************************************************
-  QTAIM - Extension for Quantum Theory of Atoms In Molecules Analysisf
+  QTAIM - Extension for Quantum Theory of Atoms In Molecules Analysis
 
   Copyright (C) 2010 Eric C. Brown
 
@@ -86,7 +86,7 @@ namespace Avogadro
     illin=0;
     init=0;
     ntrep=0;
-    ixpr=1;
+    ixpr=0;
     mesflg=1;
 
     double rwork1, rwork5, rwork6, rwork7;
@@ -95,53 +95,21 @@ namespace Avogadro
     int neq = 3;
     int itol, itask, istate, iopt, jt, iout, j, jdum;
 
-//    t0=0.0;
-//    tf=1.0;
-//    dt=0.1;
-
     y[1] = x0;
     y[2] = y0;
     y[3] = z0;
 
     double t0;
+    double tf=10.0;
+    double dt=0.1;
 
     m_path.clear();
     m_path.append(QVector3D(y[1],y[2],y[3]));
 
-    for (t0=0.0; t0 < 10.0; t0=t0+0.05)
+    for (t0=0.0; t0 < tf; t0=t0+dt)
     {
 
-      iwork1= iwork2= iwork5= iwork6= iwork7= iwork8= iwork9= 0;
-      rwork1= rwork5= rwork6= rwork7= 0.0;
-
-      t = t0;
-      tout = t0+0.05;
-      itol = 2;
-      rtol[0] = 0.0; atol[0] = 0.0;
-      rtol[1] = 0.0;
-      rtol[2] = 0.0;
-      rtol[3] = 0.0;
-      atol[1] = 1.0E-5;
-      atol[2] = 1.0E-5;
-      atol[3] = 1.0E-5;
-      itask = 1;
-      istate = 1;
-      iopt = 0;
-      jt = 2;
-
-      lsoda(neq,y,&t,tout,itol,rtol,atol,itask,&istate,iopt,jt,
-            iwork1, iwork2, iwork5, iwork6, iwork7, iwork8, iwork9,
-            rwork1,rwork5,rwork6,rwork7);
-
-      m_path.append(QVector3D(y[1],y[2],y[3]));
-
-//      printf (" at t= %12.4e y= %14.6e %14.6e %14.6e\n", t,y[1],y[2],y[3]);
-      if (istate <= 0)
-      {
-//        printf("error istate = %d\n",istate)
-        return QVector3D(y[1],y[2],y[3]);
-      }
-
+      // beta spheres
       if( m_mode == QTAIMLSODAIntegrator::SteepestAscentPathInElectronDensity)
       {
         if( m_betaSpheres.length() > 0 )
@@ -164,9 +132,40 @@ namespace Avogadro
                                 m_betaSpheres.at(n).first.z() );
             }
           }
-        } // beta spheres
-      }
+        }
+      } // beta spheres
 
+      iwork1= iwork2= iwork5= iwork6= iwork7= iwork8= iwork9= 0;
+      rwork1= rwork5= rwork6= rwork7= 0.0;
+
+      t = t0;
+      tout = t0+dt;
+      itol = 2;
+      rtol[0] = 0.0; atol[0] = 0.0;
+      rtol[1] = 0.0;
+      rtol[2] = 0.0;
+      rtol[3] = 0.0;
+      atol[1] = 1.0E-5;
+      atol[2] = 1.0E-5;
+      atol[3] = 1.0E-5;
+      itask = 1;
+      istate = 1;
+      iopt = 0;
+      jt = 2;
+
+      lsoda(neq,y,&t,tout,itol,rtol,atol,itask,&istate,iopt,jt,
+            iwork1, iwork2, iwork5, iwork6, iwork7, iwork8, iwork9,
+            rwork1,rwork5,rwork6,rwork7);
+
+      m_path.append(QVector3D(y[1],y[2],y[3]));
+
+      //      qDebug(" at t= %12.4e y= %14.6e %14.6e %14.6e", t,y[1],y[2],y[3]);
+      if (istate <= 0)
+      {
+//        qDebug("error istate = %d",istate);
+//        qDebug(" at t= %12.4e y= %14.6e %14.6e %14.6e", t,y[1],y[2],y[3]);
+        return QVector3D(y[1],y[2],y[3]);
+      }
     } // ode step
 
     return QVector3D(y[1],y[2],y[3]);
@@ -796,8 +795,8 @@ namespace Avogadro
   void QTAIMLSODAIntegrator::terminate( int *istate )
   {
      if ( illin == 5 ) {
-        printf( "lsoda -- repeated occurrence of illegal input\n" );
-        printf( "         run aborted.. apparent infinite loop\n" );
+        qDebug( "lsoda -- repeated occurrence of illegal input" );
+        qDebug( "         run aborted.. apparent infinite loop" );
      }
      else {
         illin++;
@@ -896,17 +895,17 @@ namespace Avogadro
   */
 
      if ( *istate < 1 || *istate > 3 ) {
-        printf( "lsoda -- illegal istate = %d\n", *istate );
+        qDebug( "lsoda -- illegal istate = %d", *istate );
         terminate( istate );
         return;
      }
      if ( itask < 1 || itask > 5 ) {
-        printf( "lsoda -- illegal itask = %d\n", itask );
+        qDebug( "lsoda -- illegal itask = %d", itask );
         terminate( istate );
         return;
      }
      if ( init == 0 && ( *istate == 2 || *istate == 3 ) ) {
-        printf( "lsoda -- istate > 1 but lsoda not initialized\n" );
+        qDebug( "lsoda -- istate > 1 but lsoda not initialized" );
         terminate( istate );
         return;
      }
@@ -916,8 +915,8 @@ namespace Avogadro
            ntrep++;
            if ( ntrep < 5 )
               return;
-           printf( "lsoda -- repeated calls with istate = 1 and tout = t\n" );
-           printf( "         run aborted.. apparent infinite loop\n" );
+           qDebug( "lsoda -- repeated calls with istate = 1 and tout = t" );
+           qDebug( "         run aborted.. apparent infinite loop" );
            return;
         }
      }
@@ -935,28 +934,28 @@ namespace Avogadro
      if ( *istate == 1 || *istate == 3 ) {
         ntrep = 0;
         if ( neq <= 0 ) {
-           printf( "lsoda -- neq = %d is less than 1\n", neq );
+           qDebug( "lsoda -- neq = %d is less than 1", neq );
            terminate( istate );
            return;
         }
         if ( *istate == 3 && neq > n ) {
-           printf( "lsoda -- istate = 3 and neq increased\n" );
+           qDebug( "lsoda -- istate = 3 and neq increased" );
            terminate( istate );
            return;
         }
         n = neq;
         if ( itol < 1 || itol > 4 ) {
-           printf( "lsoda -- itol = %d illegal\n", itol );
+           qDebug( "lsoda -- itol = %d illegal", itol );
            terminate( istate );
            return;
         }
         if ( iopt < 0 || iopt > 1 ) {
-           printf( "lsoda -- iopt = %d illegal\n", iopt );
+           qDebug( "lsoda -- iopt = %d illegal", iopt );
            terminate( istate );
            return;
         }
         if ( jt == 3 || jt < 1 || jt > 5 ) {
-           printf( "lsoda -- jt = %d illegal\n", jt );
+           qDebug( "lsoda -- jt = %d illegal", jt );
            terminate( istate );
            return;
         }
@@ -965,12 +964,12 @@ namespace Avogadro
            ml = iwork1;
            mu = iwork2;
            if ( ml < 0 || ml >= n ) {
-              printf( "lsoda -- ml = %d not between 1 and neq\n", ml );
+              qDebug( "lsoda -- ml = %d not between 1 and neq", ml );
               terminate( istate );
               return;
            }
            if ( mu < 0 || mu >= n ) {
-              printf( "lsoda -- mu = %d not between 1 and neq\n", mu );
+              qDebug( "lsoda -- mu = %d not between 1 and neq", mu );
               terminate( istate );
               return;
            }
@@ -998,13 +997,13 @@ namespace Avogadro
         else {             /*   if ( iopt = 1 )  */
            ixpr = iwork5;
            if ( ixpr < 0 || ixpr > 1 ) {
-              printf( "lsoda -- ixpr = %d is illegal\n", ixpr );
+              qDebug( "lsoda -- ixpr = %d is illegal", ixpr );
               terminate( istate );
               return;
            }
            mxstep = iwork6;
            if ( mxstep < 0 ) {
-              printf( "lsoda -- mxstep < 0\n" );
+              qDebug( "lsoda -- mxstep < 0" );
               terminate( istate );
               return;
            }
@@ -1012,7 +1011,7 @@ namespace Avogadro
               mxstep = mxstp0;
            mxhnil = iwork7;
            if ( mxhnil < 0 ) {
-              printf( "lsoda -- mxhnil < 0\n" );
+              qDebug( "lsoda -- mxhnil < 0" );
               terminate( istate );
               return;
            }
@@ -1020,7 +1019,7 @@ namespace Avogadro
               h0 = rwork5;
               mxordn = iwork8;
               if ( mxordn < 0 ) {
-                 printf( "lsoda -- mxordn = %d is less than 0\n", mxordn );
+                 qDebug( "lsoda -- mxordn = %d is less than 0", mxordn );
                  terminate( istate );
                  return;
               }
@@ -1029,7 +1028,7 @@ namespace Avogadro
               mxordn = min( mxordn, mord[1] );
               mxords = iwork9;
               if ( mxords < 0 ) {
-                 printf( "lsoda -- mxords = %d is less than 0\n", mxords );
+                 qDebug( "lsoda -- mxords = %d is less than 0", mxords );
                  terminate( istate );
                  return;
               }
@@ -1037,8 +1036,8 @@ namespace Avogadro
                  mxords = 100;
               mxords = min( mxords, mord[2] );
               if ( ( tout - *t ) * h0 < 0. ) {
-                 printf( "lsoda -- tout = %g behind t = %g\n", tout, *t );
-                 printf( "         integration direction is given by %g\n",
+                 qDebug( "lsoda -- tout = %g behind t = %g", tout, *t );
+                 qDebug( "         integration direction is given by %g",
                          h0 );
                  terminate( istate );
                  return;
@@ -1046,7 +1045,7 @@ namespace Avogadro
            }         /*  end if ( *istate == 1 )  */
            hmax = rwork6;
            if ( hmax < 0. ) {
-              printf( "lsoda -- hmax < 0.\n" );
+              qDebug( "lsoda -- hmax < 0." );
               terminate( istate );
               return;
            }
@@ -1055,7 +1054,7 @@ namespace Avogadro
               hmxi = 1. / hmax;
            hmin = rwork7;
            if ( hmin < 0. ) {
-              printf( "lsoda -- hmin < 0.\n" );
+              qDebug( "lsoda -- hmin < 0." );
               terminate( istate );
               return;
            }
@@ -1081,7 +1080,7 @@ namespace Avogadro
 
         yh = ( double ** ) qMalloc( ( 1 + lenyh ) * sizeof( *yh ) );
         if ( yh == NULL ) {
-           printf( "lsoda -- insufficient memory for your problem\n" );
+           qDebug( "lsoda -- insufficient memory for your problem" );
            terminate( istate );
            return;
         }
@@ -1091,7 +1090,7 @@ namespace Avogadro
         wm = ( double ** ) qMalloc( ( 1 + nyh ) * sizeof( *wm ) );
         if ( wm == NULL ) {
            qFree( yh );
-           printf( "lsoda -- insufficient memory for your problem\n" );
+           qDebug( "lsoda -- insufficient memory for your problem" );
            terminate( istate );
            return;
         }
@@ -1102,7 +1101,7 @@ namespace Avogadro
         if ( ewt == NULL ) {
            qFree( yh );
            qFree( wm );
-           printf( "lsoda -- insufficient memory for your problem\n" );
+           qDebug( "lsoda -- insufficient memory for your problem" );
            terminate( istate );
            return;
         }
@@ -1112,7 +1111,7 @@ namespace Avogadro
            qFree( yh );
            qFree( wm );
            qFree( ewt );
-           printf( "lsoda -- insufficient memory for your problem\n" );
+           qDebug( "lsoda -- insufficient memory for your problem" );
            terminate( istate );
            return;
         }
@@ -1123,7 +1122,7 @@ namespace Avogadro
            qFree( wm );
            qFree( ewt );
            qFree( savf );
-           printf( "lsoda -- insufficient memory for your problem\n" );
+           qDebug( "lsoda -- insufficient memory for your problem" );
            terminate( istate );
            return;
         }
@@ -1135,7 +1134,7 @@ namespace Avogadro
            qFree( ewt );
            qFree( savf );
            qFree( acor );
-           printf( "lsoda -- insufficient memory for your problem\n" );
+           qDebug( "lsoda -- insufficient memory for your problem" );
            terminate( istate );
            return;
         }
@@ -1152,13 +1151,13 @@ namespace Avogadro
            if ( itol == 2 || itol == 4 )
               atoli = atol[i];
            if ( rtoli < 0. ) {
-              printf( "lsoda -- rtol = %g is less than 0.\n", rtoli );
+              qDebug( "lsoda -- rtol = %g is less than 0.", rtoli );
               terminate( istate );
               freevectors();
               return;
            }
            if ( atoli < 0. ) {
-              printf( "lsoda -- atol = %g is less than 0.\n", atoli );
+              qDebug( "lsoda -- atol = %g is less than 0.", atoli );
               terminate( istate );
               freevectors();
               return;
@@ -1185,7 +1184,7 @@ namespace Avogadro
         if ( itask == 4 || itask == 5 ) {
            tcrit = rwork1;
            if ( ( tcrit - tout ) * ( tout - *t )  < 0. ) {
-              printf( "lsoda -- itask = 4 or 5 and tcrit behind tout\n" );
+              qDebug( "lsoda -- itask = 4 or 5 and tcrit behind tout" );
               terminate( istate );
               freevectors();
               return;
@@ -1225,7 +1224,7 @@ namespace Avogadro
         ewset( itol, rtol, atol, y );
         for ( i = 1 ; i <= n ; i++ ) {
            if ( ewt[i] <= 0. ) {
-              printf( "lsoda -- ewt[%d] = %g <= 0.\n", i, ewt[i] );
+              qDebug( "lsoda -- ewt[%d] = %g <= 0.", i, ewt[i] );
               // ECB Comment out because wrong number of arguments.
               //              terminate( y, yh, t, tn );
               return;
@@ -1257,7 +1256,7 @@ namespace Avogadro
            tdist = fabs( tout - *t );
            w0 = max( fabs( *t ), fabs( tout ) );
            if ( tdist < 2. * ETA * w0 ) {
-              printf( "lsoda -- tout too close to t to start integration\n ");
+              qDebug( "lsoda -- tout too close to t to start integration ");
               terminate( istate );
               freevectors();
               return;
@@ -1311,7 +1310,7 @@ namespace Avogadro
            if ( ( tn - tout ) * h >= 0. ) {
               intdy( tout, 0, y, &iflag );
               if ( iflag != 0 ) {
-                 printf( "lsoda -- trouble from intdy, itask = %d, tout = %g\n",
+                 qDebug( "lsoda -- trouble from intdy, itask = %d, tout = %g",
                     itask, tout );
                  terminate( istate );
                  freevectors();
@@ -1329,7 +1328,7 @@ namespace Avogadro
         case 3 :
            tp = tn - hu * ( 1. + 100. * ETA );
            if ( ( tp - tout ) * h > 0. ) {
-              printf( "lsoda -- itask = %d and tout behind tcur - hu\n", itask );
+              qDebug( "lsoda -- itask = %d and tout behind tcur - hu", itask );
               terminate( istate );
               freevectors();
               return;
@@ -1341,13 +1340,13 @@ namespace Avogadro
         case 4 :
            tcrit = rwork1;
            if ( ( tn - tcrit ) * h > 0. ) {
-              printf( "lsoda -- itask = 4 or 5 and tcrit behind tcur\n" );
+              qDebug( "lsoda -- itask = 4 or 5 and tcrit behind tcur" );
               terminate( istate );
               freevectors();
               return;
            }
            if ( ( tcrit - tout ) * h < 0. ) {
-              printf( "lsoda -- itask = 4 or 5 and tcrit behind tout\n" );
+              qDebug( "lsoda -- itask = 4 or 5 and tcrit behind tout" );
               terminate( istate );
               freevectors();
               return;
@@ -1355,7 +1354,7 @@ namespace Avogadro
            if ( ( tn - tout ) * h >= 0. ) {
               intdy( tout, 0, y, &iflag );
               if ( iflag != 0 ) {
-                 printf( "lsoda -- trouble from intdy, itask = %d, tout = %g\n",
+                 qDebug( "lsoda -- trouble from intdy, itask = %d, tout = %g",
                     itask, tout );
                  terminate( istate );
                  freevectors();
@@ -1371,7 +1370,7 @@ namespace Avogadro
            if ( itask == 5 ) {
               tcrit = rwork1;
               if ( ( tn - tcrit ) * h > 0. ) {
-                 printf( "lsoda -- itask = 4 or 5 and tcrit behind tcur\n" );
+                 qDebug( "lsoda -- itask = 4 or 5 and tcrit behind tcur" );
                  terminate( istate );
                  freevectors();
                  return;
@@ -1408,7 +1407,7 @@ namespace Avogadro
      while ( 1 ) {
         if ( *istate != 1 || nst != 0 ) {
            if ( ( nst - nslast ) >= mxstep ) {
-//              printf( "lsoda -- %d steps taken before reaching tout\n", mxstep );
+//              qDebug( "lsoda -- %d steps taken before reaching tout", mxstep );
               *istate = -1;
               terminate2( y, t );
               return;
@@ -1416,7 +1415,7 @@ namespace Avogadro
            ewset( itol, rtol, atol, yh[1] );
            for ( i = 1 ; i <= n ; i++ ) {
               if ( ewt[i] <= 0. ) {
-                 printf( "lsoda -- ewt[%d] = %g <= 0.\n", i, ewt[i] );
+                 qDebug( "lsoda -- ewt[%d] = %g <= 0.", i, ewt[i] );
                  *istate = -6;
                  terminate2( y, t );
                  return;
@@ -1428,16 +1427,16 @@ namespace Avogadro
         if ( tolsf > 0.01 ) {
            tolsf = tolsf * 200.;
            if ( nst == 0 ) {
-              printf( "lsoda -- at start of problem, too much accuracy\n" );
-              printf( "         requested for precision of machine,\n" );
-              printf( "         suggested scaling factor = %g\n", tolsf );
+              qDebug( "lsoda -- at start of problem, too much accuracy" );
+              qDebug( "         requested for precision of machine," );
+              qDebug( "         suggested scaling factor = %g", tolsf );
               terminate( istate );
               freevectors();
               return;
            }
-           printf( "lsoda -- at t = %g, too much accuracy requested\n", *t );
-           printf( "         for precision of machine, suggested\n" );
-           printf( "         scaling factor = %g\n", tolsf );
+           qDebug( "lsoda -- at t = %g, too much accuracy requested", *t );
+           qDebug( "         for precision of machine, suggested" );
+           qDebug( "         scaling factor = %g", tolsf );
            *istate = -2;
            terminate2( y, t );
            return;
@@ -1445,13 +1444,13 @@ namespace Avogadro
         if ( ( tn + h ) == tn ) {
            nhnil++;
            if ( nhnil <= mxhnil ) {
-              printf( "lsoda -- warning..internal t = %g and h = %g are\n", tn, h );
-              printf( "         such that in the machine, t + h = t on the next step\n" );
-              printf( "         solver will continue anyway.\n" );
+              qDebug( "lsoda -- warning..internal t = %g and h = %g are", tn, h );
+              qDebug( "         such that in the machine, t + h = t on the next step" );
+              qDebug( "         solver will continue anyway." );
               if ( nhnil == mxhnil ) {
-                 printf( "lsoda -- above warning has been issued %d times,\n",
+                 qDebug( "lsoda -- above warning has been issued %d times,",
                     nhnil );
-                 printf( "         it will not be issued again for this problem\n" );
+                 qDebug( "         it will not be issued again for this problem" );
               }
            }
         }
@@ -1462,10 +1461,10 @@ namespace Avogadro
         stoda( neq, y);
 
   /*
-     printf( "meth= %d,   order= %d,   nfe= %d,   nje= %d\n",
+     qDebug( "meth= %d,   order= %d,   nfe= %d,   nje= %d",
         meth, nq, nfe, nje );
-     printf( "t= %20.15e,   h= %20.15e,   nst=%d\n", tn, h, nst );
-     printf( "y= %20.15e,   %20.15e,   %20.15e\n\n\n",
+     qDebug( "t= %20.15e,   h= %20.15e,   nst=%d", tn, h, nst );
+     qDebug( "y= %20.15e,   %20.15e,   %20.15e",
         yh[1][1], yh[1][2], yh[1][3] );
   */
 
@@ -1570,15 +1569,15 @@ namespace Avogadro
      kflag = -2, convergence failed repeatedly or with fabs(h) = hmin.
   */
         if ( kflag == -1 || kflag == -2 ) {
-           printf( "lsoda -- at t = %g and step size h = %g, the\n", tn, h );
+           qDebug( "lsoda -- at t = %g and step size h = %g, the", tn, h );
            if ( kflag == -1 ) {
-              printf( "         error test failed repeatedly or\n" );
-              printf( "         with fabs(h) = hmin\n" );
+              qDebug( "         error test failed repeatedly or" );
+              qDebug( "         with fabs(h) = hmin" );
               *istate = -4;
            }
            if ( kflag == -2 ) {
-              printf( "         corrector convergence failed repeatedly or\n" );
-              printf( "         with fabs(h) = hmin\n" );
+              qDebug( "         corrector convergence failed repeatedly or" );
+              qDebug( "         with fabs(h) = hmin" );
               *istate = -5;
            }
            big = 0.;
@@ -1999,14 +1998,14 @@ namespace Avogadro
 
      *iflag = 0;
      if ( k < 0 || k > nq ) {
-        printf( "intdy -- k = %d illegal\n", k );
+        qDebug( "intdy -- k = %d illegal", k );
         *iflag = -1;
         return;
      }
      tp = tn - hu - 100. * ETA * ( tn + hu );
      if ( ( t - tp ) * ( t - tn ) > 0. ) {
-        printf( "intdy -- t = %g illegal\n", t );
-        printf( "         t not in interval tcur - hu to tcur\n" );
+        qDebug( "intdy -- t = %g illegal", t );
+        qDebug( "         t not in interval tcur - hu to tcur" );
         *iflag = -2;
         return;
      }
@@ -2233,7 +2232,7 @@ namespace Avogadro
      If miter = 2, make n calls to f to approximate J.
   */
      if ( miter != 2 ) {
-        printf( "prja -- miter != 2\n" );
+        qDebug( "prja -- miter != 2" );
         return;
      }
 
@@ -2514,7 +2513,7 @@ namespace Avogadro
   {
      iersl = 0;
      if ( miter != 2 ) {
-        printf( "solsy -- miter != 2\n" );
+        qDebug( "solsy -- miter != 2" );
         return;
      }
 
