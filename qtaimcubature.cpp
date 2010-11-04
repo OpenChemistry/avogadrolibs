@@ -2383,7 +2383,7 @@ namespace Avogadro
 
       }
 
-      qDebug() <<"basin=" << basins.at(i) <<  "value= " << val[0] << "err=" << err[0];
+      qDebug() <<"basin=" << basins.at(i) + 1 <<  "value= " << val[0] << "err=" << err[0];
 
     }
 

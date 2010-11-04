@@ -163,8 +163,6 @@ namespace Avogadro
       QList<qint64>    nucChargeList=wfn.nuclearChargesList();
       QList<QVector3D> ncpList=cpl.nuclearCriticalPoints();
 
-      qDebug() << ncpList;
-
       const qreal convertBohrToAngstroem=0.529177249;
 
       // Nuclear Critical Points
