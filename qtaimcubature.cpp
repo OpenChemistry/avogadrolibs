@@ -1,21 +1,4 @@
 /**********************************************************************
-  QTAIM - Extension for Quantum Theory of Atoms In Molecules Analysis
-
-  Copyright (C) 2010 Eric C. Brown
-
-  This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
-
-  Avogadro is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  Avogadro is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
@@ -1267,14 +1250,14 @@ QList<QVariant> QTAIMEvaluateProperty(QList<QVariant> variantList)
 
     if( basinSet.contains(nucleusIndex) )
     {
-//      if(nucleusIndex==0)
-//      {
-//        QFile file("/scratch/brown/0.txt");
-//        file.open(QIODevice::WriteOnly | QIODevice::Append);
-//        QTextStream out(&file);
-//        out << x0 << " " << y0 << " " << z0 << "\n";
-//        file.close();
-//      }
+      //      if(nucleusIndex==0)
+      //      {
+      //        QFile file("/scratch/brown/0.txt");
+      //        file.open(QIODevice::WriteOnly | QIODevice::Append);
+      //        QTextStream out(&file);
+      //        out << x0 << " " << y0 << " " << z0 << "\n";
+      //        file.close();
+      //      }
       for( qint64 m=0 ; m < nmode ; ++m )
       {
         if( modeList.at(m) == 0 )
@@ -1559,15 +1542,15 @@ QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
 
     if( basinSet.contains(nucleusIndex) )
     {
-//      if(nucleusIndex==0)
-//      {
-//        QFile file("/scratch/brown/0.txt");
-//        file.open(QIODevice::WriteOnly | QIODevice::Append);
-//        QTextStream out(&file);
-//        out << x0 << " " << y0 << " " << z0 << "\n";
-////        out << r0 << " " << t0 << " " << p0 << "\n";
-//        file.close();
-//      }
+      //      if(nucleusIndex==0)
+      //      {
+      //        QFile file("/scratch/brown/0.txt");
+      //        file.open(QIODevice::WriteOnly | QIODevice::Append);
+      //        QTextStream out(&file);
+      //        out << x0 << " " << y0 << " " << z0 << "\n";
+      ////        out << r0 << " " << t0 << " " << p0 << "\n";
+      //        file.close();
+      //      }
       for( qint64 m=0 ; m < nmode ; ++m )
       {
         if( modeList.at(m) == 0 )
@@ -1601,7 +1584,7 @@ QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
 }
 
 void property_v_rtp(unsigned int ndim, unsigned int npts, const double *xyz, void *param,
-                unsigned int fdim, double *fval)
+                    unsigned int fdim, double *fval)
 {
 
   QVariantList *paramVariantListPtr = (QVariantList *)param;
@@ -1993,7 +1976,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
     qreal midpoint = (right + left) / 2.0;
     rf=midpoint;
 
-//    qDebug() << left << midpoint << right ;
+    //    qDebug() << left << midpoint << right ;
 
     Matrix<qreal,3,1> rtpm;
     rtpm << midpoint, t, p;
@@ -2098,12 +2081,12 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
   paramVariantList.append(0); // mode
   paramVariantList.append( basinList.at(0) ); // basin
 
-//  qDebug() << "Into R with rf=" << rf;
+  //  qDebug() << "Into R with rf=" << rf;
   adapt_integrate(fdim, property_r, &paramVariantList,
                   dim, xmin, xmax,
                   maxEval, tol, 0,
                   val, err);
-//  qDebug() << "Out of R with val=" << val[0] << "err=" << err[0];
+  //  qDebug() << "Out of R with val=" << val[0] << "err=" << err[0];
   qreal Rval=val[0];
   qreal Rerr=err[0];
 
@@ -2116,7 +2099,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
 
   variantList.append(sin(t)*Rval);
 
-//  qDebug() << rf << t << p << sin(t) * Rval;
+  //  qDebug() << rf << t << p << sin(t) * Rval;
 
   return variantList;
 
@@ -2124,7 +2107,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
 
 
 void property_v_tp(unsigned int ndim, unsigned int npts, const double *xyz, void *param,
-                unsigned int fdim, double *fval)
+                   unsigned int fdim, double *fval)
 {
 
   QVariantList *paramVariantListPtr = (QVariantList *)param;

@@ -1,4 +1,4 @@
-   /**********************************************************************
+/**********************************************************************
   QTAIM - Extension for Quantum Theory of Atoms In Molecules Analysis
 
   Copyright (C) 2010 Eric C. Brown
@@ -73,7 +73,7 @@ namespace Avogadro
 
     if( wfn.nuclearCharge(nucleus) < 4 )
     {
-//      QTAIMODEIntegrator ode(eval,QTAIMODEIntegrator::CMBPMinusThreeGradientInElectronDensity);
+      //      QTAIMODEIntegrator ode(eval,QTAIMODEIntegrator::CMBPMinusThreeGradientInElectronDensity);
       QTAIMLSODAIntegrator ode(eval,QTAIMLSODAIntegrator::CMBPMinusThreeGradientInElectronDensity);
       result=ode.integrate(x0y0z0);
     }
@@ -156,17 +156,17 @@ namespace Avogadro
     QList<QVector3D> ncpList;
 
     QVector3D result;
-//    QTAIMODEIntegrator ode(eval,QTAIMODEIntegrator::CMBPMinusOneGradientInElectronDensity);
+    //    QTAIMODEIntegrator ode(eval,QTAIMODEIntegrator::CMBPMinusOneGradientInElectronDensity);
     QTAIMLSODAIntegrator ode(eval,QTAIMLSODAIntegrator::CMBPMinusOneGradientInElectronDensity);
     result=ode.integrate(x0y0z0);
     Matrix<qreal,3,1> xyz; xyz << result.x(), result.y(), result.z();
 
     if(
-       !( QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
+        !( QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
             eval.hessianOfElectronDensity(xyz)
             ) == -1 )
-      || (eval.gradientOfElectronDensity(xyz)).norm() > SMALL_GRADIENT_NORM
-     )
+        || (eval.gradientOfElectronDensity(xyz)).norm() > SMALL_GRADIENT_NORM
+        )
     {
       value.append(false);
       value.append(result.x());
@@ -192,16 +192,16 @@ namespace Avogadro
                                     result.z() + smallStep*highestEigenvectorOfHessian(2) );
 
     QVector3D backwardStartingPoint( result.x() - smallStep*highestEigenvectorOfHessian(0),
-                                    result.y() - smallStep*highestEigenvectorOfHessian(1),
-                                    result.z() - smallStep*highestEigenvectorOfHessian(2) );
+                                     result.y() - smallStep*highestEigenvectorOfHessian(1),
+                                     result.z() - smallStep*highestEigenvectorOfHessian(2) );
 
-//    QTAIMODEIntegrator forwardODE(eval,QTAIMODEIntegrator::SteepestAscentPathInElectronDensity);
+    //    QTAIMODEIntegrator forwardODE(eval,QTAIMODEIntegrator::SteepestAscentPathInElectronDensity);
     QTAIMLSODAIntegrator forwardODE(eval,QTAIMLSODAIntegrator::SteepestAscentPathInElectronDensity);
     forwardODE.setBetaSpheres( betaSpheres );
     QVector3D forwardEndpoint=forwardODE.integrate(forwardStartingPoint);
     QList<QVector3D> forwardPath=forwardODE.path();
 
-//    QTAIMODEIntegrator backwardODE(eval,QTAIMODEIntegrator::SteepestAscentPathInElectronDensity);
+    //    QTAIMODEIntegrator backwardODE(eval,QTAIMODEIntegrator::SteepestAscentPathInElectronDensity);
     QTAIMLSODAIntegrator backwardODE(eval,QTAIMLSODAIntegrator::SteepestAscentPathInElectronDensity);
     backwardODE.setBetaSpheres( betaSpheres );
     QVector3D backwardEndpoint=backwardODE.integrate(backwardStartingPoint);
@@ -254,68 +254,210 @@ namespace Avogadro
       bondPathConnectsPair=false;
     }
 
-  if( bondPathConnectsPair )
+    if( bondPathConnectsPair )
+    {
+      value.append(true);
+      value.append(nucleusA);
+      value.append(nucleusB);
+      value.append(result.x());
+      value.append(result.y());
+      value.append(result.z());
+      Matrix<qreal,3,1> xyz ; xyz << result.x(),result.y(),result.z();
+      value.append( eval.laplacianOfElectronDensity(xyz) );
+      value.append( QTAIMMathUtilities::ellipticityOfASymmetricThreeByThreeMatrix(
+          eval.hessianOfElectronDensity(xyz)
+          )
+                    );
+      value.append( 1 + forwardPath.length() + 1 + backwardPath.length() + 1);
+      value.append( forwardEndpoint.x() );
+      for(qint64 i=forwardPath.length() - 1 ; i >= 0 ; --i)
+      {
+        value.append( forwardPath.at(i).x() );
+      }
+      value.append(result.x());
+      for(qint64 i=0; i < backwardPath.length() ; ++i)
+      {
+        value.append( backwardPath.at(i).x() );
+      }
+      value.append( backwardEndpoint.x() );
+      value.append( forwardEndpoint.y() );
+      for(qint64 i=forwardPath.length() - 1 ; i >= 0 ; --i)
+      {
+        value.append( forwardPath.at(i).y() );
+      }
+      value.append(result.y());
+      for(qint64 i=0; i < backwardPath.length() ; ++i)
+      {
+        value.append( backwardPath.at(i).y() );
+      }
+      value.append( backwardEndpoint.y() );
+      value.append( forwardEndpoint.z() );
+      for(qint64 i=forwardPath.length() - 1 ; i >= 0 ; --i)
+      {
+        value.append( forwardPath.at(i).z() );
+      }
+      value.append(result.z());
+      for(qint64 i=0; i < backwardPath.length() ; ++i)
+      {
+        value.append( backwardPath.at(i).z() );
+      }
+      value.append( backwardEndpoint.z() );
+
+    }
+    else
+    {
+      value.append(false);
+      // for debugging
+      value.append(result.x());
+      value.append(result.y());
+      value.append(result.z());
+    }
+
+    return value;
+  }
+
+
+  QList<QVariant> QTAIMLocateElectronDensitySink( QList<QVariant> input  )
   {
-    value.append(true);
-    value.append(nucleusA);
-    value.append(nucleusB);
-    value.append(result.x());
-    value.append(result.y());
-    value.append(result.z());
-    Matrix<qreal,3,1> xyz ; xyz << result.x(),result.y(),result.z();
-    value.append( eval.laplacianOfElectronDensity(xyz) );
-    value.append( QTAIMMathUtilities::ellipticityOfASymmetricThreeByThreeMatrix(
-        eval.hessianOfElectronDensity(xyz)
-        )
-        );
-    value.append( 1 + forwardPath.length() + 1 + backwardPath.length() + 1);
-    value.append( forwardEndpoint.x() );
-    for(qint64 i=forwardPath.length() - 1 ; i >= 0 ; --i)
+    qint64 counter=0;
+    const QString fileName=input.at(counter).toString(); counter++;
+    //    const qint64 nucleus=input.at(counter).toInt(); counter++
+    qreal x0=input.at(counter).toReal(); counter++;
+    qreal y0=input.at(counter).toReal(); counter++;
+    qreal z0=input.at(counter).toReal(); counter++;
+
+    const QVector3D x0y0z0(x0,y0,z0);
+
+    QTAIMWavefunction wfn;
+    wfn.loadFromBinaryFile(fileName);
+
+    QTAIMWavefunctionEvaluator eval(wfn);
+
+    bool correctSignature;
+    QVector3D result;
+
+    Matrix<qreal,3,1> xyz; xyz << x0, y0, z0;
+    if( eval.electronDensity( xyz ) < 1.e-1 )
     {
-      value.append( forwardPath.at(i).x() );
+      correctSignature=false;
     }
-    value.append(result.x());
-    for(qint64 i=0; i < backwardPath.length() ; ++i)
+    else
     {
-      value.append( backwardPath.at(i).x() );
+      //      QTAIMODEIntegrator ode(eval,QTAIMODEIntegrator::CMBPMinusThreeGradientInElectronDensityLaplacian);
+      QTAIMLSODAIntegrator ode(eval,QTAIMLSODAIntegrator::CMBPMinusThreeGradientInElectronDensityLaplacian);
+      result=ode.integrate(x0y0z0);
+
+      Matrix<qreal,3,1> xyz; xyz << result.x(), result.y(), result.z();
+
+      if( eval.electronDensity(xyz) > 1.e-1 &&
+          eval.gradientOfElectronDensityLaplacian(xyz).norm() < 1.e-3 )
+      {
+        if(
+            QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
+                eval.hessianOfElectronDensityLaplacian(xyz)
+                ) == -3
+            )
+        {
+          correctSignature=true;
+        }
+        else
+        {
+          correctSignature=false;
+        }
+      }
+      else
+      {
+        correctSignature=false;
+      }
     }
-    value.append( backwardEndpoint.x() );
-    value.append( forwardEndpoint.y() );
-    for(qint64 i=forwardPath.length() - 1 ; i >= 0 ; --i)
+
+    QList<QVariant> value;
+    if( correctSignature )
     {
-      value.append( forwardPath.at(i).y() );
+      value.append(correctSignature);
+      value.append(result.x());
+      value.append(result.y());
+      value.append(result.z());
     }
-    value.append(result.y());
-    for(qint64 i=0; i < backwardPath.length() ; ++i)
+    else
     {
-      value.append( backwardPath.at(i).y() );
+      value.append(false);
     }
-    value.append( backwardEndpoint.y() );
-    value.append( forwardEndpoint.z() );
-    for(qint64 i=forwardPath.length() - 1 ; i >= 0 ; --i)
-    {
-      value.append( forwardPath.at(i).z() );
-    }
-    value.append(result.z());
-    for(qint64 i=0; i < backwardPath.length() ; ++i)
-    {
-      value.append( backwardPath.at(i).z() );
-    }
-    value.append( backwardEndpoint.z() );
+
+    return value;
 
   }
-  else
+
+  QList<QVariant> QTAIMLocateElectronDensitySource( QList<QVariant> input  )
   {
-    value.append(false);
-    // for debugging
-    value.append(result.x());
-    value.append(result.y());
-    value.append(result.z());
+    qint64 counter=0;
+    const QString fileName=input.at(counter).toString(); counter++;
+    //    const qint64 nucleus=input.at(counter).toInt(); counter++
+    qreal x0=input.at(counter).toReal(); counter++;
+    qreal y0=input.at(counter).toReal(); counter++;
+    qreal z0=input.at(counter).toReal(); counter++;
+
+    const QVector3D x0y0z0(x0,y0,z0);
+
+    QTAIMWavefunction wfn;
+    wfn.loadFromBinaryFile(fileName);
+
+    QTAIMWavefunctionEvaluator eval(wfn);
+
+    bool correctSignature;
+    QVector3D result;
+
+    Matrix<qreal,3,1> xyz; xyz << x0, y0, z0;
+    if( eval.electronDensity( xyz ) < 1.e-1 )
+    {
+      correctSignature=false;
+    }
+    else
+    {
+      //      QTAIMODEIntegrator ode(eval,QTAIMODEIntegrator::CMBPPlusThreeGradientInElectronDensityLaplacian);
+      QTAIMLSODAIntegrator ode(eval,QTAIMLSODAIntegrator::CMBPPlusThreeGradientInElectronDensityLaplacian);
+      result=ode.integrate(x0y0z0);
+
+      Matrix<qreal,3,1> xyz; xyz << result.x(), result.y(), result.z();
+
+      if( eval.electronDensity(xyz) > 1.e-1 &&
+          eval.gradientOfElectronDensityLaplacian(xyz).norm() < 1.e-3 )
+      {
+        if(
+            QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
+                eval.hessianOfElectronDensityLaplacian(xyz)
+                ) == 3
+            )
+        {
+          correctSignature=true;
+        }
+        else
+        {
+          correctSignature=false;
+        }
+      }
+      else
+      {
+        correctSignature=false;
+      }
+    }
+
+    QList<QVariant> value;
+    if( correctSignature )
+    {
+      value.append(correctSignature);
+      value.append(result.x());
+      value.append(result.y());
+      value.append(result.z());
+    }
+    else
+    {
+      value.append(false);
+    }
+
+    return value;
+
   }
-
-  return value;
-}
-
 
   QTAIMCriticalPointLocator::QTAIMCriticalPointLocator( QTAIMWavefunction &wfn)
   {
@@ -331,6 +473,9 @@ namespace Avogadro
 
     m_bondPaths.empty();
     m_bondedAtoms.empty();
+
+    m_electronDensitySources.empty();
+    m_electronDensitySinks.empty();
 
   }
 
@@ -532,6 +677,346 @@ namespace Avogadro
 
   }
 
+  void QTAIMCriticalPointLocator::locateElectronDensitySources()
+  {
+
+    QString temporaryFileName=QTAIMCriticalPointLocator::temporaryFileName();
+
+    QList<QList<QVariant> > inputList;
+
+    qreal xmin,ymin,zmin;
+    qreal xmax,ymax,zmax;
+    qreal xstep,ystep,zstep;
+
+    // TODO: if only we were using Eigen data structures...
+    QList<qreal> xNuclearCoordinates;
+    QList<qreal> yNuclearCoordinates;
+    QList<qreal> zNuclearCoordinates;
+
+    for( qint64 i=0; i < m_wfn->numberOfNuclei() ; ++i )
+    {
+      xNuclearCoordinates.append( m_wfn->xNuclearCoordinate(i) );
+      yNuclearCoordinates.append( m_wfn->yNuclearCoordinate(i) );
+      zNuclearCoordinates.append( m_wfn->zNuclearCoordinate(i) );
+    }
+
+    xmin=xNuclearCoordinates.first();
+    xmax=xNuclearCoordinates.first();
+    for( qint64 i=1 ; i < m_wfn->numberOfNuclei() ; ++i)
+    {
+      if( xNuclearCoordinates.at(i) < xmin )
+      {
+        xmin=xNuclearCoordinates.at(i);
+      }
+      if( xNuclearCoordinates.at(i) > xmax )
+      {
+        xmax=xNuclearCoordinates.at(i);
+      }
+    }
+
+    ymin=yNuclearCoordinates.first();
+    ymax=yNuclearCoordinates.first();
+    for( qint64 i=1 ; i < yNuclearCoordinates.count() ; ++i)
+    {
+      if( yNuclearCoordinates.at(i) < ymin )
+      {
+        ymin=yNuclearCoordinates.at(i);
+      }
+      if( yNuclearCoordinates.at(i) > ymax )
+      {
+        ymax=yNuclearCoordinates.at(i);
+      }
+    }
+
+    zmin=zNuclearCoordinates.first();
+    zmax=zNuclearCoordinates.first();
+    for( qint64 i=1 ; i < zNuclearCoordinates.count() ; ++i)
+    {
+      if( zNuclearCoordinates.at(i) < zmin )
+      {
+        zmin=zNuclearCoordinates.at(i);
+      }
+      if( zNuclearCoordinates.at(i) > zmax )
+      {
+        zmax=zNuclearCoordinates.at(i);
+      }
+    }
+
+    xmin= -2.0 + xmin;
+    ymin= -2.0 + ymin;
+    zmin= -2.0 + zmin;
+
+    xmax = 2.0 + xmax;
+    ymax = 2.0 + ymax;
+    zmax = 2.0 + zmax;
+
+    xstep=ystep=zstep= 0.5;
+
+    for( qreal x=xmin ; x < xmax+xstep ; x=x+xstep)
+    {
+      for( qreal y=ymin ; y < ymax+ystep ; y=y+ystep)
+      {
+        for( qreal z=zmin ; z < zmax+zstep ; z=z+zstep)
+        {
+          QList<QVariant> input;
+          input.append( temporaryFileName );
+//          input.append( n );
+          input.append( x );
+          input.append( y );
+          input.append( z );
+
+          inputList.append(input);
+        }
+      }
+    }
+
+    m_wfn->saveToBinaryFile(temporaryFileName);
+
+    QProgressDialog dialog;
+    dialog.setWindowTitle("QTAIM");
+    dialog.setLabelText(QString("Electron Density Sources Search"));
+
+    QFutureWatcher<void> futureWatcher;
+    QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
+    QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
+    QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int,int)), &dialog, SLOT(setRange(int,int)));
+    QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
+
+    QFuture<QList<QVariant> > future=QtConcurrent::mapped(inputList, QTAIMLocateElectronDensitySource );
+    futureWatcher.setFuture(future);
+    dialog.exec();
+    futureWatcher.waitForFinished();
+
+    QList<QList<QVariant> > results;
+    if( futureWatcher.future().isCanceled() )
+    {
+      results.clear();
+    }
+    else
+    {
+      results=future.results();
+    }
+
+    QFile file;
+    file.remove(temporaryFileName);
+
+    for( qint64 n=0 ; n < results.length() ; ++n )
+    {
+
+      qint64 counter=0;
+      bool correctSignature = results.at(n).at(counter).toBool(); counter++;
+
+      if( correctSignature )
+      {
+        qreal x=results.at(n).at(counter).toReal(); counter++;
+        qreal y=results.at(n).at(counter).toReal(); counter++;
+        qreal z=results.at(n).at(counter).toReal(); counter++;
+
+        if( (xmin < x && x < xmax) &&
+            (ymin < y && y < ymax) &&
+            (zmin < z && z < zmax) )
+        {
+          QVector3D result(x,y,z);
+
+          qreal smallestDistance=HUGE_REAL_NUMBER;
+
+          for(qint64 i=0 ; i < m_electronDensitySources.length() ; ++i )
+          {
+
+            Matrix<qreal,3,1> a(x,y,z);
+            Matrix<qreal,3,1> b(m_electronDensitySources.at(i).x(),
+                                m_electronDensitySources.at(i).y(),
+                                m_electronDensitySources.at(i).z());
+
+            qreal distance=QTAIMMathUtilities::distance(a,b);
+
+            if( distance < smallestDistance )
+            {
+              smallestDistance=distance;
+            }
+
+          }
+
+          if( smallestDistance > 1.e-2 )
+          {
+            m_electronDensitySources.append( result );
+          }
+        }
+      }
+    }
+//    qDebug() << "SOURCES" << m_electronDensitySources;
+  }
+
+  void QTAIMCriticalPointLocator::locateElectronDensitySinks()
+  {
+
+    QString temporaryFileName=QTAIMCriticalPointLocator::temporaryFileName();
+
+    QList<QList<QVariant> > inputList;
+
+    qreal xmin,ymin,zmin;
+    qreal xmax,ymax,zmax;
+    qreal xstep,ystep,zstep;
+
+    // TODO: if only we were using Eigen data structures...
+    QList<qreal> xNuclearCoordinates;
+    QList<qreal> yNuclearCoordinates;
+    QList<qreal> zNuclearCoordinates;
+
+    for( qint64 i=0; i < m_wfn->numberOfNuclei() ; ++i )
+    {
+      xNuclearCoordinates.append( m_wfn->xNuclearCoordinate(i) );
+      yNuclearCoordinates.append( m_wfn->yNuclearCoordinate(i) );
+      zNuclearCoordinates.append( m_wfn->zNuclearCoordinate(i) );
+    }
+
+    xmin=xNuclearCoordinates.first();
+    xmax=xNuclearCoordinates.first();
+    for( qint64 i=1 ; i < m_wfn->numberOfNuclei() ; ++i)
+    {
+      if( xNuclearCoordinates.at(i) < xmin )
+      {
+        xmin=xNuclearCoordinates.at(i);
+      }
+      if( xNuclearCoordinates.at(i) > xmax )
+      {
+        xmax=xNuclearCoordinates.at(i);
+      }
+    }
+
+    ymin=yNuclearCoordinates.first();
+    ymax=yNuclearCoordinates.first();
+    for( qint64 i=1 ; i < yNuclearCoordinates.count() ; ++i)
+    {
+      if( yNuclearCoordinates.at(i) < ymin )
+      {
+        ymin=yNuclearCoordinates.at(i);
+      }
+      if( yNuclearCoordinates.at(i) > ymax )
+      {
+        ymax=yNuclearCoordinates.at(i);
+      }
+    }
+
+    zmin=zNuclearCoordinates.first();
+    zmax=zNuclearCoordinates.first();
+    for( qint64 i=1 ; i < zNuclearCoordinates.count() ; ++i)
+    {
+      if( zNuclearCoordinates.at(i) < zmin )
+      {
+        zmin=zNuclearCoordinates.at(i);
+      }
+      if( zNuclearCoordinates.at(i) > zmax )
+      {
+        zmax=zNuclearCoordinates.at(i);
+      }
+    }
+
+    xmin= -2.0 + xmin;
+    ymin= -2.0 + ymin;
+    zmin= -2.0 + zmin;
+
+    xmax = 2.0 + xmax;
+    ymax = 2.0 + ymax;
+    zmax = 2.0 + zmax;
+
+    xstep=ystep=zstep= 0.5;
+
+    for( qreal x=xmin ; x < xmax+xstep ; x=x+xstep)
+    {
+      for( qreal y=ymin ; y < ymax+ystep ; y=y+ystep)
+      {
+        for( qreal z=zmin ; z < zmax+zstep ; z=z+zstep)
+        {
+          QList<QVariant> input;
+          input.append( temporaryFileName );
+//          input.append( n );
+          input.append( x );
+          input.append( y );
+          input.append( z );
+
+          inputList.append(input);
+        }
+      }
+    }
+
+    m_wfn->saveToBinaryFile(temporaryFileName);
+
+    QProgressDialog dialog;
+    dialog.setWindowTitle("QTAIM");
+    dialog.setLabelText(QString("Electron Density Sinks Search"));
+
+    QFutureWatcher<void> futureWatcher;
+    QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
+    QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
+    QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int,int)), &dialog, SLOT(setRange(int,int)));
+    QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog, SLOT(setValue(int)));
+
+    QFuture<QList<QVariant> > future=QtConcurrent::mapped(inputList, QTAIMLocateElectronDensitySink );
+    futureWatcher.setFuture(future);
+    dialog.exec();
+    futureWatcher.waitForFinished();
+
+    QList<QList<QVariant> > results;
+    if( futureWatcher.future().isCanceled() )
+    {
+      results.clear();
+    }
+    else
+    {
+      results=future.results();
+    }
+
+    QFile file;
+    file.remove(temporaryFileName);
+
+    for( qint64 n=0 ; n < results.length() ; ++n )
+    {
+
+      qint64 counter=0;
+      bool correctSignature = results.at(n).at(counter).toBool(); counter++;
+
+      if( correctSignature )
+      {
+        qreal x=results.at(n).at(counter).toReal(); counter++;
+        qreal y=results.at(n).at(counter).toReal(); counter++;
+        qreal z=results.at(n).at(counter).toReal(); counter++;
+
+        if( (xmin < x && x < xmax) &&
+            (ymin < y && y < ymax) &&
+            (zmin < z && z < zmax) )
+        {
+          QVector3D result(x,y,z);
+
+          qreal smallestDistance=HUGE_REAL_NUMBER;
+
+          for(qint64 i=0 ; i < m_electronDensitySinks.length() ; ++i )
+          {
+
+            Matrix<qreal,3,1> a(x,y,z);
+            Matrix<qreal,3,1> b(m_electronDensitySinks.at(i).x(),
+                                m_electronDensitySinks.at(i).y(),
+                                m_electronDensitySinks.at(i).z());
+
+            qreal distance=QTAIMMathUtilities::distance(a,b);
+
+            if( distance < smallestDistance )
+            {
+              smallestDistance=distance;
+            }
+
+          }
+
+          if( smallestDistance > 1.e-2 )
+          {
+            m_electronDensitySinks.append( result );
+          }
+        }
+      }
+    }
+//    qDebug() << "SINKS" << m_electronDensitySinks;
+  }
+
   QString QTAIMCriticalPointLocator::temporaryFileName()
   {
     QTemporaryFile temporaryFile;
@@ -544,7 +1029,7 @@ namespace Avogadro
     QDir dir;
     do
     {
-    // Nothing
+      // Nothing
     } while ( dir.exists(temporaryFileName) );
 
     return temporaryFileName;

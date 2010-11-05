@@ -71,14 +71,14 @@
    to pass any additional data through to your function (it corresponds
    to the fdata parameter you pass to adapt_integrate). */
 typedef void (*integrand) (unsigned int ndim, const double *x, void *,
-         unsigned int fdim, double *fval);
+                           unsigned int fdim, double *fval);
 
 /* a vector integrand of a vector of npt points: x[i*ndim + j] is the
    j-th coordinate of the i-th point, and the k-th function evaluation
    for the i-th point is returned in fval[k*npt + i]. */
 typedef void (*integrand_v) (unsigned int ndim, unsigned int npt,
-           const double *x, void *,
-           unsigned int fdim, double *fval);
+                             const double *x, void *,
+                             unsigned int fdim, double *fval);
 
 /* Integrate the function f from xmin[dim] to xmax[dim], with at most
    maxEval function evaluations (0 for no limit), until the given
@@ -88,15 +88,15 @@ typedef void (*integrand_v) (unsigned int ndim, unsigned int npt,
    integrand f(x). The return value of the function is 0 on success
    and non-zero if there  was an error. */
 int adapt_integrate(unsigned int fdim, integrand f, void *fdata,
-        unsigned int dim, const double *xmin, const double *xmax,
-        unsigned int maxEval, double reqAbsError, double reqRelError,
-        double *val, double *err);
+                    unsigned int dim, const double *xmin, const double *xmax,
+                    unsigned int maxEval, double reqAbsError, double reqRelError,
+                    double *val, double *err);
 
 /* as adapt_integrate, but vectorized integrand */
 int adapt_integrate_v(unsigned int fdim, integrand_v f, void *fdata,
-          unsigned int dim, const double *xmin, const double *xmax,
-         unsigned int maxEval, double reqAbsError, double reqRelError,
-          double *val, double *err);
+                      unsigned int dim, const double *xmin, const double *xmax,
+                      unsigned int maxEval, double reqAbsError, double reqRelError,
+                      double *val, double *err);
 
 //#ifdef __cplusplus
 //}  /* extern "C" */
@@ -119,7 +119,7 @@ namespace Avogadro
     {
       ElectronDensity=0,
       ElectronDensityLaplacian=1
-    };
+                             };
 
     explicit QTAIMCubature(QTAIMWavefunction &wfn, qint64 mode, QList<qint64> basins);
     ~QTAIMCubature();

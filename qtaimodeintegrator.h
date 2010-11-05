@@ -53,7 +53,7 @@ namespace Avogadro {
       CMBPMinusOneGradientInElectronDensityLaplacian=6,
       CMBPPlusOneGradientInElectronDensityLaplacian=7,
       CMBPPlusThreeGradientInElectronDensityLaplacian=8
-    };
+                                                    };
 
     explicit QTAIMODEIntegrator(QTAIMWavefunctionEvaluator &eval, const qint64 mode);
 

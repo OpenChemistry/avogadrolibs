@@ -818,8 +818,8 @@ namespace Avogadro
     for( qint64 m=0 ; m < m_nmo ; ++m )
     {
       value +=    2*m_occno(m)*(ipow(m_cdg100(m),2)+m_cdg000(m)*m_cdg200(m))
-                 +2*m_occno(m)*(ipow(m_cdg010(m),2)+m_cdg000(m)*m_cdg020(m))
-                 +2*m_occno(m)*(ipow(m_cdg001(m),2)+m_cdg000(m)*m_cdg002(m));
+                  +2*m_occno(m)*(ipow(m_cdg010(m),2)+m_cdg000(m)*m_cdg020(m))
+                  +2*m_occno(m)*(ipow(m_cdg001(m),2)+m_cdg000(m)*m_cdg002(m));
     }
 
     return value;

@@ -103,7 +103,7 @@ namespace Avogadro
     }
 
     bool initializeWithWFNFile(const QString &fileName);
-// TODO initialize with Avogadro general wavefunction
+    // TODO initialize with Avogadro general wavefunction
 
     const qint64 numberOfMolecularOrbitals() const { return m_numberOfMolecularOrbitals; }
     const qint64 numberOfGaussianPrimitives() const { return m_numberOfGaussianPrimitives; }
