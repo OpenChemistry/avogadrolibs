@@ -121,9 +121,9 @@ namespace Avogadro
       rtol[1] = 0.0;
       rtol[2] = 0.0;
       rtol[3] = 0.0;
-      atol[1] = 1.0E-5;
-      atol[2] = 1.0E-5;
-      atol[3] = 1.0E-5;
+      atol[1] = 5.0E-5;
+      atol[2] = 5.0E-5;
+      atol[3] = 5.0E-5;
       itask = 1;
       istate = 1;
       iopt = 0;

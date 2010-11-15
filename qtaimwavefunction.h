@@ -34,7 +34,11 @@
 #include <QIODevice>
 #include <QDataStream>
 
-// #include "qtaimwavefunctionevaluator.h"
+#include <QVariant>
+#include <QVariantList>
+
+#include <avogadro/molecule.h>
+
 namespace Avogadro
 {
 
@@ -103,6 +107,8 @@ namespace Avogadro
     }
 
     bool initializeWithWFNFile(const QString &fileName);
+//    bool initializeWithMoleculeProperties( Molecule &mol );
+    bool initializeWithMoleculeProperties( Molecule*& mol );
     // TODO initialize with Avogadro general wavefunction
 
     const qint64 numberOfMolecularOrbitals() const { return m_numberOfMolecularOrbitals; }

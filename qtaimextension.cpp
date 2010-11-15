@@ -126,27 +126,54 @@ namespace Avogadro
   QUndoCommand* QTAIMExtension::performAction(QAction *action, GLWidget *widget)
   {
 
+    bool wavefunctionAlreadyLoaded;
+
+    if( m_molecule->property("QTAIMComment").isValid() )
+    {
+      wavefunctionAlreadyLoaded=true;
+    }
+    else
+    {
+      wavefunctionAlreadyLoaded=false;
+    }
+
     int i = action->data().toInt();
 
     QTime timer;
     timer.start();
 
-    QString fileName = QFileDialog::getOpenFileName(
-        new QWidget,
-        tr("Open WFN File"),
-        QDir::homePath(),
-        tr("WFN files (*.wfn);;All files (*.*)") );
-
-    if(fileName.isNull())
+    QString fileName;
+    if( wavefunctionAlreadyLoaded )
     {
-      qDebug() << "No such file.";
-      return 0;
+      // do nothing
+    }
+    else
+    {
+       fileName = QFileDialog::getOpenFileName(
+          new QWidget,
+          tr("Open WFN File"),
+          QDir::homePath(),
+          tr("WFN files (*.wfn);;All files (*.*)") );
+
+      if(fileName.isNull())
+      {
+        qDebug() << "No such file.";
+        return 0;
+      }
     }
 
     // Instantiate a Wavefunction
 
+    bool success;
     QTAIMWavefunction wfn;
-    bool success=wfn.initializeWithWFNFile(fileName);
+    if( wavefunctionAlreadyLoaded )
+    {
+      success=wfn.initializeWithMoleculeProperties(m_molecule);
+    }
+    else
+    {
+      success=wfn.initializeWithWFNFile(fileName);
+    }
 
     if(!success)
     {
@@ -600,14 +627,7 @@ namespace Avogadro
           } // atom1
         } // atom 0
 
-
-
-
-
         m_molecule->update();
-
-
-
 
         // Electron Density
         qint64 mode=0;
@@ -619,7 +639,11 @@ namespace Avogadro
           basins.append(i);
         }
 
+//        QTime time;
+//        time.start();
         QTAIMCubature cub(wfn,mode,basins);
+//        qDebug() << "Time Elapsed:" << time.elapsed();
+
       }
       break;
     }
