@@ -55,6 +55,8 @@
 #ifndef QTAIMCUBATURE_H
 #define QTAIMCUBATURE_H
 
+#include <QPair>
+
 //#ifdef __cplusplus
 //extern "C"
 //{
@@ -121,8 +123,10 @@ namespace Avogadro
       ElectronDensityLaplacian=1
                              };
 
-    explicit QTAIMCubature(QTAIMWavefunction &wfn, qint64 mode, QList<qint64> basins);
+    explicit QTAIMCubature(QTAIMWavefunction &wfn);
     ~QTAIMCubature();
+
+    QList<QPair<qreal,qreal> > integrate(qint64 mode, QList<qint64> basins );
 
     void setMode(qint64 mode);
 
@@ -134,7 +138,7 @@ namespace Avogadro
     QString m_temporaryFileName;
     QString temporaryFileName();
 
-
+    QList<QVector3D> m_ncpList;
 
   };
 

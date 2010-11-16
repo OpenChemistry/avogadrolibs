@@ -2219,14 +2219,12 @@ void property_v_tp(unsigned int ndim, unsigned int npts, const double *xyz, void
 namespace Avogadro
 {
 
-  QTAIMCubature::QTAIMCubature(QTAIMWavefunction &wfn, qint64 mode, QList<qint64> basins )
+  QTAIMCubature::QTAIMCubature(QTAIMWavefunction &wfn)
   {
 
     m_wfn=&wfn;
-    m_mode=mode;
-    m_basins=basins;
 
-    QString m_temporaryFileName=QTAIMCubature::temporaryFileName();
+    m_temporaryFileName=QTAIMCubature::temporaryFileName();
     m_wfn->saveToBinaryFile(m_temporaryFileName);
 
     // Instantiate a Critical Point Locator
@@ -2236,7 +2234,17 @@ namespace Avogadro
     cpl.locateNuclearCriticalPoints();
 
     // QLists of results
-    QList<QVector3D> ncpList=cpl.nuclearCriticalPoints();
+    m_ncpList=cpl.nuclearCriticalPoints();
+
+  }
+
+  QList<QPair<qreal,qreal> > QTAIMCubature::integrate(qint64 mode, QList<qint64> basins )
+  {
+
+    QList<QPair<qreal,qreal> > value;
+
+    m_mode=mode;
+    m_basins=basins;
 
     double tol=1.e-2;
     unsigned int maxEval=0;
@@ -2267,22 +2275,22 @@ namespace Avogadro
 
           // shift origin of the integration to the nuclear coordinates of the ith nucleus.
 
-          xmin[0]= -8. + ncpList.at(i).x();
-          xmax[0]=  8. + ncpList.at(i).x();
-          xmin[1]= -8. + ncpList.at(i).y();
-          xmax[1]=  8. + ncpList.at(i).y();
-          xmin[2]= -8. + ncpList.at(i).z();
-          xmax[2]=  8. + ncpList.at(i).z();
+          xmin[0]= -8. + m_ncpList.at(i).x();
+          xmax[0]=  8. + m_ncpList.at(i).x();
+          xmin[1]= -8. + m_ncpList.at(i).y();
+          xmax[1]=  8. + m_ncpList.at(i).y();
+          xmin[2]= -8. + m_ncpList.at(i).z();
+          xmax[2]=  8. + m_ncpList.at(i).z();
 
           QVariantList paramVariantList;
           paramVariantList.append(m_temporaryFileName);
 
-          paramVariantList.append(ncpList.length()); // number of nuclear critical points
-          for( qint64 j=0 ; j < ncpList.length() ; ++j)
+          paramVariantList.append(m_ncpList.length()); // number of nuclear critical points
+          for( qint64 j=0 ; j < m_ncpList.length() ; ++j)
           {
-            paramVariantList.append(ncpList.at(j).x() );
-            paramVariantList.append(ncpList.at(j).y() );
-            paramVariantList.append(ncpList.at(j).z() );
+            paramVariantList.append(m_ncpList.at(j).x() );
+            paramVariantList.append(m_ncpList.at(j).y() );
+            paramVariantList.append(m_ncpList.at(j).z() );
           }
           paramVariantList.append(0); // mode
           paramVariantList.append( basins.at(i) ); // basin
@@ -2307,12 +2315,12 @@ namespace Avogadro
           QVariantList paramVariantList;
           paramVariantList.append(m_temporaryFileName);
 
-          paramVariantList.append(ncpList.length()); // number of nuclear critical points
-          for( qint64 j=0 ; j < ncpList.length() ; ++j)
+          paramVariantList.append(m_ncpList.length()); // number of nuclear critical points
+          for( qint64 j=0 ; j < m_ncpList.length() ; ++j)
           {
-            paramVariantList.append(ncpList.at(j).x() );
-            paramVariantList.append(ncpList.at(j).y() );
-            paramVariantList.append(ncpList.at(j).z() );
+            paramVariantList.append(m_ncpList.at(j).x() );
+            paramVariantList.append(m_ncpList.at(j).y() );
+            paramVariantList.append(m_ncpList.at(j).z() );
           }
           paramVariantList.append(0); // mode
           paramVariantList.append( basins.at(i) ); // basin
@@ -2346,12 +2354,12 @@ namespace Avogadro
         QVariantList paramVariantList;
         paramVariantList.append(m_temporaryFileName);
 
-        paramVariantList.append(ncpList.length()); // number of nuclear critical points
-        for( qint64 j=0 ; j < ncpList.length() ; ++j)
+        paramVariantList.append(m_ncpList.length()); // number of nuclear critical points
+        for( qint64 j=0 ; j < m_ncpList.length() ; ++j)
         {
-          paramVariantList.append(ncpList.at(j).x() );
-          paramVariantList.append(ncpList.at(j).y() );
-          paramVariantList.append(ncpList.at(j).z() );
+          paramVariantList.append(m_ncpList.at(j).x() );
+          paramVariantList.append(m_ncpList.at(j).y() );
+          paramVariantList.append(m_ncpList.at(j).z() );
         }
         paramVariantList.append(0); // mode
         paramVariantList.append( basins.at(i) ); // basin
@@ -2368,10 +2376,19 @@ namespace Avogadro
 
       qDebug() <<"basin=" << basins.at(i) + 1 <<  "value= " << val[0] << "err=" << err[0];
 
+      QPair<qreal,qreal> thisPair;
+      thisPair.first=val[0];
+      thisPair.second=err[0];
+
+      value.append(thisPair);
+
     }
 
     qFree(val);
     qFree(err);
+
+    return value;
+
   }
 
   QTAIMCubature::~QTAIMCubature()
