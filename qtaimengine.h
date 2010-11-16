@@ -29,9 +29,6 @@
 #include <avogadro/global.h>
 #include <avogadro/engine.h>
 
-#include <avogadro/qtaimnuclearcriticalpoint.h>
-#include <avogadro/qtaimbondcriticalpoint.h>
-
 #include "ui_qtaimsettingswidget.h"
 
 namespace Avogadro {

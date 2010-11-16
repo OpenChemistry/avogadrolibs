@@ -34,12 +34,6 @@
 #include <avogadro/bond.h>
 #include <avogadro/molecule.h>
 
-#include <avogadro/qtaimnuclearcriticalpoint.h>
-#include <avogadro/qtaimbondcriticalpoint.h>
-//#include <avogadro/qtaimringcriticalpoint.h>
-//#include <avogadro/qtaimcagecriticalpoint.h>
-//#include <avogadro/qtaimbondpath.h>
-
 #include <QGLWidget> // for OpenGL bits
 #include <QDebug>
 
@@ -87,72 +81,191 @@ namespace Avogadro
     if (!map) map = pd->colorMap(); // fall back to global color map
 
     // Render the bond paths
-    foreach(const QTAIMBondCriticalPoint *bcp, m_molecule->bondCriticalPoints() )
+    if(
+        m_molecule->property("QTAIMFirstNCPIndexVariantList").isValid() &&
+        m_molecule->property("QTAIMSecondNCPIndexVariantList").isValid() &&
+        m_molecule->property("QTAIMLaplacianAtBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMEllipticityAtBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMBondPathSegmentStartIndex").isValid() &&
+        m_molecule->property("QTAIMBondPathSegmentEndIndex").isValid() &&
+        m_molecule->property("QTAIMXBondPaths").isValid() &&
+        m_molecule->property("QTAIMYBondPaths").isValid() &&
+        m_molecule->property("QTAIMZBondPaths").isValid()
+        )
     {
-      QList<Eigen::Vector3d> bp=bcp->bondPath();
+      QVariant firstNCPIndexVariant=m_molecule->property("QTAIMFirstNCPIndexVariantList");
+      QVariant secondNCPIndexVariant=m_molecule->property("QTAIMSecondNCPIndexVariantList");
+      QVariant laplacianAtBondCriticalPointsVariant=m_molecule->property("QTAIMLaplacianAtBondCriticalPoints");
+      QVariant ellipticityAtBondCriticalPointsVariant=m_molecule->property("QTAIMEllipticityAtBondCriticalPoints");
+      QVariant bondPathSegmentStartIndexVariant=m_molecule->property("QTAIMBondPathSegmentStartIndex");
+      QVariant bondPathSegmentEndIndexVariant=m_molecule->property("QTAIMBondPathSegmentEndIndex");
+      QVariant xBondPathsVariant=m_molecule->property("QTAIMXBondPaths");
+      QVariant yBondPathsVariant=m_molecule->property("QTAIMYBondPaths");
+      QVariant zBondPathsVariant=m_molecule->property("QTAIMZBondPaths");
 
-      if( bcp->laplacian() > 0.0 )
+      QVariantList firstNCPIndexVariantList=firstNCPIndexVariant.toList();
+      QVariantList secondNCPIndexVariantList=secondNCPIndexVariant.toList();
+      QVariantList laplacianAtBondCriticalPointsVariantList=laplacianAtBondCriticalPointsVariant.toList();
+      QVariantList ellipticityAtBondCriticalPointsVariantList=ellipticityAtBondCriticalPointsVariant.toList();
+      QVariantList bondPathSegmentStartIndexVariantList=bondPathSegmentStartIndexVariant.toList();
+      QVariantList bondPathSegmentEndIndexVariantList=bondPathSegmentEndIndexVariant.toList();
+      QVariantList xBondPathsVariantList=xBondPathsVariant.toList();
+      QVariantList yBondPathsVariantList=yBondPathsVariant.toList();
+      QVariantList zBondPathsVariantList=zBondPathsVariant.toList();
+
+      for( qint64 i=0 ;  i < firstNCPIndexVariantList.length() ; ++i )
       {
-        for( qint64 i=0 ; i < bp.length() ; i=i+4 )
+
+        qint64 start=bondPathSegmentStartIndexVariantList.at(i).toLongLong();
+        qint64 end=bondPathSegmentEndIndexVariantList.at(i).toLongLong();
+
+        if( laplacianAtBondCriticalPointsVariantList.at(i).toReal() > 0.0 )
         {
-          pd->painter()->setColor("White");
-          pd->painter()->drawSphere(bp.at(i), 0.025 );
+
+          const qint64 step=4;
+
+          for( qint64 j=start ; j < end-1 ; j=j+step )
+          {
+            pd->painter()->setColor("White");
+            Eigen::Vector3d xyz;
+            xyz << xBondPathsVariantList.at(j).toReal(),
+                   yBondPathsVariantList.at(j).toReal(),
+                   zBondPathsVariantList.at(j).toReal();
+            pd->painter()->drawSphere(xyz, 0.025 );
+          }
         }
-      }
-      else
-      {
-        for( qint64 i=0 ; i < bp.length()-1 ; ++i )
+        else
         {
-          Vector3d v1(bp.at(i));
-          Vector3d v2(bp.at(i+1));
-//          d.normalize();
-          Vector3d v3( (v1 + v2) / 2. ) ;
 
-          double shift = 0.15;
-          int order = 1;
-          double radius=0.025;
+          const qint64 step=1;
 
-          pd->painter()->setColor("White");
-          pd->painter()->drawMultiCylinder( v1, v2, radius, order, shift );
+          for( qint64 j=start ; j < end-1 ; j=j+step )
+          {
+
+            Eigen::Vector3d xyz0;
+            xyz0 << xBondPathsVariantList.at(j).toReal(),
+                    yBondPathsVariantList.at(j).toReal(),
+                    zBondPathsVariantList.at(j).toReal();
+            Eigen::Vector3d xyz1;
+            xyz1 << xBondPathsVariantList.at(j+1).toReal(),
+                    yBondPathsVariantList.at(j+1).toReal(),
+                    zBondPathsVariantList.at(j+1).toReal();
+
+            Vector3d v1(xyz0);
+            Vector3d v2(xyz1);
+            Vector3d v3( (v1 + v2) / 2. ) ;
+
+            double shift = 0.15;
+            int order = 1;
+            double radius=0.025;
+
+            pd->painter()->setColor("White");
+            pd->painter()->drawMultiCylinder( v1, v2, radius, order, shift );
+          }
         }
-      }
-
-    }  // bond path
+      }  // bond path
+    }
 
     glDisable( GL_NORMALIZE );
     glEnable( GL_RESCALE_NORMAL );
 
-    foreach(const QTAIMNuclearCriticalPoint *ncp, m_molecule->nuclearCriticalPoints()) {
-      map->setFromPrimitive(ncp);
-      if (ncp->customColorName().isEmpty())
+
+    if( m_molecule->property("QTAIMXNuclearCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMYNuclearCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMZNuclearCriticalPoints").isValid() )
+    {
+      QVariant xNuclearCriticalPointsVariant=m_molecule->property("QTAIMXNuclearCriticalPoints");
+      QVariant yNuclearCriticalPointsVariant=m_molecule->property("QTAIMYNuclearCriticalPoints");
+      QVariant zNuclearCriticalPointsVariant=m_molecule->property("QTAIMZNuclearCriticalPoints");
+      QVariantList xNuclearCriticalPointsVariantList=xNuclearCriticalPointsVariant.toList();
+      QVariantList yNuclearCriticalPointsVariantList=yNuclearCriticalPointsVariant.toList();
+      QVariantList zNuclearCriticalPointsVariantList=zNuclearCriticalPointsVariant.toList();
+      if( xNuclearCriticalPointsVariantList.length() == yNuclearCriticalPointsVariantList.length() &&
+          xNuclearCriticalPointsVariantList.length() == zNuclearCriticalPointsVariantList.length() )
       {
-//        pd->painter()->setColor( map );
-        pd->painter()->setColor("Purple");
+        for( qint64 i=0 ; i < xNuclearCriticalPointsVariantList.length() ; ++i )
+        {
+          Eigen::Vector3d xyz;
+          xyz << xNuclearCriticalPointsVariantList.at(i).toReal(),
+                 yNuclearCriticalPointsVariantList.at(i).toReal(),
+                 zNuclearCriticalPointsVariantList.at(i).toReal();
+
+          // map->setFromPrimitive(ncp);
+
+          pd->painter()->setColor("Purple");
+          pd->painter()->drawSphere(xyz, 0.1 );
+
+        }
       }
-      else
-      {
-        pd->painter()->setColor(ncp->customColorName());
-      }
-      pd->painter()->drawSphere(ncp->pos(), 0.1 );
     }
 
-    foreach(const QTAIMBondCriticalPoint *bcp, m_molecule->bondCriticalPoints()) {
-      map->setFromPrimitive(bcp);
-      if (bcp->customColorName().isEmpty())
+
+    if( m_molecule->property("QTAIMXBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMYBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMZBondCriticalPoints").isValid() )
+    {
+      QVariant xBondCriticalPointsVariant=m_molecule->property("QTAIMXBondCriticalPoints");
+      QVariant yBondCriticalPointsVariant=m_molecule->property("QTAIMYBondCriticalPoints");
+      QVariant zBondCriticalPointsVariant=m_molecule->property("QTAIMZBondCriticalPoints");
+      QVariantList xBondCriticalPointsVariantList=xBondCriticalPointsVariant.toList();
+      QVariantList yBondCriticalPointsVariantList=yBondCriticalPointsVariant.toList();
+      QVariantList zBondCriticalPointsVariantList=zBondCriticalPointsVariant.toList();
+      if( xBondCriticalPointsVariantList.length() == yBondCriticalPointsVariantList.length() &&
+          xBondCriticalPointsVariantList.length() == zBondCriticalPointsVariantList.length() )
       {
-//        pd->painter()->setColor( map );
-        pd->painter()->setColor("Yellow");
+        for( qint64 i=0 ; i < xBondCriticalPointsVariantList.length() ; ++i )
+        {
+          Eigen::Vector3d xyz;
+          xyz << xBondCriticalPointsVariantList.at(i).toReal(),
+                 yBondCriticalPointsVariantList.at(i).toReal(),
+                 zBondCriticalPointsVariantList.at(i).toReal();
+
+          // map->setFromPrimitive(ncp);
+
+          pd->painter()->setColor("Yellow");
+          pd->painter()->drawSphere(xyz, 0.1 );
+
+        }
       }
-      else
-      {
-        pd->painter()->setColor(bcp->customColorName());
-      }
-      pd->painter()->drawSphere(bcp->pos(), 0.1 );
     }
 
     // normalize normal vectors of bonds
     glDisable( GL_RESCALE_NORMAL );
     glEnable( GL_NORMALIZE );
+
+    if( m_molecule->property("QTAIMXElectronDensitySources").isValid() &&
+        m_molecule->property("QTAIMYElectronDensitySources").isValid() &&
+        m_molecule->property("QTAIMZElectronDensitySources").isValid() )
+    {
+      QVariant xElectronDensitySourcesVariant=m_molecule->property("QTAIMXElectronDensitySources");
+      QVariant yElectronDensitySourcesVariant=m_molecule->property("QTAIMYElectronDensitySources");
+      QVariant zElectronDensitySourcesVariant=m_molecule->property("QTAIMZElectronDensitySources");
+      QVariantList xElectronDensitySourcesVariantList=xElectronDensitySourcesVariant.toList();
+      QVariantList yElectronDensitySourcesVariantList=yElectronDensitySourcesVariant.toList();
+      QVariantList zElectronDensitySourcesVariantList=zElectronDensitySourcesVariant.toList();
+      if( xElectronDensitySourcesVariantList.length() == yElectronDensitySourcesVariantList.length() &&
+          xElectronDensitySourcesVariantList.length() == zElectronDensitySourcesVariantList.length() )
+      {
+        for( qint64 i=0 ; i < xElectronDensitySourcesVariantList.length() ; ++i )
+        {
+          Eigen::Vector3d xyz;
+          xyz << xElectronDensitySourcesVariantList.at(i).toReal(),
+                 yElectronDensitySourcesVariantList.at(i).toReal(),
+                 zElectronDensitySourcesVariantList.at(i).toReal();
+
+          // map->setFromPrimitive(ncp);
+
+          pd->painter()->setColor("Blue");
+          pd->painter()->drawSphere(xyz, 0.1 );
+
+        }
+      }
+    }
+
+    // normalize normal vectors of bonds
+    glDisable( GL_RESCALE_NORMAL );
+    glEnable( GL_NORMALIZE );
+
 
 //    glPopAttrib();
 
@@ -166,67 +279,152 @@ namespace Avogadro
     if (!map) map = pd->colorMap();
 
     // Render the bond paths
-    foreach(const QTAIMBondCriticalPoint *bcp, m_molecule->bondCriticalPoints() )
+    if(
+        m_molecule->property("QTAIMFirstNCPIndexVariantList").isValid() &&
+        m_molecule->property("QTAIMSecondNCPIndexVariantList").isValid() &&
+        m_molecule->property("QTAIMLaplacianAtBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMEllipticityAtBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMBondPathSegmentStartIndex").isValid() &&
+        m_molecule->property("QTAIMBondPathSegmentEndIndex").isValid() &&
+        m_molecule->property("QTAIMXBondPaths").isValid() &&
+        m_molecule->property("QTAIMYBondPaths").isValid() &&
+        m_molecule->property("QTAIMZBondPaths").isValid()
+        )
     {
-      QList<Eigen::Vector3d> bp=bcp->bondPath();
+      QVariant firstNCPIndexVariant=m_molecule->property("QTAIMFirstNCPIndexVariantList");
+      QVariant secondNCPIndexVariant=m_molecule->property("QTAIMSecondNCPIndexVariantList");
+      QVariant laplacianAtBondCriticalPointsVariant=m_molecule->property("QTAIMLaplacianAtBondCriticalPoints");
+      QVariant ellipticityAtBondCriticalPointsVariant=m_molecule->property("QTAIMEllipticityAtBondCriticalPoints");
+      QVariant bondPathSegmentStartIndexVariant=m_molecule->property("QTAIMBondPathSegmentStartIndex");
+      QVariant bondPathSegmentEndIndexVariant=m_molecule->property("QTAIMBondPathSegmentEndIndex");
+      QVariant xBondPathsVariant=m_molecule->property("QTAIMXBondPaths");
+      QVariant yBondPathsVariant=m_molecule->property("QTAIMYBondPaths");
+      QVariant zBondPathsVariant=m_molecule->property("QTAIMZBondPaths");
 
-      if( bcp->laplacian() > 0.0 )
+      QVariantList firstNCPIndexVariantList=firstNCPIndexVariant.toList();
+      QVariantList secondNCPIndexVariantList=secondNCPIndexVariant.toList();
+      QVariantList laplacianAtBondCriticalPointsVariantList=laplacianAtBondCriticalPointsVariant.toList();
+      QVariantList ellipticityAtBondCriticalPointsVariantList=ellipticityAtBondCriticalPointsVariant.toList();
+      QVariantList bondPathSegmentStartIndexVariantList=bondPathSegmentStartIndexVariant.toList();
+      QVariantList bondPathSegmentEndIndexVariantList=bondPathSegmentEndIndexVariant.toList();
+      QVariantList xBondPathsVariantList=xBondPathsVariant.toList();
+      QVariantList yBondPathsVariantList=yBondPathsVariant.toList();
+      QVariantList zBondPathsVariantList=zBondPathsVariant.toList();
+
+      for( qint64 i=0 ;  i < firstNCPIndexVariantList.length() ; ++i )
       {
-        for( qint64 i=0 ; i < bp.length() ; i=i+4 )
+
+        qint64 start=bondPathSegmentStartIndexVariantList.at(i).toLongLong();
+        qint64 end=bondPathSegmentEndIndexVariantList.at(i).toLongLong();
+
+        if( laplacianAtBondCriticalPointsVariantList.at(i).toReal() > 0.0 )
         {
-          pd->painter()->setColor("White");
-          pd->painter()->drawSphere(bp.at(i), 0.025 );
+
+          const qint64 step=4;
+
+          for( qint64 j=start ; j < end-1 ; j=j+step )
+          {
+            pd->painter()->setColor("White");
+            Eigen::Vector3d xyz;
+            xyz << xBondPathsVariantList.at(j).toReal(),
+                   yBondPathsVariantList.at(j).toReal(),
+                   zBondPathsVariantList.at(j).toReal();
+            pd->painter()->drawSphere(xyz, 0.025 );
+          }
         }
-      }
-      else
-      {
-        for( qint64 i=0 ; i < bp.length()-1 ; ++i )
+        else
         {
-          Vector3d v1(bp.at(i));
-          Vector3d v2(bp.at(i+1));
-//          d.normalize();
-          Vector3d v3( (v1 + v2) / 2. ) ;
 
-          double shift = 0.15;
-          int order = 1;
-          double radius=0.025;
+          const qint64 step=1;
 
-          pd->painter()->setColor("White");
-          pd->painter()->drawMultiCylinder( v1, v2, radius, order, shift );
+          for( qint64 j=start ; j < end-1 ; j=j+step )
+          {
+
+            Eigen::Vector3d xyz0;
+            xyz0 << xBondPathsVariantList.at(j).toReal(),
+                    yBondPathsVariantList.at(j).toReal(),
+                    zBondPathsVariantList.at(j).toReal();
+            Eigen::Vector3d xyz1;
+            xyz1 << xBondPathsVariantList.at(j+1).toReal(),
+                    yBondPathsVariantList.at(j+1).toReal(),
+                    zBondPathsVariantList.at(j+1).toReal();
+
+            Vector3d v1(xyz0);
+            Vector3d v2(xyz1);
+            Vector3d v3( (v1 + v2) / 2. ) ;
+
+            double shift = 0.15;
+            int order = 1;
+            double radius=0.025;
+
+            pd->painter()->setColor("White");
+            pd->painter()->drawMultiCylinder( v1, v2, radius, order, shift );
+          }
         }
-      }
-
-    }  // bond path
+      }  // bond path
+    }
 
     glDisable( GL_NORMALIZE );
     glEnable( GL_RESCALE_NORMAL );
 
-    foreach(const QTAIMNuclearCriticalPoint *ncp, m_molecule->nuclearCriticalPoints()) {
-      map->setFromPrimitive(ncp);
-      if (ncp->customColorName().isEmpty())
+
+    if( m_molecule->property("QTAIMXNuclearCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMYNuclearCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMZNuclearCriticalPoints").isValid() )
+    {
+      QVariant xNuclearCriticalPointsVariant=m_molecule->property("QTAIMXNuclearCriticalPoints");
+      QVariant yNuclearCriticalPointsVariant=m_molecule->property("QTAIMYNuclearCriticalPoints");
+      QVariant zNuclearCriticalPointsVariant=m_molecule->property("QTAIMZNuclearCriticalPoints");
+      QVariantList xNuclearCriticalPointsVariantList=xNuclearCriticalPointsVariant.toList();
+      QVariantList yNuclearCriticalPointsVariantList=yNuclearCriticalPointsVariant.toList();
+      QVariantList zNuclearCriticalPointsVariantList=zNuclearCriticalPointsVariant.toList();
+      if( xNuclearCriticalPointsVariantList.length() == yNuclearCriticalPointsVariantList.length() &&
+          xNuclearCriticalPointsVariantList.length() == zNuclearCriticalPointsVariantList.length() )
       {
-//        pd->painter()->setColor( map );
-        pd->painter()->setColor("Purple");
+        for( qint64 i=0 ; i < xNuclearCriticalPointsVariantList.length() ; ++i )
+        {
+          Eigen::Vector3d xyz;
+          xyz << xNuclearCriticalPointsVariantList.at(i).toReal(),
+                 yNuclearCriticalPointsVariantList.at(i).toReal(),
+                 zNuclearCriticalPointsVariantList.at(i).toReal();
+
+          // map->setFromPrimitive(ncp);
+
+          pd->painter()->setColor("Purple");
+          pd->painter()->drawSphere(xyz, 0.1 );
+
+        }
       }
-      else
-      {
-        pd->painter()->setColor(ncp->customColorName());
-      }
-      pd->painter()->drawSphere(ncp->pos(), 0.1 );
     }
 
-    foreach(const QTAIMBondCriticalPoint *bcp, m_molecule->bondCriticalPoints()) {
-      map->setFromPrimitive(bcp);
-      if (bcp->customColorName().isEmpty())
+
+    if( m_molecule->property("QTAIMXBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMYBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMZBondCriticalPoints").isValid() )
+    {
+      QVariant xBondCriticalPointsVariant=m_molecule->property("QTAIMXBondCriticalPoints");
+      QVariant yBondCriticalPointsVariant=m_molecule->property("QTAIMYBondCriticalPoints");
+      QVariant zBondCriticalPointsVariant=m_molecule->property("QTAIMZBondCriticalPoints");
+      QVariantList xBondCriticalPointsVariantList=xBondCriticalPointsVariant.toList();
+      QVariantList yBondCriticalPointsVariantList=yBondCriticalPointsVariant.toList();
+      QVariantList zBondCriticalPointsVariantList=zBondCriticalPointsVariant.toList();
+      if( xBondCriticalPointsVariantList.length() == yBondCriticalPointsVariantList.length() &&
+          xBondCriticalPointsVariantList.length() == zBondCriticalPointsVariantList.length() )
       {
-//        pd->painter()->setColor( map );
-        pd->painter()->setColor("Yellow");
+        for( qint64 i=0 ; i < xBondCriticalPointsVariantList.length() ; ++i )
+        {
+          Eigen::Vector3d xyz;
+          xyz << xBondCriticalPointsVariantList.at(i).toReal(),
+                 yBondCriticalPointsVariantList.at(i).toReal(),
+                 zBondCriticalPointsVariantList.at(i).toReal();
+
+          // map->setFromPrimitive(ncp);
+
+          pd->painter()->setColor("Yellow");
+          pd->painter()->drawSphere(xyz, 0.1 );
+
+        }
       }
-      else
-      {
-        pd->painter()->setColor(bcp->customColorName());
-      }
-      pd->painter()->drawSphere(bcp->pos(), 0.1 );
     }
 
     // normalize normal vectors of bonds
@@ -246,67 +444,152 @@ namespace Avogadro
     cSel.setToSelectionColor();
 
     // Render the bond paths
-    foreach(const QTAIMBondCriticalPoint *bcp, m_molecule->bondCriticalPoints() )
+    if(
+        m_molecule->property("QTAIMFirstNCPIndexVariantList").isValid() &&
+        m_molecule->property("QTAIMSecondNCPIndexVariantList").isValid() &&
+        m_molecule->property("QTAIMLaplacianAtBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMEllipticityAtBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMBondPathSegmentStartIndex").isValid() &&
+        m_molecule->property("QTAIMBondPathSegmentEndIndex").isValid() &&
+        m_molecule->property("QTAIMXBondPaths").isValid() &&
+        m_molecule->property("QTAIMYBondPaths").isValid() &&
+        m_molecule->property("QTAIMZBondPaths").isValid()
+        )
     {
-      QList<Eigen::Vector3d> bp=bcp->bondPath();
+      QVariant firstNCPIndexVariant=m_molecule->property("QTAIMFirstNCPIndexVariantList");
+      QVariant secondNCPIndexVariant=m_molecule->property("QTAIMSecondNCPIndexVariantList");
+      QVariant laplacianAtBondCriticalPointsVariant=m_molecule->property("QTAIMLaplacianAtBondCriticalPoints");
+      QVariant ellipticityAtBondCriticalPointsVariant=m_molecule->property("QTAIMEllipticityAtBondCriticalPoints");
+      QVariant bondPathSegmentStartIndexVariant=m_molecule->property("QTAIMBondPathSegmentStartIndex");
+      QVariant bondPathSegmentEndIndexVariant=m_molecule->property("QTAIMBondPathSegmentEndIndex");
+      QVariant xBondPathsVariant=m_molecule->property("QTAIMXBondPaths");
+      QVariant yBondPathsVariant=m_molecule->property("QTAIMYBondPaths");
+      QVariant zBondPathsVariant=m_molecule->property("QTAIMZBondPaths");
 
-      if( bcp->laplacian() > 0.0 )
+      QVariantList firstNCPIndexVariantList=firstNCPIndexVariant.toList();
+      QVariantList secondNCPIndexVariantList=secondNCPIndexVariant.toList();
+      QVariantList laplacianAtBondCriticalPointsVariantList=laplacianAtBondCriticalPointsVariant.toList();
+      QVariantList ellipticityAtBondCriticalPointsVariantList=ellipticityAtBondCriticalPointsVariant.toList();
+      QVariantList bondPathSegmentStartIndexVariantList=bondPathSegmentStartIndexVariant.toList();
+      QVariantList bondPathSegmentEndIndexVariantList=bondPathSegmentEndIndexVariant.toList();
+      QVariantList xBondPathsVariantList=xBondPathsVariant.toList();
+      QVariantList yBondPathsVariantList=yBondPathsVariant.toList();
+      QVariantList zBondPathsVariantList=zBondPathsVariant.toList();
+
+      for( qint64 i=0 ;  i < firstNCPIndexVariantList.length() ; ++i )
       {
-        for( qint64 i=0 ; i < bp.length() ; i=i+4 )
+
+        qint64 start=bondPathSegmentStartIndexVariantList.at(i).toLongLong();
+        qint64 end=bondPathSegmentEndIndexVariantList.at(i).toLongLong();
+
+        if( laplacianAtBondCriticalPointsVariantList.at(i).toReal() > 0.0 )
         {
-          pd->painter()->setColor("White");
-          pd->painter()->drawSphere(bp.at(i), 0.025 );
+
+          const qint64 step=4;
+
+          for( qint64 j=start ; j < end-1 ; j=j+step )
+          {
+            pd->painter()->setColor("White");
+            Eigen::Vector3d xyz;
+            xyz << xBondPathsVariantList.at(j).toReal(),
+                   yBondPathsVariantList.at(j).toReal(),
+                   zBondPathsVariantList.at(j).toReal();
+            pd->painter()->drawSphere(xyz, 0.025 );
+          }
         }
-      }
-      else
-      {
-        for( qint64 i=0 ; i < bp.length()-1 ; ++i )
+        else
         {
-          Vector3d v1(bp.at(i));
-          Vector3d v2(bp.at(i+1));
-//          d.normalize();
-          Vector3d v3( (v1 + v2) / 2. ) ;
 
-          double shift = 0.15;
-          int order = 1;
-          double radius=0.025;
+          const qint64 step=1;
 
-          pd->painter()->setColor("White");
-          pd->painter()->drawMultiCylinder( v1, v2, radius, order, shift );
+          for( qint64 j=start ; j < end-1 ; j=j+step )
+          {
+
+            Eigen::Vector3d xyz0;
+            xyz0 << xBondPathsVariantList.at(j).toReal(),
+                    yBondPathsVariantList.at(j).toReal(),
+                    zBondPathsVariantList.at(j).toReal();
+            Eigen::Vector3d xyz1;
+            xyz1 << xBondPathsVariantList.at(j+1).toReal(),
+                    yBondPathsVariantList.at(j+1).toReal(),
+                    zBondPathsVariantList.at(j+1).toReal();
+
+            Vector3d v1(xyz0);
+            Vector3d v2(xyz1);
+            Vector3d v3( (v1 + v2) / 2. ) ;
+
+            double shift = 0.15;
+            int order = 1;
+            double radius=0.025;
+
+            pd->painter()->setColor("White");
+            pd->painter()->drawMultiCylinder( v1, v2, radius, order, shift );
+          }
         }
-      }
-
-    }  // bond path
+      }  // bond path
+    }
 
     glDisable( GL_NORMALIZE );
     glEnable( GL_RESCALE_NORMAL );
 
-    foreach(const QTAIMNuclearCriticalPoint *ncp, m_molecule->nuclearCriticalPoints()) {
-      map->setFromPrimitive(ncp);
-      if (ncp->customColorName().isEmpty())
+
+    if( m_molecule->property("QTAIMXNuclearCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMYNuclearCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMZNuclearCriticalPoints").isValid() )
+    {
+      QVariant xNuclearCriticalPointsVariant=m_molecule->property("QTAIMXNuclearCriticalPoints");
+      QVariant yNuclearCriticalPointsVariant=m_molecule->property("QTAIMYNuclearCriticalPoints");
+      QVariant zNuclearCriticalPointsVariant=m_molecule->property("QTAIMZNuclearCriticalPoints");
+      QVariantList xNuclearCriticalPointsVariantList=xNuclearCriticalPointsVariant.toList();
+      QVariantList yNuclearCriticalPointsVariantList=yNuclearCriticalPointsVariant.toList();
+      QVariantList zNuclearCriticalPointsVariantList=zNuclearCriticalPointsVariant.toList();
+      if( xNuclearCriticalPointsVariantList.length() == yNuclearCriticalPointsVariantList.length() &&
+          xNuclearCriticalPointsVariantList.length() == zNuclearCriticalPointsVariantList.length() )
       {
-//        pd->painter()->setColor( map );
-        pd->painter()->setColor("Purple");
+        for( qint64 i=0 ; i < xNuclearCriticalPointsVariantList.length() ; ++i )
+        {
+          Eigen::Vector3d xyz;
+          xyz << xNuclearCriticalPointsVariantList.at(i).toReal(),
+                 yNuclearCriticalPointsVariantList.at(i).toReal(),
+                 zNuclearCriticalPointsVariantList.at(i).toReal();
+
+          // map->setFromPrimitive(ncp);
+
+          pd->painter()->setColor("Purple");
+          pd->painter()->drawSphere(xyz, 0.1 );
+
+        }
       }
-      else
-      {
-        pd->painter()->setColor(ncp->customColorName());
-      }
-      pd->painter()->drawSphere(ncp->pos(), 0.1 );
     }
 
-    foreach(const QTAIMBondCriticalPoint *bcp, m_molecule->bondCriticalPoints()) {
-      map->setFromPrimitive(bcp);
-      if (bcp->customColorName().isEmpty())
+
+    if( m_molecule->property("QTAIMXBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMYBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMZBondCriticalPoints").isValid() )
+    {
+      QVariant xBondCriticalPointsVariant=m_molecule->property("QTAIMXBondCriticalPoints");
+      QVariant yBondCriticalPointsVariant=m_molecule->property("QTAIMYBondCriticalPoints");
+      QVariant zBondCriticalPointsVariant=m_molecule->property("QTAIMZBondCriticalPoints");
+      QVariantList xBondCriticalPointsVariantList=xBondCriticalPointsVariant.toList();
+      QVariantList yBondCriticalPointsVariantList=yBondCriticalPointsVariant.toList();
+      QVariantList zBondCriticalPointsVariantList=zBondCriticalPointsVariant.toList();
+      if( xBondCriticalPointsVariantList.length() == yBondCriticalPointsVariantList.length() &&
+          xBondCriticalPointsVariantList.length() == zBondCriticalPointsVariantList.length() )
       {
-//        pd->painter()->setColor( map );
-        pd->painter()->setColor("Yellow");
+        for( qint64 i=0 ; i < xBondCriticalPointsVariantList.length() ; ++i )
+        {
+          Eigen::Vector3d xyz;
+          xyz << xBondCriticalPointsVariantList.at(i).toReal(),
+                 yBondCriticalPointsVariantList.at(i).toReal(),
+                 zBondCriticalPointsVariantList.at(i).toReal();
+
+          // map->setFromPrimitive(ncp);
+
+          pd->painter()->setColor("Yellow");
+          pd->painter()->drawSphere(xyz, 0.1 );
+
+        }
       }
-      else
-      {
-        pd->painter()->setColor(bcp->customColorName());
-      }
-      pd->painter()->drawSphere(bcp->pos(), 0.1 );
     }
 
     // normalize normal vectors of bonds
@@ -325,67 +608,152 @@ namespace Avogadro
     if (!map) map = pd->colorMap();
 
     // Render the bond paths
-    foreach(const QTAIMBondCriticalPoint *bcp, m_molecule->bondCriticalPoints() )
+    if(
+        m_molecule->property("QTAIMFirstNCPIndexVariantList").isValid() &&
+        m_molecule->property("QTAIMSecondNCPIndexVariantList").isValid() &&
+        m_molecule->property("QTAIMLaplacianAtBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMEllipticityAtBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMBondPathSegmentStartIndex").isValid() &&
+        m_molecule->property("QTAIMBondPathSegmentEndIndex").isValid() &&
+        m_molecule->property("QTAIMXBondPaths").isValid() &&
+        m_molecule->property("QTAIMYBondPaths").isValid() &&
+        m_molecule->property("QTAIMZBondPaths").isValid()
+        )
     {
-      QList<Eigen::Vector3d> bp=bcp->bondPath();
+      QVariant firstNCPIndexVariant=m_molecule->property("QTAIMFirstNCPIndexVariantList");
+      QVariant secondNCPIndexVariant=m_molecule->property("QTAIMSecondNCPIndexVariantList");
+      QVariant laplacianAtBondCriticalPointsVariant=m_molecule->property("QTAIMLaplacianAtBondCriticalPoints");
+      QVariant ellipticityAtBondCriticalPointsVariant=m_molecule->property("QTAIMEllipticityAtBondCriticalPoints");
+      QVariant bondPathSegmentStartIndexVariant=m_molecule->property("QTAIMBondPathSegmentStartIndex");
+      QVariant bondPathSegmentEndIndexVariant=m_molecule->property("QTAIMBondPathSegmentEndIndex");
+      QVariant xBondPathsVariant=m_molecule->property("QTAIMXBondPaths");
+      QVariant yBondPathsVariant=m_molecule->property("QTAIMYBondPaths");
+      QVariant zBondPathsVariant=m_molecule->property("QTAIMZBondPaths");
 
-      if( bcp->laplacian() > 0.0 )
+      QVariantList firstNCPIndexVariantList=firstNCPIndexVariant.toList();
+      QVariantList secondNCPIndexVariantList=secondNCPIndexVariant.toList();
+      QVariantList laplacianAtBondCriticalPointsVariantList=laplacianAtBondCriticalPointsVariant.toList();
+      QVariantList ellipticityAtBondCriticalPointsVariantList=ellipticityAtBondCriticalPointsVariant.toList();
+      QVariantList bondPathSegmentStartIndexVariantList=bondPathSegmentStartIndexVariant.toList();
+      QVariantList bondPathSegmentEndIndexVariantList=bondPathSegmentEndIndexVariant.toList();
+      QVariantList xBondPathsVariantList=xBondPathsVariant.toList();
+      QVariantList yBondPathsVariantList=yBondPathsVariant.toList();
+      QVariantList zBondPathsVariantList=zBondPathsVariant.toList();
+
+      for( qint64 i=0 ;  i < firstNCPIndexVariantList.length() ; ++i )
       {
-        for( qint64 i=0 ; i < bp.length() ; i=i+4 )
+
+        qint64 start=bondPathSegmentStartIndexVariantList.at(i).toLongLong();
+        qint64 end=bondPathSegmentEndIndexVariantList.at(i).toLongLong();
+
+        if( laplacianAtBondCriticalPointsVariantList.at(i).toReal() > 0.0 )
         {
-          pd->painter()->setColor("White");
-          pd->painter()->drawSphere(bp.at(i), 0.025 );
+
+          const qint64 step=4;
+
+          for( qint64 j=start ; j < end-1 ; j=j+step )
+          {
+            pd->painter()->setColor("White");
+            Eigen::Vector3d xyz;
+            xyz << xBondPathsVariantList.at(j).toReal(),
+                   yBondPathsVariantList.at(j).toReal(),
+                   zBondPathsVariantList.at(j).toReal();
+            pd->painter()->drawSphere(xyz, 0.025 );
+          }
         }
-      }
-      else
-      {
-        for( qint64 i=0 ; i < bp.length()-1 ; ++i )
+        else
         {
-          Vector3d v1(bp.at(i));
-          Vector3d v2(bp.at(i+1));
-//          d.normalize();
-          Vector3d v3( (v1 + v2) / 2. ) ;
 
-          double shift = 0.15;
-          int order = 1;
-          double radius=0.025;
+          const qint64 step=1;
 
-          pd->painter()->setColor("White");
-          pd->painter()->drawMultiCylinder( v1, v2, radius, order, shift );
+          for( qint64 j=start ; j < end-1 ; j=j+step )
+          {
+
+            Eigen::Vector3d xyz0;
+            xyz0 << xBondPathsVariantList.at(j).toReal(),
+                    yBondPathsVariantList.at(j).toReal(),
+                    zBondPathsVariantList.at(j).toReal();
+            Eigen::Vector3d xyz1;
+            xyz1 << xBondPathsVariantList.at(j+1).toReal(),
+                    yBondPathsVariantList.at(j+1).toReal(),
+                    zBondPathsVariantList.at(j+1).toReal();
+
+            Vector3d v1(xyz0);
+            Vector3d v2(xyz1);
+            Vector3d v3( (v1 + v2) / 2. ) ;
+
+            double shift = 0.15;
+            int order = 1;
+            double radius=0.025;
+
+            pd->painter()->setColor("White");
+            pd->painter()->drawMultiCylinder( v1, v2, radius, order, shift );
+          }
         }
-      }
-
-    }  // bond path
+      }  // bond path
+    }
 
     glDisable( GL_NORMALIZE );
     glEnable( GL_RESCALE_NORMAL );
 
-    foreach(const QTAIMNuclearCriticalPoint *ncp, m_molecule->nuclearCriticalPoints()) {
-      map->setFromPrimitive(ncp);
-      if (ncp->customColorName().isEmpty())
+
+    if( m_molecule->property("QTAIMXNuclearCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMYNuclearCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMZNuclearCriticalPoints").isValid() )
+    {
+      QVariant xNuclearCriticalPointsVariant=m_molecule->property("QTAIMXNuclearCriticalPoints");
+      QVariant yNuclearCriticalPointsVariant=m_molecule->property("QTAIMYNuclearCriticalPoints");
+      QVariant zNuclearCriticalPointsVariant=m_molecule->property("QTAIMZNuclearCriticalPoints");
+      QVariantList xNuclearCriticalPointsVariantList=xNuclearCriticalPointsVariant.toList();
+      QVariantList yNuclearCriticalPointsVariantList=yNuclearCriticalPointsVariant.toList();
+      QVariantList zNuclearCriticalPointsVariantList=zNuclearCriticalPointsVariant.toList();
+      if( xNuclearCriticalPointsVariantList.length() == yNuclearCriticalPointsVariantList.length() &&
+          xNuclearCriticalPointsVariantList.length() == zNuclearCriticalPointsVariantList.length() )
       {
-//        pd->painter()->setColor( map );
-        pd->painter()->setColor("Purple");
+        for( qint64 i=0 ; i < xNuclearCriticalPointsVariantList.length() ; ++i )
+        {
+          Eigen::Vector3d xyz;
+          xyz << xNuclearCriticalPointsVariantList.at(i).toReal(),
+                 yNuclearCriticalPointsVariantList.at(i).toReal(),
+                 zNuclearCriticalPointsVariantList.at(i).toReal();
+
+          // map->setFromPrimitive(ncp);
+
+          pd->painter()->setColor("Purple");
+          pd->painter()->drawSphere(xyz, 0.1 );
+
+        }
       }
-      else
-      {
-        pd->painter()->setColor(ncp->customColorName());
-      }
-      pd->painter()->drawSphere(ncp->pos(), 0.1 );
     }
 
-    foreach(const QTAIMBondCriticalPoint *bcp, m_molecule->bondCriticalPoints()) {
-      map->setFromPrimitive(bcp);
-      if (bcp->customColorName().isEmpty())
+
+    if( m_molecule->property("QTAIMXBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMYBondCriticalPoints").isValid() &&
+        m_molecule->property("QTAIMZBondCriticalPoints").isValid() )
+    {
+      QVariant xBondCriticalPointsVariant=m_molecule->property("QTAIMXBondCriticalPoints");
+      QVariant yBondCriticalPointsVariant=m_molecule->property("QTAIMYBondCriticalPoints");
+      QVariant zBondCriticalPointsVariant=m_molecule->property("QTAIMZBondCriticalPoints");
+      QVariantList xBondCriticalPointsVariantList=xBondCriticalPointsVariant.toList();
+      QVariantList yBondCriticalPointsVariantList=yBondCriticalPointsVariant.toList();
+      QVariantList zBondCriticalPointsVariantList=zBondCriticalPointsVariant.toList();
+      if( xBondCriticalPointsVariantList.length() == yBondCriticalPointsVariantList.length() &&
+          xBondCriticalPointsVariantList.length() == zBondCriticalPointsVariantList.length() )
       {
-//        pd->painter()->setColor( map );
-        pd->painter()->setColor("Yellow");
+        for( qint64 i=0 ; i < xBondCriticalPointsVariantList.length() ; ++i )
+        {
+          Eigen::Vector3d xyz;
+          xyz << xBondCriticalPointsVariantList.at(i).toReal(),
+                 yBondCriticalPointsVariantList.at(i).toReal(),
+                 zBondCriticalPointsVariantList.at(i).toReal();
+
+          // map->setFromPrimitive(ncp);
+
+          pd->painter()->setColor("Yellow");
+          pd->painter()->drawSphere(xyz, 0.1 );
+
+        }
       }
-      else
-      {
-        pd->painter()->setColor(bcp->customColorName());
-      }
-      pd->painter()->drawSphere(bcp->pos(), 0.1 );
     }
 
     // normalize normal vectors of bonds
