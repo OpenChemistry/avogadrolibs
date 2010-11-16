@@ -56,7 +56,7 @@ namespace Avogadro {
       CMBPMinusOneGradientInElectronDensityLaplacian=6,
       CMBPPlusOneGradientInElectronDensityLaplacian=7,
       CMBPPlusThreeGradientInElectronDensityLaplacian=8
-    };
+                                                    };
 
     explicit QTAIMLSODAIntegrator(QTAIMWavefunctionEvaluator &eval, const qint64 mode);
 
@@ -94,10 +94,10 @@ namespace Avogadro {
     void terminate2( double *y, double *t );
     void successreturn( double *y, double *t, int itask, int ihit, double tcrit, int *istate );
     void lsoda( int neq, double *y, double *t, double tout, int itol,
-                                      double *rtol, double *atol, int itask, int *istate,
-                                      int iopt, int jt, int iwork1, int iwork2, int iwork5, int iwork6,
-                                      int iwork7, int iwork8, int iwork9, double rwork1,
-                                      double rwork5, double rwork6, double rwork7 );
+                double *rtol, double *atol, int itask, int *istate,
+                int iopt, int jt, int iwork1, int iwork2, int iwork5, int iwork6,
+                int iwork7, int iwork8, int iwork9, double rwork1,
+                double rwork5, double rwork6, double rwork7 );
     void stoda( int neq, double *y );
     void ewset( int itol, double *rtol, double *atol, double *ycur );
     void intdy( double t, int k, double *dky, int *iflag );
@@ -108,7 +108,7 @@ namespace Avogadro {
     double fnorm( int n, double **a, double *w );
     // double bnorm();
     void correction( int neq, double *y, int *corflag, double pnorm,
-                                           double *del, double *delp, double *told, int *ncf, double *rh, int *m );
+                     double *del, double *delp, double *told, int *ncf, double *rh, int *m );
     void corfailure( double *told, double *rh, int *ncf, int *corflag );
     void solsy( double *y );
     void methodswitch( double dsm, double pnorm, double *pdh, double *rh );
@@ -128,9 +128,9 @@ namespace Avogadro {
 
     double ccmax, el0, h, hmin, hmxi, hu, rc, tn;
     int illin, init, mxstep, mxhnil, nhnil, ntrep,
-               nslast, nyh, ierpj, iersl, jcur, jstart, kflag, l, meth,
-               miter, maxord, maxcor, msbp, mxncf, n, nq, nst, nfe, nje,
-               nqu;
+    nslast, nyh, ierpj, iersl, jcur, jstart, kflag, l, meth,
+    miter, maxord, maxcor, msbp, mxncf, n, nq, nst, nfe, nje,
+    nqu;
     double tsw, pdnorm;
     int ixpr, jtyp, mused, mxordn, mxords;
 
@@ -138,7 +138,7 @@ namespace Avogadro {
     /* static variables for stoda() */
 
     double conit, crate, el[14], elco[13][14], hold, rmax,
-           tesco[13][4];
+    tesco[13][4];
     int ialth, ipup, lmax, meo, nslp;
     double pdest, pdlast, ratio, cm1[13], cm2[6];
     int icount, irflag;
@@ -152,6 +152,8 @@ namespace Avogadro {
     double **yh, **wm, *ewt, *savf, *acor;
     int *ipvt;
 
+    int m_lenyh;
+    int m_nyh;
   };
 
 } // namespace Avogadro

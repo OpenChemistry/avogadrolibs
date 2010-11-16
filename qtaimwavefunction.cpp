@@ -363,4 +363,120 @@ namespace Avogadro
 
   }
 
+  bool QTAIMWavefunction::initializeWithMoleculeProperties( Molecule*& mol )
+  {
+
+    if( mol->property( "QTAIMNumberOfMolecularOrbitals" ).isValid() )
+    {
+
+      QVariant numberOfMolecularOrbitalsVariant = mol->property( "QTAIMNumberOfMolecularOrbitals" );
+      m_numberOfMolecularOrbitals=numberOfMolecularOrbitalsVariant.toLongLong();
+
+      QVariant numberOfGaussianPrimitivesVariant = mol->property( "QTAIMNumberOfGaussianPrimitives" );
+      m_numberOfGaussianPrimitives=numberOfGaussianPrimitivesVariant.toLongLong();
+
+      QVariant numberOfNucleiVariant = mol->property( "QTAIMNumberOfNuclei" );
+      m_numberOfNuclei=numberOfNucleiVariant.toLongLong();
+
+      QVariant xNuclearCoordinatesVariant = mol->property( "QTAIMXNuclearCoordinates");
+      QVariant yNuclearCoordinatesVariant = mol->property( "QTAIMYNuclearCoordinates");
+      QVariant zNuclearCoordinatesVariant = mol->property( "QTAIMZNuclearCoordinates");
+      QVariant nuclearChargesVariant = mol->property( "QTAIMNuclearCharges" );
+      QVariantList xNuclearCoordinatesVariantList = xNuclearCoordinatesVariant.toList();
+      QVariantList yNuclearCoordinatesVariantList = yNuclearCoordinatesVariant.toList();
+      QVariantList zNuclearCoordinatesVariantList = zNuclearCoordinatesVariant.toList();
+      QVariantList nuclearChargesVariantList = nuclearChargesVariant.toList();
+      QList<qreal> xNuclearCoordinatesList;
+      QList<qreal> yNuclearCoordinatesList;
+      QList<qreal> zNuclearCoordinatesList;
+      QList<qint64> nuclearChargesList;
+      for( qint64 i=0 ; i < m_numberOfNuclei ; ++i )
+      {
+        xNuclearCoordinatesList.append( xNuclearCoordinatesVariantList.at(i).toReal() );
+        yNuclearCoordinatesList.append( yNuclearCoordinatesVariantList.at(i).toReal() );
+        zNuclearCoordinatesList.append( zNuclearCoordinatesVariantList.at(i).toReal() );
+        nuclearChargesList.append( nuclearChargesVariantList.at(i).toLongLong() );
+      }
+      m_xNuclearCoordinates=xNuclearCoordinatesList.toVector();
+      m_yNuclearCoordinates=yNuclearCoordinatesList.toVector();
+      m_zNuclearCoordinates=zNuclearCoordinatesList.toVector();
+      m_nuclearCharges=nuclearChargesList.toVector();
+
+      QVariant xGaussianPrimitiveCenterCoordinatesVariant = mol->property( "QTAIMXGaussianPrimitiveCenterCoordinates" );
+      QVariant yGaussianPrimitiveCenterCoordinatesVariant = mol->property( "QTAIMYGaussianPrimitiveCenterCoordinates" );
+      QVariant zGaussianPrimitiveCenterCoordinatesVariant = mol->property( "QTAIMZGaussianPrimitiveCenterCoordinates" );
+      QVariant xGaussianPrimitiveAngularMomentaVariant = mol->property( "QTAIMXGaussianPrimitiveAngularMomenta" );
+      QVariant yGaussianPrimitiveAngularMomentaVariant = mol->property( "QTAIMYGaussianPrimitiveAngularMomenta" );
+      QVariant zGaussianPrimitiveAngularMomentaVariant = mol->property( "QTAIMZGaussianPrimitiveAngularMomenta" );
+      QVariant gaussianPrimitiveExponentCoefficientsVariant = mol->property( "QTAIMGaussianPrimitiveExponentCoefficients" );
+      QVariantList xGaussianPrimitiveCenterCoordinatesVariantList = xGaussianPrimitiveCenterCoordinatesVariant.toList();
+      QVariantList yGaussianPrimitiveCenterCoordinatesVariantList = yGaussianPrimitiveCenterCoordinatesVariant.toList();
+      QVariantList zGaussianPrimitiveCenterCoordinatesVariantList = zGaussianPrimitiveCenterCoordinatesVariant.toList();
+      QVariantList xGaussianPrimitiveAngularMomentaVariantList = xGaussianPrimitiveAngularMomentaVariant.toList();
+      QVariantList yGaussianPrimitiveAngularMomentaVariantList = yGaussianPrimitiveAngularMomentaVariant.toList();
+      QVariantList zGaussianPrimitiveAngularMomentaVariantList = zGaussianPrimitiveAngularMomentaVariant.toList();
+      QVariantList gaussianPrimitiveExponentCoefficientsVariantList = gaussianPrimitiveExponentCoefficientsVariant.toList();
+      QList<qreal> xGaussianPrimitiveCenterCoordinatesList;
+      QList<qreal> yGaussianPrimitiveCenterCoordinatesList;
+      QList<qreal> zGaussianPrimitiveCenterCoordinatesList;
+      QList<qint64> xGaussianPrimitiveAngularMomentaList;
+      QList<qint64> yGaussianPrimitiveAngularMomentaList;
+      QList<qint64> zGaussianPrimitiveAngularMomentaList;
+      QList<qreal> gaussianPrimitiveExponentCoefficientsList;
+
+      for( qint64 p=0 ; p < m_numberOfGaussianPrimitives ; ++p )
+      {
+        xGaussianPrimitiveCenterCoordinatesList.append(xGaussianPrimitiveCenterCoordinatesVariantList.at(p).toReal());
+        yGaussianPrimitiveCenterCoordinatesList.append(yGaussianPrimitiveCenterCoordinatesVariantList.at(p).toReal());
+        zGaussianPrimitiveCenterCoordinatesList.append(zGaussianPrimitiveCenterCoordinatesVariantList.at(p).toReal());
+        xGaussianPrimitiveAngularMomentaList.append(xGaussianPrimitiveAngularMomentaVariantList.at(p).toLongLong());
+        yGaussianPrimitiveAngularMomentaList.append(yGaussianPrimitiveAngularMomentaVariantList.at(p).toLongLong());
+        zGaussianPrimitiveAngularMomentaList.append(zGaussianPrimitiveAngularMomentaVariantList.at(p).toLongLong());
+        gaussianPrimitiveExponentCoefficientsList.append(gaussianPrimitiveExponentCoefficientsVariantList.at(p).toReal());
+      }
+
+      m_xGaussianPrimitiveCenterCoordinates=xGaussianPrimitiveCenterCoordinatesList.toVector();
+      m_yGaussianPrimitiveCenterCoordinates=yGaussianPrimitiveCenterCoordinatesList.toVector();
+      m_zGaussianPrimitiveCenterCoordinates=zGaussianPrimitiveCenterCoordinatesList.toVector();
+      m_xGaussianPrimitiveAngularMomenta=xGaussianPrimitiveAngularMomentaList.toVector();
+      m_yGaussianPrimitiveAngularMomenta=yGaussianPrimitiveAngularMomentaList.toVector();
+      m_zGaussianPrimitiveAngularMomenta=zGaussianPrimitiveAngularMomentaList.toVector();
+      m_gaussianPrimitiveExponentCoefficients=gaussianPrimitiveExponentCoefficientsList.toVector();
+
+      QVariant molecularOrbitalOccupationNumbersVariant = mol->property( "QTAIMMolecularOrbitalOccupationNumbers" );
+      QVariant molecularOrbitalEigenvaluesVariant = mol->property( "QTAIMMolecularOrbitalEigenvalues" );
+      QVariant molecularOrbitalCoefficientsVariant = mol->property( "QTAIMMolecularOrbitalCoefficients" );
+      QVariantList molecularOrbitalOccupationNumbersVariantList = molecularOrbitalOccupationNumbersVariant.toList();
+      QVariantList molecularOrbitalEigenvaluesVariantList = molecularOrbitalEigenvaluesVariant.toList();
+      QVariantList molecularOrbitalCoefficientsVariantList = molecularOrbitalCoefficientsVariant.toList();
+      QList<qreal> molecularOrbitalOccupationNumbersList;
+      QList<qreal> molecularOrbitalEigenvaluesList;
+      QList<qreal> molecularOrbitalCoefficientsList;
+
+      for( qint64 m=0; m < m_numberOfMolecularOrbitals ; ++m )
+      {
+        molecularOrbitalOccupationNumbersList.append(molecularOrbitalOccupationNumbersVariantList.at(m).toReal());
+        molecularOrbitalEigenvaluesList.append(molecularOrbitalEigenvaluesVariantList.at(m).toReal());
+      }
+
+      for( qint64 i=0; i < (m_numberOfMolecularOrbitals * m_numberOfGaussianPrimitives) ; ++i)
+      {
+        molecularOrbitalCoefficientsList.append(molecularOrbitalCoefficientsVariantList.at(i).toReal());
+      }
+
+      m_molecularOrbitalOccupationNumbers=molecularOrbitalOccupationNumbersList.toVector();
+      m_molecularOrbitalEigenvalues=molecularOrbitalEigenvaluesList.toVector();
+      m_molecularOrbitalCoefficients=molecularOrbitalCoefficientsList.toVector();
+
+      QVariant totalEnergyVariant = mol->property("QTAIMTotalEnergy");
+      QVariant virialRatioVariant = mol->property("QTAIMVirialRatio");
+
+      m_totalEnergy=totalEnergyVariant.toReal();
+      m_virialRatio=virialRatioVariant.toReal();
+
+    }
+
+    return true;
+  }
+
 }

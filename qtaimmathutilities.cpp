@@ -75,8 +75,8 @@ namespace Avogadro {
     Matrix<qreal,3,1> eigenvalues=eigensolver.eigenvalues();
 
     return QTAIMMathUtilities::signOfARealNumber(eigenvalues(0)) +
-      QTAIMMathUtilities::signOfARealNumber(eigenvalues(1)) +
-      QTAIMMathUtilities::signOfARealNumber(eigenvalues(2));
+        QTAIMMathUtilities::signOfARealNumber(eigenvalues(1)) +
+        QTAIMMathUtilities::signOfARealNumber(eigenvalues(2));
   }
 
   qreal QTAIMMathUtilities::ellipticityOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A )
@@ -182,9 +182,9 @@ namespace Avogadro {
 
     Matrix<qreal,4,4> A;
     A <<  b(0), 0.  , 0.  , F(0),
-          0.  , b(1), 0.  , F(1),
-          0.  , 0.  , b(2), F(2),
-          F(0), F(1), F(2), 0.   ;
+    0.  , b(1), 0.  , F(1),
+    0.  , 0.  , b(2), F(2),
+    F(0), F(1), F(2), 0.   ;
 
     Matrix<qreal,4,1> eval=QTAIMMathUtilities::eigenvaluesOfASymmetricFourByFourMatrix( A );
     Matrix<qreal,4,4> evec=QTAIMMathUtilities::eigenvectorsOfASymmetricFourByFourMatrix( A );
@@ -232,8 +232,8 @@ namespace Avogadro {
 
     Matrix<qreal,3,3> A;
     A <<  b(0), 0.  ,  F(0),
-          0.  , b(1),  F(1),
-          F(0), F(1),  0.   ;
+    0.  , b(1),  F(1),
+    F(0), F(1),  0.   ;
 
     Matrix<qreal,3,1> eval=QTAIMMathUtilities::eigenvaluesOfASymmetricThreeByThreeMatrix( A );
     Matrix<qreal,3,3> evec=QTAIMMathUtilities::eigenvectorsOfASymmetricThreeByThreeMatrix( A );
@@ -281,8 +281,8 @@ namespace Avogadro {
 
     Matrix<qreal,3,3> A;
     A <<  b(1), 0.  ,  F(1),
-          0.  , b(2),  F(2),
-          F(1), F(2),  0.   ;
+    0.  , b(2),  F(2),
+    F(1), F(2),  0.   ;
 
     Matrix<qreal,3,1> eval=QTAIMMathUtilities::eigenvaluesOfASymmetricThreeByThreeMatrix( A );
     Matrix<qreal,3,3> evec=QTAIMMathUtilities::eigenvectorsOfASymmetricThreeByThreeMatrix( A );
@@ -330,9 +330,9 @@ namespace Avogadro {
 
     Matrix<qreal,4,4> A;
     A <<  b(0), 0.  , 0.  , F(0),
-          0.  , b(1), 0.  , F(1),
-          0.  , 0.  , b(2), F(2),
-          F(0), F(1), F(2), 0.   ;
+    0.  , b(1), 0.  , F(1),
+    0.  , 0.  , b(2), F(2),
+    F(0), F(1), F(2), 0.   ;
 
     Matrix<qreal,4,1> eval=QTAIMMathUtilities::eigenvaluesOfASymmetricFourByFourMatrix( A );
     Matrix<qreal,4,4> evec=QTAIMMathUtilities::eigenvectorsOfASymmetricFourByFourMatrix( A );

@@ -1,21 +1,4 @@
 /**********************************************************************
-  QTAIM - Extension for Quantum Theory of Atoms In Molecules Analysis
-
-  Copyright (C) 2010 Eric C. Brown
-
-  This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
-
-  Avogadro is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  Avogadro is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
@@ -61,7 +44,7 @@ namespace Avogadro
     qint64 m_nmo;
     qint64 m_nprim;
     qint64 m_nnuc;
-//    qint64 m_noccmo; // number of (significantly) occupied molecular orbitals
+    //    qint64 m_noccmo; // number of (significantly) occupied molecular orbitals
     Matrix<qreal,Dynamic,1> m_nucxcoord;
     Matrix<qreal,Dynamic,1> m_nucycoord;
     Matrix<qreal,Dynamic,1> m_nuczcoord;
@@ -116,6 +99,11 @@ namespace Avogadro
     Matrix<qreal,Dynamic,1> m_cdg031;
     Matrix<qreal,Dynamic,1> m_cdg013;
     Matrix<qreal,Dynamic,1> m_cdg004;
+
+    static inline qreal ipow(qreal a, qint64 n)
+    {
+      return (qreal) pow( a, (int) n );
+    }
 
   };
 

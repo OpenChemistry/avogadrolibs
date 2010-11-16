@@ -72,8 +72,8 @@ namespace Avogadro
     switch (m_mode)
     {
     case SteepestAscentPathInElectronDensity:
-      abserr =      sqrt ( r8_epsilon ( ) );
-      relerr =      sqrt ( r8_epsilon ( ) );
+      abserr = 1.e-5;   //  sqrt ( r8_epsilon ( ) );
+      relerr = 1.e10;   //  sqrt ( r8_epsilon ( ) );
       t_start = 0.0;
       t_stop  = 10.0;
       n_step  = t_stop * 20;
@@ -291,30 +291,30 @@ namespace Avogadro
 
   qreal QTAIMODEIntegrator::r8_abs ( qreal x )
 
-  //****************************************************************************80
-  //
-  //  Purpose:
-  //
-  //    R8_ABS returns the absolute value of an R8.
-  //
-  //  Licensing:
-  //
-  //    This code is distributed under the GNU LGPL license.
-  //
-  //  Modified:
-  //
-  //    02 April 2005
-  //
-  //  Author:
-  //
-  //    John Burkardt
-  //
-  //  Parameters:
-  //
-  //    Input, qreal X, the quantity whose absolute value is desired.
-  //
-  //    Output, qreal R8_ABS, the absolute value of X.
-  //
+      //****************************************************************************80
+      //
+      //  Purpose:
+      //
+      //    R8_ABS returns the absolute value of an R8.
+      //
+      //  Licensing:
+      //
+      //    This code is distributed under the GNU LGPL license.
+      //
+      //  Modified:
+      //
+      //    02 April 2005
+      //
+      //  Author:
+      //
+      //    John Burkardt
+      //
+      //  Parameters:
+      //
+      //    Input, qreal X, the quantity whose absolute value is desired.
+      //
+      //    Output, qreal R8_ABS, the absolute value of X.
+      //
   {
     if ( 0.0 <= x )
     {
@@ -329,36 +329,36 @@ namespace Avogadro
 
   qreal QTAIMODEIntegrator::r8_epsilon ( )
 
-  //****************************************************************************80
-  //
-  //  Purpose:
-  //
-  //    R8_EPSILON returns the R8 round off unit.
-  //
-  //  Discussion:
-  //
-  //    R8_EPSILON is a number R which is a power of 2 with the property that,
-  //    to the precision of the computer's arithmetic,
-  //      1 < 1 + R
-  //    but
-  //      1 = ( 1 + R / 2 )
-  //
-  //  Licensing:
-  //
-  //    This code is distributed under the GNU LGPL license.
-  //
-  //  Modified:
-  //
-  //    06 May 2003
-  //
-  //  Author:
-  //
-  //    John Burkardt
-  //
-  //  Parameters:
-  //
-  //    Output, qreal R8_EPSILON, the R8 round-off unit.
-  //
+      //****************************************************************************80
+      //
+      //  Purpose:
+      //
+      //    R8_EPSILON returns the R8 round off unit.
+      //
+      //  Discussion:
+      //
+      //    R8_EPSILON is a number R which is a power of 2 with the property that,
+      //    to the precision of the computer's arithmetic,
+      //      1 < 1 + R
+      //    but
+      //      1 = ( 1 + R / 2 )
+      //
+      //  Licensing:
+      //
+      //    This code is distributed under the GNU LGPL license.
+      //
+      //  Modified:
+      //
+      //    06 May 2003
+      //
+      //  Author:
+      //
+      //    John Burkardt
+      //
+      //  Parameters:
+      //
+      //    Output, qreal R8_EPSILON, the R8 round-off unit.
+      //
   {
     qreal r;
 
@@ -374,8 +374,8 @@ namespace Avogadro
   //****************************************************************************80
 
   void QTAIMODEIntegrator::r8_fehl ( qint64 neqn,
-                                            qreal y[], qreal t, qreal h, qreal yp[], qreal f1[], qreal f2[],
-                                            qreal f3[], qreal f4[], qreal f5[], qreal s[] )
+                                     qreal y[], qreal t, qreal h, qreal yp[], qreal f1[], qreal f2[],
+                                     qreal f3[], qreal f4[], qreal f5[], qreal s[] )
 
   //****************************************************************************80
   //
@@ -569,30 +569,30 @@ namespace Avogadro
 
   qreal QTAIMODEIntegrator::r8_min ( qreal x, qreal y )
 
-  //****************************************************************************80
-  //
-  //  Purpose:
-  //
-  //    R8_MIN returns the minimum of two R8's.
-  //
-  //  Licensing:
-  //
-  //    This code is distributed under the GNU LGPL license.
-  //
-  //  Modified:
-  //
-  //    09 May 2003
-  //
-  //  Author:
-  //
-  //    John Burkardt
-  //
-  //  Parameters:
-  //
-  //    Input, qreal X, Y, the quantities to compare.
-  //
-  //    Output, qreal R8_MIN, the minimum of X and Y.
-  //
+      //****************************************************************************80
+      //
+      //  Purpose:
+      //
+      //    R8_MIN returns the minimum of two R8's.
+      //
+      //  Licensing:
+      //
+      //    This code is distributed under the GNU LGPL license.
+      //
+      //  Modified:
+      //
+      //    09 May 2003
+      //
+      //  Author:
+      //
+      //    John Burkardt
+      //
+      //  Parameters:
+      //
+      //    Input, qreal X, Y, the quantities to compare.
+      //
+      //    Output, qreal R8_MIN, the minimum of X and Y.
+      //
   {
     if ( y < x )
     {
@@ -606,8 +606,8 @@ namespace Avogadro
   //****************************************************************************80
 
   qint64 QTAIMODEIntegrator::r8_rkf45 ( qint64 neqn,
-                                               qreal y[], qreal yp[], qreal *t, qreal tout, qreal *relerr,
-                                               qreal abserr, qint64 flag )
+                                        qreal y[], qreal yp[], qreal *t, qreal tout, qreal *relerr,
+                                        qreal abserr, qint64 flag )
 
   //****************************************************************************80
   //
@@ -824,7 +824,7 @@ namespace Avogadro
       return 8;
     }
 
-    mflag = abs ( flag );
+    mflag = (qint64) abs ( (long) flag );
     //
     //  Is this a continuation call?
     //
@@ -842,7 +842,7 @@ namespace Avogadro
         if ( kflag == 3 )
         {
           flag = flag_save;
-          mflag = abs ( flag );
+          mflag = (qint64) abs ( (long) flag );
         }
         else if ( init == 0 )
         {
@@ -871,7 +871,7 @@ namespace Avogadro
           flag = flag_save;
           if ( kflag == 3 )
           {
-            mflag = abs ( flag );
+            mflag = (qint64) abs ( (long) flag );
           }
         }
         else if ( flag == 4 )
@@ -880,7 +880,7 @@ namespace Avogadro
           flag = flag_save;
           if ( kflag == 3 )
           {
-            mflag = abs ( flag );
+            mflag = (qint64) abs ( (long) flag );
           }
         }
         else if ( flag == 5 && 0.0 < abserr )
@@ -888,7 +888,7 @@ namespace Avogadro
           flag = flag_save;
           if ( kflag == 3 )
           {
-            mflag = abs ( flag );
+            mflag = (qint64) abs ( (long) flag );
           }
         }
         //
@@ -1163,7 +1163,7 @@ namespace Avogadro
                    + ( 21970.0 * f3[k] - 15048.0 * f4[k] )
                    )
                  + ( 22528.0 * f2[k] - 27360.0 * f5[k] )
-                            );
+                 );
 
           eeoet = r8_max ( eeoet, ee / et );
 
@@ -1268,30 +1268,30 @@ namespace Avogadro
 
   qreal QTAIMODEIntegrator::r8_sign ( qreal x )
 
-  //****************************************************************************80
-  //
-  //  Purpose:
-  //
-  //    R8_SIGN returns the sign of an R8.
-  //
-  //  Licensing:
-  //
-  //    This code is distributed under the GNU LGPL license.
-  //
-  //  Modified:
-  //
-  //    27 March 2004
-  //
-  //  Author:
-  //
-  //    John Burkardt
-  //
-  //  Parameters:
-  //
-  //    Input, qreal X, the number whose sign is desired.
-  //
-  //    Output, qreal R8_SIGN, the sign of X.
-  //
+      //****************************************************************************80
+      //
+      //  Purpose:
+      //
+      //    R8_SIGN returns the sign of an R8.
+      //
+      //  Licensing:
+      //
+      //    This code is distributed under the GNU LGPL license.
+      //
+      //  Modified:
+      //
+      //    27 March 2004
+      //
+      //  Author:
+      //
+      //    John Burkardt
+      //
+      //  Parameters:
+      //
+      //    Input, qreal X, the number whose sign is desired.
+      //
+      //    Output, qreal R8_SIGN, the sign of X.
+      //
   {
     if ( x < 0.0 )
     {
