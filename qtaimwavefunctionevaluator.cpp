@@ -92,7 +92,7 @@ namespace Avogadro
     m_cdg004.resize(m_nmo);
   }
 
-  const qreal QTAIMWavefunctionEvaluator::molecularOrbital( const qint64 mo, const Matrix<qreal,3,1> xyz )
+  qreal QTAIMWavefunctionEvaluator::molecularOrbital( const qint64 mo, const Matrix<qreal,3,1> xyz )
   {
 
     qreal value=0.0;
@@ -124,7 +124,7 @@ namespace Avogadro
 
   }
 
-  const qreal QTAIMWavefunctionEvaluator::electronDensity( const Matrix<qreal,3,1> xyz )
+  qreal QTAIMWavefunctionEvaluator::electronDensity( const Matrix<qreal,3,1> xyz )
   {
 
     qreal value;
@@ -660,7 +660,7 @@ namespace Avogadro
 
   }
 
-  const qreal QTAIMWavefunctionEvaluator::laplacianOfElectronDensity( const Matrix<qreal,3,1> xyz )
+  qreal QTAIMWavefunctionEvaluator::laplacianOfElectronDensity( const Matrix<qreal,3,1> xyz )
   {
 
     qreal value;
@@ -1904,7 +1904,7 @@ namespace Avogadro
 
   }
 
-  const qreal QTAIMWavefunctionEvaluator::kineticEnergyDensityG(Matrix<qreal,3,1> xyz)
+  qreal QTAIMWavefunctionEvaluator::kineticEnergyDensityG(Matrix<qreal,3,1> xyz)
   {
 
     qreal value;
@@ -2011,7 +2011,7 @@ namespace Avogadro
 
   }
 
-  const qreal QTAIMWavefunctionEvaluator::kineticEnergyDensityK( const Matrix<qreal,3,1> xyz )
+  qreal QTAIMWavefunctionEvaluator::kineticEnergyDensityK( const Matrix<qreal,3,1> xyz )
   {
 
     qreal value;

@@ -26,18 +26,18 @@ namespace Avogadro
 
     explicit QTAIMWavefunctionEvaluator(QTAIMWavefunction &wfn);
 
-    const qreal molecularOrbital(const qint64 mo, const Matrix<qreal,3,1> xyz);
-    const qreal electronDensity(const Matrix<qreal,3,1> xyz);
+    qreal molecularOrbital(const qint64 mo, const Matrix<qreal,3,1> xyz);
+    qreal electronDensity(const Matrix<qreal,3,1> xyz);
     const Matrix<qreal,3,1> gradientOfElectronDensity(const Matrix<qreal,3,1> xyz);
     const Matrix<qreal,3,3> hessianOfElectronDensity(const Matrix<qreal,3,1> xyz);
     const Matrix<qreal,3,4> gradientAndHessianOfElectronDensity(const Matrix<qreal,3,1> xyz);
-    const qreal laplacianOfElectronDensity(const Matrix<qreal,3,1> xyz);
-    const qreal electronDensityLaplacian(const Matrix<qreal,3,1> xyz) {return laplacianOfElectronDensity(xyz);}
+    qreal laplacianOfElectronDensity(const Matrix<qreal,3,1> xyz);
+    qreal electronDensityLaplacian(const Matrix<qreal,3,1> xyz) {return laplacianOfElectronDensity(xyz);}
     const Matrix<qreal,3,1> gradientOfElectronDensityLaplacian(const Matrix<qreal,3,1> xyz);
     const Matrix<qreal,3,3> hessianOfElectronDensityLaplacian(const Matrix<qreal,3,1> xyz);
     const Matrix<qreal,3,4> gradientAndHessianOfElectronDensityLaplacian(const Matrix<qreal,3,1> xyz);
-    const qreal kineticEnergyDensityG(const Matrix<qreal,3,1> xyz);
-    const qreal kineticEnergyDensityK(const Matrix<qreal,3,1> xyz);
+    qreal kineticEnergyDensityG(const Matrix<qreal,3,1> xyz);
+    qreal kineticEnergyDensityK(const Matrix<qreal,3,1> xyz);
     const Matrix<qreal,3,3> quantumStressTensor(const Matrix<qreal,3,1> xyz);
 
   private:

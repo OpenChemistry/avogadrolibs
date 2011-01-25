@@ -93,7 +93,7 @@ namespace Avogadro
     double atol[4], rtol[4], t, tout, y[4];
     int iwork1, iwork2, iwork5, iwork6, iwork7, iwork8, iwork9;
     int neq = 3;
-    int itol, itask, istate, iopt, jt, iout, j, jdum;
+    int itol, itask, istate, iopt, jt;
 
     y[1] = x0;
     y[2] = y0;
@@ -884,8 +884,8 @@ namespace Avogadro
   {
     int mxstp0 = 500, mxhnl0 = -1 /* 10 */;
 
-    int i, i1, i2, iflag, kgo, lf0, lenyh, ihit;
-    double atoli, ayi, big, ewti, h0, hmax, hmx, rh, rtoli,
+    int i, iflag, lenyh, ihit;
+    double atoli, ayi, big, h0, hmax, hmx, rh, rtoli,
     tcrit, tdist, tnext, tol, tolsf, tp, size, sum, w0;
 
 
@@ -1604,7 +1604,7 @@ namespace Avogadro
   void QTAIMLSODAIntegrator::stoda( int neq, double *y )
   {
     int corflag, orderflag;
-    int i, i1, j, jb, m, ncf;
+    int i, i1, j, m, ncf;
     double del, delp, dsm, dup, exup, r, rh, rhup, told;
     double pdh, pnorm;
 
@@ -2214,9 +2214,8 @@ namespace Avogadro
 
   void QTAIMLSODAIntegrator::prja( int neq, double *y )
   {
-    int i, i1, i2, ier, ii, j, j1, jj, lenp,
-    mba, mband, meb1, meband, ml3, np1;
-    double con, fac, hl0, r, r0, yi, yj, yjj;
+    int i, ier, j;
+    double fac, hl0, r, r0, yj;
     /*
      prja is called by stoda to compute and process the matrix
      P = I - h * el[1] * J, where J is an approximation to the Jacobian.

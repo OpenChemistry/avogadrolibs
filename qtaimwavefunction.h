@@ -111,50 +111,50 @@ namespace Avogadro
     bool initializeWithMoleculeProperties( Molecule*& mol );
     // TODO initialize with Avogadro general wavefunction
 
-    const qint64 numberOfMolecularOrbitals() const { return m_numberOfMolecularOrbitals; }
-    const qint64 numberOfGaussianPrimitives() const { return m_numberOfGaussianPrimitives; }
-    const qint64 numberOfNuclei() const { return m_numberOfNuclei; }
+    qint64 numberOfMolecularOrbitals() const { return m_numberOfMolecularOrbitals; }
+    qint64 numberOfGaussianPrimitives() const { return m_numberOfGaussianPrimitives; }
+    qint64 numberOfNuclei() const { return m_numberOfNuclei; }
 
     const qreal* xNuclearCoordinates() const { return m_xNuclearCoordinates.constData(); }
     const qreal* yNuclearCoordinates() const { return m_yNuclearCoordinates.constData(); }
     const qreal* zNuclearCoordinates() const { return m_zNuclearCoordinates.constData(); }
-    const qreal xNuclearCoordinate( qint64 i ) const { return m_xNuclearCoordinates.at(i); }
-    const qreal yNuclearCoordinate( qint64 i ) const { return m_yNuclearCoordinates.at(i); }
-    const qreal zNuclearCoordinate( qint64 i ) const { return m_zNuclearCoordinates.at(i); }
+    qreal xNuclearCoordinate( qint64 i ) const { return m_xNuclearCoordinates.at(i); }
+    qreal yNuclearCoordinate( qint64 i ) const { return m_yNuclearCoordinates.at(i); }
+    qreal zNuclearCoordinate( qint64 i ) const { return m_zNuclearCoordinates.at(i); }
 
     const qint64* nuclearCharges() const { return m_nuclearCharges.constData(); }
-    const qint64 nuclearCharge( qint64 i ) const { return m_nuclearCharges.at(i); }
+    qint64 nuclearCharge( qint64 i ) const { return m_nuclearCharges.at(i); }
     const QList<qint64> nuclearChargesList() const { return m_nuclearCharges.toList(); }
 
     const qreal* xGaussianPrimitiveCenterCoordinates() const { return m_xGaussianPrimitiveCenterCoordinates.constData(); }
     const qreal* yGaussianPrimitiveCenterCoordinates() const { return m_yGaussianPrimitiveCenterCoordinates.constData(); }
     const qreal* zGaussianPrimitiveCenterCoordinates() const { return m_zGaussianPrimitiveCenterCoordinates.constData(); }
-    const qreal xGaussianPrimitiveCenterCoordinate( qint64 i ) const { return m_xGaussianPrimitiveCenterCoordinates.at(i); }
-    const qreal yGaussianPrimitiveCenterCoordinate( qint64 i ) const { return m_yGaussianPrimitiveCenterCoordinates.at(i); }
-    const qreal zGaussianPrimitiveCenterCoordinate( qint64 i ) const { return m_zGaussianPrimitiveCenterCoordinates.at(i); }
+    qreal xGaussianPrimitiveCenterCoordinate( qint64 i ) const { return m_xGaussianPrimitiveCenterCoordinates.at(i); }
+    qreal yGaussianPrimitiveCenterCoordinate( qint64 i ) const { return m_yGaussianPrimitiveCenterCoordinates.at(i); }
+    qreal zGaussianPrimitiveCenterCoordinate( qint64 i ) const { return m_zGaussianPrimitiveCenterCoordinates.at(i); }
 
     const qint64* xGaussianPrimitiveAngularMomenta() const { return m_xGaussianPrimitiveAngularMomenta.constData(); }
     const qint64* yGaussianPrimitiveAngularMomenta() const { return m_yGaussianPrimitiveAngularMomenta.constData(); }
     const qint64* zGaussianPrimitiveAngularMomenta() const { return m_zGaussianPrimitiveAngularMomenta.constData(); }
-    const qint64 xGaussianPrimitiveAngularMomentum( qint64 i ) const { return m_xGaussianPrimitiveAngularMomenta.at(i); }
-    const qint64 yGaussianPrimitiveAngularMomentum( qint64 i ) const { return m_yGaussianPrimitiveAngularMomenta.at(i); }
-    const qint64 zGaussianPrimitiveAngularMomentum( qint64 i ) const { return m_zGaussianPrimitiveAngularMomenta.at(i); }
+    qint64 xGaussianPrimitiveAngularMomentum( qint64 i ) const { return m_xGaussianPrimitiveAngularMomenta.at(i); }
+    qint64 yGaussianPrimitiveAngularMomentum( qint64 i ) const { return m_yGaussianPrimitiveAngularMomenta.at(i); }
+    qint64 zGaussianPrimitiveAngularMomentum( qint64 i ) const { return m_zGaussianPrimitiveAngularMomenta.at(i); }
 
     const qreal* gaussianPrimitiveExponentCoefficients() const { return m_gaussianPrimitiveExponentCoefficients.constData(); }
-    const qreal gaussianPrimitiveExponentCoefficient( qint64 i ) const { return m_gaussianPrimitiveExponentCoefficients.at(i); }
+    qreal gaussianPrimitiveExponentCoefficient( qint64 i ) const { return m_gaussianPrimitiveExponentCoefficients.at(i); }
 
     const qreal* molecularOrbitalOccupationNumbers() const { return m_molecularOrbitalOccupationNumbers.constData(); }
-    const qreal molecularOrbitalOccupationNumber( qint64 i ) const { return m_molecularOrbitalOccupationNumbers.at(i); }
+    qreal molecularOrbitalOccupationNumber( qint64 i ) const { return m_molecularOrbitalOccupationNumbers.at(i); }
 
     const qreal* molecularOrbitalEigenvalues() const { return m_molecularOrbitalEigenvalues.constData(); }
-    const qreal molecularOrbitalEigenvalue( qint64 i ) const { return m_molecularOrbitalEigenvalues.at(i); }
+    qreal molecularOrbitalEigenvalue( qint64 i ) const { return m_molecularOrbitalEigenvalues.at(i); }
 
     const qreal* molecularOrbitalCoefficients() const { return m_molecularOrbitalCoefficients.constData(); }
-    const qreal molecularOrbitalCoefficient( qint64 i ) const { return m_molecularOrbitalCoefficients.at(i); }
-    const qreal molecularOrbitalCoefficient( qint64 mo, qint64 prim ) const { return m_molecularOrbitalCoefficients.at( mo*m_numberOfGaussianPrimitives + prim ); }
+    qreal molecularOrbitalCoefficient( qint64 i ) const { return m_molecularOrbitalCoefficients.at(i); }
+    qreal molecularOrbitalCoefficient( qint64 mo, qint64 prim ) const { return m_molecularOrbitalCoefficients.at( mo*m_numberOfGaussianPrimitives + prim ); }
 
-    const qreal totalEnergy() const { return m_totalEnergy; }
-    const qreal virialRatio() const { return m_virialRatio; }
+    qreal totalEnergy() const { return m_totalEnergy; }
+    qreal virialRatio() const { return m_virialRatio; }
 
   private:
 

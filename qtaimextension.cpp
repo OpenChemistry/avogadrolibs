@@ -118,7 +118,7 @@ namespace Avogadro
     m_molecule = molecule;
   }
 
-  QUndoCommand* QTAIMExtension::performAction(QAction *action, GLWidget *widget)
+  QUndoCommand* QTAIMExtension::performAction(QAction *action, GLWidget *)
   {
 
     bool wavefunctionAlreadyLoaded;
