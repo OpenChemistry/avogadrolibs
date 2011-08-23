@@ -2095,7 +2095,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
   qFree(val);
   qFree(err);
 
-  QList<QVariant> variantList;
+  //  QList<QVariant> variantList;
 
   variantList.append(sin(t)*Rval);
 
