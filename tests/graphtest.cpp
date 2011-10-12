@@ -1,0 +1,126 @@
+#include <gtest/gtest.h>
+
+#include "../src/graph.h"
+
+TEST(GraphTest, size)
+{
+  MolCore::Graph graph;
+  EXPECT_EQ(graph.size(), 0);
+
+  MolCore::Graph graph2(12);
+  EXPECT_EQ(graph2.size(), 12);
+}
+
+TEST(GraphTest, setSize)
+{
+  MolCore::Graph graph;
+  EXPECT_EQ(graph.size(), 0);
+
+  graph.setSize(100);
+  EXPECT_EQ(graph.size(), 100);
+
+  graph.setSize(50);
+  EXPECT_EQ(graph.size(), 50);
+}
+
+TEST(GraphTest, isEmpty)
+{
+  MolCore::Graph graph;
+  EXPECT_EQ(graph.isEmpty(), true);
+
+  graph.addVertex();
+  EXPECT_EQ(graph.isEmpty(), false);
+
+  graph.clear();
+  EXPECT_EQ(graph.isEmpty(), true);
+}
+
+TEST(GraphTest, clear)
+{
+}
+
+TEST(GraphTest, addVertex)
+{
+  MolCore::Graph graph;
+  size_t index = graph.addVertex();
+  EXPECT_EQ(index, 0);
+  EXPECT_EQ(graph.size(), 1);
+
+  index = graph.addVertex();
+  EXPECT_EQ(index, 1);
+
+  index = graph.addVertex();
+  EXPECT_EQ(index, 2);
+}
+
+TEST(GraphTest, removeVertex)
+{
+  MolCore::Graph graph(4);
+  EXPECT_EQ(graph.size(), 4);
+
+  graph.removeVertex(0);
+  EXPECT_EQ(graph.size(), 3);
+
+  graph.removeVertex(2);
+  EXPECT_EQ(graph.size(), 2);
+}
+
+TEST(GraphTest, vertexCount)
+{
+  MolCore::Graph graph;
+  EXPECT_EQ(graph.vertexCount(), 0);
+
+  graph.addVertex();
+  EXPECT_EQ(graph.vertexCount(), 1);
+
+  graph.addVertex();
+  EXPECT_EQ(graph.vertexCount(), 2);
+
+  graph.removeVertex(1);
+  EXPECT_EQ(graph.vertexCount(), 1);
+
+  graph.clear();
+  EXPECT_EQ(graph.vertexCount(), 0);
+}
+
+TEST(GraphTest, addEdge)
+{
+  MolCore::Graph graph(5);
+  EXPECT_EQ(graph.edgeCount(), 0);
+
+  graph.addEdge(0, 1);
+  EXPECT_EQ(graph.edgeCount(), 1);
+  EXPECT_EQ(graph.containsEdge(0, 1), true);
+
+  graph.addEdge(1, 4);
+  EXPECT_EQ(graph.edgeCount(), 2);
+  EXPECT_EQ(graph.containsEdge(1, 4), true);
+}
+
+TEST(GraphTest, removeEdge)
+{
+  MolCore::Graph graph(5);
+  graph.addEdge(0, 1);
+  graph.addEdge(1, 4);
+}
+
+TEST(GraphTest, edgeCount)
+{
+  MolCore::Graph graph(3);
+  EXPECT_EQ(graph.edgeCount(), 0);
+
+  graph.addEdge(0, 1);
+  EXPECT_EQ(graph.edgeCount(), 1);
+
+  graph.addEdge(0, 2);
+  EXPECT_EQ(graph.edgeCount(), 2);
+
+  graph.addEdge(1, 2);
+  EXPECT_EQ(graph.edgeCount(), 3);
+
+  graph.removeEdge(0, 1);
+  EXPECT_EQ(graph.edgeCount(), 2);
+
+  graph.clear();
+  EXPECT_EQ(graph.edgeCount(), 0);
+}
