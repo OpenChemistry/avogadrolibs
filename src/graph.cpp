@@ -185,4 +185,68 @@ bool Graph::containsEdge(size_t a, size_t b) const
   return std::find(neighborsA.begin(), neighborsA.end(), b) != neighborsA.end();
 }
 
+// --- Algorithms ---------------------------------------------------------- //
+/// Returns a vector of vector containing the indicies of each vertex
+/// in each connected component in the graph.
+std::vector<std::vector<size_t> > Graph::connectedComponents() const
+{
+  std::vector<std::vector<size_t> > components;
+
+  // position of next vertex to root the depth-first search
+  size_t position = 0;
+
+  // bitset containing each vertex that has been visitited
+  std::vector<bool> visited(size());
+
+  for(;;){
+    std::vector<size_t> component(size());
+
+    std::vector<size_t> row;
+    row.push_back(position);
+
+    while(!row.empty()){
+      std::vector<size_t> nextRow;
+
+      for(size_t i = 0; i < row.size(); i++){
+        size_t vertex = row[i];
+
+        // add vertex to the component
+        component.push_back(vertex);
+
+        // mark vertex as visited
+        visited[vertex] = true;
+
+        // iterate through each neighbor
+        const std::vector<size_t> &neighbors = m_adjacencyList[vertex];
+        for(size_t j = 0; j < neighbors.size(); j++){
+          if(visited[neighbors[j]] == false){
+            nextRow.push_back(neighbors[j]);
+          }
+        }
+      }
+
+      row = nextRow;
+    }
+
+    // add component to list of components
+    components.push_back(component);
+
+    // find next unvisited vertex
+    bool done = true;
+    for(size_t i = position + 1; i < size(); i++){
+      if(visited[i] == false){
+        position = i;
+        done = false;
+        break;
+      }
+    }
+
+    if(done){
+      break;
+    }
+  }
+
+  return components;
+}
+
 } // end MolCore namespace

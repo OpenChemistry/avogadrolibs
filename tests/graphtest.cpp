@@ -124,3 +124,20 @@ TEST(GraphTest, edgeCount)
   graph.clear();
   EXPECT_EQ(graph.edgeCount(), 0);
 }
+
+TEST(GraphTest, connectedComponents)
+{
+  MolCore::Graph graph(6);
+  EXPECT_EQ(graph.connectedComponents().size(), 6);
+
+  graph.addEdge(0, 1);
+  graph.addEdge(1, 2);
+  graph.addEdge(3, 4);
+  EXPECT_EQ(graph.connectedComponents().size(), 3);
+
+  graph.addEdge(4, 5);
+  EXPECT_EQ(graph.connectedComponents().size(), 2);
+
+  graph.addEdge(3, 2);
+  EXPECT_EQ(graph.connectedComponents().size(), 1);
+}

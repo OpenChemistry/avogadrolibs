@@ -35,6 +35,9 @@ public:
   size_t degree(size_t index) const;
   bool containsEdge(size_t a, size_t b) const;
 
+  // algorithms
+  std::vector<std::vector<size_t> > connectedComponents() const;
+
 private:
   std::vector<std::vector<size_t> > m_adjacencyList;
 };
