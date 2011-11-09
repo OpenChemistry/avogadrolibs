@@ -1,7 +1,7 @@
 include(../src)
 
 # find google test
-find_package(GTest)
+find_package(GTest REQUIRED)
 include(${GTEST_INCLUDE_DIRS})
 
 add_executable(graphtest graphtest.cpp)
