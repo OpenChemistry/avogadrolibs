@@ -4,5 +4,8 @@ project(MolCore)
 
 add_subdirectory(src)
 
-enable_testing()
-add_subdirectory(tests)
+option(ENABLE_TESTING "Enable testing and building the tests." OFF)
+if(ENABLE_TESTING)
+  enable_testing()
+  add_subdirectory(tests)
+endif()
