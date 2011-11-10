@@ -40,10 +40,15 @@ void VariantMap::setValue(const std::string &name, const Variant &value)
   m_map[name] = value;
 }
 
-/// Returns the value for \p name.
+/// Returns the value for \p name. If \p name is not found a null
+/// variant is returned.
 Variant VariantMap::value(const std::string &name) const
 {
-  return m_map.at(name);
+  std::map<std::string, Variant>::const_iterator iter = m_map.find(name);
+  if(iter == m_map.end())
+    return Variant();
+
+  return iter->second;
 }
 
 } // end MolCore namespace
