@@ -13,11 +13,11 @@ class MOLCORE_EXPORT Graph
 public:
   // construction and destruction
   Graph();
-  Graph(size_t size);
+  Graph(size_t n);
   ~Graph();
 
   // properties
-  void setSize(size_t size);
+  void setSize(size_t n);
   size_t size() const;
   bool isEmpty() const;
   void clear();

@@ -16,9 +16,9 @@ Graph::Graph()
 {
 }
 
-/// Creates a new graph containing \p size verticies.
-Graph::Graph(size_t size)
-  : m_adjacencyList(size)
+/// Creates a new graph containing size \p n verticies.
+Graph::Graph(size_t n)
+  : m_adjacencyList(n)
 {
 }
 
@@ -28,16 +28,16 @@ Graph::~Graph()
 }
 
 // --- Properties ---------------------------------------------------------- //
-/// Sets the number of verticies in the graph to \p size.
-void Graph::setSize(size_t size)
+/// Sets the number of verticies in the graph to size \p n.
+void Graph::setSize(size_t n)
 {
   // if the graph is being made smaller we first need to remove
   // all of the edges from the soon to be removed verticies
-  for(size_t i = size; i < m_adjacencyList.size(); i++){
+  for(size_t i = n; i < m_adjacencyList.size(); i++){
     removeEdges(i);
   }
 
-  m_adjacencyList.resize(size);
+  m_adjacencyList.resize(n);
 }
 
 /// Returns the number of verticies in the graph.
@@ -134,10 +134,10 @@ void Graph::removeEdges()
 /// from the graph.
 void Graph::removeEdges(size_t index)
 {
-  const std::vector<size_t> &neighbors = m_adjacencyList[index];
+  const std::vector<size_t> &nbrs = m_adjacencyList[index];
 
-  for(size_t i = 0; i < neighbors.size(); i++){
-    std::vector<size_t> &neighborsList = m_adjacencyList[neighbors[i]];
+  for(size_t i = 0; i < nbrs.size(); i++){
+    std::vector<size_t> &neighborsList = m_adjacencyList[nbrs[i]];
 
     // remove vertex from its neighbors' adjacency list
     neighborsList.erase(std::find(neighborsList.begin(),
@@ -217,10 +217,10 @@ std::vector<std::vector<size_t> > Graph::connectedComponents() const
         visited[vertex] = true;
 
         // iterate through each neighbor
-        const std::vector<size_t> &neighbors = m_adjacencyList[vertex];
-        for(size_t j = 0; j < neighbors.size(); j++){
-          if(visited[neighbors[j]] == false){
-            nextRow.push_back(neighbors[j]);
+        const std::vector<size_t> &nbrs = m_adjacencyList[vertex];
+        for(size_t j = 0; j < nbrs.size(); j++){
+          if(visited[nbrs[j]] == false){
+            nextRow.push_back(nbrs[j]);
           }
         }
       }

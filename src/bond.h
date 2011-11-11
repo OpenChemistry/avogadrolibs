@@ -16,7 +16,7 @@ class MOLCORE_EXPORT Bond
 public:
   // construction and destruction
   Bond();
-  Bond(Molecule *molecule, size_t index);
+  Bond(Molecule *m, size_t i);
 
   // properties
   bool isValid() const;

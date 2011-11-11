@@ -23,10 +23,10 @@ inline Variant::Variant()
 
 /// Creates a variant to store \p value.
 template<typename T>
-inline Variant::Variant(T value)
+inline Variant::Variant(T v)
   : m_type(Null)
 {
-  setValue(value);
+  setValue(v);
 }
 
 /// Creates a new copy of \p variant.
@@ -63,9 +63,9 @@ inline bool Variant::isNull() const
 // --- Value --------------------------------------------------------------- //
 /// Sets the value of the variant to \p value.
 template<typename T>
-inline bool Variant::setValue(T value)
+inline bool Variant::setValue(T v)
 {
-  CHEMKIT_UNUSED(value);
+  CHEMKIT_UNUSED(v);
 
   clear();
 
@@ -73,78 +73,78 @@ inline bool Variant::setValue(T value)
 }
 
 template<>
-inline bool Variant::setValue(bool value)
+inline bool Variant::setValue(bool v)
 {
   clear();
 
   m_type = Bool;
-  m_value._bool = value;
+  m_value._bool = v;
 
   return true;
 }
 
 template<>
-inline bool Variant::setValue(char value)
+inline bool Variant::setValue(char v)
 {
   clear();
 
   m_type = Int;
-  m_value._int = value;
+  m_value._int = v;
 
   return true;
 }
 
 template<>
-inline bool Variant::setValue(short value)
+inline bool Variant::setValue(short v)
 {
   clear();
 
   m_type = Int;
-  m_value._int = value;
+  m_value._int = v;
 
   return true;
 }
 
 template<>
-inline bool Variant::setValue(int value)
+inline bool Variant::setValue(int v)
 {
   clear();
 
   m_type = Int;
-  m_value._int = value;
+  m_value._int = v;
 
   return true;
 }
 
 template<>
-inline bool Variant::setValue(long value)
+inline bool Variant::setValue(long v)
 {
   clear();
 
   m_type = Long;
-  m_value._long = value;
+  m_value._long = v;
 
   return true;
 }
 
 template<>
-inline bool Variant::setValue(float value)
+inline bool Variant::setValue(float v)
 {
   clear();
 
   m_type = Float;
-  m_value._float = value;
+  m_value._float = v;
 
   return true;
 }
 
 template<>
-inline bool Variant::setValue(double value)
+inline bool Variant::setValue(double v)
 {
   clear();
 
   m_type = Double;
-  m_value._double = value;
+  m_value._double = v;
 
   return true;
 }
@@ -191,7 +191,7 @@ inline bool Variant::value() const
     return m_value._bool;
   }
   else if(m_type == Int){
-    return m_value._int;
+    return static_cast<bool>(m_value._int);
   }
 
   return false;
@@ -201,7 +201,7 @@ template<>
 inline char Variant::value() const
 {
   if(m_type == Int){
-    return m_value._int;
+    return static_cast<char>(m_value._int);
   }
   else if(m_type == String && !m_value.string->empty()){
     return m_value.string->at(0);
@@ -214,7 +214,7 @@ template<>
 inline short Variant::value() const
 {
   if(m_type == Int){
-    return m_value._int;
+    return static_cast<short>(m_value._int);
   }
   else if(m_type == String){
     return lexical_cast<short>(*m_value.string);
@@ -230,13 +230,13 @@ inline int Variant::value() const
     return m_value._int;
   }
   else if(m_type == Bool){
-    return m_value._bool;
+    return static_cast<int>(m_value._bool);
   }
   else if(m_type == Float){
-    return m_value._float;
+    return static_cast<int>(m_value._float);
   }
   else if(m_type == Double){
-    return m_value._double;
+    return static_cast<int>(m_value._double);
   }
   else if(m_type == String){
     return lexical_cast<int>(*m_value.string);
@@ -252,7 +252,7 @@ inline long Variant::value() const
     return m_value._long;
   }
   else if(m_type == Int){
-    return m_value._int;
+    return static_cast<long>(m_value._int);
   }
   else if(m_type == String){
     return lexical_cast<long>(*m_value.string);
@@ -268,10 +268,10 @@ inline float Variant::value() const
     return m_value._float;
   }
   else if(m_type == Double){
-    return m_value._double;
+    return static_cast<float>(m_value._double);
   }
   else if(m_type == Int){
-    return m_value._int;
+    return static_cast<float>(m_value._int);
   }
   else if(m_type == String){
     return lexical_cast<float>(*m_value.string);
@@ -287,10 +287,10 @@ inline double Variant::value() const
     return m_value._double;
   }
   else if(m_type == Float){
-    return m_value._float;
+    return static_cast<double>(m_value._float);
   }
   else if(m_type == Int){
-    return m_value._int;
+    return static_cast<double>(m_value._int);
   }
   else if(m_type == String){
     return lexical_cast<double>(*m_value.string);

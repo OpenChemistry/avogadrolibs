@@ -16,11 +16,11 @@ Atom::Atom()
 {
 }
 
-/// Creates a new atom object representing the atom at \p index in
-/// \p molecule.
-Atom::Atom(Molecule *molecule, size_t index)
-  : m_molecule(molecule),
-    m_index(index)
+/// Creates a new atom object representing the atom at index \p i in
+/// molecule \p m.
+Atom::Atom(Molecule *m, size_t i)
+  : m_molecule(m),
+    m_index(i)
 {
 }
 
@@ -43,10 +43,10 @@ size_t Atom::index() const
   return m_index;
 }
 
-/// Sets the atom's atomic number to \p atomicNumber.
-void Atom::setAtomicNumber(unsigned char atomicNumber)
+/// Sets the atom's atomic number to \p number.
+void Atom::setAtomicNumber(unsigned char number)
 {
-  m_molecule->atomicNumbers()[m_index] = atomicNumber;
+  m_molecule->atomicNumbers()[m_index] = number;
 }
 
 /// Returns the atom's atomic number.

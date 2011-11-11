@@ -92,10 +92,10 @@ std::vector<std::vector<size_t> >& PidMatrix::paths(size_t i, size_t j)
   return m_values[i * m_size + j];
 }
 
-void PidMatrix::addPaths(size_t i, size_t j, const std::vector<std::vector<size_t> > &paths)
+void PidMatrix::addPaths(size_t i, size_t j, const std::vector<std::vector<size_t> > &p)
 {
   std::vector<std::vector<size_t> > &current = m_values[i * m_size + j];
-  current.insert(current.end(), paths.begin(), paths.end());
+  current.insert(current.end(), p.begin(), p.end());
 }
 
 std::vector<std::vector<size_t> >& PidMatrix::operator()(size_t i, size_t j)
@@ -157,7 +157,7 @@ class RingCandidate
 {
 public:
   // construction and destruction
-  RingCandidate(size_t size, size_t start, size_t end);
+  RingCandidate(size_t n, size_t s, size_t e);
 
   // properties
   size_t size() const;
@@ -174,11 +174,11 @@ private:
 };
 
 // --- Construction and Destruction ---------------------------------------- //
-RingCandidate::RingCandidate(size_t size, size_t start, size_t end)
+RingCandidate::RingCandidate(size_t n, size_t s, size_t e)
 {
-  m_size = size;
-  m_start = start;
-  m_end = end;
+  m_size = n;
+  m_start = s;
+  m_end = e;
 }
 
 // --- Properties ---------------------------------------------------------- //
@@ -504,19 +504,19 @@ std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
 
 } // end anonymous namespace
 
-RingPerceiver::RingPerceiver(const Molecule *molecule)
+RingPerceiver::RingPerceiver(const Molecule *m)
 {
   m_ringsPerceived = false;
-  m_molecule = molecule;
+  m_molecule = m;
 }
 
 RingPerceiver::~RingPerceiver()
 {
 }
 
-void RingPerceiver::setMolecule(const Molecule *molecule)
+void RingPerceiver::setMolecule(const Molecule *m)
 {
-  m_molecule = molecule;
+  m_molecule = m;
 
   if(m_ringsPerceived){
     m_ringsPerceived = false;

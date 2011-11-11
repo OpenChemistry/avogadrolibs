@@ -14,13 +14,13 @@ class MOLCORE_EXPORT Atom
 public:
   // construction and destruction
   Atom();
-  Atom(Molecule *molecule, size_t index);
+  Atom(Molecule *m, size_t i);
 
   // properties
   bool isValid() const;
   Molecule* molecule() const;
   size_t index() const;
-  void setAtomicNumber(unsigned char atomicNumber);
+  void setAtomicNumber(unsigned char number);
   unsigned char atomicNumber() const;
 
 private:

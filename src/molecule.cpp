@@ -132,12 +132,12 @@ void Molecule::removeAtom(size_t index)
   m_atomicNumbers.erase(m_atomicNumbers.begin() + index);
 }
 
-/// Removes the atom from the molecule.
-void Molecule::removeAtom(const Atom &atom)
+/// Removes the atom \p a from the molecule.
+void Molecule::removeAtom(const Atom &a)
 {
-  assert(atom.isValid() && atom.molecule() == this);
+  assert(a.isValid() && a.molecule() == this);
 
-  removeAtom(atom.index());
+  removeAtom(a.index());
 }
 
 /// Returns the atom at \p index in the molecule.
@@ -179,12 +179,12 @@ void Molecule::removeBond(size_t index)
   m_bondOrders.erase(m_bondOrders.begin() + index);
 }
 
-/// Removes \p bond from the molecule.
-void Molecule::removeBond(const Bond &bond)
+/// Removes bond \p b from the molecule.
+void Molecule::removeBond(const Bond &b)
 {
-  assert(bond.isValid() && bond.molecule() == this);
+  assert(b.isValid() && b.molecule() == this);
 
-  removeBond(bond.index());
+  removeBond(b.index());
 }
 
 /// Removes the bond between atoms \p a and \p b.

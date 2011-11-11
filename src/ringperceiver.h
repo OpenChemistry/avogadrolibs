@@ -14,11 +14,11 @@ class MOLCORE_EXPORT RingPerceiver
 {
 public:
   // construction and destruction
-  RingPerceiver(const Molecule *molecule = 0);
+  RingPerceiver(const Molecule *m = 0);
   ~RingPerceiver();
 
   // properties
-  void setMolecule(const Molecule *molecule);
+  void setMolecule(const Molecule *m);
   const Molecule* molecule() const;
 
   // ring perception

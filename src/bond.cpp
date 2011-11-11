@@ -18,11 +18,11 @@ Bond::Bond()
 {
 }
 
-/// Creates a bond object representing a bond between atoms \p a and
-/// \p b in \p molecule.
-Bond::Bond(Molecule *molecule, size_t index)
-  : m_molecule(molecule),
-    m_index(index)
+/// Creates a bond object representing a bond at index \p i in
+/// molecule \p m.
+Bond::Bond(Molecule *m, size_t i)
+  : m_molecule(m),
+    m_index(i)
 {
 }
 

@@ -34,10 +34,10 @@ bool VariantMap::isEmpty() const
 }
 
 // --- Values -------------------------------------------------------------- //
-/// Sets the value of \p name to \p value.
-void VariantMap::setValue(const std::string &name, const Variant &value)
+/// Sets the value of \p name to \p v.
+void VariantMap::setValue(const std::string &name, const Variant &v)
 {
-  m_map[name] = value;
+  m_map[name] = v;
 }
 
 /// Returns the value for \p name. If \p name is not found a null

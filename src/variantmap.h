@@ -22,7 +22,7 @@ public:
   bool isEmpty() const;
 
   // values
-  void setValue(const std::string &name, const Variant &value);
+  void setValue(const std::string &name, const Variant &v);
   Variant value(const std::string &name) const;
 
 private:
