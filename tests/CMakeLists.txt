@@ -12,6 +12,10 @@ add_executable(moleculetest moleculetest.cpp)
 target_link_libraries(moleculetest MolCore ${GTEST_BOTH_LIBRARIES} pthread)
 add_test(MoleculeTest moleculetest)
 
+add_executable(ringperceivertest ringperceivertest.cpp)
+target_link_libraries(ringperceivertest MolCore ${GTEST_BOTH_LIBRARIES} pthread)
+add_test(RingPerceiverTest ringperceivertest)
+
 add_executable(varianttest varianttest.cpp)
 target_link_libraries(varianttest MolCore ${GTEST_BOTH_LIBRARIES} pthread)
 add_test(VariantTest varianttest)

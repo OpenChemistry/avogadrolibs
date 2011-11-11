@@ -4,6 +4,7 @@ set(HEADERS
   graph.h
   molcore.h
   molecule.h
+  ringperceiver.h
   variant.h
   variant-inline.h
   variantmap.h
@@ -14,6 +15,7 @@ set(SOURCES
   bond.cpp
   graph.cpp
   molecule.cpp
+  ringperceiver.cpp
   variantmap.cpp
 )
 
