@@ -4,6 +4,7 @@
 #include "molcore.h"
 
 #include <vector>
+#include <cstddef>
 
 namespace MolCore {
 
