@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../src/variant.h"
+#include <variant.h>
 
 TEST(VariantTest, isNull)
 {

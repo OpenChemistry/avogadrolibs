@@ -1,4 +1,4 @@
-include(../src)
+include_directories("${MolCore_SOURCE_DIR}/src")
 
 # find google test
 find_package(GTest REQUIRED)
@@ -19,4 +19,3 @@ add_test(VariantTest varianttest)
 add_executable(variantmaptest variantmaptest.cpp)
 target_link_libraries(variantmaptest MolCore ${GTEST_BOTH_LIBRARIES} pthread)
 add_test(VariantMapTest variantmaptest)
-

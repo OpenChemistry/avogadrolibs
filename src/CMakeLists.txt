@@ -18,4 +18,3 @@ set(SOURCES
 )
 
 add_library(MolCore SHARED ${SOURCES})
-
