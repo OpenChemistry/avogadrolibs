@@ -2,7 +2,7 @@ include_directories("${MolCore_SOURCE_DIR}/src")
 
 # find google test
 find_package(GTest REQUIRED)
-include(${GTEST_INCLUDE_DIRS})
+include_directories(${GTEST_INCLUDE_DIRS})
 
 add_executable(graphtest graphtest.cpp)
 target_link_libraries(graphtest MolCore ${GTEST_BOTH_LIBRARIES} pthread)
