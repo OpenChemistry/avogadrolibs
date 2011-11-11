@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../src/molecule.h"
+#include <molecule.h>
 
 TEST(MoleculeTest, size)
 {

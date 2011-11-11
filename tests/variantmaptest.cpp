@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../src/variantmap.h"
+#include <variantmap.h>
 
 TEST(VariantMapTest, size)
 {
