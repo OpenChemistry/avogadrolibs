@@ -7,20 +7,20 @@ include_directories(${GTEST_INCLUDE_DIRS})
 
 add_executable(graphtest graphtest.cpp)
 target_link_libraries(graphtest MolCore ${GTEST_BOTH_LIBRARIES})
-add_test(GraphTest graphtest)
+add_test(NAME GraphTest COMMAND graphtest)
 
 add_executable(moleculetest moleculetest.cpp)
 target_link_libraries(moleculetest MolCore ${GTEST_BOTH_LIBRARIES})
-add_test(MoleculeTest moleculetest)
+add_test(NAME MoleculeTest COMMAND moleculetest)
 
 add_executable(ringperceivertest ringperceivertest.cpp)
 target_link_libraries(ringperceivertest MolCore ${GTEST_BOTH_LIBRARIES})
-add_test(RingPerceiverTest ringperceivertest)
+add_test(NAME RingPerceiverTest COMMAND ringperceivertest)
 
 add_executable(varianttest varianttest.cpp)
 target_link_libraries(varianttest MolCore ${GTEST_BOTH_LIBRARIES})
-add_test(VariantTest varianttest)
+add_test(NAME VariantTest COMMAND varianttest)
 
 add_executable(variantmaptest variantmaptest.cpp)
 target_link_libraries(variantmaptest MolCore ${GTEST_BOTH_LIBRARIES})
-add_test(VariantMapTest variantmaptest)
+add_test(NAME VariantMapTest COMMAND variantmaptest)
