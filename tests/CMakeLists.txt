@@ -1,4 +1,5 @@
-include_directories("${MolCore_SOURCE_DIR}/src")
+include_directories("${MolCore_SOURCE_DIR}/src"
+  "${MolCore_BINARY_DIR}/src")
 
 # find google test
 find_package(GTest REQUIRED)

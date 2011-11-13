@@ -1,7 +1,7 @@
 #ifndef MOLCORE_MOLCORE_H
 #define MOLCORE_MOLCORE_H
 
-#define MOLCORE_EXPORT
+#include "molcoreexport.h"
 
 /// This macro marks a parameter as unused. Its purpose is to
 /// disable the compiler from emitting unused parameter warnings.
