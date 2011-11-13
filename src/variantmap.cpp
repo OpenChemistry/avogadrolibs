@@ -60,7 +60,7 @@ void VariantMap::setValue(const std::string &name, const Variant &v)
 Variant VariantMap::value(const std::string &name) const
 {
   std::map<std::string, Variant>::const_iterator iter = m_map.find(name);
-  if(iter == m_map.end())
+  if (iter == m_map.end())
     return Variant();
 
   return iter->second;

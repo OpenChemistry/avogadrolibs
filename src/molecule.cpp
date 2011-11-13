@@ -130,13 +130,13 @@ void Molecule::removeAtom(size_t index)
   assert(index < size());
 
   // remove the bonds containing the atom first
-  for(size_t i = 0; i < m_bondPairs.size(); i++){
+  for (size_t i = 0; i < m_bondPairs.size(); i++) {
     const std::pair<unsigned char, unsigned char> &bondPair = m_bondPairs[i];
 
-    if(bondPair.first == index || bondPair.second == index){
+    if (bondPair.first == index || bondPair.second == index) {
       m_bondPairs.erase(m_bondPairs.begin() + i);
       m_bondOrders.erase(m_bondOrders.begin() + i);
-      i--;
+      --i;
     }
   }
 
@@ -231,9 +231,8 @@ Bond Molecule::bond(const Atom &a, const Atom &b) const
   std::vector<std::pair<size_t, size_t> >::const_iterator iter =
     std::find(m_bondPairs.begin(), m_bondPairs.end(), bondPair);
 
-  if(iter == m_bondPairs.end()){
+  if (iter == m_bondPairs.end())
     return Bond();
-  }
 
   return Bond(const_cast<Molecule *>(this), iter - m_bondPairs.begin());
 }

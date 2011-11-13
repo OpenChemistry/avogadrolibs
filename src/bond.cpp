@@ -63,7 +63,7 @@ size_t Bond::index() const
 /// Returns the first atom in the molecule.
 Atom Bond::atom1() const
 {
-  if(m_molecule){
+  if (m_molecule) {
     size_t atomIndex = m_molecule->bondPairs()[m_index].first;
 
     return m_molecule->atom(atomIndex);
@@ -75,7 +75,7 @@ Atom Bond::atom1() const
 /// Returns the second atom in the molecule.
 Atom Bond::atom2() const
 {
-  if(m_molecule){
+  if (m_molecule) {
     size_t atomIndex = m_molecule->bondPairs()[m_index].second;
 
     return m_molecule->atom(atomIndex);

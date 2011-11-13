@@ -203,12 +203,10 @@ inline T Variant::value() const
 template<>
 inline bool Variant::value() const
 {
-  if(m_type == Bool){
+  if (m_type == Bool)
     return m_value._bool;
-  }
-  else if(m_type == Int){
+  else if(m_type == Int)
     return static_cast<bool>(m_value._int);
-  }
 
   return false;
 }
@@ -216,12 +214,10 @@ inline bool Variant::value() const
 template<>
 inline char Variant::value() const
 {
-  if(m_type == Int){
+  if (m_type == Int)
     return static_cast<char>(m_value._int);
-  }
-  else if(m_type == String && !m_value.string->empty()){
+  else if (m_type == String && !m_value.string->empty())
     return m_value.string->at(0);
-  }
 
   return '\0';
 }
@@ -229,12 +225,10 @@ inline char Variant::value() const
 template<>
 inline short Variant::value() const
 {
-  if(m_type == Int){
+  if (m_type == Int)
     return static_cast<short>(m_value._int);
-  }
-  else if(m_type == String){
+  else if (m_type == String)
     return lexical_cast<short>(*m_value.string);
-  }
 
   return 0;
 }
@@ -242,21 +236,16 @@ inline short Variant::value() const
 template<>
 inline int Variant::value() const
 {
-  if(m_type == Int){
+  if (m_type == Int)
     return m_value._int;
-  }
-  else if(m_type == Bool){
+  else if (m_type == Bool)
     return static_cast<int>(m_value._bool);
-  }
-  else if(m_type == Float){
+  else if (m_type == Float)
     return static_cast<int>(m_value._float);
-  }
-  else if(m_type == Double){
+  else if (m_type == Double)
     return static_cast<int>(m_value._double);
-  }
-  else if(m_type == String){
+  else if (m_type == String)
     return lexical_cast<int>(*m_value.string);
-  }
 
   return 0;
 }
@@ -264,15 +253,12 @@ inline int Variant::value() const
 template<>
 inline long Variant::value() const
 {
-  if(m_type == Long){
+  if (m_type == Long)
     return m_value._long;
-  }
-  else if(m_type == Int){
+  else if (m_type == Int)
     return static_cast<long>(m_value._int);
-  }
-  else if(m_type == String){
+  else if (m_type == String)
     return lexical_cast<long>(*m_value.string);
-  }
 
   return 0;
 }
@@ -280,18 +266,14 @@ inline long Variant::value() const
 template<>
 inline float Variant::value() const
 {
-  if(m_type == Float){
+  if (m_type == Float)
     return m_value._float;
-  }
-  else if(m_type == Double){
+  else if (m_type == Double)
     return static_cast<float>(m_value._double);
-  }
-  else if(m_type == Int){
+  else if (m_type == Int)
     return static_cast<float>(m_value._int);
-  }
-  else if(m_type == String){
+  else if (m_type == String)
     return lexical_cast<float>(*m_value.string);
-  }
 
   return 0;
 }
@@ -299,18 +281,14 @@ inline float Variant::value() const
 template<>
 inline double Variant::value() const
 {
-  if(m_type == Double){
+  if (m_type == Double)
     return m_value._double;
-  }
-  else if(m_type == Float){
+  else if (m_type == Float)
     return static_cast<double>(m_value._float);
-  }
-  else if(m_type == Int){
+  else if (m_type == Int)
     return static_cast<double>(m_value._int);
-  }
-  else if(m_type == String){
+  else if (m_type == String)
     return lexical_cast<double>(*m_value.string);
-  }
 
   return 0;
 }
@@ -318,9 +296,8 @@ inline double Variant::value() const
 template<>
 inline void* Variant::value() const
 {
-  if(m_type == Pointer){
+  if (m_type == Pointer)
     return m_value.pointer;
-  }
 
   return 0;
 }
@@ -328,21 +305,17 @@ inline void* Variant::value() const
 template<>
 inline std::string Variant::value() const
 {
-  if(m_type == String){
+  if (m_type == String)
     return *m_value.string;
-  }
 
   std::stringstream string;
 
-  if(m_type == Int){
+  if (m_type == Int)
     string << m_value._int;
-  }
-  else if(m_type == Float){
+  else if (m_type == Float)
     string << m_value._float;
-  }
-  else if(m_type == Double){
+  else if (m_type == Double)
     string << m_value._double;
-  }
 
   return string.str();
 }
@@ -350,7 +323,7 @@ inline std::string Variant::value() const
 /// Clears the variant's data and sets the variant to null.
 inline void Variant::clear()
 {
-  if(m_type == String){
+  if (m_type == String) {
     delete m_value.string;
     m_value.string = 0;
   }
@@ -446,7 +419,7 @@ inline std::string Variant::toString() const
 // --- Operators ----------------------------------------------------------- //
 inline Variant& Variant::operator=(const Variant &variant)
 {
-  if(this != &variant){
+  if (this != &variant) {
     // clear previous data
     clear();
 
@@ -454,12 +427,10 @@ inline Variant& Variant::operator=(const Variant &variant)
     m_type = variant.m_type;
 
     // set new value
-    if(m_type == String){
+    if (m_type == String)
       m_value.string = new std::string(variant.toString());
-    }
-    else if(m_type != Null){
+    else if (m_type != Null)
       m_value = variant.m_value;
-    }
   }
 
   return *this;

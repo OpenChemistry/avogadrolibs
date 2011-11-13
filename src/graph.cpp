@@ -48,7 +48,7 @@ void Graph::setSize(size_t n)
 {
   // if the graph is being made smaller we first need to remove
   // all of the edges from the soon to be removed verticies
-  for(size_t i = n; i < m_adjacencyList.size(); i++){
+  for (size_t i = n; i < m_adjacencyList.size(); i++) {
     removeEdges(i);
   }
 
@@ -110,7 +110,7 @@ void Graph::addEdge(size_t a, size_t b)
   std::vector<size_t> &neighborsB = m_adjacencyList[b];
 
   // ensure edge does not exist already
-  if(std::find(neighborsA.begin(), neighborsA.end(), b) != neighborsA.end())
+  if (std::find(neighborsA.begin(), neighborsA.end(), b) != neighborsA.end())
     return;
 
   // add the edge to each verticies adjacency list
@@ -131,7 +131,7 @@ void Graph::removeEdge(size_t a, size_t b)
                                                  neighborsA.end(),
                                                  b);
 
-  if(iter != neighborsA.end()){
+  if (iter != neighborsA.end()) {
     neighborsA.erase(iter);
     neighborsB.erase(std::find(neighborsB.begin(), neighborsB.end(), a));
   }
@@ -140,9 +140,8 @@ void Graph::removeEdge(size_t a, size_t b)
 /// Removes all of the edges from the graph.
 void Graph::removeEdges()
 {
-  for(size_t i = 0; i < m_adjacencyList.size(); i++){
+  for (size_t i = 0; i < m_adjacencyList.size(); ++i)
     m_adjacencyList[i].clear();
-  }
 }
 
 /// Removes all of the edges that contain the vertex at \p index
@@ -151,7 +150,7 @@ void Graph::removeEdges(size_t index)
 {
   const std::vector<size_t> &nbrs = m_adjacencyList[index];
 
-  for(size_t i = 0; i < nbrs.size(); i++){
+  for (size_t i = 0; i < nbrs.size(); ++i) {
     std::vector<size_t> &neighborsList = m_adjacencyList[nbrs[i]];
 
     // remove vertex from its neighbors' adjacency list
@@ -166,9 +165,8 @@ size_t Graph::edgeCount() const
 {
   size_t count = 0;
 
-  for(size_t i = 0; i < size(); i++){
+  for(size_t i = 0; i < size(); ++i)
     count += neighbors(i).size();
-  }
 
   return count / 2;
 }
@@ -213,16 +211,16 @@ std::vector<std::vector<size_t> > Graph::connectedComponents() const
   // bitset containing each vertex that has been visitited
   std::vector<bool> visited(size());
 
-  for(;;){
+  for (;;) {
     std::vector<size_t> component(size());
 
     std::vector<size_t> row;
     row.push_back(position);
 
-    while(!row.empty()){
+    while (!row.empty()) {
       std::vector<size_t> nextRow;
 
-      for(size_t i = 0; i < row.size(); i++){
+      for (size_t i = 0; i < row.size(); i++) {
         size_t vertex = row[i];
 
         // add vertex to the component
@@ -233,8 +231,8 @@ std::vector<std::vector<size_t> > Graph::connectedComponents() const
 
         // iterate through each neighbor
         const std::vector<size_t> &nbrs = m_adjacencyList[vertex];
-        for(size_t j = 0; j < nbrs.size(); j++){
-          if(visited[nbrs[j]] == false){
+        for (size_t j = 0; j < nbrs.size(); ++j) {
+          if (visited[nbrs[j]] == false) {
             nextRow.push_back(nbrs[j]);
           }
         }
@@ -248,7 +246,7 @@ std::vector<std::vector<size_t> > Graph::connectedComponents() const
 
     // find next unvisited vertex
     bool done = true;
-    for(size_t i = position + 1; i < size(); i++){
+    for (size_t i = position + 1; i < size(); ++i) {
       if(visited[i] == false){
         position = i;
         done = false;
@@ -256,9 +254,8 @@ std::vector<std::vector<size_t> > Graph::connectedComponents() const
       }
     }
 
-    if(done){
+    if (done)
       break;
-    }
   }
 
   return components;
