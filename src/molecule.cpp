@@ -151,35 +151,6 @@ Bond Molecule::addBond(const Atom &a, const Atom &b, unsigned char bondOrder)
   return Bond(this, m_bondPairs.size() - 1);
 }
 
-/// Removes the bond at \p index from the molecule.
-void Molecule::removeBond(size_t index)
-{
-  assert(index < bondCount());
-
-  std::pair<unsigned char, unsigned char> bondPair = m_bondPairs[index];
-
-  m_graph.removeEdge(bondPair.first, bondPair.second);
-  m_bondPairs.erase(m_bondPairs.begin() + index);
-  m_bondOrders.erase(m_bondOrders.begin() + index);
-}
-
-/// Removes bond \p b from the molecule.
-void Molecule::removeBond(const Bond &b)
-{
-  assert(b.isValid() && b.molecule() == this);
-
-  removeBond(b.index());
-}
-
-/// Removes the bond between atoms \p a and \p b.
-void Molecule::removeBond(const Atom &a, const Atom &b)
-{
-  assert(a.isValid() && a.molecule() == this);
-  assert(b.isValid() && b.molecule() == this);
-
-  removeBond(bond(a, b));
-}
-
 /// Returns the bond at \p index in the molecule.
 Bond Molecule::bond(size_t index) const
 {

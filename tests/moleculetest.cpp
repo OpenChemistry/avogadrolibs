@@ -59,22 +59,3 @@ TEST(MoleculeTest, addBond)
   EXPECT_EQ(bondAB.atom2().index(), b.index());
   EXPECT_EQ(bondAB.order(), 1);
 }
-
-TEST(MoleculeTest, removeBond)
-{
-  MolCore::Molecule molecule;
-  MolCore::Atom a = molecule.addAtom(1);
-  MolCore::Atom b = molecule.addAtom(1);
-  MolCore::Atom c = molecule.addAtom(1);
-  MolCore::Bond bondAB = molecule.addBond(a, b);
-  MolCore::Bond bondBC = molecule.addBond(b, c);
-  EXPECT_EQ(molecule.bondCount(), 2);
-  EXPECT_EQ(bondAB.index(), 0);
-  EXPECT_EQ(bondBC.index(), 1);
-
-  molecule.removeBond(bondAB);
-  EXPECT_EQ(molecule.bondCount(), 1);
-
-  molecule.removeBond(0);
-  EXPECT_EQ(molecule.bondCount(), 0);
-}
