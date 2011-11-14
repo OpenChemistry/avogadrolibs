@@ -51,8 +51,6 @@ public:
 
   // structure
   Atom addAtom(unsigned char atomicNumber);
-  void removeAtom(size_t index);
-  void removeAtom(const Atom &a);
   Atom atom(size_t index) const;
   size_t atomCount() const;
   Bond addBond(const Atom &a, const Atom &b, unsigned char bondOrder = 1);

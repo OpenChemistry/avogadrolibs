@@ -124,37 +124,6 @@ Atom Molecule::addAtom(unsigned char atomicNumber)
   return Atom(this, index);
 }
 
-/// Removes the atom at \p index from the molecule.
-void Molecule::removeAtom(size_t index)
-{
-  assert(index < size());
-
-  // remove the bonds containing the atom first
-  for (size_t i = 0; i < m_bondPairs.size(); i++) {
-    const std::pair<unsigned char, unsigned char> &bondPair = m_bondPairs[i];
-
-    if (bondPair.first == index || bondPair.second == index) {
-      m_bondPairs.erase(m_bondPairs.begin() + i);
-      m_bondOrders.erase(m_bondOrders.begin() + i);
-      --i;
-    }
-  }
-
-  // remove atom from graph
-  m_graph.removeVertex(index);
-
-  // remove atomic number
-  m_atomicNumbers.erase(m_atomicNumbers.begin() + index);
-}
-
-/// Removes the atom \p a from the molecule.
-void Molecule::removeAtom(const Atom &a)
-{
-  assert(a.isValid() && a.molecule() == this);
-
-  removeAtom(a.index());
-}
-
 /// Returns the atom at \p index in the molecule.
 Atom Molecule::atom(size_t index) const
 {
