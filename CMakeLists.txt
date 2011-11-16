@@ -17,3 +17,6 @@ if(ENABLE_TESTING)
   enable_testing()
   add_subdirectory(tests)
 endif()
+
+configure_file(${MolCore_SOURCE_DIR}/cmake/CTestCustom.cmake.in
+  ${MolCore_BINARY_DIR}/CTestCustom.cmake)
