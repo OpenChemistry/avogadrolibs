@@ -1,4 +1,4 @@
 set(CTEST_CUSTOM_COVERAGE_EXCLUDE
   ${CTEST_CUSTOM_COVERAGE_EXCLUDE}
-  "tests.*.cxx"
+  "tests.*.cpp"
   )
