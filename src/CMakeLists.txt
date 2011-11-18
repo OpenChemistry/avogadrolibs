@@ -1,3 +1,4 @@
+find_package(Eigen3 REQUIRED)
 
 set(HEADERS
   atom.h
