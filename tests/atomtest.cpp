@@ -14,40 +14,19 @@
 
 ******************************************************************************/
 
-#ifndef MOLCORE_BOND_H
-#define MOLCORE_BOND_H
+#include <gtest/gtest.h>
 
-#include "molcore.h"
+#include <atom.h>
+#include <molecule.h>
 
-#include <cstddef>
-
-#include "atom.h"
-
-namespace MolCore {
-
-class Molecule;
-
-class MOLCORE_EXPORT Bond
+TEST(AtomTest, setAtomicNumber)
 {
-public:
-  // construction and destruction
-  Bond();
-  Bond(Molecule *m, size_t i);
+  MolCore::Molecule molecule;
+  MolCore::Atom atom = molecule.addAtom(1);
+  EXPECT_TRUE(atom.isValid());
+  EXPECT_EQ(atom.atomicNumber(), 1);
 
-  // properties
-  bool isValid() const;
-  Molecule* molecule() const;
-  size_t index() const;
-  Atom atom1() const;
-  Atom atom2() const;
-  void setOrder(unsigned char o);
-  unsigned char order() const;
-
-private:
-  Molecule *m_molecule;
-  size_t m_index;
-};
-
-} // end MolCore namespace
-
-#endif // MOLCORE_BOND_H
+  // change the atom's atomic number
+  atom.setAtomicNumber(6);
+  EXPECT_EQ(atom.atomicNumber(), 6);
+}
