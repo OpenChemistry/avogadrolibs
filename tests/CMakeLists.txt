@@ -14,44 +14,41 @@ if(HAVE_GTEST_HPP)
 endif()
 
 if(GTEST_HAS_PTHREAD)
-  message("GTest claims it has pthreads, we need to link to it.")
+  message(STATUS "GTest claims it has pthreads, we need to link to it.")
   find_package(Threads)
   set(EXTRA_LINK_LIB ${CMAKE_THREAD_LIBS_INIT})
 else()
   set(EXTRA_LINK_LIB "")
 endif()
 
-add_executable(atomtest atomtest.cpp)
-target_link_libraries(atomtest MolCore ${GTEST_BOTH_LIBRARIES}
-  ${EXTRA_LINK_LIB})
-add_test(NAME AtomTest COMMAND atomtest)
+# Specify the name of each test (the Test will be appended where needed).
+set(tests
+  Atom
+  Bond
+  Graph
+  Molecule
+  RingPerceiver
+  Variant
+  VariantMap
+  )
 
-add_executable(bondtest bondtest.cpp)
-target_link_libraries(bondtest MolCore ${GTEST_BOTH_LIBRARIES}
-  ${EXTRA_LINK_LIB})
-add_test(NAME BondTest COMMAND bondtest)
+# Build up the source file names.
+set(testSrcs "")
+foreach(TestName ${tests})
+  message(STATUS "Adding ${TestName} test.")
+  string(TOLOWER ${TestName} testname)
+  list(APPEND testSrcs ${testname}test.cpp)
+endforeach()
+message(STATUS "Test source files: ${testSrcs}")
 
-add_executable(graphtest graphtest.cpp)
-target_link_libraries(graphtest MolCore ${GTEST_BOTH_LIBRARIES}
-  ${EXTRA_LINK_LIB})
-add_test(NAME GraphTest COMMAND graphtest)
+# Add a single executable for all of our tests.
+add_executable(MolCoreTests ${testSrcs})
+target_link_libraries(MolCoreTests MolCore
+  ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
-add_executable(moleculetest moleculetest.cpp)
-target_link_libraries(moleculetest MolCore ${GTEST_BOTH_LIBRARIES}
-  ${EXTRA_LINK_LIB})
-add_test(NAME MoleculeTest COMMAND moleculetest)
-
-add_executable(ringperceivertest ringperceivertest.cpp)
-target_link_libraries(ringperceivertest MolCore ${GTEST_BOTH_LIBRARIES}
-  ${EXTRA_LINK_LIB})
-add_test(NAME RingPerceiverTest COMMAND ringperceivertest)
-
-add_executable(varianttest varianttest.cpp)
-target_link_libraries(varianttest MolCore ${GTEST_BOTH_LIBRARIES}
-  ${EXTRA_LINK_LIB})
-add_test(NAME VariantTest COMMAND varianttest)
-
-add_executable(variantmaptest variantmaptest.cpp)
-target_link_libraries(variantmaptest MolCore ${GTEST_BOTH_LIBRARIES}
-  ${EXTRA_LINK_LIB})
-add_test(NAME VariantMapTest COMMAND variantmaptest)
+# Now add all of the tests, using the gtest_filter argument so that only those
+# cases are run in each test invocation.
+foreach(TestName ${tests})
+  add_test(NAME "${TestName}Test"
+    COMMAND MolCoreTests "--gtest_filter=${TestName}Test.*")
+endforeach()
