@@ -21,6 +21,11 @@ else()
   set(EXTRA_LINK_LIB "")
 endif()
 
+add_executable(atomtest atomtest.cpp)
+target_link_libraries(atomtest MolCore ${GTEST_BOTH_LIBRARIES}
+  ${EXTRA_LINK_LIB})
+add_test(NAME AtomTest COMMAND atomtest)
+
 add_executable(graphtest graphtest.cpp)
 target_link_libraries(graphtest MolCore ${GTEST_BOTH_LIBRARIES}
   ${EXTRA_LINK_LIB})
