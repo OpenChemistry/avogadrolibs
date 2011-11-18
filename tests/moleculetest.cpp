@@ -92,7 +92,7 @@ TEST(MoleculeTest, addBond)
 
 TEST(MoleculeTest, setData)
 {
-    MolCore::Molecule molecule;
-    molecule.setData("name", "ethanol");
-    EXPECT_EQ(molecule.data("name").toString(), "ethanol");
+  MolCore::Molecule molecule;
+  molecule.setData("name", "ethanol");
+  EXPECT_EQ(molecule.data("name").toString(), "ethanol");
 }
