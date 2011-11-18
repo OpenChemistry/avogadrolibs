@@ -40,6 +40,7 @@ public:
   size_t index() const;
   Atom atom1() const;
   Atom atom2() const;
+  void setOrder(unsigned char o);
   unsigned char order() const;
 
 private:

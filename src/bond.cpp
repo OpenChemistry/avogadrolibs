@@ -84,6 +84,12 @@ Atom Bond::atom2() const
   return Atom();
 }
 
+/// Sets the bond order for the bond to \p order.
+void Bond::setOrder(unsigned char o)
+{
+  m_molecule->bondOrders()[m_index] = o;
+}
+
 /// Returns the bond order for the bond.
 unsigned char Bond::order() const
 {
