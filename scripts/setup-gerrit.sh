@@ -22,11 +22,11 @@ gerrit_user() {
   echo -e "\nConfiguring 'gerrit' remote with user '$gu'..."
   if git config remote.gerrit.url >/dev/null; then
     # Correct the remote url
-    git remote set-url gerrit ssh://$gu@reviewtest.source.kitware.com:29419/${project} || \
+    git remote set-url gerrit $gu@review.source.kitware.com:${project} || \
       die "Could not amend gerrit remote."
   else
     # Add a new one
-    git remote add gerrit ssh://$gu@reviewtest.source.kitware.com:29419/${project} || \
+    git remote add gerrit $gu@review.source.kitware.com:${project} || \
       die "Could not add gerrit remote."
   fi
   cat << EOF
