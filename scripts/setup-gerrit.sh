@@ -11,7 +11,7 @@ die() {
 }
 
 # Centralize project variables for each script
-project="MolCore"
+project="molcore"
 
 gerrit_user() {
   read -ep "Enter your gerrit user (set in Gerrit Settings/Profile) [$USER]: " gu
