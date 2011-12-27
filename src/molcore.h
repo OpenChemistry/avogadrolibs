@@ -2,7 +2,7 @@
 
   This source file is part of the MolCore project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -18,6 +18,7 @@
 #define MOLCORE_MOLCORE_H
 
 #include "molcoreexport.h"
+#include <cstddef>
 
 /// This macro marks a parameter as unused. Its purpose is to
 /// disable the compiler from emitting unused parameter warnings.
@@ -33,6 +34,9 @@ namespace MolCore {
 
 /// Typedef for a real number.
 typedef double Real;
+
+/// Typedef for indices and sizes.
+typedef size_t Index;
 
 } // end MolCore namespace
 
