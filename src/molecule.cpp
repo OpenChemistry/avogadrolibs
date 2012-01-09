@@ -174,7 +174,9 @@ Bond Molecule::bond(const Atom &a, const Atom &b) const
   if (iter == m_bondPairs.end())
     return Bond();
 
-  return Bond(const_cast<Molecule *>(this), iter - m_bondPairs.begin());
+  size_t index = static_cast<size_t>(std::distance(m_bondPairs.begin(), iter));
+
+  return Bond(const_cast<Molecule *>(this), index);
 }
 
 /// Returns the number of bonds in the molecule.

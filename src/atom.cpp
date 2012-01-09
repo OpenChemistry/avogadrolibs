@@ -27,7 +27,7 @@ namespace MolCore {
 /// Creates a new, invalid atom object.
 Atom::Atom()
   : m_molecule(0),
-    m_index(-1)
+    m_index(size_t(-1))
 {
 }
 
