@@ -70,4 +70,42 @@ unsigned char Atom::atomicNumber() const
   return m_molecule->atomicNumbers()[m_index];
 }
 
+/// Sets the atom's 2d position to \p pos.
+void Atom::setPosition2d(const Vector2 &pos)
+{
+  std::vector<Vector2> &positions = m_molecule->atomPositions2d();
+  if (m_index >= positions.size())
+    positions.resize(m_index + 1);
+  positions[m_index] = pos;
+}
+
+/// Returns the atom's 2d position.
+Vector2 Atom::position2d() const
+{
+  const std::vector<Vector2> &positions = m_molecule->atomPositions2d();
+  if (m_index < positions.size())
+    return positions[m_index];
+  else
+    return Vector2::Zero();
+}
+
+/// Sets the atom's 3d position to \p pos.
+void Atom::setPosition3d(const Vector3 &pos)
+{
+  std::vector<Vector3> &positions = m_molecule->atomPositions3d();
+  if (m_index >= positions.size())
+    positions.resize(m_index + 1);
+  positions[m_index] = pos;
+}
+
+/// Returns the atom's 3d position.
+Vector3 Atom::position3d() const
+{
+  const std::vector<Vector3> &positions = m_molecule->atomPositions3d();
+  if (m_index >= positions.size())
+    return Vector3::Zero();
+  else
+    return positions[m_index];
+}
+
 } // end MolCore namespace

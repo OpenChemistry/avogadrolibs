@@ -73,6 +73,30 @@ const std::vector<unsigned char>& Molecule::atomicNumbers() const
   return m_atomicNumbers;
 }
 
+/// Returns a vector of 2d atom positions for the atoms in the molecule.
+std::vector<Vector2>& Molecule::atomPositions2d()
+{
+  return m_positions2d;
+}
+
+/// \overload
+const std::vector<Vector2>& Molecule::atomPositions2d() const
+{
+  return m_positions2d;
+}
+
+/// Returns a vector of 2d atom positions for the atoms in the molecule.
+std::vector<Vector3>& Molecule::atomPositions3d()
+{
+  return m_positions3d;
+}
+
+/// \overload
+const std::vector<Vector3>& Molecule::atomPositions3d() const
+{
+  return m_positions3d;
+}
+
 /// Returns a vector of pairs of atom indicies for the bonds in the
 /// molecule.
 std::vector<std::pair<size_t, size_t> >& Molecule::bondPairs()

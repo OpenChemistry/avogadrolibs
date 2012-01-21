@@ -25,6 +25,7 @@
 #include "bond.h"
 #include "graph.h"
 #include "variantmap.h"
+#include "vector.h"
 
 namespace MolCore {
 
@@ -41,6 +42,10 @@ public:
   void setData(const std::string &name, const Variant &value);
   Variant data(const std::string &name) const;
   std::vector<unsigned char>& atomicNumbers();
+  const std::vector<Vector2>& atomPositions2d() const;
+  std::vector<Vector2>& atomPositions2d();
+  const std::vector<Vector3>& atomPositions3d() const;
+  std::vector<Vector3>& atomPositions3d();
   const std::vector<unsigned char>& atomicNumbers() const;
   std::vector<std::pair<size_t, size_t> >& bondPairs();
   const std::vector<std::pair<size_t, size_t> >& bondPairs() const;
@@ -65,6 +70,8 @@ private:
   Graph m_graph;
   VariantMap m_data;
   std::vector<unsigned char> m_atomicNumbers;
+  std::vector<Vector2> m_positions2d;
+  std::vector<Vector3> m_positions3d;
   std::vector<std::pair<size_t, size_t> > m_bondPairs;
   std::vector<unsigned char> m_bondOrders;
 };

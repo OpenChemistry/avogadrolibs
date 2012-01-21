@@ -18,8 +18,7 @@
 #define MOLCORE_ATOM_H
 
 #include "molcore.h"
-
-#include <cstddef>
+#include "vector.h"
 
 namespace MolCore {
 
@@ -38,6 +37,11 @@ public:
   size_t index() const;
   void setAtomicNumber(unsigned char number);
   unsigned char atomicNumber() const;
+
+  void setPosition2d(const Vector2 &pos);
+  Vector2 position2d() const;
+  void setPosition3d(const Vector3 &pos);
+  Vector3 position3d() const;
 
 private:
   Molecule *m_molecule;
