@@ -29,7 +29,7 @@ namespace MolCore {
 /// Creates a new, invalid bond object.
 Bond::Bond()
   : m_molecule(0),
-    m_index(-1)
+    m_index(size_t(-1))
 {
 }
 
