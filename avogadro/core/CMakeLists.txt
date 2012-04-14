@@ -8,6 +8,7 @@ set(HEADERS
   atom.h
   avogadrocore.h
   bond.h
+  coordinateset.h
   graph.h
   molecule.h
   ringperceiver.h
@@ -19,6 +20,7 @@ set(HEADERS
 set(SOURCES
   atom.cpp
   bond.cpp
+  coordinateset.cpp
   graph.cpp
   molecule.cpp
   ringperceiver.cpp

@@ -1,5 +1,6 @@
 include_directories("${LibAvogadro_SOURCE_DIR}/avogadro/core"
-  "${LibAvogadro_BINARY_DIR}/avogadro/core")
+  "${LibAvogadro_BINARY_DIR}/avogadro/core"
+  "${LibAvogadro_SOURCE_DIR}" "${LibAvogadro_BINARY_DIR}")
 
 # find google test
 find_package(GTest REQUIRED)
@@ -31,6 +32,7 @@ set(tests
   Array
   Atom
   Bond
+  CoordinateSet
   Eigen
   Graph
   Molecule
