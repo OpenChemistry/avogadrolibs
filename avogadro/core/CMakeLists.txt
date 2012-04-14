@@ -4,10 +4,11 @@ find_package(Eigen3 REQUIRED)
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
 set(HEADERS
+  array.h
   atom.h
+  avogadrocore.h
   bond.h
   graph.h
-  molcore.h
   molecule.h
   ringperceiver.h
   variant.h
@@ -24,13 +25,13 @@ set(SOURCES
   variantmap.cpp
 )
 
-add_library(MolCore SHARED ${SOURCES})
+add_library(AvogadroCore ${HEADERS} ${SOURCES})
 
-# Generate an export header for the MolCore library. This handles symbol
+# Generate an export header for the AvogadroCore library. This handles symbol
 # visibility on all platforms using functionality added in CMake 2.8.6.
 include(GenerateExportHeader)
-generate_export_header(MolCore EXPORT_FILE_NAME molcoreexport.h)
+generate_export_header(AvogadroCore EXPORT_FILE_NAME avogadrocoreexport.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-add_compiler_export_flags(molcore_export_flags)
-set_property(TARGET MolCore APPEND
-  PROPERTY COMPILE_FLAGS ${molcore_export_flags})
+add_compiler_export_flags(avogadro_export_flags)
+set_property(TARGET AvogadroCore APPEND
+  PROPERTY COMPILE_FLAGS ${avogadro_export_flags})

@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -18,7 +18,8 @@
 
 #include "molecule.h"
 
-namespace MolCore {
+namespace Avogadro {
+namespace Core {
 
 // === Atom ================================================================ //
 /// \class Atom
@@ -108,4 +109,5 @@ Vector3 Atom::position3d() const
     return positions[m_index];
 }
 
-} // end MolCore namespace
+} // end Core namespace
+} // end Avogadro namespace

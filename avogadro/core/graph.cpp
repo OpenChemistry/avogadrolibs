@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -19,7 +19,8 @@
 #include <algorithm>
 #include <cassert>
 
-namespace MolCore {
+namespace Avogadro {
+namespace Core {
 
 // === Graph =============================================================== //
 /// \class Graph
@@ -261,4 +262,5 @@ std::vector<std::vector<size_t> > Graph::connectedComponents() const
   return components;
 }
 
-} // end MolCore namespace
+} // end Core namespace
+} // end Avogadro namespace

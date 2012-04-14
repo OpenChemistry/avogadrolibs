@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,19 +14,20 @@
 
 ******************************************************************************/
 
-#ifndef MOLCORE_RINGPERCEIVER_H
-#define MOLCORE_RINGPERCEIVER_H
+#ifndef AVOGADRO_CORE_RINGPERCEIVER_H
+#define AVOGADRO_CORE_RINGPERCEIVER_H
 
-#include "molcore.h"
+#include "avogadrocore.h"
 
 #include <vector>
 #include <cstddef>
 
-namespace MolCore {
+namespace Avogadro {
+namespace Core {
 
 class Molecule;
 
-class MOLCORE_EXPORT RingPerceiver
+class AVOGADROCORE_EXPORT RingPerceiver
 {
 public:
   // construction and destruction
@@ -46,6 +47,7 @@ private:
   std::vector<std::vector<size_t> > m_rings;
 };
 
-} // end MolCore namespace
+} // end Core namespace
+} // end Avogadro namespace
 
-#endif // MOLCORE_RINGPERCEIVER_H
+#endif // AVOGADRO_CORE_RINGPERCEIVER_H

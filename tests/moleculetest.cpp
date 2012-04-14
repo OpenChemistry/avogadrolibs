@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -20,28 +20,28 @@
 
 TEST(MoleculeTest, size)
 {
-  MolCore::Molecule molecule;
+  Avogadro::Core::Molecule molecule;
   EXPECT_EQ(molecule.size(), 0);
 }
 
 TEST(MoleculeTest, isEmpty)
 {
-  MolCore::Molecule molecule;
+  Avogadro::Core::Molecule molecule;
   EXPECT_EQ(molecule.isEmpty(), true);
 }
 
 TEST(MoleculeTest, addAtom)
 {
-  MolCore::Molecule molecule;
+  Avogadro::Core::Molecule molecule;
   EXPECT_EQ(molecule.atomCount(), 0);
 
-  MolCore::Atom atom = molecule.addAtom(6);
+  Avogadro::Core::Atom atom = molecule.addAtom(6);
   EXPECT_EQ(atom.isValid(), true);
   EXPECT_EQ(molecule.atomCount(), 1);
   EXPECT_EQ(atom.index(), 0);
   EXPECT_EQ(atom.atomicNumber(), 6);
 
-  MolCore::Atom atom2 = molecule.addAtom(1);
+  Avogadro::Core::Atom atom2 = molecule.addAtom(1);
   EXPECT_EQ(atom2.isValid(), true);
   EXPECT_EQ(molecule.atomCount(), 2);
   EXPECT_EQ(atom2.index(), 1);
@@ -50,12 +50,12 @@ TEST(MoleculeTest, addAtom)
 
 TEST(MoleculeTest, addBond)
 {
-  MolCore::Molecule molecule;
+  Avogadro::Core::Molecule molecule;
   EXPECT_EQ(molecule.bondCount(), 0);
 
-  MolCore::Atom a = molecule.addAtom(1);
-  MolCore::Atom b = molecule.addAtom(1);
-  MolCore::Bond bondAB = molecule.addBond(a, b);
+  Avogadro::Core::Atom a = molecule.addAtom(1);
+  Avogadro::Core::Atom b = molecule.addAtom(1);
+  Avogadro::Core::Bond bondAB = molecule.addBond(a, b);
   EXPECT_TRUE(bondAB.isValid());
   EXPECT_EQ(bondAB.molecule(), &molecule);
   EXPECT_EQ(molecule.bondCount(), 1);
@@ -64,15 +64,15 @@ TEST(MoleculeTest, addBond)
   EXPECT_EQ(bondAB.atom2().index(), b.index());
   EXPECT_EQ(bondAB.order(), 1);
 
-  MolCore::Atom c = molecule.addAtom(1);
-  MolCore::Bond bondBC = molecule.addBond(b, c, 2);
+  Avogadro::Core::Atom c = molecule.addAtom(1);
+  Avogadro::Core::Bond bondBC = molecule.addBond(b, c, 2);
   EXPECT_TRUE(bondBC.isValid());
   EXPECT_EQ(molecule.bondCount(), 2);
   EXPECT_EQ(bondBC.index(), 1);
   EXPECT_EQ(bondBC.order(), 2);
 
   // try to lookup nonexistant bond
-  MolCore::Bond bond = molecule.bond(a, c);
+  Avogadro::Core::Bond bond = molecule.bond(a, c);
   EXPECT_FALSE(bond.isValid());
 
   // try to lookup bond between a and b
@@ -92,7 +92,7 @@ TEST(MoleculeTest, addBond)
 
 TEST(MoleculeTest, setData)
 {
-  MolCore::Molecule molecule;
+  Avogadro::Core::Molecule molecule;
   molecule.setData("name", "ethanol");
   EXPECT_EQ(molecule.data("name").toString(), "ethanol");
 }

@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,20 +14,21 @@
 
 ******************************************************************************/
 
-#ifndef MOLCORE_BOND_H
-#define MOLCORE_BOND_H
+#ifndef AVOGADRO_CORE_BOND_H
+#define AVOGADRO_CORE_BOND_H
 
-#include "molcore.h"
+#include "avogadrocore.h"
 
 #include <cstddef>
 
 #include "atom.h"
 
-namespace MolCore {
+namespace Avogadro {
+namespace Core {
 
 class Molecule;
 
-class MOLCORE_EXPORT Bond
+class AVOGADROCORE_EXPORT Bond
 {
 public:
   // construction and destruction
@@ -48,6 +49,7 @@ private:
   size_t m_index;
 };
 
-} // end MolCore namespace
+} // end Core namespace
+} // end Avogadro namespace
 
-#endif // MOLCORE_BOND_H
+#endif // AVOGADRO_CORE_BOND_H

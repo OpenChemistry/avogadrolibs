@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,14 +14,15 @@
 
 ******************************************************************************/
 
-#ifndef MOLCORE_ARRAY_H
-#define MOLCORE_ARRAY_H
+#ifndef AVOGADRO_CORE_ARRAY_H
+#define AVOGADRO_CORE_ARRAY_H
 
-#include "molcore.h"
+#include "avogadrocore.h"
 
 #include <vector>
 
-namespace MolCore {
+namespace Avogadro {
+namespace Core {
 
 using std::size_t;
 
@@ -277,6 +278,7 @@ inline void Array<T>::detach()
   }
 }
 
-}
+} // end Core namespace
+} // end Avogadro namespace
 
-#endif // MOLCORE_ARRAY_H
+#endif // AVOGADRO_CORE_ARRAY_H

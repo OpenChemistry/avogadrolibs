@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -20,7 +20,7 @@
 
 TEST(VariantTest, isNull)
 {
-  MolCore::Variant variant;
+  Avogadro::Core::Variant variant;
   EXPECT_EQ(variant.isNull(), true);
 
   variant.setValue(7);
@@ -29,7 +29,7 @@ TEST(VariantTest, isNull)
 
 TEST(VariantTest, clear)
 {
-  MolCore::Variant variant(62);
+  Avogadro::Core::Variant variant(62);
   EXPECT_EQ(variant.isNull(), false);
 
   variant.clear();
@@ -44,7 +44,7 @@ TEST(VariantTest, clear)
 
 TEST(VariantTest, toBool)
 {
-  MolCore::Variant variant(false);
+  Avogadro::Core::Variant variant(false);
   EXPECT_EQ(variant.toBool(), false);
 
   variant.setValue(true);
@@ -62,7 +62,7 @@ TEST(VariantTest, toBool)
 
 TEST(VariantTest, toChar)
 {
-  MolCore::Variant variant('c');
+  Avogadro::Core::Variant variant('c');
   EXPECT_EQ(variant.toChar(), 'c');
 
   variant.setValue("hello");
@@ -71,13 +71,13 @@ TEST(VariantTest, toChar)
 
 TEST(VariantTest, toShort)
 {
-  MolCore::Variant variant(short(4));
+  Avogadro::Core::Variant variant(short(4));
   EXPECT_EQ(variant.toShort(), short(4));
 }
 
 TEST(VariantTest, toInt)
 {
-  MolCore::Variant variant(12);
+  Avogadro::Core::Variant variant(12);
   EXPECT_EQ(variant.toInt(), int(12));
 
   variant.setValue(-23);
@@ -95,7 +95,7 @@ TEST(VariantTest, toInt)
 
 TEST(VariantTest, toLong)
 {
-  MolCore::Variant variant(192L);
+  Avogadro::Core::Variant variant(192L);
   EXPECT_EQ(variant.toLong(), 192L);
 
   variant.setValue(7);
@@ -107,13 +107,13 @@ TEST(VariantTest, toLong)
 
 TEST(VariantTest, toFloat)
 {
-  MolCore::Variant variant(12.3f);
+  Avogadro::Core::Variant variant(12.3f);
   EXPECT_EQ(variant.toFloat(), 12.3f);
 }
 
 TEST(VariantTest, toDouble)
 {
-  MolCore::Variant variant(3.14);
+  Avogadro::Core::Variant variant(3.14);
   EXPECT_EQ(variant.toDouble(), 3.14);
 }
 
@@ -121,13 +121,13 @@ TEST(VariantTest, toPointer)
 {
   int value;
   void *pointer = &value;
-  MolCore::Variant variant(pointer);
+  Avogadro::Core::Variant variant(pointer);
   EXPECT_EQ(variant.toPointer(), pointer);
 }
 
 TEST(VariantTest, toString)
 {
-  MolCore::Variant variant("hello");
+  Avogadro::Core::Variant variant("hello");
   EXPECT_EQ(variant.toString(), std::string("hello"));
 
   variant.setValue(12);

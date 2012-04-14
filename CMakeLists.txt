@@ -2,11 +2,13 @@ cmake_minimum_required(VERSION 2.8.5 FATAL_ERROR)
 
 project(LibAvogadro)
 
-set(CMAKE_MODULE_PATH ${MolCore_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(BuildType)
 include(BuildLocation)
 include(CompilerFlags)
+
+option(BUILD_SHARED_LIBS "Build with shared libraries" ON)
 
 add_subdirectory(avogadro)
 

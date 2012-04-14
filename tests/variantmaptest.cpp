@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -20,13 +20,13 @@
 
 TEST(VariantMapTest, size)
 {
-  MolCore::VariantMap map;
+  Avogadro::Core::VariantMap map;
   EXPECT_EQ(map.size(), 0);
 }
 
 TEST(VariantMapTest, isEmpty)
 {
-  MolCore::VariantMap map;
+  Avogadro::Core::VariantMap map;
   EXPECT_EQ(map.isEmpty(), true);
 
   map.setValue("value1", 1);
