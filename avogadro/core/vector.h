@@ -1,6 +1,6 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
   Copyright 2012 Kitware, Inc.
 
@@ -14,19 +14,21 @@
 
 ******************************************************************************/
 
-#ifndef MOLCORE_VECTOR_H
-#define MOLCORE_VECTOR_H
+#ifndef AVOGADRO_CORE_VECTOR_H
+#define AVOGADRO_CORE_VECTOR_H
 
-#include "molcore.h"
+#include "avogadrocore.h"
 #include <Eigen/Dense>
 
-namespace MolCore {
+namespace Avogadro {
+namespace Core {
 
 /// Typedefs for vector types.
 typedef Eigen::Matrix<Real, 2, 1> Vector2;
 typedef Eigen::Matrix<Real, 3, 1> Vector3;
 typedef Eigen::Matrix<Real, 4, 1> Vector4;
 
-} // end MolCore namespace
+} // end Core namespace
+} // end Avogadro namespace
 
-#endif // MOLCORE_VECTOR_H
+#endif // AVOGADRO_CORE_VECTOR_H

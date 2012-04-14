@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,40 +14,42 @@
 
 ******************************************************************************/
 
-#ifndef MOLCORE_BOND_H
-#define MOLCORE_BOND_H
+#ifndef AVOGADRO_CORE_ATOM_H
+#define AVOGADRO_CORE_ATOM_H
 
-#include "molcore.h"
+#include "avogadrocore.h"
+#include "vector.h"
 
-#include <cstddef>
-
-#include "atom.h"
-
-namespace MolCore {
+namespace Avogadro {
+namespace Core {
 
 class Molecule;
 
-class MOLCORE_EXPORT Bond
+class AVOGADROCORE_EXPORT Atom
 {
 public:
   // construction and destruction
-  Bond();
-  Bond(Molecule *m, size_t i);
+  Atom();
+  Atom(Molecule *m, size_t i);
 
   // properties
   bool isValid() const;
   Molecule* molecule() const;
   size_t index() const;
-  Atom atom1() const;
-  Atom atom2() const;
-  void setOrder(unsigned char o);
-  unsigned char order() const;
+  void setAtomicNumber(unsigned char number);
+  unsigned char atomicNumber() const;
+
+  void setPosition2d(const Vector2 &pos);
+  Vector2 position2d() const;
+  void setPosition3d(const Vector3 &pos);
+  Vector3 position3d() const;
 
 private:
   Molecule *m_molecule;
   size_t m_index;
 };
 
-} // end MolCore namespace
+} // end Core namespace
+} // end Avogadro namespace
 
-#endif // MOLCORE_BOND_H
+#endif // AVOGADRO_CORE_ATOM_H

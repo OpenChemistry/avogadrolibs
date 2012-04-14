@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -16,20 +16,20 @@
 
 #include <gtest/gtest.h>
 
-#include <graph.h>
+#include <avogadro/core/graph.h>
 
 TEST(GraphTest, size)
 {
-  MolCore::Graph graph;
+  Avogadro::Core::Graph graph;
   EXPECT_EQ(graph.size(), 0);
 
-  MolCore::Graph graph2(12);
+  Avogadro::Core::Graph graph2(12);
   EXPECT_EQ(graph2.size(), 12);
 }
 
 TEST(GraphTest, setSize)
 {
-  MolCore::Graph graph;
+  Avogadro::Core::Graph graph;
   EXPECT_EQ(graph.size(), 0);
 
   graph.setSize(100);
@@ -41,7 +41,7 @@ TEST(GraphTest, setSize)
 
 TEST(GraphTest, isEmpty)
 {
-  MolCore::Graph graph;
+  Avogadro::Core::Graph graph;
   EXPECT_EQ(graph.isEmpty(), true);
 
   graph.addVertex();
@@ -57,7 +57,7 @@ TEST(GraphTest, clear)
 
 TEST(GraphTest, addVertex)
 {
-  MolCore::Graph graph;
+  Avogadro::Core::Graph graph;
   size_t index = graph.addVertex();
   EXPECT_EQ(index, 0);
   EXPECT_EQ(graph.size(), 1);
@@ -71,7 +71,7 @@ TEST(GraphTest, addVertex)
 
 TEST(GraphTest, removeVertex)
 {
-  MolCore::Graph graph(4);
+  Avogadro::Core::Graph graph(4);
   EXPECT_EQ(graph.size(), 4);
 
   graph.removeVertex(0);
@@ -83,7 +83,7 @@ TEST(GraphTest, removeVertex)
 
 TEST(GraphTest, vertexCount)
 {
-  MolCore::Graph graph;
+  Avogadro::Core::Graph graph;
   EXPECT_EQ(graph.vertexCount(), 0);
 
   graph.addVertex();
@@ -101,7 +101,7 @@ TEST(GraphTest, vertexCount)
 
 TEST(GraphTest, addEdge)
 {
-  MolCore::Graph graph(5);
+  Avogadro::Core::Graph graph(5);
   EXPECT_EQ(graph.edgeCount(), 0);
 
   graph.addEdge(0, 1);
@@ -115,14 +115,14 @@ TEST(GraphTest, addEdge)
 
 TEST(GraphTest, removeEdge)
 {
-  MolCore::Graph graph(5);
+  Avogadro::Core::Graph graph(5);
   graph.addEdge(0, 1);
   graph.addEdge(1, 4);
 }
 
 TEST(GraphTest, edgeCount)
 {
-  MolCore::Graph graph(3);
+  Avogadro::Core::Graph graph(3);
   EXPECT_EQ(graph.edgeCount(), 0);
 
   graph.addEdge(0, 1);
@@ -143,7 +143,7 @@ TEST(GraphTest, edgeCount)
 
 TEST(GraphTest, connectedComponents)
 {
-  MolCore::Graph graph(6);
+  Avogadro::Core::Graph graph(6);
   EXPECT_EQ(graph.connectedComponents().size(), 6);
 
   graph.addEdge(0, 1);

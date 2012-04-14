@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -16,7 +16,8 @@
 
 #include "variantmap.h"
 
-namespace MolCore {
+namespace Avogadro {
+namespace Core {
 
 // === VariantMap ========================================================== //
 /// \class VariantMap
@@ -66,4 +67,5 @@ Variant VariantMap::value(const std::string &name) const
   return iter->second;
 }
 
-} // end MolCore namespace
+} // end Core namespace
+} // end Avogadro namespace

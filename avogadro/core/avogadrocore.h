@@ -1,6 +1,6 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
   Copyright 2011-2012 Kitware, Inc.
 
@@ -14,23 +14,24 @@
 
 ******************************************************************************/
 
-#ifndef MOLCORE_MOLCORE_H
-#define MOLCORE_MOLCORE_H
+#ifndef AVOGADRO_CORE_H
+#define AVOGADRO_CORE_H
 
-#include "molcoreexport.h"
+#include "avogadrocoreexport.h"
 #include <cstddef>
 
 /// This macro marks a parameter as unused. Its purpose is to
 /// disable the compiler from emitting unused parameter warnings.
-#define MOLCORE_UNUSED(variable) (void) variable
+#define AVOGADRO_UNUSED(variable) (void) variable
 
 /// This macro marks a class as not copyable. It should be used in
 /// the private section of a class's declaration.
-#define MOLCORE_DISABLE_COPY(Class) \
+#define AVOGADRO_DISABLE_COPY(Class) \
   Class(const Class&); \
   Class& operator=(const Class&);
 
-namespace MolCore {
+namespace Avogadro {
+namespace Core {
 
 /// Typedef for a real number.
 typedef double Real;
@@ -38,6 +39,7 @@ typedef double Real;
 /// Typedef for indices and sizes.
 typedef size_t Index;
 
-} // end MolCore namespace
+} // end Core namespace
+} // end Avogadro namespace
 
-#endif // MOLCORE_MOLCORE_H
+#endif // AVOGADRO_CORE_H

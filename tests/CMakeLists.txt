@@ -1,5 +1,5 @@
-include_directories("${MolCore_SOURCE_DIR}/src"
-  "${MolCore_BINARY_DIR}/src")
+include_directories("${LibAvogadro_BINARY_DIR}/avogadro/core"
+  "${LibAvogadro_SOURCE_DIR}" "${LibAvogadro_BINARY_DIR}")
 
 # find google test
 find_package(GTest REQUIRED)
@@ -31,6 +31,7 @@ set(tests
   Array
   Atom
   Bond
+  CoordinateSet
   Eigen
   Graph
   Molecule
@@ -49,13 +50,13 @@ endforeach()
 message(STATUS "Test source files: ${testSrcs}")
 
 # Add a single executable for all of our tests.
-add_executable(MolCoreTests ${testSrcs})
-target_link_libraries(MolCoreTests MolCore
+add_executable(AvogadroTests ${testSrcs})
+target_link_libraries(AvogadroTests AvogadroCore
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
 foreach(TestName ${tests})
   add_test(NAME "${TestName}Test"
-    COMMAND MolCoreTests "--gtest_filter=${TestName}Test.*")
+    COMMAND AvogadroTests "--gtest_filter=${TestName}Test.*")
 endforeach()

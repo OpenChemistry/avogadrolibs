@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,14 +14,15 @@
 
 ******************************************************************************/
 
-#ifndef MOLCORE_VARIANT_INLINE_H
-#define MOLCORE_VARIANT_INLINE_H
+#ifndef AVOGADRO_CORE_VARIANT_INLINE_H
+#define AVOGADRO_CORE_VARIANT_INLINE_H
 
 #include "variant.h"
 
 #include <sstream>
 
-namespace MolCore {
+namespace Avogadro {
+namespace Core {
 
 // === Variant ============================================================= //
 /// \class Variant
@@ -445,6 +446,7 @@ inline T Variant::lexical_cast(const std::string &string)
   return value;
 }
 
-} // end MolCore namespace
+} // end Core namespace
+} // end Avogadro namespace
 
-#endif // MOLCORE_VARIANT_INLINE_H
+#endif // AVOGADRO_CORE_VARIANT_INLINE_H

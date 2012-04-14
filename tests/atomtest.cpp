@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -16,13 +16,12 @@
 
 #include <gtest/gtest.h>
 
-#include <atom.h>
-#include <molecule.h>
+#include <avogadro/core/molecule.h>
 
-using MolCore::Molecule;
-using MolCore::Atom;
-using MolCore::Vector2;
-using MolCore::Vector3;
+using Avogadro::Core::Molecule;
+using Avogadro::Core::Atom;
+using Avogadro::Core::Vector2;
+using Avogadro::Core::Vector3;
 
 TEST(AtomTest, setAtomicNumber)
 {

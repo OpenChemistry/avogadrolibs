@@ -1,7 +1,4 @@
-MolCore Library
+The Avogadro 2 Library
 
-This library is in the early stages of development. It is intended to create
-a core set of well-documented and tested functionality for cheminformatics
-applications.
-
-See http://molcore.org/ for more details.
+This repository is in an early state of development, developing what will be
+the 2.0 version of the Avogadro libary.

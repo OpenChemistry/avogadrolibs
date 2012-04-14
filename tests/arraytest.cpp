@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -16,13 +16,13 @@
 
 #include <gtest/gtest.h>
 
-#include <array.h>
+#include <avogadro/core/array.h>
 
-using MolCore::Array;
+using Avogadro::Core::Array;
 
 TEST(ArrayTest, setSize)
 {
-  MolCore::Array<int> array;
+  Avogadro::Core::Array<int> array;
 
   EXPECT_EQ(array.size(), 0);
 
@@ -38,7 +38,7 @@ TEST(ArrayTest, isEmpty)
 
 TEST(ArrayTest, push_back)
 {
-  MolCore::Array<int> array;
+  Avogadro::Core::Array<int> array;
   array.push_back(6);
   EXPECT_EQ(array.size(), 1);
   array.push_back(9);
@@ -47,7 +47,7 @@ TEST(ArrayTest, push_back)
 
 TEST(ArrayTest, clear)
 {
-  MolCore::Array<int> array;
+  Avogadro::Core::Array<int> array;
   array.push_back(6);
   EXPECT_EQ(array.size(), 1);
   array.push_back(9);

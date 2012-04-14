@@ -1,8 +1,8 @@
 /******************************************************************************
 
-  This source file is part of the MolCore project.
+  This source file is part of the Avogadro project.
 
-  Copyright 2011 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,16 +14,17 @@
 
 ******************************************************************************/
 
-#ifndef MOLCORE_VARIANT_H
-#define MOLCORE_VARIANT_H
+#ifndef AVOGADRO_CORE_VARIANT_H
+#define AVOGADRO_CORE_VARIANT_H
 
-#include "molcore.h"
+#include "avogadrocore.h"
 
 #include <string>
 
-namespace MolCore {
+namespace Avogadro {
+namespace Core {
 
-class MOLCORE_EXPORT Variant
+class AVOGADROCORE_EXPORT Variant
 {
 public:
   // enumerations
@@ -89,8 +90,9 @@ private:
   } m_value;
 };
 
-} // end MolCore namespace
+} // end Core namespace
+} // end Avogadro namespace
 
 #include "variant-inline.h"
 
-#endif // MOLCORE_VARIANT_H
+#endif // AVOGADRO_CORE_VARIANT_H
