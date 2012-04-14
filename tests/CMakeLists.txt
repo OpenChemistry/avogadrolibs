@@ -1,5 +1,5 @@
-include_directories("${MolCore_SOURCE_DIR}/src"
-  "${MolCore_BINARY_DIR}/src")
+include_directories("${LibAvogadro_SOURCE_DIR}/avogadro/core"
+  "${LibAvogadro_BINARY_DIR}/avogadro/core")
 
 # find google test
 find_package(GTest REQUIRED)
