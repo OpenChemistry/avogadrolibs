@@ -16,7 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include <variantmap.h>
+#include <avogadro/core/variantmap.h>
 
 TEST(VariantMapTest, size)
 {

@@ -16,7 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include <molecule.h>
+#include <avogadro/core/molecule.h>
 
 TEST(MoleculeTest, size)
 {

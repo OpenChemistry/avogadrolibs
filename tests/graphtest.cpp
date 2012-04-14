@@ -16,7 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include <graph.h>
+#include <avogadro/core/graph.h>
 
 TEST(GraphTest, size)
 {

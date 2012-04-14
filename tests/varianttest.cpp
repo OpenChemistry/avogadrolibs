@@ -16,7 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include <variant.h>
+#include <avogadro/core/variant.h>
 
 TEST(VariantTest, isNull)
 {

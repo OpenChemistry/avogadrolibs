@@ -1,5 +1,4 @@
-include_directories("${LibAvogadro_SOURCE_DIR}/avogadro/core"
-  "${LibAvogadro_BINARY_DIR}/avogadro/core"
+include_directories("${LibAvogadro_BINARY_DIR}/avogadro/core"
   "${LibAvogadro_SOURCE_DIR}" "${LibAvogadro_BINARY_DIR}")
 
 # find google test

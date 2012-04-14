@@ -16,8 +16,8 @@
 
 #include <gtest/gtest.h>
 
-#include <molecule.h>
-#include <ringperceiver.h>
+#include <avogadro/core/molecule.h>
+#include <avogadro/core/ringperceiver.h>
 
 TEST(RingPerceiverTest, benzene)
 {

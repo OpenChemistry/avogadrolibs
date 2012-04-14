@@ -16,8 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include <atom.h>
-#include <molecule.h>
+#include <avogadro/core/molecule.h>
 
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Atom;

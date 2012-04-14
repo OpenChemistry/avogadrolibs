@@ -16,9 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include <atom.h>
-#include <bond.h>
-#include <molecule.h>
+#include <avogadro/core/molecule.h>
 
 TEST(BondTest, setOrder)
 {

@@ -16,7 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include <array.h>
+#include <avogadro/core/array.h>
 
 using Avogadro::Core::Array;
 
