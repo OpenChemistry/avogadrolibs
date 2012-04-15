@@ -60,3 +60,6 @@ foreach(TestName ${tests})
   add_test(NAME "${TestName}Test"
     COMMAND AvogadroTests "--gtest_filter=${TestName}Test.*")
 endforeach()
+
+# This will get refactored soon - test per module.
+add_subdirectory(io)
