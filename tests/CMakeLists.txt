@@ -33,6 +33,7 @@ set(tests
   Bond
   CoordinateSet
   Eigen
+  Element
   Graph
   Molecule
   RingPerceiver

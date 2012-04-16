@@ -16,6 +16,8 @@
 
 #include "elements.h"
 
+#include "elementdata.h"
+
 namespace Avogadro {
 namespace Core {
 
@@ -64,9 +66,51 @@ unsigned char Elements::atomicNumberFromSymbol(const std::string &symbol)
     }
   }
   else {
-    // FIXME: I need implementing!
+    for (unsigned char i = 0; i < element_count; ++i)
+      if (symbol == element_symbols[i])
+        return i;
     return 0;
   }
+}
+
+const char * Elements::name(unsigned char atomicNumber)
+{
+  if (atomicNumber < element_count)
+    return element_names[atomicNumber];
+  else
+    return element_names[0];
+}
+
+double Elements::mass(unsigned char atomicNumber)
+{
+  if (atomicNumber < element_count)
+    return element_masses[atomicNumber];
+  else
+    return element_masses[0];
+}
+
+double Elements::radiusVDW(unsigned char atomicNumber)
+{
+  if (atomicNumber < element_count)
+    return element_VDW[atomicNumber];
+  else
+    return element_VDW[0];
+}
+
+double Elements::radiusCovalent(unsigned char atomicNumber)
+{
+  if (atomicNumber < element_count)
+    return element_covalent[atomicNumber];
+  else
+    return element_covalent[0];
+}
+
+const unsigned char * Elements::color(unsigned char atomicNumber)
+{
+  if (atomicNumber < element_count)
+    return element_color[atomicNumber];
+  else
+    return element_color[0];
 }
 
 } // end Core namespace
