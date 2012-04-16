@@ -11,6 +11,7 @@ include(CompilerFlags)
 option(BUILD_SHARED_LIBS "Build with shared libraries" ON)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(utilities)
 add_subdirectory(avogadro)
 
 option(ENABLE_TESTING "Enable testing and building the tests." OFF)
