@@ -82,7 +82,7 @@ inline bool Variant::isNull() const
 template<typename T>
 inline bool Variant::setValue(T v)
 {
-  CHEMKIT_UNUSED(v);
+  AVOGADRO_UNUSED(v);
 
   clear();
 
