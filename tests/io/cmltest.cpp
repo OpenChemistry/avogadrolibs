@@ -28,7 +28,7 @@ using Avogadro::Io::CmlFormat;
 TEST(CmlTest, readFile)
 {
   CmlFormat cml;
-  cml.readFile(std::string(AVOGADRO_DATA) + "/ethane.cml");
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml");
 
   Molecule *molecule = cml.molecule();
 
@@ -42,7 +42,7 @@ TEST(CmlTest, readFile)
 TEST(CmlTest, atoms)
 {
   CmlFormat cml;
-  cml.readFile(std::string(AVOGADRO_DATA) + "/ethane.cml");
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml");
 
   Molecule *molecule = cml.molecule();
 
@@ -66,7 +66,7 @@ TEST(CmlTest, atoms)
 TEST(CmlTest, bonds)
 {
   CmlFormat cml;
-  cml.readFile(std::string(AVOGADRO_DATA) + "/ethane.cml");
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml");
 
   Molecule *molecule = cml.molecule();
 
