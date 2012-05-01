@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.5 FATAL_ERROR)
 
-project(LibAvogadro)
+project(AvogadroLibs)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
