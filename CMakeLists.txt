@@ -22,5 +22,11 @@ if(ENABLE_TESTING)
   add_subdirectory(tests)
 endif()
 
+option(BUILD_DOCUMENTATION "Build project documentation" OFF)
+
+if(BUILD_DOCUMENTATION)
+  add_subdirectory(doc)
+endif()
+
 configure_file(${AvogadroLibs_SOURCE_DIR}/cmake/CTestCustom.cmake.in
 	${AvogadroLibs_BINARY_DIR}/CTestCustom.cmake)
