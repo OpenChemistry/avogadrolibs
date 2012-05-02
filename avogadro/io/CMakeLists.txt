@@ -24,7 +24,13 @@ target_link_libraries(AvogadroIO AvogadroCore)
 # visibility on all platforms using functionality added in CMake 2.8.6.
 include(GenerateExportHeader)
 generate_export_header(AvogadroIO EXPORT_FILE_NAME avogadroio.h)
+list(APPEND HEADERS "${CMAKE_CURRENT_BINARY_DIR}/avogadroio.h")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_compiler_export_flags(avogadro_export_flags)
 set_property(TARGET AvogadroIO APPEND
   PROPERTY COMPILE_FLAGS ${avogadro_export_flags})
+install(FILES ${HEADERS} DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/io")
+install(TARGETS AvogadroIO
+  RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
+  LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}"
+  ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
