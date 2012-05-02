@@ -3,6 +3,6 @@ find_package(Boost REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM
   "${Boost_INCLUDE_DIRS}"
-  "${LibAvogadro_SOURCE_DIR}/thirdparty/rapidxml")
+  "${AvogadroLibs_SOURCE_DIR}/thirdparty/rapidxml")
 
 add_executable(bodrparse bodrparse.cxx)

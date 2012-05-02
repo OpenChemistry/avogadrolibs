@@ -4,11 +4,11 @@ set(tests
   )
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
-  "${LibAvogadro_BINARY_DIR}/avogadro/io")
+	"${AvogadroLibs_BINARY_DIR}/avogadro/io")
 
 # THe data repository should be at the side of ours.
 find_path(AVOGADRO_DATA_ROOT .avogadro.data
-  ${LibAvogadro_SOURCE_DIR}/../avogadrodata
+  ${AvogadroLibs_SOURCE_DIR}/../avogadrodata
   $ENV{AVOGADRO_DATA_ROOT}
   DOC "The repository for data used for testing."
   )
