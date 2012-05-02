@@ -4,7 +4,7 @@ find_package(Boost REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}"
   "${Boost_INCLUDE_DIRS}"
-  "${LibAvogadro_SOURCE_DIR}/thirdparty/rapidxml")
+  "${AvogadroLibs_SOURCE_DIR}/thirdparty/rapidxml")
 
 set(HEADERS
   cmlformat.h

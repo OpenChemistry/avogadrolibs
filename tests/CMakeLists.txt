@@ -1,5 +1,5 @@
-include_directories("${LibAvogadro_BINARY_DIR}/avogadro/core"
-  "${LibAvogadro_SOURCE_DIR}" "${LibAvogadro_BINARY_DIR}")
+include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/core"
+  "${AvogadroLibs_SOURCE_DIR}" "${AvogadroLibs_BINARY_DIR}")
 
 # find google test
 find_package(GTest REQUIRED)

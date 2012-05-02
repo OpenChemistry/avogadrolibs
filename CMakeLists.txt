@@ -22,5 +22,5 @@ if(ENABLE_TESTING)
   add_subdirectory(tests)
 endif()
 
-configure_file(${LibAvogadro_SOURCE_DIR}/cmake/CTestCustom.cmake.in
-  ${LibAvogadro_BINARY_DIR}/CTestCustom.cmake)
+configure_file(${AvogadroLibs_SOURCE_DIR}/cmake/CTestCustom.cmake.in
+	${AvogadroLibs_BINARY_DIR}/CTestCustom.cmake)
