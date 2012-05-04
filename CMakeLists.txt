@@ -30,4 +30,16 @@ if(BUILD_DOCUMENTATION)
 endif()
 
 configure_file(${AvogadroLibs_SOURCE_DIR}/cmake/CTestCustom.cmake.in
-	${AvogadroLibs_BINARY_DIR}/CTestCustom.cmake)
+  ${AvogadroLibs_BINARY_DIR}/CTestCustom.cmake)
+
+configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfig.cmake.in"
+  "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake" @ONLY)
+install(FILES "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake"
+  DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
+
+configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfigVersion.cmake.in"
+  "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake" @ONLY)
+install(FILES "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
+  DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
+install(EXPORT "AvogadroLibsTargets"
+  DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
