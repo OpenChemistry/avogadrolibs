@@ -26,7 +26,7 @@ endif()
 option(BUILD_DOCUMENTATION "Build project documentation" OFF)
 
 if(BUILD_DOCUMENTATION)
-  add_subdirectory(doc)
+  add_subdirectory(docs)
 endif()
 
 configure_file(${AvogadroLibs_SOURCE_DIR}/cmake/CTestCustom.cmake.in
