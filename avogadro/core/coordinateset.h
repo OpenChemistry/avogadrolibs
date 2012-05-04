@@ -35,6 +35,10 @@ class ArraySet
 {
 public:
   ArraySet() : m_content(NULL), m_data(NULL) {}
+  ~ArraySet()
+  {
+    delete m_content;
+  }
 
   /*! \return true if the type of the array matches the input type. */
   template<typename T>
@@ -99,10 +103,7 @@ public:
     m_content = new Holder<T>(T());
   }
 
-  ~CoordinateSet()
-  {
-    delete m_content;
-  }
+  ~CoordinateSet() {}
 
   // Properties
   void resize(Index _size) { m_coordinates.resize(_size); }
