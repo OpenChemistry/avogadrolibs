@@ -22,6 +22,7 @@
 #include <limits>
 #include <vector>
 #include <cstring>
+#include <iterator>
 #include <algorithm>
 
 namespace Avogadro {
