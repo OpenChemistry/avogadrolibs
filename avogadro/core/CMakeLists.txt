@@ -16,6 +16,7 @@ set(HEADERS
   variant.h
   variant-inline.h
   variantmap.h
+  vector.h
 )
 
 set(SOURCES
