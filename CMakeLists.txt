@@ -9,6 +9,13 @@ include(BuildLocation)
 include(CompilerFlags)
 include(InstallLocation)
 
+# Set up our version.
+set(AvogadroLibs_VERSION_MAJOR   "0")
+set(AvogadroLibs_VERSION_MINOR   "1")
+set(AvogadroLibs_VERSION_PATCH   "0")
+set(AvogadroLibs_VERSION
+  "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
+
 option(BUILD_SHARED_LIBS "Build with shared libraries" ON)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -30,4 +37,16 @@ if(BUILD_DOCUMENTATION)
 endif()
 
 configure_file(${AvogadroLibs_SOURCE_DIR}/cmake/CTestCustom.cmake.in
-	${AvogadroLibs_BINARY_DIR}/CTestCustom.cmake)
+  ${AvogadroLibs_BINARY_DIR}/CTestCustom.cmake)
+
+configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfig.cmake.in"
+  "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake" @ONLY)
+install(FILES "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake"
+  DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
+
+configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfigVersion.cmake.in"
+  "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake" @ONLY)
+install(FILES "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
+  DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
+install(EXPORT "AvogadroLibsTargets"
+  DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")

@@ -16,6 +16,7 @@ set(HEADERS
   variant.h
   variant-inline.h
   variantmap.h
+  vector.h
 )
 
 set(SOURCES
@@ -43,6 +44,7 @@ set_property(TARGET AvogadroCore APPEND
 # Install the library and headers.
 install(FILES ${HEADERS} DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/core")
 install(TARGETS AvogadroCore
+  EXPORT "AvogadroLibsTargets"
   RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
   LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}"
   ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
