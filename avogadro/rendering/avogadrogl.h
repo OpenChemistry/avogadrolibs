@@ -14,24 +14,19 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_CORE_VECTOR_H
-#define AVOGADRO_CORE_VECTOR_H
+#ifndef AVOGADRO_RENDERING_AVOGADROGL_H
+#define AVOGADRO_RENDERING_AVOGADROGL_H
 
-#include "avogadrocore.h"
-#include <Eigen/Dense>
+/// GLEW should always be in the same place, but Apple likes to move gl.h.
+/// This header should be used instead of including the GL headers directly
+/// in order to work around different layouts.
 
-namespace Avogadro {
+# include <GL/glew.h>
 
-/// Typedefs for vector types.
-typedef Eigen::Matrix<Real, 2, 1> Vector2;
-typedef Eigen::Matrix<Real, 3, 1> Vector3;
-typedef Eigen::Matrix<Real, 4, 1> Vector4;
+#ifdef __APPLE__
+# include <OpenGL/gl.h>
+#else
+# include <GL/gl.h>
+#endif
 
-typedef Eigen::Matrix<float, 2, 1> Vector2f;
-typedef Eigen::Matrix<float, 3, 1> Vector3f;
-typedef Eigen::Matrix<float, 4, 1> Vector4f;
-typedef Eigen::Matrix<unsigned char, 3, 1> Vector3ub;
-
-} // end Avogadro namespace
-
-#endif // AVOGADRO_CORE_VECTOR_H
+#endif // AVOGADRO_RENDERING_AVOGADROGL_H

@@ -20,8 +20,8 @@
 
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Atom;
-using Avogadro::Core::Vector2;
-using Avogadro::Core::Vector3;
+using Avogadro::Vector2;
+using Avogadro::Vector3;
 
 TEST(AtomTest, setAtomicNumber)
 {
