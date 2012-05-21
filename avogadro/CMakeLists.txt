@@ -1,2 +1,6 @@
 add_subdirectory(core)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/core)
 add_subdirectory(io)
+add_subdirectory(rendering)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/rendering)
+add_subdirectory(qtopengl)

@@ -64,3 +64,4 @@ endforeach()
 
 # This will get refactored soon - test per module.
 add_subdirectory(io)
+add_subdirectory(qtopengl)

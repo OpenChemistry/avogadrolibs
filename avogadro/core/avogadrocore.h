@@ -19,6 +19,7 @@
 
 #include "avogadrocoreexport.h"
 #include <cstddef>
+#include <limits>
 
 /// This macro marks a parameter as unused. Its purpose is to
 /// disable the compiler from emitting unused parameter warnings.
@@ -31,15 +32,14 @@
   Class& operator=(const Class&);
 
 namespace Avogadro {
-namespace Core {
 
 /// Typedef for a real number.
 typedef double Real;
 
 /// Typedef for indices and sizes.
 typedef size_t Index;
+const Index MaxIndex = std::numeric_limits<Index>::max();
 
-} // end Core namespace
 } // end Avogadro namespace
 
 #endif // AVOGADRO_CORE_H
