@@ -19,7 +19,9 @@
 namespace Avogadro {
 namespace Rendering {
 
-Scene::Scene() : m_centerDirty(false), m_center(Vector3f::Zero()), m_radius(0.0)
+Scene::Scene()
+  : m_dirty(false), m_centerDirty(false),
+    m_center(Vector3f::Zero()), m_radius(0.0)
 {
 }
 
@@ -86,6 +88,15 @@ void Scene::addSphere(const Vector3f &position, const Vector3ub &color,
   m_sphereIndices.push_back(index + 2);
   m_sphereIndices.push_back(index + 1);
   m_centerDirty = true;
+  m_dirty = true;
+}
+
+void Scene::clear()
+{
+  m_spheres.clear();
+  m_sphereIndices.clear();
+  m_centerDirty = true;
+  m_dirty = true;
 }
 
 } // End Rendering namespace

@@ -105,6 +105,12 @@ void Camera::calculatePerspective(float fieldOfView, float aspectRatio,
   m_projection(3, 3) = 0;
 }
 
+void Camera::calculatePerspective(float fieldOfView, float zNear, float zFar)
+{
+  calculatePerspective(fieldOfView, static_cast<float>(m_width) / m_height,
+                       zNear, zFar);
+}
+
 void Camera::calculateOrthographic(float left, float right,
                                    float bottom, float top,
                                    float zNear, float zFar)
