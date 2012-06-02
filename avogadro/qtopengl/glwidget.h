@@ -46,6 +46,9 @@ public:
   /*! Get a reference to the renderer for the widget. */
   Rendering::GLRenderer& renderer() { return m_renderer; }
 
+  /*! Reset the view to fit the entire scene. */
+  void resetCamera();
+
 protected:
   /*! This is where the GL context is initialized. */
   void initializeGL();
@@ -59,6 +62,8 @@ protected:
 protected:
   void mouseDoubleClickEvent(QMouseEvent *);
   void mousePressEvent(QMouseEvent *);
+  void mouseMoveEvent(QMouseEvent *);
+  void mouseReleaseEvent(QMouseEvent *);
   void wheelEvent(QWheelEvent *);
 
 private:

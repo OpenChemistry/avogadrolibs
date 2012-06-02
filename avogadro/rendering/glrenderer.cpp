@@ -53,19 +53,16 @@ void GLRenderer::initialize()
 
   glClearColor(0, 0, 0, 0);
 
-  Vector3f center = m_scene.center();
-  m_radius = m_scene.radius() + 5.0;
-  m_camera.translate(-center);
-  m_camera.preTranslate(-3.0 * m_radius * Vector3f(0, 0, 1));
+  resetCamera();
 }
 
 void GLRenderer::resize(int width, int height)
 {
   glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
-  float aspectRatio = static_cast<float>(width) / height;
   m_camera.setViewport(width, height);
   float distance = std::max(2.0f, m_camera.distance(Vector3f::Zero()));
-  m_camera.calculatePerspective(40, aspectRatio, distance - 2.0f * m_radius,
+  m_camera.calculatePerspective(40,
+                                distance - 2.0f * m_radius,
                                 distance + 2.0f * m_radius);
 }
 
@@ -193,6 +190,19 @@ void GLRenderer::render()
   m_program.release();
 
   glDisable(GL_DEPTH_TEST);
+}
+
+void GLRenderer::resetCamera()
+{
+  Vector3f center = m_scene.center();
+  m_radius = m_scene.radius() + 5.0;
+  m_camera.setIdentity();
+  m_camera.translate(-center);
+  m_camera.preTranslate(-3.0 * m_radius * Vector3f(0, 0, 1));
+  float distance = std::max(2.0f, m_camera.distance(Vector3f::Zero()));
+  m_camera.calculatePerspective(40,
+                                distance - 2.0f * m_radius,
+                                distance + 2.0f * m_radius);
 }
 
 } // End Rendering namespace

@@ -52,6 +52,9 @@ public:
   /*! Take care of rendering the scene, requires that the context is current. */
   void render();
 
+  /*! Reset the view to fit the entire scene. */
+  void resetCamera();
+
   /*! Check whether the GL context is valid and supports required features.
    * \sa error() to get more information if the context is not valid.
    */

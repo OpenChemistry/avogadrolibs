@@ -83,6 +83,14 @@ public:
   void calculatePerspective(float fieldOfView, float aspectRatio,
                             float zNear, float zFar);
 
+  /*! Calculate the perspective projection matrix. Computes the aspect ratio
+   * from the width and height stored by the Camera object.
+   * \param fieldOfView angle in degrees in the y direction.
+   * \param zNear is the distance from the viewer to the near clipping plane.
+   * \param zFar is the distance from the viewer to the far clipping plane.
+   */
+  void calculatePerspective(float fieldOfView, float zNear, float zFar);
+
   /*! Calculate the orthographic projection matrix.
    * \param left left vertical clipping plane.
    * \param right right vertical clipping plane.
