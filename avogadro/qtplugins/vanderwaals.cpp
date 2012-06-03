@@ -14,36 +14,22 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_IO_CMLFORMAT_H
-#define AVOGADRO_IO_CMLFORMAT_H
+#include "vanderwaals.h"
 
-#include "avogadroio.h"
-
-#include <avogadro/core/molecule.h>
-
-#include <string>
-#include <vector>
+#include <QtCore/QtPlugin>
 
 namespace Avogadro {
-namespace Io {
+namespace QtPlugins {
 
-class AVOGADROIO_EXPORT CmlFormat
+VanDerWaals::VanDerWaals(QObject *p) : ScenePlugin(p)
 {
-public:
-  CmlFormat();
-  ~CmlFormat();
+}
 
-  bool readFile(const std::string &fileName);
+VanDerWaals::~VanDerWaals()
+{
+}
 
-  bool writeFile(const std::string &fileName);
+}
+}
 
-  Core::Molecule * molecule(size_t index = 0);
-
-protected:
-  std::vector<Core::Molecule *> m_molecules;
-};
-
-} // end Io namespace
-} // end Avogadro namespace
-
-#endif // CMLFORMAT_H
+Q_EXPORT_PLUGIN2(vanderwaals, Avogadro::QtPlugins::VanDerWaalsFactory)
