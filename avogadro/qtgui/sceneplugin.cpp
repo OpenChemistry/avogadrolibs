@@ -14,36 +14,22 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_IO_CMLFORMAT_H
-#define AVOGADRO_IO_CMLFORMAT_H
-
-#include "avogadroio.h"
-
-#include <avogadro/core/molecule.h>
-
-#include <string>
-#include <vector>
+#include "sceneplugin.h"
 
 namespace Avogadro {
-namespace Io {
+namespace QtGui {
 
-class AVOGADROIO_EXPORT CmlFormat
+ScenePlugin::ScenePlugin(QObject *parent_) : QObject(parent_)
 {
-public:
-  CmlFormat();
-  ~CmlFormat();
+}
 
-  bool readFile(const std::string &fileName);
+ScenePlugin::~ScenePlugin()
+{
+}
 
-  bool writeFile(const std::string &fileName);
+ScenePluginFactory::~ScenePluginFactory()
+{
+}
 
-  Core::Molecule * molecule(size_t index = 0);
-
-protected:
-  std::vector<Core::Molecule *> m_molecules;
-};
-
-} // end Io namespace
-} // end Avogadro namespace
-
-#endif // CMLFORMAT_H
+} // End QtGui namespace
+} // End Avogadro namespace
