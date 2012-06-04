@@ -35,6 +35,12 @@ GLWidget::~GLWidget()
 {
 }
 
+void GLWidget::resetCamera()
+{
+  m_renderer.resetCamera();
+  update();
+}
+
 void GLWidget::initializeGL()
 {
   m_renderer.initialize();
@@ -55,13 +61,12 @@ void GLWidget::paintGL()
 
 void GLWidget::mouseDoubleClickEvent(QMouseEvent *)
 {
-  //m_renderer.camera().setIdentity();
-  update();
+  resetCamera();
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event_)
 {
-  if (event_->button() & Qt::LeftButton) {
+  if (event_->button() == Qt::LeftButton) {
     Vector2f position(event_->pos().x(), event_->pos().y());
     Vector3f result = m_renderer.camera().unProject(position);
     m_renderer.scene().addSphere(result, Vector3ub(255, 255, 255), 1.0);
@@ -69,16 +74,17 @@ void GLWidget::mousePressEvent(QMouseEvent *event_)
   }
 }
 
-void GLWidget::wheelEvent(QWheelEvent *event_)
+void GLWidget::mouseMoveEvent(QMouseEvent *)
 {
-  //m_renderer.camera().scale(1.0f + event_->delta() * 0.001f);
-  //if (event_->delta() > 0.0)
-  //  m_renderer.camera().preTranslate(Vector3f(0, 0, 0.5));
-  //else
-  //  m_renderer.camera().preTranslate(Vector3f(0, 0,-0.5));
+}
 
+void GLWidget::mouseReleaseEvent(QMouseEvent *)
+{
+}
+
+void GLWidget::wheelEvent(QWheelEvent *)
+{
   m_renderer.camera().rotate(0.1, Vector3f(1, 0, 0));
-
   update();
 }
 
