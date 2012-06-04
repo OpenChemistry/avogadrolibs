@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.6 FATAL_ERROR)
 
 project(AvogadroLibs)
 
@@ -41,12 +41,14 @@ configure_file(${AvogadroLibs_SOURCE_DIR}/cmake/CTestCustom.cmake.in
 
 configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfig.cmake.in"
   "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake" @ONLY)
-install(FILES "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake"
-  DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
-
 configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfigVersion.cmake.in"
   "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake" @ONLY)
-install(FILES "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
+
+install(FILES
+  "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake"
+  "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindGLEW.cmake"
   DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
 install(EXPORT "AvogadroLibsTargets"
   DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
