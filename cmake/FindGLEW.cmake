@@ -7,7 +7,7 @@
 #  GLEW_LIBRARY      - The GLEW library
 #
 find_path(GLEW_INCLUDE_DIR GL/glew.h)
-find_library(GLEW_LIBRARY GLEW)
+find_library(GLEW_LIBRARY NAMES GLEW glew32)
 
 set(GLEW_INCLUDE_DIRS "${GLEW_INCLUDE_DIR}")
 
