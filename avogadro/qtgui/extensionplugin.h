@@ -14,12 +14,14 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_SCENEPLUGIN_H
-#define AVOGADRO_QTGUI_SCENEPLUGIN_H
+#ifndef AVOGADRO_QTGUI_EXTENSIONPLUGIN_H
+#define AVOGADRO_QTGUI_EXTENSIONPLUGIN_H
 
 #include "avogadroqtguiexport.h"
 
 #include <QtCore/QObject>
+
+class QAction;
 
 namespace Avogadro {
 
@@ -34,22 +36,17 @@ class Scene;
 namespace QtGui {
 
 /*!
- * \class ScenePluginFactory sceneplugin.h <avogadro/qtgui/sceneplugin.h>
+ * \class ExtensionPlugin extensionplugin.h <avogadro/qtgui/extensionplugin.h>
  * \brief The base class for scene plugin factories in Avogadro.
  * \author Marcus D. Hanwell
  */
-class AVOGADROQTGUI_EXPORT ScenePlugin : public QObject
+class AVOGADROQTGUI_EXPORT ExtensionPlugin : public QObject
 {
   Q_OBJECT
 
 public:
-  explicit ScenePlugin(QObject *parent = 0);
-  ~ScenePlugin();
-
-  /*!
-   * Process the supplied atom, and add the necessary primitives to the scene.
-   */
-  virtual void process(const Core::Molecule &molecule, Rendering::Scene &scene) = 0;
+  explicit ExtensionPlugin(QObject *parent = 0);
+  ~ExtensionPlugin();
 
   /*!
    * The name of the scene plugin, will be displayed in the user interface.
@@ -62,33 +59,35 @@ public:
   virtual QString description() const = 0;
 
   /*!
-   * Returns true if the scene plugin has been enabled and is active.
+   * \return The QActions for this extension (should be at least one).
    */
-  virtual bool isEnabled() const = 0;
+  virtual QList<QAction *> actions() const = 0;
 
   /*!
-   * Set the enabled state of the plugin (default should be false).
+   * \return The menu path of the supplied action. This can be empty if the
+   * action was not recognized, or contain two or more strings (top level, plus
+   * name, e.g. File, &Open).
    */
-  virtual void setEnabled(bool enable) = 0;
+  virtual QStringList menuPath(QAction *action = 0) const = 0;
 };
 
 /*!
- * \class ScenePluginFactory sceneplugin.h <avogadro/qtgui/sceneplugin.h>
- * \brief The base class for scene plugin factories in Avogadro.
+ * \class ExtensionPluginFactory extensionplugin.h <avogadro/qtgui/extensionplugin.h>
+ * \brief The base class for extension plugin factories in Avogadro.
  * \author Marcus D. Hanwell
  */
-class AVOGADROQTGUI_EXPORT ScenePluginFactory
+class AVOGADROQTGUI_EXPORT ExtensionPluginFactory
 {
 public:
-  virtual ~ScenePluginFactory();
+  virtual ~ExtensionPluginFactory();
 
-  virtual ScenePlugin * createSceneInstance() = 0;
+  virtual ExtensionPlugin * createExtensionInstance() = 0;
   virtual QString identifier() const = 0;
 };
 
-#define SCENE_PLUGIN_FACTORY(className, id) \
+#define EXTENSION_PLUGIN_FACTORY(className, id) \
 public: \
-  Avogadro::QtGui::ScenePlugin * createSceneInstance() \
+  Avogadro::QtGui::ExtensionPlugin * createExtensionInstance() \
   { \
     return new className; \
   } \
@@ -97,7 +96,7 @@ public: \
 } // End QtGui namespace
 } // End Avogadro namespace
 
-Q_DECLARE_INTERFACE(Avogadro::QtGui::ScenePluginFactory,
-                    "net.openchemistry.avogadro.scenepluginfactory/2.0")
+Q_DECLARE_INTERFACE(Avogadro::QtGui::ExtensionPluginFactory,
+                    "net.openchemistry.avogadro.extensionpluginfactory/2.0")
 
-#endif // AVOGADRO_QTGUI_SCENEPLUGIN_H
+#endif // AVOGADRO_QTGUI_EXTENSIONPLUGIN_H

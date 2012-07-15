@@ -26,25 +26,7 @@ set(SOURCES
   shaderprogram.cpp
 )
 
-add_library(AvogadroRendering ${HEADERS} ${SOURCES})
+avogadro_add_library(AvogadroRendering ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroRendering
   ${GLEW_LIBRARY}
   ${OPENGL_LIBRARIES})
-
-# Generate an export header for the AvogadroCore library. This handles symbol
-# visibility on all platforms using functionality added in CMake 2.8.6.
-include(GenerateExportHeader)
-generate_export_header(AvogadroRendering
-  EXPORT_FILE_NAME avogadrorenderingexport.h)
-list(APPEND HEADERS "${CMAKE_CURRENT_BINARY_DIR}/avogadrorenderingexport.h")
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-add_compiler_export_flags(avogadro_export_flags)
-set_property(TARGET AvogadroRendering APPEND
-  PROPERTY COMPILE_FLAGS ${avogadro_export_flags})
-# Install the library and headers.
-install(FILES ${HEADERS} DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/rendering")
-install(TARGETS AvogadroRendering
-  EXPORT "AvogadroLibsTargets"
-  RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
-  LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}"
-  ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
