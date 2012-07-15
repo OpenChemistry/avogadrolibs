@@ -23,10 +23,13 @@
 #include <QtCore/QStringList>
 #include <QtCore/QList>
 
+#include <QDebug>
+
 namespace Avogadro {
 namespace QtGui {
 
 class ScenePluginFactory;
+class ExtensionPluginFactory;
 
 /*!
  * \class PluginManager pluginmanager.h <avogadro/qtgui/pluginmanager.h>
@@ -62,10 +65,24 @@ public:
   void load();
   void load(const QString &dir);
 
-  /*! Return the loaded scene plugin factories. Will be empty unless load was
-   * already called.
+  /*! Return the loaded scene plugin factories. Will be empty unless load has
+   * been called.
    */
   QList<ScenePluginFactory *> scenePluginFactories() const;
+
+  /*! Return the loaded extension plugin factories. Will be empty unless load
+   * has been called.
+   */
+  QList<ExtensionPluginFactory *> extensionPluginFactories() const;
+
+  /*! Let the user request plugins with a certain type, this must use the Qt
+   * mechanisms as qobject_cast is used in conjunction with interfaces.
+   *
+   * \code
+   * factory = pluginManager->pluginFactories<Avogadro::QtGui::ScenePluginFactory>();
+   * \endcode
+   */
+  template<typename T> QList<T *> pluginFactories() const;
 
 private:
   // Hide the constructor, destructor, copy and assignment operator.
@@ -79,7 +96,20 @@ private:
 
   // Various factories loaded by the plugin manager.
   QList<ScenePluginFactory *> m_scenePluginFactories;
+  QList<ExtensionPluginFactory *> m_extensionPluginFactories;
+  QList<QObject *> m_plugins;
 };
+
+template<typename T> QList<T *> PluginManager::pluginFactories() const
+{
+  QList<T *> factories;
+  foreach(QObject *plugin, m_plugins) {
+    T *factory = qobject_cast<T *>(plugin);
+    if (factory)
+      factories.append(factory);
+  }
+  return factories;
+}
 
 } // End QtGui namespace
 } // End Avogadro namespace

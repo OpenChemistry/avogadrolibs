@@ -14,36 +14,35 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_IO_CMLFORMAT_H
-#define AVOGADRO_IO_CMLFORMAT_H
+#include "quantuminput.h"
 
-#include "avogadroioexport.h"
-
-#include <avogadro/core/molecule.h>
-
-#include <string>
-#include <vector>
+#include <QtCore/QtPlugin>
+#include <QtCore/QStringList>
 
 namespace Avogadro {
-namespace Io {
+namespace QtPlugins {
 
-class AVOGADROIO_EXPORT CmlFormat
+QuantumInput::QuantumInput(QObject *parent_) : ExtensionPlugin(parent_)
 {
-public:
-  CmlFormat();
-  ~CmlFormat();
+}
 
-  bool readFile(const std::string &fileName);
+QuantumInput::~QuantumInput()
+{
+}
 
-  bool writeFile(const std::string &fileName);
+QList<QAction *> QuantumInput::actions() const
+{
+  return QList<QAction *>();
+}
 
-  Core::Molecule * molecule(size_t index = 0);
+QStringList QuantumInput::menuPath(QAction *) const
+{
+  QStringList path;
+  path << tr("&Extensions") << tr("&NWChem");
+  return path;
+}
 
-protected:
-  std::vector<Core::Molecule *> m_molecules;
-};
+}
+}
 
-} // end Io namespace
-} // end Avogadro namespace
-
-#endif // CMLFORMAT_H
+Q_EXPORT_PLUGIN2(quantuminput, Avogadro::QtPlugins::QuantumInputFactory)

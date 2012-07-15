@@ -17,21 +17,5 @@ set(SOURCES
 # Ever feel like you should just take the modular build system?
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/../core")
 
-add_library(AvogadroIO ${HEADERS} ${SOURCES})
+avogadro_add_library(AvogadroIO ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroIO AvogadroCore)
-
-# Generate an export header for the AvogadroCore library. This handles symbol
-# visibility on all platforms using functionality added in CMake 2.8.6.
-include(GenerateExportHeader)
-generate_export_header(AvogadroIO EXPORT_FILE_NAME avogadroio.h)
-list(APPEND HEADERS "${CMAKE_CURRENT_BINARY_DIR}/avogadroio.h")
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-add_compiler_export_flags(avogadro_export_flags)
-set_property(TARGET AvogadroIO APPEND
-  PROPERTY COMPILE_FLAGS ${avogadro_export_flags})
-install(FILES ${HEADERS} DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/io")
-install(TARGETS AvogadroIO
-  EXPORT "AvogadroLibsTargets"
-  RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
-  LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}"
-  ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
