@@ -30,21 +30,4 @@ set(SOURCES
   variantmap.cpp
 )
 
-add_library(AvogadroCore ${HEADERS} ${SOURCES})
-
-# Generate an export header for the AvogadroCore library. This handles symbol
-# visibility on all platforms using functionality added in CMake 2.8.6.
-include(GenerateExportHeader)
-generate_export_header(AvogadroCore EXPORT_FILE_NAME avogadrocoreexport.h)
-list(APPEND HEADERS "${CMAKE_CURRENT_BINARY_DIR}/avogadrocoreexport.h")
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-add_compiler_export_flags(avogadro_export_flags)
-set_property(TARGET AvogadroCore APPEND
-  PROPERTY COMPILE_FLAGS ${avogadro_export_flags})
-# Install the library and headers.
-install(FILES ${HEADERS} DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/core")
-install(TARGETS AvogadroCore
-  EXPORT "AvogadroLibsTargets"
-  RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
-  LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}"
-  ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
+avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})

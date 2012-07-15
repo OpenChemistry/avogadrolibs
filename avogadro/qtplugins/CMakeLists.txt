@@ -10,11 +10,21 @@ add_definitions(${QT_DEFINITIONS})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
   "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/avogadro2/plugins")
 
-qt4_wrap_cpp(moc_srcs vanderwaals.h)
-add_library(vanderwaals MODULE vanderwaals.cpp ${moc_srcs})
-target_link_libraries(vanderwaals AvogadroCore AvogadroQtGui)
-install(TARGETS vanderwaals
-  EXPORT "AvogadroLibsTargets"
-  RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
-  LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/plugins"
-  ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}/avogadro2/plugins")
+function(avogadro_plugin name sources)
+  add_library(${name} MODULE ${sources})
+  target_link_libraries(${name} AvogadroCore AvogadroQtGui)
+  set_target_properties(${name} PROPERTIES AUTOMOC TRUE)
+  install(TARGETS ${name}
+    EXPORT "AvogadroLibsTargets"
+    RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
+    LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/plugins"
+    ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}/avogadro2/plugins")
+endfunction()
+
+# Now to make the plugins.
+
+# Scene
+avogadro_plugin(vanderwaals vanderwaals.cpp)
+
+# Extension
+avogadro_plugin(quantuminput quantuminput.cpp)

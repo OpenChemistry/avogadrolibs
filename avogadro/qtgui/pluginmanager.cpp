@@ -17,6 +17,7 @@
 #include "pluginmanager.h"
 
 #include "sceneplugin.h"
+#include "extensionplugin.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QMutex>
@@ -24,13 +25,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 
-#include <QtCore/QDebug>
-
 namespace Avogadro {
 namespace QtGui {
-
-// Compiler initializes this static pointer to 0.
-static PluginManager *pluginManagerInstance;
 
 PluginManager::PluginManager(QObject *p) : QObject(p)
 {
@@ -63,6 +59,8 @@ PluginManager::~PluginManager()
 PluginManager * PluginManager::instance()
 {
   static QMutex mutex;
+  // Compiler initializes this static pointer to 0.
+  static PluginManager *pluginManagerInstance;
   if (!pluginManagerInstance) {
     mutex.lock();
     if (!pluginManagerInstance)
@@ -98,21 +96,36 @@ void PluginManager::load(const QString &path)
                << pluginLoader.errorString();
     }
     else {
-      qDebug() << "Loaded" << pluginPath << "->";
+      qDebug() << "Loaded" << dir.absolutePath() + "/" + pluginPath << "->";
       pluginInstance->dumpObjectInfo();
     }
 
+    m_plugins.append(pluginInstance);
+
     // Now attempt to cast to known factory types, and make it available.
     ScenePluginFactory *scenePluginFactory =
-      qobject_cast<ScenePluginFactory *>(pluginInstance);
+      qobject_cast<Avogadro::QtGui::ScenePluginFactory *>(pluginInstance);
     if (scenePluginFactory)
       m_scenePluginFactories.append(scenePluginFactory);
+
+    ExtensionPluginFactory *extensionPluginFactory =
+        qobject_cast<Avogadro::QtGui::ExtensionPluginFactory *>(pluginInstance);
+    if (extensionPluginFactory)
+      m_extensionPluginFactories.append(extensionPluginFactory);
+
+    qDebug() << "Scene factories:" << m_scenePluginFactories.size() << scenePluginFactory;
+    qDebug() << "Extension factories:" << m_extensionPluginFactories.size() << extensionPluginFactory;
   }
 }
 
 QList<ScenePluginFactory *> PluginManager::scenePluginFactories() const
 {
   return m_scenePluginFactories;
+}
+
+QList<ExtensionPluginFactory *> PluginManager::extensionPluginFactories() const
+{
+  return m_extensionPluginFactories;
 }
 
 } // End QtGui namespace
