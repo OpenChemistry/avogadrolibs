@@ -19,27 +19,49 @@
 #include <QtCore/QtPlugin>
 #include <QtCore/QStringList>
 
+#include <QtGui/QAction>
+#include <QtGui/QDialog>
+
+#include <QtCore/QDebug>
+
 namespace Avogadro {
 namespace QtPlugins {
 
-QuantumInput::QuantumInput(QObject *parent_) : ExtensionPlugin(parent_)
+QuantumInput::QuantumInput(QObject *parent_) : ExtensionPlugin(parent_),
+  m_dialog(NULL)
 {
+  m_action = new QAction(this);
+  m_action->setEnabled(true);
+  m_action->setText(tr("&NWChem"));
+  connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
 }
 
 QuantumInput::~QuantumInput()
 {
+  if (m_dialog)
+    m_dialog->deleteLater();
 }
 
 QList<QAction *> QuantumInput::actions() const
 {
-  return QList<QAction *>();
+  QList<QAction *> actions_;
+  actions_.append(m_action);
+  return actions_;
 }
 
 QStringList QuantumInput::menuPath(QAction *) const
 {
   QStringList path;
-  path << tr("&Extensions") << tr("&NWChem");
+  path << tr("&Extensions");
   return path;
+}
+
+void QuantumInput::menuActivated()
+{
+  qDebug() << "They clicked on me!!!!!";
+  if (!m_dialog)
+    m_dialog = new QDialog;
+  m_dialog->show();
 }
 
 }

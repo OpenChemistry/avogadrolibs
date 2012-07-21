@@ -81,12 +81,13 @@ void PluginManager::load()
 void PluginManager::load(const QString &path)
 {
   QDir dir(path);
-  qDebug() << dir.entryList(QDir::Files);
   foreach(const QString &pluginPath, dir.entryList(QDir::Files)) {
     QPluginLoader pluginLoader(dir.absolutePath() + "/" + pluginPath);
 
-    // We only want to count plugins once.
-    if (pluginLoader.isLoaded())
+    // We only want to count plugins once, the || should not be necessary but
+    // I found that on the Mac at least isLoaded was not always reliable (and
+    // if it is we skip the second in the short-circuit).
+    if (pluginLoader.isLoaded() || m_plugins.contains(pluginLoader.instance()))
       continue;
 
     QObject *pluginInstance = pluginLoader.instance();
@@ -96,38 +97,21 @@ void PluginManager::load(const QString &path)
     if (!pluginInstance) {
       qDebug() << "Failed to load" << pluginPath << "error"
                << pluginLoader.errorString();
-    }
-    else {
-      qDebug() << "Loaded" << dir.absolutePath() + "/" + pluginPath << "->";
-      pluginInstance->dumpObjectInfo();
+      continue;
     }
 
     m_plugins.append(pluginInstance);
-
-    // Now attempt to cast to known factory types, and make it available.
-    ScenePluginFactory *scenePluginFactory =
-      qobject_cast<Avogadro::QtGui::ScenePluginFactory *>(pluginInstance);
-    if (scenePluginFactory)
-      m_scenePluginFactories.append(scenePluginFactory);
-
-    ExtensionPluginFactory *extensionPluginFactory =
-        qobject_cast<Avogadro::QtGui::ExtensionPluginFactory *>(pluginInstance);
-    if (extensionPluginFactory)
-      m_extensionPluginFactories.append(extensionPluginFactory);
-
-    qDebug() << "Scene factories:" << m_scenePluginFactories.size() << scenePluginFactory;
-    qDebug() << "Extension factories:" << m_extensionPluginFactories.size() << extensionPluginFactory;
   }
 }
 
 QList<ScenePluginFactory *> PluginManager::scenePluginFactories() const
 {
-  return m_scenePluginFactories;
+  return pluginFactories<ScenePluginFactory>();
 }
 
 QList<ExtensionPluginFactory *> PluginManager::extensionPluginFactories() const
 {
-  return m_extensionPluginFactories;
+  return pluginFactories<ExtensionPluginFactory>();
 }
 
 } // End QtGui namespace
