@@ -26,7 +26,23 @@ set(SOURCES
   shaderprogram.cpp
 )
 
-avogadro_add_library(AvogadroRendering ${HEADERS} ${SOURCES})
+set(shader_files "spheres_vs.glsl" "spheres_fs.glsl")
+foreach(file ${shader_files})
+  get_filename_component(file_we ${file} NAME_WE)
+  set(src  ${CMAKE_CURRENT_SOURCE_DIR}/${file})
+  set(resh ${CMAKE_CURRENT_BINARY_DIR}/${file_we}.h)
+  list(APPEND shader_h_files ${resh})
+  message("Adding ${file} to encoder... ${src} ${resh} ${file_we}")
+  add_custom_command(
+    OUTPUT ${resh}
+    DEPENDS ${src} encodefile
+    COMMAND encodefile
+    ARGS ${src} ${resh} ${file_we}
+    COMMENT "Encoding ${src}"
+    )
+endforeach()
+
+avogadro_add_library(AvogadroRendering ${HEADERS} ${SOURCES} ${shader_h_files})
 target_link_libraries(AvogadroRendering
   ${GLEW_LIBRARY}
   ${OPENGL_LIBRARIES})
