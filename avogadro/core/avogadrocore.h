@@ -21,6 +21,11 @@
 #include <cstddef>
 #include <limits>
 
+/// Prevent compiler error when using std::numeric_limits<T>::max()
+#if defined(_MSC_VER) && defined(max)
+#undef max
+#endif
+
 /// This macro marks a parameter as unused. Its purpose is to
 /// disable the compiler from emitting unused parameter warnings.
 #define AVOGADRO_UNUSED(variable) (void) variable
