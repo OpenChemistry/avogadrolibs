@@ -15,31 +15,10 @@ set(SOURCES
   glwidget.cpp
 )
 
-qt4_wrap_cpp(moc_srcs
-  glwidget.h
-)
-
-add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES} ${moc_srcs})
+avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtOpenGL
   AvogadroRendering
+  AvogadroQtGui
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   ${QT_QTOPENGL_LIBRARY})
-
-# Generate an export header for the AvogadroCore library. This handles symbol
-# visibility on all platforms using functionality added in CMake 2.8.6.
-include(GenerateExportHeader)
-generate_export_header(AvogadroQtOpenGL
-  EXPORT_FILE_NAME avogadroqtopenglexport.h)
-list(APPEND HEADERS "${CMAKE_CURRENT_BINARY_DIR}/avogadroqtopenglexport.h")
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-add_compiler_export_flags(avogadro_export_flags)
-set_property(TARGET AvogadroQtOpenGL APPEND
-  PROPERTY COMPILE_FLAGS ${avogadro_export_flags})
-# Install the library and headers.
-install(FILES ${HEADERS} DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/qtopengl")
-install(TARGETS AvogadroQtOpenGL
-  EXPORT "AvogadroLibsTargets"
-  RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
-  LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}"
-  ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")

@@ -17,6 +17,7 @@
 #include "pluginmanager.h"
 
 #include "sceneplugin.h"
+#include "extensionplugin.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QMutex>
@@ -28,9 +29,6 @@
 
 namespace Avogadro {
 namespace QtGui {
-
-// Compiler initializes this static pointer to 0.
-static PluginManager *pluginManagerInstance;
 
 PluginManager::PluginManager(QObject *p) : QObject(p)
 {
@@ -63,6 +61,8 @@ PluginManager::~PluginManager()
 PluginManager * PluginManager::instance()
 {
   static QMutex mutex;
+  // Compiler initializes this static pointer to 0.
+  static PluginManager *pluginManagerInstance;
   if (!pluginManagerInstance) {
     mutex.lock();
     if (!pluginManagerInstance)
@@ -81,12 +81,13 @@ void PluginManager::load()
 void PluginManager::load(const QString &path)
 {
   QDir dir(path);
-  qDebug() << dir.entryList(QDir::Files);
   foreach(const QString &pluginPath, dir.entryList(QDir::Files)) {
     QPluginLoader pluginLoader(dir.absolutePath() + "/" + pluginPath);
 
-    // We only want to count plugins once.
-    if (pluginLoader.isLoaded())
+    // We only want to count plugins once, the || should not be necessary but
+    // I found that on the Mac at least isLoaded was not always reliable (and
+    // if it is we skip the second in the short-circuit).
+    if (pluginLoader.isLoaded() || m_plugins.contains(pluginLoader.instance()))
       continue;
 
     QObject *pluginInstance = pluginLoader.instance();
@@ -96,23 +97,21 @@ void PluginManager::load(const QString &path)
     if (!pluginInstance) {
       qDebug() << "Failed to load" << pluginPath << "error"
                << pluginLoader.errorString();
-    }
-    else {
-      qDebug() << "Loaded" << pluginPath << "->";
-      pluginInstance->dumpObjectInfo();
+      continue;
     }
 
-    // Now attempt to cast to known factory types, and make it available.
-    ScenePluginFactory *scenePluginFactory =
-      qobject_cast<ScenePluginFactory *>(pluginInstance);
-    if (scenePluginFactory)
-      m_scenePluginFactories.append(scenePluginFactory);
+    m_plugins.append(pluginInstance);
   }
 }
 
 QList<ScenePluginFactory *> PluginManager::scenePluginFactories() const
 {
-  return m_scenePluginFactories;
+  return pluginFactories<ScenePluginFactory>();
+}
+
+QList<ExtensionPluginFactory *> PluginManager::extensionPluginFactories() const
+{
+  return pluginFactories<ExtensionPluginFactory>();
 }
 
 } // End QtGui namespace

@@ -1,4 +1,5 @@
 include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/core"
+  "${AvogadroLibs_BINARY_DIR}/avogadro/qtgui"
   "${AvogadroLibs_SOURCE_DIR}" "${AvogadroLibs_BINARY_DIR}")
 
 # find google test

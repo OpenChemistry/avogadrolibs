@@ -53,7 +53,11 @@ class VanDerWaalsFactory : public QObject, public QtGui::ScenePluginFactory
 {
   Q_OBJECT
   Q_INTERFACES(Avogadro::QtGui::ScenePluginFactory)
+
+public:
   SCENE_PLUGIN_FACTORY(VanDerWaals, "Van der Waals spheres")
+
+  explicit VanDerWaalsFactory(QObject *parent_ = 0) : QObject(parent_) {}
 };
 
 }

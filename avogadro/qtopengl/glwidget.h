@@ -20,6 +20,7 @@
 #include "avogadroqtopenglexport.h"
 
 #include <avogadro/rendering/glrenderer.h>
+#include <avogadro/qtgui/scenepluginmodel.h>
 
 #include <QtOpenGL/QGLWidget>
 
@@ -68,6 +69,7 @@ protected:
 
 private:
   Rendering::GLRenderer m_renderer;
+  QtGui::ScenePluginModel m_scenePlugins;
 };
 
 } // End QtOpenGL namespace

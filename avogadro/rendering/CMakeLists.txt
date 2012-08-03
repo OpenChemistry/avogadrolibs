@@ -29,25 +29,23 @@ set(SOURCES
   shaderprogram.cpp
 )
 
-add_library(AvogadroRendering ${HEADERS} ${SOURCES})
+set(shader_files "spheres_vs.glsl" "spheres_fs.glsl")
+foreach(file ${shader_files})
+  get_filename_component(file_we ${file} NAME_WE)
+  set(src  ${CMAKE_CURRENT_SOURCE_DIR}/${file})
+  set(resh ${CMAKE_CURRENT_BINARY_DIR}/${file_we}.h)
+  list(APPEND shader_h_files ${resh})
+  message("Adding ${file} to encoder... ${src} ${resh} ${file_we}")
+  add_custom_command(
+    OUTPUT ${resh}
+    DEPENDS ${src} encodefile
+    COMMAND encodefile
+    ARGS ${src} ${resh} ${file_we}
+    COMMENT "Encoding ${src}"
+    )
+endforeach()
+
+avogadro_add_library(AvogadroRendering ${HEADERS} ${SOURCES} ${shader_h_files})
 target_link_libraries(AvogadroRendering
   ${GLEW_LIBRARY}
   ${OPENGL_LIBRARIES})
-
-# Generate an export header for the AvogadroCore library. This handles symbol
-# visibility on all platforms using functionality added in CMake 2.8.6.
-include(GenerateExportHeader)
-generate_export_header(AvogadroRendering
-  EXPORT_FILE_NAME avogadrorenderingexport.h)
-list(APPEND HEADERS "${CMAKE_CURRENT_BINARY_DIR}/avogadrorenderingexport.h")
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-add_compiler_export_flags(avogadro_export_flags)
-set_property(TARGET AvogadroRendering APPEND
-  PROPERTY COMPILE_FLAGS ${avogadro_export_flags})
-# Install the library and headers.
-install(FILES ${HEADERS} DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/rendering")
-install(TARGETS AvogadroRendering
-  EXPORT "AvogadroLibsTargets"
-  RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
-  LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}"
-  ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")

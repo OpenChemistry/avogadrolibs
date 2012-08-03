@@ -21,6 +21,9 @@
 #include "shader.h"
 #include "shaderprogram.h"
 
+#include "spheres_vs.h"
+#include "spheres_fs.h"
+
 #include <iostream>
 
 namespace Avogadro {
@@ -79,63 +82,12 @@ void GLRenderer::render()
     m_scene.setClean();
   }
 
+  // Build and link the shader if it has not been used yet.
   if (m_vertex.type() == Shader::Unknown) {
     m_vertex.setType(Shader::Vertex);
-    m_vertex.setSource(
-          "attribute vec4 vertex;\n"
-          "attribute vec3 color;\n"
-          "attribute vec2 texCoordinate;\n"
-          "uniform mat4 modelView;\n"
-          "uniform mat4 projection;\n"
-          "varying vec2 v_texCoord;\n"
-          "varying vec3 fColor;\n"
-          "varying vec4 eyePosition;\n"
-          "varying float radius;\n"
-          "void main()\n"
-          "{\n"
-          "  radius = abs(texCoordinate.x);\n"
-          "  fColor = color;\n"
-          "  v_texCoord = texCoordinate / radius;\n"
-          "  gl_Position = modelView * vertex;\n"
-          "  eyePosition = gl_Position;\n"
-          "  gl_Position.xy += texCoordinate;\n"
-          "  gl_Position = projection * gl_Position;\n"
-          "}\n");
+    m_vertex.setSource(spheres_vs);
     m_fragment.setType(Shader::Fragment);
-    m_fragment.setSource(
-          "varying vec2 v_texCoord;\n"
-          "varying vec4 eyePosition;\n"
-          "varying vec3 fColor;\n"
-          "uniform mat3 normal;\n"
-          "uniform mat4 projection;\n"
-          "varying float radius;\n"
-          "void main()\n"
-          "{\n"
-          "  // Figure out if we are inside our sphere.\n"
-          "  float zz = 1.0 - v_texCoord.x*v_texCoord.x - v_texCoord.y*v_texCoord.y;\n"
-          "  if (zz <= 0.0)\n"
-          "    discard;"
-          "  vec3 fragNormal = vec3(v_texCoord, sqrt(zz));\n"
-          "\n"
-          "  vec3 N = fragNormal;\n"
-          "  vec3 L = normalize(vec3(0, 1, 1));\n"
-          "  vec3 E = vec3(0, 0, 1);\n"
-          "  vec3 H = normalize(L + E);\n"
-          "  float df = max(0.0, dot(N, L));\n"
-          "  float sf = max(0.0, dot(N, H));\n"
-          "  sf = pow(sf, 20.0);\n"
-          "  vec3 ambient = fColor / 3.0;\n"
-          "  vec3 diffuse = fColor;\n"
-          "  vec3 specular = fColor * 3.0;\n"
-          "  vec3 color = ambient + df * diffuse + sf * specular;\n"
-          "  vec4 pos = eyePosition;\n"
-          "  pos.z += fragNormal.z * radius;//The radius is 1.0\n"
-          "  pos = projection * pos;\n"
-          "  gl_FragDepth = (pos.z / pos.w + 1.0) / 2.0;\n"
-          "\n"
-          //"  gl_FragColor = vec4(normalize(position), 1.0);\n"
-          "  gl_FragColor = vec4(color, 1.0);\n"
-          "}\n");
+    m_fragment.setSource(spheres_fs);
     if (!m_vertex.compile())
       std::cout << m_vertex.error() << std::endl;
     if (!m_fragment.compile())
