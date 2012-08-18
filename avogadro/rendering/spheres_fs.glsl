@@ -23,7 +23,7 @@ void main()
   vec3 specular = fColor * 3.0;
   vec3 color = ambient + df * diffuse + sf * specular;
   vec4 pos = eyePosition;
-  pos.z += fragNormal.z * radius;//The radius is 1.0
+  pos.z += N.z * radius;//The radius is 1.0
   pos = projection * pos;
   gl_FragDepth = (pos.z / pos.w + 1.0) / 2.0;
 
