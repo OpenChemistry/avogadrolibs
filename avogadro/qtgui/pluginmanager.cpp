@@ -35,6 +35,7 @@ PluginManager::PluginManager(QObject *p) : QObject(p)
   m_relativeToApp = "/../lib/avogadro2/plugins";
 #ifdef __APPLE__
   QString buildRelative("/../../../..");
+  m_relativeToApp = buildRelative + m_relativeToApp;
   qDebug() << QCoreApplication::applicationDirPath() + buildRelative
               + "/CMakeCache.txt";
   if (QFileInfo(QCoreApplication::applicationDirPath() + buildRelative
