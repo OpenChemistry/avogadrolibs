@@ -18,7 +18,7 @@
 
 #include <avogadro/core/elements.h>
 
-#include <rapidxml.hpp>
+#include <pugixml.cpp>
 
 #include <boost/algorithm/string.hpp>
 
@@ -35,9 +35,9 @@ using std::string;
 using std::cout;
 using std::endl;
 
-using rapidxml::xml_document;
-using rapidxml::xml_node;
-using rapidxml::xml_attribute;
+using pugi::xml_document;
+using pugi::xml_node;
+using pugi::xml_attribute;
 
 using namespace Core;
 
@@ -46,11 +46,11 @@ class CmlFormatPrivate
 {
 public:
   CmlFormatPrivate(std::vector<Molecule *> &molecules,
-                   rapidxml::xml_document<> &document)
+                   pugi::xml_document &document)
     : success(false), molecule(NULL), moleculeNode(NULL)
   {
     // Parse the CML document, and create molecules/elements as necessary.
-    moleculeNode = document.first_node("molecule");
+    moleculeNode = document.child("molecule");
     if (moleculeNode) {
       if (molecules.size() == 0) {
         molecules.resize(1, new Molecule());
@@ -75,36 +75,36 @@ public:
 
   void properties()
   {
-    xml_attribute<> *attribute(0);
-    xml_node<> *node(0);
-    node = moleculeNode->first_node("name");
-    if (node && node->value())
-      molecule->setData("name", std::string(node->value()));
-    node = moleculeNode->first_node("identifier");
-    if (node && node->value()) {
-      attribute = node->first_attribute("convention");
-      if (attribute && std::string(attribute->value()) == "iupac:inchi") {
-        attribute = node->first_attribute("value");
-        if (attribute && std::string(attribute->name()) == "value")
-          molecule->setData("inchi", std::string(attribute->value()));
+    xml_attribute attribute;
+    xml_node node;
+    node = moleculeNode.child("name");
+    if (node && node.value())
+      molecule->setData("name", std::string(node.child_value()));
+    node = moleculeNode.child("identifier");
+    if (node && node.value()) {
+      attribute = node.attribute("convention");
+      if (attribute && std::string(attribute.value()) == "iupac:inchi") {
+        attribute = node.attribute("value");
+        if (attribute && std::string(attribute.name()) == "value")
+          molecule->setData("inchi", std::string(attribute.value()));
       }
     }
   }
 
   bool atoms()
   {
-    xml_node<> *atomArray = moleculeNode->first_node("atomArray");
+    xml_node atomArray = moleculeNode.child("atomArray");
     if (!atomArray)
       return false;
 
-    xml_node<> *node = atomArray->first_node("atom");
+    xml_node node = atomArray.child("atom");
     Atom atom;
     while (node) {
       // Step through all of the atom attributes and store them.
-      xml_attribute<> *attribute = node->first_attribute("elementType");
+      xml_attribute attribute = node.attribute("elementType");
       if (attribute) {
         unsigned char atomicNumber =
-          Elements::atomicNumberFromSymbol(attribute->value());
+          Elements::atomicNumberFromSymbol(attribute.value());
         atom = molecule->addAtom(atomicNumber);
       }
       else {
@@ -113,22 +113,22 @@ public:
         return false;
       }
 
-      attribute = node->first_attribute("id");
+      attribute = node.attribute("id");
       if (attribute)
-        atomIds[std::string(attribute->value())] = atom.index();
+        atomIds[std::string(attribute.value())] = atom.index();
       else // Atom nodes must have IDs - bail.
         return false;
 
       // Check for 3D geometry.
-      attribute = node->first_attribute("x3");
+      attribute = node.attribute("x3");
       if (attribute) {
-        xml_attribute<> *y3 = node->first_attribute("y3");
-        xml_attribute<> *z3 = node->first_attribute("z3");
+        xml_attribute y3 = node.attribute("y3");
+        xml_attribute z3 = node.attribute("z3");
         if (y3 && z3) {
           // It looks like we have a valid 3D position.
-          Vector3 position(strtod(attribute->value(), 0),
-                           strtod(y3->value(), 0),
-                           strtod(z3->value(), 0));
+          Vector3 position(strtod(attribute.value(), 0),
+                           strtod(y3.value(), 0),
+                           strtod(z3.value(), 0));
           atom.setPosition3d(position);
         }
         else {
@@ -138,12 +138,12 @@ public:
       }
 
       // Check for 2D geometry.
-      attribute = node->first_attribute("x2");
+      attribute = node.attribute("x2");
       if (attribute) {
-        xml_attribute<> *y2 = node->first_attribute("y2");
+        xml_attribute y2 = node.attribute("y2");
         if (y2) {
-          Vector2 position(strtod(attribute->value(), 0),
-                           strtod(y2->value(), 0));
+          Vector2 position(strtod(attribute.value(), 0),
+                           strtod(y2.value(), 0));
           atom.setPosition2d(position);
         }
         else {
@@ -153,25 +153,25 @@ public:
       }
 
       // Move on to the next atom node (if there is one).
-      node = node->next_sibling("atom");
+      node = node.next_sibling("atom");
     }
     return true;
   }
 
   bool bonds()
   {
-    xml_node<> *bondArray = moleculeNode->first_node("bondArray");
+    xml_node bondArray = moleculeNode.child("bondArray");
     if (!bondArray)
       return false;
 
-    xml_node<> *node = bondArray->first_node("bond");
+    xml_node node = bondArray.child("bond");
 
     while (node) {
-      xml_attribute<> *attribute = node->first_attribute("atomRefs2");
+      xml_attribute attribute = node.attribute("atomRefs2");
       Bond bond;
       if (attribute) {
         // Should contain two elements separated by a space.
-        std::string refs(attribute->value());
+        std::string refs(attribute.value());
         std::vector<std::string> tokens;
         boost::split(tokens, refs, boost::is_any_of(" "));
         if (tokens.size() != 2) // Corrupted file/input we don't understand
@@ -190,12 +190,12 @@ public:
         }
       }
 
-      attribute = node->first_attribute("order");
+      attribute = node.attribute("order");
       if (attribute)
-        bond.setOrder(atoi(attribute->value()));
+        bond.setOrder(atoi(attribute.value()));
 
       // Move on to the next bond node (if there is one).
-      node = node->next_sibling("bond");
+      node = node.next_sibling("bond");
     }
 
     return true;
@@ -203,7 +203,7 @@ public:
 
   bool success;
   Molecule *molecule;
-  xml_node<> *moleculeNode;
+  xml_node moleculeNode;
   std::map<std::string, size_t> atomIds;
 };
 }
@@ -220,21 +220,21 @@ bool CmlFormat::readFile(const std::string &fileName)
 {
   // Read the file into a string.
   std::ifstream file(fileName.c_str());
-  std::string contents((std::istreambuf_iterator<char>(file)),
-                        std::istreambuf_iterator<char>());
-
-  xml_document<> document;
-  try {
-    document.parse<0>(const_cast<char *>(contents.c_str()));
+  if (!file.is_open()) {
+    cout << "Error opening file: " << fileName << endl;
+    return false;
   }
-  catch (rapidxml::parse_error &e) {
-    cout << "Error parsing XML: " << e.what();
+
+  xml_document document;
+  pugi::xml_parse_result result = document.load(file);
+  if (!result) {
+    cout << "Error parsing XML: " << result.description() << endl;
     return false;
   }
 
   CmlFormatPrivate parser(m_molecules, document);
 
-  return parser.success;
+  return result == true;
 }
 
 bool CmlFormat::writeFile(const std::string &)
