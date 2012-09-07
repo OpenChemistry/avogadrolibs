@@ -234,7 +234,7 @@ bool CmlFormat::readFile(const std::string &fileName)
 
   CmlFormatPrivate parser(m_molecules, document);
 
-  return result == true;
+  return true;
 }
 
 bool CmlFormat::writeFile(const std::string &)
