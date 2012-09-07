@@ -14,7 +14,7 @@
 
 ******************************************************************************/
 
-#include <rapidxml.hpp>
+#include <pugixml.cpp>
 
 #include <boost/algorithm/string.hpp>
 
@@ -30,9 +30,9 @@ using std::cout;
 using std::endl;
 using std::vector;
 
-using rapidxml::xml_document;
-using rapidxml::xml_node;
-using rapidxml::xml_attribute;
+using pugi::xml_document;
+using pugi::xml_node;
+using pugi::xml_attribute;
 
 struct Color {
   Color() { c[0] = c[1] = c[2] = 0; }
@@ -90,78 +90,73 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  string contents((std::istreambuf_iterator<char>(file)),
-                   std::istreambuf_iterator<char>());
-
-  xml_document<> document;
-  try {
-    document.parse<0>(const_cast<char *>(contents.c_str()));
-  }
-  catch (rapidxml::parse_error &e) {
-    cout << "Error parsing XML: " << e.what();
-    return false;
+  xml_document document;
+  pugi::xml_parse_result result = document.load(file);
+  if (!result) {
+    cout << "Error parsing XML: " << result.description() << endl;
+    return 1;
   }
 
   // Construct a vector to contain all of the elements
   std::vector<Element> elements;
   int elementCount = 0;
 
-  xml_node<> *rootNode = document.first_node("list");
+  xml_node rootNode = document.child("list");
   if (rootNode) {
-    xml_node<> *atomNode = rootNode->first_node("atom");
+    xml_node atomNode = rootNode.child("atom");
     while (atomNode) {
-      xml_attribute<> *attribute = atomNode->first_attribute("id");
+      xml_attribute attribute = atomNode.attribute("id");
       if (attribute) {
-        elements.push_back(Element(string(attribute->value())));
+        elements.push_back(Element(string(attribute.value())));
       }
       else {
         cout << "Error, no atom id found. Skipping this entry." << endl;
-        atomNode = atomNode->next_sibling("atom");
+        atomNode = atomNode.next_sibling("atom");
         continue;
       }
 
       // Get the data we care about, put it into out struct.
-      xml_node<> *labelNode = atomNode->first_node("label");
+      xml_node labelNode = atomNode.child("label");
       while (labelNode) {
-        attribute = labelNode->first_attribute("dictRef");
+        attribute = labelNode.attribute("dictRef");
         if (attribute) {
-          string value(attribute->value());
+          string value(attribute.value());
           if (value == "bo:symbol")
-            elements.back().symbol = labelNode->first_attribute("value")->value();
+            elements.back().symbol = labelNode.attribute("value").value();
           else if (value == "bo:name")
-            elements.back().name = labelNode->first_attribute("value")->value();
+            elements.back().name = labelNode.attribute("value").value();
         }
-        labelNode = labelNode->next_sibling("label");
+        labelNode = labelNode.next_sibling("label");
       }
-      xml_node<> *scalarNode = atomNode->first_node("scalar");
+      xml_node scalarNode = atomNode.child("scalar");
       while (scalarNode) {
-        attribute = scalarNode->first_attribute("dictRef");
+        attribute = scalarNode.attribute("dictRef");
         if (attribute) {
-          string value(attribute->value());
+          string value(attribute.value());
           if (value == "bo:atomicNumber")
-            elements.back().atomicNumber = atoi(scalarNode->value());
+            elements.back().atomicNumber = atoi(scalarNode.child_value());
           else if (value == "bo:mass")
-            elements.back().mass = strtod(scalarNode->value(), 0);
+            elements.back().mass = strtod(scalarNode.child_value(), 0);
           else if (value == "bo:radiusCovalent")
-            elements.back().radiusCovalent = strtod(scalarNode->value(), 0);
+            elements.back().radiusCovalent = strtod(scalarNode.child_value(), 0);
           else if (value == "bo:radiusVDW")
-            elements.back().radiusVDW = strtod(scalarNode->value(), 0);
+            elements.back().radiusVDW = strtod(scalarNode.child_value(), 0);
         }
-        scalarNode = scalarNode->next_sibling("scalar");
+        scalarNode = scalarNode.next_sibling("scalar");
       }
-      xml_node<> *arrayNode = atomNode->first_node("array");
+      xml_node arrayNode = atomNode.child("array");
       while (arrayNode) {
-        attribute = arrayNode->first_attribute("dictRef");
+        attribute = arrayNode.attribute("dictRef");
         if (attribute) {
-          string value(attribute->value());
+          string value(attribute.value());
           if (value == "bo:elementColor")
-            colorFromString(arrayNode->value(), elements.back().color);
+            colorFromString(arrayNode.child_value(), elements.back().color);
         }
-        arrayNode = arrayNode->next_sibling("array");
+        arrayNode = arrayNode.next_sibling("array");
       }
 
       ++elementCount;
-      atomNode = atomNode->next_sibling("atom");
+      atomNode = atomNode.next_sibling("atom");
     }
   }
   file.close();
