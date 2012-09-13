@@ -241,13 +241,13 @@ bool CmlFormat::writeFile(const std::string &fileName,
   xml_node moleculeNode = document.append_child("molecule");
   // Standard XML namespaces for CML.
   moleculeNode.append_attribute("xmlns") = "http://www.xml-cml.org/schema";
-  moleculeNode.append_attribute("xmlns:cml") = "http://www.xml-cml.org/dict/cml";
-  moleculeNode.append_attribute("xmlns:units") = "http://www.xml-cml.org/units/units";
-  moleculeNode.append_attribute("xmlns:xsd") = "http://www.w3c.org/2001/XMLSchema";
+  moleculeNode.append_attribute("xmlns:cml") =
+      "http://www.xml-cml.org/dict/cml";
+  moleculeNode.append_attribute("xmlns:units") =
+      "http://www.xml-cml.org/units/units";
+  moleculeNode.append_attribute("xmlns:xsd") =
+      "http://www.w3c.org/2001/XMLSchema";
   moleculeNode.append_attribute("xmlns:iupac") = "http://www.iupac.org";
-
-  // Molecule identifier.
-  moleculeNode.append_attribute("id") = "CS_Ethane";
 
   // If the InChI is available, embed that in the CML file.
   if (mol.data("inchi").type() == Variant::String) {
@@ -263,7 +263,8 @@ bool CmlFormat::writeFile(const std::string &fileName,
     index << 'a' <<  i + 1;
     atomNode.append_attribute("id") = index.str().c_str();
     Atom a = mol.atom(i);
-    atomNode.append_attribute("elementType") = Elements::symbol(a.atomicNumber());
+    atomNode.append_attribute("elementType") =
+        Elements::symbol(a.atomicNumber());
     atomNode.append_attribute("x3") = a.position3d().x();
     atomNode.append_attribute("y3") = a.position3d().y();
     atomNode.append_attribute("z3") = a.position3d().z();
