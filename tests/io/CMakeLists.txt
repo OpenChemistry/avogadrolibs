@@ -1,6 +1,7 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   Cml
+  Hdf5
   )
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
