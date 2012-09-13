@@ -37,6 +37,9 @@ public:
   /** Get the name of the element with the supplied atomic number. */
   static const char * name(unsigned char atomicNumber);
 
+  /** Get the symbol of the element with the supplied atomic number. */
+  static const char * symbol(unsigned char atomicNumber);
+
   /** Get the mass of the element with the supplied atomic number. */
   static double mass(unsigned char atomicNumber);
 
