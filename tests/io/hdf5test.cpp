@@ -98,12 +98,55 @@ TEST(Hdf5Test, readWriteEigenMatrixXd)
   remove(tmpFileName);
 }
 
-TEST(Hdf5Test, thresholdsEigenMatrixXd)
+TEST(Hdf5Test, readWriteDoubleVector)
+{
+  char tmpFileName [L_tmpnam];
+  tmpnam(tmpFileName);
+
+  Hdf5DataFormat hdf5;
+  ASSERT_TRUE(hdf5.openFile(tmpFileName, Hdf5DataFormat::ReadWriteTruncate))
+      << "Opening test file '" << tmpFileName << "' failed.";
+
+  std::vector<double> vec(100);
+  size_t dims[2] = {10, 10};
+  for (int i = 0; i < 100; ++i)
+    vec[i] = i / 10.0 + i / 5.0;
+
+  EXPECT_TRUE(hdf5.writeDataset("/Group1/Group2/Data", vec, 2, dims))
+      << "Writing std::vector<double> failed.";
+
+  std::vector<double> vecRead;
+  std::vector<int> readDims = hdf5.readDataset("/Group1/Group2/Data", vecRead);
+  EXPECT_EQ(readDims.size(), 2)
+      << "Reading std::vector<double> failed: Invalid number of dimensions.";
+  EXPECT_EQ(readDims.at(0), 10)
+      << "Reading std::vector<double> failed: First dimension invalid.";
+  EXPECT_EQ(readDims.at(1), 10)
+      << "Reading std::vector<double> failed: Second dimension invalid.";
+  for (int i = 0; i < 100; ++i) {
+    EXPECT_EQ(vec[i], vecRead[i])
+        << "std::vector<double> read/write mismatch at index " << i << ".";
+  }
+
+  ASSERT_TRUE(hdf5.closeFile())
+      << "Closing test file '" << tmpFileName << "' failed.";
+
+  remove(tmpFileName);
+}
+
+TEST(Hdf5Test, thresholds)
 {
   Hdf5DataFormat hdf5;
   size_t threshold = 12;
   hdf5.setThreshold(threshold);
   EXPECT_EQ(hdf5.threshold(), threshold);
+
+  EXPECT_FALSE(hdf5.exceedsThreshold(threshold - 1))
+      << "Bad threshold check result for small data.";
+  EXPECT_FALSE(hdf5.exceedsThreshold(threshold))
+      << "Bad threshold check result for data at threshold limit.";
+  EXPECT_TRUE(hdf5.exceedsThreshold(threshold + 1))
+      << "Bad threshold check result for large data.";
 
   int numDoubles = threshold/sizeof(double);
 
@@ -114,6 +157,12 @@ TEST(Hdf5Test, thresholdsEigenMatrixXd)
   EXPECT_TRUE(hdf5.exceedsThreshold(Eigen::MatrixXd(1, numDoubles + 1)))
       << "Bad threshold check result for large data.";
 
+  EXPECT_FALSE(hdf5.exceedsThreshold(std::vector<double>(numDoubles - 1)))
+      << "Bad threshold check result for small data.";
+  EXPECT_FALSE(hdf5.exceedsThreshold(std::vector<double>(numDoubles)))
+      << "Bad threshold check result for data at threshold limit.";
+  EXPECT_TRUE(hdf5.exceedsThreshold(std::vector<double>(numDoubles + 1)))
+      << "Bad threshold check result for large data.";
 }
 
 TEST(Hdf5Test, datasetInteraction)
@@ -128,7 +177,11 @@ TEST(Hdf5Test, datasetInteraction)
   Eigen::MatrixXd mat(1,1);
   mat(0, 0) = 0.0;
 
-  EXPECT_TRUE(hdf5.writeDataset("/TLDData", mat))
+  std::vector<double> vec(27);
+  int ndim_vec= 3;
+  size_t dims_vec[3] = {3, 3, 3};
+
+  EXPECT_TRUE(hdf5.writeDataset("/TLDData", vec, ndim_vec, dims_vec))
       << "Writing Eigen::MatrixXd failed.";
   EXPECT_TRUE(hdf5.writeDataset("/Group1/DeeperData", mat))
       << "Writing Eigen::MatrixXd failed.";
@@ -158,6 +211,17 @@ TEST(Hdf5Test, datasetInteraction)
 
   EXPECT_FALSE(hdf5.datasetExists("/IShouldNotExist"))
       << "Non-existing dataset reported as found.";
+
+  std::vector<int> dim = hdf5.datasetDimensions("/Group1/DeeperData");
+  EXPECT_EQ(dim.size(), 2) << "Wrong dimensionality returned.";
+  EXPECT_EQ(dim[0], 1) << "Wrong dimensionality returned.";
+  EXPECT_EQ(dim[1], 1) << "Wrong dimensionality returned.";
+
+  dim = hdf5.datasetDimensions("/TLDData");
+  EXPECT_EQ(dim.size(), ndim_vec) << "Wrong dimensionality returned.";
+  for (int i = 0; i < ndim_vec; ++i) {
+    EXPECT_EQ(dim[i], dims_vec[i]) << "Wrong dimensionality returned at " << i;
+  }
 
   for (size_t i = 0; i < refDatasets.size(); ++i) {
     const std::string &str = refDatasets[i];

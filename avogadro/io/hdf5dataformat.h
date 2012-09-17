@@ -117,6 +117,16 @@ public:
 
   /**
    * @brief exceedsThreshold Test if a data set is "large enough" to be stored
+   * in HDF5 format. If this function returns true, the number of bytes tested
+   * is larger than the threshold and the data should be written into the HDF5
+   * file. If false, the data should be written into the accompanying format.
+   * @param bytes The size of the dataset in bytes
+   * @return true if the size exceeds the threshold set by setThreshold.
+   */
+  bool exceedsThreshold(size_t bytes) const;
+
+  /**
+   * @brief exceedsThreshold Test if a data set is "large enough" to be stored
    * in HDF5 format. If this function returns true, the size of the data in the
    * object is larger than the threshold and should be written into the HDF5
    * file. If false, the data should be written into the accompanying format.
@@ -125,6 +135,17 @@ public:
    * threshold set by setThreshold.
    */
   bool exceedsThreshold(const Eigen::MatrixXd &data) const;
+
+  /**
+   * @brief exceedsThreshold Test if a data set is "large enough" to be stored
+   * in HDF5 format. If this function returns true, the size of the data in the
+   * object is larger than the threshold and should be written into the HDF5
+   * file. If false, the data should be written into the accompanying format.
+   * @param data Data object to test.
+   * @return true if the size of the serializable data in @a data exceeds the
+   * threshold set by setThreshold.
+   */
+  bool exceedsThreshold(const std::vector<double> &data) const;
 
   /**
    * @brief datasetExists Test if the currently open file contains a dataset at
@@ -147,6 +168,29 @@ public:
   bool removeDataset(const std::string &path) const;
 
   /**
+   * @brief datasetDimensions Find the dimensions of a dataset.
+   * @param path An absolute path into the HDF5 data.
+   * @return A vector containing the dimensionality of the data, major dimension
+   * first. If an error is encountered, an empty vector is returned.
+   */
+  std::vector<int> datasetDimensions(const std::string &path) const;
+
+  /**
+   * @brief writeDataset Write the data to the currently opened file at the
+   * specified absolute HDF5 path.
+   * @param path An absolute path into the HDF5 data.
+   * @param data The data container to serialize to HDF5.
+   * @param ndims The number of dimensions in the data.
+   * @param dims The data dimensions, major dimension first.
+   * @note Since a double[] is a flat container, the dimensionality data is
+   * only used to set up the dataset metadata in the HDF5 container. The result
+   * of multiplying all values in @a dims must equal the length of the @a data.
+   * @return true if the data is successfully written, false otherwise.
+   */
+  bool writeDataset(const std::string &path, const double data[],
+                    int ndims, size_t dims[]) const;
+
+  /**
    * @brief writeDataset Write the data to the currently opened file at the
    * specified absolute HDF5 path.
    * @param path An absolute path into the HDF5 data.
@@ -156,15 +200,57 @@ public:
   bool writeDataset(const std::string &path, const Eigen::MatrixXd &data) const;
 
   /**
+   * @brief writeDataset Write the data to the currently opened file at the
+   * specified absolute HDF5 path.
+   * @param path An absolute path into the HDF5 data.
+   * @param data The data container to serialize to HDF5.
+   * @param ndims The number of dimensions in the data. Default: 1.
+   * @param dims The dimensionality of the data, major dimension first. Default:
+   * data.size().
+   * @note Since std::vector is a flat container, the dimensionality data is
+   * only used to set up the dataset metadata in the HDF5 container. Omitting
+   * the dimensionality parameters will write a flat array.
+   * @return true if the data is successfully written, false otherwise.
+   */
+  bool writeDataset(const std::string &path,
+                    const std::vector<double> &data,
+                    int ndims = 1, size_t *dims = NULL) const;
+
+  /**
+   * @brief readDataset Populate the data container @data with data from the
+   * specified path in the currently opened HDF5 file.
+   * @param path An absolute path into the HDF5 data.
+   * @param data Used to return a pointer to a new array containing the dataset
+   * at @a path. The array must be freed by the caller with delete [].
+   * @return A vector containing the dimensionality of the dataset, major
+   * dimension first. If an error occurs, an empty vector is returned and *data
+   * will be set to NULL.
+   */
+  std::vector<int> readDataset(const std::string &path, double **data) const;
+
+  /**
    * @brief readDataset Populate the data container @data with data at from the
    * specified path in the currently opened HDF5 file.
    * @param path An absolute path into the HDF5 data.
    * @param data The data container to into which the HDF5 data shall be
-   * deserializeed. @a data will be resized to fit the data.
+   * deserialized. @a data will be resized to fit the data.
    * @return true if the data is successfully read, false otherwise. If the
    * read fails, the @a data object may be left in an unpredictable state.
    */
   bool readDataset(const std::string &path, Eigen::MatrixXd &data) const;
+
+  /**
+   * @brief readDataset Populate the data container @data with data at from the
+   * specified path in the currently opened HDF5 file.
+   * @param path An absolute path into the HDF5 data.
+   * @param data The data container to into which the HDF5 data shall be
+   * deserialized. @a data will be resized to fit the data.
+   * @return A vector containing the dimensionality of the dataset, major
+   * dimension first. If an error occurs, an empty vector is returned and *data
+   * will be set to NULL.
+   */
+  std::vector<int> readDataset(const std::string &path,
+                               std::vector<double> &data) const;
 
   /**
    * @brief datasets Traverse the currently opened file and return a list of all

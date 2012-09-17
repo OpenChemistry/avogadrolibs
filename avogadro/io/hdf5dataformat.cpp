@@ -18,6 +18,7 @@
 
 #include "hdf5.h"
 
+#include <algorithm>
 #include <cstdio>
 
 namespace {
@@ -158,10 +159,19 @@ size_t Hdf5DataFormat::threshold() const
   return d->threshold;
 }
 
+bool Hdf5DataFormat::exceedsThreshold(size_t bytes) const
+{
+  return bytes > d->threshold;
+}
+
 bool Hdf5DataFormat::exceedsThreshold(const Eigen::MatrixXd &data) const
 {
-  size_t size = data.rows() * data.cols() * sizeof(double);
-  return size > d->threshold;
+  return exceedsThreshold(data.rows() * data.cols() * sizeof(double));
+}
+
+bool Hdf5DataFormat::exceedsThreshold(const std::vector<double> &data) const
+{
+  return exceedsThreshold(data.size() * sizeof(double));
 }
 
 bool Hdf5DataFormat::datasetExists(const std::string &path) const
@@ -209,8 +219,57 @@ bool Hdf5DataFormat::removeDataset(const std::string &path) const
   return H5Ldelete(d->fileId, path.c_str(), H5P_DEFAULT) >= 0;
 }
 
-bool Hdf5DataFormat::writeDataset(const std::string &path,
-                                  const Eigen::MatrixXd &data) const
+std::vector<int>
+Hdf5DataFormat::datasetDimensions(const std::string &path) const
+{
+  std::vector<int> result;
+  if (!isOpen())
+    return result;
+
+  if (!datasetExists(path))
+    return result;
+
+  // Open dataset
+  hid_t dataset_id = H5Dopen(d->fileId, path.c_str(), H5P_DEFAULT);
+  if (dataset_id < 0)
+    return result;
+
+  // Lookup dimensions
+  // Get dataspace for dataset
+  hid_t dataspace_id = H5Dget_space(dataset_id);
+  if (dataset_id < 0) {
+    H5Dclose(dataset_id);
+    return result;
+  }
+
+  // Get number of dimensions.
+  int ndims = H5Sget_simple_extent_ndims(dataspace_id);
+  if (ndims <= 0) {
+    H5Sclose(dataspace_id);
+    H5Dclose(dataset_id);
+    return result;
+  }
+
+  // Get actual dimensions.
+  hsize_t *hdims = new hsize_t[ndims];
+  int checkDims = H5Sget_simple_extent_dims(dataspace_id, hdims, NULL);
+
+  // Copy dimensions if successful
+  if (checkDims == ndims) {
+    result.resize(ndims);
+    std::copy(hdims, hdims + ndims, result.begin());
+  }
+
+  // Cleanup
+  delete [] hdims;
+  H5Sclose(dataspace_id);
+  H5Dclose(dataset_id);
+
+  return result;
+}
+
+bool Hdf5DataFormat::writeDataset(const std::string &path, const double data[],
+                                  int ndims, size_t dims[]) const
 {
   if (!isOpen())
     return false;
@@ -222,12 +281,14 @@ bool Hdf5DataFormat::writeDataset(const std::string &path,
   }
 
   // Get dimensions of data.
-  hsize_t dims[2];
-  dims[0] = data.rows();
-  dims[1] = data.cols();
+  hsize_t *hdims = new hsize_t[ndims];
+  for (int i = 0; i < ndims; ++i) {
+    hdims[i] = static_cast<hsize_t>(dims[i]);
+  }
 
   // Create a dataspace description
-  hid_t dataspace_id = H5Screate_simple(2, dims, NULL);
+  hid_t dataspace_id = H5Screate_simple(ndims, hdims, NULL);
+  delete [] hdims;
   if (dataspace_id < 0)
     return false;
 
@@ -246,9 +307,9 @@ bool Hdf5DataFormat::writeDataset(const std::string &path,
     return false;
   }
 
-  // Write the actual data. Transpose matrix (Eigen defaults to col-major).
+  // Write the actual data.
   herr_t err = H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, dataspace_id,
-                        H5P_DEFAULT, data.transpose().data());
+                        H5P_DEFAULT, data);
 
   // Cleanup
   H5Dclose(dataset_id);
@@ -258,6 +319,93 @@ bool Hdf5DataFormat::writeDataset(const std::string &path,
     return false;
 
   return true;
+}
+
+bool Hdf5DataFormat::writeDataset(const std::string &path,
+                                  const Eigen::MatrixXd &data) const
+{
+  size_t dims[2] = {static_cast<size_t>(data.rows()),
+                    static_cast<size_t>(data.cols())};
+  // Transpose data -- Eigen uses column-major ordering
+  return this->writeDataset(path, data.transpose().data(), 2, dims);
+}
+
+bool Hdf5DataFormat::writeDataset(const std::string &path,
+                                  const std::vector<double> &data, int ndims,
+                                  size_t *dims) const
+{
+  size_t size = data.size();
+  return this->writeDataset(path, &(data[0]), ndims, dims ? dims : &size);
+}
+
+std::vector<int> Hdf5DataFormat::readDataset(const std::string &path,
+                                             double **data) const
+{
+  *data = NULL;
+  std::vector<int> result;
+  if (!isOpen())
+    return result;
+
+  if (!datasetExists(path))
+    return result;
+
+  // Open dataset
+  hid_t dataset_id = H5Dopen(d->fileId, path.c_str(), H5P_DEFAULT);
+  if (dataset_id < 0)
+    return result;
+
+  // Lookup dimensions
+  // Get dataspace for dataset
+  hid_t dataspace_id = H5Dget_space(dataset_id);
+  if (dataset_id < 0) {
+    H5Dclose(dataset_id);
+    return result;
+  }
+
+  // Get number of dimensions.
+  int ndims = H5Sget_simple_extent_ndims(dataspace_id);
+  if (ndims <= 0) {
+    H5Sclose(dataspace_id);
+    H5Dclose(dataset_id);
+    return result;
+  }
+
+  // Get actual dimensions.
+  hsize_t *hdims = new hsize_t[ndims];
+  if (H5Sget_simple_extent_dims(dataspace_id, hdims, NULL) != ndims) {
+    delete [] hdims;
+    H5Sclose(dataspace_id);
+    H5Dclose(dataset_id);
+    return result;
+  }
+
+  int nele = 0;
+  result.reserve(ndims);
+  for (int i = 0; i < ndims; ++i) {
+    result.push_back(static_cast<int>(hdims[i]));
+    if (i != 0)
+      nele *= result.back();
+    else
+      nele = result.back();
+  }
+
+  // Allocate and read into data.
+  *data = new double[nele];
+  if (H5Dread(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, dataspace_id, H5P_DEFAULT,
+              *data) < 0) {
+    delete [] *data;
+    *data = NULL;
+    result.clear();
+    H5Sclose(dataspace_id);
+    H5Dclose(dataset_id);
+    return result;
+  }
+
+  // Cleanup
+  H5Sclose(dataspace_id);
+  H5Dclose(dataset_id);
+
+  return result;
 }
 
 bool Hdf5DataFormat::readDataset(const std::string &path,
@@ -300,7 +448,7 @@ bool Hdf5DataFormat::readDataset(const std::string &path,
   // Resize and populate matrix. Transpose matrix (Eigen defaults to col-major).
   data.resize(dims[0], dims[1]);
   if (H5Dread(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, dataspace_id, H5P_DEFAULT,
-              data.transpose().data())) {
+              data.transpose().data()) < 0) {
     data.resize(0,0);
     H5Sclose(dataspace_id);
     H5Dclose(dataset_id);
@@ -312,6 +460,33 @@ bool Hdf5DataFormat::readDataset(const std::string &path,
   H5Dclose(dataset_id);
 
   return true;
+}
+
+std::vector<int> Hdf5DataFormat::readDataset(const std::string &path,
+                                             std::vector<double> &data) const
+{
+  double *retData = NULL;
+  std::vector<int> result = readDataset(path, &retData);
+  if (retData == NULL || result.empty()) {
+    delete [] retData;
+    result.clear();
+    data.clear();
+    return result;
+  }
+
+  // Determine vector size
+  int nele;
+  for (size_t i = 0; i < result.size(); ++i) {
+    if (i != 0)
+      nele *= result[i];
+    else
+      nele = result[0];
+  }
+
+  data.resize(nele);
+  std::copy(retData, retData + nele, data.begin());
+  delete [] retData;
+  return result;
 }
 
 std::vector<std::string> Hdf5DataFormat::datasets() const
