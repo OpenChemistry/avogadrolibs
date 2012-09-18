@@ -25,6 +25,7 @@
 #include <fstream>
 #include <streambuf>
 #include <iostream>
+#include <sstream>
 #include <map>
 
 namespace Avogadro {
@@ -45,22 +46,12 @@ namespace {
 class CmlFormatPrivate
 {
 public:
-  CmlFormatPrivate(std::vector<Molecule *> &molecules,
-                   pugi::xml_document &document)
-    : success(false), molecule(NULL), moleculeNode(NULL)
+  CmlFormatPrivate(Molecule *mol, xml_document &document)
+    : success(false), molecule(mol), moleculeNode(NULL)
   {
     // Parse the CML document, and create molecules/elements as necessary.
     moleculeNode = document.child("molecule");
     if (moleculeNode) {
-      if (molecules.size() == 0) {
-        molecules.resize(1, new Molecule());
-      }
-      else {
-        delete molecules[0];
-        molecules[0] = new Molecule();
-      }
-      // We know there is a molecule, and only one molecule.
-      molecule = molecules[0];
       // Parse the various components we know about.
       properties();
       bool atomsExist(atoms());
@@ -216,7 +207,7 @@ CmlFormat::~CmlFormat()
 {
 }
 
-bool CmlFormat::readFile(const std::string &fileName)
+bool CmlFormat::readFile(const std::string &fileName, Core::Molecule &mol)
 {
   // Read the file into a string.
   std::ifstream file(fileName.c_str());
@@ -232,13 +223,66 @@ bool CmlFormat::readFile(const std::string &fileName)
     return false;
   }
 
-  CmlFormatPrivate parser(m_molecules, document);
+  CmlFormatPrivate parser(&mol, document);
 
   return true;
 }
 
-bool CmlFormat::writeFile(const std::string &)
+bool CmlFormat::writeFile(const std::string &fileName,
+                          const Core::Molecule &mol)
 {
+  xml_document document;
+
+  // Add a custom declaration node.
+  xml_node declaration = document.prepend_child(pugi::node_declaration);
+  declaration.append_attribute("version") = "1.0";
+  declaration.append_attribute("encoding") = "UTF-8";
+
+  xml_node moleculeNode = document.append_child("molecule");
+  // Standard XML namespaces for CML.
+  moleculeNode.append_attribute("xmlns") = "http://www.xml-cml.org/schema";
+  moleculeNode.append_attribute("xmlns:cml") =
+      "http://www.xml-cml.org/dict/cml";
+  moleculeNode.append_attribute("xmlns:units") =
+      "http://www.xml-cml.org/units/units";
+  moleculeNode.append_attribute("xmlns:xsd") =
+      "http://www.w3c.org/2001/XMLSchema";
+  moleculeNode.append_attribute("xmlns:iupac") = "http://www.iupac.org";
+
+  // If the InChI is available, embed that in the CML file.
+  if (mol.data("inchi").type() == Variant::String) {
+    xml_node node = moleculeNode.append_child("identifier");
+    node.append_attribute("convention") = "iupac:inchi";
+    node.append_attribute("value") = mol.data("inchi").toString().c_str();
+  }
+
+  xml_node atomArrayNode = moleculeNode.append_child("atomArray");
+  for (size_t i = 0; i < mol.atomCount(); ++i) {
+    xml_node atomNode = atomArrayNode.append_child("atom");
+    std::ostringstream index;
+    index << 'a' <<  i + 1;
+    atomNode.append_attribute("id") = index.str().c_str();
+    Atom a = mol.atom(i);
+    atomNode.append_attribute("elementType") =
+        Elements::symbol(a.atomicNumber());
+    atomNode.append_attribute("x3") = a.position3d().x();
+    atomNode.append_attribute("y3") = a.position3d().y();
+    atomNode.append_attribute("z3") = a.position3d().z();
+  }
+
+  xml_node bondArrayNode = moleculeNode.append_child("bondArray");
+  for (size_t i = 0; i < mol.bondCount(); ++i) {
+    xml_node bondNode = bondArrayNode.append_child("bond");
+    Bond b = mol.bond(i);
+    std::ostringstream index;
+    index << "a" << b.atom1().index() + 1 << " a" << b.atom2().index() + 1;
+    bondNode.append_attribute("atomRefs2") = index.str().c_str();
+    bondNode.append_attribute("order") = b.order();
+  }
+
+  document.save(std::cout, "  ");
+  document.save_file(fileName.c_str(), "  ");
+
   return true;
 }
 

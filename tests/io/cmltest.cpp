@@ -28,35 +28,33 @@ using Avogadro::Io::CmlFormat;
 TEST(CmlTest, readFile)
 {
   CmlFormat cml;
-  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml");
+  Molecule molecule;
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
 
-  Molecule *molecule = cml.molecule();
+  EXPECT_EQ(molecule.data("name").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("name").toString(), "Ethane");
 
-  EXPECT_EQ(molecule->data("name").type(), Avogadro::Core::Variant::String);
-  EXPECT_EQ(molecule->data("name").toString(), "Ethane");
-
-  EXPECT_EQ(molecule->data("inchi").type(), Avogadro::Core::Variant::String);
-  EXPECT_EQ(molecule->data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
+  EXPECT_EQ(molecule.data("inchi").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
 
 TEST(CmlTest, atoms)
 {
   CmlFormat cml;
-  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml");
+  Molecule molecule;
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
 
-  Molecule *molecule = cml.molecule();
-
-  EXPECT_EQ(molecule->data("name").toString(), "Ethane");
-  EXPECT_EQ(molecule->atomCount(), 8);
-  Atom atom = molecule->atom(0);
+  EXPECT_EQ(molecule.data("name").toString(), "Ethane");
+  EXPECT_EQ(molecule.atomCount(), 8);
+  Atom atom = molecule.atom(0);
   EXPECT_EQ(atom.atomicNumber(), 1);
-  atom = molecule->atom(1);
+  atom = molecule.atom(1);
   EXPECT_EQ(atom.atomicNumber(), 6);
   EXPECT_EQ(atom.position3d().x(),  0.751621);
   EXPECT_EQ(atom.position3d().y(), -0.022441);
   EXPECT_EQ(atom.position3d().z(), -0.020839);
 
-  atom = molecule->atom(7);
+  atom = molecule.atom(7);
   EXPECT_EQ(atom.atomicNumber(), 1);
   EXPECT_EQ(atom.position3d().x(), -1.184988);
   EXPECT_EQ(atom.position3d().y(),  0.004424);
@@ -66,20 +64,27 @@ TEST(CmlTest, atoms)
 TEST(CmlTest, bonds)
 {
   CmlFormat cml;
-  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml");
+  Molecule molecule;
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
 
-  Molecule *molecule = cml.molecule();
+  EXPECT_EQ(molecule.data("name").toString(), "Ethane");
+  EXPECT_EQ(molecule.atomCount(), 8);
+  EXPECT_EQ(molecule.bondCount(), 7);
 
-  EXPECT_EQ(molecule->data("name").toString(), "Ethane");
-  EXPECT_EQ(molecule->atomCount(), 8);
-  EXPECT_EQ(molecule->bondCount(), 7);
-
-  Bond bond = molecule->bond(0);
+  Bond bond = molecule.bond(0);
   EXPECT_EQ(bond.atom1().index(), 0);
   EXPECT_EQ(bond.atom2().index(), 1);
   EXPECT_EQ(bond.order(), 1);
-  bond = molecule->bond(6);
+  bond = molecule.bond(6);
   EXPECT_EQ(bond.atom1().index(), 4);
   EXPECT_EQ(bond.atom2().index(), 7);
   EXPECT_EQ(bond.order(), 1);
+}
+
+TEST(CmlTest, saveFile)
+{
+  CmlFormat cml;
+  Molecule molecule;
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
+  cml.writeFile("ethane.cml", molecule);
 }

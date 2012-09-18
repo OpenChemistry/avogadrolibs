@@ -81,6 +81,14 @@ const char * Elements::name(unsigned char atomicNumber)
     return element_names[0];
 }
 
+const char * Elements::symbol(unsigned char atomicNumber)
+{
+  if (atomicNumber < element_count)
+    return element_symbols[atomicNumber];
+  else
+    return element_symbols[0];
+}
+
 double Elements::mass(unsigned char atomicNumber)
 {
   if (atomicNumber < element_count)

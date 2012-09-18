@@ -33,9 +33,9 @@ public:
   CmlFormat();
   ~CmlFormat();
 
-  bool readFile(const std::string &fileName);
+  bool readFile(const std::string &fileName, Core::Molecule &molecule);
 
-  bool writeFile(const std::string &fileName);
+  bool writeFile(const std::string &fileName, const Core::Molecule &molecule);
 
   Core::Molecule * molecule(size_t index = 0);
 
