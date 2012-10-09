@@ -39,7 +39,15 @@ TEST(Hdf5Test, openCloseReadOnly)
 
   std::vector<std::string> datasets = hdf5.datasets();
 
-  EXPECT_EQ(refDatasets, datasets) << "Unexpected list of datasets.";
+  EXPECT_EQ(refDatasets.size(), datasets.size())
+      << "Unexpected list of datasets: Bad size.";
+  if (refDatasets.size() == datasets.size()) {
+    for (size_t i = 0; i < datasets.size(); ++i) {
+      EXPECT_EQ(refDatasets[i], datasets[i])
+          << "Unexpected list of datasets: Mismatch at index " << i << ".";
+    }
+  }
+
 
   ASSERT_TRUE(hdf5.closeFile())
       << "Failed to close read-only file " << testfile << ".";
@@ -60,7 +68,14 @@ TEST(Hdf5Test, openCloseReadWriteAppend)
 
   std::vector<std::string> datasets = hdf5.datasets();
 
-  EXPECT_EQ(refDatasets, datasets) << "Unexpected list of datasets.";
+  EXPECT_EQ(refDatasets.size(), datasets.size())
+      << "Unexpected list of datasets: Bad size.";
+  if (refDatasets.size() == datasets.size()) {
+    for (size_t i = 0; i < datasets.size(); ++i) {
+      EXPECT_EQ(refDatasets[i], datasets[i])
+          << "Unexpected list of datasets: Mismatch at index " << i << ".";
+    }
+  }
 
   ASSERT_TRUE(hdf5.closeFile())
       << "Failed to close read-only file " << testfile << ".";
