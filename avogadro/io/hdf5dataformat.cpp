@@ -268,8 +268,9 @@ Hdf5DataFormat::datasetDimensions(const std::string &path) const
   return result;
 }
 
-bool Hdf5DataFormat::writeDataset(const std::string &path, const double data[],
-                                  int ndims, size_t dims[]) const
+bool Hdf5DataFormat::writeRawDataset(const std::string &path,
+                                     const double data[],
+                                     int ndims, size_t dims[]) const
 {
   if (!isOpen())
     return false;
@@ -327,7 +328,7 @@ bool Hdf5DataFormat::writeDataset(const std::string &path,
   size_t dims[2] = {static_cast<size_t>(data.rows()),
                     static_cast<size_t>(data.cols())};
   // Transpose data -- Eigen uses column-major ordering
-  return this->writeDataset(path, data.transpose().data(), 2, dims);
+  return this->writeRawDataset(path, data.transpose().data(), 2, dims);
 }
 
 bool Hdf5DataFormat::writeDataset(const std::string &path,
@@ -335,11 +336,11 @@ bool Hdf5DataFormat::writeDataset(const std::string &path,
                                   size_t *dims) const
 {
   size_t size = data.size();
-  return this->writeDataset(path, &(data[0]), ndims, dims ? dims : &size);
+  return this->writeRawDataset(path, &(data[0]), ndims, dims ? dims : &size);
 }
 
-std::vector<int> Hdf5DataFormat::readDataset(const std::string &path,
-                                             double **data) const
+std::vector<int> Hdf5DataFormat::readRawDataset(const std::string &path,
+                                                double **data) const
 {
   *data = NULL;
   std::vector<int> result;
@@ -466,7 +467,7 @@ std::vector<int> Hdf5DataFormat::readDataset(const std::string &path,
                                              std::vector<double> &data) const
 {
   double *retData = NULL;
-  std::vector<int> result = readDataset(path, &retData);
+  std::vector<int> result = readRawDataset(path, &retData);
   if (retData == NULL || result.empty()) {
     delete [] retData;
     result.clear();

@@ -180,21 +180,6 @@ public:
    * specified absolute HDF5 path.
    * @param path An absolute path into the HDF5 data.
    * @param data The data container to serialize to HDF5.
-   * @param ndims The number of dimensions in the data.
-   * @param dims The data dimensions, major dimension first.
-   * @note Since a double[] is a flat container, the dimensionality data is
-   * only used to set up the dataset metadata in the HDF5 container. The result
-   * of multiplying all values in @a dims must equal the length of the @a data.
-   * @return true if the data is successfully written, false otherwise.
-   */
-  bool writeDataset(const std::string &path, const double data[],
-                    int ndims, size_t dims[]) const;
-
-  /**
-   * @brief writeDataset Write the data to the currently opened file at the
-   * specified absolute HDF5 path.
-   * @param path An absolute path into the HDF5 data.
-   * @param data The data container to serialize to HDF5.
    * @return true if the data is successfully written, false otherwise.
    */
   bool writeDataset(const std::string &path, const Eigen::MatrixXd &data) const;
@@ -215,18 +200,6 @@ public:
   bool writeDataset(const std::string &path,
                     const std::vector<double> &data,
                     int ndims = 1, size_t *dims = NULL) const;
-
-  /**
-   * @brief readDataset Populate the data container @data with data from the
-   * specified path in the currently opened HDF5 file.
-   * @param path An absolute path into the HDF5 data.
-   * @param data Used to return a pointer to a new array containing the dataset
-   * at @a path. The array must be freed by the caller with delete [].
-   * @return A vector containing the dimensionality of the dataset, major
-   * dimension first. If an error occurs, an empty vector is returned and *data
-   * will be set to NULL.
-   */
-  std::vector<int> readDataset(const std::string &path, double **data) const;
 
   /**
    * @brief readDataset Populate the data container @data with data at from the
@@ -263,6 +236,34 @@ public:
   std::vector<std::string> datasets() const;
 
 private:
+  /**
+   * @brief writeRawDataset Write the data to the currently opened file at the
+   * specified absolute HDF5 path.
+   * @param path An absolute path into the HDF5 data.
+   * @param data The data container to serialize to HDF5.
+   * @param ndims The number of dimensions in the data.
+   * @param dims The data dimensions, major dimension first.
+   * @note Since a double[] is a flat container, the dimensionality data is
+   * only used to set up the dataset metadata in the HDF5 container. The result
+   * of multiplying all values in @a dims must equal the length of the @a data.
+   * @return true if the data is successfully written, false otherwise.
+   */
+  bool writeRawDataset(const std::string &path, const double data[],
+                       int ndims, size_t dims[]) const;
+
+  /**
+   * @brief readRawDataset Populate the data container @data with data from the
+   * specified path in the currently opened HDF5 file.
+   * @param path An absolute path into the HDF5 data.
+   * @param data Used to return a pointer to a new array containing the dataset
+   * at @a path. The array must be freed by the caller with delete [].
+   * @return A vector containing the dimensionality of the dataset, major
+   * dimension first. If an error occurs, an empty vector is returned and *data
+   * will be set to NULL.
+   */
+  std::vector<int> readRawDataset(const std::string &path, double **data) const;
+
+
   class Private;
   /// Internal storage, used to encapsulate HDF5 data.
   Private * const d;
