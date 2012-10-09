@@ -18,6 +18,8 @@
 
 #include "hdf5.h"
 
+#include <avogadro/core/array.h>
+
 #include <algorithm>
 #include <cstdio>
 
@@ -170,6 +172,11 @@ bool Hdf5DataFormat::exceedsThreshold(const Eigen::MatrixXd &data) const
 }
 
 bool Hdf5DataFormat::exceedsThreshold(const std::vector<double> &data) const
+{
+  return exceedsThreshold(data.size() * sizeof(double));
+}
+
+bool Hdf5DataFormat::exceedsThreshold(const Core::Array<double> &data) const
 {
   return exceedsThreshold(data.size() * sizeof(double));
 }
@@ -339,6 +346,14 @@ bool Hdf5DataFormat::writeDataset(const std::string &path,
   return this->writeRawDataset(path, &(data[0]), ndims, dims ? dims : &size);
 }
 
+bool Hdf5DataFormat::writeDataset(const std::string &path,
+                                  const Core::Array<double> &data, int ndims,
+                                  size_t *dims) const
+{
+  size_t size = data.size();
+  return this->writeRawDataset(path, &(data[0]), ndims, dims ? dims : &size);
+}
+
 std::vector<int> Hdf5DataFormat::readRawDataset(const std::string &path,
                                                 double **data) const
 {
@@ -465,6 +480,33 @@ bool Hdf5DataFormat::readDataset(const std::string &path,
 
 std::vector<int> Hdf5DataFormat::readDataset(const std::string &path,
                                              std::vector<double> &data) const
+{
+  double *retData = NULL;
+  std::vector<int> result = readRawDataset(path, &retData);
+  if (retData == NULL || result.empty()) {
+    delete [] retData;
+    result.clear();
+    data.clear();
+    return result;
+  }
+
+  // Determine vector size
+  int nele;
+  for (size_t i = 0; i < result.size(); ++i) {
+    if (i != 0)
+      nele *= result[i];
+    else
+      nele = result[0];
+  }
+
+  data.resize(nele);
+  std::copy(retData, retData + nele, data.begin());
+  delete [] retData;
+  return result;
+}
+
+std::vector<int> Hdf5DataFormat::readDataset(const std::string &path,
+                                             Core::Array<double> &data) const
 {
   double *retData = NULL;
   std::vector<int> result = readRawDataset(path, &retData);

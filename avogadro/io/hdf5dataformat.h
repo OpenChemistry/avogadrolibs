@@ -26,6 +26,9 @@
 #include <vector>
 
 namespace Avogadro {
+namespace Core {
+template <typename T> class Array;
+}
 namespace Io {
 
 /**
@@ -148,6 +151,17 @@ public:
   bool exceedsThreshold(const std::vector<double> &data) const;
 
   /**
+   * @brief exceedsThreshold Test if a data set is "large enough" to be stored
+   * in HDF5 format. If this function returns true, the size of the data in the
+   * object is larger than the threshold and should be written into the HDF5
+   * file. If false, the data should be written into the accompanying format.
+   * @param data Data object to test.
+   * @return true if the size of the serializable data in @a data exceeds the
+   * threshold set by setThreshold.
+   */
+  bool exceedsThreshold(const Avogadro::Core::Array<double> &data) const;
+
+  /**
    * @brief datasetExists Test if the currently open file contains a dataset at
    * the HDF5 absolute path @a path.
    * @param path An absolute path into the HDF5 data.
@@ -202,6 +216,23 @@ public:
                     int ndims = 1, size_t *dims = NULL) const;
 
   /**
+   * @brief writeDataset Write the data to the currently opened file at the
+   * specified absolute HDF5 path.
+   * @param path An absolute path into the HDF5 data.
+   * @param data The data container to serialize to HDF5.
+   * @param ndims The number of dimensions in the data. Default: 1.
+   * @param dims The dimensionality of the data, major dimension first. Default:
+   * data.size().
+   * @note Since this is a flat container, the dimensionality data is
+   * only used to set up the dataset metadata in the HDF5 container. Omitting
+   * the dimensionality parameters will write a flat array.
+   * @return true if the data is successfully written, false otherwise.
+   */
+  bool writeDataset(const std::string &path,
+                    const Avogadro::Core::Array<double> &data,
+                    int ndims = 1, size_t *dims = NULL) const;
+
+  /**
    * @brief readDataset Populate the data container @data with data at from the
    * specified path in the currently opened HDF5 file.
    * @param path An absolute path into the HDF5 data.
@@ -224,6 +255,19 @@ public:
    */
   std::vector<int> readDataset(const std::string &path,
                                std::vector<double> &data) const;
+
+  /**
+   * @brief readDataset Populate the data container @data with data at from the
+   * specified path in the currently opened HDF5 file.
+   * @param path An absolute path into the HDF5 data.
+   * @param data The data container to into which the HDF5 data shall be
+   * deserialized. @a data will be resized to fit the data.
+   * @return A vector containing the dimensionality of the dataset, major
+   * dimension first. If an error occurs, an empty vector is returned and *data
+   * will be set to NULL.
+   */
+  std::vector<int> readDataset(const std::string &path,
+                               Avogadro::Core::Array<double> &data) const;
 
   /**
    * @brief datasets Traverse the currently opened file and return a list of all
