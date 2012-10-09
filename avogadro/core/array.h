@@ -218,7 +218,7 @@ public:
     d->data.push_back(v);
   }
 
-  ValueType operator [](const std::size_t& idx) const
+  const ValueType& operator [](const std::size_t& idx) const
   {
     return d->data[idx];
   }
