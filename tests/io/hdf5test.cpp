@@ -237,7 +237,17 @@ TEST(Hdf5Test, datasetInteraction)
   refDatasets[4] = "Group1/Group2a/Group3/Group4/Group5/Deeeep";
   refDatasets[5] = "TLDData";
   refDatasets[6] = "TLDataSibling";
-  EXPECT_EQ(refDatasets, hdf5.datasets()) << "List of dataset unexpected.";
+
+  std::vector<std::string> datasets = hdf5.datasets();
+
+  EXPECT_EQ(refDatasets.size(), datasets.size())
+    << "Unexpected list of datasets: Bad size.";
+  if (refDatasets.size() == datasets.size()) {
+    for (size_t i = 0; i < datasets.size(); ++i) {
+      EXPECT_EQ(refDatasets[i], datasets[i])
+        << "Unexpected list of datasets: Mismatch at index " << i << ".";
+    }
+  }
 
   EXPECT_FALSE(hdf5.datasetExists("/IShouldNotExist"))
       << "Non-existing dataset reported as found.";
