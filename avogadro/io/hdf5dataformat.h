@@ -19,7 +19,7 @@
 
 #include "avogadroioexport.h"
 
-#include <Eigen/Core>
+#include <avogadro/core/matrix.h> // can't forward dec eigen types
 
 #include <cstddef>
 #include <string>
@@ -137,7 +137,7 @@ public:
    * @return true if the size of the serializable data in @a data exceeds the
    * threshold set by setThreshold.
    */
-  bool exceedsThreshold(const Eigen::MatrixXd &data) const;
+  bool exceedsThreshold(const Avogadro::MatrixX &data) const;
 
   /**
    * @brief exceedsThreshold Test if a data set is "large enough" to be stored
@@ -196,7 +196,8 @@ public:
    * @param data The data container to serialize to HDF5.
    * @return true if the data is successfully written, false otherwise.
    */
-  bool writeDataset(const std::string &path, const Eigen::MatrixXd &data) const;
+  bool writeDataset(const std::string &path,
+                    const Avogadro::MatrixX &data) const;
 
   /**
    * @brief writeDataset Write the data to the currently opened file at the
@@ -241,7 +242,7 @@ public:
    * @return true if the data is successfully read, false otherwise. If the
    * read fails, the @a data object may be left in an unpredictable state.
    */
-  bool readDataset(const std::string &path, Eigen::MatrixXd &data) const;
+  bool readDataset(const std::string &path, Avogadro::MatrixX &data) const;
 
   /**
    * @brief readDataset Populate the data container @data with data at from the

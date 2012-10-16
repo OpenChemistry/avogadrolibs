@@ -166,7 +166,7 @@ bool Hdf5DataFormat::exceedsThreshold(size_t bytes) const
   return bytes > d->threshold;
 }
 
-bool Hdf5DataFormat::exceedsThreshold(const Eigen::MatrixXd &data) const
+bool Hdf5DataFormat::exceedsThreshold(const MatrixX &data) const
 {
   return exceedsThreshold(data.rows() * data.cols() * sizeof(double));
 }
@@ -330,7 +330,7 @@ bool Hdf5DataFormat::writeRawDataset(const std::string &path,
 }
 
 bool Hdf5DataFormat::writeDataset(const std::string &path,
-                                  const Eigen::MatrixXd &data) const
+                                  const MatrixX &data) const
 {
   size_t dims[2] = {static_cast<size_t>(data.rows()),
                     static_cast<size_t>(data.cols())};
@@ -425,7 +425,7 @@ std::vector<int> Hdf5DataFormat::readRawDataset(const std::string &path,
 }
 
 bool Hdf5DataFormat::readDataset(const std::string &path,
-                                 Eigen::MatrixXd &data) const
+                                 MatrixX &data) const
 {
   if (!isOpen())
     return false;
