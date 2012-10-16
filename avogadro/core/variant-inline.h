@@ -53,6 +53,9 @@ inline Variant::Variant(const Variant &variant)
   if(m_type == String){
     m_value.string = new std::string(variant.toString());
   }
+  else if(m_type == Matrix){
+    m_value.matrix = new MatrixX(*variant.m_value.matrix);
+  }
   else if(m_type != Null){
     m_value = variant.m_value;
   }
@@ -194,6 +197,17 @@ inline bool Variant::setValue(void *pointer)
   return true;
 }
 
+template<>
+inline bool Variant::setValue(MatrixX matrix)
+{
+  clear();
+
+  m_type = Matrix;
+  m_value.matrix = new MatrixX(matrix);
+
+  return true;
+}
+
 /// Returns the value of the variant in the type given by \c T.
 template<typename T>
 inline T Variant::value() const
@@ -321,12 +335,36 @@ inline std::string Variant::value() const
   return string.str();
 }
 
+template<>
+inline MatrixX Variant::value() const
+{
+  if (m_type == Matrix)
+    return *m_value.matrix;
+
+  return MatrixX();
+}
+
+template<>
+inline const MatrixX& Variant::value() const
+{
+  if (m_type == Matrix)
+    return *m_value.matrix;
+
+  // Use a static null matrix for the reference.
+  static MatrixX nullMatrix(0,0);
+  return nullMatrix;
+}
+
 /// Clears the variant's data and sets the variant to null.
 inline void Variant::clear()
 {
   if (m_type == String) {
     delete m_value.string;
     m_value.string = 0;
+  }
+  else if (m_type == Matrix) {
+    delete m_value.matrix;
+    m_value.matrix = 0;
   }
 
   m_type = Null;
@@ -417,6 +455,12 @@ inline std::string Variant::toString() const
   return value<std::string>();
 }
 
+/// Returns the value of the variant as a MatrixX.
+inline const MatrixX &Variant::toMatrix() const
+{
+  return value<const MatrixX&>();
+}
+
 // --- Operators ----------------------------------------------------------- //
 inline Variant& Variant::operator=(const Variant &variant)
 {
@@ -430,6 +474,8 @@ inline Variant& Variant::operator=(const Variant &variant)
     // set new value
     if (m_type == String)
       m_value.string = new std::string(variant.toString());
+    else if (m_type == Matrix)
+      m_value.matrix = new MatrixX(*variant.m_value.matrix);
     else if (m_type != Null)
       m_value = variant.m_value;
   }
