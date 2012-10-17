@@ -38,7 +38,7 @@ public:
     Double,
     Pointer,
     String,
-    Matrix
+    MatrixX
   };
 
   // construction and destruction
@@ -71,7 +71,8 @@ public:
   inline Real toReal() const;
   inline void* toPointer() const;
   inline std::string toString() const;
-  inline const MatrixX& toMatrix() const;
+  inline Avogadro::MatrixX toMatrixX() const;
+  inline const Avogadro::MatrixX& toMatrixXRef() const;
 
   // operators
   inline Variant& operator=(const Variant &variant);
@@ -90,7 +91,7 @@ private:
     double _double;
     void *pointer;
     std::string *string;
-    MatrixX *matrix;
+    Avogadro::MatrixX *matrix;
   } m_value;
 };
 

@@ -53,8 +53,8 @@ inline Variant::Variant(const Variant &variant)
   if(m_type == String){
     m_value.string = new std::string(variant.toString());
   }
-  else if(m_type == Matrix){
-    m_value.matrix = new MatrixX(*variant.m_value.matrix);
+  else if(m_type == MatrixX){
+    m_value.matrix = new Avogadro::MatrixX(*variant.m_value.matrix);
   }
   else if(m_type != Null){
     m_value = variant.m_value;
@@ -198,12 +198,12 @@ inline bool Variant::setValue(void *pointer)
 }
 
 template<>
-inline bool Variant::setValue(MatrixX matrix)
+inline bool Variant::setValue(Avogadro::MatrixX matrix)
 {
   clear();
 
-  m_type = Matrix;
-  m_value.matrix = new MatrixX(matrix);
+  m_type = MatrixX;
+  m_value.matrix = new Avogadro::MatrixX(matrix);
 
   return true;
 }
@@ -336,22 +336,22 @@ inline std::string Variant::value() const
 }
 
 template<>
-inline MatrixX Variant::value() const
+inline Avogadro::MatrixX Variant::value() const
 {
-  if (m_type == Matrix)
+  if (m_type == MatrixX)
     return *m_value.matrix;
 
-  return MatrixX();
+  return Avogadro::MatrixX();
 }
 
 template<>
-inline const MatrixX& Variant::value() const
+inline const Avogadro::MatrixX& Variant::value() const
 {
-  if (m_type == Matrix)
+  if (m_type == MatrixX)
     return *m_value.matrix;
 
   // Use a static null matrix for the reference.
-  static MatrixX nullMatrix(0,0);
+  static Avogadro::MatrixX nullMatrix(0,0);
   return nullMatrix;
 }
 
@@ -362,7 +362,7 @@ inline void Variant::clear()
     delete m_value.string;
     m_value.string = 0;
   }
-  else if (m_type == Matrix) {
+  else if (m_type == MatrixX) {
     delete m_value.matrix;
     m_value.matrix = 0;
   }
@@ -456,9 +456,17 @@ inline std::string Variant::toString() const
 }
 
 /// Returns the value of the variant as a MatrixX.
-inline const MatrixX &Variant::toMatrix() const
+Avogadro::MatrixX Variant::toMatrixX() const
 {
-  return value<const MatrixX&>();
+  return value<Avogadro::MatrixX>();
+}
+
+/// Returns a reference to the value of the variant as a MatrixX.
+/// This method will not perform any casting -- if type() is not exactly
+/// MatrixX, the function will fail and return a reference to an empty MatrixX.
+inline const Avogadro::MatrixX &Variant::toMatrixXRef() const
+{
+  return value<const Avogadro::MatrixX&>();
 }
 
 // --- Operators ----------------------------------------------------------- //
@@ -474,8 +482,8 @@ inline Variant& Variant::operator=(const Variant &variant)
     // set new value
     if (m_type == String)
       m_value.string = new std::string(variant.toString());
-    else if (m_type == Matrix)
-      m_value.matrix = new MatrixX(*variant.m_value.matrix);
+    else if (m_type == MatrixX)
+      m_value.matrix = new Avogadro::MatrixX(*variant.m_value.matrix);
     else if (m_type != Null)
       m_value = variant.m_value;
   }

@@ -436,11 +436,11 @@ bool CmlFormat::writeFile(const std::string &fileName,
       dataNode.append_attribute("dataType") = "xsd:string";
       dataNode.text() = var.toString().c_str();
       break;
-    case Variant::Matrix: {
+    case Variant::MatrixX: {
       dataNode.set_name("hdf5data");
       dataNode.append_attribute("dataType") = "xsd:double";
       dataNode.append_attribute("ndims") = "2";
-      const MatrixX &matrix = var.toMatrix();
+      const MatrixX &matrix = var.toMatrixXRef();
       std::stringstream stream;
       stream << matrix.rows() << " " << matrix.cols();
       dataNode.append_attribute("dims") = stream.str().c_str();
