@@ -42,6 +42,11 @@ Bond::Bond(Molecule *m, size_t i)
 {
 }
 
+/// Destroys the Bond object.
+Bond::~Bond()
+{
+}
+
 // --- Properties ---------------------------------------------------------- //
 /// Returns \c true if the bond is valid.
 bool Bond::isValid() const

@@ -68,7 +68,7 @@ class AVOGADROIO_EXPORT Hdf5DataFormat
 public:
   Hdf5DataFormat();
   /// Destructor. Closes any open file before freeing memory.
-  ~Hdf5DataFormat();
+  virtual ~Hdf5DataFormat();
 
   /// Open modes for use with openFile().
   enum OpenMode {

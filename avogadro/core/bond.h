@@ -34,6 +34,7 @@ public:
   // construction and destruction
   Bond();
   Bond(Molecule *m, size_t i);
+  virtual ~Bond();
 
   // properties
   bool isValid() const;

@@ -57,6 +57,10 @@ public:
   {
   }
 
+  virtual ~ArrayRefContainer()
+  {
+  }
+
   // Increment the reference count.
   void reref()
   {
@@ -131,7 +135,7 @@ public:
     d = other.d;
   }
 
-  ~Array();
+  virtual ~Array();
 
   /*!
    * Explicitly detach from any other implicitly shared containers. This is not

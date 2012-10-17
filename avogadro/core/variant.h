@@ -45,7 +45,7 @@ public:
   inline Variant();
   template<typename T> Variant(T value);
   inline Variant(const Variant &variant);
-  inline ~Variant();
+  inline virtual ~Variant();
 
   // properties
   inline Type type() const;

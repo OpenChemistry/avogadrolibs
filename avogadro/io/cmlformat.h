@@ -26,12 +26,11 @@
 
 namespace Avogadro {
 namespace Io {
-
 class AVOGADROIO_EXPORT CmlFormat
 {
 public:
   CmlFormat();
-  ~CmlFormat();
+  virtual ~CmlFormat();
 
   bool readFile(const std::string &fileName, Core::Molecule &molecule);
 

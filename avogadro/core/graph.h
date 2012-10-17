@@ -30,8 +30,8 @@ class AVOGADROCORE_EXPORT Graph
 public:
   // construction and destruction
   Graph();
-  Graph(size_t n);
-  ~Graph();
+  explicit Graph(size_t n);
+  virtual ~Graph();
 
   // properties
   void setSize(size_t n);

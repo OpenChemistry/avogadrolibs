@@ -35,7 +35,7 @@ class ArraySet
 {
 public:
   ArraySet() : m_content(NULL), m_data(NULL) {}
-  ~ArraySet()
+  virtual ~ArraySet()
   {
     delete m_content;
   }

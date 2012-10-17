@@ -35,7 +35,7 @@ class AVOGADROCORE_EXPORT Molecule
 public:
   // construction and destruction
   Molecule();
-  ~Molecule();
+  virtual ~Molecule();
 
   // properties
   size_t size() const;

@@ -40,6 +40,11 @@ Atom::Atom(Molecule *m, size_t i)
 {
 }
 
+/// Destroys the Atom object.
+Atom::~Atom()
+{
+}
+
 // --- Properties ---------------------------------------------------------- //
 /// Returns \c true if the atom is valid.
 bool Atom::isValid() const

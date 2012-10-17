@@ -31,8 +31,8 @@ class AVOGADROCORE_EXPORT RingPerceiver
 {
 public:
   // construction and destruction
-  RingPerceiver(const Molecule *m = 0);
-  ~RingPerceiver();
+  explicit RingPerceiver(const Molecule *m = 0);
+  virtual ~RingPerceiver();
 
   // properties
   void setMolecule(const Molecule *m);

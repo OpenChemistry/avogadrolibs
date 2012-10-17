@@ -37,7 +37,7 @@ public:
 
   // construction and destruction
   VariantMap();
-  ~VariantMap();
+  virtual ~VariantMap();
 
   // properties
   size_t size() const;

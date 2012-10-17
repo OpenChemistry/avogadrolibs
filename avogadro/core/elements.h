@@ -28,7 +28,7 @@ class AVOGADROCORE_EXPORT Elements
 {
 public:
   Elements();
-  ~Elements();
+  virtual ~Elements();
 
   /** Get the atomic number from the supplied symbol. If the symbol is not
    * recognised then 0 will be returned. 0 is also the dummy atom. */

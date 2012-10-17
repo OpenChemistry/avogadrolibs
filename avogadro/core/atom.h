@@ -31,6 +31,7 @@ public:
   // construction and destruction
   Atom();
   Atom(Molecule *m, size_t i);
+  virtual ~Atom();
 
   // properties
   bool isValid() const;
