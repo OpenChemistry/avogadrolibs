@@ -456,7 +456,15 @@ inline std::string Variant::toString() const
 }
 
 /// Returns the value of the variant as a MatrixX.
-inline const MatrixX &Variant::toMatrix() const
+MatrixX Variant::toMatrixX() const
+{
+  return value<MatrixX>();
+}
+
+/// Returns a reference to the value of the variant as a MatrixX.
+/// This method will not perform any casting -- if type() is not exactly
+/// MatrixX, the function will fail and return a reference to an empty MatrixX.
+inline const MatrixX &Variant::toMatrixXRef() const
 {
   return value<const MatrixX&>();
 }
