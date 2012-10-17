@@ -49,6 +49,16 @@ bool VariantMap::isEmpty() const
   return m_map.empty();
 }
 
+/// Returns the names of the entries in the map.
+std::vector<std::string> VariantMap::names() const
+{
+  std::vector<std::string> result;
+  result.reserve(size());
+  for (const_iterator it = constBegin(), itEnd = constEnd(); it != itEnd; ++it)
+    result.push_back((*it).first);
+  return result;
+}
+
 // --- Values -------------------------------------------------------------- //
 /// Sets the value of \p name to \p v.
 void VariantMap::setValue(const std::string &name, const Variant &v)
@@ -65,6 +75,42 @@ Variant VariantMap::value(const std::string &name) const
     return Variant();
 
   return iter->second;
+}
+
+/// Return an iterator pointing to the beginning of the map.
+VariantMap::iterator VariantMap::begin()
+{
+  return m_map.begin();
+}
+
+/// \overload
+VariantMap::const_iterator VariantMap::begin() const
+{
+  return m_map.begin();
+}
+
+/// Return an const_iterator pointing to the beginning of the map.
+VariantMap::const_iterator VariantMap::constBegin() const
+{
+  return m_map.begin();
+}
+
+/// Return an iterator pointing to the end of the map.
+VariantMap::iterator VariantMap::end()
+{
+  return m_map.end();
+}
+
+/// \overload
+VariantMap::const_iterator VariantMap::end() const
+{
+  return m_map.end();
+}
+
+/// Return an const_iterator pointing to the end of the map.
+VariantMap::const_iterator VariantMap::constEnd() const
+{
+  return m_map.end();
 }
 
 } // end Core namespace
