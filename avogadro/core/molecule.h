@@ -42,6 +42,10 @@ public:
   bool isEmpty() const;
   void setData(const std::string &name, const Variant &value);
   Variant data(const std::string &name) const;
+  void setDataMap(const VariantMap &map);
+  const VariantMap& dataMap() const;
+  VariantMap& dataMap();
+
   std::vector<unsigned char>& atomicNumbers();
   const std::vector<Vector2>& atomPositions2d() const;
   std::vector<Vector2>& atomPositions2d();
