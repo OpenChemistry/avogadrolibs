@@ -23,6 +23,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 namespace Avogadro {
 namespace Core {
@@ -30,6 +31,10 @@ namespace Core {
 class AVOGADROCORE_EXPORT VariantMap
 {
 public:
+  // typedefs
+  typedef std::map<std::string, Variant>::iterator iterator;
+  typedef std::map<std::string, Variant>::const_iterator const_iterator;
+
   // construction and destruction
   VariantMap();
   ~VariantMap();
@@ -37,10 +42,20 @@ public:
   // properties
   size_t size() const;
   bool isEmpty() const;
+  std::vector<std::string> names() const;
 
   // values
   void setValue(const std::string &name, const Variant &v);
   Variant value(const std::string &name) const;
+
+  // iterator access
+  iterator begin();
+  const_iterator begin() const;
+  const_iterator constBegin() const;
+
+  iterator end();
+  const_iterator end() const;
+  const_iterator constEnd() const;
 
 private:
   std::map<std::string, Variant> m_map;

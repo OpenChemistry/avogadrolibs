@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2011-2012 Kitware, Inc.
+  Copyright 2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,40 +14,25 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_CORE_RINGPERCEIVER_H
-#define AVOGADRO_CORE_RINGPERCEIVER_H
+#ifndef AVOGADRO_CORE_MATRIX_H
+#define AVOGADRO_CORE_MATRIX_H
 
 #include "avogadrocore.h"
-
-#include <vector>
-#include <cstddef>
+#include <Eigen/Dense>
 
 namespace Avogadro {
-namespace Core {
 
-class Molecule;
+/// Typedefs for vector types.
+typedef Eigen::Matrix<Real, 2, 2> Matrix2;
+typedef Eigen::Matrix<Real, 3, 3> Matrix3;
+typedef Eigen::Matrix<Real, 4, 4> Matrix4;
+typedef Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic> MatrixX;
 
-class AVOGADROCORE_EXPORT RingPerceiver
-{
-public:
-  // construction and destruction
-  explicit RingPerceiver(const Molecule *m = 0);
-  ~RingPerceiver();
+typedef Eigen::Matrix<float, 2, 2> Matrix2f;
+typedef Eigen::Matrix<float, 3, 3> Matrix3f;
+typedef Eigen::Matrix<float, 4, 4> Matrix4f;
+typedef Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> MatrixXf;
 
-  // properties
-  void setMolecule(const Molecule *m);
-  const Molecule* molecule() const;
-
-  // ring perception
-  std::vector<std::vector<size_t> >& rings();
-
-private:
-  bool m_ringsPerceived;
-  const Molecule *m_molecule;
-  std::vector<std::vector<size_t> > m_rings;
-};
-
-} // end Core namespace
 } // end Avogadro namespace
 
-#endif // AVOGADRO_CORE_RINGPERCEIVER_H
+#endif // AVOGADRO_CORE_MATRIX_H

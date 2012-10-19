@@ -62,6 +62,24 @@ Variant Molecule::data(const std::string &name) const
   return m_data.value(name);
 }
 
+/// Set the molecule's variant data to the entries in map.
+void Molecule::setDataMap(const VariantMap &map)
+{
+  m_data = map;
+}
+
+/// Return the molecule's variant data.
+const VariantMap &Molecule::dataMap() const
+{
+  return m_data;
+}
+
+/// \overload
+VariantMap &Molecule::dataMap()
+{
+  return m_data;
+}
+
 /// Returns a vector of atomic numbers for the atoms in the moleucle.
 std::vector<unsigned char>& Molecule::atomicNumbers()
 {

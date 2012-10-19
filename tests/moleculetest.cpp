@@ -96,3 +96,21 @@ TEST(MoleculeTest, setData)
   molecule.setData("name", "ethanol");
   EXPECT_EQ(molecule.data("name").toString(), "ethanol");
 }
+
+TEST(MoleculeTest, dataMap)
+{
+  Avogadro::Core::Molecule molecule;
+  molecule.setData("name", "ethanol");
+  molecule.setData("formula", "C2H6O");
+  Avogadro::Core::VariantMap varMap = molecule.dataMap();
+  varMap.setValue("SMILES", "CCO");
+  molecule.setDataMap(varMap);
+  molecule.dataMap().setValue("CAS", "64-17-5");
+
+  std::vector<std::string> dataNames = molecule.dataMap().names();
+  EXPECT_EQ(dataNames.size(), 4);
+  EXPECT_EQ(molecule.data("name").toString(), "ethanol");
+  EXPECT_EQ(molecule.data("formula").toString(), "C2H6O");
+  EXPECT_EQ(molecule.data("SMILES").toString(), "CCO");
+  EXPECT_EQ(molecule.data("CAS").toString(), "64-17-5");
+}

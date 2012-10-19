@@ -18,6 +18,7 @@
 #define AVOGADRO_CORE_VARIANT_H
 
 #include "avogadrocore.h"
+#include "matrix.h"
 
 #include <string>
 
@@ -36,7 +37,8 @@ public:
     Float,
     Double,
     Pointer,
-    String
+    String,
+    Matrix
   };
 
   // construction and destruction
@@ -69,6 +71,8 @@ public:
   inline Real toReal() const;
   inline void* toPointer() const;
   inline std::string toString() const;
+  inline MatrixX toMatrix() const;
+  inline const MatrixX& toMatrixRef() const;
 
   // operators
   inline Variant& operator=(const Variant &variant);
@@ -87,6 +91,7 @@ private:
     double _double;
     void *pointer;
     std::string *string;
+    MatrixX *matrix;
   } m_value;
 };
 

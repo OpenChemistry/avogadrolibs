@@ -18,12 +18,15 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/matrix.h>
+
 #include <avogadro/io/cmlformat.h>
 
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Io::CmlFormat;
+using Avogadro::MatrixX;
 
 TEST(CmlTest, readFile)
 {
@@ -87,4 +90,25 @@ TEST(CmlTest, saveFile)
   Molecule molecule;
   cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
   cml.writeFile("ethane.cml", molecule);
+}
+
+TEST(CmlTest, CmlHdf5Matrix)
+{
+  CmlFormat cml;
+  Molecule molecule;
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
+  molecule.setData("name", "ethanol");
+  MatrixX matrix(10, 12);
+  for (int row = 0; row < matrix.rows(); ++row) {
+    for (int col = 0; col < matrix.cols(); ++col) {
+      matrix(row, col) = row + col / static_cast<double>(matrix.cols());
+    }
+  }
+  molecule.setData("matrix", matrix);
+  cml.writeFile("ethane.cml", molecule);
+
+  Molecule readMolecule;
+  cml.readFile("ethane.cml", readMolecule);
+  EXPECT_TRUE(readMolecule.data("matrix").toMatrixRef().isApprox(matrix));
+  EXPECT_EQ(readMolecule.data("name").toString(), std::string("ethanol"));
 }

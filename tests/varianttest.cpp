@@ -136,3 +136,27 @@ TEST(VariantTest, toString)
   variant.setValue(std::string("hello2"));
   EXPECT_EQ(variant.toString(), std::string("hello2"));
 }
+
+TEST(VariantTest, toMatrix)
+{
+  Avogadro::MatrixX matrix(6, 7);
+  for (int row = 0; row < matrix.rows(); ++row) {
+    for (int col = 0; col < matrix.cols(); ++col) {
+      matrix(row, col) = 2 * row + col / static_cast<double>(matrix.cols());
+    }
+  }
+
+  Avogadro::Core::Variant variant(matrix);
+  const Avogadro::MatrixX &varMatrix = variant.toMatrixRef();
+
+  ASSERT_EQ(matrix.rows(), varMatrix.rows())
+      << "Number of rows don't match after variant-matrix conversion!";
+  ASSERT_EQ(matrix.cols(), varMatrix.cols())
+      << "Number of columns don't match after variant-matrix conversion!";
+  for (int row = 0; row < matrix.rows(); ++row) {
+    for (int col = 0; col < matrix.cols(); ++col) {
+      EXPECT_EQ(matrix(row, col), varMatrix(row, col))
+          << "Value mismatch at " << row << ", " << col << "!";
+    }
+  }
+}
