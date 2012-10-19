@@ -71,7 +71,8 @@ public:
   inline Real toReal() const;
   inline void* toPointer() const;
   inline std::string toString() const;
-  inline const MatrixX& toMatrix() const;
+  inline MatrixX toMatrix() const;
+  inline const MatrixX& toMatrixRef() const;
 
   // operators
   inline Variant& operator=(const Variant &variant);

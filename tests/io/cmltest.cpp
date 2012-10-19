@@ -109,6 +109,6 @@ TEST(CmlTest, CmlHdf5Matrix)
 
   Molecule readMolecule;
   cml.readFile("ethane.cml", readMolecule);
-  EXPECT_TRUE(readMolecule.data("matrix").toMatrix().isApprox(matrix));
+  EXPECT_TRUE(readMolecule.data("matrix").toMatrixRef().isApprox(matrix));
   EXPECT_EQ(readMolecule.data("name").toString(), std::string("ethanol"));
 }

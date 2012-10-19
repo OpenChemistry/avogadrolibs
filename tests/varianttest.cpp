@@ -147,7 +147,7 @@ TEST(VariantTest, toMatrix)
   }
 
   Avogadro::Core::Variant variant(matrix);
-  Avogadro::MatrixX varMatrix = variant.toMatrix();
+  const Avogadro::MatrixX &varMatrix = variant.toMatrixRef();
 
   ASSERT_EQ(matrix.rows(), varMatrix.rows())
       << "Number of rows don't match after variant-matrix conversion!";
