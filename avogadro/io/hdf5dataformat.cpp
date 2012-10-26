@@ -28,6 +28,24 @@ namespace Io {
 
 // Exclude from Doxygen:
 /// @cond
+class Hdf5DataFormat::ResizeContainer
+{
+public:
+  virtual ~ResizeContainer() {};
+  virtual bool resize(const std::vector<int> &dims) = 0;
+  virtual void *dataPointer() = 0;
+protected:
+  int dimsToNumberOfElements(const std::vector<int> &vec)
+  {
+    if (vec.empty())
+      return 0;
+    int result = vec.front();
+    for (size_t i = 1; i < vec.size(); ++i)
+      result *= vec[i];
+    return result;
+  }
+};
+
 // Internal storage. Used to keep HDF5 stuff out of the header.
 class Hdf5DataFormat::Private
 {
@@ -65,7 +83,46 @@ public:
   }
 };
 
+class ResizeMatrixX : public Avogadro::Io::Hdf5DataFormat::ResizeContainer
+{
+  MatrixX &m_data;
+public:
+  ResizeMatrixX(MatrixX &data) : m_data(data) {}
+  bool resize(const std::vector<int> &dims)
+  {
+    if (dims.size() != 2)
+      return false;
+    m_data.resize(dims[0], dims[1]);
+    return true;
+  }
+  void *dataPointer() { return m_data.data(); }
+};
 
+class ResizeVector : public Avogadro::Io::Hdf5DataFormat::ResizeContainer
+{
+  std::vector<double> &m_data;
+public:
+  ResizeVector(std::vector<double> &data) : m_data(data) {}
+  bool resize(const std::vector<int> &dims)
+  {
+    m_data.resize(dimsToNumberOfElements(dims));
+    return true;
+  }
+  void *dataPointer() { return &m_data[0]; }
+};
+
+class ResizeArray : public Avogadro::Io::Hdf5DataFormat::ResizeContainer
+{
+  Avogadro::Core::Array<double> &m_data;
+public:
+  ResizeArray(Avogadro::Core::Array<double> &data) : m_data(data) {}
+  bool resize(const std::vector<int> &dims)
+  {
+    m_data.resize(dimsToNumberOfElements(dims));
+    return true;
+  }
+  void *dataPointer() { return &m_data[0]; }
+};
 
 } // end unnamed namespace
 
@@ -355,9 +412,8 @@ bool Hdf5DataFormat::writeDataset(const std::string &path,
 }
 
 std::vector<int> Hdf5DataFormat::readRawDataset(const std::string &path,
-                                                double **data) const
+                                                ResizeContainer &container) const
 {
-  *data = NULL;
   std::vector<int> result;
   if (!isOpen())
     return result;
@@ -395,22 +451,21 @@ std::vector<int> Hdf5DataFormat::readRawDataset(const std::string &path,
     return result;
   }
 
-  int nele = 0;
   result.reserve(ndims);
   for (int i = 0; i < ndims; ++i) {
     result.push_back(static_cast<int>(hdims[i]));
-    if (i != 0)
-      nele *= result.back();
-    else
-      nele = result.back();
   }
 
   // Allocate and read into data.
-  *data = new double[nele];
+  if (!container.resize(result)) {
+    result.clear();
+    H5Sclose(dataspace_id);
+    H5Dclose(dataset_id);
+    return result;
+  }
+
   if (H5Dread(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, dataspace_id, H5P_DEFAULT,
-              *data) < 0) {
-    delete [] *data;
-    *data = NULL;
+              container.dataPointer()) < 0) {
     result.clear();
     H5Sclose(dataspace_id);
     H5Dclose(dataset_id);
@@ -427,109 +482,22 @@ std::vector<int> Hdf5DataFormat::readRawDataset(const std::string &path,
 bool Hdf5DataFormat::readDataset(const std::string &path,
                                  MatrixX &data) const
 {
-  if (!isOpen())
-    return false;
-
-  if (!datasetExists(path))
-    return false;
-
-  // Open dataset
-  hid_t dataset_id = H5Dopen(d->fileId, path.c_str(), H5P_DEFAULT);
-  if (dataset_id < 0)
-    return false;
-
-  // Lookup dimensions
-  // Get dataspace for dataset
-  hid_t dataspace_id = H5Dget_space(dataset_id);
-  if (dataset_id < 0) {
-    H5Dclose(dataset_id);
-    return false;
-  }
-
-  // Get number of dimensions. Must = 2
-  if (H5Sget_simple_extent_ndims(dataspace_id) != 2) {
-    H5Sclose(dataspace_id);
-    H5Dclose(dataset_id);
-    return false;
-  }
-
-  // Get actual dimensions. We know it must be 2D
-  hsize_t dims[2];
-  if (H5Sget_simple_extent_dims(dataspace_id, dims, NULL) != 2) {
-    H5Sclose(dataspace_id);
-    H5Dclose(dataset_id);
-    return false;
-  }
-
-  // Resize and populate matrix. Transpose matrix (Eigen defaults to col-major).
-  data.resize(dims[0], dims[1]);
-  if (H5Dread(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, dataspace_id, H5P_DEFAULT,
-              data.transpose().data()) < 0) {
-    data.resize(0,0);
-    H5Sclose(dataspace_id);
-    H5Dclose(dataset_id);
-    return false;
-  }
-
-  // Cleanup
-  H5Sclose(dataspace_id);
-  H5Dclose(dataset_id);
-
-  return true;
+  ResizeMatrixX container(data);
+  return !readRawDataset(path, container).empty();
 }
 
 std::vector<int> Hdf5DataFormat::readDataset(const std::string &path,
                                              std::vector<double> &data) const
 {
-  double *retData = NULL;
-  std::vector<int> result = readRawDataset(path, &retData);
-  if (retData == NULL || result.empty()) {
-    delete [] retData;
-    result.clear();
-    data.clear();
-    return result;
-  }
-
-  // Determine vector size
-  int nele;
-  for (size_t i = 0; i < result.size(); ++i) {
-    if (i != 0)
-      nele *= result[i];
-    else
-      nele = result[0];
-  }
-
-  data.resize(nele);
-  std::copy(retData, retData + nele, data.begin());
-  delete [] retData;
-  return result;
+  ResizeVector container(data);
+  return readRawDataset(path, container);
 }
 
 std::vector<int> Hdf5DataFormat::readDataset(const std::string &path,
                                              Core::Array<double> &data) const
 {
-  double *retData = NULL;
-  std::vector<int> result = readRawDataset(path, &retData);
-  if (retData == NULL || result.empty()) {
-    delete [] retData;
-    result.clear();
-    data.clear();
-    return result;
-  }
-
-  // Determine vector size
-  int nele;
-  for (size_t i = 0; i < result.size(); ++i) {
-    if (i != 0)
-      nele *= result[i];
-    else
-      nele = result[0];
-  }
-
-  data.resize(nele);
-  std::copy(retData, retData + nele, data.begin());
-  delete [] retData;
-  return result;
+  ResizeArray container(data);
+  return readRawDataset(path, container);
 }
 
 std::vector<std::string> Hdf5DataFormat::datasets() const
