@@ -23,32 +23,6 @@
 #include <algorithm>
 #include <cstdio>
 
-namespace {
-
-// Exclude from Doxygen:
-/// @cond
-// Build up a list of absolute paths to all datasets in the file. To be used
-// with H5Ovisit (see Hdf5DataFormat::datasets()).
-class ListDatasetsVisitor
-{
-public:
-  std::vector<std::string> datasets;
-  static herr_t operation(hid_t /*o_id*/, const char *name,
-                          const H5O_info_t *object_info, void *op_data)
-  {
-    // If this object isn't a dataset, continue
-    if (object_info->type != H5O_TYPE_DATASET)
-      return 0;
-
-    ListDatasetsVisitor *self = reinterpret_cast<ListDatasetsVisitor*>(op_data);
-    self->datasets.push_back(std::string(name));
-    return 0;
-  }
-};
-// end doxygen exclude:
-/// @endcond
-}
-
 namespace Avogadro {
 namespace Io {
 
@@ -69,6 +43,32 @@ public:
 
   size_t threshold;
 };
+
+namespace {
+
+// Build up a list of absolute paths to all datasets in the file. To be used
+// with H5Ovisit (see Hdf5DataFormat::datasets()).
+class ListDatasetsVisitor
+{
+public:
+  std::vector<std::string> datasets;
+  static herr_t operation(hid_t /*o_id*/, const char *name,
+                          const H5O_info_t *object_info, void *op_data)
+  {
+    // If this object isn't a dataset, continue
+    if (object_info->type != H5O_TYPE_DATASET)
+      return 0;
+
+    ListDatasetsVisitor *self = reinterpret_cast<ListDatasetsVisitor*>(op_data);
+    self->datasets.push_back(std::string(name));
+    return 0;
+  }
+};
+
+
+
+} // end unnamed namespace
+
 // end doxygen exclude:
 /// @endcond
 
