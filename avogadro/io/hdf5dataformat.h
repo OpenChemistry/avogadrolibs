@@ -280,6 +280,9 @@ public:
    */
   std::vector<std::string> datasets() const;
 
+  /// Used to abstract details of container resizing.
+  class ResizeContainer;
+
 private:
   /**
    * @brief writeRawDataset Write the data to the currently opened file at the
@@ -300,14 +303,13 @@ private:
    * @brief readRawDataset Populate the data container @data with data from the
    * specified path in the currently opened HDF5 file.
    * @param path An absolute path into the HDF5 data.
-   * @param data Used to return a pointer to a new array containing the dataset
-   * at @a path. The array must be freed by the caller with delete [].
+   * @param container A subclass of ResizeContainer with the container to read
+   * data into.
    * @return A vector containing the dimensionality of the dataset, major
-   * dimension first. If an error occurs, an empty vector is returned and *data
-   * will be set to NULL.
+   * dimension first. If an error occurs, an empty vector is returned.
    */
-  std::vector<int> readRawDataset(const std::string &path, double **data) const;
-
+  std::vector<int> readRawDataset(const std::string &path,
+                                  ResizeContainer &container) const;
 
   class Private;
   /// Internal storage, used to encapsulate HDF5 data.
