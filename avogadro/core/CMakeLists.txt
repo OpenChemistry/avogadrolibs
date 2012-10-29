@@ -11,6 +11,7 @@ set(HEADERS
   coordinateset.h
   elements.h
   graph.h
+  matrix.h
   molecule.h
   ringperceiver.h
   variant.h
