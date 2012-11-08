@@ -19,6 +19,8 @@
 
 #include "avogadroqtopenglexport.h"
 
+#include "navigator.h"
+
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/qtgui/scenepluginmodel.h>
 
@@ -66,8 +68,11 @@ protected:
   void mouseMoveEvent(QMouseEvent *);
   void mouseReleaseEvent(QMouseEvent *);
   void wheelEvent(QWheelEvent *);
+  void keyPressEvent(QKeyEvent *);
+  void keyReleaseEvent(QKeyEvent *);
 
 private:
+  Navigator m_navigator;
   Rendering::GLRenderer m_renderer;
   QtGui::ScenePluginModel m_scenePlugins;
 };
