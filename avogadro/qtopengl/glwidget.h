@@ -19,6 +19,8 @@
 
 #include "avogadroqtopenglexport.h"
 
+#include "navigator.h"
+
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/qtgui/scenepluginmodel.h>
 
@@ -44,6 +46,9 @@ public:
   explicit GLWidget(QWidget *parent = 0);
   ~GLWidget();
 
+  /*! Get a reference to the navigator for the widget. */
+  Navigator& navigator() { return m_navigator; }
+
   /*! Get a reference to the renderer for the widget. */
   Rendering::GLRenderer& renderer() { return m_renderer; }
 
@@ -66,8 +71,11 @@ protected:
   void mouseMoveEvent(QMouseEvent *);
   void mouseReleaseEvent(QMouseEvent *);
   void wheelEvent(QWheelEvent *);
+  void keyPressEvent(QKeyEvent *);
+  void keyReleaseEvent(QKeyEvent *);
 
 private:
+  Navigator m_navigator;
   Rendering::GLRenderer m_renderer;
   QtGui::ScenePluginModel m_scenePlugins;
 };

@@ -27,8 +27,11 @@
 namespace Avogadro {
 namespace QtOpenGL {
 
-GLWidget::GLWidget(QWidget *parent_) : QGLWidget(parent_)
+GLWidget::GLWidget(QWidget *parent_)
+  : QGLWidget(parent_),
+    m_navigator(this)
 {
+  setFocusPolicy(Qt::ClickFocus);
 }
 
 GLWidget::~GLWidget()
@@ -59,33 +62,67 @@ void GLWidget::paintGL()
   m_renderer.render();
 }
 
-void GLWidget::mouseDoubleClickEvent(QMouseEvent *)
+void GLWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
-  resetCamera();
+  e->ignore();
+  m_navigator.mouseDoubleClickEvent(e);
+
+  if (!e->isAccepted())
+    QGLWidget::mouseDoubleClickEvent(e);
 }
 
-void GLWidget::mousePressEvent(QMouseEvent *event_)
+void GLWidget::mousePressEvent(QMouseEvent *e)
 {
-  if (event_->button() == Qt::LeftButton) {
-    Vector2f position(event_->pos().x(), event_->pos().y());
-    Vector3f result = m_renderer.camera().unProject(position);
-    m_renderer.scene().addSphere(result, Vector3ub(255, 255, 255), 1.0);
-    update();
-  }
+  e->ignore();
+  m_navigator.mousePressEvent(e);
+
+  if (!e->isAccepted())
+    QGLWidget::mousePressEvent(e);
 }
 
-void GLWidget::mouseMoveEvent(QMouseEvent *)
+void GLWidget::mouseMoveEvent(QMouseEvent *e)
 {
+  e->ignore();
+  m_navigator.mouseMoveEvent(e);
+
+  if (!e->isAccepted())
+    QGLWidget::mouseMoveEvent(e);
 }
 
-void GLWidget::mouseReleaseEvent(QMouseEvent *)
+void GLWidget::mouseReleaseEvent(QMouseEvent *e)
 {
+  e->ignore();
+  m_navigator.mouseReleaseEvent(e);
+
+  if (!e->isAccepted())
+    QGLWidget::mouseReleaseEvent(e);
 }
 
-void GLWidget::wheelEvent(QWheelEvent *)
+void GLWidget::wheelEvent(QWheelEvent *e)
 {
-  m_renderer.camera().rotate(0.1, Vector3f(1, 0, 0));
-  update();
+  e->ignore();
+  m_navigator.wheelEvent(e);
+
+  if (!e->isAccepted())
+    QGLWidget::wheelEvent(e);
+}
+
+void GLWidget::keyPressEvent(QKeyEvent *e)
+{
+  e->ignore();
+  m_navigator.keyPressEvent(e);
+
+  if (!e->isAccepted())
+    QGLWidget::keyPressEvent(e);
+}
+
+void GLWidget::keyReleaseEvent(QKeyEvent *e)
+{
+  e->ignore();
+  m_navigator.keyReleaseEvent(e);
+
+  if (!e->isAccepted())
+    QGLWidget::keyReleaseEvent(e);
 }
 
 } // End QtOpenGL namespace

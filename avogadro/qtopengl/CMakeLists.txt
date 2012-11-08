@@ -9,10 +9,12 @@ add_definitions(${QT_DEFINITIONS})
 
 set(HEADERS
   glwidget.h
+  navigator.h
 )
 
 set(SOURCES
   glwidget.cpp
+  navigator.cpp
 )
 
 avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})
