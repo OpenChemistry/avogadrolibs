@@ -26,6 +26,11 @@
 #include <map>    // For member variables.
 
 namespace Avogadro {
+
+namespace Core {
+class Molecule;
+}
+
 namespace Rendering {
 
 /*!
@@ -65,6 +70,22 @@ public:
   Scene();
   ~Scene();
 
+  /*! Identifies the type of object a primitive represents. */
+  enum PrimitiveType {
+    InvalidPrimitive = -1,
+    AtomPrimitive,
+    BondPrimitive
+  };
+
+  /*! Used to identify the primitive during picking. */
+  struct PrimitiveIdentifier {
+    const Core::Molecule *molecule;
+    PrimitiveType type;
+    size_t index;
+
+    PrimitiveIdentifier() : molecule(0), type(InvalidPrimitive), index(-1) {}
+  };
+
   /*! Get the center of the points contained in this Scene. */
   Vector3f center() const;
 
@@ -73,8 +94,11 @@ public:
    */
   float radius() const;
 
-  /*! Add a sphere to the scene object. */
-  void addSphere(const Vector3f &position, const Vector3ub &color, float radius);
+  /*!
+   * Add a sphere to the scene object.
+   */
+  void addSphere(const Vector3f &position, const Vector3ub &color, float radius,
+                 const PrimitiveIdentifier &id);
 
   /*! Number of spheres in this Scene object. */
   Index sphereCount() const { return m_spheres.size() / 4; }
@@ -88,6 +112,13 @@ public:
    * BufferObject in order to be uploaded to the GPU.
    */
   const std::vector<unsigned int>& sphereIndices() const;
+
+  /*!
+   * \brief identifySphere Lookup the object represented by sphere i.
+   * \param i Index into the spheres() vector.
+   * \return PrimitiveIdentifier for
+   */
+  PrimitiveIdentifier identifySphere(size_t i) const;
 
   /*! Is the scene dirty? */
   bool dirty() const { return m_dirty; }
@@ -103,6 +134,7 @@ public:
 private:
   std::vector<unsigned int> m_sphereIndices;
   std::vector<ColorTextureVertex> m_spheres;
+  std::vector<PrimitiveIdentifier> m_sphereIdentifiers;
 
   bool             m_dirty;
   mutable bool     m_centerDirty;
@@ -118,6 +150,13 @@ inline const std::vector<ColorTextureVertex>& Scene::spheres() const
 inline const std::vector<unsigned int>& Scene::sphereIndices() const
 {
   return m_sphereIndices;
+}
+
+inline Scene::PrimitiveIdentifier Scene::identifySphere(size_t i) const
+{
+  if (i < m_sphereIdentifiers.size())
+    return m_sphereIdentifiers[i];
+  return Scene::PrimitiveIdentifier();
 }
 
 } // End Rendering namespace

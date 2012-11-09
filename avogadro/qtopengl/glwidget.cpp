@@ -76,6 +76,15 @@ void GLWidget::mousePressEvent(QMouseEvent *e)
   e->ignore();
   m_navigator.mousePressEvent(e);
 
+  // Testing...
+  if (e->button() == Qt::LeftButton) {
+    Rendering::Scene::PrimitiveIdentifier hit =
+        m_renderer.hit(e->pos().x(), e->pos().y());
+    if (hit.type == Rendering::Scene::AtomPrimitive) {
+      qDebug("Atom clicked: index=%lu\n", hit.index);
+    }
+  }
+
   if (!e->isAccepted())
     QGLWidget::mousePressEvent(e);
 }

@@ -64,7 +64,7 @@ float Scene::radius() const
 }
 
 void Scene::addSphere(const Vector3f &position, const Vector3ub &color,
-                      float r)
+                      float r, const PrimitiveIdentifier &id)
 {
   // These are here to create the impostor quads that will be acted on by the
   // shaders. If we used geometry shaders we could create just one vertex etc.
@@ -73,12 +73,16 @@ void Scene::addSphere(const Vector3f &position, const Vector3ub &color,
   // Use our packed data structure...
   ColorTextureVertex vert(position, color, Vector2f(-r, -r));
   m_spheres.push_back(vert);
+  m_sphereIdentifiers.push_back(id);
   vert.textureCoord = Vector2f(-r, r);
   m_spheres.push_back(vert);
+  m_sphereIdentifiers.push_back(id);
   vert.textureCoord = Vector2f( r,-r);
   m_spheres.push_back(vert);
+  m_sphereIdentifiers.push_back(id);
   vert.textureCoord = Vector2f( r, r);
   m_spheres.push_back(vert);
+  m_sphereIdentifiers.push_back(id);
 
   // 6 indexed vertices to draw a quad...
   m_sphereIndices.push_back(index + 0);
@@ -87,6 +91,7 @@ void Scene::addSphere(const Vector3f &position, const Vector3ub &color,
   m_sphereIndices.push_back(index + 3);
   m_sphereIndices.push_back(index + 2);
   m_sphereIndices.push_back(index + 1);
+
   m_centerDirty = true;
   m_dirty = true;
 }
@@ -94,6 +99,7 @@ void Scene::addSphere(const Vector3f &position, const Vector3ub &color,
 void Scene::clear()
 {
   m_spheres.clear();
+  m_sphereIdentifiers.clear();
   m_sphereIndices.clear();
   m_centerDirty = true;
   m_dirty = true;

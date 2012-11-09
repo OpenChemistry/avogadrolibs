@@ -38,27 +38,34 @@ BallAndStick::~BallAndStick()
 
 void BallAndStick::process(const Molecule &molecule, Scene &scene)
 {
+  Rendering::Scene::PrimitiveIdentifier identifier;
+  identifier.molecule = &molecule;
+  identifier.type = Rendering::Scene::AtomPrimitive;
   for (size_t i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
+    identifier.index = i;
     unsigned char atomicNumber = atom.atomicNumber();
     const unsigned char *c = Core::Elements::color(atomicNumber);
     Vector3ub color(c[0], c[1], c[2]);
     scene.addSphere(atom.position3d().cast<float>(), color,
                     static_cast<float>(Core::Elements::radiusVDW(
-                                         atomicNumber) * 0.3));
+                                         atomicNumber) * 0.3),
+                    identifier);
   }
 
   float bondRadius;
   Vector3ub bondColor(0.5, 0.5, 0.5);
+  identifier.type = Rendering::Scene::BondPrimitive;
   for (size_t i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
+    identifier.index = i;
     /// @todo multicylinders for bond orders
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
     Vector3f bondVector = pos2 - pos1;
     float bondLength = bondVector.norm();
 //    scene.addCylinder(pos1, bondVector.normalized(), bondLength, color,
-//                      bondRadius);
+//                      bondRadius, identifier);
   }
 }
 
