@@ -22,9 +22,11 @@
 #include "camera.h"
 #include "scene.h"
 #include "bufferobject.h"
+#include "primitive.h"
 #include "shader.h"
 #include "shaderprogram.h"
 
+#include <map>
 #include <string> // For member variables.
 #include <vector>
 
@@ -54,6 +56,14 @@ public:
 
   /*! Reset the view to fit the entire scene. */
   void resetCamera();
+
+  /*! Return the primitives under the display coordinate (x,y), mapped by depth.
+   */
+  std::map<float, Primitive::Identifier> hits(int x, int y) const;
+
+  /*! Return the top primitive under the display coordinate (x,y).
+   */
+  Primitive::Identifier hit(int x, int y) const;
 
   /*! Check whether the GL context is valid and supports required features.
    * \sa error() to get more information if the context is not valid.
@@ -94,6 +104,14 @@ inline const Camera& GLRenderer::camera() const
 inline Camera& GLRenderer::camera()
 {
   return m_camera;
+}
+
+inline Primitive::Identifier GLRenderer::hit(int x, int y) const
+{
+  std::map<float, Primitive::Identifier> results = hits(x, y);
+  if (results.size())
+    return results.begin()->second;
+  return Primitive::Identifier();
 }
 
 } // End Rendering namespace
