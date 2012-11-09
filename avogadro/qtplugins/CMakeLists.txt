@@ -25,6 +25,7 @@ endfunction()
 
 # Scene
 avogadro_plugin(vanderwaals vanderwaals.cpp)
+avogadro_plugin(ballandstick ballandstick.cpp)
 
 # Extension
 avogadro_plugin(quantuminput quantuminput.cpp)
