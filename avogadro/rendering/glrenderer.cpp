@@ -157,5 +157,50 @@ void GLRenderer::resetCamera()
                                 distance + 2.0f * m_radius);
 }
 
+std::map<float, Primitive::Identifier> GLRenderer::hits(int x, int y) const
+{
+  std::map<float, Primitive::Identifier> result;
+
+  // Our ray:
+  const Vector3f origin(m_camera.unProject(Vector3f(x, y, 0)));
+  const Vector3f end(m_camera.unProject(Vector3f(x, y, 1)));
+  const Vector3f direction((end - origin).normalized());
+
+  // Our spheres:
+  const std::vector<Sphere> &spheres = m_scene.spheres();
+
+  // Check for intersection.
+  Vector3f dst;
+  for (size_t i = 0; i < spheres.size(); ++i) {
+    const Sphere &sphere = spheres[i];
+    const Vector3f &center = sphere.position();
+    float radius = sphere.radius();
+
+    // Intersection test taken from chemkit....
+    dst = center - origin;
+    float B = dst.dot(direction);
+    float C = dst.dot(dst) - (radius * radius);
+    float D = B * B - C;
+
+    // Test for intersection
+    if (D < 0)
+      continue;
+
+    // Test for clipping
+    if (dst.dot(direction) < 0 || (center - end).dot(direction) > 0)
+      continue;
+
+    Primitive::Identifier id = sphere.identifier();
+    if (id.type != Primitive::Invalid) {
+      /// @todo This might be inaccurate for very large spheres -- may need to
+      /// project dst onto direction.
+      float depth = dst.norm();
+      result.insert(std::pair<float, Primitive::Identifier>(depth, id));
+    }
+  }
+
+  return result;
+}
+
 } // End Rendering namespace
 } // End Avogadro namespace

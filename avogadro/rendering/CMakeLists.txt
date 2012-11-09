@@ -15,6 +15,7 @@ set(HEADERS
   bufferobject.h
   camera.h
   glrenderer.h
+  primitive.h
   scene.h
   shader.h
   shaderprogram.h
