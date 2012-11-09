@@ -65,10 +65,14 @@ bool ScenePluginModel::setData(const QModelIndex &index_, const QVariant &value,
 
   switch (role) {
   case Qt::CheckStateRole:
-    if (value == Qt::Checked)
+    if (value == Qt::Checked && !item->isEnabled()) {
       item->setEnabled(true);
-    else
+      emit pluginStateChanged(item);
+    }
+    else if (value == Qt::Unchecked && item->isEnabled()) {
       item->setEnabled(false);
+      emit pluginStateChanged(item);
+    }
     emit dataChanged(index_, index_);
     return true;
   }
@@ -117,6 +121,16 @@ QModelIndex ScenePluginModel::index(int row, int column,
 void ScenePluginModel::clear()
 {
   m_scenePlugins.clear();
+}
+
+QList<ScenePlugin *> ScenePluginModel::activeScenePlugins() const
+{
+  QList<ScenePlugin *> result;
+  foreach (ScenePlugin *plugin, m_scenePlugins) {
+    if (plugin->isEnabled())
+      result << plugin;
+  }
+  return result;
 }
 
 void ScenePluginModel::addItem(ScenePlugin *item)
