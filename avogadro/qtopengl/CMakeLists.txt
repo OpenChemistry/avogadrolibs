@@ -8,17 +8,20 @@ include_directories(SYSTEM ${QT_INCLUDES})
 add_definitions(${QT_DEFINITIONS})
 
 set(HEADERS
+  editor.h
   glwidget.h
   navigator.h
 )
 
 set(SOURCES
+  editor.cpp
   glwidget.cpp
   navigator.cpp
 )
 
 avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtOpenGL
+  AvogadroCore # Needed for editor.cpp
   AvogadroRendering
   AvogadroQtGui
   ${QT_QTCORE_LIBRARY}
