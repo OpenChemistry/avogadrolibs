@@ -53,8 +53,8 @@ void BallAndStick::process(const Molecule &molecule, Scene &scene)
                     identifier);
   }
 
-  float bondRadius;
-  Vector3ub bondColor(0.5, 0.5, 0.5);
+  float bondRadius = 0.1;
+  Vector3ub bondColor(127, 127, 127);
   identifier.type = Rendering::Primitive::Bond;
   for (size_t i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
@@ -64,8 +64,8 @@ void BallAndStick::process(const Molecule &molecule, Scene &scene)
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
     Vector3f bondVector = pos2 - pos1;
     float bondLength = bondVector.norm();
-//    scene.addCylinder(pos1, bondVector.normalized(), bondLength, color,
-//                      bondRadius, identifier);
+    scene.addCylinder(pos1, bondVector / bondLength, bondLength, bondRadius,
+                      bondColor, identifier);
   }
 }
 

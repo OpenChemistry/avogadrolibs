@@ -58,10 +58,14 @@ public:
 
   /*! Upload data to the buffer object. The buffer must be an ARRAY_BUFFER
    * or uninitialized. */
-  bool upload(const std::vector<ColorTextureVertex> &array);
+  bool upload(const std::vector<ColorNormalVertex> &array);
 
   /*! Upload data to the buffer object. The buffer must be an ARRAY_BUFFER
    * or uninitialized. */
+  bool upload(const std::vector<ColorTextureVertex> &array);
+
+  /*! Upload data to the buffer object. The buffer must be an
+   * ELEMENT_ARRAY_BUFFER or uninitialized. */
   bool upload(const std::vector<unsigned int> &array);
 
   /*! Bind the buffer object ready for rendering.

@@ -24,14 +24,19 @@
 #include "spheres_vs.h"
 #include "spheres_fs.h"
 
+#include "cylinders_vs.h"
+#include "cylinders_fs.h"
+
 #include <iostream>
 
 namespace Avogadro {
 namespace Rendering {
 
 GLRenderer::GLRenderer() : m_valid(false),
-  m_arrayBuffer(BufferObject::ARRAY_BUFFER),
-  m_indexBuffer(BufferObject::ELEMENT_ARRAY_BUFFER)
+  m_sphereArrayBuffer(BufferObject::ARRAY_BUFFER),
+  m_sphereIndexBuffer(BufferObject::ELEMENT_ARRAY_BUFFER),
+  m_cylinderArrayBuffer(BufferObject::ARRAY_BUFFER),
+  m_cylinderIndexBuffer(BufferObject::ELEMENT_ARRAY_BUFFER)
 {
 }
 
@@ -75,71 +80,152 @@ void GLRenderer::render()
 
   glEnable(GL_DEPTH_TEST);
 
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadMatrixf(m_camera.modelView().matrix().data());
+
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadMatrixf(m_camera.projection().matrix().data());
+
   // Check if the VBOs are ready, if not get them ready.
-  if (!m_arrayBuffer.ready() || m_scene.dirty()) {
-    m_arrayBuffer.upload(m_scene.spheres());
-    m_indexBuffer.upload(m_scene.sphereIndices());
+  if (!m_sphereArrayBuffer.ready() || m_scene.dirty()) {
+    m_sphereArrayBuffer.upload(m_scene.sphereVertices());
+    m_sphereIndexBuffer.upload(m_scene.sphereIndices());
+    m_cylinderArrayBuffer.upload(m_scene.cylinderVertices());
+    m_cylinderIndexBuffer.upload(m_scene.cylinderIndices());
     m_scene.setClean();
   }
 
-  // Build and link the shader if it has not been used yet.
-  if (m_vertex.type() == Shader::Unknown) {
-    m_vertex.setType(Shader::Vertex);
-    m_vertex.setSource(spheres_vs);
-    m_fragment.setType(Shader::Fragment);
-    m_fragment.setSource(spheres_fs);
-    if (!m_vertex.compile())
-      std::cout << m_vertex.error() << std::endl;
-    if (!m_fragment.compile())
-      std::cout << m_fragment.error() << std::endl;
-    m_program.attachShader(m_vertex);
-    m_program.attachShader(m_fragment);
-    if (!m_program.link())
-      std::cout << m_program.error() << std::endl;
+  if (m_scene.sphereCount() != 0) {
+
+    // Build and link the shader if it has not been used yet.
+    if (m_sphereVertexShader.type() == Shader::Unknown) {
+      m_sphereVertexShader.setType(Shader::Vertex);
+      m_sphereVertexShader.setSource(spheres_vs);
+      m_sphereFragmentShader.setType(Shader::Fragment);
+      m_sphereFragmentShader.setSource(spheres_fs);
+      if (!m_sphereVertexShader.compile())
+        std::cout << m_sphereVertexShader.error() << std::endl;
+      if (!m_sphereFragmentShader.compile())
+        std::cout << m_sphereFragmentShader.error() << std::endl;
+      m_sphereProgram.attachShader(m_sphereVertexShader);
+      m_sphereProgram.attachShader(m_sphereFragmentShader);
+      if (!m_sphereProgram.link())
+        std::cout << m_sphereProgram.error() << std::endl;
+    }
+
+    if (!m_sphereProgram.bind())
+      std::cout << m_sphereProgram.error() << std::endl;
+
+    m_sphereArrayBuffer.bind();
+    m_sphereIndexBuffer.bind();
+
+    // Set up our attribute arrays.
+    if (!m_sphereProgram.enableAttributeArray("vertex"))
+      std::cout << m_sphereProgram.error() << std::endl;
+    if (!m_sphereProgram.useAttributeArray("vertex", ColorTextureVertex::vertexOffset(),
+                                           Vector3f()))
+      std::cout << m_sphereProgram.error() << std::endl;
+    if (!m_sphereProgram.enableAttributeArray("color"))
+      std::cout << m_sphereProgram.error() << std::endl;
+    if (!m_sphereProgram.useAttributeArray("color", ColorTextureVertex::colorOffset(),
+                                           Vector3ub()))
+      std::cout << m_sphereProgram.error() << std::endl;
+    if (!m_sphereProgram.enableAttributeArray("texCoordinate"))
+      std::cout << m_sphereProgram.error() << std::endl;
+    if (!m_sphereProgram.useAttributeArray("texCoordinate", ColorTextureVertex::textureCoordOffset(),
+                                           Vector2f()))
+      std::cout << m_sphereProgram.error() << std::endl;
+
+    // Render the loaded spheres using the shader and bound VBO.
+    glDrawRangeElements(GL_TRIANGLES, 0, m_scene.sphereVertices().size(),
+                        m_scene.sphereIndices().size(), GL_UNSIGNED_INT,
+                        reinterpret_cast<const GLvoid *>(NULL));
+
+
+    m_sphereArrayBuffer.release();
+    m_sphereIndexBuffer.release();
+
+    m_sphereProgram.disableAttributeArray("vector");
+    m_sphereProgram.disableAttributeArray("color");
+    m_sphereProgram.disableAttributeArray("texCoordinates");
+
+    m_sphereProgram.release();
   }
 
-  if (!m_program.bind())
-    std::cout << m_program.error() << std::endl;
+  // Cylinders:
+  if (m_scene.cylinderCount() != 0) {
 
-  m_arrayBuffer.bind();
-  m_indexBuffer.bind();
+    // Build and link the shader if it has not been used yet.
+    if (m_cylinderVertexShader.type() == Shader::Unknown) {
+      m_cylinderVertexShader.setType(Shader::Vertex);
+      m_cylinderVertexShader.setSource(cylinders_vs);
+      m_cylinderFragmentShader.setType(Shader::Fragment);
+      m_cylinderFragmentShader.setSource(cylinders_fs);
+      if (!m_cylinderVertexShader.compile())
+        std::cout << m_cylinderVertexShader.error() << std::endl;
+      if (!m_cylinderFragmentShader.compile())
+        std::cout << m_cylinderFragmentShader.error() << std::endl;
+      m_cylinderProgram.attachShader(m_cylinderVertexShader);
+      m_cylinderProgram.attachShader(m_cylinderFragmentShader);
+      if (!m_cylinderProgram.link())
+        std::cout << m_cylinderProgram.error() << std::endl;
+    }
 
-  // Set up out attribute arrays.
-  if (!m_program.enableAttributeArray("vertex"))
-    std::cout << m_program.error() << std::endl;
-  if (!m_program.useAttributeArray("vertex", ColorTextureVertex::vertexOffset(),
-                                  Vector3f()))
-    std::cout << m_program.error() << std::endl;
-  if (!m_program.enableAttributeArray("color"))
-    std::cout << m_program.error() << std::endl;
-  if (!m_program.useAttributeArray("color", ColorTextureVertex::colorOffset(),
-                                  Vector3ub()))
-    std::cout << m_program.error() << std::endl;
-  if (!m_program.enableAttributeArray("texCoordinate"))
-    std::cout << m_program.error() << std::endl;
-  if (!m_program.useAttributeArray("texCoordinate", ColorTextureVertex::textureCoordOffset(),
-                                  Vector2f()))
-    std::cout << m_program.error() << std::endl;
-  // Set up our uniforms (model-view and projection matrices right now).
-  if (!m_program.setUniformValue("modelView", m_camera.modelView().matrix()))
-    std::cout << m_program.error() << std::endl;
-  if (!m_program.setUniformValue("projection", m_camera.projection().matrix()))
-    std::cout << m_program.error() << std::endl;
+    if (!m_cylinderProgram.bind())
+      std::cout << m_cylinderProgram.error() << std::endl;
 
-  // Render the loaded spheres using the shader and bound VBO.
-  glDrawRangeElements(GL_TRIANGLES, 0, m_scene.sphereIndices().size(),
-                      m_scene.sphereIndices().size(), GL_UNSIGNED_INT,
-                      reinterpret_cast<const GLvoid *>(NULL));
+    m_cylinderArrayBuffer.bind();
+    m_cylinderIndexBuffer.bind();
 
+    // Set up out attribute arrays.
+    if (!m_cylinderProgram.enableAttributeArray("vertex"))
+      std::cout << m_cylinderProgram.error() << std::endl;
+    if (!m_cylinderProgram.useAttributeArray("vertex",
+                                             ColorNormalVertex::vertexOffset(),
+                                             Vector3f())) {
+      std::cout << m_cylinderProgram.error() << std::endl;
+    }
 
-  m_arrayBuffer.release();
-  m_indexBuffer.release();
+    if (!m_cylinderProgram.enableAttributeArray("normal"))
+      std::cout << m_cylinderProgram.error() << std::endl;
 
-  m_program.disableAttributeArray("vector");
-  m_program.disableAttributeArray("color");
-  m_program.disableAttributeArray("texCoordinates");
+    if (!m_cylinderProgram.useAttributeArray("normal",
+                                             ColorNormalVertex::normalOffset(),
+                                             Vector3f())) {
+      std::cout << m_cylinderProgram.error() << std::endl;
+    }
 
-  m_program.release();
+    if (!m_cylinderProgram.enableAttributeArray("color"))
+      std::cout << m_cylinderProgram.error() << std::endl;
+
+    if (!m_cylinderProgram.useAttributeArray("color",
+                                             ColorNormalVertex::colorOffset(),
+                                             Vector3ub())) {
+      std::cout << m_cylinderProgram.error() << std::endl;
+    }
+
+    glDrawRangeElements(GL_TRIANGLES, 0, m_scene.cylinderVertices().size(),
+                        m_scene.cylinderIndices().size(), GL_UNSIGNED_INT,
+                        reinterpret_cast<const GLvoid *>(NULL));
+
+    m_cylinderArrayBuffer.release();
+    m_cylinderIndexBuffer.release();
+
+    m_cylinderProgram.disableAttributeArray("normal");
+    m_cylinderProgram.disableAttributeArray("vertex");
+    m_cylinderProgram.disableAttributeArray("color");
+
+    m_cylinderProgram.release();
+  }
+
+  glMatrixMode(GL_MODELVIEW);
+  glPopMatrix();
+
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+
 
   glDisable(GL_DEPTH_TEST);
 }
@@ -170,14 +256,13 @@ std::map<float, Primitive::Identifier> GLRenderer::hits(int x, int y) const
   const std::vector<Sphere> &spheres = m_scene.spheres();
 
   // Check for intersection.
-  Vector3f dst;
   for (size_t i = 0; i < spheres.size(); ++i) {
     const Sphere &sphere = spheres[i];
     const Vector3f &center = sphere.position();
     float radius = sphere.radius();
 
     // Intersection test taken from chemkit....
-    dst = center - origin;
+    Vector3f dst = center - origin;
     float B = dst.dot(direction);
     float C = dst.dot(dst) - (radius * radius);
     float D = B * B - C;
@@ -192,8 +277,49 @@ std::map<float, Primitive::Identifier> GLRenderer::hits(int x, int y) const
 
     Primitive::Identifier id = sphere.identifier();
     if (id.type != Primitive::Invalid) {
-      /// @todo This might be inaccurate for very large spheres -- may need to
-      /// project dst onto direction.
+      float depth = std::min(fabs(-B + sqrt(D)), fabs(-B - sqrt(D)));
+      result.insert(std::pair<float, Primitive::Identifier>(depth, id));
+    }
+  }
+
+  // Our spheres:
+  const std::vector<Cylinder> &cylinders = m_scene.cylinders();
+  for (size_t i = 0; i < cylinders.size(); ++i) {
+    const Cylinder &cylinder = cylinders[i];
+
+    // Intersection code adapted from chemkit
+    Vector3f ao = origin - cylinder.position();
+    Vector3f ab = cylinder.direction() * cylinder.length();
+    Vector3f aoxab = ao.cross(ab);
+    Vector3f vxab = direction.cross(ab);
+
+    float A = vxab.dot(vxab);
+    float B = 2 * vxab.dot(aoxab);
+    float C = aoxab.dot(aoxab) - ab.dot(ab) *
+        (cylinder.radius() * cylinder.radius());
+    float D = B*B - 4*A*C;
+
+    // no intersection
+    if(D < 0)
+      continue;
+
+    float t = std::min((-B + sqrt(D)) / (2.f * A), (-B - sqrt(D)) / (2.f * A));
+
+    Vector3f ip = origin + (direction * t);
+    Vector3f ip1 = ip - cylinder.position();
+    Vector3f ip2 = ip - (cylinder.position() + ab);
+
+    // intersection below base or above top of the cylinder
+    if (ip1.dot(ab) < 0 || ip2.dot(ab) > 0)
+      continue;
+
+    // Test for clipping
+    Vector3f dst = ip - origin;
+    if (dst.dot(direction) < 0 || (ip - end).dot(direction) > 0)
+      continue;
+
+    Primitive::Identifier id = cylinder.identifier();
+    if (id.type != Primitive::Invalid) {
       float depth = dst.norm();
       result.insert(std::pair<float, Primitive::Identifier>(depth, id));
     }
