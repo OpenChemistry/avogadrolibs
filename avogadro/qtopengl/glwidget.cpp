@@ -29,6 +29,7 @@ namespace QtOpenGL {
 
 GLWidget::GLWidget(QWidget *parent_)
   : QGLWidget(parent_),
+    m_editor(this),
     m_navigator(this)
 {
   setFocusPolicy(Qt::ClickFocus);
@@ -65,7 +66,11 @@ void GLWidget::paintGL()
 void GLWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
   e->ignore();
-  m_navigator.mouseDoubleClickEvent(e);
+
+  m_editor.mouseDoubleClickEvent(e);
+
+  if (!e->isAccepted())
+    m_navigator.mouseDoubleClickEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::mouseDoubleClickEvent(e);
@@ -74,18 +79,11 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent *e)
 void GLWidget::mousePressEvent(QMouseEvent *e)
 {
   e->ignore();
-  m_navigator.mousePressEvent(e);
 
-  // Testing...
-  if (e->button() == Qt::LeftButton) {
-    Rendering::Primitive::Identifier hit =
-        m_renderer.hit(e->pos().x(), e->pos().y());
+  m_editor.mousePressEvent(e);
 
-    if (hit.type == Rendering::Primitive::Atom)
-      qDebug("Atom clicked: index=%lu\n", hit.index);
-    else if (hit.type == Rendering::Primitive::Bond)
-      qDebug("Bond clicked: index=%lu\n", hit.index);
-  }
+  if (!e->isAccepted())
+    m_navigator.mousePressEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::mousePressEvent(e);
@@ -94,7 +92,11 @@ void GLWidget::mousePressEvent(QMouseEvent *e)
 void GLWidget::mouseMoveEvent(QMouseEvent *e)
 {
   e->ignore();
-  m_navigator.mouseMoveEvent(e);
+
+  m_editor.mouseMoveEvent(e);
+
+  if (!e->isAccepted())
+    m_navigator.mouseMoveEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::mouseMoveEvent(e);
@@ -103,7 +105,11 @@ void GLWidget::mouseMoveEvent(QMouseEvent *e)
 void GLWidget::mouseReleaseEvent(QMouseEvent *e)
 {
   e->ignore();
-  m_navigator.mouseReleaseEvent(e);
+
+  m_editor.mouseReleaseEvent(e);
+
+  if (!e->isAccepted())
+    m_navigator.mouseReleaseEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::mouseReleaseEvent(e);
@@ -112,7 +118,11 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *e)
 void GLWidget::wheelEvent(QWheelEvent *e)
 {
   e->ignore();
-  m_navigator.wheelEvent(e);
+
+  m_editor.wheelEvent(e);
+
+  if (!e->isAccepted())
+    m_navigator.wheelEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::wheelEvent(e);
@@ -121,7 +131,11 @@ void GLWidget::wheelEvent(QWheelEvent *e)
 void GLWidget::keyPressEvent(QKeyEvent *e)
 {
   e->ignore();
-  m_navigator.keyPressEvent(e);
+
+  m_editor.keyPressEvent(e);
+
+  if (!e->isAccepted())
+    m_navigator.keyPressEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::keyPressEvent(e);
@@ -130,7 +144,11 @@ void GLWidget::keyPressEvent(QKeyEvent *e)
 void GLWidget::keyReleaseEvent(QKeyEvent *e)
 {
   e->ignore();
-  m_navigator.keyReleaseEvent(e);
+
+  m_editor.keyReleaseEvent(e);
+
+  if (!e->isAccepted())
+    m_navigator.keyReleaseEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::keyReleaseEvent(e);
