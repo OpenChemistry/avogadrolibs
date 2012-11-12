@@ -2,8 +2,10 @@ varying vec2 v_texCoord;
 varying vec4 eyePosition;
 varying vec3 fColor;
 uniform mat3 normal;
-uniform mat4 projection;
 varying float radius;
+
+uniform mat4 projection;
+
 void main()
 {
   // Figure out if we are inside our sphere.
