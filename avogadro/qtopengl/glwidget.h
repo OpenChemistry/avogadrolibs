@@ -19,6 +19,7 @@
 
 #include "avogadroqtopenglexport.h"
 
+#include "editor.h"
 #include "navigator.h"
 
 #include <avogadro/rendering/glrenderer.h>
@@ -45,6 +46,9 @@ class AVOGADROQTOPENGL_EXPORT GLWidget : public QGLWidget
 public:
   explicit GLWidget(QWidget *parent = 0);
   ~GLWidget();
+
+  /*! Get a reference to the editor for the widget. */
+  Editor& editor() { return m_editor; }
 
   /*! Get a reference to the navigator for the widget. */
   Navigator& navigator() { return m_navigator; }
@@ -75,6 +79,7 @@ protected:
   void keyReleaseEvent(QKeyEvent *);
 
 private:
+  Editor m_editor;
   Navigator m_navigator;
   Rendering::GLRenderer m_renderer;
   QtGui::ScenePluginModel m_scenePlugins;
