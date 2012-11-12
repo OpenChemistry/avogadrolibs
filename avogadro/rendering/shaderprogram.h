@@ -108,6 +108,12 @@ public:
   bool setAttributeArray(const std::string &name,
                          const std::vector<Vector3ub> &array);
 
+  /*! Set the \p name uniform value to int \p i. */
+  bool setUniformValue(const std::string &name, int i);
+
+  /*! Set the \p name uniform value to float \p f. */
+  bool setUniformValue(const std::string &name, float f);
+
   /*! Set the \p name uniform value to \p matrix. */
   bool setUniformValue(const std::string &name, const Eigen::Matrix3f &matrix);
   bool setUniformValue(const std::string &name, const Eigen::Matrix4f &matrix);

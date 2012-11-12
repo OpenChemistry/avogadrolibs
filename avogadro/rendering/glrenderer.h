@@ -88,12 +88,19 @@ private:
   Scene m_scene;
   float m_radius;
 
-  BufferObject m_arrayBuffer;
-  BufferObject m_indexBuffer;
+  BufferObject m_sphereArrayBuffer;
+  BufferObject m_sphereIndexBuffer;
 
-  ShaderProgram m_program;
-  Shader        m_vertex;
-  Shader        m_fragment;
+  ShaderProgram m_sphereProgram;
+  Shader        m_sphereVertexShader;
+  Shader        m_sphereFragmentShader;
+
+  BufferObject m_cylinderArrayBuffer;
+  BufferObject m_cylinderIndexBuffer;
+
+  ShaderProgram m_cylinderProgram;
+  Shader        m_cylinderVertexShader;
+  Shader        m_cylinderFragmentShader;
 };
 
 inline const Camera& GLRenderer::camera() const

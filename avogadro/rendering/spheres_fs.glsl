@@ -2,8 +2,8 @@ varying vec2 v_texCoord;
 varying vec4 eyePosition;
 varying vec3 fColor;
 uniform mat3 normal;
-uniform mat4 projection;
 varying float radius;
+
 void main()
 {
   // Figure out if we are inside our sphere.
@@ -24,7 +24,7 @@ void main()
   vec3 color = ambient + df * diffuse + sf * specular;
   vec4 pos = eyePosition;
   pos.z += N.z * radius;//The radius is 1.0
-  pos = projection * pos;
+  pos = gl_ProjectionMatrix * pos;
   gl_FragDepth = (pos.z / pos.w + 1.0) / 2.0;
 
 //  gl_FragColor = vec4(normalize(position), 1.0);

@@ -56,6 +56,24 @@ Index BufferObject::handle() const
   return static_cast<Index>(d->handle);
 }
 
+bool BufferObject::upload(const std::vector<ColorNormalVertex> &array)
+{
+  if (d->handle == 0) {
+    glGenBuffers(1, &d->handle);
+    d->type = GL_ARRAY_BUFFER;
+  }
+  else if (d->type != GL_ARRAY_BUFFER) {
+    m_error = "Trying to upload array buffer to incompatible buffer.";
+    return false;
+  }
+  glBindBuffer(d->type, d->handle);
+  glBufferData(d->type, array.size() * sizeof(ColorNormalVertex),
+               static_cast<const GLvoid *>(&array[0]),
+               GL_STATIC_DRAW);
+  m_dirty = false;
+  return true;
+}
+
 bool BufferObject::upload(const std::vector<ColorTextureVertex> &array)
 {
   if (d->handle == 0) {
