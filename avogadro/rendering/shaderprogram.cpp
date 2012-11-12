@@ -296,6 +296,28 @@ bool ShaderProgram::setAttributeArray(const std::string &name,
   return true;
 }
 
+bool ShaderProgram::setUniformValue(const std::string &name, int i)
+{
+  GLint location = static_cast<GLint>(findUniform(name));
+  if (location == -1) {
+    m_error = "Could not set uniform " + name + ". No such uniform.";
+    return false;
+  }
+  glUniform1i(location, static_cast<GLint>(i));
+  return true;
+}
+
+bool ShaderProgram::setUniformValue(const std::string &name, float f)
+{
+  GLint location = static_cast<GLint>(findUniform(name));
+  if (location == -1) {
+    m_error = "Could not set uniform " + name + ". No such uniform.";
+    return false;
+  }
+  glUniform1f(location, static_cast<GLfloat>(f));
+  return true;
+}
+
 bool ShaderProgram::setUniformValue(const std::string &name,
                                     const Eigen::Matrix3f &matrix)
 {

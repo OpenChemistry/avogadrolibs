@@ -80,9 +80,11 @@ void GLWidget::mousePressEvent(QMouseEvent *e)
   if (e->button() == Qt::LeftButton) {
     Rendering::Primitive::Identifier hit =
         m_renderer.hit(e->pos().x(), e->pos().y());
-    if (hit.type == Rendering::Primitive::Atom) {
+
+    if (hit.type == Rendering::Primitive::Atom)
       qDebug("Atom clicked: index=%lu\n", hit.index);
-    }
+    else if (hit.type == Rendering::Primitive::Bond)
+      qDebug("Bond clicked: index=%lu\n", hit.index);
   }
 
   if (!e->isAccepted())

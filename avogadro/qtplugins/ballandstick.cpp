@@ -53,19 +53,38 @@ void BallAndStick::process(const Molecule &molecule, Scene &scene)
                     identifier);
   }
 
-  float bondRadius;
-  Vector3ub bondColor(0.5, 0.5, 0.5);
+  float bondRadius = 0.1;
+  Vector3ub bondColor(127, 127, 127);
   identifier.type = Rendering::Primitive::Bond;
   for (size_t i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
     identifier.index = i;
-    /// @todo multicylinders for bond orders
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
     Vector3f bondVector = pos2 - pos1;
     float bondLength = bondVector.norm();
-//    scene.addCylinder(pos1, bondVector.normalized(), bondLength, color,
-//                      bondRadius, identifier);
+    bondVector /= bondLength;
+    switch (bond.order()) {
+    case 3: {
+      Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
+      scene.addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
+                        bondColor, identifier);
+      scene.addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
+                        bondColor, identifier);
+    }
+    default:
+    case 1:
+      scene.addCylinder(pos1, bondVector, bondLength, bondRadius, bondColor,
+                        identifier);
+      break;
+    case 2: {
+      Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
+      scene.addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
+                        bondColor, identifier);
+      scene.addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
+                        bondColor, identifier);
+    }
+    }
   }
 }
 
