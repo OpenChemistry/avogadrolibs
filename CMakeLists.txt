@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8.6 FATAL_ERROR)
 
 project(AvogadroLibs)
 
+message(FATAL_ERROR "error: WIP - testing CDash@home builds from gerrit")
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(BuildType)
