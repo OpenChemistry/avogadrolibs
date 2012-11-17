@@ -167,8 +167,10 @@ void ShaderProgram::release()
 bool ShaderProgram::enableAttributeArray(const std::string &name)
 {
   GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1)
+  if (location == -1) {
+    m_error = "Could not enable attribute " + name + ". No such attribute.";
     return false;
+  }
   glEnableVertexAttribArray(location);
   return true;
 }
@@ -176,8 +178,10 @@ bool ShaderProgram::enableAttributeArray(const std::string &name)
 bool ShaderProgram::disableAttributeArray(const std::string &name)
 {
   GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1)
+  if (location == -1) {
+    m_error = "Could not disable attribute " + name + ". No such attribute.";
     return false;
+  }
   glDisableVertexAttribArray(location);
   return true;
 }
@@ -187,8 +191,10 @@ bool ShaderProgram::disableAttributeArray(const std::string &name)
 bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vector2f)
 {
   GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1)
+  if (location == -1) {
+    m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
+  }
   glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 32,
                         BUFFER_OFFSET(offset));
   return true;
@@ -197,8 +203,10 @@ bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vecto
 bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vector3f)
 {
   GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1)
+  if (location == -1) {
+    m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
+  }
   glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 32,
                         BUFFER_OFFSET(offset));
   return true;
@@ -207,8 +215,10 @@ bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vecto
 bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vector3ub)
 {
   GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1)
+  if (location == -1) {
+    m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
+  }
   glVertexAttribPointer(location, 3, GL_UNSIGNED_BYTE, GL_TRUE, 32,
                         BUFFER_OFFSET(offset));
   return true;
@@ -223,8 +233,10 @@ bool ShaderProgram::setAttributeArray(const std::string &name,
   }
 
   GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1)
+  if (location == -1) {
+    m_error = "Could not set attribute " + name + ". No such attribute.";
     return false;
+  }
   const GLvoid *data = static_cast<const GLvoid *>(&array[0]);
   glVertexAttribPointer(location, 1, GL_UNSIGNED_SHORT, GL_FALSE, 0, data);
   return true;
@@ -239,8 +251,10 @@ bool ShaderProgram::setAttributeArray(const std::string &name,
   }
 
   GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1)
+  if (location == -1) {
+    m_error = "Could not set attribute " + name + ". No such attribute.";
     return false;
+  }
   const GLvoid *data = static_cast<const GLvoid *>(array[0].data());
   glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 0, data);
   return true;
@@ -255,8 +269,10 @@ bool ShaderProgram::setAttributeArray(const std::string &name,
   }
 
   GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1)
+  if (location == -1) {
+    m_error = "Could not set attribute " + name + ". No such attribute.";
     return false;
+  }
   const GLvoid *data = static_cast<const GLvoid *>(array[0].data());
   glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, data);
   return true;
@@ -271,10 +287,34 @@ bool ShaderProgram::setAttributeArray(const std::string &name,
   }
 
   GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1)
+  if (location == -1) {
+    m_error = "Could not set attribute " + name + ". No such attribute.";
     return false;
+  }
   const GLvoid *data = static_cast<const GLvoid *>(array[0].data());
   glVertexAttribPointer(location, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, data);
+  return true;
+}
+
+bool ShaderProgram::setUniformValue(const std::string &name, int i)
+{
+  GLint location = static_cast<GLint>(findUniform(name));
+  if (location == -1) {
+    m_error = "Could not set uniform " + name + ". No such uniform.";
+    return false;
+  }
+  glUniform1i(location, static_cast<GLint>(i));
+  return true;
+}
+
+bool ShaderProgram::setUniformValue(const std::string &name, float f)
+{
+  GLint location = static_cast<GLint>(findUniform(name));
+  if (location == -1) {
+    m_error = "Could not set uniform " + name + ". No such uniform.";
+    return false;
+  }
+  glUniform1f(location, static_cast<GLfloat>(f));
   return true;
 }
 
@@ -282,8 +322,10 @@ bool ShaderProgram::setUniformValue(const std::string &name,
                                     const Eigen::Matrix3f &matrix)
 {
   GLint location = static_cast<GLint>(findUniform(name));
-  if (location == -1)
+  if (location == -1) {
+    m_error = "Could not set uniform " + name + ". No such uniform.";
     return false;
+  }
   glUniformMatrix3fv(location, 1, GL_FALSE,
                      static_cast<const GLfloat *>(matrix.data()));
   return true;
@@ -293,8 +335,10 @@ bool ShaderProgram::setUniformValue(const std::string &name,
                                     const Eigen::Matrix4f &matrix)
 {
   GLint location = static_cast<GLint>(findUniform(name));
-  if (location == -1)
+  if (location == -1) {
+    m_error = "Could not set uniform " + name + ". No such uniform.";
     return false;
+  }
   glUniformMatrix4fv(location, 1, GL_FALSE,
                      static_cast<const GLfloat *>(matrix.data()));
   return true;
@@ -325,7 +369,7 @@ inline int ShaderProgram::findUniform(const std::string &name)
       static_cast<int>(glGetUniformLocation(static_cast<GLuint>(m_handle),
                                             namePtr));
   if (location == -1)
-    m_error = "Specified uniform not found in current shader program.";
+    m_error = "Uniform " + name + " not found in current shader program.";
 
   return location;
 }

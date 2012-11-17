@@ -53,10 +53,14 @@ public:
 
   void clear();
 
+  QList<ScenePlugin *> activeScenePlugins() const;
+
+signals:
+  void pluginStateChanged(Avogadro::QtGui::ScenePlugin *);
 
 public slots:
-  void addItem(ScenePlugin *item);
-  void removeItem(ScenePlugin *item);
+  void addItem(Avogadro::QtGui::ScenePlugin *item);
+  void removeItem(Avogadro::QtGui::ScenePlugin *item);
   void itemChanged();
 
 private:

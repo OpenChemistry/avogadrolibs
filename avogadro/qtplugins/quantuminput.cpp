@@ -16,6 +16,8 @@
 
 #include "quantuminput.h"
 
+#include "gamessinputdialog.h"
+
 #include <QtCore/QtPlugin>
 #include <QtCore/QStringList>
 
@@ -25,14 +27,18 @@
 #include <QtCore/QDebug>
 
 namespace Avogadro {
+namespace Core {
+class Molecule;
+}
 namespace QtPlugins {
 
 QuantumInput::QuantumInput(QObject *parent_) : ExtensionPlugin(parent_),
-  m_dialog(NULL)
+  m_dialog(NULL),
+  m_molecule(NULL)
 {
   m_action = new QAction(this);
   m_action->setEnabled(true);
-  m_action->setText(tr("&NWChem"));
+  m_action->setText(tr("&GAMESS Input Generator"));
   connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
 }
 
@@ -56,11 +62,18 @@ QStringList QuantumInput::menuPath(QAction *) const
   return path;
 }
 
+void QuantumInput::setMolecule(Core::Molecule *mol)
+{
+  if (m_dialog)
+    m_dialog->setMolecule(mol);
+  m_molecule = mol;
+}
+
 void QuantumInput::menuActivated()
 {
-  qDebug() << "They clicked on me!!!!!";
   if (!m_dialog)
-    m_dialog = new QDialog;
+    m_dialog = new GamessInputDialog;
+  m_dialog->setMolecule(m_molecule);
   m_dialog->show();
 }
 

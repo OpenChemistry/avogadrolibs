@@ -18,6 +18,9 @@
 #define AVOGADRO_RENDERING_SCENE_H
 
 #include "avogadrorenderingexport.h"
+
+#include "primitive.h"
+
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/vector.h>
 
@@ -26,6 +29,11 @@
 #include <map>    // For member variables.
 
 namespace Avogadro {
+
+namespace Core {
+class Molecule;
+}
+
 namespace Rendering {
 
 /*!
@@ -59,6 +67,22 @@ struct ColorTextureVertex {
   }
 }; // 32 bytes total size - 16/32/64 are ideal for alignment.
 
+/// Pack the vertex data into a contiguous array.
+struct ColorNormalVertex {
+  Vector3ub color;           //  3 bytes
+  unsigned char unusedAlign; //  1 byte
+  Vector3f normal;           // 12 bytes
+  Vector3f vertex;           // 12 bytes
+  unsigned char padding[4];  //  4 bytes
+
+  ColorNormalVertex(const Vector3ub &c, const Vector3f &n, const Vector3f &v)
+    : color(c), normal(n), vertex(v) {}
+
+  static int colorOffset() { return 0; }
+  static int normalOffset() { return sizeof(Vector3ub) + sizeof(unsigned char); }
+  static int vertexOffset() { return normalOffset() + sizeof(Vector3f); }
+}; // 32 bytes total size - 16/32/64 are ideal for alignment.
+
 class AVOGADRORENDERING_EXPORT Scene
 {
 public:
@@ -73,21 +97,50 @@ public:
    */
   float radius() const;
 
-  /*! Add a sphere to the scene object. */
-  void addSphere(const Vector3f &position, const Vector3ub &color, float radius);
+  /*!
+   * Add a sphere to the scene object.
+   */
+  void addSphere(const Vector3f &position, const Vector3ub &color, float radius,
+                 const Primitive::Identifier &id);
+
+  /*! Get a const reference to the sphere list in this Scene object. */
+  const std::vector<Sphere> spheres() const { return m_spheres; }
 
   /*! Number of spheres in this Scene object. */
-  Index sphereCount() const { return m_spheres.size() / 4; }
+  Index sphereCount() const { return m_spheres.size(); }
 
   /*! Get a const reference to the sphere array that can be passed to the
    * BufferObject in order to be uploaded to the GPU.
    */
-  const std::vector<ColorTextureVertex>& spheres() const;
+  const std::vector<ColorTextureVertex>& sphereVertices() const;
 
   /*! Get a const reference to the sphere index array that can be passed to the
    * BufferObject in order to be uploaded to the GPU.
    */
   const std::vector<unsigned int>& sphereIndices() const;
+
+  /*!
+   * Add a cylinder to the Scene object. Direction must be normalized.
+   */
+  void addCylinder(const Vector3f &position, const Vector3f &direction,
+                   float length, float radius_, const Vector3ub &color,
+                   const Primitive::Identifier &id);
+
+  /*! Get a const reference to the cylinder list in this Scene object. */
+  const std::vector<Cylinder> cylinders() const { return m_cylinders; }
+
+  /*! Number of cylinders in this Scene object. */
+  Index cylinderCount() const { return m_cylinders.size(); }
+
+  /*! Get a const reference to the cylinder vertex array that can be passed to
+   * BufferObject in order to be uploaded to the GPU.
+   */
+  const std::vector<ColorNormalVertex>& cylinderVertices() const;
+
+  /*! Get a const reference to the cylinder index array that can be passed to
+   * BufferObject in order to be uploaded to the GPU.
+   */
+  const std::vector<unsigned int> &cylinderIndices() const;
 
   /*! Is the scene dirty? */
   bool dirty() const { return m_dirty; }
@@ -101,8 +154,13 @@ public:
   void clear();
 
 private:
+  std::vector<Sphere> m_spheres;
   std::vector<unsigned int> m_sphereIndices;
-  std::vector<ColorTextureVertex> m_spheres;
+  std::vector<ColorTextureVertex> m_sphereVertices;
+
+  std::vector<Cylinder> m_cylinders;
+  std::vector<unsigned int> m_cylinderIndices;
+  std::vector<ColorNormalVertex> m_cylinderVertices;
 
   bool             m_dirty;
   mutable bool     m_centerDirty;
@@ -110,14 +168,24 @@ private:
   mutable float    m_radius;
 };
 
-inline const std::vector<ColorTextureVertex>& Scene::spheres() const
+inline const std::vector<ColorTextureVertex>& Scene::sphereVertices() const
 {
-  return m_spheres;
+  return m_sphereVertices;
 }
 
 inline const std::vector<unsigned int>& Scene::sphereIndices() const
 {
   return m_sphereIndices;
+}
+
+inline const std::vector<ColorNormalVertex>& Scene::cylinderVertices() const
+{
+  return m_cylinderVertices;
+}
+
+inline const std::vector<unsigned int> &Scene::cylinderIndices() const
+{
+  return m_cylinderIndices;
 }
 
 } // End Rendering namespace

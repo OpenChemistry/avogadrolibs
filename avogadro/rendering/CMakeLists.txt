@@ -15,6 +15,7 @@ set(HEADERS
   bufferobject.h
   camera.h
   glrenderer.h
+  primitive.h
   scene.h
   shader.h
   shaderprogram.h
@@ -29,7 +30,12 @@ set(SOURCES
   shaderprogram.cpp
 )
 
-set(shader_files "spheres_vs.glsl" "spheres_fs.glsl")
+set(shader_files
+  "cylinders_fs.glsl"
+  "cylinders_vs.glsl"
+  "spheres_fs.glsl"
+  "spheres_vs.glsl"
+)
 foreach(file ${shader_files})
   get_filename_component(file_we ${file} NAME_WE)
   set(src  ${CMAKE_CURRENT_SOURCE_DIR}/${file})
