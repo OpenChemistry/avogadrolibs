@@ -7,11 +7,17 @@ find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
 include_directories(SYSTEM ${QT_INCLUDES})
 add_definitions(${QT_DEFINITIONS})
 
+find_package(MoleQueue)
+include_directories(${MoleQueue_INCLUDE_DIRS})
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
   "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/avogadro2/plugins")
 
-function(avogadro_plugin name sources)
-  add_library(${name} MODULE ${sources})
+function(avogadro_plugin_ui name sources qt_uis)
+  qt4_wrap_ui(ui_srcs ${qt_uis})
+  add_library(${name} MODULE ${sources} ${ui_srcs})
   target_link_libraries(${name} AvogadroCore AvogadroQtGui)
   set_target_properties(${name} PROPERTIES AUTOMOC TRUE)
   install(TARGETS ${name}
@@ -21,6 +27,10 @@ function(avogadro_plugin name sources)
     ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}/avogadro2/plugins")
 endfunction()
 
+function(avogadro_plugin name sources)
+  avogadro_plugin_ui(${name} "${sources}" "")
+endfunction()
+
 # Now to make the plugins.
 
 # Scene
@@ -28,4 +38,13 @@ avogadro_plugin(vanderwaals vanderwaals.cpp)
 avogadro_plugin(ballandstick ballandstick.cpp)
 
 # Extension
-avogadro_plugin(quantuminput quantuminput.cpp)
+set(quantuminput_srcs
+  gamessinputdialog.cpp
+  gamesshighlighter.cpp
+  quantuminput.cpp
+)
+set(quantuminput_uis
+  gamessinputdialog.ui
+)
+avogadro_plugin_ui(quantuminput "${quantuminput_srcs}" "${quantuminput_uis}")
+target_link_libraries(quantuminput MoleQueueClient)

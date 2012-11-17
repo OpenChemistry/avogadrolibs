@@ -24,6 +24,7 @@ class QDialog;
 
 namespace Avogadro {
 namespace QtPlugins {
+class GamessInputDialog;
 
 class QuantumInput : public QtGui::ExtensionPlugin
 {
@@ -38,14 +39,18 @@ public:
   QString description() const { return tr("Generate input for quantum codes."); }
 
   QList<QAction *> actions() const;
+
   QStringList menuPath(QAction *) const;
+
+  void setMolecule(Core::Molecule *mol);
 
 private slots:
   void menuActivated();
 
 private:
   QAction *m_action;
-  QDialog *m_dialog;
+  Core::Molecule *m_molecule;
+  GamessInputDialog *m_dialog;
 };
 
 /*!
