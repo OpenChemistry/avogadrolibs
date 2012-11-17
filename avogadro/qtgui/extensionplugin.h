@@ -69,6 +69,12 @@ public:
    * name, e.g. File, &Open).
    */
   virtual QStringList menuPath(QAction *action = 0) const = 0;
+
+public slots:
+  /*!
+   * Called when the current molecule changes.
+   */
+  virtual void setMolecule(Core::Molecule *mol) = 0;
 };
 
 /*!
