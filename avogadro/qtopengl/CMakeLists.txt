@@ -10,18 +10,20 @@ add_definitions(${QT_DEFINITIONS})
 set(HEADERS
   editor.h
   glwidget.h
+  manipulator.h
   navigator.h
 )
 
 set(SOURCES
   editor.cpp
   glwidget.cpp
+  manipulator.cpp
   navigator.cpp
 )
 
 avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtOpenGL
-  AvogadroCore # Needed for editor.cpp
+  AvogadroCore # Needed for editor.cpp, manipulator.cpp
   AvogadroRendering
   AvogadroQtGui
   ${QT_QTCORE_LIBRARY}

@@ -41,7 +41,8 @@ namespace QtOpenGL {
 Editor::Editor(GLWidget *widget)
   : m_glWidget(widget),
     m_molecule(0),
-    m_object(Primitive::Identifier()),
+    m_clickedObject(Primitive::Identifier()),
+    m_newObject(Primitive::Identifier()),
     m_pressedButtons(Qt::NoButton)
 {
 }
@@ -53,27 +54,39 @@ Editor::~Editor()
 void Editor::mousePressEvent(QMouseEvent *e)
 {
   updatePressedButtons(e, false);
-  m_lastMousePosition = e->pos();
+  m_clickPosition = e->pos();
 
   if (m_pressedButtons & Qt::LeftButton) {
-    m_object = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
+    m_clickedObject = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
 
-    if (m_object.molecule != m_molecule) {
+    if (m_clickedObject.molecule && m_clickedObject.molecule != m_molecule) {
       e->ignore();
       return;
     }
 
-    switch (m_object.type) {
-    case Primitive::Invalid:
-      e->ignore();
-      return;
+    switch (m_clickedObject.type) {
+    case Primitive::Invalid: {
+      // Add an atom at the clicked position
+      Atom newAtom;
+      newAtom = m_molecule->addAtom(m_atomicNumber);
+      m_clickedObject.type = Primitive::Atom;
+      m_clickedObject.molecule = m_molecule;
+      m_clickedObject.index = newAtom.index();
+      if (newAtom.isValid()) {
+        Vector2f windowPos(e->posF().x(), e->posF().y());
+        Vector3f newPos = m_glWidget->renderer().camera().unProject(windowPos);
+        newAtom.setPosition3d(newPos.cast<double>());
+        e->accept();
+        emit moleculeChanged();
+        return;
+      }
+      break;
+    }
     case Primitive::Atom:
-      qDebug("Atom clicked: index=%lu\n", m_object.index);
       e->accept();
       return;
     case Primitive::Bond:
-      qDebug("Bond clicked: index=%lu\n", m_object.index);
-      Bond bond = m_molecule->bond(m_object.index);
+      Bond bond = m_molecule->bond(m_clickedObject.index);
       bond.setOrder((bond.order() % 3) + 1);
       emit moleculeChanged();
       e->accept();
@@ -82,14 +95,14 @@ void Editor::mousePressEvent(QMouseEvent *e)
   }
   else if (m_pressedButtons & Qt::RightButton) {
     // Delete the current primitive
-    m_object = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
+    m_clickedObject = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
 
-    if (m_object.molecule != m_molecule) {
+    if (m_clickedObject.molecule != m_molecule) {
       e->ignore();
       return;
     }
 
-    switch (m_object.type) {
+    switch (m_clickedObject.type) {
     case Primitive::Invalid:
       e->ignore();
       return;
@@ -113,9 +126,32 @@ void Editor::mouseReleaseEvent(QMouseEvent *e)
 {
   updatePressedButtons(e, true);
   e->ignore();
-  if (m_object.type != Primitive::Invalid) {
-    resetObject();
-    e->accept();
+
+  if (m_clickedObject.type == Primitive::Invalid)
+    return;
+
+  switch (e->button()) {
+  case Qt::LeftButton:
+    if (e->pos() != m_clickPosition) {
+      // If the mouse has moved, we added a new atom bonded to the clicked atom.
+      // Nothing to do but accept and reset.
+      e->accept();
+      reset();
+    }
+    else {
+      // Otherwise, change the type of the clicked atom.
+      if (m_clickedObject.type == Primitive::Atom) {
+        Core::Atom atom = m_clickedObject.molecule->atom(m_clickedObject.index);
+        atom.setAtomicNumber(m_atomicNumber);
+        emit moleculeChanged();
+        e->accept();
+        reset();
+        return;
+      }
+    }
+    break;
+  default:
+    break;
   }
 }
 
@@ -123,17 +159,37 @@ void Editor::mouseMoveEvent(QMouseEvent *e)
 {
   e->ignore();
   if (m_pressedButtons & Qt::LeftButton) {
-    if (m_object.type == Primitive::Atom) {
-      if (m_object.molecule == m_molecule) {
-        // Update atom position
-        Atom atom = m_molecule->atom(m_object.index);
+    if (m_clickedObject.type == Primitive::Atom &&
+        m_molecule == m_clickedObject.molecule) {
+      Core::Atom newAtom;
+      // Add a new atom bonded to the clicked atom
+      if (m_newObject.type == Primitive::Invalid) {
+        Core::Atom clickedAtom = m_clickedObject.molecule->atom(
+              m_clickedObject.index);
+        newAtom = m_molecule->addAtom(m_atomicNumber);
+        newAtom.setPosition3d(clickedAtom.position3d());
+        m_molecule->addBond(clickedAtom, newAtom);
+        m_newObject.type = Primitive::Atom;
+        m_newObject.molecule = m_clickedObject.molecule;
+        m_newObject.index = newAtom.index();
+      }
+      else if (m_newObject.type == Primitive::Atom) {
+        newAtom = m_newObject.molecule->atom(m_newObject.index);
+      }
+      else {
+        return;
+      }
+
+      if (newAtom.isValid()) {
         Vector2f windowPos(e->posF().x(), e->posF().y());
-        Vector3f oldPos(atom.position3d().cast<float>());
+        Vector3f oldPos(newAtom.position3d().cast<float>());
         Vector3f newPos = m_glWidget->renderer().camera().unProject(windowPos,
                                                                     oldPos);
-        atom.setPosition3d(newPos.cast<double>());
-        emit moleculeChanged();
+        newAtom.setPosition3d(newPos.cast<double>());
+
         e->accept();
+        emit moleculeChanged();
+        return;
       }
     }
   }

@@ -29,6 +29,11 @@ Elements::~Elements()
 {
 }
 
+unsigned char Elements::elementCount()
+{
+  return element_count;
+}
+
 unsigned char Elements::atomicNumberFromSymbol(const std::string &symbol)
 {
   if (symbol.length() == 1) {

@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTOPENGL_EDITOR_H
-#define AVOGADRO_QTOPENGL_EDITOR_H
+#ifndef AVOGADRO_QTOPENGL_MANIPULATOR_H
+#define AVOGADRO_QTOPENGL_MANIPULATOR_H
 
 #include <QtCore/QObject>
 
@@ -38,19 +38,16 @@ namespace QtOpenGL {
 class GLWidget;
 
 /**
- * @class Editor editor.h <avogadro/qtopengl/editor.h>
- * @brief The Editor class manipulates a molecule's geometry.
+ * @class Manipulator manipulator.h <avogadro/qtopengl/manipulator.h>
+ * @brief The Manipulator class manipulates a molecule's geometry.
  * @author David C. Lonie
  */
-class Editor : public QObject
+class Manipulator : public QObject
 {
   Q_OBJECT
 public:
-  explicit Editor(GLWidget *widget);
-  ~Editor();
-
-  /// Set the atomic number used for new atoms.
-  void setAtomicNumber(unsigned char atomicNum) { m_atomicNumber = atomicNum; }
+  explicit Manipulator(GLWidget *widget);
+  ~Manipulator();
 
   /// Respond to user input
   void mousePressEvent(QMouseEvent *);
@@ -85,24 +82,16 @@ private:
   /// @todo Account for modifier keys.
   void updatePressedButtons(QMouseEvent *, bool release);
 
-  void reset()
-  {
-    m_clickedObject = Rendering::Primitive::Identifier();
-    m_newObject = Rendering::Primitive::Identifier();
-    m_clickPosition = QPoint();
-    m_pressedButtons = Qt::NoButton;
-  }
+  void resetObject() { m_object = Rendering::Primitive::Identifier(); }
 
   GLWidget *m_glWidget;
   Core::Molecule *m_molecule;
-  unsigned char m_atomicNumber;
-  Rendering::Primitive::Identifier m_clickedObject;
-  Rendering::Primitive::Identifier m_newObject;
+  Rendering::Primitive::Identifier m_object;
   Qt::MouseButtons m_pressedButtons;
-  QPoint m_clickPosition;
+  QPoint m_lastMousePosition;
 };
 
 } // namespace QtOpenGL
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTOPENGL_NAVIGATOR_H
+#endif // AVOGADRO_QTOPENGL_MANIPULATOR_H

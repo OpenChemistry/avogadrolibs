@@ -20,6 +20,7 @@
 #include "avogadroqtopenglexport.h"
 
 #include "editor.h"
+#include "manipulator.h"
 #include "navigator.h"
 
 #include <avogadro/rendering/glrenderer.h>
@@ -50,6 +51,9 @@ public:
   /*! Get a reference to the editor for the widget. */
   Editor& editor() { return m_editor; }
 
+  /*! Get a reference to the manipulator for the widget. */
+  Manipulator& manipulator() { return m_manipulator; }
+
   /*! Get a reference to the navigator for the widget. */
   Navigator& navigator() { return m_navigator; }
 
@@ -58,6 +62,15 @@ public:
 
   /*! Reset the view to fit the entire scene. */
   void resetCamera();
+
+  /*! This is a hacky way to switch tools. It should be replaced. */
+  enum Tool {
+    NavigateTool = 0,
+    ManipulateTool,
+    EditTool
+  };
+  void setActiveTool(Tool t) { m_tool = t; }
+  Tool activeTool() const { return m_tool; }
 
 protected:
   /*! This is where the GL context is initialized. */
@@ -79,7 +92,9 @@ protected:
   void keyReleaseEvent(QKeyEvent *);
 
 private:
+  Tool m_tool;
   Editor m_editor;
+  Manipulator m_manipulator;
   Navigator m_navigator;
   Rendering::GLRenderer m_renderer;
   QtGui::ScenePluginModel m_scenePlugins;
