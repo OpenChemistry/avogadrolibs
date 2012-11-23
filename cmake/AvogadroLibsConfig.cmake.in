@@ -14,6 +14,9 @@ set(AvogadroLibs_LIBRARY_DIR     "${AvogadroLibs_INSTALL_PREFIX}/@INSTALL_LIBRAR
 set(AvogadroLibs_RUNTIME_DIR     "${AvogadroLibs_INSTALL_PREFIX}/@INSTALL_RUNTIME_DIR@")
 set(AvogadroLibs_CMAKE_DIR       "${AvogadroLibs_LIBRARY_DIR}/cmake/avogadrolibs")
 
+# List of target names that are plugins:
+set(AvogadroLibs_PLUGINS         "@AvogadroLibs_PLUGINS@")
+
 if(NOT TARGET AvogadroCore)
   include("${AvogadroLibs_CMAKE_DIR}/AvogadroLibsTargets.cmake")
 endif()

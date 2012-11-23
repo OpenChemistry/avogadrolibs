@@ -18,6 +18,9 @@ set(AvogadroLibs_VERSION
 
 option(BUILD_SHARED_LIBS "Build with shared libraries" ON)
 
+# Before any plugins are defined, and before any add_subdirectory calls:
+set_property(GLOBAL PROPERTY AvogadroLibs_PLUGINS)
+
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(utilities)
 add_subdirectory(avogadro)
@@ -35,6 +38,9 @@ option(BUILD_DOCUMENTATION "Build project documentation" OFF)
 if(BUILD_DOCUMENTATION)
   add_subdirectory(docs)
 endif()
+
+# After all add_subdirectory calls, so the list of plugins is complete:
+get_property(AvogadroLibs_PLUGINS GLOBAL PROPERTY AvogadroLibs_PLUGINS)
 
 configure_file(${AvogadroLibs_SOURCE_DIR}/cmake/CTestCustom.cmake.in
   ${AvogadroLibs_BINARY_DIR}/CTestCustom.cmake)
