@@ -25,6 +25,7 @@ function(avogadro_plugin_ui name sources qt_uis)
     RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
     LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/plugins"
     ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}/avogadro2/plugins")
+  set_property(GLOBAL APPEND PROPERTY AvogadroLibs_PLUGINS ${name})
 endfunction()
 
 function(avogadro_plugin name sources)

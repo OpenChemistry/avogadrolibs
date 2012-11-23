@@ -33,26 +33,20 @@ namespace QtGui {
 PluginManager::PluginManager(QObject *p) : QObject(p)
 {
   m_relativeToApp = "/../lib/avogadro2/plugins";
-#ifdef __APPLE__
-  QString buildRelative("/../../../..");
-  m_relativeToApp = buildRelative + m_relativeToApp;
-  qDebug() << QCoreApplication::applicationDirPath() + buildRelative
-              + "/CMakeCache.txt";
-  if (QFileInfo(QCoreApplication::applicationDirPath() + buildRelative
-                + "/CMakeCache.txt").exists()) {
-    qDebug() << QCoreApplication::applicationDirPath()
-                + buildRelative
-                + "/lib/avogadro2/plugins";
-    m_pluginDirs.append(QDir(QCoreApplication::applicationDirPath()
-                             + buildRelative
-                             + "/lib/avogadro2/plugins").absolutePath());
-    qDebug() << QDir(QCoreApplication::applicationDirPath()
-                     + buildRelative
-                     + "/lib/avogadro2/plugins").absolutePath();
-  }
-#endif
   QDir dir(QCoreApplication::applicationDirPath() + m_relativeToApp);
-  m_pluginDirs.append(dir.absolutePath());
+
+  int count = 0;
+  foreach(const QString &pluginPath, dir.entryList(QDir::Files)) {
+    ++count;
+    qDebug() << " " << dir.absolutePath() + "/" + pluginPath;
+  }
+
+  if (count > 0) {
+    m_pluginDirs.append(dir.absolutePath());
+    qDebug() << " " << count << "files found in" << dir.absolutePath();
+  } else {
+    qDebug() << "  no plugin files found in" << dir.absolutePath();
+  }
 }
 
 PluginManager::~PluginManager()
