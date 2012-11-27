@@ -32,27 +32,45 @@ namespace QtGui {
 
 PluginManager::PluginManager(QObject *p) : QObject(p)
 {
-  m_relativeToApp = "/../lib/avogadro2/plugins";
+  // http://doc.qt.digia.com/qt/deployment-plugins.html#debugging-plugins
+  bool debugPlugins = !qgetenv("QT_DEBUG_PLUGINS").isEmpty();
+
+  // The usual base directory is the parent directory of the executable's
+  // location. (exe is in "bin" or "MacOS" and plugins are under the parent
+  // directory at "lib/avogadro2/plugins"...)
+  //
+  QDir baseDir(QCoreApplication::applicationDirPath() + "/..");
+  if (debugPlugins)
+    qDebug() << "  baseDir:" << baseDir.absolutePath();
+
 #ifdef __APPLE__
-  QString buildRelative("/../../../..");
-  m_relativeToApp = buildRelative + m_relativeToApp;
-  qDebug() << QCoreApplication::applicationDirPath() + buildRelative
-              + "/CMakeCache.txt";
-  if (QFileInfo(QCoreApplication::applicationDirPath() + buildRelative
-                + "/CMakeCache.txt").exists()) {
-    qDebug() << QCoreApplication::applicationDirPath()
-                + buildRelative
-                + "/lib/avogadro2/plugins";
-    m_pluginDirs.append(QDir(QCoreApplication::applicationDirPath()
-                             + buildRelative
-                             + "/lib/avogadro2/plugins").absolutePath());
-    qDebug() << QDir(QCoreApplication::applicationDirPath()
-                     + buildRelative
-                     + "/lib/avogadro2/plugins").absolutePath();
+  // But if NOT running from the installed bundle on the Mac, the plugins are
+  // relative to the build directory instead:
+  //
+  if (!QFileInfo(baseDir.absolutePath() + "/Resources/qt.conf").exists()) {
+    QDir buildDir(QCoreApplication::applicationDirPath() + "/../../../..");
+    baseDir = buildDir;
+    if (debugPlugins)
+      qDebug() << "  using buildDir:" << buildDir.absolutePath();
   }
 #endif
-  QDir dir(QCoreApplication::applicationDirPath() + m_relativeToApp);
-  m_pluginDirs.append(dir.absolutePath());
+
+  QDir pluginsDir(baseDir.absolutePath() + "/lib/avogadro2/plugins");
+  qDebug() << "  pluginsDir:" << pluginsDir.absolutePath();
+  m_pluginDirs.append(pluginsDir.absolutePath());
+
+  if (debugPlugins) {
+    int count = 0;
+    foreach(const QString &pluginPath, pluginsDir.entryList(QDir::Files)) {
+      ++count;
+      qDebug() << " " << pluginsDir.absolutePath() + "/" + pluginPath;
+    }
+
+    if (count > 0)
+      qDebug() << " " << count << "files found in" << pluginsDir.absolutePath();
+    else
+      qDebug() << "  no plugin files found in" << pluginsDir.absolutePath();
+  }
 }
 
 PluginManager::~PluginManager()
