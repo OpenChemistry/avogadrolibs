@@ -30,6 +30,9 @@ public:
   Elements();
   ~Elements();
 
+  /** Get the number of elements in the database. */
+  static unsigned char elementCount();
+
   /** Get the atomic number from the supplied symbol. If the symbol is not
    * recognised then 0 will be returned. 0 is also the dummy atom. */
   static unsigned char atomicNumberFromSymbol(const std::string &symbol);
