@@ -21,22 +21,22 @@
 TEST(GraphTest, size)
 {
   Avogadro::Core::Graph graph;
-  EXPECT_EQ(graph.size(), 0);
+  EXPECT_EQ(graph.size(), static_cast<size_t>(0));
 
   Avogadro::Core::Graph graph2(12);
-  EXPECT_EQ(graph2.size(), 12);
+  EXPECT_EQ(graph2.size(), static_cast<size_t>(12));
 }
 
 TEST(GraphTest, setSize)
 {
   Avogadro::Core::Graph graph;
-  EXPECT_EQ(graph.size(), 0);
+  EXPECT_EQ(graph.size(), static_cast<size_t>(0));
 
   graph.setSize(100);
-  EXPECT_EQ(graph.size(), 100);
+  EXPECT_EQ(graph.size(), static_cast<size_t>(100));
 
   graph.setSize(50);
-  EXPECT_EQ(graph.size(), 50);
+  EXPECT_EQ(graph.size(), static_cast<size_t>(50));
 }
 
 TEST(GraphTest, isEmpty)
@@ -60,7 +60,7 @@ TEST(GraphTest, addVertex)
   Avogadro::Core::Graph graph;
   size_t index = graph.addVertex();
   EXPECT_EQ(index, 0);
-  EXPECT_EQ(graph.size(), 1);
+  EXPECT_EQ(graph.size(), static_cast<size_t>(1));
 
   index = graph.addVertex();
   EXPECT_EQ(index, 1);
@@ -72,37 +72,37 @@ TEST(GraphTest, addVertex)
 TEST(GraphTest, removeVertex)
 {
   Avogadro::Core::Graph graph(4);
-  EXPECT_EQ(graph.size(), 4);
+  EXPECT_EQ(graph.size(), static_cast<size_t>(4));
 
   graph.removeVertex(0);
-  EXPECT_EQ(graph.size(), 3);
+  EXPECT_EQ(graph.size(), static_cast<size_t>(3));
 
   graph.removeVertex(2);
-  EXPECT_EQ(graph.size(), 2);
+  EXPECT_EQ(graph.size(), static_cast<size_t>(2));
 }
 
 TEST(GraphTest, vertexCount)
 {
   Avogadro::Core::Graph graph;
-  EXPECT_EQ(graph.vertexCount(), 0);
+  EXPECT_EQ(graph.vertexCount(), static_cast<size_t>(0));
 
   graph.addVertex();
-  EXPECT_EQ(graph.vertexCount(), 1);
+  EXPECT_EQ(graph.vertexCount(), static_cast<size_t>(1));
 
   graph.addVertex();
-  EXPECT_EQ(graph.vertexCount(), 2);
+  EXPECT_EQ(graph.vertexCount(), static_cast<size_t>(2));
 
   graph.removeVertex(1);
-  EXPECT_EQ(graph.vertexCount(), 1);
+  EXPECT_EQ(graph.vertexCount(), static_cast<size_t>(1));
 
   graph.clear();
-  EXPECT_EQ(graph.vertexCount(), 0);
+  EXPECT_EQ(graph.vertexCount(), static_cast<size_t>(0));
 }
 
 TEST(GraphTest, addEdge)
 {
   Avogadro::Core::Graph graph(5);
-  EXPECT_EQ(graph.edgeCount(), 0);
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(0));
 
   graph.addEdge(0, 1);
   EXPECT_EQ(graph.edgeCount(), 1);
@@ -123,37 +123,37 @@ TEST(GraphTest, removeEdge)
 TEST(GraphTest, edgeCount)
 {
   Avogadro::Core::Graph graph(3);
-  EXPECT_EQ(graph.edgeCount(), 0);
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(0));
 
   graph.addEdge(0, 1);
-  EXPECT_EQ(graph.edgeCount(), 1);
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(1));
 
   graph.addEdge(0, 2);
-  EXPECT_EQ(graph.edgeCount(), 2);
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(2));
 
   graph.addEdge(1, 2);
-  EXPECT_EQ(graph.edgeCount(), 3);
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(3));
 
   graph.removeEdge(0, 1);
-  EXPECT_EQ(graph.edgeCount(), 2);
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(2));
 
   graph.clear();
-  EXPECT_EQ(graph.edgeCount(), 0);
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(0));
 }
 
 TEST(GraphTest, connectedComponents)
 {
   Avogadro::Core::Graph graph(6);
-  EXPECT_EQ(graph.connectedComponents().size(), 6);
+  EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(6));
 
   graph.addEdge(0, 1);
   graph.addEdge(1, 2);
   graph.addEdge(3, 4);
-  EXPECT_EQ(graph.connectedComponents().size(), 3);
+  EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(3));
 
   graph.addEdge(4, 5);
-  EXPECT_EQ(graph.connectedComponents().size(), 2);
+  EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(2));
 
   graph.addEdge(3, 2);
-  EXPECT_EQ(graph.connectedComponents().size(), 1);
+  EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(1));
 }

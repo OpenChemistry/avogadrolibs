@@ -21,7 +21,7 @@
 TEST(VariantMapTest, size)
 {
   Avogadro::Core::VariantMap map;
-  EXPECT_EQ(map.size(), 0);
+  EXPECT_EQ(map.size(), static_cast<size_t>(0));
 }
 
 TEST(VariantMapTest, isEmpty)

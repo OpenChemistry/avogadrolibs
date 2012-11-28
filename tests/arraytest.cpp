@@ -24,10 +24,10 @@ TEST(ArrayTest, setSize)
 {
   Avogadro::Core::Array<int> array;
 
-  EXPECT_EQ(array.size(), 0);
+  EXPECT_EQ(array.size(), static_cast<size_t>(0));
 
   array.resize(2);
-  EXPECT_EQ(array.size(), 2);
+  EXPECT_EQ(array.size(), static_cast<size_t>(2));
 }
 
 TEST(ArrayTest, isEmpty)
@@ -40,20 +40,20 @@ TEST(ArrayTest, push_back)
 {
   Avogadro::Core::Array<int> array;
   array.push_back(6);
-  EXPECT_EQ(array.size(), 1);
+  EXPECT_EQ(array.size(), static_cast<size_t>(1));
   array.push_back(9);
-  EXPECT_EQ(array.size(), 2);
+  EXPECT_EQ(array.size(), static_cast<size_t>(2));
 }
 
 TEST(ArrayTest, clear)
 {
   Avogadro::Core::Array<int> array;
   array.push_back(6);
-  EXPECT_EQ(array.size(), 1);
+  EXPECT_EQ(array.size(), static_cast<size_t>(1));
   array.push_back(9);
-  EXPECT_EQ(array.size(), 2);
+  EXPECT_EQ(array.size(), static_cast<size_t>(2));
   array.clear();
-  EXPECT_EQ(array.size(), 0);
+  EXPECT_EQ(array.size(), static_cast<size_t>(0));
 }
 
 TEST(ArrayTest, detach)

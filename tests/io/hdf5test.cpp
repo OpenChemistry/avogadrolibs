@@ -147,13 +147,13 @@ TEST(Hdf5Test, readWriteDoubleVector)
 
   std::vector<double> vecRead;
   std::vector<int> readDims = hdf5.readDataset("/Group1/Group2/Data", vecRead);
-  EXPECT_EQ(readDims.size(), 2)
+  EXPECT_EQ(readDims.size(), static_cast<size_t>(2))
       << "Reading std::vector<double> failed: Invalid number of dimensions.";
-  EXPECT_EQ(readDims.at(0), 10)
+  EXPECT_EQ(readDims.at(0), static_cast<size_t>(10))
       << "Reading std::vector<double> failed: First dimension invalid.";
-  EXPECT_EQ(readDims.at(1), 10)
+  EXPECT_EQ(readDims.at(1), static_cast<size_t>(10))
       << "Reading std::vector<double> failed: Second dimension invalid.";
-  for (int i = 0; i < 100; ++i) {
+  for (size_t i = 0; i < 100; ++i) {
     EXPECT_EQ(vec[i], vecRead[i])
         << "std::vector<double> read/write mismatch at index " << i << ".";
   }
@@ -253,12 +253,14 @@ TEST(Hdf5Test, datasetInteraction)
       << "Non-existing dataset reported as found.";
 
   std::vector<int> dim = hdf5.datasetDimensions("/Group1/DeeperData");
-  EXPECT_EQ(dim.size(), 2) << "Wrong dimensionality returned.";
-  EXPECT_EQ(dim[0], 1) << "Wrong dimensionality returned.";
-  EXPECT_EQ(dim[1], 1) << "Wrong dimensionality returned.";
+  EXPECT_EQ(dim.size(), static_cast<size_t>(2))
+      << "Wrong dimensionality returned.";
+  EXPECT_EQ(dim[0], static_cast<size_t>(1)) << "Wrong dimensionality returned.";
+  EXPECT_EQ(dim[1], static_cast<size_t>(1)) << "Wrong dimensionality returned.";
 
   dim = hdf5.datasetDimensions("/TLDData");
-  EXPECT_EQ(dim.size(), ndim_vec) << "Wrong dimensionality returned.";
+  EXPECT_EQ(dim.size(), static_cast<size_t>(ndim_vec))
+      << "Wrong dimensionality returned.";
   for (int i = 0; i < ndim_vec; ++i) {
     EXPECT_EQ(dim[i], dims_vec[i]) << "Wrong dimensionality returned at " << i;
   }
