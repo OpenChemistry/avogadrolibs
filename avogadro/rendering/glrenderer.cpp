@@ -293,13 +293,13 @@ std::map<float, Primitive::Identifier> GLRenderer::hits(int x, int y) const
       continue;
 
     // Test for clipping
-    if (dst.dot(direction) < 0 || (center - end).dot(direction) > 0)
+    if (B < 0 || (center - end).dot(direction) > 0)
       continue;
 
     Primitive::Identifier id = sphere.identifier();
     if (id.type != Primitive::Invalid) {
-      float depth = std::min(fabs(-B + static_cast<float>(sqrt(D))),
-                             fabs(-B - static_cast<float>(sqrt(D))));
+      float rootD = static_cast<float>(sqrt(D));
+      float depth = std::min(fabs(B + rootD), fabs(B - rootD));
       result.insert(std::pair<float, Primitive::Identifier>(depth, id));
     }
   }
