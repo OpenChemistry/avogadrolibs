@@ -149,8 +149,10 @@ void GLRenderer::render()
     }
 
     // Render the loaded spheres using the shader and bound VBO.
-    glDrawRangeElements(GL_TRIANGLES, 0, m_scene.sphereVertices().size(),
-                        m_scene.sphereIndices().size(), GL_UNSIGNED_INT,
+    glDrawRangeElements(GL_TRIANGLES, 0,
+                        static_cast<GLuint>(m_scene.sphereVertices().size()),
+                        static_cast<GLsizei>(m_scene.sphereIndices().size()),
+                        GL_UNSIGNED_INT,
                         reinterpret_cast<const GLvoid *>(NULL));
 
 
@@ -230,8 +232,10 @@ void GLRenderer::render()
     if (!m_cylinderProgram.setUniformValue("normalMatrix", normalMatrix))
       std::cout << m_cylinderProgram.error() << std::endl;
 
-    glDrawRangeElements(GL_TRIANGLES, 0, m_scene.cylinderVertices().size(),
-                        m_scene.cylinderIndices().size(), GL_UNSIGNED_INT,
+    glDrawRangeElements(GL_TRIANGLES, 0,
+                        static_cast<GLuint>(m_scene.cylinderVertices().size()),
+                        static_cast<GLsizei>(m_scene.cylinderIndices().size()),
+                        GL_UNSIGNED_INT,
                         reinterpret_cast<const GLvoid *>(NULL));
 
     m_cylinderArrayBuffer.release();
@@ -250,12 +254,12 @@ void GLRenderer::render()
 void GLRenderer::resetCamera()
 {
   Vector3f center = m_scene.center();
-  m_radius = m_scene.radius() + 5.0;
+  m_radius = m_scene.radius() + 5.0f;
   m_camera.setIdentity();
   m_camera.translate(-center);
-  m_camera.preTranslate(-3.0 * m_radius * Vector3f(0, 0, 1));
+  m_camera.preTranslate(-3.0f * m_radius * Vector3f(0.0f, 0.0f, 1.0f));
   float distance = std::max(2.0f, m_camera.distance(Vector3f::Zero()));
-  m_camera.calculatePerspective(40,
+  m_camera.calculatePerspective(40.0f,
                                 distance - 2.0f * m_radius,
                                 distance + 2.0f * m_radius);
 }
@@ -294,7 +298,8 @@ std::map<float, Primitive::Identifier> GLRenderer::hits(int x, int y) const
 
     Primitive::Identifier id = sphere.identifier();
     if (id.type != Primitive::Invalid) {
-      float depth = std::min(fabs(-B + sqrt(D)), fabs(-B - sqrt(D)));
+      float depth = std::min(fabs(-B + static_cast<float>(sqrt(D))),
+                             fabs(-B - static_cast<float>(sqrt(D))));
       result.insert(std::pair<float, Primitive::Identifier>(depth, id));
     }
   }

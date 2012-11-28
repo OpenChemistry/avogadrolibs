@@ -48,7 +48,7 @@ Vector3f Scene::center() const
 
   for (size_t i = 1; i < m_spheres.size(); ++i)
     m_center += m_spheres[i].position();
-  m_center /= m_spheres.size();
+  m_center /= static_cast<float>(m_spheres.size());
 
   return m_center;
 }
@@ -104,7 +104,8 @@ void Scene::addCylinder(const Vector3f &position1, const Vector3f &direction,
                                  color));
 
   const unsigned int resolution = 12; // points per circle
-  const float resRadians = (2 * M_PI / static_cast<float>(resolution));
+  const float resRadians =
+      2.0 * static_cast<float>(M_PI) / static_cast<float>(resolution);
 
   const Vector3f position2 = position1 + direction * length;
 
@@ -120,7 +121,8 @@ void Scene::addCylinder(const Vector3f &position1, const Vector3f &direction,
 
   // Generate the vertices:
   //   Endcap1
-  const unsigned int end1Start = m_cylinderVertices.size();
+  const unsigned int end1Start =
+      static_cast<unsigned int>(m_cylinderVertices.size());
   ColorNormalVertex vert(color, -direction, position1);
   m_cylinderVertices.push_back(vert);
   for (std::vector<Vector3f>::const_iterator it = radials.begin(),
@@ -130,7 +132,8 @@ void Scene::addCylinder(const Vector3f &position1, const Vector3f &direction,
   }
 
   //   Endcap2
-  const unsigned int end2Start = m_cylinderVertices.size();
+  const unsigned int end2Start =
+      static_cast<unsigned int>(m_cylinderVertices.size());
   vert.normal = direction;
   vert.vertex = position2;
   m_cylinderVertices.push_back(vert);
@@ -141,7 +144,8 @@ void Scene::addCylinder(const Vector3f &position1, const Vector3f &direction,
   }
 
   //   Tube
-  const unsigned int tubeStart = m_cylinderVertices.size();
+  const unsigned int tubeStart =
+      static_cast<unsigned int>(m_cylinderVertices.size());
   for (std::vector<Vector3f>::const_iterator it = radials.begin(),
        itEnd = radials.end(); it != itEnd; ++it) {
     vert.normal = *it;

@@ -74,7 +74,8 @@ void Manipulator::mousePressEvent(QMouseEvent *e)
     case Primitive::Bond:
       qDebug("Bond clicked: index=%lu\n", m_object.index);
       Bond bond = m_molecule->bond(m_object.index);
-      bond.setOrder((bond.order() % 3) + 1);
+      bond.setOrder((bond.order() % static_cast<unsigned char>(3))
+                    + static_cast<unsigned char>(1));
       emit moleculeChanged();
       e->accept();
       return;
@@ -141,18 +142,22 @@ void Manipulator::mouseMoveEvent(QMouseEvent *e)
 
 void Manipulator::mouseDoubleClickEvent(QMouseEvent *e)
 {
+  e->ignore();
 }
 
 void Manipulator::wheelEvent(QWheelEvent *e)
 {
+  e->ignore();
 }
 
 void Manipulator::keyPressEvent(QKeyEvent *e)
 {
+  e->ignore();
 }
 
 void Manipulator::keyReleaseEvent(QKeyEvent *e)
 {
+  e->ignore();
 }
 
 void Manipulator::updatePressedButtons(QMouseEvent *e, bool release)

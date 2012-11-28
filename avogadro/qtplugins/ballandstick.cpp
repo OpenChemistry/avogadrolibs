@@ -53,7 +53,7 @@ void BallAndStick::process(const Molecule &molecule, Scene &scene)
                     identifier);
   }
 
-  float bondRadius = 0.1;
+  float bondRadius = 0.1f;
   Vector3ub bondColor(127, 127, 127);
   identifier.type = Rendering::Primitive::Bond;
   for (size_t i = 0; i < molecule.bondCount(); ++i) {

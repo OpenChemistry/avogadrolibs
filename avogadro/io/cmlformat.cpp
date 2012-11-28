@@ -185,7 +185,7 @@ public:
 
       attribute = node.attribute("order");
       if (attribute)
-        bond.setOrder(atoi(attribute.value()));
+        bond.setOrder(static_cast<unsigned char>(atoi(attribute.value())));
 
       // Move on to the next bond node (if there is one).
       node = node.next_sibling("bond");

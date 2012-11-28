@@ -37,10 +37,10 @@ TEST(CameraTest, perspective)
 
   // Load in a known value for the result of this matrix.
   Eigen::Matrix4f expected;
-  expected << 1.83165, 0.0, 0.0, 0.0,
-              0.0, 2.74748, 0.0, 0.0,
-              0.0, 0.0, -1.22222, -2.22222,
-              0.0, 0.0, -1.0, 0.0;
+  expected << 1.83165f, 0.0f, 0.0f, 0.0f,
+              0.0f, 2.74748f, 0.0f, 0.0f,
+              0.0f, 0.0f, -1.22222f, -2.22222f,
+              0.0f, 0.0f, -1.0f, 0.0f;
   EXPECT_TRUE(camera.projection().matrix().isApprox(expected));
   // If it is incorrect, lets print out the result.
   if (!camera.projection().matrix().isApprox(expected)) {
@@ -56,10 +56,10 @@ TEST(CameraTest, orthographic)
 
   // Load in a known value for the result of this matrix.
   Eigen::Matrix4f expected;
-  expected << 0.2, 0.0, 0.0,-1.0,
-              0.0, 0.2, 0.0,-1.0,
-              0.0, 0.0,-2.0,-1.0,
-              0.0, 0.0, 0.0, 1.0;
+  expected << 0.2f, 0.0f, 0.0f,-1.0f,
+              0.0f, 0.2f, 0.0f,-1.0f,
+              0.0f, 0.0f,-2.0f,-1.0f,
+              0.0f, 0.0f, 0.0f, 1.0f;
   EXPECT_TRUE(camera.projection().matrix().isApprox(expected));
   // If it is incorrect, lets print out the result.
   if (!camera.projection().matrix().isApprox(expected)) {
@@ -90,7 +90,7 @@ TEST(CameraTest, projectPerspective)
   camera.setViewport(100, 100);
 
   Vector3f position = camera.project(Vector3f(1.0, 2.0, 0.0));
-  Vector3f expected(59.1583, 77.4748, 1.0);
+  Vector3f expected(59.1583f, 77.4748f, 1.0f);
   EXPECT_TRUE(position.isApprox(expected));
   if (!position.isApprox(expected)) {
     std::cout << "Error: No match\n" << position << std::endl;
@@ -119,7 +119,7 @@ TEST(CameraTest, unProjectPerspective)
   camera.setViewport(100, 100);
 
   Vector3f position = camera.unProject(Vector3f(10, 25, 0));
-  Vector3f expected(-0.436764, 0.181985, 9.0);
+  Vector3f expected(-0.436764f, 0.181985f, 9.0f);
   EXPECT_TRUE(position.isApprox(expected));
   if (!position.isApprox(expected)) {
     std::cout << "Error: No match\n" << position << std::endl;
