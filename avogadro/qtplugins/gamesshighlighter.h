@@ -33,7 +33,7 @@ namespace QtPlugins {
     Q_OBJECT
 
   public:
-    GamessHighlighter(QTextDocument *parent = 0);
+    GamessHighlighter(QTextDocument *parent_ = 0);
 
   protected:
     void highlightBlock(const QString &text);

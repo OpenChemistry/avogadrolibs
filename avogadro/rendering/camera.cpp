@@ -77,8 +77,9 @@ Vector3f Camera::project(const Vector3f &point) const
 Vector3f Camera::unProject(const Vector3f &point) const
 {
   Eigen::Matrix4f mvp = m_projection.matrix() * m_modelView.matrix();
-  Vector4f result(2.0f * point.x() / m_width - 1.0f,
-                  2.0f * (m_height - point.y()) / m_height - 1.0f,
+  Vector4f result(2.0f * point.x() / static_cast<float>(m_width) - 1.0f,
+                  2.0f * (static_cast<float>(m_height) - point.y()) /
+                  static_cast<float>(m_height) - 1.0f,
                   2.0f * point.z() - 1.0f,
                   1.0f);
   result = mvp.matrix().inverse() * result;
@@ -107,8 +108,8 @@ void Camera::calculatePerspective(float fieldOfView, float aspectRatio,
 
 void Camera::calculatePerspective(float fieldOfView, float zNear, float zFar)
 {
-  calculatePerspective(fieldOfView, static_cast<float>(m_width) / m_height,
-                       zNear, zFar);
+  calculatePerspective(fieldOfView, static_cast<float>(m_width) /
+                       static_cast<float>(m_height), zNear, zFar);
 }
 
 void Camera::calculateOrthographic(float left, float right,

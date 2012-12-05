@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
   QApplication app(argc, argv);
   Avogadro::QtOpenGL::GLWidget widget;
   QPixmap pixmap = widget.renderPixmap(200, 200, false);
-  bool saved = pixmap.save("glwidgettest.png", 0, 100);
+  pixmap.save("glwidgettest.png", 0, 100);
 
   QImage image = pixmap.toImage();
 

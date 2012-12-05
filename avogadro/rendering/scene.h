@@ -60,10 +60,11 @@ struct ColorTextureVertex {
   }
 
   static int vertexOffset() { return 0; }
-  static int colorOffset() { return sizeof(Vector3f); }
+  static int colorOffset() { return static_cast<int>(sizeof(Vector3f)); }
   static int textureCoordOffset()
   {
-    return colorOffset() + sizeof(Vector3ub) + sizeof(unsigned char);
+    return colorOffset() +
+        static_cast<int>(sizeof(Vector3ub) + sizeof(unsigned char));
   }
 }; // 32 bytes total size - 16/32/64 are ideal for alignment.
 
@@ -79,8 +80,14 @@ struct ColorNormalVertex {
     : color(c), normal(n), vertex(v) {}
 
   static int colorOffset() { return 0; }
-  static int normalOffset() { return sizeof(Vector3ub) + sizeof(unsigned char); }
-  static int vertexOffset() { return normalOffset() + sizeof(Vector3f); }
+  static int normalOffset()
+  {
+    return static_cast<int>(sizeof(Vector3ub) + sizeof(unsigned char));
+  }
+  static int vertexOffset()
+  {
+    return normalOffset() + static_cast<int>(sizeof(Vector3f));
+  }
 }; // 32 bytes total size - 16/32/64 are ideal for alignment.
 
 class AVOGADRORENDERING_EXPORT Scene

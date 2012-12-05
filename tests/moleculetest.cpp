@@ -21,7 +21,7 @@
 TEST(MoleculeTest, size)
 {
   Avogadro::Core::Molecule molecule;
-  EXPECT_EQ(molecule.size(), 0);
+  EXPECT_EQ(molecule.size(), static_cast<size_t>(0));
 }
 
 TEST(MoleculeTest, isEmpty)
@@ -33,43 +33,43 @@ TEST(MoleculeTest, isEmpty)
 TEST(MoleculeTest, addAtom)
 {
   Avogadro::Core::Molecule molecule;
-  EXPECT_EQ(molecule.atomCount(), 0);
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(0));
 
   Avogadro::Core::Atom atom = molecule.addAtom(6);
   EXPECT_EQ(atom.isValid(), true);
-  EXPECT_EQ(molecule.atomCount(), 1);
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(1));
   EXPECT_EQ(atom.index(), 0);
-  EXPECT_EQ(atom.atomicNumber(), 6);
+  EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(6));
 
   Avogadro::Core::Atom atom2 = molecule.addAtom(1);
   EXPECT_EQ(atom2.isValid(), true);
-  EXPECT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(2));
   EXPECT_EQ(atom2.index(), 1);
-  EXPECT_EQ(atom2.atomicNumber(), 1);
+  EXPECT_EQ(atom2.atomicNumber(), static_cast<unsigned char>(1));
 }
 
 TEST(MoleculeTest, addBond)
 {
   Avogadro::Core::Molecule molecule;
-  EXPECT_EQ(molecule.bondCount(), 0);
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(0));
 
   Avogadro::Core::Atom a = molecule.addAtom(1);
   Avogadro::Core::Atom b = molecule.addAtom(1);
   Avogadro::Core::Bond bondAB = molecule.addBond(a, b);
   EXPECT_TRUE(bondAB.isValid());
   EXPECT_EQ(bondAB.molecule(), &molecule);
-  EXPECT_EQ(molecule.bondCount(), 1);
-  EXPECT_EQ(bondAB.index(), 0);
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(1));
+  EXPECT_EQ(bondAB.index(), static_cast<size_t>(0));
   EXPECT_EQ(bondAB.atom1().index(), a.index());
   EXPECT_EQ(bondAB.atom2().index(), b.index());
-  EXPECT_EQ(bondAB.order(), 1);
+  EXPECT_EQ(bondAB.order(), static_cast<unsigned char>(1));
 
   Avogadro::Core::Atom c = molecule.addAtom(1);
   Avogadro::Core::Bond bondBC = molecule.addBond(b, c, 2);
   EXPECT_TRUE(bondBC.isValid());
-  EXPECT_EQ(molecule.bondCount(), 2);
-  EXPECT_EQ(bondBC.index(), 1);
-  EXPECT_EQ(bondBC.order(), 2);
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(2));
+  EXPECT_EQ(bondBC.index(), static_cast<size_t>(1));
+  EXPECT_EQ(bondBC.order(), static_cast<unsigned char>(2));
 
   // try to lookup nonexistant bond
   Avogadro::Core::Bond bond = molecule.bond(a, c);

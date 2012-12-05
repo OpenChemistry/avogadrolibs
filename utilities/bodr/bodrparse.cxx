@@ -133,14 +133,20 @@ int main(int argc, char* argv[])
         attribute = scalarNode.attribute("dictRef");
         if (attribute) {
           string value(attribute.value());
-          if (value == "bo:atomicNumber")
-            elements.back().atomicNumber = atoi(scalarNode.child_value());
-          else if (value == "bo:mass")
+          if (value == "bo:atomicNumber") {
+            elements.back().atomicNumber =
+                static_cast<unsigned char>(atoi(scalarNode.child_value()));
+          }
+          else if (value == "bo:mass") {
             elements.back().mass = strtod(scalarNode.child_value(), 0);
-          else if (value == "bo:radiusCovalent")
-            elements.back().radiusCovalent = strtod(scalarNode.child_value(), 0);
-          else if (value == "bo:radiusVDW")
+          }
+          else if (value == "bo:radiusCovalent") {
+            elements.back().radiusCovalent =
+                strtod(scalarNode.child_value(), 0);
+          }
+          else if (value == "bo:radiusVDW") {
             elements.back().radiusVDW = strtod(scalarNode.child_value(), 0);
+          }
         }
         scalarNode = scalarNode.next_sibling("scalar");
       }

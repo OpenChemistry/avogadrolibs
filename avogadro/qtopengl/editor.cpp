@@ -87,7 +87,8 @@ void Editor::mousePressEvent(QMouseEvent *e)
       return;
     case Primitive::Bond:
       Bond bond = m_molecule->bond(m_clickedObject.index);
-      bond.setOrder((bond.order() % 3) + 1);
+      bond.setOrder((bond.order() % static_cast<unsigned char>(3))
+                    + static_cast<unsigned char>(1));
       emit moleculeChanged();
       e->accept();
       return;
@@ -197,18 +198,22 @@ void Editor::mouseMoveEvent(QMouseEvent *e)
 
 void Editor::mouseDoubleClickEvent(QMouseEvent *e)
 {
+  e->ignore();
 }
 
 void Editor::wheelEvent(QWheelEvent *e)
 {
+  e->ignore();
 }
 
 void Editor::keyPressEvent(QKeyEvent *e)
 {
+  e->ignore();
 }
 
 void Editor::keyReleaseEvent(QKeyEvent *e)
 {
+  e->ignore();
 }
 
 void Editor::updatePressedButtons(QMouseEvent *e, bool release)

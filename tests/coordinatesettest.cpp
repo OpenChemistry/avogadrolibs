@@ -42,10 +42,10 @@ TEST(CoordinateSetTest, Resize)
 {
   CoordinateSet<Vector3d> data;
   data.resize(5);
-  EXPECT_EQ(data.size(), 5);
+  EXPECT_EQ(data.size(), static_cast<size_t>(5));
 
   data.resize(3);
-  EXPECT_EQ(data.size(), 3);
+  EXPECT_EQ(data.size(), static_cast<size_t>(3));
 }
 
 TEST(CoordinateSetTest, Store)

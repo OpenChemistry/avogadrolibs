@@ -32,11 +32,12 @@ class Molecule;
 }
 namespace QtPlugins {
 
-QuantumInput::QuantumInput(QObject *parent_) : ExtensionPlugin(parent_),
-  m_dialog(NULL),
-  m_molecule(NULL)
+QuantumInput::QuantumInput(QObject *parent_) :
+  ExtensionPlugin(parent_),
+  m_action(new QAction(this)),
+  m_molecule(NULL),
+  m_dialog(NULL)
 {
-  m_action = new QAction(this);
   m_action->setEnabled(true);
   m_action->setText(tr("&GAMESS Input Generator"));
   connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));

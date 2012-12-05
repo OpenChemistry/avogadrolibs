@@ -37,8 +37,8 @@ TEST(RingPerceiverTest, benzene)
 
   Avogadro::Core::RingPerceiver perceiver(&molecule);
   std::vector<std::vector<size_t> > rings = perceiver.rings();
-  EXPECT_EQ(rings.size(), 1);
-  EXPECT_EQ(rings[0].size(), 6);
+  EXPECT_EQ(rings.size(), static_cast<size_t>(1));
+  EXPECT_EQ(rings[0].size(), static_cast<size_t>(6));
 }
 
 TEST(RingPerceiverTest, ethanol)
@@ -52,5 +52,5 @@ TEST(RingPerceiverTest, ethanol)
 
   Avogadro::Core::RingPerceiver perceiver(&molecule);
   std::vector<std::vector<size_t> > rings = perceiver.rings();
-  EXPECT_EQ(rings.size(), 0);
+  EXPECT_EQ(rings.size(), static_cast<size_t>(0));
 }

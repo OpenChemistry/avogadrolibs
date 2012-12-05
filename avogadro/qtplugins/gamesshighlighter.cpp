@@ -19,8 +19,8 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-  GamessHighlighter::GamessHighlighter(QTextDocument *parent)
-      : QSyntaxHighlighter(parent)
+  GamessHighlighter::GamessHighlighter(QTextDocument *parent_)
+      : QSyntaxHighlighter(parent_)
   {
     HighlightingRule rule;
 
@@ -209,8 +209,8 @@ namespace QtPlugins {
     int startIndex = 0;
     int keywordLength = 0;
     if (previousBlockState() != 1) {
-      foreach(const QString &pattern, m_keywords) {
-        QRegExp expression(pattern);
+      foreach(const QString &regexString, m_keywords) {
+        QRegExp expression(regexString);
         expression.setCaseSensitivity(Qt::CaseInsensitive);
         startIndex = expression.indexIn(text);
         keywordLength = expression.matchedLength();
@@ -236,8 +236,8 @@ namespace QtPlugins {
       }
       setFormat(startIndex + keywordLength, blockLength, m_inDataBlockFormat);
       bool found = false;
-      foreach(const QString &pattern, m_keywords) {
-        QRegExp expression(pattern);
+      foreach(const QString &regexString, m_keywords) {
+        QRegExp expression(regexString);
         int index = expression.indexIn(text, startIndex + blockLength);
         if (index > startIndex) {
           found = true;

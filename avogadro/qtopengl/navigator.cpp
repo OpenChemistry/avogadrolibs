@@ -32,8 +32,8 @@
 namespace Avogadro {
 namespace QtOpenGL {
 
-const float ZOOM_SPEED = 0.02;
-const float ROTATION_SPEED = 0.005;
+const float ZOOM_SPEED = 0.02f;
+const float ROTATION_SPEED = 0.005f;
 
 Navigator::Navigator(GLWidget *widget)
   : m_glWidget(widget),
@@ -71,8 +71,10 @@ void Navigator::mouseMoveEvent(QMouseEvent *e)
     Vector3f center = m_glWidget->renderer().scene().center();
 
     m_glWidget->renderer().camera().translate(-center);
-    m_glWidget->renderer().camera().rotate(delta.y() * ROTATION_SPEED, xAxis);
-    m_glWidget->renderer().camera().rotate(delta.x() * ROTATION_SPEED, yAxis);
+    m_glWidget->renderer().camera().rotate(
+          static_cast<float>(delta.y()) * ROTATION_SPEED, xAxis);
+    m_glWidget->renderer().camera().rotate(
+          static_cast<float>(delta.x()) * ROTATION_SPEED, yAxis);
     m_glWidget->renderer().camera().translate(center);
 
     m_glWidget->update();
@@ -101,12 +103,14 @@ void Navigator::mouseMoveEvent(QMouseEvent *e)
 
     // Tilt
     m_glWidget->renderer().camera().translate(-center);
-    m_glWidget->renderer().camera().rotate(delta.x() * ROTATION_SPEED, zAxis);
+    m_glWidget->renderer().camera().rotate(
+          static_cast<float>(delta.x()) * ROTATION_SPEED, zAxis);
     m_glWidget->renderer().camera().translate(center);
 
     // Zoom
     /// @todo Use scale for orthographic projections
-    m_glWidget->renderer().camera().translate(delta.y() * ZOOM_SPEED * zAxis);
+    m_glWidget->renderer().camera().translate(
+          static_cast<float>(delta.y()) * ZOOM_SPEED * zAxis);
 
     m_glWidget->update();
     e->accept();
@@ -132,7 +136,8 @@ void Navigator::wheelEvent(QWheelEvent *e)
       m_glWidget->renderer().camera().modelView();
   Vector3f zAxis = modelView.linear().row(2).transpose().normalized();
 
-  m_glWidget->renderer().camera().translate(zAxis * e->delta() * ZOOM_SPEED);
+  m_glWidget->renderer().camera().translate(
+        zAxis * static_cast<float>(e->delta()) * ZOOM_SPEED);
 
   m_glWidget->update();
   e->accept();
@@ -141,11 +146,13 @@ void Navigator::wheelEvent(QWheelEvent *e)
 void Navigator::keyPressEvent(QKeyEvent *e)
 {
   /// @todo
+  e->ignore();
 }
 
 void Navigator::keyReleaseEvent(QKeyEvent *e)
 {
   /// @todo
+  e->ignore();
 }
 
 inline void Navigator::updatePressedButtons(QMouseEvent *e, bool release)
