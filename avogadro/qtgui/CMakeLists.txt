@@ -9,6 +9,7 @@ add_definitions(${QT_DEFINITIONS})
 
 set(HEADERS
   extensionplugin.h
+  molecule.h
   pluginmanager.h
   sceneplugin.h
   scenepluginmodel.h
@@ -16,6 +17,7 @@ set(HEADERS
 
 set(SOURCES
   extensionplugin.cpp
+  molecule.cpp
   pluginmanager.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
@@ -23,6 +25,7 @@ set(SOURCES
 
 avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtGui
+  AvogadroCore
   AvogadroRendering
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY})

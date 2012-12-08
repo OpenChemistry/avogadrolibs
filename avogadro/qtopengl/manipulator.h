@@ -30,7 +30,7 @@ class QWheelEvent;
 
 namespace Avogadro {
 
-namespace Core {
+namespace QtGui {
 class Molecule;
 }
 
@@ -70,8 +70,8 @@ public:
   /// Respond to user input
   void keyReleaseEvent(QKeyEvent *);
 
-  void setMolecule(Core::Molecule *mol) { m_molecule = mol; }
-  Core::Molecule * molecule() { return m_molecule; }
+  void setMolecule(QtGui::Molecule *mol) { m_molecule = mol; }
+  QtGui::Molecule * molecule() { return m_molecule; }
 
 signals:
   /// HACK -- the molecule should notify the scene plugins to update.
@@ -85,7 +85,7 @@ private:
   void resetObject() { m_object = Rendering::Primitive::Identifier(); }
 
   GLWidget *m_glWidget;
-  Core::Molecule *m_molecule;
+  QtGui::Molecule *m_molecule;
   Rendering::Primitive::Identifier m_object;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;
