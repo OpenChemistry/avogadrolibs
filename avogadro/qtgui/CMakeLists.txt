@@ -8,14 +8,21 @@ include_directories(SYSTEM ${QT_INCLUDES})
 add_definitions(${QT_DEFINITIONS})
 
 set(HEADERS
+  elementtranslator.h
   extensionplugin.h
+  periodictableview.h
   pluginmanager.h
   sceneplugin.h
   scenepluginmodel.h
 )
 
 set(SOURCES
+  elementdetail_p.cpp
+  elementitem_p.cpp
+  elementtranslator.cpp
   extensionplugin.cpp
+  periodictablescene_p.cpp
+  periodictableview.cpp
   pluginmanager.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
@@ -23,6 +30,7 @@ set(SOURCES
 
 avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtGui
+  AvogadroCore
   AvogadroRendering
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY})
