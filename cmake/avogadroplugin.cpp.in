@@ -14,41 +14,30 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_VANDERWAALS_H
-#define AVOGADRO_QTPLUGINS_VANDERWAALS_H
+#include <QtCore/QtPlugin>
 
-#include <avogadro/qtgui/sceneplugin.h>
+@PluginIncludes@
 
 namespace Avogadro {
 namespace QtPlugins {
 
-/*!
- * \brief Render the molecule as Van der Waals spheres.
- * \author Marcus D. Hanwell
- */
-class VanDerWaals : public QtGui::ScenePlugin
+class @PluginName@Factory : public QObject, public QtGui::@PluginType@Factory
 {
   Q_OBJECT
+  Q_INTERFACES(Avogadro::QtGui::@PluginType@Factory)
 
 public:
-  explicit VanDerWaals(QObject *parent = 0);
-  ~VanDerWaals();
+  explicit @PluginName@Factory(QObject *parent_ = 0) : QObject(parent_) {}
 
-  void process(const Core::Molecule &molecule, Rendering::Scene &scene);
+  QtGui::@PluginType@ * createInstance() { return new @PluginClass@; }
 
-  QString name() const { return tr("Van der Waals"); }
+  QString identifier() const { return "@PluginDescription@"; }
 
-  QString description() const { return tr("Simple display of VdW spheres."); }
-
-  bool isEnabled() const;
-
-  void setEnabled(bool enable);
-
-private:
-  bool m_enabled;
 };
 
 }
 }
 
-#endif // AVOGADRO_QTPLUGINS_VANDERWAALS_H
+Q_EXPORT_PLUGIN2(@PluginName@, Avogadro::QtPlugins::@PluginName@Factory)
+
+#include "@PluginName@Plugin.moc"

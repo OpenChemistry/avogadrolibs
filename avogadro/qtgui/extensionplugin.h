@@ -87,7 +87,7 @@ class AVOGADROQTGUI_EXPORT ExtensionPluginFactory
 public:
   virtual ~ExtensionPluginFactory();
 
-  virtual ExtensionPlugin * createExtensionInstance() = 0;
+  virtual ExtensionPlugin * createInstance() = 0;
   virtual QString identifier() const = 0;
 };
 
