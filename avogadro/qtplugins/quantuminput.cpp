@@ -80,5 +80,3 @@ void QuantumInput::menuActivated()
 
 }
 }
-
-Q_EXPORT_PLUGIN2(quantuminput, Avogadro::QtPlugins::QuantumInputFactory)

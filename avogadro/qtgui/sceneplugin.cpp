@@ -27,9 +27,5 @@ ScenePlugin::~ScenePlugin()
 {
 }
 
-ScenePluginFactory::~ScenePluginFactory()
-{
-}
-
 } // End QtGui namespace
 } // End Avogadro namespace

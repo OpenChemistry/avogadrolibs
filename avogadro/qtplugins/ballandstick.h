@@ -49,18 +49,6 @@ private:
   bool m_enabled;
 };
 
-
-class BallAndStickFactory : public QObject, public QtGui::ScenePluginFactory
-{
-  Q_OBJECT
-  Q_INTERFACES(Avogadro::QtGui::ScenePluginFactory)
-
-public:
-  SCENE_PLUGIN_FACTORY(BallAndStick, "Ball and Stick")
-
-  explicit BallAndStickFactory(QObject *parent_ = 0) : QObject(parent_) {}
-};
-
 } // end namespace QtPlugins
 } // end namespace Avogadro
 

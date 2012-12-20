@@ -20,8 +20,6 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/rendering/scene.h>
 
-#include <QtCore/QtPlugin>
-
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -63,5 +61,3 @@ void VanDerWaals::setEnabled(bool enable)
 
 }
 }
-
-Q_EXPORT_PLUGIN2(vanderwaals, Avogadro::QtPlugins::VanDerWaalsFactory)

@@ -73,6 +73,20 @@ public:
 };
 
 /*!
+ * \class PluginFactory plugin.h <avogadro/qtgui/plugin.h>
+ * \brief The base class for plugin factories in Avogadro.
+ * \author Marcus D. Hanwell
+ */
+class AVOGADROQTGUI_EXPORT PluginFactory
+{
+public:
+  virtual ~PluginFactory() {}
+
+  virtual QObject * createInstance() = 0;
+  virtual QString identifier() const = 0;
+};
+
+/*!
  * \class ScenePluginFactory sceneplugin.h <avogadro/qtgui/sceneplugin.h>
  * \brief The base class for scene plugin factories in Avogadro.
  * \author Marcus D. Hanwell
@@ -80,9 +94,9 @@ public:
 class AVOGADROQTGUI_EXPORT ScenePluginFactory
 {
 public:
-  virtual ~ScenePluginFactory();
+  virtual ~ScenePluginFactory() {}
 
-  virtual ScenePlugin * createSceneInstance() = 0;
+  virtual ScenePlugin * createInstance() = 0;
   virtual QString identifier() const = 0;
 };
 
@@ -97,7 +111,10 @@ public: \
 } // End QtGui namespace
 } // End Avogadro namespace
 
+Q_DECLARE_INTERFACE(Avogadro::QtGui::PluginFactory,
+                    "org.openchemistry.avogadro.pluginfactory/2.0")
+
 Q_DECLARE_INTERFACE(Avogadro::QtGui::ScenePluginFactory,
-                    "net.openchemistry.avogadro.scenepluginfactory/2.0")
+                    "org.openchemistry.avogadro.scenepluginfactory/2.0")
 
 #endif // AVOGADRO_QTGUI_SCENEPLUGIN_H
