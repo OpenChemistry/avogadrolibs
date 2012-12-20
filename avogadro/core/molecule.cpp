@@ -16,6 +16,8 @@
 
 #include "molecule.h"
 
+#include "elements.h"
+
 #include <cassert>
 #include <algorithm>
 
@@ -226,6 +228,44 @@ Bond Molecule::bond(const Atom &a, const Atom &b) const
 size_t Molecule::bondCount() const
 {
   return m_bondPairs.size();
+}
+
+/// Returns the chemical formula of the molecule
+/// @todo This should eventually be an external algorithm, not a member of
+/// Molecule.
+std::string Molecule::formula() const
+{
+  // Adapted from chemkit:
+  // a map of atomic symbols to their quantity
+  std::map<unsigned char, size_t> composition;
+  for (std::vector<unsigned char>::const_iterator it = m_atomicNumbers.begin(),
+       itEnd = m_atomicNumbers.end(); it != itEnd; ++it) {
+    composition[*it]++;
+  }
+
+  std::stringstream result;
+  std::map<unsigned char, size_t>::iterator iter;
+
+  // Carbons first
+  iter = composition.find(6);
+  if (iter != composition.end()){
+    result << "C" << iter->second;
+    composition.erase(iter);
+
+    // If carbon is present, hydrogens are next.
+    iter = composition.find(1);
+    if (iter != composition.end()) {
+      result << "H" << iter->second;
+      composition.erase(iter);
+    }
+  }
+
+  // The rest:
+  iter = composition.begin();
+  while (iter != composition.end())
+    result << Elements::symbol(iter->first) << iter->second, ++iter;
+
+  return result.str();
 }
 
 } // end Core namespace
