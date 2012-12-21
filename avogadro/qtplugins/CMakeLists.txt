@@ -100,3 +100,5 @@ avogadro_plugin2(QuantumInput
   gamessinputdialog.ui
 )
 target_link_libraries(QuantumInput MoleQueueClient)
+
+add_subdirectory(molecularproperties)
