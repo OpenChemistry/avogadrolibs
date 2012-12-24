@@ -19,6 +19,7 @@
 
 #include "avogadrocore.h"
 
+#include <string>
 #include <vector>
 
 #include "atom.h"
@@ -74,6 +75,8 @@ public:
   std::vector<Bond> bonds(const Atom &a);
 
   size_t bondCount() const;
+
+  std::string formula() const;
 
 protected:
   mutable Graph m_graph; // A transformation of the molecule to a graph.
