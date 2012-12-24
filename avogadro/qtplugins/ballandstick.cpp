@@ -20,8 +20,6 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/rendering/scene.h>
 
-#include <QtCore/QtPlugin>
-
 using Avogadro::Core::Molecule;
 using Avogadro::Rendering::Scene;
 
@@ -100,5 +98,3 @@ void BallAndStick::setEnabled(bool enable)
 
 }
 }
-
-Q_EXPORT_PLUGIN2(ballandstick, Avogadro::QtPlugins::BallAndStickFactory)

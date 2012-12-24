@@ -20,7 +20,7 @@
 
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
-#include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/glrenderer.h>
@@ -31,7 +31,7 @@
 
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
-using Avogadro::Core::Molecule;
+using Avogadro::QtGui::Molecule;
 
 using Avogadro::Rendering::Primitive;
 
@@ -59,7 +59,8 @@ void Editor::mousePressEvent(QMouseEvent *e)
   if (m_pressedButtons & Qt::LeftButton) {
     m_clickedObject = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
 
-    if (m_clickedObject.molecule && m_clickedObject.molecule != m_molecule) {
+    if (m_clickedObject.molecule &&
+        m_clickedObject.molecule != static_cast<Core::Molecule *>(m_molecule)) {
       e->ignore();
       return;
     }
@@ -109,15 +110,13 @@ void Editor::mousePressEvent(QMouseEvent *e)
       return;
     case Primitive::Atom:
       e->accept();
-      /// @todo -- no removeAtom method.
-//      m_object.molecule->removeAtom(m_object.index);
-//      emit moleculeChanged();
+      m_molecule->removeAtom(m_clickedObject.index);
+      emit moleculeChanged();
       return;
     case Primitive::Bond:
       e->accept();
-      /// @todo removeBond is declared, but not implemented
-//      m_molecule->removeBond(m_object.index);
-//      emit moleculeChanged();
+      m_molecule->removeBond(m_clickedObject.index);
+      emit moleculeChanged();
       return;
     }
   }

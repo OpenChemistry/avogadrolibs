@@ -32,11 +32,58 @@ function(avogadro_plugin name sources)
   avogadro_plugin_ui(${name} "${sources}" "")
 endfunction()
 
+# Create a plugin for Avogadro.
+# name is the name of the plugin, this will be the name of the target created.
+# description Free text description of the plugin.
+# type The base class of the plugin.
+# header is the header(s) for the class to be instantiated for the plugin.
+# pluginClass is the class to be instantiated for the plugin.
+# sources is the list of source files for the plugin.
+# uis is the list of UI files that need to be compiled (optional).
+function(avogadro_plugin2 name description type header pluginClass sources uis)
+  qt4_wrap_ui(ui_srcs ${uis})
+
+  unset(PluginIncludes)
+  foreach(_header ${header})
+    set(PluginIncludes
+      "${PluginIncludes}#include \"${CMAKE_CURRENT_SOURCE_DIR}/${_header}\"\n")
+  endforeach()
+  set(PluginName "${name}")
+  set(PluginDescription "${description}")
+  set(PluginType "${type}")
+  set(PluginClass "${pluginClass}")
+  configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/avogadroplugin.cpp.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/${name}Plugin.cpp")
+
+  add_library(${name} MODULE ${sources} ${ui_srcs} ${name}Plugin.cpp)
+  target_link_libraries(${name} AvogadroCore AvogadroQtGui)
+
+  set_target_properties(${name} PROPERTIES AUTOMOC TRUE)
+  install(TARGETS ${name}
+    EXPORT "AvogadroLibsTargets"
+    RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
+    LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/plugins"
+    ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}/avogadro2/plugins")
+  set_property(GLOBAL APPEND PROPERTY AvogadroLibs_PLUGINS ${name})
+endfunction()
+
 # Now to make the plugins.
 
 # Scene
-avogadro_plugin(vanderwaals vanderwaals.cpp)
-avogadro_plugin(ballandstick ballandstick.cpp)
+avogadro_plugin2(VanDerWaals
+  "Van der Waals rendering scheme"
+  ScenePlugin
+  vanderwaals.h
+  VanDerWaals
+  vanderwaals.cpp
+  "")
+avogadro_plugin2(BallStick
+  "Ball and stick rendering scheme"
+  ScenePlugin
+  ballandstick.h
+  BallAndStick
+  ballandstick.cpp
+  "")
 
 # Extension
 set(quantuminput_srcs
@@ -44,8 +91,14 @@ set(quantuminput_srcs
   gamesshighlighter.cpp
   quantuminput.cpp
 )
-set(quantuminput_uis
+avogadro_plugin2(QuantumInput
+  "Quantum input file generation"
+  ExtensionPlugin
+  quantuminput.h
+  QuantumInput
+  "${quantuminput_srcs}"
   gamessinputdialog.ui
 )
-avogadro_plugin_ui(quantuminput "${quantuminput_srcs}" "${quantuminput_uis}")
-target_link_libraries(quantuminput MoleQueueClient)
+target_link_libraries(QuantumInput MoleQueueClient)
+
+add_subdirectory(molecularproperties)

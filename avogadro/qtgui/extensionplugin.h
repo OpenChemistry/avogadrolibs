@@ -25,7 +25,7 @@ class QAction;
 
 namespace Avogadro {
 
-namespace Core {
+namespace QtGui {
 class Molecule;
 }
 
@@ -74,7 +74,7 @@ public slots:
   /*!
    * Called when the current molecule changes.
    */
-  virtual void setMolecule(Core::Molecule *mol) = 0;
+  virtual void setMolecule(QtGui::Molecule *mol) = 0;
 };
 
 /*!
@@ -87,7 +87,7 @@ class AVOGADROQTGUI_EXPORT ExtensionPluginFactory
 public:
   virtual ~ExtensionPluginFactory();
 
-  virtual ExtensionPlugin * createExtensionInstance() = 0;
+  virtual ExtensionPlugin * createInstance() = 0;
   virtual QString identifier() const = 0;
 };
 

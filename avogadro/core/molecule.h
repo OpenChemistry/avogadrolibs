@@ -19,6 +19,7 @@
 
 #include "avogadrocore.h"
 
+#include <string>
 #include <vector>
 
 #include "atom.h"
@@ -35,7 +36,7 @@ class AVOGADROCORE_EXPORT Molecule
 public:
   // construction and destruction
   Molecule();
-  ~Molecule();
+  virtual ~Molecule();
 
   // properties
   size_t size() const;
@@ -64,21 +65,30 @@ public:
   Atom atom(size_t index) const;
   size_t atomCount() const;
   Bond addBond(const Atom &a, const Atom &b, unsigned char bondOrder = 1);
-  void removeBond(size_t index);
-  void removeBond(const Bond &bond);
-  void removeBond(const Atom &a, const Atom &b);
   Bond bond(size_t index) const;
   Bond bond(const Atom &a, const Atom &b) const;
+
+  /*!
+   * \brief Get all bonds to \p a.
+   * \return A vector of bonds to the supplied atom \p a.
+   */
+  std::vector<Bond> bonds(const Atom &a);
+
   size_t bondCount() const;
 
-private:
-  Graph m_graph;
+  std::string formula() const;
+
+protected:
+  mutable Graph m_graph; // A transformation of the molecule to a graph.
+  mutable bool m_graphDirty; // Should the graph be rebuilt before returning it?
   VariantMap m_data;
   std::vector<unsigned char> m_atomicNumbers;
   std::vector<Vector2> m_positions2d;
   std::vector<Vector3> m_positions3d;
   std::vector<std::pair<size_t, size_t> > m_bondPairs;
   std::vector<unsigned char> m_bondOrders;
+
+  void updateGraph() const;
 };
 
 } // end Core namespace

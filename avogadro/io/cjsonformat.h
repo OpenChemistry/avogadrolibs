@@ -14,18 +14,32 @@
 
 ******************************************************************************/
 
-#include "sceneplugin.h"
+#ifndef AVOGADRO_IO_CJSONFORMAT_H
+#define AVOGADRO_IO_CJSONFORMAT_H
+
+#include "avogadroioexport.h"
+
+#include <string>
 
 namespace Avogadro {
-namespace QtGui {
-
-ScenePlugin::ScenePlugin(QObject *parent_) : QObject(parent_)
-{
+namespace Core {
+class Molecule;
 }
+namespace Io {
 
-ScenePlugin::~ScenePlugin()
+class AVOGADROIO_EXPORT CjsonFormat
 {
-}
+public:
+  CjsonFormat();
+  ~CjsonFormat();
 
-} // End QtGui namespace
-} // End Avogadro namespace
+  bool readFile(const std::string &fileName, Core::Molecule &molecule);
+
+  bool writeFile(const std::string &fileName, const Core::Molecule &molecule);
+
+};
+
+} // end Io namespace
+} // end Avogadro namespace
+
+#endif // AVOGADRO_IO_CJSONFORMAT_H

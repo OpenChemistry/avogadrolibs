@@ -10,6 +10,7 @@ add_definitions(${QT_DEFINITIONS})
 set(HEADERS
   elementtranslator.h
   extensionplugin.h
+  molecule.h
   periodictableview.h
   pluginmanager.h
   sceneplugin.h
@@ -21,6 +22,7 @@ set(SOURCES
   elementitem_p.cpp
   elementtranslator.cpp
   extensionplugin.cpp
+  molecule.cpp
   periodictablescene_p.cpp
   periodictableview.cpp
   pluginmanager.cpp

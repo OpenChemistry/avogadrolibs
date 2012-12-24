@@ -20,7 +20,7 @@
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
-#include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/molecule.h>
 
 #include <molequeue/client/client.h>
 #include <molequeue/client/job.h>
@@ -128,12 +128,19 @@ GamessInputDialog::~GamessInputDialog()
 {
 }
 
-void GamessInputDialog::setMolecule(Core::Molecule *mol)
+void GamessInputDialog::setMolecule(QtGui::Molecule *mol)
 {
-  if (mol == m_molecule)
+  if (mol == m_molecule) {
     return;
+  }
+  else if (m_molecule) {
+    disconnect(this, SLOT(updatePreviewText()));
+  }
 
   m_molecule = mol;
+
+  connect(mol, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
+
   updatePreviewText();
 }
 
