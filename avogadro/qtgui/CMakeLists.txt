@@ -8,16 +8,23 @@ include_directories(SYSTEM ${QT_INCLUDES})
 add_definitions(${QT_DEFINITIONS})
 
 set(HEADERS
+  elementtranslator.h
   extensionplugin.h
   molecule.h
+  periodictableview.h
   pluginmanager.h
   sceneplugin.h
   scenepluginmodel.h
 )
 
 set(SOURCES
+  elementdetail_p.cpp
+  elementitem_p.cpp
+  elementtranslator.cpp
   extensionplugin.cpp
   molecule.cpp
+  periodictablescene_p.cpp
+  periodictableview.cpp
   pluginmanager.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
