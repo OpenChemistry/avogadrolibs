@@ -55,7 +55,7 @@ QStringList MolecularProperties::menuPath(QAction *) const
   return QStringList() << tr("&View") << tr("&Properties");
 }
 
-void MolecularProperties::setMolecule(Core::Molecule *mol)
+void MolecularProperties::setMolecule(QtGui::Molecule *mol)
 {
   if (mol == m_molecule)
     return;

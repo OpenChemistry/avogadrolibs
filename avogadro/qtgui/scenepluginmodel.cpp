@@ -41,7 +41,7 @@ int ScenePluginModel::rowCount(const QModelIndex &parent_) const
 
 int ScenePluginModel::columnCount(const QModelIndex &) const
 {
-  return 2;
+  return 1;
 }
 
 Qt::ItemFlags ScenePluginModel::flags(const QModelIndex &index_) const

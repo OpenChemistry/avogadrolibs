@@ -45,7 +45,7 @@ public:
   QStringList menuPath(QAction *) const;
 
 public slots:
-  void setMolecule(Core::Molecule *mol);
+  void setMolecule(QtGui::Molecule *mol);
 
 private slots:
   void showDialog();
@@ -53,7 +53,7 @@ private slots:
 private:
   QAction *m_action;
   MolecularPropertiesDialog *m_dialog;
-  Core::Molecule *m_molecule;
+  QtGui::Molecule *m_molecule;
 };
 
 } // namespace QtPlugins

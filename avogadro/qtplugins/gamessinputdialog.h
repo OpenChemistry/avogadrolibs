@@ -32,7 +32,7 @@ class Client;
 }
 
 namespace Avogadro {
-namespace Core {
+namespace QtGui {
 class Molecule;
 }
 
@@ -47,9 +47,9 @@ public:
   explicit GamessInputDialog(QWidget *parent_ = 0, Qt::WindowFlags f = 0 );
   ~GamessInputDialog();
 
-  void setMolecule(Core::Molecule *mol);
+  void setMolecule(QtGui::Molecule *mol);
 
-private Q_SLOTS:
+private slots:
   void updatePreviewText();
 
   void refreshPrograms();
@@ -78,7 +78,7 @@ private:
   void setBasicDefaults();
 
   Ui::GamessInputDialog ui;
-  Avogadro::Core::Molecule *m_molecule;
+  QtGui::Molecule *m_molecule;
   GamessHighlighter *m_highlighter;
 
   MoleQueue::Client *m_client;

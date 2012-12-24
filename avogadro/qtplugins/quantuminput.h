@@ -24,6 +24,7 @@ class QDialog;
 
 namespace Avogadro {
 namespace QtPlugins {
+
 class GamessInputDialog;
 
 class QuantumInput : public QtGui::ExtensionPlugin
@@ -42,14 +43,14 @@ public:
 
   QStringList menuPath(QAction *) const;
 
-  void setMolecule(Core::Molecule *mol);
+  void setMolecule(QtGui::Molecule *mol);
 
 private slots:
   void menuActivated();
 
 private:
   QAction *m_action;
-  Core::Molecule *m_molecule;
+  QtGui::Molecule *m_molecule;
   GamessInputDialog *m_dialog;
 };
 

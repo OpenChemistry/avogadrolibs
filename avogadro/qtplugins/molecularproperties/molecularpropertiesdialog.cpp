@@ -18,14 +18,14 @@
 #include "ui_molecularpropertiesdialog.h"
 
 #include <avogadro/core/elements.h>
-#include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/molecule.h>
 
-using Avogadro::Core::Molecule;
+using Avogadro::QtGui::Molecule;
 
 namespace Avogadro {
 namespace QtPlugins {
 
-MolecularPropertiesDialog::MolecularPropertiesDialog(Core::Molecule *mol,
+MolecularPropertiesDialog::MolecularPropertiesDialog(QtGui::Molecule *mol,
                                                      QWidget *parent_)
   : QDialog(parent_),
     m_molecule(NULL),
@@ -41,7 +41,7 @@ MolecularPropertiesDialog::~MolecularPropertiesDialog()
   delete m_ui;
 }
 
-void MolecularPropertiesDialog::setMolecule(Core::Molecule *mol)
+void MolecularPropertiesDialog::setMolecule(QtGui::Molecule *mol)
 {
   if (mol == m_molecule)
     return;

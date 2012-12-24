@@ -63,7 +63,7 @@ QStringList QuantumInput::menuPath(QAction *) const
   return path;
 }
 
-void QuantumInput::setMolecule(Core::Molecule *mol)
+void QuantumInput::setMolecule(QtGui::Molecule *mol)
 {
   if (m_dialog)
     m_dialog->setMolecule(mol);

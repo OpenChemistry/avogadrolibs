@@ -21,7 +21,7 @@
 
 namespace Avogadro {
 
-namespace Core {
+namespace QtGui {
 class Molecule;
 }
 
@@ -46,13 +46,13 @@ class MolecularPropertiesDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit MolecularPropertiesDialog(Core::Molecule *mol, QWidget *parent_ = 0);
+  explicit MolecularPropertiesDialog(QtGui::Molecule *mol, QWidget *parent_ = 0);
   ~MolecularPropertiesDialog();
 
-  Core::Molecule* molecule() { return m_molecule; }
+  QtGui::Molecule* molecule() { return m_molecule; }
 
 public slots:
-  void setMolecule(Core::Molecule *mol);
+  void setMolecule(QtGui::Molecule *mol);
 
 private slots:
   void updateLabels();
@@ -61,7 +61,7 @@ private slots:
   void moleculeDestroyed();
 
 private:
-  Core::Molecule *m_molecule;
+  QtGui::Molecule *m_molecule;
   Ui::MolecularPropertiesDialog *m_ui;
 };
 

@@ -18,6 +18,10 @@
 
 #include <avogadro/core/molecule.h>
 
+using Avogadro::Core::Molecule;
+using Avogadro::Core::Atom;
+using Avogadro::Core::Bond;
+
 TEST(MoleculeTest, size)
 {
   Avogadro::Core::Molecule molecule;
@@ -88,6 +92,25 @@ TEST(MoleculeTest, addBond)
   EXPECT_EQ(bond.molecule(), &molecule);
   EXPECT_EQ(bond.atom1().index(), b.index());
   EXPECT_EQ(bond.atom2().index(), c.index());
+}
+
+TEST(MoleculeTest, findBond)
+{
+  Molecule molecule;
+  Atom a1 = molecule.addAtom(5);
+  Atom a2 = molecule.addAtom(6);
+  Bond b = molecule.addBond(a1, a2, 1);
+
+  EXPECT_EQ(molecule.bond(a1, a2).index(), b.index());
+  EXPECT_EQ(molecule.bond(a2, a1).index(), b.index());
+
+  std::vector<Bond> bonds = molecule.bonds(a1);
+  EXPECT_EQ(bonds.size(), 1);
+
+  Atom a3 = molecule.addAtom(7);
+  molecule.addBond(a1, a3, 1);
+  EXPECT_EQ(molecule.bonds(a1).size(), 2);
+  EXPECT_EQ(molecule.bonds(a3).size(), 1);
 }
 
 TEST(MoleculeTest, setData)
