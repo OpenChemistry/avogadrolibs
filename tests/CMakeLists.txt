@@ -27,6 +27,13 @@ else()
   set(EXTRA_LINK_LIB "")
 endif()
 
+# Some tests reference data in the avogadrodata repo. Emit a warning if the
+# data directory does not exist:
+get_filename_component(datadir "${AvogadroLibs_SOURCE_DIR}/../avogadrodata" ABSOLUTE)
+if(NOT EXISTS "${datadir}")
+  message(WARNING "Some tests will fail: the data directory does not exist in its expected location '${datadir}'")
+endif()
+
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   Array

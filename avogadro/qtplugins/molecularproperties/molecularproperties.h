@@ -1,6 +1,6 @@
 /******************************************************************************
 
-  This source file is part of the Avogadro project.
+  This source file is part of the MoleQueue project.
 
   Copyright 2012 Kitware, Inc.
 
@@ -14,46 +14,49 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_QUANTUMINPUT_H
-#define AVOGADRO_QTPLUGINS_QUANTUMINPUT_H
+#ifndef AVOGADRO_QTPLUGINS_MOLECULARPROPERTIES_H
+#define AVOGADRO_QTPLUGINS_MOLECULARPROPERTIES_H
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-class QAction;
-class QDialog;
-
 namespace Avogadro {
-namespace QtPlugins {
-class GamessInputDialog;
 
-class QuantumInput : public QtGui::ExtensionPlugin
+namespace Core {
+class Molecule;
+}
+
+namespace QtPlugins {
+class MolecularPropertiesDialog;
+
+/**
+ * @brief The MolecularProperties class is an extension to launch
+ * a MolecularPropertiesDialog.
+ */
+class MolecularProperties : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
-
 public:
-  explicit QuantumInput(QObject *parent = 0);
-  ~QuantumInput();
+  explicit MolecularProperties(QObject *parent_ = 0);
+  ~MolecularProperties();
 
-  QString name() const { return tr("Quantum input"); }
-
-  QString description() const { return tr("Generate input for quantum codes."); }
-
-  QList<QAction *> actions() const;
-
+  QString name() const { return tr("Molecular Properties"); }
+  QString description() const;
+  QList<QAction*> actions() const;
   QStringList menuPath(QAction *) const;
 
+public slots:
   void setMolecule(Core::Molecule *mol);
 
 private slots:
-  void menuActivated();
+  void showDialog();
 
 private:
   QAction *m_action;
+  MolecularPropertiesDialog *m_dialog;
   Core::Molecule *m_molecule;
-  GamessInputDialog *m_dialog;
 };
 
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_QUANTUMINPUT_H
+#endif // AVOGADRO_QTPLUGINS_MOLECULARPROPERTIESEXTENSION_H

@@ -19,6 +19,7 @@
 
 #include "avogadrocore.h"
 
+#include <string>
 #include <vector>
 
 #include "atom.h"
@@ -70,6 +71,8 @@ public:
   Bond bond(size_t index) const;
   Bond bond(const Atom &a, const Atom &b) const;
   size_t bondCount() const;
+
+  std::string formula() const;
 
 private:
   Graph m_graph;
