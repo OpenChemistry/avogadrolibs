@@ -6,14 +6,17 @@ find_package(HDF5 REQUIRED COMPONENTS C)
 include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}"
   "${Boost_INCLUDE_DIRS}"
   "${HDF5_INCLUDE_DIRS}"
-  "${AvogadroLibs_SOURCE_DIR}/thirdparty/pugixml")
+  "${AvogadroLibs_SOURCE_DIR}/thirdparty/pugixml"
+  "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp")
 
 set(HEADERS
+  cjsonformat.h
   cmlformat.h
   hdf5dataformat.h
 )
 
 set(SOURCES
+  cjsonformat.cpp
   cmlformat.cpp
   hdf5dataformat.cpp
 )
