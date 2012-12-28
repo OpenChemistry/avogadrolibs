@@ -46,21 +46,16 @@ void MolecularPropertiesDialog::setMolecule(QtGui::Molecule *mol)
   if (mol == m_molecule)
     return;
 
-  /// @todo For the QObject molecule...
-  //  if (m_molecule)
-    //  m_molecule->disconnect(this);
+  if (m_molecule)
+    m_molecule->disconnect(this);
 
   m_molecule = mol;
 
   if (!m_molecule)
     return;
 
-  /// @todo For the QObject molecule...
-//  if (m_molecule) {
-//    connect(m_molecule, SIGNAL(moleculeChanged()), SLOT(updateLabels()));
-//    connect(m_molecule, SIGNAL(destroyed()), SLOT(moleculeDestroyed()));
-//  }
-
+  connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateLabels()));
+  connect(m_molecule, SIGNAL(destroyed()), SLOT(moleculeDestroyed()));
   updateLabels();
 }
 
