@@ -12,7 +12,6 @@ set(HEADERS
   extensionplugin.h
   molecule.h
   periodictableview.h
-  pluginmanager.h
   sceneplugin.h
   scenepluginmodel.h
 )
@@ -25,7 +24,6 @@ set(SOURCES
   molecule.cpp
   periodictablescene_p.cpp
   periodictableview.cpp
-  pluginmanager.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
 )

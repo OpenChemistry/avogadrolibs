@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_QTGUI_PLUGINMANAGER_H
 #define AVOGADRO_QTGUI_PLUGINMANAGER_H
 
-#include "avogadroqtguiexport.h"
+#include "avogadroqtpluginsexport.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
@@ -30,7 +30,7 @@ class ScenePluginFactory;
 class ExtensionPluginFactory;
 
 /*!
- * \class PluginManager pluginmanager.h <avogadro/qtgui/pluginmanager.h>
+ * \class PluginManager pluginmanager.h <avogadro/qtplugins/pluginmanager.h>
  * \brief This class takes care of finding and loading Avogadro plugins.
  * \author Marcus D. Hanwell
  *
@@ -44,7 +44,7 @@ class ExtensionPluginFactory;
  * while ignoring plugins that have already been loaded.
  */
 
-class AVOGADROQTGUI_EXPORT PluginManager : public QObject
+class AVOGADROQTPLUGINS_EXPORT PluginManager : public QObject
 {
   Q_OBJECT
 
@@ -62,16 +62,6 @@ public:
   /*! Load all plugins available in the specified plugin directories. */
   void load();
   void load(const QString &dir);
-
-  /*! Return the loaded scene plugin factories. Will be empty unless load has
-   * been called.
-   */
-  QList<ScenePluginFactory *> scenePluginFactories() const;
-
-  /*! Return the loaded extension plugin factories. Will be empty unless load
-   * has been called.
-   */
-  QList<ExtensionPluginFactory *> extensionPluginFactories() const;
 
   /*! Let the user request plugins with a certain type, this must use the Qt
    * mechanisms as qobject_cast is used in conjunction with interfaces.
@@ -92,16 +82,16 @@ private:
   QStringList m_pluginDirs;
   QString     m_relativeToApp;
 
-  // Various factories loaded by the plugin manager.
-  QList<ScenePluginFactory *> m_scenePluginFactories;
-  QList<ExtensionPluginFactory *> m_extensionPluginFactories;
+  bool        m_staticPluginsLoaded;
+
+  // Storage for the loaded plugin instances.
   QList<QObject *> m_plugins;
 };
 
 template<typename T> QList<T *> PluginManager::pluginFactories() const
 {
   QList<T *> factories;
-  foreach(QObject *plugin, m_plugins) {
+  foreach (QObject *plugin, m_plugins) {
     T *factory = qobject_cast<T *>(plugin);
     if (factory)
       factories.append(factory);

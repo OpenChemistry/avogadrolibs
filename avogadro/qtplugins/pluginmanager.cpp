@@ -15,9 +15,7 @@
 ******************************************************************************/
 
 #include "pluginmanager.h"
-
-#include "sceneplugin.h"
-#include "extensionplugin.h"
+#include "avogadrostaticqtplugins.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QMutex>
@@ -30,7 +28,8 @@
 namespace Avogadro {
 namespace QtGui {
 
-PluginManager::PluginManager(QObject *p) : QObject(p)
+PluginManager::PluginManager(QObject *p)
+  : QObject(p), m_staticPluginsLoaded(false)
 {
   // http://doc.qt.digia.com/qt/deployment-plugins.html#debugging-plugins
   bool debugPlugins = !qgetenv("QT_DEBUG_PLUGINS").isEmpty();
@@ -56,10 +55,10 @@ PluginManager::PluginManager(QObject *p) : QObject(p)
 #endif
 
   QDir pluginsDir(baseDir.absolutePath() + "/lib/avogadro2/plugins");
-  qDebug() << "  pluginsDir:" << pluginsDir.absolutePath();
   m_pluginDirs.append(pluginsDir.absolutePath());
 
   if (debugPlugins) {
+    qDebug() << "  pluginsDir:" << pluginsDir.absolutePath();
     int count = 0;
     foreach(const QString &pluginPath, pluginsDir.entryList(QDir::Files)) {
       ++count;
@@ -99,8 +98,16 @@ void PluginManager::load()
 
 void PluginManager::load(const QString &path)
 {
+  // Load any static plugins first.
+  if (!m_staticPluginsLoaded) {
+    QObjectList staticPlugins = QPluginLoader::staticInstances();
+    foreach (QObject *pluginInstance, staticPlugins)
+      m_plugins.append(pluginInstance);
+    m_staticPluginsLoaded = true;
+  }
+
   QDir dir(path);
-  foreach(const QString &pluginPath, dir.entryList(QDir::Files)) {
+  foreach (const QString &pluginPath, dir.entryList(QDir::Files)) {
     QPluginLoader pluginLoader(dir.absolutePath() + "/" + pluginPath);
 
     // We only want to count plugins once, the || should not be necessary but
@@ -121,16 +128,6 @@ void PluginManager::load(const QString &path)
 
     m_plugins.append(pluginInstance);
   }
-}
-
-QList<ScenePluginFactory *> PluginManager::scenePluginFactories() const
-{
-  return pluginFactories<ScenePluginFactory>();
-}
-
-QList<ExtensionPluginFactory *> PluginManager::extensionPluginFactories() const
-{
-  return pluginFactories<ExtensionPluginFactory>();
 }
 
 } // End QtGui namespace

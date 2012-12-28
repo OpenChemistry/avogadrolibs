@@ -91,14 +91,6 @@ public:
   virtual QString identifier() const = 0;
 };
 
-#define EXTENSION_PLUGIN_FACTORY(className, id) \
-public: \
-  Avogadro::QtGui::ExtensionPlugin * createExtensionInstance() \
-  { \
-    return new className; \
-  } \
-  QString identifier() const { return id; }
-
 } // End QtGui namespace
 } // End Avogadro namespace
 
