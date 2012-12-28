@@ -37,8 +37,6 @@ class MolecularPropertiesDialog;
  * basic molecular properties.
  * @author David C. Lonie
  *
- * @todo This class will need to be updated with the QObject molecule: connect
- * destroyed() to moleculeDestroyed(), and moleculeChanged() to updateLabels().
  * @todo IUPAC name fetch (need inchi key).
  */
 class MolecularPropertiesDialog : public QDialog
