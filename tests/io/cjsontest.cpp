@@ -28,6 +28,7 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Io::CjsonFormat;
 using Avogadro::MatrixX;
+using Avogadro::Vector3;
 
 TEST(CjsonTest, readFile)
 {
@@ -107,4 +108,49 @@ TEST(CjsonTest, saveFile)
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
+}
+
+TEST(CjsonTest, stringReadWrite)
+{
+  // Build a methane molecule
+  Molecule mol;
+  mol.setData("name", "Methane");
+  Atom atom;
+  atom = mol.addAtom(6);
+  atom.setPosition3d(Vector3(0.0, 0.0, 0.0));
+  atom = mol.addAtom(1);
+  atom.setPosition3d(Vector3(-0.63, -0.93, -0.20));
+  mol.addBond(mol.atom(0), atom);
+  atom = mol.addAtom(1);
+  atom.setPosition3d(Vector3(-0.63, 0.93, -0.20));
+  mol.addBond(mol.atom(0), atom);
+  atom = mol.addAtom(1);
+  atom.setPosition3d(Vector3(0.92, 0.00, -0.67));
+  mol.addBond(mol.atom(0), atom);
+  atom = mol.addAtom(1);
+  atom.setPosition3d(Vector3(0.34, 0.00, 1.08));
+  mol.addBond(mol.atom(0), atom);
+
+  // Convert to a CJSON string and back.
+  CjsonFormat cjson;
+  std::string str;
+  cjson.writeString(str, mol);
+  std::cout << str << std::endl;
+  Molecule mol2;
+  cjson.readString(str, mol2);
+
+  // Verify that the molecule match.
+  EXPECT_EQ(mol.data("name").toString(), mol2.data("name").toString());
+  EXPECT_EQ(mol.atomCount(), mol2.atomCount());
+  EXPECT_EQ(mol.bondCount(), mol2.bondCount());
+  EXPECT_EQ(mol.bondCount(), mol2.bondCount());
+  atom = mol.atom(3);
+  Atom atom2 = mol2.atom(3);
+  EXPECT_EQ(atom.atomicNumber(), atom2.atomicNumber());
+  EXPECT_TRUE(atom.position3d().isApprox(atom2.position3d()));
+  Bond bond = mol.bond(2);
+  Bond bond2 = mol2.bond(2);
+  EXPECT_EQ(bond.atom1().index(), bond2.atom1().index());
+  EXPECT_EQ(bond.atom2().index(), bond2.atom2().index());
+  EXPECT_EQ(bond.order(), bond2.order());
 }

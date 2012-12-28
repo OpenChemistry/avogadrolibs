@@ -21,6 +21,10 @@
 
 #include <string>
 
+namespace Json {
+class Value;
+}
+
 namespace Avogadro {
 namespace Core {
 class Molecule;
@@ -54,6 +58,26 @@ public:
    * \return True on success, false on failure.
    */
   bool writeFile(const std::string &fileName, const Core::Molecule &molecule);
+
+  /*!
+   * \brief Read the given \p cJson string and load it into \p molecule.
+   * \param cJson A std::string to overwrite.
+   * \param molecule The molecule the data will be read into.
+   * \return True on success, false on failure.
+   */
+  bool readString(const std::string &cJson, Core::Molecule &molecule);
+
+  /*!
+   * \brief Write to the given \p cJson string the contents of \p molecule.
+   * \param cJson A std::string to overwrite.
+   * \param molecule The contents of this molecule will be written to the file.
+   * \return True on success, false on failure.
+   */
+  bool writeString(std::string &cJson, const Core::Molecule &molecule);
+
+private:
+  bool readJson(const Json::Value &json, Core::Molecule &molecule);
+  bool writeJson(Json::Value &json, const Core::Molecule &molecule);
 
 };
 
