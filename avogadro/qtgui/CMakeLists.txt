@@ -8,8 +8,12 @@ include_directories(SYSTEM ${QT_INCLUDES})
 add_definitions(${QT_DEFINITIONS})
 
 set(HEADERS
+  color3f.h
+  cube.h
   elementtranslator.h
   extensionplugin.h
+  mesh.h
+  meshgenerator.h
   molecule.h
   periodictableview.h
   sceneplugin.h
@@ -17,10 +21,13 @@ set(HEADERS
 )
 
 set(SOURCES
+  cube.cpp
   elementdetail_p.cpp
   elementitem_p.cpp
   elementtranslator.cpp
   extensionplugin.cpp
+  mesh.cpp
+  meshgenerator.cpp
   molecule.cpp
   periodictablescene_p.cpp
   periodictableview.cpp

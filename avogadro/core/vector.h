@@ -30,6 +30,7 @@ typedef Eigen::Matrix<Real, 4, 1> Vector4;
 typedef Eigen::Matrix<float, 2, 1> Vector2f;
 typedef Eigen::Matrix<float, 3, 1> Vector3f;
 typedef Eigen::Matrix<float, 4, 1> Vector4f;
+typedef Eigen::Matrix<int, 3, 1> Vector3i;
 typedef Eigen::Matrix<unsigned char, 3, 1> Vector3ub;
 
 } // end Avogadro namespace
