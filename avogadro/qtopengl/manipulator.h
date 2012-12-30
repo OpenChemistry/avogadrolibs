@@ -37,10 +37,10 @@ class Molecule;
 namespace QtOpenGL {
 class GLWidget;
 
-/**
- * @class Manipulator manipulator.h <avogadro/qtopengl/manipulator.h>
- * @brief The Manipulator class manipulates a molecule's geometry.
- * @author David C. Lonie
+/*!
+ * \class Manipulator manipulator.h <avogadro/qtopengl/manipulator.h>
+ * \brief The Manipulator class manipulates a molecule's geometry.
+ * \author David C. Lonie
  */
 class Manipulator : public QObject
 {
@@ -49,37 +49,39 @@ public:
   explicit Manipulator(GLWidget *widget);
   ~Manipulator();
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void mousePressEvent(QMouseEvent *);
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void mouseReleaseEvent(QMouseEvent *);
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void mouseMoveEvent(QMouseEvent *);
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void mouseDoubleClickEvent(QMouseEvent *);
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void wheelEvent(QWheelEvent *);
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void keyPressEvent(QKeyEvent *);
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void keyReleaseEvent(QKeyEvent *);
 
   void setMolecule(QtGui::Molecule *mol) { m_molecule = mol; }
   QtGui::Molecule * molecule() { return m_molecule; }
 
 signals:
-  /// HACK -- the molecule should notify the scene plugins to update.
+  /*! HACK -- the molecule should notify the scene plugins to update. */
   void moleculeChanged();
 
 private:
-  /// Update the currently pressed buttons, accounting for modifier keys.
-  /// @todo Account for modifier keys.
+  /*!
+   * Update the currently pressed buttons, accounting for modifier keys.
+   * \todo Account for modifier keys.
+   */
   void updatePressedButtons(QMouseEvent *, bool release);
 
   void resetObject() { m_object = Rendering::Primitive::Identifier(); }

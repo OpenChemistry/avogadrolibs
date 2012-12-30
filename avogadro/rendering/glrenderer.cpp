@@ -322,7 +322,7 @@ std::map<float, Primitive::Identifier> GLRenderer::hits(int x, int y) const
     float D = B*B - 4*A*C;
 
     // no intersection
-    if(D < 0)
+    if (D < 0)
       continue;
 
     float t = std::min((-B + sqrt(D)) / (2.f * A), (-B - sqrt(D)) / (2.f * A));

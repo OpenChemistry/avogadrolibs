@@ -27,6 +27,11 @@ namespace Avogadro {
 
 namespace QtGui {
 
+/*!
+ * \class Molecule molecule.h <avogadro/qtgui/molecule.h>
+ * \brief A QObject derived molecule object with signals/slots.
+ */
+
 class AVOGADROQTGUI_EXPORT Molecule : public QObject, public Core::Molecule
 {
   Q_OBJECT
@@ -36,10 +41,10 @@ public:
 
   /*! \enum Enumeration of change types that can be given. */
   enum MoleculeChange {
-    /// Object types that can be changed.
+    /*! Object types that can be changed. */
     Atoms = 0x01,
     Bonds = 0x02,
-    /// Operations that can affect the above types.
+    /*! Operations that can affect the above types. */
     Added    = 0x1024,
     Removed  = 0x2048,
     Modified = 0x4096
@@ -50,10 +55,9 @@ public:
    * \return The atom created.
    */
   Core::Atom addAtom(unsigned char atomicNumber);
-  //Atom atom(size_t index) const;
 
   /*!
-   * \brief removeAtom
+   * \brief Remove the specified atom from the molecule.
    * \param index The index of the atom to be removed.
    * \return True on success, false if the atom was not found.
    */
@@ -78,8 +82,6 @@ public:
   bool removeBond(size_t index);
   bool removeBond(const Core::Bond &bond);
   bool removeBond(const Core::Atom &a, const Core::Atom &b);
-  //Bond bond(size_t index) const;
-  //Bond bond(const Atom &a, const Atom &b) const;
 
 signals:
   /*!

@@ -24,21 +24,11 @@
 namespace Avogadro {
 namespace Core {
 
-// === Variant ============================================================= //
-/// \class Variant
-/// \brief The Variant class represents a union of data values.
-///
-/// Variant objects allow for the storage of and conversion between
-/// a variety of different data types.
-
-// --- Construction and Destruction ---------------------------------------- //
-/// Creates a null variant.
 inline Variant::Variant()
   : m_type(Null)
 {
 }
 
-/// Creates a variant to store \p value.
 template<typename T>
 inline Variant::Variant(T v)
   : m_type(Null)
@@ -46,42 +36,32 @@ inline Variant::Variant(T v)
   setValue(v);
 }
 
-/// Creates a new copy of \p variant.
 inline Variant::Variant(const Variant &variant)
   : m_type(variant.type())
 {
-  if(m_type == String){
+  if (m_type == String)
     m_value.string = new std::string(variant.toString());
-  }
-  else if(m_type == Matrix){
+  else if (m_type == Matrix)
     m_value.matrix = new MatrixX(*variant.m_value.matrix);
-  }
-  else if(m_type != Null){
+  else if (m_type != Null)
     m_value = variant.m_value;
-  }
 }
 
-/// Destroys the variant object
 inline Variant::~Variant()
 {
   clear();
 }
 
-// --- Properties ---------------------------------------------------------- //
-/// Returns variant's type.
 inline Variant::Type Variant::type() const
 {
   return m_type;
 }
 
-/// Returns \c true if the variant is null.
 inline bool Variant::isNull() const
 {
   return m_type == Null;
 }
 
-// --- Value --------------------------------------------------------------- //
-/// Sets the value of the variant to \p value.
 template<typename T>
 inline bool Variant::setValue(T v)
 {
@@ -208,7 +188,6 @@ inline bool Variant::setValue(MatrixX matrix)
   return true;
 }
 
-/// Returns the value of the variant in the type given by \c T.
 template<typename T>
 inline T Variant::value() const
 {
@@ -220,7 +199,7 @@ inline bool Variant::value() const
 {
   if (m_type == Bool)
     return m_value._bool;
-  else if(m_type == Int)
+  else if (m_type == Int)
     return static_cast<bool>(m_value._int);
 
   return false;
@@ -355,7 +334,6 @@ inline const MatrixX& Variant::value() const
   return nullMatrix;
 }
 
-/// Clears the variant's data and sets the variant to null.
 inline void Variant::clear()
 {
   if (m_type == String) {
@@ -370,100 +348,81 @@ inline void Variant::clear()
   m_type = Null;
 }
 
-// --- Conversions --------------------------------------------------------- //
-/// Returns the value of the variant as a \c bool.
 inline bool Variant::toBool() const
 {
   return value<bool>();
 }
 
-/// Returns the value of the variant as a \c char.
 inline char Variant::toChar() const
 {
   return value<char>();
 }
 
-/// Returns the value of the variant as an \c unsigned \c char.
 inline unsigned char Variant::toUChar() const
 {
   return value<unsigned char>();
 }
 
-/// Returns the value of the variant as a \c short.
 inline short Variant::toShort() const
 {
   return value<short>();
 }
 
-/// Returns the value of the variant as an \c unsigned \c short.
 inline unsigned short Variant::toUShort() const
 {
   return value<unsigned short>();
 }
 
-/// Returns the value of the variant as an \c int.
 inline int Variant::toInt() const
 {
   return value<int>();
 }
 
-/// Returns the value of the variant as an \c unsigned \c int.
 inline unsigned int Variant::toUInt() const
 {
   return value<unsigned int>();
 }
 
-/// Returns the value of the variant as a \c long.
 inline long Variant::toLong() const
 {
   return value<long>();
 }
 
-/// Returns the value of the variant as an \c unsigned \c long.
 inline unsigned long Variant::toULong() const
 {
   return value<unsigned long>();
 }
 
-/// Returns the value of the variant as a \c float.
 inline float Variant::toFloat() const
 {
   return value<float>();
 }
 
-/// Returns the value of the variant as a \c double.
 inline double Variant::toDouble() const
 {
   return value<double>();
 }
 
-/// Returns the value of the variant as a \c Real.
 inline Real Variant::toReal() const
 {
   return value<Real>();
 }
 
-/// Returns the value of the variant as a pointer.
 inline void* Variant::toPointer() const
 {
   return value<void *>();
 }
 
-/// Returns the value of the variant as a string.
 inline std::string Variant::toString() const
 {
   return value<std::string>();
 }
 
-/// Returns the value of the variant as a MatrixX.
 inline MatrixX Variant::toMatrix() const
 {
   return value<MatrixX>();
 }
 
-/// Returns a reference to the value of the variant as a MatrixX.
-/// This method will not perform any casting -- if type() is not exactly
-/// MatrixX, the function will fail and return a reference to an empty MatrixX.
 inline const MatrixX &Variant::toMatrixRef() const
 {
   return value<const MatrixX&>();
@@ -473,13 +432,13 @@ inline const MatrixX &Variant::toMatrixRef() const
 inline Variant& Variant::operator=(const Variant &variant)
 {
   if (this != &variant) {
-    // clear previous data
+    // Clear previous data,
     clear();
 
-    // set new type
+    // Set the new type.
     m_type = variant.m_type;
 
-    // set new value
+    // Set the new value,
     if (m_type == String)
       m_value.string = new std::string(variant.toString());
     else if (m_type == Matrix)

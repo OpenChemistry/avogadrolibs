@@ -276,9 +276,9 @@ void Sssr::append(const std::vector<size_t> &ring)
 
 bool Sssr::isValid(const std::vector<size_t> &ring) const
 {
-  // check for any duplicate atoms
-  for (size_t i = 0; i < ring.size(); i++)
-    for (size_t j = i + 1; j < ring.size(); j++)
+  // Check for any duplicate atoms.
+  for (size_t i = 0; i < ring.size(); ++i)
+    for (size_t j = i + 1; j < ring.size(); ++j)
       if (ring[i] == ring[j])
         return false;
 
@@ -287,11 +287,11 @@ bool Sssr::isValid(const std::vector<size_t> &ring) const
 
 bool Sssr::isUnique(const std::vector<size_t> &path) const
 {
-  // must be unique if sssr is empty
-  if(isEmpty())
+  // Must be unique if sssr is empty.
+  if (isEmpty())
     return true;
 
-  // check if a ring with the same atoms is already in the sssr
+  // Check if a ring with the same atoms is already in the sssr.
   std::set<size_t> pathSet;
   pathSet.insert(path.begin(), path.end());
 
@@ -315,7 +315,7 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
       return false;
   }
 
-  // build set of bonds in the path
+  // Build the set of bonds in the path.
   std::set<std::pair<int, int> > pathBonds;
   for (size_t i = 0; i < path.size()-1; i++) {
     pathBonds.insert(std::make_pair(std::min(path[i], path[i+1]),
@@ -325,7 +325,7 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
   pathBonds.insert(std::make_pair(std::min(path.front(), path.back()),
                                   std::max(path.front(), path.back())));
 
-  // remove bonds from path bonds that are already in a smaller ring
+  // Remove bonds from path bonds that are already in a smaller ring.
   for (std::vector<std::vector<size_t> >::const_iterator iter = m_rings.begin();
        iter != m_rings.end();
        ++iter) {
@@ -343,7 +343,7 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
                                    std::max(ring.front(), ring.back())));
   }
 
-  // check if any other ring contains the same bonds
+  // Check if any other ring contains the same bonds.
   for (std::vector<std::vector<size_t> >::const_iterator iter = m_rings.begin();
        iter != m_rings.end();
        ++iter) {
@@ -351,17 +351,17 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
 
     std::set<std::pair<int, int> > ringBonds;
 
-    // add ring bonds
+    // Add ring bonds.
     for (size_t i = 0; i < ring.size()-1; i++) {
       ringBonds.insert(std::make_pair(std::min(ring[i], ring[i+1]),
                                       std::max(ring[i], ring[i+1])));
     }
 
-    // add closure bond
+    // Add closure bond.
     ringBonds.insert(std::make_pair(std::min(ring.front(), ring.back()),
                                     std::max(ring.front(), ring.back())));
 
-    // check intersection
+    // Check intersection.
     std::set<std::pair<int, int> > intersection;
     std::set_intersection(pathBonds.begin(), pathBonds.end(),
                           ringBonds.begin(), ringBonds.end(),
@@ -382,26 +382,26 @@ std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
   if (ringCount == 0)
     return std::vector<std::vector<size_t> >();
 
-  // algorithm 1 - create the distance and pid matrices
+  // Algorithm 1 - create the distance and pid matrices.
   DistanceMatrix D(n);
   PidMatrix P(n);
   PidMatrix Pt(n);
 
-  for (size_t i = 0; i < n; i++) {
-    for (size_t j = 0; j < n; j++) {
+  for (size_t i = 0; i < n; ++i) {
+    for (size_t j = 0; j < n; ++j) {
       if (i == j)
         D(i, j) = 0;
-      else if(graph.containsEdge(i, j))
+      else if (graph.containsEdge(i, j))
         D(i, j) = 1;
       else
-        D(i, j) = std::numeric_limits<size_t>::max()/2; // ~ infinity
+        D(i, j) = std::numeric_limits<size_t>::max() / 2; // ~ infinity
     }
   }
 
   for (size_t k = 0; k < n; ++k) {
     for (size_t i = 0; i < n; ++i) {
       for (size_t j = 0; j < n; ++j) {
-        if(i == j || i == k || k == j)
+        if (i == j || i == k || k == j)
           continue;
 
         if (D(i, j) > D(i, k) + D(k, j)) {
@@ -423,7 +423,7 @@ std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
     }
   }
 
-  // algorithm 2 - create the ring candidate set
+  // Algorithm 2 - create the ring candidate set.
   std::vector<RingCandidate> candidates;
   for (size_t i = 0; i < n; i++) {
     for (size_t j = i + 1; j < n; j++) {
@@ -438,21 +438,21 @@ std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
         else
           size = 2 * D(i, j) + 1;
 
-        if(size > 2)
+        if (size > 2)
           candidates.push_back(RingCandidate(size, i, j));
       }
     }
   }
 
-  // sort candidates
+  // Sort the candidates.
   std::sort(candidates.begin(), candidates.end(), RingCandidate::compareSize);
 
-  // algorithm 3 - find sssr from the ring candidate set
+  // Algorithm 3 - find sssr from the ring candidate set.
   Sssr sssr;
 
   for (std::vector<RingCandidate>::iterator iter = candidates.begin();
        iter != candidates.end();
-       ++iter){
+       ++iter) {
     const RingCandidate &candidate = *iter;
 
     // odd sized ring
@@ -469,7 +469,7 @@ std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
           ring.insert(ring.end(), path.begin(), path.end());
         }
 
-        // check if ring is valid and unique
+        // Check if ring is valid and unique.
         if (sssr.isValid(ring) && sssr.isUnique(ring)) {
           sssr.append(ring);
           break;
@@ -477,9 +477,9 @@ std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
       }
     }
 
-    // even sized ring
+    // Even sized ring.
     else {
-      for (size_t i = 0; i < P(candidate.start(), candidate.end()).size()-1;
+      for (size_t i = 0; i < P(candidate.start(), candidate.end()).size() - 1;
            ++i) {
         std::vector<size_t> ring;
         ring.push_back(candidate.start());

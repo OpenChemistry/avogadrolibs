@@ -318,13 +318,13 @@ Hdf5DataFormat::datasetDimensions(const std::string &path) const
   hsize_t *hdims = new hsize_t[ndims];
   int checkDims = H5Sget_simple_extent_dims(dataspace_id, hdims, NULL);
 
-  // Copy dimensions if successful
+  // Copy dimensions if successful.
   if (checkDims == ndims) {
     result.resize(ndims);
     std::copy(hdims, hdims + ndims, result.begin());
   }
 
-  // Cleanup
+  // Cleanup.
   delete [] hdims;
   H5Sclose(dataspace_id);
   H5Dclose(dataset_id);
@@ -339,7 +339,7 @@ bool Hdf5DataFormat::writeRawDataset(const std::string &path,
   if (!isOpen())
     return false;
 
-  // Remove old data set if it exists
+  // Remove old data set if it exists.
   if (datasetExists(path)) {
     if (!removeDataset(path))
       return false;
@@ -351,7 +351,7 @@ bool Hdf5DataFormat::writeRawDataset(const std::string &path,
     hdims[i] = static_cast<hsize_t>(dims[i]);
   }
 
-  // Create a dataspace description
+  // Create a dataspace description.
   hid_t dataspace_id = H5Screate_simple(ndims, hdims, NULL);
   delete [] hdims;
   if (dataspace_id < 0)
@@ -364,7 +364,7 @@ bool Hdf5DataFormat::writeRawDataset(const std::string &path,
     return false;
   }
 
-  // Create the dataset
+  // Create the dataset.
   hid_t dataset_id = H5Dcreate(d->fileId, path.c_str(), H5T_NATIVE_DOUBLE,
                                dataspace_id, lcpl_id, H5P_DEFAULT, H5P_DEFAULT);
   if (dataset_id < 0) {
@@ -376,7 +376,7 @@ bool Hdf5DataFormat::writeRawDataset(const std::string &path,
   herr_t err = H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, dataspace_id,
                         H5P_DEFAULT, data);
 
-  // Cleanup
+  // Cleanup.
   H5Dclose(dataset_id);
   H5Sclose(dataspace_id);
 
@@ -391,7 +391,7 @@ bool Hdf5DataFormat::writeDataset(const std::string &path,
 {
   size_t dims[2] = {static_cast<size_t>(data.rows()),
                     static_cast<size_t>(data.cols())};
-  // Transpose data -- Eigen uses column-major ordering
+  // Transpose data -- Eigen uses column-major ordering.
   return this->writeRawDataset(path, data.transpose().data(), 2, dims);
 }
 

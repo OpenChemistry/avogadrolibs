@@ -24,168 +24,137 @@
 namespace Avogadro {
 namespace Core {
 
-// === Molecule ============================================================ //
-/// \class Molecule
-/// \brief The Molecule class represents a chemical molecule.
-
-// --- Construction and Destruction ---------------------------------------- //
-/// Creates a new, empty molecule.
 Molecule::Molecule() : m_graphDirty(false)
 {
 }
 
-/// Destroys the molecule object.
 Molecule::~Molecule()
 {
 }
 
-// --- Properties ---------------------------------------------------------- //
-/// Returns the number of atoms in the molecule.
 size_t Molecule::size() const
 {
   return m_atomicNumbers.size();
 }
 
-/// Returns \c true if the molecule is empty (i.e. size() == \c 0).
 bool Molecule::isEmpty() const
 {
   return m_atomicNumbers.empty();
 }
 
-/// Sets the data value with \p name to \p value.
 void Molecule::setData(const std::string &name, const Variant &value)
 {
   m_data.setValue(name, value);
 }
 
-/// Returns the data value for \p name.
 Variant Molecule::data(const std::string &name) const
 {
   return m_data.value(name);
 }
 
-/// Set the molecule's variant data to the entries in map.
 void Molecule::setDataMap(const VariantMap &map)
 {
   m_data = map;
 }
 
-/// Return the molecule's variant data.
 const VariantMap &Molecule::dataMap() const
 {
   return m_data;
 }
 
-/// \overload
 VariantMap &Molecule::dataMap()
 {
   return m_data;
 }
 
-/// Returns a vector of atomic numbers for the atoms in the moleucle.
 std::vector<unsigned char>& Molecule::atomicNumbers()
 {
   return m_atomicNumbers;
 }
 
-/// \overload
 const std::vector<unsigned char>& Molecule::atomicNumbers() const
 {
   return m_atomicNumbers;
 }
 
-/// Returns a vector of 2d atom positions for the atoms in the molecule.
 std::vector<Vector2>& Molecule::atomPositions2d()
 {
   return m_positions2d;
 }
 
-/// \overload
 const std::vector<Vector2>& Molecule::atomPositions2d() const
 {
   return m_positions2d;
 }
 
-/// Returns a vector of 2d atom positions for the atoms in the molecule.
 std::vector<Vector3>& Molecule::atomPositions3d()
 {
   return m_positions3d;
 }
 
-/// \overload
 const std::vector<Vector3>& Molecule::atomPositions3d() const
 {
   return m_positions3d;
 }
 
-/// Returns a vector of pairs of atom indicies for the bonds in the
-/// molecule.
 std::vector<std::pair<size_t, size_t> >& Molecule::bondPairs()
 {
   return m_bondPairs;
 }
 
-/// \overload
 const std::vector<std::pair<size_t, size_t> >& Molecule::bondPairs() const
 {
   return m_bondPairs;
 }
 
-/// Returns a vector containing the bond orders for the bonds in the
-/// molecule.
 std::vector<unsigned char>& Molecule::bondOrders()
 {
   return m_bondOrders;
 }
 
-/// \overload
 const std::vector<unsigned char>& Molecule::bondOrders() const
 {
   return m_bondOrders;
 }
 
-/// Returns the graph for the molecule.
 Graph& Molecule::graph()
 {
   updateGraph();
   return m_graph;
 }
 
-/// \overload
 const Graph& Molecule::graph() const
 {
   updateGraph();
   return m_graph;
 }
 
-// --- Structure ----------------------------------------------------------- //
-/// Adds an atom to the molecule.
 Atom Molecule::addAtom(unsigned char atomicNumber)
 {
   // Mark the graph as dirty.
   m_graphDirty = true;
 
-  // add atomic number
+  // Add the atomic number.
   m_atomicNumbers.push_back(atomicNumber);
 
   return Atom(this, m_atomicNumbers.size() - 1);
 }
 
-/// Returns the atom at \p index in the molecule.
 Atom Molecule::atom(size_t index) const
 {
   assert(index < size());
-
   return Atom(const_cast<Molecule*>(this), index);
 }
 
-/// Returns the number of atoms in the molecule.
 size_t Molecule::atomCount() const
 {
   return m_atomicNumbers.size();
 }
 
 namespace {
+// Make an std::pair where the lower index is always first in the pair. This
+// offers us the guarantee that any given pair of atoms will always result in
+// a pair that is the same no matter what the order of the atoms given.
 std::pair<size_t, size_t> makeBondPair(const Atom &a, const Atom &b)
 {
   return std::make_pair(a.index() < b.index() ? a.index() : b.index(),
@@ -193,7 +162,6 @@ std::pair<size_t, size_t> makeBondPair(const Atom &a, const Atom &b)
 }
 }
 
-/// Adds a bond between atoms \p a and \p b.
 Bond Molecule::addBond(const Atom &a, const Atom &b, unsigned char bondOrder)
 {
   assert(a.isValid() && a.molecule() == this);
@@ -206,7 +174,6 @@ Bond Molecule::addBond(const Atom &a, const Atom &b, unsigned char bondOrder)
   return Bond(this, m_bondPairs.size() - 1);
 }
 
-/// Returns the bond at \p index in the molecule.
 Bond Molecule::bond(size_t index) const
 {
   assert(index < bondCount());
@@ -214,7 +181,6 @@ Bond Molecule::bond(size_t index) const
   return Bond(const_cast<Molecule*>(this), index);
 }
 
-/// Returns the bond between atoms \p a and \p b.
 Bond Molecule::bond(const Atom &a, const Atom &b) const
 {
   assert(a.isValid() && a.molecule() == this);
@@ -245,19 +211,15 @@ std::vector<Bond> Molecule::bonds(const Atom &a)
   return atomBonds;
 }
 
-/// Returns the number of bonds in the molecule.
 size_t Molecule::bondCount() const
 {
   return m_bondPairs.size();
 }
 
-/// Returns the chemical formula of the molecule
-/// @todo This should eventually be an external algorithm, not a member of
-/// Molecule.
 std::string Molecule::formula() const
 {
   // Adapted from chemkit:
-  // a map of atomic symbols to their quantity
+  // A map of atomic symbols to their quantity.
   std::map<unsigned char, size_t> composition;
   for (std::vector<unsigned char>::const_iterator it = m_atomicNumbers.begin(),
        itEnd = m_atomicNumbers.end(); it != itEnd; ++it) {
@@ -269,7 +231,7 @@ std::string Molecule::formula() const
 
   // Carbons first
   iter = composition.find(6);
-  if (iter != composition.end()){
+  if (iter != composition.end()) {
     result << "C" << iter->second;
     composition.erase(iter);
 
@@ -289,7 +251,6 @@ std::string Molecule::formula() const
   return result.str();
 }
 
-/// Update the graph to correspond to the current molecule.
 void Molecule::updateGraph() const
 {
   if (!m_graphDirty)

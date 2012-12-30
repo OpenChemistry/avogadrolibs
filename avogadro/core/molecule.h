@@ -31,41 +31,93 @@
 namespace Avogadro {
 namespace Core {
 
+/*!
+ * \class Molecule molecule.h <avogadro/core/molecule.h>
+ * \brief The Molecule class represents a chemical molecule.
+ */
+
 class AVOGADROCORE_EXPORT Molecule
 {
 public:
-  // construction and destruction
+  /*! Creates a new, empty molecule. */
   Molecule();
+
+  /*! Destroys the molecule object. */
   virtual ~Molecule();
 
-  // properties
+  /*! Returns the number of atoms in the molecule. */
   size_t size() const;
+
+  /*! Returns \c true if the molecule is empty (i.e. size() == \c 0). */
   bool isEmpty() const;
+
+  /*! Sets the data value with \p name to \p value. */
   void setData(const std::string &name, const Variant &value);
+
+  /*! Returns the data value for \p name. */
   Variant data(const std::string &name) const;
+
+  /*! Set the molecule's variant data to the entries in map. */
   void setDataMap(const VariantMap &map);
+
+  /*! Return the molecule's variant data. */
   const VariantMap& dataMap() const;
+
+  /*! \overload */
   VariantMap& dataMap();
 
+  /*! Returns a vector of atomic numbers for the atoms in the moleucle. */
   std::vector<unsigned char>& atomicNumbers();
-  const std::vector<Vector2>& atomPositions2d() const;
-  std::vector<Vector2>& atomPositions2d();
-  const std::vector<Vector3>& atomPositions3d() const;
-  std::vector<Vector3>& atomPositions3d();
+
+  /*! \overload */
   const std::vector<unsigned char>& atomicNumbers() const;
+
+  /*! Returns a vector of 2d atom positions for the atoms in the molecule. */
+  const std::vector<Vector2>& atomPositions2d() const;
+
+  /*! \overload */
+  std::vector<Vector2>& atomPositions2d();
+
+  /*! Returns a vector of 2d atom positions for the atoms in the molecule. */
+  const std::vector<Vector3>& atomPositions3d() const;
+
+  /*! \overload */
+  std::vector<Vector3>& atomPositions3d();
+
+  /*! Returns a vector of pairs of atom indices of the bonds in the molecule. */
   std::vector<std::pair<size_t, size_t> >& bondPairs();
+
+  /*! \overload */
   const std::vector<std::pair<size_t, size_t> >& bondPairs() const;
+
+  /*! Returns a vector of the bond orders for the bonds in the molecule. */
   std::vector<unsigned char>& bondOrders();
+
+  /*! \overload */
   const std::vector<unsigned char>& bondOrders() const;
+
+  /*! Returns the graph for the molecule. */
   Graph& graph();
+
+  /*! \overload */
   const Graph& graph() const;
 
-  // structure
+  /*!  Adds an atom to the molecule. */
   Atom addAtom(unsigned char atomicNumber);
+
+  /*!  Returns the atom at \p index in the molecule. */
   Atom atom(size_t index) const;
+
+  /*! Returns the number of atoms in the molecule. */
   size_t atomCount() const;
+
+  /*! Adds a bond between atoms \p a and \p b. */
   Bond addBond(const Atom &a, const Atom &b, unsigned char bondOrder = 1);
+
+  /*! Returns the bond at \p index in the molecule. */
   Bond bond(size_t index) const;
+
+  /*! Returns the bond between atoms \p a and \p b. */
   Bond bond(const Atom &a, const Atom &b) const;
 
   /*!
@@ -74,8 +126,14 @@ public:
    */
   std::vector<Bond> bonds(const Atom &a);
 
+  /*! Returns the number of bonds in the molecule. */
   size_t bondCount() const;
 
+  /*!
+   * Returns the chemical formula of the molecule
+   * \todo This should eventually be an external algorithm, not a member of
+   * Molecule.
+   */
   std::string formula() const;
 
 protected:
@@ -88,6 +146,7 @@ protected:
   std::vector<std::pair<size_t, size_t> > m_bondPairs;
   std::vector<unsigned char> m_bondOrders;
 
+  /*! Update the graph to correspond to the current molecule. */
   void updateGraph() const;
 };
 

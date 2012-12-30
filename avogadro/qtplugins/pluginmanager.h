@@ -49,12 +49,14 @@ class AVOGADROQTPLUGINS_EXPORT PluginManager : public QObject
   Q_OBJECT
 
 public:
-  /*! Get the singleton instance of the plugin manager. This instance should not
+  /*!
+   * Get the singleton instance of the plugin manager. This instance should not
    * be deleted.
    */
   static PluginManager * instance();
 
-  /*! Get a reference to the plugin directory path list. Modifying this before
+  /*!
+   * Get a reference to the plugin directory path list. Modifying this before
    * calling load will allow you to add, remove or append to the search paths.
    */
   QStringList& pluginDirList() { return m_pluginDirs; }
@@ -63,7 +65,8 @@ public:
   void load();
   void load(const QString &dir);
 
-  /*! Let the user request plugins with a certain type, this must use the Qt
+  /*!
+   * Let the user request plugins with a certain type, this must use the Qt
    * mechanisms as qobject_cast is used in conjunction with interfaces.
    *
    * \code
