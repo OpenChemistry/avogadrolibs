@@ -25,7 +25,9 @@
 namespace Avogadro {
 namespace Core {
 
-/*! \brief Base class for array type containers.
+/*!
+ * \class ArraySet coordinateset.h <avogadro/core/coordinateset.h>
+ * \brief Base class for array type containers.
  *
  * This base class gives us the non-templated base class that stores all arrays
  * of data. You should use the base class as the container, and figure out its
@@ -94,6 +96,14 @@ protected:
   void *m_data;
 };
 
+/*!
+ * \class CoordinateSet coordinateset.h <avogadro/core/coordinateset.h>
+ * \brief Templated class for array type containers.
+ *
+ * This class gives us the derived templated class that stores arrays of data.
+ * of data. This class should be used to store concrete arrays, and can be
+ * cast to ArraySet when stored in generic containers.
+ */
 template<typename T>
 class CoordinateSet : public ArraySet
 {
@@ -112,7 +122,7 @@ public:
   const std::vector<T>& coordinates() const { return m_coordinates; }
 
   // Inline operator methods.
-  /// Returns the element at \index _index.
+  /*! Returns the element at \index _index. */
   T operator()(Index _index) const { return m_coordinates.at(_index); }
   T& operator[](Index _index) { return m_coordinates[_index]; }
   const T& operator[](Index _index) const { return m_coordinates[_index]; }

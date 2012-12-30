@@ -31,7 +31,7 @@ template <typename T> class Array;
 }
 namespace Io {
 
-/**
+/*!
  * @class Hdf5DataFormat hdf5dataformat.h <avogadro/io/hdf5dataformat.h>
  * @brief The Hdf5DataFormat class provides access to data stored in HDF5 files.
  * @author David C. Lonie
@@ -67,252 +67,259 @@ class AVOGADROIO_EXPORT Hdf5DataFormat
 {
 public:
   Hdf5DataFormat();
-  /// Destructor. Closes any open file before freeing memory.
+
+  /*! Destructor. Closes any open file before freeing memory. */
   ~Hdf5DataFormat();
 
-  /// Open modes for use with openFile().
+  /*! Open modes for use with openFile(). */
   enum OpenMode {
-    /// Open an existing file in read-only mode. The file must exist.
+    /*! Open an existing file in read-only mode. The file must exist. */
     ReadOnly = 0,
-    /// Create a file in read/write mode, removing any existing file with the
-    /// same name.
+    /*!
+     * Create a file in read/write mode, removing any existing file with the
+     * same name.
+     */
     ReadWriteTruncate,
-    /// Open an file in read/write mode. If the file exist, its contents will be
-    /// preserved. If it does not, a new file will be created.
+    /*!
+     * Open an file in read/write mode. If the file exist, its contents will be
+     * preserved. If it does not, a new file will be created.
+     */
     ReadWriteAppend
   };
 
-  /// @return true if a file is open.
+  /*! \return true if a file is open. */
   bool isOpen() const;
 
-  /**
-   * @brief openFile Open a file for use by this reader/writer.
-   * @param filename_ Name of the file to open.
-   * @param mode OpenMode for the file. Default is ReadWriteAppend.
-   * @note Only a single file may be opened at a time. Attempting to open
+  /*!
+   * \brief openFile Open a file for use by this reader/writer.
+   * \param filename_ Name of the file to open.
+   * \param mode OpenMode for the file. Default is ReadWriteAppend.
+   * \note Only a single file may be opened at a time. Attempting to open
    * multiple files without calling closeFile() will fail.
-   * @return True if the file is successfully opened/create by the HDF5
+   * \return True if the file is successfully opened/create by the HDF5
    * subsystem, false otherwise.
    */
   bool openFile(const std::string &filename_, OpenMode mode = ReadWriteAppend);
 
-  /// @return The name of the open file, or an empty string if no file is open.
+  /*!
+   * \return The name of the open file, or an empty string if no file is open.
+   */
   std::string filename() const;
 
-  /**
-   * @brief closeFile Close the file and reset the reader/writer. Another file
+  /*!
+   * \brief closeFile Close the file and reset the reader/writer. Another file
    * may be opened after calling this function.
-   * @return true if the file is successfully released by the HDF5 subsystem.
+   * \return true if the file is successfully released by the HDF5 subsystem.
    */
   bool closeFile();
 
-  /**
-   * @brief setThreshold Set the threshold size in bytes that will be used in
+  /*!
+   * \brief setThreshold Set the threshold size in bytes that will be used in
    * the exceedsThreshold functions. The threshold can be used to determine which
    * data is considered "large enough" to be stored in HDF5, rather than an
    * accompanying format.
-   * @param bytes The size in bytes for the threshold. Default: 1KB.
+   * \param bytes The size in bytes for the threshold. Default: 1KB.
    */
   void setThreshold(size_t bytes);
 
-  /// @return The current threshold size in bytes. Default: 1KB.
+  /*! \return The current threshold size in bytes. Default: 1KB. */
   size_t threshold() const;
 
-  /**
-   * @brief exceedsThreshold Test if a data set is "large enough" to be stored
+  /*!
+   * \brief exceedsThreshold Test if a data set is "large enough" to be stored
    * in HDF5 format. If this function returns true, the number of bytes tested
    * is larger than the threshold and the data should be written into the HDF5
    * file. If false, the data should be written into the accompanying format.
-   * @param bytes The size of the dataset in bytes
-   * @return true if the size exceeds the threshold set by setThreshold.
+   * \param bytes The size of the dataset in bytes
+   * \return true if the size exceeds the threshold set by setThreshold.
    */
   bool exceedsThreshold(size_t bytes) const;
 
-  /**
-   * @brief exceedsThreshold Test if a data set is "large enough" to be stored
+  /*!
+   * \brief exceedsThreshold Test if a data set is "large enough" to be stored
    * in HDF5 format. If this function returns true, the size of the data in the
    * object is larger than the threshold and should be written into the HDF5
    * file. If false, the data should be written into the accompanying format.
-   * @param data Data object to test.
-   * @return true if the size of the serializable data in @a data exceeds the
+   * \param data Data object to test.
+   * \return true if the size of the serializable data in \a data exceeds the
    * threshold set by setThreshold.
    */
-  bool exceedsThreshold(const Avogadro::MatrixX &data) const;
+  bool exceedsThreshold(const MatrixX &data) const;
 
-  /**
-   * @brief exceedsThreshold Test if a data set is "large enough" to be stored
+  /*!
+   * \brief exceedsThreshold Test if a data set is "large enough" to be stored
    * in HDF5 format. If this function returns true, the size of the data in the
    * object is larger than the threshold and should be written into the HDF5
    * file. If false, the data should be written into the accompanying format.
-   * @param data Data object to test.
-   * @return true if the size of the serializable data in @a data exceeds the
+   * \param data Data object to test.
+   * \return true if the size of the serializable data in @a data exceeds the
    * threshold set by setThreshold.
    */
   bool exceedsThreshold(const std::vector<double> &data) const;
 
-  /**
-   * @brief exceedsThreshold Test if a data set is "large enough" to be stored
+  /*!
+   * \brief exceedsThreshold Test if a data set is "large enough" to be stored
    * in HDF5 format. If this function returns true, the size of the data in the
    * object is larger than the threshold and should be written into the HDF5
    * file. If false, the data should be written into the accompanying format.
-   * @param data Data object to test.
-   * @return true if the size of the serializable data in @a data exceeds the
+   * \param data Data object to test.
+   * \return true if the size of the serializable data in @a data exceeds the
    * threshold set by setThreshold.
    */
-  bool exceedsThreshold(const Avogadro::Core::Array<double> &data) const;
+  bool exceedsThreshold(const Core::Array<double> &data) const;
 
-  /**
-   * @brief datasetExists Test if the currently open file contains a dataset at
+  /*!
+   * \brief datasetExists Test if the currently open file contains a dataset at
    * the HDF5 absolute path @a path.
-   * @param path An absolute path into the HDF5 data.
-   * @return true if the object at @a path both exists and is a dataset, false
+   * \param path An absolute path into the HDF5 data.
+   * \return true if the object at @a path both exists and is a dataset, false
    * otherwise.
    */
   bool datasetExists(const std::string &path) const;
 
-  /**
-   * @brief removeDataset Remove a dataset from the currently opened file.
-   * @param path An absolute path into the HDF5 data.
-   * @return true if the dataset exists and has been successfully removed.
-   * @warning Removing datasets can be expensive in terms of filesize, as
+  /*!
+   * \brief removeDataset Remove a dataset from the currently opened file.
+   * \param path An absolute path into the HDF5 data.
+   * \return true if the dataset exists and has been successfully removed.
+   * \warning Removing datasets can be expensive in terms of filesize, as
    * deleted space cannot be reclaimed by HDF5 once the file is closed, and the
    * file will not decrease in size as datasets are removed. For details, see
    * http://www.hdfgroup.org/HDF5/doc/H5.user/Performance.html#Freespace.
    */
   bool removeDataset(const std::string &path) const;
 
-  /**
-   * @brief datasetDimensions Find the dimensions of a dataset.
-   * @param path An absolute path into the HDF5 data.
-   * @return A vector containing the dimensionality of the data, major dimension
+  /*!
+   * \brief datasetDimensions Find the dimensions of a dataset.
+   * \param path An absolute path into the HDF5 data.
+   * \return A vector containing the dimensionality of the data, major dimension
    * first. If an error is encountered, an empty vector is returned.
    */
   std::vector<int> datasetDimensions(const std::string &path) const;
 
-  /**
-   * @brief writeDataset Write the data to the currently opened file at the
+  /*!
+   * \brief writeDataset Write the data to the currently opened file at the
    * specified absolute HDF5 path.
-   * @param path An absolute path into the HDF5 data.
-   * @param data The data container to serialize to HDF5.
-   * @return true if the data is successfully written, false otherwise.
+   * \param path An absolute path into the HDF5 data.
+   * \param data The data container to serialize to HDF5.
+   * \return true if the data is successfully written, false otherwise.
    */
   bool writeDataset(const std::string &path,
-                    const Avogadro::MatrixX &data) const;
+                    const MatrixX &data) const;
 
-  /**
-   * @brief writeDataset Write the data to the currently opened file at the
+  /*!
+   * \brief writeDataset Write the data to the currently opened file at the
    * specified absolute HDF5 path.
-   * @param path An absolute path into the HDF5 data.
-   * @param data The data container to serialize to HDF5.
-   * @param ndims The number of dimensions in the data. Default: 1.
-   * @param dims The dimensionality of the data, major dimension first. Default:
+   * \param path An absolute path into the HDF5 data.
+   * \param data The data container to serialize to HDF5.
+   * \param ndims The number of dimensions in the data. Default: 1.
+   * \param dims The dimensionality of the data, major dimension first. Default:
    * data.size().
-   * @note Since std::vector is a flat container, the dimensionality data is
+   * \note Since std::vector is a flat container, the dimensionality data is
    * only used to set up the dataset metadata in the HDF5 container. Omitting
    * the dimensionality parameters will write a flat array.
-   * @return true if the data is successfully written, false otherwise.
+   * \return true if the data is successfully written, false otherwise.
    */
   bool writeDataset(const std::string &path,
                     const std::vector<double> &data,
                     int ndims = 1, size_t *dims = NULL) const;
 
-  /**
-   * @brief writeDataset Write the data to the currently opened file at the
+  /*!
+   * \brief writeDataset Write the data to the currently opened file at the
    * specified absolute HDF5 path.
-   * @param path An absolute path into the HDF5 data.
-   * @param data The data container to serialize to HDF5.
-   * @param ndims The number of dimensions in the data. Default: 1.
-   * @param dims The dimensionality of the data, major dimension first. Default:
+   * \param path An absolute path into the HDF5 data.
+   * \param data The data container to serialize to HDF5.
+   * \param ndims The number of dimensions in the data. Default: 1.
+   * \param dims The dimensionality of the data, major dimension first. Default:
    * data.size().
-   * @note Since this is a flat container, the dimensionality data is
+   * \note Since this is a flat container, the dimensionality data is
    * only used to set up the dataset metadata in the HDF5 container. Omitting
    * the dimensionality parameters will write a flat array.
-   * @return true if the data is successfully written, false otherwise.
+   * \return true if the data is successfully written, false otherwise.
    */
   bool writeDataset(const std::string &path,
-                    const Avogadro::Core::Array<double> &data,
+                    const Core::Array<double> &data,
                     int ndims = 1, size_t *dims = NULL) const;
 
-  /**
-   * @brief readDataset Populate the data container @data with data at from the
+  /*!
+   * \brief readDataset Populate the data container @data with data at from the
    * specified path in the currently opened HDF5 file.
-   * @param path An absolute path into the HDF5 data.
-   * @param data The data container to into which the HDF5 data shall be
-   * deserialized. @a data will be resized to fit the data.
-   * @return true if the data is successfully read, false otherwise. If the
-   * read fails, the @a data object may be left in an unpredictable state.
+   * \param path An absolute path into the HDF5 data.
+   * \param data The data container to into which the HDF5 data shall be
+   * deserialized. \a data will be resized to fit the data.
+   * \return true if the data is successfully read, false otherwise. If the
+   * read fails, the \a data object may be left in an unpredictable state.
    */
-  bool readDataset(const std::string &path, Avogadro::MatrixX &data) const;
+  bool readDataset(const std::string &path, MatrixX &data) const;
 
-  /**
-   * @brief readDataset Populate the data container @data with data at from the
+  /*!
+   * \brief readDataset Populate the data container @data with data at from the
    * specified path in the currently opened HDF5 file.
-   * @param path An absolute path into the HDF5 data.
-   * @param data The data container to into which the HDF5 data shall be
-   * deserialized. @a data will be resized to fit the data.
-   * @return A vector containing the dimensionality of the dataset, major
+   * \param path An absolute path into the HDF5 data.
+   * \param data The data container to into which the HDF5 data shall be
+   * deserialized. \a data will be resized to fit the data.
+   * \return A vector containing the dimensionality of the dataset, major
    * dimension first. If an error occurs, an empty vector is returned and *data
    * will be set to NULL.
    */
   std::vector<int> readDataset(const std::string &path,
                                std::vector<double> &data) const;
 
-  /**
-   * @brief readDataset Populate the data container @data with data at from the
+  /*!
+   * \brief readDataset Populate the data container @data with data at from the
    * specified path in the currently opened HDF5 file.
-   * @param path An absolute path into the HDF5 data.
-   * @param data The data container to into which the HDF5 data shall be
-   * deserialized. @a data will be resized to fit the data.
-   * @return A vector containing the dimensionality of the dataset, major
+   * \param path An absolute path into the HDF5 data.
+   * \param data The data container to into which the HDF5 data shall be
+   * deserialized. \a data will be resized to fit the data.
+   * \return A vector containing the dimensionality of the dataset, major
    * dimension first. If an error occurs, an empty vector is returned and *data
    * will be set to NULL.
    */
   std::vector<int> readDataset(const std::string &path,
-                               Avogadro::Core::Array<double> &data) const;
+                               Core::Array<double> &data) const;
 
-  /**
-   * @brief datasets Traverse the currently opened file and return a list of all
+  /*!
+   * \brief datasets Traverse the currently opened file and return a list of all
    * dataset objects in the file.
-   * @return A list of datasets in the current file.
-   * @warning The list is not cached internal and is recalculated on each call.
+   * \return A list of datasets in the current file.
+   * \warning The list is not cached internal and is recalculated on each call.
    * This may be expensive on large HDF5 files, so external caching is
    * recommended if this data is frequently needed.
    */
   std::vector<std::string> datasets() const;
 
-  /// Used to abstract details of container resizing.
+  /*! Used to abstract details of container resizing. */
   class ResizeContainer;
 
 private:
-  /**
-   * @brief writeRawDataset Write the data to the currently opened file at the
+  /*!
+   * \brief writeRawDataset Write the data to the currently opened file at the
    * specified absolute HDF5 path.
-   * @param path An absolute path into the HDF5 data.
-   * @param data The data container to serialize to HDF5.
-   * @param ndims The number of dimensions in the data.
-   * @param dims The data dimensions, major dimension first.
-   * @note Since a double[] is a flat container, the dimensionality data is
+   * \param path An absolute path into the HDF5 data.
+   * \param data The data container to serialize to HDF5.
+   * \param ndims The number of dimensions in the data.
+   * \param dims The data dimensions, major dimension first.
+   * \note Since a double[] is a flat container, the dimensionality data is
    * only used to set up the dataset metadata in the HDF5 container. The result
    * of multiplying all values in @a dims must equal the length of the @a data.
-   * @return true if the data is successfully written, false otherwise.
+   * \return true if the data is successfully written, false otherwise.
    */
   bool writeRawDataset(const std::string &path, const double data[],
                        int ndims, size_t dims[]) const;
 
-  /**
-   * @brief readRawDataset Populate the data container @data with data from the
+  /*!
+   * \brief readRawDataset Populate the data container @data with data from the
    * specified path in the currently opened HDF5 file.
-   * @param path An absolute path into the HDF5 data.
-   * @param container A subclass of ResizeContainer with the container to read
+   * \param path An absolute path into the HDF5 data.
+   * \param container A subclass of ResizeContainer with the container to read
    * data into.
-   * @return A vector containing the dimensionality of the dataset, major
+   * \return A vector containing the dimensionality of the dataset, major
    * dimension first. If an error occurs, an empty vector is returned.
    */
   std::vector<int> readRawDataset(const std::string &path,
                                   ResizeContainer &container) const;
 
   class Private;
-  /// Internal storage, used to encapsulate HDF5 data.
+  /*! Internal storage, used to encapsulate HDF5 data. */
   Private * const d;
 };
 

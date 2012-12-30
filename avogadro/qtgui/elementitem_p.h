@@ -23,10 +23,11 @@
 namespace Avogadro{
 namespace QtGui {
 
-/**
- * @class ElementItem
- * @author Marcus D. Hanwell
- * @brief An element item, intended to display a single element.
+/*!
+ * \class ElementItem
+ * \internal
+ * \author Marcus D. Hanwell
+ * \brief An element item, intended to display a single element.
  *
  * This class implements a QGraphicsItem for displaying single elements in a
  * perdiodic table. It currently allows the setting of the proton number and
@@ -35,7 +36,7 @@ namespace QtGui {
 class ElementItem : public QGraphicsItem
 {
 public:
-  /**
+  /*!
    * Constructor. Should be called with the element number for this item. The
    * constructor uses setData to set the element number using the key 0. This
    * is then used by PeriodicTable to figure out which element was clicked on.
@@ -43,17 +44,17 @@ public:
   ElementItem(int elementNumber = 0);
   ~ElementItem();
 
-  /**
-   * @return the bounding rectangle of the element item.
+  /*!
+   * \return the bounding rectangle of the element item.
    */
   QRectF boundingRect() const;
 
-  /**
-   * @return the painter path which is also a rectangle in this case.
+  /*!
+   * \return the painter path which is also a rectangle in this case.
    */
   QPainterPath shape() const;
 
-  /**
+  /*!
    * This is where most of the action takes place. The element box is drawn
    * along with its symbol.
    */
@@ -61,28 +62,24 @@ public:
              QWidget *widget);
 
 private:
-  /**
-   * Indicates if element is well-formed (e.g., has non-empty symbol)
-   */
+  /*! Indicates if element is well-formed (e.g., has non-empty symbol). */
   bool m_valid;
 
-  /**
-   * The element numbers symbol.
-   */
+  /*! The element numbers symbol. */
   QString m_symbol;
 
-  /**
+  /*!
    * The color of the element which will also be used as the background color
    * for the item box.
    */
   QColor m_color;
 
-  /**
+  /*!
    * Width and height of the elements.
    */
   int m_width, m_height;
 
-  /**
+  /*!
    * The proton number of the item - all other attributes are derived from this.
    */
   int m_element;

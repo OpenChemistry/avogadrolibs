@@ -22,7 +22,7 @@
 
 namespace Avogadro {
 
-/// Typedefs for vector types.
+/*! Typedefs for vector types. */
 typedef Eigen::Matrix<Real, 2, 1> Vector2;
 typedef Eigen::Matrix<Real, 3, 1> Vector3;
 typedef Eigen::Matrix<Real, 4, 1> Vector4;

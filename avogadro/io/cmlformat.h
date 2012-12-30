@@ -22,10 +22,15 @@
 #include <avogadro/core/molecule.h>
 
 #include <string>
-#include <vector>
 
 namespace Avogadro {
 namespace Io {
+
+/*!
+ * \class CmlFormat cmlformat.h <avogadro/io/cmlformat.h>
+ * \brief Implementation of the Chemical Markup Language format.
+ * \author Marcus D. Hanwell
+ */
 
 class AVOGADROIO_EXPORT CmlFormat
 {
@@ -33,14 +38,21 @@ public:
   CmlFormat();
   ~CmlFormat();
 
+  /*!
+   * \brief Read the given \p fileName and load it into \p molecule.
+   * \param fileName The full path to the file to be read in.
+   * \param molecule The molecule the data will be read into.
+   * \return True on success, false on failure.
+   */
   bool readFile(const std::string &fileName, Core::Molecule &molecule);
 
+  /*!
+   * \brief Write to the given \p fileName the contents of \p molecule.
+   * \param fileName The full path to the file to be written.
+   * \param molecule The contents of this molecule will be written to the file.
+   * \return True on success, false on failure.
+   */
   bool writeFile(const std::string &fileName, const Core::Molecule &molecule);
-
-  Core::Molecule * molecule(size_t index = 0);
-
-protected:
-  std::vector<Core::Molecule *> m_molecules;
 };
 
 } // end Io namespace

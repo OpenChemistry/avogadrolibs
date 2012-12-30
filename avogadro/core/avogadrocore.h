@@ -21,27 +21,31 @@
 #include <cstddef>
 #include <limits>
 
-/// Prevent compiler error when using std::numeric_limits<T>::max()
+/*! Prevent compiler error when using std::numeric_limits<T>::max() */
 #if defined(_MSC_VER) && defined(max)
 #undef max
 #endif
 
-/// This macro marks a parameter as unused. Its purpose is to
-/// disable the compiler from emitting unused parameter warnings.
+/*!
+ * This macro marks a parameter as unused. Its purpose is to disable the
+ * compiler from emitting unused parameter warnings.
+ */
 #define AVOGADRO_UNUSED(variable) (void) variable
 
-/// This macro marks a class as not copyable. It should be used in
-/// the private section of a class's declaration.
+/*!
+ * This macro marks a class as not copyable. It should be used in the private
+ * section of a class's declaration.
+ */
 #define AVOGADRO_DISABLE_COPY(Class) \
   Class(const Class&); \
   Class& operator=(const Class&);
 
 namespace Avogadro {
 
-/// Typedef for a real number.
+/*! Typedef for a real number. */
 typedef double Real;
 
-/// Typedef for indices and sizes.
+/*! Typedef for indices and sizes. */
 typedef size_t Index;
 const Index MaxIndex = std::numeric_limits<Index>::max();
 

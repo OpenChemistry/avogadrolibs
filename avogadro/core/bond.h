@@ -28,20 +28,41 @@ namespace Core {
 
 class Molecule;
 
+/*!
+ * \class Bond bond.h <avogadro/core/bond.h>
+ * \brief The Bond class represents a bond between two atoms in a molecule.
+ */
+
 class AVOGADROCORE_EXPORT Bond
 {
 public:
-  // construction and destruction
+  /*! Creates a new, invalid bond object. */
   Bond();
+
+  /*!
+   * Creates a bond object representing a bond at index \p i in molecule \p m.
+   */
   Bond(Molecule *m, size_t i);
 
-  // properties
+  /*! Returns \c true if the bond is valid. */
   bool isValid() const;
+
+  /*! Returns the molecule that the bond is a part of. */
   Molecule* molecule() const;
+
+  /*! Returns the index of the bond in the molecule. */
   size_t index() const;
+
+  /*! Returns the first atom in the molecule. */
   Atom atom1() const;
+
+  /*! Returns the second atom in the molecule. */
   Atom atom2() const;
+
+  /*!  Sets the bond order for the bond to \p order. */
   void setOrder(unsigned char o);
+
+  /*! Returns the bond order for the bond. */
   unsigned char order() const;
 
 private:

@@ -464,13 +464,5 @@ bool CmlFormat::writeFile(const std::string &fileName,
   return true;
 }
 
-Molecule * CmlFormat::molecule(size_t index)
-{
-  if (index < m_molecules.size())
-    return m_molecules[index];
-  else
-    return 0;
-}
-
 } // end Io namespace
 } // end Avogadro namespace
