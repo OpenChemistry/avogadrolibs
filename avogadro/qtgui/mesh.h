@@ -20,9 +20,9 @@
 
 #include "avogadroqtguiexport.h"
 
-#include <QtCore/QObject>
-
 #include <avogadro/core/vector.h>
+
+#include <QtCore/QString>
 
 #include <vector>
 
@@ -47,15 +47,13 @@ class Color3f;
  */
 
 class MeshPrivate;
-class AVOGADROQTGUI_EXPORT Mesh : public QObject
+class AVOGADROQTGUI_EXPORT Mesh
 {
-  Q_OBJECT
-
 public:
   /*!
    * Constructor.
    */
-  Mesh(QObject *parent=0);
+  Mesh();
 
   /*!
    * Destructor.
@@ -234,7 +232,6 @@ protected:
   unsigned int m_other; // Unique id of the other mesh if this is part of a pair
   unsigned int m_cube; // Unique id of the cube this mesh was generated from
   QReadWriteLock *m_lock;
-  Q_DECLARE_PRIVATE(Mesh)
 };
 
 } // End namespace QtGui

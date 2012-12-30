@@ -145,7 +145,7 @@ void GaussianFchk::processLine()
       if (static_cast<int>(m_alphaMOcoeffs.size()) == list.at(2).toInt())
         qDebug() << "Alpha MO coefficients, n =" << m_alphaMOcoeffs.size();
     } else
-      qDebug() << "Error, MO coefficients, n =" << m_MOcoeffs.size();
+      qDebug() << "Error, alpha MO coefficients, n =" << m_MOcoeffs.size();
   } else if (key == "Beta MO coefficients") {
       m_betaMOcoeffs = readArrayD(list.at(2).toInt(), 16);
       if (static_cast<int>(m_betaMOcoeffs.size()) == list.at(2).toInt())
@@ -259,7 +259,7 @@ void GaussianFchk::load(GaussianSet* basis)
     if (m_betaMOcoeffs.size())
       basis->addBetaMOs(m_betaMOcoeffs);
     else
-      qDebug() << "Error - no MO coefficients read in.";
+      qDebug() << "Error - no beta MO coefficients read in.";
     if (m_density.rows())
       basis->setDensityMatrix(m_density);
     if (m_spinDensity.rows())

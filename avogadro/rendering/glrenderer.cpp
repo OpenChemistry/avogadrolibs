@@ -88,6 +88,10 @@ void GLRenderer::render()
     m_sphereIndexBuffer.upload(m_scene.sphereIndices());
     m_cylinderArrayBuffer.upload(m_scene.cylinderVertices());
     m_cylinderIndexBuffer.upload(m_scene.cylinderIndices());
+
+    m_triArrayBuffer.upload(m_scene.triangleVertices());
+    m_triIndexBuffer.upload(m_scene.triangleIndices());
+
     m_scene.setClean();
   }
 
@@ -167,7 +171,7 @@ void GLRenderer::render()
   }
 
   // Cylinders:
-  if (m_scene.cylinderCount() != 0) {
+  if (m_scene.cylinderCount() > 0 || m_scene.triangleVertices().size()) {
 
     // Build and link the shader if it has not been used yet.
     if (m_cylinderVertexShader.type() == Shader::Unknown) {
@@ -245,7 +249,106 @@ void GLRenderer::render()
     m_cylinderProgram.disableAttributeArray("vertex");
     m_cylinderProgram.disableAttributeArray("color");
 
+    m_triArrayBuffer.bind();
+    m_triIndexBuffer.bind();
+    // Set up out attribute arrays.
+    if (!m_cylinderProgram.enableAttributeArray("vertex"))
+      std::cout << m_cylinderProgram.error() << std::endl;
+    if (!m_cylinderProgram.useAttributeArray("vertex",
+                                             ColorNormalVertex::vertexOffset(),
+                                             Vector3f())) {
+      std::cout << m_cylinderProgram.error() << std::endl;
+    }
+
+    if (!m_cylinderProgram.enableAttributeArray("normal"))
+      std::cout << m_cylinderProgram.error() << std::endl;
+
+    if (!m_cylinderProgram.useAttributeArray("normal",
+                                             ColorNormalVertex::normalOffset(),
+                                             Vector3f())) {
+      std::cout << m_cylinderProgram.error() << std::endl;
+    }
+
+    if (!m_cylinderProgram.enableAttributeArray("color"))
+      std::cout << m_cylinderProgram.error() << std::endl;
+
+    if (!m_cylinderProgram.useAttributeArray("color",
+                                             ColorNormalVertex::colorOffset(),
+                                             Vector3ub())) {
+      std::cout << m_cylinderProgram.error() << std::endl;
+    }
+
+    glDrawRangeElements(GL_TRIANGLES, 0,
+                        static_cast<GLuint>(m_scene.triangleVertices().size()),
+                        static_cast<GLsizei>(m_scene.triangleIndices().size()),
+                        GL_UNSIGNED_INT,
+                        reinterpret_cast<const GLvoid *>(NULL));
+
+    m_triArrayBuffer.release();
+    m_triIndexBuffer.release();
+
     m_cylinderProgram.release();
+  }
+
+  // Triangle meshes:
+  if (m_scene.triangleVertices().size() > 0) {
+/*
+
+    // Set up out attribute arrays.
+    if (!m_cylinderProgram.enableAttributeArray("vertex"))
+      std::cout << m_cylinderProgram.error() << std::endl;
+    if (!m_cylinderProgram.useAttributeArray("vertex",
+                                             ColorNormalVertex::vertexOffset(),
+                                             Vector3f())) {
+      std::cout << m_cylinderProgram.error() << std::endl;
+    }
+
+    if (!m_cylinderProgram.enableAttributeArray("normal"))
+      std::cout << m_cylinderProgram.error() << std::endl;
+
+    if (!m_cylinderProgram.useAttributeArray("normal",
+                                             ColorNormalVertex::normalOffset(),
+                                             Vector3f())) {
+      std::cout << m_cylinderProgram.error() << std::endl;
+    }
+
+    if (!m_cylinderProgram.enableAttributeArray("color"))
+      std::cout << m_cylinderProgram.error() << std::endl;
+
+    if (!m_cylinderProgram.useAttributeArray("color",
+                                             ColorNormalVertex::colorOffset(),
+                                             Vector3ub())) {
+      std::cout << m_cylinderProgram.error() << std::endl;
+    }
+
+    // Set up our uniforms
+    if (!m_cylinderProgram.setUniformValue("modelView",
+                                           m_camera.modelView().matrix())) {
+      std::cout << m_cylinderProgram.error() << std::endl;
+    }
+    if (!m_cylinderProgram.setUniformValue("projection",
+                                           m_camera.projection().matrix())) {
+      std::cout << m_cylinderProgram.error() << std::endl;
+    }
+    Matrix3f normalMatrix =
+        m_camera.modelView().linear().inverse().transpose();
+    if (!m_cylinderProgram.setUniformValue("normalMatrix", normalMatrix))
+      std::cout << m_cylinderProgram.error() << std::endl;
+
+    glDrawRangeElements(GL_TRIANGLES, 0,
+                        static_cast<GLuint>(m_scene.cylinderVertices().size()),
+                        static_cast<GLsizei>(m_scene.cylinderIndices().size()),
+                        GL_UNSIGNED_INT,
+                        reinterpret_cast<const GLvoid *>(NULL));
+
+    m_cylinderArrayBuffer.release();
+    m_cylinderIndexBuffer.release();
+
+    m_cylinderProgram.disableAttributeArray("normal");
+    m_cylinderProgram.disableAttributeArray("vertex");
+    m_cylinderProgram.disableAttributeArray("color");
+
+    m_cylinderProgram.release(); */
   }
 
   glDisable(GL_DEPTH_TEST);

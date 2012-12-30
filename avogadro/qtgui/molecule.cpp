@@ -16,6 +16,9 @@
 
 #include "molecule.h"
 
+#include "mesh.h"
+#include "color3f.h"
+
 namespace Avogadro {
 namespace QtGui {
 
@@ -140,6 +143,28 @@ bool Molecule::removeBond(const Core::Bond &bond_)
 bool Molecule::removeBond(const Core::Atom &a, const Core::Atom &b)
 {
   return removeBond(bond(a, b).index());
+}
+
+Mesh* Molecule::addMesh()
+{
+  m_meshes.push_back(new Mesh);
+  return m_meshes.back();
+}
+
+Mesh* Molecule::mesh(size_t index)
+{
+  if (index < m_meshes.size())
+    return m_meshes[index];
+  else
+    return NULL;
+}
+
+const Mesh* Molecule::mesh(size_t index) const
+{
+  if (index < m_meshes.size())
+    return m_meshes[index];
+  else
+    return NULL;
 }
 
 int Molecule::findAtomUniqueId(size_t index) const

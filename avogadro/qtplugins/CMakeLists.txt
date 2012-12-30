@@ -68,7 +68,9 @@ endfunction()
 add_subdirectory(ballandstick)
 add_subdirectory(molecularproperties)
 add_subdirectory(quantuminput)
+add_subdirectory(quantumoutput)
 add_subdirectory(vanderwaals)
+add_subdirectory(meshes)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${original_library_output_dir}")
 

@@ -31,5 +31,10 @@ ExtensionPluginFactory::~ExtensionPluginFactory()
 {
 }
 
+bool ExtensionPlugin::readMolecule(Molecule &)
+{
+  return false;
+}
+
 } // End QtGui namespace
 } // End Avogadro namespace

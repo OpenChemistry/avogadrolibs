@@ -195,7 +195,7 @@ Vector3i Cube::indexVector(const Vector3 &pos) const
 Vector3 Cube::position(unsigned int index) const
 {
   int x, y, z;
-  x = int(index / (m_points.y()*m_points.z()));
+  x = int(index / (m_points.y() * m_points.z()));
   y = int((index - (x * m_points.y() * m_points.z())) / m_points.z());
   z = index % m_points.z();
   return Vector3(x * m_spacing.x() + m_min.x(),
