@@ -29,9 +29,9 @@ namespace QtOpenGL {
 
 class GLWidget;
 
-/**
- * @class Navigator navigator.h <avogadro/qtopengl/navigator.h>
- * @brief The Navigator class updates the camera in response to user input.
+/*!
+ * \class Navigator navigator.h <avogadro/qtopengl/navigator.h>
+ * \brief The Navigator class updates the camera in response to user input.
  */
 class Navigator
 {
@@ -39,30 +39,32 @@ public:
   explicit Navigator(GLWidget *widget);
   ~Navigator();
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void mousePressEvent(QMouseEvent *);
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void mouseReleaseEvent(QMouseEvent *);
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void mouseMoveEvent(QMouseEvent *);
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void mouseDoubleClickEvent(QMouseEvent *);
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void wheelEvent(QWheelEvent *);
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void keyPressEvent(QKeyEvent *);
 
-  /// Respond to user input
+  /*! Respond to user input. */
   void keyReleaseEvent(QKeyEvent *);
 
 private:
-  /// Update the currently pressed buttons, accounting for modifier keys.
-  /// @todo Account for modifier keys.
+  /*!
+   * Update the currently pressed buttons, accounting for modifier keys.
+   * \todo Account for modifier keys.
+   */
   void updatePressedButtons(QMouseEvent *, bool release);
 
   GLWidget *m_glWidget;

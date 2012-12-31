@@ -85,7 +85,9 @@ public:
 
 } // End internal namespace
 
-/*! \brief Base class for array containers.
+/*!
+ * \class Array array.h <avogadro/core/array.h>
+ * \brief Base class for array containers.
  *
  * This templated class gives us a container with copy-on-write semantics,
  * allowing for functions to effectively share data without exposing access or

@@ -23,10 +23,11 @@
 namespace Avogadro {
 namespace QtGui {
 
-/**
- * @class ElementDetail
- * @author Marcus D. Hanwell
- * @brief An item box displaying more detailed information on the element.
+/*!
+ * \class ElementDetail
+ * \internal
+ * \author Marcus D. Hanwell
+ * \brief An item box displaying more detailed information on the element.
  *
  * This class implements a QGraphicsItem for displaying a larger box that
  * gives greater detail about the selected element such as its full name,
@@ -35,40 +36,40 @@ namespace QtGui {
 class ElementDetail : public QGraphicsItem
 {
 public:
-  /**
+  /*!
    * Constructor. Should be called with the element number for this item.
    */
   explicit ElementDetail(int elementNumber = 0);
 
-  /**
-   * @return the bounding rectangle of the element item.
+  /*!
+   * \return the bounding rectangle of the element item.
    */
   QRectF boundingRect() const;
 
-  /**
-   * @return the painter path which is also a rectangle in this case.
+  /*!
+   * \return the painter path which is also a rectangle in this case.
    */
   QPainterPath shape() const;
 
-  /**
+  /*!
    * This is where most of the action takes place. The element box is drawn
    * along with its symbol, proton number, mass and full name.
    */
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
              QWidget *widget);
 
-  /**
+  /*!
    * Change the element displayed in the detail object.
    */
   void setElement(int element);
 
 private:
-  /**
+  /*!
    * Width and height of the item.
    */
   int m_width, m_height;
 
-  /**
+  /*!
    * The proton number of the item - all other attributes are derived from this.
    */
   int m_element;
