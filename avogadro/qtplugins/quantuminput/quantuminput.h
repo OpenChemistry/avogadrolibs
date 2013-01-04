@@ -19,13 +19,16 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QtCore/QMultiMap>
+#include <QtCore/QStringList>
+
 class QAction;
 class QDialog;
 
 namespace Avogadro {
 namespace QtPlugins {
 
-class GamessInputDialog;
+class QuantumInputDialog;
 
 class QuantumInput : public QtGui::ExtensionPlugin
 {
@@ -45,13 +48,24 @@ public:
 
   void setMolecule(QtGui::Molecule *mol);
 
+public slots:
+  void refreshGenerators();
+
 private slots:
   void menuActivated();
 
 private:
-  QAction *m_action;
+  void updateInputGeneratorScripts();
+  void updateActions();
+  void addAction(const QString &label, const QString &scriptFilePath);
+  QString queryProgramName(const QString &scriptFilePath);
+
+  QList<QAction*> m_actions;
   QtGui::Molecule *m_molecule;
-  GamessInputDialog *m_dialog;
+  // keyed on script file path
+  QMultiMap<QString, QuantumInputDialog*> m_dialogs;
+  // maps program name --> script file path
+  QMultiMap<QString, QString> m_inputGeneratorScripts;
 };
 
 }
