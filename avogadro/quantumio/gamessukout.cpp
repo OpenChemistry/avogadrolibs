@@ -19,6 +19,10 @@
 #include <fstream>
 #include <iostream>
 
+#include <QtCore/QRegExp>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+
 using Eigen::Vector3d;
 using std::vector;
 
@@ -34,52 +38,35 @@ using Quantum::UU;
 
 using Quantum::orbital;
 
-// Below 2 functions stolen from OpenBabel
-
 //! Break a string (supplied as the second argument) into tokens, returned
 //! in the first argument. Tokens are determined by the delimiters supplied
-//! (defaults to whitespace (i.e., spaces, tabs, newlines)
 bool tokenize(std::vector<std::string> &vcr, const char *buf,
               const char *delimstr)
 {
-  vcr.clear();
+  // Not the most efficient way to do this, but this avoids using GPL code
+  // from openbabel.
   if (!buf || !delimstr)
     return false;
 
-  std::string s(buf);
-  s += "\n";
-  size_t startpos=0,endpos=0;
+  QString tmp(buf);
+  tmp += "\n"; // for compatibility with old behavior
+  vcr.clear();
+  QString splitString("[");
+  splitString += QString(delimstr);
+  splitString += QString("]");
+  QRegExp splitter(splitString);
+  foreach (const QString &str, tmp.split(splitter, QString::SkipEmptyParts))
+    vcr.push_back(str.toStdString());
 
-  for (;;)
-  {
-    startpos = s.find_first_not_of(delimstr,startpos);
-    endpos = s.find_first_of(delimstr,startpos);
-
-    if (endpos <= s.size() && startpos <= s.size())
-      vcr.push_back(s.substr(startpos,endpos-startpos));
-    else
-      break;
-
-    startpos = endpos+1;
-  }
-
-  return(true);
+  return true;
 }
 
 //! Removes white space from front and back of string
 std::string& Trim(std::string& txt)
 {
-  std::string::size_type pos = txt.find_last_not_of(" \t\n\r");
-  if(pos!=std::string::npos)
-    txt.erase(pos+1);
-  else
-    txt.erase();
-
-  pos = txt.find_first_not_of(" \t\n\r");
-  if(pos!=std::string::npos)
-    txt.erase(0, pos);
-  else
-    txt.erase();
+  // Not the most efficient way to do this, but this avoids using GPL code
+  // from openbabel.
+  txt = QString::fromStdString(txt).trimmed().toStdString();
   return txt;
 }
 
