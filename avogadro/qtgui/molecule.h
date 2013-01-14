@@ -24,8 +24,9 @@
 #include <QtCore/QObject>
 
 namespace Avogadro {
-
 namespace QtGui {
+
+class Mesh;
 
 /*!
  * \class Molecule molecule.h <avogadro/qtgui/molecule.h>
@@ -83,6 +84,17 @@ public:
   bool removeBond(const Core::Bond &bond);
   bool removeBond(const Core::Atom &a, const Core::Atom &b);
 
+  /*!
+   * \brief Add a mesh to the molecule.
+   * \return The mesh object added to the molecule.
+   */
+  Mesh* addMesh();
+
+  Mesh* mesh(size_t index);
+  const Mesh* mesh(size_t index) const;
+
+  size_t meshCount() const { return m_meshes.size(); }
+
 signals:
   /*!
    * \brief Indicates that the molecule has changed.
@@ -100,6 +112,8 @@ private:
 
   int findAtomUniqueId(size_t index) const;
   int findBondUniqueId(size_t index) const;
+
+  std::vector<Mesh *> m_meshes;
 };
 
 } // end QtGui namespace

@@ -18,6 +18,8 @@
 
 #include <Eigen/Geometry>
 
+#include <iostream>
+
 namespace Avogadro {
 namespace Rendering {
 
@@ -185,6 +187,19 @@ void Scene::addCylinder(const Vector3f &position1, const Vector3f &direction,
   m_dirty = true;
 }
 
+void Scene::addTriangles(const Vector3f *vertices, const Vector3f *normals,
+                         size_t n)
+{
+  for (size_t i = 0; i < n; ++i) {
+    m_triangleMesh.push_back(ColorNormalVertex(Vector3ub(255, 0, 0),
+                                               *normals++,
+                                               *vertices++));
+    m_triangleIndices.push_back(i);
+  }
+  m_dirty = true;
+  std::cout << m_triangleMesh.size() << " triangles added to the scene" << std::endl;
+}
+
 void Scene::clear()
 {
   m_spheres.clear();
@@ -193,6 +208,8 @@ void Scene::clear()
   m_cylinders.clear();
   m_cylinderIndices.clear();
   m_cylinderVertices.clear();
+  m_triangleMesh.clear();
+  m_triangleIndices.clear();
   m_centerDirty = true;
   m_dirty = true;
 }

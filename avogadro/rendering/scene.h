@@ -149,6 +149,15 @@ public:
    */
   const std::vector<unsigned int> &cylinderIndices() const;
 
+  /*! Add triangles to the Scene object. The normals must be normalized. */
+  void addTriangles(const Vector3f *vertices, const Vector3f *normals, size_t n);
+
+  /*! Get a const reference to the triangle mesh that can be passed to
+   * BufferObject in order to be uploaded to the GPU.
+   */
+  const std::vector<ColorNormalVertex>& triangleVertices() const;
+  const std::vector<unsigned int>& triangleIndices() const;
+
   /*! Is the scene dirty? */
   bool dirty() const { return m_dirty; }
 
@@ -168,6 +177,9 @@ private:
   std::vector<Cylinder> m_cylinders;
   std::vector<unsigned int> m_cylinderIndices;
   std::vector<ColorNormalVertex> m_cylinderVertices;
+
+  std::vector<unsigned int> m_triangleIndices;
+  std::vector<ColorNormalVertex> m_triangleMesh;
 
   bool             m_dirty;
   mutable bool     m_centerDirty;
@@ -193,6 +205,16 @@ inline const std::vector<ColorNormalVertex>& Scene::cylinderVertices() const
 inline const std::vector<unsigned int> &Scene::cylinderIndices() const
 {
   return m_cylinderIndices;
+}
+
+inline const std::vector<ColorNormalVertex>& Scene::triangleVertices() const
+{
+  return m_triangleMesh;
+}
+
+inline const std::vector<unsigned int> &Scene::triangleIndices() const
+{
+  return m_triangleIndices;
 }
 
 } // End Rendering namespace

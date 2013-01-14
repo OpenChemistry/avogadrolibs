@@ -75,6 +75,21 @@ public slots:
    * Called when the current molecule changes.
    */
   virtual void setMolecule(QtGui::Molecule *mol) = 0;
+
+  /*!
+   * Call this slot when the moleculeReady signal indicated that a molecule is
+   * ready to be read. The \p molecule will have the data read into it. The slot
+   * will \return true if a molecule was successfully read in.
+   */
+  virtual bool readMolecule(QtGui::Molecule &mol);
+
+signals:
+  /*!
+   * Signal that the extension has a new molecule that is ready to be loaded.
+   * The application must call readMolecule in order to actually read the
+   * molecule(s).
+   */
+  void moleculeReady(int numberOfMolecules);
 };
 
 /*!

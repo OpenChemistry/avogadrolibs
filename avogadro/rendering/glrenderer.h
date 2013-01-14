@@ -98,6 +98,9 @@ private:
   BufferObject m_cylinderArrayBuffer;
   BufferObject m_cylinderIndexBuffer;
 
+  BufferObject m_triArrayBuffer;
+  BufferObject m_triIndexBuffer;
+
   ShaderProgram m_cylinderProgram;
   Shader        m_cylinderVertexShader;
   Shader        m_cylinderFragmentShader;
