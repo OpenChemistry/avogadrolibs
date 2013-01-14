@@ -2,6 +2,7 @@
 set(tests
   Cjson
   Cml
+  FileFormatManager
   Hdf5
   )
 

@@ -16,6 +16,7 @@
 
 #include "cmlformat.h"
 
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/io/hdf5dataformat.h>
 
@@ -23,19 +24,14 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include <fstream>
 #include <streambuf>
-#include <iostream>
 #include <sstream>
 #include <map>
 
 namespace Avogadro {
 namespace Io {
 
-using std::ifstream;
 using std::string;
-using std::cout;
-using std::endl;
 
 using pugi::xml_document;
 using pugi::xml_node;
@@ -44,6 +40,7 @@ using pugi::xml_attribute;
 using namespace Core;
 
 namespace {
+
 class CmlFormatPrivate
 {
 public:
@@ -61,7 +58,7 @@ public:
       success = atomsExist && bondsExist;
     }
     else {
-      cout << "Error, no molecule node found." << endl;
+      error += "Error, no molecule node found.";
       success = false;
     }
   }
@@ -102,7 +99,7 @@ public:
       }
       else {
         // There is no element data, this atom node is corrupt.
-        cout << "Warning, corrupt element node found." << endl;
+        error += "Warning, corrupt element node found.";
         return false;
       }
 
@@ -213,24 +210,22 @@ public:
       // Read data from HDF5?
       if (dataNodeName == "hdf5data") {
         if (!hdf5.isOpen()) {
-          std::cerr << "CmlFormatPrivate::data: Cannot read data member '"
-                    << dataName << "'. Cannot open file " << filename + ".h5."
-                    << endl;
+          error += "CmlFormatPrivate::data: Cannot read data member '"
+                   + dataName + "'. Cannot open file " + filename + ".h5.";
           continue;
         }
 
         if (dataType != "xsd:double") {
-          std::cerr << "CmlFormatPrivate::data: Cannot read data member '"
-                    << dataName << "'. Data type is not 'double'." << endl;
+          error += "CmlFormatPrivate::data: Cannot read data member '"
+                   + dataName + "'. Data type is not 'double'.";
           continue;
         }
 
         MatrixX matrix;
         if (!hdf5.readDataset(dataStream.str(), matrix)) {
-          std::cerr << "CmlFormatPrivate::data: Cannot read data member '"
-                    << dataName << "': Unable to read data set '"
-                    << dataStream.str() << "' from " << filename + ".h5"
-                    << endl;
+          error += "CmlFormatPrivate::data: Cannot read data member '"
+                   + dataName + "': Unable to read data set '"
+                   + dataStream.str() + "' from " + filename + ".h5";
           continue;
         }
 
@@ -270,8 +265,8 @@ public:
           variant.setValue(tmp);
         }
         else {
-          std::cerr << "CmlFormatPrivate::data: handled scalar data type: "
-                    << dataType << endl;
+          error += "CmlFormatPrivate::data: handled scalar data type: "
+                   + dataType;
           continue;
         }
       }
@@ -286,7 +281,8 @@ public:
   Molecule *molecule;
   xml_node moleculeNode;
   std::map<std::string, size_t> atomIds;
-  std::string filename;
+  string filename;
+  string error;
 };
 }
 
@@ -298,36 +294,30 @@ CmlFormat::~CmlFormat()
 {
 }
 
-bool CmlFormat::readFile(const std::string &fileName, Core::Molecule &mol)
+bool CmlFormat::read(std::istream &file, Core::Molecule &mol)
 {
-  // Read the file into a string.
-  std::ifstream file(fileName.c_str());
-  if (!file.is_open()) {
-    cout << "Error opening file: " << fileName << endl;
-    return false;
-  }
-
   xml_document document;
   pugi::xml_parse_result result = document.load(file);
   if (!result) {
-    cout << "Error parsing XML: " << result.description() << endl;
+    appendError("Error parsing XML: " + std::string(result.description()));
     return false;
   }
 
-  CmlFormatPrivate parser(&mol, document, fileName);
+  CmlFormatPrivate parser(&mol, document, fileName());
+  if (!parser.success)
+    appendError(parser.error);
 
-  return true;
+  return parser.success;
 }
 
-bool CmlFormat::writeFile(const std::string &fileName,
-                          const Core::Molecule &mol)
+bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
 {
   xml_document document;
 
   Hdf5DataFormat hdf5;
-  if (!hdf5.openFile(fileName + ".h5", Hdf5DataFormat::ReadWriteAppend)) {
-    std::cerr << "CmlFormat::writeFile: Cannot open file: "
-              << (fileName + ".h5").c_str() << endl;
+  if (!hdf5.openFile(fileName() + ".h5", Hdf5DataFormat::ReadWriteAppend)) {
+    appendError("CmlFormat::writeFile: Cannot open file: "
+                + fileName() + ".h5");
   }
 
   // Add a custom declaration node.
@@ -381,21 +371,21 @@ bool CmlFormat::writeFile(const std::string &fileName,
   VariantMap dataMap = mol.dataMap();
   for (VariantMap::const_iterator it = dataMap.constBegin(),
        itEnd = dataMap.constEnd(); it != itEnd; ++it) {
-    const std::string &name = (*it).first;
+    const std::string &name_ = (*it).first;
 
     // Skip names that are handled elsewhere:
-    if (name == "inchi")
+    if (name_ == "inchi")
       continue;
 
     const Variant &var = (*it).second;
     if (var.type() == Variant::Null) {
-      std::cerr << "CmlFormat::writeFile: skipping null dataMap member '"
-                << name.c_str() << "'." << endl;
+      appendError("CmlFormat::writeFile: skipping null dataMap member '"
+                  + name_ + "'.");
       continue;
     }
 
     xml_node dataNode = dataMapNode.append_child();
-    dataNode.append_attribute("name") = name.c_str();
+    dataNode.append_attribute("name") = name_.c_str();
 
     switch (var.type()) {
     case Variant::Null:
@@ -427,9 +417,8 @@ bool CmlFormat::writeFile(const std::string &fileName,
       dataNode.text() = var.toDouble();
       break;
     case Variant::Pointer:
-      std::cerr << "CmlFormat::writeFile: "
-                   "Skipping void* molecule data member '" << name.c_str()
-                << "'" << endl;
+      appendError("CmlFormat::writeFile: Skipping void* molecule data member '"
+                  + name_ + "'");
       break;
     case Variant::String:
       dataNode.set_name("scalar");
@@ -444,24 +433,37 @@ bool CmlFormat::writeFile(const std::string &fileName,
       std::stringstream stream;
       stream << matrix.rows() << " " << matrix.cols();
       dataNode.append_attribute("dims") = stream.str().c_str();
-      std::string h5Path = std::string("molecule/dataMap/") + name;
+      std::string h5Path = std::string("molecule/dataMap/") + name_;
       dataNode.text() = h5Path.c_str();
       hdf5.writeDataset(h5Path, matrix);
     }
       break;
     default:
-      std::cerr << "CmlFormat::writeFile: Unrecognized type '" << var.type()
-                << "' for member '" << name.c_str() << "'." << endl;
+      appendError("CmlFormat::writeFile: Unrecognized type for member '"
+                  + name_ + "'.");
       break;
     }
   }
 
   hdf5.closeFile();
 
-  document.save(std::cout, "  ");
-  document.save_file(fileName.c_str(), "  ");
+  document.save(out, "  ");
 
   return true;
+}
+
+std::vector<std::string> CmlFormat::fileExtensions() const
+{
+  std::vector<std::string> ext;
+  ext.push_back("cml");
+  return ext;
+}
+
+std::vector<std::string> CmlFormat::mimeTypes() const
+{
+  std::vector<std::string> mime;
+  mime.push_back("chemical/x-cml");
+  return mime;
 }
 
 } // end Io namespace

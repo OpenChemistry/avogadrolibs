@@ -21,15 +21,10 @@
 
 #include <jsoncpp.cpp>
 
-#include <fstream>
-
 namespace Avogadro {
 namespace Io {
 
-using std::ifstream;
 using std::string;
-using std::cout;
-using std::endl;
 
 using Core::Elements;
 using Core::Atom;
@@ -44,27 +39,19 @@ CjsonFormat::~CjsonFormat()
 {
 }
 
-bool CjsonFormat::readFile(const std::string &fileName,
-                           Core::Molecule &molecule)
+bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
 {
-  // Read the file into a string.
-  std::ifstream file(fileName.c_str());
-  if (!file.is_open()) {
-    cout << "Error opening file: " << fileName << endl;
-    return false;
-  }
-
   Json::Value root;
   Json::Reader reader;
   bool ok = reader.parse(file, root);
   if (!ok) {
-    cout << "Error parsing JSON: " << reader.getFormatedErrorMessages() << endl;
+    appendError("Error parsing JSON: " + reader.getFormatedErrorMessages());
     return false;
   }
 
   Json::Value value = root["chemical json"];
   if (value.empty()) {
-    cout << "Error, not a valid Chemical JSON file: no \"chemical json\" key found." << endl;
+    appendError("Error, not a valid Chemical JSON file: no \"chemical json\" key found.");
     return false;
   }
 
@@ -87,8 +74,7 @@ bool CjsonFormat::readFile(const std::string &fileName,
   value = root["atoms"]["coords"]["3d"];
   if (value.isArray()) {
     if (value.size() && atomCount != static_cast<size_t>(value.size() / 3)) {
-      cout << "Error, number of elements = " << atomCount
-           << " and number of 3D coordinates = " << value.size() / 3;
+      appendError("Error, number of elements != number of 3D coordinates.");
       return false;
     }
     for (unsigned int i = 0; i < atomCount; ++i) {
@@ -101,8 +87,7 @@ bool CjsonFormat::readFile(const std::string &fileName,
   value = root["atoms"]["coords"]["2d"];
   if (value.isArray()) {
     if (value.size() && atomCount != static_cast<size_t>(value.size() / 2)) {
-      cout << "Error, number of elements = " << atomCount
-           << " and number of 2D coordinates = " << value.size() / 2;
+      appendError("Error, number of elements != number of 2D coordinates.");
       return false;
     }
     for (unsigned int i = 0; i < atomCount; ++i) {
@@ -123,13 +108,12 @@ bool CjsonFormat::readFile(const std::string &fileName,
     }
   }
   else {
-    cout << "Warning, no bonding information found." << endl;
+    appendError("Warning, no bonding information found.");
   }
   value = root["bonds"]["order"];
   if (value.isArray()) {
     if (bondCount != static_cast<size_t>(value.size())) {
-      cout << "Error, number of bonds = " << atomCount
-           << " and the number of bond orders = " << value.size();
+      appendError("Error, number of bonds != number of bond orders.");
       return false;
     }
     for (unsigned int i = 0; i < bondCount; ++i)
@@ -139,17 +123,10 @@ bool CjsonFormat::readFile(const std::string &fileName,
   return true;
 }
 
-bool CjsonFormat::writeFile(const std::string &fileName,
-                            const Core::Molecule &molecule)
+bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
 {
   Json::StyledStreamWriter writer("  ");
   Json::Value root;
-
-  std::ofstream file(fileName.c_str());
-  if (!file.is_open()) {
-    cout << "Error opening file: " << fileName << endl;
-    return false;
-  }
 
   root["chemical json"] = 0;
 
@@ -193,6 +170,19 @@ bool CjsonFormat::writeFile(const std::string &fileName,
   return true;
 }
 
+std::vector<std::string> CjsonFormat::fileExtensions() const
+{
+  std::vector<std::string> ext;
+  ext.push_back("cjson");
+  return ext;
+}
+
+std::vector<std::string> CjsonFormat::mimeTypes() const
+{
+  std::vector<std::string> mime;
+  mime.push_back("chemical/x-cjson");
+  return mime;
+}
 
 } // end Io namespace
 } // end Avogadro namespace

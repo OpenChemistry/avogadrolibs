@@ -19,6 +19,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/matrix.h>
+#include <avogadro/core/molecule.h>
 
 #include <avogadro/io/cmlformat.h>
 
@@ -87,23 +88,36 @@ TEST(CmlTest, bonds)
 TEST(CmlTest, saveFile)
 {
   CmlFormat cml;
-  Molecule molecule;
-  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
-  cml.writeFile("ethane.cml", molecule);
+  Molecule readMol, writeMol;
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", readMol);
+  cml.writeFile("ethanetmp.cml", readMol);
+
+  // Now read the file back in and check a few key values are still present.
+  cml.readFile("ethanetmp.cml", writeMol);
+  EXPECT_EQ(writeMol.data("name").toString(), "Ethane");
+  EXPECT_EQ(writeMol.atomCount(), static_cast<size_t>(8));
+  EXPECT_EQ(writeMol.bondCount(), static_cast<size_t>(7));
+  Atom atom = writeMol.atom(7);
+  EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
+  EXPECT_EQ(atom.position3d().x(), -1.18499);
+  EXPECT_EQ(atom.position3d().y(),  0.004424);
+  EXPECT_EQ(atom.position3d().z(), -0.987522);
+  Bond bond = writeMol.bond(0);
+  EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
+  EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
+  EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
 }
 
-TEST(CmlTest, CmlHdf5Matrix)
+TEST(CmlTest, hdf5Matrix)
 {
   CmlFormat cml;
   Molecule molecule;
   cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
   molecule.setData("name", "ethanol");
   MatrixX matrix(10, 12);
-  for (int row = 0; row < matrix.rows(); ++row) {
-    for (int col = 0; col < matrix.cols(); ++col) {
+  for (int row = 0; row < matrix.rows(); ++row)
+    for (int col = 0; col < matrix.cols(); ++col)
       matrix(row, col) = row + col / static_cast<double>(matrix.cols());
-    }
-  }
   molecule.setData("matrix", matrix);
   cml.writeFile("ethane.cml", molecule);
 
@@ -111,4 +125,30 @@ TEST(CmlTest, CmlHdf5Matrix)
   cml.readFile("ethane.cml", readMolecule);
   EXPECT_TRUE(readMolecule.data("matrix").toMatrixRef().isApprox(matrix));
   EXPECT_EQ(readMolecule.data("name").toString(), std::string("ethanol"));
+}
+
+TEST(CmlTest, writeString)
+{
+  CmlFormat cml;
+  Molecule molecule;
+  EXPECT_EQ(cml.readFile(std::string(AVOGADRO_DATA)
+                         + "/data/ethane.cml", molecule), true);
+  std::string file;
+  EXPECT_EQ(cml.writeString(file, molecule), true);
+}
+
+TEST(CmlTest, readString)
+{
+  CmlFormat cml;
+  Molecule molecule;
+  EXPECT_EQ(cml.readFile(std::string(AVOGADRO_DATA)
+                         + "/data/ethane.cml", molecule), true);
+  std::string file;
+  EXPECT_EQ(cml.writeString(file, molecule), true);
+  Molecule moleculeFromString;
+  EXPECT_EQ(cml.readString(file, moleculeFromString), true);
+
+  EXPECT_EQ(moleculeFromString.data("name").toString(), "Ethane");
+  EXPECT_EQ(moleculeFromString.atomCount(), static_cast<size_t>(8));
+  EXPECT_EQ(moleculeFromString.bondCount(), static_cast<size_t>(7));
 }

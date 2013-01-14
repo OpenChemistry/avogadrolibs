@@ -12,12 +12,16 @@ include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}"
 set(HEADERS
   cjsonformat.h
   cmlformat.h
+  fileformat.h
+  fileformatmanager.h
   hdf5dataformat.h
 )
 
 set(SOURCES
   cjsonformat.cpp
   cmlformat.cpp
+  fileformat.cpp
+  fileformatmanager.cpp
   hdf5dataformat.cpp
 )
 

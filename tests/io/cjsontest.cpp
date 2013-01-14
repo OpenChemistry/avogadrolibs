@@ -91,10 +91,10 @@ TEST(CjsonTest, saveFile)
   Molecule savedMolecule, molecule;
   cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson",
                  savedMolecule);
-  cjson.writeFile("ethane.cjson", savedMolecule);
+  cjson.writeFile("ethanetmp.cjson", savedMolecule);
 
   // Now read the file back in and check a few key values are still present.
-  cjson.readFile("ethane.cjson", molecule);
+  cjson.readFile("ethanetmp.cjson", molecule);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(8));
   EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(7));
