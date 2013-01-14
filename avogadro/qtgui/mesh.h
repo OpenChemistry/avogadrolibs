@@ -20,6 +20,8 @@
 
 #include "avogadroqtguiexport.h"
 
+#include "color3f.h"
+
 #include <avogadro/core/vector.h>
 
 #include <QtCore/QString>
@@ -33,7 +35,6 @@ namespace Avogadro {
 namespace QtGui {
 
 class Molecule;
-class Color3f;
 
 /*!
  * \class Mesh mesh.h <avogadro/qtgui/mesh.h>

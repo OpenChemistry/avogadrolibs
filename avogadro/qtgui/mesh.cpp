@@ -16,7 +16,6 @@
 ******************************************************************************/
 
 #include "mesh.h"
-#include "color3f.h"
 
 #include <QReadWriteLock>
 #include <QDebug>
