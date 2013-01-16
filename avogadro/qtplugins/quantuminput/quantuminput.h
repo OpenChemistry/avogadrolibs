@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -19,14 +19,21 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QtCore/QMultiMap>
+#include <QtCore/QStringList>
+
 class QAction;
 class QDialog;
 
 namespace Avogadro {
 namespace QtPlugins {
+class QuantumInputDialog;
 
-class GamessInputDialog;
-
+/**
+ * @brief The QuantumInput class implements the extension interface for
+ * simulation input generators.
+ * @author David C. Lonie
+ */
 class QuantumInput : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
@@ -45,13 +52,28 @@ public:
 
   void setMolecule(QtGui::Molecule *mol);
 
+public slots:
+  /**
+   * Scan for new scripts in the input generator directories.
+   */
+  void refreshGenerators();
+
 private slots:
   void menuActivated();
 
 private:
-  QAction *m_action;
+  void updateInputGeneratorScripts();
+  void updateActions();
+  void addAction(const QString &label, const QString &scriptFilePath);
+  QString queryProgramName(const QString &scriptFilePath);
+
+  QList<QAction*> m_actions;
   QtGui::Molecule *m_molecule;
-  GamessInputDialog *m_dialog;
+  // keyed on script file path
+  QMultiMap<QString, QuantumInputDialog*> m_dialogs;
+
+  // maps program name --> script file path
+  QMultiMap<QString, QString> m_inputGeneratorScripts;
 };
 
 }
