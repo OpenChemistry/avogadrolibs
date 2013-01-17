@@ -401,7 +401,7 @@ void GAMESSUSOutput::outputAll()
 
 void GAMESSUSOutput::generateDensity()
 {
-  m_numBasisFunctions=sqrt(m_MOcoeffs.size());
+  m_numBasisFunctions = sqrt(static_cast<double>(m_MOcoeffs.size()));
   m_density.resize(m_numBasisFunctions, m_numBasisFunctions);
   m_density=Eigen::MatrixXd::Zero(m_numBasisFunctions,m_numBasisFunctions);
   for (unsigned int iBasis = 0; iBasis < m_numBasisFunctions; ++iBasis) {
