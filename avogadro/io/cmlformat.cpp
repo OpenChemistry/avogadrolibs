@@ -16,13 +16,13 @@
 
 #include "cmlformat.h"
 
+#include "hdf5dataformat.h"
+#include "utilities.h"
+
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
-#include <avogadro/io/hdf5dataformat.h>
 
 #include <pugixml.cpp>
-
-#include <boost/algorithm/string.hpp>
 
 #include <streambuf>
 #include <sstream>
@@ -162,8 +162,7 @@ public:
       if (attribute) {
         // Should contain two elements separated by a space.
         std::string refs(attribute.value());
-        std::vector<std::string> tokens;
-        boost::split(tokens, refs, boost::is_any_of(" "));
+        std::vector<std::string> tokens = split(refs, ' ');
         if (tokens.size() != 2) // Corrupted file/input we don't understand
           return false;
         std::map<std::string, size_t>::const_iterator begin, end;
