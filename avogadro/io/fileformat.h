@@ -139,7 +139,8 @@ public:
   virtual std::string description() const = 0;
 
   /*!
-   * The URL of the format if available (empty if not relevant).
+   * The URL of the format specification if available (relevant web page/wiki
+   * otherwise).
    */
   virtual std::string specificationURL() const = 0;
 

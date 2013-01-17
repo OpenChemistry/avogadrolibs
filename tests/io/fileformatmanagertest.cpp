@@ -30,12 +30,15 @@ using Avogadro::Io::FileFormatManager;
 
 TEST(FileFormatManagerTest, readFile)
 {
-  FileFormat *format = FileFormatManager::instance().formatFromIdentifier("CML");
+  FileFormat *format =
+    FileFormatManager::instance().newFormatFromIdentifier("CML");
   EXPECT_TRUE(format != NULL);
   if (!format)
     return;
   Molecule molecule;
   format->readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
+  delete format;
+  format = NULL;
 
   EXPECT_EQ(molecule.data("name").type(), Avogadro::Core::Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
