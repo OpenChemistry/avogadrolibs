@@ -29,10 +29,10 @@ namespace QtGui {
 class ScenePluginFactory;
 class ExtensionPluginFactory;
 
-/*!
- * \class PluginManager pluginmanager.h <avogadro/qtplugins/pluginmanager.h>
- * \brief This class takes care of finding and loading Avogadro plugins.
- * \author Marcus D. Hanwell
+/**
+ * @class PluginManager pluginmanager.h <avogadro/qtplugins/pluginmanager.h>
+ * @brief This class takes care of finding and loading Avogadro plugins.
+ * @author Marcus D. Hanwell
  *
  * This class will find and load Avogadro plugins. Once loaded you can use an
  * instance of this class to query and construct plugin instances. By default
@@ -49,29 +49,29 @@ class AVOGADROQTPLUGINS_EXPORT PluginManager : public QObject
   Q_OBJECT
 
 public:
-  /*!
+  /**
    * Get the singleton instance of the plugin manager. This instance should not
    * be deleted.
    */
   static PluginManager * instance();
 
-  /*!
+  /**
    * Get a reference to the plugin directory path list. Modifying this before
    * calling load will allow you to add, remove or append to the search paths.
    */
   QStringList& pluginDirList() { return m_pluginDirs; }
 
-  /*! Load all plugins available in the specified plugin directories. */
+  /** Load all plugins available in the specified plugin directories. */
   void load();
   void load(const QString &dir);
 
-  /*!
+  /**
    * Let the user request plugins with a certain type, this must use the Qt
    * mechanisms as qobject_cast is used in conjunction with interfaces.
    *
-   * \code
+   * @code
    * factory = pluginManager->pluginFactories<Avogadro::QtGui::ScenePluginFactory>();
-   * \endcode
+   * @endcode
    */
   template<typename T> QList<T *> pluginFactories() const;
 

@@ -28,9 +28,9 @@ namespace QtGui {
 
 class Mesh;
 
-/*!
- * \class Molecule molecule.h <avogadro/qtgui/molecule.h>
- * \brief A QObject derived molecule object with signals/slots.
+/**
+ * @class Molecule molecule.h <avogadro/qtgui/molecule.h>
+ * @brief A QObject derived molecule object with signals/slots.
  */
 
 class AVOGADROQTGUI_EXPORT Molecule : public QObject, public Core::Molecule
@@ -40,53 +40,53 @@ public:
   Molecule(QObject *parent_ = 0);
   ~Molecule();
 
-  /*! \enum Enumeration of change types that can be given. */
+  /** \enum Enumeration of change types that can be given. */
   enum MoleculeChange {
-    /*! Object types that can be changed. */
+    /** Object types that can be changed. */
     Atoms = 0x01,
     Bonds = 0x02,
-    /*! Operations that can affect the above types. */
+    /** Operations that can affect the above types. */
     Added    = 0x1024,
     Removed  = 0x2048,
     Modified = 0x4096
   };
 
-  /*!
-   * Add an atom with \p atomicNumber to the molecule.
-   * \return The atom created.
+  /**
+   * Add an atom with @p atomicNumber to the molecule.
+   * @return The atom created.
    */
   Core::Atom addAtom(unsigned char atomicNumber);
 
-  /*!
-   * \brief Remove the specified atom from the molecule.
-   * \param index The index of the atom to be removed.
-   * \return True on success, false if the atom was not found.
+  /**
+   * @brief Remove the specified atom from the molecule.
+   * @param index The index of the atom to be removed.
+   * @return True on success, false if the atom was not found.
    */
   bool removeAtom(size_t index);
   bool removeAtom(const Core::Atom &atom);
 
-  /*!
-   * \brief Add a bond between the specified atoms.
-   * \param a The first atom in the bond.
-   * \param b The second atom in the bond.
-   * \param bondOrder The order of the bond.
-   * \return The bond created.
+  /**
+   * @brief Add a bond between the specified atoms.
+   * @param a The first atom in the bond.
+   * @param b The second atom in the bond.
+   * @param bondOrder The order of the bond.
+   * @return The bond created.
    */
   Core::Bond addBond(const Core::Atom &a, const Core::Atom &b,
                      unsigned char bondOrder = 1);
 
-  /*!
-   * \brief Remove the specified bond.
-   * \param index The index of the bond to be remove.
-   * \return True on succes, false if the bond was not found.
+  /**
+   * @brief Remove the specified bond.
+   * @param index The index of the bond to be remove.
+   * @return True on succes, false if the bond was not found.
    */
   bool removeBond(size_t index);
   bool removeBond(const Core::Bond &bond);
   bool removeBond(const Core::Atom &a, const Core::Atom &b);
 
-  /*!
-   * \brief Add a mesh to the molecule.
-   * \return The mesh object added to the molecule.
+  /**
+   * @brief Add a mesh to the molecule.
+   * @return The mesh object added to the molecule.
    */
   Mesh* addMesh();
 
@@ -96,11 +96,11 @@ public:
   size_t meshCount() const { return m_meshes.size(); }
 
 signals:
-  /*!
-   * \brief Indicates that the molecule has changed.
-   * \param change Use the MoleculeChange enum to check what has changed.
+  /**
+   * @brief Indicates that the molecule has changed.
+   * @param change Use the MoleculeChange enum to check what has changed.
    *
-   * The \p change variable indicates what has changed, i.e. if
+   * The @p change variable indicates what has changed, i.e. if
    * change & Atoms == true then atoms were changed in some way, and if
    * change & Removed == true then one or more atoms were removed.
    */

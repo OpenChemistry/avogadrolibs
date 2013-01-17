@@ -22,9 +22,9 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-/*!
- * \brief Render one or more triangular meshes.
- * \author Marcus D. Hanwell
+/**
+ * @brief Render one or more triangular meshes.
+ * @author Marcus D. Hanwell
  */
 class Meshes : public QtGui::ScenePlugin
 {

@@ -26,10 +26,10 @@ namespace QtGui {
 
 class ScenePlugin;
 
-/*!
- * \class ScenePluginModel scenepluginmodel.h <avogadro/qtgui/scenepluginmodel.h>
- * \brief A model containing scene plugins that will build up the scene.
- * \author Marcus D. Hanwell
+/**
+ * @class ScenePluginModel scenepluginmodel.h <avogadro/qtgui/scenepluginmodel.h>
+ * @brief A model containing scene plugins that will build up the scene.
+ * @author Marcus D. Hanwell
  */
 
 class AVOGADROQTGUI_EXPORT ScenePluginModel : public QAbstractItemModel

@@ -1,4 +1,4 @@
-/*!
+/**
  * We expect to get two arguments, plus an optional third argument. The first
  * argument should be the input file name, the second the output file name and
  * if supplied the final one would be the variable name.

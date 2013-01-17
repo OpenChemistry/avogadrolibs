@@ -33,10 +33,10 @@
 namespace Avogadro {
 namespace Rendering {
 
-/*!
- * \class GLRenderer glrenderer.h <avogadro/rendering/glrenderer.h>
- * \brief Render the scene using OpenGL calls.
- * \author Marcus D. Hanwell
+/**
+ * @class GLRenderer glrenderer.h <avogadro/rendering/glrenderer.h>
+ * @brief Render the scene using OpenGL calls.
+ * @author Marcus D. Hanwell
  */
 
 class AVOGADRORENDERING_EXPORT GLRenderer
@@ -45,35 +45,35 @@ public:
   GLRenderer();
   ~GLRenderer();
 
-  /*! Initialize the OpenGL context for rendering. */
+  /** Initialize the OpenGL context for rendering. */
   void initialize();
 
-  /*! Resize the context in response to window management events. */
+  /** Resize the context in response to window management events. */
   void resize(int width, int height);
 
-  /*! Take care of rendering the scene, requires that the context is current. */
+  /** Take care of rendering the scene, requires that the context is current. */
   void render();
 
-  /*! Reset the view to fit the entire scene. */
+  /** Reset the view to fit the entire scene. */
   void resetCamera();
 
-  /*! Return the primitives under the display coordinate (x,y), mapped by depth.
+  /** Return the primitives under the display coordinate (x,y), mapped by depth.
    */
   std::map<float, Primitive::Identifier> hits(int x, int y) const;
 
-  /*! Return the top primitive under the display coordinate (x,y).
+  /** Return the top primitive under the display coordinate (x,y).
    */
   Primitive::Identifier hit(int x, int y) const;
 
-  /*! Check whether the GL context is valid and supports required features.
+  /** Check whether the GL context is valid and supports required features.
    * \sa error() to get more information if the context is not valid.
    */
   bool isValid() const { return m_valid; }
 
-  /*! Get the error message if the context is not valid. Empty if valid. */
+  /** Get the error message if the context is not valid. Empty if valid. */
   std::string error() const { return m_error; }
 
-  /*! Get the camera for this renderer. */
+  /** Get the camera for this renderer. */
   const Camera& camera() const;
   Camera& camera();
 

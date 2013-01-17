@@ -22,9 +22,9 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-/*!
- * \brief Render the molecule as Van der Waals spheres.
- * \author Marcus D. Hanwell
+/**
+ * @brief Render the molecule as Van der Waals spheres.
+ * @author Marcus D. Hanwell
  */
 class VanDerWaals : public QtGui::ScenePlugin
 {

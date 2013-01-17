@@ -22,9 +22,9 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-/*!
- * \brief Render a molecule in the ball and stick style.
- * \author David C. Lonie
+/**
+ * @brief Render a molecule in the ball and stick style.
+ * @author David C. Lonie
  */
 class BallAndStick : public QtGui::ScenePlugin
 {

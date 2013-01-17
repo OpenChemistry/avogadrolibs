@@ -36,10 +36,10 @@ class Molecule;
 
 namespace Rendering {
 
-/*!
- * \class Scene scene.h <avogadro/rendering/scene.h>
- * \brief The Scene contains data ready to be rendered.
- * \author Marcus D. Hanwell
+/**
+ * @class Scene scene.h <avogadro/rendering/scene.h>
+ * @brief The Scene contains data ready to be rendered.
+ * @author Marcus D. Hanwell
  *
  * A collection of geometric primitives ready for rendering. This is highly
  * targeted for fast rendering on modern OpenGL 2.1/ES 2.0 GPUs, but can also
@@ -96,77 +96,77 @@ public:
   Scene();
   ~Scene();
 
-  /*! Get the center of the points contained in this Scene. */
+  /** Get the center of the points contained in this Scene. */
   Vector3f center() const;
 
-  /*! Get the radius, which is currently just the largest of the axis-aligned
+  /** Get the radius, which is currently just the largest of the axis-aligned
    * components of the positions.
    */
   float radius() const;
 
-  /*!
+  /**
    * Add a sphere to the scene object.
    */
   void addSphere(const Vector3f &position, const Vector3ub &color, float radius,
                  const Primitive::Identifier &id);
 
-  /*! Get a const reference to the sphere list in this Scene object. */
+  /** Get a const reference to the sphere list in this Scene object. */
   const std::vector<Sphere> spheres() const { return m_spheres; }
 
-  /*! Number of spheres in this Scene object. */
+  /** Number of spheres in this Scene object. */
   Index sphereCount() const { return m_spheres.size(); }
 
-  /*! Get a const reference to the sphere array that can be passed to the
+  /** Get a const reference to the sphere array that can be passed to the
    * BufferObject in order to be uploaded to the GPU.
    */
   const std::vector<ColorTextureVertex>& sphereVertices() const;
 
-  /*! Get a const reference to the sphere index array that can be passed to the
+  /** Get a const reference to the sphere index array that can be passed to the
    * BufferObject in order to be uploaded to the GPU.
    */
   const std::vector<unsigned int>& sphereIndices() const;
 
-  /*!
+  /**
    * Add a cylinder to the Scene object. Direction must be normalized.
    */
   void addCylinder(const Vector3f &position, const Vector3f &direction,
                    float length, float radius_, const Vector3ub &color,
                    const Primitive::Identifier &id);
 
-  /*! Get a const reference to the cylinder list in this Scene object. */
+  /** Get a const reference to the cylinder list in this Scene object. */
   const std::vector<Cylinder> cylinders() const { return m_cylinders; }
 
-  /*! Number of cylinders in this Scene object. */
+  /** Number of cylinders in this Scene object. */
   Index cylinderCount() const { return m_cylinders.size(); }
 
-  /*! Get a const reference to the cylinder vertex array that can be passed to
+  /** Get a const reference to the cylinder vertex array that can be passed to
    * BufferObject in order to be uploaded to the GPU.
    */
   const std::vector<ColorNormalVertex>& cylinderVertices() const;
 
-  /*! Get a const reference to the cylinder index array that can be passed to
+  /** Get a const reference to the cylinder index array that can be passed to
    * BufferObject in order to be uploaded to the GPU.
    */
   const std::vector<unsigned int> &cylinderIndices() const;
 
-  /*! Add triangles to the Scene object. The normals must be normalized. */
+  /** Add triangles to the Scene object. The normals must be normalized. */
   void addTriangles(const Vector3f *vertices, const Vector3f *normals, size_t n);
 
-  /*! Get a const reference to the triangle mesh that can be passed to
+  /** Get a const reference to the triangle mesh that can be passed to
    * BufferObject in order to be uploaded to the GPU.
    */
   const std::vector<ColorNormalVertex>& triangleVertices() const;
   const std::vector<unsigned int>& triangleIndices() const;
 
-  /*! Is the scene dirty? */
+  /** Is the scene dirty? */
   bool dirty() const { return m_dirty; }
 
-  /*! Mark the scene as clean (should only be done once the data is uploaded to
+  /** Mark the scene as clean (should only be done once the data is uploaded to
    * the BufferObject.
    */
   void setClean() { m_dirty = false; }
 
-  /*! Clear the scene of all elements. */
+  /** Clear the scene of all elements. */
   void clear();
 
 private:

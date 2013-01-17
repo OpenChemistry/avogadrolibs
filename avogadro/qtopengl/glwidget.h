@@ -31,10 +31,10 @@
 namespace Avogadro {
 namespace QtOpenGL {
 
-/*!
- * \class GLWidget glwidget.h <avogadro/rendering/glwidget.h>
- * \brief QGLWidget derived object for displaying 3D molecular geometry.
- * \author Marcus D. Hanwell
+/**
+ * @class GLWidget glwidget.h <avogadro/rendering/glwidget.h>
+ * @brief QGLWidget derived object for displaying 3D molecular geometry.
+ * @author Marcus D. Hanwell
  *
  * This class creates the GL context, and contains a renderer to render the
  * 3D molecular geometry.
@@ -48,22 +48,22 @@ public:
   explicit GLWidget(QWidget *parent = 0);
   ~GLWidget();
 
-  /*! Get a reference to the editor for the widget. */
+  /** Get a reference to the editor for the widget. */
   Editor& editor() { return m_editor; }
 
-  /*! Get a reference to the manipulator for the widget. */
+  /** Get a reference to the manipulator for the widget. */
   Manipulator& manipulator() { return m_manipulator; }
 
-  /*! Get a reference to the navigator for the widget. */
+  /** Get a reference to the navigator for the widget. */
   Navigator& navigator() { return m_navigator; }
 
-  /*! Get a reference to the renderer for the widget. */
+  /** Get a reference to the renderer for the widget. */
   Rendering::GLRenderer& renderer() { return m_renderer; }
 
-  /*! Reset the view to fit the entire scene. */
+  /** Reset the view to fit the entire scene. */
   void resetCamera();
 
-  /*! This is a hacky way to switch tools. It should be replaced. */
+  /** This is a hacky way to switch tools. It should be replaced. */
   enum Tool {
     NavigateTool = 0,
     ManipulateTool,
@@ -73,13 +73,13 @@ public:
   Tool activeTool() const { return m_tool; }
 
 protected:
-  /*! This is where the GL context is initialized. */
+  /** This is where the GL context is initialized. */
   void initializeGL();
 
-  /*! Take care of resizing the context. */
+  /** Take care of resizing the context. */
   void resizeGL(int width, int height);
 
-  /*! Main entry point for all GL rendering. */
+  /** Main entry point for all GL rendering. */
   void paintGL();
 
 protected:
