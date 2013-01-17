@@ -26,6 +26,9 @@
 namespace Avogadro {
 namespace Io {
 
+// Class to ensure the FileFormatManager singleton's destructor is called before
+// the program exits. You must set the singleton on the class for this to
+// happen. If the singleton is never instanced then nothing happens.
 class FileFormatManager::Destroyer
 {
 public:
@@ -120,14 +123,20 @@ bool FileFormatManager::registerFormat(FileFormat *format)
 
 bool FileFormatManager::addFormat(FileFormat *format)
 {
-  if (!format)
+  if (!format) {
+    appendError("Supplied format was null.");
     return false;
-  if (m_identifiers.count(format->identifier()) > 0)
+  }
+  if (m_identifiers.count(format->identifier()) > 0) {
+    appendError("Format " + format->identifier() + " already loaded.");
     return false;
+  }
   for (std::vector<FileFormat *>::const_iterator it = m_formats.begin();
        it != m_formats.end(); ++it) {
-    if (*it == format)
+    if (*it == format) {
+      appendError("The format object was already loaded.");
       return false;
+    }
   }
 
   // If we got here then the format is unique enough to be added.
@@ -148,23 +157,23 @@ bool FileFormatManager::addFormat(FileFormat *format)
   return true;
 }
 
-FileFormat * FileFormatManager::formatFromIdentifier(const std::string &id)
+FileFormat * FileFormatManager::newFormatFromIdentifier(const std::string &id)
 {
-   std::map<std::string, size_t>::const_iterator it = m_identifiers.find(id);
-   return it == m_identifiers.end() ? NULL : m_formats[it->second];
+  FileFormat *format(formatFromIdentifier(id));
+  return format ? format->newInstance() : NULL;
 }
 
-FileFormat * FileFormatManager::formatFromMimeType(const std::string &mime)
+FileFormat * FileFormatManager::newFormatFromMimeType(const std::string &mime)
 {
-  std::map<std::string, size_t>::const_iterator it = m_mimeTypes.find(mime);
-  return it == m_mimeTypes.end() ? NULL : m_formats[it->second];
+  FileFormat *format(formatFromMimeType(mime));
+  return format ? format->newInstance() : NULL;
 }
 
-FileFormat * FileFormatManager::formatFromFileExtension(const std::string &extension)
+FileFormat * FileFormatManager::newFormatFromFileExtension(
+  const std::string &extension)
 {
-  std::multimap<std::string, size_t>::const_iterator it =
-    m_fileExtensions.find(extension);
-  return it == m_fileExtensions.end() ? NULL : m_formats[it->second];
+  FileFormat *format(formatFromFileExtension(extension));
+  return format ? format->newInstance() : NULL;
 }
 
 std::vector<std::string> FileFormatManager::identifiers() const
@@ -190,11 +199,16 @@ std::vector<std::string> FileFormatManager::mimeTypes() const
 std::vector<std::string> FileFormatManager::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  for (std::multimap<std::string, size_t>::const_iterator it = m_fileExtensions.begin();
-       it != m_fileExtensions.end(); ++it) {
+  for (std::multimap<std::string, size_t>::const_iterator it
+       = m_fileExtensions.begin(); it != m_fileExtensions.end(); ++it) {
     extensions.push_back(it->first);
   }
   return extensions;
+}
+
+std::string FileFormatManager::error() const
+{
+  return m_error;
 }
 
 FileFormatManager::FileFormatManager()
@@ -211,6 +225,30 @@ FileFormatManager::~FileFormatManager()
   m_formats.clear();
 }
 
+FileFormat * FileFormatManager::formatFromIdentifier(const std::string &id)
+{
+   std::map<std::string, size_t>::const_iterator it = m_identifiers.find(id);
+   return it == m_identifiers.end() ? NULL : m_formats[it->second];
+}
+
+FileFormat * FileFormatManager::formatFromMimeType(const std::string &mime)
+{
+  std::map<std::string, size_t>::const_iterator it = m_mimeTypes.find(mime);
+  return it == m_mimeTypes.end() ? NULL : m_formats[it->second];
+}
+
+FileFormat * FileFormatManager::formatFromFileExtension(
+  const std::string &extension)
+{
+  std::multimap<std::string, size_t>::const_iterator it =
+    m_fileExtensions.find(extension);
+  return it == m_fileExtensions.end() ? NULL : m_formats[it->second];
+}
+
+void FileFormatManager::appendError(const std::string &errorMessage)
+{
+  m_error += errorMessage + "\n";
+}
 
 } // end Io namespace
 } // end Avogadro namespace

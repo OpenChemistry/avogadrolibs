@@ -34,7 +34,7 @@ public:
   CjsonFormat();
   ~CjsonFormat();
 
-  FileFormat * createInstance() { return new CjsonFormat; }
+  FileFormat * newInstance() { return new CjsonFormat; }
   std::string identifier() const { return "CJSON"; }
   std::string name() const { return "Chemical JSON"; }
   std::string description() const { return "TODO: Describe the format."; }

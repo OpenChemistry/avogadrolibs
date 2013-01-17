@@ -33,7 +33,7 @@ class FileFormat;
 
 /*!
  * \class FileFormatManager fileformatmanager.h <avogadro/io/fileformatmanager.h>
- * \brief Class to manage registration, searching and creation of file formsts.
+ * \brief Class to manage registration, searching and creation of file formats.
  * \author Marcus D. Hanwell
  *
  * The file format manager is a singleton class that handles the runtime
@@ -104,6 +104,60 @@ public:
   bool addFormat(FileFormat *format);
 
   /*!
+   * New instance of the format for the specified \p identifier. Ownership
+   * is passed to the caller.
+   * \param identifier The unique identifier of the format.
+   * \return Instance of the format, NULL if not found. Ownership passes to the
+   * caller.
+   */
+  FileFormat * newFormatFromIdentifier(const std::string &identifier);
+
+  /*!
+   * New instance of the format for the specified \p mimeType. Ownership
+   * is passed to the caller.
+   * \param mimeType The MIME type (in lower case).
+   * \return Instance of the format, NULL if not found. Ownership passes to the
+   * caller.
+   */
+  FileFormat * newFormatFromMimeType(const std::string &mimeType);
+
+  /*!
+   * New instance of the format for the specified file \p extention. Ownership
+   * is passed to the caller.
+   * \param extension The file extension (in lower case).
+   * \return Instance of the format, NULL if not found. Ownership passes to the
+   * caller.
+   */
+  FileFormat * newFormatFromFileExtension(const std::string &extension);
+
+  /*!
+   * Get a list of all loaded identifiers.
+   */
+  std::vector<std::string> identifiers() const;
+
+  /*!
+   * Get a list of all loaded MIME types.
+   */
+  std::vector<std::string> mimeTypes() const;
+
+  /*!
+   * Get a list of the file extensions supported.
+   */
+  std::vector<std::string> fileExtensions() const;
+
+  /*!
+   * Get any errors that have been logged when loading formats.
+   */
+  std::string error() const;
+
+private:
+  FileFormatManager();
+  ~FileFormatManager();
+
+  FileFormatManager(const FileFormatManager&);            // Not implemented.
+  FileFormatManager& operator=(const FileFormatManager&); // Not implemented.
+
+  /*!
    * Get a pointer to the format for the specified \p identifier. Ownership
    * remains with the manager class.
    */
@@ -124,26 +178,10 @@ public:
   FileFormat * formatFromFileExtension(const std::string &extension);
 
   /*!
-   * Get a list of all loaded identifiers.
+   * \brief Append warnings/errors to the error message string.
+   * \param errorMessage The error message to append.
    */
-  std::vector<std::string> identifiers() const;
-
-  /*!
-   * Get a list of all loaded MIME types.
-   */
-  std::vector<std::string> mimeTypes() const;
-
-  /*!
-   * Get a list of the file extensions supported.
-   */
-  std::vector<std::string> fileExtensions() const;
-
-private:
-  FileFormatManager();
-  ~FileFormatManager();
-
-  FileFormatManager(const FileFormatManager&);            // Not implemented.
-  FileFormatManager& operator=(const FileFormatManager&); // Not implemented.
+  void appendError(const std::string &errorMessage);
 
   class Destroyer;
   friend class Destroyer;
@@ -154,6 +192,8 @@ private:
   std::map<std::string, size_t> m_identifiers;
   std::map<std::string, size_t> m_mimeTypes;
   std::multimap<std::string, size_t> m_fileExtensions;
+
+  std::string m_error;
 };
 
 } // end Io namespace

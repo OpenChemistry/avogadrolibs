@@ -34,7 +34,7 @@ public:
   CmlFormat();
   ~CmlFormat();
 
-  FileFormat * createInstance() { return new CmlFormat; }
+  FileFormat * newInstance() { return new CmlFormat; }
   std::string identifier() const { return "CML"; }
   std::string name() const { return "Chemical Markup Language"; }
   std::string description() const { return "TODO: Describe the format."; }

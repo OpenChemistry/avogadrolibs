@@ -118,7 +118,7 @@ public:
    * Create a new instance of the file format class. Ownership passes to the
    * caller.
    */
-  virtual FileFormat * createInstance() = 0;
+  virtual FileFormat * newInstance() = 0;
 
   /*!
    * \brief A unique identifier, used to retrieve formats programatically.
@@ -139,7 +139,8 @@ public:
   virtual std::string description() const = 0;
 
   /*!
-   * The URL of the format if available (empty if not relevant).
+   * The URL of the format specification if available (relevant web page/wiki
+   * otherwise).
    */
   virtual std::string specificationURL() const = 0;
 
