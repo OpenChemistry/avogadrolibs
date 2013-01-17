@@ -17,11 +17,7 @@
 #ifndef AVOGADRO_IO_CMLFORMAT_H
 #define AVOGADRO_IO_CMLFORMAT_H
 
-#include "avogadroioexport.h"
-
-#include <avogadro/core/molecule.h>
-
-#include <string>
+#include "fileformat.h"
 
 namespace Avogadro {
 namespace Io {
@@ -32,27 +28,27 @@ namespace Io {
  * \author Marcus D. Hanwell
  */
 
-class AVOGADROIO_EXPORT CmlFormat
+class AVOGADROIO_EXPORT CmlFormat : public FileFormat
 {
 public:
   CmlFormat();
   ~CmlFormat();
 
-  /*!
-   * \brief Read the given \p fileName and load it into \p molecule.
-   * \param fileName The full path to the file to be read in.
-   * \param molecule The molecule the data will be read into.
-   * \return True on success, false on failure.
-   */
-  bool readFile(const std::string &fileName, Core::Molecule &molecule);
+  FileFormat * newInstance() { return new CmlFormat; }
+  std::string identifier() const { return "CML"; }
+  std::string name() const { return "Chemical Markup Language"; }
+  std::string description() const { return "TODO: Describe the format."; }
 
-  /*!
-   * \brief Write to the given \p fileName the contents of \p molecule.
-   * \param fileName The full path to the file to be written.
-   * \param molecule The contents of this molecule will be written to the file.
-   * \return True on success, false on failure.
-   */
-  bool writeFile(const std::string &fileName, const Core::Molecule &molecule);
+  std::string specificationURL() const
+  {
+    return "http://www.xml-cml.org/schema/schema3/";
+  }
+
+  std::vector<std::string> fileExtensions() const;
+  std::vector<std::string> mimeTypes() const;
+
+  bool read(std::istream &in, Core::Molecule &molecule);
+  bool write(std::ostream &out, const Core::Molecule &molecule);
 };
 
 } // end Io namespace
