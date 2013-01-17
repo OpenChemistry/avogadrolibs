@@ -22,10 +22,10 @@
 namespace Avogadro {
 namespace Io {
 
-/*!
- * \class CjsonFormat cjsonformat.h <avogadro/io/cjsonformat.h>
- * \brief Implementation of the Chemical JSON format.
- * \author Marcus D. Hanwell
+/**
+ * @class CjsonFormat cjsonformat.h <avogadro/io/cjsonformat.h>
+ * @brief Implementation of the Chemical JSON format.
+ * @author Marcus D. Hanwell
  */
 
 class AVOGADROIO_EXPORT CjsonFormat : public FileFormat

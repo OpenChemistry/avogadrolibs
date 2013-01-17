@@ -30,14 +30,14 @@ namespace Rendering {
 class Primitive
 {
 public:
-  /*! Identifies the type of object a primitive represents. */
+  /** Identifies the type of object a primitive represents. */
   enum Type {
     Invalid = -1,
     Atom,
     Bond
   };
 
-  /*! Used to identify the primitive during picking. */
+  /** Used to identify the primitive during picking. */
   struct Identifier {
     Identifier() : molecule(0), type(Invalid), index(-1) {}
 

@@ -35,10 +35,10 @@ class Scene;
 
 namespace QtGui {
 
-/*!
- * \class ExtensionPlugin extensionplugin.h <avogadro/qtgui/extensionplugin.h>
- * \brief The base class for scene plugin factories in Avogadro.
- * \author Marcus D. Hanwell
+/**
+ * @class ExtensionPlugin extensionplugin.h <avogadro/qtgui/extensionplugin.h>
+ * @brief The base class for scene plugin factories in Avogadro.
+ * @author Marcus D. Hanwell
  */
 class AVOGADROQTGUI_EXPORT ExtensionPlugin : public QObject
 {
@@ -48,43 +48,43 @@ public:
   explicit ExtensionPlugin(QObject *parent = 0);
   ~ExtensionPlugin();
 
-  /*!
+  /**
    * The name of the scene plugin, will be displayed in the user interface.
    */
   virtual QString name() const = 0;
 
-  /*!
+  /**
    * A description of the scene plugin, may be displayed in the user interface.
    */
   virtual QString description() const = 0;
 
-  /*!
-   * \return The QActions for this extension (should be at least one).
+  /**
+   * @return The QActions for this extension (should be at least one).
    */
   virtual QList<QAction *> actions() const = 0;
 
-  /*!
-   * \return The menu path of the supplied action. This can be empty if the
+  /**
+   * @return The menu path of the supplied action. This can be empty if the
    * action was not recognized, or contain two or more strings (top level, plus
    * name, e.g. File, &Open).
    */
   virtual QStringList menuPath(QAction *action = 0) const = 0;
 
 public slots:
-  /*!
+  /**
    * Called when the current molecule changes.
    */
   virtual void setMolecule(QtGui::Molecule *mol) = 0;
 
-  /*!
+  /**
    * Call this slot when the moleculeReady signal indicated that a molecule is
-   * ready to be read. The \p molecule will have the data read into it. The slot
-   * will \return true if a molecule was successfully read in.
+   * ready to be read. The @p molecule will have the data read into it. The slot
+   * will @return true if a molecule was successfully read in.
    */
   virtual bool readMolecule(QtGui::Molecule &mol);
 
 signals:
-  /*!
+  /**
    * Signal that the extension has a new molecule that is ready to be loaded.
    * The application must call readMolecule in order to actually read the
    * molecule(s).
@@ -92,10 +92,10 @@ signals:
   void moleculeReady(int numberOfMolecules);
 };
 
-/*!
- * \class ExtensionPluginFactory extensionplugin.h <avogadro/qtgui/extensionplugin.h>
- * \brief The base class for extension plugin factories in Avogadro.
- * \author Marcus D. Hanwell
+/**
+ * @class ExtensionPluginFactory extensionplugin.h <avogadro/qtgui/extensionplugin.h>
+ * @brief The base class for extension plugin factories in Avogadro.
+ * @author Marcus D. Hanwell
  */
 class AVOGADROQTGUI_EXPORT ExtensionPluginFactory
 {

@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_RENDERING_AVOGADROGL_H
 #define AVOGADRO_RENDERING_AVOGADROGL_H
 
-/*!
+/**
  * GLEW should always be in the same place, but Apple likes to move gl.h.
  * This header should be used instead of including the GL headers directly
  * in order to work around different layouts.

@@ -85,9 +85,9 @@ public:
 
 } // End internal namespace
 
-/*!
- * \class Array array.h <avogadro/core/array.h>
- * \brief Base class for array containers.
+/**
+ * @class Array array.h <avogadro/core/array.h>
+ * @brief Base class for array containers.
  *
  * This templated class gives us a container with copy-on-write semantics,
  * allowing for functions to effectively share data without exposing access or
@@ -110,7 +110,7 @@ public:
   typedef typename Container::iterator iterator;
   typedef typename Container::const_iterator const_iterator;
 
-  /*! Constructors for new containers. */
+  /** Constructors for new containers. */
   Array() : d(new Container())
   {
   }
@@ -126,7 +126,7 @@ public:
   {
   }
 
-  /*! Copy constructor, note the copy made of the internal data of other. */
+  /** Copy constructor, note the copy made of the internal data of other. */
   Array(const Array &other)
   {
     other.d->reref();
@@ -135,14 +135,14 @@ public:
 
   ~Array();
 
-  /*!
+  /**
    * Explicitly detach from any other implicitly shared containers. This is not
    * normally necessary, but can be useful when you want to ensure you have a
    * copy of all data.
    */
   void detach();
 
-  /*! Retrieve a pointer to the underlying data. */
+  /** Retrieve a pointer to the underlying data. */
   T* data()
   {
     detach();

@@ -25,11 +25,11 @@ namespace QtGui {
 
 class ElementDetail;
 
-/*!
- * \class PeriodicTableScene
- * \internal
- * \author Marcus D. Hanwell
- * \brief This class encapsulates the scene, all items are contained in it.
+/**
+ * @class PeriodicTableScene
+ * @internal
+ * @author Marcus D. Hanwell
+ * @brief This class encapsulates the scene, all items are contained in it.
  *
  * This class implements a QGraphicsScene that holds all of the element items.
  * Any items owned by this class are automatically deleted by it.
@@ -39,23 +39,23 @@ class PeriodicTableScene : public QGraphicsScene
   Q_OBJECT
 
 public:
-  /*! Constructor. */
+  /** Constructor. */
   explicit PeriodicTableScene(QObject *parent = 0);
 
 signals:
-  /*!
+  /**
    * This signal is emitted when an element item is clicked.
    */
   void elementChanged(int element);
 
 public slots:
-  /*!
+  /**
    * This slot is called when an element is changed (e.g., by keyboard or code).
    */
   void changeElement(int element);
 
 protected:
-  /*!
+  /**
    * Handles the mouse press events to change the active element.
    */
   void mousePressEvent(QGraphicsSceneMouseEvent *event);

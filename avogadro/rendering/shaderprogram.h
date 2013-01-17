@@ -30,10 +30,10 @@ namespace Rendering {
 
 class Shader;
 
-/*!
- * \class ShaderProgram shaderprogram.h <avogadro/rendering/shaderprogram.h>
- * \brief The ShaderProgram uses one or more Shader objects.
- * \author Marcus D. Hanwell
+/**
+ * @class ShaderProgram shaderprogram.h <avogadro/rendering/shaderprogram.h>
+ * @brief The ShaderProgram uses one or more Shader objects.
+ * @author Marcus D. Hanwell
  *
  * This class creates a Vertex or Fragment shader, that can be attached to a
  * ShaderProgram in order to render geometry etc.
@@ -45,58 +45,58 @@ public:
   ShaderProgram();
   ~ShaderProgram();
 
-  /*! Attach the supplied shader to this program.
-   * \note A maximum of one Vertex shader and one Fragment shader can be
+  /** Attach the supplied shader to this program.
+   * @note A maximum of one Vertex shader and one Fragment shader can be
    * attached to a shader prorgram.
-   * \return true on success.
+   * @return true on success.
    */
   bool attachShader(const Shader &shader);
 
-  /*! Detach the supplied shader from this program.
-   * \note A maximum of one Vertex shader and one Fragment shader can be
+  /** Detach the supplied shader from this program.
+   * @note A maximum of one Vertex shader and one Fragment shader can be
    * attached to a shader prorgram.
-   * \return true on success.
+   * @return true on success.
    */
   bool detachShader(const Shader &shader);
 
-  /*! Attempt to link the shader program.
-   * \return false on failure. Query error to get the reason.
-   * \note The shaders attached to the program must have been compiled.
+  /** Attempt to link the shader program.
+   * @return false on failure. Query error to get the reason.
+   * @note The shaders attached to the program must have been compiled.
    */
   bool link();
 
-  /*! Bind the program in order to use it. If the program has not been linked
+  /** Bind the program in order to use it. If the program has not been linked
    * then link() will be called.
    */
   bool bind();
 
-  /*! Releases the shader program from the current context. */
+  /** Releases the shader program from the current context. */
   void release();
 
-  /*! Get the error message (empty if none) for the shader program. */
+  /** Get the error message (empty if none) for the shader program. */
   std::string error() const { return m_error; }
 
-  /*! Enable the named attribute array. Return false if the attribute array is
+  /** Enable the named attribute array. Return false if the attribute array is
    * not contained in the linked shader program.
    */
   bool enableAttributeArray(const std::string &name);
 
-  /*! Disable the named attribute array. Return false if the attribute array is
+  /** Disable the named attribute array. Return false if the attribute array is
    * not contained in the linked shader program.
    */
   bool disableAttributeArray(const std::string &name);
 
-  /*! Use the named attribute array with the bound BufferObject.
-   * \param name of the attribute (as seen in the shader program).
-   * \param offset into the bound BufferObject.
-   * \param v The type of the element being bound.
-   * \return false is the attribute array does not exist.
+  /** Use the named attribute array with the bound BufferObject.
+   * @param name of the attribute (as seen in the shader program).
+   * @param offset into the bound BufferObject.
+   * @param v The type of the element being bound.
+   * @return false is the attribute array does not exist.
    */
   bool useAttributeArray(const std::string &name, int offset, Vector2f v);
   bool useAttributeArray(const std::string &name, int offset, Vector3f v);
   bool useAttributeArray(const std::string &name, int offset, Vector3ub v);
 
-  /*! Upload the supplied array to the named attribute. BufferObject attributes
+  /** Upload the supplied array to the named attribute. BufferObject attributes
    * should be preferred and these may be removed in future.
    */
   bool setAttributeArray(const std::string &name,
@@ -108,13 +108,13 @@ public:
   bool setAttributeArray(const std::string &name,
                          const std::vector<Vector3ub> &array);
 
-  /*! Set the \p name uniform value to int \p i. */
+  /** Set the @p name uniform value to int @p i. */
   bool setUniformValue(const std::string &name, int i);
 
-  /*! Set the \p name uniform value to float \p f. */
+  /** Set the @p name uniform value to float @p f. */
   bool setUniformValue(const std::string &name, float f);
 
-  /*! Set the \p name uniform value to \p matrix. */
+  /** Set the @p name uniform value to @p matrix. */
   bool setUniformValue(const std::string &name, const Eigen::Matrix3f &matrix);
   bool setUniformValue(const std::string &name, const Eigen::Matrix4f &matrix);
 

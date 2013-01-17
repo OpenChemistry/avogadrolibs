@@ -33,10 +33,10 @@ class Scene;
 
 namespace QtGui {
 
-/*!
- * \class ScenePluginFactory sceneplugin.h <avogadro/qtgui/sceneplugin.h>
- * \brief The base class for scene plugin factories in Avogadro.
- * \author Marcus D. Hanwell
+/**
+ * @class ScenePluginFactory sceneplugin.h <avogadro/qtgui/sceneplugin.h>
+ * @brief The base class for scene plugin factories in Avogadro.
+ * @author Marcus D. Hanwell
  */
 class AVOGADROQTGUI_EXPORT ScenePlugin : public QObject
 {
@@ -46,36 +46,36 @@ public:
   explicit ScenePlugin(QObject *parent = 0);
   ~ScenePlugin();
 
-  /*!
+  /**
    * Process the supplied atom, and add the necessary primitives to the scene.
    */
   virtual void process(const Core::Molecule &molecule, Rendering::Scene &scene) = 0;
 
-  /*!
+  /**
    * The name of the scene plugin, will be displayed in the user interface.
    */
   virtual QString name() const = 0;
 
-  /*!
+  /**
    * A description of the scene plugin, may be displayed in the user interface.
    */
   virtual QString description() const = 0;
 
-  /*!
+  /**
    * Returns true if the scene plugin has been enabled and is active.
    */
   virtual bool isEnabled() const = 0;
 
-  /*!
+  /**
    * Set the enabled state of the plugin (default should be false).
    */
   virtual void setEnabled(bool enable) = 0;
 };
 
-/*!
- * \class ScenePluginFactory sceneplugin.h <avogadro/qtgui/sceneplugin.h>
- * \brief The base class for scene plugin factories in Avogadro.
- * \author Marcus D. Hanwell
+/**
+ * @class ScenePluginFactory sceneplugin.h <avogadro/qtgui/sceneplugin.h>
+ * @brief The base class for scene plugin factories in Avogadro.
+ * @author Marcus D. Hanwell
  */
 class AVOGADROQTGUI_EXPORT ScenePluginFactory
 {

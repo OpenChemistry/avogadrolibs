@@ -37,10 +37,10 @@ class Molecule;
 namespace QtOpenGL {
 class GLWidget;
 
-/*!
- * \class Editor editor.h <avogadro/qtopengl/editor.h>
- * \brief The Editor class manipulates a molecule's geometry.
- * \author David C. Lonie
+/**
+ * @class Editor editor.h <avogadro/qtopengl/editor.h>
+ * @brief The Editor class manipulates a molecule's geometry.
+ * @author David C. Lonie
  */
 class Editor : public QObject
 {
@@ -49,39 +49,39 @@ public:
   explicit Editor(GLWidget *widget);
   ~Editor();
 
-  /*! Set the atomic number used for new atoms. */
+  /** Set the atomic number used for new atoms. */
   void setAtomicNumber(unsigned char atomicNum) { m_atomicNumber = atomicNum; }
 
-  /*! Respond to user input. */
+  /** Respond to user input. */
   void mousePressEvent(QMouseEvent *);
 
-  /*! Respond to user input. */
+  /** Respond to user input. */
   void mouseReleaseEvent(QMouseEvent *);
 
-  /*! Respond to user input. */
+  /** Respond to user input. */
   void mouseMoveEvent(QMouseEvent *);
 
-  /*! Respond to user input. */
+  /** Respond to user input. */
   void mouseDoubleClickEvent(QMouseEvent *);
 
-  /*! Respond to user input. */
+  /** Respond to user input. */
   void wheelEvent(QWheelEvent *);
 
-  /*! Respond to user input. */
+  /** Respond to user input. */
   void keyPressEvent(QKeyEvent *);
 
-  /*! Respond to user input. */
+  /** Respond to user input. */
   void keyReleaseEvent(QKeyEvent *);
 
   void setMolecule(QtGui::Molecule *mol) { m_molecule = mol; }
   QtGui::Molecule * molecule() { return m_molecule; }
 
 signals:
-  /*! HACK -- the molecule should notify the scene plugins to update. */
+  /** HACK -- the molecule should notify the scene plugins to update. */
   void moleculeChanged();
 
 private:
-  /*!
+  /**
    * Update the currently pressed buttons, accounting for modifier keys.
    * \todo Account for modifier keys.
    */

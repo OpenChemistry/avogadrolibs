@@ -22,10 +22,10 @@
 namespace Avogadro {
 namespace Io {
 
-/*!
- * \class CmlFormat cmlformat.h <avogadro/io/cmlformat.h>
- * \brief Implementation of the Chemical Markup Language format.
- * \author Marcus D. Hanwell
+/**
+ * @class CmlFormat cmlformat.h <avogadro/io/cmlformat.h>
+ * @brief Implementation of the Chemical Markup Language format.
+ * @author Marcus D. Hanwell
  */
 
 class AVOGADROIO_EXPORT CmlFormat : public FileFormat

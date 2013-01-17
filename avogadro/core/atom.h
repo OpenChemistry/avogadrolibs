@@ -25,48 +25,48 @@ namespace Core {
 
 class Molecule;
 
-/*!
- * \class Atom atom.h <avogadro/core/atom.h>
- * \brief The Atom class represents an atom in a molecule.
+/**
+ * @class Atom atom.h <avogadro/core/atom.h>
+ * @brief The Atom class represents an atom in a molecule.
  */
 
 class AVOGADROCORE_EXPORT Atom
 {
 public:
-  /*! Creates a new, invalid atom object. */
+  /** Creates a new, invalid atom object. */
   Atom();
 
-  /*!
-   * Creates a new atom object representing the atom at index \p i in molecule
-   * \p m.
+  /**
+   * Creates a new atom object representing the atom at index @p i in molecule
+   * @p m.
    */
   Atom(Molecule *m, size_t i);
 
-  /*! Returns \c true if the atom is valid. */
+  /** Returns \c true if the atom is valid. */
   bool isValid() const;
 
-  /*! Returns the molecule the atom is a part of. */
+  /** Returns the molecule the atom is a part of. */
   Molecule* molecule() const;
 
-  /*! Returns the atom's index in the molecule. */
+  /** Returns the atom's index in the molecule. */
   size_t index() const;
 
-  /*! Sets the atom's atomic number to \p number. */
+  /** Sets the atom's atomic number to @p number. */
   void setAtomicNumber(unsigned char number);
 
-  /*! Returns the atom's atomic number. */
+  /** Returns the atom's atomic number. */
   unsigned char atomicNumber() const;
 
-  /*! Sets the atom's 2d position to \p pos. */
+  /** Sets the atom's 2d position to @p pos. */
   void setPosition2d(const Vector2 &pos);
 
-  /*! Returns the atom's 2d position. */
+  /** Returns the atom's 2d position. */
   Vector2 position2d() const;
 
-  /*! Sets the atom's 3d position to \p pos. */
+  /** Sets the atom's 3d position to @p pos. */
   void setPosition3d(const Vector3 &pos);
 
-  /*! Returns the atom's 3d position. */
+  /** Returns the atom's 3d position. */
   Vector3 position3d() const;
 
 private:
