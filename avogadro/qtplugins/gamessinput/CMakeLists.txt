@@ -1,0 +1,20 @@
+find_package(MoleQueue)
+include_directories(${MoleQueue_INCLUDE_DIRS})
+
+# Extension
+set(gamessinput_srcs
+  gamessinputdialog.cpp
+  gamesshighlighter.cpp
+  gamessinput.cpp
+)
+
+avogadro_plugin(GamessInput
+  "GAMESS input file generation"
+  ExtensionPlugin
+  gamessinput.h
+  GamessInput
+  "${gamessinput_srcs}"
+  gamessinputdialog.ui
+)
+
+target_link_libraries(GamessInput LINK_PRIVATE MoleQueueClient)
