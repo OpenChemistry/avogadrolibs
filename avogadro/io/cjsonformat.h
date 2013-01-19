@@ -32,23 +32,26 @@ class AVOGADROIO_EXPORT CjsonFormat : public FileFormat
 {
 public:
   CjsonFormat();
-  ~CjsonFormat();
+  ~CjsonFormat() override;
 
-  FileFormat * newInstance() { return new CjsonFormat; }
-  std::string identifier() const { return "CJSON"; }
-  std::string name() const { return "Chemical JSON"; }
-  std::string description() const { return "TODO: Describe the format."; }
+  FileFormat * newInstance() override { return new CjsonFormat; }
+  std::string identifier() const override { return "CJSON"; }
+  std::string name() const override { return "Chemical JSON"; }
+  std::string description() const override
+  {
+    return "TODO: Describe the format.";
+  }
 
-  std::string specificationURL() const
+  std::string specificationURL() const override
   {
     return "http://wiki.openchemistry.org/Chemical_JSON";
   }
 
-  std::vector<std::string> fileExtensions() const;
-  std::vector<std::string> mimeTypes() const;
+  std::vector<std::string> fileExtensions() const override;
+  std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule);
-  bool write(std::ostream &out, const Core::Molecule &molecule);
+  bool read(std::istream &in, Core::Molecule &molecule) override;
+  bool write(std::ostream &out, const Core::Molecule &molecule) override;
 };
 
 } // end Io namespace
