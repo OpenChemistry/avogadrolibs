@@ -27,6 +27,14 @@
 #endif
 
 /**
+ * Allow the C++11 override and final keywords to be used with older compilers.
+ */
+#if __cplusplus < 201103L
+# define override
+# define final
+#endif
+
+/**
  * This macro marks a parameter as unused. Its purpose is to disable the
  * compiler from emitting unused parameter warnings.
  */
