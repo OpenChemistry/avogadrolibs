@@ -18,6 +18,7 @@
 #define AVOGADRO_IO_FILEFORMAT_H
 
 #include "avogadroioexport.h"
+#include <avogadro/core/avogadrocore.h>
 
 #include <string>
 #include <vector>

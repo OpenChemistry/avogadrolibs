@@ -27,6 +27,18 @@
 #endif
 
 /**
+ * Define a macro for the new C++11 override and final identifiers when using
+ * a compiler with C++11 support enabled.
+ */
+#if __cplusplus >= 201103L
+# define AVO_OVERRIDE override
+# define AVO_FINAL final
+#else
+# define AVO_OVERRIDE
+# define AVO_FINAL
+#endif
+
+/**
  * This macro marks a parameter as unused. Its purpose is to disable the
  * compiler from emitting unused parameter warnings.
  */
