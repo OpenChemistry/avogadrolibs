@@ -14,20 +14,34 @@ set(HEADERS
   avogadrogl.h
   bufferobject.h
   camera.h
+  cylindernode.h
+  geometrynode.h
   glrenderer.h
+  meshnode.h
+  node.h
   primitive.h
   scene.h
   shader.h
   shaderprogram.h
+  spherenode.h
+  transformnode.h
+  volumenode.h
 )
 
 set(SOURCES
   bufferobject.cpp
   camera.cpp
+  cylindernode.cpp
+  geometrynode.cpp
   glrenderer.cpp
+  meshnode.cpp
+  node.cpp
   scene.cpp
   shader.cpp
   shaderprogram.cpp
+  spherenode.cpp
+  transformnode.cpp
+  volumenode.cpp
 )
 
 set(shader_files

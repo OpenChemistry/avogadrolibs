@@ -1,6 +1,8 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   Camera
+  Node
+  SphereNode
   )
 
 find_package(OpenGL REQUIRED)
