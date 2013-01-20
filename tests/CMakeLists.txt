@@ -40,6 +40,7 @@ set(tests
   Atom
   Bond
   CoordinateSet
+  CPP11
   Eigen
   Element
   Graph
