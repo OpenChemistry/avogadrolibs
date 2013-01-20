@@ -3,6 +3,23 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
+# Test for some C++11 language features.
+include(DetermineMutex)
+determine_mutex(MUTEX_TYPE MUTEX_TYPE_HEADER)
+# Currently not installed, for use in Avogadro internal libraries only.
+configure_file("${PROJECT_SOURCE_DIR}/cmake/mutex.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/mutex.h" @ONLY)
+
+if(MUTEX_TYPE_BOOST_REQUIRED)
+  message(STATUS
+    "Using Boost to replace some C++11 features that are not available.")
+  find_package(Boost COMPONENTS thread system)
+  set(AvogadroLibs_NEEDS_BOOST "thread;system" CACHE INTERNAL
+    "What Boost libraries we require")
+  set(AvogadroLibs_BOOST_INCLUDE_DIRS ${Boost_INCLUDE_DIRS} PARENT_SCOPE)
+  include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+endif()
+
 set(HEADERS
   array.h
   atom.h
@@ -32,3 +49,7 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
+if(AvogadroLibs_NEEDS_BOOST)
+  # These libraries will go in our interface libraries.
+  target_link_libraries(AvogadroCore ${Boost_LIBRARIES})
+endif()

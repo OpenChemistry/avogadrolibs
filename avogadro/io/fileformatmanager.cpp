@@ -21,6 +21,8 @@
 #include "cmlformat.h"
 #include "cjsonformat.h"
 
+#include <avogadro/core/mutex.h>
+
 #include <iostream>
 
 namespace Avogadro {
@@ -44,12 +46,16 @@ FileFormatManager::Destroyer FileFormatManager::m_destroyer;
 
 FileFormatManager& FileFormatManager::instance()
 {
-  // FIXME: We should probably add mutexes here for thread safety.
+  static Core::mutex mutex;
   if (!m_instance) {
-    m_instance = new FileFormatManager;
-    m_destroyer.setSingleton(m_instance);
-    m_instance->addFormat(new CmlFormat);
-    m_instance->addFormat(new CjsonFormat);
+    mutex.lock();
+    if (!m_instance) {
+      m_instance = new FileFormatManager;
+      m_destroyer.setSingleton(m_instance);
+      m_instance->addFormat(new CmlFormat);
+      m_instance->addFormat(new CjsonFormat);
+    }
+    mutex.unlock();
   }
 
   return *m_instance;
