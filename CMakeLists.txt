@@ -17,12 +17,14 @@ set(AvogadroLibs_VERSION
   "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
 
 option(BUILD_SHARED_LIBS "Build with shared libraries" ON)
+option(FORCE_ANSI_CPP "Force Avogadro to only USE ANSI C++ (no C++11)" OFF)
 
 # Before any plugins are defined, and before any add_subdirectory calls:
 set_property(GLOBAL PROPERTY AvogadroLibs_PLUGINS)
 set_property(GLOBAL PROPERTY AvogadroLibs_STATIC_PLUGINS)
 
-include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR})
 add_subdirectory(utilities)
 add_subdirectory(avogadro)
 
