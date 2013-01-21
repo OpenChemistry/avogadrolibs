@@ -61,15 +61,15 @@ public:
    * @return True on success, false on failure.
    */
   bool readFile(Core::Molecule &molecule, const std::string &fileName,
-                const std::string &fileExtension = std::string());
+                const std::string &fileExtension = std::string()) const;
 
   /**
    * Write @p molecule to the @p fileName supplied, inferring the
    * @p fileExtension if it is empty.
    * @return True on success, false on failure.
    */
-  bool writeFile(Core::Molecule &molecule, const std::string &fileName,
-                 const std::string &fileExtension = std::string());
+  bool writeFile(const Core::Molecule &molecule, const std::string &fileName,
+                 const std::string &fileExtension = std::string()) const;
 
   /**
    * Load @p molecule with the contents of @p string, using the supplied
@@ -77,15 +77,15 @@ public:
    * @return True on success, false on failure.
    */
   bool readString(Core::Molecule &molecule, const std::string &string,
-                  const std::string &fileExtension);
+                  const std::string &fileExtension) const;
 
   /**
    * Write @p molecule to the @p string, using the supplied @p fileExtension
    * to determine the format.
    * @return True on success, false on failure.
    */
-  bool writeString(Core::Molecule &molecule, std::string &string,
-                   const std::string &fileExtension);
+  bool writeString(const Core::Molecule &molecule, std::string &string,
+                   const std::string &fileExtension) const;
 
   /**
    * @brief Register a new file format with the format manager.
@@ -110,7 +110,7 @@ public:
    * @return Instance of the format, NULL if not found. Ownership passes to the
    * caller.
    */
-  FileFormat * newFormatFromIdentifier(const std::string &identifier);
+  FileFormat * newFormatFromIdentifier(const std::string &identifier) const;
 
   /**
    * New instance of the format for the specified @p mimeType. Ownership
@@ -119,7 +119,7 @@ public:
    * @return Instance of the format, NULL if not found. Ownership passes to the
    * caller.
    */
-  FileFormat * newFormatFromMimeType(const std::string &mimeType);
+  FileFormat * newFormatFromMimeType(const std::string &mimeType) const;
 
   /**
    * New instance of the format for the specified file @p extention. Ownership
@@ -128,7 +128,7 @@ public:
    * @return Instance of the format, NULL if not found. Ownership passes to the
    * caller.
    */
-  FileFormat * newFormatFromFileExtension(const std::string &extension);
+  FileFormat * newFormatFromFileExtension(const std::string &extension) const;
 
   /**
    * Get a list of all loaded identifiers.
@@ -161,21 +161,21 @@ private:
    * Get a pointer to the format for the specified @p identifier. Ownership
    * remains with the manager class.
    */
-  FileFormat * formatFromIdentifier(const std::string &identifier);
+  FileFormat * formatFromIdentifier(const std::string &identifier) const;
 
   /**
    * Get the format from the MIME type.
    * @param The MIME type (in lower case).
    * @return The format (ownership stays with manager) or NULL if not found.
    */
-  FileFormat * formatFromMimeType(const std::string &mimeType);
+  FileFormat * formatFromMimeType(const std::string &mimeType) const;
 
   /**
    * Get the format from the file extension.
    * @param The file extension (in lower case).
    * @return The format (ownership stays with manager) or NULL if not found.
    */
-  FileFormat * formatFromFileExtension(const std::string &extension);
+  FileFormat * formatFromFileExtension(const std::string &extension) const;
 
   /**
    * @brief Append warnings/errors to the error message string.
