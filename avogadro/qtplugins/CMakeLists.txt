@@ -66,6 +66,7 @@ endfunction()
 
 # Now to make the plugins.
 add_subdirectory(ballandstick)
+add_subdirectory(gamessinput)
 add_subdirectory(molecularproperties)
 add_subdirectory(quantuminput)
 add_subdirectory(quantumoutput)
