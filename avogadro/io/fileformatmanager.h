@@ -68,7 +68,7 @@ public:
    * @p fileExtension if it is empty.
    * @return True on success, false on failure.
    */
-  bool writeFile(Core::Molecule &molecule, const std::string &fileName,
+  bool writeFile(const Core::Molecule &molecule, const std::string &fileName,
                  const std::string &fileExtension = std::string());
 
   /**
@@ -84,7 +84,7 @@ public:
    * to determine the format.
    * @return True on success, false on failure.
    */
-  bool writeString(Core::Molecule &molecule, std::string &string,
+  bool writeString(const Core::Molecule &molecule, std::string &string,
                    const std::string &fileExtension);
 
   /**

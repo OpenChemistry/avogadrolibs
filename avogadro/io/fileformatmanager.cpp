@@ -75,7 +75,7 @@ bool FileFormatManager::readFile(Core::Molecule &molecule,
   return format->readFile(fileName, molecule);
 }
 
-bool FileFormatManager::writeFile(Core::Molecule &molecule,
+bool FileFormatManager::writeFile(const Core::Molecule &molecule,
                                   const std::string &fileName,
                                   const std::string &fileExtension)
 {
@@ -105,7 +105,7 @@ bool FileFormatManager::readString(Core::Molecule &molecule,
   return format->readString(string, molecule);
 }
 
-bool FileFormatManager::writeString(Core::Molecule &molecule,
+bool FileFormatManager::writeString(const Core::Molecule &molecule,
                                     std::string &string,
                                     const std::string &fileExtension)
 {
