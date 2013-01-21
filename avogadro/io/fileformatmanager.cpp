@@ -57,7 +57,7 @@ FileFormatManager& FileFormatManager::instance()
 
 bool FileFormatManager::readFile(Core::Molecule &molecule,
                                  const std::string &fileName,
-                                 const std::string &fileExtension)
+                                 const std::string &fileExtension) const
 {
   FileFormat *format(NULL);
   if (fileExtension.empty()) {
@@ -75,9 +75,9 @@ bool FileFormatManager::readFile(Core::Molecule &molecule,
   return format->readFile(fileName, molecule);
 }
 
-bool FileFormatManager::writeFile(Core::Molecule &molecule,
+bool FileFormatManager::writeFile(const Core::Molecule &molecule,
                                   const std::string &fileName,
-                                  const std::string &fileExtension)
+                                  const std::string &fileExtension) const
 {
   FileFormat *format(NULL);
   if (fileExtension.empty()) {
@@ -96,7 +96,7 @@ bool FileFormatManager::writeFile(Core::Molecule &molecule,
 
 bool FileFormatManager::readString(Core::Molecule &molecule,
                                    const std::string &string,
-                                   const std::string &fileExtension)
+                                   const std::string &fileExtension) const
 {
   FileFormat *format(formatFromFileExtension(fileExtension));
   if (!format)
@@ -105,9 +105,9 @@ bool FileFormatManager::readString(Core::Molecule &molecule,
   return format->readString(string, molecule);
 }
 
-bool FileFormatManager::writeString(Core::Molecule &molecule,
+bool FileFormatManager::writeString(const Core::Molecule &molecule,
                                     std::string &string,
-                                    const std::string &fileExtension)
+                                    const std::string &fileExtension) const
 {
   FileFormat *format(formatFromFileExtension(fileExtension));
   if (!format)
@@ -157,20 +157,22 @@ bool FileFormatManager::addFormat(FileFormat *format)
   return true;
 }
 
-FileFormat * FileFormatManager::newFormatFromIdentifier(const std::string &id)
+FileFormat *
+FileFormatManager::newFormatFromIdentifier(const std::string &id) const
 {
   FileFormat *format(formatFromIdentifier(id));
   return format ? format->newInstance() : NULL;
 }
 
-FileFormat * FileFormatManager::newFormatFromMimeType(const std::string &mime)
+FileFormat *
+FileFormatManager::newFormatFromMimeType(const std::string &mime) const
 {
   FileFormat *format(formatFromMimeType(mime));
   return format ? format->newInstance() : NULL;
 }
 
 FileFormat * FileFormatManager::newFormatFromFileExtension(
-  const std::string &extension)
+  const std::string &extension) const
 {
   FileFormat *format(formatFromFileExtension(extension));
   return format ? format->newInstance() : NULL;
@@ -225,20 +227,22 @@ FileFormatManager::~FileFormatManager()
   m_formats.clear();
 }
 
-FileFormat * FileFormatManager::formatFromIdentifier(const std::string &id)
+FileFormat *
+FileFormatManager::formatFromIdentifier(const std::string &id) const
 {
    std::map<std::string, size_t>::const_iterator it = m_identifiers.find(id);
    return it == m_identifiers.end() ? NULL : m_formats[it->second];
 }
 
-FileFormat * FileFormatManager::formatFromMimeType(const std::string &mime)
+FileFormat *
+FileFormatManager::formatFromMimeType(const std::string &mime) const
 {
   std::map<std::string, size_t>::const_iterator it = m_mimeTypes.find(mime);
   return it == m_mimeTypes.end() ? NULL : m_formats[it->second];
 }
 
 FileFormat * FileFormatManager::formatFromFileExtension(
-  const std::string &extension)
+  const std::string &extension) const
 {
   std::multimap<std::string, size_t>::const_iterator it =
     m_fileExtensions.find(extension);
