@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -16,44 +16,39 @@
 
 #include "quantuminput.h"
 
-#include "gamessinputdialog.h"
-
-#include <QtCore/QtPlugin>
-#include <QtCore/QStringList>
+#include "quantuminputdialog.h"
 
 #include <QtGui/QAction>
 #include <QtGui/QDialog>
 
 #include <QtCore/QDebug>
+#include <QtCore/QDir>
+#include <QtCore/QtPlugin>
+#include <QtCore/QStringList>
 
 namespace Avogadro {
-namespace Core {
+namespace QtGui {
 class Molecule;
 }
+
 namespace QtPlugins {
 
 QuantumInput::QuantumInput(QObject *parent_) :
   ExtensionPlugin(parent_),
-  m_action(new QAction(this)),
-  m_molecule(NULL),
-  m_dialog(NULL)
+  m_molecule(NULL)
 {
-  m_action->setEnabled(true);
-  m_action->setText(tr("&GAMESS Input Generator"));
-  connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
+  refreshGenerators();
 }
 
 QuantumInput::~QuantumInput()
 {
-  if (m_dialog)
-    m_dialog->deleteLater();
+  qDeleteAll(m_dialogs.values());
+  m_dialogs.clear();
 }
 
 QList<QAction *> QuantumInput::actions() const
 {
-  QList<QAction *> actions_;
-  actions_.append(m_action);
-  return actions_;
+  return m_actions;
 }
 
 QStringList QuantumInput::menuPath(QAction *) const
@@ -65,17 +60,105 @@ QStringList QuantumInput::menuPath(QAction *) const
 
 void QuantumInput::setMolecule(QtGui::Molecule *mol)
 {
-  if (m_dialog)
-    m_dialog->setMolecule(mol);
+  if (m_molecule == mol)
+    return;
+
   m_molecule = mol;
+
+  foreach (QuantumInputDialog *dlg, m_dialogs.values())
+    dlg->setMolecule(mol);
+}
+
+void QuantumInput::refreshGenerators()
+{
+  updateInputGeneratorScripts();
+  updateActions();
 }
 
 void QuantumInput::menuActivated()
 {
-  if (!m_dialog)
-    m_dialog = new GamessInputDialog;
-  m_dialog->setMolecule(m_molecule);
-  m_dialog->show();
+  QAction *theSender = qobject_cast<QAction*>(sender());
+  if (!theSender)
+    return;
+
+  QString scriptFileName = theSender->data().toString();
+  QWidget *theParent = qobject_cast<QWidget*>(parent());
+  QuantumInputDialog *dlg = m_dialogs.value(scriptFileName, NULL);
+
+  if (!dlg) {
+    dlg = new QuantumInputDialog(scriptFileName, theParent);
+    m_dialogs.insert(scriptFileName, dlg);
+  }
+  dlg->setMolecule(m_molecule);
+  dlg->show();
+  dlg->raise();
+}
+
+void QuantumInput::updateInputGeneratorScripts()
+{
+  m_inputGeneratorScripts.clear();
+
+  // List of directories to check.
+  /// @todo Custom script locations
+  QStringList dirs;
+  dirs << QCoreApplication::applicationDirPath() +
+          "/../lib/avogadro2/scripts/inputGenerators";
+
+  foreach (const QString &dirStr, dirs) {
+    qDebug() << "Checking for generator scripts in" << dirStr;
+    QDir dir(dirStr);
+    if (dir.exists() && dir.isReadable()) {
+      foreach (const QFileInfo &file, dir.entryInfoList(QDir::Files |
+                                                        QDir::NoDotAndDotDot)) {
+        QString filePath = file.absoluteFilePath();
+        qDebug() << filePath;
+        m_inputGeneratorScripts.insert(queryProgramName(filePath),
+                                       filePath);
+      }
+    }
+  }
+}
+
+void QuantumInput::updateActions()
+{
+  m_actions.clear();
+  foreach (const QString &programName, m_inputGeneratorScripts.uniqueKeys()) {
+    QStringList scripts = m_inputGeneratorScripts.values(programName);
+    // Include the full path if there are multiple generators with the same name.
+    if (scripts.size() == 1) {
+      addAction(programName, scripts.first());
+    }
+    else {
+      foreach (const QString &filePath, scripts) {
+        addAction(QString("%1 (%2)").arg(programName, filePath), filePath);
+      }
+    }
+  }
+}
+
+void QuantumInput::addAction(const QString &label,
+                             const QString &scriptFilePath)
+{
+  /// @todo Need a way to tell avogadro that the actions are no longer valid.
+  QAction *action = new QAction(label, this);
+  action->setData(scriptFilePath);
+  action->setEnabled(true);
+  connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
+  m_actions << action;
+  /// @todo Need a way to tell avogadro that new actions are available.
+}
+
+QString QuantumInput::queryProgramName(const QString &scriptFilePath)
+{
+  InputGenerator gen(scriptFilePath);
+  QString progName = gen.displayName();
+  if (gen.hasErrors()) {
+    qWarning() << "QuantumInput::queryProgramName: Unable to retrieve program "
+                  "name for" << scriptFilePath << ";" << gen.errorString();
+    return scriptFilePath;
+  }
+
+  return progName;
 }
 
 }
