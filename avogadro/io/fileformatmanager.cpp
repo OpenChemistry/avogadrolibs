@@ -26,33 +26,10 @@
 namespace Avogadro {
 namespace Io {
 
-// Class to ensure the FileFormatManager singleton's destructor is called before
-// the program exits. You must set the singleton on the class for this to
-// happen. If the singleton is never instanced then nothing happens.
-class FileFormatManager::Destroyer
-{
-public:
-  Destroyer() : m_singleton(0) { }
-  ~Destroyer() { delete m_singleton; }
-  void setSingleton(FileFormatManager *s) { m_singleton = s; }
-private:
-  FileFormatManager* m_singleton;
-};
-
-FileFormatManager* FileFormatManager::m_instance;
-FileFormatManager::Destroyer FileFormatManager::m_destroyer;
-
 FileFormatManager& FileFormatManager::instance()
 {
-  // FIXME: We should probably add mutexes here for thread safety.
-  if (!m_instance) {
-    m_instance = new FileFormatManager;
-    m_destroyer.setSingleton(m_instance);
-    m_instance->addFormat(new CmlFormat);
-    m_instance->addFormat(new CjsonFormat);
-  }
-
-  return *m_instance;
+  static FileFormatManager instance;
+  return instance;
 }
 
 bool FileFormatManager::readFile(Core::Molecule &molecule,
@@ -215,6 +192,8 @@ std::string FileFormatManager::error() const
 
 FileFormatManager::FileFormatManager()
 {
+  addFormat(new CmlFormat);
+  addFormat(new CjsonFormat);
 }
 
 FileFormatManager::~FileFormatManager()
