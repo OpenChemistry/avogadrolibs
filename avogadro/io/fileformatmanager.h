@@ -183,11 +183,6 @@ private:
    */
   void appendError(const std::string &errorMessage);
 
-  class Destroyer;
-  friend class Destroyer;
-  static FileFormatManager* m_instance;
-  static Destroyer m_destroyer;
-
   std::vector<FileFormat *> m_formats;
   std::map<std::string, size_t> m_identifiers;
   std::map<std::string, size_t> m_mimeTypes;
