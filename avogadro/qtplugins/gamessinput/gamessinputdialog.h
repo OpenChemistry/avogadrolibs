@@ -49,6 +49,9 @@ public:
 
   void setMolecule(QtGui::Molecule *mol);
 
+protected:
+  void showEvent(QShowEvent *e);
+
 private slots:
   void updatePreviewText();
 
@@ -67,6 +70,8 @@ private:
   void connectMoleQueue();
 
   void buildOptions();
+  void updateOptionCache();
+  void restoreOptionCache();
 
   void buildCalculateOptions();
   void buildTheoryOptions();
@@ -80,6 +85,9 @@ private:
   Ui::GamessInputDialog ui;
   QtGui::Molecule *m_molecule;
   GamessHighlighter *m_highlighter;
+
+  bool m_updatePending;
+  QMap<QComboBox *, int> m_optionCache;
 
   MoleQueue::Client *m_client;
 };

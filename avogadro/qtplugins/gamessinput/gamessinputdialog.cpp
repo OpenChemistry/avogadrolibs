@@ -103,6 +103,7 @@ GamessInputDialog::GamessInputDialog(QWidget *parent_, Qt::WindowFlags f)
   : QDialog( parent_, f ),
     m_molecule(NULL),
     m_highlighter(NULL),
+    m_updatePending(false),
     m_client(new MoleQueue::Client(this))
 {
   ui.setupUi(this);
@@ -142,6 +143,16 @@ void GamessInputDialog::setMolecule(QtGui::Molecule *mol)
   connect(mol, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
 
   updatePreviewText();
+}
+
+void GamessInputDialog::showEvent(QShowEvent *e)
+{
+  QWidget::showEvent(e);
+
+  // Update the preview text if an update was requested while hidden. Use a
+  // single shot to allow the dialog to show before popping up any warnings.
+  if (m_updatePending)
+    QTimer::singleShot(0, this, SLOT(updatePreviewText()));
 }
 
 void GamessInputDialog::connectBasic()
@@ -189,6 +200,27 @@ void GamessInputDialog::buildOptions()
   buildStateOptions();
   buildMultiplicityOptions();
   buildChargeOptions();
+}
+
+void GamessInputDialog::updateOptionCache()
+{
+  m_optionCache.clear();
+  m_optionCache.insert(ui.calculateCombo, ui.calculateCombo->currentIndex());
+  m_optionCache.insert(ui.theoryCombo, ui.theoryCombo->currentIndex());
+  m_optionCache.insert(ui.basisCombo, ui.basisCombo->currentIndex());
+  m_optionCache.insert(ui.stateCombo, ui.stateCombo->currentIndex());
+  m_optionCache.insert(ui.multiplicityCombo,
+                       ui.multiplicityCombo->currentIndex());
+  m_optionCache.insert(ui.chargeCombo, ui.chargeCombo->currentIndex());
+}
+
+void GamessInputDialog::restoreOptionCache()
+{
+  foreach (QComboBox *combo, m_optionCache.keys()) {
+    combo->blockSignals(true);
+    combo->setCurrentIndex(m_optionCache.value(combo, 0));
+    combo->blockSignals(false);
+  }
 }
 
 void GamessInputDialog::buildCalculateOptions()
@@ -362,6 +394,33 @@ void GamessInputDialog::setBasicDefaults()
 
 void GamessInputDialog::updatePreviewText()
 {
+  // If the dialog is not shown, delay the update in case we need to prompt the
+  // user to overwrite changes. Set the m_updatePending flag to true so we'll
+  // know to update in the show event.
+  if (!isVisible()) {
+    m_updatePending = true;
+    return;
+  }
+
+  m_updatePending = false;
+
+  // Has the preview text been modified?
+  if (ui.previewText->document()->isModified()) {
+    QString message = tr("The input file has been modified. "
+                         "Would you like to overwrite your changes to reflect "
+                         "the new geometry or job options?");
+    int response =
+        QMessageBox::question(this, tr("Overwrite modified input file?"),
+                              message, QMessageBox::Yes | QMessageBox::No,
+                              QMessageBox::No);
+    if (static_cast<QMessageBox::StandardButton>(response) !=
+        QMessageBox::Yes) {
+      restoreOptionCache();
+      return;
+    }
+  }
+
+
   // Gather options:
   CalculateOption calculate(
         static_cast<CalculateOption>(ui.calculateCombo->currentIndex()));
@@ -559,6 +618,8 @@ void GamessInputDialog::updatePreviewText()
   file += " $END\n";
 
   ui.previewText->setText(file);
+  ui.previewText->document()->setModified(false);
+  updateOptionCache();
 }
 
 void GamessInputDialog::refreshPrograms()

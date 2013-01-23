@@ -95,6 +95,16 @@ void QuantumInputDialog::setMolecule(QtGui::Molecule *mol)
   updatePreviewTextImmediately();
 }
 
+void QuantumInputDialog::showEvent(QShowEvent *e)
+{
+  QWidget::showEvent(e);
+
+  // Update the preview text if an update was requested while hidden. Use a
+  // single shot to allow the dialog to show before popping up any warnings.
+  if (m_updatePending)
+    QTimer::singleShot(0, this, SLOT(updatePreviewTextImmediately()));
+}
+
 void QuantumInputDialog::updatePreviewText()
 {
   if (m_updatePending)
@@ -106,11 +116,39 @@ void QuantumInputDialog::updatePreviewText()
 
 void QuantumInputDialog::updatePreviewTextImmediately()
 {
-  if (!m_molecule)
+  // If the dialog is not shown, delay the update in case we need to prompt the
+  // user to overwrite changes. Set the m_updatePending flag to true so we'll
+  // know to update in the show event.
+  if (!isVisible()) {
+    m_updatePending = true;
     return;
+  }
 
   // Reset the update throttling
   m_updatePending = false;
+
+  // Have any buffers been modified?
+  if (!m_dirtyTextEdits.isEmpty()) {
+    QStringList buffers;
+    foreach (QTextEdit *edit, m_dirtyTextEdits)
+      buffers << m_textEdits.key(edit, tr("Unknown"));
+    QString message = tr("The following file(s) have been modified:\n\n%1\n\n"
+                         "Would you like to overwrite your changes to reflect "
+                         "the new geometry or job options?", "", buffers.size())
+        .arg(buffers.join("\n"));
+    int response =
+        QMessageBox::question(this, tr("Overwrite modified input files?"),
+                              message, QMessageBox::Yes | QMessageBox::No,
+                              QMessageBox::No);
+    if (static_cast<QMessageBox::StandardButton>(response) !=
+        QMessageBox::Yes) {
+      applyOptions(m_optionCache);
+      return;
+    }
+  }
+
+  if (!m_molecule)
+    return;
 
   // Generate the input files
   if (!m_inputGenerator.generateInput(collectOptions(), *m_molecule)) {
@@ -140,6 +178,7 @@ void QuantumInputDialog::updatePreviewTextImmediately()
     if (m_textEdits.contains(fileName))
       continue;
     QTextEdit *edit = new QTextEdit();
+    connect(edit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
     m_ui.tabWidget->addTab(edit, fileName);
     m_textEdits.insert(fileName, edit);
   }
@@ -154,8 +193,13 @@ void QuantumInputDialog::updatePreviewTextImmediately()
       m_ui.tabWidget->insertTab(index, edit, fileName);
     }
     edit->setText(m_inputGenerator.fileContents(fileName));
+    edit->document()->setModified(false);
     ++index;
   }
+
+  // Reset dirty buffer list and cached option list
+  m_dirtyTextEdits.clear();
+  m_optionCache = collectOptions();
 
   // Restore current tab
   if (!currentWidget.isNull())
@@ -387,6 +431,19 @@ void QuantumInputDialog::showError(const QString &err)
   dlg.exec();
 }
 
+void QuantumInputDialog::textEditModified()
+{
+  if (QTextEdit *edit = qobject_cast<QTextEdit*>(sender())) {
+    if (edit->document()->isModified()) {
+      if (!m_dirtyTextEdits.contains(edit))
+        m_dirtyTextEdits << edit;
+    }
+    else {
+      m_dirtyTextEdits.removeOne(edit);
+    }
+  }
+}
+
 QString QuantumInputDialog::settingsKey(const QString &identifier) const
 {
   return QString("quantumInput/%1/%2").arg(m_inputGenerator.displayName(),
@@ -575,6 +632,20 @@ QJsonObject QuantumInputDialog::collectOptions() const
   }
 
   return ret;
+}
+
+void QuantumInputDialog::applyOptions(const QJsonObject &opts) const
+{
+  foreach (const QString &label, opts.keys()) {
+    if (QComboBox *combo =
+        qobject_cast<QComboBox*>(m_widgets.value(label, NULL))) {
+      QString currentText = opts.value(label).toString();
+      int ind = combo->findText(currentText);
+      combo->blockSignals(true);
+      combo->setCurrentIndex(ind);
+      combo->blockSignals(false);
+    }
+  }
 }
 
 } // end namespace QtPlugins

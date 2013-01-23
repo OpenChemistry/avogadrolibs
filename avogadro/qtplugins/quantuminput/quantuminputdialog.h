@@ -71,6 +71,13 @@ public:
    */
   void setMolecule(QtGui::Molecule *mol);
 
+protected:
+  /**
+   * Reimplemented to update preview text. Hidden dialogs will wait until they
+   * are reshown to update the text to prevent overwriting any modified buffers.
+   */
+  void showEvent(QShowEvent *e);
+
 private slots:
   /**
    * Update the input files. This method is throttled, and will only call the
@@ -117,6 +124,11 @@ private slots:
    */
   void showError(const QString &err);
 
+  /**
+   * Triggered when an input file's text edit is modified.
+   */
+  void textEditModified();
+
 private:
   /**
    * Generate a QSettings key with the given identifier that is unique to this
@@ -158,6 +170,13 @@ private:
   QJsonObject collectOptions() const;
 
   /**
+   * Apply the options in the passed QJsonObject to the GUI. Any widgets changed
+   * by this method will have their signals blocked while modifying their
+   * values.
+   */
+  void applyOptions(const QJsonObject &opts) const;
+
+  /**
    * Used for keyword replacement.
    * @sa InputGenerator
    * @{
@@ -170,7 +189,9 @@ private:
   QtGui::Molecule *m_molecule;
   MoleQueue::Client *m_client;
   QJsonObject m_options;
+  QJsonObject m_optionCache; // For reverting changes
   bool m_updatePending;
+  QList<QTextEdit*> m_dirtyTextEdits;
   InputGenerator m_inputGenerator;
 
   QMap<QString, QWidget*> m_widgets;
