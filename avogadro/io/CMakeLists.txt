@@ -28,4 +28,8 @@ set(SOURCES
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/../core")
 
 avogadro_add_library(AvogadroIO ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroIO AvogadroCore ${HDF5_LIBRARIES})
+
+target_link_libraries(AvogadroIO AvogadroCore)
+
+# hdf5 is the HDF5 imported target
+target_link_libraries(AvogadroIO LINK_PRIVATE hdf5)
