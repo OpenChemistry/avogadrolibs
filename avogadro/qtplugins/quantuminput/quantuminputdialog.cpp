@@ -394,8 +394,6 @@ void QuantumInputDialog::computeClicked()
   job.setProgram(program);
   job.setDescription(tr("Avogadro calculation"));
   job.setValue("numberOfCores", m_ui.coresSpinBox->value());
-  /// @todo Need a way for scripts to mark the "main" input file that will be
-  /// used as a commandline argument (JobObject::setInputFile)
   for (QMap<QString, QTextEdit*>::const_iterator it = m_textEdits.constBegin(),
        itEnd = m_textEdits.constEnd(); it != itEnd; ++it) {
     job.appendAdditionalInputFile(it.key(), it.value()->toPlainText());

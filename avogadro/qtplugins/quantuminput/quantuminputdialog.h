@@ -45,12 +45,6 @@ namespace QtPlugins {
  * @brief the QuantumInputDialog class provides a dynamic user interface that
  * is generated from input generator scripts.
  * @author David C. Lonie
- * @todo Warn before replacing modified text
- * @todo Syntax highlighting
- * @todo Custom filenames
- * @todo Allow scripts to return warnings (e.g. incompatible/ignored options)
- * @todo need some way to express dependencies across options, e.g. disable
- * basis selection if a semiempirical calc is request in GAMESS (hide GUI?)
  */
 class QuantumInputDialog : public QDialog
 {

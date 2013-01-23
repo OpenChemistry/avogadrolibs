@@ -139,13 +139,11 @@ void QuantumInput::updateActions()
 void QuantumInput::addAction(const QString &label,
                              const QString &scriptFilePath)
 {
-  /// @todo Need a way to tell avogadro that the actions are no longer valid.
   QAction *action = new QAction(label, this);
   action->setData(scriptFilePath);
   action->setEnabled(true);
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;
-  /// @todo Need a way to tell avogadro that new actions are available.
 }
 
 QString QuantumInput::queryProgramName(const QString &scriptFilePath)
