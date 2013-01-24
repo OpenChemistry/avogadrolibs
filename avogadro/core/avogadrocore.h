@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2011-2012 Kitware, Inc.
+  Copyright 2011-2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -27,16 +27,28 @@
 #endif
 
 /**
+ * Define a macro for the new C++11 override and final identifiers when using
+ * a compiler with C++11 support enabled.
+ */
+#if __cplusplus >= 201103L
+# define AVO_OVERRIDE override
+# define AVO_FINAL final
+#else
+# define AVO_OVERRIDE
+# define AVO_FINAL
+#endif
+
+/**
  * This macro marks a parameter as unused. Its purpose is to disable the
  * compiler from emitting unused parameter warnings.
  */
-#define AVOGADRO_UNUSED(variable) (void) variable
+#define AVO_UNUSED(variable) (void) variable
 
 /**
  * This macro marks a class as not copyable. It should be used in the private
  * section of a class's declaration.
  */
-#define AVOGADRO_DISABLE_COPY(Class) \
+#define AVO_DISABLE_COPY(Class) \
   Class(const Class&); \
   Class& operator=(const Class&);
 
