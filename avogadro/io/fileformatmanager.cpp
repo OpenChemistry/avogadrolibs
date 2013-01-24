@@ -21,7 +21,7 @@
 #include "cmlformat.h"
 #include "cjsonformat.h"
 
-#include <iostream>
+#include <avogadro/core/memory_p.h>
 
 namespace Avogadro {
 namespace Io {
@@ -40,7 +40,6 @@ bool FileFormatManager::readFile(Core::Molecule &molecule,
   if (fileExtension.empty()) {
     // We need to guess the file extension.
     size_t pos = fileName.find_last_of('.');
-    std::cout << fileName.substr(pos + 1) << " suffix found." << std::endl;
     format = formatFromFileExtension(fileName.substr(pos + 1));
   }
   else {
@@ -49,7 +48,8 @@ bool FileFormatManager::readFile(Core::Molecule &molecule,
   if (!format)
     return false;
 
-  return format->readFile(fileName, molecule);
+  AVO_UNIQUE_PTR<FileFormat> formatInstance(format->newInstance());
+  return formatInstance->readFile(fileName, molecule);
 }
 
 bool FileFormatManager::writeFile(const Core::Molecule &molecule,
@@ -68,7 +68,8 @@ bool FileFormatManager::writeFile(const Core::Molecule &molecule,
   if (!format)
     return false;
 
-  return format->writeFile(fileName, molecule);
+  AVO_UNIQUE_PTR<FileFormat> formatInstance(format->newInstance());
+  return formatInstance->writeFile(fileName, molecule);
 }
 
 bool FileFormatManager::readString(Core::Molecule &molecule,
@@ -79,7 +80,8 @@ bool FileFormatManager::readString(Core::Molecule &molecule,
   if (!format)
     return false;
 
-  return format->readString(string, molecule);
+  AVO_UNIQUE_PTR<FileFormat> formatInstance(format->newInstance());
+  return formatInstance->readString(string, molecule);
 }
 
 bool FileFormatManager::writeString(const Core::Molecule &molecule,
@@ -90,7 +92,8 @@ bool FileFormatManager::writeString(const Core::Molecule &molecule,
   if (!format)
     return false;
 
-  return format->writeString(string, molecule);
+  AVO_UNIQUE_PTR<FileFormat> formatInstance(format->newInstance());
+  return formatInstance->writeString(string, molecule);
 }
 
 bool FileFormatManager::registerFormat(FileFormat *format)
