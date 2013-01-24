@@ -65,7 +65,7 @@ inline bool Variant::isNull() const
 template<typename T>
 inline bool Variant::setValue(T v)
 {
-  AVOGADRO_UNUSED(v);
+  AVO_UNUSED(v);
 
   clear();
 

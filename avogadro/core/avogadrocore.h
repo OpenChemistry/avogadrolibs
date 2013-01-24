@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2011-2012 Kitware, Inc.
+  Copyright 2011-2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -42,13 +42,13 @@
  * This macro marks a parameter as unused. Its purpose is to disable the
  * compiler from emitting unused parameter warnings.
  */
-#define AVOGADRO_UNUSED(variable) (void) variable
+#define AVO_UNUSED(variable) (void) variable
 
 /**
  * This macro marks a class as not copyable. It should be used in the private
  * section of a class's declaration.
  */
-#define AVOGADRO_DISABLE_COPY(Class) \
+#define AVO_DISABLE_COPY(Class) \
   Class(const Class&); \
   Class& operator=(const Class&);
 
