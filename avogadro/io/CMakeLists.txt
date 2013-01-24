@@ -29,7 +29,8 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}/../core")
 
 avogadro_add_library(AvogadroIO ${HEADERS} ${SOURCES})
 
-target_link_libraries(AvogadroIO AvogadroCore)
+# LINK_PUBLIC is needed here to work around CMake bug
+target_link_libraries(AvogadroIO LINK_PUBLIC AvogadroCore)
 
 # hdf5 is the HDF5 imported target
 target_link_libraries(AvogadroIO LINK_PRIVATE hdf5)
