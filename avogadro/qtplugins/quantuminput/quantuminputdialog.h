@@ -45,12 +45,6 @@ namespace QtPlugins {
  * @brief the QuantumInputDialog class provides a dynamic user interface that
  * is generated from input generator scripts.
  * @author David C. Lonie
- * @todo Warn before replacing modified text
- * @todo Syntax highlighting
- * @todo Custom filenames
- * @todo Allow scripts to return warnings (e.g. incompatible/ignored options)
- * @todo need some way to express dependencies across options, e.g. disable
- * basis selection if a semiempirical calc is request in GAMESS (hide GUI?)
  */
 class QuantumInputDialog : public QDialog
 {
@@ -70,6 +64,13 @@ public:
    * Set the molecule used in the simulation.
    */
   void setMolecule(QtGui::Molecule *mol);
+
+protected:
+  /**
+   * Reimplemented to update preview text. Hidden dialogs will wait until they
+   * are reshown to update the text to prevent overwriting any modified buffers.
+   */
+  void showEvent(QShowEvent *e);
 
 private slots:
   /**
@@ -117,6 +118,11 @@ private slots:
    */
   void showError(const QString &err);
 
+  /**
+   * Triggered when an input file's text edit is modified.
+   */
+  void textEditModified();
+
 private:
   /**
    * Generate a QSettings key with the given identifier that is unique to this
@@ -158,6 +164,13 @@ private:
   QJsonObject collectOptions() const;
 
   /**
+   * Apply the options in the passed QJsonObject to the GUI. Any widgets changed
+   * by this method will have their signals blocked while modifying their
+   * values.
+   */
+  void applyOptions(const QJsonObject &opts) const;
+
+  /**
    * Used for keyword replacement.
    * @sa InputGenerator
    * @{
@@ -170,7 +183,9 @@ private:
   QtGui::Molecule *m_molecule;
   MoleQueue::Client *m_client;
   QJsonObject m_options;
+  QJsonObject m_optionCache; // For reverting changes
   bool m_updatePending;
+  QList<QTextEdit*> m_dirtyTextEdits;
   InputGenerator m_inputGenerator;
 
   QMap<QString, QWidget*> m_widgets;
