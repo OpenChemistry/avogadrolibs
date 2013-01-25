@@ -20,7 +20,7 @@ int main(int, char * [])
     try_compile(MEMORY_TYPES_FOUND
       ${PROJECT_BINARY_DIR}/CMakeTmp
       "${PROJECT_BINARY_DIR}/CMakeTmp/memory.cpp"
-      COMPILE_DEFINITIONS ${CPP11_COMPILER_FLAGS})
+      COMPILE_DEFINITIONS ${CXX11_FLAGS})
     if(MEMORY_TYPES_FOUND)
       set(RESULT "
 #define AVO_UNIQUE_PTR std::unique_ptr

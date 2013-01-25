@@ -18,7 +18,7 @@ int main(int, char * [])
     try_compile(MUTEX_TYPE_FOUND
       ${PROJECT_BINARY_DIR}/CMakeTmp
       "${PROJECT_BINARY_DIR}/CMakeTmp/mutex.cpp"
-      COMPILE_DEFINITIONS ${CPP11_COMPILER_FLAGS})
+      COMPILE_DEFINITIONS ${CXX11_FLAGS})
     if(MUTEX_TYPE_FOUND)
       set(RESULT "std::mutex")
       set(INCLUDE_RESULT "mutex")
