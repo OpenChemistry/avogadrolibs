@@ -146,7 +146,8 @@ namespace QtPlugins {
       "contents": "..."
     },
     ...
-  ]
+  ],
+  "mainFile": "file2.ext"
 }
 @endcode
  * The "files" block is an array of objects, which define the actual input
@@ -154,6 +155,14 @@ namespace QtPlugins {
  * provides the text that goes into the file. The order of the files in the
  * GUI will match the order of the files in the array, and the first file will
  * be displayed first.
+ *
+ * The "mainFile" member points to the primary input file for a calculation.
+ * This is the file that will be used as a command line argument when executing
+ * the simulation code (if applicable), and used by MoleQueue to set the
+ * $$inputFileName$$ and $$inputFileBaseName$$ input template keywords.
+ * This is optional; if present, the filename must exist in the "files" array.
+ * If absent and only one file is specified in "files", the single input file
+ * will be used. Otherwise, the main file will be left unspecified.
  *
  * The generation of molecular geometry descriptions may be skipped in the
  * script and deferred to the InputGenerator class by use of a special keyword.
@@ -253,13 +262,26 @@ public:
 
   /**
    * @return The number of input files stored by generateInput().
+   * @note This function is only valid after a successful call to
+   * generateInput().
    */
   int numberOfInputFiles() const;
 
   /**
    * @return A list of filenames created by generateInput().
+   * @note This function is only valid after a successful call to
+   * generateInput().
    */
   QStringList fileNames() const;
+
+  /**
+   * @return The "main" input file of the collection. This is the input file
+   * used by MoleQueue to determine the $$inputFileName$$ and
+   * $$inputFileBaseName$$ keywords.
+   * @note This function is only valid after a successful call to
+   * generateInput().
+   */
+  QString mainFileName() const;
 
   /**
    * @return A file contents corresponding to @p fileName. Must call
@@ -314,6 +336,7 @@ private:
   mutable QStringList m_errors;
 
   QStringList m_filenames;
+  QString m_mainFileName;
   QMap<QString, QString> m_files;
 };
 

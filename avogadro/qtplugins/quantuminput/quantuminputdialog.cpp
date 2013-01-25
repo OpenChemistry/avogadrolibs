@@ -388,6 +388,7 @@ void QuantumInputDialog::computeClicked()
 
   const QString program = parser.cap(1);
   const QString queue = parser.cap(2);
+  const QString mainFileName = m_inputGenerator.mainFileName();
 
   MoleQueue::JobObject job;
   job.setQueue(queue);
@@ -396,7 +397,11 @@ void QuantumInputDialog::computeClicked()
   job.setValue("numberOfCores", m_ui.coresSpinBox->value());
   for (QMap<QString, QTextEdit*>::const_iterator it = m_textEdits.constBegin(),
        itEnd = m_textEdits.constEnd(); it != itEnd; ++it) {
-    job.appendAdditionalInputFile(it.key(), it.value()->toPlainText());
+    QString filename = it.key();
+    if (filename != mainFileName)
+      job.appendAdditionalInputFile(filename, it.value()->toPlainText());
+    else
+      job.setInputFile(filename, it.value()->toPlainText());
   }
 
   m_client->submitJob(job);

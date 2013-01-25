@@ -94,6 +94,7 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
 {
   m_errors.clear();
   m_filenames.clear();
+  m_mainFileName.clear();
   m_files.clear();
 
   // Add the molecule file to the options
@@ -113,6 +114,7 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
   bool result = true;
   if (doc.isObject()) {
     QJsonObject obj = doc.object();
+    // Extract input file text:
     if (obj.contains("files")) {
       if (obj["files"].isArray()) {
         foreach (const QJsonValue &file, obj["files"].toArray()) {
@@ -130,24 +132,50 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
               m_errors << tr("Malformed file entry: filename/contents missing"
                              " or not strings:\n%1")
                           .arg(QString(QJsonDocument(fileObj).toJson()));
-            }
+            } // end if/else filename and contents are strings
           }
           else {
             result = false;
             m_errors << tr("Malformed file entry at index %1: Not an object.")
                         .arg(m_filenames.size());
-          }
-        } // End foreach
+          } // end if/else file is JSON object
+        } // end foreach file
       }
       else {
         result = false;
         m_errors << tr("'files' member not an array.");
-      }
+      } // end if obj["files"] is JSON array
     }
     else {
       result = false;
       m_errors << tr("'files' member missing.");
+    } // end if obj contains "files"
+
+    // Extract main input filename:
+    if (obj.contains("mainFile")) {
+      if (obj["mainFile"].isString()) {
+        QString mainFileName = obj["mainFile"].toString();
+        if (m_filenames.contains(mainFileName)) {
+          m_mainFileName = mainFileName;
+        }
+        else {
+          result = false;
+          m_errors << tr("'mainFile' member does not refer to an entry in "
+                         "'files'.");
+        } // end if/else mainFile is known
+      }
+      else {
+        result = false;
+        m_errors << tr("'mainFile' member must be a string.");
+      } // end if/else mainFile is string
     }
+    else {
+      // If no mainFile is specified and there is only one file, use it as the
+      // main file. Otherwise, don't set a main input file -- all files will
+      // be treated as supplemental input files
+      if (m_filenames.size() == 1)
+        m_mainFileName = m_filenames.first();
+    } // end if/else object contains mainFile
   }
   else {
     result = false;
@@ -168,6 +196,11 @@ int InputGenerator::numberOfInputFiles() const
 QStringList InputGenerator::fileNames() const
 {
   return m_filenames;
+}
+
+QString InputGenerator::mainFileName() const
+{
+  return m_mainFileName;
 }
 
 QString InputGenerator::fileContents(const QString &fileName) const
