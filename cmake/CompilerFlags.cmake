@@ -1,5 +1,7 @@
 # Determine if any special flags are needed for C++11 support to be enabled.
-set(CPP11_COMPILER_FLAGS "")
+set(CXX11_FLAGS "")
+
+option(FORCE_ANSI_CXX "Force Avogadro to only USE ANSI C++ (no C++11)" OFF)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
 
@@ -14,7 +16,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
   if(HAVE_GCC_ERROR_RETURN_TYPE)
     set(CMAKE_CXX_FLAGS_ERROR "-Werror=return-type")
   endif()
-  if(FORCE_ANSI_CPP)
+  if(FORCE_ANSI_CXX)
     set(HAVE_GCC_STD_CPP_03 FALSE)
     set(HAVE_GCC_STD_CPP_11 FALSE)
   else()
@@ -22,12 +24,15 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     check_cxx_compiler_flag("-std=c++11" HAVE_GCC_STD_CPP_11)
   endif()
   if(HAVE_GCC_STD_CPP_11)
-    set(CMAKE_CXX_FLAGS_STD_CPP "-std=c++11 -pedantic -Wshadow -Wextra")
-    set(CPP11_COMPILER_FLAGS "-std=c++11")
+    set(CMAKE_CXX_FLAGS_WARN "${CMAKE_CXX_FLAGS_WARN} -pedantic -Wshadow -Wextra")
+    # Set this variable so that we can enable C++11 support for relevant tests.
+    set(CXX11_FLAGS "-std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAGS}")
   elseif(HAVE_GCC_STD_CPP_03)
-    set(CMAKE_CXX_FLAGS_STD_CPP "-std=c++03 -pedantic -Wshadow -Wextra")
+    set(CMAKE_CXX_FLAGS_WARN "${CMAKE_CXX_FLAGS_WARN} -pedantic -Wshadow -Wextra")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++03")
   else()
-    set(CMAKE_CXX_FLAGS_STD_CPP "-ansi")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi")
   endif()
 
   # If we are compiling on Linux then set some extra linker flags too
@@ -40,10 +45,10 @@ if(CMAKE_COMPILER_IS_GNUCXX)
       "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_EXE_LINKER_FLAGS}")
   endif()
 
-  set(CMAKE_CXX_FLAGS_WARN "${CMAKE_CXX_FLAGS_WARN} ${CMAKE_CXX_FLAGS_STD_CPP}")
   # Set up the debug CXX_FLAGS for extra warnings
   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
     "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${CMAKE_CXX_FLAGS_WARN}")
   set(CMAKE_CXX_FLAGS_DEBUG
     "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_WARN} ${CMAKE_CXX_FLAGS_ERROR}")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 endif()
