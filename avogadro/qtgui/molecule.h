@@ -52,6 +52,11 @@ public:
   };
 
   /**
+   * Copy @p other into @p this.
+   */
+  Molecule &operator=(const Molecule &other);
+
+  /**
    * Add an atom with @p atomicNumber to the molecule.
    * @return The atom created.
    */
