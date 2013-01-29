@@ -30,6 +30,12 @@ Molecule::~Molecule()
 {
 }
 
+Molecule &Molecule::operator=(const Molecule &other)
+{
+  Core::Molecule::operator=(other);
+  return *this;
+}
+
 Core::Atom Molecule::addAtom(unsigned char atomicNumber)
 {
   m_atomUniqueIds.push_back(atomCount());
