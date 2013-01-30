@@ -28,10 +28,7 @@ Node::Node(Node *parent_) : m_parent(NULL), m_visible(true)
 Node::~Node()
 {
   // Like all good parents, we destroy our children before we go...
-  for (std::vector<Node *>::const_iterator it = m_children.begin();
-       it != m_children.end(); ++it) {
-    delete (*it);
-  }
+  clear();
 }
 
 void Node::setParent(Node *parent)
@@ -77,6 +74,16 @@ Node * Node::child(size_t index)
     return NULL;
   else
     return m_children[index];
+}
+
+void Node::clear()
+{
+  // Like all good parents, we destroy our children before we go...
+  for (std::vector<Node *>::const_iterator it = m_children.begin();
+       it != m_children.end(); ++it) {
+    delete (*it);
+  }
+  m_children.clear();
 }
 
 } // End namespace Rendering

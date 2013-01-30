@@ -22,6 +22,9 @@
 namespace Avogadro {
 namespace Rendering {
 
+class Camera;
+class Renderer;
+
 /**
  * @class GeometryNode geometrynode.h <avogadro/rendering/geometrynode.h>
  * @brief The GeometryNode class is the common base of all geometry nodes.
@@ -38,6 +41,11 @@ class AVOGADRORENDERING_EXPORT GeometryNode : public Node
 public:
   explicit GeometryNode(Node *parent = 0);
   ~GeometryNode();
+
+  virtual void render(const Camera &camera);
+
+protected:
+  Renderer *m_renderer;
 };
 
 } // End namespace Rendering

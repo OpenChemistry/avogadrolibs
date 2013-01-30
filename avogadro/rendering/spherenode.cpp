@@ -16,21 +16,183 @@
 
 #include "spherenode.h"
 
+#include "camera.h"
+#include "scene.h"
+
+#include "bufferobject.h"
+
+#include "shader.h"
+#include "shaderprogram.h"
+
+namespace {
+#include "spheres_vs.h"
+#include "spheres_fs.h"
+}
+
+#include "avogadrogl.h"
+
+#include <iostream>
+
 namespace Avogadro {
 namespace Rendering {
 
-SphereNode::SphereNode(Node *p) : GeometryNode(p)
+class SphereNode::Private
+{
+public:
+  Private() { }
+
+  BufferObject vbo;
+  BufferObject ibo;
+
+  Shader vertexShader;
+  Shader fragmentShader;
+  ShaderProgram program;
+
+  size_t numberOfVertices;
+  size_t numberOfIndices;
+};
+
+SphereNode::SphereNode(Node *p) : GeometryNode(p), m_dirty(false), d(new Private)
 {
 }
 
 SphereNode::~SphereNode()
 {
+  delete d;
+}
+
+void SphereNode::render(const Camera &camera)
+{
+  std::cout << "render called\n" << "spheres: " << m_spheres.size()
+            << "\nindices: " << m_indices.size() << std::endl;
+  if (m_indices.empty() || m_spheres.empty())
+    return;
+
+  // Check if the VBOs are ready, if not get them ready.
+  if (!d->vbo.ready() || m_dirty) {
+    std::cout << "building array buffers...\n";
+    std::vector<unsigned int> sphereIndices;
+    std::vector<ColorTextureVertex> sphereVertices;
+    sphereIndices.reserve(m_indices.size() * 4);
+    sphereVertices.reserve(m_spheres.size() * 4);
+
+    std::vector<size_t>::const_iterator itIndex = m_indices.begin();
+    std::vector<SphereColor>::const_iterator itSphere = m_spheres.begin();
+
+    for (unsigned int i = 0;
+         itIndex != m_indices.end(), itSphere != m_spheres.end();
+         ++i, ++itIndex, ++itSphere) {
+      // Use our packed data structure...
+      float r = itSphere->radius;
+      unsigned int index = 4 * (*itIndex);
+      ColorTextureVertex vert(itSphere->center, itSphere->color,
+                              Vector2f(-r, -r));
+      sphereVertices.push_back(vert);
+      vert.textureCoord = Vector2f(-r, r);
+      sphereVertices.push_back(vert);
+      vert.textureCoord = Vector2f( r,-r);
+      sphereVertices.push_back(vert);
+      vert.textureCoord = Vector2f( r, r);
+      sphereVertices.push_back(vert);
+
+      // 6 indexed vertices to draw a quad...
+      sphereIndices.push_back(index + 0);
+      sphereIndices.push_back(index + 1);
+      sphereIndices.push_back(index + 2);
+      sphereIndices.push_back(index + 3);
+      sphereIndices.push_back(index + 2);
+      sphereIndices.push_back(index + 1);
+
+      //m_spheres.push_back(Sphere(position, r, id, color));
+    }
+
+    d->vbo.upload(sphereVertices);
+    d->ibo.upload(sphereIndices);
+    d->numberOfVertices = sphereVertices.size();
+    d->numberOfIndices = sphereIndices.size();
+
+    m_dirty = false;
+  }
+
+  // Build and link the shader if it has not been used yet.
+  if (d->vertexShader.type() == Shader::Unknown) {
+    d->vertexShader.setType(Shader::Vertex);
+    d->vertexShader.setSource(spheres_vs);
+    d->fragmentShader.setType(Shader::Fragment);
+    d->fragmentShader.setSource(spheres_fs);
+    if (!d->vertexShader.compile())
+      std::cout << d->vertexShader.error() << std::endl;
+    if (!d->fragmentShader.compile())
+      std::cout << d->fragmentShader.error() << std::endl;
+    d->program.attachShader(d->vertexShader);
+    d->program.attachShader(d->fragmentShader);
+    if (!d->program.link())
+      std::cout << d->program.error() << std::endl;
+    }
+
+  if (!d->program.bind())
+    std::cout << d->program.error() << std::endl;
+
+  d->vbo.bind();
+  d->ibo.bind();
+
+  // Set up our attribute arrays.
+  if (!d->program.enableAttributeArray("vertex"))
+    std::cout << d->program.error() << std::endl;
+  if (!d->program.useAttributeArray("vertex",
+                                    ColorTextureVertex::vertexOffset(),
+                                    Vector3f())) {
+    std::cout << d->program.error() << std::endl;
+    }
+  if (!d->program.enableAttributeArray("color"))
+    std::cout << d->program.error() << std::endl;
+  if (!d->program.useAttributeArray("color",
+                                    ColorTextureVertex::colorOffset(),
+                                    Vector3ub())) {
+    std::cout << d->program.error() << std::endl;
+    }
+  if (!d->program.enableAttributeArray("texCoordinate"))
+    std::cout << d->program.error() << std::endl;
+  if (!d->program.useAttributeArray("texCoordinate",
+                                    ColorTextureVertex::textureCoordOffset(),
+                                    Vector2f())) {
+    std::cout << d->program.error() << std::endl;
+    }
+
+  // Set up our uniforms (model-view and projection matrices right now).
+  if (!d->program.setUniformValue("modelView",
+                                  camera.modelView().matrix())) {
+    std::cout << d->program.error() << std::endl;
+    }
+  if (!d->program.setUniformValue("projection",
+                                  camera.projection().matrix())) {
+    std::cout << d->program.error() << std::endl;
+    }
+
+  // Render the loaded spheres using the shader and bound VBO.
+  glDrawRangeElements(GL_TRIANGLES, 0,
+                      static_cast<GLuint>(d->numberOfVertices),
+                      static_cast<GLsizei>(d->numberOfIndices),
+                      GL_UNSIGNED_INT,
+                      reinterpret_cast<const GLvoid *>(NULL));
+
+
+  d->vbo.release();
+  d->ibo.release();
+
+  d->program.disableAttributeArray("vector");
+  d->program.disableAttributeArray("color");
+  d->program.disableAttributeArray("texCoordinates");
+
+  d->program.release();
 }
 
 void SphereNode::addSphere(const Vector3f &position, const Vector3ub &color,
                            float radius)
 {
+  m_dirty = true;
   m_spheres.push_back(SphereColor(position, radius, color));
+  m_indices.push_back(m_indices.size());
 }
 
 void SphereNode::clear()

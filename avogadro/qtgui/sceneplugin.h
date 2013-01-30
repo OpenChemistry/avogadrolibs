@@ -30,7 +30,7 @@ class Molecule;
 }
 
 namespace Rendering {
-class Scene;
+class Node;
 }
 
 namespace QtGui {
@@ -51,7 +51,7 @@ public:
   /**
    * Process the supplied atom, and add the necessary primitives to the scene.
    */
-  virtual void process(const Core::Molecule &molecule, Rendering::Scene &scene) = 0;
+  virtual void process(const Core::Molecule &molecule, Rendering::Node &node) = 0;
 
   /**
    * The name of the scene plugin, will be displayed in the user interface.

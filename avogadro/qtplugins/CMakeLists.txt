@@ -65,14 +65,15 @@ function(avogadro_plugin name description type header pluginClass sources uis)
 endfunction()
 
 # Now to make the plugins.
-add_subdirectory(ballandstick)
 add_subdirectory(gamessinput)
 add_subdirectory(molecularproperties)
 add_subdirectory(openbabel)
 add_subdirectory(quantuminput)
 add_subdirectory(quantumoutput)
+# The scene plugins
+#add_subdirectory(ballandstick)
 add_subdirectory(vanderwaals)
-add_subdirectory(meshes)
+#add_subdirectory(meshes)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${original_library_output_dir}")
 

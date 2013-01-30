@@ -18,6 +18,7 @@
 #define AVOGADRO_RENDERING_NODE_H
 
 #include "avogadrorenderingexport.h"
+#include <avogadro/core/avogadrocore.h>
 
 #include <vector>
 
@@ -86,6 +87,17 @@ public:
    * @return A pointer to the child node, or NULL if the index is out of range.
    */
   Node * child(size_t index);
+
+  /**
+   * @brief Get a reference to the child nodes list.
+   */
+  std::vector<Node *>& children() { return m_children; }
+  const std::vector<Node *> children() const { return m_children; }
+
+  /**
+   * @brief Remove all children.
+   */
+  void clear();
 
 protected:
   Node * m_parent;

@@ -18,7 +18,7 @@
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
-#include <avogadro/rendering/scene.h>
+#include <avogadro/rendering/spherenode.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -32,20 +32,24 @@ VanDerWaals::~VanDerWaals()
 }
 
 void VanDerWaals::process(const Core::Molecule &molecule,
-                          Rendering::Scene &scene)
+                          Rendering::Node &node)
 {
-  Rendering::Primitive::Identifier identifier;
-  identifier.molecule = &molecule;
-  identifier.type = Rendering::Primitive::Atom;
+  //Rendering::Primitive::Identifier identifier;
+  //identifier.molecule = &molecule;
+  //identifier.type = Rendering::Primitive::Atom;
+
+  // Add a sphere node to contain all of the VdW spheres.
+  Rendering::SphereNode *spheres = new Rendering::SphereNode(&node);
+
   for (size_t i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
-    identifier.index = i;
+    //identifier.index = i;
     unsigned char atomicNumber = atom.atomicNumber();
     const unsigned char *c = Core::Elements::color(atomicNumber);
     Vector3ub color(c[0], c[1], c[2]);
-    scene.addSphere(atom.position3d().cast<float>(), color,
-                    static_cast<float>(Core::Elements::radiusVDW(atomicNumber)),
-                    identifier);
+    spheres->addSphere(atom.position3d().cast<float>(), color,
+                       static_cast<float>(Core::Elements::radiusVDW(atomicNumber))
+                       );
   }
 }
 

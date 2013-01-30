@@ -26,6 +26,10 @@ namespace Rendering {
  * @class MeshNode meshnode.h <avogadro/rendering/meshnode.h>
  * @brief The MeshNode class contains a triangular mesh.
  * @author Marcus D. Hanwell
+ *
+ * This node is capable of rendering a well-formed triangular mesh, which can
+ * be all one color, or specify points per vertex. The mesh will be rendered
+ * in one call, the normals are expected to be normalized.
  */
 
 class AVOGADRORENDERING_EXPORT MeshNode : public GeometryNode

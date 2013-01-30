@@ -19,11 +19,15 @@
 namespace Avogadro {
 namespace Rendering {
 
-GeometryNode::GeometryNode(Node *p) : Node(p)
+GeometryNode::GeometryNode(Node *p) : Node(p), m_renderer(NULL)
 {
 }
 
 GeometryNode::~GeometryNode()
+{
+}
+
+void GeometryNode::render(const Camera &)
 {
 }
 

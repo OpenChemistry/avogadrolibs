@@ -34,7 +34,7 @@ public:
   explicit VanDerWaals(QObject *parent = 0);
   ~VanDerWaals();
 
-  void process(const Core::Molecule &molecule, Rendering::Scene &scene);
+  void process(const Core::Molecule &molecule, Rendering::Node &node);
 
   QString name() const { return tr("Van der Waals"); }
 

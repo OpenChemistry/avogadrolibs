@@ -51,6 +51,8 @@ public:
   explicit SphereNode(Node *parent = 0);
   ~SphereNode();
 
+  void render(const Camera &camera);
+
   /**
    * Add a sphere to the scene object.
    */
@@ -75,6 +77,11 @@ public:
 private:
   std::vector<SphereColor> m_spheres;
   std::vector<size_t> m_indices;
+
+  bool m_dirty;
+
+  class Private;
+  Private *d;
 };
 
 } // End namespace Rendering

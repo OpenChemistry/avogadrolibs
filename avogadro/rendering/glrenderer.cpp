@@ -20,6 +20,7 @@
 
 #include "shader.h"
 #include "shaderprogram.h"
+#include "spherenode.h"
 
 #include <avogadro/core/matrix.h>
 
@@ -81,6 +82,26 @@ void GLRenderer::render()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glEnable(GL_DEPTH_TEST);
+
+  if (m_scene.rootNode().children().size()) {
+    std::cout << "root node has " << m_scene.rootNode().children().size() << " children\n";
+    Node *node = m_scene.rootNode().children().front();
+    std::cout << "That node has " << node->children().size() << " children...\n";
+    if (node->children().size()) {
+      Node *engine = node->children().front();
+      if (engine->children().size() == 0)
+        return;
+      SphereNode *spheres = dynamic_cast<SphereNode *>(engine->children().front());
+      if (spheres) {
+        std::cout << "Blimey - we have a sphere node with " << spheres->size()
+                  << " spheres in it!\n";
+        spheres->render(m_camera);
+      }
+      else {
+        std::cout << "Bugger - not a sphere node...\n";
+      }
+    }
+  }
 
   // Check if the VBOs are ready, if not get them ready.
   if (!m_sphereArrayBuffer.ready() || m_scene.dirty()) {
