@@ -251,6 +251,157 @@ void QuantumInputDialog::defaultsClicked()
 
 void QuantumInputDialog::generateClicked()
 {
+  if (m_textEdits.size() == 1)
+    saveSingleFile(m_textEdits.keys().first());
+  else if (m_textEdits.size() > 1)
+    saveDirectory();
+  else
+    showError(tr("No input files to save!"));
+}
+
+void QuantumInputDialog::computeClicked()
+{
+  if (!m_client->isConnected()) {
+    m_client->connectToServer();
+    if (!m_client->isConnected()) {
+      QMessageBox::information(this, tr("Cannot connect to MoleQueue"),
+                               tr("Cannot connect to MoleQueue server. Please "
+                                  "ensure that it is running and try again."));
+      return;
+    }
+  }
+
+  QString programText = m_ui.programCombo->currentText();
+  if (programText.isEmpty()) {
+    QMessageBox::information(this, tr("No program set."),
+                             tr("Cannot determine which MoleQueue program "
+                                "configuration to use. Has MoleQueue been "
+                                "configured?"));
+    return;
+  }
+
+  QRegExp parser("^(.+) \\((.+)\\)$");
+  int parseResult = parser.indexIn(programText);
+
+  // Should not happen...
+  if (parseResult == -1)
+    return;
+
+  const QString program = parser.cap(1);
+  const QString queue = parser.cap(2);
+  const QString mainFileName = m_inputGenerator.mainFileName();
+
+  MoleQueue::JobObject job;
+  job.setQueue(queue);
+  job.setProgram(program);
+  job.setDescription(tr("Avogadro calculation"));
+  job.setValue("numberOfCores", m_ui.coresSpinBox->value());
+  for (QMap<QString, QTextEdit*>::const_iterator it = m_textEdits.constBegin(),
+       itEnd = m_textEdits.constEnd(); it != itEnd; ++it) {
+    QString filename = it.key();
+    if (filename != mainFileName)
+      job.appendAdditionalInputFile(filename, it.value()->toPlainText());
+    else
+      job.setInputFile(filename, it.value()->toPlainText());
+  }
+
+  m_client->submitJob(job);
+}
+
+void QuantumInputDialog::showError(const QString &err)
+{
+  qWarning() << err;
+
+  QWidget *theParent = this->isVisible() ? this
+                                         : qobject_cast<QWidget*>(parent());
+  QDialog dlg(theParent);
+  QVBoxLayout *vbox = new QVBoxLayout();
+  QLabel *label = new QLabel(tr("An error has occurred:"));
+  vbox->addWidget(label);
+  QTextBrowser *textBrowser = new QTextBrowser();
+
+  // adjust the size of the text browser to ~80 char wide, ~20 lines high
+  QSize theSize = textBrowser->sizeHint();
+  QFontMetrics metrics(textBrowser->currentFont());
+  int charWidth = metrics.width("i7OPlmWn9/") / 10;
+  int charHeight = metrics.lineSpacing();
+  theSize.setWidth(80 * charWidth);
+  theSize.setHeight(20 * charHeight);
+  textBrowser->setMinimumSize(theSize);
+  textBrowser->setText(err);
+  vbox->addWidget(textBrowser);
+  dlg.setLayout(vbox);
+
+  dlg.exec();
+}
+
+void QuantumInputDialog::textEditModified()
+{
+  if (QTextEdit *edit = qobject_cast<QTextEdit*>(sender())) {
+    if (edit->document()->isModified()) {
+      if (!m_dirtyTextEdits.contains(edit))
+        m_dirtyTextEdits << edit;
+    }
+    else {
+      m_dirtyTextEdits.removeOne(edit);
+    }
+  }
+}
+
+QString QuantumInputDialog::settingsKey(const QString &identifier) const
+{
+  return QString("quantumInput/%1/%2").arg(m_inputGenerator.displayName(),
+                                           identifier);
+}
+
+void QuantumInputDialog::saveSingleFile(const QString &fileName)
+{
+  QSettings settings;
+  QString filePath = settings.value(settingsKey("outputDirectory")).toString();
+  filePath = QFileDialog::getSaveFileName(
+        this, tr("Select output filename"), filePath + "/" + fileName);
+
+  // User cancel:
+  if (filePath.isNull())
+    return;
+
+  settings.setValue(settingsKey("outputDirectory"),
+                    QFileInfo(filePath).absoluteDir().absolutePath());
+
+  QFileInfo info(filePath);
+
+  // Don't check for overwrite: the file save dialog takes care of this.
+  // Attempt to open the file for writing
+  if (!QFile(fileName).open(QFile::WriteOnly)) {
+    showError(tr("%1: File exists and is not writable.").arg(fileName));
+    return;
+  }
+
+  QTextEdit *edit = m_textEdits.value(fileName, NULL);
+  if (!edit) {
+    showError(tr("Internal error: could not find text widget for filename '%1'")
+              .arg(fileName));
+    return;
+  }
+
+  QFile file(filePath);
+  bool success = false;
+  if (file.open(QFile::WriteOnly | QFile::Text)) {
+    if (file.write(edit->toPlainText().toLatin1()) > 0) {
+      success = true;
+    }
+    file.close();
+  }
+
+  if (!success) {
+    QMessageBox::critical(
+          this, tr("Output Error"),
+          tr("Failed to write to file %1.").arg(file.fileName()));
+  }
+}
+
+void QuantumInputDialog::saveDirectory()
+{
   QSettings settings;
   QString directory = settings.value(settingsKey("outputDirectory")).toString();
   directory = QFileDialog::getExistingDirectory(
@@ -312,6 +463,8 @@ void QuantumInputDialog::generateClicked()
           tr("The input files cannot be written:\n\n%1").arg(errors.first());
       break;
     default: {
+      // If a fatal error occured, it will be last one in the list. Pop it off
+      // and tell the user that it was the reason we had to stop.
       QString fatal = errors.last();
       QStringList tmp(errors);
       tmp.pop_back();
@@ -335,7 +488,7 @@ void QuantumInputDialog::generateClicked()
                              QMessageBox::Yes | QMessageBox::No,
                              QMessageBox::No);
 
-    if (reply == QMessageBox::No)
+    if (reply != QMessageBox::Yes)
       return;
   }
 
@@ -356,96 +509,6 @@ void QuantumInputDialog::generateClicked()
             tr("Failed to write to file %1.").arg(file.fileName()));
     }
   }
-}
-
-void QuantumInputDialog::computeClicked()
-{
-  if (!m_client->isConnected()) {
-    m_client->connectToServer();
-    if (!m_client->isConnected()) {
-      QMessageBox::information(this, tr("Cannot connect to MoleQueue"),
-                               tr("Cannot connect to MoleQueue server. Please "
-                                  "ensure that it is running and try again."));
-      return;
-    }
-  }
-
-  QString programText = m_ui.programCombo->currentText();
-  if (programText.isEmpty()) {
-    QMessageBox::information(this, tr("No program set."),
-                             tr("Cannot determine which MoleQueue program "
-                                "configuration to use. Has MoleQueue been "
-                                "configured?"));
-    return;
-  }
-
-  QRegExp parser("^(.+) \\((.+)\\)$");
-  int parseResult = parser.indexIn(programText);
-
-  // Should not happen...
-  if (parseResult == -1)
-    return;
-
-  const QString program = parser.cap(1);
-  const QString queue = parser.cap(2);
-
-  MoleQueue::JobObject job;
-  job.setQueue(queue);
-  job.setProgram(program);
-  job.setDescription(tr("Avogadro calculation"));
-  job.setValue("numberOfCores", m_ui.coresSpinBox->value());
-  for (QMap<QString, QTextEdit*>::const_iterator it = m_textEdits.constBegin(),
-       itEnd = m_textEdits.constEnd(); it != itEnd; ++it) {
-    job.appendAdditionalInputFile(it.key(), it.value()->toPlainText());
-  }
-
-  m_client->submitJob(job);
-}
-
-void QuantumInputDialog::showError(const QString &err)
-{
-  qWarning() << err;
-
-  QWidget *theParent = this->isVisible() ? this
-                                         : qobject_cast<QWidget*>(parent());
-  QDialog dlg(theParent);
-  QVBoxLayout *vbox = new QVBoxLayout();
-  QLabel *label = new QLabel(tr("An error has occurred:"));
-  vbox->addWidget(label);
-  QTextBrowser *textBrowser = new QTextBrowser();
-
-  // adjust the size of the text browser to ~80 char wide, ~20 lines high
-  QSize theSize = textBrowser->sizeHint();
-  QFontMetrics metrics(textBrowser->currentFont());
-  int charWidth = metrics.width("i7OPlmWn9/") / 10;
-  int charHeight = metrics.lineSpacing();
-  theSize.setWidth(80 * charWidth);
-  theSize.setHeight(20 * charHeight);
-  textBrowser->setMinimumSize(theSize);
-  textBrowser->setText(err);
-  vbox->addWidget(textBrowser);
-  dlg.setLayout(vbox);
-
-  dlg.exec();
-}
-
-void QuantumInputDialog::textEditModified()
-{
-  if (QTextEdit *edit = qobject_cast<QTextEdit*>(sender())) {
-    if (edit->document()->isModified()) {
-      if (!m_dirtyTextEdits.contains(edit))
-        m_dirtyTextEdits << edit;
-    }
-    else {
-      m_dirtyTextEdits.removeOne(edit);
-    }
-  }
-}
-
-QString QuantumInputDialog::settingsKey(const QString &identifier) const
-{
-  return QString("quantumInput/%1/%2").arg(m_inputGenerator.displayName(),
-                                           identifier);
 }
 
 void QuantumInputDialog::connectButtons()

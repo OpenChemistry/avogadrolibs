@@ -135,6 +135,14 @@ private:
   QString settingsKey(const QString &identifier) const;
 
   /**
+   * Write the input file(s) to disk. Prompts user for target location.
+   * @{
+   */
+  void saveSingleFile(const QString &fileName);
+  void saveDirectory();
+  /**@}*/
+
+  /**
    * Make signal/slot connections.
    * @{
    */
