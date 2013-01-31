@@ -133,15 +133,91 @@ void OBProcess::readFilePrepareOutput()
   releaseProcess();
 }
 
+bool OBProcess::queryForceFields()
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::queryForceFields(): process already in use.";
+    return false;
+  }
+
+  QStringList options;
+  options << "-L" << "forcefields";
+
+  executeObabel(options, this, SLOT(queryForceFieldsPrepare()));
+  return true;
+}
+
+void OBProcess::queryForceFieldsPrepare()
+{
+  if (m_aborted) {
+    releaseProcess();
+    return;
+  }
+
+  QMap<QString, QString> result;
+
+  QString output = QString::fromLatin1(m_process->readAllStandardOutput());
+
+  QRegExp parser("([^\\s]+)\\s+(\\S[^\\n]*[^\\n\\.]+)\\.?\\n");
+  int pos = 0;
+  while ((pos = parser.indexIn(output, pos)) != -1) {
+    QString key = parser.cap(1);
+    QString desc = parser.cap(2);
+    result.insertMulti(key, desc);
+    pos += parser.matchedLength();
+  }
+
+  releaseProcess();
+  emit queryForceFieldsFinished(result);
+}
+
+bool OBProcess::optimizeGeometry(const QByteArray &cml,
+                                 const QStringList &options)
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::optimizeGeometry(): process already in use.";
+    return false;
+  }
+
+  QStringList realOptions;
+  realOptions << "-icml" << "-ocml" << "--minimize" << options;
+
+  executeObabel(realOptions, this, SLOT(optimizeGeometryPrepare()), cml);
+  /// @todo add a progress update signal. Watch readyReadStandardError for log.
+  return true;
+}
+
+void OBProcess::optimizeGeometryPrepare()
+{
+  if (m_aborted) {
+    releaseProcess();
+    return;
+  }
+
+  QByteArray result = m_process->readAllStandardOutput();
+  qDebug() << result;
+  qDebug() << m_process->readAllStandardError();
+
+  releaseProcess();
+  emit optimizeGeometryFinished(result);
+}
+
 void OBProcess::executeObabel(const QStringList &options,
-                              QObject *receiver, const char *slot)
+                              QObject *receiver, const char *slot,
+                              const QByteArray &obabelStdin)
 {
   // Setup exit handler
   connect(m_process, SIGNAL(finished(int)), receiver, slot);
   connect(m_process, SIGNAL(error(QProcess::ProcessError)), receiver, slot);
 
   // Start process
+  qDebug() << "OBProcess::executeObabel: "
+              "Running" << m_obabelExecutable << options.join(" ");
   m_process->start(m_obabelExecutable, options);
+  if (!obabelStdin.isNull()) {
+    m_process->write(obabelStdin);
+    m_process->closeWriteChannel();
+  }
 }
 
 void OBProcess::resetState()
