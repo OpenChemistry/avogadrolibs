@@ -178,25 +178,24 @@ void OpenBabel::onOpenFileReadFinished(const QByteArray &output)
 
 void OpenBabel::refreshReadFormats()
 {
-  // Fail here if the process is already in use.
-  if (m_process->inUse()) {
-    showProcessInUseError(tr("Cannot update OpenBabel file formats."));
-    return;
-  }
+  // No need to check if the member process is in use -- we use a temporary
+  // process for the refresh methods.
+  OBProcess *proc = new OBProcess(this);
 
-  disconnect(m_process);
-  m_process->disconnect(this);
-
-  connect(m_process,
+  connect(proc,
           SIGNAL(queryReadFormatsFinished(QMap<QString,QString>)),
           SLOT(handleReadFormatUpdate(QMap<QString,QString>)));
 
-  m_process->queryReadFormats();
+  proc->queryReadFormats();
 }
 
-void OpenBabel::handleReadFormatUpdate(QMap<QString, QString> fmts)
+void OpenBabel::handleReadFormatUpdate(const QMap<QString, QString> &fmts)
 {
   m_readFormatsFilterString.clear();
+
+  OBProcess *proc = qobject_cast<OBProcess*>(sender());
+  if (proc)
+    proc->deleteLater();
 
   m_readFormats = fmts;
   qDebug() << fmts.size() << "formats available through OpenBabel.";

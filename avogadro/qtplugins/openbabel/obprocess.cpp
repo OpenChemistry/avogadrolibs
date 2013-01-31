@@ -92,9 +92,8 @@ bool OBProcess::readFile(const QString &filename,
     return false;
   }
 
-  QStringList options;
-
   // Setup input options
+  QStringList options;
   options << QString("-i%1").arg(!inputFormatOverride.isEmpty()
                                  ? inputFormatOverride
                                  : QFileInfo(filename).suffix());

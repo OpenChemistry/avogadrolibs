@@ -65,7 +65,7 @@ private slots:
   void onOpenFileReadFinished(const QByteArray &output);
 
   void refreshReadFormats();
-  void handleReadFormatUpdate(QMap<QString, QString> fmts);
+  void handleReadFormatUpdate(const QMap<QString, QString> &fmts);
 
 private:
   void showProcessInUseError(const QString &title) const;
