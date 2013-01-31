@@ -95,6 +95,13 @@ public:
 
   size_t meshCount() const { return m_meshes.size(); }
 
+public slots:
+  /**
+   * @brief Force the molecule to emit the changed() signal.
+   * @param change See changed().
+   */
+  void emitChanged(unsigned int change);
+
 signals:
   /**
    * @brief Indicates that the molecule has changed.
