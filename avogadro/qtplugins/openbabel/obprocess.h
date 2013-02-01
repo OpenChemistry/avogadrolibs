@@ -159,12 +159,67 @@ private slots:
   // end File Reading doxygen group
   /**@}*/
 
+  /**
+   * @name Force Fields
+   * Methods, signals, and slots pertaining to geometry optimizations.
+   * @{
+   */
+
+public slots:
+  /**
+   * Request a list of all supported force fields from obabel.
+   *
+   * After calling this method, the queryForceFieldsFinished signal will be
+   * emitted. This method executes
+   *
+   * `obabel -L forcefields`
+   *
+   * and parses the output.
+   *
+   * If an error occurs, queryReadFormatsFinished will be emitted with an empty
+   * argument.
+   *
+   * @return True if the process started successfully, false otherwise.
+   */
+  bool queryForceFields();
+
+signals:
+  /**
+   * Triggered when the process started by queryForceFields() completes.
+   * @param forceFields The force fields supported by OpenBabel. Keys
+   * are unique identifiers for the force fields, and the values are
+   * non-translated (english), human-readable descriptions.
+   *
+   * If an error occurs, forceFields will be empty.
+   */
+  void queryForceFieldsFinished(const QMap<QString, QString> &forceFields);
+
+private slots:
+  void queryForceFieldsPrepare();
+
+public slots:
+  /// @todo document
+  bool optimizeGeometry(const QByteArray &cml, const QStringList &options);
+signals:
+  /// @todo document
+  void optimizeGeometryFinished(const QByteArray &cml);
+  /// @todo document
+  void optimizeGeometryStatusUpdate(int step, int maxSteps,
+                                    double currentEnergy, double lastEnergy);
+private slots:
+  void optimizeGeometryPrepare();
+  void optimizeGeometryReadLog();
+
+  // end Force Fields doxygen group
+  /**@}*/
+
 private:
   /**
    * Internal method for launching the obabel executable.
    * @param options List of options to pass to QProcess::start
    * @param receiver A QObject subclass instance that has @a slot as a member.
    * @param slot The slot to call when completed. Must have no arguments.
+   * @param obabelStdin Standard input for the obabel process (optional).
    *
    * Call this method like so:
 @code
@@ -176,10 +231,12 @@ executeObabel(options, this, SLOT(mySlot()));
    * @a slot will be connected to QProcess::finished(int) and
    * QProcess::error(QProcess::ProcessError) with @a receiver as receiver and
    * @a m_process as sender. @a m_process is then started using
-   * m_obabelExecutable and options as arguments.
+   * m_obabelExecutable and options as arguments. If provided, the obabelStdin
+   * data will be written to the obabel stdin channel.
    */
   void executeObabel(const QStringList &options, QObject *receiver,
-                     const char *slot);
+                     const char *slot,
+                     const QByteArray &obabelStdin = QByteArray());
 
   void resetState();
 
@@ -202,6 +259,11 @@ executeObabel(options, this, SLOT(mySlot()));
   bool m_aborted;
   QProcess *m_process;
   QString m_obabelExecutable;
+
+  // Optimize geometry ivars:
+  int m_optimizeGeometryMaxSteps;
+  QString m_optimizeGeometryLog;
+
 };
 
 } // namespace QtPlugins
