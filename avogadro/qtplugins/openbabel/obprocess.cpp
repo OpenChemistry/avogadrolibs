@@ -93,15 +93,21 @@ bool OBProcess::readFile(const QString &filename,
   }
 
   QStringList options;
+  QString inputFormat = inputFormatOverride.isEmpty() ?
+                        QFileInfo(filename).suffix() : inputFormatOverride;
 
   // Setup input options
-  options << QString("-i%1").arg(!inputFormatOverride.isEmpty()
-                                 ? inputFormatOverride
-                                 : QFileInfo(filename).suffix());
+  options << QString("-i%1").arg(inputFormat);
   options << filename;
 
   // Setup output options
   options << QString("-o%1").arg(outputFormat);
+
+  // See if we are using a format that never has 3D coordinates.
+  QStringList specialFormats;
+  specialFormats << "smi" << "inchi" << "can";
+  if (specialFormats.contains(inputFormat))
+    options << "--gen3d";
 
   executeObabel(options, this, SLOT(readFilePrepareOutput()));
   return true;
