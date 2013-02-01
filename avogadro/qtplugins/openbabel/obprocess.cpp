@@ -19,6 +19,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
+#include <QtCore/QRegExp>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -102,6 +103,7 @@ bool OBProcess::readFile(const QString &filename,
   // Setup output options
   options << QString("-o%1").arg(outputFormat);
 
+  // Execute process
   executeObabel(options, this, SLOT(readFilePrepareOutput()));
   return true;
 }
@@ -133,15 +135,126 @@ void OBProcess::readFilePrepareOutput()
   releaseProcess();
 }
 
+bool OBProcess::queryForceFields()
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::queryForceFields(): process already in use.";
+    return false;
+  }
+
+  QStringList options;
+  options << "-L" << "forcefields";
+
+  executeObabel(options, this, SLOT(queryForceFieldsPrepare()));
+  return true;
+}
+
+void OBProcess::queryForceFieldsPrepare()
+{
+  if (m_aborted) {
+    releaseProcess();
+    return;
+  }
+
+  QMap<QString, QString> result;
+
+  QString output = QString::fromLatin1(m_process->readAllStandardOutput());
+
+  QRegExp parser("([^\\s]+)\\s+(\\S[^\\n]*[^\\n\\.]+)\\.?\\n");
+  int pos = 0;
+  while ((pos = parser.indexIn(output, pos)) != -1) {
+    QString key = parser.cap(1);
+    QString desc = parser.cap(2);
+    result.insertMulti(key, desc);
+    pos += parser.matchedLength();
+  }
+
+  releaseProcess();
+  emit queryForceFieldsFinished(result);
+}
+
+bool OBProcess::optimizeGeometry(const QByteArray &cml,
+                                 const QStringList &options)
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::optimizeGeometry(): process already in use.";
+    return false;
+  }
+
+  QStringList realOptions;
+  realOptions << "-icml" << "-ocml" << "--minimize" << options;
+
+  // We'll need to read the log (printed to stderr) to update progress
+  connect(m_process, SIGNAL(readyReadStandardError()),
+          SLOT(optimizeGeometryReadLog()));
+
+  // Initialize the log reader ivars
+  m_optimizeGeometryLog.clear();
+  m_optimizeGeometryMaxSteps = -1;
+
+  // Start the optimization
+  executeObabel(realOptions, this, SLOT(optimizeGeometryPrepare()), cml);
+  return true;
+}
+
+void OBProcess::optimizeGeometryPrepare()
+{
+  if (m_aborted) {
+    releaseProcess();
+    return;
+  }
+
+  QByteArray result = m_process->readAllStandardOutput();
+
+  releaseProcess();
+  emit optimizeGeometryFinished(result);
+}
+
+void OBProcess::optimizeGeometryReadLog()
+{
+  // Append the current stderr to the log
+  m_optimizeGeometryLog +=
+      QString::fromLatin1(m_process->readAllStandardError());
+
+  // Search for the maximum number of steps if we haven't found it yet
+  if (m_optimizeGeometryMaxSteps < 0) {
+    QRegExp maxStepsParser("\nSTEPS = ([0-9]+)\n\n");
+    if (maxStepsParser.indexIn(m_optimizeGeometryLog) != -1) {
+      m_optimizeGeometryMaxSteps = maxStepsParser.cap(1).toInt();
+      emit optimizeGeometryStatusUpdate(0, m_optimizeGeometryMaxSteps,
+                                        0.0, 0.0);
+    }
+  }
+
+  // Emit the last printed step
+  if (m_optimizeGeometryMaxSteps >= 0) {
+    QRegExp lastStepParser("\\n\\s*([0-9]+)\\s+([-0-9.]+)\\s+([-0-9.]+)\\n");
+    if (lastStepParser.lastIndexIn(m_optimizeGeometryLog) != -1) {
+     int step = lastStepParser.cap(1).toInt();
+     double energy = lastStepParser.cap(2).toDouble();
+     double lastEnergy = lastStepParser.cap(3).toDouble();
+     emit optimizeGeometryStatusUpdate(step, m_optimizeGeometryMaxSteps,
+                                       energy, lastEnergy);
+    }
+  }
+}
+
 void OBProcess::executeObabel(const QStringList &options,
-                              QObject *receiver, const char *slot)
+                              QObject *receiver, const char *slot,
+                              const QByteArray &obabelStdin)
 {
   // Setup exit handler
   connect(m_process, SIGNAL(finished(int)), receiver, slot);
   connect(m_process, SIGNAL(error(QProcess::ProcessError)), receiver, slot);
 
   // Start process
+  qDebug() << "OBProcess::executeObabel: "
+              "Running" << m_obabelExecutable << options.join(" ");
   m_process->start(m_obabelExecutable, options);
+  if (!obabelStdin.isNull()) {
+    m_process->write(obabelStdin);
+    m_process->closeWriteChannel();
+  }
 }
 
 void OBProcess::resetState()
