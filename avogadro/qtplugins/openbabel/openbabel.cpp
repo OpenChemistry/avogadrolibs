@@ -16,6 +16,7 @@
 
 #include "openbabel.h"
 
+#include "obforcefielddialog.h"
 #include "obprocess.h"
 
 #include <avogadro/io/fileformatmanager.h>
@@ -37,6 +38,7 @@ namespace QtPlugins {
 
 OpenBabel::OpenBabel(QObject *p) :
   ExtensionPlugin(p),
+  m_molecule(NULL),
   m_process(new OBProcess(this)),
   m_progress(NULL)
 {
@@ -46,7 +48,14 @@ OpenBabel::OpenBabel(QObject *p) :
   connect(action, SIGNAL(triggered()), SLOT(onOpenFile()));
   m_actions.push_back(action);
 
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Optimize geometry via OpenBabel..."));
+  connect(action, SIGNAL(triggered()), SLOT(onOptimizeGeometry()));
+  m_actions.push_back(action);
+
   refreshReadFormats();
+  refreshForceFields();
 }
 
 OpenBabel::~OpenBabel()
@@ -63,15 +72,15 @@ QStringList OpenBabel::menuPath(QAction *) const
   return QStringList() << tr("&File");
 }
 
-void OpenBabel::setMolecule(QtGui::Molecule *)
+void OpenBabel::setMolecule(QtGui::Molecule *mol)
 {
-  // no-op
+  if (mol != m_molecule)
+    m_molecule = mol;
 }
 
 bool OpenBabel::readMolecule(QtGui::Molecule &mol)
 {
-  m_progress->setLabelText(tr("Loading file via OpenBabel:\n\n%1")
-                           .arg(tr("Loading molecule from CML...")));
+  m_progress->setLabelText(tr("Loading molecule from CML..."));
 
   bool result = false;
 
@@ -107,7 +116,7 @@ bool OpenBabel::readMolecule(QtGui::Molecule &mol)
     }
   }
 
-  m_progress->hide();
+  m_progress->reset();
   return result;
 }
 
@@ -148,9 +157,11 @@ void OpenBabel::onOpenFile()
   // Setup progress dialog
   if (!m_progress)
     m_progress = new QProgressDialog(qobject_cast<QWidget*>(parent()));
-  m_progress->setLabelText(tr("Loading file via OpenBabel:\n\n%1")
-                           .arg(tr("Converting to CML with %1...")
-                                .arg(m_process->obabelExecutable())));
+
+  m_progress->setWindowTitle(tr("Loading file (OpenBabel, %1)")
+                             .arg(fileName));
+  m_progress->setLabelText(tr("Converting to CML with %1...")
+                           .arg(m_process->obabelExecutable()));
   m_progress->setRange(0, 0);
   m_progress->setMinimumDuration(0);
   m_progress->setValue(0);
@@ -168,9 +179,8 @@ void OpenBabel::onOpenFile()
 
 void OpenBabel::onOpenFileReadFinished(const QByteArray &output)
 {
-  m_progress->setLabelText(tr("Loading file via OpenBabel:\n\n%1")
-                           .arg(tr("Retrieving CML from %1...")
-                                .arg(m_process->obabelExecutable())));
+  m_progress->setLabelText(tr("Retrieving CML from %1...")
+                           .arg(m_process->obabelExecutable()));
 
   m_moleculeQueue.append(output);
   emit moleculeReady(1);
@@ -235,12 +245,239 @@ void OpenBabel::handleReadFormatUpdate(const QMap<QString, QString> &fmts)
                                     .arg(allExtensions.join(" ")));
 }
 
+void OpenBabel::refreshForceFields()
+{
+  // No need to check if the member process is in use -- we use a temporary
+  // process for the refresh methods.
+  OBProcess *proc = new OBProcess(this);
+
+  connect(proc,
+          SIGNAL(queryForceFieldsFinished(QMap<QString,QString>)),
+          SLOT(handleForceFieldsUpdate(QMap<QString,QString>)));
+
+  proc->queryForceFields();
+}
+
+void OpenBabel::handleForceFieldsUpdate(const QMap<QString, QString> &ffMap)
+{
+  OBProcess *proc = qobject_cast<OBProcess*>(sender());
+  if (proc)
+    proc->deleteLater();
+
+  m_forceFields = ffMap;
+  qDebug() << m_forceFields.size()
+           << "forcefields available through OpenBabel.";
+  qDebug() << m_forceFields;
+}
+
+void OpenBabel::onOptimizeGeometry()
+{
+  if (!m_molecule || m_molecule->atomCount() == 0) {
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                          tr("Error"),
+                          tr("Molecule invalid. Cannot optimize geometry.")
+                          .arg(m_process->obabelExecutable()),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  // If the force field map is empty, there is probably a problem with the
+  // obabel executable. Warn the user and return.
+  if (m_forceFields.isEmpty()) {
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                          tr("Error"),
+                          tr("An error occurred while retrieving the list of "
+                             "supported forcefields. (using '%1').")
+                          .arg(m_process->obabelExecutable()),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  // Fail here if the process is already in use
+  if (m_process->inUse()) {
+    showProcessInUseError(tr("Cannot optimize geometry with OpenBabel."));
+    return;
+  }
+
+  QSettings settings;
+  QStringList options =
+      settings.value("openbabel/optimizeGeometry/lastOptions").toStringList();
+
+  options = OBForceFieldDialog::prompt(qobject_cast<QWidget*>(parent()),
+                                       m_forceFields.keys(), options,
+                                       guessDefaultForceField());
+
+  // User cancel
+  if (options.isEmpty())
+    return;
+
+  settings.setValue("openbabel/optimizeGeometry/lastOptions", options);
+
+  // Setup progress dialog
+  if (!m_progress)
+    m_progress = new QProgressDialog(qobject_cast<QWidget*>(parent()));
+  m_progress->setWindowTitle(tr("Optimizing Geometry (OpenBabel)"));
+  m_progress->setLabelText(tr("Generating CML..."));
+  m_progress->setRange(0, 0);
+  m_progress->setMinimumDuration(0);
+  m_progress->setValue(0);
+
+  // Connect process
+  disconnect(m_process);
+  m_process->disconnect(this);
+  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
+  connect(m_process,
+          SIGNAL(optimizeGeometryStatusUpdate(int,int,double,double)),
+          SLOT(onOptimizeGeometryStatusUpdate(int,int,double,double)));
+  connect(m_process, SIGNAL(optimizeGeometryFinished(QByteArray)),
+          SLOT(onOptimizeGeometryFinished(QByteArray)));
+
+  m_progress->show();
+
+  // Generate CML
+  std::string cml;
+  if (!Io::FileFormatManager::instance().writeString(*m_molecule, cml, "cml")) {
+    m_progress->reset();
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                          tr("Error"),
+                          tr("An internal error occurred while generating a "
+                             "CML representation of the current molecule."),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  m_progress->setLabelText(tr("Starting %1...", "arg is an executable file.")
+                           .arg(m_process->obabelExecutable()));
+
+  // Run obabel
+  m_process->optimizeGeometry(QByteArray(cml.c_str()), options);
+}
+
+void OpenBabel::onOptimizeGeometryStatusUpdate(int step, int numSteps,
+                                               double energy, double lastEnergy)
+{
+  QString status;
+
+  if (step == 0) {
+    status = tr("Step %1 of %2\nCurrent energy: %3\ndE: %4")
+        .arg(step).arg(numSteps)
+        .arg(fabs(energy) > 1e-10 ? QString::number(energy, 'g', 5)
+                                  : QString("(pending)"))
+        .arg("(pending)");
+  }
+  else {
+    double dE = energy - lastEnergy;
+    status = tr("Step %1 of %2\nCurrent energy: %3\ndE: %4")
+        .arg(step).arg(numSteps)
+        .arg(energy, 0, 'g', 5)
+        .arg(dE, 0, 'g', 5);
+  }
+
+  m_progress->setRange(0, numSteps);
+  m_progress->setValue(step);
+  m_progress->setLabelText(status);
+}
+
+void OpenBabel::onOptimizeGeometryFinished(const QByteArray &output)
+{
+  m_progress->setLabelText(tr("Updating molecule..."));
+
+  // CML --> molecule
+  Core::Molecule mol;
+  if (!Io::FileFormatManager::instance().readString(mol, output.constData(),
+                                                    "cml")) {
+    m_progress->reset();
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                          tr("Error"),
+                          tr("Error interpreting obabel CML output."),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  /// @todo cache a pointer to the current molecule in the above slot, and
+  /// verify that we're still operating on the same molecule.
+
+  // Check that the atom count hasn't changed:
+  if (mol.atomCount() != m_molecule->atomCount()) {
+    m_progress->reset();
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                          tr("Error"),
+                          tr("Number of atoms in obabel output (%1) does not "
+                             "match the number of atoms in the original "
+                             "molecule (%2).")
+                          .arg(mol.atomCount()).arg(m_molecule->atomCount()),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  std::swap(mol.atomPositions3d(), m_molecule->atomPositions3d());
+  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified);
+  m_progress->reset();
+}
+
 void OpenBabel::showProcessInUseError(const QString &title) const
 {
   QMessageBox::critical(qobject_cast<QWidget*>(parent()), title,
                         tr("Already running OpenBabel. Wait for the other "
                            "operation to complete and try again."),
                         QMessageBox::Ok);
+}
+
+QString OpenBabel::guessDefaultForceField() const
+{
+  // Guess forcefield based on molecule. Preference is GAFF, MMFF94, then UFF.
+  // See discussion at
+  // http://forums.openbabel.org/Heuristic-for-selecting-best-forcefield-td4655917.html
+  QString formula = QString::fromStdString(m_molecule->formula());
+  QStringList elementTypes = formula.split(QRegExp("\\d+"),
+                                           QString::SkipEmptyParts);
+  bool mmff94Valid = true;
+  bool gaffValid = true;
+  QStringList::const_iterator eleIter = elementTypes.constBegin();
+  while (eleIter != elementTypes.constEnd() && (mmff94Valid || gaffValid)) {
+    // These are supported by GAFF and MMFF94s
+    if (*eleIter != "C"  &&
+        *eleIter != "H"  &&
+        *eleIter != "F"  &&
+        *eleIter != "Cl" &&
+        *eleIter != "Br" &&
+        *eleIter != "I"  &&
+        *eleIter != "N"  &&
+        *eleIter != "O"  &&
+        *eleIter != "P"  &&
+        *eleIter != "S"  ){
+      gaffValid = false;
+
+      // These are supported by MMFF94 (but not GAFF)
+      if (*eleIter != "Fe" &&
+          *eleIter != "Li" &&
+          *eleIter != "Na" &&
+          *eleIter != "K"  &&
+          *eleIter != "Zn" &&
+          *eleIter != "Ca" &&
+          *eleIter != "Cu" &&
+          *eleIter != "Mg" &&
+          *eleIter != "Na" ){
+        mmff94Valid = false;
+      }
+    }
+    ++eleIter;
+  }
+
+  QStringList ffs = m_forceFields.keys();
+  QString result;
+  if (gaffValid && ffs.contains("GAFF"))
+    result = "GAFF";
+  else if (mmff94Valid && ffs.contains("MMFF94"))
+    result = "MMFF94";
+  // MMFF94 handles nitrogens more correctly than MMFF94s, but this
+  // can be used in a pinch.
+  else if (mmff94Valid && ffs.contains("MMFF94s"))
+    result = "MMFF94s";
+  else if (ffs.contains("UFF"))
+    result = "UFF";
+
+  return result;
 }
 
 }
