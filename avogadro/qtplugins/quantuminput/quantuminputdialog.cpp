@@ -28,11 +28,15 @@
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 
+#include <QtGui/QCheckBox>
+#include <QtGui/QComboBox>
 #include <QtGui/QFileDialog>
 #include <QtGui/QFormLayout>
 #include <QtGui/QHBoxLayout>
+#include <QtGui/QLineEdit>
 #include <QtGui/QMessageBox>
 #include <QtGui/QProgressDialog>
+#include <QtGui/QSpinBox>
 #include <QtGui/QTextBrowser>
 #include <QtGui/QTextEdit>
 #include <QtGui/QVBoxLayout>
@@ -535,6 +539,37 @@ void QuantumInputDialog::connectMoleQueue()
           this, SLOT(queueListReceived(QJsonObject)));
 }
 
+QString QuantumInputDialog::lookupOptionType(const QString &name) const
+{
+  if (!m_options.contains("userOptions") ||
+      !m_options["userOptions"].isObject()) {
+    qWarning() << tr("'userOptions' missing, or not an object.");
+    return QString();
+  }
+
+  QJsonObject userOptions = m_options["userOptions"].toObject();
+
+  if (!userOptions.contains(name)) {
+    qWarning() << tr("Option '%1' not found in userOptions.").arg(name);
+    return QString();
+  }
+
+  if (!userOptions.value(name).isObject()) {
+    qWarning() << tr("Option '%1' does not refer to an object.");
+    return QString();
+  }
+
+  QJsonObject obj = userOptions[name].toObject();
+
+  if (!obj.contains("type") ||
+      !obj.value("type").isString()) {
+    qWarning() << tr("'type' is not a string for option '%1'.").arg(name);
+    return QString();
+  }
+
+  return obj["type"].toString();
+}
+
 void QuantumInputDialog::updateOptions()
 {
   m_options = m_inputGenerator.options();
@@ -566,7 +601,11 @@ void QuantumInputDialog::buildOptionGui()
 
   QJsonObject userOptions = m_options.value("userOptions").toObject();
 
-  // Calculation Type at the top:
+  // Title first
+  if (userOptions.contains("Title"))
+    addOptionRow(tr("Title"), userOptions.take("Title"));
+
+  // Calculation Type next:
   if (userOptions.contains("Calculation Type"))
     addOptionRow(tr("Calculation Type"), userOptions.take("Calculation Type"));
 
@@ -629,26 +668,91 @@ void QuantumInputDialog::addOptionRow(const QString &label,
 
 QWidget* QuantumInputDialog::createOptionWidget(const QJsonValue &option)
 {
-  /// @todo Expand this to cover clamped number ranges, strings, etc
   if (!option.isObject())
     return NULL;
 
   QJsonObject obj = option.toObject();
 
-  if (!obj.contains("values") || !obj["values"].isArray())
+  if (!obj.contains("type") ||
+      !obj.value("type").isString())
     return NULL;
+
+  QString type = obj["type"].toString();
+
+  if (type == "stringList")
+    return createStringListWidget(obj);
+  else if (type == "string")
+    return createStringWidget(obj);
+  else if (type == "integer")
+    return createIntegerWidget(obj);
+  else if (type == "boolean")
+    return createBooleanWidget(obj);
+
+  qDebug() << "Unrecognized option type:" << type;
+  return NULL;
+}
+
+QWidget *QuantumInputDialog::createStringListWidget(const QJsonObject &obj)
+{
+  if (!obj.contains("values") || !obj["values"].isArray()) {
+    qDebug() << "QuantumInputDialog::createStringListWidget()"
+                "values missing, or not array!";
+    return NULL;
+  }
 
   QJsonArray valueArray = obj["values"].toArray();
 
-  QComboBox *combo = new QComboBox;
+  QComboBox *combo = new QComboBox(this);
 
   for (QJsonArray::const_iterator vit = valueArray.constBegin(),
        vitEnd = valueArray.constEnd(); vit != vitEnd; ++vit) {
-    combo->addItem((*vit).toString());
+    if ((*vit).isString())
+      combo->addItem((*vit).toString());
+    else
+      qDebug() << "Cannot convert value to string for stringList:" << *vit;
   }
   connect(combo, SIGNAL(currentIndexChanged(int)), SLOT(updatePreviewText()));
 
   return combo;
+}
+
+QWidget *QuantumInputDialog::createStringWidget(const QJsonObject &obj)
+{
+  Q_UNUSED(obj);
+  QLineEdit *edit = new QLineEdit(this);
+  connect(edit, SIGNAL(textChanged(QString)), SLOT(updatePreviewText()));
+  return edit;
+}
+
+QWidget *QuantumInputDialog::createIntegerWidget(const QJsonObject &obj)
+{
+  QSpinBox *spin = new QSpinBox(this);
+  if (obj.contains("minimum") &&
+      obj.value("minimum").isDouble()) {
+    spin->setMinimum(static_cast<int>(obj["minimum"].toDouble() + 0.5));
+  }
+  if (obj.contains("maximum") &&
+      obj.value("maximum").isDouble()) {
+    spin->setMaximum(static_cast<int>(obj["maximum"].toDouble() + 0.5));
+  }
+  if (obj.contains("prefix") &&
+      obj.value("prefix").isString()) {
+    spin->setPrefix(obj["prefix"].toString());
+  }
+  if (obj.contains("suffix") &&
+      obj.value("suffix").isString()) {
+    spin->setSuffix(obj["suffix"].toString());
+  }
+  connect(spin, SIGNAL(valueChanged(int)), SLOT(updatePreviewText()));
+  return spin;
+}
+
+QWidget *QuantumInputDialog::createBooleanWidget(const QJsonObject &obj)
+{
+  Q_UNUSED(obj);
+  QCheckBox *checkBox = new QCheckBox(this);
+  connect(checkBox, SIGNAL(toggled(bool)), SLOT(updatePreviewText()));
+  return checkBox;
 }
 
 void QuantumInputDialog::setOptionDefaults()
@@ -674,16 +778,120 @@ void QuantumInputDialog::setOptionDefaults()
     }
 
     QJsonObject obj = val.toObject();
-
-    int def = 0;
-    if (obj["default"].isDouble())
-      def = static_cast<int>(std::floor(obj["default"].toDouble() + 0.5));
-
-    if (QComboBox *combo =
-        qobject_cast<QComboBox*>(m_widgets.value(label, NULL))) {
-      combo->setCurrentIndex(def);
-    }
+    if (obj.contains("default"))
+      setOption(label, obj["default"]);
+    else if (m_inputGenerator.debug())
+      qWarning() << tr("Default value missing for option '%1'.").arg(label);
   }
+}
+
+void QuantumInputDialog::setOption(const QString &name,
+                                   const QJsonValue &defaultValue)
+{
+  QString type = lookupOptionType(name);
+
+  if (type == "stringList")
+    return setStringListOption(name, defaultValue);
+  else if (type == "string")
+    return setStringOption(name, defaultValue);
+  else if (type == "integer")
+    return setIntegerOption(name, defaultValue);
+  else if (type == "boolean")
+    return setBooleanOption(name, defaultValue);
+
+  qWarning() << tr("Unrecognized option type '%1' for option '%2'.")
+                .arg(type).arg(name);
+  return;
+}
+
+void QuantumInputDialog::setStringListOption(const QString &name,
+                                             const QJsonValue &value)
+{
+  QComboBox *combo = qobject_cast<QComboBox*>(m_widgets.value(name, NULL));
+  if (!combo) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad widget type.")
+                  .arg(name);
+    return;
+  }
+
+  if (!value.isDouble()) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad default value:")
+                  .arg(name)
+               << value;
+    return;
+  }
+
+  int intVal = static_cast<int>(value.toDouble() + 0.5);
+  combo->setCurrentIndex(intVal);
+}
+
+void QuantumInputDialog::setStringOption(const QString &name,
+                                         const QJsonValue &value)
+{
+  QLineEdit *lineEdit = qobject_cast<QLineEdit*>(m_widgets.value(name, NULL));
+  if (!lineEdit) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad widget type.")
+                  .arg(name);
+    return;
+  }
+
+  if (!value.isString()) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad default value:")
+                  .arg(name)
+               << value;
+    return;
+  }
+
+  lineEdit->setText(value.toString());
+}
+
+void QuantumInputDialog::setIntegerOption(const QString &name,
+                                          const QJsonValue &value)
+{
+  QSpinBox *spin = qobject_cast<QSpinBox*>(m_widgets.value(name, NULL));
+  if (!spin) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad widget type.")
+                  .arg(name);
+    return;
+  }
+
+  if (!value.isDouble()) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad default value:")
+                  .arg(name)
+               << value;
+    return;
+  }
+
+  int intVal = static_cast<int>(value.toDouble() + 0.5);
+  spin->setValue(intVal);
+}
+
+void QuantumInputDialog::setBooleanOption(const QString &name,
+                                          const QJsonValue &value)
+{
+  QCheckBox *checkBox = qobject_cast<QCheckBox*>(m_widgets.value(name, NULL));
+  if (!checkBox) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad widget type.")
+                  .arg(name);
+    return;
+  }
+
+  if (!value.isBool()) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad default value:")
+                  .arg(name)
+               << value;
+    return;
+  }
+
+  checkBox->setChecked(value.toBool());
 }
 
 QJsonObject QuantumInputDialog::collectOptions() const
@@ -691,9 +899,22 @@ QJsonObject QuantumInputDialog::collectOptions() const
   QJsonObject ret;
 
   foreach (QString label, m_widgets.keys()) {
-    if (QComboBox *combo =
-        qobject_cast<QComboBox*>(m_widgets.value(label, NULL))) {
+    QWidget *widget = m_widgets.value(label, NULL);
+    if (QComboBox *combo = qobject_cast<QComboBox*>(widget)) {
       ret.insert(label, combo->currentText());
+    }
+    else if (QLineEdit *lineEdit = qobject_cast<QLineEdit*>(widget)) {
+      ret.insert(label, lineEdit->text());
+    }
+    else if (QSpinBox *spinBox = qobject_cast<QSpinBox*>(widget)) {
+      ret.insert(label, spinBox->value());
+    }
+    else if (QCheckBox *checkBox = qobject_cast<QCheckBox*>(widget)) {
+      ret.insert(label, checkBox->isChecked());
+    }
+    else {
+      qWarning() << tr("Unhandled widget in collectOptions for option '%1'.")
+                    .arg(label);
     }
   }
 
@@ -709,18 +930,10 @@ QJsonObject QuantumInputDialog::collectSettings() const
   return ret;
 }
 
-void QuantumInputDialog::applyOptions(const QJsonObject &opts) const
+void QuantumInputDialog::applyOptions(const QJsonObject &opts)
 {
-  foreach (const QString &label, opts.keys()) {
-    if (QComboBox *combo =
-        qobject_cast<QComboBox*>(m_widgets.value(label, NULL))) {
-      QString currentText = opts.value(label).toString();
-      int ind = combo->findText(currentText);
-      combo->blockSignals(true);
-      combo->setCurrentIndex(ind);
-      combo->blockSignals(false);
-    }
-  }
+  foreach (const QString &label, opts.keys())
+    setOption(label, opts[label]);
 }
 
 } // end namespace QtPlugins
