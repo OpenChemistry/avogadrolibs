@@ -172,6 +172,12 @@ private:
   QJsonObject collectOptions() const;
 
   /**
+   * Collect all settings (options that are not dynamically generated from the
+   * input generator script) into a JSON object.
+   */
+  QJsonObject collectSettings() const;
+
+  /**
    * Apply the options in the passed QJsonObject to the GUI. Any widgets changed
    * by this method will have their signals blocked while modifying their
    * values.

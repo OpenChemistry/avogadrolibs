@@ -151,7 +151,10 @@ void QuantumInputDialog::updatePreviewTextImmediately()
     return;
 
   // Generate the input files
-  if (!m_inputGenerator.generateInput(collectOptions(), *m_molecule)) {
+  QJsonObject inputOptions;
+  inputOptions["options"] = collectOptions();
+  inputOptions["settings"] = collectSettings();
+  if (!m_inputGenerator.generateInput(inputOptions, *m_molecule)) {
     showError(m_inputGenerator.errorString());
     m_inputGenerator.clearErrors();
     return;
@@ -522,6 +525,8 @@ void QuantumInputDialog::connectButtons()
   connect(m_ui.closeButton, SIGNAL(clicked()), SLOT(close()));
   connect(m_ui.refreshProgramsButton, SIGNAL(clicked()),
           SLOT(refreshPrograms()));
+  connect(m_ui.coresSpinBox, SIGNAL(valueChanged(int)),
+          SLOT(updatePreviewText()));
 }
 
 void QuantumInputDialog::connectMoleQueue()
@@ -691,6 +696,15 @@ QJsonObject QuantumInputDialog::collectOptions() const
       ret.insert(label, combo->currentText());
     }
   }
+
+  return ret;
+}
+
+QJsonObject QuantumInputDialog::collectSettings() const
+{
+  QJsonObject ret;
+
+  ret.insert("numberOfCores", m_ui.coresSpinBox->value());
 
   return ret;
 }

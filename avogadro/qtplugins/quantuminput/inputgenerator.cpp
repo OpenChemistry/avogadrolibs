@@ -98,8 +98,7 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
   m_files.clear();
 
   // Add the molecule file to the options
-  QJsonObject allOptions;
-  allOptions["options"] = options_;
+  QJsonObject allOptions(options_);
   if (!insertMolecule(allOptions, mol))
     return false;
 

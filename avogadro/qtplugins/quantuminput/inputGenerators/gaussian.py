@@ -69,7 +69,7 @@ def getOptions():
 
   return opts
 
-def generateInputFile(opts):
+def generateInputFile(opts, settings):
   # Extract options:
   calculate = opts['Calculation Type']
   theory = opts['Theory']
@@ -78,11 +78,16 @@ def generateInputFile(opts):
   charge = opts['Charge']
   outputFormat = opts['Output Format']
   checkpoint = opts['Write Checkpoint File']
+  nCores = int(settings['numberOfCores'])
 
   # TODO I'm not porting the %NProcShared bit here...we'll need some more
   # plumbing to support that here without adding a second '#Procs' option to the
   # GUI (MoleQueue already has one).
   output = ''
+
+  # Number of cores
+  if nCores > 1:
+    output += "%%NProcShared=%d\n"%nCores
 
   # Checkpoint
   if checkpoint == 'On':
@@ -163,7 +168,7 @@ def generateInput():
   opts = json.loads(stdinStr)
 
   # Generate the input file
-  inp = generateInputFile(opts['options'])
+  inp = generateInputFile(opts['options'], opts['settings'])
 
   # Prepare the result
   result = {}

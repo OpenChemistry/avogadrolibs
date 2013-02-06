@@ -119,6 +119,9 @@ namespace QtPlugins {
     "First option name": "Value 2",
     "Second option name": "Value 1",
     ...
+  },
+  "settings": {
+    "numberOfCores": 4
   }
 }
 @endcode
@@ -131,6 +134,9 @@ namespace QtPlugins {
  * The "options" block contains key/value
  * pairs for each of the options specified in the "userOptions" block of the
  * <tt>--print-options</tt> output.
+ * The "settings" block contains a fixed set of parameters that are always
+ * available in the GUI:
+ * - <tt>numberOfCores</tt>: The number of processor cores requested.
  *
  * If the script is called with <tt>--generate-input</tt>, it must write a JSON
  * string to standard output of the following format:
