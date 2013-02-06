@@ -137,3 +137,22 @@ TEST(MoleculeTest, dataMap)
   EXPECT_EQ(molecule.data("SMILES").toString(), "CCO");
   EXPECT_EQ(molecule.data("CAS").toString(), "64-17-5");
 }
+
+TEST(MoleculeTest, perceiveBondsSimple)
+{
+  Molecule molecule;
+  Atom o1 = molecule.addAtom(8);
+  Atom h2 = molecule.addAtom(1);
+  Atom h3 = molecule.addAtom(1);
+
+  o1.setPosition3d(Avogadro::Vector3(0, 0, 0));
+  h2.setPosition3d(Avogadro::Vector3(0.6, -0.5, 0));
+  h3.setPosition3d(Avogadro::Vector3(-0.6, -0.5, 0));
+  EXPECT_EQ(molecule.bondCount(), 0);
+
+  molecule.perceiveBondsSimple();
+  EXPECT_EQ(molecule.bondCount(), 2);
+  EXPECT_TRUE(molecule.bond(o1, h2).isValid());
+  EXPECT_TRUE(molecule.bond(o1, h3).isValid());
+  EXPECT_FALSE(molecule.bond(h2, h3).isValid());
+}
