@@ -151,6 +151,12 @@ private:
   /**@}*/
 
   /**
+   * Given the name of a user-option in m_options, return the type string.
+   * If an error occurs, an empty string will be returned.
+   */
+  QString lookupOptionType(const QString &name) const;
+
+  /**
    * Used to construct the script-specific GUI.
    * @{
    */
@@ -158,12 +164,23 @@ private:
   void buildOptionGui();
   void addOptionRow(const QString &label, const QJsonValue &option);
   QWidget* createOptionWidget(const QJsonValue &option);
+  QWidget* createStringListWidget(const QJsonObject &obj);
+  QWidget* createStringWidget(const QJsonObject &obj);
+  QWidget* createIntegerWidget(const QJsonObject &obj);
+  QWidget* createBooleanWidget(const QJsonObject &obj);
   /**@}*/
 
   /**
    * Set the simulation settings to their default values.
+   * @{
    */
   void setOptionDefaults();
+  void setOption(const QString &name, const QJsonValue &defaultValue);
+  void setStringListOption(const QString &name, const QJsonValue &value);
+  void setStringOption(const QString &name, const QJsonValue &value);
+  void setIntegerOption(const QString &name, const QJsonValue &value);
+  void setBooleanOption(const QString &name, const QJsonValue &value);
+  /**@}*/
 
   /**
    * Collect all of the user-specified options into a JSON object, to be sent
@@ -182,7 +199,7 @@ private:
    * by this method will have their signals blocked while modifying their
    * values.
    */
-  void applyOptions(const QJsonObject &opts) const;
+  void applyOptions(const QJsonObject &opts);
 
   /**
    * Used for keyword replacement.
