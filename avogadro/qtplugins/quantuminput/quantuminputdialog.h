@@ -201,15 +201,6 @@ private:
    */
   void applyOptions(const QJsonObject &opts);
 
-  /**
-   * Used for keyword replacement.
-   * @sa InputGenerator
-   * @{
-   */
-  QString generateCoordinateBlock(const QString &spec) const;
-  void replaceKeywords(QString &str) const;
-  /**@}*/
-
   Ui::QuantumInputDialog m_ui;
   QtGui::Molecule *m_molecule;
   MoleQueue::Client *m_client;
