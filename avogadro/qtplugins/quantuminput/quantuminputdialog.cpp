@@ -630,9 +630,9 @@ void QuantumInputDialog::buildOptionGui()
   }
   else {
     if (hasTheory)
-      addOptionRow(tr("Theory"), userOptions["Theory"]);
+      addOptionRow(tr("Theory"), userOptions.take("Theory"));
     if (hasBasis)
-      addOptionRow(tr("Basis"), userOptions["Basis"]);
+      addOptionRow(tr("Basis"), userOptions.take("Basis"));
   }
 
   // Other special cases:
