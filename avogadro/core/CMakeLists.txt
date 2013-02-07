@@ -22,7 +22,7 @@ if(MUTEX_TYPE_BOOST_REQUIRED)
   endif()
   message(STATUS
     "Using Boost to replace some C++11 features that are not available.")
-  find_package(Boost COMPONENTS thread system)
+  find_package(Boost COMPONENTS thread system chrono)
   set(AvogadroLibs_NEEDS_BOOST "thread;system" CACHE INTERNAL
     "What Boost libraries we require")
   set(AvogadroLibs_BOOST_INCLUDE_DIRS ${Boost_INCLUDE_DIRS} PARENT_SCOPE)
