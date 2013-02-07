@@ -27,6 +27,7 @@
 #include <qjsonarray.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QTextStream>
@@ -210,6 +211,12 @@ QString InputGenerator::fileContents(const QString &fileName) const
 QByteArray InputGenerator::execute(const QStringList &args,
                                    const QByteArray &scriptStdin) const
 {
+  // Verify that the file is executable before doing anything else:
+  if (!QFileInfo(m_scriptFilePath).isExecutable()) {
+    return tr("Input generator script '%1' is not executable.")
+        .arg(m_scriptFilePath).toLocal8Bit();
+  }
+
   QProcess proc;
 
   // Merge stdout and stderr
