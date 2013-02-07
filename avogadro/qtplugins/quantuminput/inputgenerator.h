@@ -271,23 +271,25 @@ $$coords:[coordSpec]$$
  * - @c x: X cartesian coordinate in Angstrom
  * - @c y: Y cartesian coordinate in Angstrom
  * - @c z: Z cartesian coordinate in Angstrom
+ * - @c 0: A literal "0". Useful for optimization flags.
+ * - @c 1: A literal "1". Useful for optimization flags.
  *
  * For example, the string
 ~~~
-$$coords:SZxyz$$
+$$coords:SZxyz110$$
 ~~~
  * will be
  * replaced by a molecule-specific block of text similar to the following:
 ~~~
-C     6        1.126214              0.765886              0.000000
-C     6        0.819345             -0.564955              0.000000
-C     6       -0.598383             -0.795127              0.000000
-C     6       -1.310706              0.370165              0.000000
-S     16      -0.285330              1.757144              0.000000
-H     1        2.130424              1.185837              0.000000
-H     1        1.548377             -1.375303              0.000000
-H     1       -1.033768             -1.794407              0.000000
-H     1       -2.396173              0.450760              0.000000
+C     6        1.126214              0.765886              0.000000 1 1 0
+C     6        0.819345             -0.564955              0.000000 1 1 0
+C     6       -0.598383             -0.795127              0.000000 1 1 0
+C     6       -1.310706              0.370165              0.000000 1 1 0
+S     16      -0.285330              1.757144              0.000000 1 1 0
+H     1        2.130424              1.185837              0.000000 1 1 0
+H     1        1.548377             -1.375303              0.000000 1 1 0
+H     1       -1.033768             -1.794407              0.000000 1 1 0
+H     1       -2.396173              0.450760              0.000000 1 1 0
 ~~~
  *
  * Error Handling

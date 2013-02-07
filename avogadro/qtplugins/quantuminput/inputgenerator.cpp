@@ -355,6 +355,8 @@ QString InputGenerator::generateCoordinateBlock(const QString &spec,
   // - 'x': x coordinate
   // - 'y': y coordinate
   // - 'z': z coordinate
+  // - '0': Literal 0
+  // - '1': Literal 1
   bool needElementSymbol = spec.contains('S');
   bool needElementName = spec.contains('N');
   bool needPosition =
@@ -422,6 +424,16 @@ QString InputGenerator::generateCoordinateBlock(const QString &spec,
         stream.setFieldAlignment(QTextStream::AlignRight);
         stream.setFieldWidth(realWidth);
         stream << pos3d.z();
+        break;
+      case '0':
+        stream.setFieldAlignment(QTextStream::AlignLeft);
+        stream.setFieldWidth(1);
+        stream << 0;
+        break;
+      case '1':
+        stream.setFieldAlignment(QTextStream::AlignLeft);
+        stream.setFieldWidth(1);
+        stream << 1;
         break;
       } // end switch
 
