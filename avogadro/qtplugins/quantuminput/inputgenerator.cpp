@@ -357,6 +357,7 @@ QString InputGenerator::generateCoordinateBlock(const QString &spec,
   // - 'z': z coordinate
   // - '0': Literal 0
   // - '1': Literal 1
+  // - '_': Space character.
   bool needElementSymbol = spec.contains('S');
   bool needElementName = spec.contains('N');
   bool needPosition =
@@ -395,6 +396,15 @@ QString InputGenerator::generateCoordinateBlock(const QString &spec,
     it = begin;
     while (it != end) {
       switch (it->toLatin1()) {
+      case '_':
+        // Space character. If we are not at the end of the spec, a space will
+        // be added by default after the switch clause. If we are at the end,
+        // add a space before the newline that will be added.
+        if (it + 1 == end) {
+          stream.setFieldWidth(1);
+          stream << " ";
+        }
+        break;
       case 'Z':
         stream.setFieldAlignment(QTextStream::AlignLeft);
         stream.setFieldWidth(3);
