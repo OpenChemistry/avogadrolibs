@@ -28,6 +28,7 @@ set(input_generators
   inputGenerators/gaussian.py
   inputGenerators/mopac.py
   inputGenerators/nwchem.py
+  inputGenerators/qchem.py
 )
 
 # Default shebang lines for interpreted scripts:
