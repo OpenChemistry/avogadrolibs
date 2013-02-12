@@ -4,6 +4,7 @@ set(tests
   Cml
   FileFormatManager
   Hdf5
+  Xyz
   )
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
