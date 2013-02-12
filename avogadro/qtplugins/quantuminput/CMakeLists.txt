@@ -1,6 +1,6 @@
 # Pull in MoleQueue
 find_package(MoleQueue)
-include_directories("${MoleQueue_INCLUDE_DIRS}")
+include_directories(${MoleQueue_INCLUDE_DIRS})
 
 # Needed to find avogadroioexport.h:
 include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/io/")

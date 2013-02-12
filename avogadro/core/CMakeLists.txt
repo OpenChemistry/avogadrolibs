@@ -16,9 +16,13 @@ configure_file("${PROJECT_SOURCE_DIR}/cmake/memory.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/memory_p.h" @ONLY)
 
 if(MUTEX_TYPE_BOOST_REQUIRED)
+  # FindBoost(...) requires this to be set on Windows.
+  if(NOT BUILD_SHARED_LIBS OR WIN32)
+    set(Boost_USE_STATIC_LIBS ON)
+  endif()
   message(STATUS
     "Using Boost to replace some C++11 features that are not available.")
-  find_package(Boost COMPONENTS thread system)
+  find_package(Boost COMPONENTS thread system chrono)
   set(AvogadroLibs_NEEDS_BOOST "thread;system" CACHE INTERNAL
     "What Boost libraries we require")
   set(AvogadroLibs_BOOST_INCLUDE_DIRS ${Boost_INCLUDE_DIRS} PARENT_SCOPE)
