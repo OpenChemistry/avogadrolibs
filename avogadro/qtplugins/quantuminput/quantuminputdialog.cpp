@@ -185,6 +185,7 @@ void QuantumInputDialog::updatePreviewTextImmediately()
     if (m_textEdits.contains(fileName))
       continue;
     QTextEdit *edit = new QTextEdit();
+    edit->setFontFamily("monospace");
     connect(edit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
     m_ui.tabWidget->addTab(edit, fileName);
     m_textEdits.insert(fileName, edit);
