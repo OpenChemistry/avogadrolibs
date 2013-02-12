@@ -196,7 +196,7 @@ namespace QtPlugins {
  * channel as JSON string of the following form:
 ~~~{.js}
 {
-  "cjson": "[...]",
+  "cjson": {...},
   "options": {
     "First option name": "Value 2",
     "Second option name": "Value 1",
@@ -207,11 +207,11 @@ namespace QtPlugins {
   }
 }
 ~~~
- * The `cjson` entry will contain a string with a Chemical JSON representation
+ * The `cjson` entry will contain a Chemical JSON representation
  * of the molecule if `inputMoleculeFormat` is set to "cjson" in the
  * `--print-options` output.
- * Similarly, it will be `cml` if a Chemical Markup Language representation
- * was requested.
+ * Similarly, a `cml` entry and CML string will exist if a Chemical Markup
+ * Language representation was requested.
  * It will be omitted entirely if `inputMoleculeFormat` is not set.
  * The `options` block contains key/value
  * pairs for each of the options specified in the `userOptions` block of the

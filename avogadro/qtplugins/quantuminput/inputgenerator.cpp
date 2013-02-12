@@ -332,13 +332,34 @@ bool InputGenerator::insertMolecule(QJsonObject &json,
   }
 
   std::string str;
-  if (format->writeString(str, mol)) {
+  if (!format->writeString(str, mol)) {
     m_errors << tr("Error writing molecule representation to string: %1")
                    .arg(QString::fromStdString(format->error()));
     return false;
   }
 
-  json.insert(m_moleculeExtension, QJsonValue(QString::fromStdString(str)));
+  if (m_moleculeExtension != "cjson") {
+    json.insert(m_moleculeExtension, QJsonValue(QString::fromStdString(str)));
+  }
+  else {
+    // If cjson was requested, embed the actual JSON, rather than the string.
+    QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(str.c_str(), &error);
+    if (error.error != QJsonParseError::NoError) {
+      m_errors << tr("Error generating cjson object: Parse error at offset %1: "
+                     "%2\nRaw JSON:\n\n%3").arg(error.offset)
+                  .arg(error.errorString()).arg(QString::fromStdString(str));
+      return false;
+    }
+
+    if (!doc.isObject()) {
+      m_errors << tr("Error generator cjson object: Parsed JSON is not an "
+                     "object:\n%1").arg(QString::fromStdString(str));
+      return false;
+    }
+
+    json.insert(m_moleculeExtension, doc.object());
+  }
 
   return true;
 }
