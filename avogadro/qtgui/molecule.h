@@ -42,6 +42,8 @@ public:
 
   /** \enum Enumeration of change types that can be given. */
   enum MoleculeChange {
+    /** Useful for initializing MoleculeChange variables. */
+    NoChange = 0x0,
     /** Object types that can be changed. */
     Atoms = 0x01,
     Bonds = 0x02,
@@ -50,6 +52,7 @@ public:
     Removed  = 0x2048,
     Modified = 0x4096
   };
+  Q_DECLARE_FLAGS(MoleculeChanges, MoleculeChange)
 
   /**
    * Add an atom with @p atomicNumber to the molecule.
@@ -122,6 +125,8 @@ private:
 
   std::vector<Mesh *> m_meshes;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Molecule::MoleculeChanges)
 
 } // end QtGui namespace
 } // end Avogadro namespace
