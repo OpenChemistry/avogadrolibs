@@ -31,6 +31,7 @@ set(input_generators
   inputGenerators/mopac.py
   inputGenerators/nwchem.py
   inputGenerators/qchem.py
+  inputGenerators/terachem.py
 )
 
 # Default shebang lines for interpreted scripts:
