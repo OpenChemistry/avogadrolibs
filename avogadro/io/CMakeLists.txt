@@ -19,6 +19,7 @@ set(HEADERS
   fileformatmanager.h
   hdf5dataformat.h
   utilities.h
+  xyzformat.h
 )
 
 set(SOURCES
@@ -27,6 +28,7 @@ set(SOURCES
   fileformat.cpp
   fileformatmanager.cpp
   hdf5dataformat.cpp
+  xyzformat.cpp
 )
 
 # Ever feel like you should just take the modular build system?
