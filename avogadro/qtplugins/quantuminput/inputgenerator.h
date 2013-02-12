@@ -293,6 +293,10 @@ $$coords:__SZxyz110$$
   H  1   -2.396173  0.450760  0.000000 1 1 0
 ~~~
  *
+ * Other keywords that can be used in the input files are:
+ * - `$$atomCount$$`: Number of atoms in the molecule.
+ * - `$$bondCount$$`: Number of bonds in the molecule.
+ *
  * Error Handling
  * ==============
  *

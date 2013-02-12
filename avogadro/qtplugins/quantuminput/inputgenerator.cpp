@@ -481,6 +481,10 @@ QString InputGenerator::generateCoordinateBlock(const QString &spec,
 void InputGenerator::replaceKeywords(QString &str,
                                      const Core::Molecule &mol) const
 {
+  // Simple keywords:
+  str.replace("$$atomCount$$", QString::number(mol.atomCount()));
+  str.replace("$$bondCount$$", QString::number(mol.bondCount()));
+
   // Find each coordinate block keyword in the file, then generate and replace
   // it with the appropriate values.
   QRegExp coordParser("\\$\\$coords:([^\\$]*)\\$\\$");
