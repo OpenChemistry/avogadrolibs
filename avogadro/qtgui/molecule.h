@@ -69,6 +69,11 @@ public:
   bool removeAtom(const Core::Atom &atom);
 
   /**
+   * Remove all atoms from the molecule.
+   */
+  void clearAtoms();
+
+  /**
    * @brief Add a bond between the specified atoms.
    * @param a The first atom in the bond.
    * @param b The second atom in the bond.
@@ -86,6 +91,11 @@ public:
   bool removeBond(size_t index);
   bool removeBond(const Core::Bond &bond);
   bool removeBond(const Core::Atom &a, const Core::Atom &b);
+
+  /**
+   * Remove all bonds from the molecule.
+   */
+  void clearBonds();
 
   /**
    * @brief Add a mesh to the molecule.

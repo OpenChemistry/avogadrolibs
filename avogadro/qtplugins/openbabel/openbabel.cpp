@@ -61,6 +61,12 @@ OpenBabel::OpenBabel(QObject *p) :
   connect(action, SIGNAL(triggered()), SLOT(onConfigureGeometryOptimization()));
   m_actions.push_back(action);
 
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Perceive bonds (Open Babel)..."));
+  connect(action, SIGNAL(triggered()), SLOT(onPerceiveBonds()));
+      m_actions.push_back(action);
+
   refreshReadFormats();
   refreshForceFields();
 }
@@ -457,6 +463,100 @@ void OpenBabel::onOptimizeGeometryFinished(const QByteArray &output)
 
   std::swap(mol.atomPositions3d(), m_molecule->atomPositions3d());
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified);
+  m_progress->reset();
+}
+
+void OpenBabel::onPerceiveBonds()
+{
+  // Fail here if the process is already in use
+  if (m_process->inUse()) {
+    showProcessInUseError(tr("Cannot open file with OpenBabel."));
+    return;
+  }
+
+  if (!m_molecule || m_molecule->atomCount() < 2) {
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                          tr("Error"),
+                          tr("Invalid molecule: Cannot perceive bonds."),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  // Setup progress dialog
+  if (!m_progress)
+    m_progress = new QProgressDialog(qobject_cast<QWidget*>(parent()));
+
+  m_progress->setWindowTitle(tr("Perceiving Bonds (OpenBabel)"));
+  m_progress->setLabelText(tr("Generating XYZ representation..."));
+  m_progress->setRange(0, 0);
+  m_progress->setMinimumDuration(0);
+  m_progress->setValue(0);
+  m_progress->show();
+
+  // Generate XYZ
+  std::string xyz;
+  if (!Io::FileFormatManager::instance().writeString(*m_molecule, xyz, "xyz")) {
+    m_progress->reset();
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
+                          tr("Error generating XYZ string."),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  // Connect process
+  disconnect(m_process);
+  m_process->disconnect(this);
+  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
+  connect(m_process, SIGNAL(convertFinished(QByteArray)),
+          SLOT(onPerceiveBondsFinished(QByteArray)));
+
+  m_progress->setLabelText(tr("Converting XYZ to CML with %1...")
+                           .arg(m_process->obabelExecutable()));
+
+  // Run process
+  m_process->convert(xyz.c_str(), "xyz", "cml");
+}
+
+void OpenBabel::onPerceiveBondsFinished(const QByteArray &output)
+{
+  m_progress->setLabelText(tr("Updating molecule from CML..."));
+
+  // CML --> molecule
+  Core::Molecule mol;
+  if (!Io::FileFormatManager::instance().readString(mol, output.constData(),
+                                                    "cml")) {
+    m_progress->reset();
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                          tr("Error"),
+                          tr("Error interpreting obabel CML output."),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  /// @todo cache a pointer to the current molecule in the above slot, and
+  /// verify that we're still operating on the same molecule.
+
+  // Check that the atom count hasn't changed:
+  if (mol.atomCount() != m_molecule->atomCount()) {
+    m_progress->reset();
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                          tr("Error"),
+                          tr("Number of atoms in obabel output (%1) does not "
+                             "match the number of atoms in the original "
+                             "molecule (%2).")
+                          .arg(mol.atomCount()).arg(m_molecule->atomCount()),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  m_molecule->clearBonds();
+  for (size_t i = 0; i < mol.bondCount(); ++i) {
+    Avogadro::Core::Bond bond = mol.bond(i);
+    m_molecule->addBond(m_molecule->atom(bond.atom1().index()),
+                        m_molecule->atom(bond.atom2().index()),
+                        bond.order());
+  }
+
   m_progress->reset();
 }
 

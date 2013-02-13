@@ -77,6 +77,9 @@ private slots:
                                       double energy, double lastEnergy);
   void onOptimizeGeometryFinished(const QByteArray &output);
 
+  void onPerceiveBonds();
+  void onPerceiveBondsFinished(const QByteArray &output);
+
 private:
   void showProcessInUseError(const QString &title) const;
   QString autoDetectForceField() const;
