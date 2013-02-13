@@ -56,7 +56,7 @@ public:
   QStringList menuPath(QAction *) const;
 
 public slots:
-  void setMolecule(QtGui::Molecule *);
+  void setMolecule(QtGui::Molecule *mol);
 
   bool readMolecule(QtGui::Molecule &mol);
 
@@ -65,15 +65,28 @@ private slots:
   void onOpenFileReadFinished(const QByteArray &output);
 
   void refreshReadFormats();
-  void handleReadFormatUpdate(QMap<QString, QString> fmts);
+  void handleReadFormatUpdate(const QMap<QString, QString> &fmts);
+
+  void refreshForceFields();
+  void handleForceFieldsUpdate(const QMap<QString, QString> &ffMap);
+
+  void onConfigureGeometryOptimization();
+
+  void onOptimizeGeometry();
+  void onOptimizeGeometryStatusUpdate(int step, int numSteps,
+                                      double energy, double lastEnergy);
+  void onOptimizeGeometryFinished(const QByteArray &output);
 
 private:
   void showProcessInUseError(const QString &title) const;
+  QString autoDetectForceField() const;
 
+  QtGui::Molecule *m_molecule;
   OBProcess *m_process;
   QList<QAction *> m_actions;
   QList<QByteArray> m_moleculeQueue;
   QMap<QString, QString> m_readFormats;
+  QMap<QString, QString> m_forceFields;
   QString m_readFormatsFilterString;
   QProgressDialog *m_progress;
 };

@@ -167,6 +167,11 @@ const Mesh* Molecule::mesh(size_t index) const
     return NULL;
 }
 
+void Molecule::emitChanged(unsigned int change)
+{
+  emit changed(change);
+}
+
 int Molecule::findAtomUniqueId(size_t index) const
 {
   for (size_t i = 0; i < m_atomUniqueIds.size(); ++i)
