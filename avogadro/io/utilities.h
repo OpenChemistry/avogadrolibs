@@ -17,8 +17,6 @@
 #ifndef AVOGADRO_IO_UTILITIES_H
 #define AVOGADRO_IO_UTILITIES_H
 
-#include "avogadroioexport.h"
-
 #include <string>
 #include <vector>
 #include <sstream>
