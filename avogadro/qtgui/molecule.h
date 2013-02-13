@@ -58,7 +58,7 @@ public:
    * Add an atom with @p atomicNumber to the molecule.
    * @return The atom created.
    */
-  Core::Atom addAtom(unsigned char atomicNumber);
+  Core::Atom addAtom(unsigned char atomicNumber) AVO_OVERRIDE;
 
   /**
    * @brief Remove the specified atom from the molecule.
@@ -76,7 +76,7 @@ public:
    * @return The bond created.
    */
   Core::Bond addBond(const Core::Atom &a, const Core::Atom &b,
-                     unsigned char bondOrder = 1);
+                     unsigned char bondOrder = 1) AVO_OVERRIDE;
 
   /**
    * @brief Remove the specified bond.

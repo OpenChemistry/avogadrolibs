@@ -103,7 +103,7 @@ public:
   const Graph& graph() const;
 
   /**  Adds an atom to the molecule. */
-  Atom addAtom(unsigned char atomicNumber);
+  virtual Atom addAtom(unsigned char atomicNumber);
 
   /**  Returns the atom at @p index in the molecule. */
   Atom atom(size_t index) const;
@@ -112,7 +112,8 @@ public:
   size_t atomCount() const;
 
   /** Adds a bond between atoms @p a and @p b. */
-  Bond addBond(const Atom &a, const Atom &b, unsigned char bondOrder = 1);
+  virtual Bond addBond(const Atom &a, const Atom &b,
+                       unsigned char bondOrder = 1);
 
   /** Returns the bond at @p index in the molecule. */
   Bond bond(size_t index) const;
