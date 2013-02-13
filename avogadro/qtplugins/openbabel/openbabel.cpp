@@ -44,14 +44,21 @@ OpenBabel::OpenBabel(QObject *p) :
 {
   QAction *action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Load molecule via OpenBabel..."));
+  action->setText(tr("Load molecule (Open Babel)..."));
   connect(action, SIGNAL(triggered()), SLOT(onOpenFile()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Optimize geometry via OpenBabel..."));
+  action->setText(tr("Optimize geometry (Open Babel)"));
+  action->setShortcut(QKeySequence("Ctrl+Alt+O"));
   connect(action, SIGNAL(triggered()), SLOT(onOptimizeGeometry()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Configure geometry optimization (Open Babel)..."));
+  connect(action, SIGNAL(triggered()), SLOT(onConfigureGeometryOptimization()));
   m_actions.push_back(action);
 
   refreshReadFormats();
@@ -67,9 +74,12 @@ QList<QAction *> OpenBabel::actions() const
   return m_actions;
 }
 
-QStringList OpenBabel::menuPath(QAction *) const
+QStringList OpenBabel::menuPath(QAction *action) const
 {
-  return QStringList() << tr("&File");
+  // Load file...
+  if (action == m_actions.first())
+    return QStringList() << tr("&File");
+  return QStringList() << tr("&Extensions");
 }
 
 void OpenBabel::setMolecule(QtGui::Molecule *mol)
@@ -270,13 +280,41 @@ void OpenBabel::handleForceFieldsUpdate(const QMap<QString, QString> &ffMap)
   qDebug() << m_forceFields;
 }
 
+void OpenBabel::onConfigureGeometryOptimization()
+{
+  // If the force field map is empty, there is probably a problem with the
+  // obabel executable. Warn the user and return.
+  if (m_forceFields.isEmpty()) {
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                          tr("Error"),
+                          tr("An error occurred while retrieving the list of "
+                             "supported forcefields. (using '%1').")
+                          .arg(m_process->obabelExecutable()),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  QSettings settings;
+  QStringList options =
+      settings.value("openbabel/optimizeGeometry/lastOptions").toStringList();
+
+  options = OBForceFieldDialog::prompt(qobject_cast<QWidget*>(parent()),
+                                       m_forceFields.keys(), options,
+                                       autoDetectForceField());
+
+  // User cancel
+  if (options.isEmpty())
+    return;
+
+  settings.setValue("openbabel/optimizeGeometry/lastOptions", options);
+}
+
 void OpenBabel::onOptimizeGeometry()
 {
   if (!m_molecule || m_molecule->atomCount() == 0) {
     QMessageBox::critical(qobject_cast<QWidget*>(parent()),
                           tr("Error"),
-                          tr("Molecule invalid. Cannot optimize geometry.")
-                          .arg(m_process->obabelExecutable()),
+                          tr("Molecule invalid. Cannot optimize geometry."),
                           QMessageBox::Ok);
     return;
   }
@@ -302,16 +340,23 @@ void OpenBabel::onOptimizeGeometry()
   QSettings settings;
   QStringList options =
       settings.value("openbabel/optimizeGeometry/lastOptions").toStringList();
+  bool autoDetect =
+      settings.value("openbabel/optimizeGeometry/autoDetect", true).toBool();
 
-  options = OBForceFieldDialog::prompt(qobject_cast<QWidget*>(parent()),
-                                       m_forceFields.keys(), options,
-                                       guessDefaultForceField());
-
-  // User cancel
-  if (options.isEmpty())
-    return;
-
-  settings.setValue("openbabel/optimizeGeometry/lastOptions", options);
+  if (autoDetect) {
+    QString ff = autoDetectForceField();
+    int ffIndex = options.indexOf("--ff");
+    if (ffIndex >= 0) {
+      // Shouldn't happen, but just to be safe...
+      if (ffIndex + 1 == options.size())
+        options << ff;
+      else
+        options[ffIndex + 1] = ff;
+    }
+    else {
+      options << "--ff" << ff;
+    }
+  }
 
   // Setup progress dialog
   if (!m_progress)
@@ -423,7 +468,7 @@ void OpenBabel::showProcessInUseError(const QString &title) const
                         QMessageBox::Ok);
 }
 
-QString OpenBabel::guessDefaultForceField() const
+QString OpenBabel::autoDetectForceField() const
 {
   // Guess forcefield based on molecule. Preference is GAFF, MMFF94, then UFF.
   // See discussion at

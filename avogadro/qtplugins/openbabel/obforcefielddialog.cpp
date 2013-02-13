@@ -37,21 +37,22 @@ enum LineSearchMethod {
   Newton
 };
 
-OBForceFieldDialog::OBForceFieldDialog(const QStringList &forceFields, QWidget *parent_) :
+OBForceFieldDialog::OBForceFieldDialog(const QStringList &forceFields,
+                                       QWidget *parent_) :
   QDialog(parent_),
   ui(new Ui::OBForceFieldDialog)
 {
   ui->setupUi(this);
   ui->forceField->addItems(forceFields);
-  updateDefaultForceField();
+  updateRecommendedForceField();
 
-  connect(ui->useDefault, SIGNAL(toggled(bool)),
-          SLOT(useDefaultForceFieldToggled(bool)));
+  connect(ui->useRecommended, SIGNAL(toggled(bool)),
+          SLOT(useRecommendedForceFieldToggled(bool)));
 
   QSettings settings;
-  bool useDefault = settings.value("openbabel/OBForceFieldDialog/useDefault",
+  bool autoDetect = settings.value("openbabel/optimizeGeometry/autoDetect",
                                    true).toBool();
-  ui->useDefault->setChecked(useDefault);
+  ui->useRecommended->setChecked(autoDetect);
 }
 
 OBForceFieldDialog::~OBForceFieldDialog()
@@ -62,11 +63,11 @@ OBForceFieldDialog::~OBForceFieldDialog()
 QStringList OBForceFieldDialog::prompt(QWidget *parent_,
                                        const QStringList &forceFields,
                                        const QStringList &startingOptions,
-                                       const QString &defaultForceField)
+                                       const QString &recommendedForceField_)
 {
   OBForceFieldDialog dlg(forceFields, parent_);
   dlg.setOptions(startingOptions);
-  dlg.setDefaultForceField(defaultForceField);
+  dlg.setRecommendedForceField(recommendedForceField_);
 
   QStringList options;
   if (static_cast<DialogCode>(dlg.exec()) == Accepted)
@@ -114,7 +115,7 @@ QStringList OBForceFieldDialog::options() const
 
 void OBForceFieldDialog::setOptions(const QStringList &opts)
 {
-  // Set some defaults. The match the defaults in obabel -L minimize
+  // Set some defaults. These match the defaults in obabel -L minimize
   ui->energyConv->setValue(-6);
   ui->algorithm->setCurrentIndex(static_cast<int>(ConjugateGradient));
   ui->lineSearch->setCurrentIndex(static_cast<int>(Simple));
@@ -285,23 +286,23 @@ void OBForceFieldDialog::setOptions(const QStringList &opts)
   }
 }
 
-void OBForceFieldDialog::setDefaultForceField(const QString &dff)
+void OBForceFieldDialog::setRecommendedForceField(const QString &rff)
 {
-  if (dff == m_defaultForceField)
+  if (rff == m_recommendedForceField)
     return;
 
-  if (ui->forceField->findText(dff) == -1)
+  if (ui->forceField->findText(rff) == -1)
     return;
 
-  m_defaultForceField = dff;
-  updateDefaultForceField();
+  m_recommendedForceField = rff;
+  updateRecommendedForceField();
 }
 
-void OBForceFieldDialog::useDefaultForceFieldToggled(bool state)
+void OBForceFieldDialog::useRecommendedForceFieldToggled(bool state)
 {
-  if (!m_defaultForceField.isEmpty()) {
+  if (!m_recommendedForceField.isEmpty()) {
     if (state) {
-      int index = ui->forceField->findText(m_defaultForceField);
+      int index = ui->forceField->findText(m_recommendedForceField);
       if (index >= 0) {
         ui->forceField->setCurrentIndex(index);
       }
@@ -309,20 +310,21 @@ void OBForceFieldDialog::useDefaultForceFieldToggled(bool state)
   }
   ui->forceField->setEnabled(!state);
 
-  QSettings().setValue("openbabel/OBForceFieldDialog/useDefault", state);
+  QSettings().setValue("openbabel/optimizeGeometry/autoDetect", state);
 }
 
-void OBForceFieldDialog::updateDefaultForceField()
+void OBForceFieldDialog::updateRecommendedForceField()
 {
-  if (m_defaultForceField.isEmpty()) {
-    ui->useDefault->hide();
+  if (m_recommendedForceField.isEmpty()) {
+    ui->useRecommended->hide();
     ui->forceField->setEnabled(true);
   }
   else {
-    ui->useDefault->setText(tr("Use default (%1)").arg(m_defaultForceField));
+    ui->useRecommended->setText(tr("Autodetect (%1)")
+                                .arg(m_recommendedForceField));
     // Force the combo box to update if needed:
-    useDefaultForceFieldToggled(ui->useDefault->isChecked());
-    ui->useDefault->show();
+    useRecommendedForceFieldToggled(ui->useRecommended->isChecked());
+    ui->useRecommended->show();
   }
 }
 

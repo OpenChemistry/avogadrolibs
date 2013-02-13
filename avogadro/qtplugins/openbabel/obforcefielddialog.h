@@ -45,15 +45,15 @@ public:
   /**
    * Construct a new dialog using the forcefields in @a forceFields and
    * initialize the options to those in @a startingOptions (see setOptions).
-   * If the user chooses the default force field, @a defaultForceField will be
-   * set. This is useful for preferring a specific force field for a particular
-   * molecule.
+   * If the user chooses the recommended force field, @a recommendedForceField_
+   * will be set. This is useful for preferring a specific force field for a
+   * particular molecule.
    * When the user closes the dialog, the options they selected are returned. If
    * the user cancels the dialog, an empty list is returned.
    */
   static QStringList prompt(QWidget *parent_,  const QStringList &forceFields,
                             const QStringList &startingOptions,
-                            const QString &defaultForceField = QString());
+                            const QString &recommendedForceField_ = QString());
 
   /**
    * Get/set the options displayed in the dialog. The option format is a list of
@@ -86,26 +86,27 @@ obabel -icml -ocml --minimize --log --crit 1e-05 --ff Ghemical --sd"
   /**@}*/
 
   /**
-   * Get/set the default forcefield for the current molecule. If an empty
-   * string, the user will not be shown an option to use the default forcefield.
+   * Get/set the recommended forcefield for the current molecule. If an empty
+   * string, the user will not be shown an option to use the recommended
+   * forcefield.
    * If the string is non-empty (and in the forceFields list passed in the
    * constructor), the user will have the option of setting the forcefield to
    * this value.
    *
    * @{
    */
-  QString defaultForceField() const { return m_defaultForceField; }
-  void setDefaultForceField(const QString &dff);
+  QString recommendedForceField() const { return m_recommendedForceField; }
+  void setRecommendedForceField(const QString &rff);
   /**@}*/
 
 private slots:
-  void useDefaultForceFieldToggled(bool state);
+  void useRecommendedForceFieldToggled(bool state);
 
 private:
-  void updateDefaultForceField();
+  void updateRecommendedForceField();
 
   Ui::OBForceFieldDialog *ui;
-  QString m_defaultForceField;
+  QString m_recommendedForceField;
 };
 
 

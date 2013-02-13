@@ -161,7 +161,8 @@ private slots:
 
   /**
    * @name Force Fields
-   * Methods, signals, and slots pertaining to geometry optimizations.
+   * Methods, signals, and slots pertaining to force fields (e.g. geometry
+   * optimizations).
    * @{
    */
 

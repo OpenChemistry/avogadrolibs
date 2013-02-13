@@ -70,6 +70,8 @@ private slots:
   void refreshForceFields();
   void handleForceFieldsUpdate(const QMap<QString, QString> &ffMap);
 
+  void onConfigureGeometryOptimization();
+
   void onOptimizeGeometry();
   void onOptimizeGeometryStatusUpdate(int step, int numSteps,
                                       double energy, double lastEnergy);
@@ -77,7 +79,7 @@ private slots:
 
 private:
   void showProcessInUseError(const QString &title) const;
-  QString guessDefaultForceField() const;
+  QString autoDetectForceField() const;
 
   QtGui::Molecule *m_molecule;
   OBProcess *m_process;

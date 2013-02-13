@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>327</width>
-    <height>356</height>
+    <height>388</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -92,9 +92,9 @@
        <widget class="QComboBox" name="forceField"/>
       </item>
       <item row="1" column="1">
-       <widget class="QCheckBox" name="useDefault">
+       <widget class="QCheckBox" name="useRecommended">
         <property name="text">
-         <string>Use default</string>
+         <string>Autodetect</string>
         </property>
        </widget>
       </item>
@@ -265,6 +265,8 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>forceField</tabstop>
+  <tabstop>useRecommended</tabstop>
   <tabstop>algorithm</tabstop>
   <tabstop>lineSearch</tabstop>
   <tabstop>energyConv</tabstop>
