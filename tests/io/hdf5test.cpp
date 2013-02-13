@@ -98,8 +98,7 @@ TEST(Hdf5Test, openCloseReadWriteAppend)
 
 TEST(Hdf5Test, readWriteEigenMatrixXd)
 {
-  char tmpFileName [L_tmpnam];
-  tmpnam(tmpFileName);
+  std::string tmpFileName("Hdf5Test_readWriteEigenMatrixXd.hdf");
 
   Hdf5DataFormat hdf5;
   ASSERT_TRUE(hdf5.openFile(tmpFileName, Hdf5DataFormat::ReadWriteTruncate))
@@ -125,13 +124,12 @@ TEST(Hdf5Test, readWriteEigenMatrixXd)
   ASSERT_TRUE(hdf5.closeFile())
       << "Closing test file '" << tmpFileName << "' failed.";
 
-  remove(tmpFileName);
+  remove(tmpFileName.c_str());
 }
 
 TEST(Hdf5Test, readWriteDoubleVector)
 {
-  char tmpFileName [L_tmpnam];
-  tmpnam(tmpFileName);
+  std::string tmpFileName("Hdf5Test_readWriteDoubleVector.hdf");
 
   Hdf5DataFormat hdf5;
   ASSERT_TRUE(hdf5.openFile(tmpFileName, Hdf5DataFormat::ReadWriteTruncate))
@@ -161,7 +159,7 @@ TEST(Hdf5Test, readWriteDoubleVector)
   ASSERT_TRUE(hdf5.closeFile())
       << "Closing test file '" << tmpFileName << "' failed.";
 
-  remove(tmpFileName);
+  remove(tmpFileName.c_str());
 }
 
 TEST(Hdf5Test, thresholds)
@@ -197,8 +195,7 @@ TEST(Hdf5Test, thresholds)
 
 TEST(Hdf5Test, datasetInteraction)
 {
-  char tmpFileName [L_tmpnam];
-  tmpnam(tmpFileName);
+  std::string tmpFileName("Hdf5Test_datasetInteraction.hdf");
 
   Hdf5DataFormat hdf5;
   ASSERT_TRUE(hdf5.openFile(tmpFileName, Hdf5DataFormat::ReadWriteTruncate))
@@ -278,5 +275,5 @@ TEST(Hdf5Test, datasetInteraction)
   ASSERT_TRUE(hdf5.closeFile())
       << "Closing test file '" << tmpFileName << "' failed.";
 
-  remove(tmpFileName);
+  remove(tmpFileName.c_str());
 }
