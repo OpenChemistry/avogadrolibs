@@ -28,6 +28,7 @@
 
 #include <QtGui/QAction>
 #include <QtGui/QFileDialog>
+#include <QtGui/QInputDialog>
 #include <QtGui/QMessageBox>
 #include <QtGui/QProgressDialog>
 
@@ -65,6 +66,24 @@ OpenBabel::OpenBabel(QObject *p) :
   action->setEnabled(true);
   action->setText(tr("Perceive bonds"));
   connect(action, SIGNAL(triggered()), SLOT(onPerceiveBonds()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Add hydrogens"));
+  connect(action, SIGNAL(triggered()), SLOT(onAddHydrogens()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Add hydrogens for pH..."));
+  connect(action, SIGNAL(triggered()), SLOT(onAddHydrogensPh()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Remove hydrogens"));
+  connect(action, SIGNAL(triggered()), SLOT(onRemoveHydrogens()));
   m_actions.push_back(action);
 
   refreshReadFormats();
@@ -530,6 +549,168 @@ void OpenBabel::onPerceiveBondsFinished(const QByteArray &output)
   m_molecule->clearBonds();
   for (size_t i = 0; i < mol.bondCount(); ++i) {
     Avogadro::Core::Bond bond = mol.bond(i);
+    m_molecule->addBond(m_molecule->atom(bond.atom1().index()),
+                        m_molecule->atom(bond.atom2().index()),
+                        bond.order());
+  }
+
+  m_progress->reset();
+}
+
+void OpenBabel::onAddHydrogens()
+{
+  if (!m_molecule || m_molecule->atomCount() == 0)
+    return; // Nothing to do.
+
+  // Fail here if the process is already in use
+  if (m_process->inUse()) {
+    showProcessInUseError(tr("Cannot add hydrogens with Open Babel."));
+    return;
+  }
+
+  // Setup progress dialog
+  initializeProgressDialog(tr("Adding Hydrogens (OpenBabel)"),
+                           tr("Generating obabel input..."), 0, 0, 0);
+
+  // Generate CML
+  std::string cml;
+  if (!Io::FileFormatManager::instance().writeString(*m_molecule, cml, "cml")) {
+    m_progress->reset();
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
+                          tr("Error generating CML string."),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  // Connect process
+  disconnect(m_process);
+  m_process->disconnect(this);
+  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
+  connect(m_process, SIGNAL(convertFinished(QByteArray)),
+          SLOT(onHydrogenOperationFinished(QByteArray)));
+
+  m_progress->setLabelText(tr("Running %1...")
+                           .arg(m_process->obabelExecutable()));
+
+  // Run process
+  m_process->convert(cml.c_str(), "cml", "cml", QStringList() << "-h");
+}
+
+void OpenBabel::onAddHydrogensPh()
+{
+  if (!m_molecule || m_molecule->atomCount() == 0)
+    return; // Nothing to do.
+
+  // Fail here if the process is already in use
+  if (m_process->inUse()) {
+    showProcessInUseError(tr("Cannot add hydrogens with Open Babel."));
+    return;
+  }
+
+  // Prompt for pH
+  bool ok = false;
+  double pH = QInputDialog::getDouble(qobject_cast<QWidget*>(parent()),
+                                      tr("Add hydrogens for pH"),
+                                      tr("pH:"), 7.4, 0, 14, 2, &ok);
+  if (!ok) // user cancel
+    return;
+
+  // Setup progress dialog
+  initializeProgressDialog(tr("Adding Hydrogens (OpenBabel)"),
+                           tr("Generating obabel input..."), 0, 0, 0);
+
+  // Generate CML
+  std::string cml;
+  if (!Io::FileFormatManager::instance().writeString(*m_molecule, cml, "cml")) {
+    m_progress->reset();
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
+                          tr("Error generating CML string."),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  // Connect process
+  disconnect(m_process);
+  m_process->disconnect(this);
+  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
+  connect(m_process, SIGNAL(convertFinished(QByteArray)),
+          SLOT(onHydrogenOperationFinished(QByteArray)));
+
+  m_progress->setLabelText(tr("Running %1...")
+                           .arg(m_process->obabelExecutable()));
+
+  // Run process
+  m_process->convert(cml.c_str(), "cml", "cml",
+                     QStringList() << "-p" << QString::number(pH));
+}
+
+void OpenBabel::onRemoveHydrogens()
+{
+  if (!m_molecule || m_molecule->atomCount() == 0)
+    return; // Nothing to do.
+
+  // Fail here if the process is already in use
+  if (m_process->inUse()) {
+    showProcessInUseError(tr("Cannot remove hydrogens with Open Babel."));
+    return;
+  }
+
+  // Setup progress dialog
+  initializeProgressDialog(tr("Removing Hydrogens (OpenBabel)"),
+                           tr("Generating obabel input..."), 0, 0, 0);
+
+  // Generate CML
+  std::string cml;
+  if (!Io::FileFormatManager::instance().writeString(*m_molecule, cml, "cml")) {
+    m_progress->reset();
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
+                          tr("Error generating CML string."),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  // Connect process
+  disconnect(m_process);
+  m_process->disconnect(this);
+  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
+  connect(m_process, SIGNAL(convertFinished(QByteArray)),
+          SLOT(onHydrogenOperationFinished(QByteArray)));
+
+  m_progress->setLabelText(tr("Running %1...")
+                           .arg(m_process->obabelExecutable()));
+
+  // Run process
+  m_process->convert(cml.c_str(), "cml", "cml", QStringList() << "-d");
+}
+
+void OpenBabel::onHydrogenOperationFinished(const QByteArray &cml)
+{
+  m_progress->setLabelText(tr("Reading obabel output..."));
+
+  // CML --> molecule
+  Core::Molecule mol;
+  if (!Io::FileFormatManager::instance().readString(mol, cml.constData(),
+                                                    "cml")) {
+    m_progress->reset();
+    qDebug() << "Bad CML: " << cml;
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                          tr("Error"),
+                          tr("Error interpreting obabel CML output."),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  /// @todo cache a pointer to the current molecule in the above slot, and
+  /// verify that we're still operating on the same molecule.
+
+  // Update molecule
+  m_molecule->clearAtoms();
+  for (size_t i = 0; i < mol.atomCount(); ++i) {
+    Core::Atom atom = mol.atom(i);
+    m_molecule->addAtom(atom.atomicNumber()).setPosition3d(atom.position3d());
+  }
+  for (size_t i = 0; i < mol.bondCount(); ++i) {
+    Core::Bond bond = mol.bond(i);
     m_molecule->addBond(m_molecule->atom(bond.atom1().index()),
                         m_molecule->atom(bond.atom2().index()),
                         bond.order());
