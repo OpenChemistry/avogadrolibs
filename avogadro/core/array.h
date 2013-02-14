@@ -151,12 +151,12 @@ public:
 
   const T* data() const
   {
-    return d->data.data();
+    return &d->data[0];
   }
 
   const T* constData() const
   {
-    return d->data.data();
+    return &d->data[0];
   }
 
   size_t size() const
