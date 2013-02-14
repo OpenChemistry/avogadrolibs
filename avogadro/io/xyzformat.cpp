@@ -33,6 +33,10 @@ using Avogadro::Core::Molecule;
 namespace Avogadro {
 namespace Io {
 
+#ifndef _WIN32
+using std::isalpha;
+#endif
+
 XyzFormat::XyzFormat()
 {
 }
@@ -63,7 +67,7 @@ bool XyzFormat::read(std::istream &inStream, Core::Molecule &mol)
         inStream >> pos.y() &&
         inStream >> pos.z()) {
       if (!buffer.empty()) {
-        if (std::isalpha(buffer[0])) {
+        if (isalpha(buffer[0])) {
           atomicNum = Elements::atomicNumberFromSymbol(buffer);
         }
         else {
