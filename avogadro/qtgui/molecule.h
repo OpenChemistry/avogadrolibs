@@ -42,6 +42,8 @@ public:
 
   /** \enum Enumeration of change types that can be given. */
   enum MoleculeChange {
+    /** Useful for initializing MoleculeChange variables. */
+    NoChange = 0x0,
     /** Object types that can be changed. */
     Atoms = 0x01,
     Bonds = 0x02,
@@ -50,12 +52,13 @@ public:
     Removed  = 0x2048,
     Modified = 0x4096
   };
+  Q_DECLARE_FLAGS(MoleculeChanges, MoleculeChange)
 
   /**
    * Add an atom with @p atomicNumber to the molecule.
    * @return The atom created.
    */
-  Core::Atom addAtom(unsigned char atomicNumber);
+  Core::Atom addAtom(unsigned char atomicNumber) AVO_OVERRIDE;
 
   /**
    * @brief Remove the specified atom from the molecule.
@@ -66,6 +69,11 @@ public:
   bool removeAtom(const Core::Atom &atom);
 
   /**
+   * Remove all atoms from the molecule.
+   */
+  void clearAtoms();
+
+  /**
    * @brief Add a bond between the specified atoms.
    * @param a The first atom in the bond.
    * @param b The second atom in the bond.
@@ -73,7 +81,7 @@ public:
    * @return The bond created.
    */
   Core::Bond addBond(const Core::Atom &a, const Core::Atom &b,
-                     unsigned char bondOrder = 1);
+                     unsigned char bondOrder = 1) AVO_OVERRIDE;
 
   /**
    * @brief Remove the specified bond.
@@ -83,6 +91,11 @@ public:
   bool removeBond(size_t index);
   bool removeBond(const Core::Bond &bond);
   bool removeBond(const Core::Atom &a, const Core::Atom &b);
+
+  /**
+   * Remove all bonds from the molecule.
+   */
+  void clearBonds();
 
   /**
    * @brief Add a mesh to the molecule.
@@ -122,6 +135,8 @@ private:
 
   std::vector<Mesh *> m_meshes;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Molecule::MoleculeChanges)
 
 } // end QtGui namespace
 } // end Avogadro namespace

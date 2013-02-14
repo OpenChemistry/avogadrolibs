@@ -141,6 +141,50 @@ void OBProcess::readFilePrepareOutput()
   releaseProcess();
 }
 
+bool OBProcess::convert(const QByteArray &input, const QString &inFormat,
+                        const QString &outFormat, const QStringList &options)
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::convert: process already in use.";
+    return false;
+  }
+
+  QStringList realOptions;
+  realOptions << QString("-i%1").arg(inFormat)
+              << QString("-o%1").arg(outFormat)
+              << options;
+
+  executeObabel(realOptions, this, SLOT(convertPrepareOutput()), input);
+  return true;
+}
+
+void OBProcess::convertPrepareOutput()
+{
+  if (m_aborted) {
+    releaseProcess();
+    return;
+  }
+
+  // Keep this empty if an error occurs:
+  QByteArray output;
+
+  // Check for errors.
+  QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
+  QRegExp errorChecker("\\b0 molecules converted\\b" "|"
+                       "obabel: cannot read input format!");
+  if (!errorOutput.contains(errorChecker)) {
+    if (m_process->exitStatus() == QProcess::NormalExit)
+      output = m_process->readAllStandardOutput();
+  }
+
+  /// Print any meaningful warnings @todo This should go to a log at some point.
+  if (!errorOutput.isEmpty() && errorOutput != "1 molecule converted\n")
+    qDebug() << m_obabelExecutable << " stderr:\n" << errorOutput;
+
+  emit convertFinished(output);
+  releaseProcess();
+}
+
 bool OBProcess::queryForceFields()
 {
   if (!tryLockProcess()) {
