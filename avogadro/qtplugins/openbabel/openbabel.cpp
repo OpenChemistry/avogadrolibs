@@ -50,22 +50,22 @@ OpenBabel::OpenBabel(QObject *p) :
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Optimize geometry (Open Babel)"));
+  action->setText(tr("Optimize geometry"));
   action->setShortcut(QKeySequence("Ctrl+Alt+O"));
   connect(action, SIGNAL(triggered()), SLOT(onOptimizeGeometry()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Configure geometry optimization (Open Babel)..."));
+  action->setText(tr("Configure geometry optimization..."));
   connect(action, SIGNAL(triggered()), SLOT(onConfigureGeometryOptimization()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Perceive bonds (Open Babel)"));
+  action->setText(tr("Perceive bonds"));
   connect(action, SIGNAL(triggered()), SLOT(onPerceiveBonds()));
-      m_actions.push_back(action);
+  m_actions.push_back(action);
 
   refreshReadFormats();
   refreshForceFields();
@@ -85,7 +85,7 @@ QStringList OpenBabel::menuPath(QAction *action) const
   // Load file...
   if (action == m_actions.first())
     return QStringList() << tr("&File");
-  return QStringList() << tr("&Extensions");
+  return QStringList() << tr("&Extensions") << tr("&Open Babel");
 }
 
 void OpenBabel::setMolecule(QtGui::Molecule *mol)
