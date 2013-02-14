@@ -171,16 +171,9 @@ void OpenBabel::onOpenFile()
   settings.setValue("openbabel/openFile/lastFileName", fileName);
 
   // Setup progress dialog
-  if (!m_progress)
-    m_progress = new QProgressDialog(qobject_cast<QWidget*>(parent()));
-
-  m_progress->setWindowTitle(tr("Loading file (OpenBabel, %1)")
-                             .arg(fileName));
-  m_progress->setLabelText(tr("Converting to CML with %1...")
-                           .arg(m_process->obabelExecutable()));
-  m_progress->setRange(0, 0);
-  m_progress->setMinimumDuration(0);
-  m_progress->setValue(0);
+  initializeProgressDialog(tr("Loading file (OpenBabel, %1)").arg(fileName),
+                           tr("Converting to CML with %1...")
+                           .arg(m_process->obabelExecutable()), 0, 0, 0);
 
   // Connect process
   disconnect(m_process);
@@ -189,7 +182,6 @@ void OpenBabel::onOpenFile()
   connect(m_process, SIGNAL(readFileFinished(QByteArray)),
           SLOT(onOpenFileReadFinished(QByteArray)));
 
-  m_progress->show();
   m_process->readFile(fileName, "cml");
 }
 
@@ -365,13 +357,8 @@ void OpenBabel::onOptimizeGeometry()
   }
 
   // Setup progress dialog
-  if (!m_progress)
-    m_progress = new QProgressDialog(qobject_cast<QWidget*>(parent()));
-  m_progress->setWindowTitle(tr("Optimizing Geometry (OpenBabel)"));
-  m_progress->setLabelText(tr("Generating CML..."));
-  m_progress->setRange(0, 0);
-  m_progress->setMinimumDuration(0);
-  m_progress->setValue(0);
+  initializeProgressDialog(tr("Optimizing Geometry (OpenBabel)"),
+                           tr("Generating CML..."), 0, 0, 0);
 
   // Connect process
   disconnect(m_process);
@@ -382,8 +369,6 @@ void OpenBabel::onOptimizeGeometry()
           SLOT(onOptimizeGeometryStatusUpdate(int,int,double,double)));
   connect(m_process, SIGNAL(optimizeGeometryFinished(QByteArray)),
           SLOT(onOptimizeGeometryFinished(QByteArray)));
-
-  m_progress->show();
 
   // Generate CML
   std::string cml;
@@ -483,15 +468,8 @@ void OpenBabel::onPerceiveBonds()
   }
 
   // Setup progress dialog
-  if (!m_progress)
-    m_progress = new QProgressDialog(qobject_cast<QWidget*>(parent()));
-
-  m_progress->setWindowTitle(tr("Perceiving Bonds (OpenBabel)"));
-  m_progress->setLabelText(tr("Generating XYZ representation..."));
-  m_progress->setRange(0, 0);
-  m_progress->setMinimumDuration(0);
-  m_progress->setValue(0);
-  m_progress->show();
+  initializeProgressDialog(tr("Perceiving Bonds (OpenBabel)"),
+                           tr("Generating XYZ representation..."), 0, 0, 0);
 
   // Generate XYZ
   std::string xyz;
@@ -558,6 +536,23 @@ void OpenBabel::onPerceiveBondsFinished(const QByteArray &output)
   }
 
   m_progress->reset();
+}
+
+void OpenBabel::initializeProgressDialog(const QString &title,
+                                         const QString &label,
+                                         int min, int max, int value,
+                                         bool showDialog)
+{
+  if (!m_progress)
+    m_progress = new QProgressDialog(qobject_cast<QWidget*>(parent()));
+
+  m_progress->setWindowTitle(title);
+  m_progress->setLabelText(label);
+  m_progress->setRange(min, max);
+  m_progress->setValue(value);
+  m_progress->setMinimumDuration(0);
+  if (showDialog)
+    m_progress->show();
 }
 
 void OpenBabel::showProcessInUseError(const QString &title) const
