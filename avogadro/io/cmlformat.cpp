@@ -55,7 +55,7 @@ public:
       properties();
       bool atomsExist(atoms());
       bool bondsExist(bonds());
-      success = atomsExist && bondsExist;
+      success = atomsExist || bondsExist;
     }
     else {
       error += "Error, no molecule node found.";
