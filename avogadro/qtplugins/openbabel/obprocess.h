@@ -19,6 +19,7 @@
 
 #include <QtCore/QMap>
 #include <QtCore/QObject>
+#include <QtCore/QStringList>
 
 class QProcess;
 
@@ -133,7 +134,7 @@ public slots:
    *
    * After calling this method, the readFileFinished signal will be emitted to
    * indicate return status along with the requested representation of the
-   * molecule, or an error message.
+   * molecule.
    *
    * The conversion is performed as:
    * `obabel -i<filename extension> <filename> -o<outputFormat>`
@@ -157,6 +158,49 @@ private slots:
   void readFilePrepareOutput();
 
   // end File Reading doxygen group
+  /**@}*/
+
+  /**
+   * @name Format Operations
+   * Operations that manipulate molecular representations.
+   * @{
+   */
+public slots:
+  /**
+   * Convert the text representation in @a input from @a inFormat to
+   * @a outFormat.
+   *
+   * @param input Text representation of molecule in @a inFormat format.
+   * @param inFormat File extension corresponding to input format
+   * (see `obabel -L formats`).
+   * @param outFormat File extension corresponding to output format.
+   * @param options Additional options passed to obabel.
+   *
+   * After calling this method, the convertFinished signal will be emitted to
+   * indicate return status along with the requested representation of the
+   * molecule.
+   *
+   * The conversion is performed as:
+   * `obabel -i<inFormat> -o<outFormat> <options> < input > output`
+   *
+   * @return True if the process started succesfully, false otherwise.
+   */
+  bool convert(const QByteArray &input, const QString &inFormat,
+               const QString &outFormat,
+               const QStringList &options = QStringList());
+
+signals:
+  /**
+   * Emitted after a call to convert() finishes.
+   * @param output The molecule in CML format, or an empty QByteArray if an e
+   * error occurred.
+   */
+  void convertFinished(const QByteArray &output);
+
+private slots:
+  void convertPrepareOutput();
+
+  // end Format Operations doxygen group
   /**@}*/
 
   /**
