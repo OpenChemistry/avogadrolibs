@@ -25,7 +25,13 @@ target_link_libraries(QuantumInput LINK_PRIVATE AvogadroIO MoleQueueClient)
 
 # Bundled generator scripts
 set(input_generators
+  inputGenerators/gamessuk.py
+  inputGenerators/gaussian.py
+  inputGenerators/molpro.py
+  inputGenerators/mopac.py
   inputGenerators/nwchem.py
+  inputGenerators/qchem.py
+  inputGenerators/terachem.py
 )
 
 # Default shebang lines for interpreted scripts:

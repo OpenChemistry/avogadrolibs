@@ -27,6 +27,7 @@
 #include <qjsonarray.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QTextStream>
@@ -98,8 +99,7 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
   m_files.clear();
 
   // Add the molecule file to the options
-  QJsonObject allOptions;
-  allOptions["options"] = options_;
+  QJsonObject allOptions(options_);
   if (!insertMolecule(allOptions, mol))
     return false;
 
@@ -211,6 +211,12 @@ QString InputGenerator::fileContents(const QString &fileName) const
 QByteArray InputGenerator::execute(const QStringList &args,
                                    const QByteArray &scriptStdin) const
 {
+  // Verify that the file is executable before doing anything else:
+  if (!QFileInfo(m_scriptFilePath).isExecutable()) {
+    return tr("Input generator script '%1' is not executable.")
+        .arg(m_scriptFilePath).toLocal8Bit();
+  }
+
   QProcess proc;
 
   // Merge stdout and stderr
@@ -326,13 +332,34 @@ bool InputGenerator::insertMolecule(QJsonObject &json,
   }
 
   std::string str;
-  if (format->writeString(str, mol)) {
+  if (!format->writeString(str, mol)) {
     m_errors << tr("Error writing molecule representation to string: %1")
                    .arg(QString::fromStdString(format->error()));
     return false;
   }
 
-  json.insert(m_moleculeExtension, QJsonValue(QString::fromStdString(str)));
+  if (m_moleculeExtension != "cjson") {
+    json.insert(m_moleculeExtension, QJsonValue(QString::fromStdString(str)));
+  }
+  else {
+    // If cjson was requested, embed the actual JSON, rather than the string.
+    QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(str.c_str(), &error);
+    if (error.error != QJsonParseError::NoError) {
+      m_errors << tr("Error generating cjson object: Parse error at offset %1: "
+                     "%2\nRaw JSON:\n\n%3").arg(error.offset)
+                  .arg(error.errorString()).arg(QString::fromStdString(str));
+      return false;
+    }
+
+    if (!doc.isObject()) {
+      m_errors << tr("Error generator cjson object: Parsed JSON is not an "
+                     "object:\n%1").arg(QString::fromStdString(str));
+      return false;
+    }
+
+    json.insert(m_moleculeExtension, doc.object());
+  }
 
   return true;
 }
@@ -349,6 +376,9 @@ QString InputGenerator::generateCoordinateBlock(const QString &spec,
   // - 'x': x coordinate
   // - 'y': y coordinate
   // - 'z': z coordinate
+  // - '0': Literal 0
+  // - '1': Literal 1
+  // - '_': Space character.
   bool needElementSymbol = spec.contains('S');
   bool needElementName = spec.contains('N');
   bool needPosition =
@@ -387,6 +417,15 @@ QString InputGenerator::generateCoordinateBlock(const QString &spec,
     it = begin;
     while (it != end) {
       switch (it->toLatin1()) {
+      case '_':
+        // Space character. If we are not at the end of the spec, a space will
+        // be added by default after the switch clause. If we are at the end,
+        // add a space before the newline that will be added.
+        if (it + 1 == end) {
+          stream.setFieldWidth(1);
+          stream << " ";
+        }
+        break;
       case 'Z':
         stream.setFieldAlignment(QTextStream::AlignLeft);
         stream.setFieldWidth(3);
@@ -417,6 +456,16 @@ QString InputGenerator::generateCoordinateBlock(const QString &spec,
         stream.setFieldWidth(realWidth);
         stream << pos3d.z();
         break;
+      case '0':
+        stream.setFieldAlignment(QTextStream::AlignLeft);
+        stream.setFieldWidth(1);
+        stream << 0;
+        break;
+      case '1':
+        stream.setFieldAlignment(QTextStream::AlignLeft);
+        stream.setFieldWidth(1);
+        stream << 1;
+        break;
       } // end switch
 
       stream.setFieldWidth(1);
@@ -432,6 +481,10 @@ QString InputGenerator::generateCoordinateBlock(const QString &spec,
 void InputGenerator::replaceKeywords(QString &str,
                                      const Core::Molecule &mol) const
 {
+  // Simple keywords:
+  str.replace("$$atomCount$$", QString::number(mol.atomCount()));
+  str.replace("$$bondCount$$", QString::number(mol.bondCount()));
+
   // Find each coordinate block keyword in the file, then generate and replace
   // it with the appropriate values.
   QRegExp coordParser("\\$\\$coords:([^\\$]*)\\$\\$");

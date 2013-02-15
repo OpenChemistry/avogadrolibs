@@ -47,94 +47,182 @@ namespace QtPlugins {
  * the interface defined below, new input generators can be created faster and
  * easier than writing full Avogadro extensions.
  *
+ * Script Entry Points
+ * ===================
+ *
  * The script must handle the following command-line arguments:
- * - <tt>--debug</tt> Enable extra debugging output. Used with other commands.
+ * - `--debug` Enable extra debugging output. Used with other commands.
  *   It is not required that the script support extra debugging, but it should
  *   not crash when this option is passed.
- * - <tt>--print-options</tt> Print the available options supported by the
+ * - `--print-options` Print the available options supported by the
  *   script, e.g. simulation parameters, etc. See below for more details.
- * - <tt>--generate-input</tt> Read an option block from stdin and print
+ * - `--generate-input` Read an option block from stdin and print
  *   input files to stdout. See below for more details.
- * - <tt>--display-name</tt> Print a user-friendly name for the input generator.
+ * - `--display-name` Print a user-friendly name for the input generator.
  *   This is used in the GUI for menu entries, window titles, etc.
  *
- * The format of the <tt>--print-options</tt> output must be a JSON object of
+ * Specifying parameters with `--print-options`
+ * ============================================
+ *
+ * The format of the `--print-options` output must be a JSON object of
  * the following form:
-@code {.js}
+~~~{.js}
 {
   "userOptions": {
-    "First option name": {
-      "values": [
-        "Value 1",
-        "Value 2",
-        "Value 3",
-        ...
-      ],
-      "default": 0
-    },
-    "Second option name": {
-      "values": [
-        "Value 1",
-        "Value 2",
-        "Value 3",
-        ...
-      ],
-      "default": 2,
-    },
     ...
   },
   "inputMoleculeFormat": "cjson"
 }
-@endcode
- * The "userOptions" block contains a JSON object keyed with option names
+~~~
+ * The `userOptions` block contains a JSON object keyed with option names
  * (e.g. "First option name"), which are used in the GUI to label simulation
- * parameter settings. The "values" member of the option object provides an
- * array of strings containing the possible values of the parameter. "default"
- * indicates which value is the default by providing a zero-based index into the
- * "values" array.
+ * parameter settings. Various parameter types are supported:
  *
- * @note Currently, only parameters that have a discrete set of values can be
- * used, and the values will be placed in a combo box in the GUI. This will
- * eventually be expanded to provide ways of requesting other types of
- * parameters, such as integers, floating point numbers, booleans, etc.
+ * Fixed Mutually-Exclusive Parameter Lists
+ * ----------------------------------------
+ *
+ * Parameters that have a fixed number of mutually-exclusive string values will
+ * be presented using a QComboBox. Such a parameter can be specified in the
+ * `userOptions` block as:
+~~~{.js}
+{
+  "userOptions": {
+    "Parameter Name": {
+      "type": "stringList",
+      "values": ["Option 1", "Option 2", "Option 3"],
+      "default": 0
+    }
+  }
+}
+~~~
+ * Here, `Parameter Name` is the label that will be displayed in the GUI as a
+ * label next to the combo box.
+ * The array of strings in `values` will be used as the available entries in
+ * the combo box in the order they are written.
+ * `default` is a zero-based index into the `values` array and indicates
+ * which value should be initially selected by default.
+ *
+ * Short Free-Form Text Parameters
+ * -------------------------------
+ *
+ * A short text string can be requested (e.g. for the "title" of an
+ * optimization) via:
+~~~{.js}
+{
+  "userOptions": {
+    "Parameter Name": {
+      "type": "string",
+      "default": "blah blah blah"
+    }
+  }
+}
+~~~
+ * This will add a QLineEdit to the GUI, initialized with the text specified by
+ * `default`.
+ *
+ * Clamped Integer Values
+ * ----------------------
+ *
+ * Scripts may request integer values from a specified range by adding a
+ * user-option of the following form:
+~~~{.js}
+{
+  "userOptions": {
+    "Parameter Name": {
+      "type": "integer",
+      "minimum": -5,
+      "maximum": 5,
+      "default": 0,
+      "prefix": "some text ",
+      "suffix": " units"
+    }
+  }
+}
+~~~
+ * This block will result in a QSpinBox, configured as follows:
+ * - `minimum` and `maximum` indicate the valid range of integers for the
+ *   parameter.
+ * - `default` is the integer value that will be shown initially.
+ * - (optional) `prefix` and `suffix` are used to insert text before or
+ *   after the integer value in the spin box.
+ *   This is handy for specifying units.
+ *   Note that any prefix or suffix will be stripped out of the corresponding
+ *   entry in the call to `--generate-input`, and just the raw integer value
+ *   will be sent.
+ *
+ * Boolean Parameters
+ * ------------------
+ *
+ * If a simple on/off value is needed, a boolean type option can be requested:
+~~~{.js}
+{
+  "userOptions": {
+    "Parameter Name": {
+      "type": "boolean",
+      "default": true,
+    }
+  }
+}
+~~~
+ * This will result in a QCheckBox in the dynamically generated GUI, with
+ * the inital check state shown in `default`.
+ *
+ * Special Parameters
+ * ------------------
+ *
+ * Some parameters are common to most calculation codes.
+ * If the following parameter names are found, they will be handled specially
+ * while creating the GUI.
  *
  * @todo Document expected option names/value that are handled specially.
  *
- * The "inputMoleculeFormat" is optional, and can be used to request a
+ * Requesting Full Structure of Current Molecule
+ * ---------------------------------------------
+ *
+ * The `inputMoleculeFormat` is optional, and can be used to request a
  * representation of the current molecule's geometry when
- * <tt>--generate-input</tt> is called. The corresponding value
+ * `--generate-input` is called. The corresponding value
  * indicates the format of the molecule that the script expects. If this value
  * is omitted, no representation of the structure will be provided.
  *
  * @note Currently valid options for inputMoleculeFormat are "cjson" for
  * Chemical JSON or "cml" for Chemical Markup Language.
  *
- * When <tt>--generate-input</tt> is used, the information needed to generate
- * the input file will be passed to the script's standard input
+ * Handling User Selections: `--generate-input`
+ * ============================================
+ *
+ * When `--generate-input` is passed, the information needed to generate
+ * the input file will be written to the script's standard input
  * channel as JSON string of the following form:
-@code {.js}
+~~~{.js}
 {
-  "cjson": "[...]",
+  "cjson": {...},
   "options": {
     "First option name": "Value 2",
     "Second option name": "Value 1",
     ...
+  },
+  "settings": {
+    "numberOfCores": 4
   }
 }
-@endcode
- * The "cjson" entry will contain a string with a Chemical JSON representation
- * of the molecule if "inputMoleculeFormat" is set to "cjson" in the
- * <tt>--print-options</tt> output.
- * Similarly, it will be "cml" if a Chemical Markup Language representation was
- * requested.
- * It will be omitted entirely if "inputMoleculeFormat" is not set.
- * The "options" block contains key/value
- * pairs for each of the options specified in the "userOptions" block of the
- * <tt>--print-options</tt> output.
+~~~
+ * The `cjson` entry will contain a Chemical JSON representation
+ * of the molecule if `inputMoleculeFormat` is set to "cjson" in the
+ * `--print-options` output.
+ * Similarly, a `cml` entry and CML string will exist if a Chemical Markup
+ * Language representation was requested.
+ * It will be omitted entirely if `inputMoleculeFormat` is not set.
+ * The `options` block contains key/value
+ * pairs for each of the options specified in the `userOptions` block of the
+ * `--print-options` output.
+ * The `settings` block contains a fixed set of parameters that are always
+ * available in the GUI:
+ * - `numberOfCores`: The number of processor cores requested.
  *
- * If the script is called with <tt>--generate-input</tt>, it must write a JSON
- * string to standard output of the following format:
-@code {.js}
+ * If the script is called with `--generate-input`, it must write a JSON
+ * string to standard output with the following format:
+~~~{.js}
 {
   "files": [
     {
@@ -149,27 +237,33 @@ namespace QtPlugins {
   ],
   "mainFile": "file2.ext"
 }
-@endcode
- * The "files" block is an array of objects, which define the actual input
- * files. The "filename" member provides the name of the file, and "contents"
- * provides the text that goes into the file. The order of the files in the
+~~~
+ * The `files` block is an array of objects, which define the actual input
+ * files. The `filename` member provides the name of the file, and
+ * `contents` provides the text that goes into the file.
+ * The order of the files in the
  * GUI will match the order of the files in the array, and the first file will
  * be displayed first.
  *
- * The "mainFile" member points to the primary input file for a calculation.
+ * The `mainFile` member points to the primary input file for a calculation.
  * This is the file that will be used as a command line argument when executing
  * the simulation code (if applicable), and used by MoleQueue to set the
- * $$inputFileName$$ and $$inputFileBaseName$$ input template keywords.
- * This is optional; if present, the filename must exist in the "files" array.
- * If absent and only one file is specified in "files", the single input file
+ * `$$inputFileName$$` and `$$inputFileBaseName$$` input template keywords.
+ * This is optional; if present, the filename must exist in the `files` array.
+ * If absent and only one file is specified in `files`, the single input file
  * will be used. Otherwise, the main file will be left unspecified.
+ *
+ * Automatic Generation of Geometry
+ * ================================
  *
  * The generation of molecular geometry descriptions may be skipped in the
  * script and deferred to the InputGenerator class by use of a special keyword.
  * The "contents" string may contain a keyword of the form
- * @verbatim $$coords:[coordSpec]$$ @endverbatim where <tt>[coordSpec]</tt>
- * is a sequence
- * of characters. The characters in <tt>[coordSpec]</tt> indicate the
+~~~
+$$coords:[coordSpec]$$
+~~~
+ * where `[coordSpec]` is a sequence
+ * of characters. The characters in `[coordSpec]` indicate the
  * information needed about each atom in the coordinate block:
  * - @c Z: Atomic number
  * - @c S: Element symbol
@@ -177,20 +271,34 @@ namespace QtPlugins {
  * - @c x: X cartesian coordinate in Angstrom
  * - @c y: Y cartesian coordinate in Angstrom
  * - @c z: Z cartesian coordinate in Angstrom
+ * - @c 0: A literal "0". Useful for optimization flags.
+ * - @c 1: A literal "1". Useful for optimization flags.
+ * - @c _: A space character. Useful for alignment.
  *
- * For example, the string @verbatim $$coords:SZxyz$$ @endverbatim will be
+ * For example, the string
+~~~
+$$coords:__SZxyz110$$
+~~~
+ * will be
  * replaced by a molecule-specific block of text similar to the following:
-@verbatim
-C     6        1.126214              0.765886              0.000000
-C     6        0.819345             -0.564955              0.000000
-C     6       -0.598383             -0.795127              0.000000
-C     6       -1.310706              0.370165              0.000000
-S     16      -0.285330              1.757144              0.000000
-H     1        2.130424              1.185837              0.000000
-H     1        1.548377             -1.375303              0.000000
-H     1       -1.033768             -1.794407              0.000000
-H     1       -2.396173              0.450760              0.000000
-@endverbatim
+~~~
+  C  6    1.126214  0.765886  0.000000 1 1 0
+  C  6    0.819345 -0.564955  0.000000 1 1 0
+  C  6   -0.598383 -0.795127  0.000000 1 1 0
+  C  6   -1.310706  0.370165  0.000000 1 1 0
+  S  16  -0.285330  1.757144  0.000000 1 1 0
+  H  1    2.130424  1.185837  0.000000 1 1 0
+  H  1    1.548377 -1.375303  0.000000 1 1 0
+  H  1   -1.033768 -1.794407  0.000000 1 1 0
+  H  1   -2.396173  0.450760  0.000000 1 1 0
+~~~
+ *
+ * Other keywords that can be used in the input files are:
+ * - `$$atomCount$$`: Number of atoms in the molecule.
+ * - `$$bondCount$$`: Number of bonds in the molecule.
+ *
+ * Error Handling
+ * ==============
  *
  * In general, these scripts should be written robustly so that they will not
  * fail under normal circumstances. However, if for some reason an error
@@ -198,10 +306,14 @@ H     1       -2.396173              0.450760              0.000000
  * standard output as plain text (i.e. not JSON), and it will be shown to the
  * user.
  *
+ * Debugging
+ * =========
+ *
  * Debugging may be enabled by defining AVO_QM_INPUT_DEBUG in the process's
  * environment. This will cause the <tt>--debug</tt> option to be passed in
  * all calls to generator scripts, and will print extra information to the
- * qDebug() stream from within avogadro.
+ * qDebug() stream from within avogadro. The script is free to handle the
+ * debug flag as the author wishes.
  */
 class InputGenerator : public QObject
 {
