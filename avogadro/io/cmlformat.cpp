@@ -53,9 +53,9 @@ public:
       // Parse the various components we know about.
       data();
       properties();
-      bool atomsExist(atoms());
-      bool bondsExist(bonds());
-      success = atomsExist && bondsExist;
+      success = atoms();
+      if (success)
+        bonds();
     }
     else {
       error += "Error, no molecule node found.";

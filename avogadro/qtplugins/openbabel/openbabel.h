@@ -80,7 +80,14 @@ private slots:
   void onPerceiveBonds();
   void onPerceiveBondsFinished(const QByteArray &output);
 
+  void onAddHydrogens();
+  void onAddHydrogensPh();
+  void onRemoveHydrogens();
+  void onHydrogenOperationFinished(const QByteArray &cml);
+
 private:
+  void initializeProgressDialog(const QString &title, const QString &label,
+                                int min, int max, int value, bool showDialog = true);
   void showProcessInUseError(const QString &title) const;
   QString autoDetectForceField() const;
 
