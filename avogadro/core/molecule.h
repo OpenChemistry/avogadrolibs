@@ -137,6 +137,11 @@ public:
    */
   std::string formula() const;
 
+  /**
+   * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
+   */
+  void perceiveBondsSimple();
+
 protected:
   mutable Graph m_graph; // A transformation of the molecule to a graph.
   mutable bool m_graphDirty; // Should the graph be rebuilt before returning it?

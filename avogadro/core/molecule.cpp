@@ -251,6 +251,44 @@ std::string Molecule::formula() const
   return result.str();
 }
 
+// bond perception code ported from VTK's vtkSimpleBondPerceiver class
+void Molecule::perceiveBondsSimple()
+{
+  // check for coordinates
+  if (m_positions3d.size() != atomCount())
+    return;
+
+  // the tolerance used in the comparisons
+  double tolerance = 0.45;
+
+  // cache atomic radii
+  std::vector<double> radii(atomCount());
+  for (size_t i = 0; i < radii.size(); i++)
+    radii[i] = Elements::radiusCovalent(m_atomicNumbers[i]);
+
+  // check for bonds
+  for (size_t i = 0; i < atomCount(); i++) {
+    Vector3 ipos = m_positions3d[i];
+    for (size_t j = i + 1; j < atomCount(); j++) {
+      double cutoff = radii[i] + radii[j] + tolerance;
+      Vector3 jpos = m_positions3d[j];
+      Vector3 diff = jpos - ipos;
+
+      if (std::fabs(diff[0]) > cutoff ||
+          std::fabs(diff[1]) > cutoff ||
+          std::fabs(diff[2]) > cutoff ||
+          (m_atomicNumbers[i] == 1 && m_atomicNumbers[j] == 1))
+        continue;
+
+      // check radius and add bond if needed
+      double cutoffSq = cutoff * cutoff;
+      double diffsq = diff.squaredNorm();
+      if (diffsq < cutoffSq && diffsq > 0.1)
+        addBond(atom(i), atom(j), 1);
+    }
+  }
+}
+
 void Molecule::updateGraph() const
 {
   if (!m_graphDirty)
