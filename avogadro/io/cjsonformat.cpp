@@ -64,60 +64,92 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
     molecule.setData("inchi", value.asString());
 
   // Read in the atomic data.
-  value = root["atoms"]["elements"]["number"];
+  Json::Value atoms = root["atoms"];
+  if (atoms.empty()) {
+    appendError("Error, not valid Chemical JSON: not \"atom\" key found");
+    return false;
+  }
+
+  value =  atoms["elements"];
+  if (value.empty()) {
+    appendError("Error, not valid Chemical JSON: not \"atoms.elements\" key found");
+    return false;
+  }
+
+  value = value["number"];
+  if (value.empty()) {
+    appendError("Error, not valid Chemical JSON: not \"atoms.elements.number\" key found");
+    return false;
+  }
+
   size_t atomCount(0);
   if (value.isArray()) {
     atomCount = static_cast<size_t>(value.size());
     for (unsigned int i = 0; i < atomCount; ++i)
       molecule.addAtom(value.get(i, 0).asInt());
   }
-  value = root["atoms"]["coords"]["3d"];
-  if (value.isArray()) {
-    if (value.size() && atomCount != static_cast<size_t>(value.size() / 3)) {
-      appendError("Error, number of elements != number of 3D coordinates.");
-      return false;
+
+  Json::Value coords = atoms["coords"];
+  if (!coords.empty()) {
+    value = coords["3d"];
+    if (value.isArray()) {
+      if (value.size() && atomCount != static_cast<size_t>(value.size() / 3)) {
+        appendError("Error, number of elements != number of 3D coordinates.");
+        return false;
+      }
+      for (unsigned int i = 0; i < atomCount; ++i) {
+        Atom a = molecule.atom(i);
+        a.setPosition3d(Vector3(value.get(3 * i + 0, 0).asDouble(),
+                                value.get(3 * i + 1, 0).asDouble(),
+                                value.get(3 * i + 2, 0).asDouble()));
+      }
     }
-    for (unsigned int i = 0; i < atomCount; ++i) {
-      Atom a = molecule.atom(i);
-      a.setPosition3d(Vector3(value.get(3 * i + 0, 0).asDouble(),
-                              value.get(3 * i + 1, 0).asDouble(),
-                              value.get(3 * i + 2, 0).asDouble()));
-    }
-  }
-  value = root["atoms"]["coords"]["2d"];
-  if (value.isArray()) {
-    if (value.size() && atomCount != static_cast<size_t>(value.size() / 2)) {
-      appendError("Error, number of elements != number of 2D coordinates.");
-      return false;
-    }
-    for (unsigned int i = 0; i < atomCount; ++i) {
-      Atom a = molecule.atom(i);
-      a.setPosition2d(Vector2(value.get(2 * i + 0, 0).asDouble(),
-                              value.get(2 * i + 1, 0).asDouble()));
+
+    value = coords["2d"];
+    if (value.isArray()) {
+      if (value.size() && atomCount != static_cast<size_t>(value.size() / 2)) {
+        appendError("Error, number of elements != number of 2D coordinates.");
+        return false;
+      }
+      for (unsigned int i = 0; i < atomCount; ++i) {
+        Atom a = molecule.atom(i);
+        a.setPosition2d(Vector2(value.get(2 * i + 0, 0).asDouble(),
+                                value.get(2 * i + 1, 0).asDouble()));
+      }
     }
   }
 
   // Now for the bonding data.
-  value = root["bonds"]["connections"]["index"];
-  size_t bondCount(0);
-  if (value.isArray()) {
-    bondCount = static_cast<size_t>(value.size() / 2);
-    for (unsigned int i = 0; i < bondCount * 2; i += 2) {
-      molecule.addBond(molecule.atom(value.get(i + 0, 0).asInt()),
-                       molecule.atom(value.get(i + 1, 0).asInt()));
-    }
-  }
-  else {
-    appendError("Warning, no bonding information found.");
-  }
-  value = root["bonds"]["order"];
-  if (value.isArray()) {
-    if (bondCount != static_cast<size_t>(value.size())) {
-      appendError("Error, number of bonds != number of bond orders.");
+  Json::Value bonds = root["bonds"];
+  if (!bonds.empty()) {
+    value = bonds["connections"];
+    if (value.empty()) {
+      appendError("Error, not valid Chemical JSON: not \"bonds.connections\" key found");
       return false;
     }
-    for (unsigned int i = 0; i < bondCount; ++i)
-      molecule.bond(i).setOrder(static_cast<unsigned char>(value.get(i, 1).asInt()));
+
+    value = value["index"];
+    size_t bondCount(0);
+    if (value.isArray()) {
+      bondCount = static_cast<size_t>(value.size() / 2);
+      for (unsigned int i = 0; i < bondCount * 2; i += 2) {
+        molecule.addBond(molecule.atom(value.get(i + 0, 0).asInt()),
+                         molecule.atom(value.get(i + 1, 0).asInt()));
+      }
+    }
+    else {
+      appendError("Warning, no bonding information found.");
+    }
+
+    value = bonds["order"];
+    if (value.isArray()) {
+      if (bondCount != static_cast<size_t>(value.size())) {
+        appendError("Error, number of bonds != number of bond orders.");
+        return false;
+      }
+      for (unsigned int i = 0; i < bondCount; ++i)
+        molecule.bond(i).setOrder(static_cast<unsigned char>(value.get(i, 1).asInt()));
+    }
   }
 
   return true;
