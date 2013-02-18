@@ -33,8 +33,10 @@ TEST(CjsonTest, readFile)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson", molecule);
-
+  bool success = cjson.readFile(std::string(AVOGADRO_DATA) +
+                                "/data/ethane.cjson", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").type(), Avogadro::Core::Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
 
@@ -46,8 +48,10 @@ TEST(CjsonTest, atoms)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson", molecule);
-
+  bool success = cjson.readFile(std::string(AVOGADRO_DATA) +
+                                "/data/ethane.cjson", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(8));
   Atom atom = molecule.atom(0);
@@ -69,8 +73,10 @@ TEST(CjsonTest, bonds)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson", molecule);
-
+  bool success = cjson.readFile(std::string(AVOGADRO_DATA) +
+                                "/data/ethane.cjson", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(8));
   EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(7));
@@ -89,12 +95,20 @@ TEST(CjsonTest, saveFile)
 {
   CjsonFormat cjson;
   Molecule savedMolecule, molecule;
-  cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson",
-                 savedMolecule);
-  cjson.writeFile("ethanetmp.cjson", savedMolecule);
+  bool success = cjson.readFile(std::string(AVOGADRO_DATA) +
+                                "/data/ethane.cjson",
+                                savedMolecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
+
+  success = cjson.writeFile("ethanetmp.cjson", savedMolecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
 
   // Now read the file back in and check a few key values are still present.
-  cjson.readFile("ethanetmp.cjson", molecule);
+  success = cjson.readFile("ethanetmp.cjson", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(8));
   EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(7));
