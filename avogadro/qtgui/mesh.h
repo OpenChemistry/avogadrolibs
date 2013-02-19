@@ -123,7 +123,10 @@ public:
   /**
    * @return The number of vertices.
    */
-  unsigned int numVertices() const { return m_vertices.size(); }
+  unsigned int numVertices() const
+  {
+    return static_cast<unsigned int>(m_vertices.size());
+  }
 
   /**
    * @return Pointer to the first vertex of the specified triangle.
@@ -149,7 +152,10 @@ public:
   /**
    * @return The number of normals.
    */
-  unsigned int numNormals() const { return m_normals.size(); }
+  unsigned int numNormals() const
+  {
+    return static_cast<unsigned int>(m_normals.size());
+  }
 
   /**
    * @return Pointer to the first normal of the specified triangle.
