@@ -75,6 +75,20 @@ public:
    */
   template<typename T> QList<T *> pluginFactories() const;
 
+  /**
+   * Let the user request a plugin by name, this must use the Qt
+   * mechanisms as qobject_cast is used in conjunction with interfaces.
+   *
+   * @code
+   * factory = pluginManager->
+   *             pluginFactories<Avogadro::QtGui::ScenePluginFactory>("name");
+   * @endcode
+   *
+   * @param name The name of the plugin factory.
+   * @return The plugin factory if the plugin was found, NULL otherwise.
+   */
+  template<typename T> T * pluginFactory(const QString &name) const;
+
 private:
   // Hide the constructor, destructor, copy and assignment operator.
   PluginManager(QObject *parent = 0);
@@ -102,7 +116,18 @@ template<typename T> QList<T *> PluginManager::pluginFactories() const
   return factories;
 }
 
-} // End QtGui namespace
+template<typename T> T * PluginManager::pluginFactory(const QString &name) const
+{
+  T *factory;
+  foreach (QObject *plugin, m_plugins) {
+    factory = qobject_cast<T *>(plugin);
+    if (factory && factory->name() == name)
+      break;
+  }
+  return factory;
+}
+
+} // End QtPlugins namespace
 } // End Avogadro namespace
 
 #endif // AVOGADRO_QTGUI_PLUGINMANAGER_H
