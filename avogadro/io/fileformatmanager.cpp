@@ -22,7 +22,7 @@
 #include "cjsonformat.h"
 #include "xyzformat.h"
 
-#include <avogadro/core/memory_p.h>
+#include <avogadro/stl/memory_p.h>
 
 namespace Avogadro {
 namespace Io {

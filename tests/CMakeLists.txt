@@ -11,6 +11,13 @@ include_directories(SYSTEM
   ${GTEST_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR})
 
+# Check if we need extra include directories for C++11 features.
+if(AvogadroLibs_NEEDS_BOOST)
+  include_directories(SYSTEM
+    ${AvogadroLibs_MUTEX_INCLUDE_DIRS}
+    ${AvogadroLibs_MEMORY_INCLUDE_DIRS})
+endif()
+
 include(CheckIncludeFileCXX)
 include(CheckCXXSymbolExists)
 check_include_file_cxx("gtest/gtest.h" HAVE_GTEST_HPP)
@@ -63,6 +70,12 @@ message(STATUS "Test source files: ${testSrcs}")
 add_executable(AvogadroTests ${testSrcs})
 target_link_libraries(AvogadroTests AvogadroCore
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+# Additional libraries and compiler definitions necessary when using Boost to
+# replace C++11.
+if(AvogadroLibs_NEEDS_BOOST)
+  target_link_libraries(AvogadroTests ${AvogadroLibs_MUTEX_BOOST_LIBRARIES})
+  add_definitions(${AvogadroLibs_BOOST_DEFINITIONS})
+endif()
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.

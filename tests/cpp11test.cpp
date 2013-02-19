@@ -16,9 +16,9 @@
 
 #include <gtest/gtest.h>
 
-#include <avogadro/core/memory_p.h>
+#include <avogadro/stl/memory_p.h>
+#include <avogadro/stl/mutex_p.h>
 #include <avogadro/core/molecule.h>
-#include <avogadro/core/mutex_p.h>
 
 using Avogadro::Core::Molecule;
 
