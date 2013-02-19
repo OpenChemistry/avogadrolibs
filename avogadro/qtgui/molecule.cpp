@@ -32,7 +32,7 @@ Molecule::~Molecule()
 
 Core::Atom Molecule::addAtom(unsigned char atomicNumber)
 {
-  m_atomUniqueIds.push_back(atomCount());
+  m_atomUniqueIds.push_back(static_cast<int>(atomCount()));
   Core::Atom a = Core::Molecule::addAtom(atomicNumber);
   emit changed(Atoms | Added);
   return a;
@@ -77,7 +77,7 @@ bool Molecule::removeAtom(size_t index)
 
     int movedAtomUID = findAtomUniqueId(newSize);
     assert(movedAtomUID != -1);
-    m_atomUniqueIds[movedAtomUID] = index;
+    m_atomUniqueIds[movedAtomUID] = static_cast<int>(index);
   }
   // Resize the arrays for the smaller molecule.
   if (m_positions2d.size() == m_atomicNumbers.size())
@@ -105,7 +105,7 @@ void Molecule::clearAtoms()
 Core::Bond Molecule::addBond(const Core::Atom &a, const Core::Atom &b,
                              unsigned char bondOrder)
 {
-  m_bondUniqueIds.push_back(bondCount());
+  m_bondUniqueIds.push_back(static_cast<int>(bondCount()));
   Core::Bond bond_ = Core::Molecule::addBond(a, b, bondOrder);
   emit changed(Bonds | Added);
   return bond_;
@@ -129,7 +129,7 @@ bool Molecule::removeBond(size_t index)
 
     int movedBondUID = findBondUniqueId(newSize);
     assert(movedBondUID != -1);
-    m_bondUniqueIds[movedBondUID] = index;
+    m_bondUniqueIds[movedBondUID] = static_cast<int>(index);
   }
 
   // Resize the arrays for the smaller molecule.
