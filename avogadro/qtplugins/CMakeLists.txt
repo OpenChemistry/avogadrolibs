@@ -11,7 +11,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "${original_library_output_dir}/avogadro2/staticplugins")
 
 # Optionally build all plugins statically.
-option(BUILD_STATIC_PLUGINS "Build plugins statically by default" OFF)
+option(BUILD_STATIC_PLUGINS "Build static plugins by default" ON)
 
 # Create a plugin for Avogadro.
 # name is the name of the plugin, this will be the name of the target created.

@@ -37,10 +37,7 @@ PluginManager::PluginManager(QObject *p)
   // The usual base directory is the parent directory of the executable's
   // location. (exe is in "bin" or "MacOS" and plugins are under the parent
   // directory at "lib/avogadro2/plugins"...)
-  //
   QDir baseDir(QCoreApplication::applicationDirPath() + "/..");
-  if (debugPlugins)
-    qDebug() << "  baseDir:" << baseDir.absolutePath();
 
 #ifdef __APPLE__
   // But if NOT running from the installed bundle on the Mac, the plugins are
@@ -53,6 +50,13 @@ PluginManager::PluginManager(QObject *p)
       qDebug() << "  using buildDir:" << buildDir.absolutePath();
   }
 #endif
+
+  // If the environment variable is set, use that as the base directory.
+  QByteArray pluginDir = qgetenv("AVOGADRO_PLUGIN_DIR");
+  if (!pluginDir.isEmpty())
+    baseDir.setPath(pluginDir);
+  if (debugPlugins)
+    qDebug() << "  baseDir:" << baseDir.absolutePath();
 
   QDir pluginsDir(baseDir.absolutePath() + "/lib/avogadro2/plugins");
   m_pluginDirs.append(pluginsDir.absolutePath());
