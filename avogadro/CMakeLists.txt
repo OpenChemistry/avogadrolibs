@@ -32,6 +32,7 @@ option(USE_BOOST "Enable libraries that use Boost" ON)
 option(USE_OPENGL "Enable libraries that use OpenGL" ON)
 option(USE_QT "Enable libraries that use Qt 4" ON)
 
+add_subdirectory(stl)
 add_subdirectory(core)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/core)
 

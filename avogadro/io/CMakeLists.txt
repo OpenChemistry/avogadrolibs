@@ -7,9 +7,9 @@ include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/pugixml"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp")
 
-if(AvogadroLibs_NEEDS_BOOST)
-  # The libraries will be in the interface libraries, just need includes.
-  include_directories(SYSTEM ${AvogadroLibs_BOOST_INCLUDE_DIRS})
+if(DEFINED AvogadroLibs_MEMORY_INCLUDE_DIRS)
+  # The smart pointer classes just require headers.
+  include_directories(SYSTEM ${AvogadroLibs_MEMORY_INCLUDE_DIRS})
 endif()
 
 set(HEADERS
