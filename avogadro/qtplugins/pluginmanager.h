@@ -24,7 +24,7 @@
 #include <QtCore/QList>
 
 namespace Avogadro {
-namespace QtGui {
+namespace QtPlugins {
 
 class ScenePluginFactory;
 class ExtensionPluginFactory;

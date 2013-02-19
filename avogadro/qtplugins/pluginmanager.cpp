@@ -26,7 +26,7 @@
 #include <QtCore/QDebug>
 
 namespace Avogadro {
-namespace QtGui {
+namespace QtPlugins {
 
 PluginManager::PluginManager(QObject *p)
   : QObject(p), m_staticPluginsLoaded(false)
