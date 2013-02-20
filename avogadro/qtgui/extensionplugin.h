@@ -19,6 +19,8 @@
 
 #include "avogadroqtguiexport.h"
 
+#include <avogadro/qtplugins/pluginfactory.h>
+
 #include <QtCore/QObject>
 
 class QAction;
@@ -98,12 +100,10 @@ signals:
  * @author Marcus D. Hanwell
  */
 class AVOGADROQTGUI_EXPORT ExtensionPluginFactory
+  : public QtPlugins::PluginFactory<ExtensionPlugin>
 {
 public:
   virtual ~ExtensionPluginFactory();
-
-  virtual ExtensionPlugin * createInstance() = 0;
-  virtual QString identifier() const = 0;
 };
 
 } // End QtGui namespace

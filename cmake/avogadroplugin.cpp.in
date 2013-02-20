@@ -31,7 +31,9 @@ public:
 
   QtGui::@PluginType@ * createInstance() { return new @PluginClass@; }
 
-  QString identifier() const { return "@PluginDescription@"; }
+  QString identifier() const { return "@PluginName@"; }
+
+  QString description() const { return "@PluginDescription@"; }
 
 };
 
