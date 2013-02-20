@@ -19,6 +19,8 @@
 
 #include "avogadroqtguiexport.h"
 
+#include <avogadro/qtplugins/pluginfactory.h>
+
 #include <QtCore/QObject>
 
 namespace Avogadro {
@@ -78,12 +80,10 @@ public:
  * @author Marcus D. Hanwell
  */
 class AVOGADROQTGUI_EXPORT ScenePluginFactory
+  : public Avogadro::QtPlugins::PluginFactory<ScenePlugin>
 {
 public:
   virtual ~ScenePluginFactory() {}
-
-  virtual ScenePlugin * createInstance() = 0;
-  virtual QString identifier() const = 0;
 };
 
 } // End QtGui namespace

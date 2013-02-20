@@ -99,6 +99,7 @@ file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h"
 # then the static plugin header must be included by the application.
 set(HEADERS
   pluginmanager.h
+  pluginfactory.h
   "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h"
 )
 
