@@ -313,12 +313,6 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
 {
   xml_document document;
 
-  Hdf5DataFormat hdf5;
-  if (!hdf5.openFile(fileName() + ".h5", Hdf5DataFormat::ReadWriteAppend)) {
-    appendError("CmlFormat::writeFile: Cannot open file: "
-                + fileName() + ".h5");
-  }
-
   // Add a custom declaration node.
   xml_node declaration = document.prepend_child(pugi::node_declaration);
   declaration.append_attribute("version") = "1.0";
@@ -365,6 +359,9 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
     bondNode.append_attribute("atomRefs2") = index.str().c_str();
     bondNode.append_attribute("order") = b.order();
   }
+
+  Hdf5DataFormat hdf5;
+  bool openFile = true;
 
   xml_node dataMapNode = moleculeNode.append_child("dataMap");
   VariantMap dataMap = mol.dataMap();
@@ -425,6 +422,14 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
       dataNode.text() = var.toString().c_str();
       break;
     case Variant::Matrix: {
+      if(openFile) {
+        if (!hdf5.openFile(fileName() + ".h5", Hdf5DataFormat::ReadWriteAppend)) {
+          appendError("CmlFormat::writeFile: Cannot open file: "
+                      + fileName() + ".h5");
+        }
+        openFile = false;
+      }
+
       dataNode.set_name("hdf5data");
       dataNode.append_attribute("dataType") = "xsd:double";
       dataNode.append_attribute("ndims") = "2";
