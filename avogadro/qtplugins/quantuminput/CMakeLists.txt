@@ -27,6 +27,7 @@ target_link_libraries(QuantumInput LINK_PRIVATE AvogadroIO MoleQueueClient)
 set(input_generators
   inputGenerators/gamessuk.py
   inputGenerators/gaussian.py
+  inputGenerators/lammps.py
   inputGenerators/molpro.py
   inputGenerators/mopac.py
   inputGenerators/nwchem.py
