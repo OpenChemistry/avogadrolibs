@@ -39,7 +39,8 @@ BufferObject::BufferObject(ObjectType type_)
 
 BufferObject::~BufferObject()
 {
-  glDeleteBuffers(1, &d->handle);
+  if (d->handle != 0)
+    glDeleteBuffers(1, &d->handle);
   delete d;
 }
 
