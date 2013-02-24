@@ -17,18 +17,19 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/vector.h>
+#include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spherenode.h>
 
 #include <iostream>
 
-using Avogadro::Rendering::Node;
+using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::SphereNode;
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 
 TEST(SphereNodeTest, children)
 {
-  Node root;
+  GroupNode root;
   SphereNode *child1 = new SphereNode;
   SphereNode *child2 = new SphereNode;
   root.addChild(child1);
@@ -40,23 +41,13 @@ TEST(SphereNodeTest, children)
   EXPECT_EQ(child2, root.child(1));
 }
 
-TEST(SphereNodeTest, parents)
-{
-  Node root;
-  SphereNode *child1 = new SphereNode(&root);
-  SphereNode *child2 = new SphereNode(&root);
-
-  EXPECT_EQ(&root, child1->parent());
-  EXPECT_EQ(&root, child2->parent());
-  EXPECT_EQ(child1, root.child(0));
-  EXPECT_EQ(child2, root.child(1));
-}
-
 TEST(SphereNodeTest, removeChild)
 {
-  Node root;
-  SphereNode *child1 = new SphereNode(&root);
-  SphereNode *child2 = new SphereNode(&root);
+  GroupNode root;
+  SphereNode *child1 = new SphereNode;
+  SphereNode *child2 = new SphereNode;
+  root.addChild(child1);
+  root.addChild(child2);
 
   EXPECT_EQ(child1, root.child(0));
   EXPECT_EQ(root.removeChild(child1), true);

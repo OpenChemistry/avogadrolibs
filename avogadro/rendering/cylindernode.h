@@ -31,7 +31,7 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT CylinderNode : public GeometryNode
 {
 public:
-  explicit CylinderNode(Node *parent = 0);
+  explicit CylinderNode();
   ~CylinderNode();
 };
 

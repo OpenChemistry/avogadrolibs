@@ -35,7 +35,7 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT MeshNode : public GeometryNode
 {
 public:
-  explicit MeshNode(Node *parent = 0);
+  explicit MeshNode();
   ~MeshNode();
 };
 

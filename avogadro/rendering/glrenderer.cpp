@@ -85,11 +85,10 @@ void GLRenderer::render()
 
   if (m_scene.rootNode().children().size()) {
     std::cout << "root node has " << m_scene.rootNode().children().size() << " children\n";
-    Node *node = m_scene.rootNode().children().front();
-    std::cout << "That node has " << node->children().size() << " children...\n";
-    if (node->children().size()) {
-      Node *engine = node->children().front();
-      if (engine->children().size() == 0)
+    GroupNode *node = m_scene.rootNode().children().front()->cast<GroupNode>();
+    if (node && node->children().size()) {
+      GroupNode *engine = node->children().front()->cast<GroupNode>();
+      if (engine == NULL || engine->children().size() == 0)
         return;
       SphereNode *spheres = dynamic_cast<SphereNode *>(engine->children().front());
       if (spheres) {

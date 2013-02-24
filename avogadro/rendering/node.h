@@ -20,10 +20,10 @@
 #include "avogadrorenderingexport.h"
 #include <avogadro/core/avogadrocore.h>
 
-#include <vector>
-
 namespace Avogadro {
 namespace Rendering {
+
+class GroupNode;
 
 /**
  * @class Node node.h <avogadro/rendering/node.h>
@@ -31,35 +31,27 @@ namespace Rendering {
  * @author Marcus D. Hanwell
  *
  * The Node class is the base class for nodes in the Scene, providing common
- * API and functionality. The Node class may be used to group items together,
- * but for most other purposes a more derived Node type would be the correct
- * choice.
+ * API and functionality.
  */
 
 class AVOGADRORENDERING_EXPORT Node
 {
 public:
-  explicit Node(Node *parent = 0);
+  Node();
   virtual ~Node();
-
-  /**
-   * @brief Set the parent node for the node.
-   * @param parent The parent, a value of NULL denotes no parent node.
-   */
-  void setParent(Node *parent);
 
   /**
    * @brief Get a pointer to the node's parent.
    * @return Pointer to the parent node, NULL if no parent.
    */
-  const Node * parent() const { return m_parent; }
-  Node * parent() { return m_parent; }
+  const GroupNode * parent() const { return m_parent; }
+  GroupNode * parent() { return m_parent; }
 
   /**
    * @brief Set the visibility of the node.
-   * @param vis True if the node is visible, false if invisible.
+   * @param visibility True if the node is visible, false if invisible.
    */
-  void setVisible(bool vis) { m_visible = vis; }
+  void setVisible(bool visibility) { m_visible = visibility; }
 
   /**
    * @brief Get the current visibility of the node.
@@ -68,43 +60,28 @@ public:
   bool isVisible() const { return m_visible; }
 
   /**
-   * @brief Add a child node, this node will have its parent set and will be
-   * deleted by this node upon destruction.
-   * @param node Node to be added.
+   * @brief Attempt to dynamic_cast to specified node type.
+   * @return Valid pointer to specified type, or null.
    */
-  void addChild(Node *node);
-
-  /**
-   * @brief Remove child node, this node will no longer be deleted.
-   * @param node Node to be removed.
-   * @return True if the node was removed, false if it was not found.
-   */
-  bool removeChild(Node *node);
-
-  /**
-   * @brief Get the child Node at the specified index.
-   * @param index The index of the child.
-   * @return A pointer to the child node, or NULL if the index is out of range.
-   */
-  Node * child(size_t index);
-
-  /**
-   * @brief Get a reference to the child nodes list.
-   */
-  std::vector<Node *>& children() { return m_children; }
-  const std::vector<Node *> children() const { return m_children; }
-
-  /**
-   * @brief Remove all children.
-   */
-  void clear();
+  template<typename T> T* cast();
 
 protected:
-  Node * m_parent;
-  bool m_visible;
-  std::vector<Node *> m_children;
+  friend class GroupNode;
 
+  /**
+   * @brief Set the parent node for the node.
+   * @param parent The parent, a value of NULL denotes no parent node.
+   */
+  void setParent(GroupNode *parent);
+
+  GroupNode * m_parent;
+  bool m_visible;
 };
+
+template<typename T> T* Node::cast()
+{
+  return dynamic_cast<T*>(this);
+}
 
 } // End namespace Rendering
 } // End namespace Avogadro

@@ -18,6 +18,7 @@
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spherenode.h>
 
 namespace Avogadro {
@@ -32,14 +33,15 @@ VanDerWaals::~VanDerWaals()
 }
 
 void VanDerWaals::process(const Core::Molecule &molecule,
-                          Rendering::Node &node)
+                          Rendering::GroupNode &node)
 {
   //Rendering::Primitive::Identifier identifier;
   //identifier.molecule = &molecule;
   //identifier.type = Rendering::Primitive::Atom;
 
   // Add a sphere node to contain all of the VdW spheres.
-  Rendering::SphereNode *spheres = new Rendering::SphereNode(&node);
+  Rendering::SphereNode *spheres = new Rendering::SphereNode;
+  node.addChild(spheres);
 
   for (size_t i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);

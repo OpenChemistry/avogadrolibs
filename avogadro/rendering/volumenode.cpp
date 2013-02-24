@@ -19,7 +19,7 @@
 namespace Avogadro {
 namespace Rendering {
 
-VolumeNode::VolumeNode(Node *p) : GeometryNode(p)
+VolumeNode::VolumeNode()
 {
 }
 

@@ -16,15 +16,16 @@
 
 #include <gtest/gtest.h>
 
-#include <avogadro/rendering/node.h>
+#include <avogadro/rendering/groupnode.h>
 
 #include <iostream>
 
 using Avogadro::Rendering::Node;
+using Avogadro::Rendering::GroupNode;
 
 TEST(NodeTest, children)
 {
-  Node root;
+  GroupNode root;
   Node *child1 = new Node;
   Node *child2 = new Node;
   root.addChild(child1);
@@ -36,23 +37,13 @@ TEST(NodeTest, children)
   EXPECT_EQ(child2, root.child(1));
 }
 
-TEST(NodeTest, parents)
-{
-  Node root;
-  Node *child1 = new Node(&root);
-  Node *child2 = new Node(&root);
-
-  EXPECT_EQ(&root, child1->parent());
-  EXPECT_EQ(&root, child2->parent());
-  EXPECT_EQ(child1, root.child(0));
-  EXPECT_EQ(child2, root.child(1));
-}
-
 TEST(NodeTest, removeChild)
 {
-  Node root;
-  Node *child1 = new Node(&root);
-  Node *child2 = new Node(&root);
+  GroupNode root;
+  Node *child1 = new Node;
+  Node *child2 = new Node;
+  root.addChild(child1);
+  root.addChild(child2);
 
   EXPECT_EQ(child1, root.child(0));
   EXPECT_EQ(root.removeChild(child1), true);

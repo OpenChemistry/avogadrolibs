@@ -31,7 +31,7 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT VolumeNode : public GeometryNode
 {
 public:
-  explicit VolumeNode(Node *parent = 0);
+  explicit VolumeNode();
   ~VolumeNode();
 };
 

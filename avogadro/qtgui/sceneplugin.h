@@ -19,6 +19,7 @@
 
 #include "avogadroqtguiexport.h"
 
+#include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtplugins/pluginfactory.h>
 
 #include <QtCore/QObject>
@@ -30,7 +31,7 @@ class Molecule;
 }
 
 namespace Rendering {
-class Node;
+class GroupNode;
 }
 
 namespace QtGui {
@@ -51,7 +52,8 @@ public:
   /**
    * Process the supplied atom, and add the necessary primitives to the scene.
    */
-  virtual void process(const Core::Molecule &molecule, Rendering::Node &node) = 0;
+  virtual void process(const Core::Molecule &molecule,
+                       Rendering::GroupNode &node) = 0;
 
   /**
    * The name of the scene plugin, will be displayed in the user interface.

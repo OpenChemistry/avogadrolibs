@@ -19,7 +19,7 @@
 namespace Avogadro {
 namespace Rendering {
 
-TransformNode::TransformNode(Node *p) : Node(p)
+TransformNode::TransformNode(GroupNode *p) : GroupNode(p)
 {
 }
 

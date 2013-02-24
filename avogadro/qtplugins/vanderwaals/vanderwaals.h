@@ -34,7 +34,8 @@ public:
   explicit VanDerWaals(QObject *parent = 0);
   ~VanDerWaals();
 
-  void process(const Core::Molecule &molecule, Rendering::Node &node);
+  void process(const Core::Molecule &molecule,
+               Rendering::GroupNode &node) AVO_OVERRIDE;
 
   QString name() const { return tr("Van der Waals"); }
 

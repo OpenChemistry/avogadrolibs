@@ -16,6 +16,7 @@ set(HEADERS
   camera.h
   cylindernode.h
   geometrynode.h
+  groupnode.h
   glrenderer.h
   meshnode.h
   node.h
@@ -33,6 +34,7 @@ set(SOURCES
   camera.cpp
   cylindernode.cpp
   geometrynode.cpp
+  groupnode.cpp
   glrenderer.cpp
   meshnode.cpp
   node.cpp

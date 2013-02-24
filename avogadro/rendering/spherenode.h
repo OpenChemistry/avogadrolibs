@@ -21,6 +21,8 @@
 
 #include <avogadro/core/vector.h>
 
+#include <vector>
+
 namespace Avogadro {
 namespace Rendering {
 
@@ -48,13 +50,13 @@ struct SphereColor
 class AVOGADRORENDERING_EXPORT SphereNode : public GeometryNode
 {
 public:
-  explicit SphereNode(Node *parent = 0);
+  explicit SphereNode();
   ~SphereNode();
 
   void render(const Camera &camera);
 
   /**
-   * Add a sphere to the scene object.
+   * Add a sphere to the geometry object.
    */
   void addSphere(const Vector3f &position, const Vector3ub &color, float radius);
 

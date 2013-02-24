@@ -19,7 +19,7 @@
 
 #include "avogadrorenderingexport.h"
 
-#include "node.h"
+#include "groupnode.h"
 #include "primitive.h"
 
 #include <avogadro/core/avogadrocore.h>
@@ -108,8 +108,8 @@ public:
   /**
    * Get the root node of the scene.
    */
-  Node& rootNode() { return m_rootNode; }
-  const Node& rootNode() const { return m_rootNode; }
+  GroupNode& rootNode() { return m_rootNode; }
+  const GroupNode& rootNode() const { return m_rootNode; }
 
   /**
    * Add a sphere to the scene object.
@@ -177,7 +177,7 @@ public:
   void clear();
 
 private:
-  Node m_rootNode;
+  GroupNode m_rootNode;
 
   std::vector<Sphere> m_spheres;
   std::vector<unsigned int> m_sphereIndices;

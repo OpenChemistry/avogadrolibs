@@ -19,7 +19,7 @@
 namespace Avogadro {
 namespace Rendering {
 
-CylinderNode::CylinderNode(Node *p) : GeometryNode(p)
+CylinderNode::CylinderNode()
 {
 }
 

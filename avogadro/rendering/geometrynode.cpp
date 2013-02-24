@@ -19,7 +19,7 @@
 namespace Avogadro {
 namespace Rendering {
 
-GeometryNode::GeometryNode(Node *p) : Node(p), m_renderer(NULL)
+GeometryNode::GeometryNode() : m_renderer(NULL)
 {
 }
 

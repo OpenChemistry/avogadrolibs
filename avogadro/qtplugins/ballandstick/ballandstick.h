@@ -34,7 +34,8 @@ public:
   explicit BallAndStick(QObject *parent = 0);
   ~BallAndStick();
 
-  void process(const Core::Molecule &molecule, Rendering::Scene &scene);
+  void process(const Core::Molecule &molecule,
+               Rendering::GroupNode &node) AVO_OVERRIDE;
 
   QString name() const { return tr("Ball and Stick"); }
 

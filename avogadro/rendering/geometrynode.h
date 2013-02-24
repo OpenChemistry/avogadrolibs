@@ -39,7 +39,7 @@ class Renderer;
 class AVOGADRORENDERING_EXPORT GeometryNode : public Node
 {
 public:
-  explicit GeometryNode(Node *parent = 0);
+  explicit GeometryNode();
   ~GeometryNode();
 
   virtual void render(const Camera &camera);

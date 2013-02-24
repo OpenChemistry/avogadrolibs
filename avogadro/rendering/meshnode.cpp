@@ -19,7 +19,7 @@
 namespace Avogadro {
 namespace Rendering {
 
-MeshNode::MeshNode(Node *p) : GeometryNode(p)
+MeshNode::MeshNode()
 {
 }
 

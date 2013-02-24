@@ -18,13 +18,15 @@
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
-#include <avogadro/rendering/scene.h>
-
-using Avogadro::Core::Molecule;
-using Avogadro::Rendering::Scene;
+#include <avogadro/rendering/groupnode.h>
+#include <avogadro/rendering/spherenode.h>
 
 namespace Avogadro {
 namespace QtPlugins {
+
+using Core::Elements;
+using Core::Molecule;
+using Rendering::SphereNode;
 
 BallAndStick::BallAndStick(QObject *p) : ScenePlugin(p), m_enabled(true)
 {
@@ -34,29 +36,33 @@ BallAndStick::~BallAndStick()
 {
 }
 
-void BallAndStick::process(const Molecule &molecule, Scene &scene)
+void BallAndStick::process(const Molecule &molecule,
+                           Rendering::GroupNode &node)
 {
-  Rendering::Primitive::Identifier identifier;
-  identifier.molecule = &molecule;
-  identifier.type = Rendering::Primitive::Atom;
+  //Rendering::Primitive::Identifier identifier;
+  //identifier.molecule = &molecule;
+  //identifier.type = Rendering::Primitive::Atom;
+
+  // Add a sphere node to contain all of the VdW spheres.
+  Rendering::SphereNode *spheres = new Rendering::SphereNode;
+  node.addChild(spheres);
   for (size_t i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
-    identifier.index = i;
+    //identifier.index = i;
     unsigned char atomicNumber = atom.atomicNumber();
-    const unsigned char *c = Core::Elements::color(atomicNumber);
+    const unsigned char *c = Elements::color(atomicNumber);
     Vector3ub color(c[0], c[1], c[2]);
-    scene.addSphere(atom.position3d().cast<float>(), color,
-                    static_cast<float>(Core::Elements::radiusVDW(
-                                         atomicNumber) * 0.3),
-                    identifier);
+    spheres->addSphere(atom.position3d().cast<float>(), color,
+                       static_cast<float>(Elements::radiusVDW(atomicNumber))
+                       * 0.3);
   }
 
   float bondRadius = 0.1f;
   Vector3ub bondColor(127, 127, 127);
-  identifier.type = Rendering::Primitive::Bond;
+  //identifier.type = Rendering::Primitive::Bond;
   for (size_t i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
-    identifier.index = i;
+    //identifier.index = i;
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
     Vector3f bondVector = pos2 - pos1;
@@ -65,22 +71,21 @@ void BallAndStick::process(const Molecule &molecule, Scene &scene)
     switch (bond.order()) {
     case 3: {
       Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
-      scene.addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
-                        bondColor, identifier);
-      scene.addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
-                        bondColor, identifier);
+//      scene.addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
+//                        bondColor);
+//      scene.addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
+//                        bondColor);
     }
     default:
     case 1:
-      scene.addCylinder(pos1, bondVector, bondLength, bondRadius, bondColor,
-                        identifier);
+      //scene.addCylinder(pos1, bondVector, bondLength, bondRadius, bondColor);
       break;
     case 2: {
       Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
-      scene.addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
-                        bondColor, identifier);
-      scene.addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
-                        bondColor, identifier);
+//      scene.addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
+//                        bondColor);
+//      scene.addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
+//                        bondColor);
     }
     }
   }

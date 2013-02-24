@@ -17,21 +17,21 @@
 #ifndef AVOGADRO_RENDERING_TRANSFORMNODE_H
 #define AVOGADRO_RENDERING_TRANSFORMNODE_H
 
-#include "node.h"
+#include "groupnode.h"
 
 namespace Avogadro {
 namespace Rendering {
 
 /**
  * @class TransofrmNode transformnode.h <avogadro/rendering/transformnode.h>
- * @brief The TransformNode class is applies a trasnform to all child nodes.
+ * @brief The TransformNode class applies a transform to all child nodes.
  * @author Marcus D. Hanwell
  */
 
-class AVOGADRORENDERING_EXPORT TransformNode : public Node
+class AVOGADRORENDERING_EXPORT TransformNode : public GroupNode
 {
 public:
-  explicit TransformNode(Node *parent = 0);
+  explicit TransformNode(GroupNode *parent = 0);
   ~TransformNode();
 };
 

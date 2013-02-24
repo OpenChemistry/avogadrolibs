@@ -33,6 +33,9 @@ namespace {
 
 #include <iostream>
 
+using std::cout;
+using std::endl;
+
 namespace Avogadro {
 namespace Rendering {
 
@@ -52,7 +55,7 @@ public:
   size_t numberOfIndices;
 };
 
-SphereNode::SphereNode(Node *p) : GeometryNode(p), m_dirty(false), d(new Private)
+SphereNode::SphereNode() : m_dirty(false), d(new Private)
 {
 }
 
@@ -63,14 +66,14 @@ SphereNode::~SphereNode()
 
 void SphereNode::render(const Camera &camera)
 {
-  std::cout << "render called\n" << "spheres: " << m_spheres.size()
-            << "\nindices: " << m_indices.size() << std::endl;
+  cout << "render called\n" << "spheres: " << m_spheres.size()
+       << "\nindices: " << m_indices.size() << endl;
   if (m_indices.empty() || m_spheres.empty())
     return;
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
-    std::cout << "building array buffers...\n";
+    cout << "building array buffers...\n";
     std::vector<unsigned int> sphereIndices;
     std::vector<ColorTextureVertex> sphereVertices;
     sphereIndices.reserve(m_indices.size() * 4);
@@ -121,53 +124,53 @@ void SphereNode::render(const Camera &camera)
     d->fragmentShader.setType(Shader::Fragment);
     d->fragmentShader.setSource(spheres_fs);
     if (!d->vertexShader.compile())
-      std::cout << d->vertexShader.error() << std::endl;
+      cout << d->vertexShader.error() << endl;
     if (!d->fragmentShader.compile())
-      std::cout << d->fragmentShader.error() << std::endl;
+      cout << d->fragmentShader.error() << endl;
     d->program.attachShader(d->vertexShader);
     d->program.attachShader(d->fragmentShader);
     if (!d->program.link())
-      std::cout << d->program.error() << std::endl;
-    }
+      cout << d->program.error() << endl;
+  }
 
   if (!d->program.bind())
-    std::cout << d->program.error() << std::endl;
+    cout << d->program.error() << endl;
 
   d->vbo.bind();
   d->ibo.bind();
 
   // Set up our attribute arrays.
   if (!d->program.enableAttributeArray("vertex"))
-    std::cout << d->program.error() << std::endl;
+    cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("vertex",
                                     ColorTextureVertex::vertexOffset(),
                                     Vector3f())) {
-    std::cout << d->program.error() << std::endl;
-    }
+    cout << d->program.error() << endl;
+  }
   if (!d->program.enableAttributeArray("color"))
-    std::cout << d->program.error() << std::endl;
+    cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("color",
                                     ColorTextureVertex::colorOffset(),
                                     Vector3ub())) {
-    std::cout << d->program.error() << std::endl;
-    }
+    cout << d->program.error() << endl;
+  }
   if (!d->program.enableAttributeArray("texCoordinate"))
-    std::cout << d->program.error() << std::endl;
+    cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("texCoordinate",
                                     ColorTextureVertex::textureCoordOffset(),
                                     Vector2f())) {
-    std::cout << d->program.error() << std::endl;
-    }
+    cout << d->program.error() << endl;
+  }
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!d->program.setUniformValue("modelView",
                                   camera.modelView().matrix())) {
-    std::cout << d->program.error() << std::endl;
-    }
+    cout << d->program.error() << endl;
+  }
   if (!d->program.setUniformValue("projection",
                                   camera.projection().matrix())) {
-    std::cout << d->program.error() << std::endl;
-    }
+    cout << d->program.error() << endl;
+  }
 
   // Render the loaded spheres using the shader and bound VBO.
   glDrawRangeElements(GL_TRIANGLES, 0,
