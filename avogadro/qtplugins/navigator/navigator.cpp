@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-13 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -16,13 +16,15 @@
 
 #include "navigator.h"
 
-#include "glwidget.h"
-
 #include <avogadro/core/vector.h>
+
+#include <avogadro/qtopengl/glwidget.h>
+
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/scene.h>
 
+#include <QtGui/QAction>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
@@ -30,36 +32,47 @@
 #include <Eigen/Geometry>
 
 namespace Avogadro {
-namespace QtOpenGL {
+namespace QtPlugins {
 
 const float ZOOM_SPEED = 0.02f;
 const float ROTATION_SPEED = 0.005f;
 
-Navigator::Navigator(GLWidget *widget)
-  : m_glWidget(widget),
+Navigator::Navigator(QObject *parent_)
+  : QtGui::ToolPlugin(parent_),
+    m_activateAction(new QAction(this)),
+    m_molecule(NULL),
+    m_glWidget(NULL),
     m_pressedButtons(Qt::NoButton)
 {
+  m_activateAction->setText(tr("Navigate"));
 }
 
 Navigator::~Navigator()
 {
 }
 
-void Navigator::mousePressEvent(QMouseEvent *e)
+QWidget * Navigator::toolWidget() const
+{
+  return NULL;
+}
+
+QUndoCommand * Navigator::mousePressEvent(QMouseEvent *e)
 {
   updatePressedButtons(e, false);
   m_lastMousePosition = e->pos();
   e->accept();
+  return NULL;
 }
 
-void Navigator::mouseReleaseEvent(QMouseEvent *e)
+QUndoCommand * Navigator::mouseReleaseEvent(QMouseEvent *e)
 {
   updatePressedButtons(e, true);
   m_lastMousePosition = QPoint();
   e->accept();
+  return NULL;
 }
 
-void Navigator::mouseMoveEvent(QMouseEvent *e)
+QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
 {
   // Rotate
   if (m_pressedButtons & Qt::LeftButton) {
@@ -117,18 +130,21 @@ void Navigator::mouseMoveEvent(QMouseEvent *e)
   }
 
   m_lastMousePosition = e->pos();
+
+  return NULL;
 }
 
-void Navigator::mouseDoubleClickEvent(QMouseEvent *e)
+QUndoCommand * Navigator::mouseDoubleClickEvent(QMouseEvent *e)
 {
   // Reset
   if (e->button() == Qt::LeftButton) {
     m_glWidget->resetCamera();
     e->accept();
   }
+  return NULL;
 }
 
-void Navigator::wheelEvent(QWheelEvent *e)
+QUndoCommand * Navigator::wheelEvent(QWheelEvent *e)
 {
   /// @todo Use scale for orthographic projections
   // Zoom
@@ -141,18 +157,21 @@ void Navigator::wheelEvent(QWheelEvent *e)
 
   m_glWidget->update();
   e->accept();
+  return NULL;
 }
 
-void Navigator::keyPressEvent(QKeyEvent *e)
+QUndoCommand * Navigator::keyPressEvent(QKeyEvent *e)
 {
   /// @todo
   e->ignore();
+  return NULL;
 }
 
-void Navigator::keyReleaseEvent(QKeyEvent *e)
+QUndoCommand * Navigator::keyReleaseEvent(QKeyEvent *e)
 {
   /// @todo
   e->ignore();
+  return NULL;
 }
 
 inline void Navigator::updatePressedButtons(QMouseEvent *e, bool release)
@@ -164,6 +183,5 @@ inline void Navigator::updatePressedButtons(QMouseEvent *e, bool release)
     m_pressedButtons |= e->buttons();
 }
 
-
-} // namespace QtOpenGL
+} // namespace QtPlugins
 } // namespace Avogadro
