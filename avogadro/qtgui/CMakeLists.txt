@@ -18,6 +18,7 @@ set(HEADERS
   periodictableview.h
   sceneplugin.h
   scenepluginmodel.h
+  toolplugin.h
 )
 
 set(SOURCES
@@ -33,6 +34,7 @@ set(SOURCES
   periodictableview.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
+  toolplugin.cpp
 )
 
 avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES})
