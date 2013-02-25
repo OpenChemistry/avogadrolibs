@@ -47,7 +47,17 @@ public:
   explicit PeriodicTableView(QWidget *parent = 0);
   ~PeriodicTableView();
 
+  /**
+   * @return The currently selected element.
+   */
+  int element() const { return m_element; }
+
 public slots:
+  /**
+   * @param element The currently selected element.
+   */
+  void setElement(int element);
+
   /**
    * This slot is called to clear the key buffer (e.g. after a delay in typing).
    */
@@ -64,6 +74,11 @@ signals:
    * Signal emitted when the active element in the PeriodicTableView changes.
    */
   void elementChanged(int element);
+
+  /**
+   * Signal emitted when a element is double clicked.
+   */
+  void elementSelected(int element);
 
 protected:
   /**
