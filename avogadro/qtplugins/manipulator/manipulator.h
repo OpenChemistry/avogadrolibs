@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-13 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,68 +14,45 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTOPENGL_MANIPULATOR_H
-#define AVOGADRO_QTOPENGL_MANIPULATOR_H
+#ifndef AVOGADRO_QTPLUGINS_MANIPULATOR_H
+#define AVOGADRO_QTPLUGINS_MANIPULATOR_H
 
-#include <QtCore/QObject>
+#include <avogadro/qtgui/toolplugin.h>
 
 #include <avogadro/rendering/primitive.h>
 
 #include <QtCore/QPoint>
 #include <QtCore/Qt> // for Qt:: namespace
 
-class QKeyEvent;
-class QMouseEvent;
-class QWheelEvent;
-
 namespace Avogadro {
-
-namespace QtGui {
-class Molecule;
-}
-
-namespace QtOpenGL {
-class GLWidget;
+namespace QtPlugins {
 
 /**
- * @class Manipulator manipulator.h <avogadro/qtopengl/manipulator.h>
+ * @class Manipulator manipulator.h <avogadro/qtplugins/manipulator/manipulator.h>
  * @brief The Manipulator class manipulates a molecule's geometry.
  * @author David C. Lonie
  */
-class Manipulator : public QObject
+class Manipulator : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit Manipulator(GLWidget *widget);
+  explicit Manipulator(QObject *parent_ = NULL);
   ~Manipulator();
 
-  /** Respond to user input. */
-  void mousePressEvent(QMouseEvent *);
+  QString name() const AVO_OVERRIDE { return tr("Manipulate tool"); }
+  QString description() const AVO_OVERRIDE { return tr("Manipulate tool"); }
+  QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
+  QWidget * toolWidget() const AVO_OVERRIDE;
 
-  /** Respond to user input. */
-  void mouseReleaseEvent(QMouseEvent *);
+  void setMolecule(QtGui::Molecule *mol) AVO_OVERRIDE { m_molecule = mol; }
+  void setGLWidget(QtOpenGL::GLWidget *widget) AVO_OVERRIDE
+  {
+    m_glWidget = widget;
+  }
 
-  /** Respond to user input. */
-  void mouseMoveEvent(QMouseEvent *);
-
-  /** Respond to user input. */
-  void mouseDoubleClickEvent(QMouseEvent *);
-
-  /** Respond to user input. */
-  void wheelEvent(QWheelEvent *);
-
-  /** Respond to user input. */
-  void keyPressEvent(QKeyEvent *);
-
-  /** Respond to user input. */
-  void keyReleaseEvent(QKeyEvent *);
-
-  void setMolecule(QtGui::Molecule *mol) { m_molecule = mol; }
-  QtGui::Molecule * molecule() { return m_molecule; }
-
-signals:
-  /** HACK -- the molecule should notify the scene plugins to update. */
-  void moleculeChanged();
+  QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
+  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) AVO_OVERRIDE;
+  QUndoCommand * mouseMoveEvent(QMouseEvent *e) AVO_OVERRIDE;
 
 private:
   /**
@@ -86,8 +63,9 @@ private:
 
   void resetObject() { m_object = Rendering::Primitive::Identifier(); }
 
-  GLWidget *m_glWidget;
+  QAction *m_activateAction;
   QtGui::Molecule *m_molecule;
+  QtOpenGL::GLWidget *m_glWidget;
   Rendering::Primitive::Identifier m_object;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;
