@@ -34,6 +34,8 @@
 
 #include <string>
 
+using Avogadro::QtGui::Molecule;
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -554,6 +556,8 @@ void OpenBabel::onPerceiveBondsFinished(const QByteArray &output)
                         bond.order());
   }
 
+  m_molecule->emitChanged(Molecule::Bonds | Molecule::Added |
+                          Molecule::Removed | Molecule::Modified);
   m_progress->reset();
 }
 
@@ -715,6 +719,9 @@ void OpenBabel::onHydrogenOperationFinished(const QByteArray &cml)
                         m_molecule->atom(bond.atom2().index()),
                         bond.order());
   }
+
+  m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds | Molecule::Added |
+                          Molecule::Removed | Molecule::Modified);
 
   m_progress->reset();
 }
