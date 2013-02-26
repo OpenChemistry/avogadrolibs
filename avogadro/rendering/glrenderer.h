@@ -33,6 +33,8 @@
 namespace Avogadro {
 namespace Rendering {
 
+class GeometryNode;
+
 /**
  * @class GLRenderer glrenderer.h <avogadro/rendering/glrenderer.h>
  * @brief Render the scene using OpenGL calls.
@@ -77,11 +79,17 @@ public:
   const Camera& camera() const;
   Camera& camera();
 
-  /// Get the scene for this renderer.
+  /** Get the scene for this renderer. */
   const Scene& scene() const { return m_scene; }
   Scene& scene() { return m_scene; }
 
 private:
+  /**
+   * @brief Render a group node.
+   */
+  void render(GroupNode *group);
+  void render(GeometryNode *geometry);
+
   bool m_valid;
   std::string m_error;
   Camera m_camera;

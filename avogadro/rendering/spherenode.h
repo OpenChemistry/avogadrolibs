@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_RENDERING_SPHERENODE_H
 #define AVOGADRO_RENDERING_SPHERENODE_H
 
-#include "geometrynode.h"
+#include "drawable.h"
 
 #include <avogadro/core/vector.h>
 
@@ -40,19 +40,28 @@ struct SphereColor
  * @brief The SphereNode class contains one or more spheres.
  * @author Marcus D. Hanwell
  *
- * This node is capaable of storing the geometry for one or more spheres in the
+ * This node is capable of storing the geometry for one or more spheres in the
  * scene. A sphere is defined by a center point, a radius and a color. If the
  * spheres are not a densely packed one-to-one mapping with the objects indices
  * they can also optionally use an identifier that will point to some numberic
  * ID for the purposes of picking.
  */
 
-class AVOGADRORENDERING_EXPORT SphereNode : public GeometryNode
+class AVOGADRORENDERING_EXPORT SphereNode : public Drawable
 {
 public:
-  explicit SphereNode();
+  SphereNode();
   ~SphereNode();
 
+  /**
+   * @brief Update the VBOs, IBOs etc ready for rendering.
+   */
+  void update();
+
+  /**
+   * @brief Render the sphere geometry.
+   * @param camera The current camera to be used for rendering.
+   */
   void render(const Camera &camera);
 
   /**

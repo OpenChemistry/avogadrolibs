@@ -64,10 +64,8 @@ SphereNode::~SphereNode()
   delete d;
 }
 
-void SphereNode::render(const Camera &camera)
+void SphereNode::update()
 {
-  cout << "render called\n" << "spheres: " << m_spheres.size()
-       << "\nindices: " << m_indices.size() << endl;
   if (m_indices.empty() || m_spheres.empty())
     return;
 
@@ -132,6 +130,15 @@ void SphereNode::render(const Camera &camera)
     if (!d->program.link())
       cout << d->program.error() << endl;
   }
+}
+
+void SphereNode::render(const Camera &camera)
+{
+  if (m_indices.empty() || m_spheres.empty())
+    return;
+
+  // Prepare the VBOs, IBOs and shader program if necessary.
+  update();
 
   if (!d->program.bind())
     cout << d->program.error() << endl;
@@ -178,7 +185,6 @@ void SphereNode::render(const Camera &camera)
                       static_cast<GLsizei>(d->numberOfIndices),
                       GL_UNSIGNED_INT,
                       reinterpret_cast<const GLvoid *>(NULL));
-
 
   d->vbo.release();
   d->ibo.release();

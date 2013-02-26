@@ -20,7 +20,7 @@
 
 #include "shader.h"
 #include "shaderprogram.h"
-#include "spherenode.h"
+#include "geometrynode.h"
 
 #include <avogadro/core/matrix.h>
 
@@ -77,30 +77,39 @@ void GLRenderer::resize(int width, int height)
                                 distance + 2.0f * m_radius);
 }
 
+void GLRenderer::render(GroupNode *group)
+{
+  if (!group)
+    return;
+  for (std::vector<Node *>::iterator it = group->children().begin();
+       it != group->children().end(); ++it) {
+    GroupNode *childGroup = (*it)->cast<GroupNode>();
+    if (childGroup) {
+      render(childGroup);
+      continue;
+    }
+    GeometryNode *childGeometry = (*it)->cast<GeometryNode>();
+    if (childGeometry) {
+      render(childGeometry);
+      continue;
+    }
+  }
+}
+
+void GLRenderer::render(GeometryNode *geometry)
+{
+  if (!geometry)
+    return;
+  geometry->render(m_camera);
+}
+
 void GLRenderer::render()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glEnable(GL_DEPTH_TEST);
 
-  if (m_scene.rootNode().children().size()) {
-    std::cout << "root node has " << m_scene.rootNode().children().size() << " children\n";
-    GroupNode *node = m_scene.rootNode().children().front()->cast<GroupNode>();
-    if (node && node->children().size()) {
-      GroupNode *engine = node->children().front()->cast<GroupNode>();
-      if (engine == NULL || engine->children().size() == 0)
-        return;
-      SphereNode *spheres = dynamic_cast<SphereNode *>(engine->children().front());
-      if (spheres) {
-        std::cout << "Blimey - we have a sphere node with " << spheres->size()
-                  << " spheres in it!\n";
-        spheres->render(m_camera);
-      }
-      else {
-        std::cout << "Bugger - not a sphere node...\n";
-      }
-    }
-  }
+  render(&m_scene.rootNode());
 
   // Check if the VBOs are ready, if not get them ready.
   if (!m_sphereArrayBuffer.ready() || m_scene.dirty()) {

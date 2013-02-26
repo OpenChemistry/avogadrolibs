@@ -18,11 +18,16 @@
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spherenode.h>
 
 namespace Avogadro {
 namespace QtPlugins {
+
+using Rendering::GeometryNode;
+using Rendering::GroupNode;
+using Rendering::SphereNode;
 
 VanDerWaals::VanDerWaals(QObject *p) : ScenePlugin(p), m_enabled(false)
 {
@@ -40,8 +45,10 @@ void VanDerWaals::process(const Core::Molecule &molecule,
   //identifier.type = Rendering::Primitive::Atom;
 
   // Add a sphere node to contain all of the VdW spheres.
-  Rendering::SphereNode *spheres = new Rendering::SphereNode;
-  node.addChild(spheres);
+  GeometryNode *geometry = new GeometryNode;
+  node.addChild(geometry);
+  SphereNode *spheres = new SphereNode;
+  geometry->addDrawable(spheres);
 
   for (size_t i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);

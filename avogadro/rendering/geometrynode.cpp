@@ -16,19 +16,70 @@
 
 #include "geometrynode.h"
 
+#include "drawable.h"
+
 namespace Avogadro {
 namespace Rendering {
 
-GeometryNode::GeometryNode() : m_renderer(NULL)
+GeometryNode::GeometryNode()
 {
 }
 
 GeometryNode::~GeometryNode()
 {
+  clearDrawables();
 }
 
-void GeometryNode::render(const Camera &)
+void GeometryNode::addDrawable(Drawable *object)
 {
+  for (std::vector<Drawable *>::const_iterator it = m_drawables.begin();
+       it != m_drawables.end(); ++it) {
+    if (*it == object)
+      return;
+  }
+  object->setParent(this);
+  m_drawables.push_back(object);
+}
+
+bool GeometryNode::removeDrawable(Drawable *object)
+{
+  if (!object)
+    return false;
+  for (std::vector<Drawable *>::iterator it = m_drawables.begin();
+       it != m_drawables.end(); ++it) {
+    if (*it == object) {
+      (*it)->setParent(NULL);
+      m_drawables.erase(it);
+      return true;
+    }
+  }
+  return false;
+}
+
+Drawable * GeometryNode::drawable(size_t index)
+{
+  if (index >= m_drawables.size())
+    return NULL;
+  else
+    return m_drawables[index];
+}
+
+void GeometryNode::clearDrawables()
+{
+  // Like all good parents, we destroy our children before we go...
+  for (std::vector<Drawable *>::const_iterator it = m_drawables.begin();
+       it != m_drawables.end(); ++it) {
+    delete (*it);
+  }
+  m_drawables.clear();
+}
+
+void GeometryNode::render(const Camera &camera)
+{
+  for (std::vector<Drawable *>::iterator it = m_drawables.begin();
+       it != m_drawables.end(); ++it) {
+    (*it)->render(camera);
+  }
 }
 
 } // End namespace Rendering

@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_RENDERING_MESHNODE_H
 #define AVOGADRO_RENDERING_MESHNODE_H
 
-#include "geometrynode.h"
+#include "drawable.h"
 
 namespace Avogadro {
 namespace Rendering {
@@ -32,7 +32,7 @@ namespace Rendering {
  * in one call, the normals are expected to be normalized.
  */
 
-class AVOGADRORENDERING_EXPORT MeshNode : public GeometryNode
+class AVOGADRORENDERING_EXPORT MeshNode : public Drawable
 {
 public:
   explicit MeshNode();

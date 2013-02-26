@@ -19,21 +19,21 @@
 
 #include "node.h"
 
+#include <vector>
+
 namespace Avogadro {
 namespace Rendering {
 
 class Camera;
-class Renderer;
+class Drawable;
 
 /**
  * @class GeometryNode geometrynode.h <avogadro/rendering/geometrynode.h>
  * @brief The GeometryNode class is the common base of all geometry nodes.
  * @author Marcus D. Hanwell
  *
- * The GeometryNode class is the common base clas for all nodes containing
- * geometry to be rendered to the scene. It provides some common API for
- * geometry properties, and this class is the one that should be derived from
- * to provide new primitives to render.
+ * The GeometryNode contains any Drawable objects, and is the only node type
+ * that results in anything being rendered to the screen.
  */
 
 class AVOGADRORENDERING_EXPORT GeometryNode : public Node
@@ -42,10 +42,44 @@ public:
   explicit GeometryNode();
   ~GeometryNode();
 
-  virtual void render(const Camera &camera);
+  /**
+   * @brief Add a drawable object to the geometry node.
+   * @param object Drawable object to be added.
+   */
+  void addDrawable(Drawable *object);
+
+  /**
+   * @brief Remove child node, this node will no longer be deleted.
+   * @param node Node to be removed.
+   * @return True if the node was removed, false if it was not found.
+   */
+  bool removeDrawable(Drawable *node);
+
+  /**
+   * @brief Get the child Node at the specified index.
+   * @param index The index of the child.
+   * @return A pointer to the child node, or NULL if the index is out of range.
+   */
+  Drawable * drawable(size_t index);
+
+  /**
+   * @brief Get a reference to the child nodes list.
+   */
+  std::vector<Drawable *>& drawables() { return m_drawables; }
+  const std::vector<Drawable *> drawables() const { return m_drawables; }
+
+  /**
+   * @brief Remove all drawable objects.
+   */
+  void clearDrawables();
+
+  /**
+   * @brief Render the drawables in the geometry node.
+   */
+  void render(const Camera &camera);
 
 protected:
-  Renderer *m_renderer;
+  std::vector<Drawable *> m_drawables;
 };
 
 } // End namespace Rendering
