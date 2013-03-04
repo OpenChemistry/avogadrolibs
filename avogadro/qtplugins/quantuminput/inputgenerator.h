@@ -235,6 +235,7 @@ namespace QtPlugins {
     },
     ...
   ],
+  "warnings": ["First warning.", "Second warning.", ... ],
   "mainFile": "file2.ext"
 }
 ~~~
@@ -244,6 +245,12 @@ namespace QtPlugins {
  * The order of the files in the
  * GUI will match the order of the files in the array, and the first file will
  * be displayed first.
+ *
+ * The `warnings` member provides an array of strings that describe non-fatal
+ * warnings to be shown to the users. This is useful for describing
+ * the resolution of conflicting options, e.g. "Ignoring basis set for
+ * semi-empirical calculation.". This member is optional and should be omitted
+ * if no warnings are present.
  *
  * The `mainFile` member points to the primary input file for a calculation.
  * This is the file that will be used as a command line argument when executing
@@ -413,14 +420,17 @@ public:
   void clearErrors() { m_errors.clear(); }
 
   /**
-   * @return A QStringList containing all errors.
+   * @return A QStringList containing all errors that occurred in the last call
+   * to the input generator script.
    */
   QStringList errorList() const { return m_errors; }
 
   /**
-   * @return A double-spaced list of all errors that occurred.
+   * @return A QStringList containing all warnings returned by the input
+   * generator script in the last call to generateInput. These are
+   * script-specific warnings.
    */
-  QString errorString() const { return m_errors.join("\n\n"); }
+  QStringList warningList() const { return m_warnings; }
 
 public slots:
   /**
@@ -445,6 +455,7 @@ private:
   mutable QString m_scriptFilePath;
   mutable QString m_displayName;
   mutable QJsonObject m_options;
+  mutable QStringList m_warnings;
   mutable QStringList m_errors;
 
   QStringList m_filenames;

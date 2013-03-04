@@ -24,6 +24,7 @@ import sys
 
 # Some globals:
 debug = False
+warnings = []
 
 def getOptions():
   userOptions = {}
@@ -102,6 +103,7 @@ def generateInputFile(opts, settings):
   # Theory/Basis
   if theory == 'AM1' or theory == 'PM3':
     output += '#n %s'%(theory)
+    warnings.append('Ignoring basis set for semi-empirical calculation.')
   else:
     output += '#n %s/%s'%(theory, basis.replace(' ', ''))
 
@@ -163,6 +165,10 @@ def generateInput():
   # Specify the main input file. This will be used by MoleQueue to determine
   # the value of the $$inputFileName$$ and $$inputFileBaseName$$ keywords.
   result['mainFile'] = 'job.com'
+
+  if len(warnings) > 0:
+    result['warnings'] = warnings
+
   return result
 
 if __name__ == "__main__":

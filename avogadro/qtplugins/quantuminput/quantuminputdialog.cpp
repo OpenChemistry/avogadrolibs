@@ -33,6 +33,7 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QFormLayout>
 #include <QtGui/QHBoxLayout>
+#include <QtGui/QIcon>
 #include <QtGui/QLineEdit>
 #include <QtGui/QMessageBox>
 #include <QtGui/QProgressDialog>
@@ -65,6 +66,9 @@ QuantumInputDialog::QuantumInputDialog(const QString &scriptFilePath,
   m_ui.setupUi(this);
 
   m_ui.debugCheckBox->setChecked(m_inputGenerator.debug());
+
+  resetWarningDisplay();
+  m_ui.warningTextButton->setIcon(QIcon::fromTheme("dialog-warning"));
 
   setWindowTitle(tr("%1 Input Generator").arg(m_inputGenerator.displayName()));
 
@@ -158,8 +162,15 @@ void QuantumInputDialog::updatePreviewTextImmediately()
   QJsonObject inputOptions;
   inputOptions["options"] = collectOptions();
   inputOptions["settings"] = collectSettings();
-  if (!m_inputGenerator.generateInput(inputOptions, *m_molecule)) {
-    showError(m_inputGenerator.errorString());
+  bool success = m_inputGenerator.generateInput(inputOptions, *m_molecule);
+
+  if (!m_inputGenerator.warningList().isEmpty())
+    setWarning(m_inputGenerator.warningList().join("\n"));
+  else
+    resetWarningDisplay();
+
+  if (!success) {
+    showError(m_inputGenerator.errorList().join("\n\n"));
     m_inputGenerator.clearErrors();
     return;
   }
@@ -314,6 +325,40 @@ void QuantumInputDialog::computeClicked()
   }
 
   m_client->submitJob(job);
+}
+
+void QuantumInputDialog::setWarning(const QString &warn)
+{
+  qWarning() << tr("Script returns warnings:\n") << warn;
+
+  m_ui.warningText->setText(warn);
+  m_ui.warningBox->show();
+}
+
+void QuantumInputDialog::toggleWarningText()
+{
+  if (m_ui.warningText->isVisible())
+    hideWarningText();
+  else
+    showWarningText();
+}
+
+void QuantumInputDialog::showWarningText()
+{
+  m_ui.warningText->show();
+  m_ui.warningTextButton->setText(tr("Hide &Warnings"));
+}
+
+void QuantumInputDialog::hideWarningText()
+{
+  m_ui.warningText->hide();
+  m_ui.warningTextButton->setText(tr("Show &Warnings"));
+}
+
+void QuantumInputDialog::resetWarningDisplay()
+{
+  m_ui.warningBox->hide();
+  showWarningText();
 }
 
 void QuantumInputDialog::showError(const QString &err)
@@ -532,6 +577,7 @@ void QuantumInputDialog::connectButtons()
           SLOT(refreshPrograms()));
   connect(m_ui.coresSpinBox, SIGNAL(valueChanged(int)),
           SLOT(updatePreviewText()));
+  connect(m_ui.warningTextButton, SIGNAL(clicked()), SLOT(toggleWarningText()));
 }
 
 void QuantumInputDialog::connectMoleQueue()
@@ -576,7 +622,7 @@ void QuantumInputDialog::updateOptions()
   m_options = m_inputGenerator.options();
 
   if (m_inputGenerator.hasErrors()) {
-    showError(m_inputGenerator.errorString());
+    showError(m_inputGenerator.errorList().join("\n\n"));
     m_inputGenerator.clearErrors();
   }
 

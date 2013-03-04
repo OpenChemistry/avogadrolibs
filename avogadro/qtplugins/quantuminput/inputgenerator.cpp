@@ -94,6 +94,7 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
                                    const Core::Molecule &mol)
 {
   m_errors.clear();
+  m_warnings.clear();
   m_filenames.clear();
   m_mainFileName.clear();
   m_files.clear();
@@ -114,6 +115,22 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
   bool result = true;
   if (doc.isObject()) {
     QJsonObject obj = doc.object();
+
+    // Check for any warnings:
+    if (obj.contains("warnings")) {
+      if (obj["warnings"].isArray()) {
+        foreach (const QJsonValue &warning, obj["warnings"].toArray()) {
+          if (warning.isString())
+            m_warnings << warning.toString();
+          else
+            m_errors << tr("Non-string warning returned.");
+        }
+      }
+      else {
+        m_errors << tr("'warnings' member is not an array.");
+      }
+    }
+
     // Extract input file text:
     if (obj.contains("files")) {
       if (obj["files"].isArray()) {
