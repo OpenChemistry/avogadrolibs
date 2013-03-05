@@ -27,7 +27,7 @@ namespace QtGui {
 
 using Core::Elements;
 
-PeriodicTableView::PeriodicTableView(QWidget *parent) : QGraphicsView(parent)
+PeriodicTableView::PeriodicTableView(QWidget *parent_) : QGraphicsView(parent_)
 {
   // Use a small title bar (Qt::Tool) with no minimize or maximise buttons
   setWindowFlags(Qt::Dialog | Qt::Tool);
@@ -66,7 +66,7 @@ void PeriodicTableView::clearKeyPressBuffer()
   m_keyPressBuffer.clear();
 }
 
-void PeriodicTableView::keyPressEvent(QKeyEvent *event)
+void PeriodicTableView::keyPressEvent(QKeyEvent *event_)
 {
   if (m_keyPressBuffer.isEmpty()) {
     // This is the first character typed.
@@ -75,7 +75,7 @@ void PeriodicTableView::keyPressEvent(QKeyEvent *event)
     QTimer::singleShot(2000, this, SLOT(clearKeyPressBuffer()));
   }
 
-  m_keyPressBuffer.append(event->text());
+  m_keyPressBuffer.append(event_->text());
   // Try setting an element symbol from this string.
   int element = m_keyPressBuffer.toInt();
   if (element <= 0 || element > 119) {
@@ -96,7 +96,7 @@ void PeriodicTableView::keyPressEvent(QKeyEvent *event)
       table->changeElement(element);
   }
 
-  QGraphicsView::keyPressEvent(event);
+  QGraphicsView::keyPressEvent(event_);
 }
 
 } // End QtGui namespace

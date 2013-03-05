@@ -107,7 +107,7 @@ void Scene::addCylinder(const Vector3f &position1, const Vector3f &direction,
 
   const unsigned int resolution = 12; // points per circle
   const float resRadians =
-      2.0 * static_cast<float>(M_PI) / static_cast<float>(resolution);
+      2.0f * static_cast<float>(M_PI) / static_cast<float>(resolution);
 
   const Vector3f position2 = position1 + direction * length;
 
@@ -194,7 +194,7 @@ void Scene::addTriangles(const Vector3f *vertices, const Vector3f *normals,
     m_triangleMesh.push_back(ColorNormalVertex(Vector3ub(255, 0, 0),
                                                *normals++,
                                                *vertices++));
-    m_triangleIndices.push_back(i);
+    m_triangleIndices.push_back(static_cast<unsigned int>(i));
   }
   m_dirty = true;
   std::cout << m_triangleMesh.size() << " triangles added to the scene" << std::endl;

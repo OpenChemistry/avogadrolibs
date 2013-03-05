@@ -14,6 +14,9 @@
 
 ******************************************************************************/
 
+// Prevent warnings about fopen() being unsafe.
+#define _CRT_SECURE_NO_DEPRECATE
+
 #include "hdf5dataformat.h"
 
 #include "hdf5.h"
