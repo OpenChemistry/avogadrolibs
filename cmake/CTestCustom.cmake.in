@@ -5,4 +5,7 @@ set(CTEST_CUSTOM_COVERAGE_EXCLUDE
   ".*/thirdparty/.*"
   # Exclude MOC files (Qt).
   "moc_"
+  # Nested Qt foreach loops produce this warning:
+  "_container_.* shadows a previous local"
+  "shadowed declaration is here"
   )

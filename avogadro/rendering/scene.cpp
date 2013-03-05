@@ -194,7 +194,7 @@ void Scene::addTriangles(const Vector3f *vertices, const Vector3f *normals,
     m_triangleMesh.push_back(ColorNormalVertex(Vector3ub(255, 0, 0),
                                                *normals++,
                                                *vertices++));
-    m_triangleIndices.push_back(i);
+    m_triangleIndices.push_back(static_cast<unsigned int>(i));
   }
   m_dirty = true;
   std::cout << m_triangleMesh.size() << " triangles added to the scene" << std::endl;

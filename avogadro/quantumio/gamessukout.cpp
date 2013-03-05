@@ -350,8 +350,8 @@ void GamessukOut::readBasisSet(std::ifstream &ifs)
     if ( line.compare(0,10," =========") == 0 )
     {
       // End of  basis - add indicies of where the coffecients and exponents of the GTOs for the last shell end
-      gukBasis.gtoIndicies.at(  gukBasis.shellLabels.size()-1 )
-          .push_back( gukBasis.gtoExponents.size() );
+      gukBasis.gtoIndicies.at(  gukBasis.shellLabels.size()-1 ).push_back(
+            static_cast<unsigned int>(gukBasis.gtoExponents.size()));
       break;
     }
 
@@ -392,8 +392,8 @@ void GamessukOut::readBasisSet(std::ifstream &ifs)
         else
         {
           // Add the index for where the GTO coffecients and exponents for the previous shell start
-          gukBasis.gtoIndicies.at( gukBasis.shellLabels.size()-1 )
-              .push_back( gukBasis.gtoExponents.size() );
+          gukBasis.gtoIndicies.at( gukBasis.shellLabels.size()-1 ).push_back(
+                static_cast<unsigned int>(gukBasis.gtoExponents.size()));
         }
 
       } // end firstAtom
@@ -447,8 +447,8 @@ void GamessukOut::readBasisSet(std::ifstream &ifs)
         else
         {
           // Add the index for where the primitives for the last shell finish
-          gukBasis.gtoIndicies.at( gukBasis.shellLabels.size()-1 )
-              .push_back( gukBasis.gtoExponents.size() );
+          gukBasis.gtoIndicies.at( gukBasis.shellLabels.size()-1 ).push_back(
+                static_cast<unsigned int>(gukBasis.gtoExponents.size()));
 
         } // end sp shell
 
@@ -541,8 +541,8 @@ inline void GamessukOut::addSpBasis(std::vector<double> s_coeff,
     gukBasis.gtoExponents.push_back(sp_exponents[i]);
     gukBasis.gtoCoefficients.push_back(s_coeff[i]);
   }
-  gukBasis.gtoIndicies.at( gukBasis.shellLabels.size()-1 )
-      .push_back( gukBasis.gtoExponents.size()  );
+  gukBasis.gtoIndicies.at( gukBasis.shellLabels.size()-1 ).push_back(
+        static_cast<unsigned int>(gukBasis.gtoExponents.size()));
 
   //Add p
   gukBasis.shells.at( gukBasis.shellLabels.size()-1 ).push_back(P);
@@ -552,8 +552,8 @@ inline void GamessukOut::addSpBasis(std::vector<double> s_coeff,
     gukBasis.gtoExponents.push_back(sp_exponents[i]);
     gukBasis.gtoCoefficients.push_back(p_coeff[i]);
   }
-  gukBasis.gtoIndicies.at( gukBasis.shellLabels.size()-1 )
-      .push_back( gukBasis.gtoExponents.size()  );
+  gukBasis.gtoIndicies.at( gukBasis.shellLabels.size()-1 ).push_back(
+        static_cast<unsigned int>(gukBasis.gtoExponents.size()));
 
 } // end addSpBasis
 
@@ -670,7 +670,8 @@ int GamessukOut::readMOVectors(std::ifstream &ifs)
   if ( strstr(buffer, "end of")!=0 ) return 0;
 
   tokenize(tokens, buffer, " \t\n");
-  norbitals = tokens.size(); // How many orbital columns
+  // How many orbital columns:
+  norbitals = static_cast<unsigned int>(tokens.size());
 
   for ( unsigned int i=0; i < tokens.size() ; i++ )
   {
@@ -680,7 +681,8 @@ int GamessukOut::readMOVectors(std::ifstream &ifs)
   }
 
   // Add the lists to hold this set of coefficients
-  norbitalsRead=gukBasis.moVectors.size(); // How many were read in previously
+  // How many were read in previously:
+  norbitalsRead = static_cast<unsigned int>(gukBasis.moVectors.size());
 
   // Create the arrays to hold the coefficients for each orbital
   for ( unsigned int i=0; i < norbitals ; i++ )
@@ -790,7 +792,7 @@ void GamessukOut::load(GaussianSet* basis)
     if ( i >= gukBasis.moVectors.size() )
     {
       //std::cout << "Adding blank vectors for non-printed MOs " << i << std::endl;
-      moEnd=MOs.size()+nBasis;
+      moEnd = static_cast<unsigned int>(MOs.size()) + nBasis;
       for ( unsigned int j=MOs.size(); j<moEnd; j++)
         MOs.push_back(0.0);
     }
