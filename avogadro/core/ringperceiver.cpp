@@ -316,7 +316,7 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
   }
 
   // Build the set of bonds in the path.
-  std::set<std::pair<int, int> > pathBonds;
+  std::set<std::pair<size_t, size_t> > pathBonds;
   for (size_t i = 0; i < path.size()-1; i++) {
     pathBonds.insert(std::make_pair(std::min(path[i], path[i+1]),
                                     std::max(path[i], path[i+1])));
@@ -349,7 +349,7 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
        ++iter) {
     const std::vector<size_t> &ring = *iter;
 
-    std::set<std::pair<int, int> > ringBonds;
+    std::set<std::pair<size_t, size_t> > ringBonds;
 
     // Add ring bonds.
     for (size_t i = 0; i < ring.size()-1; i++) {
@@ -362,7 +362,7 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
                                     std::max(ring.front(), ring.back())));
 
     // Check intersection.
-    std::set<std::pair<int, int> > intersection;
+    std::set<std::pair<size_t, size_t> > intersection;
     std::set_intersection(pathBonds.begin(), pathBonds.end(),
                           ringBonds.begin(), ringBonds.end(),
                           std::inserter(intersection, intersection.begin()));
