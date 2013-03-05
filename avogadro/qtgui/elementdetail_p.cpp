@@ -58,11 +58,13 @@ void ElementDetail::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
   QFontMetrics fm(font);
   int pixelHeight = fm.height();
 
-  QString symbol = Elements::symbol(m_element);
+  QString symbol = Elements::symbol(static_cast<unsigned char>(m_element));
   QString name(ElementTranslator::name(m_element));
-  QString mass = QString("%L1").arg(Elements::mass(m_element), 0, 'f', 3);
+  QString mass = QString("%L1")
+      .arg(Elements::mass(static_cast<unsigned char>(m_element)), 0, 'f', 3);
 
-  const unsigned char *colorTmp = Elements::color(m_element);
+  const unsigned char *colorTmp =
+      Elements::color(static_cast<unsigned char>(m_element));
   QColor color(Qt::white);
   if (colorTmp) {
     color.setRgb(static_cast<int>(colorTmp[0]),

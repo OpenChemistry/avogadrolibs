@@ -103,9 +103,9 @@ inline Color3f::Color3f(float r, float g, float b)
 
 inline Color3f::Color3f(int r, int g, int b)
 {
-  m_data[0] = r / 255.0f;
-  m_data[1] = g / 255.0f;
-  m_data[2] = b / 255.0f;
+  m_data[0] = static_cast<float>(r) / 255.0f;
+  m_data[1] = static_cast<float>(g) / 255.0f;
+  m_data[2] = static_cast<float>(b) / 255.0f;
 }
 
 inline void Color3f::set(float r, float g, float b)
