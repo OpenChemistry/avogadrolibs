@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-13 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -19,16 +19,17 @@
 
 #include "avogadroqtopenglexport.h"
 
-#include "editor.h"
-#include "manipulator.h"
-#include "navigator.h"
-
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/qtgui/scenepluginmodel.h>
 
 #include <QtOpenGL/QGLWidget>
 
 namespace Avogadro {
+
+namespace QtGui {
+class ToolPlugin;
+}
+
 namespace QtOpenGL {
 
 /**
@@ -48,29 +49,28 @@ public:
   explicit GLWidget(QWidget *parent = 0);
   ~GLWidget();
 
-  /** Get a reference to the editor for the widget. */
-  Editor& editor() { return m_editor; }
-
-  /** Get a reference to the manipulator for the widget. */
-  Manipulator& manipulator() { return m_manipulator; }
-
-  /** Get a reference to the navigator for the widget. */
-  Navigator& navigator() { return m_navigator; }
-
   /** Get a reference to the renderer for the widget. */
   Rendering::GLRenderer& renderer() { return m_renderer; }
 
+  /// @todo Document these
+  QList<QtGui::ToolPlugin*> tools() const { return m_tools; }
+
+  QtGui::ToolPlugin * activeTool() const { return m_activeTool; }
+
+  QtGui::ToolPlugin * defaultTool() const { return m_defaultTool; }
+
+public slots:
   /** Reset the view to fit the entire scene. */
   void resetCamera();
 
-  /** This is a hacky way to switch tools. It should be replaced. */
-  enum Tool {
-    NavigateTool = 0,
-    ManipulateTool,
-    EditTool
-  };
-  void setActiveTool(Tool t) { m_tool = t; }
-  Tool activeTool() const { return m_tool; }
+  /// @todo Document these
+  void setTools(QList<QtGui::ToolPlugin*> toolList) { m_tools = toolList; }
+
+  void setActiveTool(const QString &name);
+  void setActiveTool(QtGui::ToolPlugin* tool) { m_activeTool = tool; }
+
+  void setDefaultTool(const QString &name);
+  void setDefaultTool(QtGui::ToolPlugin* tool) { m_defaultTool = tool; }
 
 protected:
   /** This is where the GL context is initialized. */
@@ -92,10 +92,9 @@ protected:
   void keyReleaseEvent(QKeyEvent *);
 
 private:
-  Tool m_tool;
-  Editor m_editor;
-  Manipulator m_manipulator;
-  Navigator m_navigator;
+  QList<QtGui::ToolPlugin*> m_tools;
+  QtGui::ToolPlugin *m_activeTool;
+  QtGui::ToolPlugin *m_defaultTool;
   Rendering::GLRenderer m_renderer;
   QtGui::ScenePluginModel m_scenePlugins;
 };

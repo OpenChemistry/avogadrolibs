@@ -8,17 +8,11 @@ include_directories(SYSTEM ${QT_INCLUDES})
 add_definitions(${QT_DEFINITIONS})
 
 set(HEADERS
-  editor.h
   glwidget.h
-  manipulator.h
-  navigator.h
 )
 
 set(SOURCES
-  editor.cpp
   glwidget.cpp
-  manipulator.cpp
-  navigator.cpp
 )
 
 avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})

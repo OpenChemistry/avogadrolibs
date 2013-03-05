@@ -34,7 +34,6 @@ Core::Atom Molecule::addAtom(unsigned char atomicNumber)
 {
   m_atomUniqueIds.push_back(static_cast<int>(atomCount()));
   Core::Atom a = Core::Molecule::addAtom(atomicNumber);
-  emit changed(Atoms | Added);
   return a;
 }
 
@@ -86,8 +85,6 @@ bool Molecule::removeAtom(size_t index)
     m_positions3d.resize(newSize);
   m_atomicNumbers.resize(newSize);
 
-  // Emit a signal to show the molecule has changed and return success.
-  emit changed(Atoms | Removed);
   return true;
 }
 
@@ -107,7 +104,6 @@ Core::Bond Molecule::addBond(const Core::Atom &a, const Core::Atom &b,
 {
   m_bondUniqueIds.push_back(static_cast<int>(bondCount()));
   Core::Bond bond_ = Core::Molecule::addBond(a, b, bondOrder);
-  emit changed(Bonds | Added);
   return bond_;
 }
 
@@ -136,8 +132,6 @@ bool Molecule::removeBond(size_t index)
   m_bondOrders.resize(newSize);
   m_bondPairs.resize(newSize);
 
-  // Emit a signal to show the molecule has changed and return success.
-  emit changed(Bonds | Removed);
   return true;
 }
 
@@ -181,7 +175,8 @@ const Mesh* Molecule::mesh(size_t index) const
 
 void Molecule::emitChanged(unsigned int change)
 {
-  emit changed(change);
+  if (change != NoChange)
+    emit changed(change);
 }
 
 int Molecule::findAtomUniqueId(size_t index) const
