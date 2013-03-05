@@ -152,7 +152,8 @@ QString QuantumInput::queryProgramName(const QString &scriptFilePath)
   QString progName = gen.displayName();
   if (gen.hasErrors()) {
     qWarning() << "QuantumInput::queryProgramName: Unable to retrieve program "
-                  "name for" << scriptFilePath << ";" << gen.errorString();
+                  "name for" << scriptFilePath << ";"
+               << gen.errorList().join("\n\n");
     return scriptFilePath;
   }
 
