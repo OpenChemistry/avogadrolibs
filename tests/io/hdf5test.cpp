@@ -20,6 +20,8 @@
 
 #include <avogadro/io/hdf5dataformat.h>
 
+// Prevent warnings about fopen() being unsafe.
+#define _CRT_SECURE_NO_DEPRECATE
 #include <cstdio>
 
 using Avogadro::Io::Hdf5DataFormat;
@@ -176,7 +178,7 @@ TEST(Hdf5Test, thresholds)
   EXPECT_TRUE(hdf5.exceedsThreshold(threshold + 1))
       << "Bad threshold check result for large data.";
 
-  int numDoubles = threshold/static_cast<int>(sizeof(double));
+  int numDoubles = static_cast<int>(threshold/sizeof(double));
 
   EXPECT_FALSE(hdf5.exceedsThreshold(Eigen::MatrixXd(1, numDoubles - 1)))
       << "Bad threshold check result for small data.";

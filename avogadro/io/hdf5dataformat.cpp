@@ -21,6 +21,9 @@
 #include <avogadro/core/array.h>
 
 #include <algorithm>
+
+// Prevent warnings about fopen() being unsafe.
+#define _CRT_SECURE_NO_DEPRECATE
 #include <cstdio>
 
 namespace Avogadro {
