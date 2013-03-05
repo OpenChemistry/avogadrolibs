@@ -56,11 +56,9 @@ bool Cube::setLimits(const Vector3 &min_, const Vector3 &max_,
 bool Cube::setLimits(const Vector3 &min_, const Vector3 &max_,
                      double spacing_)
 {
-  Vector3i points;
   Vector3 delta = max_ - min_;
   delta = delta / spacing_;
-  points = Vector3i(delta.x(), delta.y(), delta.z());
-  return setLimits(min_, max_, points);
+  return setLimits(min_, max_, delta.cast<int>());
 }
 
 bool Cube::setLimits(const Vector3 &min_, const Vector3i &dim,
@@ -231,9 +229,9 @@ float Cube::valuef(const Vector3f &pos) const
   // Interpolate the value at the supplied vector - trilinear interpolation...
   Vector3f delta = pos - m_min.cast<float>();
   // Find the integer low and high corners
-  Vector3i lC(delta.x() / m_spacing.x(),
-              delta.y() / m_spacing.y(),
-              delta.z() / m_spacing.z());
+  Vector3i lC(static_cast<int>(delta.x() / m_spacing.x()),
+              static_cast<int>(delta.y() / m_spacing.y()),
+              static_cast<int>(delta.z() / m_spacing.z()));
   Vector3i hC(lC.x() + 1,
               lC.y() + 1,
               lC.z() + 1);
@@ -242,16 +240,17 @@ float Cube::valuef(const Vector3f &pos) const
   Vector3f P((delta.x() - lC.x() * m_spacing.x()) / m_spacing.x(),
              (delta.y() - lC.y() * m_spacing.y()) / m_spacing.y(),
              (delta.z() - lC.z() * m_spacing.z()) / m_spacing.z());
-  Vector3f dP = Vector3f(1.0, 1.0, 1.0) - P;
+  Vector3f dP = Vector3f(1.0f, 1.0f, 1.0f) - P;
   // Now calculate and return the interpolated value
-  return value(lC.x(), lC.y(), lC.z()) * dP.x() * dP.y() * dP.z() +
-         value(hC.x(), lC.y(), lC.z()) * P.x()  * dP.y() * dP.z() +
-         value(lC.x(), hC.y(), lC.z()) * dP.x() * P.y()  * dP.z() +
-         value(lC.x(), lC.y(), hC.z()) * dP.x() * dP.y() * P.z()  +
-         value(hC.x(), lC.y(), hC.z()) * P.x()  * dP.y() * P.z()  +
-         value(lC.x(), hC.y(), hC.z()) * dP.x() * P.y()  * P.z()  +
-         value(hC.x(), hC.y(), lC.z()) * P.x()  * P.y()  * dP.z() +
-         value(hC.x(), hC.y(), hC.z()) * P.x()  * P.y()  * P.z();
+  return static_cast<float>(
+        value(lC.x(), lC.y(), lC.z()) * dP.x() * dP.y() * dP.z() +
+        value(hC.x(), lC.y(), lC.z()) * P.x()  * dP.y() * dP.z() +
+        value(lC.x(), hC.y(), lC.z()) * dP.x() * P.y()  * dP.z() +
+        value(lC.x(), lC.y(), hC.z()) * dP.x() * dP.y() * P.z()  +
+        value(hC.x(), lC.y(), hC.z()) * P.x()  * dP.y() * P.z()  +
+        value(lC.x(), hC.y(), hC.z()) * dP.x() * P.y()  * P.z()  +
+        value(hC.x(), hC.y(), lC.z()) * P.x()  * P.y()  * dP.z() +
+        value(hC.x(), hC.y(), hC.z()) * P.x()  * P.y()  * P.z());
 }
 
 double Cube::value(const Vector3 &pos) const
@@ -260,9 +259,9 @@ double Cube::value(const Vector3 &pos) const
   // Interpolate the value at the supplied vector - trilinear interpolation...
   Vector3 delta = pos - m_min;
   // Find the integer low and high corners
-  Vector3i lC(delta.x() / m_spacing.x(),
-              delta.y() / m_spacing.y(),
-              delta.z() / m_spacing.z());
+  Vector3i lC(static_cast<int>(delta.x() / m_spacing.x()),
+              static_cast<int>(delta.y() / m_spacing.y()),
+              static_cast<int>(delta.z() / m_spacing.z()));
   Vector3i hC(lC.x() + 1,
               lC.y() + 1,
               lC.z() + 1);
