@@ -1,5 +1,9 @@
 include(GenerateExportHeader)
 
+if(WIN32 AND MSVC)
+  add_definitions("-D_CRT_SECURE_NO_WARNINGS")
+endif()
+
 function(avogadro_add_library name)
   add_library(${name} ${ARGN})
   # Use the new AUTOMOC support for Qt libraries (CMake 2.8.6).

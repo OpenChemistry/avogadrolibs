@@ -73,7 +73,7 @@ bool MeshGenerator::initialize(const Cube *cube_, Mesh *mesh_, float iso,
     qDebug() << "Cannot get a read lock...";
     return false;
   }
-  m_stepSize = m_cube->spacing().x();
+  m_stepSize = static_cast<float>(m_cube->spacing().x());
   m_min = m_cube->min().cast<float>();
   m_dim = m_cube->dimensions();
   m_progmax = m_dim.x();
@@ -138,12 +138,12 @@ void MeshGenerator::clear()
 
 Vector3f MeshGenerator::normal(const Vector3f &pos)
 {
-  Vector3f norm(m_cube->valuef(pos - Vector3f(0.01, 0.00, 0.00))
-                - m_cube->valuef(pos + Vector3f(0.01, 0.00, 0.00)),
-                m_cube->valuef(pos - Vector3f(0.00, 0.01, 0.00))
-                - m_cube->valuef(pos + Vector3f(0.00, 0.01, 0.00)),
-                m_cube->valuef(pos - Vector3f(0.00, 0.00, 0.01))
-                - m_cube->valuef(pos + Vector3f(0.00, 0.00, 0.01)));
+  Vector3f norm(m_cube->valuef(pos - Vector3f(0.01f, 0.00f, 0.00f))
+              - m_cube->valuef(pos + Vector3f(0.01f, 0.00f, 0.00f)),
+                m_cube->valuef(pos - Vector3f(0.00f, 0.01f, 0.00f))
+              - m_cube->valuef(pos + Vector3f(0.00f, 0.01f, 0.00f)),
+                m_cube->valuef(pos - Vector3f(0.00f, 0.00f, 0.01f))
+              - m_cube->valuef(pos + Vector3f(0.00f, 0.00f, 0.01f)));
   norm.normalize();
   return norm;
 }
@@ -168,9 +168,9 @@ bool MeshGenerator::marchingCube(const Vector3i &pos)
   Vector3f asEdgeNorm[12];
 
   // Calculate the position in the Cube
-  Vector3f fPos(pos.x() * m_stepSize + m_min.x(),
-                pos.y() * m_stepSize + m_min.y(),
-                pos.z() * m_stepSize + m_min.z());
+  Vector3f fPos(pos.x() * static_cast<float>(m_stepSize) + m_min.x(),
+                pos.y() * static_cast<float>(m_stepSize) + m_min.y(),
+                pos.z() * static_cast<float>(m_stepSize) + m_min.z());
 
   //Make a local copy of the values at the cube's corners
   for(int i = 0; i < 8; ++i) {
@@ -224,7 +224,7 @@ bool MeshGenerator::marchingCube(const Vector3i &pos)
     if (!m_reverseWinding) {
       for(int j = 0; j < 3; ++j) {
         iVertex = a2iTriangleConnectionTable[iFlagIndex][3*i+j];
-        m_indices.push_back(m_vertices.size());
+        m_indices.push_back(static_cast<unsigned int>(m_vertices.size()));
         m_normals.push_back(asEdgeNorm[iVertex]);
         m_vertices.push_back(asEdgeVertex[iVertex]);
       }
@@ -232,7 +232,7 @@ bool MeshGenerator::marchingCube(const Vector3i &pos)
     else {
       for(int j = 2; j >= 0; --j) {
         iVertex = a2iTriangleConnectionTable[iFlagIndex][3*i+j];
-        m_indices.push_back(m_vertices.size());
+        m_indices.push_back(static_cast<unsigned int>(m_vertices.size()));
         m_normals.push_back(-asEdgeNorm[iVertex]);
         m_vertices.push_back(asEdgeVertex[iVertex]);
       }

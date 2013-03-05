@@ -23,7 +23,6 @@ set(HEADERS
 set(SOURCES
   atom.cpp
   bond.cpp
-  coordinateset.cpp
   elements.cpp
   graph.cpp
   molecule.cpp

@@ -111,7 +111,7 @@ void MopacAux::processLine()
     //      QString tmp = key.mid(key.indexOf('[')+1, 6);
     qDebug() << "Size of eigen vectors matrix ="
              << m_atomIndex.size() * m_atomIndex.size();
-    readEigenVectors(m_atomIndex.size() * m_atomIndex.size());
+    readEigenVectors(static_cast<int>(m_atomIndex.size() * m_atomIndex.size()));
   }
   else if (key.contains("TOTAL_DENSITY_MATRIX")) {
     QString tmp = key.mid(key.indexOf('[')+1, 6);
@@ -141,7 +141,7 @@ void MopacAux::load(SlaterSet* basis)
   Core::Molecule &mol = basis->moleculeRef();
   if (m_atomPos.size() == m_atomNums.size()) {
     for (size_t i = 0; i < m_atomPos.size(); ++i) {
-      Core::Atom a = mol.addAtom(m_atomNums[i]);
+      Core::Atom a = mol.addAtom(static_cast<unsigned char>(m_atomNums[i]));
       a.setPosition3d(m_atomPos[i]);
     }
   }
