@@ -83,12 +83,12 @@ QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
     Vector3f yAxis = modelView.linear().row(1).transpose().normalized();
     Vector3f center = m_glWidget->renderer().scene().center();
 
-    m_glWidget->renderer().camera().translate(-center);
+    m_glWidget->renderer().camera().translate(center);
     m_glWidget->renderer().camera().rotate(
           static_cast<float>(delta.y()) * ROTATION_SPEED, xAxis);
     m_glWidget->renderer().camera().rotate(
           static_cast<float>(delta.x()) * ROTATION_SPEED, yAxis);
-    m_glWidget->renderer().camera().translate(center);
+    m_glWidget->renderer().camera().translate(-center);
 
     m_glWidget->update();
     e->accept();
