@@ -94,7 +94,7 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
   if (value.isArray()) {
     atomCount = static_cast<size_t>(value.size());
     for (unsigned int i = 0; i < atomCount; ++i)
-      molecule.addAtom(value.get(i, 0).asInt());
+      molecule.addAtom(static_cast<unsigned char>(value.get(i, 0).asInt()));
   }
   else {
     appendError("Error: \"atoms.elements.number\" is not of type array");

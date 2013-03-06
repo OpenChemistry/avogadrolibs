@@ -171,9 +171,9 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
     // Extract main input filename:
     if (obj.contains("mainFile")) {
       if (obj["mainFile"].isString()) {
-        QString mainFileName = obj["mainFile"].toString();
-        if (m_filenames.contains(mainFileName)) {
-          m_mainFileName = mainFileName;
+        QString mainFile = obj["mainFile"].toString();
+        if (m_filenames.contains(mainFile)) {
+          m_mainFileName = mainFile;
         }
         else {
           result = false;
@@ -260,8 +260,8 @@ QByteArray InputGenerator::execute(const QStringList &args,
       return QByteArray();
     }
 
-    int len = proc.write(scriptStdin);
-    if (len != scriptStdin.size()) {
+    qint64 len = proc.write(scriptStdin);
+    if (len != static_cast<qint64>(scriptStdin.size())) {
       m_errors << tr("Error running script '%1 %2': failed to write to stdin "
                      "(len=%3, wrote %4 bytes, QProcess error: %5).")
                   .arg(m_scriptFilePath).arg(realArgs.join(" "))

@@ -37,10 +37,11 @@ ElementItem::ElementItem(int elementNumber) : m_valid(false), m_color(Qt::white)
   // Want these items to be selectable
   setFlags(QGraphicsItem::ItemIsSelectable);
 
-  m_symbol = Elements::symbol(m_element);
+  m_symbol = Elements::symbol(static_cast<unsigned char>(m_element));
   if (!m_symbol.isEmpty())
     m_valid = true;
-  const unsigned char *color = Elements::color(m_element);
+  const unsigned char *color =
+      Elements::color(static_cast<unsigned char>(m_element));
   if (color) {
     m_color.setRgb(static_cast<int>(color[0]),
                    static_cast<int>(color[1]),

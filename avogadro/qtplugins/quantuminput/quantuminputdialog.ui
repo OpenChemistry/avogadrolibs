@@ -37,7 +37,7 @@
      <property name="title">
       <string>Calculation Setup</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QGridLayout" name="gridLayout1">
       <item row="0" column="0">
        <widget class="QLabel" name="label_4">
         <property name="sizePolicy">

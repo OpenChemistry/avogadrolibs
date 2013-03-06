@@ -40,8 +40,8 @@ using Quantum::UU;
 using Quantum::orbital;
 
 GAMESSUSOutput::GAMESSUSOutput(const QString &filename, GaussianSet* basis) :
-  m_coordFactor(1.0), m_currentMode(NotParsing), m_currentAtom(1),
-  m_currentScfMode(doubly)
+  m_coordFactor(1.0), m_currentMode(NotParsing), m_currentScfMode(doubly),
+  m_currentAtom(1)
 {
   // Open the file for reading and process it
   QFile* file = new QFile(filename);
@@ -257,7 +257,7 @@ void GAMESSUSOutput::processLine(GaussianSet *basis)
 
         // Now we need to re-order the MO coeffs, so we insert one MO at a time
         for (unsigned int i = 0; i < numColumns; ++i) {
-          numRows = columns[i].size();
+          numRows = static_cast<unsigned int>(columns[i].size());
           for (unsigned int j = 0; j < numRows; ++j) {
             //qDebug() << "push back" << columns[i][j];
             switch (m_currentScfMode) {
@@ -401,12 +401,14 @@ void GAMESSUSOutput::outputAll()
 
 void GAMESSUSOutput::generateDensity()
 {
-  m_numBasisFunctions = sqrt(static_cast<double>(m_MOcoeffs.size()));
+  m_numBasisFunctions = static_cast<unsigned int>(
+        sqrt(static_cast<double>(m_MOcoeffs.size())));
   m_density.resize(m_numBasisFunctions, m_numBasisFunctions);
   m_density=Eigen::MatrixXd::Zero(m_numBasisFunctions,m_numBasisFunctions);
+  unsigned int electronPairs = static_cast<unsigned int>(m_electrons / 2);
   for (unsigned int iBasis = 0; iBasis < m_numBasisFunctions; ++iBasis) {
     for (unsigned int jBasis = 0; jBasis <= iBasis; ++jBasis) {
-      for (unsigned int iMO = 0; iMO < m_electrons / 2; ++iMO) {
+      for (unsigned int iMO = 0; iMO < electronPairs; ++iMO) {
         double icoeff = m_MOcoeffs.at(iMO * m_numBasisFunctions + iBasis);
         double jcoeff = m_MOcoeffs.at(iMO * m_numBasisFunctions + jBasis);
         m_density(jBasis, iBasis) += 2.0 * icoeff * jcoeff;

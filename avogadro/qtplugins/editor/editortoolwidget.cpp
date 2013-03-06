@@ -48,25 +48,25 @@ EditorToolWidget::~EditorToolWidget()
   delete m_ui;
 }
 
-unsigned short EditorToolWidget::atomicNumber() const
+unsigned char EditorToolWidget::atomicNumber() const
 {
   int curIndex = m_ui->element->currentIndex();
   QVariant itemData = m_ui->element->itemData(curIndex);
   if (!itemData.isValid())
     return 0;
 
-  unsigned short atomicNum = static_cast<unsigned short>(itemData.toUInt());
+  unsigned char atomicNum = static_cast<unsigned char>(itemData.toUInt());
 
   // "Other..." selected....
   if (atomicNum == 0)
-    atomicNum = static_cast<unsigned short>(m_elementSelector->element());
+    atomicNum = static_cast<unsigned char>(m_elementSelector->element());
 
   return atomicNum;
 }
 
-unsigned short EditorToolWidget::bondOrder() const
+unsigned char EditorToolWidget::bondOrder() const
 {
-  return static_cast<unsigned short>(
+  return static_cast<unsigned char>(
         m_ui->bondOrder->itemData(m_ui->bondOrder->currentIndex()).toUInt());
 }
 
@@ -84,7 +84,7 @@ void EditorToolWidget::elementChanged(int index)
 void EditorToolWidget::updateElementCombo()
 {
   // Build set of all elements:
-  QList<unsigned short> allElements;
+  QList<unsigned char> allElements;
   allElements << m_defaultElements;
   allElements << m_userElements;
   qSort(allElements);
@@ -97,7 +97,7 @@ void EditorToolWidget::updateElementCombo()
 
   // Clear and repopulate combo
   m_ui->element->clear();
-  foreach (unsigned short atomicNum, allElements) {
+  foreach (unsigned char atomicNum, allElements) {
     m_ui->element->addItem(QString("%1 (%2)")
                            .arg(Core::Elements::name(atomicNum))
                            .arg(atomicNum), atomicNum);
@@ -106,10 +106,11 @@ void EditorToolWidget::updateElementCombo()
   m_ui->element->addItem(tr("Other..."), 0);
 
   // Reset the element if it still exists
-  selectElement(selectedData.isValid() ? selectedData.toUInt() : -1);
+  selectElement(static_cast<unsigned char>(selectedData.isValid()
+                                           ? selectedData.toInt() : -1));
 }
 
-void EditorToolWidget::addUserElement(unsigned short element)
+void EditorToolWidget::addUserElement(unsigned char element)
 {
   // Never add any of the common elements to the user list.
   if (m_defaultElements.contains(element))
@@ -135,11 +136,11 @@ void EditorToolWidget::addUserElement(unsigned short element)
 
 void EditorToolWidget::elementSelectedFromTable(int element)
 {
-  addUserElement(static_cast<unsigned short>(element));
-  selectElement(static_cast<unsigned short>(element));
+  addUserElement(static_cast<unsigned char>(element));
+  selectElement(static_cast<unsigned char>(element));
 }
 
-void EditorToolWidget::selectElement(unsigned short element)
+void EditorToolWidget::selectElement(unsigned char element)
 {
   int curIndex = element > 0 ? m_ui->element->findData(element) : -1;
   if (curIndex >= 0)
@@ -166,7 +167,7 @@ void EditorToolWidget::buildElements()
   QVariantList userElementsVar =
       QSettings().value("editortool/userElements").toList();
   foreach (const QVariant &var, userElementsVar)
-    m_userElements << static_cast<unsigned short>(var.toUInt());
+    m_userElements << static_cast<unsigned char>(var.toUInt());
 
   updateElementCombo();
 }

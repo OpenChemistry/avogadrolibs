@@ -88,7 +88,7 @@ private:
   Rendering::Primitive::Identifier m_bondedAtom;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_clickPosition;
-  unsigned short m_clickedAtomicNumber;
+  unsigned char m_clickedAtomicNumber;
   bool m_bondAdded;
 };
 

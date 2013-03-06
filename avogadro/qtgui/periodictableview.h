@@ -44,7 +44,7 @@ public:
    * Constructor - contructs a new PeriodicTableView with an internal instance
    * of PeriodicTableScene.
    */
-  explicit PeriodicTableView(QWidget *parent = 0);
+  explicit PeriodicTableView(QWidget *parent_ = 0);
   ~PeriodicTableView();
 
   /**
@@ -84,7 +84,7 @@ protected:
   /**
    * Handles the keyboard events to change the active element.
    */
-  void keyPressEvent(QKeyEvent *event);
+  void keyPressEvent(QKeyEvent *event_);
 
 private:
   /**
