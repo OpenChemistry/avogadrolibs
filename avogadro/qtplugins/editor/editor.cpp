@@ -215,7 +215,7 @@ void Editor::atomLeftClick(QMouseEvent *e)
   Atom atom = m_clickedObject.molecule->atom(m_clickedObject.index);
   if (atom.isValid()) {
     // Store the original atomic number of the clicked atom before updating it.
-    unsigned short atomicNumber = m_toolWidget->atomicNumber();
+    unsigned char atomicNumber = m_toolWidget->atomicNumber();
     if (atom.atomicNumber() != atomicNumber) {
       m_clickedAtomicNumber = atom.atomicNumber();
       atom.setAtomicNumber(atomicNumber);
@@ -228,7 +228,7 @@ void Editor::atomLeftClick(QMouseEvent *e)
 void Editor::bondLeftClick(QMouseEvent *e)
 {
   Bond bond = m_clickedObject.molecule->bond(m_clickedObject.index);
-  unsigned short order = m_toolWidget->bondOrder();
+  unsigned char order = m_toolWidget->bondOrder();
   if (order != bond.order()) {
     bond.setOrder(order);
     m_molecule->emitChanged(Molecule::Bonds | Molecule::Modified);

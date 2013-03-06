@@ -76,8 +76,10 @@ QUndoCommand * Manipulator::mousePressEvent(QMouseEvent *e)
       return NULL;
     case Primitive::Bond: {
       Bond bond = m_molecule->bond(m_object.index);
-      bond.setOrder((bond.order() % static_cast<unsigned char>(3))
-                    + static_cast<unsigned char>(1));
+      unsigned char currentOrder = bond.order();
+      unsigned char maxOrder = static_cast<unsigned char>(3U);
+      unsigned char increment = static_cast<unsigned char>(1U);
+      bond.setOrder((currentOrder % maxOrder) + increment);
       m_molecule->emitChanged(Molecule::Bonds | Molecule::Modified);
       e->accept();
       return NULL;
