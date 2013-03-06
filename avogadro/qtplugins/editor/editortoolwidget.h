@@ -38,15 +38,15 @@ public:
   explicit EditorToolWidget(QWidget *parent_ = 0);
   ~EditorToolWidget();
 
-  unsigned short atomicNumber() const;
-  unsigned short bondOrder() const;
+  unsigned char atomicNumber() const;
+  unsigned char bondOrder() const;
 
 private slots:
   void elementChanged(int index);
   void updateElementCombo();
-  void addUserElement(unsigned short element);
+  void addUserElement(unsigned char element);
   void elementSelectedFromTable(int element);
-  void selectElement(unsigned short element);
+  void selectElement(unsigned char element);
 
 private:
   void buildElements();
@@ -55,8 +55,8 @@ private:
 
   Ui::EditorToolWidget *m_ui;
   QtGui::PeriodicTableView *m_elementSelector;
-  QList<unsigned short> m_defaultElements;
-  QList<unsigned short> m_userElements;
+  QList<unsigned char> m_defaultElements;
+  QList<unsigned char> m_userElements;
 };
 
 } // namespace QtPlugins
