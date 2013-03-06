@@ -22,6 +22,10 @@ option(BUILD_SHARED_LIBS "Build with shared libraries" ON)
 set_property(GLOBAL PROPERTY AvogadroLibs_PLUGINS)
 set_property(GLOBAL PROPERTY AvogadroLibs_STATIC_PLUGINS)
 
+if(MSVC)
+  add_definitions("-D_CRT_SECURE_NO_WARNINGS")
+endif()
+
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR})
 add_subdirectory(utilities)

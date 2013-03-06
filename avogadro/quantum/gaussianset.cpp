@@ -53,8 +53,8 @@ struct GaussianShell
 static const double BOHR_TO_ANGSTROM = 0.529177249;
 static const double ANGSTROM_TO_BOHR = 1.0 / BOHR_TO_ANGSTROM;
 
-GaussianSet::GaussianSet() : m_numMOs(0), m_numAtoms(0), m_init(false),
-  m_cube(0), m_gaussianShells(0), m_numAlphaMOs(0), m_numBetaMOs(0)
+GaussianSet::GaussianSet() : m_numMOs(0), m_numAlphaMOs(0), m_numBetaMOs(0),
+    m_numAtoms(0), m_init(false), m_cube(0), m_gaussianShells(0)
 {
 }
 
@@ -68,7 +68,7 @@ unsigned int GaussianSet::addAtom(const Vector3d& pos, int atomicNumber)
   // Add to the new data structure, delete the old soon
   Core::Atom a = m_molecule.addAtom(static_cast<unsigned char>(atomicNumber));
   a.setPosition3d(pos);
-  return a.index();
+  return static_cast<unsigned int>(a.index());
 }
 
 unsigned int GaussianSet::addBasis(unsigned int atom, orbital type)
@@ -143,7 +143,7 @@ void GaussianSet::addAlphaMOs(const vector<double>& MOs)
 
   // Some programs don't output all MOs, so we take the amount of data
   // and divide by the # of AO functions
-  unsigned int columns = MOs.size() / m_numMOs;
+  unsigned int columns = static_cast<unsigned int>(MOs.size()) / m_numMOs;
   qDebug() << " add Alpha MOs: " << m_numMOs << columns;
 
   m_alphaMoMatrix.resize(m_numMOs, m_numMOs);
@@ -159,7 +159,7 @@ void GaussianSet::addBetaMOs(const vector<double>& MOs)
 
   // Some programs don't output all MOs, so we take the amount of data
   // and divide by the # of AO functions
-  unsigned int columns = MOs.size() / m_numMOs;
+  unsigned int columns = static_cast<unsigned int>(MOs.size()) / m_numMOs;
   qDebug() << " add Beta MOs: " << m_numMOs << columns;
 
   m_betaMoMatrix.resize(m_numMOs, m_numMOs);
@@ -246,7 +246,8 @@ bool GaussianSet::calculateCubeAlphaMO(Cube *cube, unsigned int state)
   initCalculation();
 
   // Set up the points we want to calculate the density at
-  m_gaussianShells = new QVector<GaussianShell>(cube->data()->size());
+  m_gaussianShells =
+      new QVector<GaussianShell>(static_cast<int>(cube->data()->size()));
 
   for (int i = 0; i < m_gaussianShells->size(); ++i) {
     (*m_gaussianShells)[i].set = this;
@@ -281,7 +282,8 @@ bool GaussianSet::calculateCubeBetaMO(Cube *cube, unsigned int state)
   initCalculation();
 
   // Set up the points we want to calculate the density at
-  m_gaussianShells = new QVector<GaussianShell>(cube->data()->size());
+  m_gaussianShells =
+      new QVector<GaussianShell>(static_cast<int>(cube->data()->size()));
 
   for (int i = 0; i < m_gaussianShells->size(); ++i) {
     (*m_gaussianShells)[i].set = this;
@@ -362,7 +364,8 @@ bool GaussianSet::calculateCubeSpinDensity(Cube *cube)
   initCalculation();
 
   // Set up the points we want to calculate the density at
-  m_gaussianShells = new QVector<GaussianShell>(cube->data()->size());
+  m_gaussianShells =
+      new QVector<GaussianShell>(static_cast<int>(cube->data()->size()));
 
   for (int i = 0; i < m_gaussianShells->size(); ++i) {
     (*m_gaussianShells)[i].set = this;
@@ -589,7 +592,7 @@ void GaussianSet::processAlphaPoint(GaussianShell &shell)
 {
   GaussianSet *set = shell.set;
   unsigned int atomsSize = set->m_numAtoms;
-  unsigned int basisSize = set->m_symmetry.size();
+  unsigned int basisSize = static_cast<unsigned int>(set->m_symmetry.size());
   std::vector<int> &basis = set->m_symmetry;
   vector<Vector3d> deltas;
   vector<double> dr2;
@@ -642,7 +645,7 @@ void GaussianSet::processBetaPoint(GaussianShell &shell)
 {
   GaussianSet *set = shell.set;
   unsigned int atomsSize = set->m_numAtoms;
-  unsigned int basisSize = set->m_symmetry.size();
+  unsigned int basisSize = static_cast<unsigned int>(set->m_symmetry.size());
   std::vector<int> &basis = set->m_symmetry;
   vector<Vector3d> deltas;
   vector<double> dr2;
@@ -755,8 +758,9 @@ void GaussianSet::processSpinDensity(GaussianShell &shell)
 {
   GaussianSet *set = shell.set;
   unsigned int atomsSize = set->m_numAtoms;
-  unsigned int basisSize = set->m_symmetry.size();
-  unsigned int matrixSize = set->m_spinDensity.rows();
+  unsigned int basisSize = static_cast<unsigned int>(set->m_symmetry.size());
+  unsigned int matrixSize =
+      static_cast<unsigned int>(set->m_spinDensity.rows());
   std::vector<int> &basis = set->m_symmetry;
   vector<Vector3d> deltas;
   vector<double> dr2;
@@ -1140,13 +1144,13 @@ unsigned int GaussianSet::numMOs()
 unsigned int GaussianSet::numAlphaMOs()
 {
   // Return the total number of MOs
-  return m_alphaMoMatrix.rows();
+  return static_cast<unsigned int>(m_alphaMoMatrix.rows());
 }
 
 unsigned int GaussianSet::numBetaMOs()
 {
   // Return the total number of MOs
-  return m_betaMoMatrix.rows();
+  return static_cast<unsigned int>(m_betaMoMatrix.rows());
 }
 
 bool GaussianSet::generateDensity()
@@ -1183,6 +1187,8 @@ bool GaussianSet::generateDensity()
         }
         qDebug() << iBasis << ", " << jBasis << ": " << m_density(iBasis, jBasis);
         break;
+      default:
+        qDebug() << "Unhandled scf type:" << m_scfType;
       }
     }
   }
@@ -1219,7 +1225,7 @@ bool GaussianSet::generateSpinDensity()
 void GaussianSet::outputAll()
 {
   // Can be called to print out a summary of the basis set as read in
-  m_numAtoms = m_molecule.atomCount();
+  m_numAtoms = static_cast<unsigned int>(m_molecule.atomCount());
   qDebug() << "\nGaussian Basis Set\nNumber of atoms:" << m_numAtoms;
   switch (m_scfType) {
   case rhf:
@@ -1317,7 +1323,7 @@ void GaussianSet::outputAll()
 void GaussianSet::outputAlphaAll()
 {
   // Can be called to print out a summary of the basis set as read in
-  m_numAtoms = m_molecule.atomCount();
+  m_numAtoms = static_cast<unsigned int>(m_molecule.atomCount());
   qDebug() << "\nGaussian Basis Set\nNumber of atoms:" << m_numAtoms;
   switch (m_scfType) {
   case rhf:
@@ -1415,7 +1421,7 @@ void GaussianSet::outputAlphaAll()
 void GaussianSet::outputBetaAll()
 {
   // Can be called to print out a summary of the basis set as read in
-  m_numAtoms = m_molecule.atomCount();
+  m_numAtoms = static_cast<unsigned int>(m_molecule.atomCount());
   qDebug() << "\nGaussian Basis Set\nNumber of atoms:" << m_numAtoms;
   switch (m_scfType) {
   case rhf:
