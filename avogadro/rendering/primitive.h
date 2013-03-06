@@ -41,6 +41,19 @@ public:
   struct Identifier {
     Identifier() : molecule(0), type(Invalid), index(-1) {}
 
+    bool operator==(const Identifier &other) const
+    {
+      return molecule == other.molecule && type == other.type &&
+          index == other.index;
+    }
+
+    bool operator!=(const Identifier &other) const
+    {
+      return !operator==(other);
+    }
+
+    bool isValid() const { return type != Invalid; }
+
     const Core::Molecule *molecule;
     Type type;
     size_t index;

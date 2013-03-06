@@ -27,7 +27,9 @@ namespace QtGui {
 
 using Core::Elements;
 
-PeriodicTableView::PeriodicTableView(QWidget *parent_) : QGraphicsView(parent_)
+PeriodicTableView::PeriodicTableView(QWidget *parent_)
+  : QGraphicsView(parent_),
+    m_element(6) // Everyone loves carbon.
 {
   // Use a small title bar (Qt::Tool) with no minimize or maximise buttons
   setWindowFlags(Qt::Dialog | Qt::Tool);
@@ -36,6 +38,7 @@ PeriodicTableView::PeriodicTableView(QWidget *parent_) : QGraphicsView(parent_)
   table->setSceneRect(-20, -20, 480, 260);
   table->setItemIndexMethod(QGraphicsScene::NoIndex);
   table->setBackgroundBrush(Qt::white);
+  table->changeElement(m_element);
 
   setScene(table);
   setRenderHint(QPainter::Antialiasing);
@@ -51,8 +54,17 @@ PeriodicTableView::~PeriodicTableView()
   delete scene();
 }
 
+void PeriodicTableView::setElement(int element)
+{
+  m_element = element;
+  PeriodicTableScene *table = qobject_cast<PeriodicTableScene *>(scene());
+  if (table)
+    table->changeElement(element);
+}
+
 void PeriodicTableView::elementClicked(int id)
 {
+  m_element = id;
   emit(elementChanged(id));
 }
 
@@ -89,12 +101,9 @@ void PeriodicTableView::keyPressEvent(QKeyEvent *event_)
     }
   }
 
-  if (element > 0 && element < 119) { // got a valid symbol
-    // Notify the scene
-    PeriodicTableScene *table = qobject_cast<PeriodicTableScene *>(scene());
-    if (table)
-      table->changeElement(element);
-  }
+  // got a valid symbol
+  if (element > 0 && element < 119)
+    setElement(element);
 
   QGraphicsView::keyPressEvent(event_);
 }

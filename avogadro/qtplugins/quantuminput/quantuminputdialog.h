@@ -114,7 +114,34 @@ private slots:
   void computeClicked();
 
   /**
-   * Show the user an error message.
+   * Show the user an warning. These are messages returned by the input
+   * generator script.
+   */
+  void setWarning(const QString &warn);
+
+  /**
+   * Toggle the visibility of the warning text.
+   */
+  void toggleWarningText();
+
+  /**
+   * Show the warning text.
+   */
+  void showWarningText();
+
+  /**
+   * Hide the warning text.
+   */
+  void hideWarningText();
+
+  /**
+   * Hide the warning widget.
+   */
+  void resetWarningDisplay();
+
+  /**
+   * Show the user an error message. These are errors that have occurred
+   * in this extension, not necessarily in the input generator script.
    */
   void showError(const QString &err);
 

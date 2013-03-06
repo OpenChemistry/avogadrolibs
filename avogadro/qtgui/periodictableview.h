@@ -47,7 +47,17 @@ public:
   explicit PeriodicTableView(QWidget *parent_ = 0);
   ~PeriodicTableView();
 
+  /**
+   * @return The currently selected element.
+   */
+  int element() const { return m_element; }
+
 public slots:
+  /**
+   * @param element The currently selected element.
+   */
+  void setElement(int element);
+
   /**
    * This slot is called to clear the key buffer (e.g. after a delay in typing).
    */
