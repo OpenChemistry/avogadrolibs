@@ -54,12 +54,12 @@ PeriodicTableView::~PeriodicTableView()
   delete scene();
 }
 
-void PeriodicTableView::setElement(int element)
+void PeriodicTableView::setElement(int element_)
 {
-  m_element = element;
+  m_element = element_;
   PeriodicTableScene *table = qobject_cast<PeriodicTableScene *>(scene());
   if (table)
-    table->changeElement(element);
+    table->changeElement(element_);
 }
 
 void PeriodicTableView::elementClicked(int id)
@@ -89,21 +89,22 @@ void PeriodicTableView::keyPressEvent(QKeyEvent *event_)
 
   m_keyPressBuffer.append(event_->text());
   // Try setting an element symbol from this string.
-  int element = m_keyPressBuffer.toInt();
-  if (element <= 0 || element > 119) {
+  int elem = m_keyPressBuffer.toInt();
+  if (elem <= 0 || elem > 119) {
     // Not a valid number, have we tried 2- and 3-character symbols?
     if (m_keyPressBuffer.length() > 3) {
       clearKeyPressBuffer();
     }
     else {
       // try parsing as a symbol
-      element = Elements::atomicNumberFromSymbol(m_keyPressBuffer.toAscii().data());
+      elem = static_cast<int>(Elements::atomicNumberFromSymbol(
+                                m_keyPressBuffer.toAscii().data()));
     }
   }
 
   // got a valid symbol
-  if (element > 0 && element < 119)
-    setElement(element);
+  if (elem > 0 && elem < 119)
+    setElement(elem);
 
   QGraphicsView::keyPressEvent(event_);
 }

@@ -237,9 +237,11 @@ float Cube::valuef(const Vector3f &pos) const
               lC.z() + 1);
   // So there are six corners in total - work out the delta of the position
   // and the low corner
-  Vector3f P((delta.x() - lC.x() * m_spacing.x()) / m_spacing.x(),
-             (delta.y() - lC.y() * m_spacing.y()) / m_spacing.y(),
-             (delta.z() - lC.z() * m_spacing.z()) / m_spacing.z());
+  const Vector3f lCf(lC.cast<float>());
+  const Vector3f spacingf(m_spacing.cast<float>());
+  Vector3f P((delta.x() - lCf.x() * spacingf.x()) / spacingf.x(),
+             (delta.y() - lCf.y() * spacingf.y()) / spacingf.y(),
+             (delta.z() - lCf.z() * spacingf.z()) / spacingf.z());
   Vector3f dP = Vector3f(1.0f, 1.0f, 1.0f) - P;
   // Now calculate and return the interpolated value
   return static_cast<float>(
