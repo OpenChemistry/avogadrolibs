@@ -59,6 +59,21 @@ bool OBProcess::queryReadFormats()
   return true;
 }
 
+bool OBProcess::queryWriteFormats()
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::queryWriteFormats: process already in use.";
+    return false;
+  }
+
+  // Setup options
+  QStringList options;
+  options << "-L" << "formats" << "write";
+
+  executeObabel(options, this, SLOT(queryWriteFormatsPrepare()));
+  return true;
+}
+
 void OBProcess::queryReadFormatsPrepare()
 {
   if (m_aborted) {
@@ -81,6 +96,31 @@ void OBProcess::queryReadFormatsPrepare()
 
   releaseProcess();
   emit queryReadFormatsFinished(result);
+  return;
+}
+
+void OBProcess::queryWriteFormatsPrepare()
+{
+  if (m_aborted) {
+    releaseProcess();
+    return;
+  }
+
+  QMap<QString, QString> result;
+
+  QString output = QString::fromLatin1(m_process->readAllStandardOutput());
+
+  QRegExp parser("\\s*([^\\s]+)\\s+--\\s+([^\\n]+)\\n");
+  int pos = 0;
+  while ((pos = parser.indexIn(output, pos)) != -1) {
+    QString extension = parser.cap(1);
+    QString description = parser.cap(2);
+    result.insertMulti(description, extension);
+    pos += parser.matchedLength();
+  }
+
+  releaseProcess();
+  emit queryWriteFormatsFinished(result);
   return;
 }
 
@@ -114,6 +154,32 @@ bool OBProcess::readFile(const QString &filename,
   return true;
 }
 
+bool OBProcess::writeFile(const QString &filename,
+                          const QByteArray &inputString,
+                          const QString &inputFormat,
+                          const QString &outputFormatOverride)
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::writeFile: process already in use.";
+    return false;
+  }
+
+  QStringList options;
+  QString outputFormat = outputFormatOverride.isEmpty() ?
+        QFileInfo(filename).suffix() : outputFormatOverride;
+
+  // Setup input options
+  options << QString("-i%1").arg(inputFormat);
+
+  // Setup output options
+  options << QString("-o%1").arg(outputFormat);
+  options << "-O";
+  options << filename;
+
+  executeObabel(options, this, SLOT(readFilePrepareOutput()), inputString);
+  return true;
+}
+
 void OBProcess::readFilePrepareOutput()
 {
   if (m_aborted) {
@@ -138,6 +204,32 @@ void OBProcess::readFilePrepareOutput()
     qDebug() << m_obabelExecutable << " stderr:\n" << errorOutput;
 
   emit readFileFinished(output);
+  releaseProcess();
+}
+
+void OBProcess::writeFilePrepareOutput()
+{
+  if (m_aborted) {
+    releaseProcess();
+    return;
+  }
+
+  bool result = false;
+
+  // Check for errors.
+  QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
+  QRegExp errorChecker("\\b0 molecules converted\\b" "|"
+                       "obabel: cannot read input format!");
+  if (!errorOutput.contains(errorChecker)) {
+    if (m_process->exitStatus() == QProcess::NormalExit)
+      result = true;
+  }
+
+  /// Print any meaningful warnings @todo This should go to a log at some point.
+  if (!errorOutput.isEmpty() && errorOutput != "1 molecule converted\n")
+    qDebug() << m_obabelExecutable << " stderr:\n" << errorOutput;
+
+  emit writeFileFinished(result);
   releaseProcess();
 }
 

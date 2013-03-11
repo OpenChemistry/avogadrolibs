@@ -97,6 +97,24 @@ public slots:
    */
   bool queryReadFormats();
 
+  /**
+   * Request a list of all supported output formats from obabel.
+   *
+   * After calling this method, the queryWriteFormatsFinished signal will be
+   * emitted. This method executes
+   *
+   * `obabel -L formats write`
+   *
+   * and parses the output into a map (keys are format descriptions, values are
+   * format extensions).
+   *
+   * If an error occurs, queryWriteFormatsFinished will be emitted with an empty
+   * argument.
+   *
+   * @return True if the process started successfully, false otherwise.
+   */
+  bool queryWriteFormats();
+
 signals:
   /**
    * Triggered when the process started by queryReadFormats() completes.
@@ -112,8 +130,23 @@ signals:
    */
   void queryReadFormatsFinished(QMap<QString, QString> readFormats);
 
+  /**
+   * Triggered when the process started by queryWriteFormats() completes.
+   * @param writeFormats The file formats that OpenBabel can write. Keys
+   * are non-translated (english), human-readable descriptions of the formats,
+   * and the values are the corresponding file extensions.
+   *
+   * @note writeFormats will usually contain more than one extensions per
+   * format, so accessing the values with QMap::values() (instead of
+   * QMap::value()) is required.
+   *
+   * If an error occurs, writeFormats will be empty.
+   */
+  void queryWriteFormatsFinished(QMap<QString, QString> writeFormats);
+
 private slots:
   void queryReadFormatsPrepare();
+  void queryWriteFormatsPrepare();
 
   // end File Format Support doxygen group
   /**@}*/
@@ -146,6 +179,27 @@ public slots:
   bool readFile(const QString &filename, const QString &outputFormat = "cml",
                 const QString &inputFormatOverride = QString());
 
+  /**
+   * Request that obabel write a molecule to disk.
+   * @param filename The file to write.
+   * @param inputString A string representation of the molecule using a
+   * standard format.
+   * @param inputFormat The format used to represent the molecule. Default: cml
+   * @param outputFormatOverride Optional override to the written file's format.
+   * If not specified, the format is guessed from @a filename's extension.
+   *
+   * After calling this method, the writeFileFinished signal will be emitted to
+   * indicate return status.
+   *
+   * The conversion is performed as:
+   * `obabel -i<inputFormat> -o<outputFormat> filename < [inputString]`
+   *
+   * @return True if the process started successfully, false otherwise.
+   */
+  bool writeFile(const QString &filename, const QByteArray &inputString,
+                 const QString &inputFormat = "cml",
+                 const QString &outputFormatOverride = QString());
+
 signals:
   /**
    * Emitted after a call to readFile.
@@ -154,8 +208,15 @@ signals:
    */
   void readFileFinished(const QByteArray &output);
 
+  /**
+   * Emitted after a call to writeFile.
+   * @param success True if the file was written successfully.
+   */
+  void writeFileFinished(bool success);
+
 private slots:
   void readFilePrepareOutput();
+  void writeFilePrepareOutput();
 
   // end File Reading doxygen group
   /**@}*/
