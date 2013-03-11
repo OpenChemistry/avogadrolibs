@@ -34,6 +34,11 @@ public:
   CmlFormat();
   ~CmlFormat() AVO_OVERRIDE;
 
+  Operations supportedOperations() const AVO_OVERRIDE
+  {
+    return ReadWrite | File | Stream | String;
+  }
+
   FileFormat * newInstance() AVO_OVERRIDE { return new CmlFormat; }
   std::string identifier() const AVO_OVERRIDE { return "CML"; }
   std::string name() const AVO_OVERRIDE { return "Chemical Markup Language"; }

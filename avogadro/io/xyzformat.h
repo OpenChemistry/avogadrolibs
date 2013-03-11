@@ -34,6 +34,11 @@ public:
   XyzFormat();
   ~XyzFormat() AVO_OVERRIDE;
 
+  Operations supportedOperations() const AVO_OVERRIDE
+  {
+    return ReadWrite | File | Stream | String;
+  }
+
   FileFormat * newInstance() AVO_OVERRIDE { return new XyzFormat; }
   std::string identifier() const AVO_OVERRIDE { return "XYZ"; }
   std::string name() const AVO_OVERRIDE { return "XYZ"; }
