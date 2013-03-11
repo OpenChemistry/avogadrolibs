@@ -42,7 +42,7 @@ public:
     return "TODO: Describe the format.";
   }
 
-  std::string specificationURL() const AVO_OVERRIDE
+  std::string specificationUrl() const AVO_OVERRIDE
   {
     return "http://www.xml-cml.org/schema/schema3/";
   }

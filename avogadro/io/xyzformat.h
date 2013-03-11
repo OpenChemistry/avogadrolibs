@@ -42,7 +42,7 @@ public:
     return "Generic format that tabulates atomic symbols and 3D positions.";
   }
 
-  std::string specificationURL() const AVO_OVERRIDE
+  std::string specificationUrl() const AVO_OVERRIDE
   {
     return "http://openbabel.org/wiki/XYZ";
   }

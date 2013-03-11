@@ -143,7 +143,7 @@ public:
    * The URL of the format specification if available (relevant web page/wiki
    * otherwise).
    */
-  virtual std::string specificationURL() const = 0;
+  virtual std::string specificationUrl() const = 0;
 
   /**
    * @brief Get the file name extension(s) that the format supports reading.
