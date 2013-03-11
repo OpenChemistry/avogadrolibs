@@ -79,7 +79,8 @@ QUndoCommand * Manipulator::mousePressEvent(QMouseEvent *e)
       unsigned char currentOrder = bond.order();
       unsigned char maxOrder = static_cast<unsigned char>(3U);
       unsigned char increment = static_cast<unsigned char>(1U);
-      bond.setOrder((currentOrder % maxOrder) + increment);
+      bond.setOrder(static_cast<unsigned char>(currentOrder % maxOrder)
+                    + increment);
       m_molecule->emitChanged(Molecule::Bonds | Molecule::Modified);
       e->accept();
       return NULL;

@@ -56,7 +56,7 @@ public slots:
   /**
    * @param element The currently selected element.
    */
-  void setElement(int element);
+  void setElement(int element_);
 
   /**
    * This slot is called to clear the key buffer (e.g. after a delay in typing).

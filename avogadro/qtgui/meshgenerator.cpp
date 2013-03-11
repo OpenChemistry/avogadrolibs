@@ -168,13 +168,12 @@ bool MeshGenerator::marchingCube(const Vector3i &pos)
   Vector3f asEdgeNorm[12];
 
   // Calculate the position in the Cube
-  Vector3f fPos(pos.x() * static_cast<float>(m_stepSize) + m_min.x(),
-                pos.y() * static_cast<float>(m_stepSize) + m_min.y(),
-                pos.z() * static_cast<float>(m_stepSize) + m_min.z());
+  Vector3f fPos(pos.cast<float>() * static_cast<float>(m_stepSize) + m_min);
 
   //Make a local copy of the values at the cube's corners
   for(int i = 0; i < 8; ++i) {
-    afCubeValue[i] = m_cube->value(Vector3i(pos + Vector3i(a2iVertexOffset[i])));
+    afCubeValue[i] = static_cast<float>(
+          m_cube->value(Vector3i(pos + Vector3i(a2iVertexOffset[i]))));
   }
 
   //Find which vertices are inside of the surface and which are outside

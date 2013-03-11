@@ -68,8 +68,10 @@ Vector3f Camera::project(const Vector3f &point) const
   Eigen::Matrix4f mvp = m_projection.matrix() * m_modelView.matrix();
   Vector4f tPoint(point.x(), point.y(), point.z(), 1.0f);
   tPoint = mvp * tPoint;
-  Vector3f result(m_width * (tPoint.x() / tPoint.w() + 1.0f) / 2.0f,
-                  m_height * (tPoint.y() / tPoint.w() + 1.0f) / 2.0f,
+  Vector3f result(static_cast<float>(m_width)
+                  * (tPoint.x() / tPoint.w() + 1.0f) / 2.0f,
+                  static_cast<float>(m_height)
+                  * (tPoint.y() / tPoint.w() + 1.0f) / 2.0f,
                   (tPoint.z() / tPoint.w() + 1.0f) / 2.0f);
   return result;
 }
