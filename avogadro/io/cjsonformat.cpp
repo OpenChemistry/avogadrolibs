@@ -33,6 +33,7 @@ using Core::Variant;
 
 CjsonFormat::CjsonFormat()
 {
+  setSupportedOperations(ReadWrite | File | Stream | String);
 }
 
 CjsonFormat::~CjsonFormat()

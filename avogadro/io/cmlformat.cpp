@@ -287,6 +287,7 @@ public:
 
 CmlFormat::CmlFormat()
 {
+  setSupportedOperations(ReadWrite | File | Stream | String);
 }
 
 CmlFormat::~CmlFormat()

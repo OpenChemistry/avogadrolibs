@@ -48,7 +48,30 @@ namespace Io {
 class AVOGADROIO_EXPORT FileFormat
 {
 public:
+  FileFormat();
   virtual ~FileFormat();
+
+  /**
+   * @brief Flags defining supported operations.
+   */
+  enum Operation {
+    None      = 0x0,
+    Read      = 0x1,
+    Write     = 0x2,
+    ReadWrite = Read | Write,
+
+    Stream    = 0x10,
+    String    = 0x20,
+    File      = 0x40,
+
+    All       = ReadWrite | Stream | String | File
+  };
+  typedef int Operations;
+
+  /**
+   * @return Operation flags defining the capabilities of this format.
+   */
+  Operations supportedOperations() const { return m_supportedOperations; }
 
   /**
    * @brief Read the given @p in stream and load it into @p molecule.
@@ -165,7 +188,16 @@ protected:
    */
   void appendError(const std::string &errorString, bool newLine = true);
 
+  /**
+   * @brief Set the return value for supportedOperations().
+   */
+  void setSupportedOperations(Operations ops)
+  {
+    m_supportedOperations = ops;
+  }
+
 private:
+  Operations m_supportedOperations;
   std::string m_error;
   std::string m_fileName;
 };

@@ -22,6 +22,11 @@
 namespace Avogadro {
 namespace Io {
 
+FileFormat::FileFormat()
+  : m_supportedOperations(None)
+{
+}
+
 FileFormat::~FileFormat()
 {
 }

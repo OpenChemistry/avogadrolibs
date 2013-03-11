@@ -39,6 +39,7 @@ using std::isalpha;
 
 XyzFormat::XyzFormat()
 {
+  setSupportedOperations(ReadWrite | File | Stream | String);
 }
 
 XyzFormat::~XyzFormat()
