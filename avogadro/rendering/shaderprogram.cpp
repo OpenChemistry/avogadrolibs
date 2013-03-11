@@ -344,6 +344,19 @@ bool ShaderProgram::setUniformValue(const std::string &name,
   return true;
 }
 
+bool ShaderProgram::setUniformValue(const std::string &name,
+                                    const Vector3ub &v)
+{
+  GLint location = static_cast<GLint>(findUniform(name));
+  if (location == -1) {
+    m_error = "Could not set uniform " + name + ". No such uniform.";
+    return false;
+  }
+  Vector3f colorf(v.cast<float>() * (1.0f / 255.0f));
+  glUniform3fv(location, 1, colorf.data());
+  return true;
+}
+
 inline int ShaderProgram::findAttributeArray(const std::string &name)
 {
   if (name.empty() || !m_linked)

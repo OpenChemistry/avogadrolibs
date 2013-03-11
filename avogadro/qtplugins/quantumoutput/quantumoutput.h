@@ -74,6 +74,7 @@ private:
   QtGui::Mesh        *m_mesh1;
   QtGui::Mesh        *m_mesh2;
   QtGui::MeshGenerator *m_meshGenerator;
+  QtGui::MeshGenerator *m_meshGenerator2;
 
   void openFile(const QString &fileName);
   void calculateMolecularOrbital(int number);

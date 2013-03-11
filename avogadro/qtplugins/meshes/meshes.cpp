@@ -18,16 +18,19 @@
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/mesh.h>
-#include <avogadro/core/elements.h>
-#include <avogadro/rendering/scene.h>
+#include <avogadro/rendering/geometrynode.h>
+#include <avogadro/rendering/groupnode.h>
+#include <avogadro/rendering/meshnode.h>
 
 #include <QtCore/QDebug>
 
-using Avogadro::Core::Molecule;
-using Avogadro::Rendering::Scene;
-
 namespace Avogadro {
 namespace QtPlugins {
+
+using Core::Molecule;
+using Rendering::GeometryNode;
+using Rendering::GroupNode;
+using Rendering::MeshNode;
 
 Meshes::Meshes(QObject *p) : ScenePlugin(p), m_enabled(false)
 {
@@ -37,18 +40,43 @@ Meshes::~Meshes()
 {
 }
 
-void Meshes::process(const Molecule &molecule, Scene &scene)
+void Meshes::process(const Molecule &molecule, GroupNode &node)
 {
   const QtGui::Molecule *mol = dynamic_cast<const QtGui::Molecule*>(&molecule);
+
+  // Add a sphere node to contain all of the VdW spheres.
+  // Add a sphere node to contain all of the VdW spheres.
+  GeometryNode *geometry = new GeometryNode;
+  node.addChild(geometry);
+
+  unsigned char opacity = 100;
+
   if (mol) {
-    qDebug() << "Success!!!";
     if (mol->meshCount()) {
       qDebug() << "We have" << mol->meshCount() << "meshes...";
       const QtGui::Mesh *mesh = mol->mesh(0);
       qDebug() << mesh << "with" << mesh->numVertices() << "vertices";
       size_t n = mesh->numVertices();
-      scene.addTriangles(static_cast<const Vector3f *>(mesh->vertex(0)),
-                         static_cast<const Vector3f *>(mesh->normal(0)), n);
+
+      MeshNode *mesh1 = new MeshNode;
+      geometry->addDrawable(mesh1);
+      mesh1->addTriangles(static_cast<const Vector3f *>(mesh->vertex(0)),
+                          static_cast<const Vector3f *>(mesh->normal(0)),
+                          NULL, n);
+      mesh1->setColor(Vector3ub(255, 0, 0));
+      mesh1->setOpacity(opacity);
+
+      if (mol->meshCount() >= 2) {
+        MeshNode *mesh2 = new MeshNode;
+        geometry->addDrawable(mesh2);
+        mesh = mol->mesh(1);
+        n = mesh->numVertices();
+        mesh2->addTriangles(static_cast<const Vector3f *>(mesh->vertex(0)),
+                            static_cast<const Vector3f *>(mesh->normal(0)),
+                            NULL, n);
+        mesh2->setColor(Vector3ub(0, 0, 255));
+        mesh2->setOpacity(opacity);
+      }
     }
   }
 }

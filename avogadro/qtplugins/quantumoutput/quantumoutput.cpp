@@ -42,7 +42,8 @@ QuantumOutput::QuantumOutput(QObject *p) :
   m_cube(NULL),
   m_mesh1(NULL),
   m_mesh2(NULL),
-  m_meshGenerator(NULL)
+  m_meshGenerator(NULL),
+  m_meshGenerator2(NULL)
 {
   QAction *action = new QAction(this);
   action->setEnabled(true);
@@ -169,6 +170,15 @@ void QuantumOutput::calculateFinished()
   m_meshGenerator->initialize(m_cube, m_mesh1, 0.02);
   connect(m_meshGenerator, SIGNAL(finished()), SLOT(meshFinished()));
   m_meshGenerator->start();
+
+  if (!m_mesh2)
+    m_mesh2 = m_molecule->addMesh();
+  if (!m_meshGenerator2)
+    m_meshGenerator2 = new QtGui::MeshGenerator;
+  m_meshGenerator2->initialize(m_cube, m_mesh2, -0.02, true);
+  connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
+  m_meshGenerator2->start();
+
 }
 
 void QuantumOutput::meshFinished()

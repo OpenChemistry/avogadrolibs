@@ -118,6 +118,9 @@ public:
   bool setUniformValue(const std::string &name, const Eigen::Matrix3f &matrix);
   bool setUniformValue(const std::string &name, const Eigen::Matrix4f &matrix);
 
+  /** Set the @p name uniform value to the supplied value. */
+  bool setUniformValue(const std::string &name, const Vector3ub &v);
+
 protected:
   Index m_handle;
   Index m_vertexShader;

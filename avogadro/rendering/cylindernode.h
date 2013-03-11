@@ -34,7 +34,6 @@ struct CylinderColor
   Vector3ub color;
 };
 
-
 /**
  * @class CylinderNode cylindernode.h <avogadro/rendering/cylindernode.h>
  * @brief The CylinderNode contains one or more cylinders.

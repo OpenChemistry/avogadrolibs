@@ -51,6 +51,8 @@ set(SOURCES
 set(shader_files
   "cylinders_fs.glsl"
   "cylinders_vs.glsl"
+  "mesh_fs.glsl"
+  "mesh_vs.glsl"
   "spheres_fs.glsl"
   "spheres_vs.glsl"
 )

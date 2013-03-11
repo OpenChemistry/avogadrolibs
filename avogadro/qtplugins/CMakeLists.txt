@@ -73,7 +73,7 @@ add_subdirectory(quantumoutput)
 # The scene plugins
 add_subdirectory(ballandstick)
 add_subdirectory(vanderwaals)
-#add_subdirectory(meshes)
+add_subdirectory(meshes)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${original_library_output_dir}")
 
