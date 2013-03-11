@@ -19,6 +19,8 @@
 
 #include "avogadroioexport.h"
 
+#include "fileformat.h" // For FileFormat::Operation enum.
+
 #include <vector>
 #include <map>
 #include <string>
@@ -28,8 +30,6 @@ namespace Core {
 class Molecule;
 }
 namespace Io {
-
-class FileFormat;
 
 /**
  * @class FileFormatManager fileformatmanager.h <avogadro/io/fileformatmanager.h>
@@ -107,43 +107,79 @@ public:
    * New instance of the format for the specified @p identifier. Ownership
    * is passed to the caller.
    * @param identifier The unique identifier of the format.
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
    * @return Instance of the format, NULL if not found. Ownership passes to the
    * caller.
    */
-  FileFormat * newFormatFromIdentifier(const std::string &identifier) const;
+  FileFormat * newFormatFromIdentifier(
+      const std::string &identifier,
+      FileFormat::Operations filter = FileFormat::None) const;
 
   /**
    * New instance of the format for the specified @p mimeType. Ownership
    * is passed to the caller.
    * @param mimeType The MIME type (in lower case).
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
    * @return Instance of the format, NULL if not found. Ownership passes to the
    * caller.
    */
-  FileFormat * newFormatFromMimeType(const std::string &mimeType) const;
+  FileFormat * newFormatFromMimeType(
+      const std::string &mimeType,
+      FileFormat::Operations filter = FileFormat::None) const;
 
   /**
    * New instance of the format for the specified file @p extention. Ownership
    * is passed to the caller.
    * @param extension The file extension (in lower case).
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
    * @return Instance of the format, NULL if not found. Ownership passes to the
    * caller.
    */
-  FileFormat * newFormatFromFileExtension(const std::string &extension) const;
+  FileFormat * newFormatFromFileExtension(
+      const std::string &extension,
+      FileFormat::Operations filter = FileFormat::None) const;
 
   /**
-   * Get a list of all loaded identifiers.
+   * Get a list of all loaded identifiers, optionally matching the specified
+   * filter.
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
    */
-  std::vector<std::string> identifiers() const;
+  std::vector<std::string>
+  identifiers(FileFormat::Operations filter = FileFormat::None) const;
 
   /**
-   * Get a list of all loaded MIME types.
+   * Get a list of all loaded MIME types, optionally matching the specified
+   * filter.
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
    */
-  std::vector<std::string> mimeTypes() const;
+  std::vector<std::string>
+  mimeTypes(FileFormat::Operations filter = FileFormat::None) const;
 
   /**
-   * Get a list of the file extensions supported.
+   * Get a list of the file extensions supported, optionally matching the
+   * specified filter.
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
    */
-  std::vector<std::string> fileExtensions() const;
+  std::vector<std::string>
+  fileExtensions(FileFormat::Operations filter = FileFormat::None) const;
+
+  /**
+   * Get a list of known FileFormat objects, optionally matching the
+   * specified filter.
+   * @warning The objects in the returned list are owned by the
+   * FileFormatManager and should not be modified. Use FileFormat::newInstance()
+   * to create mutable copies.
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
+   */
+  std::vector<const FileFormat *>
+  fileFormats(FileFormat::Operations filter = FileFormat::None) const;
 
   /**
    * Get any errors that have been logged when loading formats.
@@ -151,6 +187,9 @@ public:
   std::string error() const;
 
 private:
+  typedef std::vector<size_t> FormatIdVector;
+  typedef std::map<std::string, FormatIdVector> FormatIdMap;
+
   FileFormatManager();
   ~FileFormatManager();
 
@@ -158,24 +197,70 @@ private:
   FileFormatManager& operator=(const FileFormatManager&); // Not implemented.
 
   /**
-   * Get a pointer to the format for the specified @p identifier. Ownership
-   * remains with the manager class.
+   * @brief Return keys from a map that have formats matching the supplied
+   * operation filter.
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
+   * @param fmap The FormatMap to operate on.
    */
-  FileFormat * formatFromIdentifier(const std::string &identifier) const;
+  std::vector<std::string>
+  filteredKeysFromFormatMap(FileFormat::Operations filter,
+                            const FormatIdMap &fmap) const;
 
   /**
-   * Get the format from the MIME type.
-   * @param The MIME type (in lower case).
-   * @return The format (ownership stays with manager) or NULL if not found.
+   * @brief Return formats from a map that match the supplied key and operation
+   * filter.
+   * @note Ownership of the format filter(s) remains with the FileFormatManager.
+   * Use FileFormat::newInstance to clone each format before use.
+   * @param key The map key.
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
+   * @param fmap The FormatIdMap to operate on.
    */
-  FileFormat * formatFromMimeType(const std::string &mimeType) const;
+  std::vector<FileFormat*>
+  filteredFormatsFromFormatMap(const std::string &key,
+                               FileFormat::Operations filter,
+                               const FormatIdMap &fmap) const;
 
   /**
-   * Get the format from the file extension.
-   * @param The file extension (in lower case).
-   * @return The format (ownership stays with manager) or NULL if not found.
+   * @brief Return a format from a map that matches the supplied key and
+   * operation filter.
+   * @note Ownership of the format filter(s) remains with the FileFormatManager.
+   * Use FileFormat::newInstance to clone each format before use.
+   * @param key The map key.
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
+   * @param fmap The FormatIdMap to operate on.
    */
-  FileFormat * formatFromFileExtension(const std::string &extension) const;
+  FileFormat * filteredFormatFromFormatMap(const std::string &key,
+                                           FileFormat::Operations filter,
+                                           const FormatIdMap &fmap) const;
+
+  /**
+   * @brief Return formats from a vector that match the supplied operation
+   * filter.
+   * @note Ownership of the format filter(s) remains with the FileFormatManager.
+   * Use FileFormat::newInstance to clone each format before use.
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
+   * @param fvec The FormatIdVector to operate on.
+   */
+  std::vector<FileFormat*>
+  filteredFormatsFromFormatVector(FileFormat::Operations filter,
+                                  const FormatIdVector &fvec) const;
+
+  /**
+   * @brief Return the first format from a vector that matches the supplied
+   * operation filter.
+   * @note Ownership of the format filter(s) remains with the FileFormatManager.
+   * Use FileFormat::newInstance to clone each format before use.
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
+   * @param fmap The FormatIdVector to operate on.
+   */
+  FileFormat *
+  filteredFormatFromFormatVector(FileFormat::Operations filter,
+                                 const FormatIdVector &fvec) const;
 
   /**
    * @brief Append warnings/errors to the error message string.
@@ -184,9 +269,10 @@ private:
   void appendError(const std::string &errorMessage);
 
   std::vector<FileFormat *> m_formats;
-  std::map<std::string, size_t> m_identifiers;
-  std::map<std::string, size_t> m_mimeTypes;
-  std::multimap<std::string, size_t> m_fileExtensions;
+
+  FormatIdMap m_identifiers;
+  FormatIdMap m_mimeTypes;
+  FormatIdMap m_fileExtensions;
 
   std::string m_error;
 };
