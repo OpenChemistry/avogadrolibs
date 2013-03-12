@@ -16,6 +16,7 @@
 
 #include "openbabel.h"
 
+#include "obfileformat.h"
 #include "obforcefielddialog.h"
 #include "obprocess.h"
 
@@ -23,8 +24,10 @@
 
 #include <avogadro/qtgui/molecule.h>
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
+#include <QtCore/QTimer>
 
 #include <QtGui/QAction>
 #include <QtGui/QFileDialog>
@@ -43,15 +46,11 @@ OpenBabel::OpenBabel(QObject *p) :
   ExtensionPlugin(p),
   m_molecule(NULL),
   m_process(new OBProcess(this)),
+  m_readFormatsPending(true),
+  m_writeFormatsPending(true),
   m_progress(NULL)
 {
   QAction *action = new QAction(this);
-  action->setEnabled(true);
-  action->setText(tr("Load molecule (Open Babel)..."));
-  connect(action, SIGNAL(triggered()), SLOT(onOpenFile()));
-  m_actions.push_back(action);
-
-  action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Optimize geometry"));
   action->setShortcut(QKeySequence("Ctrl+Alt+O"));
@@ -89,6 +88,7 @@ OpenBabel::OpenBabel(QObject *p) :
   m_actions.push_back(action);
 
   refreshReadFormats();
+  refreshWriteFormats();
   refreshForceFields();
 }
 
@@ -101,12 +101,76 @@ QList<QAction *> OpenBabel::actions() const
   return m_actions;
 }
 
-QStringList OpenBabel::menuPath(QAction *action) const
+QStringList OpenBabel::menuPath(QAction *) const
 {
-  // Load file...
-  if (action == m_actions.first())
-    return QStringList() << tr("&File");
   return QStringList() << tr("&Extensions") << tr("&Open Babel");
+}
+
+QList<Io::FileFormat *> OpenBabel::fileFormats() const
+{
+  // Wait for update processes to finish:
+  if (m_readFormatsPending || m_writeFormatsPending) {
+    QTimer timeout;
+    timeout.start(5000);
+    while (timeout.isActive()
+           && (m_readFormatsPending || m_writeFormatsPending)) {
+      qApp->processEvents(QEventLoop::AllEvents, 500);
+    }
+
+    // Return empty list if timeout.
+    if (m_readFormatsPending || m_writeFormatsPending) {
+      qWarning() << tr("Timeout querying obabel for supported file formats.");
+      return QList<Io::FileFormat*>();
+    }
+  }
+
+  QList<Io::FileFormat*> result;
+
+  std::string mapDesc;
+  std::string fname;
+  std::string fidentifier;
+  std::string fdescription;
+  std::string fspecificationUrl("http://openbabel.org/wiki/Category:Formats");
+  std::vector<std::string> fexts;
+  std::vector<std::string> fmime;
+
+  QSet<QString> formatDescriptions;
+  formatDescriptions.unite(m_readFormats.uniqueKeys().toSet());
+  formatDescriptions.unite(m_writeFormats.uniqueKeys().toSet());
+
+  QSet<QString> formatExtensions;
+
+  foreach (const QString &qdesc, formatDescriptions) {
+    mapDesc = qdesc.toStdString();
+    fname = mapDesc;
+    fidentifier = std::string("OpenBabel: ") + mapDesc;
+    fdescription = mapDesc;
+    fexts.clear();
+    fmime.clear();
+
+    formatExtensions.clear();
+    Io::FileFormat::Operations rw = Io::FileFormat::None;
+
+    if (m_readFormats.contains(qdesc)) {
+      formatExtensions.unite(m_readFormats.values(qdesc).toSet());
+      rw |= Io::FileFormat::Read;
+    }
+    if (m_writeFormats.contains(qdesc)) {
+      formatExtensions.unite(m_writeFormats.values(qdesc).toSet());
+      rw |= Io::FileFormat::Write;
+    }
+
+    foreach (const QString &ext, formatExtensions)
+      fexts.push_back(ext.toStdString());
+
+    OBFileFormat *fmt = new OBFileFormat(fname, fidentifier, fdescription,
+                                         fspecificationUrl, fexts, fmime);
+
+    fmt->setReadWriteFlags(rw);
+    result.append(fmt);
+  }
+
+  return result;
 }
 
 void OpenBabel::setMolecule(QtGui::Molecule *mol)
@@ -157,64 +221,6 @@ bool OpenBabel::readMolecule(QtGui::Molecule &mol)
   return result;
 }
 
-void OpenBabel::onOpenFile()
-{
-  // If the filter string is not set, there is probably a problem with the
-  // obabel executable. Warn the user and return.
-  if (m_readFormatsFilterString.isEmpty()) {
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Error"),
-                          tr("An error occurred while retrieving the list of "
-                             "supported formats. (using '%1').")
-                          .arg(m_process->obabelExecutable()),
-                          QMessageBox::Ok);
-    return;
-  }
-
-  // Fail here if the process is already in use
-  if (m_process->inUse()) {
-    showProcessInUseError(tr("Cannot open file with OpenBabel."));
-    return;
-  }
-
-  QSettings settings;
-  QString lastFileName =
-      settings.value("openbabel/openFile/lastFileName", "").toString();
-  QString fileName = QFileDialog::getOpenFileName(
-        qobject_cast<QWidget*>(parent()), tr("Open file with OpenBabel"),
-        lastFileName,
-        m_readFormatsFilterString);
-
-  // User cancel
-  if (fileName.isNull())
-    return;
-
-  settings.setValue("openbabel/openFile/lastFileName", fileName);
-
-  // Setup progress dialog
-  initializeProgressDialog(tr("Loading file (OpenBabel, %1)").arg(fileName),
-                           tr("Converting to CML with %1...")
-                           .arg(m_process->obabelExecutable()), 0, 0, 0);
-
-  // Connect process
-  disconnect(m_process);
-  m_process->disconnect(this);
-  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
-  connect(m_process, SIGNAL(readFileFinished(QByteArray)),
-          SLOT(onOpenFileReadFinished(QByteArray)));
-
-  m_process->readFile(fileName, "cml");
-}
-
-void OpenBabel::onOpenFileReadFinished(const QByteArray &output)
-{
-  m_progress->setLabelText(tr("Retrieving CML from %1...")
-                           .arg(m_process->obabelExecutable()));
-
-  m_moleculeQueue.append(output);
-  emit moleculeReady(1);
-}
-
 void OpenBabel::refreshReadFormats()
 {
   // No need to check if the member process is in use -- we use a temporary
@@ -230,48 +236,39 @@ void OpenBabel::refreshReadFormats()
 
 void OpenBabel::handleReadFormatUpdate(const QMap<QString, QString> &fmts)
 {
-  m_readFormatsFilterString.clear();
+  m_readFormatsPending = false;
 
   OBProcess *proc = qobject_cast<OBProcess*>(sender());
   if (proc)
     proc->deleteLater();
 
   m_readFormats = fmts;
-  qDebug() << fmts.size() << "formats available through OpenBabel.";
+  qDebug() << fmts.size() << "readable formats available through OpenBabel.";
+}
 
-  if (fmts.isEmpty())
-    return;
+void OpenBabel::refreshWriteFormats()
+{
+  // No need to check if the member process is in use -- we use a temporary
+  // process for the refresh methods.
+  OBProcess *proc = new OBProcess(this);
 
-  // This is a list of "extensions" returned by OB that are not actually
-  // file extensions, but rather the full filename of the file. These
-  // will be used as-is in the filter string, while others will be prepended
-  // with "*.".
-  QStringList nonExtensions;
-  nonExtensions
-      << "POSCAR"  // VASP input geometry
-      << "CONTCAR" // VASP output geometry
-      << "HISTORY" // DL-POLY history file
-      << "CONFIG"  // DL-POLY config file
-         ;
+  connect(proc,
+          SIGNAL(queryWriteFormatsFinished(QMap<QString,QString>)),
+          SLOT(handleWriteFormatUpdate(QMap<QString,QString>)));
 
-  // This holds all known extensions:
-  QStringList allExtensions;
+  proc->queryWriteFormats();
+}
 
-  foreach (const QString &desc, m_readFormats.uniqueKeys()) {
-    QStringList extensions;
-    foreach (QString extension, m_readFormats.values(desc)) {
-      if (!nonExtensions.contains(extension))
-        extension.prepend("*.");
-      extensions << extension;
-    }
-    allExtensions << extensions;
-    m_readFormatsFilterString += QString("%1 (%2);;").arg(desc,
-                                                          extensions.join(" "));
-  }
+void OpenBabel::handleWriteFormatUpdate(const QMap<QString, QString> &fmts)
+{
+  m_writeFormatsPending = false;
 
-  m_readFormatsFilterString.prepend(tr("All supported formats (%1);;"
-                                       "All files (*);;")
-                                    .arg(allExtensions.join(" ")));
+  OBProcess *proc = qobject_cast<OBProcess*>(sender());
+  if (proc)
+    proc->deleteLater();
+
+  m_writeFormats = fmts;
+  qDebug() << fmts.size() << "writable formats available through OpenBabel.";
 }
 
 void OpenBabel::refreshForceFields()
