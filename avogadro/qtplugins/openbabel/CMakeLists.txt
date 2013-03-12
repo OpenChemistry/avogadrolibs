@@ -1,4 +1,5 @@
 set(openbabel_srcs
+  obfileformat.cpp
   obforcefielddialog.cpp
   obprocess.cpp
   openbabel.cpp

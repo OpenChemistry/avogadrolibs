@@ -51,6 +51,28 @@ public:
   virtual ~FileFormat();
 
   /**
+   * @brief Flags defining supported operations.
+   */
+  enum Operation {
+    None      = 0x0,
+    Read      = 0x1,
+    Write     = 0x2,
+    ReadWrite = Read | Write,
+
+    Stream    = 0x10,
+    String    = 0x20,
+    File      = 0x40,
+
+    All       = ReadWrite | Stream | String | File
+  };
+  typedef int Operations;
+
+  /**
+   * @return Operation flags defining the capabilities of this format.
+   */
+  virtual Operations supportedOperations() const = 0;
+
+  /**
    * @brief Read the given @p in stream and load it into @p molecule.
    * @param in The input file stream.
    * @param molecule The molecule the data will be read into.
@@ -143,7 +165,7 @@ public:
    * The URL of the format specification if available (relevant web page/wiki
    * otherwise).
    */
-  virtual std::string specificationURL() const = 0;
+  virtual std::string specificationUrl() const = 0;
 
   /**
    * @brief Get the file name extension(s) that the format supports reading.

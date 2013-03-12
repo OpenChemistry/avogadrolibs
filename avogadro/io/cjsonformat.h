@@ -34,6 +34,11 @@ public:
   CjsonFormat();
   ~CjsonFormat() AVO_OVERRIDE;
 
+  Operations supportedOperations() const AVO_OVERRIDE
+  {
+    return ReadWrite | File | Stream | String;
+  }
+
   FileFormat * newInstance() AVO_OVERRIDE { return new CjsonFormat; }
   std::string identifier() const AVO_OVERRIDE { return "CJSON"; }
   std::string name() const AVO_OVERRIDE { return "Chemical JSON"; }
@@ -42,7 +47,7 @@ public:
     return "TODO: Describe the format.";
   }
 
-  std::string specificationURL() const AVO_OVERRIDE
+  std::string specificationUrl() const AVO_OVERRIDE
   {
     return "http://wiki.openchemistry.org/Chemical_JSON";
   }

@@ -59,6 +59,21 @@ bool OBProcess::queryReadFormats()
   return true;
 }
 
+bool OBProcess::queryWriteFormats()
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::queryWriteFormats: process already in use.";
+    return false;
+  }
+
+  // Setup options
+  QStringList options;
+  options << "-L" << "formats" << "write";
+
+  executeObabel(options, this, SLOT(queryWriteFormatsPrepare()));
+  return true;
+}
+
 void OBProcess::queryReadFormatsPrepare()
 {
   if (m_aborted) {
@@ -84,61 +99,29 @@ void OBProcess::queryReadFormatsPrepare()
   return;
 }
 
-bool OBProcess::readFile(const QString &filename,
-                         const QString &outputFormat,
-                         const QString &inputFormatOverride)
-{
-  if (!tryLockProcess()) {
-    qWarning() << "OBProcess::readFile: process already in use.";
-    return false;
-  }
-
-  QStringList options;
-  QString inputFormat = inputFormatOverride.isEmpty() ?
-                        QFileInfo(filename).suffix() : inputFormatOverride;
-
-  // Setup input options
-  options << QString("-i%1").arg(inputFormat);
-  options << filename;
-
-  // Setup output options
-  options << QString("-o%1").arg(outputFormat);
-
-  // See if we are using a format that never has 3D coordinates.
-  QStringList specialFormats;
-  specialFormats << "smi" << "inchi" << "can";
-  if (specialFormats.contains(inputFormat))
-    options << "--gen3d";
-
-  executeObabel(options, this, SLOT(readFilePrepareOutput()));
-  return true;
-}
-
-void OBProcess::readFilePrepareOutput()
+void OBProcess::queryWriteFormatsPrepare()
 {
   if (m_aborted) {
     releaseProcess();
     return;
   }
 
-  // Keep this empty if an error occurs:
-  QByteArray output;
+  QMap<QString, QString> result;
 
-  // Check for errors.
-  QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
-  QRegExp errorChecker("\\b0 molecules converted\\b" "|"
-                       "obabel: cannot read input format!");
-  if (!errorOutput.contains(errorChecker)) {
-    if (m_process->exitStatus() == QProcess::NormalExit)
-      output = m_process->readAllStandardOutput();
+  QString output = QString::fromLatin1(m_process->readAllStandardOutput());
+
+  QRegExp parser("\\s*([^\\s]+)\\s+--\\s+([^\\n]+)\\n");
+  int pos = 0;
+  while ((pos = parser.indexIn(output, pos)) != -1) {
+    QString extension = parser.cap(1);
+    QString description = parser.cap(2);
+    result.insertMulti(description, extension);
+    pos += parser.matchedLength();
   }
 
-  /// Print any meaningful warnings @todo This should go to a log at some point.
-  if (!errorOutput.isEmpty() && errorOutput != "1 molecule converted\n")
-    qDebug() << m_obabelExecutable << " stderr:\n" << errorOutput;
-
-  emit readFileFinished(output);
   releaseProcess();
+  emit queryWriteFormatsFinished(result);
+  return;
 }
 
 bool OBProcess::convert(const QByteArray &input, const QString &inFormat,
