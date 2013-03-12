@@ -55,17 +55,19 @@ public:
 
   QStringList menuPath(QAction *) const;
 
+  QList<Io::FileFormat *> fileFormats() const;
+
 public slots:
   void setMolecule(QtGui::Molecule *mol);
 
   bool readMolecule(QtGui::Molecule &mol);
 
 private slots:
-  void onOpenFile();
-  void onOpenFileReadFinished(const QByteArray &output);
-
   void refreshReadFormats();
   void handleReadFormatUpdate(const QMap<QString, QString> &fmts);
+
+  void refreshWriteFormats();
+  void handleWriteFormatUpdate(const QMap<QString, QString> &fmts);
 
   void refreshForceFields();
   void handleForceFieldsUpdate(const QMap<QString, QString> &ffMap);
@@ -95,9 +97,11 @@ private:
   OBProcess *m_process;
   QList<QAction *> m_actions;
   QList<QByteArray> m_moleculeQueue;
+  bool m_readFormatsPending;
+  bool m_writeFormatsPending;
   QMap<QString, QString> m_readFormats;
+  QMap<QString, QString> m_writeFormats;
   QMap<QString, QString> m_forceFields;
-  QString m_readFormatsFilterString;
   QProgressDialog *m_progress;
 };
 

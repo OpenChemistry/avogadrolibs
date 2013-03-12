@@ -97,6 +97,24 @@ public slots:
    */
   bool queryReadFormats();
 
+  /**
+   * Request a list of all supported output formats from obabel.
+   *
+   * After calling this method, the queryWriteFormatsFinished signal will be
+   * emitted. This method executes
+   *
+   * `obabel -L formats write`
+   *
+   * and parses the output into a map (keys are format descriptions, values are
+   * format extensions).
+   *
+   * If an error occurs, queryWriteFormatsFinished will be emitted with an empty
+   * argument.
+   *
+   * @return True if the process started successfully, false otherwise.
+   */
+  bool queryWriteFormats();
+
 signals:
   /**
    * Triggered when the process started by queryReadFormats() completes.
@@ -112,52 +130,25 @@ signals:
    */
   void queryReadFormatsFinished(QMap<QString, QString> readFormats);
 
+  /**
+   * Triggered when the process started by queryWriteFormats() completes.
+   * @param writeFormats The file formats that OpenBabel can write. Keys
+   * are non-translated (english), human-readable descriptions of the formats,
+   * and the values are the corresponding file extensions.
+   *
+   * @note writeFormats will usually contain more than one extensions per
+   * format, so accessing the values with QMap::values() (instead of
+   * QMap::value()) is required.
+   *
+   * If an error occurs, writeFormats will be empty.
+   */
+  void queryWriteFormatsFinished(QMap<QString, QString> writeFormats);
+
 private slots:
   void queryReadFormatsPrepare();
+  void queryWriteFormatsPrepare();
 
   // end File Format Support doxygen group
-  /**@}*/
-
-  /**
-   * @name File Reading
-   * Used to open a file with obabel and return a CML representation
-   * of the molecule.
-   * @{
-   */
-public slots:
-  /**
-   * Request that obabel read a file from disk.
-   * @param filename The output file to read.
-   * @param outputFormat The format used to represent the molecule. Default: cml
-   * @param inputFormatOverride Optional override to the input file's format.
-   * If not specified, the format is guessed from @a filename's extension.
-   *
-   * After calling this method, the readFileFinished signal will be emitted to
-   * indicate return status along with the requested representation of the
-   * molecule.
-   *
-   * The conversion is performed as:
-   * `obabel -i<filename extension> <filename> -o<outputFormat>`
-   *
-   * The standard output is recorded and returned by readFileFinished.
-   *
-   * @return True if the process started successfully, false otherwise.
-   */
-  bool readFile(const QString &filename, const QString &outputFormat = "cml",
-                const QString &inputFormatOverride = QString());
-
-signals:
-  /**
-   * Emitted after a call to readFile.
-   * @param output The molecule in the requested format, or an empty QByteArray
-   * if an error occurred.
-   */
-  void readFileFinished(const QByteArray &output);
-
-private slots:
-  void readFilePrepareOutput();
-
-  // end File Reading doxygen group
   /**@}*/
 
   /**
