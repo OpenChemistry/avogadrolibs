@@ -176,7 +176,7 @@ public:
 
 };
 
-TEST(FileFormatManagerTest, testFilters)
+TEST(FileFormatManagerTest, filtering)
 {
   // Add formats with various supported operations
   Format readOnly("readOnly", Format::All ^ Format::Write);
