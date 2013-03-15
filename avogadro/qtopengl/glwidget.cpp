@@ -48,6 +48,22 @@ void GLWidget::resetCamera()
   update();
 }
 
+void GLWidget::setTools(const QList<QtGui::ToolPlugin *> &toolList)
+{
+  foreach (QtGui::ToolPlugin *tool, toolList)
+    addTool(tool);
+}
+
+void GLWidget::addTool(QtGui::ToolPlugin *tool)
+{
+  if (m_tools.contains(tool))
+    return;
+
+  tool->setParent(this);
+  tool->setGLWidget(this);
+  m_tools << tool;
+}
+
 void GLWidget::setActiveTool(const QString &name)
 {
   foreach (QtGui::ToolPlugin *tool, m_tools) {
@@ -60,6 +76,13 @@ void GLWidget::setActiveTool(const QString &name)
   }
 }
 
+void GLWidget::setActiveTool(QtGui::ToolPlugin *tool)
+{
+  if (tool)
+    addTool(tool);
+  m_activeTool = tool;
+}
+
 void GLWidget::setDefaultTool(const QString &name)
 {
   foreach (QtGui::ToolPlugin *tool, m_tools) {
@@ -70,6 +93,13 @@ void GLWidget::setDefaultTool(const QString &name)
       return;
     }
   }
+}
+
+void GLWidget::setDefaultTool(QtGui::ToolPlugin *tool)
+{
+  if (tool)
+    addTool(tool);
+  m_defaultTool = tool;
 }
 
 void GLWidget::initializeGL()

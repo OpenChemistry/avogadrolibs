@@ -39,6 +39,13 @@ namespace QtOpenGL {
  *
  * This class creates the GL context, and contains a renderer to render the
  * 3D molecular geometry.
+ *
+ * The GLWidget also manages a collection of ToolPlugins that are used to
+ * respond to user input events. Use setTools() or addTool() to add tools to the
+ * widget. Use setActiveTool() to indicate which tool is active. The active tool
+ * is will be given the opportunity to handle input events first. If the active
+ * tool does not handle the event, the default tool will be used. If the default
+ * tool also ignores the event, it is passed to QGLWidget's handlers.
  */
 
 class AVOGADROQTOPENGL_EXPORT GLWidget : public QGLWidget
@@ -52,25 +59,54 @@ public:
   /** Get a reference to the renderer for the widget. */
   Rendering::GLRenderer& renderer() { return m_renderer; }
 
-  /// @todo Document these
+  /**
+   * @return A list of the ToolPlugins owned by the GLWidget.
+   */
   QList<QtGui::ToolPlugin*> tools() const { return m_tools; }
 
+  /**
+   * @return The active tool.
+   */
   QtGui::ToolPlugin * activeTool() const { return m_activeTool; }
 
+  /**
+   * @return The default tool.
+   */
   QtGui::ToolPlugin * defaultTool() const { return m_defaultTool; }
 
 public slots:
   /** Reset the view to fit the entire scene. */
   void resetCamera();
 
-  /// @todo Document these
-  void setTools(QList<QtGui::ToolPlugin*> toolList) { m_tools = toolList; }
+  /**
+   * Make the tools in toolList available to the GLWidget. The GLWidget takes
+   * ownership of the tools.
+   */
+  void setTools(const QList<QtGui::ToolPlugin*> &toolList);
 
+  /**
+   * Make tool available to the GLWidget. The GLWidget takes ownership of the
+   * tool.
+   */
+  void addTool(QtGui::ToolPlugin *tool);
+
+  /**
+   * Set the active tool. This is the tool that will be used to handle input
+   * events first.
+   * @{
+   */
   void setActiveTool(const QString &name);
-  void setActiveTool(QtGui::ToolPlugin* tool) { m_activeTool = tool; }
+  void setActiveTool(QtGui::ToolPlugin* tool);
+  /**@}*/
 
+  /**
+   * Set the default tool. This is the tool that will be used to handle input
+   * events that are ignored by the active tool.
+   * @{
+   */
   void setDefaultTool(const QString &name);
-  void setDefaultTool(QtGui::ToolPlugin* tool) { m_defaultTool = tool; }
+  void setDefaultTool(QtGui::ToolPlugin* tool);
+  /**@}*/
 
 protected:
   /** This is where the GL context is initialized. */
@@ -82,7 +118,7 @@ protected:
   /** Main entry point for all GL rendering. */
   void paintGL();
 
-protected:
+  /** Reimplemented from QGLWidget @{ */
   void mouseDoubleClickEvent(QMouseEvent *);
   void mousePressEvent(QMouseEvent *);
   void mouseMoveEvent(QMouseEvent *);
@@ -90,6 +126,7 @@ protected:
   void wheelEvent(QWheelEvent *);
   void keyPressEvent(QKeyEvent *);
   void keyReleaseEvent(QKeyEvent *);
+  /** @} */
 
 private:
   QList<QtGui::ToolPlugin*> m_tools;
