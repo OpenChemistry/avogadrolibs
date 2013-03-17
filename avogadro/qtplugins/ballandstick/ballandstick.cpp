@@ -20,8 +20,8 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
-#include <avogadro/rendering/spherenode.h>
-#include <avogadro/rendering/cylindernode.h>
+#include <avogadro/rendering/spheregeometry.h>
+#include <avogadro/rendering/cylindergeometry.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -30,8 +30,8 @@ using Core::Elements;
 using Core::Molecule;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
-using Rendering::SphereNode;
-using Rendering::CylinderNode;
+using Rendering::SphereGeometry;
+using Rendering::CylinderGeometry;
 
 BallAndStick::BallAndStick(QObject *p) : ScenePlugin(p), m_enabled(true)
 {
@@ -52,7 +52,7 @@ void BallAndStick::process(const Molecule &molecule,
   // Add a sphere node to contain all of the VdW spheres.
   GeometryNode *geometry = new GeometryNode;
   node.addChild(geometry);
-  SphereNode *spheres = new SphereNode;
+  SphereGeometry *spheres = new SphereGeometry;
   geometry->addDrawable(spheres);
 
   for (size_t i = 0; i < molecule.atomCount(); ++i) {
@@ -68,7 +68,7 @@ void BallAndStick::process(const Molecule &molecule,
 
   float bondRadius = 0.1f;
   Vector3ub bondColor(127, 127, 127);
-  CylinderNode *cylinders = new CylinderNode;
+  CylinderGeometry *cylinders = new CylinderGeometry;
   geometry->addDrawable(cylinders);
   //identifier.type = Rendering::Primitive::Bond;
   for (size_t i = 0; i < molecule.bondCount(); ++i) {

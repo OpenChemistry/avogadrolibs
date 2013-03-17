@@ -14,18 +14,29 @@
 
 ******************************************************************************/
 
-#include "volumenode.h"
+#ifndef AVOGADRO_RENDERING_VOLUMEGEOMETRY_H
+#define AVOGADRO_RENDERING_VOLUMEGEOMETRY_H
+
+#include "drawable.h"
 
 namespace Avogadro {
 namespace Rendering {
 
-VolumeNode::VolumeNode()
-{
-}
+/**
+ * @class VolumeGeometry volumegeometry.h <avogadro/rendering/volumegeometry.h>
+ * @brief The VolumeGeometry class contains a regularly spaced volumetric data
+ * set.
+ * @author Marcus D. Hanwell
+ */
 
-VolumeNode::~VolumeNode()
+class AVOGADRORENDERING_EXPORT VolumeGeometry : public Drawable
 {
-}
+public:
+  explicit VolumeGeometry();
+  ~VolumeGeometry();
+};
 
 } // End namespace Rendering
 } // End namespace Avogadro
+
+#endif // AVOGADRO_RENDERING_VOLUMEGEOMETRY_H

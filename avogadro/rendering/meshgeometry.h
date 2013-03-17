@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_RENDERING_MESHNODE_H
-#define AVOGADRO_RENDERING_MESHNODE_H
+#ifndef AVOGADRO_RENDERING_MESHGEOMETRY_H
+#define AVOGADRO_RENDERING_MESHGEOMETRY_H
 
 #include "drawable.h"
 
@@ -33,16 +33,16 @@ struct VertexNormalColor
 };
 
 /**
- * @class MeshNode meshnode.h <avogadro/rendering/meshnode.h>
- * @brief The MeshNode is used for triangle mesh geometry.
+ * @class MeshGeometry meshgeometry.h <avogadro/rendering/meshgeometry.h>
+ * @brief The MeshGeometry is used for triangle mesh geometry.
  * @author Marcus D. Hanwell
  */
 
-class AVOGADRORENDERING_EXPORT MeshNode : public Drawable
+class AVOGADRORENDERING_EXPORT MeshGeometry : public Drawable
 {
 public:
-  MeshNode();
-  ~MeshNode();
+  MeshGeometry();
+  ~MeshGeometry();
 
   /**
    * @brief Update the VBOs, IBOs etc ready for rendering.
@@ -113,4 +113,4 @@ private:
 } // End namespace Rendering
 } // End namespace Avogadro
 
-#endif // AVOGADRO_RENDERING_MESHNODE_H
+#endif // AVOGADRO_RENDERING_MESHGEOMETRY_H

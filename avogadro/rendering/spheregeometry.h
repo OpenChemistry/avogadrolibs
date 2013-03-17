@@ -14,37 +14,44 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_RENDERING_CYLINDERNODE_H
-#define AVOGADRO_RENDERING_CYLINDERNODE_H
+#ifndef AVOGADRO_RENDERING_SPHEREGEOMETRY_H
+#define AVOGADRO_RENDERING_SPHEREGEOMETRY_H
 
 #include "drawable.h"
+
+#include <avogadro/core/vector.h>
+
+#include <vector>
 
 namespace Avogadro {
 namespace Rendering {
 
-struct CylinderColor
+struct SphereColor
 {
-  CylinderColor(const Vector3f &pos, const Vector3f &dir,
-                float l, float r, const Vector3ub &c)
-    : position(pos), direction(dir), length(l), radius(r), color(c) {}
-  Vector3f position;
-  Vector3f direction;
-  float length;
+  SphereColor(Vector3f centre, float r, Vector3ub c)
+    : center(centre), radius(r), color(c) {}
+  Vector3f center;
   float radius;
   Vector3ub color;
 };
 
 /**
- * @class CylinderNode cylindernode.h <avogadro/rendering/cylindernode.h>
- * @brief The CylinderNode contains one or more cylinders.
+ * @class SphereGeometry spheregeometry.h <avogadro/rendering/spheregeometry.h>
+ * @brief The SphereGeometry class contains one or more spheres.
  * @author Marcus D. Hanwell
+ *
+ * This Drawable is capable of storing the geometry for one or more spheres.
+ * A sphere is defined by a center point, a radius and a color. If the
+ * spheres are not a densely packed one-to-one mapping with the objects indices
+ * they can also optionally use an identifier that will point to some numberic
+ * ID for the purposes of picking.
  */
 
-class AVOGADRORENDERING_EXPORT CylinderNode : public Drawable
+class AVOGADRORENDERING_EXPORT SphereGeometry : public Drawable
 {
 public:
-  CylinderNode();
-  ~CylinderNode();
+  SphereGeometry();
+  ~SphereGeometry();
 
   /**
    * @brief Update the VBOs, IBOs etc ready for rendering.
@@ -60,14 +67,13 @@ public:
   /**
    * Add a sphere to the geometry object.
    */
-  void addCylinder(const Vector3f &position, const Vector3f &direction,
-                   float length, float radius, const Vector3ub &color);
+  void addSphere(const Vector3f &position, const Vector3ub &color, float radius);
 
   /**
    * Get a reference to the spheres.
    */
-  std::vector<CylinderColor>& cylinders() { return m_cylinders; }
-  const std::vector<CylinderColor>& cylinders() const { return m_cylinders; }
+  std::vector<SphereColor>& spheres() { return m_spheres; }
+  const std::vector<SphereColor>& spheres() const { return m_spheres; }
 
   /**
    * Clear the contents of the node.
@@ -77,10 +83,10 @@ public:
   /**
    * Get the number of spheres in the node object.
    */
-  size_t size() const { return m_cylinders.size(); }
+  size_t size() const { return m_spheres.size(); }
 
 private:
-  std::vector<CylinderColor> m_cylinders;
+  std::vector<SphereColor> m_spheres;
   std::vector<size_t> m_indices;
 
   bool m_dirty;
@@ -92,4 +98,4 @@ private:
 } // End namespace Rendering
 } // End namespace Avogadro
 
-#endif // AVOGADRO_RENDERING_CYLINDERNODE_H
+#endif // AVOGADRO_RENDERING_SPHEREGEOMETRY_H

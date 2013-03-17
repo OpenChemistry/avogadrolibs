@@ -2,7 +2,7 @@
 set(tests
   Camera
   Node
-  SphereNode
+  SphereGeometry
   )
 
 find_package(OpenGL REQUIRED)

@@ -18,20 +18,20 @@
 
 #include <avogadro/core/vector.h>
 #include <avogadro/rendering/geometrynode.h>
-#include <avogadro/rendering/spherenode.h>
+#include <avogadro/rendering/spheregeometry.h>
 
 #include <iostream>
 
 using Avogadro::Rendering::GeometryNode;
-using Avogadro::Rendering::SphereNode;
+using Avogadro::Rendering::SphereGeometry;
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 
-TEST(SphereNodeTest, children)
+TEST(SphereGeometryTest, children)
 {
   GeometryNode root;
-  SphereNode *child1 = new SphereNode;
-  SphereNode *child2 = new SphereNode;
+  SphereGeometry *child1 = new SphereGeometry;
+  SphereGeometry *child2 = new SphereGeometry;
   root.addDrawable(child1);
   root.addDrawable(child2);
 
@@ -41,11 +41,11 @@ TEST(SphereNodeTest, children)
   EXPECT_EQ(child2, root.drawable(1));
 }
 
-TEST(SphereNodeTest, removeChild)
+TEST(SphereGeometryTest, removeChild)
 {
   GeometryNode root;
-  SphereNode *child1 = new SphereNode;
-  SphereNode *child2 = new SphereNode;
+  SphereGeometry *child1 = new SphereGeometry;
+  SphereGeometry *child2 = new SphereGeometry;
   root.addDrawable(child1);
   root.addDrawable(child2);
 
@@ -59,16 +59,16 @@ TEST(SphereNodeTest, removeChild)
   delete child1;
 }
 
-TEST(SphereNodeTest, addSphere)
+TEST(SphereGeometryTest, addSphere)
 {
-  SphereNode node;
+  SphereGeometry node;
   node.addSphere(Vector3f(1.0, 2.0, 3.0), Vector3ub(200, 100, 50), 5.0);
   EXPECT_EQ(node.size(), static_cast<size_t>(1));
 }
 
-TEST(SphereNodeTest, clear)
+TEST(SphereGeometryTest, clear)
 {
-  SphereNode node;
+  SphereGeometry node;
   node.addSphere(Vector3f(1.0, 2.0, 3.0), Vector3ub(200, 100, 50), 5.0);
   EXPECT_EQ(node.size(), static_cast<size_t>(1));
   node.clear();

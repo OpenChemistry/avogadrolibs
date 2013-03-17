@@ -20,7 +20,7 @@
 #include <avogadro/qtgui/mesh.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
-#include <avogadro/rendering/meshnode.h>
+#include <avogadro/rendering/meshgeometry.h>
 
 #include <QtCore/QDebug>
 
@@ -30,7 +30,7 @@ namespace QtPlugins {
 using Core::Molecule;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
-using Rendering::MeshNode;
+using Rendering::MeshGeometry;
 
 Meshes::Meshes(QObject *p) : ScenePlugin(p), m_enabled(false)
 {
@@ -58,7 +58,7 @@ void Meshes::process(const Molecule &molecule, GroupNode &node)
       qDebug() << mesh << "with" << mesh->numVertices() << "vertices";
       size_t n = mesh->numVertices();
 
-      MeshNode *mesh1 = new MeshNode;
+      MeshGeometry *mesh1 = new MeshGeometry;
       geometry->addDrawable(mesh1);
       mesh1->addTriangles(static_cast<const Vector3f *>(mesh->vertex(0)),
                           static_cast<const Vector3f *>(mesh->normal(0)),
@@ -67,7 +67,7 @@ void Meshes::process(const Molecule &molecule, GroupNode &node)
       mesh1->setOpacity(opacity);
 
       if (mol->meshCount() >= 2) {
-        MeshNode *mesh2 = new MeshNode;
+        MeshGeometry *mesh2 = new MeshGeometry;
         geometry->addDrawable(mesh2);
         mesh = mol->mesh(1);
         n = mesh->numVertices();
