@@ -64,6 +64,7 @@ public:
    * @return Valid pointer to specified type, or null.
    */
   template<typename T> T* cast();
+  template<typename T> const T* cast() const;
 
 protected:
   friend class GroupNode;
@@ -81,6 +82,11 @@ protected:
 template<typename T> T* Node::cast()
 {
   return dynamic_cast<T*>(this);
+}
+
+template<typename T> const T* Node::cast() const
+{
+  return dynamic_cast<const T*>(this);
 }
 
 } // End namespace Rendering

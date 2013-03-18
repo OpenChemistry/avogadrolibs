@@ -196,8 +196,44 @@ void SphereGeometry::render(const Camera &camera)
   d->program.release();
 }
 
+std::multimap<float, Identifier> SphereGeometry::hits(const Vector3f &rayOrigin,
+                                                      const Vector3f &rayEnd,
+                                                      const Vector3f &rayDirection) const
+{
+  std::multimap<float, Identifier> result;
+
+  // Check for intersection.
+  for (size_t i = 0; i < m_spheres.size(); ++i) {
+    const SphereColor &sphere = m_spheres[i];
+
+    Vector3f distance = sphere.center - rayOrigin;
+    float B = distance.dot(rayDirection);
+    float C = distance.dot(distance) - (sphere.radius * sphere.radius);
+    float D = B * B - C;
+
+    // Test for intersection
+    if (D < 0)
+      continue;
+
+    // Test for clipping
+    if (B < 0 || (sphere.center - rayEnd).dot(rayDirection) > 0)
+      continue;
+
+    Identifier id;
+    id.molecule = m_identifier.molecule;
+    id.type = m_identifier.type;
+    id.index = i;
+    if (id.type != InvalidType) {
+      float rootD = static_cast<float>(sqrt(D));
+      float depth = std::min(fabs(B + rootD), fabs(B - rootD));
+      result.insert(std::pair<float, Identifier>(depth, id));
+    }
+  }
+  return result;
+}
+
 void SphereGeometry::addSphere(const Vector3f &position, const Vector3ub &color,
-                           float radius)
+                               float radius)
 {
   m_dirty = true;
   m_spheres.push_back(SphereColor(position, radius, color));

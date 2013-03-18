@@ -105,7 +105,7 @@ void CylinderGeometry::update()
       Vector3f radial = direction.unitOrthogonal() * radius;
       Eigen::AngleAxisf transform(resolutionRadians, direction);
       radials.clear();
-      for (unsigned int i = 0; i < resolution; ++i) {
+      for (unsigned int j = 0; j < resolution; ++j) {
         radials.push_back(radial);
         radial = transform * radial;
       }
@@ -123,9 +123,9 @@ void CylinderGeometry::update()
         cylinderVertices.push_back(vert);
       }
       // Now to stitch it together.
-      for (unsigned int i = 0; i < resolution; ++i) {
-        unsigned int r1 = i + i;
-        unsigned int r2 = (i != 0 ? r1 : resolution + resolution) - 2;
+      for (unsigned int j = 0; j < resolution; ++j) {
+        unsigned int r1 = j + j;
+        unsigned int r2 = (j != 0 ? r1 : resolution + resolution) - 2;
         cylinderIndices.push_back(tubeStart + r1);
         cylinderIndices.push_back(tubeStart + r1 + 1);
         cylinderIndices.push_back(tubeStart + r2);
@@ -229,10 +229,65 @@ void CylinderGeometry::render(const Camera &camera)
   d->program.release();
 }
 
+std::multimap<float, Identifier> CylinderGeometry::hits(const Vector3f &rayOrigin,
+                                                        const Vector3f &rayEnd,
+                                                        const Vector3f &rayDirection) const
+{
+  std::multimap<float, Identifier> result;
+
+  for (size_t i = 0; i < m_cylinders.size(); ++i) {
+    const CylinderColor &cylinder = m_cylinders[i];
+
+    // Check for cylinder intersection with the ray.
+    Vector3f ao = rayOrigin - cylinder.position;
+    Vector3f ab = cylinder.direction * cylinder.length;
+    Vector3f aoxab = ao.cross(ab);
+    Vector3f vxab = rayDirection.cross(ab);
+
+    float A = vxab.dot(vxab);
+    float B = 2.0f * vxab.dot(aoxab);
+    float C = aoxab.dot(aoxab) - ab.dot(ab) * (cylinder.radius * cylinder.radius);
+    float D = B * B - 4.0f * A * C;
+
+    // no intersection
+    if (D < 0.0f)
+      continue;
+
+    float t = std::min((-B + sqrt(D)) / (2.0f * A), (-B - sqrt(D)) / (2.0f * A));
+
+    Vector3f ip = rayOrigin + (rayDirection * t);
+    Vector3f ip1 = ip - cylinder.position;
+    Vector3f ip2 = ip - (cylinder.position + ab);
+
+    // intersection below base or above top of the cylinder
+    if (ip1.dot(ab) < 0.0f || ip2.dot(ab) > 0.0f)
+      continue;
+
+    // Test for clipping
+    Vector3f distance = ip - rayOrigin;
+    if (distance.dot(rayDirection) < 0.0f
+        || (ip - rayEnd).dot(rayDirection) > 0.0f)
+      continue;
+
+    Identifier id;
+    id.molecule = m_identifier.molecule;
+    id.type = m_identifier.type;
+    id.index = i;
+    if (m_indexMap.size())
+      id.index = m_indexMap.find(i)->second;
+    if (id.type != InvalidType) {
+      float depth = distance.norm();
+      result.insert(std::pair<float, Identifier>(depth, id));
+    }
+  }
+
+  return result;
+}
+
 void CylinderGeometry::addCylinder(const Vector3f &position,
-                               const Vector3f &direction,
-                               float length, float radius,
-                               const Vector3ub &color)
+                                   const Vector3f &direction,
+                                   float length, float radius,
+                                   const Vector3ub &color)
 {
   m_dirty = true;
   m_cylinders.push_back(CylinderColor(position, direction, length, radius,
@@ -240,10 +295,21 @@ void CylinderGeometry::addCylinder(const Vector3f &position,
   m_indices.push_back(m_indices.size());
 }
 
+void CylinderGeometry::addCylinder(const Vector3f &position,
+                                   const Vector3f &direction,
+                                   float length, float radius,
+                                   const Vector3ub &color,
+                                   size_t index)
+{
+  m_indexMap[m_cylinders.size()] = index;
+  addCylinder(position, direction, length, radius, color);
+}
+
 void CylinderGeometry::clear()
 {
   m_cylinders.clear();
   m_indices.clear();
+  m_indexMap.clear();
 }
 
 } // End namespace Rendering

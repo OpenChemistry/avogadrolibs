@@ -32,7 +32,7 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT VolumeGeometry : public Drawable
 {
 public:
-  explicit VolumeGeometry();
+  VolumeGeometry();
   ~VolumeGeometry();
 };
 

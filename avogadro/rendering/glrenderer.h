@@ -61,11 +61,11 @@ public:
 
   /** Return the primitives under the display coordinate (x,y), mapped by depth.
    */
-  std::map<float, Primitive::Identifier> hits(int x, int y) const;
+  std::multimap<float, Identifier> hits(int x, int y) const;
 
   /** Return the top primitive under the display coordinate (x,y).
    */
-  Primitive::Identifier hit(int x, int y) const;
+  Identifier hit(int x, int y) const;
 
   /** Check whether the GL context is valid and supports required features.
    * \sa error() to get more information if the context is not valid.
@@ -88,30 +88,34 @@ private:
    * @brief Render a group node.
    */
   void render(GroupNode *group);
+
+  /**
+   * @brief Render a group node.
+   */
   void render(GeometryNode *geometry);
+
+  /**
+   * @brief Detect hits in a group node.
+   */
+  std::multimap<float, Identifier> hits(const GroupNode *group,
+                                        const Vector3f &rayOrigin,
+                                        const Vector3f &rayEnd,
+                                        const Vector3f &rayDirection) const;
+
+  /**
+   * @brief Detect hits in a geometry node.
+   */
+  std::multimap<float, Identifier> hits(const GeometryNode *geometry,
+                                        const Vector3f &rayOrigin,
+                                        const Vector3f &rayEnd,
+                                        const Vector3f &rayDirection) const;
+
 
   bool m_valid;
   std::string m_error;
   Camera m_camera;
   Scene m_scene;
   float m_radius;
-
-  BufferObject m_sphereArrayBuffer;
-  BufferObject m_sphereIndexBuffer;
-
-  ShaderProgram m_sphereProgram;
-  Shader        m_sphereVertexShader;
-  Shader        m_sphereFragmentShader;
-
-  BufferObject m_cylinderArrayBuffer;
-  BufferObject m_cylinderIndexBuffer;
-
-  BufferObject m_triArrayBuffer;
-  BufferObject m_triIndexBuffer;
-
-  ShaderProgram m_cylinderProgram;
-  Shader        m_cylinderVertexShader;
-  Shader        m_cylinderFragmentShader;
 };
 
 inline const Camera& GLRenderer::camera() const
@@ -124,12 +128,12 @@ inline Camera& GLRenderer::camera()
   return m_camera;
 }
 
-inline Primitive::Identifier GLRenderer::hit(int x, int y) const
+inline Identifier GLRenderer::hit(int x, int y) const
 {
-  std::map<float, Primitive::Identifier> results = hits(x, y);
+  std::multimap<float, Identifier> results = hits(x, y);
   if (results.size())
     return results.begin()->second;
-  return Primitive::Identifier();
+  return Identifier();
 }
 
 } // End Rendering namespace

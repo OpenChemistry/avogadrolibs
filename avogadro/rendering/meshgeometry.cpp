@@ -57,8 +57,8 @@ public:
   size_t numberOfIndices;
 };
 
-MeshGeometry::MeshGeometry() : m_dirty(false), d(new Private),
-  m_color(255, 0, 0), m_opacity(255)
+MeshGeometry::MeshGeometry() : m_color(255, 0, 0), m_opacity(255),
+  m_dirty(false), d(new Private)
 {
 }
 

@@ -31,13 +31,20 @@ void Drawable::render(const Camera &)
 {
 }
 
+std::multimap<float, Identifier> Drawable::hits(const Vector3f &,
+                                                const Vector3f &,
+                                                const Vector3f &) const
+{
+  return std::multimap<float, Identifier>();
+}
+
 void Drawable::clear()
 {
 }
 
-void Drawable::setParent(GeometryNode *parent)
+void Drawable::setParent(GeometryNode *parent_)
 {
-  m_parent = parent;
+  m_parent = parent_;
 }
 
 } // End namespace Rendering

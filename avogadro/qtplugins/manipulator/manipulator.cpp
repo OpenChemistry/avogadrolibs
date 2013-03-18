@@ -34,17 +34,19 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::QtGui::Molecule;
 
-using Avogadro::Rendering::Primitive;
-
 namespace Avogadro {
 namespace QtPlugins {
+
+using Core::Atom;
+using Core::Bond;
+using QtGui::Molecule;
+using Rendering::Identifier;
 
 Manipulator::Manipulator(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
     m_activateAction(new QAction(this)),
     m_molecule(NULL),
     m_glWidget(NULL),
-    m_object(Primitive::Identifier()),
     m_pressedButtons(Qt::NoButton)
 {
   m_activateAction->setText(tr("Manipulate"));
@@ -71,10 +73,10 @@ QUndoCommand * Manipulator::mousePressEvent(QMouseEvent *e)
     m_object = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
 
     switch (m_object.type) {
-    case Primitive::Atom:
+    case Rendering::AtomType:
       e->accept();
       return NULL;
-    case Primitive::Bond: {
+    case Rendering::BondType: {
       Bond bond = m_molecule->bond(m_object.index);
       unsigned char currentOrder = bond.order();
       unsigned char maxOrder = static_cast<unsigned char>(3U);
@@ -100,7 +102,7 @@ QUndoCommand * Manipulator::mouseReleaseEvent(QMouseEvent *e)
 
   updatePressedButtons(e, true);
 
-  if (m_object.type == Primitive::Invalid)
+  if (m_object.type == Rendering::InvalidType)
     return NULL;
 
   switch (e->button()) {
@@ -120,7 +122,7 @@ QUndoCommand * Manipulator::mouseMoveEvent(QMouseEvent *e)
 {
   e->ignore();
   if (m_pressedButtons & Qt::LeftButton) {
-    if (m_object.type == Primitive::Atom) {
+    if (m_object.type == Rendering::AtomType) {
       if (m_object.molecule == m_molecule) {
         // Update atom position
         Atom atom = m_molecule->atom(m_object.index);

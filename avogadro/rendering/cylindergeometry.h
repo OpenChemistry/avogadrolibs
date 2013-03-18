@@ -58,10 +58,24 @@ public:
   void render(const Camera &camera);
 
   /**
+   * Return the primitives that are hit by the ray.
+   * @param rayOrigin Origin of the ray.
+   * @param rayEnd End point of the ray.
+   * @param rayDirection Normalized direction of the ray.
+   * @return Sorted collection of primitives that were hit.
+   */
+  std::multimap<float, Identifier> hits(const Vector3f &rayOrigin,
+                                        const Vector3f &rayEnd,
+                                        const Vector3f &rayDirection) const;
+
+  /**
    * Add a sphere to the geometry object.
    */
   void addCylinder(const Vector3f &position, const Vector3f &direction,
                    float length, float radius, const Vector3ub &color);
+  void addCylinder(const Vector3f &position, const Vector3f &direction,
+                   float length, float radius, const Vector3ub &color,
+                   size_t index);
 
   /**
    * Get a reference to the spheres.
@@ -82,6 +96,7 @@ public:
 private:
   std::vector<CylinderColor> m_cylinders;
   std::vector<size_t> m_indices;
+  std::map<size_t, size_t> m_indexMap;
 
   bool m_dirty;
 
