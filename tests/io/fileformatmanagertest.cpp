@@ -141,3 +141,70 @@ TEST(FileFormatManagerTest, writeStringCjson)
   EXPECT_EQ(cmlMol.data("inchi").type(), Avogadro::Core::Variant::String);
   EXPECT_EQ(cmlMol.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
+
+class Format : public FileFormat
+{
+private:
+  Operations m_ops;
+  std::string m_ident;
+public:
+  Format(const std::string &ident, Operations ops)
+    : FileFormat(), m_ops(ops), m_ident(ident)
+  {
+  }
+  Operations supportedOperations() const AVO_OVERRIDE { return m_ops; }
+  bool read(std::istream &, Molecule &) AVO_OVERRIDE { return false; }
+  bool write(std::ostream &, const Molecule &) AVO_OVERRIDE { return false; }
+  FileFormat *newInstance() AVO_OVERRIDE
+    { return new Format(m_ident, m_ops); }
+  std::string identifier() const AVO_OVERRIDE { return m_ident; }
+  std::string name() const AVO_OVERRIDE { return m_ident; }
+  std::string description() const AVO_OVERRIDE { return m_ident; }
+  std::string specificationUrl() const AVO_OVERRIDE { return ""; }
+  std::vector<std::string> fileExtensions() const AVO_OVERRIDE
+  {
+    std::vector<std::string> result;
+    result.push_back("asdfjkl;");
+    return result;
+  }
+  std::vector<std::string> mimeTypes() const AVO_OVERRIDE
+  {
+    std::vector<std::string> result;
+    result.push_back("chemical/x-doodie");
+    return result;
+  }
+
+};
+
+TEST(FileFormatManagerTest, filtering)
+{
+  // Add formats with various supported operations
+  Format readOnly("readOnly", Format::All ^ Format::Write);
+  Format writeOnly("writeOnly", Format::All ^ Format::Read);
+  FileFormatManager::registerFormat(readOnly.newInstance());
+  FileFormatManager::registerFormat(writeOnly.newInstance());
+
+  FileFormatManager &manager = FileFormatManager::instance();
+  FileFormat *format = NULL;
+
+  format = manager.newFormatFromFileExtension("asdfjkl;", Format::Read);
+  ASSERT_TRUE(format != NULL);
+  EXPECT_EQ(format->identifier(), std::string("readOnly"));
+  delete format;
+
+  format = manager.newFormatFromFileExtension("asdfjkl;", Format::Write);
+  ASSERT_TRUE(format != NULL);
+  EXPECT_EQ(format->identifier(), std::string("writeOnly"));
+  delete format;
+
+  format = manager.newFormatFromMimeType("chemical/x-doodie", Format::Write);
+  ASSERT_TRUE(format != NULL);
+  EXPECT_EQ(format->identifier(), std::string("writeOnly"));
+  delete format;
+
+  format = manager.newFormatFromMimeType("chemical/x-doodie", Format::Read);
+  ASSERT_TRUE(format != NULL);
+  EXPECT_EQ(format->identifier(), std::string("readOnly"));
+  delete format;
+
+}

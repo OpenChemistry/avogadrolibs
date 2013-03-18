@@ -401,8 +401,12 @@ std::map<float, Primitive::Identifier> GLRenderer::hits(int x, int y) const
   std::map<float, Primitive::Identifier> result;
 
   // Our ray:
-  const Vector3f origin(m_camera.unProject(Vector3f(x, y, 0)));
-  const Vector3f end(m_camera.unProject(Vector3f(x, y, 1)));
+  const Vector3f origin(m_camera.unProject(Vector3f(static_cast<float>(x),
+                                                    static_cast<float>(y),
+                                                    0.f)));
+  const Vector3f end(m_camera.unProject(Vector3f(static_cast<float>(x),
+                                                 static_cast<float>(y),
+                                                 1.f)));
   const Vector3f direction((end - origin).normalized());
 
   // Our spheres:
@@ -431,7 +435,8 @@ std::map<float, Primitive::Identifier> GLRenderer::hits(int x, int y) const
     Primitive::Identifier id = sphere.identifier();
     if (id.type != Primitive::Invalid) {
       float rootD = static_cast<float>(sqrt(D));
-      float depth = std::min(fabs(B + rootD), fabs(B - rootD));
+      float depth = static_cast<float>(std::min(fabs(B + rootD),
+                                                fabs(B - rootD)));
       result.insert(std::pair<float, Primitive::Identifier>(depth, id));
     }
   }
@@ -457,7 +462,8 @@ std::map<float, Primitive::Identifier> GLRenderer::hits(int x, int y) const
     if (D < 0)
       continue;
 
-    float t = std::min((-B + sqrt(D)) / (2.f * A), (-B - sqrt(D)) / (2.f * A));
+    float t = static_cast<float>(std::min((-B + sqrt(D)) / (2.f * A),
+                                          (-B - sqrt(D)) / (2.f * A)));
 
     Vector3f ip = origin + (direction * t);
     Vector3f ip1 = ip - cylinder.position();

@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-13 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,15 +14,18 @@
 
 ******************************************************************************/
 
-#include "editor.h"
-
-#include "glwidget.h"
+#include "manipulator.h"
 
 #include <avogadro/core/vector.h>
+
 #include <avogadro/qtgui/molecule.h>
+
+#include <avogadro/qtopengl/glwidget.h>
+
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/glrenderer.h>
 
+#include <QtGui/QAction>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
@@ -34,83 +37,86 @@ using Avogadro::QtGui::Molecule;
 using Avogadro::Rendering::Primitive;
 
 namespace Avogadro {
-namespace QtOpenGL {
+namespace QtPlugins {
 
-Manipulator::Manipulator(GLWidget *widget)
-  : m_glWidget(widget),
-    m_molecule(0),
+Manipulator::Manipulator(QObject *parent_)
+  : QtGui::ToolPlugin(parent_),
+    m_activateAction(new QAction(this)),
+    m_molecule(NULL),
+    m_glWidget(NULL),
     m_object(Primitive::Identifier()),
     m_pressedButtons(Qt::NoButton)
 {
+  m_activateAction->setText(tr("Manipulate"));
 }
 
 Manipulator::~Manipulator()
 {
 }
 
-void Manipulator::mousePressEvent(QMouseEvent *e)
+QWidget *Manipulator::toolWidget() const
 {
+  return NULL;
+}
+
+QUndoCommand * Manipulator::mousePressEvent(QMouseEvent *e)
+{
+  if (!m_glWidget)
+    return NULL;
+
   updatePressedButtons(e, false);
   m_lastMousePosition = e->pos();
 
   if (m_pressedButtons & Qt::LeftButton) {
     m_object = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
 
-    if (m_object.molecule != m_molecule) {
-      e->ignore();
-      return;
-    }
-
     switch (m_object.type) {
-    case Primitive::Invalid:
-      e->ignore();
-      return;
     case Primitive::Atom:
       e->accept();
-      return;
-    case Primitive::Bond:
+      return NULL;
+    case Primitive::Bond: {
       Bond bond = m_molecule->bond(m_object.index);
-      bond.setOrder((bond.order() % static_cast<unsigned char>(3))
-                    + static_cast<unsigned char>(1));
-      emit moleculeChanged();
+      unsigned char currentOrder = bond.order();
+      unsigned char maxOrder = static_cast<unsigned char>(3U);
+      unsigned char increment = static_cast<unsigned char>(1U);
+      bond.setOrder(static_cast<unsigned char>(currentOrder % maxOrder)
+                    + increment);
+      m_molecule->emitChanged(Molecule::Bonds | Molecule::Modified);
       e->accept();
-      return;
+      return NULL;
+    }
+    default:
+      break;
     }
   }
-  else if (m_pressedButtons & Qt::RightButton) {
-    // Delete the current primitive
-    m_object = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
 
-    if (m_object.molecule != m_molecule) {
-      e->ignore();
-      return;
-    }
-
-    switch (m_object.type) {
-    case Primitive::Invalid:
-      e->ignore();
-      return;
-    case Primitive::Atom:
-      e->ignore();
-      return;
-    case Primitive::Bond:
-      e->ignore();
-      return;
-    }
-  }
+  return NULL;
 }
 
-void Manipulator::mouseReleaseEvent(QMouseEvent *e)
+QUndoCommand * Manipulator::mouseReleaseEvent(QMouseEvent *e)
 {
+  if (!m_glWidget)
+    return NULL;
+
   updatePressedButtons(e, true);
-  e->ignore();
-  if (m_object.type != Primitive::Invalid) {
+
+  if (m_object.type == Primitive::Invalid)
+    return NULL;
+
+  switch (e->button()) {
+  case Qt::LeftButton:
+  case Qt::RightButton:
     resetObject();
     e->accept();
+    break;
+  default:
+    break;
   }
+
+  return NULL;
 }
 
-void Manipulator::mouseMoveEvent(QMouseEvent *e)
+QUndoCommand * Manipulator::mouseMoveEvent(QMouseEvent *e)
 {
   e->ignore();
   if (m_pressedButtons & Qt::LeftButton) {
@@ -123,31 +129,12 @@ void Manipulator::mouseMoveEvent(QMouseEvent *e)
         Vector3f newPos = m_glWidget->renderer().camera().unProject(windowPos,
                                                                     oldPos);
         atom.setPosition3d(newPos.cast<double>());
-        emit moleculeChanged();
+        m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
         e->accept();
       }
     }
   }
-}
-
-void Manipulator::mouseDoubleClickEvent(QMouseEvent *e)
-{
-  e->ignore();
-}
-
-void Manipulator::wheelEvent(QWheelEvent *e)
-{
-  e->ignore();
-}
-
-void Manipulator::keyPressEvent(QKeyEvent *e)
-{
-  e->ignore();
-}
-
-void Manipulator::keyReleaseEvent(QKeyEvent *e)
-{
-  e->ignore();
+  return NULL;
 }
 
 void Manipulator::updatePressedButtons(QMouseEvent *e, bool release)
@@ -159,5 +146,5 @@ void Manipulator::updatePressedButtons(QMouseEvent *e, bool release)
     m_pressedButtons |= e->buttons();
 }
 
-} // namespace QtOpenGL
+} // namespace QtPlugins
 } // namespace Avogadro

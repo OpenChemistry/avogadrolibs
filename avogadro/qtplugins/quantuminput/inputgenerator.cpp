@@ -94,6 +94,7 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
                                    const Core::Molecule &mol)
 {
   m_errors.clear();
+  m_warnings.clear();
   m_filenames.clear();
   m_mainFileName.clear();
   m_files.clear();
@@ -114,6 +115,22 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
   bool result = true;
   if (doc.isObject()) {
     QJsonObject obj = doc.object();
+
+    // Check for any warnings:
+    if (obj.contains("warnings")) {
+      if (obj["warnings"].isArray()) {
+        foreach (const QJsonValue &warning, obj["warnings"].toArray()) {
+          if (warning.isString())
+            m_warnings << warning.toString();
+          else
+            m_errors << tr("Non-string warning returned.");
+        }
+      }
+      else {
+        m_errors << tr("'warnings' member is not an array.");
+      }
+    }
+
     // Extract input file text:
     if (obj.contains("files")) {
       if (obj["files"].isArray()) {
@@ -154,9 +171,9 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
     // Extract main input filename:
     if (obj.contains("mainFile")) {
       if (obj["mainFile"].isString()) {
-        QString mainFileName = obj["mainFile"].toString();
-        if (m_filenames.contains(mainFileName)) {
-          m_mainFileName = mainFileName;
+        QString mainFile = obj["mainFile"].toString();
+        if (m_filenames.contains(mainFile)) {
+          m_mainFileName = mainFile;
         }
         else {
           result = false;
@@ -243,8 +260,8 @@ QByteArray InputGenerator::execute(const QStringList &args,
       return QByteArray();
     }
 
-    int len = proc.write(scriptStdin);
-    if (len != scriptStdin.size()) {
+    qint64 len = proc.write(scriptStdin);
+    if (len != static_cast<qint64>(scriptStdin.size())) {
       m_errors << tr("Error running script '%1 %2': failed to write to stdin "
                      "(len=%3, wrote %4 bytes, QProcess error: %5).")
                   .arg(m_scriptFilePath).arg(realArgs.join(" "))

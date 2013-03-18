@@ -167,7 +167,7 @@ void QuantumOutput::calculateFinished()
     m_mesh1 = m_molecule->addMesh();
   if (!m_meshGenerator)
     m_meshGenerator = new QtGui::MeshGenerator;
-  m_meshGenerator->initialize(m_cube, m_mesh1, 0.02);
+  m_meshGenerator->initialize(m_cube, m_mesh1, 0.02f);
   connect(m_meshGenerator, SIGNAL(finished()), SLOT(meshFinished()));
   m_meshGenerator->start();
 

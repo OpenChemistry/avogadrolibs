@@ -35,6 +35,10 @@ namespace Rendering {
 class Scene;
 }
 
+namespace Io {
+class FileFormat;
+}
+
 namespace QtGui {
 
 /**
@@ -71,6 +75,13 @@ public:
    * name, e.g. File, &Open).
    */
   virtual QStringList menuPath(QAction *action = 0) const = 0;
+
+  /**
+   * @return A list of file format readers/writers.
+   *
+   * The caller takes ownership of the objects in the returned list.
+   */
+  virtual QList<Io::FileFormat *> fileFormats() const;
 
 public slots:
   /**

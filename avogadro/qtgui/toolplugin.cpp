@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,31 +14,57 @@
 
 ******************************************************************************/
 
-#include "extensionplugin.h"
+#include "toolplugin.h"
 
 namespace Avogadro {
 namespace QtGui {
 
-ExtensionPlugin::ExtensionPlugin(QObject *parent_) : QObject(parent_)
+ToolPlugin::ToolPlugin(QObject *parent_)
+  : QObject(parent_)
 {
 }
 
-ExtensionPlugin::~ExtensionPlugin()
+ToolPlugin::~ToolPlugin()
 {
 }
 
-QList<Io::FileFormat *> ExtensionPlugin::fileFormats() const
+QUndoCommand *ToolPlugin::mousePressEvent(QMouseEvent *)
 {
-  return QList<Io::FileFormat*>();
+  return NULL;
 }
 
-ExtensionPluginFactory::~ExtensionPluginFactory()
+QUndoCommand *ToolPlugin::mouseReleaseEvent(QMouseEvent *)
 {
+  return NULL;
 }
 
-bool ExtensionPlugin::readMolecule(Molecule &)
+QUndoCommand *ToolPlugin::mouseMoveEvent(QMouseEvent *)
 {
-  return false;
+  return NULL;
+}
+
+QUndoCommand *ToolPlugin::mouseDoubleClickEvent(QMouseEvent *)
+{
+  return NULL;
+}
+
+QUndoCommand *ToolPlugin::wheelEvent(QWheelEvent *)
+{
+  return NULL;
+}
+
+QUndoCommand *ToolPlugin::keyPressEvent(QKeyEvent *)
+{
+  return NULL;
+}
+
+QUndoCommand *ToolPlugin::keyReleaseEvent(QKeyEvent *)
+{
+  return NULL;
+}
+
+ToolPluginFactory::~ToolPluginFactory()
+{
 }
 
 } // End QtGui namespace

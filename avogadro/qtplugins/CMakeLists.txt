@@ -65,8 +65,11 @@ function(avogadro_plugin name description type header pluginClass sources uis)
 endfunction()
 
 # Now to make the plugins.
+add_subdirectory(editor)
 add_subdirectory(gamessinput)
+add_subdirectory(manipulator)
 add_subdirectory(molecularproperties)
+add_subdirectory(navigator)
 add_subdirectory(openbabel)
 add_subdirectory(quantuminput)
 add_subdirectory(quantumoutput)

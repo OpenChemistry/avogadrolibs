@@ -34,6 +34,11 @@ public:
   XyzFormat();
   ~XyzFormat() AVO_OVERRIDE;
 
+  Operations supportedOperations() const AVO_OVERRIDE
+  {
+    return ReadWrite | File | Stream | String;
+  }
+
   FileFormat * newInstance() AVO_OVERRIDE { return new XyzFormat; }
   std::string identifier() const AVO_OVERRIDE { return "XYZ"; }
   std::string name() const AVO_OVERRIDE { return "XYZ"; }
@@ -42,7 +47,7 @@ public:
     return "Generic format that tabulates atomic symbols and 3D positions.";
   }
 
-  std::string specificationURL() const AVO_OVERRIDE
+  std::string specificationUrl() const AVO_OVERRIDE
   {
     return "http://openbabel.org/wiki/XYZ";
   }

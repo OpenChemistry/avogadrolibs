@@ -41,10 +41,14 @@ bool FileFormatManager::readFile(Core::Molecule &molecule,
   if (fileExtension.empty()) {
     // We need to guess the file extension.
     size_t pos = fileName.find_last_of('.');
-    format = formatFromFileExtension(fileName.substr(pos + 1));
+    format = filteredFormatFromFormatMap(fileName.substr(pos + 1),
+                                         FileFormat::Read | FileFormat::File,
+                                         m_fileExtensions);
   }
   else {
-    format = formatFromFileExtension(fileExtension);
+    format = filteredFormatFromFormatMap(fileExtension,
+                                         FileFormat::Read | FileFormat::File,
+                                         m_fileExtensions);
   }
   if (!format)
     return false;
@@ -61,10 +65,14 @@ bool FileFormatManager::writeFile(const Core::Molecule &molecule,
   if (fileExtension.empty()) {
     // We need to guess the file extension.
     size_t pos = fileName.find_last_of('.');
-    format = formatFromFileExtension(fileName.substr(pos + 1));
+    format = filteredFormatFromFormatMap(fileName.substr(pos + 1),
+                                         FileFormat::Write | FileFormat::File,
+                                         m_fileExtensions);
   }
   else {
-    format = formatFromFileExtension(fileExtension);
+    format = filteredFormatFromFormatMap(fileExtension,
+                                         FileFormat::Write | FileFormat::File,
+                                         m_fileExtensions);
   }
   if (!format)
     return false;
@@ -77,7 +85,9 @@ bool FileFormatManager::readString(Core::Molecule &molecule,
                                    const std::string &string,
                                    const std::string &fileExtension) const
 {
-  FileFormat *format(formatFromFileExtension(fileExtension));
+  FileFormat *format(filteredFormatFromFormatMap(
+                       fileExtension, FileFormat::Read | FileFormat::String,
+                       m_fileExtensions));
   if (!format)
     return false;
 
@@ -89,7 +99,9 @@ bool FileFormatManager::writeString(const Core::Molecule &molecule,
                                     std::string &string,
                                     const std::string &fileExtension) const
 {
-  FileFormat *format(formatFromFileExtension(fileExtension));
+  FileFormat *format(filteredFormatFromFormatMap(
+                       fileExtension, FileFormat::Write | FileFormat::String,
+                       m_fileExtensions));
   if (!format)
     return false;
 
@@ -123,70 +135,76 @@ bool FileFormatManager::addFormat(FileFormat *format)
   // If we got here then the format is unique enough to be added.
   size_t index = m_formats.size();
   m_formats.push_back(format);
-  m_identifiers[format->identifier()] = index;
+  m_identifiers[format->identifier()].push_back(index);
   std::vector<std::string> mimes = format->mimeTypes();
   for (std::vector<std::string>::const_iterator it = mimes.begin();
        it != mimes.end(); ++it) {
-    m_mimeTypes[*it] = index;
+    m_mimeTypes[*it].push_back(index);
   }
   std::vector<std::string> extensions = format->fileExtensions();
   for (std::vector<std::string>::const_iterator it = extensions.begin();
        it != extensions.end(); ++it) {
-    m_fileExtensions.insert(std::pair<std::string, size_t>(*it, index));
+    m_fileExtensions[*it].push_back(index);
   }
 
   return true;
 }
 
 FileFormat *
-FileFormatManager::newFormatFromIdentifier(const std::string &id) const
+FileFormatManager::newFormatFromIdentifier(const std::string &id,
+                                           FileFormat::Operations filter) const
 {
-  FileFormat *format(formatFromIdentifier(id));
+  FileFormat *format(filteredFormatFromFormatMap(id, filter, m_identifiers));
   return format ? format->newInstance() : NULL;
 }
 
 FileFormat *
-FileFormatManager::newFormatFromMimeType(const std::string &mime) const
+FileFormatManager::newFormatFromMimeType(const std::string &mime,
+                                         FileFormat::Operations filter) const
 {
-  FileFormat *format(formatFromMimeType(mime));
+  FileFormat *format(filteredFormatFromFormatMap(mime, filter, m_mimeTypes));
   return format ? format->newInstance() : NULL;
 }
 
 FileFormat * FileFormatManager::newFormatFromFileExtension(
-  const std::string &extension) const
+    const std::string &extension, FileFormat::Operations filter) const
 {
-  FileFormat *format(formatFromFileExtension(extension));
+  FileFormat *format(filteredFormatFromFormatMap(extension, filter,
+                                                 m_fileExtensions));
   return format ? format->newInstance() : NULL;
 }
 
-std::vector<std::string> FileFormatManager::identifiers() const
+std::vector<std::string>
+FileFormatManager::identifiers(FileFormat::Operations filter) const
 {
-  std::vector<std::string> ids;
-  for (std::map<std::string, size_t>::const_iterator it = m_identifiers.begin();
-       it != m_identifiers.end(); ++it) {
-    ids.push_back(it->first);
-  }
-  return ids;
+  return filteredKeysFromFormatMap(filter, m_identifiers);
 }
 
-std::vector<std::string> FileFormatManager::mimeTypes() const
+std::vector<std::string>
+FileFormatManager::mimeTypes(FileFormat::Operations filter) const
 {
-  std::vector<std::string> mimes;
-  for (std::map<std::string, size_t>::const_iterator it = m_mimeTypes.begin();
-       it != m_mimeTypes.end(); ++it) {
-    mimes.push_back(it->first);
-  }
-  return mimes;
+  return filteredKeysFromFormatMap(filter, m_mimeTypes);
 }
 
-std::vector<std::string> FileFormatManager::fileExtensions() const
+std::vector<std::string>
+FileFormatManager::fileExtensions(FileFormat::Operations filter) const
 {
-  std::vector<std::string> extensions;
-  for (std::multimap<std::string, size_t>::const_iterator it
-       = m_fileExtensions.begin(); it != m_fileExtensions.end(); ++it) {
-    extensions.push_back(it->first);
+  return filteredKeysFromFormatMap(filter, m_fileExtensions);
+}
+
+std::vector<const FileFormat *> FileFormatManager::fileFormats(
+    FileFormat::Operations filter) const
+{
+  std::vector<const FileFormat *> result;
+
+  for (std::vector<FileFormat *>::const_iterator it = m_formats.begin(),
+       itEnd = m_formats.end(); it != itEnd; ++it) {
+    if (filter == FileFormat::None
+        || (filter & (*it)->supportedOperations()) == filter) {
+      result.push_back(*it);
+    }
   }
-  return extensions;
+  return result;
 }
 
 std::string FileFormatManager::error() const
@@ -211,26 +229,73 @@ FileFormatManager::~FileFormatManager()
   m_formats.clear();
 }
 
-FileFormat *
-FileFormatManager::formatFromIdentifier(const std::string &id) const
+std::vector<std::string> FileFormatManager::filteredKeysFromFormatMap(
+    FileFormat::Operations filter,
+    const FileFormatManager::FormatIdMap &fmap) const
 {
-   std::map<std::string, size_t>::const_iterator it = m_identifiers.find(id);
-   return it == m_identifiers.end() ? NULL : m_formats[it->second];
+  std::vector<std::string> result;
+  for (FormatIdMap::const_iterator it = fmap.begin(); it != fmap.end(); ++it) {
+    for (std::vector<size_t>::const_iterator formatIt = it->second.begin();
+         formatIt != it->second.end(); ++formatIt) {
+      if (filter == FileFormat::None
+          || (m_formats[*formatIt]->supportedOperations() & filter) == filter) {
+        result.push_back(it->first);
+        break;
+      }
+    }
+  }
+  return result;
 }
 
-FileFormat *
-FileFormatManager::formatFromMimeType(const std::string &mime) const
+std::vector<FileFormat *> FileFormatManager::filteredFormatsFromFormatMap(
+    const std::string &key, FileFormat::Operations filter,
+    const FileFormatManager::FormatIdMap &fmap) const
 {
-  std::map<std::string, size_t>::const_iterator it = m_mimeTypes.find(mime);
-  return it == m_mimeTypes.end() ? NULL : m_formats[it->second];
+  std::vector<FileFormat *> result;
+
+  FormatIdMap::const_iterator it = fmap.find(key);
+  if (it != fmap.end())
+    result = filteredFormatsFromFormatVector(filter, it->second);
+
+  return result;
 }
 
-FileFormat * FileFormatManager::formatFromFileExtension(
-  const std::string &extension) const
+FileFormat *FileFormatManager::filteredFormatFromFormatMap(
+    const std::string &key, FileFormat::Operations filter,
+    const FileFormatManager::FormatIdMap &fmap) const
 {
-  std::multimap<std::string, size_t>::const_iterator it =
-    m_fileExtensions.find(extension);
-  return it == m_fileExtensions.end() ? NULL : m_formats[it->second];
+  FormatIdMap::const_iterator it = fmap.find(key);
+  if (it != fmap.end())
+    return filteredFormatFromFormatVector(filter, it->second);
+
+  return NULL;
+}
+
+std::vector<FileFormat *> FileFormatManager::filteredFormatsFromFormatVector(
+    FileFormat::Operations filter,
+    const FileFormatManager::FormatIdVector &v) const
+{
+  std::vector<FileFormat *> result;
+  for (FormatIdVector::const_iterator it = v.begin(); it != v.end(); ++it) {
+    if (filter == FileFormat::None
+        || (m_formats[*it]->supportedOperations() & filter) == filter) {
+      result.push_back(m_formats[*it]);
+    }
+  }
+  return result;
+}
+
+FileFormat *FileFormatManager::filteredFormatFromFormatVector(
+    FileFormat::Operations filter,
+    const FileFormatManager::FormatIdVector &v) const
+{
+  for (FormatIdVector::const_iterator it = v.begin(); it != v.end(); ++it) {
+    if (filter == FileFormat::None
+        || (m_formats[*it]->supportedOperations() & filter) == filter) {
+      return m_formats[*it];
+    }
+  }
+  return NULL;
 }
 
 void FileFormatManager::appendError(const std::string &errorMessage)

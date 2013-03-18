@@ -27,7 +27,9 @@ namespace QtGui {
 
 using Core::Elements;
 
-PeriodicTableView::PeriodicTableView(QWidget *parent) : QGraphicsView(parent)
+PeriodicTableView::PeriodicTableView(QWidget *parent_)
+  : QGraphicsView(parent_),
+    m_element(6) // Everyone loves carbon.
 {
   // Use a small title bar (Qt::Tool) with no minimize or maximise buttons
   setWindowFlags(Qt::Dialog | Qt::Tool);
@@ -36,6 +38,7 @@ PeriodicTableView::PeriodicTableView(QWidget *parent) : QGraphicsView(parent)
   table->setSceneRect(-20, -20, 480, 260);
   table->setItemIndexMethod(QGraphicsScene::NoIndex);
   table->setBackgroundBrush(Qt::white);
+  table->changeElement(m_element);
 
   setScene(table);
   setRenderHint(QPainter::Antialiasing);
@@ -51,8 +54,17 @@ PeriodicTableView::~PeriodicTableView()
   delete scene();
 }
 
+void PeriodicTableView::setElement(int element_)
+{
+  m_element = element_;
+  PeriodicTableScene *table = qobject_cast<PeriodicTableScene *>(scene());
+  if (table)
+    table->changeElement(element_);
+}
+
 void PeriodicTableView::elementClicked(int id)
 {
+  m_element = id;
   emit(elementChanged(id));
 }
 
@@ -66,7 +78,7 @@ void PeriodicTableView::clearKeyPressBuffer()
   m_keyPressBuffer.clear();
 }
 
-void PeriodicTableView::keyPressEvent(QKeyEvent *event)
+void PeriodicTableView::keyPressEvent(QKeyEvent *event_)
 {
   if (m_keyPressBuffer.isEmpty()) {
     // This is the first character typed.
@@ -75,28 +87,26 @@ void PeriodicTableView::keyPressEvent(QKeyEvent *event)
     QTimer::singleShot(2000, this, SLOT(clearKeyPressBuffer()));
   }
 
-  m_keyPressBuffer.append(event->text());
+  m_keyPressBuffer.append(event_->text());
   // Try setting an element symbol from this string.
-  int element = m_keyPressBuffer.toInt();
-  if (element <= 0 || element > 119) {
+  int elem = m_keyPressBuffer.toInt();
+  if (elem <= 0 || elem > 119) {
     // Not a valid number, have we tried 2- and 3-character symbols?
     if (m_keyPressBuffer.length() > 3) {
       clearKeyPressBuffer();
     }
     else {
       // try parsing as a symbol
-      element = Elements::atomicNumberFromSymbol(m_keyPressBuffer.toAscii().data());
+      elem = static_cast<int>(Elements::atomicNumberFromSymbol(
+                                m_keyPressBuffer.toAscii().data()));
     }
   }
 
-  if (element > 0 && element < 119) { // got a valid symbol
-    // Notify the scene
-    PeriodicTableScene *table = qobject_cast<PeriodicTableScene *>(scene());
-    if (table)
-      table->changeElement(element);
-  }
+  // got a valid symbol
+  if (elem > 0 && elem < 119)
+    setElement(elem);
 
-  QGraphicsView::keyPressEvent(event);
+  QGraphicsView::keyPressEvent(event_);
 }
 
 } // End QtGui namespace

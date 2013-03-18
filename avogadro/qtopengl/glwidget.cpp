@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-13 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -16,22 +16,24 @@
 
 #include "glwidget.h"
 
+#include <avogadro/qtgui/toolplugin.h>
+
 #include <avogadro/rendering/camera.h>
 
-#include <iostream>
-#include <Eigen/Geometry>
+#include <QtGui/QAction>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QWheelEvent>
 
 #include <QtCore/QDebug>
-#include <QtGui/QMouseEvent>
 
 namespace Avogadro {
 namespace QtOpenGL {
 
 GLWidget::GLWidget(QWidget *parent_)
   : QGLWidget(parent_),
-    m_editor(this),
-    m_manipulator(this),
-    m_navigator(this)
+    m_activeTool(NULL),
+    m_defaultTool(NULL)
 {
   setFocusPolicy(Qt::ClickFocus);
 }
@@ -44,6 +46,30 @@ void GLWidget::resetCamera()
 {
   m_renderer.resetCamera();
   update();
+}
+
+void GLWidget::setActiveTool(const QString &name)
+{
+  foreach (QtGui::ToolPlugin *tool, m_tools) {
+    QAction *toolAction = tool->activateAction();
+    if (tool->name() == name
+        || (toolAction && toolAction->text() == name)) {
+      setActiveTool(tool);
+      return;
+    }
+  }
+}
+
+void GLWidget::setDefaultTool(const QString &name)
+{
+  foreach (QtGui::ToolPlugin *tool, m_tools) {
+    QAction *toolAction = tool->activateAction();
+    if (tool->name() == name
+        || (toolAction && toolAction->text() == name)) {
+      setDefaultTool(tool);
+      return;
+    }
+  }
 }
 
 void GLWidget::initializeGL()
@@ -68,20 +94,11 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
   e->ignore();
 
-  switch (m_tool) {
-  case NavigateTool:
-    m_navigator.mouseDoubleClickEvent(e);
-    break;
-  case ManipulateTool:
-    m_manipulator.mouseDoubleClickEvent(e);
-    break;
-  case EditTool:
-    m_editor.mouseDoubleClickEvent(e);
-    break;
-  }
+  if (m_activeTool)
+    m_activeTool->mouseDoubleClickEvent(e);
 
-  if (!e->isAccepted())
-    m_navigator.mouseDoubleClickEvent(e);
+  if (m_defaultTool && !e->isAccepted())
+    m_defaultTool->mouseDoubleClickEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::mouseDoubleClickEvent(e);
@@ -92,20 +109,11 @@ void GLWidget::mousePressEvent(QMouseEvent *e)
 {
   e->ignore();
 
-  switch (m_tool) {
-  case NavigateTool:
-    m_navigator.mousePressEvent(e);
-    break;
-  case ManipulateTool:
-    m_manipulator.mousePressEvent(e);
-    break;
-  case EditTool:
-    m_editor.mousePressEvent(e);
-    break;
-  }
+  if (m_activeTool)
+    m_activeTool->mousePressEvent(e);
 
-  if (!e->isAccepted())
-    m_navigator.mousePressEvent(e);
+  if (m_defaultTool && !e->isAccepted())
+    m_defaultTool->mousePressEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::mousePressEvent(e);
@@ -115,20 +123,11 @@ void GLWidget::mouseMoveEvent(QMouseEvent *e)
 {
   e->ignore();
 
-  switch (m_tool) {
-  case NavigateTool:
-    m_navigator.mouseMoveEvent(e);
-    break;
-  case ManipulateTool:
-    m_manipulator.mouseMoveEvent(e);
-    break;
-  case EditTool:
-    m_editor.mouseMoveEvent(e);
-    break;
-  }
+  if (m_activeTool)
+    m_activeTool->mouseMoveEvent(e);
 
-  if (!e->isAccepted())
-    m_navigator.mouseMoveEvent(e);
+  if (m_defaultTool && !e->isAccepted())
+    m_defaultTool->mouseMoveEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::mouseMoveEvent(e);
@@ -138,20 +137,11 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *e)
 {
   e->ignore();
 
-  switch (m_tool) {
-  case NavigateTool:
-    m_navigator.mouseReleaseEvent(e);
-    break;
-  case ManipulateTool:
-    m_manipulator.mouseReleaseEvent(e);
-    break;
-  case EditTool:
-    m_editor.mouseReleaseEvent(e);
-    break;
-  }
+  if (m_activeTool)
+    m_activeTool->mouseReleaseEvent(e);
 
-  if (!e->isAccepted())
-    m_navigator.mouseReleaseEvent(e);
+  if (m_defaultTool && !e->isAccepted())
+    m_defaultTool->mouseReleaseEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::mouseReleaseEvent(e);
@@ -161,20 +151,11 @@ void GLWidget::wheelEvent(QWheelEvent *e)
 {
   e->ignore();
 
-  switch (m_tool) {
-  case NavigateTool:
-    m_navigator.wheelEvent(e);
-    break;
-  case ManipulateTool:
-    m_manipulator.wheelEvent(e);
-    break;
-  case EditTool:
-    m_editor.wheelEvent(e);
-    break;
-  }
+  if (m_activeTool)
+    m_activeTool->wheelEvent(e);
 
-  if (!e->isAccepted())
-    m_navigator.wheelEvent(e);
+  if (m_defaultTool && !e->isAccepted())
+    m_defaultTool->wheelEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::wheelEvent(e);
@@ -184,20 +165,11 @@ void GLWidget::keyPressEvent(QKeyEvent *e)
 {
   e->ignore();
 
-  switch (m_tool) {
-  case NavigateTool:
-    m_navigator.keyPressEvent(e);
-    break;
-  case ManipulateTool:
-    m_manipulator.keyPressEvent(e);
-    break;
-  case EditTool:
-    m_editor.keyPressEvent(e);
-    break;
-  }
+  if (m_activeTool)
+    m_activeTool->keyPressEvent(e);
 
-  if (!e->isAccepted())
-    m_navigator.keyPressEvent(e);
+  if (m_defaultTool && !e->isAccepted())
+    m_defaultTool->keyPressEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::keyPressEvent(e);
@@ -207,20 +179,11 @@ void GLWidget::keyReleaseEvent(QKeyEvent *e)
 {
   e->ignore();
 
-  switch (m_tool) {
-  case NavigateTool:
-    m_navigator.keyReleaseEvent(e);
-    break;
-  case ManipulateTool:
-    m_manipulator.keyReleaseEvent(e);
-    break;
-  case EditTool:
-    m_editor.keyReleaseEvent(e);
-    break;
-  }
+  if (m_activeTool)
+    m_activeTool->keyReleaseEvent(e);
 
-  if (!e->isAccepted())
-    m_navigator.keyReleaseEvent(e);
+  if (m_defaultTool && !e->isAccepted())
+    m_defaultTool->keyReleaseEvent(e);
 
   if (!e->isAccepted())
     QGLWidget::keyReleaseEvent(e);

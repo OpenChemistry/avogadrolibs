@@ -44,10 +44,20 @@ public:
    * Constructor - contructs a new PeriodicTableView with an internal instance
    * of PeriodicTableScene.
    */
-  explicit PeriodicTableView(QWidget *parent = 0);
+  explicit PeriodicTableView(QWidget *parent_ = 0);
   ~PeriodicTableView();
 
+  /**
+   * @return The currently selected element.
+   */
+  int element() const { return m_element; }
+
 public slots:
+  /**
+   * @param element The currently selected element.
+   */
+  void setElement(int element_);
+
   /**
    * This slot is called to clear the key buffer (e.g. after a delay in typing).
    */
@@ -74,7 +84,7 @@ protected:
   /**
    * Handles the keyboard events to change the active element.
    */
-  void keyPressEvent(QKeyEvent *event);
+  void keyPressEvent(QKeyEvent *event_);
 
 private:
   /**
