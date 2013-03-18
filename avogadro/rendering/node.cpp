@@ -27,9 +27,9 @@ Node::~Node()
 {
 }
 
-void Node::setParent(GroupNode *parent)
+void Node::setParent(GroupNode *parent_)
 {
-  m_parent = parent;
+  m_parent = parent_;
 }
 
 } // End namespace Rendering

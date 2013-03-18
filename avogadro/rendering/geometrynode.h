@@ -19,6 +19,10 @@
 
 #include "node.h"
 
+#include "primitive.h"
+#include <avogadro/core/vector.h>
+
+#include <map>
 #include <vector>
 
 namespace Avogadro {
@@ -39,7 +43,7 @@ class Drawable;
 class AVOGADRORENDERING_EXPORT GeometryNode : public Node
 {
 public:
-  explicit GeometryNode();
+  GeometryNode();
   ~GeometryNode();
 
   /**
@@ -77,6 +81,17 @@ public:
    * @brief Render the drawables in the geometry node.
    */
   void render(const Camera &camera);
+
+  /**
+   * Return the primitives that are hit by the ray.
+   * @param rayOrigin Origin of the ray.
+   * @param rayEnd End point of the ray.
+   * @param rayDirection Normalized direction of the ray.
+   * @return Sorted collection of primitives that were hit.
+   */
+  std::multimap<float, Identifier> hits(const Vector3f &rayOrigin,
+                                        const Vector3f &rayEnd,
+                                        const Vector3f &rayDirection) const;
 
 protected:
   std::vector<Drawable *> m_drawables;

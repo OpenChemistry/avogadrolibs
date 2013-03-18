@@ -18,6 +18,8 @@
 
 #include "drawable.h"
 
+#include <iostream>
+
 namespace Avogadro {
 namespace Rendering {
 
@@ -78,8 +80,25 @@ void GeometryNode::render(const Camera &camera)
 {
   for (std::vector<Drawable *>::iterator it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
-    (*it)->render(camera);
+    if ((*it)->isVisible())
+      (*it)->render(camera);
   }
+}
+
+std::multimap<float, Identifier> GeometryNode::hits(const Vector3f &rayOrigin,
+                                                    const Vector3f &rayEnd,
+                                                    const Vector3f &rayDirection) const
+{
+  std::multimap<float, Identifier> result;
+  for (std::vector<Drawable *>::const_iterator it = m_drawables.begin();
+       it != m_drawables.end(); ++it) {
+    std::multimap<float, Identifier> drawableHits;
+    if ((*it)->isVisible())
+      drawableHits = (*it)->hits(rayOrigin, rayEnd, rayDirection);
+    result.insert(drawableHits.begin(), drawableHits.end());
+  }
+
+  return result;
 }
 
 } // End namespace Rendering

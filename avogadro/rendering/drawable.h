@@ -19,9 +19,10 @@
 
 #include "avogadrorenderingexport.h"
 
+#include "primitive.h"
 #include <avogadro/core/vector.h>
 
-#include <vector>
+#include <map>
 
 namespace Avogadro {
 namespace Rendering {
@@ -71,6 +72,24 @@ public:
   virtual void render(const Camera &camera);
 
   /**
+   * Get the indentifier for the object, this stores the parent Molecule and
+   * the type represented by the geometry.
+   */
+  Identifier& identifier() { return m_identifier; }
+  const Identifier& identifier() const { return m_identifier; }
+
+  /**
+   * Return the primitives that are hit by the ray.
+   * @param rayOrigin Origin of the ray.
+   * @param rayEnd End point of the ray.
+   * @param rayDirection Normalized direction of the ray.
+   * @return Sorted collection of primitives that were hit.
+   */
+  virtual std::multimap<float, Identifier> hits(const Vector3f &rayOrigin,
+                                                const Vector3f &rayEnd,
+                                                const Vector3f &rayDirection) const;
+
+  /**
    * Clear the contents of the node.
    */
   virtual void clear();
@@ -86,6 +105,7 @@ protected:
 
   GeometryNode * m_parent;
   bool m_visible;
+  Identifier m_identifier;
 };
 
 } // End namespace Rendering

@@ -83,9 +83,9 @@ private:
   QtGui::Molecule *m_molecule;
   QtOpenGL::GLWidget *m_glWidget;
   EditorToolWidget *m_toolWidget;
-  Rendering::Primitive::Identifier m_clickedObject;
-  Rendering::Primitive::Identifier m_newObject;
-  Rendering::Primitive::Identifier m_bondedAtom;
+  Rendering::Identifier m_clickedObject;
+  Rendering::Identifier m_newObject;
+  Rendering::Identifier m_bondedAtom;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_clickPosition;
   unsigned char m_clickedAtomicNumber;

@@ -65,6 +65,17 @@ public:
   void render(const Camera &camera);
 
   /**
+   * Return the primitives that are hit by the ray.
+   * @param rayOrigin Origin of the ray.
+   * @param rayEnd End point of the ray.
+   * @param rayDirection Normalized direction of the ray.
+   * @return Sorted collection of primitives that were hit.
+   */
+  std::multimap<float, Identifier> hits(const Vector3f &rayOrigin,
+                                        const Vector3f &rayEnd,
+                                        const Vector3f &rayDirection) const;
+
+  /**
    * Add a sphere to the geometry object.
    */
   void addSphere(const Vector3f &position, const Vector3ub &color, float radius);

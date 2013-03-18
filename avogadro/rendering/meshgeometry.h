@@ -19,6 +19,8 @@
 
 #include "drawable.h"
 
+#include <vector>
+
 namespace Avogadro {
 namespace Rendering {
 

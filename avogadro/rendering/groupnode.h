@@ -64,7 +64,7 @@ public:
    * @brief Get a reference to the child nodes list.
    */
   std::vector<Node *>& children() { return m_children; }
-  const std::vector<Node *> children() const { return m_children; }
+  const std::vector<Node *>& children() const { return m_children; }
 
   /**
    * @brief Remove all children.

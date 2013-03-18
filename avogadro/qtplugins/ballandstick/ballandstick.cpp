@@ -44,20 +44,16 @@ BallAndStick::~BallAndStick()
 void BallAndStick::process(const Molecule &molecule,
                            Rendering::GroupNode &node)
 {
-  //Rendering::Primitive::Identifier identifier;
-  //identifier.molecule = &molecule;
-  //identifier.type = Rendering::Primitive::Atom;
-
-  // Add a sphere node to contain all of the VdW spheres.
-  // Add a sphere node to contain all of the VdW spheres.
+  // Add a sphere node to contain all of the spheres.
   GeometryNode *geometry = new GeometryNode;
   node.addChild(geometry);
   SphereGeometry *spheres = new SphereGeometry;
+  spheres->identifier().molecule = &molecule;
+  spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
 
   for (size_t i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
-    //identifier.index = i;
     unsigned char atomicNumber = atom.atomicNumber();
     const unsigned char *c = Elements::color(atomicNumber);
     Vector3ub color(c[0], c[1], c[2]);
@@ -69,8 +65,9 @@ void BallAndStick::process(const Molecule &molecule,
   float bondRadius = 0.1f;
   Vector3ub bondColor(127, 127, 127);
   CylinderGeometry *cylinders = new CylinderGeometry;
+  cylinders->identifier().molecule = &molecule;
+  cylinders->identifier().type = Rendering::BondType;
   geometry->addDrawable(cylinders);
-  //identifier.type = Rendering::Primitive::Bond;
   for (size_t i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
     //identifier.index = i;
@@ -83,21 +80,21 @@ void BallAndStick::process(const Molecule &molecule,
     case 3: {
       Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
       cylinders->addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
-                             bondColor);
+                             bondColor, i);
       cylinders->addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
-                             bondColor);
+                             bondColor, i);
     }
     default:
     case 1:
       cylinders->addCylinder(pos1, bondVector, bondLength, bondRadius,
-                             bondColor);
+                             bondColor, i);
       break;
     case 2: {
       Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
       cylinders->addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
-                             bondColor);
+                             bondColor, i);
       cylinders->addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
-                             bondColor);
+                             bondColor, i);
     }
     }
   }
