@@ -65,7 +65,6 @@ function(avogadro_plugin name description type header pluginClass sources uis)
 endfunction()
 
 # Now to make the plugins.
-add_subdirectory(ballandstick)
 add_subdirectory(editor)
 add_subdirectory(gamessinput)
 add_subdirectory(manipulator)
@@ -74,6 +73,8 @@ add_subdirectory(navigator)
 add_subdirectory(openbabel)
 add_subdirectory(quantuminput)
 add_subdirectory(quantumoutput)
+# The scene plugins
+add_subdirectory(ballandstick)
 add_subdirectory(vanderwaals)
 add_subdirectory(meshes)
 

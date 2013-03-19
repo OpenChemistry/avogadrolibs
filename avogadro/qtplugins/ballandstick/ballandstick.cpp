@@ -18,13 +18,20 @@
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
-#include <avogadro/rendering/scene.h>
-
-using Avogadro::Core::Molecule;
-using Avogadro::Rendering::Scene;
+#include <avogadro/rendering/geometrynode.h>
+#include <avogadro/rendering/groupnode.h>
+#include <avogadro/rendering/spheregeometry.h>
+#include <avogadro/rendering/cylindergeometry.h>
 
 namespace Avogadro {
 namespace QtPlugins {
+
+using Core::Elements;
+using Core::Molecule;
+using Rendering::GeometryNode;
+using Rendering::GroupNode;
+using Rendering::SphereGeometry;
+using Rendering::CylinderGeometry;
 
 BallAndStick::BallAndStick(QObject *p) : ScenePlugin(p), m_enabled(true)
 {
@@ -34,29 +41,35 @@ BallAndStick::~BallAndStick()
 {
 }
 
-void BallAndStick::process(const Molecule &molecule, Scene &scene)
+void BallAndStick::process(const Molecule &molecule,
+                           Rendering::GroupNode &node)
 {
-  Rendering::Primitive::Identifier identifier;
-  identifier.molecule = &molecule;
-  identifier.type = Rendering::Primitive::Atom;
+  // Add a sphere node to contain all of the spheres.
+  GeometryNode *geometry = new GeometryNode;
+  node.addChild(geometry);
+  SphereGeometry *spheres = new SphereGeometry;
+  spheres->identifier().molecule = &molecule;
+  spheres->identifier().type = Rendering::AtomType;
+  geometry->addDrawable(spheres);
+
   for (size_t i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
-    identifier.index = i;
     unsigned char atomicNumber = atom.atomicNumber();
-    const unsigned char *c = Core::Elements::color(atomicNumber);
+    const unsigned char *c = Elements::color(atomicNumber);
     Vector3ub color(c[0], c[1], c[2]);
-    scene.addSphere(atom.position3d().cast<float>(), color,
-                    static_cast<float>(Core::Elements::radiusVDW(
-                                         atomicNumber) * 0.3),
-                    identifier);
+    spheres->addSphere(atom.position3d().cast<float>(), color,
+                       static_cast<float>(Elements::radiusVDW(atomicNumber))
+                       * 0.3);
   }
 
   float bondRadius = 0.1f;
   Vector3ub bondColor(127, 127, 127);
-  identifier.type = Rendering::Primitive::Bond;
+  CylinderGeometry *cylinders = new CylinderGeometry;
+  cylinders->identifier().molecule = &molecule;
+  cylinders->identifier().type = Rendering::BondType;
+  geometry->addDrawable(cylinders);
   for (size_t i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
-    identifier.index = i;
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
     Vector3f bondVector = pos2 - pos1;
@@ -65,22 +78,22 @@ void BallAndStick::process(const Molecule &molecule, Scene &scene)
     switch (bond.order()) {
     case 3: {
       Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
-      scene.addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
-                        bondColor, identifier);
-      scene.addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
-                        bondColor, identifier);
+      cylinders->addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
+                             bondColor, i);
+      cylinders->addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
+                             bondColor, i);
     }
     default:
     case 1:
-      scene.addCylinder(pos1, bondVector, bondLength, bondRadius, bondColor,
-                        identifier);
+      cylinders->addCylinder(pos1, bondVector, bondLength, bondRadius,
+                             bondColor, i);
       break;
     case 2: {
       Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
-      scene.addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
-                        bondColor, identifier);
-      scene.addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
-                        bondColor, identifier);
+      cylinders->addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
+                             bondColor, i);
+      cylinders->addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
+                             bondColor, i);
     }
     }
   }

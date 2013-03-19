@@ -14,25 +14,45 @@ set(HEADERS
   avogadrogl.h
   bufferobject.h
   camera.h
+  cylindergeometry.h
+  drawable.h
+  geometrynode.h
+  groupnode.h
   glrenderer.h
+  meshgeometry.h
+  node.h
   primitive.h
   scene.h
   shader.h
   shaderprogram.h
+  spheregeometry.h
+  transformnode.h
+  volumegeometry.h
 )
 
 set(SOURCES
   bufferobject.cpp
   camera.cpp
+  cylindergeometry.cpp
+  drawable.cpp
+  geometrynode.cpp
+  groupnode.cpp
   glrenderer.cpp
+  meshgeometry.cpp
+  node.cpp
   scene.cpp
   shader.cpp
   shaderprogram.cpp
+  spheregeometry.cpp
+  transformnode.cpp
+  volumegeometry.cpp
 )
 
 set(shader_files
   "cylinders_fs.glsl"
   "cylinders_vs.glsl"
+  "mesh_fs.glsl"
+  "mesh_vs.glsl"
   "spheres_fs.glsl"
   "spheres_vs.glsl"
 )

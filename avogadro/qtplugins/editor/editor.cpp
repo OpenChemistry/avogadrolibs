@@ -46,12 +46,6 @@
 
 #include <limits>
 
-using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
-using Avogadro::QtGui::Molecule;
-using Avogadro::Rendering::Primitive;
-using Avogadro::QtOpenGL::GLWidget;
-
 namespace {
 const unsigned char INVALID_ATOMIC_NUMBER =
     std::numeric_limits<unsigned char>::max();
@@ -60,15 +54,18 @@ const unsigned char INVALID_ATOMIC_NUMBER =
 namespace Avogadro {
 namespace QtPlugins {
 
+using Core::Atom;
+using Core::Bond;
+using QtGui::Molecule;
+using Rendering::Identifier;
+using QtOpenGL::GLWidget;
+
 Editor::Editor(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
     m_activateAction(new QAction(this)),
     m_molecule(NULL),
     m_glWidget(NULL),
     m_toolWidget(new EditorToolWidget(qobject_cast<QWidget*>(parent_))),
-    m_clickedObject(Primitive::Identifier()),
-    m_newObject(Primitive::Identifier()),
-    m_bondedAtom(Primitive::Identifier()),
     m_pressedButtons(Qt::NoButton),
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER),
     m_bondAdded(false)
@@ -99,13 +96,13 @@ QUndoCommand *Editor::mousePressEvent(QMouseEvent *e)
     m_clickedObject = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
 
     switch (m_clickedObject.type) {
-    case Primitive::Invalid:
+    case Rendering::InvalidType:
       emptyLeftClick(e);
       return NULL;
-    case Primitive::Atom:
+    case Rendering::AtomType:
       atomLeftClick(e);
       return NULL;
-    case Primitive::Bond:
+    case Rendering::BondType:
       bondLeftClick(e);
       return NULL;
     }
@@ -114,10 +111,10 @@ QUndoCommand *Editor::mousePressEvent(QMouseEvent *e)
     m_clickedObject = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
 
     switch (m_clickedObject.type) {
-    case Primitive::Atom:
+    case Rendering::AtomType:
       atomRightClick(e);
       return NULL;
-    case Primitive::Bond:
+    case Rendering::BondType:
       bondRightClick(e);
       return NULL;
     default:
@@ -135,7 +132,7 @@ QUndoCommand *Editor::mouseReleaseEvent(QMouseEvent *e)
 
   updatePressedButtons(e, true);
 
-  if (m_clickedObject.type == Primitive::Invalid)
+  if (m_clickedObject.type == Rendering::InvalidType)
     return NULL;
 
   switch (e->button()) {
@@ -157,7 +154,7 @@ QUndoCommand *Editor::mouseMoveEvent(QMouseEvent *e)
     return NULL;
 
   if (m_pressedButtons & Qt::LeftButton)
-    if (m_clickedObject.type == Primitive::Atom)
+    if (m_clickedObject.type == Rendering::AtomType)
       atomLeftDrag(e);
 
   return NULL;
@@ -207,9 +204,9 @@ void Editor::updatePressedButtons(QMouseEvent *e, bool release)
 
 void Editor::reset()
 {
-  m_clickedObject = Rendering::Primitive::Identifier();
-  m_newObject = Rendering::Primitive::Identifier();
-  m_bondedAtom = Rendering::Primitive::Identifier();
+  m_clickedObject = Identifier();
+  m_newObject = Identifier();
+  m_bondedAtom = Identifier();
   m_clickPosition = QPoint();
   m_pressedButtons = Qt::NoButton;
   m_clickedAtomicNumber = INVALID_ATOMIC_NUMBER;
@@ -225,7 +222,7 @@ void Editor::emptyLeftClick(QMouseEvent *e)
   newAtom.setPosition3d(atomPos.cast<double>());
 
   // Update the clicked object
-  m_clickedObject.type = Primitive::Atom;
+  m_clickedObject.type = Rendering::AtomType;
   m_clickedObject.molecule = m_molecule;
   m_clickedObject.index = newAtom.index();
 
@@ -284,12 +281,12 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   Molecule::MoleculeChanges changes = Molecule::NoChange;
 
   // Get the list of hits at the current mouse position:
-  std::map<float, Primitive::Identifier> hits =
+  std::multimap<float, Identifier> hits =
       m_glWidget->renderer().hits(e->pos().x(), e->pos().y());
 
   // Check if the previously clicked atom is still under the mouse.
-  float depth = -1.f;
-  for (std::map<float, Primitive::Identifier>::const_iterator
+  float depth = -1.0f;
+  for (std::multimap<float, Rendering::Identifier>::const_iterator
        it = hits.begin(), itEnd = hits.end(); it != itEnd; ++it) {
     if (it->second == m_clickedObject) {
       depth = it->first;
@@ -301,11 +298,11 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   if (depth >= 0.f) {
     // ...and we've created a new atom, remove the new atom and reset the
     // clicked atom's atomic number
-    if (m_newObject.type == Primitive::Atom &&
-        m_molecule == m_newObject.molecule) {
+    if (m_newObject.type == Rendering::AtomType
+        && m_molecule == m_newObject.molecule) {
       m_molecule->removeAtom(m_newObject.index);
       changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
-      m_newObject = Primitive::Identifier();
+      m_newObject = Identifier();
       Atom atom = m_clickedObject.molecule->atom(m_clickedObject.index);
       if (atom.atomicNumber() != m_toolWidget->atomicNumber()) {
         m_clickedAtomicNumber = atom.atomicNumber();
@@ -334,8 +331,8 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   // Does a bonded atom already exist?
   if (m_bondedAtom.isValid()) {
     // Is it still under the mouse?
-    depth = -1.f;
-    for (std::map<float, Primitive::Identifier>::const_iterator
+    depth = -1.0f;
+    for (std::multimap<float, Identifier>::const_iterator
          it = hits.begin(), itEnd = hits.end(); it != itEnd; ++it) {
       if (it->second == m_bondedAtom) {
         depth = it->first;
@@ -349,19 +346,19 @@ void Editor::atomLeftDrag(QMouseEvent *e)
       Atom clickedAtom = m_clickedObject.molecule->atom(m_clickedObject.index);
       if (m_bondAdded && m_molecule->removeBond(clickedAtom, bondedAtom))
         changes |= Molecule::Bonds | Molecule::Removed;
-      m_bondedAtom = Primitive::Identifier();
+      m_bondedAtom = Identifier();
       m_bondAdded = false;
     }
   }
 
   // Is there another atom under the cursor, besides newAtom? If so, we'll draw
   // a bond to it.
-  Primitive::Identifier atomToBond;
-  for (std::map<float, Primitive::Identifier>::const_iterator
+  Identifier atomToBond;
+  for (std::multimap<float, Identifier>::const_iterator
        it = hits.begin(), itEnd = hits.end(); it != itEnd; ++it) {
-    const Primitive::Identifier &ident = it->second;
+    const Identifier &ident = it->second;
     // Are we on an atom
-    if (ident.type == Primitive::Atom)
+    if (ident.type == Rendering::AtomType)
       // besides the one that was clicked or a new atom
       if (ident != m_newObject && ident != m_clickedObject) {
         // then we have an atom that we should be drawing a bond to.
@@ -372,10 +369,10 @@ void Editor::atomLeftDrag(QMouseEvent *e)
 
   if (atomToBond.isValid()) {
     // If we have a newAtom, destroy it
-    if (m_newObject.type == Primitive::Atom) {
+    if (m_newObject.type == Rendering::AtomType) {
       if (m_molecule->removeAtom(m_newObject.index))
         changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
-      m_newObject = Primitive::Identifier();
+      m_newObject = Identifier();
     }
 
     // Skip the rest of this block if atomToBond is already bonded
@@ -387,7 +384,7 @@ void Editor::atomLeftDrag(QMouseEvent *e)
               m_clickedObject.molecule->atom(m_clickedObject.index))) {
           changes |= Molecule::Bonds | Molecule::Removed;
         }
-        m_bondedAtom = Primitive::Identifier();
+        m_bondedAtom = Identifier();
       }
 
       // Create a new bond between clicked atom and atomToBond.
@@ -417,11 +414,11 @@ void Editor::atomLeftDrag(QMouseEvent *e)
     newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber());
     m_molecule->addBond(clickedAtom, newAtom, m_toolWidget->bondOrder());
     changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Added;
-    m_newObject.type = Primitive::Atom;
+    m_newObject.type = Rendering::AtomType;
     m_newObject.molecule = newAtom.molecule();
     m_newObject.index = newAtom.index();
   }
-  else if (m_newObject.type == Primitive::Atom) {
+  else if (m_newObject.type == Rendering::AtomType) {
     // Grab the previously created atom
     newAtom = m_newObject.molecule->atom(m_newObject.index);
   }

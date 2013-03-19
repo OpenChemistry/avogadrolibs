@@ -61,12 +61,12 @@ private:
    */
   void updatePressedButtons(QMouseEvent *, bool release);
 
-  void resetObject() { m_object = Rendering::Primitive::Identifier(); }
+  void resetObject() { m_object = Rendering::Identifier(); }
 
   QAction *m_activateAction;
   QtGui::Molecule *m_molecule;
   QtOpenGL::GLWidget *m_glWidget;
-  Rendering::Primitive::Identifier m_object;
+  Rendering::Identifier m_object;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;
 };

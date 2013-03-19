@@ -27,6 +27,38 @@ class Molecule;
 
 namespace Rendering {
 
+/** Identifies the type of object a primitive represents. */
+enum Type {
+  InvalidType = -1,
+  AtomType,
+  BondType
+};
+
+/** Used to identify the primitive during picking. */
+struct Identifier {
+  Identifier() : molecule(0), type(InvalidType), index(-1) {}
+
+  bool operator==(const Identifier &other) const
+  {
+    return molecule == other.molecule && type == other.type &&
+        index == other.index;
+  }
+
+  bool operator!=(const Identifier &other) const
+  {
+    return !operator==(other);
+  }
+
+  bool isValid() const
+  {
+    return type != InvalidType && molecule != NULL;
+  }
+
+  const Core::Molecule *molecule;
+  Type type;
+  size_t index;
+};
+
 class Primitive
 {
 public:

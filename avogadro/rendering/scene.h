@@ -19,6 +19,7 @@
 
 #include "avogadrorenderingexport.h"
 
+#include "groupnode.h"
 #include "primitive.h"
 
 #include <avogadro/core/avogadrocore.h>
@@ -105,6 +106,12 @@ public:
   float radius() const;
 
   /**
+   * Get the root node of the scene.
+   */
+  GroupNode& rootNode() { return m_rootNode; }
+  const GroupNode& rootNode() const { return m_rootNode; }
+
+  /**
    * Add a sphere to the scene object.
    */
   void addSphere(const Vector3f &position, const Vector3ub &color, float radius,
@@ -170,6 +177,8 @@ public:
   void clear();
 
 private:
+  GroupNode m_rootNode;
+
   std::vector<Sphere> m_spheres;
   std::vector<unsigned int> m_sphereIndices;
   std::vector<ColorTextureVertex> m_sphereVertices;

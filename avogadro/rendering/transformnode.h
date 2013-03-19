@@ -14,42 +14,30 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_MESHES_H
-#define AVOGADRO_QTPLUGINS_MESHES_H
+#ifndef AVOGADRO_RENDERING_TRANSFORMNODE_H
+#define AVOGADRO_RENDERING_TRANSFORMNODE_H
 
-#include <avogadro/qtgui/sceneplugin.h>
+#include "groupnode.h"
 
 namespace Avogadro {
-namespace QtPlugins {
+namespace Rendering {
 
 /**
- * @brief Render one or more triangular meshes.
+ * @class TransofrmNode transformnode.h <avogadro/rendering/transformnode.h>
+ * @brief The TransformNode class applies a transform to all child nodes.
  * @author Marcus D. Hanwell
+ *
+ * @todo This is currently a stub and does nothing.
  */
-class Meshes : public QtGui::ScenePlugin
+
+class AVOGADRORENDERING_EXPORT TransformNode : public GroupNode
 {
-  Q_OBJECT
-
 public:
-  explicit Meshes(QObject *parent = 0);
-  ~Meshes();
-
-  void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) AVO_OVERRIDE;
-
-  QString name() const { return tr("Meshes"); }
-
-  QString description() const { return tr("Render triangle meshes."); }
-
-  bool isEnabled() const;
-
-  void setEnabled(bool enable);
-
-private:
-  bool m_enabled;
+  explicit TransformNode(GroupNode *parent = 0);
+  ~TransformNode();
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // End namespace Rendering
+} // End namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_MESHES_H
+#endif // AVOGADRO_RENDERING_TRANSFORMNODE_H
