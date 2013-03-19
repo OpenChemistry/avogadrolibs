@@ -38,7 +38,10 @@ public:
   explicit EditorToolWidget(QWidget *parent_ = 0);
   ~EditorToolWidget();
 
+  void setAtomicNumber(unsigned char atomicNum);
   unsigned char atomicNumber() const;
+
+  void setBondOrder(unsigned char order);
   unsigned char bondOrder() const;
 
 private slots:
