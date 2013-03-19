@@ -23,7 +23,7 @@ set_property(GLOBAL PROPERTY AvogadroLibs_PLUGINS)
 set_property(GLOBAL PROPERTY AvogadroLibs_STATIC_PLUGINS)
 
 if(MSVC)
-  add_definitions("-D_CRT_SECURE_NO_WARNINGS")
+  add_definitions("-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX")
 endif()
 
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}
