@@ -80,8 +80,7 @@ QStringList OBForceFieldDialog::options() const
 {
   QStringList opts;
 
-  opts << "--log"
-       << "--crit"
+  opts << "--crit"
        << QString::number(std::pow(10.0f, ui->energyConv->value()), 'e', 0)
        << "--ff" << ui->forceField->currentText()
        << "--steps" << QString::number(ui->stepLimit->value())
