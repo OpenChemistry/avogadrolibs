@@ -215,7 +215,7 @@ bool OBProcess::optimizeGeometry(const QByteArray &cml,
   }
 
   QStringList realOptions;
-  realOptions << "-icml" << "-ocml" << "--minimize" << options;
+  realOptions << "-icml" << "-ocml" << "--minimize" << "--log" << options;
 
   // We'll need to read the log (printed to stderr) to update progress
   connect(m_process, SIGNAL(readyReadStandardError()),
