@@ -14,9 +14,6 @@
 
 ******************************************************************************/
 
-// Prevent MSVC from defining the max() macro that hides numeric_limits::max().
-#define NOMINMAX
-
 #include "editor.h"
 
 #include "editortoolwidget.h"
