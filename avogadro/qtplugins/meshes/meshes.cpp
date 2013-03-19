@@ -44,8 +44,6 @@ void Meshes::process(const Molecule &molecule, GroupNode &node)
 {
   const QtGui::Molecule *mol = dynamic_cast<const QtGui::Molecule*>(&molecule);
 
-  // Add a sphere node to contain all of the VdW spheres.
-  // Add a sphere node to contain all of the VdW spheres.
   GeometryNode *geometry = new GeometryNode;
   node.addChild(geometry);
 

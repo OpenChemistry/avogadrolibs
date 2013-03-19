@@ -27,6 +27,8 @@ namespace Rendering {
  * @brief The VolumeGeometry class contains a regularly spaced volumetric data
  * set.
  * @author Marcus D. Hanwell
+ *
+ * @todo This is currently a stub and does nothing.
  */
 
 class AVOGADRORENDERING_EXPORT VolumeGeometry : public Drawable

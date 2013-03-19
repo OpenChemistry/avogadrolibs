@@ -196,9 +196,10 @@ void SphereGeometry::render(const Camera &camera)
   d->program.release();
 }
 
-std::multimap<float, Identifier> SphereGeometry::hits(const Vector3f &rayOrigin,
-                                                      const Vector3f &rayEnd,
-                                                      const Vector3f &rayDirection) const
+std::multimap<float, Identifier>
+SphereGeometry::hits(const Vector3f &rayOrigin,
+                     const Vector3f &rayEnd,
+                     const Vector3f &rayDirection) const
 {
   std::multimap<float, Identifier> result;
 

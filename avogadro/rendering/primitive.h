@@ -49,7 +49,10 @@ struct Identifier {
     return !operator==(other);
   }
 
-  bool isValid() const { return type != InvalidType; }
+  bool isValid() const
+  {
+    return type != InvalidType && molecule != NULL;
+  }
 
   const Core::Molecule *molecule;
   Type type;

@@ -57,6 +57,7 @@ TEST(SphereGeometryTest, removeChild)
   EXPECT_EQ(&root, child2->parent());
   EXPECT_EQ(root.removeDrawable(child2), true);
   delete child1;
+  delete child2;
 }
 
 TEST(SphereGeometryTest, addSphere)

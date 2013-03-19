@@ -224,14 +224,15 @@ void CylinderGeometry::render(const Camera &camera)
 
   d->program.disableAttributeArray("vector");
   d->program.disableAttributeArray("color");
-  d->program.disableAttributeArray("texCoordinates");
+  d->program.disableAttributeArray("normal");
 
   d->program.release();
 }
 
-std::multimap<float, Identifier> CylinderGeometry::hits(const Vector3f &rayOrigin,
-                                                        const Vector3f &rayEnd,
-                                                        const Vector3f &rayDirection) const
+std::multimap<float, Identifier>
+CylinderGeometry::hits(const Vector3f &rayOrigin,
+                       const Vector3f &rayEnd,
+                       const Vector3f &rayDirection) const
 {
   std::multimap<float, Identifier> result;
 

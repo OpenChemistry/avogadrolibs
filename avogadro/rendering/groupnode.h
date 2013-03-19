@@ -61,6 +61,11 @@ public:
   Node * child(size_t index);
 
   /**
+   * @return The number of child nodes contained by the GroupNode.
+   */
+  size_t childCount() const { return m_children.size(); }
+
+  /**
    * @brief Get a reference to the child nodes list.
    */
   std::vector<Node *>& children() { return m_children; }

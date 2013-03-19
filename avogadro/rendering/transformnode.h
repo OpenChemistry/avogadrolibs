@@ -26,6 +26,8 @@ namespace Rendering {
  * @class TransofrmNode transformnode.h <avogadro/rendering/transformnode.h>
  * @brief The TransformNode class applies a transform to all child nodes.
  * @author Marcus D. Hanwell
+ *
+ * @todo This is currently a stub and does nothing.
  */
 
 class AVOGADRORENDERING_EXPORT TransformNode : public GroupNode

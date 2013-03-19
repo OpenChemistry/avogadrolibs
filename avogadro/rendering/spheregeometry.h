@@ -43,7 +43,7 @@ struct SphereColor
  * This Drawable is capable of storing the geometry for one or more spheres.
  * A sphere is defined by a center point, a radius and a color. If the
  * spheres are not a densely packed one-to-one mapping with the objects indices
- * they can also optionally use an identifier that will point to some numberic
+ * they can also optionally use an identifier that will point to some numeric
  * ID for the purposes of picking.
  */
 
@@ -78,7 +78,8 @@ public:
   /**
    * Add a sphere to the geometry object.
    */
-  void addSphere(const Vector3f &position, const Vector3ub &color, float radius);
+  void addSphere(const Vector3f &position, const Vector3ub &color,
+                 float radius);
 
   /**
    * Get a reference to the spheres.

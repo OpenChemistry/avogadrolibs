@@ -70,7 +70,6 @@ void BallAndStick::process(const Molecule &molecule,
   geometry->addDrawable(cylinders);
   for (size_t i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
-    //identifier.index = i;
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
     Vector3f bondVector = pos2 - pos1;

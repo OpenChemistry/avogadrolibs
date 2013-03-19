@@ -191,8 +191,7 @@ void MeshGeometry::render(const Camera &camera)
   d->ibo.release();
 
   d->program.disableAttributeArray("vector");
-  d->program.disableAttributeArray("color");
-  d->program.disableAttributeArray("texCoordinates");
+  d->program.disableAttributeArray("normal");
 
   d->program.release();
 }
