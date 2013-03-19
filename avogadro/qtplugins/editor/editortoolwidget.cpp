@@ -14,6 +14,9 @@
 
 ******************************************************************************/
 
+// Prevent MSVC from defining the max() macro that hides numeric_limits::max().
+#define NOMINMAX
+
 #include "editortoolwidget.h"
 #include "ui_editortoolwidget.h"
 
@@ -23,6 +26,14 @@
 
 #include <QtCore/QList>
 #include <QtCore/QSettings>
+
+#include <limits>
+
+namespace {
+// The ItemData of the "Other" entry in the combo box
+const int ELEMENT_SELECTOR_TAG =
+    static_cast<int>(std::numeric_limits<unsigned char>::max());
+}
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -41,11 +52,19 @@ EditorToolWidget::EditorToolWidget(QWidget *parent_) :
           this, SLOT(elementChanged(int)));
   connect(m_elementSelector, SIGNAL(elementChanged(int)),
           this, SLOT(elementSelectedFromTable(int)));
+
+  // Show carbon at startup.
+  selectElement(6);
 }
 
 EditorToolWidget::~EditorToolWidget()
 {
   delete m_ui;
+}
+
+void EditorToolWidget::setAtomicNumber(unsigned char atomicNum)
+{
+  m_elementSelector->setElement(static_cast<int>(atomicNum));
 }
 
 unsigned char EditorToolWidget::atomicNumber() const
@@ -64,6 +83,12 @@ unsigned char EditorToolWidget::atomicNumber() const
   return atomicNum;
 }
 
+void EditorToolWidget::setBondOrder(unsigned char order)
+{
+  if (order < m_ui->bondOrder->count())
+    m_ui->bondOrder->setCurrentIndex(static_cast<int>(order - 1));
+}
+
 unsigned char EditorToolWidget::bondOrder() const
 {
   return static_cast<unsigned char>(
@@ -74,7 +99,7 @@ void EditorToolWidget::elementChanged(int index)
 {
   QVariant itemData = m_ui->element->itemData(index);
   if (itemData.isValid()) {
-    if (itemData.toUInt() == 0)
+    if (itemData.toUInt() == ELEMENT_SELECTOR_TAG)
       m_elementSelector->show();
     else
       m_elementSelector->setElement(itemData.toInt());
@@ -103,7 +128,7 @@ void EditorToolWidget::updateElementCombo()
                            .arg(atomicNum), atomicNum);
   }
   m_ui->element->insertSeparator(m_ui->element->count());
-  m_ui->element->addItem(tr("Other..."), 0);
+  m_ui->element->addItem(tr("Other..."), ELEMENT_SELECTOR_TAG);
 
   // Reset the element if it still exists
   selectElement(static_cast<unsigned char>(selectedData.isValid()

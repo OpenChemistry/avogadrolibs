@@ -56,7 +56,9 @@ public:
   QUndoCommand * mouseReleaseEvent(QMouseEvent *e) AVO_OVERRIDE;
   QUndoCommand * mouseMoveEvent(QMouseEvent *e) AVO_OVERRIDE;
   QUndoCommand * keyPressEvent(QKeyEvent *e) AVO_OVERRIDE;
-  QUndoCommand * keyReleaseEvent(QKeyEvent *e) AVO_OVERRIDE;
+
+private slots:
+  void clearKeyPressBuffer() { m_keyPressBuffer.clear(); }
 
 private:
   /**
@@ -90,6 +92,7 @@ private:
   QPoint m_clickPosition;
   unsigned char m_clickedAtomicNumber;
   bool m_bondAdded;
+  QString m_keyPressBuffer;
 };
 
 } // namespace QtPlugins

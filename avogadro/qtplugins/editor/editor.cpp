@@ -42,6 +42,7 @@
 #include <QtGui/QWidget>
 
 #include <QtCore/QDebug>
+#include <QtCore/QTimer>
 
 #include <limits>
 
@@ -87,6 +88,7 @@ QWidget *Editor::toolWidget() const
 
 QUndoCommand *Editor::mousePressEvent(QMouseEvent *e)
 {
+  clearKeyPressBuffer();
   if (!m_glWidget)
     return NULL;
 
@@ -163,17 +165,34 @@ QUndoCommand *Editor::mouseMoveEvent(QMouseEvent *e)
 
 QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
 {
-  /// @todo Implement keypresses to change the current atom type
-  e->ignore();
-  qDebug() << "stub: " << Q_FUNC_INFO;
-  return NULL;
-}
+  if (e->text().isEmpty())
+    return NULL;
 
-QUndoCommand *Editor::keyReleaseEvent(QKeyEvent *e)
-{
-  /// @todo Implement keypresses to change the current atom type
-  e->ignore();
-  qDebug() << "stub: " << Q_FUNC_INFO;
+  e->accept();
+
+  // Set a timer to clear the buffer on first keypress:
+  if (m_keyPressBuffer.isEmpty())
+    QTimer::singleShot(2000, this, SLOT(clearKeyPressBuffer()));
+
+  m_keyPressBuffer.append(m_keyPressBuffer.isEmpty()
+                          ? e->text().toUpper()
+                          : e->text().toLower());
+
+  if (m_keyPressBuffer.size() >= 3) {
+    clearKeyPressBuffer();
+    return NULL;
+  }
+
+  bool ok = false;
+  int atomicNum = m_keyPressBuffer.toInt(&ok);
+  if (!ok || atomicNum <= 0 || atomicNum > Core::Elements::elementCount()) {
+    atomicNum = Core::Elements::atomicNumberFromSymbol(
+          m_keyPressBuffer.toStdString());
+  }
+
+  if (atomicNum > 0 || atomicNum <= Core::Elements::elementCount())
+    m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
+
   return NULL;
 }
 
