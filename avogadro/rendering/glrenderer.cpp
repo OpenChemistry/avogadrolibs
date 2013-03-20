@@ -29,7 +29,7 @@
 namespace Avogadro {
 namespace Rendering {
 
-GLRenderer::GLRenderer() : m_valid(false)
+GLRenderer::GLRenderer() : m_valid(false), m_radius(20.0)
 {
 }
 
@@ -61,10 +61,16 @@ void GLRenderer::resize(int width, int height)
 {
   glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
   m_camera.setViewport(width, height);
-  float distance = std::max(2.0f, m_camera.distance(Vector3f::Zero()));
+
+  float distance = m_camera.distance(Vector3f::Zero());
   m_camera.calculatePerspective(40,
-                                distance - 2.0f * m_radius,
+                                std::max(2.0f, distance - 2.0f * m_radius),
                                 distance + 2.0f * m_radius);
+
+  Eigen::Affine3f proj = m_camera.projection();
+  std::cout << "\n\nProjection: " << proj.matrix() << std::endl;
+  std::cout << "Model View: " << m_camera.modelView().matrix() << std::endl;
+  std::cout << "The distance = " << distance << std::endl;
 }
 
 void GLRenderer::render(GroupNode *group)
@@ -107,10 +113,10 @@ void GLRenderer::resetCamera()
   m_radius = m_scene.radius() + 5.0f;
   m_camera.setIdentity();
   m_camera.translate(-center);
-  m_camera.preTranslate(-3.0f * m_radius * Vector3f(0.0f, 0.0f, 1.0f));
-  float distance = std::max(2.0f, m_camera.distance(Vector3f::Zero()));
+  m_camera.preTranslate(-2.0f * m_radius * Vector3f(0.0f, 0.0f, 1.0f));
+  float distance = m_camera.distance(Vector3f::Zero());
   m_camera.calculatePerspective(40.0f,
-                                distance - 2.0f * m_radius,
+                                std::max(2.0f, distance - 2.0f * m_radius),
                                 distance + 2.0f * m_radius);
 }
 
