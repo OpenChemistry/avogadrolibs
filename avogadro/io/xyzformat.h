@@ -40,7 +40,7 @@ public:
   }
 
   FileFormat * newInstance() const AVO_OVERRIDE { return new XyzFormat; }
-  std::string identifier() const AVO_OVERRIDE { return "XYZ"; }
+  std::string identifier() const AVO_OVERRIDE { return "Avogadro: XYZ"; }
   std::string name() const AVO_OVERRIDE { return "XYZ"; }
   std::string description() const AVO_OVERRIDE
   {

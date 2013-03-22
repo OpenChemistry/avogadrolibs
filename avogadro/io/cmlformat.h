@@ -40,7 +40,7 @@ public:
   }
 
   FileFormat * newInstance() const AVO_OVERRIDE { return new CmlFormat; }
-  std::string identifier() const AVO_OVERRIDE { return "CML"; }
+  std::string identifier() const AVO_OVERRIDE { return "Avogadro: CML"; }
   std::string name() const AVO_OVERRIDE { return "Chemical Markup Language"; }
   std::string description() const AVO_OVERRIDE
   {
