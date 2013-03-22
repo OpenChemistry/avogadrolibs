@@ -182,6 +182,36 @@ public:
   fileFormats(FileFormat::Operations filter = FileFormat::None) const;
 
   /**
+   * Get a list of known FileFormat objects that handle the specified MIME type,
+   * optionally matching a filter.
+   * @warning The objects in the returned list are owned by the
+   * FileFormatManager and cannot be modified. Use FileFormat::newInstance()
+   * to create mutable copies.
+   * @param mimeType MIME type.
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
+   */
+  std::vector<const FileFormat *>
+  fileFormatsFromMimeType(
+      const std::string &mimeType,
+      FileFormat::Operations filter = FileFormat::None) const;
+
+  /**
+   * Get a list of known FileFormat objects that handle the specified file
+   * extension, optionally matching a filter.
+   * @warning The objects in the returned list are owned by the
+   * FileFormatManager and cannot be modified. Use FileFormat::newInstance()
+   * to create mutable copies.
+   * @param extension File extension.
+   * @param filter Bitwise combination of FileFormat::Operation values that
+   * represents the minimum required capabilities.
+   */
+  std::vector<const FileFormat *>
+  fileFormatsFromFileExtension(
+      const std::string &extension,
+      FileFormat::Operations filter = FileFormat::None) const;
+
+  /**
    * Get any errors that have been logged when loading formats.
    */
   std::string error() const;
