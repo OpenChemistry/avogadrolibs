@@ -173,7 +173,7 @@ public:
    * Get a list of known FileFormat objects, optionally matching the
    * specified filter.
    * @warning The objects in the returned list are owned by the
-   * FileFormatManager and should not be modified. Use FileFormat::newInstance()
+   * FileFormatManager and cannot be modified. Use FileFormat::newInstance()
    * to create mutable copies.
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.

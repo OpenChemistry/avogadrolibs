@@ -39,7 +39,7 @@ public:
     return ReadWrite | File | Stream | String;
   }
 
-  FileFormat * newInstance() AVO_OVERRIDE { return new CmlFormat; }
+  FileFormat * newInstance() const AVO_OVERRIDE { return new CmlFormat; }
   std::string identifier() const AVO_OVERRIDE { return "CML"; }
   std::string name() const AVO_OVERRIDE { return "Chemical Markup Language"; }
   std::string description() const AVO_OVERRIDE

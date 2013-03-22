@@ -204,7 +204,7 @@ void OBFileFormat::clear()
   Io::FileFormat::clear();
 }
 
-Io::FileFormat *OBFileFormat::newInstance()
+Io::FileFormat *OBFileFormat::newInstance() const
 {
   return new OBFileFormat(m_name, m_identifier, m_description,
                           m_specificationUrl, m_fileExtensions, m_mimeTypes);

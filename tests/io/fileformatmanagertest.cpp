@@ -155,7 +155,7 @@ public:
   Operations supportedOperations() const AVO_OVERRIDE { return m_ops; }
   bool read(std::istream &, Molecule &) AVO_OVERRIDE { return false; }
   bool write(std::ostream &, const Molecule &) AVO_OVERRIDE { return false; }
-  FileFormat *newInstance() AVO_OVERRIDE
+  FileFormat *newInstance() const AVO_OVERRIDE
     { return new Format(m_ident, m_ops); }
   std::string identifier() const AVO_OVERRIDE { return m_ident; }
   std::string name() const AVO_OVERRIDE { return m_ident; }

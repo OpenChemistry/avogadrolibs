@@ -47,7 +47,7 @@ public:
 
   void clear();
 
-  FileFormat *newInstance();
+  FileFormat *newInstance() const;
 
   std::string description() const AVO_OVERRIDE { return m_description; }
   std::string identifier() const AVO_OVERRIDE { return m_identifier; }
