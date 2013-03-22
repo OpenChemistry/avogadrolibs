@@ -34,12 +34,12 @@ else()
   set(EXTRA_LINK_LIB "")
 endif()
 
-# Some tests reference data in the avogadrodata repo. Emit a warning if the
-# data directory does not exist:
-get_filename_component(datadir "${AvogadroLibs_SOURCE_DIR}/../avogadrodata" ABSOLUTE)
-if(NOT EXISTS "${datadir}")
-  message(WARNING "Some tests will fail: the data directory does not exist in its expected location '${datadir}'")
-endif()
+find_path(AVOGADRO_DATA_ROOT .avogadro.data
+  ${AvogadroLibs_SOURCE_DIR}/../avogadrodata
+  $ENV{AVOGADRO_DATA_ROOT}
+  DOC "The repository for data used for testing."
+  )
+mark_as_advanced(AVOGADRO_DATA_ROOT)
 
 # Specify the name of each test (the Test will be appended where needed).
 set(tests

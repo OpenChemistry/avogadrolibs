@@ -10,16 +10,11 @@ set(tests
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
 	"${AvogadroLibs_BINARY_DIR}/avogadro/io")
 
-# THe data repository should be at the side of ours.
-find_path(AVOGADRO_DATA_ROOT .avogadro.data
-  ${AvogadroLibs_SOURCE_DIR}/../avogadrodata
-  $ENV{AVOGADRO_DATA_ROOT}
-  DOC "The repository for data used for testing."
-  )
-mark_as_advanced(AVOGADRO_DATA_ROOT)
-
 if(AVOGADRO_DATA_ROOT)
   set(AVOGADRO_DATA ${AVOGADRO_DATA_ROOT})
+else()
+  message("No data root found, please set to run the tests.")
+  return()
 endif()
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/iotests.h.in"
