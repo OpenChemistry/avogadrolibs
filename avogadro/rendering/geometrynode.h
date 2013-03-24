@@ -47,6 +47,11 @@ public:
   ~GeometryNode();
 
   /**
+   * Accept a visit from our friendly visitor.
+   */
+  void accept(Visitor &) AVO_OVERRIDE;
+
+  /**
    * @brief Add a drawable object to the geometry node.
    * @param object Drawable object to be added.
    */

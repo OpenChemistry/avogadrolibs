@@ -17,6 +17,7 @@ set(HEADERS
   cylindergeometry.h
   drawable.h
   geometrynode.h
+  geometryvisitor.h
   groupnode.h
   glrenderer.h
   meshgeometry.h
@@ -27,6 +28,7 @@ set(HEADERS
   shaderprogram.h
   spheregeometry.h
   transformnode.h
+  visitor.h
   volumegeometry.h
 )
 
@@ -36,6 +38,7 @@ set(SOURCES
   cylindergeometry.cpp
   drawable.cpp
   geometrynode.cpp
+  geometryvisitor.cpp
   groupnode.cpp
   glrenderer.cpp
   meshgeometry.cpp
@@ -45,6 +48,7 @@ set(SOURCES
   shaderprogram.cpp
   spheregeometry.cpp
   transformnode.cpp
+  visitor.cpp
   volumegeometry.cpp
 )
 

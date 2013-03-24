@@ -24,6 +24,7 @@ namespace Avogadro {
 namespace Rendering {
 
 class GroupNode;
+class Visitor;
 
 /**
  * @class Node node.h <avogadro/rendering/node.h>
@@ -39,6 +40,11 @@ class AVOGADRORENDERING_EXPORT Node
 public:
   Node();
   virtual ~Node();
+
+  /**
+   * Accept a visit from our friendly visitor.
+   */
+  virtual void accept(Visitor &) { return; }
 
   /**
    * @brief Get a pointer to the node's parent.

@@ -74,8 +74,6 @@ void MeshGeometry::update()
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
-    cout << "building array buffers...\n";
-
     std::vector<unsigned int> indices;
     std::vector<ColorNormalVertex> verts;
     indices.reserve(m_indices.size());

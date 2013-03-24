@@ -24,6 +24,8 @@
 #include "shader.h"
 #include "shaderprogram.h"
 
+#include "visitor.h"
+
 namespace {
 #include "spheres_vs.h"
 #include "spheres_fs.h"
@@ -64,6 +66,11 @@ SphereGeometry::~SphereGeometry()
   delete d;
 }
 
+void SphereGeometry::accept(Visitor &visitor)
+{
+  visitor.visit(*this);
+}
+
 void SphereGeometry::update()
 {
   if (m_indices.empty() || m_spheres.empty())
@@ -71,7 +78,6 @@ void SphereGeometry::update()
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
-    cout << "building array buffers...\n";
     std::vector<unsigned int> sphereIndices;
     std::vector<ColorTextureVertex> sphereVertices;
     sphereIndices.reserve(m_indices.size() * 4);

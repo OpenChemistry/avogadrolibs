@@ -85,6 +85,11 @@ public:
 
 private:
   /**
+   * Apply the projection matrix.
+   */
+  void applyProjection();
+
+  /**
    * @brief Render a group node.
    */
   void render(GroupNode *group);
@@ -115,6 +120,7 @@ private:
   std::string m_error;
   Camera m_camera;
   Scene m_scene;
+  Vector3f m_center;
   float m_radius;
 };
 

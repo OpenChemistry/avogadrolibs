@@ -54,6 +54,11 @@ public:
   ~SphereGeometry();
 
   /**
+   * Accept a visit from our friendly visitor.
+   */
+  void accept(Visitor &) AVO_OVERRIDE;
+
+  /**
    * @brief Update the VBOs, IBOs etc ready for rendering.
    */
   void update();

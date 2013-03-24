@@ -37,7 +37,12 @@ class AVOGADRORENDERING_EXPORT GroupNode : public Node
 {
 public:
   explicit GroupNode(GroupNode *parent = 0);
-  ~GroupNode();
+  ~GroupNode() AVO_OVERRIDE;
+
+  /**
+   * Accept a visit from our friendly visitor.
+   */
+  void accept(Visitor &) AVO_OVERRIDE;
 
   /**
    * @brief Add a child node, this node will have its parent set and will be
