@@ -21,6 +21,8 @@
 
 #include <avogadro/core/vector.h>
 
+#include <vector>
+
 namespace Avogadro {
 namespace Rendering {
 
@@ -49,18 +51,32 @@ public:
   void visit(SphereGeometry &) AVO_OVERRIDE;
 
   /**
+   * Clear the state of the visitor.
+   */
+  void clear();
+
+  /**
    * Get the positiion of the center of the scene.
    */
-  Vector3f center() const { return m_center; }
+  Vector3f center();
 
   /**
    * Get the radius of the scene.
    */
-  float radius() const { return m_radius; }
+  float radius();
 
 private:
+  /**
+   * Get the average of the accumulated spherical centers and minimal radius.
+   */
+  void average();
+
   Vector3f m_center;
   float m_radius;
+  bool m_dirty;
+
+  std::vector<Vector3f> m_centers;
+  std::vector<float> m_radii;
 };
 
 } // End namespace Rendering
