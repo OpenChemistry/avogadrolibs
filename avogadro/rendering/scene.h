@@ -111,22 +111,12 @@ public:
   GroupNode& rootNode() { return m_rootNode; }
   const GroupNode& rootNode() const { return m_rootNode; }
 
-  /** Is the scene dirty? */
-  bool dirty() const { return m_dirty; }
-
-  /** Mark the scene as clean (should only be done once the data is uploaded to
-   * the BufferObject.
-   */
-  void setClean() { m_dirty = false; }
-
   /** Clear the scene of all elements. */
   void clear();
 
 private:
   GroupNode m_rootNode;
 
-  bool             m_dirty;
-  mutable bool     m_centerDirty;
   mutable Vector3f m_center;
   mutable float    m_radius;
 };

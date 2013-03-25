@@ -20,14 +20,10 @@
 
 #include <Eigen/Geometry>
 
-#include <iostream>
-
 namespace Avogadro {
 namespace Rendering {
 
-Scene::Scene()
-  : m_dirty(false), m_centerDirty(false),
-    m_center(Vector3f::Zero()), m_radius(10.0)
+Scene::Scene() : m_center(Vector3f::Zero()), m_radius(4.0f)
 {
 }
 
@@ -40,8 +36,9 @@ Vector3f Scene::center()
   GeometryVisitor visitor;
   m_rootNode.accept(visitor);
 
+  // For an empty scene ensure that a minimum radius of 4.0 (gives space).
   m_center = visitor.center();
-  m_radius = visitor.radius();
+  m_radius = std::max(4.0f, visitor.radius());
 
   return m_center;
 }
@@ -56,8 +53,6 @@ float Scene::radius()
 void Scene::clear()
 {
   m_rootNode.clear();
-  m_centerDirty = true;
-  m_dirty = true;
 }
 
 } // End Rendering namespace
