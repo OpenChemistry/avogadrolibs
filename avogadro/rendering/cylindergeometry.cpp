@@ -110,6 +110,7 @@ void CylinderGeometry::update()
 
       // Cylinder
       ColorNormalVertex vert(itCylinder->color, -direction, position1);
+      ColorNormalVertex vert2(itCylinder->color2, -direction, position1);
       const unsigned int tubeStart =
           static_cast<unsigned int>(cylinderVertices.size());
       for (std::vector<Vector3f>::const_iterator it = radials.begin(),
@@ -117,8 +118,9 @@ void CylinderGeometry::update()
         vert.normal = *it;
         vert.vertex = position1 + *it;
         cylinderVertices.push_back(vert);
-        vert.vertex = position2 + *it;
-        cylinderVertices.push_back(vert);
+        vert2.normal = vert.normal;
+        vert2.vertex = position2 + *it;
+        cylinderVertices.push_back(vert2);
       }
       // Now to stitch it together.
       for (unsigned int j = 0; j < resolution; ++j) {
@@ -288,9 +290,18 @@ void CylinderGeometry::addCylinder(const Vector3f &position,
                                    float length, float radius,
                                    const Vector3ub &color)
 {
+    addCylinder(position, direction, length, radius, color, color);
+}
+
+void CylinderGeometry::addCylinder(const Vector3f &position,
+                                   const Vector3f &direction,
+                                   float length, float radius,
+                                   const Vector3ub &colorStart,
+                                   const Vector3ub &colorEnd)
+{
   m_dirty = true;
   m_cylinders.push_back(CylinderColor(position, direction, length, radius,
-                                      color));
+                                      colorStart, colorEnd));
   m_indices.push_back(m_indices.size());
 }
 
@@ -301,7 +312,18 @@ void CylinderGeometry::addCylinder(const Vector3f &position,
                                    size_t index)
 {
   m_indexMap[m_cylinders.size()] = index;
-  addCylinder(position, direction, length, radius, color);
+  addCylinder(position, direction, length, radius, color, color);
+}
+
+void CylinderGeometry::addCylinder(const Vector3f &position,
+                                   const Vector3f &direction,
+                                   float length, float radius,
+                                   const Vector3ub &colorStart,
+                                   const Vector3ub &colorEnd,
+                                   size_t index)
+{
+  m_indexMap[m_cylinders.size()] = index;
+  addCylinder(position, direction, length, radius, colorStart, colorEnd);
 }
 
 void CylinderGeometry::clear()
