@@ -63,7 +63,6 @@ void BallAndStick::process(const Molecule &molecule,
   }
 
   float bondRadius = 0.1f;
-  Vector3ub bondColor(127, 127, 127);
   CylinderGeometry *cylinders = new CylinderGeometry;
   cylinders->identifier().molecule = &molecule;
   cylinders->identifier().type = Rendering::BondType;
@@ -72,6 +71,8 @@ void BallAndStick::process(const Molecule &molecule,
     Core::Bond bond = molecule.bond(i);
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
+    Vector3ub color1(Elements::color(bond.atom1().atomicNumber()));
+    Vector3ub color2(Elements::color(bond.atom2().atomicNumber()));
     Vector3f bondVector = pos2 - pos1;
     float bondLength = bondVector.norm();
     bondVector /= bondLength;
@@ -79,21 +80,21 @@ void BallAndStick::process(const Molecule &molecule,
     case 3: {
       Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
       cylinders->addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
-                             bondColor, i);
+                             color1, color2, i);
       cylinders->addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
-                             bondColor, i);
+                             color1, color2, i);
     }
     default:
     case 1:
       cylinders->addCylinder(pos1, bondVector, bondLength, bondRadius,
-                             bondColor, i);
+                             color1, color2, i);
       break;
     case 2: {
       Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
       cylinders->addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
-                             bondColor, i);
+                             color1, color2, i);
       cylinders->addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
-                             bondColor, i);
+                             color1, color2, i);
     }
     }
   }
