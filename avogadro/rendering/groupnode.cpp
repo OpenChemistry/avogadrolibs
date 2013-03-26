@@ -15,6 +15,7 @@
 ******************************************************************************/
 
 #include "groupnode.h"
+#include "visitor.h"
 
 namespace Avogadro {
 namespace Rendering {
@@ -29,6 +30,15 @@ GroupNode::~GroupNode()
 {
   // Like all good parents, we destroy our children before we go...
   clear();
+}
+
+void GroupNode::accept(Visitor &visitor)
+{
+  visitor.visit(*this);
+  for (std::vector<Node *>::iterator it = m_children.begin();
+       it != m_children.end(); ++it) {
+    (*it)->accept(visitor);
+  }
 }
 
 void GroupNode::addChild(Node *node)

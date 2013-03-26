@@ -14,44 +14,17 @@
 
 ******************************************************************************/
 
-#include "drawable.h"
-
 #include "visitor.h"
 
 namespace Avogadro {
 namespace Rendering {
 
-Drawable::Drawable() : m_parent(NULL), m_visible(true)
+Visitor::Visitor()
 {
 }
 
-Drawable::~Drawable()
+Visitor::~Visitor()
 {
-}
-
-void Drawable::accept(Visitor &visitor)
-{
-  visitor.visit(*this);
-}
-
-void Drawable::render(const Camera &)
-{
-}
-
-std::multimap<float, Identifier> Drawable::hits(const Vector3f &,
-                                                const Vector3f &,
-                                                const Vector3f &) const
-{
-  return std::multimap<float, Identifier>();
-}
-
-void Drawable::clear()
-{
-}
-
-void Drawable::setParent(GeometryNode *parent_)
-{
-  m_parent = parent_;
 }
 
 } // End namespace Rendering

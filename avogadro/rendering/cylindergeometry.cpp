@@ -73,8 +73,6 @@ void CylinderGeometry::update()
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
-    cout << "building array buffers...\n";
-
     // Set some defaults for our cylinders.
     const unsigned int resolution = 12; // points per circle
     const float resolutionRadians =

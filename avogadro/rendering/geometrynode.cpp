@@ -17,6 +17,7 @@
 #include "geometrynode.h"
 
 #include "drawable.h"
+#include "visitor.h"
 
 #include <iostream>
 
@@ -30,6 +31,15 @@ GeometryNode::GeometryNode()
 GeometryNode::~GeometryNode()
 {
   clearDrawables();
+}
+
+void GeometryNode::accept(Visitor &visitor)
+{
+  visitor.visit(*this);
+  for (std::vector<Drawable *>::const_iterator it = m_drawables.begin();
+       it != m_drawables.end(); ++it) {
+    (*it)->accept(visitor);
+  }
 }
 
 void GeometryNode::addDrawable(Drawable *object)

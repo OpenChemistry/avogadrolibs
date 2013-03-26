@@ -29,6 +29,7 @@ namespace Rendering {
 
 class Camera;
 class GeometryNode;
+class Visitor;
 
 /**
  * @class Drawable drawable.h <avogadro/rendering/drawable.h>
@@ -45,6 +46,11 @@ class AVOGADRORENDERING_EXPORT Drawable
 public:
   Drawable();
   virtual ~Drawable();
+
+  /**
+   * Accept a visit from our friendly visitor.
+   */
+  virtual void accept(Visitor &);
 
   /**
    * @brief Get a pointer to the drawable object's parent.

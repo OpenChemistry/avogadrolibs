@@ -21,6 +21,7 @@
 #include "shader.h"
 #include "shaderprogram.h"
 #include "geometrynode.h"
+#include "geometryvisitor.h"
 
 #include <avogadro/core/matrix.h>
 
@@ -29,7 +30,8 @@
 namespace Avogadro {
 namespace Rendering {
 
-GLRenderer::GLRenderer() : m_valid(false), m_radius(20.0)
+GLRenderer::GLRenderer() : m_valid(false), m_center(Vector3f::Zero()),
+  m_radius(20.0)
 {
 }
 
@@ -61,11 +63,6 @@ void GLRenderer::resize(int width, int height)
 {
   glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
   m_camera.setViewport(width, height);
-
-  float distance = m_camera.distance(Vector3f::Zero());
-  m_camera.calculatePerspective(40,
-                                std::max(2.0f, distance - 2.0f * m_radius),
-                                distance + 2.0f * m_radius);
 }
 
 void GLRenderer::render(GroupNode *group)
@@ -98,21 +95,26 @@ void GLRenderer::render()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
+  applyProjection();
   render(&m_scene.rootNode());
   glDisable(GL_DEPTH_TEST);
 }
 
 void GLRenderer::resetCamera()
 {
-  Vector3f center = m_scene.center();
-  m_radius = m_scene.radius() + 5.0f;
+  m_center = m_scene.center();
+  m_radius = m_scene.radius();
   m_camera.setIdentity();
-  m_camera.translate(-center);
-  m_camera.preTranslate(-2.0f * m_radius * Vector3f(0.0f, 0.0f, 1.0f));
-  float distance = m_camera.distance(Vector3f::Zero());
+  m_camera.translate(-m_center);
+  m_camera.preTranslate(-3.0f * (m_radius + 2.0f) * Vector3f::UnitZ());
+}
+
+void GLRenderer::applyProjection()
+{
+  float distance = m_camera.distance(m_center);
   m_camera.calculatePerspective(40.0f,
-                                std::max(2.0f, distance - 2.0f * m_radius),
-                                distance + 2.0f * m_radius);
+                                std::max(2.0f, distance - m_radius),
+                                distance + m_radius);
 }
 
 std::multimap<float, Identifier>
