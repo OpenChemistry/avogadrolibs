@@ -8,6 +8,7 @@ include(BuildType)
 include(BuildLocation)
 include(CompilerFlags)
 include(InstallLocation)
+include(DetermineVersion)
 
 # Set up our version.
 set(AvogadroLibs_VERSION_MAJOR   "0")
@@ -15,6 +16,8 @@ set(AvogadroLibs_VERSION_MINOR   "1")
 set(AvogadroLibs_VERSION_PATCH   "0")
 set(AvogadroLibs_VERSION
   "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
+find_package(Git)
+determine_version(${AvogadroLibs_SOURCE_DIR} ${GIT_EXECUTABLE} "AvogadroLibs")
 
 option(BUILD_SHARED_LIBS "Build with shared libraries" ON)
 
