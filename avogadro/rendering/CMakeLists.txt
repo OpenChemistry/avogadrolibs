@@ -20,6 +20,7 @@ set(HEADERS
   geometryvisitor.h
   groupnode.h
   glrenderer.h
+  glrendervisitor.h
   meshgeometry.h
   node.h
   primitive.h
@@ -41,6 +42,7 @@ set(SOURCES
   geometryvisitor.cpp
   groupnode.cpp
   glrenderer.cpp
+  glrendervisitor.cpp
   meshgeometry.cpp
   node.cpp
   scene.cpp

@@ -21,7 +21,7 @@
 #include "shader.h"
 #include "shaderprogram.h"
 #include "geometrynode.h"
-#include "geometryvisitor.h"
+#include "glrendervisitor.h"
 
 #include <avogadro/core/matrix.h>
 
@@ -65,38 +65,15 @@ void GLRenderer::resize(int width, int height)
   m_camera.setViewport(width, height);
 }
 
-void GLRenderer::render(GroupNode *group)
-{
-  if (!group)
-    return;
-  for (std::vector<Node *>::iterator it = group->children().begin();
-       it != group->children().end(); ++it) {
-    GroupNode *childGroup = (*it)->cast<GroupNode>();
-    if (childGroup) {
-      render(childGroup);
-      continue;
-    }
-    GeometryNode *childGeometry = (*it)->cast<GeometryNode>();
-    if (childGeometry) {
-      render(childGeometry);
-      continue;
-    }
-  }
-}
-
-void GLRenderer::render(GeometryNode *geometry)
-{
-  if (!geometry)
-    return;
-  geometry->render(m_camera);
-}
-
 void GLRenderer::render()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
   applyProjection();
-  render(&m_scene.rootNode());
+
+  GLRenderVisitor visitor(m_camera);
+  m_scene.rootNode().accept(visitor);
+
   glDisable(GL_DEPTH_TEST);
 }
 

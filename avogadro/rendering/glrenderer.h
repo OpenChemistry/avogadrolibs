@@ -90,16 +90,6 @@ private:
   void applyProjection();
 
   /**
-   * @brief Render a group node.
-   */
-  void render(GroupNode *group);
-
-  /**
-   * @brief Render a group node.
-   */
-  void render(GeometryNode *geometry);
-
-  /**
    * @brief Detect hits in a group node.
    */
   std::multimap<float, Identifier> hits(const GroupNode *group,

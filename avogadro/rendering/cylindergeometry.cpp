@@ -16,6 +16,7 @@
 
 #include "cylindergeometry.h"
 
+#include "visitor.h"
 #include "camera.h"
 #include "scene.h"
 
@@ -64,6 +65,11 @@ CylinderGeometry::CylinderGeometry() : m_dirty(false), d(new Private)
 CylinderGeometry::~CylinderGeometry()
 {
   delete d;
+}
+
+void CylinderGeometry::accept(Visitor &visitor)
+{
+  visitor.visit(*this);
 }
 
 void CylinderGeometry::update()
