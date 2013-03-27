@@ -16,6 +16,7 @@
 
 #include "meshgeometry.h"
 
+#include "visitor.h"
 #include "camera.h"
 #include "scene.h"
 
@@ -65,6 +66,11 @@ MeshGeometry::MeshGeometry() : m_color(255, 0, 0), m_opacity(255),
 MeshGeometry::~MeshGeometry()
 {
   delete d;
+}
+
+void MeshGeometry::accept(Visitor &visitor)
+{
+  visitor.visit(*this);
 }
 
 void MeshGeometry::update()
