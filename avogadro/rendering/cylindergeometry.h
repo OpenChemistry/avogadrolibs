@@ -27,13 +27,18 @@ namespace Rendering {
 struct CylinderColor
 {
   CylinderColor(const Vector3f &pos, const Vector3f &dir,
-                float l, float r, const Vector3ub &c)
-    : position(pos), direction(dir), length(l), radius(r), color(c) {}
+                float l, float r, const Vector3ub &c,
+                const Vector3ub &c2 = Vector3ub::Zero())
+    : position(pos), direction(dir), length(l), radius(r), color(c), color2(c2)
+  {
+  }
+
   Vector3f position;
   Vector3f direction;
   float length;
   float radius;
   Vector3ub color;
+  Vector3ub color2;
 };
 
 /**
@@ -59,7 +64,7 @@ public:
   void update();
 
   /**
-   * @brief Render the sphere geometry.
+   * @brief Render the cylinder geometry.
    * @param camera The current camera to be used for rendering.
    */
   void render(const Camera &camera);
@@ -76,16 +81,58 @@ public:
                                         const Vector3f &rayDirection) const;
 
   /**
-   * Add a sphere to the geometry object.
+   * @brief Add a cylinder to the geometry object.
+   * @param position Base of the cylinder.
+   * @param direction Direction vector for the cylinder.
+   * @param length Length of the cylinder.
+   * @param radius Radius of the cylinder.
+   * @param color Color the cylinder will be rendered.
    */
   void addCylinder(const Vector3f &position, const Vector3f &direction,
                    float length, float radius, const Vector3ub &color);
+
+  /**
+   * @brief Add a cylinder to the geometry object.
+   * @param position Base of the cylinder.
+   * @param direction Direction vector for the cylinder.
+   * @param length Length of the cylinder.
+   * @param radius Radius of the cylinder.
+   * @param colorStart Color the start of the base of the cylinder.
+   * @param colorEnd Color of the end of the cylinder.
+   */
+  void addCylinder(const Vector3f &position, const Vector3f &direction,
+                   float length, float radius, const Vector3ub &color1,
+                   const Vector3ub &color2);
+
+  /**
+   * @brief Add a cylinder to the geometry object.
+   * @param position Base of the cylinder.
+   * @param direction Direction vector for the cylinder.
+   * @param length Length of the cylinder.
+   * @param radius Radius of the cylinder.
+   * @param color Color the cylinder will be rendered.
+   * @param index The index of the cylinder being added.
+   */
   void addCylinder(const Vector3f &position, const Vector3f &direction,
                    float length, float radius, const Vector3ub &color,
                    size_t index);
 
   /**
-   * Get a reference to the spheres.
+   * @brief Add a cylinder to the geometry object.
+   * @param position Base of the cylinder.
+   * @param direction Direction vector for the cylinder.
+   * @param length Length of the cylinder.
+   * @param radius Radius of the cylinder.
+   * @param colorStart Color the start of the base of the cylinder.
+   * @param colorEnd Color of the end of the cylinder.
+   * @param index The index of the cylinder being added.
+   */
+  void addCylinder(const Vector3f &position, const Vector3f &direction,
+                   float length, float radius, const Vector3ub &color,
+                   const Vector3ub &color2, size_t index);
+
+  /**
+   * Get a reference to the cylinders.
    */
   std::vector<CylinderColor>& cylinders() { return m_cylinders; }
   const std::vector<CylinderColor>& cylinders() const { return m_cylinders; }
@@ -96,7 +143,7 @@ public:
   void clear();
 
   /**
-   * Get the number of spheres in the node object.
+   * Get the number of cylinders in the node object.
    */
   size_t size() const { return m_cylinders.size(); }
 
