@@ -59,3 +59,5 @@ if(USE_QT)
   endif()
   add_subdirectory(qtplugins)
 endif()
+
+add_subdirectory(vtk)
