@@ -90,6 +90,17 @@ OpenBabel::OpenBabel(QObject *p) :
   refreshReadFormats();
   refreshWriteFormats();
   refreshForceFields();
+
+  QString info = openBabelInfo();
+  if (info.isEmpty()) {
+    qDebug() << tr("%1 not found! Disabling Open Babel plugin actions.")
+                .arg(OBProcess().obabelExecutable());
+    foreach(QAction *a, m_actions)
+      a->setEnabled(false);
+  }
+  else {
+    qDebug() << info;
+  }
 }
 
 OpenBabel::~OpenBabel()
@@ -171,6 +182,15 @@ QList<Io::FileFormat *> OpenBabel::fileFormats() const
   }
 
   return result;
+}
+
+QString OpenBabel::openBabelInfo() const
+{
+  OBProcess proc;
+  QString version = proc.version();
+  if (version.isEmpty())
+    return QString();
+  return QString("%1: %2").arg(proc.obabelExecutable(), version);
 }
 
 void OpenBabel::setMolecule(QtGui::Molecule *mol)

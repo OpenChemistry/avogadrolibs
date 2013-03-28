@@ -38,6 +38,23 @@ OBProcess::OBProcess(QObject *parent_) :
     m_obabelExecutable = obabelExec;
 }
 
+QString OBProcess::version()
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::version: process already in use.";
+    return false;
+  }
+
+  executeObabel(QStringList() << "-V");
+
+  QString result;
+  if (m_process->waitForFinished(500))
+    result = m_process->readAllStandardOutput().trimmed();
+
+  releaseProcess();
+  return result;
+}
+
 void OBProcess::abort()
 {
   m_aborted = true;
@@ -277,8 +294,10 @@ void OBProcess::executeObabel(const QStringList &options,
                               const QByteArray &obabelStdin)
 {
   // Setup exit handler
-  connect(m_process, SIGNAL(finished(int)), receiver, slot);
-  connect(m_process, SIGNAL(error(QProcess::ProcessError)), receiver, slot);
+  if (receiver) {
+    connect(m_process, SIGNAL(finished(int)), receiver, slot);
+    connect(m_process, SIGNAL(error(QProcess::ProcessError)), receiver, slot);
+  }
 
   // Start process
   qDebug() << "OBProcess::executeObabel: "

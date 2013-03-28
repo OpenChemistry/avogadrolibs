@@ -40,6 +40,11 @@ public:
   explicit OBProcess(QObject *parent_ = 0);
 
   /**
+   * @return The output of obabel -V.
+   */
+  QString version();
+
+  /**
    * @name Process Management
    * Methods, slots, and signals used to interact with the OpenBabel process.
    * @{
@@ -303,8 +308,8 @@ executeObabel(options, this, SLOT(mySlot()));
    * m_obabelExecutable and options as arguments. If provided, the obabelStdin
    * data will be written to the obabel stdin channel.
    */
-  void executeObabel(const QStringList &options, QObject *receiver,
-                     const char *slot,
+  void executeObabel(const QStringList &options, QObject *receiver = NULL,
+                     const char *slot = NULL,
                      const QByteArray &obabelStdin = QByteArray());
 
   void resetState();
