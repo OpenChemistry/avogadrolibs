@@ -38,7 +38,7 @@ Vector3f Scene::center()
 
   // For an empty scene ensure that a minimum radius of 4.0 (gives space).
   m_center = visitor.center();
-  m_radius = std::max(4.0f, visitor.radius());
+  m_radius = std::max(4.0f, visitor.radius()) + 2.0f;
 
   return m_center;
 }
