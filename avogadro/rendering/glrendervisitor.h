@@ -32,7 +32,7 @@ namespace Rendering {
  * This visitor will render elements in the scene.
  */
 
-class GLRenderVisitor : public Visitor
+class AVOGADRORENDERING_EXPORT GLRenderVisitor : public Visitor
 {
 public:
   explicit GLRenderVisitor(const Camera &camera = Camera());
