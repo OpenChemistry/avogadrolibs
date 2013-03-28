@@ -30,7 +30,7 @@ bool FileFormat::readFile(const std::string &fileName_,
                           Core::Molecule &molecule)
 {
   m_fileName = fileName_;
-  std::ifstream file(fileName_.c_str());
+  std::ifstream file(fileName_.c_str(), std::ifstream::binary);
   if (!file.is_open()) {
     appendError("Error opening file: " + fileName_ + "\n");
     return false;
@@ -42,7 +42,7 @@ bool FileFormat::writeFile(const std::string &fileName_,
                            const Core::Molecule &molecule)
 {
   m_fileName = fileName_;
-  std::ofstream file(fileName_.c_str());
+  std::ofstream file(fileName_.c_str(), std::ofstream::binary);
   if (!file.is_open()) {
     appendError("Error opening file: " + fileName_ + "\n");
     return false;
