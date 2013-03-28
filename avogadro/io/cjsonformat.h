@@ -39,8 +39,8 @@ public:
     return ReadWrite | File | Stream | String;
   }
 
-  FileFormat * newInstance() AVO_OVERRIDE { return new CjsonFormat; }
-  std::string identifier() const AVO_OVERRIDE { return "CJSON"; }
+  FileFormat * newInstance() const AVO_OVERRIDE { return new CjsonFormat; }
+  std::string identifier() const AVO_OVERRIDE { return "Avogadro: CJSON"; }
   std::string name() const AVO_OVERRIDE { return "Chemical JSON"; }
   std::string description() const AVO_OVERRIDE
   {
