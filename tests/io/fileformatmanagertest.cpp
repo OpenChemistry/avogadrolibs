@@ -31,7 +31,7 @@ using Avogadro::Io::FileFormatManager;
 TEST(FileFormatManagerTest, readFile)
 {
   FileFormat *format =
-    FileFormatManager::instance().newFormatFromIdentifier("CML");
+    FileFormatManager::instance().newFormatFromIdentifier("Avogadro: CML");
   EXPECT_TRUE(format != NULL);
   if (!format)
     return;
