@@ -14,32 +14,29 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_RENDERING_GEOMETRYVISITOR_H
-#define AVOGADRO_RENDERING_GEOMETRYVISITOR_H
+#ifndef AVOGADRO_RENDERING_GLRENDERVISITOR_H
+#define AVOGADRO_RENDERING_GLRENDERVISITOR_H
 
 #include "visitor.h"
 
-#include <avogadro/core/vector.h>
-
-#include <vector>
+#include "camera.h"
 
 namespace Avogadro {
 namespace Rendering {
 
 /**
- * @class GeometryVisitor geometryvisitor.h <avogadro/rendering/geometryvisitor.h>
- * @brief Visitor that determines the geometry of the scene.
+ * @class GLRenderVisitor glrendervisitor.h <avogadro/rendering/glrendervisitor.h>
+ * @brief Visitor that takes care of rendering the scene.
  * @author Marcus D. Hanwell
  *
- * This visitor will attempt to determine the geometry of the scene, most
- * notably the center and radius of the bounding sphere.
+ * This visitor will render elements in the scene.
  */
 
-class GeometryVisitor : public Visitor
+class GLRenderVisitor : public Visitor
 {
 public:
-  GeometryVisitor();
-  ~GeometryVisitor() AVO_OVERRIDE;
+  explicit GLRenderVisitor(const Camera &camera = Camera());
+  ~GLRenderVisitor() AVO_OVERRIDE;
 
   /**
    * The overloaded visit functions, the base versions of which do nothing.
@@ -49,39 +46,17 @@ public:
   void visit(GeometryNode &) AVO_OVERRIDE { return; }
   void visit(Drawable &) AVO_OVERRIDE;
   void visit(SphereGeometry &) AVO_OVERRIDE;
-  void visit(CylinderGeometry &) AVO_OVERRIDE { return; }
-  void visit(MeshGeometry &) AVO_OVERRIDE { return; }
+  void visit(CylinderGeometry &) AVO_OVERRIDE;
+  void visit(MeshGeometry &) AVO_OVERRIDE;
 
-  /**
-   * Clear the state of the visitor.
-   */
-  void clear();
-
-  /**
-   * Get the positiion of the center of the scene.
-   */
-  Vector3f center();
-
-  /**
-   * Get the radius of the scene.
-   */
-  float radius();
+  void setCamera(const Camera &camera_) { m_camera = camera_; }
+  Camera camera() const { return m_camera; }
 
 private:
-  /**
-   * Get the average of the accumulated spherical centers and minimal radius.
-   */
-  void average();
-
-  Vector3f m_center;
-  float m_radius;
-  bool m_dirty;
-
-  std::vector<Vector3f> m_centers;
-  std::vector<float> m_radii;
+  Camera m_camera;
 };
 
 } // End namespace Rendering
 } // End namespace Avogadro
 
-#endif // AVOGADRO_RENDERING_GEOMETRYVISITOR_H
+#endif // AVOGADRO_RENDERING_GLRENDERVISITOR_H

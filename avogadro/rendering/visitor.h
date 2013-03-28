@@ -23,9 +23,11 @@
 namespace Avogadro {
 namespace Rendering {
 
+class CylinderGeometry;
 class Drawable;
 class GeometryNode;
 class GroupNode;
+class MeshGeometry;
 class Node;
 class SphereGeometry;
 
@@ -52,6 +54,8 @@ public:
   virtual void visit(GeometryNode &) { return; }
   virtual void visit(Drawable &) { return; }
   virtual void visit(SphereGeometry &) { return; }
+  virtual void visit(CylinderGeometry &) { return; }
+  virtual void visit(MeshGeometry &) { return; }
 };
 
 } // End namespace Rendering
