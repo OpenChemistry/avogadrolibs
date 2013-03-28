@@ -57,6 +57,8 @@ public:
 
   QList<Io::FileFormat *> fileFormats() const;
 
+  QString openBabelInfo() const;
+
 public slots:
   void setMolecule(QtGui::Molecule *mol);
 
