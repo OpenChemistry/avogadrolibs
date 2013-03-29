@@ -49,6 +49,10 @@ public:
   {
     // Parse the CML document, and create molecules/elements as necessary.
     moleculeNode = document.child("molecule");
+    xml_node cmlNode = document.child("cml");
+    if (cmlNode)
+      moleculeNode = cmlNode.child("molecule");
+
     if (moleculeNode) {
       // Parse the various components we know about.
       data();
