@@ -8,7 +8,7 @@ namespace Core {
 
 unsigned char element_count = 119;
 
-const char* element_symbols[] = { 
+const char* element_symbols[] = {
   "Xx", "H", "He", "Li", "Be", "B", "C", "N", "O", "F",
   "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K",
   "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu",
@@ -22,7 +22,7 @@ const char* element_symbols[] = {
   "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt",
   "Ds", "Rg", "Cn", "Uut", "Uuq", "Uup", "Uuh", "Uus", "Uuo" };
 
-const char* element_names[] = { 
+const char* element_names[] = {
   "Dummy", "Hydrogen", "Helium", "Lithium", "Beryllium",
   "Boron", "Carbon", "Nitrogen", "Oxygen", "Fluorine",
   "Neon", "Sodium", "Magnesium", "Aluminium", "Silicon",
@@ -48,7 +48,7 @@ const char* element_names[] = {
   "Darmstadtium", "Roentgenium", "Copernicium", "Ununtrium", "Ununquadium",
   "Ununpentium", "Ununhexium", "Ununseptium", "Ununoctium" };
 
-double element_masses[] = { 
+double element_masses[] = {
   0, 1.00794, 4.0026, 6.941, 9.01218, 10.811, 12.0107,
   14.0067, 15.9994, 18.9984, 20.1797, 22.9898, 24.305, 26.9815,
   28.0855, 30.9738, 32.065, 35.453, 39.948, 39.0983, 40.078,
@@ -67,8 +67,8 @@ double element_masses[] = {
   268, 271, 272, 270, 276, 281, 280,
   285, 284, 289, 288, 293, -1, 294 };
 
-double element_VDW[] = { 
-  0, 1.2, 1.4, 2.2, 1.9, 1.8, 1.7, 1.6, 1.55, 1.5,
+double element_VDW[] = {
+  0.69, 1.2, 1.4, 2.2, 1.9, 1.8, 1.7, 1.6, 1.55, 1.5,
   1.54, 2.4, 2.2, 2.1, 2.1, 1.95, 1.8, 1.8, 1.88, 2.8,
   2.4, 2.3, 2.15, 2.05, 2.05, 2.05, 2.05, 2, 2, 2,
   2.1, 2.1, 2.1, 2.05, 1.9, 1.9, 2.02, 2.9, 2.55, 2.4,
@@ -81,8 +81,8 @@ double element_VDW[] = {
   2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
   -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 
-double element_covalent[] = { 
-  0, 0.37, 0.32, 1.34, 0.9, 0.82, 0.77, 0.75, 0.73, 0.71,
+double element_covalent[] = {
+  0.18, 0.37, 0.32, 1.34, 0.9, 0.82, 0.77, 0.75, 0.73, 0.71,
   0.69, 1.54, 1.3, 1.18, 1.11, 1.06, 1.02, 0.99, 0.97, 1.96,
   1.74, 1.44, 1.36, 1.25, 1.27, 1.39, 1.25, 1.26, 1.21, 1.38,
   1.31, 1.26, 1.22, 1.19, 1.16, 1.14, 1.1, 2.11, 1.92, 1.62,
@@ -95,7 +95,7 @@ double element_covalent[] = {
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
   -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 
-unsigned char element_color[][3] = { 
+unsigned char element_color[][3] = {
   {17, 127, 178}, {255, 255, 255}, {216, 255, 255},
   {204, 127, 255}, {193, 255, 0}, {255, 181, 181},
   {127, 127, 127}, {12, 12, 255}, {255, 12, 12},
