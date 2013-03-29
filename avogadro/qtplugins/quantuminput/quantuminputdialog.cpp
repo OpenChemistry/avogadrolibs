@@ -411,6 +411,8 @@ void QuantumInputDialog::saveSingleFile(const QString &fileName)
 {
   QSettings settings;
   QString filePath = settings.value(settingsKey("outputDirectory")).toString();
+  if (filePath.isEmpty())
+    filePath = QDir::homePath();
   filePath = QFileDialog::getSaveFileName(
         this, tr("Select output filename"), filePath + "/" + fileName);
 
@@ -457,6 +459,8 @@ void QuantumInputDialog::saveDirectory()
 {
   QSettings settings;
   QString directory = settings.value(settingsKey("outputDirectory")).toString();
+  if (directory.isEmpty())
+    directory = QDir::homePath();
   directory = QFileDialog::getExistingDirectory(
         this, tr("Select output directory"), directory);
 
