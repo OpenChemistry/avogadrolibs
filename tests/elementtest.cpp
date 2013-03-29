@@ -75,3 +75,9 @@ TEST(ElementTest, colors)
   EXPECT_EQ(Elements::color(6)[1], 127);
   EXPECT_EQ(Elements::color(6)[2], 127);
 }
+
+TEST(ElementTest, dummyElement)
+{
+  EXPECT_EQ(Elements::radiusVDW(0), 0.69);
+  EXPECT_EQ(Elements::radiusCovalent(0), 0.18);
+}
