@@ -40,14 +40,15 @@ OBProcess::OBProcess(QObject *parent_) :
 
 QString OBProcess::version()
 {
+  QString result;
+
   if (!tryLockProcess()) {
     qWarning() << "OBProcess::version: process already in use.";
-    return false;
+    return result;
   }
 
   executeObabel(QStringList() << "-V");
 
-  QString result;
   if (m_process->waitForFinished(500))
     result = m_process->readAllStandardOutput().trimmed();
 
