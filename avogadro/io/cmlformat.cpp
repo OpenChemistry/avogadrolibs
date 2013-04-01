@@ -184,8 +184,40 @@ public:
       }
 
       attribute = node.attribute("order");
-      if (attribute)
-        bond.setOrder(static_cast<unsigned char>(atoi(attribute.value())));
+      if (attribute && strlen(attribute.value()) == 1) {
+        char o = attribute.value()[0];
+        switch (o) {
+        case '1':
+        case 'S':
+        case 's':
+          bond.setOrder(1);
+          break;
+        case '2':
+        case 'D':
+        case 'd':
+          bond.setOrder(2);
+          break;
+        case '3':
+        case 'T':
+        case 't':
+          bond.setOrder(3);
+          break;
+        case '4':
+          bond.setOrder(4);
+          break;
+        case '5':
+          bond.setOrder(5);
+          break;
+        case '6':
+          bond.setOrder(6);
+          break;
+        default:
+          bond.setOrder(1);
+        }
+      }
+      else {
+        bond.setOrder(1);
+      }
 
       // Move on to the next bond node (if there is one).
       node = node.next_sibling("bond");
