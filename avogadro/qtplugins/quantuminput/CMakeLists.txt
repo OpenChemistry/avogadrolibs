@@ -1,5 +1,5 @@
 # Pull in MoleQueue
-find_package(MoleQueue)
+find_package(MoleQueue REQUIRED NO_MODULE)
 include_directories(${MoleQueue_INCLUDE_DIRS})
 
 # Needed to find avogadroioexport.h:
@@ -44,6 +44,14 @@ endif()
 set(QUANTUMINPUT_PYTHON2_SHEBANG "#!${PYTHON2_EXECUTABLE}"
   CACHE STRING "Shebang line (e.g. \"#!/usr/bin/...\") for python 2.x scripts.")
 mark_as_advanced(QUANTUMINPUT_PYTHON2_SHEBANG)
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h.in"
+"namespace Avogadro {
+const char *pythonInterpreterPath = \"${PYTHON2_EXECUTABLE}\";
+}
+")
+configure_file("${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h")
 
 # Place input scripts in the same relative path to the build-tree executable
 set(configured_script_dir
