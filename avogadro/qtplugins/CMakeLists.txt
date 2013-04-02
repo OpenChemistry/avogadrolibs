@@ -84,7 +84,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${original_library_output_dir}")
 # Add all of the static plugins to the initialization file.
 get_property(AvogadroLibs_STATIC_PLUGINS GLOBAL
   PROPERTY AvogadroLibs_STATIC_PLUGINS)
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h"
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
   "// Automatically generated file. Do not edit.
 #ifndef AVOGADRO_STATIC_QTPLUGINS_H
 #define AVOGADRO_STATIC_QTPLUGINS_H
@@ -92,12 +92,17 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h"
 #include <QtCore/QtPlugin>\n\n")
 
 foreach(_plugin ${AvogadroLibs_STATIC_PLUGINS})
-  file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h"
+  file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
     "Q_IMPORT_PLUGIN(${_plugin})\n")
 endforeach()
 
-file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h"
+file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
   "\n#endif // AVOGADRO_STATIC_QTPLUGINS_H\n")
+
+# Configure the static plugin header, ensuring it only changes if the contents
+# are modified - otherwise the original timestamp will be maintained.
+configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h")
 
 # Now to build the plugin library, which can also statically link plugins
 # and initialize them for the application. If Avogadro is built statically
