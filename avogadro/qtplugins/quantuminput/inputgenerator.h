@@ -461,6 +461,8 @@ private:
   QStringList m_filenames;
   QString m_mainFileName;
   QMap<QString, QString> m_files;
+
+  QString m_pythonInterpreter;
 };
 
 } // namespace QtPlugins

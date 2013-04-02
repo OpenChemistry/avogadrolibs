@@ -16,6 +16,8 @@
 
 #include "inputgenerator.h"
 
+#include "quantumpython.h"
+
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
@@ -44,6 +46,11 @@ InputGenerator::InputGenerator(const QString &scriptFilePath_)
     m_displayName(),
     m_options()
 {
+  QByteArray python = qgetenv("AVOGADRO_PYTHON_INTERPRETER");
+  if (python.isEmpty())
+    m_pythonInterpreter = pythonInterpreterPath;
+  else
+    m_pythonInterpreter = python;
 }
 
 InputGenerator::~InputGenerator()
@@ -228,12 +235,6 @@ QString InputGenerator::fileContents(const QString &fileName) const
 QByteArray InputGenerator::execute(const QStringList &args,
                                    const QByteArray &scriptStdin) const
 {
-  // Verify that the file is executable before doing anything else:
-  if (!QFileInfo(m_scriptFilePath).isExecutable()) {
-    return tr("Input generator script '%1' is not executable.")
-        .arg(m_scriptFilePath).toLocal8Bit();
-  }
-
   QProcess proc;
 
   // Merge stdout and stderr
@@ -248,7 +249,8 @@ QByteArray InputGenerator::execute(const QStringList &args,
   }
 
   // Start script
-  proc.start(m_scriptFilePath, realArgs);
+  realArgs.prepend(m_scriptFilePath);
+  proc.start(m_pythonInterpreter, realArgs);
 
   // Write scriptStdin to the process's stdin
   if (!scriptStdin.isNull()) {
