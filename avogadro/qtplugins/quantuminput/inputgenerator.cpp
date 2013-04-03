@@ -32,6 +32,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QSettings>
 #include <QtCore/QTextStream>
 
 #include <string>
@@ -46,11 +47,13 @@ InputGenerator::InputGenerator(const QString &scriptFilePath_)
     m_displayName(),
     m_options()
 {
-  QByteArray python = qgetenv("AVOGADRO_PYTHON_INTERPRETER");
-  if (python.isEmpty())
+  m_pythonInterpreter = qgetenv("AVO_PYTHON_INTERPRETER");
+  if (m_pythonInterpreter.isEmpty()) {
+    m_pythonInterpreter = QSettings().value(
+          "quantumInput/interpreters/python").toString();
+  }
+  if (m_pythonInterpreter.isEmpty())
     m_pythonInterpreter = pythonInterpreterPath;
-  else
-    m_pythonInterpreter = python;
 }
 
 InputGenerator::~InputGenerator()

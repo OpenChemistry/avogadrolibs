@@ -47,7 +47,7 @@ mark_as_advanced(QUANTUMINPUT_PYTHON2_SHEBANG)
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h.in"
 "namespace Avogadro {
-const char *pythonInterpreterPath = \"${PYTHON2_EXECUTABLE}\";
+static const char *pythonInterpreterPath = \"${PYTHON2_EXECUTABLE}\";
 }
 ")
 configure_file("${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h.in"
