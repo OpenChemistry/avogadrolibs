@@ -27,6 +27,8 @@ SurfaceDialog::SurfaceDialog(QWidget *parent_, Qt::WindowFlags f)
 {
   m_ui->setupUi(this);
 
+  surfaceComboChanged(1);
+
   connect(m_ui->surfaceCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(surfaceComboChanged(int)));
   connect(m_ui->resolutionCombo, SIGNAL(currentIndexChanged(int)),

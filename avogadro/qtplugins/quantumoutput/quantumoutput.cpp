@@ -18,6 +18,8 @@
 
 #include "surfacedialog.h"
 
+#include <avogadro/core/variant.h>
+
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/cube.h>
 #include <avogadro/qtgui/mesh.h>
@@ -99,6 +101,16 @@ QStringList QuantumOutput::menuPath(QAction *currentAction) const
 
 void QuantumOutput::setMolecule(QtGui::Molecule *mol)
 {
+  bool isQuantum(false);
+  if (m_basis && m_basis == mol->data("basis").toPointer())
+    isQuantum = true;
+  else {
+    delete m_basis;
+    m_basis = NULL;
+  }
+  m_actions[1]->setEnabled(isQuantum);
+  m_actions[2]->setEnabled(isQuantum);
+  m_actions[3]->setEnabled(isQuantum);
   m_molecule = mol;
 }
 
@@ -106,6 +118,8 @@ bool QuantumOutput::readMolecule(QtGui::Molecule &mol)
 {
   qDebug() << "Reading the molecule in the Quantum Output plugin!";
   Core::Molecule oqmol = m_basis->molecule();
+  void *basisPtr = m_basis;
+  mol.setData("basis", basisPtr);
   for (size_t i = 0; i < oqmol.atomCount(); ++i) {
     Core::Atom a = mol.addAtom(oqmol.atom(i).atomicNumber());
     a.setPosition3d(oqmol.atom(i).position3d() * BOHR_TO_ANGSTROM);
@@ -159,7 +173,7 @@ void QuantumOutput::calculateMolecularOrbital(int molecularOrbital,
              << "molecular orbitals.";
     if (!m_progressDialog) {
       m_progressDialog = new QProgressDialog(qobject_cast<QWidget *>(parent()));
-      m_progressDialog->setCancelButtonText(tr("Abort Calculation"));
+      m_progressDialog->setCancelButtonText(NULL);
       m_progressDialog->setWindowModality(Qt::NonModal);
     }
     if (!m_cube)
@@ -167,13 +181,18 @@ void QuantumOutput::calculateMolecularOrbital(int molecularOrbital,
 
     m_isoValue = isoValue;
     m_cube->setLimits(m_molecule, stepSize, 5.0);
-    if (molecularOrbital == -1)
+    QString progressText;
+    if (molecularOrbital == -1) {
       m_basis->calculateCubeDensity(m_cube);
-    else
+      progressText = tr("Calculating electron density");
+    }
+    else {
       m_basis->calculateCubeMO(m_cube, molecularOrbital);
+      progressText =
+          tr("Calculating molecular orbital %L1").arg(molecularOrbital);
+    }
     // Set up the progress dialog.
-    m_progressDialog->setWindowTitle(
-          tr("Calculating molecular orbital %L1").arg(molecularOrbital));
+    m_progressDialog->setWindowTitle(progressText);
     m_progressDialog->setRange(m_basis->watcher().progressMinimum(),
                                m_basis->watcher().progressMaximum());
     m_progressDialog->setValue(m_basis->watcher().progressValue());
@@ -242,9 +261,6 @@ void QuantumOutput::openFile(const QString &fileName)
   m_basis = QuantumIO::BasisSetLoader::LoadBasisSet(fileName);
   if (m_basis) {
     qDebug() << "Number of MOs:" << m_basis->numMOs();
-    m_actions[1]->setEnabled(true);
-    m_actions[2]->setEnabled(true);
-    m_actions[3]->setEnabled(true);
     emit moleculeReady(1);
   }
 }
