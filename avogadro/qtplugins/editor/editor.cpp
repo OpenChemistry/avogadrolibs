@@ -247,11 +247,12 @@ void Editor::atomLeftClick(QMouseEvent *e)
 void Editor::bondLeftClick(QMouseEvent *e)
 {
   Bond bond = m_clickedObject.molecule->bond(m_clickedObject.index);
-  unsigned char order = m_toolWidget->bondOrder();
-  if (order != bond.order()) {
-    bond.setOrder(order);
-    m_molecule->emitChanged(Molecule::Bonds | Molecule::Modified);
-  }
+  unsigned char currentOrder = bond.order();
+  unsigned char maxOrder = static_cast<unsigned char>(3U);
+  unsigned char increment = static_cast<unsigned char>(1U);
+  bond.setOrder(static_cast<unsigned char>(currentOrder % maxOrder)
+                + increment);
+  m_molecule->emitChanged(Molecule::Bonds | Molecule::Modified);
   e->accept();
 }
 

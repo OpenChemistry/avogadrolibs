@@ -76,17 +76,6 @@ QUndoCommand * Manipulator::mousePressEvent(QMouseEvent *e)
     case Rendering::AtomType:
       e->accept();
       return NULL;
-    case Rendering::BondType: {
-      Bond bond = m_molecule->bond(m_object.index);
-      unsigned char currentOrder = bond.order();
-      unsigned char maxOrder = static_cast<unsigned char>(3U);
-      unsigned char increment = static_cast<unsigned char>(1U);
-      bond.setOrder(static_cast<unsigned char>(currentOrder % maxOrder)
-                    + increment);
-      m_molecule->emitChanged(Molecule::Bonds | Molecule::Modified);
-      e->accept();
-      return NULL;
-    }
     default:
       break;
     }
