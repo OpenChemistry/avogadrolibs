@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -15,6 +15,8 @@
 ******************************************************************************/
 
 #include "quantumoutput.h"
+
+#include "surfacedialog.h"
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/cube.h>
@@ -42,8 +44,9 @@ QuantumOutput::QuantumOutput(QObject *p) :
   m_cube(NULL),
   m_mesh1(NULL),
   m_mesh2(NULL),
-  m_meshGenerator(NULL),
-  m_meshGenerator2(NULL)
+  m_meshGenerator1(NULL),
+  m_meshGenerator2(NULL),
+  m_dialog(NULL)
 {
   QAction *action = new QAction(this);
   action->setEnabled(true);
@@ -59,6 +62,11 @@ QuantumOutput::QuantumOutput(QObject *p) :
   action->setEnabled(false);
   action->setText(tr("Calculate LUMO"));
   connect(action, SIGNAL(triggered()), SLOT(lumoActivated()));
+  m_actions.push_back(action);
+  action = new QAction(this);
+  action->setEnabled(false);
+  action->setText(tr("Calculate electronic surfaces..."));
+  connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
   m_actions.push_back(action);
 }
 
@@ -80,7 +88,8 @@ QStringList QuantumOutput::menuPath(QAction *currentAction) const
     path << tr("&File");
     return path;
   }
-  else if (m_actions[1] == currentAction || m_actions[2] == currentAction) {
+  else if (m_actions[1] == currentAction || m_actions[2] == currentAction
+           || m_actions[3] == currentAction) {
     QStringList path;
     path << tr("&Quantum");
     return path;
@@ -116,16 +125,34 @@ void QuantumOutput::loadMoleculeActivated()
 void QuantumOutput::homoActivated()
 {
   if (m_basis)
-    calculateMolecularOrbital(m_basis->numElectrons() / 2);
+    calculateMolecularOrbital(m_basis->numElectrons() / 2, 0.02, 0.2);
 }
 
 void QuantumOutput::lumoActivated()
 {
   if (m_basis)
-    calculateMolecularOrbital(m_basis->numElectrons() / 2 + 1);
+    calculateMolecularOrbital(m_basis->numElectrons() / 2 + 1, 0.02, 0.2);
 }
 
-void QuantumOutput::calculateMolecularOrbital(int mo)
+void QuantumOutput::surfacesActivated()
+{
+  if (!m_basis)
+    return;
+
+  if (!m_dialog) {
+    m_dialog = new SurfaceDialog(qobject_cast<QWidget *>(parent()));
+    connect(m_dialog, SIGNAL(calculateMO(int,float,float)),
+            SLOT(calculateMolecularOrbital(int,float,float)));
+    connect(m_dialog, SIGNAL(calculateElectronDensity(float,float)),
+            SLOT(calculateElectronDensity(float,float)));
+  }
+
+  m_dialog->setNumberOfElectrons(m_basis->numElectrons(), m_basis->numMOs());
+  m_dialog->show();
+}
+
+void QuantumOutput::calculateMolecularOrbital(int molecularOrbital,
+                                              float isoValue, float stepSize)
 {
   if (m_basis) {
     qDebug() << "We have a valid basis set loaded, with" << m_basis->numMOs()
@@ -135,14 +162,18 @@ void QuantumOutput::calculateMolecularOrbital(int mo)
       m_progressDialog->setCancelButtonText(tr("Abort Calculation"));
       m_progressDialog->setWindowModality(Qt::NonModal);
     }
-    if (!m_cube) {
+    if (!m_cube)
       m_cube = new QtGui::Cube;
-      m_cube->setLimits(m_molecule, 0.2, 5.0);
-    }
-    m_basis->calculateCubeMO(m_cube, mo);
+
+    m_isoValue = isoValue;
+    m_cube->setLimits(m_molecule, stepSize, 5.0);
+    if (molecularOrbital == -1)
+      m_basis->calculateCubeDensity(m_cube);
+    else
+      m_basis->calculateCubeMO(m_cube, molecularOrbital);
     // Set up the progress dialog.
     m_progressDialog->setWindowTitle(
-          tr("Calculating molecular orbital %L1").arg(mo));
+          tr("Calculating molecular orbital %L1").arg(molecularOrbital));
     m_progressDialog->setRange(m_basis->watcher().progressMinimum(),
                                m_basis->watcher().progressMaximum());
     m_progressDialog->setValue(m_basis->watcher().progressValue());
@@ -157,34 +188,47 @@ void QuantumOutput::calculateMolecularOrbital(int mo)
   }
 }
 
+void QuantumOutput::calculateElectronDensity(float isoValue, float stepSize)
+{
+  // Call through to calculate molecular orbital using -1 for density.
+  calculateMolecularOrbital(-1, isoValue, stepSize);
+}
+
 void QuantumOutput::calculateFinished()
 {
   qDebug() << "The calculation finished!";
   if (!m_cube)
     return;
 
+  disconnect(&m_basis->watcher(), 0, 0, 0);
+
   if (!m_mesh1)
     m_mesh1 = m_molecule->addMesh();
-  if (!m_meshGenerator)
-    m_meshGenerator = new QtGui::MeshGenerator;
-  m_meshGenerator->initialize(m_cube, m_mesh1, 0.02f);
-  connect(m_meshGenerator, SIGNAL(finished()), SLOT(meshFinished()));
-  m_meshGenerator->start();
+  if (!m_meshGenerator1) {
+    m_meshGenerator1 = new QtGui::MeshGenerator;
+    connect(m_meshGenerator1, SIGNAL(finished()), SLOT(meshFinished()));
+  }
+  m_meshGenerator1->initialize(m_cube, m_mesh1, m_isoValue);
+  m_meshGenerator1->start();
 
   if (!m_mesh2)
     m_mesh2 = m_molecule->addMesh();
-  if (!m_meshGenerator2)
+  if (!m_meshGenerator2) {
     m_meshGenerator2 = new QtGui::MeshGenerator;
-  m_meshGenerator2->initialize(m_cube, m_mesh2, -0.02, true);
-  connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
+    connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
+  }
+  m_meshGenerator2->initialize(m_cube, m_mesh2, -m_isoValue, true);
   m_meshGenerator2->start();
 
+  if (m_dialog)
+    m_dialog->setCalculationEnabled(true);
 }
 
 void QuantumOutput::meshFinished()
 {
-  qDebug() << "The mesh has finished, seeing" << m_mesh1->numVertices()
-           << "vertices.";
+  qDebug() << "The mesh has finished, mesh1 has" << m_mesh1->numVertices()
+           << "vertices, and mesh 2 has" << m_mesh2->numVertices() << ".";
+  m_molecule->emitChanged(QtGui::Molecule::Added);
 }
 
 void QuantumOutput::openFile(const QString &fileName)
@@ -200,6 +244,7 @@ void QuantumOutput::openFile(const QString &fileName)
     qDebug() << "Number of MOs:" << m_basis->numMOs();
     m_actions[1]->setEnabled(true);
     m_actions[2]->setEnabled(true);
+    m_actions[3]->setEnabled(true);
     emit moleculeReady(1);
   }
 }

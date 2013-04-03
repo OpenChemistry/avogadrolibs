@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -36,6 +36,8 @@ class BasisSet;
 
 namespace QtPlugins {
 
+class SurfaceDialog;
+
 class QuantumOutput : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
@@ -60,8 +62,12 @@ private slots:
   void loadMoleculeActivated();
   void homoActivated();
   void lumoActivated();
+  void surfacesActivated();
   void calculateFinished();
   void meshFinished();
+  void calculateMolecularOrbital(int molecularOrbital, float isoValue,
+                                 float stepSize);
+  void calculateElectronDensity(float isoValue, float stepSize);
 
 private:
   QList<QAction *>    m_actions;
@@ -73,11 +79,14 @@ private:
   QtGui::Cube        *m_cube;
   QtGui::Mesh        *m_mesh1;
   QtGui::Mesh        *m_mesh2;
-  QtGui::MeshGenerator *m_meshGenerator;
+  QtGui::MeshGenerator *m_meshGenerator1;
   QtGui::MeshGenerator *m_meshGenerator2;
 
+  float m_isoValue;
+
+  SurfaceDialog *m_dialog;
+
   void openFile(const QString &fileName);
-  void calculateMolecularOrbital(int number);
 };
 
 }
