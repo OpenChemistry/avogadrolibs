@@ -23,10 +23,12 @@
 #include <avogadro/qtgui/scenepluginmodel.h>
 
 #include <QtOpenGL/QGLWidget>
+#include <QtCore/QPointer>
 
 namespace Avogadro {
 
 namespace QtGui {
+class Molecule;
 class ToolPlugin;
 }
 
@@ -56,6 +58,17 @@ public:
   explicit GLWidget(QWidget *parent = 0);
   ~GLWidget();
 
+  /** Set the molecule the widget will render. */
+  void setMolecule(QtGui::Molecule *molecule);
+
+  /**
+   * Get the molecule being rendered by the widget.
+   * @{
+   */
+  QtGui::Molecule * molecule();
+  const QtGui::Molecule * molecule() const;
+  /** @}*/
+
   /** Get a reference to the renderer for the widget. */
   Rendering::GLRenderer& renderer() { return m_renderer; }
 
@@ -74,7 +87,27 @@ public:
    */
   QtGui::ToolPlugin * defaultTool() const { return m_defaultTool; }
 
+  /**
+   * Get the GLWidget's ScenePluginModel, used to add, delete and modify the
+   * scene plugin items.
+   * @{
+   */
+  QtGui::ScenePluginModel& sceneModel() { return m_scenePlugins; }
+  const QtGui::ScenePluginModel& sceneModel() const { return m_scenePlugins; }
+  /** @}*/
+
 public slots:
+  /**
+   * Update the scene plugins for the widget, this will generate geeometry in
+   * the scene etc.
+   */
+  void updateScene();
+
+  /**
+   * Clear the contents of the scene.
+   */
+  void clearScene();
+
   /** Reset the view to fit the entire scene. */
   void resetCamera();
 
@@ -129,6 +162,7 @@ protected:
   /** @} */
 
 private:
+  QPointer<QtGui::Molecule> m_molecule;
   QList<QtGui::ToolPlugin*> m_tools;
   QtGui::ToolPlugin *m_activeTool;
   QtGui::ToolPlugin *m_defaultTool;
