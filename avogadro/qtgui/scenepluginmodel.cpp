@@ -135,8 +135,10 @@ QList<ScenePlugin *> ScenePluginModel::activeScenePlugins() const
 
 void ScenePluginModel::addItem(ScenePlugin *item)
 {
-  if (!m_scenePlugins.contains(item))
+  if (!m_scenePlugins.contains(item)) {
     m_scenePlugins.append(item);
+    item->setParent(this);
+  }
 }
 
 void ScenePluginModel::removeItem(ScenePlugin *item)
