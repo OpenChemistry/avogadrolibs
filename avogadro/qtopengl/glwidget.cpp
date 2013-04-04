@@ -39,6 +39,9 @@ GLWidget::GLWidget(QWidget *parent_)
     m_defaultTool(NULL)
 {
   setFocusPolicy(Qt::ClickFocus);
+  connect(&m_scenePlugins,
+          SIGNAL(pluginStateChanged(Avogadro::QtGui::ScenePlugin*)),
+          SLOT(updateScene()));
 }
 
 GLWidget::~GLWidget()
@@ -48,7 +51,10 @@ GLWidget::~GLWidget()
 void GLWidget::setMolecule(QtGui::Molecule *mol)
 {
   clearScene();
+  if (m_molecule)
+    disconnect(m_molecule, 0, 0, 0);
   m_molecule = mol;
+  connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateScene()));
 }
 
 QtGui::Molecule * GLWidget::molecule()

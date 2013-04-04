@@ -96,6 +96,7 @@ public:
   const QtGui::ScenePluginModel& sceneModel() const { return m_scenePlugins; }
   /** @}*/
 
+public slots:
   /**
    * Update the scene plugins for the widget, this will generate geeometry in
    * the scene etc.
@@ -107,7 +108,6 @@ public:
    */
   void clearScene();
 
-public slots:
   /** Reset the view to fit the entire scene. */
   void resetCamera();
 
