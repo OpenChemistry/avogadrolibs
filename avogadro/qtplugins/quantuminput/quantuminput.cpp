@@ -17,13 +17,20 @@
 #include "quantuminput.h"
 
 #include "quantuminputdialog.h"
+#include "quantumpython.h"
+
+#include <avogadro/qtgui/filebrowsewidget.h>
 
 #include <QtGui/QAction>
 #include <QtGui/QDialog>
+#include <QtGui/QDialogButtonBox>
+#include <QtGui/QLabel>
+#include <QtGui/QVBoxLayout>
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QtPlugin>
+#include <QtCore/QSettings>
 #include <QtCore/QStringList>
 
 namespace Avogadro {
@@ -94,6 +101,57 @@ void QuantumInput::menuActivated()
   dlg->raise();
 }
 
+void QuantumInput::configurePython()
+{
+  // Create objects
+  QSettings settings;
+  QDialog dlg(qobject_cast<QWidget*>(parent()));
+  QLabel *label = new QLabel;
+  QVBoxLayout *layout = new QVBoxLayout;
+  QtGui::FileBrowseWidget *browser = new QtGui::FileBrowseWidget;
+  QDialogButtonBox *buttonBox = new QDialogButtonBox;
+
+  // Configure objects
+  // Check for python interpreter in env var
+  QString pythonInterp = QString::fromLocal8Bit(
+        qgetenv("AVO_PYTHON_INTERPRETER"));
+  if (pythonInterp.isEmpty()) {
+    // Check settings
+    pythonInterp = settings.value("quantumInput/interpreters/python",
+                                  QString()).toString();
+  }
+  // Use compile-time default if still not found.
+  if (pythonInterp.isEmpty())
+    pythonInterp = QString(pythonInterpreterPath);
+  browser->setFileName(pythonInterp);
+
+  buttonBox->setStandardButtons(QDialogButtonBox::Ok
+                                | QDialogButtonBox::Cancel);
+
+  dlg.setWindowTitle(tr("Set path to Python interpreter:"));
+  label->setText(tr("Select the python interpreter used to run input generator "
+                    "scripts.\nAvogadro must be restarted for any changes to "
+                    "take effect."));
+
+  // Build layout
+  layout->addWidget(label);
+  layout->addWidget(browser);
+  layout->addWidget(buttonBox);
+  dlg.setLayout(layout);
+
+  // Connect
+  connect(buttonBox, SIGNAL(accepted()), &dlg, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), &dlg, SLOT(reject()));
+
+  // Show dialog
+  QDialog::DialogCode response = static_cast<QDialog::DialogCode>(dlg.exec());
+  if (response != QDialog::Accepted)
+    return;
+
+  // Handle response
+  settings.setValue("quantumInput/interpreters/python", browser->fileName());
+}
+
 void QuantumInput::updateInputGeneratorScripts()
 {
   m_inputGeneratorScripts.clear();
@@ -122,6 +180,11 @@ void QuantumInput::updateInputGeneratorScripts()
 void QuantumInput::updateActions()
 {
   m_actions.clear();
+
+  QAction *action = new QAction(tr("Set Python Path..."), this);
+  connect(action, SIGNAL(triggered()), SLOT(configurePython()));
+  m_actions << action;
+
   foreach (const QString &programName, m_inputGeneratorScripts.uniqueKeys()) {
     QStringList scripts = m_inputGeneratorScripts.values(programName);
     // Include the full path if there are multiple generators with the same name.

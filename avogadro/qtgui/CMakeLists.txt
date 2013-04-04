@@ -12,6 +12,7 @@ set(HEADERS
   cube.h
   elementtranslator.h
   extensionplugin.h
+  filebrowsewidget.h
   mesh.h
   meshgenerator.h
   molecule.h
@@ -27,6 +28,7 @@ set(SOURCES
   elementitem_p.cpp
   elementtranslator.cpp
   extensionplugin.cpp
+  filebrowsewidget.cpp
   mesh.cpp
   meshgenerator.cpp
   molecule.cpp
