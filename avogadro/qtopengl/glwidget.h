@@ -61,9 +61,13 @@ public:
   /** Set the molecule the widget will render. */
   void setMolecule(QtGui::Molecule *molecule);
 
-  /** Get the molecule being rendered by the widget. */
+  /**
+   * Get the molecule being rendered by the widget.
+   * @{
+   */
   QtGui::Molecule * molecule();
   const QtGui::Molecule * molecule() const;
+  /** @}*/
 
   /** Get a reference to the renderer for the widget. */
   Rendering::GLRenderer& renderer() { return m_renderer; }
@@ -86,9 +90,11 @@ public:
   /**
    * Get the GLWidget's ScenePluginModel, used to add, delete and modify the
    * scene plugin items.
+   * @{
    */
   QtGui::ScenePluginModel& sceneModel() { return m_scenePlugins; }
   const QtGui::ScenePluginModel& sceneModel() const { return m_scenePlugins; }
+  /** @}*/
 
   /**
    * Update the scene plugins for the widget, this will generate geeometry in
