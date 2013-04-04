@@ -16,6 +16,9 @@
 
 #include "glwidget.h"
 
+#include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/sceneplugin.h>
+#include <avogadro/qtgui/scenepluginmodel.h>
 #include <avogadro/qtgui/toolplugin.h>
 
 #include <avogadro/rendering/camera.h>
@@ -40,6 +43,44 @@ GLWidget::GLWidget(QWidget *parent_)
 
 GLWidget::~GLWidget()
 {
+}
+
+void GLWidget::setMolecule(QtGui::Molecule *mol)
+{
+  clearScene();
+  m_molecule = mol;
+}
+
+QtGui::Molecule * GLWidget::molecule()
+{
+  return m_molecule;
+}
+
+const QtGui::Molecule * GLWidget::molecule() const
+{
+  return m_molecule;
+}
+
+void GLWidget::updateScene()
+{
+  // Build up the scene with the scene plugins, creating the appropriate nodes.
+  if (m_molecule) {
+    Rendering::GroupNode &node = m_renderer.scene().rootNode();
+    node.clear();
+    Rendering::GroupNode *moleculeNode = new Rendering::GroupNode(&node);
+
+    foreach (QtGui::ScenePlugin *scenePlugin,
+             m_scenePlugins.activeScenePlugins()) {
+      Rendering::GroupNode *engineNode = new Rendering::GroupNode(moleculeNode);
+      scenePlugin->process(*m_molecule, *engineNode);
+    }
+    update();
+  }
+}
+
+void GLWidget::clearScene()
+{
+  m_renderer.scene().clear();
 }
 
 void GLWidget::resetCamera()
