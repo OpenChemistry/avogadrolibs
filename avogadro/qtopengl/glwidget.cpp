@@ -54,6 +54,8 @@ void GLWidget::setMolecule(QtGui::Molecule *mol)
   if (m_molecule)
     disconnect(m_molecule, 0, 0, 0);
   m_molecule = mol;
+  foreach (QtGui::ToolPlugin *tool, m_tools)
+    tool->setMolecule(m_molecule);
   connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateScene()));
 }
 
@@ -108,6 +110,7 @@ void GLWidget::addTool(QtGui::ToolPlugin *tool)
 
   tool->setParent(this);
   tool->setGLWidget(this);
+  tool->setMolecule(m_molecule);
   m_tools << tool;
 }
 
