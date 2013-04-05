@@ -210,6 +210,16 @@ private:
   /**@}*/
 
   /**
+   * @brief Search for an option named @a option and convert its value to a
+   * string.
+   * @param option The name of the option.
+   * @param value String to overwrite with option value.
+   * @return True if value is overwritten, false if the option is not found or
+   * cannot be converted to a string.
+   */
+  bool optionString(const QString &option, QString &value) const;
+
+  /**
    * Collect all of the user-specified options into a JSON object, to be sent
    * to the generator script.
    */

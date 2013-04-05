@@ -723,13 +723,18 @@ void GamessInputDialog::computeClicked()
   const QString program = parser.cap(1);
   const QString queue = parser.cap(2);
 
+  QString formula(QString::fromStdString(m_molecule->formula()));
+  QString calculation(ui.calculateCombo->currentText());
+  QString theory(QString("%1/%2").arg(ui.theoryCombo->currentText(),
+                                      ui.basisCombo->currentText()));
+  theory.replace(QRegExp("\\s+"), "");
+
+  QString description = QString("%1 | %2 | %3").arg(formula, calculation, theory);
+
   MoleQueue::JobObject job;
   job.setQueue(queue);
   job.setProgram(program);
-  job.setDescription(QString("GAMESS calculation: %1 %2/%3")
-                     .arg(ui.calculateCombo->currentText())
-                     .arg(ui.theoryCombo->currentText())
-                     .arg(ui.basisCombo->currentText()));
+  job.setDescription(description);
   job.setValue("numberOfCores", ui.coresSpinBox->value());
   job.setInputFile("job.inp", ui.previewText->toPlainText());
 

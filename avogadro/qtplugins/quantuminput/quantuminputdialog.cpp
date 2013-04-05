@@ -310,10 +310,35 @@ void QuantumInputDialog::computeClicked()
   const QString queue = parser.cap(2);
   const QString mainFileName = m_inputGenerator.mainFileName();
 
+  QString title;
+  QString calculation;
+  QString theory;
+  QString basis;
+
+  bool haveTitle(optionString("Title", title));
+  bool haveCalculation(optionString("Calculation Type", calculation));
+  bool haveTheory(optionString("Theory", theory));
+  bool haveBasis(optionString("Basis", basis));
+  QString formula(QString::fromStdString(m_molecule->formula()));
+
+  // Merge theory/basis into theory
+  if (haveBasis) {
+    if (haveTheory)
+      theory += "/";
+    theory += basis;
+    theory.replace(QRegExp("\\s+"), "");
+    haveTheory = true;
+  }
+
+  QString description = QString("%1%2%3%4").arg(formula)
+      .arg(haveCalculation ? " | " + calculation : QString())
+      .arg(haveTheory ? " | " + theory : QString())
+      .arg(haveTitle ? "\n" + title : QString());
+
   MoleQueue::JobObject job;
   job.setQueue(queue);
   job.setProgram(program);
-  job.setDescription(tr("Avogadro calculation"));
+  job.setDescription(description);
   job.setValue("numberOfCores", m_ui.coresSpinBox->value());
   for (QMap<QString, QTextEdit*>::const_iterator it = m_textEdits.constBegin(),
        itEnd = m_textEdits.constEnd(); it != itEnd; ++it) {
@@ -956,6 +981,33 @@ void QuantumInputDialog::setBooleanOption(const QString &name,
   }
 
   checkBox->setChecked(value.toBool());
+}
+
+bool QuantumInputDialog::optionString(const QString &option,
+                                      QString &value) const
+{
+  QWidget *widget = m_widgets.value(option, NULL);
+  bool result = false;
+  value.clear();
+
+  if (QLineEdit *edit = qobject_cast<QLineEdit*>(widget)) {
+    result = true;
+    value = edit->text();
+  }
+  else if (QComboBox *combo = qobject_cast<QComboBox*>(widget)) {
+    result = true;
+    value = combo->currentText();
+  }
+  else if (QSpinBox *spin = qobject_cast<QSpinBox*>(widget)) {
+    result = true;
+    value = QString::number(spin->value());
+  }
+  else if (QDoubleSpinBox *spin = qobject_cast<QDoubleSpinBox*>(widget)) {
+    result = true;
+    value = QString::number(spin->value());
+  }
+
+  return result;
 }
 
 QJsonObject QuantumInputDialog::collectOptions() const
