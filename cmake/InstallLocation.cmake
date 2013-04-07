@@ -20,7 +20,7 @@ if(NOT INSTALL_DATA_DIR)
   set(INSTALL_DATA_DIR "share")
 endif()
 if(NOT INSTALL_DOC_DIR)
-  set(INSTALL_DOC_DIR "doc")
+  set(INSTALL_DOC_DIR "${INSTALL_DATA_DIR}/doc")
 endif()
 
 # Set up RPATH for the project too.

@@ -48,6 +48,13 @@ if(BUILD_DOCUMENTATION)
   add_subdirectory(docs)
 endif()
 
+install(
+  FILES
+    README.md
+    CONTRIBUTING.md
+    COPYING
+  DESTINATION "${INSTALL_DOC_DIR}/avogadrolibs")
+
 # After all add_subdirectory calls, so the list of plugins is complete:
 get_property(AvogadroLibs_PLUGINS GLOBAL PROPERTY AvogadroLibs_PLUGINS)
 get_property(AvogadroLibs_STATIC_PLUGINS GLOBAL
