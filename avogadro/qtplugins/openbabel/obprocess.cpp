@@ -16,7 +16,9 @@
 
 #include "obprocess.h"
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
+#include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QRegExp>
@@ -29,13 +31,40 @@ OBProcess::OBProcess(QObject *parent_) :
   m_processLocked(false),
   m_aborted(false),
   m_process(new QProcess(this)),
+#ifdef _WIN32
+  m_obabelExecutable("obabel.exe")
+#else
   m_obabelExecutable("obabel")
+#endif
 {
   // Read the AVO_OBABEL_EXECUTABLE env var to optionally override the
   // executable used for obabel.
   QByteArray obabelExec = qgetenv("AVO_OBABEL_EXECUTABLE");
-  if (!obabelExec.isEmpty())
+  if (!obabelExec.isEmpty()) {
     m_obabelExecutable = obabelExec;
+  }
+  else {
+    // If not overridden, look for an obabel next to the executable.
+    QDir baseDir(QCoreApplication::applicationDirPath());
+    if (!baseDir.absolutePath().startsWith("/usr/") &&
+        QFileInfo(baseDir.absolutePath() + '/' + m_obabelExecutable).exists()) {
+      m_obabelExecutable = baseDir.absolutePath() + '/' + m_obabelExecutable;
+      QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+#ifdef Q_WS_WIN
+      env.insert("BABEL_DATADIR",
+                 QCoreApplication::applicationDirPath() + "/data");
+#else
+      // FIXME: Hardwiring a versioned subdirectory for now.
+      env.insert("BABEL_DATADIR",
+                 QCoreApplication::applicationDirPath()
+                 + "/../share/openbabel/2.3.2");
+      env.insert("BABEL_LIBDIR",
+                 QCoreApplication::applicationDirPath()
+                 + "/../lib/openbabel/2.3.2");
+#endif
+      m_process->setProcessEnvironment(env);
+    }
+  }
 }
 
 QString OBProcess::version()
