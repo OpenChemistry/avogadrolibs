@@ -1,6 +1,6 @@
 /******************************************************************************
 
-  This source file is part of the MoleQueue project.
+  This source file is part of the Avogadro project.
 
   Copyright 2013 Kitware, Inc.
 
@@ -21,6 +21,7 @@
 
 #include <QtGui/QWidget>
 
+class QFileSystemModel;
 class QLineEdit;
 class QPushButton;
 
@@ -32,13 +33,26 @@ class AVOGADROQTGUI_EXPORT FileBrowseWidget : public QWidget
   Q_OBJECT
 
 public:
+  enum Mode {
+    ExistingFile = 0,
+    ExecutableFile
+  };
+
   explicit FileBrowseWidget(QWidget *theParent = 0);
   ~FileBrowseWidget();
 
   QString fileName() const;
 
+  bool validFileName() const { return m_valid; }
+
   QPushButton *browseButton() const;
   QLineEdit *lineEdit() const;
+
+  void setMode(Mode m);
+  Mode mode() const;
+
+signals:
+  void fileNameChanged(const QString &filename);
 
 public slots:
   void setFileName(const QString &fname);
@@ -50,6 +64,9 @@ private slots:
   void fileNameNoMatch();
 
 private:
+  Mode m_mode;
+  bool m_valid;
+  QFileSystemModel *m_fileSystemModel;
   QPushButton *m_button;
   QLineEdit *m_edit;
 };
