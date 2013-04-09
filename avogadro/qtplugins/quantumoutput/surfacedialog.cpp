@@ -69,14 +69,14 @@ void SurfaceDialog::setCalculationEnabled(bool enable)
 void SurfaceDialog::surfaceComboChanged(int n)
 {
   m_ui->moCombo->setEnabled(n == 1);
-  float isoValue(0.0);
+  float isoValue(0.0f);
   switch (n) {
   case 0:
-    isoValue = 0.1;
+    isoValue = 0.1f;
     break;
   case 1:
   default:
-    isoValue = 0.02;
+    isoValue = 0.02f;
   }
   m_ui->isoValueEdit->setText(QString::number(isoValue));
 }

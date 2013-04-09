@@ -89,7 +89,7 @@ void MeshGeometry::update()
     std::vector<VertexNormalColor>::const_iterator itVertices = m_vertices.begin();
 
     for (unsigned int i = 0;
-         itIndex != m_indices.end(), itVertices != m_vertices.end();
+         itIndex != m_indices.end() && itVertices != m_vertices.end();
          ++i, ++itIndex, ++itVertices) {
 
       // Fill the VBO with triangles.

@@ -139,13 +139,13 @@ void QuantumOutput::loadMoleculeActivated()
 void QuantumOutput::homoActivated()
 {
   if (m_basis)
-    calculateMolecularOrbital(m_basis->numElectrons() / 2, 0.02, 0.2);
+    calculateMolecularOrbital(m_basis->numElectrons() / 2, 0.02f, 0.2f);
 }
 
 void QuantumOutput::lumoActivated()
 {
   if (m_basis)
-    calculateMolecularOrbital(m_basis->numElectrons() / 2 + 1, 0.02, 0.2);
+    calculateMolecularOrbital(m_basis->numElectrons() / 2 + 1, 0.02f, 0.2f);
 }
 
 void QuantumOutput::surfacesActivated()
