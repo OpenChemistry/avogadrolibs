@@ -123,6 +123,7 @@ void QuantumInput::configurePython()
   // Use compile-time default if still not found.
   if (pythonInterp.isEmpty())
     pythonInterp = QString(pythonInterpreterPath);
+  browser->setMode(QtGui::FileBrowseWidget::ExecutableFile);
   browser->setFileName(pythonInterp);
 
   buttonBox->setStandardButtons(QDialogButtonBox::Ok

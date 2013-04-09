@@ -30,24 +30,34 @@ namespace QtGui {
 
 FileBrowseWidget::FileBrowseWidget(QWidget *theParent) :
   QWidget(theParent),
+  m_mode(), // use the setter to initialize filters.
+  m_valid(false),
+  m_fileSystemModel(new QFileSystemModel(this)),
   m_button(new QPushButton(tr("Browse"))),
   m_edit(new QLineEdit)
 {
   QHBoxLayout *hbox = new QHBoxLayout;
   hbox->addWidget(m_edit);
   hbox->addWidget(m_button);
-  this->setLayout(hbox);
+  setLayout(hbox);
+
+  // Focus config
+  setFocusPolicy(Qt::StrongFocus);
+  setFocusProxy(m_edit);
+  setTabOrder(m_edit, m_button);
 
   // Setup completion
-  QFileSystemModel *fsModel = new QFileSystemModel(this);
-  fsModel->setFilter(QDir::Files | QDir::Dirs | QDir::NoDot);
-  fsModel->setRootPath(QDir::rootPath());
-  QCompleter *fsCompleter = new QCompleter(fsModel, this);
+  m_fileSystemModel->setRootPath(QDir::rootPath());
+  QCompleter *fsCompleter = new QCompleter(m_fileSystemModel, this);
   m_edit->setCompleter(fsCompleter);
 
   // Connections:
   connect(m_button, SIGNAL(clicked()), SLOT(browse()));
   connect(m_edit, SIGNAL(textChanged(QString)), SLOT(testFileName()));
+  connect(m_edit, SIGNAL(textChanged(QString)),
+          SIGNAL(fileNameChanged(QString)));
+
+  setMode(ExistingFile);
 }
 
 FileBrowseWidget::~FileBrowseWidget()
@@ -83,20 +93,36 @@ void FileBrowseWidget::browse()
 
   initialPath += "/" + info.fileName();
 
-  QString newFilePath = QFileDialog::getOpenFileName(
-        this, tr("Select file"), initialPath);
-
-  if (!newFilePath.isEmpty())
-    setFileName(newFilePath);
+  QFileDialog dlg(this);
+  switch (m_mode) {
+  default:
+  case ExistingFile:
+    dlg.setWindowTitle(tr("Select file:"));
+    break;
+  case ExecutableFile:
+    dlg.setWindowTitle(tr("Select executable:"));
+    dlg.setFilter(QDir::Executable);
+    break;
+  }
+  dlg.setFileMode(QFileDialog::ExistingFile);
+  dlg.setDirectory(initialPath);
+  if (static_cast<QFileDialog::DialogCode>(dlg.exec()) == QFileDialog::Accepted
+      && !dlg.selectedFiles().isEmpty())
+    setFileName(dlg.selectedFiles().first());
 }
 
 void FileBrowseWidget::testFileName()
 {
   QFileInfo info(fileName());
-  if (info.exists())
-    fileNameMatch();
-  else
-    fileNameNoMatch();
+  if (info.exists()) {
+    if (m_mode != ExecutableFile
+        || info.isExecutable()) {
+      fileNameMatch();
+      return;
+    }
+  }
+
+  fileNameNoMatch();
 }
 
 void FileBrowseWidget::fileNameMatch()
@@ -104,6 +130,7 @@ void FileBrowseWidget::fileNameMatch()
   QPalette pal;
   pal.setColor(QPalette::Text, Qt::black);
   m_edit->setPalette(pal);
+  m_valid = true;
 }
 
 void FileBrowseWidget::fileNameNoMatch()
@@ -111,6 +138,27 @@ void FileBrowseWidget::fileNameNoMatch()
   QPalette pal;
   pal.setColor(QPalette::Text, Qt::red);
   m_edit->setPalette(pal);
+  m_valid = false;
+}
+
+void FileBrowseWidget::setMode(FileBrowseWidget::Mode m)
+{
+  m_mode = m;
+  QDir::Filters modelFilters =
+      QDir::Files | QDir::AllDirs | QDir::NoDot | QDir::Drives;
+
+  // This should go here, but unfortunately this also filters out a ton of
+  // directories as well...
+  //  if (m_mode == ExecutableFile)
+  //    modelFilters |= QDir::Executable;
+
+  m_fileSystemModel->setFilter(modelFilters);
+  testFileName();
+}
+
+FileBrowseWidget::Mode FileBrowseWidget::mode() const
+{
+  return m_mode;
 }
 
 } // namespace QtGui
