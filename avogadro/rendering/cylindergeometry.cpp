@@ -82,7 +82,7 @@ void CylinderGeometry::update()
     // Set some defaults for our cylinders.
     const unsigned int resolution = 12; // points per circle
     const float resolutionRadians =
-        2.0 * static_cast<float>(M_PI) / static_cast<float>(resolution);
+        2.0f * static_cast<float>(M_PI) / static_cast<float>(resolution);
     std::vector<Vector3f> radials;
     radials.reserve(resolution);
 
@@ -95,7 +95,7 @@ void CylinderGeometry::update()
     std::vector<CylinderColor>::const_iterator itCylinder = m_cylinders.begin();
 
     for (unsigned int i = 0;
-         itIndex != m_indices.end(), itCylinder != m_cylinders.end();
+         itIndex != m_indices.end() && itCylinder != m_cylinders.end();
          ++i, ++itIndex, ++itCylinder) {
 
       const Vector3f &position1 = itCylinder->position;

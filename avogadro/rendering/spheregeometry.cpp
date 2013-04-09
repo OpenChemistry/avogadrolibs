@@ -87,11 +87,11 @@ void SphereGeometry::update()
     std::vector<SphereColor>::const_iterator itSphere = m_spheres.begin();
 
     for (unsigned int i = 0;
-         itIndex != m_indices.end(), itSphere != m_spheres.end();
+         itIndex != m_indices.end() && itSphere != m_spheres.end();
          ++i, ++itIndex, ++itSphere) {
       // Use our packed data structure...
       float r = itSphere->radius;
-      unsigned int index = 4 * (*itIndex);
+      unsigned int index = 4 * static_cast<unsigned int>(*itIndex);
       ColorTextureVertex vert(itSphere->center, itSphere->color,
                               Vector2f(-r, -r));
       sphereVertices.push_back(vert);

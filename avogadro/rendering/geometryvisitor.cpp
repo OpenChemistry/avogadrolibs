@@ -47,7 +47,7 @@ void GeometryVisitor::visit(SphereGeometry &geometry)
   std::vector<SphereColor>::const_iterator it = spheres.begin();
   for (; it != spheres.end(); ++it)
     tmpCenter += it->center;
-  tmpCenter /= spheres.size();
+  tmpCenter /= static_cast<float>(spheres.size());
 
   // Now find its radius.
   float tmpRadius(0.0f);
@@ -100,12 +100,12 @@ void GeometryVisitor::average()
     std::vector<Vector3f>::const_iterator cit;
     for (cit = m_centers.begin(); cit != m_centers.end(); ++cit)
       m_center += *cit;
-    m_center /= m_centers.size();
+    m_center /= static_cast<float>(m_centers.size());
     // Now find the smallest enclosing radius for the new center.
     m_radius = 0.0f;
     std::vector<float>::const_iterator rit;
     for (cit = m_centers.begin(), rit = m_radii.begin();
-         cit != m_centers.end(), rit != m_radii.end(); ++cit, ++rit) {
+         cit != m_centers.end() && rit != m_radii.end(); ++cit, ++rit) {
       float distance = (m_center - (*cit)).norm() + (*rit);
       if (distance > m_radius)
         m_radius = distance;

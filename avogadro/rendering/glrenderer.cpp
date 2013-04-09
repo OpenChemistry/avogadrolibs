@@ -134,8 +134,11 @@ GLRenderer::hits(const GeometryNode *geometry, const Vector3f &rayOrigin,
 std::multimap<float, Identifier> GLRenderer::hits(int x, int y) const
 {
   // Our ray:
-  const Vector3f origin(m_camera.unProject(Vector3f(x, y, 0)));
-  const Vector3f end(m_camera.unProject(Vector3f(x, y, 1)));
+  const Vector3f origin(m_camera.unProject(Vector3f(static_cast<float>(x),
+                                                    static_cast<float>(y),
+                                                    0.f)));
+  const Vector3f end(m_camera.unProject(Vector3f(static_cast<float>(x),
+                                                 static_cast<float>(y), 1.f)));
   const Vector3f direction((end - origin).normalized());
 
   return hits(&m_scene.rootNode(), origin, end, direction);
