@@ -52,7 +52,7 @@ QList<QAction *> MolecularProperties::actions() const
 
 QStringList MolecularProperties::menuPath(QAction *) const
 {
-  return QStringList() << tr("&View") << tr("&Properties");
+  return QStringList() << tr("&View");
 }
 
 void MolecularProperties::setMolecule(QtGui::Molecule *mol)
