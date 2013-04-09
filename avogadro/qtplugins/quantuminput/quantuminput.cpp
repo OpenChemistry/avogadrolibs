@@ -61,7 +61,7 @@ QList<QAction *> QuantumInput::actions() const
 QStringList QuantumInput::menuPath(QAction *) const
 {
   QStringList path;
-  path << tr("&Extensions");
+  path << tr("&Quantum") << tr("Input Generators");
   return path;
 }
 
