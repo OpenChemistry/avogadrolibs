@@ -169,7 +169,6 @@ void QuantumInput::updateInputGeneratorScripts()
       foreach (const QFileInfo &file, dir.entryInfoList(QDir::Files |
                                                         QDir::NoDotAndDotDot)) {
         QString filePath = file.absoluteFilePath();
-        qDebug() << filePath;
         m_inputGeneratorScripts.insert(queryProgramName(filePath),
                                        filePath);
       }

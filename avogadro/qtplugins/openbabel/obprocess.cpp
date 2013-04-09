@@ -180,7 +180,7 @@ void OBProcess::convertPrepareOutput()
 
   /// Print any meaningful warnings @todo This should go to a log at some point.
   if (!errorOutput.isEmpty() && errorOutput != "1 molecule converted\n")
-    qDebug() << m_obabelExecutable << " stderr:\n" << errorOutput;
+    qWarning() << m_obabelExecutable << " stderr:\n" << errorOutput;
 
   emit convertFinished(output);
   releaseProcess();

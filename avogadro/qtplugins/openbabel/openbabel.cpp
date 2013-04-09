@@ -93,13 +93,13 @@ OpenBabel::OpenBabel(QObject *p) :
 
   QString info = openBabelInfo();
   if (info.isEmpty()) {
-    qDebug() << tr("%1 not found! Disabling Open Babel plugin actions.")
-                .arg(OBProcess().obabelExecutable());
+    qWarning() << tr("%1 not found! Disabling Open Babel plugin actions.")
+                  .arg(OBProcess().obabelExecutable());
     foreach(QAction *a, m_actions)
       a->setEnabled(false);
   }
   else {
-    qDebug() << info;
+    qDebug() << OBProcess().obabelExecutable() << " found: " << info;
   }
 }
 
@@ -263,7 +263,6 @@ void OpenBabel::handleReadFormatUpdate(const QMap<QString, QString> &fmts)
     proc->deleteLater();
 
   m_readFormats = fmts;
-  qDebug() << fmts.size() << "readable formats available through OpenBabel.";
 }
 
 void OpenBabel::refreshWriteFormats()
@@ -288,7 +287,6 @@ void OpenBabel::handleWriteFormatUpdate(const QMap<QString, QString> &fmts)
     proc->deleteLater();
 
   m_writeFormats = fmts;
-  qDebug() << fmts.size() << "writable formats available through OpenBabel.";
 }
 
 void OpenBabel::refreshForceFields()
@@ -311,9 +309,6 @@ void OpenBabel::handleForceFieldsUpdate(const QMap<QString, QString> &ffMap)
     proc->deleteLater();
 
   m_forceFields = ffMap;
-  qDebug() << m_forceFields.size()
-           << "forcefields available through OpenBabel.";
-  qDebug() << m_forceFields;
 }
 
 void OpenBabel::onConfigureGeometryOptimization()
@@ -713,7 +708,7 @@ void OpenBabel::onHydrogenOperationFinished(const QByteArray &cml)
   if (!Io::FileFormatManager::instance().readString(mol, cml.constData(),
                                                     "cml")) {
     m_progress->reset();
-    qDebug() << "Bad CML: " << cml;
+    qWarning() << "Bad CML: " << cml;
     QMessageBox::critical(qobject_cast<QWidget*>(parent()),
                           tr("Error"),
                           tr("Error interpreting obabel CML output."),
