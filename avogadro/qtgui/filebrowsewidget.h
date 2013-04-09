@@ -64,6 +64,15 @@ private slots:
   void fileNameNoMatch();
 
 private:
+  /**
+   * @brief Search the environment variable PATH for a file with the specified
+   * name.
+   * @param exec The name of the file.
+   * @return The absolute path to the file on the system, or a null QString if
+   * not found.
+   */
+  static QString searchSystemPathForFile(const QString &exec);
+
   Mode m_mode;
   bool m_valid;
   QFileSystemModel *m_fileSystemModel;
