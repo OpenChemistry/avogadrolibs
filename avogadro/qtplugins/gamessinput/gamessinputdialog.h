@@ -63,6 +63,8 @@ private slots:
   void generateClicked();
   void computeClicked();
 
+  void updateTitlePlaceholder();
+
 private:
   void connectBasic();
   void connectPreview();
@@ -81,6 +83,8 @@ private:
   void buildChargeOptions();
 
   void setBasicDefaults();
+
+  QString generateJobTitle() const;
 
   Ui::GamessInputDialog ui;
   QtGui::Molecule *m_molecule;
