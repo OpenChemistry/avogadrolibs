@@ -24,6 +24,8 @@
 #include <QtGui/QPushButton>
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QProcessEnvironment>
+#include <QtCore/QRegExp>
 
 namespace Avogadro {
 namespace QtGui {
@@ -86,12 +88,25 @@ void FileBrowseWidget::setFileName(const QString &fname)
 
 void FileBrowseWidget::browse()
 {
-  QString fname = fileName();
+  QString fname(fileName());
   QFileInfo info(fname);
-  QString initialPath = !fname.isEmpty() ? info.absolutePath()
-                                         : QDir::homePath();
+  QString initialFilePath;
 
-  initialPath += "/" + info.fileName();
+  if (info.isAbsolute()) {
+    initialFilePath = info.absolutePath();
+  }
+  else if (m_mode == ExecutableFile) {
+    initialFilePath = searchSystemPathForFile(fname);
+    if (!initialFilePath.isEmpty())
+      initialFilePath = QFileInfo(initialFilePath).absolutePath();
+  }
+
+  if (initialFilePath.isEmpty())
+    initialFilePath = QDir::homePath();
+
+  initialFilePath += "/" + info.fileName();
+
+  info = QFileInfo(initialFilePath);
 
   QFileDialog dlg(this);
   switch (m_mode) {
@@ -105,7 +120,8 @@ void FileBrowseWidget::browse()
     break;
   }
   dlg.setFileMode(QFileDialog::ExistingFile);
-  dlg.setDirectory(initialPath);
+  dlg.setDirectory(info.absolutePath());
+  dlg.selectFile(info.fileName());
   if (static_cast<QFileDialog::DialogCode>(dlg.exec()) == QFileDialog::Accepted
       && !dlg.selectedFiles().isEmpty())
     setFileName(dlg.selectedFiles().first());
@@ -114,9 +130,19 @@ void FileBrowseWidget::browse()
 void FileBrowseWidget::testFileName()
 {
   QFileInfo info(fileName());
-  if (info.exists()) {
-    if (m_mode != ExecutableFile
-        || info.isExecutable()) {
+  if (info.isAbsolute()) {
+    if (info.exists()) {
+      if (m_mode != ExecutableFile
+          || info.isExecutable()) {
+        fileNameMatch();
+        return;
+      }
+    }
+  }
+  else if (m_mode == ExecutableFile) {
+    // for non-absolute executables, search PATH
+    QString absoluteFilePath = searchSystemPathForFile(fileName());
+    if (!absoluteFilePath.isNull()) {
       fileNameMatch();
       return;
     }
@@ -139,6 +165,36 @@ void FileBrowseWidget::fileNameNoMatch()
   pal.setColor(QPalette::Text, Qt::red);
   m_edit->setPalette(pal);
   m_valid = false;
+}
+
+QString FileBrowseWidget::searchSystemPathForFile(const QString &exec)
+{
+  QString result;
+  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+  if (!env.contains("PATH"))
+    return result;
+
+  static QRegExp pathSplitter = QRegExp(
+#ifdef Q_OS_WIN32
+        ";"
+#else // WIN32
+        ":"
+#endif// WIN32
+        );
+  QStringList paths =
+      env.value("PATH").split(pathSplitter, QString::SkipEmptyParts);
+
+  foreach (const QString &path, paths) {
+    QFileInfo info(path + "/" + exec);
+    if (!info.exists()
+        || !info.isFile()) {
+      continue;
+    }
+    result = info.absoluteFilePath();
+    break;
+  }
+
+  return result;
 }
 
 void FileBrowseWidget::setMode(FileBrowseWidget::Mode m)
