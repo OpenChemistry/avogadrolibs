@@ -91,15 +91,15 @@ void QuantumInputDialog::setMolecule(QtGui::Molecule *mol)
   if (mol == m_molecule)
     return;
 
-  if (m_molecule) {
-    disconnect(mol, SIGNAL(changed(unsigned int)),
-               this, SLOT(updatePreviewText()));
-  }
+  if (m_molecule)
+    m_molecule->disconnect(this);
 
   m_molecule = mol;
 
   connect(mol, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
+  connect(mol, SIGNAL(changed(unsigned int)), SLOT(updateTitlePlaceholder()));
 
+  updateTitlePlaceholder();
   updatePreviewTextImmediately();
 }
 
@@ -310,30 +310,10 @@ void QuantumInputDialog::computeClicked()
   const QString queue = parser.cap(2);
   const QString mainFileName = m_inputGenerator.mainFileName();
 
-  QString title;
-  QString calculation;
-  QString theory;
-  QString basis;
-
-  bool haveTitle(optionString("Title", title));
-  bool haveCalculation(optionString("Calculation Type", calculation));
-  bool haveTheory(optionString("Theory", theory));
-  bool haveBasis(optionString("Basis", basis));
-  QString formula(QString::fromStdString(m_molecule->formula()));
-
-  // Merge theory/basis into theory
-  if (haveBasis) {
-    if (haveTheory)
-      theory += "/";
-    theory += basis;
-    theory.replace(QRegExp("\\s+"), "");
-    haveTheory = true;
-  }
-
-  QString description = QString("%1%2%3%4").arg(formula)
-      .arg(haveCalculation ? " | " + calculation : QString())
-      .arg(haveTheory ? " | " + theory : QString())
-      .arg(haveTitle ? "\n" + title : QString());
+  QString description;
+  optionString("Title", description);
+  if (description.isEmpty())
+    description = generateJobTitle();
 
   MoleQueue::JobObject job;
   job.setQueue(queue);
@@ -424,6 +404,42 @@ void QuantumInputDialog::textEditModified()
       m_dirtyTextEdits.removeOne(edit);
     }
   }
+}
+
+void QuantumInputDialog::updateTitlePlaceholder()
+{
+  if (QLineEdit *titleEdit =
+        qobject_cast<QLineEdit*>(m_widgets.value("Title", NULL))) {
+    titleEdit->setPlaceholderText(generateJobTitle());
+  }
+}
+
+QString QuantumInputDialog::generateJobTitle() const
+{
+  QString calculation;
+  bool haveCalculation(optionString("Calculation Type", calculation));
+
+  QString theory;
+  bool haveTheory(optionString("Theory", theory));
+
+  QString basis;
+  bool haveBasis(optionString("Basis", basis));
+
+  QString formula(m_molecule ? QString::fromStdString(m_molecule->formula())
+                             : tr("[no molecule]"));
+
+  // Merge theory/basis into theory
+  if (haveBasis) {
+    if (haveTheory)
+      theory += "/";
+    theory += basis;
+    theory.replace(QRegExp("\\s+"), "");
+    haveTheory = true;
+  }
+
+  return QString("%1%2%3").arg(formula)
+      .arg(haveCalculation ? " | " + calculation : QString())
+      .arg(haveTheory      ? " | " + theory      : QString());
 }
 
 QString QuantumInputDialog::settingsKey(const QString &identifier) const
@@ -722,6 +738,28 @@ void QuantumInputDialog::buildOptionGui()
        itEnd = userOptions.constEnd(); it != itEnd; ++it) {
     addOptionRow(it.key(), it.value());
   }
+
+  // Make connections for standard options:
+  if (QLineEdit *lineEdit = qobject_cast<QLineEdit*>(
+        m_widgets.value("Title", NULL))) {
+    connect(lineEdit, SIGNAL(textChanged(QString)),
+            SLOT(titleEditModified(QString)));
+  }
+  if (QComboBox *combo = qobject_cast<QComboBox*>(
+        m_widgets.value("Calculation Type", NULL))) {
+    connect(combo, SIGNAL(currentIndexChanged(int)),
+            SLOT(updateTitlePlaceholder()));
+  }
+  if (QComboBox *combo = qobject_cast<QComboBox*>(
+        m_widgets.value("Theory", NULL))) {
+    connect(combo, SIGNAL(currentIndexChanged(int)),
+            SLOT(updateTitlePlaceholder()));
+  }
+  if (QComboBox *combo = qobject_cast<QComboBox*>(
+        m_widgets.value("Basis", NULL))) {
+    connect(combo, SIGNAL(currentIndexChanged(int)),
+            SLOT(updateTitlePlaceholder()));
+  }
 }
 
 void QuantumInputDialog::addOptionRow(const QString &label,
@@ -738,6 +776,7 @@ void QuantumInputDialog::addOptionRow(const QString &label,
     widget->deleteLater();
     return;
   }
+
   form->addRow(label + ":", widget);
   m_widgets.insert(label, widget);
 }
@@ -1020,7 +1059,10 @@ QJsonObject QuantumInputDialog::collectOptions() const
       ret.insert(label, combo->currentText());
     }
     else if (QLineEdit *lineEdit = qobject_cast<QLineEdit*>(widget)) {
-      ret.insert(label, lineEdit->text());
+      QString value(lineEdit->text());
+      if (value.isEmpty() && label == "Title")
+        value = generateJobTitle();
+      ret.insert(label, value);
     }
     else if (QSpinBox *spinBox = qobject_cast<QSpinBox*>(widget)) {
       ret.insert(label, spinBox->value());

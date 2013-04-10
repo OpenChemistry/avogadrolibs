@@ -131,17 +131,18 @@ GamessInputDialog::~GamessInputDialog()
 
 void GamessInputDialog::setMolecule(QtGui::Molecule *mol)
 {
-  if (mol == m_molecule) {
+  if (mol == m_molecule)
     return;
-  }
-  else if (m_molecule) {
-    disconnect(this, SLOT(updatePreviewText()));
-  }
+
+  if (m_molecule)
+    m_molecule->disconnect(this);
 
   m_molecule = mol;
 
   connect(mol, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
+  connect(mol, SIGNAL(changed(unsigned int)), SLOT(updateTitlePlaceholder()));
 
+  updateTitlePlaceholder();
   updatePreviewText();
 }
 
@@ -157,12 +158,22 @@ void GamessInputDialog::showEvent(QShowEvent *e)
 
 void GamessInputDialog::connectBasic()
 {
+  connect(ui.titleEdit, SIGNAL(textChanged(QString)),
+          this, SLOT(updatePreviewText()));
+  connect(ui.titleEdit, SIGNAL(textChanged(QString)),
+          this, SLOT(titleEditModified(QString)));
   connect( ui.calculateCombo, SIGNAL( currentIndexChanged( int ) ),
            this, SLOT( updatePreviewText() ) );
+  connect(ui.calculateCombo, SIGNAL(currentIndexChanged(int)),
+          this, SLOT(updateTitlePlaceholder()));
   connect( ui.theoryCombo, SIGNAL( currentIndexChanged( int ) ),
            this, SLOT( updatePreviewText() ) );
+  connect(ui.theoryCombo, SIGNAL(currentIndexChanged(int)),
+          this, SLOT(updateTitlePlaceholder()));
   connect( ui.basisCombo, SIGNAL( currentIndexChanged( int ) ),
            this, SLOT( updatePreviewText() ) );
+  connect(ui.basisCombo, SIGNAL(currentIndexChanged(int)),
+          this, SLOT(updateTitlePlaceholder()));
   connect( ui.stateCombo, SIGNAL( currentIndexChanged( int ) ),
            this, SLOT( updatePreviewText() ) );
   connect( ui.multiplicityCombo, SIGNAL( currentIndexChanged( int ) ),
@@ -384,12 +395,28 @@ void GamessInputDialog::buildChargeOptions()
 
 void GamessInputDialog::setBasicDefaults()
 {
+  ui.titleEdit->setText(QString());
   ui.calculateCombo->setCurrentIndex( CalculateSinglePoint );
   ui.theoryCombo->setCurrentIndex( TheoryB3LYP );
   ui.basisCombo->setCurrentIndex( Basis321G );
   ui.stateCombo->setCurrentIndex( StateGas );
   ui.multiplicityCombo->setCurrentIndex( MultiplicitySinglet );
   ui.chargeCombo->setCurrentIndex( ChargeNeutral );
+}
+
+QString GamessInputDialog::generateJobTitle() const
+{
+  QString calculation(ui.calculateCombo->currentText());
+  QString theory(ui.theoryCombo->currentText());
+  QString basis(ui.basisCombo->currentText());
+  QString formula(m_molecule ? QString::fromStdString(m_molecule->formula())
+                             : tr("[no molecule]"));
+
+  // Merge theory/basis into theory
+  theory += "/" + basis;
+  theory.replace(QRegExp("\\s+"), "");
+
+  return QString("%1 | %2 | %3").arg(formula, calculation, theory);
 }
 
 void GamessInputDialog::updatePreviewText()
@@ -422,6 +449,10 @@ void GamessInputDialog::updatePreviewText()
 
 
   // Gather options:
+  QString title(ui.titleEdit->text());
+  if (title.isEmpty())
+    title = generateJobTitle();
+
   CalculateOption calculate(
         static_cast<CalculateOption>(ui.calculateCombo->currentIndex()));
   TheoryOption theory(
@@ -590,8 +621,7 @@ void GamessInputDialog::updatePreviewText()
 
   // build up the input file:
   QString file;
-  file += "! File created by the GAMESS Input Deck Generator Plugin for "
-      "Avogadro 2.0\n";
+  file += QString("! %1\n").arg(title);
   file += QString(" $BASIS GBASIS=%1%2 $END\n").arg(gBasis, extraBasis);
   file += pcm;
   file += QString(" $CONTRL SCFTYP=%1 RUNTYP=%2 ICHARG=%3 MULT=%4%5 $END\n")
@@ -723,13 +753,9 @@ void GamessInputDialog::computeClicked()
   const QString program = parser.cap(1);
   const QString queue = parser.cap(2);
 
-  QString formula(QString::fromStdString(m_molecule->formula()));
-  QString calculation(ui.calculateCombo->currentText());
-  QString theory(QString("%1/%2").arg(ui.theoryCombo->currentText(),
-                                      ui.basisCombo->currentText()));
-  theory.replace(QRegExp("\\s+"), "");
-
-  QString description = QString("%1 | %2 | %3").arg(formula, calculation, theory);
+  QString description(ui.titleEdit->text());
+  if (description.isEmpty())
+    description = generateJobTitle();
 
   MoleQueue::JobObject job;
   job.setQueue(queue);
@@ -739,6 +765,11 @@ void GamessInputDialog::computeClicked()
   job.setInputFile("job.inp", ui.previewText->toPlainText());
 
   m_client->submitJob(job);
+}
+
+void GamessInputDialog::updateTitlePlaceholder()
+{
+  ui.titleEdit->setPlaceholderText(generateJobTitle());
 }
 
 } // end namespace QtPlugins
