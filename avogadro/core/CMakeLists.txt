@@ -25,6 +25,7 @@ set(SOURCES
   bond.cpp
   elements.cpp
   graph.cpp
+  mdlvalence_p.h
   molecule.cpp
   ringperceiver.cpp
   variantmap.cpp
