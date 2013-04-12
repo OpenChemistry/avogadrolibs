@@ -108,10 +108,12 @@ void PeriodicTableView::keyPressEvent(QKeyEvent *event_)
   QGraphicsView::keyPressEvent(event_);
 }
 
-void PeriodicTableView::resizeEvent(QResizeEvent *event)
+void PeriodicTableView::resizeEvent(QResizeEvent *e)
 {
-  double scale(double(event->size().width()) / 500.0);
-  QTransform scaleTransform(QTransform::fromScale(scale, scale));
+  double widthScale(double(e->size().width()) / 500.0);
+  double heightScale(double(e->size().height()) / 280.0);
+  double scale_ = std::min(widthScale, heightScale);
+  QTransform scaleTransform(QTransform::fromScale(scale_, scale_));
   setTransform(scaleTransform);
 }
 
