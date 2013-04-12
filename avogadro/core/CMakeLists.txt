@@ -12,6 +12,7 @@ set(HEADERS
   elements.h
   graph.h
   matrix.h
+  mdlvalence.h
   molecule.h
   ringperceiver.h
   variant.h
