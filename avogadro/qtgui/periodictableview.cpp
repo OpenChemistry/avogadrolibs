@@ -31,8 +31,8 @@ PeriodicTableView::PeriodicTableView(QWidget *parent_)
   : QGraphicsView(parent_),
     m_element(6) // Everyone loves carbon.
 {
-  // Use a small title bar (Qt::Tool) with no minimize or maximise buttons
-  setWindowFlags(Qt::Dialog | Qt::Tool);
+  // Make the periodic table view a standard dialog.
+  setWindowFlags(Qt::Dialog);
 
   PeriodicTableScene *table = new PeriodicTableScene;
   table->setSceneRect(-20, -20, 480, 260);
@@ -110,9 +110,7 @@ void PeriodicTableView::keyPressEvent(QKeyEvent *event_)
 
 void PeriodicTableView::resizeEvent(QResizeEvent *e)
 {
-  double widthScale(double(e->size().width()) / 500.0);
-  double heightScale(double(e->size().height()) / 280.0);
-  double scale_ = std::min(widthScale, heightScale);
+  double scale_(double(e->size().width()) / 500.0);
   QTransform scaleTransform(QTransform::fromScale(scale_, scale_));
   setTransform(scaleTransform);
 }
