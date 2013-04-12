@@ -86,6 +86,11 @@ protected:
    */
   void keyPressEvent(QKeyEvent *event_);
 
+  /**
+   * Handle resize events.
+   */
+  void resizeEvent(QResizeEvent *event);
+
 private:
   /**
    * Proton number of the active element.

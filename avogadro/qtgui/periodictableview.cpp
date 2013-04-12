@@ -44,7 +44,6 @@ PeriodicTableView::PeriodicTableView(QWidget *parent_)
   setRenderHint(QPainter::Antialiasing);
   setWindowTitle(tr("Periodic Table"));
   resize(490, 270);
-  setFixedSize(490, 270);
   connect(table, SIGNAL(elementChanged(int)),
           this, SLOT(elementClicked(int)));
 }
@@ -107,6 +106,13 @@ void PeriodicTableView::keyPressEvent(QKeyEvent *event_)
     setElement(elem);
 
   QGraphicsView::keyPressEvent(event_);
+}
+
+void PeriodicTableView::resizeEvent(QResizeEvent *event)
+{
+  double scale(double(event->size().width()) / 500.0);
+  QTransform scaleTransform(QTransform::fromScale(scale, scale));
+  setTransform(scaleTransform);
 }
 
 } // End QtGui namespace
