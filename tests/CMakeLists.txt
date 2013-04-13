@@ -1,6 +1,4 @@
-include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/core"
-  "${AvogadroLibs_BINARY_DIR}/avogadro/qtgui"
-  "${AvogadroLibs_SOURCE_DIR}" "${AvogadroLibs_BINARY_DIR}")
+include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/core")
 
 # find google test
 find_package(GTest REQUIRED)
@@ -41,49 +39,8 @@ find_path(AVOGADRO_DATA_ROOT .avogadro.data
   )
 mark_as_advanced(AVOGADRO_DATA_ROOT)
 
-# Specify the name of each test (the Test will be appended where needed).
-set(tests
-  Array
-  Atom
-  Bond
-  CoordinateSet
-  CPP11
-  Eigen
-  Element
-  Graph
-  Molecule
-  RingPerceiver
-  Variant
-  VariantMap
-  )
-
-# Build up the source file names.
-set(testSrcs "")
-foreach(TestName ${tests})
-  message(STATUS "Adding ${TestName} test.")
-  string(TOLOWER ${TestName} testname)
-  list(APPEND testSrcs ${testname}test.cpp)
-endforeach()
-message(STATUS "Test source files: ${testSrcs}")
-
-# Add a single executable for all of our tests.
-add_executable(AvogadroTests ${testSrcs})
-target_link_libraries(AvogadroTests AvogadroCore
-  ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
-# Additional libraries and compiler definitions necessary when using Boost to
-# replace C++11.
-if(AvogadroLibs_NEEDS_BOOST)
-  target_link_libraries(AvogadroTests ${AvogadroLibs_MUTEX_BOOST_LIBRARIES})
-  add_definitions(${AvogadroLibs_BOOST_DEFINITIONS})
-endif()
-
-# Now add all of the tests, using the gtest_filter argument so that only those
-# cases are run in each test invocation.
-foreach(TestName ${tests})
-  add_test(NAME "${TestName}Test"
-    COMMAND AvogadroTests "--gtest_filter=${TestName}Test.*")
-endforeach()
-
-# This will get refactored soon - test per module.
+# Add the tests for each module.
+add_subdirectory(core)
 add_subdirectory(io)
+add_subdirectory(rendering)
 add_subdirectory(qtopengl)
