@@ -60,6 +60,7 @@ private:
   QtGui::PeriodicTableView *m_elementSelector;
   QList<unsigned char> m_defaultElements;
   QList<unsigned char> m_userElements;
+  unsigned char m_currentElement;
 };
 
 } // namespace QtPlugins
