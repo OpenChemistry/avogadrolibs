@@ -119,20 +119,10 @@ QStringList OpenBabel::menuPath(QAction *) const
 
 QList<Io::FileFormat *> OpenBabel::fileFormats() const
 {
-  // Wait for update processes to finish:
+  // Return empty list if not ready yet, and print a warning.
   if (m_readFormatsPending || m_writeFormatsPending) {
-    QTimer timeout;
-    timeout.start(5000);
-    while (timeout.isActive()
-           && (m_readFormatsPending || m_writeFormatsPending)) {
-      qApp->processEvents(QEventLoop::AllEvents, 500);
-    }
-
-    // Return empty list if timeout.
-    if (m_readFormatsPending || m_writeFormatsPending) {
-      qWarning() << tr("Timeout querying obabel for supported file formats.");
-      return QList<Io::FileFormat*>();
-    }
+    qWarning() << tr("Timeout querying obabel for supported file formats.");
+    return QList<Io::FileFormat*>();
   }
 
   QList<Io::FileFormat*> result;
@@ -263,6 +253,10 @@ void OpenBabel::handleReadFormatUpdate(const QMap<QString, QString> &fmts)
     proc->deleteLater();
 
   m_readFormats = fmts;
+
+  // If read and write formats are both dont emit a signal.
+  if (!m_readFormatsPending && !m_writeFormatsPending)
+    emit fileFormatsReady();
 }
 
 void OpenBabel::refreshWriteFormats()
@@ -287,6 +281,10 @@ void OpenBabel::handleWriteFormatUpdate(const QMap<QString, QString> &fmts)
     proc->deleteLater();
 
   m_writeFormats = fmts;
+
+  // If read and write formats are both dont emit a signal.
+  if (!m_readFormatsPending && !m_writeFormatsPending)
+    emit fileFormatsReady();
 }
 
 void OpenBabel::refreshForceFields()
