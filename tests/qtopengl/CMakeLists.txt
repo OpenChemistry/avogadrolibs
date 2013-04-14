@@ -21,10 +21,16 @@ else()
   return()
 endif()
 
-add_executable(AvogadroQtOpenGLCxx glwidgettest.cpp)
+add_executable(AvogadroQtOpenGLTests glwidgettest.cpp)
 
-target_link_libraries(AvogadroQtOpenGLCxx
+target_link_libraries(AvogadroQtOpenGLTests
   AvogadroQtOpenGL
   vtkImagingCore
   vtkRenderingQt
   ${QT_QTOPENGL_LIBRARY})
+
+add_test(NAME "glwidgettest"
+  COMMAND
+    AvogadroQtOpenGLTests
+    "--baseline" "${AVOGADRO_DATA_ROOT}/baselines/avogadro/qtopengl"
+    "--temporary" "${PROJECT_BINARY_DIR}/Testing/Temporary")
