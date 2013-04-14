@@ -76,13 +76,15 @@ double imageThresholdTest(const std::string &name, vtkImageData *imageData,
   }
   else {
     // There was no input file, write one to the temporary directory and return.
+    string testFileName = tempDir + "/" + name + ".png";
+    vtkNew<vtkPNGWriter> pngWriter;
+    pngWriter->SetFileName(testFileName.c_str());
+    pngWriter->SetInputData(imageData);
+    pngWriter->Write();
     os << "<DartMeasurement name=\"ImageNotFound\" type=\"test/string\">"
        << inputFileName << "</DartMeasurement>";
-    vtkNew<vtkPNGWriter> pngWriter;
-    pngWriter->SetFileName(string(tempDir + "/" + name + ".png").c_str());
-    pngWriter->SetInputData(imageData);
-    pngWriter->Update();
-    pngWriter->Write();
+    os << "<DartMeasurementFile name=\"TestImage\" type=\"image/png\">"
+       << testFileName << "</DartMeasurementFile>";
     return 1000.0;
   }
 
