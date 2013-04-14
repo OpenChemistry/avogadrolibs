@@ -103,6 +103,13 @@ signals:
    * molecule(s).
    */
   void moleculeReady(int numberOfMolecules);
+
+  /**
+   * Signal that the extension has file formats that are ready to be registered.
+   * If emitted the application should call fileFormats to get the formats the
+   * extension is registering.
+   */
+  void fileFormatsReady();
 };
 
 /**
