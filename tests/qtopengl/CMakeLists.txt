@@ -31,6 +31,6 @@ target_link_libraries(AvogadroQtOpenGLTests
 
 add_test(NAME "glwidgettest"
   COMMAND
-    AvogadroQtOpenGLTests
+    AvogadroQtOpenGLTests "glwidgettest"
     "--baseline" "${AVOGADRO_DATA_ROOT}/baselines/avogadro/qtopengl"
     "--temporary" "${PROJECT_BINARY_DIR}/Testing/Temporary")
