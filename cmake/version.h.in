@@ -1,0 +1,30 @@
+/******************************************************************************
+
+ This source file is part of the Avogadro project.
+
+ Copyright 2013 Kitware, Inc.
+
+ This source code is released under the New BSD License, (the "License").
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ ******************************************************************************/
+
+#ifndef VERSION_H_
+#define VERSION_H_
+
+#include "avogadrocoreexport.h"
+
+#cmakedefine AvogadroLibs_VERSION "@AvogadroLibs_VERSION@"
+
+namespace Avogadro {
+
+AVOGADROCORE_EXPORT const char *version();
+
+} // end Avogadro namespace
+
+#endif /* VERSION_H_ */
