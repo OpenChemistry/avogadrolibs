@@ -67,6 +67,7 @@ endfunction()
 # Now to make the plugins.
 add_subdirectory(editor)
 add_subdirectory(gamessinput)
+add_subdirectory(hydrogens)
 add_subdirectory(manipulator)
 add_subdirectory(molecularproperties)
 add_subdirectory(mongochem)
