@@ -21,6 +21,7 @@
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/hydrogentools.h>
 #include <avogadro/core/vector.h>
 
 #include <avogadro/qtgui/molecule.h>
@@ -67,6 +68,7 @@ Editor::Editor(QObject *parent_)
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER),
     m_bondAdded(false)
 {
+  connect(m_toolWidget, SIGNAL(fixupHydrogens()), SLOT(fixupHydrogens()));
   m_activateAction->setText(tr("Draw"));
   reset();
 }
@@ -188,6 +190,18 @@ QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
     m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
 
   return NULL;
+}
+
+void Editor::fixupHydrogens()
+{
+  if (m_molecule) {
+    Core::HydrogenTools::fixupHydrogens(*m_molecule);
+    // Assume bonds and atoms changed...
+    m_molecule->emitChanged(QtGui::Molecule::Atoms
+                            | QtGui::Molecule::Bonds
+                            | QtGui::Molecule::Added
+                            | QtGui::Molecule::Removed);
+  }
 }
 
 void Editor::updatePressedButtons(QMouseEvent *e, bool release)
