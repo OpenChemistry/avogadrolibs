@@ -52,6 +52,32 @@ TEST(MoleculeTest, addAtom)
   EXPECT_EQ(atom2.atomicNumber(), static_cast<unsigned char>(1));
 }
 
+TEST(MoleculeTest, removeAtom)
+{
+  Avogadro::Core::Molecule molecule;
+  Avogadro::Core::Atom atom0 = molecule.addAtom(6);
+  Avogadro::Core::Atom atom1 = molecule.addAtom(1);
+  Avogadro::Core::Atom atom2 = molecule.addAtom(1);
+  Avogadro::Core::Atom atom3 = molecule.addAtom(1);
+  Avogadro::Core::Atom atom4 = molecule.addAtom(1);
+  molecule.addBond(atom0, atom1, 1);
+  molecule.addBond(atom0, atom2, 1);
+  molecule.addBond(atom0, atom3, 1);
+  molecule.addBond(atom0, atom4, 1);
+
+  EXPECT_EQ(5, molecule.atomCount());
+  EXPECT_EQ(4, molecule.bondCount());
+
+  molecule.removeAtom(atom0);
+
+  EXPECT_EQ(4, molecule.atomCount());
+  EXPECT_EQ(0, molecule.bondCount());
+
+  molecule.clearAtoms();
+
+  EXPECT_EQ(0, molecule.atomCount());
+}
+
 TEST(MoleculeTest, addBond)
 {
   Avogadro::Core::Molecule molecule;
@@ -92,6 +118,32 @@ TEST(MoleculeTest, addBond)
   EXPECT_EQ(bond.molecule(), &molecule);
   EXPECT_EQ(bond.atom1().index(), b.index());
   EXPECT_EQ(bond.atom2().index(), c.index());
+}
+
+TEST(MoleculeTest, removeBond)
+{
+  Avogadro::Core::Molecule molecule;
+  Avogadro::Core::Atom a = molecule.addAtom(1);
+  Avogadro::Core::Atom b = molecule.addAtom(1);
+  Avogadro::Core::Bond bondAB = molecule.addBond(a, b);
+  Avogadro::Core::Atom c = molecule.addAtom(1);
+  molecule.addBond(b, c, 2);
+
+  EXPECT_EQ(3, molecule.atomCount());
+  EXPECT_EQ(2, molecule.bondCount());
+  EXPECT_TRUE(molecule.bond(a, b).isValid());
+  EXPECT_TRUE(molecule.bond(b, c).isValid());
+
+  molecule.removeBond(bondAB);
+
+  EXPECT_EQ(3, molecule.atomCount());
+  EXPECT_EQ(1, molecule.bondCount());
+  EXPECT_FALSE(molecule.bond(a, b).isValid());
+  EXPECT_TRUE(molecule.bond(b, c).isValid());
+
+  molecule.clearBonds();
+
+  EXPECT_EQ(0, molecule.bondCount());
 }
 
 TEST(MoleculeTest, findBond)

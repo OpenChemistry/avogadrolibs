@@ -105,6 +105,26 @@ public:
   /**  Adds an atom to the molecule. */
   virtual Atom addAtom(unsigned char atomicNumber);
 
+  /**
+   * @brief Remove the specified atom from the molecule.
+   * @param index The index of the atom to be removed.
+   * @return True on success, false if the atom was not found.
+   */
+  virtual bool removeAtom(size_t index);
+
+  /**
+   * @brief Remove the specified atom from the molecule.
+   * @param atom The atom to be removed.
+   * @return True on success, false if the atom was not found.
+   * @overload
+   */
+  virtual bool removeAtom(const Core::Atom &atom);
+
+  /**
+   * Remove all atoms from the molecule.
+   */
+  virtual void clearAtoms();
+
   /**  Returns the atom at @p index in the molecule. */
   Atom atom(size_t index) const;
 
@@ -114,6 +134,35 @@ public:
   /** Adds a bond between atoms @p a and @p b. */
   virtual Bond addBond(const Atom &a, const Atom &b,
                        unsigned char bondOrder = 1);
+
+  /**
+   * @brief Remove the specified bond.
+   * @param index The index of the bond to be removed.
+   * @return True on success, false if the bond was not found.
+   */
+  virtual bool removeBond(size_t index);
+
+  /**
+   * @brief Remove the specified bond.
+   * @param bond The bond to be removed.
+   * @return True on success, false if the bond was not found.
+   * @overload
+   */
+  virtual bool removeBond(const Core::Bond &bond);
+
+  /**
+   * @brief Remove the specified bond.
+   * @param a One atom in the bond.
+   * @param b The other atom in the bond.
+   * @return True on success, false if the bond was not found.
+   * @overload
+   */
+  virtual bool removeBond(const Core::Atom &a, const Core::Atom &b);
+
+  /**
+   * Remove all bonds from the molecule.
+   */
+  virtual void clearBonds();
 
   /** Returns the bond at @p index in the molecule. */
   Bond bond(size_t index) const;

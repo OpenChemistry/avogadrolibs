@@ -93,12 +93,6 @@ bool Molecule::removeAtom(const Core::Atom &atom_)
   return removeAtom(atom_.index());
 }
 
-void Molecule::clearAtoms()
-{
-  while (atomCount() > 0)
-    removeAtom(static_cast<size_t>(0));
-}
-
 Core::Bond Molecule::addBond(const Core::Atom &a, const Core::Atom &b,
                              unsigned char bondOrder)
 {
@@ -143,12 +137,6 @@ bool Molecule::removeBond(const Core::Bond &bond_)
 bool Molecule::removeBond(const Core::Atom &a, const Core::Atom &b)
 {
   return removeBond(bond(a, b).index());
-}
-
-void Molecule::clearBonds()
-{
-  while (bondCount())
-    removeBond(static_cast<size_t>(0));
 }
 
 Mesh* Molecule::addMesh()
