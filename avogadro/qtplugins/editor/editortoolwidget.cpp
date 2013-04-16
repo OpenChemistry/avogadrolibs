@@ -46,6 +46,8 @@ EditorToolWidget::EditorToolWidget(QWidget *parent_) :
   connect(m_ui->element, SIGNAL(currentIndexChanged(int)),
           this, SLOT(elementChanged(int)));
 
+  connect(m_ui->pushFixHydrogens, SIGNAL(clicked()), SIGNAL(fixupHydrogens()));
+
   // Show carbon at startup.
   selectElement(6);
 }
