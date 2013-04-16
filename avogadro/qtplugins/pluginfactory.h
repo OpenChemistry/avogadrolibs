@@ -1,6 +1,6 @@
 /******************************************************************************
 
- This source file is part of the MoleQueue project.
+ This source file is part of the Avogadro project.
 
  Copyright 2013 Kitware, Inc.
 
