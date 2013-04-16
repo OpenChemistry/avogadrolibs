@@ -8,6 +8,7 @@ set(tests
   Eigen
   Element
   Graph
+  HydrogenTools
   Molecule
   RingPerceiver
   Variant
