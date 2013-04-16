@@ -59,6 +59,7 @@ public:
 
 private slots:
   void clearKeyPressBuffer() { m_keyPressBuffer.clear(); }
+  void adjustHydrogens();
 
 private:
   /**

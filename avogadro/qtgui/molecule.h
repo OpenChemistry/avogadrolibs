@@ -65,13 +65,15 @@ public:
    * @param index The index of the atom to be removed.
    * @return True on success, false if the atom was not found.
    */
-  bool removeAtom(size_t index);
-  bool removeAtom(const Core::Atom &atom);
+  bool removeAtom(size_t index) AVO_OVERRIDE;
 
   /**
-   * Remove all atoms from the molecule.
+   * @brief Remove the specified atom from the molecule.
+   * @param atom The atom to be removed.
+   * @return True on success, false if the atom was not found.
+   * @overload
    */
-  void clearAtoms();
+  bool removeAtom(const Core::Atom &atom) AVO_OVERRIDE;
 
   /**
    * @brief Add a bond between the specified atoms.
@@ -85,17 +87,27 @@ public:
 
   /**
    * @brief Remove the specified bond.
-   * @param index The index of the bond to be remove.
-   * @return True on succes, false if the bond was not found.
+   * @param index The index of the bond to be removed.
+   * @return True on success, false if the bond was not found.
    */
-  bool removeBond(size_t index);
-  bool removeBond(const Core::Bond &bond);
-  bool removeBond(const Core::Atom &a, const Core::Atom &b);
+  bool removeBond(size_t index) AVO_OVERRIDE;
 
   /**
-   * Remove all bonds from the molecule.
+   * @brief Remove the specified bond.
+   * @param bond The bond to be removed.
+   * @return True on success, false if the bond was not found.
+   * @overload
    */
-  void clearBonds();
+  bool removeBond(const Core::Bond &bond) AVO_OVERRIDE;
+
+  /**
+   * @brief Remove the specified bond.
+   * @param a One atom in the bond.
+   * @param b The other atom in the bond.
+   * @return True on success, false if the bond was not found.
+   * @overload
+   */
+  bool removeBond(const Core::Atom &a, const Core::Atom &b) AVO_OVERRIDE;
 
   /**
    * @brief Add a mesh to the molecule.

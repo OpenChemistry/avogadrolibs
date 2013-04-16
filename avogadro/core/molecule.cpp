@@ -140,6 +140,60 @@ Atom Molecule::addAtom(unsigned char atomicNumber)
   return Atom(this, m_atomicNumbers.size() - 1);
 }
 
+bool Molecule::removeAtom(size_t index)
+{
+  if (index >= atomCount())
+    return false;
+
+  // Before removing the atom we must first remove any bonds to it.
+  std::vector<Bond> atomBonds = bonds(atom(index));
+  while (atomBonds.size()) {
+    removeBond(atomBonds.back());
+    atomBonds = bonds(atom(index));
+  }
+
+  size_t newSize = m_atomicNumbers.size() - 1;
+  if (index != newSize) {
+    // We need to move the last atom to this position, and update its unique ID.
+    m_atomicNumbers[index] = m_atomicNumbers.back();
+    if (m_positions2d.size() == m_atomicNumbers.size())
+      m_positions2d[index] = m_positions2d.back();
+    if (m_positions3d.size() == m_atomicNumbers.size())
+      m_positions3d[index] = m_positions3d.back();
+
+    // Find any bonds to the moved atom and update their index.
+    atomBonds = bonds(atom(newSize));
+    for (std::vector<Bond>::const_iterator it = atomBonds.begin(),
+         itEnd = atomBonds.end(); it != itEnd; ++it) {
+      std::pair<size_t, size_t> bondPair = m_bondPairs[it->index()];
+      if (bondPair.first == newSize)
+        bondPair.first = index;
+      else if (bondPair.second == newSize)
+        bondPair.second = index;
+      m_bondPairs[it->index()] = bondPair;
+    }
+  }
+  // Resize the arrays for the smaller molecule.
+  if (m_positions2d.size() == m_atomicNumbers.size())
+    m_positions2d.pop_back();
+  if (m_positions3d.size() == m_atomicNumbers.size())
+    m_positions3d.pop_back();
+  m_atomicNumbers.pop_back();
+
+  return true;
+}
+
+bool Molecule::removeAtom(const Atom &atom_)
+{
+  return removeAtom(atom_.index());
+}
+
+void Molecule::clearAtoms()
+{
+  while (atomCount() != 0)
+    removeAtom(static_cast<size_t>(0));
+}
+
 Atom Molecule::atom(size_t index) const
 {
   assert(index < size());
@@ -172,6 +226,37 @@ Bond Molecule::addBond(const Atom &a, const Atom &b, unsigned char bondOrder)
   m_bondOrders.push_back(bondOrder);
 
   return Bond(this, m_bondPairs.size() - 1);
+}
+
+bool Molecule::removeBond(size_t index)
+{
+  if (index >= bondCount())
+    return false;
+
+  size_t newSize = m_bondOrders.size() - 1;
+  if (index != newSize) {
+    m_bondOrders[index] = m_bondOrders.back();
+    m_bondPairs[index] = m_bondPairs.back();
+  }
+  m_bondOrders.pop_back();
+  m_bondPairs.pop_back();
+  return true;
+}
+
+bool Molecule::removeBond(const Bond &bond_)
+{
+  return removeBond(bond_.index());
+}
+
+bool Molecule::removeBond(const Atom &a, const Atom &b)
+{
+  return removeBond(bond(a, b).index());
+}
+
+void Molecule::clearBonds()
+{
+  while (bondCount())
+    removeBond(static_cast<size_t>(0));
 }
 
 Bond Molecule::bond(size_t index) const
@@ -232,21 +317,29 @@ std::string Molecule::formula() const
   // Carbons first
   iter = composition.find(6);
   if (iter != composition.end()) {
-    result << "C" << iter->second;
+    result << "C";
+    if (iter->second > 1)
+      result << iter->second;
     composition.erase(iter);
 
     // If carbon is present, hydrogens are next.
     iter = composition.find(1);
     if (iter != composition.end()) {
-      result << "H" << iter->second;
+      result << "H";
+      if (iter->second > 1)
+        result << iter->second;
       composition.erase(iter);
     }
   }
 
   // The rest:
   iter = composition.begin();
-  while (iter != composition.end())
-    result << Elements::symbol(iter->first) << iter->second, ++iter;
+  while (iter != composition.end()) {
+    result << Elements::symbol(iter->first);
+    if (iter->second > 1)
+      result << iter->second;
+    ++iter;
+  }
 
   return result.str();
 }

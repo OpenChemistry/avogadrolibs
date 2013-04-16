@@ -15,6 +15,7 @@ set(HEADERS
   coordinateset.h
   elements.h
   graph.h
+  hydrogentools.h
   matrix.h
   molecule.h
   ringperceiver.h
@@ -30,6 +31,8 @@ set(SOURCES
   bond.cpp
   elements.cpp
   graph.cpp
+  hydrogentools.cpp
+  mdlvalence_p.h
   molecule.cpp
   ringperceiver.cpp
   variantmap.cpp
