@@ -15,6 +15,9 @@
 
 ******************************************************************************/
 
+namespace Avogadro {
+namespace Core {
+
 /**
  * Calculate the full valency (e.g. number of expected bonds) for a given atom.
  * This function is adapted from the MDL valence model to indicate when an atom
@@ -579,6 +582,9 @@ static unsigned int atomValence(const unsigned char atomicNumber,
   return numBonds;
 }
 
+// This method is removed as it is not used at the moment and emits warnings
+// otherwise. It should be used when an MDL reader is added.
+#if 0
 /**
  * Calculate the full valency (e.g. number of expected bonds) for a given atom.
  * This function implements the MDL valence model.
@@ -1031,3 +1037,7 @@ static unsigned int mdlValence(const unsigned char atomicNumber,
   }
   return numBonds;
 }
+#endif
+
+} // end namespace Core
+} // end namespace Avogadro
