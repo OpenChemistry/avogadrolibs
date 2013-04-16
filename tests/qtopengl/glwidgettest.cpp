@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,64 +14,61 @@
 
 ******************************************************************************/
 
+#include <avogadro/rendering/geometrynode.h>
+#include <avogadro/rendering/spheregeometry.h>
 #include <avogadro/qtopengl/glwidget.h>
+#include <utilities/vtktesting/imageregressiontest.h>
 
+#include <QtCore/QTimer>
 #include <QtGui/QApplication>
 #include <QtGui/QImage>
-#include <QtGui/QPixmap>
-#include <QtCore/QDebug>
 
-#include <vtkQImageToImageSource.h>
-#include <vtkImageDifference.h>
-#include <vtkPNGReader.h>
-#include <vtkImageData.h>
-#include <vtkPointData.h>
-#include <vtkUnsignedCharArray.h>
-#include <vtkTrivialProducer.h>
-#include <vtkNew.h>
+#include <QtOpenGL/QGLFormat>
 
 #include <iostream>
 
-int main(int argc, char *argv[])
+using Avogadro::Vector3f;
+using Avogadro::Vector3ub;
+using Avogadro::Rendering::GeometryNode;
+using Avogadro::Rendering::SphereGeometry;
+
+int glwidgettest(int argc, char *argv[])
 {
+  // Set up the default format for our GL contexts.
+  QGLFormat defaultFormat = QGLFormat::defaultFormat();
+  defaultFormat.setSampleBuffers(true);
+  QGLFormat::setDefaultFormat(defaultFormat);
+
   QApplication app(argc, argv);
   Avogadro::QtOpenGL::GLWidget widget;
-  QPixmap pixmap = widget.renderPixmap(200, 200, false);
-  pixmap.save("glwidgettest.png", 0, 100);
+  widget.setGeometry(10, 10, 250, 250);
+  widget.show();
 
-  QImage image = pixmap.toImage();
+  GeometryNode *geometry = new GeometryNode;
+  SphereGeometry *spheres = new SphereGeometry;
+  geometry->addDrawable(spheres);
+  spheres->addSphere(Vector3f(0, 0, 0), Vector3ub(255, 0, 0), 0.5);
+  spheres->addSphere(Vector3f(2, 0, 0), Vector3ub(0, 255, 0), 1.5);
+  spheres->addSphere(Vector3f(0, 2, 1), Vector3ub(0, 0, 255), 1.0);
+  widget.renderer().scene().rootNode().addChild(geometry);
 
-  vtkNew<vtkImageDifference> imageDiff;
-  vtkNew<vtkQImageToImageSource> qimage;
-  qimage->SetQImage(&image);
-  vtkNew<vtkPNGReader> pngReader;
-  pngReader->SetFileName("glwidgettest.png");
+  // Make sure the widget renders the scene, and store it in a QImage.
+  widget.raise();
+  widget.repaint();
 
-  // Let's copy the image and remove the alpha channel we don't use.
-  vtkNew<vtkImageData> imageData;
-  qimage->Update();
-  imageData->SetDimensions(qimage->GetOutput()->GetDimensions());
-  imageData->AllocateScalars(VTK_UNSIGNED_CHAR, 3);
-  unsigned char *source =
-      reinterpret_cast<unsigned char*>(vtkUnsignedCharArray::SafeDownCast(qimage->GetOutput()->GetPointData()->GetScalars())->GetVoidPointer(0));
-  unsigned char *dest =
-      reinterpret_cast<unsigned char*>(vtkUnsignedCharArray::SafeDownCast(imageData->GetPointData()->GetScalars())->GetVoidPointer(0));
-  int size = image.width() * image.height();
-  for (int i = 0; i < size; ++i) {
-    dest[3 * i + 0] = source[4 * i + 0];
-    dest[3 * i + 1] = source[4 * i + 1];
-    dest[3 * i + 2] = source[4 * i + 2];
-  }
-  vtkNew<vtkTrivialProducer> producer;
-  producer->SetOutput(imageData.GetPointer());
-  imageDiff->SetInputConnection(producer->GetOutputPort());
-  imageDiff->SetImageConnection(pngReader->GetOutputPort());
+  // Run the application for a while, and then quit so we can save an image.
+  QTimer timer;
+  timer.setSingleShot(true);
+  app.connect(&timer, SIGNAL(timeout()), SLOT(quit()));
+  timer.start(200);
+  app.exec();
 
-  double minError = VTK_DOUBLE_MAX;
-  imageDiff->Update();
-  minError = imageDiff->GetThresholdedError();
+  // Grab the frame buffer of the GLWidget and save it to a QImage.
+  QImage image = widget.grabFrameBuffer(false);
 
-  qDebug() << "Image error measured to be: " << minError;
+  // Set up the image regression test.
+  Avogadro::VtkTesting::ImageRegressionTest test(argc, argv);
 
-  return minError < 15 ? 0 : 1;
+  // Do the image threshold test, printing output to the std::cout for ctest.
+  return test.imageThresholdTest(image, std::cout);
 }
