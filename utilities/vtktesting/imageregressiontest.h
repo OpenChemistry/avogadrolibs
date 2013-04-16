@@ -160,7 +160,7 @@ private:
 
 };
 
-ImageRegressionTest::ImageRegressionTest(int argc, char *argv[])
+inline ImageRegressionTest::ImageRegressionTest(int argc, char *argv[])
   : m_threshold(15.0), m_valid(false)
 {
   if (argc < 2) {
@@ -169,7 +169,7 @@ ImageRegressionTest::ImageRegressionTest(int argc, char *argv[])
 
   for (int i = 0; i < argc; ++i) {
     std::string arg(argv[i]);
-    if (i == 1 && arg[0] != '-' && arg[1] != '-') {
+    if (i == 0 && arg[0] != '-' && arg[1] != '-') {
       // It is the test name.
       m_name = argv[i];
       continue;
@@ -187,8 +187,8 @@ ImageRegressionTest::ImageRegressionTest(int argc, char *argv[])
     m_valid = true;
 }
 
-int ImageRegressionTest::imageThresholdTest(vtkImageData *imageData,
-                                            std::ostream &os)
+inline int ImageRegressionTest::imageThresholdTest(vtkImageData *imageData,
+                                                   std::ostream &os)
 {
   // Check the input file exists, and can be read.
   std::string inputFileName(m_baselinePath + "/" + m_name + ".png");
@@ -277,16 +277,16 @@ int ImageRegressionTest::imageThresholdTest(vtkImageData *imageData,
   return minError < m_threshold ? 0 : 1;
 }
 
-int ImageRegressionTest::imageThresholdTest(QImage &image,
-                                            std::ostream &os)
+inline int ImageRegressionTest::imageThresholdTest(QImage &image,
+                                                   std::ostream &os)
 {
   vtkNew<vtkImageData> imageData;
   convertImage(image, imageData.GetPointer());
   return imageThresholdTest(imageData.GetPointer(), os);
 }
 
-void ImageRegressionTest::convertImage(QImage &inputImage,
-                                       vtkImageData *outputImage)
+inline void ImageRegressionTest::convertImage(QImage &inputImage,
+                                              vtkImageData *outputImage)
 {
   // Now to convert this to a vtkImageData, so that we can diff it.
   vtkNew<vtkQImageToImageSource> qimage;

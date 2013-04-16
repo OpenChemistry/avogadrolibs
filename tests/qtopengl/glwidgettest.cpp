@@ -32,7 +32,7 @@ using Avogadro::Vector3ub;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::SphereGeometry;
 
-int main(int argc, char *argv[])
+int glwidgettest(int argc, char *argv[])
 {
   // Set up the default format for our GL contexts.
   QGLFormat defaultFormat = QGLFormat::defaultFormat();

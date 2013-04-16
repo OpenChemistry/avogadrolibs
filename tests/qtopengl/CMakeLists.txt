@@ -21,7 +21,19 @@ else()
   return()
 endif()
 
-add_executable(AvogadroQtOpenGLTests glwidgettest.cpp)
+# List of tests to be added, the name will be changed to lower case with
+# test.cpp appended. The main function of each test is expected to be lower
+# cased version with test appended, e.g. GLWidget -> glwidgettest.
+set(tests
+  GLWidget)
+
+foreach(test ${tests})
+  string(TOLOWER ${test} testname)
+  list(APPEND testSrcs ${testname}test.cpp)
+endforeach()
+create_test_sourcelist(testDriver qtopengltests.cpp ${testSrcs})
+
+add_executable(AvogadroQtOpenGLTests ${testDriver})
 
 target_link_libraries(AvogadroQtOpenGLTests
   AvogadroQtOpenGL
@@ -29,8 +41,11 @@ target_link_libraries(AvogadroQtOpenGLTests
   vtkRenderingQt
   ${QT_QTOPENGL_LIBRARY})
 
-add_test(NAME "glwidgettest"
-  COMMAND
-    AvogadroQtOpenGLTests "glwidgettest"
-    "--baseline" "${AVOGADRO_DATA_ROOT}/baselines/avogadro/qtopengl"
-    "--temporary" "${PROJECT_BINARY_DIR}/Testing/Temporary")
+foreach(test ${tests})
+  string(TOLOWER ${test} testname)
+  add_test(NAME "${test}"
+    COMMAND
+      AvogadroQtOpenGLTests "${testname}test"
+      "--baseline" "${AVOGADRO_DATA_ROOT}/baselines/avogadro/qtopengl"
+      "--temporary" "${PROJECT_BINARY_DIR}/Testing/Temporary")
+endforeach()
