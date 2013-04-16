@@ -3,6 +3,10 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
+# configure the version header
+configure_file("${PROJECT_SOURCE_DIR}/cmake/version.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/version.h")
+
 set(HEADERS
   array.h
   atom.h
@@ -18,6 +22,7 @@ set(HEADERS
   variant-inline.h
   variantmap.h
   vector.h
+  "${CMAKE_CURRENT_BINARY_DIR}/version.h"
 )
 
 set(SOURCES
@@ -28,6 +33,7 @@ set(SOURCES
   molecule.cpp
   ringperceiver.cpp
   variantmap.cpp
+  version.cpp
 )
 
 avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
