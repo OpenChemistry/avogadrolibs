@@ -12,7 +12,6 @@ set(HEADERS
   elements.h
   graph.h
   matrix.h
-  mdlvalence.h
   molecule.h
   ringperceiver.h
   variant.h
@@ -26,6 +25,7 @@ set(SOURCES
   bond.cpp
   elements.cpp
   graph.cpp
+  mdlvalence_p.h
   molecule.cpp
   ringperceiver.cpp
   variantmap.cpp
