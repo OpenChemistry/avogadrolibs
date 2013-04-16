@@ -44,6 +44,9 @@ public:
   void setBondOrder(unsigned char order);
   unsigned char bondOrder() const;
 
+signals:
+  void adjustHydrogens();
+
 private slots:
   void elementChanged(int index);
   void updateElementCombo();
