@@ -18,6 +18,7 @@ set(HEADERS
   fileformat.h
   fileformatmanager.h
   hdf5dataformat.h
+  mdlformat.h
   utilities.h
   xyzformat.h
 )
@@ -28,6 +29,7 @@ set(SOURCES
   fileformat.cpp
   fileformatmanager.cpp
   hdf5dataformat.cpp
+  mdlformat.cpp
   xyzformat.cpp
 )
 

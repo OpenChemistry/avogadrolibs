@@ -20,6 +20,7 @@
 
 #include "cmlformat.h"
 #include "cjsonformat.h"
+#include "mdlformat.h"
 #include "xyzformat.h"
 
 #include <avogadro/stl/memory_p.h>
@@ -236,6 +237,7 @@ FileFormatManager::FileFormatManager()
 {
   addFormat(new CmlFormat);
   addFormat(new CjsonFormat);
+  addFormat(new MdlFormat);
   addFormat(new XyzFormat);
 }
 

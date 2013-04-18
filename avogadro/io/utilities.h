@@ -31,8 +31,8 @@ namespace Io {
  * @param skipEmpty If true any empty items will be skipped.
  * @return A vector containing the items.
  */
-std::vector<std::string> split(const std::string &string, char delimiter,
-                               bool skipEmpty = true)
+inline std::vector<std::string> split(const std::string &string, char delimiter,
+                                      bool skipEmpty = true)
 {
   std::vector<std::string> elements;
   std::stringstream stringStream(string);
@@ -43,6 +43,42 @@ std::vector<std::string> split(const std::string &string, char delimiter,
     elements.push_back(item);
   }
   return elements;
+}
+
+/**
+ * @brief Trim a string of whitespace from the left and right.
+ */
+inline std::string trimmed(const std::string &input)
+{
+  size_t start = input.find_first_not_of(" \n\r\t");
+  size_t end = input.find_last_not_of(" \n\r\t");
+  return input.substr(start, end - start + 1);
+}
+
+/**
+ * @brief Cast the inputString to the specified type.
+ * @param inputString String to cast to the specified type.
+ */
+template<typename T> T lexicalCast(const std::string &inputString)
+{
+  T value;
+  std::istringstream(inputString) >> value;
+  return value;
+}
+
+/**
+ * @brief Cast the inputString to the specified type.
+ * @param inputString String to cast to the specified type.
+ * @param ok Set to true on success, and false if the string could not be
+ * converted to the specified type.
+ */
+template<typename T> T lexicalCast(const std::string &inputString, bool &ok)
+{
+  T value;
+  std::istringstream stream(inputString);
+  stream >> value;
+  ok = !stream.fail();
+  return value;
 }
 
 } // end Io namespace

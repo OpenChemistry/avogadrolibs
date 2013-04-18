@@ -452,10 +452,10 @@ inline Variant& Variant::operator=(const Variant &variant)
 
 // --- Internal Methods ---------------------------------------------------- //
 template<typename T>
-inline T Variant::lexical_cast(const std::string &string)
+inline T Variant::lexical_cast(const std::string &str)
 {
   T value;
-  std::istringstream(string) >> value;
+  std::istringstream(str) >> value;
   return value;
 }
 

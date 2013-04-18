@@ -4,6 +4,8 @@ set(tests
   Cml
   FileFormatManager
   Hdf5
+  Mdl
+  Utilities
   Xyz
   )
 
