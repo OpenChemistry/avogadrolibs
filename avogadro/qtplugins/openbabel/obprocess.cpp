@@ -253,7 +253,7 @@ void OBProcess::queryForceFieldsPrepare()
   emit queryForceFieldsFinished(result);
 }
 
-bool OBProcess::optimizeGeometry(const QByteArray &cml,
+bool OBProcess::optimizeGeometry(const QByteArray &mol,
                                  const QStringList &options)
 {
   if (!tryLockProcess()) {
@@ -262,7 +262,7 @@ bool OBProcess::optimizeGeometry(const QByteArray &cml,
   }
 
   QStringList realOptions;
-  realOptions << "-icml" << "-ocml" << "--minimize" << "--log" << options;
+  realOptions << "-imol" << "-omol" << "--minimize" << "--log" << options;
 
   // We'll need to read the log (printed to stderr) to update progress
   connect(m_process, SIGNAL(readyReadStandardError()),
@@ -273,7 +273,7 @@ bool OBProcess::optimizeGeometry(const QByteArray &cml,
   m_optimizeGeometryMaxSteps = -1;
 
   // Start the optimization
-  executeObabel(realOptions, this, SLOT(optimizeGeometryPrepare()), cml);
+  executeObabel(realOptions, this, SLOT(optimizeGeometryPrepare()), mol);
   return true;
 }
 
