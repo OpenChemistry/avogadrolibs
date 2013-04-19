@@ -30,12 +30,14 @@ class Cube;
 class Mesh;
 class MeshGenerator;
 }
-namespace Quantum {
+namespace Core {
 class BasisSet;
 }
 
 namespace QtPlugins {
 
+class GaussianSetConcurrent;
+class SlaterSetConcurrent;
 class SurfaceDialog;
 
 class QuantumOutput : public QtGui::ExtensionPlugin
@@ -56,8 +58,6 @@ public:
 
   void setMolecule(QtGui::Molecule *mol);
 
-  bool readMolecule(QtGui::Molecule &mol);
-
 private slots:
   void loadMoleculeActivated();
   void homoActivated();
@@ -74,7 +74,10 @@ private:
   QProgressDialog    *m_progressDialog;
 
   QtGui::Molecule    *m_molecule;
-  Quantum::BasisSet  *m_basis;
+  Core::BasisSet     *m_basis;
+
+  GaussianSetConcurrent *m_concurrent;
+  SlaterSetConcurrent *m_concurrent2;
 
   QtGui::Cube        *m_cube;
   QtGui::Mesh        *m_mesh1;

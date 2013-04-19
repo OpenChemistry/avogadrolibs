@@ -3,6 +3,7 @@
   This source file is part of the Avogadro project.
 
   Copyright 2010 Geoffrey R. Hutchison
+  Copyright 2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -17,37 +18,62 @@
 #ifndef AVOGADRO_QUANTUMIO_MOLDEN_H
 #define AVOGADRO_QUANTUMIO_MOLDEN_H
 
-#include <Eigen/Core>
-#include <vector>
+#include "avogadroquantumioexport.h"
+#include <avogadro/core/gaussianset.h>
+#include <avogadro/io/fileformat.h>
 
-#include <avogadro/quantum/gaussianset.h>
+#include <vector>
 
 namespace Avogadro {
 namespace QuantumIO {
 
-using Quantum::GaussianSet;
-using Quantum::orbital;
-
-class MoldenFile
+class AVOGADROQUANTUMIO_EXPORT MoldenFile : public Io::FileFormat
 {
-  // Parsing mode: section of the file currently being parsed
-  enum mode { NotParsing, Atoms, GTO, STO, MO, SCF };
 public:
-  MoldenFile(const QString &filename, GaussianSet *basis);
-  ~MoldenFile();
-  void outputAll();
+  MoldenFile();
+  ~MoldenFile() AVO_OVERRIDE;
+
+  Operations supportedOperations() const AVO_OVERRIDE
+  {
+    return Read | File | Stream | String;
+  }
+
+  FileFormat * newInstance() const AVO_OVERRIDE { return new MoldenFile; }
+  std::string identifier() const AVO_OVERRIDE { return "Avogadro: Molden"; }
+  std::string name() const AVO_OVERRIDE { return "Molden"; }
+  std::string description() const AVO_OVERRIDE
+  {
+    return "Molden file format.";
+  }
+
+  std::string specificationUrl() const AVO_OVERRIDE
+  {
+    return "http://www.cmbi.ru.nl/molden/molden_format.html";
+  }
+
+  std::vector<std::string> fileExtensions() const AVO_OVERRIDE;
+  std::vector<std::string> mimeTypes() const AVO_OVERRIDE;
+
+  bool read(std::istream &in, Core::Molecule &molecule) AVO_OVERRIDE;
+  bool write(std::ostream &, const Core::Molecule &) AVO_OVERRIDE
+  {
+    // Empty, as we do not write out Molden files.
+    return false;
+  }
+
 private:
-  QIODevice *m_in;
-  void processLine();
-  void load(GaussianSet* basis);
+  void outputAll();
+
+  void processLine(std::istream &in);
+  void readAtom(const std::vector<std::string> &list);
+  void load(Core::GaussianSet* basis);
 
   double m_coordFactor;
-  mode m_currentMode;
   int m_electrons;
   unsigned int m_numBasisFunctions;
   std::vector<int> m_aNums;
   std::vector<double> m_aPos;
-  std::vector<orbital> m_shellTypes;
+  std::vector<Core::GaussianSet::orbital> m_shellTypes;
   std::vector<int> m_shellNums;
   std::vector<int> m_shelltoAtom;
   std::vector<double> m_a;
@@ -55,6 +81,9 @@ private:
   std::vector<double> m_csp;
   std::vector<double> m_orbitalEnergy;
   std::vector<double> m_MOcoeffs;
+
+  enum Mode { Atoms, GTO, MO, Unrecognized };
+  Mode m_mode;
 };
 
 } // End namespace

@@ -18,44 +18,63 @@
 #ifndef AVOGADRO_QUANTUMIO_MOPACAUX_H
 #define AVOGADRO_QUANTUMIO_MOPACAUX_H
 
-#include <QtCore/QTextStream>
-#include <Eigen/Core>
+#include "avogadroquantumioexport.h"
+#include <avogadro/core/slaterset.h>
+#include <avogadro/io/fileformat.h>
+
 #include <vector>
 
-class QString;
-
 namespace Avogadro {
-
-namespace Quantum {
-class SlaterSet;
-}
-
 namespace QuantumIO {
 
-using Quantum::SlaterSet;
-
-class MopacAux
+class AVOGADROQUANTUMIO_EXPORT MopacAux : public Io::FileFormat
 {
 public:
-  MopacAux(QString filename, SlaterSet *basis);
-  ~MopacAux();
+  MopacAux();
+  ~MopacAux() AVO_OVERRIDE;
   void outputAll();
 
+  Operations supportedOperations() const AVO_OVERRIDE
+  {
+    return Read | File | Stream | String;
+  }
+
+  FileFormat * newInstance() const AVO_OVERRIDE { return new MopacAux; }
+  std::string identifier() const AVO_OVERRIDE { return "Avogadro: MOPAC"; }
+  std::string name() const AVO_OVERRIDE { return "MOPAC AUX"; }
+  std::string description() const AVO_OVERRIDE
+  {
+    return "MOPAC AUX file format.";
+  }
+
+  std::string specificationUrl() const AVO_OVERRIDE
+  {
+    return "http://openmopac.net/manual/auxiliary.html";
+  }
+
+  std::vector<std::string> fileExtensions() const AVO_OVERRIDE;
+  std::vector<std::string> mimeTypes() const AVO_OVERRIDE;
+
+  bool read(std::istream &in, Core::Molecule &molecule) AVO_OVERRIDE;
+  bool write(std::ostream &, const Core::Molecule &) AVO_OVERRIDE
+  {
+    // Empty, as we do not write out MOPAC AUX files.
+    return false;
+  }
+
 private:
-  QTextStream m_in;
-  void processLine();
-  void load(SlaterSet* basis);
-  std::vector<int> readArrayI(unsigned int n);
-  std::vector<double> readArrayD(unsigned int n);
-  std::vector<int> readArraySym(unsigned int n);
-  std::vector<Eigen::Vector3d> readArrayVec(unsigned int n);
-  bool readOverlapMatrix(unsigned int n);
-  bool readEigenVectors(unsigned int n);
-  bool readDensityMatrix(unsigned int n);
+  void processLine(std::istream &in);
+  void load(Core::SlaterSet* basis);
+  std::vector<int> readArrayElements(std::istream &in, unsigned int n);
+  std::vector<int> readArrayI(std::istream &in, unsigned int n);
+  std::vector<double> readArrayD(std::istream &in, unsigned int n);
+  std::vector<int> readArraySym(std::istream &in, unsigned int n);
+  std::vector<Vector3> readArrayVec(std::istream &in, unsigned int n);
+  bool readOverlapMatrix(std::istream &in, unsigned int n);
+  bool readEigenVectors(std::istream &in, unsigned int n);
+  bool readDensityMatrix(std::istream &in, unsigned int n);
 
   int m_electrons;
-  std::vector<int> m_aNums;
-  std::vector<double> m_aPos;
   std::vector<int> m_shellTypes;
   std::vector<int> m_shellNums;
   std::vector<int> m_shelltoAtom;
