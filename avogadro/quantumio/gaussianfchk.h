@@ -18,39 +18,59 @@
 #ifndef AVOGADRO_QUANTUMIO_GAUSSIANFCHK_H
 #define AVOGADRO_QUANTUMIO_GAUSSIANFCHK_H
 
-#include <QtCore/QIODevice>
-#include <Eigen/Core>
+#include "avogadroquantumioexport.h"
+#include <avogadro/core/gaussianset.h>
+#include <avogadro/io/fileformat.h>
+
 #include <vector>
 
-class QString;
-
 namespace Avogadro {
-
-namespace Quantum {
-class GaussianSet;
-}
-
 namespace QuantumIO {
 
-using Quantum::GaussianSet;
-
-class GaussianFchk
+class AVOGADROQUANTUMIO_EXPORT GaussianFchk : public Io::FileFormat
 {
-  enum scf { rhf, uhf, rohf, Unknown };
-
 public:
-  GaussianFchk(const QString &filename, GaussianSet *basis);
-  ~GaussianFchk();
+  GaussianFchk();
+  ~GaussianFchk() AVO_OVERRIDE;
+
+  Operations supportedOperations() const AVO_OVERRIDE
+  {
+    return Read | File | Stream | String;
+  }
+
+  FileFormat * newInstance() const AVO_OVERRIDE { return new GaussianFchk; }
+  std::string identifier() const AVO_OVERRIDE { return "Avogadro: FCHK"; }
+  std::string name() const AVO_OVERRIDE { return "Gaussian FCHK"; }
+  std::string description() const AVO_OVERRIDE
+  {
+    return "Guassian formatted checkpoint reader.";
+  }
+
+  std::string specificationUrl() const AVO_OVERRIDE
+  {
+    return "http://www.gaussian.com/g_tech/g_ur/f_formchk.htm";
+  }
+
+  std::vector<std::string> fileExtensions() const AVO_OVERRIDE;
+  std::vector<std::string> mimeTypes() const AVO_OVERRIDE;
+
+  bool read(std::istream &in, Core::Molecule &molecule) AVO_OVERRIDE;
+  bool write(std::ostream &, const Core::Molecule &) AVO_OVERRIDE
+  {
+    // Empty, as we do not write out Gaussian FCHK files.
+    return false;
+  }
+
   void outputAll();
 
 private:
-  QIODevice *m_in;
-  void processLine();
-  void load(GaussianSet* basis);
-  std::vector<int> readArrayI(unsigned int n);
-  std::vector<double> readArrayD(unsigned int n, int width = 0);
-  bool readDensityMatrix(unsigned int n, int width = 0);
-  bool readSpinDensityMatrix(unsigned int n, int width = 0);
+  void processLine(std::istream &in);
+  void load(Core::GaussianSet* basis);
+  std::vector<int> readArrayI(std::istream &in, unsigned int n);
+  std::vector<double> readArrayD(std::istream &in, unsigned int n,
+                                 int width = 0);
+  bool readDensityMatrix(std::istream &in, unsigned int n, int width = 0);
+  bool readSpinDensityMatrix(std::istream &in, unsigned int n, int width = 0);
 
   /**
    * Use either m_electrons, or m_electronsAlpha and m_electronsBeta.
@@ -74,12 +94,12 @@ private:
   std::vector<double> m_MOcoeffs;
   std::vector<double> m_alphaMOcoeffs;
   std::vector<double> m_betaMOcoeffs;
-  Eigen::MatrixXd m_density;     /// Total density matrix
-  Eigen::MatrixXd m_spinDensity; /// Spin density matrix
-  scf m_scftype;
+  MatrixX m_density;     /// Total density matrix
+  MatrixX m_spinDensity; /// Spin density matrix
+  Core::ScfType m_scftype;
 };
 
-} // End namespace openqube
+}
 }
 
 #endif

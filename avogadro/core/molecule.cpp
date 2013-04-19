@@ -16,6 +16,7 @@
 
 #include "molecule.h"
 
+#include "basisset.h"
 #include "elements.h"
 
 #include <cassert>
@@ -24,12 +25,13 @@
 namespace Avogadro {
 namespace Core {
 
-Molecule::Molecule() : m_graphDirty(false)
+Molecule::Molecule() : m_graphDirty(false), m_basisSet(NULL)
 {
 }
 
 Molecule::~Molecule()
 {
+  delete m_basisSet;
 }
 
 size_t Molecule::size() const
