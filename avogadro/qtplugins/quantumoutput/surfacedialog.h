@@ -27,6 +27,11 @@ class SurfaceDialog;
 namespace Avogadro {
 namespace QtPlugins {
 
+/**
+ * @brief The SurfaceDialog presents various properties that have been read in
+ * from a quantum output file and provides interface to initiate calculations.
+ */
+
 class SurfaceDialog : public QDialog
 {
   Q_OBJECT
