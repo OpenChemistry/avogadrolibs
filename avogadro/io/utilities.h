@@ -46,6 +46,18 @@ inline std::vector<std::string> split(const std::string &string, char delimiter,
 }
 
 /**
+ * @brief Search the input string for the search string.
+ * @param input String to be examined.
+ * @param search String that will be searched for.
+ * @return True if the string contains search, false otherwise.
+ */
+inline bool contains(const std::string &input, const std::string &search)
+{
+  size_t found = input.find(search);
+  return found != std::string::npos;
+}
+
+/**
  * @brief Trim a string of whitespace from the left and right.
  */
 inline std::string trimmed(const std::string &input)

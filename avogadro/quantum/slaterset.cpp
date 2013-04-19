@@ -123,7 +123,7 @@ unsigned int SlaterSet::numMOs()
 {
   return static_cast<unsigned int>(m_overlap.cols());
 }
-
+/*
 inline bool SlaterSet::isSmall(double val)
 {
   if (val > -1e-15 && val < 1e-15)
@@ -137,13 +137,13 @@ unsigned int SlaterSet::factorial(unsigned int n)
   if (n <= 1)
     return n;
   return (n * factorial(n - 1));
-}
+}*/
 
 void SlaterSet::outputAll()
 {
 
 }
-
+/*
 bool SlaterSet::calculateCubeAlphaMO(Cube *, unsigned int)
 {
   return false;
@@ -548,6 +548,7 @@ inline double SlaterSet::calcSlater(SlaterSet *set, const Eigen::Vector3d &delta
   }
   return tmp;
 }
+*/
 
 } // End namespace Quantum
 } // End namespace Avogadro

@@ -34,6 +34,9 @@
 #include <QtCore/QReadWriteLock>
 #include <QtCore/QDebug>
 
+using std::cout;
+using std::endl;
+
 using std::vector;
 using Eigen::Vector3d;
 using Eigen::Vector3i;
@@ -54,8 +57,9 @@ static const double BOHR_TO_ANGSTROM = 0.529177249;
 static const double ANGSTROM_TO_BOHR = 1.0 / BOHR_TO_ANGSTROM;
 
 GaussianSet::GaussianSet() : m_numMOs(0), m_numAlphaMOs(0), m_numBetaMOs(0),
-    m_numAtoms(0), m_init(false), m_cube(0), m_gaussianShells(0)
+    m_numAtoms(0), m_init(false)//, m_cube(0)//, m_gaussianShells(0)
 {
+  m_scfType = rhf;
 }
 
 GaussianSet::~GaussianSet()
@@ -217,6 +221,16 @@ bool GaussianSet::calculateCubeMO(Cube *cube, unsigned int state)
     (*m_gaussianShells)[i].state = state;
   }
 
+  for (int i = 0; i < m_moMatrix.rows(); ++i) {
+    cout << "MO " << i << ": ";
+    for (int j = 0; j < m_moMatrix.cols(); ++j) {
+      cout << m_moMatrix(i, j) << " ";
+    }
+    cout << endl;
+  }
+
+  qDebug() << "Cube size" << cube->data()->size();
+
   // Lock the cube until we are done.
   cube->lock()->lockForWrite();
 
@@ -228,6 +242,7 @@ bool GaussianSet::calculateCubeMO(Cube *cube, unsigned int state)
 
   // The main part of the mapped reduced function...
   m_future = QtConcurrent::map(*m_gaussianShells, GaussianSet::processPoint);
+
   // Connect our watcher to our future
   m_watcher.setFuture(m_future);
 
@@ -259,13 +274,12 @@ bool GaussianSet::calculateCubeAlphaMO(Cube *cube, unsigned int state)
   // Lock the cube until we are done.
   cube->lock()->lockForWrite();
 
-  // Watch for the future
-  connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
-
   // The main part of the mapped reduced function...
   m_future = QtConcurrent::map(*m_gaussianShells, GaussianSet::processAlphaPoint);
   // Connect our watcher to our future
   m_watcher.setFuture(m_future);
+  // Watch for the future
+  connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
 
   return true;
 }
@@ -391,20 +405,22 @@ BasisSet * GaussianSet::clone()
 {
   GaussianSet *result = new GaussianSet();
 
-  result->m_symmetry = this->m_symmetry;
-  result->m_atomIndices = this->m_atomIndices;
-  result->m_moIndices = this->m_moIndices;
-  result->m_gtoIndices = this->m_gtoIndices;
-  result->m_cIndices = this->m_cIndices;
-  result->m_gtoA = this->m_gtoA;
-  result->m_gtoC = this->m_gtoC;
-  result->m_gtoCN = this->m_gtoCN;
-  result->m_moMatrix = this->m_moMatrix;
-  result->m_density = this->m_density;
+  result->m_symmetry = m_symmetry;
+  result->m_atomIndices = m_atomIndices;
+  result->m_moIndices = m_moIndices;
+  result->m_gtoIndices = m_gtoIndices;
+  result->m_cIndices = m_cIndices;
+  result->m_gtoA = m_gtoA;
+  result->m_gtoC = m_gtoC;
+  result->m_gtoCN = m_gtoCN;
+  result->m_moMatrix = m_moMatrix;
+  result->m_density = m_density;
 
-  result->m_numMOs = this->m_numMOs;
-  result->m_numAtoms = this->m_numAtoms;
-  result->m_init = this->m_init;
+  result->m_numMOs = m_numMOs;
+  result->m_numAtoms = m_numAtoms;
+  result->m_molecule = m_molecule;
+  result->m_electrons = m_electrons;
+  result->m_init = m_init;
 
   // Skip tmp vars
   return result;
@@ -412,6 +428,7 @@ BasisSet * GaussianSet::clone()
 
 void GaussianSet::calculationComplete()
 {
+  qDebug() << "Calculation complete in GaussianSet!";
   disconnect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
   (*m_gaussianShells)[0].tCube->lock()->unlock();
   delete m_gaussianShells;
@@ -431,6 +448,7 @@ void GaussianSet::initCalculation()
 {
   if (m_init)
     return;
+
   // This currently just involves normalising all contraction coefficients
   m_numAtoms = static_cast<unsigned int>(m_molecule.atomCount());
   m_gtoCN.clear();
@@ -537,6 +555,7 @@ void GaussianSet::initCalculation()
 /// This is the stuff we actually use right now - porting to new data structure
 void GaussianSet::processPoint(GaussianShell &shell)
 {
+  //qDebug() << "Processiong a point..." << shell.pos;
   GaussianSet *set = shell.set;
   unsigned int atomsSize = set->m_numAtoms;
   unsigned int basisSize = static_cast<unsigned int>(set->m_symmetry.size());
@@ -551,6 +570,7 @@ void GaussianSet::processPoint(GaussianShell &shell)
   // Calculate our position
   Vector3d pos = shell.tCube->position(shell.pos) * ANGSTROM_TO_BOHR;
   //qDebug() << pos.x() << " " << pos.y() << " " << pos.y();
+  //qDebug() << "atoms" << atomsSize << "basis" << basisSize;
 
   // Calculate the deltas for the position
   for (unsigned int i = 0; i < atomsSize; ++i) {
@@ -586,6 +606,7 @@ void GaussianSet::processPoint(GaussianShell &shell)
   }
   // Set the value
   shell.tCube->setValue(shell.pos, tmp);
+  //qDebug() << "Value of" << tmp << "found";
 }
 
 void GaussianSet::processAlphaPoint(GaussianShell &shell)
@@ -1238,11 +1259,11 @@ void GaussianSet::outputAll()
     qDebug() << "ROHF orbitals";
     break;
   default:
-    qDebug() << "Uknown orbitals";
+    qDebug() << "Unknown orbitals";
     break;
   }
 
-  initCalculation();
+  //initCalculation();
 
   if (!isValid()) {
     qDebug() << "Basis set is marked as invalid.";
@@ -1340,7 +1361,7 @@ void GaussianSet::outputAlphaAll()
     break;
   }
 
-  initCalculation();
+  //initCalculation();
 
   if (!isValid()) {
     qDebug() << "Basis set is marked as invalid.";
@@ -1438,7 +1459,7 @@ void GaussianSet::outputBetaAll()
     break;
   }
 
-  initCalculation();
+  //initCalculation();
 
   if (!isValid()) {
     qDebug() << "Basis set is marked as invalid.";

@@ -1,4 +1,5 @@
 set(quantumoutput_srcs
+  gaussiansetconcurrent.cpp
   surfacedialog.cpp
   quantumoutput.cpp
 )

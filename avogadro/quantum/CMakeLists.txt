@@ -28,9 +28,7 @@ set(SOURCES
   slaterset.cpp
 )
 
-qt4_wrap_cpp(mocSOURCES basisset.h gaussianset.h slaterset.h)
-
-avogadro_add_library(AvogadroQuantum ${HEADERS} ${SOURCES} ${mocSOURCES})
+avogadro_add_library(AvogadroQuantum ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQuantum
   AvogadroCore
   AvogadroQtGui

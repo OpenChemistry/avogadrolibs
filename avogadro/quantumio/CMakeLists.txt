@@ -3,26 +3,24 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
-find_package(Qt4 COMPONENTS QtCore REQUIRED)
-include_directories(SYSTEM ${QT_INCLUDES})
-add_definitions(${QT_DEFINITIONS})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # Headers for our public API
 set(HEADERS
-  basissetloader.h
+  gamessus.h
+  gaussianfchk.h
 )
 
 # Source files for our data.
 set(SOURCES
-  basissetloader.cpp
-  gamessukout.cpp
+  #basissetloader.cpp
+  #gamessukout.cpp
   gamessus.cpp
   gaussianfchk.cpp
-  molden.cpp
-  mopacaux.cpp
+  #molden.cpp
+  #mopacaux.cpp
 )
 
 avogadro_add_library(AvogadroQuantumIO ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQuantumIO
-  AvogadroQuantum
-  ${QT_QTCORE_LIBRARY})
+  AvogadroIO)

@@ -18,47 +18,85 @@
 #ifndef AVOGADRO_QUANTUMIO_GAMESSUS_H
 #define AVOGADRO_QUANTUMIO_GAMESSUS_H
 
-#include <QtCore/QIODevice>
-#include <Eigen/Core>
+#include "avogadroquantumioexport.h"
+#include <avogadro/core/gaussianset.h>
+#include <avogadro/io/fileformat.h>
+
 #include <vector>
-
-#include <avogadro/quantum/gaussianset.h>
-
-class QString;
 
 namespace Avogadro {
 namespace QuantumIO {
 
-using Quantum::GaussianSet;
-using Quantum::orbital;
-
-class GAMESSUSOutput
+class AVOGADROQUANTUMIO_EXPORT GAMESSUSOutput : public Io::FileFormat
 {
-  // Parsing mode: section of the file currently being parsed
-  enum mode { NotParsing, Atoms, GTO, MO };
-  enum scfMode { alpha, beta, doubly };
-  enum scf  { rhf, uhf, rohf, Unknown };
-
 public:
-  GAMESSUSOutput(const QString &filename, GaussianSet *basis);
-  ~GAMESSUSOutput();
-  void outputAll();
+  GAMESSUSOutput();
+  ~GAMESSUSOutput() AVO_OVERRIDE;
+
+  Operations supportedOperations() const AVO_OVERRIDE
+  {
+    return Read | File | Stream | String;
+  }
+
+  FileFormat * newInstance() const AVO_OVERRIDE { return new GAMESSUSOutput; }
+  std::string identifier() const AVO_OVERRIDE { return "Avogadro: GAMESS"; }
+  std::string name() const AVO_OVERRIDE { return "GAMESS"; }
+  std::string description() const AVO_OVERRIDE
+  {
+    return "GAMESS US log file output parser.";
+  }
+
+  std::string specificationUrl() const AVO_OVERRIDE
+  {
+    return "";
+  }
+
+  std::vector<std::string> fileExtensions() const AVO_OVERRIDE;
+  std::vector<std::string> mimeTypes() const AVO_OVERRIDE;
+
+  bool read(std::istream &in, Core::Molecule &molecule) AVO_OVERRIDE;
+  bool write(std::ostream &, const Core::Molecule &) AVO_OVERRIDE
+  {
+    // Empty, as we do not write out GAMESS log files.
+    return false;
+  }
 
 private:
-  QIODevice *m_in;
-  void processLine(GaussianSet *basis);
-  void load(GaussianSet *basis);
+  /**
+   * @brief Read the atom block of the log file.
+   * @param in Our input stream.
+   * @param molecule The molecule to add the atoms to.
+   * @param angs Whether the units are Angstroms (true) or Bohr (false).
+   */
+  void readAtomBlock(std::istream &in, Core::Molecule &molecule, bool angs);
+
+  /**
+   * Read in the basis set block.
+   */
+  void readBasisSet(std::istream &in);
+
+  /**
+   * Read in the molecular orbitals.
+   */
+  void readEigenvectors(std::istream &in);
+
+  /**
+   * Outpull all known properties that have been read, useful for debugging.
+   */
+  void outputAll();
+
+  /**
+   * Load the basis with the properties read in from the file.
+   */
+  void load(Core::GaussianSet *basis);
 
   double m_coordFactor;
-  mode m_currentMode;
-  scfMode m_currentScfMode;
   int m_electrons;
   int m_electronsA;
   int m_electronsB;
-  int m_currentAtom;
-  scf m_scftype;
+  Core::ScfType m_scftype;
   unsigned int m_numBasisFunctions;
-  std::vector<orbital> m_shellTypes;
+  std::vector<Core::GaussianSet::orbital> m_shellTypes;
   std::vector<int> m_shellNums;
   std::vector<int> m_shelltoAtom;
   std::vector<double> m_a;
@@ -71,11 +109,10 @@ private:
   std::vector<double> m_alphaMOcoeffs;
   std::vector<double> m_betaMOcoeffs;
 
-  Eigen::MatrixXd m_density;     /// Total density matrix
-  void generateDensity();
+  MatrixX m_density;     /// Total density matrix
 };
 
-} // End namespace
+}
 }
 
 #endif
