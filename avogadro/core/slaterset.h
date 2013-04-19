@@ -15,21 +15,19 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QUANTUM_SLATERSET_H
-#define AVOGADRO_QUANTUM_SLATERSET_H
+#ifndef AVOGADRO_CORE_SLATERSET_H
+#define AVOGADRO_CORE_SLATERSET_H
 
 #include "basisset.h"
 
 #include <avogadro/core/vector.h>
 #include <avogadro/core/matrix.h>
 
-#include <QtCore/QFuture>
-
 #include <Eigen/Dense>
 #include <vector>
 
 namespace Avogadro {
-namespace Quantum {
+namespace Core {
 
 /**
  * @class SlaterSet slaterset.h
@@ -51,10 +49,8 @@ namespace Quantum {
 
 struct SlaterShell;
 
-class AVOGADROQUANTUM_EXPORT SlaterSet : public BasisSet
+class AVOGADROCORE_EXPORT SlaterSet : public BasisSet
 {
-  Q_OBJECT
-
 public:
   /**
    * Constructor.
@@ -70,13 +66,6 @@ public:
    * Enumeration of the Slater orbital types.
    */
   enum slater { S, PX, PY, PZ, X2, XZ, Z2, YZ, XY, UU };
-
-  /**
-   * Function to add an atom to the SlaterSet.
-   * @param pos Position of the center of the QAtom.
-   * @return The index of the added atom.
-   */
-  bool addAtoms(const std::vector<Eigen::Vector3d> &pos);
 
   /**
    * Add a basis to the basis set.
@@ -122,69 +111,51 @@ public:
   bool addDensityMatrix(const Eigen::MatrixXd &d);
 
   /**
-   * @return The number of MOs in the BasisSet.
+   * @return The number of molecular orbitals in the BasisSet.
    */
-  unsigned int numMOs();
+  unsigned int molecularOrbitalCount(ElectronType type = doubly);
+
+  /**
+   * @return True of the basis set is valid, false otherwise.
+   * Default is true, if false then the basis set is likely unusable.
+   */
+  bool isValid() { return true; }
+
+  /**
+   * Initialize the calculation, this must normally be done before anything.
+   */
+  void initCalculation();
+
+  /**
+   * Accessors for the various properties of the GaussianSet.
+   */
+  std::vector<int>& slaterIndices() { return m_slaterIndices; }
+  std::vector<int>& slaterTypes() { return m_slaterTypes; }
+  std::vector<double>& zetas() { return m_zetas; }
+  std::vector<double>& factors() { return m_factors; }
+  std::vector<int>& PQNs() { return m_PQNs; }
+  MatrixX& normalizedMatrix() { return m_normalized; }
+  MatrixX& densityMatrix() { return m_density; }
 
   void outputAll();
 
-  bool calculateCubeMO(Cube *cube, unsigned int state = 1);
-  bool calculateCubeAlphaMO(Cube *cube, unsigned int state = 1);
-  bool calculateCubeBetaMO(Cube *cube, unsigned int state = 1);
-
-  bool calculateCubeDensity(Cube *cube);
-  bool calculateCubeSpinDensity(Cube *cube);
-
-  QFutureWatcher<void> & watcher() { return m_watcher; }
-
-  /**
-   * Create a deep copy of @a this and return a pointer to it.
-   */
-  virtual BasisSet * clone();
-
-private Q_SLOTS:
-  /**
-   * Slot to set the cube data once Qt Concurrent is done
-   */
-  void calculationComplete();
-
 private:
-  std::vector<Eigen::Vector3d> m_atomPos;
   std::vector<int> m_slaterIndices;
   std::vector<int> m_slaterTypes;
   std::vector<double> m_zetas;
   std::vector<int> m_pqns, m_PQNs;
 
   std::vector<double> m_factors;
-  Eigen::MatrixXd m_overlap;
-  Eigen::MatrixXd m_eigenVectors;
-  Eigen::MatrixXd m_density;
-  Eigen::MatrixXd m_normalized;
+  MatrixX m_overlap;
+  MatrixX m_eigenVectors;
+  MatrixX m_density;
+  MatrixX m_normalized;
   bool m_initialized;
 
-  QFuture<void> m_future;
-  QFutureWatcher<void> m_watcher;
-  Cube *m_cube; // Cube to put the results into
-  QVector<SlaterShell> m_slaterShells;
-
-  bool initialize();
-
-  static bool isSmall(double val);
   unsigned int factorial(unsigned int n);
-
-  static void processPoint(SlaterShell &shell);
-  static void processDensity(SlaterShell &shell);
-  static double pointSlater(SlaterSet *set, const Eigen::Vector3d &delta,
-                            double dr2, unsigned int slater,
-                            unsigned int indexMO);
-  static double pointSlater(SlaterSet *set, const Eigen::Vector3d &delta,
-                            double dr2, unsigned int slater,
-                            unsigned int indexMO, double expZeta);
-  static double calcSlater(SlaterSet *set, const Eigen::Vector3d &delta,
-                           double dr2, unsigned int slater);
 };
 
-} // End Quantum namespace
+} // End Core namespace
 } // End Avogadro namespace
 
 #endif
