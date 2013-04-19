@@ -23,9 +23,6 @@
 
 #include <avogadro/core/molecule.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QFutureWatcher>
-
 namespace Avogadro {
 
 namespace QtGui {
@@ -42,58 +39,41 @@ using QtGui::Cube;
  * @author Marcus D. Hanwell
  *
  * This is the base class for basis sets, and has two derived classes -
- * GaussianSet and SlaterSet. It must be populated with data, and can then be
- * used to calculate values of the basis set in a cube.
+ * GaussianSet and SlaterSet. It must be populated with data, with other classes
+ * capable of performing calculations on the data or writing it out.
  */
 
-class AVOGADROQUANTUM_EXPORT BasisSet : public QObject
+class AVOGADROQUANTUM_EXPORT BasisSet
 {
-  Q_OBJECT
-
 public:
   /**
    * Constructor.
    */
-  BasisSet()
-    : m_electrons(0), m_electronsAlpha(0), m_electronsBeta(0), m_valid(true) {}
+  BasisSet() {}
 
   /**
    * Destructor.
    */
   virtual ~BasisSet() {}
 
-  /**
-   * Set the number of electrons in the BasisSet.
-   * @param n The number of electrons in the BasisSet.
-   */
-  void setNumElectrons(unsigned int n) { m_electrons = n; }
+  enum ElectronType {
+    Electron,
+    AlphaElectron,
+    BetaElectron
+  };
 
   /**
    * Set the number of electrons in the BasisSet.
    * @param n The number of electrons in the BasisSet.
+   * @param type The type of the electrons (alpha, beta, doubly occupied).
    */
-  void setNumAlphaElectrons(unsigned int n) { m_electronsAlpha = n; }
+  virtual void setElectronCount(unsigned int n, ElectronType type = Electron);
 
   /**
-   * Set the number of electrons in the BasisSet.
-   * @param n The number of electrons in the BasisSet.
-   */
-  void setNumBetaElectrons(unsigned int n) { m_electronsBeta = n; }
-
-  /**
+   * @param type The type of the electrons (alpha, beta, doubly occupied).
    * @return The number of electrons in the molecule.
    */
-  unsigned int numElectrons() { return m_electrons; }
-
-  /**
-   * @return The number of electrons in the molecule.
-   */
-  unsigned int numAlphaElectrons() { return m_electronsAlpha; }
-
-  /**
-   * @return The number of electrons in the molecule.
-   */
-  unsigned int numBetaElectrons() { return m_electronsBeta; }
+  unsigned int electronCount(ElectronType type = Electron);
 
   /**
    * Set the molecule for the basis set.
@@ -163,9 +143,9 @@ public:
    * @sa blockingCalculateCubeMO
    * @return True if the calculation was successful.
    */
-  virtual bool calculateCubeMO(Cube *cube, unsigned int mo = 1) = 0;
-  virtual bool calculateCubeAlphaMO(Cube *cube, unsigned int mo = 1) = 0;
-  virtual bool calculateCubeBetaMO(Cube *cube, unsigned int mo = 1) = 0;
+  //virtual bool calculateCubeMO(Cube *cube, unsigned int mo = 1) = 0;
+  //virtual bool calculateCubeAlphaMO(Cube *cube, unsigned int mo = 1) = 0;
+  //virtual bool calculateCubeBetaMO(Cube *cube, unsigned int mo = 1) = 0;
 
   /**
    * Calculate the MO over the entire range of the supplied Cube.
@@ -174,9 +154,9 @@ public:
    * @sa calculateCubeMO
    * @return True if the calculation was successful.
    */
-  virtual bool blockingCalculateCubeMO(Cube *cube, unsigned int mo = 1);
-  virtual bool blockingCalculateCubeAlphaMO(Cube *cube, unsigned int mo = 1);
-  virtual bool blockingCalculateCubeBetaMO(Cube *cube, unsigned int mo = 1);
+  //virtual bool blockingCalculateCubeMO(Cube *cube, unsigned int mo = 1);
+ // virtual bool blockingCalculateCubeAlphaMO(Cube *cube, unsigned int mo = 1);
+  //virtual bool blockingCalculateCubeBetaMO(Cube *cube, unsigned int mo = 1);
 
   /**
    * Calculate the electron density over the entire range of the supplied Cube.
@@ -186,7 +166,7 @@ public:
    * @sa blockingCalculateCubeDensity
    * @return True if the calculation was successful.
    */
-  virtual bool calculateCubeDensity(Cube *cube) = 0;
+  //virtual bool calculateCubeDensity(Cube *cube) = 0;
 
   /**
    * Calculate the electron spin density over the entire range of the supplied Cube.
@@ -196,7 +176,7 @@ public:
    * @sa blockingCalculateCubeSpinDensity
    * @return True if the calculation was successful.
    */
-  virtual bool calculateCubeSpinDensity(Cube *cube) = 0;
+  //virtual bool calculateCubeSpinDensity(Cube *cube) = 0;
 
   /**
    * Calculate the electron density over the entire range of the supplied Cube.
@@ -204,7 +184,7 @@ public:
    * @sa calculateCubeDensity
    * @return True if the calculation was successful.
    */
-  virtual bool blockingCalculateCubeDensity(Cube *cube);
+  //virtual bool blockingCalculateCubeDensity(Cube *cube);
 
   /**
    * Calculate the electron spin density over the entire range of the supplied Cube.
@@ -212,37 +192,62 @@ public:
    * @sa calculateCubeSpinDensity
    * @return True if the calculation was successful.
    */
-  virtual bool blockingCalculateCubeSpinDensity(Cube *cube);
-
-  /**
-   * When performing a calculation the QFutureWatcher is useful if you want
-   * to update a progress bar.
-   */
-  virtual QFutureWatcher<void> & watcher() = 0;
+  //virtual bool blockingCalculateCubeSpinDensity(Cube *cube);
 
   /**
    * Create a deep copy of @a this and return a pointer to it.
    */
-  virtual BasisSet * clone() = 0;
+  //virtual BasisSet * clone() = 0;
 
 protected:
-  /// Total number of electrons
-  unsigned int m_electrons;
-  unsigned int m_electronsAlpha;
-  unsigned int m_electronsBeta;
-
-  /** Is the loaded basis set valid? Allows us to mark a basis set invalid if we
-   * were not able to interpret part of it.
+  /**
+   * Total number of electrons, 0 is alpha electrons and 1 is beta electrons.
+   * For closed shell calculations alpha is doubly occupied and there are no
+   * beta electrons.
    */
-  bool m_valid;
+  unsigned int m_electrons[2];
 
-  /** The Molecule holds the atoms (and possibly bonds) read in from the output
+  /**
+   * The Molecule holds the atoms (and possibly bonds) read in from the output
    * file. Most basis sets have orbitals around these atoms, but this is not
    * necessarily the case.
    */
-  Core::Molecule m_molecule;
+  Core::Molecule *m_molecule;
 
 };
+
+inline void BasisSet::setElectronCount(unsigned int n, ElectronType type)
+{
+  switch (type) {
+  case Electron:
+    m_electrons[0] = n;
+    m_electrons[1] = 0;
+    break;
+  case AlphaElectron:
+    m_electrons[0] = n;
+    break;
+  case BetaElectron:
+    m_electrons[1] = n;
+    break;
+  default:
+    // Shouldn't hit this condition.
+  }
+}
+
+inline unsigned int BasisSet::electronCount(ElectronType type)
+{
+  switch (type) {
+  case Electron:
+  case AlphaElectron:
+    return m_electrons[0];
+  case BetaElectron:
+    return m_electrons[1];
+  default:
+    // Shouldn't hit this condition.
+    return 0;
+  }
+}
+
 
 } // End namesapce Quantum
 } // End namespace Avogadro

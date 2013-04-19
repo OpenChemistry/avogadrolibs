@@ -17,6 +17,7 @@
 #include "quantumoutput.h"
 
 #include "surfacedialog.h"
+#include "gaussiansetconcurrent.h"
 
 #include <avogadro/core/variant.h>
 
@@ -25,8 +26,14 @@
 #include <avogadro/qtgui/mesh.h>
 #include <avogadro/qtgui/meshgenerator.h>
 
-#include <avogadro/quantum/basisset.h>
+#include <avogadro/core/basisset.h>
+#include <avogadro/core/gaussiansettools.h>
+
+#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/quantumio/basissetloader.h>
+#include <avogadro/quantumio/gamessus.h>
+#include <avogadro/quantumio/gaussianfchk.h>
+#include <avogadro/quantumio/molden.h>
 
 #include <QtCore/QDebug>
 #include <QtGui/QAction>
@@ -43,6 +50,7 @@ QuantumOutput::QuantumOutput(QObject *p) :
   m_progressDialog(NULL),
   m_molecule(NULL),
   m_basis(NULL),
+  m_concurrent(NULL),
   m_cube(NULL),
   m_mesh1(NULL),
   m_mesh2(NULL),
@@ -51,11 +59,6 @@ QuantumOutput::QuantumOutput(QObject *p) :
   m_dialog(NULL)
 {
   QAction *action = new QAction(this);
-  action->setEnabled(true);
-  action->setText(tr("Load QM Output"));
-  connect(action, SIGNAL(triggered()), SLOT(loadMoleculeActivated()));
-  m_actions.push_back(action);
-  action = new QAction(this);
   action->setEnabled(false);
   action->setText(tr("Calculate HOMO"));
   connect(action, SIGNAL(triggered()), SLOT(homoActivated()));
@@ -70,11 +73,15 @@ QuantumOutput::QuantumOutput(QObject *p) :
   action->setText(tr("Calculate electronic surfaces..."));
   connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
   m_actions.push_back(action);
+
+  // Register our quantum file format.
+  Io::FileFormatManager::registerFormat(new QuantumIO::GAMESSUSOutput);
+  Io::FileFormatManager::registerFormat(new QuantumIO::GaussianFchk);
+  Io::FileFormatManager::registerFormat(new QuantumIO::MoldenFile);
 }
 
 QuantumOutput::~QuantumOutput()
 {
-  delete m_basis;
   delete m_cube;
 }
 
@@ -83,69 +90,40 @@ QList<QAction *> QuantumOutput::actions() const
   return m_actions;
 }
 
-QStringList QuantumOutput::menuPath(QAction *currentAction) const
+QStringList QuantumOutput::menuPath(QAction *) const
 {
-  if (m_actions[0] == currentAction) {
-    QStringList path;
-    path << tr("&File");
-    return path;
-  }
-  else if (m_actions[1] == currentAction || m_actions[2] == currentAction
-           || m_actions[3] == currentAction) {
-    QStringList path;
-    path << tr("&Quantum");
-    return path;
-  }
-  return QStringList();
+  QStringList path;
+  path << tr("&Quantum");
+  return path;
 }
 
 void QuantumOutput::setMolecule(QtGui::Molecule *mol)
 {
   bool isQuantum(false);
-  if (m_basis && m_basis == mol->data("basis").toPointer())
+  if (mol->basisSet()) {
+    m_basis = mol->basisSet();
     isQuantum = true;
-  else {
-    delete m_basis;
-    m_basis = NULL;
   }
+  m_actions[0]->setEnabled(isQuantum);
   m_actions[1]->setEnabled(isQuantum);
   m_actions[2]->setEnabled(isQuantum);
-  m_actions[3]->setEnabled(isQuantum);
   m_molecule = mol;
-}
-
-bool QuantumOutput::readMolecule(QtGui::Molecule &mol)
-{
-  qDebug() << "Reading the molecule in the Quantum Output plugin!";
-  Core::Molecule oqmol = m_basis->molecule();
-  void *basisPtr = m_basis;
-  mol.setData("basis", basisPtr);
-  for (size_t i = 0; i < oqmol.atomCount(); ++i) {
-    Core::Atom a = mol.addAtom(oqmol.atom(i).atomicNumber());
-    a.setPosition3d(oqmol.atom(i).position3d() * BOHR_TO_ANGSTROM);
-  }
-  return true;
 }
 
 void QuantumOutput::loadMoleculeActivated()
 {
-  QString fileName = QFileDialog::getOpenFileName(qobject_cast<QWidget *>(parent()),
-                                                  tr("Open QM file"),
-                                                  "",
-                                                  tr("QM Output Files (*.log *.gamout *.fchk)"));
-  openFile(fileName);
 }
 
 void QuantumOutput::homoActivated()
 {
   if (m_basis)
-    calculateMolecularOrbital(m_basis->numElectrons() / 2, 0.02f, 0.2f);
+    calculateMolecularOrbital(m_basis->electronCount() / 2, 0.02f, 0.2f);
 }
 
 void QuantumOutput::lumoActivated()
 {
   if (m_basis)
-    calculateMolecularOrbital(m_basis->numElectrons() / 2 + 1, 0.02f, 0.2f);
+    calculateMolecularOrbital(m_basis->electronCount() / 2 + 1, 0.02f, 0.2f);
 }
 
 void QuantumOutput::surfacesActivated()
@@ -161,7 +139,8 @@ void QuantumOutput::surfacesActivated()
             SLOT(calculateElectronDensity(float,float)));
   }
 
-  m_dialog->setNumberOfElectrons(m_basis->numElectrons(), m_basis->numMOs());
+  m_dialog->setNumberOfElectrons(m_basis->electronCount(),
+                                 m_basis->molecularOrbitalCount());
   m_dialog->show();
 }
 
@@ -169,8 +148,6 @@ void QuantumOutput::calculateMolecularOrbital(int molecularOrbital,
                                               float isoValue, float stepSize)
 {
   if (m_basis) {
-    qDebug() << "We have a valid basis set loaded, with" << m_basis->numMOs()
-             << "molecular orbitals.";
     if (!m_progressDialog) {
       m_progressDialog = new QProgressDialog(qobject_cast<QWidget *>(parent()));
       m_progressDialog->setCancelButtonText(NULL);
@@ -179,31 +156,35 @@ void QuantumOutput::calculateMolecularOrbital(int molecularOrbital,
     if (!m_cube)
       m_cube = new QtGui::Cube;
 
+    if (!m_concurrent)
+      m_concurrent = new GaussianSetConcurrent(this);
+    m_concurrent->setMolecule(m_molecule);
+
     m_isoValue = isoValue;
     m_cube->setLimits(m_molecule, stepSize, 5.0);
     QString progressText;
     if (molecularOrbital == -1) {
-      m_basis->calculateCubeDensity(m_cube);
+      m_concurrent->calculateElectronDensity(m_cube);
       progressText = tr("Calculating electron density");
     }
     else {
-      m_basis->calculateCubeMO(m_cube, molecularOrbital);
+      m_concurrent->calculateMolecularOrbital(m_cube, molecularOrbital);
       progressText =
           tr("Calculating molecular orbital %L1").arg(molecularOrbital);
     }
     // Set up the progress dialog.
     m_progressDialog->setWindowTitle(progressText);
-    m_progressDialog->setRange(m_basis->watcher().progressMinimum(),
-                               m_basis->watcher().progressMaximum());
-    m_progressDialog->setValue(m_basis->watcher().progressValue());
+    m_progressDialog->setRange(m_concurrent->watcher().progressMinimum(),
+                               m_concurrent->watcher().progressMaximum());
+    m_progressDialog->setValue(m_concurrent->watcher().progressValue());
     m_progressDialog->show();
 
-    connect(&m_basis->watcher(), SIGNAL(progressValueChanged(int)),
+    connect(&m_concurrent->watcher(), SIGNAL(progressValueChanged(int)),
             m_progressDialog, SLOT(setValue(int)));
-    connect(&m_basis->watcher(), SIGNAL(progressRangeChanged(int,int)),
+    connect(&m_concurrent->watcher(), SIGNAL(progressRangeChanged(int,int)),
             m_progressDialog, SLOT(setRange(int,int)));
-//    connect(&m_basis->watcher(), SIGNAL(canceled()), SLOT(calculateCanceled()));
-    connect(&m_basis->watcher(), SIGNAL(finished()), SLOT(calculateFinished()));
+    //connect(&m_concurrent->watcher(), SIGNAL(canceled()), SLOT(calculateCanceled()));
+    connect(&m_concurrent->watcher(), SIGNAL(finished()), SLOT(calculateFinished()));
   }
 }
 
@@ -219,7 +200,7 @@ void QuantumOutput::calculateFinished()
   if (!m_cube)
     return;
 
-  disconnect(&m_basis->watcher(), 0, 0, 0);
+  disconnect(&m_concurrent->watcher(), 0, 0, 0);
 
   if (!m_mesh1)
     m_mesh1 = m_molecule->addMesh();
@@ -250,19 +231,8 @@ void QuantumOutput::meshFinished()
   m_molecule->emitChanged(QtGui::Molecule::Added);
 }
 
-void QuantumOutput::openFile(const QString &fileName)
+void QuantumOutput::openFile(const QString &)
 {
-  qDebug() << "Trying to open" << fileName;
-  if (m_basis) {
-    delete m_basis;
-    m_basis = NULL;
-  }
-
-  m_basis = QuantumIO::BasisSetLoader::LoadBasisSet(fileName);
-  if (m_basis) {
-    qDebug() << "Number of MOs:" << m_basis->numMOs();
-    emit moleculeReady(1);
-  }
 }
 
 }

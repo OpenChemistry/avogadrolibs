@@ -17,6 +17,7 @@
 
 #include "basissetloader.h"
 
+#include <avogadro/core/molecule.h>
 #include <avogadro/quantum/gaussianset.h>
 #include <avogadro/quantum/slaterset.h>
 #include "gamessukout.h"
@@ -108,7 +109,9 @@ BasisSet * BasisSetLoader::LoadBasisSet(const QString& filename)
   else if (completeSuffix.contains("gamout", Qt::CaseInsensitive)
            || completeSuffix.contains("gamess", Qt::CaseInsensitive)) {
     GaussianSet *gaussian = new GaussianSet;
-    GAMESSUSOutput gamout(filename, gaussian);
+    GAMESSUSOutput gamout;
+    Core::Molecule molecule;
+    gamout.readFile(filename.toStdString(), molecule);
     return gaussian;
   }
   else if (completeSuffix.contains("gukout", Qt::CaseInsensitive)) {

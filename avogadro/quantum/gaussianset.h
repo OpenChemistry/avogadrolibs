@@ -21,8 +21,6 @@
 
 #include "basisset.h"
 
-#include <QtCore/QFuture>
-
 #include <avogadro/core/vector.h>
 #include <avogadro/core/matrix.h>
 
@@ -64,8 +62,6 @@ struct GaussianShell;
 
 class AVOGADROQUANTUM_EXPORT GaussianSet : public BasisSet
 {
-  Q_OBJECT
-
 public:
   /**
    * Constructor.
@@ -185,28 +181,28 @@ public:
    * When performing a calculation the QFutureWatcher is useful if you want
    * to update a progress bar.
    */
-  QFutureWatcher<void> & watcher() { return m_watcher; }
+//  QFutureWatcher<void> & watcher() { return m_watcher; }
 
   /**
    * Create a deep copy of @a this and return a pointer to it.
    */
-  virtual BasisSet * clone();
+  //virtual BasisSet * clone();
 
   //maybe there is another way this should work
   //i'm not sure about these derived classes
   scfType m_scfType;
 
-signals:
+//signals:
   /**
    * Emitted when the calculation is complete.
    */
-  void finished();
+//  void finished();
 
-private slots:
+//private slots:
   /**
    * Slot to set the cube data once Qt Concurrent is done
    */
-  void calculationComplete();
+//  void calculationComplete();
 
 private:
   // New storage of the data
@@ -234,7 +230,7 @@ private:
   unsigned int m_numBetaMOs;     //! The number of beta orbitals
   unsigned int m_numAtoms;       //! Total number of atoms in the basis set
   bool m_init;                   //! Has the calculation been initialised?
-
+/*
   QFuture<void> m_future;
   QFutureWatcher<void> m_watcher;
   Cube *m_cube;                  //! Cube to put the results into (3D grid).
@@ -269,6 +265,7 @@ private:
                      double dr2, int basis, MatrixX &out);
   static void pointD5(GaussianSet *set, const Vector3 &delta,
                       double dr2, int basis, MatrixX &out);
+                      */
   bool generateDensity();
   bool generateSpinDensity();
 };

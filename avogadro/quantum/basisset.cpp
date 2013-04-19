@@ -21,7 +21,7 @@
 
 namespace Avogadro {
 namespace Quantum {
-
+/*
 bool BasisSet::blockingCalculateCubeMO(Cube *cube, unsigned int mo)
 {
   if (!this->calculateCubeMO(cube, mo))
@@ -61,6 +61,7 @@ bool BasisSet::blockingCalculateCubeSpinDensity(Cube *cube)
   this->watcher().waitForFinished();
   return true;
 }
+*/
 
 } // End namespace Quantum
 } // End namespace Avogadro

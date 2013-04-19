@@ -13,16 +13,20 @@ set(HEADERS
   atomtyper.h
   atomtyper-inline.h
   avogadrocore.h
+  basisset.h
   bond.h
   coordinateset.h
   coordinateblockgenerator.h
   elements.h
+  gaussianset.h
+  gaussiansettools.h
   graph.h
   hydrogentools.h
   matrix.h
   molecule.h
   nameatomtyper.h
   ringperceiver.h
+  slaterset.h
   symbolatomtyper.h
   variant.h
   variant-inline.h
@@ -36,12 +40,15 @@ set(SOURCES
   bond.cpp
   coordinateblockgenerator.cpp
   elements.cpp
+  gaussianset.cpp
+  gaussiansettools.cpp
   graph.cpp
   hydrogentools.cpp
   mdlvalence_p.h
   molecule.cpp
   nameatomtyper.cpp
   ringperceiver.cpp
+  slaterset.cpp
   symbolatomtyper.cpp
   variantmap.cpp
   version.cpp
