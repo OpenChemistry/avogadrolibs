@@ -31,6 +31,8 @@
 namespace Avogadro {
 namespace Core {
 
+class BasisSet;
+
 /**
  * @class Molecule molecule.h <avogadro/core/molecule.h>
  * @brief The Molecule class represents a chemical molecule.
@@ -187,6 +189,17 @@ public:
   std::string formula() const;
 
   /**
+   * Set the basis set for the molecule, note that the molecule takes ownership
+   * of the object.
+   */
+  void setBasisSet(BasisSet *basis) { m_basisSet = basis; }
+
+  /**
+   * Get the basis set (if present) for the molecule.
+   */
+  BasisSet * basisSet() { return m_basisSet; }
+
+  /**
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
    */
   void perceiveBondsSimple();
@@ -200,6 +213,8 @@ protected:
   std::vector<Vector3> m_positions3d;
   std::vector<std::pair<size_t, size_t> > m_bondPairs;
   std::vector<unsigned char> m_bondOrders;
+
+  BasisSet *m_basisSet;
 
   /** Update the graph to correspond to the current molecule. */
   void updateGraph() const;
