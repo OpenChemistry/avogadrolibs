@@ -43,7 +43,7 @@ target_link_libraries(AvogadroQtOpenGLTests
 
 foreach(test ${tests})
   string(TOLOWER ${test} testname)
-  add_test(NAME "${test}"
+  add_test(NAME "QtOpenGL-${test}"
     COMMAND
       AvogadroQtOpenGLTests "${testname}test"
       "--baseline" "${AVOGADRO_DATA_ROOT}/baselines/avogadro/qtopengl"
