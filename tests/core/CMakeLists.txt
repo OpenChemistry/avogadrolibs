@@ -38,6 +38,6 @@ endif()
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
 foreach(TestName ${tests})
-  add_test(NAME "${TestName}Test"
+  add_test(NAME "Core-${TestName}"
     COMMAND AvogadroTests "--gtest_filter=${TestName}Test.*")
 endforeach()

@@ -28,6 +28,6 @@ target_link_libraries(AvogadroRenderingTests AvogadroRendering
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
 foreach(TestName ${tests})
-  add_test(NAME "${TestName}Test"
+  add_test(NAME "Rendering-${TestName}"
     COMMAND AvogadroRenderingTests "--gtest_filter=${TestName}Test.*")
 endforeach()
