@@ -56,6 +56,7 @@ bool MdlFormat::read(std::istream &in, Core::Molecule &mol)
 
   // The first line is the molecule name.
   getline(in, buffer);
+  buffer = trimmed(buffer);
   if (!buffer.empty())
     mol.setData("name", buffer);
 
