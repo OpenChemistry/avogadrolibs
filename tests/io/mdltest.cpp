@@ -53,15 +53,15 @@ TEST(MdlTest, atoms)
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   atom = molecule.atom(1);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(6));
-  EXPECT_EQ(atom.position3d().x(),  0.7516);
-  EXPECT_EQ(atom.position3d().y(), -0.0224);
-  EXPECT_EQ(atom.position3d().z(), -0.0208);
+  EXPECT_DOUBLE_EQ(atom.position3d().x(),  0.7516);
+  EXPECT_DOUBLE_EQ(atom.position3d().y(), -0.0224);
+  EXPECT_DOUBLE_EQ(atom.position3d().z(), -0.0208);
 
   atom = molecule.atom(7);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
-  EXPECT_EQ(atom.position3d().x(), -1.1850);
-  EXPECT_EQ(atom.position3d().y(),  0.0044);
-  EXPECT_EQ(atom.position3d().z(), -0.9875);
+  EXPECT_DOUBLE_EQ(atom.position3d().x(), -1.1850);
+  EXPECT_DOUBLE_EQ(atom.position3d().y(),  0.0044);
+  EXPECT_DOUBLE_EQ(atom.position3d().z(), -0.9875);
 }
 
 TEST(MdlTest, bonds)
@@ -109,9 +109,9 @@ TEST(MdlTest, saveFile)
   EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(7));
   Atom atom = molecule.atom(7);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
-  EXPECT_EQ(atom.position3d().x(), -1.1850);
-  EXPECT_EQ(atom.position3d().y(),  0.0044);
-  EXPECT_EQ(atom.position3d().z(), -0.9875);
+  EXPECT_DOUBLE_EQ(atom.position3d().x(), -1.1850);
+  EXPECT_DOUBLE_EQ(atom.position3d().y(),  0.0044);
+  EXPECT_DOUBLE_EQ(atom.position3d().z(), -0.9875);
   Bond bond = molecule.bond(0);
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
