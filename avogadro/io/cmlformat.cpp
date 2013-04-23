@@ -21,12 +21,19 @@
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/matrix.h>
 
 #include <pugixml.cpp>
 
+#include <bitset>
+#include <cmath>
 #include <streambuf>
 #include <sstream>
 #include <map>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 namespace Avogadro {
 namespace Io {
@@ -45,7 +52,11 @@ class CmlFormatPrivate
 {
 public:
   CmlFormatPrivate(Molecule *mol, xml_document &document, std::string filename_)
-    : success(false), molecule(mol), moleculeNode(NULL), filename(filename_)
+    : success(false),
+      molecule(mol),
+      cellMatrix(Matrix3f::Zero()),
+      moleculeNode(NULL),
+      filename(filename_)
   {
     // Parse the CML document, and create molecules/elements as necessary.
     moleculeNode = document.child("molecule");
@@ -56,10 +67,11 @@ public:
     if (moleculeNode) {
       // Parse the various components we know about.
       data();
-      properties();
-      success = atoms();
+      success = properties();
       if (success)
-        bonds();
+        success = atoms();
+      if (success)
+        success = bonds();
     }
     else {
       error += "Error, no molecule node found.";
@@ -67,7 +79,7 @@ public:
     }
   }
 
-  void properties()
+  bool properties()
   {
     xml_attribute attribute;
     xml_node node;
@@ -83,6 +95,71 @@ public:
           molecule->setData("inchi", std::string(attribute.value()));
       }
     }
+
+    // Unit cell:
+    node = moleculeNode.child("crystal");
+    if (node) {
+      float a;
+      float b;
+      float c;
+      float alpha;
+      float beta;
+      float gamma;
+      enum { CellA = 0, CellB, CellC, CellAlpha, CellBeta, CellGamma };
+      std::bitset<6> parsedValues;
+      for (pugi::xml_node scalar = node.child("scalar"); scalar;
+           scalar = scalar.next_sibling("scalar")) {
+        pugi::xml_attribute title = scalar.attribute("title");
+        const float degToRad(static_cast<float>(M_PI) / 180.0f);
+        if (title) {
+          std::string titleStr(title.value());
+          if (titleStr == "a") {
+            a = scalar.text().as_float();
+            parsedValues.set(CellA);
+          }
+          else if (titleStr == "b") {
+            b = scalar.text().as_float();
+            parsedValues.set(CellB);
+          }
+          else if (titleStr == "c") {
+            c = scalar.text().as_float();
+            parsedValues.set(CellC);
+          }
+          else if (titleStr == "alpha") {
+            alpha = scalar.text().as_float() * degToRad;
+            parsedValues.set(CellAlpha);
+          }
+          else if (titleStr == "beta") {
+            beta = scalar.text().as_float() * degToRad;
+            parsedValues.set(CellBeta);
+          }
+          else if (titleStr == "gamma") {
+            gamma = scalar.text().as_float() * degToRad;
+            parsedValues.set(CellGamma);
+          }
+        }
+      }
+      if (parsedValues.count() != 6) {
+        error += "Incomplete unit cell description.";
+        return false;
+      }
+      // Convert parameters to matrix. See "Appendix 2: Coordinate Systems and
+      // Transformations" of the PDB guide (ref v2.2, 4/23/13,
+      // http://www.bmsc.washington.edu/CrystaLinks/man/pdb/guide2.2_frame.html)
+      const float cAlpha = std::cos(alpha);
+      const float cBeta = std::cos(beta);
+      const float cGamma = std::cos(gamma);
+      const float sGamma = std::sin(gamma);
+      const float V = a * b * c * std::sqrt(1 - cAlpha*cAlpha
+                                            - cBeta * cBeta
+                                            - cGamma * cGamma
+                                            + (2 * cAlpha * cBeta * cGamma));
+      cellMatrix
+          << a, b * cGamma, c * cBeta,
+          0,    b * sGamma, c * (cAlpha - cBeta * cGamma) / sGamma,
+          0,    0,          V / (a * b * sGamma);
+    }
+    return true;
   }
 
   bool atoms()
@@ -127,6 +204,20 @@ public:
         }
         else {
           // Corrupt 3D position supplied for atom.
+          return false;
+        }
+      }
+      else if ((attribute = node.attribute("xFract"))) {
+        xml_attribute &xF = attribute;
+        xml_attribute yF = node.attribute("yFract");
+        xml_attribute zF = node.attribute("zFract");
+        if (yF && zF) {
+          Vector3f coord(xF.as_float(), yF.as_float(), zF.as_float());
+          coord = cellMatrix * coord;
+          atom.setPosition3d(coord.cast<Real>());
+        }
+        else {
+          error += "Missing y or z fractional coordinate on atom.";
           return false;
         }
       }
@@ -314,6 +405,7 @@ public:
 
   bool success;
   Molecule *molecule;
+  Matrix3f cellMatrix;
   xml_node moleculeNode;
   std::map<std::string, size_t> atomIds;
   string filename;
