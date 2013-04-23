@@ -75,6 +75,7 @@ def getOptions():
   # TODO Coordinate format (need zmatrix)
 
   opts = {'userOptions' : userOptions}
+  opts['allowCustomBaseName'] = True
 
   return opts
 
@@ -153,18 +154,21 @@ def generateInput():
   # Generate the input file
   inp = generateInputFile(opts['options'], opts['settings'])
 
+  # Basename for input files:
+  baseName = opts['settings']['baseName']
+
   # Prepare the result
   result = {}
   # Input file text -- will appear in the same order in the GUI as they are
   # listed in the array:
   files = []
-  files.append({'filename': 'job.com', 'contents': inp})
+  files.append({'filename': '%s.com'%baseName, 'contents': inp})
   if debug:
     files.append({'filename': 'debug_info', 'contents': stdinStr})
   result['files'] = files
   # Specify the main input file. This will be used by MoleQueue to determine
   # the value of the $$inputFileName$$ and $$inputFileBaseName$$ keywords.
-  result['mainFile'] = 'job.com'
+  result['mainFile'] = '%s.com'%baseName
 
   if len(warnings) > 0:
     result['warnings'] = warnings

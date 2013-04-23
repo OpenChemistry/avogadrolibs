@@ -448,6 +448,12 @@ QString QuantumInputDialog::settingsKey(const QString &identifier) const
                                            identifier);
 }
 
+void QuantumInputDialog::enableBaseNameGui(bool enable)
+{
+  m_ui.baseNameEdit->setVisible(enable);
+  m_ui.baseNameLabel->setVisible(enable);
+}
+
 void QuantumInputDialog::saveSingleFile(const QString &fileName)
 {
   QSettings settings;
@@ -623,6 +629,8 @@ void QuantumInputDialog::connectButtons()
   connect(m_ui.coresSpinBox, SIGNAL(valueChanged(int)),
           SLOT(updatePreviewText()));
   connect(m_ui.warningTextButton, SIGNAL(clicked()), SLOT(toggleWarningText()));
+  connect(m_ui.baseNameEdit, SIGNAL(textChanged(QString)),
+          SLOT(updatePreviewText()));
 }
 
 void QuantumInputDialog::connectMoleQueue()
@@ -670,6 +678,10 @@ void QuantumInputDialog::updateOptions()
     showError(m_inputGenerator.errorList().join("\n\n"));
     m_inputGenerator.clearErrors();
   }
+
+  enableBaseNameGui(m_options.contains("allowCustomBaseName")
+                    ? m_options.value("allowCustomBaseName").toBool(false)
+                    : false);
 
   // Create the widgets, etc for the gui
   buildOptionGui();
@@ -1083,6 +1095,11 @@ QJsonObject QuantumInputDialog::collectSettings() const
 {
   QJsonObject ret;
 
+  QString baseName = m_ui.baseNameEdit->text();
+  if (baseName.isEmpty())
+    baseName = m_ui.baseNameEdit->placeholderText();
+
+  ret.insert("baseName", baseName);
   ret.insert("numberOfCores", m_ui.coresSpinBox->value());
 
   return ret;
