@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>manipulate_16.png</file>
+        <file>manipulate_32.png</file>
+    </qresource>
+</RCC>

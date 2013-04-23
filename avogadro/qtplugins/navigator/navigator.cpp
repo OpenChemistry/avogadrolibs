@@ -25,6 +25,7 @@
 #include <avogadro/rendering/scene.h>
 
 #include <QtGui/QAction>
+#include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
@@ -45,6 +46,7 @@ Navigator::Navigator(QObject *parent_)
     m_pressedButtons(Qt::NoButton)
 {
   m_activateAction->setText(tr("Navigate"));
+  m_activateAction->setIcon(QIcon(":/icons/navigate_32.png"));
 }
 
 Navigator::~Navigator()

@@ -26,6 +26,7 @@
 #include <avogadro/rendering/glrenderer.h>
 
 #include <QtGui/QAction>
+#include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
@@ -50,6 +51,7 @@ Manipulator::Manipulator(QObject *parent_)
     m_pressedButtons(Qt::NoButton)
 {
   m_activateAction->setText(tr("Manipulate"));
+  m_activateAction->setIcon(QIcon(":/icons/manipulate_32.png"));
 }
 
 Manipulator::~Manipulator()

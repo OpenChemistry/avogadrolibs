@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>draw_32.png</file>
+        <file>draw_16.png</file>
+    </qresource>
+</RCC>
