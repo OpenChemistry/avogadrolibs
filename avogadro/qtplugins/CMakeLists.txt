@@ -21,8 +21,18 @@ option(BUILD_STATIC_PLUGINS "Build static plugins by default" ON)
 # pluginClass is the class to be instantiated for the plugin.
 # sources is the list of source files for the plugin.
 # uis is the list of UI files that need to be compiled (optional).
-function(avogadro_plugin name description type header pluginClass sources uis)
+# rcs is the list of qrc files that need to be compiled (optional).
+function(avogadro_plugin name description type header pluginClass sources)
+  set(uis "")
+  set(rcs "")
+  if(${ARGC} GREATER 6)
+    set(uis ${ARGV6})
+  endif()
+  if(${ARGC} GREATER 7)
+    set(rcs ${ARGV7})
+  endif()
   qt4_wrap_ui(ui_srcs ${uis})
+  qt4_add_resources(rc_srcs ${rcs})
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
   unset(PluginIncludes)
   foreach(_header ${header})
@@ -45,7 +55,13 @@ function(avogadro_plugin name description type header pluginClass sources uis)
     set_property(GLOBAL APPEND PROPERTY AvogadroLibs_PLUGINS ${name})
   endif()
 
-  add_library(${name} ${_plugin_object} ${sources} ${ui_srcs} ${name}Plugin.cpp)
+  add_library(${name}
+    ${_plugin_object}
+    ${sources}
+    ${ui_srcs}
+    ${rc_srcs}
+    ${name}Plugin.cpp
+  )
   target_link_libraries(${name} AvogadroCore AvogadroQtGui)
 
   if("${_plugin_object}" STREQUAL "STATIC")
