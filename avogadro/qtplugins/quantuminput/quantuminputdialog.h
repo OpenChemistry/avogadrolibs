@@ -167,6 +167,11 @@ private:
   QString settingsKey(const QString &identifier) const;
 
   /**
+   * Enable/disable the GUI for specifying the input file base name.
+   */
+  void enableBaseNameGui(bool enable = true);
+
+  /**
    * Write the input file(s) to disk. Prompts user for target location.
    * @{
    */

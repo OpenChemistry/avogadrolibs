@@ -71,7 +71,8 @@ namespace QtPlugins {
   "userOptions": {
     ...
   },
-  "inputMoleculeFormat": "cjson"
+  "inputMoleculeFormat": "cjson",
+  "allowCustomBaseName" : true
 }
 ~~~
  * The `userOptions` block contains a JSON object keyed with option names
@@ -188,6 +189,17 @@ namespace QtPlugins {
  * @note Currently valid options for inputMoleculeFormat are "cjson" for
  * Chemical JSON or "cml" for Chemical Markup Language.
  *
+ * Specifying Filenames
+ * --------------------
+ *
+ * The `allowCustomBaseName` option toggles whether the user may specify a
+ * custom base name for input files. If the simulation code expects specific
+ * filenames, set this to false and hardcode the filenames the code expects.
+ * If the simulation allows input files to have custom names, set this to true
+ * and use the base name provided to generate the input filenames (See the
+ * `--generate-input` `baseName` documentation below). If this option is not
+ * specified, it is assumed to be false.
+ *
  * Handling User Selections: `--generate-input`
  * ============================================
  *
@@ -203,6 +215,7 @@ namespace QtPlugins {
     ...
   },
   "settings": {
+    "baseName": "job",
     "numberOfCores": 4
   }
 }
@@ -217,7 +230,10 @@ namespace QtPlugins {
  * pairs for each of the options specified in the `userOptions` block of the
  * `--print-options` output.
  * The `settings` block contains a fixed set of parameters that are always
- * available in the GUI:
+ * available provided:
+ * - `baseName`: The basename for input files (See the `allowCustomBaseName`
+ *   documentation above). This defaults to "job" if `allowCustomBaseName` is
+ *   `false`.
  * - `numberOfCores`: The number of processor cores requested.
  *
  * If the script is called with `--generate-input`, it must write a JSON
