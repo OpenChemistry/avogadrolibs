@@ -20,6 +20,7 @@
 
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/vector.h>
 
 #include <avogadro/io/cmlformat.h>
 
@@ -28,6 +29,8 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Io::CmlFormat;
 using Avogadro::MatrixX;
+using Avogadro::Real;
+using Avogadro::Vector3;
 
 TEST(CmlTest, readFile)
 {
@@ -83,6 +86,38 @@ TEST(CmlTest, bonds)
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(4));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(7));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
+}
+
+TEST(CmlTest, fractionalCoords)
+{
+  std::string cmlStr(
+        "<?xml version=\"1.0\"?>"
+        "<molecule xmlns=\"http://www.xml-cml.org/schema\">"
+        "<crystal>"
+        "<scalar title=\"a\" units=\"units:angstrom\">5.3</scalar>"
+        "<scalar title=\"b\" units=\"units:angstrom\">2.4</scalar>"
+        "<scalar title=\"c\" units=\"units:angstrom\">1.8</scalar>"
+        "<scalar title=\"alpha\" units=\"units:degree\">85.000000</scalar>"
+        "<scalar title=\"beta\" units=\"units:degree\">90.000000</scalar>"
+        "<scalar title=\"gamma\" units=\"units:degree\">105.000000</scalar>"
+        "</crystal>"
+        "<atomArray>"
+        "<atom id=\"a\" elementType=\"H\" "
+        "xFract=\"0.5\" yFract=\"0.5\" zFract=\"0.5\"/>"
+        "</atomArray>"
+        "</molecule>"
+        );
+  CmlFormat cml;
+  Molecule molecule;
+  cml.readString(cmlStr, molecule);
+  ASSERT_EQ(1, molecule.atomCount());
+  Atom atom = molecule.atom(0);
+  EXPECT_EQ(1, atom.atomicNumber());
+  EXPECT_TRUE(atom.position3d().isApprox(
+                Vector3(static_cast<Real>(2.33942),
+                        static_cast<Real>(1.24032),
+                        static_cast<Real>(0.89633)), 1e-5));
+
 }
 
 TEST(CmlTest, saveFile)
