@@ -245,6 +245,20 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>warningText</tabstop>
+  <tabstop>warningTextButton</tabstop>
+  <tabstop>baseNameEdit</tabstop>
+  <tabstop>programCombo</tabstop>
+  <tabstop>refreshProgramsButton</tabstop>
+  <tabstop>coresSpinBox</tabstop>
+  <tabstop>computeButton</tabstop>
+  <tabstop>defaultsButton</tabstop>
+  <tabstop>debugCheckBox</tabstop>
+  <tabstop>generateButton</tabstop>
+  <tabstop>closeButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
