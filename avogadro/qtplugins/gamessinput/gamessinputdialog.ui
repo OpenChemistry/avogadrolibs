@@ -49,6 +49,9 @@
          <property name="text">
           <string>Charge:</string>
          </property>
+         <property name="buddy">
+          <cstring>chargeCombo</cstring>
+         </property>
         </widget>
        </item>
        <item row="6" column="0">
@@ -99,6 +102,9 @@
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
+         <property name="buddy">
+          <cstring>calculateCombo</cstring>
+         </property>
         </widget>
        </item>
        <item row="2" column="0">
@@ -109,12 +115,18 @@
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
+         <property name="buddy">
+          <cstring>theoryCombo</cstring>
+         </property>
         </widget>
        </item>
        <item row="0" column="0">
         <widget class="QLabel" name="label_8">
          <property name="text">
           <string>Title:</string>
+         </property>
+         <property name="buddy">
+          <cstring>titleEdit</cstring>
          </property>
         </widget>
        </item>
@@ -200,7 +212,7 @@
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>theoryCombo</cstring>
+          <cstring>stateCombo</cstring>
          </property>
         </widget>
        </item>
@@ -274,8 +286,28 @@
      <property name="title">
       <string>Calculation Setup</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout2">
+     <layout class="QFormLayout" name="formLayout">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
       <item row="0" column="0">
+       <widget class="QLabel" name="baseNameLabel">
+        <property name="text">
+         <string>Base File Name: </string>
+        </property>
+        <property name="buddy">
+         <cstring>baseNameEdit</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="baseNameEdit">
+        <property name="placeholderText">
+         <string>job</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
        <widget class="QLabel" name="label_4">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -286,9 +318,12 @@
         <property name="text">
          <string>Program (Queue):</string>
         </property>
+        <property name="buddy">
+         <cstring>programCombo</cstring>
+        </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="1" column="1">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QComboBox" name="programCombo">
@@ -319,7 +354,7 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="label_7">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -330,9 +365,12 @@
         <property name="text">
          <string>Processor cores:</string>
         </property>
+        <property name="buddy">
+         <cstring>coresSpinBox</cstring>
+        </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <widget class="QSpinBox" name="coresSpinBox">
@@ -368,6 +406,26 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>modeTab</tabstop>
+  <tabstop>titleEdit</tabstop>
+  <tabstop>calculateCombo</tabstop>
+  <tabstop>theoryCombo</tabstop>
+  <tabstop>basisCombo</tabstop>
+  <tabstop>stateCombo</tabstop>
+  <tabstop>multiplicityCombo</tabstop>
+  <tabstop>chargeCombo</tabstop>
+  <tabstop>previewText</tabstop>
+  <tabstop>baseNameEdit</tabstop>
+  <tabstop>programCombo</tabstop>
+  <tabstop>refreshProgramsButton</tabstop>
+  <tabstop>coresSpinBox</tabstop>
+  <tabstop>computeButton</tabstop>
+  <tabstop>resetAllButton</tabstop>
+  <tabstop>defaultsButton</tabstop>
+  <tabstop>generateButton</tabstop>
+  <tabstop>closeButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

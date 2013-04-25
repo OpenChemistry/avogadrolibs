@@ -34,6 +34,7 @@
 #include <QtGui/QProgressDialog>
 
 #include <QtCore/QFile>
+#include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
@@ -700,14 +701,25 @@ void GamessInputDialog::defaultsClicked()
 
 void GamessInputDialog::generateClicked()
 {
-  QString filename =
-      QFileDialog::getSaveFileName(this, tr("Save GAMESS input file"));
+  QSettings settings;
+  QString fileName = (ui.baseNameEdit->text().isEmpty()
+                      ? ui.baseNameEdit->placeholderText()
+                      : ui.baseNameEdit->text()) + ".inp";
+  QString targetFile = settings.value("gamessInput/outputDirectory",
+                                     QDir::homePath()).toString();
+  targetFile = QDir(QFileInfo(targetFile).absoluteDir()).absoluteFilePath(
+        fileName);
+
+  fileName = QFileDialog::getSaveFileName(this, tr("Save GAMESS input file"),
+                                          targetFile);
 
   // User cancel:
-  if (filename.isNull())
+  if (fileName.isNull())
     return;
 
-  QFile file(filename);
+  settings.setValue("gamessInput/outputDirectory", fileName);
+
+  QFile file(fileName);
   bool success = false;
   if (file.open(QFile::WriteOnly | QFile::Text)) {
     if (file.write(ui.previewText->toPlainText().toLatin1()) > 0) {
@@ -718,7 +730,7 @@ void GamessInputDialog::generateClicked()
 
   if (!success) {
     QMessageBox::critical(this, tr("Output Error"),
-                          tr("Failed to write to file %1.").arg(filename));
+                          tr("Failed to write to file %1.").arg(fileName));
   }
 }
 
@@ -757,12 +769,16 @@ void GamessInputDialog::computeClicked()
   if (description.isEmpty())
     description = generateJobTitle();
 
+  QString fileName = ui.baseNameEdit->text().isEmpty()
+      ? ui.baseNameEdit->placeholderText() : ui.baseNameEdit->text();
+
   MoleQueue::JobObject job;
   job.setQueue(queue);
   job.setProgram(program);
   job.setDescription(description);
   job.setValue("numberOfCores", ui.coresSpinBox->value());
-  job.setInputFile("job.inp", ui.previewText->toPlainText());
+  job.setInputFile(QString("%1.inp").arg(fileName),
+                   ui.previewText->toPlainText());
 
   m_client->submitJob(job);
 }
