@@ -7,6 +7,10 @@ set(editor_uis
   editortoolwidget.ui
 )
 
+set(editor_rcs
+  editor.qrc
+)
+
 avogadro_plugin(Editor
   "Editor tool"
   ToolPlugin
@@ -14,4 +18,5 @@ avogadro_plugin(Editor
   Editor
   "${editor_srcs}"
   "${editor_uis}"
+  "${editor_rcs}"
 )

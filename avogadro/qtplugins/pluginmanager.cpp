@@ -74,6 +74,7 @@ PluginManager::PluginManager(QObject *p)
     else
       qDebug() << "  no plugin files found in" << pluginsDir.absolutePath();
   }
+  initAvogadroPluginResources();
 }
 
 PluginManager::~PluginManager()

@@ -21,8 +21,18 @@ option(BUILD_STATIC_PLUGINS "Build static plugins by default" ON)
 # pluginClass is the class to be instantiated for the plugin.
 # sources is the list of source files for the plugin.
 # uis is the list of UI files that need to be compiled (optional).
-function(avogadro_plugin name description type header pluginClass sources uis)
+# rcs is the list of qrc files that need to be compiled (optional).
+function(avogadro_plugin name description type header pluginClass sources)
+  set(uis "")
+  set(rcs "")
+  if(${ARGC} GREATER 6)
+    set(uis ${ARGV6})
+  endif()
+  if(${ARGC} GREATER 7)
+    set(rcs ${ARGV7})
+  endif()
   qt4_wrap_ui(ui_srcs ${uis})
+  qt4_add_resources(rc_srcs ${rcs})
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
   unset(PluginIncludes)
   foreach(_header ${header})
@@ -40,12 +50,22 @@ function(avogadro_plugin name description type header pluginClass sources uis)
   if(BUILD_STATIC_PLUGINS)
     set(_plugin_object "STATIC")
     set_property(GLOBAL APPEND PROPERTY AvogadroLibs_STATIC_PLUGINS ${name})
+    if(rcs)
+      get_filename_component(_name_we ${rcs} NAME_WE)
+      set_property(GLOBAL APPEND PROPERTY AvogadroLibs_STATIC_RCS ${_name_we})
+    endif()
   else()
     set(_plugin_object "MODULE")
     set_property(GLOBAL APPEND PROPERTY AvogadroLibs_PLUGINS ${name})
   endif()
 
-  add_library(${name} ${_plugin_object} ${sources} ${ui_srcs} ${name}Plugin.cpp)
+  add_library(${name}
+    ${_plugin_object}
+    ${sources}
+    ${ui_srcs}
+    ${rc_srcs}
+    ${name}Plugin.cpp
+  )
   target_link_libraries(${name} AvogadroCore AvogadroQtGui)
 
   if("${_plugin_object}" STREQUAL "STATIC")
@@ -85,6 +105,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${original_library_output_dir}")
 # Add all of the static plugins to the initialization file.
 get_property(AvogadroLibs_STATIC_PLUGINS GLOBAL
   PROPERTY AvogadroLibs_STATIC_PLUGINS)
+get_property(AvogadroLibs_STATIC_RCS GLOBAL
+  PROPERTY AvogadroLibs_STATIC_RCS)
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
   "// Automatically generated file. Do not edit.
 #ifndef AVOGADRO_STATIC_QTPLUGINS_H
@@ -96,6 +118,14 @@ foreach(_plugin ${AvogadroLibs_STATIC_PLUGINS})
   file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
     "Q_IMPORT_PLUGIN(${_plugin})\n")
 endforeach()
+file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
+  "\nvoid initAvogadroPluginResources() {\n")
+foreach(_rcs ${AvogadroLibs_STATIC_RCS})
+  file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
+    "  Q_INIT_RESOURCE(${_rcs});\n")
+endforeach()
+file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
+  "}\n\n")
 
 file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
   "\n#endif // AVOGADRO_STATIC_QTPLUGINS_H\n")

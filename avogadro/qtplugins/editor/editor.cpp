@@ -33,6 +33,7 @@
 
 #include <QtGui/QAction>
 #include <QtGui/QComboBox>
+#include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QVBoxLayout>
@@ -70,6 +71,7 @@ Editor::Editor(QObject *parent_)
 {
   connect(m_toolWidget, SIGNAL(adjustHydrogens()), SLOT(adjustHydrogens()));
   m_activateAction->setText(tr("Draw"));
+  m_activateAction->setIcon(QIcon(":/icons/editor.png"));
   reset();
 }
 
