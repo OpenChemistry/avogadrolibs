@@ -10,6 +10,7 @@ configure_file("${PROJECT_SOURCE_DIR}/cmake/version.h.in"
 set(HEADERS
   array.h
   atom.h
+  atomtyper.h
   avogadrocore.h
   bond.h
   coordinateset.h
@@ -18,7 +19,9 @@ set(HEADERS
   hydrogentools.h
   matrix.h
   molecule.h
+  nameatomtyper.h
   ringperceiver.h
+  symbolatomtyper.h
   variant.h
   variant-inline.h
   variantmap.h
@@ -28,13 +31,16 @@ set(HEADERS
 
 set(SOURCES
   atom.cpp
+  atomtyper.cpp
   bond.cpp
   elements.cpp
   graph.cpp
   hydrogentools.cpp
   mdlvalence_p.h
   molecule.cpp
+  nameatomtyper.cpp
   ringperceiver.cpp
+  symbolatomtyper.cpp
   variantmap.cpp
   version.cpp
 )
