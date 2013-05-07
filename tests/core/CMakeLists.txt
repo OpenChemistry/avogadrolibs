@@ -2,6 +2,7 @@
 set(tests
   Array
   Atom
+  AtomTyper
   Bond
   CoordinateSet
   CPP11
