@@ -35,6 +35,8 @@ template <typename OutputType>
 class AVOGADROCORE_EXPORT AtomTyper
 {
 public:
+  typedef OutputType ValueType;
+
   explicit AtomTyper(const Molecule *mol = NULL);
   virtual ~AtomTyper();
 
