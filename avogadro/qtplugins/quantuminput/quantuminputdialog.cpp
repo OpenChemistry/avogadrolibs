@@ -16,6 +16,7 @@
 
 #include "quantuminputdialog.h"
 
+#include "generichighlighter.h"
 #include "inputgenerator.h"
 
 #include <avogadro/qtgui/molecule.h>
@@ -211,6 +212,14 @@ void QuantumInputDialog::updatePreviewTextImmediately()
       m_ui.tabWidget->removeTab(tabIndex);
       m_ui.tabWidget->insertTab(index, edit, fileName);
     }
+
+    GenericHighlighter *highlighter(
+          m_inputGenerator.createFileHighlighter(fileName));
+    if (highlighter) {
+      highlighter->setParent(this);
+      highlighter->setDocument(edit->document());
+    }
+
     edit->setText(m_inputGenerator.fileContents(fileName));
     edit->document()->setModified(false);
     ++index;

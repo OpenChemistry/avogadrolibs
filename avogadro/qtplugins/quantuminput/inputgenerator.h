@@ -27,6 +27,8 @@
 
 class QJsonDocument;
 class QProcess;
+class QRegExp;
+class QTextCharFormat;
 class QTextStream;
 
 namespace Avogadro {
@@ -36,6 +38,7 @@ class Molecule;
 }
 
 namespace QtPlugins {
+class GenericHighlighter;
 
 /**
  * @brief The InputGenerator class provides an interface to input generator
@@ -71,6 +74,19 @@ namespace QtPlugins {
   "userOptions": {
     ...
   },
+  "highlightStyles": [
+    {
+      "style": "Descriptive name",
+      "rules": [
+        {
+          "patterns": [ ... ],
+          "format": { ... }
+        },
+        ...
+      ],
+    },
+    ...
+  ],
   "inputMoleculeFormat": "cjson",
   "allowCustomBaseName" : true
 }
@@ -177,6 +193,77 @@ namespace QtPlugins {
  *
  * @todo Document expected option names/value that are handled specially.
  *
+ * Syntax Highlighting
+ * -------------------
+ *
+ * Rules for syntax highlighting can be specified as a collection of regular
+ * expressions or wildcard patterns and text format specifications in the
+ * "highlightRules" array. The `highlightRules` format is:
+~~~{.js}
+  "highlightStyles": [
+    {
+      "style": "Style 1",
+      "rules": [ (list of highlight rules, see below) ],
+    },
+    {
+      "style": "Style 2",
+      "rules": [ (list of highlight rules, see below) ],
+    },
+    ...
+  ],
+~~~
+ * The `style` name is unique to the style object, and used to associate a
+ * set of highlighting rules with particular output files. See the
+ * `--generate-input` documentation for more details.
+ *
+ * The general form of a highlight rule is:
+~~~{.js}
+{
+  "patterns": [
+    { "regexp": "^Some regexp?$" },
+    { "wildcard": "A * wildcard expression" },
+    { "string": "An exact string to match.",
+      "caseSensitive": false
+    },
+    ...
+  ],
+  "format": {
+    "foreground": [ 255, 128,  64 ],
+    "background": [   0, 128, 128 ],
+    "attributes": ["bold", "italic", "underline"],
+    "family": "serif"
+  }
+}
+~~~
+ *
+ * The `patterns` array contains a collection of fixed strings, wildcard
+ * expressions, and regular expressions (using the QRegExp syntax flavor, see
+ * the QRegExp documentation) that are used to identify strings that should be
+ * formatted.
+ * There must be one of the following members present in each pattern object:
+ * - `regexp` A QRegExp-style regular expression
+ * - `wildcard` A wildcard expression
+ * - `string` An exact string to match.
+ *
+ * Any pattern object may also set a boolean `caseSensitive` member to indicate
+ * whether the match should consider character case. If omitted, a
+ * case-sensitive match is assumed.
+ *
+ * The `format` member specifies
+ * the font properties to apply:
+ * - `foreground` color as an RGB tuple, ranged 0-255
+ * - `background` color as an RGB tuple, ranged 0-255
+ * - `attributes` array of font attributes, valid strings are `"bold"`,
+ *   `"italic"`, or `"underline"`
+ * - `family` of font. Valid values are `"serif"`, `"sans"`, or `"mono"`
+ *
+ * Any of the font property members may be omitted and default QTextCharFormat
+ * settings will be substituted.
+ *
+ * The input generator extension will apply the entries in the `highlightRules`
+ * object to the text in the order they appear. Thus, later rules will
+ * override the formatting of earlier rules should a conflict arise.
+ *
  * Requesting Full Structure of Current Molecule
  * ---------------------------------------------
  *
@@ -243,7 +330,8 @@ namespace QtPlugins {
   "files": [
     {
       "filename": "file1.ext",
-      "contents": "..."
+      "contents": "...",
+      "highlightStyles": [ ... ]
     },
     {
       "filename": "file2.ext",
@@ -258,6 +346,11 @@ namespace QtPlugins {
  * The `files` block is an array of objects, which define the actual input
  * files. The `filename` member provides the name of the file, and
  * `contents` provides the text that goes into the file.
+ * The optional `highlightStyles` member is an array of strings describing any
+ * highlight styles to apply to the file (see `--print-options` documentation).
+ * Each string in this array must match a `style` description in a highlighting
+ * rule in the `--print-options` output.
+ * Zero or more highlighting styles may be applied to any file.
  * The order of the files in the
  * GUI will match the order of the files in the array, and the first file will
  * be displayed first.
@@ -426,6 +519,14 @@ public:
   QString fileContents(const QString &fileName) const;
 
   /**
+   * @return A syntax highlighter for the file @a fileName. Must call
+   * generateInput() first. The caller takes ownership of the returned object.
+   * If no syntax highlighter is defined, this function returns NULL.
+   * @sa fileNames
+   */
+  GenericHighlighter *createFileHighlighter(const QString &fileName) const;
+
+  /**
    * @return True if an error is set.
    */
   bool hasErrors() const { return !m_errors.isEmpty(); }
@@ -464,6 +565,10 @@ private:
   QString generateCoordinateBlock(const QString &spec,
                                   const Core::Molecule &mol) const;
   void replaceKeywords(QString &str, const Core::Molecule &mol) const;
+  bool parseHighlightStyles(const QJsonArray &json) const;
+  bool parseRules(const QJsonArray &json, GenericHighlighter &highligher) const;
+  bool parseFormat(const QJsonObject &json, QTextCharFormat &format) const;
+  bool parsePattern(const QJsonValue &json, QRegExp &pattern) const;
 
   bool m_debug;
   // File extension of requested molecule format
@@ -477,6 +582,9 @@ private:
   QStringList m_filenames;
   QString m_mainFileName;
   QMap<QString, QString> m_files;
+  QMap<QString, GenericHighlighter*> m_fileHighlighters;
+
+  mutable QMap<QString, GenericHighlighter*> m_highlightStyles;
 
   QString m_pythonInterpreter;
 };
