@@ -25,6 +25,22 @@ import sys
 # Some globals:
 debug = False
 
+def basisGuiToInput(gui):
+  if gui == '3-21 G':
+    return "3-21G"
+  elif gui == '6-31 G(d)':
+    return "6-31G*"
+  elif gui == '6-31 G(d,p)':
+    return "6-31G**"
+  elif gui == '6-31+ G(d)':
+    return "6-31+G*"
+  elif gui == '6-311 G(d)':
+    return "6-311G*"
+  elif gui == 'LANL2DZ':
+    return "LANL2DZ ECP"
+  else:
+    return gui
+
 def getOptions():
   userOptions = {}
 
@@ -75,7 +91,123 @@ def getOptions():
   userOptions['Charge']['minimum'] = -9
   userOptions['Charge']['maximum'] = 9
 
-  opts = {'userOptions' : userOptions}
+  # highlighting options
+  defaultRules = []
+
+  # literal numbers
+  numberRule = {
+    "patterns": [
+      { "regexp": "\\b[-+.0-9]+\\b" }
+    ],
+    "format": {
+      "foreground": [ 255, 0, 255 ]
+    }
+  }
+
+  defaultRules.append(numberRule)
+
+  # Title highlighting
+  titleRule = {
+    "patterns": [
+      { "wildcard": "title \"*\"" }
+    ],
+    "format": {
+      "foreground": [ 0, 0, 0 ],
+      "attributes": [ "bold" ],
+      "family": "serif"
+    }
+  }
+
+  defaultRules.append(titleRule)
+
+  # Basis sets
+  basisPatterns = []
+  for basis in userOptions['Basis']['values']:
+    basisPatterns.append( { "string": basisGuiToInput(basis) } )
+
+  basisFormat = {
+    "foreground": [ 25, 25, 220 ],
+    "attributes": [ "bold" ],
+    "family": [ "mono" ]
+  }
+
+  basisRule = {
+    "patterns": basisPatterns,
+    "format": basisFormat
+  }
+
+  defaultRules.append(basisRule)
+
+  # Top level directives
+  topLevelDirectives = [
+  "start", "restart", "scratch_dir", "permanent_dir", "memory", "echo", "title",
+  "print", "noprint", "set", "unset", "stop", "task", "ecce_print"]
+
+  # These aren't top-level directives according to the manual, but
+  # for now just stick them in that ruleset.
+  topLevelDirectives.extend(["charge", "geometry", "basis", "spherical",
+  "library", "end", "xc", "mult", "freeze atomic"])
+
+  tldPatterns = []
+  for tld in topLevelDirectives:
+    tldPatterns.append( { "regexp": "\\b%s\\b"%tld } )
+
+  tldRule = {
+    "patterns": tldPatterns,
+    "format": {
+      "foreground": [80, 220, 80],
+      "attributes": ["bold"],
+      "family": "sans"
+    }
+  }
+
+  defaultRules.append(tldRule)
+
+  # Tasks
+  tasks = ["energy", "optimize", "freq"]
+  taskPatterns = []
+  for task in tasks:
+    taskPatterns.append( { "regexp": "\\b%s\\b"%task } )
+
+  taskRule = {
+    "patterns": taskPatterns,
+    "format": {
+      "foreground": [225, 128, 128],
+      "background": [255, 220, 220],
+      "attributes": ["bold", "italic"],
+      "family": "mono"
+    }
+  }
+
+  defaultRules.append(taskRule)
+
+  # QM keywords
+  qm = ["scf", "dft", "b3lyp", "mp2", "ccsd"]
+  qmPatterns = []
+  for word in qm:
+    qmPatterns.append( { "regexp": "\\b%s\\b"%word } )
+
+  qmRule = {
+    "patterns": qmPatterns,
+    "format": {
+      "foreground": [63, 128, 255],
+      "attributes": ["bold", "italic"],
+      "family": "mono"
+    }
+  }
+
+  defaultRules.append(qmRule)
+
+  # Assemble default style:
+  defaultStyle = {}
+  defaultStyle["style"] = "default"
+  defaultStyle["rules"] = defaultRules
+
+  highlightStyles = [ defaultStyle ]
+
+  opts = {}
+  opts['userOptions'] = userOptions
+  opts['highlightStyles'] = highlightStyles
   opts['allowCustomBaseName'] = True
 
   return opts
@@ -109,26 +241,7 @@ def generateInputFile(opts):
     nwfile += " spherical"
   nwfile += "\n"
   nwfile += "  * library "
-  if basis == 'STO-3G':
-    nwfile += "STO-3G"
-  elif basis == '3-21 G':
-    nwfile += "3-21G"
-  elif basis == '6-31 G(d)':
-    nwfile += "6-31G*"
-  elif basis == '6-31 G(d,p)':
-    nwfile += "6-31G**"
-  elif basis == '6-31+ G(d)':
-    nwfile += "6-31+G*"
-  elif basis == '6-311 G(d)':
-    nwfile += "6-311G*"
-  elif basis == 'cc-pVDZ':
-    nwfile += "cc-pVDZ"
-  elif basis == 'cc-pVTZ':
-    nwfile += "cc-pVTZ"
-  elif basis == 'LANL2DZ':
-    nwfile += "LANL2DZ ECP"
-  else:
-    raise Exception("Invalid Basis: %s"%basis)
+  nwfile += basisGuiToInput(basis)
   nwfile += "\n"
   nwfile += "end\n\n"
 
@@ -189,7 +302,10 @@ def generateInput():
   # Input file text -- will appear in the same order in the GUI as they are
   # listed in the array:
   files = []
-  files.append({'filename': '%s.nw'%baseName, 'contents': inp})
+  files.append({'filename': '%s.nw'%baseName,
+                'contents': inp,
+                'highlightStyles': [ 'default' ]})
+
   if debug:
     files.append({'filename': 'debug_info', 'contents': stdinStr})
   result['files'] = files
