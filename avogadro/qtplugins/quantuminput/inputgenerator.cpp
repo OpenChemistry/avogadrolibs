@@ -694,6 +694,45 @@ bool InputGenerator::parseRules(const QJsonArray &json,
 bool InputGenerator::parseFormat(const QJsonObject &json,
                                  QTextCharFormat &format) const
 {
+  // Check for presets first:
+  if (json.contains("preset")) {
+    if (!json["preset"].isString()) {
+      qDebug() << "Preset is not a string.";
+      return false;
+    }
+
+    QString preset(json["preset"].toString());
+    /// @todo Store presets in a singleton that can be configured in the GUI,
+    /// rather than hardcoding them.
+    if (preset == "title") {
+      format.setFontFamily("serif");
+      format.setForeground(Qt::darkGreen);
+      format.setFontWeight(QFont::Bold);
+    }
+    else if (preset == "keyword") {
+      format.setFontFamily("mono");
+      format.setForeground(Qt::darkBlue);
+    }
+    else if (preset == "property") {
+      format.setFontFamily("mono");
+      format.setForeground(Qt::darkRed);
+    }
+    else if (preset == "literal") {
+      format.setFontFamily("mono");
+      format.setForeground(Qt::darkMagenta);
+    }
+    else if (preset == "comment") {
+      format.setFontFamily("serif");
+      format.setForeground(Qt::darkGreen);
+      format.setFontItalic(true);
+    }
+    else {
+      qDebug() << "Invalid style preset: " << preset;
+      return false;
+    }
+    return true;
+  }
+
   // Extract an RGB tuple from 'array' as a QBrush:
   struct {
     QBrush operator()(const QJsonArray &array, bool *ok)
@@ -709,6 +748,10 @@ bool InputGenerator::parseFormat(const QJsonObject &json,
         if (!array.at(i).isDouble())
           return result;
         rgb[i] = static_cast<int>(array.at(i).toDouble());
+        if (rgb[i] < 0 || rgb[i] > 255) {
+          qDebug() << "Warning: Color component value invalid: " << rgb[i]
+                   << " (Valid range is 0-255).";
+        }
       }
 
       result.setColor(QColor(rgb[0], rgb[1], rgb[2]));

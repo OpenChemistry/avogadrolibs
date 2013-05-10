@@ -85,16 +85,33 @@ void GenericHighlighter::highlightBlock(const QString &text)
 }
 
 void GenericHighlighter::Rule::apply(const QString &text,
-                                     GenericHighlighter &highligher)
+                                     GenericHighlighter &highlighter)
 {
   typedef QList<QRegExp>::iterator PatternIter;
   for (PatternIter it = m_patterns.begin(), end = m_patterns.end();
        it != end; ++it) {
     int index = it->indexIn(text);
     while (index >= 0) {
-      int length = it->matchedLength();
-      highligher.setFormat(index, length, m_format);
-      index = it->indexIn(text, index + length);
+      // If using a regex with capture groups defined, only highlight the
+      // capture groups.
+      if (it->captureCount() > 0) {
+        QStringList capturedTexts(it->capturedTexts());
+        QString match(capturedTexts.takeFirst());
+        foreach (const QString &capture, capturedTexts) {
+          int capOffset(match.indexOf(capture));
+          while (capOffset > 0) {
+            int capLength(capture.size());
+            highlighter.setFormat(index + capOffset, capLength, m_format);
+            capOffset = match.indexOf(capture, capOffset + capLength);
+          }
+        }
+        index = it->indexIn(text, index + match.size());
+      }
+      else {
+        int length(it->matchedLength());
+        highlighter.setFormat(index, length, m_format);
+        index = it->indexIn(text, index + length);
+      }
     }
   }
 }
