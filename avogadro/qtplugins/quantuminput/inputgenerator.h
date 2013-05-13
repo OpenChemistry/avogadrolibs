@@ -228,6 +228,19 @@ class GenericHighlighter;
     ...
   ],
   "format": {
+    "preset": "<preset name>"
+  }
+}
+~~~
+ *
+ * or,
+ *
+~~~{.js}
+{
+  "patterns": [
+    ...
+  ],
+  "format": {
     "foreground": [ 255, 128,  64 ],
     "background": [   0, 128, 128 ],
     "attributes": ["bold", "italic", "underline"],
@@ -241,7 +254,9 @@ class GenericHighlighter;
  * the QRegExp documentation) that are used to identify strings that should be
  * formatted.
  * There must be one of the following members present in each pattern object:
- * - `regexp` A QRegExp-style regular expression
+ * - `regexp` A QRegExp-style regular expression. If no capture groups ("(...)")
+ *   are defined, the entire match is formatted. If one or more capture groups,
+ *   only the captured texts will be marked.
  * - `wildcard` A wildcard expression
  * - `string` An exact string to match.
  *
@@ -249,8 +264,21 @@ class GenericHighlighter;
  * whether the match should consider character case. If omitted, a
  * case-sensitive match is assumed.
  *
- * The `format` member specifies
- * the font properties to apply:
+ * The preferred form of the `format` member is simply a specification of a
+ * preset format.
+ * This allows for consistent color schemes across input generators.
+ * The recognized presets are:
+ * - `"title"`: A human readable title string.
+ * - `"keyword"`: directives defined by the target input format specification
+ *   to have special meaning, such as tags indicating where coordinates are
+ *   to be found.
+ * - `"property"`: A property of the simulation, such as level of theory, basis
+ *   set, minimization method, etc.
+ * - `"literal"`: A numeric literal (i.e. a raw number, such as a coordinate).
+ * - `"comment"`: Sections of the input that are ignored by the simulation code.
+ *
+ * If advanced formatting is desired, the second form of the `format` member
+ * allows fine-tuning of the font properties:
  * - `foreground` color as an RGB tuple, ranged 0-255
  * - `background` color as an RGB tuple, ranged 0-255
  * - `attributes` array of font attributes, valid strings are `"bold"`,

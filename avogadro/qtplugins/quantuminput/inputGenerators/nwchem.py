@@ -94,109 +94,91 @@ def getOptions():
   # highlighting options
   defaultRules = []
 
-  # literal numbers
-  numberRule = {
+  # literals
+  literalRule = {
     "patterns": [
-      { "regexp": "\\b[-+.0-9]+\\b" }
+      { "regexp": "\\b[+-]?[.0-9]+(?:[eEdD][+-]?[.0-9]+)?\\b" }
     ],
     "format": {
-      "foreground": [ 255, 0, 255 ]
+      "preset": "literal"
     }
   }
 
-  defaultRules.append(numberRule)
+  defaultRules.append(literalRule)
 
-  # Title highlighting
+  # keywords
+  keywordList = [
+  "(?:re)?start", "(?:scratch|permanent)?_dir", "memory", "echo", "title",
+  "(?:no)?print", "(?:un)?set", "stop", "task", "ecce_print", "charge",
+  "geometry", "basis", "spherical", "library", "end", "xc", "mult",
+  "freeze atomic", "(?:no)?center", "bqbq", "nuc(?:l(?:eus)?)?", "scf", "dft",
+  "mp2", "ccsd", "units", "autosym"]
+
+  keywordPatterns = []
+  for keyword in keywordList:
+    keywordPatterns.append( { "regexp": "\\b%s\\b"%keyword } )
+
+  keywordRule = {
+    "patterns": keywordPatterns,
+    "format": {
+      "preset": "keyword"
+    }
+  }
+
+  defaultRules.append(keywordRule)
+
+  # properties
+  propertyPatterns = []
+  for basis in userOptions['Basis']['values']:
+    propertyPatterns.append( { "regexp": "\*\\s+library\\s+([^\\n]+)" } )
+
+  propertyPatterns.append( { "regexp": "units\\s+(an|angstroms|au|atom|bohr|nm|nanometers|pm|picometers)" } )
+  propertyPatterns.append( { "regexp": "(?:re)?start\\s+([^;\\n]+)" } )
+  propertyPatterns.append( { "regexp": "\\bprint\\s+(xyz)" } )
+  propertyPatterns.append( { "regexp": "\\autosym\\s+([-\\d.eEdD+]+)" } )
+  propertyPatterns.append( { "regexp": "\\bnuc(?:l(?:eus)?)?\\s+([^\\s;]+)" } )
+  propertyPatterns.append( { "regexp": "\\bbasis\\s+(spherical)\\b" } )
+  propertyPatterns.append( { "regexp": "\\bxc\\s+([^\\n]+)\\b" } )
+
+  propertyPatterns.append( { "regexp":
+  "\\btask\\s+" + # Task directive
+  "((?:mc)?scf|(:?so)?dft|(:?direct_|ri)?mp2|ccsd(:?\\(t\\))?|selci|md|pspw|band|tce)\\s+" + # theory
+  "(energy|gradient|optimize|saddle|hessian|freq(?:uencies)?|property|(?:thermo)?dynamics)\\b" # calc
+  } )
+
+
+  propertyRule = {
+    "patterns": propertyPatterns,
+    "format": {
+      "preset": "property"
+    }
+  }
+
+  defaultRules.append(propertyRule)
+
+  # title
   titleRule = {
     "patterns": [
-      { "wildcard": "title \"*\"" }
+      { "regexp": "title\\s+\"(.+)\"" }
     ],
     "format": {
-      "foreground": [ 0, 0, 0 ],
-      "attributes": [ "bold" ],
-      "family": "serif"
+      "preset": "title"
     }
   }
 
   defaultRules.append(titleRule)
 
-  # Basis sets
-  basisPatterns = []
-  for basis in userOptions['Basis']['values']:
-    basisPatterns.append( { "string": basisGuiToInput(basis) } )
-
-  basisFormat = {
-    "foreground": [ 25, 25, 220 ],
-    "attributes": [ "bold" ],
-    "family": [ "mono" ]
-  }
-
-  basisRule = {
-    "patterns": basisPatterns,
-    "format": basisFormat
-  }
-
-  defaultRules.append(basisRule)
-
-  # Top level directives
-  topLevelDirectives = [
-  "start", "restart", "scratch_dir", "permanent_dir", "memory", "echo", "title",
-  "print", "noprint", "set", "unset", "stop", "task", "ecce_print"]
-
-  # These aren't top-level directives according to the manual, but
-  # for now just stick them in that ruleset.
-  topLevelDirectives.extend(["charge", "geometry", "basis", "spherical",
-  "library", "end", "xc", "mult", "freeze atomic"])
-
-  tldPatterns = []
-  for tld in topLevelDirectives:
-    tldPatterns.append( { "regexp": "\\b%s\\b"%tld } )
-
-  tldRule = {
-    "patterns": tldPatterns,
+  # comment
+  commentRule = {
+    "patterns": [
+    { "regexp": "#[^\n]*" }
+    ],
     "format": {
-      "foreground": [80, 220, 80],
-      "attributes": ["bold"],
-      "family": "sans"
+      "preset": "comment"
     }
   }
 
-  defaultRules.append(tldRule)
-
-  # Tasks
-  tasks = ["energy", "optimize", "freq"]
-  taskPatterns = []
-  for task in tasks:
-    taskPatterns.append( { "regexp": "\\b%s\\b"%task } )
-
-  taskRule = {
-    "patterns": taskPatterns,
-    "format": {
-      "foreground": [225, 128, 128],
-      "background": [255, 220, 220],
-      "attributes": ["bold", "italic"],
-      "family": "mono"
-    }
-  }
-
-  defaultRules.append(taskRule)
-
-  # QM keywords
-  qm = ["scf", "dft", "b3lyp", "mp2", "ccsd"]
-  qmPatterns = []
-  for word in qm:
-    qmPatterns.append( { "regexp": "\\b%s\\b"%word } )
-
-  qmRule = {
-    "patterns": qmPatterns,
-    "format": {
-      "foreground": [63, 128, 255],
-      "attributes": ["bold", "italic"],
-      "family": "mono"
-    }
-  }
-
-  defaultRules.append(qmRule)
+  defaultRules.append(commentRule)
 
   # Assemble default style:
   defaultStyle = {}

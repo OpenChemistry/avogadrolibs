@@ -53,7 +53,7 @@ public:
 
     /** Apply this rule to the string of text, updating the highlighter if any
      *  matches are found. */
-    void apply(const QString &text, GenericHighlighter &highligher);
+    void apply(const QString &text, GenericHighlighter &highlighter);
 
   private:
     QList<QRegExp> m_patterns;
