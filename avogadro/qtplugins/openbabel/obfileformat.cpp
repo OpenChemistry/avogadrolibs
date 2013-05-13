@@ -100,7 +100,7 @@ bool OBFileFormat::read(std::istream &in, Core::Molecule &molecule)
 
   // Extract char data
   QByteArray input;
-  input.resize(length);
+  input.resize(static_cast<int>(length));
   in.read(input.data(), length);
   if (in.gcount() != length) {
     appendError("Error reading stream into buffer!");
