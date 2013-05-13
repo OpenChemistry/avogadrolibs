@@ -246,7 +246,7 @@ def generateInputFile(opts):
   elif theory == "CCSD":
     task = "ccsd"
     nwfile += "ccsd\n"
-    nwfile += "  # Exclude core electrons from MP2 treatment:\n"
+    nwfile += "  # Exclude core electrons from coupled cluster perturbations:\n"
     nwfile += "  freeze atomic\n"
     nwfile += "end\n\n"
   else:
