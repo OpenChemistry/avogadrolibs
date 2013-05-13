@@ -761,11 +761,6 @@ void QuantumInputDialog::buildOptionGui()
   }
 
   // Make connections for standard options:
-  if (QLineEdit *lineEdit = qobject_cast<QLineEdit*>(
-        m_widgets.value("Title", NULL))) {
-    connect(lineEdit, SIGNAL(textChanged(QString)),
-            SLOT(titleEditModified(QString)));
-  }
   if (QComboBox *combo = qobject_cast<QComboBox*>(
         m_widgets.value("Calculation Type", NULL))) {
     connect(combo, SIGNAL(currentIndexChanged(int)),
