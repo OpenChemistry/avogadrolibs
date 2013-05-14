@@ -4,6 +4,7 @@ set(tests
   Atom
   AtomTyper
   Bond
+  CoordinateBlockGenerator
   CoordinateSet
   CPP11
   Eigen
