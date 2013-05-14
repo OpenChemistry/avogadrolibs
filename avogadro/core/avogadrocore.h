@@ -61,6 +61,11 @@ typedef double Real;
 typedef size_t Index;
 const Index MaxIndex = std::numeric_limits<Index>::max();
 
+/** Unit conversion factors. @{ */
+const double BOHR_TO_ANGSTROM = 0.52917721092;
+const double ANGSTROM_TO_BOHR = 1.0 / BOHR_TO_ANGSTROM;
+/** @} */
+
 } // end Avogadro namespace
 
 #endif // AVOGADRO_CORE_H
