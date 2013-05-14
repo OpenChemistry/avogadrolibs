@@ -161,8 +161,6 @@ void GamessInputDialog::connectBasic()
 {
   connect(ui.titleEdit, SIGNAL(textChanged(QString)),
           this, SLOT(updatePreviewText()));
-  connect(ui.titleEdit, SIGNAL(textChanged(QString)),
-          this, SLOT(titleEditModified(QString)));
   connect( ui.calculateCombo, SIGNAL( currentIndexChanged( int ) ),
            this, SLOT( updatePreviewText() ) );
   connect(ui.calculateCombo, SIGNAL(currentIndexChanged(int)),

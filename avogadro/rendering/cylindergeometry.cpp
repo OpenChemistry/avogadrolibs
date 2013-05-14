@@ -260,7 +260,8 @@ CylinderGeometry::hits(const Vector3f &rayOrigin,
     if (D < 0.0f)
       continue;
 
-    float t = std::min((-B + sqrt(D)) / (2.0f * A), (-B - sqrt(D)) / (2.0f * A));
+    float t = std::min((-B + std::sqrt(D)) / (2.0f * A),
+                       (-B - std::sqrt(D)) / (2.0f * A));
 
     Vector3f ip = rayOrigin + (rayDirection * t);
     Vector3f ip1 = ip - cylinder.position;

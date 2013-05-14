@@ -58,7 +58,7 @@ void GeometryVisitor::visit(SphereGeometry &geometry)
         tmpRadius = distance;
     }
   }
-  tmpRadius = sqrt(tmpRadius);
+  tmpRadius = std::sqrt(tmpRadius);
   m_centers.push_back(tmpCenter);
   m_radii.push_back(tmpRadius);
 }

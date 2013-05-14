@@ -59,7 +59,7 @@ void BallAndStick::process(const Molecule &molecule,
     Vector3ub color(c[0], c[1], c[2]);
     spheres->addSphere(atom.position3d().cast<float>(), color,
                        static_cast<float>(Elements::radiusVDW(atomicNumber))
-                       * 0.3);
+                       * 0.3f);
   }
 
   float bondRadius = 0.1f;
