@@ -51,33 +51,20 @@ def getOptions():
   userOptions['Calculation Type'] = {}
   userOptions['Calculation Type']['type'] = "stringList"
   userOptions['Calculation Type']['default'] = 1
-  userOptions['Calculation Type']['values'] = []
-  userOptions['Calculation Type']['values'].append('Single Point')
-  userOptions['Calculation Type']['values'].append('Equilibrium Geometry')
-  userOptions['Calculation Type']['values'].append('Frequencies')
+  userOptions['Calculation Type']['values'] = \
+    ['Single Point',  'Equilibrium Geometry', 'Frequencies']
 
   userOptions['Theory'] = {}
   userOptions['Theory']['type'] = "stringList"
   userOptions['Theory']['default'] = 1
-  userOptions['Theory']['values'] = []
-  userOptions['Theory']['values'].append('RHF')
-  userOptions['Theory']['values'].append('B3LYP')
-  userOptions['Theory']['values'].append('MP2')
-  userOptions['Theory']['values'].append('CCSD')
+  userOptions['Theory']['values'] = ['RHF', 'B3LYP', 'MP2', 'CCSD']
 
   userOptions['Basis'] = {}
   userOptions['Basis']['type'] = "stringList"
   userOptions['Basis']['default'] = 2
-  userOptions['Basis']['values'] = []
-  userOptions['Basis']['values'].append('STO-3G')
-  userOptions['Basis']['values'].append('3-21 G')
-  userOptions['Basis']['values'].append('6-31 G(d)')
-  userOptions['Basis']['values'].append('6-31 G(d,p)')
-  userOptions['Basis']['values'].append('6-31+ G(d)')
-  userOptions['Basis']['values'].append('6-311 G(d)')
-  userOptions['Basis']['values'].append('cc-pVDZ')
-  userOptions['Basis']['values'].append('cc-pVTZ')
-  userOptions['Basis']['values'].append('LANL2DZ')
+  userOptions['Basis']['values'] = \
+    ['STO-3G', '3-21 G', '6-31 G(d)', '6-31 G(d,p)', '6-31+ G(d)', \
+     '6-311 G(d)', 'cc-pVDZ', 'cc-pVTZ', 'LANL2DZ']
 
   userOptions['Multiplicity'] = {}
   userOptions['Multiplicity']['type'] = "integer"
