@@ -406,36 +406,11 @@ class GenericHighlighter;
 ~~~
 $$coords:[coordSpec]$$
 ~~~
- * where `[coordSpec]` is a sequence
- * of characters. The characters in `[coordSpec]` indicate the
- * information needed about each atom in the coordinate block:
- * - @c Z: Atomic number
- * - @c S: Element symbol
- * - @c N: Element name
- * - @c x: X cartesian coordinate in Angstrom
- * - @c y: Y cartesian coordinate in Angstrom
- * - @c z: Z cartesian coordinate in Angstrom
- * - @c 0: A literal "0". Useful for optimization flags.
- * - @c 1: A literal "1". Useful for optimization flags.
- * - @c _: A space character. Useful for alignment.
- *
- * For example, the string
-~~~
-$$coords:__SZxyz110$$
-~~~
- * will be
- * replaced by a molecule-specific block of text similar to the following:
-~~~
-  C  6    1.126214  0.765886  0.000000 1 1 0
-  C  6    0.819345 -0.564955  0.000000 1 1 0
-  C  6   -0.598383 -0.795127  0.000000 1 1 0
-  C  6   -1.310706  0.370165  0.000000 1 1 0
-  S  16  -0.285330  1.757144  0.000000 1 1 0
-  H  1    2.130424  1.185837  0.000000 1 1 0
-  H  1    1.548377 -1.375303  0.000000 1 1 0
-  H  1   -1.033768 -1.794407  0.000000 1 1 0
-  H  1   -2.396173  0.450760  0.000000 1 1 0
-~~~
+ * where `[coordSpec]` is a sequence of characters.
+ * The characters in `[coordSpec]` indicate the information needed about each
+ * atom in the coordinate block.
+ * See the CoordinateBlockGenerator documentation for a list of recognized
+ * characters.
  *
  * Other keywords that can be used in the input files are:
  * - `$$atomCount$$`: Number of atoms in the molecule.
