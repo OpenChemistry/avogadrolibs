@@ -19,6 +19,7 @@
 #include "generichighlighter.h"
 #include "quantumpython.h"
 
+#include <avogadro/core/coordinateblockgenerator.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
@@ -36,7 +37,6 @@
 #include <QtCore/QProcess>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QSettings>
-#include <QtCore/QTextStream>
 
 #include <string>
 
@@ -436,115 +436,12 @@ bool InputGenerator::insertMolecule(QJsonObject &json,
 QString InputGenerator::generateCoordinateBlock(const QString &spec,
                                                 const Core::Molecule &mol) const
 {
-  // Coordinate blocks:
-  // $$coords:<spec>$$ where <spec> is a character string indicating the
-  // atom attributes to print:
-  // - 'Z': Atomic number
-  // - 'S': Element symbol
-  // - 'N': Element name
-  // - 'x': x coordinate
-  // - 'y': y coordinate
-  // - 'z': z coordinate
-  // - '0': Literal 0
-  // - '1': Literal 1
-  // - '_': Space character.
-  bool needElementSymbol = spec.contains('S');
-  bool needElementName = spec.contains('N');
-  bool needPosition =
-      spec.contains('x') || spec.contains('y') || spec.contains('z');
-
-  // Loop variables
-  size_t numAtoms = mol.atomCount();
-  Core::Atom atom;
-  unsigned char atomicNumber;
-  const char *symbol;
-  const char *name;
-  Vector3 pos3d;
-  QString::const_iterator it;
-  QString::const_iterator begin = spec.constBegin();
-  QString::const_iterator end = spec.constEnd();
-
-  // The replacement string and text stream
-  QString replacement;
-  QTextStream stream(&replacement);
-  stream.setRealNumberNotation(QTextStream::FixedNotation);
-  stream.setRealNumberPrecision(6);
-  // Field width for real numbers:
-  const int realWidth = 11;
-
-  // Generate the replacement block
-  for (size_t atom_i = 0; atom_i < numAtoms; ++atom_i) {
-    atom = mol.atom(atom_i);
-    atomicNumber = atom.atomicNumber();
-    if (needElementSymbol)
-      symbol = Core::Elements::symbol(atomicNumber);
-    if (needElementName)
-      name = Core::Elements::name(atomicNumber);
-    if (needPosition)
-      pos3d = atom.position3d();
-
-    it = begin;
-    while (it != end) {
-      switch (it->toLatin1()) {
-      case '_':
-        // Space character. If we are not at the end of the spec, a space will
-        // be added by default after the switch clause. If we are at the end,
-        // add a space before the newline that will be added.
-        if (it + 1 == end) {
-          stream.setFieldWidth(1);
-          stream << " ";
-        }
-        break;
-      case 'Z':
-        stream.setFieldAlignment(QTextStream::AlignLeft);
-        stream.setFieldWidth(3);
-        stream << static_cast<int>(atomicNumber);
-        break;
-      case 'S':
-        stream.setFieldAlignment(QTextStream::AlignLeft);
-        stream.setFieldWidth(3);
-        stream << symbol;
-        break;
-      case 'N':
-        stream.setFieldAlignment(QTextStream::AlignLeft);
-        stream.setFieldWidth(13); // longest name is currently 13 char
-        stream << name;
-        break;
-      case 'x':
-        stream.setFieldAlignment(QTextStream::AlignRight);
-        stream.setFieldWidth(realWidth);
-        stream << pos3d.x();
-        break;
-      case 'y':
-        stream.setFieldAlignment(QTextStream::AlignRight);
-        stream.setFieldWidth(realWidth);
-        stream << pos3d.y();
-        break;
-      case 'z':
-        stream.setFieldAlignment(QTextStream::AlignRight);
-        stream.setFieldWidth(realWidth);
-        stream << pos3d.z();
-        break;
-      case '0':
-        stream.setFieldAlignment(QTextStream::AlignLeft);
-        stream.setFieldWidth(1);
-        stream << 0;
-        break;
-      case '1':
-        stream.setFieldAlignment(QTextStream::AlignLeft);
-        stream.setFieldWidth(1);
-        stream << 1;
-        break;
-      } // end switch
-
-      stream.setFieldWidth(1);
-      stream << (++it != end ? " " : "\n");
-    } // end while
-  } // end for atom
-
-  // Remove the final newline
-  replacement.chop(1);
-  return replacement;
+  Core::CoordinateBlockGenerator gen;
+  gen.setMolecule(&mol);
+  gen.setSpecification(spec.toStdString());
+  std::string tmp(gen.generateCoordinateBlock());
+  tmp.resize(tmp.size() - 1); // Pop off the trailing newline
+  return QString::fromStdString(tmp);
 }
 
 void InputGenerator::replaceKeywords(QString &str,

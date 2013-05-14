@@ -15,6 +15,7 @@ set(HEADERS
   avogadrocore.h
   bond.h
   coordinateset.h
+  coordinateblockgenerator.h
   elements.h
   graph.h
   hydrogentools.h
@@ -33,6 +34,7 @@ set(HEADERS
 set(SOURCES
   atom.cpp
   bond.cpp
+  coordinateblockgenerator.cpp
   elements.cpp
   graph.cpp
   hydrogentools.cpp
