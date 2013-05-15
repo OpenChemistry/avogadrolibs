@@ -33,6 +33,7 @@ set(input_generators
   inputGenerators/nwchem.py
   inputGenerators/qchem.py
   inputGenerators/terachem.py
+  inputGenerators/apbs.py
 )
 
 # Default shebang lines for interpreted scripts:

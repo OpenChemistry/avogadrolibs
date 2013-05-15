@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Pdb2Pqr</class>
+ <widget class="QDialog" name="Pdb2Pqr">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>87</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PDB2PQR</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Input PDB File:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="inputFileNameLineEdit"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="inputFileNameButton">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Force Field:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="forceFieldComboBox">
+       <item>
+        <property name="text">
+         <string>AMBER</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>CHARMM</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>PARSE</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>TYL06</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>PEOEPB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>SWANSON</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="runButton">
+       <property name="text">
+        <string>Run</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancelButton">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

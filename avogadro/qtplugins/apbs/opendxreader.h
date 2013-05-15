@@ -1,0 +1,74 @@
+/******************************************************************************
+
+  This source file is part of the Avogadro project.
+
+  Copyright 2013 Kitware, Inc.
+
+  This source code is released under the New BSD License, (the "License").
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+******************************************************************************/
+
+#ifndef AVOGADRO_QTPLUGINS_APBS_OPENDXREADER_H
+#define AVOGADRO_QTPLUGINS_APBS_OPENDXREADER_H
+
+#include <avogadro/qtgui/cube.h>
+
+namespace Avogadro {
+namespace QtPlugins {
+
+/**
+ * @class OpenDxReader opendxreader.h <avogadro/qtplugins/apbs/opendxreader.h>
+ * @brief Provide a reader for OpenDX files.
+ */
+class OpenDxReader
+{
+public:
+  /**
+   * Constructor for OpenDxReader.
+   */
+  OpenDxReader();
+
+  /**
+   * Destructor for OpenDxReader.
+   */
+  ~OpenDxReader();
+
+  /**
+   * Reads the file with the given @fileName. Returns false if an error
+   * occurs.
+   */
+  bool readFile(const QString &fileName);
+
+  /**
+   * @return String describing the last error that occured.
+   */
+  QString errorString() const;
+
+  /**
+   * Returns the positive potential energy cube read from the file. Returns 0
+   * if no file has been successfully read.
+   */
+  QtGui::Cube* positivePotentialCube() const;
+
+  /**
+   * Returns the negative potential energy cube read from the file. Returns 0
+   * if no file has been successfully read.
+   */
+  QtGui::Cube* negativePotentialCube() const;
+
+private:
+  QtGui::Cube *m_positivePotentialCube;
+  QtGui::Cube *m_negativePotentialCube;
+  QString m_errorString;
+};
+
+}
+}
+
+#endif
