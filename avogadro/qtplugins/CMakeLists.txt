@@ -93,6 +93,7 @@ add_subdirectory(molecularproperties)
 add_subdirectory(mongochem)
 add_subdirectory(navigator)
 add_subdirectory(openbabel)
+add_subdirectory(apbs)
 add_subdirectory(quantuminput)
 add_subdirectory(quantumoutput)
 # The scene plugins
