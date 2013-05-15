@@ -62,15 +62,15 @@ bool Cube::setLimits(const Vector3 &min_, const Vector3 &max_,
 }
 
 bool Cube::setLimits(const Vector3 &min_, const Vector3i &dim,
-                     double spacing_)
+                     const Vector3 &spacing_)
 {
-  Vector3 max_ = Vector3(min_.x() + (dim.x()-1) * spacing_,
-                         min_.y() + (dim.y()-1) * spacing_,
-                         min_.z() + (dim.z()-1) * spacing_);
+  Vector3 max_ = Vector3(min_.x() + (dim.x()-1) * spacing_[0],
+                         min_.y() + (dim.y()-1) * spacing_[1],
+                         min_.z() + (dim.z()-1) * spacing_[2]);
   m_min = min_;
   m_max = max_;
   m_points = dim;
-  m_spacing = Vector3(spacing_, spacing_, spacing_);
+  m_spacing = spacing_;
   m_data.resize(m_points.x() * m_points.y() * m_points.z());
   return true;
 }

@@ -102,7 +102,7 @@ public:
    * @param spacing The interval between points in the cube.
    */
   bool setLimits(const Vector3 &min, const Vector3i &dim,
-                 double spacing);
+                 const Vector3 &spacing);
 
   /**
    * Set the limits of the cube - copy the limits of an existing Cube.
