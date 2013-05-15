@@ -85,6 +85,7 @@ function(avogadro_plugin name description type header pluginClass sources)
 endfunction()
 
 # Now to make the plugins.
+add_subdirectory(apbs)
 add_subdirectory(editor)
 add_subdirectory(gamessinput)
 add_subdirectory(hydrogens)
