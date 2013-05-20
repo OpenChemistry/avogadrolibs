@@ -39,12 +39,27 @@ public:
   Elements();
   ~Elements();
 
+  /** Used by functions that return an atomic number to indicate an error. */
+  enum { InvalidElement = 255 };
+
   /** Get the number of elements in the database. */
   static unsigned char elementCount();
 
   /**
+   * Get the atomic number from the supplied element name. If the name is not
+   * recognised then InvalidElement will be returned. 0 represents the dummy
+   * atom ("Dummy").
+   * @note The input string is expected to be lowercase with the first letter
+   * capitalized.
+   */
+  static unsigned char atomicNumberFromName(const std::string &name);
+
+  /**
    * Get the atomic number from the supplied symbol. If the symbol is not
-   * recognised then 0 will be returned. 0 is also the dummy atom.
+   * recognised then InvalidElement will be returned. 0 represents the dummy
+   * atom ("Xx").
+   * @note The input string is expected to be lowercase with the first letter
+   * capitalized.
    */
   static unsigned char atomicNumberFromSymbol(const std::string &symbol);
 

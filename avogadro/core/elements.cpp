@@ -34,6 +34,14 @@ unsigned char Elements::elementCount()
   return element_count;
 }
 
+unsigned char Elements::atomicNumberFromName(const std::string &name)
+{
+  for (unsigned char i = 0; i < element_count; ++i)
+    if (name == element_names[i])
+      return i;
+  return InvalidElement;
+}
+
 unsigned char Elements::atomicNumberFromSymbol(const std::string &symbol)
 {
   if (symbol.length() == 1) {
@@ -67,14 +75,14 @@ unsigned char Elements::atomicNumberFromSymbol(const std::string &symbol)
     case 'U':
       return 92;
     default:
-      return 0;
+      return InvalidElement;
     }
   }
   else {
     for (unsigned char i = 0; i < element_count; ++i)
       if (symbol == element_symbols[i])
         return i;
-    return 0;
+    return InvalidElement;
   }
 }
 
