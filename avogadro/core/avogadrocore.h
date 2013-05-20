@@ -61,6 +61,9 @@ typedef double Real;
 typedef size_t Index;
 const Index MaxIndex = std::numeric_limits<Index>::max();
 
+/** Used to represent an invalid atomic number. */
+const unsigned char InvalidElement = 255;
+
 } // end Avogadro namespace
 
 #endif // AVOGADRO_CORE_H

@@ -26,7 +26,7 @@ TEST(ElementTest, symbolSingles)
   EXPECT_EQ(Elements::atomicNumberFromSymbol("C"), 6);
   EXPECT_EQ(Elements::atomicNumberFromSymbol("S"), 16);
   EXPECT_EQ(Elements::atomicNumberFromSymbol("U"), 92);
-  EXPECT_EQ(Elements::atomicNumberFromSymbol("X"), 0);
+  EXPECT_EQ(Elements::atomicNumberFromSymbol("X"), Avogadro::InvalidElement);
 }
 
 TEST(ElementTest, symbolDoubles)
@@ -35,7 +35,7 @@ TEST(ElementTest, symbolDoubles)
   EXPECT_EQ(Elements::atomicNumberFromSymbol("Fe"), 26);
   EXPECT_EQ(Elements::atomicNumberFromSymbol("Uuh"), 116);
   EXPECT_EQ(Elements::atomicNumberFromSymbol("Xe"), 54);
-  EXPECT_EQ(Elements::atomicNumberFromSymbol("Xeee"), 0);
+  EXPECT_EQ(Elements::atomicNumberFromSymbol("Xeee"), Avogadro::InvalidElement);
 }
 
 TEST(ElementTest, names)
