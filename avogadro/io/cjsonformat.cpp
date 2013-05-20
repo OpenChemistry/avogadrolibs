@@ -49,6 +49,11 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
     return false;
   }
 
+  if (!root.isObject()) {
+    appendError("Error: Input is not a JSON object.");
+    return false;
+  }
+
   Json::Value value = root["chemical json"];
   if (value.empty()) {
     appendError("Error: no \"chemical json\" key found.");
