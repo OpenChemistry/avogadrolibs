@@ -43,6 +43,12 @@ public:
   static unsigned char elementCount();
 
   /**
+   * Get the atomic number from the supplied element name. If the name is not
+   * recognised then 0 will be returned. 0 is also the dummy atom.
+   */
+  static unsigned char atomicNumberFromName(const std::string &name);
+
+  /**
    * Get the atomic number from the supplied symbol. If the symbol is not
    * recognised then 0 will be returned. 0 is also the dummy atom.
    */

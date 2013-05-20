@@ -34,6 +34,14 @@ unsigned char Elements::elementCount()
   return element_count;
 }
 
+unsigned char Elements::atomicNumberFromName(const std::string &name)
+{
+  for (unsigned char i = 0; i < element_count; ++i)
+    if (name == element_names[i])
+      return i;
+  return 0;
+}
+
 unsigned char Elements::atomicNumberFromSymbol(const std::string &symbol)
 {
   if (symbol.length() == 1) {
