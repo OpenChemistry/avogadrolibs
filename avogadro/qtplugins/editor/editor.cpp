@@ -188,7 +188,7 @@ QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
           m_keyPressBuffer.toStdString());
   }
 
-  if (atomicNum > 0 || atomicNum <= Core::Elements::elementCount())
+  if (atomicNum != Core::Elements::InvalidElement)
     m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
 
   return NULL;
