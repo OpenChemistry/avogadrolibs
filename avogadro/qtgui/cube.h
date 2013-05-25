@@ -105,6 +105,15 @@ public:
                  double spacing);
 
   /**
+   * Set the limits of the cube.
+   * @param min The minimum point in the cube.
+   * @param dim The integer dimensions of the cube in x, y and z.
+   * @param spacing The interval between points in the cube.
+   */
+  bool setLimits(const Vector3 &min, const Vector3i &dim,
+                 const Vector3 &spacing);
+
+  /**
    * Set the limits of the cube - copy the limits of an existing Cube.
    * @param cube Existing Cube to copy the limits from.
    */

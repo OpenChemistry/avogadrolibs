@@ -232,7 +232,7 @@ SphereGeometry::hits(const Vector3f &rayOrigin,
     id.index = i;
     if (id.type != InvalidType) {
       float rootD = static_cast<float>(sqrt(D));
-      float depth = std::min(fabs(B + rootD), fabs(B - rootD));
+      float depth = std::min(std::abs(B + rootD), std::abs(B - rootD));
       result.insert(std::pair<float, Identifier>(depth, id));
     }
   }

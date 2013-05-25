@@ -130,7 +130,7 @@ bool MdlFormat::read(std::istream &in, Core::Molecule &mol)
       appendError("Error parsing end bond index:" + buffer.substr(3, 3));
       return false;
     }
-    short order(lexicalCast<int>(buffer.substr(6, 3), ok));
+    int order(lexicalCast<int>(buffer.substr(6, 3), ok));
     if (!ok) {
       appendError("Error parsing bond order:" + buffer.substr(6, 3));
       return false;
@@ -139,7 +139,8 @@ bool MdlFormat::read(std::istream &in, Core::Molecule &mol)
       appendError("Bond read in with out of bounds index.");
       return false;
     }
-    mol.addBond(mol.atom(begin), mol.atom(end), order);
+    mol.addBond(mol.atom(begin), mol.atom(end),
+                static_cast<unsigned char>(order));
   }
 
   // Look for the end tag.
