@@ -85,6 +85,7 @@ function(avogadro_plugin name description type header pluginClass sources)
 endfunction()
 
 # Now to make the plugins.
+add_subdirectory(apbs)
 add_subdirectory(cartesianeditor)
 add_subdirectory(copypaste)
 add_subdirectory(editor)
