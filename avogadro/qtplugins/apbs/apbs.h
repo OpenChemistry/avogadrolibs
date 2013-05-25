@@ -18,13 +18,17 @@
 #define AVOGADRO_QTPLUGINS_APBS_APBS_H
 
 #include <avogadro/qtgui/extensionplugin.h>
-
-#include <QStringList>
+#include <avogadro/core/avogadrocore.h>
 
 class QProgressDialog;
 
 namespace Avogadro {
 namespace QtPlugins {
+
+/**
+ * @brief The Apbs class provides integration with the APBS package, primarily
+ * reading the OpenDX output files produced by it at this point.
+ */
 
 class Apbs : public QtGui::ExtensionPlugin
 {
@@ -32,16 +36,16 @@ class Apbs : public QtGui::ExtensionPlugin
 
 public:
   explicit Apbs(QObject *parent_ = 0);
-  ~Apbs();
+  ~Apbs() AVO_OVERRIDE;
 
-  QString name() const { return tr("APBS"); }
-  QString description() const { return tr("Interact with APBS utilities."); }
-  QList<QAction *> actions() const { return m_actions; }
-  QStringList menuPath(QAction *) const
+  QString name() const AVO_OVERRIDE { return tr("APBS"); }
+  QString description() const AVO_OVERRIDE
   {
-    return QStringList() << tr("&Extensions") << tr("&APBS");
+    return tr("Interact with APBS utilities.");
   }
-  void setMolecule(QtGui::Molecule *);
+  QList<QAction *> actions() const AVO_OVERRIDE { return m_actions; }
+  QStringList menuPath(QAction *) const AVO_OVERRIDE;
+  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE;
 
 private slots:
   void onOpenOutputFile();

@@ -23,7 +23,6 @@ namespace Avogadro {
 namespace QtPlugins {
 
 /**
- * @class OpenDxReader opendxreader.h <avogadro/qtplugins/apbs/opendxreader.h>
  * @brief Provide a reader for OpenDX files.
  */
 class OpenDxReader
@@ -64,4 +63,4 @@ private:
 }
 }
 
-#endif
+#endif // AVOGADRO_QTPLUGINS_APBS_OPENDXREADER_H

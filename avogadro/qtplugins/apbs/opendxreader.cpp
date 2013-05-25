@@ -16,8 +16,9 @@
 
 #include "opendxreader.h"
 
-#include <QDebug>
-#include <QFile>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
+#include <QtCore/QVector>
 
 namespace Avogadro {
 namespace QtPlugins {
