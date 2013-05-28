@@ -59,6 +59,12 @@ public:
   /** Reset the view to fit the entire scene. */
   void resetCamera();
 
+  /**
+   * Reset the scene geometry, this should be done when the scene geeometry has
+   * changed in order to ensure correct clipping.
+   */
+  void resetGeometry();
+
   /** Return the primitives under the display coordinate (x,y), mapped by depth.
    */
   std::multimap<float, Identifier> hits(int x, int y) const;

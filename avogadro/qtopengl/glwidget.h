@@ -111,6 +111,9 @@ public slots:
   /** Reset the view to fit the entire scene. */
   void resetCamera();
 
+  /** Reset the geometry when the molecule etc changes. */
+  void resetGeometry();
+
   /**
    * Make the tools in toolList available to the GLWidget. The GLWidget takes
    * ownership of the tools.

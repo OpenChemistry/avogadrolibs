@@ -79,11 +79,16 @@ void GLRenderer::render()
 
 void GLRenderer::resetCamera()
 {
-  m_center = m_scene.center();
-  m_radius = m_scene.radius();
+  resetGeometry();
   m_camera.setIdentity();
   m_camera.translate(-m_center);
   m_camera.preTranslate(-3.0f * (m_radius + 2.0f) * Vector3f::UnitZ());
+}
+
+void GLRenderer::resetGeometry()
+{
+  m_center = m_scene.center();
+  m_radius = m_scene.radius();
 }
 
 void GLRenderer::applyProjection()
