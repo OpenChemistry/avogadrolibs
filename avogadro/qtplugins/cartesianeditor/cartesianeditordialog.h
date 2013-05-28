@@ -70,6 +70,7 @@ private slots:
   void textModified(bool modified);
 
 private:
+  static QIcon standardIcon(const QString &name);
   void buildPresets();
 
   // Enable/disable input validation when the text edit is modified.

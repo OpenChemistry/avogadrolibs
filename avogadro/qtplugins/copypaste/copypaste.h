@@ -20,6 +20,8 @@
 #include <avogadro/qtgui/extensionplugin.h>
 #include <avogadro/core/avogadrocore.h>
 
+#include <QtGui/QIcon>
+
 namespace Avogadro {
 namespace Io {
 class FileFormat;
@@ -59,6 +61,8 @@ private slots:
   void paste();
 
 private:
+  static QIcon standardIcon(const QString &name);
+
   // Cached between emitting moleculeReady() and calling readMolecule().
   QByteArray m_pastedData;
   Io::FileFormat *m_pastedFormat;
