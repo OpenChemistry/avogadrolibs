@@ -82,6 +82,7 @@ void GLWidget::updateScene()
       Rendering::GroupNode *engineNode = new Rendering::GroupNode(moleculeNode);
       scenePlugin->process(*m_molecule, *engineNode);
     }
+    m_renderer.resetGeometry();
     update();
   }
 }
@@ -95,6 +96,11 @@ void GLWidget::resetCamera()
 {
   m_renderer.resetCamera();
   update();
+}
+
+void GLWidget::resetGeometry()
+{
+  m_renderer.resetGeometry();
 }
 
 void GLWidget::setTools(const QList<QtGui::ToolPlugin *> &toolList)
