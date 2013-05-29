@@ -440,7 +440,8 @@ QString InputGenerator::generateCoordinateBlock(const QString &spec,
   gen.setMolecule(&mol);
   gen.setSpecification(spec.toStdString());
   std::string tmp(gen.generateCoordinateBlock());
-  tmp.resize(tmp.size() - 1); // Pop off the trailing newline
+  if (!tmp.empty())
+    tmp.resize(tmp.size() - 1); // Pop off the trailing newline
   return QString::fromStdString(tmp);
 }
 
