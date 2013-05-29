@@ -7,8 +7,6 @@ include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/io/")
 
 # Extension
 set(quantuminput_srcs
-  generichighlighter.cpp
-  inputgenerator.cpp
   quantuminputdialog.cpp
   quantuminput.cpp
 )

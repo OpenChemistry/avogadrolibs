@@ -17,6 +17,8 @@
 #ifndef AVOGADRO_QTPLUGINS_GENERICHIGHLIGHTER_H
 #define AVOGADRO_QTPLUGINS_GENERICHIGHLIGHTER_H
 
+#include "avogadroqtguiexport.h"
+
 #include <avogadro/core/avogadrocore.h>
 
 #include <QtGui/QSyntaxHighlighter>
@@ -25,13 +27,13 @@
 class QRegExp;
 
 namespace Avogadro {
-namespace QtPlugins {
+namespace QtGui {
 
 /**
  * @brief The GenericHighlighter class provides a regexp-based programmable
  * syntax highlighter.
  */
-class GenericHighlighter : public QSyntaxHighlighter
+class AVOGADROQTGUI_EXPORT GenericHighlighter : public QSyntaxHighlighter
 {
   Q_OBJECT
 public:

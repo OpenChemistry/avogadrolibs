@@ -20,7 +20,7 @@
 #include <QtGui/QDialog>
 #include "ui_quantuminputdialog.h"
 
-#include "inputgenerator.h"
+#include <avogadro/qtgui/inputgenerator.h>
 
 #include <qjsonobject.h>
 
@@ -260,7 +260,7 @@ private:
   QJsonObject m_optionCache; // For reverting changes
   bool m_updatePending;
   QList<QTextEdit*> m_dirtyTextEdits;
-  InputGenerator m_inputGenerator;
+  QtGui::InputGenerator m_inputGenerator;
 
   QMap<QString, QWidget*> m_widgets;
   QMap<QString, QTextEdit*> m_textEdits;
