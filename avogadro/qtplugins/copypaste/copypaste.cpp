@@ -20,6 +20,7 @@
 #include <avogadro/io/fileformatmanager.h>
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QMimeData>
 
@@ -44,15 +45,15 @@ CopyPaste::CopyPaste(QObject *parent_) :
   m_pasteAction(new QAction(tr("Paste"), this))
 {
   m_copyAction->setShortcut(QKeySequence("Ctrl+C"));
-  m_copyAction->setIcon(standardIcon("edit-copy"));
+  m_copyAction->setIcon(QtGui::standardIcon("edit-copy"));
   connect(m_copyAction, SIGNAL(triggered()), SLOT(copy()));
 
   m_cutAction->setShortcut(QKeySequence("Ctrl+X"));
-  m_cutAction->setIcon(standardIcon("edit-cut"));
+  m_cutAction->setIcon(QtGui::standardIcon("edit-cut"));
   connect(m_cutAction, SIGNAL(triggered()), SLOT(cut()));
 
   m_pasteAction->setShortcut(QKeySequence("Ctrl+V"));
-  m_pasteAction->setIcon(standardIcon("edit-paste"));
+  m_pasteAction->setIcon(QtGui::standardIcon("edit-paste"));
   connect(m_pasteAction, SIGNAL(triggered()), SLOT(paste()));
 }
 
@@ -184,12 +185,6 @@ void CopyPaste::paste()
 
   if (m_pastedFormat)
     emit moleculeReady(1);
-}
-
-QIcon CopyPaste::standardIcon(const QString &name)
-{
-  return QIcon::fromTheme(name,
-                          QIcon(QString(":/icons/fallback/%1.png").arg(name)));
 }
 
 } // namespace QtPlugins
