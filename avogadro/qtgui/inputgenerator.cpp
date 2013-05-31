@@ -41,7 +41,7 @@
 #include <string>
 
 namespace Avogadro {
-namespace QtPlugins {
+namespace QtGui {
 
 InputGenerator::InputGenerator(const QString &scriptFilePath_)
   : m_debug(!qgetenv("AVO_QM_INPUT_DEBUG").isEmpty()),

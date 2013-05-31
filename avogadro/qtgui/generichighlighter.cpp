@@ -19,7 +19,7 @@
 #include <assert.h>
 
 namespace Avogadro {
-namespace QtPlugins {
+namespace QtGui {
 
 GenericHighlighter::GenericHighlighter(QObject *parent_) :
   QSyntaxHighlighter(parent_)

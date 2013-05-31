@@ -17,6 +17,8 @@
 #ifndef AVOGADRO_QTPLUGINS_INPUTGENERATOR_H
 #define AVOGADRO_QTPLUGINS_INPUTGENERATOR_H
 
+#include "avogadroqtguiexport.h"
+
 #include <qjsonobject.h>
 
 #include <QtCore/QByteArray>
@@ -37,7 +39,7 @@ namespace Core {
 class Molecule;
 }
 
-namespace QtPlugins {
+namespace QtGui {
 class GenericHighlighter;
 
 /**
@@ -434,7 +436,7 @@ $$coords:[coordSpec]$$
  * qDebug() stream from within avogadro. The script is free to handle the
  * debug flag as the author wishes.
  */
-class InputGenerator : public QObject
+class AVOGADROQTGUI_EXPORT InputGenerator : public QObject
 {
   Q_OBJECT
 public:

@@ -211,7 +211,7 @@ void QuantumInput::addAction(const QString &label,
 
 QString QuantumInput::queryProgramName(const QString &scriptFilePath)
 {
-  InputGenerator gen(scriptFilePath);
+  QtGui::InputGenerator gen(scriptFilePath);
   QString progName = gen.displayName();
   if (gen.hasErrors()) {
     qWarning() << "QuantumInput::queryProgramName: Unable to retrieve program "
