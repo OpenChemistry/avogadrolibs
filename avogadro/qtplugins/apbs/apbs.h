@@ -24,6 +24,7 @@ class QProgressDialog;
 
 namespace Avogadro {
 namespace QtPlugins {
+class ApbsDialog;
 
 /**
  * @brief The Apbs class provides integration with the APBS package, primarily
@@ -46,16 +47,27 @@ public:
   QList<QAction *> actions() const AVO_OVERRIDE { return m_actions; }
   QStringList menuPath(QAction *) const AVO_OVERRIDE;
   void setMolecule(QtGui::Molecule *) AVO_OVERRIDE;
+  bool readMolecule(QtGui::Molecule &) AVO_OVERRIDE;
 
 private slots:
   void onOpenOutputFile();
   void onMeshGeneratorProgress(int value);
-  void cubeGeneratorFinished();
+  void meshGeneratorFinished();
+  void onRunApbs();
+
+private:
+  /**
+   * Loads the cube from the OpenDX file and adds the meshes to the molecule.
+   */
+  bool loadOpenDxFile(const QString &fileName, QtGui::Molecule &molecule);
 
 private:
   QtGui::Molecule *m_molecule;
   QList<QAction *> m_actions;
   QProgressDialog *m_progressDialog;
+  ApbsDialog *m_dialog;
+  QString m_pqrFileName;
+  QString m_cubeFileName;
 };
 
 }
