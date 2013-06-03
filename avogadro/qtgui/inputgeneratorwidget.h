@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012-2013 Kitware, Inc.
+  Copyright 2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,17 +14,17 @@
 
 ******************************************************************************/
 
-#ifndef QUANTUMINPUTDIALOG_H
-#define QUANTUMINPUTDIALOG_H
+#ifndef AVOGADRO_QTGUI_INPUTGENERATORWIDGET_H
+#define AVOGADRO_QTGUI_INPUTGENERATORWIDGET_H
 
-#include <QtGui/QDialog>
-#include "ui_quantuminputdialog.h"
+#include <QtGui/QWidget>
 
+#include <avogadro/qtgui/avogadroqtguiexport.h>
 #include <avogadro/qtgui/inputgenerator.h>
 
-#include <qjsonobject.h>
+#include <avogadro/core/avogadrocore.h>
 
-#include <QtCore/QMap>
+#include <qjsonobject.h>
 
 class QJsonValue;
 class QTextEdit;
@@ -37,40 +37,59 @@ class Client;
 namespace Avogadro {
 namespace QtGui {
 class Molecule;
+
+namespace Ui {
+class InputGeneratorWidget;
 }
 
-namespace QtPlugins {
-
 /**
- * @brief the QuantumInputDialog class provides a dynamic user interface that
- * is generated from input generator scripts.
- * @author David C. Lonie
+ * @class InputGeneratorWidget inputgeneratorwidget.h
+ * <avogadro/qtgui/inputgeneratorwidget.h>
+ * @brief The InputGeneratorWidget class provides a user interface for
+ * configuring, saving, editing, and running input files produced by
+ * InputGenerator scripts.
+ * @sa InputGenerator InputGeneratorDialog
  */
-class QuantumInputDialog : public QDialog
+class AVOGADROQTGUI_EXPORT InputGeneratorWidget : public QWidget
 {
   Q_OBJECT
 
 public:
   /**
-   * Constructor
+   * Construct a widget that dynamically generates a GUI to configure the
+   * InputGenerator script specified by scriptFilePath.
+   */
+  explicit InputGeneratorWidget(QWidget *parent_ = 0);
+  ~InputGeneratorWidget() AVO_OVERRIDE;
+
+  /**
+   * Use the input generator script pointed to by scriptFilePath.
    * @param scriptFilePath Absolute path to generator script.
    */
-  explicit QuantumInputDialog(const QString &scriptFilePath,
-                              QWidget *parent_ = NULL,
-                              Qt::WindowFlags f = NULL);
-  ~QuantumInputDialog();
+  void setInputGeneratorScript(const QString &scriptFilePath);
 
   /**
    * Set the molecule used in the simulation.
    */
   void setMolecule(QtGui::Molecule *mol);
 
+  /**
+   * Access to the underlying input generator object. @{
+   */
+  const InputGenerator &inputGenerator() const { return m_inputGenerator; }
+
+signals:
+  /**
+   * @brief closeClicked is emitted when the close button is clicked.
+   */
+  void closeClicked();
+
 protected:
   /**
    * Reimplemented to update preview text. Hidden dialogs will wait until they
    * are reshown to update the text to prevent overwriting any modified buffers.
    */
-  void showEvent(QShowEvent *e);
+  void showEvent(QShowEvent *e) AVO_OVERRIDE;
 
 private slots:
   /**
@@ -253,7 +272,7 @@ private:
    */
   QString generateJobTitle() const;
 
-  Ui::QuantumInputDialog m_ui;
+  Ui::InputGeneratorWidget *m_ui;
   QtGui::Molecule *m_molecule;
   MoleQueue::Client *m_client;
   QJsonObject m_options;
@@ -266,7 +285,7 @@ private:
   QMap<QString, QTextEdit*> m_textEdits;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
 
-#endif // GAMESSINPUTDIALOG_H
+} // namespace QtGui
+} // namespace Avogadro
+#endif // AVOGADRO_QTGUI_INPUTGENERATORWIDGET_H

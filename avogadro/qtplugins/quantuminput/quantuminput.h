@@ -26,8 +26,11 @@ class QAction;
 class QDialog;
 
 namespace Avogadro {
+namespace QtGui {
+class InputGeneratorDialog;
+}
+
 namespace QtPlugins {
-class QuantumInputDialog;
 
 /**
  * @brief The QuantumInput class implements the extension interface for
@@ -66,12 +69,12 @@ private:
   void updateInputGeneratorScripts();
   void updateActions();
   void addAction(const QString &label, const QString &scriptFilePath);
-  QString queryProgramName(const QString &scriptFilePath);
+  bool queryProgramName(const QString &scriptFilePath, QString &displayName);
 
   QList<QAction*> m_actions;
   QtGui::Molecule *m_molecule;
   // keyed on script file path
-  QMultiMap<QString, QuantumInputDialog*> m_dialogs;
+  QMultiMap<QString, QtGui::InputGeneratorDialog*> m_dialogs;
 
   // maps program name --> script file path
   QMultiMap<QString, QString> m_inputGeneratorScripts;

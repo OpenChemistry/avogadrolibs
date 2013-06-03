@@ -7,7 +7,6 @@ include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/io/")
 
 # Extension
 set(quantuminput_srcs
-  quantuminputdialog.cpp
   quantuminput.cpp
 )
 
@@ -17,7 +16,6 @@ avogadro_plugin(QuantumInput
   quantuminput.h
   QuantumInput
   "${quantuminput_srcs}"
-  quantuminputdialog.ui
 )
 
 target_link_libraries(QuantumInput LINK_PRIVATE AvogadroIO MoleQueueClient)

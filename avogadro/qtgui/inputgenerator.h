@@ -43,9 +43,10 @@ namespace QtGui {
 class GenericHighlighter;
 
 /**
+ * @class InputGenerator inputgenerator.h <avogadro/qtgui/inputgenerator.h>
  * @brief The InputGenerator class provides an interface to input generator
  * scripts.
- * @author David C. Lonie
+ * @sa InputGeneratorWidget
  *
  * The QuantumInput extension provides a scriptable method for users to add
  * custom input generators to Avogadro. By writing an executable that implements
@@ -444,7 +445,9 @@ public:
    * Constructor
    * @param scriptFilePath_ Absolute path to generator script.
    */
-  explicit InputGenerator(const QString &scriptFilePath_);
+  explicit InputGenerator(const QString &scriptFilePath_,
+                          QObject *parent_ = NULL);
+  explicit InputGenerator(QObject *parent_ = NULL);
   ~InputGenerator();
 
   /**
@@ -477,6 +480,17 @@ public:
    * @return The path to the generator file.
    */
   QString scriptFilePath() const { return m_scriptFilePath; }
+
+  /**
+   * Set the path to the input generator script file. This will reset any
+   * cached data held by this class.
+   */
+  void setScriptFilePath(const QString &scriptFile);
+
+  /**
+   * Clear any cached data and return to an uninitialized state.
+   */
+  void reset();
 
   /**
    * Request input files from the script using the supplied options object and
@@ -561,7 +575,7 @@ public slots:
   void setDebug(bool d) { m_debug = d; }
 
 private:
-
+  void setDefaultPythonInterpretor();
   QByteArray execute(const QStringList &args,
                      const QByteArray &scriptStdin = QByteArray()) const;
   bool parseJson(const QByteArray &json, QJsonDocument &doc) const;

@@ -43,20 +43,21 @@
 namespace Avogadro {
 namespace QtGui {
 
-InputGenerator::InputGenerator(const QString &scriptFilePath_)
-  : m_debug(!qgetenv("AVO_QM_INPUT_DEBUG").isEmpty()),
+InputGenerator::InputGenerator(const QString &scriptFilePath_, QObject *parent_)
+  : QObject(parent_),
+    m_debug(!qgetenv("AVO_QM_INPUT_DEBUG").isEmpty()),
     m_moleculeExtension("Unknown"),
-    m_scriptFilePath(scriptFilePath_),
-    m_displayName(),
-    m_options()
+    m_scriptFilePath(scriptFilePath_)
 {
-  m_pythonInterpreter = qgetenv("AVO_PYTHON_INTERPRETER");
-  if (m_pythonInterpreter.isEmpty()) {
-    m_pythonInterpreter = QSettings().value(
-          "quantumInput/interpreters/python").toString();
-  }
-  if (m_pythonInterpreter.isEmpty())
-    m_pythonInterpreter = pythonInterpreterPath;
+  setDefaultPythonInterpretor();
+}
+
+InputGenerator::InputGenerator(QObject *parent_)
+  : QObject(parent_),
+    m_debug(!qgetenv("AVO_QM_INPUT_DEBUG").isEmpty()),
+    m_moleculeExtension("Unknown")
+{
+  setDefaultPythonInterpretor();
 }
 
 InputGenerator::~InputGenerator()
@@ -112,6 +113,29 @@ QString InputGenerator::displayName() const
   }
 
   return m_displayName;
+}
+
+void InputGenerator::setScriptFilePath(const QString &scriptFile)
+{
+  reset();
+  m_scriptFilePath = scriptFile;
+}
+
+void InputGenerator::reset()
+{
+  setDefaultPythonInterpretor();
+  m_debug = !qgetenv("AVO_QM_INPUT_DEBUG").isEmpty();
+  m_moleculeExtension = "Unknown";
+  m_scriptFilePath = QString();
+  m_displayName = QString();
+  m_options = QJsonObject();
+  m_warnings.clear();
+  m_errors.clear();
+  m_filenames.clear();
+  m_mainFileName.clear();
+  m_files.clear();
+  m_fileHighlighters.clear();
+  m_highlightStyles.clear();
 }
 
 bool InputGenerator::generateInput(const QJsonObject &options_,
@@ -282,6 +306,17 @@ InputGenerator::createFileHighlighter(const QString &fileName) const
   return toClone ? new GenericHighlighter(*toClone) : toClone;
 }
 
+void InputGenerator::setDefaultPythonInterpretor()
+{
+  m_pythonInterpreter = qgetenv("AVO_PYTHON_INTERPRETER");
+  if (m_pythonInterpreter.isEmpty()) {
+    m_pythonInterpreter = QSettings().value(
+          "quantumInput/interpreters/python").toString();
+  }
+  if (m_pythonInterpreter.isEmpty())
+    m_pythonInterpreter = pythonInterpreterPath;
+}
+
 QByteArray InputGenerator::execute(const QStringList &args,
                                    const QByteArray &scriptStdin) const
 {
@@ -329,6 +364,17 @@ QByteArray InputGenerator::execute(const QStringList &args,
                    "finish (%3).")
                 .arg(m_scriptFilePath, realArgs.join(" "),
                      processErrorString(proc));
+    return QByteArray();
+  }
+
+  if (proc.exitStatus() != QProcess::NormalExit || proc.exitCode() != 0) {
+    m_errors << tr("Error running script '%1 %2': Abnormal exit status %3 "
+                   "(%4: %5).")
+                .arg(m_scriptFilePath)
+                .arg(realArgs.join(" "))
+                .arg(proc.exitCode())
+                .arg(processErrorString(proc))
+                .arg(proc.errorString());
     return QByteArray();
   }
 
