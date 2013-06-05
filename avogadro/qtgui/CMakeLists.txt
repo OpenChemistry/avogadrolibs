@@ -38,6 +38,8 @@ set(HEADERS
   filebrowsewidget.h
   generichighlighter.h
   inputgenerator.h
+  inputgeneratordialog.h
+  inputgeneratorwidget.h
   mesh.h
   meshgenerator.h
   molecule.h
@@ -56,6 +58,8 @@ set(SOURCES
   filebrowsewidget.cpp
   generichighlighter.cpp
   inputgenerator.cpp
+  inputgeneratordialog.cpp
+  inputgeneratorwidget.cpp
   mesh.cpp
   meshgenerator.cpp
   molecule.cpp
@@ -65,6 +69,13 @@ set(SOURCES
   scenepluginmodel.cpp
   toolplugin.cpp
 )
+
+set(UIS
+  inputgeneratordialog.ui
+  inputgeneratorwidget.ui
+)
+qt4_wrap_ui(UI_SOURCES ${UIS})
+list(APPEND SOURCES ${UI_SOURCES})
 
 avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtGui

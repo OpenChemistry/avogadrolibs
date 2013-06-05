@@ -16,10 +16,11 @@
 
 #include "quantuminput.h"
 
-#include "quantuminputdialog.h"
 #include "quantumpython.h"
 
 #include <avogadro/qtgui/filebrowsewidget.h>
+#include <avogadro/qtgui/inputgenerator.h>
+#include <avogadro/qtgui/inputgeneratordialog.h>
 
 #include <QtGui/QAction>
 #include <QtGui/QDialog>
@@ -27,6 +28,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QtPlugin>
@@ -72,7 +74,7 @@ void QuantumInput::setMolecule(QtGui::Molecule *mol)
 
   m_molecule = mol;
 
-  foreach (QuantumInputDialog *dlg, m_dialogs.values())
+  foreach (QtGui::InputGeneratorDialog *dlg, m_dialogs.values())
     dlg->setMolecule(mol);
 }
 
@@ -90,10 +92,10 @@ void QuantumInput::menuActivated()
 
   QString scriptFileName = theSender->data().toString();
   QWidget *theParent = qobject_cast<QWidget*>(parent());
-  QuantumInputDialog *dlg = m_dialogs.value(scriptFileName, NULL);
+  QtGui::InputGeneratorDialog *dlg = m_dialogs.value(scriptFileName, NULL);
 
   if (!dlg) {
-    dlg = new QuantumInputDialog(scriptFileName, theParent);
+    dlg = new QtGui::InputGeneratorDialog(scriptFileName, theParent);
     m_dialogs.insert(scriptFileName, dlg);
   }
   dlg->setMolecule(m_molecule);
@@ -170,8 +172,9 @@ void QuantumInput::updateInputGeneratorScripts()
       foreach (const QFileInfo &file, dir.entryInfoList(QDir::Files |
                                                         QDir::NoDotAndDotDot)) {
         QString filePath = file.absoluteFilePath();
-        m_inputGeneratorScripts.insert(queryProgramName(filePath),
-                                       filePath);
+        QString displayName;
+        if (queryProgramName(filePath, displayName))
+          m_inputGeneratorScripts.insert(displayName, filePath);
       }
     }
   }
@@ -209,18 +212,19 @@ void QuantumInput::addAction(const QString &label,
   m_actions << action;
 }
 
-QString QuantumInput::queryProgramName(const QString &scriptFilePath)
+bool QuantumInput::queryProgramName(const QString &scriptFilePath,
+                                    QString &displayName)
 {
   QtGui::InputGenerator gen(scriptFilePath);
-  QString progName = gen.displayName();
+  displayName = gen.displayName();
   if (gen.hasErrors()) {
+    displayName.clear();
     qWarning() << "QuantumInput::queryProgramName: Unable to retrieve program "
                   "name for" << scriptFilePath << ";"
                << gen.errorList().join("\n\n");
-    return scriptFilePath;
+    return false;
   }
-
-  return progName;
+  return true;
 }
 
 }

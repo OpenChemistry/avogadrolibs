@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012-2013 Kitware, Inc.
+  Copyright 2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,7 +14,8 @@
 
 ******************************************************************************/
 
-#include "quantuminputdialog.h"
+#include "inputgeneratorwidget.h"
+#include "ui_inputgeneratorwidget.h"
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/generichighlighter.h>
@@ -52,26 +53,18 @@
 #include <QtCore/QTimer>
 
 namespace Avogadro {
-namespace QtPlugins {
+namespace QtGui {
 
-QuantumInputDialog::QuantumInputDialog(const QString &scriptFilePath,
-                                       QWidget *parent_, Qt::WindowFlags f)
-  : QDialog( parent_, f ),
-    m_molecule(NULL),
-    m_client(new MoleQueue::Client(this)),
-    m_updatePending(false),
-    m_inputGenerator(scriptFilePath)
+InputGeneratorWidget::InputGeneratorWidget(QWidget *parent_) :
+  QWidget(parent_),
+  m_ui(new Ui::InputGeneratorWidget),
+  m_molecule(NULL),
+  m_client(new MoleQueue::Client(this)),
+  m_updatePending(false),
+  m_inputGenerator(QString())
 {
-  m_ui.setupUi(this);
-
-  m_ui.debugCheckBox->setChecked(m_inputGenerator.debug());
-
-  resetWarningDisplay();
-  m_ui.warningTextButton->setIcon(QIcon::fromTheme("dialog-warning"));
-
-  setWindowTitle(tr("%1 Input Generator").arg(m_inputGenerator.displayName()));
-
-  updateOptions();
+  m_ui->setupUi(this);
+  m_ui->warningTextButton->setIcon(QIcon::fromTheme("dialog-warning"));
 
   connectButtons();
   connectMoleQueue();
@@ -81,11 +74,20 @@ QuantumInputDialog::QuantumInputDialog(const QString &scriptFilePath,
     m_client->requestQueueList();
 }
 
-QuantumInputDialog::~QuantumInputDialog()
+InputGeneratorWidget::~InputGeneratorWidget()
 {
+  delete m_ui;
 }
 
-void QuantumInputDialog::setMolecule(QtGui::Molecule *mol)
+void InputGeneratorWidget::setInputGeneratorScript(const QString &scriptFile)
+{
+  m_inputGenerator.setScriptFilePath(scriptFile);
+  m_ui->debugCheckBox->setChecked(m_inputGenerator.debug());
+  updateOptions();
+  resetWarningDisplay();
+}
+
+void InputGeneratorWidget::setMolecule(QtGui::Molecule *mol)
 {
   if (mol == m_molecule)
     return;
@@ -102,7 +104,7 @@ void QuantumInputDialog::setMolecule(QtGui::Molecule *mol)
   updatePreviewTextImmediately();
 }
 
-void QuantumInputDialog::showEvent(QShowEvent *e)
+void InputGeneratorWidget::showEvent(QShowEvent *e)
 {
   QWidget::showEvent(e);
 
@@ -112,7 +114,7 @@ void QuantumInputDialog::showEvent(QShowEvent *e)
     QTimer::singleShot(0, this, SLOT(updatePreviewTextImmediately()));
 }
 
-void QuantumInputDialog::updatePreviewText()
+void InputGeneratorWidget::updatePreviewText()
 {
   if (m_updatePending)
     return;
@@ -121,7 +123,7 @@ void QuantumInputDialog::updatePreviewText()
   QTimer::singleShot(250, this, SLOT(updatePreviewTextImmediately()));
 }
 
-void QuantumInputDialog::updatePreviewTextImmediately()
+void InputGeneratorWidget::updatePreviewTextImmediately()
 {
   // If the dialog is not shown, delay the update in case we need to prompt the
   // user to overwrite changes. Set the m_updatePending flag to true so we'll
@@ -149,7 +151,12 @@ void QuantumInputDialog::updatePreviewTextImmediately()
                               QMessageBox::No);
     if (static_cast<QMessageBox::StandardButton>(response) !=
         QMessageBox::Yes) {
+      // Prevent updates while restoring the option cache:
+      bool oldUpdatePending = m_updatePending;
+      m_updatePending = true;
+      // Restore cached options.
       applyOptions(m_optionCache);
+      m_updatePending = oldUpdatePending;
       return;
     }
   }
@@ -175,7 +182,7 @@ void QuantumInputDialog::updatePreviewTextImmediately()
   }
 
   // Store the currently displayed tab
-  QPointer<QWidget> currentWidget(m_ui.tabWidget->currentWidget());
+  QPointer<QWidget> currentWidget(m_ui->tabWidget->currentWidget());
 
   // Ensure that the correct tabs are shown:
   QStringList fileNames = m_inputGenerator.fileNames();
@@ -183,8 +190,8 @@ void QuantumInputDialog::updatePreviewTextImmediately()
   foreach (const QString &tabName, m_textEdits.keys()) {
     if (!fileNames.contains(tabName)) {
       QTextEdit *edit = m_textEdits.value(tabName);
-      int index = m_ui.tabWidget->indexOf(edit);
-      m_ui.tabWidget->removeTab(index);
+      int index = m_ui->tabWidget->indexOf(edit);
+      m_ui->tabWidget->removeTab(index);
       m_textEdits.remove(tabName);
       delete edit;
     }
@@ -197,7 +204,7 @@ void QuantumInputDialog::updatePreviewTextImmediately()
     QTextEdit *edit = new QTextEdit();
     edit->setFontFamily("monospace");
     connect(edit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
-    m_ui.tabWidget->addTab(edit, fileName);
+    m_ui->tabWidget->addTab(edit, fileName);
     m_textEdits.insert(fileName, edit);
   }
 
@@ -205,10 +212,10 @@ void QuantumInputDialog::updatePreviewTextImmediately()
   int index = 0;
   foreach (const QString &fileName, fileNames) {
     QTextEdit *edit = m_textEdits.value(fileName);
-    int tabIndex = m_ui.tabWidget->indexOf(edit);
+    int tabIndex = m_ui->tabWidget->indexOf(edit);
     if (tabIndex != index) {
-      m_ui.tabWidget->removeTab(tabIndex);
-      m_ui.tabWidget->insertTab(index, edit, fileName);
+      m_ui->tabWidget->removeTab(tabIndex);
+      m_ui->tabWidget->insertTab(index, edit, fileName);
     }
 
     QtGui::GenericHighlighter *highlighter(
@@ -229,10 +236,10 @@ void QuantumInputDialog::updatePreviewTextImmediately()
 
   // Restore current tab
   if (!currentWidget.isNull())
-    m_ui.tabWidget->setCurrentWidget(currentWidget);
+    m_ui->tabWidget->setCurrentWidget(currentWidget);
 }
 
-void QuantumInputDialog::refreshPrograms()
+void InputGeneratorWidget::refreshPrograms()
 {
   if (!m_client->isConnected()) {
     m_client->connectToServer();
@@ -246,9 +253,9 @@ void QuantumInputDialog::refreshPrograms()
   m_client->requestQueueList();
 }
 
-void QuantumInputDialog::queueListReceived(const QJsonObject &queueList)
+void InputGeneratorWidget::queueListReceived(const QJsonObject &queueList)
 {
-  m_ui.programCombo->clear();
+  m_ui->programCombo->clear();
   int firstMatch = -1;
   foreach (const QString &queue, queueList.keys())
     {
@@ -258,24 +265,23 @@ void QuantumInputDialog::queueListReceived(const QJsonObject &queueList)
         if (firstMatch < 0 &&
             program.toString().contains(m_inputGenerator.displayName(),
                                         Qt::CaseInsensitive)) {
-          firstMatch = m_ui.programCombo->count();
+          firstMatch = m_ui->programCombo->count();
         }
-        m_ui.programCombo->addItem(QString("%1 (%2)").arg(program.toString(),
+        m_ui->programCombo->addItem(QString("%1 (%2)").arg(program.toString(),
                                                           queue));
       }
     }
   }
-  m_ui.programCombo->setCurrentIndex(firstMatch);
+  m_ui->programCombo->setCurrentIndex(firstMatch);
 }
 
-
-void QuantumInputDialog::defaultsClicked()
+void InputGeneratorWidget::defaultsClicked()
 {
   setOptionDefaults();
   updatePreviewTextImmediately();
 }
 
-void QuantumInputDialog::generateClicked()
+void InputGeneratorWidget::generateClicked()
 {
   if (m_textEdits.size() == 1)
     saveSingleFile(m_textEdits.keys().first());
@@ -285,7 +291,7 @@ void QuantumInputDialog::generateClicked()
     showError(tr("No input files to save!"));
 }
 
-void QuantumInputDialog::computeClicked()
+void InputGeneratorWidget::computeClicked()
 {
   if (!m_client->isConnected()) {
     m_client->connectToServer();
@@ -297,7 +303,7 @@ void QuantumInputDialog::computeClicked()
     }
   }
 
-  QString programText = m_ui.programCombo->currentText();
+  QString programText = m_ui->programCombo->currentText();
   if (programText.isEmpty()) {
     QMessageBox::information(this, tr("No program set."),
                              tr("Cannot determine which MoleQueue program "
@@ -326,7 +332,7 @@ void QuantumInputDialog::computeClicked()
   job.setQueue(queue);
   job.setProgram(program);
   job.setDescription(description);
-  job.setValue("numberOfCores", m_ui.coresSpinBox->value());
+  job.setValue("numberOfCores", m_ui->coresSpinBox->value());
   for (QMap<QString, QTextEdit*>::const_iterator it = m_textEdits.constBegin(),
        itEnd = m_textEdits.constEnd(); it != itEnd; ++it) {
     QString filename = it.key();
@@ -339,41 +345,41 @@ void QuantumInputDialog::computeClicked()
   m_client->submitJob(job);
 }
 
-void QuantumInputDialog::setWarning(const QString &warn)
+void InputGeneratorWidget::setWarning(const QString &warn)
 {
   qWarning() << tr("Script returns warnings:\n") << warn;
 
-  m_ui.warningText->setText(warn);
-  m_ui.warningBox->show();
+  m_ui->warningText->setText(warn);
+  m_ui->warningBox->show();
 }
 
-void QuantumInputDialog::toggleWarningText()
+void InputGeneratorWidget::toggleWarningText()
 {
-  if (m_ui.warningText->isVisible())
+  if (m_ui->warningText->isVisible())
     hideWarningText();
   else
     showWarningText();
 }
 
-void QuantumInputDialog::showWarningText()
+void InputGeneratorWidget::showWarningText()
 {
-  m_ui.warningText->show();
-  m_ui.warningTextButton->setText(tr("Hide &Warnings"));
+  m_ui->warningText->show();
+  m_ui->warningTextButton->setText(tr("Hide &Warnings"));
 }
 
-void QuantumInputDialog::hideWarningText()
+void InputGeneratorWidget::hideWarningText()
 {
-  m_ui.warningText->hide();
-  m_ui.warningTextButton->setText(tr("Show &Warnings"));
+  m_ui->warningText->hide();
+  m_ui->warningTextButton->setText(tr("Show &Warnings"));
 }
 
-void QuantumInputDialog::resetWarningDisplay()
+void InputGeneratorWidget::resetWarningDisplay()
 {
-  m_ui.warningBox->hide();
+  m_ui->warningBox->hide();
   showWarningText();
 }
 
-void QuantumInputDialog::showError(const QString &err)
+void InputGeneratorWidget::showError(const QString &err)
 {
   qWarning() << err;
 
@@ -400,7 +406,7 @@ void QuantumInputDialog::showError(const QString &err)
   dlg.exec();
 }
 
-void QuantumInputDialog::textEditModified()
+void InputGeneratorWidget::textEditModified()
 {
   if (QTextEdit *edit = qobject_cast<QTextEdit*>(sender())) {
     if (edit->document()->isModified()) {
@@ -413,7 +419,7 @@ void QuantumInputDialog::textEditModified()
   }
 }
 
-void QuantumInputDialog::updateTitlePlaceholder()
+void InputGeneratorWidget::updateTitlePlaceholder()
 {
   if (QLineEdit *titleEdit =
         qobject_cast<QLineEdit*>(m_widgets.value("Title", NULL))) {
@@ -421,47 +427,19 @@ void QuantumInputDialog::updateTitlePlaceholder()
   }
 }
 
-QString QuantumInputDialog::generateJobTitle() const
-{
-  QString calculation;
-  bool haveCalculation(optionString("Calculation Type", calculation));
-
-  QString theory;
-  bool haveTheory(optionString("Theory", theory));
-
-  QString basis;
-  bool haveBasis(optionString("Basis", basis));
-
-  QString formula(m_molecule ? QString::fromStdString(m_molecule->formula())
-                             : tr("[no molecule]"));
-
-  // Merge theory/basis into theory
-  if (haveBasis) {
-    if (haveTheory)
-      theory += "/";
-    theory += basis;
-    theory.replace(QRegExp("\\s+"), "");
-    haveTheory = true;
-  }
-
-  return QString("%1%2%3").arg(formula)
-      .arg(haveCalculation ? " | " + calculation : QString())
-      .arg(haveTheory      ? " | " + theory      : QString());
-}
-
-QString QuantumInputDialog::settingsKey(const QString &identifier) const
+QString InputGeneratorWidget::settingsKey(const QString &identifier) const
 {
   return QString("quantumInput/%1/%2").arg(m_inputGenerator.displayName(),
                                            identifier);
 }
 
-void QuantumInputDialog::enableBaseNameGui(bool enable)
+void InputGeneratorWidget::enableBaseNameGui(bool enable)
 {
-  m_ui.baseNameEdit->setVisible(enable);
-  m_ui.baseNameLabel->setVisible(enable);
+  m_ui->baseNameEdit->setVisible(enable);
+  m_ui->baseNameLabel->setVisible(enable);
 }
 
-void QuantumInputDialog::saveSingleFile(const QString &fileName)
+void InputGeneratorWidget::saveSingleFile(const QString &fileName)
 {
   QSettings settings;
   QString filePath = settings.value(settingsKey("outputDirectory")).toString();
@@ -509,7 +487,7 @@ void QuantumInputDialog::saveSingleFile(const QString &fileName)
   }
 }
 
-void QuantumInputDialog::saveDirectory()
+void InputGeneratorWidget::saveDirectory()
 {
   QSettings settings;
   QString directory = settings.value(settingsKey("outputDirectory")).toString();
@@ -622,31 +600,33 @@ void QuantumInputDialog::saveDirectory()
   }
 }
 
-void QuantumInputDialog::connectButtons()
+void InputGeneratorWidget::connectButtons()
 {
-  connect(m_ui.debugCheckBox, SIGNAL(toggled(bool)),
+  connect(m_ui->debugCheckBox, SIGNAL(toggled(bool)),
           &m_inputGenerator, SLOT(setDebug(bool)));
-  connect(m_ui.debugCheckBox, SIGNAL(toggled(bool)), SLOT(updatePreviewText()));
-  connect(m_ui.defaultsButton, SIGNAL(clicked()), SLOT(defaultsClicked()));
-  connect(m_ui.generateButton, SIGNAL(clicked()), SLOT(generateClicked()));
-  connect(m_ui.computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
-  connect(m_ui.closeButton, SIGNAL(clicked()), SLOT(close()));
-  connect(m_ui.refreshProgramsButton, SIGNAL(clicked()),
-          SLOT(refreshPrograms()));
-  connect(m_ui.coresSpinBox, SIGNAL(valueChanged(int)),
+  connect(m_ui->debugCheckBox, SIGNAL(toggled(bool)),
           SLOT(updatePreviewText()));
-  connect(m_ui.warningTextButton, SIGNAL(clicked()), SLOT(toggleWarningText()));
-  connect(m_ui.baseNameEdit, SIGNAL(textChanged(QString)),
+  connect(m_ui->defaultsButton, SIGNAL(clicked()), SLOT(defaultsClicked()));
+  connect(m_ui->generateButton, SIGNAL(clicked()), SLOT(generateClicked()));
+  connect(m_ui->computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
+  connect(m_ui->closeButton, SIGNAL(clicked()), SIGNAL(closeClicked()));
+  connect(m_ui->refreshProgramsButton, SIGNAL(clicked()),
+          SLOT(refreshPrograms()));
+  connect(m_ui->coresSpinBox, SIGNAL(valueChanged(int)),
+          SLOT(updatePreviewText()));
+  connect(m_ui->warningTextButton, SIGNAL(clicked()),
+          SLOT(toggleWarningText()));
+  connect(m_ui->baseNameEdit, SIGNAL(textChanged(QString)),
           SLOT(updatePreviewText()));
 }
 
-void QuantumInputDialog::connectMoleQueue()
+void InputGeneratorWidget::connectMoleQueue()
 {
   connect(m_client, SIGNAL(queueListReceived(QJsonObject)),
           this, SLOT(queueListReceived(QJsonObject)));
 }
 
-QString QuantumInputDialog::lookupOptionType(const QString &name) const
+QString InputGeneratorWidget::lookupOptionType(const QString &name) const
 {
   if (!m_options.contains("userOptions") ||
       !m_options["userOptions"].isObject()) {
@@ -677,7 +657,7 @@ QString QuantumInputDialog::lookupOptionType(const QString &name) const
   return obj["type"].toString();
 }
 
-void QuantumInputDialog::updateOptions()
+void InputGeneratorWidget::updateOptions()
 {
   m_options = m_inputGenerator.options();
 
@@ -695,13 +675,13 @@ void QuantumInputDialog::updateOptions()
   setOptionDefaults();
 }
 
-void QuantumInputDialog::buildOptionGui()
+void InputGeneratorWidget::buildOptionGui()
 {
   // Clear old widgets from the layout
   m_widgets.clear();
-  delete m_ui.optionsWidget->layout();
+  delete m_ui->optionsWidget->layout();
   QFormLayout *form = new QFormLayout;
-  m_ui.optionsWidget->setLayout(form);
+  m_ui->optionsWidget->setLayout(form);
 
   if (!m_options.contains("userOptions") ||
       !m_options["userOptions"].isObject()) {
@@ -776,14 +756,14 @@ void QuantumInputDialog::buildOptionGui()
   }
 }
 
-void QuantumInputDialog::addOptionRow(const QString &label,
-                                      const QJsonValue &option)
+void InputGeneratorWidget::addOptionRow(const QString &label,
+                                        const QJsonValue &option)
 {
   QWidget *widget = createOptionWidget(option);
   if (!widget)
     return;
 
-  QFormLayout *form = qobject_cast<QFormLayout*>(m_ui.optionsWidget->layout());
+  QFormLayout *form = qobject_cast<QFormLayout*>(m_ui->optionsWidget->layout());
   if (!form) {
     qWarning() << "Cannot add option" << label
                << "to GUI -- layout is not a form.";
@@ -795,7 +775,7 @@ void QuantumInputDialog::addOptionRow(const QString &label,
   m_widgets.insert(label, widget);
 }
 
-QWidget* QuantumInputDialog::createOptionWidget(const QJsonValue &option)
+QWidget *InputGeneratorWidget::createOptionWidget(const QJsonValue &option)
 {
   if (!option.isObject())
     return NULL;
@@ -821,7 +801,7 @@ QWidget* QuantumInputDialog::createOptionWidget(const QJsonValue &option)
   return NULL;
 }
 
-QWidget *QuantumInputDialog::createStringListWidget(const QJsonObject &obj)
+QWidget *InputGeneratorWidget::createStringListWidget(const QJsonObject &obj)
 {
   if (!obj.contains("values") || !obj["values"].isArray()) {
     qDebug() << "QuantumInputDialog::createStringListWidget()"
@@ -845,7 +825,7 @@ QWidget *QuantumInputDialog::createStringListWidget(const QJsonObject &obj)
   return combo;
 }
 
-QWidget *QuantumInputDialog::createStringWidget(const QJsonObject &obj)
+QWidget *InputGeneratorWidget::createStringWidget(const QJsonObject &obj)
 {
   Q_UNUSED(obj);
   QLineEdit *edit = new QLineEdit(this);
@@ -853,7 +833,7 @@ QWidget *QuantumInputDialog::createStringWidget(const QJsonObject &obj)
   return edit;
 }
 
-QWidget *QuantumInputDialog::createIntegerWidget(const QJsonObject &obj)
+QWidget *InputGeneratorWidget::createIntegerWidget(const QJsonObject &obj)
 {
   QSpinBox *spin = new QSpinBox(this);
   if (obj.contains("minimum") &&
@@ -876,7 +856,7 @@ QWidget *QuantumInputDialog::createIntegerWidget(const QJsonObject &obj)
   return spin;
 }
 
-QWidget *QuantumInputDialog::createBooleanWidget(const QJsonObject &obj)
+QWidget *InputGeneratorWidget::createBooleanWidget(const QJsonObject &obj)
 {
   Q_UNUSED(obj);
   QCheckBox *checkBox = new QCheckBox(this);
@@ -884,7 +864,7 @@ QWidget *QuantumInputDialog::createBooleanWidget(const QJsonObject &obj)
   return checkBox;
 }
 
-void QuantumInputDialog::setOptionDefaults()
+void InputGeneratorWidget::setOptionDefaults()
 {
   if (!m_options.contains("userOptions") ||
       !m_options["userOptions"].isObject()) {
@@ -914,8 +894,8 @@ void QuantumInputDialog::setOptionDefaults()
   }
 }
 
-void QuantumInputDialog::setOption(const QString &name,
-                                   const QJsonValue &defaultValue)
+void InputGeneratorWidget::setOption(const QString &name,
+                                     const QJsonValue &defaultValue)
 {
   QString type = lookupOptionType(name);
 
@@ -933,8 +913,8 @@ void QuantumInputDialog::setOption(const QString &name,
   return;
 }
 
-void QuantumInputDialog::setStringListOption(const QString &name,
-                                             const QJsonValue &value)
+void InputGeneratorWidget::setStringListOption(const QString &name,
+                                               const QJsonValue &value)
 {
   QComboBox *combo = qobject_cast<QComboBox*>(m_widgets.value(name, NULL));
   if (!combo) {
@@ -969,8 +949,8 @@ void QuantumInputDialog::setStringListOption(const QString &name,
   combo->setCurrentIndex(index);
 }
 
-void QuantumInputDialog::setStringOption(const QString &name,
-                                         const QJsonValue &value)
+void InputGeneratorWidget::setStringOption(const QString &name,
+                                           const QJsonValue &value)
 {
   QLineEdit *lineEdit = qobject_cast<QLineEdit*>(m_widgets.value(name, NULL));
   if (!lineEdit) {
@@ -991,8 +971,8 @@ void QuantumInputDialog::setStringOption(const QString &name,
   lineEdit->setText(value.toString());
 }
 
-void QuantumInputDialog::setIntegerOption(const QString &name,
-                                          const QJsonValue &value)
+void InputGeneratorWidget::setIntegerOption(const QString &name,
+                                            const QJsonValue &value)
 {
   QSpinBox *spin = qobject_cast<QSpinBox*>(m_widgets.value(name, NULL));
   if (!spin) {
@@ -1014,8 +994,8 @@ void QuantumInputDialog::setIntegerOption(const QString &name,
   spin->setValue(intVal);
 }
 
-void QuantumInputDialog::setBooleanOption(const QString &name,
-                                          const QJsonValue &value)
+void InputGeneratorWidget::setBooleanOption(const QString &name,
+                                            const QJsonValue &value)
 {
   QCheckBox *checkBox = qobject_cast<QCheckBox*>(m_widgets.value(name, NULL));
   if (!checkBox) {
@@ -1036,34 +1016,34 @@ void QuantumInputDialog::setBooleanOption(const QString &name,
   checkBox->setChecked(value.toBool());
 }
 
-bool QuantumInputDialog::optionString(const QString &option,
-                                      QString &value) const
+bool InputGeneratorWidget::optionString(const QString &option,
+                                        QString &value) const
 {
   QWidget *widget = m_widgets.value(option, NULL);
-  bool result = false;
+  bool retval = false;
   value.clear();
 
   if (QLineEdit *edit = qobject_cast<QLineEdit*>(widget)) {
-    result = true;
+    retval = true;
     value = edit->text();
   }
   else if (QComboBox *combo = qobject_cast<QComboBox*>(widget)) {
-    result = true;
+    retval = true;
     value = combo->currentText();
   }
-  else if (QSpinBox *spin = qobject_cast<QSpinBox*>(widget)) {
-    result = true;
-    value = QString::number(spin->value());
+  else if (QSpinBox *spinbox = qobject_cast<QSpinBox*>(widget)) {
+    retval = true;
+    value = QString::number(spinbox->value());
   }
-  else if (QDoubleSpinBox *spin = qobject_cast<QDoubleSpinBox*>(widget)) {
-    result = true;
-    value = QString::number(spin->value());
+  else if (QDoubleSpinBox *dspinbox = qobject_cast<QDoubleSpinBox*>(widget)) {
+    retval = true;
+    value = QString::number(dspinbox->value());
   }
 
-  return result;
+  return retval;
 }
 
-QJsonObject QuantumInputDialog::collectOptions() const
+QJsonObject InputGeneratorWidget::collectOptions() const
 {
   QJsonObject ret;
 
@@ -1093,25 +1073,53 @@ QJsonObject QuantumInputDialog::collectOptions() const
   return ret;
 }
 
-QJsonObject QuantumInputDialog::collectSettings() const
+QJsonObject InputGeneratorWidget::collectSettings() const
 {
   QJsonObject ret;
 
-  QString baseName = m_ui.baseNameEdit->text();
+  QString baseName = m_ui->baseNameEdit->text();
   if (baseName.isEmpty())
-    baseName = m_ui.baseNameEdit->placeholderText();
+    baseName = m_ui->baseNameEdit->placeholderText();
 
   ret.insert("baseName", baseName);
-  ret.insert("numberOfCores", m_ui.coresSpinBox->value());
+  ret.insert("numberOfCores", m_ui->coresSpinBox->value());
 
   return ret;
 }
 
-void QuantumInputDialog::applyOptions(const QJsonObject &opts)
+void InputGeneratorWidget::applyOptions(const QJsonObject &opts)
 {
   foreach (const QString &label, opts.keys())
     setOption(label, opts[label]);
 }
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+QString InputGeneratorWidget::generateJobTitle() const
+{
+  QString calculation;
+  bool haveCalculation(optionString("Calculation Type", calculation));
+
+  QString theory;
+  bool haveTheory(optionString("Theory", theory));
+
+  QString basis;
+  bool haveBasis(optionString("Basis", basis));
+
+  QString formula(m_molecule ? QString::fromStdString(m_molecule->formula())
+                             : tr("[no molecule]"));
+
+  // Merge theory/basis into theory
+  if (haveBasis) {
+    if (haveTheory)
+      theory += "/";
+    theory += basis;
+    theory.replace(QRegExp("\\s+"), "");
+    haveTheory = true;
+  }
+
+  return QString("%1%2%3").arg(formula)
+      .arg(haveCalculation ? " | " + calculation : QString())
+      .arg(haveTheory      ? " | " + theory      : QString());
+}
+
+} // namespace QtGui
+} // namespace Avogadro
