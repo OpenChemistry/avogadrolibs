@@ -74,6 +74,11 @@ public:
   void setMolecule(QtGui::Molecule *mol);
 
   /**
+   * Sets the input generator option.
+   */
+  void setOption(const QString &name, const QJsonValue &defaultValue);
+
+  /**
    * Access to the underlying input generator object. @{
    */
   const InputGenerator &inputGenerator() const { return m_inputGenerator; }
@@ -231,7 +236,6 @@ private:
    * @{
    */
   void setOptionDefaults();
-  void setOption(const QString &name, const QJsonValue &defaultValue);
   void setStringListOption(const QString &name, const QJsonValue &value);
   void setStringOption(const QString &name, const QJsonValue &value);
   void setIntegerOption(const QString &name, const QJsonValue &value);

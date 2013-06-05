@@ -14,21 +14,8 @@
 
 ******************************************************************************/
 
-#include <iostream>
-
 #include "apbsoutputdialog.h"
 #include "ui_apbsoutputdialog.h"
-#include "opendxreader.h"
-
-#include <QProcess>
-#include <QFileDialog>
-#include <QMessageBox>
-
-#include <avogadro/io/fileformatmanager.h>
-#include <avogadro/qtgui/cube.h>
-#include <avogadro/qtgui/mesh.h>
-#include <avogadro/qtgui/molecule.h>
-#include <avogadro/qtgui/meshgenerator.h>
 
 namespace Avogadro {
 namespace QtPlugins {

@@ -151,44 +151,18 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>APBS Input File</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
-       <widget class="QTextEdit" name="textEdit"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <widget class="QPushButton" name="saveInputFileButton">
-       <property name="text">
-        <string>Save Input File</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="runApbsButton">
-       <property name="text">
-        <string>Run APBS</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="closeButton">
-       <property name="text">
-        <string>Close</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <widget class="Avogadro::QtGui::InputGeneratorWidget" name="inputGenerator" native="true"/>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Avogadro::QtGui::InputGeneratorWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">avogadro/qtgui/inputgeneratorwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

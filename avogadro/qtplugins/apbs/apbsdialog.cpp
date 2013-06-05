@@ -34,26 +34,24 @@ ApbsDialog::ApbsDialog(QWidget *parent_)
   : QDialog(parent_),
     m_ui(new Ui::ApbsDialog),
     m_molecule(0),
-    m_inputGenerator(
-      new QtGui::InputGenerator(QCoreApplication::applicationDirPath() +
-        "/../lib/avogadro2/scripts/inputGenerators/apbs.py")),
     m_loadStructureFile(false),
     m_loadCubeFile(false)
 {
   m_ui->setupUi(this);
+  m_ui->inputGenerator->setInputGeneratorScript(
+    QCoreApplication::applicationDirPath() +
+    "/../lib/avogadro2/scripts/inputGenerators/apbs.py"
+  );
 
-  connect(m_ui->closeButton, SIGNAL(clicked()), this, SLOT(reject()));
+  connect(m_ui->inputGenerator, SIGNAL(closeClicked()), this, SLOT(reject()));
   connect(m_ui->openPdbFileButton, SIGNAL(clicked()), this, SLOT(openPdbFile()));
   connect(m_ui->openPqrFileButton, SIGNAL(clicked()), this, SLOT(openPqrFile()));
-  connect(m_ui->runApbsButton, SIGNAL(clicked()), this, SLOT(runApbs()));
   connect(m_ui->runPdb2PqrButton, SIGNAL(clicked()), this, SLOT(runPdb2Pqr()));
-  connect(m_ui->saveInputFileButton, SIGNAL(clicked()), this, SLOT(saveInputFile()));
 }
 
 ApbsDialog::~ApbsDialog()
 {
   delete m_ui;
-  delete m_inputGenerator;
 }
 
 void ApbsDialog::setMolecule(QtGui::Molecule *molecule)
@@ -64,7 +62,9 @@ void ApbsDialog::setMolecule(QtGui::Molecule *molecule)
     // clear values from previous runs
     m_ui->pdbFileLineEdit->clear();
     m_ui->pqrFileLineEdit->clear();
-    m_ui->textEdit->clear();
+
+    // set molecule for the input generator
+    m_ui->inputGenerator->setMolecule(molecule);
   }
 }
 
@@ -104,9 +104,8 @@ void ApbsDialog::openPqrFile()
   if (!fileName.isEmpty()) {
     m_ui->pqrFileLineEdit->setText(fileName);
     m_ui->loadFromPqrButton->setChecked(true);
+    m_ui->inputGenerator->setOption("Input File", fileName);
   }
-
-  updatePreviewTextImmediately();
 }
 
 void ApbsDialog::runApbs()
@@ -176,7 +175,7 @@ void ApbsDialog::runPdb2Pqr()
     QMessageBox::information(
       this, "Success", QString("Generated %1").arg(pqrFileName));
     m_generatedPqrFileName = pqrFileName;
-    updatePreviewTextImmediately();
+    m_ui->inputGenerator->setOption("Input File", m_generatedPqrFileName);
   }
   else {
     QMessageBox::critical(
@@ -200,41 +199,13 @@ void ApbsDialog::saveInputFile()
 
 void ApbsDialog::saveInputFile(const QString &fileName)
 {
-  QString contents = m_inputGenerator->fileContents("apbs.in");
+  QString contents =
+    m_ui->inputGenerator->inputGenerator().fileContents("apbs.in");
 
   QFile file(fileName);
   file.open(QFile::WriteOnly);
   file.write(contents.toAscii());
   file.close();
-}
-
-void ApbsDialog::updatePreviewTextImmediately()
-{
-    QString pqrFileName;
-    if (m_ui->generateFromPdbButton->isChecked())
-      pqrFileName = m_generatedPqrFileName;
-    else
-      pqrFileName = m_ui->pqrFileLineEdit->text();
-
-    QJsonObject inputOptions;
-    QJsonObject options;
-    options["mainFile"] = pqrFileName;
-    options["Input File"] = pqrFileName;
-    options["Calculation"] = QString("mg-auto");
-    inputOptions["options"] = options;
-    QJsonObject settings;
-    inputOptions["settings"] = settings;
-    bool success = m_inputGenerator->generateInput(inputOptions, *m_molecule);
-
-    if (!success) {
-      // FIXME: show in a dialog
-      std::cerr << "errors: " << std::endl;
-      foreach (const QString &error, m_inputGenerator->errorList()) {
-        std::cerr << "  " << error.toStdString() << std::endl;
-      }
-    }
-
-    m_ui->textEdit->setText(m_inputGenerator->fileContents("apbs.in"));
 }
 
 }
