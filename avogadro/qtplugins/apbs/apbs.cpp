@@ -15,8 +15,10 @@
 ******************************************************************************/
 
 #include "apbs.h"
+#include "apbsdialog.h"
 #include "opendxreader.h"
 
+#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/cube.h>
 #include <avogadro/qtgui/mesh.h>
 #include <avogadro/qtgui/molecule.h>
@@ -36,9 +38,17 @@ Apbs::Apbs(QObject *parent_)
     m_molecule(0)
 {
   QAction *action = new QAction(this);
+  action->setText(tr("Run APBS"));
+  connect(action, SIGNAL(triggered()), this, SLOT(onRunApbs()));
+  m_actions.append(action);
+
+  action = new QAction(this);
   action->setText(tr("Open Output File"));
   connect(action, SIGNAL(triggered()), this, SLOT(onOpenOutputFile()));
   m_actions.append(action);
+
+  m_dialog = new ApbsDialog;
+  m_dialog->hide();
 
   m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent_));
   m_progressDialog->hide();
@@ -46,6 +56,7 @@ Apbs::Apbs(QObject *parent_)
 
 Apbs::~Apbs()
 {
+  delete m_dialog;
   delete m_progressDialog;
 }
 
@@ -69,70 +80,13 @@ void Apbs::onOpenOutputFile()
   if (fileName.isEmpty())
     return;
 
-  m_progressDialog->show();
-  m_progressDialog->setMinimumDuration(0);
-  m_progressDialog->setRange(0, 0);
-  m_progressDialog->setLabelText(tr("Reading OpenDX File"));
-  qApp->processEvents();
-
-  OpenDxReader reader;
-  bool ok = reader.readFile(fileName);
-  if (!ok) {
-    QMessageBox::critical(qobject_cast<QWidget *>(parent()),
-                          tr("APBS Error"),
-                          tr("Error: %1").arg(reader.errorString()));
+  if (!m_molecule)
     return;
-  }
 
-  const QtGui::Cube *cube = reader.cube();
-  if (!cube) {
-    QMessageBox::critical(qobject_cast<QWidget *>(parent()),
-                          tr("APBS Error"),
-                          tr("Error: No Cube Found"));
-    return;
-  }
-
-  if (!m_molecule) {
-    QMessageBox::critical(qobject_cast<QWidget *>(parent()),
-                          tr("APBS Error"),
-                          tr("Error: No Molecule Found"));
-    return;
-  }
-
-  // generate positive potential mesh
-  m_progressDialog->setLabelText("Generating Positive Potential Mesh");
-  m_progressDialog->setRange(0, 100);
-  m_progressDialog->setValue(1);
-  qApp->processEvents();
-
-  QtGui::Mesh *positivePotentialMesh = m_molecule->addMesh();
-  QtGui::MeshGenerator *positiveMeshGenerator =
-    new QtGui::MeshGenerator(cube, positivePotentialMesh, 0.1f);
-  connect(positiveMeshGenerator, SIGNAL(finished()),
-          this, SLOT(cubeGeneratorFinished()));
-  connect(positiveMeshGenerator, SIGNAL(progressValueChanged(int)),
-          this, SLOT(onMeshGeneratorProgress(int)));
-  positiveMeshGenerator->run();
-
-  m_progressDialog->setLabelText("Generating Negative Potential Mesh");
-  m_progressDialog->setValue(1);
-  qApp->processEvents();
-
-  // generate negative potential mesh
-  QtGui::Mesh *negativePotentialMesh = m_molecule->addMesh();
-  QtGui::MeshGenerator *negativeMeshGenerator =
-    new QtGui::MeshGenerator(cube, negativePotentialMesh, -0.1f);
-  connect(negativeMeshGenerator, SIGNAL(finished()),
-          this, SLOT(cubeGeneratorFinished()));
-  connect(negativeMeshGenerator, SIGNAL(progressValueChanged(int)),
-          this, SLOT(onMeshGeneratorProgress(int)));
-  negativeMeshGenerator->run();
-
-  m_progressDialog->setValue(100);
-  m_progressDialog->hide();
+  loadOpenDxFile(fileName, *m_molecule);
 }
 
-void Apbs::cubeGeneratorFinished()
+void Apbs::meshGeneratorFinished()
 {
   QtGui::MeshGenerator *generator =
     qobject_cast<QtGui::MeshGenerator *>(sender());
@@ -151,6 +105,95 @@ void Apbs::onMeshGeneratorProgress(int value)
 {
   m_progressDialog->setValue(value);
   qApp->processEvents();
+}
+
+void Apbs::onRunApbs()
+{
+  m_dialog->setMolecule(m_molecule);
+  int code = m_dialog->exec();
+  m_dialog->hide();
+  if (code == QDialog::Accepted) {
+    m_pqrFileName = m_dialog->pqrFileName();
+    m_cubeFileName = m_dialog->cubeFileName();
+
+    emit moleculeReady(1);
+  }
+}
+
+bool Apbs::readMolecule(QtGui::Molecule &molecule)
+{
+  bool ok = Io::FileFormatManager::instance().readFile(molecule,
+    m_pqrFileName.toStdString());
+  if (!ok) {
+    QMessageBox::critical(qobject_cast<QWidget *>(parent()),
+     tr("IO Error"), tr("Error reading structure file (%1).").arg(
+       m_pqrFileName));
+    return false;
+  }
+
+  if (!m_cubeFileName.isEmpty()) {
+    // load the cube file and generate meshes
+    ok = loadOpenDxFile(m_cubeFileName, molecule);
+    if (!ok)
+      return false;
+  }
+
+  return true;
+}
+
+bool Apbs::loadOpenDxFile(const QString &fileName, QtGui::Molecule &molecule)
+{
+  OpenDxReader reader;
+  bool ok = reader.readFile(fileName);
+  if (!ok) {
+    QMessageBox::critical(qobject_cast<QWidget *>(parent()),
+      tr("OpenDX Error"),
+      tr("Error reading OpenDX file: %1").arg(reader.errorString()));
+  }
+  else {
+    const QtGui::Cube *cube = reader.cube();
+
+    if (!cube) {
+      QMessageBox::critical(qobject_cast<QWidget *>(parent()),
+        tr("OpenDX Error"),
+        tr("Error reading OpenDX file: No cube found"));
+    }
+    else {
+      // generate positive mesh
+      m_progressDialog->setLabelText("Generating Positive Potential Mesh");
+      m_progressDialog->setRange(0, 100);
+      m_progressDialog->setValue(1);
+      qApp->processEvents();
+
+      QtGui::Mesh *mesh = molecule.addMesh();
+      QtGui::MeshGenerator *meshGenerator =
+        new QtGui::MeshGenerator(cube, mesh, 0.1f);
+      connect(meshGenerator, SIGNAL(finished()),
+              this, SLOT(meshGeneratorFinished()));
+      connect(meshGenerator, SIGNAL(progressValueChanged(int)),
+              this, SLOT(onMeshGeneratorProgress(int)));
+      meshGenerator->run();
+
+      // generate negative mesh
+      m_progressDialog->setLabelText("Generating Negative Potential Mesh");
+      m_progressDialog->setRange(0, 100);
+      m_progressDialog->setValue(1);
+      qApp->processEvents();
+
+      mesh = molecule.addMesh();
+      meshGenerator = new QtGui::MeshGenerator(cube, mesh, -0.1f);
+      connect(meshGenerator, SIGNAL(finished()),
+              this, SLOT(meshGeneratorFinished()));
+      connect(meshGenerator, SIGNAL(progressValueChanged(int)),
+              this, SLOT(onMeshGeneratorProgress(int)));
+      meshGenerator->run();
+
+      m_progressDialog->setValue(100);
+      m_progressDialog->hide();
+    }
+  }
+
+  return true;
 }
 
 }
