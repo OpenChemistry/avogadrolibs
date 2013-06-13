@@ -369,12 +369,13 @@ QByteArray InputGenerator::execute(const QStringList &args,
 
   if (proc.exitStatus() != QProcess::NormalExit || proc.exitCode() != 0) {
     m_errors << tr("Error running script '%1 %2': Abnormal exit status %3 "
-                   "(%4: %5).")
+                   "(%4: %5)\n\n%6.")
                 .arg(m_scriptFilePath)
                 .arg(realArgs.join(" "))
                 .arg(proc.exitCode())
                 .arg(processErrorString(proc))
-                .arg(proc.errorString());
+                .arg(proc.errorString())
+                .arg(QString(proc.readAll()));
     return QByteArray();
   }
 

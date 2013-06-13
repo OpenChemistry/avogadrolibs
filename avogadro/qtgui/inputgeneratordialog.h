@@ -31,6 +31,13 @@ namespace Ui {
 class InputGeneratorDialog;
 }
 
+/**
+ * @class InputGeneratorDialog inputgeneratordialog.h
+ * <avogadro/qtgui/inputgeneratordialog.h>
+ * @brief The InputGeneratorDialog class provides a thin wrapper around
+ * InputGeneratorWidget for standalone use.
+ * @sa InputGenerator InputGeneratorWidget
+ */
 class AVOGADROQTGUI_EXPORT InputGeneratorDialog : public QDialog
 {
   Q_OBJECT
