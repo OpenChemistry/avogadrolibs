@@ -46,6 +46,10 @@ def getOptions():
   userOptions['Theory']['values'] = \
     ['HF', 'BLYP', 'B3LYP', 'B3LYP1', 'B3LYP5', 'PBE', 'REVPBE']
 
+  userOptions['Filename Base'] = {}
+  userOptions['Filename Base']['type'] = 'string'
+  userOptions['Filename Base']['default'] = 'job'
+
   userOptions['Unrestricted'] = {}
   userOptions['Unrestricted']['type'] = 'boolean'
   userOptions['Unrestricted']['default'] = False
@@ -77,11 +81,10 @@ def getOptions():
   # TODO Coordinate format (can do pdb, not sure it's necessary though)
 
   opts = {'userOptions' : userOptions}
-  opts['allowCustomBaseName'] = True
 
   return opts
 
-def generateInputFile(opts, settings):
+def generateInputFile(opts):
   # Extract options:
   title = opts['Title']
   calculate = opts['Calculation Type']
@@ -91,6 +94,7 @@ def generateInputFile(opts, settings):
   dispersion = opts['Dispersion']
   charge = opts['Charge']
   multiplicity = opts['Multiplicity']
+  baseName = opts['Filename Base']
 
   # Convert to code-specific strings
   basisStr = ''
@@ -138,7 +142,7 @@ def generateInputFile(opts, settings):
   output += '%-15s%s\n'%('charge', charge)
   output += '%-15s%s\n\n'%('spinmult', multiplicity)
 
-  output += '%-15s%s\n\n'%('coordinates', 'job.xyz')
+  output += '%-15s%s\n\n'%('coordinates', '%s.xyz'%baseName)
 
   output += 'end\n'
 
@@ -155,10 +159,10 @@ def generateInput():
   opts = json.loads(stdinStr)
 
   # Generate the input file
-  inp = generateInputFile(opts['options'], opts['settings'])
+  inp = generateInputFile(opts['options'])
 
   # Basename for input files:
-  baseName = opts['settings']['baseName']
+  baseName = opts['options']['Filename Base']
 
   # Prepare the result
   result = {}
@@ -166,7 +170,7 @@ def generateInput():
   # listed in the array:
   files = []
   files.append({'filename': '%s.%s'%(baseName, extension), 'contents': inp[0]})
-  files.append({'filename': 'job.xyz', 'contents': inp[1]})
+  files.append({'filename': '%s.xyz'%baseName, 'contents': inp[1]})
   if debug:
     files.append({'filename': 'debug_info', 'contents': stdinStr})
   result['files'] = files

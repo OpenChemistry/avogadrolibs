@@ -90,8 +90,7 @@ class GenericHighlighter;
     },
     ...
   ],
-  "inputMoleculeFormat": "cjson",
-  "allowCustomBaseName" : true
+  "inputMoleculeFormat": "cjson"
 }
 ~~~
  * The `userOptions` block contains a JSON object keyed with option names
@@ -193,8 +192,20 @@ class GenericHighlighter;
  * Some parameters are common to most calculation codes.
  * If the following parameter names are found, they will be handled specially
  * while creating the GUI.
+ * It is recommended to use the names below for these options to provide a
+ * consistent interface and ensure that MoleQueue job staging uses correct
+ * values where appropriate.
  *
- * @todo Document expected option names/value that are handled specially.
+ * | Option name        | type       | description                                                         |
+ * | :----------------: | :--------: | :------------------------------------------------------------------ |
+ * | "Title"            | string     | Input file title comment, MoleQueue job description.                |
+ * | "Filename Base"    | string     | Input file base name, e.g. "job" in "job.inp".                      |
+ * | "Processor Cores"  | integer    | Number of cores to use. Will be passed to MoleQueue.                |
+ * | "Calculation Type" | stringList | Type of calculation, e.g. "Single Point" or "Equilibrium Geometry". |
+ * | "Theory"           | stringList | Levels of QM theory, e.g. "RHF", "B3LYP", "MP2", "CCSD", etc.       |
+ * | "Basis"            | stringList | Available basis sets, e.g. "STO-3G", "6-31G**", etc.                |
+ * | "Charge"           | integer    | Charge on the system.                                               |
+ * | "Multiplicity"     | integer    | Spin multiplicity of the system.                                    |
  *
  * Syntax Highlighting
  * -------------------
@@ -307,17 +318,6 @@ class GenericHighlighter;
  * @note Currently valid options for inputMoleculeFormat are "cjson" for
  * Chemical JSON or "cml" for Chemical Markup Language.
  *
- * Specifying Filenames
- * --------------------
- *
- * The `allowCustomBaseName` option toggles whether the user may specify a
- * custom base name for input files. If the simulation code expects specific
- * filenames, set this to false and hardcode the filenames the code expects.
- * If the simulation allows input files to have custom names, set this to true
- * and use the base name provided to generate the input filenames (See the
- * `--generate-input` `baseName` documentation below). If this option is not
- * specified, it is assumed to be false.
- *
  * Handling User Selections: `--generate-input`
  * ============================================
  *
@@ -331,10 +331,6 @@ class GenericHighlighter;
     "First option name": "Value 2",
     "Second option name": "Value 1",
     ...
-  },
-  "settings": {
-    "baseName": "job",
-    "numberOfCores": 4
   }
 }
 ~~~
@@ -347,12 +343,6 @@ class GenericHighlighter;
  * The `options` block contains key/value
  * pairs for each of the options specified in the `userOptions` block of the
  * `--print-options` output.
- * The `settings` block contains a fixed set of parameters that are always
- * available provided:
- * - `baseName`: The basename for input files (See the `allowCustomBaseName`
- *   documentation above). This defaults to "job" if `allowCustomBaseName` is
- *   `false`.
- * - `numberOfCores`: The number of processor cores requested.
  *
  * If the script is called with `--generate-input`, it must write a JSON
  * string to standard output with the following format:

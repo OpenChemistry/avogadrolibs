@@ -51,6 +51,10 @@ def getOptions():
   userOptions['Basis']['values'] = \
     ['STO-3G', '3-21G', '6-31G', '6-31G(d)', 'cc-pVDZ', 'cc-pVTZ']
 
+  userOptions['Filename Base'] = {}
+  userOptions['Filename Base']['type'] = 'string'
+  userOptions['Filename Base']['default'] = 'job'
+
   userOptions['Charge'] = {}
   userOptions['Charge']['type'] = "integer"
   userOptions['Charge']['default'] = 0
@@ -70,11 +74,10 @@ def getOptions():
   userOptions['Direct SCF Mode']['default'] = False
 
   opts = {'userOptions' : userOptions}
-  opts['allowCustomBaseName'] = True
 
   return opts
 
-def generateInputFile(opts, settings):
+def generateInputFile(opts):
   # Extract options:
   title = opts['Title']
   calculate = opts['Calculation Type']
@@ -159,10 +162,10 @@ def generateInput():
   opts = json.loads(stdinStr)
 
   # Generate the input file
-  inp = generateInputFile(opts['options'], opts['settings'])
+  inp = generateInputFile(opts['options'])
 
   # Basename for input files:
-  baseName = opts['settings']['baseName']
+  baseName = opts['options']['Filename Base']
 
   # Prepare the result
   result = {}

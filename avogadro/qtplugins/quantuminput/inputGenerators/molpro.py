@@ -52,6 +52,10 @@ def getOptions():
     ['STO-3G', '3-21G', '6-31G', '6-31G(d)', '6-31G(d,p)', '6-31+G(d)', \
      '6-311G(d)', 'cc-pVDZ', 'cc-pVTZ', 'AUG-cc-pVDZ', 'AUG-cc-pVTZ']
 
+  userOptions['Filename Base'] = {}
+  userOptions['Filename Base']['type'] = 'string'
+  userOptions['Filename Base']['default'] = 'job'
+
   userOptions['Charge'] = {}
   userOptions['Charge']['type'] = 'integer'
   userOptions['Charge']['default'] = 0
@@ -72,11 +76,10 @@ def getOptions():
 
   opts = {'userOptions' : userOptions}
   opts['inputMoleculeFormat'] = 'cjson'
-  opts['allowCustomBaseName'] = True
 
   return opts
 
-def generateInputFile(cjson, opts, settings):
+def generateInputFile(cjson, opts):
   # Extract options:
   title = opts['Title']
   calculate = opts['Calculation Type']
@@ -174,10 +177,10 @@ def generateInput():
   opts = json.loads(stdinStr)
 
   # Generate the input file
-  inp = generateInputFile(opts['cjson'], opts['options'], opts['settings'])
+  inp = generateInputFile(opts['cjson'], opts['options'])
 
   # Basename for input files:
-  baseName = opts['settings']['baseName']
+  baseName = opts['options']['Filename Base']
 
   # Prepare the result
   result = {}

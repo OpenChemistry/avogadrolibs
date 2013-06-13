@@ -37,6 +37,8 @@ InputGeneratorDialog::InputGeneratorDialog(const QString &scriptFileName,
 {
   ui->setupUi(this);
   ui->widget->setInputGeneratorScript(scriptFileName);
+  setWindowTitle(tr("%1 Input Generator")
+                 .arg(ui->widget->inputGenerator().displayName()));
   connect(ui->widget, SIGNAL(closeClicked()), SLOT(close()));
 }
 
