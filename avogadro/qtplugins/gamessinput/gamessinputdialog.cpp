@@ -23,7 +23,7 @@
 #include <avogadro/qtgui/molecule.h>
 
 #include <molequeue/client/client.h>
-#include <molequeue/client/job.h>
+#include <molequeue/client/jobobject.h>
 
 #include <qjsonarray.h>
 #include <qjsonobject.h>
