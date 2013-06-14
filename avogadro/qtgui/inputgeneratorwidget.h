@@ -222,6 +222,7 @@ private:
   QWidget* createOptionWidget(const QJsonValue &option);
   QWidget* createStringListWidget(const QJsonObject &obj);
   QWidget* createStringWidget(const QJsonObject &obj);
+  QWidget* createFilePathWidget(const QJsonObject &obj);
   QWidget* createIntegerWidget(const QJsonObject &obj);
   QWidget* createBooleanWidget(const QJsonObject &obj);
   /**@}*/
@@ -234,6 +235,7 @@ private:
   void setOption(const QString &name, const QJsonValue &defaultValue);
   void setStringListOption(const QString &name, const QJsonValue &value);
   void setStringOption(const QString &name, const QJsonValue &value);
+  void setFilePathOption(const QString &name, const QJsonValue &value);
   void setIntegerOption(const QString &name, const QJsonValue &value);
   void setBooleanOption(const QString &name, const QJsonValue &value);
   /**@}*/

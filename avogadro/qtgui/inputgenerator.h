@@ -140,6 +140,24 @@ class GenericHighlighter;
  * This will add a QLineEdit to the GUI, initialized with the text specified by
  * `default`.
  *
+ * Existing files
+ * --------------
+ *
+ * An input generator can ask for the absolute path to an existing file using
+ * the following option block:
+~~~{.js}
+{
+  "userOptions": {
+    "Parameter Name": {
+      "type": "filePath",
+      "default": "/path/to/some/file"
+    }
+  }
+}
+~~~
+ * This will add an Avogadro::QtGui::FileBrowseWidget to the GUI, initialized to
+ * the file pointed to by default.
+ *
  * Clamped Integer Values
  * ----------------------
  *
