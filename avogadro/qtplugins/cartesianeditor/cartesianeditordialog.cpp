@@ -19,6 +19,7 @@
 #include "cartesiantextedit.h"
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/coordinateblockgenerator.h>
@@ -171,9 +172,9 @@ CartesianEditorDialog::CartesianEditorDialog(QWidget *parent_) :
   connect(m_ui->clear,  SIGNAL(clicked()), SLOT(clearClicked()));
   connect(m_ui->apply,  SIGNAL(clicked()), SLOT(applyClicked()));
 
-  m_ui->cut->setIcon(standardIcon("edit-cut"));
-  m_ui->copy->setIcon(standardIcon("edit-copy"));
-  m_ui->paste->setIcon(standardIcon("edit-paste"));
+  m_ui->cut->setIcon(QtGui::standardIcon("edit-cut"));
+  m_ui->copy->setIcon(QtGui::standardIcon("edit-copy"));
+  m_ui->paste->setIcon(QtGui::standardIcon("edit-paste"));
 
   buildPresets();
   listenForTextEditChanges(true);
@@ -541,12 +542,6 @@ void CartesianEditorDialog::textModified(bool modified)
 {
   m_ui->apply->setEnabled(modified);
   m_ui->revert->setEnabled(modified);
-}
-
-QIcon CartesianEditorDialog::standardIcon(const QString &name)
-{
-  return QIcon::fromTheme(name,
-                          QIcon(QString(":/icons/fallback/%1.png").arg(name)));
 }
 
 void CartesianEditorDialog::buildPresets()
