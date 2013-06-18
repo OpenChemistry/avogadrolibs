@@ -44,3 +44,7 @@ add_subdirectory(core)
 add_subdirectory(io)
 add_subdirectory(rendering)
 add_subdirectory(qtopengl)
+
+if(USE_PROTOCALL)
+  add_subdirectory(protocall)
+endif()
