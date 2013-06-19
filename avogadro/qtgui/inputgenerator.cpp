@@ -187,10 +187,31 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
         foreach (const QJsonValue &file, obj["files"].toArray()) {
           if (file.isObject()) {
             QJsonObject fileObj = file.toObject();
-            if (fileObj["filename"].isString() &&
-                fileObj["contents"].isString()) {
+            if (fileObj["filename"].isString()) {
               QString fileName = fileObj["filename"].toString();
-              QString contents = fileObj["contents"].toString();
+              QString contents;
+              if (fileObj["contents"].isString()) {
+                contents = fileObj["contents"].toString();
+              }
+              else if (fileObj["filePath"].isString()) {
+                QFile refFile(fileObj["filePath"].toString());
+                if (refFile.exists() && refFile.open(QFile::ReadOnly)) {
+                  contents = QString(refFile.readAll());
+                }
+                else {
+                  contents = tr("Reference file '%1' does not exist.")
+                      .arg(refFile.fileName());
+                  m_warnings << tr("Error populating file %1: %2")
+                                .arg(fileName, contents);
+                }
+              }
+              else {
+                m_errors << tr("File '%1' poorly formed. Missing string "
+                               "'contents' or 'filePath' members.")
+                            .arg(fileName);
+                contents = m_errors.back();
+                result = false;
+              }
               replaceKeywords(contents, mol);
               m_filenames << fileName;
               m_files.insert(fileObj["filename"].toString(), contents);
