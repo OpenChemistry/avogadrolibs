@@ -171,10 +171,21 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
   inputOptions["settings"] = collectSettings();
   bool success = m_inputGenerator.generateInput(inputOptions, *m_molecule);
 
-  if (!m_inputGenerator.warningList().isEmpty())
-    setWarning(m_inputGenerator.warningList().join("\n"));
-  else
+  if (!m_inputGenerator.warningList().isEmpty()) {
+    QString warningHtml;
+    warningHtml += "<style>li{color:red;}h3{font-weight:bold;}</style>";
+    warningHtml += "<h3>" + tr("Problems occured during input generation:")
+        + "</h3>";
+    warningHtml += "<ul>";
+    foreach (const QString &warning, m_inputGenerator.warningList())
+      warningHtml += QString ("<li>%1</li>").arg(warning);
+    warningHtml += "</ul>";
+
+    setWarning(warningHtml);
+  }
+  else {
     resetWarningDisplay();
+  }
 
   if (!success) {
     showError(m_inputGenerator.errorList().join("\n\n"));
