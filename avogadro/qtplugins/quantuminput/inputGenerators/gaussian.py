@@ -51,6 +51,15 @@ def getOptions():
   userOptions['Basis']['values'] = \
     ['STO-3G', '3-21 G', '6-31 G(d)', '6-31 G(d,p)', 'LANL2DZ']
 
+  userOptions['Filename Base'] = {}
+  userOptions['Filename Base']['type'] = 'string'
+  userOptions['Filename Base']['default'] = 'job'
+
+  userOptions['Processor Cores'] = {}
+  userOptions['Processor Cores']['type'] = 'integer'
+  userOptions['Processor Cores']['default'] = 1
+  userOptions['Processor Cores']['minimum'] = 1
+
   userOptions['Multiplicity'] = {}
   userOptions['Multiplicity']['type'] = "integer"
   userOptions['Multiplicity']['default'] = 1
@@ -75,11 +84,10 @@ def getOptions():
   # TODO Coordinate format (need zmatrix)
 
   opts = {'userOptions' : userOptions}
-  opts['allowCustomBaseName'] = True
 
   return opts
 
-def generateInputFile(opts, settings):
+def generateInputFile(opts):
   # Extract options:
   title = opts['Title']
   calculate = opts['Calculation Type']
@@ -89,7 +97,7 @@ def generateInputFile(opts, settings):
   charge = opts['Charge']
   outputFormat = opts['Output Format']
   checkpoint = opts['Write Checkpoint File']
-  nCores = int(settings['numberOfCores'])
+  nCores = int(opts['Processor Cores'])
 
   output = ''
 
@@ -152,10 +160,10 @@ def generateInput():
   opts = json.loads(stdinStr)
 
   # Generate the input file
-  inp = generateInputFile(opts['options'], opts['settings'])
+  inp = generateInputFile(opts['options'])
 
   # Basename for input files:
-  baseName = opts['settings']['baseName']
+  baseName = opts['options']['Filename Base']
 
   # Prepare the result
   result = {}
