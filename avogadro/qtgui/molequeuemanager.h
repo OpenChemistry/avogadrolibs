@@ -25,7 +25,7 @@
 #include <avogadro/core/avogadrocore.h>
 
 #include <molequeue/client/client.h>
-#include <molequeue/client/job.h>
+#include <molequeue/client/jobobject.h>
 
 #include <QtCore/QStringList>
 #include <QtCore/QModelIndex>

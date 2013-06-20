@@ -24,7 +24,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-#include <molequeue/client/job.h>
+#include <molequeue/client/jobobject.h>
 
 namespace Avogadro {
 namespace QtGui {
