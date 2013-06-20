@@ -30,10 +30,6 @@ class QJsonValue;
 class QTextEdit;
 class QWidget;
 
-namespace MoleQueue {
-class Client;
-}
-
 namespace Avogadro {
 namespace QtGui {
 class Molecule;
@@ -105,18 +101,6 @@ private slots:
   void updatePreviewTextImmediately();
 
   /**
-   * Query the MoleQueue server (if available) for the list of available queues
-   * and programs.
-   */
-  void refreshPrograms();
-
-  /**
-   * Triggered when MoleQueue replies to the request from refreshPrograms().
-   * Parse the response from MoleQueue and update the GUI.
-   */
-  void queueListReceived(const QJsonObject &queueList);
-
-  /**
    * Triggered when the user resets the default values.
    */
   void defaultsClicked();
@@ -186,11 +170,6 @@ private:
   QString settingsKey(const QString &identifier) const;
 
   /**
-   * Enable/disable the GUI for specifying the input file base name.
-   */
-  void enableBaseNameGui(bool enable = true);
-
-  /**
    * Write the input file(s) to disk. Prompts user for target location.
    * @{
    */
@@ -200,11 +179,8 @@ private:
 
   /**
    * Make signal/slot connections.
-   * @{
    */
   void connectButtons();
-  void connectMoleQueue();
-  /**@}*/
 
   /**
    * Given the name of a user-option in m_options, return the type string.
@@ -255,12 +231,6 @@ private:
   QJsonObject collectOptions() const;
 
   /**
-   * Collect all settings (options that are not dynamically generated from the
-   * input generator script) into a JSON object.
-   */
-  QJsonObject collectSettings() const;
-
-  /**
    * Apply the options in the passed QJsonObject to the GUI. Any widgets changed
    * by this method will have their signals blocked while modifying their
    * values.
@@ -274,7 +244,6 @@ private:
 
   Ui::InputGeneratorWidget *m_ui;
   QtGui::Molecule *m_molecule;
-  MoleQueue::Client *m_client;
   QJsonObject m_options;
   QJsonObject m_optionCache; // For reverting changes
   bool m_updatePending;

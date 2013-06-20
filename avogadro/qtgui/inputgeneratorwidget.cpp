@@ -19,9 +19,8 @@
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/generichighlighter.h>
-
-#include <molequeue/client/client.h>
-#include <molequeue/client/job.h>
+#include <avogadro/qtgui/molequeuedialog.h>
+#include <avogadro/qtgui/molequeuemanager.h>
 
 #include <qjsonarray.h>
 #include <qjsondocument.h>
@@ -34,6 +33,7 @@
 #include <QtGui/QFormLayout>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QIcon>
+#include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QMessageBox>
 #include <QtGui/QProgressDialog>
@@ -59,7 +59,6 @@ InputGeneratorWidget::InputGeneratorWidget(QWidget *parent_) :
   QWidget(parent_),
   m_ui(new Ui::InputGeneratorWidget),
   m_molecule(NULL),
-  m_client(new MoleQueue::Client(this)),
   m_updatePending(false),
   m_inputGenerator(QString())
 {
@@ -67,11 +66,6 @@ InputGeneratorWidget::InputGeneratorWidget(QWidget *parent_) :
   m_ui->warningTextButton->setIcon(QIcon::fromTheme("dialog-warning"));
 
   connectButtons();
-  connectMoleQueue();
-
-  m_client->connectToServer();
-  if (m_client->isConnected())
-    m_client->requestQueueList();
 }
 
 InputGeneratorWidget::~InputGeneratorWidget()
@@ -167,7 +161,6 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
   // Generate the input files
   QJsonObject inputOptions;
   inputOptions["options"] = collectOptions();
-  inputOptions["settings"] = collectSettings();
   bool success = m_inputGenerator.generateInput(inputOptions, *m_molecule);
 
   if (!m_inputGenerator.warningList().isEmpty())
@@ -239,42 +232,6 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
     m_ui->tabWidget->setCurrentWidget(currentWidget);
 }
 
-void InputGeneratorWidget::refreshPrograms()
-{
-  if (!m_client->isConnected()) {
-    m_client->connectToServer();
-    if (!m_client->isConnected()) {
-      QMessageBox::information(this, tr("Cannot connect to MoleQueue"),
-                               tr("Cannot connect to MoleQueue server. Please "
-                                  "ensure that it is running and try again."));
-      return;
-    }
-  }
-  m_client->requestQueueList();
-}
-
-void InputGeneratorWidget::queueListReceived(const QJsonObject &queueList)
-{
-  m_ui->programCombo->clear();
-  int firstMatch = -1;
-  foreach (const QString &queue, queueList.keys())
-    {
-    foreach (const QJsonValue &program, queueList.value(queue).toArray())
-    {
-      if (program.isString()) {
-        if (firstMatch < 0 &&
-            program.toString().contains(m_inputGenerator.displayName(),
-                                        Qt::CaseInsensitive)) {
-          firstMatch = m_ui->programCombo->count();
-        }
-        m_ui->programCombo->addItem(QString("%1 (%2)").arg(program.toString(),
-                                                          queue));
-      }
-    }
-  }
-  m_ui->programCombo->setCurrentIndex(firstMatch);
-}
-
 void InputGeneratorWidget::defaultsClicked()
 {
   setOptionDefaults();
@@ -293,56 +250,44 @@ void InputGeneratorWidget::generateClicked()
 
 void InputGeneratorWidget::computeClicked()
 {
-  if (!m_client->isConnected()) {
-    m_client->connectToServer();
-    if (!m_client->isConnected()) {
-      QMessageBox::information(this, tr("Cannot connect to MoleQueue"),
-                               tr("Cannot connect to MoleQueue server. Please "
-                                  "ensure that it is running and try again."));
-      return;
-    }
-  }
-
-  QString programText = m_ui->programCombo->currentText();
-  if (programText.isEmpty()) {
-    QMessageBox::information(this, tr("No program set."),
-                             tr("Cannot determine which MoleQueue program "
-                                "configuration to use. Has MoleQueue been "
-                                "configured?"));
+  // Verify that molequeue is running:
+  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  if (!mqManager.connectIfNeeded()) {
+    QMessageBox::information(this, tr("Cannot connect to MoleQueue"),
+                             tr("Cannot connect to MoleQueue server. Please "
+                                "ensure that it is running and try again."));
     return;
   }
 
-  QRegExp parser("^(.+) \\((.+)\\)$");
-  int parseResult = parser.indexIn(programText);
-
-  // Should not happen...
-  if (parseResult == -1)
-    return;
-
-  const QString program = parser.cap(1);
-  const QString queue = parser.cap(2);
+  // Collect info for the MoleQueueDialog:
   const QString mainFileName = m_inputGenerator.mainFileName();
 
   QString description;
-  optionString("Title", description);
-  if (description.isEmpty())
+  if (!optionString("Title", description) || description.isEmpty())
     description = generateJobTitle();
 
+  QString coresString;
+  int numCores = optionString("Processor Cores", coresString)
+      ? coresString.toInt() : 1;
+
   MoleQueue::JobObject job;
-  job.setQueue(queue);
-  job.setProgram(program);
+  job.setProgram(m_inputGenerator.displayName());
   job.setDescription(description);
-  job.setValue("numberOfCores", m_ui->coresSpinBox->value());
+  job.setValue("numberOfCores", numCores);
   for (QMap<QString, QTextEdit*>::const_iterator it = m_textEdits.constBegin(),
        itEnd = m_textEdits.constEnd(); it != itEnd; ++it) {
-    QString filename = it.key();
-    if (filename != mainFileName)
-      job.appendAdditionalInputFile(filename, it.value()->toPlainText());
+    QString fileName = it.key();
+    if (fileName != mainFileName)
+      job.appendAdditionalInputFile(fileName, it.value()->toPlainText());
     else
-      job.setInputFile(filename, it.value()->toPlainText());
+      job.setInputFile(fileName, it.value()->toPlainText());
   }
 
-  m_client->submitJob(job);
+  MoleQueueDialog::submitJob(this,
+                             tr("Submit %1 Calculation")
+                             .arg(m_inputGenerator.displayName()),
+                             job, MoleQueueDialog::WaitForSubmissionResponse
+                             | MoleQueueDialog::SelectProgramFromTemplate);
 }
 
 void InputGeneratorWidget::setWarning(const QString &warn)
@@ -431,12 +376,6 @@ QString InputGeneratorWidget::settingsKey(const QString &identifier) const
 {
   return QString("quantumInput/%1/%2").arg(m_inputGenerator.displayName(),
                                            identifier);
-}
-
-void InputGeneratorWidget::enableBaseNameGui(bool enable)
-{
-  m_ui->baseNameEdit->setVisible(enable);
-  m_ui->baseNameLabel->setVisible(enable);
 }
 
 void InputGeneratorWidget::saveSingleFile(const QString &fileName)
@@ -610,20 +549,8 @@ void InputGeneratorWidget::connectButtons()
   connect(m_ui->generateButton, SIGNAL(clicked()), SLOT(generateClicked()));
   connect(m_ui->computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
   connect(m_ui->closeButton, SIGNAL(clicked()), SIGNAL(closeClicked()));
-  connect(m_ui->refreshProgramsButton, SIGNAL(clicked()),
-          SLOT(refreshPrograms()));
-  connect(m_ui->coresSpinBox, SIGNAL(valueChanged(int)),
-          SLOT(updatePreviewText()));
   connect(m_ui->warningTextButton, SIGNAL(clicked()),
           SLOT(toggleWarningText()));
-  connect(m_ui->baseNameEdit, SIGNAL(textChanged(QString)),
-          SLOT(updatePreviewText()));
-}
-
-void InputGeneratorWidget::connectMoleQueue()
-{
-  connect(m_client, SIGNAL(queueListReceived(QJsonObject)),
-          this, SLOT(queueListReceived(QJsonObject)));
 }
 
 QString InputGeneratorWidget::lookupOptionType(const QString &name) const
@@ -666,10 +593,6 @@ void InputGeneratorWidget::updateOptions()
     m_inputGenerator.clearErrors();
   }
 
-  enableBaseNameGui(m_options.contains("allowCustomBaseName")
-                    ? m_options.value("allowCustomBaseName").toBool(false)
-                    : false);
-
   // Create the widgets, etc for the gui
   buildOptionGui();
   setOptionDefaults();
@@ -695,6 +618,14 @@ void InputGeneratorWidget::buildOptionGui()
   // Title first
   if (userOptions.contains("Title"))
     addOptionRow(tr("Title"), userOptions.take("Title"));
+
+  // File basename next:
+  if (userOptions.contains("Filename Base"))
+    addOptionRow(tr("Filename Base"), userOptions.take("Filename Base"));
+
+  // Number of cores next:
+  if (userOptions.contains("Processor Cores"))
+    addOptionRow(tr("Processor Cores"), userOptions.take("Processor Cores"));
 
   // Calculation Type next:
   if (userOptions.contains("Calculation Type"))
@@ -1069,20 +1000,6 @@ QJsonObject InputGeneratorWidget::collectOptions() const
                     .arg(label);
     }
   }
-
-  return ret;
-}
-
-QJsonObject InputGeneratorWidget::collectSettings() const
-{
-  QJsonObject ret;
-
-  QString baseName = m_ui->baseNameEdit->text();
-  if (baseName.isEmpty())
-    baseName = m_ui->baseNameEdit->placeholderText();
-
-  ret.insert("baseName", baseName);
-  ret.insert("numberOfCores", m_ui->coresSpinBox->value());
 
   return ret;
 }

@@ -20,10 +20,10 @@
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
-#include <avogadro/qtgui/molecule.h>
 
-#include <molequeue/client/client.h>
-#include <molequeue/client/job.h>
+#include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/molequeuedialog.h>
+#include <avogadro/qtgui/molequeuemanager.h>
 
 #include <qjsonarray.h>
 #include <qjsonobject.h>
@@ -37,6 +37,9 @@
 #include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
+
+using Avogadro::QtGui::MoleQueueDialog;
+using Avogadro::QtGui::MoleQueueManager;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -104,8 +107,7 @@ GamessInputDialog::GamessInputDialog(QWidget *parent_, Qt::WindowFlags f)
   : QDialog( parent_, f ),
     m_molecule(NULL),
     m_highlighter(NULL),
-    m_updatePending(false),
-    m_client(new MoleQueue::Client(this))
+    m_updatePending(false)
 {
   ui.setupUi(this);
   m_highlighter = new GamessHighlighter(ui.previewText->document());
@@ -115,15 +117,10 @@ GamessInputDialog::GamessInputDialog(QWidget *parent_, Qt::WindowFlags f)
   connectBasic();
   connectPreview();
   connectButtons();
-  connectMoleQueue();
 
   setBasicDefaults();
 
   updatePreviewText();
-
-  m_client->connectToServer();
-  if (m_client->isConnected())
-    m_client->requestQueueList();
 }
 
 GamessInputDialog::~GamessInputDialog()
@@ -192,14 +189,6 @@ void GamessInputDialog::connectButtons()
   connect( ui.generateButton, SIGNAL(clicked()), SLOT(generateClicked()));
   connect( ui.computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
   connect( ui.closeButton, SIGNAL(clicked()), SLOT(close()));
-  connect( ui.refreshProgramsButton, SIGNAL(clicked()),
-           SLOT(refreshPrograms()));
-}
-
-void GamessInputDialog::connectMoleQueue()
-{
-  connect(m_client, SIGNAL(queueListReceived(QJsonObject)),
-          this, SLOT(queueListReceived(QJsonObject)));
 }
 
 void GamessInputDialog::buildOptions()
@@ -651,40 +640,6 @@ void GamessInputDialog::updatePreviewText()
   updateOptionCache();
 }
 
-void GamessInputDialog::refreshPrograms()
-{
-  if (!m_client->isConnected()) {
-    m_client->connectToServer();
-    if (!m_client->isConnected()) {
-      QMessageBox::information(this, tr("Cannot connect to MoleQueue"),
-                               tr("Cannot connect to MoleQueue server. Please "
-                                  "ensure that it is running and try again."));
-      return;
-    }
-  }
-  m_client->requestQueueList();
-}
-
-void GamessInputDialog::queueListReceived(const QJsonObject &queueList)
-{
-  ui.programCombo->clear();
-  int firstGamess = -1;
-  foreach (const QString &queue, queueList.keys())
-    {
-    foreach (const QJsonValue &program, queueList.value(queue).toArray())
-    {
-      if (program.isString()) {
-        if (firstGamess < 0 && program.toString().contains("GAMESS"))
-          firstGamess = ui.programCombo->count();
-        ui.programCombo->addItem(QString("%1 (%2)").arg(program.toString(),
-                                                        queue));
-
-      }
-    }
-  }
-  ui.programCombo->setCurrentIndex(firstGamess);
-}
-
 void GamessInputDialog::resetClicked()
 {
   setBasicDefaults();
@@ -734,51 +689,32 @@ void GamessInputDialog::generateClicked()
 
 void GamessInputDialog::computeClicked()
 {
-  if (!m_client->isConnected()) {
-    m_client->connectToServer();
-    if (!m_client->isConnected()) {
-      QMessageBox::information(this, tr("Cannot connect to MoleQueue"),
-                               tr("Cannot connect to MoleQueue server. Please "
-                                  "ensure that it is running and try again."));
-      return;
-    }
-  }
-
-  QString programText = ui.programCombo->currentText();
-  if (programText.isEmpty()) {
-    QMessageBox::information(this, tr("No program set."),
-                             tr("Cannot determine which MoleQueue program "
-                                "configuration to use. Has MoleQueue been "
-                                "configured?"));
+  // Verify that molequeue is running:
+  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  if (!mqManager.connectIfNeeded()) {
+    QMessageBox::information(this, tr("Cannot connect to MoleQueue"),
+                             tr("Cannot connect to MoleQueue server. Please "
+                                "ensure that it is running and try again."));
     return;
   }
-
-  QRegExp parser("^(.+) \\((.+)\\)$");
-  int parseResult = parser.indexIn(programText);
-
-  // Should not happen...
-  if (parseResult == -1)
-    return;
-
-  const QString program = parser.cap(1);
-  const QString queue = parser.cap(2);
 
   QString description(ui.titleEdit->text());
   if (description.isEmpty())
     description = generateJobTitle();
 
-  QString fileName = ui.baseNameEdit->text().isEmpty()
+  QString fileNameBase = ui.baseNameEdit->text().isEmpty()
       ? ui.baseNameEdit->placeholderText() : ui.baseNameEdit->text();
 
   MoleQueue::JobObject job;
-  job.setQueue(queue);
-  job.setProgram(program);
+  job.setProgram("GAMESS");
   job.setDescription(description);
-  job.setValue("numberOfCores", ui.coresSpinBox->value());
-  job.setInputFile(QString("%1.inp").arg(fileName),
+  job.setInputFile(QString("%1.inp").arg(fileNameBase),
                    ui.previewText->toPlainText());
 
-  m_client->submitJob(job);
+  MoleQueueDialog::submitJob(this,
+                             tr("Submit GAMESS Calculation"),
+                             job, MoleQueueDialog::WaitForSubmissionResponse
+                             | MoleQueueDialog::SelectProgramFromTemplate);
 }
 
 void GamessInputDialog::updateTitlePlaceholder()
