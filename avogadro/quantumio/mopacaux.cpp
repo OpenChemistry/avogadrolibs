@@ -18,6 +18,7 @@
 #include "mopacaux.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/io/utilities.h>
 
 #include <iostream>

@@ -23,7 +23,6 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/core/matrix.h>
 
-#include <Eigen/Dense>
 #include <vector>
 
 namespace Avogadro {
@@ -60,7 +59,7 @@ public:
   /**
    * Destructor.
    */
-  ~SlaterSet();
+  ~SlaterSet() AVO_OVERRIDE;
 
   /**
    * Enumeration of the Slater orbital types.
@@ -113,13 +112,13 @@ public:
   /**
    * @return The number of molecular orbitals in the BasisSet.
    */
-  unsigned int molecularOrbitalCount(ElectronType type = doubly);
+  unsigned int molecularOrbitalCount(ElectronType type = Paired) AVO_OVERRIDE;
 
   /**
    * @return True of the basis set is valid, false otherwise.
    * Default is true, if false then the basis set is likely unusable.
    */
-  bool isValid() { return true; }
+  bool isValid() AVO_OVERRIDE { return true; }
 
   /**
    * Initialize the calculation, this must normally be done before anything.

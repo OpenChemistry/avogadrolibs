@@ -18,6 +18,7 @@
 #include "gaussianfchk.h"
 
 #include <avogadro/core/gaussianset.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/io/utilities.h>
 
 #include <iostream>
@@ -33,12 +34,12 @@ namespace QuantumIO {
 using Core::Atom;
 using Core::BasisSet;
 using Core::GaussianSet;
-using Core::rhf;
-using Core::uhf;
-using Core::rohf;
+using Core::Rhf;
+using Core::Uhf;
+using Core::Rohf;
 using Core::Unknown;
 
-GaussianFchk::GaussianFchk() : m_scftype(rhf)
+GaussianFchk::GaussianFchk() : m_scftype(Rhf)
 {
 }
 
@@ -103,10 +104,10 @@ void GaussianFchk::processLine(std::istream &in)
 
   // Big switch statement checking for various things we are interested in
   if (Io::contains(key, "RHF")) {
-    m_scftype = rhf;
+    m_scftype = Rhf;
   }
   else if (Io::contains(key, "UHF")) {
-    m_scftype = uhf;
+    m_scftype = Uhf;
   }
   else if (key == "Number of atoms" && list.size() > 1) {
     cout << "Number of atoms = " << Io::lexicalCast<int>(list[1]) << endl;
@@ -156,11 +157,11 @@ void GaussianFchk::processLine(std::istream &in)
     m_csp = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
   }
   else if (key == "Alpha Orbital Energies") {
-    if (m_scftype == rhf) {
+    if (m_scftype == Rhf) {
       m_orbitalEnergy = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
       cout << "MO energies, n = " << m_orbitalEnergy.size() << endl;
     }
-    else if (m_scftype == uhf) {
+    else if (m_scftype == Uhf) {
       m_alphaOrbitalEnergy = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
       cout << "Alpha MO energies, n = " << m_alphaOrbitalEnergy.size() << endl;
     }
@@ -170,12 +171,12 @@ void GaussianFchk::processLine(std::istream &in)
     }
   }
   else if (key == "Alpha MO coefficients" && list.size() > 2) {
-    if (m_scftype == rhf) {
+    if (m_scftype == Rhf) {
       m_MOcoeffs = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
       if (static_cast<int>(m_MOcoeffs.size()) == Io::lexicalCast<int>(list[2]))
         cout << "MO coefficients, n = " << m_MOcoeffs.size() << endl;
     }
-    else if (m_scftype == uhf) {
+    else if (m_scftype == Uhf) {
       m_alphaMOcoeffs = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
       if (static_cast<int>(m_alphaMOcoeffs.size()) == Io::lexicalCast<int>(list[2]))
         cout << "Alpha MO coefficients, n = " << m_alphaMOcoeffs.size() << endl;
@@ -219,12 +220,12 @@ void GaussianFchk::load(GaussianSet* basis)
       int s = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::S);
       int tmpGTO = nGTO;
       for (int j = 0; j < m_shellNums[i]; ++j) {
-        basis->addGTO(s, m_c[nGTO], m_a[nGTO]);
+        basis->addGto(s, m_c[nGTO], m_a[nGTO]);
         ++nGTO;
       }
       int p = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::P);
       for (int j = 0; j < m_shellNums[i]; ++j) {
-        basis->addGTO(p, m_csp[tmpGTO], m_a[tmpGTO]);
+        basis->addGto(p, m_csp[tmpGTO], m_a[tmpGTO]);
         ++tmpGTO;
       }
     }
@@ -275,7 +276,7 @@ void GaussianFchk::load(GaussianSet* basis)
       if (type != GaussianSet::UU) {
         int b = basis->addBasis(m_shelltoAtom[i] - 1, type);
         for (int j = 0; j < m_shellNums[i]; ++j) {
-          basis->addGTO(b, m_c[nGTO], m_a[nGTO]);
+          basis->addGto(b, m_c[nGTO], m_a[nGTO]);
           ++nGTO;
         }
       }
@@ -288,9 +289,9 @@ void GaussianFchk::load(GaussianSet* basis)
     else
       cout << "Error no MO coefficients...\n";
     if (m_alphaMOcoeffs.size())
-      basis->setMolecularOrbitals(m_alphaMOcoeffs, BasisSet::alpha);
+      basis->setMolecularOrbitals(m_alphaMOcoeffs, BasisSet::Alpha);
     if (m_betaMOcoeffs.size())
-      basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::beta);
+      basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::Beta);
     if (m_density.rows())
       basis->setDensityMatrix(m_density);
     if (m_spinDensity.rows())
@@ -549,13 +550,13 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream &in, unsigned int n,
 void GaussianFchk::outputAll()
 {
   switch (m_scftype) {
-    case rhf:
+    case Rhf:
       cout << "SCF type = RHF\n";
       break;
-    case uhf:
+    case Uhf:
       cout << "SCF type = UHF\n";
       break;
-    case rohf:
+    case Rohf:
       cout << "SCF type = ROHF\n";
       break;
     default:

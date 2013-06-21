@@ -18,6 +18,7 @@
 
 #include "slatersettools.h"
 
+#include "molecule.h"
 #include "slaterset.h"
 
 #include <iostream>

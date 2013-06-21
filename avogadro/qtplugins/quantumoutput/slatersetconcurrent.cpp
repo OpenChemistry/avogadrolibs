@@ -16,6 +16,7 @@
 
 #include "slatersetconcurrent.h"
 
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/slaterset.h>
 #include <avogadro/core/slatersettools.h>
 
