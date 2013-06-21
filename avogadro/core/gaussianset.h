@@ -32,7 +32,7 @@ namespace Core {
 /**
  * Enumeration of the SCF type.
  */
-enum ScfType { rhf, uhf, rohf, Unknown };
+enum ScfType { Rhf, Uhf, Rohf, Unknown };
 
 /**
  * @class GaussianSet gaussianset.h <avogadro/core/gaussianset.h>
@@ -63,7 +63,7 @@ public:
   /**
    * Destructor.
    */
-  ~GaussianSet();
+  ~GaussianSet() AVO_OVERRIDE;
 
   /**
    * Enumeration of the Gaussian type orbitals.
@@ -85,15 +85,15 @@ public:
    * @param a The exponent of the GTO.
    * @return The index of the added GTO.
    */
-  unsigned int addGTO(unsigned int basis, double c, double a);
+  unsigned int addGto(unsigned int basis, double c, double a);
 
   /**
    * Set the molecular orbital (MO) coefficients to the GaussianSet.
    * @param MOs Vector containing the MO coefficients for the GaussianSet.
-   * @param type The type of the MOs (doubly, alpha, beta).
+   * @param type The type of the MOs (Paired, Alpha, Beta).
    */
   void setMolecularOrbitals(const std::vector<double>& MOs,
-                            ElectronType type = doubly);
+                            ElectronType type = Paired);
 
   /**
    * Set the SCF density matrix for the GaussianSet.
@@ -114,13 +114,13 @@ public:
   /**
    * @return The number of molecular orbitals in the GaussianSet.
    */
-  unsigned int molecularOrbitalCount(ElectronType type = doubly);
+  unsigned int molecularOrbitalCount(ElectronType type = Paired) AVO_OVERRIDE;
 
   /**
    * Debug routine, outputs all of the data in the GaussianSet.
    * @param The electrons to output the information for.
    */
-  void outputAll(ElectronType type = doubly);
+  void outputAll(ElectronType type = Paired);
 
   /**
    * @return True of the basis set is valid, false otherwise.

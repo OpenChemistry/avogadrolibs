@@ -18,6 +18,7 @@
 #include "molden.h"
 
 #include <avogadro/core/gaussianset.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/io/utilities.h>
 
 #include <iostream>
@@ -33,9 +34,9 @@ namespace QuantumIO {
 using Core::Atom;
 using Core::BasisSet;
 using Core::GaussianSet;
-using Core::rhf;
-using Core::uhf;
-using Core::rohf;
+using Core::Rhf;
+using Core::Uhf;
+using Core::Rohf;
 using Core::Unknown;
 
 MoldenFile::MoldenFile():
@@ -230,8 +231,8 @@ void MoldenFile::load(GaussianSet* basis)
       int s = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::S);
       int p = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::P);
       for (int j = 0; j < m_shellNums[i]; ++j) {
-        basis->addGTO(s, m_c[nGTO], m_a[nGTO]);
-        basis->addGTO(p, m_csp[nSP], m_a[nGTO]);
+        basis->addGto(s, m_c[nGTO], m_a[nGTO]);
+        basis->addGto(p, m_csp[nSP], m_a[nGTO]);
         ++nSP;
         ++nGTO;
       }
@@ -239,7 +240,7 @@ void MoldenFile::load(GaussianSet* basis)
     else {
       int b = basis->addBasis(m_shelltoAtom[i] - 1, m_shellTypes[i]);
       for (int j = 0; j < m_shellNums[i]; ++j) {
-        basis->addGTO(b, m_c[nGTO], m_a[nGTO]);
+        basis->addGto(b, m_c[nGTO], m_a[nGTO]);
         ++nGTO;
       }
     }

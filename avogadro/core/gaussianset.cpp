@@ -18,6 +18,8 @@
 
 #include "gaussianset.h"
 
+#include "molecule.h"
+
 #include <cmath>
 #include <iostream>
 
@@ -31,7 +33,7 @@ namespace Core {
 
 GaussianSet::GaussianSet() : m_numMOs(0), m_init(false)
 {
-  m_scfType = rhf;
+  m_scfType = Rhf;
 }
 
 GaussianSet::~GaussianSet()
@@ -75,7 +77,7 @@ unsigned int GaussianSet::addBasis(unsigned int atom, orbital type)
   return static_cast<unsigned int>(m_symmetry.size() - 1);
 }
 
-unsigned int GaussianSet::addGTO(unsigned int basis, double c, double a)
+unsigned int GaussianSet::addGto(unsigned int basis, double c, double a)
 {
   if (m_gtoIndices.size() == basis) {
     m_gtoIndices.push_back(static_cast<unsigned int>(m_gtoA.size()));
@@ -97,7 +99,7 @@ void GaussianSet::setMolecularOrbitals(const vector<double>& MOs,
   m_init = false;
 
   size_t index(0);
-  if (type == beta)
+  if (type == Beta)
     index = 1;
 
   // Some programs don't output all MOs, so we take the amount of data
@@ -135,7 +137,7 @@ bool GaussianSet::generateDensityMatrix()
 unsigned int GaussianSet::molecularOrbitalCount(ElectronType type)
 {
   size_t index(0);
-  if (type == beta)
+  if (type == Beta)
     index = 1;
   return static_cast<unsigned int>(m_moMatrix[index].rows());
 }
@@ -143,20 +145,20 @@ unsigned int GaussianSet::molecularOrbitalCount(ElectronType type)
 void GaussianSet::outputAll(ElectronType type)
 {
   size_t index(0);
-  if (type == beta)
+  if (type == Beta)
     index = 1;
 
   // Can be called to print out a summary of the basis set as read in
   unsigned int numAtoms = static_cast<unsigned int>(m_molecule->atomCount());
   cout << "\nGaussian Basis Set\nNumber of atoms:" << numAtoms << endl;
   switch (m_scfType) {
-  case rhf:
+  case Rhf:
     cout << "RHF orbitals" << endl;
     break;
-  case uhf:
+  case Uhf:
     cout << "UHF orbitals" << endl;
     break;
-  case rohf:
+  case Rohf:
     cout << "ROHF orbitals" << endl;
     break;
   default:
@@ -382,7 +384,7 @@ bool GaussianSet::generateDensity()
   for (unsigned int iBasis=0; iBasis < m_numMOs; ++iBasis) {
     for (unsigned int jBasis=0;jBasis<=iBasis; ++jBasis) {
       switch (m_scfType) {
-      case rhf:
+      case Rhf:
         for (unsigned int iMO = 0; iMO < m_electrons[0] / 2; ++iMO) {
           double icoeff = m_moMatrix[0](iBasis, iMO);
           double jcoeff = m_moMatrix[0](jBasis, iMO);
@@ -392,7 +394,7 @@ bool GaussianSet::generateDensity()
         cout << iBasis << ", " << jBasis << ": "
              << m_density(iBasis, jBasis) << endl;
         break;
-      case uhf:
+      case Uhf:
         for (unsigned int iaMO = 0; iaMO < m_electrons[0]; ++iaMO) {
           double icoeff = m_moMatrix[0](iBasis, iaMO);
           double jcoeff = m_moMatrix[0](jBasis, iaMO);
@@ -418,7 +420,7 @@ bool GaussianSet::generateDensity()
 
 bool GaussianSet::generateSpinDensity()
 {
-  if (m_scfType != uhf)
+  if (m_scfType != Uhf)
     return false;
 
   m_spinDensity.resize(m_numMOs, m_numMOs);

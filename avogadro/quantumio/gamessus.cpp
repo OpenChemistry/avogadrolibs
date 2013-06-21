@@ -16,6 +16,7 @@
 
 #include "gamessus.h"
 
+#include <avogadro/core/molecule.h>
 #include <avogadro/io/utilities.h>
 
 #include <iostream>
@@ -31,14 +32,14 @@ namespace QuantumIO {
 using Core::Atom;
 using Core::BasisSet;
 using Core::GaussianSet;
-using Core::rhf;
-using Core::uhf;
-using Core::rohf;
+using Core::Rhf;
+using Core::Uhf;
+using Core::Rohf;
 using Core::Unknown;
 
 GAMESSUSOutput::GAMESSUSOutput() :
   m_coordFactor(1.0),
-  m_scftype(rhf)
+  m_scftype(Rhf)
 {
 }
 
@@ -285,12 +286,12 @@ void GAMESSUSOutput::load(GaussianSet* basis)
       int tmpGTO = nGTO;
       int s = basis->addBasis(m_shelltoAtom.at(i) - 1, GaussianSet::S);
       for (int j = 0; j < m_shellNums.at(i); ++j) {
-        basis->addGTO(s, m_c.at(nGTO), m_a.at(nGTO));
+        basis->addGto(s, m_c.at(nGTO), m_a.at(nGTO));
         ++nGTO;
       }
       int p = basis->addBasis(m_shelltoAtom.at(i) - 1, GaussianSet::P);
       for (int j = 0; j < m_shellNums.at(i); ++j) {
-        basis->addGTO(p, m_csp.at(nSP), m_a.at(tmpGTO));
+        basis->addGto(p, m_csp.at(nSP), m_a.at(tmpGTO));
         ++tmpGTO;
         ++nSP;
       }
@@ -298,7 +299,7 @@ void GAMESSUSOutput::load(GaussianSet* basis)
     else {
       int b = basis->addBasis(m_shelltoAtom.at(i) - 1, m_shellTypes.at(i));
       for (int j = 0; j < m_shellNums.at(i); ++j) {
-        basis->addGTO(b, m_c.at(nGTO), m_a.at(nGTO));
+        basis->addGto(b, m_c.at(nGTO), m_a.at(nGTO));
         ++nGTO;
       }
     }
@@ -309,41 +310,27 @@ void GAMESSUSOutput::load(GaussianSet* basis)
   if (m_MOcoeffs.size())
     basis->setMolecularOrbitals(m_MOcoeffs);
   if (m_alphaMOcoeffs.size())
-    basis->setMolecularOrbitals(m_alphaMOcoeffs, BasisSet::alpha);
+    basis->setMolecularOrbitals(m_alphaMOcoeffs, BasisSet::Alpha);
   if (m_betaMOcoeffs.size())
-    basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::beta);
+    basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::Beta);
 
   //generateDensity();
   //if (m_density.rows())
     //basis->setDensityMatrix(m_density);
 
-  switch (m_scftype) {
-  case rhf:
-    basis->setScfType(Core::rhf);
-    break;
-  case uhf:
-    basis->setScfType(Core::uhf);
-    break;
-  case rohf:
-    basis->setScfType(Core::rohf);
-    break;
-  case Unknown:
-  default:
-    basis->setScfType(Core::Unknown);
-    break;
-  }
+  basis->setScfType(m_scftype);
 }
 
 void GAMESSUSOutput::outputAll()
 {
   switch (m_scftype) {
-  case rhf:
+  case Rhf:
     cout << "SCF type = RHF" << endl;
     break;
-  case uhf:
+  case Uhf:
     cout << "SCF type = UHF" << endl;
     break;
-  case rohf:
+  case Rohf:
     cout << "SCF type = ROHF" << endl;
     break;
   default:
