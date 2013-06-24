@@ -19,14 +19,17 @@
 #ifndef AVOGADRO_CORE_GAUSSIANSETTOOLS_H
 #define AVOGADRO_CORE_GAUSSIANSETTOOLS_H
 
-#include "molecule.h"
+#include "avogadrocore.h"
 
 #include "vector.h"
+
+#include <vector>
 
 namespace Avogadro {
 namespace Core {
 
 class GaussianSet;
+class Molecule;
 
 /**
  * @class GaussianSetTools gaussiansettools.h <avogadro/core/gaussiansettools.h>

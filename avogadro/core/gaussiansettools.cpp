@@ -19,8 +19,8 @@
 #include "gaussiansettools.h"
 
 #include "gaussianset.h"
+#include "molecule.h"
 
-#include <vector>
 #include <iostream>
 
 using std::cout;

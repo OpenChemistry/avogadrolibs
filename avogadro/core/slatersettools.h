@@ -23,6 +23,8 @@
 
 #include "vector.h"
 
+#include <vector>
+
 namespace Avogadro {
 namespace Core {
 
