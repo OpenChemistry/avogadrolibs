@@ -17,9 +17,6 @@ set(SOURCES
 
 avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtOpenGL
-  AvogadroCore # Needed for editor.cpp, manipulator.cpp
   AvogadroRendering
   AvogadroQtGui
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
   ${QT_QTOPENGL_LIBRARY})
