@@ -16,235 +16,267 @@
 ******************************************************************************/
 
 #include "gaussianfchk.h"
-#include <avogadro/quantum/gaussianset.h>
 
-#include <QtCore/QFile>
-#include <QtCore/QStringList>
-#include <QtCore/QDebug>
+#include <avogadro/core/gaussianset.h>
+#include <avogadro/core/molecule.h>
+#include <avogadro/io/utilities.h>
 
-using Eigen::Vector3d;
+#include <iostream>
+
 using std::vector;
+using std::string;
+using std::cout;
+using std::endl;
 
 namespace Avogadro {
 namespace QuantumIO {
 
-using Quantum::S;
-using Quantum::SP;
-using Quantum::P;
-using Quantum::D;
-using Quantum::D5;
-using Quantum::F;
-using Quantum::F7;
-using Quantum::G;
-using Quantum::G9;
-using Quantum::H;
-using Quantum::H11;
-using Quantum::I;
-using Quantum::I13;
-using Quantum::UU;
+using Core::Atom;
+using Core::BasisSet;
+using Core::GaussianSet;
+using Core::Rhf;
+using Core::Uhf;
+using Core::Rohf;
+using Core::Unknown;
 
-using Quantum::orbital;
-
-GaussianFchk::GaussianFchk(const QString &filename, GaussianSet* basis)
+GaussianFchk::GaussianFchk() : m_scftype(Rhf)
 {
-  // Open the file for reading and process it
-  QFile* file = new QFile(filename);
-  file->open(QIODevice::ReadOnly | QIODevice::Text);
-  m_in = file;
-
-  qDebug() << "File" << filename << "opened.";
-
-  // Process the formatted checkpoint and extract all the information we need
-  while (!m_in->atEnd()) {
-    processLine();
-  }
-
-  // Now it should all be loaded load it into the basis set
-  load(basis);
-
-  delete file;
 }
 
 GaussianFchk::~GaussianFchk()
 {
 }
 
-void GaussianFchk::processLine()
+std::vector<std::string> GaussianFchk::fileExtensions() const
 {
-  // First truncate the line, remove trailing white space and check
-  QString line = m_in->readLine();
-  if (line.isEmpty())
-    return;
-  QString key = line;
-  key.resize(42);
-  key = key.trimmed();
+  std::vector<std::string> extensions;
+  extensions.push_back("fchk");
+  return extensions;
+}
 
-  QString tmp = line.mid(43, 37);
-  QStringList list = tmp.split(' ', QString::SkipEmptyParts);
+std::vector<std::string> GaussianFchk::mimeTypes() const
+{
+  return std::vector<std::string>();
+}
+
+bool GaussianFchk::read(std::istream &in, Core::Molecule &molecule)
+{
+  // Read the log file line by line, most sections are terminated by an empty
+  // line, so they should be retained.
+  while (!in.eof())
+    processLine(in);
+
+  GaussianSet *basis = new GaussianSet;
+
+  int nAtom = 0;
+  for (unsigned int i = 0; i < m_aPos.size(); i += 3) {
+    Atom a = molecule.addAtom(m_aNums[nAtom++]);
+    a.setPosition3d(Vector3(m_aPos[i    ] * BOHR_TO_ANGSTROM,
+                            m_aPos[i + 1] * BOHR_TO_ANGSTROM,
+                            m_aPos[i + 2] * BOHR_TO_ANGSTROM));
+  }
+  // Do simple bond perception.
+  molecule.perceiveBondsSimple();
+  molecule.setBasisSet(basis);
+  basis->setMolecule(&molecule);
+  load(basis);
+  return true;
+}
+
+void GaussianFchk::processLine(std::istream &in)
+{
+  // First truncate the line, remove trailing white space and check any line of
+  // the required length. We are looking for keyword lines of the form,
+  // Charge                                     I                0
+  // If we are in any other kind of block that is not known skip through until
+  // we find a recognized block.
+  string line;
+  if (!getline(in, line) || line.size() < 44)
+    return;
+
+  string key = line.substr(0, 42);
+
+  //cout << "Key:\t" << key << endl;
+  key = Io::trimmed(key);
+
+  string tmp = line.substr(43);
+  vector<string> list = Io::split(tmp, ' ');
 
   // Big switch statement checking for various things we are interested in
-  if (key.contains("RHF")) {
-        m_scftype=rhf;
-  } else if (key.contains("UHF")) {
-        m_scftype=uhf;
-  } else if (key == "Number of atoms") {
-    qDebug() << "Number of atoms =" << list.at(1).toInt();
-  } else if (key == "Number of electrons") {
-    m_electrons = list.at(1).toInt();
-  } else if (key == "Number of alpha electrons") {
-    m_electronsAlpha = list.at(1).toInt();
-  } else if (key == "Number of beta electrons") {
-    m_electronsBeta = list.at(1).toInt();
-  } else if (key == "Number of basis functions") {
-    m_numBasisFunctions = list.at(1).toInt();
-    qDebug() << "Number of basis functions =" << m_numBasisFunctions;
+  if (Io::contains(key, "RHF")) {
+    m_scftype = Rhf;
   }
-  else if (key == "Atomic numbers") {
-    m_aNums = readArrayI(list.at(2).toInt());
-    if (static_cast<int>(m_aNums.size()) != list.at(2).toInt())
-      qDebug() << "Reading atomic numbers failed.";
+  else if (Io::contains(key, "UHF")) {
+    m_scftype = Uhf;
+  }
+  else if (key == "Number of atoms" && list.size() > 1) {
+    cout << "Number of atoms = " << Io::lexicalCast<int>(list[1]) << endl;
+  }
+  else if (key == "Number of electrons" && list.size() > 1) {
+    m_electrons = Io::lexicalCast<int>(list[1]);
+  }
+  else if (key == "Number of alpha electrons" && list.size() > 1) {
+    m_electronsAlpha = Io::lexicalCast<int>(list[1]);
+  }
+  else if (key == "Number of beta electrons" && list.size() > 1) {
+    m_electronsBeta = Io::lexicalCast<int>(list[1]);
+  }
+  else if (key == "Number of basis functions" && list.size() > 1) {
+    m_numBasisFunctions = Io::lexicalCast<int>(list[1]);
+    cout << "Number of basis functions = " << m_numBasisFunctions << endl;
+  }
+  else if (key == "Atomic numbers" && list.size() > 2) {
+    m_aNums = readArrayI(in, Io::lexicalCast<int>(list[2]));
+    if (static_cast<int>(m_aNums.size()) != Io::lexicalCast<int>(list[2]))
+      cout << "Reading atomic numbers failed.\n";
     else
-      qDebug() << "Reading atomic numbers succeeded.";
+      cout << "Reading atomic numbers succeeded.\n";
   }
   // Now we get to the meat of it - coordinates of the atoms
-  else if (key == "Current cartesian coordinates")
-    m_aPos = readArrayD(list.at(2).toInt(), 16);
+  else if (key == "Current cartesian coordinates" && list.size() > 2) {
+    m_aPos = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+  }
   // The real meat is here - basis sets etc!
-  else if (key == "Shell types")
-    m_shellTypes = readArrayI(list.at(2).toInt());
-  else if (key == "Number of primitives per shell")
-    m_shellNums = readArrayI(list.at(2).toInt());
-  else if (key == "Shell to atom map")
-    m_shelltoAtom = readArrayI(list.at(2).toInt());
+  else if (key == "Shell types" && list.size() > 2) {
+    m_shellTypes = readArrayI(in, Io::lexicalCast<int>(list[2]));
+  }
+  else if (key == "Number of primitives per shell" && list.size() > 2) {
+    m_shellNums = readArrayI(in, Io::lexicalCast<int>(list[2]));
+  }
+  else if (key == "Shell to atom map" && list.size() > 2) {
+    m_shelltoAtom = readArrayI(in, Io::lexicalCast<int>(list[2]));
+  }
   // Now to get the exponents and coefficients(
-  else if (key == "Primitive exponents")
-    m_a = readArrayD(list.at(2).toInt(), 16);
-  else if (key == "Contraction coefficients")
-    m_c = readArrayD(list.at(2).toInt(), 16);
-  else if (key == "P(S=P) Contraction coefficients")
-    m_csp = readArrayD(list.at(2).toInt(), 16);
+  else if (key == "Primitive exponents" && list.size() > 2) {
+    m_a = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+  }
+  else if (key == "Contraction coefficients" && list.size() > 2) {
+    m_c = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+  }
+  else if (key == "P(S=P) Contraction coefficients" && list.size() > 2) {
+    m_csp = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+  }
   else if (key == "Alpha Orbital Energies") {
-    if (m_scftype == rhf) {
-      m_orbitalEnergy = readArrayD(list.at(2).toInt(), 16);
-      qDebug() << "MO energies, n =" << m_orbitalEnergy.size();
-    } else if (m_scftype == uhf) {
-      m_alphaOrbitalEnergy = readArrayD(list.at(2).toInt(), 16);
-      qDebug() << "Alpha MO energies, n =" << m_alphaOrbitalEnergy.size();
-    } else if (key == "Beta Orbital Energies") {
-      m_betaOrbitalEnergy = readArrayD(list.at(2).toInt(), 16);
-      qDebug() << "Beta MO energies, n =" << m_betaOrbitalEnergy.size();
+    if (m_scftype == Rhf) {
+      m_orbitalEnergy = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+      cout << "MO energies, n = " << m_orbitalEnergy.size() << endl;
+    }
+    else if (m_scftype == Uhf) {
+      m_alphaOrbitalEnergy = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+      cout << "Alpha MO energies, n = " << m_alphaOrbitalEnergy.size() << endl;
+    }
+    else if (key == "Beta Orbital Energies") {
+      m_betaOrbitalEnergy = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+      cout << "Beta MO energies, n = " << m_betaOrbitalEnergy.size() << endl;
     }
   }
-  else if (key == "Alpha MO coefficients") {
-    if (m_scftype == rhf) {
-      m_MOcoeffs = readArrayD(list.at(2).toInt(), 16);
-      if (static_cast<int>(m_MOcoeffs.size()) == list.at(2).toInt())
-        qDebug() << "MO coefficients, n =" << m_MOcoeffs.size();
-    } else if (m_scftype == uhf) {
-      m_alphaMOcoeffs = readArrayD(list.at(2).toInt(), 16);
-      if (static_cast<int>(m_alphaMOcoeffs.size()) == list.at(2).toInt())
-        qDebug() << "Alpha MO coefficients, n =" << m_alphaMOcoeffs.size();
-    } else
-      qDebug() << "Error, alpha MO coefficients, n =" << m_MOcoeffs.size();
-  } else if (key == "Beta MO coefficients") {
-      m_betaMOcoeffs = readArrayD(list.at(2).toInt(), 16);
-      if (static_cast<int>(m_betaMOcoeffs.size()) == list.at(2).toInt())
-        qDebug() << "Beta MO coefficients, n =" << m_betaMOcoeffs.size();
+  else if (key == "Alpha MO coefficients" && list.size() > 2) {
+    if (m_scftype == Rhf) {
+      m_MOcoeffs = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+      if (static_cast<int>(m_MOcoeffs.size()) == Io::lexicalCast<int>(list[2]))
+        cout << "MO coefficients, n = " << m_MOcoeffs.size() << endl;
+    }
+    else if (m_scftype == Uhf) {
+      m_alphaMOcoeffs = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+      if (static_cast<int>(m_alphaMOcoeffs.size()) == Io::lexicalCast<int>(list[2]))
+        cout << "Alpha MO coefficients, n = " << m_alphaMOcoeffs.size() << endl;
+    }
+    else {
+      cout << "Error, alpha MO coefficients, n = " << m_MOcoeffs.size() << endl;
+    }
   }
-  else if (key == "Total SCF Density") {
-    if (readDensityMatrix(list.at(2).toInt(), 16))
-      qDebug() << "SCF density matrix read in" << m_density.rows();
-    else
-      qDebug() << "Error reading in the SCF density matrix.";
+  else if (key == "Beta MO coefficients" && list.size() > 2) {
+      m_betaMOcoeffs = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+      if (static_cast<int>(m_betaMOcoeffs.size()) == Io::lexicalCast<int>(list[2]))
+        cout << "Beta MO coefficients, n = " << m_betaMOcoeffs.size() << endl;
   }
-  else if (key == "Spin SCF Density") {
-    if (readSpinDensityMatrix(list.at(2).toInt(), 16))
-      qDebug() << "SCF spin density matrix read in" << m_spinDensity.rows();
+  else if (key == "Total SCF Density" && list.size() > 2) {
+    if (readDensityMatrix(in, Io::lexicalCast<int>(list[2]), 16))
+      cout << "SCF density matrix read in " << m_density.rows() << endl;
     else
-      qDebug() << "Error reading in the SCF spin density matrix.";
+      cout << "Error reading in the SCF density matrix.\n";
+  }
+  else if (key == "Spin SCF Density" && list.size() > 2) {
+    if (readSpinDensityMatrix(in, Io::lexicalCast<int>(list[2]), 16))
+      cout << "SCF spin density matrix read in " << m_spinDensity.rows() << endl;
+    else
+      cout << "Error reading in the SCF spin density matrix.\n";
   }
 }
 
 void GaussianFchk::load(GaussianSet* basis)
 {
   // Now load up our basis set
-  basis->setNumElectrons(m_electrons);
-  basis->setNumAlphaElectrons(m_electronsAlpha);
-  basis->setNumBetaElectrons(m_electronsBeta);
-  int nAtom = 0;
-  for (unsigned int i = 0; i < m_aPos.size(); i += 3)
-    basis->addAtom(Vector3d(m_aPos.at(i), m_aPos.at(i+1), m_aPos.at(i+2)),
-                   m_aNums.at(nAtom++));
-
-  qDebug() << "loading basis: " << m_shellTypes.size() << m_shellNums.size()
-           << m_shelltoAtom.size() << m_a.size() << m_c.size() << m_csp.size();
+  basis->setElectronCount(m_electrons);
+  //basis->setElectronCount(m_electronsAlpha, Core::GaussianSet::alpha);
+  //basis->setElectronCount(m_electronsBeta, Core::GaussianSet::beta);
 
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i) {
     // Handle the SP case separately - this should possibly be a distinct type
-    if (m_shellTypes.at(i) == -1)  {
+    if (m_shellTypes[i] == -1)  {
       // SP orbital type - actually have to add two shells
-      int s = basis->addBasis(m_shelltoAtom.at(i) - 1, S);
+      int s = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::S);
       int tmpGTO = nGTO;
-      for (int j = 0; j < m_shellNums.at(i); ++j) {
-        basis->addGTO(s, m_c.at(nGTO), m_a.at(nGTO));
+      for (int j = 0; j < m_shellNums[i]; ++j) {
+        basis->addGto(s, m_c[nGTO], m_a[nGTO]);
         ++nGTO;
       }
-      int p = basis->addBasis(m_shelltoAtom.at(i) - 1, P);
-      for (int j = 0; j < m_shellNums.at(i); ++j) {
-        basis->addGTO(p, m_csp.at(tmpGTO), m_a.at(tmpGTO));
+      int p = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::P);
+      for (int j = 0; j < m_shellNums[i]; ++j) {
+        basis->addGto(p, m_csp[tmpGTO], m_a[tmpGTO]);
         ++tmpGTO;
       }
     }
     else {
-      orbital type;
-      switch (m_shellTypes.at(i)) {
+      GaussianSet::orbital type;
+      switch (m_shellTypes[i]) {
       case 0:
-        type = S;
+        type = GaussianSet::S;
         break;
       case 1:
-        type = P;
+        type = GaussianSet::P;
         break;
       case 2:
-        type = D;
+        type = GaussianSet::D;
         break;
       case -2:
-        type = D5;
+        type = GaussianSet::D5;
         break;
       case 3:
-        type = F;
+        type = GaussianSet::F;
         break;
       case -3:
-        type = F7;
+        type = GaussianSet::F7;
         break;
       case 4:
-        type = G;
+        type = GaussianSet::G;
         break;
       case -4:
-        type = G9;
+        type = GaussianSet::G9;
         break;
       case 5:
-        type = H;
+        type = GaussianSet::H;
         break;
       case -5:
-        type = H11;
+        type = GaussianSet::H11;
         break;
       case 6:
-        type = I;
+        type = GaussianSet::I;
         break;
       case -6:
-        type = I13;
+        type = GaussianSet::I13;
         break;
       default:
         // If we encounter GTOs we do not understand, the basis is likely invalid
-        type = UU;
-        basis->setIsValid(false);
+        type = GaussianSet::UU;
+        /// basis->setValid(false);
       }
-      if (type != UU) {
-        int b = basis->addBasis(m_shelltoAtom.at(i) - 1, type);
-        for (int j = 0; j < m_shellNums.at(i); ++j) {
-          basis->addGTO(b, m_c.at(nGTO), m_a.at(nGTO));
+      if (type != GaussianSet::UU) {
+        int b = basis->addBasis(m_shelltoAtom[i] - 1, type);
+        for (int j = 0; j < m_shellNums[i]; ++j) {
+          basis->addGto(b, m_c[nGTO], m_a[nGTO]);
           ++nGTO;
         }
       }
@@ -253,46 +285,49 @@ void GaussianFchk::load(GaussianSet* basis)
   // Now to load in the MO coefficients
   if (basis->isValid()) {
     if (m_MOcoeffs.size())
-      basis->addMOs(m_MOcoeffs);
-    if (m_alphaMOcoeffs.size())
-      basis->addAlphaMOs(m_alphaMOcoeffs);
-    if (m_betaMOcoeffs.size())
-      basis->addBetaMOs(m_betaMOcoeffs);
+      basis->setMolecularOrbitals(m_MOcoeffs);
     else
-      qDebug() << "Error - no beta MO coefficients read in.";
+      cout << "Error no MO coefficients...\n";
+    if (m_alphaMOcoeffs.size())
+      basis->setMolecularOrbitals(m_alphaMOcoeffs, BasisSet::Alpha);
+    if (m_betaMOcoeffs.size())
+      basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::Beta);
     if (m_density.rows())
       basis->setDensityMatrix(m_density);
     if (m_spinDensity.rows())
       basis->setSpinDensityMatrix(m_spinDensity);
   }
+  else {
+    cout << "Basis set is not valid!\n";
+  }
 }
 
-vector<int> GaussianFchk::readArrayI(unsigned int n)
+vector<int> GaussianFchk::readArrayI(std::istream &in, unsigned int n)
 {
   vector<int> tmp;
   tmp.reserve(n);
-  bool ok = false;
+  bool ok(false);
   while (tmp.size() < n) {
-    if (m_in->atEnd()) {
-      qDebug() << "GaussianFchk::readArrayI could not read all elements"
-               << n << "expected" << tmp.size() << "parsed.";
+    if (in.eof()) {
+      cout << "GaussianFchk::readArrayI could not read all elements "
+           << n << " expected " << tmp.size() << " parsed.\n";
       return tmp;
     }
-    QString line = m_in->readLine();
-    if (line.isEmpty())
+    string line;
+    if (getline(in, line), line.empty())
       return tmp;
 
-    QStringList list = line.split(' ', QString::SkipEmptyParts);
-    for (int i = 0; i < list.size(); ++i) {
+    vector<string> list = Io::split(line, ' ');
+    for (size_t i = 0; i < list.size(); ++i) {
       if (tmp.size() >= n) {
-        qDebug() << "Too many variables read in. File may be inconsistent."
-                 << tmp.size() << "of" << n;
+        cout << "Too many variables read in. File may be inconsistent. "
+             << tmp.size() << " of " << n << endl;
         return tmp;
       }
-      tmp.push_back(list.at(i).toInt(&ok));
+      tmp.push_back(Io::lexicalCast<int>(list[i], ok));
       if (!ok) {
-        qDebug() << "Warning: problem converting string to integer:"
-                 << list.at(i) << "in GaussianFchk::readArrayI.";
+        cout << "Warning: problem converting string to integer: "
+             << list[i] << " in GaussianFchk::readArrayI.\n";
         return tmp;
       }
     }
@@ -300,34 +335,34 @@ vector<int> GaussianFchk::readArrayI(unsigned int n)
   return tmp;
 }
 
-vector<double> GaussianFchk::readArrayD(unsigned int n, int width)
+vector<double> GaussianFchk::readArrayD(std::istream &in, unsigned int n,
+                                        int width)
 {
-  // FIXME Should return a bool and operate on a vector by reference
   vector<double> tmp;
   tmp.reserve(n);
-  bool ok = false;
+  bool ok(false);
   while (tmp.size() < n) {
-    if (m_in->atEnd()) {
-      qDebug() << "GaussianFchk::readArrayD could not read all elements"
-               << n << "expected" << tmp.size() << "parsed.";
+    if (in.eof()) {
+      cout << "GaussianFchk::readArrayD could not read all elements "
+           << n << " expected " << tmp.size() << " parsed.\n";
       return tmp;
     }
-    QString line = m_in->readLine();
-    if (line.isEmpty())
+    string line;
+    if (getline(in, line), line.empty())
       return tmp;
 
     if (width == 0) { // we can split by spaces
-      QStringList list = line.split(' ', QString::SkipEmptyParts);
-      for (int i = 0; i < list.size(); ++i) {
+      vector<string> list = Io::split(line, ' ');
+      for (size_t i = 0; i < list.size(); ++i) {
         if (tmp.size() >= n) {
-          qDebug() << "Too many variables read in. File may be inconsistent."
-                   << tmp.size() << "of" << n;
+          cout << "Too many variables read in. File may be inconsistent. "
+               << tmp.size() << " of " << n << endl;
           return tmp;
         }
-        tmp.push_back(list.at(i).trimmed().toDouble(&ok));
+        tmp.push_back(Io::lexicalCast<double>(list[i], ok));
         if (!ok) {
-          qDebug() << "Warning: problem converting string to double:"
-                   << list.at(i) << "in GaussianFchk::readArrayD.";
+          cout << "Warning: problem converting string to integer: "
+               << list[i] << " in GaussianFchk::readArrayD.\n";
           return tmp;
         }
       }
@@ -335,18 +370,18 @@ vector<double> GaussianFchk::readArrayD(unsigned int n, int width)
     else { // Q-Chem files use 16 character fields
       int maxColumns = 80 / width;
       for (int i = 0; i < maxColumns; ++i) {
-        QString substring = line.mid(i * width, width);
-        if (substring.length() != width)
+        string substring = line.substr(i * width, width);
+        if (static_cast<int>(substring.length()) != width)
           break;
         if (tmp.size() >= n) {
-          qDebug() << "Too many variables read in. File may be inconsistent."
-                   << tmp.size() << "of" << n;
+          cout << "Too many variables read in. File may be inconsistent. "
+               << tmp.size() << " of " << n << endl;
           return tmp;
         }
-        tmp.push_back(substring.toDouble(&ok));
+        tmp.push_back(Io::lexicalCast<double>(substring, ok));
         if (!ok) {
-          qDebug() << "Warning: problem converting string to double:"
-                   << substring << "in GaussianFchk::readArrayD.";
+          cout << "Warning: problem converting string to double: "
+               << substring << " in GaussianFchk::readArrayD.\n";
           return tmp;
         }
       }
@@ -355,7 +390,8 @@ vector<double> GaussianFchk::readArrayD(unsigned int n, int width)
   return tmp;
 }
 
-bool GaussianFchk::readDensityMatrix(unsigned int n, int width)
+bool GaussianFchk::readDensityMatrix(std::istream &in, unsigned int n,
+                                     int width)
 {
   // This function reads in the lower triangular density matrix
   m_density.resize(m_numBasisFunctions, m_numBasisFunctions);
@@ -364,25 +400,25 @@ bool GaussianFchk::readDensityMatrix(unsigned int n, int width)
   unsigned int f = 1;
   bool ok = false;
   while (cnt < n) {
-    if (m_in->atEnd()) {
-      qDebug() << "GaussianFchk::readDensityMatrix could not read all elements"
-               << n << "expected" << cnt << "parsed.";
+    if (in.eof()) {
+      cout << "GaussianFchk::readDensityMatrix could not read all elements "
+           << n << " expected " << cnt << " parsed.\n";
       return false;
     }
-    QString line = m_in->readLine();
-    if (line.isEmpty())
+    string line;
+    if (getline(in, line), line.empty())
       return false;
 
     if (width == 0) { // we can split by spaces
-      QStringList list = line.split(' ', QString::SkipEmptyParts);
-      for (int k = 0; k < list.size(); ++k) {
+      vector<string> list = Io::split(line, ' ');
+      for (size_t k = 0; k < list.size(); ++k) {
         if (cnt >= n) {
-          qDebug() << "Too many variables read in. File may be inconsistent."
-                   << cnt << "of" << n;
+          cout << "Too many variables read in. File may be inconsistent. "
+               << cnt << " of " << n << endl;
           return false;
         }
         // Read in lower half matrix
-        m_density(i, j) = list.at(k).toDouble(&ok);
+        m_density(i, j) = Io::lexicalCast<double>(list[k], ok);
         if (ok) { // Valid double converted, carry on
           ++j; ++cnt;
           if (j == f) {
@@ -393,8 +429,8 @@ bool GaussianFchk::readDensityMatrix(unsigned int n, int width)
           }
         }
         else { // Invalid conversion of a string to double
-          qDebug() << "Warning: problem converting string to double:"
-                   << list.at(k) << "\nIn GaussianFchk::readDensityMatrix.";
+          cout << "Warning: problem converting string to double: "
+               << list.at(k) << "\nIn GaussianFchk::readDensityMatrix.\n";
           return false;
         }
       }
@@ -402,16 +438,17 @@ bool GaussianFchk::readDensityMatrix(unsigned int n, int width)
     else { // Q-Chem files use 16-character fields
       int maxColumns = 80 / width;
       for (int c = 0; c < maxColumns; ++c) {
-        QString substring = line.mid(c * width, width);
-        if (substring.length() != width)
+        string substring = line.substr(c * width, width);
+        if (static_cast<int>(substring.length()) != width) {
           break;
+        }
         else if (cnt >= n) {
-          qDebug() << "Too many variables read in. File may be inconsistent."
-                   << cnt << "of" << n;
+          cout << "Too many variables read in. File may be inconsistent. "
+               << cnt << " of " << n << endl;
           return false;
         }
         // Read in lower half matrix
-        m_density(i, j) = substring.toDouble(&ok);
+        m_density(i, j) = Io::lexicalCast<double>(substring, ok);
         if (ok) { // Valid double converted, carry on
           ++j; ++cnt;
           if (j == f) {
@@ -422,8 +459,8 @@ bool GaussianFchk::readDensityMatrix(unsigned int n, int width)
           }
         }
         else { // Invalid conversion of a string to double
-          qDebug() << "Warning: problem converting string to double:"
-                   << substring << "\nIn GaussianFchk::readDensityMatrix.";
+          cout << "Warning: problem converting string to double: "
+               << substring << "\nIn GaussianFchk::readDensityMatrix.\n";
           return false;
         }
       }
@@ -431,7 +468,8 @@ bool GaussianFchk::readDensityMatrix(unsigned int n, int width)
   }
   return true;
 }
-bool GaussianFchk::readSpinDensityMatrix(unsigned int n, int width)
+bool GaussianFchk::readSpinDensityMatrix(std::istream &in, unsigned int n,
+                                         int width)
 {
   // This function reads in the lower triangular density matrix
   m_spinDensity.resize(m_numBasisFunctions, m_numBasisFunctions);
@@ -440,25 +478,25 @@ bool GaussianFchk::readSpinDensityMatrix(unsigned int n, int width)
   unsigned int f = 1;
   bool ok = false;
   while (cnt < n) {
-    if (m_in->atEnd()) {
-      qDebug() << "GaussianFchk::readSpinDensityMatrix could not read all elements"
-               << n << "expected" << cnt << "parsed.";
+    if (in.eof()) {
+      cout << "GaussianFchk::readSpinDensityMatrix could not read all elements "
+           << n << " expected " << cnt << " parsed.\n";
       return false;
     }
-    QString line = m_in->readLine();
-    if (line.isEmpty())
+    string line;
+    if (getline(in, line), line.empty())
       return false;
 
     if (width == 0) { // we can split by spaces
-      QStringList list = line.split(' ', QString::SkipEmptyParts);
-      for (int k = 0; k < list.size(); ++k) {
+      vector<string> list = Io::split(line, ' ');
+      for (size_t k = 0; k < list.size(); ++k) {
         if (cnt >= n) {
-          qDebug() << "Too many variables read in. File may be inconsistent."
-                   << cnt << "of" << n;
+          cout << "Too many variables read in. File may be inconsistent. "
+               << cnt << " of " << n << endl;
           return false;
         }
         // Read in lower half matrix
-        m_spinDensity(i, j) = list.at(k).toDouble(&ok);
+        m_spinDensity(i, j) = Io::lexicalCast<double>(list[k], ok);
         if (ok) { // Valid double converted, carry on
           ++j; ++cnt;
           if (j == f) {
@@ -469,8 +507,8 @@ bool GaussianFchk::readSpinDensityMatrix(unsigned int n, int width)
           }
         }
         else { // Invalid conversion of a string to double
-          qDebug() << "Warning: problem converting string to double:"
-                   << list.at(k) << "\nIn GaussianFchk::readDensityMatrix.";
+          cout << "Warning: problem converting string to double: "
+               << list[k] << "\nIn GaussianFchk::readDensityMatrix.\n";
           return false;
         }
       }
@@ -478,16 +516,17 @@ bool GaussianFchk::readSpinDensityMatrix(unsigned int n, int width)
     else { // Q-Chem files use 16-character fields
       int maxColumns = 80 / width;
       for (int c = 0; c < maxColumns; ++c) {
-        QString substring = line.mid(c * width, width);
-        if (substring.length() != width)
+        string substring = line.substr(c * width, width);
+        if (static_cast<int>(substring.length()) != width) {
           break;
+        }
         else if (cnt >= n) {
-          qDebug() << "Too many variables read in. File may be inconsistent."
-                   << cnt << "of" << n;
+          cout << "Too many variables read in. File may be inconsistent. "
+               << cnt << " of " << n << endl;
           return false;
         }
         // Read in lower half matrix
-        m_spinDensity(i, j) = substring.toDouble(&ok);
+        m_spinDensity(i, j) = Io::lexicalCast<double>(substring, ok);
         if (ok) { // Valid double converted, carry on
           ++j; ++cnt;
           if (j == f) {
@@ -498,8 +537,8 @@ bool GaussianFchk::readSpinDensityMatrix(unsigned int n, int width)
           }
         }
         else { // Invalid conversion of a string to double
-          qDebug() << "Warning: problem converting string to double:"
-                   << substring << "\nIn GaussianFchk::readSpinDensityMatrix.";
+          cout << "Warning: problem converting string to double: "
+               << substring << "\nIn GaussianFchk::readSpinDensityMatrix.\n";
           return false;
         }
       }
@@ -511,35 +550,41 @@ bool GaussianFchk::readSpinDensityMatrix(unsigned int n, int width)
 void GaussianFchk::outputAll()
 {
   switch (m_scftype) {
-    case rhf:
-      qDebug() << "SCF type = RHF";
+    case Rhf:
+      cout << "SCF type = RHF\n";
       break;
-    case uhf:
-      qDebug() << "SCF type = UHF";
+    case Uhf:
+      cout << "SCF type = UHF\n";
       break;
-    case rohf:
-      qDebug() << "SCF type = ROHF";
+    case Rohf:
+      cout << "SCF type = ROHF\n";
       break;
     default:
-      qDebug() << "SCF type = Unknown";
+      cout << "SCF type = Unknown\n";
   }
-  qDebug() << "Shell mappings.";
+  cout << "Shell mappings:\n";
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i)
-    qDebug() << i << ": type =" << m_shellTypes.at(i)
-             << ", number =" << m_shellNums.at(i)
-             << ", atom =" << m_shelltoAtom.at(i);
-  if (m_MOcoeffs.size())
-    qDebug() << "MO coefficients.";
-  for (unsigned int i = 0; i < m_MOcoeffs.size(); ++i)
-    qDebug() << m_MOcoeffs.at(i);
-  if (m_alphaMOcoeffs.size())
-    qDebug() << "Alpha MO coefficients.";
-  for (unsigned int i = 0; i < m_alphaMOcoeffs.size(); ++i)
-    qDebug() << m_alphaMOcoeffs.at(i);
-  if (m_betaMOcoeffs.size())
-    qDebug() << "Beta MO coefficients.";
-  for (unsigned int i = 0; i < m_betaMOcoeffs.size(); ++i)
-    qDebug() << m_betaMOcoeffs.at(i);
+    cout << i << " : type = " << m_shellTypes.at(i)
+         << ", number = " << m_shellNums.at(i)
+         << ", atom = " << m_shelltoAtom.at(i) << endl;
+  if (m_MOcoeffs.size()) {
+    cout << "MO coefficients:\n";
+    for (unsigned int i = 0; i < m_MOcoeffs.size(); ++i)
+      cout << m_MOcoeffs.at(i) << "\t";
+    cout << endl << endl;
+  }
+  if (m_alphaMOcoeffs.size()) {
+    cout << "Alpha MO coefficients:\n";
+    for (unsigned int i = 0; i < m_alphaMOcoeffs.size(); ++i)
+      cout << m_alphaMOcoeffs.at(i) << "\t";
+    cout << endl << endl;
+  }
+  if (m_betaMOcoeffs.size()) {
+    cout << "Beta MO coefficients:\n";
+    for (unsigned int i = 0; i < m_betaMOcoeffs.size(); ++i)
+      cout << m_betaMOcoeffs.at(i) << "\t";
+    cout << endl << endl;
+  }
 }
 
 }
