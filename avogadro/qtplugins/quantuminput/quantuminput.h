@@ -25,7 +25,15 @@
 class QAction;
 class QDialog;
 
+namespace MoleQueue {
+class JobObject;
+}
+
 namespace Avogadro {
+namespace Io {
+class FileFormat;
+}
+
 namespace QtGui {
 class InputGeneratorDialog;
 }
@@ -61,6 +69,13 @@ public slots:
    */
   void refreshGenerators();
 
+  /**
+   * Emitted when the user requests that a job's output be loaded in Avogadro.
+   */
+  void openJobOutput(const MoleQueue::JobObject &job);
+
+  bool readMolecule(QtGui::Molecule &mol);
+
 private slots:
   void menuActivated();
   void configurePython();
@@ -78,6 +93,9 @@ private:
 
   // maps program name --> script file path
   QMultiMap<QString, QString> m_inputGeneratorScripts;
+
+  const Io::FileFormat *m_outputFormat;
+  QString m_outputFileName;
 };
 
 }

@@ -34,6 +34,7 @@ const unsigned int MoleQueueWidget::InvalidMoleQueueId(
 MoleQueueWidget::MoleQueueWidget(QWidget *parent_) :
   QWidget(parent_),
   m_ui(new Ui::MoleQueueWidget),
+  m_jobState("Unknown"),
   m_requestId(-1),
   m_moleQueueId(InvalidMoleQueueId)
 {
@@ -92,6 +93,7 @@ void MoleQueueWidget::refreshPrograms()
 int MoleQueueWidget::submitJobRequest()
 {
   m_submissionError.clear();
+  m_jobState = "Unknown";
   m_requestId = -1;
   m_moleQueueId = InvalidMoleQueueId;
 
@@ -105,7 +107,8 @@ int MoleQueueWidget::submitJobRequest()
 
   m_requestId = mqManager.client().submitJob(job);
   if (m_requestId >= 0) {
-    listenForReply();
+    listenForJobSubmitReply();
+    listenForJobStateChange();
   }
   else {
     m_submissionError = tr("Client failed to submit job to MoleQueue.");
@@ -126,6 +129,24 @@ void MoleQueueWidget::showAndSelectProgram(const QString &programName)
 
   if (mqManager.connectIfNeeded())
     mqManager.requestQueueList();
+}
+
+bool MoleQueueWidget::openOutput() const
+{
+  return m_ui->openOutput->isChecked();
+}
+
+bool MoleQueueWidget::requestJobLookup()
+{
+  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  if (m_moleQueueId != InvalidMoleQueueId &&
+      mqManager.connectIfNeeded()) {
+    listenForLookupJobReply();
+    int reqId = mqManager.client().lookupJob(m_moleQueueId);
+    setProperty("lookupJobRequestId", reqId);
+    return true;
+  }
+  return false;
 }
 
 MoleQueue::JobObject MoleQueueWidget::configuredJob() const
@@ -185,12 +206,26 @@ void MoleQueueWidget::showAndSelectProgramHandler()
   }
 }
 
+void MoleQueueWidget::onLookupJobReply(int reqId, const QJsonObject &result)
+{
+  QVariant reqIdVariant(property("lookupJobRequestId"));
+  bool ok;
+  int myReqId = reqIdVariant.toInt(&ok);
+  if (ok && reqId == myReqId) {
+    setProperty("lookupJobRequestId", QVariant());
+    listenForLookupJobReply(false);
+    MoleQueue::JobObject job;
+    job.fromJson(result);
+    emit jobUpdated(job);
+  }
+}
+
 void MoleQueueWidget::onSubmissionSuccess(int localId, unsigned int mqId)
 {
   if (localId != m_requestId)
     return;
 
-  listenForReply(false);
+  listenForJobSubmitReply(false);
   m_moleQueueId = mqId;
   emit jobSubmitted(true);
 }
@@ -201,12 +236,45 @@ void MoleQueueWidget::onSubmissionFailure(int localId, unsigned int,
   if (localId != m_requestId)
     return;
 
-  listenForReply(false);
+  listenForJobSubmitReply(false);
   m_submissionError = error;
   emit jobSubmitted(false);
 }
 
-void MoleQueueWidget::listenForReply(bool listen)
+void MoleQueueWidget::onJobStateChange(unsigned int mqId,
+                                       const QString &,
+                                       const QString &newState)
+{
+  if (mqId != m_moleQueueId)
+    return;
+
+  m_jobState = newState;
+
+  if (m_jobState == QLatin1String("Finished")) {
+    listenForJobStateChange(false);
+    emit jobFinished(true);
+  }
+  else if (m_jobState == QLatin1String("Error")
+           || m_jobState == QLatin1String("Canceled")) {
+    listenForJobStateChange(false);
+    emit jobFinished(false);
+  }
+}
+
+void MoleQueueWidget::listenForLookupJobReply(bool listen)
+{
+  MoleQueue::Client &mqClient(MoleQueueManager::instance().client());
+  if (listen) {
+    connect(&mqClient, SIGNAL(lookupJobResponse(int,QJsonObject)),
+            this, SLOT(onLookupJobReply(int,QJsonObject)));
+  }
+  else {
+    disconnect(&mqClient, SIGNAL(lookupJobResponse(int,QJsonObject)),
+               this, SLOT(onLookupJobReply(int,QJsonObject)));
+  }
+}
+
+void MoleQueueWidget::listenForJobSubmitReply(bool listen)
 {
   MoleQueue::Client &mqClient(MoleQueueManager::instance().client());
 
@@ -221,6 +289,20 @@ void MoleQueueWidget::listenForReply(bool listen)
                this, SLOT(onSubmissionSuccess(int,uint)));
     disconnect(&mqClient, SIGNAL(errorReceived(int,uint,QString)),
                this, SLOT(onSubmissionFailure(int,uint,QString)));
+  }
+}
+
+void MoleQueueWidget::listenForJobStateChange(bool listen)
+{
+  MoleQueue::Client &mqClient(MoleQueueManager::instance().client());
+
+  if (listen) {
+    connect(&mqClient, SIGNAL(jobStateChanged(uint,QString,QString)),
+            this, SLOT(onJobStateChange(uint,QString,QString)));
+  }
+  else {
+    disconnect(&mqClient, SIGNAL(jobStateChanged(uint,QString,QString)),
+               this, SLOT(onJobStateChange(uint,QString,QString)));
   }
 }
 

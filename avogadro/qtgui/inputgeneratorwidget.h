@@ -30,6 +30,10 @@ class QJsonValue;
 class QTextEdit;
 class QWidget;
 
+namespace MoleQueue {
+class JobObject;
+}
+
 namespace Avogadro {
 namespace QtGui {
 class Molecule;
@@ -79,6 +83,11 @@ signals:
    * @brief closeClicked is emitted when the close button is clicked.
    */
   void closeClicked();
+
+  /**
+   * Emitted when the user requests that a job's output be loaded in Avogadro.
+   */
+  void openJobOutput(const MoleQueue::JobObject &job);
 
 protected:
   /**
