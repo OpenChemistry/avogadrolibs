@@ -25,6 +25,7 @@
 
 namespace Avogadro {
 namespace QtGui {
+class InputGeneratorWidget;
 class Molecule;
 
 namespace Ui {
@@ -53,6 +54,14 @@ public:
    * @param scriptFilePath Absolute path to generator script.
    */
   void setInputGeneratorScript(const QString &scriptFilePath);
+
+  /**
+   * @return A reference to the internal InputGeneratorWidget.
+   * @{
+   */
+  InputGeneratorWidget& widget();
+  const InputGeneratorWidget& widget() const;
+  /** @} */
 
 public slots:
   /**

@@ -19,8 +19,14 @@
 #include "quantumpython.h"
 
 #include <avogadro/qtgui/filebrowsewidget.h>
+#include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/inputgenerator.h>
 #include <avogadro/qtgui/inputgeneratordialog.h>
+#include <avogadro/qtgui/inputgeneratorwidget.h>
+#include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/molequeuemanager.h> // For MoleQueue::JobObject
+
+#include <avogadro/io/fileformat.h>
 
 #include <QtGui/QAction>
 #include <QtGui/QDialog>
@@ -44,7 +50,8 @@ namespace QtPlugins {
 
 QuantumInput::QuantumInput(QObject *parent_) :
   ExtensionPlugin(parent_),
-  m_molecule(NULL)
+  m_molecule(NULL),
+  m_outputFormat(NULL)
 {
   refreshGenerators();
 }
@@ -78,6 +85,42 @@ void QuantumInput::setMolecule(QtGui::Molecule *mol)
     dlg->setMolecule(mol);
 }
 
+void QuantumInput::openJobOutput(const MoleQueue::JobObject &job)
+{
+  m_outputFormat = NULL;
+  m_outputFileName.clear();
+
+  QString outputPath(job.value("outputDirectory").toString());
+
+  using QtGui::FileFormatDialog;
+  FileFormatDialog::FormatFilePair result =
+      FileFormatDialog::fileToRead(qobject_cast<QWidget*>(parent()),
+                                   tr("Open Output File"), outputPath);
+
+  if (result.first == NULL) // User canceled
+    return;
+
+  m_outputFormat = result.first;
+  m_outputFileName = result.second;
+
+  emit moleculeReady(1);
+}
+
+bool QuantumInput::readMolecule(QtGui::Molecule &mol)
+{
+  Io::FileFormat *reader = m_outputFormat->newInstance();
+  bool success = reader->readFile(m_outputFileName.toStdString(), mol);
+  if (!success) {
+    qWarning() << "Error reading output file" << m_outputFileName
+               << "\n\t" << QString::fromStdString(reader->error());
+  }
+
+  m_outputFormat = NULL;
+  m_outputFileName.clear();
+
+  return success;
+}
+
 void QuantumInput::refreshGenerators()
 {
   updateInputGeneratorScripts();
@@ -96,6 +139,8 @@ void QuantumInput::menuActivated()
 
   if (!dlg) {
     dlg = new QtGui::InputGeneratorDialog(scriptFileName, theParent);
+    connect(&dlg->widget(), SIGNAL(openJobOutput(MoleQueue::JobObject)),
+            this, SLOT(openJobOutput(MoleQueue::JobObject)));
     m_dialogs.insert(scriptFileName, dlg);
   }
   dlg->setMolecule(m_molecule);

@@ -51,7 +51,9 @@ public:
    */
   MoleQueue::JobObject& jobTemplate();
   const MoleQueue::JobObject& jobTemplate() const;
+public slots:
   void setJobTemplate(const MoleQueue::JobObject &job);
+public:
   /** @} */
 
   /**
@@ -62,16 +64,34 @@ public:
   void showAndSelectProgram(const QString &programName);
 
   /**
-   * @return A JobObject with the GUI options. Any settings in jobTemplate that
-   * are not handled by the GUI are passed through untouched to the new object.
+   * @return True if the last submission was successful. Only valid after
+   * jobSubmitted has been emitted.
    */
-  MoleQueue::JobObject configuredJob() const;
+  bool submissionSuccess() const { return m_moleQueueId != InvalidMoleQueueId; }
 
   /**
    * @return True if the last submission was successful. Only valid after
    * jobSubmitted has been emitted.
    */
-  bool submissionSuccess() const { return m_moleQueueId != InvalidMoleQueueId; }
+  QString jobState() const { return m_jobState; }
+
+  /**
+   * @return True if the job has finished running.
+   */
+  bool jobCompleted() const
+  {
+    return (m_jobState == QLatin1String("Finished")
+            || m_jobState == QLatin1String("Error")
+            || m_jobState == QLatin1String("Canceled"));
+  }
+
+  /**
+   * @return true if the job completed without error.
+   */
+  bool jobSuccess() const
+  {
+    return m_jobState == QLatin1String("Finished");
+  }
 
   /**
    * @return The request id associated with the last call to submitJobRequest.
@@ -97,6 +117,20 @@ public:
    */
   QString submissionError() const { return m_submissionError; }
 
+  /**
+   * @return True if the user has requested that the output file be opened when
+   * the calculation completes.
+   */
+  bool openOutput() const;
+
+  /**
+   * @brief Request the current state of the job identified by moleQueueId()
+   * from the server. The result will be emitted in the jobUpdated() signal.
+   * @return True if moleQueueId() is valid and the server is connected, false
+   * if the request cannot be sent.
+   */
+  bool requestJobLookup();
+
 public slots:
   /**
    * Query the MoleQueue server (if available) for the list of available queues
@@ -119,18 +153,45 @@ signals:
    */
   void jobSubmitted(bool success);
 
+  /**
+   * Emitted after jobSubmitted is emitted and the job completes.
+   * @param success True if the job enters the "Finished" state. False if the
+   * job enters the "Canceled" or "Error" states.
+   */
+  void jobFinished(bool success);
+
+  /**
+   * Emitted after a successful call to requestJobLookup().
+   * @param job The result of the lookupJob() RPC query.
+   */
+  void jobUpdated(const MoleQueue::JobObject &job);
+
 private slots:
   void showAndSelectProgramHandler();
+
+  void onLookupJobReply(int reqId, const QJsonObject &result);
 
   void onSubmissionSuccess(int localId, unsigned int moleQueueId);
   void onSubmissionFailure(int localId, unsigned int, const QString &error);
 
+  void onJobStateChange(unsigned int mqId, const QString &oldState,
+                        const QString &newState);
+
 private:
-  void listenForReply(bool listen = true);
+  void listenForLookupJobReply(bool listen = true);
+  void listenForJobSubmitReply(bool listen = true);
+  void listenForJobStateChange(bool listen = true);
+
+  /**
+   * @return A JobObject with the GUI options. Any settings in jobTemplate that
+   * are not handled by the GUI are passed through untouched to the new object.
+   */
+  MoleQueue::JobObject configuredJob() const;
 
 private:
   Ui::MoleQueueWidget *m_ui;
   MoleQueue::JobObject m_jobTemplate;
+  QString m_jobState;
   QString m_submissionError;
   int m_requestId;
   unsigned int m_moleQueueId;
