@@ -96,6 +96,9 @@ unsigned int GaussianSet::addGto(unsigned int basis, double c, double a)
 void GaussianSet::setMolecularOrbitals(const vector<double>& MOs,
                                        ElectronType type)
 {
+  if (!m_numMOs)
+    return;
+
   m_init = false;
 
   size_t index(0);
