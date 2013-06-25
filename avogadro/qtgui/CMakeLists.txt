@@ -89,9 +89,7 @@ list(APPEND SOURCES ${UI_SOURCES})
 
 avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtGui
-  AvogadroCore
-  AvogadroRendering
-  MoleQueueClient
   AvogadroIO
+  MoleQueueClient
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY})
