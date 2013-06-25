@@ -36,6 +36,7 @@ set(HEADERS
   elementtranslator.h
   extensionplugin.h
   filebrowsewidget.h
+  fileformatdialog.h
   generichighlighter.h
   inputgenerator.h
   inputgeneratordialog.h
@@ -60,6 +61,7 @@ set(SOURCES
   elementtranslator.cpp
   extensionplugin.cpp
   filebrowsewidget.cpp
+  fileformatdialog.cpp
   generichighlighter.cpp
   inputgenerator.cpp
   inputgeneratordialog.cpp
