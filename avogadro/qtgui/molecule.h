@@ -61,6 +61,13 @@ public:
   Core::Atom addAtom(unsigned char atomicNumber) AVO_OVERRIDE;
 
   /**
+   * Add an atom with @p atomicNumber and @p uniqueId to the molecule.
+   * @return The atom created. This can be invalid if the unique ID was already
+   * in use.
+   */
+  Core::Atom addAtom(unsigned char atomicNumber, int uniqueId);
+
+  /**
    * @brief Remove the specified atom from the molecule.
    * @param index The index of the atom to be removed.
    * @return True on success, false if the atom was not found.
@@ -76,6 +83,23 @@ public:
   bool removeAtom(const Core::Atom &atom) AVO_OVERRIDE;
 
   /**
+   * @brief Get the atom referenced by the @p uniqueId, the isValid method
+   * should be queried to ensure the id still referenced a valid atom.
+   * @param uniqueId The unique identifier for the atom.
+   * @return An Atom object, check it is valid before using it.
+   */
+  Core::Atom atomByUniqueId(int uniqueId);
+
+  /**
+   * @brief Get the unique ID of the atom, this will uniquely reference the atom
+   * as long as it exists.
+   * @param atom The atom to obtain the unique ID of.
+   * @return The unique identifier for the atom, -1 if the atom is invalid or
+   * does not belong to this molecule.
+   */
+  int atomUniqueId(const Core::Atom &atom) const;
+
+  /**
    * @brief Add a bond between the specified atoms.
    * @param a The first atom in the bond.
    * @param b The second atom in the bond.
@@ -84,6 +108,18 @@ public:
    */
   Core::Bond addBond(const Core::Atom &a, const Core::Atom &b,
                      unsigned char bondOrder = 1) AVO_OVERRIDE;
+
+  /**
+   * @brief Add a bond between the specified atoms.
+   * @param a The first atom in the bond.
+   * @param b The second atom in the bond.
+   * @param bondOrder The order of the bond.
+   * @param uniqueId The unique ID to use for the bond.
+   * @return The bond created. This can be invalid if the unique ID was already
+   * in use.
+   */
+  Core::Bond addBond(const Core::Atom &a, const Core::Atom &b,
+                     unsigned char bondOrder, int uniqueId);
 
   /**
    * @brief Remove the specified bond.
@@ -108,6 +144,23 @@ public:
    * @overload
    */
   bool removeBond(const Core::Atom &a, const Core::Atom &b) AVO_OVERRIDE;
+
+  /**
+   * @brief Get the bond referenced by the @p uniqueId, the isValid method
+   * should be queried to ensure the id still referenced a valid bond.
+   * @param uniqueId The unique identifier for the bond.
+   * @return A Bond object, check it is valid before using it.
+   */
+  Core::Bond bondByUniqueId(int uniqueId);
+
+  /**
+   * @brief Get the unique ID of the bond, this will uniquely reference the bond
+   * as long as it exists.
+   * @param bond The bond to obtain the unique ID of.
+   * @return The unique identifier for the bond, -1 if the bond is invalid or
+   * does not belong to this molecule.
+   */
+  int bondUniqueId(const Core::Bond &bond) const;
 
   /**
    * @brief Add a mesh to the molecule.
