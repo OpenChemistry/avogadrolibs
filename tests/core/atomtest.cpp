@@ -84,3 +84,15 @@ TEST(AtomTest, setAtomPosition3d)
   EXPECT_EQ(atom2.position3d().y(), 3.14);
   EXPECT_EQ(atom2.position3d().z(), 6.66);
 }
+
+TEST(AtomTest, operators)
+{
+  Molecule molecule;
+  Atom atom1 = molecule.addAtom(1);
+  Atom atom2 = molecule.addAtom(2);
+  EXPECT_TRUE(atom1 == molecule.atom(0));
+  EXPECT_FALSE(atom1 != molecule.atom(0));
+  EXPECT_TRUE(atom1 != molecule.atom(1));
+  EXPECT_FALSE(atom1 == molecule.atom(1));
+  EXPECT_TRUE(atom1 != atom2);
+}
