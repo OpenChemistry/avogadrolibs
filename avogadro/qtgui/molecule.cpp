@@ -37,6 +37,18 @@ Core::Atom Molecule::addAtom(unsigned char atomicNumber)
   return a;
 }
 
+Core::Atom Molecule::addAtom(unsigned char atomicNumber, int uniqueId)
+{
+  if (uniqueId >= static_cast<int>(m_atomUniqueIds.size())
+      || m_atomUniqueIds[uniqueId] != -1) {
+    return Core::Atom();
+  }
+
+  m_atomUniqueIds[uniqueId] = static_cast<int>(atomCount());
+  Core::Atom a = Core::Molecule::addAtom(atomicNumber);
+  return a;
+}
+
 bool Molecule::removeAtom(size_t index)
 {
   if (index >= atomCount())
@@ -93,10 +105,41 @@ bool Molecule::removeAtom(const Core::Atom &atom_)
   return removeAtom(atom_.index());
 }
 
+Core::Atom Molecule::atomByUniqueId(int uniqueId)
+{
+  if (uniqueId >= static_cast<int>(m_atomUniqueIds.size())
+      || m_atomUniqueIds[uniqueId] == -1) {
+    return Core::Atom();
+  }
+  else {
+    return Core::Atom(this, static_cast<size_t>(m_atomUniqueIds[uniqueId]));
+  }
+}
+
+int Molecule::atomUniqueId(const Core::Atom &a) const
+{
+  if (a.molecule() != this)
+    return -1;
+  return findAtomUniqueId(a.index());
+}
+
 Core::Bond Molecule::addBond(const Core::Atom &a, const Core::Atom &b,
                              unsigned char bondOrder)
 {
   m_bondUniqueIds.push_back(static_cast<int>(bondCount()));
+  Core::Bond bond_ = Core::Molecule::addBond(a, b, bondOrder);
+  return bond_;
+}
+
+Core::Bond Molecule::addBond(const Core::Atom &a, const Core::Atom &b,
+                             unsigned char bondOrder, int uniqueId)
+{
+  if (uniqueId >= static_cast<int>(m_bondUniqueIds.size())
+      || m_bondUniqueIds[uniqueId] != -1) {
+    return Core::Bond();
+  }
+
+  m_bondUniqueIds[uniqueId] = static_cast<int>(bondCount());
   Core::Bond bond_ = Core::Molecule::addBond(a, b, bondOrder);
   return bond_;
 }
@@ -139,6 +182,25 @@ bool Molecule::removeBond(const Core::Atom &a, const Core::Atom &b)
   return removeBond(bond(a, b).index());
 }
 
+Core::Bond Molecule::bondByUniqueId(int uniqueId)
+{
+  if (uniqueId >= static_cast<int>(m_bondUniqueIds.size())
+      || m_bondUniqueIds[uniqueId] == -1) {
+    return Core::Bond();
+  }
+  else {
+    return Core::Bond(this, static_cast<size_t>(m_bondUniqueIds[uniqueId]));
+  }
+}
+
+int Molecule::bondUniqueId(const Core::Bond &b) const
+{
+  if (b.molecule() != this)
+    return -1;
+  return findBondUniqueId(b.index());
+}
+
+
 Mesh* Molecule::addMesh()
 {
   m_meshes.push_back(new Mesh);
@@ -167,7 +229,7 @@ void Molecule::emitChanged(unsigned int change)
     emit changed(change);
 }
 
-int Molecule::findAtomUniqueId(size_t index) const
+inline int Molecule::findAtomUniqueId(size_t index) const
 {
   for (size_t i = 0; i < m_atomUniqueIds.size(); ++i)
     if (m_atomUniqueIds[i] == static_cast<int>(index))
@@ -175,7 +237,7 @@ int Molecule::findAtomUniqueId(size_t index) const
   return -1;
 }
 
-int Molecule::findBondUniqueId(size_t index) const
+inline int Molecule::findBondUniqueId(size_t index) const
 {
   for (size_t i = 0; i < m_bondUniqueIds.size(); ++i)
     if (m_bondUniqueIds[i] == static_cast<int>(index))
