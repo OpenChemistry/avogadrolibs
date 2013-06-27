@@ -24,6 +24,8 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
 
+#include <QDebug>
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -125,13 +127,12 @@ bool OBFileFormat::read(std::istream &in, Core::Molecule &molecule)
   QStringList options;
   QStringList formats2D;
   formats2D << "smi" << "inchi" << "can";
-  if (formats2D.contains(QString::fromStdString(m_fileExtensions.front()))) {
+  if (formats2D.contains(QString::fromStdString(m_fileExtensions.front())))
     options << "--gen3d";
-  }
 
   // Perform the conversion.
   if (!proc.convert(input, QString::fromStdString(m_fileExtensions.front()),
-                    "cml")) {
+                    "cml", options)) {
     appendError("OpenBabel conversion failed!");
     return false;
   }
