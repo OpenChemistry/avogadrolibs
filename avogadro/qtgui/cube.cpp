@@ -295,21 +295,15 @@ bool Cube::setValue(int i, int j, int k, double value_)
   unsigned int index = i * m_points.y() * m_points.z() + j * m_points.z() + k;
   if (index < m_data.size()) {
     m_data[index] = value_;
+    if (value_ < m_minValue)
+      m_minValue = value_;
+    else if (value_ > m_maxValue)
+      m_maxValue = value_;
     return true;
   }
   else {
     return false;
   }
-}
-
-void Cube::setName(const char *name_)
-{
-  this->setName(QString(name_));
-}
-
-const char * Cube::name_c_str() const
-{
-  return this->name().toStdString().c_str();
 }
 
 QReadWriteLock * Cube::lock() const

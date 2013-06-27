@@ -19,6 +19,8 @@
 
 #include <avogadro/qtgui/cube.h>
 
+#include <QtCore/QString>
+
 namespace Avogadro {
 namespace QtPlugins {
 

@@ -23,7 +23,6 @@
 #include <avogadro/core/vector.h>
 
 #include <vector>
-#include <QtCore/QString>
 
 // Forward declarations
 class QReadWriteLock;
@@ -215,11 +214,8 @@ public:
    */
   double maxValue() const { return m_maxValue; }
 
-  void setName(const QString &name_) { m_name = name_; }
-  QString name() const { return m_name; }
-
-  void setName(const char *name);
-  const char * name_c_str() const;
+  void setName(const std::string &name_) { m_name = name_; }
+  std::string name() const { return m_name; }
 
   void setCubeType(Type type) { m_cubeType = type; }
   Type cubeType() const { return m_cubeType; }
@@ -234,7 +230,7 @@ protected:
   Vector3 m_min, m_max, m_spacing;
   Vector3i m_points;
   double m_minValue, m_maxValue;
-  QString m_name;
+  std::string m_name;
   Type    m_cubeType;
   QReadWriteLock *m_lock;
 };
