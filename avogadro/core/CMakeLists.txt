@@ -24,6 +24,7 @@ set(HEADERS
   hydrogentools.h
   matrix.h
   molecule.h
+  mutex.h
   nameatomtyper.h
   ringperceiver.h
   slaterset.h
@@ -47,6 +48,7 @@ set(SOURCES
   hydrogentools.cpp
   mdlvalence_p.h
   molecule.cpp
+  mutex.cpp
   nameatomtyper.cpp
   ringperceiver.cpp
   slaterset.cpp
@@ -57,3 +59,11 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
+
+# Additional libraries and compiler definitions necessary when using Boost to
+# replace C++11.
+if(AvogadroLibs_NEEDS_BOOST)
+  target_link_libraries(AvogadroCore
+    LINK_PRIVATE ${AvogadroLibs_MUTEX_BOOST_LIBRARIES})
+  add_definitions(${AvogadroLibs_BOOST_DEFINITIONS})
+endif()
