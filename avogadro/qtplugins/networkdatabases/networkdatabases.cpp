@@ -67,8 +67,8 @@ bool NetworkDatabases::readMolecule(QtGui::Molecule &mol)
   if (m_moleculeData.isEmpty() || m_moleculeName.isEmpty())
     return false;
 
-  return Io::FileFormatManager::instance().readString(mol, m_moleculeData.data(),
-                                                      "sdf");
+  return Io::FileFormatManager::instance().readString(
+        mol, m_moleculeData.data(), "sdf");
 }
 
 void NetworkDatabases::showDialog()
@@ -83,17 +83,20 @@ void NetworkDatabases::showDialog()
   }
   // Prompt for a chemical structure name
   bool ok;
-  QString structureName = QInputDialog::getText(qobject_cast<QWidget*>(parent()),
-                                                tr("Chemical Name"),
-                                                tr("Chemical structure to download."),
-                                                QLineEdit::Normal,
-                                                "", &ok);
+  QString structureName =
+      QInputDialog::getText(qobject_cast<QWidget*>(parent()),
+                            tr("Chemical Name"),
+                            tr("Chemical structure to download."),
+                            QLineEdit::Normal, "", &ok);
+
   if (!ok || structureName.isEmpty())
     return;
 
-  // Hard coding the NIH resolver download URL - this could be used for other services
+  // Hard coding the NIH resolver download URL - this could be used for other
+  // services
   m_network->get(QNetworkRequest(
-      QUrl("http://cactus.nci.nih.gov/chemical/structure/" + structureName + "/sdf?get3d=true"
+      QUrl("http://cactus.nci.nih.gov/chemical/structure/" + structureName
+           + "/sdf?get3d=true"
            + "&resolver=name_by_opsin,name_by_cir,name_by_chemspider"
            + "&requester=Avogadro2")));
 
