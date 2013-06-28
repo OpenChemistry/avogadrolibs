@@ -15,15 +15,15 @@
 ******************************************************************************/
 
 /** Generated file, do not edit. */
-#ifndef AVOGADRO_CORE_MEMORY_H
-#define AVOGADRO_CORE_MEMORY_H
+#ifndef AVOGADRO_STL_MEMORY_H
+#define AVOGADRO_STL_MEMORY_H
 
 @MEMORY_TYPE_INCLUDES@
 
 namespace Avogadro {
-namespace Core {
+namespace Stl {
 @MEMORY_TYPEDEFS@
 }
 }
 
-#endif // AVOGADRO_CORE_MEMORY_H
+#endif // AVOGADRO_STL_MEMORY_H
