@@ -12,6 +12,7 @@ set(tests
   Graph
   HydrogenTools
   Molecule
+  Mutex
   RingPerceiver
   Variant
   VariantMap
