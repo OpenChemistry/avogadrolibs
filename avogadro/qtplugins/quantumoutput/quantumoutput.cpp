@@ -163,7 +163,7 @@ void QuantumOutput::calculateMolecularOrbital(int molecularOrbital,
     m_concurrent2->setMolecule(m_molecule);
 
     m_isoValue = isoValue;
-    m_cube->setLimits(m_molecule, stepSize, 5.0);
+    m_cube->setLimits(*m_molecule, stepSize, 5.0);
     QString progressText;
     if (molecularOrbital == -1) {
       if (dynamic_cast<GaussianSet *>(m_basis))
