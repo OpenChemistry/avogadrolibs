@@ -32,6 +32,15 @@ set(input_generators
   inputGenerators/terachem.py
 )
 
+option(INSTALL_TEST_INPUT_GENERATOR
+  "Install a dummy input generator that is used to test generator scripts."
+  OFF
+)
+
+if(INSTALL_TEST_INPUT_GENERATOR)
+  list(APPEND input_generators inputGenerators/inputgeneratortest.py)
+endif()
+
 # Default shebang lines for interpreted scripts:
 # Python 2.x. Default "#!/usr/bin/env python" or python 2.x interpretor in PATH.
 set(PYTHON2_EXECUTABLE "/usr/bin/env python")

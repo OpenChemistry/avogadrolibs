@@ -187,10 +187,31 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
         foreach (const QJsonValue &file, obj["files"].toArray()) {
           if (file.isObject()) {
             QJsonObject fileObj = file.toObject();
-            if (fileObj["filename"].isString() &&
-                fileObj["contents"].isString()) {
+            if (fileObj["filename"].isString()) {
               QString fileName = fileObj["filename"].toString();
-              QString contents = fileObj["contents"].toString();
+              QString contents;
+              if (fileObj["contents"].isString()) {
+                contents = fileObj["contents"].toString();
+              }
+              else if (fileObj["filePath"].isString()) {
+                QFile refFile(fileObj["filePath"].toString());
+                if (refFile.exists() && refFile.open(QFile::ReadOnly)) {
+                  contents = QString(refFile.readAll());
+                }
+                else {
+                  contents = tr("Reference file '%1' does not exist.")
+                      .arg(refFile.fileName());
+                  m_warnings << tr("Error populating file %1: %2")
+                                .arg(fileName, contents);
+                }
+              }
+              else {
+                m_errors << tr("File '%1' poorly formed. Missing string "
+                               "'contents' or 'filePath' members.")
+                            .arg(fileName);
+                contents = m_errors.back();
+                result = false;
+              }
               replaceKeywords(contents, mol);
               m_filenames << fileName;
               m_files.insert(fileObj["filename"].toString(), contents);
@@ -342,7 +363,7 @@ QByteArray InputGenerator::execute(const QStringList &args,
     if (!proc.waitForStarted(5000)) {
       m_errors << tr("Error running script '%1 %2': Timed out waiting for "
                      "start (%3).")
-                  .arg(m_scriptFilePath, realArgs.join(" "),
+                  .arg(m_pythonInterpreter, realArgs.join(" "),
                        processErrorString(proc));
       return QByteArray();
     }
@@ -351,7 +372,7 @@ QByteArray InputGenerator::execute(const QStringList &args,
     if (len != static_cast<qint64>(scriptStdin.size())) {
       m_errors << tr("Error running script '%1 %2': failed to write to stdin "
                      "(len=%3, wrote %4 bytes, QProcess error: %5).")
-                  .arg(m_scriptFilePath).arg(realArgs.join(" "))
+                  .arg(m_pythonInterpreter).arg(realArgs.join(" "))
                   .arg(scriptStdin.size()).arg(len)
                   .arg(processErrorString(proc));
       return QByteArray();
@@ -362,15 +383,15 @@ QByteArray InputGenerator::execute(const QStringList &args,
   if (!proc.waitForFinished(5000)) {
     m_errors << tr("Error running script '%1 %2': Timed out waiting for "
                    "finish (%3).")
-                .arg(m_scriptFilePath, realArgs.join(" "),
+                .arg(m_pythonInterpreter, realArgs.join(" "),
                      processErrorString(proc));
     return QByteArray();
   }
 
   if (proc.exitStatus() != QProcess::NormalExit || proc.exitCode() != 0) {
     m_errors << tr("Error running script '%1 %2': Abnormal exit status %3 "
-                   "(%4: %5)\n\n%6.")
-                .arg(m_scriptFilePath)
+                   "(%4: %5)\n\nOutput:\n%6")
+                .arg(m_pythonInterpreter)
                 .arg(realArgs.join(" "))
                 .arg(proc.exitCode())
                 .arg(processErrorString(proc))

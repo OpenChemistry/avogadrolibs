@@ -17,8 +17,9 @@
 #include "inputgeneratorwidget.h"
 #include "ui_inputgeneratorwidget.h"
 
-#include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/filebrowsewidget.h>
 #include <avogadro/qtgui/generichighlighter.h>
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/molequeuedialog.h>
 #include <avogadro/qtgui/molequeuemanager.h>
 
@@ -163,10 +164,21 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
   inputOptions["options"] = collectOptions();
   bool success = m_inputGenerator.generateInput(inputOptions, *m_molecule);
 
-  if (!m_inputGenerator.warningList().isEmpty())
-    setWarning(m_inputGenerator.warningList().join("\n"));
-  else
+  if (!m_inputGenerator.warningList().isEmpty()) {
+    QString warningHtml;
+    warningHtml += "<style>li{color:red;}h3{font-weight:bold;}</style>";
+    warningHtml += "<h3>" + tr("Problems occured during input generation:")
+        + "</h3>";
+    warningHtml += "<ul>";
+    foreach (const QString &warning, m_inputGenerator.warningList())
+      warningHtml += QString ("<li>%1</li>").arg(warning);
+    warningHtml += "</ul>";
+
+    setWarning(warningHtml);
+  }
+  else {
     resetWarningDisplay();
+  }
 
   if (!success) {
     showError(m_inputGenerator.errorList().join("\n\n"));
@@ -723,6 +735,8 @@ QWidget *InputGeneratorWidget::createOptionWidget(const QJsonValue &option)
     return createStringListWidget(obj);
   else if (type == "string")
     return createStringWidget(obj);
+  else if (type == "filePath")
+    return createFilePathWidget(obj);
   else if (type == "integer")
     return createIntegerWidget(obj);
   else if (type == "boolean")
@@ -762,6 +776,15 @@ QWidget *InputGeneratorWidget::createStringWidget(const QJsonObject &obj)
   QLineEdit *edit = new QLineEdit(this);
   connect(edit, SIGNAL(textChanged(QString)), SLOT(updatePreviewText()));
   return edit;
+}
+
+QWidget *InputGeneratorWidget::createFilePathWidget(const QJsonObject &obj)
+{
+  Q_UNUSED(obj);
+  QtGui::FileBrowseWidget *fileBrowse = new QtGui::FileBrowseWidget(this);
+  connect(fileBrowse, SIGNAL(fileNameChanged(QString)),
+          SLOT(updatePreviewText()));
+  return fileBrowse;
 }
 
 QWidget *InputGeneratorWidget::createIntegerWidget(const QJsonObject &obj)
@@ -834,6 +857,8 @@ void InputGeneratorWidget::setOption(const QString &name,
     return setStringListOption(name, defaultValue);
   else if (type == "string")
     return setStringOption(name, defaultValue);
+  else if (type == "filePath")
+    return setFilePathOption(name, defaultValue);
   else if (type == "integer")
     return setIntegerOption(name, defaultValue);
   else if (type == "boolean")
@@ -900,6 +925,29 @@ void InputGeneratorWidget::setStringOption(const QString &name,
   }
 
   lineEdit->setText(value.toString());
+}
+
+void InputGeneratorWidget::setFilePathOption(const QString &name,
+                                             const QJsonValue &value)
+{
+  QtGui::FileBrowseWidget *fileBrowse =
+      qobject_cast<QtGui::FileBrowseWidget*>(m_widgets.value(name, NULL));
+  if (!fileBrowse) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad widget type.")
+                  .arg(name);
+    return;
+  }
+
+  if (!value.isString()) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad default value:")
+                  .arg(name)
+               << value;
+    return;
+  }
+
+  fileBrowse->setFileName(value.toString());
 }
 
 void InputGeneratorWidget::setIntegerOption(const QString &name,
@@ -970,6 +1018,11 @@ bool InputGeneratorWidget::optionString(const QString &option,
     retval = true;
     value = QString::number(dspinbox->value());
   }
+  else if (QtGui::FileBrowseWidget *fileBrowse
+           = qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
+    retval = true;
+    value = fileBrowse->fileName();
+  }
 
   return retval;
 }
@@ -994,6 +1047,10 @@ QJsonObject InputGeneratorWidget::collectOptions() const
     }
     else if (QCheckBox *checkBox = qobject_cast<QCheckBox*>(widget)) {
       ret.insert(label, checkBox->isChecked());
+    }
+    else if (QtGui::FileBrowseWidget *fileBrowse
+             = qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
+      ret.insert(label, fileBrowse->fileName());
     }
     else {
       qWarning() << tr("Unhandled widget in collectOptions for option '%1'.")
