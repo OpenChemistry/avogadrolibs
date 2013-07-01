@@ -27,10 +27,6 @@
 
 class QJsonObject;
 
-namespace MoleQueue {
-class Client;
-}
-
 namespace Avogadro {
 namespace QtGui {
 class Molecule;
@@ -55,9 +51,6 @@ protected:
 private slots:
   void updatePreviewText();
 
-  void refreshPrograms();
-  void queueListReceived(const QJsonObject &queueList);
-
   void defaultsClicked();
   void resetClicked();
   void generateClicked();
@@ -69,7 +62,6 @@ private:
   void connectBasic();
   void connectPreview();
   void connectButtons();
-  void connectMoleQueue();
 
   void buildOptions();
   void updateOptionCache();
@@ -92,8 +84,6 @@ private:
 
   bool m_updatePending;
   QMap<QComboBox *, int> m_optionCache;
-
-  MoleQueue::Client *m_client;
 };
 
 } // end namespace QtPlugins

@@ -74,6 +74,19 @@ private:
   size_t m_index;
 };
 
+inline bool operator==(const Atom& lhs, const Atom& rhs)
+{
+  if (lhs.molecule() == rhs.molecule() && lhs.index() == rhs.index())
+    return true;
+  else
+    return false;
+}
+
+inline bool operator!=(const Atom& lhs, const Atom& rhs)
+{
+  return !operator==(lhs, rhs);
+}
+
 } // end Core namespace
 } // end Avogadro namespace
 

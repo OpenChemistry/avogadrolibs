@@ -43,6 +43,10 @@ set(HEADERS
   mesh.h
   meshgenerator.h
   molecule.h
+  molequeuedialog.h
+  molequeuemanager.h
+  molequeuequeuelistmodel.h
+  molequeuewidget.h
   periodictableview.h
   sceneplugin.h
   scenepluginmodel.h
@@ -63,6 +67,10 @@ set(SOURCES
   mesh.cpp
   meshgenerator.cpp
   molecule.cpp
+  molequeuedialog.cpp
+  molequeuemanager.cpp
+  molequeuequeuelistmodel.cpp
+  molequeuewidget.cpp
   periodictablescene_p.cpp
   periodictableview.cpp
   sceneplugin.cpp
@@ -73,15 +81,15 @@ set(SOURCES
 set(UIS
   inputgeneratordialog.ui
   inputgeneratorwidget.ui
+  molequeuedialog.ui
+  molequeuewidget.ui
 )
 qt4_wrap_ui(UI_SOURCES ${UIS})
 list(APPEND SOURCES ${UI_SOURCES})
 
 avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtGui
-  AvogadroCore
-  AvogadroRendering
-  MoleQueueClient
   AvogadroIO
+  MoleQueueClient
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY})

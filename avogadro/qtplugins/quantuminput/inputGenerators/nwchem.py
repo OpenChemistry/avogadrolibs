@@ -78,6 +78,10 @@ def getOptions():
   userOptions['Charge']['minimum'] = -9
   userOptions['Charge']['maximum'] = 9
 
+  userOptions['Filename Base'] = {}
+  userOptions['Filename Base']['type'] = 'string'
+  userOptions['Filename Base']['default'] = 'job'
+
   # highlighting options
   defaultRules = []
 
@@ -177,7 +181,6 @@ def getOptions():
   opts = {}
   opts['userOptions'] = userOptions
   opts['highlightStyles'] = highlightStyles
-  opts['allowCustomBaseName'] = True
 
   return opts
 
@@ -264,7 +267,7 @@ def generateInput():
   inp = generateInputFile(opts['options'])
 
   # Basename for input files:
-  baseName = opts['settings']['baseName']
+  baseName = opts['options']['Filename Base']
 
   # Prepare the result
   result = {}
