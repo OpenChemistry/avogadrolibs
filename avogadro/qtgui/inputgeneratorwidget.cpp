@@ -295,11 +295,38 @@ void InputGeneratorWidget::computeClicked()
       job.setInputFile(fileName, it.value()->toPlainText());
   }
 
-  MoleQueueDialog::submitJob(this,
-                             tr("Submit %1 Calculation")
-                             .arg(m_inputGenerator.displayName()),
-                             job, MoleQueueDialog::WaitForSubmissionResponse
-                             | MoleQueueDialog::SelectProgramFromTemplate);
+  MoleQueueDialog::SubmitStatus result =
+      MoleQueueDialog::submitJob(this,
+                                 tr("Submit %1 Calculation")
+                                 .arg(m_inputGenerator.displayName()),
+                                 job, MoleQueueDialog::WaitForSubmissionResponse
+                                 | MoleQueueDialog::SelectProgramFromTemplate);
+
+  switch (result) {
+  default:
+  case MoleQueueDialog::SubmissionSuccessful:
+  case MoleQueueDialog::SubmissionFailed:
+  case MoleQueueDialog::SubmissionAttempted:
+  case MoleQueueDialog::SubmissionAborted:
+    // The dialog handles these cases adequately, we don't need to do anything.
+    break;
+
+  case MoleQueueDialog::JobFailed:
+    // Inform the user:
+    QMessageBox::information(this, tr("Job Failed"),
+                             tr("The job did not complete successfully."),
+                             QMessageBox::Ok);
+    break;
+
+  case MoleQueueDialog::JobFinished:
+    // Let the world know that the job is ready to open. job has been
+    // overwritten with the final job details.
+    emit openJobOutput(job);
+    // Hide the parent if it's a dialog:
+    if (QDialog *dlg = qobject_cast<QDialog*>(parent()))
+      dlg->hide();
+    break;
+  }
 }
 
 void InputGeneratorWidget::setWarning(const QString &warn)

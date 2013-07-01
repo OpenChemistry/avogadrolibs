@@ -20,14 +20,13 @@
 #include <QtGui/QDialog>
 #include "avogadroqtguiexport.h"
 
-#include <avogadro/qtgui/molequeuewidget.h>
-
 #include <avogadro/core/avogadrocore.h>
 
 #include <molequeue/client/jobobject.h>
 
 namespace Avogadro {
 namespace QtGui {
+class MoleQueueWidget;
 
 namespace Ui {
 class MoleQueueDialog;
@@ -96,7 +95,22 @@ public:
     /**
      * The user canceled the submission.
      */
-    SubmissionAborted
+    SubmissionAborted,
+
+    /**
+     * The user requested that the job output be opened when finished, but
+     * the job did not finish successfully (the job was either canceled or
+     * failed).
+     */
+    JobFailed,
+
+    /**
+     * The user requested that the job output be opened when finished, and
+     * the the job completed without error. The jobTemplate argument of
+     * submitJob will be overwritten with the current job details, fetched
+     * from the server after the job enters the "Finished" state.
+     */
+    JobFinished
   };
 
   /**
@@ -104,7 +118,10 @@ public:
    * MoleQueue.
    * @param parent_ The parent widget for parenting/layout purposes.
    * @param caption The dialog title.
-   * @param jobTemplate A template job, used to initialize GUI options.
+   * @param jobTemplate A template job, used to initialize GUI options. If
+   * the user requests that the job output is opened and the job finishes
+   * successfully, this will be overwritten with the current job details, and
+   * JobFinished is returned.
    * @param options Bitwise combination of flags that control dialog behavior.
    * @param moleQueueId If not NULL, the variable referenced by this pointer
    * will be overwritten by the MoleQueue Id of the submitted job when the
@@ -117,7 +134,7 @@ public:
    * @return A SubmitStatus enum value indicating the result of the submission.
    */
   static SubmitStatus submitJob(QWidget *parent_, const QString &caption,
-                                const MoleQueue::JobObject &jobTemplate,
+                                MoleQueue::JobObject &jobTemplate,
                                 SubmitOptions options,
                                 unsigned int *moleQueueId = NULL,
                                 int *submissionRequestId = NULL);
@@ -130,15 +147,18 @@ public:
   const MoleQueueWidget &widget() const;
   /** @} */
 
-  /**
-   * Wait for the submitJob reply from MoleQueue. This must be called after
-   * MoleQueueDialog.widget().submitJobRequest().
-   * @param msTimeout Timeout in milliseconds.
-   * @return True if a reply was received, false on timeout.
-   */
-  bool waitForReply(int msTimeout = 5000) const;
-
 private:
+  typedef QPair<QObject *, const char*> MetaMethod;
+  /**
+   * Wait @a timeout milliseconds for @a source to emit @a signal.
+   * @param signalList List of QObject* and const char* (signals) to listen for.
+   * @param msTimeout Timeout in milliseconds. A negative value will wait
+   * forever.
+   * @return True if a signal in @a signalList is received, false on timeout.
+   */
+  bool waitForSignal(const QList<MetaMethod> &signalList,
+                     int msTimeout = 5000) const;
+
   Ui::MoleQueueDialog *m_ui;
 };
 
