@@ -16,11 +16,10 @@
 
 #include "quantuminput.h"
 
-#include "quantumpython.h"
-
 #include <avogadro/qtgui/filebrowsewidget.h>
 #include <avogadro/qtgui/inputgenerator.h>
 #include <avogadro/qtgui/inputgeneratordialog.h>
+#include <avogadro/qtgui/quantumpython.h>
 
 #include <QtGui/QAction>
 #include <QtGui/QDialog>

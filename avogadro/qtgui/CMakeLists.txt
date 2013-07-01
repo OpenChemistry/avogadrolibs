@@ -18,9 +18,6 @@ find_package(PythonInterp 2)
 if(PYTHON_EXECUTABLE)
   set(PYTHON2_EXECUTABLE "${PYTHON_EXECUTABLE}")
 endif()
-set(QUANTUMINPUT_PYTHON2_SHEBANG "#!${PYTHON2_EXECUTABLE}"
-  CACHE STRING "Shebang line (e.g. \"#!/usr/bin/...\") for python 2.x scripts.")
-mark_as_advanced(QUANTUMINPUT_PYTHON2_SHEBANG)
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h.in"
 "namespace Avogadro {
