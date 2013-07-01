@@ -20,15 +20,13 @@
 #include <QtGui/QFileDialog>
 #include "avogadroqtguiexport.h"
 
+#include <avogadro/io/fileformat.h>
+
 #include <vector>
 
 namespace Avogadro {
 namespace Core {
 class Molecule;
-}
-
-namespace Io {
-class FileFormat;
 }
 
 namespace QtGui {
@@ -87,6 +85,23 @@ public:
   static FormatFilePair fileToWrite(
       QWidget *parent, const QString &caption = QString(),
       const QString &dir = QString(), const QString &filter = QString());
+
+  /**
+   * Given a filename and a set of Io::FileFormat::Operation flags, find a
+   * suitable file format from the FileFormatManager. If multiple readers are
+   * found, ask the user to select one. If no suitable format is found, return
+   * NULL.
+   * @param parentWidget Parent for any dialog windows that will appear.
+   * @param caption Window title for any dialog windows.
+   * @param fileName Filename to use when searching for a format. Formats are
+   * chosen based on the file extension.
+   * @param formatFlags Operations that the format must support. Most likely
+   * (Io::FileFormat::)Read | File or Write | File.
+   * @return The selected matching reader, or NULL if no reader is found.
+   */
+  static const Io::FileFormat *findFileFormat(QWidget *parentWidget,
+      const QString &caption, const QString &fileName,
+      const Io::FileFormat::Operations formatFlags);
 
 private:
   /**

@@ -57,20 +57,12 @@ FileFormatDialog::fileToRead(QWidget *parent, const QString &caption,
     if (fileName.isEmpty()) // user cancel
       return result;
 
-    // Extract extension from filename.
-    QFileInfo fileInfo(fileName);
-    QString extension = fileInfo.suffix();
-    if (extension.isEmpty())
-      extension = fileInfo.fileName();
-    extension = extension.toLower();
-
-    // Lookup matching file formats.
-    vector<const FileFormat*> matches(
-          FileFormatManager::instance().fileFormatsFromFileExtension(
-            extension.toStdString(), FileFormat::Read | FileFormat::File));
+    const Io::FileFormat *format = findFileFormat(
+          parent, caption, fileName,
+          FileFormat::File | FileFormat::Read);
 
     // If none found, give user the option to retry.
-    if (matches.empty()) {
+    if (!format) {
       QMessageBox::StandardButton reply =
           QMessageBox::question(parent, caption,
                                 tr("Unable to find a suitable file reader for "
@@ -86,12 +78,8 @@ FileFormatDialog::fileToRead(QWidget *parent, const QString &caption,
       }
     }
 
-    result.first = selectFileFormat(parent, matches, caption,
-                                    tr("Multiple readers found that can read "
-                                       "this file. Which should be used?"),
-                                    QString("FileFormatDialog/fileToRead/%1"
-                                            "/lastUsed").arg(extension));
-    result.second = fileInfo.absoluteFilePath();
+    result.first = format;
+    result.second = fileName;
 
   } while (false);
 
@@ -99,7 +87,7 @@ FileFormatDialog::fileToRead(QWidget *parent, const QString &caption,
 }
 
 FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
-    QWidget *parent, const QString &caption, const QString &dir,
+    QWidget *parentWidget, const QString &caption, const QString &dir,
     const QString &filter)
 {
   FormatFilePair result(NULL, QString());
@@ -107,28 +95,20 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
   const QString realFilter = filter.isEmpty() ? writeFileFilter() : filter;
 
   do { // jump point for continue statements on retry
-    QString fileName = QFileDialog::getSaveFileName(parent, caption, dir,
+    QString fileName = QFileDialog::getSaveFileName(parentWidget, caption, dir,
                                                     realFilter);
 
     if (fileName.isEmpty()) // user cancel
       return result;
 
-    // Extract extension from filename.
-    QFileInfo fileInfo(fileName);
-    QString extension = fileInfo.suffix();
-    if (extension.isEmpty())
-      extension = fileInfo.fileName();
-    extension = extension.toLower();
-
-    // Lookup matching file formats.
-    vector<const FileFormat*> matches(
-          FileFormatManager::instance().fileFormatsFromFileExtension(
-            extension.toStdString(), FileFormat::Write | FileFormat::File));
+    const Io::FileFormat *format = findFileFormat(
+          parentWidget, caption, fileName,
+          FileFormat::File | FileFormat::Write);
 
     // If none found, give user the option to retry.
-    if (matches.empty()) {
+    if (!format) {
       QMessageBox::StandardButton reply =
-          QMessageBox::question(parent, caption,
+          QMessageBox::question(parentWidget, caption,
                                 tr("Unable to find a suitable file writer for "
                                    "the selected format."),
                                 QMessageBox::Abort | QMessageBox::Retry,
@@ -142,16 +122,65 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
       }
     }
 
-    result.first = selectFileFormat(parent, matches, caption,
-                                    tr("Multiple writers found that can write "
-                                       "this file. Which should be used?"),
-                                    QString("FileFormatDialog/fileToWrite/%1"
-                                            "/lastUsed").arg(extension));
-    result.second = fileInfo.absoluteFilePath();
+    result.first = format;
+    result.second = fileName;
 
   } while (false);
 
   return result;
+}
+
+const Io::FileFormat *FileFormatDialog::findFileFormat(
+    QWidget *parentWidget, const QString &caption, const QString &fileName,
+    const FileFormat::Operations formatFlags)
+{
+  if (fileName.isEmpty())
+    return NULL;
+
+  // Extract extension from filename.
+  QFileInfo fileInfo(fileName);
+  QString extension = fileInfo.suffix();
+  if (extension.isEmpty())
+    extension = fileInfo.fileName();
+  extension = extension.toLower();
+
+  // Lookup matching file formats.
+  vector<const FileFormat*> matches(
+        FileFormatManager::instance().fileFormatsFromFileExtension(
+          extension.toStdString(), formatFlags));
+
+  // Prepare the strings for selectFileFormat:
+  QString noun;
+  QString verb;
+  QString key;
+
+  if ((formatFlags & FileFormat::Read
+      && formatFlags & FileFormat::Write)
+      || ((formatFlags & FileFormat::Read) == 0
+          && (formatFlags & FileFormat::Read) == 0)) {
+    // Both or neither read/write
+    noun = tr("handlers", "File handlers");
+    verb = tr("handle", "e.g. file handlers that can 'handle' this file.");
+    key = "fileToWrite"; // Just use the write settings
+    }
+  else if (formatFlags & FileFormat::Read) {
+    // Read
+    noun = tr("readers", "File readers");
+    verb = tr("read", "e.g. file readers that can 'read' this file.");
+    key = "fileToRead";
+    }
+  else if (formatFlags & FileFormat::Write) {
+    // Write
+    noun = tr("writers", "File writers");
+    verb = tr("write", "e.g. file writers that can 'write' this file.");
+    key = "fileToWrite";
+    }
+
+  return selectFileFormat(parentWidget, matches, caption,
+                          tr("Multiple %1 found that can %2 this file. "
+                             "Which should be used?").arg(noun, verb),
+                          QString("FileFormatDialog/%1/%2"
+                                  "/lastUsed").arg(key, extension));
 }
 
 const QString FileFormatDialog::readFileFilter()
