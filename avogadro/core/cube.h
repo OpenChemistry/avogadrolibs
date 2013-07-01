@@ -3,7 +3,7 @@
   This source file is part of the Avogadro project.
 
   Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2010-2012 Kitware, Inc.
+  Copyright 2010-2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -15,30 +15,28 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_CUBE_H
-#define AVOGADRO_QTGUI_CUBE_H
+#ifndef AVOGADRO_CORE_CUBE_H
+#define AVOGADRO_CORE_CUBE_H
 
-#include "avogadroqtguiexport.h"
+#include "avogadrocore.h"
 
-#include <avogadro/core/vector.h>
+#include "vector.h"
 
 #include <vector>
 
-// Forward declarations
-class QReadWriteLock;
-
 namespace Avogadro {
-namespace QtGui {
+namespace Core {
 
 class Molecule;
+class Mutex;
 
 /**
- * @class Cube cube.h <avogadro/qtgui/cube.h>
+ * @class Cube cube.h <avogadro/core/cube.h>
  * @brief Provide a data structure for regularly spaced 3D grids.
  * @author Marcus D. Hanwell
  */
 
-class AVOGADROQTGUI_EXPORT Cube
+class AVOGADROCORE_EXPORT Cube
 {
 public:
   Cube();
@@ -223,7 +221,7 @@ public:
   /**
    * Provides locking.
    */
-  QReadWriteLock * lock() const;
+  Mutex * lock() const { return m_lock; }
 
 protected:
   std::vector<double> m_data;
@@ -232,7 +230,7 @@ protected:
   double m_minValue, m_maxValue;
   std::string m_name;
   Type    m_cubeType;
-  QReadWriteLock *m_lock;
+  Mutex *m_lock;
 };
 
 inline bool Cube::setValue(unsigned int i, double value_)
@@ -249,7 +247,7 @@ inline bool Cube::setValue(unsigned int i, double value_)
     return false;
 }
 
-} // End QtGui namespace
+} // End Core namespace
 } // End Avogadro namespace
 
 #endif // AVOGADRO_QTGUI_CUBE_H

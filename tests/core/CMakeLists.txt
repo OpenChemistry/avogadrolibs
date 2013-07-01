@@ -7,6 +7,7 @@ set(tests
   CoordinateBlockGenerator
   CoordinateSet
   CPP11
+  Cube
   Eigen
   Element
   Graph

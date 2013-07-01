@@ -19,7 +19,7 @@
 #include "opendxreader.h"
 
 #include <avogadro/io/fileformatmanager.h>
-#include <avogadro/qtgui/cube.h>
+#include <avogadro/core/cube.h>
 #include <avogadro/qtgui/mesh.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/meshgenerator.h>
@@ -151,7 +151,7 @@ bool Apbs::loadOpenDxFile(const QString &fileName, QtGui::Molecule &molecule)
       tr("Error reading OpenDX file: %1").arg(reader.errorString()));
   }
   else {
-    const QtGui::Cube *cube = reader.cube();
+    const Core::Cube *cube = reader.cube();
 
     if (!cube) {
       QMessageBox::critical(qobject_cast<QWidget *>(parent()),
