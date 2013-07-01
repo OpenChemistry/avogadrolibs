@@ -16,8 +16,6 @@
 
 #include "quantuminput.h"
 
-#include "quantumpython.h"
-
 #include <avogadro/qtgui/filebrowsewidget.h>
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/inputgenerator.h>
@@ -25,8 +23,7 @@
 #include <avogadro/qtgui/inputgeneratorwidget.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/molequeuemanager.h> // For MoleQueue::JobObject
-
-#include <avogadro/io/fileformat.h>
+#include <avogadro/qtgui/quantumpython.h>
 
 #include <QtGui/QAction>
 #include <QtGui/QDialog>

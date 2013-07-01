@@ -11,16 +11,11 @@ find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
 include_directories(SYSTEM ${QT_INCLUDES})
 add_definitions(${QT_DEFINITIONS})
 
-# Default shebang lines for interpreted scripts:
-# Python 2.x. Default "#!/usr/bin/env python" or python 2.x interpretor in PATH.
-set(PYTHON2_EXECUTABLE "/usr/bin/env python")
+# Find python2 for input generator scripts:
 find_package(PythonInterp 2)
 if(PYTHON_EXECUTABLE)
   set(PYTHON2_EXECUTABLE "${PYTHON_EXECUTABLE}")
 endif()
-set(QUANTUMINPUT_PYTHON2_SHEBANG "#!${PYTHON2_EXECUTABLE}"
-  CACHE STRING "Shebang line (e.g. \"#!/usr/bin/...\") for python 2.x scripts.")
-mark_as_advanced(QUANTUMINPUT_PYTHON2_SHEBANG)
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h.in"
 "namespace Avogadro {
