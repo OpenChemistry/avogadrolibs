@@ -3,7 +3,7 @@
   This source file is part of the Avogadro project.
 
   Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2010-2012 Kitware, Inc.
+  Copyright 2010-2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -18,17 +18,15 @@
 #include "cube.h"
 
 #include "molecule.h"
-
-#include <QtCore/QReadWriteLock>
-#include <QtCore/QDebug>
+#include "mutex.h"
 
 namespace Avogadro {
-namespace QtGui {
+namespace Core {
 
 Cube::Cube() : m_data(0),
   m_min(0.0, 0.0, 0.0), m_max(0.0, 0.0, 0.0), m_spacing(0.0, 0.0, 0.0),
   m_points(0, 0, 0), m_minValue(0.0), m_maxValue(0.0),
-  m_lock(new QReadWriteLock)
+  m_lock(new Mutex)
 {
 }
 
@@ -131,27 +129,23 @@ std::vector<double> * Cube::data()
 
 bool Cube::setData(const std::vector<double> &values)
 {
-  if (!values.size()) {
-    qDebug() << "Zero sized vector passed to Cube::setData. Nothing to do.";
+  if (!values.size())
     return false;
-  }
+
   if (static_cast<int>(values.size()) == m_points.x() * m_points.y() * m_points.z()) {
     m_data = values;
-    qDebug() << "Loaded in cube data" << m_data.size();
     // Now to update the minimum and maximum values
     m_minValue = m_maxValue = m_data[0];
-    foreach (double val, m_data) {
-      if (val < m_minValue)
-        m_minValue = val;
-      else if (val > m_maxValue)
-        m_maxValue = val;
+    for (std::vector<double>::const_iterator it = values.begin();
+         it != values.end(); ++it) {
+      if (*it < m_minValue)
+        m_minValue = *it;
+      else if (*it > m_maxValue)
+        m_maxValue = *it;
     }
     return true;
   }
   else {
-    qDebug() << "The vector passed to Cube::setData does not have the correct"
-             << "size. Expected" << m_points.x() * m_points.y() * m_points.z()
-             << "got" << values.size();
     return false;
   }
 }
@@ -159,13 +153,10 @@ bool Cube::setData(const std::vector<double> &values)
 bool Cube::addData(const std::vector<double> &values)
 {
   // Initialise the cube to zero if necessary
-  if (!m_data.size()) {
+  if (!m_data.size())
     m_data.resize(m_points.x() * m_points.y() * m_points.z());
-  }
-  if (values.size() != m_data.size() || !values.size()) {
-    qDebug() << "Attempted to add values to cube - sizes do not match...";
+  if (values.size() != m_data.size() || !values.size())
     return false;
-  }
   for (unsigned int i = 0; i < m_data.size(); i++) {
     m_data[i] += values[i];
     if (m_data[i] < m_minValue)
@@ -220,13 +211,10 @@ double Cube::value(const Vector3i &pos) const
 {
   unsigned int index = pos.x() * m_points.y() * m_points.z()
       + pos.y() * m_points.z() + pos.z();
-  if (index < m_data.size()) {
+  if (index < m_data.size())
     return m_data[index];
-  }
-  else {
-    qDebug() << "Attempted to access an index out of range.";
+  else
     return 6969.0;
-  }
 }
 
 float Cube::valuef(const Vector3f &pos) const
@@ -306,10 +294,5 @@ bool Cube::setValue(int i, int j, int k, double value_)
   }
 }
 
-QReadWriteLock * Cube::lock() const
-{
-  return m_lock;
-}
-
-} // End QtGui namespace
+} // End Core namespace
 } // End Avogadro namespace

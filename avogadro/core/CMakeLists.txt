@@ -22,6 +22,7 @@ set(HEADERS
   bond.h
   coordinateset.h
   coordinateblockgenerator.h
+  cube.h
   elements.h
   gaussianset.h
   gaussiansettools.h
@@ -46,6 +47,7 @@ set(SOURCES
   atom.cpp
   bond.cpp
   coordinateblockgenerator.cpp
+  cube.cpp
   elements.cpp
   gaussianset.cpp
   gaussiansettools.cpp

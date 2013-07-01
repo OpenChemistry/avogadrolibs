@@ -17,11 +17,14 @@
 #ifndef AVOGADRO_QTPLUGINS_APBS_OPENDXREADER_H
 #define AVOGADRO_QTPLUGINS_APBS_OPENDXREADER_H
 
-#include <avogadro/qtgui/cube.h>
-
 #include <QtCore/QString>
 
 namespace Avogadro {
+
+namespace Core {
+class Cube;
+}
+
 namespace QtPlugins {
 
 /**
@@ -55,10 +58,10 @@ public:
    * Returns the potential energy cube read from the file. Returns 0 if no file
    * has been successfully read.
    */
-  QtGui::Cube* cube() const;
+  Core::Cube* cube() const;
 
 private:
-  QtGui::Cube *m_cube;
+  Core::Cube *m_cube;
   QString m_errorString;
 };
 

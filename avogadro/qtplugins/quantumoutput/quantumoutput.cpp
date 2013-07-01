@@ -23,7 +23,7 @@
 #include <avogadro/core/variant.h>
 
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/qtgui/cube.h>
+#include <avogadro/core/cube.h>
 #include <avogadro/qtgui/mesh.h>
 #include <avogadro/qtgui/meshgenerator.h>
 
@@ -45,6 +45,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 using Core::GaussianSet;
+using Core::Cube;
 
 QuantumOutput::QuantumOutput(QObject *p) :
   ExtensionPlugin(p),
@@ -153,7 +154,7 @@ void QuantumOutput::calculateMolecularOrbital(int molecularOrbital,
       m_progressDialog->setWindowModality(Qt::NonModal);
     }
     if (!m_cube)
-      m_cube = new QtGui::Cube;
+      m_cube = new Cube;
 
     if (!m_concurrent)
       m_concurrent = new GaussianSetConcurrent(this);
