@@ -15,40 +15,35 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_MESH_H
-#define AVOGADRO_QTGUI_MESH_H
+#ifndef AVOGADRO_CORE_MESH_H
+#define AVOGADRO_CORE_MESH_H
 
-#include "avogadroqtguiexport.h"
+#include "avogadrocore.h"
 
 #include "color3f.h"
-
-#include <avogadro/core/vector.h>
-
-#include <QtCore/QString>
+#include "vector.h"
 
 #include <vector>
 
-// Forward declarations
-class QReadWriteLock;
-
 namespace Avogadro {
-namespace QtGui {
+namespace Core {
 
 class Molecule;
+class Mutex;
 
 /**
- * @class Mesh mesh.h <avogadro/qtgui/mesh.h>
+ * @class Mesh mesh.h <avogadro/core/mesh.h>
  * @brief Encapsulation of a triangular mesh that makes up a surface.
  * @author Marcus D. Hanwell
  *
- * The Mesh class is a Primitive subclass that provides an Mesh object. All
- * meshes must be owned by a Molecule. It should also be removed by the
+ * The Mesh class is a data container that provides a Mesh object. All
+ * meshes should be owned by a Molecule. It should also be removed by the
  * Molecule that owns it. Meshes encapsulate triangular meshes that can also
  * have colors associated with each vertex.
  */
 
 class MeshPrivate;
-class AVOGADROQTGUI_EXPORT Mesh
+class AVOGADROCORE_EXPORT Mesh
 {
 public:
   /**
@@ -118,7 +113,7 @@ public:
   /**
    * @return Vector containing all of the vertices in a one dimensional array.
    */
-  const std::vector<Eigen::Vector3f> & vertices() const;
+  const std::vector<Vector3f> & vertices() const;
 
   /**
    * @return The number of vertices.
@@ -131,23 +126,23 @@ public:
   /**
    * @return Pointer to the first vertex of the specified triangle.
    */
-  const Eigen::Vector3f * vertex(int n) const;
+  const Vector3f * vertex(int n) const;
 
   /**
    * Clear the vertices vector and assign new values.
    */
-  bool setVertices(const std::vector<Eigen::Vector3f> &values);
+  bool setVertices(const std::vector<Vector3f> &values);
 
   /**
    * Add one or more vertices, i.e., the vector is expected to be of length
    * 3 x n where n is an integer.
    */
-  bool addVertices(const std::vector<Eigen::Vector3f> &values);
+  bool addVertices(const std::vector<Vector3f> &values);
 
   /**
    * @return Vector containing all of the normals in a one-dimensional array.
    */
-  const std::vector<Eigen::Vector3f> & normals() const;
+  const std::vector<Vector3f> & normals() const;
 
   /**
    * @return The number of normals.
@@ -160,18 +155,18 @@ public:
   /**
    * @return Pointer to the first normal of the specified triangle.
    */
-  const Eigen::Vector3f * normal(int n) const;
+  const Vector3f * normal(int n) const;
 
   /**
    * Clear the normals vector and assign new values.
    */
-  bool setNormals(const std::vector<Eigen::Vector3f> &values);
+  bool setNormals(const std::vector<Vector3f> &values);
 
   /**
    * Add one or more normals, i.e., the vector is expected to be of length
    * 3 x n where n is an integer.
    */
-  bool addNormals(const std::vector<Eigen::Vector3f> &values);
+  bool addNormals(const std::vector<Vector3f> &values);
 
   /**
    * @return Vector containing all of the colors in a one-dimensional array.
@@ -215,33 +210,33 @@ public:
   /**
    * Set the name of the Mesh.
    */
-  void setName(QString name_) { m_name = name_; }
+  void setName(const std::string &name_) { m_name = name_; }
 
   /**
    * @return The name of the Mesh.
    */
-  QString name() { return m_name; }
+  std::string name() { return m_name; }
 
   /**
    * Provides locking.
    */
-  QReadWriteLock *lock() const;
+  Mutex * lock() const { return m_lock; }
 
   friend class Molecule;
 
 protected:
-  std::vector<Eigen::Vector3f> m_vertices;
-  std::vector<Eigen::Vector3f> m_normals;
+  std::vector<Vector3f> m_vertices;
+  std::vector<Vector3f> m_normals;
   std::vector<Color3f> m_colors;
-  QString m_name;
+  std::string m_name;
   bool m_stable;
   float m_isoValue;
   unsigned int m_other; // Unique id of the other mesh if this is part of a pair
   unsigned int m_cube; // Unique id of the cube this mesh was generated from
-  QReadWriteLock *m_lock;
+  Mutex *m_lock;
 };
 
-} // End namespace QtGui
+} // End namespace Core
 } // End namespace Avogadro
 
-#endif //AVOGADRO_QTGUI_MESH_H
+#endif //AVOGADRO_CORE_MESH_H

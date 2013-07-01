@@ -16,9 +16,6 @@
 
 #include "molecule.h"
 
-#include "mesh.h"
-#include "color3f.h"
-
 namespace Avogadro {
 namespace QtGui {
 
@@ -198,29 +195,6 @@ int Molecule::bondUniqueId(const Core::Bond &b) const
   if (b.molecule() != this)
     return -1;
   return findBondUniqueId(b.index());
-}
-
-
-Mesh* Molecule::addMesh()
-{
-  m_meshes.push_back(new Mesh);
-  return m_meshes.back();
-}
-
-Mesh* Molecule::mesh(size_t index)
-{
-  if (index < m_meshes.size())
-    return m_meshes[index];
-  else
-    return NULL;
-}
-
-const Mesh* Molecule::mesh(size_t index) const
-{
-  if (index < m_meshes.size())
-    return m_meshes[index];
-  else
-    return NULL;
 }
 
 void Molecule::emitChanged(unsigned int change)

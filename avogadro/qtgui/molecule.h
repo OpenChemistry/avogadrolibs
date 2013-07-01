@@ -162,17 +162,6 @@ public:
    */
   int bondUniqueId(const Core::Bond &bond) const;
 
-  /**
-   * @brief Add a mesh to the molecule.
-   * @return The mesh object added to the molecule.
-   */
-  Mesh* addMesh();
-
-  Mesh* mesh(size_t index);
-  const Mesh* mesh(size_t index) const;
-
-  size_t meshCount() const { return m_meshes.size(); }
-
 public slots:
   /**
    * @brief Force the molecule to emit the changed() signal.
@@ -197,8 +186,6 @@ private:
 
   int findAtomUniqueId(size_t index) const;
   int findBondUniqueId(size_t index) const;
-
-  std::vector<Mesh *> m_meshes;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Molecule::MoleculeChanges)

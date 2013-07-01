@@ -31,7 +31,6 @@ configure_file("${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h")
 
 set(HEADERS
-  color3f.h
   elementtranslator.h
   extensionplugin.h
   filebrowsewidget.h
@@ -39,7 +38,6 @@ set(HEADERS
   inputgenerator.h
   inputgeneratordialog.h
   inputgeneratorwidget.h
-  mesh.h
   meshgenerator.h
   molecule.h
   molequeuedialog.h
@@ -62,7 +60,6 @@ set(SOURCES
   inputgenerator.cpp
   inputgeneratordialog.cpp
   inputgeneratorwidget.cpp
-  mesh.cpp
   meshgenerator.cpp
   molecule.cpp
   molequeuedialog.cpp

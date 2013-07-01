@@ -32,6 +32,7 @@ namespace Avogadro {
 namespace Core {
 
 class BasisSet;
+class Mesh;
 
 /**
  * @class Molecule molecule.h <avogadro/core/molecule.h>
@@ -182,6 +183,17 @@ public:
   size_t bondCount() const;
 
   /**
+   * @brief Add a mesh to the molecule.
+   * @return The mesh object added to the molecule.
+   */
+  Mesh* addMesh();
+
+  Mesh* mesh(size_t index);
+  const Mesh* mesh(size_t index) const;
+
+  size_t meshCount() const { return m_meshes.size(); }
+
+  /**
    * Returns the chemical formula of the molecule
    * \todo This should eventually be an external algorithm, not a member of
    * Molecule.
@@ -213,6 +225,8 @@ protected:
   std::vector<Vector3> m_positions3d;
   std::vector<std::pair<size_t, size_t> > m_bondPairs;
   std::vector<unsigned char> m_bondOrders;
+
+  std::vector<Mesh *> m_meshes;
 
   BasisSet *m_basisSet;
 

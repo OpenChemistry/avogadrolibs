@@ -15,14 +15,14 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_COLOR3F_H
-#define AVOGADRO_QTGUI_COLOR3F_H
+#ifndef AVOGADRO_CORE_COLOR3F_H
+#define AVOGADRO_CORE_COLOR3F_H
 
 namespace Avogadro {
-namespace QtGui {
+namespace Core {
 
 /**
- * @class Color3f color3f.h <avogadro/qtgui/color3f.h>
+ * @class Color3f color3f.h <avogadro/core/color3f.h>
  * @brief Representation of an RGB color using three floats.
  * @author Marcus D. Hanwell
  *
@@ -125,7 +125,7 @@ inline const float * Color3f::data() const
   return &(m_data[0]);
 }
 
-} // End namespace QtGui
+} // End namespace Core
 } // End namespace Avogadro
 
-#endif // AVOGADRO_QTGUI_COLOR3F_H
+#endif // AVOGADRO_CORE_COLOR3F_H
