@@ -57,6 +57,16 @@ void InputGeneratorDialog::setInputGeneratorScript(const QString &scriptFile)
     setWindowTitle(tr("%1 Input Generator").arg(displayName));
 }
 
+InputGeneratorWidget &InputGeneratorDialog::widget()
+{
+  return *ui->widget;
+}
+
+const InputGeneratorWidget &InputGeneratorDialog::widget() const
+{
+  return *ui->widget;
+}
+
 void InputGeneratorDialog::setMolecule(Molecule *mol)
 {
   ui->widget->setMolecule(mol);

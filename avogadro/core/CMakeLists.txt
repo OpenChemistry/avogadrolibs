@@ -3,6 +3,11 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
+# Check if we need extra include directories for C++11 features.
+if(AvogadroLibs_NEEDS_BOOST)
+  include_directories(SYSTEM ${AvogadroLibs_MUTEX_INCLUDE_DIRS})
+endif()
+
 # configure the version header
 configure_file("${PROJECT_SOURCE_DIR}/cmake/version.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/version.h")
@@ -17,6 +22,7 @@ set(HEADERS
   bond.h
   coordinateset.h
   coordinateblockgenerator.h
+  cube.h
   elements.h
   gaussianset.h
   gaussiansettools.h
@@ -24,6 +30,7 @@ set(HEADERS
   hydrogentools.h
   matrix.h
   molecule.h
+  mutex.h
   nameatomtyper.h
   ringperceiver.h
   slaterset.h
@@ -40,6 +47,7 @@ set(SOURCES
   atom.cpp
   bond.cpp
   coordinateblockgenerator.cpp
+  cube.cpp
   elements.cpp
   gaussianset.cpp
   gaussiansettools.cpp
@@ -47,6 +55,7 @@ set(SOURCES
   hydrogentools.cpp
   mdlvalence_p.h
   molecule.cpp
+  mutex.cpp
   nameatomtyper.cpp
   ringperceiver.cpp
   slaterset.cpp
@@ -57,3 +66,11 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
+
+# Additional libraries and compiler definitions necessary when using Boost to
+# replace C++11.
+if(AvogadroLibs_NEEDS_BOOST)
+  target_link_libraries(AvogadroCore
+    LINK_PRIVATE ${AvogadroLibs_MUTEX_BOOST_LIBRARIES})
+  add_definitions(${AvogadroLibs_BOOST_DEFINITIONS})
+endif()

@@ -27,10 +27,10 @@ configure_file("${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h.in"
 
 set(HEADERS
   color3f.h
-  cube.h
   elementtranslator.h
   extensionplugin.h
   filebrowsewidget.h
+  fileformatdialog.h
   generichighlighter.h
   inputgenerator.h
   inputgeneratordialog.h
@@ -49,12 +49,12 @@ set(HEADERS
 )
 
 set(SOURCES
-  cube.cpp
   elementdetail_p.cpp
   elementitem_p.cpp
   elementtranslator.cpp
   extensionplugin.cpp
   filebrowsewidget.cpp
+  fileformatdialog.cpp
   generichighlighter.cpp
   inputgenerator.cpp
   inputgeneratordialog.cpp

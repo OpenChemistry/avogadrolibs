@@ -19,10 +19,10 @@
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/gaussiansettools.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/mutex.h>
 
-#include <avogadro/qtgui/cube.h>
+#include <avogadro/core/cube.h>
 
-#include <QtCore/QReadWriteLock>
 #include <QtCore/QtConcurrentMap>
 
 namespace Avogadro {
@@ -31,7 +31,7 @@ namespace QtPlugins {
 using Core::Molecule;
 using Core::GaussianSet;
 using Core::GaussianSetTools;
-using QtGui::Cube;
+using Core::Cube;
 
 template<typename Derived>
 class BasisSetConcurrent
@@ -70,18 +70,18 @@ void GaussianSetConcurrent::setMolecule(Core::Molecule *mol)
   m_tools = new GaussianSetTools(mol);
 }
 
-bool GaussianSetConcurrent::calculateMolecularOrbital(QtGui::Cube *cube,
+bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube *cube,
                                                       unsigned int state)
 {
   return setUpCalculation(cube, state, GaussianSetConcurrent::processOrbital);
 }
 
-bool GaussianSetConcurrent::calculateElectronDensity(QtGui::Cube *cube)
+bool GaussianSetConcurrent::calculateElectronDensity(Core::Cube *cube)
 {
   return setUpCalculation(cube, 0, GaussianSetConcurrent::processDensity);
 }
 
-bool GaussianSetConcurrent::calculateSpinDensity(QtGui::Cube *cube)
+bool GaussianSetConcurrent::calculateSpinDensity(Core::Cube *cube)
 {
   return setUpCalculation(cube, 0, GaussianSetConcurrent::processSpinDensity);
 }
@@ -95,7 +95,7 @@ void GaussianSetConcurrent::calculationComplete()
   emit finished();
 }
 
-bool GaussianSetConcurrent::setUpCalculation(QtGui::Cube *cube,
+bool GaussianSetConcurrent::setUpCalculation(Core::Cube *cube,
                                              unsigned int state,
                                              void (*func)(GaussianShell &))
 {
@@ -115,7 +115,7 @@ bool GaussianSetConcurrent::setUpCalculation(QtGui::Cube *cube,
   }
 
   // Lock the cube until we are done.
-  cube->lock()->lockForWrite();
+  cube->lock()->lock();
 
   // Watch for the future
   connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));

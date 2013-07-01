@@ -14,16 +14,48 @@
 
 ******************************************************************************/
 
-/** Generated file, do not edit. */
-#ifndef AVOGADRO_STL_MUTEX_H
-#define AVOGADRO_STL_MUTEX_H
+#include "mutex.h"
 
-#include <@MUTEX_TYPE_HEADER@>
+#include <avogadro/stl/mutex_p.h>
 
 namespace Avogadro {
-namespace Stl {
-typedef @MUTEX_TYPE@ mutex;
-}
+namespace Core {
+
+using Stl::mutex;
+
+class Mutex::PIMPL
+{
+public:
+  PIMPL()
+  {
+  }
+
+  mutex lock;
+};
+
+Mutex::Mutex() : d(new PIMPL)
+{
 }
 
-#endif // AVOGADRO_STL_MUTEX_H
+Mutex::~Mutex()
+{
+  delete d;
+}
+
+void Mutex::lock()
+{
+  d->lock.lock();
+}
+
+bool Mutex::tryLock()
+{
+  return d->lock.try_lock();
+}
+
+void Mutex::unlock()
+{
+  d->lock.unlock();
+}
+
+}
+}

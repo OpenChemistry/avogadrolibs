@@ -17,6 +17,8 @@
 #include "molequeuedialog.h"
 #include "ui_molequeuedialog.h"
 
+#include <avogadro/qtgui/molequeuewidget.h>
+
 #include <QtGui/QMessageBox>
 #include <QtGui/QProgressDialog>
 
@@ -40,7 +42,7 @@ MoleQueueDialog::~MoleQueueDialog()
 
 MoleQueueDialog::SubmitStatus
 MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
-                           const MoleQueue::JobObject &jobTemplate,
+                           MoleQueue::JobObject &jobTemplate,
                            SubmitOptions options, unsigned int *moleQueueId,
                            int *submissionRequestId)
 {
@@ -65,7 +67,8 @@ MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
 
     int requestId = dlg.widget().submitJobRequest();
 
-    if (options & WaitForSubmissionResponse) {
+    if (options & WaitForSubmissionResponse
+        || dlg.widget().openOutput()) {
       QProgressDialog progress;
       progress.setCancelButton(NULL);
       progress.setLabelText(tr("Submitting job to MoleQueue..."));
@@ -73,7 +76,9 @@ MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
       progress.setValue(0);
       progress.show();
 
-      if (!dlg.waitForReply()) {
+      QList<MetaMethod> submittedSignal;
+      submittedSignal << MetaMethod(&dlg.widget(), SIGNAL(jobSubmitted(bool)));
+      if (!dlg.waitForSignal(submittedSignal)) {
         progress.hide();
         QMessageBox::information(&dlg, tr("Job Submission Timeout"),
                                  tr("Avogadro timed out waiting for a reply "
@@ -86,7 +91,54 @@ MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
           *submissionRequestId = dlg.widget().requestId();
         if (moleQueueId != NULL)
           *moleQueueId = dlg.widget().moleQueueId();
-        return SubmissionSuccessful;
+
+        // Do we need to wait for the job to finish?
+        if (!dlg.widget().openOutput())
+          return SubmissionSuccessful;
+
+        // Update progress dialog
+        progress.setLabelText(tr("Waiting for job %1 '%2' to finish...")
+                              .arg(dlg.widget().moleQueueId())
+                              .arg(jobTemplate.description()));
+        progress.setCancelButtonText(tr("Stop waiting"));
+
+        // Wait for job completion or progress bar cancellation.
+        QList<MetaMethod> completionSignals;
+        completionSignals
+            << MetaMethod(&dlg.widget(), SIGNAL(jobFinished(bool)))
+            << MetaMethod(&progress, SIGNAL(canceled()));
+
+        dlg.waitForSignal(completionSignals, -1);
+
+        // Did the user cancel?
+        if (progress.wasCanceled())
+          return SubmissionSuccessful;
+
+        // Error occurred:
+        if (!dlg.widget().jobSuccess())
+          return JobFailed;
+
+        // Update progress bar:
+        progress.setLabelText(tr("Fetching completed job information..."));
+        progress.setCancelButton(NULL);
+
+        // Job completed -- overwrite job template with updated job details.
+        connect(&dlg.widget(), SIGNAL(jobUpdated(MoleQueue::JobObject)),
+                &dlg.widget(), SLOT(setJobTemplate(MoleQueue::JobObject)));
+        QList<MetaMethod> lookupSignal;
+        lookupSignal << MetaMethod(&dlg.widget(),
+                                   SIGNAL(jobUpdated(MoleQueue::JobObject)));
+        dlg.widget().requestJobLookup();
+        if (!dlg.waitForSignal(lookupSignal)) {
+          progress.hide();
+          QMessageBox::information(&dlg, tr("Job Retrieval Timeout"),
+                                   tr("Avogadro timed out waiting for the "
+                                      "finished job details from MoleQueue."));
+          return JobFailed;
+        }
+
+        jobTemplate = dlg.widget().jobTemplate();
+        return JobFinished;
       }
       else {
         progress.hide();
@@ -119,16 +171,21 @@ const MoleQueueWidget &MoleQueueDialog::widget() const
   return *m_ui->widget;
 }
 
-bool MoleQueueDialog::waitForReply(int msTimeout) const
+bool MoleQueueDialog::waitForSignal(const QList<MetaMethod> &signalList,
+                                    int msTimeout) const
 {
   QEventLoop waiter;
+
+  foreach (const MetaMethod &sig, signalList)
+    connect(sig.first, sig.second, &waiter, SLOT(quit()));
+
   QTimer limiter;
-  limiter.setSingleShot(true);
+  if (msTimeout >= 0) {
+    limiter.setSingleShot(true);
+    connect(&limiter, SIGNAL(timeout()), &waiter, SLOT(quit()));
+    limiter.start(msTimeout);
+  }
 
-  connect(&limiter, SIGNAL(timeout()), &waiter, SLOT(quit()));
-  connect(m_ui->widget, SIGNAL(jobSubmitted(bool)), &waiter, SLOT(quit()));
-
-  limiter.start(msTimeout);
   waiter.exec();
 
   return limiter.isActive();

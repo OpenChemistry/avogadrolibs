@@ -16,12 +16,16 @@
 
 #include "opendxreader.h"
 
+#include <avogadro/core/cube.h>
+
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtCore/QVector>
 
 namespace Avogadro {
 namespace QtPlugins {
+
+using Core::Cube;
 
 OpenDxReader::OpenDxReader()
   : m_cube(0)
@@ -96,8 +100,8 @@ bool OpenDxReader::readFile(const QString &fileName)
   Vector3 spacing(spacings[0][0], spacings[1][1], spacings[2][2]);
 
   // create potential cube
-  m_cube = new QtGui::Cube();
-  m_cube->setCubeType(QtGui::Cube::ESP);
+  m_cube = new Cube;
+  m_cube->setCubeType(Cube::ESP);
   m_cube->setLimits(origin, dim, spacing);
   m_cube->setData(values);
 
@@ -109,7 +113,7 @@ QString OpenDxReader::errorString() const
   return m_errorString;
 }
 
-QtGui::Cube* OpenDxReader::cube() const
+Cube* OpenDxReader::cube() const
 {
   return m_cube;
 }

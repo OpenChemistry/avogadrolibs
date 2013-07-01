@@ -32,6 +32,15 @@ set(input_generators
   inputGenerators/terachem.py
 )
 
+option(INSTALL_TEST_INPUT_GENERATOR
+  "Install a dummy input generator that is used to test generator scripts."
+  OFF
+)
+
+if(INSTALL_TEST_INPUT_GENERATOR)
+  list(APPEND input_generators inputGenerators/inputgeneratortest.py)
+endif()
+
 # Place input scripts in the same relative path to the build-tree executable
 set(configured_script_dir
   "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../lib/avogadro2/scripts/inputGenerators/")

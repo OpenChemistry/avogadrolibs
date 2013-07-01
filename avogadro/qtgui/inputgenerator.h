@@ -139,6 +139,24 @@ class GenericHighlighter;
  * This will add a QLineEdit to the GUI, initialized with the text specified by
  * `default`.
  *
+ * Existing files
+ * --------------
+ *
+ * An input generator can ask for the absolute path to an existing file using
+ * the following option block:
+~~~{.js}
+{
+  "userOptions": {
+    "Parameter Name": {
+      "type": "filePath",
+      "default": "/path/to/some/file"
+    }
+  }
+}
+~~~
+ * This will add an Avogadro::QtGui::FileBrowseWidget to the GUI, initialized to
+ * the file pointed to by default.
+ *
  * Clamped Integer Values
  * ----------------------
  *
@@ -356,7 +374,7 @@ class GenericHighlighter;
     },
     {
       "filename": "file2.ext",
-      "contents": "..."
+      "filePath": "/path/to/file/on/local/filesystem"
     },
     ...
   ],
@@ -366,7 +384,10 @@ class GenericHighlighter;
 ~~~
  * The `files` block is an array of objects, which define the actual input
  * files. The `filename` member provides the name of the file, and
- * `contents` provides the text that goes into the file.
+ * either `contents` or `filePath` provide the text that goes into the file.
+ * The `contents` string will be used as the file contents, and `filePath`
+ * should contain an absolute path to a file on the filesystem to read and use
+ * as the input file contents.
  * The optional `highlightStyles` member is an array of strings describing any
  * highlight styles to apply to the file (see `--print-options` documentation).
  * Each string in this array must match a `style` description in a highlighting
