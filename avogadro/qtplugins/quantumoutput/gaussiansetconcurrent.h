@@ -23,10 +23,8 @@
 
 namespace Avogadro {
 
-namespace QtGui {
-class Cube;
-}
 namespace Core {
+class Cube;
 class Molecule;
 class GaussianSet;
 class GaussianSetTools;
@@ -52,9 +50,9 @@ public:
 
   void setMolecule(Core::Molecule *mol);
 
-  bool calculateMolecularOrbital(QtGui::Cube *cube, unsigned int state);
-  bool calculateElectronDensity(QtGui::Cube *cube);
-  bool calculateSpinDensity(QtGui::Cube *cube);
+  bool calculateMolecularOrbital(Core::Cube *cube, unsigned int state);
+  bool calculateElectronDensity(Core::Cube *cube);
+  bool calculateSpinDensity(Core::Cube *cube);
 
   QFutureWatcher<void> & watcher() { return m_watcher; }
 
@@ -73,13 +71,13 @@ private slots:
 private:
   QFuture<void> m_future;
   QFutureWatcher<void> m_watcher;
-  QtGui::Cube *m_cube;
+  Core::Cube *m_cube;
   QVector<GaussianShell> *m_gaussianShells;
 
   Core::GaussianSet *m_set;
   Core::GaussianSetTools *m_tools;
 
-  bool setUpCalculation(QtGui::Cube *cube, unsigned int state,
+  bool setUpCalculation(Core::Cube *cube, unsigned int state,
                         void (*func)(GaussianShell &));
 
   static void processOrbital(GaussianShell &shell);

@@ -16,9 +16,9 @@
 
 #include <gtest/gtest.h>
 
-#include <avogadro/qtgui/cube.h>
+#include <avogadro/core/cube.h>
 
-using Avogadro::QtGui::Cube;
+using Avogadro::Core::Cube;
 using Avogadro::Vector3;
 using Avogadro::Vector3i;
 

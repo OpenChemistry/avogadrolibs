@@ -14,9 +14,11 @@ if(MUTEX_TYPE_BOOST_REQUIRED)
   message(STATUS
     "Using Boost to replace C++11 mutex that is not available.")
   find_package(Boost COMPONENTS thread system chrono REQUIRED)
+  find_package(Threads)
   set(AvogadroLibs_NEEDS_BOOST TRUE CACHE INTERNAL
     "AvogadroLibs requires some Boost components to replace C++11 features")
-  set(AvogadroLibs_MUTEX_BOOST_LIBRARIES "${Boost_LIBRARIES}" CACHE INTERNAL
+  set(AvogadroLibs_MUTEX_BOOST_LIBRARIES
+    "${Boost_LIBRARIES};${CMAKE_THREAD_LIBS_INIT}" CACHE INTERNAL
     "The Boost libraries we require for Mutex support")
   set(AvogadroLibs_MUTEX_INCLUDE_DIRS "${Boost_INCLUDE_DIRS}" CACHE INTERNAL
     "The Boost libraries we require for Mutex support")

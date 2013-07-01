@@ -14,16 +14,36 @@
 
 ******************************************************************************/
 
-/** Generated file, do not edit. */
-#ifndef AVOGADRO_STL_MUTEX_H
-#define AVOGADRO_STL_MUTEX_H
+#include <gtest/gtest.h>
 
-#include <@MUTEX_TYPE_HEADER@>
+#include <avogadro/core/mutex.h>
 
-namespace Avogadro {
-namespace Stl {
-typedef @MUTEX_TYPE@ mutex;
+using Avogadro::Core::Mutex;
+
+TEST(MutexTest, lock)
+{
+  Mutex mutex;
+
+  mutex.lock();
+  int array[15];
+  array[4] = 1;
+  mutex.unlock();
+
+  EXPECT_EQ(array[4], 1);
 }
-}
 
-#endif // AVOGADRO_STL_MUTEX_H
+TEST(MutexText, tryLock)
+{
+  Mutex mutex;
+
+  mutex.lock();
+  EXPECT_FALSE(mutex.tryLock());
+  int array[15];
+  array[4] = 2;
+  mutex.unlock();
+
+  EXPECT_TRUE(mutex.tryLock());
+  mutex.unlock();
+
+  EXPECT_EQ(array[4], 2);
+}

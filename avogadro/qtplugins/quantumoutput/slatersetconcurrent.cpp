@@ -20,9 +20,9 @@
 #include <avogadro/core/slaterset.h>
 #include <avogadro/core/slatersettools.h>
 
-#include <avogadro/qtgui/cube.h>
+#include <avogadro/core/cube.h>
+#include <avogadro/core/mutex.h>
 
-#include <QtCore/QReadWriteLock>
 #include <QtCore/QtConcurrentMap>
 
 namespace Avogadro {
@@ -30,7 +30,7 @@ namespace QtPlugins {
 
 using Core::SlaterSet;
 using Core::SlaterSetTools;
-using QtGui::Cube;
+using Core::Cube;
 
 struct SlaterShell
 {
@@ -60,18 +60,18 @@ void SlaterSetConcurrent::setMolecule(Core::Molecule *mol)
   m_tools = new SlaterSetTools(mol);
 }
 
-bool SlaterSetConcurrent::calculateMolecularOrbital(QtGui::Cube *cube,
+bool SlaterSetConcurrent::calculateMolecularOrbital(Core::Cube *cube,
                                                     unsigned int state)
 {
   return setUpCalculation(cube, state, SlaterSetConcurrent::processOrbital);
 }
 
-bool SlaterSetConcurrent::calculateElectronDensity(QtGui::Cube *cube)
+bool SlaterSetConcurrent::calculateElectronDensity(Core::Cube *cube)
 {
   return setUpCalculation(cube, 0, SlaterSetConcurrent::processDensity);
 }
 
-bool SlaterSetConcurrent::calculateSpinDensity(QtGui::Cube *cube)
+bool SlaterSetConcurrent::calculateSpinDensity(Core::Cube *cube)
 {
   return setUpCalculation(cube, 0, SlaterSetConcurrent::processSpinDensity);
 }
@@ -85,9 +85,9 @@ void SlaterSetConcurrent::calculationComplete()
   emit finished();
 }
 
-bool SlaterSetConcurrent::setUpCalculation(QtGui::Cube *cube,
-                                             unsigned int state,
-                                             void (*func)(SlaterShell &))
+bool SlaterSetConcurrent::setUpCalculation(Core::Cube *cube,
+                                           unsigned int state,
+                                           void (*func)(SlaterShell &))
 {
   if (!m_set || !m_tools)
     return false;
@@ -105,7 +105,7 @@ bool SlaterSetConcurrent::setUpCalculation(QtGui::Cube *cube,
   }
 
   // Lock the cube until we are done.
-  cube->lock()->lockForWrite();
+  cube->lock()->lock();
 
   // Watch for the future
   connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
