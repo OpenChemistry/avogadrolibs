@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_QTPLUGINS_APBS_APBSDIALOG_H
 #define AVOGADRO_QTPLUGINS_APBS_APBSDIALOG_H
 
-#include <avogadro/qtgui/cube.h>
+#include <avogadro/core/cube.h>
 
 #include <QDialog>
 
