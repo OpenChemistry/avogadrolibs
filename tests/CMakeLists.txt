@@ -51,3 +51,7 @@ if(USE_OPENGL)
     add_subdirectory(qtopengl)
   endif()
 endif()
+
+if(USE_PROTOCALL)
+  add_subdirectory(protocall)
+endif()
