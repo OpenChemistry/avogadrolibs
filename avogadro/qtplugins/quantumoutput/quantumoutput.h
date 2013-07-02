@@ -26,16 +26,25 @@ class QProgressDialog;
 namespace Avogadro {
 
 namespace QtGui {
-class Cube;
 class Mesh;
 class MeshGenerator;
 }
-namespace Quantum {
+namespace Core {
 class BasisSet;
+class Cube;
 }
 
 namespace QtPlugins {
 
+/**
+ * @brief The QuantumOutput plugin registers quantum file formats, adds several
+ * menu entries to calculate properties if a valid quantum data output file was
+ * loaded.
+ * @author Marcus D. Hanwell
+ */
+
+class GaussianSetConcurrent;
+class SlaterSetConcurrent;
 class SurfaceDialog;
 
 class QuantumOutput : public QtGui::ExtensionPlugin
@@ -56,10 +65,7 @@ public:
 
   void setMolecule(QtGui::Molecule *mol);
 
-  bool readMolecule(QtGui::Molecule &mol);
-
 private slots:
-  void loadMoleculeActivated();
   void homoActivated();
   void lumoActivated();
   void surfacesActivated();
@@ -74,9 +80,12 @@ private:
   QProgressDialog    *m_progressDialog;
 
   QtGui::Molecule    *m_molecule;
-  Quantum::BasisSet  *m_basis;
+  Core::BasisSet     *m_basis;
 
-  QtGui::Cube        *m_cube;
+  GaussianSetConcurrent *m_concurrent;
+  SlaterSetConcurrent *m_concurrent2;
+
+  Core::Cube        *m_cube;
   QtGui::Mesh        *m_mesh1;
   QtGui::Mesh        *m_mesh2;
   QtGui::MeshGenerator *m_meshGenerator1;
@@ -85,8 +94,6 @@ private:
   float m_isoValue;
 
   SurfaceDialog *m_dialog;
-
-  void openFile(const QString &fileName);
 };
 
 }

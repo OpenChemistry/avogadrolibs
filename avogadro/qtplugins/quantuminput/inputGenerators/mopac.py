@@ -44,6 +44,10 @@ def getOptions():
   userOptions['Theory']['values'] = \
     ['AM1', 'PM3', 'PM6', 'RM1', 'MNDO', 'MNDOD']
 
+  userOptions['Filename Base'] = {}
+  userOptions['Filename Base']['type'] = 'string'
+  userOptions['Filename Base']['default'] = 'job'
+
   userOptions['Multiplicity'] = {}
   userOptions['Multiplicity']['type'] = "integer"
   userOptions['Multiplicity']['default'] = 1
@@ -59,11 +63,10 @@ def getOptions():
   # TODO Coordinate format (need zmatrix)
 
   opts = {'userOptions' : userOptions}
-  opts['allowCustomBaseName'] = True
 
   return opts
 
-def generateInputFile(opts, settings):
+def generateInputFile(opts):
   # Extract options:
   title = opts['Title']
   calculate = opts['Calculation Type']
@@ -124,10 +127,10 @@ def generateInput():
   opts = json.loads(stdinStr)
 
   # Generate the input file
-  inp = generateInputFile(opts['options'], opts['settings'])
+  inp = generateInputFile(opts['options'])
 
   # Basename for input files:
-  baseName = opts['settings']['baseName']
+  baseName = opts['options']['Filename Base']
 
   # Prepare the result
   result = {}

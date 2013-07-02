@@ -22,7 +22,15 @@
 class QAction;
 class QDialog;
 
+namespace MoleQueue {
+class JobObject;
+}
+
 namespace Avogadro {
+namespace Io {
+class FileFormat;
+}
+
 namespace QtPlugins {
 
 class GamessInputDialog;
@@ -45,6 +53,14 @@ public:
 
   void setMolecule(QtGui::Molecule *mol);
 
+public slots:
+  /**
+   * Emitted when the user requests that a job's output be loaded in Avogadro.
+   */
+  void openJobOutput(const MoleQueue::JobObject &job);
+
+  bool readMolecule(QtGui::Molecule &mol);
+
 private slots:
   void menuActivated();
 
@@ -52,6 +68,8 @@ private:
   QAction *m_action;
   QtGui::Molecule *m_molecule;
   GamessInputDialog *m_dialog;
+  const Io::FileFormat *m_outputFormat;
+  QString m_outputFileName;
 };
 
 }

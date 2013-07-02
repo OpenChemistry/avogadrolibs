@@ -15,15 +15,15 @@
 ******************************************************************************/
 
 /** Generated file, do not edit. */
-#ifndef AVOGADRO_CORE_MUTEX_H
-#define AVOGADRO_CORE_MUTEX_H
+#ifndef AVOGADRO_STL_MUTEX_H
+#define AVOGADRO_STL_MUTEX_H
 
 #include <@MUTEX_TYPE_HEADER@>
 
 namespace Avogadro {
-namespace Core {
+namespace Stl {
 typedef @MUTEX_TYPE@ mutex;
 }
 }
 
-#endif // AVOGADRO_CORE_MUTEX_H
+#endif // AVOGADRO_STL_MUTEX_H

@@ -7,9 +7,6 @@ include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/io/")
 
 # Extension
 set(quantuminput_srcs
-  generichighlighter.cpp
-  inputgenerator.cpp
-  quantuminputdialog.cpp
   quantuminput.cpp
 )
 
@@ -19,13 +16,13 @@ avogadro_plugin(QuantumInput
   quantuminput.h
   QuantumInput
   "${quantuminput_srcs}"
-  quantuminputdialog.ui
 )
 
 target_link_libraries(QuantumInput LINK_PRIVATE AvogadroIO MoleQueueClient)
 
 # Bundled generator scripts
 set(input_generators
+  inputGenerators/apbs.py
   inputGenerators/gamessuk.py
   inputGenerators/gaussian.py
   inputGenerators/molpro.py
@@ -34,6 +31,15 @@ set(input_generators
   inputGenerators/qchem.py
   inputGenerators/terachem.py
 )
+
+option(INSTALL_TEST_INPUT_GENERATOR
+  "Install a dummy input generator that is used to test generator scripts."
+  OFF
+)
+
+if(INSTALL_TEST_INPUT_GENERATOR)
+  list(APPEND input_generators inputGenerators/inputgeneratortest.py)
+endif()
 
 # Default shebang lines for interpreted scripts:
 # Python 2.x. Default "#!/usr/bin/env python" or python 2.x interpretor in PATH.

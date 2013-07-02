@@ -3,6 +3,7 @@
   This source file is part of the Avogadro project.
 
   Copyright 2010 Geoffrey R. Hutchison
+  Copyright 2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -16,159 +17,187 @@
 
 #include "molden.h"
 
-#include <QtCore/QFile>
-#include <QtCore/QStringList>
-#include <QtCore/QDebug>
+#include <avogadro/core/gaussianset.h>
+#include <avogadro/core/molecule.h>
+#include <avogadro/io/utilities.h>
 
-using Eigen::Vector3d;
+#include <iostream>
+
 using std::vector;
-
-#ifndef BOHR_TO_ANGSTROM
-#define BOHR_TO_ANGSTROM 0.529177249
-#endif
+using std::string;
+using std::cout;
+using std::endl;
 
 namespace Avogadro {
 namespace QuantumIO {
 
-using Quantum::S;
-using Quantum::SP;
-using Quantum::P;
-using Quantum::D;
-using Quantum::F;
-using Quantum::UU;
+using Core::Atom;
+using Core::BasisSet;
+using Core::GaussianSet;
+using Core::Rhf;
+using Core::Uhf;
+using Core::Rohf;
+using Core::Unknown;
 
-MoldenFile::MoldenFile(const QString &filename, GaussianSet* basis):
-  m_coordFactor(1.0), m_currentMode(NotParsing)
+MoldenFile::MoldenFile():
+  m_coordFactor(1.0),
+  m_electrons(0),
+  m_mode(Unrecognized)
 {
-  // Open the file for reading and process it
-  QFile* file = new QFile(filename);
-
-  file->open(QIODevice::ReadOnly | QIODevice::Text);
-  m_in = file;
-
-  qDebug() << "File" << filename << "opened.";
-
-  // Process the formatted checkpoint and extract all the information we need
-  while (!m_in->atEnd()) {
-    processLine();
-  }
-
-  // Now it should all be loaded load it into the basis set
-  load(basis);
-
-  delete file;
 }
 
 MoldenFile::~MoldenFile()
 {
 }
 
-void MoldenFile::processLine()
+std::vector<std::string> MoldenFile::fileExtensions() const
 {
-  // First truncate the line, remove trailing white space and check for blank lines
-  QString key = m_in->readLine().trimmed();
-  while(key.isEmpty() && !m_in->atEnd()) {
-    key = m_in->readLine().trimmed();
-  }
+  std::vector<std::string> extensions;
+  extensions.push_back("mold");
+  return extensions;
+}
 
-  if (m_in->atEnd())
+std::vector<std::string> MoldenFile::mimeTypes() const
+{
+  return std::vector<std::string>();
+}
+
+bool MoldenFile::read(std::istream &in, Core::Molecule &molecule)
+{
+  // Read the log file line by line, most sections are terminated by an empty
+  // line, so they should be retained.
+  while (!in.eof())
+    processLine(in);
+
+  GaussianSet *basis = new GaussianSet;
+
+  int nAtom = 0;
+  for (unsigned int i = 0; i < m_aPos.size(); i += 3) {
+    Atom a = molecule.addAtom(m_aNums[nAtom++]);
+    a.setPosition3d(Vector3(m_aPos[i    ], m_aPos[i + 1], m_aPos[i + 2]));
+  }
+  // Do simple bond perception.
+  molecule.perceiveBondsSimple();
+  molecule.setBasisSet(basis);
+  basis->setMolecule(&molecule);
+  load(basis);
+  return true;
+}
+
+void MoldenFile::processLine(std::istream &in)
+{
+  // First truncate the line, remove trailing white space and check for blanks.
+  string line;
+  if (!getline(in, line) || Io::trimmed(line).empty())
     return;
 
-  QStringList list = key.split(' ', QString::SkipEmptyParts);
+  vector<string> list = Io::split(line, ' ');
 
-  // Big switch statement checking for various things we are interested in
-  // Make sure to switch mode:
-  //      enum mode { NotParsing, Atoms, GTO, STO, MO, SCF }
-  if (key.contains("[atoms]", Qt::CaseInsensitive)) {
-    if (list.size() > 1 && list[1].contains("au", Qt::CaseInsensitive))
+  // Big switch statement checking for various things we are interested in. The
+  // Molden file format uses sectiosn, each starts with a header line of the
+  // form [Atoms], and the beginning of a new section denotes the end of the
+  // last.
+  if (Io::contains(line, "[Atoms]")) {
+    if (list.size() > 1 && Io::contains(list[1], "AU"))
       m_coordFactor = BOHR_TO_ANGSTROM;
-    m_currentMode = Atoms;
-  } else if (key.contains("[gto]", Qt::CaseInsensitive)) {
-    m_currentMode = GTO;
-  } else if (key.contains("[mo]", Qt::CaseInsensitive)) {
-    m_currentMode = MO;
-  } else if (key.contains("[")) { // unknown section
-    m_currentMode = NotParsing;
-  } else {
-    QString shell;
-    orbital shellType;
+    m_mode = Atoms;
+  }
+  else if (Io::contains(line, "[GTO]")) {
+    m_mode = GTO;
+  }
+  else if (Io::contains(line, "[MO]")) {
+    m_mode = MO;
+  }
+  else if (Io::contains(line, "[")) { // unknown section
+    m_mode = Unrecognized;
+  }
+  else {
+    // We are in a section, and must parse the lines in that section.
+    string shell;
+    GaussianSet::orbital shellType;
 
-    // parsing a line -- what mode are we in?
-    switch (m_currentMode) {
+    // Parsing a line of data in a section - what mode are we in?
+    switch (m_mode) {
     case Atoms:
-      // element_name number atomic_number x y z
-      if (list.size() < 6)
-        return;
-      m_aNums.push_back(list[2].toInt());
-      m_aPos.push_back(list[3].toDouble() * m_coordFactor);
-      m_aPos.push_back(list[4].toDouble() * m_coordFactor);
-      m_aPos.push_back(list[5].toDouble() * m_coordFactor);
-
+      readAtom(list);
       break;
-    case GTO:
-    {
+    case GTO: {
       // TODO: detect dead files and make bullet-proof
-      int atom = list[0].toInt();
+      int atom = Io::lexicalCast<int>(list[0]);
 
-      key = m_in->readLine().trimmed();
-      while (!key.isEmpty()) { // read the shell types in this GTO
-        list = key.split(' ', QString::SkipEmptyParts);
-        shell = list[0].toLower();
-        shellType = Quantum::UU;
-        if (shell.contains("sp"))
-          shellType = Quantum::SP;
-        else if (shell.contains("s"))
-          shellType = Quantum::S;
-        else if (shell.contains("p"))
-          shellType = Quantum::P;
-        else if (shell.contains("d"))
-          shellType = Quantum::D;
-        else if (shell.contains("f"))
-          shellType = Quantum::F;
+      getline(in, line);
+      line = Io::trimmed(line);
+      while (!line.empty()) { // Read the shell types in this GTO.
+        list = Io::split(line, ' ');
+        if (list.size() < 1)
+          break;
+        shell = list[0];
+        shellType = GaussianSet::UU;
+        if (shell == "sp")
+          shellType = GaussianSet::SP;
+        else if (shell == "s")
+          shellType = GaussianSet::S;
+        else if (shell == "p")
+          shellType = GaussianSet::P;
+        else if (shell == "d")
+          shellType = GaussianSet::D;
+        else if (shell == "f")
+          shellType = GaussianSet::F;
+        else if (shell == "g")
+          shellType = GaussianSet::G;
 
-        if (shellType != Quantum::UU) {
+        if (shellType != GaussianSet::UU) {
           m_shellTypes.push_back(shellType);
           m_shelltoAtom.push_back(atom);
         }
-        else
+        else {
           return;
+        }
 
-        int numGTOs = list[1].toInt();
+        int numGTOs = Io::lexicalCast<int>(list[1]);
         m_shellNums.push_back(numGTOs);
 
-        // now read all the exponents and contraction coefficients
+        // Now read all the exponents and contraction coefficients.
         for (int gto = 0; gto < numGTOs; ++gto) {
-          key = m_in->readLine().trimmed();
-          list = key.split(' ', QString::SkipEmptyParts);
-          m_a.push_back(list[0].toDouble());
-          m_c.push_back(list[1].toDouble());
-          if (shellType == Quantum::SP && list.size() > 2)
-            m_csp.push_back(list[2].toDouble());
-        } // finished parsing a new GTO
-        key = m_in->readLine().trimmed(); // start reading the next shell
+          getline(in, line);
+          line = Io::trimmed(line);
+          list = Io::split(line, ' ');
+          if (list.size() > 1) {
+            m_a.push_back(Io::lexicalCast<double>(list[0]));
+            m_c.push_back(Io::lexicalCast<double>(list[1]));
+          }
+          if (shellType == GaussianSet::SP && list.size() > 2)
+            m_csp.push_back(Io::lexicalCast<double>(list[2]));
+        }
+        // Start reading the next shell.
+        getline(in, line);
+        line = Io::trimmed(line);
       }
     }
     break;
 
     case MO:
-      // parse occ, spin, energy, etc.
-      while (!key.isEmpty() && key.contains('=')) {
-        key = m_in->readLine().trimmed();
-        list = key.split(' ', QString::SkipEmptyParts);
-        if (key.contains("occup", Qt::CaseInsensitive))
-          m_electrons += (int)list[1].toDouble();
+      // Parse the occupation, spin, energy, etc (Occup, Spin, Ene).
+      while (!line.empty() && Io::contains(line, "=")) {
+        getline(in, line);
+        line = Io::trimmed(line);
+        list = Io::split(line, ' ');
+        if (Io::contains(line, "Occup"))
+          m_electrons += Io::lexicalCast<int>(list[1]);
       }
 
-      // parse MO coefficients
-      while (!key.isEmpty() && !key.contains('=')) {
-        list = key.split(' ', QString::SkipEmptyParts);
+      // Parse the molecular orbital coefficients.
+      while (!line.empty() && !Io::contains(line, "=")) {
+        list = Io::split(line, ' ');
         if (list.size() < 2)
           break;
 
-        m_MOcoeffs.push_back(list[1].toDouble());
-        key = m_in->readLine().trimmed();
-      } // finished parsing a new MO
+        m_MOcoeffs.push_back(Io::lexicalCast<double>(list[1]));
 
+        getline(in, line);
+        line = Io::trimmed(line);
+        list = Io::split(line, ' ');
+      }
       break;
     default:
       break;
@@ -176,55 +205,62 @@ void MoldenFile::processLine()
   }
 }
 
+void MoldenFile::readAtom(const vector<string> &list)
+{
+  // element_name number atomic_number x y z
+  if (list.size() < 6)
+    return;
+  m_aNums.push_back(Io::lexicalCast<int>(list[2]));
+  m_aPos.push_back(Io::lexicalCast<double>(list[3]) * m_coordFactor);
+  m_aPos.push_back(Io::lexicalCast<double>(list[4]) * m_coordFactor);
+  m_aPos.push_back(Io::lexicalCast<double>(list[5]) * m_coordFactor);
+}
+
 void MoldenFile::load(GaussianSet* basis)
 {
   // Now load up our basis set
-  basis->setNumElectrons(m_electrons);
-  int nAtom = 0;
-  for (unsigned int i = 0; i < m_aPos.size(); i += 3)
-    basis->addAtom(Vector3d(m_aPos.at(i), m_aPos.at(i+1), m_aPos.at(i+2)),
-                   m_aNums.at(nAtom++));
+  basis->setElectronCount(m_electrons);
 
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
   int nSP = 0; // number of SP shells
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i) {
-
     // Handle the SP case separately - this should possibly be a distinct type
-    if (m_shellTypes.at(i) == SP)  {
+    if (m_shellTypes.at(i) == GaussianSet::SP)  {
       // SP orbital type - currently have to unroll into two shells
-      int s = basis->addBasis(m_shelltoAtom.at(i) - 1, S);
-      int p = basis->addBasis(m_shelltoAtom.at(i) - 1, P);
-      for (int j = 0; j < m_shellNums.at(i); ++j) {
-        basis->addGTO(s, m_c.at(nGTO), m_a.at(nGTO));
-        basis->addGTO(p, m_csp.at(nSP), m_a.at(nGTO));
+      int s = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::S);
+      int p = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::P);
+      for (int j = 0; j < m_shellNums[i]; ++j) {
+        basis->addGto(s, m_c[nGTO], m_a[nGTO]);
+        basis->addGto(p, m_csp[nSP], m_a[nGTO]);
         ++nSP;
         ++nGTO;
       }
     }
     else {
-      int b = basis->addBasis(m_shelltoAtom.at(i) - 1, m_shellTypes.at(i));
-      for (int j = 0; j < m_shellNums.at(i); ++j) {
-        basis->addGTO(b, m_c.at(nGTO), m_a.at(nGTO));
+      int b = basis->addBasis(m_shelltoAtom[i] - 1, m_shellTypes[i]);
+      for (int j = 0; j < m_shellNums[i]; ++j) {
+        basis->addGto(b, m_c[nGTO], m_a[nGTO]);
         ++nGTO;
       }
     }
   }
   // Now to load in the MO coefficients
   if (m_MOcoeffs.size())
-    basis->addMOs(m_MOcoeffs);
+    basis->setMolecularOrbitals(m_MOcoeffs);
 }
 
 void MoldenFile::outputAll()
 {
-  qDebug() << "Shell mappings.";
+  cout << "Shell mappings:\n";
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i)
-    qDebug() << i << ": type =" << m_shellTypes.at(i)
-             << ", number =" << m_shellNums.at(i)
-             << ", atom =" << m_shelltoAtom.at(i);
-  qDebug() << "MO coefficients.";
+    cout << i << ": type = " << m_shellTypes.at(i)
+         << ", number = " << m_shellNums.at(i)
+         << ", atom = " << m_shelltoAtom.at(i) << endl;
+  cout << "MO coefficients:\n";
   for (unsigned int i = 0; i < m_MOcoeffs.size(); ++i)
-    qDebug() << m_MOcoeffs.at(i);
+    cout << m_MOcoeffs.at(i) << "\t";
+  cout << endl;
 }
 
 }

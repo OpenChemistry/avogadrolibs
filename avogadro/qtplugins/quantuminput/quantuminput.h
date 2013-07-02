@@ -25,9 +25,20 @@
 class QAction;
 class QDialog;
 
+namespace MoleQueue {
+class JobObject;
+}
+
 namespace Avogadro {
+namespace Io {
+class FileFormat;
+}
+
+namespace QtGui {
+class InputGeneratorDialog;
+}
+
 namespace QtPlugins {
-class QuantumInputDialog;
 
 /**
  * @brief The QuantumInput class implements the extension interface for
@@ -58,6 +69,13 @@ public slots:
    */
   void refreshGenerators();
 
+  /**
+   * Emitted when the user requests that a job's output be loaded in Avogadro.
+   */
+  void openJobOutput(const MoleQueue::JobObject &job);
+
+  bool readMolecule(QtGui::Molecule &mol);
+
 private slots:
   void menuActivated();
   void configurePython();
@@ -66,15 +84,18 @@ private:
   void updateInputGeneratorScripts();
   void updateActions();
   void addAction(const QString &label, const QString &scriptFilePath);
-  QString queryProgramName(const QString &scriptFilePath);
+  bool queryProgramName(const QString &scriptFilePath, QString &displayName);
 
   QList<QAction*> m_actions;
   QtGui::Molecule *m_molecule;
   // keyed on script file path
-  QMultiMap<QString, QuantumInputDialog*> m_dialogs;
+  QMultiMap<QString, QtGui::InputGeneratorDialog*> m_dialogs;
 
   // maps program name --> script file path
   QMultiMap<QString, QString> m_inputGeneratorScripts;
+
+  const Io::FileFormat *m_outputFormat;
+  QString m_outputFileName;
 };
 
 }

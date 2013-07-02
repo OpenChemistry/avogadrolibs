@@ -7,11 +7,13 @@ set(tests
   CoordinateBlockGenerator
   CoordinateSet
   CPP11
+  Cube
   Eigen
   Element
   Graph
   HydrogenTools
   Molecule
+  Mutex
   RingPerceiver
   Variant
   VariantMap

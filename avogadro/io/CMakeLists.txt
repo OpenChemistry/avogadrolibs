@@ -33,9 +33,6 @@ set(SOURCES
   xyzformat.cpp
 )
 
-# Ever feel like you should just take the modular build system?
-include_directories("${CMAKE_CURRENT_BINARY_DIR}/../core")
-
 avogadro_add_library(AvogadroIO ${HEADERS} ${SOURCES})
 
 # hdf5 is the HDF5 imported target
