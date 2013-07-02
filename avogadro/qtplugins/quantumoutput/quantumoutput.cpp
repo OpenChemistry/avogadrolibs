@@ -24,7 +24,7 @@
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/core/cube.h>
-#include <avogadro/qtgui/mesh.h>
+#include <avogadro/core/mesh.h>
 #include <avogadro/qtgui/meshgenerator.h>
 
 #include <avogadro/core/basisset.h>

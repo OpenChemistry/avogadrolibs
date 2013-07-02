@@ -20,7 +20,7 @@
 
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/core/cube.h>
-#include <avogadro/qtgui/mesh.h>
+#include <avogadro/core/mesh.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/meshgenerator.h>
 
@@ -32,6 +32,8 @@
 
 namespace Avogadro {
 namespace QtPlugins {
+
+using Core::Mesh;
 
 Apbs::Apbs(QObject *parent_)
   : QtGui::ExtensionPlugin(parent_),
@@ -165,7 +167,7 @@ bool Apbs::loadOpenDxFile(const QString &fileName, QtGui::Molecule &molecule)
       m_progressDialog->setValue(1);
       qApp->processEvents();
 
-      QtGui::Mesh *mesh = molecule.addMesh();
+      Mesh *mesh = molecule.addMesh();
       QtGui::MeshGenerator *meshGenerator =
         new QtGui::MeshGenerator(cube, mesh, 0.1f);
       connect(meshGenerator, SIGNAL(finished()),

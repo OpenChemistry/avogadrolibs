@@ -26,12 +26,12 @@ class QProgressDialog;
 namespace Avogadro {
 
 namespace QtGui {
-class Mesh;
 class MeshGenerator;
 }
 namespace Core {
 class BasisSet;
 class Cube;
+class Mesh;
 }
 
 namespace QtPlugins {
@@ -86,8 +86,8 @@ private:
   SlaterSetConcurrent *m_concurrent2;
 
   Core::Cube        *m_cube;
-  QtGui::Mesh        *m_mesh1;
-  QtGui::Mesh        *m_mesh2;
+  Core::Mesh        *m_mesh1;
+  Core::Mesh        *m_mesh2;
   QtGui::MeshGenerator *m_meshGenerator1;
   QtGui::MeshGenerator *m_meshGenerator2;
 

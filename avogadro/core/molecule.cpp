@@ -17,7 +17,9 @@
 #include "molecule.h"
 
 #include "basisset.h"
+#include "color3f.h"
 #include "elements.h"
+#include "mesh.h"
 
 #include <cassert>
 #include <algorithm>
@@ -301,6 +303,28 @@ std::vector<Bond> Molecule::bonds(const Atom &a)
 size_t Molecule::bondCount() const
 {
   return m_bondPairs.size();
+}
+
+Mesh* Molecule::addMesh()
+{
+  m_meshes.push_back(new Mesh);
+  return m_meshes.back();
+}
+
+Mesh* Molecule::mesh(size_t index)
+{
+  if (index < m_meshes.size())
+    return m_meshes[index];
+  else
+    return NULL;
+}
+
+const Mesh* Molecule::mesh(size_t index) const
+{
+  if (index < m_meshes.size())
+    return m_meshes[index];
+  else
+    return NULL;
 }
 
 std::string Molecule::formula() const

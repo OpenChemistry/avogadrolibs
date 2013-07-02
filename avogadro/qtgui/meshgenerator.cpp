@@ -19,7 +19,7 @@
 
 #include <avogadro/core/cube.h>
 #include <avogadro/core/mutex.h>
-#include "mesh.h"
+#include <avogadro/core/mesh.h>
 
 #include <QReadWriteLock>
 #include <QDebug>
@@ -28,6 +28,7 @@ namespace Avogadro {
 namespace QtGui {
 
 using Core::Cube;
+using Core::Mesh;
 
 MeshGenerator::MeshGenerator(QObject *p) :
   QThread(p),

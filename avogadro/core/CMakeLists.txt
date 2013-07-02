@@ -13,6 +13,7 @@ configure_file("${PROJECT_SOURCE_DIR}/cmake/version.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/version.h")
 
 set(HEADERS
+  color3f.h
   array.h
   atom.h
   atomtyper.h
@@ -29,6 +30,7 @@ set(HEADERS
   graph.h
   hydrogentools.h
   matrix.h
+  mesh.h
   molecule.h
   mutex.h
   nameatomtyper.h
@@ -53,6 +55,7 @@ set(SOURCES
   gaussiansettools.cpp
   graph.cpp
   hydrogentools.cpp
+  mesh.cpp
   mdlvalence_p.h
   molecule.cpp
   mutex.cpp
