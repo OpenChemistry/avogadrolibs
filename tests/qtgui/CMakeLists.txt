@@ -25,6 +25,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtguitests.h.in"
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   Molecule
+  MoleQueueQueueListModel
   )
 
 if(PYTHON2_EXECUTABLE AND AVOGADRO_DATA)

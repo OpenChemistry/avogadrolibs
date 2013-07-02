@@ -22,6 +22,9 @@
 
 #include <QtCore/QStringList>
 
+// for gtest unit testing access
+class MoleQueueQueueListModelTestBridge;
+
 namespace Avogadro {
 namespace QtGui {
 class MoleQueueManager;
@@ -100,6 +103,7 @@ public:
 
 protected:
   friend class MoleQueueManager;
+  friend class ::MoleQueueQueueListModelTestBridge;
 
   /**
    * Protected constructor. Keeps objects isolated to MoleQueueManager ivars.
