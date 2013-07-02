@@ -197,9 +197,9 @@ public:
         xml_attribute z3 = node.attribute("z3");
         if (y3 && z3) {
           // It looks like we have a valid 3D position.
-          Vector3 position(strtod(attribute.value(), 0),
-                           strtod(y3.value(), 0),
-                           strtod(z3.value(), 0));
+          Vector3 position(lexicalCast<double>(attribute.value()),
+                           lexicalCast<double>(y3.value()),
+                           lexicalCast<double>(z3.value()));
           atom.setPosition3d(position);
         }
         else {
@@ -227,8 +227,8 @@ public:
       if (attribute) {
         xml_attribute y2 = node.attribute("y2");
         if (y2) {
-          Vector2 position(strtod(attribute.value(), 0),
-                           strtod(y2.value(), 0));
+          Vector2 position(lexicalCast<double>(attribute.value()),
+                           lexicalCast<double>(y2.value()));
           atom.setPosition2d(position);
         }
         else {
