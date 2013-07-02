@@ -28,7 +28,10 @@ set(tests
   )
 
 if(PYTHON2_EXECUTABLE AND AVOGADRO_DATA)
-  list(APPEND tests InputGenerator)
+  list(APPEND tests
+    InputGenerator
+    InputGeneratorWidget
+  )
 endif()
 
 # Build up the source file names.
