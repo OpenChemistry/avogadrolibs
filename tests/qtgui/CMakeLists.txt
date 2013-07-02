@@ -30,6 +30,7 @@ set(tests
 
 if(PYTHON2_EXECUTABLE AND AVOGADRO_DATA)
   list(APPEND tests
+    FileBrowseWidget
     InputGenerator
     InputGeneratorWidget
   )
