@@ -171,9 +171,9 @@ CartesianEditorDialog::CartesianEditorDialog(QWidget *parent_) :
   connect(m_ui->clear,  SIGNAL(clicked()), SLOT(clearClicked()));
   connect(m_ui->apply,  SIGNAL(clicked()), SLOT(applyClicked()));
 
-  m_ui->cut->setIcon(QIcon::fromTheme("edit-cut")); /// @todo Fallback icon
-  m_ui->copy->setIcon(QIcon::fromTheme("edit-copy")); /// @todo Fallback icon
-  m_ui->paste->setIcon(QIcon::fromTheme("edit-paste")); /// @todo Fallback icon
+  m_ui->cut->setIcon(QIcon::fromTheme("edit-cut"));
+  m_ui->copy->setIcon(QIcon::fromTheme("edit-copy"));
+  m_ui->paste->setIcon(QIcon::fromTheme("edit-paste"));
 
   buildPresets();
   listenForTextEditChanges(true);

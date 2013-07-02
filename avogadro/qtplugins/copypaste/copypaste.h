@@ -20,6 +20,8 @@
 #include <avogadro/qtgui/extensionplugin.h>
 #include <avogadro/core/avogadrocore.h>
 
+#include <QtGui/QIcon>
+
 namespace Avogadro {
 namespace Io {
 class FileFormat;

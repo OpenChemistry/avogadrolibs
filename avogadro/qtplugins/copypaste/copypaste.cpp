@@ -44,15 +44,15 @@ CopyPaste::CopyPaste(QObject *parent_) :
   m_pasteAction(new QAction(tr("Paste"), this))
 {
   m_copyAction->setShortcut(QKeySequence("Ctrl+C"));
-  m_copyAction->setIcon(QIcon::fromTheme("edit-copy")); /// @todo fallback icon
+  m_copyAction->setIcon(QIcon::fromTheme("edit-copy"));
   connect(m_copyAction, SIGNAL(triggered()), SLOT(copy()));
 
   m_cutAction->setShortcut(QKeySequence("Ctrl+X"));
-  m_cutAction->setIcon(QIcon::fromTheme("edit-cut")); /// @todo fallback icon
+  m_cutAction->setIcon(QIcon::fromTheme("edit-cut"));
   connect(m_cutAction, SIGNAL(triggered()), SLOT(cut()));
 
   m_pasteAction->setShortcut(QKeySequence("Ctrl+V"));
-  m_pasteAction->setIcon(QIcon::fromTheme("edit-paste")); /// @todo fallback icon
+  m_pasteAction->setIcon(QIcon::fromTheme("edit-paste"));
   connect(m_pasteAction, SIGNAL(triggered()), SLOT(paste()));
 }
 

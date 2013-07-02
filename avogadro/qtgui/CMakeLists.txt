@@ -79,6 +79,12 @@ set(UIS
 qt4_wrap_ui(UI_SOURCES ${UIS})
 list(APPEND SOURCES ${UI_SOURCES})
 
+set(RCS
+  qtgui.qrc
+)
+qt4_add_resources(RC_SOURCES ${RCS})
+list(APPEND SOURCES ${RC_SOURCES})
+
 avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtGui
   AvogadroIO
