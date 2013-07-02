@@ -39,7 +39,9 @@ set(SOURCES
   toolplugin.cpp
 )
 
-avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES})
+qt4_add_resources(RCC_SOURCES qtgui.qrc)
+
+avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES} ${RCC_SOURCES})
 target_link_libraries(AvogadroQtGui
   AvogadroCore
   AvogadroRendering
