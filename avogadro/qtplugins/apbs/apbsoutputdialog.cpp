@@ -26,7 +26,7 @@
 
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/core/cube.h>
-#include <avogadro/qtgui/mesh.h>
+#include <avogadro/core/mesh.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/meshgenerator.h>
 
