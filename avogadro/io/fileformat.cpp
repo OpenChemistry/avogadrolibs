@@ -17,10 +17,13 @@
 #include "fileformat.h"
 
 #include <fstream>
+#include <locale>
 #include <sstream>
 
 namespace Avogadro {
 namespace Io {
+
+using std::locale;
 
 FileFormat::~FileFormat()
 {
@@ -35,6 +38,9 @@ bool FileFormat::readFile(const std::string &fileName_,
     appendError("Error opening file: " + fileName_ + "\n");
     return false;
   }
+  // Imbue the standard C locale.
+  locale cLocale("C");
+  file.imbue(cLocale);
   return read(file, molecule);
 }
 
@@ -47,12 +53,18 @@ bool FileFormat::writeFile(const std::string &fileName_,
     appendError("Error opening file: " + fileName_ + "\n");
     return false;
   }
+  // Imbue the standard C locale.
+  locale cLocale("C");
+  file.imbue(cLocale);
   return write(file, molecule);
 }
 
 bool FileFormat::readString(const std::string &string, Core::Molecule &molecule)
 {
   std::istringstream stream(string, std::istringstream::in);
+  // Imbue the standard C locale.
+  locale cLocale("C");
+  stream.imbue(cLocale);
   return read(stream, molecule);
 }
 
@@ -60,6 +72,9 @@ bool FileFormat::writeString(std::string &string,
                              const Core::Molecule &molecule)
 {
   std::ostringstream stream(string, std::ostringstream::out);
+  // Imbue the standard C locale.
+  locale cLocale("C");
+  stream.imbue(cLocale);
   bool result = write(stream, molecule);
   string = stream.str();
   return result;
