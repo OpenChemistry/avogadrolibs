@@ -24,6 +24,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtguitests.h.in"
 
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
+  GenericHighlighter
   Molecule
   MoleQueueQueueListModel
   )
