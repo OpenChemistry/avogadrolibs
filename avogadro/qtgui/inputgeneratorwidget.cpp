@@ -206,7 +206,8 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
   foreach (const QString &fileName, fileNames) {
     if (m_textEdits.contains(fileName))
       continue;
-    QTextEdit *edit = new QTextEdit();
+    QTextEdit *edit = new QTextEdit(this);
+    edit->setObjectName(fileName);
     edit->setFontFamily("monospace");
     connect(edit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
     m_ui->tabWidget->addTab(edit, fileName);
@@ -678,10 +679,12 @@ void InputGeneratorWidget::buildOptionGui()
     QWidget *basisWidget = createOptionWidget(userOptions.take("Basis"));
     QHBoxLayout *hbox = new QHBoxLayout;
     if (theoryWidget) {
+      theoryWidget->setObjectName("Theory");
       hbox->addWidget(theoryWidget);
       m_widgets.insert("Theory", theoryWidget);
     }
     if (basisWidget) {
+      basisWidget->setObjectName("Basis");
       hbox->addWidget(basisWidget);
       m_widgets.insert("Basis", basisWidget);
     }
@@ -740,6 +743,9 @@ void InputGeneratorWidget::addOptionRow(const QString &label,
     widget->deleteLater();
     return;
   }
+
+  // For lookups during unit testing:
+  widget->setObjectName(label);
 
   form->addRow(label + ":", widget);
   m_widgets.insert(label, widget);

@@ -348,14 +348,15 @@ QByteArray InputGenerator::execute(const QStringList &args,
 
   // Add debugging flag if needed.
   QStringList realArgs(args);
-  if (m_debug) {
+  if (m_debug)
     realArgs.prepend("--debug");
-    qDebug() << "Executing" << m_scriptFilePath << realArgs.join(" ")
-             << "<" << scriptStdin;
-  }
 
   // Start script
   realArgs.prepend(m_scriptFilePath);
+  if (m_debug) {
+    qDebug() << "Executing" << m_pythonInterpreter << realArgs.join(" ")
+             << "<" << scriptStdin;
+  }
   proc.start(m_pythonInterpreter, realArgs);
 
   // Write scriptStdin to the process's stdin
