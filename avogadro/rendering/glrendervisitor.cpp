@@ -17,6 +17,7 @@
 #include "glrendervisitor.h"
 
 #include "spheregeometry.h"
+#include "ambientocclusionspheregeometry.h"
 #include "cylindergeometry.h"
 #include "meshgeometry.h"
 
@@ -37,6 +38,11 @@ void GLRenderVisitor::visit(Drawable &geometry)
 }
 
 void GLRenderVisitor::visit(SphereGeometry &geometry)
+{
+  geometry.render(m_camera);
+}
+
+void GLRenderVisitor::visit(AmbientOcclusionSphereGeometry &geometry)
 {
   geometry.render(m_camera);
 }

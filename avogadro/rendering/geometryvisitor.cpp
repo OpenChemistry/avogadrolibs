@@ -17,6 +17,7 @@
 #include "geometryvisitor.h"
 
 #include "spheregeometry.h"
+#include "ambientocclusionspheregeometry.h"
 
 namespace Avogadro {
 namespace Rendering {
@@ -35,6 +36,35 @@ void GeometryVisitor::visit(Drawable &)
 }
 
 void GeometryVisitor::visit(SphereGeometry &geometry)
+{
+  const std::vector<SphereColor> &spheres = geometry.spheres();
+  if (!spheres.size())
+    return;
+
+  m_dirty = true;
+
+  Vector3f tmpCenter(Vector3f::Zero());
+  // First find the center of the sphere geometry.
+  std::vector<SphereColor>::const_iterator it = spheres.begin();
+  for (; it != spheres.end(); ++it)
+    tmpCenter += it->center;
+  tmpCenter /= static_cast<float>(spheres.size());
+
+  // Now find its radius.
+  float tmpRadius(0.0f);
+  if (spheres.size() > 1) {
+    for (it = spheres.begin(); it != spheres.end(); ++it) {
+      float distance = (it->center - tmpCenter).squaredNorm();
+      if (distance > tmpRadius)
+        tmpRadius = distance;
+    }
+  }
+  tmpRadius = std::sqrt(tmpRadius);
+  m_centers.push_back(tmpCenter);
+  m_radii.push_back(tmpRadius);
+}
+
+void GeometryVisitor::visit(AmbientOcclusionSphereGeometry &geometry)
 {
   const std::vector<SphereColor> &spheres = geometry.spheres();
   if (!spheres.size())

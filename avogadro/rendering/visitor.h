@@ -30,6 +30,7 @@ class GroupNode;
 class MeshGeometry;
 class Node;
 class SphereGeometry;
+class AmbientOcclusionSphereGeometry;
 
 /**
  * @class Visitor visitor.h <avogadro/rendering/visitor.h>
@@ -54,6 +55,7 @@ public:
   virtual void visit(GeometryNode &) { return; }
   virtual void visit(Drawable &) { return; }
   virtual void visit(SphereGeometry &) { return; }
+  virtual void visit(AmbientOcclusionSphereGeometry &) { return; }
   virtual void visit(CylinderGeometry &) { return; }
   virtual void visit(MeshGeometry &) { return; }
 };
