@@ -25,6 +25,7 @@
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
+using Avogadro::Io::FileFormat;
 using Avogadro::Io::MdlFormat;
 
 TEST(MdlTest, readFile)
@@ -116,4 +117,37 @@ TEST(MdlTest, saveFile)
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
+}
+
+TEST(MdlTest, readMulti)
+{
+  MdlFormat multi;
+  multi.open(AVOGADRO_DATA "/data/multi.sdf", FileFormat::Read);
+  Molecule molecule;
+
+  // Read in the first structure.
+  EXPECT_TRUE(multi.readMolecule(molecule));
+  ASSERT_EQ(multi.error(), "");
+
+  EXPECT_EQ(molecule.data("name").toString(), "Methane");
+  EXPECT_EQ(molecule.atomCount(), 5);
+  EXPECT_EQ(molecule.bondCount(), 4);
+
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 6);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 1);
+  EXPECT_EQ(molecule.atom(2).atomicNumber(), 1);
+  EXPECT_EQ(molecule.atom(3).atomicNumber(), 1);
+  EXPECT_EQ(molecule.atom(4).atomicNumber(), 1);
+
+  EXPECT_EQ(molecule.atom(4).position3d().x(), -0.5134);
+  EXPECT_EQ(molecule.atom(4).position3d().y(),  0.8892);
+  EXPECT_EQ(molecule.atom(4).position3d().z(), -0.3630);
+
+  // Now read in the second structure.
+  Molecule molecule2;
+  EXPECT_TRUE(multi.readMolecule(molecule2));
+  ASSERT_EQ(multi.error(), "");
+  EXPECT_EQ(molecule2.data("name").toString(), "Caffeine");
+  EXPECT_EQ(molecule2.atomCount(), 24);
+  EXPECT_EQ(molecule2.bondCount(), 25);
 }

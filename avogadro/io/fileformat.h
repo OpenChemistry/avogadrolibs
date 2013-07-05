@@ -48,6 +48,7 @@ namespace Io {
 class AVOGADROIO_EXPORT FileFormat
 {
 public:
+  FileFormat();
   virtual ~FileFormat();
 
   /**
@@ -71,6 +72,26 @@ public:
    * @return Operation flags defining the capabilities of this format.
    */
   virtual Operations supportedOperations() const = 0;
+
+  /**
+   * @brief Open the specified file in Read or Write mode.
+   * @return True on success, false on failure.
+   */
+  bool open(const std::string &fileName, Operation mode);
+
+  /**
+   * @brief Close any opened file handles.
+   */
+  void close();
+
+  /**
+   * @brief Read in a molecule, if there are no molecules to read molecule will
+   * be empty. This can be used to read in one or more molecules from a given
+   * file using repeated calls for each molecule.
+   * @param molecule The molecule the data will be read into.
+   * @return True on success, false on failure.
+   */
+  bool readMolecule(Core::Molecule &molecule);
 
   /**
    * @brief Read the given @p in stream and load it into @p molecule.
@@ -190,6 +211,11 @@ protected:
 private:
   std::string m_error;
   std::string m_fileName;
+
+  // Streams for reading/writing data, especially streaming data in/out.
+  Operation m_mode;
+  std::istream *m_in;
+  std::ostream *m_out;
 };
 
 } // end Io namespace
