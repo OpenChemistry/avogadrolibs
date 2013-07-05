@@ -31,7 +31,7 @@ namespace Io {
 class AVOGADROIO_EXPORT XyzFormat : public FileFormat
 {
 public:
-  XyzFormat();
+  explicit XyzFormat(const std::string &fileName = "", Operation mode = None);
   ~XyzFormat() AVO_OVERRIDE;
 
   Operations supportedOperations() const AVO_OVERRIDE

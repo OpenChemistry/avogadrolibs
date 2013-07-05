@@ -37,7 +37,8 @@ namespace Io {
 using std::isalpha;
 #endif
 
-XyzFormat::XyzFormat()
+XyzFormat::XyzFormat(const std::string &fileName_, Operation mode_)
+  : FileFormat(fileName_, mode_)
 {
 }
 

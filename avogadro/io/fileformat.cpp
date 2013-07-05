@@ -23,10 +23,32 @@
 namespace Avogadro {
 namespace Io {
 
+using std::ifstream;
 using std::locale;
+using std::ofstream;
+
+FileFormat::FileFormat(const std::string &fileName_, Operation mode_)
+  : m_fileName(fileName_), m_mode(mode_), m_in(NULL), m_out(NULL)
+{
+  if (!m_fileName.empty()) {
+    if (m_mode == Read)
+      m_in = new ifstream(m_fileName.c_str(), std::ifstream::binary);
+    else if (m_mode == Write)
+      m_out = new ofstream(m_fileName.c_str(), std::ofstream::binary);
+  }
+}
 
 FileFormat::~FileFormat()
 {
+  delete m_in;
+  delete m_out;
+}
+
+bool FileFormat::readMolecule(Core::Molecule &molecule)
+{
+  if (!m_in)
+    return false;
+  return read(*m_in, molecule);
 }
 
 bool FileFormat::readFile(const std::string &fileName_,
