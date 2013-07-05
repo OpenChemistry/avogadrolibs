@@ -23,14 +23,13 @@
 
 #include <Eigen/Geometry> // For member variables.
 
-#include <string> // For member variables.
-
 namespace Avogadro {
 namespace Rendering {
 
 /**
  * @class Camera camera.h <avogadro/rendering/camera.h>
- * @brief The Scene contains data ready to be rendered.
+ * @brief The Camera class provides utility functionality useful in camera's
+ * used with 3D scenes.
  * @author Marcus D. Hanwell
  */
 
