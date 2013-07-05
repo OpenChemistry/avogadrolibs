@@ -30,6 +30,7 @@
 
 using Avogadro::Core::Atom;
 using Avogadro::Core::Molecule;
+using Avogadro::Io::FileFormat;
 using Avogadro::Io::XyzFormat;
 using Avogadro::Vector3;
 
@@ -102,4 +103,40 @@ TEST(XyzTest, write)
     checkedSomething = true;
   }
   EXPECT_TRUE(checkedSomething);
+}
+
+TEST(XyzTest, readMulti)
+{
+  XyzFormat multi;
+  multi.open(AVOGADRO_DATA "/data/multi.xyz", FileFormat::Read);
+  Molecule molecule;
+
+  // Read in the first structure.
+  EXPECT_TRUE(multi.readMolecule(molecule));
+  ASSERT_EQ(multi.error(), "");
+
+  EXPECT_EQ(molecule.data("name").toString(), "Methane");
+  EXPECT_EQ(molecule.atomCount(), 5);
+  EXPECT_EQ(molecule.bondCount(), 0);
+
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 6);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 1);
+  EXPECT_EQ(molecule.atom(2).atomicNumber(), 1);
+  EXPECT_EQ(molecule.atom(3).atomicNumber(), 1);
+  EXPECT_EQ(molecule.atom(4).atomicNumber(), 1);
+
+  EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().x(), -0.51336);
+  EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().y(),  0.88916);
+  EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().z(), -0.36300);
+
+  // Now read in the second structure.
+  Molecule molecule2;
+  EXPECT_TRUE(multi.readMolecule(molecule2));
+  ASSERT_EQ(multi.error(), "");
+  EXPECT_EQ(molecule2.data("name").toString(), "Caffeine");
+  EXPECT_EQ(molecule2.atomCount(), 24);
+  EXPECT_EQ(molecule2.bondCount(), 0);
+
+  // Should return false when there are no more molecules to be read in.
+  EXPECT_FALSE(multi.readMolecule(molecule));
 }

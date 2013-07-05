@@ -16,6 +16,8 @@
 
 #include "xyzformat.h"
 
+#include "utilities.h"
+
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
@@ -53,10 +55,11 @@ bool XyzFormat::read(std::istream &inStream, Core::Molecule &mol)
     return false;
   }
 
-  // Throw away the title
   std::string buffer;
   std::getline(inStream, buffer); // Finish the first line
-  std::getline(inStream, buffer); // Discard the example
+  std::getline(inStream, buffer);
+  if (!buffer.empty())
+    mol.setData("name", trimmed(buffer));
 
   // Parse atoms
   unsigned char atomicNum;
