@@ -53,10 +53,11 @@ struct ColorTextureVertex {
   Vector3ub color;           //  3 bytes
   unsigned char unusedAlign; //  1 byte
   Vector2f textureCoord;     //  8 bytes
-  Vector2f padding;          //  8 bytes
+  Vector2f textureCoord2;    //  8 bytes
 
-  ColorTextureVertex(const Vector3f &p, const Vector3ub &c, const Vector2f &t)
-    : vertex(p), color(c), textureCoord(t)
+  ColorTextureVertex(const Vector3f &p, const Vector3ub &c, const Vector2f &t,
+      const Vector2f &t2 = Vector2f::Zero()) : vertex(p), color(c),
+      textureCoord(t), textureCoord2(t2)
   {
   }
 
@@ -66,6 +67,10 @@ struct ColorTextureVertex {
   {
     return colorOffset() +
         static_cast<int>(sizeof(Vector3ub) + sizeof(unsigned char));
+  }
+  static int textureCoord2Offset()
+  {
+    return textureCoordOffset() + static_cast<int>(sizeof(Vector2f));
   }
 }; // 32 bytes total size - 16/32/64 are ideal for alignment.
 

@@ -52,6 +52,7 @@ set(SOURCES
   transformnode.cpp
   visitor.cpp
   volumegeometry.cpp
+  ambientocclusionspheregeometry.cpp
 )
 
 set(shader_files
@@ -61,6 +62,12 @@ set(shader_files
   "mesh_vs.glsl"
   "spheres_fs.glsl"
   "spheres_vs.glsl"
+  "sphere_ao_depth_vs.glsl"
+  "sphere_ao_depth_fs.glsl"
+  "sphere_ao_bake_vs.glsl"
+  "sphere_ao_bake_fs.glsl"
+  "sphere_ao_render_vs.glsl"
+  "sphere_ao_render_fs.glsl"
 )
 foreach(file ${shader_files})
   get_filename_component(file_we ${file} NAME_WE)
