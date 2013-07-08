@@ -8,10 +8,9 @@ void main()
   vec3 H = normalize(L + E);
   float df = max(0.0, dot(N, L));
   float sf = max(0.0, dot(N, H));
-  sf = pow(sf, 69.0);
-  vec4 ambient = gl_Color / 3.0;
-  vec4 diffuse = gl_Color;
-  vec4 specular = gl_Color * 3.0;
-  gl_FragColor = ambient + df * diffuse + sf * specular;
+  vec4 ambient = 0.4 * gl_Color;
+  vec4 diffuse = 0.55 * gl_Color;
+  vec4 specular = 0.5 * (vec4(1, 1, 1, 1) - gl_Color);
+  gl_FragColor = ambient + df * diffuse + pow(sf, 20.0) * specular;
   gl_FragColor.a = 1.0;
 }
