@@ -20,3 +20,5 @@ avogadro_plugin(Editor
   "${editor_uis}"
   "${editor_rcs}"
 )
+
+target_link_libraries(Editor AvogadroRendering)
