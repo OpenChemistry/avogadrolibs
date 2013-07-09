@@ -240,7 +240,7 @@ public:
   Array &operator=(const std::vector<OtherT> &v)
   {
     detach();
-    d->data = v.Data;
+    d->data = v;
     return *this;
   }
 
@@ -255,7 +255,7 @@ public:
   Array &operator=(const Array &v)
   {
     detach();
-    d->data = v.Data;
+    d->data = v.d->data;
     return *this;
   }
 
