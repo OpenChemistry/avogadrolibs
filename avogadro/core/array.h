@@ -146,7 +146,7 @@ public:
   T* data()
   {
     detach();
-    return d->data.data();
+    return &d->data[0];
   }
 
   const T* data() const
