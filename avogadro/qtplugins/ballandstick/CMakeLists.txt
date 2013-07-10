@@ -5,3 +5,5 @@ avogadro_plugin(BallStick
   BallAndStick
   ballandstick.cpp
   "")
+
+target_link_libraries(BallStick AvogadroRendering)

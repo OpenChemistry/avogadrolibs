@@ -17,8 +17,6 @@
 #ifndef AVOGADRO_CORE_ATOMTYPER_H
 #define AVOGADRO_CORE_ATOMTYPER_H
 
-#include "avogadrocore.h"
-
 #include <avogadro/core/array.h>
 
 namespace Avogadro {
@@ -32,7 +30,7 @@ class Molecule;
  * type identifiers describing the atoms in a molecule.
  */
 template <typename OutputType>
-class AVOGADROCORE_EXPORT AtomTyper
+class AtomTyper
 {
 public:
   typedef OutputType ValueType;

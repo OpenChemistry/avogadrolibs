@@ -18,3 +18,5 @@ avogadro_plugin(Manipulator
   "${manipulator_uis}"
   "${manipulator_rcs}"
 )
+
+target_link_libraries(Manipulator AvogadroRendering)

@@ -5,3 +5,5 @@ avogadro_plugin(Meshes
   Meshes
   meshes.cpp
   "")
+
+target_link_libraries(Meshes AvogadroRendering)
