@@ -20,11 +20,16 @@
 #include "ambientocclusionspheregeometry.h"
 #include "cylindergeometry.h"
 #include "meshgeometry.h"
+#include "textlabel.h"
+#include "texture2d.h"
 
 namespace Avogadro {
 namespace Rendering {
 
-GLRenderVisitor::GLRenderVisitor(const Camera &camera_) : m_camera(camera_)
+GLRenderVisitor::GLRenderVisitor(const Camera &camera_,
+                                 const TextRenderStrategy *trs)
+  : m_camera(camera_),
+    m_textRenderStrategy(trs)
 {
 }
 
@@ -55,6 +60,18 @@ void GLRenderVisitor::visit(CylinderGeometry &geometry)
 void GLRenderVisitor::visit(MeshGeometry &geometry)
 {
   geometry.render(m_camera);
+}
+
+void GLRenderVisitor::visit(Texture2D &texture)
+{
+  texture.render(m_camera);
+}
+
+void GLRenderVisitor::visit(TextLabel &label)
+{
+  if (m_textRenderStrategy)
+    label.buildTexture(*m_textRenderStrategy);
+  label.render(m_camera);
 }
 
 } // End namespace Rendering

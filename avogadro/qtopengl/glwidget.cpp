@@ -30,6 +30,12 @@
 
 #include <QtCore/QDebug>
 
+// Just playin'
+#include <avogadro/rendering/geometrynode.h>
+#include <avogadro/rendering/textlabel.h>
+#include <avogadro/rendering/textproperties.h>
+#include <avogadro/qtgui/qttextrenderstrategy.h>
+
 namespace Avogadro {
 namespace QtOpenGL {
 
@@ -42,6 +48,7 @@ GLWidget::GLWidget(QWidget *parent_)
   connect(&m_scenePlugins,
           SIGNAL(pluginStateChanged(Avogadro::QtGui::ScenePlugin*)),
           SLOT(updateScene()));
+  m_renderer.setTextRenderStrategy(new QtGui::QtTextRenderStrategy);
 }
 
 GLWidget::~GLWidget()
@@ -82,6 +89,19 @@ void GLWidget::updateScene()
       Rendering::GroupNode *engineNode = new Rendering::GroupNode(moleculeNode);
       scenePlugin->process(*m_molecule, *engineNode);
     }
+
+    Rendering::TextLabel *label = new Rendering::TextLabel;
+    label->setString("Test string!");
+    Rendering::TextProperties tprop;
+    tprop.setColorRgb(255, 0, 0);
+    tprop.setFontSize(72);
+    label->setTextProperties(tprop);
+
+    Rendering::GeometryNode *lnode = new Rendering::GeometryNode;
+    lnode->addDrawable(label);
+
+    m_renderer.scene().rootNode().addChild(lnode);
+
     m_renderer.resetGeometry();
     update();
   }

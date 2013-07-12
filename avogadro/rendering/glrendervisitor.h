@@ -23,6 +23,7 @@
 
 namespace Avogadro {
 namespace Rendering {
+class TextRenderStrategy;
 
 /**
  * @class GLRenderVisitor glrendervisitor.h <avogadro/rendering/glrendervisitor.h>
@@ -35,7 +36,8 @@ namespace Rendering {
 class GLRenderVisitor : public Visitor
 {
 public:
-  explicit GLRenderVisitor(const Camera &camera = Camera());
+  explicit GLRenderVisitor(const Camera &camera = Camera(),
+                           const TextRenderStrategy *trs = NULL);
   ~GLRenderVisitor() AVO_OVERRIDE;
 
   /**
@@ -49,12 +51,24 @@ public:
   void visit(AmbientOcclusionSphereGeometry &) AVO_OVERRIDE;
   void visit(CylinderGeometry &) AVO_OVERRIDE;
   void visit(MeshGeometry &) AVO_OVERRIDE;
+  void visit(Texture2D &) AVO_OVERRIDE;
+  void visit(TextLabel &) AVO_OVERRIDE;
 
   void setCamera(const Camera &camera_) { m_camera = camera_; }
   Camera camera() const { return m_camera; }
 
+  void setTextRenderStrategy(TextRenderStrategy *trs)
+  {
+    m_textRenderStrategy = trs;
+  }
+  const TextRenderStrategy *textRenderStrategy() const
+  {
+    return m_textRenderStrategy;
+  }
+
 private:
   Camera m_camera;
+  const TextRenderStrategy *m_textRenderStrategy;
 };
 
 } // End namespace Rendering

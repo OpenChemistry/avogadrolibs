@@ -41,6 +41,7 @@ set(HEADERS
   molequeuequeuelistmodel.h
   molequeuewidget.h
   periodictableview.h
+  qttextrenderstrategy.h
   sceneplugin.h
   scenepluginmodel.h
   toolplugin.h
@@ -65,6 +66,7 @@ set(SOURCES
   molequeuewidget.cpp
   periodictablescene_p.cpp
   periodictableview.cpp
+  qttextrenderstrategy.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
   toolplugin.cpp

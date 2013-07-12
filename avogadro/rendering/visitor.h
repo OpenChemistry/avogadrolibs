@@ -30,6 +30,8 @@ class GroupNode;
 class MeshGeometry;
 class Node;
 class SphereGeometry;
+class TextLabel;
+class Texture2D;
 class AmbientOcclusionSphereGeometry;
 
 /**
@@ -58,6 +60,9 @@ public:
   virtual void visit(AmbientOcclusionSphereGeometry &) { return; }
   virtual void visit(CylinderGeometry &) { return; }
   virtual void visit(MeshGeometry &) { return; }
+  virtual void visit(Texture2D &) { return; }
+  virtual void visit(TextLabel &) { return; }
+
 };
 
 } // End namespace Rendering

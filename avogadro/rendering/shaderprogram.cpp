@@ -195,7 +195,11 @@ bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vecto
     m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
   }
-  glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 32,
+  // HERE'S THE PROBLEM:
+  // The stride of 0 will break existing VBO that are all 32 byte aligned.
+  // Pass the stride in as an argument (can we generalize the type a bit more,
+  // too?)
+  glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 0,
                         BUFFER_OFFSET(offset));
   return true;
 }
@@ -207,7 +211,7 @@ bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vecto
     m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
   }
-  glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 32,
+  glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0,
                         BUFFER_OFFSET(offset));
   return true;
 }
