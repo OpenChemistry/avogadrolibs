@@ -20,6 +20,7 @@
 #include <avogadro/qtgui/sceneplugin.h>
 #include <avogadro/qtgui/scenepluginmodel.h>
 #include <avogadro/qtgui/toolplugin.h>
+#include <avogadro/qtgui/qttextrenderstrategy.h>
 
 #include <avogadro/rendering/camera.h>
 
@@ -42,6 +43,7 @@ GLWidget::GLWidget(QWidget *parent_)
   connect(&m_scenePlugins,
           SIGNAL(pluginStateChanged(Avogadro::QtGui::ScenePlugin*)),
           SLOT(updateScene()));
+  m_renderer.setTextRenderStrategy(new QtGui::QtTextRenderStrategy);
 }
 
 GLWidget::~GLWidget()

@@ -64,6 +64,14 @@ public:
    * or uninitialized. */
   bool upload(const std::vector<ColorTextureVertex> &array);
 
+  /** Upload data to the buffer object. The buffer must be an ARRAY_BUFFER
+   * or uninitialized. */
+  bool upload(const std::vector<Vector2f> &array);
+
+  /** Upload data to the buffer object. The buffer must be an ARRAY_BUFFER
+   * or uninitialized. */
+  bool upload(const std::vector<Vector3f> &array);
+
   /** Upload data to the buffer object. The buffer must be an
    * ELEMENT_ARRAY_BUFFER or uninitialized. */
   bool upload(const std::vector<unsigned int> &array);
@@ -75,6 +83,9 @@ public:
 
   /** Release the buffer. This should be done after rendering is complete. */
   bool release();
+
+  /** Return a string describing errors. */
+  std::string error() const { return m_error; }
 
 private:
   struct Private;
