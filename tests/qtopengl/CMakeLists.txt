@@ -25,7 +25,9 @@ endif()
 # test.cpp appended. The main function of each test is expected to be lower
 # cased version with test appended, e.g. GLWidget -> glwidgettest.
 set(tests
-  GLWidget)
+  GLWidget
+  QtTextLabel
+)
 
 foreach(test ${tests})
   string(TOLOWER ${test} testname)

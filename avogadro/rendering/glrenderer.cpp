@@ -22,6 +22,9 @@
 #include "shaderprogram.h"
 #include "geometrynode.h"
 #include "glrendervisitor.h"
+#include "textlabel.h"
+#include "textrenderstrategy.h"
+#include "visitor.h"
 
 #include <avogadro/core/matrix.h>
 
@@ -30,14 +33,18 @@
 namespace Avogadro {
 namespace Rendering {
 
-GLRenderer::GLRenderer() : m_valid(false), m_center(Vector3f::Zero()),
-  m_radius(20.0)
+GLRenderer::GLRenderer()
+  : m_valid(false),
+    m_textRenderStrategy(NULL),
+    m_center(Vector3f::Zero()),
+    m_radius(20.0)
 {
   m_overlayCamera.setIdentity();
 }
 
 GLRenderer::~GLRenderer()
 {
+  delete m_textRenderStrategy;
 }
 
 void GLRenderer::initialize()
@@ -72,7 +79,7 @@ void GLRenderer::render()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   applyProjection();
 
-  GLRenderVisitor visitor(m_camera);
+  GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
   // Setup for opaque geometry
   visitor.setRenderPass(OpaquePass);
   glEnable(GL_DEPTH_TEST);
@@ -106,15 +113,42 @@ void GLRenderer::resetGeometry()
   m_radius = m_scene.radius();
 }
 
+void GLRenderer::setTextRenderStrategy(TextRenderStrategy *tren)
+{
+  if (tren != m_textRenderStrategy) {
+    // Force all labels to be regenerated on the next render:
+    class ResetTextLabelVisitor : public Visitor
+    {
+    public:
+      void visit(Node &) { return; }
+      void visit(GroupNode &) { return; }
+      void visit(GeometryNode &) { return; }
+      void visit(Drawable &) { return; }
+      void visit(SphereGeometry &) { return; }
+      void visit(AmbientOcclusionSphereGeometry &) { return; }
+      void visit(CylinderGeometry &) { return; }
+      void visit(MeshGeometry &) { return; }
+      void visit(Texture2D &) { return; }
+      void visit(TextLabel &l) { l.invalidateTexture(); }
+    } labelResetter;
+
+    m_scene.rootNode().accept(labelResetter);
+
+    delete m_textRenderStrategy;
+    m_textRenderStrategy = tren;
+  }
+}
+
 void GLRenderer::applyProjection()
 {
   float distance = m_camera.distance(m_center);
   m_camera.calculatePerspective(40.0f,
                                 std::max(2.0f, distance - m_radius),
                                 distance + m_radius);
-  m_overlayCamera.calculateOrthographic(0, m_overlayCamera.width(),
-                                        0, m_overlayCamera.height(),
-                                        -1, 1);
+  m_overlayCamera.calculateOrthographic(
+        0.f, static_cast<float>(m_overlayCamera.width()),
+        0.f, static_cast<float>(m_overlayCamera.height()),
+        -1.f, 1.f);
 }
 
 std::multimap<float, Identifier>

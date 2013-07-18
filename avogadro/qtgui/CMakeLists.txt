@@ -41,6 +41,7 @@ set(HEADERS
   molequeuequeuelistmodel.h
   molequeuewidget.h
   periodictableview.h
+  qttextrenderstrategy.h
   sceneplugin.h
   scenepluginmodel.h
   toolplugin.h
@@ -65,6 +66,7 @@ set(SOURCES
   molequeuewidget.cpp
   periodictablescene_p.cpp
   periodictableview.cpp
+  qttextrenderstrategy.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
   toolplugin.cpp
@@ -88,6 +90,7 @@ list(APPEND SOURCES ${RC_SOURCES})
 avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtGui
   AvogadroIO
+  AvogadroRendering
   MoleQueueClient
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY})

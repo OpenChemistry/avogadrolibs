@@ -1,5 +1,6 @@
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
-  "${AvogadroLibs_BINARY_DIR}/avogadro/qtgui")
+  "${AvogadroLibs_BINARY_DIR}/avogadro/qtgui"
+  "${AvogadroLibs_BINARY_DIR}/avogadro/rendering")
 
 find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
 include_directories(SYSTEM ${QT_INCLUDES})
@@ -28,6 +29,12 @@ set(tests
   Molecule
   MoleQueueQueueListModel
   )
+
+if(AVOGADRO_DATA)
+  list(APPEND tests
+    QtTextRenderStrategy
+  )
+endif()
 
 if(PYTHON2_EXECUTABLE AND AVOGADRO_DATA)
   list(APPEND tests
