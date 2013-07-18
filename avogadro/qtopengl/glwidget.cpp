@@ -16,6 +16,8 @@
 
 #include "glwidget.h"
 
+#include "qttextrenderstrategy.h"
+
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/sceneplugin.h>
 #include <avogadro/qtgui/scenepluginmodel.h>
@@ -42,6 +44,7 @@ GLWidget::GLWidget(QWidget *parent_)
   connect(&m_scenePlugins,
           SIGNAL(pluginStateChanged(Avogadro::QtGui::ScenePlugin*)),
           SLOT(updateScene()));
+  m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
 }
 
 GLWidget::~GLWidget()

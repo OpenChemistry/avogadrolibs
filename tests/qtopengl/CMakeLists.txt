@@ -21,11 +21,18 @@ else()
   return()
 endif()
 
+# Setup config file with data location
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtopengltests.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/qtopengltests.h" @ONLY)
+
 # List of tests to be added, the name will be changed to lower case with
 # test.cpp appended. The main function of each test is expected to be lower
 # cased version with test appended, e.g. GLWidget -> glwidgettest.
 set(tests
-  GLWidget)
+  GLWidget
+  QtTextLabel
+  QtTextRenderStrategy
+)
 
 foreach(test ${tests})
   string(TOLOWER ${test} testname)
