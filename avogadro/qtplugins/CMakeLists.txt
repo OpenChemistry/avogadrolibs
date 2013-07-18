@@ -100,6 +100,7 @@ add_subdirectory(openbabel)
 add_subdirectory(quantuminput)
 add_subdirectory(quantumoutput)
 # The scene plugins
+add_subdirectory(atomlabels)
 add_subdirectory(ballandstick)
 add_subdirectory(vanderwaals)
 add_subdirectory(meshes)
