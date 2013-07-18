@@ -115,6 +115,7 @@ private:
   bool m_valid;
   std::string m_error;
   Camera m_camera;
+  Camera m_overlayCamera;
   Scene m_scene;
   Vector3f m_center;
   float m_radius;

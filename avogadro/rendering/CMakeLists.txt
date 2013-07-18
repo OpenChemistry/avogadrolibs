@@ -12,6 +12,7 @@ endif()
 
 set(HEADERS
   avogadrogl.h
+  avogadrorendering.h
   bufferobject.h
   camera.h
   cylindergeometry.h

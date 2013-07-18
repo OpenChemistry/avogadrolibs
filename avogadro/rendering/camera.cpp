@@ -151,10 +151,10 @@ void Camera::calculateOrthographic(float left, float right,
   m_projection(3, 3) = 1;
 }
 
-void Camera::setViewport(int width, int height)
+void Camera::setViewport(int w, int h)
 {
-  m_width = width;
-  m_height = height;
+  m_width = w;
+  m_height = h;
 }
 
 void Camera::setProjection(const Eigen::Affine3f &transform)

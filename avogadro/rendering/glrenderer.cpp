@@ -33,6 +33,7 @@ namespace Rendering {
 GLRenderer::GLRenderer() : m_valid(false), m_center(Vector3f::Zero()),
   m_radius(20.0)
 {
+  m_overlayCamera.setIdentity();
 }
 
 GLRenderer::~GLRenderer()
@@ -63,18 +64,32 @@ void GLRenderer::resize(int width, int height)
 {
   glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
   m_camera.setViewport(width, height);
+  m_overlayCamera.setViewport(width, height);
 }
 
 void GLRenderer::render()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glEnable(GL_DEPTH_TEST);
   applyProjection();
 
   GLRenderVisitor visitor(m_camera);
+  // Setup for opaque geometry
+  visitor.setRenderPass(OpaquePass);
+  glEnable(GL_DEPTH_TEST);
+  glDisable(GL_BLEND);
   m_scene.rootNode().accept(visitor);
 
+  // Setup for transparent geometry
+  visitor.setRenderPass(TranslucentPass);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  m_scene.rootNode().accept(visitor);
+
+  // Setup for overlay rendering
+  visitor.setRenderPass(OverlayPass);
+  visitor.setCamera(m_overlayCamera);
   glDisable(GL_DEPTH_TEST);
+  m_scene.rootNode().accept(visitor);
 }
 
 void GLRenderer::resetCamera()
@@ -97,6 +112,9 @@ void GLRenderer::applyProjection()
   m_camera.calculatePerspective(40.0f,
                                 std::max(2.0f, distance - m_radius),
                                 distance + m_radius);
+  m_overlayCamera.calculateOrthographic(0, m_overlayCamera.width(),
+                                        0, m_overlayCamera.height(),
+                                        -1, 1);
 }
 
 std::multimap<float, Identifier>
