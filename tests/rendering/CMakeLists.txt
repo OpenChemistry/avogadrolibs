@@ -1,7 +1,10 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
+  AbsoluteQuadStrategy
+  BillboardQuadStrategy
   Camera
   Node
+  OverlayQuadStrategy
   SphereGeometry
   )
 
