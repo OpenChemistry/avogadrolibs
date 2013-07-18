@@ -188,38 +188,41 @@ bool ShaderProgram::disableAttributeArray(const std::string &name)
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vector2f)
+bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
+                                      int stride, Vector2f)
 {
   GLint location = static_cast<GLint>(findAttributeArray(name));
   if (location == -1) {
     m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
   }
-  glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 32,
+  glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, stride,
                         BUFFER_OFFSET(offset));
   return true;
 }
 
-bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vector3f)
+bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
+                                      int stride, Vector3f)
 {
   GLint location = static_cast<GLint>(findAttributeArray(name));
   if (location == -1) {
     m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
   }
-  glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 32,
+  glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, stride,
                         BUFFER_OFFSET(offset));
   return true;
 }
 
-bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vector3ub)
+bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
+                                      int stride, Vector3ub)
 {
   GLint location = static_cast<GLint>(findAttributeArray(name));
   if (location == -1) {
     m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
   }
-  glVertexAttribPointer(location, 3, GL_UNSIGNED_BYTE, GL_TRUE, 32,
+  glVertexAttribPointer(location, 3, GL_UNSIGNED_BYTE, GL_TRUE, stride,
                         BUFFER_OFFSET(offset));
   return true;
 }

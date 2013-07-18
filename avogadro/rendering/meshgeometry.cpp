@@ -143,6 +143,7 @@ void MeshGeometry::render(const Camera &camera)
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("vertex",
                                     ColorNormalVertex::vertexOffset(),
+                                    sizeof(ColorNormalVertex),
                                     Vector3f())) {
     cout << d->program.error() << endl;
   }
@@ -150,6 +151,7 @@ void MeshGeometry::render(const Camera &camera)
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("color",
                                     ColorNormalVertex::colorOffset(),
+                                    sizeof(ColorNormalVertex),
                                     Vector3ub())) {
     cout << d->program.error() << endl;
   } */
@@ -157,6 +159,7 @@ void MeshGeometry::render(const Camera &camera)
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("normal",
                                     ColorNormalVertex::normalOffset(),
+                                    sizeof(ColorNormalVertex),
                                     Vector3f())) {
     cout << d->program.error() << endl;
   }

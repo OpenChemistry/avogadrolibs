@@ -89,12 +89,18 @@ public:
   /** Use the named attribute array with the bound BufferObject.
    * @param name of the attribute (as seen in the shader program).
    * @param offset into the bound BufferObject.
+   * @param stride The stride of the element access (i.e. the size of each
+   * element in the currently bound BufferObject). 0 may be used to indicate
+   * tightly packed data.
    * @param v The type of the element being bound.
    * @return false is the attribute array does not exist.
    */
-  bool useAttributeArray(const std::string &name, int offset, Vector2f v);
-  bool useAttributeArray(const std::string &name, int offset, Vector3f v);
-  bool useAttributeArray(const std::string &name, int offset, Vector3ub v);
+  bool useAttributeArray(const std::string &name, int offset, int stride,
+                         Vector2f v);
+  bool useAttributeArray(const std::string &name, int offset, int stride,
+                         Vector3f v);
+  bool useAttributeArray(const std::string &name, int offset, int stride,
+                         Vector3ub v);
 
   /** Upload the supplied array to the named attribute. BufferObject attributes
    * should be preferred and these may be removed in future.
