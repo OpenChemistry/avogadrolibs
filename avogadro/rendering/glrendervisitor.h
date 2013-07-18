@@ -19,6 +19,7 @@
 
 #include "visitor.h"
 
+#include "avogadrorendering.h"
 #include "camera.h"
 
 namespace Avogadro {
@@ -39,6 +40,15 @@ public:
   ~GLRenderVisitor() AVO_OVERRIDE;
 
   /**
+   * The current stage of a multipass rendering.
+   * @sa Rendering::RenderPass
+   * @{
+   */
+  void setRenderPass(RenderPass pass) { m_renderPass = pass; }
+  RenderPass renderPass() const { return m_renderPass; }
+  /** @} */
+
+  /**
    * The overloaded visit functions, the base versions of which do nothing.
    */
   void visit(Node &) AVO_OVERRIDE { return; }
@@ -55,6 +65,7 @@ public:
 
 private:
   Camera m_camera;
+  RenderPass m_renderPass;
 };
 
 } // End namespace Rendering

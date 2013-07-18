@@ -24,7 +24,9 @@
 namespace Avogadro {
 namespace Rendering {
 
-GLRenderVisitor::GLRenderVisitor(const Camera &camera_) : m_camera(camera_)
+GLRenderVisitor::GLRenderVisitor(const Camera &camera_)
+  : m_camera(camera_),
+    m_renderPass(NotRendering)
 {
 }
 
@@ -34,27 +36,32 @@ GLRenderVisitor::~GLRenderVisitor()
 
 void GLRenderVisitor::visit(Drawable &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(SphereGeometry &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(AmbientOcclusionSphereGeometry &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(CylinderGeometry &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(MeshGeometry &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 } // End namespace Rendering

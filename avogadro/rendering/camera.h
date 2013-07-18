@@ -112,6 +112,12 @@ public:
   /** Set the dimensions of the viewport in pixels. */
   void setViewport(int width, int height);
 
+  /** Get the width of the viewport in pixels. */
+  int width() const { return m_width; }
+
+  /** Get the height of the viewport in pixels. */
+  int height() const { return m_height; }
+
   /** Set the model view matrix to the identity. This resets the model view
    * matrix.
    */

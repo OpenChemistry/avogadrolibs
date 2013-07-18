@@ -184,8 +184,6 @@ void MeshGeometry::render(const Camera &camera)
                                   static_cast<float>(m_opacity) / 255.0f))
     cout << d->program.error() << endl;
 
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   // Render the loaded spheres using the shader and bound VBO.
   glDrawRangeElements(GL_TRIANGLES, 0,
                       static_cast<GLuint>(d->numberOfVertices),
@@ -193,7 +191,6 @@ void MeshGeometry::render(const Camera &camera)
                       GL_UNSIGNED_INT,
                       reinterpret_cast<const GLvoid *>(NULL));
 
-  glDisable(GL_BLEND);
   d->vbo.release();
   d->ibo.release();
 
