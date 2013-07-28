@@ -46,7 +46,7 @@ bool FileFormat::open(const std::string &fileName_, Operation mode_)
   if (!m_fileName.empty()) {
     // Imbue the standard C locale.
     locale cLocale("C");
-    if (m_mode == Read) {
+    if (m_mode & Read) {
       ifstream *file = new ifstream(m_fileName.c_str(), std::ifstream::binary);
       m_in = file;
       if (file->is_open()) {
@@ -54,11 +54,11 @@ bool FileFormat::open(const std::string &fileName_, Operation mode_)
         return true;
       }
       else {
-        appendError("Error opening file: " + fileName_ + "\n");
+        appendError("Error opening file: " + fileName_);
         return false;
       }
     }
-    else if (m_mode == Write) {
+    else if (m_mode & Write) {
       ofstream *file = new ofstream(m_fileName.c_str(), std::ofstream::binary);
       m_out = file;
       if (file->is_open()) {
@@ -66,7 +66,7 @@ bool FileFormat::open(const std::string &fileName_, Operation mode_)
         return true;
       }
       else {
-        appendError("Error opening file: " + fileName_ + "\n");
+        appendError("Error opening file: " + fileName_);
         return false;
       }
     }
@@ -94,6 +94,13 @@ bool FileFormat::readMolecule(Core::Molecule &molecule)
   return read(*m_in, molecule);
 }
 
+bool FileFormat::writeMolecule(const Core::Molecule &molecule)
+{
+  if (!m_out)
+    return false;
+  return write(*m_out, molecule);
+}
+
 bool FileFormat::readFile(const std::string &fileName_,
                           Core::Molecule &molecule)
 {
@@ -109,16 +116,13 @@ bool FileFormat::readFile(const std::string &fileName_,
 bool FileFormat::writeFile(const std::string &fileName_,
                            const Core::Molecule &molecule)
 {
-  m_fileName = fileName_;
-  std::ofstream file(fileName_.c_str(), std::ofstream::binary);
-  if (!file.is_open()) {
-    appendError("Error opening file: " + fileName_ + "\n");
+  bool result = open(fileName_, Write);
+  if (!result)
     return false;
-  }
-  // Imbue the standard C locale.
-  locale cLocale("C");
-  file.imbue(cLocale);
-  return write(file, molecule);
+
+  result = writeMolecule(molecule);
+  close();
+  return result;
 }
 
 bool FileFormat::readString(const std::string &string, Core::Molecule &molecule)

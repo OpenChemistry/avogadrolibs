@@ -60,11 +60,13 @@ public:
     Write     = 0x2,
     ReadWrite = Read | Write,
 
+    MultiMolecule = 0x4,
+
     Stream    = 0x10,
     String    = 0x20,
     File      = 0x40,
 
-    All       = ReadWrite | Stream | String | File
+    All       = ReadWrite | MultiMolecule | Stream | String | File
   };
   typedef int Operations;
 
@@ -80,6 +82,19 @@ public:
   bool open(const std::string &fileName, Operation mode);
 
   /**
+   * @brief The mode the format is currently operating in.
+   * @return The mode the format is in.
+   */
+  Operation mode() { return m_mode; }
+
+  /**
+   * @brief Check if the supplied mode(s) is being used.
+   * @param isInMode The mode(s) to test against
+   * @return True if the format is currently in the supplied mode(s).
+   */
+  bool isMode(Operation isInMode) { return m_mode & isInMode; }
+
+  /**
    * @brief Close any opened file handles.
    */
   void close();
@@ -92,6 +107,14 @@ public:
    * @return True on success, false on failure.
    */
   bool readMolecule(Core::Molecule &molecule);
+
+  /**
+   * @brief Write out a molecule. This can be used to write one or more
+   * molecules to a given file using repeated calls for each molecule.
+   * @param molecule The molecule the data will be written from.
+   * @return True on success, false on failure.
+   */
+  bool writeMolecule(const Core::Molecule &molecule);
 
   /**
    * @brief Read the given @p in stream and load it into @p molecule.
@@ -217,6 +240,13 @@ private:
   std::istream *m_in;
   std::ostream *m_out;
 };
+
+inline FileFormat::Operation operator|(FileFormat::Operation a,
+                                       FileFormat::Operation b)
+{
+  return static_cast<FileFormat::Operation>(static_cast<int>(a)
+                                            | static_cast<int>(b));
+}
 
 } // end Io namespace
 } // end Avogadro namespace
