@@ -201,6 +201,9 @@ bool MdlFormat::write(std::ostream &out, const Core::Molecule &mol)
   }
   out << "M  END\n";
 
+  if (isMode(FileFormat::MultiMolecule))
+    out << "$$$$\n";
+
   return true;
 }
 
