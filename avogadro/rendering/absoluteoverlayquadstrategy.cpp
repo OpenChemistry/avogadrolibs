@@ -14,31 +14,29 @@
 
 ******************************************************************************/
 
-#include "overlayquadstrategy.h"
-
-#include "camera.h"
+#include "absoluteoverlayquadstrategy.h"
 
 namespace Avogadro {
 namespace Rendering {
 
-OverlayQuadStrategy::OverlayQuadStrategy()
-  : m_anchor(0, 0)
+AbsoluteOverlayQuadStrategy::AbsoluteOverlayQuadStrategy()
 {
 }
 
-OverlayQuadStrategy::~OverlayQuadStrategy()
+AbsoluteOverlayQuadStrategy::~AbsoluteOverlayQuadStrategy()
 {
+
 }
 
-Core::Array<Vector3f>
-OverlayQuadStrategy::quad(const Camera &camera)
+Core::Array<Vector3f> AbsoluteOverlayQuadStrategy::quad(const Camera &camera)
 {
-  // Convert fractional anchor point into pixel coordinates:
-  const Vector2i pixelCoords(
-        static_cast<int>(std::floor(m_anchor.x() * camera.width())),
-        static_cast<int>(std::floor(m_anchor.y() * camera.height())));
+  // Convert to 3D coordinate
+  const Vector3f pixelCoords(static_cast<float>(m_anchor.x()),
+                             static_cast<float>(m_anchor.y()),
+                             0.f);
   m_strategy.setAnchor(pixelCoords);
   return m_strategy.quad(camera);
+
 }
 
 } // namespace Rendering

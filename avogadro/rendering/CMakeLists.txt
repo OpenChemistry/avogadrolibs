@@ -12,6 +12,7 @@ endif()
 
 set(HEADERS
   absolutequadstrategy.h
+  absoluteoverlayquadstrategy.h
   avogadrogl.h
   avogadrorendering.h
   billboardquadstrategy.h
@@ -44,6 +45,7 @@ set(HEADERS
 
 set(SOURCES
   absolutequadstrategy.cpp
+  absoluteoverlayquadstrategy.cpp
   billboardquadstrategy.cpp
   bufferobject.cpp
   camera.cpp

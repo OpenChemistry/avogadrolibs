@@ -14,43 +14,41 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_RENDERING_OVERLAYQUADSTRATEGY_H
-#define AVOGADRO_RENDERING_OVERLAYQUADSTRATEGY_H
+#ifndef AVOGADRO_RENDERING_ABSOLUTEOVERLAYQUADSTRATEGY_H
+#define AVOGADRO_RENDERING_ABSOLUTEOVERLAYQUADSTRATEGY_H
 
 #include "quadplacementstrategy.h"
 #include "avogadrorenderingexport.h"
 
-#include "absoluteoverlayquadstrategy.h"
+#include "billboardquadstrategy.h"
 
 namespace Avogadro {
 namespace Rendering {
 
 /**
- * @class OverlayQuadStrategy overlayquadstrategy.h
- * <avogadro/rendering/overlayquadstrategy.h>
- * @brief The OverlayQuadStrategy class positions a resizable quad that
+ * @class AbsoluteOverlayQuadStrategy absoluteoverlayquadstrategy.h
+ * <avogadro/rendering/absoluteoverlayquadstrategy.h>
+ * @brief The AbsoluteOverlayQuadStrategy class positions a resizable quad that
  * always faces a Camera, suitable for rendering during a overlay pass.
  *
  * The resulting quad is positioned using anchor(), hAlign(), and vAlign().
  * See the anchor() method for more information.
  */
-class AVOGADRORENDERING_EXPORT OverlayQuadStrategy :
+class AVOGADRORENDERING_EXPORT AbsoluteOverlayQuadStrategy :
     public QuadPlacementStrategy
 {
 public:
-  OverlayQuadStrategy();
-  ~OverlayQuadStrategy() AVO_OVERRIDE;
+  AbsoluteOverlayQuadStrategy();
+  ~AbsoluteOverlayQuadStrategy() AVO_OVERRIDE;
 
   Core::Array<Vector3f> quad(const Camera &camera) AVO_OVERRIDE;
 
   /**
-   * The point used to anchor the quad to the overlay plane. The units are
-   * in fractions of the current view point, e.g. (0.0, 0.0) will anchor to the
-   * bottom-left corner of the viewport, (1.0, 1.0) is the upper-right corner,
-   * and (0.5, 0.5) is the center.
+   * The point used to anchor the quad to the overlay plane, in pixels.
+   * (0, 0) is the bottom left corner of the viewport.
    */
-  void setAnchor(const Vector2f &p) { m_anchor = p; }
-  Vector2f anchor() const { return m_anchor; }
+  void setAnchor(const Vector2i &p) { m_anchor = p; }
+  Vector2i anchor() const { return m_anchor; }
   /** @} */
 
   void setDimensions(const Vector2f &d) { m_strategy.setDimensions(d);}
@@ -78,12 +76,13 @@ public:
   void setAlign(HAlign hAlign, VAlign vAlign);
 
 private:
-  AbsoluteOverlayQuadStrategy m_strategy;
-  Vector2f m_anchor;
+  BillboardQuadStrategy m_strategy;
+  Vector2i m_anchor;
 };
 
-inline void OverlayQuadStrategy::setAlign(OverlayQuadStrategy::HAlign h,
-                                          OverlayQuadStrategy::VAlign v)
+inline void
+AbsoluteOverlayQuadStrategy::setAlign(AbsoluteOverlayQuadStrategy::HAlign h,
+                                      AbsoluteOverlayQuadStrategy::VAlign v)
 {
   setHAlign(h);
   setVAlign(v);
@@ -92,4 +91,4 @@ inline void OverlayQuadStrategy::setAlign(OverlayQuadStrategy::HAlign h,
 } // namespace Rendering
 } // namespace Avogadro
 
-#endif // AVOGADRO_RENDERING_OVERLAYQUADSTRATEGY_H
+#endif // AVOGADRO_RENDERING_ABSOLUTEOVERLAYQUADSTRATEGY_H
