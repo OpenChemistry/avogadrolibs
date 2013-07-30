@@ -70,8 +70,12 @@ TEST(FileBrowseWidgetTest, validExecutableFile)
   FileBrowseWidget widget;
 
   widget.setMode(FileBrowseWidget::ExecutableFile);
+#ifndef Q_OS_WIN32 // Qt doesn't identify python files as exec on windows:
   widget.setFileName(AVOGADRO_DATA
                      "/tests/avogadro/scripts/inputgeneratortest.py");
+#else // Q_OS_WIN32
+  widget.setFileName("C:/Windows/System32/cmd.exe");
+#endif // Q_OS_WIN32
   EXPECT_TRUE(widget.validFileName());
   widget.setFileName(AVOGADRO_DATA "/data/ethane.cml");
   EXPECT_FALSE(widget.validFileName());
