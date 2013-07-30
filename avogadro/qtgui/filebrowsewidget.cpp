@@ -132,10 +132,24 @@ void FileBrowseWidget::testFileName()
   QFileInfo info(fileName());
   if (info.isAbsolute()) {
     if (info.exists()) {
-      if (m_mode != ExecutableFile
-          || info.isExecutable()) {
+      switch (m_mode) {
+      case ExistingFile:
         fileNameMatch();
         return;
+      case ExecutableFile:
+#ifdef Q_OS_WIN32
+      // On windows, QFileInfo just checks file extensions to determine if a
+      // file is exectuble. As of 4.8, only the extensions .exe, .com, .bat,
+      // .pif, and .cmd. Add additional formats that we'll allow here:
+      if (info.suffix().toLower() == QLatin1String(".py")) {
+        fileNameMatch();
+        return;
+      }
+#endif // Q_OS_WIN32
+      if (info.isExecutable()) {
+        fileNameMatch();
+        return;
+      }
       }
     }
   }
