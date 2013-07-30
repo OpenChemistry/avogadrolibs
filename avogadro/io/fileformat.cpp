@@ -23,40 +23,106 @@
 namespace Avogadro {
 namespace Io {
 
+using std::ifstream;
 using std::locale;
+using std::ofstream;
+
+FileFormat::FileFormat()
+  : m_mode(None), m_in(NULL), m_out(NULL)
+{
+}
 
 FileFormat::~FileFormat()
 {
+  delete m_in;
+  delete m_out;
+}
+
+bool FileFormat::open(const std::string &fileName_, Operation mode_)
+{
+  close();
+  m_fileName = fileName_;
+  m_mode = mode_;
+  if (!m_fileName.empty()) {
+    // Imbue the standard C locale.
+    locale cLocale("C");
+    if (m_mode & Read) {
+      ifstream *file = new ifstream(m_fileName.c_str(), std::ifstream::binary);
+      m_in = file;
+      if (file->is_open()) {
+        m_in->imbue(cLocale);
+        return true;
+      }
+      else {
+        appendError("Error opening file: " + fileName_);
+        return false;
+      }
+    }
+    else if (m_mode & Write) {
+      ofstream *file = new ofstream(m_fileName.c_str(), std::ofstream::binary);
+      m_out = file;
+      if (file->is_open()) {
+        m_out->imbue(cLocale);
+        return true;
+      }
+      else {
+        appendError("Error opening file: " + fileName_);
+        return false;
+      }
+    }
+  }
+  return false;
+}
+
+void FileFormat::close()
+{
+  if (m_in) {
+    delete m_in;
+    m_in = NULL;
+  }
+  if (m_out) {
+    delete m_out;
+    m_out = NULL;
+  }
+  m_mode = None;
+}
+
+bool FileFormat::readMolecule(Core::Molecule &molecule)
+{
+  if (!m_in)
+    return false;
+  return read(*m_in, molecule);
+}
+
+bool FileFormat::writeMolecule(const Core::Molecule &molecule)
+{
+  if (!m_out)
+    return false;
+  return write(*m_out, molecule);
 }
 
 bool FileFormat::readFile(const std::string &fileName_,
                           Core::Molecule &molecule)
 {
-  m_fileName = fileName_;
-  std::ifstream file(fileName_.c_str(), std::ifstream::binary);
-  if (!file.is_open()) {
-    appendError("Error opening file: " + fileName_ + "\n");
+  bool result = open(fileName_, Read);
+  if (!result)
     return false;
-  }
-  // Imbue the standard C locale.
-  locale cLocale("C");
-  file.imbue(cLocale);
-  return read(file, molecule);
+
+  result = readMolecule(molecule);
+  close();
+  return result;
 }
 
 bool FileFormat::writeFile(const std::string &fileName_,
                            const Core::Molecule &molecule)
 {
-  m_fileName = fileName_;
-  std::ofstream file(fileName_.c_str(), std::ofstream::binary);
-  if (!file.is_open()) {
-    appendError("Error opening file: " + fileName_ + "\n");
+  bool result = open(fileName_, Write);
+  if (!result)
     return false;
-  }
-  // Imbue the standard C locale.
-  locale cLocale("C");
-  file.imbue(cLocale);
-  return write(file, molecule);
+
+  result = writeMolecule(molecule);
+  close();
+  return result;
 }
 
 bool FileFormat::readString(const std::string &string, Core::Molecule &molecule)

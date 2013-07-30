@@ -57,6 +57,11 @@ bool MdlFormat::read(std::istream &in, Core::Molecule &mol)
   // The first line is the molecule name.
   getline(in, buffer);
   buffer = trimmed(buffer);
+  // Check for the record separator in SDF, and skip if found.
+  if (buffer == "$$$$") {
+    getline(in, buffer);
+    buffer = trimmed(buffer);
+  }
   if (!buffer.empty())
     mol.setData("name", buffer);
 
@@ -196,6 +201,9 @@ bool MdlFormat::write(std::ostream &out, const Core::Molecule &mol)
   }
   out << "M  END\n";
 
+  if (isMode(FileFormat::MultiMolecule))
+    out << "$$$$\n";
+
   return true;
 }
 
@@ -203,6 +211,7 @@ std::vector<std::string> MdlFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.push_back("mol");
+  ext.push_back("sdf");
   return ext;
 }
 

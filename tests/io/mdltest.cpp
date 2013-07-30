@@ -25,6 +25,7 @@
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
+using Avogadro::Io::FileFormat;
 using Avogadro::Io::MdlFormat;
 
 TEST(MdlTest, readFile)
@@ -116,4 +117,74 @@ TEST(MdlTest, saveFile)
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
+}
+
+TEST(MdlTest, readMulti)
+{
+  MdlFormat multi;
+  multi.open(AVOGADRO_DATA "/data/multi.sdf",
+             FileFormat::Read | FileFormat::MultiMolecule);
+  Molecule molecule;
+
+  // Read in the first structure.
+  EXPECT_TRUE(multi.readMolecule(molecule));
+  ASSERT_EQ(multi.error(), "");
+
+  EXPECT_EQ(molecule.data("name").toString(), "Methane");
+  EXPECT_EQ(molecule.atomCount(), 5);
+  EXPECT_EQ(molecule.bondCount(), 4);
+
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 6);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 1);
+  EXPECT_EQ(molecule.atom(2).atomicNumber(), 1);
+  EXPECT_EQ(molecule.atom(3).atomicNumber(), 1);
+  EXPECT_EQ(molecule.atom(4).atomicNumber(), 1);
+
+  EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().x(), -0.5134);
+  EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().y(),  0.8892);
+  EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().z(), -0.3630);
+
+  // Now read in the second structure.
+  Molecule molecule2;
+  EXPECT_TRUE(multi.readMolecule(molecule2));
+  ASSERT_EQ(multi.error(), "");
+  EXPECT_EQ(molecule2.data("name").toString(), "Caffeine");
+  EXPECT_EQ(molecule2.atomCount(), 24);
+  EXPECT_EQ(molecule2.bondCount(), 25);
+
+  // Should return false when there are no more molecules to be read in.
+  EXPECT_FALSE(multi.readMolecule(molecule));
+}
+
+TEST(MdlTest, writeMulti)
+{
+  MdlFormat multi;
+  multi.open(AVOGADRO_DATA "/data/multi.sdf",
+             FileFormat::Read | FileFormat::MultiMolecule);
+  Molecule mol[2];
+
+  // Read in the two structures in the file.
+  EXPECT_TRUE(multi.readMolecule(mol[0]));
+  ASSERT_EQ(multi.error(), "");
+  EXPECT_TRUE(multi.readMolecule(mol[1]));
+  ASSERT_EQ(multi.error(), "");
+  multi.close();
+
+  // Now attempt to write out a multi-molecule file.
+  multi.open("multitmp.sdf", FileFormat::Write | FileFormat::MultiMolecule);
+  multi.writeMolecule(mol[0]);
+  multi.writeMolecule(mol[1]);
+  multi.close();
+
+  // Finally, let's read them back in and check the basic properties match.
+  multi.open("multitmp.sdf", FileFormat::Read | FileFormat::MultiMolecule);
+  Molecule ref[2];
+  EXPECT_TRUE(multi.readMolecule(ref[0]));
+  EXPECT_TRUE(multi.readMolecule(ref[1]));
+  // Compare some properties and see if they made it all the way back to us.
+  for (int i = 0; i < 2; ++i) {
+    EXPECT_EQ(mol[i].data("name").toString(), ref[i].data("name").toString());
+    EXPECT_EQ(mol[i].atomCount(), ref[i].atomCount());
+    EXPECT_EQ(mol[i].bondCount(), ref[i].bondCount());
+  }
 }
