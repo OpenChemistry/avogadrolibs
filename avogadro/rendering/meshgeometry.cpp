@@ -16,31 +16,38 @@
 
 #include "meshgeometry.h"
 
-#include "visitor.h"
+#include "avogadrogl.h"
+#include "bufferobject.h"
 #include "camera.h"
 #include "scene.h"
-
-#include "bufferobject.h"
-
 #include "shader.h"
 #include "shaderprogram.h"
+#include "visitor.h"
+
+#include <avogadro/core/matrix.h>
+#include <avogadro/core/vector.h>
+
+#include <iostream>
+#include <iterator>
+#include <limits>
 
 namespace {
 #include "mesh_vs.h"
 #include "mesh_fs.h"
 }
 
-#include "avogadrogl.h"
-
-#include <avogadro/core/matrix.h>
-
-#include <iostream>
+using Avogadro::Vector3f;
+using Avogadro::Vector3ub;
+using Avogadro::Vector4ub;
 
 using std::cout;
 using std::endl;
 
 namespace Avogadro {
 namespace Rendering {
+
+const unsigned int MeshGeometry::InvalidIndex =
+    std::numeric_limits<unsigned int>::max();
 
 class MeshGeometry::Private
 {
@@ -80,30 +87,10 @@ void MeshGeometry::update()
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
-    std::vector<unsigned int> indices;
-    std::vector<ColorNormalVertex> verts;
-    indices.reserve(m_indices.size());
-    verts.reserve(m_vertices.size());
-
-    std::vector<size_t>::const_iterator itIndex = m_indices.begin();
-    std::vector<VertexNormalColor>::const_iterator itVertices = m_vertices.begin();
-
-    for (unsigned int i = 0;
-         itIndex != m_indices.end() && itVertices != m_vertices.end();
-         ++i, ++itIndex, ++itVertices) {
-
-      // Fill the VBO with triangles.
-      verts.push_back(ColorNormalVertex(itVertices->color,
-                                           itVertices->normal,
-                                           itVertices->vertex));
-      indices.push_back(i);
-    }
-
-    d->vbo.upload(verts);
-    d->ibo.upload(indices);
-    d->numberOfVertices = verts.size();
-    d->numberOfIndices = indices.size();
-
+    d->vbo.upload(m_vertices, BufferObject::ARRAY_BUFFER);
+    d->ibo.upload(m_indices, BufferObject::ELEMENT_ARRAY_BUFFER);
+    d->numberOfVertices = m_vertices.size();
+    d->numberOfIndices = m_indices.size();
     m_dirty = false;
   }
 
@@ -141,26 +128,23 @@ void MeshGeometry::render(const Camera &camera)
   // Set up our attribute arrays.
   if (!d->program.enableAttributeArray("vertex"))
     cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("vertex",
-                                    ColorNormalVertex::vertexOffset(),
-                                    sizeof(ColorNormalVertex),
-                                    Vector3f())) {
+  if (!d->program.useAttributeArray("vertex", PackedVertex::vertexOffset(),
+                                    sizeof(PackedVertex),
+                                    ShaderProgram::FloatT, 3)) {
     cout << d->program.error() << endl;
   }
-/*  if (!d->program.enableAttributeArray("color"))
+  if (!d->program.enableAttributeArray("color"))
     cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("color",
-                                    ColorNormalVertex::colorOffset(),
-                                    sizeof(ColorNormalVertex),
-                                    Vector3ub())) {
+  if (!d->program.useAttributeArray("color", PackedVertex::colorOffset(),
+                                    sizeof(PackedVertex),
+                                    ShaderProgram::UCharT, 4)) {
     cout << d->program.error() << endl;
-  } */
+  }
   if (!d->program.enableAttributeArray("normal"))
     cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("normal",
-                                    ColorNormalVertex::normalOffset(),
-                                    sizeof(ColorNormalVertex),
-                                    Vector3f())) {
+  if (!d->program.useAttributeArray("normal", PackedVertex::normalOffset(),
+                                    sizeof(PackedVertex),
+                                    ShaderProgram::FloatT, 3)) {
     cout << d->program.error() << endl;
   }
 
@@ -200,14 +184,88 @@ void MeshGeometry::render(const Camera &camera)
   d->program.release();
 }
 
-void MeshGeometry::addTriangles(const Vector3f *verts, const Vector3f *norms,
-                            const Vector3ub *c, size_t n)
+unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
+                                 const Core::Array<Vector3f> &n,
+                                 const Core::Array<Vector4ub> &c)
 {
-  for (size_t i = 0; i < n; ++i) {
-    m_vertices.push_back(VertexNormalColor(*verts++, *norms++,
-                                           c ? *c++ : Vector3ub(255, 0, 0)));
-    m_indices.push_back(i);
+  if (v.size() != n.size() || n.size() != c.size())
+    return InvalidIndex;
+
+  size_t result = m_vertices.size();
+
+  Core::Array<Vector3f>::const_iterator vIter = v.begin();
+  Core::Array<Vector3f>::const_iterator vEnd = v.end();
+  Core::Array<Vector3f>::const_iterator nIter = n.begin();
+  Core::Array<Vector4ub>::const_iterator cIter = c.begin();
+
+  while (vIter != vEnd)
+    m_vertices.push_back(PackedVertex(*(cIter++), *(nIter++), *(vIter++)));
+
+  m_dirty = true;
+
+  return static_cast<unsigned int>(result);
+}
+
+unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
+                                 const Core::Array<Vector3f> &n,
+                                 const Core::Array<Vector3ub> &c)
+{
+  if (v.size() != n.size() || n.size() != c.size())
+    return InvalidIndex;
+
+  size_t result = m_vertices.size();
+
+  Core::Array<Vector3f>::const_iterator vIter = v.begin();
+  Core::Array<Vector3f>::const_iterator vEnd = v.end();
+  Core::Array<Vector3f>::const_iterator nIter = n.begin();
+  Core::Array<Vector3ub>::const_iterator cIter = c.begin();
+
+  Vector4ub tmpColor(0, 0, 0, m_opacity);
+  while (vIter != vEnd) {
+    tmpColor.head<3>() = *(cIter++);
+    m_vertices.push_back(PackedVertex(tmpColor, *(nIter++), *(vIter++)));
   }
+
+  m_dirty = true;
+
+  return static_cast<unsigned int>(result);
+}
+
+unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
+                                 const Core::Array<Vector3f> &n)
+{
+  if (v.size() != n.size())
+    return InvalidIndex;
+
+  size_t result = m_vertices.size();
+
+  Core::Array<Vector3f>::const_iterator vIter = v.begin();
+  Core::Array<Vector3f>::const_iterator vEnd = v.end();
+  Core::Array<Vector3f>::const_iterator nIter = n.begin();
+
+  Vector4ub tmpColor(m_color[0], m_color[1], m_color[2], m_opacity);
+  while (vIter != vEnd)
+    m_vertices.push_back(PackedVertex(tmpColor, *(nIter++), *(vIter++)));
+
+  m_dirty = true;
+
+  return static_cast<unsigned int>(result);
+}
+
+void MeshGeometry::addTriangle(unsigned int index1, unsigned int index2,
+                               unsigned int index3)
+{
+  m_indices.push_back(index1);
+  m_indices.push_back(index2);
+  m_indices.push_back(index3);
+  m_dirty = true;
+}
+
+void MeshGeometry::addTriangles(const Core::Array<unsigned int> &indiceArray)
+{
+  m_indices.reserve(m_indices.size() + indiceArray.size());
+  std::copy(indiceArray.begin(), indiceArray.end(),
+            std::back_inserter(m_indices));
   m_dirty = true;
 }
 

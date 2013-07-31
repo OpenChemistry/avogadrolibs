@@ -22,6 +22,48 @@
 namespace Avogadro {
 namespace Rendering {
 
+namespace {
+inline GLenum convertType(ShaderProgram::Type type)
+{
+  switch (type) {
+  default:
+  case ShaderProgram::UCharT:
+    return GL_UNSIGNED_BYTE;
+  case ShaderProgram::CharT:
+    return GL_BYTE;
+  case ShaderProgram::ShortT:
+    return GL_SHORT;
+  case ShaderProgram::UShortT:
+    return GL_UNSIGNED_SHORT;
+  case ShaderProgram::IntT:
+    return GL_INT;
+  case ShaderProgram::UIntT:
+    return GL_UNSIGNED_INT;
+  case ShaderProgram::FloatT:
+    return GL_FLOAT;
+  case ShaderProgram::DoubleT:
+    return GL_DOUBLE;
+  }
+}
+
+inline GLboolean isIntegral(ShaderProgram::Type type)
+{
+  switch (type) {
+  default:
+  case ShaderProgram::UCharT:
+  case ShaderProgram::CharT:
+  case ShaderProgram::ShortT:
+  case ShaderProgram::UShortT:
+  case ShaderProgram::IntT:
+  case ShaderProgram::UIntT:
+    return GL_TRUE;
+  case ShaderProgram::FloatT:
+  case ShaderProgram::DoubleT:
+    return GL_FALSE;
+  }
+}
+} // end anon namespace
+
 ShaderProgram::ShaderProgram() : m_handle(0), m_vertexShader(0),
   m_fragmentShader(0), m_linked(false)
 {
@@ -189,41 +231,30 @@ bool ShaderProgram::disableAttributeArray(const std::string &name)
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
-                                      int stride, Vector2f)
+                                      int stride, Type elementType,
+                                      int elementTupleSize,
+                                      NormalizeOption normalize)
 {
   GLint location = static_cast<GLint>(findAttributeArray(name));
   if (location == -1) {
     m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
   }
-  glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, stride,
-                        BUFFER_OFFSET(offset));
-  return true;
-}
-
-bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
-                                      int stride, Vector3f)
-{
-  GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1) {
-    m_error = "Could not use attribute " + name + ". No such attribute.";
-    return false;
+  GLboolean realNormalize;
+  switch (normalize) {
+  default:
+  case ShaderProgram::AutoNormalize:
+    realNormalize = isIntegral(elementType);
+    break;
+  case ShaderProgram::Normalize:
+    realNormalize = GL_TRUE;
+    break;
+  case ShaderProgram::DontNormalize:
+    realNormalize = GL_FALSE;
+    break;
   }
-  glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, stride,
-                        BUFFER_OFFSET(offset));
-  return true;
-}
-
-bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
-                                      int stride, Vector3ub)
-{
-  GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1) {
-    m_error = "Could not use attribute " + name + ". No such attribute.";
-    return false;
-  }
-  glVertexAttribPointer(location, 3, GL_UNSIGNED_BYTE, GL_TRUE, stride,
-                        BUFFER_OFFSET(offset));
+  glVertexAttribPointer(location, elementTupleSize, convertType(elementType),
+                        realNormalize, stride, BUFFER_OFFSET(offset));
   return true;
 }
 

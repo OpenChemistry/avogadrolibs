@@ -20,10 +20,9 @@
 
 #include "avogadrocore.h"
 
+#include "array.h"
 #include "color3f.h"
 #include "vector.h"
-
-#include <vector>
 
 namespace Avogadro {
 namespace Core {
@@ -57,10 +56,10 @@ public:
   ~Mesh();
 
   /**
-   * Reserve the expected space for the mesh. This causes all member vector
+   * Reserve the expected space for the mesh. This causes all member array
    * storage to call the reserve function with the number specified.
    * @param size Expected size of the mesh.
-   * @param colors Should the colors vector reserve this space too? Defaults
+   * @param colors Should the colors array reserve this space too? Defaults
    * to false.
    * @return True on success.
    */
@@ -111,9 +110,9 @@ public:
   unsigned int cube() const { return m_cube; }
 
   /**
-   * @return Vector containing all of the vertices in a one dimensional array.
+   * @return Array containing all of the vertices in a one dimensional array.
    */
-  const std::vector<Vector3f> & vertices() const;
+  const Core::Array<Vector3f> & vertices() const;
 
   /**
    * @return The number of vertices.
@@ -131,18 +130,18 @@ public:
   /**
    * Clear the vertices vector and assign new values.
    */
-  bool setVertices(const std::vector<Vector3f> &values);
+  bool setVertices(const Core::Array<Vector3f> &values);
 
   /**
-   * Add one or more vertices, i.e., the vector is expected to be of length
+   * Add one or more vertices, i.e., the array is expected to be of length
    * 3 x n where n is an integer.
    */
-  bool addVertices(const std::vector<Vector3f> &values);
+  bool addVertices(const Core::Array<Vector3f> &values);
 
   /**
-   * @return Vector containing all of the normals in a one-dimensional array.
+   * @return Array containing all of the normals in a one-dimensional array.
    */
-  const std::vector<Vector3f> & normals() const;
+  const Core::Array<Vector3f> & normals() const;
 
   /**
    * @return The number of normals.
@@ -158,20 +157,20 @@ public:
   const Vector3f * normal(int n) const;
 
   /**
-   * Clear the normals vector and assign new values.
+   * Clear the normals array and assign new values.
    */
-  bool setNormals(const std::vector<Vector3f> &values);
+  bool setNormals(const Core::Array<Vector3f> &values);
 
   /**
-   * Add one or more normals, i.e., the vector is expected to be of length
+   * Add one or more normals, i.e., the array is expected to be of length
    * 3 x n where n is an integer.
    */
-  bool addNormals(const std::vector<Vector3f> &values);
+  bool addNormals(const Core::Array<Vector3f> &values);
 
   /**
-   * @return Vector containing all of the colors in a one-dimensional array.
+   * @return Array containing all of the colors in a one-dimensional array.
    */
-  const std::vector<Color3f> & colors() const;
+  const Core::Array<Color3f> & colors() const;
 
   /**
    * @return Pointer to the first color of the specified triangle.
@@ -179,15 +178,15 @@ public:
   const Color3f * color(int n) const;
 
   /**
-   * Clear the colors vector and assign new values.
+   * Clear the colors array and assign new values.
    */
-  bool setColors(const std::vector<Color3f> &values);
+  bool setColors(const Core::Array<Color3f> &values);
 
   /**
-   * Add one or more normals, i.e., the vector is expected to be of length
+   * Add one or more normals, i.e., the array is expected to be of length
    * 3 x n where n is an integer.
    */
-  bool addColors(const std::vector<Color3f> &values);
+  bool addColors(const Core::Array<Color3f> &values);
 
   /**
    * Sanity checking function - is the mesh sane?
@@ -224,10 +223,10 @@ public:
 
   friend class Molecule;
 
-protected:
-  std::vector<Vector3f> m_vertices;
-  std::vector<Vector3f> m_normals;
-  std::vector<Color3f> m_colors;
+private:
+  Core::Array<Vector3f> m_vertices;
+  Core::Array<Vector3f> m_normals;
+  Core::Array<Color3f> m_colors;
   std::string m_name;
   bool m_stable;
   float m_isoValue;

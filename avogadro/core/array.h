@@ -106,6 +106,7 @@ public:
 
 public:
   typedef T ValueType;
+  typedef T value_type;
 
   typedef typename Container::iterator iterator;
   typedef typename Container::const_iterator const_iterator;

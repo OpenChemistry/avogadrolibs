@@ -42,6 +42,12 @@ class Shader;
 class AVOGADRORENDERING_EXPORT ShaderProgram
 {
 public:
+  /** Identifiers for numeric types. */
+  enum Type { CharT, UCharT, ShortT, UShortT, IntT, UIntT, FloatT, DoubleT };
+
+  /** Options for attribute normalization. */
+  enum NormalizeOption { AutoNormalize, Normalize, DontNormalize };
+
   ShaderProgram();
   ~ShaderProgram();
 
@@ -92,15 +98,22 @@ public:
    * @param stride The stride of the element access (i.e. the size of each
    * element in the currently bound BufferObject). 0 may be used to indicate
    * tightly packed data.
-   * @param v The type of the element being bound.
-   * @return false is the attribute array does not exist.
+   * @param elementType Tag identifying the memory representation of the
+   * element.
+   * @param elementTupleSize The number of elements per vertex (e.g. a 3D
+   * position attribute would be 3).
+   * @param normalize Indicates the range used by the attribute data. If set to
+   * ShaderProgram::Normalize, integral values are mapped from the type's valid
+   * range to [-1, 1] for signed types or [0, 1] for unsigned types. If set to
+   * ShaderProgram::DontNormalize, the values are passed into the program as-is.
+   * ShaderProgram::AutoNormalize will use Normalize for all integral types, and
+   * DontNormalize for floating point types. If not specified, AutoNormalize is
+   * used.
+   * @return false if the attribute array does not exist.
    */
   bool useAttributeArray(const std::string &name, int offset, int stride,
-                         Vector2f v);
-  bool useAttributeArray(const std::string &name, int offset, int stride,
-                         Vector3f v);
-  bool useAttributeArray(const std::string &name, int offset, int stride,
-                         Vector3ub v);
+                         Type elementType, int elementTupleSize,
+                         NormalizeOption normalize = AutoNormalize);
 
   /** Upload the supplied array to the named attribute. BufferObject attributes
    * should be preferred and these may be removed in future.

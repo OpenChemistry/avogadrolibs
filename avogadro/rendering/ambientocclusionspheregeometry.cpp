@@ -584,7 +584,7 @@ class SphereAmbientOcclusionRenderer : public AmbientOcclusionRenderer
       if (!m_depthProgram.useAttributeArray("a_pos",
                                             ColorTextureVertex::vertexOffset(),
                                             sizeof(ColorTextureVertex),
-                                            Vector3f())) {
+                                            ShaderProgram::FloatT, 3)) {
         cout << m_depthProgram.error() << endl;
       }
       if (!m_depthProgram.enableAttributeArray("a_corner"))
@@ -592,7 +592,7 @@ class SphereAmbientOcclusionRenderer : public AmbientOcclusionRenderer
       if (!m_depthProgram.useAttributeArray("a_corner",
                                             ColorTextureVertex::textureCoordOffset(),
                                             sizeof(ColorTextureVertex),
-                                            Vector2f())) {
+                                            ShaderProgram::FloatT, 2)) {
         cout << m_depthProgram.error() << endl;
       }
 
@@ -653,7 +653,7 @@ class SphereAmbientOcclusionRenderer : public AmbientOcclusionRenderer
       if (!m_aoProgram.useAttributeArray("a_pos",
                                          ColorTextureVertex::vertexOffset(),
                                          sizeof(ColorTextureVertex),
-                                         Vector3f())) {
+                                         ShaderProgram::FloatT, 3)) {
         cout << m_aoProgram.error() << endl;
       }
       if (!m_aoProgram.enableAttributeArray("a_corner"))
@@ -661,7 +661,7 @@ class SphereAmbientOcclusionRenderer : public AmbientOcclusionRenderer
       if (!m_aoProgram.useAttributeArray("a_corner",
                                          ColorTextureVertex::textureCoordOffset(),
                                          sizeof(ColorTextureVertex),
-                                         Vector2f())) {
+                                         ShaderProgram::FloatT, 2)) {
         cout << m_aoProgram.error() << endl;
       }
       if (!m_aoProgram.enableAttributeArray("a_tileOffset"))
@@ -669,7 +669,7 @@ class SphereAmbientOcclusionRenderer : public AmbientOcclusionRenderer
       if (!m_aoProgram.useAttributeArray("a_tileOffset",
                                          ColorTextureVertex::textureCoord2Offset(),
                                          sizeof(ColorTextureVertex),
-                                         Vector2f())) {
+                                         ShaderProgram::FloatT, 2)) {
         cout << m_aoProgram.error() << endl;
       }
 
@@ -867,8 +867,8 @@ void AmbientOcclusionSphereGeometry::update()
       }
     }
 
-    d->vbo.upload(sphereVertices);
-    d->ibo.upload(sphereIndices);
+    d->vbo.upload(sphereVertices, BufferObject::ARRAY_BUFFER);
+    d->ibo.upload(sphereIndices, BufferObject::ELEMENT_ARRAY_BUFFER);
     d->numberOfVertices = sphereVertices.size();
     d->numberOfIndices = sphereIndices.size();
 
@@ -924,7 +924,7 @@ void AmbientOcclusionSphereGeometry::render(const Camera &camera)
   if (!d->program.useAttributeArray("a_pos",
                                     ColorTextureVertex::vertexOffset(),
                                     sizeof(ColorTextureVertex),
-                                    Vector3f())) {
+                                    ShaderProgram::FloatT, 3)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("a_corner"))
@@ -932,7 +932,7 @@ void AmbientOcclusionSphereGeometry::render(const Camera &camera)
   if (!d->program.useAttributeArray("a_corner",
                                     ColorTextureVertex::textureCoordOffset(),
                                     sizeof(ColorTextureVertex),
-                                    Vector2f())) {
+                                    ShaderProgram::FloatT, 2)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("a_tileOffset"))
@@ -940,7 +940,7 @@ void AmbientOcclusionSphereGeometry::render(const Camera &camera)
   if (!d->program.useAttributeArray("a_tileOffset",
                                     ColorTextureVertex::textureCoord2Offset(),
                                     sizeof(ColorTextureVertex),
-                                    Vector2f())) {
+                                    ShaderProgram::FloatT, 2)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("a_color"))
@@ -948,7 +948,7 @@ void AmbientOcclusionSphereGeometry::render(const Camera &camera)
   if (!d->program.useAttributeArray("a_color",
                                     ColorTextureVertex::colorOffset(),
                                     sizeof(ColorTextureVertex),
-                                    Vector3ub())) {
+                                    ShaderProgram::UCharT, 3)) {
     cout << d->program.error() << endl;
   }
 

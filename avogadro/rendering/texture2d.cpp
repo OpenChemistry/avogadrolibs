@@ -104,10 +104,11 @@ void Texture2D::render(const Camera &camera)
       || !d->program.enableAttributeArray("vertex")
       || !d->program.enableAttributeArray("texCoord")
       || !d->vertexBuffer.bind()
-      || !d->program.useAttributeArray("vertex", 0, 0, Vector3f())
+      || !d->program.useAttributeArray("vertex", 0, 0, ShaderProgram::FloatT, 3)
       || !d->vertexBuffer.release()
       || !d->tcoordBuffer.bind()
-      || !d->program.useAttributeArray("texCoord", 0, 0, Vector2f())
+      || !d->program.useAttributeArray("texCoord", 0, 0, ShaderProgram::FloatT,
+                                       2)
       || !d->tcoordBuffer.release()
       ) {
     std::cerr << d->program.error() << std::endl;
@@ -190,7 +191,7 @@ bool Texture2D::prepareGl(const Camera &camera)
       || !std::equal(quad.begin(), quad.end(), d->quad.begin())) {
     d->quad.resize(4);
     std::copy(quad.begin(), quad.end(), d->quad.begin());
-    if (!d->vertexBuffer.upload(d->quad)) {
+    if (!d->vertexBuffer.upload(d->quad, BufferObject::ARRAY_BUFFER)) {
       std::cerr << d->vertexBuffer.error() << std::endl;
       return false;
     }
@@ -210,7 +211,7 @@ bool Texture2D::prepareGl(const Camera &camera)
     d->tcoords.resize(4);
     std::copy(m_textureCoordinates.begin(), m_textureCoordinates.end(),
               d->tcoords.begin());
-    if (!d->tcoordBuffer.upload(d->tcoords)) {
+    if (!d->tcoordBuffer.upload(d->tcoords, BufferObject::ARRAY_BUFFER)) {
       std::cerr << d->tcoordBuffer.error() << std::endl;
       return false;
     }
