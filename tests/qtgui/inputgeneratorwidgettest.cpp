@@ -94,7 +94,7 @@ TEST(InputGeneratorWidgetTest, exercise)
   // Check the contents of the filepath file:
   QTextEdit *filePathEdit = widget.findChild<QTextEdit*>("job.testFilePath");
   QFile testFile(testFilePath);
-  EXPECT_TRUE(testFile.open(QFile::ReadOnly));
+  EXPECT_TRUE(testFile.open(QFile::ReadOnly | QFile::Text));
   QByteArray refData(testFile.readAll());
   EXPECT_EQ(std::string(refData.constData()),
             filePathEdit->document()->toPlainText().toStdString());
