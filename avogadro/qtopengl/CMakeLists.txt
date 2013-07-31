@@ -9,10 +9,12 @@ add_definitions(${QT_DEFINITIONS})
 
 set(HEADERS
   glwidget.h
+  qttextrenderstrategy.h
 )
 
 set(SOURCES
   glwidget.cpp
+  qttextrenderstrategy.cpp
 )
 
 avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})

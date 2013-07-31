@@ -20,11 +20,17 @@
 #include "ambientocclusionspheregeometry.h"
 #include "cylindergeometry.h"
 #include "meshgeometry.h"
+#include "textlabel.h"
+#include "texture2d.h"
 
 namespace Avogadro {
 namespace Rendering {
 
-GLRenderVisitor::GLRenderVisitor(const Camera &camera_) : m_camera(camera_)
+GLRenderVisitor::GLRenderVisitor(const Camera &camera_,
+                                 const TextRenderStrategy *trs)
+  : m_camera(camera_),
+    m_textRenderStrategy(trs),
+    m_renderPass(NotRendering)
 {
 }
 
@@ -34,27 +40,47 @@ GLRenderVisitor::~GLRenderVisitor()
 
 void GLRenderVisitor::visit(Drawable &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(SphereGeometry &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(AmbientOcclusionSphereGeometry &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(CylinderGeometry &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(MeshGeometry &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
+}
+
+void GLRenderVisitor::visit(Texture2D &geometry)
+{
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
+}
+
+void GLRenderVisitor::visit(TextLabel &geometry)
+{
+  if (geometry.renderPass() == m_renderPass) {
+    if (m_textRenderStrategy)
+      geometry.buildTexture(*m_textRenderStrategy);
+    geometry.render(m_camera);
+  }
 }
 
 } // End namespace Rendering

@@ -11,7 +11,11 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
 endif()
 
 set(HEADERS
+  absolutequadstrategy.h
+  absoluteoverlayquadstrategy.h
   avogadrogl.h
+  avogadrorendering.h
+  billboardquadstrategy.h
   bufferobject.h
   camera.h
   cylindergeometry.h
@@ -23,17 +27,26 @@ set(HEADERS
   glrendervisitor.h
   meshgeometry.h
   node.h
+  overlayquadstrategy.h
   primitive.h
+  quadplacementstrategy.h
   scene.h
   shader.h
   shaderprogram.h
   spheregeometry.h
+  textlabel.h
+  textproperties.h
+  textrenderstrategy.h
+  texture2d.h
   transformnode.h
   visitor.h
   volumegeometry.h
 )
 
 set(SOURCES
+  absolutequadstrategy.cpp
+  absoluteoverlayquadstrategy.cpp
+  billboardquadstrategy.cpp
   bufferobject.cpp
   camera.cpp
   cylindergeometry.cpp
@@ -45,10 +58,16 @@ set(SOURCES
   glrendervisitor.cpp
   meshgeometry.cpp
   node.cpp
+  overlayquadstrategy.cpp
+  quadplacementstrategy.cpp
   scene.cpp
   shader.cpp
   shaderprogram.cpp
   spheregeometry.cpp
+  textlabel.cpp
+  textproperties.cpp
+  textrenderstrategy.cpp
+  texture2d.cpp
   transformnode.cpp
   visitor.cpp
   volumegeometry.cpp
@@ -68,6 +87,8 @@ set(shader_files
   "sphere_ao_bake_fs.glsl"
   "sphere_ao_render_vs.glsl"
   "sphere_ao_render_fs.glsl"
+  "texture2d_fs.glsl"
+  "texture2d_vs.glsl"
 )
 foreach(file ${shader_files})
   get_filename_component(file_we ${file} NAME_WE)

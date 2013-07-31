@@ -157,21 +157,21 @@ void SphereGeometry::render(const Camera &camera)
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("vertex",
                                     ColorTextureVertex::vertexOffset(),
-                                    Vector3f())) {
+                                    sizeof(ColorTextureVertex), Vector3f())) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("color"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("color",
                                     ColorTextureVertex::colorOffset(),
-                                    Vector3ub())) {
+                                    sizeof(ColorTextureVertex), Vector3ub())) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("texCoordinate"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("texCoordinate",
                                     ColorTextureVertex::textureCoordOffset(),
-                                    Vector2f())) {
+                                    sizeof(ColorTextureVertex), Vector2f())) {
     cout << d->program.error() << endl;
   }
 

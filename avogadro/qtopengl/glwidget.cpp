@@ -16,6 +16,8 @@
 
 #include "glwidget.h"
 
+#include "qttextrenderstrategy.h"
+
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/sceneplugin.h>
 #include <avogadro/qtgui/scenepluginmodel.h>
@@ -42,6 +44,7 @@ GLWidget::GLWidget(QWidget *parent_)
   connect(&m_scenePlugins,
           SIGNAL(pluginStateChanged(Avogadro::QtGui::ScenePlugin*)),
           SLOT(updateScene()));
+  m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
 }
 
 GLWidget::~GLWidget()
@@ -82,6 +85,18 @@ void GLWidget::updateScene()
       Rendering::GroupNode *engineNode = new Rendering::GroupNode(moleculeNode);
       scenePlugin->process(*m_molecule, *engineNode);
     }
+
+    // Let the tools perform any drawing they need to do.
+    if (m_activeTool) {
+      Rendering::GroupNode *toolNode = new Rendering::GroupNode(moleculeNode);
+      m_activeTool->draw(*toolNode);
+    }
+
+    if (m_defaultTool) {
+      Rendering::GroupNode *toolNode = new Rendering::GroupNode(moleculeNode);
+      m_defaultTool->draw(*toolNode);
+    }
+
     m_renderer.resetGeometry();
     update();
   }
@@ -134,9 +149,22 @@ void GLWidget::setActiveTool(const QString &name)
 
 void GLWidget::setActiveTool(QtGui::ToolPlugin *tool)
 {
+  if (tool == m_activeTool)
+    return;
+
+  if (m_activeTool && m_activeTool != m_defaultTool) {
+    disconnect(m_activeTool, SIGNAL(drawablesChanged()),
+               this, SLOT(updateScene()));
+  }
+
   if (tool)
     addTool(tool);
   m_activeTool = tool;
+
+  if (m_activeTool && m_activeTool != m_defaultTool) {
+    connect(m_activeTool, SIGNAL(drawablesChanged()),
+            this, SLOT(updateScene()));
+  }
 }
 
 void GLWidget::setDefaultTool(const QString &name)
@@ -153,9 +181,22 @@ void GLWidget::setDefaultTool(const QString &name)
 
 void GLWidget::setDefaultTool(QtGui::ToolPlugin *tool)
 {
+  if (tool == m_defaultTool)
+    return;
+
+  if (m_defaultTool && m_activeTool != m_defaultTool) {
+    disconnect(m_defaultTool, SIGNAL(drawablesChanged()),
+               this, SLOT(updateScene()));
+  }
+
   if (tool)
     addTool(tool);
   m_defaultTool = tool;
+
+  if (m_defaultTool && m_activeTool != m_defaultTool) {
+    connect(m_defaultTool, SIGNAL(drawablesChanged()),
+            this, SLOT(updateScene()));
+  }
 }
 
 void GLWidget::initializeGL()

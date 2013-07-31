@@ -29,6 +29,10 @@ class QWheelEvent;
 
 namespace Avogadro {
 
+namespace Rendering {
+class GroupNode;
+}
+
 namespace QtOpenGL {
 class GLWidget;
 }
@@ -85,6 +89,17 @@ public:
   virtual QUndoCommand * keyPressEvent(QKeyEvent *e);
   virtual QUndoCommand * keyReleaseEvent(QKeyEvent *e);
   /**@}*/
+
+  /**
+   * Override this method to add drawables to the scene graph.
+   */
+  virtual void draw(Rendering::GroupNode &node);
+
+signals:
+  /**
+   * Emitted when draw() needs to be called again due to updates.
+   */
+  void drawablesChanged();
 
 public slots:
   /**

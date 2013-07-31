@@ -19,6 +19,7 @@
 
 #include "avogadrorenderingexport.h"
 
+#include "avogadrorendering.h"
 #include "primitive.h"
 #include <avogadro/core/vector.h>
 
@@ -72,6 +73,15 @@ public:
   bool isVisible() const { return m_visible; }
 
   /**
+   * The render pass in which this drawable should be rendered.
+   * @sa Rendering::RenderPass
+   * @{
+   */
+  void setRenderPass(RenderPass pass) { m_renderPass = pass; }
+  RenderPass renderPass() const { return m_renderPass; }
+  /** @} */
+
+  /**
    * @brief Render the contents of the drawable.
    * @param camera The current Camera.
    */
@@ -111,6 +121,7 @@ protected:
 
   GeometryNode * m_parent;
   bool m_visible;
+  RenderPass m_renderPass;
   Identifier m_identifier;
 };
 

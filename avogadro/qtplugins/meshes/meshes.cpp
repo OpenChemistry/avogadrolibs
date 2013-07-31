@@ -61,6 +61,8 @@ void Meshes::process(const Molecule &mol, GroupNode &node)
                         NULL, n);
     mesh1->setColor(Vector3ub(255, 0, 0));
     mesh1->setOpacity(opacity);
+    mesh1->setRenderPass(opacity == 255 ? Rendering::OpaquePass
+                                        : Rendering::TranslucentPass);
 
     if (mol.meshCount() >= 2) {
       MeshGeometry *mesh2 = new MeshGeometry;
@@ -72,6 +74,8 @@ void Meshes::process(const Molecule &mol, GroupNode &node)
                           NULL, n);
       mesh2->setColor(Vector3ub(0, 0, 255));
       mesh2->setOpacity(opacity);
+      mesh2->setRenderPass(opacity == 255 ? Rendering::OpaquePass
+                                          : Rendering::TranslucentPass);
     }
   }
 }

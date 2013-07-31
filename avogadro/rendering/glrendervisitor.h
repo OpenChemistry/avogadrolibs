@@ -19,10 +19,12 @@
 
 #include "visitor.h"
 
+#include "avogadrorendering.h"
 #include "camera.h"
 
 namespace Avogadro {
 namespace Rendering {
+class TextRenderStrategy;
 
 /**
  * @class GLRenderVisitor glrendervisitor.h <avogadro/rendering/glrendervisitor.h>
@@ -35,8 +37,18 @@ namespace Rendering {
 class GLRenderVisitor : public Visitor
 {
 public:
-  explicit GLRenderVisitor(const Camera &camera = Camera());
+  explicit GLRenderVisitor(const Camera &camera = Camera(),
+                           const TextRenderStrategy *trs = NULL);
   ~GLRenderVisitor() AVO_OVERRIDE;
+
+  /**
+   * The current stage of a multipass rendering.
+   * @sa Rendering::RenderPass
+   * @{
+   */
+  void setRenderPass(RenderPass pass) { m_renderPass = pass; }
+  RenderPass renderPass() const { return m_renderPass; }
+  /** @} */
 
   /**
    * The overloaded visit functions, the base versions of which do nothing.
@@ -49,12 +61,31 @@ public:
   void visit(AmbientOcclusionSphereGeometry &) AVO_OVERRIDE;
   void visit(CylinderGeometry &) AVO_OVERRIDE;
   void visit(MeshGeometry &) AVO_OVERRIDE;
+  void visit(Texture2D &geometry) AVO_OVERRIDE;
+  void visit(TextLabel &geometry) AVO_OVERRIDE;
 
   void setCamera(const Camera &camera_) { m_camera = camera_; }
   Camera camera() const { return m_camera; }
 
+  /**
+   * A TextRenderStrategy implementation used to render text for annotations.
+   * If NULL, no text will be produced.
+   * @{
+   */
+  void setTextRenderStrategy(TextRenderStrategy *trs)
+  {
+    m_textRenderStrategy = trs;
+  }
+  const TextRenderStrategy *textRenderStrategy() const
+  {
+    return m_textRenderStrategy;
+  }
+  /** @} */
+
 private:
   Camera m_camera;
+  const TextRenderStrategy *m_textRenderStrategy;
+  RenderPass m_renderPass;
 };
 
 } // End namespace Rendering

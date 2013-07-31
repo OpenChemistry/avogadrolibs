@@ -63,6 +63,10 @@ QUndoCommand *ToolPlugin::keyReleaseEvent(QKeyEvent *)
   return NULL;
 }
 
+void ToolPlugin::draw(Rendering::GroupNode &)
+{
+}
+
 ToolPluginFactory::~ToolPluginFactory()
 {
 }

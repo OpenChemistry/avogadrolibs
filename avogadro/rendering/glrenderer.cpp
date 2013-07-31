@@ -22,6 +22,9 @@
 #include "shaderprogram.h"
 #include "geometrynode.h"
 #include "glrendervisitor.h"
+#include "textlabel.h"
+#include "textrenderstrategy.h"
+#include "visitor.h"
 
 #include <avogadro/core/matrix.h>
 
@@ -30,13 +33,18 @@
 namespace Avogadro {
 namespace Rendering {
 
-GLRenderer::GLRenderer() : m_valid(false), m_center(Vector3f::Zero()),
-  m_radius(20.0)
+GLRenderer::GLRenderer()
+  : m_valid(false),
+    m_textRenderStrategy(NULL),
+    m_center(Vector3f::Zero()),
+    m_radius(20.0)
 {
+  m_overlayCamera.setIdentity();
 }
 
 GLRenderer::~GLRenderer()
 {
+  delete m_textRenderStrategy;
 }
 
 void GLRenderer::initialize()
@@ -63,18 +71,32 @@ void GLRenderer::resize(int width, int height)
 {
   glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
   m_camera.setViewport(width, height);
+  m_overlayCamera.setViewport(width, height);
 }
 
 void GLRenderer::render()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glEnable(GL_DEPTH_TEST);
   applyProjection();
 
-  GLRenderVisitor visitor(m_camera);
+  GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
+  // Setup for opaque geometry
+  visitor.setRenderPass(OpaquePass);
+  glEnable(GL_DEPTH_TEST);
+  glDisable(GL_BLEND);
   m_scene.rootNode().accept(visitor);
 
+  // Setup for transparent geometry
+  visitor.setRenderPass(TranslucentPass);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  m_scene.rootNode().accept(visitor);
+
+  // Setup for overlay rendering
+  visitor.setRenderPass(OverlayPass);
+  visitor.setCamera(m_overlayCamera);
   glDisable(GL_DEPTH_TEST);
+  m_scene.rootNode().accept(visitor);
 }
 
 void GLRenderer::resetCamera()
@@ -91,12 +113,42 @@ void GLRenderer::resetGeometry()
   m_radius = m_scene.radius();
 }
 
+void GLRenderer::setTextRenderStrategy(TextRenderStrategy *tren)
+{
+  if (tren != m_textRenderStrategy) {
+    // Force all labels to be regenerated on the next render:
+    class ResetTextLabelVisitor : public Visitor
+    {
+    public:
+      void visit(Node &) { return; }
+      void visit(GroupNode &) { return; }
+      void visit(GeometryNode &) { return; }
+      void visit(Drawable &) { return; }
+      void visit(SphereGeometry &) { return; }
+      void visit(AmbientOcclusionSphereGeometry &) { return; }
+      void visit(CylinderGeometry &) { return; }
+      void visit(MeshGeometry &) { return; }
+      void visit(Texture2D &) { return; }
+      void visit(TextLabel &l) { l.invalidateTexture(); }
+    } labelResetter;
+
+    m_scene.rootNode().accept(labelResetter);
+
+    delete m_textRenderStrategy;
+    m_textRenderStrategy = tren;
+  }
+}
+
 void GLRenderer::applyProjection()
 {
   float distance = m_camera.distance(m_center);
   m_camera.calculatePerspective(40.0f,
                                 std::max(2.0f, distance - m_radius),
                                 distance + m_radius);
+  m_overlayCamera.calculateOrthographic(
+        0.f, static_cast<float>(m_overlayCamera.width()),
+        0.f, static_cast<float>(m_overlayCamera.height()),
+        -1.f, 1.f);
 }
 
 std::multimap<float, Identifier>
