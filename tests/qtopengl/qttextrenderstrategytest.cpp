@@ -175,7 +175,7 @@ bool render()
 } // end anon namespace
 
 // Driver function:
-int qttextrenderstrategytest(int , char **)
+int qttextrenderstrategytest(int, char ** const)
 {
   bool result = true;
   if (!newInstance())
