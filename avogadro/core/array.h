@@ -34,8 +34,20 @@ class ArrayRefContainer
 public:
   typedef T ValueType;
   typedef std::vector<T> Parent; // The parent container for iterators etc
+
+  // STL compatibility, forward typedefs from std::vector:
+  typedef typename Parent::value_type value_type;
+  typedef typename Parent::allocator_type allocator_type;
+  typedef typename Parent::reference reference;
+  typedef typename Parent::const_reference const_reference;
+  typedef typename Parent::pointer pointer;
+  typedef typename Parent::const_pointer const_pointer;
   typedef typename Parent::iterator iterator;
   typedef typename Parent::const_iterator const_iterator;
+  typedef typename Parent::reverse_iterator reverse_iterator;
+  typedef typename Parent::const_reverse_iterator const_reverse_iterator;
+  typedef typename Parent::difference_type difference_type;
+  typedef typename Parent::size_type size_type;
 
   ArrayRefContainer() : m_ref(1), data()
   {
@@ -107,8 +119,20 @@ public:
 public:
   typedef T ValueType;
 
+  /** Typedefs for STL compatibility @{ */
+  typedef typename Container::value_type value_type;
+  typedef typename Container::allocator_type allocator_type;
+  typedef typename Container::reference reference;
+  typedef typename Container::const_reference const_reference;
+  typedef typename Container::pointer pointer;
+  typedef typename Container::const_pointer const_pointer;
   typedef typename Container::iterator iterator;
   typedef typename Container::const_iterator const_iterator;
+  typedef typename Container::reverse_iterator reverse_iterator;
+  typedef typename Container::const_reverse_iterator const_reverse_iterator;
+  typedef typename Container::difference_type difference_type;
+  typedef typename Container::size_type size_type;
+  /** @} */
 
   /** Constructors for new containers. */
   Array() : d(new Container())

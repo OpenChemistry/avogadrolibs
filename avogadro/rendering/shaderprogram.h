@@ -20,6 +20,7 @@
 #include "avogadrorenderingexport.h"
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/vector.h>
+#include <avogadro/core/types.h>
 
 #include <string> // For member variables.
 #include <vector> // For member variables.
@@ -42,6 +43,21 @@ class Shader;
 class AVOGADRORENDERING_EXPORT ShaderProgram
 {
 public:
+  /** Options for attribute normalization. */
+  enum NormalizeOption {
+    /// The values range across the limits of the numeric type.
+    /// This option instructs the rendering engine to normalize them to
+    /// the range [0.0, 1.0] for unsigned types, and [-1.0, 1.0] for signed
+    /// types.
+    /// For example, unsigned char values will be mapped so that 0 = 0.0,
+    /// and 255 = 1.0.
+    /// The resulting floating point numbers will be passed into
+    /// the shader program.
+    Normalize,
+    /// The values should be used as-is. Do not perform any normalization.
+    NoNormalize
+  };
+
   ShaderProgram();
   ~ShaderProgram();
 
@@ -92,15 +108,17 @@ public:
    * @param stride The stride of the element access (i.e. the size of each
    * element in the currently bound BufferObject). 0 may be used to indicate
    * tightly packed data.
-   * @param v The type of the element being bound.
-   * @return false is the attribute array does not exist.
+   * @param elementType Tag identifying the memory representation of the
+   * element.
+   * @param elementTupleSize The number of elements per vertex (e.g. a 3D
+   * position attribute would be 3).
+   * @param normalize Indicates the range used by the attribute data.
+   * See NormalizeOption for more information.
+   * @return false if the attribute array does not exist.
    */
   bool useAttributeArray(const std::string &name, int offset, int stride,
-                         Vector2f v);
-  bool useAttributeArray(const std::string &name, int offset, int stride,
-                         Vector3f v);
-  bool useAttributeArray(const std::string &name, int offset, int stride,
-                         Vector3ub v);
+                         Avogadro::Type elementType, int elementTupleSize,
+                         NormalizeOption normalize);
 
   /** Upload the supplied array to the named attribute. BufferObject attributes
    * should be preferred and these may be removed in future.
