@@ -1207,15 +1207,7 @@ QList<QVariant> QTAIMEvaluateProperty(QList<QVariant> variantList)
     {
       QPair<QVector3D,qreal> thisBetaSphere;
       thisBetaSphere.first=QVector3D(ncpList.at(i).x(), ncpList.at(i).y(),ncpList.at(i).z());
-
-      if( wfn.nuclearCharge(i) <= 4 )
-      {
-        thisBetaSphere.second=0.10;
-      }
-      else
-      {
-        thisBetaSphere.second=0.10;
-      }
+      thisBetaSphere.second=0.10;
       betaSpheres.append(thisBetaSphere);
     }
 
@@ -1499,15 +1491,7 @@ QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
     {
       QPair<QVector3D,qreal> thisBetaSphere;
       thisBetaSphere.first=QVector3D(ncpList.at(i).x(), ncpList.at(i).y(),ncpList.at(i).z());
-
-      if( wfn.nuclearCharge(i) <= 4 )
-      {
-        thisBetaSphere.second=0.10;
-      }
-      else
-      {
-        thisBetaSphere.second=0.10;
-      }
+      thisBetaSphere.second=0.10;
       betaSpheres.append(thisBetaSphere);
     }
 
@@ -1831,15 +1815,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
   {
     QPair<QVector3D,qreal> thisBetaSphere;
     thisBetaSphere.first=QVector3D(ncpList.at(i).x(), ncpList.at(i).y(),ncpList.at(i).z());
-
-    if( wfn.nuclearCharge(i) <= 4 )
-    {
-      thisBetaSphere.second=0.10;
-    }
-    else
-    {
-      thisBetaSphere.second=0.10;
-    }
+    thisBetaSphere.second=0.10;
     betaSpheres.append(thisBetaSphere);
   }
 
