@@ -17,6 +17,8 @@
 #include "avogadroserver.h"
 #include "avoremotemoleculeservice.h"
 #include "RemoteMoleculeService_Dispatcher.pb.h"
+#include "avoremotefilesystemservice.h"
+#include "RemoteFileSystemService_Dispatcher.pb.h"
 
 #include <vtkSocketController.h>
 #include <vtkClientSocket.h>
@@ -52,7 +54,7 @@ void AvogadroServer::listen(int port)
 {
   m_socket =  vtkServerSocket::New();
   if (m_socket->CreateServer(port) != 0) {
-     cerr << "Failed to set up server socket.\n";
+     std::cerr << "Failed to set up server socket.\n";
      m_socket->Delete();
      return;
   }
@@ -162,6 +164,10 @@ int main(int argc, char *argv[])
   AvoRemoteMoleculeService service;
   AvoRemoteMoleculeService::Dispatcher dispatcher(&service);
   mgr->registerService(&dispatcher);
+  AvoRemoteFileSystemService remoteFileSystemService;
+  AvoRemoteFileSystemService::Dispatcher remoteFileSystemDispatcher(
+      &remoteFileSystemService);
+  mgr->registerService(&remoteFileSystemDispatcher);
 
   AvogadroServer server;
   server.listen(port);

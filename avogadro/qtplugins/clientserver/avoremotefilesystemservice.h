@@ -14,21 +14,30 @@
 
  ******************************************************************************/
 
-#ifndef AVOREMOTEMOLECULESERVICE_H
-#define AVOREMOTEMOLECULESERVICE_H
+#ifndef AVOREMOTEFILESYSTEMSERVICE_H
+#define AVOREMOTEFILESYSTEMSERVICE_H
 
-#include "RemoteMoleculeService.pb.h"
+#include "RemoteFileSystemService.pb.h"
 
-class AvoRemoteMoleculeService : public RemoteMoleculeService
+class AvoRemoteFileSystemService : public RemoteFileSystemService
 {
 public:
-  virtual ~AvoRemoteMoleculeService();
+  virtual ~AvoRemoteFileSystemService();
 
-  void open(const OpenRequest* input, OpenResponse* output,
+  void ls(const Path* input, Listing* output,
       ::google::protobuf::Closure* done);
 
-  void fileFormats(FileFormats* formats,
+  void cwd(Path* output, ::google::protobuf::Closure* done);
+
+  void separator(Separator* output, ::google::protobuf::Closure* done);
+
+  void specialDirectories(Paths* output, ::google::protobuf::Closure* done) {};
+  void absolutePath(const Path* input, Path* output,
       ::google::protobuf::Closure* done);
+
+private:
+  void ls(const std::string path, Listing* output);
+
 };
 
-#endif /* AVOREMOTEMOLECULESERVICE_H */
+#endif /* AVOREMOTEFILESYSTEMSERVICE_H */

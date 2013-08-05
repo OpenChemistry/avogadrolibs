@@ -19,7 +19,9 @@
 
 #include <avogadro/io/cjsonformat.h>
 #include <avogadro/io/cmlformat.h>
+#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/core/molecule.h>
+#include <iostream>
 
 using Avogadro::Core::Molecule;
 using std::string;
@@ -33,24 +35,43 @@ void AvoRemoteMoleculeService::open(const OpenRequest* input,
 {
 
   string path = input->path();
-  string format = input->format();
 
-  Avogadro::Io::FileFormat *reader = NULL;
-  if (format == "cml")
-    reader = new Avogadro::Io::CmlFormat;
-  else if (format == "cjson")
-    reader = new Avogadro::Io::CjsonFormat;
-
+  Avogadro::Io::FileFormatManager &mgr
+    = Avogadro::Io::FileFormatManager::instance();
   Molecule molecule;
 
   // Try and read the file
-  if (!reader->readFile(path, molecule)) {
-    output->setErrorString(reader->error());
+  if (!mgr.readFile(molecule, path)) {
+    output->setErrorString(mgr.error());
     done->Run();
     return;
   }
 
   // If we where successful send the result back
   output->mutable_molecule()->set(&molecule);
+  done->Run();
+}
+
+void AvoRemoteMoleculeService::fileFormats(FileFormats* formats,
+    ::google::protobuf::Closure* done)
+{
+  Avogadro::Io::FileFormatManager &mgr
+    = Avogadro::Io::FileFormatManager::instance();
+
+  std::vector<const Avogadro::Io::FileFormat *> fileFormats = mgr.fileFormats();
+  for(std::vector<const Avogadro::Io::FileFormat *>::iterator iter
+        = fileFormats.begin(); iter != fileFormats.end(); ++iter)
+  {
+    FileFormat *format = formats->add_formats();
+    format->set_name((*iter)->name());
+
+    std::vector<std::string> extensions = (*iter)->fileExtensions();
+    for(std::vector<std::string>::iterator extIter
+            = extensions.begin(); extIter != extensions.end(); ++extIter)
+    {
+      format->add_extension(*extIter);
+    }
+  }
+
   done->Run();
 }

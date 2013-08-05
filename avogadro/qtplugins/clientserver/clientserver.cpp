@@ -17,6 +17,7 @@
 #include "clientserver.h"
 #include "RemoteMoleculeService.pb.h"
 #include "connectionsettingsdialog.h"
+#include "filedialog.h"
 
 #include <QtGui/QAction>
 #include <QtGui/QMessageBox>
@@ -102,7 +103,7 @@ void ClientServer::select() {
         return;
       }
     }
-    QTimer::singleShot(500, this, SLOT(select()));
+    QTimer::singleShot(100, this, SLOT(select()));
   }
 }
 
@@ -138,32 +139,15 @@ bool ClientServer::connectToServer(const QString &host, int port) {
 
 void ClientServer::openFile()
 {
-
-  QString filter(QString("%1 (*.cml);;%2 (*.cjson)")
-                  .arg(tr("Chemical Markup Language"))
-                  .arg(tr("Chemical JSON")));
-
   QSettings settings;
-  QString dir = settings.value("MainWindow/lastOpenDir").toString();
-
-  QString fileName
-    = QFileDialog::getOpenFileName(qobject_cast<QWidget*>(parent()),
-                                   tr("Open remote chemical file"),
-                                   dir, filter);
-
-  if (fileName.isEmpty()) // user cancel
-    return;
-
-  QFileInfo info(fileName);
-  dir = info.absoluteDir().absolutePath();
-  settings.setValue("MainWindow/lastOpenDir", dir);
-
   if (!isConnected()) {
-    QString host = settings.value("ConnectionSettings/hostName").toString();
-    int port = settings.value("ConnectionSettings/port").toInt();
+    QString host = settings
+                     .value("clientServer/connectionSettings/hostName")
+                       .toString();
+    int port = settings.value("clientServer/connectionSettings/port").toInt();
 
     if (!connectToServer(host.toLocal8Bit().data(), port)) {
-      QMessageBox::critical(qobject_cast<QWidget*>(this->parent()),
+      QMessageBox::critical(qobject_cast<QWidget*>(parent()),
                             tr("Connection failed"),
                             tr("The connection to %2:%3 failed: connection"
                                " refused.").arg(host).arg(port));
@@ -172,21 +156,29 @@ void ClientServer::openFile()
   }
 
   RemoteMoleculeService::Proxy proxy(m_channel);
+  FileFormats *response = new FileFormats();
+  Closure *callback = NewCallback(this,
+                        &ClientServer::handleFileFormatsResponse, response);
+
+  proxy.fileFormats(response, callback);
+}
+
+void ClientServer::openFile(const QString &filePath)
+{
+  QSettings settings;
+  QFileInfo fileInfo(filePath);
+  settings.setValue(lastOpenDirSettingPath(), fileInfo.dir().path());
+
+  RemoteMoleculeService::Proxy proxy(m_channel);
 
   OpenRequest request;
-  if (fileName.toLower().endsWith("cjson"))
-    request.set_format("cjson");
-  else
-    request.set_format("cml");
-
-  request.set_path(fileName.toLocal8Bit().data());
+  request.set_path(filePath.toStdString());
 
   OpenResponse *response = new OpenResponse();
-  Closure *callback = NewCallback(this, &ClientServer::handleResponse,
+  Closure *callback = NewCallback(this, &ClientServer::handleOpenResponse,
      response);
 
  proxy.open(&request, response, callback);
-
 }
 
 void ClientServer::setMolecule(QtGui::Molecule *mol)
@@ -204,7 +196,7 @@ bool ClientServer::readMolecule(QtGui::Molecule &mol) {
   return false;
 }
 
-void ClientServer::handleResponse(OpenResponse *response)
+void ClientServer::handleOpenResponse(OpenResponse *response)
 {
   if (!response->hasError()) {
     m_molecule = response->mutable_molecule()->get();
@@ -238,6 +230,76 @@ void ClientServer::openSettings()
   m_dialog->show();
 }
 
+
+QString ClientServer::lastOpenDirSettingPath()
+{
+  QSettings settings;
+  QString host = settings.value("clientServer/connectionSettings/hostName")
+                      .toString();
+  QString port = settings.value("clientServer/connectionSettings/port")
+                      .toString();
+
+  QString settingsPath = tr("clientServer/%1:%2/lastOpenDir")
+                          .arg(host).arg(port);
+
+  return settingsPath;
+}
+
+void ClientServer::handleFileFormatsResponse(FileFormats *response)
+{
+  QSettings settings;
+
+  QStringList filters;
+  for (int i=0; i<response->formats_size(); i++)
+  {
+    FileFormat format = response->formats(i);
+    QString filter = tr("%1 (").arg(QString::fromStdString(format.name()));
+    for (int j=0; j<format.extension_size(); j++)
+    {
+      filter += tr("*.%1").arg(QString::fromStdString(format.extension(j)));
+
+      if (j != format.extension_size()-1)
+        filter += " ";
+    }
+
+    filter += ")";
+    filters << filter;
+  }
+
+  qDebug() << filters.join(";;");
+
+  QString dir = settings.value(lastOpenDirSettingPath()).toString();
+  FileDialog *remoteFileDialog = new FileDialog(m_channel, NULL,
+      QString("Remote File Dialog"), dir, filters.join(";;"));
+
+  connect(remoteFileDialog, SIGNAL(accepted()), this, SLOT(onAccepted()));
+  connect(remoteFileDialog, SIGNAL(finished(int)), this, SLOT(onFinished(int)));
+
+  remoteFileDialog->show();
+
+  delete response;
+}
+
+void ClientServer::onAccepted()
+{
+  FileDialog *dialog = qobject_cast<FileDialog*>(sender());
+
+  if (!dialog)
+    return;
+
+  QString file = dialog->getSelectedFile();
+
+  if (!file.isEmpty())
+    openFile(file);
+}
+
+void ClientServer::onFinished(int result)
+{
+  FileDialog *dialog = qobject_cast<FileDialog*>(sender());
+
+  if (dialog)
+    dialog->deleteLater();
+}
 
 } // namespace QtPlugins
 }
