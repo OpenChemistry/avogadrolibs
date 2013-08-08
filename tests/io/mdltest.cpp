@@ -188,3 +188,23 @@ TEST(MdlTest, writeMulti)
     EXPECT_EQ(mol[i].bondCount(), ref[i].bondCount());
   }
 }
+
+TEST(MdlTest, readSdfData)
+{
+  MdlFormat multi;
+  multi.open(AVOGADRO_DATA "/data/pubchem3.sdf",
+             FileFormat::Read | FileFormat::MultiMolecule);
+  Molecule mol[2];
+  EXPECT_TRUE(multi.readMolecule(mol[0]));
+  EXPECT_TRUE(multi.readMolecule(mol[1]));
+
+  // Check a few of the data parameters in the first few molecules.
+  EXPECT_EQ(mol[0].data("PUBCHEM_IUPAC_INCHI").toString(),
+            "InChI=1S/C9H17NO4/c1-7(11)14-8(5-9(12)13)6-10(2,3)4/h8H,5-6H2,1-4H3");
+  EXPECT_EQ(mol[0].data("PUBCHEM_OPENEYE_CAN_SMILES").toString(),
+            "CC(=O)OC(CC(=O)[O-])C[N+](C)(C)C");
+  EXPECT_EQ(mol[1].data("PUBCHEM_IUPAC_INCHI").toString(),
+            "InChI=1S/C9H17NO4/c1-7(11)14-8(5-9(12)13)6-10(2,3)4/h8H,5-6H2,1-4H3/p+1");
+  EXPECT_EQ(mol[1].data("PUBCHEM_OPENEYE_CAN_SMILES").toString(),
+            "CC(=O)OC(CC(=O)O)C[N+](C)(C)C");
+}
