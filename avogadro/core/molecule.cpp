@@ -31,9 +31,48 @@ Molecule::Molecule() : m_graphDirty(false), m_basisSet(NULL)
 {
 }
 
+Molecule::Molecule(const Molecule &other)
+ : m_graphDirty(true), m_basisSet(NULL), m_data(other.m_data),
+   m_atomicNumbers(other.atomicNumbers()), m_positions2d(other.m_positions2d),
+   m_positions3d(other.m_positions3d), m_bondPairs(other.m_bondPairs),
+   m_bondOrders(other.m_bondOrders)
+{
+  // Copy over any meshes
+  for(size_t i=0; i< other.meshCount(); i++) {
+    Mesh *mesh = addMesh();
+    *mesh = *other.mesh(i);
+  }
+}
+
+Molecule& Molecule::operator=(const Molecule& other)
+{
+  if (this != &other) {
+    m_graphDirty = true;
+    m_basisSet = NULL;
+    m_data = other.m_data;
+    m_atomicNumbers = other.m_atomicNumbers;
+    m_positions2d = other.m_positions2d;
+    m_positions3d = other.m_positions3d;
+    m_bondPairs = other.m_bondPairs;
+    m_bondOrders = other.m_bondOrders;
+
+    clearMeshes();
+
+    // Copy over any meshes
+    for(size_t i=0; i< other.meshCount(); i++) {
+      Mesh *mesh = addMesh();
+      *mesh = *other.mesh(i);
+    }
+  }
+
+  return *this;
+}
+
 Molecule::~Molecule()
 {
   delete m_basisSet;
+
+  clearMeshes();
 }
 
 size_t Molecule::size() const
@@ -325,6 +364,14 @@ const Mesh* Molecule::mesh(size_t index) const
     return m_meshes[index];
   else
     return NULL;
+}
+
+void Molecule::clearMeshes()
+{
+  while(!m_meshes.empty()) {
+    delete m_meshes.back();
+    m_meshes.pop_back();
+  }
 }
 
 std::string Molecule::formula() const

@@ -52,6 +52,11 @@ public:
   Mesh();
 
   /**
+   * Copy constructor
+   */
+  Mesh(const Mesh &other);
+
+  /**
    * Destructor.
    */
   ~Mesh();
@@ -215,7 +220,7 @@ public:
   /**
    * @return The name of the Mesh.
    */
-  std::string name() { return m_name; }
+  std::string name() const { return m_name; }
 
   /**
    * Provides locking.

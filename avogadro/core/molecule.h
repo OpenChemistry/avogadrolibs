@@ -45,6 +45,12 @@ public:
   /** Creates a new, empty molecule. */
   Molecule();
 
+  /** Copy constructor  */
+  Molecule(const Molecule &other);
+
+  /** Assignment operator */
+  Molecule& operator=(const Molecule& other);
+
   /** Destroys the molecule object. */
   virtual ~Molecule();
 
@@ -192,6 +198,8 @@ public:
   const Mesh* mesh(size_t index) const;
 
   size_t meshCount() const { return m_meshes.size(); }
+
+  void clearMeshes();
 
   /**
    * Returns the chemical formula of the molecule

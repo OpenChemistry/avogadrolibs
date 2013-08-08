@@ -39,6 +39,14 @@ class AVOGADROQTGUI_EXPORT Molecule : public QObject, public Core::Molecule
 public:
   Molecule(QObject *parent_ = 0);
   ~Molecule();
+  /** copy constructor */
+  Molecule(const Molecule &other);
+
+  /** Assignment operator */
+  Molecule& operator=(const Molecule& other);
+
+  /** Assignment operator to copy data from base instance */
+  Molecule& operator=(const Core::Molecule& other);
 
   /** \enum Enumeration of change types that can be given. */
   enum MoleculeChange {

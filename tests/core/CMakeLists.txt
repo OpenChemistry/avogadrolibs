@@ -12,6 +12,7 @@ set(tests
   Element
   Graph
   HydrogenTools
+  Mesh
   Molecule
   Mutex
   RingPerceiver
