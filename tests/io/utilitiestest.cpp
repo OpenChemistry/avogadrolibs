@@ -21,6 +21,8 @@
 #include <avogadro/io/utilities.h>
 
 using std::string;
+using Avogadro::Io::contains;
+using Avogadro::Io::startsWith;
 
 TEST(UtilitiesTest, split)
 {
@@ -62,4 +64,20 @@ TEST(UtilitiesTest, lexicalCastCheck)
   // Pass something in that should fail.
   Avogadro::Io::lexicalCast<int>("five", ok);
   EXPECT_EQ(ok, false);
+}
+
+TEST(UtilitiesTest, contains)
+{
+  bool ok(false);
+  EXPECT_TRUE(contains("hasFoo", "has"));
+  EXPECT_TRUE(contains("hasFoo", "Foo"));
+  EXPECT_FALSE(contains("hasFoo", "bar"));
+}
+
+TEST(UtilitiesTest, startsWith)
+{
+  bool ok(false);
+  EXPECT_TRUE(startsWith("hasFoo", "has"));
+  EXPECT_FALSE(startsWith("hasFoo", "Foo"));
+  EXPECT_FALSE(startsWith("hasFoo", "bar"));
 }

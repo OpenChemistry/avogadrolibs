@@ -57,6 +57,12 @@ inline bool contains(const std::string &input, const std::string &search)
   return found != std::string::npos;
 }
 
+inline bool startsWith(const std::string &input, const std::string &search)
+{
+  size_t found = input.find(search);
+  return found == 0;
+}
+
 /**
  * @brief Trim a string of whitespace from the left and right.
  */
