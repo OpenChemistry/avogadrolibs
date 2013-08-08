@@ -172,6 +172,34 @@ bool MdlFormat::read(std::istream &in, Core::Molecule &mol)
     return false;
   }
 
+  // Now parse the data block.
+  bool inValue(false);
+  string dataName;
+  string dataValue;
+  while (getline(in, buffer)) {
+    if (trimmed(buffer) == "$$$$")
+      return true;
+    if (inValue) {
+      if (buffer.empty() && dataName.length() > 0) {
+        mol.setData(dataName, dataValue);
+        dataName.clear();
+        dataValue.clear();
+        inValue = false;
+      }
+      else {
+        if (dataValue.length())
+          dataValue += "\n";
+        dataValue += buffer;
+      }
+    }
+    else if (startsWith(buffer, "> <")) {
+      // This is a data header, read the name of the entry, and the value on the
+      // following lines.
+      dataName = buffer.substr(3, buffer.length() - 4);
+      inValue = true;
+    }
+  }
+
   return true;
 }
 
