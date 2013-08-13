@@ -872,8 +872,8 @@ void AmbientOcclusionSphereGeometry::update()
       }
     }
 
-    d->vbo.upload(sphereVertices, BufferObject::ARRAY_BUFFER);
-    d->ibo.upload(sphereIndices, BufferObject::ELEMENT_ARRAY_BUFFER);
+    d->vbo.upload(sphereVertices, BufferObject::ArrayBuffer);
+    d->ibo.upload(sphereIndices, BufferObject::ElementArrayBuffer);
     d->numberOfVertices = sphereVertices.size();
     d->numberOfIndices = sphereIndices.size();
 

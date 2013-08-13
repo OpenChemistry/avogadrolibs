@@ -113,10 +113,10 @@ void SphereGeometry::update()
       //m_spheres.push_back(Sphere(position, r, id, color));
     }
 
-    if (!d->vbo.upload(sphereVertices, BufferObject::ARRAY_BUFFER))
+    if (!d->vbo.upload(sphereVertices, BufferObject::ArrayBuffer))
       cout << d->vbo.error() << endl;
 
-    if (!d->ibo.upload(sphereIndices, BufferObject::ELEMENT_ARRAY_BUFFER))
+    if (!d->ibo.upload(sphereIndices, BufferObject::ElementArrayBuffer))
       cout << d->ibo.error() << endl;
 
     d->numberOfVertices = sphereVertices.size();

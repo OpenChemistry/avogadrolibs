@@ -41,13 +41,19 @@ enum RenderPass {
    */
   TranslucentPass,
   /**
-   * Drawables are being rendered over the Opaque and Translucent scene. The
+   * 3D geometry is being drawn over the Opaque and Translucent rendering.
+   * Depth testing is disabled, and alpha blending is enabled using the
+   * equivalent of the OpenGL call glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA).
+   */
+  Overlay3DPass,
+  /**
+   * 2D drawables are being rendered over the 3D scene. The
    * modelview matrix is identity, and the projection matrix is configured to
    * an orthographic projection that matches the viewport. Valid Z values are
    * [-1, 1], and the origin is in the bottom-right corner. Depth testing is
    * disabled, and alpha blending is performed the same as in TranslucentPass.
    */
-  OverlayPass
+  Overlay2DPass
 };
 
 } // end namespace Rendering

@@ -120,17 +120,26 @@ public:
                          Avogadro::Type elementType, int elementTupleSize,
                          NormalizeOption normalize);
 
-  /** Upload the supplied array to the named attribute. BufferObject attributes
-   * should be preferred and these may be removed in future.
+  /** Upload the supplied array of tightly packed values to the named attribute.
+   * BufferObject attributes should be preferred and this may be removed in
+   * future.
+   *
+   * @param name Attribute name
+   * @param array Container of data. See note.
+   * @param tupleSize The number of elements per vertex, e.g. a 3D coordinate
+   * array will have a tuple size of 3.
+   * @param  normalize Indicates the range used by the attribute data.
+   * See NormalizeOption for more information.
+   *
+   * @note The ContainerT type must have tightly packed values of
+   * ContainerT::value_type accessible by reference via ContainerT::operator[].
+   * Additionally, the standard size() and empty() methods must be implemented.
+   * The std::vector and Avogadro::Core::Array classes are examples of such
+   * supported containers.
    */
-  bool setAttributeArray(const std::string &name,
-                         const std::vector<unsigned short> &array);
-  bool setAttributeArray(const std::string &name,
-                         const std::vector<Vector2f> &array);
-  bool setAttributeArray(const std::string &name,
-                         const std::vector<Vector3f> &array);
-  bool setAttributeArray(const std::string &name,
-                         const std::vector<Vector3ub> &array);
+  template <class ContainerT>
+  bool setAttributeArray(const std::string &name, const ContainerT &array,
+                         int tupleSize, NormalizeOption normalize);
 
   /** Set the @p name uniform value to int @p i. */
   bool setUniformValue(const std::string &name, int i);
@@ -146,6 +155,9 @@ public:
   bool setUniformValue(const std::string &name, const Vector3ub &v);
 
 protected:
+  bool setAttributeArrayInternal(const std::string &name, void *buffer,
+                                 Avogadro::Type type, int tupleSize,
+                                 NormalizeOption normalize);
   Index m_handle;
   Index m_vertexShader;
   Index m_fragmentShader;
@@ -160,6 +172,19 @@ private:
   int findAttributeArray(const std::string &name);
   int findUniform(const std::string &name);
 };
+
+template <class ContainerT>
+inline bool ShaderProgram::setAttributeArray(
+    const std::string &name, const ContainerT &array, int tupleSize,
+    NormalizeOption normalize)
+{
+  if (array.empty()) {
+    m_error = "Refusing to upload empty array for attribute " + name + ".";
+    return false;
+  }
+  Type type = Avogadro::TypeTraits<typename ContainerT::value_type>::EnumValue;
+  return setAttributeArrayInternal(name, &array[0], type, tupleSize, normalize);
+}
 
 } // End Rendering namespace
 } // End Avogadro namespace

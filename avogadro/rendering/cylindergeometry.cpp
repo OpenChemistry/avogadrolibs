@@ -142,8 +142,8 @@ void CylinderGeometry::update()
       }
     }
 
-    d->vbo.upload(cylinderVertices, BufferObject::ARRAY_BUFFER);
-    d->ibo.upload(cylinderIndices, BufferObject::ELEMENT_ARRAY_BUFFER);
+    d->vbo.upload(cylinderVertices, BufferObject::ArrayBuffer);
+    d->ibo.upload(cylinderIndices, BufferObject::ElementArrayBuffer);
     d->numberOfVertices = cylinderVertices.size();
     d->numberOfIndices = cylinderIndices.size();
 

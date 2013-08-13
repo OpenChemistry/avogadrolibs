@@ -40,11 +40,11 @@ class AVOGADRORENDERING_EXPORT BufferObject
 {
 public:
   enum ObjectType {
-    ARRAY_BUFFER,
-    ELEMENT_ARRAY_BUFFER
+    ArrayBuffer,
+    ElementArrayBuffer
   };
 
-  BufferObject(ObjectType type = ARRAY_BUFFER);
+  BufferObject(ObjectType type = ArrayBuffer);
   ~BufferObject();
 
   /** Get the type of the buffer object. */

@@ -26,9 +26,9 @@ inline GLenum convertType(BufferObject::ObjectType type)
 {
   switch (type) {
   default:
-  case BufferObject::ARRAY_BUFFER:
+  case BufferObject::ArrayBuffer:
     return GL_ARRAY_BUFFER;
-  case BufferObject::ELEMENT_ARRAY_BUFFER:
+  case BufferObject::ElementArrayBuffer:
     return GL_ELEMENT_ARRAY_BUFFER;
   }
 }
@@ -44,7 +44,7 @@ struct BufferObject::Private
 BufferObject::BufferObject(ObjectType type_)
   : d(new Private), m_dirty(true)
 {
-  if (type_ == ARRAY_BUFFER)
+  if (type_ == ArrayBuffer)
     d->type = GL_ARRAY_BUFFER;
   else
     d->type = GL_ELEMENT_ARRAY_BUFFER;
@@ -60,9 +60,9 @@ BufferObject::~BufferObject()
 BufferObject::ObjectType BufferObject::type() const
 {
   if (d->type == GL_ARRAY_BUFFER)
-    return ARRAY_BUFFER;
+    return ArrayBuffer;
   else
-    return ELEMENT_ARRAY_BUFFER;
+    return ElementArrayBuffer;
 }
 
 Index BufferObject::handle() const

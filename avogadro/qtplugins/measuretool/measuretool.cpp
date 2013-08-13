@@ -249,7 +249,7 @@ void MeasureTool::draw(Rendering::GroupNode &node)
   TextLabel *label = new TextLabel;
   label->setString(overlayText.toStdString());
   label->setTextProperties(overlayTProp);
-  label->setRenderPass(Rendering::OverlayPass);
+  label->setRenderPass(Rendering::Overlay2DPass);
   label->setQuadPlacementStrategy(overlay);
 
   geo->addDrawable(label);

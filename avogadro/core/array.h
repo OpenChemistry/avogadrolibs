@@ -188,6 +188,11 @@ public:
     return d->data.size();
   }
 
+  size_t max_size() const
+  {
+    return d->data.max_size();
+  }
+
   bool empty() const
   {
     return d->data.empty();
@@ -238,10 +243,104 @@ public:
     return d->data.end();
   }
 
+  const_reverse_iterator rbegin() const
+  {
+    return d->data.rbegin();
+  }
+
+  const_reverse_iterator rend() const
+  {
+    return d->data.rend();
+  }
+
+  reverse_iterator rbegin()
+  {
+    detach();
+    return d->data.rbegin();
+  }
+
+  reverse_iterator rend()
+  {
+    detach();
+    return d->data.rend();
+  }
+
+  reference front()
+  {
+    detach();
+    return d->data.front();
+  }
+
+  const_reference front() const
+  {
+    return d->data.front();
+  }
+
+  reference back()
+  {
+    detach();
+    return d->data.back();
+  }
+
+  const_reference back() const
+  {
+    return d->data.back();
+  }
+
+  template <class InputIterator>
+  void assign(InputIterator first, InputIterator last)
+  {
+    detach();
+    d->data.assign(first, last);
+  }
+
+  void assign(size_type n, const value_type &val)
+  {
+    detach();
+    d->data.assign(n, val);
+  }
+
   void push_back(const ValueType& v)
   {
     detach();
     d->data.push_back(v);
+  }
+
+  void pop_back()
+  {
+    detach();
+    d->data.pop_back();
+  }
+
+  iterator insert(iterator position, const value_type &val)
+  {
+    detach();
+    return d->data.insert(position, val);
+  }
+
+  void insert(iterator position, size_type n, const value_type &val)
+  {
+    detach();
+    d->data.insert(position, n, val);
+  }
+
+  template <class InputIterator>
+  void insert(iterator position, InputIterator first, InputIterator last)
+  {
+    detach();
+    d->data.insert(position, first, last);
+  }
+
+  iterator erase(iterator position)
+  {
+    detach();
+    return d->data.erase(position);
+  }
+
+  iterator erase(iterator first, iterator last)
+  {
+    detach();
+    return d->data.erase(first, last);
   }
 
   const ValueType& operator [](const std::size_t& idx) const

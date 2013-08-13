@@ -87,8 +87,8 @@ void MeshGeometry::update()
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
-    d->vbo.upload(m_vertices, BufferObject::ARRAY_BUFFER);
-    d->ibo.upload(m_indices, BufferObject::ELEMENT_ARRAY_BUFFER);
+    d->vbo.upload(m_vertices, BufferObject::ArrayBuffer);
+    d->ibo.upload(m_indices, BufferObject::ElementArrayBuffer);
     d->numberOfVertices = m_vertices.size();
     d->numberOfIndices = m_indices.size();
     m_dirty = false;
@@ -162,15 +162,9 @@ void MeshGeometry::render(const Camera &camera)
   if (!d->program.setUniformValue("normalMatrix", normalMatrix))
     std::cout << d->program.error() << std::endl;
 
-//  if (!d->program.setUniformValue("u_color", m_color))
-//    cout << d->program.error() << endl;
-//  if (!d->program.setUniformValue("u_opacity",
-//                                  static_cast<float>(m_opacity) / 255.0f))
-//    cout << d->program.error() << endl;
-
   // Render the loaded spheres using the shader and bound VBO.
   glDrawRangeElements(GL_TRIANGLES, 0,
-                      static_cast<GLuint>(d->numberOfVertices),
+                      static_cast<GLuint>(d->numberOfVertices - 1),
                       static_cast<GLsizei>(d->numberOfIndices),
                       GL_UNSIGNED_INT,
                       reinterpret_cast<const GLvoid *>(NULL));
@@ -179,14 +173,15 @@ void MeshGeometry::render(const Camera &camera)
   d->ibo.release();
 
   d->program.disableAttributeArray("vector");
+  d->program.disableAttributeArray("color");
   d->program.disableAttributeArray("normal");
 
   d->program.release();
 }
 
 unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
-                                 const Core::Array<Vector3f> &n,
-                                 const Core::Array<Vector4ub> &c)
+                                       const Core::Array<Vector3f> &n,
+                                       const Core::Array<Vector4ub> &c)
 {
   if (v.size() != n.size() || n.size() != c.size())
     return InvalidIndex;
@@ -207,8 +202,8 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
 }
 
 unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
-                                 const Core::Array<Vector3f> &n,
-                                 const Core::Array<Vector3ub> &c)
+                                       const Core::Array<Vector3f> &n,
+                                       const Core::Array<Vector3ub> &c)
 {
   if (v.size() != n.size() || n.size() != c.size())
     return InvalidIndex;
@@ -232,7 +227,7 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
 }
 
 unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
-                                 const Core::Array<Vector3f> &n)
+                                       const Core::Array<Vector3f> &n)
 {
   if (v.size() != n.size())
     return InvalidIndex;
@@ -243,7 +238,7 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
   Core::Array<Vector3f>::const_iterator vEnd = v.end();
   Core::Array<Vector3f>::const_iterator nIter = n.begin();
 
-  Vector4ub tmpColor(m_color[0], m_color[1], m_color[2], m_opacity);
+  const Vector4ub tmpColor(m_color[0], m_color[1], m_color[2], m_opacity);
   while (vIter != vEnd)
     m_vertices.push_back(PackedVertex(tmpColor, *(nIter++), *(vIter++)));
 
@@ -273,6 +268,7 @@ void MeshGeometry::clear()
 {
   m_vertices.clear();
   m_indices.clear();
+  m_dirty = true;
 }
 
 } // End namespace Rendering

@@ -192,7 +192,7 @@ bool Texture2D::prepareGl(const Camera &camera)
       || !std::equal(quad.begin(), quad.end(), d->quad.begin())) {
     d->quad.resize(4);
     std::copy(quad.begin(), quad.end(), d->quad.begin());
-    if (!d->vertexBuffer.upload(d->quad, BufferObject::ARRAY_BUFFER)) {
+    if (!d->vertexBuffer.upload(d->quad, BufferObject::ArrayBuffer)) {
       std::cerr << d->vertexBuffer.error() << std::endl;
       return false;
     }
@@ -212,7 +212,7 @@ bool Texture2D::prepareGl(const Camera &camera)
     d->tcoords.resize(4);
     std::copy(m_textureCoordinates.begin(), m_textureCoordinates.end(),
               d->tcoords.begin());
-    if (!d->tcoordBuffer.upload(d->tcoords, BufferObject::ARRAY_BUFFER)) {
+    if (!d->tcoordBuffer.upload(d->tcoords, BufferObject::ArrayBuffer)) {
       std::cerr << d->tcoordBuffer.error() << std::endl;
       return false;
     }

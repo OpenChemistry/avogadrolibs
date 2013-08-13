@@ -19,6 +19,8 @@
 #include "shader.h"
 #include "avogadrogl.h"
 
+#include <avogadro/core/types.h>
+
 namespace Avogadro {
 namespace Rendering {
 
@@ -229,78 +231,6 @@ bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
   return true;
 }
 
-bool ShaderProgram::setAttributeArray(const std::string &name,
-                                      const std::vector<unsigned short> &array)
-{
-  if (array.empty()) {
-    m_error = "Supplied array was empty.";
-    return false;
-  }
-
-  GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1) {
-    m_error = "Could not set attribute " + name + ". No such attribute.";
-    return false;
-  }
-  const GLvoid *data = static_cast<const GLvoid *>(&array[0]);
-  glVertexAttribPointer(location, 1, GL_UNSIGNED_SHORT, GL_FALSE, 0, data);
-  return true;
-}
-
-bool ShaderProgram::setAttributeArray(const std::string &name,
-                                      const std::vector<Vector2f> &array)
-{
-  if (array.empty()) {
-    m_error = "Supplied array was empty.";
-    return false;
-  }
-
-  GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1) {
-    m_error = "Could not set attribute " + name + ". No such attribute.";
-    return false;
-  }
-  const GLvoid *data = static_cast<const GLvoid *>(array[0].data());
-  glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 0, data);
-  return true;
-}
-
-bool ShaderProgram::setAttributeArray(const std::string &name,
-                                      const std::vector<Vector3f> &array)
-{
-  if (array.empty()) {
-    m_error = "Supplied array was empty.";
-    return false;
-  }
-
-  GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1) {
-    m_error = "Could not set attribute " + name + ". No such attribute.";
-    return false;
-  }
-  const GLvoid *data = static_cast<const GLvoid *>(array[0].data());
-  glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, data);
-  return true;
-}
-
-bool ShaderProgram::setAttributeArray(const std::string &name,
-                                      const std::vector<Vector3ub> &array)
-{
-  if (array.empty()) {
-    m_error = "Supplied array was empty.";
-    return false;
-  }
-
-  GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1) {
-    m_error = "Could not set attribute " + name + ". No such attribute.";
-    return false;
-  }
-  const GLvoid *data = static_cast<const GLvoid *>(array[0].data());
-  glVertexAttribPointer(location, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, data);
-  return true;
-}
-
 bool ShaderProgram::setUniformValue(const std::string &name, int i)
 {
   GLint location = static_cast<GLint>(findUniform(name));
@@ -359,6 +289,25 @@ bool ShaderProgram::setUniformValue(const std::string &name,
   }
   Vector3f colorf(v.cast<float>() * (1.0f / 255.0f));
   glUniform3fv(location, 1, colorf.data());
+  return true;
+}
+
+bool ShaderProgram::setAttributeArrayInternal(
+    const std::string &name, void *buffer, Avogadro::Type type, int tupleSize,
+    ShaderProgram::NormalizeOption normalize)
+{
+  if (type == Avogadro::UnknownType) {
+    m_error = "Unrecognized data type for attribute " + name + ".";
+    return false;
+  }
+  GLint location = static_cast<GLint>(findAttributeArray(name));
+  if (location == -1) {
+    m_error = "Could not set attribute " + name + ". No such attribute.";
+    return false;
+  }
+  const GLvoid *data = static_cast<const GLvoid *>(buffer);
+  glVertexAttribPointer(location, tupleSize, convertType(type),
+                        normalize == Normalize ? GL_TRUE : GL_FALSE, 0, data);
   return true;
 }
 
