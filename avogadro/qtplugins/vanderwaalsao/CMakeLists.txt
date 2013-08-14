@@ -5,3 +5,5 @@ avogadro_plugin(VanDerWaalsAO
   VanDerWaalsAO
   vanderwaalsao.cpp
   "")
+
+target_link_libraries(VanDerWaalsAO AvogadroRendering)
