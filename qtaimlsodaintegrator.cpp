@@ -559,10 +559,8 @@ namespace Avogadro
   */
 
   {
-    int nm1, k, j;
+    int k, j;
     double t;
-
-    nm1 = n - 1;
 
     /*
      Job = 0, solve a * x = b.
@@ -884,9 +882,9 @@ namespace Avogadro
   {
     int mxstp0 = 500, mxhnl0 = -1 /* 10 */;
 
-    int i, iflag, lenyh, ihit;
-    double atoli, ayi, big, h0, hmax, hmx, rh, rtoli,
-    tcrit, tdist, tnext, tol, tolsf, tp, size, sum, w0;
+    int i, iflag, lenyh;
+    double atoli, ayi, big, hmax, hmx, rh, rtoli,
+    tdist, tnext, tol, tolsf, tp, size, sum, w0;
 
 
     /*
@@ -934,7 +932,7 @@ namespace Avogadro
      First check legality of the non-optional inputs neq, itol, iopt,
      jt, ml, and mu.
   */
-
+    double h0(0.0);
     if ( *istate == 1 || *istate == 3 ) {
       ntrep = 0;
       if ( neq <= 0 ) {
@@ -982,7 +980,6 @@ namespace Avogadro
       /* Next process and check the optional inpus.   */
 
       /* Default options.   */
-
       if ( iopt == 0 ) {
         ixpr = 0;
         mxstep = mxstp0;
@@ -1181,6 +1178,7 @@ namespace Avogadro
      and the calculation of the initial step size.
      The error weights in ewt are inverted after being loaded.
   */
+    int tcrit(0);
     if ( *istate == 1 ) {
       tn = *t;
       tsw = *t;
@@ -1307,6 +1305,7 @@ namespace Avogadro
      The next code block is for continuation calls only ( *istate = 2 or 3 )
      and is to check stop conditions before taking a step.
   */
+    int ihit(0);
     if ( *istate == 2 || *istate == 3 ) {
       nslast = nst;
       switch ( itask ) {
@@ -1605,7 +1604,7 @@ namespace Avogadro
   {
     int corflag, orderflag;
     int i, i1, j, m, ncf;
-    double del, delp, dsm, dup, exup, r, rh, rhup, told;
+    double del, delp, dup, exup, r, rh, rhup, told;
     double pdh, pnorm;
 
     /*
@@ -1768,6 +1767,7 @@ namespace Avogadro
      The local error test is done now.
   */
       jcur = 0;
+      double dsm(0.0);
       if ( m == 0 )
         dsm = del / tesco[nq][2];
       if ( m > 0 )
@@ -2482,7 +2482,7 @@ namespace Avogadro
   {
     int j, i1, i;
 
-    *ncf++;
+    (*ncf)++;
     rmax = 2.;
     tn = *told;
     for ( j = nq ; j >= 1 ; j-- )

@@ -1278,8 +1278,8 @@ QList<QVariant> QTAIMEvaluateProperty(QList<QVariant> variantList)
 
 }
 
-void property_v(unsigned int ndim, unsigned int npts, const double *xyz, void *param,
-                unsigned int fdim, double *fval)
+void property_v(unsigned int /* ndim */, unsigned int npts, const double *xyz, void *param,
+                unsigned int /* dim */, double *fval)
 {
 
   QVariantList *paramVariantListPtr = (QVariantList *)param;
@@ -1306,7 +1306,6 @@ void property_v(unsigned int ndim, unsigned int npts, const double *xyz, void *p
     basinList.append( paramVariantList.at(i).toLongLong()  );
     counter++;
   }
-  qint64 nbasin=basinList.length();
 
   // prepare input
 
@@ -1567,8 +1566,8 @@ QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
 
 }
 
-void property_v_rtp(unsigned int ndim, unsigned int npts, const double *xyz, void *param,
-                    unsigned int fdim, double *fval)
+void property_v_rtp(unsigned int /* ndim */, unsigned int npts, const double *xyz, void *param,
+                    unsigned int /* fdim */, double *fval)
 {
 
   QVariantList *paramVariantListPtr = (QVariantList *)param;
@@ -1595,7 +1594,6 @@ void property_v_rtp(unsigned int ndim, unsigned int npts, const double *xyz, voi
     basinList.append( paramVariantList.at(i).toLongLong()  );
     counter++;
   }
-  qint64 nbasin=basinList.length();
 
   // prepare input
 
@@ -1714,7 +1712,6 @@ void property_r(unsigned int ndim, const double *xyz, void *param,
     basinList.append( paramVariantList.at(i).toLongLong()  );
     counter++;
   }
-  qint64 nbasin=basinList.length();
 
   Matrix<qreal,3,1> rtp;
   rtp << r, t, p;
@@ -1945,7 +1942,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
     qDebug() << "error in bisection: both values positive.";
   }
 
-  qreal rf;
+  qreal rf(0.0);
   while( fabs(right-left) > 2.0 * epsilon )
   {
 
@@ -2064,7 +2061,6 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
                   val, err);
   //  qDebug() << "Out of R with val=" << val[0] << "err=" << err[0];
   qreal Rval=val[0];
-  qreal Rerr=err[0];
 
   qFree(xmin);
   qFree(xmax);
@@ -2082,8 +2078,8 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
 }
 
 
-void property_v_tp(unsigned int ndim, unsigned int npts, const double *xyz, void *param,
-                   unsigned int fdim, double *fval)
+void property_v_tp(unsigned int /* ndim */, unsigned int npts, const double *xyz, void *param,
+                   unsigned int /* fdim */, double *fval)
 {
 
   QVariantList *paramVariantListPtr = (QVariantList *)param;
@@ -2110,7 +2106,6 @@ void property_v_tp(unsigned int ndim, unsigned int npts, const double *xyz, void
     basinList.append( paramVariantList.at(i).toLongLong()  );
     counter++;
   }
-  qint64 nbasin=basinList.length();
 
   // prepare input
 

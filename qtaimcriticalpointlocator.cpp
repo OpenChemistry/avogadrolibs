@@ -535,13 +535,17 @@ namespace Avogadro
 
       bool correctSignature = results.at(n).at(0).toBool();
 
-      QVector3D result(
+      if (correctSignature)
+      {
+
+        QVector3D result(
           results.at(n).at(1).toReal(),
           results.at(n).at(2).toReal(),
           results.at(n).at(3).toReal()
-          );
+        );
 
-      m_nuclearCriticalPoints.append( result );
+        m_nuclearCriticalPoints.append( result );
+      }
 
     }
 
