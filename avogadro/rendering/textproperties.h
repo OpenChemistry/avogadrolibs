@@ -19,6 +19,8 @@
 
 #include "avogadrorenderingexport.h"
 
+#include <avogadro/core/vector.h>
+
 namespace Avogadro {
 namespace Rendering {
 
@@ -134,11 +136,15 @@ public:
    */
   void setColorRgba(unsigned char r, unsigned char g,
                     unsigned char b, unsigned char a);
-  void setColorRgba(unsigned char rgba[4]);
+  void setColorRgba(const unsigned char rgba[4]);
+  void setColorRgba(const Vector4ub &rgba);
   void colorRgba(unsigned char rgba[4]) const;
+  Vector4ub colorRgba() const;
   void setColorRgb(unsigned char r, unsigned char g, unsigned char b);
-  void setColorRgb(unsigned char rgb[3]);
+  void setColorRgb(const unsigned char rgb[3]);
+  void setColorRgb(const Vector3ub &rgb);
   void colorRgb(unsigned char rgb[3]) const;
+  Vector3ub colorRgb() const;
   void setRed(unsigned char r) { m_rgba[0] = r; }
   unsigned char red() const { return m_rgba[0]; }
   void setGreen(unsigned char g) { m_rgba[1] = g; }
@@ -214,12 +220,17 @@ inline void TextProperties::setColorRgba(unsigned char r, unsigned char g,
   m_rgba[3] = a;
 }
 
-inline void TextProperties::setColorRgba(unsigned char rgba[4])
+inline void TextProperties::setColorRgba(const unsigned char rgba[])
 {
   m_rgba[0] = rgba[0];
   m_rgba[1] = rgba[1];
   m_rgba[2] = rgba[2];
   m_rgba[3] = rgba[3];
+}
+
+inline void TextProperties::setColorRgba(const Vector4ub &rgba)
+{
+  setColorRgba(rgba.data());
 }
 
 inline void TextProperties::colorRgba(unsigned char rgba[]) const
@@ -230,6 +241,11 @@ inline void TextProperties::colorRgba(unsigned char rgba[]) const
   rgba[3] = m_rgba[3];
 }
 
+inline Vector4ub TextProperties::colorRgba() const
+{
+  return Vector4ub(m_rgba);
+}
+
 inline void TextProperties::setColorRgb(unsigned char r, unsigned char g,
                                         unsigned char b)
 {
@@ -238,11 +254,16 @@ inline void TextProperties::setColorRgb(unsigned char r, unsigned char g,
   m_rgba[2] = b;
 }
 
-inline void TextProperties::setColorRgb(unsigned char rgb[])
+inline void TextProperties::setColorRgb(const unsigned char rgb[])
 {
   m_rgba[0] = rgb[0];
   m_rgba[1] = rgb[1];
   m_rgba[2] = rgb[2];
+}
+
+inline void TextProperties::setColorRgb(const Vector3ub &rgb)
+{
+  setColorRgb(rgb.data());
 }
 
 inline void TextProperties::colorRgb(unsigned char rgb[]) const
@@ -250,6 +271,11 @@ inline void TextProperties::colorRgb(unsigned char rgb[]) const
   rgb[0] = m_rgba[0];
   rgb[1] = m_rgba[1];
   rgb[2] = m_rgba[2];
+}
+
+inline Vector3ub TextProperties::colorRgb() const
+{
+  return Vector3ub(m_rgba);
 }
 
 inline void swap(TextProperties &lhs, TextProperties &rhs) { lhs.swap(rhs); }

@@ -113,8 +113,12 @@ void SphereGeometry::update()
       //m_spheres.push_back(Sphere(position, r, id, color));
     }
 
-    d->vbo.upload(sphereVertices);
-    d->ibo.upload(sphereIndices);
+    if (!d->vbo.upload(sphereVertices, BufferObject::ArrayBuffer))
+      cout << d->vbo.error() << endl;
+
+    if (!d->ibo.upload(sphereIndices, BufferObject::ElementArrayBuffer))
+      cout << d->ibo.error() << endl;
+
     d->numberOfVertices = sphereVertices.size();
     d->numberOfIndices = sphereIndices.size();
 
@@ -157,21 +161,24 @@ void SphereGeometry::render(const Camera &camera)
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("vertex",
                                     ColorTextureVertex::vertexOffset(),
-                                    sizeof(ColorTextureVertex), Vector3f())) {
+                                    sizeof(ColorTextureVertex),
+                                    FloatType, 3, ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("color"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("color",
                                     ColorTextureVertex::colorOffset(),
-                                    sizeof(ColorTextureVertex), Vector3ub())) {
+                                    sizeof(ColorTextureVertex),
+                                    UCharType, 3, ShaderProgram::Normalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("texCoordinate"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("texCoordinate",
                                     ColorTextureVertex::textureCoordOffset(),
-                                    sizeof(ColorTextureVertex), Vector2f())) {
+                                    sizeof(ColorTextureVertex),
+                                    FloatType, 2, ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
 

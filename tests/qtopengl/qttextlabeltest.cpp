@@ -127,7 +127,7 @@ int qttextlabeltest(int argc, char *argv[])
   label = new TextLabel;
   label->setString("Test\nOverlay\nPosition");
   label->setTextProperties(tprop);
-  label->setRenderPass(Avogadro::Rendering::OverlayPass);
+  label->setRenderPass(Avogadro::Rendering::Overlay2DPass);
   label->setQuadPlacementStrategy(overQuad);
   geometry->addDrawable(label);
 
