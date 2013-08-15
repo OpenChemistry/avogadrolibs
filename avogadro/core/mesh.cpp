@@ -56,24 +56,24 @@ bool Mesh::stable()
   return m_stable;
 }
 
-const vector<Vector3f> & Mesh::vertices() const
+const Core::Array<Vector3f> &Mesh::vertices() const
 {
   return m_vertices;
 }
 
 const Vector3f * Mesh::vertex(int n) const
 {
-  return &(m_vertices[n]);
+  return &(m_vertices[n * 3]);
 }
 
-bool Mesh::setVertices(const vector<Vector3f> &values)
+bool Mesh::setVertices(const Core::Array<Vector3f> &values)
 {
   m_vertices.clear();
   m_vertices = values;
   return true;
 }
 
-bool Mesh::addVertices(const vector<Vector3f> &values)
+bool Mesh::addVertices(const Core::Array<Vector3f> &values)
 {
   if (m_vertices.capacity() < m_vertices.size() + values.size())
     m_vertices.reserve(m_vertices.capacity() * 2);
@@ -87,7 +87,7 @@ bool Mesh::addVertices(const vector<Vector3f> &values)
   }
 }
 
-const vector<Vector3f> & Mesh::normals() const
+const Core::Array<Vector3f> &Mesh::normals() const
 {
   return m_normals;
 }
@@ -97,14 +97,14 @@ const Vector3f * Mesh::normal(int n) const
   return &(m_normals[n * 3]);
 }
 
-bool Mesh::setNormals(const vector<Vector3f> &values)
+bool Mesh::setNormals(const Core::Array<Vector3f> &values)
 {
   m_normals.clear();
   m_normals = values;
   return true;
 }
 
-bool Mesh::addNormals(const vector<Vector3f> &values)
+bool Mesh::addNormals(const Core::Array<Vector3f> &values)
 {
   if (m_normals.capacity() < m_normals.size() + values.size())
     m_normals.reserve(m_normals.capacity() * 2);
@@ -118,7 +118,7 @@ bool Mesh::addNormals(const vector<Vector3f> &values)
   }
 }
 
-const vector<Color3f> & Mesh::colors() const
+const Core::Array<Color3f> &Mesh::colors() const
 {
   return m_colors;
 }
@@ -132,14 +132,14 @@ const Color3f * Mesh::color(int n) const
     return &(m_colors[n*3]);
 }
 
-bool Mesh::setColors(const vector<Color3f> &values)
+bool Mesh::setColors(const Core::Array<Color3f> &values)
 {
   m_colors.clear();
   m_colors = values;
   return true;
 }
 
-bool Mesh::addColors(const vector<Color3f> &values)
+bool Mesh::addColors(const Core::Array<Color3f> &values)
 {
   if (m_colors.capacity() < m_colors.size() + values.size())
     m_colors.reserve(m_colors.capacity() * 2);
