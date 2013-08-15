@@ -58,6 +58,18 @@ inline bool contains(const std::string &input, const std::string &search)
 }
 
 /**
+ * @brief Efficient method to confirm input starts with the search string.
+ * @param input String to be examined.
+ * @param search String that will be searched for.
+ * @return True if the string starts with search, false otherwise.
+ */
+inline bool startsWith(const std::string &input, const std::string &search)
+{
+  return input.size() >= search.size() && input.compare(0, search.size(),
+                                                        search) == 0;
+}
+
+/**
  * @brief Trim a string of whitespace from the left and right.
  */
 inline std::string trimmed(const std::string &input)
