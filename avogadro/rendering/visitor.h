@@ -27,6 +27,7 @@ class CylinderGeometry;
 class Drawable;
 class GeometryNode;
 class GroupNode;
+class LineStripGeometry;
 class MeshGeometry;
 class Node;
 class SphereGeometry;
@@ -62,6 +63,7 @@ public:
   virtual void visit(MeshGeometry &) { return; }
   virtual void visit(Texture2D &) { return; }
   virtual void visit(TextLabel &) { return; }
+  virtual void visit(LineStripGeometry &) { return; }
 
 };
 
