@@ -38,6 +38,7 @@ set(HEADERS
   slaterset.h
   slatersettools.h
   symbolatomtyper.h
+  types.h
   variant.h
   variant-inline.h
   variantmap.h
