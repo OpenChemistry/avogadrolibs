@@ -63,6 +63,7 @@ public:
   void visit(MeshGeometry &) AVO_OVERRIDE;
   void visit(Texture2D &geometry) AVO_OVERRIDE;
   void visit(TextLabel &geometry) AVO_OVERRIDE;
+  void visit(LineStripGeometry &geometry) AVO_OVERRIDE;
 
   void setCamera(const Camera &camera_) { m_camera = camera_; }
   Camera camera() const { return m_camera; }

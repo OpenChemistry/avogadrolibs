@@ -135,6 +135,7 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy *tren)
       void visit(MeshGeometry &) { return; }
       void visit(Texture2D &) { return; }
       void visit(TextLabel &l) { l.invalidateTexture(); }
+      void visit(LineStripGeometry &) { return; }
     } labelResetter;
 
     m_scene.rootNode().accept(labelResetter);

@@ -25,6 +25,7 @@ set(HEADERS
   groupnode.h
   glrenderer.h
   glrendervisitor.h
+  linestripgeometry.h
   meshgeometry.h
   node.h
   overlayquadstrategy.h
@@ -56,6 +57,7 @@ set(SOURCES
   groupnode.cpp
   glrenderer.cpp
   glrendervisitor.cpp
+  linestripgeometry.cpp
   meshgeometry.cpp
   node.cpp
   overlayquadstrategy.cpp
@@ -77,6 +79,8 @@ set(SOURCES
 set(shader_files
   "cylinders_fs.glsl"
   "cylinders_vs.glsl"
+  "linestrip_fs.glsl"
+  "linestrip_vs.glsl"
   "mesh_fs.glsl"
   "mesh_vs.glsl"
   "spheres_fs.glsl"
