@@ -16,6 +16,7 @@
 
 #include "meshes.h"
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/rendering/geometrynode.h>
@@ -23,6 +24,8 @@
 #include <avogadro/rendering/meshgeometry.h>
 
 #include <QtCore/QDebug>
+
+#include <algorithm>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -41,6 +44,16 @@ Meshes::~Meshes()
 {
 }
 
+// Generator for std::generate call below:
+namespace {
+struct Sequence {
+  Sequence() : i(0) {}
+  unsigned int operator()() { return i++; }
+  void reset() { i = 0; }
+  unsigned int i;
+};
+}
+
 void Meshes::process(const Molecule &mol, GroupNode &node)
 {
   GeometryNode *geometry = new GeometryNode;
@@ -52,15 +65,20 @@ void Meshes::process(const Molecule &mol, GroupNode &node)
     qDebug() << "We have" << mol.meshCount() << "meshes...";
     const Mesh *mesh = mol.mesh(0);
     qDebug() << mesh << "with" << mesh->numVertices() << "vertices";
-    size_t n = mesh->numVertices();
+
+    /// @todo Allow use of MeshGeometry without an index array when all vertices
+    /// form explicit triangles.
+    // Create index array:
+    Sequence indexGenerator;
+    Core::Array<unsigned int> indices(mesh->numVertices());
+    std::generate(indices.begin(), indices.end(), indexGenerator);
 
     MeshGeometry *mesh1 = new MeshGeometry;
     geometry->addDrawable(mesh1);
-    mesh1->addTriangles(static_cast<const Vector3f *>(mesh->vertex(0)),
-                        static_cast<const Vector3f *>(mesh->normal(0)),
-                        NULL, n);
     mesh1->setColor(Vector3ub(255, 0, 0));
     mesh1->setOpacity(opacity);
+    mesh1->addVertices(mesh->vertices(), mesh->normals());
+    mesh1->addTriangles(indices);
     mesh1->setRenderPass(opacity == 255 ? Rendering::OpaquePass
                                         : Rendering::TranslucentPass);
 
@@ -68,12 +86,18 @@ void Meshes::process(const Molecule &mol, GroupNode &node)
       MeshGeometry *mesh2 = new MeshGeometry;
       geometry->addDrawable(mesh2);
       mesh = mol.mesh(1);
-      n = mesh->numVertices();
-      mesh2->addTriangles(static_cast<const Vector3f *>(mesh->vertex(0)),
-                          static_cast<const Vector3f *>(mesh->normal(0)),
-                          NULL, n);
+      if (mesh->numVertices() < indices.size()) {
+        indices.resize(mesh->numVertices());
+      }
+      else if (mesh->numVertices() > indices.size()) {
+        indexGenerator.reset();
+        indices.resize(mesh->numVertices());
+        std::generate(indices.begin(), indices.end(), indexGenerator);
+      }
       mesh2->setColor(Vector3ub(0, 0, 255));
       mesh2->setOpacity(opacity);
+      mesh2->addVertices(mesh->vertices(), mesh->normals());
+      mesh2->addTriangles(indices);
       mesh2->setRenderPass(opacity == 255 ? Rendering::OpaquePass
                                           : Rendering::TranslucentPass);
     }

@@ -56,7 +56,7 @@ void TextLabel::buildTexture(const TextRenderStrategy &tren)
     // otherwise. A factor of 45 seems to get non-overlay text at (0, 0, 0) to
     // roughly match the size of overlay text at the same point size for most
     // viewport sizes.
-    if (m_renderPass == OverlayPass)
+    if (m_renderPass == Overlay2DPass)
       m_quadPlacementStrategy->setDimensions(m_textDimensions);
     else
       m_quadPlacementStrategy->setDimensions(m_textDimensions / 45.f);

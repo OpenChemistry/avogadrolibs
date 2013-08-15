@@ -40,11 +40,11 @@ class AVOGADRORENDERING_EXPORT BufferObject
 {
 public:
   enum ObjectType {
-    ARRAY_BUFFER,
-    ELEMENT_ARRAY_BUFFER
+    ArrayBuffer,
+    ElementArrayBuffer
   };
 
-  BufferObject(ObjectType type = ARRAY_BUFFER);
+  BufferObject(ObjectType type = ArrayBuffer);
   ~BufferObject();
 
   /** Get the type of the buffer object. */
@@ -56,25 +56,18 @@ public:
   /** Determine if the buffer object is ready to be used. */
   bool ready() const { return m_dirty == false; }
 
-  /** Upload data to the buffer object. The buffer must be an ARRAY_BUFFER
-   * or uninitialized. */
-  bool upload(const std::vector<ColorNormalVertex> &array);
-
-  /** Upload data to the buffer object. The buffer must be an ARRAY_BUFFER
-   * or uninitialized. */
-  bool upload(const std::vector<ColorTextureVertex> &array);
-
-  /** Upload data to the buffer object. The buffer must be an ARRAY_BUFFER
-   * or uninitialized. */
-  bool upload(const std::vector<Vector2f> &array);
-
-  /** Upload data to the buffer object. The buffer must be an ARRAY_BUFFER
-   * or uninitialized. */
-  bool upload(const std::vector<Vector3f> &array);
-
-  /** Upload data to the buffer object. The buffer must be an
-   * ELEMENT_ARRAY_BUFFER or uninitialized. */
-  bool upload(const std::vector<unsigned int> &array);
+  /**
+   * Upload data to the buffer object. The BufferObject::type() must match
+   * @a type or be uninitialized.
+   *
+   * The ContainerT type must have tightly packed values of
+   * ContainerT::value_type accessible by reference via ContainerT::operator[].
+   * Additionally, the standard size() and empty() methods must be implemented.
+   * The std::vector and Avogadro::Core::Array classes are examples of such
+   * supported containers.
+   */
+  template <class ContainerT>
+  bool upload(const ContainerT &array, ObjectType type);
 
   /** Bind the buffer object ready for rendering.
    * @note Only one ARRAY_BUFFER and one ELEMENT_ARRAY_BUFFER may be bound at
@@ -88,12 +81,26 @@ public:
   std::string error() const { return m_error; }
 
 private:
+  bool uploadInternal(const void *buffer, size_t size, ObjectType objectType);
+
   struct Private;
   Private *d;
   bool  m_dirty;
 
   std::string m_error;
 };
+
+template <class ContainerT>
+inline bool BufferObject::upload(const ContainerT &array,
+                                 BufferObject::ObjectType objectType)
+{
+  if (array.empty()) {
+    m_error = "Refusing to upload empty array.";
+    return false;
+  }
+  return uploadInternal(&array[0],
+      array.size() * sizeof(typename ContainerT::value_type), objectType);
+}
 
 } // End Rendering namespace
 } // End Avogadro namespace

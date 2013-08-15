@@ -92,8 +92,13 @@ void GLRenderer::render()
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   m_scene.rootNode().accept(visitor);
 
-  // Setup for overlay rendering
-  visitor.setRenderPass(OverlayPass);
+  // Setup for 3d overlay rendering
+  visitor.setRenderPass(Overlay3DPass);
+  glClear(GL_DEPTH_BUFFER_BIT);
+  m_scene.rootNode().accept(visitor);
+
+  // Setup for 2d overlay rendering
+  visitor.setRenderPass(Overlay2DPass);
   visitor.setCamera(m_overlayCamera);
   glDisable(GL_DEPTH_TEST);
   m_scene.rootNode().accept(visitor);
