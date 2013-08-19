@@ -14,27 +14,88 @@
 
 ******************************************************************************/
 
+#include "utils.h"
+
 #include <gtest/gtest.h>
 
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/vector.h>
+#include <avogadro/core/color3f.h>
+#include <avogadro/core/mesh.h>
 
-using Avogadro::Core::Molecule;
-using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
+using namespace Avogadro::Core;
 
-TEST(MoleculeTest, size)
+class MoleculeTest : public testing::Test
+{
+public:
+  MoleculeTest();
+
+protected:
+  Molecule m_testMolecule;
+};
+
+
+MoleculeTest::MoleculeTest()
+{
+  Atom o1 = m_testMolecule.addAtom(8);
+  Atom h2 = m_testMolecule.addAtom(1);
+  Atom h3 = m_testMolecule.addAtom(1);
+
+  o1.setPosition3d(Avogadro::Vector3(0, 0, 0));
+  h2.setPosition3d(Avogadro::Vector3(0.6, -0.5, 0));
+  h3.setPosition3d(Avogadro::Vector3(-0.6, -0.5, 0));
+
+  o1.setPosition2d(Avogadro::Vector2(0, 0));
+  h2.setPosition2d(Avogadro::Vector2(0.6, -0.5));
+  h3.setPosition2d(Avogadro::Vector2(-0.6, -0.5));
+
+  // Add some data
+  Avogadro::Core::VariantMap data;
+  data.setValue("test", Avogadro::Core::Variant("test"));
+  m_testMolecule.setDataMap(data);
+
+  // Add some bonds
+  m_testMolecule.perceiveBondsSimple();
+
+  Mesh *mesh = m_testMolecule.addMesh();
+
+  std::vector<Avogadro::Vector3f> vertices;
+  std::vector<Avogadro::Vector3f> normals;
+  std::vector<Color3f> colors;
+
+  Color3f color = Color3f(23, 23, 23);
+  colors.push_back(color);
+
+  Avogadro::Vector3f vec;
+  vec[0] = 1.2;
+  vec[1] = 1.3;
+  vec[2] = 1.4;
+
+  vertices.push_back(vec);
+  normals.push_back(vec);
+
+  mesh->setColors(colors);
+  mesh->setNormals(normals);
+  mesh->setVertices(vertices);
+  mesh->setIsoValue(1.2);
+  mesh->setName("testmesh");
+  mesh->setOtherMesh(1);
+  mesh->setStable(false);
+}
+
+TEST_F(MoleculeTest, size)
 {
   Avogadro::Core::Molecule molecule;
   EXPECT_EQ(molecule.size(), static_cast<size_t>(0));
 }
 
-TEST(MoleculeTest, isEmpty)
+TEST_F(MoleculeTest, isEmpty)
 {
   Avogadro::Core::Molecule molecule;
   EXPECT_EQ(molecule.isEmpty(), true);
 }
 
-TEST(MoleculeTest, addAtom)
+TEST_F(MoleculeTest, addAtom)
 {
   Avogadro::Core::Molecule molecule;
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(0));
@@ -52,7 +113,7 @@ TEST(MoleculeTest, addAtom)
   EXPECT_EQ(atom2.atomicNumber(), static_cast<unsigned char>(1));
 }
 
-TEST(MoleculeTest, removeAtom)
+TEST_F(MoleculeTest, removeAtom)
 {
   Avogadro::Core::Molecule molecule;
   Avogadro::Core::Atom atom0 = molecule.addAtom(6);
@@ -78,7 +139,7 @@ TEST(MoleculeTest, removeAtom)
   EXPECT_EQ(0, molecule.atomCount());
 }
 
-TEST(MoleculeTest, addBond)
+TEST_F(MoleculeTest, addBond)
 {
   Avogadro::Core::Molecule molecule;
   EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(0));
@@ -120,7 +181,7 @@ TEST(MoleculeTest, addBond)
   EXPECT_EQ(bond.atom2().index(), c.index());
 }
 
-TEST(MoleculeTest, removeBond)
+TEST_F(MoleculeTest, removeBond)
 {
   Avogadro::Core::Molecule molecule;
   Avogadro::Core::Atom a = molecule.addAtom(1);
@@ -146,7 +207,7 @@ TEST(MoleculeTest, removeBond)
   EXPECT_EQ(0, molecule.bondCount());
 }
 
-TEST(MoleculeTest, findBond)
+TEST_F(MoleculeTest, findBond)
 {
   Molecule molecule;
   Atom a1 = molecule.addAtom(5);
@@ -165,14 +226,14 @@ TEST(MoleculeTest, findBond)
   EXPECT_EQ(molecule.bonds(a3).size(), 1);
 }
 
-TEST(MoleculeTest, setData)
+TEST_F(MoleculeTest, setData)
 {
   Avogadro::Core::Molecule molecule;
   molecule.setData("name", "ethanol");
   EXPECT_EQ(molecule.data("name").toString(), "ethanol");
 }
 
-TEST(MoleculeTest, dataMap)
+TEST_F(MoleculeTest, dataMap)
 {
   Avogadro::Core::Molecule molecule;
   molecule.setData("name", "ethanol");
@@ -190,7 +251,7 @@ TEST(MoleculeTest, dataMap)
   EXPECT_EQ(molecule.data("CAS").toString(), "64-17-5");
 }
 
-TEST(MoleculeTest, perceiveBondsSimple)
+TEST_F(MoleculeTest, perceiveBondsSimple)
 {
   Molecule molecule;
   Atom o1 = molecule.addAtom(8);
@@ -207,4 +268,19 @@ TEST(MoleculeTest, perceiveBondsSimple)
   EXPECT_TRUE(molecule.bond(o1, h2).isValid());
   EXPECT_TRUE(molecule.bond(o1, h3).isValid());
   EXPECT_FALSE(molecule.bond(h2, h3).isValid());
+}
+
+TEST_F(MoleculeTest, copy)
+{
+  Molecule copy(m_testMolecule);
+
+  assertEqual(m_testMolecule, copy);
+}
+
+TEST_F(MoleculeTest, assignment)
+{
+  Molecule assign;
+  assign = m_testMolecule;
+
+  assertEqual(m_testMolecule, assign);
 }

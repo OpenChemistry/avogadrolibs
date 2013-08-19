@@ -17,24 +17,91 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/core/mesh.h>
+#include <avogadro/core/color3f.h>
+#include <avogadro/core/vector.h>
+
+#include "utils.h"
 
 using Avogadro::QtGui::Molecule;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
+using Avogadro::Core::Color3f;
+using Avogadro::Core::Mesh;
 
-TEST(MoleculeTest, size)
+class MoleculeTest : public testing::Test
+{
+public:
+  MoleculeTest();
+
+protected:
+  Molecule m_testMolecule;
+};
+
+MoleculeTest::MoleculeTest()
+{
+  Atom o1 = m_testMolecule.addAtom(8);
+  Atom h2 = m_testMolecule.addAtom(1);
+  Atom h3 = m_testMolecule.addAtom(1);
+  Bond b[2];
+  b[0] = m_testMolecule.addBond(o1, h2, 1);
+  b[1] = m_testMolecule.addBond(o1, h3, 2);
+
+  o1.setPosition3d(Avogadro::Vector3(0, 0, 0));
+  h2.setPosition3d(Avogadro::Vector3(0.6, -0.5, 0));
+  h3.setPosition3d(Avogadro::Vector3(-0.6, -0.5, 0));
+
+  o1.setPosition2d(Avogadro::Vector2(0, 0));
+  h2.setPosition2d(Avogadro::Vector2(0.6, -0.5));
+  h3.setPosition2d(Avogadro::Vector2(-0.6, -0.5));
+
+  // Add some data
+  Avogadro::Core::VariantMap data;
+  data.setValue("test", Avogadro::Core::Variant("test"));
+  m_testMolecule.setDataMap(data);
+
+  Mesh *mesh = m_testMolecule.addMesh();
+
+  std::vector<Avogadro::Vector3f> vertices;
+  std::vector<Avogadro::Vector3f> normals;
+  std::vector<Color3f> colors;
+
+  Color3f color = Color3f(23, 23, 23);
+  colors.push_back(color);
+
+  Avogadro::Vector3f vec;
+  vec[0] = 1.2;
+  vec[1] = 1.3;
+  vec[2] = 1.4;
+
+  vertices.push_back(vec);
+  normals.push_back(vec);
+
+  mesh->setColors(colors);
+  mesh->setNormals(normals);
+  mesh->setVertices(vertices);
+  mesh->setIsoValue(1.2);
+  mesh->setName("testmesh");
+  mesh->setOtherMesh(1);
+  mesh->setStable(false);
+}
+
+
+
+
+TEST_F(MoleculeTest, size)
 {
   Molecule molecule;
   EXPECT_EQ(molecule.size(), static_cast<size_t>(0));
 }
 
-TEST(MoleculeTest, isEmpty)
+TEST_F(MoleculeTest, isEmpty)
 {
   Molecule molecule;
   EXPECT_EQ(molecule.isEmpty(), true);
 }
 
-TEST(MoleculeTest, addAtom)
+TEST_F(MoleculeTest, addAtom)
 {
   Molecule molecule;
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(0));
@@ -52,7 +119,7 @@ TEST(MoleculeTest, addAtom)
   EXPECT_EQ(atom2.atomicNumber(), static_cast<unsigned char>(1));
 }
 
-TEST(MoleculeTest, removeAtom)
+TEST_F(MoleculeTest, removeAtom)
 {
   Molecule molecule;
   Atom atom0 = molecule.addAtom(6);
@@ -78,7 +145,7 @@ TEST(MoleculeTest, removeAtom)
   EXPECT_EQ(0, molecule.atomCount());
 }
 
-TEST(MoleculeTest, addBond)
+TEST_F(MoleculeTest, addBond)
 {
   Molecule molecule;
   EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(0));
@@ -120,7 +187,7 @@ TEST(MoleculeTest, addBond)
   EXPECT_EQ(bond.atom2().index(), c.index());
 }
 
-TEST(MoleculeTest, removeBond)
+TEST_F(MoleculeTest, removeBond)
 {
   Molecule molecule;
   Atom a = molecule.addAtom(1);
@@ -146,7 +213,7 @@ TEST(MoleculeTest, removeBond)
   EXPECT_EQ(0, molecule.bondCount());
 }
 
-TEST(MoleculeTest, findBond)
+TEST_F(MoleculeTest, findBond)
 {
   Molecule molecule;
   Atom a1 = molecule.addAtom(5);
@@ -165,7 +232,7 @@ TEST(MoleculeTest, findBond)
   EXPECT_EQ(molecule.bonds(a3).size(), 1);
 }
 
-TEST(MoleculeTest, uniqueAtom)
+TEST_F(MoleculeTest, uniqueAtom)
 {
   Molecule molecule;
   Atom a1 = molecule.addAtom(5);
@@ -212,7 +279,7 @@ TEST(MoleculeTest, uniqueAtom)
   EXPECT_EQ(test.atomicNumber(), 8);
 }
 
-TEST(MoleculeTest, uniqueAtomRestore)
+TEST_F(MoleculeTest, uniqueAtomRestore)
 {
   Molecule molecule;
   Atom a1 = molecule.addAtom(5);
@@ -240,7 +307,7 @@ TEST(MoleculeTest, uniqueAtomRestore)
   EXPECT_TRUE(molecule.atomByUniqueId(uid2).isValid());
 }
 
-TEST(MoleculeTest, uniqueBond)
+TEST_F(MoleculeTest, uniqueBond)
 {
   Molecule molecule;
   Atom a1 = molecule.addAtom(5);
@@ -272,7 +339,7 @@ TEST(MoleculeTest, uniqueBond)
   EXPECT_EQ(molecule.bondByUniqueId(uid[3]), b[3]);
 }
 
-TEST(MoleculeTest, uniqueBondRestore)
+TEST_F(MoleculeTest, uniqueBondRestore)
 {
   Molecule molecule;
   Atom a1 = molecule.addAtom(5);
@@ -300,4 +367,118 @@ TEST(MoleculeTest, uniqueBondRestore)
   molecule.addBond(a1, a4, 3, uid[2]);
   EXPECT_TRUE(molecule.bondByUniqueId(uid[2]).isValid());
   EXPECT_EQ(molecule.bondByUniqueId(uid[2]).order(), 3);
+}
+
+TEST_F(MoleculeTest, copy)
+{
+  Molecule copy(m_testMolecule);
+
+  assertEqual(static_cast<const Avogadro::Core::Molecule &>(m_testMolecule),
+      static_cast<const Avogadro::Core::Molecule &>(copy));
+
+  EXPECT_EQ(copy.atomByUniqueId(0).atomicNumber(), 8);
+  EXPECT_EQ(copy.atomByUniqueId(1).atomicNumber(), 1);
+  EXPECT_EQ(copy.atomByUniqueId(2).atomicNumber(), 1);
+  EXPECT_FALSE(copy.atomByUniqueId(3).isValid());
+  EXPECT_EQ(copy.bondByUniqueId(0).atom1().atomicNumber(), 8);
+  EXPECT_EQ(copy.bondByUniqueId(0).atom2().atomicNumber(), 1);
+  EXPECT_EQ(copy.bondByUniqueId(1).atom1().atomicNumber(), 8);
+  EXPECT_EQ(copy.bondByUniqueId(1).atom2().atomicNumber(), 1);
+  EXPECT_FALSE(copy.bondByUniqueId(2).isValid());
+}
+
+TEST_F(MoleculeTest, assignment)
+{
+  Molecule assign;
+  assign = m_testMolecule;
+
+  assertEqual(static_cast<const Avogadro::Core::Molecule &>(m_testMolecule),
+      static_cast<const Avogadro::Core::Molecule &>(assign));
+
+  EXPECT_EQ(assign.atomByUniqueId(0).atomicNumber(), 8);
+  EXPECT_EQ(assign.atomByUniqueId(1).atomicNumber(), 1);
+  EXPECT_EQ(assign.atomByUniqueId(2).atomicNumber(), 1);
+  EXPECT_FALSE(assign.atomByUniqueId(3).isValid());
+  EXPECT_EQ(assign.bondByUniqueId(0).atom1().atomicNumber(), 8);
+  EXPECT_EQ(assign.bondByUniqueId(0).atom2().atomicNumber(), 1);
+  EXPECT_EQ(assign.bondByUniqueId(1).atom1().atomicNumber(), 8);
+  EXPECT_EQ(assign.bondByUniqueId(1).atom2().atomicNumber(), 1);
+  EXPECT_FALSE(assign.bondByUniqueId(2).isValid());
+}
+
+TEST_F(MoleculeTest, baseAssignment)
+{
+  // Create a base molecule
+  Avogadro::Core::Molecule baseMolecule;
+  Atom o1 = baseMolecule.addAtom(8);
+  Atom h2 = baseMolecule.addAtom(1);
+  Atom h3 = baseMolecule.addAtom(1);
+  Bond b[2];
+  b[0] = baseMolecule.addBond(o1, h2, 1);
+  b[1] = baseMolecule.addBond(o1, h3, 2);
+
+  o1.setPosition3d(Avogadro::Vector3(0, 0, 0));
+  h2.setPosition3d(Avogadro::Vector3(0.6, -0.5, 0));
+  h3.setPosition3d(Avogadro::Vector3(-0.6, -0.5, 0));
+
+  o1.setPosition2d(Avogadro::Vector2(0, 0));
+  h2.setPosition2d(Avogadro::Vector2(0.6, -0.5));
+  h3.setPosition2d(Avogadro::Vector2(-0.6, -0.5));
+
+  // Add some data
+  Avogadro::Core::VariantMap data;
+  data.setValue("test", Avogadro::Core::Variant("test"));
+  baseMolecule.setDataMap(data);
+
+  Mesh *mesh = baseMolecule.addMesh();
+
+  std::vector<Avogadro::Vector3f> vertices;
+  std::vector<Avogadro::Vector3f> normals;
+  std::vector<Color3f> colors;
+
+  Color3f color = Color3f(23, 23, 23);
+  colors.push_back(color);
+
+  Avogadro::Vector3f vec;
+  vec[0] = 1.2;
+  vec[1] = 1.3;
+  vec[2] = 1.4;
+
+  vertices.push_back(vec);
+  normals.push_back(vec);
+
+  mesh->setColors(colors);
+  mesh->setNormals(normals);
+  mesh->setVertices(vertices);
+  mesh->setIsoValue(1.2);
+  mesh->setName("testmesh");
+  mesh->setOtherMesh(1);
+  mesh->setStable(false);
+
+  Avogadro::QtGui::Molecule qtMolecule;
+
+  qtMolecule.addAtom(6);
+  Atom a1 = qtMolecule.addAtom(4);
+  Atom a2 = qtMolecule.addAtom(5);
+  qtMolecule.addBond(a1, a2);
+
+  qtMolecule = baseMolecule;
+
+  assertEqual(baseMolecule,
+      static_cast<const Avogadro::Core::Molecule &>(qtMolecule));
+
+  // Check the ids have reset
+  EXPECT_EQ(qtMolecule.atomByUniqueId(0).atomicNumber(), o1.atomicNumber());
+  EXPECT_EQ(qtMolecule.atomByUniqueId(1).atomicNumber(), h2.atomicNumber());
+  EXPECT_EQ(qtMolecule.atomByUniqueId(2).atomicNumber(), h3.atomicNumber());
+  EXPECT_FALSE(qtMolecule.atomByUniqueId(3).isValid());
+  EXPECT_EQ(qtMolecule.bondByUniqueId(0).atom1().atomicNumber(),
+      b[0].atom1().atomicNumber());
+  EXPECT_EQ(qtMolecule.bondByUniqueId(0).atom2().atomicNumber(),
+        b[0].atom2().atomicNumber());
+  EXPECT_EQ(qtMolecule.bondByUniqueId(1).atom1().atomicNumber(),
+        b[1].atom1().atomicNumber());
+  EXPECT_EQ(qtMolecule.bondByUniqueId(1).atom2().atomicNumber(),
+        b[1].atom2().atomicNumber());
+  EXPECT_FALSE(qtMolecule.bondByUniqueId(2).isValid());
 }

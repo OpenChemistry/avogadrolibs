@@ -23,6 +23,47 @@ Molecule::Molecule(QObject *parent_) : QObject(parent_)
 {
 }
 
+Molecule::Molecule(const Molecule &other)
+  : QObject(), Core::Molecule(other)
+{
+  // Now assign the unique ids
+  for(int i=0; i<atomCount(); i++)
+    m_atomUniqueIds.push_back(i);
+
+  for(int i=0; i<bondCount(); i++)
+    m_bondUniqueIds.push_back(i);
+}
+
+Molecule& Molecule::operator=(const Molecule& other)
+{
+  // Call the base classes assigment operator
+  Core::Molecule::operator= (other);
+
+  // Copy over the unique ids
+  m_atomUniqueIds = other.m_atomUniqueIds;
+  m_bondUniqueIds = other.m_bondUniqueIds;
+
+  return *this;
+}
+
+
+Molecule& Molecule::operator=(const Core::Molecule& other)
+{
+  // Call the base classes assigment operator
+  Core::Molecule::operator= (other);
+
+  // Reset the unique ids.
+  m_atomUniqueIds.clear();
+  for(int i=0; i<atomCount(); i++)
+    m_atomUniqueIds.push_back(i);
+
+  m_bondUniqueIds.clear();
+  for(int i=0; i<bondCount(); i++)
+    m_bondUniqueIds.push_back(i);
+
+  return *this;
+}
+
 Molecule::~Molecule()
 {
 }
