@@ -54,6 +54,7 @@ public:
   void visit(MeshGeometry &) AVO_OVERRIDE { return; }
   void visit(Texture2D &) AVO_OVERRIDE { return; }
   void visit(TextLabel &) AVO_OVERRIDE { return; }
+  void visit(LineStripGeometry &) AVO_OVERRIDE { return; }
 
   /**
    * Clear the state of the visitor.

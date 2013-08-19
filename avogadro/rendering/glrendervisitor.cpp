@@ -19,6 +19,7 @@
 #include "spheregeometry.h"
 #include "ambientocclusionspheregeometry.h"
 #include "cylindergeometry.h"
+#include "linestripgeometry.h"
 #include "meshgeometry.h"
 #include "textlabel.h"
 #include "texture2d.h"
@@ -81,6 +82,12 @@ void GLRenderVisitor::visit(TextLabel &geometry)
       geometry.buildTexture(*m_textRenderStrategy);
     geometry.render(m_camera);
   }
+}
+
+void GLRenderVisitor::visit(LineStripGeometry &geometry)
+{
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 } // End namespace Rendering

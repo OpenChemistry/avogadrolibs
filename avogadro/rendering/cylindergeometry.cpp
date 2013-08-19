@@ -142,8 +142,8 @@ void CylinderGeometry::update()
       }
     }
 
-    d->vbo.upload(cylinderVertices);
-    d->ibo.upload(cylinderIndices);
+    d->vbo.upload(cylinderVertices, BufferObject::ArrayBuffer);
+    d->ibo.upload(cylinderIndices, BufferObject::ElementArrayBuffer);
     d->numberOfVertices = cylinderVertices.size();
     d->numberOfIndices = cylinderIndices.size();
 
@@ -187,7 +187,7 @@ void CylinderGeometry::render(const Camera &camera)
   if (!d->program.useAttributeArray("vertex",
                                     ColorNormalVertex::vertexOffset(),
                                     sizeof(ColorNormalVertex),
-                                    Vector3f())) {
+                                    FloatType, 3, ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("color"))
@@ -195,7 +195,7 @@ void CylinderGeometry::render(const Camera &camera)
   if (!d->program.useAttributeArray("color",
                                     ColorNormalVertex::colorOffset(),
                                     sizeof(ColorNormalVertex),
-                                    Vector3ub())) {
+                                    UCharType, 3, ShaderProgram::Normalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("normal"))
@@ -203,7 +203,7 @@ void CylinderGeometry::render(const Camera &camera)
   if (!d->program.useAttributeArray("normal",
                                     ColorNormalVertex::normalOffset(),
                                     sizeof(ColorNormalVertex),
-                                    Vector3f())) {
+                                    FloatType, 3, ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
 

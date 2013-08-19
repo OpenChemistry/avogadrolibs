@@ -20,11 +20,10 @@
 
 #include "avogadroqtguiexport.h"
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
 #include <QtCore/QThread>
-
-#include <vector>
 
 namespace Avogadro {
 
@@ -154,8 +153,8 @@ protected:
   float m_stepSize;      /** The step size of the cube. */
   Vector3f m_min; /** The minimum point in the cube. */
   Vector3i m_dim; /** The dimensions of the cube. */
-  std::vector<Vector3f> m_vertices, m_normals;
-  std::vector<unsigned int> m_indices;
+  Core::Array<Vector3f> m_vertices, m_normals;
+  Core::Array<unsigned int> m_indices;
   int m_progmin;
   int m_progmax;
 
