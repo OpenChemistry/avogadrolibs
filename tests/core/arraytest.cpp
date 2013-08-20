@@ -88,3 +88,25 @@ TEST(ArrayTest, implicitDetach)
   EXPECT_EQ(array.at(2), 666);
   EXPECT_EQ(array2.at(2), 42);
 }
+
+TEST(ArrayTest, operators)
+{
+  Array<int> a1;
+  Array<int> a2;
+  for (int i = 0; i < 10; ++i) {
+    a1.push_back(i);
+    a2.push_back(i * 10);
+  }
+
+  Array<int> a1c(a1);
+  EXPECT_TRUE(a1 == a1c);
+  EXPECT_TRUE(a1 != a2);
+  EXPECT_TRUE(a1 <  a2);
+  EXPECT_TRUE(a1 <= a1c);
+  EXPECT_TRUE(a2 >  a1);
+  EXPECT_TRUE(a1 >= a1c);
+
+  using std::swap;
+  swap(a1, a2);
+  EXPECT_TRUE(a2 == a1c);
+}

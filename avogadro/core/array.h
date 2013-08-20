@@ -19,6 +19,7 @@
 
 #include "avogadrocore.h"
 
+#include <algorithm>
 #include <vector>
 
 namespace Avogadro {
@@ -382,6 +383,12 @@ public:
     return *this;
   }
 
+  void swap(Array<ValueType> &other)
+  {
+    using std::swap;
+    swap(d, other.d);
+  }
+
 protected:
   Container *d;
 };
@@ -401,6 +408,50 @@ inline void Array<T>::detach()
     d->deref();
     d = o;
   }
+}
+
+template <typename T>
+inline bool operator==(const Array<T> &lhs, const Array<T> &rhs)
+{
+  return lhs.size() == rhs.size()
+      && std::equal(lhs.begin(), lhs.end(), rhs.begin());
+}
+
+template <typename T>
+inline bool operator!=(const Array<T> &lhs, const Array<T> &rhs)
+{
+  return !(lhs == rhs);
+}
+
+template <typename T>
+inline bool operator<(const Array<T> &lhs, const Array<T> &rhs)
+{
+  return std::lexicographical_compare(lhs.begin(), lhs.end(),
+                                      rhs.begin(), rhs.end());
+}
+
+template <typename T>
+inline bool operator>(const Array<T> &lhs, const Array<T> &rhs)
+{
+  return rhs < lhs;
+}
+
+template <typename T>
+inline bool operator<=(const Array<T> &lhs, const Array<T> &rhs)
+{
+  return !(rhs < lhs);
+}
+
+template <typename T>
+inline bool operator>=(const Array<T> &lhs, const Array<T> &rhs)
+{
+  return !(lhs < rhs);
+}
+
+template <typename T>
+inline void swap(Array<T> &lhs, Array<T> &rhs)
+{
+  lhs.swap(rhs);
 }
 
 } // end Core namespace
