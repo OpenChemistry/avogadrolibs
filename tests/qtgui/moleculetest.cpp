@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/qtgui/array.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/color3f.h>
@@ -24,6 +25,7 @@
 #include "utils.h"
 
 using Avogadro::QtGui::Molecule;
+using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Color3f;
@@ -62,9 +64,9 @@ MoleculeTest::MoleculeTest()
 
   Mesh *mesh = m_testMolecule.addMesh();
 
-  std::vector<Avogadro::Vector3f> vertices;
-  std::vector<Avogadro::Vector3f> normals;
-  std::vector<Color3f> colors;
+  Array<Avogadro::Vector3f> vertices;
+  Array<Avogadro::Vector3f> normals;
+  Array<Color3f> colors;
 
   Color3f color = Color3f(23, 23, 23);
   colors.push_back(color);
@@ -432,9 +434,9 @@ TEST_F(MoleculeTest, baseAssignment)
 
   Mesh *mesh = baseMolecule.addMesh();
 
-  std::vector<Avogadro::Vector3f> vertices;
-  std::vector<Avogadro::Vector3f> normals;
-  std::vector<Color3f> colors;
+  Array<Avogadro::Vector3f> vertices;
+  Array<Avogadro::Vector3f> normals;
+  Array<Color3f> colors;
 
   Color3f color = Color3f(23, 23, 23);
   colors.push_back(color);

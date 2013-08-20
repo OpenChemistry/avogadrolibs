@@ -18,6 +18,7 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/core/color3f.h>
@@ -59,9 +60,9 @@ MoleculeTest::MoleculeTest()
 
   Mesh *mesh = m_testMolecule.addMesh();
 
-  std::vector<Avogadro::Vector3f> vertices;
-  std::vector<Avogadro::Vector3f> normals;
-  std::vector<Color3f> colors;
+  Array<Avogadro::Vector3f> vertices;
+  Array<Avogadro::Vector3f> normals;
+  Array<Color3f> colors;
 
   Color3f color = Color3f(23, 23, 23);
   colors.push_back(color);
