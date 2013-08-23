@@ -16,11 +16,10 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/core/color3f.h>
-
-#include <vector>
 
 using namespace Avogadro::Core;
 
@@ -34,9 +33,9 @@ protected:
 
 MeshTest::MeshTest()
 {
-  std::vector<Avogadro::Vector3f> vertices;
-  std::vector<Avogadro::Vector3f> normals;
-  std::vector<Color3f> colors;
+  Array<Avogadro::Vector3f> vertices;
+  Array<Avogadro::Vector3f> normals;
+  Array<Color3f> colors;
 
   Color3f color = Color3f(23, 23, 23);
   colors.push_back(color);
@@ -61,13 +60,13 @@ void MeshTest::assertEquals(const Mesh &m1, const Mesh &m2)
   EXPECT_EQ(m1.isoValue(), m2.isoValue());
   EXPECT_TRUE(m1.vertices() == m2.vertices());
 
-  const std::vector<Color3f> colors1 = m1.colors();
-  const std::vector<Color3f> colors2 = m1.colors();
+  const Array<Color3f> colors1 = m1.colors();
+  const Array<Color3f> colors2 = m1.colors();
 
   EXPECT_EQ(colors1.size(), colors2.size());
 
   int i = 0;
-  for (std::vector<Color3f>::const_iterator it = colors1.begin(),
+  for (Array<Color3f>::const_iterator it = colors1.begin(),
           itEnd = colors1.end(); it != itEnd; ++it) {
     EXPECT_EQ(it->red(), colors2[i].red());
     EXPECT_EQ(it->green(), colors2[i].green());
