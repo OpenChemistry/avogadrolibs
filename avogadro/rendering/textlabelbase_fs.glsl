@@ -1,9 +1,9 @@
 uniform sampler2D texture;
-varying vec4 texc;
+varying vec2 texc;
 
 void main(void)
 {
-  gl_FragColor = texture2D(texture, texc.st);
+  gl_FragColor = texture2D(texture, texc);
   if (gl_FragColor.a == 0)
     discard;
 }

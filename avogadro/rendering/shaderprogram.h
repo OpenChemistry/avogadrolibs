@@ -30,6 +30,7 @@ namespace Avogadro {
 namespace Rendering {
 
 class Shader;
+class Texture2D;
 
 /**
  * @class ShaderProgram shaderprogram.h <avogadro/rendering/shaderprogram.h>
@@ -141,6 +142,10 @@ public:
   bool setAttributeArray(const std::string &name, const ContainerT &array,
                          int tupleSize, NormalizeOption normalize);
 
+  /** Set the sampler @a samplerName to use the specified texture. */
+  bool setTextureSampler(const std::string &samplerName,
+                         const Texture2D &texture);
+
   /** Set the @p name uniform value to int @p i. */
   bool setUniformValue(const std::string &name, int i);
 
@@ -151,8 +156,11 @@ public:
   bool setUniformValue(const std::string &name, const Eigen::Matrix3f &matrix);
   bool setUniformValue(const std::string &name, const Eigen::Matrix4f &matrix);
 
-  /** Set the @p name uniform value to the supplied value. */
+  /** Set the @p name uniform value to the supplied value. @{ */
+  bool setUniformValue(const std::string &name, const Vector3f &v);
+  bool setUniformValue(const std::string &name, const Vector2i &v);
   bool setUniformValue(const std::string &name, const Vector3ub &v);
+  /** @} */
 
 protected:
   bool setAttributeArrayInternal(const std::string &name, void *buffer,
@@ -168,7 +176,12 @@ protected:
 
   std::map<std::string, int> m_attributes;
 
+  std::map<const Texture2D*, int> m_textureUnitBindings;
+  std::vector<bool> m_boundTextureUnits;
+
 private:
+  void initializeTextureUnits();
+  void releaseAllTextureUnits();
   int findAttributeArray(const std::string &name);
   int findUniform(const std::string &name);
 };

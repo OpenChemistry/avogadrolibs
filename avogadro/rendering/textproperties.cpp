@@ -22,14 +22,14 @@ namespace Avogadro {
 namespace Rendering {
 
 TextProperties::TextProperties()
-  : m_pointSize(12),
+  : m_pointSize(10),
     m_hAlign(HLeft),
     m_vAlign(VTop),
     m_rotationDegreesCW(0.f),
     m_fontFamily(SansSerif),
     m_fontStyles(NoFontStyle)
 {
-  setColorRgba(0, 0, 0, 255);
+  setColorRgba(255, 255, 255, 255);
 }
 
 TextProperties::TextProperties(const TextProperties &other)

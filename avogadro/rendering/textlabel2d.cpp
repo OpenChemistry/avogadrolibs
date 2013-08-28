@@ -14,31 +14,36 @@
 
 ******************************************************************************/
 
-#include "overlayquadstrategy.h"
+#include "textlabel2d.h"
 
-#include "camera.h"
+#include "visitor.h"
 
 namespace Avogadro {
 namespace Rendering {
 
-OverlayQuadStrategy::OverlayQuadStrategy()
-  : m_anchor(0, 0)
+TextLabel2D::TextLabel2D()
+{
+  setRenderPass(Rendering::Overlay2DPass);
+}
+
+TextLabel2D::~TextLabel2D()
 {
 }
 
-OverlayQuadStrategy::~OverlayQuadStrategy()
+void TextLabel2D::accept(Visitor &visitor)
 {
+  visitor.visit(*this);
 }
 
-Core::Array<Vector3f>
-OverlayQuadStrategy::quad(const Camera &camera)
+void TextLabel2D::setAnchor(const Vector2i &windowCoords)
 {
-  // Convert fractional anchor point into pixel coordinates:
-  const Vector2i pixelCoords(
-        static_cast<int>(std::floor(m_anchor.x() * camera.width())),
-        static_cast<int>(std::floor(m_anchor.y() * camera.height())));
-  m_strategy.setAnchor(pixelCoords);
-  return m_strategy.quad(camera);
+  setAnchorInternal(Vector3f(static_cast<float>(windowCoords.x()),
+                             static_cast<float>(windowCoords.y()), 0.f));
+}
+
+Vector2i TextLabel2D::anchor() const
+{
+  return getAnchorInternal().head<2>().cast<int>();
 }
 
 } // namespace Rendering

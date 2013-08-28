@@ -61,8 +61,8 @@ public:
   void visit(AmbientOcclusionSphereGeometry &) AVO_OVERRIDE;
   void visit(CylinderGeometry &) AVO_OVERRIDE;
   void visit(MeshGeometry &) AVO_OVERRIDE;
-  void visit(Texture2D &geometry) AVO_OVERRIDE;
-  void visit(TextLabel &geometry) AVO_OVERRIDE;
+  void visit(TextLabel2D &geometry) AVO_OVERRIDE;
+  void visit(TextLabel3D &geometry) AVO_OVERRIDE;
   void visit(LineStripGeometry &geometry) AVO_OVERRIDE;
 
   void setCamera(const Camera &camera_) { m_camera = camera_; }

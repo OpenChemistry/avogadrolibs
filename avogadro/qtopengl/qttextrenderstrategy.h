@@ -44,7 +44,7 @@ public:
                    int bbox[4]) const AVO_OVERRIDE;
 
   void render(const std::string &string, const Rendering::TextProperties &tprop,
-              unsigned char *buffer, size_t dims[2]) const AVO_OVERRIDE;
+              unsigned char *buffer, const Vector2i &dims) const AVO_OVERRIDE;
 
   /**
    * Keep the buffer as a QImage::Format_ARGB32_Premultiplied image. Useful
