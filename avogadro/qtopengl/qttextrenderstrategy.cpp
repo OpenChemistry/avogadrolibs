@@ -151,7 +151,8 @@ void QtTextRenderStrategy::boundingBox(
 
 void QtTextRenderStrategy::render(const std::string &string,
                                   const Rendering::TextProperties &tprop,
-                                  unsigned char *buffer, size_t dims[2]) const
+                                  unsigned char *buffer,
+                                  const Vector2i &dims) const
 {
   // Convert inputs to Qt
   QString str = QString::fromStdString(string);
@@ -159,8 +160,7 @@ void QtTextRenderStrategy::render(const std::string &string,
   QFont font = textPropertiesToQFont(tprop);
 
   // Construct our target image to use the input buffer and clear it.
-  QImage target(buffer, static_cast<int>(dims[0]), static_cast<int>(dims[1]),
-                QImage::Format_ARGB32_Premultiplied);
+  QImage target(buffer, dims[0], dims[1], QImage::Format_ARGB32_Premultiplied);
   target.fill(qRgba(0, 0, 0, 0));
 
   // Painter setup

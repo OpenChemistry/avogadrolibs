@@ -17,61 +17,150 @@
 #include "texture2d.h"
 
 #include "avogadrogl.h"
-#include "bufferobject.h"
-#include "camera.h"
-#include "quadplacementstrategy.h"
-#include "scene.h"
-#include "shader.h"
-#include "shaderprogram.h"
-#include "visitor.h"
 
-#include <avogadro/core/matrix.h>
-
-#include <iostream>
-
-// Bring in our shader sources:
-namespace {
-#include "texture2d_fs.h"
-#include "texture2d_vs.h"
-} // end anon namespace
-
-using Avogadro::Core::Array;
 
 namespace Avogadro {
 namespace Rendering {
 
+namespace {
+GLint convertFilterOptionToGL(Texture2D::FilterOption opt)
+{
+  switch (opt) {
+  case Texture2D::Nearest:
+    return GL_NEAREST;
+  case Texture2D::Linear:
+    return GL_LINEAR;
+  default:
+    return -1;
+  }
+}
+
+Texture2D::FilterOption convertFilterOptionFromGL(GLint opt)
+{
+  switch (opt) {
+  case GL_NEAREST:
+    return Texture2D::Nearest;
+  case GL_LINEAR:
+    return Texture2D::Linear;
+  default:
+    return Texture2D::InvalidFilter;
+  }
+}
+
+GLint convertWrappingOptionToGL(Texture2D::WrappingOption opt)
+{
+  switch (opt) {
+  case Texture2D::ClampToEdge:
+    return GL_CLAMP_TO_EDGE;
+  case Texture2D::MirroredRepeat:
+    return GL_MIRRORED_REPEAT;
+  case Texture2D::Repeat:
+    return GL_REPEAT;
+  default:
+    return -1;
+  }
+}
+
+Texture2D::WrappingOption convertWrappingOptionFromGL(GLint opt)
+{
+  switch (opt) {
+  case GL_CLAMP_TO_EDGE:
+    return Texture2D::ClampToEdge;
+  case GL_MIRRORED_REPEAT:
+    return Texture2D::MirroredRepeat;
+  case GL_REPEAT:
+    return Texture2D::Repeat;
+  default:
+    return Texture2D::InvalidWrapping;
+  }
+}
+
+GLint convertInternalFormatToGL(Texture2D::InternalFormat fmt)
+{
+  switch (fmt) {
+  case Texture2D::InternalDepth:
+    return GL_DEPTH_COMPONENT;
+  case Texture2D::InternalDepthStencil:
+    return GL_DEPTH_STENCIL;
+  case Texture2D::InternalR:
+    return GL_RED;
+  case Texture2D::InternalRG:
+    return GL_RG;
+  case Texture2D::InternalRGB:
+    return GL_RGB;
+  case Texture2D::InternalRGBA:
+    return GL_RGBA;
+  default:
+    return -1;
+  }
+}
+
+GLint convertIncomingFormatToGL(Texture2D::IncomingFormat fmt)
+{
+  switch (fmt) {
+  case Texture2D::IncomingR:
+    return GL_RED;
+  case Texture2D::IncomingRG:
+    return GL_RG;
+  case Texture2D::IncomingRGB:
+    return GL_RGB;
+  case Texture2D::IncomingBGR:
+    return GL_BGR;
+  case Texture2D::IncomingRGBA:
+    return GL_RGBA;
+  case Texture2D::IncomingBGRA:
+    return GL_BGRA;
+  case Texture2D::IncomingDepth:
+    return GL_DEPTH_COMPONENT;
+  case Texture2D::IncomingDepthStencil:
+    return GL_DEPTH_STENCIL;
+  default:
+    return -1;
+  }
+}
+
+GLenum convertTypeToGL(Type type)
+{
+  switch (type) {
+  case CharType:
+    return GL_BYTE;
+  case UCharType:
+    return GL_UNSIGNED_BYTE;
+  case ShortType:
+    return GL_SHORT;
+  case UShortType:
+    return GL_UNSIGNED_SHORT;
+  case IntType:
+    return GL_INT;
+  case UIntType:
+    return GL_UNSIGNED_INT;
+  case FloatType:
+    return GL_FLOAT;
+  case DoubleType:
+    return GL_DOUBLE;
+  default:
+    return 0;
+  }
+}
+
+} // end anon namespace
+
 class Texture2D::Private
 {
 public:
-  Private() : textureIdSet(false) { }
+  Private() : textureId(0) { }
   ~Private()
   {
-    if (textureIdSet)
+    if (textureId > 0)
       glDeleteTextures(1, &textureId);
   }
 
-  BufferObject vertexBuffer;
-  BufferObject tcoordBuffer;
-
-  Shader vShader;
-  Shader fShader;
-  ShaderProgram program;
-
-  bool textureIdSet;
-  GLuint textureId;
-
-  std::vector<Vector3f> quad;
-  std::vector<Vector2f> tcoords;
+  mutable GLuint textureId;
 };
 
 Texture2D::Texture2D()
-  : Drawable(),
-    m_quadPlacementStrategy(NULL),
-    m_textureSynced(false),
-    d(new Private)
+  : d(new Private)
 {
-  m_textureSize[0] = 0;
-  m_textureSize[1] = 0;
 }
 
 Texture2D::~Texture2D()
@@ -79,179 +168,148 @@ Texture2D::~Texture2D()
   delete d;
 }
 
-void Texture2D::accept(Visitor &v)
+Index Texture2D::handle() const
 {
-  v.visit(*this);
+  return static_cast<Index>(d->textureId);
 }
 
-void Texture2D::render(const Camera &camera)
+void Texture2D::setMinFilter(Texture2D::FilterOption opt)
 {
-  if (m_textureData.empty())
-    return;
+  Index old = pushTexture();
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                  convertFilterOptionToGL(opt));
+  popTexture(old);
+}
 
-  // Upload geometry and textures, build and link shaders:
-  if (!prepareGl(camera))
-    return;
+Texture2D::FilterOption Texture2D::minFilter() const
+{
+  Index old = pushTexture();
+  GLint result;
+  glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, &result);
+  popTexture(old);
 
-  Matrix4f mvp(camera.projection().matrix() * camera.modelView().matrix());
+  return convertFilterOptionFromGL(result);
+}
 
-  glActiveTexture(GL_TEXTURE0);
+void Texture2D::setMagFilter(Texture2D::FilterOption opt)
+{
+  Index old = pushTexture();
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                  convertFilterOptionToGL(opt));
+  popTexture(old);
+}
+
+Texture2D::FilterOption Texture2D::magFilter() const
+{
+  Index old = pushTexture();
+  GLint result;
+  glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, &result);
+  popTexture(old);
+
+  return convertFilterOptionFromGL(result);
+}
+
+void Texture2D::setWrappingS(Texture2D::WrappingOption opt)
+{
+  Index old = pushTexture();
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+                  convertWrappingOptionToGL(opt));
+  popTexture(old);
+}
+
+Texture2D::WrappingOption Texture2D::wrappingS() const
+{
+  Index old = pushTexture();
+  GLint result;
+  glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, &result);
+  popTexture(old);
+
+  return convertWrappingOptionFromGL(result);
+}
+
+void Texture2D::setWrappingT(Texture2D::WrappingOption opt)
+{
+  Index old = pushTexture();
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
+                  convertWrappingOptionToGL(opt));
+  popTexture(old);
+}
+
+Texture2D::WrappingOption Texture2D::wrappingT() const
+{
+  Index old = pushTexture();
+  GLint result;
+  glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, &result);
+  popTexture(old);
+
+  return convertWrappingOptionFromGL(result);
+}
+
+bool Texture2D::bind() const
+{
+  return pushTexture() != MaxIndex;
+}
+
+bool Texture2D::release() const
+{
+  popTexture(0);
+  return true;
+}
+
+bool Texture2D::uploadInternal(
+    const void *buffer, const Vector2i &dims,
+    Texture2D::IncomingFormat dataFormat, Avogadro::Type dataType,
+    Texture2D::InternalFormat internalFormat)
+{
+  // The dataType has already been validated.
+  Index old = pushTexture();
+  glTexImage2D(GL_TEXTURE_2D, 0, convertInternalFormatToGL(internalFormat),
+               dims[0], dims[1], 0, convertIncomingFormatToGL(dataFormat),
+               convertTypeToGL(dataType),
+               static_cast<GLvoid*>(const_cast<void*>(buffer)));
+  popTexture(old);
+  return true;
+}
+
+Index Texture2D::pushTexture() const
+{
+  GLint currentHandle;
+  glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentHandle);
+
+  if (d->textureId == 0) {
+    if (!const_cast<Texture2D*>(this)->generateTextureHandle())
+      return MaxIndex;
+  }
+
   glBindTexture(GL_TEXTURE_2D, d->textureId);
 
-  if (!d->program.bind()
-      || !d->program.setUniformValue("mvp", mvp)
-      || !d->program.setUniformValue("texture", 0)
-      || !d->program.enableAttributeArray("vertex")
-      || !d->program.enableAttributeArray("texCoord")
-      || !d->vertexBuffer.bind()
-      || !d->program.useAttributeArray("vertex", 0, 0, FloatType, 3,
-                                       ShaderProgram::NoNormalize)
-      || !d->vertexBuffer.release()
-      || !d->tcoordBuffer.bind()
-      || !d->program.useAttributeArray("texCoord", 0, 0, FloatType, 2,
-                                       ShaderProgram::NoNormalize)
-      || !d->tcoordBuffer.release()
-      ) {
-    std::cerr << d->program.error() << std::endl;
-  }
-
-  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-  glBindTexture(GL_TEXTURE_2D, 0);
-  d->program.disableAttributeArray("vertex");
-  d->program.disableAttributeArray("texCoord");
-  d->program.release();
+  return static_cast<Index>(currentHandle);
 }
 
-void Texture2D::setTextureData(const Core::Array<unsigned char> &data,
-                               size_t width, size_t height)
+void Texture2D::popTexture(Index id) const
 {
-  m_textureData = data;
-  m_textureSize[0] = width;
-  m_textureSize[1] = height;
-  m_textureSynced = false;
+  glBindTexture(GL_TEXTURE_2D, id);
 }
 
-Core::Array<unsigned char> Texture2D::textureData() const
+bool Texture2D::generateTextureHandle()
 {
-  return m_textureData;
-}
-
-void Texture2D::textureSize(size_t size[2]) const
-{
-  size[0] = m_textureSize[0];
-  size[1] = m_textureSize[1];
-}
-
-void Texture2D::setQuadPlacementStrategy(QuadPlacementStrategy *strategy)
-{
-  if (m_quadPlacementStrategy != strategy) {
-    delete m_quadPlacementStrategy;
-    m_quadPlacementStrategy = strategy;
-  }
-}
-
-const QuadPlacementStrategy *Texture2D::quadPlacementStrategy() const
-{
-  return m_quadPlacementStrategy;
-}
-
-QuadPlacementStrategy *Texture2D::quadPlacementStrategy()
-{
-  return m_quadPlacementStrategy;
-}
-
-void Texture2D::setTextureCoordinates(const Core::Array<Vector2f> tcoords)
-{
-  m_textureCoordinates = tcoords;
-}
-
-Core::Array<Vector2f> Texture2D::textureCoordinates() const
-{
-  return m_textureCoordinates;
-}
-
-bool Texture2D::prepareGl(const Camera &camera)
-{
-  // Fetch the quad from the current strategy
-  if (!m_quadPlacementStrategy) {
-    std::cerr << "Avogadro::Rendering::Texture2D::prepareGL error: "
-                 "no quad placement strategy set!" << std::endl;
+  if (d->textureId > 0) {
+    m_error = "Refusing to overwrite existing texture handle.";
     return false;
   }
 
-  Array<Vector3f> quad(m_quadPlacementStrategy->quad(camera));
-  if (quad.size() != 4) {
-    std::cerr << "Avogadro::Rendering::Texture2D::prepareGL error: "
-                 "invalid quad size: " << quad.size() << std::endl;
+  glGenTextures(1, &d->textureId);
+
+  if (d->textureId == 0) {
+    m_error = "Error generating texture handle.";
     return false;
   }
 
-  // Upload the quad if it changed
-  if (d->quad.size() != 4
-      || !std::equal(quad.begin(), quad.end(), d->quad.begin())) {
-    d->quad.resize(4);
-    std::copy(quad.begin(), quad.end(), d->quad.begin());
-    if (!d->vertexBuffer.upload(d->quad, BufferObject::ArrayBuffer)) {
-      std::cerr << d->vertexBuffer.error() << std::endl;
-      return false;
-    }
-  }
-
-  // Upload tcoords if they've changed
-  if (m_textureCoordinates.size() != 4) {
-    std::cerr << "Avogadro::Rendering::Texture2D::prepareGL error: "
-                 "invalid texture coordinate array length: "
-              << m_textureCoordinates.size() << std::endl;
-    return false;
-  }
-
-  if (d->tcoords.size() != 4
-      || !std::equal(d->tcoords.begin(), d->tcoords.end(),
-                     m_textureCoordinates.begin())) {
-    d->tcoords.resize(4);
-    std::copy(m_textureCoordinates.begin(), m_textureCoordinates.end(),
-              d->tcoords.begin());
-    if (!d->tcoordBuffer.upload(d->tcoords, BufferObject::ArrayBuffer)) {
-      std::cerr << d->tcoordBuffer.error() << std::endl;
-      return false;
-    }
-  }
-
-  if (!m_textureSynced) {
-    if (!d->textureIdSet) {
-      glGenTextures(1, &d->textureId);
-      d->textureIdSet = true;
-    }
-
-    /// @todo We'll want to generalize this eventually...
-    glBindTexture(GL_TEXTURE_2D, d->textureId);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexImage2D(
-          GL_TEXTURE_2D, 0, GL_RGBA, static_cast<GLsizei>(m_textureSize[0]),
-          static_cast<GLsizei>(m_textureSize[1]), 0, GL_RGBA, GL_UNSIGNED_BYTE,
-          m_textureData.data());
-    m_textureSynced = true;
-  }
-
-  // Compile and link shaders if needed
-  if (d->vShader.type() == Shader::Unknown) {
-    d->vShader.setType(Shader::Vertex);
-    d->vShader.setSource(texture2d_vs);
-    d->fShader.setType(Shader::Fragment);
-    d->fShader.setSource(texture2d_fs);
-    if (!d->vShader.compile())
-      std::cerr << d->vShader.error() << std::endl;
-    if (!d->fShader.compile())
-      std::cerr << d->fShader.error() << std::endl;
-    d->program.attachShader(d->vShader);
-    d->program.attachShader(d->fShader);
-    if (!d->program.link())
-      std::cerr << d->program.error() << std::endl;
-  }
+  // Set up defaults to match the documentation:
+  setMinFilter(Linear);
+  setMagFilter(Linear);
+  setWrappingS(Repeat);
+  setWrappingT(Repeat);
 
   return true;
 }

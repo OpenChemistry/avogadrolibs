@@ -22,13 +22,12 @@
 
 #include <avogadro/qtopengl/glwidget.h>
 
-#include <avogadro/rendering/absoluteoverlayquadstrategy.h>
-#include <avogadro/rendering/billboardquadstrategy.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/scene.h>
-#include <avogadro/rendering/textlabel.h>
+#include <avogadro/rendering/textlabel2d.h>
+#include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
 
 #include <avogadro/core/atom.h>
@@ -52,12 +51,11 @@ const float RAD_TO_DEG_F = 180.f / static_cast<float>(M_PI);
 
 using Avogadro::Core::Atom;
 using Avogadro::Core::Elements;
-using Avogadro::Rendering::AbsoluteOverlayQuadStrategy;
-using Avogadro::Rendering::BillboardQuadStrategy;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
-using Avogadro::Rendering::TextLabel;
+using Avogadro::Rendering::TextLabel2D;
+using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
 
 namespace Avogadro {
@@ -140,8 +138,6 @@ void MeasureTool::draw(Rendering::GroupNode &node)
   node.addChild(geo);
 
   TextProperties atomLabelProp;
-  atomLabelProp.setBold(true);
-  atomLabelProp.setPointSize(8);
   atomLabelProp.setFontFamily(TextProperties::SansSerif);
   atomLabelProp.setAlign(TextProperties::HCenter, TextProperties::VCenter);
 
@@ -159,18 +155,11 @@ void MeasureTool::draw(Rendering::GroupNode &node)
     const unsigned char *color = Elements::color(atomicNumber);
     atomLabelProp.setColorRgb(contrastingColor(Vector3ub(color)).data());
 
-
-    BillboardQuadStrategy *billboard(new BillboardQuadStrategy);
-    billboard->setRadius(Elements::radiusCovalent(atomicNumber));
-    billboard->setAnchor(positions[i].cast<float>());
-    billboard->setAlign(BillboardQuadStrategy::HCenter,
-                        BillboardQuadStrategy::VCenter);
-
-    TextLabel *label = new TextLabel;
-    label->setString(QString("#%1").arg(i + 1).toStdString());
-    label->setQuadPlacementStrategy(billboard);
+    TextLabel3D *label = new TextLabel3D;
+    label->setText(QString("#%1").arg(i + 1).toStdString());
     label->setTextProperties(atomLabelProp);
-    label->setRenderPass(Rendering::TranslucentPass);
+    label->setAnchor(positions[i].cast<float>());
+    label->setRadius(Elements::radiusCovalent(atomicNumber));
 
     geo->addDrawable(label);
   }
@@ -236,21 +225,15 @@ void MeasureTool::draw(Rendering::GroupNode &node)
     return;
 
   TextProperties overlayTProp;
-  overlayTProp.setPointSize(8);
   overlayTProp.setFontFamily(TextProperties::Mono);
-  overlayTProp.setBold(true);
   overlayTProp.setColorRgb(64, 255, 220);
+  overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
 
-  AbsoluteOverlayQuadStrategy *overlay = new AbsoluteOverlayQuadStrategy;
-  overlay->setAlign(AbsoluteOverlayQuadStrategy::HLeft,
-                    AbsoluteOverlayQuadStrategy::VBottom);
-  overlay->setAnchor(Vector2i(10, 10));
-
-  TextLabel *label = new TextLabel;
-  label->setString(overlayText.toStdString());
+  TextLabel2D *label = new TextLabel2D;
+  label->setText(overlayText.toStdString());
   label->setTextProperties(overlayTProp);
   label->setRenderPass(Rendering::Overlay2DPass);
-  label->setQuadPlacementStrategy(overlay);
+  label->setAnchor(Vector2i(10, 10));
 
   geo->addDrawable(label);
 }

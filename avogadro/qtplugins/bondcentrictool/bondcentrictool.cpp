@@ -25,13 +25,12 @@
 
 #include <avogadro/qtopengl/glwidget.h>
 
-#include <avogadro/rendering/billboardquadstrategy.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/linestripgeometry.h>
 #include <avogadro/rendering/meshgeometry.h>
-#include <avogadro/rendering/textlabel.h>
+#include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
 
 #include <avogadro/core/array.h>
@@ -955,24 +954,18 @@ void BondCentricTool::drawBondAngle(Rendering::GeometryNode &node,
 
   const Vector3f &textPos(a1);
 
-  Rendering::TextLabel *label = new Rendering::TextLabel;
-  label->setString(QString::number(displayAngle, 'f', 1).toStdString()
-                   + degreeString);
+  Rendering::TextLabel3D *label = new Rendering::TextLabel3D;
+  label->setText(QString::number(displayAngle, 'f', 1).toStdString()
+                 + degreeString);
   label->setRenderPass(Rendering::Overlay3DPass);
+  label->setAnchor(textPos);
   node.addDrawable(label);
-
-  Rendering::BillboardQuadStrategy *bill = new Rendering::BillboardQuadStrategy;
-  bill->setAlign(Rendering::BillboardQuadStrategy::HCenter,
-                 Rendering::BillboardQuadStrategy::VCenter);
-  bill->setAnchor(textPos);
-  label->setQuadPlacementStrategy(bill);
 
   Rendering::TextProperties tprop;
   tprop.setAlign(Rendering::TextProperties::HCenter,
                  Rendering::TextProperties::VCenter);
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
   tprop.setColorRgb(255, 200, 64);
-  tprop.setPointSize(5);
   label->setTextProperties(tprop);
 }
 
@@ -984,25 +977,18 @@ void BondCentricTool::drawBondLengthLabel(Rendering::GeometryNode &node,
   const Vector3f bondCenter((startPos + endPos) * 0.5f);
   const Vector3f bondVector(endPos - startPos);
 
-  Rendering::TextLabel *label = new Rendering::TextLabel;
-  label->setString(QString::number(bondVector.norm(), 'f', 2).toStdString()
-                   + angstromString);
+  Rendering::TextLabel3D *label = new Rendering::TextLabel3D;
+  label->setText(QString::number(bondVector.norm(), 'f', 2).toStdString()
+                 + angstromString);
   label->setRenderPass(Rendering::Overlay3DPass);
+  label->setAnchor(bondCenter);
   node.addDrawable(label);
-
-  Rendering::BillboardQuadStrategy *bill = new Rendering::BillboardQuadStrategy;
-  bill->setAlign(Rendering::BillboardQuadStrategy::HCenter,
-                 Rendering::BillboardQuadStrategy::VCenter);
-  bill->setAnchor(bondCenter);
-  bill->setRadius(0.25f); // project the label towards the camera a bit
-  label->setQuadPlacementStrategy(bill);
 
   Rendering::TextProperties tprop;
   tprop.setAlign(Rendering::TextProperties::HCenter,
                  Rendering::TextProperties::VCenter);
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
   tprop.setColorRgb(255, 200, 64);
-  tprop.setPointSize(5);
   label->setTextProperties(tprop);
 }
 
@@ -1058,23 +1044,17 @@ void BondCentricTool::drawAtomBondAngle(Rendering::GeometryNode &node,
   arc->setRenderPass(Rendering::OpaquePass);
   arc->setArc(origin, start, axis, angle, 5.f, 1.f);
 
-  Rendering::TextLabel *label = new Rendering::TextLabel;
-  label->setString(QString::number(angle, 'f', 1).toStdString() + degreeString);
+  Rendering::TextLabel3D *label = new Rendering::TextLabel3D;
+  label->setText(QString::number(angle, 'f', 1).toStdString() + degreeString);
   label->setRenderPass(Rendering::Overlay3DPass);
+  label->setAnchor(labelPos);
   node.addDrawable(label);
-
-  Rendering::BillboardQuadStrategy *bill = new Rendering::BillboardQuadStrategy;
-  bill->setAlign(Rendering::BillboardQuadStrategy::HCenter,
-                 Rendering::BillboardQuadStrategy::VCenter);
-  bill->setAnchor(labelPos);
-  label->setQuadPlacementStrategy(bill);
 
   Rendering::TextProperties tprop;
   tprop.setAlign(Rendering::TextProperties::HCenter,
                  Rendering::TextProperties::VCenter);
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
   tprop.setColorRgb(color);
-  tprop.setPointSize(5);
   label->setTextProperties(tprop);
 }
 

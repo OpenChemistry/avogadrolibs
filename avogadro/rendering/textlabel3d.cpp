@@ -14,36 +14,45 @@
 
 ******************************************************************************/
 
-#include "billboardquadstrategy.h"
+#include "textlabel3d.h"
 
-#include "camera.h"
-
-#include <avogadro/core/matrix.h>
-#include <avogadro/core/vector.h>
+#include "visitor.h"
 
 namespace Avogadro {
 namespace Rendering {
 
-BillboardQuadStrategy::BillboardQuadStrategy()
-  : m_useCameraUp(true),
-    m_anchor(0.f, 0.f, 0.f),
-    m_radius(0.f)
+TextLabel3D::TextLabel3D()
+{
+  setRenderPass(TranslucentPass);
+}
+
+TextLabel3D::~TextLabel3D()
 {
 }
 
-BillboardQuadStrategy::~BillboardQuadStrategy()
+void TextLabel3D::accept(Visitor &visitor)
 {
+  visitor.visit(*this);
 }
 
-Core::Array<Vector3f> BillboardQuadStrategy::quad(const Camera &camera)
+void TextLabel3D::setAnchor(const Vector3f &position)
 {
-  const Matrix3f basis(camera.modelView().linear().transpose());
-  const Vector3f normal(basis.col(2).normalized());
-  m_strategy.setNormal(normal);
-  m_strategy.setAnchor(m_anchor + (normal * m_radius));
-  if (m_useCameraUp)
-    m_strategy.setUp(basis.col(1).normalized());
-  return m_strategy.quad(camera);
+  setAnchorInternal(position);
+}
+
+Vector3f TextLabel3D::anchor() const
+{
+  return getAnchorInternal();
+}
+
+void TextLabel3D::setRadius(float r)
+{
+  setRadiusInternal(r);
+}
+
+float TextLabel3D::radius() const
+{
+  return getRadiusInternal();
 }
 
 } // namespace Rendering
