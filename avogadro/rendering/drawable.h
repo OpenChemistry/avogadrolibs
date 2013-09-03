@@ -46,6 +46,7 @@ class AVOGADRORENDERING_EXPORT Drawable
 {
 public:
   Drawable();
+  Drawable(const Drawable &other);
   virtual ~Drawable();
 
   /**

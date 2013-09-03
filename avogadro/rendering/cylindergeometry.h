@@ -51,6 +51,7 @@ class AVOGADRORENDERING_EXPORT CylinderGeometry : public Drawable
 {
 public:
   CylinderGeometry();
+  CylinderGeometry(const CylinderGeometry &other);
   ~CylinderGeometry();
 
   /**

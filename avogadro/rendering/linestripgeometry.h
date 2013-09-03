@@ -45,6 +45,7 @@ public:
   static const size_t InvalidIndex;
 
   LineStripGeometry();
+  LineStripGeometry(const LineStripGeometry &other);
   ~LineStripGeometry();
 
   /**

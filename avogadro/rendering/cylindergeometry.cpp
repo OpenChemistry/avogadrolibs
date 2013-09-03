@@ -62,6 +62,16 @@ CylinderGeometry::CylinderGeometry() : m_dirty(false), d(new Private)
 {
 }
 
+CylinderGeometry::CylinderGeometry(const CylinderGeometry &other)
+  : Drawable(other),
+    m_cylinders(other.m_cylinders),
+    m_indices(other.m_indices),
+    m_indexMap(other.m_indexMap),
+    m_dirty(true),
+    d(new Private)
+{
+}
+
 CylinderGeometry::~CylinderGeometry()
 {
   delete d;

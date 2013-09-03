@@ -28,6 +28,14 @@ Drawable::Drawable() :
 {
 }
 
+Drawable::Drawable(const Drawable &other)
+  : m_parent(other.m_parent),
+    m_visible(other.m_visible),
+    m_renderPass(other.m_renderPass),
+    m_identifier(other.m_identifier)
+{
+}
+
 Drawable::~Drawable()
 {
 }

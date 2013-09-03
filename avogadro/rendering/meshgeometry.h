@@ -53,6 +53,7 @@ public:
   static const unsigned int InvalidIndex;
 
   MeshGeometry();
+  MeshGeometry(const MeshGeometry &other);
   ~MeshGeometry();
 
   /**
