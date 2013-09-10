@@ -52,8 +52,8 @@ public:
   void visit(AmbientOcclusionSphereGeometry &) AVO_OVERRIDE;
   void visit(CylinderGeometry &) AVO_OVERRIDE { return; }
   void visit(MeshGeometry &) AVO_OVERRIDE { return; }
-  void visit(Texture2D &) AVO_OVERRIDE { return; }
-  void visit(TextLabel &) AVO_OVERRIDE { return; }
+  void visit(TextLabel2D &) AVO_OVERRIDE { return; }
+  void visit(TextLabel3D &) AVO_OVERRIDE { return; }
   void visit(LineStripGeometry &) AVO_OVERRIDE { return; }
 
   /**

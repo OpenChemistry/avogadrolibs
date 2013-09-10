@@ -19,6 +19,8 @@
 
 #include "avogadrorenderingexport.h"
 
+#include <avogadro/core/vector.h>
+
 #include <string>
 
 namespace Avogadro {
@@ -63,7 +65,8 @@ public:
    */
   virtual void render(const std::string &string,
                       const TextProperties &tprop,
-                      unsigned char *buffer, size_t dims[2]) const = 0;
+                      unsigned char *buffer,
+                      const Vector2i &dims) const = 0;
 };
 
 } // namespace Rendering

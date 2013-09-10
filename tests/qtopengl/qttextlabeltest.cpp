@@ -14,17 +14,14 @@
 
 ******************************************************************************/
 
-#include <avogadro/rendering/textlabel.h>
-
 #include <utilities/vtktesting/imageregressiontest.h>
 
 #include <avogadro/qtopengl/glwidget.h>
 
-#include <avogadro/rendering/absolutequadstrategy.h>
-#include <avogadro/rendering/billboardquadstrategy.h>
 #include <avogadro/rendering/geometrynode.h>
-#include <avogadro/rendering/overlayquadstrategy.h>
-#include <avogadro/rendering/textlabel.h>
+#include <avogadro/rendering/spheregeometry.h>
+#include <avogadro/rendering/textlabel2d.h>
+#include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
 
 #include <avogadro/core/vector.h>
@@ -40,12 +37,13 @@
 
 using Avogadro::Vector2f;
 using Avogadro::Vector3f;
-using Avogadro::Rendering::AbsoluteQuadStrategy;
-using Avogadro::Rendering::BillboardQuadStrategy;
+using Avogadro::Vector2i;
+using Avogadro::Vector3ub;
 using Avogadro::Rendering::GeometryNode;
-using Avogadro::Rendering::OverlayQuadStrategy;
-using Avogadro::Rendering::TextLabel;
+using Avogadro::Rendering::TextLabel2D;
+using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
+using Avogadro::Rendering::SphereGeometry;
 
 int qttextlabeltest(int argc, char *argv[])
 {
@@ -54,89 +52,133 @@ int qttextlabeltest(int argc, char *argv[])
   defaultFormat.setSampleBuffers(true);
   QGLFormat::setDefaultFormat(defaultFormat);
 
+  // Create and show widget
   QApplication app(argc, argv);
   Avogadro::QtOpenGL::GLWidget widget;
-  widget.setGeometry(10, 10, 250, 250);
+  widget.setGeometry(10, 10, 500, 500);
   widget.show();
 
+  // Create scene
   GeometryNode *geometry = new GeometryNode;
   widget.renderer().scene().rootNode().addChild(geometry);
+
+  // Add a small sphere at the origin for reference:
+  SphereGeometry *spheres = new SphereGeometry;
+  spheres->addSphere(Vector3f::Zero(), Vector3ub(128, 128, 128), 0.1);
+  geometry->addDrawable(spheres);
 
   // Default text property:
   TextProperties tprop;
 
-  // Test absolute positioning:
-  AbsoluteQuadStrategy *absQuad = new AbsoluteQuadStrategy;
-  absQuad->setAnchor(Vector3f(1.f, 1.f, 1.f));
-  absQuad->setNormal(Vector3f(0.f, 1.f, 0.f));
-  absQuad->setUp(Vector3f(0.f, 0.f, -1.f));
-  absQuad->setHAlign(AbsoluteQuadStrategy::HCenter);
-  absQuad->setVAlign(AbsoluteQuadStrategy::VCenter);
+  // Test alignment:
+  TextLabel3D *l3 = NULL;
+  TextLabel2D *l2 = NULL;
 
-  tprop.setFontFamily(TextProperties::SansSerif);
-  tprop.setHAlign(TextProperties::HCenter);
-  tprop.setVAlign(TextProperties::VCenter);
-  tprop.setPointSize(20);
-  tprop.setUnderline(true);
-  tprop.setColorRgba(0, 0, 255, 255);
+  // 3D:
+  tprop.setColorRgb(255, 0, 0);
+  tprop.setAlign(TextProperties::HLeft, TextProperties::VTop);
+  l3 = new TextLabel3D;
+  l3->setText("Upper Left Anchor");
+  l3->setAnchor(Vector3f::Zero());
+  l3->setTextProperties(tprop);
+  geometry->addDrawable(l3);
 
-  TextLabel *label = new TextLabel;
-  label->setString("Test\nAbsolute Position");
-  label->setTextProperties(tprop);
-  label->setRenderPass(Avogadro::Rendering::TranslucentPass);
-  label->setQuadPlacementStrategy(absQuad);
-  geometry->addDrawable(label);
+  tprop.setColorRgb(0, 255, 0);
+  tprop.setAlign(TextProperties::HLeft, TextProperties::VBottom);
+  l3 = new TextLabel3D;
+  l3->setText("Bottom Left Anchor");
+  l3->setAnchor(Vector3f::Zero());
+  l3->setTextProperties(tprop);
+  geometry->addDrawable(l3);
 
-  // Test billboarding
-  BillboardQuadStrategy *bboardQuad = new BillboardQuadStrategy;
-  bboardQuad->setAnchor(Vector3f(1.f, 0.f, -2.f));
-  bboardQuad->setRadius(2.5);
-  bboardQuad->setHAlign(AbsoluteQuadStrategy::HRight);
-  bboardQuad->setVAlign(AbsoluteQuadStrategy::VTop);
+  tprop.setColorRgb(0, 0, 255);
+  tprop.setAlign(TextProperties::HRight, TextProperties::VTop);
+  l3 = new TextLabel3D;
+  l3->setText("Upper Right Anchor");
+  l3->setAnchor(Vector3f::Zero());
+  l3->setTextProperties(tprop);
+  geometry->addDrawable(l3);
 
-  tprop.setFontFamily(TextProperties::Mono);
-  tprop.setHAlign(TextProperties::HRight);
-  tprop.setVAlign(TextProperties::VTop);
-  tprop.setUnderline(false);
-  tprop.setItalic(true);
-  tprop.setPointSize(15);
-  tprop.setColorRgba(255, 0, 0, 200);
+  tprop.setColorRgb(255, 255, 0);
+  tprop.setAlign(TextProperties::HRight, TextProperties::VBottom);
+  l3 = new TextLabel3D;
+  l3->setText("Bottom Right Anchor");
+  l3->setAnchor(Vector3f::Zero());
+  l3->setTextProperties(tprop);
+  geometry->addDrawable(l3);
 
-  label = new TextLabel;
-  label->setString("Test\nBillboard\nPosition");
-  label->setTextProperties(tprop);
-  label->setRenderPass(Avogadro::Rendering::TranslucentPass);
-  label->setQuadPlacementStrategy(bboardQuad);
-  geometry->addDrawable(label);
+  tprop.setColorRgba(255, 255, 255, 220);
+  tprop.setRotationDegreesCW(90.f);
+  tprop.setAlign(TextProperties::HCenter, TextProperties::VCenter);
+  l3 = new TextLabel3D;
+  l3->setText("Centered Anchor (3D)");
+  l3->setAnchor(Vector3f::Zero());
+  l3->setTextProperties(tprop);
+  l3->setRenderPass(Avogadro::Rendering::TranslucentPass);
+  geometry->addDrawable(l3);
+  tprop.setRotationDegreesCW(0.f);
+  tprop.setAlpha(255);
 
-  // Test overlay
-  OverlayQuadStrategy *overQuad = new OverlayQuadStrategy;
-  overQuad->setAnchor(Vector2f(0.05f, 0.05f));
-  overQuad->setHAlign(AbsoluteQuadStrategy::HLeft);
-  overQuad->setVAlign(AbsoluteQuadStrategy::VBottom);
+  // 2D:
+  tprop.setColorRgb(255, 0, 0);
+  tprop.setAlign(TextProperties::HLeft, TextProperties::VTop);
+  l2 = new TextLabel2D;
+  l2->setText("Upper Left Corner");
+  l2->setAnchor(Vector2i(0, widget.height()));
+  l2->setTextProperties(tprop);
+  geometry->addDrawable(l2);
 
-  tprop.setFontFamily(TextProperties::Mono);
-  tprop.setHAlign(TextProperties::HLeft);
-  tprop.setVAlign(TextProperties::VBottom);
-  tprop.setPointSize(8);
-  tprop.setColorRgba(64, 255, 128, 128);
-  tprop.setItalic(false);
-  tprop.setBold(true);
-  tprop.setRotationDegreesCW(12.3f);
+  tprop.setColorRgb(0, 255, 0);
+  tprop.setAlign(TextProperties::HLeft, TextProperties::VBottom);
+  l2 = new TextLabel2D;
+  l2->setText("Bottom Left Corner");
+  l2->setAnchor(Vector2i(0, 0));
+  l2->setTextProperties(tprop);
+  geometry->addDrawable(l2);
 
-  label = new TextLabel;
-  label->setString("Test\nOverlay\nPosition");
-  label->setTextProperties(tprop);
-  label->setRenderPass(Avogadro::Rendering::Overlay2DPass);
-  label->setQuadPlacementStrategy(overQuad);
-  geometry->addDrawable(label);
+  tprop.setColorRgb(0, 0, 255);
+  tprop.setAlign(TextProperties::HRight, TextProperties::VTop);
+  l2 = new TextLabel2D;
+  l2->setText("Upper Right Corner");
+  l2->setAnchor(Vector2i(widget.width(), widget.height()));
+  l2->setTextProperties(tprop);
+  geometry->addDrawable(l2);
 
-  // Camera setup
-  widget.renderer().camera().setIdentity();
-  widget.renderer().camera().lookAt(Vector3f(1.f, 1.f, 0.f),
-                                    Vector3f(-1.f, 0.f, -1.f),
-                                    Vector3f(0.f, 0.f, -1.f));
-  widget.renderer().camera().preTranslate(Vector3f(0.f, 0.f, -10.f));
+  tprop.setColorRgb(255, 255, 0);
+  tprop.setAlign(TextProperties::HRight, TextProperties::VBottom);
+  l2 = new TextLabel2D;
+  l2->setText("Bottom Right Corner");
+  l2->setAnchor(Vector2i(widget.width(), 0));
+  l2->setTextProperties(tprop);
+  geometry->addDrawable(l2);
+
+  tprop.setColorRgba(255, 255, 255, 220);
+  tprop.setAlign(TextProperties::HCenter, TextProperties::VCenter);
+  l2 = new TextLabel2D;
+  l2->setText("Centered Anchor (2D)");
+  l2->setAnchor(Vector2i(widget.width() / 2, widget.height() / 2));
+  l2->setTextProperties(tprop);
+  geometry->addDrawable(l2);
+
+  // Test the TextLabel3D's radius feature:
+  spheres->addSphere(Vector3f(0.f, 6.f, 0.f), Vector3ub(255, 255, 255), 1.f);
+
+  tprop.setColorRgba(255, 128, 64, 255);
+  tprop.setRotationDegreesCW(90.f);
+  l3 = new TextLabel3D;
+  l3->setText("Clipped");
+  l3->setAnchor(Vector3f(0.f, 6.f, 0.f));
+  l3->setTextProperties(tprop);
+  geometry->addDrawable(l3);
+
+  tprop.setColorRgba(64, 128, 255, 255);
+  tprop.setRotationDegreesCW(45.f);
+  l3 = new TextLabel3D;
+  l3->setText("Projected");
+  l3->setAnchor(Vector3f(0.f, 6.f, 0.f));
+  l3->setTextProperties(tprop);
+  l3->setRadius(1.f);
+  geometry->addDrawable(l3);
 
   // Make sure the widget renders the scene, and store it in a QImage.
   widget.raise();

@@ -19,6 +19,8 @@
 
 #include <avogadro/rendering/textproperties.h>
 
+#include <avogadro/core/vector.h>
+
 #include <QtGui/QApplication>
 #include <QtGui/QImage>
 
@@ -29,6 +31,7 @@
 typedef Avogadro::QtOpenGL::QtTextRenderStrategy Strategy;
 typedef Avogadro::Rendering::TextRenderStrategy Interface;
 using Avogadro::Rendering::TextProperties;
+using Avogadro::Vector2i;
 
 // Need to start an app to load fonts
 #define START_QAPP \
@@ -99,8 +102,7 @@ bool testRenderedString(Strategy &strategy, const std::string &str,
 {
   int bbox[4];
   strategy.boundingBox(str, tprop, bbox);
-  size_t dims[2] = {static_cast<size_t>(bbox[1] - bbox[0] + 1),
-                    static_cast<size_t>(bbox[3] - bbox[2] + 1)};
+  const Vector2i dims(bbox[1] - bbox[0] + 1, bbox[3] - bbox[2] + 1);
   std::vector<unsigned char> buffer(dims[0] * dims[1] * 4);
   if (buffer.empty())
     return false;
@@ -115,8 +117,7 @@ void saveRenderedString(Strategy &strategy, const std::string &str,
 {
   int bbox[4];
   strategy.boundingBox(str, tprop, bbox);
-  size_t dims[2] = {static_cast<size_t>(bbox[1] - bbox[0] + 1),
-                    static_cast<size_t>(bbox[3] - bbox[2] + 1)};
+  const Vector2i dims(bbox[1] - bbox[0] + 1, bbox[3] - bbox[2] + 1);
   std::vector<unsigned char> buffer(dims[0] * dims[1] * 4);
   if (buffer.empty())
     return;

@@ -22,7 +22,8 @@
 #include "shaderprogram.h"
 #include "geometrynode.h"
 #include "glrendervisitor.h"
-#include "textlabel.h"
+#include "textlabel2d.h"
+#include "textlabel3d.h"
 #include "textrenderstrategy.h"
 #include "visitor.h"
 
@@ -134,7 +135,8 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy *tren)
       void visit(CylinderGeometry &) { return; }
       void visit(MeshGeometry &) { return; }
       void visit(Texture2D &) { return; }
-      void visit(TextLabel &l) { l.invalidateTexture(); }
+      void visit(TextLabel2D &l) { l.resetTexture(); }
+      void visit(TextLabel3D &l) { l.resetTexture(); }
       void visit(LineStripGeometry &) { return; }
     } labelResetter;
 

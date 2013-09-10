@@ -21,8 +21,8 @@
 #include "cylindergeometry.h"
 #include "linestripgeometry.h"
 #include "meshgeometry.h"
-#include "textlabel.h"
-#include "texture2d.h"
+#include "textlabel2d.h"
+#include "textlabel3d.h"
 
 namespace Avogadro {
 namespace Rendering {
@@ -69,13 +69,16 @@ void GLRenderVisitor::visit(MeshGeometry &geometry)
     geometry.render(m_camera);
 }
 
-void GLRenderVisitor::visit(Texture2D &geometry)
+void GLRenderVisitor::visit(TextLabel2D &geometry)
 {
-  if (geometry.renderPass() == m_renderPass)
+  if (geometry.renderPass() == m_renderPass) {
+    if (m_textRenderStrategy)
+      geometry.buildTexture(*m_textRenderStrategy);
     geometry.render(m_camera);
+  }
 }
 
-void GLRenderVisitor::visit(TextLabel &geometry)
+void GLRenderVisitor::visit(TextLabel3D &geometry)
 {
   if (geometry.renderPass() == m_renderPass) {
     if (m_textRenderStrategy)
