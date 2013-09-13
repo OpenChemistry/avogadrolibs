@@ -42,7 +42,7 @@ add_subdirectory(io)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/io)
 add_subdirectory(quantumio)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/quantumio)
-
+add_subdirectory(command)
 if(USE_OPENGL)
   add_subdirectory(rendering)
   include_directories(${CMAKE_CURRENT_BINARY_DIR}/rendering)
