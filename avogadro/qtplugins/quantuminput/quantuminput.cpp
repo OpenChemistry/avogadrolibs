@@ -16,6 +16,7 @@
 
 #include "quantuminput.h"
 
+#include <avogadro/qtgui/avogadropython.h>
 #include <avogadro/qtgui/filebrowsewidget.h>
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/inputgenerator.h>
@@ -23,7 +24,6 @@
 #include <avogadro/qtgui/inputgeneratorwidget.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/molequeuemanager.h> // For MoleQueue::JobObject
-#include <avogadro/qtgui/quantumpython.h>
 
 #include <QtGui/QAction>
 #include <QtGui/QDialog>
@@ -210,6 +210,8 @@ void QuantumInput::updateInputGeneratorScripts()
   QStringList dirs;
   dirs << QCoreApplication::applicationDirPath() +
           "/../lib/avogadro2/scripts/inputGenerators";
+  dirs << QCoreApplication::applicationDirPath() +
+          "/../lib64/avogadro2/scripts/inputGenerators";
 
   foreach (const QString &dirStr, dirs) {
     qDebug() << "Checking for generator scripts in" << dirStr;

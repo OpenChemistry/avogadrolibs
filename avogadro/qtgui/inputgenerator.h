@@ -14,16 +14,18 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_INPUTGENERATOR_H
-#define AVOGADRO_QTPLUGINS_INPUTGENERATOR_H
+#ifndef AVOGADRO_QTGUI_INPUTGENERATOR_H
+#define AVOGADRO_QTGUI_INPUTGENERATOR_H
 
+#include <QtCore/QObject>
 #include "avogadroqtguiexport.h"
+
+#include <avogadro/core/avogadrocore.h>
 
 #include <qjsonobject.h>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QMap>
-#include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
@@ -41,6 +43,7 @@ class Molecule;
 
 namespace QtGui {
 class GenericHighlighter;
+class PythonScript;
 
 /**
  * @class InputGenerator inputgenerator.h <avogadro/qtgui/inputgenerator.h>
@@ -464,7 +467,7 @@ public:
   /**
    * @return True if debugging is enabled.
    */
-  bool debug() const { return m_debug; }
+  bool debug() const;
 
   /**
    * Query the script for the available options (<tt>--generate-options</tt>)
@@ -490,7 +493,7 @@ public:
   /**
    * @return The path to the generator file.
    */
-  QString scriptFilePath() const { return m_scriptFilePath; }
+  QString scriptFilePath() const;
 
   /**
    * Set the path to the input generator script file. This will reset any
@@ -583,9 +586,11 @@ public slots:
   /**
    * Enable/disable debugging.
    */
-  void setDebug(bool d) { m_debug = d; }
+  void setDebug(bool d);
 
 private:
+  PythonScript *m_interpreter;
+
   void setDefaultPythonInterpretor();
   QByteArray execute(const QStringList &args,
                      const QByteArray &scriptStdin = QByteArray()) const;
@@ -600,10 +605,8 @@ private:
   bool parseFormat(const QJsonObject &json, QTextCharFormat &format) const;
   bool parsePattern(const QJsonValue &json, QRegExp &pattern) const;
 
-  bool m_debug;
   // File extension of requested molecule format
   mutable QString m_moleculeExtension;
-  mutable QString m_scriptFilePath;
   mutable QString m_displayName;
   mutable QJsonObject m_options;
   mutable QStringList m_warnings;
@@ -616,10 +619,9 @@ private:
 
   mutable QMap<QString, GenericHighlighter*> m_highlightStyles;
 
-  QString m_pythonInterpreter;
 };
 
-} // namespace QtPlugins
+} // namespace QtGui
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_INPUTGENERATOR_H
+#endif // AVOGADRO_QTGUI_INPUTGENERATOR_H
