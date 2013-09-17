@@ -206,5 +206,20 @@ TEST(FileFormatManagerTest, filtering)
   ASSERT_TRUE(format != NULL);
   EXPECT_EQ(format->identifier(), std::string("readOnly"));
   delete format;
+}
 
+TEST(FileFormatManagerTest, unregister)
+{
+  Format testFormat("testingFormat", FileFormat::All);
+  FileFormatManager::registerFormat(testFormat.newInstance());
+
+  FileFormatManager &manager = FileFormatManager::instance();
+  FileFormat *format = manager.newFormatFromIdentifier("testingFormat");
+  ASSERT_TRUE(format != NULL);
+  EXPECT_EQ(format->identifier(), std::string("testingFormat"));
+  delete format;
+
+  EXPECT_TRUE(FileFormatManager::unregisterFormat("testingFormat"));
+  format = manager.newFormatFromIdentifier("testingFormat");
+  ASSERT_TRUE(format == NULL);
 }
