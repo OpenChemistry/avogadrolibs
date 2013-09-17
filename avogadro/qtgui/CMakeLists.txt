@@ -17,13 +17,13 @@ if(PYTHON_EXECUTABLE)
   set(PYTHON2_EXECUTABLE "${PYTHON_EXECUTABLE}")
 endif()
 
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h.in"
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
 "namespace Avogadro {
 static const char *pythonInterpreterPath = \"${PYTHON2_EXECUTABLE}\";
 }
 ")
-configure_file("${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/quantumpython.h")
+configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h")
 
 set(HEADERS
   elementtranslator.h
@@ -41,6 +41,7 @@ set(HEADERS
   molequeuequeuelistmodel.h
   molequeuewidget.h
   periodictableview.h
+  pythonscript.h
   sceneplugin.h
   scenepluginmodel.h
   toolplugin.h
@@ -65,6 +66,7 @@ set(SOURCES
   molequeuewidget.cpp
   periodictablescene_p.cpp
   periodictableview.cpp
+  pythonscript.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
   toolplugin.cpp

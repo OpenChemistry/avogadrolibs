@@ -17,7 +17,7 @@
 #include "inputgenerator.h"
 
 #include "generichighlighter.h"
-#include "quantumpython.h"
+#include "pythonscript.h"
 
 #include <avogadro/core/coordinateblockgenerator.h>
 #include <avogadro/core/elements.h>
@@ -33,8 +33,7 @@
 #include <QtGui/QBrush>
 
 #include <QtCore/QDebug>
-#include <QtCore/QFileInfo>
-#include <QtCore/QProcess>
+#include <QtCore/QFile>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QSettings>
 
@@ -45,23 +44,25 @@ namespace QtGui {
 
 InputGenerator::InputGenerator(const QString &scriptFilePath_, QObject *parent_)
   : QObject(parent_),
-    m_debug(!qgetenv("AVO_QM_INPUT_DEBUG").isEmpty()),
-    m_moleculeExtension("Unknown"),
-    m_scriptFilePath(scriptFilePath_)
+    m_interpreter(new PythonScript(scriptFilePath_, this)),
+    m_moleculeExtension("Unknown")
 {
-  setDefaultPythonInterpretor();
 }
 
 InputGenerator::InputGenerator(QObject *parent_)
   : QObject(parent_),
-    m_debug(!qgetenv("AVO_QM_INPUT_DEBUG").isEmpty()),
+    m_interpreter(new PythonScript(this)),
     m_moleculeExtension("Unknown")
 {
-  setDefaultPythonInterpretor();
 }
 
 InputGenerator::~InputGenerator()
 {
+}
+
+bool InputGenerator::debug() const
+{
+  return m_interpreter->debug();
 }
 
 QJsonObject InputGenerator::options() const
@@ -72,7 +73,13 @@ QJsonObject InputGenerator::options() const
     m_highlightStyles.clear();
 
     // Retrieve/set options
-    QByteArray json = execute(QStringList() << "--print-options");
+    QByteArray json = m_interpreter->execute(
+          QStringList() << "--print-options");
+
+    if (m_interpreter->hasErrors()) {
+      m_errors << m_interpreter->errorList();
+      return m_options;
+    }
 
     QJsonDocument doc;
     if (!parseJson(json, doc))
@@ -108,25 +115,31 @@ QString InputGenerator::displayName() const
 {
   m_errors.clear();
   if (m_displayName.isEmpty()) {
-    m_displayName = QString(execute(QStringList() << "--display-name"));
+    m_displayName = QString(m_interpreter->execute(
+                              QStringList() << "--display-name"));
+    m_errors << m_interpreter->errorList();
     m_displayName = m_displayName.trimmed();
   }
 
   return m_displayName;
 }
 
+QString InputGenerator::scriptFilePath() const
+{
+  return m_interpreter->scriptFilePath();
+}
+
 void InputGenerator::setScriptFilePath(const QString &scriptFile)
 {
   reset();
-  m_scriptFilePath = scriptFile;
+  m_interpreter->setScriptFilePath(scriptFile);
 }
 
 void InputGenerator::reset()
 {
-  setDefaultPythonInterpretor();
-  m_debug = !qgetenv("AVO_QM_INPUT_DEBUG").isEmpty();
+  m_interpreter->setDefaultPythonInterpretor();
+  m_interpreter->setScriptFilePath(QString());
   m_moleculeExtension = "Unknown";
-  m_scriptFilePath = QString();
   m_displayName = QString();
   m_options = QJsonObject();
   m_warnings.clear();
@@ -154,8 +167,13 @@ bool InputGenerator::generateInput(const QJsonObject &options_,
   if (!insertMolecule(allOptions, mol))
     return false;
 
-  QByteArray json(execute(QStringList() << "--generate-input",
-                          QJsonDocument(allOptions).toJson()));
+  QByteArray json(m_interpreter->execute(QStringList() << "--generate-input",
+                                         QJsonDocument(allOptions).toJson()));
+
+  if (m_interpreter->hasErrors()) {
+    m_errors << m_interpreter->errorList();
+    return false;
+  }
 
   QJsonDocument doc;
   if (!parseJson(json, doc))
@@ -327,86 +345,9 @@ InputGenerator::createFileHighlighter(const QString &fileName) const
   return toClone ? new GenericHighlighter(*toClone) : toClone;
 }
 
-void InputGenerator::setDefaultPythonInterpretor()
+void InputGenerator::setDebug(bool d)
 {
-  m_pythonInterpreter = qgetenv("AVO_PYTHON_INTERPRETER");
-  if (m_pythonInterpreter.isEmpty()) {
-    m_pythonInterpreter = QSettings().value(
-          "quantumInput/interpreters/python").toString();
-  }
-  if (m_pythonInterpreter.isEmpty())
-    m_pythonInterpreter = pythonInterpreterPath;
-}
-
-QByteArray InputGenerator::execute(const QStringList &args,
-                                   const QByteArray &scriptStdin) const
-{
-  QProcess proc;
-
-  // Merge stdout and stderr
-  proc.setProcessChannelMode(QProcess::MergedChannels);
-
-  // Add debugging flag if needed.
-  QStringList realArgs(args);
-  if (m_debug)
-    realArgs.prepend("--debug");
-
-  // Start script
-  realArgs.prepend(m_scriptFilePath);
-  if (m_debug) {
-    qDebug() << "Executing" << m_pythonInterpreter << realArgs.join(" ")
-             << "<" << scriptStdin;
-  }
-  proc.start(m_pythonInterpreter, realArgs);
-
-  // Write scriptStdin to the process's stdin
-  if (!scriptStdin.isNull()) {
-    if (!proc.waitForStarted(5000)) {
-      m_errors << tr("Error running script '%1 %2': Timed out waiting for "
-                     "start (%3).")
-                  .arg(m_pythonInterpreter, realArgs.join(" "),
-                       processErrorString(proc));
-      return QByteArray();
-    }
-
-    qint64 len = proc.write(scriptStdin);
-    if (len != static_cast<qint64>(scriptStdin.size())) {
-      m_errors << tr("Error running script '%1 %2': failed to write to stdin "
-                     "(len=%3, wrote %4 bytes, QProcess error: %5).")
-                  .arg(m_pythonInterpreter).arg(realArgs.join(" "))
-                  .arg(scriptStdin.size()).arg(len)
-                  .arg(processErrorString(proc));
-      return QByteArray();
-    }
-    proc.closeWriteChannel();
-  }
-
-  if (!proc.waitForFinished(5000)) {
-    m_errors << tr("Error running script '%1 %2': Timed out waiting for "
-                   "finish (%3).")
-                .arg(m_pythonInterpreter, realArgs.join(" "),
-                     processErrorString(proc));
-    return QByteArray();
-  }
-
-  if (proc.exitStatus() != QProcess::NormalExit || proc.exitCode() != 0) {
-    m_errors << tr("Error running script '%1 %2': Abnormal exit status %3 "
-                   "(%4: %5)\n\nOutput:\n%6")
-                .arg(m_pythonInterpreter)
-                .arg(realArgs.join(" "))
-                .arg(proc.exitCode())
-                .arg(processErrorString(proc))
-                .arg(proc.errorString())
-                .arg(QString(proc.readAll()));
-    return QByteArray();
-  }
-
-  QByteArray result(proc.readAll());
-
-  if (m_debug)
-    qDebug() << "Output:" << result;
-
-  return result;
+  m_interpreter->setDebug(d);
 }
 
 bool InputGenerator::parseJson(const QByteArray &json, QJsonDocument &doc) const
@@ -420,33 +361,6 @@ bool InputGenerator::parseJson(const QByteArray &json, QJsonDocument &doc) const
     return false;
   }
   return true;
-}
-
-QString InputGenerator::processErrorString(const QProcess &proc) const
-{
-  QString result;
-  switch (proc.error()) {
-  case QProcess::FailedToStart:
-    result = tr("Script failed to start.");
-    break;
-  case QProcess::Crashed:
-    result = tr("Script crashed.");
-    break;
-  case QProcess::Timedout:
-    result = tr("Script timed out.");
-    break;
-  case QProcess::ReadError:
-    result = tr("Read error.");
-    break;
-  case QProcess::WriteError:
-    result = tr("Write error.");
-    break;
-  default:
-  case QProcess::UnknownError:
-    result = tr("Unknown error.");
-    break;
-  }
-  return result;
 }
 
 bool InputGenerator::insertMolecule(QJsonObject &json,
