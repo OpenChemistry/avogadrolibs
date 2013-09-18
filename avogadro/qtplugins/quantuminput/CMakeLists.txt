@@ -41,23 +41,5 @@ if(INSTALL_TEST_INPUT_GENERATOR)
   list(APPEND input_generators inputGenerators/inputgeneratortest.py)
 endif()
 
-# Place input scripts in the same relative path to the build-tree executable
-set(configured_script_dir
-  "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../lib/avogadro2/scripts/inputGenerators/")
-message("Writing configured scripts to ${configured_script_dir}")
-# Configure files to set shebangs
-set(configured_input_generators)
-foreach(script ${input_generators})
-  get_filename_component(fname "${script}" NAME)
-  set(configured_script
-    "${configured_script_dir}/${fname}")
-  configure_file("${script}" "${configured_script}" @ONLY)
-  list(APPEND configured_input_generators "${configured_script}")
-endforeach()
-
-# Installed location of the input generators:
-set(QUANTUMINPUT_GENERATOR_DIR
-  "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/inputGenerators/")
-
-install(PROGRAMS ${configured_input_generators}
-  DESTINATION "${QUANTUMINPUT_GENERATOR_DIR}")
+install(PROGRAMS ${input_generators}
+  DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/inputGenerators/")
