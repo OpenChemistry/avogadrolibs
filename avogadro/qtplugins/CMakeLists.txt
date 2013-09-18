@@ -101,6 +101,7 @@ add_subdirectory(networkdatabases)
 add_subdirectory(openbabel)
 add_subdirectory(quantuminput)
 add_subdirectory(quantumoutput)
+add_subdirectory(scriptfileformats)
 # The scene plugins
 add_subdirectory(ballandstick)
 add_subdirectory(vanderwaals)
