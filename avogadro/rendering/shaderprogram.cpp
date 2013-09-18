@@ -262,7 +262,7 @@ bool ShaderProgram::disableAttributeArray(const std::string &name)
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
-                                      int stride, Type elementType,
+                                      size_t stride, Type elementType,
                                       int elementTupleSize,
                                       NormalizeOption normalize)
 {

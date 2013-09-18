@@ -331,7 +331,8 @@ bool MoleQueueQueueListModel::isQueueIndex(const QModelIndex &i) const
 
 bool MoleQueueQueueListModel::isProgramIndex(const QModelIndex &i) const
 {
-  return i.isValid() && m_uidLookup.contains(i.internalId());
+  return i.isValid()
+      && m_uidLookup.contains(static_cast<quint32>(i.internalId()));
 }
 
 quint32 MoleQueueQueueListModel::lookupUid(const QString &queue,

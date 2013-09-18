@@ -32,15 +32,15 @@ Molecule::Molecule() : m_graphDirty(false), m_basisSet(NULL)
 }
 
 Molecule::Molecule(const Molecule &other)
- : m_graphDirty(true), m_basisSet(NULL), m_data(other.m_data),
+ : m_graphDirty(true), m_data(other.m_data),
    m_atomicNumbers(other.atomicNumbers()), m_positions2d(other.m_positions2d),
    m_positions3d(other.m_positions3d), m_bondPairs(other.m_bondPairs),
-   m_bondOrders(other.m_bondOrders)
+   m_bondOrders(other.m_bondOrders), m_basisSet(NULL)
 {
   // Copy over any meshes
   for(size_t i=0; i< other.meshCount(); i++) {
-    Mesh *mesh = addMesh();
-    *mesh = *other.mesh(i);
+    Mesh *m = addMesh();
+    *m = *other.mesh(i);
   }
 }
 
@@ -60,8 +60,8 @@ Molecule& Molecule::operator=(const Molecule& other)
 
     // Copy over any meshes
     for(size_t i=0; i< other.meshCount(); i++) {
-      Mesh *mesh = addMesh();
-      *mesh = *other.mesh(i);
+      Mesh *m = addMesh();
+      *m = *other.mesh(i);
     }
   }
 

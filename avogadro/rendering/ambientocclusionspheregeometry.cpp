@@ -471,7 +471,8 @@ class AmbientOcclusionBaker
       glDisable(GL_DEPTH_TEST);
 
       // render the scene
-      m_renderer->renderAO(modelView, projection, m_textureSize, numDirections);
+      m_renderer->renderAO(modelView, projection, m_textureSize,
+                           static_cast<float>(numDirections));
 
       // unbind framebuffer
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -807,9 +808,10 @@ void AmbientOcclusionSphereGeometry::update()
     sphereIndices.reserve(m_indices.size() * 4);
     sphereVertices.reserve(m_spheres.size() * 4);
 
-    int nSpheres = m_spheres.size();
-    int nSpheresSquared = std::ceil(std::sqrt(static_cast<float>(nSpheres)));
-    float tileSize = 1.0f / nSpheresSquared;
+    int nSpheres = static_cast<int>(m_spheres.size());
+    int nSpheresSquared = static_cast<int>(
+          std::ceil(std::sqrt(static_cast<float>(nSpheres))));
+    float tileSize = 1.0f / static_cast<float>(nSpheresSquared);
     float halfTileSize = tileSize / 2.0f;
     int tileX = 0;
     int tileY = 0;
@@ -822,7 +824,7 @@ void AmbientOcclusionSphereGeometry::update()
     for (std::vector<SphereColor>::const_iterator i = m_spheres.begin();
         i != m_spheres.end(); ++i)
       center += i->center;
-    center /= nSpheres;
+    center /= static_cast<float>(nSpheres);
 
     /*
     d->translate = Eigen::Matrix4f::Identity();
@@ -846,8 +848,10 @@ void AmbientOcclusionSphereGeometry::update()
       unsigned int index = 4 * static_cast<unsigned int>(*itIndex);
       ColorTextureVertex vert(itSphere->center, itSphere->color,
                               Vector2f(-r, -r),
-                              Vector2f(halfTileSize + tileSize * tileX,
-                                       halfTileSize + tileSize * tileY));
+                              Vector2f(halfTileSize + tileSize
+                                       * static_cast<float>(tileX),
+                                       halfTileSize + tileSize
+                                       * static_cast<float>(tileY)));
       sphereVertices.push_back(vert);
       vert.textureCoord = Vector2f(-r, r);
       sphereVertices.push_back(vert);
@@ -879,9 +883,11 @@ void AmbientOcclusionSphereGeometry::update()
 
 
     SphereAmbientOcclusionRenderer aoSphereRenderer(d->vbo, d->ibo,
-        m_spheres.size(), d->numberOfVertices, d->numberOfIndices);
+        static_cast<int>(m_spheres.size()),
+        static_cast<int>(d->numberOfVertices),
+        static_cast<int>(d->numberOfIndices));
     AmbientOcclusionBaker baker(&aoSphereRenderer, d->aoTextureSize);
-    baker.accumulateAO(center, radius + 2.0);
+    baker.accumulateAO(center, radius + 2.0f);
     d->aoTexture = baker.aoTexture();
     baker.destroy();
     aoSphereRenderer.destroy();
@@ -978,9 +984,9 @@ void AmbientOcclusionSphereGeometry::render(const Camera &camera)
   // scaled such that half a texel is removed from all sides of a tile.
 
   // width of a singl texel in texture coordinates [0, 1]
-  float texel = 1.0f / d->aoTextureSize;
+  float texel = 1.0f / static_cast<float>(d->aoTextureSize);
   // with of a single tile in texture coordinates [0, 1]
-  float tile = 1.0f / std::ceil(std::sqrt(static_cast<float>(m_spheres.size())));
+  float tile = 1.f / std::ceil(std::sqrt(static_cast<float>(m_spheres.size())));
 
 
   // The uv coordinates, centered around the tileOffset are originally in the

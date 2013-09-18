@@ -64,7 +64,7 @@ int qttextlabeltest(int argc, char *argv[])
 
   // Add a small sphere at the origin for reference:
   SphereGeometry *spheres = new SphereGeometry;
-  spheres->addSphere(Vector3f::Zero(), Vector3ub(128, 128, 128), 0.1);
+  spheres->addSphere(Vector3f::Zero(), Vector3ub(128, 128, 128), 0.1f);
   geometry->addDrawable(spheres);
 
   // Default text property:
