@@ -92,7 +92,7 @@ public:
    * @param isInMode The mode(s) to test against
    * @return True if the format is currently in the supplied mode(s).
    */
-  bool isMode(Operation isInMode) { return m_mode & isInMode; }
+  bool isMode(Operation isInMode) { return (m_mode & isInMode) != None; }
 
   /**
    * @brief Close any opened file handles.

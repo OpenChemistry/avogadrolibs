@@ -27,10 +27,10 @@ Molecule::Molecule(const Molecule &other)
   : QObject(), Core::Molecule(other)
 {
   // Now assign the unique ids
-  for(int i=0; i<atomCount(); i++)
+  for (int i = 0; i < static_cast<int>(atomCount()); i++)
     m_atomUniqueIds.push_back(i);
 
-  for(int i=0; i<bondCount(); i++)
+  for (int i = 0; i < static_cast<int>(bondCount()); i++)
     m_bondUniqueIds.push_back(i);
 }
 
@@ -54,11 +54,11 @@ Molecule& Molecule::operator=(const Core::Molecule& other)
 
   // Reset the unique ids.
   m_atomUniqueIds.clear();
-  for(int i=0; i<atomCount(); i++)
+  for (int i = 0; i < static_cast<int>(atomCount()); i++)
     m_atomUniqueIds.push_back(i);
 
   m_bondUniqueIds.clear();
-  for(int i=0; i<bondCount(); i++)
+  for (int i = 0; i < static_cast<int>(bondCount()); i++)
     m_bondUniqueIds.push_back(i);
 
   return *this;

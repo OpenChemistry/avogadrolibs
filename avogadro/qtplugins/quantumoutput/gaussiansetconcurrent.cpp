@@ -105,7 +105,8 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube *cube,
   m_set->initCalculation();
 
   // Set up the points we want to calculate the density at.
-  m_gaussianShells = new QVector<GaussianShell>(cube->data()->size());
+  m_gaussianShells =
+      new QVector<GaussianShell>(static_cast<int>(cube->data()->size()));
 
   for (int i = 0; i < m_gaussianShells->size(); ++i) {
     (*m_gaussianShells)[i].tools = m_tools;

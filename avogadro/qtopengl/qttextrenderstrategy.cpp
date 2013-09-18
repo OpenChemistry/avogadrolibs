@@ -89,7 +89,7 @@ inline QFont textPropertiesToQFont(const TextProperties &prop)
 
   TextProperties::FontStyles style = prop.fontStyles();
 
-  QFont result(family, prop.pointSize(),
+  QFont result(family, static_cast<int>(prop.pointSize()),
                static_cast<bool>(style & TextProperties::Bold) ? QFont::Bold
                                                                : QFont::Normal,
                static_cast<bool>(style & TextProperties::Italic));
@@ -137,10 +137,10 @@ void QtTextRenderStrategy::boundingBox(
     tmpRect = transform.mapRect(tmpRect);
 
     // Update the bbox, rounding values to give the largest containing bbox
-    rect.setLeft(std::floor(tmpRect.left()));
-    rect.setRight(std::floor(tmpRect.right()));
-    rect.setTop(std::ceil(tmpRect.top()));
-    rect.setBottom(std::floor(tmpRect.bottom()));
+    rect.setLeft(static_cast<int>(std::floor(tmpRect.left())));
+    rect.setRight(static_cast<int>(std::floor(tmpRect.right())));
+    rect.setTop(static_cast<int>(std::ceil(tmpRect.top())));
+    rect.setBottom(static_cast<int>(std::floor(tmpRect.bottom())));
   }
 
   bbox[0] = rect.left();

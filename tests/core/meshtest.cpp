@@ -40,7 +40,7 @@ MeshTest::MeshTest()
   Color3f color = Color3f(23, 23, 23);
   colors.push_back(color);
 
-  Avogadro::Vector3f vec(1.2, 1.3, 1.4);
+  Avogadro::Vector3f vec(1.2f, 1.3f, 1.4f);
 
   vertices.push_back(vec);
   normals.push_back(vec);
@@ -48,7 +48,7 @@ MeshTest::MeshTest()
   m_testMesh.setColors(colors);
   m_testMesh.setNormals(normals);
   m_testMesh.setVertices(vertices);
-  m_testMesh.setIsoValue(1.2);
+  m_testMesh.setIsoValue(1.2f);
   m_testMesh.setName("testmesh");
   m_testMesh.setOtherMesh(1);
 }

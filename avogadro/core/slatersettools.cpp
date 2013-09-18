@@ -50,7 +50,7 @@ double SlaterSetTools::calculateMolecularOrbital(const Vector3 &position,
   vector<double> values(calculateValues(position));
 
   const MatrixX &matrix = m_basis->normalizedMatrix();
-  int matrixSize(matrix.rows());
+  int matrixSize(static_cast<int>(matrix.rows()));
   int indexMO(mo - 1);
 
   // Now calculate the value of the density at this point in space
@@ -64,7 +64,7 @@ double SlaterSetTools::calculateMolecularOrbital(const Vector3 &position,
 double SlaterSetTools::calculateElectronDensity(const Vector3 &position) const
 {
   const MatrixX &matrix = m_basis->densityMatrix();
-  int matrixSize(m_basis->normalizedMatrix().rows());
+  int matrixSize(static_cast<int>(m_basis->normalizedMatrix().rows()));
   if (matrix.rows() != matrixSize || matrix.cols() != matrixSize)
     return 0.0;
 

@@ -288,7 +288,7 @@ Index Texture2D::pushTexture() const
 
 void Texture2D::popTexture(Index id) const
 {
-  glBindTexture(GL_TEXTURE_2D, id);
+  glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(id));
 }
 
 bool Texture2D::generateTextureHandle()

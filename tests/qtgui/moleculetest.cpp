@@ -71,10 +71,7 @@ MoleculeTest::MoleculeTest()
   Color3f color = Color3f(23, 23, 23);
   colors.push_back(color);
 
-  Avogadro::Vector3f vec;
-  vec[0] = 1.2;
-  vec[1] = 1.3;
-  vec[2] = 1.4;
+  Avogadro::Vector3f vec(1.2f, 1.3f, 1.4f);
 
   vertices.push_back(vec);
   normals.push_back(vec);
@@ -82,7 +79,7 @@ MoleculeTest::MoleculeTest()
   mesh->setColors(colors);
   mesh->setNormals(normals);
   mesh->setVertices(vertices);
-  mesh->setIsoValue(1.2);
+  mesh->setIsoValue(1.2f);
   mesh->setName("testmesh");
   mesh->setOtherMesh(1);
   mesh->setStable(false);
@@ -441,10 +438,7 @@ TEST_F(MoleculeTest, baseAssignment)
   Color3f color = Color3f(23, 23, 23);
   colors.push_back(color);
 
-  Avogadro::Vector3f vec;
-  vec[0] = 1.2;
-  vec[1] = 1.3;
-  vec[2] = 1.4;
+  Avogadro::Vector3f vec(1.2f, 1.3f, 1.4f);
 
   vertices.push_back(vec);
   normals.push_back(vec);
@@ -452,7 +446,7 @@ TEST_F(MoleculeTest, baseAssignment)
   mesh->setColors(colors);
   mesh->setNormals(normals);
   mesh->setVertices(vertices);
-  mesh->setIsoValue(1.2);
+  mesh->setIsoValue(1.2f);
   mesh->setName("testmesh");
   mesh->setOtherMesh(1);
   mesh->setStable(false);

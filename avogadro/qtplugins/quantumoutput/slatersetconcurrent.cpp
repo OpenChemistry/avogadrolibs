@@ -95,7 +95,7 @@ bool SlaterSetConcurrent::setUpCalculation(Core::Cube *cube,
   m_set->initCalculation();
 
   // Set up the points we want to calculate the density at.
-  m_shells = new QVector<SlaterShell>(cube->data()->size());
+  m_shells = new QVector<SlaterShell>(static_cast<int>(cube->data()->size()));
 
   for (int i = 0; i < m_shells->size(); ++i) {
     (*m_shells)[i].tools = m_tools;
