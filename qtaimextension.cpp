@@ -29,6 +29,7 @@
 #include <avogadro/bond.h>
 #include <avogadro/painter.h>
 #include <avogadro/toolgroup.h>
+#include <avogadro/engine.h>
 
 #include <QAction>
 
@@ -184,7 +185,15 @@ namespace Avogadro
     }
 
     m_molecule->clear();
-    widget->toolGroup()->setActiveTool("Navigate");
+    if (widget) {
+      widget->toolGroup()->setActiveTool("Navigate");
+      // Make sure QTAIM engine is turned on too
+
+      foreach (Engine *engine, widget->engines()) {
+        if (engine->identifier() == "QTAIM")
+          engine->setEnabled(true);
+      }
+    }
 
 
     // Instantiate an Evaluator
