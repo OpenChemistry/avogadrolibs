@@ -32,40 +32,41 @@ using namespace Eigen;
 
 namespace Avogadro {
 
-  class QTAIMMathUtilities
+  namespace QTAIMMathUtilities
   {
-  public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    Matrix<qreal,3,1> eigenvaluesOfASymmetricThreeByThreeMatrix(const Matrix<qreal,3,3> &A);
+    Matrix<qreal,3,3> eigenvectorsOfASymmetricThreeByThreeMatrix(const Matrix<qreal,3,3> &A);
+    Matrix<qreal,4,1> eigenvaluesOfASymmetricFourByFourMatrix(const Matrix<qreal,4,4> &A);
+    Matrix<qreal,4,4> eigenvectorsOfASymmetricFourByFourMatrix(const Matrix<qreal,4,4> &A);
 
-    static Matrix<qreal,3,1> eigenvaluesOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A );
-    static Matrix<qreal,3,3> eigenvectorsOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A );
-    static Matrix<qreal,4,1> eigenvaluesOfASymmetricFourByFourMatrix( Matrix<qreal,4,4> A );
-    static Matrix<qreal,4,4> eigenvectorsOfASymmetricFourByFourMatrix( Matrix<qreal,4,4> A );
+    qint64 signOfARealNumber(qreal x);
+    qint64 signatureOfASymmetricThreeByThreeMatrix(const Matrix<qreal,3,3> &A);
+    qreal ellipticityOfASymmetricThreeByThreeMatrix(const Matrix<qreal,3,3> &A);
 
-    static qint64 signOfARealNumber( qreal x );
-    static qint64 signatureOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A );
-    static qreal ellipticityOfASymmetricThreeByThreeMatrix( Matrix<qreal,3,3> A );
+    qreal distance(const Matrix<qreal,3,1> &a, const Matrix<qreal,3,1> &b);
 
-    static qreal distance( Matrix<qreal,3,1> a, Matrix<qreal,3,1> b  );
+    Matrix<qreal,3,1> sphericalToCartesian(const Matrix<qreal,3,1> &rtp,
+                                           const Matrix<qreal,3,1> &x0y0z0);
+    Matrix<qreal,3,1> sphericalToCartesian(const Matrix<qreal,3,1> &rtp);
 
-    static Matrix<qreal,3,1> sphericalToCartesian( Matrix<qreal,3,1> rtp, Matrix<qreal,3,1> x0y0z0 );
-    static Matrix<qreal,3,1> sphericalToCartesian( Matrix<qreal,3,1> rtp );
-
-    static Matrix<qreal,3,1> cartesianToSpherical( Matrix<qreal,3,1> xyz, Matrix<qreal,3,1> x0y0z0 );
-    static Matrix<qreal,3,1> cartesianToSpherical( Matrix<qreal,3,1> xyz );
+    Matrix<qreal,3,1> cartesianToSpherical(const Matrix<qreal,3,1> &xyz,
+                                           const Matrix<qreal,3,1> &x0y0z0);
+    Matrix<qreal,3,1> cartesianToSpherical(const Matrix<qreal,3,1> &xyz);
 
     // Cerjan-Miller-Baker-Popelier Methods
 
     // A small number to prevent divide by zero in CMBP routines
 #define SMALL 1.e-10
 
-    static Matrix<qreal,3,1> minusThreeSignatureLocatorGradient( Matrix<qreal,3,1> g, Matrix<qreal,3,3> H );
-    static Matrix<qreal,3,1> minusOneSignatureLocatorGradient  ( Matrix<qreal,3,1> g, Matrix<qreal,3,3> H );
-    static Matrix<qreal,3,1> plusOneSignatureLocatorGradient   ( Matrix<qreal,3,1> g, Matrix<qreal,3,3> H );
-    static Matrix<qreal,3,1> plusThreeSignatureLocatorGradient ( Matrix<qreal,3,1> g, Matrix<qreal,3,3> H );
-
-  };
-
+    Matrix<qreal,3,1> minusThreeSignatureLocatorGradient(const Matrix<qreal,3,1> &g,
+                                                         const Matrix<qreal,3,3> &H);
+    Matrix<qreal,3,1> minusOneSignatureLocatorGradient(const Matrix<qreal,3,1> &g,
+                                                       const Matrix<qreal,3,3> &H);
+    Matrix<qreal,3,1> plusOneSignatureLocatorGradient(const Matrix<qreal,3,1> &g,
+                                                      const Matrix<qreal,3,3> &H);
+    Matrix<qreal,3,1> plusThreeSignatureLocatorGradient(const Matrix<qreal,3,1> &g,
+                                                        const Matrix<qreal,3,3> &H);
+  }
 } // namespace Avogadro
 
 #endif // QTAIMMATHUTILITIES_H
