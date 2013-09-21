@@ -30,10 +30,7 @@
 #include <QVector3D>
 #include <QPair>
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #include <Eigen/Core>
-#pragma GCC diagnostic pop
 
 #include "qtaimwavefunction.h"
 #include "qtaimwavefunctionevaluator.h"
