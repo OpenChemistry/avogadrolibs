@@ -27,6 +27,7 @@
 #include <avogadro/molecule.h>
 #include <avogadro/atom.h>
 #include <avogadro/bond.h>
+#include <avogadro/fragment.h>
 #include <avogadro/painter.h>
 #include <avogadro/toolgroup.h>
 #include <avogadro/engine.h>
@@ -184,7 +185,6 @@ namespace Avogadro
         return 0;
     }
 
-    m_molecule->clear();
     if (widget) {
       widget->toolGroup()->setActiveTool("Navigate");
       // Make sure QTAIM engine is turned on too
@@ -195,6 +195,15 @@ namespace Avogadro
       }
     }
 
+    //    m_molecule->clear();
+    // Don't clear the molecule, since this will destroy all meshes, etc.
+    // Instead, we'll clear the atoms and bonds, which will be re-created from the QTAIM file.
+    foreach(Bond *bond, m_molecule->bonds())
+      m_molecule->removeBond(bond);
+    foreach(Atom *atom, m_molecule->atoms())
+      m_molecule->removeAtom(atom);
+    foreach(Fragment *ring, m_molecule->rings())
+      m_molecule->removeRing(ring);
 
     // Instantiate an Evaluator
     QTAIMWavefunctionEvaluator eval(wfn);
