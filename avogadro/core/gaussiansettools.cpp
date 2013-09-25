@@ -50,7 +50,7 @@ double GaussianSetTools::calculateMolecularOrbital(const Vector3 &position,
   vector<double> values(calculateValues(position));
 
   const MatrixX &matrix = m_basis->moMatrix();
-  int matrixSize(matrix.rows());
+  int matrixSize(static_cast<int>(matrix.rows()));
   int indexMO(mo - 1);
 
   // Now calculate the value of the density at this point in space
@@ -64,7 +64,7 @@ double GaussianSetTools::calculateMolecularOrbital(const Vector3 &position,
 double GaussianSetTools::calculateElectronDensity(const Vector3 &position) const
 {
   const MatrixX &matrix = m_basis->densityMatrix();
-  int matrixSize(m_basis->moMatrix().rows());
+  int matrixSize(static_cast<int>(m_basis->moMatrix().rows()));
   if (matrix.rows() != matrixSize || matrix.cols() != matrixSize) {
     return 0.0;
   }
@@ -87,7 +87,7 @@ double GaussianSetTools::calculateElectronDensity(const Vector3 &position) const
 double GaussianSetTools::calculateSpinDensity(const Vector3 &position) const
 {
   const MatrixX &matrix = m_basis->spinDensityMatrix();
-  int matrixSize(m_basis->moMatrix().rows());
+  int matrixSize(static_cast<int>(m_basis->moMatrix().rows()));
   if (matrix.rows() != matrixSize || matrix.cols() != matrixSize) {
     return 0.0;
   }
@@ -126,7 +126,7 @@ inline bool GaussianSetTools::isSmall(double val) const
 inline vector<double> GaussianSetTools::calculateValues(const Vector3 &position) const
 {
   m_basis->initCalculation();
-  size_t atomsSize = m_molecule->atomCount();
+  unsigned int atomsSize = static_cast<unsigned int>(m_molecule->atomCount());
   size_t basisSize = m_basis->symmetry().size();
   const std::vector<int> &basis = m_basis->symmetry();
   const std::vector<unsigned int> &atomIndices = m_basis->atomIndices();
@@ -150,7 +150,7 @@ inline vector<double> GaussianSetTools::calculateValues(const Vector3 &position)
   values.resize(matrixSize, 0.0);
 
   // Now calculate the values at this point in space
-  for (size_t i = 0; i < basisSize; ++i) {
+  for (unsigned int i = 0; i < basisSize; ++i) {
     switch (basis[i]) {
     case GaussianSet::S:
       pointS(i, dr2[atomIndices[i]], values);

@@ -933,7 +933,7 @@ void BondCentricTool::drawBondAngle(Rendering::GeometryNode &node,
 
   // Add an arc and label to show a bit more info:
   const Vector3f selectedBondOffset(m_planeNormal.cross(m_bondVector));
-  const float radius(movingBondVector.norm() * 0.75);
+  const float radius(movingBondVector.norm() * 0.75f);
   Vector3f startEdge(newA2Direction * radius);
   Vector3f normal(m_bondVector);
   float angle = vectorAngleDegrees(startEdge, selectedBondOffset, normal);
@@ -1024,7 +1024,7 @@ void BondCentricTool::drawAtomBondAngle(Rendering::GeometryNode &node,
   const Vector3f anchorVector(otherAnchorAtomPos - atomPos);
   const Vector3f anchorUnitVector(anchorVector.normalized());
 
-  const float radius(otherVector.norm() * 0.75);
+  const float radius(otherVector.norm() * 0.75f);
   const Vector3f &origin(atomPos);
   const Vector3f start(anchorUnitVector * radius);
   const Vector3f axis(anchorVector.cross(otherVector).normalized());

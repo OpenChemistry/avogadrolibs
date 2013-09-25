@@ -166,7 +166,7 @@ void LineStripGeometry::render(const Camera &camera)
 
   // There is an implicit ending index of m_vertices.size():
   startIndex = *startIter;
-  endIndex = m_vertices.size();
+  endIndex = static_cast<unsigned int>(m_vertices.size());
   glLineWidth(*widthIter);
   glDrawArrays(GL_LINE_STRIP,
                static_cast<GLint>(startIndex),
@@ -196,7 +196,7 @@ size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f> &vertices,
     return InvalidIndex;
 
   size_t result = m_lineStarts.size();
-  m_lineStarts.push_back(m_vertices.size());
+  m_lineStarts.push_back(static_cast<unsigned int>(m_vertices.size()));
   m_lineWidths.push_back(lineWidth);
 
   Array<Vector4ub>::const_iterator colorIter(rgba.begin());
@@ -219,7 +219,7 @@ size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f> &vertices,
     return InvalidIndex;
 
   size_t result = m_lineStarts.size();
-  m_lineStarts.push_back(m_vertices.size());
+  m_lineStarts.push_back(static_cast<unsigned int>(m_vertices.size()));
   m_lineWidths.push_back(lineWidth);
 
   Array<Vector3ub>::const_iterator colorIter(rgb.begin());
@@ -244,7 +244,7 @@ size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f> &vertices,
     return InvalidIndex;
 
   size_t result = m_lineStarts.size();
-  m_lineStarts.push_back(m_vertices.size());
+  m_lineStarts.push_back(static_cast<unsigned int>(m_vertices.size()));
   m_lineWidths.push_back(lineWidth);
 
   Array<Vector3f>::const_iterator vertIter(vertices.begin());

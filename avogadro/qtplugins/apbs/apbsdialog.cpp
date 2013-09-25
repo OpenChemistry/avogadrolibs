@@ -157,7 +157,7 @@ void ApbsDialog::runPdb2Pqr()
     return;
   }
 
-  QString pqrFileName = QFileInfo(pdbFileName).baseName() + ".pqr";
+  QString pqrFileName_ = QFileInfo(pdbFileName).baseName() + ".pqr";
   QString forceFieldName = m_ui->forceFieldComboBox->currentText();
 
   // run pdb2pqr
@@ -165,7 +165,7 @@ void ApbsDialog::runPdb2Pqr()
   arguments.append("--ff");
   arguments.append(forceFieldName);
   arguments.append(pdbFileName);
-  arguments.append(pqrFileName);
+  arguments.append(pqrFileName_);
 
   QProcess process;
   process.start("pdb2pqr", arguments);
@@ -174,8 +174,8 @@ void ApbsDialog::runPdb2Pqr()
 
   if (process.exitStatus() == QProcess::NormalExit) {
     QMessageBox::information(
-      this, "Success", QString("Generated %1").arg(pqrFileName));
-    m_generatedPqrFileName = pqrFileName;
+      this, "Success", QString("Generated %1").arg(pqrFileName_));
+    m_generatedPqrFileName = pqrFileName_;
     updatePreviewTextImmediately();
   }
   else {
@@ -210,16 +210,16 @@ void ApbsDialog::saveInputFile(const QString &fileName)
 
 void ApbsDialog::updatePreviewTextImmediately()
 {
-    QString pqrFileName;
+    QString pqrFileName_;
     if (m_ui->generateFromPdbButton->isChecked())
-      pqrFileName = m_generatedPqrFileName;
+      pqrFileName_ = m_generatedPqrFileName;
     else
-      pqrFileName = m_ui->pqrFileLineEdit->text();
+      pqrFileName_ = m_ui->pqrFileLineEdit->text();
 
     QJsonObject inputOptions;
     QJsonObject options;
-    options["mainFile"] = pqrFileName;
-    options["Input File"] = pqrFileName;
+    options["mainFile"] = pqrFileName_;
+    options["Input File"] = pqrFileName_;
     options["Calculation"] = QString("mg-auto");
     inputOptions["options"] = options;
     QJsonObject settings;

@@ -117,7 +117,7 @@ public:
    * See NormalizeOption for more information.
    * @return false if the attribute array does not exist.
    */
-  bool useAttributeArray(const std::string &name, int offset, int stride,
+  bool useAttributeArray(const std::string &name, int offset, size_t stride,
                          Avogadro::Type elementType, int elementTupleSize,
                          NormalizeOption normalize);
 

@@ -262,7 +262,7 @@ bool ShaderProgram::disableAttributeArray(const std::string &name)
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
-                                      int stride, Type elementType,
+                                      size_t stride, Type elementType,
                                       int elementTupleSize,
                                       NormalizeOption normalize)
 {
@@ -272,8 +272,8 @@ bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
     return false;
   }
   glVertexAttribPointer(location, elementTupleSize, convertType(elementType),
-                        normalize == Normalize ? GL_TRUE : GL_FALSE, stride,
-                        BUFFER_OFFSET(offset));
+                        normalize == Normalize ? GL_TRUE : GL_FALSE,
+                        static_cast<GLsizei>(stride), BUFFER_OFFSET(offset));
   return true;
 }
 

@@ -159,7 +159,8 @@ void MeasureTool::draw(Rendering::GroupNode &node)
     label->setText(QString("#%1").arg(i + 1).toStdString());
     label->setTextProperties(atomLabelProp);
     label->setAnchor(positions[i].cast<float>());
-    label->setRadius(Elements::radiusCovalent(atomicNumber));
+    label->setRadius(
+          static_cast<float>(Elements::radiusCovalent(atomicNumber)));
 
     geo->addDrawable(label);
   }
@@ -201,10 +202,12 @@ void MeasureTool::draw(Rendering::GroupNode &node)
     overlayText += QString("%1 %L2\n")
         .arg(tr("Dihedral:"), labelWidth)
         .arg(dihedralAngle(v1, v2, v3), 10, 'f', 5);
-    angle23 = std::acos((-v2).dot(v3) / (v2Norm * v3Norm)) * RAD_TO_DEG_F;
+    angle23 = static_cast<float>(std::acos((-v2).dot(v3) / (v2Norm * v3Norm)))
+        * RAD_TO_DEG_F;
     // fall through
   case 3:
-    angle12 = std::acos((-v1).dot(v2) / (v1Norm * v2Norm)) * RAD_TO_DEG_F;
+    angle12 = static_cast<float>(std::acos((-v1).dot(v2) / (v1Norm * v2Norm)))
+        * RAD_TO_DEG_F;
     overlayText += QString("%1 %L2 %L3\n")
         .arg(tr("Angles:"), labelWidth)
         .arg(angle12, 10, 'f', 5)
@@ -249,9 +252,9 @@ inline Vector3ub MeasureTool::contrastingColor(const Vector3ub &rgb) const
   for (size_t i = 0; i < 3; ++i) {
     unsigned char input = rgb[i];
     if (input > 160 || input < 96)
-      result[i] = 255 - input;
+      result[i] = static_cast<unsigned char>(255 - input);
     else
-      result[i] = 255 - (input / 4);
+      result[i] = static_cast<unsigned char>(255 - (input / 4));
 
     // Clamp to 32-->223 to prevent pure black/white
     result[i] = std::min(maxVal, std::max(minVal, result[i]));

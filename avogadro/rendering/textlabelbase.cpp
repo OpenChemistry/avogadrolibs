@@ -109,11 +109,12 @@ void TextLabelBase::RenderImpl::setTextureData(
     const Array<unsigned char> &buffer, const Vector2i &dimensions)
 {
   // Calculate texture coordinates. This centers each texel on a pixel:
-  const Vector2f denoms(dimensions.cast<float>() * 2);
+  const Vector2f dimsF(dimensions.cast<float>());
+  const Vector2f denoms(dimsF * 2.f);
   const float uMin = 1.f / denoms[0];
   const float vMin = 1.f / denoms[1];
-  const float uMax = ((2.f * dimensions[0]) - 1.f) / denoms[0];
-  const float vMax = ((2.f * dimensions[1]) - 1.f) / denoms[1];
+  const float uMax = ((2.f * dimsF[0]) - 1.f) / denoms[0];
+  const float vMax = ((2.f * dimsF[1]) - 1.f) / denoms[1];
   vertices[0].tcoord = Vector2f(uMin, vMin);
   vertices[1].tcoord = Vector2f(uMax, vMin);
   vertices[2].tcoord = Vector2f(uMin, vMax);
