@@ -37,7 +37,7 @@ void GeometryVisitor::visit(Drawable &)
 
 void GeometryVisitor::visit(SphereGeometry &geometry)
 {
-  const std::vector<SphereColor> &spheres = geometry.spheres();
+  const Core::Array<SphereColor> &spheres = geometry.spheres();
   if (!spheres.size())
     return;
 
@@ -66,7 +66,7 @@ void GeometryVisitor::visit(SphereGeometry &geometry)
 
 void GeometryVisitor::visit(AmbientOcclusionSphereGeometry &geometry)
 {
-  const std::vector<SphereColor> &spheres = geometry.spheres();
+  const Core::Array<SphereColor> &spheres = geometry.spheres();
   if (!spheres.size())
     return;
 

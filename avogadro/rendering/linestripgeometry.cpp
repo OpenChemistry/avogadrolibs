@@ -69,6 +69,18 @@ LineStripGeometry::LineStripGeometry()
 {
 }
 
+LineStripGeometry::LineStripGeometry(const LineStripGeometry &other)
+  : Drawable(other),
+    m_vertices(other.m_vertices),
+    m_lineStarts(other.m_lineStarts),
+    m_lineWidths(other.m_lineWidths),
+    m_color(other.m_color),
+    m_opacity(other.m_opacity),
+    m_dirty(true),
+    d(new Private)
+{
+}
+
 LineStripGeometry::~LineStripGeometry()
 {
   delete d;

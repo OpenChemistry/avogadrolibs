@@ -70,6 +70,17 @@ MeshGeometry::MeshGeometry() : m_color(255, 0, 0), m_opacity(255),
 {
 }
 
+MeshGeometry::MeshGeometry(const MeshGeometry &other)
+  : Drawable(other),
+    m_vertices(other.m_vertices),
+    m_indices(other.m_indices),
+    m_color(other.m_color),
+    m_opacity(other.m_opacity),
+    m_dirty(true), // Force rendering internals to be rebuilt
+    d(new Private)
+{
+}
+
 MeshGeometry::~MeshGeometry()
 {
   delete d;

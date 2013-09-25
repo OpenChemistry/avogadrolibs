@@ -20,10 +20,9 @@
 
 #include "drawable.h"
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/rendering/spheregeometry.h>
-
-#include <vector>
 
 namespace Avogadro {
 namespace Rendering {
@@ -46,6 +45,7 @@ class AVOGADRORENDERING_EXPORT AmbientOcclusionSphereGeometry : public Drawable
 {
 public:
   AmbientOcclusionSphereGeometry();
+  AmbientOcclusionSphereGeometry(const AmbientOcclusionSphereGeometry &other);
   ~AmbientOcclusionSphereGeometry();
 
   /**
@@ -84,8 +84,8 @@ public:
   /**
    * Get a reference to the spheres.
    */
-  std::vector<SphereColor>& spheres() { return m_spheres; }
-  const std::vector<SphereColor>& spheres() const { return m_spheres; }
+  Core::Array<SphereColor>& spheres() { return m_spheres; }
+  const Core::Array<SphereColor>& spheres() const { return m_spheres; }
 
   /**
    * Clear the contents of the node.
@@ -98,8 +98,8 @@ public:
   size_t size() const { return m_spheres.size(); }
 
 private:
-  std::vector<SphereColor> m_spheres;
-  std::vector<size_t> m_indices;
+  Core::Array<SphereColor> m_spheres;
+  Core::Array<size_t> m_indices;
 
   bool m_dirty;
 
