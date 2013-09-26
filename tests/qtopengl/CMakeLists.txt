@@ -11,7 +11,9 @@ include_directories(SYSTEM ${QT_INCLUDES})
 add_definitions(${QT_DEFINITIONS})
 
 # We want to find some parts of VTK in order to do image comparisons.
-find_package(VTK COMPONENTS vtkImagingCore vtkRenderingQt NO_MODULE REQUIRED)
+find_package(VTK
+  COMPONENTS vtkImagingCore vtkRenderingQt vtkIOImage
+  NO_MODULE REQUIRED)
 include_directories(SYSTEM ${VTK_INCLUDE_DIRS})
 
 if(AVOGADRO_DATA_ROOT)
