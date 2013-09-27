@@ -128,11 +128,22 @@ public:
    */
   virtual void clearAtoms();
 
-  /**  Returns the atom at @p index in the molecule. */
+  /**
+   * @return the atom at @p index in the molecule.
+   */
   Atom atom(size_t index) const;
 
-  /** Returns the number of atoms in the molecule. */
+  /**
+   * @return The number of atoms in the molecule.
+   */
   size_t atomCount() const;
+
+  /**
+   * @brief Get the number of atoms in the molecule that match atomicNumber.
+   * @param atomicNumber The atomic number to match on.
+   * @return The number of atoms with the supplied atomic number.
+   */
+  size_t atomCount(unsigned char atomicNumber) const;
 
   /** Adds a bond between atoms @p a and @p b. */
   virtual Bond addBond(const Atom &a, const Atom &b,
@@ -195,10 +206,16 @@ public:
 
   /**
    * Returns the chemical formula of the molecule
-   * \todo This should eventually be an external algorithm, not a member of
+   * @todo This should eventually be an external algorithm, not a member of
    * Molecule.
    */
   std::string formula() const;
+
+  /**
+   * @return The mass of the molecule obtained by summing constituent atomic
+   * masses.
+   */
+  double mass() const;
 
   /**
    * Set the basis set for the molecule, note that the molecule takes ownership
