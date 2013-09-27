@@ -248,6 +248,17 @@ size_t Molecule::atomCount() const
   return m_atomicNumbers.size();
 }
 
+size_t Molecule::atomCount(unsigned char atomicNumber) const
+{
+  size_t count(0);
+  for (std::vector<unsigned char>::const_iterator it = m_atomicNumbers.begin();
+       it != m_atomicNumbers.end(); ++it) {
+    if (*it == atomicNumber)
+      ++count;
+  }
+  return count;
+}
+
 namespace {
 // Make an std::pair where the lower index is always first in the pair. This
 // offers us the guarantee that any given pair of atoms will always result in
@@ -415,6 +426,14 @@ std::string Molecule::formula() const
   }
 
   return result.str();
+}
+
+double Molecule::mass() const
+{
+  double mass(0.0);
+  for (size_t i = 0; i < atomCount(); ++i)
+    mass += Elements::mass(atom(i).atomicNumber());
+  return mass;
 }
 
 // bond perception code ported from VTK's vtkSimpleBondPerceiver class
