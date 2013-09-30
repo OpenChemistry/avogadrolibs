@@ -39,7 +39,11 @@ class AVOGADRORENDERING_EXPORT TextLabelBase : public Drawable
 {
 public:
   TextLabelBase();
+  TextLabelBase(const TextLabelBase &other);
   ~TextLabelBase();
+
+  TextLabelBase& operator=(TextLabelBase other);
+  friend void swap(TextLabelBase &lhs, TextLabelBase &rhs);
 
   void render(const Camera &camera) AVO_OVERRIDE;
 
@@ -84,11 +88,32 @@ protected:
   void setRadiusInternal(float radius);
   float getRadiusInternal() const;
 
+  void markDirty();
+
 private:
   // Container for rendering cache:
   class RenderImpl;
   RenderImpl * const m_render;
 };
+
+inline TextLabelBase &TextLabelBase::operator=(TextLabelBase other)
+{
+  using std::swap;
+  swap(*this, other);
+  return *this;
+}
+
+inline void swap(TextLabelBase &lhs, TextLabelBase &rhs)
+{
+  using std::swap;
+  swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));
+  swap(lhs.m_text, rhs.m_text);
+  swap(lhs.m_textProperties, rhs.m_textProperties);
+  swap(lhs.m_imageDimensions, rhs.m_imageDimensions);
+  swap(lhs.m_imageRgba, rhs.m_imageRgba);
+  lhs.markDirty();
+  rhs.markDirty();
+}
 
 } // namespace Rendering
 } // namespace Avogadro

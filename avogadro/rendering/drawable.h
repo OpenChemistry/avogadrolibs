@@ -49,6 +49,9 @@ public:
   Drawable(const Drawable &other);
   virtual ~Drawable();
 
+  Drawable &operator=(Drawable);
+  friend void swap(Drawable &lhs, Drawable &rhs);
+
   /**
    * Accept a visit from our friendly visitor.
    */
@@ -125,6 +128,22 @@ protected:
   RenderPass m_renderPass;
   Identifier m_identifier;
 };
+
+inline Drawable &Drawable::operator=(Drawable rhs)
+{
+  using std::swap;
+  swap(*this, rhs);
+  return *this;
+}
+
+inline void swap(Drawable &lhs, Drawable &rhs)
+{
+  using std::swap;
+  swap(lhs.m_parent, rhs.m_parent);
+  swap(lhs.m_visible, rhs.m_visible);
+  swap(lhs.m_renderPass, rhs.m_renderPass);
+  swap(lhs.m_identifier, rhs.m_identifier);
+}
 
 } // End namespace Rendering
 } // End namespace Avogadro
