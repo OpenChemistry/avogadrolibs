@@ -25,6 +25,8 @@
 
 #include <avogadro/stl/memory_p.h>
 
+#include <algorithm>
+
 namespace Avogadro {
 namespace Io {
 
@@ -115,6 +117,11 @@ bool FileFormatManager::registerFormat(FileFormat *format)
   return instance().addFormat(format);
 }
 
+bool FileFormatManager::unregisterFormat(const std::string &identifier)
+{
+  return instance().removeFormat(identifier);
+}
+
 bool FileFormatManager::addFormat(FileFormat *format)
 {
   if (!format) {
@@ -146,6 +153,55 @@ bool FileFormatManager::addFormat(FileFormat *format)
   for (std::vector<std::string>::const_iterator it = extensions.begin();
        it != extensions.end(); ++it) {
     m_fileExtensions[*it].push_back(index);
+  }
+
+  return true;
+}
+
+namespace {
+// Lookup each key from "keys" in "map", and remove "val" from the Map's
+// data value (which is a vector of ValueType)
+template<typename Map, typename VectorOfKeys, typename ValueType>
+void removeFromMap(Map &map, const VectorOfKeys &keys, const ValueType &val)
+{
+  typedef typename VectorOfKeys::const_iterator KeysIter;
+  for (KeysIter key = keys.begin(), keyEnd = keys.end(); key != keyEnd; ++key) {
+    typename Map::iterator mapMatch = map.find(*key);
+    if (mapMatch == map.end())
+      continue;
+    typename Map::mapped_type &vec = mapMatch->second;
+    if (vec.size() <= 1) {
+      map.erase(*key);
+    }
+    else {
+      typename Map::mapped_type::iterator newEnd =
+          std::remove(vec.begin(), vec.end(), val);
+      vec.resize(newEnd - vec.begin());
+    }
+  }
+}
+}
+
+bool FileFormatManager::removeFormat(const std::string &identifier)
+{
+  FormatIdVector ids = m_identifiers[identifier];
+  m_identifiers.erase(identifier);
+
+  if (ids.empty())
+    return false;
+
+  for (FormatIdVector::const_iterator it = ids.begin(), itEnd = ids.end();
+       it != itEnd; ++it) {
+    FileFormat *fmt = m_formats[*it];
+
+    if (fmt == NULL)
+      continue;
+
+    removeFromMap(m_mimeTypes, fmt->mimeTypes(), *it);
+    removeFromMap(m_fileExtensions, fmt->fileExtensions(), *it);
+
+    m_formats[*it] = NULL;
+    delete fmt;
   }
 
   return true;
