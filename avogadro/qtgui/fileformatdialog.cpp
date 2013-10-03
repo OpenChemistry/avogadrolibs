@@ -177,7 +177,7 @@ const Io::FileFormat *FileFormatDialog::findFileFormat(
     }
 
   return selectFileFormat(parentWidget, matches, caption,
-                          tr("Multiple %1 found that can %2 this file. "
+                          tr("Multiple %1 found that can %2 this format. "
                              "Which should be used?").arg(noun, verb),
                           QString("FileFormatDialog/%1/%2"
                                   "/lastUsed").arg(key, extension));
