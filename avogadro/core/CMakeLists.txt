@@ -25,6 +25,7 @@ set(HEADERS
   coordinateblockgenerator.h
   cube.h
   elements.h
+  extendedmoleculebase.h
   gaussianset.h
   gaussiansettools.h
   graph.h

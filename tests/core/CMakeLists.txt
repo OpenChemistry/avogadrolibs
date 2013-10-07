@@ -6,6 +6,7 @@ set(tests
   Bond
   CoordinateBlockGenerator
   CoordinateSet
+  Crystal
   CPP11
   Cube
   Eigen
