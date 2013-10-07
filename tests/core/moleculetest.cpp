@@ -243,6 +243,8 @@ TEST_F(MoleculeTest, dataMap)
 
   std::vector<std::string> dataNames = molecule.dataMap().names();
   EXPECT_EQ(dataNames.size(), 4);
+  EXPECT_EQ(molecule.hasData("name"), true);
+  EXPECT_EQ(molecule.hasData("invalid"), false);
   EXPECT_EQ(molecule.data("name").toString(), "ethanol");
   EXPECT_EQ(molecule.data("formula").toString(), "C2H6O");
   EXPECT_EQ(molecule.data("SMILES").toString(), "CCO");

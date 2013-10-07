@@ -31,5 +31,7 @@ TEST(VariantMapTest, isEmpty)
 
   map.setValue("value1", 1);
   EXPECT_EQ(map.isEmpty(), false);
+  EXPECT_EQ(map.hasValue("value1"), true);
+  EXPECT_EQ(map.hasValue("value2"), false);
   EXPECT_EQ(map.value("value1").toInt(), 1);
 }

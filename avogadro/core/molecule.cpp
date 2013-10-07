@@ -95,6 +95,11 @@ Variant Molecule::data(const std::string &name) const
   return m_data.value(name);
 }
 
+bool Molecule::hasData(const std::string &name) const
+{
+  return m_data.hasValue(name);
+}
+
 void Molecule::setDataMap(const VariantMap &map)
 {
   m_data = map;
