@@ -66,6 +66,11 @@ public:
   /** Returns the data value for @p name. */
   Variant data(const std::string &name) const;
 
+  /**
+   * Returns true if the molecule has data with the given key, false otherwise.
+   */
+  bool hasData(const std::string &name) const;
+
   /** Set the molecule's variant data to the entries in map. */
   void setDataMap(const VariantMap &map);
 

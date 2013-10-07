@@ -64,6 +64,11 @@ public:
    */
   Variant value(const std::string &name) const;
 
+  /**
+   * Returns true if the key exists in the map.
+   */
+  bool hasValue(const std::string &name) const;
+
   /** Return an iterator pointing to the beginning of the map. */
   iterator begin();
 
