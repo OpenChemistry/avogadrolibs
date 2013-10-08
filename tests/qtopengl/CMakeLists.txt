@@ -47,6 +47,7 @@ add_executable(AvogadroQtOpenGLTests ${testDriver})
 target_link_libraries(AvogadroQtOpenGLTests
   AvogadroQtOpenGL
   vtkImagingCore
+  vtkIOImage
   vtkRenderingQt
   ${QT_QTOPENGL_LIBRARY})
 
