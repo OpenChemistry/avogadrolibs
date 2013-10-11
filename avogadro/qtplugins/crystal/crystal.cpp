@@ -1,0 +1,200 @@
+/******************************************************************************
+
+  This source file is part of the Avogadro project.
+
+  Copyright 2013 Kitware, Inc.
+
+  This source code is released under the New BSD License, (the "License").
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+******************************************************************************/
+
+#include "crystal.h"
+
+#include <avogadro/core/unitcell.h>
+#include <avogadro/core/crystaltools.h>
+
+#include <avogadro/qtgui/molecule.h>
+
+#include <QtGui/QAction>
+
+#include <QtCore/QStringList>
+
+using Avogadro::Core::CrystalTools;
+using Avogadro::Core::UnitCell;
+using Avogadro::QtGui::Molecule;
+
+namespace {
+const Avogadro::Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
+}
+
+namespace Avogadro {
+namespace QtPlugins {
+
+Crystal::Crystal(QObject *parent_) :
+  Avogadro::QtGui::ExtensionPlugin(parent_),
+  m_molecule(NULL),
+  m_niggliReduceAction(new QAction(this)),
+  m_scaleVolumeAction(new QAction(this)),
+  m_standardOrientationAction(new QAction(this)),
+  m_toggleUnitCellAction(new QAction(this)),
+  m_wrapAtomsToCellAction(new QAction(this))
+{
+  // this will be changed when the molecule is set:
+  m_toggleUnitCellAction->setText(tr("Toggle Unit Cell"));
+  connect(m_toggleUnitCellAction, SIGNAL(triggered()), SLOT(toggleUnitCell()));
+  m_actions.push_back(m_toggleUnitCellAction);
+  m_toggleUnitCellAction->setProperty("menu priority", 0);
+
+  m_wrapAtomsToCellAction->setText(tr("&Wrap Atoms to Unit Cell"));
+  connect(m_wrapAtomsToCellAction, SIGNAL(triggered()),
+          SLOT(wrapAtomsToCell()));
+  m_actions.push_back(m_wrapAtomsToCellAction);
+  m_wrapAtomsToCellAction->setProperty("menu priority", -200);
+
+  m_standardOrientationAction->setText(tr("Rotate to Standard &Orientation"));
+  connect(m_standardOrientationAction, SIGNAL(triggered()),
+          SLOT(standardOrientation()));
+  m_actions.push_back(m_standardOrientationAction);
+  m_standardOrientationAction->setProperty("menu priority", -250);
+
+  m_scaleVolumeAction->setText(tr("Scale Cell &Volume"));
+  connect(m_scaleVolumeAction, SIGNAL(triggered()), SLOT(scaleVolume()));
+  m_actions.push_back(m_scaleVolumeAction);
+  m_scaleVolumeAction->setProperty("menu priority", -275);
+
+  m_niggliReduceAction->setText(tr("Reduce Cell (&Niggli)"));
+  connect(m_niggliReduceAction, SIGNAL(triggered()), SLOT(niggliReduce()));
+  m_actions.push_back(m_niggliReduceAction);
+  m_niggliReduceAction->setProperty("menu priority", -350);
+
+  updateActions();
+}
+
+Crystal::~Crystal()
+{
+  qDeleteAll(m_actions);
+  m_actions.clear();
+}
+
+QList<QAction *> Crystal::actions() const
+{
+  return m_actions;
+}
+
+QStringList Crystal::menuPath(QAction *) const
+{
+  return QStringList() << tr("&Crystal");
+}
+
+void Crystal::setMolecule(QtGui::Molecule *mol)
+{
+  if (m_molecule == mol)
+    return;
+
+  if (m_molecule)
+    m_molecule->disconnect(this);
+
+  m_molecule = mol;
+
+  if (m_molecule) {
+    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+  }
+
+  updateActions();
+}
+
+void Crystal::moleculeChanged(unsigned int c)
+{
+  Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
+
+  Molecule::MoleculeChanges changes =
+      static_cast<Molecule::MoleculeChanges>(c);
+
+  if (changes & Molecule::UnitCell) {
+    if (changes & Molecule::Added || changes & Molecule::Removed)
+      updateActions();
+  }
+}
+
+void Crystal::updateActions()
+{
+  // Disable everything for NULL molecules.
+  if (!m_molecule) {
+    foreach (QAction *action, m_actions)
+      action->setEnabled(false);
+    return;
+  }
+
+  if (m_molecule->unitCell()) {
+    foreach (QAction *action, m_actions)
+      action->setEnabled(true);
+
+    m_toggleUnitCellAction->setText(tr("Remove &Unit Cell"));
+  }
+  else {
+    foreach (QAction *action, m_actions)
+      action->setEnabled(false);
+
+    m_toggleUnitCellAction->setEnabled(true);
+    m_toggleUnitCellAction->setText(tr("Add &Unit Cell"));
+  }
+}
+
+void Crystal::niggliReduce()
+{
+  CrystalTools::niggliReduce(*m_molecule, CrystalTools::TransformAtoms);
+  CrystalTools::rotateToStandardOrientation(*m_molecule,
+                                            CrystalTools::TransformAtoms);
+  CrystalTools::wrapAtomsToUnitCell(*m_molecule);
+  m_molecule->emitChanged(Molecule::Modified
+                          | Molecule::Atoms | Molecule::UnitCell);
+}
+
+void Crystal::scaleVolume()
+{
+  CrystalTools::setVolume(*m_molecule, CrystalTools::TransformAtoms);
+  m_molecule->emitChanged(Molecule::Modified
+                          | Molecule::Atoms | Molecule::UnitCell);
+}
+
+void Crystal::standardOrientation()
+{
+  CrystalTools::rotateToStandardOrientation(*m_molecule,
+                                            CrystalTools::TransformAtoms);
+  m_molecule->emitChanged(Molecule::Modified
+                          | Molecule::Atoms | Molecule::UnitCell);
+}
+
+void Crystal::toggleUnitCell()
+{
+  if (m_molecule->unitCell()) {
+    m_molecule->setUnitCell(NULL);
+    m_molecule->emitChanged(Molecule::UnitCell | Molecule::Removed);
+  }
+  else {
+    UnitCell *cell = new UnitCell;
+    cell->setCellParameters(static_cast<Real>(5.0),
+                            static_cast<Real>(5.0),
+                            static_cast<Real>(5.0),
+                            static_cast<Real>(90.0) * DEG_TO_RAD,
+                            static_cast<Real>(90.0) * DEG_TO_RAD,
+                            static_cast<Real>(90.0) * DEG_TO_RAD);
+    m_molecule->setUnitCell(cell);
+    m_molecule->emitChanged(Molecule::UnitCell | Molecule::Added);
+  }
+}
+
+void Crystal::wrapAtomsToCell()
+{
+  CrystalTools::wrapAtomsToUnitCell(*m_molecule);
+  m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+}
+
+} // namespace QtPlugins
+} // namespace Avogadro

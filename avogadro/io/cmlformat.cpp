@@ -22,6 +22,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/matrix.h>
+#include <avogadro/core/unitcell.h>
 
 #include <pugixml.cpp>
 
@@ -54,7 +55,6 @@ public:
   CmlFormatPrivate(Molecule *mol, xml_document &document, std::string filename_)
     : success(false),
       molecule(mol),
-      cellMatrix(Matrix3f::Zero()),
       moleculeNode(NULL),
       filename(filename_)
   {
@@ -143,21 +143,9 @@ public:
         error += "Incomplete unit cell description.";
         return false;
       }
-      // Convert parameters to matrix. See "Appendix 2: Coordinate Systems and
-      // Transformations" of the PDB guide (ref v2.2, 4/23/13,
-      // http://www.bmsc.washington.edu/CrystaLinks/man/pdb/guide2.2_frame.html)
-      const float cAlpha = std::cos(alpha);
-      const float cBeta = std::cos(beta);
-      const float cGamma = std::cos(gamma);
-      const float sGamma = std::sin(gamma);
-      const float V = a * b * c * std::sqrt(1 - cAlpha * cAlpha
-                                            - cBeta * cBeta
-                                            - cGamma * cGamma
-                                            + (2 * cAlpha * cBeta * cGamma));
-      cellMatrix
-          << a, b * cGamma, c * cBeta,
-          0,    b * sGamma, c * (cAlpha - cBeta * cGamma) / sGamma,
-          0,    0,          V / (a * b * sGamma);
+      UnitCell *cell = new UnitCell;
+      cell->setCellParameters(a, b, c, alpha, beta, gamma);
+      molecule->setUnitCell(cell);
     }
     return true;
   }
@@ -208,13 +196,20 @@ public:
         }
       }
       else if ((attribute = node.attribute("xFract"))) {
+        if (!molecule->unitCell()) {
+          error += "No unit cell defined. "
+                   "Cannot interpret fractional coordinates.";
+          return false;
+        }
         xml_attribute &xF = attribute;
         xml_attribute yF = node.attribute("yFract");
         xml_attribute zF = node.attribute("zFract");
         if (yF && zF) {
-          Vector3f coord(xF.as_float(), yF.as_float(), zF.as_float());
-          coord = cellMatrix * coord;
-          atom.setPosition3d(coord.cast<Real>());
+          Vector3 coord(static_cast<Real>(xF.as_float()),
+                        static_cast<Real>(yF.as_float()),
+                        static_cast<Real>(zF.as_float()));
+          molecule->unitCell()->toCartesian(coord, coord);
+          atom.setPosition3d(coord);
         }
         else {
           error += "Missing y or z fractional coordinate on atom.";
@@ -405,7 +400,6 @@ public:
 
   bool success;
   Molecule *molecule;
-  Matrix3f cellMatrix;
   xml_node moleculeNode;
   std::map<std::string, size_t> atomIds;
   string filename;

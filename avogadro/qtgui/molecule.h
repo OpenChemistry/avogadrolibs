@@ -55,6 +55,7 @@ public:
     /** Object types that can be changed. */
     Atoms = 0x01,
     Bonds = 0x02,
+    UnitCell = 0x04,
     /** Operations that can affect the above types. */
     Added    = 0x1024,
     Removed  = 0x2048,

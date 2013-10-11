@@ -20,6 +20,7 @@
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/unitcell.h>
 
 #include <iomanip>
 
@@ -50,6 +51,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   bool needElementSymbol(false);
   bool needElementName(false);
   bool needPosition(false);
+  bool needFractionalPosition(false);
   for (it = begin; it != end; ++it) {
     switch (*it) {
     case 'S':
@@ -63,6 +65,11 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
     case 'z':
       needPosition = true;
       break;
+    case 'a':
+    case 'b':
+    case 'c':
+      needFractionalPosition = true;
+      break;
     }
   }
 
@@ -73,6 +80,8 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   const char *symbol;
   const char *name;
   Vector3 pos3d;
+  Vector3 fpos3d;
+  const UnitCell *cell = needFractionalPosition ? molecule()->unitCell() : NULL;
 
   // widths/precisions
   enum {
@@ -101,6 +110,8 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
       name = Core::Elements::name(atomicNumber);
     if (needPosition)
       pos3d = atom.position3d();
+    if (needFractionalPosition)
+      fpos3d = cell ? cell->toFractional(atom.position3d()) : Vector3::Zero() ;
 
     switch (m_distanceUnit) {
     case Bohr:
@@ -174,6 +185,44 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
         m_stream << std::left
                  << std::setw(1)
                  << 1;
+      case 'a':
+        if (cell) {
+          m_stream << std::right
+                   << std::setw(coordinateWidth)
+                   << std::setprecision(coordinatePrecision)
+                   << fpos3d.x();
+        }
+        else {
+          m_stream << std::right
+                   << std::setw(coordinateWidth)
+                   << "N/A";
+        }
+        break;
+      case 'b':
+        if (cell) {
+          m_stream << std::right
+                   << std::setw(coordinateWidth)
+                   << std::setprecision(coordinatePrecision)
+                   << fpos3d.y();
+        }
+        else {
+          m_stream << std::right
+                   << std::setw(coordinateWidth)
+                   << "N/A";
+        }
+        break;
+      case 'c':
+        if (cell) {
+          m_stream << std::right
+                   << std::setw(coordinateWidth)
+                   << std::setprecision(coordinatePrecision)
+                   << fpos3d.z();
+        }
+        else {
+          m_stream << std::right
+                   << std::setw(coordinateWidth)
+                   << "N/A";
+        }
         break;
       } // end switch
 

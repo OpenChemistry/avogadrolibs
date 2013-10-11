@@ -152,7 +152,7 @@ CartesianEditorDialog::CartesianEditorDialog(QWidget *parent_) :
           SLOT(textModified(bool)));
 
   // Setup spec edit
-  QRegExp specRegExp("[#ZGSNxyz01_]*");
+  QRegExp specRegExp("[#ZGSNabcxyz01_]*");
   QRegExpValidator *specValidator = new QRegExpValidator(specRegExp, this);
   m_ui->spec->setValidator(specValidator);
   connect(m_ui->presets, SIGNAL(currentIndexChanged(int)),
