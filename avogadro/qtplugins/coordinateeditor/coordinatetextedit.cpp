@@ -14,7 +14,7 @@
 
 ******************************************************************************/
 
-#include "cartesiantextedit.h"
+#include "coordinatetextedit.h"
 
 #include <QtGui/QApplication>
 #include <QtGui/QHelpEvent>
@@ -26,7 +26,7 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-CartesianTextEdit::CartesianTextEdit(QWidget *p)
+CoordinateTextEdit::CoordinateTextEdit(QWidget *p)
   : QTextEdit(p),
     m_hasInvalidMarks(false)
 {
@@ -44,7 +44,7 @@ CartesianTextEdit::CartesianTextEdit(QWidget *p)
   m_validFormat.setForeground(Qt::darkGreen);
 }
 
-void CartesianTextEdit::resetMarks()
+void CoordinateTextEdit::resetMarks()
 {
   m_hasInvalidMarks = false;
   m_marks.clear();
@@ -55,20 +55,20 @@ void CartesianTextEdit::resetMarks()
   }
 }
 
-void CartesianTextEdit::markInvalid(QTextCursor &cur, const QString &tooltip)
+void CoordinateTextEdit::markInvalid(QTextCursor &cur, const QString &tooltip)
 {
   m_hasInvalidMarks = true;
   cur.mergeCharFormat(m_invalidFormat);
   m_marks.append(Mark(cur.anchor(), cur.position(), tooltip));
 }
 
-void CartesianTextEdit::markValid(QTextCursor &cur, const QString &tooltip)
+void CoordinateTextEdit::markValid(QTextCursor &cur, const QString &tooltip)
 {
   cur.mergeCharFormat(m_validFormat);
   m_marks.append(Mark(cur.anchor(), cur.position(), tooltip));
 }
 
-bool CartesianTextEdit::event(QEvent *e)
+bool CoordinateTextEdit::event(QEvent *e)
 {
   if (e->type() == QEvent::ToolTip) {
     QHelpEvent *helpEvent = static_cast<QHelpEvent*>(e);
@@ -78,7 +78,7 @@ bool CartesianTextEdit::event(QEvent *e)
   return QTextEdit::event(e);
 }
 
-void CartesianTextEdit::showToolTip(QHelpEvent *e) const
+void CoordinateTextEdit::showToolTip(QHelpEvent *e) const
 {
   int position(cursorForPosition(e->pos()).position());
   bool handled(false);

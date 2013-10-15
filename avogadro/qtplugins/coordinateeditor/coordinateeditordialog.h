@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_CARTESIANEDITORDIALOG_H
-#define AVOGADRO_QTPLUGINS_CARTESIANEDITORDIALOG_H
+#ifndef AVOGADRO_QTPLUGINS_COORDINATEEDITORDIALOG_H
+#define AVOGADRO_QTPLUGINS_COORDINATEEDITORDIALOG_H
 
 #include <QtGui/QDialog>
 
@@ -27,19 +27,19 @@ class Molecule;
 namespace QtPlugins {
 
 namespace Ui {
-class CartesianEditorDialog;
+class CoordinateEditorDialog;
 }
 
 /**
- * @brief The CartesianEditorDialog class implements a free-text cartesian
- * coordinate editor.
+ * @brief The CoordinateEditorDialog class implements a free-text coordinate
+ * editor.
  */
-class CartesianEditorDialog : public QDialog
+class CoordinateEditorDialog : public QDialog
 {
   Q_OBJECT
 public:
-  explicit CartesianEditorDialog(QWidget *parent_ = 0);
-  ~CartesianEditorDialog();
+  explicit CoordinateEditorDialog(QWidget *parent_ = 0);
+  ~CoordinateEditorDialog();
 
   void setMolecule(QtGui::Molecule *mol);
 
@@ -77,7 +77,7 @@ private:
 
   QString detectInputFormat() const;
 
-  Ui::CartesianEditorDialog *m_ui;
+  Ui::CoordinateEditorDialog *m_ui;
   QtGui::Molecule *m_molecule;
 
   // State storage for validateInput methods. PIMPL'd for organization.
@@ -91,4 +91,4 @@ private:
 } // namespace QtPlugins
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_CARTESIANEDITORDIALOG_H
+#endif // AVOGADRO_QTPLUGINS_COORDINATEEDITORDIALOG_H
