@@ -14,9 +14,9 @@
 
 ******************************************************************************/
 
-#include "cartesianeditordialog.h"
-#include "ui_cartesianeditordialog.h"
-#include "cartesiantextedit.h"
+#include "coordinateeditordialog.h"
+#include "ui_coordinateeditordialog.h"
+#include "coordinatetextedit.h"
 
 #include <avogadro/qtgui/molecule.h>
 
@@ -109,7 +109,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 // Storage class used to hold state while validating input.
-class CartesianEditorDialog::ValidateStorage
+class CoordinateEditorDialog::ValidateStorage
 {
 public:
   ValidateStorage()
@@ -137,9 +137,9 @@ public:
   QVector<AtomStruct> atoms;
 };
 
-CartesianEditorDialog::CartesianEditorDialog(QWidget *parent_) :
+CoordinateEditorDialog::CoordinateEditorDialog(QWidget *parent_) :
   QDialog(parent_),
-  m_ui(new Ui::CartesianEditorDialog),
+  m_ui(new Ui::CoordinateEditorDialog),
   m_molecule(NULL),
   m_validate(new ValidateStorage),
   m_defaultSpec("SZxyz#N")
@@ -179,12 +179,12 @@ CartesianEditorDialog::CartesianEditorDialog(QWidget *parent_) :
   listenForTextEditChanges(true);
 }
 
-CartesianEditorDialog::~CartesianEditorDialog()
+CoordinateEditorDialog::~CoordinateEditorDialog()
 {
   delete m_ui;
 }
 
-void CartesianEditorDialog::setMolecule(QtGui::Molecule *mol)
+void CoordinateEditorDialog::setMolecule(QtGui::Molecule *mol)
 {
   if (mol != m_molecule) {
     if (m_molecule)
@@ -195,13 +195,13 @@ void CartesianEditorDialog::setMolecule(QtGui::Molecule *mol)
   }
 }
 
-void CartesianEditorDialog::moleculeChanged(uint change)
+void CoordinateEditorDialog::moleculeChanged(uint change)
 {
   if (static_cast<Molecule::MoleculeChange>(change) & Molecule::Atoms)
     updateText();
 }
 
-void CartesianEditorDialog::presetChanged(int ind)
+void CoordinateEditorDialog::presetChanged(int ind)
 {
   QVariant itemData(m_ui->presets->itemData(ind));
   bool isCustom(itemData.type() != QVariant::String);
@@ -211,7 +211,7 @@ void CartesianEditorDialog::presetChanged(int ind)
                                : itemData.toString());
 }
 
-void CartesianEditorDialog::specChanged()
+void CoordinateEditorDialog::specChanged()
 {
   // Store the spec if custom preset is selected.
   if (m_ui->presets->currentIndex() == CustomPreset)
@@ -219,7 +219,7 @@ void CartesianEditorDialog::specChanged()
   updateText();
 }
 
-void CartesianEditorDialog::specEdited()
+void CoordinateEditorDialog::specEdited()
 {
   // Editing the spec switches to and updates the custom preset.
   if (m_ui->presets->currentIndex() != CustomPreset) {
@@ -228,7 +228,7 @@ void CartesianEditorDialog::specEdited()
   }
 }
 
-void CartesianEditorDialog::updateText()
+void CoordinateEditorDialog::updateText()
 {
   if (m_ui->text->document()->isModified()) {
     int reply =
@@ -263,7 +263,7 @@ void CartesianEditorDialog::updateText()
   m_ui->text->document()->setModified(false);
 }
 
-void CartesianEditorDialog::helpClicked()
+void CoordinateEditorDialog::helpClicked()
 {
   // Give the spec lineedit focus and show its tooltip.
   m_ui->spec->setFocus(Qt::MouseFocusReason);
@@ -272,7 +272,7 @@ void CartesianEditorDialog::helpClicked()
   QToolTip::showText(point, m_ui->spec->toolTip(), m_ui->spec);
 }
 
-void CartesianEditorDialog::validateInput()
+void CoordinateEditorDialog::validateInput()
 {
   if (m_validate->isValidating) {
     m_validate->restartWhenFinished = true;
@@ -307,7 +307,7 @@ void CartesianEditorDialog::validateInput()
   validateInputWorker();
 }
 
-void CartesianEditorDialog::validateInputWorker()
+void CoordinateEditorDialog::validateInputWorker()
 {
   if (!m_validate->isValidating)
     return;
@@ -466,7 +466,7 @@ void CartesianEditorDialog::validateInputWorker()
   }
 }
 
-void CartesianEditorDialog::applyClicked()
+void CoordinateEditorDialog::applyClicked()
 {
   if (!m_molecule)
     return;
@@ -495,7 +495,7 @@ void CartesianEditorDialog::applyClicked()
   validateInput();
 }
 
-void CartesianEditorDialog::applyFinish(bool valid)
+void CoordinateEditorDialog::applyFinish(bool valid)
 {
   // Clean up
   m_validate->collectAtoms = false;
@@ -537,13 +537,13 @@ void CartesianEditorDialog::applyFinish(bool valid)
     m_molecule->emitChanged(change);
 }
 
-void CartesianEditorDialog::textModified(bool modified)
+void CoordinateEditorDialog::textModified(bool modified)
 {
   m_ui->apply->setEnabled(modified);
   m_ui->revert->setEnabled(modified);
 }
 
-void CartesianEditorDialog::buildPresets()
+void CoordinateEditorDialog::buildPresets()
 {
   // Custom must be first:
   m_ui->presets->addItem(tr("Custom"), QVariant());
@@ -558,7 +558,7 @@ void CartesianEditorDialog::buildPresets()
   m_ui->presets->setCurrentIndex(1);
 }
 
-void CartesianEditorDialog::listenForTextEditChanges(bool enable)
+void CoordinateEditorDialog::listenForTextEditChanges(bool enable)
 {
   if (enable)
     connect(m_ui->text, SIGNAL(textChanged()), this, SLOT(validateInput()));
@@ -566,7 +566,7 @@ void CartesianEditorDialog::listenForTextEditChanges(bool enable)
     disconnect(m_ui->text, SIGNAL(textChanged()), this, SLOT(validateInput()));
 }
 
-QString CartesianEditorDialog::detectInputFormat() const
+QString CoordinateEditorDialog::detectInputFormat() const
 {
   if (m_ui->text->document()->isEmpty())
     return QString();
@@ -718,18 +718,18 @@ QString CartesianEditorDialog::detectInputFormat() const
   return (!atomTypeSet || numCoordsSet < 3) ? QString(): resultSpec;
 }
 
-void CartesianEditorDialog::cutClicked()
+void CoordinateEditorDialog::cutClicked()
 {
   copyClicked();
   clearClicked();
 }
 
-void CartesianEditorDialog::copyClicked()
+void CoordinateEditorDialog::copyClicked()
 {
   qApp->clipboard()->setText(m_ui->text->document()->toPlainText());
 }
 
-void CartesianEditorDialog::pasteClicked()
+void CoordinateEditorDialog::pasteClicked()
 {
   const QMimeData *mimeData = qApp->clipboard()->mimeData();
   m_ui->text->document()->setPlainText((mimeData && mimeData->hasText())
@@ -737,12 +737,12 @@ void CartesianEditorDialog::pasteClicked()
                                        : "");
 }
 
-void CartesianEditorDialog::revertClicked()
+void CoordinateEditorDialog::revertClicked()
 {
   updateText();
 }
 
-void CartesianEditorDialog::clearClicked()
+void CoordinateEditorDialog::clearClicked()
 {
   m_ui->text->document()->clear();
 }

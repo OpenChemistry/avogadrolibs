@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Avogadro::QtPlugins::CartesianEditorDialog</class>
- <widget class="QDialog" name="Avogadro::QtPlugins::CartesianEditorDialog">
+ <class>Avogadro::QtPlugins::CoordinateEditorDialog</class>
+ <widget class="QDialog" name="Avogadro::QtPlugins::CoordinateEditorDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Cartesian Editor</string>
+   <string>Coordinate Editor</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -87,7 +87,7 @@
     </layout>
    </item>
    <item>
-    <widget class="Avogadro::QtPlugins::CartesianTextEdit" name="text"/>
+    <widget class="Avogadro::QtPlugins::CoordinateTextEdit" name="text"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -152,9 +152,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Avogadro::QtPlugins::CartesianTextEdit</class>
+   <class>Avogadro::QtPlugins::CoordinateTextEdit</class>
    <extends>QTextEdit</extends>
-   <header>cartesiantextedit.h</header>
+   <header>coordinatetextedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
