@@ -87,7 +87,7 @@ endfunction()
 # Now to make the plugins.
 add_subdirectory(apbs)
 add_subdirectory(bondcentrictool)
-add_subdirectory(cartesianeditor)
+add_subdirectory(coordinateeditor)
 add_subdirectory(copypaste)
 add_subdirectory(crystal)
 add_subdirectory(editor)

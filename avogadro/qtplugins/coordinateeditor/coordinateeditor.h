@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_CARTESIANEDITOR_H
-#define AVOGADRO_QTPLUGINS_CARTESIANEDITOR_H
+#ifndef AVOGADRO_QTPLUGINS_COORDINATEEDITOR_H
+#define AVOGADRO_QTPLUGINS_COORDINATEEDITOR_H
 
 #include <avogadro/qtgui/extensionplugin.h>
 
@@ -23,24 +23,24 @@
 
 namespace Avogadro {
 namespace QtPlugins {
-class CartesianEditorDialog;
+class CoordinateEditorDialog;
 
 /**
- * @brief CartesianEditor implements the plugin interface for the cartesian
+ * @brief CoordinateEditor implements the plugin interface for the coordinate
  * editor extension.
  */
-class CartesianEditor : public Avogadro::QtGui::ExtensionPlugin
+class CoordinateEditor : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit CartesianEditor(QObject *parent_ = 0);
-  ~CartesianEditor() AVO_OVERRIDE;
+  explicit CoordinateEditor(QObject *parent_ = 0);
+  ~CoordinateEditor() AVO_OVERRIDE;
 
-  QString name() const AVO_OVERRIDE { return tr("Cartesian editor"); }
+  QString name() const AVO_OVERRIDE { return tr("Coordinate editor"); }
 
   QString description() const AVO_OVERRIDE
   {
-    return tr("Text editing of cartesian atomic coordinates.");
+    return tr("Text editing of atomic coordinates.");
   }
 
   QList<QAction *> actions() const AVO_OVERRIDE;
@@ -54,7 +54,7 @@ private slots:
   void triggered();
 
 private:
-  CartesianEditorDialog *m_dialog;
+  CoordinateEditorDialog *m_dialog;
   QtGui::Molecule *m_molecule;
   QAction *m_action;
 };
@@ -62,4 +62,4 @@ private:
 } // namespace QtPlugins
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_CARTESIANEDITOR_H
+#endif // AVOGADRO_QTPLUGINS_COORDINATEEDITOR_H

@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_CARTESIANTEXTEDIT_H
-#define AVOGADRO_QTPLUGINS_CARTESIANTEXTEDIT_H
+#ifndef AVOGADRO_QTPLUGINS_COORDINATETEXTEDIT_H
+#define AVOGADRO_QTPLUGINS_COORDINATETEXTEDIT_H
 
 #include <QtGui/QTextEdit>
 
@@ -27,14 +27,14 @@ namespace Avogadro {
 namespace QtPlugins {
 
 /**
- * @brief The CartesianTextEdit class extends QTextEdit to provide context
+ * @brief The CoordinateTextEdit class extends QTextEdit to provide context
  * tooltips and highlighting for syntax errors.
  */
-class CartesianTextEdit : public QTextEdit
+class CoordinateTextEdit : public QTextEdit
 {
   Q_OBJECT
 public:
-  explicit CartesianTextEdit(QWidget *p = 0);
+  explicit CoordinateTextEdit(QWidget *p = 0);
 
   bool hasInvalidMarks() const { return m_hasInvalidMarks; }
 
@@ -68,4 +68,4 @@ private:
 } // namespace QtPlugins
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_CARTESIANTEXTEDIT_H
+#endif // AVOGADRO_QTPLUGINS_COORDINATETEXTEDIT_H
