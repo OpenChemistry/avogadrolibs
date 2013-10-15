@@ -16,6 +16,7 @@ set(tests
   Molecule
   Mutex
   RingPerceiver
+  UnitCell
   Variant
   VariantMap
   )
