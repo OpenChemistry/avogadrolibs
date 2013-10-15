@@ -33,6 +33,7 @@ namespace Core {
 
 class BasisSet;
 class Mesh;
+class UnitCell;
 
 /**
  * @class Molecule molecule.h <avogadro/core/molecule.h>
@@ -225,6 +226,15 @@ public:
   BasisSet * basisSet() { return m_basisSet; }
 
   /**
+   * The unit cell for this molecule. May be NULL for non-periodic structures.
+   * @{
+   */
+  void setUnitCell(UnitCell *uc);
+  UnitCell *unitCell() { return m_unitCell; }
+  const UnitCell *unitCell() const { return m_unitCell; }
+  /** @} */
+
+  /**
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
    */
   void perceiveBondsSimple();
@@ -242,6 +252,7 @@ protected:
   std::vector<Mesh *> m_meshes;
 
   BasisSet *m_basisSet;
+  UnitCell *m_unitCell;
 
   /** Update the graph to correspond to the current molecule. */
   void updateGraph() const;

@@ -20,6 +20,7 @@
 #include "color3f.h"
 #include "elements.h"
 #include "mesh.h"
+#include "unitcell.h"
 
 #include <cassert>
 #include <algorithm>
@@ -27,7 +28,7 @@
 namespace Avogadro {
 namespace Core {
 
-Molecule::Molecule() : m_graphDirty(false), m_basisSet(NULL)
+Molecule::Molecule() : m_graphDirty(false), m_basisSet(NULL), m_unitCell(NULL)
 {
 }
 
@@ -35,7 +36,8 @@ Molecule::Molecule(const Molecule &other)
  : m_graphDirty(true), m_data(other.m_data),
    m_atomicNumbers(other.atomicNumbers()), m_positions2d(other.m_positions2d),
    m_positions3d(other.m_positions3d), m_bondPairs(other.m_bondPairs),
-   m_bondOrders(other.m_bondOrders), m_basisSet(NULL)
+   m_bondOrders(other.m_bondOrders), m_basisSet(NULL),
+   m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : NULL)
 {
   // Copy over any meshes
   for(size_t i=0; i< other.meshCount(); i++) {
@@ -49,6 +51,7 @@ Molecule& Molecule::operator=(const Molecule& other)
   if (this != &other) {
     m_graphDirty = true;
     m_basisSet = NULL;
+    m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : NULL;
     m_data = other.m_data;
     m_atomicNumbers = other.m_atomicNumbers;
     m_positions2d = other.m_positions2d;
@@ -71,7 +74,7 @@ Molecule& Molecule::operator=(const Molecule& other)
 Molecule::~Molecule()
 {
   delete m_basisSet;
-
+  delete m_unitCell;
   clearMeshes();
 }
 
@@ -420,6 +423,14 @@ std::string Molecule::formula() const
   }
 
   return result.str();
+}
+
+void Molecule::setUnitCell(UnitCell *uc)
+{
+  if (uc != m_unitCell) {
+    delete m_unitCell;
+    m_unitCell = uc;
+  }
 }
 
 // bond perception code ported from VTK's vtkSimpleBondPerceiver class
