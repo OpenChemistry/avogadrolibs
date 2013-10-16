@@ -64,6 +64,9 @@ public:
    * - @c x: X cartesian coordinate
    * - @c y: Y cartesian coordinate
    * - @c z: Z cartesian coordinate
+   * - @c a: 'a' lattice coordinate (unit cell required)
+   * - @c b: 'b' lattice coordinate (unit cell required)
+   * - @c c: 'c' lattice coordinate (unit cell required)
    * - @c 0: A literal "0". Useful for optimization flags.
    * - @c 1: A literal "1". Useful for optimization flags.
    * - @c _: A space character. Useful for alignment.
