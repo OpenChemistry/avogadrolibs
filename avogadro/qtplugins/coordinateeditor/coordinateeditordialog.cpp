@@ -22,6 +22,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/coordinateblockgenerator.h>
+#include <avogadro/core/crystaltools.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/vector.h>
 
@@ -117,6 +118,7 @@ public:
       restartWhenFinished(false),
       collectAtoms(false),
       convertDistance(false),
+      latticePositions(false),
       distanceConversion(1.f)
   {}
 
@@ -124,6 +126,7 @@ public:
   bool restartWhenFinished;
   bool collectAtoms;
   bool convertDistance;
+  bool latticePositions;
   float distanceConversion;
 
   // Format specification
@@ -152,7 +155,7 @@ CoordinateEditorDialog::CoordinateEditorDialog(QWidget *parent_) :
           SLOT(textModified(bool)));
 
   // Setup spec edit
-  QRegExp specRegExp("[#ZGSNxyz01_]*");
+  QRegExp specRegExp("[#ZGSNabcxyz01_]*");
   QRegExpValidator *specValidator = new QRegExpValidator(specRegExp, this);
   m_ui->spec->setValidator(specValidator);
   connect(m_ui->presets, SIGNAL(currentIndexChanged(int)),
@@ -197,8 +200,10 @@ void CoordinateEditorDialog::setMolecule(QtGui::Molecule *mol)
 
 void CoordinateEditorDialog::moleculeChanged(uint change)
 {
-  if (static_cast<Molecule::MoleculeChange>(change) & Molecule::Atoms)
+  if (static_cast<Molecule::MoleculeChange>(change) & Molecule::Atoms ||
+      static_cast<Molecule::MoleculeChange>(change) & Molecule::UnitCell) {
     updateText();
+  }
 }
 
 void CoordinateEditorDialog::presetChanged(int ind)
@@ -299,6 +304,7 @@ void CoordinateEditorDialog::validateInput()
   }
 
   // Initialize
+  m_validate->latticePositions = inputFormat.contains('a');
   m_validate->isValidating = true;
   m_validate->spec = inputFormat;
   m_validate->lineCursor = QTextCursor(m_ui->text->document());
@@ -429,6 +435,39 @@ void CoordinateEditorDialog::validateInputWorker()
         break;
       }
 
+      case 'a': {
+        // Validate real:
+        bool isReal;
+        atom.pos.x() = tokenCursor.selectedText().toDouble(&isReal);
+        if (!isReal)
+          m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
+        else
+          m_ui->text->markValid(tokenCursor, tr("'a' lattice coordinate."));
+        break;
+      }
+
+      case 'b': {
+        // Validate real:
+        bool isReal;
+        atom.pos.y() = tokenCursor.selectedText().toDouble(&isReal);
+        if (!isReal)
+          m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
+        else
+          m_ui->text->markValid(tokenCursor, tr("'b' lattice coordinate."));
+        break;
+      }
+
+      case 'c': {
+        // Validate real:
+        bool isReal;
+        atom.pos.z() = tokenCursor.selectedText().toDouble(&isReal);
+        if (!isReal)
+          m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
+        else
+          m_ui->text->markValid(tokenCursor, tr("'c' coordinate."));
+        break;
+      }
+
       default:
         qWarning() << "Unhandled character in detected spec: " << *iter;
         break;
@@ -437,7 +476,7 @@ void CoordinateEditorDialog::validateInputWorker()
 
     // Store this atom info if collecting.
     if (m_validate->collectAtoms) {
-      if (m_validate->convertDistance)
+      if (m_validate->convertDistance && !m_validate->latticePositions)
         atom.pos *= m_validate->distanceConversion;
       m_validate->atoms << atom;
     }
@@ -519,7 +558,13 @@ void CoordinateEditorDialog::applyFinish(bool valid)
   m_molecule->clearAtoms();
   foreach (const AtomStruct &atom, atoms)
     m_molecule->addAtom(atom.atomicNumber).setPosition3d(atom.pos);
-  m_molecule->perceiveBondsSimple();
+  if (m_validate->latticePositions) {
+    Core::CrystalTools::setFractionalCoordinates(*m_molecule,
+                                                 m_molecule->atomPositions3d());
+  }
+  else {
+    m_molecule->perceiveBondsSimple();
+  }
 
   m_ui->text->document()->setModified(false);
 
@@ -550,6 +595,10 @@ void CoordinateEditorDialog::buildPresets()
   m_ui->presets->addItem(tr("XYZ format (symbols)"), QVariant("Sxyz"));
   m_ui->presets->addItem(tr("XYZ format (names)"), QVariant("Nxyz"));
   m_ui->presets->addItem(tr("XYZ format (atomic numbers)"), QVariant("Zxyz"));
+  m_ui->presets->addItem(tr("Lattice coordinates (symbols)"), QVariant("Sabc"));
+  m_ui->presets->addItem(tr("Lattice coordinates (names)"), QVariant("Nabc"));
+  m_ui->presets->addItem(tr("Lattice coordinates (atomic numbers)"),
+                         QVariant("Zabc"));
   m_ui->presets->addItem(tr("GAMESS format (symbols)"), QVariant("SGxyz"));
   m_ui->presets->addItem(tr("GAMESS format (names)"), QVariant("NGxyz"));
   m_ui->presets->addItem(tr("Turbomole format"), QVariant("xyzS"));
@@ -711,6 +760,22 @@ QString CoordinateEditorDialog::detectInputFormat() const
 
     FORMAT_DEBUG(qDebug() << current << tokens[i];)
     resultSpec += current;
+  }
+
+  // Check the current specification -- if a|b|c appears before x|y|z, assume
+  // that the specified coordinates are lattice coords
+  static QRegExp cartesianSniffer("x|y|z");
+  static QRegExp fractionalSniffer("a|b|c");
+  const QString currentSpec(m_ui->spec->text());
+  int cartesianIndex = currentSpec.indexOf(cartesianSniffer);
+  int fractionalIndex = currentSpec.indexOf(fractionalSniffer);
+  if (fractionalIndex != -1
+      && (cartesianIndex == -1
+          || fractionalIndex < cartesianIndex)) {
+    resultSpec.replace('x', 'a');
+    resultSpec.replace('y', 'b');
+    resultSpec.replace('z', 'c');
+    FORMAT_DEBUG(qDebug() << "Interpreting positions as lattice coordinates.";)
   }
 
   FORMAT_DEBUG(qDebug() << "Detected format:" << resultSpec);
