@@ -1,9 +1,22 @@
-/**********************************************************************
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-  02110-1301, USA.
-**********************************************************************/
+/******************************************************************************
+
+  This source file is part of the Avogadro project.
+
+  Copyright (C) 2010 Eric C. Brown
+
+  This source code is released under the GPL v3 or later (the "License").
+
+  You should have received a copy of the GNU General Public License along with
+  this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
+  Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+******************************************************************************/
 
 /* Based on */
 
@@ -137,6 +150,7 @@
 
 #include "qtaimcubature.h"
 
+using namespace Avogadro::QtPlugins;
 
 /* error return codes */
 #define SUCCESS 0
@@ -1182,10 +1196,10 @@ QList<QVariant> QTAIMEvaluateProperty(QList<QVariant> variantList)
   }
   QSet<qint64> basinSet=basinList.toSet();
 
-  Avogadro::QTAIMWavefunction wfn;
+  QTAIMWavefunction wfn;
   wfn.loadFromBinaryFile(wfnFileName);
 
-  Avogadro::QTAIMWavefunctionEvaluator eval(wfn);
+  QTAIMWavefunctionEvaluator eval(wfn);
 
   QList<QVariant> valueList;
 
@@ -1211,7 +1225,7 @@ QList<QVariant> QTAIMEvaluateProperty(QList<QVariant> variantList)
       betaSpheres.append(thisBetaSphere);
     }
 
-    Avogadro::QTAIMLSODAIntegrator ode(eval,0);
+    QTAIMLSODAIntegrator ode(eval,0);
     //  Avogadro::QTAIMODEIntegrator ode(eval,0);
 
     ode.setBetaSpheres(betaSpheres);
@@ -1230,7 +1244,7 @@ QList<QVariant> QTAIMEvaluateProperty(QList<QVariant> variantList)
                           betaSpheres.at(n).first.y(),
                           betaSpheres.at(n).first.z());
 
-      qreal distance=Avogadro::QTAIMMathUtilities::distance(a,b);
+      qreal distance=QTAIMMathUtilities::distance(a,b);
 
       if( distance < smallestDistance )
       {
@@ -1459,16 +1473,16 @@ QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
       ncpList.at(basinList.at(0)).y(),
       ncpList.at(basinList.at(0)).z();
 
-  Matrix<qreal,3,1> x0y0z0=Avogadro::QTAIMMathUtilities::sphericalToCartesian(r0t0p0, origin );
+  Matrix<qreal,3,1> x0y0z0=QTAIMMathUtilities::sphericalToCartesian(r0t0p0, origin );
 
   qreal x0=x0y0z0(0);
   qreal y0=x0y0z0(1);
   qreal z0=x0y0z0(2);
 
-  Avogadro::QTAIMWavefunction wfn;
+  QTAIMWavefunction wfn;
   wfn.loadFromBinaryFile(wfnFileName);
 
-  Avogadro::QTAIMWavefunctionEvaluator eval(wfn);
+  QTAIMWavefunctionEvaluator eval(wfn);
 
   QList<QVariant> valueList;
 
@@ -1494,7 +1508,7 @@ QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
       betaSpheres.append(thisBetaSphere);
     }
 
-    Avogadro::QTAIMLSODAIntegrator ode(eval,0);
+    QTAIMLSODAIntegrator ode(eval,0);
     //  Avogadro::QTAIMODEIntegrator ode(eval,0);
 
     ode.setBetaSpheres(betaSpheres);
@@ -1513,7 +1527,7 @@ QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
                           betaSpheres.at(n).first.y(),
                           betaSpheres.at(n).first.z());
 
-      qreal distance=Avogadro::QTAIMMathUtilities::distance(a,b);
+      qreal distance=QTAIMMathUtilities::distance(a,b);
 
       if( distance < smallestDistance )
       {
@@ -1721,7 +1735,7 @@ void property_r(unsigned int ndim, const double *xyz, void *param,
       ncpList.at(basinList.at(0)).y(),
       ncpList.at(basinList.at(0)).z();
 
-  Matrix<qreal,3,1> XYZ=Avogadro::QTAIMMathUtilities::sphericalToCartesian(rtp, origin );
+  Matrix<qreal,3,1> XYZ=QTAIMMathUtilities::sphericalToCartesian(rtp, origin );
 
   qreal x=XYZ(0);
   qreal y=XYZ(1);
@@ -1730,9 +1744,9 @@ void property_r(unsigned int ndim, const double *xyz, void *param,
   // This routine reads the wavefunction file repeatedly.
   // Let's hope that this time is dwarfed by the time
   // taken to delineate the atomic basins in the calling routine.
-  Avogadro::QTAIMWavefunction wfn;
+  QTAIMWavefunction wfn;
   wfn.loadFromBinaryFile(wfnFileName);
-  Avogadro::QTAIMWavefunctionEvaluator eval(wfn);
+  QTAIMWavefunctionEvaluator eval(wfn);
 
   for(qint64 m=0; m<nmode ; ++m )
   {
@@ -1802,9 +1816,9 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
   }
   QSet<qint64> basinSet=basinList.toSet();
 
-  Avogadro::QTAIMWavefunction wfn;
+  QTAIMWavefunction wfn;
   wfn.loadFromBinaryFile(wfnFileName);
-  Avogadro::QTAIMWavefunctionEvaluator eval(wfn);
+  QTAIMWavefunctionEvaluator eval(wfn);
 
   // Set up steepest ascent integrator and beta spheres
   QList<QPair<QVector3D,qreal> > betaSpheres;
@@ -1816,7 +1830,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
     betaSpheres.append(thisBetaSphere);
   }
 
-  Avogadro::QTAIMLSODAIntegrator ode(eval,0);
+  QTAIMLSODAIntegrator ode(eval,0);
   //  Avogadro::QTAIMODEIntegrator ode(eval,0);
 
   ode.setBetaSpheres(betaSpheres);
@@ -1840,7 +1854,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
 
   Matrix<qreal,3,1> rtpl;
   rtpl << left, t, p;
-  Matrix<qreal,3,1> xyzl=Avogadro::QTAIMMathUtilities::sphericalToCartesian(rtpl, origin);
+  Matrix<qreal,3,1> xyzl=QTAIMMathUtilities::sphericalToCartesian(rtpl, origin);
 
   qreal fleft;
   qreal x=xyzl(0);
@@ -1867,7 +1881,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
                           betaSpheres.at(n).first.y(),
                           betaSpheres.at(n).first.z());
 
-      qreal distance=Avogadro::QTAIMMathUtilities::distance(a,b);
+      qreal distance=QTAIMMathUtilities::distance(a,b);
 
       if( distance < smallestDistance )
       {
@@ -1890,7 +1904,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
 
   Matrix<qreal,3,1> rtpr;
   rtpr << right, t, p;
-  Matrix<qreal,3,1> xyzr=Avogadro::QTAIMMathUtilities::sphericalToCartesian(rtpr, origin);
+  Matrix<qreal,3,1> xyzr=QTAIMMathUtilities::sphericalToCartesian(rtpr, origin);
 
   qreal fright;
   x=xyzr(0);
@@ -1917,7 +1931,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
                           betaSpheres.at(n).first.y(),
                           betaSpheres.at(n).first.z());
 
-      qreal distance=Avogadro::QTAIMMathUtilities::distance(a,b);
+      qreal distance=QTAIMMathUtilities::distance(a,b);
 
       if( distance < smallestDistance )
       {
@@ -1953,7 +1967,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
 
     Matrix<qreal,3,1> rtpm;
     rtpm << midpoint, t, p;
-    Matrix<qreal,3,1> xyzm=Avogadro::QTAIMMathUtilities::sphericalToCartesian(rtpm, origin);
+    Matrix<qreal,3,1> xyzm=QTAIMMathUtilities::sphericalToCartesian(rtpm, origin);
 
     qreal fmidpoint;
     x=xyzm(0);
@@ -1980,7 +1994,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
                             betaSpheres.at(n).first.y(),
                             betaSpheres.at(n).first.z());
 
-        qreal distance=Avogadro::QTAIMMathUtilities::distance(a,b);
+        qreal distance=QTAIMMathUtilities::distance(a,b);
 
         if( distance < smallestDistance )
         {
@@ -2187,8 +2201,8 @@ void property_v_tp(unsigned int /* ndim */, unsigned int npts, const double *xyz
   }
 }
 
-namespace Avogadro
-{
+namespace Avogadro {
+namespace QtPlugins {
 
   QTAIMCubature::QTAIMCubature(QTAIMWavefunction &wfn)
   {
@@ -2394,4 +2408,5 @@ namespace Avogadro
   }
 
 
-}
+} // end namespace QtPlugins
+} // end namespace Avogadro
