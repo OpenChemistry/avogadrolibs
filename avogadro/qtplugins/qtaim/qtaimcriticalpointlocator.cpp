@@ -1,26 +1,23 @@
-/**********************************************************************
-  QTAIM - Extension for Quantum Theory of Atoms In Molecules Analysis
+/******************************************************************************
 
-  Copyright (C) 2010 Eric C. Brown
+This source file is part of the Avogadro project.
 
-  This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+Copyright 2013 Kitware, Inc.
 
-  Avogadro is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
+Adapted from the Avogadro 1 implementation and relicensed with permission
+from the original author(s):
 
-  Avogadro is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+Copyright (C) 2010 Eric C. Brown
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-  02110-1301, USA.
-**********************************************************************/
+This source code is released under the New BSD License, (the "License").
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+******************************************************************************/
 
 #include "qtaimcriticalpointlocator.h"
 #include "qtaimwavefunction.h"
@@ -51,8 +48,8 @@ using namespace Eigen;
 #define HUGE_REAL_NUMBER 1.e20
 #define SMALL_GRADIENT_NORM 1.e-4
 
-namespace Avogadro
-{
+namespace Avogadro {
+namespace QtPlugins {
 
   QList<QVariant> QTAIMLocateNuclearCriticalPoint( QList<QVariant> input  )
   {
@@ -1039,4 +1036,5 @@ namespace Avogadro
     return temporaryFileName;
   }
 
+} // namespace QtPlugins
 } // namespace Avogadro
