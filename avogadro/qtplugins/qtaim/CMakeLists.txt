@@ -1,12 +1,5 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
-set(LINK_LIBS avogadro)
-set(PLUGIN_LABEL extensions)
-set(PLUGIN_TARGET extensions)
-
 set(qtaimextension_SRCS
     qtaimextension.cpp
-#    qtaimdialog.cpp
     qtaimwavefunction.cpp
     qtaimwavefunctionevaluator.cpp
     qtaimodeintegrator.cpp
@@ -17,11 +10,20 @@ set(qtaimextension_SRCS
     qtaimcubature.cpp
 )
 
-#set(qtaim_UIS
-#  qtaimdialog.ui
-#)
-
-avogadro_plugin_nogl(qtaimextension
+avogadro_plugin(QTAIMExtension
+  "QTAIM extension"
+  ExtensionPlugin
+  qtaimextension.h
+  QTAIMExtension
   "${qtaimextension_SRCS}"
-#  "${qtaimextension_UIS}"
- )
+)
+
+# The settings widget is not built -- it's settings weren't actually used by the
+# engine in Avogadro 1. The sources are kept for later if we decide to use it.
+avogadro_plugin(QTAIMScenePlugin
+  "QTAIM scene plugin"
+  ScenePlugin
+  qtaimengine.h
+  QTAIMEngine
+  qtaimengine.cpp
+)

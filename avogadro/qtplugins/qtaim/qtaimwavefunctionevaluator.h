@@ -1,9 +1,18 @@
-/**********************************************************************
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-  02110-1301, USA.
- **********************************************************************/
+/******************************************************************************
+
+  This source file is part of the Avogadro project.
+
+  Copyright (C) 2010 Eric C. Brown
+
+  This source code is released under the New BSD License, (the "License").
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+******************************************************************************/
 
 #ifndef QTAIMWAVEFUNCTIONEVALUATOR_H
 #define QTAIMWAVEFUNCTIONEVALUATOR_H
@@ -14,8 +23,8 @@
 
 using namespace Eigen;
 
-namespace Avogadro
-{
+namespace Avogadro {
+namespace QtPlugins {
 
   class QTAIMWavefunction;
 
@@ -107,6 +116,7 @@ namespace Avogadro
 
   };
 
+} // namespace QtPlugins
 } // namespace Avogadro
 
 #endif // QTAIMWAVEFUNCTIONEVALUATOR_H
