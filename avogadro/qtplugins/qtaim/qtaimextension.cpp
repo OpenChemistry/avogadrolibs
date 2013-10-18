@@ -1,36 +1,23 @@
+/******************************************************************************
 
-/**********************************************************************
-  QTAIM - Extension for Quantum Theory of Atoms In Molecules Analysis
+  This source file is part of the Avogadro project.
 
-  Copyright (C) 2010 Eric C. Brown
-  This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  Copyright 2010 Eric C. Brown
+  Copyright 2013 Kitware, Inc.
 
-  Avogadro is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
+  This source code is released under the New BSD License, (the "License").
 
-  Avogadro is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-  02110-1301, USA.
- **********************************************************************/
+******************************************************************************/
 
 #include "qtaimextension.h"
 
-#include <avogadro/molecule.h>
-#include <avogadro/atom.h>
-#include <avogadro/bond.h>
-#include <avogadro/fragment.h>
-#include <avogadro/painter.h>
-#include <avogadro/toolgroup.h>
-#include <avogadro/engine.h>
+#include <avogadro/qtgui/molecule.h>
 
 #include <QAction>
 
@@ -54,8 +41,8 @@
 using namespace std;
 using namespace Eigen;
 
-namespace Avogadro
-{
+namespace Avogadro {
+namespace QtPlugins {
 
   enum QTAIMExtensionIndex {
     FirstAction = 0,
@@ -63,25 +50,29 @@ namespace Avogadro
     ThirdAction
   };
 
-  QTAIMExtension::QTAIMExtension( QObject *parent ) : Extension( parent )
+  QTAIMExtension::QTAIMExtension( QObject *parent )
+    : QtGui::ExtensionPlugin( parent )
   {
     // create an action for our first action
     QAction *action = new QAction( this );
     action->setText( tr("Molecular Graph..." ));
     m_actions.append( action );
     action->setData( FirstAction );
+    connect(action, SIGNAL(triggered()), SLOT(triggered()));
 
     // create an action for our second action
     action = new QAction( this );
     action->setText( tr("Molecular Graph with Lone Pairs..." ));
     m_actions.append( action );
     action->setData( SecondAction );
+    connect(action, SIGNAL(triggered()), SLOT(triggered()));
 
     // create an action for our third action
     action = new QAction( this );
     action->setText( tr("Atomic Charge..." ));
     m_actions.append( action );
     action->setData( ThirdAction );
+    connect(action, SIGNAL(triggered()), SLOT(triggered()));
   }
 
   QTAIMExtension::~QTAIMExtension()
@@ -93,36 +84,21 @@ namespace Avogadro
     return m_actions;
   }
 
-  QString QTAIMExtension::menuPath(QAction *action) const
+  QStringList QTAIMExtension::menuPath(QAction *) const
   {
-    int i = action->data().toInt();
-
-    switch ( i ) {
-    case FirstAction:
-      return tr("E&xtensions") + '>' + tr("QTAIM");
-      break;
-    case SecondAction:
-      return tr("E&xtensions") + '>' + tr("QTAIM");
-      break;
-    case ThirdAction:
-      return tr("E&xtensions") + '>' + tr("QTAIM");
-      break;
-    }
-    return "";
+    return QStringList() << tr("E&xtensions") << tr("QTAIM");
   }
 
-  QDockWidget * QTAIMExtension::dockWidget()
-  {
-    return 0;
-  }
-
-  void QTAIMExtension::setMolecule(Molecule *molecule)
+  void QTAIMExtension::setMolecule(QtGui::Molecule *molecule)
   {
     m_molecule = molecule;
   }
 
-  QUndoCommand* QTAIMExtension::performAction(QAction *action, GLWidget *widget)
+  void QTAIMExtension::triggered()
   {
+    QAction *action = qobject_cast<QAction*>(sender());
+    if (!action)
+      return;
 
     bool wavefunctionAlreadyLoaded;
 
@@ -156,7 +132,7 @@ namespace Avogadro
       if(fileName.isNull())
       {
         qDebug() << "No such file.";
-        return 0;
+        return;
       }
     }
 
@@ -182,28 +158,17 @@ namespace Avogadro
       {
         qDebug() << "Error reading WFN file.";
       }
-        return 0;
+        return;
     }
 
-    if (widget) {
-      widget->toolGroup()->setActiveTool("Navigate");
-      // Make sure QTAIM engine is turned on too
+    QtGui::Molecule::MoleculeChanges changes;
+    if (m_molecule->atomCount() > 0)
+      changes |= QtGui::Molecule::Atoms | QtGui::Molecule::Removed;
+    if (m_molecule->bondCount() > 0)
+      changes |= QtGui::Molecule::Bonds | QtGui::Molecule::Removed;
 
-      foreach (Engine *engine, widget->engines()) {
-        if (engine->identifier() == "QTAIM")
-          engine->setEnabled(true);
-      }
-    }
-
-    //    m_molecule->clear();
-    // Don't clear the molecule, since this will destroy all meshes, etc.
-    // Instead, we'll clear the atoms and bonds, which will be re-created from the QTAIM file.
-    foreach(Bond *bond, m_molecule->bonds())
-      m_molecule->removeBond(bond);
-    foreach(Atom *atom, m_molecule->atoms())
-      m_molecule->removeAtom(atom);
-    foreach(Fragment *ring, m_molecule->rings())
-      m_molecule->removeRing(ring);
+    m_molecule->clearAtoms();
+    m_molecule->emitChanged(static_cast<unsigned int>(changes));
 
     // Instantiate an Evaluator
     QTAIMWavefunctionEvaluator eval(wfn);
@@ -258,12 +223,16 @@ namespace Avogadro
 
           int Z=(int) wfn.nuclearCharge(n);
 
-          Atom *atom=m_molecule->addAtom();
-          atom->setPos( Eigen::Vector3d(x,y,z) );
-          atom->setAtomicNumber(Z);
+          m_molecule->addAtom(static_cast<unsigned char>(Z)).setPosition3d(
+                Vector3(static_cast<Real>(x),
+                        static_cast<Real>(y),
+                        static_cast<Real>(z)));
         }
 
-        m_molecule->update();
+        if (m_molecule->atomCount() > 0) {
+          m_molecule->emitChanged(QtGui::Molecule::Atoms |
+                                  QtGui::Molecule::Added);
+        }
 
         // Locate the Bond Critical Points and Trace Bond Paths
         cpl.locateBondCriticalPoints();
@@ -289,15 +258,14 @@ namespace Avogadro
         QVariantList yBondPathsVariantList;
         QVariantList zBondPathsVariantList;
 
-        QList<Atom *> currentAtoms=m_molecule->atoms();
-
         // Connectivity stored as Bonds
 
         qint64 bpCtr=0;
+        qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
 
-        for( qint64 atom0=0 ; atom0 < currentAtoms.length() - 1 ; ++atom0 )
+        for( qint64 atom0=0 ; atom0 < numAtoms - 1 ; ++atom0 )
         {
-          for( qint64 atom1=atom0+1 ; atom1 < currentAtoms.length() ; ++atom1 )
+          for( qint64 atom1=atom0+1 ; atom1 < numAtoms ; ++atom1 )
           {
 
             bool areBonded=false;
@@ -319,9 +287,9 @@ namespace Avogadro
                   }
                   else
                   {
-                    Bond *bond=m_molecule->addBond();
-                    bond->setBegin( currentAtoms.at(atom0) );
-                    bond->setEnd( currentAtoms.at(atom1) );
+                    m_molecule->addBond(
+                          m_molecule->atom(static_cast<size_t>(atom0)),
+                          m_molecule->atom(static_cast<size_t>(atom1)));
                     //            bond->setAromaticity(isAromatic);
                     //            bond->setOrder( (int) order);
                   }
@@ -375,7 +343,10 @@ namespace Avogadro
         m_molecule->setProperty("QTAIMYBondPaths",yBondPathsVariantList);
         m_molecule->setProperty("QTAIMZBondPaths",zBondPathsVariantList);
 
-        m_molecule->update();
+        if (m_molecule->bondCount()) {
+          m_molecule->emitChanged(QtGui::Molecule::Bonds |
+                                  QtGui::Molecule::Added);
+        }
       }
       break;
     case SecondAction: // Molecular Graph with Lone Pairs
@@ -427,12 +398,16 @@ namespace Avogadro
 
           int Z=(int) wfn.nuclearCharge(n);
 
-          Atom *atom=m_molecule->addAtom();
-          atom->setPos( Eigen::Vector3d(x,y,z) );
-          atom->setAtomicNumber(Z);
+          m_molecule->addAtom(static_cast<unsigned char>(Z)).setPosition3d(
+                Vector3(static_cast<Real>(x),
+                        static_cast<Real>(y),
+                        static_cast<Real>(z)));
         }
 
-        m_molecule->update();
+        if (m_molecule->atomCount() > 0) {
+          m_molecule->emitChanged(QtGui::Molecule::Atoms |
+                                  QtGui::Molecule::Added);
+        }
 
         // Locate the Bond Critical Points and Trace Bond Paths
         cpl.locateBondCriticalPoints();
@@ -458,15 +433,14 @@ namespace Avogadro
         QVariantList yBondPathsVariantList;
         QVariantList zBondPathsVariantList;
 
-        QList<Atom *> currentAtoms=m_molecule->atoms();
-
         // Connectivity stored as Bonds
 
         qint64 bpCtr=0;
+        qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
 
-        for( qint64 atom0=0 ; atom0 < currentAtoms.length() - 1 ; ++atom0 )
+        for( qint64 atom0=0 ; atom0 < numAtoms - 1 ; ++atom0 )
         {
-          for( qint64 atom1=atom0+1 ; atom1 < currentAtoms.length() ; ++atom1 )
+          for( qint64 atom1=atom0+1 ; atom1 < numAtoms ; ++atom1 )
           {
 
             bool areBonded=false;
@@ -488,9 +462,9 @@ namespace Avogadro
                   }
                   else
                   {
-                    Bond *bond=m_molecule->addBond();
-                    bond->setBegin( currentAtoms.at(atom0) );
-                    bond->setEnd( currentAtoms.at(atom1) );
+                    m_molecule->addBond(
+                          m_molecule->atom(static_cast<size_t>(atom0)),
+                          m_molecule->atom(static_cast<size_t>(atom1)));
                     //            bond->setAromaticity(isAromatic);
                     //            bond->setOrder( (int) order);
                   }
@@ -544,7 +518,10 @@ namespace Avogadro
         m_molecule->setProperty("QTAIMYBondPaths",yBondPathsVariantList);
         m_molecule->setProperty("QTAIMZBondPaths",zBondPathsVariantList);
 
-        m_molecule->update();
+        if (m_molecule->bondCount()) {
+          m_molecule->emitChanged(QtGui::Molecule::Bonds |
+                                  QtGui::Molecule::Added);
+        }
 
         // Locate Electron Density Sources / Lone Pairs
 
@@ -573,7 +550,8 @@ namespace Avogadro
         m_molecule->setProperty("QTAIMYElectronDensitySources",yElectronDensitySourcesVariantList);
         m_molecule->setProperty("QTAIMZElectronDensitySources",zElectronDensitySourcesVariantList);
 
-        m_molecule->update();
+        // TODO need some way to indicate that the properties have changed:
+//        m_molecule->update();
 
       }
       break;
@@ -627,12 +605,16 @@ namespace Avogadro
 
           int Z=(int) wfn.nuclearCharge(n);
 
-          Atom *atom=m_molecule->addAtom();
-          atom->setPos( Eigen::Vector3d(x,y,z) );
-          atom->setAtomicNumber(Z);
+          m_molecule->addAtom(static_cast<unsigned char>(Z)).setPosition3d(
+                Vector3(static_cast<Real>(x),
+                        static_cast<Real>(y),
+                        static_cast<Real>(z)));
         }
 
-        m_molecule->update();
+        if (m_molecule->atomCount() > 0) {
+          m_molecule->emitChanged(QtGui::Molecule::Atoms |
+                                  QtGui::Molecule::Added);
+        }
 
         // Locate the Bond Critical Points and Trace Bond Paths
         cpl.locateBondCriticalPoints();
@@ -658,15 +640,15 @@ namespace Avogadro
         QVariantList yBondPathsVariantList;
         QVariantList zBondPathsVariantList;
 
-        QList<Atom *> currentAtoms=m_molecule->atoms();
-
         // Connectivity stored as Bonds
 
         qint64 bpCtr=0;
+        qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
+        int molecule;
 
-        for( qint64 atom0=0 ; atom0 < currentAtoms.length() - 1 ; ++atom0 )
+        for( qint64 atom0=0 ; atom0 < numAtoms - 1 ; ++atom0 )
         {
-          for( qint64 atom1=atom0+1 ; atom1 < currentAtoms.length() ; ++atom1 )
+          for( qint64 atom1=atom0+1 ; atom1 < numAtoms ; ++atom1 )
           {
 
             bool areBonded=false;
@@ -688,9 +670,9 @@ namespace Avogadro
                   }
                   else
                   {
-                    Bond *bond=m_molecule->addBond();
-                    bond->setBegin( currentAtoms.at(atom0) );
-                    bond->setEnd( currentAtoms.at(atom1) );
+                    m_molecule->addBond(
+                          m_molecule->atom(static_cast<size_t>(atom0)),
+                          m_molecule->atom(static_cast<size_t>(atom1)));
                     //            bond->setAromaticity(isAromatic);
                     //            bond->setOrder( (int) order);
                   }
@@ -744,7 +726,10 @@ namespace Avogadro
         m_molecule->setProperty("QTAIMYBondPaths",yBondPathsVariantList);
         m_molecule->setProperty("QTAIMZBondPaths",zBondPathsVariantList);
 
-        m_molecule->update();
+        if (m_molecule->bondCount() > 0) {
+          m_molecule->emitChanged(QtGui::Molecule::Bonds |
+                                  QtGui::Molecule::Added);
+        }
 
         // Electron Density
         qint64 mode=0;
@@ -770,7 +755,7 @@ namespace Avogadro
 
         // TODO: Set the properties of the atoms.
         // I don't know why this bombs.
-        for(qint64 i=0 ; m_molecule->atoms().length(); ++i)
+        for(qint64 i=0 ; static_cast<qint64>(m_molecule->atomCount()); ++i)
         {
 //          Atom *atom=m_molecule->atoms().at(i);
 //          const qreal charge=results.at(i).first;
@@ -781,10 +766,8 @@ namespace Avogadro
       break;
     }
 
-    return 0;
+    return;
   }
 
-}
-
-Q_EXPORT_PLUGIN2(qtaimextension, Avogadro::QTAIMExtensionFactory)
-
+} // end namespace QtPlugins
+} // end namespace Avogadro
