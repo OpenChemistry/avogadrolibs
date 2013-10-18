@@ -128,22 +128,22 @@ namespace QtPlugins {
       {
         if( m_betaSpheres.length() > 0 )
         {
-          for( qint64 n=0 ; n < m_betaSpheres.length() ; ++n )
+          for( qint64 n_=0 ; n_ < m_betaSpheres.length() ; ++n_ )
           {
             Matrix<qreal,3,1> a(y[1],y[2],y[3]);
-            Matrix<qreal,3,1> b(m_betaSpheres.at(n).first.x(),
-                                m_betaSpheres.at(n).first.y(),
-                                m_betaSpheres.at(n).first.z() );
+            Matrix<qreal,3,1> b(m_betaSpheres.at(n_).first.x(),
+                                m_betaSpheres.at(n_).first.y(),
+                                m_betaSpheres.at(n_).first.z() );
 
             qreal distance=QTAIMMathUtilities::distance(a,b);
 
-            if( distance < m_betaSpheres.at(n).second )
+            if( distance < m_betaSpheres.at(n_).second )
             {
               m_status=0;
-              m_associatedSphere=n;
-              return QVector3D( m_betaSpheres.at(n).first.x(),
-                                m_betaSpheres.at(n).first.y(),
-                                m_betaSpheres.at(n).first.z() );
+              m_associatedSphere=n_;
+              return QVector3D( m_betaSpheres.at(n_).first.x(),
+                                m_betaSpheres.at(n_).first.y(),
+                                m_betaSpheres.at(n_).first.z() );
             }
           }
         }
@@ -258,7 +258,7 @@ namespace QtPlugins {
 
 
 
-  void QTAIMLSODAIntegrator::daxpy( int n, double da, double *dx, int incx, double *dy, int incy )
+  void QTAIMLSODAIntegrator::daxpy( int n_, double da, double *dx, int incx, double *dy, int incy )
 
       /*
      Purpose : To compute
@@ -291,7 +291,7 @@ namespace QtPlugins {
   {
     int ix, iy, i, m;
 
-    if ( n < 0 || da == 0. )
+    if ( n_ < 0 || da == 0. )
       return;
 
     /* Code for nonequal or nonpositive increments.  */
@@ -300,10 +300,10 @@ namespace QtPlugins {
       ix = 1;
       iy = 1;
       if ( incx < 0 )
-        ix = ( -n + 1 ) * incx + 1;
+        ix = ( -n_ + 1 ) * incx + 1;
       if ( incy < 0 )
-        iy = ( -n + 1 ) * incy + 1;
-      for ( i = 1 ; i <= n ; i++ ) {
+        iy = ( -n_ + 1 ) * incy + 1;
+      for ( i = 1 ; i <= n_ ; i++ ) {
         dy[iy] = dy[iy] + da * dx[ix];
         ix = ix + incx;
         iy = iy + incy;
@@ -316,14 +316,14 @@ namespace QtPlugins {
     /* Clean-up loop so remaining vector length is a multiple of 4.  */
 
     if ( incx == 1 ) {
-      m = n % 4;
+      m = n_ % 4;
       if ( m != 0 ) {
         for ( i = 1 ; i <= m ; i++ )
           dy[i] = dy[i] + da * dx[i];
-        if ( n < 4 )
+        if ( n_ < 4 )
           return;
       }
-      for ( i = m + 1 ; i <= n ; i = i + 4 ) {
+      for ( i = m + 1 ; i <= n_ ; i = i + 4 ) {
         dy[i] = dy[i] + da * dx[i];
         dy[i+1] = dy[i+1] + da * dx[i+1];
         dy[i+2] = dy[i+2] + da * dx[i+2];
@@ -334,13 +334,13 @@ namespace QtPlugins {
 
     /* Code for equal, positive, nonunit increments.   */
 
-    for ( i = 1 ; i <= n * incx ; i = i + incx )
+    for ( i = 1 ; i <= n_ * incx ; i = i + incx )
       dy[i] = da * dx[i] + dy[i];
     return;
 
   }
 
-  double QTAIMLSODAIntegrator::ddot( int n, double *dx, int incx, double *dy, int incy )
+  double QTAIMLSODAIntegrator::ddot( int n_, double *dx, int incx, double *dy, int incy )
 
       /*
          Purpose : Inner product dx . dy
@@ -372,7 +372,7 @@ namespace QtPlugins {
     int ix, iy, i, m;
 
     dotprod = 0.;
-    if ( n <= 0 )
+    if ( n_ <= 0 )
       return dotprod;
 
     /* Code for unequal or nonpositive increments.  */
@@ -381,10 +381,10 @@ namespace QtPlugins {
       ix = 1;
       iy = 1;
       if ( incx < 0 )
-        ix = ( -n + 1 ) * incx + 1;
+        ix = ( -n_ + 1 ) * incx + 1;
       if ( incy < 0 )
-        iy = ( -n + 1 ) * incy + 1;
-      for ( i = 1 ; i <= n ; i++ ) {
+        iy = ( -n_ + 1 ) * incy + 1;
+      for ( i = 1 ; i <= n_ ; i++ ) {
         dotprod = dotprod + dx[ix] * dy[iy];
         ix = ix + incx;
         iy = iy + incy;
@@ -397,14 +397,14 @@ namespace QtPlugins {
     /* Clean-up loop so remaining vector length is a multiple of 5.  */
 
     if ( incx == 1 ) {
-      m = n % 5;
+      m = n_ % 5;
       if ( m != 0 ) {
         for ( i = 1 ; i <= m ; i++ )
           dotprod = dotprod + dx[i] * dy[i];
-        if ( n < 5 )
+        if ( n_ < 5 )
           return dotprod;
       }
-      for ( i = m + 1 ; i <= n ; i = i + 5 )
+      for ( i = m + 1 ; i <= n_ ; i = i + 5 )
         dotprod = dotprod + dx[i] * dy[i] + dx[i+1] * dy[i+1] +
                   dx[i+2] * dy[i+2] + dx[i+3] * dy[i+3] +
                   dx[i+4] * dy[i+4];
@@ -413,13 +413,13 @@ namespace QtPlugins {
 
     /* Code for positive equal nonunit increments.   */
 
-    for ( i = 1 ; i <= n * incx ; i = i + incx )
+    for ( i = 1 ; i <= n_ * incx ; i = i + incx )
       dotprod = dotprod + dx[i] * dy[i];
     return dotprod;
 
   }
 
-  void QTAIMLSODAIntegrator::dgefa( double **a, int n, int *ipvt, int *info )
+  void QTAIMLSODAIntegrator::dgefa( double **a, int n_, int *ipvt_, int *info )
 
       /*
      Purpose : dgefa factors a double matrix by Gaussian elimination.
@@ -467,13 +467,13 @@ namespace QtPlugins {
     /* Gaussian elimination with partial pivoting.   */
 
     *info = 0;
-    for ( k = 1 ; k <= n - 1 ; k++ ) {
+    for ( k = 1 ; k <= n_ - 1 ; k++ ) {
       /*
      Find j = pivot index.  Note that a[k]+k-1 is the address of
      the 0-th element of the row vector whose 1st element is a[k][k].
       */
-      j = idamax( n-k+1, a[k]+k-1, 1 ) + k - 1;
-      ipvt[k] = j;
+      j = idamax( n_-k+1, a[k]+k-1, 1 ) + k - 1;
+      ipvt_[k] = j;
       /*
      Zero pivot implies this row already triangularized.
       */
@@ -493,27 +493,27 @@ namespace QtPlugins {
      Compute multipliers.
       */
       t = -1. / a[k][k];
-      dscal( n-k, t, a[k]+k, 1 );
+      dscal( n_-k, t, a[k]+k, 1 );
       /*
      Column elimination with row indexing.
       */
-      for ( i = k + 1 ; i <= n ; i++ ) {
+      for ( i = k + 1 ; i <= n_ ; i++ ) {
         t = a[i][j];
         if ( j != k ) {
           a[i][j] = a[i][k];
           a[i][k] = t;
         }
-        daxpy( n-k, t, a[k]+k, 1, a[i]+k, 1 );
+        daxpy( n_-k, t, a[k]+k, 1, a[i]+k, 1 );
       }
     }                     /*  end k-loop  */
 
-    ipvt[n] = n;
-    if ( a[n][n] == 0. )
-      *info = n;
+    ipvt_[n_] = n_;
+    if ( a[n_][n_] == 0. )
+      *info = n_;
 
   }
 
-  void QTAIMLSODAIntegrator::dgesl( double **a, int n, int *ipvt, double *b, int job )
+  void QTAIMLSODAIntegrator::dgesl( double **a, int n_, int *ipvt_, double *b, int job )
 
       /*
      Purpose : dgesl solves the linear system
@@ -562,16 +562,16 @@ namespace QtPlugins {
       /*
      First solve L * y = b.
   */
-      for ( k = 1 ; k <= n ; k++ ) {
+      for ( k = 1 ; k <= n_ ; k++ ) {
         t = ddot( k-1, a[k], 1, b, 1 );
         b[k] = ( b[k] - t ) / a[k][k];
       }
       /*
      Now solve U * x = y.
   */
-      for ( k = n - 1 ; k >= 1 ; k-- ) {
-        b[k] = b[k] + ddot( n-k, a[k]+k, 1, b+k, 1 );
-        j = ipvt[k];
+      for ( k = n_ - 1 ; k >= 1 ; k-- ) {
+        b[k] = b[k] + ddot( n_-k, a[k]+k, 1, b+k, 1 );
+        j = ipvt_[k];
         if ( j != k ) {
           t = b[j];
           b[j] = b[k];
@@ -586,19 +586,19 @@ namespace QtPlugins {
 
      First solve Transpose(U) * y = b.
   */
-    for ( k = 1 ; k <= n - 1 ; k++ ) {
-      j = ipvt[k];
+    for ( k = 1 ; k <= n_ - 1 ; k++ ) {
+      j = ipvt_[k];
       t = b[j];
       if ( j != k ) {
         b[j] = b[k];
         b[k] = t;
       }
-      daxpy( n-k, t, a[k]+k, 1, b+k, 1 );
+      daxpy( n_-k, t, a[k]+k, 1, b+k, 1 );
     }
     /*
      Now solve Transpose(L) * x = y.
   */
-    for ( k = n ; k >= 1 ; k-- ) {
+    for ( k = n_ ; k >= 1 ; k-- ) {
       b[k] = b[k] / a[k][k];
       t = -b[k];
       daxpy( k-1, t, a[k], 1, b, 1 );
@@ -607,7 +607,7 @@ namespace QtPlugins {
   }
 
 
-  void QTAIMLSODAIntegrator::dscal( int n, double da, double *dx, int incx )
+  void QTAIMLSODAIntegrator::dscal( int n_, double da, double *dx, int incx )
 
       /* Purpose : scalar vector multiplication
 
@@ -635,13 +635,13 @@ namespace QtPlugins {
   {
     int m, i;
 
-    if ( n <= 0 )
+    if ( n_ <= 0 )
       return;
 
     /* Code for increments not equal to 1.  */
 
     if ( incx != 1 ) {
-      for ( i = 1 ; i <= n * incx ; i = i + incx )
+      for ( i = 1 ; i <= n_ * incx ; i = i + incx )
         dx[i] = da * dx[i];
       return;
     }
@@ -650,14 +650,14 @@ namespace QtPlugins {
 
     /* Clean-up loop so remaining vector length is a multiple of 5.  */
 
-    m = n % 5;
+    m = n_ % 5;
     if ( m != 0 ) {
       for ( i = 1 ; i <= m ; i++ )
         dx[i] = da * dx[i];
-      if ( n < 5 )
+      if ( n_ < 5 )
         return;
     }
-    for ( i = m + 1 ; i <= n ; i = i + 5 ) {
+    for ( i = m + 1 ; i <= n_ ; i = i + 5 ) {
       dx[i] = da * dx[i];
       dx[i+1] = da * dx[i+1];
       dx[i+2] = da * dx[i+2];
@@ -668,7 +668,7 @@ namespace QtPlugins {
 
   }
 
-  int QTAIMLSODAIntegrator::idamax( int n, double *dx, int incx )
+  int QTAIMLSODAIntegrator::idamax( int n_, double *dx, int incx )
 
       /* Purpose : Find largest component of double vector dx
 
@@ -695,10 +695,10 @@ namespace QtPlugins {
     int i, ii, xindex;
 
     xindex = 0;
-    if ( n <= 0 )
+    if ( n_ <= 0 )
       return xindex;
     xindex = 1;
-    if ( n <= 1 || incx <= 0 )
+    if ( n_ <= 1 || incx <= 0 )
       return xindex;
 
     /* Code for increments not equal to 1.   */
@@ -706,7 +706,7 @@ namespace QtPlugins {
     if ( incx != 1 ) {
       dmax = fabs( dx[1] );
       ii = 2;
-      for ( i = 1 + incx ; i <= n * incx ; i = i + incx ) {
+      for ( i = 1 + incx ; i <= n_ * incx ; i = i + incx ) {
         xmag = fabs( dx[i] );
         if ( xmag > dmax ) {
           xindex = ii;
@@ -720,7 +720,7 @@ namespace QtPlugins {
     /* Code for increments equal to 1.  */
 
     dmax = fabs( dx[1] );
-    for ( i = 2 ; i <= n ; i++ ) {
+    for ( i = 2 ; i <= n_ ; i++ ) {
       xmag = fabs( dx[i] );
       if ( xmag > dmax ) {
         xindex = i;
@@ -2034,9 +2034,9 @@ namespace QtPlugins {
   }      /*   end intdy   */
 
 
-  void QTAIMLSODAIntegrator::cfode( int meth )
+  void QTAIMLSODAIntegrator::cfode( int meth_ )
   {
-    int i, nq, nqm1, nqp1;
+    int i, nq_, nqm1, nqp1;
     double agamq, fnq, fnqm1, pc[13], pint, ragq,
     rqfac, rq1fac, tsign, xpin;
     /*
@@ -2071,7 +2071,7 @@ namespace QtPlugins {
      size at order nq-1 if k = 1, at order nq if k = 2, and at order
      nq+1 if k = 3.
   */
-    if ( meth == 1 ) {
+    if ( meth_ == 1 ) {
       elco[1][1] = 1.;
       elco[1][2] = 1.;
       tesco[1][1] = 0.;
@@ -2080,7 +2080,7 @@ namespace QtPlugins {
       tesco[12][3] = 0.;
       pc[1] = 1.;
       rqfac = 1.;
-      for ( nq = 2 ; nq <= 12 ; nq++ ) {
+      for ( nq_ = 2 ; nq_ <= 12 ; nq_++ ) {
         /*
      The pc array will contain the coefficients of the polynomial
 
@@ -2089,15 +2089,15 @@ namespace QtPlugins {
      Initially, p(x) = 1.
   */
         rq1fac = rqfac;
-        rqfac = rqfac / ( double ) nq;
-        nqm1 = nq - 1;
+        rqfac = rqfac / ( double ) nq_;
+        nqm1 = nq_ - 1;
         fnqm1 = ( double ) nqm1;
-        nqp1 = nq + 1;
+        nqp1 = nq_ + 1;
         /*
      Form coefficients of p(x)*(x+nq-1).
   */
-        pc[nq] = 0.;
-        for ( i = nq ; i >= 2 ; i-- )
+        pc[nq_] = 0.;
+        for ( i = nq_ ; i >= 2 ; i-- )
           pc[i] = pc[i-1] + fnqm1 * pc[i];
         pc[1] = fnqm1 * pc[1];
         /*
@@ -2106,7 +2106,7 @@ namespace QtPlugins {
         pint = pc[1];
         xpin = pc[1] / 2.;
         tsign = 1.;
-        for ( i = 2 ; i <= nq ; i++ ) {
+        for ( i = 2 ; i <= nq_ ; i++ ) {
           tsign = -tsign;
           pint += tsign * pc[i] / ( double ) i;
           xpin += tsign * pc[i] / ( double ) ( i + 1 );
@@ -2114,14 +2114,14 @@ namespace QtPlugins {
         /*
      Store coefficients in elco and tesco.
   */
-        elco[nq][1] = pint * rq1fac;
-        elco[nq][2] = 1.;
-        for ( i = 2 ; i <= nq ; i++ )
-          elco[nq][i+1] = rq1fac * pc[i] / ( double ) i;
+        elco[nq_][1] = pint * rq1fac;
+        elco[nq_][2] = 1.;
+        for ( i = 2 ; i <= nq_ ; i++ )
+          elco[nq_][i+1] = rq1fac * pc[i] / ( double ) i;
         agamq = rqfac * xpin;
         ragq = 1. / agamq;
-        tesco[nq][2] = ragq;
-        if ( nq < 12 )
+        tesco[nq_][2] = ragq;
+        if ( nq_ < 12 )
           tesco[nqp1][1] = ragq * rqfac / ( double ) nqp1;
         tesco[nqm1][3] = ragq;
       }      /*   end for   */
@@ -2140,25 +2140,25 @@ namespace QtPlugins {
 
      Initially, p(x) = 1.
   */
-    for ( nq = 1 ; nq <= 5 ; nq++ ) {
-      fnq = ( double ) nq;
-      nqp1 = nq + 1;
+    for ( nq_ = 1 ; nq_ <= 5 ; nq_++ ) {
+      fnq = ( double ) nq_;
+      nqp1 = nq_ + 1;
       /*
      Form coefficients of p(x)*(x+nq).
   */
       pc[nqp1] = 0.;
-      for ( i = nq + 1 ; i >= 2 ; i-- )
+      for ( i = nq_ + 1 ; i >= 2 ; i-- )
         pc[i] = pc[i-1] + fnq * pc[i];
       pc[1] *= fnq;
       /*
      Store coefficients in elco and tesco.
   */
       for ( i = 1 ; i <= nqp1 ; i++ )
-        elco[nq][i] = pc[i] / pc[2];
-      elco[nq][2] = 1.;
-      tesco[nq][1] = rq1fac;
-      tesco[nq][2] = ( ( double ) nqp1 ) / elco[nq][1];
-      tesco[nq][3] = ( ( double ) ( nq + 2 ) ) / elco[nq][1];
+        elco[nq_][i] = pc[i] / pc[2];
+      elco[nq_][2] = 1.;
+      tesco[nq_][1] = rq1fac;
+      tesco[nq_][2] = ( ( double ) nqp1 ) / elco[nq_][1];
+      tesco[nq_][3] = ( ( double ) ( nq_ + 2 ) ) / elco[nq_][1];
       rq1fac /= fnq;
     }
     return;
@@ -2269,7 +2269,7 @@ namespace QtPlugins {
   }      /*   end prja   */
 
 
-  double QTAIMLSODAIntegrator::vmnorm( int n, double *v, double *w )
+  double QTAIMLSODAIntegrator::vmnorm( int n_, double *v, double *w )
       /*
      This function routine computes the weighted max-norm
      of the vector of length n contained in the array v, with weights
@@ -2283,14 +2283,14 @@ namespace QtPlugins {
     double vm;
 
     vm = 0.;
-    for ( i = 1 ; i <= n ; i++ )
+    for ( i = 1 ; i <= n_ ; i++ )
       vm = max( vm, fabs( v[i] ) * w[i] );
     return vm;
 
   }                  /*   end vmnorm   */
 
 
-  double QTAIMLSODAIntegrator::fnorm( int n, double **a, double *w )
+  double QTAIMLSODAIntegrator::fnorm( int n_, double **a, double *w )
       /*
      This subroutine computes the norm of a full n by n matrix,
      stored in the array a, that is consistent with the weighted max-norm
@@ -2304,10 +2304,10 @@ namespace QtPlugins {
     double an, sum, *ap1;
 
     an = 0.;
-    for ( i = 1; i <= n ; i++ ) {
+    for ( i = 1; i <= n_ ; i++ ) {
       sum = 0.;
       ap1 = a[i];
-      for ( j = 1 ; j <= n ; j++ )
+      for ( j = 1 ; j <= n_ ; j++ )
         sum += fabs( ap1[j] ) / w[j];
       an = max( an, sum * w[i] );
     }

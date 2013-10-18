@@ -922,10 +922,10 @@ static heap_item heap_pop(heap *h)
   }
 
   {
-    unsigned int i, fdim = h->fdim;
-    for (i = 0; i < fdim; ++i) {
-      h->ee[i].val -= ret.ee[i].val;
-      h->ee[i].err -= ret.ee[i].err;
+    unsigned int i_, fdim = h->fdim;
+    for (i_ = 0; i_ < fdim; ++i_) {
+      h->ee[i_].val -= ret.ee[i_].val;
+      h->ee[i_].err -= ret.ee[i_].err;
     }
   }
   return ret;
@@ -2393,7 +2393,7 @@ namespace QtPlugins {
   {
     QTemporaryFile temporaryFile;
     temporaryFile.open();
-    QString temporaryFileName=temporaryFile.fileName();
+    QString tempFileName=temporaryFile.fileName();
     temporaryFile.close();
     temporaryFile.remove();
 
@@ -2402,9 +2402,9 @@ namespace QtPlugins {
     do
     {
       // Nothing
-    } while ( dir.exists(temporaryFileName) );
+    } while ( dir.exists(tempFileName) );
 
-    return temporaryFileName;
+    return tempFileName;
   }
 
 

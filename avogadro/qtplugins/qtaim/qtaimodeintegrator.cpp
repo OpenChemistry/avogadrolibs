@@ -367,7 +367,7 @@ namespace QtPlugins {
   //****************************************************************************80
 
   void QTAIMODEIntegrator::r8_fehl ( qint64 neqn,
-                                     qreal y[], qreal t, qreal h, qreal yp[], qreal f1[], qreal f2[],
+                                     qreal y[], qreal t, qreal h_, qreal yp[], qreal f1[], qreal f2[],
                                      qreal f3[], qreal f4[], qreal f5[], qreal s[] )
 
   //****************************************************************************80
@@ -446,7 +446,7 @@ namespace QtPlugins {
     qreal ch;
     qint64 i;
 
-    ch = h / 4.0;
+    ch = h_ / 4.0;
 
     for ( i = 0; i < neqn; i++ )
     {
@@ -455,16 +455,16 @@ namespace QtPlugins {
 
     QTAIMODEIntegrator::r8_f (t + ch, f5, f1 );
 
-    ch = 3.0 * h / 32.0;
+    ch = 3.0 * h_ / 32.0;
 
     for ( i = 0; i < neqn; i++ )
     {
       f5[i] = y[i] + ch * ( yp[i] + 3.0 * f1[i] );
     }
 
-    QTAIMODEIntegrator::r8_f ( t + 3.0 * h / 8.0, f5, f2 );
+    QTAIMODEIntegrator::r8_f ( t + 3.0 * h_ / 8.0, f5, f2 );
 
-    ch = h / 2197.0;
+    ch = h_ / 2197.0;
 
     for ( i = 0; i < neqn; i++ )
     {
@@ -474,9 +474,9 @@ namespace QtPlugins {
                 );
     }
 
-    QTAIMODEIntegrator::r8_f ( t + 12.0 * h / 13.0, f5, f3 );
+    QTAIMODEIntegrator::r8_f ( t + 12.0 * h_ / 13.0, f5, f3 );
 
-    ch = h / 4104.0;
+    ch = h_ / 4104.0;
 
     for ( i = 0; i < neqn; i++ )
     {
@@ -487,9 +487,9 @@ namespace QtPlugins {
                   );
     }
 
-    QTAIMODEIntegrator::r8_f ( t + h, f5, f4 );
+    QTAIMODEIntegrator::r8_f ( t + h_, f5, f4 );
 
-    ch = h / 20520.0;
+    ch = h_ / 20520.0;
 
     for ( i = 0; i < neqn; i++ )
     {
@@ -502,11 +502,11 @@ namespace QtPlugins {
                   );
     }
 
-    QTAIMODEIntegrator::r8_f ( t + h / 2.0, f1, f5 );
+    QTAIMODEIntegrator::r8_f ( t + h_ / 2.0, f1, f5 );
     //
     //  Ready to compute the approximate solution at T+H.
     //
-    ch = h / 7618050.0;
+    ch = h_ / 7618050.0;
 
     for ( i = 0; i < neqn; i++ )
     {

@@ -254,10 +254,10 @@ namespace QtPlugins {
       value.append(result.x());
       value.append(result.y());
       value.append(result.z());
-      Matrix<qreal,3,1> xyz ; xyz << result.x(),result.y(),result.z();
-      value.append( eval.laplacianOfElectronDensity(xyz) );
+      Matrix<qreal,3,1> xyz_ ; xyz_ << result.x(),result.y(),result.z();
+      value.append( eval.laplacianOfElectronDensity(xyz_) );
       value.append( QTAIMMathUtilities::ellipticityOfASymmetricThreeByThreeMatrix(
-          eval.hessianOfElectronDensity(xyz)
+          eval.hessianOfElectronDensity(xyz_)
           )
                     );
       value.append( 1 + forwardPath.length() + 1 + backwardPath.length() + 1);
@@ -339,14 +339,14 @@ namespace QtPlugins {
       QTAIMLSODAIntegrator ode(eval,QTAIMLSODAIntegrator::CMBPMinusThreeGradientInElectronDensityLaplacian);
       result=ode.integrate(x0y0z0);
 
-      Matrix<qreal,3,1> xyz; xyz << result.x(), result.y(), result.z();
+      Matrix<qreal,3,1> xyz_; xyz_ << result.x(), result.y(), result.z();
 
-      if( eval.electronDensity(xyz) > 1.e-1 &&
-          eval.gradientOfElectronDensityLaplacian(xyz).norm() < 1.e-3 )
+      if( eval.electronDensity(xyz_) > 1.e-1 &&
+          eval.gradientOfElectronDensityLaplacian(xyz_).norm() < 1.e-3 )
       {
         if(
             QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
-                eval.hessianOfElectronDensityLaplacian(xyz)
+                eval.hessianOfElectronDensityLaplacian(xyz_)
                 ) == -3
             )
         {
@@ -410,14 +410,14 @@ namespace QtPlugins {
       QTAIMLSODAIntegrator ode(eval,QTAIMLSODAIntegrator::CMBPPlusThreeGradientInElectronDensityLaplacian);
       result=ode.integrate(x0y0z0);
 
-      Matrix<qreal,3,1> xyz; xyz << result.x(), result.y(), result.z();
+      Matrix<qreal,3,1> xyz_; xyz_ << result.x(), result.y(), result.z();
 
-      if( eval.electronDensity(xyz) > 1.e-1 &&
-          eval.gradientOfElectronDensityLaplacian(xyz).norm() < 1.e-3 )
+      if( eval.electronDensity(xyz_) > 1.e-1 &&
+          eval.gradientOfElectronDensityLaplacian(xyz_).norm() < 1.e-3 )
       {
         if(
             QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
-                eval.hessianOfElectronDensityLaplacian(xyz)
+                eval.hessianOfElectronDensityLaplacian(xyz_)
                 ) == 3
             )
         {
@@ -474,7 +474,7 @@ namespace QtPlugins {
   void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
   {
 
-    QString temporaryFileName=QTAIMCriticalPointLocator::temporaryFileName();
+    QString tempFileName=QTAIMCriticalPointLocator::temporaryFileName();
 
     QList<QList<QVariant> > inputList;
 
@@ -483,7 +483,7 @@ namespace QtPlugins {
     for( qint64 n=0 ; n < numberOfNuclei ; ++n)
     {
       QList<QVariant> input;
-      input.append( temporaryFileName );
+      input.append( tempFileName );
       input.append( n );
       input.append( m_wfn->xNuclearCoordinate(n) );
       input.append( m_wfn->yNuclearCoordinate(n) );
@@ -492,7 +492,7 @@ namespace QtPlugins {
       inputList.append(input);
     }
 
-    m_wfn->saveToBinaryFile(temporaryFileName);
+    m_wfn->saveToBinaryFile(tempFileName);
 
     QProgressDialog dialog;
     dialog.setWindowTitle("QTAIM");
@@ -520,7 +520,7 @@ namespace QtPlugins {
     }
 
     QFile file;
-    file.remove(temporaryFileName);
+    file.remove(tempFileName);
 
     for( qint64 n=0 ; n < results.length() ; ++n )
     {
@@ -558,7 +558,7 @@ namespace QtPlugins {
       return;
     }
 
-    QString temporaryFileName=QTAIMCriticalPointLocator::temporaryFileName();
+    QString tempFileName=QTAIMCriticalPointLocator::temporaryFileName();
 
     QString nuclearCriticalPointsFileName=QTAIMCriticalPointLocator::temporaryFileName();
     QFile nuclearCriticalPointsFile(nuclearCriticalPointsFileName);
@@ -589,7 +589,7 @@ namespace QtPlugins {
                             ( m_wfn->zNuclearCoordinate(M) + m_wfn->zNuclearCoordinate(N) ) / 2.0 );
 
           QList<QVariant> input;
-          input.append( temporaryFileName );
+          input.append( tempFileName );
           input.append( nuclearCriticalPointsFileName );
           input.append( M );
           input.append( N );
@@ -602,7 +602,7 @@ namespace QtPlugins {
       } // end N
     } // end M
 
-    m_wfn->saveToBinaryFile(temporaryFileName);
+    m_wfn->saveToBinaryFile(tempFileName);
 
     QProgressDialog dialog;
     dialog.setWindowTitle("QTAIM");
@@ -630,7 +630,7 @@ namespace QtPlugins {
     }
 
     QFile file;
-    file.remove(temporaryFileName);
+    file.remove(tempFileName);
     file.remove(nuclearCriticalPointsFileName);
 
     for( qint64 i=0 ; i < results.length() ; ++i )
@@ -641,10 +641,10 @@ namespace QtPlugins {
 
       if(success)
       {
-        QPair<qint64,qint64> bondedAtoms;
-        bondedAtoms.first=thisCriticalPoint.at(1).toInt();
-        bondedAtoms.second=thisCriticalPoint.at(2).toInt();
-        m_bondedAtoms.append( bondedAtoms );
+        QPair<qint64,qint64> bondedAtoms_;
+        bondedAtoms_.first=thisCriticalPoint.at(1).toInt();
+        bondedAtoms_.second=thisCriticalPoint.at(2).toInt();
+        m_bondedAtoms.append( bondedAtoms_ );
 
         QVector3D coordinates(thisCriticalPoint.at(3).toReal(),
                               thisCriticalPoint.at(4).toReal(),
@@ -657,11 +657,11 @@ namespace QtPlugins {
         qint64 pathLength=thisCriticalPoint.at(8).toInt();
 
         QList<QVector3D> bondPath;
-        for( qint64 i=0 ; i < pathLength ; ++i )
+        for( qint64 j=0 ; j < pathLength ; ++j )
         {
-          QVector3D pathPoint(thisCriticalPoint.at(9 + i                ).toReal(),
-                              thisCriticalPoint.at(9 + i +   pathLength ).toReal(),
-                              thisCriticalPoint.at(9 + i + 2*pathLength ).toReal());
+          QVector3D pathPoint(thisCriticalPoint.at(9 + j                ).toReal(),
+                              thisCriticalPoint.at(9 + j +   pathLength ).toReal(),
+                              thisCriticalPoint.at(9 + j + 2*pathLength ).toReal());
 
           bondPath.append(pathPoint);
         }
@@ -676,7 +676,7 @@ namespace QtPlugins {
   void QTAIMCriticalPointLocator::locateElectronDensitySources()
   {
 
-    QString temporaryFileName=QTAIMCriticalPointLocator::temporaryFileName();
+    QString tempFileName=QTAIMCriticalPointLocator::temporaryFileName();
 
     QList<QList<QVariant> > inputList;
 
@@ -755,7 +755,7 @@ namespace QtPlugins {
         for( qreal z=zmin ; z < zmax+zstep ; z=z+zstep)
         {
           QList<QVariant> input;
-          input.append( temporaryFileName );
+          input.append( tempFileName );
 //          input.append( n );
           input.append( x );
           input.append( y );
@@ -766,7 +766,7 @@ namespace QtPlugins {
       }
     }
 
-    m_wfn->saveToBinaryFile(temporaryFileName);
+    m_wfn->saveToBinaryFile(tempFileName);
 
     QProgressDialog dialog;
     dialog.setWindowTitle("QTAIM");
@@ -794,7 +794,7 @@ namespace QtPlugins {
     }
 
     QFile file;
-    file.remove(temporaryFileName);
+    file.remove(tempFileName);
 
     for( qint64 n=0 ; n < results.length() ; ++n )
     {
@@ -846,7 +846,7 @@ namespace QtPlugins {
   void QTAIMCriticalPointLocator::locateElectronDensitySinks()
   {
 
-    QString temporaryFileName=QTAIMCriticalPointLocator::temporaryFileName();
+    QString tempFileName=QTAIMCriticalPointLocator::temporaryFileName();
 
     QList<QList<QVariant> > inputList;
 
@@ -925,7 +925,7 @@ namespace QtPlugins {
         for( qreal z=zmin ; z < zmax+zstep ; z=z+zstep)
         {
           QList<QVariant> input;
-          input.append( temporaryFileName );
+          input.append( tempFileName );
 //          input.append( n );
           input.append( x );
           input.append( y );
@@ -936,7 +936,7 @@ namespace QtPlugins {
       }
     }
 
-    m_wfn->saveToBinaryFile(temporaryFileName);
+    m_wfn->saveToBinaryFile(tempFileName);
 
     QProgressDialog dialog;
     dialog.setWindowTitle("QTAIM");
@@ -964,7 +964,7 @@ namespace QtPlugins {
     }
 
     QFile file;
-    file.remove(temporaryFileName);
+    file.remove(tempFileName);
 
     for( qint64 n=0 ; n < results.length() ; ++n )
     {
@@ -1017,7 +1017,7 @@ namespace QtPlugins {
   {
     QTemporaryFile temporaryFile;
     temporaryFile.open();
-    QString temporaryFileName=temporaryFile.fileName();
+    QString tempFileName=temporaryFile.fileName();
     temporaryFile.close();
     temporaryFile.remove();
 
@@ -1026,9 +1026,9 @@ namespace QtPlugins {
     do
     {
       // Nothing
-    } while ( dir.exists(temporaryFileName) );
+    } while ( dir.exists(tempFileName) );
 
-    return temporaryFileName;
+    return tempFileName;
   }
 
 } // namespace QtPlugins
