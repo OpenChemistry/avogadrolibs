@@ -172,7 +172,6 @@ namespace QTAIMMathUtilities {
     F(0), F(1), F(2), 0.   ;
 
     Matrix<qreal, 4, 1> eval = eigenvaluesOfASymmetricFourByFourMatrix(A);
-    Matrix<qreal, 4, 4> evec = eigenvectorsOfASymmetricFourByFourMatrix(A);
 
     Matrix<qreal, 3, 1> lambda;
     lambda << eval(3), eval(3), eval(3);
@@ -212,7 +211,6 @@ namespace QTAIMMathUtilities {
     F(0), F(1),  0.   ;
 
     Matrix<qreal, 3, 1> eval = eigenvaluesOfASymmetricThreeByThreeMatrix(A);
-    Matrix<qreal, 3, 3> evec = eigenvectorsOfASymmetricThreeByThreeMatrix(A);
 
     Matrix<qreal, 3, 1> lambda;
     lambda << eval(2), eval(2), (0.5) * (b(2) - sqrt(pow(b(2), 2) + 4.0 * pow(F(2), 2)));
@@ -252,7 +250,6 @@ namespace QTAIMMathUtilities {
     F(1), F(2),  0.;
 
     Matrix<qreal, 3, 1> eval = eigenvaluesOfASymmetricThreeByThreeMatrix(A);
-    Matrix<qreal, 3, 3> evec = eigenvectorsOfASymmetricThreeByThreeMatrix(A);
 
     Matrix<qreal, 3, 1> lambda;
     lambda << eval(2), eval(2), (0.5) * (b(0) + sqrt(pow(b(0), 2) + 4.0 * pow(F(0), 2)));
@@ -293,7 +290,6 @@ namespace QTAIMMathUtilities {
     F(0), F(1), F(2), 0.;
 
     Matrix<qreal, 4, 1> eval = eigenvaluesOfASymmetricFourByFourMatrix(A);
-    Matrix<qreal, 4, 4> evec = eigenvectorsOfASymmetricFourByFourMatrix(A);
 
     Matrix<qreal, 3, 1> lambda;
     lambda << eval(0), eval(0), eval(0);

@@ -50,8 +50,8 @@ namespace QtPlugins {
     ThirdAction
   };
 
-  QTAIMExtension::QTAIMExtension( QObject *parent )
-    : QtGui::ExtensionPlugin( parent )
+  QTAIMExtension::QTAIMExtension( QObject *aParent )
+    : QtGui::ExtensionPlugin( aParent )
   {
     // create an action for our first action
     QAction *action = new QAction( this );
@@ -309,11 +309,11 @@ namespace QtPlugins {
                   ellipticityAtBondCriticalPointsVariantList.append( ellipticityAtBondCriticalPoints.at(bondPair) );
 
                   bondPathSegmentStartIndexVariantList.append( bpCtr );
-                  for( qint64 i=0; i < bondPathList.at(bondPair).length() ; ++i )
+                  for( qint64 j=0; j < bondPathList.at(bondPair).length() ; ++j )
                   {
-                    qreal x=bondPathList.at(bondPair).at(i).x() * convertBohrToAngstrom;
-                    qreal y=bondPathList.at(bondPair).at(i).y() * convertBohrToAngstrom;
-                    qreal z=bondPathList.at(bondPair).at(i).z() * convertBohrToAngstrom;
+                    x=bondPathList.at(bondPair).at(j).x() * convertBohrToAngstrom;
+                    y=bondPathList.at(bondPair).at(j).y() * convertBohrToAngstrom;
+                    z=bondPathList.at(bondPair).at(j).z() * convertBohrToAngstrom;
 
                     xBondPathsVariantList.append( x );
                     yBondPathsVariantList.append( y );
@@ -484,11 +484,11 @@ namespace QtPlugins {
                   ellipticityAtBondCriticalPointsVariantList.append( ellipticityAtBondCriticalPoints.at(bondPair) );
 
                   bondPathSegmentStartIndexVariantList.append( bpCtr );
-                  for( qint64 i=0; i < bondPathList.at(bondPair).length() ; ++i )
+                  for( qint64 j=0; j < bondPathList.at(bondPair).length() ; ++j )
                   {
-                    qreal x=bondPathList.at(bondPair).at(i).x() * convertBohrToAngstrom;
-                    qreal y=bondPathList.at(bondPair).at(i).y() * convertBohrToAngstrom;
-                    qreal z=bondPathList.at(bondPair).at(i).z() * convertBohrToAngstrom;
+                    x=bondPathList.at(bondPair).at(j).x() * convertBohrToAngstrom;
+                    y=bondPathList.at(bondPair).at(j).y() * convertBohrToAngstrom;
+                    z=bondPathList.at(bondPair).at(j).z() * convertBohrToAngstrom;
 
                     xBondPathsVariantList.append( x );
                     yBondPathsVariantList.append( y );
@@ -644,7 +644,6 @@ namespace QtPlugins {
 
         qint64 bpCtr=0;
         qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
-        int molecule;
 
         for( qint64 atom0=0 ; atom0 < numAtoms - 1 ; ++atom0 )
         {
@@ -692,11 +691,11 @@ namespace QtPlugins {
                   ellipticityAtBondCriticalPointsVariantList.append( ellipticityAtBondCriticalPoints.at(bondPair) );
 
                   bondPathSegmentStartIndexVariantList.append( bpCtr );
-                  for( qint64 i=0; i < bondPathList.at(bondPair).length() ; ++i )
+                  for( qint64 j=0; j < bondPathList.at(bondPair).length() ; ++j )
                   {
-                    qreal x=bondPathList.at(bondPair).at(i).x() * convertBohrToAngstrom;
-                    qreal y=bondPathList.at(bondPair).at(i).y() * convertBohrToAngstrom;
-                    qreal z=bondPathList.at(bondPair).at(i).z() * convertBohrToAngstrom;
+                    x=bondPathList.at(bondPair).at(j).x() * convertBohrToAngstrom;
+                    y=bondPathList.at(bondPair).at(j).y() * convertBohrToAngstrom;
+                    z=bondPathList.at(bondPair).at(j).z() * convertBohrToAngstrom;
 
                     xBondPathsVariantList.append( x );
                     yBondPathsVariantList.append( y );
@@ -736,9 +735,9 @@ namespace QtPlugins {
 
         // All Atomic Basins
         QList<qint64> basins;
-        for( qint64 i=0 ; i < wfn.numberOfNuclei() ; ++i )
+        for( qint64 j=0 ; j < wfn.numberOfNuclei() ; ++j )
         {
-          basins.append(i);
+          basins.append(j);
         }
 
         QTAIMCubature cub(wfn);
@@ -748,14 +747,14 @@ namespace QtPlugins {
         QList<QPair<qreal,qreal> > results=cub.integrate(mode,basins);
         //        qDebug() << "Time Elapsed:" << time.elapsed();
 
-        for(qint64 i=0 ; i < results.length() ; ++i)
+        for(qint64 j=0 ; j < results.length() ; ++j)
         {
-          qDebug() << "basin" << i << results.at(i).first << results.at(i).second;
+          qDebug() << "basin" << j << results.at(j).first << results.at(j).second;
         }
 
         // TODO: Set the properties of the atoms.
         // I don't know why this bombs.
-        for(qint64 i=0 ; static_cast<qint64>(m_molecule->atomCount()); ++i)
+        for(qint64 j=0 ; static_cast<qint64>(m_molecule->atomCount()); ++j)
         {
 //          Atom *atom=m_molecule->atoms().at(i);
 //          const qreal charge=results.at(i).first;

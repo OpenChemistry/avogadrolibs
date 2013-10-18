@@ -34,8 +34,8 @@ using namespace Avogadro::Rendering;
 namespace Avogadro {
 namespace QtPlugins {
 
-  QTAIMEngine::QTAIMEngine(QObject *parent)
-    : QtGui::ScenePlugin(parent),
+  QTAIMEngine::QTAIMEngine(QObject *aParent)
+    : QtGui::ScenePlugin(aParent),
       m_enabled(false)
   {
   }
@@ -111,7 +111,7 @@ namespace QtPlugins {
             xyz << xBondPathsVariantList.at(j).toFloat(),
                    yBondPathsVariantList.at(j).toFloat(),
                    zBondPathsVariantList.at(j).toFloat();
-            spheres->addSphere(xyz, color, 0.025);
+            spheres->addSphere(xyz, color, 0.025f);
           }
         }
         else
@@ -168,7 +168,7 @@ namespace QtPlugins {
 
           // map->setFromPrimitive(ncp);
 
-          spheres->addSphere(xyz, color, 0.1);
+          spheres->addSphere(xyz, color, 0.1f);
         }
       }
     }
@@ -197,7 +197,7 @@ namespace QtPlugins {
 
           // map->setFromPrimitive(ncp);
 
-          spheres->addSphere(xyz, color, 0.1);
+          spheres->addSphere(xyz, color, 0.1f);
         }
       }
     }
@@ -225,7 +225,7 @@ namespace QtPlugins {
 
           // map->setFromPrimitive(ncp);
 
-          spheres->addSphere(xyz, color, 0.1);
+          spheres->addSphere(xyz, color, 0.1f);
         }
       }
     }
