@@ -387,18 +387,18 @@ namespace QtPlugins {
       QList<qreal> xNuclearCoordinatesList;
       QList<qreal> yNuclearCoordinatesList;
       QList<qreal> zNuclearCoordinatesList;
-      QList<qint64> nuclearChargesList;
+      QList<qint64> nuclearChargesList_;
       for( qint64 i=0 ; i < m_numberOfNuclei ; ++i )
       {
         xNuclearCoordinatesList.append( xNuclearCoordinatesVariantList.at(i).toReal() );
         yNuclearCoordinatesList.append( yNuclearCoordinatesVariantList.at(i).toReal() );
         zNuclearCoordinatesList.append( zNuclearCoordinatesVariantList.at(i).toReal() );
-        nuclearChargesList.append( nuclearChargesVariantList.at(i).toLongLong() );
+        nuclearChargesList_.append( nuclearChargesVariantList.at(i).toLongLong() );
       }
       m_xNuclearCoordinates=xNuclearCoordinatesList.toVector();
       m_yNuclearCoordinates=yNuclearCoordinatesList.toVector();
       m_zNuclearCoordinates=zNuclearCoordinatesList.toVector();
-      m_nuclearCharges=nuclearChargesList.toVector();
+      m_nuclearCharges=nuclearChargesList_.toVector();
 
       QVariant xGaussianPrimitiveCenterCoordinatesVariant = mol->property( "QTAIMXGaussianPrimitiveCenterCoordinates" );
       QVariant yGaussianPrimitiveCenterCoordinatesVariant = mol->property( "QTAIMYGaussianPrimitiveCenterCoordinates" );
