@@ -1,135 +1,61 @@
-/**********************************************************************
-  QTAIMEngine - Dynamic detail engine for QTAIM display
+/******************************************************************************
+
+  This source file is part of the Avogadro project.
+
+  Copyright 2013 Kitware, Inc.
+
+  Adapted from the Avogadro 1 implementation and relicensed with permission
+  from the original author(s):
 
   Copyright (C) 2007 Donald Ephraim Curtis
   Copyright (C) 2010 Eric C. Brown
 
-  This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  This source code is released under the New BSD License, (the "License").
 
-  Avogadro is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 
-  Avogadro is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-  02110-1301, USA.
- **********************************************************************/
+******************************************************************************/
 
 #ifndef QTAIMENGINE_H
 #define QTAIMENGINE_H
 
-#include <avogadro/global.h>
-#include <avogadro/engine.h>
+#include <avogadro/qtgui/sceneplugin.h>
 
-#include "ui_qtaimsettingswidget.h"
+#include <avogadro/core/avogadrocore.h>
 
 namespace Avogadro {
+namespace QtPlugins {
 
-  //! QTAIM Engine class.
-  class Atom;
-  class QTAIMSettingsWidget;
-  class QTAIMEngine : public Engine
+class QTAIMEngine : public QtGui::ScenePlugin
+{
+  Q_OBJECT
+public:
+  explicit QTAIMEngine(QObject *parent=0);
+  virtual ~QTAIMEngine() AVO_OVERRIDE;
+
+  void process(const Core::Molecule &molecule,
+               Rendering::GroupNode &node) AVO_OVERRIDE;
+
+  QString name() const AVO_OVERRIDE { return tr("QTAIM"); }
+
+  QString description() const AVO_OVERRIDE
   {
-    Q_OBJECT
-    AVOGADRO_ENGINE("QTAIM", tr("QTAIM"),
-                      tr("Renders primitives using QTAIM properties"))
+    return tr("Renders primitives using QTAIM properties");
+  }
 
-    public:
-      //! Constructor
-      QTAIMEngine(QObject *parent=0);
+  bool isEnabled() const AVO_OVERRIDE { return m_enabled; }
 
-      Engine *clone() const;
+  void setEnabled(bool enable) AVO_OVERRIDE { m_enabled = enable; }
 
-      //! Deconstructor
-      ~QTAIMEngine();
+private:
+  bool m_enabled;
+};
 
-      bool renderOpaque(PainterDevice *pd);
-      bool renderTransparent(PainterDevice *pd);
-      bool renderQuick(PainterDevice *pd);
-      bool renderPick(PainterDevice *pd);
-
-      double transparencyDepth() const;
-
-      Engine::Layers layers() const;
-
-      double radius(const PainterDevice *pd, const Primitive *p = 0) const;
-
-      /**
-       * @return a pointer to the QTAIMEngine settings widget
-       */
-      QWidget *settingsWidget();
-
-      bool hasSettings() { return true; }
-
-      /**
-       * Write the engine settings so that they can be saved between sessions.
-       */
-      void writeSettings(QSettings &settings) const;
-
-      /**
-       * Read in the settings that have been saved for the engine instance.
-       */
-      void readSettings(QSettings &settings);
-
-
-    private:
-      double radius(const Atom *atom) const;
-      double (*pRadius)(const Atom *atom);
-
-      QTAIMSettingsWidget *m_settingsWidget;
-
-      double m_atomRadiusPercentage;
-      double m_bondRadius;
-      int m_atomRadiusType;
-
-      double m_alpha; // transparency of the balls & sticks
-
-   private Q_SLOTS:
-      void settingsWidgetDestroyed();
-
-      /**
-       * @param percent percentage of the VdwRad
-       */
-      void setAtomRadiusPercentage(int percent);
-      /**
-       * @param value determines if covalent or VdW radii are used
-       */
-      void setAtomRadiusType(int value);
-      /**
-       * @param value radius of the bonds * 10
-       */
-      void setBondRadius(int value);
-
-      /**
-       * @param value opacity of the balls & sticks / 20
-       */
-      void setOpacity(int value);
-
-  };
-
-  class QTAIMSettingsWidget : public QWidget, public Ui::QTAIMSettingsWidget
-  {
-    public:
-      QTAIMSettingsWidget(QWidget *parent=0) : QWidget(parent) {
-        setupUi(this);
-      }
-  };
-
-  class QTAIMEngineFactory : public QObject, public PluginFactory
-  {
-    Q_OBJECT
-    Q_INTERFACES(Avogadro::PluginFactory)
-    AVOGADRO_ENGINE_FACTORY(QTAIMEngine);
-  };
-
+} // end namespace QtPlugins
 } // end namespace Avogadro
 
 #endif

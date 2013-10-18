@@ -1,33 +1,31 @@
-/**********************************************************************
-  QTAIM - Extension for Quantum Theory of Atoms In Molecules Analysis
+/******************************************************************************
+
+  This source file is part of the Avogadro project.
+
+  Copyright 2013 Kitware, Inc.
+
+  Adapted from the Avogadro 1 implementation and relicensed with permission
+  from the original author(s):
 
   Copyright (C) 2010 Eric C. Brown
 
-  This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  This source code is released under the New BSD License, (the "License").
 
-  Avogadro is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 
-  Avogadro is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-  02110-1301, USA.
- **********************************************************************/
+******************************************************************************/
 
 #include <cmath>
 
 #include "qtaimwavefunctionevaluator.h"
 
-namespace Avogadro
-{
+namespace Avogadro {
+namespace QtPlugins {
+
   QTAIMWavefunctionEvaluator::QTAIMWavefunctionEvaluator(QTAIMWavefunction &wfn)
   {
 
@@ -35,21 +33,21 @@ namespace Avogadro
     m_nprim=wfn.numberOfGaussianPrimitives();
     m_nnuc=wfn.numberOfNuclei();
 
-    m_nucxcoord=Map<Matrix<qreal,Dynamic,1> >(wfn.xNuclearCoordinates(),m_nnuc);
-    m_nucycoord=Map<Matrix<qreal,Dynamic,1> >(wfn.yNuclearCoordinates(),m_nnuc);
-    m_nuczcoord=Map<Matrix<qreal,Dynamic,1> >(wfn.zNuclearCoordinates(),m_nnuc);
-    m_nucz=Map<Matrix<qint64,Dynamic,1> >(wfn.nuclearCharges(),m_nnuc);
-    m_X0=Map<Matrix<qreal,Dynamic,1> >(wfn.xGaussianPrimitiveCenterCoordinates(),m_nprim,1);
-    m_Y0=Map<Matrix<qreal,Dynamic,1> >(wfn.yGaussianPrimitiveCenterCoordinates(),m_nprim,1);
-    m_Z0=Map<Matrix<qreal,Dynamic,1> >(wfn.zGaussianPrimitiveCenterCoordinates(),m_nprim,1);
-    m_xamom=Map<Matrix<qint64,Dynamic,1> >(wfn.xGaussianPrimitiveAngularMomenta(),m_nprim,1);
-    m_yamom=Map<Matrix<qint64,Dynamic,1> >(wfn.yGaussianPrimitiveAngularMomenta(),m_nprim,1);
-    m_zamom=Map<Matrix<qint64,Dynamic,1> >(wfn.zGaussianPrimitiveAngularMomenta(),m_nprim,1);
-    m_alpha=Map<Matrix<qreal,Dynamic,1> >(wfn.gaussianPrimitiveExponentCoefficients(),m_nprim,1);
+    m_nucxcoord=Map<const Matrix<qreal,Dynamic,1> >(wfn.xNuclearCoordinates(),m_nnuc);
+    m_nucycoord=Map<const Matrix<qreal,Dynamic,1> >(wfn.yNuclearCoordinates(),m_nnuc);
+    m_nuczcoord=Map<const Matrix<qreal,Dynamic,1> >(wfn.zNuclearCoordinates(),m_nnuc);
+    m_nucz=Map<const Matrix<qint64,Dynamic,1> >(wfn.nuclearCharges(),m_nnuc);
+    m_X0=Map<const Matrix<qreal,Dynamic,1> >(wfn.xGaussianPrimitiveCenterCoordinates(),m_nprim,1);
+    m_Y0=Map<const Matrix<qreal,Dynamic,1> >(wfn.yGaussianPrimitiveCenterCoordinates(),m_nprim,1);
+    m_Z0=Map<const Matrix<qreal,Dynamic,1> >(wfn.zGaussianPrimitiveCenterCoordinates(),m_nprim,1);
+    m_xamom=Map<const Matrix<qint64,Dynamic,1> >(wfn.xGaussianPrimitiveAngularMomenta(),m_nprim,1);
+    m_yamom=Map<const Matrix<qint64,Dynamic,1> >(wfn.yGaussianPrimitiveAngularMomenta(),m_nprim,1);
+    m_zamom=Map<const Matrix<qint64,Dynamic,1> >(wfn.zGaussianPrimitiveAngularMomenta(),m_nprim,1);
+    m_alpha=Map<const Matrix<qreal,Dynamic,1> >(wfn.gaussianPrimitiveExponentCoefficients(),m_nprim,1);
     // TODO Implement screening for unoccupied molecular orbitals.
-    m_occno=Map<Matrix<qreal,Dynamic,1> >(wfn.molecularOrbitalOccupationNumbers(),m_nmo,1);
-    m_orbe=Map<Matrix<qreal,Dynamic,1> >(wfn.molecularOrbitalEigenvalues(),m_nmo,1);
-    m_coef=Map<Matrix<qreal,Dynamic,Dynamic,RowMajor> >(wfn.molecularOrbitalCoefficients(),m_nmo,m_nprim);
+    m_occno=Map<const Matrix<qreal,Dynamic,1> >(wfn.molecularOrbitalOccupationNumbers(),m_nmo,1);
+    m_orbe=Map<const Matrix<qreal,Dynamic,1> >(wfn.molecularOrbitalEigenvalues(),m_nmo,1);
+    m_coef=Map<const Matrix<qreal,Dynamic,Dynamic,RowMajor> >(wfn.molecularOrbitalCoefficients(),m_nmo,m_nprim);
     m_totalEnergy=wfn.totalEnergy();
     m_virialRatio=wfn.virialRatio();
 
@@ -2347,4 +2345,5 @@ namespace Avogadro
 
   }
 
+} // namespace QtPlugins
 } // namespace Avogadro
