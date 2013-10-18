@@ -38,8 +38,8 @@ using namespace Avogadro::Rendering;
 namespace Avogadro {
 namespace QtPlugins {
 
-  QTAIMEngine::QTAIMEngine(QObject *parent)
-    : QtGui::ScenePlugin(parent),
+  QTAIMEngine::QTAIMEngine(QObject *aParent)
+    : QtGui::ScenePlugin(aParent),
       m_enabled(false)
   {
   }
