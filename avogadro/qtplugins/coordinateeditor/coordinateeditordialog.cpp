@@ -14,14 +14,15 @@
 
 ******************************************************************************/
 
-#include "cartesianeditordialog.h"
-#include "ui_cartesianeditordialog.h"
-#include "cartesiantextedit.h"
+#include "coordinateeditordialog.h"
+#include "ui_coordinateeditordialog.h"
+#include "coordinatetextedit.h"
 
 #include <avogadro/qtgui/molecule.h>
 
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/coordinateblockgenerator.h>
+#include <avogadro/core/crystaltools.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/vector.h>
 
@@ -109,7 +110,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 // Storage class used to hold state while validating input.
-class CartesianEditorDialog::ValidateStorage
+class CoordinateEditorDialog::ValidateStorage
 {
 public:
   ValidateStorage()
@@ -117,6 +118,7 @@ public:
       restartWhenFinished(false),
       collectAtoms(false),
       convertDistance(false),
+      latticePositions(false),
       distanceConversion(1.f)
   {}
 
@@ -124,6 +126,7 @@ public:
   bool restartWhenFinished;
   bool collectAtoms;
   bool convertDistance;
+  bool latticePositions;
   float distanceConversion;
 
   // Format specification
@@ -137,9 +140,9 @@ public:
   QVector<AtomStruct> atoms;
 };
 
-CartesianEditorDialog::CartesianEditorDialog(QWidget *parent_) :
+CoordinateEditorDialog::CoordinateEditorDialog(QWidget *parent_) :
   QDialog(parent_),
-  m_ui(new Ui::CartesianEditorDialog),
+  m_ui(new Ui::CoordinateEditorDialog),
   m_molecule(NULL),
   m_validate(new ValidateStorage),
   m_defaultSpec("SZxyz#N")
@@ -152,7 +155,7 @@ CartesianEditorDialog::CartesianEditorDialog(QWidget *parent_) :
           SLOT(textModified(bool)));
 
   // Setup spec edit
-  QRegExp specRegExp("[#ZGSNxyz01_]*");
+  QRegExp specRegExp("[#ZGSNabcxyz01_]*");
   QRegExpValidator *specValidator = new QRegExpValidator(specRegExp, this);
   m_ui->spec->setValidator(specValidator);
   connect(m_ui->presets, SIGNAL(currentIndexChanged(int)),
@@ -179,12 +182,12 @@ CartesianEditorDialog::CartesianEditorDialog(QWidget *parent_) :
   listenForTextEditChanges(true);
 }
 
-CartesianEditorDialog::~CartesianEditorDialog()
+CoordinateEditorDialog::~CoordinateEditorDialog()
 {
   delete m_ui;
 }
 
-void CartesianEditorDialog::setMolecule(QtGui::Molecule *mol)
+void CoordinateEditorDialog::setMolecule(QtGui::Molecule *mol)
 {
   if (mol != m_molecule) {
     if (m_molecule)
@@ -195,13 +198,15 @@ void CartesianEditorDialog::setMolecule(QtGui::Molecule *mol)
   }
 }
 
-void CartesianEditorDialog::moleculeChanged(uint change)
+void CoordinateEditorDialog::moleculeChanged(uint change)
 {
-  if (static_cast<Molecule::MoleculeChange>(change) & Molecule::Atoms)
+  if (static_cast<Molecule::MoleculeChange>(change) & Molecule::Atoms ||
+      static_cast<Molecule::MoleculeChange>(change) & Molecule::UnitCell) {
     updateText();
+  }
 }
 
-void CartesianEditorDialog::presetChanged(int ind)
+void CoordinateEditorDialog::presetChanged(int ind)
 {
   QVariant itemData(m_ui->presets->itemData(ind));
   bool isCustom(itemData.type() != QVariant::String);
@@ -211,7 +216,7 @@ void CartesianEditorDialog::presetChanged(int ind)
                                : itemData.toString());
 }
 
-void CartesianEditorDialog::specChanged()
+void CoordinateEditorDialog::specChanged()
 {
   // Store the spec if custom preset is selected.
   if (m_ui->presets->currentIndex() == CustomPreset)
@@ -219,7 +224,7 @@ void CartesianEditorDialog::specChanged()
   updateText();
 }
 
-void CartesianEditorDialog::specEdited()
+void CoordinateEditorDialog::specEdited()
 {
   // Editing the spec switches to and updates the custom preset.
   if (m_ui->presets->currentIndex() != CustomPreset) {
@@ -228,7 +233,7 @@ void CartesianEditorDialog::specEdited()
   }
 }
 
-void CartesianEditorDialog::updateText()
+void CoordinateEditorDialog::updateText()
 {
   if (m_ui->text->document()->isModified()) {
     int reply =
@@ -263,7 +268,7 @@ void CartesianEditorDialog::updateText()
   m_ui->text->document()->setModified(false);
 }
 
-void CartesianEditorDialog::helpClicked()
+void CoordinateEditorDialog::helpClicked()
 {
   // Give the spec lineedit focus and show its tooltip.
   m_ui->spec->setFocus(Qt::MouseFocusReason);
@@ -272,7 +277,7 @@ void CartesianEditorDialog::helpClicked()
   QToolTip::showText(point, m_ui->spec->toolTip(), m_ui->spec);
 }
 
-void CartesianEditorDialog::validateInput()
+void CoordinateEditorDialog::validateInput()
 {
   if (m_validate->isValidating) {
     m_validate->restartWhenFinished = true;
@@ -299,6 +304,7 @@ void CartesianEditorDialog::validateInput()
   }
 
   // Initialize
+  m_validate->latticePositions = inputFormat.contains('a');
   m_validate->isValidating = true;
   m_validate->spec = inputFormat;
   m_validate->lineCursor = QTextCursor(m_ui->text->document());
@@ -307,7 +313,7 @@ void CartesianEditorDialog::validateInput()
   validateInputWorker();
 }
 
-void CartesianEditorDialog::validateInputWorker()
+void CoordinateEditorDialog::validateInputWorker()
 {
   if (!m_validate->isValidating)
     return;
@@ -429,6 +435,39 @@ void CartesianEditorDialog::validateInputWorker()
         break;
       }
 
+      case 'a': {
+        // Validate real:
+        bool isReal;
+        atom.pos.x() = tokenCursor.selectedText().toDouble(&isReal);
+        if (!isReal)
+          m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
+        else
+          m_ui->text->markValid(tokenCursor, tr("'a' lattice coordinate."));
+        break;
+      }
+
+      case 'b': {
+        // Validate real:
+        bool isReal;
+        atom.pos.y() = tokenCursor.selectedText().toDouble(&isReal);
+        if (!isReal)
+          m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
+        else
+          m_ui->text->markValid(tokenCursor, tr("'b' lattice coordinate."));
+        break;
+      }
+
+      case 'c': {
+        // Validate real:
+        bool isReal;
+        atom.pos.z() = tokenCursor.selectedText().toDouble(&isReal);
+        if (!isReal)
+          m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
+        else
+          m_ui->text->markValid(tokenCursor, tr("'c' coordinate."));
+        break;
+      }
+
       default:
         qWarning() << "Unhandled character in detected spec: " << *iter;
         break;
@@ -437,7 +476,7 @@ void CartesianEditorDialog::validateInputWorker()
 
     // Store this atom info if collecting.
     if (m_validate->collectAtoms) {
-      if (m_validate->convertDistance)
+      if (m_validate->convertDistance && !m_validate->latticePositions)
         atom.pos *= m_validate->distanceConversion;
       m_validate->atoms << atom;
     }
@@ -466,7 +505,7 @@ void CartesianEditorDialog::validateInputWorker()
   }
 }
 
-void CartesianEditorDialog::applyClicked()
+void CoordinateEditorDialog::applyClicked()
 {
   if (!m_molecule)
     return;
@@ -495,7 +534,7 @@ void CartesianEditorDialog::applyClicked()
   validateInput();
 }
 
-void CartesianEditorDialog::applyFinish(bool valid)
+void CoordinateEditorDialog::applyFinish(bool valid)
 {
   // Clean up
   m_validate->collectAtoms = false;
@@ -519,7 +558,13 @@ void CartesianEditorDialog::applyFinish(bool valid)
   m_molecule->clearAtoms();
   foreach (const AtomStruct &atom, atoms)
     m_molecule->addAtom(atom.atomicNumber).setPosition3d(atom.pos);
-  m_molecule->perceiveBondsSimple();
+  if (m_validate->latticePositions) {
+    Core::CrystalTools::setFractionalCoordinates(*m_molecule,
+                                                 m_molecule->atomPositions3d());
+  }
+  else {
+    m_molecule->perceiveBondsSimple();
+  }
 
   m_ui->text->document()->setModified(false);
 
@@ -537,19 +582,23 @@ void CartesianEditorDialog::applyFinish(bool valid)
     m_molecule->emitChanged(change);
 }
 
-void CartesianEditorDialog::textModified(bool modified)
+void CoordinateEditorDialog::textModified(bool modified)
 {
   m_ui->apply->setEnabled(modified);
   m_ui->revert->setEnabled(modified);
 }
 
-void CartesianEditorDialog::buildPresets()
+void CoordinateEditorDialog::buildPresets()
 {
   // Custom must be first:
   m_ui->presets->addItem(tr("Custom"), QVariant());
   m_ui->presets->addItem(tr("XYZ format (symbols)"), QVariant("Sxyz"));
   m_ui->presets->addItem(tr("XYZ format (names)"), QVariant("Nxyz"));
   m_ui->presets->addItem(tr("XYZ format (atomic numbers)"), QVariant("Zxyz"));
+  m_ui->presets->addItem(tr("Lattice coordinates (symbols)"), QVariant("Sabc"));
+  m_ui->presets->addItem(tr("Lattice coordinates (names)"), QVariant("Nabc"));
+  m_ui->presets->addItem(tr("Lattice coordinates (atomic numbers)"),
+                         QVariant("Zabc"));
   m_ui->presets->addItem(tr("GAMESS format (symbols)"), QVariant("SGxyz"));
   m_ui->presets->addItem(tr("GAMESS format (names)"), QVariant("NGxyz"));
   m_ui->presets->addItem(tr("Turbomole format"), QVariant("xyzS"));
@@ -558,7 +607,7 @@ void CartesianEditorDialog::buildPresets()
   m_ui->presets->setCurrentIndex(1);
 }
 
-void CartesianEditorDialog::listenForTextEditChanges(bool enable)
+void CoordinateEditorDialog::listenForTextEditChanges(bool enable)
 {
   if (enable)
     connect(m_ui->text, SIGNAL(textChanged()), this, SLOT(validateInput()));
@@ -566,7 +615,7 @@ void CartesianEditorDialog::listenForTextEditChanges(bool enable)
     disconnect(m_ui->text, SIGNAL(textChanged()), this, SLOT(validateInput()));
 }
 
-QString CartesianEditorDialog::detectInputFormat() const
+QString CoordinateEditorDialog::detectInputFormat() const
 {
   if (m_ui->text->document()->isEmpty())
     return QString();
@@ -713,23 +762,39 @@ QString CartesianEditorDialog::detectInputFormat() const
     resultSpec += current;
   }
 
+  // Check the current specification -- if a|b|c appears before x|y|z, assume
+  // that the specified coordinates are lattice coords
+  static QRegExp cartesianSniffer("x|y|z");
+  static QRegExp fractionalSniffer("a|b|c");
+  const QString currentSpec(m_ui->spec->text());
+  int cartesianIndex = currentSpec.indexOf(cartesianSniffer);
+  int fractionalIndex = currentSpec.indexOf(fractionalSniffer);
+  if (fractionalIndex != -1
+      && (cartesianIndex == -1
+          || fractionalIndex < cartesianIndex)) {
+    resultSpec.replace('x', 'a');
+    resultSpec.replace('y', 'b');
+    resultSpec.replace('z', 'c');
+    FORMAT_DEBUG(qDebug() << "Interpreting positions as lattice coordinates.";)
+  }
+
   FORMAT_DEBUG(qDebug() << "Detected format:" << resultSpec);
 
   return (!atomTypeSet || numCoordsSet < 3) ? QString(): resultSpec;
 }
 
-void CartesianEditorDialog::cutClicked()
+void CoordinateEditorDialog::cutClicked()
 {
   copyClicked();
   clearClicked();
 }
 
-void CartesianEditorDialog::copyClicked()
+void CoordinateEditorDialog::copyClicked()
 {
   qApp->clipboard()->setText(m_ui->text->document()->toPlainText());
 }
 
-void CartesianEditorDialog::pasteClicked()
+void CoordinateEditorDialog::pasteClicked()
 {
   const QMimeData *mimeData = qApp->clipboard()->mimeData();
   m_ui->text->document()->setPlainText((mimeData && mimeData->hasText())
@@ -737,12 +802,12 @@ void CartesianEditorDialog::pasteClicked()
                                        : "");
 }
 
-void CartesianEditorDialog::revertClicked()
+void CoordinateEditorDialog::revertClicked()
 {
   updateText();
 }
 
-void CartesianEditorDialog::clearClicked()
+void CoordinateEditorDialog::clearClicked()
 {
   m_ui->text->document()->clear();
 }

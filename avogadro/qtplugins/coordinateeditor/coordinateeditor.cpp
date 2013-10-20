@@ -14,49 +14,49 @@
 
 ******************************************************************************/
 
-#include "cartesianeditor.h"
+#include "coordinateeditor.h"
 
-#include "cartesianeditordialog.h"
+#include "coordinateeditordialog.h"
 
 #include <QtGui/QAction>
 
 namespace Avogadro {
 namespace QtPlugins {
 
-CartesianEditor::CartesianEditor(QObject *parent_) :
+CoordinateEditor::CoordinateEditor(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
   m_dialog(NULL),
   m_molecule(NULL),
-  m_action(new QAction(tr("&Cartesian Editor"), this))
+  m_action(new QAction(tr("Atomic &Coordinate Editor"), this))
 {
   connect(m_action, SIGNAL(triggered()), SLOT(triggered()));
 }
 
-CartesianEditor::~CartesianEditor()
+CoordinateEditor::~CoordinateEditor()
 {
 }
 
-QList<QAction *> CartesianEditor::actions() const
+QList<QAction *> CoordinateEditor::actions() const
 {
   return QList<QAction*>() << m_action;
 }
 
-QStringList CartesianEditor::menuPath(QAction *) const
+QStringList CoordinateEditor::menuPath(QAction *) const
 {
   return QStringList() << tr("&Edit");
 }
 
-void CartesianEditor::setMolecule(QtGui::Molecule *mol)
+void CoordinateEditor::setMolecule(QtGui::Molecule *mol)
 {
   m_molecule = mol;
   if (m_dialog)
     m_dialog->setMolecule(mol);
 }
 
-void CartesianEditor::triggered()
+void CoordinateEditor::triggered()
 {
   if (!m_dialog) {
-    m_dialog = new CartesianEditorDialog(qobject_cast<QWidget*>(parent()));
+    m_dialog = new CoordinateEditorDialog(qobject_cast<QWidget*>(parent()));
     m_dialog->setMolecule(m_molecule);
   }
 

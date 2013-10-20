@@ -23,6 +23,7 @@ set(HEADERS
   bond.h
   coordinateset.h
   coordinateblockgenerator.h
+  crystaltools.h
   cube.h
   elements.h
   gaussianset.h
@@ -39,6 +40,7 @@ set(HEADERS
   slatersettools.h
   symbolatomtyper.h
   types.h
+  unitcell.h
   variant.h
   variant-inline.h
   variantmap.h
@@ -50,6 +52,7 @@ set(SOURCES
   atom.cpp
   bond.cpp
   coordinateblockgenerator.cpp
+  crystaltools.cpp
   cube.cpp
   elements.cpp
   gaussianset.cpp
@@ -65,6 +68,7 @@ set(SOURCES
   slaterset.cpp
   slatersettools.cpp
   symbolatomtyper.cpp
+  unitcell.cpp
   variantmap.cpp
   version.cpp
 )
