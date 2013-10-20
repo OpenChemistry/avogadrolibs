@@ -18,7 +18,6 @@
 #define AVOGADRO_CORE_UNITCELL_H
 
 #include "avogadrocore.h"
-#include "avogadrocoreexport.h"
 
 #include "matrix.h"
 #include "vector.h"

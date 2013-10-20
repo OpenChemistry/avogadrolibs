@@ -16,8 +16,8 @@
 
 #include "crystaltools.h"
 
-#include <avogadro/core/unitcell.h>
-#include <avogadro/core/molecule.h>
+#include "unitcell.h"
+#include "molecule.h"
 
 #include <algorithm>
 #include <iostream>
@@ -93,43 +93,42 @@ bool CrystalTools::rotateToStandardOrientation(Molecule &molecule, Options opts)
   const Real DENOM_TOL = 1e-5;
 
   // Create target matrix, fill with zeros
-  Matrix3 newMat (Matrix3::Zero());
+  Matrix3 newMat(Matrix3::Zero());
 
   // Set components of new v1:
-  newMat(0,0) = L1;
+  newMat(0, 0) = L1;
 
   // Set components of new v2:
   denom = L1;
   if (fabs(denom) < DENOM_TOL)
     return false;
 
-  newMat(0,1) = (x1*x2 + y1*y2 + z1*z2) / denom;
+  newMat(0, 1) = (x1 * x2 + y1 * y2 + z1 * z2) / denom;
 
-  newMat(1,1) = sqrt(x2*x2 * sqrdnorm1yz +
-                     detv1v2yz*detv1v2yz -
-                     2*x1*x2*dotv1v2yz +
-                     x1*x1*sqrdnorm2yz) / denom;
+  newMat(1, 1) = sqrt(x2 * x2 * sqrdnorm1yz +
+                     detv1v2yz * detv1v2yz -
+                     2 * x1 * x2 * dotv1v2yz +
+                     x1 * x1 * sqrdnorm2yz) / denom;
 
   // Set components of new v3
-  newMat(0,2) = (x1*x3 + y1*y3 + z1*z3) / denom;
+  newMat(0, 2) = (x1 * x3 + y1 * y3 + z1 * z3) / denom;
 
-  denom = L1 * L1 * newMat(1,1);
+  denom = L1 * L1 * newMat(1, 1);
   if (fabs(denom) < DENOM_TOL)
     return false;
 
-  newMat(1,2) = (x1*x1*(y2*y3 + z2*z3) +
-                 x2*(x3*sqrdnorm1yz -
-                     x1*(y1*y3 + z1*z3)
-                     ) +
-                 detv1v2yz*(y3*z1 - y1*z3) -
-                 x1*x3*dotv1v2yz) / denom;
+  newMat(1, 2) = (x1 * x1 * (y2 * y3 + z2 * z3)
+                 + x2 * (x3 * sqrdnorm1yz
+                 - x1 * (y1*y3 + z1*z3))
+                 + detv1v2yz * (y3 * z1 - y1 * z3)
+                 - x1 * x3 * dotv1v2yz) / denom;
 
-  denom = L1 * newMat(1,1);
+  denom = L1 * newMat(1, 1);
   if (fabs(denom) < DENOM_TOL)
     return false;
 
   // Numerator is determinant of original cell:
-  newMat(2,2) = before.determinant() / denom;
+  newMat(2, 2) = before.determinant() / denom;
 
   return setCellMatrix(molecule, newMat, opts & TransformAtoms);
 }
@@ -143,7 +142,7 @@ bool CrystalTools::setVolume(Molecule &molecule, Real newVolume,
   const UnitCell &cell = *molecule.unitCell();
 
   const Real scaleFactor = std::pow(newVolume / cell.volume(),
-                                    static_cast<Real>(1.0/3.0));
+                                    static_cast<Real>(1.0 / 3.0));
 
   const Matrix3 newMatrix(cell.cellMatrix() * scaleFactor);
 
@@ -233,11 +232,11 @@ bool CrystalTools::niggliReduce(Molecule &molecule, Options opts)
   Real eta  = 2 * a * c * std::cos(beta);
   Real zeta = 2 * a * b * std::cos(gamma);
 
-  // Return value
+  // Return value.
   bool ret = false;
 
-  // comparison tolerance
-  Real tol = FUZZY_TOL * std::pow(a * b * c, static_cast<Real>(1.0/3.0));
+  // Comparison tolerance.
+  Real tol = FUZZY_TOL * std::pow(a * b * c, static_cast<Real>(1.0 / 3.0));
 
   // Initialize change of basis matrices:
   //
@@ -255,20 +254,28 @@ bool CrystalTools::niggliReduce(Molecule &molecule, Options opts)
 
   // Cache static matrices:
 
-  // Swap x,y (Used in Step 1). Negatives ensure proper sign of final
+  // Swap x, y (Used in Step 1). Negatives ensure proper sign of final
   // determinant.
-  tmpMat << 0,-1,0, -1,0,0, 0,0,-1;
+  tmpMat << 0 , -1,  0,
+           -1,   0,  0,
+            0,   0, -1;
   const Matrix3 C1(tmpMat);
-  // Swap y,z (Used in Step 2). Negatives ensure proper sign of final
+  // Swap y, z (Used in Step 2). Negatives ensure proper sign of final
   // determinant
-  tmpMat << -1,0,0, 0,0,-1, 0,-1,0;
+  tmpMat << -1,  0,  0,
+             0,  0, -1,
+             0, -1,  0;
   const Matrix3 C2(tmpMat);
   // For step 8:
-  tmpMat << 1,0,1, 0,1,1, 0,0,1;
+  tmpMat << 1,  0,  1,
+            0,  1,  1,
+            0,  0,  1;
   const Matrix3 C8(tmpMat);
 
   // initial change of basis matrix
-  tmpMat << 1,0,0, 0,1,0, 0,0,1;
+  tmpMat << 1,  0,  0,
+            0,  1,  0,
+            0,  0,  1;
   Matrix3 cob(tmpMat);
 
   // Enable debugging output here:
@@ -368,7 +375,9 @@ bool CrystalTools::niggliReduce(Molecule &molecule, Options opts)
         }
         *p = -1;
       }
-      tmpMat << i, 0, 0,    0, j, 0,    0, 0, k;
+      tmpMat << i, 0, 0,
+                0, j, 0,
+                0, 0, k;
       cob *= tmpMat;
 
       // Update characteristic
@@ -412,7 +421,9 @@ bool CrystalTools::niggliReduce(Molecule &molecule, Options opts)
         ) {
       Real signEta = niggliSign(eta);
       // Update change of basis matrix:
-      tmpMat << 1, 0, -signEta,    0, 1, 0,     0, 0, 1;
+      tmpMat << 1, 0, -signEta,
+                0, 1, 0,
+                0, 0, 1;
       cob *= tmpMat;
 
       // Update characteristic
@@ -434,7 +445,9 @@ bool CrystalTools::niggliReduce(Molecule &molecule, Options opts)
         ) {
       Real signZeta = niggliSign(zeta);
       // Update change of basis matrix:
-      tmpMat << 1, -signZeta, 0,    0, 1, 0,     0, 0, 1;
+      tmpMat << 1, -signZeta, 0,
+                0,         1, 0,
+                0,         0, 1;
       cob *= tmpMat;
 
       // Update characteristic
@@ -543,13 +556,13 @@ bool CrystalTools::isNiggliReduced(const Molecule &molecule)
     return false;
   }
 
-  if (!(fuzzyGreaterThan(xi, static_cast<Real>(0.0), tol) &&
-        fuzzyGreaterThan(eta, static_cast<Real>(0.0), tol) &&
-        fuzzyGreaterThan(zeta, static_cast<Real>(0.0), tol))
+  if (!(fuzzyGreaterThan(xi, static_cast<Real>(0.0), tol)
+        && fuzzyGreaterThan(eta, static_cast<Real>(0.0), tol)
+        && fuzzyGreaterThan(zeta, static_cast<Real>(0.0), tol))
       &&
-      !(fuzzyLessThanEq(zeta, static_cast<Real>(0.0), tol) &&
-        fuzzyLessThanEq(zeta, static_cast<Real>(0.0), tol) &&
-        fuzzyLessThanEq(zeta, static_cast<Real>(0.0), tol))) {
+      !(fuzzyLessThanEq(zeta, static_cast<Real>(0.0), tol)
+        && fuzzyLessThanEq(zeta, static_cast<Real>(0.0), tol)
+        && fuzzyLessThanEq(zeta, static_cast<Real>(0.0), tol))) {
     return false;
   }
 
@@ -609,8 +622,8 @@ bool CrystalTools::setCellMatrix(Molecule &molecule,
 {
 
   if (opt & TransformAtoms && molecule.unitCell()) {
-    const Matrix3 xform((newCellColMatrix *
-                         molecule.unitCell()->cellMatrix().inverse())
+    const Matrix3 xform((newCellColMatrix
+                         * molecule.unitCell()->cellMatrix().inverse())
                         .transpose());
     std::for_each(molecule.atomPositions3d().begin(),
                   molecule.atomPositions3d().end(),
