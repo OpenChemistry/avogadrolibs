@@ -18,9 +18,116 @@
 
 #include "avogadrocore.h"
 #include "elementdata.h"
+#include "utilities.h"
+
+#include <vector>
 
 namespace Avogadro {
 namespace Core {
+
+// Handle custom element identifiers:
+namespace {
+const static std::string CustomElementSymbolPrefix = "X";
+const static std::string CustomElementNamePrefix = "CustomElement_";
+
+static std::vector<std::string> CustomElementSymbols;
+static std::vector<std::string> CustomElementNames;
+
+// Match carbon's radii
+static double CustomElementCovalentRadius = element_covalent[6];
+static double CustomElementVDWRadius = element_VDW[6];
+
+inline bool isCustomElement(unsigned char atomicNumber)
+{
+  return atomicNumber >= CustomElementMin
+      && atomicNumber <= CustomElementMax;
+}
+
+inline std::string encodeCustomElement(unsigned char atomicNumber)
+{
+  std::string result;
+  if (isCustomElement(atomicNumber)) {
+    result.resize(2);
+    unsigned char index = atomicNumber - Avogadro::CustomElementMin;
+    result[0] = 'a' + static_cast<char>(index / 26);
+    result[1] = 'a' + static_cast<char>(index % 26);
+  }
+  return result;
+}
+
+inline unsigned char decodeCustomElement(const std::string &str)
+{
+  if (str.size() == 2) {
+    if (str[0] >= 'a' && str[0] <= 'z' && str[1] >= 'a' && str[1] <= 'z') {
+      return CustomElementMin
+          + static_cast<unsigned char>(str[0] - 'a') * 26
+          + static_cast<unsigned char>(str[1] - 'a');
+    }
+  }
+  return Avogadro::InvalidElement;
+}
+
+inline unsigned char interpretCustomElementName(const std::string &name)
+{
+  if (startsWith(name, CustomElementNamePrefix)) {
+    const std::string number(name.substr(CustomElementNamePrefix.size()));
+    return decodeCustomElement(number);
+  }
+  return InvalidElement;
+}
+
+inline std::string createCustomElementName(unsigned char atomicNumber)
+{
+  return CustomElementNamePrefix + encodeCustomElement(atomicNumber);
+}
+
+inline const char * customElementName(unsigned char atomicNumber)
+{
+  return CustomElementNames[atomicNumber - CustomElementMin].c_str();
+}
+
+inline unsigned char interpretCustomElementSymbol(const std::string &symbol)
+{
+  if (symbol.size() == 3)
+    return decodeCustomElement(symbol.substr(1));
+  return InvalidElement;
+}
+
+inline std::string createCustomElementSymbol(unsigned char atomicNumber)
+{
+  return CustomElementSymbolPrefix + encodeCustomElement(atomicNumber);
+}
+
+inline const char * customElementSymbol(unsigned char atomicNumber)
+{
+  return CustomElementSymbols[atomicNumber - CustomElementMin].c_str();
+}
+
+inline unsigned char * customElementColor(unsigned char atomicNumber)
+{
+  return Core::element_color[atomicNumber % element_count];
+}
+
+// Initialize the static lookup tables.
+class InitializeCustomElementTables
+{
+public:
+  InitializeCustomElementTables()
+  {
+    CustomElementSymbols.resize(CustomElementCount);
+    CustomElementNames.resize(CustomElementCount);
+    std::string suffix;
+    for (unsigned char i = CustomElementMin; i <= CustomElementMax; ++i) {
+      suffix = encodeCustomElement(i);
+      CustomElementSymbols[i - CustomElementMin] =
+          CustomElementSymbolPrefix + suffix;
+      CustomElementNames[i - CustomElementMin] =
+          CustomElementNamePrefix + suffix;
+    }
+  }
+} CustomElementTableInitializer;
+
+} // end anon namespace
 
 Elements::Elements()
 {
@@ -40,7 +147,8 @@ unsigned char Elements::atomicNumberFromName(const std::string &name)
   for (unsigned char i = 0; i < element_count; ++i)
     if (name == element_names[i])
       return i;
-  return InvalidElement;
+
+  return interpretCustomElementName(name);
 }
 
 unsigned char Elements::atomicNumberFromSymbol(const std::string &symbol)
@@ -83,7 +191,7 @@ unsigned char Elements::atomicNumberFromSymbol(const std::string &symbol)
     for (unsigned char i = 0; i < element_count; ++i)
       if (symbol == element_symbols[i])
         return i;
-    return InvalidElement;
+    return interpretCustomElementSymbol(symbol);
   }
 }
 
@@ -91,6 +199,8 @@ const char * Elements::name(unsigned char atomicNumber)
 {
   if (atomicNumber < element_count)
     return element_names[atomicNumber];
+  else if (isCustomElement(atomicNumber))
+    return customElementName(atomicNumber);
   else
     return element_names[0];
 }
@@ -99,6 +209,8 @@ const char * Elements::symbol(unsigned char atomicNumber)
 {
   if (atomicNumber < element_count)
     return element_symbols[atomicNumber];
+  else if (isCustomElement(atomicNumber))
+    return customElementSymbol(atomicNumber);
   else
     return element_symbols[0];
 }
@@ -115,6 +227,8 @@ double Elements::radiusVDW(unsigned char atomicNumber)
 {
   if (atomicNumber < element_count)
     return element_VDW[atomicNumber];
+  else if (isCustomElement(atomicNumber))
+    return CustomElementVDWRadius;
   else
     return element_VDW[0];
 }
@@ -123,6 +237,8 @@ double Elements::radiusCovalent(unsigned char atomicNumber)
 {
   if (atomicNumber < element_count)
     return element_covalent[atomicNumber];
+  else if (isCustomElement(atomicNumber))
+    return CustomElementCovalentRadius;
   else
     return element_covalent[0];
 }
@@ -131,6 +247,8 @@ const unsigned char * Elements::color(unsigned char atomicNumber)
 {
   if (atomicNumber < element_count)
     return element_color[atomicNumber];
+  else if (isCustomElement(atomicNumber))
+    return customElementColor(atomicNumber);
   else
     return element_color[0];
 }
