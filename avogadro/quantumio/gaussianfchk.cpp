@@ -19,7 +19,7 @@
 
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
-#include <avogadro/io/utilities.h>
+#include <avogadro/core/utilities.h>
 
 #include <iostream>
 
@@ -97,88 +97,88 @@ void GaussianFchk::processLine(std::istream &in)
   string key = line.substr(0, 42);
 
   //cout << "Key:\t" << key << endl;
-  key = Io::trimmed(key);
+  key = Core::trimmed(key);
 
   string tmp = line.substr(43);
-  vector<string> list = Io::split(tmp, ' ');
+  vector<string> list = Core::split(tmp, ' ');
 
   // Big switch statement checking for various things we are interested in
-  if (Io::contains(key, "RHF")) {
+  if (Core::contains(key, "RHF")) {
     m_scftype = Rhf;
   }
-  else if (Io::contains(key, "UHF")) {
+  else if (Core::contains(key, "UHF")) {
     m_scftype = Uhf;
   }
   else if (key == "Number of atoms" && list.size() > 1) {
-    cout << "Number of atoms = " << Io::lexicalCast<int>(list[1]) << endl;
+    cout << "Number of atoms = " << Core::lexicalCast<int>(list[1]) << endl;
   }
   else if (key == "Number of electrons" && list.size() > 1) {
-    m_electrons = Io::lexicalCast<int>(list[1]);
+    m_electrons = Core::lexicalCast<int>(list[1]);
   }
   else if (key == "Number of alpha electrons" && list.size() > 1) {
-    m_electronsAlpha = Io::lexicalCast<int>(list[1]);
+    m_electronsAlpha = Core::lexicalCast<int>(list[1]);
   }
   else if (key == "Number of beta electrons" && list.size() > 1) {
-    m_electronsBeta = Io::lexicalCast<int>(list[1]);
+    m_electronsBeta = Core::lexicalCast<int>(list[1]);
   }
   else if (key == "Number of basis functions" && list.size() > 1) {
-    m_numBasisFunctions = Io::lexicalCast<int>(list[1]);
+    m_numBasisFunctions = Core::lexicalCast<int>(list[1]);
     cout << "Number of basis functions = " << m_numBasisFunctions << endl;
   }
   else if (key == "Atomic numbers" && list.size() > 2) {
-    m_aNums = readArrayI(in, Io::lexicalCast<int>(list[2]));
-    if (static_cast<int>(m_aNums.size()) != Io::lexicalCast<int>(list[2]))
+    m_aNums = readArrayI(in, Core::lexicalCast<int>(list[2]));
+    if (static_cast<int>(m_aNums.size()) != Core::lexicalCast<int>(list[2]))
       cout << "Reading atomic numbers failed.\n";
     else
       cout << "Reading atomic numbers succeeded.\n";
   }
   // Now we get to the meat of it - coordinates of the atoms
   else if (key == "Current cartesian coordinates" && list.size() > 2) {
-    m_aPos = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+    m_aPos = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
   }
   // The real meat is here - basis sets etc!
   else if (key == "Shell types" && list.size() > 2) {
-    m_shellTypes = readArrayI(in, Io::lexicalCast<int>(list[2]));
+    m_shellTypes = readArrayI(in, Core::lexicalCast<int>(list[2]));
   }
   else if (key == "Number of primitives per shell" && list.size() > 2) {
-    m_shellNums = readArrayI(in, Io::lexicalCast<int>(list[2]));
+    m_shellNums = readArrayI(in, Core::lexicalCast<int>(list[2]));
   }
   else if (key == "Shell to atom map" && list.size() > 2) {
-    m_shelltoAtom = readArrayI(in, Io::lexicalCast<int>(list[2]));
+    m_shelltoAtom = readArrayI(in, Core::lexicalCast<int>(list[2]));
   }
   // Now to get the exponents and coefficients(
   else if (key == "Primitive exponents" && list.size() > 2) {
-    m_a = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+    m_a = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
   }
   else if (key == "Contraction coefficients" && list.size() > 2) {
-    m_c = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+    m_c = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
   }
   else if (key == "P(S=P) Contraction coefficients" && list.size() > 2) {
-    m_csp = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+    m_csp = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
   }
   else if (key == "Alpha Orbital Energies") {
     if (m_scftype == Rhf) {
-      m_orbitalEnergy = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+      m_orbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
       cout << "MO energies, n = " << m_orbitalEnergy.size() << endl;
     }
     else if (m_scftype == Uhf) {
-      m_alphaOrbitalEnergy = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+      m_alphaOrbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
       cout << "Alpha MO energies, n = " << m_alphaOrbitalEnergy.size() << endl;
     }
     else if (key == "Beta Orbital Energies") {
-      m_betaOrbitalEnergy = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
+      m_betaOrbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
       cout << "Beta MO energies, n = " << m_betaOrbitalEnergy.size() << endl;
     }
   }
   else if (key == "Alpha MO coefficients" && list.size() > 2) {
     if (m_scftype == Rhf) {
-      m_MOcoeffs = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
-      if (static_cast<int>(m_MOcoeffs.size()) == Io::lexicalCast<int>(list[2]))
+      m_MOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
+      if (static_cast<int>(m_MOcoeffs.size()) == Core::lexicalCast<int>(list[2]))
         cout << "MO coefficients, n = " << m_MOcoeffs.size() << endl;
     }
     else if (m_scftype == Uhf) {
-      m_alphaMOcoeffs = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
-      if (static_cast<int>(m_alphaMOcoeffs.size()) == Io::lexicalCast<int>(list[2]))
+      m_alphaMOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
+      if (static_cast<int>(m_alphaMOcoeffs.size()) == Core::lexicalCast<int>(list[2]))
         cout << "Alpha MO coefficients, n = " << m_alphaMOcoeffs.size() << endl;
     }
     else {
@@ -186,18 +186,18 @@ void GaussianFchk::processLine(std::istream &in)
     }
   }
   else if (key == "Beta MO coefficients" && list.size() > 2) {
-      m_betaMOcoeffs = readArrayD(in, Io::lexicalCast<int>(list[2]), 16);
-      if (static_cast<int>(m_betaMOcoeffs.size()) == Io::lexicalCast<int>(list[2]))
+      m_betaMOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
+      if (static_cast<int>(m_betaMOcoeffs.size()) == Core::lexicalCast<int>(list[2]))
         cout << "Beta MO coefficients, n = " << m_betaMOcoeffs.size() << endl;
   }
   else if (key == "Total SCF Density" && list.size() > 2) {
-    if (readDensityMatrix(in, Io::lexicalCast<int>(list[2]), 16))
+    if (readDensityMatrix(in, Core::lexicalCast<int>(list[2]), 16))
       cout << "SCF density matrix read in " << m_density.rows() << endl;
     else
       cout << "Error reading in the SCF density matrix.\n";
   }
   else if (key == "Spin SCF Density" && list.size() > 2) {
-    if (readSpinDensityMatrix(in, Io::lexicalCast<int>(list[2]), 16))
+    if (readSpinDensityMatrix(in, Core::lexicalCast<int>(list[2]), 16))
       cout << "SCF spin density matrix read in " << m_spinDensity.rows() << endl;
     else
       cout << "Error reading in the SCF spin density matrix.\n";
@@ -317,14 +317,14 @@ vector<int> GaussianFchk::readArrayI(std::istream &in, unsigned int n)
     if (getline(in, line), line.empty())
       return tmp;
 
-    vector<string> list = Io::split(line, ' ');
+    vector<string> list = Core::split(line, ' ');
     for (size_t i = 0; i < list.size(); ++i) {
       if (tmp.size() >= n) {
         cout << "Too many variables read in. File may be inconsistent. "
              << tmp.size() << " of " << n << endl;
         return tmp;
       }
-      tmp.push_back(Io::lexicalCast<int>(list[i], ok));
+      tmp.push_back(Core::lexicalCast<int>(list[i], ok));
       if (!ok) {
         cout << "Warning: problem converting string to integer: "
              << list[i] << " in GaussianFchk::readArrayI.\n";
@@ -352,14 +352,14 @@ vector<double> GaussianFchk::readArrayD(std::istream &in, unsigned int n,
       return tmp;
 
     if (width == 0) { // we can split by spaces
-      vector<string> list = Io::split(line, ' ');
+      vector<string> list = Core::split(line, ' ');
       for (size_t i = 0; i < list.size(); ++i) {
         if (tmp.size() >= n) {
           cout << "Too many variables read in. File may be inconsistent. "
                << tmp.size() << " of " << n << endl;
           return tmp;
         }
-        tmp.push_back(Io::lexicalCast<double>(list[i], ok));
+        tmp.push_back(Core::lexicalCast<double>(list[i], ok));
         if (!ok) {
           cout << "Warning: problem converting string to integer: "
                << list[i] << " in GaussianFchk::readArrayD.\n";
@@ -378,7 +378,7 @@ vector<double> GaussianFchk::readArrayD(std::istream &in, unsigned int n,
                << tmp.size() << " of " << n << endl;
           return tmp;
         }
-        tmp.push_back(Io::lexicalCast<double>(substring, ok));
+        tmp.push_back(Core::lexicalCast<double>(substring, ok));
         if (!ok) {
           cout << "Warning: problem converting string to double: "
                << substring << " in GaussianFchk::readArrayD.\n";
@@ -410,7 +410,7 @@ bool GaussianFchk::readDensityMatrix(std::istream &in, unsigned int n,
       return false;
 
     if (width == 0) { // we can split by spaces
-      vector<string> list = Io::split(line, ' ');
+      vector<string> list = Core::split(line, ' ');
       for (size_t k = 0; k < list.size(); ++k) {
         if (cnt >= n) {
           cout << "Too many variables read in. File may be inconsistent. "
@@ -418,7 +418,7 @@ bool GaussianFchk::readDensityMatrix(std::istream &in, unsigned int n,
           return false;
         }
         // Read in lower half matrix
-        m_density(i, j) = Io::lexicalCast<double>(list[k], ok);
+        m_density(i, j) = Core::lexicalCast<double>(list[k], ok);
         if (ok) { // Valid double converted, carry on
           ++j; ++cnt;
           if (j == f) {
@@ -448,7 +448,7 @@ bool GaussianFchk::readDensityMatrix(std::istream &in, unsigned int n,
           return false;
         }
         // Read in lower half matrix
-        m_density(i, j) = Io::lexicalCast<double>(substring, ok);
+        m_density(i, j) = Core::lexicalCast<double>(substring, ok);
         if (ok) { // Valid double converted, carry on
           ++j; ++cnt;
           if (j == f) {
@@ -488,7 +488,7 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream &in, unsigned int n,
       return false;
 
     if (width == 0) { // we can split by spaces
-      vector<string> list = Io::split(line, ' ');
+      vector<string> list = Core::split(line, ' ');
       for (size_t k = 0; k < list.size(); ++k) {
         if (cnt >= n) {
           cout << "Too many variables read in. File may be inconsistent. "
@@ -496,7 +496,7 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream &in, unsigned int n,
           return false;
         }
         // Read in lower half matrix
-        m_spinDensity(i, j) = Io::lexicalCast<double>(list[k], ok);
+        m_spinDensity(i, j) = Core::lexicalCast<double>(list[k], ok);
         if (ok) { // Valid double converted, carry on
           ++j; ++cnt;
           if (j == f) {
@@ -526,7 +526,7 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream &in, unsigned int n,
           return false;
         }
         // Read in lower half matrix
-        m_spinDensity(i, j) = Io::lexicalCast<double>(substring, ok);
+        m_spinDensity(i, j) = Core::lexicalCast<double>(substring, ok);
         if (ok) { // Valid double converted, carry on
           ++j; ++cnt;
           if (j == f) {

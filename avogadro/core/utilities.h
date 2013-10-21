@@ -22,7 +22,7 @@
 #include <sstream>
 
 namespace Avogadro {
-namespace Io {
+namespace Core {
 
 /**
  * @brief Split the supplied @p string by the @p delimiter.
@@ -107,7 +107,7 @@ template<typename T> T lexicalCast(const std::string &inputString, bool &ok)
   return value;
 }
 
-} // end Io namespace
+} // end Core namespace
 } // end Avogadro namespace
 
 #endif // AVOGADRO_IO_UTILITIES_H
