@@ -64,6 +64,29 @@ const Index MaxIndex = std::numeric_limits<Index>::max();
 /** Used to represent an invalid atomic number. */
 const unsigned char InvalidElement = 255;
 
+/** Minimum value for atomic numbers that represent custom, non-elemental
+ *  particles. */
+const unsigned char CustomElementMin = 128;
+
+/** Maximum value for atomic numbers that represent custom, non-elemental
+ *  particles. */
+const unsigned char CustomElementMax = 254;
+
+/** Count of atomic number values that are used to represent custom,
+ * non-elemental particles. */
+const unsigned char CustomElementCount =
+    CustomElementMax - CustomElementMin + 1;
+
+/**
+ * @return True if @a atomicNumber denotes a custom element type.
+ */
+namespace Core {
+inline bool isCustomElement(unsigned char atomicNumber)
+{
+  return atomicNumber >= CustomElementMin && atomicNumber <= CustomElementMax;
+}
+}
+
 /** Unit conversion factors. @{ */
 const double BOHR_TO_ANGSTROM = 0.52917721092;
 const double ANGSTROM_TO_BOHR = 1.0 / BOHR_TO_ANGSTROM;

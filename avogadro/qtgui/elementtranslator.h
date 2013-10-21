@@ -50,6 +50,11 @@ public:
    * @return a QString with the appropriate translation for the current locale.
    */
   static QString name(int element);
+
+  /**
+   * @return The highest atomic number supported by this class.
+   */
+  static int numberOfElements();
 };
 
 } // End namespace QtGui
