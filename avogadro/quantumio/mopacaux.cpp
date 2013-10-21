@@ -19,7 +19,7 @@
 
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
-#include <avogadro/io/utilities.h>
+#include <avogadro/core/utilities.h>
 
 #include <iostream>
 
@@ -80,57 +80,57 @@ void MopacAux::processLine(std::istream &in)
 {
   // First truncate the line, remove trailing white space and check
   string line;
-  if (!getline(in, line) || Io::trimmed(line).empty())
+  if (!getline(in, line) || Core::trimmed(line).empty())
     return;
 
-  string key = Io::trimmed(line);
+  string key = Core::trimmed(line);
 
   // Big switch statement checking for various things we are interested in
-  if (Io::contains(key, "ATOM_EL")) {
-    int tmp = Io::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+  if (Core::contains(key, "ATOM_EL")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of atoms = " << tmp << endl;
     m_atomNums = readArrayElements(in, tmp);
   }
-  else if (Io::contains(key, "AO_ATOMINDEX")) {
-    int tmp = Io::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+  else if (Core::contains(key, "AO_ATOMINDEX")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of atomic orbitals = " << tmp << endl;
     m_atomIndex = readArrayI(in, tmp);
     for (size_t i = 0; i < m_atomIndex.size(); ++i)
       --m_atomIndex[i];
   }
-  else if (Io::contains(key, "ATOM_SYMTYPE")) {
-    int tmp = Io::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+  else if (Core::contains(key, "ATOM_SYMTYPE")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of atomic orbital types = " << tmp << endl;
     m_atomSym = readArraySym(in, tmp);
   }
-  else if (Io::contains(key, "AO_ZETA")) {
-    int tmp = Io::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+  else if (Core::contains(key, "AO_ZETA")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of zeta values = " << tmp << endl;
     m_zeta = readArrayD(in, tmp);
   }
-  else if (Io::contains(key, "ATOM_PQN")) {
-    int tmp = Io::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+  else if (Core::contains(key, "ATOM_PQN")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of PQN values =" << tmp << endl;
     m_pqn = readArrayI(in, tmp);
   }
-  else if (Io::contains(key, "NUM_ELECTRONS")) {
-    vector<string> list = Io::split(line, '=');
+  else if (Core::contains(key, "NUM_ELECTRONS")) {
+    vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
-      m_electrons = Io::lexicalCast<int>(list[1]);
+      m_electrons = Core::lexicalCast<int>(list[1]);
       cout << "Number of electrons = " << m_electrons << endl;
     }
   }
-  else if (Io::contains(key, "ATOM_X_OPT:ANGSTROMS")) {
-    int tmp = Io::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+  else if (Core::contains(key, "ATOM_X_OPT:ANGSTROMS")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of atomic coordinates = " << tmp << endl;
     m_atomPos = readArrayVec(in, tmp);
   }
-  else if (Io::contains(key, "OVERLAP_MATRIX")) {
-    int tmp = Io::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
+  else if (Core::contains(key, "OVERLAP_MATRIX")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
     cout << "Size of lower half triangle of overlap matrix = " << tmp << endl;
     readOverlapMatrix(in, tmp);
   }
-  else if (Io::contains(key, "EIGENVECTORS")) {
+  else if (Core::contains(key, "EIGENVECTORS")) {
     // For large molecules the Eigenvectors counter overflows to [*****]
     // So just use the square of the m_atomIndex array
     //      QString tmp = key.mid(key.indexOf('[')+1, 6);
@@ -139,8 +139,8 @@ void MopacAux::processLine(std::istream &in)
     readEigenVectors(in,
                      static_cast<int>(m_atomIndex.size() * m_atomIndex.size()));
   }
-  else if (Io::contains(key, "TOTAL_DENSITY_MATRIX")) {
-    int tmp = Io::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
+  else if (Core::contains(key, "TOTAL_DENSITY_MATRIX")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
     cout << "Size of lower half triangle of density matrix = " << tmp << endl;
     readDensityMatrix(in, tmp);
   }
@@ -170,7 +170,7 @@ vector<int> MopacAux::readArrayElements(std::istream &in, unsigned int n)
   while (tmp.size() < n) {
     string line;
     getline(in, line);
-    vector<string> list = Io::split(line, ' ');
+    vector<string> list = Core::split(line, ' ');
     for (size_t i = 0; i < list.size(); ++i) {
       tmp.push_back(
             static_cast<int>(Core::Elements::atomicNumberFromSymbol(list[i])));
@@ -185,9 +185,9 @@ vector<int> MopacAux::readArrayI(std::istream &in, unsigned int n)
   while (tmp.size() < n) {
     string line;
     getline(in, line);
-    vector<string> list = Io::split(line, ' ');
+    vector<string> list = Core::split(line, ' ');
     for (size_t i = 0; i < list.size(); ++i)
-      tmp.push_back(Io::lexicalCast<int>(list[i]));
+      tmp.push_back(Core::lexicalCast<int>(list[i]));
   }
   return tmp;
 }
@@ -198,9 +198,9 @@ vector<double> MopacAux::readArrayD(std::istream &in, unsigned int n)
   while (tmp.size() < n) {
     string line;
     getline(in, line);
-    vector<string> list = Io::split(line, ' ');
+    vector<string> list = Core::split(line, ' ');
     for (size_t i = 0; i < list.size(); ++i)
-      tmp.push_back(Io::lexicalCast<double>(list[i]));
+      tmp.push_back(Core::lexicalCast<double>(list[i]));
   }
   return tmp;
 }
@@ -212,7 +212,7 @@ vector<int> MopacAux::readArraySym(std::istream &in, unsigned int n)
   while (tmp.size() < n) {
     string line;
     getline(in, line);
-    vector<string> list = Io::split(line, ' ');
+    vector<string> list = Core::split(line, ' ');
     for (size_t i = 0; i < list.size(); ++i) {
       if (list[i] == "S")
         type = SlaterSet::S;
@@ -248,9 +248,9 @@ vector<Vector3> MopacAux::readArrayVec(std::istream &in, unsigned int n)
   while (cnt < n) {
     string line;
     getline(in, line);
-    vector<string> list = Io::split(line, ' ');
+    vector<string> list = Core::split(line, ' ');
     for (size_t i = 0; i < list.size(); ++i)
-      ptr[cnt++] = Io::lexicalCast<double>(list[i]);
+      ptr[cnt++] = Core::lexicalCast<double>(list[i]);
   }
   return tmp;
 }
@@ -266,10 +266,10 @@ bool MopacAux::readOverlapMatrix(std::istream &in, unsigned int n)
   getline(in, line);
   while (cnt < n) {
     getline(in, line);
-    vector<string> list = Io::split(line, ' ');
+    vector<string> list = Core::split(line, ' ');
     for (size_t k = 0; k < list.size(); ++k) {
       //m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
-      m_overlap(i, j) = m_overlap(j, i) = Io::lexicalCast<double>(list[k]);
+      m_overlap(i, j) = m_overlap(j, i) = Core::lexicalCast<double>(list[k]);
       ++i; ++cnt;
       if (i == f) {
         // We need to move down to the next row and increment f - lower tri
@@ -290,9 +290,9 @@ bool MopacAux::readEigenVectors(std::istream &in, unsigned int n)
   while (cnt < n) {
     string line;
     getline(in, line);
-    vector<string> list = Io::split(line, ' ');
+    vector<string> list = Core::split(line, ' ');
     for (size_t k = 0; k < list.size(); ++k) {
-      m_eigenVectors(i, j) = Io::lexicalCast<double>(list[k]);
+      m_eigenVectors(i, j) = Core::lexicalCast<double>(list[k]);
       ++i; ++cnt;
       if (i == m_zeta.size()) {
         // We need to move down to the next row and increment f - lower tri
@@ -315,10 +315,10 @@ bool MopacAux::readDensityMatrix(std::istream &in, unsigned int n)
   getline(in, line);
   while (cnt < n) {
     getline(in, line);
-    vector<string> list = Io::split(line, ' ');
+    vector<string> list = Core::split(line, ' ');
     for (size_t k = 0; k < list.size(); ++k) {
       //m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
-      m_density(i, j) = m_density(j, i) = Io::lexicalCast<double>(list[k]);
+      m_density(i, j) = m_density(j, i) = Core::lexicalCast<double>(list[k]);
       ++i; ++cnt;
       if (i == f) {
         // We need to move down to the next row and increment f - lower tri

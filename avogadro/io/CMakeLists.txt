@@ -19,7 +19,6 @@ set(HEADERS
   fileformatmanager.h
   hdf5dataformat.h
   mdlformat.h
-  utilities.h
   xyzformat.h
 )
 
