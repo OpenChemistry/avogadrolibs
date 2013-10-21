@@ -22,7 +22,7 @@ namespace Avogadro {
 namespace Rendering {
 
 TextProperties::TextProperties()
-  : m_pointSize(10),
+  : m_pixelHeight(24),
     m_hAlign(HLeft),
     m_vAlign(VTop),
     m_rotationDegreesCW(0.f),
@@ -33,7 +33,7 @@ TextProperties::TextProperties()
 }
 
 TextProperties::TextProperties(const TextProperties &other)
-  : m_pointSize(other.m_pointSize),
+  : m_pixelHeight(other.m_pixelHeight),
     m_hAlign(other.m_hAlign),
     m_vAlign(other.m_vAlign),
     m_rotationDegreesCW(other.m_rotationDegreesCW),
@@ -59,7 +59,7 @@ TextProperties &TextProperties::operator=(TextProperties other)
 void TextProperties::swap(TextProperties &other)
 {
   using std::swap;
-  swap(m_pointSize, other.m_pointSize);
+  swap(m_pixelHeight, other.m_pixelHeight);
   swap(m_hAlign, other.m_hAlign);
   swap(m_vAlign, other.m_vAlign);
   swap(m_rotationDegreesCW, other.m_rotationDegreesCW);
@@ -73,7 +73,7 @@ void TextProperties::swap(TextProperties &other)
 
 bool TextProperties::operator==(const TextProperties &other) const
 {
-  return m_pointSize == other.m_pointSize
+  return m_pixelHeight == other.m_pixelHeight
          && m_hAlign == other.m_hAlign
          && m_vAlign == other.m_vAlign
          && m_rotationDegreesCW == other.m_rotationDegreesCW
