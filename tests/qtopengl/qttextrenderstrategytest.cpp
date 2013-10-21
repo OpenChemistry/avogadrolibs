@@ -63,15 +63,18 @@ bool boundingBox()
   TextProperties tprop;
   std::string testString("Testing string\nwith newlines!");
   tprop.setFontFamily(TextProperties::SansSerif);
-  tprop.setPointSize(12);
+  tprop.setPixelHeight(27);
   tprop.setHAlign(TextProperties::HCenter);
   tprop.setVAlign(TextProperties::VCenter);
 
   int bbox[4];
   int refbbox[4] = {-86, 85, -28, 27};
   strategy.boundingBox(testString, tprop, bbox);
-  if (!std::equal(bbox, bbox + 4, refbbox))
+  if (!std::equal(bbox, bbox + 4, refbbox)) {
+    qCritical() << "boundingBox() failed: "
+                << bbox[0] << bbox[1] << bbox[2] << bbox[3];
     result = false;
+  }
 
   return result;
 }
@@ -139,7 +142,7 @@ bool render()
 
   TextProperties tprop;
   tprop.setFontFamily(TextProperties::SansSerif);
-  tprop.setPointSize(12);
+  tprop.setPixelHeight(27);
   tprop.setColorRgb(63, 127, 255);
   tprop.setVAlign(TextProperties::VTop);
   tprop.setHAlign(TextProperties::HLeft);
