@@ -13,6 +13,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 # Optionally build all plugins statically.
 option(BUILD_STATIC_PLUGINS "Build static plugins by default" ON)
 
+# Allow GPL plugins to be disabled.
+option(BUILD_GPL_PLUGINS
+  "Build plugins that are licensed under the GNU Public License." OFF
+)
+
 # Create a plugin for Avogadro.
 # name is the name of the plugin, this will be the name of the target created.
 # description Free text description of the plugin.
@@ -112,6 +117,11 @@ add_subdirectory(overlayaxes)
 add_subdirectory(vanderwaalsao)
 if (USE_PROTOCALL)
   add_subdirectory(clientserver)
+endif()
+
+if(BUILD_GPL_PLUGINS)
+  # qtaimcurvature.h/cpp contains GPL licensed code:
+  add_subdirectory(qtaim)
 endif()
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${original_library_output_dir}")
