@@ -185,6 +185,29 @@ public slots:
                const QString &outFormat,
                const QStringList &options = QStringList());
 
+  /**
+   * Convert the file @a filename from @a inFormat to @a outFormat.
+   *
+   * @param filename File containing molecule representation in @a inFormat
+   * format.
+   * @param inFormat File extension corresponding to input format
+   * (see `obabel -L formats`).
+   * @param outFormat File extension corresponding to output format.
+   * @param options Additional options passed to obabel.
+   *
+   * After calling this method, the convertFinished signal will be emitted to
+   * indicate return status along with the requested representation of the
+   * molecule.
+   *
+   * The conversion is performed as:
+   * `obabel -i<inFormat> <filename> -o<outFormat> <options> > output`
+   *
+   * @return True if the process started succesfully, false otherwise.
+   */
+  bool convert(const QString &filename, const QString &inFormat,
+               const QString &outFormat,
+               const QStringList &options = QStringList());
+
 signals:
   /**
    * Emitted after a call to convert() finishes.

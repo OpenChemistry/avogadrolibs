@@ -34,12 +34,13 @@ public:
                const std::string &description_,
                const std::string &specificationUrl_,
                const std::vector<std::string> fileExtensions_,
-               const std::vector<std::string> mimeTypes_);
+               const std::vector<std::string> mimeTypes_,
+               bool fileOnly_ = false);
   ~OBFileFormat();
 
   Operations supportedOperations() const AVO_OVERRIDE
   {
-    return m_rwFlags | Stream | File | String;
+    return m_rwFlags | File | (m_fileOnly ? None : Stream | String);
   }
 
   bool read(std::istream &in, Core::Molecule &molecule);
@@ -74,6 +75,12 @@ public:
     m_rwFlags = ops & ReadWrite;
   }
 
+  /** Whether or not the format supports files only. This is needed for
+   * multifile formats. */
+  void setFileOnly(bool f) { m_fileOnly = f; }
+  bool fileOnly() const { return m_fileOnly; }
+  /** @} */
+
   class ProcessListener;
 
 private:
@@ -84,6 +91,7 @@ private:
   std::string m_identifier;
   std::string m_name;
   std::string m_specificationUrl;
+  bool m_fileOnly;
 };
 
 } // namespace QtPlugins
