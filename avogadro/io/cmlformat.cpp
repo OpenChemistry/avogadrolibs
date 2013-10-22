@@ -242,7 +242,7 @@ public:
   {
     xml_node bondArray = moleculeNode.child("bondArray");
     if (!bondArray)
-      return false;
+      return true;
 
     xml_node node = bondArray.child("bond");
 
