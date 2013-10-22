@@ -104,6 +104,9 @@ public:
   unsigned char opacity() const { return m_opacity; }
   /** @} */
 
+  /** The vertex array. */
+  Core::Array<PackedVertex> vertices() const { return m_vertices; }
+
 private:
   /**
    * @brief Update the VBOs, IBOs etc ready for rendering.
