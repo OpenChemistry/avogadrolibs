@@ -19,6 +19,7 @@
 #include "hdf5dataformat.h"
 #include "utilities.h"
 
+#include <avogadro/core/crystaltools.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/matrix.h>
@@ -35,6 +36,11 @@
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
+
+namespace {
+const Avogadro::Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
+const Avogadro::Real RAD_TO_DEG = static_cast<Avogadro::Real>(180.0 / M_PI);
+}
 
 namespace Avogadro {
 namespace Io {
@@ -458,6 +464,40 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
     node.append_attribute("value") = mol.data("inchi").toString().c_str();
   }
 
+    // Cell specification
+  const UnitCell *cell = mol.unitCell();
+  if (cell) {
+    xml_node crystalNode = moleculeNode.append_child("crystal");
+
+    xml_node crystalANode = crystalNode.append_child("scalar");
+    xml_node crystalBNode = crystalNode.append_child("scalar");
+    xml_node crystalCNode = crystalNode.append_child("scalar");
+    xml_node crystalAlphaNode = crystalNode.append_child("scalar");
+    xml_node crystalBetaNode  = crystalNode.append_child("scalar");
+    xml_node crystalGammaNode = crystalNode.append_child("scalar");
+
+    crystalANode.append_attribute("title") = "a";
+    crystalBNode.append_attribute("title") = "b";
+    crystalCNode.append_attribute("title") = "c";
+    crystalAlphaNode.append_attribute("title") = "alpha";
+    crystalBetaNode.append_attribute("title") =  "beta";
+    crystalGammaNode.append_attribute("title") = "gamma";
+
+    crystalANode.append_attribute("units") = "units:angstrom";
+    crystalBNode.append_attribute("units") = "units:angstrom";
+    crystalCNode.append_attribute("units") = "units:angstrom";
+    crystalAlphaNode.append_attribute("units") = "units:degree";
+    crystalBetaNode.append_attribute("units")  = "units:degree";
+    crystalGammaNode.append_attribute("units") = "units:degree";
+
+    crystalANode.text() = static_cast<double>(cell->a());
+    crystalBNode.text() = static_cast<double>(cell->b());
+    crystalCNode.text() = static_cast<double>(cell->c());
+    crystalAlphaNode.text() = static_cast<double>(cell->alpha() * RAD_TO_DEG);
+    crystalBetaNode.text()  = static_cast<double>(cell->beta()  * RAD_TO_DEG);
+    crystalGammaNode.text() = static_cast<double>(cell->gamma() * RAD_TO_DEG);
+  }
+
   xml_node atomArrayNode = moleculeNode.append_child("atomArray");
   for (size_t i = 0; i < mol.atomCount(); ++i) {
     xml_node atomNode = atomArrayNode.append_child("atom");
@@ -467,9 +507,17 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
     Atom a = mol.atom(i);
     atomNode.append_attribute("elementType") =
         Elements::symbol(a.atomicNumber());
-    atomNode.append_attribute("x3") = a.position3d().x();
-    atomNode.append_attribute("y3") = a.position3d().y();
-    atomNode.append_attribute("z3") = a.position3d().z();
+    if (cell) {
+      Vector3 fracPos = cell->toFractional(a.position3d());
+      atomNode.append_attribute("xFract") = fracPos.x();
+      atomNode.append_attribute("yFract") = fracPos.y();
+      atomNode.append_attribute("zFract") = fracPos.z();
+    }
+    else {
+      atomNode.append_attribute("x3") = a.position3d().x();
+      atomNode.append_attribute("y3") = a.position3d().y();
+      atomNode.append_attribute("z3") = a.position3d().z();
+    }
   }
 
   xml_node bondArrayNode = moleculeNode.append_child("bondArray");
