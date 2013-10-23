@@ -18,6 +18,7 @@
 
 #include "spheregeometry.h"
 #include "ambientocclusionspheregeometry.h"
+#include "linestripgeometry.h"
 
 namespace Avogadro {
 namespace Rendering {
@@ -91,6 +92,34 @@ void GeometryVisitor::visit(AmbientOcclusionSphereGeometry &geometry)
   tmpRadius = std::sqrt(tmpRadius);
   m_centers.push_back(tmpCenter);
   m_radii.push_back(tmpRadius);
+}
+
+void GeometryVisitor::visit(LineStripGeometry &lsg)
+{
+  typedef Core::Array<LineStripGeometry::PackedVertex> VertexArray;
+  const VertexArray verts(lsg.vertices());
+  if (!verts.size())
+    return;
+
+  m_dirty = true;
+
+  Vector3f tmpCenter(Vector3f::Zero());
+  for (VertexArray::const_iterator it = verts.begin(), itEnd = verts.end();
+       it != itEnd; ++it) {
+    tmpCenter += it->vertex;
+  }
+  tmpCenter /= static_cast<float>(verts.size());
+
+  float tmpRadius(0.f);
+  for (VertexArray::const_iterator it = verts.begin(), itEnd = verts.end();
+       it != itEnd; ++it) {
+    float distance = (it->vertex - tmpCenter).squaredNorm();
+    if (distance > tmpRadius)
+      tmpRadius = distance;
+  }
+
+  m_centers.push_back(tmpCenter);
+  m_radii.push_back(std::sqrt(tmpRadius));
 }
 
 void GeometryVisitor::clear()
