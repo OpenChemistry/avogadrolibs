@@ -141,6 +141,10 @@ QList<Io::FileFormat *> OpenBabel::fileFormats() const
 
   QSet<QString> formatExtensions;
 
+  // These can only be read directly from file:
+  QList<QString> multifileFormatDescriptions;
+  multifileFormatDescriptions << "VASP format";
+
   foreach (const QString &qdesc, formatDescriptions) {
     mapDesc = qdesc.toStdString();
     fname = mapDesc;
@@ -148,6 +152,7 @@ QList<Io::FileFormat *> OpenBabel::fileFormats() const
     fdescription = mapDesc;
     fexts.clear();
     fmime.clear();
+    bool fileOnly = multifileFormatDescriptions.contains(qdesc);
 
     formatExtensions.clear();
     Io::FileFormat::Operations rw = Io::FileFormat::None;
@@ -165,7 +170,8 @@ QList<Io::FileFormat *> OpenBabel::fileFormats() const
       fexts.push_back(ext.toStdString());
 
     OBFileFormat *fmt = new OBFileFormat(fname, fidentifier, fdescription,
-                                         fspecificationUrl, fexts, fmime);
+                                         fspecificationUrl, fexts, fmime,
+                                         fileOnly);
 
     fmt->setReadWriteFlags(rw);
     result.append(fmt);
@@ -525,7 +531,7 @@ void OpenBabel::onPerceiveBonds()
                            .arg(m_process->obabelExecutable()));
 
   // Run process
-  m_process->convert(xyz.c_str(), "xyz", "cml");
+  m_process->convert(QByteArray(xyz.c_str(), xyz.size()), "xyz", "cml");
 }
 
 void OpenBabel::onPerceiveBondsFinished(const QByteArray &output)
@@ -609,7 +615,8 @@ void OpenBabel::onAddHydrogens()
                            .arg(m_process->obabelExecutable()));
 
   // Run process
-  m_process->convert(mol.c_str(), "mol", "mol", QStringList() << "-h");
+  m_process->convert(QByteArray(mol.c_str(), mol.size()), "mol", "mol",
+                     QStringList() << "-h");
 }
 
 void OpenBabel::onAddHydrogensPh()
@@ -656,7 +663,7 @@ void OpenBabel::onAddHydrogensPh()
                            .arg(m_process->obabelExecutable()));
 
   // Run process
-  m_process->convert(mol.c_str(), "mol", "mol",
+  m_process->convert(QByteArray(mol.c_str(), mol.size()), "mol", "mol",
                      QStringList() << "-p" << QString::number(pH));
 }
 
@@ -696,7 +703,8 @@ void OpenBabel::onRemoveHydrogens()
                            .arg(m_process->obabelExecutable()));
 
   // Run process
-  m_process->convert(mol.c_str(), "mol", "mol", QStringList() << "-d");
+  m_process->convert(QByteArray(mol.c_str(), mol.size()), "mol", "mol",
+                     QStringList() << "-d");
 }
 
 void OpenBabel::onHydrogenOperationFinished(const QByteArray &mdl)

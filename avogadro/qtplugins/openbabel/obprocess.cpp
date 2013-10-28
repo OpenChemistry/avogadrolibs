@@ -188,6 +188,24 @@ bool OBProcess::convert(const QByteArray &input, const QString &inFormat,
   return true;
 }
 
+bool OBProcess::convert(const QString &filename, const QString &inFormat,
+                        const QString &outFormat, const QStringList &options)
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::convert: process already in use.";
+    return false;
+  }
+
+  QStringList realOptions;
+  realOptions << QString("-i%1").arg(inFormat)
+              << filename
+              << QString("-o%1").arg(outFormat)
+              << options;
+
+  executeObabel(realOptions, this, SLOT(convertPrepareOutput()));
+  return true;
+}
+
 void OBProcess::convertPrepareOutput()
 {
   if (m_aborted) {

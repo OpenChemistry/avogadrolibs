@@ -50,6 +50,7 @@ FileFormatDialog::fileToRead(QWidget *parent, const QString &caption,
   // Use the default read filter if none specified:
   const QString realFilter = filter.isEmpty() ? readFileFilter() : filter;
 
+  bool done = false;
   do { // jump point for continue statements on retry
     QString fileName = QFileDialog::getOpenFileName(parent, caption, dir,
                                                     realFilter);
@@ -80,8 +81,9 @@ FileFormatDialog::fileToRead(QWidget *parent, const QString &caption,
 
     result.first = format;
     result.second = fileName;
+    done = true;
 
-  } while (false);
+  } while (!done);
 
   return result;
 }
@@ -142,7 +144,6 @@ const Io::FileFormat *FileFormatDialog::findFileFormat(
   QString extension = fileInfo.suffix();
   if (extension.isEmpty())
     extension = fileInfo.fileName();
-  extension = extension.toLower();
 
   // Lookup matching file formats.
   vector<const FileFormat*> matches(
