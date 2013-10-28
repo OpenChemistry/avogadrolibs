@@ -26,10 +26,11 @@ void alignToPixelCenter(inout vec4 clipCoord)
 
   // Fix up coordinates -- pixel centers are at xy = (-w + (2*i + 1) * inc)
   // for the i'th pixel. First find i and floor it. Just solve the above for i:
-  ivec2 pixels = floor((clipCoord.xy + abs(clipCoord.ww) - inc) / (2 * inc));
+  ivec2 pixels = ivec2(floor((clipCoord.xy + abs(clipCoord.ww) - inc)
+                             / (2. * inc)));
 
   // Now reapply the equation to obtain a pixel centered offset.
-  clipCoord.xy = -abs(clipCoord.ww) + (2 * vec2(pixels) + vec2(1., 1.)) * inc;
+  clipCoord.xy = -abs(clipCoord.ww) + (2. * vec2(pixels) + vec2(1., 1.)) * inc;
 }
 
 void main(void)

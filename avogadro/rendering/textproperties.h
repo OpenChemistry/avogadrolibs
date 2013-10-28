@@ -63,10 +63,10 @@ public:
   { return !operator==(other); }
 
   /**
-   * Point size of the text.
+   * The height of the text in pixels.
    */
-  void setPointSize(float size) { m_pointSize = size; }
-  float pointSize() const { return m_pointSize; }
+  void setPixelHeight(size_t height) { m_pixelHeight = height; }
+  size_t pixelHeight() const { return m_pixelHeight; }
   /** @} */
 
   /**
@@ -156,7 +156,7 @@ public:
   /** @} */
 
 private:
-  float m_pointSize;
+  size_t m_pixelHeight;
   HAlign m_hAlign;
   VAlign m_vAlign;
   float m_rotationDegreesCW;
