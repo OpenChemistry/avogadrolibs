@@ -33,6 +33,9 @@ class AVOGADROCORE_EXPORT UnitCell
 {
 public:
   UnitCell();
+  UnitCell(Real a, Real b, Real c, Real alpha, Real beta, Real gamma);
+  UnitCell(const Vector3 &a, const Vector3 &b, const Vector3 &c);
+  explicit UnitCell(const Matrix3 &cellMatrix);
   UnitCell(const UnitCell &other);
   ~UnitCell();
   UnitCell &operator=(UnitCell other);
@@ -136,8 +139,31 @@ private:
 };
 
 inline UnitCell::UnitCell()
-  : m_cellMatrix(Matrix3::Identity())
+  : m_cellMatrix(Matrix3::Identity()),
+    m_fractionalMatrix(Matrix3::Identity())
 {
+}
+
+inline UnitCell::UnitCell(Real a_, Real b_, Real c_,
+                          Real alpha_, Real beta_, Real gamma_)
+{
+  setCellParameters(a_, b_, c_, alpha_, beta_, gamma_);
+}
+
+inline UnitCell::UnitCell(const Vector3 &a_,
+                          const Vector3 &b_,
+                          const Vector3 &c_)
+{
+  m_cellMatrix.col(0) = a_;
+  m_cellMatrix.col(1) = b_;
+  m_cellMatrix.col(2) = c_;
+  computeFractionalMatrix();
+}
+
+inline UnitCell::UnitCell(const Matrix3 &cellMatrix_)
+{
+  m_cellMatrix = cellMatrix_;
+  computeFractionalMatrix();
 }
 
 inline UnitCell::UnitCell(const UnitCell &other)

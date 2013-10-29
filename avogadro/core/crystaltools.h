@@ -26,6 +26,7 @@
 namespace Avogadro {
 namespace Core {
 class Molecule;
+class UnitCell;
 
 /**
  * @class CrystalTools crystaltools.h <avogadro/core/crystaltools.h>
@@ -112,6 +113,16 @@ public:
    */
   static bool setCellMatrix(Molecule &molecule, const Matrix3 &newCellColMatrix,
                             Options opt = None);
+
+  /**
+   * Populate the @a frac vector with the fractional representation of the
+   * cartesian coordinates in @a cart, using @a unitCell to perform the
+   * coordinate transformation.
+   * @return True on success, false otherwise.
+   */
+  static bool fractionalCoordinates(const UnitCell &unitCell,
+                                    const std::vector<Vector3> &cart,
+                                    std::vector<Vector3> &frac);
 
   /**
    * Populate the @a coords vector with the fractional coordinates of the atoms
