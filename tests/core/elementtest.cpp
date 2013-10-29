@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/utilities.h>
 
 using Avogadro::Core::Elements;
 
@@ -80,4 +81,22 @@ TEST(ElementTest, dummyElement)
 {
   EXPECT_EQ(Elements::radiusVDW(0), 0.69);
   EXPECT_EQ(Elements::radiusCovalent(0), 0.18);
+}
+
+TEST(ElementTest, customElements)
+{
+  for (unsigned char i = Avogadro::CustomElementMin;
+       i <= Avogadro::CustomElementMax; ++i) {
+    std::string name = Elements::name(i);
+    std::string symbol = Elements::symbol(i);
+    // These should not return the dummy labels
+    EXPECT_TRUE(Avogadro::Core::isCustomElement(i));
+    EXPECT_STRNE(name.c_str(), Elements::name(0));
+    EXPECT_STRNE(symbol.c_str(), Elements::symbol(0));
+    // The last two characters must match:
+    EXPECT_EQ(name.substr(name.size() - 2), symbol.substr(symbol.size() - 2));
+    // Round trip:
+    EXPECT_EQ((int)Elements::atomicNumberFromName(name), (int)i);
+    EXPECT_EQ((int)Elements::atomicNumberFromSymbol(symbol), (int)i);
+  }
 }

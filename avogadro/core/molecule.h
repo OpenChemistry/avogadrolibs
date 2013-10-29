@@ -19,6 +19,7 @@
 
 #include "avogadrocore.h"
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -43,6 +44,9 @@ class UnitCell;
 class AVOGADROCORE_EXPORT Molecule
 {
 public:
+  /** Type for custom element map. */
+  typedef std::map<unsigned char, std::string> CustomElementMap;
+
   /** Creates a new, empty molecule. */
   Molecule();
 
@@ -116,6 +120,26 @@ public:
 
   /** \overload */
   const Graph& graph() const;
+
+  /** A map of custom element atomic numbers to string identifiers. These ids
+   * can be used to override the generic custom element names returned by the
+   * Elements class, and should be somewhat meaningful to the user.
+   *
+   * @note Custom element atomic numbers lie between CustomElementMin and
+   * CustomElementMax.
+   * @sa Avogadro::QtGui::CustomElementDialog
+   * @sa hasCustomElements
+   * @{ */
+  const CustomElementMap & customElementMap() const;
+  void setCustomElementMap(const CustomElementMap &map);
+  /** @} */
+
+  /**
+   * @return True if custom elements exist in the molecule.
+   * @note Custom element atomic numbers lie between CustomElementMin and
+   * CustomElementMax.
+   */
+  bool hasCustomElements() const;
 
   /**  Adds an atom to the molecule. */
   virtual Atom addAtom(unsigned char atomicNumber);
@@ -243,6 +267,7 @@ protected:
   mutable Graph m_graph; // A transformation of the molecule to a graph.
   mutable bool m_graphDirty; // Should the graph be rebuilt before returning it?
   VariantMap m_data;
+  CustomElementMap m_customElementMap;
   std::vector<unsigned char> m_atomicNumbers;
   std::vector<Vector2> m_positions2d;
   std::vector<Vector3> m_positions3d;

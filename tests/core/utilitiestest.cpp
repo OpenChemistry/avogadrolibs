@@ -14,55 +14,56 @@
 
 ******************************************************************************/
 
-#include "iotests.h"
-
 #include <gtest/gtest.h>
 
-#include <avogadro/io/utilities.h>
+#include <avogadro/core/utilities.h>
 
 using std::string;
-using Avogadro::Io::contains;
-using Avogadro::Io::startsWith;
+using Avogadro::Core::contains;
+using Avogadro::Core::lexicalCast;
+using Avogadro::Core::split;
+using Avogadro::Core::startsWith;
+using Avogadro::Core::trimmed;
 
 TEST(UtilitiesTest, split)
 {
   string test(" trim white space    ");
-  EXPECT_EQ(Avogadro::Io::split(test, ' ').size(), 3);
+  EXPECT_EQ(split(test, ' ').size(), 3);
 }
 
 TEST(UtilitiesTest, splitEmpty)
 {
   string test(" trim white space    ");
-  EXPECT_EQ(Avogadro::Io::split(test, ' ', false).size(), 7);
+  EXPECT_EQ(split(test, ' ', false).size(), 7);
 }
 
 TEST(UtilitiesTest, trimmed)
 {
   string test(" trim white space \n\t\r");
-  EXPECT_EQ(Avogadro::Io::trimmed(test), "trim white space");
-  EXPECT_EQ(Avogadro::Io::trimmed("test"), "test");
-  EXPECT_EQ(Avogadro::Io::trimmed("H"), "H");
-  EXPECT_EQ(Avogadro::Io::trimmed("  H"), "H");
-  EXPECT_EQ(Avogadro::Io::trimmed("H  "), "H");
-  EXPECT_EQ(Avogadro::Io::trimmed(" H  "), "H");
+  EXPECT_EQ(trimmed(test), "trim white space");
+  EXPECT_EQ(trimmed("test"), "test");
+  EXPECT_EQ(trimmed("H"), "H");
+  EXPECT_EQ(trimmed("  H"), "H");
+  EXPECT_EQ(trimmed("H  "), "H");
+  EXPECT_EQ(trimmed(" H  "), "H");
 }
 
 TEST(UtilitiesTest, lexicalCast)
 {
-  EXPECT_EQ(Avogadro::Io::lexicalCast<int>("5"), 5);
-  EXPECT_EQ(Avogadro::Io::lexicalCast<double>("5.3"), 5.3);
-  EXPECT_EQ(Avogadro::Io::lexicalCast<double>("5.3E-10"), 5.3e-10);
+  EXPECT_EQ(lexicalCast<int>("5"), 5);
+  EXPECT_EQ(lexicalCast<double>("5.3"), 5.3);
+  EXPECT_EQ(lexicalCast<double>("5.3E-10"), 5.3e-10);
 }
 
 TEST(UtilitiesTest, lexicalCastCheck)
 {
   // Something simple that should pass.
   bool ok(false);
-  Avogadro::Io::lexicalCast<int>("5", ok);
+  lexicalCast<int>("5", ok);
   EXPECT_EQ(ok, true);
 
   // Pass something in that should fail.
-  Avogadro::Io::lexicalCast<int>("five", ok);
+  lexicalCast<int>("five", ok);
   EXPECT_EQ(ok, false);
 }
 

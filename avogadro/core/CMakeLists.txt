@@ -41,6 +41,7 @@ set(HEADERS
   symbolatomtyper.h
   types.h
   unitcell.h
+  utilities.h
   variant.h
   variant-inline.h
   variantmap.h

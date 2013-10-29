@@ -16,10 +16,9 @@
 
 #include "mdlformat.h"
 
-#include "utilities.h"
-
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
 #include <iomanip>
@@ -32,6 +31,9 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
 using Avogadro::Core::Molecule;
+using Avogadro::Core::lexicalCast;
+using Avogadro::Core::startsWith;
+using Avogadro::Core::trimmed;
 
 using std::string;
 using std::istringstream;

@@ -14,15 +14,15 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_IO_UTILITIES_H
-#define AVOGADRO_IO_UTILITIES_H
+#ifndef AVOGADRO_CORE_UTILITIES_H
+#define AVOGADRO_CORE_UTILITIES_H
 
 #include <string>
 #include <vector>
 #include <sstream>
 
 namespace Avogadro {
-namespace Io {
+namespace Core {
 
 /**
  * @brief Split the supplied @p string by the @p delimiter.
@@ -107,7 +107,7 @@ template<typename T> T lexicalCast(const std::string &inputString, bool &ok)
   return value;
 }
 
-} // end Io namespace
+} // end Core namespace
 } // end Avogadro namespace
 
-#endif // AVOGADRO_IO_UTILITIES_H
+#endif // AVOGADRO_CORE_UTILITIES_H

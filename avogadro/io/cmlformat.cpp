@@ -17,12 +17,12 @@
 #include "cmlformat.h"
 
 #include "hdf5dataformat.h"
-#include "utilities.h"
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/unitcell.h>
+#include <avogadro/core/utilities.h>
 
 #include <pugixml.cpp>
 
