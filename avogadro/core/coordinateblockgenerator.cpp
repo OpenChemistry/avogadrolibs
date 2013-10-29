@@ -115,7 +115,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
 
     switch (m_distanceUnit) {
     case Bohr:
-      pos3d *= static_cast<float>(ANGSTROM_TO_BOHR);
+      pos3d *= ANGSTROM_TO_BOHR_F;
       break;
     default:
     case Angstrom:

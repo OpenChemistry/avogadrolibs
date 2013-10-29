@@ -522,7 +522,7 @@ void CoordinateEditorDialog::applyClicked()
   switch (m_ui->distanceUnit->currentIndex()) {
   case Bohr:
     m_validate->convertDistance = true;
-    m_validate->distanceConversion = static_cast<float>(BOHR_TO_ANGSTROM);
+    m_validate->distanceConversion = BOHR_TO_ANGSTROM_F;
     break;
   default:
     m_validate->convertDistance = false;

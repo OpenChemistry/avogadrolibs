@@ -33,10 +33,6 @@ using Avogadro::Core::CrystalTools;
 using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
-namespace {
-const Avogadro::Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
-}
-
 namespace Avogadro {
 namespace QtPlugins {
 

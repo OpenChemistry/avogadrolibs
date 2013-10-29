@@ -116,7 +116,7 @@ void GAMESSUSOutput::readAtomBlock(std::istream &in, Core::Molecule &molecule,
                                    bool angs)
 {
   // We read the atom block in until it terminates with a blank line.
-  double coordFactor = angs ? 1.0 : BOHR_TO_ANGSTROM;
+  double coordFactor = angs ? 1.0 : BOHR_TO_ANGSTROM_D;
   string buffer;
   while (getline(in, buffer)) {
     if (Io::contains(buffer, "CHARGE") ||Io::contains(buffer, "------"))

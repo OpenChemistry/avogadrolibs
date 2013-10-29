@@ -99,7 +99,7 @@ void MoldenFile::processLine(std::istream &in)
   // last.
   if (Io::contains(line, "[Atoms]")) {
     if (list.size() > 1 && Io::contains(list[1], "AU"))
-      m_coordFactor = BOHR_TO_ANGSTROM;
+      m_coordFactor = BOHR_TO_ANGSTROM_D;
     m_mode = Atoms;
   }
   else if (Io::contains(line, "[GTO]")) {
