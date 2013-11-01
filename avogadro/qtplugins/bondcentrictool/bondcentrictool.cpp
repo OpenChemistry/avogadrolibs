@@ -51,6 +51,8 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+using Avogadro::DEG_TO_RAD_F;
+using Avogadro::RAD_TO_DEG_F;
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 using Avogadro::Vector4ub;
@@ -65,8 +67,6 @@ using Avogadro::Rendering::LineStripGeometry;
 using Avogadro::Rendering::MeshGeometry;
 
 namespace {
-const float RAD_TO_DEG_F = 180.f / static_cast<float>(M_PI);
-const float DEG_TO_RAD_F = static_cast<float>(M_PI) / 180.f;
 const std::string degreeString("\xb0");
 /// @todo Add wide character support to text renderer.
 const std::string angstromString("A");

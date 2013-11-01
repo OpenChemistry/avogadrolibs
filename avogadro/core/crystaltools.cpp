@@ -643,8 +643,8 @@ struct FractionalCoordinatesFunctor
 {
   const UnitCell &unitCell;
 
-  FractionalCoordinatesFunctor(const Molecule &molecule)
-    : unitCell(*molecule.unitCell())
+  FractionalCoordinatesFunctor(const UnitCell &uc)
+    : unitCell(uc)
   {
   }
 
@@ -655,6 +655,19 @@ struct FractionalCoordinatesFunctor
 };
 }
 
+bool CrystalTools::fractionalCoordinates(const UnitCell &unitCell,
+                                         const std::vector<Vector3> &cart,
+                                         std::vector<Vector3> &frac)
+{
+  if (&frac != &cart) // avoid self-copy...
+    frac = cart;
+
+  std::for_each(frac.begin(), frac.end(),
+                FractionalCoordinatesFunctor(unitCell));
+
+  return true;
+}
+
 bool CrystalTools::fractionalCoordinates(const Molecule &molecule,
                                          std::vector<Vector3> &coords)
 {
@@ -662,10 +675,9 @@ bool CrystalTools::fractionalCoordinates(const Molecule &molecule,
     return false;
 
   coords = molecule.atomPositions3d();
+  coords.resize(molecule.atomCount());
 
-  std::for_each(coords.begin(), coords.end(),
-                FractionalCoordinatesFunctor(molecule));
-  return true;
+  return fractionalCoordinates(*molecule.unitCell(), coords, coords);
 }
 
 namespace {

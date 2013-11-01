@@ -16,8 +16,10 @@
 
 #include "cjsonformat.h"
 
+#include <avogadro/core/crystaltools.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/unitcell.h>
 
 #include <jsoncpp.cpp>
 
@@ -67,6 +69,28 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
   value = root["inchi"];
   if (!value.empty() && value.isString())
     molecule.setData("inchi", value.asString());
+
+  value = root["unit cell"];
+  if (value.type() == Json::objectValue) {
+    if (!value["a"].isNumeric() ||
+        !value["b"].isNumeric() ||
+        !value["c"].isNumeric() ||
+        !value["alpha"].isNumeric() ||
+        !value["beta"].isNumeric() ||
+        !value["gamma"].isNumeric()) {
+      appendError("Invalid unit cell specification: a, b, c, alpha, beta, gamma"
+                  " must be present and numeric.");
+      return false;
+    }
+    Real a = static_cast<Real>(value["a"].asDouble());
+    Real b = static_cast<Real>(value["b"].asDouble());
+    Real c = static_cast<Real>(value["c"].asDouble());
+    Real alpha = static_cast<Real>(value["alpha"].asDouble()) * DEG_TO_RAD;
+    Real beta  = static_cast<Real>(value["beta" ].asDouble()) * DEG_TO_RAD;
+    Real gamma = static_cast<Real>(value["gamma"].asDouble()) * DEG_TO_RAD;
+    Core::UnitCell *unitCell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+    molecule.setUnitCell(unitCell);
+  }
 
   // Read in the atomic data.
   Json::Value atoms = root["atoms"];
@@ -134,6 +158,29 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
                                 value.get(2 * i + 1, 0).asDouble()));
       }
     }
+
+    value = coords["3d fractional"];
+    if (value.type() == Json::arrayValue) {
+      if (!molecule.unitCell()) {
+        appendError("Cannot interpret fractional coordinates without "
+                    "unit cell.");
+        return false;
+      }
+      if (value.size() && atomCount != static_cast<size_t>(value.size() / 3)) {
+        appendError("Error: number of elements != number of fractional "
+                    "coordinates.");
+        return false;
+      }
+      std::vector<Vector3> fcoords;
+      fcoords.reserve(atomCount);
+      for (size_t i = 0; i < atomCount; ++i) {
+        fcoords.push_back(
+              Vector3(static_cast<Real>(value.get(i * 3 + 0, 0).asDouble()),
+                      static_cast<Real>(value.get(i * 3 + 1, 0).asDouble()),
+                      static_cast<Real>(value.get(i * 3 + 2, 0).asDouble())));
+      }
+      Core::CrystalTools::setFractionalCoordinates(molecule, fcoords);
+    }
   }
 
   // Now for the bonding data.
@@ -185,20 +232,64 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
   if (molecule.data("inchi").type() == Variant::String)
     root["inchi"] = molecule.data("inchi").toString().c_str();
 
-  // Create and populate the atom arrays.
-  Json::Value elements(Json::arrayValue);
-  Json::Value coords3d(Json::arrayValue);
-  Json::Value coords2d(Json::arrayValue);
-  for (size_t i = 0; i < molecule.atomCount(); ++i) {
-    Atom atom = molecule.atom(i);
-    elements.append(atom.atomicNumber());
-    coords3d.append(atom.position3d().x());
-    coords3d.append(atom.position3d().y());
-    coords3d.append(atom.position3d().z());
+  if (molecule.unitCell()) {
+    Json::Value unitCell = Json::Value(Json::objectValue);
+    unitCell["a"] = molecule.unitCell()->a();
+    unitCell["b"] = molecule.unitCell()->b();
+    unitCell["c"] = molecule.unitCell()->c();
+    unitCell["alpha"] = molecule.unitCell()->alpha() * RAD_TO_DEG;
+    unitCell["beta"]  = molecule.unitCell()->beta()  * RAD_TO_DEG;
+    unitCell["gamma"] = molecule.unitCell()->gamma() * RAD_TO_DEG;
+    root["unit cell"] = unitCell;
   }
+
+  // Create and populate the atom arrays.
   if (molecule.atomCount()) {
+    Json::Value elements(Json::arrayValue);
+    for (size_t i = 0; i < molecule.atomCount(); ++i)
+      elements.append(molecule.atom(i).atomicNumber());
     root["atoms"]["elements"]["number"] = elements;
-    root["atoms"]["coords"]["3d"] = coords3d;
+
+    // 3d positions:
+    if (molecule.atomPositions3d().size() == molecule.atomCount()) {
+      if (molecule.unitCell()) {
+        Json::Value coordsFractional(Json::arrayValue);
+        std::vector<Vector3> fcoords;
+        Core::CrystalTools::fractionalCoordinates(*molecule.unitCell(),
+                                                  molecule.atomPositions3d(),
+                                                  fcoords);
+        for (std::vector<Vector3>::const_iterator it = fcoords.begin(),
+             itEnd = fcoords.end(); it != itEnd; ++it) {
+          coordsFractional.append(it->x());
+          coordsFractional.append(it->y());
+          coordsFractional.append(it->z());
+        }
+        root["atoms"]["coords"]["3d fractional"] = coordsFractional;
+      }
+      else {
+        Json::Value coords3d(Json::arrayValue);
+        for (std::vector<Vector3>::const_iterator
+             it = molecule.atomPositions3d().begin(),
+             itEnd = molecule.atomPositions3d().end(); it != itEnd; ++it) {
+          coords3d.append(it->x());
+          coords3d.append(it->y());
+          coords3d.append(it->z());
+        }
+        root["atoms"]["coords"]["3d"] = coords3d;
+      }
+    }
+
+    // 2d positions:
+    if (molecule.atomPositions2d().size() == molecule.atomCount()) {
+      Json::Value coords2d(Json::arrayValue);
+      for (std::vector<Vector2>::const_iterator
+           it = molecule.atomPositions2d().begin(),
+           itEnd = molecule.atomPositions2d().end(); it != itEnd; ++it) {
+        coords2d.append(it->x());
+        coords2d.append(it->y());
+      }
+      root["atoms"]["coords"]["2d"] = coords2d;
+    }
   }
 
   // Create and populate the bond arrays.

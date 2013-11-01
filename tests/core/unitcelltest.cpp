@@ -24,10 +24,6 @@ using namespace Avogadro;
 using namespace Avogadro::Core;
 
 namespace {
-const Real DEG_TO_RAD = static_cast<Real>(M_PI / 180.0);
-const Real RAD_TO_DEG = static_cast<Real>(180.0 / M_PI);
-
-
 // use alpha, beta, gamma in degrees
 Molecule createCrystal(Real a, Real b, Real c,
                        Real alpha, Real beta, Real gamma) {

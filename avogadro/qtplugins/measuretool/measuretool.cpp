@@ -41,14 +41,6 @@
 
 #include <cmath>
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
-namespace {
-const float RAD_TO_DEG_F = 180.f / static_cast<float>(M_PI);
-}
-
 using Avogadro::Core::Atom;
 using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;

@@ -30,9 +30,6 @@ using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
 namespace {
-const Avogadro::Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
-const Avogadro::Real RAD_TO_DEG = static_cast<Avogadro::Real>(180.0 / M_PI);
-
 // Matrix formatting:
 const int MATRIX_WIDTH = 9;
 const int MATRIX_PREC = 5;
