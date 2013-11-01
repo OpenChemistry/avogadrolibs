@@ -19,7 +19,7 @@
 
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
-#include <avogadro/io/utilities.h>
+#include <avogadro/core/utilities.h>
 
 #include <iostream>
 
@@ -88,27 +88,27 @@ void MoldenFile::processLine(std::istream &in)
 {
   // First truncate the line, remove trailing white space and check for blanks.
   string line;
-  if (!getline(in, line) || Io::trimmed(line).empty())
+  if (!getline(in, line) || Core::trimmed(line).empty())
     return;
 
-  vector<string> list = Io::split(line, ' ');
+  vector<string> list = Core::split(line, ' ');
 
   // Big switch statement checking for various things we are interested in. The
   // Molden file format uses sectiosn, each starts with a header line of the
   // form [Atoms], and the beginning of a new section denotes the end of the
   // last.
-  if (Io::contains(line, "[Atoms]")) {
-    if (list.size() > 1 && Io::contains(list[1], "AU"))
+  if (Core::contains(line, "[Atoms]")) {
+    if (list.size() > 1 && Core::contains(list[1], "AU"))
       m_coordFactor = BOHR_TO_ANGSTROM_D;
     m_mode = Atoms;
   }
-  else if (Io::contains(line, "[GTO]")) {
+  else if (Core::contains(line, "[GTO]")) {
     m_mode = GTO;
   }
-  else if (Io::contains(line, "[MO]")) {
+  else if (Core::contains(line, "[MO]")) {
     m_mode = MO;
   }
-  else if (Io::contains(line, "[")) { // unknown section
+  else if (Core::contains(line, "[")) { // unknown section
     m_mode = Unrecognized;
   }
   else {
@@ -123,12 +123,12 @@ void MoldenFile::processLine(std::istream &in)
       break;
     case GTO: {
       // TODO: detect dead files and make bullet-proof
-      int atom = Io::lexicalCast<int>(list[0]);
+      int atom = Core::lexicalCast<int>(list[0]);
 
       getline(in, line);
-      line = Io::trimmed(line);
+      line = Core::trimmed(line);
       while (!line.empty()) { // Read the shell types in this GTO.
-        list = Io::split(line, ' ');
+        list = Core::split(line, ' ');
         if (list.size() < 1)
           break;
         shell = list[0];
@@ -154,49 +154,49 @@ void MoldenFile::processLine(std::istream &in)
           return;
         }
 
-        int numGTOs = Io::lexicalCast<int>(list[1]);
+        int numGTOs = Core::lexicalCast<int>(list[1]);
         m_shellNums.push_back(numGTOs);
 
         // Now read all the exponents and contraction coefficients.
         for (int gto = 0; gto < numGTOs; ++gto) {
           getline(in, line);
-          line = Io::trimmed(line);
-          list = Io::split(line, ' ');
+          line = Core::trimmed(line);
+          list = Core::split(line, ' ');
           if (list.size() > 1) {
-            m_a.push_back(Io::lexicalCast<double>(list[0]));
-            m_c.push_back(Io::lexicalCast<double>(list[1]));
+            m_a.push_back(Core::lexicalCast<double>(list[0]));
+            m_c.push_back(Core::lexicalCast<double>(list[1]));
           }
           if (shellType == GaussianSet::SP && list.size() > 2)
-            m_csp.push_back(Io::lexicalCast<double>(list[2]));
+            m_csp.push_back(Core::lexicalCast<double>(list[2]));
         }
         // Start reading the next shell.
         getline(in, line);
-        line = Io::trimmed(line);
+        line = Core::trimmed(line);
       }
     }
     break;
 
     case MO:
       // Parse the occupation, spin, energy, etc (Occup, Spin, Ene).
-      while (!line.empty() && Io::contains(line, "=")) {
+      while (!line.empty() && Core::contains(line, "=")) {
         getline(in, line);
-        line = Io::trimmed(line);
-        list = Io::split(line, ' ');
-        if (Io::contains(line, "Occup"))
-          m_electrons += Io::lexicalCast<int>(list[1]);
+        line = Core::trimmed(line);
+        list = Core::split(line, ' ');
+        if (Core::contains(line, "Occup"))
+          m_electrons += Core::lexicalCast<int>(list[1]);
       }
 
       // Parse the molecular orbital coefficients.
-      while (!line.empty() && !Io::contains(line, "=")) {
-        list = Io::split(line, ' ');
+      while (!line.empty() && !Core::contains(line, "=")) {
+        list = Core::split(line, ' ');
         if (list.size() < 2)
           break;
 
-        m_MOcoeffs.push_back(Io::lexicalCast<double>(list[1]));
+        m_MOcoeffs.push_back(Core::lexicalCast<double>(list[1]));
 
         getline(in, line);
-        line = Io::trimmed(line);
-        list = Io::split(line, ' ');
+        line = Core::trimmed(line);
+        list = Core::split(line, ' ');
       }
       break;
     default:
@@ -210,10 +210,10 @@ void MoldenFile::readAtom(const vector<string> &list)
   // element_name number atomic_number x y z
   if (list.size() < 6)
     return;
-  m_aNums.push_back(Io::lexicalCast<int>(list[2]));
-  m_aPos.push_back(Io::lexicalCast<double>(list[3]) * m_coordFactor);
-  m_aPos.push_back(Io::lexicalCast<double>(list[4]) * m_coordFactor);
-  m_aPos.push_back(Io::lexicalCast<double>(list[5]) * m_coordFactor);
+  m_aNums.push_back(Core::lexicalCast<int>(list[2]));
+  m_aPos.push_back(Core::lexicalCast<double>(list[3]) * m_coordFactor);
+  m_aPos.push_back(Core::lexicalCast<double>(list[4]) * m_coordFactor);
+  m_aPos.push_back(Core::lexicalCast<double>(list[5]) * m_coordFactor);
 }
 
 void MoldenFile::load(GaussianSet* basis)

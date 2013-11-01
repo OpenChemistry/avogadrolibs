@@ -33,11 +33,16 @@ Molecule::Molecule() : m_graphDirty(false), m_basisSet(NULL), m_unitCell(NULL)
 }
 
 Molecule::Molecule(const Molecule &other)
- : m_graphDirty(true), m_data(other.m_data),
-   m_atomicNumbers(other.atomicNumbers()), m_positions2d(other.m_positions2d),
-   m_positions3d(other.m_positions3d), m_bondPairs(other.m_bondPairs),
-   m_bondOrders(other.m_bondOrders), m_basisSet(NULL),
-   m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : NULL)
+  : m_graphDirty(true),
+    m_data(other.m_data),
+    m_customElementMap(other.m_customElementMap),
+    m_atomicNumbers(other.atomicNumbers()),
+    m_positions2d(other.m_positions2d),
+    m_positions3d(other.m_positions3d),
+    m_bondPairs(other.m_bondPairs),
+    m_bondOrders(other.m_bondOrders),
+    m_basisSet(NULL),
+    m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : NULL)
 {
   // Copy over any meshes
   for(size_t i=0; i< other.meshCount(); i++) {
@@ -50,6 +55,7 @@ Molecule& Molecule::operator=(const Molecule& other)
 {
   if (this != &other) {
     m_graphDirty = true;
+    m_customElementMap = other.m_customElementMap;
     m_basisSet = NULL;
     m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : NULL;
     m_data = other.m_data;
@@ -178,6 +184,27 @@ const Graph& Molecule::graph() const
 {
   updateGraph();
   return m_graph;
+}
+
+const Molecule::CustomElementMap &Molecule::customElementMap() const
+{
+  return m_customElementMap;
+}
+
+void Molecule::setCustomElementMap(const Molecule::CustomElementMap &map)
+{
+  m_customElementMap = map;
+}
+
+bool Molecule::hasCustomElements() const
+{
+  for (std::vector<unsigned char>::const_iterator
+       it = m_atomicNumbers.begin(), itEnd = m_atomicNumbers.end();
+       it != itEnd; ++it) {
+    if (Core::isCustomElement(*it))
+      return true;
+  }
+  return false;
 }
 
 Atom Molecule::addAtom(unsigned char atomicNumber)

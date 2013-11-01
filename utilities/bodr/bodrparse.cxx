@@ -16,7 +16,7 @@
 
 #include <pugixml.cpp>
 
-#include <avogadro/io/utilities.h>
+#include <avogadro/core/utilities.h>
 
 #include <fstream>
 #include <string>
@@ -61,7 +61,7 @@ struct Element {
 // Separate the three components, then cast for unsigned char and store.
 bool colorFromString(const std::string &str, Color &color)
 {
-  std::vector<std::string> tokens = Avogadro::Io::split(str, ' ');
+  std::vector<std::string> tokens = Avogadro::Core::split(str, ' ');
   if (tokens.size() != 3) {// Corrupted file/input we don't understand
     cout << "Error processing color, wrong number of components "
          << tokens.size() << endl;

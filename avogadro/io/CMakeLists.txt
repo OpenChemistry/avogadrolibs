@@ -17,9 +17,9 @@ set(HEADERS
   cmlformat.h
   fileformat.h
   fileformatmanager.h
+  gromacsformat.h
   hdf5dataformat.h
   mdlformat.h
-  utilities.h
   xyzformat.h
 )
 
@@ -28,6 +28,7 @@ set(SOURCES
   cmlformat.cpp
   fileformat.cpp
   fileformatmanager.cpp
+  gromacsformat.cpp
   hdf5dataformat.cpp
   mdlformat.cpp
   xyzformat.cpp

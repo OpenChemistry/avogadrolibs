@@ -26,6 +26,7 @@ configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h")
 
 set(HEADERS
+  customelementdialog.h
   elementtranslator.h
   extensionplugin.h
   filebrowsewidget.h
@@ -48,6 +49,7 @@ set(HEADERS
 )
 
 set(SOURCES
+  customelementdialog.cpp
   elementdetail_p.cpp
   elementitem_p.cpp
   elementtranslator.cpp
@@ -73,6 +75,7 @@ set(SOURCES
 )
 
 set(UIS
+  customelementdialog.ui
   inputgeneratordialog.ui
   inputgeneratorwidget.ui
   molequeuedialog.ui

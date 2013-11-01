@@ -31,6 +31,14 @@ namespace Core {
  * The elements class gives a simple interface to basic data about chemical
  * elements. The data is automatically generated from the Blue Obelisk data
  * repository.
+ *
+ * The atomic numbers between the symbolic constants CustomElementMin and
+ * CustomElementMax are used to represent non-elemental entities, such as
+ * particles or structures units from MD simulations. Custom elements names and
+ * symbols are returned as name="CustomElement_aa" and symbol="Xaa", where 'aa'
+ * is some combination of lowercase letters that is unique to the particular
+ * custom element atomic number. For all custom elements, the radii will match
+ * Carbon, the color is random (but consistent), and the mass is zero.
  */
 
 class AVOGADROCORE_EXPORT Elements
@@ -59,6 +67,16 @@ public:
    * capitalized.
    */
   static unsigned char atomicNumberFromSymbol(const std::string &symbol);
+
+  /**
+   * Given a string, attempt to identify an element symbol, name, or atomic
+   * number. This method is slower and less reliable than the
+   * atomicNumberFrom*() methods, and is only intended for making an initial
+   * guess of user input.
+   * @return the atomic number that best matches the string, or InvalidElement
+   * if no match can be made.
+   */
+  static unsigned char guessAtomicNumber(const std::string &str);
 
   /** Get the name of the element with the supplied atomic number. */
   static const char * name(unsigned char atomicNumber);

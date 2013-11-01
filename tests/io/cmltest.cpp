@@ -118,6 +118,24 @@ TEST(CmlTest, fractionalCoords)
                         static_cast<Real>(1.24032),
                         static_cast<Real>(0.89633)), 1e-5));
 
+  cmlStr.clear();
+  cml.writeString(cmlStr, molecule);
+  std::cout << cmlStr << std::endl;
+  EXPECT_TRUE(cmlStr.find("<scalar title=\"a\" units=\"units:angstrom\">5.3"
+                          "</scalar>") != std::string::npos);
+  EXPECT_TRUE(cmlStr.find("<scalar title=\"b\" units=\"units:angstrom\">2.4"
+                          "</scalar>") != std::string::npos);
+  EXPECT_TRUE(cmlStr.find("<scalar title=\"c\" units=\"units:angstrom\">1.8"
+                          "</scalar>") != std::string::npos);
+  EXPECT_TRUE(cmlStr.find("<scalar title=\"alpha\" units=\"units:degree\">85"
+                          "</scalar>") != std::string::npos);
+  EXPECT_TRUE(cmlStr.find("<scalar title=\"beta\" units=\"units:degree\">90"
+                          "</scalar>") != std::string::npos);
+  EXPECT_TRUE(cmlStr.find("<scalar title=\"gamma\" units=\"units:degree\">105"
+                          "</scalar>") != std::string::npos);
+  EXPECT_TRUE(cmlStr.find("xFract=\"0.5\"") != std::string::npos);
+  EXPECT_TRUE(cmlStr.find("yFract=\"0.5\"") != std::string::npos);
+  EXPECT_TRUE(cmlStr.find("zFract=\"0.5\"") != std::string::npos);
 }
 
 TEST(CmlTest, saveFile)

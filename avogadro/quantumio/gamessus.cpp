@@ -17,7 +17,7 @@
 #include "gamessus.h"
 
 #include <avogadro/core/molecule.h>
-#include <avogadro/io/utilities.h>
+#include <avogadro/core/utilities.h>
 
 #include <iostream>
 
@@ -68,38 +68,38 @@ bool GAMESSUSOutput::read(std::istream &in, Core::Molecule &molecule)
   bool atomsRead(false);
   string buffer;
   while (getline(in, buffer)) {
-    if (Io::contains(buffer, "COORDINATES (BOHR)")) {
+    if (Core::contains(buffer, "COORDINATES (BOHR)")) {
       if (atomsRead)
         continue;
       atomsRead = true;
       readAtomBlock(in, molecule, false);
     }
-    else if (Io::contains(buffer, "COORDINATES OF ALL ATOMS ARE (ANGS)")) {
+    else if (Core::contains(buffer, "COORDINATES OF ALL ATOMS ARE (ANGS)")) {
       if (atomsRead)
         continue;
       atomsRead = true;
       readAtomBlock(in, molecule, true);
     }
-    else if (Io::contains(buffer, "ATOMIC BASIS SET")) {
+    else if (Core::contains(buffer, "ATOMIC BASIS SET")) {
       readBasisSet(in);
     }
-    else if (Io::contains(buffer, "NUMBER OF ELECTRONS")) {
-      vector<string> parts = Io::split(buffer, '=');
+    else if (Core::contains(buffer, "NUMBER OF ELECTRONS")) {
+      vector<string> parts = Core::split(buffer, '=');
       if (parts.size() == 2)
-        m_electrons = Io::lexicalCast<int>(parts[1]);
+        m_electrons = Core::lexicalCast<int>(parts[1]);
       else
         cout << "error" << buffer << endl;
     }
-    else if (Io::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (ALPHA)")) {
+    else if (Core::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (ALPHA)")) {
       cout << "Found alpha orbitals\n";
     }
-    else if (Io::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (BETA )")) {
+    else if (Core::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (BETA )")) {
       cout << "Found alpha orbitals\n";
     }
-    else if (Io::contains(buffer, "SCFTYP=")) {
+    else if (Core::contains(buffer, "SCFTYP=")) {
       cout << "Found SCF type\n";
     }
-    else if (Io::contains(buffer, "EIGENVECTORS")) {
+    else if (Core::contains(buffer, "EIGENVECTORS")) {
       readEigenvectors(in);
     }
   }
@@ -119,11 +119,11 @@ void GAMESSUSOutput::readAtomBlock(std::istream &in, Core::Molecule &molecule,
   double coordFactor = angs ? 1.0 : BOHR_TO_ANGSTROM_D;
   string buffer;
   while (getline(in, buffer)) {
-    if (Io::contains(buffer, "CHARGE") ||Io::contains(buffer, "------"))
+    if (Core::contains(buffer, "CHARGE") || Core::contains(buffer, "------"))
       continue;
     else if (buffer == "\n") // Our work here is done.
       return;
-    vector<string> parts = Io::split(buffer, ' ');
+    vector<string> parts = Core::split(buffer, ' ');
     if (parts.size() != 5) {
       appendError("Poorly formed atom line: " + buffer);
       return;
@@ -131,16 +131,16 @@ void GAMESSUSOutput::readAtomBlock(std::istream &in, Core::Molecule &molecule,
     bool ok(false);
     Vector3 pos;
     unsigned char atomicNumber(
-          static_cast<unsigned char>(Io::lexicalCast<int>(parts[1], ok)));
+          static_cast<unsigned char>(Core::lexicalCast<int>(parts[1], ok)));
     if (!ok)
       appendError("Failed to cast to int for atomic number: " + parts[1]);
-    pos.x() = Io::lexicalCast<Real>(parts[2], ok) * coordFactor;
+    pos.x() = Core::lexicalCast<Real>(parts[2], ok) * coordFactor;
     if (!ok)
       appendError("Failed to cast to double for position: " + parts[2]);
-    pos.y() = Io::lexicalCast<Real>(parts[3], ok) * coordFactor;
+    pos.y() = Core::lexicalCast<Real>(parts[3], ok) * coordFactor;
     if (!ok)
       appendError("Failed to cast to double for position: " + parts[3]);
-    pos.z() = Io::lexicalCast<Real>(parts[4], ok) * coordFactor;
+    pos.z() = Core::lexicalCast<Real>(parts[4], ok) * coordFactor;
     if (!ok)
       appendError("Failed to cast to double for position: " + parts[4]);
     Atom atom = molecule.addAtom(atomicNumber);
@@ -158,12 +158,12 @@ void GAMESSUSOutput::readBasisSet(std::istream &in)
   bool header(true);
   while (getline(in, buffer)) {
     if (header) { // Skip the header lines until we hit the last header line.
-      if (Io::contains(buffer, "SHELL"))
+      if (Core::contains(buffer, "SHELL"))
         header = false;
       continue;
     }
-    vector<string> parts = Io::split(buffer, ' ');
-    if (Io::contains(buffer, "TOTAL NUMBER OF BASIS SET SHELLS")) {
+    vector<string> parts = Core::split(buffer, ' ');
+    if (Core::contains(buffer, "TOTAL NUMBER OF BASIS SET SHELLS")) {
       // End of the basis set block.
       return;
     }
@@ -205,13 +205,13 @@ void GAMESSUSOutput::readBasisSet(std::istream &in)
       int numGTOs(0);
       while (parts.size() == 5 || parts.size() == 6) {
         ++numGTOs;
-        m_a.push_back(Io::lexicalCast<double>(parts[3]));
-        m_c.push_back(Io::lexicalCast<double>(parts[4]));
+        m_a.push_back(Core::lexicalCast<double>(parts[3]));
+        m_c.push_back(Core::lexicalCast<double>(parts[4]));
         if (shellType == GaussianSet::SP && parts.size() == 6)
-          m_csp.push_back(Io::lexicalCast<double>(parts[5]));
+          m_csp.push_back(Core::lexicalCast<double>(parts[5]));
         if (!getline(in, buffer))
           break;
-        parts = Io::split(buffer, ' ');
+        parts = Core::split(buffer, ' ');
       }
       // Now add this to our data structure.
       m_shellNums.push_back(numGTOs);
@@ -227,12 +227,13 @@ void GAMESSUSOutput::readEigenvectors(std::istream &in)
   getline(in, buffer);
   getline(in, buffer);
   getline(in, buffer);
-  vector<string> parts = Io::split(buffer, ' ');
+  vector<string> parts = Core::split(buffer, ' ');
   vector< vector<double> > eigenvectors;
   bool ok(false);
   size_t numberOfMos(0);
   bool newBlock(true);
-  while (!Io::contains(buffer, "END OF") || Io::contains(buffer, "--------")) {
+  while (!Core::contains(buffer, "END OF")
+         || Core::contains(buffer, "--------")) {
     // Any line with actual information in it will contain >= 5 parts.
     if (parts.size() > 5 && buffer.substr(0, 16) != "                ") {
       if (newBlock) {
@@ -246,7 +247,7 @@ void GAMESSUSOutput::readEigenvectors(std::istream &in)
         newBlock = false;
       }
       for (size_t i = 0; i < parts.size() - 4; ++i) {
-        eigenvectors[i].push_back(Io::lexicalCast<double>(parts[i + 4], ok));
+        eigenvectors[i].push_back(Core::lexicalCast<double>(parts[i + 4], ok));
         if (!ok)
           appendError("Failed to cast to double for eigenvector: " + parts[i]);
       }
@@ -257,7 +258,7 @@ void GAMESSUSOutput::readEigenvectors(std::istream &in)
     }
     if (!getline(in, buffer))
       break;
-    parts = Io::split(buffer, ' ');
+    parts = Core::split(buffer, ' ');
   }
   for (size_t i = 0; i < eigenvectors.size(); ++i)
     for (size_t j = 0; j < eigenvectors[i].size(); ++j)

@@ -5,7 +5,6 @@ set(tests
   FileFormatManager
   Hdf5
   Mdl
-  Utilities
   Xyz
   )
 
