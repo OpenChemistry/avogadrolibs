@@ -17,6 +17,7 @@
 #include "inputgeneratorwidget.h"
 #include "ui_inputgeneratorwidget.h"
 
+#include <avogadro/qtgui/batchjob.h>
 #include <avogadro/qtgui/filebrowsewidget.h>
 #include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/molecule.h>
@@ -61,6 +62,7 @@ InputGeneratorWidget::InputGeneratorWidget(QWidget *parent_) :
   m_ui(new Ui::InputGeneratorWidget),
   m_molecule(NULL),
   m_updatePending(false),
+  m_batchMode(false),
   m_inputGenerator(QString())
 {
   m_ui->setupUi(this);
@@ -97,6 +99,39 @@ void InputGeneratorWidget::setMolecule(QtGui::Molecule *mol)
 
   updateTitlePlaceholder();
   updatePreviewTextImmediately();
+}
+
+bool InputGeneratorWidget::configureBatchJob(BatchJob &batch) const
+{
+  if (!m_batchMode)
+    return false;
+
+  QJsonObject mqOpts = promptForBatchJobOptions();
+  if (mqOpts.empty())
+    return false;
+
+  QJsonObject calcOpts;
+  calcOpts[QLatin1String("options")] = collectOptions();
+
+  batch.setInputGeneratorOptions(calcOpts);
+  batch.setMoleQueueOptions(mqOpts);
+
+  qDebug() << "Calc Opts:\n" << QString(QJsonDocument(calcOpts).toJson());
+  qDebug() << "Job Opts:\n" << QString(QJsonDocument(mqOpts).toJson());
+
+  return true;
+}
+
+void InputGeneratorWidget::setBatchMode(bool m)
+{
+  if (m_batchMode != m) {
+    m_batchMode = m;
+    foreach (QTextEdit *edit, m_textEdits)
+      edit->setReadOnly(m_batchMode);
+    m_ui->computeButton->setVisible(!m_batchMode);
+    m_ui->generateButton->setVisible(!m_batchMode);
+    m_ui->closeButton->setText(m_batchMode ? tr("Continue") : tr("Close"));
+  }
 }
 
 void InputGeneratorWidget::showEvent(QShowEvent *e)
@@ -577,6 +612,34 @@ void InputGeneratorWidget::saveDirectory()
             tr("Failed to write to file %1.").arg(file.fileName()));
     }
   }
+}
+
+QJsonObject InputGeneratorWidget::promptForBatchJobOptions() const
+{
+  // Verify that molequeue is running:
+  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  if (!mqManager.connectIfNeeded()) {
+    QMessageBox::information(this->parentWidget(),
+                             tr("Cannot connect to MoleQueue"),
+                             tr("Cannot connect to MoleQueue server. Please "
+                                "ensure that it is running and try again."));
+    return QJsonObject();
+  }
+
+  QString coresString;
+  int numCores = optionString("Processor Cores", coresString)
+      ? coresString.toInt() : 1;
+
+  MoleQueue::JobObject job;
+  job.setProgram(m_inputGenerator.displayName());
+  job.setValue("numberOfCores", numCores);
+
+  if (!MoleQueueDialog::promptForJobOptions(this->parentWidget(),
+                                            tr("Configure Job"), job)) {
+    return QJsonObject();
+  }
+
+  return job.json();
 }
 
 void InputGeneratorWidget::connectButtons()
