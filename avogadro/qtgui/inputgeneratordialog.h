@@ -22,10 +22,12 @@
 #include <avogadro/core/avogadrocore.h>
 
 #include <avogadro/qtgui/avogadroqtguiexport.h>
+#include <avogadro/qtgui/inputgeneratorwidget.h>
+
+#include <QtCore/QSharedPointer>
 
 namespace Avogadro {
 namespace QtGui {
-class InputGeneratorWidget;
 class Molecule;
 
 namespace Ui {
@@ -44,6 +46,8 @@ class AVOGADROQTGUI_EXPORT InputGeneratorDialog : public QDialog
   Q_OBJECT
 
 public:
+  class BatchOptions;
+
   explicit InputGeneratorDialog(QWidget *parent_ = 0);
   explicit InputGeneratorDialog(const QString &scriptFileName,
                                 QWidget *parent_ = 0);
@@ -63,6 +67,34 @@ public:
   const InputGeneratorWidget& widget() const;
   /** @} */
 
+  /**
+   * Used to configure batch jobs.
+   *
+   * When performing the same calculation on a number of molecules, this method
+   * will ask the user to configure a calculation using the current molecule and
+   * input generator settings. After the calculation settings are accepted, a
+   * MoleQueueDialog is used to set job options. Both calculation and job
+   * options are collected in the returned BatchOptions object.
+   *
+   * Errors are handled internally. User cancellation is indicated by this
+   * method returning an uninitialized BatchOptions object -- use
+   * BatchOptions::isValid to check if the user canceled.
+   *
+   * The returned BatchOptions object, if valid, is used in subsequent calls to
+   * submitNextJobInBatch(), which will submit jobs using the configured options
+   * for individual molecules.
+   */
+  BatchOptions collectBatchOptions();
+
+  /**
+   * Using the BatchOptions obtained from a call to collectBatchOptions(),
+   * construct and submit a new job that uses the Molecule @a mol as input.
+   *
+   * Returns false if an error occurs.
+   */
+  bool submitNextJobInBatch(const QtGui::Molecule &mol,
+                            const BatchOptions &options);
+
 public slots:
   /**
    * Set the molecule used in the simulation.
@@ -73,6 +105,33 @@ private:
   Ui::InputGeneratorDialog *ui;
 };
 
+/**
+ * Object to hold calculation and job options for batch job submissions.
+ */
+class AVOGADROQTGUI_EXPORT InputGeneratorDialog::BatchOptions
+{
+public:
+  friend class InputGeneratorDialog;
+  BatchOptions() : options(NULL) {}
+  BatchOptions(const BatchOptions &other) : options(other.options) {}
+  BatchOptions& operator=(const BatchOptions &o)
+  {
+    options = o.options;
+    return *this;
+  }
+
+  bool isValid() const { return !options.isNull(); }
+
+  friend void swap(BatchOptions &lhs, BatchOptions &rhs)
+  {
+    using std::swap;
+    swap(lhs.options, rhs.options);
+  }
+
+protected:
+  typedef QSharedPointer<InputGeneratorWidget::BatchOptions> DataType;
+  DataType options;
+};
 
 } // namespace QtGui
 } // namespace Avogadro
