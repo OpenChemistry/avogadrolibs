@@ -27,7 +27,7 @@ InputGeneratorDialog::InputGeneratorDialog(QWidget *parent_)
     ui(new Ui::InputGeneratorDialog)
 {
   ui->setupUi(this);
-  connect(ui->widget, SIGNAL(closeClicked()), SLOT(close()));
+  connect(ui->widget, SIGNAL(closeClicked()), SLOT(accept()));
 }
 
 InputGeneratorDialog::InputGeneratorDialog(const QString &scriptFileName,
@@ -36,10 +36,8 @@ InputGeneratorDialog::InputGeneratorDialog(const QString &scriptFileName,
     ui(new Ui::InputGeneratorDialog)
 {
   ui->setupUi(this);
-  ui->widget->setInputGeneratorScript(scriptFileName);
-  setWindowTitle(tr("%1 Input Generator")
-                 .arg(ui->widget->inputGenerator().displayName()));
-  connect(ui->widget, SIGNAL(closeClicked()), SLOT(close()));
+  connect(ui->widget, SIGNAL(closeClicked()), SLOT(accept()));
+  this->setInputGeneratorScript(scriptFileName);
 }
 
 InputGeneratorDialog::~InputGeneratorDialog()
@@ -65,6 +63,16 @@ InputGeneratorWidget &InputGeneratorDialog::widget()
 const InputGeneratorWidget &InputGeneratorDialog::widget() const
 {
   return *ui->widget;
+}
+
+bool InputGeneratorDialog::configureBatchJob(BatchJob &batch)
+{
+  ui->widget->setBatchMode(true);
+  DialogCode reply = static_cast<DialogCode>(exec());
+  if (reply != Accepted)
+    return false;
+
+  return ui->widget->configureBatchJob(batch);
 }
 
 void InputGeneratorDialog::setMolecule(Molecule *mol)

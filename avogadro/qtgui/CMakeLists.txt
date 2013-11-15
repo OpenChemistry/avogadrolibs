@@ -26,6 +26,7 @@ configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h")
 
 set(HEADERS
+  batchjob.h
   customelementdialog.h
   elementtranslator.h
   extensionplugin.h
@@ -49,6 +50,7 @@ set(HEADERS
 )
 
 set(SOURCES
+  batchjob.cpp
   customelementdialog.cpp
   elementdetail_p.cpp
   elementitem_p.cpp

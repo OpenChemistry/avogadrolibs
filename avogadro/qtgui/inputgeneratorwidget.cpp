@@ -17,6 +17,7 @@
 #include "inputgeneratorwidget.h"
 #include "ui_inputgeneratorwidget.h"
 
+#include <avogadro/qtgui/batchjob.h>
 #include <avogadro/qtgui/filebrowsewidget.h>
 #include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/molecule.h>
@@ -61,6 +62,7 @@ InputGeneratorWidget::InputGeneratorWidget(QWidget *parent_) :
   m_ui(new Ui::InputGeneratorWidget),
   m_molecule(NULL),
   m_updatePending(false),
+  m_batchMode(false),
   m_inputGenerator(QString())
 {
   m_ui->setupUi(this);
@@ -92,11 +94,58 @@ void InputGeneratorWidget::setMolecule(QtGui::Molecule *mol)
 
   m_molecule = mol;
 
-  connect(mol, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
-  connect(mol, SIGNAL(changed(unsigned int)), SLOT(updateTitlePlaceholder()));
+  if (mol) {
+    connect(mol, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
+    connect(mol, SIGNAL(changed(unsigned int)), SLOT(updateTitlePlaceholder()));
+  }
 
   updateTitlePlaceholder();
   updatePreviewTextImmediately();
+}
+
+bool InputGeneratorWidget::configureBatchJob(BatchJob &batch) const
+{
+  if (!m_batchMode)
+    return false;
+
+  QJsonObject mqOpts = promptForBatchJobOptions();
+  if (mqOpts.empty())
+    return false;
+
+  MoleQueue::JobObject job;
+  job.fromJson(mqOpts);
+
+  QJsonObject calcOpts;
+  calcOpts[QLatin1String("options")] = collectOptions();
+
+  // Set job description from title:
+  QString description;
+  if (!optionString("Title", description) || description.isEmpty())
+    description = generateJobTitle();
+  job.setDescription(description);
+
+  mqOpts = job.json();
+
+  batch.setInputGeneratorOptions(calcOpts);
+  batch.setMoleQueueOptions(mqOpts);
+
+  qDebug() << "Calc Opts:\n" << QString(QJsonDocument(calcOpts).toJson());
+  qDebug() << "Job Opts:\n" << QString(QJsonDocument(mqOpts).toJson());
+
+  return true;
+}
+
+void InputGeneratorWidget::setBatchMode(bool m)
+{
+  if (m_batchMode != m) {
+    m_batchMode = m;
+    foreach (QTextEdit *edit, m_textEdits)
+      edit->setReadOnly(m_batchMode);
+    m_ui->computeButton->setVisible(!m_batchMode);
+    m_ui->generateButton->setVisible(!m_batchMode);
+    m_ui->closeButton->setText(m_batchMode ? tr("Continue") : tr("Close"));
+    updateTitlePlaceholder();
+  }
 }
 
 void InputGeneratorWidget::showEvent(QShowEvent *e)
@@ -577,6 +626,34 @@ void InputGeneratorWidget::saveDirectory()
             tr("Failed to write to file %1.").arg(file.fileName()));
     }
   }
+}
+
+QJsonObject InputGeneratorWidget::promptForBatchJobOptions() const
+{
+  // Verify that molequeue is running:
+  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  if (!mqManager.connectIfNeeded()) {
+    QMessageBox::information(this->parentWidget(),
+                             tr("Cannot connect to MoleQueue"),
+                             tr("Cannot connect to MoleQueue server. Please "
+                                "ensure that it is running and try again."));
+    return QJsonObject();
+  }
+
+  QString coresString;
+  int numCores = optionString("Processor Cores", coresString)
+      ? coresString.toInt() : 1;
+
+  MoleQueue::JobObject job;
+  job.setProgram(m_inputGenerator.displayName());
+  job.setValue("numberOfCores", numCores);
+
+  if (!MoleQueueDialog::promptForJobOptions(this->parentWidget(),
+                                            tr("Configure Job"), job)) {
+    return QJsonObject();
+  }
+
+  return job.json();
 }
 
 void InputGeneratorWidget::connectButtons()
@@ -1111,9 +1188,6 @@ QString InputGeneratorWidget::generateJobTitle() const
   QString basis;
   bool haveBasis(optionString("Basis", basis));
 
-  QString formula(m_molecule ? QString::fromStdString(m_molecule->formula())
-                             : tr("[no molecule]"));
-
   // Merge theory/basis into theory
   if (haveBasis) {
     if (haveTheory)
@@ -1122,6 +1196,17 @@ QString InputGeneratorWidget::generateJobTitle() const
     theory.replace(QRegExp("\\s+"), "");
     haveTheory = true;
   }
+
+  if (m_batchMode) {
+    QString result;
+    result = haveCalculation ? calculation : QString();
+    result += haveTheory ? (result.size() != 0 ? " | " : QString()) + theory
+                         : QString();
+    return result;
+  }
+
+  QString formula(m_molecule ? QString::fromStdString(m_molecule->formula())
+                             : tr("[no molecule]"));
 
   return QString("%1%2%3").arg(formula)
       .arg(haveCalculation ? " | " + calculation : QString())

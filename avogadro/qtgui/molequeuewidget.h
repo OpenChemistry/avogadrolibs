@@ -131,6 +131,20 @@ public:
    */
   bool requestJobLookup();
 
+  /**
+   * @return A JobObject with the GUI options. Any settings in jobTemplate that
+   * are not handled by the GUI are passed through untouched to the new object.
+   */
+  MoleQueue::JobObject configuredJob() const;
+
+  /**
+   * If the widget is in 'batch mode', options that don't make sense are hidden
+   * (such as 'open output when finished').
+   */
+  void setBatchMode(bool batch);
+  bool batchMode() const;
+  /**@}*/
+
 public slots:
   /**
    * Query the MoleQueue server (if available) for the list of available queues
@@ -181,12 +195,6 @@ private:
   void listenForLookupJobReply(bool listen = true);
   void listenForJobSubmitReply(bool listen = true);
   void listenForJobStateChange(bool listen = true);
-
-  /**
-   * @return A JobObject with the GUI options. Any settings in jobTemplate that
-   * are not handled by the GUI are passed through untouched to the new object.
-   */
-  MoleQueue::JobObject configuredJob() const;
 
 private:
   Ui::MoleQueueWidget *m_ui;
