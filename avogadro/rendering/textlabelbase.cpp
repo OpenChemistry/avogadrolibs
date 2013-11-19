@@ -270,6 +270,16 @@ TextLabelBase::TextLabelBase()
 {
 }
 
+TextLabelBase::TextLabelBase(const TextLabelBase &other)
+  : Drawable(other),
+    m_text(other.m_text),
+    m_textProperties(other.m_textProperties),
+    m_imageDimensions(other.m_imageDimensions),
+    m_imageRgba(other.m_imageRgba),
+    m_render(new RenderImpl)
+{
+}
+
 TextLabelBase::~TextLabelBase()
 {
   delete m_render;
@@ -359,6 +369,13 @@ void TextLabelBase::setRadiusInternal(float radius)
 float TextLabelBase::getRadiusInternal() const
 {
   return m_render->radius;
+}
+
+void TextLabelBase::markDirty()
+{
+  m_render->shadersInvalid = true;
+  m_render->textureInvalid = true;
+  m_render->vboInvalid = true;
 }
 
 } // namespace Rendering
