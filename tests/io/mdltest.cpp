@@ -25,6 +25,7 @@
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
+using Avogadro::Core::Variant;
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::MdlFormat;
 
@@ -36,7 +37,7 @@ TEST(MdlTest, readFile)
                                 "/data/ethane.mol", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(mdl.error(), "");
-  EXPECT_EQ(molecule.data("name").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
 }
 

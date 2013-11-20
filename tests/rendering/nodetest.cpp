@@ -18,8 +18,6 @@
 
 #include <avogadro/rendering/groupnode.h>
 
-#include <iostream>
-
 using Avogadro::Rendering::Node;
 using Avogadro::Rendering::GroupNode;
 

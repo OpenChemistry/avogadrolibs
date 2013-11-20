@@ -30,6 +30,7 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::UnitCell;
+using Avogadro::Core::Variant;
 using Avogadro::Io::CjsonFormat;
 using Avogadro::MatrixX;
 
@@ -41,10 +42,10 @@ TEST(CjsonTest, readFile)
                                 "/data/ethane.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
-  EXPECT_EQ(molecule.data("name").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
 
-  EXPECT_EQ(molecule.data("inchi").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("inchi").type(), Variant::String);
   EXPECT_EQ(molecule.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
 

@@ -17,11 +17,12 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/atom.h>
-#include <avogadro/core/bond.h>
 #include <avogadro/core/hydrogentools.h>
 #include <avogadro/core/molecule.h>
 
-using namespace Avogadro::Core;
+using Avogadro::Core::Atom;
+using Avogadro::Core::HydrogenTools;
+using Avogadro::Core::Molecule;
 
 TEST(HydrogenToolsTest, removeAllHydrogens)
 {

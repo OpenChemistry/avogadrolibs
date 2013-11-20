@@ -18,15 +18,17 @@
 
 #include <avogadro/core/variantmap.h>
 
+using Avogadro::Core::VariantMap;
+
 TEST(VariantMapTest, size)
 {
-  Avogadro::Core::VariantMap map;
+  VariantMap map;
   EXPECT_EQ(map.size(), static_cast<size_t>(0));
 }
 
 TEST(VariantMapTest, isEmpty)
 {
-  Avogadro::Core::VariantMap map;
+  VariantMap map;
   EXPECT_EQ(map.isEmpty(), true);
 
   map.setValue("value1", 1);

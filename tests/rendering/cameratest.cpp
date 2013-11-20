@@ -42,7 +42,7 @@ TEST(CameraTest, perspective)
               0.0f, 0.0f, -1.22222f, -2.22222f,
               0.0f, 0.0f, -1.0f, 0.0f;
   EXPECT_TRUE(camera.projection().matrix().isApprox(expected));
-  // If it is incorrect, lets print out the result.
+  // If it is incorrect then print out the result.
   if (!camera.projection().matrix().isApprox(expected)) {
     std::cout << "Error: No match\n" << camera.projection().matrix()
               << "\nexpected\n" << expected << std::endl;
@@ -61,7 +61,7 @@ TEST(CameraTest, orthographic)
               0.0f, 0.0f,-2.0f,-1.0f,
               0.0f, 0.0f, 0.0f, 1.0f;
   EXPECT_TRUE(camera.projection().matrix().isApprox(expected));
-  // If it is incorrect, lets print out the result.
+  // If it is incorrect then print out the result.
   if (!camera.projection().matrix().isApprox(expected)) {
     std::cout << "Error: No match\n" << camera.projection().matrix()
               << "\nexpected\n" << expected << std::endl;

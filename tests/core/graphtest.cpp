@@ -18,18 +18,20 @@
 
 #include <avogadro/core/graph.h>
 
+using Avogadro::Core::Graph;
+
 TEST(GraphTest, size)
 {
-  Avogadro::Core::Graph graph;
+  Graph graph;
   EXPECT_EQ(graph.size(), static_cast<size_t>(0));
 
-  Avogadro::Core::Graph graph2(12);
+  Graph graph2(12);
   EXPECT_EQ(graph2.size(), static_cast<size_t>(12));
 }
 
 TEST(GraphTest, setSize)
 {
-  Avogadro::Core::Graph graph;
+  Graph graph;
   EXPECT_EQ(graph.size(), static_cast<size_t>(0));
 
   graph.setSize(100);
@@ -41,7 +43,7 @@ TEST(GraphTest, setSize)
 
 TEST(GraphTest, isEmpty)
 {
-  Avogadro::Core::Graph graph;
+  Graph graph;
   EXPECT_EQ(graph.isEmpty(), true);
 
   graph.addVertex();
@@ -57,7 +59,7 @@ TEST(GraphTest, clear)
 
 TEST(GraphTest, addVertex)
 {
-  Avogadro::Core::Graph graph;
+  Graph graph;
   size_t index = graph.addVertex();
   EXPECT_EQ(index, 0);
   EXPECT_EQ(graph.size(), static_cast<size_t>(1));
@@ -71,7 +73,7 @@ TEST(GraphTest, addVertex)
 
 TEST(GraphTest, removeVertex)
 {
-  Avogadro::Core::Graph graph(4);
+  Graph graph(4);
   EXPECT_EQ(graph.size(), static_cast<size_t>(4));
 
   graph.removeVertex(0);
@@ -83,7 +85,7 @@ TEST(GraphTest, removeVertex)
 
 TEST(GraphTest, vertexCount)
 {
-  Avogadro::Core::Graph graph;
+  Graph graph;
   EXPECT_EQ(graph.vertexCount(), static_cast<size_t>(0));
 
   graph.addVertex();
@@ -101,7 +103,7 @@ TEST(GraphTest, vertexCount)
 
 TEST(GraphTest, addEdge)
 {
-  Avogadro::Core::Graph graph(5);
+  Graph graph(5);
   EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(0));
 
   graph.addEdge(0, 1);
@@ -115,14 +117,14 @@ TEST(GraphTest, addEdge)
 
 TEST(GraphTest, removeEdge)
 {
-  Avogadro::Core::Graph graph(5);
+  Graph graph(5);
   graph.addEdge(0, 1);
   graph.addEdge(1, 4);
 }
 
 TEST(GraphTest, edgeCount)
 {
-  Avogadro::Core::Graph graph(3);
+  Graph graph(3);
   EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(0));
 
   graph.addEdge(0, 1);
@@ -143,7 +145,7 @@ TEST(GraphTest, edgeCount)
 
 TEST(GraphTest, connectedComponents)
 {
-  Avogadro::Core::Graph graph(6);
+  Graph graph(6);
   EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(6));
 
   graph.addEdge(0, 1);
