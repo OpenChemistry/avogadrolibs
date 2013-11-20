@@ -434,6 +434,31 @@ TEST_F(MoleculeTest, uniqueBondRestore)
   EXPECT_EQ(molecule.bondByUniqueId(uid[2]).order(), 3);
 }
 
+TEST_F(MoleculeTest, atomCount)
+{
+  Molecule mol;
+  mol.addAtom(8);
+  mol.addAtom(1);
+  mol.addAtom(1);
+  // Check the total count, and the counts of specific elements.
+  EXPECT_EQ(mol.atomCount(), 3);
+  EXPECT_EQ(mol.atomCount(1), 2);
+  EXPECT_EQ(mol.atomCount(8), 1);
+  EXPECT_EQ(mol.atomCount(42), 0);
+}
+
+TEST_F(MoleculeTest, mass)
+{
+  Molecule mol;
+  EXPECT_DOUBLE_EQ(mol.mass(), 0.0);
+  Atom a = mol.addAtom(8);
+  mol.addAtom(1);
+  mol.addAtom(1);
+  EXPECT_DOUBLE_EQ(mol.mass(), 18.01528);
+  a.setAtomicNumber(9);
+  EXPECT_DOUBLE_EQ(mol.mass(), 21.01428);
+}
+
 TEST_F(MoleculeTest, persistentBond)
 {
   Molecule molecule;
