@@ -19,7 +19,6 @@
 #include "qtguitests.h"
 
 #include <avogadro/qtgui/filebrowsewidget.h>
-#include <avogadro/qtgui/inputgenerator.h>
 #include <avogadro/qtgui/inputgeneratorwidget.h>
 #include <avogadro/qtgui/molecule.h>
 
@@ -34,7 +33,9 @@
 #include <QtCore/QFile>
 #include <QtCore/QTimer>
 
-using namespace Avogadro::QtGui;
+using Avogadro::QtGui::FileBrowseWidget;
+using Avogadro::QtGui::InputGeneratorWidget;
+using Avogadro::QtGui::Molecule;
 
 namespace {
 

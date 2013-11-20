@@ -21,7 +21,10 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/core/color3f.h>
 
-using namespace Avogadro::Core;
+using Avogadro::Vector3f;
+using Avogadro::Core::Array;
+using Avogadro::Core::Color3f;
+using Avogadro::Core::Mesh;
 
 class MeshTest : public testing::Test {
 public:
@@ -33,14 +36,14 @@ protected:
 
 MeshTest::MeshTest()
 {
-  Array<Avogadro::Vector3f> vertices;
-  Array<Avogadro::Vector3f> normals;
+  Array<Vector3f> vertices;
+  Array<Vector3f> normals;
   Array<Color3f> colors;
 
   Color3f color = Color3f(23, 23, 23);
   colors.push_back(color);
 
-  Avogadro::Vector3f vec(1.2f, 1.3f, 1.4f);
+  Vector3f vec(1.2f, 1.3f, 1.4f);
 
   vertices.push_back(vec);
   normals.push_back(vec);

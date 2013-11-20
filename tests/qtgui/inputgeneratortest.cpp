@@ -29,7 +29,8 @@
 #include <qjsonarray.h>
 #include <qjsonobject.h>
 
-using namespace Avogadro::QtGui;
+using Avogadro::QtGui::GenericHighlighter;
+using Avogadro::QtGui::InputGenerator;
 
 TEST(InputGeneratorTest, exercise)
 {

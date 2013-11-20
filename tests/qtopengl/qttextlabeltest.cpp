@@ -44,6 +44,8 @@ using Avogadro::Rendering::TextLabel2D;
 using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
 using Avogadro::Rendering::SphereGeometry;
+using Avogadro::QtOpenGL::GLWidget;
+using Avogadro::VtkTesting::ImageRegressionTest;
 
 int qttextlabeltest(int argc, char *argv[])
 {
@@ -54,7 +56,7 @@ int qttextlabeltest(int argc, char *argv[])
 
   // Create and show widget
   QApplication app(argc, argv);
-  Avogadro::QtOpenGL::GLWidget widget;
+  GLWidget widget;
   widget.setGeometry(10, 10, 500, 500);
   widget.show();
 
@@ -195,7 +197,7 @@ int qttextlabeltest(int argc, char *argv[])
   QImage image = widget.grabFrameBuffer(false);
 
   // Set up the image regression test.
-  Avogadro::VtkTesting::ImageRegressionTest test(argc, argv);
+  ImageRegressionTest test(argc, argv);
 
   // Do the image threshold test, printing output to the std::cout for ctest.
   return test.imageThresholdTest(image, std::cout);

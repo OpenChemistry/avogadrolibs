@@ -25,6 +25,7 @@
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
+using Avogadro::Core::Variant;
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
 
@@ -40,10 +41,10 @@ TEST(FileFormatManagerTest, readFile)
   delete format;
   format = NULL;
 
-  EXPECT_EQ(molecule.data("name").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
 
-  EXPECT_EQ(molecule.data("inchi").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("inchi").type(), Variant::String);
   EXPECT_EQ(molecule.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
 
@@ -70,9 +71,9 @@ TEST(FileFormatManagerTest, readFileGuessCml)
   FileFormatManager::instance().readFile(molecule,
                                          std::string(AVOGADRO_DATA)
                                          + "/data/ethane.cml");
-  EXPECT_EQ(molecule.data("name").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
-  EXPECT_EQ(molecule.data("inchi").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("inchi").type(), Variant::String);
   EXPECT_EQ(molecule.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
 
@@ -82,9 +83,9 @@ TEST(FileFormatManagerTest, readFileGuessCjson)
   FileFormatManager::instance().readFile(molecule,
                                          std::string(AVOGADRO_DATA)
                                          + "/data/ethane.cjson");
-  EXPECT_EQ(molecule.data("name").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
-  EXPECT_EQ(molecule.data("inchi").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("inchi").type(), Variant::String);
   EXPECT_EQ(molecule.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
 
@@ -131,14 +132,14 @@ TEST(FileFormatManagerTest, writeStringCjson)
   FileFormatManager::instance().readString(cjsonMol, cjson, "cjson");
   FileFormatManager::instance().readString(cmlMol, cml, "cml");
 
-  EXPECT_EQ(cjsonMol.data("name").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(cjsonMol.data("name").type(), Variant::String);
   EXPECT_EQ(cjsonMol.data("name").toString(), "Ethane");
-  EXPECT_EQ(cjsonMol.data("inchi").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(cjsonMol.data("inchi").type(), Variant::String);
   EXPECT_EQ(cjsonMol.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 
-  EXPECT_EQ(cmlMol.data("name").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(cmlMol.data("name").type(), Variant::String);
   EXPECT_EQ(cmlMol.data("name").toString(), "Ethane");
-  EXPECT_EQ(cmlMol.data("inchi").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(cmlMol.data("inchi").type(), Variant::String);
   EXPECT_EQ(cmlMol.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
 

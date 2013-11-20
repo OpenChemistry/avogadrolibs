@@ -25,7 +25,7 @@
 #include <QtGui/QTextDocumentFragment>
 #include <QtGui/QTextLayout>
 
-using namespace Avogadro::QtGui;
+using Avogadro::QtGui::GenericHighlighter;
 
 namespace {
 

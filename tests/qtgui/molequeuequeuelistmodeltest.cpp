@@ -20,7 +20,7 @@
 
 #include <QtCore/QListIterator>
 
-using namespace Avogadro::QtGui;
+using Avogadro::QtGui::MoleQueueQueueListModel;
 
 // Allow access to protected members (like ctor, setQueueList)
 class MoleQueueQueueListModelTestBridge

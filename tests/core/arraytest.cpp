@@ -22,7 +22,7 @@ using Avogadro::Core::Array;
 
 TEST(ArrayTest, setSize)
 {
-  Avogadro::Core::Array<int> array;
+  Array<int> array;
 
   EXPECT_EQ(array.size(), static_cast<size_t>(0));
 
@@ -38,7 +38,7 @@ TEST(ArrayTest, isEmpty)
 
 TEST(ArrayTest, push_back)
 {
-  Avogadro::Core::Array<int> array;
+  Array<int> array;
   array.push_back(6);
   EXPECT_EQ(array.size(), static_cast<size_t>(1));
   array.push_back(9);
@@ -47,7 +47,7 @@ TEST(ArrayTest, push_back)
 
 TEST(ArrayTest, clear)
 {
-  Avogadro::Core::Array<int> array;
+  Array<int> array;
   array.push_back(6);
   EXPECT_EQ(array.size(), static_cast<size_t>(1));
   array.push_back(9);
