@@ -316,7 +316,7 @@ TEST_F(MoleculeTest, persistentAtom)
   molecule.addBond(a1, a2, 1);
   molecule.addBond(a1, a3, 2);
 
-  PersistentAtom pa1(&molecule, molecule.atomUniqueId(a1));
+  PersistentAtom pa1(a1);
   PersistentAtom pa2(&molecule, molecule.atomUniqueId(a2));
   PersistentAtom pa3(&molecule, molecule.atomUniqueId(a3));
   EXPECT_EQ(pa1.uniqueIdentifier(), 0);
@@ -353,7 +353,7 @@ TEST_F(MoleculeTest, persistentAtomRestore)
   molecule.addBond(a1, a2, 1);
   molecule.addBond(a1, a3, 2);
 
-  PersistentAtom pa1(&molecule, molecule.atomUniqueId(a1));
+  PersistentAtom pa1(a1);
   PersistentAtom pa2(&molecule, molecule.atomUniqueId(a2));
 
   molecule.removeAtom(pa2.atom());
@@ -449,8 +449,9 @@ TEST_F(MoleculeTest, persistentBond)
   b[4] = molecule.addBond(a2, a3, 1);
 
   PersistentBond pbond[5];
-  for (int i = 0; i < 5; ++i)
-    pbond[i].set(&molecule, molecule.bondUniqueId(b[i]));
+  for (int i = 0; i < 4; ++i)
+    pbond[i].set(b[i]);
+  pbond[4].set(&molecule, molecule.bondUniqueId(b[4]));
   EXPECT_EQ(pbond[0].bond().order(), 1);
   EXPECT_EQ(pbond[1].bond().order(), 2);
   EXPECT_EQ(pbond[2].bond().order(), 3);

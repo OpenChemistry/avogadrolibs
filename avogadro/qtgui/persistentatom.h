@@ -37,10 +37,16 @@ public:
    * @param m The molecule the persistent atom belongs to.
    * @param uniqueId The unique identifier for the atom.
    */
-  PersistentAtom(Molecule *m = NULL, Index uniqueId = -1)
+  explicit PersistentAtom(Molecule *m = NULL, Index uniqueId = -1)
     : m_molecule(m), m_uniqueId(uniqueId)
   {
   }
+
+  /**
+   * @brief Create a persistent atom from a standard atom object.
+   * @param a The atom that a persistent reference should be created for.
+   */
+  explicit PersistentAtom(const Core::Atom &a);
 
   /**
    * @brief Set the molecule and unique ID for the persistent object.
@@ -48,6 +54,12 @@ public:
    * @param uniqueId The unique ID of the atom.
    */
   void set(Molecule *m, Index uniqueId);
+
+  /**
+   * @brief Set the persistent atom from a standard atom object.
+   * @param a The atom that a persistent reference should be created for.
+   */
+  void set(const Core::Atom &a);
 
   /**
    * @return True if the persistent atom is valid.
@@ -76,10 +88,22 @@ private:
   Index m_uniqueId;
 };
 
+inline PersistentAtom::PersistentAtom(const Core::Atom &a)
+  : m_molecule(dynamic_cast<QtGui::Molecule *>(a.molecule()))
+{
+  m_uniqueId = m_molecule ? m_molecule->atomUniqueId(a) : -1;
+}
+
 inline void PersistentAtom::set(Molecule *m, Index uniqueId)
 {
   m_molecule = m;
   m_uniqueId = uniqueId;
+}
+
+inline void PersistentAtom::set(const Core::Atom &a)
+{
+  m_molecule = dynamic_cast<QtGui::Molecule *>(a.molecule());
+  m_uniqueId = m_molecule ? m_molecule->atomUniqueId(a) : -1;;
 }
 
 inline bool PersistentAtom::isValid() const
