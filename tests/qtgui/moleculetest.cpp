@@ -525,9 +525,7 @@ TEST_F(MoleculeTest, persistentBondRestore)
 TEST_F(MoleculeTest, copy)
 {
   Molecule copy(m_testMolecule);
-
-  assertEqual(static_cast<const Avogadro::Core::Molecule &>(m_testMolecule),
-      static_cast<const Avogadro::Core::Molecule &>(copy));
+  assertEqual(m_testMolecule, copy);
 
   EXPECT_EQ(copy.atomByUniqueId(0).atomicNumber(), 8);
   EXPECT_EQ(copy.atomByUniqueId(1).atomicNumber(), 1);
@@ -544,9 +542,7 @@ TEST_F(MoleculeTest, assignment)
 {
   Molecule assign;
   assign = m_testMolecule;
-
-  assertEqual(static_cast<const Avogadro::Core::Molecule &>(m_testMolecule),
-      static_cast<const Avogadro::Core::Molecule &>(assign));
+  assertEqual(m_testMolecule, assign);
 
   EXPECT_EQ(assign.atomByUniqueId(0).atomicNumber(), 8);
   EXPECT_EQ(assign.atomByUniqueId(1).atomicNumber(), 1);
@@ -614,8 +610,7 @@ TEST_F(MoleculeTest, baseAssignment)
 
   qtMolecule = baseMolecule;
 
-  assertEqual(baseMolecule,
-      static_cast<const Avogadro::Core::Molecule &>(qtMolecule));
+  assertEqual(baseMolecule, qtMolecule);
 
   // Check the ids have reset
   EXPECT_EQ(qtMolecule.atomByUniqueId(0).atomicNumber(), o1.atomicNumber());
@@ -623,12 +618,12 @@ TEST_F(MoleculeTest, baseAssignment)
   EXPECT_EQ(qtMolecule.atomByUniqueId(2).atomicNumber(), h3.atomicNumber());
   EXPECT_FALSE(qtMolecule.atomByUniqueId(3).isValid());
   EXPECT_EQ(qtMolecule.bondByUniqueId(0).atom1().atomicNumber(),
-      b[0].atom1().atomicNumber());
+            b[0].atom1().atomicNumber());
   EXPECT_EQ(qtMolecule.bondByUniqueId(0).atom2().atomicNumber(),
-        b[0].atom2().atomicNumber());
+            b[0].atom2().atomicNumber());
   EXPECT_EQ(qtMolecule.bondByUniqueId(1).atom1().atomicNumber(),
-        b[1].atom1().atomicNumber());
+            b[1].atom1().atomicNumber());
   EXPECT_EQ(qtMolecule.bondByUniqueId(1).atom2().atomicNumber(),
-        b[1].atom2().atomicNumber());
+            b[1].atom2().atomicNumber());
   EXPECT_FALSE(qtMolecule.bondByUniqueId(2).isValid());
 }

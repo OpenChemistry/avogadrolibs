@@ -35,7 +35,6 @@ protected:
   Molecule m_testMolecule;
 };
 
-
 MoleculeTest::MoleculeTest()
 {
   Atom o1 = m_testMolecule.addAtom(8);
@@ -83,19 +82,19 @@ MoleculeTest::MoleculeTest()
 
 TEST_F(MoleculeTest, size)
 {
-  Avogadro::Core::Molecule molecule;
+  Molecule molecule;
   EXPECT_EQ(molecule.size(), static_cast<size_t>(0));
 }
 
 TEST_F(MoleculeTest, isEmpty)
 {
-  Avogadro::Core::Molecule molecule;
+  Molecule molecule;
   EXPECT_EQ(molecule.isEmpty(), true);
 }
 
 TEST_F(MoleculeTest, addAtom)
 {
-  Avogadro::Core::Molecule molecule;
+  Molecule molecule;
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(0));
 
   Avogadro::Core::Atom atom = molecule.addAtom(6);
