@@ -17,6 +17,8 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/persistentatom.h>
+#include <avogadro/qtgui/persistentbond.h>
 #include <avogadro/core/array.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/color3f.h>
@@ -25,6 +27,8 @@
 #include "utils.h"
 
 using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::PersistentAtom;
+using Avogadro::QtGui::PersistentBond;
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
@@ -84,9 +88,6 @@ MoleculeTest::MoleculeTest()
   mesh->setOtherMesh(1);
   mesh->setStable(false);
 }
-
-
-
 
 TEST_F(MoleculeTest, size)
 {
@@ -306,6 +307,71 @@ TEST_F(MoleculeTest, uniqueAtomRestore)
   EXPECT_TRUE(molecule.atomByUniqueId(uid2).isValid());
 }
 
+TEST_F(MoleculeTest, persistentAtom)
+{
+  Molecule molecule;
+  Atom a1 = molecule.addAtom(5);
+  Atom a2 = molecule.addAtom(6);
+  Atom a3 = molecule.addAtom(7);
+  molecule.addBond(a1, a2, 1);
+  molecule.addBond(a1, a3, 2);
+
+  PersistentAtom pa1(a1);
+  PersistentAtom pa2(&molecule, molecule.atomUniqueId(a2));
+  PersistentAtom pa3(&molecule, molecule.atomUniqueId(a3));
+  EXPECT_EQ(pa1.uniqueIdentifier(), 0);
+  EXPECT_EQ(pa2.uniqueIdentifier(), 1);
+  EXPECT_EQ(pa3.uniqueIdentifier(), 2);
+
+  molecule.removeAtom(a2);
+
+  Atom a4 = molecule.addAtom(8);
+  PersistentAtom pa4(&molecule, molecule.atomUniqueId(a4));
+  EXPECT_EQ(pa4.uniqueIdentifier(), 3);
+  molecule.addBond(a1, a4, 1);
+
+  // Check we can get the invalid atom, and also resolve the unique IDs to the
+  // correct atom objects from their peristent atom containers.
+  Atom test = pa1.atom();
+  EXPECT_TRUE(a1 == test);
+  test = pa2.atom();
+  EXPECT_FALSE(pa2.isValid());
+  EXPECT_FALSE(test.isValid());
+  test = pa4.atom();
+  EXPECT_FALSE(a1 == test);
+  EXPECT_TRUE(a4 == test);
+  EXPECT_TRUE(a2 != test);
+  EXPECT_EQ(test.atomicNumber(), 8);
+}
+
+TEST_F(MoleculeTest, persistentAtomRestore)
+{
+  Molecule molecule;
+  Atom a1 = molecule.addAtom(5);
+  Atom a2 = molecule.addAtom(6);
+  Atom a3 = molecule.addAtom(7);
+  molecule.addBond(a1, a2, 1);
+  molecule.addBond(a1, a3, 2);
+
+  PersistentAtom pa1(a1);
+  PersistentAtom pa2(&molecule, molecule.atomUniqueId(a2));
+
+  molecule.removeAtom(pa2.atom());
+
+  Atom a4 = molecule.addAtom(8);
+  molecule.addBond(a1, a4, 1);
+
+  // Check we can get the invalid atom, and also resolve the unique IDs to the
+  // correct atom objects from their persistent atom containers.
+  Atom test = pa1.atom();
+  EXPECT_TRUE(a1 == test);
+  test = pa2.atom();
+  EXPECT_FALSE(test.isValid());
+  test = molecule.addAtom(8, pa2.uniqueIdentifier());
+  EXPECT_TRUE(test.isValid());
+  EXPECT_TRUE(pa2.isValid());
+}
+
 TEST_F(MoleculeTest, uniqueBond)
 {
   Molecule molecule;
@@ -391,6 +457,69 @@ TEST_F(MoleculeTest, mass)
   EXPECT_DOUBLE_EQ(mol.mass(), 18.01528);
   a.setAtomicNumber(9);
   EXPECT_DOUBLE_EQ(mol.mass(), 21.01428);
+}
+
+TEST_F(MoleculeTest, persistentBond)
+{
+  Molecule molecule;
+  Atom a1 = molecule.addAtom(5);
+  Atom a2 = molecule.addAtom(6);
+  Atom a3 = molecule.addAtom(7);
+  Atom a4 = molecule.addAtom(8);
+  Bond b[5];
+  b[0] = molecule.addBond(a1, a2, 1);
+  b[1] = molecule.addBond(a1, a3, 2);
+  b[2] = molecule.addBond(a1, a4, 3);
+  b[3] = molecule.addBond(a4, a3, 2);
+  b[4] = molecule.addBond(a2, a3, 1);
+
+  PersistentBond pbond[5];
+  for (int i = 0; i < 4; ++i)
+    pbond[i].set(b[i]);
+  pbond[4].set(&molecule, molecule.bondUniqueId(b[4]));
+  EXPECT_EQ(pbond[0].bond().order(), 1);
+  EXPECT_EQ(pbond[1].bond().order(), 2);
+  EXPECT_EQ(pbond[2].bond().order(), 3);
+  EXPECT_EQ(pbond[3].bond().order(), 2);
+  EXPECT_EQ(pbond[4].bond().order(), 1);
+  molecule.removeBond(b[2]);
+  EXPECT_EQ(pbond[0].bond().order(), 1);
+  EXPECT_EQ(pbond[1].bond().order(), 2);
+  EXPECT_TRUE(pbond[4].isValid());
+  EXPECT_FALSE(pbond[2].isValid());
+  EXPECT_EQ(pbond[3].bond().order(), 2);
+  EXPECT_EQ(pbond[4].bond().order(), 1);
+  EXPECT_EQ(pbond[3].bond(), b[3]);
+}
+
+TEST_F(MoleculeTest, persistentBondRestore)
+{
+  Molecule molecule;
+  Atom a1 = molecule.addAtom(5);
+  Atom a2 = molecule.addAtom(6);
+  Atom a3 = molecule.addAtom(7);
+  Atom a4 = molecule.addAtom(8);
+  Bond b[5];
+  b[0] = molecule.addBond(a1, a2, 1);
+  b[1] = molecule.addBond(a1, a3, 2);
+  b[2] = molecule.addBond(a1, a4, 3);
+  b[3] = molecule.addBond(a4, a3, 2);
+  b[4] = molecule.addBond(a2, a3, 1);
+
+  PersistentBond pbond[5];
+  for (int i = 0; i < 5; ++i)
+    pbond[i].set(&molecule, molecule.bondUniqueId(b[i]));
+  molecule.removeBond(b[2]);
+  EXPECT_EQ(pbond[0].bond().order(), 1);
+  EXPECT_EQ(pbond[1].bond().order(), 2);
+  EXPECT_TRUE(pbond[4].isValid());
+  EXPECT_FALSE(pbond[2].isValid());
+  EXPECT_EQ(pbond[3].bond().order(), 2);
+  EXPECT_EQ(pbond[4].bond().order(), 1);
+  EXPECT_EQ(pbond[3].bond(), b[3]);
+  molecule.addBond(a1, a4, 3, pbond[2].uniqueIdentifier());
+  EXPECT_TRUE(pbond[2].isValid());
+  EXPECT_EQ(pbond[2].bond().order(), 3);
 }
 
 TEST_F(MoleculeTest, copy)

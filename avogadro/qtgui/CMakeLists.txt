@@ -42,6 +42,8 @@ set(HEADERS
   molequeuequeuelistmodel.h
   molequeuewidget.h
   periodictableview.h
+  persistentatom.h
+  persistentbond.h
   pythonscript.h
   sceneplugin.h
   scenepluginmodel.h
