@@ -123,6 +123,11 @@ void ScenePluginModel::clear()
   m_scenePlugins.clear();
 }
 
+QList<ScenePlugin *> ScenePluginModel::scenePlugins() const
+{
+  return m_scenePlugins;
+}
+
 QList<ScenePlugin *> ScenePluginModel::activeScenePlugins() const
 {
   QList<ScenePlugin *> result;
