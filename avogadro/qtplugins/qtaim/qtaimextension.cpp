@@ -765,6 +765,9 @@ namespace QtPlugins {
       break;
     }
 
+    emit requestActiveTool("Navigator");
+    emit requestActiveDisplayTypes(QStringList() << "QTAIMScenePlugin");
+
     return;
   }
 

@@ -53,6 +53,7 @@ public:
 
   void clear();
 
+  QList<ScenePlugin *> scenePlugins() const;
   QList<ScenePlugin *> activeScenePlugins() const;
 
 signals:
