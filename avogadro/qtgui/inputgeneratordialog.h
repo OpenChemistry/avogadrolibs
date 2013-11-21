@@ -22,10 +22,11 @@
 #include <avogadro/core/avogadrocore.h>
 
 #include <avogadro/qtgui/avogadroqtguiexport.h>
+#include <avogadro/qtgui/inputgeneratorwidget.h>
 
 namespace Avogadro {
 namespace QtGui {
-class InputGeneratorWidget;
+class BatchJob;
 class Molecule;
 
 namespace Ui {
@@ -63,6 +64,33 @@ public:
   const InputGeneratorWidget& widget() const;
   /** @} */
 
+  /**
+   * Used to configure batch jobs.
+   *
+   * When performing the same calculation on a number of molecules, this method
+   * will ask the user to configure a calculation using the current molecule and
+   * input generator settings. After the calculation settings are accepted, a
+   * MoleQueueDialog is used to set job options. Both calculation and job
+   * options are stored in the supplied BatchJob object.
+   *
+   * Errors are handled internally. User cancellation is indicated by this
+   * method returning false.
+   *
+   * To submit jobs using the configured options, call BatchJob::submitNextJob
+   * for each molecule.
+   *
+   * Typical usage:
+~~~
+  BatchJob *batch = ...;
+  InputGeneratorDialog dlg(scriptFilePath, windowParent);
+  dlg.setMolecule(&refMol); // Representative molecule as placeholder in GUI.
+  dlg.configureBatchJob(*batch);
+  foreach(mol)
+    batch->submitNextJob(mol);
+~~~
+   */
+  bool configureBatchJob(BatchJob &batch);
+
 public slots:
   /**
    * Set the molecule used in the simulation.
@@ -72,7 +100,6 @@ public slots:
 private:
   Ui::InputGeneratorDialog *ui;
 };
-
 
 } // namespace QtGui
 } // namespace Avogadro
