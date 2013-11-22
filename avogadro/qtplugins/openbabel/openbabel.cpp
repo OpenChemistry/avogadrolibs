@@ -485,7 +485,12 @@ void OpenBabel::onOptimizeGeometryFinished(const QByteArray &output)
     return;
   }
 
-  std::swap(mol.atomPositions3d(), m_molecule->atomPositions3d());
+  size_t atomIndex = 0;
+  for (std::vector<Vector3>::const_iterator it = mol.atomPositions3d().begin(),
+       itEnd = mol.atomPositions3d().end(); it != itEnd; ++it) {
+    m_molecule->setAtomPosition3d(atomIndex++, *it);
+  }
+
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified);
   m_progress->reset();
 }

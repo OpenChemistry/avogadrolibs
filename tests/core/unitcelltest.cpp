@@ -254,9 +254,11 @@ TEST(UnitCellTest, fractionalCoordinates)
   EXPECT_TRUE(std::fabs(fcoords[5][1] - static_cast<Real>(0)) < 1e-4);
   EXPECT_TRUE(std::fabs(fcoords[5][2] - static_cast<Real>(1)) < 1e-4);
 
-  mol.atomPositions3d().clear();
+  // Invalidate positions:
+  for (size_t atomIndex = 0; atomIndex < mol.atomCount(); ++atomIndex)
+    mol.setAtomPosition3d(atomIndex, Vector3());
   EXPECT_TRUE(CrystalTools::setFractionalCoordinates(mol, fcoords));
-  std::vector<Vector3> ccoords = mol.atomPositions3d();
+  const std::vector<Vector3> &ccoords = mol.atomPositions3d();
   for (int i = 0; i < 6; ++i) {
     for (int j = 0; j < 3; ++j) {
       EXPECT_FLOAT_EQ(static_cast<float>(ccoords_ref[i][j]),

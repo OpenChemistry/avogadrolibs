@@ -43,6 +43,8 @@ class UnitCell;
 
 class AVOGADROCORE_EXPORT Molecule
 {
+  friend class Atom;
+  friend class Bond;
 public:
   /** Type for custom element map. */
   typedef std::map<unsigned char, std::string> CustomElementMap;
@@ -66,7 +68,7 @@ public:
   bool isEmpty() const;
 
   /** Sets the data value with @p name to @p value. */
-  void setData(const std::string &name, const Variant &value);
+  virtual void setData(const std::string &name, const Variant &value);
 
   /** Returns the data value for @p name. */
   Variant data(const std::string &name) const;
@@ -77,48 +79,51 @@ public:
   bool hasData(const std::string &name) const;
 
   /** Set the molecule's variant data to the entries in map. */
-  void setDataMap(const VariantMap &map);
+  virtual void setDataMap(const VariantMap &map);
 
   /** Return the molecule's variant data. */
   const VariantMap& dataMap() const;
 
-  /** \overload */
-  VariantMap& dataMap();
+  /**
+   * Set the atomic number of atom @a atomIndex to @a number.
+   * @return false if @a atomIndex is out of range.
+   */
+  bool setAtomicNumber(size_t atomIndex, unsigned char number);
 
-  /** Returns a vector of atomic numbers for the atoms in the moleucle. */
-  std::vector<unsigned char>& atomicNumbers();
-
-  /** \overload */
+  /** Returns a vector of atomic numbers for the atoms in the molecule. */
   const std::vector<unsigned char>& atomicNumbers() const;
+
+  /**
+   * Set the 2D position of atom @a atomIndex to @a pos.
+   * @return false if @a atomIndex is out of range.
+   */
+  bool setAtomPosition2d(size_t atomIndex, const Vector2 &pos);
 
   /** Returns a vector of 2d atom positions for the atoms in the molecule. */
   const std::vector<Vector2>& atomPositions2d() const;
 
-  /** \overload */
-  std::vector<Vector2>& atomPositions2d();
+  /**
+   * Set the 3D position of atom @a atomIndex to @a pos.
+   * @return false if @a atomIndex is out of range.
+   */
+  bool setAtomPosition3d(size_t atomIndex, const Vector3 &pos);
 
   /** Returns a vector of 2d atom positions for the atoms in the molecule. */
   const std::vector<Vector3>& atomPositions3d() const;
 
-  /** \overload */
-  std::vector<Vector3>& atomPositions3d();
-
   /** Returns a vector of pairs of atom indices of the bonds in the molecule. */
-  std::vector<std::pair<size_t, size_t> >& bondPairs();
-
-  /** \overload */
   const std::vector<std::pair<size_t, size_t> >& bondPairs() const;
 
-  /** Returns a vector of the bond orders for the bonds in the molecule. */
-  std::vector<unsigned char>& bondOrders();
+  /**
+   * Set the order of bond @a bondIndex to @a order.
+   * @return false if @a bondIndex is out of range.
+   */
+  bool setBondOrder(size_t bondIndex, unsigned char order);
 
-  /** \overload */
+  /** Returns a vector of the bond orders for the bonds in the molecule. */
   const std::vector<unsigned char>& bondOrders() const;
 
   /** Returns the graph for the molecule. */
-  Graph& graph();
-
-  /** \overload */
   const Graph& graph() const;
 
   /** A map of custom element atomic numbers to string identifiers. These ids
@@ -131,7 +136,7 @@ public:
    * @sa hasCustomElements
    * @{ */
   const CustomElementMap & customElementMap() const;
-  void setCustomElementMap(const CustomElementMap &map);
+  virtual void setCustomElementMap(const CustomElementMap &map);
   /** @} */
 
   /**
@@ -270,8 +275,8 @@ public:
    * The unit cell for this molecule. May be NULL for non-periodic structures.
    * @{
    */
-  void setUnitCell(UnitCell *uc);
-  UnitCell *unitCell() { return m_unitCell; }
+  virtual void setUnitCell(UnitCell *uc);
+  virtual UnitCell *unitCell() { return m_unitCell; }
   const UnitCell *unitCell() const { return m_unitCell; }
   /** @} */
 
@@ -298,7 +303,88 @@ protected:
 
   /** Update the graph to correspond to the current molecule. */
   void updateGraph() const;
+
+  /** Internal methods for use by proxies. No bounds checking. @{ */
+  virtual void setAtomicNumberInternal(size_t atomIndex, unsigned char number);
+  virtual void setAtomPosition2dInternal(size_t atomIndex, const Vector2 &pos);
+  virtual void setAtomPosition3dInternal(size_t atomIndex, const Vector3 &pos);
+  virtual void setBondOrderInternal(size_t bondIndex, unsigned char order);
+  /**@*/
 };
+
+inline bool Molecule::setAtomicNumber(size_t atomIndex, unsigned char number)
+{
+  if (atomIndex < atomCount()) {
+    setAtomicNumberInternal(atomIndex, number);
+    return true;
+  }
+  return false;
+}
+
+inline bool Molecule::setAtomPosition2d(size_t atomIndex, const Vector2 &pos)
+{
+  if (atomIndex < atomCount()) {
+    setAtomPosition2dInternal(atomIndex, pos);
+    return true;
+  }
+  return false;
+}
+
+inline bool Molecule::setAtomPosition3d(size_t atomIndex, const Vector3 &pos)
+{
+  if (atomIndex < atomCount()) {
+    setAtomPosition3dInternal(atomIndex, pos);
+    return true;
+  }
+  return false;
+}
+
+inline bool Molecule::setBondOrder(size_t bondIndex, unsigned char order)
+{
+  if (bondIndex < bondCount()) {
+    setBondOrderInternal(bondIndex, order);
+    return true;
+  }
+  return false;
+}
+
+inline size_t Molecule::atomCount() const
+{
+  return m_atomicNumbers.size();
+}
+
+inline size_t Molecule::bondCount() const
+{
+  return m_bondPairs.size();
+}
+
+inline void Molecule::setAtomicNumberInternal(size_t atomIndex,
+                                              unsigned char number)
+{
+  m_atomicNumbers[atomIndex] = number;
+}
+
+inline void Molecule::setAtomPosition2dInternal(size_t atomIndex,
+                                                const Vector2 &pos)
+{
+  if (atomIndex >= m_positions2d.size())
+    m_positions2d.resize(atomIndex + 1);
+  m_positions2d[atomIndex] = pos;
+}
+
+inline void Molecule::setAtomPosition3dInternal(size_t atomIndex,
+                                                const Vector3 &pos)
+{
+  if (atomIndex >= m_positions3d.size())
+    m_positions3d.resize(atomIndex + 1);
+  m_positions3d[atomIndex] = pos;
+}
+
+inline void Molecule::setBondOrderInternal(size_t bondIndex,
+                                           unsigned char order)
+{
+  m_bondOrders[bondIndex] = order;
+}
 
 } // end Core namespace
 } // end Avogadro namespace

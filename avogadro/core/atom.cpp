@@ -50,7 +50,7 @@ size_t Atom::index() const
 
 void Atom::setAtomicNumber(unsigned char number)
 {
-  m_molecule->atomicNumbers()[m_index] = number;
+  m_molecule->setAtomicNumberInternal(m_index, number);
 }
 
 unsigned char Atom::atomicNumber() const
@@ -60,10 +60,7 @@ unsigned char Atom::atomicNumber() const
 
 void Atom::setPosition2d(const Vector2 &pos)
 {
-  std::vector<Vector2> &positions = m_molecule->atomPositions2d();
-  if (m_index >= positions.size())
-    positions.resize(m_index + 1);
-  positions[m_index] = pos;
+  m_molecule->setAtomPosition2dInternal(m_index, pos);
 }
 
 Vector2 Atom::position2d() const
@@ -77,10 +74,7 @@ Vector2 Atom::position2d() const
 
 void Atom::setPosition3d(const Vector3 &pos)
 {
-  std::vector<Vector3> &positions = m_molecule->atomPositions3d();
-  if (m_index >= positions.size())
-    positions.resize(m_index + 1);
-  positions[m_index] = pos;
+  m_molecule->setAtomPosition3dInternal(m_index, pos);
 }
 
 Vector3 Atom::position3d() const

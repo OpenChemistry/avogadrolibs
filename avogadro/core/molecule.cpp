@@ -119,24 +119,9 @@ const VariantMap &Molecule::dataMap() const
   return m_data;
 }
 
-VariantMap &Molecule::dataMap()
-{
-  return m_data;
-}
-
-std::vector<unsigned char>& Molecule::atomicNumbers()
-{
-  return m_atomicNumbers;
-}
-
 const std::vector<unsigned char>& Molecule::atomicNumbers() const
 {
   return m_atomicNumbers;
-}
-
-std::vector<Vector2>& Molecule::atomPositions2d()
-{
-  return m_positions2d;
 }
 
 const std::vector<Vector2>& Molecule::atomPositions2d() const
@@ -144,19 +129,9 @@ const std::vector<Vector2>& Molecule::atomPositions2d() const
   return m_positions2d;
 }
 
-std::vector<Vector3>& Molecule::atomPositions3d()
-{
-  return m_positions3d;
-}
-
 const std::vector<Vector3>& Molecule::atomPositions3d() const
 {
   return m_positions3d;
-}
-
-std::vector<std::pair<size_t, size_t> >& Molecule::bondPairs()
-{
-  return m_bondPairs;
 }
 
 const std::vector<std::pair<size_t, size_t> >& Molecule::bondPairs() const
@@ -164,20 +139,9 @@ const std::vector<std::pair<size_t, size_t> >& Molecule::bondPairs() const
   return m_bondPairs;
 }
 
-std::vector<unsigned char>& Molecule::bondOrders()
-{
-  return m_bondOrders;
-}
-
 const std::vector<unsigned char>& Molecule::bondOrders() const
 {
   return m_bondOrders;
-}
-
-Graph& Molecule::graph()
-{
-  updateGraph();
-  return m_graph;
 }
 
 const Graph& Molecule::graph() const
@@ -276,11 +240,6 @@ Atom Molecule::atom(size_t index) const
 {
   assert(index < size());
   return Atom(const_cast<Molecule*>(this), index);
-}
-
-size_t Molecule::atomCount() const
-{
-  return m_atomicNumbers.size();
 }
 
 size_t Molecule::atomCount(unsigned char atomicNumber) const
@@ -383,11 +342,6 @@ std::vector<Bond> Molecule::bonds(const Atom &a)
     if (m_bondPairs[i].first == atomIndex || m_bondPairs[i].second == atomIndex)
       atomBonds.push_back(Bond(this, i));
   return atomBonds;
-}
-
-size_t Molecule::bondCount() const
-{
-  return m_bondPairs.size();
 }
 
 Mesh* Molecule::addMesh()

@@ -25,31 +25,18 @@
 namespace Avogadro {
 namespace Core {
 
-namespace {
-struct WrapAtomsToCellFunctor
-{
-  const UnitCell &unitCell;
-
-  WrapAtomsToCellFunctor(Molecule &molecule)
-    : unitCell(*molecule.unitCell())
-  {
-  }
-
-  void operator()(Vector3 &pos)
-  {
-    unitCell.wrapCartesian(pos, pos);
-  }
-};
-}
-
 bool CrystalTools::wrapAtomsToUnitCell(Molecule &molecule)
 {
-  if (!molecule.unitCell())
+  const UnitCell *cell = molecule.unitCell();
+  if (!cell)
     return false;
 
-  std::for_each(molecule.atomPositions3d().begin(),
-                molecule.atomPositions3d().end(),
-                WrapAtomsToCellFunctor(molecule));
+  typedef std::vector<Vector3> PosVector;
+  const PosVector &v = molecule.atomPositions3d();
+  size_t atomIndex = 0;
+  for (PosVector::const_iterator i = v.begin(), end = v.end(); i < end; ++i)
+    molecule.setAtomPosition3d(atomIndex++, cell->wrapCartesian(*i));
+
   return true;
 }
 
@@ -603,19 +590,6 @@ bool CrystalTools::isNiggliReduced(const Molecule &molecule)
   return true;
 }
 
-namespace {
-struct TransformAtomsFunctor
-{
-  TransformAtomsFunctor(const Matrix3 &t) : transform(t) { }
-  const Matrix3 &transform;
-
-  void operator()(Vector3 &pos)
-  {
-    pos = transform * pos;
-  }
-};
-}
-
 bool CrystalTools::setCellMatrix(Molecule &molecule,
                                  const Matrix3 &newCellColMatrix,
                                  Options opt)
@@ -625,9 +599,11 @@ bool CrystalTools::setCellMatrix(Molecule &molecule,
     const Matrix3 xform((newCellColMatrix
                          * molecule.unitCell()->cellMatrix().inverse())
                         .transpose());
-    std::for_each(molecule.atomPositions3d().begin(),
-                  molecule.atomPositions3d().end(),
-                  TransformAtomsFunctor(xform));
+    typedef std::vector<Vector3> PosVec;
+    const PosVec &v = molecule.atomPositions3d();
+    size_t atomIndex = 0;
+    for (PosVec::const_iterator i = v.begin(), end = v.end(); i != end; ++i)
+      molecule.setAtomPosition3d(atomIndex++, xform * (*i));
   }
 
   if (!molecule.unitCell())
@@ -680,37 +656,21 @@ bool CrystalTools::fractionalCoordinates(const Molecule &molecule,
   return fractionalCoordinates(*molecule.unitCell(), coords, coords);
 }
 
-namespace {
-struct SetFractionalCoordinatesFunctor
-{
-  const UnitCell &unitCell;
-
-  SetFractionalCoordinatesFunctor(const Molecule &molecule)
-    : unitCell(*molecule.unitCell())
-  {
-  }
-
-  Vector3 operator()(const Vector3 &pos)
-  {
-    return unitCell.toCartesian(pos);
-  }
-};
-}
-
 bool CrystalTools::setFractionalCoordinates(Molecule &molecule,
                                             const std::vector<Vector3> &coords)
 {
-  if (!molecule.unitCell())
+  const UnitCell *cell = molecule.unitCell();
+  if (!cell)
     return false;
 
-  if (coords.size() != molecule.atomCount())
+  size_t numAtoms = molecule.atomCount();
+
+  if (coords.size() != numAtoms)
     return false;
 
-  std::vector<Vector3> &output = molecule.atomPositions3d();
-  output.resize(coords.size());
-
-  std::transform(coords.begin(), coords.end(), output.begin(),
-                 SetFractionalCoordinatesFunctor(molecule));
+  std::vector<Vector3>::const_iterator it(coords.begin());
+  for (size_t atomIndex = 0; atomIndex < numAtoms; ++atomIndex)
+    molecule.setAtomPosition3d(atomIndex, cell->toCartesian(*it++));
 
   return true;
 }

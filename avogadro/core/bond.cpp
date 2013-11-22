@@ -72,7 +72,7 @@ Atom Bond::atom2() const
 
 void Bond::setOrder(unsigned char o)
 {
-  m_molecule->bondOrders()[m_index] = o;
+  m_molecule->setBondOrderInternal(m_index, o);
 }
 
 unsigned char Bond::order() const

@@ -54,29 +54,10 @@ void CustomElementDialog::resolve(QWidget *p, Molecule &mol)
     dlg.apply();
 }
 
-namespace {
-struct RemapAtomicNumbers
-{
-  typedef std::map<unsigned char, unsigned char> MapType;
-  const MapType &map;
-
-  RemapAtomicNumbers(const MapType& m) : map(m) {}
-  RemapAtomicNumbers(const RemapAtomicNumbers &o) : map(o.map) {}
-
-  unsigned char operator()(unsigned char old) const
-  {
-    if (Core::isCustomElement(old)) {
-      MapType::const_iterator it = map.find(old);
-      return it == map.end() ? old : it->second;
-    }
-    return old;
-  }
-};
-}
-
 void CustomElementDialog::apply()
 {
-  RemapAtomicNumbers::MapType oldToNew;
+  typedef std::map<unsigned char, unsigned char> RemapType;
+  RemapType oldToNew;
   Molecule::CustomElementMap newMap;
   const Molecule::CustomElementMap &oldMap = m_molecule.customElementMap();
   unsigned char newIdGenerator = CustomElementMin;
@@ -101,9 +82,17 @@ void CustomElementDialog::apply()
   }
 
   if (newMap.size() != oldMap.size()) {
-    std::vector<unsigned char> &atomicNumbers = m_molecule.atomicNumbers();
-    std::transform(atomicNumbers.begin(), atomicNumbers.end(),
-                   atomicNumbers.begin(), RemapAtomicNumbers(oldToNew));
+    const std::vector<unsigned char> &atomicNums = m_molecule.atomicNumbers();
+    size_t atomIndex = 0;
+    const RemapType::const_iterator invalidMatch = oldToNew.end();
+    for (std::vector<unsigned char>::const_iterator it = atomicNums.begin(),
+         itEnd = atomicNums.end(); it != itEnd; ++it, ++atomIndex) {
+      if (Core::isCustomElement(*it)) {
+        RemapType::const_iterator match = oldToNew.find(*it);
+        if (match != invalidMatch)
+          m_molecule.setAtomicNumber(atomIndex, match->second);
+      }
+    }
     m_molecule.setCustomElementMap(newMap);
     m_molecule.emitChanged(Molecule::Atoms | Molecule::Modified);
   }

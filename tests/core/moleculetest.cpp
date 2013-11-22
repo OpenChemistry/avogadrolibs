@@ -248,7 +248,7 @@ TEST_F(MoleculeTest, dataMap)
   VariantMap varMap = molecule.dataMap();
   varMap.setValue("SMILES", "CCO");
   molecule.setDataMap(varMap);
-  molecule.dataMap().setValue("CAS", "64-17-5");
+  molecule.setData("CAS", "64-17-5");
 
   std::vector<std::string> dataNames = molecule.dataMap().names();
   EXPECT_EQ(dataNames.size(), 4);
