@@ -31,12 +31,13 @@ namespace QtPlugins {
 PluginManager::PluginManager(QObject *p)
   : QObject(p), m_staticPluginsLoaded(false)
 {
+  QString libDir(AvogadroLibs_LIB_DIR);
   // http://doc.qt.digia.com/qt/deployment-plugins.html#debugging-plugins
   bool debugPlugins = !qgetenv("QT_DEBUG_PLUGINS").isEmpty();
 
   // The usual base directory is the parent directory of the executable's
   // location. (exe is in "bin" or "MacOS" and plugins are under the parent
-  // directory at "lib/avogadro2/plugins"...)
+  // directory at "<libDir>/avogadro2/plugins"...)
   QDir baseDir(QCoreApplication::applicationDirPath() + "/..");
 
 #ifdef __APPLE__
@@ -58,7 +59,8 @@ PluginManager::PluginManager(QObject *p)
   if (debugPlugins)
     qDebug() << "  baseDir:" << baseDir.absolutePath();
 
-  QDir pluginsDir(baseDir.absolutePath() + "/lib/avogadro2/plugins");
+  QDir pluginsDir(baseDir.absolutePath() + "/" + libDir
+                  + "/avogadro2/plugins");
   m_pluginDirs.append(pluginsDir.absolutePath());
 
   if (debugPlugins) {
