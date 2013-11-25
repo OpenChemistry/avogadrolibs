@@ -27,3 +27,5 @@ avogadro_plugin(QTAIMScenePlugin
   QTAIMEngine
   qtaimengine.cpp
 )
+
+target_link_libraries(QTAIMScenePlugin LINK_PRIVATE AvogadroRendering)

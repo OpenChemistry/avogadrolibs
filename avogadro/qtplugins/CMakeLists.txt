@@ -10,13 +10,15 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "${original_library_output_dir}/avogadro2/staticplugins")
 
+# The plugin manager needs to know the library directory to find plugins.
+add_definitions(-DAvogadroLibs_LIB_DIR=\"${INSTALL_LIBRARY_DIR}\")
+
 # Optionally build all plugins statically.
 option(BUILD_STATIC_PLUGINS "Build static plugins by default" ON)
 
 # Allow GPL plugins to be disabled.
 option(BUILD_GPL_PLUGINS
-  "Build plugins that are licensed under the GNU Public License." OFF
-)
+  "Build plugins that are licensed under the GNU Public License." OFF)
 
 # Create a plugin for Avogadro.
 # name is the name of the plugin, this will be the name of the target created.
