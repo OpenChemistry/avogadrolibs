@@ -29,6 +29,8 @@
 #include <avogadro/rendering/primitive.h>
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/persistentatom.h>
+#include <avogadro/qtgui/persistentbond.h>
 
 #include <avogadro/core/avogadrocore.h>
 
@@ -168,13 +170,9 @@ private:
   void updatePlaneSnapAngles();
   void updateSnappedPlaneNormal();
 
-  /// @todo use persistent bond/atom objects instead of raw uids:
-  int m_selectedBondId;
-  Core::Bond getSelectedBond() const;
-  int m_anchorAtomId;
-  Core::Atom getAnchorAtom() const;
-  int m_clickedAtomId;
-  Core::Atom getClickedAtom() const;
+  QtGui::PersistentBond m_selectedBond;
+  QtGui::PersistentAtom m_anchorAtom;
+  QtGui::PersistentAtom m_clickedAtom;
 };
 
 inline QString BondCentricTool::name() const

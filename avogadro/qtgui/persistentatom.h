@@ -37,7 +37,7 @@ public:
    * @param m The molecule the persistent atom belongs to.
    * @param uniqueId The unique identifier for the atom.
    */
-  explicit PersistentAtom(Molecule *m = NULL, Index uniqueId = -1)
+  explicit PersistentAtom(Molecule *m = NULL, Index uniqueId = MaxIndex)
     : m_molecule(m), m_uniqueId(uniqueId)
   {
   }
@@ -60,6 +60,11 @@ public:
    * @param a The atom that a persistent reference should be created for.
    */
   void set(const Core::Atom &a);
+
+  /**
+   * @brief Reset the the object to an invalid state.
+   */
+  void reset();
 
   /**
    * @return True if the persistent atom is valid.
@@ -91,7 +96,7 @@ private:
 inline PersistentAtom::PersistentAtom(const Core::Atom &a)
   : m_molecule(dynamic_cast<QtGui::Molecule *>(a.molecule()))
 {
-  m_uniqueId = m_molecule ? m_molecule->atomUniqueId(a) : -1;
+  m_uniqueId = m_molecule ? m_molecule->atomUniqueId(a) : MaxIndex;
 }
 
 inline void PersistentAtom::set(Molecule *m, Index uniqueId)
@@ -103,7 +108,12 @@ inline void PersistentAtom::set(Molecule *m, Index uniqueId)
 inline void PersistentAtom::set(const Core::Atom &a)
 {
   m_molecule = dynamic_cast<QtGui::Molecule *>(a.molecule());
-  m_uniqueId = m_molecule ? m_molecule->atomUniqueId(a) : -1;;
+  m_uniqueId = m_molecule ? m_molecule->atomUniqueId(a) : MaxIndex;
+}
+
+inline void PersistentAtom::reset()
+{
+  set(NULL, MaxIndex);
 }
 
 inline bool PersistentAtom::isValid() const
@@ -113,7 +123,7 @@ inline bool PersistentAtom::isValid() const
 
 inline Core::Atom PersistentAtom::atom() const
 {
-  return m_molecule->atomByUniqueId(m_uniqueId);
+  return m_molecule ? m_molecule->atomByUniqueId(m_uniqueId) : Core::Atom();
 }
 
 } // End of QtGui namespace

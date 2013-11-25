@@ -37,7 +37,7 @@ public:
    * @param m The molecule the persistent bond belongs to.
    * @param uniqueId The unique identifier for the bond.
    */
-  explicit PersistentBond(Molecule *m = NULL, Index uniqueId = -1)
+  explicit PersistentBond(Molecule *m = NULL, Index uniqueId = MaxIndex)
     : m_molecule(m), m_uniqueId(uniqueId)
   {
   }
@@ -60,6 +60,11 @@ public:
    * @param b The bond that a persistent reference should be created for.
    */
   void set(const Core::Bond &b);
+
+  /**
+   * @brief Reset the the object to an invalid state.
+   */
+  void reset();
 
   /**
    * @return True if the persistent bond is valid.
@@ -91,7 +96,7 @@ private:
 inline PersistentBond::PersistentBond(const Core::Bond &b)
   : m_molecule(dynamic_cast<QtGui::Molecule *>(b.molecule()))
 {
-  m_uniqueId = m_molecule ? m_molecule->bondUniqueId(b) : -1;
+  m_uniqueId = m_molecule ? m_molecule->bondUniqueId(b) : MaxIndex;
 }
 
 inline void PersistentBond::set(Molecule *m, Index uniqueId)
@@ -103,7 +108,12 @@ inline void PersistentBond::set(Molecule *m, Index uniqueId)
 inline void PersistentBond::set(const Core::Bond &b)
 {
   m_molecule = dynamic_cast<QtGui::Molecule *>(b.molecule());
-  m_uniqueId = m_molecule ? m_molecule->bondUniqueId(b) : -1;;
+  m_uniqueId = m_molecule ? m_molecule->bondUniqueId(b) : MaxIndex;
+}
+
+inline void PersistentBond::reset()
+{
+  set(NULL, MaxIndex);
 }
 
 inline bool PersistentBond::isValid() const
@@ -113,7 +123,7 @@ inline bool PersistentBond::isValid() const
 
 inline Core::Bond PersistentBond::bond() const
 {
-  return m_molecule->bondByUniqueId(m_uniqueId);
+  return m_molecule ? m_molecule->bondByUniqueId(m_uniqueId) : Core::Bond();
 }
 
 } // End of QtGui namespace

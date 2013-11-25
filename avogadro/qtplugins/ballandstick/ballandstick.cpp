@@ -52,7 +52,7 @@ void BallAndStick::process(const Molecule &molecule,
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
 
-  for (size_t i = 0; i < molecule.atomCount(); ++i) {
+  for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
     unsigned char atomicNumber = atom.atomicNumber();
     const unsigned char *c = Elements::color(atomicNumber);
@@ -67,7 +67,7 @@ void BallAndStick::process(const Molecule &molecule,
   cylinders->identifier().molecule = &molecule;
   cylinders->identifier().type = Rendering::BondType;
   geometry->addDrawable(cylinders);
-  for (size_t i = 0; i < molecule.bondCount(); ++i) {
+  for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();

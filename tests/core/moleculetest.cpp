@@ -24,6 +24,7 @@
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/mesh.h>
 
+using Avogadro::Index;
 using Avogadro::Vector2;
 using Avogadro::Vector3;
 using Avogadro::Vector3f;
@@ -93,7 +94,7 @@ MoleculeTest::MoleculeTest()
 TEST_F(MoleculeTest, size)
 {
   Molecule molecule;
-  EXPECT_EQ(molecule.size(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.size(), static_cast<Index>(0));
 }
 
 TEST_F(MoleculeTest, isEmpty)
@@ -105,17 +106,17 @@ TEST_F(MoleculeTest, isEmpty)
 TEST_F(MoleculeTest, addAtom)
 {
   Molecule molecule;
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(0));
 
   Avogadro::Core::Atom atom = molecule.addAtom(6);
   EXPECT_EQ(atom.isValid(), true);
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(1));
   EXPECT_EQ(atom.index(), 0);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(6));
 
   Avogadro::Core::Atom atom2 = molecule.addAtom(1);
   EXPECT_EQ(atom2.isValid(), true);
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(2));
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(2));
   EXPECT_EQ(atom2.index(), 1);
   EXPECT_EQ(atom2.atomicNumber(), static_cast<unsigned char>(1));
 }
@@ -149,15 +150,15 @@ TEST_F(MoleculeTest, removeAtom)
 TEST_F(MoleculeTest, addBond)
 {
   Molecule molecule;
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(0));
 
   Atom a = molecule.addAtom(1);
   Atom b = molecule.addAtom(1);
   Bond bondAB = molecule.addBond(a, b);
   EXPECT_TRUE(bondAB.isValid());
   EXPECT_EQ(bondAB.molecule(), &molecule);
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(1));
-  EXPECT_EQ(bondAB.index(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(1));
+  EXPECT_EQ(bondAB.index(), static_cast<Index>(0));
   EXPECT_EQ(bondAB.atom1().index(), a.index());
   EXPECT_EQ(bondAB.atom2().index(), b.index());
   EXPECT_EQ(bondAB.order(), static_cast<unsigned char>(1));
@@ -165,8 +166,8 @@ TEST_F(MoleculeTest, addBond)
   Atom c = molecule.addAtom(1);
   Bond bondBC = molecule.addBond(b, c, 2);
   EXPECT_TRUE(bondBC.isValid());
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(2));
-  EXPECT_EQ(bondBC.index(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(2));
+  EXPECT_EQ(bondBC.index(), static_cast<Index>(1));
   EXPECT_EQ(bondBC.order(), static_cast<unsigned char>(2));
 
   // try to lookup nonexistant bond

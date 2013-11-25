@@ -50,7 +50,7 @@ TEST(AtomTyper, singleAtomTyping)
   typer.setMolecule(&molecule);
 
   // Check that the single atom typing method works as expected
-  for (unsigned char i = 0; i < molecule.atomCount(); ++i) {
+  for (Avogadro::Index i = 0; i < molecule.atomCount(); ++i) {
     EXPECT_EQ(ref[i], typer.atomType(molecule.atom(i)))
               << "run(Atom): Mismatch at index " << i;
   }

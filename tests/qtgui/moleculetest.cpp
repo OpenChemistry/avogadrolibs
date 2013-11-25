@@ -34,6 +34,7 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Color3f;
 using Avogadro::Core::Mesh;
+using Avogadro::Index;
 
 class MoleculeTest : public testing::Test
 {
@@ -92,7 +93,7 @@ MoleculeTest::MoleculeTest()
 TEST_F(MoleculeTest, size)
 {
   Molecule molecule;
-  EXPECT_EQ(molecule.size(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.size(), static_cast<Index>(0));
 }
 
 TEST_F(MoleculeTest, isEmpty)
@@ -104,17 +105,17 @@ TEST_F(MoleculeTest, isEmpty)
 TEST_F(MoleculeTest, addAtom)
 {
   Molecule molecule;
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(0));
 
   Atom atom = molecule.addAtom(6);
   EXPECT_EQ(atom.isValid(), true);
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(1));
   EXPECT_EQ(atom.index(), 0);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(6));
 
   Atom atom2 = molecule.addAtom(1);
   EXPECT_EQ(atom2.isValid(), true);
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(2));
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(2));
   EXPECT_EQ(atom2.index(), 1);
   EXPECT_EQ(atom2.atomicNumber(), static_cast<unsigned char>(1));
 }
@@ -148,15 +149,15 @@ TEST_F(MoleculeTest, removeAtom)
 TEST_F(MoleculeTest, addBond)
 {
   Molecule molecule;
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(0));
 
   Atom a = molecule.addAtom(1);
   Atom b = molecule.addAtom(1);
   Bond bondAB = molecule.addBond(a, b);
   EXPECT_TRUE(bondAB.isValid());
   EXPECT_EQ(bondAB.molecule(), &molecule);
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(1));
-  EXPECT_EQ(bondAB.index(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(1));
+  EXPECT_EQ(bondAB.index(), static_cast<Index>(0));
   EXPECT_EQ(bondAB.atom1().index(), a.index());
   EXPECT_EQ(bondAB.atom2().index(), b.index());
   EXPECT_EQ(bondAB.order(), static_cast<unsigned char>(1));
@@ -164,8 +165,8 @@ TEST_F(MoleculeTest, addBond)
   Atom c = molecule.addAtom(1);
   Bond bondBC = molecule.addBond(b, c, 2);
   EXPECT_TRUE(bondBC.isValid());
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(2));
-  EXPECT_EQ(bondBC.index(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(2));
+  EXPECT_EQ(bondBC.index(), static_cast<Index>(1));
   EXPECT_EQ(bondBC.order(), static_cast<unsigned char>(2));
 
   // try to lookup nonexistant bond
@@ -241,9 +242,9 @@ TEST_F(MoleculeTest, uniqueAtom)
   Bond b1 = molecule.addBond(a1, a2, 1);
   Bond b2 = molecule.addBond(a1, a3, 2);
 
-  int uid1 = molecule.atomUniqueId(a1);
-  int uid2 = molecule.atomUniqueId(a2);
-  int uid3 = molecule.atomUniqueId(a3);
+  Index uid1 = molecule.atomUniqueId(a1);
+  Index uid2 = molecule.atomUniqueId(a2);
+  Index uid3 = molecule.atomUniqueId(a3);
   EXPECT_EQ(uid1, 0);
   EXPECT_EQ(uid2, 1);
   EXPECT_EQ(uid3, 2);
@@ -260,7 +261,7 @@ TEST_F(MoleculeTest, uniqueAtom)
   EXPECT_EQ(bonds.size(), 1);
 
   Atom a4 = molecule.addAtom(8);
-  int uid4 = molecule.atomUniqueId(a4);
+  Index uid4 = molecule.atomUniqueId(a4);
   EXPECT_EQ(uid4, 3);
   molecule.addBond(a1, a4, 1);
   EXPECT_EQ(molecule.bonds(a1).size(), 2);
@@ -288,8 +289,8 @@ TEST_F(MoleculeTest, uniqueAtomRestore)
   molecule.addBond(a1, a2, 1);
   molecule.addBond(a1, a3, 2);
 
-  int uid1 = molecule.atomUniqueId(a1);
-  int uid2 = molecule.atomUniqueId(a2);
+  Index uid1 = molecule.atomUniqueId(a1);
+  Index uid2 = molecule.atomUniqueId(a2);
 
   molecule.removeAtom(a2);
 
@@ -386,7 +387,7 @@ TEST_F(MoleculeTest, uniqueBond)
   b[3] = molecule.addBond(a4, a3, 2);
   b[4] = molecule.addBond(a2, a3, 1);
 
-  int uid[5];
+  Index uid[5];
   for (int i = 0; i < 5; ++i)
     uid[i] = molecule.bondUniqueId(b[i]);
   EXPECT_EQ(molecule.bondByUniqueId(uid[0]).order(), 1);
@@ -418,7 +419,7 @@ TEST_F(MoleculeTest, uniqueBondRestore)
   b[3] = molecule.addBond(a4, a3, 2);
   b[4] = molecule.addBond(a2, a3, 1);
 
-  int uid[5];
+  Index uid[5];
   for (int i = 0; i < 5; ++i)
     uid[i] = molecule.bondUniqueId(b[i]);
   molecule.removeBond(b[2]);

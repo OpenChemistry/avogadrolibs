@@ -23,11 +23,11 @@ namespace Core {
 
 Bond::Bond()
   : m_molecule(0),
-    m_index(size_t(-1))
+    m_index(MaxIndex)
 {
 }
 
-Bond::Bond(Molecule *m, size_t i)
+Bond::Bond(Molecule *m, Index i)
   : m_molecule(m),
     m_index(i)
 {
@@ -43,7 +43,7 @@ Molecule* Bond::molecule() const
   return m_molecule;
 }
 
-size_t Bond::index() const
+Index Bond::index() const
 {
   return m_index;
 }
@@ -51,7 +51,7 @@ size_t Bond::index() const
 Atom Bond::atom1() const
 {
   if (m_molecule) {
-    size_t atomIndex = m_molecule->bondPairs()[m_index].first;
+    Index atomIndex = m_molecule->bondPairs()[m_index].first;
 
     return m_molecule->atom(atomIndex);
   }
@@ -62,7 +62,7 @@ Atom Bond::atom1() const
 Atom Bond::atom2() const
 {
   if (m_molecule) {
-    size_t atomIndex = m_molecule->bondPairs()[m_index].second;
+    Index atomIndex = m_molecule->bondPairs()[m_index].second;
 
     return m_molecule->atom(atomIndex);
   }

@@ -317,16 +317,10 @@ BondCentricTool::BondCentricTool(QObject *parent_)
     m_glWidget(NULL),
     m_moveState(IgnoreMove),
     m_planeSnapIncr(10.f),
-    m_snapPlaneToBonds(true),
-    m_selectedBondId(-1),
-    m_anchorAtomId(-1),
-    m_clickedAtomId(-1)
+    m_snapPlaneToBonds(true)
 {
   m_activateAction->setText(tr("Bond-centric manipulation"));
   m_activateAction->setIcon(QIcon(":/icons/bondcentrictool.png"));
-
-
-
 }
 
 BondCentricTool::~BondCentricTool()
@@ -370,12 +364,12 @@ QUndoCommand * BondCentricTool::mousePressEvent(QMouseEvent *e)
     return initRotatePlane(e, ident);
 
   // Return if selectedBond is not valid or the hit is not on a bond:
-  if (m_selectedBondId < 0 || ident.type != Rendering::AtomType)
+  if (!m_selectedBond.isValid() || ident.type != Rendering::AtomType)
     return NULL;
 
   // Test if the atom is in the selected bond, or one bond removed.
   Atom clickedAtom = m_molecule->atom(ident.index);
-  Bond selectedBond = getSelectedBond();
+  Bond selectedBond = m_selectedBond.bond();
   bool atomIsInBond = bondContainsAtom(selectedBond, clickedAtom);
   bool atomIsNearBond = false;
   Atom anchorAtom;
@@ -416,7 +410,7 @@ QUndoCommand * BondCentricTool::mousePressEvent(QMouseEvent *e)
 
 QUndoCommand *BondCentricTool::mouseDoubleClickEvent(QMouseEvent *e)
 {
-  if (m_selectedBondId >= 0  && e->button() == Qt::LeftButton) {
+  if (m_selectedBond.isValid() && e->button() == Qt::LeftButton) {
     reset();
     emit drawablesChanged();
   }
@@ -462,7 +456,7 @@ QUndoCommand * BondCentricTool::mouseReleaseEvent(QMouseEvent *)
 
 void BondCentricTool::draw(Rendering::GroupNode &node)
 {
-  Bond selectedBond = getSelectedBond();
+  Bond selectedBond = m_selectedBond.bond();
 
   if (!selectedBond.isValid())
     return;
@@ -482,7 +476,7 @@ void BondCentricTool::draw(Rendering::GroupNode &node)
   case RotateBondedAtom: {
     drawBondQuad(*geo, selectedBond);
 
-    Atom otherAtom = otherBondedAtom(selectedBond, getClickedAtom());
+    Atom otherAtom = otherBondedAtom(selectedBond, m_clickedAtom.atom());
     if (otherAtom.isValid()) {
       drawAtomBondAngles(*geo, otherAtom, selectedBond);
     }
@@ -496,8 +490,8 @@ void BondCentricTool::draw(Rendering::GroupNode &node)
     break;
 
   case RotateNeighborAtom: {
-    Atom clickedAtom = getClickedAtom();
-    Atom anchorAtom = getAnchorAtom();
+    Atom clickedAtom = m_clickedAtom.atom();
+    Atom anchorAtom = m_anchorAtom.atom();
     Bond otherBond = m_molecule->bond(clickedAtom, anchorAtom);
     if (otherBond.isValid())
       drawBondAngle(*geo, selectedBond, otherBond);
@@ -509,17 +503,17 @@ void BondCentricTool::draw(Rendering::GroupNode &node)
 void BondCentricTool::reset(BondCentricTool::ResetBondBehavior bond)
 {
   if (bond == ResetBond)
-    m_selectedBondId = -1;
+    m_selectedBond.reset();
 
-  m_clickedAtomId = -1;
-  m_anchorAtomId = -1;
+  m_clickedAtom.reset();
+  m_anchorAtom.reset();
   m_moveState = IgnoreMove;
   m_clickedPoint = QPoint();
 }
 
 void BondCentricTool::initializeBondVectors()
 {
-  Bond bond = getSelectedBond();
+  Bond bond = m_selectedBond.bond();
   if (bond.isValid()) {
     m_bondVector = (bond.atom2().position3d().cast<float>()
                     - bond.atom1().position3d().cast<float>()).normalized();
@@ -529,7 +523,7 @@ void BondCentricTool::initializeBondVectors()
 
 void BondCentricTool::updateBondVector()
 {
-  Bond bond = getSelectedBond();
+  Bond bond = m_selectedBond.bond();
   if (bond.isValid()) {
     m_bondVector = (bond.atom2().position3d().cast<float>()
                     - bond.atom1().position3d().cast<float>()).normalized();
@@ -541,17 +535,18 @@ QUndoCommand *BondCentricTool::initRotatePlane(
 {
   Bond selectedBond = m_molecule->bond(ident.index);
   // Get unique id:
-  int bondUniqueId = m_molecule->bondUniqueId(selectedBond);
-  if (bondUniqueId < 0)
+  Index bondUniqueId = m_molecule->bondUniqueId(selectedBond);
+  if (bondUniqueId == MaxIndex)
     return NULL; // Something went horribly wrong.
+
   // Reset the bond vector/plane normal if the bond changed
-  if (bondUniqueId != m_selectedBondId) {
-    m_selectedBondId = bondUniqueId;
+  if (bondUniqueId != m_selectedBond.uniqueIdentifier()) {
+    m_selectedBond = QtGui::PersistentBond(m_molecule, bondUniqueId);
     initializeBondVectors();
   }
   updatePlaneSnapAngles();
   updateSnappedPlaneNormal();
-  if (m_selectedBondId < 0)
+  if (!m_selectedBond.isValid())
     return NULL;
   e->accept();
   m_moveState = RotatePlane;
@@ -564,8 +559,8 @@ QUndoCommand *BondCentricTool::initRotatePlane(
 QUndoCommand *BondCentricTool::initRotateBondedAtom(
     QMouseEvent *e, const Core::Atom &clickedAtom)
 {
-  m_clickedAtomId = m_molecule->atomUniqueId(clickedAtom);
-  if (m_clickedAtomId < 0)
+  m_clickedAtom = QtGui::PersistentAtom(clickedAtom);
+  if (!m_clickedAtom.isValid())
     return NULL;
   e->accept();
   m_moveState = RotateBondedAtom;
@@ -579,8 +574,8 @@ QUndoCommand *BondCentricTool::initRotateBondedAtom(
 QUndoCommand *BondCentricTool::initAdjustBondLength(
     QMouseEvent *e, const Core::Atom &clickedAtom)
 {
-  m_clickedAtomId = m_molecule->atomUniqueId(clickedAtom);
-  if (m_clickedAtomId < 0)
+  m_clickedAtom = QtGui::PersistentAtom(clickedAtom);
+  if (!m_clickedAtom.isValid())
     return NULL;
   e->accept();
   m_moveState = AdjustBondLength;
@@ -594,9 +589,9 @@ QUndoCommand *BondCentricTool::initAdjustBondLength(
 QUndoCommand *BondCentricTool::initRotateNeighborAtom(
     QMouseEvent *e, const Core::Atom &clickedAtom, const Core::Atom &anchorAtom)
 {
-  m_clickedAtomId = m_molecule->atomUniqueId(clickedAtom);
-  m_anchorAtomId = m_molecule->atomUniqueId(anchorAtom);
-  if (m_clickedAtomId < 0 || m_anchorAtomId < 0)
+  m_clickedAtom = QtGui::PersistentAtom(clickedAtom);
+  m_anchorAtom = QtGui::PersistentAtom(anchorAtom);
+  if (!m_clickedAtom.isValid() || !m_anchorAtom.isValid())
     return NULL;
   e->accept();
   m_moveState = RotateNeighborAtom;
@@ -610,7 +605,7 @@ QUndoCommand *BondCentricTool::initRotateNeighborAtom(
 QUndoCommand *BondCentricTool::rotatePlane(QMouseEvent *e)
 {
   // The bond should be valid.
-  const Bond selectedBond = getSelectedBond();
+  const Bond selectedBond = m_selectedBond.bond();
   if (!selectedBond.isValid())
     return NULL;
 
@@ -656,8 +651,8 @@ QUndoCommand *BondCentricTool::rotateBondedAtom(QMouseEvent *e)
   if ((m_lastDragPoint - e->pos()).manhattanLength() < 2)
     return NULL;
 
-  Bond bond = getSelectedBond();
-  Atom clickedAtom = getClickedAtom();
+  Bond bond = m_selectedBond.bond();
+  Atom clickedAtom = m_clickedAtom.atom();
   Atom centerAtom = otherBondedAtom(bond, clickedAtom);
 
   // Sanity check:
@@ -723,8 +718,8 @@ QUndoCommand *BondCentricTool::adjustBondLength(QMouseEvent *e)
   if ((m_lastDragPoint - e->pos()).manhattanLength() < 2)
     return NULL;
 
-  Bond selectedBond = getSelectedBond();
-  Atom clickedAtom = getClickedAtom();
+  Bond selectedBond = m_selectedBond.bond();
+  Atom clickedAtom = m_clickedAtom.atom();
 
   // Sanity check:
   if (!selectedBond.isValid() || !clickedAtom.isValid())
@@ -768,11 +763,11 @@ QUndoCommand *BondCentricTool::rotateNeighborAtom(QMouseEvent *e)
   if ((m_lastDragPoint - e->pos()).manhattanLength() < 2)
     return NULL;
 
-  Bond selectedBond = getSelectedBond();
+  Bond selectedBond = m_selectedBond.bond();
   // Atom that was clicked
-  Atom clickedAtom = getClickedAtom();
+  Atom clickedAtom = m_clickedAtom.atom();
   // Atom in selected bond also attached to clickedAtom
-  Atom anchorAtom = getAnchorAtom();
+  Atom anchorAtom = m_anchorAtom.atom();
   // The "other" atom in selected bond
   Atom otherAtom = otherBondedAtom(selectedBond, anchorAtom);
 
@@ -1092,7 +1087,7 @@ void BondCentricTool::updatePlaneSnapAngles()
   m_planeSnapAngles.clear();
 
   // Add bond angles if requested:
-  Bond selectedBond = getSelectedBond();
+  Bond selectedBond = m_selectedBond.bond();
   if (m_snapPlaneToBonds && selectedBond.isValid()) {
     const Atom atom1 = selectedBond.atom1();
     const Atom atom2 = selectedBond.atom2();
@@ -1221,28 +1216,6 @@ bool BondCentricTool::buildFragmentRecurse(const Core::Bond &bond,
     } // *it != bond
   } // foreach bond
   return true;
-}
-
-inline Core::Bond BondCentricTool::getSelectedBond() const
-{
-  if (m_molecule)
-    return m_molecule->bondByUniqueId(m_selectedBondId);
-  return Core::Bond();
-}
-
-inline Core::Atom BondCentricTool::getClickedAtom() const
-{
-  if (m_molecule)
-    return m_molecule->atomByUniqueId(m_clickedAtomId);
-  return Core::Atom();
-
-}
-
-inline Core::Atom BondCentricTool::getAnchorAtom() const
-{
-  if (m_molecule)
-    return m_molecule->atomByUniqueId(m_anchorAtomId);
-  return Core::Atom();
 }
 
 } // namespace QtPlugins

@@ -36,7 +36,7 @@ enum Type {
 
 /** Used to identify the primitive during picking. */
 struct Identifier {
-  Identifier() : molecule(0), type(InvalidType), index(-1) {}
+  Identifier() : molecule(0), type(InvalidType), index(MaxIndex) {}
 
   bool operator==(const Identifier &other) const
   {
@@ -56,7 +56,7 @@ struct Identifier {
 
   const Core::Molecule *molecule;
   Type type;
-  size_t index;
+  Index index;
 };
 
 class Primitive
@@ -71,7 +71,7 @@ public:
 
   /** Used to identify the primitive during picking. */
   struct Identifier {
-    Identifier() : molecule(0), type(Invalid), index(-1) {}
+    Identifier() : molecule(0), type(Invalid), index(MaxIndex) {}
 
     bool operator==(const Identifier &other) const
     {
@@ -88,7 +88,7 @@ public:
 
     const Core::Molecule *molecule;
     Type type;
-    size_t index;
+    Index index;
   };
 
   Primitive(Identifier id, const Vector3ub &color_)

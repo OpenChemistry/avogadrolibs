@@ -74,14 +74,14 @@ public:
    * @return The atom created. This can be invalid if the unique ID was already
    * in use.
    */
-  virtual Core::Atom addAtom(unsigned char atomicNumber, int uniqueId);
+  virtual Core::Atom addAtom(unsigned char atomicNumber, Index uniqueId);
 
   /**
    * @brief Remove the specified atom from the molecule.
    * @param index The index of the atom to be removed.
    * @return True on success, false if the atom was not found.
    */
-  bool removeAtom(size_t index) AVO_OVERRIDE;
+  bool removeAtom(Index index) AVO_OVERRIDE;
 
   /**
    * @brief Remove the specified atom from the molecule.
@@ -97,16 +97,16 @@ public:
    * @param uniqueId The unique identifier for the atom.
    * @return An Atom object, check it is valid before using it.
    */
-  Core::Atom atomByUniqueId(int uniqueId);
+  Core::Atom atomByUniqueId(Index uniqueId);
 
   /**
    * @brief Get the unique ID of the atom, this will uniquely reference the atom
    * as long as it exists.
    * @param atom The atom to obtain the unique ID of.
-   * @return The unique identifier for the atom, -1 if the atom is invalid or
-   * does not belong to this molecule.
+   * @return The unique identifier for the atom, MaxIndex if the atom is invalid
+   * or does not belong to this molecule.
    */
-  int atomUniqueId(const Core::Atom &atom) const;
+  Index atomUniqueId(const Core::Atom &atom) const;
 
   /**
    * @brief Add a bond between the specified atoms.
@@ -128,14 +128,14 @@ public:
    * in use.
    */
   virtual Core::Bond addBond(const Core::Atom &a, const Core::Atom &b,
-                             unsigned char bondOrder, int uniqueId);
+                             unsigned char bondOrder, Index uniqueId);
 
   /**
    * @brief Remove the specified bond.
    * @param index The index of the bond to be removed.
    * @return True on success, false if the bond was not found.
    */
-  bool removeBond(size_t index) AVO_OVERRIDE;
+  bool removeBond(Index index) AVO_OVERRIDE;
 
   /**
    * @brief Remove the specified bond.
@@ -160,16 +160,16 @@ public:
    * @param uniqueId The unique identifier for the bond.
    * @return A Bond object, check it is valid before using it.
    */
-  Core::Bond bondByUniqueId(int uniqueId);
+  Core::Bond bondByUniqueId(Index uniqueId);
 
   /**
    * @brief Get the unique ID of the bond, this will uniquely reference the bond
    * as long as it exists.
    * @param bond The bond to obtain the unique ID of.
-   * @return The unique identifier for the bond, -1 if the bond is invalid or
-   * does not belong to this molecule.
+   * @return The unique identifier for the bond, MaxIndex if the bond is invalid
+   * or does not belong to this molecule.
    */
-  int bondUniqueId(const Core::Bond &bond) const;
+  Index bondUniqueId(const Core::Bond &bond) const;
 
 public slots:
   /**
@@ -190,11 +190,11 @@ signals:
   void changed(unsigned int change);
 
 private:
-  std::vector<int> m_atomUniqueIds;
-  std::vector<int> m_bondUniqueIds;
+  std::vector<Index> m_atomUniqueIds;
+  std::vector<Index> m_bondUniqueIds;
 
-  int findAtomUniqueId(size_t index) const;
-  int findBondUniqueId(size_t index) const;
+  Index findAtomUniqueId(Index index) const;
+  Index findBondUniqueId(Index index) const;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Molecule::MoleculeChanges)

@@ -288,8 +288,8 @@ namespace QtPlugins {
                   else
                   {
                     m_molecule->addBond(
-                          m_molecule->atom(static_cast<size_t>(atom0)),
-                          m_molecule->atom(static_cast<size_t>(atom1)));
+                          m_molecule->atom(static_cast<Index>(atom0)),
+                          m_molecule->atom(static_cast<Index>(atom1)));
                     //            bond->setAromaticity(isAromatic);
                     //            bond->setOrder( (int) order);
                   }
@@ -463,8 +463,8 @@ namespace QtPlugins {
                   else
                   {
                     m_molecule->addBond(
-                          m_molecule->atom(static_cast<size_t>(atom0)),
-                          m_molecule->atom(static_cast<size_t>(atom1)));
+                          m_molecule->atom(static_cast<Index>(atom0)),
+                          m_molecule->atom(static_cast<Index>(atom1)));
                     //            bond->setAromaticity(isAromatic);
                     //            bond->setOrder( (int) order);
                   }
@@ -670,8 +670,8 @@ namespace QtPlugins {
                   else
                   {
                     m_molecule->addBond(
-                          m_molecule->atom(static_cast<size_t>(atom0)),
-                          m_molecule->atom(static_cast<size_t>(atom1)));
+                          m_molecule->atom(static_cast<Index>(atom0)),
+                          m_molecule->atom(static_cast<Index>(atom1)));
                     //            bond->setAromaticity(isAromatic);
                     //            bond->setOrder( (int) order);
                   }
