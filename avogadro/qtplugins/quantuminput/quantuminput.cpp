@@ -24,6 +24,7 @@
 #include <avogadro/qtgui/inputgeneratorwidget.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/molequeuemanager.h> // For MoleQueue::JobObject
+#include <avogadro/qtgui/utilities.h>
 
 #include <QtGui/QAction>
 #include <QtGui/QDialog>
@@ -208,10 +209,9 @@ void QuantumInput::updateInputGeneratorScripts()
   // List of directories to check.
   /// @todo Custom script locations
   QStringList dirs;
-  dirs << QCoreApplication::applicationDirPath() +
-          "/../lib/avogadro2/scripts/inputGenerators";
-  dirs << QCoreApplication::applicationDirPath() +
-          "/../lib64/avogadro2/scripts/inputGenerators";
+  dirs << QCoreApplication::applicationDirPath() + "/../"
+          + QtGui::Utilities::libraryDirectory()
+          + "/avogadro2/scripts/inputGenerators";
 
   foreach (const QString &dirStr, dirs) {
     qDebug() << "Checking for generator scripts in" << dirStr;

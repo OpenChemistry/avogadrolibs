@@ -17,6 +17,8 @@
 #include "pluginmanager.h"
 #include "avogadrostaticqtplugins.h"
 
+#include <avogadro/qtgui/utilities.h>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QMutex>
 #include <QtCore/QPluginLoader>
@@ -31,7 +33,7 @@ namespace QtPlugins {
 PluginManager::PluginManager(QObject *p)
   : QObject(p), m_staticPluginsLoaded(false)
 {
-  QString libDir(AvogadroLibs_LIB_DIR);
+  QString libDir(QtGui::Utilities::libraryDirectory());
   // http://doc.qt.digia.com/qt/deployment-plugins.html#debugging-plugins
   bool debugPlugins = !qgetenv("QT_DEBUG_PLUGINS").isEmpty();
 
