@@ -10,9 +10,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "${original_library_output_dir}/avogadro2/staticplugins")
 
-# The plugin manager needs to know the library directory to find plugins.
-add_definitions(-DAvogadroLibs_LIB_DIR=\"${INSTALL_LIBRARY_DIR}\")
-
 # Optionally build all plugins statically.
 option(BUILD_STATIC_PLUGINS "Build static plugins by default" ON)
 
@@ -178,4 +175,4 @@ set(SOURCES
 
 avogadro_add_library(AvogadroQtPlugins ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtPlugins LINK_PUBLIC ${QT_QTCORE_LIBRARY}
-  LINK_PRIVATE ${AvogadroLibs_STATIC_PLUGINS})
+  LINK_PRIVATE ${AvogadroLibs_STATIC_PLUGINS} AvogadroQtGui)
