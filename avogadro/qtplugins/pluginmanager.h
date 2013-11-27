@@ -37,8 +37,8 @@ class ExtensionPluginFactory;
  * This class will find and load Avogadro plugins. Once loaded you can use an
  * instance of this class to query and construct plugin instances. By default
  * plugins are loaded from
- * QApplication::applicationDirPath()../lib/avogadro/plugins but this can be
- * changed or more paths can be added.
+ * QApplication::applicationDirPath()../<libdir>/avogadro/plugins but this can
+ * be changed, or more paths can be added.
  *
  * The load methods can be called multiple times, and will load any new plugins
  * while ignoring plugins that have already been loaded.
