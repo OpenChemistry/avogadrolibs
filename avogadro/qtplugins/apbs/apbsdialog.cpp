@@ -26,6 +26,7 @@
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/inputgenerator.h>
+#include <avogadro/qtgui/utilities.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -35,8 +36,9 @@ ApbsDialog::ApbsDialog(QWidget *parent_)
     m_ui(new Ui::ApbsDialog),
     m_molecule(0),
     m_inputGenerator(
-      new QtGui::InputGenerator(QCoreApplication::applicationDirPath() +
-        "/../lib/avogadro2/scripts/inputGenerators/apbs.py")),
+      new QtGui::InputGenerator(QCoreApplication::applicationDirPath() + "/../"
+                                + QtGui::Utilities::libraryDirectory()
+                                + "/avogadro2/scripts/inputGenerators/apbs.py")),
     m_loadStructureFile(false),
     m_loadCubeFile(false)
 {

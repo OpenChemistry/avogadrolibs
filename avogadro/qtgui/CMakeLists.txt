@@ -11,6 +11,9 @@ find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
 include_directories(SYSTEM ${QT_INCLUDES})
 add_definitions(${QT_DEFINITIONS})
 
+# Provide some simple API to find the plugins, scripts, etc.
+add_definitions(-DAvogadroLibs_LIB_DIR=\"${INSTALL_LIBRARY_DIR}\")
+
 # Find python2 for input generator scripts:
 find_package(PythonInterp 2)
 if(PYTHON_EXECUTABLE)
@@ -48,6 +51,7 @@ set(HEADERS
   sceneplugin.h
   scenepluginmodel.h
   toolplugin.h
+  utilities.h
 )
 
 set(SOURCES
@@ -74,6 +78,7 @@ set(SOURCES
   sceneplugin.cpp
   scenepluginmodel.cpp
   toolplugin.cpp
+  utilities.cpp
 )
 
 set(UIS
