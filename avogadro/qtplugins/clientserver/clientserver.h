@@ -70,6 +70,7 @@ private slots:
   void select();
   void onAccepted();
   void onFinished(int result);
+  void disconnect();
 
 private:
   ConnectionSettingsDialog *m_dialog;
@@ -84,7 +85,7 @@ private:
   void handleOpenResponse(OpenResponse *response);
   void handleFileFormatsResponse(FileFormats *response);
   bool connectToServer(const QString &host, int port);
-  void disconnect();
+
   bool isConnected();
   QString lastOpenDirSettingPath();
 

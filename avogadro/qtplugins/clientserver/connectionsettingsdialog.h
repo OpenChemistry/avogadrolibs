@@ -33,6 +33,9 @@ public:
   explicit ConnectionSettingsDialog(QWidget *parent_ = 0);
   virtual ~ConnectionSettingsDialog();
 
+signals:
+  void settingsChanged();
+
 private slots:
   void testConnection();
   void updateSettings();

@@ -83,8 +83,16 @@ void ConnectionSettingsDialog::updateSettings()
   QVariant host(m_ui->editHostName->text());
   QVariant port(m_ui->spinPort->value());
 
+  bool changed = false;
+  if (host != settings.value("clientServer/connectionSettings/hostName") ||
+      port != settings.value("clientServer/connectionSettings/port"))
+    changed = true;
+
   settings.setValue("clientServer/connectionSettings/hostName", host);
   settings.setValue("clientServer/connectionSettings/port", port);
+
+  if (changed)
+    emit settingsChanged();
 }
 
 } /* namespace QtPlugins */

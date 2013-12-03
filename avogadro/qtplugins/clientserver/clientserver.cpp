@@ -46,7 +46,7 @@ namespace QtPlugins {
 
 ClientServer::ClientServer(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_openAction(new QAction(this)), m_settingsAction(new QAction(this)),
+  m_dialog(NULL), m_openAction(new QAction(this)), m_settingsAction(new QAction(this)),
   m_molecule(NULL), m_controller(NULL), m_communicator(NULL), m_channel(NULL)
 {
   m_openAction->setEnabled(true);
@@ -224,9 +224,10 @@ void ClientServer::onConnectionError()
 
 void ClientServer::openSettings()
 {
-  if (!m_dialog)
+  if (!m_dialog) {
     m_dialog = new ConnectionSettingsDialog(qobject_cast<QWidget*>(parent()));
-
+    connect(m_dialog, SIGNAL(settingsChanged()), this, SLOT(disconnect()));
+  }
   m_dialog->show();
 }
 
