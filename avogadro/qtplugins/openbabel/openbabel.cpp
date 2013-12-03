@@ -729,11 +729,11 @@ void OpenBabel::onHydrogenOperationFinished(const QByteArray &mdl)
 
   // Update molecule
   m_molecule->clearAtoms();
-  for (size_t i = 0; i < mol.atomCount(); ++i) {
+  for (Index i = 0; i < mol.atomCount(); ++i) {
     Core::Atom atom = mol.atom(i);
     m_molecule->addAtom(atom.atomicNumber()).setPosition3d(atom.position3d());
   }
-  for (size_t i = 0; i < mol.bondCount(); ++i) {
+  for (Index i = 0; i < mol.bondCount(); ++i) {
     Core::Bond bond = mol.bond(i);
     m_molecule->addBond(m_molecule->atom(bond.atom1().index()),
                         m_molecule->atom(bond.atom2().index()),

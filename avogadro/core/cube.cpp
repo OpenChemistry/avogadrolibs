@@ -91,11 +91,11 @@ bool Cube::setLimits(const Cube &cube)
 
 bool Cube::setLimits(const Molecule &mol, double spacing_, double padding)
 {
-  size_t numAtoms = mol.atomCount();
+  Index numAtoms = mol.atomCount();
   Vector3 min_, max_;
   if (numAtoms) {
     Vector3 curPos = min_ = max_ = mol.atomPositions3d()[0];
-    for (size_t i = 1; i < numAtoms; ++i) {
+    for (Index i = 1; i < numAtoms; ++i) {
       curPos = mol.atomPositions3d()[i];
       if (curPos.x() < min_.x())
         min_.x() = curPos.x();

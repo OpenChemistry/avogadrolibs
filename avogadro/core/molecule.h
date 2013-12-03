@@ -60,7 +60,7 @@ public:
   virtual ~Molecule();
 
   /** Returns the number of atoms in the molecule. */
-  size_t size() const;
+  Index size() const;
 
   /** Returns \c true if the molecule is empty (i.e. size() == \c 0). */
   bool isEmpty() const;
@@ -104,10 +104,10 @@ public:
   std::vector<Vector3>& atomPositions3d();
 
   /** Returns a vector of pairs of atom indices of the bonds in the molecule. */
-  std::vector<std::pair<size_t, size_t> >& bondPairs();
+  std::vector<std::pair<Index, Index> >& bondPairs();
 
   /** \overload */
-  const std::vector<std::pair<size_t, size_t> >& bondPairs() const;
+  const std::vector<std::pair<Index, Index> >& bondPairs() const;
 
   /** Returns a vector of the bond orders for the bonds in the molecule. */
   std::vector<unsigned char>& bondOrders();
@@ -149,7 +149,7 @@ public:
    * @param index The index of the atom to be removed.
    * @return True on success, false if the atom was not found.
    */
-  virtual bool removeAtom(size_t index);
+  virtual bool removeAtom(Index index);
 
   /**
    * @brief Remove the specified atom from the molecule.
@@ -167,19 +167,19 @@ public:
   /**
    * @return the atom at @p index in the molecule.
    */
-  Atom atom(size_t index) const;
+  Atom atom(Index index) const;
 
   /**
    * @return The number of atoms in the molecule.
    */
-  size_t atomCount() const;
+  Index atomCount() const;
 
   /**
    * @brief Get the number of atoms in the molecule that match atomicNumber.
    * @param atomicNumber The atomic number to match on.
    * @return The number of atoms with the supplied atomic number.
    */
-  size_t atomCount(unsigned char atomicNumber) const;
+  Index atomCount(unsigned char atomicNumber) const;
 
   /** Adds a bond between atoms @p a and @p b. */
   virtual Bond addBond(const Atom &a, const Atom &b,
@@ -190,7 +190,7 @@ public:
    * @param index The index of the bond to be removed.
    * @return True on success, false if the bond was not found.
    */
-  virtual bool removeBond(size_t index);
+  virtual bool removeBond(Index index);
 
   /**
    * @brief Remove the specified bond.
@@ -215,7 +215,7 @@ public:
   virtual void clearBonds();
 
   /** Returns the bond at @p index in the molecule. */
-  Bond bond(size_t index) const;
+  Bond bond(Index index) const;
 
   /** Returns the bond between atoms @p a and @p b. */
   Bond bond(const Atom &a, const Atom &b) const;
@@ -227,7 +227,7 @@ public:
   std::vector<Bond> bonds(const Atom &a);
 
   /** Returns the number of bonds in the molecule. */
-  size_t bondCount() const;
+  Index bondCount() const;
 
   /**
    * @brief Add a mesh to the molecule.
@@ -235,10 +235,10 @@ public:
    */
   Mesh* addMesh();
 
-  Mesh* mesh(size_t index);
-  const Mesh* mesh(size_t index) const;
+  Mesh* mesh(Index index);
+  const Mesh* mesh(Index index) const;
 
-  size_t meshCount() const { return m_meshes.size(); }
+  Index meshCount() const { return static_cast<Index>(m_meshes.size()); }
 
   void clearMeshes();
 
@@ -288,7 +288,7 @@ protected:
   std::vector<unsigned char> m_atomicNumbers;
   std::vector<Vector2> m_positions2d;
   std::vector<Vector3> m_positions3d;
-  std::vector<std::pair<size_t, size_t> > m_bondPairs;
+  std::vector<std::pair<Index, Index> > m_bondPairs;
   std::vector<unsigned char> m_bondOrders;
 
   std::vector<Mesh *> m_meshes;

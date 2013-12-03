@@ -42,7 +42,7 @@ public:
   /**
    * Creates a bond object representing a bond at index @p i in molecule @p m.
    */
-  Bond(Molecule *m, size_t i);
+  Bond(Molecule *m, Index i);
 
   /** Returns \c true if the bond is valid. */
   bool isValid() const;
@@ -51,7 +51,7 @@ public:
   Molecule* molecule() const;
 
   /** Returns the index of the bond in the molecule. */
-  size_t index() const;
+  Index index() const;
 
   /** Returns the first atom in the molecule. */
   Atom atom1() const;
@@ -67,7 +67,7 @@ public:
 
 private:
   Molecule *m_molecule;
-  size_t m_index;
+  Index m_index;
 };
 
 inline bool operator==(const Bond& lhs, const Bond& rhs)
