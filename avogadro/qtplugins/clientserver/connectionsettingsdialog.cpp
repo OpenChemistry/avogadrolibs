@@ -39,9 +39,9 @@ ConnectionSettingsDialog::ConnectionSettingsDialog(QWidget *parent_) :
   connect(m_ui->buttonBox, SIGNAL(accepted()), SLOT(updateSettings()));
 
   QSettings settings;
-  QString host = settings.value("clientServer/connectionSettings/hostName")
+  QString host = settings.value("clientServer/connectionSettings/hostName", "localhost")
                       .toString();
-  int port = settings.value("clientServer/connectionSettings/port").toInt();
+  int port = settings.value("clientServer/connectionSettings/port", 6060).toInt();
 
   m_ui->editHostName->setText(host);
   m_ui->spinPort->setValue(port);
