@@ -40,6 +40,11 @@ add_executable(avogadroserver
 target_link_libraries(avogadroserver
   vtkParallelCore AvogadroProtoCall)
 
+install(TARGETS avogadroserver
+  RUNTIME DESTINATION ${INSTALL_RUNTIME_DIR}
+  BUNDLE DESTINATION .
+  )
+
 # Build plugin
 foreach(_file ${_protocall_common_source} ${_protocall_proxy_source})
   set_source_files_properties(${_file} PROPERTIES SKIP_AUTOMOC TRUE)
