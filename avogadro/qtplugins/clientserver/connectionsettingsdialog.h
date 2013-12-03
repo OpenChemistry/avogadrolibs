@@ -33,6 +33,9 @@ public:
   explicit ConnectionSettingsDialog(QWidget *parent_ = 0);
   virtual ~ConnectionSettingsDialog();
 
+  static const QString defaultHost;
+  static const int defaultPort = 6060;
+
 signals:
   void settingsChanged();
 

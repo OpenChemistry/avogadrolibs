@@ -142,9 +142,10 @@ void ClientServer::openFile()
   QSettings settings;
   if (!isConnected()) {
     QString host = settings
-                     .value("clientServer/connectionSettings/hostName")
-                       .toString();
-    int port = settings.value("clientServer/connectionSettings/port").toInt();
+                     .value("clientServer/connectionSettings/hostName",
+                         ConnectionSettingsDialog::defaultHost).toString();
+    int port = settings.value("clientServer/connectionSettings/port",
+        ConnectionSettingsDialog::defaultPort).toInt();
 
     if (!connectToServer(host.toLocal8Bit().data(), port)) {
       QMessageBox::critical(qobject_cast<QWidget*>(parent()),

@@ -30,6 +30,8 @@ namespace Avogadro
 namespace QtPlugins
 {
 
+const QString ConnectionSettingsDialog::defaultHost = "localhost";
+
 ConnectionSettingsDialog::ConnectionSettingsDialog(QWidget *parent_) :
   QDialog(parent_), m_ui(new Ui::ConnectionSettingsDialog)
 {
@@ -39,9 +41,10 @@ ConnectionSettingsDialog::ConnectionSettingsDialog(QWidget *parent_) :
   connect(m_ui->buttonBox, SIGNAL(accepted()), SLOT(updateSettings()));
 
   QSettings settings;
-  QString host = settings.value("clientServer/connectionSettings/hostName")
-                      .toString();
-  int port = settings.value("clientServer/connectionSettings/port").toInt();
+  QString host = settings.value("clientServer/connectionSettings/hostName",
+      defaultHost).toString();
+  int port = settings.value("clientServer/connectionSettings/port", defaultPort)
+      .toInt();
 
   m_ui->editHostName->setText(host);
   m_ui->spinPort->setValue(port);
