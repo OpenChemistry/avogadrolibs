@@ -41,7 +41,10 @@ namespace QtPlugins {
 class ConnectionSettingsDialog;
 
 /**
- * @brief
+ * @class ClientServer clientserver.h
+ * <avogadro/qtplugins/clientserver/clientserver.h>
+ * @brief Plugin used to connect to and perform remote operations on an
+ * Avodadro server.
  */
 class ClientServer : public Avogadro::QtGui::ExtensionPlugin
 {

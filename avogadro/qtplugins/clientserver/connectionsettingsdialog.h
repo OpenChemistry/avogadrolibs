@@ -26,6 +26,12 @@ namespace Ui {
 class ConnectionSettingsDialog;
 }
 
+/**
+ * @class ConnectionSettingsDialog connectionsettingsdialog.h
+ * <avogadro/qtplugins/clientserver/connectionsettingsdialog.h>
+ * @brief Dialog to set the connection settings for connecting to a remote
+ * server.
+ */
 class ConnectionSettingsDialog : public QDialog
 {
   Q_OBJECT

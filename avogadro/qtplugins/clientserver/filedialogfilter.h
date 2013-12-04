@@ -22,6 +22,11 @@
 #include <QRegExp>
 class FileDialogModel;
 
+/**
+ * @class FileDialogFilter filedialogfilter.h
+ * <avogadro/qtplugins/clientserver/filedialogfilter.h>
+ * @brief Filter used to filter data in file dialog model
+ */
 class FileDialogFilter :
   public QSortFilterProxyModel
 {
