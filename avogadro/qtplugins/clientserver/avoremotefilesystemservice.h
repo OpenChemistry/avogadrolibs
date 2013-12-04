@@ -19,6 +19,12 @@
 
 #include "RemoteFileSystemService.pb.h"
 
+/**
+ * @class AvoRemoteFileSystemService avoremotefilesystemservice.h
+ * <avogadro/qtplugins/clientserver/avoremotefilesystemservice.h>
+ * @brief Server side implementation of RemoteFileSystemService. Provides
+ * methods for browsing a remote filesystem.
+ */
 class AvoRemoteFileSystemService : public RemoteFileSystemService
 {
 public:

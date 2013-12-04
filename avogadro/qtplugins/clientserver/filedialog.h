@@ -32,9 +32,9 @@ class vtkCommunicatorChannel;
 }
 
 /**
-  Provides a standard file dialog "front-end" for the FileDialogModel
-*/
-
+ * @class FileDialog filedialog.h <avogadro/qtplugins/clientserver/filedialog.h>
+ * @brief Remote file dialog
+ */
 class FileDialog : public QDialog
 {
   Q_OBJECT

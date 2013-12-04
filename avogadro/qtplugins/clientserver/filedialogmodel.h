@@ -35,7 +35,11 @@ class vtkCommunicatorChannel;
 class Listing;
 class Path;
 
-
+/**
+ * @class FileDialogModel filedialogmodel.h
+ * <avogadro/qtplugins/clientserver/filedialogmodel.h>
+ * @brief Remote file dialog model
+ */
 class FileDialogModel : public QAbstractItemModel
 {
   typedef QAbstractItemModel base;
