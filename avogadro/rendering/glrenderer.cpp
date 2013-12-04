@@ -70,6 +70,9 @@ void GLRenderer::initialize()
 
 void GLRenderer::resize(int width, int height)
 {
+  if (!m_valid)
+    return;
+
   glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);
@@ -77,6 +80,9 @@ void GLRenderer::resize(int width, int height)
 
 void GLRenderer::render()
 {
+  if (!m_valid)
+    return;
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   applyProjection();
 

@@ -96,6 +96,23 @@ public:
   const QtGui::ScenePluginModel& sceneModel() const { return m_scenePlugins; }
   /** @}*/
 
+  /**
+   * Check if the GLWidget was able to acquire a context, and set up the
+   * renderer correctly. If not valid, the error method may provide more
+   * information.
+   * @return true if value, false if not.
+   */
+  bool isValid() const { return m_renderer.isValid(); }
+
+  /**
+   * Get the error(s), if any, encountered when setting up the GLWidget.
+   * @return A free form string containing errors encountered.
+   */
+  QString error() const { return m_renderer.error().c_str(); }
+
+signals:
+  void rendererInvalid();
+
 public slots:
   /**
    * Update the scene plugins for the widget, this will generate geeometry in
