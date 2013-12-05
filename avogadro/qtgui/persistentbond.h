@@ -29,7 +29,7 @@ namespace QtGui {
  * using the unique ID mechanism of the molecule.
  */
 
-class AVOGADROQTGUI_EXPORT PersistentBond
+class PersistentBond
 {
 public:
   /**
