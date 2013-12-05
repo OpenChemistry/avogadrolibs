@@ -35,7 +35,7 @@ Bond::Bond(Molecule *m, Index i)
 
 bool Bond::isValid() const
 {
-  return m_molecule != 0;
+  return m_molecule && m_index < m_molecule->bondCount();
 }
 
 Molecule* Bond::molecule() const
