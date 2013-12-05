@@ -53,6 +53,7 @@ set(HEADERS
   persistentatom.h
   persistentbond.h
   pythonscript.h
+  rwmolecule.h
   sceneplugin.h
   scenepluginmodel.h
   toolplugin.h
@@ -80,6 +81,7 @@ set(SOURCES
   periodictablescene_p.cpp
   periodictableview.cpp
   pythonscript.cpp
+  rwmolecule.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
   toolplugin.cpp
