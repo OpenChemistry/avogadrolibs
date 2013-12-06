@@ -28,6 +28,7 @@ set(tests
   GenericHighlighter
   Molecule
   MoleQueueQueueListModel
+  RWMolecule
   )
 
 if(PYTHON2_EXECUTABLE AND AVOGADRO_DATA)
