@@ -147,6 +147,9 @@ public:
   const MoleQueueWidget &widget() const;
   /** @} */
 
+public slots:
+  void done(int r);
+
 private:
   typedef QPair<QObject *, const char*> MetaMethod;
   /**

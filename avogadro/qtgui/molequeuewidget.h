@@ -131,6 +131,12 @@ public:
    */
   bool requestJobLookup();
 
+
+  /**
+   * @return True if the user has selected a program, false otherwise.
+   */
+  bool programSelected();
+
 public slots:
   /**
    * Query the MoleQueue server (if available) for the list of available queues
