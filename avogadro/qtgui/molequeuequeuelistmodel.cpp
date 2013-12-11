@@ -298,6 +298,14 @@ void MoleQueueQueueListModel::mergeQueue(int row, const QStringList &newProgs)
       ++oldInd;
     }
   }
+
+  // Add any remaining new programs
+  for (; newInd < newProgs.size(); ++newInd, ++oldInd)
+    insertProgram(row, m_programList[row].size(), newProgs[newInd]);
+
+  // Or remove any old programs.
+  while (oldInd < m_programList[row].size())
+    removeProgram(row, oldInd);
 }
 
 void MoleQueueQueueListModel::insertProgram(int queueRow, int progRow,
