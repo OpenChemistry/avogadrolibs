@@ -166,7 +166,7 @@ void QuantumInput::configurePython()
         qgetenv("AVO_PYTHON_INTERPRETER"));
   if (pythonInterp.isEmpty()) {
     // Check settings
-    pythonInterp = settings.value("quantumInput/interpreters/python",
+    pythonInterp = settings.value("interpreters/python",
                                   QString()).toString();
   }
   // Use compile-time default if still not found.
@@ -199,7 +199,7 @@ void QuantumInput::configurePython()
     return;
 
   // Handle response
-  settings.setValue("quantumInput/interpreters/python", browser->fileName());
+  settings.setValue("interpreters/python", browser->fileName());
 }
 
 void QuantumInput::updateInputGeneratorScripts()
