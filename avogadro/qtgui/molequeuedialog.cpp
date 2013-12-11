@@ -191,5 +191,17 @@ bool MoleQueueDialog::waitForSignal(const QList<MetaMethod> &signalList,
   return limiter.isActive();
 }
 
+void MoleQueueDialog::done(int r)
+{
+  if (r == QDialog::Accepted && !widget().programSelected()) {
+      QMessageBox::information(parentWidget(), tr("No program selected."),
+                               tr("Please select the target program from the "
+                                  "\"Queue and Program\" list."));
+  }
+  else {
+    QDialog::done(r);
+  }
+}
+
 } // namespace QtGui
 } // namespace Avogadro
