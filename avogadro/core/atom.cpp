@@ -35,7 +35,7 @@ Atom::Atom(Molecule *m, Index i)
 
 bool Atom::isValid() const
 {
-  return m_molecule != 0;
+  return m_molecule && m_index < m_molecule->atomCount();
 }
 
 Molecule* Atom::molecule() const
