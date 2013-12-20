@@ -30,6 +30,8 @@
 #include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
 
+#include <avogadro/qtgui/molecule.h>
+
 #include <avogadro/core/atom.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
@@ -43,6 +45,7 @@
 
 using Avogadro::Core::Atom;
 using Avogadro::Core::Elements;
+using Avogadro::QtGui::Molecule;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
@@ -139,7 +142,7 @@ void MeasureTool::draw(Rendering::GroupNode &node)
     Identifier &ident = m_atoms[i];
     Q_ASSERT(ident.type == Rendering::AtomType);
     Q_ASSERT(ident.molecule != NULL);
-    Core::Atom atom = ident.molecule->atom(ident.index);
+    Molecule::AtomType atom = ident.molecule->atom(ident.index);
     Q_ASSERT(atom.isValid());
     unsigned char atomicNumber(atom.atomicNumber());
     positions[i] = atom.position3d();

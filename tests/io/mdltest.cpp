@@ -51,7 +51,7 @@ TEST(MdlTest, atoms)
   EXPECT_EQ(mdl.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(8));
-  Atom atom = molecule.atom(0);
+  Molecule::AtomType atom = molecule.atom(0);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   atom = molecule.atom(1);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(6));
@@ -78,7 +78,7 @@ TEST(MdlTest, bonds)
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(8));
   EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(7));
 
-  Bond bond = molecule.bond(0);
+  Molecule::BondType bond = molecule.bond(0);
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
@@ -109,12 +109,12 @@ TEST(MdlTest, saveFile)
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(8));
   EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(7));
-  Atom atom = molecule.atom(7);
+  Molecule::AtomType atom = molecule.atom(7);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   EXPECT_DOUBLE_EQ(atom.position3d().x(), -1.1850);
   EXPECT_DOUBLE_EQ(atom.position3d().y(),  0.0044);
   EXPECT_DOUBLE_EQ(atom.position3d().z(), -0.9875);
-  Bond bond = molecule.bond(0);
+  Molecule::BondType bond = molecule.bond(0);
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));

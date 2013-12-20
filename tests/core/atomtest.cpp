@@ -26,7 +26,7 @@ using Avogadro::Vector3;
 TEST(AtomTest, setAtomicNumber)
 {
   Molecule molecule;
-  Atom atom = molecule.addAtom(1);
+  Molecule::AtomType atom = molecule.addAtom(1);
   EXPECT_TRUE(atom.isValid());
   EXPECT_EQ(atom.atomicNumber(), 1);
 
@@ -38,7 +38,7 @@ TEST(AtomTest, setAtomicNumber)
 TEST(AtomTest, setAtomPosition2d)
 {
   Molecule molecule;
-  Atom atom = molecule.addAtom(1);
+  Molecule::AtomType atom = molecule.addAtom(1);
 
   // Should return a zero vector if the position has not been set.
   EXPECT_EQ(atom.position2d().x(), 0.0);
@@ -50,7 +50,7 @@ TEST(AtomTest, setAtomPosition2d)
   EXPECT_EQ(atom.position2d().y(), 1.0);
 
   // Try with a second atom, confirm no cross over with the first too.
-  Atom atom2 = molecule.addAtom(6);
+  Molecule::AtomType atom2 = molecule.addAtom(6);
   atom2.setPosition2d(Vector2(0.42, 3.14));
   EXPECT_EQ(atom.position2d().x(), 0.5);
   EXPECT_EQ(atom.position2d().y(), 1.0);
@@ -61,7 +61,7 @@ TEST(AtomTest, setAtomPosition2d)
 TEST(AtomTest, setAtomPosition3d)
 {
   Molecule molecule;
-  Atom atom = molecule.addAtom(1);
+  Molecule::AtomType atom = molecule.addAtom(1);
 
   // Should return a zero vector if the position has not been set.
   EXPECT_EQ(atom.position3d().x(), 0.0);
@@ -75,7 +75,7 @@ TEST(AtomTest, setAtomPosition3d)
   EXPECT_EQ(atom.position3d().z(), 1.5);
 
   // Try with a second atom, confirm no cross over with the first too.
-  Atom atom2 = molecule.addAtom(6);
+  Molecule::AtomType atom2 = molecule.addAtom(6);
   atom2.setPosition3d(Vector3(0.42, 3.14, 6.66));
   EXPECT_EQ(atom.position3d().x(), 0.5);
   EXPECT_EQ(atom.position3d().y(), 1.0);
@@ -88,8 +88,8 @@ TEST(AtomTest, setAtomPosition3d)
 TEST(AtomTest, operators)
 {
   Molecule molecule;
-  Atom atom1 = molecule.addAtom(1);
-  Atom atom2 = molecule.addAtom(2);
+  Molecule::AtomType atom1 = molecule.addAtom(1);
+  Molecule::AtomType atom2 = molecule.addAtom(2);
   EXPECT_TRUE(atom1 == molecule.atom(0));
   EXPECT_FALSE(atom1 != molecule.atom(0));
   EXPECT_TRUE(atom1 != molecule.atom(1));

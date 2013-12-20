@@ -231,7 +231,7 @@ void Editor::emptyLeftClick(QMouseEvent *e)
   // Add an atom at the clicked position
   Vector2f windowPos(e->posF().x(), e->posF().y());
   Vector3f atomPos = m_glWidget->renderer().camera().unProject(windowPos);
-  Atom newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber());
+  Molecule::AtomType newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber());
   newAtom.setPosition3d(atomPos.cast<double>());
 
   // Update the clicked object
@@ -247,7 +247,7 @@ void Editor::emptyLeftClick(QMouseEvent *e)
 
 void Editor::atomLeftClick(QMouseEvent *e)
 {
-  Atom atom = m_clickedObject.molecule->atom(m_clickedObject.index);
+  Molecule::AtomType atom = m_clickedObject.molecule->atom(m_clickedObject.index);
   if (atom.isValid()) {
     // Store the original atomic number of the clicked atom before updating it.
     unsigned char atomicNumber = m_toolWidget->atomicNumber();
@@ -262,7 +262,7 @@ void Editor::atomLeftClick(QMouseEvent *e)
 
 void Editor::bondLeftClick(QMouseEvent *e)
 {
-  Bond bond = m_clickedObject.molecule->bond(m_clickedObject.index);
+  Molecule::BondType bond = m_clickedObject.molecule->bond(m_clickedObject.index);
   bond.setOrder(static_cast<unsigned char>((bond.order() % 3)  + 1));
   m_molecule->emitChanged(Molecule::Bonds | Molecule::Modified);
   e->accept();
@@ -313,7 +313,8 @@ void Editor::atomLeftDrag(QMouseEvent *e)
       m_molecule->removeAtom(m_newObject.index);
       changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
       m_newObject = Identifier();
-      Atom atom = m_clickedObject.molecule->atom(m_clickedObject.index);
+      Molecule::AtomType atom =
+          m_clickedObject.molecule->atom(m_clickedObject.index);
       if (atom.atomicNumber() != m_toolWidget->atomicNumber()) {
         m_clickedAtomicNumber = atom.atomicNumber();
         atom.setAtomicNumber(m_toolWidget->atomicNumber());
@@ -332,7 +333,8 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   // If the clicked atom's identity has been changed from the initial click,
   // reset its atomic number
   if (m_clickedAtomicNumber != INVALID_ATOMIC_NUMBER) {
-    Atom clickedAtom = m_clickedObject.molecule->atom(m_clickedObject.index);
+    Molecule::AtomType clickedAtom =
+        m_clickedObject.molecule->atom(m_clickedObject.index);
     clickedAtom.setAtomicNumber(m_clickedAtomicNumber);
     m_clickedAtomicNumber = INVALID_ATOMIC_NUMBER;
     changes |= Molecule::Atoms | Molecule::Modified;
@@ -352,8 +354,10 @@ void Editor::atomLeftDrag(QMouseEvent *e)
 
     // If the bonded atom is no longer under the mouse, remove the bond.
     if (depth < 0.f) {
-      Atom bondedAtom = m_bondedAtom.molecule->atom(m_bondedAtom.index);
-      Atom clickedAtom = m_clickedObject.molecule->atom(m_clickedObject.index);
+      Molecule::AtomType bondedAtom =
+          m_bondedAtom.molecule->atom(m_bondedAtom.index);
+      Molecule::AtomType clickedAtom =
+          m_clickedObject.molecule->atom(m_clickedObject.index);
       if (m_bondAdded && m_molecule->removeBond(clickedAtom, bondedAtom))
         changes |= Molecule::Bonds | Molecule::Removed;
       m_bondedAtom = Identifier();
@@ -398,8 +402,10 @@ void Editor::atomLeftDrag(QMouseEvent *e)
       }
 
       // Create a new bond between clicked atom and atomToBond.
-      Atom clickedAtom = m_clickedObject.molecule->atom(m_clickedObject.index);
-      Atom bondedAtom = atomToBond.molecule->atom(atomToBond.index);
+      Molecule::AtomType clickedAtom =
+          m_clickedObject.molecule->atom(m_clickedObject.index);
+      Molecule::AtomType bondedAtom =
+          atomToBond.molecule->atom(atomToBond.index);
       if (!m_molecule->bond(clickedAtom, bondedAtom).isValid()) {
         m_molecule->addBond(clickedAtom, bondedAtom, m_toolWidget->bondOrder());
         m_bondAdded = true;
@@ -417,10 +423,11 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   // We just need to create the new atom (if we haven't already), then update
   // its position.
 
-  Atom newAtom;
+  Molecule::AtomType newAtom;
   if (!m_newObject.isValid()) {
     // Add a new atom bonded to the clicked atom
-    Atom clickedAtom = m_clickedObject.molecule->atom(m_clickedObject.index);
+    Molecule::AtomType clickedAtom =
+        m_clickedObject.molecule->atom(m_clickedObject.index);
     newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber());
     m_molecule->addBond(clickedAtom, newAtom, m_toolWidget->bondOrder());
     changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Added;

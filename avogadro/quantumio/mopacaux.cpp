@@ -65,7 +65,8 @@ bool MopacAux::read(std::istream &in, Core::Molecule &molecule)
   SlaterSet *basis = new SlaterSet;
 
   for (unsigned int i = 0; i < m_atomPos.size(); ++i) {
-    Atom a = molecule.addAtom(static_cast<unsigned char>(m_atomNums[i]));
+    Core::Molecule::AtomType a =
+        molecule.addAtom(static_cast<unsigned char>(m_atomNums[i]));
     a.setPosition3d(m_atomPos[i]);
   }
   // Do simple bond perception.

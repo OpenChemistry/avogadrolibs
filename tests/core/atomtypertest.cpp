@@ -41,7 +41,7 @@ TEST(AtomTyper, singleAtomTyping)
     MassTyper() : AtomTyper<double>(NULL) {}
     Array<double>& typesRef() { return m_types; }
   protected:
-    double type(const Atom &atom)
+    double type(const Molecule::AtomType &atom)
     {
       return Elements::mass(atom.atomicNumber());
     }

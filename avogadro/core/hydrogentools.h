@@ -19,14 +19,13 @@
 
 #include "avogadrocoreexport.h"
 
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
 #include <vector>
 
 namespace Avogadro {
 namespace Core {
-class Atom;
-class Molecule;
 
 class AVOGADROCORE_EXPORT HydrogenTools
 {
@@ -62,7 +61,7 @@ public:
    * bonds to add, a negative number indicates the number of bonds that need to
    * be removed.
    */
-  static int valencyAdjustment(const Atom &atom);
+  static int valencyAdjustment(const Molecule::AtomType &atom);
 
   /**
    * Obtain the indices of hydrogens that can be removed from @a atom.
@@ -74,7 +73,8 @@ public:
    * @note This function modifies neither @a atom nor its parent molecule. It
    * only pushes the indices of hydrogens to remove to the end of @a indices.
    */
-  static int extraHydrogenIndices(const Atom &atom, int numberOfHydrogens,
+  static int extraHydrogenIndices(const Molecule::AtomType &atom,
+                                  int numberOfHydrogens,
                                   std::vector<size_t> &indices);
 
   /**
@@ -87,7 +87,8 @@ public:
    * bonded atoms, but this is not guaranteed.
    */
   static void generateNewHydrogenPositions(
-      const Atom &atom, int numberOfHydrogens, std::vector<Vector3> &positions);
+      const Molecule::AtomType &atom, int numberOfHydrogens,
+      std::vector<Vector3> &positions);
 
 private:
   HydrogenTools(); // Not implemented

@@ -54,7 +54,7 @@ TEST(CmlTest, atoms)
 
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(8));
-  Atom atom = molecule.atom(0);
+  Molecule::AtomType atom = molecule.atom(0);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   atom = molecule.atom(1);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(6));
@@ -79,7 +79,7 @@ TEST(CmlTest, bonds)
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(8));
   EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(7));
 
-  Bond bond = molecule.bond(0);
+  Molecule::BondType bond = molecule.bond(0);
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
@@ -112,7 +112,7 @@ TEST(CmlTest, fractionalCoords)
   Molecule molecule;
   cml.readString(cmlStr, molecule);
   ASSERT_EQ(1, molecule.atomCount());
-  Atom atom = molecule.atom(0);
+  Molecule::AtomType atom = molecule.atom(0);
   EXPECT_EQ(1, atom.atomicNumber());
   EXPECT_TRUE(atom.position3d().isApprox(
                 Vector3(static_cast<Real>(2.33942),
@@ -151,12 +151,12 @@ TEST(CmlTest, saveFile)
   EXPECT_EQ(writeMol.data("name").toString(), "Ethane");
   EXPECT_EQ(writeMol.atomCount(), static_cast<size_t>(8));
   EXPECT_EQ(writeMol.bondCount(), static_cast<size_t>(7));
-  Atom atom = writeMol.atom(7);
+  Molecule::AtomType atom = writeMol.atom(7);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   EXPECT_EQ(atom.position3d().x(), -1.18499);
   EXPECT_EQ(atom.position3d().y(),  0.004424);
   EXPECT_EQ(atom.position3d().z(), -0.987522);
-  Bond bond = writeMol.bond(0);
+  Molecule::BondType bond = writeMol.bond(0);
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));

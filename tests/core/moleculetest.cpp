@@ -29,8 +29,6 @@ using Avogadro::Vector2;
 using Avogadro::Vector3;
 using Avogadro::Vector3f;
 using Avogadro::Core::Array;
-using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
 using Avogadro::Core::Color3f;
 using Avogadro::Core::Mesh;
 using Avogadro::Core::Molecule;
@@ -48,9 +46,9 @@ protected:
 
 MoleculeTest::MoleculeTest()
 {
-  Atom o1 = m_testMolecule.addAtom(8);
-  Atom h2 = m_testMolecule.addAtom(1);
-  Atom h3 = m_testMolecule.addAtom(1);
+  Molecule::AtomType o1 = m_testMolecule.addAtom(8);
+  Molecule::AtomType h2 = m_testMolecule.addAtom(1);
+  Molecule::AtomType h3 = m_testMolecule.addAtom(1);
 
   o1.setPosition3d(Vector3(0, 0, 0));
   h2.setPosition3d(Vector3(0.6, -0.5, 0));
@@ -91,30 +89,18 @@ MoleculeTest::MoleculeTest()
   mesh->setStable(false);
 }
 
-TEST_F(MoleculeTest, size)
-{
-  Molecule molecule;
-  EXPECT_EQ(molecule.size(), static_cast<Index>(0));
-}
-
-TEST_F(MoleculeTest, isEmpty)
-{
-  Molecule molecule;
-  EXPECT_EQ(molecule.isEmpty(), true);
-}
-
 TEST_F(MoleculeTest, addAtom)
 {
   Molecule molecule;
   EXPECT_EQ(molecule.atomCount(), static_cast<Index>(0));
 
-  Avogadro::Core::Atom atom = molecule.addAtom(6);
+  Molecule::AtomType atom = molecule.addAtom(6);
   EXPECT_EQ(atom.isValid(), true);
   EXPECT_EQ(molecule.atomCount(), static_cast<Index>(1));
   EXPECT_EQ(atom.index(), 0);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(6));
 
-  Avogadro::Core::Atom atom2 = molecule.addAtom(1);
+  Molecule::AtomType atom2 = molecule.addAtom(1);
   EXPECT_EQ(atom2.isValid(), true);
   EXPECT_EQ(molecule.atomCount(), static_cast<Index>(2));
   EXPECT_EQ(atom2.index(), 1);
@@ -124,11 +110,11 @@ TEST_F(MoleculeTest, addAtom)
 TEST_F(MoleculeTest, removeAtom)
 {
   Molecule molecule;
-  Atom atom0 = molecule.addAtom(6);
-  Atom atom1 = molecule.addAtom(1);
-  Atom atom2 = molecule.addAtom(1);
-  Atom atom3 = molecule.addAtom(1);
-  Atom atom4 = molecule.addAtom(1);
+  Molecule::AtomType atom0 = molecule.addAtom(6);
+  Molecule::AtomType atom1 = molecule.addAtom(1);
+  Molecule::AtomType atom2 = molecule.addAtom(1);
+  Molecule::AtomType atom3 = molecule.addAtom(1);
+  Molecule::AtomType atom4 = molecule.addAtom(1);
   molecule.addBond(atom0, atom1, 1);
   molecule.addBond(atom0, atom2, 1);
   molecule.addBond(atom0, atom3, 1);
@@ -152,9 +138,9 @@ TEST_F(MoleculeTest, addBond)
   Molecule molecule;
   EXPECT_EQ(molecule.bondCount(), static_cast<Index>(0));
 
-  Atom a = molecule.addAtom(1);
-  Atom b = molecule.addAtom(1);
-  Bond bondAB = molecule.addBond(a, b);
+  Molecule::AtomType a = molecule.addAtom(1);
+  Molecule::AtomType b = molecule.addAtom(1);
+  Molecule::BondType bondAB = molecule.addBond(a, b);
   EXPECT_TRUE(bondAB.isValid());
   EXPECT_EQ(bondAB.molecule(), &molecule);
   EXPECT_EQ(molecule.bondCount(), static_cast<Index>(1));
@@ -163,15 +149,15 @@ TEST_F(MoleculeTest, addBond)
   EXPECT_EQ(bondAB.atom2().index(), b.index());
   EXPECT_EQ(bondAB.order(), static_cast<unsigned char>(1));
 
-  Atom c = molecule.addAtom(1);
-  Bond bondBC = molecule.addBond(b, c, 2);
+  Molecule::AtomType c = molecule.addAtom(1);
+  Molecule::BondType bondBC = molecule.addBond(b, c, 2);
   EXPECT_TRUE(bondBC.isValid());
   EXPECT_EQ(molecule.bondCount(), static_cast<Index>(2));
   EXPECT_EQ(bondBC.index(), static_cast<Index>(1));
   EXPECT_EQ(bondBC.order(), static_cast<unsigned char>(2));
 
   // try to lookup nonexistant bond
-  Bond bond = molecule.bond(a, c);
+  Molecule::BondType bond = molecule.bond(a, c);
   EXPECT_FALSE(bond.isValid());
 
   // try to lookup bond between a and b
@@ -192,10 +178,10 @@ TEST_F(MoleculeTest, addBond)
 TEST_F(MoleculeTest, removeBond)
 {
   Molecule molecule;
-  Atom a = molecule.addAtom(1);
-  Atom b = molecule.addAtom(1);
-  Bond bondAB = molecule.addBond(a, b);
-  Atom c = molecule.addAtom(1);
+  Molecule::AtomType a = molecule.addAtom(1);
+  Molecule::AtomType b = molecule.addAtom(1);
+  Molecule::BondType bondAB = molecule.addBond(a, b);
+  Molecule::AtomType c = molecule.addAtom(1);
   molecule.addBond(b, c, 2);
 
   EXPECT_EQ(3, molecule.atomCount());
@@ -218,17 +204,17 @@ TEST_F(MoleculeTest, removeBond)
 TEST_F(MoleculeTest, findBond)
 {
   Molecule molecule;
-  Atom a1 = molecule.addAtom(5);
-  Atom a2 = molecule.addAtom(6);
-  Bond b = molecule.addBond(a1, a2, 1);
+  Molecule::AtomType a1 = molecule.addAtom(5);
+  Molecule::AtomType a2 = molecule.addAtom(6);
+  Molecule::BondType b = molecule.addBond(a1, a2, 1);
 
   EXPECT_EQ(molecule.bond(a1, a2).index(), b.index());
   EXPECT_EQ(molecule.bond(a2, a1).index(), b.index());
 
-  std::vector<Bond> bonds = molecule.bonds(a1);
+  Array<Molecule::BondType> bonds = molecule.bonds(a1);
   EXPECT_EQ(bonds.size(), 1);
 
-  Atom a3 = molecule.addAtom(7);
+  Molecule::AtomType a3 = molecule.addAtom(7);
   molecule.addBond(a1, a3, 1);
   EXPECT_EQ(molecule.bonds(a1).size(), 2);
   EXPECT_EQ(molecule.bonds(a3).size(), 1);
@@ -264,9 +250,9 @@ TEST_F(MoleculeTest, dataMap)
 TEST_F(MoleculeTest, perceiveBondsSimple)
 {
   Molecule molecule;
-  Atom o1 = molecule.addAtom(8);
-  Atom h2 = molecule.addAtom(1);
-  Atom h3 = molecule.addAtom(1);
+  Molecule::AtomType o1 = molecule.addAtom(8);
+  Molecule::AtomType h2 = molecule.addAtom(1);
+  Molecule::AtomType h3 = molecule.addAtom(1);
 
   o1.setPosition3d(Vector3(0, 0, 0));
   h2.setPosition3d(Vector3(0.6, -0.5, 0));

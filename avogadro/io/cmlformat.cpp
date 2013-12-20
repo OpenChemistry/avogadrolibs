@@ -163,7 +163,7 @@ public:
       return false;
 
     xml_node node = atomArray.child("atom");
-    Atom atom;
+    Molecule::AtomType atom;
     while (node) {
       // Step through all of the atom attributes and store them.
       xml_attribute attribute = node.attribute("elementType");
@@ -254,7 +254,7 @@ public:
 
     while (node) {
       xml_attribute attribute = node.attribute("atomRefs2");
-      Bond bond;
+      Molecule::BondType bond;
       if (attribute) {
         // Should contain two elements separated by a space.
         std::string refs(attribute.value());
@@ -504,7 +504,7 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
     std::ostringstream index;
     index << 'a' <<  i + 1;
     atomNode.append_attribute("id") = index.str().c_str();
-    Atom a = mol.atom(i);
+    Molecule::AtomType a = mol.atom(i);
     atomNode.append_attribute("elementType") =
         Elements::symbol(a.atomicNumber());
     if (cell) {
@@ -523,7 +523,7 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
   xml_node bondArrayNode = moleculeNode.append_child("bondArray");
   for (Index i = 0; i < mol.bondCount(); ++i) {
     xml_node bondNode = bondArrayNode.append_child("bond");
-    Bond b = mol.bond(i);
+    Molecule::BondType b = mol.bond(i);
     std::ostringstream index;
     index << "a" << b.atom1().index() + 1 << " a" << b.atom2().index() + 1;
     bondNode.append_attribute("atomRefs2") = index.str().c_str();

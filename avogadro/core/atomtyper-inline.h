@@ -51,13 +51,13 @@ void AtomTyper<OutputType>::run()
   initialize();
   Index numAtoms = m_molecule ? m_molecule->atomCount() : 0;
   for (Index atomId = 0; atomId < numAtoms; ++atomId) {
-    Atom atom = m_molecule->atom(atomId);
+    Molecule::AtomType atom = m_molecule->atom(atomId);
     m_types.push_back(type(atom));
   }
 }
 
 template <typename OutputType>
-OutputType AtomTyper<OutputType>::atomType(const Atom &atom)
+OutputType AtomTyper<OutputType>::atomType(const Molecule::AtomType &atom)
 {
   OutputType result;
   if (atom.isValid() && atom.molecule() == m_molecule) {

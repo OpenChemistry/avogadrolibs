@@ -111,7 +111,7 @@ bool GromacsFormat::read(std::istream &in, Molecule &molecule)
         return false;
       }
     }
-    Atom atom = molecule.addAtom(it->second);
+    Molecule::AtomType atom = molecule.addAtom(it->second);
 
     // Coords
     for (int i = 0; i < 3; ++i) {

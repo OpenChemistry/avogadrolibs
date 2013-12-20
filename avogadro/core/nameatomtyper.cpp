@@ -31,7 +31,7 @@ NameAtomTyper::~NameAtomTyper()
 {
 }
 
-std::string NameAtomTyper::type(const Atom &atom)
+std::string NameAtomTyper::type(const Molecule::AtomType &atom)
 {
   return std::string(Elements::name(atom.atomicNumber()));
 }

@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
@@ -230,9 +231,9 @@ TEST(UnitCellTest, fractionalCoordinates)
   mol.addAtom(1).setPosition3d(Vector3(static_cast<Real>(-2.5),
                                        static_cast<Real>(0.57717),
                                        static_cast<Real>(4.29149)));
-  std::vector<Vector3> ccoords_ref = mol.atomPositions3d();
+  Array<Vector3> ccoords_ref = mol.atomPositions3d();
 
-  std::vector<Vector3> fcoords;
+  Array<Vector3> fcoords;
   EXPECT_TRUE(CrystalTools::fractionalCoordinates(mol, fcoords));
   EXPECT_EQ(mol.atomCount(), fcoords.size());
   EXPECT_TRUE(std::fabs(fcoords[0][0] - static_cast<Real>(0)) < 1e-4);
@@ -256,7 +257,7 @@ TEST(UnitCellTest, fractionalCoordinates)
 
   mol.atomPositions3d().clear();
   EXPECT_TRUE(CrystalTools::setFractionalCoordinates(mol, fcoords));
-  std::vector<Vector3> ccoords = mol.atomPositions3d();
+  Array<Vector3> ccoords = mol.atomPositions3d();
   for (int i = 0; i < 6; ++i) {
     for (int j = 0; j < 3; ++j) {
       EXPECT_FLOAT_EQ(static_cast<float>(ccoords_ref[i][j]),
@@ -277,7 +278,7 @@ TEST(UnitCellTest, wrapAtomsToUnitCell)
   for (int i = 0; i < 10; ++i)
     mol.addAtom(1).setPosition3d(Vector3::Zero());
 
-  std::vector<Vector3> fcoords;
+  Array<Vector3> fcoords;
   for (int i = 0; i < 10; ++i) {
     fcoords.push_back(Vector3(static_cast<Real>(i + i / 10.),
                               static_cast<Real>(i + 2 * i / 10.),

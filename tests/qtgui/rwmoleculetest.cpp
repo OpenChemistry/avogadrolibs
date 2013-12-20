@@ -140,7 +140,7 @@ TEST(RWMoleculeTest, removeAtom)
   Atom a4 = mol.addAtom(5); // B
 
   const Vector3 pos(Real(1), Real(2), Real(3));
-  mol.setPosition3d(0, pos);
+  mol.setAtomPosition3d(0, pos);
 
   ASSERT_EQ(5, mol.atomCount());
   ASSERT_EQ(std::string("HHeLiBeB"), formula(mol));
@@ -181,9 +181,9 @@ TEST(RWMoleculeTest, removeAtom)
 
   // atom 0 was the only one with a position, so all positions should be 0,0,0:
   for (Index i = 0; i < mol.atomCount(); ++i) {
-    EXPECT_EQ(Real(0), mol.position3d(i).x()) << " for atom index " << i;
-    EXPECT_EQ(Real(0), mol.position3d(i).y()) << " for atom index " << i;
-    EXPECT_EQ(Real(0), mol.position3d(i).z()) << " for atom index " << i;
+    EXPECT_EQ(Real(0), mol.atomPosition3d(i).x()) << " for atom index " << i;
+    EXPECT_EQ(Real(0), mol.atomPosition3d(i).y()) << " for atom index " << i;
+    EXPECT_EQ(Real(0), mol.atomPosition3d(i).z()) << " for atom index " << i;
   }
 
   mol.undoStack().undo();
@@ -202,9 +202,9 @@ TEST(RWMoleculeTest, removeAtom)
   EXPECT_TRUE(mol.bondByUniqueId(7).isValid());
   EXPECT_TRUE(mol.bondByUniqueId(9).isValid());
 
-  EXPECT_EQ(pos.x(), mol.position3d(0).x());
-  EXPECT_EQ(pos.y(), mol.position3d(0).y());
-  EXPECT_EQ(pos.z(), mol.position3d(0).z());
+  EXPECT_EQ(pos.x(), mol.atomPosition3d(0).x());
+  EXPECT_EQ(pos.y(), mol.atomPosition3d(0).y());
+  EXPECT_EQ(pos.z(), mol.atomPosition3d(0).z());
 
   mol.undoStack().undo();
 
@@ -247,7 +247,7 @@ TEST(RWMoleculeTest, clearAtoms)
   Atom a4 = mol.addAtom(5); // B
 
   const Vector3 pos(Real(1), Real(2), Real(3));
-  mol.setPosition3d(0, pos);
+  mol.setAtomPosition3d(0, pos);
 
   ASSERT_EQ(5, mol.atomCount());
   ASSERT_EQ(std::string("HHeLiBeB"), formula(mol));
@@ -354,7 +354,7 @@ TEST(RWMoleculeTest, setAtomicNumber)
   EXPECT_EQ(1, mol.atomicNumber(0));
 }
 
-TEST(RWMoleculeTest, setPositions3d)
+TEST(RWMoleculeTest, setAtomPositions3d)
 {
   RWMolecule mol;
   mol.addAtom(1);
@@ -372,39 +372,39 @@ TEST(RWMoleculeTest, setPositions3d)
   pos.push_back(Vector3(gen, gen, gen)); gen++;
   pos.push_back(Vector3(gen, gen, gen)); gen++;
 
-  mol.setPositions3d(pos);
-  EXPECT_TRUE(std::equal(mol.positions3d().begin(), mol.positions3d().end(),
-                         pos.begin()));
+  mol.setAtomPositions3d(pos);
+  EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
+                         mol.atomPositions3d().end(), pos.begin()));
   mol.undoStack().undo();
-  EXPECT_TRUE(mol.positions3d().empty());
+  EXPECT_TRUE(mol.atomPositions3d().empty());
   mol.undoStack().redo();
-  EXPECT_TRUE(std::equal(mol.positions3d().begin(), mol.positions3d().end(),
-                         pos.begin()));
+  EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
+                         mol.atomPositions3d().end(), pos.begin()));
   mol.undoStack().undo();
 
   // Test merging for interactive edits:
   mol.setInteractive(true);
-  mol.setPositions3d(pos);
+  mol.setAtomPositions3d(pos);
   for (Array<Vector3>::iterator it = pos.begin(), itEnd = pos.end();
        it != itEnd; ++it) {
     it->x() += static_cast<Real>(pos.size());
     it->y() += static_cast<Real>(pos.size());
     it->z() += static_cast<Real>(pos.size());
   }
-  mol.setPositions3d(pos);
+  mol.setAtomPositions3d(pos);
   mol.setInteractive(false);
 
-  EXPECT_TRUE(std::equal(mol.positions3d().begin(), mol.positions3d().end(),
-                         pos.begin()));
+  EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
+                         mol.atomPositions3d().end(), pos.begin()));
   EXPECT_EQ(1, mol.undoStack().count());
   mol.undoStack().undo();
-  EXPECT_TRUE(mol.positions3d().empty());
+  EXPECT_TRUE(mol.atomPositions3d().empty());
   mol.undoStack().redo();
-  EXPECT_TRUE(std::equal(mol.positions3d().begin(), mol.positions3d().end(),
-                         pos.begin()));
+  EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
+                         mol.atomPositions3d().end(), pos.begin()));
 }
 
-TEST(RWMoleculeTest, setPosition3d)
+TEST(RWMoleculeTest, setAtomPosition3d)
 {
   RWMolecule mol;
   mol.addAtom(1);
@@ -414,38 +414,38 @@ TEST(RWMoleculeTest, setPosition3d)
   mol.addAtom(5);
   mol.undoStack().clear();
 
-  EXPECT_TRUE(mol.positions3d().empty());
-  mol.setPosition3d(0, Vector3(Real(1), Real(2), Real(3)));
-  EXPECT_EQ(mol.atomicNumbers().size(), mol.positions3d().size());
-  EXPECT_EQ(Real(1), mol.position3d(0).x());
-  EXPECT_EQ(Real(2), mol.position3d(0).y());
-  EXPECT_EQ(Real(3), mol.position3d(0).z());
+  EXPECT_TRUE(mol.atomPositions3d().empty());
+  mol.setAtomPosition3d(0, Vector3(Real(1), Real(2), Real(3)));
+  EXPECT_EQ(mol.atomicNumbers().size(), mol.atomPositions3d().size());
+  EXPECT_EQ(Real(1), mol.atomPosition3d(0).x());
+  EXPECT_EQ(Real(2), mol.atomPosition3d(0).y());
+  EXPECT_EQ(Real(3), mol.atomPosition3d(0).z());
   for (Index i = 1; i < 5; ++i)
-    EXPECT_EQ(Vector3::Zero(), mol.position3d(i));
+    EXPECT_EQ(Vector3::Zero(), mol.atomPosition3d(i));
 
   mol.undoStack().undo();
   for (Index i = 0; i < 5; ++i)
-    EXPECT_EQ(Vector3::Zero(), mol.position3d(i));
+    EXPECT_EQ(Vector3::Zero(), mol.atomPosition3d(i));
 
   mol.undoStack().redo();
-  EXPECT_EQ(Real(1), mol.position3d(0).x());
-  EXPECT_EQ(Real(2), mol.position3d(0).y());
-  EXPECT_EQ(Real(3), mol.position3d(0).z());
+  EXPECT_EQ(Real(1), mol.atomPosition3d(0).x());
+  EXPECT_EQ(Real(2), mol.atomPosition3d(0).y());
+  EXPECT_EQ(Real(3), mol.atomPosition3d(0).z());
   for (Index i = 1; i < 5; ++i)
-    EXPECT_EQ(Vector3::Zero(), mol.position3d(i));
+    EXPECT_EQ(Vector3::Zero(), mol.atomPosition3d(i));
 
   mol.undoStack().undo();
   mol.undoStack().clear();
 
   // Test command merging for interactive editing:
   mol.setInteractive(true);
-  mol.setPosition3d(0, Vector3(Real(1), Real(2), Real(3)));
-  mol.setPosition3d(3, Vector3(Real(4), Real(5), Real(6)));
-  mol.setPosition3d(0, Vector3(Real(7), Real(8), Real(9)));
-  mol.setPosition3d(1, Vector3(Real(6), Real(4), Real(2)));
+  mol.setAtomPosition3d(0, Vector3(Real(1), Real(2), Real(3)));
+  mol.setAtomPosition3d(3, Vector3(Real(4), Real(5), Real(6)));
+  mol.setAtomPosition3d(0, Vector3(Real(7), Real(8), Real(9)));
+  mol.setAtomPosition3d(1, Vector3(Real(6), Real(4), Real(2)));
   mol.setInteractive(false);
 
-  Array<Vector3> pos(mol.positions3d());
+  Array<Vector3> pos(mol.atomPositions3d());
   EXPECT_EQ(Vector3(Real(7), Real(8), Real(9)), pos[0]);
   EXPECT_EQ(Vector3(Real(6), Real(4), Real(2)), pos[1]);
   EXPECT_EQ(Vector3::Zero(), pos[2]);
@@ -455,9 +455,10 @@ TEST(RWMoleculeTest, setPosition3d)
   EXPECT_EQ(1, mol.undoStack().count());
   mol.undoStack().undo();
   for (Index i = 1; i < 5; ++i)
-    EXPECT_EQ(Vector3::Zero(), mol.position3d(i));
+    EXPECT_EQ(Vector3::Zero(), mol.atomPosition3d(i));
   mol.undoStack().redo();
-  EXPECT_TRUE(std::equal(pos.begin(), pos.end(), mol.positions3d().begin()));
+  EXPECT_TRUE(std::equal(pos.begin(), pos.end(),
+                         mol.atomPositions3d().begin()));
 }
 
 TEST(RWMoleculeTest, addBond)
@@ -754,9 +755,9 @@ TEST(RWMoleculeTest, AtomType)
   a1.setPosition3d(Vector3(Real(6), Real(7), Real(8)));
 
   EXPECT_EQ(Vector3(Real(3), Real(4), Real(5)), a0.position3d());
-  EXPECT_EQ(Vector3(Real(3), Real(4), Real(5)), mol.position3d(0));
+  EXPECT_EQ(Vector3(Real(3), Real(4), Real(5)), mol.atomPosition3d(0));
   EXPECT_EQ(Vector3(Real(6), Real(7), Real(8)), a1.position3d());
-  EXPECT_EQ(Vector3(Real(6), Real(7), Real(8)), mol.position3d(1));
+  EXPECT_EQ(Vector3(Real(6), Real(7), Real(8)), mol.atomPosition3d(1));
 
   Atom other(&mol, 0);
   EXPECT_EQ(a0, other);

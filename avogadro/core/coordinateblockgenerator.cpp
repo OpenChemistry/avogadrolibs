@@ -75,7 +75,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
 
   // Variables for loops below
   const Index numAtoms = m_molecule->atomCount();
-  Atom atom;
+  Molecule::AtomType atom;
   unsigned char atomicNumber;
   const char *symbol;
   const char *name;

@@ -38,6 +38,7 @@
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
+using Avogadro::QtGui::Molecule;
 using Avogadro::QtGui::MoleQueueDialog;
 using Avogadro::QtGui::MoleQueueManager;
 
@@ -623,7 +624,7 @@ void GamessInputDialog::updatePreviewText()
 
   if (m_molecule) {
     for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
-      Core::Atom atom = m_molecule->atom(i);
+      Molecule::AtomType atom = m_molecule->atom(i);
       file += QString("%1 %2 %3 %4 %5\n")
           .arg(Core::Elements::symbol(atom.atomicNumber()), -3)
           .arg(static_cast<float>(atom.atomicNumber()), 5, 'f', 1)

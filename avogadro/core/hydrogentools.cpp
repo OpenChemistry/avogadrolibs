@@ -16,6 +16,7 @@
 
 #include "hydrogentools.h"
 
+#include "array.h"
 #include "atom.h"
 #include "bond.h"
 #include "elements.h"
@@ -34,20 +35,18 @@
 #endif
 
 using Avogadro::Vector3;
-using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
 using Avogadro::Core::atomValence;
 using Avogadro::Core::Molecule;
 
-typedef std::vector<Avogadro::Core::Bond> NeighborListType;
-
 namespace {
 
+typedef Avogadro::Core::Array<Molecule::BondType> NeighborListType;
+
 // Return the other atom in the bond.
-inline Atom getOtherAtom(const Atom &atom, const Bond &bond)
+inline Molecule::AtomType getOtherAtom(const Molecule::AtomType &atom,
+                                       const Molecule::BondType &bond)
 {
   return bond.atom1().index() != atom.index() ? bond.atom1() : bond.atom2();
-
 }
 
 inline unsigned int countExistingBonds(const NeighborListType &bonds)
@@ -60,8 +59,8 @@ inline unsigned int countExistingBonds(const NeighborListType &bonds)
   return result;
 }
 
-inline unsigned int lookupValency(const Atom &atom,
-                                   unsigned int numExistingBonds)
+inline unsigned int lookupValency(const Molecule::AtomType &atom,
+                                  unsigned int numExistingBonds)
 {
   char charge(0); /// todo No charges (yet?)...
   return atomValence(atom.atomicNumber(), charge, numExistingBonds);
@@ -82,9 +81,9 @@ namespace Core {
 
 void HydrogenTools::removeAllHydrogens(Molecule &molecule)
 {
-  const std::vector<unsigned char> atomicNums(molecule.atomicNumbers());
+  const Array<unsigned char> atomicNums(molecule.atomicNumbers());
   size_t atomIndex = molecule.atomCount() - 1;
-  for (std::vector<unsigned char>::const_reverse_iterator
+  for (Array<unsigned char>::const_reverse_iterator
        it = atomicNums.rbegin(), itEnd = atomicNums.rend(); it != itEnd;
        ++it, --atomIndex) {
     if (*it == 1)
@@ -111,7 +110,7 @@ void HydrogenTools::adjustHydrogens(Molecule &molecule, Adjustment adjustment)
   // Iterate through all atoms in the molecule, adding hydrogens as needed
   // and building up a list of hydrogens that should be removed.
   for (size_t atomIndex = 0; atomIndex < numAtoms; ++atomIndex) {
-    const Atom atom(molecule.atom(atomIndex));
+    const Molecule::AtomType atom(molecule.atom(atomIndex));
     int hDiff = valencyAdjustment(atom);
     // Add hydrogens:
     if (doAdd && hDiff > 0) {
@@ -119,7 +118,7 @@ void HydrogenTools::adjustHydrogens(Molecule &molecule, Adjustment adjustment)
       generateNewHydrogenPositions(atom, hDiff, newHPos);
       for (std::vector<Vector3>::const_iterator it = newHPos.begin(),
            itEnd = newHPos.end(); it != itEnd; ++it) {
-        Atom newH(molecule.addAtom(1));
+        Molecule::AtomType newH(molecule.addAtom(1));
         newH.setPosition3d(*it);
         molecule.addBond(atom, newH, 1);
       }
@@ -144,7 +143,7 @@ void HydrogenTools::adjustHydrogens(Molecule &molecule, Adjustment adjustment)
   }
 }
 
-int HydrogenTools::valencyAdjustment(const Atom &atom)
+int HydrogenTools::valencyAdjustment(const Molecule::AtomType &atom)
 {
   int result = 0;
   if (atom.isValid()) {
@@ -156,7 +155,7 @@ int HydrogenTools::valencyAdjustment(const Atom &atom)
   return result;
 }
 
-int HydrogenTools::extraHydrogenIndices(const Atom &atom,
+int HydrogenTools::extraHydrogenIndices(const Molecule::AtomType &atom,
                                          int numberOfHydrogens,
                                          std::vector<size_t> &indices)
 {
@@ -167,7 +166,7 @@ int HydrogenTools::extraHydrogenIndices(const Atom &atom,
   const NeighborListType bonds(atom.molecule()->bonds(atom));
   for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
        it != itEnd && result < numberOfHydrogens; ++it) {
-    const Atom otherAtom = getOtherAtom(atom, *it);
+    const Molecule::AtomType otherAtom = getOtherAtom(atom, *it);
     if (otherAtom.atomicNumber() == 1) {
       indices.push_back(otherAtom.index());
       ++result;
@@ -178,7 +177,8 @@ int HydrogenTools::extraHydrogenIndices(const Atom &atom,
 }
 
 void HydrogenTools::generateNewHydrogenPositions(
-    const Atom &atom, int numberOfHydrogens, std::vector<Vector3> &positions)
+    const Molecule::AtomType &atom, int numberOfHydrogens,
+    std::vector<Vector3> &positions)
 {
   if (!atom.isValid())
     return;
@@ -189,7 +189,7 @@ void HydrogenTools::generateNewHydrogenPositions(
   allVectors.reserve(bonds.size() + static_cast<size_t>(numberOfHydrogens));
   for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
        it != itEnd; ++it) {
-    Atom otherAtom = getOtherAtom(atom, *it);
+    Molecule::AtomType otherAtom = getOtherAtom(atom, *it);
     Vector3 delta = otherAtom.position3d() - atom.position3d();
     if (!delta.isZero(1e-5))
       allVectors.push_back(delta.normalized());

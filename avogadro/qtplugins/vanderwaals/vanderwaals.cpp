@@ -26,6 +26,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 using Core::Elements;
+using Core::Molecule;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::SphereGeometry;
@@ -50,7 +51,7 @@ void VanDerWaals::process(const Core::Molecule &molecule,
   geometry->addDrawable(spheres);
 
   for (Index i = 0; i < molecule.atomCount(); ++i) {
-    Core::Atom atom = molecule.atom(i);
+    Molecule::AtomType atom = molecule.atom(i);
     unsigned char atomicNumber = atom.atomicNumber();
     const unsigned char *c = Elements::color(atomicNumber);
     Vector3ub color(c[0], c[1], c[2]);

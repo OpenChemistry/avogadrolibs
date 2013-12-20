@@ -568,7 +568,7 @@ void OpenBabel::onPerceiveBondsFinished(const QByteArray &output)
 
   m_molecule->clearBonds();
   for (size_t i = 0; i < mol.bondCount(); ++i) {
-    Avogadro::Core::Bond bond = mol.bond(i);
+    Molecule::BondType bond = mol.bond(i);
     m_molecule->addBond(m_molecule->atom(bond.atom1().index()),
                         m_molecule->atom(bond.atom2().index()),
                         bond.order());
@@ -730,11 +730,11 @@ void OpenBabel::onHydrogenOperationFinished(const QByteArray &mdl)
   // Update molecule
   m_molecule->clearAtoms();
   for (Index i = 0; i < mol.atomCount(); ++i) {
-    Core::Atom atom = mol.atom(i);
+    Molecule::AtomType atom = mol.atom(i);
     m_molecule->addAtom(atom.atomicNumber()).setPosition3d(atom.position3d());
   }
   for (Index i = 0; i < mol.bondCount(); ++i) {
-    Core::Bond bond = mol.bond(i);
+    Molecule::BondType bond = mol.bond(i);
     m_molecule->addBond(m_molecule->atom(bond.atom1().index()),
                         m_molecule->atom(bond.atom2().index()),
                         bond.order());

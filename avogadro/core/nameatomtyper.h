@@ -38,7 +38,7 @@ public:
   ~NameAtomTyper() AVO_OVERRIDE;
 
 protected:
-  std::string type(const Atom &atom) AVO_OVERRIDE;
+  std::string type(const Molecule::AtomType &atom) AVO_OVERRIDE;
 };
 
 } // namespace Core

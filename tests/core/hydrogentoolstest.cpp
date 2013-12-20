@@ -31,14 +31,14 @@ TEST(HydrogenToolsTest, removeAllHydrogens)
   HydrogenTools::removeAllHydrogens(mol);
   EXPECT_EQ(mol.atomCount(), 0);
 
-  Atom C1 = mol.addAtom(6);
-  Atom C2 = mol.addAtom(6);
-  Atom C3 = mol.addAtom(6);
+  Molecule::AtomType C1 = mol.addAtom(6);
+  Molecule::AtomType C2 = mol.addAtom(6);
+  Molecule::AtomType C3 = mol.addAtom(6);
 
   mol.addBond(C1, C2, 1);
   mol.addBond(C2, C3, 1);
 
-  Atom H = mol.addAtom(1);
+  Molecule::AtomType H = mol.addAtom(1);
   mol.addBond(C1, H);
   H = mol.addAtom(1);
   mol.addBond(C1, H);
@@ -64,9 +64,9 @@ TEST(HydrogenToolsTest, removeAllHydrogens)
 TEST(HydrogenToolsTest, adjustHydrogens_C3H8)
 {
   Molecule mol;
-  Atom C1 = mol.addAtom(6);
-  Atom C2 = mol.addAtom(6);
-  Atom C3 = mol.addAtom(6);
+  Molecule::AtomType C1 = mol.addAtom(6);
+  Molecule::AtomType C2 = mol.addAtom(6);
+  Molecule::AtomType C3 = mol.addAtom(6);
   mol.addBond(C1, C2, 1);
   mol.addBond(C2, C3, 1);
 
@@ -79,10 +79,10 @@ TEST(HydrogenToolsTest, adjustHydrogens_C3H8)
 TEST(HydrogenToolsTest, adjustHydrogens_C2H7NO)
 {
   Molecule mol;
-  Atom C1 = mol.addAtom(6);
-  Atom C2 = mol.addAtom(6);
-  Atom O1 = mol.addAtom(8);
-  Atom N1 = mol.addAtom(7);
+  Molecule::AtomType C1 = mol.addAtom(6);
+  Molecule::AtomType C2 = mol.addAtom(6);
+  Molecule::AtomType O1 = mol.addAtom(8);
+  Molecule::AtomType N1 = mol.addAtom(7);
   mol.addBond(C1, C2, 1);
   mol.addBond(C2, O1, 1);
   mol.addBond(O1, N1, 1);
@@ -96,9 +96,9 @@ TEST(HydrogenToolsTest, adjustHydrogens_C2H7NO)
 TEST(HydrogenToolsTest, adjustHydrogens_C2H4O)
 {
   Molecule mol;
-  Atom C1 = mol.addAtom(6);
-  Atom C2 = mol.addAtom(6);
-  Atom O1 = mol.addAtom(8);
+  Molecule::AtomType C1 = mol.addAtom(6);
+  Molecule::AtomType C2 = mol.addAtom(6);
+  Molecule::AtomType O1 = mol.addAtom(8);
   mol.addBond(C1, C2, 1);
   mol.addBond(C2, O1, 2);
 
@@ -129,7 +129,7 @@ TEST(HydrogenToolsTest, adjustHydrogens_adjustments)
     }
 
     Molecule mol;
-    Atom C1 = mol.addAtom(6); // Overbond this atom
+    Molecule::AtomType C1 = mol.addAtom(6); // Overbond this atom
     mol.addBond(C1, mol.addAtom(1));
     mol.addBond(C1, mol.addAtom(1));
     mol.addBond(C1, mol.addAtom(1));
@@ -140,7 +140,7 @@ TEST(HydrogenToolsTest, adjustHydrogens_adjustments)
     mol.addBond(C1, mol.addAtom(1));
     mol.addBond(C1, mol.addAtom(1));
     mol.addBond(C1, mol.addAtom(1));
-    Atom C2 = mol.addAtom(6); // Underbond this atom
+    Molecule::AtomType C2 = mol.addAtom(6); // Underbond this atom
     mol.addBond(C2, mol.addAtom(1));
 
     EXPECT_EQ(std::string("C2H11"), mol.formula());
@@ -152,7 +152,7 @@ TEST(HydrogenToolsTest, adjustHydrogens_adjustments)
 TEST(HydrogenToolsTest, valencyAdjustment_C)
 {
   Molecule mol;
-  Atom C = mol.addAtom(6);
+  Molecule::AtomType C = mol.addAtom(6);
   int expectedAdjustment = 4;
   for (int i = 0; i < 8; ++i, --expectedAdjustment) {
     EXPECT_EQ(expectedAdjustment, HydrogenTools::valencyAdjustment(C));
@@ -163,7 +163,7 @@ TEST(HydrogenToolsTest, valencyAdjustment_C)
 TEST(HydrogenToolsTest, valencyAdjustment_N)
 {
   Molecule mol;
-  Atom N = mol.addAtom(7);
+  Molecule::AtomType N = mol.addAtom(7);
   int expectedAdjustment = 3;
   for (int i = 0; i < 8; ++i, --expectedAdjustment) {
     if (i == 4) // neutral N can have 3 or 5 bonds in our valence model.
@@ -176,7 +176,7 @@ TEST(HydrogenToolsTest, valencyAdjustment_N)
 TEST(HydrogenToolsTest, valencyAdjustment_O)
 {
   Molecule mol;
-  Atom O = mol.addAtom(8);
+  Molecule::AtomType O = mol.addAtom(8);
   int expectedAdjustment = 2;
   for (int i = 0; i < 8; ++i, --expectedAdjustment) {
     EXPECT_EQ(expectedAdjustment, HydrogenTools::valencyAdjustment(O));

@@ -143,7 +143,7 @@ void GAMESSUSOutput::readAtomBlock(std::istream &in, Core::Molecule &molecule,
     pos.z() = Core::lexicalCast<Real>(parts[4], ok) * coordFactor;
     if (!ok)
       appendError("Failed to cast to double for position: " + parts[4]);
-    Atom atom = molecule.addAtom(atomicNumber);
+    Core::Molecule::AtomType atom = molecule.addAtom(atomicNumber);
     atom.setPosition3d(pos);
   }
 }

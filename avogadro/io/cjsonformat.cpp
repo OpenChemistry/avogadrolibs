@@ -23,6 +23,8 @@
 
 #include <jsoncpp.cpp>
 
+using Avogadro::Core::Molecule;
+
 namespace Avogadro {
 namespace Io {
 
@@ -139,7 +141,7 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
         return false;
       }
       for (Index i = 0; i < atomCount; ++i) {
-        Atom a = molecule.atom(i);
+        Molecule::AtomType a = molecule.atom(i);
         a.setPosition3d(Vector3(value.get(3 * i + 0, 0).asDouble(),
                                 value.get(3 * i + 1, 0).asDouble(),
                                 value.get(3 * i + 2, 0).asDouble()));
@@ -153,7 +155,7 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
         return false;
       }
       for (Index i = 0; i < atomCount; ++i) {
-        Atom a = molecule.atom(i);
+        Molecule::AtomType a = molecule.atom(i);
         a.setPosition2d(Vector2(value.get(2 * i + 0, 0).asDouble(),
                                 value.get(2 * i + 1, 0).asDouble()));
       }
@@ -171,7 +173,7 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
                     "coordinates.");
         return false;
       }
-      std::vector<Vector3> fcoords;
+      Core::Array<Vector3> fcoords;
       fcoords.reserve(atomCount);
       for (Index i = 0; i < atomCount; ++i) {
         fcoords.push_back(
@@ -255,7 +257,7 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
       if (molecule.unitCell()) {
         Json::Value coordsFractional(Json::arrayValue);
-        std::vector<Vector3> fcoords;
+        Core::Array<Vector3> fcoords;
         Core::CrystalTools::fractionalCoordinates(*molecule.unitCell(),
                                                   molecule.atomPositions3d(),
                                                   fcoords);
@@ -298,7 +300,7 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
     Json::Value connections(Json::arrayValue);
     Json::Value order(Json::arrayValue);
     for (Index i = 0; i < molecule.bondCount(); ++i) {
-      Bond bond = molecule.bond(i);
+      Molecule::BondType bond = molecule.bond(i);
       connections.append(static_cast<Json::Value::UInt>(bond.atom1().index()));
       connections.append(static_cast<Json::Value::UInt>(bond.atom2().index()));
       order.append(bond.order());

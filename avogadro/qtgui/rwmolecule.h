@@ -19,11 +19,14 @@
 
 #include <QtCore/QObject>
 #include "avogadroqtguiexport.h"
-#include "rwatom.h"
-#include "rwbond.h"
+
+#include "persistentatom.h"
+#include "persistentbond.h"
 
 #include <avogadro/core/array.h>
+#include <avogadro/core/atom.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/bond.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
@@ -56,10 +59,16 @@ class AVOGADROQTGUI_EXPORT RWMolecule : public QObject
   Q_OBJECT
 public:
   /** Typedef for Atom class. */
-  typedef Atom<RWMolecule> AtomType;
+  typedef Core::Atom<RWMolecule> AtomType;
+
+  /** Typedef for PersistentAtom class. */
+  typedef PersistentAtom<RWMolecule> PersistentAtomType;
 
   /** Typedef for Bond class. */
-  typedef Bond<RWMolecule> BondType;
+  typedef Core::Bond<RWMolecule> BondType;
+
+  /** Typedef for PersistentBond class. */
+  typedef PersistentBond<RWMolecule> PersistentBondType;
 
   /** Construct a empty molecule with a clean undo stack. */
   explicit RWMolecule(QObject *parent = 0);
@@ -158,7 +167,7 @@ public:
    * indexed by atom index.
    * @note May be empty if position information has not been set for any atoms.
    */
-  const Core::Array<Vector3>& positions3d() const;
+  const Core::Array<Vector3>& atomPositions3d() const;
 
   /**
    * Get the 3D position of a single atom.
@@ -166,14 +175,14 @@ public:
    * @return The position of the atom, or Vector3::Zero() if no position
    * information has been set.
    */
-  Vector3 position3d(Index atomId) const;
+  Vector3 atomPosition3d(Index atomId) const;
 
   /**
    * Replace the current array of 3D atomic coordinates.
    * @param pos The new coordinate array. Must be of length atomCount().
    * @return True on success, false otherwise.
    */
-  bool setPositions3d(const Core::Array<Vector3> &pos);
+  bool setAtomPositions3d(const Core::Array<Vector3> &pos);
 
   /**
    * Set the 3D position of a single atom.
@@ -181,7 +190,7 @@ public:
    * @param pos The new position of the atom.
    * @return True on success, false otherwise.
    */
-  bool setPosition3d(Index atomId, const Vector3& pos);
+  bool setAtomPosition3d(Index atomId, const Vector3& pos);
 
   /**
    * Create a new bond in the molecule.
@@ -211,7 +220,6 @@ public:
    * @param atom2 The index of the other atom in bond.
    * @return The requested bond object. Will be invalid if @a atom1 or @a atom2
    * do not exist.
-   * {
    */
   BondType bond(Index atom1, Index atom2) const;
 
@@ -221,7 +229,6 @@ public:
    * @param atom2 The other atom in bond.
    * @return The requested bond object. Will be invalid if @a atom1 or @a atom2
    * are invalid.
-   * {
    */
   BondType bond(const AtomType &atom1, const AtomType &atom2) const;
 
@@ -432,12 +439,12 @@ inline unsigned char RWMolecule::atomicNumber(Index atomId) const
                                          : InvalidElement;
 }
 
-inline const Core::Array<Vector3> &RWMolecule::positions3d() const
+inline const Core::Array<Vector3> &RWMolecule::atomPositions3d() const
 {
   return m_positions3d;
 }
 
-inline Vector3 RWMolecule::position3d(Index atomId) const
+inline Vector3 RWMolecule::atomPosition3d(Index atomId) const
 {
   return atomId < m_positions3d.size() ? m_positions3d[atomId] : Vector3();
 }

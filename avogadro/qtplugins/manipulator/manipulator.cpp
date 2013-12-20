@@ -116,7 +116,7 @@ QUndoCommand * Manipulator::mouseMoveEvent(QMouseEvent *e)
     if (m_object.type == Rendering::AtomType) {
       if (m_object.molecule == m_molecule) {
         // Update atom position
-        Atom atom = m_molecule->atom(m_object.index);
+        Molecule::AtomType atom = m_molecule->atom(m_object.index);
         Vector2f windowPos(e->posF().x(), e->posF().y());
         Vector3f oldPos(atom.position3d().cast<float>());
         Vector3f newPos = m_glWidget->renderer().camera().unProject(windowPos,

@@ -70,7 +70,8 @@ bool GaussianFchk::read(std::istream &in, Core::Molecule &molecule)
 
   int nAtom = 0;
   for (unsigned int i = 0; i < m_aPos.size(); i += 3) {
-    Atom a = molecule.addAtom(static_cast<unsigned char>(m_aNums[nAtom++]));
+    Core::Molecule::AtomType a =
+        molecule.addAtom(static_cast<unsigned char>(m_aNums[nAtom++]));
     a.setPosition3d(Vector3(m_aPos[i    ] * BOHR_TO_ANGSTROM,
                             m_aPos[i + 1] * BOHR_TO_ANGSTROM,
                             m_aPos[i + 2] * BOHR_TO_ANGSTROM));

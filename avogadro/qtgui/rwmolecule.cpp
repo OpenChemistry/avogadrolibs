@@ -244,7 +244,7 @@ bool RWMolecule::removeAtom(Index atomId)
   }
 
   RemoveAtomCommand *comm = new RemoveAtomCommand(
-        *this, atomId, uniqueId, atomicNumber(atomId), position3d(atomId));
+        *this, atomId, uniqueId, atomicNumber(atomId), atomPosition3d(atomId));
   comm->setText("Remove Atom");
 
   m_undoStack.push(comm);
@@ -381,7 +381,7 @@ public:
 };
 } // end anon namespace
 
-bool RWMolecule::setPositions3d(const Core::Array<Vector3> &pos)
+bool RWMolecule::setAtomPositions3d(const Core::Array<Vector3> &pos)
 {
   if (pos.size() != m_atomicNumbers.size())
     return false;
@@ -464,7 +464,7 @@ public:
 };
 } // end anon namespace
 
-bool RWMolecule::setPosition3d(Index atomId, const Vector3 &pos)
+bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3 &pos)
 {
   if (atomId >= atomCount())
     return false;

@@ -17,12 +17,11 @@
 #ifndef AVOGADRO_CORE_ATOMTYPER_H
 #define AVOGADRO_CORE_ATOMTYPER_H
 
-#include <avogadro/core/array.h>
+#include "array.h"
+#include "molecule.h"
 
 namespace Avogadro {
 namespace Core {
-class Atom;
-class Molecule;
 
 /**
  * @class AtomTyper atomtyper.h <avogadro/core/atomtyper.h>
@@ -54,7 +53,7 @@ public:
    * previously, a cached result is returned.
    * @return The type of @a atom.
    */
-  virtual OutputType atomType(const Atom &atom);
+  virtual OutputType atomType(const Molecule::AtomType &atom);
 
   /**
    * @return An Array of OutputType objects. There will be one object for each
@@ -83,7 +82,7 @@ protected:
    * @param atom The atom to type.
    * @return The type of @a atom.
    */
-  virtual OutputType type(const Atom &atom) = 0;
+  virtual OutputType type(const Molecule::AtomType &atom) = 0;
 
   /** The molecule on which to operate. */
   const Molecule *m_molecule;

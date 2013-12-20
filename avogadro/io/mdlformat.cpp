@@ -113,7 +113,7 @@ bool MdlFormat::read(std::istream &in, Core::Molecule &mol)
     string element(trimmed(buffer.substr(31, 3)));
     if (!buffer.empty()) {
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
-      Atom newAtom = mol.addAtom(atomicNum);
+      Molecule::AtomType newAtom = mol.addAtom(atomicNum);
       newAtom.setPosition3d(pos);
       continue;
     }
@@ -214,7 +214,7 @@ bool MdlFormat::write(std::ostream &out, const Core::Molecule &mol)
       << setw(3) << mol.bondCount() << "  0  0  0  0  0  0  0  0999 V2000\n";
   // Atom block.
   for (size_t i = 0; i < mol.atomCount(); ++i) {
-    Atom atom = mol.atom(i);
+    Molecule::AtomType atom = mol.atom(i);
     out << setw(10) << std::right << std::fixed << setprecision(4)
         << atom.position3d().x() << setw(10) << atom.position3d().y()
         << setw(10) << atom.position3d().z()
@@ -223,7 +223,7 @@ bool MdlFormat::write(std::ostream &out, const Core::Molecule &mol)
   }
   // Bond block.
   for (size_t i = 0; i < mol.bondCount(); ++i) {
-    Bond bond = mol.bond(i);
+    Molecule::BondType bond = mol.bond(i);
     out.unsetf(std::ios::floatfield);
     out << setw(3) << std::right << bond.atom1().index() + 1
         << setw(3) << bond.atom2().index() + 1

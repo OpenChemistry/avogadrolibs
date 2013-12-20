@@ -102,12 +102,12 @@ TEST(FileFormatManagerTest, writeFileGuessCml)
   EXPECT_EQ(writeMol.data("name").toString(), "Ethane");
   EXPECT_EQ(writeMol.atomCount(), static_cast<size_t>(8));
   EXPECT_EQ(writeMol.bondCount(), static_cast<size_t>(7));
-  Atom atom = writeMol.atom(7);
+  Molecule::AtomType atom = writeMol.atom(7);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   EXPECT_EQ(atom.position3d().x(), -1.18499);
   EXPECT_EQ(atom.position3d().y(),  0.004424);
   EXPECT_EQ(atom.position3d().z(), -0.987522);
-  Bond bond = writeMol.bond(0);
+  Molecule::BondType bond = writeMol.bond(0);
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
