@@ -26,12 +26,24 @@ namespace Ui {
 class ConnectionSettingsDialog;
 }
 
+/**
+ * @class ConnectionSettingsDialog connectionsettingsdialog.h
+ * <avogadro/qtplugins/clientserver/connectionsettingsdialog.h>
+ * @brief Dialog to set the connection settings for connecting to a remote
+ * server.
+ */
 class ConnectionSettingsDialog : public QDialog
 {
   Q_OBJECT
 public:
   explicit ConnectionSettingsDialog(QWidget *parent_ = 0);
   virtual ~ConnectionSettingsDialog();
+
+  static const QString defaultHost;
+  static const int defaultPort = 6060;
+
+signals:
+  void settingsChanged();
 
 private slots:
   void testConnection();
