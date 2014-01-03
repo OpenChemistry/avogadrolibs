@@ -68,22 +68,22 @@ Molecule::~Molecule()
 {
 }
 
-Core::Atom Molecule::addAtom(unsigned char atomicNumber)
+Molecule::AtomType Molecule::addAtom(unsigned char number)
 {
   m_atomUniqueIds.push_back(atomCount());
-  Core::Atom a = Core::Molecule::addAtom(atomicNumber);
+  AtomType a = Core::Molecule::addAtom(number);
   return a;
 }
 
-Core::Atom Molecule::addAtom(unsigned char atomicNumber, Index uniqueId)
+Molecule::AtomType Molecule::addAtom(unsigned char number, Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_atomUniqueIds.size())
       || m_atomUniqueIds[uniqueId] != MaxIndex) {
-    return Core::Atom();
+    return AtomType();
   }
 
   m_atomUniqueIds[uniqueId] = atomCount();
-  Core::Atom a = Core::Molecule::addAtom(atomicNumber);
+  AtomType a = Core::Molecule::addAtom(number);
   return a;
 }
 
@@ -99,7 +99,7 @@ bool Molecule::removeAtom(Index index)
   m_atomUniqueIds[uniqueId] = MaxIndex;
 
   // Before removing the atom we must first remove any bonds to it.
-  std::vector<Core::Bond> atomBonds = Core::Molecule::bonds(atom(index));
+  Core::Array<BondType> atomBonds = Core::Molecule::bonds(atom(index));
   while (atomBonds.size()) {
     removeBond(atomBonds.back());
     atomBonds = Core::Molecule::bonds(atom(index));
@@ -116,13 +116,13 @@ bool Molecule::removeAtom(Index index)
 
     // Find any bonds to the moved atom and update their index.
     atomBonds = Core::Molecule::bonds(atom(newSize));
-    foreach (const Core::Bond &currentBond, atomBonds) {
-      std::pair<Index, Index> bondPair = m_bondPairs[currentBond.index()];
-      if (bondPair.first == newSize)
-        bondPair.first = index;
-      else if (bondPair.second == newSize)
-        bondPair.second = index;
-      m_bondPairs[currentBond.index()] = bondPair;
+    foreach (const BondType &currentBond, atomBonds) {
+      std::pair<Index, Index> pair = m_bondPairs[currentBond.index()];
+      if (pair.first == newSize)
+        pair.first = index;
+      else if (pair.second == newSize)
+        pair.second = index;
+      m_bondPairs[currentBond.index()] = pair;
     }
 
     Index movedAtomUID = findAtomUniqueId(newSize);
@@ -139,48 +139,60 @@ bool Molecule::removeAtom(Index index)
   return true;
 }
 
-bool Molecule::removeAtom(const Core::Atom &atom_)
+bool Molecule::removeAtom(const AtomType &atom_)
 {
   return removeAtom(atom_.index());
 }
 
-Core::Atom Molecule::atomByUniqueId(Index uniqueId)
+Molecule::AtomType Molecule::atomByUniqueId(Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_atomUniqueIds.size())
       || m_atomUniqueIds[uniqueId] == MaxIndex) {
-    return Core::Atom();
+    return AtomType();
   }
   else {
-    return Core::Atom(this, m_atomUniqueIds[uniqueId]);
+    return AtomType(this, m_atomUniqueIds[uniqueId]);
   }
 }
 
-Index Molecule::atomUniqueId(const Core::Atom &a) const
+Index Molecule::atomUniqueId(const AtomType &a) const
 {
   if (a.molecule() != this)
     return MaxIndex;
   return findAtomUniqueId(a.index());
 }
 
-Core::Bond Molecule::addBond(const Core::Atom &a, const Core::Atom &b,
-                             unsigned char bondOrder)
+Index Molecule::atomUniqueId(Index a) const
+{
+  return findAtomUniqueId(a);
+}
+
+Molecule::BondType Molecule::addBond(const AtomType &a, const AtomType &b,
+                                     unsigned char order)
 {
   m_bondUniqueIds.push_back(bondCount());
-  Core::Bond bond_ = Core::Molecule::addBond(a, b, bondOrder);
+  BondType bond_ = Core::Molecule::addBond(a, b, order);
   return bond_;
 }
 
-Core::Bond Molecule::addBond(const Core::Atom &a, const Core::Atom &b,
-                             unsigned char bondOrder, Index uniqueId)
+Molecule::BondType Molecule::addBond(Avogadro::Index atomId1,
+                                     Avogadro::Index atomId2,
+                                     unsigned char order)
+{
+  m_bondUniqueIds.push_back(bondCount());
+  return Core::Molecule::addBond(atomId1, atomId2, order);
+}
+
+Molecule::BondType Molecule::addBond(const AtomType &a, const AtomType &b,
+                                     unsigned char order, Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_bondUniqueIds.size())
       || m_bondUniqueIds[uniqueId] != MaxIndex) {
-    return Core::Bond();
+    return BondType();
   }
 
   m_bondUniqueIds[uniqueId] = bondCount();
-  Core::Bond bond_ = Core::Molecule::addBond(a, b, bondOrder);
-  return bond_;
+  return Core::Molecule::addBond(a, b, order);
 }
 
 bool Molecule::removeBond(Index index)
@@ -211,32 +223,42 @@ bool Molecule::removeBond(Index index)
   return true;
 }
 
-bool Molecule::removeBond(const Core::Bond &bond_)
+bool Molecule::removeBond(const BondType &bond_)
 {
   return removeBond(bond_.index());
 }
 
-bool Molecule::removeBond(const Core::Atom &a, const Core::Atom &b)
+bool Molecule::removeBond(const AtomType &a, const AtomType &b)
 {
   return removeBond(bond(a, b).index());
 }
 
-Core::Bond Molecule::bondByUniqueId(Index uniqueId)
+bool Molecule::removeBond(Index a, Index b)
+{
+  return removeBond(bond(a, b).index());
+}
+
+Molecule::BondType Molecule::bondByUniqueId(Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_bondUniqueIds.size())
       || m_bondUniqueIds[uniqueId] == MaxIndex) {
-    return Core::Bond();
+    return BondType();
   }
   else {
-    return Core::Bond(this, static_cast<Index>(m_bondUniqueIds[uniqueId]));
+    return BondType(this, static_cast<Index>(m_bondUniqueIds[uniqueId]));
   }
 }
 
-Index Molecule::bondUniqueId(const Core::Bond &b) const
+Index Molecule::bondUniqueId(const BondType &b) const
 {
   if (b.molecule() != this)
     return MaxIndex;
   return findBondUniqueId(b.index());
+}
+
+Index Molecule::bondUniqueId(Index b) const
+{
+  return findBondUniqueId(b);
 }
 
 void Molecule::emitChanged(unsigned int change)

@@ -170,9 +170,9 @@ private:
   void updatePlaneSnapAngles();
   void updateSnappedPlaneNormal();
 
-  QtGui::PersistentBond m_selectedBond;
-  QtGui::PersistentAtom m_anchorAtom;
-  QtGui::PersistentAtom m_clickedAtom;
+  QtGui::Molecule::PersistentBondType m_selectedBond;
+  QtGui::Molecule::PersistentAtomType m_anchorAtom;
+  QtGui::Molecule::PersistentAtomType m_clickedAtom;
 };
 
 inline QString BondCentricTool::name() const

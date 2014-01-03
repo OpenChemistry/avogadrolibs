@@ -91,18 +91,6 @@ MoleculeTest::MoleculeTest()
   mesh->setStable(false);
 }
 
-TEST_F(MoleculeTest, size)
-{
-  Molecule molecule;
-  EXPECT_EQ(molecule.size(), static_cast<Index>(0));
-}
-
-TEST_F(MoleculeTest, isEmpty)
-{
-  Molecule molecule;
-  EXPECT_EQ(molecule.isEmpty(), true);
-}
-
 TEST_F(MoleculeTest, addAtom)
 {
   Molecule molecule;
@@ -225,7 +213,7 @@ TEST_F(MoleculeTest, findBond)
   EXPECT_EQ(molecule.bond(a1, a2).index(), b.index());
   EXPECT_EQ(molecule.bond(a2, a1).index(), b.index());
 
-  std::vector<Bond> bonds = molecule.bonds(a1);
+  Array<Bond> bonds = molecule.bonds(a1);
   EXPECT_EQ(bonds.size(), 1);
 
   Atom a3 = molecule.addAtom(7);
