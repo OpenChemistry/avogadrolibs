@@ -25,13 +25,13 @@ using Avogadro::Core::Molecule;
 TEST(CPP11Test, unique_ptr)
 {
   AVO_UNIQUE_PTR<Molecule> molecule(new Molecule);
-  EXPECT_EQ(molecule->size(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule->atomCount(), static_cast<size_t>(0));
 }
 
 TEST(CPP11Test, shared_ptr)
 {
   Avogadro::Stl::shared_ptr<Molecule> molecule(new Molecule);
-  EXPECT_EQ(molecule->size(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule->atomCount(), static_cast<size_t>(0));
 }
 
 TEST(CPP11Test, weak_ptr)
@@ -39,12 +39,12 @@ TEST(CPP11Test, weak_ptr)
   Avogadro::Stl::shared_ptr<Molecule> molecule(new Molecule);
   Avogadro::Stl::weak_ptr<Molecule> weakMolecule(molecule);
 
-  EXPECT_EQ(molecule->size(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule->atomCount(), static_cast<size_t>(0));
   molecule->addAtom(5);
-  EXPECT_EQ(molecule->size(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule->atomCount(), static_cast<size_t>(1));
 
   Avogadro::Stl::shared_ptr<Molecule> sharedMolecule = weakMolecule.lock();
-  EXPECT_EQ(sharedMolecule->size(), static_cast<size_t>(1));
+  EXPECT_EQ(sharedMolecule->atomCount(), static_cast<size_t>(1));
 }
 
 TEST(CPP11Test, mutex)

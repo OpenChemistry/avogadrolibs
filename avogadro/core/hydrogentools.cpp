@@ -16,6 +16,7 @@
 
 #include "hydrogentools.h"
 
+#include "array.h"
 #include "atom.h"
 #include "bond.h"
 #include "elements.h"
@@ -34,20 +35,19 @@
 #endif
 
 using Avogadro::Vector3;
+using Avogadro::Core::atomValence;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
-using Avogadro::Core::atomValence;
 using Avogadro::Core::Molecule;
 
-typedef std::vector<Avogadro::Core::Bond> NeighborListType;
-
 namespace {
+
+typedef Avogadro::Core::Array<Bond> NeighborListType;
 
 // Return the other atom in the bond.
 inline Atom getOtherAtom(const Atom &atom, const Bond &bond)
 {
   return bond.atom1().index() != atom.index() ? bond.atom1() : bond.atom2();
-
 }
 
 inline unsigned int countExistingBonds(const NeighborListType &bonds)
@@ -61,9 +61,9 @@ inline unsigned int countExistingBonds(const NeighborListType &bonds)
 }
 
 inline unsigned int lookupValency(const Atom &atom,
-                                   unsigned int numExistingBonds)
+                                  unsigned int numExistingBonds)
 {
-  char charge(0); /// todo No charges (yet?)...
+  char charge(0); /// @todo No charges (yet?)...
   return atomValence(atom.atomicNumber(), charge, numExistingBonds);
 }
 
@@ -82,9 +82,9 @@ namespace Core {
 
 void HydrogenTools::removeAllHydrogens(Molecule &molecule)
 {
-  const std::vector<unsigned char> atomicNums(molecule.atomicNumbers());
+  const Array<unsigned char> atomicNums(molecule.atomicNumbers());
   size_t atomIndex = molecule.atomCount() - 1;
-  for (std::vector<unsigned char>::const_reverse_iterator
+  for (Array<unsigned char>::const_reverse_iterator
        it = atomicNums.rbegin(), itEnd = atomicNums.rend(); it != itEnd;
        ++it, --atomIndex) {
     if (*it == 1)
@@ -178,7 +178,8 @@ int HydrogenTools::extraHydrogenIndices(const Atom &atom,
 }
 
 void HydrogenTools::generateNewHydrogenPositions(
-    const Atom &atom, int numberOfHydrogens, std::vector<Vector3> &positions)
+    const Atom &atom, int numberOfHydrogens,
+    std::vector<Vector3> &positions)
 {
   if (!atom.isValid())
     return;

@@ -90,18 +90,6 @@ MoleculeTest::MoleculeTest()
   mesh->setStable(false);
 }
 
-TEST_F(MoleculeTest, size)
-{
-  Molecule molecule;
-  EXPECT_EQ(molecule.size(), static_cast<Index>(0));
-}
-
-TEST_F(MoleculeTest, isEmpty)
-{
-  Molecule molecule;
-  EXPECT_EQ(molecule.isEmpty(), true);
-}
-
 TEST_F(MoleculeTest, addAtom)
 {
   Molecule molecule;
@@ -224,7 +212,7 @@ TEST_F(MoleculeTest, findBond)
   EXPECT_EQ(molecule.bond(a1, a2).index(), b.index());
   EXPECT_EQ(molecule.bond(a2, a1).index(), b.index());
 
-  std::vector<Bond> bonds = molecule.bonds(a1);
+  Array<Bond> bonds = molecule.bonds(a1);
   EXPECT_EQ(bonds.size(), 1);
 
   Atom a3 = molecule.addAtom(7);
@@ -253,7 +241,7 @@ TEST_F(MoleculeTest, uniqueAtom)
   EXPECT_EQ(molecule.bond(a2, a1).index(), b1.index());
   EXPECT_EQ(molecule.bond(a3, a1).index(), b2.index());
 
-  std::vector<Bond> bonds = molecule.bonds(a1);
+  Array<Bond> bonds = molecule.bonds(a1);
   EXPECT_EQ(bonds.size(), 2);
 
   molecule.removeAtom(a2);
@@ -317,9 +305,9 @@ TEST_F(MoleculeTest, persistentAtom)
   molecule.addBond(a1, a2, 1);
   molecule.addBond(a1, a3, 2);
 
-  PersistentAtom pa1(a1);
-  PersistentAtom pa2(&molecule, molecule.atomUniqueId(a2));
-  PersistentAtom pa3(&molecule, molecule.atomUniqueId(a3));
+  Molecule::PersistentAtomType pa1(a1);
+  Molecule::PersistentAtomType pa2(&molecule, molecule.atomUniqueId(a2));
+  Molecule::PersistentAtomType pa3(&molecule, molecule.atomUniqueId(a3));
   EXPECT_EQ(pa1.uniqueIdentifier(), 0);
   EXPECT_EQ(pa2.uniqueIdentifier(), 1);
   EXPECT_EQ(pa3.uniqueIdentifier(), 2);
@@ -327,7 +315,7 @@ TEST_F(MoleculeTest, persistentAtom)
   molecule.removeAtom(a2);
 
   Atom a4 = molecule.addAtom(8);
-  PersistentAtom pa4(&molecule, molecule.atomUniqueId(a4));
+  Molecule::PersistentAtomType pa4(&molecule, molecule.atomUniqueId(a4));
   EXPECT_EQ(pa4.uniqueIdentifier(), 3);
   molecule.addBond(a1, a4, 1);
 
@@ -354,8 +342,8 @@ TEST_F(MoleculeTest, persistentAtomRestore)
   molecule.addBond(a1, a2, 1);
   molecule.addBond(a1, a3, 2);
 
-  PersistentAtom pa1(a1);
-  PersistentAtom pa2(&molecule, molecule.atomUniqueId(a2));
+  Molecule::PersistentAtomType pa1(a1);
+  Molecule::PersistentAtomType pa2(&molecule, molecule.atomUniqueId(a2));
 
   molecule.removeAtom(pa2.atom());
 
@@ -474,7 +462,7 @@ TEST_F(MoleculeTest, persistentBond)
   b[3] = molecule.addBond(a4, a3, 2);
   b[4] = molecule.addBond(a2, a3, 1);
 
-  PersistentBond pbond[5];
+  Molecule::PersistentBondType pbond[5];
   for (int i = 0; i < 4; ++i)
     pbond[i].set(b[i]);
   pbond[4].set(&molecule, molecule.bondUniqueId(b[4]));
@@ -507,7 +495,7 @@ TEST_F(MoleculeTest, persistentBondRestore)
   b[3] = molecule.addBond(a4, a3, 2);
   b[4] = molecule.addBond(a2, a3, 1);
 
-  PersistentBond pbond[5];
+  Molecule::PersistentBondType pbond[5];
   for (int i = 0; i < 5; ++i)
     pbond[i].set(&molecule, molecule.bondUniqueId(b[i]));
   molecule.removeBond(b[2]);

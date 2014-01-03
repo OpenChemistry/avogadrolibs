@@ -101,7 +101,7 @@ void CustomElementDialog::apply()
   }
 
   if (newMap.size() != oldMap.size()) {
-    std::vector<unsigned char> &atomicNumbers = m_molecule.atomicNumbers();
+    Core::Array<unsigned char> &atomicNumbers = m_molecule.atomicNumbers();
     std::transform(atomicNumbers.begin(), atomicNumbers.end(),
                    atomicNumbers.begin(), RemapAtomicNumbers(oldToNew));
     m_molecule.setCustomElementMap(newMap);
@@ -137,7 +137,7 @@ struct CustomElementFilter
 void CustomElementDialog::prepareForm()
 {
   const Molecule::CustomElementMap &map = m_molecule.customElementMap();
-  const std::vector<unsigned char> &atomicNumbers = m_molecule.atomicNumbers();
+  const Core::Array<unsigned char> &atomicNumbers = m_molecule.atomicNumbers();
 
   std::set<unsigned char> customElements =
       std::for_each(atomicNumbers.begin(), atomicNumbers.end(),

@@ -492,13 +492,13 @@ bool CrystalTools::niggliReduce(Molecule &molecule, Options opts)
   // Update atoms if needed
   if (opts & TransformAtoms) {
     // Get fractional coordinates
-    std::vector<Vector3> fcoords;
+    Array<Vector3> fcoords;
     if (!fractionalCoordinates(molecule, fcoords))
       return false;
 
     // fix coordinates with COB matrix:
     const Matrix3 invCob(cob.inverse());
-    for (std::vector<Vector3>::iterator it = fcoords.begin(),
+    for (Array<Vector3>::iterator it = fcoords.begin(),
          itEnd = fcoords.end(); it != itEnd; ++it) {
       *it = invCob * (*it);
     }
@@ -656,8 +656,8 @@ struct FractionalCoordinatesFunctor
 }
 
 bool CrystalTools::fractionalCoordinates(const UnitCell &unitCell,
-                                         const std::vector<Vector3> &cart,
-                                         std::vector<Vector3> &frac)
+                                         const Array<Vector3> &cart,
+                                         Array<Vector3> &frac)
 {
   if (&frac != &cart) // avoid self-copy...
     frac = cart;
@@ -669,7 +669,7 @@ bool CrystalTools::fractionalCoordinates(const UnitCell &unitCell,
 }
 
 bool CrystalTools::fractionalCoordinates(const Molecule &molecule,
-                                         std::vector<Vector3> &coords)
+                                         Array<Vector3> &coords)
 {
   if (!molecule.unitCell())
     return false;
@@ -698,7 +698,7 @@ struct SetFractionalCoordinatesFunctor
 }
 
 bool CrystalTools::setFractionalCoordinates(Molecule &molecule,
-                                            const std::vector<Vector3> &coords)
+                                            const Array<Vector3> &coords)
 {
   if (!molecule.unitCell())
     return false;
@@ -706,7 +706,7 @@ bool CrystalTools::setFractionalCoordinates(Molecule &molecule,
   if (coords.size() != molecule.atomCount())
     return false;
 
-  std::vector<Vector3> &output = molecule.atomPositions3d();
+  Array<Vector3> &output = molecule.atomPositions3d();
   output.resize(coords.size());
 
   std::transform(coords.begin(), coords.end(), output.begin(),
