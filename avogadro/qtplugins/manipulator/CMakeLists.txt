@@ -5,6 +5,10 @@ set(manipulator_srcs
 set(manipulator_uis
 )
 
+set(manipulator_rcs
+  manipulator.qrc
+)
+
 avogadro_plugin(Manipulator
   "Manipulator tool"
   ToolPlugin
@@ -12,4 +16,7 @@ avogadro_plugin(Manipulator
   Manipulator
   "${manipulator_srcs}"
   "${manipulator_uis}"
+  "${manipulator_rcs}"
 )
+
+target_link_libraries(Manipulator AvogadroRendering)

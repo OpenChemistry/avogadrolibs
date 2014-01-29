@@ -39,6 +39,14 @@ class AVOGADROQTGUI_EXPORT Molecule : public QObject, public Core::Molecule
 public:
   Molecule(QObject *parent_ = 0);
   ~Molecule();
+  /** copy constructor */
+  Molecule(const Molecule &other);
+
+  /** Assignment operator */
+  Molecule& operator=(const Molecule& other);
+
+  /** Assignment operator to copy data from base instance */
+  Molecule& operator=(const Core::Molecule& other);
 
   /** \enum Enumeration of change types that can be given. */
   enum MoleculeChange {
@@ -47,6 +55,7 @@ public:
     /** Object types that can be changed. */
     Atoms = 0x01,
     Bonds = 0x02,
+    UnitCell = 0x04,
     /** Operations that can affect the above types. */
     Added    = 0x1024,
     Removed  = 0x2048,
@@ -61,17 +70,43 @@ public:
   Core::Atom addAtom(unsigned char atomicNumber) AVO_OVERRIDE;
 
   /**
+   * Add an atom with @p atomicNumber and @p uniqueId to the molecule.
+   * @return The atom created. This can be invalid if the unique ID was already
+   * in use.
+   */
+  virtual Core::Atom addAtom(unsigned char atomicNumber, Index uniqueId);
+
+  /**
    * @brief Remove the specified atom from the molecule.
    * @param index The index of the atom to be removed.
    * @return True on success, false if the atom was not found.
    */
-  bool removeAtom(size_t index);
-  bool removeAtom(const Core::Atom &atom);
+  bool removeAtom(Index index) AVO_OVERRIDE;
 
   /**
-   * Remove all atoms from the molecule.
+   * @brief Remove the specified atom from the molecule.
+   * @param atom The atom to be removed.
+   * @return True on success, false if the atom was not found.
+   * @overload
    */
-  void clearAtoms();
+  bool removeAtom(const Core::Atom &atom) AVO_OVERRIDE;
+
+  /**
+   * @brief Get the atom referenced by the @p uniqueId, the isValid method
+   * should be queried to ensure the id still referenced a valid atom.
+   * @param uniqueId The unique identifier for the atom.
+   * @return An Atom object, check it is valid before using it.
+   */
+  Core::Atom atomByUniqueId(Index uniqueId);
+
+  /**
+   * @brief Get the unique ID of the atom, this will uniquely reference the atom
+   * as long as it exists.
+   * @param atom The atom to obtain the unique ID of.
+   * @return The unique identifier for the atom, MaxIndex if the atom is invalid
+   * or does not belong to this molecule.
+   */
+  Index atomUniqueId(const Core::Atom &atom) const;
 
   /**
    * @brief Add a bond between the specified atoms.
@@ -84,29 +119,57 @@ public:
                      unsigned char bondOrder = 1) AVO_OVERRIDE;
 
   /**
+   * @brief Add a bond between the specified atoms.
+   * @param a The first atom in the bond.
+   * @param b The second atom in the bond.
+   * @param bondOrder The order of the bond.
+   * @param uniqueId The unique ID to use for the bond.
+   * @return The bond created. This can be invalid if the unique ID was already
+   * in use.
+   */
+  virtual Core::Bond addBond(const Core::Atom &a, const Core::Atom &b,
+                             unsigned char bondOrder, Index uniqueId);
+
+  /**
    * @brief Remove the specified bond.
-   * @param index The index of the bond to be remove.
-   * @return True on succes, false if the bond was not found.
+   * @param index The index of the bond to be removed.
+   * @return True on success, false if the bond was not found.
    */
-  bool removeBond(size_t index);
-  bool removeBond(const Core::Bond &bond);
-  bool removeBond(const Core::Atom &a, const Core::Atom &b);
+  bool removeBond(Index index) AVO_OVERRIDE;
 
   /**
-   * Remove all bonds from the molecule.
+   * @brief Remove the specified bond.
+   * @param bond The bond to be removed.
+   * @return True on success, false if the bond was not found.
+   * @overload
    */
-  void clearBonds();
+  bool removeBond(const Core::Bond &bond) AVO_OVERRIDE;
 
   /**
-   * @brief Add a mesh to the molecule.
-   * @return The mesh object added to the molecule.
+   * @brief Remove the specified bond.
+   * @param a One atom in the bond.
+   * @param b The other atom in the bond.
+   * @return True on success, false if the bond was not found.
+   * @overload
    */
-  Mesh* addMesh();
+  bool removeBond(const Core::Atom &a, const Core::Atom &b) AVO_OVERRIDE;
 
-  Mesh* mesh(size_t index);
-  const Mesh* mesh(size_t index) const;
+  /**
+   * @brief Get the bond referenced by the @p uniqueId, the isValid method
+   * should be queried to ensure the id still referenced a valid bond.
+   * @param uniqueId The unique identifier for the bond.
+   * @return A Bond object, check it is valid before using it.
+   */
+  Core::Bond bondByUniqueId(Index uniqueId);
 
-  size_t meshCount() const { return m_meshes.size(); }
+  /**
+   * @brief Get the unique ID of the bond, this will uniquely reference the bond
+   * as long as it exists.
+   * @param bond The bond to obtain the unique ID of.
+   * @return The unique identifier for the bond, MaxIndex if the bond is invalid
+   * or does not belong to this molecule.
+   */
+  Index bondUniqueId(const Core::Bond &bond) const;
 
 public slots:
   /**
@@ -127,13 +190,11 @@ signals:
   void changed(unsigned int change);
 
 private:
-  std::vector<int> m_atomUniqueIds;
-  std::vector<int> m_bondUniqueIds;
+  std::vector<Index> m_atomUniqueIds;
+  std::vector<Index> m_bondUniqueIds;
 
-  int findAtomUniqueId(size_t index) const;
-  int findBondUniqueId(size_t index) const;
-
-  std::vector<Mesh *> m_meshes;
+  Index findAtomUniqueId(Index index) const;
+  Index findBondUniqueId(Index index) const;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Molecule::MoleculeChanges)

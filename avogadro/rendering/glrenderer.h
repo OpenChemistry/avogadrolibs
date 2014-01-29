@@ -32,8 +32,8 @@
 
 namespace Avogadro {
 namespace Rendering {
-
 class GeometryNode;
+class TextRenderStrategy;
 
 /**
  * @class GLRenderer glrenderer.h <avogadro/rendering/glrenderer.h>
@@ -59,6 +59,12 @@ public:
   /** Reset the view to fit the entire scene. */
   void resetCamera();
 
+  /**
+   * Reset the scene geometry, this should be done when the scene geeometry has
+   * changed in order to ensure correct clipping.
+   */
+  void resetGeometry();
+
   /** Return the primitives under the display coordinate (x,y), mapped by depth.
    */
   std::multimap<float, Identifier> hits(int x, int y) const;
@@ -82,6 +88,15 @@ public:
   /** Get the scene for this renderer. */
   const Scene& scene() const { return m_scene; }
   Scene& scene() { return m_scene; }
+
+  /**
+   * Get/set the text rendering strategy for this object. The renderer takes
+   * ownership of the strategy object. @{
+   */
+  const TextRenderStrategy *textRenderStrategy() const;
+  TextRenderStrategy *textRenderStrategy();
+  void setTextRenderStrategy(TextRenderStrategy *tren);
+  /** @} */
 
 private:
   /**
@@ -109,7 +124,10 @@ private:
   bool m_valid;
   std::string m_error;
   Camera m_camera;
+  Camera m_overlayCamera;
   Scene m_scene;
+  TextRenderStrategy *m_textRenderStrategy;
+
   Vector3f m_center;
   float m_radius;
 };
@@ -122,6 +140,16 @@ inline const Camera& GLRenderer::camera() const
 inline Camera& GLRenderer::camera()
 {
   return m_camera;
+}
+
+inline const TextRenderStrategy *GLRenderer::textRenderStrategy() const
+{
+  return m_textRenderStrategy;
+}
+
+inline TextRenderStrategy *GLRenderer::textRenderStrategy()
+{
+  return m_textRenderStrategy;
 }
 
 inline Identifier GLRenderer::hit(int x, int y) const

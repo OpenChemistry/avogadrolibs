@@ -17,14 +17,18 @@
 
 #include "meshgenerator.h"
 
-#include "cube.h"
-#include "mesh.h"
+#include <avogadro/core/cube.h>
+#include <avogadro/core/mutex.h>
+#include <avogadro/core/mesh.h>
 
 #include <QReadWriteLock>
 #include <QDebug>
 
 namespace Avogadro {
 namespace QtGui {
+
+using Core::Cube;
+using Core::Mesh;
 
 MeshGenerator::MeshGenerator(QObject *p) :
   QThread(p),
@@ -69,7 +73,7 @@ bool MeshGenerator::initialize(const Cube *cube_, Mesh *mesh_, float iso,
   m_mesh = mesh_;
   m_iso = iso;
   m_reverseWinding = reverse;
-  if (!m_cube->lock()->tryLockForRead()) {
+  if (!m_cube->lock()->tryLock()) {
     qDebug() << "Cannot get a read lock...";
     return false;
   }
@@ -87,16 +91,17 @@ void MeshGenerator::run()
     qDebug() << "No mesh or cube set - nothing to find isosurface of...";
     return;
   }
+
+  // Attempt to obtain a lock, wait one second between attempts.
+  while (!m_cube->lock()->tryLock())
+    sleep(1);
+
   // Mark the mesh as being worked on and clear it
   m_mesh->setStable(false);
   m_mesh->clear();
 
   m_vertices.reserve(m_dim.x()*m_dim.y()*m_dim.z()*3);
   m_normals.reserve(m_dim.x()*m_dim.y()*m_dim.z()*3);
-
-  if (!m_cube->lock()->tryLockForRead()) {
-    qDebug() << "Cannot get a read lock...";
-  }
 
   // Now to march the cube
   for(int i = 0; i < m_dim.x()-1; ++i) {

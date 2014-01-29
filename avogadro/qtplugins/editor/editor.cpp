@@ -21,6 +21,7 @@
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/hydrogentools.h>
 #include <avogadro/core/vector.h>
 
 #include <avogadro/qtgui/molecule.h>
@@ -32,6 +33,7 @@
 
 #include <QtGui/QAction>
 #include <QtGui/QComboBox>
+#include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QVBoxLayout>
@@ -67,7 +69,9 @@ Editor::Editor(QObject *parent_)
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER),
     m_bondAdded(false)
 {
+  connect(m_toolWidget, SIGNAL(adjustHydrogens()), SLOT(adjustHydrogens()));
   m_activateAction->setText(tr("Draw"));
+  m_activateAction->setIcon(QIcon(":/icons/editor.png"));
   reset();
 }
 
@@ -184,10 +188,22 @@ QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
           m_keyPressBuffer.toStdString());
   }
 
-  if (atomicNum > 0 || atomicNum <= Core::Elements::elementCount())
+  if (atomicNum != Avogadro::InvalidElement)
     m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
 
   return NULL;
+}
+
+void Editor::adjustHydrogens()
+{
+  if (m_molecule) {
+    Core::HydrogenTools::adjustHydrogens(*m_molecule);
+    // Assume bonds and atoms changed...
+    m_molecule->emitChanged(QtGui::Molecule::Atoms
+                            | QtGui::Molecule::Bonds
+                            | QtGui::Molecule::Added
+                            | QtGui::Molecule::Removed);
+  }
 }
 
 void Editor::updatePressedButtons(QMouseEvent *e, bool release)
@@ -247,11 +263,8 @@ void Editor::atomLeftClick(QMouseEvent *e)
 void Editor::bondLeftClick(QMouseEvent *e)
 {
   Bond bond = m_clickedObject.molecule->bond(m_clickedObject.index);
-  unsigned char order = m_toolWidget->bondOrder();
-  if (order != bond.order()) {
-    bond.setOrder(order);
-    m_molecule->emitChanged(Molecule::Bonds | Molecule::Modified);
-  }
+  bond.setOrder(static_cast<unsigned char>((bond.order() % 3)  + 1));
+  m_molecule->emitChanged(Molecule::Bonds | Molecule::Modified);
   e->accept();
 }
 

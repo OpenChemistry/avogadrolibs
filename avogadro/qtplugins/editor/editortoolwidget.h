@@ -44,6 +44,9 @@ public:
   void setBondOrder(unsigned char order);
   unsigned char bondOrder() const;
 
+signals:
+  void adjustHydrogens();
+
 private slots:
   void elementChanged(int index);
   void updateElementCombo();
@@ -60,6 +63,7 @@ private:
   QtGui::PeriodicTableView *m_elementSelector;
   QList<unsigned char> m_defaultElements;
   QList<unsigned char> m_userElements;
+  unsigned char m_currentElement;
 };
 
 } // namespace QtPlugins

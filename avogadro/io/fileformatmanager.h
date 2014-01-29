@@ -96,12 +96,25 @@ public:
   static bool registerFormat(FileFormat *format);
 
   /**
+   * @brief Unregister a file format from the format manager.
+   * @param identifier The identifier for the format to remove.
+   * @return True on success, false on failure.
+   */
+  static bool unregisterFormat(const std::string &identifier);
+
+  /**
    * Add the supplied @p format to the manager, registering its ID, MIME type,
    * file extension and other relevant data for later lookup. The manager
    * assumes ownership of the supplied object.
    * @return True on success, false on failure.
    */
   bool addFormat(FileFormat *format);
+
+  /**
+   * Remove the format with the identifier @a identifier from the manager.
+   * @return True on success, false on failure.
+   */
+  bool removeFormat(const std::string &identifier);
 
   /**
    * New instance of the format for the specified @p identifier. Ownership

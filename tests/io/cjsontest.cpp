@@ -20,12 +20,17 @@
 
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/unitcell.h>
 
 #include <avogadro/io/cjsonformat.h>
 
-using Avogadro::Core::Molecule;
+using Avogadro::PI_F;
+using Avogadro::Real;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
+using Avogadro::Core::Molecule;
+using Avogadro::Core::UnitCell;
+using Avogadro::Core::Variant;
 using Avogadro::Io::CjsonFormat;
 using Avogadro::MatrixX;
 
@@ -37,10 +42,10 @@ TEST(CjsonTest, readFile)
                                 "/data/ethane.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
-  EXPECT_EQ(molecule.data("name").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
 
-  EXPECT_EQ(molecule.data("inchi").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("inchi").type(), Variant::String);
   EXPECT_EQ(molecule.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
 
@@ -89,6 +94,57 @@ TEST(CjsonTest, bonds)
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(4));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(7));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
+}
+
+TEST(CjsonTest, crystal)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  bool success = cjson.readFile(std::string(AVOGADRO_DATA) +
+                                "/data/rutile.cjson", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
+  EXPECT_EQ(molecule.data("name").toString(), "TiO2 rutile");
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(6));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(0));
+
+  const UnitCell *unitCell = molecule.unitCell();
+  ASSERT_NE(unitCell, (UnitCell*)NULL);
+  EXPECT_TRUE(std::fabs((float)unitCell->a() - 2.95812f) < 1e-5f);
+  EXPECT_TRUE(std::fabs((float)unitCell->b() - 4.59373f) < 1e-5f);
+  EXPECT_TRUE(std::fabs((float)unitCell->c() - 4.59373f) < 1e-5f);
+  EXPECT_TRUE(std::fabs((float)unitCell->alpha() - (.5f * PI_F)) < 1e-5f);
+  EXPECT_TRUE(std::fabs((float)unitCell->beta()  - (.5f * PI_F)) < 1e-5f);
+  EXPECT_TRUE(std::fabs((float)unitCell->gamma() - (.5f * PI_F)) < 1e-5f);
+
+  Atom atom = molecule.atom(5);
+  EXPECT_EQ(atom.atomicNumber(), 8);
+  EXPECT_TRUE(std::fabs((float)atom.position3d().x() - 1.479060f) < 1e-5f);
+  EXPECT_TRUE(std::fabs((float)atom.position3d().y() - 3.699331f) < 1e-5f);
+  EXPECT_TRUE(std::fabs((float)atom.position3d().z() - 0.894399f) < 1e-5f);
+
+  std::string cjsonStr;
+  cjson.writeString(cjsonStr, molecule);
+  Molecule otherMolecule;
+  cjson.readString(cjsonStr, otherMolecule);
+
+  const UnitCell *otherUnitCell = otherMolecule.unitCell();
+  ASSERT_NE(otherUnitCell, (UnitCell*)NULL);
+  EXPECT_FLOAT_EQ((float)otherUnitCell->a(),     (float)unitCell->a());
+  EXPECT_FLOAT_EQ((float)otherUnitCell->b(),     (float)unitCell->b());
+  EXPECT_FLOAT_EQ((float)otherUnitCell->c(),     (float)unitCell->c());
+  EXPECT_FLOAT_EQ((float)otherUnitCell->alpha(), (float)unitCell->alpha());
+  EXPECT_FLOAT_EQ((float)otherUnitCell->beta(),  (float)unitCell->beta());
+  EXPECT_FLOAT_EQ((float)otherUnitCell->gamma(), (float)unitCell->gamma());
+
+  Atom otherAtom = otherMolecule.atom(5);
+  EXPECT_EQ(otherAtom.atomicNumber(), atom.atomicNumber());
+  EXPECT_FLOAT_EQ((float)otherAtom.position3d().x(),
+                  (float)atom.position3d().x());
+  EXPECT_FLOAT_EQ((float)otherAtom.position3d().y(),
+                  (float)atom.position3d().y());
+  EXPECT_FLOAT_EQ((float)otherAtom.position3d().z(),
+                  (float)atom.position3d().z());
 }
 
 TEST(CjsonTest, saveFile)

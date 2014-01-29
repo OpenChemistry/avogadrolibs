@@ -12,6 +12,7 @@ endif()
 
 set(HEADERS
   avogadrogl.h
+  avogadrorendering.h
   bufferobject.h
   camera.h
   cylindergeometry.h
@@ -21,6 +22,7 @@ set(HEADERS
   groupnode.h
   glrenderer.h
   glrendervisitor.h
+  linestripgeometry.h
   meshgeometry.h
   node.h
   primitive.h
@@ -28,6 +30,12 @@ set(HEADERS
   shader.h
   shaderprogram.h
   spheregeometry.h
+  textlabel2d.h
+  textlabel3d.h
+  textlabelbase.h
+  textproperties.h
+  textrenderstrategy.h
+  texture2d.h
   transformnode.h
   visitor.h
   volumegeometry.h
@@ -43,24 +51,42 @@ set(SOURCES
   groupnode.cpp
   glrenderer.cpp
   glrendervisitor.cpp
+  linestripgeometry.cpp
   meshgeometry.cpp
   node.cpp
   scene.cpp
   shader.cpp
   shaderprogram.cpp
   spheregeometry.cpp
+  textlabel2d.cpp
+  textlabel3d.cpp
+  textlabelbase.cpp
+  textproperties.cpp
+  textrenderstrategy.cpp
+  texture2d.cpp
   transformnode.cpp
   visitor.cpp
   volumegeometry.cpp
+  ambientocclusionspheregeometry.cpp
 )
 
 set(shader_files
   "cylinders_fs.glsl"
   "cylinders_vs.glsl"
+  "linestrip_fs.glsl"
+  "linestrip_vs.glsl"
   "mesh_fs.glsl"
   "mesh_vs.glsl"
   "spheres_fs.glsl"
   "spheres_vs.glsl"
+  "sphere_ao_depth_vs.glsl"
+  "sphere_ao_depth_fs.glsl"
+  "sphere_ao_bake_vs.glsl"
+  "sphere_ao_bake_fs.glsl"
+  "sphere_ao_render_vs.glsl"
+  "sphere_ao_render_fs.glsl"
+  "textlabelbase_fs.glsl"
+  "textlabelbase_vs.glsl"
 )
 foreach(file ${shader_files})
   get_filename_component(file_we ${file} NAME_WE)

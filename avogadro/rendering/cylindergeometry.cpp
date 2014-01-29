@@ -62,6 +62,16 @@ CylinderGeometry::CylinderGeometry() : m_dirty(false), d(new Private)
 {
 }
 
+CylinderGeometry::CylinderGeometry(const CylinderGeometry &other)
+  : Drawable(other),
+    m_cylinders(other.m_cylinders),
+    m_indices(other.m_indices),
+    m_indexMap(other.m_indexMap),
+    m_dirty(true),
+    d(new Private)
+{
+}
+
 CylinderGeometry::~CylinderGeometry()
 {
   delete d;
@@ -82,7 +92,7 @@ void CylinderGeometry::update()
     // Set some defaults for our cylinders.
     const unsigned int resolution = 12; // points per circle
     const float resolutionRadians =
-        2.0 * static_cast<float>(M_PI) / static_cast<float>(resolution);
+        2.0f * static_cast<float>(M_PI) / static_cast<float>(resolution);
     std::vector<Vector3f> radials;
     radials.reserve(resolution);
 
@@ -95,7 +105,7 @@ void CylinderGeometry::update()
     std::vector<CylinderColor>::const_iterator itCylinder = m_cylinders.begin();
 
     for (unsigned int i = 0;
-         itIndex != m_indices.end(), itCylinder != m_cylinders.end();
+         itIndex != m_indices.end() && itCylinder != m_cylinders.end();
          ++i, ++itIndex, ++itCylinder) {
 
       const Vector3f &position1 = itCylinder->position;
@@ -142,8 +152,8 @@ void CylinderGeometry::update()
       }
     }
 
-    d->vbo.upload(cylinderVertices);
-    d->ibo.upload(cylinderIndices);
+    d->vbo.upload(cylinderVertices, BufferObject::ArrayBuffer);
+    d->ibo.upload(cylinderIndices, BufferObject::ElementArrayBuffer);
     d->numberOfVertices = cylinderVertices.size();
     d->numberOfIndices = cylinderIndices.size();
 
@@ -186,21 +196,24 @@ void CylinderGeometry::render(const Camera &camera)
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("vertex",
                                     ColorNormalVertex::vertexOffset(),
-                                    Vector3f())) {
+                                    sizeof(ColorNormalVertex),
+                                    FloatType, 3, ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("color"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("color",
                                     ColorNormalVertex::colorOffset(),
-                                    Vector3ub())) {
+                                    sizeof(ColorNormalVertex),
+                                    UCharType, 3, ShaderProgram::Normalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("normal"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("normal",
                                     ColorNormalVertex::normalOffset(),
-                                    Vector3f())) {
+                                    sizeof(ColorNormalVertex),
+                                    FloatType, 3, ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
 
@@ -260,7 +273,8 @@ CylinderGeometry::hits(const Vector3f &rayOrigin,
     if (D < 0.0f)
       continue;
 
-    float t = std::min((-B + sqrt(D)) / (2.0f * A), (-B - sqrt(D)) / (2.0f * A));
+    float t = std::min((-B + std::sqrt(D)) / (2.0f * A),
+                       (-B - std::sqrt(D)) / (2.0f * A));
 
     Vector3f ip = rayOrigin + (rayDirection * t);
     Vector3f ip1 = ip - cylinder.position;

@@ -9,17 +9,16 @@ add_definitions(${QT_DEFINITIONS})
 
 set(HEADERS
   glwidget.h
+  qttextrenderstrategy.h
 )
 
 set(SOURCES
   glwidget.cpp
+  qttextrenderstrategy.cpp
 )
 
 avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtOpenGL
-  AvogadroCore # Needed for editor.cpp, manipulator.cpp
   AvogadroRendering
   AvogadroQtGui
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
   ${QT_QTOPENGL_LIBRARY})

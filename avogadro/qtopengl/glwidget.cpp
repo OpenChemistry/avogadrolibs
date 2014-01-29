@@ -16,6 +16,11 @@
 
 #include "glwidget.h"
 
+#include "qttextrenderstrategy.h"
+
+#include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/sceneplugin.h>
+#include <avogadro/qtgui/scenepluginmodel.h>
 #include <avogadro/qtgui/toolplugin.h>
 
 #include <avogadro/rendering/camera.h>
@@ -24,8 +29,6 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-
-#include <QtCore/QDebug>
 
 namespace Avogadro {
 namespace QtOpenGL {
@@ -36,16 +39,81 @@ GLWidget::GLWidget(QWidget *parent_)
     m_defaultTool(NULL)
 {
   setFocusPolicy(Qt::ClickFocus);
+  connect(&m_scenePlugins,
+          SIGNAL(pluginStateChanged(Avogadro::QtGui::ScenePlugin*)),
+          SLOT(updateScene()));
+  m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
 }
 
 GLWidget::~GLWidget()
 {
 }
 
+void GLWidget::setMolecule(QtGui::Molecule *mol)
+{
+  clearScene();
+  if (m_molecule)
+    disconnect(m_molecule, 0, 0, 0);
+  m_molecule = mol;
+  foreach (QtGui::ToolPlugin *tool, m_tools)
+    tool->setMolecule(m_molecule);
+  connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateScene()));
+}
+
+QtGui::Molecule * GLWidget::molecule()
+{
+  return m_molecule;
+}
+
+const QtGui::Molecule * GLWidget::molecule() const
+{
+  return m_molecule;
+}
+
+void GLWidget::updateScene()
+{
+  // Build up the scene with the scene plugins, creating the appropriate nodes.
+  if (m_molecule) {
+    Rendering::GroupNode &node = m_renderer.scene().rootNode();
+    node.clear();
+    Rendering::GroupNode *moleculeNode = new Rendering::GroupNode(&node);
+
+    foreach (QtGui::ScenePlugin *scenePlugin,
+             m_scenePlugins.activeScenePlugins()) {
+      Rendering::GroupNode *engineNode = new Rendering::GroupNode(moleculeNode);
+      scenePlugin->process(*m_molecule, *engineNode);
+    }
+
+    // Let the tools perform any drawing they need to do.
+    if (m_activeTool) {
+      Rendering::GroupNode *toolNode = new Rendering::GroupNode(moleculeNode);
+      m_activeTool->draw(*toolNode);
+    }
+
+    if (m_defaultTool) {
+      Rendering::GroupNode *toolNode = new Rendering::GroupNode(moleculeNode);
+      m_defaultTool->draw(*toolNode);
+    }
+
+    m_renderer.resetGeometry();
+    update();
+  }
+}
+
+void GLWidget::clearScene()
+{
+  m_renderer.scene().clear();
+}
+
 void GLWidget::resetCamera()
 {
   m_renderer.resetCamera();
   update();
+}
+
+void GLWidget::resetGeometry()
+{
+  m_renderer.resetGeometry();
 }
 
 void GLWidget::setTools(const QList<QtGui::ToolPlugin *> &toolList)
@@ -61,6 +129,7 @@ void GLWidget::addTool(QtGui::ToolPlugin *tool)
 
   tool->setParent(this);
   tool->setGLWidget(this);
+  tool->setMolecule(m_molecule);
   m_tools << tool;
 }
 
@@ -78,9 +147,22 @@ void GLWidget::setActiveTool(const QString &name)
 
 void GLWidget::setActiveTool(QtGui::ToolPlugin *tool)
 {
+  if (tool == m_activeTool)
+    return;
+
+  if (m_activeTool && m_activeTool != m_defaultTool) {
+    disconnect(m_activeTool, SIGNAL(drawablesChanged()),
+               this, SLOT(updateScene()));
+  }
+
   if (tool)
     addTool(tool);
   m_activeTool = tool;
+
+  if (m_activeTool && m_activeTool != m_defaultTool) {
+    connect(m_activeTool, SIGNAL(drawablesChanged()),
+            this, SLOT(updateScene()));
+  }
 }
 
 void GLWidget::setDefaultTool(const QString &name)
@@ -97,17 +179,29 @@ void GLWidget::setDefaultTool(const QString &name)
 
 void GLWidget::setDefaultTool(QtGui::ToolPlugin *tool)
 {
+  if (tool == m_defaultTool)
+    return;
+
+  if (m_defaultTool && m_activeTool != m_defaultTool) {
+    disconnect(m_defaultTool, SIGNAL(drawablesChanged()),
+               this, SLOT(updateScene()));
+  }
+
   if (tool)
     addTool(tool);
   m_defaultTool = tool;
+
+  if (m_defaultTool && m_activeTool != m_defaultTool) {
+    connect(m_defaultTool, SIGNAL(drawablesChanged()),
+            this, SLOT(updateScene()));
+  }
 }
 
 void GLWidget::initializeGL()
 {
   m_renderer.initialize();
-  if (!m_renderer.isValid()) {
-    qDebug() << "Error initializing: " << m_renderer.error().c_str();
-  }
+  if (!m_renderer.isValid())
+    emit rendererInvalid();
 }
 
 void GLWidget::resizeGL(int width_, int height_)

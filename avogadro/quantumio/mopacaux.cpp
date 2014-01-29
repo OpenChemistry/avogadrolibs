@@ -17,219 +17,259 @@
 
 #include "mopacaux.h"
 
+#include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
-#include <avogadro/quantum/slaterset.h>
+#include <avogadro/core/utilities.h>
 
-#include <QtCore/QFile>
-#include <QtCore/QStringList>
-#include <QtCore/QDebug>
+#include <iostream>
 
 using std::vector;
-using Eigen::Vector3d;
+using std::string;
+using std::cout;
+using std::endl;
 
 namespace Avogadro {
 namespace QuantumIO {
 
-MopacAux::MopacAux(QString filename, SlaterSet* basis)
+using Core::Atom;
+using Core::BasisSet;
+using Core::SlaterSet;
+
+MopacAux::MopacAux()
 {
-  // Open the file for reading and process it
-  QFile file(filename);
-  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    return;
-
-  qDebug() << "File" << filename << "opened.";
-
-  // Process the formatted checkpoint and extract all the information we need
-  m_in.setDevice(&file);
-  while (!m_in.atEnd()) {
-    processLine();
-  }
-
-  // Now it should all be loaded load it into the basis set
-  load(basis);
 }
 
 MopacAux::~MopacAux()
 {
 }
 
-void MopacAux::processLine()
+std::vector<std::string> MopacAux::fileExtensions() const
+{
+  std::vector<std::string> extensions;
+  extensions.push_back("aux");
+  return extensions;
+}
+
+std::vector<std::string> MopacAux::mimeTypes() const
+{
+  return std::vector<std::string>();
+}
+
+bool MopacAux::read(std::istream &in, Core::Molecule &molecule)
+{
+  // Read the log file line by line, most sections are terminated by an empty
+  // line, so they should be retained.
+  while (!in.eof())
+    processLine(in);
+
+  SlaterSet *basis = new SlaterSet;
+
+  for (unsigned int i = 0; i < m_atomPos.size(); ++i) {
+    Atom a = molecule.addAtom(static_cast<unsigned char>(m_atomNums[i]));
+    a.setPosition3d(m_atomPos[i]);
+  }
+  // Do simple bond perception.
+  molecule.perceiveBondsSimple();
+  molecule.setBasisSet(basis);
+  basis->setMolecule(&molecule);
+  load(basis);
+  return true;
+}
+
+void MopacAux::processLine(std::istream &in)
 {
   // First truncate the line, remove trailing white space and check
-  QString line = m_in.readLine();
-  QString key = line;
-  key = key.trimmed();
-  //    QStringList list = tmp.split("=", QString::SkipEmptyParts);
+  string line;
+  if (!getline(in, line) || Core::trimmed(line).empty())
+    return;
+
+  string key = Core::trimmed(line);
 
   // Big switch statement checking for various things we are interested in
-  if (key.contains("ATOM_CORE")) {
-    QString tmp = key.mid(key.indexOf('[')+1, 4);
-    qDebug() << "Number of atoms =" << tmp.toInt();
-    m_atomNums = readArrayI(tmp.toInt());
+  if (Core::contains(key, "ATOM_EL")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    cout << "Number of atoms = " << tmp << endl;
+    m_atomNums = readArrayElements(in, tmp);
   }
-  else if (key.contains("AO_ATOMINDEX")) {
-    QString tmp = key.mid(key.indexOf('[')+1, 4);
-    qDebug() << "Number of atomic orbitals =" << tmp.toInt();
-    m_atomIndex = readArrayI(tmp.toInt());
-    for (unsigned int i = 0; i < m_atomIndex.size(); ++i) {
+  else if (Core::contains(key, "AO_ATOMINDEX")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    cout << "Number of atomic orbitals = " << tmp << endl;
+    m_atomIndex = readArrayI(in, tmp);
+    for (size_t i = 0; i < m_atomIndex.size(); ++i)
       --m_atomIndex[i];
+  }
+  else if (Core::contains(key, "ATOM_SYMTYPE")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    cout << "Number of atomic orbital types = " << tmp << endl;
+    m_atomSym = readArraySym(in, tmp);
+  }
+  else if (Core::contains(key, "AO_ZETA")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    cout << "Number of zeta values = " << tmp << endl;
+    m_zeta = readArrayD(in, tmp);
+  }
+  else if (Core::contains(key, "ATOM_PQN")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    cout << "Number of PQN values =" << tmp << endl;
+    m_pqn = readArrayI(in, tmp);
+  }
+  else if (Core::contains(key, "NUM_ELECTRONS")) {
+    vector<string> list = Core::split(line, '=');
+    if (list.size() > 1) {
+      m_electrons = Core::lexicalCast<int>(list[1]);
+      cout << "Number of electrons = " << m_electrons << endl;
     }
   }
-  else if (key.contains("ATOM_SYMTYPE")) {
-    QString tmp = key.mid(key.indexOf('[')+1, 4);
-    qDebug() << "Number of atomic orbital types =" << tmp.toInt();
-    m_atomSym = readArraySym(tmp.toInt());
+  else if (Core::contains(key, "ATOM_X_OPT:ANGSTROMS")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    cout << "Number of atomic coordinates = " << tmp << endl;
+    m_atomPos = readArrayVec(in, tmp);
   }
-  else if (key.contains("AO_ZETA")) {
-    QString tmp = key.mid(key.indexOf('[')+1, 4);
-    qDebug() << "Number of zeta values =" << tmp.toInt();
-    m_zeta = readArrayD(tmp.toInt());
+  else if (Core::contains(key, "OVERLAP_MATRIX")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
+    cout << "Size of lower half triangle of overlap matrix = " << tmp << endl;
+    readOverlapMatrix(in, tmp);
   }
-  else if (key.contains("ATOM_PQN")) {
-    QString tmp = key.mid(key.indexOf('[')+1, 4);
-    qDebug() << "Number of PQN values =" << tmp.toInt();
-    m_pqn = readArrayI(tmp.toInt());
-  }
-  else if (key.contains("NUM_ELECTRONS")) {
-    QString tmp = key.split('=').at(1);
-    qDebug() << "Number of electrons =" << tmp.toInt();
-    m_electrons = tmp.toInt();
-  }
-  else if (key.contains("ATOM_X_OPT:ANGSTROMS")) {
-    QString tmp = key.mid(key.indexOf('[')+1, 4);
-    qDebug() << "Number of atomic coordinates =" << tmp.toInt();
-    m_atomPos = readArrayVec(tmp.toInt());
-  }
-  else if (key.contains("OVERLAP_MATRIX")) {
-    QString tmp = key.mid(key.indexOf('[')+1, 6);
-    qDebug() << "Size of lower half triangle of overlap matrix =" << tmp.toInt();
-    readOverlapMatrix(tmp.toInt());
-  }
-  else if (key.contains("EIGENVECTORS")) {
+  else if (Core::contains(key, "EIGENVECTORS")) {
     // For large molecules the Eigenvectors counter overflows to [*****]
     // So just use the square of the m_atomIndex array
     //      QString tmp = key.mid(key.indexOf('[')+1, 6);
-    qDebug() << "Size of eigen vectors matrix ="
-             << m_atomIndex.size() * m_atomIndex.size();
-    readEigenVectors(static_cast<int>(m_atomIndex.size() * m_atomIndex.size()));
+    cout << "Size of eigen vectors matrix = "
+         << m_atomIndex.size() * m_atomIndex.size() << endl;
+    readEigenVectors(in,
+                     static_cast<int>(m_atomIndex.size() * m_atomIndex.size()));
   }
-  else if (key.contains("TOTAL_DENSITY_MATRIX")) {
-    QString tmp = key.mid(key.indexOf('[')+1, 6);
-    qDebug() << "Size of lower half triangle of density matrix =" << tmp.toInt();
-    readDensityMatrix(tmp.toInt());
+  else if (Core::contains(key, "TOTAL_DENSITY_MATRIX")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
+    cout << "Size of lower half triangle of density matrix = " << tmp << endl;
+    readDensityMatrix(in, tmp);
   }
 }
 
 void MopacAux::load(SlaterSet* basis)
 {
   if (m_atomPos.size() == 0) {
-    qWarning() << "No atoms found in .aux file. Bailing out.";
-    basis->setIsValid(false);
+    cout << "No atoms found in .aux file. Bailing out." << endl;
+    //basis->setIsValid(false);
     return;
   }
   // Now load up our basis set
-  basis->addAtoms(m_atomPos);
   basis->addSlaterIndices(m_atomIndex);
   basis->addSlaterTypes(m_atomSym);
   basis->addZetas(m_zeta);
   basis->addPQNs(m_pqn);
-  basis->setNumElectrons(m_electrons);
+  basis->setElectronCount(m_electrons);
   basis->addOverlapMatrix(m_overlap);
   basis->addEigenVectors(m_eigenVectors);
   basis->addDensityMatrix(m_density);
-
-  Core::Molecule &mol = basis->moleculeRef();
-  if (m_atomPos.size() == m_atomNums.size()) {
-    for (size_t i = 0; i < m_atomPos.size(); ++i) {
-      Core::Atom a = mol.addAtom(static_cast<unsigned char>(m_atomNums[i]));
-      a.setPosition3d(m_atomPos[i]);
-    }
-  }
-  else {
-    qWarning() << "Number of atomic numbers (" << m_atomNums.size()
-               << ") does not equal the number of atomic positions ("
-               << m_atomPos.size() << "). Not populating molecule.";
-    basis->setIsValid(false);
-  }
 }
 
-vector<int> MopacAux::readArrayI(unsigned int n)
+vector<int> MopacAux::readArrayElements(std::istream &in, unsigned int n)
 {
   vector<int> tmp;
   while (tmp.size() < n) {
-    QString line = m_in.readLine();
-    QStringList list = line.split(' ', QString::SkipEmptyParts);
-    for (int i = 0; i < list.size(); ++i)
-      tmp.push_back(list.at(i).toInt());
+    string line;
+    getline(in, line);
+    vector<string> list = Core::split(line, ' ');
+    for (size_t i = 0; i < list.size(); ++i) {
+      tmp.push_back(
+            static_cast<int>(Core::Elements::atomicNumberFromSymbol(list[i])));
+    }
   }
   return tmp;
 }
 
-vector<double> MopacAux::readArrayD(unsigned int n)
+vector<int> MopacAux::readArrayI(std::istream &in, unsigned int n)
+{
+  vector<int> tmp;
+  while (tmp.size() < n) {
+    string line;
+    getline(in, line);
+    vector<string> list = Core::split(line, ' ');
+    for (size_t i = 0; i < list.size(); ++i)
+      tmp.push_back(Core::lexicalCast<int>(list[i]));
+  }
+  return tmp;
+}
+
+vector<double> MopacAux::readArrayD(std::istream &in, unsigned int n)
 {
   vector<double> tmp;
   while (tmp.size() < n) {
-    QString line = m_in.readLine();
-    QStringList list = line.split(' ', QString::SkipEmptyParts);
-    for (int i = 0; i < list.size(); ++i)
-      tmp.push_back(list.at(i).toDouble());
+    string line;
+    getline(in, line);
+    vector<string> list = Core::split(line, ' ');
+    for (size_t i = 0; i < list.size(); ++i)
+      tmp.push_back(Core::lexicalCast<double>(list[i]));
   }
   return tmp;
 }
 
-vector<int> MopacAux::readArraySym(unsigned int n)
+vector<int> MopacAux::readArraySym(std::istream &in, unsigned int n)
 {
   int type;
   vector<int> tmp;
   while (tmp.size() < n) {
-    QString line = m_in.readLine();
-    QStringList list = line.split(' ', QString::SkipEmptyParts);
-    for (int i = 0; i < list.size(); ++i) {
-      if (list.at(i) == "S") type = SlaterSet::S;
-      else if (list.at(i) == "PX") type = SlaterSet::PX;
-      else if (list.at(i) == "PY") type = SlaterSet::PY;
-      else if (list.at(i) == "PZ") type = SlaterSet::PZ;
-      else if (list.at(i) == "X2") type = SlaterSet::X2;
-      else if (list.at(i) == "XZ") type = SlaterSet::XZ;
-      else if (list.at(i) == "Z2") type = SlaterSet::Z2;
-      else if (list.at(i) == "YZ") type = SlaterSet::YZ;
-      else if (list.at(i) == "XY") type = SlaterSet::XY;
-      else type = SlaterSet::UU;
+    string line;
+    getline(in, line);
+    vector<string> list = Core::split(line, ' ');
+    for (size_t i = 0; i < list.size(); ++i) {
+      if (list[i] == "S")
+        type = SlaterSet::S;
+      else if (list[i] == "PX")
+        type = SlaterSet::PX;
+      else if (list[i] == "PY")
+        type = SlaterSet::PY;
+      else if (list[i] == "PZ")
+        type = SlaterSet::PZ;
+      else if (list[i] == "X2")
+        type = SlaterSet::X2;
+      else if (list[i] == "XZ")
+        type = SlaterSet::XZ;
+      else if (list[i] == "Z2")
+        type = SlaterSet::Z2;
+      else if (list[i] == "YZ")
+        type = SlaterSet::YZ;
+      else if (list[i] == "XY")
+        type = SlaterSet::XY;
+      else
+        type = SlaterSet::UU;
       tmp.push_back(type);
     }
   }
   return tmp;
 }
 
-vector<Vector3d> MopacAux::readArrayVec(unsigned int n)
+vector<Vector3> MopacAux::readArrayVec(std::istream &in, unsigned int n)
 {
-  vector<Vector3d> tmp(n/3);
+  vector<Vector3> tmp(n / 3);
   double *ptr = tmp[0].data();
   unsigned int cnt = 0;
   while (cnt < n) {
-    QString line = m_in.readLine();
-    QStringList list = line.split(' ', QString::SkipEmptyParts);
-    for (int i = 0; i < list.size(); ++i) {
-      ptr[cnt++] = list.at(i).toDouble();
-    }
+    string line;
+    getline(in, line);
+    vector<string> list = Core::split(line, ' ');
+    for (size_t i = 0; i < list.size(); ++i)
+      ptr[cnt++] = Core::lexicalCast<double>(list[i]);
   }
   return tmp;
 }
 
-bool MopacAux::readOverlapMatrix(unsigned int n)
+bool MopacAux::readOverlapMatrix(std::istream &in, unsigned int n)
 {
   m_overlap.resize(m_zeta.size(), m_zeta.size());
   unsigned int cnt = 0;
   unsigned int i = 0, j = 0;
   unsigned int f = 1;
   // Skip the first commment line...
-  m_in.readLine();
+  string line;
+  getline(in, line);
   while (cnt < n) {
-    QString line = m_in.readLine();
-    QStringList list = line.split(' ', QString::SkipEmptyParts);
-    for (int k = 0; k < list.size(); ++k) {
+    getline(in, line);
+    vector<string> list = Core::split(line, ' ');
+    for (size_t k = 0; k < list.size(); ++k) {
       //m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
-      m_overlap(i, j) = m_overlap(j, i) = list.at(k).toDouble();
+      m_overlap(i, j) = m_overlap(j, i) = Core::lexicalCast<double>(list[k]);
       ++i; ++cnt;
       if (i == f) {
         // We need to move down to the next row and increment f - lower tri
@@ -242,16 +282,17 @@ bool MopacAux::readOverlapMatrix(unsigned int n)
   return true;
 }
 
-bool MopacAux::readEigenVectors(unsigned int n)
+bool MopacAux::readEigenVectors(std::istream &in, unsigned int n)
 {
   m_eigenVectors.resize(m_zeta.size(), m_zeta.size());
   unsigned int cnt = 0;
   unsigned int i = 0, j = 0;
   while (cnt < n) {
-    QString line = m_in.readLine();
-    QStringList list = line.split(' ', QString::SkipEmptyParts);
-    for (int k = 0; k < list.size(); ++k) {
-      m_eigenVectors(i, j) = list.at(k).toDouble();
+    string line;
+    getline(in, line);
+    vector<string> list = Core::split(line, ' ');
+    for (size_t k = 0; k < list.size(); ++k) {
+      m_eigenVectors(i, j) = Core::lexicalCast<double>(list[k]);
       ++i; ++cnt;
       if (i == m_zeta.size()) {
         // We need to move down to the next row and increment f - lower tri
@@ -263,20 +304,21 @@ bool MopacAux::readEigenVectors(unsigned int n)
   return true;
 }
 
-bool MopacAux::readDensityMatrix(unsigned int n)
+bool MopacAux::readDensityMatrix(std::istream &in, unsigned int n)
 {
   m_density.resize(m_zeta.size(), m_zeta.size());
   unsigned int cnt = 0;
   unsigned int i = 0, j = 0;
   unsigned int f = 1;
   // Skip the first commment line...
-  m_in.readLine();
+  string line;
+  getline(in, line);
   while (cnt < n) {
-    QString line = m_in.readLine();
-    QStringList list = line.split(' ', QString::SkipEmptyParts);
-    for (int k = 0; k < list.size(); ++k) {
+    getline(in, line);
+    vector<string> list = Core::split(line, ' ');
+    for (size_t k = 0; k < list.size(); ++k) {
       //m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
-      m_density(i, j) = m_density(j, i) = list.at(k).toDouble();
+      m_density(i, j) = m_density(j, i) = Core::lexicalCast<double>(list[k]);
       ++i; ++cnt;
       if (i == f) {
         // We need to move down to the next row and increment f - lower tri
@@ -291,14 +333,15 @@ bool MopacAux::readDensityMatrix(unsigned int n)
 
 void MopacAux::outputAll()
 {
-  qDebug() << "Shell mappings.";
+  cout << "Shell mappings:\n";
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i)
-    qDebug() << i << ": type =" << m_shellTypes.at(i)
-             << ", number =" << m_shellNums.at(i)
-             << ", atom =" << m_shelltoAtom.at(i);
-  qDebug() << "MO coefficients.";
+    cout << i << ": type = " << m_shellTypes.at(i)
+         << ", number = " << m_shellNums.at(i)
+         << ", atom = " << m_shelltoAtom.at(i) << endl;
+  cout << "MO coefficients:\n";
   for (unsigned int i = 0; i < m_MOcoeffs.size(); ++i)
-    qDebug() << m_MOcoeffs.at(i);
+    cout << m_MOcoeffs.at(i) << "\t";
+  cout << endl;
 }
 
 }

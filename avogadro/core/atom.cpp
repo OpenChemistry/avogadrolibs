@@ -23,11 +23,11 @@ namespace Core {
 
 Atom::Atom()
   : m_molecule(0),
-    m_index(size_t(-1))
+    m_index(MaxIndex)
 {
 }
 
-Atom::Atom(Molecule *m, size_t i)
+Atom::Atom(Molecule *m, Index i)
   : m_molecule(m),
     m_index(i)
 {
@@ -35,7 +35,7 @@ Atom::Atom(Molecule *m, size_t i)
 
 bool Atom::isValid() const
 {
-  return m_molecule != 0;
+  return m_molecule && m_index < m_molecule->atomCount();
 }
 
 Molecule* Atom::molecule() const
@@ -43,7 +43,7 @@ Molecule* Atom::molecule() const
   return m_molecule;
 }
 
-size_t Atom::index() const
+Index Atom::index() const
 {
   return m_index;
 }
@@ -61,7 +61,7 @@ unsigned char Atom::atomicNumber() const
 void Atom::setPosition2d(const Vector2 &pos)
 {
   std::vector<Vector2> &positions = m_molecule->atomPositions2d();
-  if (m_index >= positions.size())
+  if (m_index >= static_cast<Index>(positions.size()))
     positions.resize(m_index + 1);
   positions[m_index] = pos;
 }
@@ -69,7 +69,7 @@ void Atom::setPosition2d(const Vector2 &pos)
 Vector2 Atom::position2d() const
 {
   const std::vector<Vector2> &positions = m_molecule->atomPositions2d();
-  if (m_index < positions.size())
+  if (m_index < static_cast<Index>(positions.size()))
     return positions[m_index];
   else
     return Vector2::Zero();
@@ -78,7 +78,7 @@ Vector2 Atom::position2d() const
 void Atom::setPosition3d(const Vector3 &pos)
 {
   std::vector<Vector3> &positions = m_molecule->atomPositions3d();
-  if (m_index >= positions.size())
+  if (m_index >= static_cast<Index>(positions.size()))
     positions.resize(m_index + 1);
   positions[m_index] = pos;
 }
@@ -86,7 +86,7 @@ void Atom::setPosition3d(const Vector3 &pos)
 Vector3 Atom::position3d() const
 {
   const std::vector<Vector3> &positions = m_molecule->atomPositions3d();
-  if (m_index >= positions.size())
+  if (m_index >= static_cast<Index>(positions.size()))
     return Vector3::Zero();
   else
     return positions[m_index];

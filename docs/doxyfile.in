@@ -31,7 +31,7 @@ PROJECT_NAME           = @CMAKE_PROJECT_NAME@
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER         =
+PROJECT_NUMBER         = @AvogadroLibs_VERSION@
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute)
 # base path where the generated documentation will be put.
@@ -481,7 +481,7 @@ MAX_INITIALIZER_LINES  = 30
 # at the bottom of the documentation of classes and structs. If set to YES the
 # list will mention the files that were used to generate the documentation.
 
-SHOW_USED_FILES        = NO
+SHOW_USED_FILES        = YES
 
 # If the sources in your project are distributed over multiple directories
 # then setting the SHOW_DIRECTORIES tag to YES will show the directory hierarchy
@@ -598,7 +598,7 @@ INPUT_ENCODING         = UTF-8
 # *.hpp *.h++ *.idl *.odl *.cs *.php *.php3 *.inc *.m *.mm *.py *.f90
 
 FILE_PATTERNS          = *.h \
-                         *.cpp
+                         *.dox
 
 # The RECURSIVE tag can be used to turn specify whether or not subdirectories
 # should be searched for input files as well. Possible values are YES and NO.

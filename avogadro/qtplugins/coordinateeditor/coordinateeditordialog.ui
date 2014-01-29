@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Avogadro::QtPlugins::CoordinateEditorDialog</class>
+ <widget class="QDialog" name="Avogadro::QtPlugins::CoordinateEditorDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Coordinate Editor</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <property name="labelAlignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Preset:</string>
+       </property>
+       <property name="buddy">
+        <cstring>presets</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Distance Unit:</string>
+       </property>
+       <property name="buddy">
+        <cstring>distanceUnit</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="distanceUnit">
+       <item>
+        <property name="text">
+         <string>Angstrom</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Bohr</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Format:</string>
+       </property>
+       <property name="buddy">
+        <cstring>spec</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLineEdit" name="spec">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specification of format. Each character indicates a value to write per atom:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;#&lt;/span&gt; - Atom index (1, 2, ..., numAtoms)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Z&lt;/span&gt; - Atomic number (e.g. &amp;quot;6&amp;quot; for carbon)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;G&lt;/span&gt; - GAMESS-style atomic number (e.g. &amp;quot;6.0&amp;quot; for carbon)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;N&lt;/span&gt; - Element name (e.g. &amp;quot;Carbon&amp;quot;)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt; - Element symbol (e.g. &amp;quot;C&amp;quot; for carbon)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;x&lt;/span&gt; - X position coordinate&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;y&lt;/span&gt; - Y position coordinate&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;z&lt;/span&gt; - Z position coordinate&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;a&lt;/span&gt; - 'a' lattice coordinate (crystals only)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;b&lt;/span&gt; - 'b' lattice coordinate (crystals only)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;c&lt;/span&gt; - 'c' lattice coordinate (crystals only)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;_&lt;/span&gt; - A literal space (&amp;quot; &amp;quot;), useful for alignment&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; - A literal 0 (&amp;quot;0&amp;quot;), useful for optimization flags&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;1&lt;/span&gt; - A literal 1 (&amp;quot;1&amp;quot;), useful for optimization flags&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="help">
+         <property name="text">
+          <string>Help...</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="presets"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="Avogadro::QtPlugins::CoordinateTextEdit" name="text"/>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QToolButton" name="cut">
+       <property name="text">
+        <string>Cut</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="copy">
+       <property name="text">
+        <string>Copy</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="paste">
+       <property name="text">
+        <string>Paste</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="revert">
+       <property name="text">
+        <string>Revert</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="clear">
+       <property name="text">
+        <string>Clear</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="apply">
+       <property name="text">
+        <string>Apply</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Avogadro::QtPlugins::CoordinateTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>coordinatetextedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>presets</tabstop>
+  <tabstop>spec</tabstop>
+  <tabstop>help</tabstop>
+  <tabstop>distanceUnit</tabstop>
+  <tabstop>text</tabstop>
+  <tabstop>cut</tabstop>
+  <tabstop>copy</tabstop>
+  <tabstop>paste</tabstop>
+  <tabstop>revert</tabstop>
+  <tabstop>clear</tabstop>
+  <tabstop>apply</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

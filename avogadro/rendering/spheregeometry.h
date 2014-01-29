@@ -19,9 +19,8 @@
 
 #include "drawable.h"
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
-
-#include <vector>
 
 namespace Avogadro {
 namespace Rendering {
@@ -51,7 +50,11 @@ class AVOGADRORENDERING_EXPORT SphereGeometry : public Drawable
 {
 public:
   SphereGeometry();
+  SphereGeometry(const SphereGeometry &other);
   ~SphereGeometry();
+
+  SphereGeometry & operator=(SphereGeometry);
+  friend void swap(SphereGeometry &lhs, SphereGeometry &rhs);
 
   /**
    * Accept a visit from our friendly visitor.
@@ -89,8 +92,8 @@ public:
   /**
    * Get a reference to the spheres.
    */
-  std::vector<SphereColor>& spheres() { return m_spheres; }
-  const std::vector<SphereColor>& spheres() const { return m_spheres; }
+  Core::Array<SphereColor>& spheres() { return m_spheres; }
+  const Core::Array<SphereColor>& spheres() const { return m_spheres; }
 
   /**
    * Clear the contents of the node.
@@ -103,14 +106,30 @@ public:
   size_t size() const { return m_spheres.size(); }
 
 private:
-  std::vector<SphereColor> m_spheres;
-  std::vector<size_t> m_indices;
+  Core::Array<SphereColor> m_spheres;
+  Core::Array<size_t> m_indices;
 
   bool m_dirty;
 
   class Private;
   Private *d;
 };
+
+inline SphereGeometry &SphereGeometry::operator=(SphereGeometry other)
+{
+  using std::swap;
+  swap(*this, other);
+  return *this;
+}
+
+inline void swap(SphereGeometry &lhs, SphereGeometry &rhs)
+{
+  using std::swap;
+  swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));
+  swap(lhs.m_spheres, rhs.m_spheres);
+  swap(lhs.m_indices, rhs.m_indices);
+  lhs.m_dirty = rhs.m_dirty = true;
+}
 
 } // End namespace Rendering
 } // End namespace Avogadro

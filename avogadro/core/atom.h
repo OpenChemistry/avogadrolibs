@@ -40,7 +40,7 @@ public:
    * Creates a new atom object representing the atom at index @p i in molecule
    * @p m.
    */
-  Atom(Molecule *m, size_t i);
+  Atom(Molecule *m, Index i);
 
   /** Returns \c true if the atom is valid. */
   bool isValid() const;
@@ -49,7 +49,7 @@ public:
   Molecule* molecule() const;
 
   /** Returns the atom's index in the molecule. */
-  size_t index() const;
+  Index index() const;
 
   /** Sets the atom's atomic number to @p number. */
   void setAtomicNumber(unsigned char number);
@@ -71,8 +71,21 @@ public:
 
 private:
   Molecule *m_molecule;
-  size_t m_index;
+  Index m_index;
 };
+
+inline bool operator==(const Atom& lhs, const Atom& rhs)
+{
+  if (lhs.molecule() == rhs.molecule() && lhs.index() == rhs.index())
+    return true;
+  else
+    return false;
+}
+
+inline bool operator!=(const Atom& lhs, const Atom& rhs)
+{
+  return !operator==(lhs, rhs);
+}
 
 } // end Core namespace
 } // end Avogadro namespace

@@ -23,7 +23,7 @@ namespace Avogadro {
 namespace Rendering {
 
 /**
- * @class TransofrmNode transformnode.h <avogadro/rendering/transformnode.h>
+ * @class TransformNode transformnode.h <avogadro/rendering/transformnode.h>
  * @brief The TransformNode class applies a transform to all child nodes.
  * @author Marcus D. Hanwell
  *

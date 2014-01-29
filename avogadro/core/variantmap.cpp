@@ -60,6 +60,11 @@ Variant VariantMap::value(const std::string &name) const
   return iter->second;
 }
 
+bool VariantMap::hasValue(const std::string &name) const
+{
+  return m_map.find(name) != m_map.end();
+}
+
 VariantMap::iterator VariantMap::begin()
 {
   return m_map.begin();

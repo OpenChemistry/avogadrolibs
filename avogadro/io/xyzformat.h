@@ -36,7 +36,7 @@ public:
 
   Operations supportedOperations() const AVO_OVERRIDE
   {
-    return ReadWrite | File | Stream | String;
+    return ReadWrite | MultiMolecule | File | Stream | String;
   }
 
   FileFormat * newInstance() const AVO_OVERRIDE { return new XyzFormat; }

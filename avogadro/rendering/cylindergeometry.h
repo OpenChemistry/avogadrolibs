@@ -51,7 +51,11 @@ class AVOGADRORENDERING_EXPORT CylinderGeometry : public Drawable
 {
 public:
   CylinderGeometry();
+  CylinderGeometry(const CylinderGeometry &other);
   ~CylinderGeometry();
+
+  CylinderGeometry &operator=(CylinderGeometry);
+  friend void swap(CylinderGeometry &lhs, CylinderGeometry &rhs);
 
   /**
    * Accept a visit from our friendly visitor.
@@ -157,6 +161,23 @@ private:
   class Private;
   Private *d;
 };
+
+inline CylinderGeometry &CylinderGeometry::operator=(CylinderGeometry other)
+{
+  using std::swap;
+  swap(*this, other);
+  return *this;
+}
+
+inline void swap(CylinderGeometry &lhs, CylinderGeometry &rhs)
+{
+  using std::swap;
+  swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));
+  swap(lhs.m_cylinders, rhs.m_cylinders);
+  swap(lhs.m_indices, rhs.m_indices);
+  swap(lhs.m_indexMap, rhs.m_indexMap);
+  lhs.m_dirty = rhs.m_dirty = true;
+}
 
 } // End namespace Rendering
 } // End namespace Avogadro

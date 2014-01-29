@@ -49,7 +49,7 @@ void VanDerWaals::process(const Core::Molecule &molecule,
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
 
-  for (size_t i = 0; i < molecule.atomCount(); ++i) {
+  for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
     unsigned char atomicNumber = atom.atomicNumber();
     const unsigned char *c = Elements::color(atomicNumber);

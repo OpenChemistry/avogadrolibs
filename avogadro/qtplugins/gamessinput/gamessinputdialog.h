@@ -28,7 +28,7 @@
 class QJsonObject;
 
 namespace MoleQueue {
-class Client;
+class JobObject;
 }
 
 namespace Avogadro {
@@ -49,25 +49,29 @@ public:
 
   void setMolecule(QtGui::Molecule *mol);
 
+signals:
+   /**
+    * Emitted when the user requests that a job's output be loaded in Avogadro.
+    */
+  void openJobOutput(const MoleQueue::JobObject &job);
+
 protected:
   void showEvent(QShowEvent *e);
 
 private slots:
   void updatePreviewText();
 
-  void refreshPrograms();
-  void queueListReceived(const QJsonObject &queueList);
-
   void defaultsClicked();
   void resetClicked();
   void generateClicked();
   void computeClicked();
 
+  void updateTitlePlaceholder();
+
 private:
   void connectBasic();
   void connectPreview();
   void connectButtons();
-  void connectMoleQueue();
 
   void buildOptions();
   void updateOptionCache();
@@ -82,14 +86,14 @@ private:
 
   void setBasicDefaults();
 
+  QString generateJobTitle() const;
+
   Ui::GamessInputDialog ui;
   QtGui::Molecule *m_molecule;
   GamessHighlighter *m_highlighter;
 
   bool m_updatePending;
   QMap<QComboBox *, int> m_optionCache;
-
-  MoleQueue::Client *m_client;
 };
 
 } // end namespace QtPlugins

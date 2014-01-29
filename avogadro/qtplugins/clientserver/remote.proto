@@ -1,0 +1,53 @@
+import "protocall.proto";
+import "external_avogadrocore.proto";
+
+
+message OpenRequest {
+  optional string path = 1;
+}
+
+message OpenResponse {
+  optional external.Avogadro.Core.Molecule molecule = 1;
+}
+
+service RemoteMoleculeService {
+  rpc open(OpenRequest) returns(OpenResponse);
+  rpc fileFormats(Void) returns(FileFormats);
+}
+
+message Path {
+  optional string name = 1;
+  optional string path = 2;
+  optional uint32 type = 3;
+  optional bool hidden = 4;
+}
+
+message Listing {
+  optional Path path  = 1;
+  repeated Path paths = 2;
+}
+
+message Separator {
+  optional string separator = 1;
+}
+
+message Paths {
+  repeated Paths dirs = 1;
+}
+
+message FileFormat {
+    optional string name = 1;
+    repeated string extension = 2;
+}
+
+message FileFormats {
+  repeated FileFormat formats = 1;
+}
+
+service RemoteFileSystemService {
+  rpc ls(Path) returns(Listing);
+  rpc cwd(Void) returns(Path);
+  rpc separator(Void) returns(Separator);
+  rpc specialDirectories(Void) returns(Paths);
+  rpc absolutePath(Path) returns(Path);
+}

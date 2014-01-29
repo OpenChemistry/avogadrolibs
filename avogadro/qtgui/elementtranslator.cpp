@@ -390,5 +390,10 @@ QString ElementTranslator::name(int element)
   return result;
 }
 
+int ElementTranslator::numberOfElements()
+{
+  return 118;
+}
+
 } // End namespace QtGui
 } // End namespace Avogadro

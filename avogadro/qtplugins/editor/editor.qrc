@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>editor.png</file>
+    </qresource>
+</RCC>

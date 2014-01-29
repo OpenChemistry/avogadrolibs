@@ -17,16 +17,30 @@
 #include "cmlformat.h"
 
 #include "hdf5dataformat.h"
-#include "utilities.h"
 
+#include <avogadro/core/crystaltools.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/matrix.h>
+#include <avogadro/core/unitcell.h>
+#include <avogadro/core/utilities.h>
 
 #include <pugixml.cpp>
 
+#include <bitset>
+#include <cmath>
 #include <streambuf>
 #include <sstream>
 #include <map>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+namespace {
+const Avogadro::Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
+const Avogadro::Real RAD_TO_DEG = static_cast<Avogadro::Real>(180.0 / M_PI);
+}
 
 namespace Avogadro {
 namespace Io {
@@ -45,7 +59,10 @@ class CmlFormatPrivate
 {
 public:
   CmlFormatPrivate(Molecule *mol, xml_document &document, std::string filename_)
-    : success(false), molecule(mol), moleculeNode(NULL), filename(filename_)
+    : success(false),
+      molecule(mol),
+      moleculeNode(NULL),
+      filename(filename_)
   {
     // Parse the CML document, and create molecules/elements as necessary.
     moleculeNode = document.child("molecule");
@@ -56,10 +73,11 @@ public:
     if (moleculeNode) {
       // Parse the various components we know about.
       data();
-      properties();
-      success = atoms();
+      success = properties();
       if (success)
-        bonds();
+        success = atoms();
+      if (success)
+        success = bonds();
     }
     else {
       error += "Error, no molecule node found.";
@@ -67,7 +85,7 @@ public:
     }
   }
 
-  void properties()
+  bool properties()
   {
     xml_attribute attribute;
     xml_node node;
@@ -83,6 +101,59 @@ public:
           molecule->setData("inchi", std::string(attribute.value()));
       }
     }
+
+    // Unit cell:
+    node = moleculeNode.child("crystal");
+    if (node) {
+      float a;
+      float b;
+      float c;
+      float alpha;
+      float beta;
+      float gamma;
+      enum { CellA = 0, CellB, CellC, CellAlpha, CellBeta, CellGamma };
+      std::bitset<6> parsedValues;
+      for (pugi::xml_node scalar = node.child("scalar"); scalar;
+           scalar = scalar.next_sibling("scalar")) {
+        pugi::xml_attribute title = scalar.attribute("title");
+        const float degToRad(static_cast<float>(M_PI) / 180.0f);
+        if (title) {
+          std::string titleStr(title.value());
+          if (titleStr == "a") {
+            a = scalar.text().as_float();
+            parsedValues.set(CellA);
+          }
+          else if (titleStr == "b") {
+            b = scalar.text().as_float();
+            parsedValues.set(CellB);
+          }
+          else if (titleStr == "c") {
+            c = scalar.text().as_float();
+            parsedValues.set(CellC);
+          }
+          else if (titleStr == "alpha") {
+            alpha = scalar.text().as_float() * degToRad;
+            parsedValues.set(CellAlpha);
+          }
+          else if (titleStr == "beta") {
+            beta = scalar.text().as_float() * degToRad;
+            parsedValues.set(CellBeta);
+          }
+          else if (titleStr == "gamma") {
+            gamma = scalar.text().as_float() * degToRad;
+            parsedValues.set(CellGamma);
+          }
+        }
+      }
+      if (parsedValues.count() != 6) {
+        error += "Incomplete unit cell description.";
+        return false;
+      }
+      UnitCell *cell = new UnitCell;
+      cell->setCellParameters(a, b, c, alpha, beta, gamma);
+      molecule->setUnitCell(cell);
+    }
+    return true;
   }
 
   bool atoms()
@@ -120,13 +191,34 @@ public:
         xml_attribute z3 = node.attribute("z3");
         if (y3 && z3) {
           // It looks like we have a valid 3D position.
-          Vector3 position(strtod(attribute.value(), 0),
-                           strtod(y3.value(), 0),
-                           strtod(z3.value(), 0));
+          Vector3 position(lexicalCast<double>(attribute.value()),
+                           lexicalCast<double>(y3.value()),
+                           lexicalCast<double>(z3.value()));
           atom.setPosition3d(position);
         }
         else {
           // Corrupt 3D position supplied for atom.
+          return false;
+        }
+      }
+      else if ((attribute = node.attribute("xFract"))) {
+        if (!molecule->unitCell()) {
+          error += "No unit cell defined. "
+                   "Cannot interpret fractional coordinates.";
+          return false;
+        }
+        xml_attribute &xF = attribute;
+        xml_attribute yF = node.attribute("yFract");
+        xml_attribute zF = node.attribute("zFract");
+        if (yF && zF) {
+          Vector3 coord(static_cast<Real>(xF.as_float()),
+                        static_cast<Real>(yF.as_float()),
+                        static_cast<Real>(zF.as_float()));
+          molecule->unitCell()->toCartesian(coord, coord);
+          atom.setPosition3d(coord);
+        }
+        else {
+          error += "Missing y or z fractional coordinate on atom.";
           return false;
         }
       }
@@ -136,8 +228,8 @@ public:
       if (attribute) {
         xml_attribute y2 = node.attribute("y2");
         if (y2) {
-          Vector2 position(strtod(attribute.value(), 0),
-                           strtod(y2.value(), 0));
+          Vector2 position(lexicalCast<double>(attribute.value()),
+                           lexicalCast<double>(y2.value()));
           atom.setPosition2d(position);
         }
         else {
@@ -156,7 +248,7 @@ public:
   {
     xml_node bondArray = moleculeNode.child("bondArray");
     if (!bondArray)
-      return false;
+      return true;
 
     xml_node node = bondArray.child("bond");
 
@@ -169,7 +261,7 @@ public:
         std::vector<std::string> tokens = split(refs, ' ');
         if (tokens.size() != 2) // Corrupted file/input we don't understand
           return false;
-        std::map<std::string, size_t>::const_iterator begin, end;
+        std::map<std::string, Index>::const_iterator begin, end;
         begin = atomIds.find(tokens[0]);
         end = atomIds.find(tokens[1]);
         if (begin != atomIds.end() && end != atomIds.end()
@@ -184,8 +276,40 @@ public:
       }
 
       attribute = node.attribute("order");
-      if (attribute)
-        bond.setOrder(static_cast<unsigned char>(atoi(attribute.value())));
+      if (attribute && strlen(attribute.value()) == 1) {
+        char o = attribute.value()[0];
+        switch (o) {
+        case '1':
+        case 'S':
+        case 's':
+          bond.setOrder(1);
+          break;
+        case '2':
+        case 'D':
+        case 'd':
+          bond.setOrder(2);
+          break;
+        case '3':
+        case 'T':
+        case 't':
+          bond.setOrder(3);
+          break;
+        case '4':
+          bond.setOrder(4);
+          break;
+        case '5':
+          bond.setOrder(5);
+          break;
+        case '6':
+          bond.setOrder(6);
+          break;
+        default:
+          bond.setOrder(1);
+        }
+      }
+      else {
+        bond.setOrder(1);
+      }
 
       // Move on to the next bond node (if there is one).
       node = node.next_sibling("bond");
@@ -283,7 +407,7 @@ public:
   bool success;
   Molecule *molecule;
   xml_node moleculeNode;
-  std::map<std::string, size_t> atomIds;
+  std::map<std::string, Index> atomIds;
   string filename;
   string error;
 };
@@ -340,8 +464,42 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
     node.append_attribute("value") = mol.data("inchi").toString().c_str();
   }
 
+    // Cell specification
+  const UnitCell *cell = mol.unitCell();
+  if (cell) {
+    xml_node crystalNode = moleculeNode.append_child("crystal");
+
+    xml_node crystalANode = crystalNode.append_child("scalar");
+    xml_node crystalBNode = crystalNode.append_child("scalar");
+    xml_node crystalCNode = crystalNode.append_child("scalar");
+    xml_node crystalAlphaNode = crystalNode.append_child("scalar");
+    xml_node crystalBetaNode  = crystalNode.append_child("scalar");
+    xml_node crystalGammaNode = crystalNode.append_child("scalar");
+
+    crystalANode.append_attribute("title") = "a";
+    crystalBNode.append_attribute("title") = "b";
+    crystalCNode.append_attribute("title") = "c";
+    crystalAlphaNode.append_attribute("title") = "alpha";
+    crystalBetaNode.append_attribute("title") =  "beta";
+    crystalGammaNode.append_attribute("title") = "gamma";
+
+    crystalANode.append_attribute("units") = "units:angstrom";
+    crystalBNode.append_attribute("units") = "units:angstrom";
+    crystalCNode.append_attribute("units") = "units:angstrom";
+    crystalAlphaNode.append_attribute("units") = "units:degree";
+    crystalBetaNode.append_attribute("units")  = "units:degree";
+    crystalGammaNode.append_attribute("units") = "units:degree";
+
+    crystalANode.text() = static_cast<double>(cell->a());
+    crystalBNode.text() = static_cast<double>(cell->b());
+    crystalCNode.text() = static_cast<double>(cell->c());
+    crystalAlphaNode.text() = static_cast<double>(cell->alpha() * RAD_TO_DEG);
+    crystalBetaNode.text()  = static_cast<double>(cell->beta()  * RAD_TO_DEG);
+    crystalGammaNode.text() = static_cast<double>(cell->gamma() * RAD_TO_DEG);
+  }
+
   xml_node atomArrayNode = moleculeNode.append_child("atomArray");
-  for (size_t i = 0; i < mol.atomCount(); ++i) {
+  for (Index i = 0; i < mol.atomCount(); ++i) {
     xml_node atomNode = atomArrayNode.append_child("atom");
     std::ostringstream index;
     index << 'a' <<  i + 1;
@@ -349,13 +507,21 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
     Atom a = mol.atom(i);
     atomNode.append_attribute("elementType") =
         Elements::symbol(a.atomicNumber());
-    atomNode.append_attribute("x3") = a.position3d().x();
-    atomNode.append_attribute("y3") = a.position3d().y();
-    atomNode.append_attribute("z3") = a.position3d().z();
+    if (cell) {
+      Vector3 fracPos = cell->toFractional(a.position3d());
+      atomNode.append_attribute("xFract") = fracPos.x();
+      atomNode.append_attribute("yFract") = fracPos.y();
+      atomNode.append_attribute("zFract") = fracPos.z();
+    }
+    else {
+      atomNode.append_attribute("x3") = a.position3d().x();
+      atomNode.append_attribute("y3") = a.position3d().y();
+      atomNode.append_attribute("z3") = a.position3d().z();
+    }
   }
 
   xml_node bondArrayNode = moleculeNode.append_child("bondArray");
-  for (size_t i = 0; i < mol.bondCount(); ++i) {
+  for (Index i = 0; i < mol.bondCount(); ++i) {
     xml_node bondNode = bondArrayNode.append_child("bond");
     Bond b = mol.bond(i);
     std::ostringstream index;

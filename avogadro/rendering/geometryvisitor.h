@@ -49,8 +49,12 @@ public:
   void visit(GeometryNode &) AVO_OVERRIDE { return; }
   void visit(Drawable &) AVO_OVERRIDE;
   void visit(SphereGeometry &) AVO_OVERRIDE;
+  void visit(AmbientOcclusionSphereGeometry &) AVO_OVERRIDE;
   void visit(CylinderGeometry &) AVO_OVERRIDE { return; }
   void visit(MeshGeometry &) AVO_OVERRIDE { return; }
+  void visit(TextLabel2D &) AVO_OVERRIDE { return; }
+  void visit(TextLabel3D &) AVO_OVERRIDE { return; }
+  void visit(LineStripGeometry &) AVO_OVERRIDE;
 
   /**
    * Clear the state of the visitor.

@@ -19,6 +19,7 @@
 
 #include "avogadrorenderingexport.h"
 
+#include "avogadrorendering.h"
 #include "primitive.h"
 #include <avogadro/core/vector.h>
 
@@ -45,7 +46,11 @@ class AVOGADRORENDERING_EXPORT Drawable
 {
 public:
   Drawable();
+  Drawable(const Drawable &other);
   virtual ~Drawable();
+
+  Drawable &operator=(Drawable);
+  friend void swap(Drawable &lhs, Drawable &rhs);
 
   /**
    * Accept a visit from our friendly visitor.
@@ -70,6 +75,15 @@ public:
    * @return True if visible.
    */
   bool isVisible() const { return m_visible; }
+
+  /**
+   * The render pass in which this drawable should be rendered.
+   * @sa Rendering::RenderPass
+   * @{
+   */
+  void setRenderPass(RenderPass pass) { m_renderPass = pass; }
+  RenderPass renderPass() const { return m_renderPass; }
+  /** @} */
 
   /**
    * @brief Render the contents of the drawable.
@@ -111,8 +125,25 @@ protected:
 
   GeometryNode * m_parent;
   bool m_visible;
+  RenderPass m_renderPass;
   Identifier m_identifier;
 };
+
+inline Drawable &Drawable::operator=(Drawable rhs)
+{
+  using std::swap;
+  swap(*this, rhs);
+  return *this;
+}
+
+inline void swap(Drawable &lhs, Drawable &rhs)
+{
+  using std::swap;
+  swap(lhs.m_parent, rhs.m_parent);
+  swap(lhs.m_visible, rhs.m_visible);
+  swap(lhs.m_renderPass, rhs.m_renderPass);
+  swap(lhs.m_identifier, rhs.m_identifier);
+}
 
 } // End namespace Rendering
 } // End namespace Avogadro

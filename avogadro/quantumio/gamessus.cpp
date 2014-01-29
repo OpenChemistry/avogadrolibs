@@ -16,308 +16,283 @@
 
 #include "gamessus.h"
 
-#include <QtCore/QFile>
-#include <QtCore/QStringList>
-#include <QtCore/QDebug>
+#include <avogadro/core/molecule.h>
+#include <avogadro/core/utilities.h>
 
-using Eigen::Vector3d;
+#include <iostream>
+
 using std::vector;
-
-#ifndef BOHR_TO_ANGSTROM
-#define BOHR_TO_ANGSTROM 0.529177249
-#endif
+using std::string;
+using std::cout;
+using std::endl;
 
 namespace Avogadro {
 namespace QuantumIO {
 
-using Quantum::S;
-using Quantum::SP;
-using Quantum::P;
-using Quantum::D;
-using Quantum::F;
-using Quantum::UU;
+using Core::Atom;
+using Core::BasisSet;
+using Core::GaussianSet;
+using Core::Rhf;
+using Core::Uhf;
+using Core::Rohf;
+using Core::Unknown;
 
-using Quantum::orbital;
-
-GAMESSUSOutput::GAMESSUSOutput(const QString &filename, GaussianSet* basis) :
-  m_coordFactor(1.0), m_currentMode(NotParsing), m_currentScfMode(doubly),
-  m_currentAtom(1)
+GAMESSUSOutput::GAMESSUSOutput() :
+  m_coordFactor(1.0),
+  m_scftype(Rhf)
 {
-  // Open the file for reading and process it
-  QFile* file = new QFile(filename);
-  file->open(QIODevice::ReadOnly | QIODevice::Text);
-  m_in = file;
-
-  qDebug() << "File" << filename << "opened.";
-
-  // Process the formatted checkpoint and extract all the information we need
-  while (!m_in->atEnd())
-    processLine(basis);
-
-  // Now it should all be loaded load it into the basis set
-  load(basis);
-
-  delete file;
 }
 
 GAMESSUSOutput::~GAMESSUSOutput()
 {
 }
 
-void GAMESSUSOutput::processLine(GaussianSet *basis)
+std::vector<std::string> GAMESSUSOutput::fileExtensions() const
 {
-  // First truncate the line, remove trailing white space and check for blank lines
-  QString key = m_in->readLine().trimmed();
-  while (key.isEmpty() && !m_in->atEnd())
-    key = m_in->readLine().trimmed();
+  std::vector<std::string> extensions;
+  extensions.push_back("gamout");
+  extensions.push_back("log");
+  extensions.push_back("out");
+  return extensions;
+}
 
-  if (m_in->atEnd())
-    return;
+std::vector<std::string> GAMESSUSOutput::mimeTypes() const
+{
+  return std::vector<std::string>();
+}
 
-  QStringList list2;
-  QString     tmp;
-  QStringList list = key.split(' ', QString::SkipEmptyParts);
-  int numGTOs;
-
-  // Big switch statement checking for various things we are interested in
-  // Make sure to switch mode:
-  //      enum mode { NotParsing, Atoms, GTO, STO, MO, SCF }
-  if (key.contains("COORDINATES (BOHR)", Qt::CaseInsensitive)) {
-    // FIXME: Add back clear if necessary.
-    // basis->moleculeRef().clear();
-
-    m_coordFactor = 1.0; // coordinates are supposed to be in bohr?!
-    m_currentMode = Atoms;
-    key = m_in->readLine().trimmed(); // skip the column titles
-  } else if (key.contains("COORDINATES OF ALL ATOMS ARE (ANGS)",
-                          Qt::CaseInsensitive)) {
-    // FIXME: Add back clear if necessary.
-    // basis->moleculeRef().clearAtoms();
-
-    m_coordFactor = 1.0 / BOHR_TO_ANGSTROM; // in Angstroms now
-    m_currentMode = Atoms;
-    key = m_in->readLine(); // skip column titles
-    key = m_in->readLine(); // and ----- line
-  } else if (key.contains("INTERNUCLEAR DISTANCES", Qt::CaseInsensitive)) {
-    //this silly parser is far too greedy
-    m_currentMode = NotParsing;
-  } else if (key.contains("ATOMIC BASIS SET")) {
-    m_currentMode = GTO;
-    // ---
-    // PRIMITIVE
-    // BASIS FUNC
-    // blank
-    // column header
-    // blank
-    // element
-    for (unsigned int i = 0; i < 7; ++i) {
-      key = m_in->readLine();
+bool GAMESSUSOutput::read(std::istream &in, Core::Molecule &molecule)
+{
+  // Read the log file line by line, most sections are terminated by an empty
+  // line, so they should be retained.
+  bool atomsRead(false);
+  string buffer;
+  while (getline(in, buffer)) {
+    if (Core::contains(buffer, "COORDINATES (BOHR)")) {
+      if (atomsRead)
+        continue;
+      atomsRead = true;
+      readAtomBlock(in, molecule, false);
     }
-  } else if (key.contains("TOTAL NUMBER OF BASIS SET")) {
-    m_currentMode = NotParsing; // no longer reading GTOs
-  } else if (key.contains("NUMBER OF CARTESIAN GAUSSIAN BASIS")) {
-    m_currentMode = NotParsing; // no longer reading GTOs
-  } else if (key.contains("NUMBER OF ELECTRONS")) {
-    m_electrons = list[4].toInt();
-  } else if (key.contains("NUMBER OF OCCUPIED ORBITALS (ALPHA)")) {
-    m_electronsA = list[6].toInt();
-  } else if (key.contains("NUMBER OF OCCUPIED ORBITALS (BETA )")) {
-    m_electronsB = list[7].toInt();
-  } else if (key.contains("SCFTYP=")) {
-    //the SCFtyp is necessary to know what we are reading
-      list = key.split(' ');
-      tmp = list[0];
-      list2 = tmp.split('=');
-      tmp = list2[1];
-      if (tmp.contains("RHF"))
-        m_scftype=rhf;
-      else if (tmp.contains("UHF"))
-        m_scftype=uhf;
-      else if (tmp.contains("ROHF"))
-        m_scftype=rohf;
-      else {
-        qDebug() << "SCF type = " << tmp << " cannot be read.";
-        m_scftype=Unknown;
-        return;
+    else if (Core::contains(buffer, "COORDINATES OF ALL ATOMS ARE (ANGS)")) {
+      if (atomsRead)
+        continue;
+      atomsRead = true;
+      readAtomBlock(in, molecule, true);
+    }
+    else if (Core::contains(buffer, "ATOMIC BASIS SET")) {
+      readBasisSet(in);
+    }
+    else if (Core::contains(buffer, "NUMBER OF ELECTRONS")) {
+      vector<string> parts = Core::split(buffer, '=');
+      if (parts.size() == 2)
+        m_electrons = Core::lexicalCast<int>(parts[1]);
+      else
+        cout << "error" << buffer << endl;
+    }
+    else if (Core::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (ALPHA)")) {
+      cout << "Found alpha orbitals\n";
+    }
+    else if (Core::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (BETA )")) {
+      cout << "Found alpha orbitals\n";
+    }
+    else if (Core::contains(buffer, "SCFTYP=")) {
+      cout << "Found SCF type\n";
+    }
+    else if (Core::contains(buffer, "EIGENVECTORS")) {
+      readEigenvectors(in);
+    }
+  }
+
+  molecule.perceiveBondsSimple();
+  GaussianSet *basis = new GaussianSet;
+  load(basis);
+  molecule.setBasisSet(basis);
+  basis->setMolecule(&molecule);
+  return true;
+}
+
+void GAMESSUSOutput::readAtomBlock(std::istream &in, Core::Molecule &molecule,
+                                   bool angs)
+{
+  // We read the atom block in until it terminates with a blank line.
+  double coordFactor = angs ? 1.0 : BOHR_TO_ANGSTROM_D;
+  string buffer;
+  while (getline(in, buffer)) {
+    if (Core::contains(buffer, "CHARGE") || Core::contains(buffer, "------"))
+      continue;
+    else if (buffer == "\n") // Our work here is done.
+      return;
+    vector<string> parts = Core::split(buffer, ' ');
+    if (parts.size() != 5) {
+      appendError("Poorly formed atom line: " + buffer);
+      return;
+    }
+    bool ok(false);
+    Vector3 pos;
+    unsigned char atomicNumber(
+          static_cast<unsigned char>(Core::lexicalCast<int>(parts[1], ok)));
+    if (!ok)
+      appendError("Failed to cast to int for atomic number: " + parts[1]);
+    pos.x() = Core::lexicalCast<Real>(parts[2], ok) * coordFactor;
+    if (!ok)
+      appendError("Failed to cast to double for position: " + parts[2]);
+    pos.y() = Core::lexicalCast<Real>(parts[3], ok) * coordFactor;
+    if (!ok)
+      appendError("Failed to cast to double for position: " + parts[3]);
+    pos.z() = Core::lexicalCast<Real>(parts[4], ok) * coordFactor;
+    if (!ok)
+      appendError("Failed to cast to double for position: " + parts[4]);
+    Atom atom = molecule.addAtom(atomicNumber);
+    atom.setPosition3d(pos);
+  }
+}
+
+void GAMESSUSOutput::readBasisSet(std::istream &in)
+{
+  // Basic strategy is to use the number of parts in a line to determine the
+  // type, where atom has 1 part, and a GTO has 5 (or 6 for SP/L). Termination
+  // of the block when we hit the summary information at the end.
+  string buffer;
+  int currentAtom(0);
+  bool header(true);
+  while (getline(in, buffer)) {
+    if (header) { // Skip the header lines until we hit the last header line.
+      if (Core::contains(buffer, "SHELL"))
+        header = false;
+      continue;
+    }
+    vector<string> parts = Core::split(buffer, ' ');
+    if (Core::contains(buffer, "TOTAL NUMBER OF BASIS SET SHELLS")) {
+      // End of the basis set block.
+      return;
+    }
+    else if (parts.size() == 1) {
+      // Currently just incrememt the current atom, we should probably at least
+      // verify the element matches in the future too.
+      ++currentAtom;
+    }
+    else if (parts.size() == 5 || parts.size() == 6) {
+      if (parts[1].size() != 1) {
+        appendError("Error parsing basis set line, unrecognized type"
+                    + parts[1]);
+        continue;
       }
-  } else if (key.contains("----- ALPHA SET -----") && m_scftype==uhf) {
-    m_currentMode = MO;
-    m_currentScfMode = alpha;
-    key = m_in->readLine(); // blank line
-    key = m_in->readLine(); // ------------
-    key = m_in->readLine(); // EIGENVECTORS
-    key = m_in->readLine(); // ------------
-    key = m_in->readLine(); // blank line
-  } else if (key.contains("EIGENVECTORS") && m_currentScfMode==beta) {
-    //beta is set at the conclustion of alpha reads
-    m_currentMode = MO;
-    key = m_in->readLine(); // ------------
-    key = m_in->readLine(); // blank line
-  } else if (key.contains("EIGENVECTORS") && m_scftype==rhf) {
-    //|| key.contains("MOLECULAR ORBITALS")) {
-    m_currentMode = MO;
-    m_currentScfMode = doubly;
-    key = m_in->readLine(); // ----
-    key = m_in->readLine(); // blank line
-  } else {
-    QString shell;
-    orbital shellType;
-    vector <vector <double> > columns;
-    unsigned int numColumns, numRows;
-
-    // parsing a line -- what mode are we in?
-    switch (m_currentMode) {
-    case Atoms: {
-      // element_name atomic_number x y z
-      if (list.size() < 5)
-        return;
-      Vector3d pos(list[2].toDouble() * m_coordFactor,
-                   list[3].toDouble() * m_coordFactor,
-                   list[4].toDouble() * m_coordFactor);
-      basis->addAtom(pos, int(list[1].toDouble()));
-      break;
-    }
-    case GTO:
-      // should start at the first line of shell functions
-      if (key.isEmpty())
+      // Determine the shell type.
+      GaussianSet::orbital shellType(GaussianSet::UU);
+      switch (parts[1][0]) {
+      case 'S':
+        shellType = GaussianSet::S;
         break;
-      list = key.split(' ', QString::SkipEmptyParts);
-      numGTOs = 0;
-      while (list.size() > 1) {
-        numGTOs++;
-        shell = list[1].toLower();
-        shellType = UU;
-        if (shell.contains("s"))
-          shellType = S;
-        else if (shell.contains("l"))
-          shellType = SP;
-        else if (shell.contains("p"))
-          shellType = P;
-        else if (shell.contains("d"))
-          shellType = D;
-        else if (shell.contains("f"))
-          shellType = F;
-        else
-          return;
-
-        m_a.push_back(list[3].toDouble());
-        m_c.push_back(list[4].toDouble());
-        if (shellType == SP && list.size() > 4)
-          m_csp.push_back(list[5].toDouble());
-
-        // read to the next shell
-        key = m_in->readLine().trimmed();
-        if (key.isEmpty()) {
-          key = m_in->readLine().trimmed();
-          m_shellNums.push_back(numGTOs);
-          m_shellTypes.push_back(shellType);
-          m_shelltoAtom.push_back(m_currentAtom);
-          numGTOs = 0;
-        }
-        list = key.split(' ', QString::SkipEmptyParts);
-      } // end "while list > 1) -- i.e., we're on the next atom line
-
-      key = m_in->readLine(); // start reading the next atom
-      m_currentAtom++;
-      break;
-
-    case MO:
-      switch (m_currentScfMode) {
-      case alpha:
-        m_alphaMOcoeffs.clear();
+      case 'L':
+        shellType = GaussianSet::SP;
         break;
-      case beta:
-        m_betaMOcoeffs.clear();
+      case 'P':
+        shellType = GaussianSet::P;
         break;
-      case doubly:
-        m_MOcoeffs.clear(); // if the orbitals were punched multiple times
+      case 'D':
+        shellType = GaussianSet::D;
+        break;
+      case 'F':
+        shellType = GaussianSet::F;
         break;
       default:
-        ;
+        shellType = GaussianSet::UU;
+        appendError("Unrecognized shell type: " + parts[1]);
       }
-      while (!key.contains("END OF") && !key.contains("-----")) {
-        // currently reading the MO number
-        key = m_in->readLine(); // energies
-        key = m_in->readLine(); // symmetries
-        key = m_in->readLine(); // now we've got coefficients
-        list = key.split(' ', QString::SkipEmptyParts);
-        while (list.size() > 5) {
-          numColumns = list.size() - 4;
-          columns.resize(numColumns);
-          for (unsigned int i = 0; i < numColumns; ++i)
-            columns[i].push_back(list[i + 4].toDouble());
+      // Read in the rest of the shell, terminate when the number of tokens
+      // is not 5 or 6 in a line.
+      int numGTOs(0);
+      while (parts.size() == 5 || parts.size() == 6) {
+        ++numGTOs;
+        m_a.push_back(Core::lexicalCast<double>(parts[3]));
+        m_c.push_back(Core::lexicalCast<double>(parts[4]));
+        if (shellType == GaussianSet::SP && parts.size() == 6)
+          m_csp.push_back(Core::lexicalCast<double>(parts[5]));
+        if (!getline(in, buffer))
+          break;
+        parts = Core::split(buffer, ' ');
+      }
+      // Now add this to our data structure.
+      m_shellNums.push_back(numGTOs);
+      m_shellTypes.push_back(shellType);
+      m_shelltoAtom.push_back(currentAtom);
+    }
+  }
+}
 
-          key = m_in->readLine();
-          if (key.contains(QLatin1String("END OF RHF")) ||
-              key.contains(QLatin1String("END OF UHF"))) {
-            break;
-          }
-          list = key.split(' ', QString::SkipEmptyParts);
-        } // ok, we've finished one batch of MO coeffs
-
-        // Now we need to re-order the MO coeffs, so we insert one MO at a time
-        for (unsigned int i = 0; i < numColumns; ++i) {
-          numRows = static_cast<unsigned int>(columns[i].size());
-          for (unsigned int j = 0; j < numRows; ++j) {
-            //qDebug() << "push back" << columns[i][j];
-            switch (m_currentScfMode) {
-            case alpha:
-              m_alphaMOcoeffs.push_back(columns[i][j]);
-              break;
-            case beta:
-              m_betaMOcoeffs.push_back(columns[i][j]);
-              break;
-            case doubly:
-              m_MOcoeffs.push_back(columns[i][j]);
-              break;
-            default:
-              ;
-            }
-          }
-        }
-        columns.clear();
-
-        if (key.trimmed().isEmpty())
-          key = m_in->readLine(); // skip the blank line after the MOs
-      } // finished parsing MOs
-      m_currentMode = NotParsing;
-      if (m_currentScfMode == alpha)
-        m_currentScfMode = beta;
+void GAMESSUSOutput::readEigenvectors(std::istream &in)
+{
+  string buffer;
+  getline(in, buffer);
+  getline(in, buffer);
+  getline(in, buffer);
+  vector<string> parts = Core::split(buffer, ' ');
+  vector< vector<double> > eigenvectors;
+  bool ok(false);
+  size_t numberOfMos(0);
+  bool newBlock(true);
+  while (!Core::contains(buffer, "END OF")
+         || Core::contains(buffer, "--------")) {
+    // Any line with actual information in it will contain >= 5 parts.
+    if (parts.size() > 5 && buffer.substr(0, 16) != "                ") {
+      if (newBlock) {
+        // Reorder the columns/rows, add them and then prepare
+        for (size_t i = 0; i < eigenvectors.size(); ++i)
+          for (size_t j = 0; j < eigenvectors[i].size(); ++j)
+            m_MOcoeffs.push_back(eigenvectors[i][j]);
+        eigenvectors.clear();
+        eigenvectors.resize(parts.size() - 4);
+        numberOfMos += eigenvectors.size();
+        newBlock = false;
+      }
+      for (size_t i = 0; i < parts.size() - 4; ++i) {
+        eigenvectors[i].push_back(Core::lexicalCast<double>(parts[i + 4], ok));
+        if (!ok)
+          appendError("Failed to cast to double for eigenvector: " + parts[i]);
+      }
+    }
+    else {
+      // Note that we are either ending or entering a new block of orbitals.
+      newBlock = true;
+    }
+    if (!getline(in, buffer))
       break;
+    parts = Core::split(buffer, ' ');
+  }
+  for (size_t i = 0; i < eigenvectors.size(); ++i)
+    for (size_t j = 0; j < eigenvectors[i].size(); ++j)
+      m_MOcoeffs.push_back(eigenvectors[i][j]);
 
-    default:
-      ;
-    } // end switch
-  } // end if (mode)
-} // end process line
+  // Now we just need to transpose the matrix, as GAMESS uses a different order.
+  // We know the number of columns (MOs), and the number of rows (primitives).
+  if (eigenvectors.size() != numberOfMos * m_a.size()) {
+    appendError("Incorrect number of eigenvectors loaded.");
+    return;
+  }
+}
 
 void GAMESSUSOutput::load(GaussianSet* basis)
 {
-  outputAll();
-
   // Now load up our basis set
-  basis->setNumElectrons(m_electrons);
-  basis->setNumAlphaElectrons(m_electronsA);
-  basis->setNumBetaElectrons(m_electronsB);
-
-  //    qDebug() << m_shellTypes.size() << m_shellNums.size() << m_shelltoAtom.size() << m_a.size() << m_c.size() << m_csp.size();
+  basis->setElectronCount(m_electrons);
 
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
   int nSP = 0; // number of SP shells
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i) {
     // Handle the SP case separately - this should possibly be a distinct type
-    if (m_shellTypes.at(i) == SP)  {
+    if (m_shellTypes.at(i) == GaussianSet::SP)  {
       // SP orbital type - currently have to unroll into two shells
       int tmpGTO = nGTO;
-      int s = basis->addBasis(m_shelltoAtom.at(i) - 1, S);
+      int s = basis->addBasis(m_shelltoAtom.at(i) - 1, GaussianSet::S);
       for (int j = 0; j < m_shellNums.at(i); ++j) {
-        basis->addGTO(s, m_c.at(nGTO), m_a.at(nGTO));
+        basis->addGto(s, m_c.at(nGTO), m_a.at(nGTO));
         ++nGTO;
       }
-      int p = basis->addBasis(m_shelltoAtom.at(i) - 1, P);
+      int p = basis->addBasis(m_shelltoAtom.at(i) - 1, GaussianSet::P);
       for (int j = 0; j < m_shellNums.at(i); ++j) {
-        basis->addGTO(p, m_csp.at(nSP), m_a.at(tmpGTO));
+        basis->addGto(p, m_csp.at(nSP), m_a.at(tmpGTO));
         ++tmpGTO;
         ++nSP;
       }
@@ -325,7 +300,7 @@ void GAMESSUSOutput::load(GaussianSet* basis)
     else {
       int b = basis->addBasis(m_shelltoAtom.at(i) - 1, m_shellTypes.at(i));
       for (int j = 0; j < m_shellNums.at(i); ++j) {
-        basis->addGTO(b, m_c.at(nGTO), m_a.at(nGTO));
+        basis->addGto(b, m_c.at(nGTO), m_a.at(nGTO));
         ++nGTO;
       }
     }
@@ -334,89 +309,52 @@ void GAMESSUSOutput::load(GaussianSet* basis)
 
   // Now to load in the MO coefficients
   if (m_MOcoeffs.size())
-    basis->addMOs(m_MOcoeffs);
+    basis->setMolecularOrbitals(m_MOcoeffs);
   if (m_alphaMOcoeffs.size())
-    basis->addAlphaMOs(m_alphaMOcoeffs);
+    basis->setMolecularOrbitals(m_alphaMOcoeffs, BasisSet::Alpha);
   if (m_betaMOcoeffs.size())
-    basis->addBetaMOs(m_betaMOcoeffs);
+    basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::Beta);
 
   //generateDensity();
   //if (m_density.rows())
     //basis->setDensityMatrix(m_density);
 
-  switch (m_scftype) {
-  case rhf:
-    basis->m_scfType = Quantum::rhf;
-    break;
-  case uhf:
-    basis->m_scfType = Quantum::uhf;
-    break;
-  case rohf:
-    basis->m_scfType = Quantum::rohf;
-    break;
-  case Unknown:
-    basis->m_scfType = Quantum::Unknown;
-    break;
-  default:
-    basis->m_scfType = Quantum::Unknown;
-    break;
-  }
-  qDebug() << " done loadBasis ";
+  basis->setScfType(m_scftype);
 }
 
 void GAMESSUSOutput::outputAll()
 {
   switch (m_scftype) {
-  case rhf:
-    qDebug() << "SCF type = RHF";
+  case Rhf:
+    cout << "SCF type = RHF" << endl;
     break;
-  case uhf:
-    qDebug() << "SCF type = UHF";
+  case Uhf:
+    cout << "SCF type = UHF" << endl;
     break;
-  case rohf:
-    qDebug() << "SCF type = ROHF";
+  case Rohf:
+    cout << "SCF type = ROHF" << endl;
     break;
   default:
-    qDebug() << "SCF typ = Unknown";
+    cout << "SCF typ = Unknown" << endl;
   }
-  qDebug() << "Shell mappings.";
+  cout << "Shell mappings\n";
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i) {
-    qDebug() << i << ": type =" << m_shellTypes.at(i)
-             << ", number =" << m_shellNums.at(i)
-             << ", atom =" << m_shelltoAtom.at(i);
+    cout << i << ": type = " << m_shellTypes.at(i)
+         << ", number = " << m_shellNums.at(i)
+         << ", atom = " << m_shelltoAtom.at(i) << endl;
   }
   if (m_MOcoeffs.size())
-    qDebug() << "MO coefficients.";
+    cout << "MO coefficients.\n";
   for (unsigned int i = 0; i < m_MOcoeffs.size(); ++i)
-    qDebug() << m_MOcoeffs.at(i);
+    cout << m_MOcoeffs.at(i) << "\t";
   if (m_alphaMOcoeffs.size())
-    qDebug() << "Alpha MO coefficients.";
+    cout << "Alpha MO coefficients.\n";
   for (unsigned int i = 0; i < m_alphaMOcoeffs.size(); ++i)
-    qDebug() << m_alphaMOcoeffs.at(i);
+    cout << m_alphaMOcoeffs.at(i);
   if (m_betaMOcoeffs.size())
-    qDebug() << "Beta MO coefficients.";
+    cout << "Beta MO coefficients.\n";
   for (unsigned int i = 0; i < m_betaMOcoeffs.size(); ++i)
-    qDebug() << m_betaMOcoeffs.at(i);
-}
-
-void GAMESSUSOutput::generateDensity()
-{
-  m_numBasisFunctions = static_cast<unsigned int>(
-        sqrt(static_cast<double>(m_MOcoeffs.size())));
-  m_density.resize(m_numBasisFunctions, m_numBasisFunctions);
-  m_density=Eigen::MatrixXd::Zero(m_numBasisFunctions,m_numBasisFunctions);
-  unsigned int electronPairs = static_cast<unsigned int>(m_electrons / 2);
-  for (unsigned int iBasis = 0; iBasis < m_numBasisFunctions; ++iBasis) {
-    for (unsigned int jBasis = 0; jBasis <= iBasis; ++jBasis) {
-      for (unsigned int iMO = 0; iMO < electronPairs; ++iMO) {
-        double icoeff = m_MOcoeffs.at(iMO * m_numBasisFunctions + iBasis);
-        double jcoeff = m_MOcoeffs.at(iMO * m_numBasisFunctions + jBasis);
-        m_density(jBasis, iBasis) += 2.0 * icoeff * jcoeff;
-        m_density(iBasis, jBasis) = m_density(jBasis, iBasis);
-      }
-      qDebug() << iBasis << ", " << jBasis << ": " << m_density(iBasis, jBasis);
-    }
-  }
+    cout << m_betaMOcoeffs.at(i);
 }
 
 }

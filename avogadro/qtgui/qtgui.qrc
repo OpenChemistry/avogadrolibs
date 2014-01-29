@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/fallback/32x32/document-export.png</file>
+        <file>icons/fallback/32x32/document-import.png</file>
+        <file>icons/fallback/32x32/document-new.png</file>
+        <file>icons/fallback/32x32/document-open-recent.png</file>
+        <file>icons/fallback/32x32/document-open.png</file>
+        <file>icons/fallback/32x32/document-save-all.png</file>
+        <file>icons/fallback/32x32/document-save-as.png</file>
+        <file>icons/fallback/32x32/document-save.png</file>
+        <file>icons/fallback/32x32/edit-copy.png</file>
+        <file>icons/fallback/32x32/edit-cut.png</file>
+        <file>icons/fallback/32x32/edit-paste.png</file>
+        <file>icons/fallback/32x32/help-about.png</file>
+        <file>icons/fallback/index.theme</file>
+    </qresource>
+</RCC>

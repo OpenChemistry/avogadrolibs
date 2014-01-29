@@ -61,6 +61,15 @@ SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private)
 {
 }
 
+SphereGeometry::SphereGeometry(const SphereGeometry &other)
+  : Drawable(other),
+    m_spheres(other.m_spheres),
+    m_indices(other.m_indices),
+    m_dirty(true),
+    d(new Private)
+{
+}
+
 SphereGeometry::~SphereGeometry()
 {
   delete d;
@@ -87,11 +96,11 @@ void SphereGeometry::update()
     std::vector<SphereColor>::const_iterator itSphere = m_spheres.begin();
 
     for (unsigned int i = 0;
-         itIndex != m_indices.end(), itSphere != m_spheres.end();
+         itIndex != m_indices.end() && itSphere != m_spheres.end();
          ++i, ++itIndex, ++itSphere) {
       // Use our packed data structure...
       float r = itSphere->radius;
-      unsigned int index = 4 * (*itIndex);
+      unsigned int index = 4 * static_cast<unsigned int>(*itIndex);
       ColorTextureVertex vert(itSphere->center, itSphere->color,
                               Vector2f(-r, -r));
       sphereVertices.push_back(vert);
@@ -113,8 +122,12 @@ void SphereGeometry::update()
       //m_spheres.push_back(Sphere(position, r, id, color));
     }
 
-    d->vbo.upload(sphereVertices);
-    d->ibo.upload(sphereIndices);
+    if (!d->vbo.upload(sphereVertices, BufferObject::ArrayBuffer))
+      cout << d->vbo.error() << endl;
+
+    if (!d->ibo.upload(sphereIndices, BufferObject::ElementArrayBuffer))
+      cout << d->ibo.error() << endl;
+
     d->numberOfVertices = sphereVertices.size();
     d->numberOfIndices = sphereIndices.size();
 
@@ -157,21 +170,24 @@ void SphereGeometry::render(const Camera &camera)
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("vertex",
                                     ColorTextureVertex::vertexOffset(),
-                                    Vector3f())) {
+                                    sizeof(ColorTextureVertex),
+                                    FloatType, 3, ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("color"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("color",
                                     ColorTextureVertex::colorOffset(),
-                                    Vector3ub())) {
+                                    sizeof(ColorTextureVertex),
+                                    UCharType, 3, ShaderProgram::Normalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("texCoordinate"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("texCoordinate",
                                     ColorTextureVertex::textureCoordOffset(),
-                                    Vector2f())) {
+                                    sizeof(ColorTextureVertex),
+                                    FloatType, 2, ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
 
@@ -232,7 +248,7 @@ SphereGeometry::hits(const Vector3f &rayOrigin,
     id.index = i;
     if (id.type != InvalidType) {
       float rootD = static_cast<float>(sqrt(D));
-      float depth = std::min(fabs(B + rootD), fabs(B - rootD));
+      float depth = std::min(std::abs(B + rootD), std::abs(B - rootD));
       result.insert(std::pair<float, Identifier>(depth, id));
     }
   }

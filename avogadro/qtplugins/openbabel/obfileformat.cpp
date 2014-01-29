@@ -75,14 +75,16 @@ OBFileFormat::OBFileFormat(const std::string &name_,
                            const std::string &description_,
                            const std::string &specificationUrl_,
                            const std::vector<std::string> fileExtensions_,
-                           const std::vector<std::string> mimeTypes_)
+                           const std::vector<std::string> mimeTypes_,
+                           bool fileOnly_)
   : Io::FileFormat(),
     m_description(description_),
     m_fileExtensions(fileExtensions_),
     m_mimeTypes(mimeTypes_),
     m_identifier(identifier_),
     m_name(name_),
-    m_specificationUrl(specificationUrl_)
+    m_specificationUrl(specificationUrl_),
+    m_fileOnly(fileOnly_)
 {
 }
 
@@ -92,27 +94,11 @@ OBFileFormat::~OBFileFormat()
 
 bool OBFileFormat::read(std::istream &in, Core::Molecule &molecule)
 {
-  // Determine length of data
-  in.seekg(0, std::ios_base::end);
-  std::istream::pos_type length = in.tellg();
-  in.seekg(0, std::ios_base::beg);
-  in.clear();
-
-  // Extract char data
-  QByteArray input;
-  input.resize(length);
-  in.read(input.data(), length);
-  if (in.gcount() != length) {
-    appendError("Error reading stream into buffer!");
-    return false;
-  }
-
-  // Block until the read is completed.
+  // Allow blocking until the read is completed.
   OBProcess proc;
   ProcessListener listener;
   QObject::connect(&proc, SIGNAL(convertFinished(QByteArray)),
                    &listener, SLOT(responseReceived(QByteArray)));
-
 
   // Just grab the first file extension from the list -- all extensions for a
   // given format map to the same parsers in OB.
@@ -125,15 +111,48 @@ bool OBFileFormat::read(std::istream &in, Core::Molecule &molecule)
   QStringList options;
   QStringList formats2D;
   formats2D << "smi" << "inchi" << "can";
-  if (formats2D.contains(QString::fromStdString(m_fileExtensions.front()))) {
+  if (formats2D.contains(QString::fromStdString(m_fileExtensions.front())))
     options << "--gen3d";
-  }
 
-  // Perform the conversion.
-  if (!proc.convert(input, QString::fromStdString(m_fileExtensions.front()),
-                    "cml")) {
-    appendError("OpenBabel conversion failed!");
-    return false;
+  if (!m_fileOnly) {
+    // Determine length of data
+    in.seekg(0, std::ios_base::end);
+    std::istream::pos_type length = in.tellg();
+    in.seekg(0, std::ios_base::beg);
+    in.clear();
+
+    // Extract char data
+    QByteArray input;
+    input.resize(static_cast<int>(length));
+    in.read(input.data(), length);
+    if (in.gcount() != length) {
+      appendError("Error reading stream into buffer!");
+      return false;
+    }
+
+    // Perform the conversion.
+    if (!proc.convert(input, QString::fromStdString(m_fileExtensions.front()),
+                      "cml", options)) {
+      appendError("OpenBabel conversion failed!");
+      return false;
+    }
+  }
+  else {
+    // Can only read files. Need absolute path.
+    QString filename = QString::fromStdString(fileName());
+    if (!QFileInfo(filename).isAbsolute()) {
+      appendError("Internal error -- filename must be absolute! "
+                  + filename.toStdString());
+      return false;
+    }
+
+    // Perform the conversion.
+    if (!proc.convert(filename,
+                      QString::fromStdString(m_fileExtensions.front()),
+                      "cml", options)) {
+      appendError("OpenBabel conversion failed!");
+      return false;
+    }
   }
 
   QByteArray cmlOutput;
@@ -207,7 +226,8 @@ void OBFileFormat::clear()
 Io::FileFormat *OBFileFormat::newInstance() const
 {
   return new OBFileFormat(m_name, m_identifier, m_description,
-                          m_specificationUrl, m_fileExtensions, m_mimeTypes);
+                          m_specificationUrl, m_fileExtensions, m_mimeTypes,
+                          m_fileOnly);
 }
 
 } // namespace QtPlugins

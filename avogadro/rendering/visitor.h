@@ -27,9 +27,13 @@ class CylinderGeometry;
 class Drawable;
 class GeometryNode;
 class GroupNode;
+class LineStripGeometry;
 class MeshGeometry;
 class Node;
 class SphereGeometry;
+class TextLabel2D;
+class TextLabel3D;
+class AmbientOcclusionSphereGeometry;
 
 /**
  * @class Visitor visitor.h <avogadro/rendering/visitor.h>
@@ -54,8 +58,13 @@ public:
   virtual void visit(GeometryNode &) { return; }
   virtual void visit(Drawable &) { return; }
   virtual void visit(SphereGeometry &) { return; }
+  virtual void visit(AmbientOcclusionSphereGeometry &) { return; }
   virtual void visit(CylinderGeometry &) { return; }
   virtual void visit(MeshGeometry &) { return; }
+  virtual void visit(TextLabel2D &) { return; }
+  virtual void visit(TextLabel3D &) { return; }
+  virtual void visit(LineStripGeometry &) { return; }
+
 };
 
 } // End namespace Rendering

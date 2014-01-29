@@ -16,15 +16,87 @@
 
 #include "shaderprogram.h"
 
-#include "shader.h"
 #include "avogadrogl.h"
+#include "shader.h"
+#include "texture2d.h"
+
+#include <avogadro/core/types.h>
+
+#include <algorithm>
 
 namespace Avogadro {
 namespace Rendering {
 
+namespace {
+inline GLenum convertType(Type type)
+{
+  switch (type) {
+  default:
+  case UCharType:
+    return GL_UNSIGNED_BYTE;
+  case CharType:
+    return GL_BYTE;
+  case ShortType:
+    return GL_SHORT;
+  case UShortType:
+    return GL_UNSIGNED_SHORT;
+  case IntType:
+    return GL_INT;
+  case UIntType:
+    return GL_UNSIGNED_INT;
+  case FloatType:
+    return GL_FLOAT;
+  case DoubleType:
+    return GL_DOUBLE;
+  }
+}
+
+inline GLenum lookupTextureUnit(GLint index)
+{
+#define MAKE_TEXTURE_UNIT_CASE(i) case i: return GL_TEXTURE##i;
+  switch (index) {
+  MAKE_TEXTURE_UNIT_CASE(0)
+  MAKE_TEXTURE_UNIT_CASE(1)
+  MAKE_TEXTURE_UNIT_CASE(2)
+  MAKE_TEXTURE_UNIT_CASE(3)
+  MAKE_TEXTURE_UNIT_CASE(4)
+  MAKE_TEXTURE_UNIT_CASE(5)
+  MAKE_TEXTURE_UNIT_CASE(6)
+  MAKE_TEXTURE_UNIT_CASE(7)
+  MAKE_TEXTURE_UNIT_CASE(8)
+  MAKE_TEXTURE_UNIT_CASE(9)
+  MAKE_TEXTURE_UNIT_CASE(10)
+  MAKE_TEXTURE_UNIT_CASE(11)
+  MAKE_TEXTURE_UNIT_CASE(12)
+  MAKE_TEXTURE_UNIT_CASE(13)
+  MAKE_TEXTURE_UNIT_CASE(14)
+  MAKE_TEXTURE_UNIT_CASE(15)
+  MAKE_TEXTURE_UNIT_CASE(16)
+  MAKE_TEXTURE_UNIT_CASE(17)
+  MAKE_TEXTURE_UNIT_CASE(18)
+  MAKE_TEXTURE_UNIT_CASE(19)
+  MAKE_TEXTURE_UNIT_CASE(20)
+  MAKE_TEXTURE_UNIT_CASE(21)
+  MAKE_TEXTURE_UNIT_CASE(22)
+  MAKE_TEXTURE_UNIT_CASE(23)
+  MAKE_TEXTURE_UNIT_CASE(24)
+  MAKE_TEXTURE_UNIT_CASE(25)
+  MAKE_TEXTURE_UNIT_CASE(26)
+  MAKE_TEXTURE_UNIT_CASE(27)
+  MAKE_TEXTURE_UNIT_CASE(28)
+  MAKE_TEXTURE_UNIT_CASE(29)
+  MAKE_TEXTURE_UNIT_CASE(30)
+  MAKE_TEXTURE_UNIT_CASE(31)
+  default:
+    return 0;
+  }
+}
+} // end anon namespace
+
 ShaderProgram::ShaderProgram() : m_handle(0), m_vertexShader(0),
   m_fragmentShader(0), m_linked(false)
 {
+  initializeTextureUnits();
 }
 
 ShaderProgram::~ShaderProgram()
@@ -162,6 +234,7 @@ bool ShaderProgram::bind()
 void ShaderProgram::release()
 {
   glUseProgram(0);
+  releaseAllTextureUnits();
 }
 
 bool ShaderProgram::enableAttributeArray(const std::string &name)
@@ -188,111 +261,80 @@ bool ShaderProgram::disableAttributeArray(const std::string &name)
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vector2f)
+bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
+                                      size_t stride, Type elementType,
+                                      int elementTupleSize,
+                                      NormalizeOption normalize)
 {
   GLint location = static_cast<GLint>(findAttributeArray(name));
   if (location == -1) {
     m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
   }
-  glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 32,
-                        BUFFER_OFFSET(offset));
+  glVertexAttribPointer(location, elementTupleSize, convertType(elementType),
+                        normalize == Normalize ? GL_TRUE : GL_FALSE,
+                        static_cast<GLsizei>(stride), BUFFER_OFFSET(offset));
   return true;
 }
 
-bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vector3f)
+bool ShaderProgram::setTextureSampler(const std::string &name,
+                                      const Texture2D &texture)
 {
-  GLint location = static_cast<GLint>(findAttributeArray(name));
+  // Look up sampler location:
+  GLint location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
-    m_error = "Could not use attribute " + name + ". No such attribute.";
-    return false;
-  }
-  glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 32,
-                        BUFFER_OFFSET(offset));
-  return true;
-}
-
-bool ShaderProgram::useAttributeArray(const std::string &name, int offset, Vector3ub)
-{
-  GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1) {
-    m_error = "Could not use attribute " + name + ". No such attribute.";
-    return false;
-  }
-  glVertexAttribPointer(location, 3, GL_UNSIGNED_BYTE, GL_TRUE, 32,
-                        BUFFER_OFFSET(offset));
-  return true;
-}
-
-bool ShaderProgram::setAttributeArray(const std::string &name,
-                                      const std::vector<unsigned short> &array)
-{
-  if (array.empty()) {
-    m_error = "Supplied array was empty.";
+    m_error = "Could not set sampler " + name + ". No uniform with that name.";
     return false;
   }
 
-  GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1) {
-    m_error = "Could not set attribute " + name + ". No such attribute.";
-    return false;
-  }
-  const GLvoid *data = static_cast<const GLvoid *>(&array[0]);
-  glVertexAttribPointer(location, 1, GL_UNSIGNED_SHORT, GL_FALSE, 0, data);
-  return true;
-}
+  // Check if the texture is already bound:
+  GLint textureUnitId = 0;
+  typedef std::map<const Texture2D*, int>::const_iterator TMapIter;
+  TMapIter result = m_textureUnitBindings.find(&texture);
+  if (result == m_textureUnitBindings.end()) {
+    // Not bound. Attempt to bind the texture to an available texture unit.
+    // We'll leave GL_TEXTURE0 unbound, as it is used for manipulating
+    // textures.
+    std::vector<bool>::iterator begin = m_boundTextureUnits.begin() + 1;
+    std::vector<bool>::iterator end = m_boundTextureUnits.end();
+    std::vector<bool>::iterator available = std::find(begin, end, false);
 
-bool ShaderProgram::setAttributeArray(const std::string &name,
-                                      const std::vector<Vector2f> &array)
-{
-  if (array.empty()) {
-    m_error = "Supplied array was empty.";
-    return false;
-  }
+    if (available == end) {
+      m_error = "Could not set sampler " + name + ". No remaining texture "
+          "units available.";
+      return false;
+    }
 
-  GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1) {
-    m_error = "Could not set attribute " + name + ". No such attribute.";
-    return false;
-  }
-  const GLvoid *data = static_cast<const GLvoid *>(array[0].data());
-  glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 0, data);
-  return true;
-}
+    textureUnitId = static_cast<GLint>(available - begin);
 
-bool ShaderProgram::setAttributeArray(const std::string &name,
-                                      const std::vector<Vector3f> &array)
-{
-  if (array.empty()) {
-    m_error = "Supplied array was empty.";
-    return false;
-  }
+    GLenum textureUnit = lookupTextureUnit(textureUnitId);
+    if (textureUnit == 0) {
+      m_error = "Could not set sampler " + name
+          + ". Texture unit lookup failed.";
+      return false;
+    }
 
-  GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1) {
-    m_error = "Could not set attribute " + name + ". No such attribute.";
-    return false;
-  }
-  const GLvoid *data = static_cast<const GLvoid *>(array[0].data());
-  glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, data);
-  return true;
-}
+    glActiveTexture(textureUnit);
+    if (!texture.bind()) {
+      m_error = "Could not set sampler " + name + ": Error while binding "
+          "texture: '" + texture.error() + "'.";
+      glActiveTexture(GL_TEXTURE0);
+      return false;
+    }
+    glActiveTexture(GL_TEXTURE0);
 
-bool ShaderProgram::setAttributeArray(const std::string &name,
-                                      const std::vector<Vector3ub> &array)
-{
-  if (array.empty()) {
-    m_error = "Supplied array was empty.";
-    return false;
+    // Mark texture unit as in-use.
+    m_textureUnitBindings.insert(std::make_pair(&texture, textureUnitId));
+    *available = true;
+  }
+  else {
+    // Texture is already bound.
+    textureUnitId = result->second;
   }
 
-  GLint location = static_cast<GLint>(findAttributeArray(name));
-  if (location == -1) {
-    m_error = "Could not set attribute " + name + ". No such attribute.";
-    return false;
-  }
-  const GLvoid *data = static_cast<const GLvoid *>(array[0].data());
-  glVertexAttribPointer(location, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, data);
+  // Set the texture unit uniform
+  glUniform1i(location, textureUnitId);
+
   return true;
 }
 
@@ -344,6 +386,28 @@ bool ShaderProgram::setUniformValue(const std::string &name,
   return true;
 }
 
+bool ShaderProgram::setUniformValue(const std::string &name, const Vector3f &v)
+{
+  GLint location = static_cast<GLint>(findUniform(name));
+  if (location == -1) {
+    m_error = "Could not set uniform " + name + ". No such uniform.";
+    return false;
+  }
+  glUniform3fv(location, 1, v.data());
+  return true;
+}
+
+bool ShaderProgram::setUniformValue(const std::string &name, const Vector2i &v)
+{
+  GLint location = static_cast<GLint>(findUniform(name));
+  if (location == -1) {
+    m_error = "Could not set uniform " + name + ". No such uniform.";
+    return false;
+  }
+  glUniform2iv(location, 1, v.data());
+  return true;
+}
+
 bool ShaderProgram::setUniformValue(const std::string &name,
                                     const Vector3ub &v)
 {
@@ -355,6 +419,47 @@ bool ShaderProgram::setUniformValue(const std::string &name,
   Vector3f colorf(v.cast<float>() * (1.0f / 255.0f));
   glUniform3fv(location, 1, colorf.data());
   return true;
+}
+
+bool ShaderProgram::setAttributeArrayInternal(
+    const std::string &name, void *buffer, Avogadro::Type type, int tupleSize,
+    ShaderProgram::NormalizeOption normalize)
+{
+  if (type == Avogadro::UnknownType) {
+    m_error = "Unrecognized data type for attribute " + name + ".";
+    return false;
+  }
+  GLint location = static_cast<GLint>(findAttributeArray(name));
+  if (location == -1) {
+    m_error = "Could not set attribute " + name + ". No such attribute.";
+    return false;
+  }
+  const GLvoid *data = static_cast<const GLvoid *>(buffer);
+  glVertexAttribPointer(location, tupleSize, convertType(type),
+                        normalize == Normalize ? GL_TRUE : GL_FALSE, 0, data);
+  return true;
+}
+
+void ShaderProgram::initializeTextureUnits()
+{
+  GLint numTextureUnits;
+  glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &numTextureUnits);
+
+  // We'll impose a a hard limit of 32 texture units for symbolic lookups.
+  // This seems to be about the maximum available on current hardware.
+  // If increasing this limit, modify the lookupTextureUnit method
+  // appropriately.
+  numTextureUnits = std::min(std::max(numTextureUnits, 0), 32);
+
+  m_boundTextureUnits.clear();
+  m_boundTextureUnits.resize(numTextureUnits, false);
+  m_textureUnitBindings.clear();
+}
+
+void ShaderProgram::releaseAllTextureUnits()
+{
+  std::fill(m_boundTextureUnits.begin(), m_boundTextureUnits.end(), false);
+  m_textureUnitBindings.clear();
 }
 
 inline int ShaderProgram::findAttributeArray(const std::string &name)

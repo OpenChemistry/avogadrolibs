@@ -23,14 +23,13 @@
 
 #include <Eigen/Geometry> // For member variables.
 
-#include <string> // For member variables.
-
 namespace Avogadro {
 namespace Rendering {
 
 /**
  * @class Camera camera.h <avogadro/rendering/camera.h>
- * @brief The Scene contains data ready to be rendered.
+ * @brief The Camera class provides utility functionality useful in camera's
+ * used with 3D scenes.
  * @author Marcus D. Hanwell
  */
 
@@ -58,6 +57,14 @@ public:
 
   /** Scale the model view matrix, to give the effect of zooming in or out. */
   void scale(float scale);
+
+  /** Set the model-view matrix to the "look at" transformation matrix.
+   * @param eye the position of the eye/camera.
+   * @param center the position to look at.
+   * @param up the vector pointing up.
+   */
+  void lookAt(const Vector3f &eye, const Vector3f &center,
+              const Vector3f &up);
 
   /** Distance to supplied point @p point and the camera. */
   float distance(const Vector3f &point) const;
@@ -103,7 +110,13 @@ public:
                              float zNear, float zFar);
 
   /** Set the dimensions of the viewport in pixels. */
-  void setViewport(int width, int height);
+  void setViewport(int w, int h);
+
+  /** Get the width of the viewport in pixels. */
+  int width() const { return m_width; }
+
+  /** Get the height of the viewport in pixels. */
+  int height() const { return m_height; }
 
   /** Set the model view matrix to the identity. This resets the model view
    * matrix.

@@ -29,7 +29,12 @@ class @PluginName@Factory : public QObject, public QtGui::@PluginType@Factory
 public:
   explicit @PluginName@Factory(QObject *parent_ = 0) : QObject(parent_) {}
 
-  QtGui::@PluginType@ * createInstance() { return new @PluginClass@; }
+  QtGui::@PluginType@ * createInstance()
+  {
+    @PluginClass@ *object = new @PluginClass@(parent());
+    object->setObjectName("@PluginName@");
+    return object;
+  }
 
   QString identifier() const { return "@PluginName@"; }
 

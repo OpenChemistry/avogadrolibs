@@ -17,6 +17,8 @@
 #include "geometryvisitor.h"
 
 #include "spheregeometry.h"
+#include "ambientocclusionspheregeometry.h"
+#include "linestripgeometry.h"
 
 namespace Avogadro {
 namespace Rendering {
@@ -36,7 +38,7 @@ void GeometryVisitor::visit(Drawable &)
 
 void GeometryVisitor::visit(SphereGeometry &geometry)
 {
-  const std::vector<SphereColor> &spheres = geometry.spheres();
+  const Core::Array<SphereColor> &spheres = geometry.spheres();
   if (!spheres.size())
     return;
 
@@ -47,7 +49,7 @@ void GeometryVisitor::visit(SphereGeometry &geometry)
   std::vector<SphereColor>::const_iterator it = spheres.begin();
   for (; it != spheres.end(); ++it)
     tmpCenter += it->center;
-  tmpCenter /= spheres.size();
+  tmpCenter /= static_cast<float>(spheres.size());
 
   // Now find its radius.
   float tmpRadius(0.0f);
@@ -58,9 +60,66 @@ void GeometryVisitor::visit(SphereGeometry &geometry)
         tmpRadius = distance;
     }
   }
-  tmpRadius = sqrt(tmpRadius);
+  tmpRadius = std::sqrt(tmpRadius);
   m_centers.push_back(tmpCenter);
   m_radii.push_back(tmpRadius);
+}
+
+void GeometryVisitor::visit(AmbientOcclusionSphereGeometry &geometry)
+{
+  const Core::Array<SphereColor> &spheres = geometry.spheres();
+  if (!spheres.size())
+    return;
+
+  m_dirty = true;
+
+  Vector3f tmpCenter(Vector3f::Zero());
+  // First find the center of the sphere geometry.
+  std::vector<SphereColor>::const_iterator it = spheres.begin();
+  for (; it != spheres.end(); ++it)
+    tmpCenter += it->center;
+  tmpCenter /= static_cast<float>(spheres.size());
+
+  // Now find its radius.
+  float tmpRadius(0.0f);
+  if (spheres.size() > 1) {
+    for (it = spheres.begin(); it != spheres.end(); ++it) {
+      float distance = (it->center - tmpCenter).squaredNorm();
+      if (distance > tmpRadius)
+        tmpRadius = distance;
+    }
+  }
+  tmpRadius = std::sqrt(tmpRadius);
+  m_centers.push_back(tmpCenter);
+  m_radii.push_back(tmpRadius);
+}
+
+void GeometryVisitor::visit(LineStripGeometry &lsg)
+{
+  typedef Core::Array<LineStripGeometry::PackedVertex> VertexArray;
+  const VertexArray verts(lsg.vertices());
+  if (!verts.size())
+    return;
+
+  m_dirty = true;
+
+  Vector3f tmpCenter(Vector3f::Zero());
+  for (VertexArray::const_iterator it = verts.begin(), itEnd = verts.end();
+       it != itEnd; ++it) {
+    tmpCenter += it->vertex;
+  }
+  tmpCenter /= static_cast<float>(verts.size());
+
+  float tmpRadius(0.f);
+  for (VertexArray::const_iterator it = verts.begin(), itEnd = verts.end();
+       it != itEnd; ++it) {
+    float distance = (it->vertex - tmpCenter).squaredNorm();
+    if (distance > tmpRadius)
+      tmpRadius = distance;
+  }
+
+  m_centers.push_back(tmpCenter);
+  m_radii.push_back(std::sqrt(tmpRadius));
 }
 
 void GeometryVisitor::clear()
@@ -100,12 +159,12 @@ void GeometryVisitor::average()
     std::vector<Vector3f>::const_iterator cit;
     for (cit = m_centers.begin(); cit != m_centers.end(); ++cit)
       m_center += *cit;
-    m_center /= m_centers.size();
+    m_center /= static_cast<float>(m_centers.size());
     // Now find the smallest enclosing radius for the new center.
     m_radius = 0.0f;
     std::vector<float>::const_iterator rit;
     for (cit = m_centers.begin(), rit = m_radii.begin();
-         cit != m_centers.end(), rit != m_radii.end(); ++cit, ++rit) {
+         cit != m_centers.end() && rit != m_radii.end(); ++cit, ++rit) {
       float distance = (m_center - (*cit)).norm() + (*rit);
       if (distance > m_radius)
         m_radius = distance;

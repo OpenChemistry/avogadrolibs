@@ -35,7 +35,8 @@ namespace QtPlugins {
 EditorToolWidget::EditorToolWidget(QWidget *parent_) :
   QWidget(parent_),
   m_ui(new Ui::EditorToolWidget),
-  m_elementSelector(new QtGui::PeriodicTableView(this))
+  m_elementSelector(NULL),
+  m_currentElement(6)
 {
   m_ui->setupUi(this);
 
@@ -44,8 +45,8 @@ EditorToolWidget::EditorToolWidget(QWidget *parent_) :
 
   connect(m_ui->element, SIGNAL(currentIndexChanged(int)),
           this, SLOT(elementChanged(int)));
-  connect(m_elementSelector, SIGNAL(elementChanged(int)),
-          this, SLOT(elementSelectedFromTable(int)));
+
+  connect(m_ui->pushFixHydrogens, SIGNAL(clicked()), SIGNAL(adjustHydrogens()));
 
   // Show carbon at startup.
   selectElement(6);
@@ -58,7 +59,9 @@ EditorToolWidget::~EditorToolWidget()
 
 void EditorToolWidget::setAtomicNumber(unsigned char atomicNum)
 {
-  m_elementSelector->setElement(static_cast<int>(atomicNum));
+  m_currentElement = atomicNum;
+  if (m_elementSelector)
+    m_elementSelector->setElement(static_cast<int>(atomicNum));
 }
 
 unsigned char EditorToolWidget::atomicNumber() const
@@ -71,7 +74,7 @@ unsigned char EditorToolWidget::atomicNumber() const
   unsigned char atomicNum = static_cast<unsigned char>(itemData.toUInt());
 
   // "Other..." selected....
-  if (atomicNum == 0)
+  if (atomicNum == 0 && m_elementSelector)
     atomicNum = static_cast<unsigned char>(m_elementSelector->element());
 
   return atomicNum;
@@ -93,10 +96,20 @@ void EditorToolWidget::elementChanged(int index)
 {
   QVariant itemData = m_ui->element->itemData(index);
   if (itemData.isValid()) {
-    if (itemData.toUInt() == ELEMENT_SELECTOR_TAG)
+    if (itemData.toInt() == ELEMENT_SELECTOR_TAG) {
+      if (!m_elementSelector) {
+        m_elementSelector = new QtGui::PeriodicTableView(this);
+        connect(m_elementSelector, SIGNAL(elementChanged(int)),
+                this, SLOT(elementSelectedFromTable(int)));
+      }
+      m_elementSelector->setElement(m_currentElement);
       m_elementSelector->show();
-    else
-      m_elementSelector->setElement(itemData.toInt());
+    }
+    else {
+      if (m_elementSelector)
+        m_elementSelector->setElement(itemData.toInt());
+      m_currentElement = static_cast<unsigned char>(itemData.toInt());
+    }
   }
 }
 

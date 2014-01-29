@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -26,15 +26,26 @@ class QProgressDialog;
 namespace Avogadro {
 
 namespace QtGui {
-class Cube;
-class Mesh;
 class MeshGenerator;
 }
-namespace Quantum {
+namespace Core {
 class BasisSet;
+class Cube;
+class Mesh;
 }
 
 namespace QtPlugins {
+
+/**
+ * @brief The QuantumOutput plugin registers quantum file formats, adds several
+ * menu entries to calculate properties if a valid quantum data output file was
+ * loaded.
+ * @author Marcus D. Hanwell
+ */
+
+class GaussianSetConcurrent;
+class SlaterSetConcurrent;
+class SurfaceDialog;
 
 class QuantumOutput : public QtGui::ExtensionPlugin
 {
@@ -54,30 +65,35 @@ public:
 
   void setMolecule(QtGui::Molecule *mol);
 
-  bool readMolecule(QtGui::Molecule &mol);
-
 private slots:
-  void loadMoleculeActivated();
   void homoActivated();
   void lumoActivated();
+  void surfacesActivated();
   void calculateFinished();
   void meshFinished();
+  void calculateMolecularOrbital(int molecularOrbital, float isoValue,
+                                 float stepSize);
+  void calculateElectronDensity(float isoValue, float stepSize);
 
 private:
   QList<QAction *>    m_actions;
   QProgressDialog    *m_progressDialog;
 
   QtGui::Molecule    *m_molecule;
-  Quantum::BasisSet  *m_basis;
+  Core::BasisSet     *m_basis;
 
-  QtGui::Cube        *m_cube;
-  QtGui::Mesh        *m_mesh1;
-  QtGui::Mesh        *m_mesh2;
-  QtGui::MeshGenerator *m_meshGenerator;
+  GaussianSetConcurrent *m_concurrent;
+  SlaterSetConcurrent *m_concurrent2;
+
+  Core::Cube        *m_cube;
+  Core::Mesh        *m_mesh1;
+  Core::Mesh        *m_mesh2;
+  QtGui::MeshGenerator *m_meshGenerator1;
   QtGui::MeshGenerator *m_meshGenerator2;
 
-  void openFile(const QString &fileName);
-  void calculateMolecularOrbital(int number);
+  float m_isoValue;
+
+  SurfaceDialog *m_dialog;
 };
 
 }

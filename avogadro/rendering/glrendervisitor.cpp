@@ -17,13 +17,21 @@
 #include "glrendervisitor.h"
 
 #include "spheregeometry.h"
+#include "ambientocclusionspheregeometry.h"
 #include "cylindergeometry.h"
+#include "linestripgeometry.h"
 #include "meshgeometry.h"
+#include "textlabel2d.h"
+#include "textlabel3d.h"
 
 namespace Avogadro {
 namespace Rendering {
 
-GLRenderVisitor::GLRenderVisitor(const Camera &camera_) : m_camera(camera_)
+GLRenderVisitor::GLRenderVisitor(const Camera &camera_,
+                                 const TextRenderStrategy *trs)
+  : m_camera(camera_),
+    m_textRenderStrategy(trs),
+    m_renderPass(NotRendering)
 {
 }
 
@@ -33,22 +41,56 @@ GLRenderVisitor::~GLRenderVisitor()
 
 void GLRenderVisitor::visit(Drawable &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(SphereGeometry &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
+}
+
+void GLRenderVisitor::visit(AmbientOcclusionSphereGeometry &geometry)
+{
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(CylinderGeometry &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(MeshGeometry &geometry)
 {
-  geometry.render(m_camera);
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
+}
+
+void GLRenderVisitor::visit(TextLabel2D &geometry)
+{
+  if (geometry.renderPass() == m_renderPass) {
+    if (m_textRenderStrategy)
+      geometry.buildTexture(*m_textRenderStrategy);
+    geometry.render(m_camera);
+  }
+}
+
+void GLRenderVisitor::visit(TextLabel3D &geometry)
+{
+  if (geometry.renderPass() == m_renderPass) {
+    if (m_textRenderStrategy)
+      geometry.buildTexture(*m_textRenderStrategy);
+    geometry.render(m_camera);
+  }
+}
+
+void GLRenderVisitor::visit(LineStripGeometry &geometry)
+{
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
 }
 
 } // End namespace Rendering

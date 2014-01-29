@@ -22,6 +22,10 @@
 #include "shaderprogram.h"
 #include "geometrynode.h"
 #include "glrendervisitor.h"
+#include "textlabel2d.h"
+#include "textlabel3d.h"
+#include "textrenderstrategy.h"
+#include "visitor.h"
 
 #include <avogadro/core/matrix.h>
 
@@ -30,13 +34,18 @@
 namespace Avogadro {
 namespace Rendering {
 
-GLRenderer::GLRenderer() : m_valid(false), m_center(Vector3f::Zero()),
-  m_radius(20.0)
+GLRenderer::GLRenderer()
+  : m_valid(false),
+    m_textRenderStrategy(NULL),
+    m_center(Vector3f::Zero()),
+    m_radius(20.0)
 {
+  m_overlayCamera.setIdentity();
 }
 
 GLRenderer::~GLRenderer()
 {
+  delete m_textRenderStrategy;
 }
 
 void GLRenderer::initialize()
@@ -61,29 +70,87 @@ void GLRenderer::initialize()
 
 void GLRenderer::resize(int width, int height)
 {
+  if (!m_valid)
+    return;
+
   glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
   m_camera.setViewport(width, height);
+  m_overlayCamera.setViewport(width, height);
 }
 
 void GLRenderer::render()
 {
+  if (!m_valid)
+    return;
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glEnable(GL_DEPTH_TEST);
   applyProjection();
 
-  GLRenderVisitor visitor(m_camera);
+  GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
+  // Setup for opaque geometry
+  visitor.setRenderPass(OpaquePass);
+  glEnable(GL_DEPTH_TEST);
+  glDisable(GL_BLEND);
   m_scene.rootNode().accept(visitor);
 
+  // Setup for transparent geometry
+  visitor.setRenderPass(TranslucentPass);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  m_scene.rootNode().accept(visitor);
+
+  // Setup for 3d overlay rendering
+  visitor.setRenderPass(Overlay3DPass);
+  glClear(GL_DEPTH_BUFFER_BIT);
+  m_scene.rootNode().accept(visitor);
+
+  // Setup for 2d overlay rendering
+  visitor.setRenderPass(Overlay2DPass);
+  visitor.setCamera(m_overlayCamera);
   glDisable(GL_DEPTH_TEST);
+  m_scene.rootNode().accept(visitor);
 }
 
 void GLRenderer::resetCamera()
 {
-  m_center = m_scene.center();
-  m_radius = m_scene.radius();
+  resetGeometry();
   m_camera.setIdentity();
   m_camera.translate(-m_center);
   m_camera.preTranslate(-3.0f * (m_radius + 2.0f) * Vector3f::UnitZ());
+}
+
+void GLRenderer::resetGeometry()
+{
+  m_center = m_scene.center();
+  m_radius = m_scene.radius();
+}
+
+void GLRenderer::setTextRenderStrategy(TextRenderStrategy *tren)
+{
+  if (tren != m_textRenderStrategy) {
+    // Force all labels to be regenerated on the next render:
+    class ResetTextLabelVisitor : public Visitor
+    {
+    public:
+      void visit(Node &) { return; }
+      void visit(GroupNode &) { return; }
+      void visit(GeometryNode &) { return; }
+      void visit(Drawable &) { return; }
+      void visit(SphereGeometry &) { return; }
+      void visit(AmbientOcclusionSphereGeometry &) { return; }
+      void visit(CylinderGeometry &) { return; }
+      void visit(MeshGeometry &) { return; }
+      void visit(Texture2D &) { return; }
+      void visit(TextLabel2D &l) { l.resetTexture(); }
+      void visit(TextLabel3D &l) { l.resetTexture(); }
+      void visit(LineStripGeometry &) { return; }
+    } labelResetter;
+
+    m_scene.rootNode().accept(labelResetter);
+
+    delete m_textRenderStrategy;
+    m_textRenderStrategy = tren;
+  }
 }
 
 void GLRenderer::applyProjection()
@@ -92,6 +159,10 @@ void GLRenderer::applyProjection()
   m_camera.calculatePerspective(40.0f,
                                 std::max(2.0f, distance - m_radius),
                                 distance + m_radius);
+  m_overlayCamera.calculateOrthographic(
+        0.f, static_cast<float>(m_overlayCamera.width()),
+        0.f, static_cast<float>(m_overlayCamera.height()),
+        -1.f, 1.f);
 }
 
 std::multimap<float, Identifier>
@@ -134,8 +205,11 @@ GLRenderer::hits(const GeometryNode *geometry, const Vector3f &rayOrigin,
 std::multimap<float, Identifier> GLRenderer::hits(int x, int y) const
 {
   // Our ray:
-  const Vector3f origin(m_camera.unProject(Vector3f(x, y, 0)));
-  const Vector3f end(m_camera.unProject(Vector3f(x, y, 1)));
+  const Vector3f origin(m_camera.unProject(Vector3f(static_cast<float>(x),
+                                                    static_cast<float>(y),
+                                                    0.f)));
+  const Vector3f end(m_camera.unProject(Vector3f(static_cast<float>(x),
+                                                 static_cast<float>(y), 1.f)));
   const Vector3f direction((end - origin).normalized());
 
   return hits(&m_scene.rootNode(), origin, end, direction);

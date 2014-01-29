@@ -19,6 +19,7 @@
 
 #include "avogadrocore.h"
 
+#include <algorithm>
 #include <vector>
 
 namespace Avogadro {
@@ -34,8 +35,20 @@ class ArrayRefContainer
 public:
   typedef T ValueType;
   typedef std::vector<T> Parent; // The parent container for iterators etc
+
+  // STL compatibility, forward typedefs from std::vector:
+  typedef typename Parent::value_type value_type;
+  typedef typename Parent::allocator_type allocator_type;
+  typedef typename Parent::reference reference;
+  typedef typename Parent::const_reference const_reference;
+  typedef typename Parent::pointer pointer;
+  typedef typename Parent::const_pointer const_pointer;
   typedef typename Parent::iterator iterator;
   typedef typename Parent::const_iterator const_iterator;
+  typedef typename Parent::reverse_iterator reverse_iterator;
+  typedef typename Parent::const_reverse_iterator const_reverse_iterator;
+  typedef typename Parent::difference_type difference_type;
+  typedef typename Parent::size_type size_type;
 
   ArrayRefContainer() : m_ref(1), data()
   {
@@ -107,8 +120,20 @@ public:
 public:
   typedef T ValueType;
 
+  /** Typedefs for STL compatibility @{ */
+  typedef typename Container::value_type value_type;
+  typedef typename Container::allocator_type allocator_type;
+  typedef typename Container::reference reference;
+  typedef typename Container::const_reference const_reference;
+  typedef typename Container::pointer pointer;
+  typedef typename Container::const_pointer const_pointer;
   typedef typename Container::iterator iterator;
   typedef typename Container::const_iterator const_iterator;
+  typedef typename Container::reverse_iterator reverse_iterator;
+  typedef typename Container::const_reverse_iterator const_reverse_iterator;
+  typedef typename Container::difference_type difference_type;
+  typedef typename Container::size_type size_type;
+  /** @} */
 
   /** Constructors for new containers. */
   Array() : d(new Container())
@@ -146,7 +171,7 @@ public:
   T* data()
   {
     detach();
-    return d->data.data();
+    return &d->data[0];
   }
 
   const T* data() const
@@ -162,6 +187,11 @@ public:
   size_t size() const
   {
     return d->data.size();
+  }
+
+  size_t max_size() const
+  {
+    return d->data.max_size();
   }
 
   bool empty() const
@@ -214,10 +244,104 @@ public:
     return d->data.end();
   }
 
+  const_reverse_iterator rbegin() const
+  {
+    return d->data.rbegin();
+  }
+
+  const_reverse_iterator rend() const
+  {
+    return d->data.rend();
+  }
+
+  reverse_iterator rbegin()
+  {
+    detach();
+    return d->data.rbegin();
+  }
+
+  reverse_iterator rend()
+  {
+    detach();
+    return d->data.rend();
+  }
+
+  reference front()
+  {
+    detach();
+    return d->data.front();
+  }
+
+  const_reference front() const
+  {
+    return d->data.front();
+  }
+
+  reference back()
+  {
+    detach();
+    return d->data.back();
+  }
+
+  const_reference back() const
+  {
+    return d->data.back();
+  }
+
+  template <class InputIterator>
+  void assign(InputIterator first, InputIterator last)
+  {
+    detach();
+    d->data.assign(first, last);
+  }
+
+  void assign(size_type n, const value_type &val)
+  {
+    detach();
+    d->data.assign(n, val);
+  }
+
   void push_back(const ValueType& v)
   {
     detach();
     d->data.push_back(v);
+  }
+
+  void pop_back()
+  {
+    detach();
+    d->data.pop_back();
+  }
+
+  iterator insert(iterator position, const value_type &val)
+  {
+    detach();
+    return d->data.insert(position, val);
+  }
+
+  void insert(iterator position, size_type n, const value_type &val)
+  {
+    detach();
+    d->data.insert(position, n, val);
+  }
+
+  template <class InputIterator>
+  void insert(iterator position, InputIterator first, InputIterator last)
+  {
+    detach();
+    d->data.insert(position, first, last);
+  }
+
+  iterator erase(iterator position)
+  {
+    detach();
+    return d->data.erase(position);
+  }
+
+  iterator erase(iterator first, iterator last)
+  {
+    detach();
+    return d->data.erase(first, last);
   }
 
   const ValueType& operator [](const std::size_t& idx) const
@@ -240,7 +364,7 @@ public:
   Array &operator=(const std::vector<OtherT> &v)
   {
     detach();
-    d->data = v.Data;
+    d->data = v;
     return *this;
   }
 
@@ -255,8 +379,14 @@ public:
   Array &operator=(const Array &v)
   {
     detach();
-    d->data = v.Data;
+    d->data = v.d->data;
     return *this;
+  }
+
+  void swap(Array<ValueType> &other)
+  {
+    using std::swap;
+    swap(d, other.d);
   }
 
 protected:
@@ -278,6 +408,50 @@ inline void Array<T>::detach()
     d->deref();
     d = o;
   }
+}
+
+template <typename T>
+inline bool operator==(const Array<T> &lhs, const Array<T> &rhs)
+{
+  return lhs.size() == rhs.size()
+      && std::equal(lhs.begin(), lhs.end(), rhs.begin());
+}
+
+template <typename T>
+inline bool operator!=(const Array<T> &lhs, const Array<T> &rhs)
+{
+  return !(lhs == rhs);
+}
+
+template <typename T>
+inline bool operator<(const Array<T> &lhs, const Array<T> &rhs)
+{
+  return std::lexicographical_compare(lhs.begin(), lhs.end(),
+                                      rhs.begin(), rhs.end());
+}
+
+template <typename T>
+inline bool operator>(const Array<T> &lhs, const Array<T> &rhs)
+{
+  return rhs < lhs;
+}
+
+template <typename T>
+inline bool operator<=(const Array<T> &lhs, const Array<T> &rhs)
+{
+  return !(rhs < lhs);
+}
+
+template <typename T>
+inline bool operator>=(const Array<T> &lhs, const Array<T> &rhs)
+{
+  return !(lhs < rhs);
+}
+
+template <typename T>
+inline void swap(Array<T> &lhs, Array<T> &rhs)
+{
+  lhs.swap(rhs);
 }
 
 } // end Core namespace

@@ -21,7 +21,18 @@
 namespace Avogadro {
 namespace Rendering {
 
-Drawable::Drawable() : m_parent(NULL), m_visible(true)
+Drawable::Drawable() :
+  m_parent(NULL),
+  m_visible(true),
+  m_renderPass(OpaquePass)
+{
+}
+
+Drawable::Drawable(const Drawable &other)
+  : m_parent(other.m_parent),
+    m_visible(other.m_visible),
+    m_renderPass(other.m_renderPass),
+    m_identifier(other.m_identifier)
 {
 }
 
