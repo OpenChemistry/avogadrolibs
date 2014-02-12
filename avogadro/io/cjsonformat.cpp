@@ -23,6 +23,8 @@
 
 #include <jsoncpp.cpp>
 
+using Avogadro::Core::Molecule;
+
 namespace Avogadro {
 namespace Io {
 
@@ -171,7 +173,7 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
                     "coordinates.");
         return false;
       }
-      std::vector<Vector3> fcoords;
+      Core::Array<Vector3> fcoords;
       fcoords.reserve(atomCount);
       for (Index i = 0; i < atomCount; ++i) {
         fcoords.push_back(
@@ -255,7 +257,7 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
       if (molecule.unitCell()) {
         Json::Value coordsFractional(Json::arrayValue);
-        std::vector<Vector3> fcoords;
+        Core::Array<Vector3> fcoords;
         Core::CrystalTools::fractionalCoordinates(*molecule.unitCell(),
                                                   molecule.atomPositions3d(),
                                                   fcoords);

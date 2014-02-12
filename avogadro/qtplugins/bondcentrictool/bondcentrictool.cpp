@@ -374,8 +374,8 @@ QUndoCommand * BondCentricTool::mousePressEvent(QMouseEvent *e)
   bool atomIsNearBond = false;
   Atom anchorAtom;
   if (!atomIsInBond) {
-    std::vector<Bond> bonds = m_molecule->bonds(clickedAtom);
-    for (std::vector<Bond>::const_iterator
+    Array<Bond> bonds = m_molecule->bonds(clickedAtom);
+    for (Array<Bond>::const_iterator
          it = bonds.begin(), itEnd = bonds.end(); it != itEnd; ++it) {
       Atom atom = otherBondedAtom(*it, clickedAtom);
       if (bondContainsAtom(selectedBond, atom)) {
@@ -541,7 +541,8 @@ QUndoCommand *BondCentricTool::initRotatePlane(
 
   // Reset the bond vector/plane normal if the bond changed
   if (bondUniqueId != m_selectedBond.uniqueIdentifier()) {
-    m_selectedBond = QtGui::PersistentBond(m_molecule, bondUniqueId);
+    m_selectedBond =
+        QtGui::Molecule::PersistentBondType(m_molecule, bondUniqueId);
     initializeBondVectors();
   }
   updatePlaneSnapAngles();
@@ -559,7 +560,7 @@ QUndoCommand *BondCentricTool::initRotatePlane(
 QUndoCommand *BondCentricTool::initRotateBondedAtom(
     QMouseEvent *e, const Core::Atom &clickedAtom)
 {
-  m_clickedAtom = QtGui::PersistentAtom(clickedAtom);
+  m_clickedAtom = QtGui::Molecule::PersistentAtomType(clickedAtom);
   if (!m_clickedAtom.isValid())
     return NULL;
   e->accept();
@@ -574,7 +575,7 @@ QUndoCommand *BondCentricTool::initRotateBondedAtom(
 QUndoCommand *BondCentricTool::initAdjustBondLength(
     QMouseEvent *e, const Core::Atom &clickedAtom)
 {
-  m_clickedAtom = QtGui::PersistentAtom(clickedAtom);
+  m_clickedAtom = QtGui::Molecule::PersistentAtomType(clickedAtom);
   if (!m_clickedAtom.isValid())
     return NULL;
   e->accept();
@@ -589,8 +590,8 @@ QUndoCommand *BondCentricTool::initAdjustBondLength(
 QUndoCommand *BondCentricTool::initRotateNeighborAtom(
     QMouseEvent *e, const Core::Atom &clickedAtom, const Core::Atom &anchorAtom)
 {
-  m_clickedAtom = QtGui::PersistentAtom(clickedAtom);
-  m_anchorAtom = QtGui::PersistentAtom(anchorAtom);
+  m_clickedAtom = QtGui::Molecule::PersistentAtomType(clickedAtom);
+  m_anchorAtom = QtGui::Molecule::PersistentAtomType(anchorAtom);
   if (!m_clickedAtom.isValid() || !m_anchorAtom.isValid())
     return NULL;
   e->accept();
@@ -991,9 +992,9 @@ void BondCentricTool::drawAtomBondAngles(Rendering::GeometryNode &node,
                                          const Atom &atom,
                                          const Bond &anchorBond)
 {
-  const std::vector<Bond> bonds = atom.molecule()->bonds(atom);
-  std::vector<Bond>::const_iterator bondIter(bonds.begin());
-  std::vector<Bond>::const_iterator bondEnd(bonds.end());
+  const Array<Bond> bonds = atom.molecule()->bonds(atom);
+  Array<Bond>::const_iterator bondIter(bonds.begin());
+  Array<Bond>::const_iterator bondEnd(bonds.end());
   size_t count = 0;
   while (bondIter != bondEnd) {
     if (*bondIter != anchorBond)
@@ -1094,7 +1095,7 @@ void BondCentricTool::updatePlaneSnapAngles()
     for (int i = 0; i < 2; ++i) {
       const Atom &atom = i == 0 ? atom1 : atom2;
       const Vector3f atomPos(atom.position3d().cast<float>());
-      const std::vector<Bond> bonds = atom.molecule()->bonds(atom);
+      const Array<Bond> bonds = atom.molecule()->bonds(atom);
       for (std::vector<Bond>::const_iterator it = bonds.begin(),
            itEnd = bonds.end(); it != itEnd; ++it) {
         if (*it != selectedBond) {
@@ -1193,7 +1194,7 @@ bool BondCentricTool::buildFragmentRecurse(const Core::Bond &bond,
                                            const Core::Atom &startAtom,
                                            const Core::Atom &currentAtom)
 {
-  std::vector<Bond> bonds = m_molecule->bonds(currentAtom);
+  Array<Bond> bonds = m_molecule->bonds(currentAtom);
   typedef std::vector<Bond>::const_iterator BondIter;
   for (BondIter it = bonds.begin(), itEnd = bonds.end(); it != itEnd; ++it) {
     if (*it != bond) { // Skip the current bond

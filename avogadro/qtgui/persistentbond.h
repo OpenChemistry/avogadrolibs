@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_QTGUI_PERSISTENTBOND_H
 #define AVOGADRO_QTGUI_PERSISTENTBOND_H
 
-#include "molecule.h"
+#include <avogadro/core/avogadrocore.h>
 
 namespace Avogadro {
 namespace QtGui {
@@ -28,16 +28,19 @@ namespace QtGui {
  * reference that can be held onto. The bond() method gets the underlying bond
  * using the unique ID mechanism of the molecule.
  */
-
+template <typename Molecule_T>
 class PersistentBond
 {
 public:
+  typedef Molecule_T MoleculeType;
+  typedef typename Molecule_T::BondType BondType;
+
   /**
    * @brief Create a persistent bond, with the specified unique id.
    * @param m The molecule the persistent bond belongs to.
    * @param uniqueId The unique identifier for the bond.
    */
-  explicit PersistentBond(Molecule *m = NULL, Index uniqueId = MaxIndex)
+  explicit PersistentBond(MoleculeType *m = NULL, Index uniqueId = MaxIndex)
     : m_molecule(m), m_uniqueId(uniqueId)
   {
   }
@@ -46,20 +49,20 @@ public:
    * @brief Create a persistent bond from a standard bond object.
    * @param b The bond that a persistent reference should be created for.
    */
-  explicit PersistentBond(const Core::Bond &b);
+  explicit PersistentBond(const BondType &b);
 
   /**
    * @brief Set the molecule and unique ID for the persistent object.
    * @param m The molecule that contains the bond.
    * @param uniqueId The unique ID of the bond.
    */
-  void set(Molecule *m, Index uniqueId);
+  void set(MoleculeType *m, Index uniqueId);
 
   /**
    * @brief Set the persistent bond from a standard bond object.
    * @param b The bond that a persistent reference should be created for.
    */
-  void set(const Core::Bond &b);
+  void set(const BondType &b);
 
   /**
    * @brief Reset the the object to an invalid state.
@@ -74,7 +77,7 @@ public:
   /**
    * @return The molecule the bond is a part of.
    */
-  Molecule* molecule() const { return m_molecule; }
+  MoleculeType* molecule() const { return m_molecule; }
 
   /**
    * @brief The persistent unique ID of the bond.
@@ -86,44 +89,50 @@ public:
    * @brief Obtain the bond being held by the persistent object.
    * @return A reference to the bond held by the object.
    */
-  Core::Bond bond() const;
+  BondType bond() const;
 
 private:
-  Molecule *m_molecule;
+  MoleculeType *m_molecule;
   Index m_uniqueId;
 };
 
-inline PersistentBond::PersistentBond(const Core::Bond &b)
-  : m_molecule(dynamic_cast<QtGui::Molecule *>(b.molecule()))
+template <typename Molecule_T>
+PersistentBond<Molecule_T>::PersistentBond(const BondType &b)
+  : m_molecule(dynamic_cast<MoleculeType*>(b.molecule()))
 {
   m_uniqueId = m_molecule ? m_molecule->bondUniqueId(b) : MaxIndex;
 }
 
-inline void PersistentBond::set(Molecule *m, Index uniqueId)
+template <typename Molecule_T>
+void PersistentBond<Molecule_T>::set(MoleculeType *m, Index uniqueId)
 {
   m_molecule = m;
   m_uniqueId = uniqueId;
 }
 
-inline void PersistentBond::set(const Core::Bond &b)
+template <typename Molecule_T>
+void PersistentBond<Molecule_T>::set(const BondType &b)
 {
-  m_molecule = dynamic_cast<QtGui::Molecule *>(b.molecule());
+  m_molecule = dynamic_cast<MoleculeType*>(b.molecule());
   m_uniqueId = m_molecule ? m_molecule->bondUniqueId(b) : MaxIndex;
 }
 
-inline void PersistentBond::reset()
+template <typename Molecule_T>
+void PersistentBond<Molecule_T>::reset()
 {
   set(NULL, MaxIndex);
 }
 
-inline bool PersistentBond::isValid() const
+template <typename Molecule_T>
+bool PersistentBond<Molecule_T>::isValid() const
 {
   return bond().isValid();
 }
 
-inline Core::Bond PersistentBond::bond() const
+template <typename Molecule_T>
+typename Molecule_T::BondType PersistentBond<Molecule_T>::bond() const
 {
-  return m_molecule ? m_molecule->bondByUniqueId(m_uniqueId) : Core::Bond();
+  return m_molecule ? m_molecule->bondByUniqueId(m_uniqueId) : BondType();
 }
 
 } // End of QtGui namespace

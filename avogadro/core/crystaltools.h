@@ -17,11 +17,10 @@
 #ifndef AVOGADRO_CORE_CRYSTALTOOLS_H
 #define AVOGADRO_CORE_CRYSTALTOOLS_H
 
+#include "array.h"
 #include "avogadrocore.h"
 #include "matrix.h"
 #include "vector.h"
-
-#include <vector>
 
 namespace Avogadro {
 namespace Core {
@@ -121,8 +120,8 @@ public:
    * @return True on success, false otherwise.
    */
   static bool fractionalCoordinates(const UnitCell &unitCell,
-                                    const std::vector<Vector3> &cart,
-                                    std::vector<Vector3> &frac);
+                                    const Array<Vector3> &cart,
+                                    Array<Vector3> &frac);
 
   /**
    * Populate the @a coords vector with the fractional coordinates of the atoms
@@ -132,7 +131,7 @@ public:
    * @return True on success, false otherwise.
    */
   static bool fractionalCoordinates(const Molecule &molecule,
-                                    std::vector<Vector3> &coords);
+                                    Array<Vector3> &coords);
 
   /**
    * Set the atomic positions of @a molecule to the fractional coordinates in
@@ -141,7 +140,7 @@ public:
    * @return
    */
   static bool setFractionalCoordinates(Molecule &molecule,
-                                       const std::vector<Vector3> &coords);
+                                       const Array<Vector3> &coords);
 
 private:
   CrystalTools(); // not implemented
