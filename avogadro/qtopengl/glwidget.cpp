@@ -30,8 +30,6 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
 
-#include <QtCore/QDebug>
-
 namespace Avogadro {
 namespace QtOpenGL {
 
@@ -202,9 +200,8 @@ void GLWidget::setDefaultTool(QtGui::ToolPlugin *tool)
 void GLWidget::initializeGL()
 {
   m_renderer.initialize();
-  if (!m_renderer.isValid()) {
-    qDebug() << "Error initializing: " << m_renderer.error().c_str();
-  }
+  if (!m_renderer.isValid())
+    emit rendererInvalid();
 }
 
 void GLWidget::resizeGL(int width_, int height_)

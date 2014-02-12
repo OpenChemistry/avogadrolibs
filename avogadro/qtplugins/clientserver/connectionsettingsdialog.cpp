@@ -30,6 +30,8 @@ namespace Avogadro
 namespace QtPlugins
 {
 
+const QString ConnectionSettingsDialog::defaultHost = "localhost";
+
 ConnectionSettingsDialog::ConnectionSettingsDialog(QWidget *parent_) :
   QDialog(parent_), m_ui(new Ui::ConnectionSettingsDialog)
 {
@@ -39,8 +41,10 @@ ConnectionSettingsDialog::ConnectionSettingsDialog(QWidget *parent_) :
   connect(m_ui->buttonBox, SIGNAL(accepted()), SLOT(updateSettings()));
 
   QSettings settings;
-  QString host = settings.value("ConnectionSettings/hostName").toString();
-  int port = settings.value("ConnectionSettings/port").toInt();
+  QString host = settings.value("clientServer/connectionSettings/hostName",
+      defaultHost).toString();
+  int port = settings.value("clientServer/connectionSettings/port", defaultPort)
+      .toInt();
 
   m_ui->editHostName->setText(host);
   m_ui->spinPort->setValue(port);
@@ -48,7 +52,7 @@ ConnectionSettingsDialog::ConnectionSettingsDialog(QWidget *parent_) :
 
 ConnectionSettingsDialog::~ConnectionSettingsDialog()
 {
-// TODO Auto-generated destructor stub
+
 }
 
 void ConnectionSettingsDialog::testConnection()
@@ -61,7 +65,7 @@ void ConnectionSettingsDialog::testConnection()
   controller->SetCommunicator(communicator.GetPointer());
   controller->Initialize();
 
-  if(!communicator->ConnectTo(host.toLocal8Bit().data(), port)) {
+  if (!communicator->ConnectTo(host.toLocal8Bit().data(), port)) {
     QMessageBox::critical(this, tr("Connection refused"),
                         tr("The connection to %2:%3 failed: connection"
                            " refused.").arg(host).arg(port));
@@ -82,8 +86,16 @@ void ConnectionSettingsDialog::updateSettings()
   QVariant host(m_ui->editHostName->text());
   QVariant port(m_ui->spinPort->value());
 
-  settings.setValue("ConnectionSettings/hostName", host);
-  settings.setValue("ConnectionSettings/port", port);
+  bool changed = false;
+  if (host != settings.value("clientServer/connectionSettings/hostName") ||
+      port != settings.value("clientServer/connectionSettings/port"))
+    changed = true;
+
+  settings.setValue("clientServer/connectionSettings/hostName", host);
+  settings.setValue("clientServer/connectionSettings/port", port);
+
+  if (changed)
+    emit settingsChanged();
 }
 
 } /* namespace QtPlugins */

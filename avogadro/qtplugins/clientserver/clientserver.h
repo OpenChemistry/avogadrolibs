@@ -20,6 +20,7 @@
 #include <avogadro/qtgui/extensionplugin.h>
 
 class OpenResponse;
+class FileFormats;
 
 namespace ProtoCall {
 namespace Runtime {
@@ -40,7 +41,10 @@ namespace QtPlugins {
 class ConnectionSettingsDialog;
 
 /**
- * @brief
+ * @class ClientServer clientserver.h
+ * <avogadro/qtplugins/clientserver/clientserver.h>
+ * @brief Plugin used to connect to and perform remote operations on an
+ * Avodadro server.
  */
 class ClientServer : public Avogadro::QtGui::ExtensionPlugin
 {
@@ -63,9 +67,13 @@ signals:
 
 private slots:
   void openFile();
+  void openFile(const QString &filePath);
   void openSettings();
   void onConnectionError();
   void select();
+  void onAccepted();
+  void onFinished(int result);
+  void disconnect();
 
 private:
   ConnectionSettingsDialog *m_dialog;
@@ -77,10 +85,13 @@ private:
   ProtoCall::Runtime::vtkCommunicatorChannel *m_channel;
   QList<QAction *> m_actions;
 
-  void handleResponse(OpenResponse *response);
+  void handleOpenResponse(OpenResponse *response);
+  void handleFileFormatsResponse(FileFormats *response);
   bool connectToServer(const QString &host, int port);
-  void disconnect();
+
   bool isConnected();
+  QString lastOpenDirSettingPath();
+
 
 };
 

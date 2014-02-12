@@ -298,6 +298,14 @@ void MoleQueueQueueListModel::mergeQueue(int row, const QStringList &newProgs)
       ++oldInd;
     }
   }
+
+  // Add any remaining new programs
+  for (; newInd < newProgs.size(); ++newInd, ++oldInd)
+    insertProgram(row, m_programList[row].size(), newProgs[newInd]);
+
+  // Or remove any old programs.
+  while (oldInd < m_programList[row].size())
+    removeProgram(row, oldInd);
 }
 
 void MoleQueueQueueListModel::insertProgram(int queueRow, int progRow,
@@ -321,7 +329,7 @@ void MoleQueueQueueListModel::removeProgram(int queueRow, int progRow)
 bool MoleQueueQueueListModel::isQueueIndex(const QModelIndex &i) const
 {
   if (i.isValid()
-      && i.internalId() == QueueInternalId
+      && static_cast<quint32>(i.internalId()) == QueueInternalId
       && i.row() < m_queueList.size()
       && i.column() == 0) {
     return true;
