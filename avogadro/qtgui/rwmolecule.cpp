@@ -352,7 +352,7 @@ public:
   SetPositions3dCommand(RWMolecule &m,
                         const Core::Array<Vector3> &oldPositions3d,
                         const Core::Array<Vector3> &newPositions3d)
-    : MergeUndoCommand(m),
+    : MergeUndoCommand<SetPositions3dMergeId>(m),
       m_oldPositions3d(oldPositions3d),
       m_newPositions3d(newPositions3d)
   {
@@ -404,7 +404,7 @@ public:
   SetPosition3dCommand(RWMolecule &m, Index atomId,
                        const Vector3 &oldPosition3d,
                        const Vector3 &newPosition3d)
-    : MergeUndoCommand(m),
+    : MergeUndoCommand<SetPosition3dMergeId>(m),
       m_atomIds(1, atomId),
       m_oldPosition3ds(1, oldPosition3d),
       m_newPosition3ds(1, newPosition3d)
@@ -689,7 +689,7 @@ public:
   SetBondOrderCommand(RWMolecule &m, Index bondId,
                       unsigned char oldBondOrder,
                       unsigned char newBondOrder)
-    : MergeUndoCommand(m),
+    : MergeUndoCommand<SetBondOrderMergeId>(m),
       m_bondId(bondId),
       m_oldBondOrder(oldBondOrder),
       m_newBondOrder(newBondOrder)
