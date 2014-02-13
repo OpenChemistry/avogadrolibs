@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Avogadro::QtGui::InputGeneratorDialog</class>
- <widget class="QDialog" name="Avogadro::QtGui::InputGeneratorDialog">
+ <class>Avogadro::MoleQueue::InputGeneratorDialog</class>
+ <widget class="QDialog" name="Avogadro::MoleQueue::InputGeneratorDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,15 +15,15 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="Avogadro::QtGui::InputGeneratorWidget" name="widget" native="true"/>
+    <widget class="Avogadro::MoleQueue::InputGeneratorWidget" name="widget" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Avogadro::QtGui::InputGeneratorWidget</class>
+   <class>Avogadro::MoleQueue::InputGeneratorWidget</class>
    <extends>QWidget</extends>
-   <header location="global">avogadro/qtgui/inputgeneratorwidget.h</header>
+   <header location="global">avogadro/molequeue/inputgeneratorwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -16,45 +16,34 @@
 
 #include "inputgeneratorwidget.h"
 #include "ui_inputgeneratorwidget.h"
+#include "molequeuedialog.h"
+#include "molequeuemanager.h"
 
 #include <avogadro/qtgui/filebrowsewidget.h>
 #include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/qtgui/molequeuedialog.h>
-#include <avogadro/qtgui/molequeuemanager.h>
 
-#include <qjsonarray.h>
+#include <molequeue/client/jobobject.h>
 #include <qjsondocument.h>
-#include <qjsonobject.h>
-#include <qjsonvalue.h>
 
-#include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QFileDialog>
 #include <QtGui/QFormLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QIcon>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QMessageBox>
-#include <QtGui/QProgressDialog>
 #include <QtGui/QSpinBox>
-#include <QtGui/QTextBrowser>
 #include <QtGui/QTextEdit>
-#include <QtGui/QVBoxLayout>
 
 #include <QtCore/QDebug>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
 #include <QtCore/QPointer>
-#include <QtCore/QRegExp>
 #include <QtCore/QSettings>
-#include <QtCore/QString>
-#include <QtCore/QTextStream>
 #include <QtCore/QTimer>
 
 namespace Avogadro {
-namespace QtGui {
+namespace MoleQueue {
+
+using ::MoleQueue::JobObject;
 
 InputGeneratorWidget::InputGeneratorWidget(QWidget *parent_) :
   QWidget(parent_),
@@ -283,7 +272,7 @@ void InputGeneratorWidget::computeClicked()
   int numCores = optionString("Processor Cores", coresString)
       ? coresString.toInt() : 1;
 
-  MoleQueue::JobObject job;
+  JobObject job;
   job.setProgram(m_inputGenerator.displayName());
   job.setDescription(description);
   job.setValue("numberOfCores", numCores);
@@ -1128,5 +1117,5 @@ QString InputGeneratorWidget::generateJobTitle() const
       .arg(haveTheory      ? " | " + theory      : QString());
 }
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Avogadro::QtGui::MoleQueueDialog</class>
- <widget class="QDialog" name="Avogadro::QtGui::MoleQueueDialog">
+ <class>Avogadro::MoleQueue::MoleQueueDialog</class>
+ <widget class="QDialog" name="Avogadro::MoleQueue::MoleQueueDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="Avogadro::QtGui::MoleQueueWidget" name="widget" native="true"/>
+    <widget class="Avogadro::MoleQueue::MoleQueueWidget" name="widget" native="true"/>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
@@ -31,9 +31,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Avogadro::QtGui::MoleQueueWidget</class>
+   <class>Avogadro::MoleQueue::MoleQueueWidget</class>
    <extends>QWidget</extends>
-   <header location="global">avogadro/qtgui/molequeuewidget.h</header>
+   <header location="global">avogadro/molequeue/molequeuewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
@@ -42,7 +42,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Avogadro::QtGui::MoleQueueDialog</receiver>
+   <receiver>Avogadro::MoleQueue::MoleQueueDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -58,7 +58,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Avogadro::QtGui::MoleQueueDialog</receiver>
+   <receiver>Avogadro::MoleQueue::MoleQueueDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

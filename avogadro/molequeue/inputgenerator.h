@@ -14,26 +14,21 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_INPUTGENERATOR_H
-#define AVOGADRO_QTGUI_INPUTGENERATOR_H
+#ifndef AVOGADRO_MOLEQUEUE_INPUTGENERATOR_H
+#define AVOGADRO_MOLEQUEUE_INPUTGENERATOR_H
 
 #include <QtCore/QObject>
-#include "avogadroqtguiexport.h"
+#include "avogadromolequeueexport.h"
 
 #include <avogadro/core/avogadrocore.h>
 
 #include <qjsonobject.h>
-
-#include <QtCore/QByteArray>
 #include <QtCore/QMap>
-#include <QtCore/QString>
 #include <QtCore/QStringList>
 
 class QJsonDocument;
 class QProcess;
-class QRegExp;
 class QTextCharFormat;
-class QTextStream;
 
 namespace Avogadro {
 
@@ -44,9 +39,11 @@ class Molecule;
 namespace QtGui {
 class GenericHighlighter;
 class PythonScript;
+}
 
+namespace MoleQueue {
 /**
- * @class InputGenerator inputgenerator.h <avogadro/qtgui/inputgenerator.h>
+ * @class InputGenerator inputgenerator.h <avogadro/molequeue/inputgenerator.h>
  * @brief The InputGenerator class provides an interface to input generator
  * scripts.
  * @sa InputGeneratorWidget
@@ -451,7 +448,7 @@ $$coords:[coordSpec]$$
  * qDebug() stream from within avogadro. The script is free to handle the
  * debug flag as the author wishes.
  */
-class AVOGADROQTGUI_EXPORT InputGenerator : public QObject
+class AVOGADROMOLEQUEUE_EXPORT InputGenerator : public QObject
 {
   Q_OBJECT
 public:
@@ -557,7 +554,7 @@ public:
    * If no syntax highlighter is defined, this function returns NULL.
    * @sa fileNames
    */
-  GenericHighlighter *createFileHighlighter(const QString &fileName) const;
+  QtGui::GenericHighlighter *createFileHighlighter(const QString &fileName) const;
 
   /**
    * @return True if an error is set.
@@ -589,7 +586,7 @@ public slots:
   void setDebug(bool d);
 
 private:
-  PythonScript *m_interpreter;
+  QtGui::PythonScript *m_interpreter;
 
   void setDefaultPythonInterpretor();
   QByteArray execute(const QStringList &args,
@@ -601,7 +598,7 @@ private:
                                   const Core::Molecule &mol) const;
   void replaceKeywords(QString &str, const Core::Molecule &mol) const;
   bool parseHighlightStyles(const QJsonArray &json) const;
-  bool parseRules(const QJsonArray &json, GenericHighlighter &highligher) const;
+  bool parseRules(const QJsonArray &json, QtGui::GenericHighlighter &highligher) const;
   bool parseFormat(const QJsonObject &json, QTextCharFormat &format) const;
   bool parsePattern(const QJsonValue &json, QRegExp &pattern) const;
 
@@ -615,13 +612,13 @@ private:
   QStringList m_filenames;
   QString m_mainFileName;
   QMap<QString, QString> m_files;
-  QMap<QString, GenericHighlighter*> m_fileHighlighters;
+  QMap<QString, QtGui::GenericHighlighter*> m_fileHighlighters;
 
-  mutable QMap<QString, GenericHighlighter*> m_highlightStyles;
+  mutable QMap<QString, QtGui::GenericHighlighter*> m_highlightStyles;
 
 };
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTGUI_INPUTGENERATOR_H
+#endif // AVOGADRO_MOLEQUEUE_INPUTGENERATOR_H

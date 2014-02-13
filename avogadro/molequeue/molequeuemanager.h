@@ -14,31 +14,23 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_MOLEQUEUEPROXY_H
-#define AVOGADRO_QTGUI_MOLEQUEUEPROXY_H
+#ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEMANAGER_H
+#define AVOGADRO_MOLEQUEUE_MOLEQUEUEMANAGER_H
 
 #include <QtCore/QObject>
 
-#include <avogadro/qtgui/avogadroqtguiexport.h>
-#include <avogadro/qtgui/molequeuequeuelistmodel.h>
+#include "molequeuequeuelistmodel.h"
 
 #include <avogadro/core/avogadrocore.h>
 
 #include <molequeue/client/client.h>
-#include <molequeue/client/jobobject.h>
-
-#include <QtCore/QStringList>
-#include <QtCore/QModelIndex>
-#include <QtCore/QModelIndexList>
-
-#include <limits>
 
 namespace Avogadro {
-namespace QtGui {
+namespace MoleQueue {
 
 /**
  * @class MoleQueueManager molequeuemanager.h
- * <avogadro/qtgui/molequeuemanager.h>
+ * <avogadro/molequeue/molequeuemanager.h>
  * @brief The MoleQueueManager class provides access to a MoleQueue server.
  *
  * This singleton class provides access to a single MoleQueue::Client instance
@@ -47,7 +39,7 @@ namespace QtGui {
  * connectIfNeeded convenience function can be used to ensure that the client
  * is connected before use.
  */
-class AVOGADROQTGUI_EXPORT MoleQueueManager : public QObject
+class AVOGADROMOLEQUEUE_EXPORT MoleQueueManager : public QObject
 {
   Q_OBJECT
 public:
@@ -70,8 +62,8 @@ public:
    * @return A reference to the managed MoleQueue::Client instance.
    * @{
    */
-  MoleQueue::Client& client();
-  const MoleQueue::Client& client() const;
+  ::MoleQueue::Client& client();
+  const ::MoleQueue::Client& client() const;
   /** @} */
 
   /**
@@ -97,12 +89,12 @@ private slots:
 
 private:
   static MoleQueueManager *m_instance;
-  MoleQueue::Client m_client;
+  ::MoleQueue::Client m_client;
   MoleQueueQueueListModel m_queueModel;
 
 };
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTGUI_MOLEQUEUEPROXY_H
+#endif // AVOGADRO_MOLEQUEUE_MOLEQUEUEMANAGER_H

@@ -17,7 +17,7 @@
 #include "molequeuewidget.h"
 #include "ui_molequeuewidget.h"
 
-#include <avogadro/qtgui/molequeuemanager.h>
+#include "molequeuemanager.h"
 
 #include <QtGui/QMessageBox>
 
@@ -26,7 +26,10 @@
 #include <limits>
 
 namespace Avogadro {
-namespace QtGui {
+namespace MoleQueue {
+
+using ::MoleQueue::JobObject;
+using ::MoleQueue::Client;
 
 const unsigned int MoleQueueWidget::InvalidMoleQueueId(
     std::numeric_limits<unsigned int>::max());
@@ -55,17 +58,17 @@ MoleQueueWidget::~MoleQueueWidget()
   delete m_ui;
 }
 
-MoleQueue::JobObject &MoleQueueWidget::jobTemplate()
+JobObject &MoleQueueWidget::jobTemplate()
 {
   return m_jobTemplate;
 }
 
-const MoleQueue::JobObject &MoleQueueWidget::jobTemplate() const
+const JobObject &MoleQueueWidget::jobTemplate() const
 {
   return m_jobTemplate;
 }
 
-void MoleQueueWidget::setJobTemplate(const MoleQueue::JobObject &job)
+void MoleQueueWidget::setJobTemplate(const JobObject &job)
 {
   m_jobTemplate = job;
 
@@ -263,7 +266,7 @@ void MoleQueueWidget::onJobStateChange(unsigned int mqId,
 
 void MoleQueueWidget::listenForLookupJobReply(bool listen)
 {
-  MoleQueue::Client &mqClient(MoleQueueManager::instance().client());
+  Client &mqClient(MoleQueueManager::instance().client());
   if (listen) {
     connect(&mqClient, SIGNAL(lookupJobResponse(int,QJsonObject)),
             this, SLOT(onLookupJobReply(int,QJsonObject)));
@@ -312,5 +315,5 @@ bool MoleQueueWidget::programSelected()
   return sel.size() > 0;
 }
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro

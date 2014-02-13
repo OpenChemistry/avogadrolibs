@@ -14,32 +14,31 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_INPUTGENERATORDIALOG_H
-#define AVOGADRO_QTGUI_INPUTGENERATORDIALOG_H
+#ifndef AVOGADRO_MOLEQUEUE_INPUTGENERATORDIALOG_H
+#define AVOGADRO_MOLEQUEUE_INPUTGENERATORDIALOG_H
 
 #include <QtGui/QDialog>
-
+#include "avogadromolequeueexport.h"
 #include <avogadro/core/avogadrocore.h>
-
-#include <avogadro/qtgui/avogadroqtguiexport.h>
 
 namespace Avogadro {
 namespace QtGui {
-class InputGeneratorWidget;
 class Molecule;
+}
 
+namespace MoleQueue {
 namespace Ui {
 class InputGeneratorDialog;
 }
-
+class InputGeneratorWidget;
 /**
  * @class InputGeneratorDialog inputgeneratordialog.h
- * <avogadro/qtgui/inputgeneratordialog.h>
+ * <avogadro/molequeue/inputgeneratordialog.h>
  * @brief The InputGeneratorDialog class provides a thin wrapper around
  * InputGeneratorWidget for standalone use.
  * @sa InputGenerator InputGeneratorWidget
  */
-class AVOGADROQTGUI_EXPORT InputGeneratorDialog : public QDialog
+class AVOGADROMOLEQUEUE_EXPORT InputGeneratorDialog : public QDialog
 {
   Q_OBJECT
 
@@ -74,6 +73,7 @@ private:
 };
 
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro
-#endif // AVOGADRO_QTGUI_INPUTGENERATORDIALOG_H
+
+#endif // AVOGADRO_MOLEQUEUE_INPUTGENERATORDIALOG_H

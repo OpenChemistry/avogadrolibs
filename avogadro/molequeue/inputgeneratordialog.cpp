@@ -17,10 +17,12 @@
 #include "inputgeneratordialog.h"
 #include "ui_inputgeneratordialog.h"
 
-#include <avogadro/qtgui/inputgeneratorwidget.h>
+#include "inputgeneratorwidget.h"
 
 namespace Avogadro {
-namespace QtGui {
+namespace MoleQueue {
+
+using QtGui::Molecule;
 
 InputGeneratorDialog::InputGeneratorDialog(QWidget *parent_)
   : QDialog(parent_),
@@ -72,5 +74,5 @@ void InputGeneratorDialog::setMolecule(Molecule *mol)
   ui->widget->setMolecule(mol);
 }
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro

@@ -14,18 +14,20 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_MOLEQUEUEDIALOG_H
-#define AVOGADRO_QTGUI_MOLEQUEUEDIALOG_H
+#ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEDIALOG_H
+#define AVOGADRO_MOLEQUEUE_MOLEQUEUEDIALOG_H
 
 #include <QtGui/QDialog>
-#include "avogadroqtguiexport.h"
+#include "avogadromolequeueexport.h"
 
 #include <avogadro/core/avogadrocore.h>
 
-#include <molequeue/client/jobobject.h>
+namespace MoleQueue {
+class JobObject;
+}
 
 namespace Avogadro {
-namespace QtGui {
+namespace MoleQueue {
 class MoleQueueWidget;
 
 namespace Ui {
@@ -33,12 +35,12 @@ class MoleQueueDialog;
 }
 
 /**
- * @class MoleQueueDialog molequeuedialog.h <avogadro/qtgui/molequeuedialog.h>
+ * @class MoleQueueDialog molequeuedialog.h <avogadro/molequeue/molequeuedialog.h>
  * @brief The MoleQueueDialog class provides a thin wrapper around
  * MoleQueueWidget for standalone use.
  * @sa MoleQueueWidget MoleQueueManager
  */
-class AVOGADROQTGUI_EXPORT MoleQueueDialog : public QDialog
+class AVOGADROMOLEQUEUE_EXPORT MoleQueueDialog : public QDialog
 {
   Q_OBJECT
 public:
@@ -134,7 +136,7 @@ public:
    * @return A SubmitStatus enum value indicating the result of the submission.
    */
   static SubmitStatus submitJob(QWidget *parent_, const QString &caption,
-                                MoleQueue::JobObject &jobTemplate,
+                                ::MoleQueue::JobObject &jobTemplate,
                                 SubmitOptions options,
                                 unsigned int *moleQueueId = NULL,
                                 int *submissionRequestId = NULL);
@@ -167,6 +169,6 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(MoleQueueDialog::SubmitOptions)
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro
-#endif // AVOGADRO_QTGUI_MOLEQUEUEDIALOG_H
+#endif // AVOGADRO_MOLEQUEUE_MOLEQUEUEDIALOG_H

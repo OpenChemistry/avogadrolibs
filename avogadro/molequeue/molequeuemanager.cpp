@@ -16,12 +16,8 @@
 
 #include "molequeuemanager.h"
 
-#include <qjsonarray.h>
-#include <qjsonobject.h>
-#include <qjsonvalue.h>
-
 namespace Avogadro {
-namespace QtGui {
+namespace MoleQueue {
 
 MoleQueueManager *MoleQueueManager::m_instance = NULL;
 
@@ -48,12 +44,12 @@ bool MoleQueueManager::connectIfNeeded()
   return m_client.isConnected() || m_client.connectToServer();
 }
 
-MoleQueue::Client &MoleQueueManager::client()
+::MoleQueue::Client &MoleQueueManager::client()
 {
   return m_client;
 }
 
-const MoleQueue::Client &MoleQueueManager::client() const
+const ::MoleQueue::Client &MoleQueueManager::client() const
 {
   return m_client;
 }
@@ -85,5 +81,5 @@ void MoleQueueManager::updateQueueModel(const QJsonObject &json)
   emit queueListUpdated();
 }
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro
