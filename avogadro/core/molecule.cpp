@@ -541,10 +541,10 @@ void Molecule::setUnitCell(UnitCell *uc)
 
 double Molecule::mass() const
 {
-  double result(0.0);
+  double m(0.0);
   for (Index i = 0; i < atomCount(); ++i)
-    result += Elements::mass(atom(i).atomicNumber());
-  return result;
+    m += Elements::mass(atom(i).atomicNumber());
+  return m;
 }
 
 // bond perception code ported from VTK's vtkSimpleBondPerceiver class
@@ -559,8 +559,11 @@ void Molecule::perceiveBondsSimple()
 
   // cache atomic radii
   std::vector<double> radii(atomCount());
-  for (size_t i = 0; i < radii.size(); i++)
+  for (size_t i = 0; i < radii.size(); i++) {
     radii[i] = Elements::radiusCovalent(m_atomicNumbers[i]);
+    if (radii[i] <= 0.0)
+      radii[i] = 2.0;
+  }
 
   // check for bonds
   for (Index i = 0; i < atomCount(); i++) {
