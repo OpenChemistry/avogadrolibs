@@ -405,15 +405,15 @@ protected: // members
 class AVOGADROQTGUI_EXPORT RWAtom : public Core::AtomTemplate<RWMolecule>
 {
 public:
-  RWAtom() : AtomTemplate<RWMolecule>() {}
-  RWAtom(RWMolecule *m, Index i) : AtomTemplate<RWMolecule>(m, i) {}
+  RWAtom() : Core::AtomTemplate<RWMolecule>() {}
+  RWAtom(RWMolecule *m, Index i) : Core::AtomTemplate<RWMolecule>(m, i) {}
 };
 
 class AVOGADROQTGUI_EXPORT RWBond : public Core::BondTemplate<RWMolecule>
 {
 public:
-  RWBond() : BondTemplate<RWMolecule>() {}
-  RWBond(RWMolecule *m, Index i) : BondTemplate<RWMolecule>(m, i) {}
+  RWBond() : Core::BondTemplate<RWMolecule>() {}
+  RWBond(RWMolecule *m, Index i) : Core::BondTemplate<RWMolecule>(m, i) {}
 };
 
 inline RWMolecule::AtomType RWMolecule::atom(Index atomId) const
