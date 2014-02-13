@@ -14,11 +14,11 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_MOLEQUEUEQUEUELISTMODEL_H
-#define AVOGADRO_QTGUI_MOLEQUEUEQUEUELISTMODEL_H
+#ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEQUEUELISTMODEL_H
+#define AVOGADRO_MOLEQUEUE_MOLEQUEUEQUEUELISTMODEL_H
 
 #include <QtCore/QAbstractItemModel>
-#include "avogadroqtguiexport.h"
+#include "avogadromolequeueexport.h"
 
 #include <QtCore/QStringList>
 
@@ -26,12 +26,12 @@
 class MoleQueueQueueListModelTestBridge;
 
 namespace Avogadro {
-namespace QtGui {
+namespace MoleQueue {
 class MoleQueueManager;
 
 /**
  * @class MoleQueueQueueListModel molequeuequeuelistmodel.h
- * <avogadro/qtgui/molequeuequeuelistmodel.h>
+ * <avogadro/molequeue/molequeuequeuelistmodel.h>
  * @brief The MoleQueueQueueListModel class is Qt item model representing the
  * tree of available queues and programs in a running MoleQueue process.
  *
@@ -50,7 +50,7 @@ class MoleQueueManager;
  * MoleQueueManager::instance().requestQueueList() and waiting for the
  * MoleQueueManager::queueListUpdated() signal.
  */
-class AVOGADROQTGUI_EXPORT MoleQueueQueueListModel : public QAbstractItemModel
+class AVOGADROMOLEQUEUE_EXPORT MoleQueueQueueListModel : public QAbstractItemModel
 {
   Q_OBJECT
 public:
@@ -144,7 +144,7 @@ private:
   quint32 m_uidCounter;
 };
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTGUI_MOLEQUEUEQUEUELISTMODEL_H
+#endif // AVOGADRO_MOLEQUEUE_MOLEQUEUEQUEUELISTMODEL_H

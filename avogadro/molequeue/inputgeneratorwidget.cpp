@@ -16,12 +16,12 @@
 
 #include "inputgeneratorwidget.h"
 #include "ui_inputgeneratorwidget.h"
+#include "molequeuedialog.h"
+#include "molequeuemanager.h"
 
 #include <avogadro/qtgui/filebrowsewidget.h>
 #include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/qtgui/molequeuedialog.h>
-#include <avogadro/qtgui/molequeuemanager.h>
 
 #include <qjsonarray.h>
 #include <qjsondocument.h>
@@ -54,7 +54,9 @@
 #include <QtCore/QTimer>
 
 namespace Avogadro {
-namespace QtGui {
+namespace MoleQueue {
+
+using ::MoleQueue::JobObject;
 
 InputGeneratorWidget::InputGeneratorWidget(QWidget *parent_) :
   QWidget(parent_),
@@ -283,7 +285,7 @@ void InputGeneratorWidget::computeClicked()
   int numCores = optionString("Processor Cores", coresString)
       ? coresString.toInt() : 1;
 
-  MoleQueue::JobObject job;
+  JobObject job;
   job.setProgram(m_inputGenerator.displayName());
   job.setDescription(description);
   job.setValue("numberOfCores", numCores);
@@ -1128,5 +1130,5 @@ QString InputGeneratorWidget::generateJobTitle() const
       .arg(haveTheory      ? " | " + theory      : QString());
 }
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro

@@ -21,7 +21,7 @@
 #include <limits>
 
 namespace Avogadro {
-namespace QtGui {
+namespace MoleQueue {
 
 namespace {
 // Internal id used for queue model indices
@@ -379,5 +379,5 @@ quint32 MoleQueueQueueListModel::nextUid()
   return m_uidCounter;
 }
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro

@@ -16,8 +16,7 @@
 
 #include "molequeuedialog.h"
 #include "ui_molequeuedialog.h"
-
-#include <avogadro/qtgui/molequeuewidget.h>
+#include "molequeuewidget.h"
 
 #include <QtGui/QMessageBox>
 #include <QtGui/QProgressDialog>
@@ -26,7 +25,9 @@
 #include <QtCore/QTimer>
 
 namespace Avogadro {
-namespace QtGui {
+namespace MoleQueue {
+
+using ::MoleQueue::JobObject;
 
 MoleQueueDialog::MoleQueueDialog(QWidget *parent_) :
   QDialog(parent_),
@@ -42,7 +43,7 @@ MoleQueueDialog::~MoleQueueDialog()
 
 MoleQueueDialog::SubmitStatus
 MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
-                           MoleQueue::JobObject &jobTemplate,
+                           JobObject &jobTemplate,
                            SubmitOptions options, unsigned int *moleQueueId,
                            int *submissionRequestId)
 {
@@ -203,5 +204,5 @@ void MoleQueueDialog::done(int r)
   }
 }
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro

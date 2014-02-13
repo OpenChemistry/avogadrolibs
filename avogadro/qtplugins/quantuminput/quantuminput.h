@@ -34,7 +34,7 @@ namespace Io {
 class FileFormat;
 }
 
-namespace QtGui {
+namespace MoleQueue {
 class InputGeneratorDialog;
 }
 
@@ -72,7 +72,7 @@ public slots:
   /**
    * Emitted when the user requests that a job's output be loaded in Avogadro.
    */
-  void openJobOutput(const MoleQueue::JobObject &job);
+  void openJobOutput(const ::MoleQueue::JobObject &job);
 
   bool readMolecule(QtGui::Molecule &mol);
 
@@ -89,7 +89,7 @@ private:
   QList<QAction*> m_actions;
   QtGui::Molecule *m_molecule;
   // keyed on script file path
-  QMultiMap<QString, QtGui::InputGeneratorDialog*> m_dialogs;
+  QMultiMap<QString, MoleQueue::InputGeneratorDialog*> m_dialogs;
 
   // maps program name --> script file path
   QMultiMap<QString, QString> m_inputGeneratorScripts;

@@ -16,9 +16,6 @@
 
 #include "inputgenerator.h"
 
-#include "generichighlighter.h"
-#include "pythonscript.h"
-
 #include <avogadro/core/coordinateblockgenerator.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
@@ -26,6 +23,9 @@
 
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
+
+#include <avogadro/qtgui/generichighlighter.h>
+#include <avogadro/qtgui/pythonscript.h>
 
 #include <qjsondocument.h>
 #include <qjsonarray.h>
@@ -40,7 +40,10 @@
 #include <string>
 
 namespace Avogadro {
-namespace QtGui {
+namespace MoleQueue {
+
+using QtGui::PythonScript;
+using QtGui::GenericHighlighter;
 
 InputGenerator::InputGenerator(const QString &scriptFilePath_, QObject *parent_)
   : QObject(parent_),
@@ -713,5 +716,5 @@ bool InputGenerator::parsePattern(const QJsonValue &json,
   return true;
 }
 
-} // namespace QtPlugins
+} // namespace MoleQueue
 } // namespace Avogadro

@@ -14,29 +14,29 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_MOLEQUEUEWIDGET_H
-#define AVOGADRO_QTGUI_MOLEQUEUEWIDGET_H
+#ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEWIDGET_H
+#define AVOGADRO_MOLEQUEUE_MOLEQUEUEWIDGET_H
 
 #include <QtGui/QWidget>
-#include "avogadroqtguiexport.h"
+#include "avogadromolequeueexport.h"
 
 #include <avogadro/core/avogadrocore.h>
 
 #include <molequeue/client/jobobject.h>
 
 namespace Avogadro {
-namespace QtGui {
+namespace MoleQueue {
 
 namespace Ui {
 class MoleQueueWidget;
 }
 
 /**
- * @class MoleQueueWidget molequeuewidget.h <avogadro/qtcore/molequeuewidget.h>
+ * @class MoleQueueWidget molequeuewidget.h <avogadro/molequeue/molequeuewidget.h>
  * @brief The MoleQueueWidget class provides a widget for configuring and
  * submitting a MoleQueue::JobObject.
  */
-class AVOGADROQTGUI_EXPORT MoleQueueWidget : public QWidget
+class AVOGADROMOLEQUEUE_EXPORT MoleQueueWidget : public QWidget
 {
   Q_OBJECT
 public:
@@ -49,10 +49,10 @@ public:
    * that will be submitted by submitJobRequest.
    * @{
    */
-  MoleQueue::JobObject& jobTemplate();
-  const MoleQueue::JobObject& jobTemplate() const;
+  ::MoleQueue::JobObject& jobTemplate();
+  const ::MoleQueue::JobObject& jobTemplate() const;
 public slots:
-  void setJobTemplate(const MoleQueue::JobObject &job);
+  void setJobTemplate(const ::MoleQueue::JobObject &job);
 public:
   /** @} */
 
@@ -169,7 +169,7 @@ signals:
    * Emitted after a successful call to requestJobLookup().
    * @param job The result of the lookupJob() RPC query.
    */
-  void jobUpdated(const MoleQueue::JobObject &job);
+  void jobUpdated(const ::MoleQueue::JobObject &job);
 
 private slots:
   void showAndSelectProgramHandler();
@@ -191,18 +191,18 @@ private:
    * @return A JobObject with the GUI options. Any settings in jobTemplate that
    * are not handled by the GUI are passed through untouched to the new object.
    */
-  MoleQueue::JobObject configuredJob() const;
+  ::MoleQueue::JobObject configuredJob() const;
 
 private:
   Ui::MoleQueueWidget *m_ui;
-  MoleQueue::JobObject m_jobTemplate;
+  ::MoleQueue::JobObject m_jobTemplate;
   QString m_jobState;
   QString m_submissionError;
   int m_requestId;
   unsigned int m_moleQueueId;
 };
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTGUI_MOLEQUEUEWIDGET_H
+#endif // AVOGADRO_MOLEQUEUE_MOLEQUEUEWIDGET_H

@@ -20,7 +20,7 @@
 
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/qtgui/molequeuemanager.h> // For MoleQueue::JobObject
+#include <avogadro/molequeue/molequeuemanager.h> // For MoleQueue::JobObject
 
 #include <avogadro/io/fileformat.h>
 
@@ -39,6 +39,8 @@ namespace Core {
 class Molecule;
 }
 namespace QtPlugins {
+
+using ::MoleQueue::JobObject;
 
 GamessInput::GamessInput(QObject *parent_) :
   ExtensionPlugin(parent_),
@@ -77,7 +79,7 @@ void GamessInput::setMolecule(QtGui::Molecule *mol)
   m_molecule = mol;
 }
 
-void GamessInput::openJobOutput(const MoleQueue::JobObject &job)
+void GamessInput::openJobOutput(const JobObject &job)
 {
   m_outputFormat = NULL;
   m_outputFileName.clear();

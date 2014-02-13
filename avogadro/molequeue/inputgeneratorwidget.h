@@ -14,15 +14,12 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_INPUTGENERATORWIDGET_H
-#define AVOGADRO_QTGUI_INPUTGENERATORWIDGET_H
+#ifndef AVOGADRO_MOLEQUEUE_INPUTGENERATORWIDGET_H
+#define AVOGADRO_MOLEQUEUE_INPUTGENERATORWIDGET_H
 
 #include <QtGui/QWidget>
 
-#include <avogadro/qtgui/avogadroqtguiexport.h>
-#include <avogadro/qtgui/inputgenerator.h>
-
-#include <avogadro/core/avogadrocore.h>
+#include "inputgenerator.h"
 
 #include <qjsonobject.h>
 
@@ -37,20 +34,21 @@ class JobObject;
 namespace Avogadro {
 namespace QtGui {
 class Molecule;
+}
 
+namespace MoleQueue {
 namespace Ui {
 class InputGeneratorWidget;
 }
-
 /**
  * @class InputGeneratorWidget inputgeneratorwidget.h
- * <avogadro/qtgui/inputgeneratorwidget.h>
+ * <avogadro/molequeue/inputgeneratorwidget.h>
  * @brief The InputGeneratorWidget class provides a user interface for
  * configuring, saving, editing, and running input files produced by
  * InputGenerator scripts.
  * @sa InputGenerator InputGeneratorDialog
  */
-class AVOGADROQTGUI_EXPORT InputGeneratorWidget : public QWidget
+class AVOGADROMOLEQUEUE_EXPORT InputGeneratorWidget : public QWidget
 {
   Q_OBJECT
 
@@ -87,7 +85,7 @@ signals:
   /**
    * Emitted when the user requests that a job's output be loaded in Avogadro.
    */
-  void openJobOutput(const MoleQueue::JobObject &job);
+  void openJobOutput(const ::MoleQueue::JobObject &job);
 
 protected:
   /**
@@ -259,13 +257,14 @@ private:
   QJsonObject m_optionCache; // For reverting changes
   bool m_updatePending;
   QList<QTextEdit*> m_dirtyTextEdits;
-  QtGui::InputGenerator m_inputGenerator;
+  InputGenerator m_inputGenerator;
 
   QMap<QString, QWidget*> m_widgets;
   QMap<QString, QTextEdit*> m_textEdits;
 };
 
 
-} // namespace QtGui
+} // namespace MoleQueue
 } // namespace Avogadro
-#endif // AVOGADRO_QTGUI_INPUTGENERATORWIDGET_H
+
+#endif // AVOGADRO_MOLEQUEUE_INPUTGENERATORWIDGET_H

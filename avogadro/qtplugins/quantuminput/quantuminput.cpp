@@ -19,12 +19,12 @@
 #include <avogadro/qtgui/avogadropython.h>
 #include <avogadro/qtgui/filebrowsewidget.h>
 #include <avogadro/qtgui/fileformatdialog.h>
-#include <avogadro/qtgui/inputgenerator.h>
-#include <avogadro/qtgui/inputgeneratordialog.h>
-#include <avogadro/qtgui/inputgeneratorwidget.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/qtgui/molequeuemanager.h> // For MoleQueue::JobObject
 #include <avogadro/qtgui/utilities.h>
+#include <avogadro/molequeue/inputgenerator.h>
+#include <avogadro/molequeue/inputgeneratordialog.h>
+#include <avogadro/molequeue/inputgeneratorwidget.h>
+#include <avogadro/molequeue/molequeuemanager.h> // For MoleQueue::JobObject
 
 #include <QtGui/QAction>
 #include <QtGui/QDialog>
@@ -41,11 +41,11 @@
 #include <QtCore/QStringList>
 
 namespace Avogadro {
-namespace QtGui {
-class Molecule;
-}
-
 namespace QtPlugins {
+
+using MoleQueue::InputGenerator;
+using MoleQueue::InputGeneratorDialog;
+using ::MoleQueue::JobObject;
 
 QuantumInput::QuantumInput(QObject *parent_) :
   ExtensionPlugin(parent_),
@@ -80,11 +80,11 @@ void QuantumInput::setMolecule(QtGui::Molecule *mol)
 
   m_molecule = mol;
 
-  foreach (QtGui::InputGeneratorDialog *dlg, m_dialogs.values())
+  foreach (InputGeneratorDialog *dlg, m_dialogs.values())
     dlg->setMolecule(mol);
 }
 
-void QuantumInput::openJobOutput(const MoleQueue::JobObject &job)
+void QuantumInput::openJobOutput(const JobObject &job)
 {
   m_outputFormat = NULL;
   m_outputFileName.clear();
@@ -137,10 +137,10 @@ void QuantumInput::menuActivated()
 
   QString scriptFileName = theSender->data().toString();
   QWidget *theParent = qobject_cast<QWidget*>(parent());
-  QtGui::InputGeneratorDialog *dlg = m_dialogs.value(scriptFileName, NULL);
+  InputGeneratorDialog *dlg = m_dialogs.value(scriptFileName, NULL);
 
   if (!dlg) {
-    dlg = new QtGui::InputGeneratorDialog(scriptFileName, theParent);
+    dlg = new InputGeneratorDialog(scriptFileName, theParent);
     connect(&dlg->widget(), SIGNAL(openJobOutput(MoleQueue::JobObject)),
             this, SLOT(openJobOutput(MoleQueue::JobObject)));
     m_dialogs.insert(scriptFileName, dlg);
@@ -263,7 +263,7 @@ void QuantumInput::addAction(const QString &label,
 bool QuantumInput::queryProgramName(const QString &scriptFilePath,
                                     QString &displayName)
 {
-  QtGui::InputGenerator gen(scriptFilePath);
+  InputGenerator gen(scriptFilePath);
   displayName = gen.displayName();
   if (gen.hasErrors()) {
     displayName.clear();

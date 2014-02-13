@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Avogadro::QtGui::InputGeneratorWidget</class>
- <widget class="QWidget" name="Avogadro::QtGui::InputGeneratorWidget">
+ <class>Avogadro::MoleQueue::InputGeneratorWidget</class>
+ <widget class="QWidget" name="Avogadro::MoleQueue::InputGeneratorWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
+    <width>813</width>
     <height>650</height>
    </rect>
   </property>
