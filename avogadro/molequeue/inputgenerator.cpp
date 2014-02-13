@@ -17,9 +17,7 @@
 #include "inputgenerator.h"
 
 #include <avogadro/core/coordinateblockgenerator.h>
-#include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
-#include <avogadro/core/vector.h>
 
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
@@ -30,14 +28,8 @@
 #include <qjsondocument.h>
 #include <qjsonarray.h>
 
-#include <QtGui/QBrush>
-
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
-#include <QtCore/QScopedPointer>
-#include <QtCore/QSettings>
-
-#include <string>
 
 namespace Avogadro {
 namespace MoleQueue {

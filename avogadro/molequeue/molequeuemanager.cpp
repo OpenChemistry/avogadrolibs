@@ -16,10 +16,6 @@
 
 #include "molequeuemanager.h"
 
-#include <qjsonarray.h>
-#include <qjsonobject.h>
-#include <qjsonvalue.h>
-
 namespace Avogadro {
 namespace MoleQueue {
 

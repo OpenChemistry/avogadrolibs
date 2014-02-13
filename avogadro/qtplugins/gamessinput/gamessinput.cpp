@@ -20,19 +20,13 @@
 
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/molequeue/molequeuemanager.h> // For MoleQueue::JobObject
-
 #include <avogadro/io/fileformat.h>
 
-#include <QtCore/QtPlugin>
+#include <molequeue/client/jobobject.h>
+
 #include <QtCore/QDebug>
-#include <QtCore/QStringList>
 
-#include <QtGui/QAction>
-#include <QtGui/QDialog>
 #include <QtGui/QMessageBox>
-
-#include <qjsonvalue.h>
 
 namespace Avogadro {
 namespace Core {

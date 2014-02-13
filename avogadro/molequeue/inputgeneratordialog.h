@@ -18,10 +18,8 @@
 #define AVOGADRO_MOLEQUEUE_INPUTGENERATORDIALOG_H
 
 #include <QtGui/QDialog>
-
-#include <avogadro/core/avogadrocore.h>
-
 #include "avogadromolequeueexport.h"
+#include <avogadro/core/avogadrocore.h>
 
 namespace Avogadro {
 namespace QtGui {

@@ -24,7 +24,8 @@
 #include <avogadro/molequeue/inputgenerator.h>
 #include <avogadro/molequeue/inputgeneratordialog.h>
 #include <avogadro/molequeue/inputgeneratorwidget.h>
-#include <avogadro/molequeue/molequeuemanager.h> // For MoleQueue::JobObject
+
+#include <molequeue/client/jobobject.h>
 
 #include <QtGui/QAction>
 #include <QtGui/QDialog>

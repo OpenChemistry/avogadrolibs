@@ -25,6 +25,7 @@
 #include <avogadro/molequeue/molequeuedialog.h>
 #include <avogadro/molequeue/molequeuemanager.h>
 
+#include <molequeue/client/jobobject.h>
 #include <qjsonarray.h>
 #include <qjsonobject.h>
 #include <qjsonvalue.h>

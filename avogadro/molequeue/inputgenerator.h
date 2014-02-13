@@ -23,17 +23,12 @@
 #include <avogadro/core/avogadrocore.h>
 
 #include <qjsonobject.h>
-
-#include <QtCore/QByteArray>
 #include <QtCore/QMap>
-#include <QtCore/QString>
 #include <QtCore/QStringList>
 
 class QJsonDocument;
 class QProcess;
-class QRegExp;
 class QTextCharFormat;
-class QTextStream;
 
 namespace Avogadro {
 

@@ -23,34 +23,21 @@
 #include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <qjsonarray.h>
+#include <molequeue/client/jobobject.h>
 #include <qjsondocument.h>
-#include <qjsonobject.h>
-#include <qjsonvalue.h>
 
-#include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QFileDialog>
 #include <QtGui/QFormLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QIcon>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QMessageBox>
-#include <QtGui/QProgressDialog>
 #include <QtGui/QSpinBox>
-#include <QtGui/QTextBrowser>
 #include <QtGui/QTextEdit>
-#include <QtGui/QVBoxLayout>
 
 #include <QtCore/QDebug>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
 #include <QtCore/QPointer>
-#include <QtCore/QRegExp>
 #include <QtCore/QSettings>
-#include <QtCore/QString>
-#include <QtCore/QTextStream>
 #include <QtCore/QTimer>
 
 namespace Avogadro {
