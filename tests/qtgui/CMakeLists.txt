@@ -1,5 +1,6 @@
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
   "${AvogadroLibs_BINARY_DIR}/avogadro/qtgui"
+  "${AvogadroLibs_BINARY_DIR}/avogadro/molequeue"
   "${AvogadroLibs_SOURCE_DIR}/tests/core")
 
 find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
@@ -49,7 +50,7 @@ endforeach()
 
 # Add a single executable for all of our tests.
 add_executable(AvogadroQtGuiTests ${testSrcs})
-target_link_libraries(AvogadroQtGuiTests AvogadroQtGui
+target_link_libraries(AvogadroQtGuiTests AvogadroQtGui AvogadroMoleQueue
   MoleQueueClient ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those
