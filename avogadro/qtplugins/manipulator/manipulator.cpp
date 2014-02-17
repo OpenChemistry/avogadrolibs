@@ -25,7 +25,7 @@
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/glrenderer.h>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
@@ -117,7 +117,7 @@ QUndoCommand * Manipulator::mouseMoveEvent(QMouseEvent *e)
       if (m_object.molecule == m_molecule) {
         // Update atom position
         Atom atom = m_molecule->atom(m_object.index);
-        Vector2f windowPos(e->posF().x(), e->posF().y());
+        Vector2f windowPos(e->localPos().x(), e->localPos().y());
         Vector3f oldPos(atom.position3d().cast<float>());
         Vector3f newPos = m_glWidget->renderer().camera().unProject(windowPos,
                                                                     oldPos);

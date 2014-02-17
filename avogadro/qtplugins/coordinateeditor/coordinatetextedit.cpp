@@ -16,10 +16,10 @@
 
 #include "coordinatetextedit.h"
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QHelpEvent>
 #include <QtGui/QTextCursor>
-#include <QtGui/QToolTip>
+#include <QtWidgets/QToolTip>
 
 #include <QtCore/QListIterator>
 

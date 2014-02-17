@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_QTGUI_CUSTOMELEMENTDIALOG_H
 #define AVOGADRO_QTGUI_CUSTOMELEMENTDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include "avogadroqtguiexport.h"
 
 #include <avogadro/core/avogadrocore.h>

@@ -22,7 +22,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-#include <qjsonobject.h>
+#include <QtCore/QJsonObject>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 

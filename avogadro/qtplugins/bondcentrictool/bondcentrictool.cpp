@@ -39,7 +39,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
 

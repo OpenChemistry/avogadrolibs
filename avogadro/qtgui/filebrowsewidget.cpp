@@ -16,12 +16,12 @@
 
 #include "filebrowsewidget.h"
 
-#include <QtGui/QCompleter>
-#include <QtGui/QFileDialog>
-#include <QtGui/QFileSystemModel>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QCompleter>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QFileSystemModel>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPushButton>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcessEnvironment>

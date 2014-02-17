@@ -19,7 +19,7 @@
 
 #include "avogadroqtguiexport.h"
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 class QFileSystemModel;
 class QLineEdit;

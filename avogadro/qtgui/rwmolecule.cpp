@@ -16,7 +16,7 @@
 
 #include "rwmolecule.h"
 
-#include <QtGui/QUndoCommand>
+#include <QtWidgets/QUndoCommand>
 
 #include <algorithm>
 #include <cassert>

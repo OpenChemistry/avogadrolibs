@@ -19,7 +19,7 @@
 #include <avogadro/qtgui/customelementdialog.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 
 using Avogadro::QtGui::Molecule;
 

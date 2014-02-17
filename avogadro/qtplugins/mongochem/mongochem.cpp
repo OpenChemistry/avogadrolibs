@@ -16,7 +16,7 @@
 
 #include "mongochem.h"
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
 

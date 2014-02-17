@@ -20,9 +20,9 @@
 #include "elementdetail_p.h"
 #include "elementtranslator.h"
 
-#include <QtGui/QGraphicsSceneMouseEvent>
+#include <QtWidgets/QGraphicsSceneMouseEvent>
 #include <QtGui/QPainter>
-#include <QtGui/QStyleOption>
+#include <QtWidgets/QStyleOption>
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>
 
@@ -172,7 +172,8 @@ void PeriodicTableScene::mousePressEvent(QGraphicsSceneMouseEvent *event_)
   if (event_->button() != Qt::LeftButton)
     return;
 
-  QGraphicsItem *item = QGraphicsScene::itemAt(event_->scenePos());
+  QGraphicsItem *item = QGraphicsScene::itemAt(event_->scenePos(),
+                                               QTransform());
   if (item->data(0).toInt() > 0 && item->data(0).toInt() < 119) {
     emit(elementChanged(item->data(0).toInt()));
     m_detail->setElement(item->data(0).toInt());

@@ -6,9 +6,9 @@ include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/qtgui"
 find_package(OpenGL REQUIRED)
 include_directories(SYSTEM ${OPENGL_INCLUDE_DIR})
 
-find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
-include_directories(SYSTEM ${QT_INCLUDES})
-add_definitions(${QT_DEFINITIONS})
+find_package(Qt5OpenGL REQUIRED)
+include_directories(SYSTEM ${Qt5OpenGL_INCLUDE_DIRS})
+add_definitions(${Qt5OpenGL_DEFINITIONS})
 
 # We want to find some parts of VTK in order to do image comparisons.
 find_package(VTK
@@ -44,12 +44,13 @@ create_test_sourcelist(testDriver qtopengltests.cpp ${testSrcs})
 
 add_executable(AvogadroQtOpenGLTests ${testDriver})
 
+qt5_use_modules(AvogadroQtOpenGLTests OpenGL)
+
 target_link_libraries(AvogadroQtOpenGLTests
   AvogadroQtOpenGL
   vtkImagingCore
   vtkIOImage
-  vtkRenderingQt
-  ${QT_QTOPENGL_LIBRARY})
+  vtkRenderingQt)
 
 foreach(test ${tests})
   string(TOLOWER ${test} testname)

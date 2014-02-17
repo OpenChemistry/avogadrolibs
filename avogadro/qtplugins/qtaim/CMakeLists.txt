@@ -1,3 +1,7 @@
+find_package(Qt5Concurrent REQUIRED)
+include_directories(SYSTEM ${Qt5Concurrent_INCLUDE_DIRS})
+add_definitions(${Qt5Concurrent_DEFINITIONS})
+
 set(qtaimextension_SRCS
     qtaimextension.cpp
     qtaimwavefunction.cpp
@@ -28,4 +32,5 @@ avogadro_plugin(QTAIMScenePlugin
   qtaimengine.cpp
 )
 
-target_link_libraries(QTAIMScenePlugin LINK_PRIVATE AvogadroRendering)
+target_link_libraries(QTAIMScenePlugin
+  LINK_PRIVATE AvogadroRendering ${Qt5Concurrent_LIBRARIES})

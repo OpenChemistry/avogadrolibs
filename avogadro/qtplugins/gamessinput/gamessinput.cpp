@@ -26,7 +26,7 @@
 
 #include <QtCore/QDebug>
 
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 namespace Avogadro {
 namespace Core {

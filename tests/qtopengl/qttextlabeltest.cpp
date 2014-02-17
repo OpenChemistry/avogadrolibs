@@ -28,7 +28,7 @@
 
 #include <QtOpenGL/QGLFormat>
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QImage>
 
 #include <QtCore/QTimer>

@@ -31,7 +31,7 @@ template<typename T>
 class PluginFactory
 {
 public:
-  virtual ~PluginFactory() {};
+  virtual ~PluginFactory() {}
 
   virtual T * createInstance() = 0;
   virtual QString identifier() const = 0;

@@ -131,6 +131,6 @@ public:
 } // End Avogadro namespace
 
 Q_DECLARE_INTERFACE(Avogadro::QtGui::ToolPluginFactory,
-                    "net.openchemistry.avogadro.toolpluginfactory/2.0")
+                    "org.openchemistry.avogadro.ToolPluginFactory")
 
 #endif // AVOGADRO_QTGUI_TOOLPLUGIN_H

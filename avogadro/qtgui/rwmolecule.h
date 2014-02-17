@@ -30,7 +30,7 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
-#include <QtGui/QUndoStack>
+#include <QtWidgets/QUndoStack>
 
 namespace Avogadro {
 namespace QtGui {

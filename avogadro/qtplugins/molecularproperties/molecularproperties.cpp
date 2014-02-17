@@ -18,7 +18,7 @@
 
 #include "molecularpropertiesdialog.h"
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 
 #include <QtCore/QStringList>
 

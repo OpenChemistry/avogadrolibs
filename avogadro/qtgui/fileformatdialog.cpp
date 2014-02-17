@@ -19,8 +19,8 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/io/fileformatmanager.h>
 
-#include <QtGui/QInputDialog>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QInputDialog>
+#include <QtWidgets/QMessageBox>
 
 #include <QtCore/QSettings>
 

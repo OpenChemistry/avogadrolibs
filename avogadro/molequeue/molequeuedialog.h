@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEDIALOG_H
 #define AVOGADRO_MOLEQUEUE_MOLEQUEUEDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include "avogadromolequeueexport.h"
 
 #include <avogadro/core/avogadrocore.h>

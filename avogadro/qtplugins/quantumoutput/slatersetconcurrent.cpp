@@ -23,7 +23,7 @@
 #include <avogadro/core/cube.h>
 #include <avogadro/core/mutex.h>
 
-#include <QtCore/QtConcurrentMap>
+#include <QtConcurrent/QtConcurrentMap>
 
 namespace Avogadro {
 namespace QtPlugins {

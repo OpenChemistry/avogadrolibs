@@ -97,7 +97,7 @@ void PeriodicTableView::keyPressEvent(QKeyEvent *event_)
     else {
       // try parsing as a symbol
       elem = static_cast<int>(Elements::atomicNumberFromSymbol(
-                                m_keyPressBuffer.toAscii().data()));
+                                m_keyPressBuffer.toLatin1().data()));
     }
   }
 

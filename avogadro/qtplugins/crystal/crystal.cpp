@@ -24,8 +24,8 @@
 
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtGui/QAction>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMessageBox>
 
 #include <QtCore/QStringList>
 

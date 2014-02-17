@@ -24,17 +24,17 @@
 #include <avogadro/qtgui/molecule.h>
 
 #include <molequeue/client/jobobject.h>
-#include <qjsondocument.h>
 
-#include <QtGui/QComboBox>
-#include <QtGui/QFileDialog>
-#include <QtGui/QFormLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QMessageBox>
-#include <QtGui/QSpinBox>
-#include <QtGui/QTextEdit>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QSpinBox>
+#include <QtWidgets/QTextEdit>
 
+#include <QtCore/QJsonDocument>
 #include <QtCore/QDebug>
 #include <QtCore/QPointer>
 #include <QtCore/QSettings>

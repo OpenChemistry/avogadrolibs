@@ -20,7 +20,7 @@
 
 #include "avogadroqtguiexport.h"
 
-#include <QtGui/QGraphicsView>
+#include <QtWidgets/QGraphicsView>
 
 namespace Avogadro {
 namespace QtGui {

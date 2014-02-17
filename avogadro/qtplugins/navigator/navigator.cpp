@@ -24,8 +24,7 @@
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/scene.h>
 
-#include <QtGui/QAction>
-#include <QtGui/QIcon>
+#include <QtWidgets/QAction>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
@@ -99,7 +98,7 @@ QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
   else if (m_pressedButtons & Qt::RightButton) {
     Vector3f center = m_glWidget->renderer().scene().center();
     Vector2f fromScreen(m_lastMousePosition.x(), m_lastMousePosition.y());
-    Vector2f toScreen(e->posF().x(), e->posF().y());
+    Vector2f toScreen(e->localPos().x(), e->localPos().y());
     Vector3f from(m_glWidget->renderer().camera().unProject(fromScreen, center));
     Vector3f to(m_glWidget->renderer().camera().unProject(toScreen, center));
 

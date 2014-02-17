@@ -20,9 +20,9 @@
 
 #include <avogadro/core/elements.h>
 
-#include <QtGui/QGraphicsSceneMouseEvent>
+#include <QtWidgets/QGraphicsSceneMouseEvent>
 #include <QtGui/QPainter>
-#include <QtGui/QStyleOption>
+#include <QtWidgets/QStyleOption>
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>
 

@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_QTGUI_MOLECULARPROPERTIESDIALOG_H
 #define AVOGADRO_QTGUI_MOLECULARPROPERTIESDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Avogadro {
 

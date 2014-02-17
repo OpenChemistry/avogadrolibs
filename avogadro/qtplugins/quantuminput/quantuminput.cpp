@@ -27,12 +27,12 @@
 
 #include <molequeue/client/jobobject.h>
 
-#include <QtGui/QAction>
-#include <QtGui/QDialog>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QLabel>
-#include <QtGui/QMessageBox>
-#include <QtGui/QVBoxLayout>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QVBoxLayout>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>

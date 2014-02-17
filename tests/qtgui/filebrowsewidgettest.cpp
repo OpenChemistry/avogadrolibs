@@ -21,8 +21,8 @@
 
 #include <QtTest/QSignalSpy>
 
-#include <QtGui/QApplication>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QLineEdit>
 
 #include <QtCore/QVariant>
 

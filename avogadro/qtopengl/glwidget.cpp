@@ -25,7 +25,7 @@
 
 #include <avogadro/rendering/camera.h>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>

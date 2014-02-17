@@ -23,12 +23,10 @@
 
 #include <QtCore/QMimeData>
 
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QApplication>
 #include <QtGui/QClipboard>
-#include <QtGui/QIcon>
-#include <QtGui/QKeySequence>
-#include <QtGui/QMessageBox>
 
 #include <string>
 #include <vector>
