@@ -16,7 +16,7 @@
 
 #include "generichighlighter.h"
 
-#include <assert.h>
+#include <cassert>
 
 namespace Avogadro {
 namespace QtGui {
@@ -31,9 +31,9 @@ GenericHighlighter::~GenericHighlighter()
 }
 
 GenericHighlighter::GenericHighlighter(const GenericHighlighter &other)
-  : QSyntaxHighlighter(static_cast<QObject*>(NULL)),
-    m_rules(other.m_rules)
+  : QSyntaxHighlighter(static_cast<QTextDocument *>(NULL))
 {
+  m_rules = other.m_rules;
 }
 
 GenericHighlighter& GenericHighlighter::operator=(GenericHighlighter other)

@@ -142,8 +142,8 @@ void QuantumInput::menuActivated()
 
   if (!dlg) {
     dlg = new InputGeneratorDialog(scriptFileName, theParent);
-    connect(&dlg->widget(), SIGNAL(openJobOutput(MoleQueue::JobObject)),
-            this, SLOT(openJobOutput(MoleQueue::JobObject)));
+    connect(&dlg->widget(), SIGNAL(openJobOutput(const::MoleQueue::JobObject&)),
+            this, SLOT(openJobOutput(const::MoleQueue::JobObject&)));
     m_dialogs.insert(scriptFileName, dlg);
   }
   dlg->setMolecule(m_molecule);

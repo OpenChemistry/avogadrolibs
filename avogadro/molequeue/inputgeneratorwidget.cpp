@@ -213,8 +213,8 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
       m_ui->tabWidget->insertTab(index, edit, fileName);
     }
 
-    QtGui::GenericHighlighter *highlighter(
-          m_inputGenerator.createFileHighlighter(fileName));
+    QtGui::GenericHighlighter *highlighter =
+            m_inputGenerator.createFileHighlighter(fileName);
     if (highlighter) {
       highlighter->setParent(this);
       highlighter->setDocument(edit->document());
