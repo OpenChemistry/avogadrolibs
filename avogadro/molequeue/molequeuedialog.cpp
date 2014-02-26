@@ -20,8 +20,8 @@
 
 #include <molequeue/client/jobobject.h>
 
-#include <QtGui/QMessageBox>
-#include <QtGui/QProgressDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressDialog>
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>

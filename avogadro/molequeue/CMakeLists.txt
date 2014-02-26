@@ -7,9 +7,8 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
-find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
-include_directories(SYSTEM ${QT_INCLUDES})
-add_definitions(${QT_DEFINITIONS})
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Network REQUIRED)
 
 set(HEADERS
   inputgenerator.h
@@ -37,13 +36,13 @@ set(UIS
   molequeuedialog.ui
   molequeuewidget.ui
 )
-qt4_wrap_ui(UI_SOURCES ${UIS})
+qt5_wrap_ui(UI_SOURCES ${UIS})
 list(APPEND SOURCES ${UI_SOURCES})
 
 avogadro_add_library(AvogadroMoleQueue ${HEADERS} ${SOURCES})
+qt5_use_modules(AvogadroMoleQueue Widgets Network)
 set_target_properties(AvogadroMoleQueue PROPERTIES AUTOMOC TRUE)
 target_link_libraries(AvogadroMoleQueue
   AvogadroQtGui
   MoleQueueClient
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY})
+  ${Qt5Widgets_LIBRARIES})

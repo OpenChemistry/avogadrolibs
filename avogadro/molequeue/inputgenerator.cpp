@@ -25,9 +25,8 @@
 #include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/pythonscript.h>
 
-#include <qjsondocument.h>
-#include <qjsonarray.h>
-
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonArray>
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 

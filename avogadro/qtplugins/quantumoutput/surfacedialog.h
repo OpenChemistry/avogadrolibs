@@ -18,7 +18,7 @@
 #ifndef AVOGADRO_QTPLUGINS_SURFACEDIALOG_H
 #define AVOGADRO_QTPLUGINS_SURFACEDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Ui {
 class SurfaceDialog;

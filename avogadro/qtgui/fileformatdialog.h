@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_QTGUI_FILEFORMATDIALOG_H
 #define AVOGADRO_QTGUI_FILEFORMATDIALOG_H
 
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QFileDialog>
 #include "avogadroqtguiexport.h"
 
 #include <avogadro/io/fileformat.h>

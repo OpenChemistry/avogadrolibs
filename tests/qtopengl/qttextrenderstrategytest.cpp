@@ -21,7 +21,7 @@
 
 #include <avogadro/core/vector.h>
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QImage>
 
 #include <QtCore/QDebug>

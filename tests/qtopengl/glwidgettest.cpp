@@ -20,7 +20,7 @@
 #include <utilities/vtktesting/imageregressiontest.h>
 
 #include <QtCore/QTimer>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QImage>
 
 #include <QtOpenGL/QGLFormat>

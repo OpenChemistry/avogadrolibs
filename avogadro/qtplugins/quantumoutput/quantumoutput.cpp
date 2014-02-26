@@ -37,9 +37,9 @@
 #include <avogadro/quantumio/mopacaux.h>
 
 #include <QtCore/QDebug>
-#include <QtGui/QAction>
-#include <QtGui/QFileDialog>
-#include <QtGui/QProgressDialog>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QProgressDialog>
 
 namespace Avogadro {
 namespace QtPlugins {

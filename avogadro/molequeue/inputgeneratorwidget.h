@@ -17,11 +17,11 @@
 #ifndef AVOGADRO_MOLEQUEUE_INPUTGENERATORWIDGET_H
 #define AVOGADRO_MOLEQUEUE_INPUTGENERATORWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 #include "inputgenerator.h"
 
-#include <qjsonobject.h>
+#include <QtCore/QJsonObject>
 
 class QJsonValue;
 class QTextEdit;

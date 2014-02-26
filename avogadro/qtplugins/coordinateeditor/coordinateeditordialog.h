@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_QTPLUGINS_COORDINATEEDITORDIALOG_H
 #define AVOGADRO_QTPLUGINS_COORDINATEEDITORDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Avogadro {
 namespace QtGui {

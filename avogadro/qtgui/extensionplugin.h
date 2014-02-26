@@ -142,6 +142,6 @@ public:
 } // End Avogadro namespace
 
 Q_DECLARE_INTERFACE(Avogadro::QtGui::ExtensionPluginFactory,
-                    "net.openchemistry.avogadro.extensionpluginfactory/2.0")
+                    "org.openchemistry.avogadro.ExtensionPluginFactory")
 
 #endif // AVOGADRO_QTGUI_EXTENSIONPLUGIN_H

@@ -31,14 +31,13 @@
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/glrenderer.h>
 
-#include <QtGui/QAction>
-#include <QtGui/QComboBox>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QComboBox>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
-#include <QtGui/QVBoxLayout>
 #include <QtGui/QWheelEvent>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
@@ -229,7 +228,7 @@ void Editor::reset()
 void Editor::emptyLeftClick(QMouseEvent *e)
 {
   // Add an atom at the clicked position
-  Vector2f windowPos(e->posF().x(), e->posF().y());
+  Vector2f windowPos(e->localPos().x(), e->localPos().y());
   Vector3f atomPos = m_glWidget->renderer().camera().unProject(windowPos);
   Atom newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber());
   newAtom.setPosition3d(atomPos.cast<double>());
@@ -439,7 +438,7 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   }
 
   if (newAtom.isValid()) {
-    Vector2f windowPos(e->posF().x(), e->posF().y());
+    Vector2f windowPos(e->localPos().x(), e->localPos().y());
     Vector3f oldPos(newAtom.position3d().cast<float>());
     Vector3f newPos = m_glWidget->renderer().camera().unProject(windowPos,
                                                                 oldPos);

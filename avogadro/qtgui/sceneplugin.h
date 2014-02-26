@@ -92,6 +92,6 @@ public:
 } // End Avogadro namespace
 
 Q_DECLARE_INTERFACE(Avogadro::QtGui::ScenePluginFactory,
-                    "org.openchemistry.avogadro.scenepluginfactory/2.0")
+                    "org.openchemistry.avogadro.ScenePluginFactory")
 
 #endif // AVOGADRO_QTGUI_SCENEPLUGIN_H

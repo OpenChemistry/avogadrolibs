@@ -3,9 +3,7 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
-find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
-include_directories(SYSTEM ${QT_INCLUDES})
-add_definitions(${QT_DEFINITIONS})
+find_package(Qt5Widgets REQUIRED)
 
 # Provide some simple API to find the plugins, scripts, etc.
 if(APPLE)
@@ -73,17 +71,15 @@ set(SOURCES
 set(UIS
   customelementdialog.ui
 )
-qt4_wrap_ui(UI_SOURCES ${UIS})
+qt5_wrap_ui(UI_SOURCES ${UIS})
 list(APPEND SOURCES ${UI_SOURCES})
 
 set(RCS
   qtgui.qrc
 )
-qt4_add_resources(RC_SOURCES ${RCS})
+qt5_add_resources(RC_SOURCES ${RCS})
 list(APPEND SOURCES ${RC_SOURCES})
 
 avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroQtGui
-  AvogadroIO
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY})
+qt5_use_modules(AvogadroQtGui Widgets)
+target_link_libraries(AvogadroQtGui AvogadroIO)

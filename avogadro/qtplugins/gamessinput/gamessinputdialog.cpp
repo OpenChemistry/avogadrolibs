@@ -30,9 +30,9 @@
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
-#include <QtGui/QProgressDialog>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressDialog>
 
 #include <QtCore/QFile>
 #include <QtCore/QSettings>

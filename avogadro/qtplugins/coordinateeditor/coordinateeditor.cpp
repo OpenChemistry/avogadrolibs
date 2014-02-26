@@ -18,7 +18,7 @@
 
 #include "coordinateeditordialog.h"
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 
 namespace Avogadro {
 namespace QtPlugins {

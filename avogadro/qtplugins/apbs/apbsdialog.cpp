@@ -208,7 +208,7 @@ void ApbsDialog::saveInputFile(const QString &fileName)
 
   QFile file(fileName);
   file.open(QFile::WriteOnly);
-  file.write(contents.toAscii());
+  file.write(contents.toLatin1());
   file.close();
 }
 

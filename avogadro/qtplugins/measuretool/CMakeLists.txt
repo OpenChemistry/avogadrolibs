@@ -1,3 +1,6 @@
+find_package(Qt5OpenGL REQUIRED)
+include_directories(SYSTEM ${Qt5OpenGL_INCLUDE_DIRS})
+
 set(measuretool_srcs
   measuretool.cpp
 )

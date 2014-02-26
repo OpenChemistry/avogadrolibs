@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_QTPLUGINS_UNITCELLDIALOG_H
 #define AVOGADRO_QTPLUGINS_UNITCELLDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/matrix.h>

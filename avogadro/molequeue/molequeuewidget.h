@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEWIDGET_H
 #define AVOGADRO_MOLEQUEUE_MOLEQUEUEWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include "avogadromolequeueexport.h"
 
 #include <avogadro/core/avogadrocore.h>

@@ -19,7 +19,7 @@
 #include <avogadro/core/hydrogentools.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtGui/QKeySequence>
 
 #include <QtCore/QStringList>

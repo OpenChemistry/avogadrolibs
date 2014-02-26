@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_QTPLUGINS_EDITORTOOLWIDGET_H
 #define AVOGADRO_QTPLUGINS_EDITORTOOLWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 namespace Avogadro {
 namespace QtGui {
