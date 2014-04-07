@@ -99,7 +99,7 @@ QVariant MoleculeModel::data(const QModelIndex &index_, int role) const
   if (index_.column() == 0) {
     switch (role) {
     case Qt::DisplayRole: {
-      std::string name = "Untitled";
+      std::string name = tr("Untitled").toStdString();
       if (item->hasData("name")) {
         name = item->data("name").toString();
       }
