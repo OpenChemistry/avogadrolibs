@@ -36,6 +36,7 @@ set(HEADERS
   generichighlighter.h
   meshgenerator.h
   molecule.h
+  moleculemodel.h
   periodictableview.h
   persistentatom.h
   persistentbond.h
@@ -58,6 +59,7 @@ set(SOURCES
   generichighlighter.cpp
   meshgenerator.cpp
   molecule.cpp
+  moleculemodel.cpp
   periodictablescene_p.cpp
   periodictableview.cpp
   pythonscript.cpp
