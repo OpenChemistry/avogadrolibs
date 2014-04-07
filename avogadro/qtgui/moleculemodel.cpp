@@ -17,6 +17,8 @@
 #include "moleculemodel.h"
 #include "molecule.h"
 
+#include <QtCore/QFileInfo>
+
 namespace Avogadro {
 namespace QtGui {
 
@@ -98,8 +100,13 @@ QVariant MoleculeModel::data(const QModelIndex &index_, int role) const
     switch (role) {
     case Qt::DisplayRole: {
       std::string name = "Untitled";
-      if (item->hasData("name"))
+      if (item->hasData("name")) {
         name = item->data("name").toString();
+      }
+      else if (item->hasData("fileName")) {
+        name = QFileInfo(item->data("fileName").toString().c_str())
+                .fileName().toStdString();
+      }
       return (name + " (" + item->formula() + ")").c_str();
     }
     case Qt::EditRole:
