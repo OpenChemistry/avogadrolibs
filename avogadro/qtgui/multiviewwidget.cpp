@@ -24,8 +24,6 @@
 #include <QtWidgets/QPushButton>
 #include <QtCore/QEvent>
 
-#include <QDebug>
-
 namespace Avogadro {
 namespace QtGui {
 
@@ -65,8 +63,7 @@ MultiViewWidget::~MultiViewWidget()
 void MultiViewWidget::addWidget(QWidget *widget)
 {
   if (widget) {
-    ContainerWidget *container = createContainer();
-    container->setViewWidget(widget);
+    ContainerWidget *container = createContainer(widget);
     m_children << container;
     if (m_children.size() == 1) {
       QVBoxLayout *widgetLayout = qobject_cast<QVBoxLayout *>(layout());
@@ -77,6 +74,7 @@ void MultiViewWidget::addWidget(QWidget *widget)
       }
       widgetLayout->addWidget(container);
     }
+    setActiveWidget(widget);
   }
 }
 
@@ -133,7 +131,8 @@ void MultiViewWidget::createView()
       if (widget) {
         ActiveWidgetFilter *filter = new ActiveWidgetFilter(this);
         widget->installEventFilter(filter);
-        container->layout()->replaceWidget(optionsWidget, widget);
+        container->layout()->removeWidget(optionsWidget);
+        container->layout()->addWidget(widget);
         optionsWidget->deleteLater();
         setActiveWidget(widget);
       }
@@ -141,14 +140,17 @@ void MultiViewWidget::createView()
   }
 }
 
-ContainerWidget * MultiViewWidget::createContainer()
+ContainerWidget * MultiViewWidget::createContainer(QWidget *widget)
 {
   ContainerWidget *container = new ContainerWidget;
   connect(container, SIGNAL(splitHorizontal()), SLOT(splitHorizontal()));
   connect(container, SIGNAL(splitVertical()), SLOT(splitVertical()));
 
+  if (widget) {
+    container->setViewWidget(widget);
+  }
   // If we have a factory, then create the options widget too!
-  if (m_factory) {
+  else if (m_factory) {
     QWidget *optionsWidget = new QWidget;
     QVBoxLayout *v = new QVBoxLayout;
     optionsWidget->setLayout(v);
@@ -173,16 +175,15 @@ ContainerWidget * MultiViewWidget::createContainer()
 void MultiViewWidget::splitView(Qt::Orientation orient,
                                 ContainerWidget *container)
 {
-  qDebug() << "Container" << container << "parent" << container->parent();
   QVBoxLayout *widgetLayout = qobject_cast<QVBoxLayout *>(container->parent());
   QSplitter *split = qobject_cast<QSplitter *>(container->parent());
   if (!widgetLayout)
     if (container->parent() == this)
       widgetLayout = qobject_cast<QVBoxLayout *>(layout());
-  qDebug() << "Layout" << widgetLayout;
   if (widgetLayout) {
     QSplitter *splitter = new QSplitter(orient, this);
-    widgetLayout->replaceWidget(container, splitter);
+    widgetLayout->removeWidget(container);
+    widgetLayout->addWidget(splitter);
     splitter->addWidget(container);
     container = createContainer();
     splitter->addWidget(container);

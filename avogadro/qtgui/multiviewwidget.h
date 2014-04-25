@@ -69,7 +69,7 @@ private:
   QString m_defaultView;
   QWidget *m_activeWidget;
 
-  ContainerWidget * createContainer();
+  ContainerWidget * createContainer(QWidget *widget = 0);
 
   void splitView(Qt::Orientation orient, ContainerWidget *container);
 };
