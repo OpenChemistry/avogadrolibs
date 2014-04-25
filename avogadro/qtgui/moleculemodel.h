@@ -20,11 +20,22 @@
 #include "avogadroqtguiexport.h"
 
 #include <QtCore/QAbstractItemModel>
+#include <Eigen/Geometry>
 
 namespace Avogadro {
 namespace QtGui {
 
 class Molecule;
+
+struct MoleculeSystem
+{
+  MoleculeSystem() : m_molecule(NULL), m_dirty(false), m_active(false) { }
+
+  Molecule *m_molecule;
+  Eigen::Affine3f m_modelView;
+  bool m_dirty;
+  bool m_active;
+};
 
 /**
  * @class MoleculeModel moleculemodel.h <avogadro/qtgui/moleculemodel.h>
