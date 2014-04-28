@@ -43,8 +43,10 @@ protected:
     Q_ASSERT(m_widget);
     if (e->type() == QEvent::MouseButtonPress) {
       QWidget *w = qobject_cast<QWidget *>(obj);
-      if (w)
+      if (w && w != m_widget->activeWidget()) {
         m_widget->setActiveWidget(w);
+        return true;
+      }
     }
     return QObject::eventFilter(obj, e);
   }
@@ -82,10 +84,7 @@ void MultiViewWidget::addWidget(QWidget *widget)
 
 QWidget * MultiViewWidget::activeWidget()
 {
-  if (m_children.empty())
-    return NULL;
-
-  return m_children.first();
+  return m_activeWidget;
 }
 
 void MultiViewWidget::setActiveWidget(QWidget *widget)
