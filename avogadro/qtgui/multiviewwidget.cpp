@@ -52,7 +52,8 @@ protected:
 };
 
 MultiViewWidget::MultiViewWidget(QWidget *p, Qt::WindowFlags f)
-  : QWidget(p, f), m_factory(NULL), m_activeWidget(NULL)
+  : QWidget(p, f), m_factory(NULL), m_activeWidget(NULL),
+    m_activeFilter(new ActiveWidgetFilter(this))
 {
 }
 
@@ -74,6 +75,7 @@ void MultiViewWidget::addWidget(QWidget *widget)
       }
       widgetLayout->addWidget(container);
     }
+    widget->installEventFilter(m_activeFilter);
     setActiveWidget(widget);
   }
 }
@@ -129,8 +131,7 @@ void MultiViewWidget::createView()
     if (container) {
       QWidget *widget = m_factory->createView(button->text());
       if (widget) {
-        ActiveWidgetFilter *filter = new ActiveWidgetFilter(this);
-        widget->installEventFilter(filter);
+        widget->installEventFilter(m_activeFilter);
         container->layout()->removeWidget(optionsWidget);
         container->layout()->addWidget(widget);
         optionsWidget->deleteLater();

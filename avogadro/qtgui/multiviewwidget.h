@@ -26,6 +26,7 @@ namespace QtGui {
 
 class ContainerWidget;
 class ViewFactory;
+class ActiveWidgetFilter;
 
 /**
  * @class MultiViewWidget multiviewwidget.h <avogadro/qtgui/multiviewwidget.h>
@@ -68,6 +69,7 @@ private:
   ViewFactory *m_factory;
   QString m_defaultView;
   QWidget *m_activeWidget;
+  ActiveWidgetFilter *m_activeFilter;
 
   ContainerWidget * createContainer(QWidget *widget = 0);
 
