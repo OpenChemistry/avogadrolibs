@@ -73,7 +73,10 @@ const QtGui::Molecule * GLWidget::molecule() const
 void GLWidget::updateScene()
 {
   // Build up the scene with the scene plugins, creating the appropriate nodes.
-  if (m_molecule) {
+  QtGui::Molecule *mol = m_molecule;
+  if (!mol)
+    mol = new QtGui::Molecule(this);
+  if (mol) {
     Rendering::GroupNode &node = m_renderer.scene().rootNode();
     node.clear();
     Rendering::GroupNode *moleculeNode = new Rendering::GroupNode(&node);
@@ -81,7 +84,7 @@ void GLWidget::updateScene()
     foreach (QtGui::ScenePlugin *scenePlugin,
              m_scenePlugins.activeScenePlugins()) {
       Rendering::GroupNode *engineNode = new Rendering::GroupNode(moleculeNode);
-      scenePlugin->process(*m_molecule, *engineNode);
+      scenePlugin->process(*mol, *engineNode);
     }
 
     // Let the tools perform any drawing they need to do.
@@ -96,8 +99,10 @@ void GLWidget::updateScene()
     }
 
     m_renderer.resetGeometry();
-    update();
+    updateGL();
   }
+  if (mol != m_molecule)
+    delete mol;
 }
 
 void GLWidget::clearScene()
@@ -108,7 +113,7 @@ void GLWidget::clearScene()
 void GLWidget::resetCamera()
 {
   m_renderer.resetCamera();
-  update();
+  updateGL();
 }
 
 void GLWidget::resetGeometry()
