@@ -23,7 +23,6 @@
 #include <avogadro/rendering/primitive.h>
 
 #include <QtCore/QPoint>
-#include <QtCore/Qt> // for Qt:: namespace
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -46,10 +45,20 @@ public:
   QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
   QWidget * toolWidget() const AVO_OVERRIDE;
 
-  void setMolecule(QtGui::Molecule *mol) AVO_OVERRIDE { m_molecule = mol; }
+  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE { }
+  void setEditMolecule(QtGui::RWMolecule *mol) AVO_OVERRIDE
+  {
+    m_molecule = mol;
+  }
+
   void setGLWidget(QtOpenGL::GLWidget *widget) AVO_OVERRIDE
   {
     m_glWidget = widget;
+  }
+
+  void setGLRenderer(Rendering::GLRenderer *renderer) AVO_OVERRIDE
+  {
+    m_renderer = renderer;
   }
 
   QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
@@ -83,8 +92,9 @@ private:
   void atomLeftDrag(QMouseEvent *e);
 
   QAction *m_activateAction;
-  QtGui::Molecule *m_molecule;
+  QtGui::RWMolecule *m_molecule;
   QtOpenGL::GLWidget *m_glWidget;
+  Rendering::GLRenderer *m_renderer;
   EditorToolWidget *m_toolWidget;
   Rendering::Identifier m_clickedObject;
   Rendering::Identifier m_newObject;

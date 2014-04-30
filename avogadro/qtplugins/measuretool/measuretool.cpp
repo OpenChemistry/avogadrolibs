@@ -32,12 +32,14 @@
 
 #include <avogadro/core/atom.h>
 #include <avogadro/core/elements.h>
-#include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
+#include <avogadro/qtgui/molecule.h>
 
 #include <QtWidgets/QAction>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
+
+#include <QDebug>
 
 #include <cmath>
 
@@ -56,7 +58,9 @@ namespace QtPlugins {
 MeasureTool::MeasureTool(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
     m_activateAction(new QAction(this)),
-    m_glWidget(NULL)
+    m_glWidget(NULL),
+    m_molecule(NULL),
+    m_renderer(NULL)
 {
   m_activateAction->setText(tr("Measure"));
   m_activateAction->setIcon(QIcon(":/icons/measuretool.png"));
@@ -73,12 +77,13 @@ QWidget * MeasureTool::toolWidget() const
 
 QUndoCommand * MeasureTool::mousePressEvent(QMouseEvent *e)
 {
-  if (e->button() != Qt::LeftButton
-      || !m_glWidget) {
+  if (e->button() != Qt::LeftButton || !m_renderer) {
     return NULL;
   }
 
-  Identifier hit = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
+  Identifier hit = m_renderer->hit(e->pos().x(), e->pos().y());
+
+  qDebug() << "hit:" << hit.molecule << hit.type << hit.index;
 
   // If an atom is clicked, accept the event, but don't add it to the atom list
   // until the button is released (this way the user can cancel the click by
@@ -92,12 +97,11 @@ QUndoCommand * MeasureTool::mousePressEvent(QMouseEvent *e)
 QUndoCommand * MeasureTool::mouseReleaseEvent(QMouseEvent *e)
 {
   // If the click is released on an atom, add it to the list
-  if (e->button() != Qt::LeftButton
-      || !m_glWidget) {
+  if (e->button() != Qt::LeftButton || !m_renderer) {
     return NULL;
   }
 
-  Identifier hit = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
+  Identifier hit = m_renderer->hit(e->pos().x(), e->pos().y());
 
   // Now add the atom on release.
   if (hit.type == Rendering::AtomType) {
@@ -112,8 +116,7 @@ QUndoCommand * MeasureTool::mouseReleaseEvent(QMouseEvent *e)
 QUndoCommand *MeasureTool::mouseDoubleClickEvent(QMouseEvent *e)
 {
   // Reset the atom list
-  if (e->button() == Qt::LeftButton
-      && !m_atoms.isEmpty()) {
+  if (e->button() == Qt::LeftButton && !m_atoms.isEmpty()) {
     m_atoms.clear();
     emit drawablesChanged();
     e->accept();
@@ -139,7 +142,7 @@ void MeasureTool::draw(Rendering::GroupNode &node)
     Identifier &ident = m_atoms[i];
     Q_ASSERT(ident.type == Rendering::AtomType);
     Q_ASSERT(ident.molecule != NULL);
-    Core::Atom atom = ident.molecule->atom(ident.index);
+    Core::Atom atom = m_molecule->atom(ident.index);
     Q_ASSERT(atom.isValid());
     unsigned char atomicNumber(atom.atomicNumber());
     positions[i] = atom.position3d();

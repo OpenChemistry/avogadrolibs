@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTOPENGL_GLWIDGET_H
-#define AVOGADRO_QTOPENGL_GLWIDGET_H
+#ifndef AVOGADRO_QTOPENGL_EDITGLWIDGET_H
+#define AVOGADRO_QTOPENGL_EDITGLWIDGET_H
 
 #include "avogadroqtopenglexport.h"
 
@@ -28,52 +28,52 @@
 namespace Avogadro {
 
 namespace QtGui {
-class Molecule;
+class RWMolecule;
 class ToolPlugin;
 }
 
 namespace QtOpenGL {
 
 /**
- * @class GLWidget glwidget.h <avogadro/qtopengl/glwidget.h>
- * @brief QGLWidget derived object for displaying 3D molecular geometry.
+ * @class EditGLWidget EditGLWidget.h <avogadro/qtopengl/EditGLWidget.h>
+ * @brief QEditGLWidget derived object for displaying 3D molecular geometry.
  * @author Marcus D. Hanwell
  *
  * This class creates the GL context, and contains a renderer to render the
  * 3D molecular geometry.
  *
- * The GLWidget also manages a collection of ToolPlugins that are used to
+ * The EditGLWidget also manages a collection of ToolPlugins that are used to
  * respond to user input events. Use setTools() or addTool() to add tools to the
  * widget. Use setActiveTool() to indicate which tool is active. The active tool
  * will be given the opportunity to handle input events first. If the active
  * tool does not handle the event, the default tool will be used. If the default
- * tool also ignores the event, it will be passed to QGLWidget's handlers.
+ * tool also ignores the event, it will be passed to QEditGLWidget's handlers.
  */
 
-class AVOGADROQTOPENGL_EXPORT GLWidget : public QGLWidget
+class AVOGADROQTOPENGL_EXPORT EditGLWidget : public QGLWidget
 {
   Q_OBJECT
 
 public:
-  explicit GLWidget(QWidget *parent = 0);
-  ~GLWidget();
+  explicit EditGLWidget(QWidget *parent = 0);
+  ~EditGLWidget();
 
   /** Set the molecule the widget will render. */
-  void setMolecule(QtGui::Molecule *molecule);
+  void setMolecule(QtGui::RWMolecule *molecule);
 
   /**
    * Get the molecule being rendered by the widget.
    * @{
    */
-  QtGui::Molecule * molecule();
-  const QtGui::Molecule * molecule() const;
+  QtGui::RWMolecule * molecule();
+  const QtGui::RWMolecule * molecule() const;
   /** @}*/
 
   /** Get a reference to the renderer for the widget. */
   Rendering::GLRenderer& renderer() { return m_renderer; }
 
   /**
-   * @return A list of the ToolPlugins owned by the GLWidget.
+   * @return A list of the ToolPlugins owned by the EditGLWidget.
    */
   QList<QtGui::ToolPlugin*> tools() const { return m_tools; }
 
@@ -88,7 +88,7 @@ public:
   QtGui::ToolPlugin * defaultTool() const { return m_defaultTool; }
 
   /**
-   * Get the GLWidget's ScenePluginModel, used to add, delete and modify the
+   * Get the EditGLWidget's ScenePluginModel, used to add, delete and modify the
    * scene plugin items.
    * @{
    */
@@ -97,7 +97,7 @@ public:
   /** @}*/
 
   /**
-   * Check if the GLWidget was able to acquire a context, and set up the
+   * Check if the EditGLWidget was able to acquire a context, and set up the
    * renderer correctly. If not valid, the error method may provide more
    * information.
    * @return true if value, false if not.
@@ -105,7 +105,7 @@ public:
   bool isValid() const { return m_renderer.isValid(); }
 
   /**
-   * Get the error(s), if any, encountered when setting up the GLWidget.
+   * Get the error(s), if any, encountered when setting up the EditGLWidget.
    * @return A free form string containing errors encountered.
    */
   QString error() const { return m_renderer.error().c_str(); }
@@ -132,13 +132,13 @@ public slots:
   void resetGeometry();
 
   /**
-   * Make the tools in toolList available to the GLWidget. The GLWidget takes
+   * Make the tools in toolList available to the EditGLWidget. The EditGLWidget takes
    * ownership of the tools.
    */
   void setTools(const QList<QtGui::ToolPlugin*> &toolList);
 
   /**
-   * Make tool available to the GLWidget. The GLWidget takes ownership of the
+   * Make tool available to the EditGLWidget. The EditGLWidget takes ownership of the
    * tool.
    */
   void addTool(QtGui::ToolPlugin *tool);
@@ -171,7 +171,7 @@ protected:
   /** Main entry point for all GL rendering. */
   void paintGL();
 
-  /** Reimplemented from QGLWidget @{ */
+  /** Reimplemented from QEditGLWidget @{ */
   void mouseDoubleClickEvent(QMouseEvent *);
   void mousePressEvent(QMouseEvent *);
   void mouseMoveEvent(QMouseEvent *);
@@ -182,7 +182,7 @@ protected:
   /** @} */
 
 private:
-  QPointer<QtGui::Molecule> m_molecule;
+  QPointer<QtGui::RWMolecule> m_molecule;
   QList<QtGui::ToolPlugin*> m_tools;
   QtGui::ToolPlugin *m_activeTool;
   QtGui::ToolPlugin *m_defaultTool;
@@ -193,4 +193,4 @@ private:
 } // End QtOpenGL namespace
 } // End Avogadro namespace
 
-#endif // AVOGADRO_QTOPENGL_GLWIDGET_H
+#endif // AVOGADRO_QTOPENGL_EDITGLWIDGDET_H

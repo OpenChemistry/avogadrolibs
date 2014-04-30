@@ -31,6 +31,8 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
 
+#include <QDebug>
+
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::QtGui::Molecule;
@@ -48,6 +50,7 @@ Manipulator::Manipulator(QObject *parent_)
     m_activateAction(new QAction(this)),
     m_molecule(NULL),
     m_glWidget(NULL),
+    m_renderer(NULL),
     m_pressedButtons(Qt::NoButton)
 {
   m_activateAction->setText(tr("Manipulate"));
@@ -65,14 +68,15 @@ QWidget *Manipulator::toolWidget() const
 
 QUndoCommand * Manipulator::mousePressEvent(QMouseEvent *e)
 {
-  if (!m_glWidget)
+  if (!m_renderer)
     return NULL;
 
   updatePressedButtons(e, false);
   m_lastMousePosition = e->pos();
 
   if (m_pressedButtons & Qt::LeftButton) {
-    m_object = m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
+    m_object = m_renderer->hit(e->pos().x(), e->pos().y());
+    qDebug() << m_object.molecule << m_object.type << m_object.index;
 
     switch (m_object.type) {
     case Rendering::AtomType:
@@ -88,7 +92,7 @@ QUndoCommand * Manipulator::mousePressEvent(QMouseEvent *e)
 
 QUndoCommand * Manipulator::mouseReleaseEvent(QMouseEvent *e)
 {
-  if (!m_glWidget)
+  if (!m_renderer)
     return NULL;
 
   updatePressedButtons(e, true);
@@ -111,21 +115,23 @@ QUndoCommand * Manipulator::mouseReleaseEvent(QMouseEvent *e)
 
 QUndoCommand * Manipulator::mouseMoveEvent(QMouseEvent *e)
 {
+  qDebug() << "move" << m_molecule
+              << reinterpret_cast<const QtGui::Molecule*>(m_object.molecule)
+           << m_object.molecule << m_object.type << m_object.index;
   e->ignore();
-  if (m_pressedButtons & Qt::LeftButton) {
-    if (m_object.type == Rendering::AtomType) {
-      if (m_object.molecule == m_molecule) {
-        // Update atom position
-        Atom atom = m_molecule->atom(m_object.index);
-        Vector2f windowPos(e->localPos().x(), e->localPos().y());
-        Vector3f oldPos(atom.position3d().cast<float>());
-        Vector3f newPos = m_glWidget->renderer().camera().unProject(windowPos,
-                                                                    oldPos);
-        atom.setPosition3d(newPos.cast<double>());
-        m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
-        e->accept();
-      }
-    }
+  if (m_pressedButtons & Qt::LeftButton
+      && m_object.type == Rendering::AtomType
+      && reinterpret_cast<const QtGui::Molecule*>(m_object.molecule) == m_molecule) {
+    // Update atom position
+    Atom atom = m_molecule->atom(m_object.index);
+    qDebug() << "Mouse move...";
+    Vector2f windowPos(e->localPos().x(), e->localPos().y());
+    Vector3f oldPos(atom.position3d().cast<float>());
+    Vector3f newPos = m_glWidget->renderer().camera().unProject(windowPos,
+                                                                oldPos);
+    atom.setPosition3d(newPos.cast<double>());
+    m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+    e->accept();
   }
   return NULL;
 }

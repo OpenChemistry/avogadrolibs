@@ -49,6 +49,10 @@ public:
   {
     m_glWidget = widget;
   }
+  void setGLRenderer(Rendering::GLRenderer *renderer) AVO_OVERRIDE
+  {
+    m_renderer = renderer;
+  }
 
   QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
   QUndoCommand * mouseReleaseEvent(QMouseEvent *e) AVO_OVERRIDE;
@@ -66,6 +70,7 @@ private:
   QAction *m_activateAction;
   QtGui::Molecule *m_molecule;
   QtOpenGL::GLWidget *m_glWidget;
+  Rendering::GLRenderer *m_renderer;
   Rendering::Identifier m_object;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;

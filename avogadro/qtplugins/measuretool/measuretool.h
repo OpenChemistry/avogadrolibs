@@ -50,8 +50,9 @@ public:
   QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
   QWidget * toolWidget() const AVO_OVERRIDE;
 
-  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE { m_atoms.clear(); }
+  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE;
   void setGLWidget(QtOpenGL::GLWidget *widget) AVO_OVERRIDE;
+  void setGLRenderer(Rendering::GLRenderer *renderer) AVO_OVERRIDE;
 
   QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
   QUndoCommand * mouseReleaseEvent(QMouseEvent *e) AVO_OVERRIDE;
@@ -67,12 +68,27 @@ private:
   bool toggleAtom(const Rendering::Identifier &atom);
   QAction *m_activateAction;
   QtOpenGL::GLWidget *m_glWidget;
+  QtGui::Molecule *m_molecule;
+  Rendering::GLRenderer *m_renderer;
   QVector<Rendering::Identifier> m_atoms;
 };
 
 inline void MeasureTool::setGLWidget(QtOpenGL::GLWidget *widget)
 {
   m_glWidget = widget;
+}
+
+inline void MeasureTool::setMolecule(QtGui::Molecule *mol)
+{
+  if (m_molecule != mol) {
+    m_atoms.clear();
+    m_molecule = mol;
+  }
+}
+
+inline void MeasureTool::setGLRenderer(Rendering::GLRenderer *renderer)
+{
+  m_renderer = renderer;
 }
 
 } // namespace QtPlugins
