@@ -187,6 +187,11 @@ void MultiViewWidget::splitView(Qt::Orientation orient,
     splitter->addWidget(container);
     container = createContainer();
     splitter->addWidget(container);
+    QList<int> sizes;
+    int s = Qt::Horizontal ? splitter->size().width() / 2
+                           : splitter->size().height() / 2;
+    sizes << s << s;
+    splitter->setSizes(sizes);
   }
   else if (split) {
     QSplitter *splitter = new QSplitter(orient, this);
@@ -195,6 +200,11 @@ void MultiViewWidget::splitView(Qt::Orientation orient,
     container = createContainer();
     splitter->addWidget(container);
     split->insertWidget(idx, splitter);
+    QList<int> sizes;
+    int s = Qt::Horizontal ? splitter->size().width() / 2
+                           : splitter->size().height() / 2;
+    sizes << s << s;
+    splitter->setSizes(sizes);
   }
 }
 
