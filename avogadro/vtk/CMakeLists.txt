@@ -9,18 +9,24 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
   add_definitions(-DGLEW_STATIC)
 endif()
 
-find_package(VTK COMPONENTS vtkRenderingOpenGL REQUIRED)
+find_package(Qt5OpenGL REQUIRED)
+
+find_package(VTK COMPONENTS vtkRenderingOpenGL vtkGUISupportQt REQUIRED)
 include_directories(SYSTEM ${VTK_INCLUDE_DIRS})
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ${VTK_DEFINITIONS})
 
 set(HEADERS
   vtkAvogadroActor.h
+  vtkglwidget.h
 )
 
 set(SOURCES
   vtkAvogadroActor.cxx
+  vtkglwidget.cpp
 )
 
 avogadro_add_library(AvogadroVtk ${HEADERS} ${SOURCES})
+qt5_use_modules(AvogadroVtk OpenGL)
+set_target_properties(AvogadroVtk PROPERTIES AUTOMOC TRUE)
 target_link_libraries(AvogadroVtk AvogadroRendering
-  vtkRenderingOpenGL)
+  vtkRenderingOpenGL vtkGUISupportQt)
