@@ -27,26 +27,45 @@
 #include <vtkRenderViewBase.h>
 #include <vtkVolume.h>
 #include <vtkInteractorStyleTrackballCamera.h>
+#include <vtkRenderer.h>
+#include <vtkRenderWindow.h>
+
+#include <vtkSphereSource.h>
+#include <vtkPolyDataMapper.h>
 
 namespace Avogadro {
 namespace VTK {
 
 vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
-  : QVTKWidget(p, f)
+  : QVTKWidget(p, f),
+    m_activeTool(NULL),
+    m_defaultTool(NULL)
 {
-  setFocusPolicy(Qt::ClickFocus);
+  //setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins,
           SIGNAL(pluginStateChanged(Avogadro::QtGui::ScenePlugin*)),
           SLOT(updateScene()));
 
   // Set up our renderer, window, scene, etc.
-  m_context->SetInteractor(this->GetInteractor());
-  this->SetRenderWindow(m_context->GetRenderWindow());
+  GetRenderWindow()->AddRenderer(m_vtkRenderer.Get());
+
+  //m_context->SetInteractor(this->GetInteractor());
+  //this->SetRenderWindow(m_context->GetRenderWindow());
   vtkNew<vtkInteractorStyleTrackballCamera> interactor;
-  m_context->GetInteractor()->SetInteractorStyle(interactor.Get());
+  GetInteractor()->SetInteractorStyle(interactor.Get());
+  GetInteractor()->Initialize();
 
   m_actor->setScene(&this->renderer().scene());
-  m_context->GetRenderer()->AddActor(m_actor.Get());
+  m_vtkRenderer->AddActor(m_actor.Get());
+
+  vtkNew<vtkSphereSource> sphere;
+  sphere->SetRadius(0.5);
+  sphere->SetCenter(0, 0, 0);
+  vtkNew<vtkPolyDataMapper> mapper;
+  mapper->SetInputConnection(sphere->GetOutputPort());
+  vtkNew<vtkActor> sphereActor;
+  sphereActor->SetMapper(mapper.Get());
+  m_vtkRenderer->AddActor(sphereActor.Get());
 }
 
 vtkGLWidget::~vtkGLWidget()
@@ -76,53 +95,56 @@ const QtGui::Molecule * vtkGLWidget::molecule() const
 
 void vtkGLWidget::updateScene()
 {
+
+
+  return;
   // Build up the scene with the scene plugins, creating the appropriate nodes.
   QtGui::Molecule *mol = m_molecule;
   if (!mol)
     mol = new QtGui::Molecule(this);
-  if (mol) {
-    Rendering::GroupNode &node = m_renderer.scene().rootNode();
-    node.clear();
-    Rendering::GroupNode *moleculeNode = new Rendering::GroupNode(&node);
+//  if (mol) {
+//    Rendering::GroupNode &node = m_renderer.scene().rootNode();
+//    node.clear();
+//    Rendering::GroupNode *moleculeNode = new Rendering::GroupNode(&node);
 
-    foreach (QtGui::ScenePlugin *scenePlugin,
-             m_scenePlugins.activeScenePlugins()) {
-      Rendering::GroupNode *engineNode = new Rendering::GroupNode(moleculeNode);
-      scenePlugin->process(*mol, *engineNode);
-    }
+//    foreach (QtGui::ScenePlugin *scenePlugin,
+//             m_scenePlugins.activeScenePlugins()) {
+//      Rendering::GroupNode *engineNode = new Rendering::GroupNode(moleculeNode);
+//      scenePlugin->process(*mol, *engineNode);
+//    }
 
-    // Let the tools perform any drawing they need to do.
-    if (m_activeTool) {
-      Rendering::GroupNode *toolNode = new Rendering::GroupNode(moleculeNode);
-      m_activeTool->draw(*toolNode);
-    }
+//    // Let the tools perform any drawing they need to do.
+//    if (m_activeTool) {
+//      Rendering::GroupNode *toolNode = new Rendering::GroupNode(moleculeNode);
+//      m_activeTool->draw(*toolNode);
+//    }
 
-    if (m_defaultTool) {
-      Rendering::GroupNode *toolNode = new Rendering::GroupNode(moleculeNode);
-      m_defaultTool->draw(*toolNode);
-    }
+//    if (m_defaultTool) {
+//      Rendering::GroupNode *toolNode = new Rendering::GroupNode(moleculeNode);
+//      m_defaultTool->draw(*toolNode);
+//    }
 
-    m_renderer.resetGeometry();
+  //  m_renderer.resetGeometry();
     update();
-  }
+//  }
   if (mol != m_molecule)
     delete mol;
 }
 
 void vtkGLWidget::clearScene()
 {
-  m_renderer.scene().clear();
+  //m_renderer.scene().clear();
 }
 
 void vtkGLWidget::resetCamera()
 {
-  m_renderer.resetCamera();
+  //m_renderer.resetCamera();
   update();
 }
 
 void vtkGLWidget::resetGeometry()
 {
-  m_renderer.resetGeometry();
+  //m_renderer.resetGeometry();
 }
 
 }

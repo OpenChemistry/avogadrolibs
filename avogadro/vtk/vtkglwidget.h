@@ -29,7 +29,8 @@
 
 class vtkAvogadroActor;
 class vtkLookupTable;
-class vtkRenderViewBase;
+//class vtkRenderViewBase;
+class vtkRenderer;
 class vtkVolume;
 
 namespace Avogadro {
@@ -99,7 +100,8 @@ private:
   QtGui::ScenePluginModel m_scenePlugins;
 
   vtkNew<vtkAvogadroActor> m_actor;
-  vtkNew<vtkRenderViewBase> m_context;
+  //vtkNew<vtkRenderViewBase> m_context;
+  vtkNew<vtkRenderer> m_vtkRenderer;
   vtkNew<vtkLookupTable> m_lut;
   vtkSmartPointer<vtkVolume> m_volume;
 };

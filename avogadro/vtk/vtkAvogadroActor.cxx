@@ -34,7 +34,7 @@ using Avogadro::Rendering::GLRenderVisitor;
 vtkStandardNewMacro(vtkAvogadroActor)
 
 vtkAvogadroActor::vtkAvogadroActor()
-  : m_scene(new Avogadro::Rendering::Scene)
+  : m_scene(new Avogadro::Rendering::Scene), m_initialized(false)
 {
   for (short i = 0; i < 6; ++i)
     m_bounds[i] = 0.0;
@@ -47,6 +47,23 @@ vtkAvogadroActor::~vtkAvogadroActor()
 
 int vtkAvogadroActor::RenderOpaqueGeometry(vtkViewport *)
 {
+  if (!m_initialized) {
+    GLenum result = glewInit();
+    if (result != GLEW_OK) {
+      cout << "Error, could not initialize GLEW." << endl;
+      return 0;
+    }
+    if (!GLEW_VERSION_2_1) {
+      cout << "GL version 2.1 is not supported by your GPU." << endl;
+      return 0;
+    }
+    m_initialized = true;
+  }
+
+  float vals[] = { 0.0, 0.0 };
+  glGetFloatv(GL_DEPTH_RANGE, vals);
+  cout << "Depth range " << vals[0] << " -> " << vals[1] << endl;
+
   // Figure out the current model view and projection matrices for our camera.
   Camera camera;
   Affine3f mv, proj;
@@ -54,9 +71,12 @@ int vtkAvogadroActor::RenderOpaqueGeometry(vtkViewport *)
   glGetFloatv(GL_PROJECTION_MATRIX, proj.matrix().data());
   camera.setModelView(mv);
   camera.setProjection(proj);
+  //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  //glEnable(GL_DEPTH_TEST);
 
   // Render the Avogadro scene using the GLRenderVisitor and return.
   GLRenderVisitor visitor(camera);
+  visitor.setRenderPass(Avogadro::Rendering::OpaquePass);
   m_scene->rootNode().accept(visitor);
 
   return 1;

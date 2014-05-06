@@ -13,7 +13,8 @@ find_package(Qt5OpenGL REQUIRED)
 
 find_package(VTK
   COMPONENTS
-    vtkRenderingOpenGL vtkGUISupportQt vtkViewsCore vtkRenderingFreeTypeOpenGL
+    vtkRenderingOpenGL vtkGUISupportQtOpenGL vtkRenderingFreeTypeOpenGL
+    vtkDomainsChemistry
   REQUIRED)
 include_directories(SYSTEM ${VTK_INCLUDE_DIRS})
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ${VTK_DEFINITIONS})
