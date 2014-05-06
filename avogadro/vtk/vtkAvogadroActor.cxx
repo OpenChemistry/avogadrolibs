@@ -60,10 +60,6 @@ int vtkAvogadroActor::RenderOpaqueGeometry(vtkViewport *)
     m_initialized = true;
   }
 
-  float vals[] = { 0.0, 0.0 };
-  glGetFloatv(GL_DEPTH_RANGE, vals);
-  cout << "Depth range " << vals[0] << " -> " << vals[1] << endl;
-
   // Figure out the current model view and projection matrices for our camera.
   Camera camera;
   Affine3f mv, proj;

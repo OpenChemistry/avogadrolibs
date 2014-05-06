@@ -14,7 +14,7 @@ find_package(Qt5OpenGL REQUIRED)
 find_package(VTK
   COMPONENTS
     vtkRenderingOpenGL vtkGUISupportQtOpenGL vtkRenderingFreeTypeOpenGL
-    vtkDomainsChemistry
+    vtkDomainsChemistry vtkRenderingVolumeOpenGL
   REQUIRED)
 include_directories(SYSTEM ${VTK_INCLUDE_DIRS})
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ${VTK_DEFINITIONS})
@@ -33,4 +33,5 @@ avogadro_add_library(AvogadroVtk ${HEADERS} ${SOURCES})
 qt5_use_modules(AvogadroVtk OpenGL)
 set_target_properties(AvogadroVtk PROPERTIES AUTOMOC TRUE)
 target_link_libraries(AvogadroVtk AvogadroRendering AvogadroQtGui
-  vtkRenderingOpenGL vtkGUISupportQt vtkRenderingFreeTypeOpenGL vtkViewsCore)
+  vtkRenderingOpenGL vtkGUISupportQt vtkRenderingFreeTypeOpenGL
+  vtkRenderingVolumeOpenGL)

@@ -154,7 +154,7 @@ void QuantumOutput::calculateMolecularOrbital(int molecularOrbital,
       m_progressDialog->setWindowModality(Qt::NonModal);
     }
     if (!m_cube)
-      m_cube = new Cube;
+      m_cube = m_molecule->addCube();
 
     if (!m_concurrent)
       m_concurrent = new GaussianSetConcurrent(this);
