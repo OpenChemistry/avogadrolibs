@@ -34,7 +34,7 @@ using Avogadro::Rendering::GLRenderVisitor;
 vtkStandardNewMacro(vtkAvogadroActor)
 
 vtkAvogadroActor::vtkAvogadroActor()
-  : m_scene(new Avogadro::Rendering::Scene), m_initialized(false)
+  : m_scene(NULL), m_initialized(false)
 {
   for (short i = 0; i < 6; ++i)
     m_bounds[i] = 0.0;
@@ -42,7 +42,6 @@ vtkAvogadroActor::vtkAvogadroActor()
 
 vtkAvogadroActor::~vtkAvogadroActor()
 {
-  delete m_scene;
 }
 
 int vtkAvogadroActor::RenderOpaqueGeometry(vtkViewport *)
@@ -59,6 +58,8 @@ int vtkAvogadroActor::RenderOpaqueGeometry(vtkViewport *)
     }
     m_initialized = true;
   }
+  if (!m_scene)
+    return 0;
 
   // Figure out the current model view and projection matrices for our camera.
   Camera camera;
@@ -107,10 +108,7 @@ double * vtkAvogadroActor::GetBounds()
 
 void vtkAvogadroActor::setScene(Avogadro::Rendering::Scene *scene)
 {
-  if (m_scene != scene)
-    delete m_scene;
   m_scene = scene;
-  Modified();
 }
 
 void vtkAvogadroActor::PrintSelf(ostream &os, vtkIndent indent)
