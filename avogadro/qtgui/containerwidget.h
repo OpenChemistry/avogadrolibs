@@ -50,6 +50,7 @@ public:
 signals:
   void splitVertical();
   void splitHorizontal();
+  void closeView();
 
 private:
   QWidget *m_viewWidget;

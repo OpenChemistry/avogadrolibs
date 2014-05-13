@@ -63,6 +63,7 @@ public slots:
   void splitHorizontal();
   void splitVertical();
   void createView();
+  void removeView();
 
 private:
   QList<ContainerWidget *> m_children;

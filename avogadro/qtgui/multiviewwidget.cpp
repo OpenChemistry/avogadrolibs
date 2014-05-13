@@ -140,11 +140,50 @@ void MultiViewWidget::createView()
   }
 }
 
+void MultiViewWidget::removeView()
+{
+  ContainerWidget *container = qobject_cast<ContainerWidget *>(sender());
+  if (container) {
+    QSplitter *splitter = qobject_cast<QSplitter *>(container->parent());
+    if (splitter && splitter->count() == 2) {
+      // Get its parent, and insert the other widget into it, delete this widget.
+      QSplitter *splitterParent = qobject_cast<QSplitter *>(splitter->parent());
+      QWidget *moveWidget = splitter->widget(0);
+      if (moveWidget == container)
+        moveWidget = splitter->widget(1);
+      setActiveWidget(moveWidget);
+      if (splitterParent) {
+        int idx = splitterParent->indexOf(splitter);
+        splitterParent->insertWidget(idx, moveWidget);
+        splitter->deleteLater();
+      }
+      else if (splitter->parent() == this) {
+        // No more splits - back to single view widget.
+        QVBoxLayout *layoutParent = qobject_cast<QVBoxLayout *>(layout());
+        if (layoutParent) {
+          layoutParent->addWidget(moveWidget);
+          layoutParent->removeWidget(splitter);
+          splitter->deleteLater();
+        }
+      }
+    }
+    else if (container->parent() == this) {
+      // Delete the current container, and create the option container.
+      QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(layout());
+      container->deleteLater();
+      ContainerWidget *newContainer = createContainer();
+      vLayout->addWidget(newContainer);
+      setActiveWidget(newContainer);
+    }
+  }
+}
+
 ContainerWidget * MultiViewWidget::createContainer(QWidget *widget)
 {
   ContainerWidget *container = new ContainerWidget;
   connect(container, SIGNAL(splitHorizontal()), SLOT(splitHorizontal()));
   connect(container, SIGNAL(splitVertical()), SLOT(splitVertical()));
+  connect(container, SIGNAL(closeView()), SLOT(removeView()));
 
   if (widget) {
     container->setViewWidget(widget);

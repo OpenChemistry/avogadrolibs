@@ -42,7 +42,8 @@ ContainerWidget::ContainerWidget(QWidget *p, Qt::WindowFlags f)
   button = new QPushButton(tr("Split Vertical"), this);
   connect(button, SIGNAL(clicked()), SIGNAL(splitVertical()));
   h->addWidget(button);
-  button = new QPushButton(tr("Maximize"), this);
+  button = new QPushButton(tr("Close"), this);
+  connect(button, SIGNAL(clicked()), SIGNAL(closeView()));
   h->addWidget(button);
   v->addLayout(h);
   setLayout(v);
