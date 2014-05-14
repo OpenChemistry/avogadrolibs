@@ -150,16 +150,13 @@ vtkGLWidget::vtkGLWidget(QWidget* p, const QGLWidget* shareWidget,
     m_activeTool(NULL),
     m_defaultTool(NULL)
 {
-  //setFocusPolicy(Qt::ClickFocus);
+  setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins,
           SIGNAL(pluginStateChanged(Avogadro::QtGui::ScenePlugin*)),
           SLOT(updateScene()));
 
   // Set up our renderer, window, scene, etc.
   GetRenderWindow()->AddRenderer(m_vtkRenderer.Get());
-
-  //m_context->SetInteractor(this->GetInteractor());
-  //this->SetRenderWindow(m_context->GetRenderWindow());
   vtkNew<vtkInteractorStyleTrackballCamera> interactor;
   GetInteractor()->SetInteractorStyle(interactor.Get());
   GetInteractor()->Initialize();
@@ -169,15 +166,6 @@ vtkGLWidget::vtkGLWidget(QWidget* p, const QGLWidget* shareWidget,
 
   //GetRenderWindow()->SetSwapBuffers(0);
   //setAutoBufferSwap(true);
-
-  /*vtkNew<vtkSphereSource> sphere;
-  sphere->SetRadius(0.5);
-  sphere->SetCenter(0, 0, 0);
-  vtkNew<vtkPolyDataMapper> mapper;
-  mapper->SetInputConnection(sphere->GetOutputPort());
-  vtkNew<vtkActor> sphereActor;
-  sphereActor->SetMapper(mapper.Get());
-  m_vtkRenderer->AddActor(sphereActor.Get());*/
 }
 
 vtkGLWidget::~vtkGLWidget()
@@ -246,18 +234,18 @@ void vtkGLWidget::updateScene()
 
 void vtkGLWidget::clearScene()
 {
-  //m_renderer.scene().clear();
+  m_renderer.scene().clear();
 }
 
 void vtkGLWidget::resetCamera()
 {
-  //m_renderer.resetCamera();
+  m_renderer.resetCamera();
   update();
 }
 
 void vtkGLWidget::resetGeometry()
 {
-  //m_renderer.resetGeometry();
+  m_renderer.resetGeometry();
 }
 
 }
