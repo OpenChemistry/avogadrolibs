@@ -18,7 +18,7 @@
 #define AVOGADRO_VTKGLWIDGET_H
 
 #include "avogadrovtkexport.h"
-#include <QVTKWidget.h>
+#include <QVTKWidget2.h>
 #include <vtkNew.h>
 #include <vtkSmartPointer.h>
 
@@ -42,12 +42,13 @@ class ToolPlugin;
 
 namespace VTK {
 
-class AVOGADROVTK_EXPORT vtkGLWidget : public QVTKWidget
+class AVOGADROVTK_EXPORT vtkGLWidget : public QVTKWidget2
 {
   Q_OBJECT
 
 public:
-  vtkGLWidget(QWidget* p = NULL, Qt::WindowFlags f = 0);
+  vtkGLWidget(QWidget* p = NULL, const QGLWidget* shareWidget = 0,
+              Qt::WindowFlags f = 0);
   ~vtkGLWidget();
 
   /** Set the molecule the widget will render. */

@@ -27,9 +27,10 @@
 #include <vtkLookupTable.h>
 #include <vtkRenderViewBase.h>
 #include <vtkVolume.h>
+#include <QVTKInteractor.h>
 #include <vtkInteractorStyleTrackballCamera.h>
 #include <vtkRenderer.h>
-#include <vtkRenderWindow.h>
+#include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkImageData.h>
 #include <vtkImageShiftScale.h>
 #include <vtkSmartVolumeMapper.h>
@@ -143,8 +144,9 @@ vtkVolume * cubeVolume(Core::Cube *cube)
   return volume;
 }
 
-vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
-  : QVTKWidget(p, f),
+vtkGLWidget::vtkGLWidget(QWidget* p, const QGLWidget* shareWidget,
+                         Qt::WindowFlags f)
+  : QVTKWidget2(p, shareWidget, f),
     m_activeTool(NULL),
     m_defaultTool(NULL)
 {
@@ -164,6 +166,9 @@ vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
 
   m_actor->setScene(&this->renderer().scene());
   m_vtkRenderer->AddActor(m_actor.Get());
+
+  //GetRenderWindow()->SetSwapBuffers(0);
+  //setAutoBufferSwap(true);
 
   /*vtkNew<vtkSphereSource> sphere;
   sphere->SetRadius(0.5);

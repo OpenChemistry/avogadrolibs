@@ -33,5 +33,5 @@ avogadro_add_library(AvogadroVtk ${HEADERS} ${SOURCES})
 qt5_use_modules(AvogadroVtk OpenGL)
 set_target_properties(AvogadroVtk PROPERTIES AUTOMOC TRUE)
 target_link_libraries(AvogadroVtk AvogadroRendering AvogadroQtGui
-  vtkRenderingOpenGL vtkGUISupportQt vtkRenderingFreeTypeOpenGL
+  vtkRenderingOpenGL vtkGUISupportQtOpenGL vtkRenderingFreeTypeOpenGL
   vtkRenderingVolumeOpenGL)
