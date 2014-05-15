@@ -92,7 +92,6 @@ QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
           static_cast<float>(delta.x()) * ROTATION_SPEED, yAxis);
     m_renderer->camera().translate(-center);
 
-    m_glWidget->update();
     e->accept();
   }
   // Translate
@@ -105,7 +104,6 @@ QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
 
     m_renderer->camera().translate(to - from);
 
-    m_glWidget->update();
     e->accept();
   }
   // Tilt/zoom
@@ -127,7 +125,6 @@ QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
     m_renderer->camera().translate(
           static_cast<float>(delta.y()) * ZOOM_SPEED * zAxis);
 
-    m_glWidget->update();
     e->accept();
   }
 
@@ -140,8 +137,10 @@ QUndoCommand * Navigator::mouseDoubleClickEvent(QMouseEvent *e)
 {
   // Reset
   if (e->button() == Qt::MiddleButton) {
-    m_glWidget->resetCamera();
-    e->accept();
+    if (m_glWidget) {
+      m_glWidget->resetCamera();
+      e->accept();
+    }
   }
   return NULL;
 }
@@ -156,7 +155,6 @@ QUndoCommand * Navigator::wheelEvent(QWheelEvent *e)
 
   m_renderer->camera().translate(zAxis * e->delta() * ZOOM_SPEED);
 
-  m_glWidget->update();
   e->accept();
   return NULL;
 }
