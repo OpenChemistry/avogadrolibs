@@ -103,6 +103,12 @@ signals:
    */
   void drawablesChanged();
 
+  /**
+   * Emitted when something changed (camera, etc) and the molecule should be
+   * redrawn.
+   */
+  void updateRequested();
+
 public slots:
   /**
    * Called when the current molecule changes.

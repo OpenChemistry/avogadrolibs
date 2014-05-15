@@ -130,6 +130,9 @@ QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
 
   m_lastMousePosition = e->pos();
 
+  if (e->isAccepted())
+    emit updateRequested();
+
   return NULL;
 }
 
@@ -140,6 +143,7 @@ QUndoCommand * Navigator::mouseDoubleClickEvent(QMouseEvent *e)
     if (m_glWidget) {
       m_glWidget->resetCamera();
       e->accept();
+      emit updateRequested();
     }
   }
   return NULL;
@@ -156,6 +160,7 @@ QUndoCommand * Navigator::wheelEvent(QWheelEvent *e)
   m_renderer->camera().translate(zAxis * e->delta() * ZOOM_SPEED);
 
   e->accept();
+  emit updateRequested();
   return NULL;
 }
 
