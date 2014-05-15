@@ -34,7 +34,6 @@
 
 namespace Avogadro {
 namespace QtGui {
-class RWMolecule;
 
 /** Concrete atom/bond proxy classes for RWMolecule. @{ */
 class RWAtom;
@@ -385,11 +384,28 @@ public:
   class UndoCommand;
   friend class UndoCommand;
 
-protected: // methods
+public slots:
+  /**
+   * @brief Force the molecule to emit the changed() signal.
+   * @param change See changed().
+   */
+  void emitChanged(unsigned int change);
+
+signals:
+  /**
+   * @brief Indicates that the molecule has changed.
+   * @param change Use the MoleculeChange enum to check what has changed.
+   *
+   * The @p change variable indicates what has changed, i.e. if
+   * change & Atoms == true then atoms were changed in some way, and if
+   * change & Removed == true then one or more atoms were removed.
+   */
+  void changed(unsigned int change);
+
+protected:
   Index findAtomUniqueId(Index atomId) const;
   Index findBondUniqueId(Index bondId) const;
 
-protected: // members
   Core::Array<Index> m_atomUniqueIds;
   Core::Array<Index> m_bondUniqueIds;
   Core::Array<unsigned char> m_atomicNumbers;

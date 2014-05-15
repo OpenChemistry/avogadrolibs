@@ -24,6 +24,7 @@
 #include <avogadro/core/hydrogentools.h>
 #include <avogadro/core/vector.h>
 
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
 #include <avogadro/qtopengl/glwidget.h>
@@ -240,7 +241,7 @@ void Editor::emptyLeftClick(QMouseEvent *e)
   m_clickedObject.index = newAtom.index();
 
   // Emit changed signal
-  //m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+  m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
 
   e->accept();
 }
@@ -254,7 +255,7 @@ void Editor::atomLeftClick(QMouseEvent *e)
     if (atom.atomicNumber() != atomicNumber) {
       m_clickedAtomicNumber = atom.atomicNumber();
       atom.setAtomicNumber(atomicNumber);
-      //m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+      m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
     }
     e->accept();
   }
@@ -264,7 +265,7 @@ void Editor::bondLeftClick(QMouseEvent *e)
 {
   RWBond bond = m_molecule->bond(m_clickedObject.index);
   bond.setOrder(static_cast<unsigned char>((bond.order() % 3)  + 1));
-  //m_molecule->emitChanged(Molecule::Bonds | Molecule::Modified);
+  m_molecule->emitChanged(Molecule::Bonds | Molecule::Modified);
   e->accept();
 }
 
@@ -272,14 +273,14 @@ void Editor::atomRightClick(QMouseEvent *e)
 {
   e->accept();
   m_molecule->removeAtom(m_clickedObject.index);
-  //m_molecule->emitChanged(Molecule::Atoms | Molecule::Removed);
+  m_molecule->emitChanged(Molecule::Atoms | Molecule::Removed);
 }
 
 void Editor::bondRightClick(QMouseEvent *e)
 {
   e->accept();
   m_molecule->removeBond(m_clickedObject.index);
-  //m_molecule->emitChanged(Molecule::Bonds | Molecule::Removed);
+  m_molecule->emitChanged(Molecule::Bonds | Molecule::Removed);
 }
 
 void Editor::atomLeftDrag(QMouseEvent *e)
@@ -288,7 +289,7 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   e->accept();
 
   // Build up a MoleculeChanges bitfield
-  //Molecule::MoleculeChanges changes = Molecule::NoChange;
+  Molecule::MoleculeChanges changes = Molecule::NoChange;
 
   // Get the list of hits at the current mouse position:
   std::multimap<float, Identifier> hits =
@@ -311,15 +312,15 @@ void Editor::atomLeftDrag(QMouseEvent *e)
     if (m_newObject.type == Rendering::AtomType
         && m_molecule == m_newObject.molecule) {
       m_molecule->removeAtom(m_newObject.index);
-      //changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
+      changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
       m_newObject = Identifier();
       RWAtom atom = m_molecule->atom(m_clickedObject.index);
       if (atom.atomicNumber() != m_toolWidget->atomicNumber()) {
         m_clickedAtomicNumber = atom.atomicNumber();
         atom.setAtomicNumber(m_toolWidget->atomicNumber());
-      //  changes |= Molecule::Atoms | Molecule::Modified;
+        changes |= Molecule::Atoms | Molecule::Modified;
       }
-      //m_molecule->emitChanged(changes);
+      m_molecule->emitChanged(changes);
       return;
     }
 
@@ -328,14 +329,13 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   }
 
   // If we get here, the clicked atom is no longer under the cursor.
-
   // If the clicked atom's identity has been changed from the initial click,
   // reset its atomic number
   if (m_clickedAtomicNumber != INVALID_ATOMIC_NUMBER) {
     RWAtom clickedAtom = m_molecule->atom(m_clickedObject.index);
     clickedAtom.setAtomicNumber(m_clickedAtomicNumber);
     m_clickedAtomicNumber = INVALID_ATOMIC_NUMBER;
-    //changes |= Molecule::Atoms | Molecule::Modified;
+    changes |= Molecule::Atoms | Molecule::Modified;
   }
 
   // Does a bonded atom already exist?
@@ -356,7 +356,7 @@ void Editor::atomLeftDrag(QMouseEvent *e)
       RWAtom clickedAtom = m_molecule->atom(m_clickedObject.index);
       if (m_bondAdded)
         m_molecule->removeBond(clickedAtom, bondedAtom);
-      //  changes |= Molecule::Bonds | Molecule::Removed;
+      changes |= Molecule::Bonds | Molecule::Removed;
       m_bondedAtom = Identifier();
       m_bondAdded = false;
     }
@@ -382,7 +382,7 @@ void Editor::atomLeftDrag(QMouseEvent *e)
     // If we have a newAtom, destroy it
     if (m_newObject.type == Rendering::AtomType) {
       m_molecule->removeAtom(m_newObject.index);
-      //changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
+      changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
       m_newObject = Identifier();
     }
 
@@ -394,7 +394,7 @@ void Editor::atomLeftDrag(QMouseEvent *e)
               m_molecule->atom(m_bondedAtom.index),
               m_molecule->atom(m_clickedObject.index))) {
           ;
-          //changes |= Molecule::Bonds | Molecule::Removed;
+          changes |= Molecule::Bonds | Molecule::Removed;
         }
         m_bondedAtom = Identifier();
       }
@@ -407,10 +407,10 @@ void Editor::atomLeftDrag(QMouseEvent *e)
         m_bondAdded = true;
       }
       m_bondedAtom = atomToBond;
-      //changes |= Molecule::Bonds | Molecule::Added;
+      changes |= Molecule::Bonds | Molecule::Added;
     }
 
-    //m_molecule->emitChanged(changes);
+    m_molecule->emitChanged(changes);
     return;
   }
 
@@ -418,16 +418,16 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   // possible exception of a new atom we've added that's bonded to clicked atom.
   // We just need to create the new atom (if we haven't already), then update
   // its position.
-
   RWAtom newAtom;
   if (!m_newObject.isValid()) {
     // Add a new atom bonded to the clicked atom
     RWAtom clickedAtom = m_molecule->atom(m_clickedObject.index);
     newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber());
     m_molecule->addBond(clickedAtom, newAtom, m_toolWidget->bondOrder());
-    //changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Added;
+    changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Added;
     m_newObject.type = Rendering::AtomType;
     m_newObject.index = newAtom.index();
+    m_newObject.molecule = m_molecule;
   }
   else if (m_newObject.type == Rendering::AtomType) {
     // Grab the previously created atom
@@ -444,10 +444,10 @@ void Editor::atomLeftDrag(QMouseEvent *e)
     Vector3f oldPos(newAtom.position3d().cast<float>());
     Vector3f newPos = m_renderer->camera().unProject(windowPos, oldPos);
     newAtom.setPosition3d(newPos.cast<double>());
-    //changes |= Molecule::Atoms | Molecule::Modified;
+    changes |= Molecule::Atoms | Molecule::Modified;
   }
 
-  //m_molecule->emitChanged(changes);
+  m_molecule->emitChanged(changes);
   return;
 }
 
