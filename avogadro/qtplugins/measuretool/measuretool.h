@@ -24,7 +24,7 @@
 #include <avogadro/qtgui/toolplugin.h>
 
 #include <avogadro/rendering/primitive.h>
-
+#include <avogadro/rendering/geometrynode.h>
 #include <avogadro/core/avogadrocore.h>
 
 #include <QtCore/QVector>
@@ -51,7 +51,7 @@ public:
   QWidget * toolWidget() const AVO_OVERRIDE;
 
   void setMolecule(QtGui::Molecule *) AVO_OVERRIDE;
-  void setGLWidget(QtOpenGL::GLWidget *widget) AVO_OVERRIDE;
+  void setEditMolecule(QtGui::RWMolecule *) AVO_OVERRIDE;
   void setGLRenderer(Rendering::GLRenderer *renderer) AVO_OVERRIDE;
 
   QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
@@ -66,23 +66,31 @@ private:
   float dihedralAngle(const Vector3 &b1, const Vector3 &b2,
                       const Vector3 &b3) const;
   bool toggleAtom(const Rendering::Identifier &atom);
+  template<typename T> void createLabels(T *mol, Rendering::GeometryNode *geo,
+                                         QVector<Vector3> &positions);
+
   QAction *m_activateAction;
-  QtOpenGL::GLWidget *m_glWidget;
   QtGui::Molecule *m_molecule;
+  QtGui::RWMolecule *m_rwMolecule;
   Rendering::GLRenderer *m_renderer;
   QVector<Rendering::Identifier> m_atoms;
 };
-
-inline void MeasureTool::setGLWidget(QtOpenGL::GLWidget *widget)
-{
-  m_glWidget = widget;
-}
 
 inline void MeasureTool::setMolecule(QtGui::Molecule *mol)
 {
   if (m_molecule != mol) {
     m_atoms.clear();
     m_molecule = mol;
+    m_rwMolecule = NULL;
+  }
+}
+
+inline void MeasureTool::setEditMolecule(QtGui::RWMolecule *mol)
+{
+  if (m_rwMolecule != mol) {
+    m_atoms.clear();
+    m_rwMolecule = mol;
+    m_molecule = NULL;
   }
 }
 

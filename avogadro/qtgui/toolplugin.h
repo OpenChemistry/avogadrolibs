@@ -119,7 +119,7 @@ public slots:
   /**
    * Set the GLWidget used by the tool.
    */
-  virtual void setGLWidget(QtOpenGL::GLWidget *widget) = 0;
+  virtual void setGLWidget(QtOpenGL::GLWidget *) { }
 
   /**
    * Set the GLRenderer used by the tool.

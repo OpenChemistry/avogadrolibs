@@ -56,6 +56,7 @@ namespace QtPlugins {
 using QtGui::RWAtom;
 using QtGui::RWBond;
 using QtGui::Molecule;
+using QtGui::RWMolecule;
 using Rendering::Identifier;
 using QtOpenGL::GLWidget;
 
