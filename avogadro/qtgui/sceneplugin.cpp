@@ -27,5 +27,9 @@ ScenePlugin::~ScenePlugin()
 {
 }
 
+void ScenePlugin::processEditable(const RWMolecule &, Rendering::GroupNode &)
+{
+}
+
 } // End QtGui namespace
 } // End Avogadro namespace

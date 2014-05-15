@@ -58,6 +58,8 @@ void EditGLWidget::setMolecule(QtGui::RWMolecule *mol)
   foreach (QtGui::ToolPlugin *tool, m_tools)
     tool->setEditMolecule(m_molecule);
   connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateScene()));
+  if (m_molecule)
+    m_molecule->setInteractive(true);
 }
 
 QtGui::RWMolecule * EditGLWidget::molecule()
@@ -84,7 +86,7 @@ void EditGLWidget::updateScene()
     foreach (QtGui::ScenePlugin *scenePlugin,
              m_scenePlugins.activeScenePlugins()) {
       Rendering::GroupNode *engineNode = new Rendering::GroupNode(moleculeNode);
-      //scenePlugin->process(*mol, *engineNode);
+      scenePlugin->processEditable(*mol, *engineNode);
     }
 
     // Let the tools perform any drawing they need to do.

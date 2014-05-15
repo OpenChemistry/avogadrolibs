@@ -37,6 +37,9 @@ public:
   void process(const Core::Molecule &molecule,
                Rendering::GroupNode &node) AVO_OVERRIDE;
 
+  void processEditable(const QtGui::RWMolecule &molecule,
+                       Rendering::GroupNode &node) AVO_OVERRIDE;
+
   QString name() const { return tr("Ball and Stick"); }
 
   QString description() const { return tr("Render atoms as spheres and bonds "
