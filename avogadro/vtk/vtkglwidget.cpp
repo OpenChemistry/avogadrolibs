@@ -226,7 +226,7 @@ void vtkGLWidget::updateScene()
     }
 
     m_renderer.resetGeometry();
-    update();
+    updateGL();
   }
   if (mol != m_molecule)
     delete mol;
@@ -240,7 +240,7 @@ void vtkGLWidget::clearScene()
 void vtkGLWidget::resetCamera()
 {
   m_renderer.resetCamera();
-  update();
+  updateGL();
 }
 
 void vtkGLWidget::resetGeometry()

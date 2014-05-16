@@ -212,17 +212,28 @@ QList<RWMolecule *> MoleculeModel::editableMolecules() const
 
 void MoleculeModel::setActiveMolecule(QObject *active)
 {
+  if (m_activeMolecule == active)
+    return;
+
+  int rowS = m_molecules.indexOf(qobject_cast<Molecule*>(m_activeMolecule));
+  if (rowS < 0) {
+    rowS = m_rwMolecules.indexOf(qobject_cast<RWMolecule*>(m_activeMolecule));
+    if (rowS >= 0)
+      rowS += m_molecules.size();
+  }
+
   m_activeMolecule = active;
   int row = m_molecules.indexOf(qobject_cast<Molecule*>(active));
-  if (row >=0) {
-    emit dataChanged(createIndex(row, 0), createIndex(row, 0));
-    return;
+  if (row < 0) {
+    row = m_rwMolecules.indexOf(qobject_cast<RWMolecule*>(active));
+    if (row >= 0)
+      row += m_molecules.size();
   }
-  row = m_rwMolecules.indexOf(qobject_cast<RWMolecule*>(active));
-  if (row >= 0) {
-    row += m_molecules.size();
+
+  if (rowS >= 0)
+    emit dataChanged(createIndex(rowS, 0), createIndex(rowS, 0));
+  if (row >= 0)
     emit dataChanged(createIndex(row, 0), createIndex(row, 0));
-  }
 }
 
 void MoleculeModel::addItem(Molecule *item)
