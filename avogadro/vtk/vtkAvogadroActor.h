@@ -73,6 +73,8 @@ protected:
   Avogadro::Rendering::Scene *m_scene;
   double m_bounds[6];
 
+  bool m_initialized;
+
 private:
   vtkAvogadroActor(const vtkAvogadroActor&); // Not implemented.
   void operator=(const vtkAvogadroActor&);   // Not implemented.

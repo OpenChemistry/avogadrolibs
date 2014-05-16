@@ -34,7 +34,8 @@
 
 namespace Avogadro {
 namespace QtGui {
-class RWMolecule;
+
+class Molecule;
 
 /** Concrete atom/bond proxy classes for RWMolecule. @{ */
 class RWAtom;
@@ -63,6 +64,7 @@ class RWBond;
 class AVOGADROQTGUI_EXPORT RWMolecule : public QObject
 {
   Q_OBJECT
+
 public:
   /** Typedef for Atom class. */
   typedef RWAtom AtomType;
@@ -78,6 +80,9 @@ public:
 
   /** Construct a empty molecule with a clean undo stack. */
   explicit RWMolecule(QObject *parent = 0);
+
+  /** Construct a molecule with the atoms/bonds of mol. */
+  explicit RWMolecule(const Molecule &mol, QObject *parent = 0);
 
   ~RWMolecule() AVO_OVERRIDE;
 
@@ -385,11 +390,28 @@ public:
   class UndoCommand;
   friend class UndoCommand;
 
-protected: // methods
+public slots:
+  /**
+   * @brief Force the molecule to emit the changed() signal.
+   * @param change See changed().
+   */
+  void emitChanged(unsigned int change);
+
+signals:
+  /**
+   * @brief Indicates that the molecule has changed.
+   * @param change Use the MoleculeChange enum to check what has changed.
+   *
+   * The @p change variable indicates what has changed, i.e. if
+   * change & Atoms == true then atoms were changed in some way, and if
+   * change & Removed == true then one or more atoms were removed.
+   */
+  void changed(unsigned int change);
+
+protected:
   Index findAtomUniqueId(Index atomId) const;
   Index findBondUniqueId(Index bondId) const;
 
-protected: // members
   Core::Array<Index> m_atomUniqueIds;
   Core::Array<Index> m_bondUniqueIds;
   Core::Array<unsigned char> m_atomicNumbers;
@@ -400,6 +422,8 @@ protected: // members
   bool m_interactive;
 
   QUndoStack m_undoStack;
+
+  friend class Molecule;
 };
 
 class AVOGADROQTGUI_EXPORT RWAtom : public Core::AtomTemplate<RWMolecule>

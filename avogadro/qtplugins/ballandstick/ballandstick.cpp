@@ -22,6 +22,7 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
 #include <avogadro/rendering/cylindergeometry.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -69,6 +70,65 @@ void BallAndStick::process(const Molecule &molecule,
   geometry->addDrawable(cylinders);
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
+    Vector3f pos1 = bond.atom1().position3d().cast<float>();
+    Vector3f pos2 = bond.atom2().position3d().cast<float>();
+    Vector3ub color1(Elements::color(bond.atom1().atomicNumber()));
+    Vector3ub color2(Elements::color(bond.atom2().atomicNumber()));
+    Vector3f bondVector = pos2 - pos1;
+    float bondLength = bondVector.norm();
+    bondVector /= bondLength;
+    switch (bond.order()) {
+    case 3: {
+      Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
+      cylinders->addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
+                             color1, color2, i);
+      cylinders->addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
+                             color1, color2, i);
+    }
+    default:
+    case 1:
+      cylinders->addCylinder(pos1, bondVector, bondLength, bondRadius,
+                             color1, color2, i);
+      break;
+    case 2: {
+      Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
+      cylinders->addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
+                             color1, color2, i);
+      cylinders->addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
+                             color1, color2, i);
+    }
+    }
+  }
+}
+
+void BallAndStick::processEditable(const QtGui::RWMolecule &molecule,
+                                   Rendering::GroupNode &node)
+{
+  // Add a sphere node to contain all of the spheres.
+  GeometryNode *geometry = new GeometryNode;
+  node.addChild(geometry);
+  SphereGeometry *spheres = new SphereGeometry;
+  spheres->identifier().molecule = &molecule;
+  spheres->identifier().type = Rendering::AtomType;
+  geometry->addDrawable(spheres);
+
+  for (Index i = 0; i < molecule.atomCount(); ++i) {
+    QtGui::RWAtom atom = molecule.atom(i);
+    unsigned char atomicNumber = atom.atomicNumber();
+    const unsigned char *c = Elements::color(atomicNumber);
+    Vector3ub color(c[0], c[1], c[2]);
+    spheres->addSphere(atom.position3d().cast<float>(), color,
+                       static_cast<float>(Elements::radiusVDW(atomicNumber))
+                       * 0.3f);
+  }
+
+  float bondRadius = 0.1f;
+  CylinderGeometry *cylinders = new CylinderGeometry;
+  cylinders->identifier().molecule = &molecule;
+  cylinders->identifier().type = Rendering::BondType;
+  geometry->addDrawable(cylinders);
+  for (Index i = 0; i < molecule.bondCount(); ++i) {
+    QtGui::RWBond bond = molecule.bond(i);
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
     Vector3ub color1(Elements::color(bond.atom1().atomicNumber()));

@@ -32,6 +32,7 @@
 namespace Avogadro {
 namespace Core {
 class BasisSet;
+class Cube;
 class Mesh;
 class UnitCell;
 
@@ -383,6 +384,19 @@ public:
   void clearMeshes();
 
   /**
+   * @brief Add a mesh to the molecule.
+   * @return The mesh object added to the molecule.
+   */
+  Cube* addCube();
+
+  Cube* cube(Index index);
+  const Cube* cube(Index index) const;
+
+  Index cubeCount() const { return static_cast<Index>(m_cubes.size()); }
+
+  void clearCubes();
+
+  /**
    * Returns the chemical formula of the molecule
    * @todo This should eventually be an external algorithm, not a member of
    * Molecule.
@@ -432,6 +446,7 @@ protected:
   Array<unsigned char> m_bondOrders;
 
   std::vector<Mesh *> m_meshes;
+  std::vector<Cube *> m_cubes;
 
   BasisSet *m_basisSet;
   UnitCell *m_unitCell;

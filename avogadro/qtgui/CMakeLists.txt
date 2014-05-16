@@ -28,6 +28,7 @@ configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h")
 
 set(HEADERS
+  containerwidget.h
   customelementdialog.h
   elementtranslator.h
   extensionplugin.h
@@ -36,6 +37,8 @@ set(HEADERS
   generichighlighter.h
   meshgenerator.h
   molecule.h
+  moleculemodel.h
+  multiviewwidget.h
   periodictableview.h
   persistentatom.h
   persistentbond.h
@@ -45,9 +48,11 @@ set(HEADERS
   scenepluginmodel.h
   toolplugin.h
   utilities.h
+  viewfactory.h
 )
 
 set(SOURCES
+  containerwidget.cpp
   customelementdialog.cpp
   elementdetail_p.cpp
   elementitem_p.cpp
@@ -58,6 +63,8 @@ set(SOURCES
   generichighlighter.cpp
   meshgenerator.cpp
   molecule.cpp
+  moleculemodel.cpp
+  multiviewwidget.cpp
   periodictablescene_p.cpp
   periodictableview.cpp
   pythonscript.cpp
@@ -66,6 +73,7 @@ set(SOURCES
   scenepluginmodel.cpp
   toolplugin.cpp
   utilities.cpp
+  viewfactory.cpp
 )
 
 set(UIS

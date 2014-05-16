@@ -18,6 +18,7 @@
 
 #include "basisset.h"
 #include "color3f.h"
+#include "cube.h"
 #include "elements.h"
 #include "mesh.h"
 #include "unitcell.h"
@@ -454,6 +455,36 @@ void Molecule::clearMeshes()
   while(!m_meshes.empty()) {
     delete m_meshes.back();
     m_meshes.pop_back();
+  }
+}
+
+Cube* Molecule::addCube()
+{
+  m_cubes.push_back(new Cube);
+  return m_cubes.back();
+}
+
+Cube* Molecule::cube(Index index)
+{
+  if (index < static_cast<Index>(m_cubes.size()))
+    return m_cubes[index];
+  else
+    return NULL;
+}
+
+const Cube* Molecule::cube(Index index) const
+{
+  if (index < static_cast<Index>(m_cubes.size()))
+    return m_cubes[index];
+  else
+    return NULL;
+}
+
+void Molecule::clearCubes()
+{
+  while(!m_cubes.empty()) {
+    delete m_cubes.back();
+    m_cubes.pop_back();
   }
 }
 

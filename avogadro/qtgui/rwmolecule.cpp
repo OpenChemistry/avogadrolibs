@@ -16,6 +16,8 @@
 
 #include "rwmolecule.h"
 
+#include "molecule.h"
+
 #include <QtWidgets/QUndoCommand>
 
 #include <algorithm>
@@ -77,6 +79,18 @@ RWMolecule::RWMolecule(QObject *p) :
   QObject(p),
   m_unitCell(NULL)
 {
+}
+
+RWMolecule::RWMolecule(const Molecule &mol, QObject *p)
+  : QObject(p),
+    m_unitCell(NULL)
+{
+  m_atomUniqueIds = mol.m_atomUniqueIds;
+  m_bondUniqueIds = mol.m_bondUniqueIds;
+  m_atomicNumbers = mol.m_atomicNumbers;
+  m_positions3d = mol.m_positions3d;
+  m_bondPairs = mol.m_bondPairs;
+  m_bondOrders = mol.m_bondOrders;
 }
 
 RWMolecule::~RWMolecule()
@@ -827,6 +841,12 @@ bool RWMolecule::setBondPair(Index bondId, const std::pair<Index, Index> &pair)
   comm->setText(tr("Update Bond"));
   m_undoStack.push(comm);
   return true;
+}
+
+void RWMolecule::emitChanged(unsigned int change)
+{
+  if (change != Molecule::NoChange)
+    emit changed(change);
 }
 
 Index RWMolecule::findAtomUniqueId(Index atomId) const

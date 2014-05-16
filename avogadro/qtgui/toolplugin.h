@@ -31,6 +31,7 @@ namespace Avogadro {
 
 namespace Rendering {
 class GroupNode;
+class GLRenderer;
 }
 
 namespace QtOpenGL {
@@ -39,6 +40,7 @@ class GLWidget;
 
 namespace QtGui {
 class Molecule;
+class RWMolecule;
 
 /**
  * @class ToolPlugin toolplugin.h <avogadro/qtgui/toolplugin.h>
@@ -101,16 +103,28 @@ signals:
    */
   void drawablesChanged();
 
+  /**
+   * Emitted when something changed (camera, etc) and the molecule should be
+   * redrawn.
+   */
+  void updateRequested();
+
 public slots:
   /**
    * Called when the current molecule changes.
    */
   virtual void setMolecule(QtGui::Molecule *mol) = 0;
+  virtual void setEditMolecule(QtGui::RWMolecule *) { }
 
   /**
    * Set the GLWidget used by the tool.
    */
-  virtual void setGLWidget(QtOpenGL::GLWidget *widget) = 0;
+  virtual void setGLWidget(QtOpenGL::GLWidget *) { }
+
+  /**
+   * Set the GLRenderer used by the tool.
+   */
+  virtual void setGLRenderer(Rendering::GLRenderer *) { }
 };
 
 /**

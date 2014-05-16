@@ -6,17 +6,17 @@ include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 find_package(Qt5OpenGL REQUIRED)
 
 set(HEADERS
+  editglwidget.h
   glwidget.h
   qttextrenderstrategy.h
 )
 
 set(SOURCES
+  editglwidget.cpp
   glwidget.cpp
   qttextrenderstrategy.cpp
 )
 
 avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})
 qt5_use_modules(AvogadroQtOpenGL OpenGL)
-target_link_libraries(AvogadroQtOpenGL
-  AvogadroRendering
-  AvogadroQtGui)
+target_link_libraries(AvogadroQtOpenGL AvogadroRendering AvogadroQtGui)

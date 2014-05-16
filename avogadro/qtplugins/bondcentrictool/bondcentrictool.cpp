@@ -36,8 +36,9 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/atom.h>
 #include <avogadro/core/elements.h>
-#include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
+#include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtWidgets/QAction>
 #include <QtGui/QIcon>
@@ -48,23 +49,23 @@
 #include <cmath>
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846
+# define M_PI 3.14159265358979323846
 #endif
 
-using Avogadro::DEG_TO_RAD_F;
-using Avogadro::RAD_TO_DEG_F;
-using Avogadro::Vector3f;
-using Avogadro::Vector3ub;
-using Avogadro::Vector4ub;
-using Avogadro::Core::Array;
-using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
-using Avogadro::Core::Elements;
-using Avogadro::Rendering::GeometryNode;
-using Avogadro::Rendering::GroupNode;
-using Avogadro::Rendering::Identifier;
-using Avogadro::Rendering::LineStripGeometry;
-using Avogadro::Rendering::MeshGeometry;
+namespace Avogadro {
+namespace QtPlugins {
+
+using Core::Array;
+using QtGui::RWAtom;
+using QtGui::RWBond;
+using QtGui::RWMolecule;
+using QtGui::Molecule;
+using Core::Elements;
+using Rendering::GeometryNode;
+using Rendering::GroupNode;
+using Rendering::Identifier;
+using Rendering::LineStripGeometry;
+using Rendering::MeshGeometry;
 
 namespace {
 const std::string degreeString("\xb0");
@@ -307,14 +308,11 @@ void ArcStrip::setArc(const Vector3f &origin, const Vector3f &start,
 
 } // end anon namespace
 
-namespace Avogadro {
-namespace QtPlugins {
-
 BondCentricTool::BondCentricTool(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
     m_activateAction(new QAction(this)),
     m_molecule(NULL),
-    m_glWidget(NULL),
+    m_renderer(NULL),
     m_moveState(IgnoreMove),
     m_planeSnapIncr(10.f),
     m_snapPlaneToBonds(true)
@@ -332,7 +330,11 @@ QWidget * BondCentricTool::toolWidget() const
   return NULL;
 }
 
-void BondCentricTool::setMolecule(QtGui::Molecule *mol)
+void BondCentricTool::setMolecule(QtGui::Molecule *)
+{
+}
+
+void BondCentricTool::setEditMolecule(QtGui::RWMolecule *mol)
 {
   if (m_molecule != mol) {
     m_molecule = mol;
@@ -340,9 +342,13 @@ void BondCentricTool::setMolecule(QtGui::Molecule *mol)
   }
 }
 
-void BondCentricTool::setGLWidget(QtOpenGL::GLWidget *widget)
+void BondCentricTool::setGLWidget(QtOpenGL::GLWidget *)
 {
-  m_glWidget = widget;
+}
+
+void BondCentricTool::setGLRenderer(Rendering::GLRenderer *ren)
+{
+  m_renderer = ren;
 }
 
 QUndoCommand * BondCentricTool::mousePressEvent(QMouseEvent *e)
@@ -352,7 +358,7 @@ QUndoCommand * BondCentricTool::mousePressEvent(QMouseEvent *e)
     return NULL;
 
   Rendering::Identifier ident =
-      m_glWidget->renderer().hit(e->pos().x(), e->pos().y());
+      m_renderer->hit(e->pos().x(), e->pos().y());
 
   // If no hits, return. Also ensure that the hit molecule is the one we expect.
   if (!ident.isValid() || ident.molecule != m_molecule)
@@ -368,16 +374,16 @@ QUndoCommand * BondCentricTool::mousePressEvent(QMouseEvent *e)
     return NULL;
 
   // Test if the atom is in the selected bond, or one bond removed.
-  Atom clickedAtom = m_molecule->atom(ident.index);
-  Bond selectedBond = m_selectedBond.bond();
+  RWAtom clickedAtom = m_molecule->atom(ident.index);
+  RWBond selectedBond = m_selectedBond.bond();
   bool atomIsInBond = bondContainsAtom(selectedBond, clickedAtom);
   bool atomIsNearBond = false;
-  Atom anchorAtom;
+  RWAtom anchorAtom;
   if (!atomIsInBond) {
-    Array<Bond> bonds = m_molecule->bonds(clickedAtom);
-    for (Array<Bond>::const_iterator
+    Array<RWBond> bonds = m_molecule->bonds(clickedAtom);
+    for (Array<RWBond>::const_iterator
          it = bonds.begin(), itEnd = bonds.end(); it != itEnd; ++it) {
-      Atom atom = otherBondedAtom(*it, clickedAtom);
+      RWAtom atom = otherBondedAtom(*it, clickedAtom);
       if (bondContainsAtom(selectedBond, atom)) {
         anchorAtom = atom;
         atomIsNearBond = true;
@@ -456,7 +462,7 @@ QUndoCommand * BondCentricTool::mouseReleaseEvent(QMouseEvent *)
 
 void BondCentricTool::draw(Rendering::GroupNode &node)
 {
-  Bond selectedBond = m_selectedBond.bond();
+  RWBond selectedBond = m_selectedBond.bond();
 
   if (!selectedBond.isValid())
     return;
@@ -476,7 +482,7 @@ void BondCentricTool::draw(Rendering::GroupNode &node)
   case RotateBondedAtom: {
     drawBondQuad(*geo, selectedBond);
 
-    Atom otherAtom = otherBondedAtom(selectedBond, m_clickedAtom.atom());
+    RWAtom otherAtom = otherBondedAtom(selectedBond, m_clickedAtom.atom());
     if (otherAtom.isValid()) {
       drawAtomBondAngles(*geo, otherAtom, selectedBond);
     }
@@ -490,9 +496,9 @@ void BondCentricTool::draw(Rendering::GroupNode &node)
     break;
 
   case RotateNeighborAtom: {
-    Atom clickedAtom = m_clickedAtom.atom();
-    Atom anchorAtom = m_anchorAtom.atom();
-    Bond otherBond = m_molecule->bond(clickedAtom, anchorAtom);
+    RWAtom clickedAtom = m_clickedAtom.atom();
+    RWAtom anchorAtom = m_anchorAtom.atom();
+    RWBond otherBond = m_molecule->bond(clickedAtom, anchorAtom);
     if (otherBond.isValid())
       drawBondAngle(*geo, selectedBond, otherBond);
     break;
@@ -513,7 +519,7 @@ void BondCentricTool::reset(BondCentricTool::ResetBondBehavior bond)
 
 void BondCentricTool::initializeBondVectors()
 {
-  Bond bond = m_selectedBond.bond();
+  RWBond bond = m_selectedBond.bond();
   if (bond.isValid()) {
     m_bondVector = (bond.atom2().position3d().cast<float>()
                     - bond.atom1().position3d().cast<float>()).normalized();
@@ -523,7 +529,7 @@ void BondCentricTool::initializeBondVectors()
 
 void BondCentricTool::updateBondVector()
 {
-  Bond bond = m_selectedBond.bond();
+  RWBond bond = m_selectedBond.bond();
   if (bond.isValid()) {
     m_bondVector = (bond.atom2().position3d().cast<float>()
                     - bond.atom1().position3d().cast<float>()).normalized();
@@ -533,7 +539,7 @@ void BondCentricTool::updateBondVector()
 QUndoCommand *BondCentricTool::initRotatePlane(
     QMouseEvent *e, const Rendering::Identifier &ident)
 {
-  Bond selectedBond = m_molecule->bond(ident.index);
+  RWBond selectedBond = m_molecule->bond(ident.index);
   // Get unique id:
   Index bondUniqueId = m_molecule->bondUniqueId(selectedBond);
   if (bondUniqueId == MaxIndex)
@@ -542,7 +548,7 @@ QUndoCommand *BondCentricTool::initRotatePlane(
   // Reset the bond vector/plane normal if the bond changed
   if (bondUniqueId != m_selectedBond.uniqueIdentifier()) {
     m_selectedBond =
-        QtGui::Molecule::PersistentBondType(m_molecule, bondUniqueId);
+        QtGui::RWMolecule::PersistentBondType(m_molecule, bondUniqueId);
     initializeBondVectors();
   }
   updatePlaneSnapAngles();
@@ -558,9 +564,9 @@ QUndoCommand *BondCentricTool::initRotatePlane(
 }
 
 QUndoCommand *BondCentricTool::initRotateBondedAtom(
-    QMouseEvent *e, const Core::Atom &clickedAtom)
+    QMouseEvent *e, const QtGui::RWAtom &clickedAtom)
 {
-  m_clickedAtom = QtGui::Molecule::PersistentAtomType(clickedAtom);
+  m_clickedAtom = RWMolecule::PersistentAtomType(clickedAtom);
   if (!m_clickedAtom.isValid())
     return NULL;
   e->accept();
@@ -573,9 +579,9 @@ QUndoCommand *BondCentricTool::initRotateBondedAtom(
 }
 
 QUndoCommand *BondCentricTool::initAdjustBondLength(
-    QMouseEvent *e, const Core::Atom &clickedAtom)
+    QMouseEvent *e, const QtGui::RWAtom &clickedAtom)
 {
-  m_clickedAtom = QtGui::Molecule::PersistentAtomType(clickedAtom);
+  m_clickedAtom = RWMolecule::PersistentAtomType(clickedAtom);
   if (!m_clickedAtom.isValid())
     return NULL;
   e->accept();
@@ -588,10 +594,10 @@ QUndoCommand *BondCentricTool::initAdjustBondLength(
 }
 
 QUndoCommand *BondCentricTool::initRotateNeighborAtom(
-    QMouseEvent *e, const Core::Atom &clickedAtom, const Core::Atom &anchorAtom)
+    QMouseEvent *e, const QtGui::RWAtom &clickedAtom, const QtGui::RWAtom &anchorAtom)
 {
-  m_clickedAtom = QtGui::Molecule::PersistentAtomType(clickedAtom);
-  m_anchorAtom = QtGui::Molecule::PersistentAtomType(anchorAtom);
+  m_clickedAtom = RWMolecule::PersistentAtomType(clickedAtom);
+  m_anchorAtom = RWMolecule::PersistentAtomType(anchorAtom);
   if (!m_clickedAtom.isValid() || !m_anchorAtom.isValid())
     return NULL;
   e->accept();
@@ -606,12 +612,12 @@ QUndoCommand *BondCentricTool::initRotateNeighborAtom(
 QUndoCommand *BondCentricTool::rotatePlane(QMouseEvent *e)
 {
   // The bond should be valid.
-  const Bond selectedBond = m_selectedBond.bond();
+  const RWBond selectedBond = m_selectedBond.bond();
   if (!selectedBond.isValid())
     return NULL;
 
   const QPoint deltaDrag = e->pos() - m_lastDragPoint;
-  const Rendering::Camera &camera(m_glWidget->renderer().camera());
+  const Rendering::Camera &camera(m_renderer->camera());
 
   // Atomic position in world coordinates
   const Vector3 beginPos(selectedBond.atom1().position3d());
@@ -652,9 +658,9 @@ QUndoCommand *BondCentricTool::rotateBondedAtom(QMouseEvent *e)
   if ((m_lastDragPoint - e->pos()).manhattanLength() < 2)
     return NULL;
 
-  Bond bond = m_selectedBond.bond();
-  Atom clickedAtom = m_clickedAtom.atom();
-  Atom centerAtom = otherBondedAtom(bond, clickedAtom);
+  RWBond bond = m_selectedBond.bond();
+  RWAtom clickedAtom = m_clickedAtom.atom();
+  RWAtom centerAtom = otherBondedAtom(bond, clickedAtom);
 
   // Sanity check:
   if (!bond.isValid() || !clickedAtom.isValid() || !centerAtom.isValid())
@@ -667,7 +673,7 @@ QUndoCommand *BondCentricTool::rotateBondedAtom(QMouseEvent *e)
   //         center atom (performed in 2D).
   //       - sign is based on whether m_planeNormal is pointing into/out of the
   //         screen.
-  const Rendering::Camera &camera(m_glWidget->renderer().camera());
+  const Rendering::Camera &camera(m_renderer->camera());
 
   // Get the window coordinates of the relevant points
   const Vector3f centerPos(centerAtom.position3d().cast<float>());
@@ -706,7 +712,7 @@ QUndoCommand *BondCentricTool::rotateBondedAtom(QMouseEvent *e)
   // Perform transformation
   transformFragment();
   updateBondVector();
-  m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Modified | Molecule::Atoms);
   emit drawablesChanged();
 
   m_lastDragPoint = e->pos();
@@ -719,15 +725,15 @@ QUndoCommand *BondCentricTool::adjustBondLength(QMouseEvent *e)
   if ((m_lastDragPoint - e->pos()).manhattanLength() < 2)
     return NULL;
 
-  Bond selectedBond = m_selectedBond.bond();
-  Atom clickedAtom = m_clickedAtom.atom();
+  RWBond selectedBond = m_selectedBond.bond();
+  RWAtom clickedAtom = m_clickedAtom.atom();
 
   // Sanity check:
   if (!selectedBond.isValid() || !clickedAtom.isValid())
     return NULL;
 
-  const Rendering::Camera &camera(m_glWidget->renderer().camera());
-  Atom otherAtom = otherBondedAtom(selectedBond, clickedAtom);
+  const Rendering::Camera &camera(m_renderer->camera());
+  RWAtom otherAtom = otherBondedAtom(selectedBond, clickedAtom);
 
   const Vector2f curPosWin(static_cast<float>(e->pos().x()),
                            static_cast<float>(e->pos().y()));
@@ -764,13 +770,13 @@ QUndoCommand *BondCentricTool::rotateNeighborAtom(QMouseEvent *e)
   if ((m_lastDragPoint - e->pos()).manhattanLength() < 2)
     return NULL;
 
-  Bond selectedBond = m_selectedBond.bond();
+  RWBond selectedBond = m_selectedBond.bond();
   // Atom that was clicked
-  Atom clickedAtom = m_clickedAtom.atom();
+  RWAtom clickedAtom = m_clickedAtom.atom();
   // Atom in selected bond also attached to clickedAtom
-  Atom anchorAtom = m_anchorAtom.atom();
+  RWAtom anchorAtom = m_anchorAtom.atom();
   // The "other" atom in selected bond
-  Atom otherAtom = otherBondedAtom(selectedBond, anchorAtom);
+  RWAtom otherAtom = otherBondedAtom(selectedBond, anchorAtom);
 
   // Sanity check:
   if (!selectedBond.isValid()
@@ -780,7 +786,7 @@ QUndoCommand *BondCentricTool::rotateNeighborAtom(QMouseEvent *e)
     return NULL;
   }
 
-  const Rendering::Camera &camera(m_glWidget->renderer().camera());
+  const Rendering::Camera &camera(m_renderer->camera());
 
   // Compute the angle between last drag and current drag positions
   const Vector3f center(anchorAtom.position3d().cast<float>());
@@ -828,7 +834,7 @@ QUndoCommand *BondCentricTool::rotateNeighborAtom(QMouseEvent *e)
 }
 
 void BondCentricTool::drawBondQuad(Rendering::GeometryNode &node,
-                                   const Bond &bond) const
+                                   const RWBond &bond) const
 {
   const Vector3f atom1Pos(bond.atom1().position3d().cast<float>());
   const Vector3f atom2Pos(bond.atom2().position3d().cast<float>());
@@ -871,15 +877,15 @@ void BondCentricTool::drawBondQuad(Rendering::GeometryNode &node,
 }
 
 void BondCentricTool::drawBondAngle(Rendering::GeometryNode &node,
-                                    const Core::Bond &selectedBond,
-                                    const Core::Bond &movingBond) const
+                                    const QtGui::RWBond &selectedBond,
+                                    const QtGui::RWBond &movingBond) const
 {
   // Draw the selected bond quad as usual
   drawBondQuad(node, selectedBond);
 
   // Determine the atom shared between the bonds (atom1).
-  Atom atom1;
-  Atom atom2;
+  RWAtom atom1;
+  RWAtom atom2;
   if (selectedBond.atom1() == movingBond.atom1() ||
       selectedBond.atom2() == movingBond.atom1()) {
     atom1 = movingBond.atom1();
@@ -966,7 +972,7 @@ void BondCentricTool::drawBondAngle(Rendering::GeometryNode &node,
 }
 
 void BondCentricTool::drawBondLengthLabel(Rendering::GeometryNode &node,
-                                          const Core::Bond &bond)
+                                          const QtGui::RWBond &bond)
 {
   const Vector3f startPos(bond.atom1().position3d().cast<float>());
   const Vector3f endPos(bond.atom2().position3d().cast<float>());
@@ -989,12 +995,12 @@ void BondCentricTool::drawBondLengthLabel(Rendering::GeometryNode &node,
 }
 
 void BondCentricTool::drawAtomBondAngles(Rendering::GeometryNode &node,
-                                         const Atom &atom,
-                                         const Bond &anchorBond)
+                                         const RWAtom &atom,
+                                         const RWBond &anchorBond)
 {
-  const Array<Bond> bonds = atom.molecule()->bonds(atom);
-  Array<Bond>::const_iterator bondIter(bonds.begin());
-  Array<Bond>::const_iterator bondEnd(bonds.end());
+  const Array<RWBond> bonds = atom.molecule()->bonds(atom);
+  Array<RWBond>::const_iterator bondIter(bonds.begin());
+  Array<RWBond>::const_iterator bondEnd(bonds.end());
   size_t count = 0;
   while (bondIter != bondEnd) {
     if (*bondIter != anchorBond)
@@ -1004,13 +1010,13 @@ void BondCentricTool::drawAtomBondAngles(Rendering::GeometryNode &node,
 }
 
 void BondCentricTool::drawAtomBondAngle(Rendering::GeometryNode &node,
-                                        const Core::Atom &atom,
-                                        const Core::Bond &anchorBond,
-                                        const Core::Bond &otherBond,
+                                        const QtGui::RWAtom &atom,
+                                        const QtGui::RWBond &anchorBond,
+                                        const QtGui::RWBond &otherBond,
                                         const Vector3ub &color)
 {
-  const Atom otherAtom = otherBondedAtom(otherBond, atom);
-  const Atom otherAnchorAtom = otherBondedAtom(anchorBond, atom);
+  const RWAtom otherAtom = otherBondedAtom(otherBond, atom);
+  const RWAtom otherAnchorAtom = otherBondedAtom(anchorBond, atom);
 
   const Vector3f atomPos(atom.position3d().cast<float>());
   const Vector3f otherAtomPos(otherAtom.position3d().cast<float>());
@@ -1054,14 +1060,14 @@ void BondCentricTool::drawAtomBondAngle(Rendering::GeometryNode &node,
   label->setTextProperties(tprop);
 }
 
-inline bool BondCentricTool::bondContainsAtom(const Core::Bond &bond,
-                                              const Core::Atom &atom) const
+inline bool BondCentricTool::bondContainsAtom(const QtGui::RWBond &bond,
+                                              const QtGui::RWAtom &atom) const
 {
   return atom == bond.atom1() || atom == bond.atom2();
 }
 
-inline Core::Atom BondCentricTool::otherBondedAtom(const Core::Bond &bond,
-                                                   const Core::Atom &atom) const
+inline QtGui::RWAtom BondCentricTool::otherBondedAtom(const QtGui::RWBond &bond,
+                                                   const QtGui::RWAtom &atom) const
 {
   return bond.atom1() == atom ? bond.atom2() : bond.atom1();
 }
@@ -1073,7 +1079,7 @@ inline void BondCentricTool::transformFragment() const
   Eigen::Transform<Real, 3, Eigen::Affine> transform(m_transform.cast<Real>());
   for (std::vector<int>::const_iterator
        it = m_fragment.begin(), itEnd = m_fragment.end(); it != itEnd; ++it) {
-    Atom atom = m_molecule->atomByUniqueId(*it);
+    RWAtom atom = m_molecule->atomByUniqueId(*it);
     if (atom.isValid()) {
       Vector3 pos = atom.position3d();
       pos = transform * pos;
@@ -1088,18 +1094,18 @@ void BondCentricTool::updatePlaneSnapAngles()
   m_planeSnapAngles.clear();
 
   // Add bond angles if requested:
-  Bond selectedBond = m_selectedBond.bond();
+  RWBond selectedBond = m_selectedBond.bond();
   if (m_snapPlaneToBonds && selectedBond.isValid()) {
-    const Atom atom1 = selectedBond.atom1();
-    const Atom atom2 = selectedBond.atom2();
+    const RWAtom atom1 = selectedBond.atom1();
+    const RWAtom atom2 = selectedBond.atom2();
     for (int i = 0; i < 2; ++i) {
-      const Atom &atom = i == 0 ? atom1 : atom2;
+      const RWAtom &atom = i == 0 ? atom1 : atom2;
       const Vector3f atomPos(atom.position3d().cast<float>());
-      const Array<Bond> bonds = atom.molecule()->bonds(atom);
-      for (std::vector<Bond>::const_iterator it = bonds.begin(),
+      const Array<RWBond> bonds = atom.molecule()->bonds(atom);
+      for (std::vector<RWBond>::const_iterator it = bonds.begin(),
            itEnd = bonds.end(); it != itEnd; ++it) {
         if (*it != selectedBond) {
-          const Atom otherAtom(otherBondedAtom(*it, atom));
+          const RWAtom otherAtom(otherBondedAtom(*it, atom));
           const Vector3f otherAtomPos(otherAtom.position3d().cast<float>());
           const Vector3f otherBondVector(otherAtomPos - atomPos);
           // Project otherBondVector into the plane normal to m_bondVector
@@ -1178,8 +1184,8 @@ inline bool BondCentricTool::fragmentHasAtom(int uid) const
                    uid) != m_fragment.end();
 }
 
-void BondCentricTool::buildFragment(const Core::Bond &bond,
-                                    const Core::Atom &startAtom)
+void BondCentricTool::buildFragment(const QtGui::RWBond &bond,
+                                    const QtGui::RWAtom &startAtom)
 {
   m_fragment.clear();
   if (!buildFragmentRecurse(bond, startAtom, startAtom)) {
@@ -1190,15 +1196,15 @@ void BondCentricTool::buildFragment(const Core::Bond &bond,
   m_fragment.push_back(m_molecule->atomUniqueId(startAtom));
 }
 
-bool BondCentricTool::buildFragmentRecurse(const Core::Bond &bond,
-                                           const Core::Atom &startAtom,
-                                           const Core::Atom &currentAtom)
+bool BondCentricTool::buildFragmentRecurse(const QtGui::RWBond &bond,
+                                           const QtGui::RWAtom &startAtom,
+                                           const QtGui::RWAtom &currentAtom)
 {
-  Array<Bond> bonds = m_molecule->bonds(currentAtom);
-  typedef std::vector<Bond>::const_iterator BondIter;
+  Array<RWBond> bonds = m_molecule->bonds(currentAtom);
+  typedef std::vector<RWBond>::const_iterator BondIter;
   for (BondIter it = bonds.begin(), itEnd = bonds.end(); it != itEnd; ++it) {
     if (*it != bond) { // Skip the current bond
-      Atom nextAtom = otherBondedAtom(*it, currentAtom);
+      RWAtom nextAtom = otherBondedAtom(*it, currentAtom);
       if (nextAtom != startAtom) {
         // Skip atoms that have already been added. This prevents infinite
         // recursion on cycles in the fragments

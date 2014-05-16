@@ -36,6 +36,8 @@ class GroupNode;
 
 namespace QtGui {
 
+class RWMolecule;
+
 /**
  * @class ScenePluginFactory sceneplugin.h <avogadro/qtgui/sceneplugin.h>
  * @brief The base class for scene plugin factories in Avogadro.
@@ -54,6 +56,9 @@ public:
    */
   virtual void process(const Core::Molecule &molecule,
                        Rendering::GroupNode &node) = 0;
+
+  virtual void processEditable(const RWMolecule &molecule,
+                               Rendering::GroupNode &node);
 
   /**
    * The name of the scene plugin, will be displayed in the user interface.

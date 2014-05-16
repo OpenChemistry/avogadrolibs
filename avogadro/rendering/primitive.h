@@ -20,11 +20,6 @@
 #include <avogadro/core/vector.h>
 
 namespace Avogadro {
-
-namespace Core {
-class Molecule;
-}
-
 namespace Rendering {
 
 /** Identifies the type of object a primitive represents. */
@@ -54,7 +49,7 @@ struct Identifier {
     return type != InvalidType && molecule != NULL;
   }
 
-  const Core::Molecule *molecule;
+  const void* molecule;
   Type type;
   Index index;
 };
@@ -86,7 +81,7 @@ public:
 
     bool isValid() const { return type != Invalid; }
 
-    const Core::Molecule *molecule;
+    const void* molecule;
     Type type;
     Index index;
   };

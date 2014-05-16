@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012-13 Kitware, Inc.
+  Copyright 2014 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,11 +14,11 @@
 
 ******************************************************************************/
 
-#include "glwidget.h"
+#include "editglwidget.h"
 
 #include "qttextrenderstrategy.h"
 
-#include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/qtgui/sceneplugin.h>
 #include <avogadro/qtgui/scenepluginmodel.h>
 #include <avogadro/qtgui/toolplugin.h>
@@ -33,7 +33,7 @@
 namespace Avogadro {
 namespace QtOpenGL {
 
-GLWidget::GLWidget(QWidget *parent_)
+EditGLWidget::EditGLWidget(QWidget *parent_)
   : QGLWidget(parent_),
     m_activeTool(NULL),
     m_defaultTool(NULL)
@@ -45,37 +45,39 @@ GLWidget::GLWidget(QWidget *parent_)
   m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
 }
 
-GLWidget::~GLWidget()
+EditGLWidget::~EditGLWidget()
 {
 }
 
-void GLWidget::setMolecule(QtGui::Molecule *mol)
+void EditGLWidget::setMolecule(QtGui::RWMolecule *mol)
 {
   clearScene();
   if (m_molecule)
     disconnect(m_molecule, 0, 0, 0);
   m_molecule = mol;
   foreach (QtGui::ToolPlugin *tool, m_tools)
-    tool->setMolecule(m_molecule);
+    tool->setEditMolecule(m_molecule);
   connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateScene()));
+  if (m_molecule)
+    m_molecule->setInteractive(true);
 }
 
-QtGui::Molecule * GLWidget::molecule()
+QtGui::RWMolecule * EditGLWidget::molecule()
 {
   return m_molecule;
 }
 
-const QtGui::Molecule * GLWidget::molecule() const
+const QtGui::RWMolecule * EditGLWidget::molecule() const
 {
   return m_molecule;
 }
 
-void GLWidget::updateScene()
+void EditGLWidget::updateScene()
 {
   // Build up the scene with the scene plugins, creating the appropriate nodes.
-  QtGui::Molecule *mol = m_molecule;
+  QtGui::RWMolecule *mol = m_molecule;
   if (!mol)
-    mol = new QtGui::Molecule(this);
+    mol = new QtGui::RWMolecule(this);
   if (mol) {
     Rendering::GroupNode &node = m_renderer.scene().rootNode();
     node.clear();
@@ -84,7 +86,7 @@ void GLWidget::updateScene()
     foreach (QtGui::ScenePlugin *scenePlugin,
              m_scenePlugins.activeScenePlugins()) {
       Rendering::GroupNode *engineNode = new Rendering::GroupNode(moleculeNode);
-      scenePlugin->process(*mol, *engineNode);
+      scenePlugin->processEditable(*mol, *engineNode);
     }
 
     // Let the tools perform any drawing they need to do.
@@ -105,42 +107,42 @@ void GLWidget::updateScene()
     delete mol;
 }
 
-void GLWidget::clearScene()
+void EditGLWidget::clearScene()
 {
   m_renderer.scene().clear();
 }
 
-void GLWidget::resetCamera()
+void EditGLWidget::resetCamera()
 {
   m_renderer.resetCamera();
   updateGL();
 }
 
-void GLWidget::resetGeometry()
+void EditGLWidget::resetGeometry()
 {
   m_renderer.resetGeometry();
 }
 
-void GLWidget::setTools(const QList<QtGui::ToolPlugin *> &toolList)
+void EditGLWidget::setTools(const QList<QtGui::ToolPlugin *> &toolList)
 {
   foreach (QtGui::ToolPlugin *tool, toolList)
     addTool(tool);
 }
 
-void GLWidget::addTool(QtGui::ToolPlugin *tool)
+void EditGLWidget::addTool(QtGui::ToolPlugin *tool)
 {
   if (m_tools.contains(tool))
     return;
 
   connect(tool, SIGNAL(updateRequested()), SLOT(updateGL()));
   tool->setParent(this);
-  tool->setGLWidget(this);
-  tool->setMolecule(m_molecule);
+  //tool->setGLWidget(this);
+  tool->setEditMolecule(m_molecule);
   tool->setGLRenderer(&m_renderer);
   m_tools << tool;
 }
 
-void GLWidget::setActiveTool(const QString &name)
+void EditGLWidget::setActiveTool(const QString &name)
 {
   foreach (QtGui::ToolPlugin *tool, m_tools) {
     QAction *toolAction = tool->activateAction();
@@ -152,7 +154,7 @@ void GLWidget::setActiveTool(const QString &name)
   }
 }
 
-void GLWidget::setActiveTool(QtGui::ToolPlugin *tool)
+void EditGLWidget::setActiveTool(QtGui::ToolPlugin *tool)
 {
   if (tool == m_activeTool)
     return;
@@ -172,7 +174,7 @@ void GLWidget::setActiveTool(QtGui::ToolPlugin *tool)
   }
 }
 
-void GLWidget::setDefaultTool(const QString &name)
+void EditGLWidget::setDefaultTool(const QString &name)
 {
   foreach (QtGui::ToolPlugin *tool, m_tools) {
     QAction *toolAction = tool->activateAction();
@@ -184,7 +186,7 @@ void GLWidget::setDefaultTool(const QString &name)
   }
 }
 
-void GLWidget::setDefaultTool(QtGui::ToolPlugin *tool)
+void EditGLWidget::setDefaultTool(QtGui::ToolPlugin *tool)
 {
   if (tool == m_defaultTool)
     return;
@@ -204,24 +206,24 @@ void GLWidget::setDefaultTool(QtGui::ToolPlugin *tool)
   }
 }
 
-void GLWidget::initializeGL()
+void EditGLWidget::initializeGL()
 {
   m_renderer.initialize();
   if (!m_renderer.isValid())
     emit rendererInvalid();
 }
 
-void GLWidget::resizeGL(int width_, int height_)
+void EditGLWidget::resizeGL(int width_, int height_)
 {
   m_renderer.resize(width_, height_);
 }
 
-void GLWidget::paintGL()
+void EditGLWidget::paintGL()
 {
   m_renderer.render();
 }
 
-void GLWidget::mouseDoubleClickEvent(QMouseEvent *e)
+void EditGLWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
   e->ignore();
 
@@ -236,7 +238,7 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent *e)
 }
 
 
-void GLWidget::mousePressEvent(QMouseEvent *e)
+void EditGLWidget::mousePressEvent(QMouseEvent *e)
 {
   e->ignore();
 
@@ -250,7 +252,7 @@ void GLWidget::mousePressEvent(QMouseEvent *e)
     QGLWidget::mousePressEvent(e);
 }
 
-void GLWidget::mouseMoveEvent(QMouseEvent *e)
+void EditGLWidget::mouseMoveEvent(QMouseEvent *e)
 {
   e->ignore();
 
@@ -264,7 +266,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *e)
     QGLWidget::mouseMoveEvent(e);
 }
 
-void GLWidget::mouseReleaseEvent(QMouseEvent *e)
+void EditGLWidget::mouseReleaseEvent(QMouseEvent *e)
 {
   e->ignore();
 
@@ -278,7 +280,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *e)
     QGLWidget::mouseReleaseEvent(e);
 }
 
-void GLWidget::wheelEvent(QWheelEvent *e)
+void EditGLWidget::wheelEvent(QWheelEvent *e)
 {
   e->ignore();
 
@@ -292,7 +294,7 @@ void GLWidget::wheelEvent(QWheelEvent *e)
     QGLWidget::wheelEvent(e);
 }
 
-void GLWidget::keyPressEvent(QKeyEvent *e)
+void EditGLWidget::keyPressEvent(QKeyEvent *e)
 {
   e->ignore();
 
@@ -306,7 +308,7 @@ void GLWidget::keyPressEvent(QKeyEvent *e)
     QGLWidget::keyPressEvent(e);
 }
 
-void GLWidget::keyReleaseEvent(QKeyEvent *e)
+void EditGLWidget::keyReleaseEvent(QKeyEvent *e)
 {
   e->ignore();
 

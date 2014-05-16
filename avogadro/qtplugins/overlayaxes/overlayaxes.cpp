@@ -258,6 +258,17 @@ void OverlayAxes::process(const Core::Molecule &, Rendering::GroupNode &node)
   node.addChild(geo);
 }
 
+void OverlayAxes::processEditable(const QtGui::RWMolecule &,
+                                  Rendering::GroupNode &node)
+{
+  GeometryNode *geo = new GeometryNode;
+  // Since our geometry doesn't change, we just make a copy of the pre-built
+  // set of axes.
+  geo->addDrawable(new CustomMesh(*m_render->mesh));
+  node.addChild(geo);
+}
+
+
 bool OverlayAxes::isEnabled() const
 {
   return m_enabled;

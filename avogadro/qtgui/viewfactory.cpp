@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2014 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,20 +14,16 @@
 
 ******************************************************************************/
 
-#include "sceneplugin.h"
+#include "viewfactory.h"
 
 namespace Avogadro {
 namespace QtGui {
 
-ScenePlugin::ScenePlugin(QObject *parent_) : QObject(parent_)
+ViewFactory::ViewFactory()
 {
 }
 
-ScenePlugin::~ScenePlugin()
-{
-}
-
-void ScenePlugin::processEditable(const RWMolecule &, Rendering::GroupNode &)
+ViewFactory::~ViewFactory()
 {
 }
 
