@@ -19,12 +19,13 @@
 #include "rwmolecule.h"
 
 #include <QtCore/QFileInfo>
+#include <QtGui/QColor>
 
 namespace Avogadro {
 namespace QtGui {
 
-MoleculeModel::MoleculeModel(QObject *parent_)
-  : QAbstractItemModel(parent_)
+MoleculeModel::MoleculeModel(QObject *p)
+  : QAbstractItemModel(p), m_activeMolecule(NULL)
 {
 }
 
@@ -70,6 +71,10 @@ bool MoleculeModel::setData(const QModelIndex &index_, const QVariant &value,
 
   switch (role) {
   case Qt::CheckStateRole:
+    if (mol)
+      m_activeMolecule = mol;
+    else
+      m_activeMolecule = rwMol;
     if (value == Qt::Checked /*&& !item->isEnabled()*/) {
       //item->setEnabled(true);
       if (mol)
@@ -149,6 +154,14 @@ QVariant MoleculeModel::data(const QModelIndex &index_, int role) const
         return mol->formula().c_str();
       //else
       //  return rwMol->formula().c_str();
+    case Qt::ForegroundRole:
+      if ((mol && mol == m_activeMolecule)
+          || (rwMol && rwMol == m_activeMolecule)) {
+        return QVariant(QColor(Qt::red));
+      }
+      else {
+        return QVariant(QColor(Qt::black));
+      }
     default:
       return QVariant();
     }
@@ -197,6 +210,20 @@ QList<RWMolecule *> MoleculeModel::editableMolecules() const
   return m_rwMolecules;
 }
 
+void MoleculeModel::setActiveMolecule(QObject *active)
+{
+  m_activeMolecule = active;
+  int row = m_molecules.indexOf(qobject_cast<Molecule*>(active));
+  if (row >=0) {
+    emit dataChanged(createIndex(row, 0), createIndex(row, 0));
+    return;
+  }
+  row = m_rwMolecules.indexOf(qobject_cast<RWMolecule*>(active));
+  if (row >= 0) {
+    row += m_molecules.size();
+    emit dataChanged(createIndex(row, 0), createIndex(row, 0));
+  }
+}
 
 void MoleculeModel::addItem(Molecule *item)
 {

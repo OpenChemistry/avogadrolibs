@@ -49,7 +49,7 @@ class AVOGADROQTGUI_EXPORT MoleculeModel : public QAbstractItemModel
   Q_OBJECT
 
 public:
-  explicit MoleculeModel(QObject *parent = 0);
+  explicit MoleculeModel(QObject *p = 0);
 
   QModelIndex parent(const QModelIndex &child) const;
   int rowCount(const QModelIndex &parent) const;
@@ -69,11 +69,14 @@ public:
   QList<Molecule *> activeMolecules() const;
   QList<RWMolecule *> editableMolecules() const;
 
+  QObject * activeMolecule() const { return m_activeMolecule; }
+
 signals:
   void moleculeStateChanged(Avogadro::QtGui::Molecule *);
   void moleculeStateChanged(Avogadro::QtGui::RWMolecule *);
 
 public slots:
+  void setActiveMolecule(QObject *active);
   void addItem(Avogadro::QtGui::Molecule *item);
   void addItem(Avogadro::QtGui::RWMolecule *item);
   void removeItem(Avogadro::QtGui::Molecule *item);
@@ -83,6 +86,7 @@ public slots:
 private:
   QList<Molecule *> m_molecules;
   QList<RWMolecule *> m_rwMolecules;
+  QObject *m_activeMolecule;
 };
 
 } // End QtGui namespace
