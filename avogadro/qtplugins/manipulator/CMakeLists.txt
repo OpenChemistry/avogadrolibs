@@ -13,7 +13,7 @@ set(manipulator_rcs
 )
 
 avogadro_plugin(Manipulator
-  "Manipulator tool"
+  "Manipulator"
   ToolPlugin
   manipulator.h
   Manipulator
