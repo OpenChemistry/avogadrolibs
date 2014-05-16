@@ -146,7 +146,7 @@ void EditGLWidget::setActiveTool(const QString &name)
 {
   foreach (QtGui::ToolPlugin *tool, m_tools) {
     QAction *toolAction = tool->activateAction();
-    if (tool->name() == name
+    if (tool->objectName() == name
         || (toolAction && toolAction->text() == name)) {
       setActiveTool(tool);
       return;
