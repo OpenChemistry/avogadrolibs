@@ -35,6 +35,8 @@
 namespace Avogadro {
 namespace QtGui {
 
+class Molecule;
+
 /** Concrete atom/bond proxy classes for RWMolecule. @{ */
 class RWAtom;
 class RWBond;
@@ -62,6 +64,7 @@ class RWBond;
 class AVOGADROQTGUI_EXPORT RWMolecule : public QObject
 {
   Q_OBJECT
+
 public:
   /** Typedef for Atom class. */
   typedef RWAtom AtomType;
@@ -77,6 +80,9 @@ public:
 
   /** Construct a empty molecule with a clean undo stack. */
   explicit RWMolecule(QObject *parent = 0);
+
+  /** Construct a molecule with the atoms/bonds of mol. */
+  explicit RWMolecule(const Molecule &mol, QObject *parent = 0);
 
   ~RWMolecule() AVO_OVERRIDE;
 
@@ -416,6 +422,8 @@ protected:
   bool m_interactive;
 
   QUndoStack m_undoStack;
+
+  friend class Molecule;
 };
 
 class AVOGADROQTGUI_EXPORT RWAtom : public Core::AtomTemplate<RWMolecule>

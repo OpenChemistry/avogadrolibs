@@ -31,6 +31,7 @@ namespace Avogadro {
 namespace QtGui {
 
 class Mesh;
+class RWMolecule;
 
 /**
  * @class Molecule molecule.h <avogadro/qtgui/molecule.h>
@@ -40,6 +41,7 @@ class Mesh;
 class AVOGADROQTGUI_EXPORT Molecule : public QObject, public Core::Molecule
 {
   Q_OBJECT
+
 public:
   /** Typedef for Atom class. */
   typedef Core::Molecule::AtomType AtomType;
@@ -54,6 +56,7 @@ public:
   typedef PersistentBond<Molecule> PersistentBondType;
 
   Molecule(QObject *parent_ = 0);
+  Molecule(const RWMolecule &mol, QObject *parent = 0);
   ~Molecule();
   /** copy constructor */
   Molecule(const Molecule &other);
@@ -206,6 +209,13 @@ public:
   Index bondUniqueId(Index bond) const;
   /** @} */
 
+  /**
+   * @brief Convert this molecule to an RWMolecule, this will only contain the
+   * atoms and bonds, none of the other data will be moved.
+   * @return An RWMolecule with the atoms and bonds of this molecule.
+   */
+  //RWMolecule toRWMolecule() const;
+
 public slots:
   /**
    * @brief Force the molecule to emit the changed() signal.
@@ -230,6 +240,8 @@ private:
 
   Index findAtomUniqueId(Index index) const;
   Index findBondUniqueId(Index index) const;
+
+  friend class RWMolecule;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Molecule::MoleculeChanges)

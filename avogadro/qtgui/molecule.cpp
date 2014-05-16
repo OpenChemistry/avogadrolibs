@@ -15,12 +15,23 @@
 ******************************************************************************/
 
 #include "molecule.h"
+#include "rwmolecule.h"
 
 namespace Avogadro {
 namespace QtGui {
 
 Molecule::Molecule(QObject *parent_) : QObject(parent_)
 {
+}
+
+Molecule::Molecule(const RWMolecule &mol, QObject *p) : QObject(p)
+{
+  m_atomUniqueIds = mol.m_atomUniqueIds;
+  m_bondUniqueIds = mol.m_bondUniqueIds;
+  m_atomicNumbers = mol.m_atomicNumbers;
+  m_positions3d = mol.m_positions3d;
+  m_bondPairs = mol.m_bondPairs;
+  m_bondOrders = mol.m_bondOrders;
 }
 
 Molecule::Molecule(const Molecule &other)
