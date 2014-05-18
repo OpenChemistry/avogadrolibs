@@ -19,12 +19,12 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
 #include <QtGui/QClipboard>
 #include <QtGui/QIcon>
 #include <QtGui/QKeySequence>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 #include <string>
 #include <vector>
@@ -36,10 +36,12 @@ using Core::Elements;
 
 Bonding::Bonding(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_action(new QAction(tr("Bonding"), this))
+  m_action(new QAction(tr("Bond perception"), this)),
+  m_clearAction(new QAction(tr("Bond removal"), this))
 {
   m_action->setShortcut(QKeySequence("Ctrl+B"));
   connect(m_action, SIGNAL(triggered()), SLOT(bond2()));
+  connect(m_clearAction, SIGNAL(triggered()), SLOT(clearBonds()));
 }
 
 Bonding::~Bonding()
@@ -49,7 +51,7 @@ Bonding::~Bonding()
 QList<QAction *> Bonding::actions() const
 {
   QList<QAction *> result;
-  return result << m_action;
+  return result << m_action << m_clearAction;
 }
 
 QStringList Bonding::menuPath(QAction *) const
@@ -114,6 +116,12 @@ void Bonding::bond2()
         m_molecule->addBond(m_molecule->atom(i), m_molecule->atom(j), 1);
     }
   }
+  m_molecule->emitChanged(QtGui::Molecule::Bonds);
+}
+
+void Bonding::clearBonds()
+{
+  m_molecule->clearBonds();
   m_molecule->emitChanged(QtGui::Molecule::Bonds);
 }
 

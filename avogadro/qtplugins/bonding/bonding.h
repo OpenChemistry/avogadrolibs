@@ -50,11 +50,13 @@ public slots:
 private slots:
   void bond();
   void bond2();
+  void clearBonds();
 
 private:
   QtGui::Molecule *m_molecule;
 
   QAction *m_action;
+  QAction *m_clearAction;
 };
 
 } // namespace QtPlugins
