@@ -58,6 +58,7 @@ public:
 
 signals:
   void pluginStateChanged(Avogadro::QtGui::ScenePlugin *);
+  void pluginConfigChanged();
 
 public slots:
   void addItem(Avogadro::QtGui::ScenePlugin *item);

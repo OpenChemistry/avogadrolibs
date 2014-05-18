@@ -81,6 +81,9 @@ public:
   virtual void setEnabled(bool enable) = 0;
 
   virtual QWidget * setupWidget();
+
+signals:
+  void drawablesChanged();
 };
 
 /**
