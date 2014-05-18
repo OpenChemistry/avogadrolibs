@@ -89,6 +89,31 @@ bool XyzFormat::read(std::istream &inStream, Core::Molecule &mol)
     break;
   }
 
+  // Do we have an animation?
+  size_t numAtoms2;
+  if ((inStream >> numAtoms2) && numAtoms == numAtoms2) {
+    std::getline(inStream, buffer); // Finish the count line
+    std::getline(inStream, buffer); // Skip the blank
+    mol.setCoordinate3d(mol.atomPositions3d(), 0);
+    int coordSet = 1;
+    while (numAtoms == numAtoms2) {
+      Core::Array<Vector3> positions;
+      positions.reserve(numAtoms);
+      for (size_t i = 0; i < numAtoms; ++i) {
+        if (inStream >> buffer && inStream >> pos.x()
+            && inStream >> pos.y() && inStream >> pos.z()) {
+          positions.push_back(pos);
+        }
+      }
+      mol.setCoordinate3d(positions, coordSet++);
+      if (!(inStream >> numAtoms2))
+        break;
+      std::getline(inStream, buffer); // Finish the count line
+      std::getline(inStream, buffer); // Skip the blank
+      positions.clear();
+    }
+  }
+
   // Check that all atoms were handled.
   if (mol.atomCount() != numAtoms) {
     std::ostringstream errorStream;

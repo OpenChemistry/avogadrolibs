@@ -108,6 +108,7 @@ add_subdirectory(networkdatabases)
 add_subdirectory(openbabel)
 add_subdirectory(quantumoutput)
 add_subdirectory(scriptfileformats)
+add_subdirectory(playertool)
 
 if(USE_MOLEQUEUE)
   add_subdirectory(apbs)

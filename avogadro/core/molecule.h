@@ -434,6 +434,11 @@ public:
    */
   void perceiveBondsSimple();
 
+  int coordinate3dCount();
+  bool setCoordinate3d(int coord);
+  int coordinate3d() const;
+  bool setCoordinate3d(const Array<Vector3> &coords, int index);
+
 protected:
   mutable Graph m_graph; // A transformation of the molecule to a graph.
   mutable bool m_graphDirty; // Should the graph be rebuilt before returning it?
@@ -442,6 +447,7 @@ protected:
   Array<unsigned char> m_atomicNumbers;
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
+  Array< Array<Vector3> > m_coordinates3d; // Used for conformers/trajectories.
   Array<std::pair<Index, Index> > m_bondPairs;
   Array<unsigned char> m_bondOrders;
 
