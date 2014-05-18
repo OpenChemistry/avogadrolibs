@@ -585,6 +585,34 @@ void Molecule::perceiveBondsSimple()
   }
 }
 
+int Molecule::coordinate3dCount()
+{
+  return static_cast<int>(m_coordinates3d.size());
+}
+
+bool Molecule::setCoordinate3d(int coord)
+{
+  if (coord >= 0 && coord < static_cast<int>(m_coordinates3d.size())) {
+    m_positions3d = m_coordinates3d[coord];
+    return true;
+  }
+  return false;
+}
+
+int Molecule::coordinate3d() const
+{
+  /// FIXME: Needs adding in...
+  return 0;
+}
+
+bool Molecule::setCoordinate3d(const Array<Vector3> &coords, int index)
+{
+  if (static_cast<int>(m_coordinates3d.size()) <= index)
+    m_coordinates3d.resize(index + 1);
+  m_coordinates3d[index] = coords;
+  return true;
+}
+
 void Molecule::updateGraph() const
 {
   if (!m_graphDirty)
