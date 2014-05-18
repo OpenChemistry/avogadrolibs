@@ -92,6 +92,7 @@ endfunction()
 
 # Now to make the plugins.
 add_subdirectory(bondcentrictool)
+add_subdirectory(bonding)
 add_subdirectory(coordinateeditor)
 add_subdirectory(copypaste)
 add_subdirectory(crystal)
