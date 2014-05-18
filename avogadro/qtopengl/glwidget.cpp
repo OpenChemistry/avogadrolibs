@@ -42,6 +42,7 @@ GLWidget::GLWidget(QWidget *parent_)
   connect(&m_scenePlugins,
           SIGNAL(pluginStateChanged(Avogadro::QtGui::ScenePlugin*)),
           SLOT(updateScene()));
+  connect(&m_scenePlugins, SIGNAL(pluginConfigChanged()), SLOT(updateScene()));
   m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
 }
 
