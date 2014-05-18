@@ -68,8 +68,6 @@ int vtkAvogadroActor::RenderOpaqueGeometry(vtkViewport *)
   glGetFloatv(GL_PROJECTION_MATRIX, proj.matrix().data());
   camera.setModelView(mv);
   camera.setProjection(proj);
-  //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  //glEnable(GL_DEPTH_TEST);
 
   // Render the Avogadro scene using the GLRenderVisitor and return.
   GLRenderVisitor visitor(camera);
@@ -81,12 +79,25 @@ int vtkAvogadroActor::RenderOpaqueGeometry(vtkViewport *)
 
 int vtkAvogadroActor::RenderTranslucentPolygonalGeometry(vtkViewport *)
 {
-  return 0;
+  // Figure out the current model view and projection matrices for our camera.
+  Camera camera;
+  Affine3f mv, proj;
+  glGetFloatv(GL_MODELVIEW_MATRIX, mv.matrix().data());
+  glGetFloatv(GL_PROJECTION_MATRIX, proj.matrix().data());
+  camera.setModelView(mv);
+  camera.setProjection(proj);
+
+  // Render the Avogadro scene using the GLRenderVisitor and return.
+  GLRenderVisitor visitor(camera);
+  visitor.setRenderPass(Avogadro::Rendering::TranslucentPass);
+  m_scene->rootNode().accept(visitor);
+
+  return 1;
 }
 
 int vtkAvogadroActor::HasTranslucentPolygonalGeometry()
 {
-  return 0;
+  return 1;
 }
 
 double * vtkAvogadroActor::GetBounds()
