@@ -24,6 +24,12 @@
 #include <avogadro/rendering/cylindergeometry.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QVBoxLayout>
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -34,12 +40,15 @@ using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 using Rendering::CylinderGeometry;
 
-BallAndStick::BallAndStick(QObject *p) : ScenePlugin(p), m_enabled(true)
+BallAndStick::BallAndStick(QObject *p) : ScenePlugin(p), m_enabled(true),
+  m_setupWidget(NULL)
 {
 }
 
 BallAndStick::~BallAndStick()
 {
+  if (m_setupWidget)
+    m_setupWidget->deleteLater();
 }
 
 void BallAndStick::process(const Molecule &molecule,
@@ -168,6 +177,18 @@ bool BallAndStick::isEnabled() const
 void BallAndStick::setEnabled(bool enable)
 {
   m_enabled = enable;
+}
+
+QWidget * BallAndStick::setupWidget()
+{
+  if (!m_setupWidget) {
+    m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
+    QVBoxLayout *v = new QVBoxLayout;
+    QLabel *label = new QLabel("Test Ball and Stick");
+    v->addWidget(label);
+    m_setupWidget->setLayout(v);
+  }
+  return m_setupWidget;
 }
 
 }

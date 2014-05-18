@@ -79,6 +79,8 @@ public:
    * Set the enabled state of the plugin (default should be false).
    */
   virtual void setEnabled(bool enable) = 0;
+
+  virtual QWidget * setupWidget();
 };
 
 /**
