@@ -116,11 +116,22 @@ public:
   GroupNode& rootNode() { return m_rootNode; }
   const GroupNode& rootNode() const { return m_rootNode; }
 
+  /**
+   * Set the background color of the scene (default is black).
+   */
+  void setBackgroundColor(const Vector4ub &color) { m_backgroundColor = color; }
+
+  /**
+   * Get the background color of the scene.
+   */
+  Vector4ub backgroundColor() const { return m_backgroundColor; }
+
   /** Clear the scene of all elements. */
   void clear();
 
 private:
   GroupNode m_rootNode;
+  Vector4ub m_backgroundColor;
 
   mutable Vector3f m_center;
   mutable float    m_radius;
