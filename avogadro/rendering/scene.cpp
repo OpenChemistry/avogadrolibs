@@ -23,8 +23,10 @@
 namespace Avogadro {
 namespace Rendering {
 
-Scene::Scene() : m_center(Vector3f::Zero()), m_radius(4.0f),
-  m_backgroundColor(0, 0, 0, 0)
+Scene::Scene()
+  : m_backgroundColor(0, 0, 0, 0),
+    m_center(Vector3f::Zero()),
+    m_radius(4.0f)
 {
 }
 
