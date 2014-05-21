@@ -36,6 +36,7 @@ namespace Rendering {
 
 GLRenderer::GLRenderer()
   : m_valid(false),
+    m_projection(Perspective),
     m_textRenderStrategy(NULL),
     m_center(Vector3f::Zero()),
     m_radius(20.0)
@@ -156,9 +157,20 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy *tren)
 void GLRenderer::applyProjection()
 {
   float distance = m_camera.distance(m_center);
-  m_camera.calculatePerspective(40.0f,
-                                std::max(2.0f, distance - m_radius),
-                                distance + m_radius);
+  if (m_projection == Perspective) {
+    m_camera.calculatePerspective(40.0f,
+                                  std::max(2.0f, distance - m_radius),
+                                  distance + m_radius);
+  }
+  else {
+    // Renders the orthographic projection of the molecule
+    const double halfHeight = 1.0 * m_radius;
+    const double halfWidth = halfHeight * m_camera.width() / m_camera.height();
+    m_camera.calculateOrthographic(-halfWidth, halfWidth,
+                                   -halfHeight, halfHeight,
+                                   std::max(2.0f, distance - m_radius),
+                                   distance + m_radius);
+  }
   m_overlayCamera.calculateOrthographic(
         0.f, static_cast<float>(m_overlayCamera.width()),
         0.f, static_cast<float>(m_overlayCamera.height()),
