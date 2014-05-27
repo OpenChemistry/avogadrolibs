@@ -24,18 +24,25 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
+#include <iostream>
+
 #include <string>
 #include <utility>
 
-using Avogadro::Core::Atom;
-using Avogadro::Core::Molecule;
-using Avogadro::Core::UnitCell;
-using Avogadro::Core::lexicalCast;
-using Avogadro::Core::trimmed;
-using Avogadro::Core::split;
-
 namespace Avogadro {
 namespace Io {
+
+using Core::Atom;
+using Core::Molecule;
+using Core::UnitCell;
+using Core::lexicalCast;
+using Core::trimmed;
+using Core::split;
+
+using std::string;
+using std::getline;
+using std::map;
+using std::vector;
 
 GromacsFormat::GromacsFormat()
 {
@@ -57,16 +64,16 @@ std::vector<std::string> GromacsFormat::mimeTypes() const
 
 bool GromacsFormat::read(std::istream &in, Molecule &molecule)
 {
-  std::string buffer;
-  std::string value;
+  string buffer;
+  string value;
 
   // Title
-  std::getline(in, buffer);
+  getline(in, buffer);
   if (!buffer.empty())
     molecule.setData("name", trimmed(buffer));
 
   // Atom count
-  std::getline(in, buffer);
+  getline(in, buffer);
   buffer = trimmed(buffer);
   bool ok;
   size_t numAtoms = lexicalCast<size_t>(buffer, ok);
@@ -76,19 +83,36 @@ bool GromacsFormat::read(std::istream &in, Molecule &molecule)
   }
 
   // read atom info:
-  typedef std::map<std::string, unsigned char> AtomTypeMap;
+  typedef map<string, unsigned char> AtomTypeMap;
   AtomTypeMap atomTypes;
   unsigned char customElementCounter = CustomElementMin;
   Vector3 pos;
   while (numAtoms-- > 0) {
-    std::getline(in, buffer);
-    if (buffer.size() < 44) {
+    getline(in, buffer);
+    // Figure out the distance between decimal points, implement support for
+    // variable precision as specified:
+    // "any number of decimal places, the format will then be n+5 positions with
+    // n decimal places (n+1 for velocities) in stead of 8 with 3 (with 4 for
+    // velocities)".
+    size_t decimal1 = buffer.find(".", 20);
+    size_t decimal2 = string::npos;
+    int decimalSep = 0;
+    if (decimal1 != string::npos)
+      decimal2 = buffer.find(".", decimal1 + 1);
+    if (decimal2 != string::npos)
+      decimalSep = decimal2 - decimal1;
+    if (decimalSep == 0) {
+      appendError("Decimal separation of 0 found in atom positions: " + buffer);
+      return false;
+    }
+
+    if (buffer.size() < static_cast<size_t>(20 + 3 * decimalSep)) {
       appendError("Error reading atom specification -- line too short: "
                   + buffer);
       return false;
     }
 
-    // Format of buffer is: (all indices start at 1)
+    // Format of buffer is: (all indices start at 1, variable dp throws this).
     // Offset:  0 format: %5i   value: Residue number
     // Offset:  5 format: %-5s  value: Residue name
     // Offset: 10 format: %5s   value: Atom name
@@ -115,7 +139,7 @@ bool GromacsFormat::read(std::istream &in, Molecule &molecule)
 
     // Coords
     for (int i = 0; i < 3; ++i) {
-      value = trimmed(buffer.substr(20 + i * 8, 8));
+      value = trimmed(buffer.substr(20 + i * decimalSep, decimalSep));
       pos[i] = lexicalCast<Real>(value, ok);
       if (!ok || value.empty()) {
         appendError("Error reading atom specification -- invalid coordinate: '"
@@ -140,8 +164,8 @@ bool GromacsFormat::read(std::istream &in, Molecule &molecule)
   // v1(x) v2(y) v3(z) [v1(y) v1(z) v2(x) v2(z) v3(x) v3(y)]
   // The last six values may be omitted, set all non-specified values to 0.
   // v1(y) == v1(z) == v2(z) == 0 always.
-  std::getline(in, buffer);
-  std::vector<std::string> tokens(split(buffer, ' ', true));
+  getline(in, buffer);
+  vector<string> tokens(split(buffer, ' ', true));
   if (tokens.size() > 0) {
     if (tokens.size() != 3 && tokens.size() != 9) {
       appendError("Invalid box specification -- need either 3 or 9 values: '"
