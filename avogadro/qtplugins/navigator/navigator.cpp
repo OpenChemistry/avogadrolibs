@@ -88,6 +88,7 @@ QUndoCommand * Navigator::mouseReleaseEvent(QMouseEvent *e)
 {
   updatePressedButtons(e, true);
   m_lastMousePosition = QPoint();
+  m_currentAction = Nothing;
   e->accept();
   return NULL;
 }
@@ -97,57 +98,23 @@ QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
   switch (m_currentAction) {
   case Rotation: {
     QPoint delta = e->pos() - m_lastMousePosition;
-    const Eigen::Affine3f &modelView =
-        m_renderer->camera().modelView();
-    Vector3f xAxis = modelView.linear().row(0).transpose().normalized();
-    Vector3f yAxis = modelView.linear().row(1).transpose().normalized();
-    Vector3f center = m_renderer->scene().center();
-
-    m_renderer->camera().translate(center);
-    m_renderer->camera().rotate(
-          static_cast<float>(delta.y()) * ROTATION_SPEED, xAxis);
-    m_renderer->camera().rotate(
-          static_cast<float>(delta.x()) * ROTATION_SPEED, yAxis);
-    m_renderer->camera().translate(-center);
-
+    rotate(m_renderer->scene().center(), delta.y(), delta.x(), 0);
     e->accept();
     break;
   }
   case Translation: {
-    Vector3f center = m_renderer->scene().center();
     Vector2f fromScreen(m_lastMousePosition.x(), m_lastMousePosition.y());
     Vector2f toScreen(e->localPos().x(), e->localPos().y());
-    Vector3f from(m_renderer->camera().unProject(fromScreen, center));
-    Vector3f to(m_renderer->camera().unProject(toScreen, center));
-
-    m_renderer->camera().translate(to - from);
-
+    translate(m_renderer->scene().center(), fromScreen, toScreen);
     e->accept();
     break;
   }
   case ZoomTilt: {
     QPoint delta = e->pos() - m_lastMousePosition;
-    const Eigen::Affine3f &modelView = m_renderer->camera().modelView();
-    Vector3f zAxis = modelView.linear().row(2).transpose().normalized();
-    Vector3f center = m_renderer->scene().center();
-
     // Tilt
-    m_renderer->camera().translate(-center);
-    m_renderer->camera().rotate(
-          static_cast<float>(delta.x()) * ROTATION_SPEED, zAxis);
-    m_renderer->camera().translate(center);
-
+    rotate(m_renderer->scene().center(), 0, 0, delta.x());
     // Zoom
-    /// @todo Use scale for orthographic projections
-    Vector3f transformedCenter = modelView * center;
-    float distance = transformedCenter.norm();
-    float t = delta.y() * ZOOM_SPEED;
-    float u = 2.0f / distance - 1.0f;
-    if (t < u)
-      t = u;
-    m_renderer->camera().preTranslate(transformedCenter * t);
-    //m_renderer->camera().scale(delta.y() * ZOOM_SPEED);
-
+    zoom(m_renderer->scene().center(), delta.y());
     e->accept();
     break;
   }
@@ -180,14 +147,7 @@ QUndoCommand * Navigator::wheelEvent(QWheelEvent *e)
 {
   /// @todo Use scale for orthographic projections
   // Zoom
-  const Eigen::Affine3f &modelView =
-      m_renderer->camera().modelView();
-  Vector3f zAxis = modelView.linear().row(2).transpose().normalized();
-
-  if (m_renderer->projection() == Rendering::Perspective)
-    m_renderer->camera().translate(zAxis * e->delta() * ZOOM_SPEED);
-  else
-    m_renderer->camera().scale(e->delta() * ZOOM_SPEED);
+  zoom(m_renderer->scene().center(), e->delta() * 0.1);
 
   e->accept();
   emit updateRequested();
@@ -215,6 +175,46 @@ inline void Navigator::updatePressedButtons(QMouseEvent *e, bool release)
     m_pressedButtons &= e->buttons();
   else
     m_pressedButtons |= e->buttons();
+}
+
+inline void Navigator::rotate(const Vector3f &ref, float x, float y, float z)
+{
+  const Eigen::Affine3f &modelView = m_renderer->camera().modelView();
+  Vector3f xAxis = modelView.linear().row(0).transpose().normalized();
+  Vector3f yAxis = modelView.linear().row(1).transpose().normalized();
+  Vector3f zAxis = modelView.linear().row(2).transpose().normalized();
+  m_renderer->camera().translate(ref);
+  m_renderer->camera().rotate(x * ROTATION_SPEED, xAxis);
+  m_renderer->camera().rotate(y * ROTATION_SPEED, yAxis);
+  m_renderer->camera().rotate(z * ROTATION_SPEED, zAxis);
+  m_renderer->camera().translate(-ref);
+}
+
+inline void Navigator::zoom(const Vector3f &ref, float d)
+{
+  const Eigen::Affine3f &modelView = m_renderer->camera().modelView();
+  Vector3f transformedCenter = modelView * ref;
+  float distance = transformedCenter.norm();
+  float t = d * ZOOM_SPEED;
+  float u = 2.0f / distance - 1.0f;
+  if (t < u)
+    t = u;
+  m_renderer->camera().preTranslate(transformedCenter * t);
+}
+
+inline void Navigator::translate(const Vector3f &ref, float x, float y)
+{
+  Vector2f fromScreen(0, 0);
+  Vector2f toScreen(x, y);
+  translate(ref, fromScreen, toScreen);
+}
+
+inline void Navigator::translate(const Vector3f &ref, const Vector2f &fromScr,
+                                 const Vector2f &toScr)
+{
+  Vector3f from(m_renderer->camera().unProject(fromScr, ref));
+  Vector3f to(m_renderer->camera().unProject(toScr, ref));
+  m_renderer->camera().translate(to - from);
 }
 
 } // namespace QtPlugins

@@ -19,7 +19,7 @@
 
 #include <avogadro/qtgui/toolplugin.h>
 
-#include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/vector.h>
 
 #include <QtCore/QPoint>
 #include <QtCore/Qt> // for Qt:: namespace
@@ -68,6 +68,11 @@ private:
    * \todo Account for modifier keys.
    */
   void updatePressedButtons(QMouseEvent *, bool release);
+
+  void rotate(const Vector3f &ref, float x, float y, float z);
+  void zoom(const Vector3f &ref, float d);
+  void translate(const Vector3f &ref, float x, float y);
+  void translate(const Vector3f &ref, const Vector2f &from, const Vector2f &to);
 
   QAction *m_activateAction;
   QtGui::Molecule *m_molecule;
