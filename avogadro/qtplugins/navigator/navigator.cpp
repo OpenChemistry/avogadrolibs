@@ -43,7 +43,8 @@ Navigator::Navigator(QObject *parent_)
     m_molecule(NULL),
     m_glWidget(NULL),
     m_renderer(NULL),
-    m_pressedButtons(Qt::NoButton)
+    m_pressedButtons(Qt::NoButton),
+    m_currentAction(Nothing)
 {
   m_activateAction->setText(tr("Navigate"));
   m_activateAction->setIcon(QIcon(":/icons/navigator.png"));
@@ -63,6 +64,23 @@ QUndoCommand * Navigator::mousePressEvent(QMouseEvent *e)
   updatePressedButtons(e, false);
   m_lastMousePosition = e->pos();
   e->accept();
+
+  // Figure out what type of navigation has been requested.
+  if (e->buttons() & Qt::LeftButton && e->modifiers() == Qt::NoModifier) {
+    m_currentAction = Rotation;
+  }
+  else if (e->buttons() & Qt::MidButton
+           || (e->buttons() & Qt::LeftButton
+               && e->modifiers() == Qt::ShiftModifier)) {
+    m_currentAction = ZoomTilt;
+  }
+  else if (e->buttons() & Qt::RightButton
+           || (e->buttons() & Qt::LeftButton
+               && (e->modifiers() == Qt::ControlModifier
+                   || e->modifiers() == Qt::MetaModifier))) {
+    m_currentAction = Translation;
+  }
+
   return NULL;
 }
 
@@ -76,8 +94,8 @@ QUndoCommand * Navigator::mouseReleaseEvent(QMouseEvent *e)
 
 QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
 {
-  // Rotate
-  if (m_pressedButtons & Qt::LeftButton) {
+  switch (m_currentAction) {
+  case Rotation: {
     QPoint delta = e->pos() - m_lastMousePosition;
     const Eigen::Affine3f &modelView =
         m_renderer->camera().modelView();
@@ -93,9 +111,9 @@ QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
     m_renderer->camera().translate(-center);
 
     e->accept();
+    break;
   }
-  // Translate
-  else if (m_pressedButtons & Qt::RightButton) {
+  case Translation: {
     Vector3f center = m_renderer->scene().center();
     Vector2f fromScreen(m_lastMousePosition.x(), m_lastMousePosition.y());
     Vector2f toScreen(e->localPos().x(), e->localPos().y());
@@ -105,12 +123,11 @@ QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
     m_renderer->camera().translate(to - from);
 
     e->accept();
+    break;
   }
-  // Tilt/zoom
-  else if (m_pressedButtons & Qt::MiddleButton) {
+  case ZoomTilt: {
     QPoint delta = e->pos() - m_lastMousePosition;
-    const Eigen::Affine3f &modelView =
-        m_renderer->camera().modelView();
+    const Eigen::Affine3f &modelView = m_renderer->camera().modelView();
     Vector3f zAxis = modelView.linear().row(2).transpose().normalized();
     Vector3f center = m_renderer->scene().center();
 
@@ -122,10 +139,20 @@ QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
 
     // Zoom
     /// @todo Use scale for orthographic projections
-    m_renderer->camera().translate(
-          static_cast<float>(delta.y()) * ZOOM_SPEED * zAxis);
+    Vector3f transformedCenter = modelView * center;
+    float distance = transformedCenter.norm();
+    float t = delta.y() * ZOOM_SPEED;
+    float u = 2.0f / distance - 1.0f;
+    if (t < u)
+      t = u;
+    m_renderer->camera().preTranslate(transformedCenter * t);
+    //m_renderer->camera().scale(delta.y() * ZOOM_SPEED);
 
     e->accept();
+    break;
+  }
+  default:
+    ;
   }
 
   m_lastMousePosition = e->pos();
@@ -157,7 +184,10 @@ QUndoCommand * Navigator::wheelEvent(QWheelEvent *e)
       m_renderer->camera().modelView();
   Vector3f zAxis = modelView.linear().row(2).transpose().normalized();
 
-  m_renderer->camera().translate(zAxis * e->delta() * ZOOM_SPEED);
+  if (m_renderer->projection() == Rendering::Perspective)
+    m_renderer->camera().translate(zAxis * e->delta() * ZOOM_SPEED);
+  else
+    m_renderer->camera().scale(e->delta() * ZOOM_SPEED);
 
   e->accept();
   emit updateRequested();

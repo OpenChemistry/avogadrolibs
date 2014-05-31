@@ -75,6 +75,15 @@ private:
   Rendering::GLRenderer *m_renderer;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;
+
+  enum ToolAction {
+    Nothing = 0,
+    Rotation,
+    Translation,
+    ZoomTilt,
+    Zoom
+  };
+  ToolAction m_currentAction;
 };
 
 } // namespace QtPlugins
