@@ -117,7 +117,7 @@ void GLRenderer::resetCamera()
   resetGeometry();
   m_camera.setIdentity();
   m_camera.translate(-m_center);
-  m_camera.preTranslate(-3.0f * (m_radius + 2.0f) * Vector3f::UnitZ());
+  m_camera.preTranslate(-2.22f * m_radius * Vector3f::UnitZ());
 }
 
 void GLRenderer::resetGeometry()

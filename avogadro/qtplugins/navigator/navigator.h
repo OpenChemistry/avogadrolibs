@@ -19,7 +19,7 @@
 
 #include <avogadro/qtgui/toolplugin.h>
 
-#include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/vector.h>
 
 #include <QtCore/QPoint>
 #include <QtCore/Qt> // for Qt:: namespace
@@ -69,12 +69,26 @@ private:
    */
   void updatePressedButtons(QMouseEvent *, bool release);
 
+  void rotate(const Vector3f &ref, float x, float y, float z);
+  void zoom(const Vector3f &ref, float d);
+  void translate(const Vector3f &ref, float x, float y);
+  void translate(const Vector3f &ref, const Vector2f &from, const Vector2f &to);
+
   QAction *m_activateAction;
   QtGui::Molecule *m_molecule;
   QtOpenGL::GLWidget *m_glWidget;
   Rendering::GLRenderer *m_renderer;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;
+
+  enum ToolAction {
+    Nothing = 0,
+    Rotation,
+    Translation,
+    ZoomTilt,
+    Zoom
+  };
+  ToolAction m_currentAction;
 };
 
 } // namespace QtPlugins
