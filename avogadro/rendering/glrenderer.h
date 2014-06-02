@@ -35,11 +35,6 @@ namespace Rendering {
 class GeometryNode;
 class TextRenderStrategy;
 
-enum Projection {
-  Perspective,
-  Orthographic
-};
-
 /**
  * @class GLRenderer glrenderer.h <avogadro/rendering/glrenderer.h>
  * @brief Render the scene using OpenGL calls.
@@ -103,10 +98,6 @@ public:
   void setTextRenderStrategy(TextRenderStrategy *tren);
   /** @} */
 
-  void setProjection(Projection proj) { m_projection = proj; }
-
-  Projection projection() const { return m_projection; }
-
 private:
   /**
    * Apply the projection matrix.
@@ -134,7 +125,6 @@ private:
   std::string m_error;
   Camera m_camera;
   Camera m_overlayCamera;
-  Projection m_projection;
   Scene m_scene;
   TextRenderStrategy *m_textRenderStrategy;
 
