@@ -247,7 +247,10 @@ inline void Navigator::zoom(const Vector3f &ref, float d)
   float u = 2.0f / distance - 1.0f;
   if (t < u)
     t = u;
-  m_renderer->camera().preTranslate(transformedCenter * t);
+  if (m_renderer->camera().projectionType() == Rendering::Perspective)
+    m_renderer->camera().preTranslate(transformedCenter * t);
+  else
+    m_renderer->camera().scale(t + 1.0f);
 }
 
 inline void Navigator::translate(const Vector3f &ref, float x, float y)

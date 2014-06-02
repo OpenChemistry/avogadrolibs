@@ -26,6 +26,11 @@
 namespace Avogadro {
 namespace Rendering {
 
+enum Projection {
+  Perspective,
+  Orthographic
+};
+
 /**
  * @class Camera camera.h <avogadro/rendering/camera.h>
  * @brief The Camera class provides utility functionality useful in camera's
@@ -55,7 +60,7 @@ public:
   /** Prerotate the camera about the supplied @p axis by @p angle (degrees). */
   void preRotate(float angle, const Vector3f &axis);
 
-  /** Scale the model view matrix, to give the effect of zooming in or out. */
+  /** Modify the matrix, to give the effect of zooming in or out. */
   void scale(float scale);
 
   /** Set the model-view matrix to the "look at" transformation matrix.
@@ -135,11 +140,38 @@ public:
   /** Get a reference to the model view matrix. */
   const Eigen::Affine3f& modelView() const;
 
+  /**
+   * Set the projection type for this camera (Perspective or Orthographic).
+   * @param proj The projection type to use.
+   */
+  void setProjectionType(Projection proj) { m_projectionType = proj; }
+
+  /**
+   * Get the projection type the camera is using.
+   * @return The current projection type.
+   */
+  Projection projectionType() const { return m_projectionType; }
+
+  /**
+   * Set the orthographic scale, this defaults to 1.0. Affects calculation of
+   * the orthographic projection matrix.
+   * @param newScale The factor to scale orthographic projection by.
+   */
+  void setOrthographicScale(float newScale) { m_orthographicScale = newScale; }
+
+  /**
+   * Get the value of the orthographic scale, defaults to 1.0.
+   * @return The current value of the orthographic scale.
+   */
+  float orthographicScale() const { return m_orthographicScale; }
+
 private:
   Eigen::Affine3f m_projection;
   Eigen::Affine3f m_modelView;
   int m_width;
   int m_height;
+  Projection m_projectionType;
+  float m_orthographicScale;
 };
 
 inline const Eigen::Affine3f&  Camera::projection() const
