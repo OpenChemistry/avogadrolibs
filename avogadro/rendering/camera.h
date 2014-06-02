@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-2014 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -44,26 +44,35 @@ public:
   Camera();
   ~Camera();
 
-  /** Translate the camera's model view matrix using the supplied translation
+  /**
+   * Translate the camera's model view matrix using the supplied translation
    * vector @p translate.
    */
   void translate(const Vector3f &translate);
 
-  /** Pretranslate the camera's model view matrix using the supplied translation
+  /**
+   * Pretranslate the camera's model view matrix using the supplied translation
    * vector @p translate.
    */
   void preTranslate(const Vector3f &translate);
 
-  /** Rotate the camera about the supplied @p axis by @p angle (degrees). */
+  /**
+   * Rotate the camera about the supplied @p axis by @p angle (degrees).
+   */
   void rotate(float angle, const Vector3f &axis);
 
-  /** Prerotate the camera about the supplied @p axis by @p angle (degrees). */
+  /**
+   * Prerotate the camera about the supplied @p axis by @p angle (degrees).
+   */
   void preRotate(float angle, const Vector3f &axis);
 
-  /** Modify the matrix, to give the effect of zooming in or out. */
+  /**
+   * Modify the matrix, to give the effect of zooming in or out.
+   */
   void scale(float scale);
 
-  /** Set the model-view matrix to the "look at" transformation matrix.
+  /**
+   * Set the model-view matrix to the "look at" transformation matrix.
    * @param eye the position of the eye/camera.
    * @param center the position to look at.
    * @param up the vector pointing up.
@@ -71,22 +80,30 @@ public:
   void lookAt(const Vector3f &eye, const Vector3f &center,
               const Vector3f &up);
 
-  /** Distance to supplied point @p point and the camera. */
+  /**
+   * Distance to supplied point @p point and the camera.
+   */
   float distance(const Vector3f &point) const;
 
-  /** Projects a point from the scene to the window. */
+  /**
+   * Projects a point from the scene to the window.
+   */
   Vector3f project(const Vector3f &point) const;
 
-  /** Unprojects a point from the window to the scene. */
+  /**
+   * Unprojects a point from the window to the scene.
+   */
   Vector3f unProject(const Vector3f &point) const;
 
-  /** Unprojects a point from the window to the scene, using the supplied
+  /**
+   * Unprojects a point from the window to the scene, using the supplied
    * reference point (defaults to the origin if nothing is supplied).
    */
   Vector3f unProject(const Vector2f &point,
                      const Vector3f &reference = Vector3f::Zero()) const;
 
-  /** Calculate the perspective projection matrix.
+  /**
+   * Calculate the perspective projection matrix.
    * @param fieldOfView angle in degrees in the y direction.
    * @param aspectRatio is the ratio of width to height.
    * @param zNear is the distance from the viewer to the near clipping plane.
@@ -95,7 +112,8 @@ public:
   void calculatePerspective(float fieldOfView, float aspectRatio,
                             float zNear, float zFar);
 
-  /** Calculate the perspective projection matrix. Computes the aspect ratio
+  /**
+   * Calculate the perspective projection matrix. Computes the aspect ratio
    * from the width and height stored by the Camera object.
    * @param fieldOfView angle in degrees in the y direction.
    * @param zNear is the distance from the viewer to the near clipping plane.
@@ -103,7 +121,8 @@ public:
    */
   void calculatePerspective(float fieldOfView, float zNear, float zFar);
 
-  /** Calculate the orthographic projection matrix.
+  /**
+   * Calculate the orthographic projection matrix.
    * @param left left vertical clipping plane.
    * @param right right vertical clipping plane.
    * @param bottom bottom horizontal clipping plane.
@@ -114,27 +133,40 @@ public:
   void calculateOrthographic(float left, float right, float bottom, float top,
                              float zNear, float zFar);
 
-  /** Set the dimensions of the viewport in pixels. */
+  /**
+   * Set the dimensions of the viewport in pixels.
+   */
   void setViewport(int w, int h);
 
-  /** Get the width of the viewport in pixels. */
+  /**
+   * Get the width of the viewport in pixels.
+   */
   int width() const { return m_width; }
 
-  /** Get the height of the viewport in pixels. */
+  /**
+   * Get the height of the viewport in pixels.
+   */
   int height() const { return m_height; }
 
-  /** Set the model view matrix to the identity. This resets the model view
+  /**
+   * Set the model view matrix to the identity. This resets the model view
    * matrix.
    */
   void setIdentity() { m_modelView.setIdentity(); }
 
-  /** Set the projection transform. */
+  /**
+   * Set the projection transform.
+   */
   void setProjection(const Eigen::Affine3f &transform);
 
-  /** Get a reference to the projection matrix. */
+  /**
+   * Get a reference to the projection matrix.
+   */
   const Eigen::Affine3f& projection() const;
 
-  /** Set the model view transform. */
+  /**
+   * Set the model view transform.
+   */
   void setModelView(const Eigen::Affine3f &transform);
 
   /** Get a reference to the model view matrix. */
