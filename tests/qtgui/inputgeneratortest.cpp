@@ -19,7 +19,7 @@
 #include "qtguitests.h"
 
 #include <avogadro/qtgui/generichighlighter.h>
-#include <avogadro/qtgui/inputgenerator.h>
+#include <avogadro/molequeue/inputgenerator.h>
 
 #include <avogadro/core/molecule.h>
 
@@ -29,7 +29,8 @@
 #include <qjsonarray.h>
 #include <qjsonobject.h>
 
-using namespace Avogadro::QtGui;
+using Avogadro::QtGui::GenericHighlighter;
+using Avogadro::MoleQueue::InputGenerator;
 
 TEST(InputGeneratorTest, exercise)
 {

@@ -18,7 +18,7 @@
 #ifndef AVOGADRO_QTGUI_PERIODICTABLESCENE_P_H
 #define AVOGADRO_QTGUI_PERIODICTABLESCENE_P_H
 
-#include <QtGui/QGraphicsScene>
+#include <QtWidgets/QGraphicsScene>
 
 namespace Avogadro {
 namespace QtGui {

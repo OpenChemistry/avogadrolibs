@@ -24,12 +24,18 @@ namespace QtPlugins {
 class @PluginName@Factory : public QObject, public QtGui::@PluginType@Factory
 {
   Q_OBJECT
+  Q_PLUGIN_METADATA(IID "org.openchemistry.avogadro.@PluginType@Factory")
   Q_INTERFACES(Avogadro::QtGui::@PluginType@Factory)
 
 public:
   explicit @PluginName@Factory(QObject *parent_ = 0) : QObject(parent_) {}
 
-  QtGui::@PluginType@ * createInstance() { return new @PluginClass@; }
+  QtGui::@PluginType@ * createInstance()
+  {
+    @PluginClass@ *object = new @PluginClass@(parent());
+    object->setObjectName("@PluginName@");
+    return object;
+  }
 
   QString identifier() const { return "@PluginName@"; }
 
@@ -39,7 +45,5 @@ public:
 
 }
 }
-
-Q_EXPORT_PLUGIN2(@PluginName@, Avogadro::QtPlugins::@PluginName@Factory)
 
 #include "@PluginName@Plugin.moc"

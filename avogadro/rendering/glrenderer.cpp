@@ -63,13 +63,14 @@ void GLRenderer::initialize()
     return;
   }
 
-  glClearColor(0, 0, 0, 0);
-
   resetCamera();
 }
 
 void GLRenderer::resize(int width, int height)
 {
+  if (!m_valid)
+    return;
+
   glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);
@@ -77,6 +78,11 @@ void GLRenderer::resize(int width, int height)
 
 void GLRenderer::render()
 {
+  if (!m_valid)
+    return;
+
+  Vector4ub c = m_scene.backgroundColor();
+  glClearColor(c[0] / 255.0f, c[1] / 255.0f, c[2] / 255.0f, c[3] / 255.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   applyProjection();
 
@@ -110,7 +116,7 @@ void GLRenderer::resetCamera()
   resetGeometry();
   m_camera.setIdentity();
   m_camera.translate(-m_center);
-  m_camera.preTranslate(-3.0f * (m_radius + 2.0f) * Vector3f::UnitZ());
+  m_camera.preTranslate(-2.22f * m_radius * Vector3f::UnitZ());
 }
 
 void GLRenderer::resetGeometry()
@@ -150,9 +156,20 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy *tren)
 void GLRenderer::applyProjection()
 {
   float distance = m_camera.distance(m_center);
-  m_camera.calculatePerspective(40.0f,
-                                std::max(2.0f, distance - m_radius),
-                                distance + m_radius);
+  if (m_camera.projectionType() == Perspective) {
+    m_camera.calculatePerspective(40.0f,
+                                  std::max(2.0f, distance - m_radius),
+                                  distance + m_radius);
+  }
+  else {
+    // Renders the orthographic projection of the molecule
+    const double halfHeight = m_radius;
+    const double halfWidth = halfHeight * m_camera.width() / m_camera.height();
+    m_camera.calculateOrthographic(-halfWidth, halfWidth,
+                                   -halfHeight, halfHeight,
+                                   std::max(2.0f, distance - m_radius),
+                                   distance + m_radius);
+  }
   m_overlayCamera.calculateOrthographic(
         0.f, static_cast<float>(m_overlayCamera.width()),
         0.f, static_cast<float>(m_overlayCamera.height()),

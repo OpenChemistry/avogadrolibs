@@ -1072,62 +1072,62 @@ namespace QtPlugins {
       m_lenyh=lenyh;
       m_nyh=nyh;
 
-      yh = ( double ** ) qMalloc( ( 1 + lenyh ) * sizeof( *yh ) );
+      yh = ( double ** ) malloc( ( 1 + lenyh ) * sizeof( *yh ) );
       if ( yh == NULL ) {
         qDebug( "lsoda -- insufficient memory for your problem" );
         terminate( istate );
         return;
       }
       for ( i = 1 ; i <= lenyh ; i++ )
-        yh[i] = ( double * ) qMalloc( ( 1 + nyh ) * sizeof( double ) );
+        yh[i] = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
 
-      wm = ( double ** ) qMalloc( ( 1 + nyh ) * sizeof( *wm ) );
+      wm = ( double ** ) malloc( ( 1 + nyh ) * sizeof( *wm ) );
       if ( wm == NULL ) {
-        qFree( yh );
+        free( yh );
         qDebug( "lsoda -- insufficient memory for your problem" );
         terminate( istate );
         return;
       }
       for ( i = 1 ; i <= nyh ; i++ )
-        wm[i] = ( double * ) qMalloc( ( 1 + nyh ) * sizeof( double ) );
+        wm[i] = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
 
-      ewt = ( double * ) qMalloc( ( 1 + nyh ) * sizeof( double ) );
+      ewt = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
       if ( ewt == NULL ) {
-        qFree( yh );
-        qFree( wm );
+        free( yh );
+        free( wm );
         qDebug( "lsoda -- insufficient memory for your problem" );
         terminate( istate );
         return;
       }
 
-      savf = ( double * ) qMalloc( ( 1 + nyh ) * sizeof( double ) );
+      savf = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
       if ( savf == NULL ) {
-        qFree( yh );
-        qFree( wm );
-        qFree( ewt );
+        free( yh );
+        free( wm );
+        free( ewt );
         qDebug( "lsoda -- insufficient memory for your problem" );
         terminate( istate );
         return;
       }
 
-      acor = ( double * ) qMalloc( ( 1 + nyh ) * sizeof( double ) );
+      acor = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
       if ( acor == NULL ) {
-        qFree( yh );
-        qFree( wm );
-        qFree( ewt );
-        qFree( savf );
+        free( yh );
+        free( wm );
+        free( ewt );
+        free( savf );
         qDebug( "lsoda -- insufficient memory for your problem" );
         terminate( istate );
         return;
       }
 
-      ipvt = ( int * ) qMalloc( ( 1 + nyh ) * sizeof( int ) );
+      ipvt = ( int * ) malloc( ( 1 + nyh ) * sizeof( int ) );
       if ( ipvt == NULL ) {
-        qFree( yh );
-        qFree( wm );
-        qFree( ewt );
-        qFree( savf );
-        qFree( acor );
+        free( yh );
+        free( wm );
+        free( ewt );
+        free( savf );
+        free( acor );
         qDebug( "lsoda -- insufficient memory for your problem" );
         terminate( istate );
         return;
@@ -2792,20 +2792,20 @@ namespace QtPlugins {
     int i;
     for( i=1; i<= m_lenyh ; ++i )
     {
-      qFree( yh[i] );
+      free( yh[i] );
     }
-    qFree( yh );
+    free( yh );
 
     for( i=1; i<= m_nyh ; ++i )
     {
-      qFree( wm[i] );
+      free( wm[i] );
     }
-    qFree( wm );
+    free( wm );
 
-    qFree( ewt );
-    qFree( savf );
-    qFree( acor );
-    qFree( ipvt );
+    free( ewt );
+    free( savf );
+    free( acor );
+    free( ipvt );
   }     /*   end freevectors   */
 
 } // namespace QtPlugins

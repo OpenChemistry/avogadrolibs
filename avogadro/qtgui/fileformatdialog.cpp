@@ -19,8 +19,8 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/io/fileformatmanager.h>
 
-#include <QtGui/QInputDialog>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QInputDialog>
+#include <QtWidgets/QMessageBox>
 
 #include <QtCore/QSettings>
 
@@ -134,7 +134,8 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
 
 const Io::FileFormat *FileFormatDialog::findFileFormat(
     QWidget *parentWidget, const QString &caption, const QString &fileName,
-    const FileFormat::Operations formatFlags)
+    const FileFormat::Operations formatFlags,
+    const QString &formatPrefix)
 {
   if (fileName.isEmpty())
     return NULL;
@@ -181,7 +182,8 @@ const Io::FileFormat *FileFormatDialog::findFileFormat(
                           tr("Multiple %1 found that can %2 this format. "
                              "Which should be used?").arg(noun, verb),
                           QString("FileFormatDialog/%1/%2"
-                                  "/lastUsed").arg(key, extension));
+                                  "/lastUsed").arg(key, extension),
+                          formatPrefix);
 }
 
 const QString FileFormatDialog::readFileFilter()
@@ -274,7 +276,8 @@ const Io::FileFormat *FileFormatDialog::selectFileFormat(
     QWidget *parentWidget,
     const std::vector<const Io::FileFormat *> &ffs,
     const QString &caption, const QString &prompt,
-    const QString &settingsKey)
+    const QString &settingsKey,
+    const QString &formatPrefix)
 {
   if (ffs.empty())
     return NULL;
@@ -287,6 +290,14 @@ const Io::FileFormat *FileFormatDialog::selectFileFormat(
        it = ffs.begin(), itEnd = ffs.end(); it != itEnd; ++it) {
     idents << QString::fromStdString((*it)->identifier());
   }
+
+  // If there is a format prefix, see if that can reduce the results down.
+  QStringList preferred;
+  foreach (const QString &id, idents)
+    if (id.startsWith(formatPrefix))
+      preferred << id;
+  if (preferred.size() == 1)
+    return ffs[idents.indexOf(preferred.first())];
 
   // See if they used one before:
   QString lastIdent = settingsKey.isNull()

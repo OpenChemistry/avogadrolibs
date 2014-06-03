@@ -108,7 +108,7 @@ vector<double> SlaterSetTools::calculateValues(const Vector3 &position) const
 {
   m_basis->initCalculation();
 
-  size_t atomsSize = m_molecule->atomCount();
+  Index atomsSize = m_molecule->atomCount();
   size_t basisSize = m_basis->zetas().size();
 
   const vector<int> &slaterIndices = m_basis->slaterIndices();
@@ -123,7 +123,7 @@ vector<double> SlaterSetTools::calculateValues(const Vector3 &position) const
   dr2.reserve(atomsSize);
 
   // Calculate the deltas for the position
-  for (size_t i = 0; i < atomsSize; ++i) {
+  for (Index i = 0; i < atomsSize; ++i) {
     deltas.push_back(position - m_molecule->atom(i).position3d());
     dr2.push_back(deltas[i].squaredNorm());
   }

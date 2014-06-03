@@ -24,9 +24,9 @@
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 
-#include <QtGui/QAction>
-#include <QtGui/QMessageBox>
-#include <QtGui/QProgressDialog>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressDialog>
 
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;

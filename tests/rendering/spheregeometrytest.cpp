@@ -20,8 +20,6 @@
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/spheregeometry.h>
 
-#include <iostream>
-
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::SphereGeometry;
 using Avogadro::Vector3f;

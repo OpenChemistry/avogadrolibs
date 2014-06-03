@@ -19,68 +19,198 @@
 
 #include "avogadrocore.h"
 
-#include <cstddef>
-
 #include "atom.h"
 
 namespace Avogadro {
 namespace Core {
 
-class Molecule;
-
 /**
  * @class Bond bond.h <avogadro/core/bond.h>
- * @brief The Bond class represents a bond between two atoms in a molecule.
+ * The Bond class represents a bond in a molecule.
+ * To use the appropriate bond implementation for a specific molecule
+ * implementation, use the [MoleculeClass]::BondType typedef.
  */
-
-class AVOGADROCORE_EXPORT Bond
+template <class Molecule_T>
+class BondTemplate
 {
 public:
+  typedef Molecule_T MoleculeType;
+  typedef typename Molecule_T::AtomType AtomType;
+
   /** Creates a new, invalid bond object. */
-  Bond();
+  BondTemplate();
 
   /**
    * Creates a bond object representing a bond at index @p i in molecule @p m.
    */
-  Bond(Molecule *m, size_t i);
+  BondTemplate(MoleculeType *m, Index i);
 
-  /** Returns \c true if the bond is valid. */
+  /**
+   * @return True if @a this and @a other share the same index and molecule.
+   */
+  bool operator==(const BondTemplate<MoleculeType> &other) const;
+
+  /**
+   * @return True if @a this and @a other do not share the same index or
+   * molecule.
+   */
+  bool operator!=(const BondTemplate<MoleculeType> &other) const;
+
+  /**
+   * Prefix increment operator. Increment this Bond's index by 1 and return a
+   * self-reference. Check isValid() before calling any other methods.
+   */
+  BondTemplate<MoleculeType>& operator++();
+
+  /**
+   * Postfix increment operator. Increment this Bond's index by 1 and return a
+   * copy of the current Atom. Check isValid() before calling any other methods.
+   */
+  BondTemplate<MoleculeType> operator++(int);
+
+  /**
+   * Prefix decrement operator. Decrement this Bond's index by 1 and return a
+   * self-reference. Check isValid() before calling any other methods.
+   */
+  BondTemplate<MoleculeType>& operator--();
+
+  /**
+   * Postfix decrement operator. Decrement this Bond's index by 1 and return a
+   * copy of the current Atom. Check isValid() before calling any other methods.
+   */
+  BondTemplate<MoleculeType> operator--(int);
+
+  /**
+   * @return True if the molecule is set and the index is less than the number
+   * of bonds.
+   */
   bool isValid() const;
 
-  /** Returns the molecule that the bond is a part of. */
-  Molecule* molecule() const;
+  /**
+   * @return The molecule that contains this Bond.
+   */
+  MoleculeType* molecule() const;
 
-  /** Returns the index of the bond in the molecule. */
-  size_t index() const;
+  /**
+   * @return The index of this bond in molecule().
+   */
+  Index index() const;
 
-  /** Returns the first atom in the molecule. */
-  Atom atom1() const;
+  /**
+   * An atom in the bond, such that atom1().index() < atom2.index().
+   * @{
+   */
+  AtomType atom1() const;
+  AtomType atom2() const;
+  /** @} */
 
-  /** Returns the second atom in the molecule. */
-  Atom atom2() const;
-
-  /**  Sets the bond order for the bond to @p order. */
+  /**
+   * The bond's order (single = 1, double = 2, etc.)
+   * @{
+   */
   void setOrder(unsigned char o);
-
-  /** Returns the bond order for the bond. */
   unsigned char order() const;
+  /** @} */
 
 private:
-  Molecule *m_molecule;
-  size_t m_index;
+  MoleculeType *m_molecule;
+  Index m_index;
 };
 
-inline bool operator==(const Bond& lhs, const Bond& rhs)
+template <class Molecule_T>
+BondTemplate<Molecule_T>::BondTemplate()
+  : m_molecule(NULL),
+    m_index(MaxIndex)
 {
-  if (lhs.molecule() == rhs.molecule() && lhs.index() == rhs.index())
-    return true;
-  else
-    return false;
 }
 
-inline bool operator!=(const Bond& lhs, const Bond& rhs)
+template <class Molecule_T>
+BondTemplate<Molecule_T>::BondTemplate(MoleculeType *m, Index i)
+  : m_molecule(m),
+    m_index(i)
 {
-  return !operator==(lhs, rhs);
+}
+
+template <class Molecule_T>
+bool BondTemplate<Molecule_T>::operator==(const BondTemplate<MoleculeType> &other) const
+{
+  return m_molecule == other.m_molecule && m_index == other.m_index;
+}
+
+template <class Molecule_T>
+bool BondTemplate<Molecule_T>::operator!=(const BondTemplate<MoleculeType> &other) const
+{
+  return m_molecule != other.m_molecule || m_index != other.m_index;
+}
+
+template <class Molecule_T>
+BondTemplate<Molecule_T> &BondTemplate<Molecule_T>::operator++()
+{
+  ++m_index;
+  return *this;
+}
+
+template <class Molecule_T>
+BondTemplate<Molecule_T> BondTemplate<Molecule_T>::operator++(int)
+{
+  AtomTemplate<MoleculeType> result(m_molecule, m_index++);
+  return result;
+}
+
+template <class Molecule_T>
+BondTemplate<Molecule_T> &BondTemplate<Molecule_T>::operator--()
+{
+  --m_index;
+  return *this;
+}
+
+template <class Molecule_T>
+BondTemplate<Molecule_T> BondTemplate<Molecule_T>::operator--(int)
+{
+  AtomTemplate<MoleculeType> result(m_molecule, m_index--);
+  return result;
+}
+
+template <class Molecule_T>
+bool BondTemplate<Molecule_T>::isValid() const
+{
+  return m_molecule && m_index < m_molecule->bondCount();
+}
+
+template <class Molecule_T>
+typename BondTemplate<Molecule_T>::MoleculeType *BondTemplate<Molecule_T>::molecule() const
+{
+  return m_molecule;
+}
+
+template <class Molecule_T>
+Index BondTemplate<Molecule_T>::index() const
+{
+  return m_index;
+}
+
+template <class Molecule_T>
+typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom1() const
+{
+  return AtomType(m_molecule, m_molecule->bondPairs()[m_index].first);
+}
+
+template <class Molecule_T>
+typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom2() const
+{
+  return AtomType(m_molecule, m_molecule->bondPairs()[m_index].second);
+}
+
+template <class Molecule_T>
+void BondTemplate<Molecule_T>::setOrder(unsigned char o)
+{
+  m_molecule->setBondOrder(m_index, o);
+}
+
+template <class Molecule_T>
+unsigned char BondTemplate<Molecule_T>::order() const
+{
+  return m_molecule->bondOrders()[m_index];
 }
 
 } // end Core namespace

@@ -22,7 +22,7 @@
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/unitcell.h>
 
-#include <QtGui/QPlainTextEdit>
+#include <QtWidgets/QPlainTextEdit>
 
 #include <QtCore/QRegExp>
 

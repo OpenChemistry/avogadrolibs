@@ -19,22 +19,23 @@
 #include "qtguitests.h"
 
 #include <avogadro/qtgui/filebrowsewidget.h>
-#include <avogadro/qtgui/inputgenerator.h>
-#include <avogadro/qtgui/inputgeneratorwidget.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/molequeue/inputgeneratorwidget.h>
 
-#include <QtGui/QApplication>
-#include <QtGui/QCheckBox>
-#include <QtGui/QComboBox>
-#include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
-#include <QtGui/QSpinBox>
-#include <QtGui/QTextEdit>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpinBox>
+#include <QtWidgets/QTextEdit>
 
 #include <QtCore/QFile>
 #include <QtCore/QTimer>
 
-using namespace Avogadro::QtGui;
+using Avogadro::QtGui::FileBrowseWidget;
+using Avogadro::MoleQueue::InputGeneratorWidget;
+using Avogadro::QtGui::Molecule;
 
 namespace {
 

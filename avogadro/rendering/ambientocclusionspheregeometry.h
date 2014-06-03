@@ -48,6 +48,10 @@ public:
   AmbientOcclusionSphereGeometry(const AmbientOcclusionSphereGeometry &other);
   ~AmbientOcclusionSphereGeometry();
 
+  AmbientOcclusionSphereGeometry &operator=(AmbientOcclusionSphereGeometry);
+  friend void swap(AmbientOcclusionSphereGeometry &lhs,
+                   AmbientOcclusionSphereGeometry &rhs);
+
   /**
    * Accept a visit from our friendly visitor.
    */
@@ -106,6 +110,24 @@ private:
   class Private;
   Private *d;
 };
+
+inline AmbientOcclusionSphereGeometry &
+AmbientOcclusionSphereGeometry::operator=(AmbientOcclusionSphereGeometry other)
+{
+  using std::swap;
+  swap(*this, other);
+  return *this;
+}
+
+inline void swap(AmbientOcclusionSphereGeometry &lhs,
+                 AmbientOcclusionSphereGeometry &rhs)
+{
+  using std::swap;
+  swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));
+  swap(lhs.m_spheres, rhs.m_spheres);
+  swap(lhs.m_indices, rhs.m_indices);
+  lhs.m_dirty = rhs.m_dirty = true;
+}
 
 } // End namespace Rendering
 } // End namespace Avogadro

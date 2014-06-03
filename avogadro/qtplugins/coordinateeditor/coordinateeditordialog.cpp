@@ -26,14 +26,14 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/vector.h>
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QClipboard>
 #include <QtGui/QFont>
 #include <QtGui/QIcon>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextDocument>
-#include <QtGui/QToolTip>
+#include <QtWidgets/QToolTip>
 #include <QtGui/QRegExpValidator>
 
 #include <QtCore/QDebug>

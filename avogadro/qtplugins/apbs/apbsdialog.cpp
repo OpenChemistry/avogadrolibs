@@ -25,18 +25,22 @@
 #include <QMessageBox>
 
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/qtgui/inputgenerator.h>
+#include <avogadro/qtgui/utilities.h>
+#include <avogadro/molequeue/inputgenerator.h>
 
 namespace Avogadro {
 namespace QtPlugins {
+
+using MoleQueue::InputGenerator;
 
 ApbsDialog::ApbsDialog(QWidget *parent_)
   : QDialog(parent_),
     m_ui(new Ui::ApbsDialog),
     m_molecule(0),
     m_inputGenerator(
-      new QtGui::InputGenerator(QCoreApplication::applicationDirPath() +
-        "/../lib/avogadro2/scripts/inputGenerators/apbs.py")),
+      new InputGenerator(QCoreApplication::applicationDirPath() + "/../"
+                         + QtGui::Utilities::libraryDirectory()
+                         + "/avogadro2/scripts/inputGenerators/apbs.py")),
     m_loadStructureFile(false),
     m_loadCubeFile(false)
 {
@@ -204,7 +208,7 @@ void ApbsDialog::saveInputFile(const QString &fileName)
 
   QFile file(fileName);
   file.open(QFile::WriteOnly);
-  file.write(contents.toAscii());
+  file.write(contents.toLatin1());
   file.close();
 }
 

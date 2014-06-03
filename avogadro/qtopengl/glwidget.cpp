@@ -25,12 +25,10 @@
 
 #include <avogadro/rendering/camera.h>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-
-#include <QtCore/QDebug>
 
 namespace Avogadro {
 namespace QtOpenGL {
@@ -44,6 +42,7 @@ GLWidget::GLWidget(QWidget *parent_)
   connect(&m_scenePlugins,
           SIGNAL(pluginStateChanged(Avogadro::QtGui::ScenePlugin*)),
           SLOT(updateScene()));
+  connect(&m_scenePlugins, SIGNAL(pluginConfigChanged()), SLOT(updateScene()));
   m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
 }
 
@@ -75,7 +74,10 @@ const QtGui::Molecule * GLWidget::molecule() const
 void GLWidget::updateScene()
 {
   // Build up the scene with the scene plugins, creating the appropriate nodes.
-  if (m_molecule) {
+  QtGui::Molecule *mol = m_molecule;
+  if (!mol)
+    mol = new QtGui::Molecule(this);
+  if (mol) {
     Rendering::GroupNode &node = m_renderer.scene().rootNode();
     node.clear();
     Rendering::GroupNode *moleculeNode = new Rendering::GroupNode(&node);
@@ -83,7 +85,7 @@ void GLWidget::updateScene()
     foreach (QtGui::ScenePlugin *scenePlugin,
              m_scenePlugins.activeScenePlugins()) {
       Rendering::GroupNode *engineNode = new Rendering::GroupNode(moleculeNode);
-      scenePlugin->process(*m_molecule, *engineNode);
+      scenePlugin->process(*mol, *engineNode);
     }
 
     // Let the tools perform any drawing they need to do.
@@ -98,8 +100,10 @@ void GLWidget::updateScene()
     }
 
     m_renderer.resetGeometry();
-    update();
+    updateGL();
   }
+  if (mol != m_molecule)
+    delete mol;
 }
 
 void GLWidget::clearScene()
@@ -110,7 +114,7 @@ void GLWidget::clearScene()
 void GLWidget::resetCamera()
 {
   m_renderer.resetCamera();
-  update();
+  updateGL();
 }
 
 void GLWidget::resetGeometry()
@@ -129,9 +133,11 @@ void GLWidget::addTool(QtGui::ToolPlugin *tool)
   if (m_tools.contains(tool))
     return;
 
+  connect(tool, SIGNAL(updateRequested()), SLOT(updateGL()));
   tool->setParent(this);
   tool->setGLWidget(this);
   tool->setMolecule(m_molecule);
+  tool->setGLRenderer(&m_renderer);
   m_tools << tool;
 }
 
@@ -139,7 +145,7 @@ void GLWidget::setActiveTool(const QString &name)
 {
   foreach (QtGui::ToolPlugin *tool, m_tools) {
     QAction *toolAction = tool->activateAction();
-    if (tool->name() == name
+    if (tool->objectName() == name
         || (toolAction && toolAction->text() == name)) {
       setActiveTool(tool);
       return;
@@ -202,9 +208,8 @@ void GLWidget::setDefaultTool(QtGui::ToolPlugin *tool)
 void GLWidget::initializeGL()
 {
   m_renderer.initialize();
-  if (!m_renderer.isValid()) {
-    qDebug() << "Error initializing: " << m_renderer.error().c_str();
-  }
+  if (!m_renderer.isValid())
+    emit rendererInvalid();
 }
 
 void GLWidget::resizeGL(int width_, int height_)

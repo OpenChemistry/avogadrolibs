@@ -20,11 +20,6 @@
 #include <avogadro/core/vector.h>
 
 namespace Avogadro {
-
-namespace Core {
-class Molecule;
-}
-
 namespace Rendering {
 
 /** Identifies the type of object a primitive represents. */
@@ -36,7 +31,7 @@ enum Type {
 
 /** Used to identify the primitive during picking. */
 struct Identifier {
-  Identifier() : molecule(0), type(InvalidType), index(-1) {}
+  Identifier() : molecule(0), type(InvalidType), index(MaxIndex) {}
 
   bool operator==(const Identifier &other) const
   {
@@ -54,9 +49,9 @@ struct Identifier {
     return type != InvalidType && molecule != NULL;
   }
 
-  const Core::Molecule *molecule;
+  const void* molecule;
   Type type;
-  size_t index;
+  Index index;
 };
 
 class Primitive
@@ -71,7 +66,7 @@ public:
 
   /** Used to identify the primitive during picking. */
   struct Identifier {
-    Identifier() : molecule(0), type(Invalid), index(-1) {}
+    Identifier() : molecule(0), type(Invalid), index(MaxIndex) {}
 
     bool operator==(const Identifier &other) const
     {
@@ -86,9 +81,9 @@ public:
 
     bool isValid() const { return type != Invalid; }
 
-    const Core::Molecule *molecule;
+    const void* molecule;
     Type type;
-    size_t index;
+    Index index;
   };
 
   Primitive(Identifier id, const Vector3ub &color_)

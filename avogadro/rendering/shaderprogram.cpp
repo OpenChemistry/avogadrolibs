@@ -128,15 +128,15 @@ bool ShaderProgram::attachShader(const Shader &shader)
     if (m_vertexShader != 0) {
       glDetachShader(static_cast<GLuint>(m_handle),
                      static_cast<GLuint>(m_vertexShader));
-      m_vertexShader = shader.handle();
     }
+    m_vertexShader = shader.handle();
   }
   else if (shader.type() == Shader::Fragment) {
     if (m_fragmentShader != 0) {
       glDetachShader(static_cast<GLuint>(m_handle),
                      static_cast<GLuint>(m_fragmentShader));
-      m_fragmentShader = shader.handle();
     }
+    m_fragmentShader = shader.handle();
   }
   else {
     m_error = "Unknown shader type encountered - this should not happen.";
@@ -449,10 +449,10 @@ void ShaderProgram::initializeTextureUnits()
   // This seems to be about the maximum available on current hardware.
   // If increasing this limit, modify the lookupTextureUnit method
   // appropriately.
-  numTextureUnits = std::min(numTextureUnits, 32);
+  numTextureUnits = std::min(std::max(numTextureUnits, 0), 32);
 
-  m_boundTextureUnits.resize(numTextureUnits);
-  std::fill(m_boundTextureUnits.begin(), m_boundTextureUnits.end(), false);
+  m_boundTextureUnits.clear();
+  m_boundTextureUnits.resize(numTextureUnits, false);
   m_textureUnitBindings.clear();
 }
 

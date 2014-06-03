@@ -16,11 +16,11 @@
 
 #include <gtest/gtest.h>
 
-#include <avogadro/qtgui/molequeuequeuelistmodel.h>
+#include <avogadro/molequeue/molequeuequeuelistmodel.h>
 
 #include <QtCore/QListIterator>
 
-using namespace Avogadro::QtGui;
+using Avogadro::MoleQueue::MoleQueueQueueListModel;
 
 // Allow access to protected members (like ctor, setQueueList)
 class MoleQueueQueueListModelTestBridge

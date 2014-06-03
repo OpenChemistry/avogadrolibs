@@ -49,8 +49,8 @@ template <typename OutputType>
 void AtomTyper<OutputType>::run()
 {
   initialize();
-  size_t numAtoms = m_molecule ? m_molecule->atomCount() : 0;
-  for (size_t atomId = 0; atomId < numAtoms; ++atomId) {
+  Index numAtoms = m_molecule ? m_molecule->atomCount() : 0;
+  for (Index atomId = 0; atomId < numAtoms; ++atomId) {
     Atom atom = m_molecule->atom(atomId);
     m_types.push_back(type(atom));
   }

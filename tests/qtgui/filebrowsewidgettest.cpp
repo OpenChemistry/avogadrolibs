@@ -21,12 +21,12 @@
 
 #include <QtTest/QSignalSpy>
 
-#include <QtGui/QApplication>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QLineEdit>
 
 #include <QtCore/QVariant>
 
-using namespace Avogadro::QtGui;
+using Avogadro::QtGui::FileBrowseWidget;
 
 // Need a QApplication to instantiate widget
 #define START_QAPP \

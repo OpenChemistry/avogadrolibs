@@ -28,6 +28,12 @@ class vtkCommunicatorChannel;
 
 class vtkServerSocket;
 
+/**
+ * @class AvogadroServer avogadroserver.h
+ *        <avogadro/qtplugins/clientserver/avogadroserver.h>
+ * @brief Simple server implementation based on vtkServerSocket, accepting
+ * connections and processing ProtoCall requests.
+ */
 class AvogadroServer
 {
 public:

@@ -18,9 +18,12 @@
 
 #include <avogadro/core/variant.h>
 
+using Avogadro::MatrixX;
+using Avogadro::Core::Variant;
+
 TEST(VariantTest, isNull)
 {
-  Avogadro::Core::Variant variant;
+  Variant variant;
   EXPECT_EQ(variant.isNull(), true);
 
   variant.setValue(7);
@@ -29,7 +32,7 @@ TEST(VariantTest, isNull)
 
 TEST(VariantTest, clear)
 {
-  Avogadro::Core::Variant variant(62);
+  Variant variant(62);
   EXPECT_EQ(variant.isNull(), false);
 
   variant.clear();
@@ -44,7 +47,7 @@ TEST(VariantTest, clear)
 
 TEST(VariantTest, toBool)
 {
-  Avogadro::Core::Variant variant(false);
+  Variant variant(false);
   EXPECT_EQ(variant.toBool(), false);
 
   variant.setValue(true);
@@ -62,7 +65,7 @@ TEST(VariantTest, toBool)
 
 TEST(VariantTest, toChar)
 {
-  Avogadro::Core::Variant variant('c');
+  Variant variant('c');
   EXPECT_EQ(variant.toChar(), 'c');
 
   variant.setValue("hello");
@@ -71,13 +74,13 @@ TEST(VariantTest, toChar)
 
 TEST(VariantTest, toShort)
 {
-  Avogadro::Core::Variant variant(short(4));
+  Variant variant(short(4));
   EXPECT_EQ(variant.toShort(), short(4));
 }
 
 TEST(VariantTest, toInt)
 {
-  Avogadro::Core::Variant variant(12);
+  Variant variant(12);
   EXPECT_EQ(variant.toInt(), int(12));
 
   variant.setValue(-23);
@@ -95,7 +98,7 @@ TEST(VariantTest, toInt)
 
 TEST(VariantTest, toLong)
 {
-  Avogadro::Core::Variant variant(192L);
+  Variant variant(192L);
   EXPECT_EQ(variant.toLong(), 192L);
 
   variant.setValue(7);
@@ -107,13 +110,13 @@ TEST(VariantTest, toLong)
 
 TEST(VariantTest, toFloat)
 {
-  Avogadro::Core::Variant variant(12.3f);
+  Variant variant(12.3f);
   EXPECT_EQ(variant.toFloat(), 12.3f);
 }
 
 TEST(VariantTest, toDouble)
 {
-  Avogadro::Core::Variant variant(3.14);
+  Variant variant(3.14);
   EXPECT_EQ(variant.toDouble(), 3.14);
 }
 
@@ -121,13 +124,13 @@ TEST(VariantTest, toPointer)
 {
   int value;
   void *pointer = &value;
-  Avogadro::Core::Variant variant(pointer);
+  Variant variant(pointer);
   EXPECT_EQ(variant.toPointer(), pointer);
 }
 
 TEST(VariantTest, toString)
 {
-  Avogadro::Core::Variant variant("hello");
+  Variant variant("hello");
   EXPECT_EQ(variant.toString(), std::string("hello"));
 
   variant.setValue(12);
@@ -139,15 +142,15 @@ TEST(VariantTest, toString)
 
 TEST(VariantTest, toMatrix)
 {
-  Avogadro::MatrixX matrix(6, 7);
+  MatrixX matrix(6, 7);
   for (int row = 0; row < matrix.rows(); ++row) {
     for (int col = 0; col < matrix.cols(); ++col) {
       matrix(row, col) = 2 * row + col / static_cast<double>(matrix.cols());
     }
   }
 
-  Avogadro::Core::Variant variant(matrix);
-  const Avogadro::MatrixX &varMatrix = variant.toMatrixRef();
+  Variant variant(matrix);
+  const MatrixX &varMatrix = variant.toMatrixRef();
 
   ASSERT_EQ(matrix.rows(), varMatrix.rows())
       << "Number of rows don't match after variant-matrix conversion!";

@@ -9,8 +9,8 @@ set(bondcentrictool_rcs
   bondcentrictool.qrc
 )
 
-avogadro_plugin(BondCentricTool
-  "Bond-centric manipulation tool"
+avogadro_plugin(BondCentric
+  "Bond-centric"
   ToolPlugin
   bondcentrictool.h
   BondCentricTool
@@ -19,4 +19,4 @@ avogadro_plugin(BondCentricTool
   "${bondcentrictool_rcs}"
 )
 
-target_link_libraries(BondCentricTool LINK_PRIVATE AvogadroQtOpenGL)
+target_link_libraries(BondCentric LINK_PRIVATE AvogadroQtOpenGL)

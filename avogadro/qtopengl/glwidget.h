@@ -35,7 +35,7 @@ class ToolPlugin;
 namespace QtOpenGL {
 
 /**
- * @class GLWidget glwidget.h <avogadro/rendering/glwidget.h>
+ * @class GLWidget glwidget.h <avogadro/qtopengl/glwidget.h>
  * @brief QGLWidget derived object for displaying 3D molecular geometry.
  * @author Marcus D. Hanwell
  *
@@ -95,6 +95,23 @@ public:
   QtGui::ScenePluginModel& sceneModel() { return m_scenePlugins; }
   const QtGui::ScenePluginModel& sceneModel() const { return m_scenePlugins; }
   /** @}*/
+
+  /**
+   * Check if the GLWidget was able to acquire a context, and set up the
+   * renderer correctly. If not valid, the error method may provide more
+   * information.
+   * @return true if value, false if not.
+   */
+  bool isValid() const { return m_renderer.isValid(); }
+
+  /**
+   * Get the error(s), if any, encountered when setting up the GLWidget.
+   * @return A free form string containing errors encountered.
+   */
+  QString error() const { return m_renderer.error().c_str(); }
+
+signals:
+  void rendererInvalid();
 
 public slots:
   /**

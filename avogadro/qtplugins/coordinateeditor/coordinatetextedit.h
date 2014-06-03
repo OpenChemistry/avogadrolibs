@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_QTPLUGINS_COORDINATETEXTEDIT_H
 #define AVOGADRO_QTPLUGINS_COORDINATETEXTEDIT_H
 
-#include <QtGui/QTextEdit>
+#include <QtWidgets/QTextEdit>
 
 #include <QtGui/QTextCharFormat>
 

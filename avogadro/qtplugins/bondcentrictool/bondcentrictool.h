@@ -28,7 +28,9 @@
 
 #include <avogadro/rendering/primitive.h>
 
-#include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
+#include <avogadro/qtgui/persistentatom.h>
+#include <avogadro/qtgui/persistentbond.h>
 
 #include <avogadro/core/avogadrocore.h>
 
@@ -46,8 +48,6 @@ class GeometryNode;
 namespace QtPlugins {
 
 /**
- * @class BondCentricTool bondcentrictool.h
- * <avogadro/qtplugins/measuretool/bondcentrictool.h>
  * @brief BondCentricTool manipulates molecular geometry by adjusting bond
  * angles/lengths.
  *
@@ -68,7 +68,9 @@ public:
   QWidget * toolWidget() const AVO_OVERRIDE;
 
   void setMolecule(QtGui::Molecule *) AVO_OVERRIDE;
+  void setEditMolecule(QtGui::RWMolecule *) AVO_OVERRIDE;
   void setGLWidget(QtOpenGL::GLWidget *widget) AVO_OVERRIDE;
+  void setGLRenderer(Rendering::GLRenderer *ren) AVO_OVERRIDE;
 
   QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
   QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) AVO_OVERRIDE;
@@ -96,12 +98,12 @@ private:
   QUndoCommand* initRotatePlane(QMouseEvent *e,
                                 const Rendering::Identifier &ident);
   QUndoCommand* initRotateBondedAtom(QMouseEvent *e,
-                                     const Core::Atom &clickedAtom);
+                                     const QtGui::RWAtom &clickedAtom);
   QUndoCommand* initAdjustBondLength(QMouseEvent *e,
-                                     const Core::Atom &clickedAtom);
+                                     const QtGui::RWAtom &clickedAtom);
   QUndoCommand* initRotateNeighborAtom(QMouseEvent *e,
-                                       const Core::Atom &clickedAtom,
-                                       const Core::Atom &anchorAtom);
+                                       const QtGui::RWAtom &clickedAtom,
+                                       const QtGui::RWAtom &anchorAtom);
 
   // Mouse move event handlers:
   QUndoCommand* rotatePlane(QMouseEvent *e);
@@ -111,25 +113,25 @@ private:
 
   // Drawing helpers:
   void drawBondQuad(Rendering::GeometryNode &node,
-                    const Core::Bond &bond) const;
+                    const QtGui::RWBond &bond) const;
   void drawBondAngle(Rendering::GeometryNode &node,
-                     const Core::Bond &selectedBond,
-                     const Core::Bond &movingBond) const;
+                     const QtGui::RWBond &selectedBond,
+                     const QtGui::RWBond &movingBond) const;
   void drawBondLengthLabel(Rendering::GeometryNode &node,
-                           const Core::Bond &bond);
+                           const QtGui::RWBond &bond);
   void drawAtomBondAngles(Rendering::GeometryNode &node,
-                          const Core::Atom &atom,
-                          const Core::Bond &anchorBond);
+                          const QtGui::RWAtom &atom,
+                          const QtGui::RWBond &anchorBond);
   void drawAtomBondAngle(Rendering::GeometryNode &node,
-                         const Core::Atom &atom,
-                         const Core::Bond &anchorBond,
-                         const Core::Bond &otherBond,
+                         const QtGui::RWAtom &atom,
+                         const QtGui::RWBond &anchorBond,
+                         const QtGui::RWBond &otherBond,
                          const Vector3ub &color);
 
   // Bond utilities
-  bool bondContainsAtom(const Core::Bond &bond, const Core::Atom &atom) const;
-  Core::Atom otherBondedAtom(const Core::Bond &bond,
-                             const Core::Atom &atom) const;
+  bool bondContainsAtom(const QtGui::RWBond &bond, const QtGui::RWAtom &atom) const;
+  QtGui::RWAtom otherBondedAtom(const QtGui::RWBond &bond,
+                             const QtGui::RWAtom &atom) const;
 
   // The 'fragment' is the SkeletonTree of the 1.x implementation. It is a list
   // of atoms created by buildFragment(bond, startAtom), which walks the bonds
@@ -138,16 +140,16 @@ private:
   // cycle is detected, only startAtom is added to m_fragment.
   void resetFragment() { m_fragment.clear(); }
   bool fragmentHasAtom(int uid) const;
-  void buildFragment(const Core::Bond &bond, const Core::Atom &startAtom);
-  bool buildFragmentRecurse(const Core::Bond &bond, const Core::Atom &startAtom,
-                            const Core::Atom &currentAtom);
+  void buildFragment(const QtGui::RWBond &bond, const QtGui::RWAtom &startAtom);
+  bool buildFragmentRecurse(const QtGui::RWBond &bond, const QtGui::RWAtom &startAtom,
+                            const QtGui::RWAtom &currentAtom);
   // Use transformFragment to transform the position of each atom in the
   // fragment by m_transform.
   void transformFragment() const;
 
   QAction *m_activateAction;
-  QtGui::Molecule *m_molecule;
-  QtOpenGL::GLWidget *m_glWidget;
+  QtGui::RWMolecule *m_molecule;
+  Rendering::GLRenderer *m_renderer;
   MoveState m_moveState;
   QPoint m_clickedPoint;
   QPoint m_lastDragPoint;
@@ -168,13 +170,9 @@ private:
   void updatePlaneSnapAngles();
   void updateSnappedPlaneNormal();
 
-  /// @todo use persistent bond/atom objects instead of raw uids:
-  int m_selectedBondId;
-  Core::Bond getSelectedBond() const;
-  int m_anchorAtomId;
-  Core::Atom getAnchorAtom() const;
-  int m_clickedAtomId;
-  Core::Atom getClickedAtom() const;
+  QtGui::RWMolecule::PersistentBondType m_selectedBond;
+  QtGui::RWMolecule::PersistentAtomType m_anchorAtom;
+  QtGui::RWMolecule::PersistentAtomType m_clickedAtom;
 };
 
 inline QString BondCentricTool::name() const

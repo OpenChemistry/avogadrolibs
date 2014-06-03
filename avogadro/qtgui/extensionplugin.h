@@ -110,6 +110,20 @@ signals:
    * extension is registering.
    */
   void fileFormatsReady();
+
+  /**
+   * Signal to request a particular tool is set as the active tool. This is
+   * useful when loading a structure outside of the normal file API and setting
+   * "Navigator" to active instead of "Editor" (the default).
+   */
+  void requestActiveTool(QString toolName);
+
+  /**
+   * Request a specific display type (or types) are active, and all others are
+   * disabled. This can be useful when loading a specific type of data that
+   * would be most readily viewed with a specialized view.
+   */
+  void requestActiveDisplayTypes(QStringList displayTypes);
 };
 
 /**
@@ -128,6 +142,6 @@ public:
 } // End Avogadro namespace
 
 Q_DECLARE_INTERFACE(Avogadro::QtGui::ExtensionPluginFactory,
-                    "net.openchemistry.avogadro.extensionpluginfactory/2.0")
+                    "org.openchemistry.avogadro.ExtensionPluginFactory")
 
 #endif // AVOGADRO_QTGUI_EXTENSIONPLUGIN_H

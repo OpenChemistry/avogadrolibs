@@ -44,10 +44,16 @@ public:
   QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
   QWidget * toolWidget() const AVO_OVERRIDE;
 
-  void setMolecule(QtGui::Molecule *mol) AVO_OVERRIDE { m_molecule = mol; }
-  void setGLWidget(QtOpenGL::GLWidget *widget) AVO_OVERRIDE
+  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE { }
+
+  void setEditMolecule(QtGui::RWMolecule *mol) AVO_OVERRIDE
   {
-    m_glWidget = widget;
+    m_molecule = mol;
+  }
+
+  void setGLRenderer(Rendering::GLRenderer *renderer) AVO_OVERRIDE
+  {
+    m_renderer = renderer;
   }
 
   QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
@@ -64,8 +70,8 @@ private:
   void resetObject() { m_object = Rendering::Identifier(); }
 
   QAction *m_activateAction;
-  QtGui::Molecule *m_molecule;
-  QtOpenGL::GLWidget *m_glWidget;
+  QtGui::RWMolecule *m_molecule;
+  Rendering::GLRenderer *m_renderer;
   Rendering::Identifier m_object;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;

@@ -24,7 +24,18 @@
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/mesh.h>
 
-using namespace Avogadro::Core;
+using Avogadro::Index;
+using Avogadro::Vector2;
+using Avogadro::Vector3;
+using Avogadro::Vector3f;
+using Avogadro::Core::Array;
+using Avogadro::Core::Atom;
+using Avogadro::Core::Bond;
+using Avogadro::Core::Color3f;
+using Avogadro::Core::Mesh;
+using Avogadro::Core::Molecule;
+using Avogadro::Core::Variant;
+using Avogadro::Core::VariantMap;
 
 class MoleculeTest : public testing::Test
 {
@@ -35,24 +46,23 @@ protected:
   Molecule m_testMolecule;
 };
 
-
 MoleculeTest::MoleculeTest()
 {
   Atom o1 = m_testMolecule.addAtom(8);
   Atom h2 = m_testMolecule.addAtom(1);
   Atom h3 = m_testMolecule.addAtom(1);
 
-  o1.setPosition3d(Avogadro::Vector3(0, 0, 0));
-  h2.setPosition3d(Avogadro::Vector3(0.6, -0.5, 0));
-  h3.setPosition3d(Avogadro::Vector3(-0.6, -0.5, 0));
+  o1.setPosition3d(Vector3(0, 0, 0));
+  h2.setPosition3d(Vector3(0.6, -0.5, 0));
+  h3.setPosition3d(Vector3(-0.6, -0.5, 0));
 
-  o1.setPosition2d(Avogadro::Vector2(0, 0));
-  h2.setPosition2d(Avogadro::Vector2(0.6, -0.5));
-  h3.setPosition2d(Avogadro::Vector2(-0.6, -0.5));
+  o1.setPosition2d(Vector2(0, 0));
+  h2.setPosition2d(Vector2(0.6, -0.5));
+  h3.setPosition2d(Vector2(-0.6, -0.5));
 
   // Add some data
-  Avogadro::Core::VariantMap data;
-  data.setValue("test", Avogadro::Core::Variant("test"));
+  VariantMap data;
+  data.setValue("test", Variant("test"));
   m_testMolecule.setDataMap(data);
 
   // Add some bonds
@@ -60,14 +70,14 @@ MoleculeTest::MoleculeTest()
 
   Mesh *mesh = m_testMolecule.addMesh();
 
-  Array<Avogadro::Vector3f> vertices;
-  Array<Avogadro::Vector3f> normals;
+  Array<Vector3f> vertices;
+  Array<Vector3f> normals;
   Array<Color3f> colors;
 
   Color3f color = Color3f(23, 23, 23);
   colors.push_back(color);
 
-  Avogadro::Vector3f vec(1.2f, 1.3f, 1.4f);
+  Vector3f vec(1.2f, 1.3f, 1.4f);
 
   vertices.push_back(vec);
   normals.push_back(vec);
@@ -81,44 +91,32 @@ MoleculeTest::MoleculeTest()
   mesh->setStable(false);
 }
 
-TEST_F(MoleculeTest, size)
-{
-  Avogadro::Core::Molecule molecule;
-  EXPECT_EQ(molecule.size(), static_cast<size_t>(0));
-}
-
-TEST_F(MoleculeTest, isEmpty)
-{
-  Avogadro::Core::Molecule molecule;
-  EXPECT_EQ(molecule.isEmpty(), true);
-}
-
 TEST_F(MoleculeTest, addAtom)
 {
-  Avogadro::Core::Molecule molecule;
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(0));
+  Molecule molecule;
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(0));
 
   Avogadro::Core::Atom atom = molecule.addAtom(6);
   EXPECT_EQ(atom.isValid(), true);
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(1));
   EXPECT_EQ(atom.index(), 0);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(6));
 
   Avogadro::Core::Atom atom2 = molecule.addAtom(1);
   EXPECT_EQ(atom2.isValid(), true);
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(2));
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(2));
   EXPECT_EQ(atom2.index(), 1);
   EXPECT_EQ(atom2.atomicNumber(), static_cast<unsigned char>(1));
 }
 
 TEST_F(MoleculeTest, removeAtom)
 {
-  Avogadro::Core::Molecule molecule;
-  Avogadro::Core::Atom atom0 = molecule.addAtom(6);
-  Avogadro::Core::Atom atom1 = molecule.addAtom(1);
-  Avogadro::Core::Atom atom2 = molecule.addAtom(1);
-  Avogadro::Core::Atom atom3 = molecule.addAtom(1);
-  Avogadro::Core::Atom atom4 = molecule.addAtom(1);
+  Molecule molecule;
+  Atom atom0 = molecule.addAtom(6);
+  Atom atom1 = molecule.addAtom(1);
+  Atom atom2 = molecule.addAtom(1);
+  Atom atom3 = molecule.addAtom(1);
+  Atom atom4 = molecule.addAtom(1);
   molecule.addBond(atom0, atom1, 1);
   molecule.addBond(atom0, atom2, 1);
   molecule.addBond(atom0, atom3, 1);
@@ -139,29 +137,29 @@ TEST_F(MoleculeTest, removeAtom)
 
 TEST_F(MoleculeTest, addBond)
 {
-  Avogadro::Core::Molecule molecule;
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(0));
+  Molecule molecule;
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(0));
 
-  Avogadro::Core::Atom a = molecule.addAtom(1);
-  Avogadro::Core::Atom b = molecule.addAtom(1);
-  Avogadro::Core::Bond bondAB = molecule.addBond(a, b);
+  Atom a = molecule.addAtom(1);
+  Atom b = molecule.addAtom(1);
+  Bond bondAB = molecule.addBond(a, b);
   EXPECT_TRUE(bondAB.isValid());
   EXPECT_EQ(bondAB.molecule(), &molecule);
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(1));
-  EXPECT_EQ(bondAB.index(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(1));
+  EXPECT_EQ(bondAB.index(), static_cast<Index>(0));
   EXPECT_EQ(bondAB.atom1().index(), a.index());
   EXPECT_EQ(bondAB.atom2().index(), b.index());
   EXPECT_EQ(bondAB.order(), static_cast<unsigned char>(1));
 
-  Avogadro::Core::Atom c = molecule.addAtom(1);
-  Avogadro::Core::Bond bondBC = molecule.addBond(b, c, 2);
+  Atom c = molecule.addAtom(1);
+  Bond bondBC = molecule.addBond(b, c, 2);
   EXPECT_TRUE(bondBC.isValid());
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(2));
-  EXPECT_EQ(bondBC.index(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(2));
+  EXPECT_EQ(bondBC.index(), static_cast<Index>(1));
   EXPECT_EQ(bondBC.order(), static_cast<unsigned char>(2));
 
   // try to lookup nonexistant bond
-  Avogadro::Core::Bond bond = molecule.bond(a, c);
+  Bond bond = molecule.bond(a, c);
   EXPECT_FALSE(bond.isValid());
 
   // try to lookup bond between a and b
@@ -181,11 +179,11 @@ TEST_F(MoleculeTest, addBond)
 
 TEST_F(MoleculeTest, removeBond)
 {
-  Avogadro::Core::Molecule molecule;
-  Avogadro::Core::Atom a = molecule.addAtom(1);
-  Avogadro::Core::Atom b = molecule.addAtom(1);
-  Avogadro::Core::Bond bondAB = molecule.addBond(a, b);
-  Avogadro::Core::Atom c = molecule.addAtom(1);
+  Molecule molecule;
+  Atom a = molecule.addAtom(1);
+  Atom b = molecule.addAtom(1);
+  Bond bondAB = molecule.addBond(a, b);
+  Atom c = molecule.addAtom(1);
   molecule.addBond(b, c, 2);
 
   EXPECT_EQ(3, molecule.atomCount());
@@ -215,7 +213,7 @@ TEST_F(MoleculeTest, findBond)
   EXPECT_EQ(molecule.bond(a1, a2).index(), b.index());
   EXPECT_EQ(molecule.bond(a2, a1).index(), b.index());
 
-  std::vector<Bond> bonds = molecule.bonds(a1);
+  Array<Bond> bonds = molecule.bonds(a1);
   EXPECT_EQ(bonds.size(), 1);
 
   Atom a3 = molecule.addAtom(7);
@@ -226,17 +224,17 @@ TEST_F(MoleculeTest, findBond)
 
 TEST_F(MoleculeTest, setData)
 {
-  Avogadro::Core::Molecule molecule;
+  Molecule molecule;
   molecule.setData("name", "ethanol");
   EXPECT_EQ(molecule.data("name").toString(), "ethanol");
 }
 
 TEST_F(MoleculeTest, dataMap)
 {
-  Avogadro::Core::Molecule molecule;
+  Molecule molecule;
   molecule.setData("name", "ethanol");
   molecule.setData("formula", "C2H6O");
-  Avogadro::Core::VariantMap varMap = molecule.dataMap();
+  VariantMap varMap = molecule.dataMap();
   varMap.setValue("SMILES", "CCO");
   molecule.setDataMap(varMap);
   molecule.dataMap().setValue("CAS", "64-17-5");
@@ -258,9 +256,9 @@ TEST_F(MoleculeTest, perceiveBondsSimple)
   Atom h2 = molecule.addAtom(1);
   Atom h3 = molecule.addAtom(1);
 
-  o1.setPosition3d(Avogadro::Vector3(0, 0, 0));
-  h2.setPosition3d(Avogadro::Vector3(0.6, -0.5, 0));
-  h3.setPosition3d(Avogadro::Vector3(-0.6, -0.5, 0));
+  o1.setPosition3d(Vector3(0, 0, 0));
+  h2.setPosition3d(Vector3(0.6, -0.5, 0));
+  h3.setPosition3d(Vector3(-0.6, -0.5, 0));
   EXPECT_EQ(molecule.bondCount(), 0);
 
   molecule.perceiveBondsSimple();

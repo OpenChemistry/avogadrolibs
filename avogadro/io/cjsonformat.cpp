@@ -23,6 +23,8 @@
 
 #include <jsoncpp.cpp>
 
+using Avogadro::Core::Molecule;
+
 namespace Avogadro {
 namespace Io {
 
@@ -119,10 +121,10 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
     return false;
   }
 
-  size_t atomCount(0);
+  Index atomCount(0);
   if (value.isArray()) {
-    atomCount = static_cast<size_t>(value.size());
-    for (unsigned int i = 0; i < atomCount; ++i)
+    atomCount = static_cast<Index>(value.size());
+    for (Index i = 0; i < atomCount; ++i)
       molecule.addAtom(static_cast<unsigned char>(value.get(i, 0).asInt()));
   }
   else {
@@ -134,11 +136,11 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
   if (!coords.empty()) {
     value = coords["3d"];
     if (value.isArray()) {
-      if (value.size() && atomCount != static_cast<size_t>(value.size() / 3)) {
+      if (value.size() && atomCount != static_cast<Index>(value.size() / 3)) {
         appendError("Error: number of elements != number of 3D coordinates.");
         return false;
       }
-      for (unsigned int i = 0; i < atomCount; ++i) {
+      for (Index i = 0; i < atomCount; ++i) {
         Atom a = molecule.atom(i);
         a.setPosition3d(Vector3(value.get(3 * i + 0, 0).asDouble(),
                                 value.get(3 * i + 1, 0).asDouble(),
@@ -148,11 +150,11 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
 
     value = coords["2d"];
     if (value.isArray()) {
-      if (value.size() && atomCount != static_cast<size_t>(value.size() / 2)) {
+      if (value.size() && atomCount != static_cast<Index>(value.size() / 2)) {
         appendError("Error: number of elements != number of 2D coordinates.");
         return false;
       }
-      for (unsigned int i = 0; i < atomCount; ++i) {
+      for (Index i = 0; i < atomCount; ++i) {
         Atom a = molecule.atom(i);
         a.setPosition2d(Vector2(value.get(2 * i + 0, 0).asDouble(),
                                 value.get(2 * i + 1, 0).asDouble()));
@@ -171,9 +173,9 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
                     "coordinates.");
         return false;
       }
-      std::vector<Vector3> fcoords;
+      Core::Array<Vector3> fcoords;
       fcoords.reserve(atomCount);
-      for (size_t i = 0; i < atomCount; ++i) {
+      for (Index i = 0; i < atomCount; ++i) {
         fcoords.push_back(
               Vector3(static_cast<Real>(value.get(i * 3 + 0, 0).asDouble()),
                       static_cast<Real>(value.get(i * 3 + 1, 0).asDouble()),
@@ -193,12 +195,13 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
     }
 
     value = value["index"];
-    size_t bondCount(0);
+    Index bondCount(0);
     if (value.isArray()) {
-      bondCount = static_cast<size_t>(value.size() / 2);
-      for (unsigned int i = 0; i < bondCount * 2; i += 2) {
-        molecule.addBond(molecule.atom(value.get(i + 0, 0).asInt()),
-                         molecule.atom(value.get(i + 1, 0).asInt()));
+      bondCount = static_cast<Index>(value.size() / 2);
+      for (Index i = 0; i < bondCount * 2; i += 2) {
+        molecule.addBond(
+              molecule.atom(static_cast<Index>(value.get(i + 0, 0).asInt())),
+              molecule.atom(static_cast<Index>(value.get(i + 1, 0).asInt())));
       }
     }
     else {
@@ -207,11 +210,11 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
 
     value = bonds["order"];
     if (value.isArray()) {
-      if (bondCount != static_cast<size_t>(value.size())) {
+      if (bondCount != static_cast<Index>(value.size())) {
         appendError("Error: number of bonds != number of bond orders.");
         return false;
       }
-      for (unsigned int i = 0; i < bondCount; ++i)
+      for (Index i = 0; i < bondCount; ++i)
         molecule.bond(i).setOrder(
           static_cast<unsigned char>(value.get(i, 1).asInt()));
     }
@@ -246,7 +249,7 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
   // Create and populate the atom arrays.
   if (molecule.atomCount()) {
     Json::Value elements(Json::arrayValue);
-    for (size_t i = 0; i < molecule.atomCount(); ++i)
+    for (Index i = 0; i < molecule.atomCount(); ++i)
       elements.append(molecule.atom(i).atomicNumber());
     root["atoms"]["elements"]["number"] = elements;
 
@@ -254,7 +257,7 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
       if (molecule.unitCell()) {
         Json::Value coordsFractional(Json::arrayValue);
-        std::vector<Vector3> fcoords;
+        Core::Array<Vector3> fcoords;
         Core::CrystalTools::fractionalCoordinates(*molecule.unitCell(),
                                                   molecule.atomPositions3d(),
                                                   fcoords);
@@ -296,7 +299,7 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
   if (molecule.bondCount()) {
     Json::Value connections(Json::arrayValue);
     Json::Value order(Json::arrayValue);
-    for (size_t i = 0; i < molecule.bondCount(); ++i) {
+    for (Index i = 0; i < molecule.bondCount(); ++i) {
       Bond bond = molecule.bond(i);
       connections.append(static_cast<Json::Value::UInt>(bond.atom1().index()));
       connections.append(static_cast<Json::Value::UInt>(bond.atom2().index()));

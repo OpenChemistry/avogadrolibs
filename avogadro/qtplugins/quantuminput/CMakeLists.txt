@@ -18,7 +18,7 @@ avogadro_plugin(QuantumInput
   "${quantuminput_srcs}"
 )
 
-target_link_libraries(QuantumInput LINK_PRIVATE AvogadroIO MoleQueueClient)
+target_link_libraries(QuantumInput LINK_PRIVATE AvogadroIO AvogadroMoleQueue)
 
 # Bundled generator scripts
 set(input_generators

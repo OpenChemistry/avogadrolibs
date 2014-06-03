@@ -17,6 +17,8 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/persistentatom.h>
+#include <avogadro/qtgui/persistentbond.h>
 #include <avogadro/core/array.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/color3f.h>
@@ -25,11 +27,14 @@
 #include "utils.h"
 
 using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::PersistentAtom;
+using Avogadro::QtGui::PersistentBond;
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Color3f;
 using Avogadro::Core::Mesh;
+using Avogadro::Index;
 
 class MoleculeTest : public testing::Test
 {
@@ -85,35 +90,20 @@ MoleculeTest::MoleculeTest()
   mesh->setStable(false);
 }
 
-
-
-
-TEST_F(MoleculeTest, size)
-{
-  Molecule molecule;
-  EXPECT_EQ(molecule.size(), static_cast<size_t>(0));
-}
-
-TEST_F(MoleculeTest, isEmpty)
-{
-  Molecule molecule;
-  EXPECT_EQ(molecule.isEmpty(), true);
-}
-
 TEST_F(MoleculeTest, addAtom)
 {
   Molecule molecule;
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(0));
 
   Atom atom = molecule.addAtom(6);
   EXPECT_EQ(atom.isValid(), true);
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(1));
   EXPECT_EQ(atom.index(), 0);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(6));
 
   Atom atom2 = molecule.addAtom(1);
   EXPECT_EQ(atom2.isValid(), true);
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(2));
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(2));
   EXPECT_EQ(atom2.index(), 1);
   EXPECT_EQ(atom2.atomicNumber(), static_cast<unsigned char>(1));
 }
@@ -147,15 +137,15 @@ TEST_F(MoleculeTest, removeAtom)
 TEST_F(MoleculeTest, addBond)
 {
   Molecule molecule;
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(0));
 
   Atom a = molecule.addAtom(1);
   Atom b = molecule.addAtom(1);
   Bond bondAB = molecule.addBond(a, b);
   EXPECT_TRUE(bondAB.isValid());
   EXPECT_EQ(bondAB.molecule(), &molecule);
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(1));
-  EXPECT_EQ(bondAB.index(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(1));
+  EXPECT_EQ(bondAB.index(), static_cast<Index>(0));
   EXPECT_EQ(bondAB.atom1().index(), a.index());
   EXPECT_EQ(bondAB.atom2().index(), b.index());
   EXPECT_EQ(bondAB.order(), static_cast<unsigned char>(1));
@@ -163,8 +153,8 @@ TEST_F(MoleculeTest, addBond)
   Atom c = molecule.addAtom(1);
   Bond bondBC = molecule.addBond(b, c, 2);
   EXPECT_TRUE(bondBC.isValid());
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(2));
-  EXPECT_EQ(bondBC.index(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(2));
+  EXPECT_EQ(bondBC.index(), static_cast<Index>(1));
   EXPECT_EQ(bondBC.order(), static_cast<unsigned char>(2));
 
   // try to lookup nonexistant bond
@@ -222,7 +212,7 @@ TEST_F(MoleculeTest, findBond)
   EXPECT_EQ(molecule.bond(a1, a2).index(), b.index());
   EXPECT_EQ(molecule.bond(a2, a1).index(), b.index());
 
-  std::vector<Bond> bonds = molecule.bonds(a1);
+  Array<Bond> bonds = molecule.bonds(a1);
   EXPECT_EQ(bonds.size(), 1);
 
   Atom a3 = molecule.addAtom(7);
@@ -240,9 +230,9 @@ TEST_F(MoleculeTest, uniqueAtom)
   Bond b1 = molecule.addBond(a1, a2, 1);
   Bond b2 = molecule.addBond(a1, a3, 2);
 
-  int uid1 = molecule.atomUniqueId(a1);
-  int uid2 = molecule.atomUniqueId(a2);
-  int uid3 = molecule.atomUniqueId(a3);
+  Index uid1 = molecule.atomUniqueId(a1);
+  Index uid2 = molecule.atomUniqueId(a2);
+  Index uid3 = molecule.atomUniqueId(a3);
   EXPECT_EQ(uid1, 0);
   EXPECT_EQ(uid2, 1);
   EXPECT_EQ(uid3, 2);
@@ -251,7 +241,7 @@ TEST_F(MoleculeTest, uniqueAtom)
   EXPECT_EQ(molecule.bond(a2, a1).index(), b1.index());
   EXPECT_EQ(molecule.bond(a3, a1).index(), b2.index());
 
-  std::vector<Bond> bonds = molecule.bonds(a1);
+  Array<Bond> bonds = molecule.bonds(a1);
   EXPECT_EQ(bonds.size(), 2);
 
   molecule.removeAtom(a2);
@@ -259,7 +249,7 @@ TEST_F(MoleculeTest, uniqueAtom)
   EXPECT_EQ(bonds.size(), 1);
 
   Atom a4 = molecule.addAtom(8);
-  int uid4 = molecule.atomUniqueId(a4);
+  Index uid4 = molecule.atomUniqueId(a4);
   EXPECT_EQ(uid4, 3);
   molecule.addBond(a1, a4, 1);
   EXPECT_EQ(molecule.bonds(a1).size(), 2);
@@ -287,8 +277,8 @@ TEST_F(MoleculeTest, uniqueAtomRestore)
   molecule.addBond(a1, a2, 1);
   molecule.addBond(a1, a3, 2);
 
-  int uid1 = molecule.atomUniqueId(a1);
-  int uid2 = molecule.atomUniqueId(a2);
+  Index uid1 = molecule.atomUniqueId(a1);
+  Index uid2 = molecule.atomUniqueId(a2);
 
   molecule.removeAtom(a2);
 
@@ -306,6 +296,71 @@ TEST_F(MoleculeTest, uniqueAtomRestore)
   EXPECT_TRUE(molecule.atomByUniqueId(uid2).isValid());
 }
 
+TEST_F(MoleculeTest, persistentAtom)
+{
+  Molecule molecule;
+  Atom a1 = molecule.addAtom(5);
+  Atom a2 = molecule.addAtom(6);
+  Atom a3 = molecule.addAtom(7);
+  molecule.addBond(a1, a2, 1);
+  molecule.addBond(a1, a3, 2);
+
+  Molecule::PersistentAtomType pa1(a1);
+  Molecule::PersistentAtomType pa2(&molecule, molecule.atomUniqueId(a2));
+  Molecule::PersistentAtomType pa3(&molecule, molecule.atomUniqueId(a3));
+  EXPECT_EQ(pa1.uniqueIdentifier(), 0);
+  EXPECT_EQ(pa2.uniqueIdentifier(), 1);
+  EXPECT_EQ(pa3.uniqueIdentifier(), 2);
+
+  molecule.removeAtom(a2);
+
+  Atom a4 = molecule.addAtom(8);
+  Molecule::PersistentAtomType pa4(&molecule, molecule.atomUniqueId(a4));
+  EXPECT_EQ(pa4.uniqueIdentifier(), 3);
+  molecule.addBond(a1, a4, 1);
+
+  // Check we can get the invalid atom, and also resolve the unique IDs to the
+  // correct atom objects from their peristent atom containers.
+  Atom test = pa1.atom();
+  EXPECT_TRUE(a1 == test);
+  test = pa2.atom();
+  EXPECT_FALSE(pa2.isValid());
+  EXPECT_FALSE(test.isValid());
+  test = pa4.atom();
+  EXPECT_FALSE(a1 == test);
+  EXPECT_TRUE(a4 == test);
+  EXPECT_TRUE(a2 != test);
+  EXPECT_EQ(test.atomicNumber(), 8);
+}
+
+TEST_F(MoleculeTest, persistentAtomRestore)
+{
+  Molecule molecule;
+  Atom a1 = molecule.addAtom(5);
+  Atom a2 = molecule.addAtom(6);
+  Atom a3 = molecule.addAtom(7);
+  molecule.addBond(a1, a2, 1);
+  molecule.addBond(a1, a3, 2);
+
+  Molecule::PersistentAtomType pa1(a1);
+  Molecule::PersistentAtomType pa2(&molecule, molecule.atomUniqueId(a2));
+
+  molecule.removeAtom(pa2.atom());
+
+  Atom a4 = molecule.addAtom(8);
+  molecule.addBond(a1, a4, 1);
+
+  // Check we can get the invalid atom, and also resolve the unique IDs to the
+  // correct atom objects from their persistent atom containers.
+  Atom test = pa1.atom();
+  EXPECT_TRUE(a1 == test);
+  test = pa2.atom();
+  EXPECT_FALSE(test.isValid());
+  test = molecule.addAtom(8, pa2.uniqueIdentifier());
+  EXPECT_TRUE(test.isValid());
+  EXPECT_TRUE(pa2.isValid());
+}
+
 TEST_F(MoleculeTest, uniqueBond)
 {
   Molecule molecule;
@@ -320,7 +375,7 @@ TEST_F(MoleculeTest, uniqueBond)
   b[3] = molecule.addBond(a4, a3, 2);
   b[4] = molecule.addBond(a2, a3, 1);
 
-  int uid[5];
+  Index uid[5];
   for (int i = 0; i < 5; ++i)
     uid[i] = molecule.bondUniqueId(b[i]);
   EXPECT_EQ(molecule.bondByUniqueId(uid[0]).order(), 1);
@@ -352,7 +407,7 @@ TEST_F(MoleculeTest, uniqueBondRestore)
   b[3] = molecule.addBond(a4, a3, 2);
   b[4] = molecule.addBond(a2, a3, 1);
 
-  int uid[5];
+  Index uid[5];
   for (int i = 0; i < 5; ++i)
     uid[i] = molecule.bondUniqueId(b[i]);
   molecule.removeBond(b[2]);
@@ -368,12 +423,98 @@ TEST_F(MoleculeTest, uniqueBondRestore)
   EXPECT_EQ(molecule.bondByUniqueId(uid[2]).order(), 3);
 }
 
+TEST_F(MoleculeTest, atomCount)
+{
+  Molecule mol;
+  mol.addAtom(8);
+  mol.addAtom(1);
+  mol.addAtom(1);
+  // Check the total count, and the counts of specific elements.
+  EXPECT_EQ(mol.atomCount(), 3);
+  EXPECT_EQ(mol.atomCount(1), 2);
+  EXPECT_EQ(mol.atomCount(8), 1);
+  EXPECT_EQ(mol.atomCount(42), 0);
+}
+
+TEST_F(MoleculeTest, mass)
+{
+  Molecule mol;
+  EXPECT_DOUBLE_EQ(mol.mass(), 0.0);
+  Atom a = mol.addAtom(8);
+  mol.addAtom(1);
+  mol.addAtom(1);
+  EXPECT_DOUBLE_EQ(mol.mass(), 18.01528);
+  a.setAtomicNumber(9);
+  EXPECT_DOUBLE_EQ(mol.mass(), 21.01428);
+}
+
+TEST_F(MoleculeTest, persistentBond)
+{
+  Molecule molecule;
+  Atom a1 = molecule.addAtom(5);
+  Atom a2 = molecule.addAtom(6);
+  Atom a3 = molecule.addAtom(7);
+  Atom a4 = molecule.addAtom(8);
+  Bond b[5];
+  b[0] = molecule.addBond(a1, a2, 1);
+  b[1] = molecule.addBond(a1, a3, 2);
+  b[2] = molecule.addBond(a1, a4, 3);
+  b[3] = molecule.addBond(a4, a3, 2);
+  b[4] = molecule.addBond(a2, a3, 1);
+
+  Molecule::PersistentBondType pbond[5];
+  for (int i = 0; i < 4; ++i)
+    pbond[i].set(b[i]);
+  pbond[4].set(&molecule, molecule.bondUniqueId(b[4]));
+  EXPECT_EQ(pbond[0].bond().order(), 1);
+  EXPECT_EQ(pbond[1].bond().order(), 2);
+  EXPECT_EQ(pbond[2].bond().order(), 3);
+  EXPECT_EQ(pbond[3].bond().order(), 2);
+  EXPECT_EQ(pbond[4].bond().order(), 1);
+  molecule.removeBond(b[2]);
+  EXPECT_EQ(pbond[0].bond().order(), 1);
+  EXPECT_EQ(pbond[1].bond().order(), 2);
+  EXPECT_TRUE(pbond[4].isValid());
+  EXPECT_FALSE(pbond[2].isValid());
+  EXPECT_EQ(pbond[3].bond().order(), 2);
+  EXPECT_EQ(pbond[4].bond().order(), 1);
+  EXPECT_EQ(pbond[3].bond(), b[3]);
+}
+
+TEST_F(MoleculeTest, persistentBondRestore)
+{
+  Molecule molecule;
+  Atom a1 = molecule.addAtom(5);
+  Atom a2 = molecule.addAtom(6);
+  Atom a3 = molecule.addAtom(7);
+  Atom a4 = molecule.addAtom(8);
+  Bond b[5];
+  b[0] = molecule.addBond(a1, a2, 1);
+  b[1] = molecule.addBond(a1, a3, 2);
+  b[2] = molecule.addBond(a1, a4, 3);
+  b[3] = molecule.addBond(a4, a3, 2);
+  b[4] = molecule.addBond(a2, a3, 1);
+
+  Molecule::PersistentBondType pbond[5];
+  for (int i = 0; i < 5; ++i)
+    pbond[i].set(&molecule, molecule.bondUniqueId(b[i]));
+  molecule.removeBond(b[2]);
+  EXPECT_EQ(pbond[0].bond().order(), 1);
+  EXPECT_EQ(pbond[1].bond().order(), 2);
+  EXPECT_TRUE(pbond[4].isValid());
+  EXPECT_FALSE(pbond[2].isValid());
+  EXPECT_EQ(pbond[3].bond().order(), 2);
+  EXPECT_EQ(pbond[4].bond().order(), 1);
+  EXPECT_EQ(pbond[3].bond(), b[3]);
+  molecule.addBond(a1, a4, 3, pbond[2].uniqueIdentifier());
+  EXPECT_TRUE(pbond[2].isValid());
+  EXPECT_EQ(pbond[2].bond().order(), 3);
+}
+
 TEST_F(MoleculeTest, copy)
 {
   Molecule copy(m_testMolecule);
-
-  assertEqual(static_cast<const Avogadro::Core::Molecule &>(m_testMolecule),
-      static_cast<const Avogadro::Core::Molecule &>(copy));
+  assertEqual(m_testMolecule, copy);
 
   EXPECT_EQ(copy.atomByUniqueId(0).atomicNumber(), 8);
   EXPECT_EQ(copy.atomByUniqueId(1).atomicNumber(), 1);
@@ -390,9 +531,7 @@ TEST_F(MoleculeTest, assignment)
 {
   Molecule assign;
   assign = m_testMolecule;
-
-  assertEqual(static_cast<const Avogadro::Core::Molecule &>(m_testMolecule),
-      static_cast<const Avogadro::Core::Molecule &>(assign));
+  assertEqual(m_testMolecule, assign);
 
   EXPECT_EQ(assign.atomByUniqueId(0).atomicNumber(), 8);
   EXPECT_EQ(assign.atomByUniqueId(1).atomicNumber(), 1);
@@ -460,8 +599,7 @@ TEST_F(MoleculeTest, baseAssignment)
 
   qtMolecule = baseMolecule;
 
-  assertEqual(baseMolecule,
-      static_cast<const Avogadro::Core::Molecule &>(qtMolecule));
+  assertEqual(baseMolecule, qtMolecule);
 
   // Check the ids have reset
   EXPECT_EQ(qtMolecule.atomByUniqueId(0).atomicNumber(), o1.atomicNumber());
@@ -469,12 +607,12 @@ TEST_F(MoleculeTest, baseAssignment)
   EXPECT_EQ(qtMolecule.atomByUniqueId(2).atomicNumber(), h3.atomicNumber());
   EXPECT_FALSE(qtMolecule.atomByUniqueId(3).isValid());
   EXPECT_EQ(qtMolecule.bondByUniqueId(0).atom1().atomicNumber(),
-      b[0].atom1().atomicNumber());
+            b[0].atom1().atomicNumber());
   EXPECT_EQ(qtMolecule.bondByUniqueId(0).atom2().atomicNumber(),
-        b[0].atom2().atomicNumber());
+            b[0].atom2().atomicNumber());
   EXPECT_EQ(qtMolecule.bondByUniqueId(1).atom1().atomicNumber(),
-        b[1].atom1().atomicNumber());
+            b[1].atom1().atomicNumber());
   EXPECT_EQ(qtMolecule.bondByUniqueId(1).atom2().atomicNumber(),
-        b[1].atom2().atomicNumber());
+            b[1].atom2().atomicNumber());
   EXPECT_FALSE(qtMolecule.bondByUniqueId(2).isValid());
 }

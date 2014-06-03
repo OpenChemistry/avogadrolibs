@@ -48,6 +48,9 @@ public:
   LineStripGeometry(const LineStripGeometry &other);
   ~LineStripGeometry();
 
+  LineStripGeometry & operator=(LineStripGeometry);
+  friend void swap(LineStripGeometry &lhs, LineStripGeometry &rhs);
+
   /**
    * Accept a visit from our friendly visitor.
    */
@@ -125,6 +128,25 @@ private:
   class Private;
   Private *d;
 };
+
+inline LineStripGeometry &LineStripGeometry::operator=(LineStripGeometry other)
+{
+  using std::swap;
+  swap(*this, other);
+  return *this;
+}
+
+inline void swap(LineStripGeometry &lhs, LineStripGeometry &rhs)
+{
+  using std::swap;
+  swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));
+  swap(lhs.m_vertices, rhs.m_vertices);
+  swap(lhs.m_lineStarts, rhs.m_lineStarts);
+  swap(lhs.m_lineWidths, rhs.m_lineWidths);
+  swap(lhs.m_color, rhs.m_color);
+  swap(lhs.m_opacity, rhs.m_opacity);
+  lhs.m_dirty = rhs.m_dirty = true;
+}
 
 } // End namespace Rendering
 } // End namespace Avogadro

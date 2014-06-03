@@ -19,6 +19,7 @@
 #include "fileformatscript.h"
 
 #include <avogadro/io/fileformatmanager.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -62,10 +63,9 @@ void ScriptFileFormats::refreshFileFormats()
   // List of directories to check.
   /// @todo Custom script locations
   QStringList dirs;
-  dirs << QCoreApplication::applicationDirPath() +
-          "/../lib/avogadro2/scripts/formatScripts";
-  dirs << QCoreApplication::applicationDirPath() +
-          "/../lib64/avogadro2/scripts/formatScripts";
+  dirs << QCoreApplication::applicationDirPath() + "/../"
+          + QtGui::Utilities::libraryDirectory()
+          + "/avogadro2/scripts/formatScripts";
 
   foreach (const QString &dirStr, dirs) {
     qDebug() << "Checking for file format scripts in" << dirStr;

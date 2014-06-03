@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2012-2014 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -23,7 +23,8 @@
 namespace Avogadro {
 namespace Rendering {
 
-Camera::Camera() : m_width(0), m_height(0)
+Camera::Camera() : m_width(0), m_height(0),
+  m_projectionType(Perspective), m_orthographicScale(1.0)
 {
   m_projection.setIdentity();
   m_modelView.setIdentity();
@@ -53,9 +54,12 @@ void Camera::preRotate(float angle, const Vector3f &axis)
   m_modelView.prerotate(Eigen::AngleAxisf(angle, axis));
 }
 
-void Camera::scale(float scale_)
+void Camera::scale(float s)
 {
-  m_modelView.scale(scale_);
+  if (m_projectionType == Perspective)
+    m_modelView.scale(s);
+  else
+    m_orthographicScale *= s;
 }
 
 void Camera::lookAt(const Vector3f &eye, const Vector3f &center,
@@ -141,6 +145,10 @@ void Camera::calculateOrthographic(float left, float right,
                                    float bottom, float top,
                                    float zNear, float zFar)
 {
+  left *= m_orthographicScale;
+  right *= m_orthographicScale;
+  bottom *= m_orthographicScale;
+  top *= m_orthographicScale;
   m_projection.setIdentity();
   m_projection(0, 0) = 2.0f / (right - left);
   m_projection(0, 3) = -(right + left) / (right - left);

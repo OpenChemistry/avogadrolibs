@@ -50,8 +50,6 @@ set(HEADERS
 )
 
 set(SOURCES
-  atom.cpp
-  bond.cpp
   coordinateblockgenerator.cpp
   crystaltools.cpp
   cube.cpp

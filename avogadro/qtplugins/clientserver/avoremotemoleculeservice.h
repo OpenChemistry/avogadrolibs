@@ -19,6 +19,12 @@
 
 #include "RemoteMoleculeService.pb.h"
 
+/**
+ * @class AvoRemoteMoleculeService avoremotemoleculeservice.h
+ * <avogadro/qtplugins/clientserver/avoremotemoleculeservice.h>
+ * @brief The server side implementation of the RemoteMoleculeService, provides
+ * functionality to open a molecule on a remote system.
+ */
 class AvoRemoteMoleculeService : public RemoteMoleculeService
 {
 public:
@@ -27,6 +33,8 @@ public:
   void open(const OpenRequest* input, OpenResponse* output,
       ::google::protobuf::Closure* done);
 
+  void fileFormats(FileFormats* formats,
+      ::google::protobuf::Closure* done);
 };
 
 #endif /* AVOREMOTEMOLECULESERVICE_H */

@@ -126,7 +126,7 @@ inline bool GaussianSetTools::isSmall(double val) const
 inline vector<double> GaussianSetTools::calculateValues(const Vector3 &position) const
 {
   m_basis->initCalculation();
-  unsigned int atomsSize = static_cast<unsigned int>(m_molecule->atomCount());
+  Index atomsSize = m_molecule->atomCount();
   size_t basisSize = m_basis->symmetry().size();
   const std::vector<int> &basis = m_basis->symmetry();
   const std::vector<unsigned int> &atomIndices = m_basis->atomIndices();
@@ -139,7 +139,7 @@ inline vector<double> GaussianSetTools::calculateValues(const Vector3 &position)
   Vector3 pos(position * ANGSTROM_TO_BOHR);
 
   // Calculate the deltas for the position
-  for (size_t i = 0; i < atomsSize; ++i) {
+  for (Index i = 0; i < atomsSize; ++i) {
     deltas.push_back(pos - (m_molecule->atom(i).position3d() * ANGSTROM_TO_BOHR));
     dr2.push_back(deltas[i].squaredNorm());
   }

@@ -35,6 +35,9 @@ public:
   void process(const Core::Molecule &molecule,
                Rendering::GroupNode &node) AVO_OVERRIDE;
 
+  void processEditable(const QtGui::RWMolecule &molecule,
+                       Rendering::GroupNode &node) AVO_OVERRIDE;
+
   QString name() const { return tr("Reference Axes Overlay"); }
 
   QString description() const

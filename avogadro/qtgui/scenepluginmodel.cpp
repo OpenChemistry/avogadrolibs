@@ -123,6 +123,11 @@ void ScenePluginModel::clear()
   m_scenePlugins.clear();
 }
 
+QList<ScenePlugin *> ScenePluginModel::scenePlugins() const
+{
+  return m_scenePlugins;
+}
+
 QList<ScenePlugin *> ScenePluginModel::activeScenePlugins() const
 {
   QList<ScenePlugin *> result;
@@ -138,6 +143,7 @@ void ScenePluginModel::addItem(ScenePlugin *item)
   if (!m_scenePlugins.contains(item)) {
     m_scenePlugins.append(item);
     item->setParent(this);
+    connect(item, SIGNAL(drawablesChanged()), SIGNAL(pluginConfigChanged()));
   }
 }
 

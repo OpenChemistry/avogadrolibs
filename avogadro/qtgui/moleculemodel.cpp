@@ -1,0 +1,296 @@
+/******************************************************************************
+
+  This source file is part of the Avogadro project.
+
+  Copyright 2013-2014 Kitware, Inc.
+
+  This source code is released under the New BSD License, (the "License").
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+******************************************************************************/
+
+#include "moleculemodel.h"
+#include "molecule.h"
+#include "rwmolecule.h"
+
+#include <QtCore/QFileInfo>
+#include <QtGui/QColor>
+
+namespace Avogadro {
+namespace QtGui {
+
+MoleculeModel::MoleculeModel(QObject *p)
+  : QAbstractItemModel(p), m_activeMolecule(NULL)
+{
+}
+
+QModelIndex MoleculeModel::parent(const QModelIndex &) const
+{
+  return QModelIndex();
+}
+
+int MoleculeModel::rowCount(const QModelIndex &parent_) const
+{
+  if (parent_.isValid())
+    return 0;
+  else
+    return m_molecules.size() + m_rwMolecules.size();
+}
+
+int MoleculeModel::columnCount(const QModelIndex &) const
+{
+  return 1;
+}
+
+Qt::ItemFlags MoleculeModel::flags(const QModelIndex &idx) const
+{
+    if (idx.column() == 0) {
+      return static_cast<Qt::ItemFlags>(Qt::ItemIsEditable | Qt::ItemIsEnabled);
+    }
+    else {
+      return Qt::ItemIsEnabled;
+    }
+}
+
+bool MoleculeModel::setData(const QModelIndex &index_, const QVariant &value,
+                            int role)
+{
+  if (!index_.isValid() || index_.column() > 1)
+    return false;
+
+  QObject *object = static_cast<QObject *>(index_.internalPointer());
+  Molecule *mol = qobject_cast<Molecule *>(object);
+  RWMolecule *rwMol = qobject_cast<RWMolecule *>(object);
+  if (!mol && !rwMol)
+    return false;
+
+  switch (role) {
+  case Qt::CheckStateRole:
+    if (mol)
+      m_activeMolecule = mol;
+    else
+      m_activeMolecule = rwMol;
+    if (value == Qt::Checked /*&& !item->isEnabled()*/) {
+      //item->setEnabled(true);
+      if (mol)
+        emit moleculeStateChanged(mol);
+      else
+        emit moleculeStateChanged(rwMol);
+    }
+    else if (value == Qt::Unchecked /*&& item->isEnabled()*/) {
+      //item->setEnabled(false);
+      if (mol)
+        emit moleculeStateChanged(mol);
+      else
+        emit moleculeStateChanged(rwMol);
+    }
+    emit dataChanged(index_, index_);
+    return true;
+  case Qt::EditRole:
+    if (mol)
+      mol->setData("name", std::string(value.toString().toLatin1()));
+    //else
+    //  rwMol->setData("name", std::string(value.toString().toLatin1()));
+    emit dataChanged(index_, index_);
+    return true;
+  }
+  return false;
+}
+
+QVariant MoleculeModel::data(const QModelIndex &index_, int role) const
+{
+  if (!index_.isValid() || index_.column() > 1)
+    return QVariant();
+
+  QObject *object = static_cast<QObject *>(index_.internalPointer());
+  Molecule *mol = qobject_cast<Molecule *>(object);
+  RWMolecule *rwMol = qobject_cast<RWMolecule *>(object);
+  if (!mol && !rwMol)
+    return QVariant();
+
+  if (index_.column() == 0) {
+    switch (role) {
+    case Qt::DisplayRole: {
+      std::string name = tr("Untitled").toStdString();
+      if (mol && mol->hasData("name")) {
+        name = mol->data("name").toString();
+      }
+      else if (mol && mol->hasData("fileName")) {
+        name = QFileInfo(mol->data("fileName").toString().c_str())
+                .fileName().toStdString();
+      }
+      //if (rwMol && rwMol->hasData("name")) {
+      //  name = rwMol->data("name").toString();
+      //}
+      //else if (rwMol && rwMol->hasData("fileName")) {
+      //  name = QFileInfo(rwMol->data("fileName").toString().c_str())
+      //          .fileName().toStdString();
+      //}
+      if (mol)
+        return (name + " (" + mol->formula() + ")").c_str();
+      else
+        return "Edit molecule";
+      //  return (name + " (" + rwMol->formula() + ")").c_str();
+    }
+    case Qt::EditRole:
+      if (mol)
+        return mol->data("name").toString().c_str();
+      else
+        return "Edit molecule";
+      //  return rwMol->data("name").toString().c_str();
+    case Qt::ToolTipRole:
+      if (mol && mol->hasData("fileName"))
+        return mol->data("fileName").toString().c_str();
+      //else if (rwMol && rwMol->hasData("fileName"))
+      //  return rwMol->data("fileName").toString().c_str();
+      return "Not saved";
+    case Qt::WhatsThisRole:
+      if (mol)
+        return mol->formula().c_str();
+      //else
+      //  return rwMol->formula().c_str();
+    case Qt::ForegroundRole:
+      if ((mol && mol == m_activeMolecule)
+          || (rwMol && rwMol == m_activeMolecule)) {
+        return QVariant(QColor(Qt::red));
+      }
+      else {
+        return QVariant(QColor(Qt::black));
+      }
+    default:
+      return QVariant();
+    }
+  }
+  return QVariant();
+}
+
+QModelIndex MoleculeModel::index(int row, int column,
+                                 const QModelIndex &parent_) const
+{
+  if (!parent_.isValid()) {
+    if (row >= 0 && row < m_molecules.size()) {
+      return createIndex(row, column, m_molecules[row]);
+    }
+    else if (row >= m_molecules.size()
+             && row < m_molecules.size() + m_rwMolecules.size()) {
+      return createIndex(row, column, m_rwMolecules[row - m_molecules.size()]);
+    }
+  }
+  return QModelIndex();
+}
+
+void MoleculeModel::clear()
+{
+  m_molecules.clear();
+  m_rwMolecules.clear();
+}
+
+QList<Molecule *> MoleculeModel::molecules() const
+{
+  return m_molecules;
+}
+
+QList<Molecule *> MoleculeModel::activeMolecules() const
+{
+  QList<Molecule *> result;
+  foreach (Molecule *mol, m_molecules) {
+    if (true)
+      result << mol;
+  }
+  return result;
+}
+
+QList<RWMolecule *> MoleculeModel::editableMolecules() const
+{
+  return m_rwMolecules;
+}
+
+void MoleculeModel::setActiveMolecule(QObject *active)
+{
+  if (m_activeMolecule == active)
+    return;
+
+  int rowS = m_molecules.indexOf(qobject_cast<Molecule*>(m_activeMolecule));
+  if (rowS < 0) {
+    rowS = m_rwMolecules.indexOf(qobject_cast<RWMolecule*>(m_activeMolecule));
+    if (rowS >= 0)
+      rowS += m_molecules.size();
+  }
+
+  m_activeMolecule = active;
+  int row = m_molecules.indexOf(qobject_cast<Molecule*>(active));
+  if (row < 0) {
+    row = m_rwMolecules.indexOf(qobject_cast<RWMolecule*>(active));
+    if (row >= 0)
+      row += m_molecules.size();
+  }
+
+  if (rowS >= 0)
+    emit dataChanged(createIndex(rowS, 0), createIndex(rowS, 0));
+  if (row >= 0)
+    emit dataChanged(createIndex(row, 0), createIndex(row, 0));
+}
+
+void MoleculeModel::addItem(Molecule *item)
+{
+  if (!m_molecules.contains(item)) {
+    int row = m_molecules.size();
+    beginInsertRows(QModelIndex(), row, row);
+    m_molecules.append(item);
+    item->setParent(this);
+    endInsertRows();
+  }
+}
+
+void MoleculeModel::addItem(RWMolecule *item)
+{
+  if (!m_rwMolecules.contains(item)) {
+    int row = m_molecules.size() + m_rwMolecules.size();
+    beginInsertRows(QModelIndex(), row, row);
+    m_rwMolecules.append(item);
+    item->setParent(this);
+    endInsertRows();
+  }
+}
+
+void MoleculeModel::removeItem(Molecule *item)
+{
+  if (m_molecules.contains(item)) {
+    int row = m_molecules.indexOf(item);
+    beginRemoveRows(QModelIndex(), row, row);
+    m_molecules.removeAt(row);
+    // Do we want strong ownership of molecules?
+    item->deleteLater();
+    endRemoveRows();
+  }
+}
+
+void MoleculeModel::removeItem(RWMolecule *item)
+{
+  if (m_rwMolecules.contains(item)) {
+    int row = m_molecules.size() + m_rwMolecules.indexOf(item);
+    beginRemoveRows(QModelIndex(), row, row);
+    m_rwMolecules.removeAt(row);
+    // Do we want strong ownership of molecules?
+    item->deleteLater();
+    endRemoveRows();
+  }
+}
+
+void MoleculeModel::itemChanged()
+{
+  Molecule *item = qobject_cast<Molecule *>(sender());
+  if (item) {
+    int row = m_molecules.indexOf(item);
+    if (row >= 0)
+      emit dataChanged(createIndex(row, 0), createIndex(row, 0));
+  }
+}
+
+} // End QtGui namespace
+} // End Avogadro namespace

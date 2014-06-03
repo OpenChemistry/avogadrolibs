@@ -17,7 +17,7 @@
 #ifndef AVOGADRO_QTGUI_FILEFORMATDIALOG_H
 #define AVOGADRO_QTGUI_FILEFORMATDIALOG_H
 
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QFileDialog>
 #include "avogadroqtguiexport.h"
 
 #include <avogadro/io/fileformat.h>
@@ -64,9 +64,10 @@ public:
    * compatible file reader. If an error occurs, the format pointer will be
    * NULL.
    */
-  static FormatFilePair fileToRead(
-      QWidget *parent, const QString &caption = QString(),
-      const QString &dir = QString(), const QString &filter = QString());
+  static FormatFilePair fileToRead(QWidget *parent,
+                                   const QString &caption = QString(),
+                                   const QString &dir = QString(),
+                                   const QString &filter = QString());
 
   /**
    * @brief Show a QFileDialog to prompt the user for a file to save and resolve
@@ -82,9 +83,10 @@ public:
    * compatible file writer. If an error occurs, the format pointer will be
    * NULL.
    */
-  static FormatFilePair fileToWrite(
-      QWidget *parent, const QString &caption = QString(),
-      const QString &dir = QString(), const QString &filter = QString());
+  static FormatFilePair fileToWrite(QWidget *parent,
+                                    const QString &caption = QString(),
+                                    const QString &dir = QString(),
+                                    const QString &filter = QString());
 
   /**
    * Given a filename and a set of Io::FileFormat::Operation flags, find a
@@ -97,11 +99,14 @@ public:
    * chosen based on the file extension.
    * @param formatFlags Operations that the format must support. Most likely
    * (Io::FileFormat::)Read | File or Write | File.
+   * @param formatPrefix Filter on the supplied prefix (default to none).
    * @return The selected matching reader, or NULL if no reader is found.
    */
   static const Io::FileFormat *findFileFormat(QWidget *parentWidget,
-      const QString &caption, const QString &fileName,
-      const Io::FileFormat::Operations formatFlags);
+                                              const QString &caption,
+                                              const QString &fileName,
+                                              const Io::FileFormat::Operations formatFlags,
+                                              const QString &formatPrefix = QString());
 
 private:
   /**
@@ -139,6 +144,7 @@ public: // Must be public for operator declarations
     AllFiles = 0x2
   };
   Q_DECLARE_FLAGS(FilterStringOptions, FilterStringOption)
+
 private:
   static QString generateFilterString(
       const std::vector<const Io::FileFormat*> &ffs,
@@ -157,12 +163,12 @@ private:
    * store the user's choice for initializing the dialog next time.
    * @return The selected FileFormat instance.
    */
-  static const Io::FileFormat* selectFileFormat(
-      QWidget *parentWidget,
-      const std::vector<const Io::FileFormat*> &ffs,
-      const QString &caption,
-      const QString &prompt,
-      const QString &settingsKey = QString());
+  static const Io::FileFormat* selectFileFormat(QWidget *parentWidget,
+                                                const std::vector<const Io::FileFormat*> &ffs,
+                                                const QString &caption,
+                                                const QString &prompt,
+                                                const QString &settingsKey = QString(),
+                                                const QString &formatPrefix = QString());
 
 };
 

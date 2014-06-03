@@ -74,7 +74,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   }
 
   // Variables for loops below
-  const size_t numAtoms = m_molecule->atomCount();
+  const Index numAtoms = m_molecule->atomCount();
   Atom atom;
   unsigned char atomicNumber;
   const char *symbol;
@@ -101,7 +101,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   m_stream << std::fixed;
 
   // Iterate through the atoms
-  for (size_t atomI = 0; atomI < numAtoms; ++atomI) {
+  for (Index atomI = 0; atomI < numAtoms; ++atomI) {
     atom = m_molecule->atom(atomI);
     atomicNumber = atom.atomicNumber();
     if (needElementSymbol)

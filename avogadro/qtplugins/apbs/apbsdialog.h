@@ -28,6 +28,8 @@ class ApbsDialog;
 namespace Avogadro {
 namespace QtGui {
 class Molecule;
+}
+namespace MoleQueue {
 class InputGenerator;
 }
 
@@ -78,7 +80,7 @@ private:
   Ui::ApbsDialog *m_ui;
   QString m_generatedPqrFileName;
   QtGui::Molecule *m_molecule;
-  QtGui::InputGenerator *m_inputGenerator;
+  MoleQueue::InputGenerator *m_inputGenerator;
   QString m_cubeFileName;
   bool m_loadStructureFile;
   bool m_loadCubeFile;

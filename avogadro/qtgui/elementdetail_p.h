@@ -18,7 +18,7 @@
 #ifndef AVOGADRO_QTGUI_ELEMENTDETAIL_P_H
 #define AVOGADRO_QTGUI_ELEMENTDETAIL_P_H
 
-#include <QtGui/QGraphicsItem>
+#include <QtWidgets/QGraphicsItem>
 
 namespace Avogadro {
 namespace QtGui {

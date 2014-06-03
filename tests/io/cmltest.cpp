@@ -27,6 +27,7 @@
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
+using Avogadro::Core::Variant;
 using Avogadro::Io::CmlFormat;
 using Avogadro::MatrixX;
 using Avogadro::Real;
@@ -38,10 +39,10 @@ TEST(CmlTest, readFile)
   Molecule molecule;
   cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
 
-  EXPECT_EQ(molecule.data("name").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
 
-  EXPECT_EQ(molecule.data("inchi").type(), Avogadro::Core::Variant::String);
+  EXPECT_EQ(molecule.data("inchi").type(), Variant::String);
   EXPECT_EQ(molecule.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
 

@@ -1,7 +1,9 @@
 find_package(Eigen3 REQUIRED)
-find_package(Qt4 COMPONENTS QtCore REQUIRED)
-include_directories(SYSTEM ${QT_INCLUDES} ${EIGEN3_INCLUDE_DIR})
-add_definitions(${QT_DEFINITIONS})
+include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
+
+find_package(Qt5Widgets REQUIRED)
+include_directories(SYSTEM ${Qt5Widgets_INCLUDE_DIRS})
+add_definitions(${Qt5Widgets_DEFINITIONS})
 
 # Modify the output directory for the build tree.
 set(original_library_output_dir "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
@@ -15,8 +17,7 @@ option(BUILD_STATIC_PLUGINS "Build static plugins by default" ON)
 
 # Allow GPL plugins to be disabled.
 option(BUILD_GPL_PLUGINS
-  "Build plugins that are licensed under the GNU Public License." OFF
-)
+  "Build plugins that are licensed under the GNU Public License." OFF)
 
 # Create a plugin for Avogadro.
 # name is the name of the plugin, this will be the name of the target created.
@@ -36,8 +37,8 @@ function(avogadro_plugin name description type header pluginClass sources)
   if(${ARGC} GREATER 7)
     set(rcs ${ARGV7})
   endif()
-  qt4_wrap_ui(ui_srcs ${uis})
-  qt4_add_resources(rc_srcs ${rcs})
+  qt5_wrap_ui(ui_srcs ${uis})
+  qt5_add_resources(rc_srcs ${rcs})
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
   unset(PluginIncludes)
   foreach(_header ${header})
@@ -90,14 +91,13 @@ function(avogadro_plugin name description type header pluginClass sources)
 endfunction()
 
 # Now to make the plugins.
-add_subdirectory(apbs)
 add_subdirectory(bondcentrictool)
+add_subdirectory(bonding)
 add_subdirectory(coordinateeditor)
 add_subdirectory(copypaste)
 add_subdirectory(crystal)
 add_subdirectory(customelements)
 add_subdirectory(editor)
-add_subdirectory(gamessinput)
 add_subdirectory(hydrogens)
 add_subdirectory(lineformatinput)
 add_subdirectory(manipulator)
@@ -107,13 +107,21 @@ add_subdirectory(mongochem)
 add_subdirectory(navigator)
 add_subdirectory(networkdatabases)
 add_subdirectory(openbabel)
-add_subdirectory(quantuminput)
 add_subdirectory(quantumoutput)
 add_subdirectory(scriptfileformats)
+add_subdirectory(playertool)
+
+if(USE_MOLEQUEUE)
+  add_subdirectory(apbs)
+  add_subdirectory(gamessinput)
+  add_subdirectory(quantuminput)
+endif()
+
 # The scene plugins
 add_subdirectory(ballandstick)
 add_subdirectory(licorice)
 add_subdirectory(vanderwaals)
+add_subdirectory(wireframe)
 add_subdirectory(meshes)
 add_subdirectory(overlayaxes)
 add_subdirectory(vanderwaalsao)
@@ -142,7 +150,7 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
 
 foreach(_plugin ${AvogadroLibs_STATIC_PLUGINS})
   file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
-    "Q_IMPORT_PLUGIN(${_plugin})\n")
+    "Q_IMPORT_PLUGIN(${_plugin}Factory)\n")
 endforeach()
 file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
   "\nvoid initAvogadroPluginResources() {\n")
@@ -175,5 +183,5 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroQtPlugins ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroQtPlugins LINK_PUBLIC ${QT_QTCORE_LIBRARY}
-  LINK_PRIVATE ${AvogadroLibs_STATIC_PLUGINS})
+target_link_libraries(AvogadroQtPlugins LINK_PUBLIC ${Qt5Core_LIBRARIES}
+  LINK_PRIVATE ${AvogadroLibs_STATIC_PLUGINS} AvogadroQtGui)

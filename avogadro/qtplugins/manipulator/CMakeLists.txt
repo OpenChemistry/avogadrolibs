@@ -1,3 +1,6 @@
+find_package(Qt5OpenGL REQUIRED)
+include_directories(SYSTEM ${Qt5OpenGL_INCLUDE_DIRS})
+
 set(manipulator_srcs
   manipulator.cpp
 )
@@ -10,7 +13,7 @@ set(manipulator_rcs
 )
 
 avogadro_plugin(Manipulator
-  "Manipulator tool"
+  "Manipulator"
   ToolPlugin
   manipulator.h
   Manipulator
@@ -19,4 +22,4 @@ avogadro_plugin(Manipulator
   "${manipulator_rcs}"
 )
 
-target_link_libraries(Manipulator AvogadroRendering)
+target_link_libraries(Manipulator AvogadroQtOpenGL)

@@ -16,18 +16,18 @@
 
 #include <gtest/gtest.h>
 
-#include <Eigen/Core>
+#include <avogadro/core/vector.h>
 #include <avogadro/core/coordinateset.h>
 
 using Avogadro::Core::ArraySet;
 using Avogadro::Core::CoordinateSet;
-using Eigen::Vector3d;
+using Avogadro::Vector3;
 
 TEST(CoordinateSetTest, StoreType)
 {
-  ArraySet *array = new CoordinateSet<Vector3d>;
+  ArraySet *array = new CoordinateSet<Vector3>;
 
-  EXPECT_TRUE(array->isType(Vector3d()));
+  EXPECT_TRUE(array->isType(Vector3()));
 
   delete array;
   array = 0;
@@ -40,7 +40,7 @@ TEST(CoordinateSetTest, StoreType)
 
 TEST(CoordinateSetTest, Resize)
 {
-  CoordinateSet<Vector3d> data;
+  CoordinateSet<Vector3> data;
   data.resize(5);
   EXPECT_EQ(data.size(), static_cast<size_t>(5));
 
@@ -50,9 +50,9 @@ TEST(CoordinateSetTest, Resize)
 
 TEST(CoordinateSetTest, Store)
 {
-  CoordinateSet<Vector3d> data;
+  CoordinateSet<Vector3> data;
   data.resize(5);
-  data[0] = Vector3d(0.0, 1.0, 2.0);
+  data[0] = Vector3(0.0, 1.0, 2.0);
   EXPECT_EQ(data[0].x(), 0.0);
   EXPECT_EQ(data[0].y(), 1.0);
   EXPECT_EQ(data[0].z(), 2.0);
@@ -60,12 +60,12 @@ TEST(CoordinateSetTest, Store)
 
 TEST(CoordinateSetTest, StoreTypeRetrieve)
 {
-  CoordinateSet<Vector3d> data;
+  CoordinateSet<Vector3> data;
   data.resize(5);
-  data[0] = Vector3d(0.0, 1.0, 2.0);
+  data[0] = Vector3(0.0, 1.0, 2.0);
 
   ArraySet *array = &data;
-  CoordinateSet<Vector3d> &ref = *reinterpret_cast< CoordinateSet<Vector3d> *>(array);
+  CoordinateSet<Vector3> &ref = *reinterpret_cast< CoordinateSet<Vector3> *>(array);
   EXPECT_EQ(ref[0].x(), 0.0);
   EXPECT_EQ(ref[0].y(), 1.0);
   EXPECT_EQ(ref[0].z(), 2.0);

@@ -22,24 +22,26 @@
 #include <avogadro/core/elements.h>
 
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/qtgui/molequeuedialog.h>
-#include <avogadro/qtgui/molequeuemanager.h>
+#include <avogadro/molequeue/molequeuedialog.h>
+#include <avogadro/molequeue/molequeuemanager.h>
 
+#include <molequeue/client/jobobject.h>
 #include <qjsonarray.h>
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
-#include <QtGui/QProgressDialog>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressDialog>
 
 #include <QtCore/QFile>
 #include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
-using Avogadro::QtGui::MoleQueueDialog;
-using Avogadro::QtGui::MoleQueueManager;
+using Avogadro::MoleQueue::MoleQueueDialog;
+using Avogadro::MoleQueue::MoleQueueManager;
+using MoleQueue::JobObject;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -705,7 +707,7 @@ void GamessInputDialog::computeClicked()
   QString fileNameBase = ui.baseNameEdit->text().isEmpty()
       ? ui.baseNameEdit->placeholderText() : ui.baseNameEdit->text();
 
-  MoleQueue::JobObject job;
+  JobObject job;
   job.setProgram("GAMESS");
   job.setDescription(description);
   job.setInputFile(QString("%1.inp").arg(fileNameBase),

@@ -20,7 +20,7 @@
 #include <utilities/vtktesting/imageregressiontest.h>
 
 #include <QtCore/QTimer>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QImage>
 
 #include <QtOpenGL/QGLFormat>
@@ -31,6 +31,8 @@ using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::SphereGeometry;
+using Avogadro::QtOpenGL::GLWidget;
+using Avogadro::VtkTesting::ImageRegressionTest;
 
 int glwidgettest(int argc, char *argv[])
 {
@@ -40,7 +42,7 @@ int glwidgettest(int argc, char *argv[])
   QGLFormat::setDefaultFormat(defaultFormat);
 
   QApplication app(argc, argv);
-  Avogadro::QtOpenGL::GLWidget widget;
+  GLWidget widget;
   widget.setGeometry(10, 10, 250, 250);
   widget.show();
 
@@ -67,7 +69,7 @@ int glwidgettest(int argc, char *argv[])
   QImage image = widget.grabFrameBuffer(false);
 
   // Set up the image regression test.
-  Avogadro::VtkTesting::ImageRegressionTest test(argc, argv);
+  ImageRegressionTest test(argc, argv);
 
   // Do the image threshold test, printing output to the std::cout for ctest.
   return test.imageThresholdTest(image, std::cout);

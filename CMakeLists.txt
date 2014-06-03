@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.7 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.8 FATAL_ERROR)
 
 project(AvogadroLibs)
 
@@ -12,8 +12,8 @@ include(DetermineVersion)
 
 # Set up our version.
 set(AvogadroLibs_VERSION_MAJOR   "0")
-set(AvogadroLibs_VERSION_MINOR   "6")
-set(AvogadroLibs_VERSION_PATCH   "0")
+set(AvogadroLibs_VERSION_MINOR   "7")
+set(AvogadroLibs_VERSION_PATCH   "2")
 set(AvogadroLibs_VERSION
   "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
 find_package(Git)

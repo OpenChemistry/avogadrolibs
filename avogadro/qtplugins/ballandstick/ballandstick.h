@@ -32,22 +32,39 @@ class BallAndStick : public QtGui::ScenePlugin
 
 public:
   explicit BallAndStick(QObject *parent = 0);
-  ~BallAndStick();
+  ~BallAndStick() AVO_OVERRIDE;
 
   void process(const Core::Molecule &molecule,
                Rendering::GroupNode &node) AVO_OVERRIDE;
 
-  QString name() const { return tr("Ball and Stick"); }
+  void processEditable(const QtGui::RWMolecule &molecule,
+                       Rendering::GroupNode &node) AVO_OVERRIDE;
 
-  QString description() const { return tr("Render atoms as spheres and bonds "
-                                          "as cylinders."); }
+  QString name() const AVO_OVERRIDE { return tr("Ball and Stick"); }
 
-  bool isEnabled() const;
+  QString description() const AVO_OVERRIDE
+  {
+    return tr("Render atoms as spheres and bonds as cylinders.");
+  }
 
-  void setEnabled(bool enable);
+  bool isEnabled() const AVO_OVERRIDE;
+
+  void setEnabled(bool enable) AVO_OVERRIDE;
+
+  QWidget * setupWidget() AVO_OVERRIDE;
+
+private slots:
+  void multiBonds(bool show);
+  void showHydrogens(bool show);
 
 private:
   bool m_enabled;
+
+  Rendering::GroupNode *m_group;
+
+  QWidget *m_setupWidget;
+  bool m_multiBonds;
+  bool m_showHydrogens;
 };
 
 } // end namespace QtPlugins

@@ -261,7 +261,7 @@ public:
         std::vector<std::string> tokens = split(refs, ' ');
         if (tokens.size() != 2) // Corrupted file/input we don't understand
           return false;
-        std::map<std::string, size_t>::const_iterator begin, end;
+        std::map<std::string, Index>::const_iterator begin, end;
         begin = atomIds.find(tokens[0]);
         end = atomIds.find(tokens[1]);
         if (begin != atomIds.end() && end != atomIds.end()
@@ -407,7 +407,7 @@ public:
   bool success;
   Molecule *molecule;
   xml_node moleculeNode;
-  std::map<std::string, size_t> atomIds;
+  std::map<std::string, Index> atomIds;
   string filename;
   string error;
 };
@@ -499,7 +499,7 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
   }
 
   xml_node atomArrayNode = moleculeNode.append_child("atomArray");
-  for (size_t i = 0; i < mol.atomCount(); ++i) {
+  for (Index i = 0; i < mol.atomCount(); ++i) {
     xml_node atomNode = atomArrayNode.append_child("atom");
     std::ostringstream index;
     index << 'a' <<  i + 1;
@@ -521,7 +521,7 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
   }
 
   xml_node bondArrayNode = moleculeNode.append_child("bondArray");
-  for (size_t i = 0; i < mol.bondCount(); ++i) {
+  for (Index i = 0; i < mol.bondCount(); ++i) {
     xml_node bondNode = bondArrayNode.append_child("bond");
     Bond b = mol.bond(i);
     std::ostringstream index;

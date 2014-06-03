@@ -1,10 +1,10 @@
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
   "${AvogadroLibs_BINARY_DIR}/avogadro/qtgui"
+  "${AvogadroLibs_BINARY_DIR}/avogadro/molequeue"
   "${AvogadroLibs_SOURCE_DIR}/tests/core")
 
-find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
-include_directories(SYSTEM ${QT_INCLUDES})
-add_definitions(${QT_DEFINITIONS})
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Test REQUIRED)
 
 # Pull in MoleQueue for QtJson
 find_package(MoleQueue REQUIRED NO_MODULE)
@@ -28,6 +28,7 @@ set(tests
   GenericHighlighter
   Molecule
   MoleQueueQueueListModel
+  RWMolecule
   )
 
 if(PYTHON2_EXECUTABLE AND AVOGADRO_DATA)
@@ -48,7 +49,8 @@ endforeach()
 
 # Add a single executable for all of our tests.
 add_executable(AvogadroQtGuiTests ${testSrcs})
-target_link_libraries(AvogadroQtGuiTests AvogadroQtGui
+qt5_use_modules(AvogadroQtGuiTests Widgets Test)
+target_link_libraries(AvogadroQtGuiTests AvogadroQtGui AvogadroMoleQueue
   MoleQueueClient ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those

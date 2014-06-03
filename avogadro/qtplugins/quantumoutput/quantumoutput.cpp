@@ -37,9 +37,9 @@
 #include <avogadro/quantumio/mopacaux.h>
 
 #include <QtCore/QDebug>
-#include <QtGui/QAction>
-#include <QtGui/QFileDialog>
-#include <QtGui/QProgressDialog>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QProgressDialog>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -154,7 +154,7 @@ void QuantumOutput::calculateMolecularOrbital(int molecularOrbital,
       m_progressDialog->setWindowModality(Qt::NonModal);
     }
     if (!m_cube)
-      m_cube = new Cube;
+      m_cube = m_molecule->addCube();
 
     if (!m_concurrent)
       m_concurrent = new GaussianSetConcurrent(this);

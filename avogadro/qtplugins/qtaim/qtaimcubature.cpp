@@ -199,7 +199,7 @@ static hypercube make_hypercube(unsigned int dim, const double *center, const do
   unsigned int i;
   hypercube h;
   h.dim = dim;
-  h.data = (double *) qMalloc(sizeof(double) * dim * 2);
+  h.data = (double *) malloc(sizeof(double) * dim * 2);
   h.vol = 0;
   if (h.data) {
     for (i = 0; i < dim; ++i) {
@@ -227,7 +227,7 @@ static hypercube make_hypercube_range(unsigned int dim, const double *xmin, cons
 
 static void destroy_hypercube(hypercube *h)
 {
-  qFree(h->data);
+  free(h->data);
   h->dim = 0;
 }
 
@@ -246,14 +246,14 @@ static region make_region(const hypercube *h, unsigned int fdim)
   R.h = make_hypercube(h->dim, h->data, h->data + h->dim);
   R.splitDim = 0;
   R.fdim = fdim;
-  R.ee = R.h.data ? (esterr *) qMalloc(sizeof(esterr) * fdim) : NULL;
+  R.ee = R.h.data ? (esterr *) malloc(sizeof(esterr) * fdim) : NULL;
   return R;
 }
 
 static void destroy_region(region *R)
 {
   destroy_hypercube(&R->h);
-  qFree(R->ee);
+  free(R->ee);
   R->ee = 0;
 }
 
@@ -267,7 +267,7 @@ static int cut_region(region *R, region *R2)
   if (!R2->h.data) return FAILURE;
   R->h.data[d] -= R->h.data[d + dim];
   R2->h.data[d] += R->h.data[d + dim];
-  R2->ee = (esterr *) qMalloc(sizeof(esterr) * R2->fdim);
+  R2->ee = (esterr *) malloc(sizeof(esterr) * R2->fdim);
   return R2->ee == NULL;
 }
 
@@ -294,22 +294,22 @@ static void destroy_rule(rule *r)
 {
   if (r) {
     if (r->destroy) r->destroy(r);
-    qFree(r->pts);
-    qFree(r);
+    free(r->pts);
+    free(r);
   }
 }
 
 static int alloc_rule_pts(rule *r, unsigned int num_regions)
 {
   if (num_regions > r->num_regions) {
-    qFree(r->pts);
+    free(r->pts);
     r->pts = r->vals = NULL;
     r->num_regions = 0;
     num_regions *= 2; /* allocate extra so that
              repeatedly calling alloc_rule_pts with
              growing num_regions only needs
              a logarithmic number of allocations */
-    r->pts = (double *) qMalloc(sizeof(double) *
+    r->pts = (double *) malloc(sizeof(double) *
                                 (num_regions
                                  * r->num_points * (r->dim + r->fdim)));
     if (r->fdim + r->dim > 0 && !r->pts) return FAILURE;
@@ -326,7 +326,7 @@ static rule *make_rule(size_t sz, /* >= sizeof(rule) */
   rule *r;
 
   if (sz < sizeof(rule)) return NULL;
-  r = (rule *) qMalloc(sz);
+  r = (rule *) malloc(sz);
   if (!r) return NULL;
   r->pts = r->vals = NULL;
   r->num_regions = 0;
@@ -506,7 +506,7 @@ static int isqr(int x)
 static void destroy_rule75genzmalik(rule *r_)
 {
   rule75genzmalik *r = (rule75genzmalik *) r_;
-  qFree(r->p);
+  free(r->p);
 }
 
 static int rule75genzmalik_evalError(rule *r_, unsigned int fdim, integrand_v f, void *fdata, unsigned int nR, region *R)
@@ -656,7 +656,7 @@ static rule *make_rule75genzmalik(unsigned int dim, unsigned int fdim)
                  / real(729));
   r->weightE3 = real(265 - 100 * to_int(dim)) / real(1458);
 
-  r->p = (double *) qMalloc(sizeof(double) * dim * 3);
+  r->p = (double *) malloc(sizeof(double) * dim * 3);
   if (!r->p) { destroy_rule((rule *) r); return NULL; }
   r->widthLambda = r->p + dim;
   r->widthLambda2 = r->p + 2 * dim;
@@ -841,7 +841,7 @@ static heap heap_alloc(unsigned int nalloc, unsigned int fdim)
   h.nalloc = 0;
   h.items = 0;
   h.fdim = fdim;
-  h.ee = (esterr *) qMalloc(sizeof(esterr) * fdim);
+  h.ee = (esterr *) malloc(sizeof(esterr) * fdim);
   if (h.ee) {
     for (i = 0; i < fdim; ++i) h.ee[i].val = h.ee[i].err = 0;
     heap_resize(&h, nalloc);
@@ -855,7 +855,7 @@ static void heap_free(heap *h)
   h->n = 0;
   heap_resize(h, 0);
   h->fdim = 0;
-  qFree(h->ee);
+  free(h->ee);
 }
 
 static int heap_push(heap *h, heap_item hi)
@@ -947,11 +947,11 @@ static int ruleadapt_integrate(rule *r, unsigned int fdim, integrand_v f, void *
   regions = heap_alloc(1, fdim);
   if (!regions.ee || !regions.items) goto bad;
 
-  ee = (esterr *) qMalloc(sizeof(esterr) * fdim);
+  ee = (esterr *) malloc(sizeof(esterr) * fdim);
   if (!ee) goto bad;
 
   nR_alloc = 2;
-  R = (region *) qMalloc(sizeof(region) * nR_alloc);
+  R = (region *) malloc(sizeof(region) * nR_alloc);
   if (!R) goto bad;
   R[0] = make_region(h, fdim);
   if (!R[0].ee
@@ -1038,15 +1038,15 @@ static int ruleadapt_integrate(rule *r, unsigned int fdim, integrand_v f, void *
   }
 
   /* printf("regions.nalloc = %d\n", regions.nalloc); */
-  qFree(ee);
+  free(ee);
   heap_free(&regions);
-  qFree(R);
+  free(R);
   return SUCCESS;
 
   bad:
-  qFree(ee);
+  free(ee);
   heap_free(&regions);
-  qFree(R);
+  free(R);
   return FAILURE;
 }
 
@@ -1121,7 +1121,7 @@ int adapt_integrate(unsigned int fdim, integrand f, void *fdata,
   if (fdim == 0) return SUCCESS; /* nothing to do */
 
   d.f = f; d.fdata = fdata;
-  d.fval1 = (double *) qMalloc(sizeof(double) * fdim);
+  d.fval1 = (double *) malloc(sizeof(double) * fdim);
   if (!d.fval1) {
     unsigned int i;
     for (i = 0; i < fdim; ++i) {
@@ -1132,7 +1132,7 @@ int adapt_integrate(unsigned int fdim, integrand f, void *fdata,
   }
   ret = integrate(fdim, fv, &d, dim, xmin, xmax,
                   maxEval, reqAbsError, reqRelError, val, err, 0);
-  qFree(d.fval1);
+  free(d.fval1);
   return ret;
 }
 
@@ -2038,8 +2038,8 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
   unsigned int fdim=1;
   double *val;
   double *err;
-  val = (double *) qMalloc(sizeof(double) * fdim);
-  err = (double *) qMalloc(sizeof(double) * fdim);
+  val = (double *) malloc(sizeof(double) * fdim);
+  err = (double *) malloc(sizeof(double) * fdim);
 
   double tol=1.e-6;
   unsigned int maxEval=0;
@@ -2048,8 +2048,8 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
 
   double *xmin;
   double *xmax;
-  xmin = (double *) qMalloc(dim * sizeof(double));
-  xmax = (double *) qMalloc(dim * sizeof(double));
+  xmin = (double *) malloc(dim * sizeof(double));
+  xmax = (double *) malloc(dim * sizeof(double));
 
   xmin[0] = 0.0;
   xmax[0] = rf;
@@ -2076,10 +2076,10 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
   //  qDebug() << "Out of R with val=" << val[0] << "err=" << err[0];
   qreal Rval=val[0];
 
-  qFree(xmin);
-  qFree(xmax);
-  qFree(val);
-  qFree(err);
+  free(xmin);
+  free(xmax);
+  free(val);
+  free(err);
 
   //  QList<QVariant> variantList;
 
@@ -2240,8 +2240,8 @@ namespace QtPlugins {
     unsigned int fdim=1;
     double *val;
     double *err;
-    val = (double *) qMalloc(sizeof(double) * fdim);
-    err = (double *) qMalloc(sizeof(double) * fdim);
+    val = (double *) malloc(sizeof(double) * fdim);
+    err = (double *) malloc(sizeof(double) * fdim);
 
     for( qint64 i=0 ; i < m_basins.length() ; ++i)
     {
@@ -2252,8 +2252,8 @@ namespace QtPlugins {
 
         double *xmin;
         double *xmax;
-        xmin = (double *) qMalloc(dim * sizeof(double));
-        xmax = (double *) qMalloc(dim * sizeof(double));
+        xmin = (double *) malloc(dim * sizeof(double));
+        xmax = (double *) malloc(dim * sizeof(double));
 
         if(cartesianIntegrationLimits)
         {
@@ -2316,8 +2316,8 @@ namespace QtPlugins {
                             val, err);
         }
 
-        qFree(xmin);
-        qFree(xmax);
+        free(xmin);
+        free(xmax);
 
       }
       else
@@ -2326,8 +2326,8 @@ namespace QtPlugins {
 
         double *xmin;
         double *xmax;
-        xmin = (double *) qMalloc(dim * sizeof(double));
-        xmax = (double *) qMalloc(dim * sizeof(double));
+        xmin = (double *) malloc(dim * sizeof(double));
+        xmax = (double *) malloc(dim * sizeof(double));
 
         const qreal pi=4.0*atan(1.0);
 
@@ -2354,8 +2354,8 @@ namespace QtPlugins {
                           maxEval, tol, 0,
                           val, err);
 
-        qFree(xmin);
-        qFree(xmax);
+        free(xmin);
+        free(xmax);
 
       }
 
@@ -2369,8 +2369,8 @@ namespace QtPlugins {
 
     }
 
-    qFree(val);
-    qFree(err);
+    free(val);
+    free(err);
 
     return value;
 
