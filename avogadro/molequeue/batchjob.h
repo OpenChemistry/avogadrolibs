@@ -235,7 +235,7 @@ private: // variables
   QJsonObject m_moleQueueOptions;
 
   /// Cached job states.
-  QList<::MoleQueue::JobObject> m_jobObjects;
+  QList< ::MoleQueue::JobObject > m_jobObjects;
   /// Lookup batch ids from server ids.
   QMap<ServerId, BatchId> m_serverIds;
   /// Job states. For fast lookups without string conversions.
