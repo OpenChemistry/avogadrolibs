@@ -40,6 +40,7 @@ namespace MoleQueue {
 namespace Ui {
 class InputGeneratorWidget;
 }
+class BatchJob;
 /**
  * @class InputGeneratorWidget inputgeneratorwidget.h
  * <avogadro/molequeue/inputgeneratorwidget.h>
@@ -47,6 +48,18 @@ class InputGeneratorWidget;
  * configuring, saving, editing, and running input files produced by
  * InputGenerator scripts.
  * @sa InputGenerator InputGeneratorDialog
+ *
+ * The InputGeneratorWidget creates a GUI to represent the options given by an
+ * input generator script, and has some utilities for job submission through
+ * MoleQueue.
+ *
+ * By default, the widget will configure input files for a single molecule,
+ * which can be either written to disk or submitted for processing with
+ * MoleQueue.
+ *
+ * By enabling batch mode (setBatchMode()), the current molecule is used to
+ * configure a calculation for submission to MoleQueue, and the parameters are
+ * saved. These may be used to configure and submit jobs for other molecules.
  */
 class AVOGADROMOLEQUEUE_EXPORT InputGeneratorWidget : public QWidget
 {
@@ -75,6 +88,25 @@ public:
    * Access to the underlying input generator object. @{
    */
   const InputGenerator &inputGenerator() const { return m_inputGenerator; }
+
+  /**
+   * @return True if the widget is in batch mode. See the class documentation
+   * for details. Default is false.
+   */
+  bool batchMode() const { return m_batchMode; }
+
+  /**
+   * Collect the current calculation parameters and prompt for MoleQueue
+   * options. Both option sets are stored in @a batch.
+   */
+  bool configureBatchJob(BatchJob &batch) const;
+
+public slots:
+  /**
+   * Enable/disable 'template mode'. See the class documentation for details.
+   * Default is off.
+   */
+  void setBatchMode(bool m);
 
 signals:
   /**
@@ -184,6 +216,9 @@ private:
   void saveDirectory();
   /**@}*/
 
+  /** Get batch job options from MoleQueueDialog. */
+  QJsonObject promptForBatchJobOptions() const;
+
   /**
    * Make signal/slot connections.
    */
@@ -256,6 +291,7 @@ private:
   QJsonObject m_options;
   QJsonObject m_optionCache; // For reverting changes
   bool m_updatePending;
+  bool m_batchMode;
   QList<QTextEdit*> m_dirtyTextEdits;
   InputGenerator m_inputGenerator;
 

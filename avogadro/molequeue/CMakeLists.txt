@@ -11,6 +11,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network REQUIRED)
 
 set(HEADERS
+  batchjob.h
   inputgenerator.h
   inputgeneratordialog.h
   inputgeneratorwidget.h
@@ -21,6 +22,7 @@ set(HEADERS
 )
 
 set(SOURCES
+  batchjob.cpp
   inputgenerator.cpp
   inputgeneratordialog.cpp
   inputgeneratorwidget.cpp

@@ -467,6 +467,11 @@ public:
   bool debug() const;
 
   /**
+   * @return True if the generator is configured with a valid script.
+   */
+  bool isValid() const;
+
+  /**
    * Query the script for the available options (<tt>--generate-options</tt>)
    * and return the output as a JSON object.
    * @note The results will be cached the first time this function is called
@@ -617,6 +622,12 @@ private:
   mutable QMap<QString, QtGui::GenericHighlighter*> m_highlightStyles;
 
 };
+
+inline bool InputGenerator::isValid() const
+{
+  displayName();
+  return !hasErrors();
+}
 
 } // namespace MoleQueue
 } // namespace Avogadro

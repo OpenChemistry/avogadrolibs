@@ -164,6 +164,24 @@ MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
   }
 }
 
+bool MoleQueueDialog::promptForJobOptions(QWidget *windowParent,
+                                          const QString &caption,
+                                          MoleQueue::JobObject &jobTemplate)
+{
+  MoleQueueDialog dlg(windowParent);
+  dlg.setWindowTitle(caption);
+  dlg.widget().setBatchMode(true);
+  dlg.widget().setJobTemplate(jobTemplate);
+  if (!jobTemplate.program().isEmpty())
+    dlg.widget().showAndSelectProgram(jobTemplate.program());
+
+  if (static_cast<DialogCode>(dlg.exec()) != Accepted)
+    return false;
+
+  jobTemplate = dlg.widget().configuredJob();
+  return true;
+}
+
 MoleQueueWidget &MoleQueueDialog::widget()
 {
   return *m_ui->widget;

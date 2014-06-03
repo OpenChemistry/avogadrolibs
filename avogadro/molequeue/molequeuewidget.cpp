@@ -186,6 +186,17 @@ MoleQueue::JobObject MoleQueueWidget::configuredJob() const
   return job;
 }
 
+void MoleQueueWidget::setBatchMode(bool batch)
+{
+  m_ui->openOutput->setHidden(batch);
+  m_ui->openOutputLabel->setHidden(batch);
+}
+
+bool MoleQueueWidget::batchMode() const
+{
+  return m_ui->openOutput->isHidden();
+}
+
 void MoleQueueWidget::showAndSelectProgramHandler()
 {
   MoleQueueManager &mqManager = MoleQueueManager::instance();

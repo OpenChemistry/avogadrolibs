@@ -132,9 +132,23 @@ public:
   bool requestJobLookup();
 
   /**
+   * If the widget is in 'batch mode', options that don't make sense are hidden
+   * (such as 'open output when finished').
+   */
+  void setBatchMode(bool batch);
+  bool batchMode() const;
+  /**@}*/
+
+  /**
    * @return True if the user has selected a program, false otherwise.
    */
   bool programSelected();
+
+  /**
+   * @return A JobObject with the GUI options. Any settings in jobTemplate that
+   * are not handled by the GUI are passed through untouched to the new object.
+   */
+  ::MoleQueue::JobObject configuredJob() const;
 
 public slots:
   /**
@@ -187,13 +201,6 @@ private:
   void listenForJobSubmitReply(bool listen = true);
   void listenForJobStateChange(bool listen = true);
 
-  /**
-   * @return A JobObject with the GUI options. Any settings in jobTemplate that
-   * are not handled by the GUI are passed through untouched to the new object.
-   */
-  ::MoleQueue::JobObject configuredJob() const;
-
-private:
   Ui::MoleQueueWidget *m_ui;
   ::MoleQueue::JobObject m_jobTemplate;
   QString m_jobState;

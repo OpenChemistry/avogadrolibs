@@ -142,6 +142,17 @@ public:
                                 int *submissionRequestId = NULL);
 
   /**
+   * Show a job configuration dialog and collect the user's selected options.
+   * @param windowParent The parent of the dialog window.
+   * @param caption Title of the dialog window.
+   * @param jobTemplate JobObject with initial options. Will be overwritten
+   * with the configured job options.
+   * @return True on success, false otherwise.
+   */
+  static bool promptForJobOptions(QWidget *windowParent, const QString &caption,
+                                  ::MoleQueue::JobObject &jobTemplate);
+
+  /**
    * @return A reference to the internal MoleQueueWidget instance.
    * @{
    */
