@@ -244,7 +244,7 @@ private: // variables
   QMap<RequestId, Request> m_requests;
 };
 
-inline BatchJob::BatchJob::Request::Request(Type t, BatchId b) : type(t), batchId(b) {}
+inline BatchJob::Request::Request(Type t, BatchId b) : type(t), batchId(b) {}
 
 inline void BatchJob::setInputGeneratorOptions(const QJsonObject &opts)
 {
