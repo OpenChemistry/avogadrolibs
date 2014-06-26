@@ -25,6 +25,7 @@
 
 #include <avogadro/rendering/camera.h>
 
+#include <QtCore/QTimer>
 #include <QtWidgets/QAction>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
@@ -36,7 +37,8 @@ namespace QtOpenGL {
 GLWidget::GLWidget(QWidget *parent_)
   : QGLWidget(parent_),
     m_activeTool(NULL),
-    m_defaultTool(NULL)
+    m_defaultTool(NULL),
+    m_renderTimer(NULL)
 {
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins,
@@ -133,7 +135,7 @@ void GLWidget::addTool(QtGui::ToolPlugin *tool)
   if (m_tools.contains(tool))
     return;
 
-  connect(tool, SIGNAL(updateRequested()), SLOT(updateGL()));
+  connect(tool, SIGNAL(updateRequested()), SLOT(requestUpdate()));
   tool->setParent(this);
   tool->setGLWidget(this);
   tool->setMolecule(m_molecule);
@@ -203,6 +205,25 @@ void GLWidget::setDefaultTool(QtGui::ToolPlugin *tool)
     connect(m_defaultTool, SIGNAL(drawablesChanged()),
             this, SLOT(updateScene()));
   }
+}
+
+void GLWidget::requestUpdate()
+{
+  if (!m_renderTimer) {
+    m_renderTimer = new QTimer(this);
+    connect(m_renderTimer, SIGNAL(timeout()), SLOT(updateTimeout()));
+    m_renderTimer->setSingleShot(1000 / 30);
+    m_renderTimer->start();
+  }
+}
+
+void GLWidget::updateTimeout()
+{
+  if (m_renderTimer) {
+    m_renderTimer->deleteLater();
+    m_renderTimer = NULL;
+  }
+  updateGL();
 }
 
 void GLWidget::initializeGL()
