@@ -25,6 +25,8 @@
 #include <QtOpenGL/QGLWidget>
 #include <QtCore/QPointer>
 
+class QTimer;
+
 namespace Avogadro {
 
 namespace QtGui {
@@ -161,6 +163,19 @@ public slots:
   void setDefaultTool(QtGui::ToolPlugin* tool);
   /**@}*/
 
+  /**
+   * Request an update, this will by default initiate a timer that will trigger
+   * in a specified time, enabling us to compress multiple events such as
+   * camera moves to maintain interactivity.
+   */
+  void requestUpdate();
+
+protected slots:
+  /**
+   * Perform the update of the render, this should only be called by the timer.
+   */
+  void updateTimeout();
+
 protected:
   /** This is where the GL context is initialized. */
   void initializeGL();
@@ -188,6 +203,8 @@ private:
   QtGui::ToolPlugin *m_defaultTool;
   Rendering::GLRenderer m_renderer;
   QtGui::ScenePluginModel m_scenePlugins;
+
+  QTimer *m_renderTimer;
 };
 
 } // End QtOpenGL namespace
