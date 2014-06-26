@@ -126,6 +126,17 @@ public:
    */
   Vector4ub backgroundColor() const { return m_backgroundColor; }
 
+  /**
+   * Mark the scene as dirty, primarily to ensure radius/center will be
+   * recalculated.
+   */
+  void setDirty(bool dirty) { m_dirty = dirty; }
+
+  /**
+   * Has the scene been marked as dirty?
+   */
+  bool isDirty() const { return m_dirty; }
+
   /** Clear the scene of all elements. */
   void clear();
 
@@ -133,6 +144,7 @@ private:
   GroupNode m_rootNode;
   Vector4ub m_backgroundColor;
 
+  mutable bool     m_dirty;
   mutable Vector3f m_center;
   mutable float    m_radius;
 };
