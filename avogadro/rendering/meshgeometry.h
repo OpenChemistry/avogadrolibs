@@ -142,6 +142,9 @@ public:
   unsigned char opacity() const { return m_opacity; }
   /** @} */
 
+  Core::Array<PackedVertex> vertices() { return m_vertices; }
+  Core::Array<unsigned int> triangles() { return m_indices; }
+
 private:
   /**
    * @brief Update the VBOs, IBOs etc ready for rendering.

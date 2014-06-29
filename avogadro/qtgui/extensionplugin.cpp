@@ -41,5 +41,13 @@ bool ExtensionPlugin::readMolecule(Molecule &)
   return false;
 }
 
+void ExtensionPlugin::setScene(Rendering::Scene *)
+{
+}
+
+void ExtensionPlugin::setCamera(Rendering::Camera *camera)
+{
+}
+
 } // End QtGui namespace
 } // End Avogadro namespace

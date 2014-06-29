@@ -110,6 +110,7 @@ add_subdirectory(openbabel)
 add_subdirectory(quantumoutput)
 add_subdirectory(scriptfileformats)
 add_subdirectory(playertool)
+add_subdirectory(povray)
 
 if(USE_MOLEQUEUE)
   add_subdirectory(apbs)
