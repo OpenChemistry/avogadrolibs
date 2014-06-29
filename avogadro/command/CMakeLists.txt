@@ -3,3 +3,6 @@ include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}")
 
 add_executable(avocjsontocml cjsontocml.cpp)
 target_link_libraries(avocjsontocml AvogadroIO)
+
+add_executable(avobabel avobabel.cpp)
+target_link_libraries(avobabel AvogadroIO)
