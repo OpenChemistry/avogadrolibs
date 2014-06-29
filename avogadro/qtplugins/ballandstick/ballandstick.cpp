@@ -97,21 +97,20 @@ void BallAndStick::process(const Molecule &molecule,
     switch (m_multiBonds ? bond.order() : 1) {
     case 3: {
       Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
-      cylinders->addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
+      cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius,
                              color1, color2, i);
-      cylinders->addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
+      cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius,
                              color1, color2, i);
     }
     default:
     case 1:
-      cylinders->addCylinder(pos1, bondVector, bondLength, bondRadius,
-                             color1, color2, i);
+      cylinders->addCylinder(pos1, pos2, bondRadius, color1, color2, i);
       break;
     case 2: {
       Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
-      cylinders->addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
+      cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius,
                              color1, color2, i);
-      cylinders->addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
+      cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius,
                              color1, color2, i);
     }
     }
@@ -163,21 +162,20 @@ void BallAndStick::processEditable(const QtGui::RWMolecule &molecule,
     switch (m_multiBonds ? bond.order() : 1) {
     case 3: {
       Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
-      cylinders->addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
+      cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius,
                              color1, color2, i);
-      cylinders->addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
+      cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius,
                              color1, color2, i);
     }
     default:
     case 1:
-      cylinders->addCylinder(pos1, bondVector, bondLength, bondRadius,
-                             color1, color2, i);
+      cylinders->addCylinder(pos1, pos2, bondRadius, color1, color2, i);
       break;
     case 2: {
       Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
-      cylinders->addCylinder(pos1 + delta, bondVector, bondLength, bondRadius,
+      cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius,
                              color1, color2, i);
-      cylinders->addCylinder(pos1 - delta, bondVector, bondLength, bondRadius,
+      cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius,
                              color1, color2, i);
     }
     }

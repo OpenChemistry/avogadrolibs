@@ -139,7 +139,7 @@ namespace QtPlugins {
             float length = direction.norm();
             direction /= length;
 
-            cylinders->addCylinder(v1, direction, length, radius, color);
+            cylinders->addCylinder(v1, v2, radius, color);
           }
         }
       }  // bond path
