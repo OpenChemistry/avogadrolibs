@@ -108,12 +108,10 @@ void CylinderGeometry::update()
          itIndex != m_indices.end() && itCylinder != m_cylinders.end();
          ++i, ++itIndex, ++itCylinder) {
 
-      const Vector3f &position1 = itCylinder->position;
-      const Vector3f &direction = itCylinder->direction;
+      const Vector3f &position1 = itCylinder->end1;
+      const Vector3f &position2 = itCylinder->end2;
+      const Vector3f direction = (position2 - position1).normalized();
       float radius = itCylinder->radius;
-
-      const Vector3f position2 = position1 + direction
-                                 * itCylinder->length;
 
       // Generate the radial vectors
       Vector3f radial = direction.unitOrthogonal() * radius;
@@ -259,8 +257,8 @@ CylinderGeometry::hits(const Vector3f &rayOrigin,
     const CylinderColor &cylinder = m_cylinders[i];
 
     // Check for cylinder intersection with the ray.
-    Vector3f ao = rayOrigin - cylinder.position;
-    Vector3f ab = cylinder.direction * cylinder.length;
+    Vector3f ao = rayOrigin - cylinder.end1;
+    Vector3f ab = cylinder.end2 - cylinder.end1;
     Vector3f aoxab = ao.cross(ab);
     Vector3f vxab = rayDirection.cross(ab);
 
@@ -277,8 +275,8 @@ CylinderGeometry::hits(const Vector3f &rayOrigin,
                        (-B - std::sqrt(D)) / (2.0f * A));
 
     Vector3f ip = rayOrigin + (rayDirection * t);
-    Vector3f ip1 = ip - cylinder.position;
-    Vector3f ip2 = ip - (cylinder.position + ab);
+    Vector3f ip1 = ip - cylinder.end1;
+    Vector3f ip2 = ip - (cylinder.end1 + ab);
 
     // intersection below base or above top of the cylinder
     if (ip1.dot(ab) < 0.0f || ip2.dot(ab) > 0.0f)
@@ -305,45 +303,45 @@ CylinderGeometry::hits(const Vector3f &rayOrigin,
   return result;
 }
 
-void CylinderGeometry::addCylinder(const Vector3f &position,
-                                   const Vector3f &direction,
-                                   float length, float radius,
+void CylinderGeometry::addCylinder(const Vector3f &pos1,
+                                   const Vector3f &pos2,
+                                   float radius,
                                    const Vector3ub &color)
 {
-    addCylinder(position, direction, length, radius, color, color);
+    addCylinder(pos1, pos2, radius, color, color);
 }
 
-void CylinderGeometry::addCylinder(const Vector3f &position,
-                                   const Vector3f &direction,
-                                   float length, float radius,
+void CylinderGeometry::addCylinder(const Vector3f &pos1,
+                                   const Vector3f &pos2,
+                                   float radius,
                                    const Vector3ub &colorStart,
                                    const Vector3ub &colorEnd)
 {
   m_dirty = true;
-  m_cylinders.push_back(CylinderColor(position, direction, length, radius,
+  m_cylinders.push_back(CylinderColor(pos1, pos2, radius,
                                       colorStart, colorEnd));
   m_indices.push_back(m_indices.size());
 }
 
-void CylinderGeometry::addCylinder(const Vector3f &position,
-                                   const Vector3f &direction,
-                                   float length, float radius,
+void CylinderGeometry::addCylinder(const Vector3f &pos1,
+                                   const Vector3f &pos2,
+                                   float radius,
                                    const Vector3ub &color,
                                    size_t index)
 {
   m_indexMap[m_cylinders.size()] = index;
-  addCylinder(position, direction, length, radius, color, color);
+  addCylinder(pos1, pos2, radius, color, color);
 }
 
-void CylinderGeometry::addCylinder(const Vector3f &position,
-                                   const Vector3f &direction,
-                                   float length, float radius,
+void CylinderGeometry::addCylinder(const Vector3f &pos1,
+                                   const Vector3f &pos2,
+                                   float radius,
                                    const Vector3ub &colorStart,
                                    const Vector3ub &colorEnd,
                                    size_t index)
 {
   m_indexMap[m_cylinders.size()] = index;
-  addCylinder(position, direction, length, radius, colorStart, colorEnd);
+  addCylinder(pos1, pos2, radius, colorStart, colorEnd);
 }
 
 void CylinderGeometry::clear()

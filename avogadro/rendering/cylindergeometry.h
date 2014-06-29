@@ -26,16 +26,15 @@ namespace Rendering {
 
 struct CylinderColor
 {
-  CylinderColor(const Vector3f &pos, const Vector3f &dir,
-                float l, float r, const Vector3ub &c,
+  CylinderColor(const Vector3f &pos1, const Vector3f &pos2,
+                float r, const Vector3ub &c,
                 const Vector3ub &c2 = Vector3ub::Zero())
-    : position(pos), direction(dir), length(l), radius(r), color(c), color2(c2)
+    : end1(pos1), end2(pos2), radius(r), color(c), color2(c2)
   {
   }
 
-  Vector3f position;
-  Vector3f direction;
-  float length;
+  Vector3f end1;
+  Vector3f end2;
   float radius;
   Vector3ub color;
   Vector3ub color2;
@@ -92,8 +91,8 @@ public:
    * @param radius Radius of the cylinder.
    * @param color Color the cylinder will be rendered.
    */
-  void addCylinder(const Vector3f &position, const Vector3f &direction,
-                   float length, float radius, const Vector3ub &color);
+  void addCylinder(const Vector3f &pos1, const Vector3f &pos2,
+                   float radius, const Vector3ub &color);
 
   /**
    * @brief Add a cylinder to the geometry object.
@@ -104,9 +103,8 @@ public:
    * @param colorStart Color the start of the base of the cylinder.
    * @param colorEnd Color of the end of the cylinder.
    */
-  void addCylinder(const Vector3f &position, const Vector3f &direction,
-                   float length, float radius, const Vector3ub &color1,
-                   const Vector3ub &color2);
+  void addCylinder(const Vector3f &pos1, const Vector3f &pos2,
+                   float radius, const Vector3ub &color1, const Vector3ub &color2);
 
   /**
    * @brief Add a cylinder to the geometry object.
@@ -117,8 +115,8 @@ public:
    * @param color Color the cylinder will be rendered.
    * @param index The index of the cylinder being added.
    */
-  void addCylinder(const Vector3f &position, const Vector3f &direction,
-                   float length, float radius, const Vector3ub &color,
+  void addCylinder(const Vector3f &pos1, const Vector3f &pos2,
+                   float radius, const Vector3ub &color,
                    size_t index);
 
   /**
@@ -131,8 +129,8 @@ public:
    * @param colorEnd Color of the end of the cylinder.
    * @param index The index of the cylinder being added.
    */
-  void addCylinder(const Vector3f &position, const Vector3f &direction,
-                   float length, float radius, const Vector3ub &color,
+  void addCylinder(const Vector3f &pos1, const Vector3f &pos2,
+                   float radius, const Vector3ub &color,
                    const Vector3ub &color2, size_t index);
 
   /**

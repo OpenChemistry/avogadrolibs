@@ -74,8 +74,7 @@ void Licorice::process(const Molecule &molecule,
     float bondLength = bondVector.norm();
     bondVector /= bondLength;
 
-    cylinders->addCylinder(pos1, bondVector, bondLength, radius,
-                           color1, color2, i);
+    cylinders->addCylinder(pos1, pos2, radius, color1, color2, i);
   }
 }
 
