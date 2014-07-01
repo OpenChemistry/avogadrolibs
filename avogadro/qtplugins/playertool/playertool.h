@@ -24,8 +24,9 @@
 #include <QtCore/QTimer>
 
 class QLabel;
-class QLineEdit;
+class QSpinBox;
 class QCheckBox;
+class QGLWidget;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -45,12 +46,14 @@ public:
   QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
   QWidget * toolWidget() const AVO_OVERRIDE;
 
-  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE;
-  void setGLRenderer(Rendering::GLRenderer *renderer) AVO_OVERRIDE;
-
   QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
   QUndoCommand * mouseReleaseEvent(QMouseEvent *e) AVO_OVERRIDE;
   QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) AVO_OVERRIDE;
+
+public slots:
+  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE;
+  void setGLRenderer(Rendering::GLRenderer *renderer) AVO_OVERRIDE;
+  void setActiveWidget(QWidget *widget) AVO_OVERRIDE;
 
 protected slots:
   void back();
@@ -58,6 +61,8 @@ protected slots:
   void play();
   void stop();
   void animate(int advance = 1);
+
+  void recordMovie();
 
 private:
   QAction *m_activateAction;
@@ -67,8 +72,9 @@ private:
   mutable QWidget *m_toolWidget;
   QTimer m_timer;
   mutable QLabel *m_info;
-  mutable QLineEdit *m_animationFPS;
+  mutable QSpinBox *m_animationFPS;
   mutable QCheckBox *m_dynamicBonding;
+  mutable QGLWidget *m_glWidget;
 };
 
 inline void PlayerTool::setMolecule(QtGui::Molecule *mol)

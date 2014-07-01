@@ -19,14 +19,20 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtWidgets/QAction>
+#include <QtCore/QProcess>
 #include <QtGui/QIcon>
+#include <QtWidgets/QAction>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QSpinBox>
 #include <QtWidgets/QCheckBox>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
+#include <QtOpenGL/QGLWidget>
+#include <QtOpenGL/QGLFramebufferObject>
 
 #include <QDebug>
 
@@ -79,7 +85,10 @@ QWidget * PlayerTool::toolWidget() const
     QHBoxLayout *frames = new QHBoxLayout;
     QLabel *label = new QLabel(tr("Frame rate:"));
     frames->addWidget(label);
-    m_animationFPS = new QLineEdit;
+    m_animationFPS = new QSpinBox;
+    m_animationFPS->setValue(5);
+    m_animationFPS->setMinimum(0);
+    m_animationFPS->setMaximum(100);
     frames->addWidget(m_animationFPS);
     layout->addLayout(frames);
 
@@ -90,6 +99,14 @@ QWidget * PlayerTool::toolWidget() const
     bonding->addWidget(m_dynamicBonding);
     bonding->addStretch(1);
     layout->addLayout(bonding);
+
+    QHBoxLayout *recordLayout = new QHBoxLayout;
+    recordLayout->addStretch(1);
+    button = new QPushButton(tr("Record Movie..."));
+    connect(button, SIGNAL(clicked()), SLOT(recordMovie()));
+    recordLayout->addWidget(button);
+    recordLayout->addStretch(1);
+    layout->addLayout(recordLayout);
 
     m_info = new QLabel(tr("Stopped"));
     layout->addWidget(m_info);
@@ -115,6 +132,11 @@ QUndoCommand *PlayerTool::mouseDoubleClickEvent(QMouseEvent *)
   return NULL;
 }
 
+void PlayerTool::setActiveWidget(QWidget *widget)
+{
+  m_glWidget = qobject_cast<QGLWidget *>(widget);
+}
+
 void PlayerTool::back()
 {
   animate(-1);
@@ -127,11 +149,12 @@ void PlayerTool::forward()
 
 void PlayerTool::play()
 {
-  bool ok;
-  double fps = m_animationFPS->text().toDouble(&ok);
-  if (!ok || fps < 0.00001)
+  double fps = static_cast<double>(m_animationFPS->value());
+  if (fps < 0.00001)
     fps = 5;
   int timeOut = static_cast<int>(1000 / fps);
+  if (m_timer.isActive())
+    m_timer.stop();
   m_timer.start(timeOut);
 }
 
@@ -161,6 +184,75 @@ void PlayerTool::animate(int advance)
     m_info->setText(tr("Frame %0 of %1").arg(m_currentFrame + 1)
                     .arg(m_molecule->coordinate3dCount()));
   }
+}
+
+void PlayerTool::recordMovie()
+{
+  if (m_timer.isActive())
+    m_timer.stop();
+
+  QString baseFileName;
+  if (m_molecule)
+    baseFileName = m_molecule->data("fileName").toString().c_str();
+  QFileInfo info(baseFileName);
+
+  QString baseName = QFileDialog::getSaveFileName(qobject_cast<QWidget*>(parent()),
+                                                  tr("Export Bitmap Graphics"),
+                                                  "",
+                                                  "Movie (*.mp4)");
+
+  if (baseName.isEmpty())
+    return;
+  if (!QFileInfo(baseName).suffix().isEmpty())
+    baseName = QFileInfo(baseName).baseName();
+
+  bool bonding = m_dynamicBonding->isChecked();
+  int numberLength =
+      static_cast<int>(ceil(log10(m_molecule->coordinate3dCount()) + 1.0));
+  m_glWidget->resize(800, 600);
+  for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+    m_molecule->setCoordinate3d(i);
+    if (bonding) {
+      m_molecule->clearBonds();
+      m_molecule->perceiveBondsSimple();
+    }
+    m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+    QString fileName = QString::number(i);
+    while (fileName.length() < numberLength)
+      fileName.prepend('0');
+    fileName.prepend(baseName);
+    fileName.append(".png");
+
+    QImage exportImage;
+    m_glWidget->raise();
+    m_glWidget->repaint();
+    if (QGLFramebufferObject::hasOpenGLFramebufferObjects()) {
+      exportImage = m_glWidget->grabFrameBuffer(true);
+    }
+    else {
+      QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+      exportImage = pixmap.toImage();
+    }
+
+    if (!exportImage.save(fileName)) {
+      QMessageBox::warning(qobject_cast<QWidget *>(parent()), tr("Avogadro"),
+                           tr("Cannot save file %1.").arg(fileName));
+      return;
+    }
+  }
+  QProcess proc;
+  QStringList args;
+  args << "-y" << "-r" << QString::number(m_animationFPS->value())
+       << "-i" << baseName + "%0" + QString::number(numberLength) + "d.png"
+       << "-c:v" << "libx264" << "-r" << "30" << "-pix_fmt" << "yuv420p"
+       << baseName + ".mp4";
+  proc.execute("avconv", args);
+
+  args.clear();
+  args << "-dispose" << "Background" << "-delay" << QString::number(100 / m_animationFPS->value())
+       << baseName + "%0" + QString::number(numberLength) + "d.png[0-" + QString::number(m_molecule->coordinate3dCount() - 1) + "]"
+       << baseName + ".gif";
+  proc.execute("convert", args);
 }
 
 } // namespace QtPlugins

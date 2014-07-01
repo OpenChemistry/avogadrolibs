@@ -122,6 +122,12 @@ public slots:
   virtual void setGLWidget(QtOpenGL::GLWidget *) { }
 
   /**
+   * Set the active widget used by the tool, this can be anything derived from
+   * QWidget.
+   */
+  virtual void setActiveWidget(QWidget *) { }
+
+  /**
    * Set the GLRenderer used by the tool.
    */
   virtual void setGLRenderer(Rendering::GLRenderer *) { }

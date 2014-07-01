@@ -32,6 +32,7 @@ class Molecule;
 }
 
 namespace Rendering {
+class Camera;
 class Scene;
 }
 
@@ -43,7 +44,7 @@ namespace QtGui {
 
 /**
  * @class ExtensionPlugin extensionplugin.h <avogadro/qtgui/extensionplugin.h>
- * @brief The base class for scene plugin factories in Avogadro.
+ * @brief The base class for extension plugin factories in Avogadro.
  * @author Marcus D. Hanwell
  */
 class AVOGADROQTGUI_EXPORT ExtensionPlugin : public QObject
@@ -55,12 +56,12 @@ public:
   ~ExtensionPlugin();
 
   /**
-   * The name of the scene plugin, will be displayed in the user interface.
+   * The name of the extension plugin, will be displayed in the user interface.
    */
   virtual QString name() const = 0;
 
   /**
-   * A description of the scene plugin, may be displayed in the user interface.
+   * A description of the extension plugin, may be displayed in the user interface.
    */
   virtual QString description() const = 0;
 
@@ -95,6 +96,22 @@ public slots:
    * will @return true if a molecule was successfully read in.
    */
   virtual bool readMolecule(QtGui::Molecule &mol);
+
+  /**
+   * Called when the current scene changes.
+   */
+  virtual void setScene(Rendering::Scene *scene);
+
+  /**
+   * Called when the active camera for the view changes.
+   */
+  virtual void setCamera(Rendering::Camera *camera);
+
+  /**
+   * Called when the active widget changes. This must be used carefully, and
+   * should check that the widget has been cast if used.
+   */
+  virtual void setActiveWidget(QWidget *widget);
 
 signals:
   /**

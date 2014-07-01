@@ -25,6 +25,7 @@ set(HEADERS
   linestripgeometry.h
   meshgeometry.h
   node.h
+  povrayvisitor.h
   primitive.h
   scene.h
   shader.h
@@ -54,6 +55,7 @@ set(SOURCES
   linestripgeometry.cpp
   meshgeometry.cpp
   node.cpp
+  povrayvisitor.cpp
   scene.cpp
   shader.cpp
   shaderprogram.cpp
