@@ -107,6 +107,12 @@ public slots:
    */
   virtual void setCamera(Rendering::Camera *camera);
 
+  /**
+   * Called when the active widget changes. This must be used carefully, and
+   * should check that the widget has been cast if used.
+   */
+  virtual void setActiveWidget(QWidget *widget);
+
 signals:
   /**
    * Signal that the extension has a new molecule that is ready to be loaded.

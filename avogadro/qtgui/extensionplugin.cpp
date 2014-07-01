@@ -49,5 +49,9 @@ void ExtensionPlugin::setCamera(Rendering::Camera *camera)
 {
 }
 
+void ExtensionPlugin::setActiveWidget(QWidget *widget)
+{
+}
+
 } // End QtGui namespace
 } // End Avogadro namespace

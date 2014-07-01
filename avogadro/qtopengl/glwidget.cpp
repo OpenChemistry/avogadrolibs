@@ -138,6 +138,7 @@ void GLWidget::addTool(QtGui::ToolPlugin *tool)
   connect(tool, SIGNAL(updateRequested()), SLOT(requestUpdate()));
   tool->setParent(this);
   tool->setGLWidget(this);
+  tool->setActiveWidget(this);
   tool->setMolecule(m_molecule);
   tool->setGLRenderer(&m_renderer);
   m_tools << tool;
