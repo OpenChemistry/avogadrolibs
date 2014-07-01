@@ -49,7 +49,7 @@ POVRay::~POVRay()
 QList<QAction *> POVRay::actions() const
 {
   QList<QAction *> result;
-  return result << m_action;
+  return result;// << m_action;
 }
 
 QStringList POVRay::menuPath(QAction *) const
