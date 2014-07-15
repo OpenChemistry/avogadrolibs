@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2011-2012 Kitware, Inc.
+  Copyright 2011-2012 Kitware, Inc. and Geoffrey Hutchison
 
   This source code is released under the New BSD License, (the "License").
 
@@ -117,6 +117,64 @@ public:
    * @return True on success, false otherwise.
    */
   bool setAtomicNumber(Index atomId, unsigned char atomicNumber);
+
+  /** Returns a vector of hybridizations for the atoms in the moleucle. */
+  Array<signed char>& hybridizations();
+
+  /** \overload */
+  const Array<signed char>& hybridizations() const;
+
+  /**
+   * Get the hybridization for the requested atom.
+   * @param atomId The index of the atom.
+   * @return The hybridization of the atom indexed at @a atomId, or
+   * 0 if @a atomId is invalid.
+   */
+  signed char hybridization(Index atomId) const;
+
+  /**
+   * Replace the current array of hybridizations.
+   * @param hybs The new hybridization array. Must be of length atomCount().
+   * @return True on success, false otherwise.
+   */
+  bool setHybridizations(const Core::Array<signed char> &hybs);
+
+  /**
+   * Set the hybridization of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param charge The new hybridization.
+   * @return True on success, false otherwise.
+   */
+  bool setHybridization(Index atomId, signed char hybridization);
+
+  /** Returns a vector of formal charges for the atoms in the moleucle. */
+  Array<signed char>& formalCharges();
+
+  /** \overload */
+  const Array<signed char>& formalCharges() const;
+
+  /**
+   * Get the formal charge for the requested atom.
+   * @param atomId The index of the atom.
+   * @return The formal charge of the atom indexed at @a atomId, or
+   * 0 if @a atomId is invalid.
+   */
+  signed char formalCharge(Index atomId) const;
+
+  /**
+   * Replace the current array of formal charges.
+   * @param charges The new formal charge array. Must be of length atomCount().
+   * @return True on success, false otherwise.
+   */
+  bool setFormalCharges(const Core::Array<signed char> &charges);
+
+  /**
+   * Set the formal charge of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param charge The new formal charge.
+   * @return True on success, false otherwise.
+   */
+  bool setFormalCharge(Index atomId, signed char charge);
 
   /** Returns a vector of 2d atom positions for the atoms in the molecule. */
   const Array<Vector2>& atomPositions2d() const;
@@ -448,6 +506,9 @@ protected:
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
   Array< Array<Vector3> > m_coordinates3d; // Used for conformers/trajectories.
+  Array<signed char> m_hybridizations;
+  Array<signed char> m_formalCharges;
+
   Array<std::pair<Index, Index> > m_bondPairs;
   Array<unsigned char> m_bondOrders;
 
@@ -494,6 +555,54 @@ inline bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
 {
   if (atomId < atomCount()) {
     m_atomicNumbers[atomId] = number;
+    return true;
+  }
+  return false;
+}
+
+inline signed char Molecule::hybridization(Index atomId) const
+{
+  return atomId < m_hybridizations.size() ? m_hybridizations[atomId]
+                                           : 0;
+}
+
+inline bool Molecule::setHybridizations(const Core::Array<signed char> &hybs)
+{
+  if (hybs.size() == atomCount()) {
+    m_hybridizations = hybs;
+    return true;
+  }
+  return false;
+}
+
+inline bool Molecule::setHybridization(Index atomId, signed char hyb)
+{
+  if (atomId < atomCount()) {
+    m_hybridizations[atomId] = hyb;
+    return true;
+  }
+  return false;
+}
+
+inline signed char Molecule::formalCharge(Index atomId) const
+{
+  return atomId < m_formalCharges.size() ? m_formalCharges[atomId]
+                                           : 0;
+}
+
+inline bool Molecule::setFormalCharges(const Core::Array<signed char> &charges)
+{
+  if (charges.size() == atomCount()) {
+    m_formalCharges = charges;
+    return true;
+  }
+  return false;
+}
+
+inline bool Molecule::setFormalCharge(Index atomId, signed char charge)
+{
+  if (atomId < atomCount()) {
+    m_formalCharges[atomId] = charge;
     return true;
   }
   return false;

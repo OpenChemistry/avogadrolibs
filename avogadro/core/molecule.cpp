@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2011-2012 Kitware, Inc.
+  Copyright 2011-2014 Kitware, Inc. and Geoffrey Hutchison
 
   This source code is released under the New BSD License, (the "License").
 
@@ -40,6 +40,8 @@ Molecule::Molecule(const Molecule &other)
     m_atomicNumbers(other.atomicNumbers()),
     m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d),
+    m_hybridizations(other.m_hybridizations),
+    m_formalCharges(other.m_formalCharges),
     m_bondPairs(other.m_bondPairs),
     m_bondOrders(other.m_bondOrders),
     m_basisSet(NULL),
@@ -63,6 +65,8 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_atomicNumbers = other.m_atomicNumbers;
     m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
+    m_hybridizations = other.m_hybridizations;
+    m_formalCharges = other.m_formalCharges;
     m_bondPairs = other.m_bondPairs;
     m_bondOrders = other.m_bondOrders;
 
@@ -123,6 +127,26 @@ Array<unsigned char>& Molecule::atomicNumbers()
 const Array<unsigned char> &Molecule::atomicNumbers() const
 {
   return m_atomicNumbers;
+}
+
+Array<signed char>& Molecule::hybridizations()
+{
+  return m_hybridizations;
+}
+
+const Array<signed char> &Molecule::hybridizations() const
+{
+  return m_hybridizations;
+}
+
+Array<signed char>& Molecule::formalCharges()
+{
+  return m_formalCharges;
+}
+
+const Array<signed char> &Molecule::formalCharges() const
+{
+  return m_formalCharges;
 }
 
 Array<Vector2> &Molecule::atomPositions2d()
@@ -229,6 +253,10 @@ bool Molecule::removeAtom(Index index)
       m_positions2d[index] = m_positions2d.back();
     if (m_positions3d.size() == m_atomicNumbers.size())
       m_positions3d[index] = m_positions3d.back();
+    if (m_hybridizations.size() == m_atomicNumbers.size())
+      m_hybridizations[index] = m_hybridizations.back();
+    if (m_formalCharges.size() == m_formalCharges.size())
+      m_formalCharges[index] = m_formalCharges.back();
 
     // Find any bonds to the moved atom and update their index.
     atomBonds = bonds(atom(newSize));
@@ -247,6 +275,10 @@ bool Molecule::removeAtom(Index index)
     m_positions2d.pop_back();
   if (m_positions3d.size() == m_atomicNumbers.size())
     m_positions3d.pop_back();
+  if (m_hybridizations.size() == m_atomicNumbers.size())
+    m_hybridizations.pop_back();
+  if (m_formalCharges.size() == m_atomicNumbers.size())
+    m_formalCharges.pop_back();
   m_atomicNumbers.pop_back();
 
   return true;
