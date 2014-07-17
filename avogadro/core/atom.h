@@ -122,6 +122,22 @@ public:
   Vector3 position3d() const;
   /** @} */
 
+  /**
+   * The hybridization / coordination of this atom
+   * @{
+   */
+  void setHybridization(signed char hyb);
+  signed char hybridization() const;
+  /** @} */
+
+  /**
+   * The formal charge of this atom
+   * @{
+   */
+  void setFormalCharge(signed char charge);
+  signed char formalCharge() const;
+  /** @} */
+
 private:
   MoleculeType *m_molecule;
   Index m_index;
@@ -235,6 +251,30 @@ Vector3 AtomTemplate<Molecule_T>::position3d() const
 {
   return m_molecule->atomPositions3d().size() > 0 ?
         m_molecule->atomPositions3d()[m_index] : Vector3::Zero();
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setHybridization(signed char hyb)
+{
+  m_molecule->setHybridization(m_index, hyb);
+}
+
+template <class Molecule_T>
+signed char AtomTemplate<Molecule_T>::hybridization() const
+{
+  return m_molecule->hybridization(m_index);
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setFormalCharge(signed char charge)
+{
+  m_molecule->setHybridization(m_index, charge);
+}
+
+template <class Molecule_T>
+signed char AtomTemplate<Molecule_T>::formalCharge() const
+{
+  return m_molecule->formalCharge(m_index);
 }
 
 } // end Core namespace

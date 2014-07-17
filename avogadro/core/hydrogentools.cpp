@@ -63,7 +63,7 @@ inline unsigned int countExistingBonds(const NeighborListType &bonds)
 inline unsigned int lookupValency(const Atom &atom,
                                   unsigned int numExistingBonds)
 {
-  char charge(0); /// @todo No charges (yet?)...
+  signed char charge = atom.formalCharge();
   return atomValence(atom.atomicNumber(), charge, numExistingBonds);
 }
 
