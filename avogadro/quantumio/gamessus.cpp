@@ -51,6 +51,7 @@ std::vector<std::string> GAMESSUSOutput::fileExtensions() const
 {
   std::vector<std::string> extensions;
   extensions.push_back("gamout");
+  extensions.push_back("gamess");
   extensions.push_back("log");
   extensions.push_back("out");
   return extensions;
@@ -90,7 +91,7 @@ bool GAMESSUSOutput::read(std::istream &in, Core::Molecule &molecule)
       else
         cout << "error" << buffer << endl;
     }
-    else if (Core::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (ALPHA)")) {
+    /*else if (Core::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (ALPHA)")) {
       cout << "Found alpha orbitals\n";
     }
     else if (Core::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (BETA )")) {
@@ -98,17 +99,24 @@ bool GAMESSUSOutput::read(std::istream &in, Core::Molecule &molecule)
     }
     else if (Core::contains(buffer, "SCFTYP=")) {
       cout << "Found SCF type\n";
-    }
+    }*/
     else if (Core::contains(buffer, "EIGENVECTORS")) {
       readEigenvectors(in);
     }
   }
+
+  //f functions and beyond need to be reordered
+  reorderMOs();
 
   molecule.perceiveBondsSimple();
   GaussianSet *basis = new GaussianSet;
   load(basis);
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
+
+
+  //outputAll();
+
   return true;
 }
 
@@ -260,6 +268,7 @@ void GAMESSUSOutput::readEigenvectors(std::istream &in)
       break;
     parts = Core::split(buffer, ' ');
   }
+  m_nMOs = numberOfMos;
   for (size_t i = 0; i < eigenvectors.size(); ++i)
     for (size_t j = 0; j < eigenvectors[i].size(); ++j)
       m_MOcoeffs.push_back(eigenvectors[i][j]);
@@ -322,6 +331,79 @@ void GAMESSUSOutput::load(GaussianSet* basis)
   basis->setScfType(m_scftype);
 }
 
+void GAMESSUSOutput::reorderMOs()
+{
+  unsigned int GTOcounter = 0;
+  for (unsigned int iMO =0;iMO<m_nMOs;iMO++)
+  {
+    //loop over the basis set shells
+    for (unsigned int i=0; i < m_shellTypes.size(); i++)
+    {
+      //The angular momentum of the shell
+      //determines the number of primitive GTOs.
+      //GAMESS always prints the full cartesian set.
+      double xxx,yyy,zzz,xxy,xxz,yyx,yyz,zzx,zzy,xyz;
+      unsigned int nPrimGTOs = 0;
+      switch (m_shellTypes.at(i))
+      {
+        case GaussianSet::S:
+          nPrimGTOs = 1;
+          GTOcounter += nPrimGTOs;
+          break;
+        case GaussianSet::P:
+          nPrimGTOs = 3;
+          GTOcounter += nPrimGTOs;
+          break;
+          //L?
+        case GaussianSet::D:
+          nPrimGTOs = 7;
+          GTOcounter += nPrimGTOs;
+          break;
+        case GaussianSet::F:
+          nPrimGTOs = 10;
+          //f functions are the first set to be reordered.
+          //double xxx = m_MOcoeffs.at(MOcounter);
+          yyy = m_MOcoeffs.at(GTOcounter+1);
+          zzz = m_MOcoeffs.at(GTOcounter+2);
+          xxy = m_MOcoeffs.at(GTOcounter+3);
+          xxz = m_MOcoeffs.at(GTOcounter+4);
+          yyx = m_MOcoeffs.at(GTOcounter+5);
+          yyz = m_MOcoeffs.at(GTOcounter+6);
+          zzx = m_MOcoeffs.at(GTOcounter+7);
+          zzy = m_MOcoeffs.at(GTOcounter+8);
+          xyz = m_MOcoeffs.at(GTOcounter+9);
+          //xxx is unchanged
+          m_MOcoeffs.at(GTOcounter+1)=xxy; //xxy
+          m_MOcoeffs.at(GTOcounter+2)=xxz; //xxz
+          m_MOcoeffs.at(GTOcounter+3)=yyx; //xyy
+          m_MOcoeffs.at(GTOcounter+4)=xyz; //xyz
+          m_MOcoeffs.at(GTOcounter+5)=zzx; //xzz
+          m_MOcoeffs.at(GTOcounter+6)=yyy; //yyy
+          m_MOcoeffs.at(GTOcounter+7)=yyz; //yyz
+          m_MOcoeffs.at(GTOcounter+8)=zzy; //yzz
+          m_MOcoeffs.at(GTOcounter+9)=zzz; //zzz
+
+          GTOcounter += nPrimGTOs;
+          break;
+        case GaussianSet::G:
+          nPrimGTOs = 15;
+          GTOcounter += nPrimGTOs;
+          break;
+        case GaussianSet::H:
+          nPrimGTOs = 21;
+          GTOcounter += nPrimGTOs;
+          break;
+        case GaussianSet::I:
+          nPrimGTOs = 28;
+          GTOcounter += nPrimGTOs;
+          break;
+        default:
+          cout << "Basis set not handled - results may be incorrect.\n";
+      }
+    }
+  }
+}
+
 void GAMESSUSOutput::outputAll()
 {
   switch (m_scftype) {
@@ -343,10 +425,24 @@ void GAMESSUSOutput::outputAll()
          << ", number = " << m_shellNums.at(i)
          << ", atom = " << m_shelltoAtom.at(i) << endl;
   }
-  if (m_MOcoeffs.size())
-    cout << "MO coefficients.\n";
-  for (unsigned int i = 0; i < m_MOcoeffs.size(); ++i)
-    cout << m_MOcoeffs.at(i) << "\t";
+  int nGTOs =0;
+  if (m_MOcoeffs.size()) {
+    nGTOs = m_MOcoeffs.size()/m_nMOs;
+    cout << m_nMOs << " MOs, " << nGTOs << " GTOs" << endl;
+  }
+
+  for (unsigned int iMO = 0;iMO<10;iMO++)
+  {
+    for (unsigned int i = iMO*nGTOs; i < nGTOs*iMO+10;++i) //m_MOcoeffs.size(); ++i)
+      cout << m_MOcoeffs.at(i) << "\t";
+    cout << "\n";
+  }
+
+
+
+
+
+
   if (m_alphaMOcoeffs.size())
     cout << "Alpha MO coefficients.\n";
   for (unsigned int i = 0; i < m_alphaMOcoeffs.size(); ++i)
@@ -355,6 +451,7 @@ void GAMESSUSOutput::outputAll()
     cout << "Beta MO coefficients.\n";
   for (unsigned int i = 0; i < m_betaMOcoeffs.size(); ++i)
     cout << m_betaMOcoeffs.at(i);
+  cout<<std::flush;
 }
 
 }

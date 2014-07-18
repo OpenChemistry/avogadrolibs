@@ -163,6 +163,8 @@ inline vector<double> GaussianSetTools::calculateValues(const Vector3 &position)
       break;
     case GaussianSet::D5:
       pointD5(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
+    case GaussianSet::F:
+      pointF(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
       break;
     default:
       // Not handled - return a zero contribution
@@ -282,6 +284,44 @@ inline void GaussianSetTools::pointD5(unsigned int moIndex,
 
   for (int i = 0; i < 5; ++i)
     values[baseIndex + i] += componentsD[i] * components[i];
+}
+inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3 &delta,
+                                     double dr2, vector<double> &values) const
+{
+  // F type orbitals have 10 components and each component has a different
+  // independent MO weighting. Many things can be cached to save time though.
+  unsigned int baseIndex = m_basis->moIndices()[moIndex];
+
+  double components[10] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+
+  vector<double> &gtoA = m_basis->gtoA();
+  vector<double> &gtoCN = m_basis->gtoCN();
+
+  // Now iterate through the D type GTOs and sum their contributions
+  unsigned int cIndex = m_basis->cIndices()[moIndex];
+  for (unsigned int i = m_basis->gtoIndices()[moIndex];
+       i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
+    // Calculate the common factor
+    double tmpGTO = exp(-gtoA[i] * dr2);
+    for (int j = 0; j < 10; ++j)
+      components[j] += gtoCN[cIndex++] * tmpGTO;
+  }
+
+  double componentsF[10] = {
+    delta.x() * delta.x() * delta.x(),    // xxx
+    delta.x() * delta.x() * delta.y(),    // xxy
+    delta.x() * delta.x() * delta.z(),    // xxz
+    delta.x() * delta.y() * delta.y(),    // xyy
+    delta.x() * delta.y() * delta.z(),    // xyz
+    delta.x() * delta.z() * delta.z(),    // xzz
+    delta.y() * delta.y() * delta.y(),    // yyy
+    delta.y() * delta.y() * delta.z(),    // yyz
+    delta.y() * delta.z() * delta.z(),    // yzz
+    delta.z() * delta.z() * delta.z()     // zzz
+  };
+
+  for (int i = 0; i < 10; ++i)
+    values[baseIndex + i] += components[i] * componentsF[i];
 }
 
 } // End Core namespace
