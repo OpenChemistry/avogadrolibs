@@ -23,6 +23,22 @@
 namespace Avogadro {
 namespace Core {
 
+    enum AtomHybridization {
+      PerceivedOctaheadral = -6,
+      PerceivedTrigonalBipyramidal = -5,
+      PerceivedSquarePlanar = -4,
+      PerceivedSP3 = -3,
+      PerceivedSP2 = -2,
+      PerceivedSP = -1,
+      HybridizationUnknown = 0,
+      SP = 1,
+      SP2 = 2,
+      SP3 = 3,
+      SquarePlanar = 4,
+      TrigonalBipyramidal = 5,
+      Octahedral = 6
+    };
+
 /**
  * @class Atom atom.h <avogadro/core/atom.h>
  * The atom class represents an atom in a molecule.
@@ -126,8 +142,8 @@ public:
    * The hybridization / coordination of this atom
    * @{
    */
-  void setHybridization(signed char hyb);
-  signed char hybridization() const;
+  void setHybridization(AtomHybridization hyb);
+  AtomHybridization hybridization() const;
   /** @} */
 
   /**
@@ -254,13 +270,13 @@ Vector3 AtomTemplate<Molecule_T>::position3d() const
 }
 
 template <class Molecule_T>
-void AtomTemplate<Molecule_T>::setHybridization(signed char hyb)
+  void AtomTemplate<Molecule_T>::setHybridization(AtomHybridization hyb)
 {
   m_molecule->setHybridization(m_index, hyb);
 }
 
 template <class Molecule_T>
-signed char AtomTemplate<Molecule_T>::hybridization() const
+  AtomHybridization AtomTemplate<Molecule_T>::hybridization() const
 {
   return m_molecule->hybridization(m_index);
 }
