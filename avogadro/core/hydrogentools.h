@@ -20,6 +20,7 @@
 #include "avogadrocoreexport.h"
 
 #include <avogadro/core/vector.h>
+#include <avogadro/core/atom.h>
 
 #include <vector>
 
@@ -92,14 +93,14 @@ public:
   /**
    * Perceive the geometry / hybridization bonded to @a atom.
    * Ideally, the client should cache the hybridization number
-   * by calling setHybridization() with a negative number.
+   * by calling setHybridization() later
    */
-  static signed char perceiveHybridization(const Atom &atom);
+  static AtomHybridization perceiveHybridization(const Atom &atom);
 
   /**
    * Generate a new bond vector (unit length)
    */
-  static Vector3 generateNewBondVector(const Atom &atom, std::vector<Vector3> &currentVectors, int hybridization);
+  static Vector3 generateNewBondVector(const Atom &atom, std::vector<Vector3> &currentVectors, AtomHybridization hybridization);
 
 private:
   HydrogenTools(); // Not implemented
