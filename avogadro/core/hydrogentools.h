@@ -89,10 +89,23 @@ public:
   static void generateNewHydrogenPositions(
       const Atom &atom, int numberOfHydrogens, std::vector<Vector3> &positions);
 
+  /**
+   * Perceive the geometry / hybridization bonded to @a atom.
+   * Ideally, the client should cache the hybridization number
+   * by calling setHybridization() with a negative number.
+   */
+  static signed char perceiveHybridization(const Atom &atom);
+
+  /**
+   * Generate a new bond vector (unit length)
+   */
+  static Vector3 generateNewBondVector(const Atom &atom, std::vector<Vector3> &currentVectors, int hybridization);
+
 private:
   HydrogenTools(); // Not implemented
   ~HydrogenTools(); // Not implemented
 };
+
 
 } // namespace Core
 } // namespace Avogadro
