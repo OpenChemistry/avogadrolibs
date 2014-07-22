@@ -129,12 +129,12 @@ const Array<unsigned char> &Molecule::atomicNumbers() const
   return m_atomicNumbers;
 }
 
-Array<signed char>& Molecule::hybridizations()
+Array<AtomHybridization>& Molecule::hybridizations()
 {
   return m_hybridizations;
 }
 
-const Array<signed char> &Molecule::hybridizations() const
+const Array<AtomHybridization> &Molecule::hybridizations() const
 {
   return m_hybridizations;
 }

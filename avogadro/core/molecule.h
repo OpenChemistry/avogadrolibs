@@ -119,10 +119,10 @@ public:
   bool setAtomicNumber(Index atomId, unsigned char atomicNumber);
 
   /** Returns a vector of hybridizations for the atoms in the moleucle. */
-  Array<signed char>& hybridizations();
+  Array<AtomHybridization>& hybridizations();
 
   /** \overload */
-  const Array<signed char>& hybridizations() const;
+  const Array<AtomHybridization>& hybridizations() const;
 
   /**
    * Get the hybridization for the requested atom.
@@ -130,14 +130,14 @@ public:
    * @return The hybridization of the atom indexed at @a atomId, or
    * 0 if @a atomId is invalid.
    */
-  signed char hybridization(Index atomId) const;
+  AtomHybridization hybridization(Index atomId) const;
 
   /**
    * Replace the current array of hybridizations.
    * @param hybs The new hybridization array. Must be of length atomCount().
    * @return True on success, false otherwise.
    */
-  bool setHybridizations(const Core::Array<signed char> &hybs);
+  bool setHybridizations(const Core::Array<AtomHybridization> &hybs);
 
   /**
    * Set the hybridization of a single atom.
@@ -145,7 +145,7 @@ public:
    * @param charge The new hybridization.
    * @return True on success, false otherwise.
    */
-  bool setHybridization(Index atomId, signed char hybridization);
+  bool setHybridization(Index atomId, AtomHybridization hybridization);
 
   /** Returns a vector of formal charges for the atoms in the moleucle. */
   Array<signed char>& formalCharges();
@@ -506,7 +506,7 @@ protected:
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
   Array< Array<Vector3> > m_coordinates3d; // Used for conformers/trajectories.
-  Array<signed char> m_hybridizations;
+  Array<AtomHybridization> m_hybridizations;
   Array<signed char> m_formalCharges;
 
   Array<std::pair<Index, Index> > m_bondPairs;
@@ -560,13 +560,16 @@ inline bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
   return false;
 }
 
-inline signed char Molecule::hybridization(Index atomId) const
+ inline AtomHybridization Molecule::hybridization(Index atomId) const
 {
-  return atomId < m_hybridizations.size() ? m_hybridizations[atomId]
-                                           : 0;
+  AtomHybridization hyb = HybridizationUnknown;
+  if (atomId < m_hybridizations.size())
+    return m_hybridizations[atomId];
+
+  return hyb;
 }
 
-inline bool Molecule::setHybridizations(const Core::Array<signed char> &hybs)
+ inline bool Molecule::setHybridizations(const Core::Array<AtomHybridization> &hybs)
 {
   if (hybs.size() == atomCount()) {
     m_hybridizations = hybs;
@@ -575,7 +578,7 @@ inline bool Molecule::setHybridizations(const Core::Array<signed char> &hybs)
   return false;
 }
 
-inline bool Molecule::setHybridization(Index atomId, signed char hyb)
+ inline bool Molecule::setHybridization(Index atomId, AtomHybridization hyb)
 {
   if (atomId < atomCount()) {
     m_hybridizations[atomId] = hyb;
