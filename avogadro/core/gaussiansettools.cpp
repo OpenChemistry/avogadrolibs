@@ -261,7 +261,7 @@ inline void GaussianSetTools::pointD5(unsigned int moIndex,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (int j = 0; j < 6; ++j)
+    for (int j = 0; j < 5; ++j)
       components[j] += gtoCN[cIndex++] * tmpGTO;
   }
 
