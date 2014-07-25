@@ -60,7 +60,7 @@ unsigned int GaussianSet::addBasis(unsigned int atom, orbital type)
     m_numMOs += 5;
     break;
   case F:
-    m_numMOs += 8;
+    m_numMOs += 10;
     break;
   case F7:
     m_numMOs += 7;
@@ -108,7 +108,7 @@ void GaussianSet::setMolecularOrbitals(const vector<double>& MOs,
   // Some programs don't output all MOs, so we take the amount of data
   // and divide by the number of atomic orbital functions.
   unsigned int columns = static_cast<unsigned int>(MOs.size()) / m_numMOs;
-  cout << " Add MOs: " << m_numMOs << columns << endl;
+  //cout << " Add MOs: " << m_numMOs << columns << endl;
 
   m_moMatrix[index].resize(m_numMOs, columns);
 
@@ -340,7 +340,46 @@ void GaussianSet::initCalculation()
       }
       break;
     case F:
-      skip = 10;
+    /*
+     Thanks, Jmol
+     Cartesian forms for f (l = 3) basis functions:
+     Type         Normalization
+     xxx          [(32768 * alpha^9) / (225 * pi^3))]^(1/4)
+     xxy          [(32768 * alpha^9) / (9 * pi^3))]^(1/4)
+     xxz          [(32768 * alpha^9) / (9 * pi^3))]^(1/4)
+     xyy          [(32768 * alpha^9) / (9 * pi^3))]^(1/4)
+     xyz          [(32768 * alpha^9) / (1 * pi^3))]^(1/4)
+     xzz          [(32768 * alpha^9) / (9 * pi^3))]^(1/4)
+     yyy          [(32768 * alpha^9) / (225 * pi^3))]^(1/4)
+     yyz          [(32768 * alpha^9) / (9 * pi^3))]^(1/4)
+     yzz          [(32768 * alpha^9) / (9 * pi^3))]^(1/4)
+     zzz          [(32768 * alpha^9) / (225 * pi^3))]^(1/4)
+
+     Thank you, Python
+                                 pi = 3.141592653589793
+     (32768./225./(pi**3.))**(0.25) = 1.4721580892990938
+     (32768./9./(pi**3.))**(0.25)   = 3.291845561298979
+     (32768./(pi**3.))**(0.25)      = 5.701643762839922
+     */
+      {
+      double norm1 = 1.4721580892990938;
+      double norm2 = 3.291845561298979;
+      double norm3 = 5.701643762839922;
+      m_moIndices[i] = indexMO;
+      indexMO += 10;
+      m_cIndices.push_back(static_cast<unsigned int>(m_gtoCN.size()));
+      for(unsigned j = m_gtoIndices[i]; j < m_gtoIndices[i+1]; ++j) {
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm1); //xxx
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2);  //xxy
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2);  //xxz
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2);  //xyy
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm3);  //xyz
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2);  //xzz
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm1); //yyy
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2);  //yyz
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2);  //yzz
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm1); //zzz
+      }}
       break;
     case F7:
       skip = 7;

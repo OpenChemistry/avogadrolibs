@@ -81,6 +81,11 @@ private:
   void readEigenvectors(std::istream &in);
 
   /**
+   * Reorder the molecular orbitals.
+   */
+  void reorderMOs();
+
+  /**
    * Outpull all known properties that have been read, useful for debugging.
    */
   void outputAll();
@@ -94,6 +99,7 @@ private:
   int m_electrons;
   int m_electronsA;
   int m_electronsB;
+  int m_nMOs;
   Core::ScfType m_scftype;
   unsigned int m_numBasisFunctions;
   std::vector<Core::GaussianSet::orbital> m_shellTypes;
