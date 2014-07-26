@@ -100,6 +100,8 @@ private:
                std::vector<double> &values) const;
   void pointF(unsigned int index, const Vector3 &delta, double dr2,
                std::vector<double> &values) const;
+  void pointF7(unsigned int index, const Vector3 &delta, double dr2,
+               std::vector<double> &values) const;
 };
 
 } // End Core namespace

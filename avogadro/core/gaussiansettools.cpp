@@ -165,6 +165,8 @@ inline vector<double> GaussianSetTools::calculateValues(const Vector3 &position)
       pointD5(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
     case GaussianSet::F:
       pointF(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
+    case GaussianSet::F7:
+      pointF7(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
       break;
     default:
       // Not handled - return a zero contribution
@@ -306,7 +308,6 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3 &delta,
     for (int j = 0; j < 10; ++j)
       components[j] += gtoCN[cIndex++] * tmpGTO;
   }
-
   double componentsF[10] = {
     delta.x() * delta.x() * delta.x(),    // xxx
     delta.x() * delta.x() * delta.y(),    // xxy
@@ -321,6 +322,73 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3 &delta,
   };
 
   for (int i = 0; i < 10; ++i)
+    values[baseIndex + i] += components[i] * componentsF[i];
+}
+
+inline void GaussianSetTools::pointF7(unsigned int moIndex, const Vector3 &delta,
+                                     double dr2, vector<double> &values) const
+{
+  // F type orbitals have 7 components and each component has a different
+  // independent MO weighting. Many things can be cached to save time though.
+  unsigned int baseIndex = m_basis->moIndices()[moIndex];
+
+  double components[7] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+  vector<double> &gtoA = m_basis->gtoA();
+  vector<double> &gtoCN = m_basis->gtoCN();
+
+  // Now iterate through the D type GTOs and sum their contributions
+  unsigned int cIndex = m_basis->cIndices()[moIndex];
+  for (unsigned int i = m_basis->gtoIndices()[moIndex];
+       i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
+    // Calculate the common factor
+    double tmpGTO = exp(-gtoA[i] * dr2);
+    for (int j = 0; j < 7; ++j)
+      components[j] += gtoCN[cIndex++] * tmpGTO;
+  }
+
+  double xxx = delta.x() * delta.x() * delta.x();    // xxx
+  double xxy = delta.x() * delta.x() * delta.y();    // xxy
+  double xxz = delta.x() * delta.x() * delta.z();    // xxz
+  double xyy = delta.x() * delta.y() * delta.y();    // xyy
+  double xyz = delta.x() * delta.y() * delta.z();    // xyz
+  double xzz = delta.x() * delta.z() * delta.z();    // xzz
+  double yyy = delta.y() * delta.y() * delta.y();    // yyy
+  double yyz = delta.y() * delta.y() * delta.z();    // yyz
+  double yzz = delta.y() * delta.z() * delta.z();    // yzz
+  double zzz = delta.z() * delta.z() * delta.z();    // zzz
+
+  /*
+  spherical combinations borrowed from CASINO/Crystal documentation
+
+   linear combination
+3,0     z^3 - 3/2 * (x^2z + y^2z)      2z^3 - 3 * (x^2z + y^2z)      * 2
+3,1     6 * xz^2 - 3/2 * (x^3 + xy^2)  4xz^2 - x^3 - xy^2            * 2/3
+3,-1    6 * yz^2 - 3/2 * (x^2y + y^3)  4yz^2 - x^2y - y^3            * 2/3
+3,2     15 * (x^2z - y^2z)             x^2z - y^2z                   * 1/15
+3,-2    30 * xyz                       xyz                           * 1/30
+3,3     15 * x^3 - 45 * xy^2           x^3 - 3xy^2                   * 1/15
+3,-3    45 * x^2y - 15 * y^3           3x^2y - y^3                   * 1/15
+
+final normalization
+          (2 - delta_m,0) * (l - |m|)!
+*  root  ------------------------------                     (m-dependent)
+                (l + m)!
+*/
+  double root6 = 2.449489742783178;
+  double root60 = 7.745966692414834;
+  double root360 = 18.973665961010276;
+  double componentsF[7] = {
+    zzz - 3.0/2.0 * (xxz + yyz),
+    (6.0 * xzz - 3.0/2.0 * (xxx + xyy))/root6,
+    (6.0 * yzz - 3.0/2.0 * (xxy + yyy))/root6,
+    (15.0 * (xxz - yyz))/root60,
+    (30.0 * xyz)/root60,
+    (15.0 * xxx - 45.0 * xyy)/root360,
+    (45.0 * xxy - 15.0 * yyy)/root360
+  };
+
+  for (int i = 0; i < 7; ++i)
     values[baseIndex + i] += components[i] * componentsF[i];
 }
 
