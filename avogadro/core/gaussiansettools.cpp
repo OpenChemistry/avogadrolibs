@@ -163,8 +163,10 @@ inline vector<double> GaussianSetTools::calculateValues(const Vector3 &position)
       break;
     case GaussianSet::D5:
       pointD5(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
+      break;
     case GaussianSet::F:
       pointF(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
+      break;
     case GaussianSet::F7:
       pointF7(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
       break;
