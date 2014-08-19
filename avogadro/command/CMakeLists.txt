@@ -9,3 +9,6 @@ target_link_libraries(avobabel AvogadroIO)
 
 add_executable(qube qube.cpp)
 target_link_libraries(qube AvogadroQuantumIO AvogadroIO)
+
+add_executable(cell cell.cpp)
+target_link_libraries(cell AvogadroIO)

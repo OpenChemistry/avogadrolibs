@@ -19,6 +19,7 @@ set(HEADERS
   atomtyper.h
   atomtyper-inline.h
   avogadrocore.h
+  avospglib.h
   basisset.h
   bond.h
   coordinateset.h
@@ -38,6 +39,7 @@ set(HEADERS
   ringperceiver.h
   slaterset.h
   slatersettools.h
+  symmetrytools.h
   symbolatomtyper.h
   types.h
   unitcell.h
@@ -50,6 +52,7 @@ set(HEADERS
 )
 
 set(SOURCES
+  avospglib.cpp
   coordinateblockgenerator.cpp
   crystaltools.cpp
   cube.cpp
@@ -66,13 +69,34 @@ set(SOURCES
   ringperceiver.cpp
   slaterset.cpp
   slatersettools.cpp
+  symmetrytools.cpp
   symbolatomtyper.cpp
   unitcell.cpp
   variantmap.cpp
   version.cpp
 )
+set(spglib_SRCS
+  spglib/cell.c
+  spglib/debug.c
+  spglib/hall_symbol.c
+  spglib/lattice.c
+  spglib/mathfunc.c
+  spglib/pointgroup.c
+  spglib/primitive.c
+  spglib/refinement.c
+  spglib/spacegroup.c
+  spglib/spg_database.c
+  spglib/spglib.c
+  spglib/symmetry.c
+  spglib/kpoint.c
+  spglib/site_symmetry.c
+  spglib/sitesym_database.c
+  spglib/spglib_f.c
+  spglib/spin.c
+  spglib/tetrahedron_method.c
+)
 
-avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
+avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES} ${spglib_SRCS})
 
 # Additional libraries and compiler definitions necessary when using Boost to
 # replace C++11.

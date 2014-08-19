@@ -22,6 +22,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/matrix.h>
+#include <avogadro/core/vector.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
@@ -32,6 +33,7 @@
 #include <streambuf>
 #include <sstream>
 #include <map>
+#include <iostream>
 
 #ifndef M_PI
 # define M_PI 3.14159265358979323846
@@ -151,6 +153,23 @@ public:
       }
       UnitCell *cell = new UnitCell;
       cell->setCellParameters(a, b, c, alpha, beta, gamma);
+
+      //get the spaceGroup
+      pugi::xml_node symm = node.child("symmetry");
+      pugi::xml_attribute spaceGroup = symm.attribute("spaceGroup");
+      if (spaceGroup) {
+        std::string spgStr(spaceGroup.value());
+        cell->setSpaceGroup(spgStr);
+      }
+      //add transformation vectors
+      if (symm) {
+        for (pugi::xml_node trans = symm.child("transform3"); trans;
+            trans = trans.next_sibling("transform3")) {
+          std::string trans3 = trans.child_value();
+          cell->AddTransform(trans3);
+        }
+      }
+
       molecule->setUnitCell(cell);
     }
     return true;

@@ -21,6 +21,7 @@
 
 #include "matrix.h"
 #include "vector.h"
+#include "array.h"
 
 namespace Avogadro {
 namespace Core {
@@ -71,6 +72,14 @@ public:
    */
   void setCellParameters(Real a, Real b, Real c,
                          Real alpha, Real beta, Real gamma);
+
+  /**
+   * Set the space group of the cell
+   *  @spg space group
+   */
+  void setSpaceGroup(std::string spaceGroup) { m_spaceGroup = spaceGroup;}
+
+  std::string getSpaceGroup() { return m_spaceGroup;}
 
   /**
    * The volume of the unit cell in cubic Angstroms.
@@ -126,6 +135,9 @@ public:
   Vector3 wrapCartesian(const Vector3 &cart) const;
   void wrapCartesian(const Vector3 &cart, Vector3 &wrapped) const;
   /** @} */
+  void AddTransform(const std::string &s);
+  Array<Matrix3> m_transformM;
+  Array<Vector3> m_transformV;
 
 private:
   static Real signedAngleRadians(const Vector3 &v1, const Vector3 &v2,
@@ -136,6 +148,7 @@ private:
 
   Matrix3 m_cellMatrix;
   Matrix3 m_fractionalMatrix;
+  std::string m_spaceGroup;
 };
 
 inline UnitCell::UnitCell()
