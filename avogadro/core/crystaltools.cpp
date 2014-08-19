@@ -21,6 +21,8 @@
 
 #include <algorithm>
 #include <iostream>
+using std::cout;
+using std::endl;
 
 namespace Avogadro {
 namespace Core {
@@ -713,6 +715,81 @@ bool CrystalTools::setFractionalCoordinates(Molecule &molecule,
                  SetFractionalCoordinatesFunctor(molecule));
 
   return true;
+}
+bool CrystalTools::fillUnitCell(Molecule &molecule)
+{
+  if(!molecule.unitCell())
+    return false;
+
+  cout << "Filling unit cell" << endl;
+  UnitCell &m_unitcell = *molecule.unitCell();
+
+  Array<Vector3>      fOut;
+  Array<unsigned char> numOut;
+
+  //fOut.push_back(fcoords.at(0));
+  static double prec=2e-5;
+  size_t numAtoms = molecule.atomCount();
+  cout << "  " << numAtoms << " atoms were originally specified" << endl;
+  for (size_t i = 0; i < numAtoms; ++i) {
+    Atom atom = molecule.atom(i);
+    Vector3 fcoords=m_unitcell.toFractional(atom.position3d());
+    unsigned char thisAtom = atom.atomicNumber();
+
+    //apply each transformation to this atom
+    for (size_t t=0;t<m_unitcell.m_transformM.size();++t) {
+      Vector3 tmp = m_unitcell.m_transformM.at(t)*fcoords
+        + m_unitcell.m_transformV.at(t);
+      if (tmp.x() < 0.)
+        tmp.x() += 1.;
+      if (tmp.x() >= 1.)
+        tmp.x() -= 1.;
+      if (tmp.y() < 0.)
+        tmp.y() += 1.;
+      if (tmp.y() >= 1.)
+        tmp.y() -= 1.;
+      if (tmp.z() < 0.)
+        tmp.z() += 1.;
+      if (tmp.z() >= 1.)
+        tmp.z() -= 1.;
+
+      //If the new position is unique
+      //add it to the fractional coordiantes
+      bool duplicate = false;
+      for (size_t j = 0;j<fOut.size();++j) {
+        if (fabs(tmp.x() - fOut.at(j).x()) < prec &&
+            fabs(tmp.y() - fOut.at(j).y()) < prec &&
+            fabs(tmp.z() - fOut.at(j).z()) < prec)
+        {
+          duplicate = true;
+          break;
+        }
+      }
+      if (!duplicate) {
+        numOut.push_back(thisAtom);
+        fOut.push_back(tmp);
+      }
+    }
+  }
+
+  //make cartisian positions
+  Array<Vector3> cOut;
+  for (size_t i = 0; i < fOut.size(); ++i) {
+    cOut.push_back(m_unitcell.toCartesian(fOut.at(i)));
+  }
+
+  //let's try to remove the original atoms and add the new ones
+  molecule.clearAtoms();
+  for (size_t i = 0; i < numOut.size(); ++i) {
+    molecule.addAtom(numOut.at(i));
+  }
+
+  molecule.setAtomPositions3d(cOut);
+
+  cout << "  " << molecule.atomCount() << " atoms were generated" << endl;
+
+  return true;
+
 }
 
 } // namespace Core

@@ -142,6 +142,8 @@ public:
   static bool setFractionalCoordinates(Molecule &molecule,
                                        const Array<Vector3> &coords);
 
+  static bool fillUnitCell(Molecule &molecule);
+
 private:
   CrystalTools(); // not implemented
   ~CrystalTools(); // not implemented

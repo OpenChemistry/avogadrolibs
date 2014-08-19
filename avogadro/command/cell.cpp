@@ -20,6 +20,7 @@
 #include <avogadro/core/version.h>
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/vector.h>
+#include <avogadro/core/crystaltools.h>
 #include <avogadro/core/avospglib.h>
 
 #include <iostream>
@@ -30,6 +31,7 @@ using Avogadro::Io::FileFormatManager;
 using Avogadro::Core::UnitCell;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::AvoSpglib;
+using Avogadro::Core::CrystalTools;
 using std::cin;
 using std::cout;
 using std::endl;
@@ -92,14 +94,10 @@ int main(int argc, char *argv[])
   }
 
 
+  CrystalTools::fillUnitCell(mol);
+
   AvoSpglib *m_spg = new AvoSpglib(&mol);
-
-  cout << endl;
-  m_spg->fillUnitCell();
-  cout << endl;
-
-  AvoSpglib *m_spg2 = new AvoSpglib(&mol);
-  m_spg2->getSpacegroup();
+  m_spg->getSpacegroup();
 
   return 0;
 }

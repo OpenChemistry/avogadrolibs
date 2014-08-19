@@ -38,8 +38,8 @@ namespace Core {
       m_unitcell = dynamic_cast<UnitCell *>(m_molecule->unitCell());
 
     //space group read
-    cout << "Space Group" << endl;
-    cout << m_unitcell->getSpaceGroup() << endl;
+    cout << "The unit cell thinks this is the Space Group" << endl;
+    cout << "  " << m_unitcell->getSpaceGroup() << endl;
 
 
 
@@ -61,99 +61,6 @@ namespace Core {
 
     }
 
-    /*size_t numTransforms=m_unitcell->m_transformM.size();
-    for (size_t i=0;i<numTransforms;++i) {
-      cout << m_unitcell->m_transformM.at(i) << endl;
-      cout << m_unitcell->m_transformV.at(i) << endl;
-      cout << endl;
-    }*/
-
-  }
-
-  /*bool AvoSpglib::fillUnitCell(const double cartTol)
-  {
-
-    const double tolSq = cartTol*cartTol;
-
-    Array<Vector3> filledFcoords = Transform();
-    size_t numFilled = filledFcoords.size();
-    cout << numFilled << "  filled atoms" << endl;
-
-    for (size_t i = 0; i < numFilled; ++i) {
-      cout << "  " << filledFcoords.at(i).x() << " " << filledFcoords.at(i).y() << " " << filledFcoords.at(i).x() << endl;
-    }
-
-    return true;
-  }*/
-
-  // return fcoords after apply symmetry
-  // transformations
-  //Array<Vector3> AvoSpglib::Transform()
-  bool AvoSpglib::fillUnitCell(const double cartTol)
-  {
-    Array<Vector3>      fOut;
-    Array<unsigned char> numOut;
-
-    //fOut.push_back(fcoords.at(0));
-    static double prec=2e-5;
-    size_t numAtoms = m_molecule->atomCount();
-    for (size_t i = 0; i < numAtoms; ++i) {
-      unsigned char thisAtom = atomicNums.at(i);
-
-      //apply each transformation to this atom
-      for (size_t t=0;t<m_unitcell->m_transformM.size();++t) {
-        Vector3 tmp = m_unitcell->m_transformM.at(t)*fcoords.at(i)
-          + m_unitcell->m_transformV.at(t);
-        if (tmp.x() < 0.)
-          tmp.x() += 1.;
-        if (tmp.x() >= 1.)
-          tmp.x() -= 1.;
-        if (tmp.y() < 0.)
-          tmp.y() += 1.;
-        if (tmp.y() >= 1.)
-          tmp.y() -= 1.;
-        if (tmp.z() < 0.)
-          tmp.z() += 1.;
-        if (tmp.z() >= 1.)
-          tmp.z() -= 1.;
-
-        //If the new position is unique
-        //add it to the fractional coordiantes
-        bool duplicate = false;
-        for (size_t j = 0;j<fOut.size();++j) {
-          if (fabs(tmp.x() - fOut.at(j).x()) < prec &&
-              fabs(tmp.y() - fOut.at(j).y()) < prec &&
-              fabs(tmp.z() - fOut.at(j).z()) < prec)
-          {
-            duplicate = true;
-            break;
-          }
-        }
-        if (!duplicate) {
-          numOut.push_back(thisAtom);
-          fOut.push_back(tmp);
-        }
-      }
-    }
-
-    //make cartisian positions
-    Array<Vector3> cOut;
-    for (size_t i = 0; i < fOut.size(); ++i) {
-      cOut.push_back(m_unitcell->toCartesian(fOut.at(i)));
-      //cout << cOut.at(i).x() << " " << cOut.at(i).y() << " " << cOut.at(i).z() << endl;
-    }
-
-    //let's try to remove the original atoms and add the new ones
-    m_molecule->clearAtoms();
-    for (size_t i = 0; i < numOut.size(); ++i) {
-      m_molecule->addAtom(numOut.at(i));
-    }
-    cout << numOut.size() << endl;
-    cout << m_molecule->atomCount() << endl;
-
-    m_molecule->setAtomPositions3d(cOut);
-
-    return true;
 
   }
 
@@ -178,20 +85,19 @@ namespace Core {
     }
 
       // find spacegroup data
-    cout << "determine spagegroup" << endl;
+    cout << "AvoSpglib determined the Space group to be:" << endl;
     SpglibDataset * ptr = spg_get_dataset(lattice,
                                           positions,
                                           types,
                                           numAtoms,
                                           cartTol);
     if (!ptr || ptr->spacegroup_number == 0) {
-      cout << "Cannot determine spacegroup." << endl;
+      cout << "  Cannot determine spacegroup." << endl;
         return 0;
     }
 
-    cout << endl;
-    cout << ptr->hall_symbol << " | " << ptr->hall_number << endl;
-    cout << ptr->international_symbol << " | " << ptr->spacegroup_number << endl;
+    cout << "  " << ptr->hall_symbol << " | " << ptr->hall_number << endl;
+    cout << "  " << ptr->international_symbol << " | " << ptr->spacegroup_number << endl;
 
     cout << endl;
 
