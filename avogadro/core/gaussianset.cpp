@@ -382,7 +382,23 @@ void GaussianSet::initCalculation()
       }}
       break;
     case F7:
-      skip = 7;
+      {
+      //m-independent normalization factor
+      //math.sqrt(2.**(3.+3./2.))/(math.pi**(3./4.))*math.sqrt(2.**3. / 15.)
+      //same as norm1 above.
+      double norm = 1.4721580892990935;
+      m_moIndices[i] = indexMO;
+      indexMO += 7;
+      m_cIndices.push_back(static_cast<unsigned int>(m_gtoCN.size()));
+      for(unsigned j = m_gtoIndices[i]; j < m_gtoIndices[i+1]; ++j) {
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm); //0
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm); //+1
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm); //-1
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm); //+2
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm); //-2
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm); //+3
+        m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm); //-3
+      }}
       break;
     case G:
       skip = 15;
