@@ -22,6 +22,10 @@
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/linestripgeometry.h>
+#include <avogadro/rendering/textlabel2d.h>
+#include <avogadro/rendering/textlabel3d.h>
+#include <avogadro/rendering/textproperties.h>
+#include <avogadro/rendering/glrenderer.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -32,6 +36,9 @@ using Core::UnitCell;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
+using Avogadro::Rendering::TextLabel2D;
+using Avogadro::Rendering::TextLabel3D;
+using Avogadro::Rendering::TextProperties;
 
 CrystalScene::CrystalScene(QObject *p) : ScenePlugin(p), m_enabled(true)
 {
@@ -90,6 +97,40 @@ void CrystalScene::process(const Molecule &molecule, GroupNode &node)
     strip[0] -= a;
     strip[1] -= a;
     lines->addLineStrip(strip, width);
+
+    QString overlayText;
+    QString hallLabel = tr("Hall Symbol:");
+    QString intLabel  = tr("Space Group:");
+    int labelWidth = -std::max(hallLabel.size(),intLabel.size());
+
+    std::string intSymb = cell->getSpaceGroup();
+    if(intSymb.size())
+    {
+      overlayText += QString("%1 %2\n")
+        .arg(tr("SpaceGroup Symbol:"),intLabel.size())
+        .arg(tr(intSymb.c_str()),intSymb.size());
+    }
+    std::string hallSymb = cell->getHallSymbol();
+    if(hallSymb.size())
+    {
+      overlayText += QString("%1 %2\n")
+        .arg(tr("Hall Symbol:"),hallLabel.size())
+        .arg(tr(hallSymb.c_str()),hallSymb.size());
+    }
+
+    TextProperties overlayTProp;
+    overlayTProp.setFontFamily(TextProperties::Mono);
+    overlayTProp.setColorRgb(255,255,255);
+    overlayTProp.setAlign(TextProperties::HLeft,TextProperties::VTop);
+
+    TextLabel2D *label = new TextLabel2D;
+    label->setText(overlayText.toStdString());
+    label->setTextProperties(overlayTProp);
+    label->setRenderPass(Rendering::Overlay2DPass);
+    label->setAnchor(Vector2i(10,500));
+
+    //don't know what to do next
+    geometry->addDrawable(label);
   }
 }
 

@@ -157,10 +157,10 @@ public:
       //get the spaceGroup
       pugi::xml_node symm = node.child("symmetry");
       pugi::xml_attribute spaceGroup = symm.attribute("spaceGroup");
-      if (spaceGroup) {
+      /*if (spaceGroup) {
         std::string spgStr(spaceGroup.value());
         cell->setSpaceGroup(spgStr);
-      }
+      }*/
       //add transformation vectors
       if (symm) {
         for (pugi::xml_node trans = symm.child("transform3"); trans;
