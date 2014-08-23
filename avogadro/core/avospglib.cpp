@@ -38,25 +38,22 @@ namespace Core {
       m_unitcell = dynamic_cast<UnitCell *>(m_molecule->unitCell());
 
     //space group read
-    cout << "The unit cell thinks this is the Space Group" << endl;
-    cout << "  " << m_unitcell->getSpaceGroup() << endl;
+    //cout << "The unit cell thinks this is the Space Group" << endl;
+    //cout << "  " << m_unitcell->getSpaceGroup() << endl;
 
 
 
 
     //generate the data that will be given to Spglib
     cellMatrix = m_unitcell->cellMatrix();
-    cout << "cell matrix" << endl;
-    cout << cellMatrix << endl;
-
     atomicNums=m_molecule->atomicNumbers();
     size_t numAtoms = m_molecule->atomCount();
     for (size_t i = 0; i < numAtoms; ++i) {
       Atom atom = m_molecule->atom(i);
       fcoords.push_back(m_unitcell->toFractional(atom.position3d()));
       atomicNumsi.push_back(atom.atomicNumber());
-      cout << "atom " << i << endl;
-      cout << "  " << atomicNumsi.at(i) << endl;
+      //cout << "atom " << i << endl;
+      cout << "  " << atomicNumsi.at(i);
       cout << "  " << fcoords.at(i).x() << " " << fcoords.at(i).y() << " " << fcoords.at(i).x() << endl;
 
     }
@@ -104,6 +101,68 @@ namespace Core {
 
     return ptr->spacegroup_number;
   }
+
+  /*unsigned int AvoSpglib::reduceToPrimitive(Array<Vector3> pos,Array<Vector3> nums,const double cartTol)
+  {
+    // Spglib expects column vecs, so fill with transpose
+    double lattice[3][3] = {
+      {cellMatrix(0,0), cellMatrix(1,0), cellMatrix(2,0)},
+      {cellMatrix(0,1), cellMatrix(1,1), cellMatrix(2,1)},
+      {cellMatrix(0,2), cellMatrix(1,2), cellMatrix(2,2)}
+    };
+
+      // Build position and type list
+    size_t numAtoms = m_molecule->atomCount();
+    double (*positions)[3] = new double[numAtoms][3];
+    int *types = new int[numAtoms];
+    for (int i = 0; i < numAtoms; ++i) {
+      types[i]          = atomicNums.at(i);
+      positions[i][0]   = fcoords.at(i).x();
+      positions[i][1]   = fcoords.at(i).y();
+      positions[i][2]   = fcoords.at(i).z();
+    }
+
+      // find spacegroup data
+    cout << "AvoSpglib determined the Space group to be:" << endl;
+    SpglibDataset * ptr = spg_get_dataset(lattice,
+                                          positions,
+                                          types,
+                                          numAtoms,
+                                          cartTol);
+    if (!ptr || ptr->spacegroup_number == 0) {
+      cout << "  Cannot determine spacegroup." << endl;
+        return 0;
+    }
+
+
+    // Refine the structure
+    int numBravaisAtoms =
+      spg_refine_cell(lattice, positions, types,
+      numAtoms, cartTol);
+
+    // if spglib cannot refine the cell, return 0.
+    if (numBravaisAtoms <= 0) {
+      return 0;
+    }
+
+    // Find primitive cell. This updates lattice, positions, types
+    // to primitive
+    int numPrimitiveAtoms =
+      spg_find_primitive(lattice, positions, types,
+          numBravaisAtoms, cartTol);
+
+    cout << numPrimitiveAtoms << endl;
+    for (int i = 0; i < numPrimitiveAtoms; ++i) {
+      nums.push_back(types[i]);
+      Vector3 tmp;
+      tmp.x() = positions[i][0];
+      tmp.y() = positions[i][1];
+      tmp.z() = positions[i][2];
+      pos.push_back(tmp);
+    }
+
+    return numPrimitiveAtoms;
+  }*/
 
 
 

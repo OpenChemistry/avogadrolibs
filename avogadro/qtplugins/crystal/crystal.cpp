@@ -21,6 +21,7 @@
 
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/crystaltools.h>
+#include <avogadro/core/avospglib.h>
 
 #include <avogadro/qtgui/molecule.h>
 
@@ -30,6 +31,7 @@
 #include <QtCore/QStringList>
 
 using Avogadro::Core::CrystalTools;
+using Avogadro::Core::AvoSpglib;
 using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
@@ -45,7 +47,9 @@ Crystal::Crystal(QObject *parent_) :
   m_scaleVolumeAction(new QAction(this)),
   m_standardOrientationAction(new QAction(this)),
   m_toggleUnitCellAction(new QAction(this)),
-  m_wrapAtomsToCellAction(new QAction(this))
+  m_wrapAtomsToCellAction(new QAction(this)),
+  m_fillUnitCell(new QAction(this)),
+  m_perceiveSpaceGroup(new QAction(this))
 {
   // this will be changed when the molecule is set:
   m_toggleUnitCellAction->setText(tr("Toggle Unit Cell"));
@@ -79,6 +83,21 @@ Crystal::Crystal(QObject *parent_) :
   connect(m_niggliReduceAction, SIGNAL(triggered()), SLOT(niggliReduce()));
   m_actions.push_back(m_niggliReduceAction);
   m_niggliReduceAction->setProperty("menu priority", -350);
+
+  m_fillUnitCell->setText(tr("&Fill Unit Cell"));
+  connect(m_fillUnitCell, SIGNAL(triggered()), SLOT(fillUnitCell()));
+  m_actions.push_back(m_fillUnitCell);
+  m_fillUnitCell->setProperty("menu priority", -370);
+
+  m_perceiveSpaceGroup->setText(tr("Perceive Space Group"));
+  connect(m_perceiveSpaceGroup, SIGNAL(triggered()), SLOT(perceiveSpaceGroup()));
+  m_actions.push_back(m_perceiveSpaceGroup);
+  m_perceiveSpaceGroup->setProperty("menu priority", -380);
+
+  //m_primitiveReduce->setText(tr("Reduce to primitive lattice"));
+  //connect(m_primitiveReduce, SIGNAL(triggered()), SLOT(primitiveReduce()));
+  //m_actions.push_back(m_primitiveReduce);
+  //m_primitiveReduce->setProperty("menu priority", -390);
 
   updateActions();
 }
@@ -165,6 +184,32 @@ void Crystal::editUnitCell()
   }
 
   m_unitCellDialog->show();
+}
+
+void Crystal::fillUnitCell()
+{
+  CrystalTools::fillUnitCell(*m_molecule);
+  m_molecule->emitChanged(Molecule::Modified
+                          | Molecule::Atoms | Molecule::UnitCell);
+
+  /*if (CrystalTools::isFilled(*m_molecule)) {
+    QMessageBox::information(qobject_cast<QWidget*>(parent()),
+                             tr("Fill Unit Cell"),
+                             tr("The unit cell is already filled."),
+                             QMessageBox::Ok);
+    return;
+  }*/
+
+
+}
+
+void Crystal::perceiveSpaceGroup()
+{
+
+  CrystalTools::getSpacegroup(*m_molecule);
+  //AvoSpglib *m_spg = new AvoSpglib(m_molecule);
+  //m_spg->getSpacegroup();
+
 }
 
 void Crystal::niggliReduce()

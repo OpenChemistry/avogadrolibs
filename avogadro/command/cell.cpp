@@ -95,11 +95,11 @@ int main(int argc, char *argv[])
 
 
   CrystalTools::fillUnitCell(mol);
+  if(CrystalTools::getSpacegroup(mol))
+    cout << "success" << endl;
 
-  AvoSpglib *m_spg = new AvoSpglib(&mol);
-  m_spg->getSpacegroup();
+  //CrystalTools::primitiveReduce(mol);
 
-  return 0;
 }
 
 void printHelp()

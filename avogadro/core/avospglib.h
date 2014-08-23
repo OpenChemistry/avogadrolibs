@@ -55,6 +55,7 @@ class AVOGADROCORE_EXPORT AvoSpglib
        */
       unsigned int getSpacegroup(const double cartTol = AVOSPGLIB_TOL);
       bool fillUnitCell(const double cartTol = AVOSPGLIB_TOL);
+      //unsigned int reduceToPrimitive(Array<Vector3> pos, Array<Vector3> nums,const double cartTol = AVOSPGLIB_TOL);
 
     private:
       Molecule *m_molecule;

@@ -143,6 +143,9 @@ public:
                                        const Array<Vector3> &coords);
 
   static bool fillUnitCell(Molecule &molecule);
+  //static bool primitiveReduce(Molecule &molecule);
+  static bool getSpacegroup(Molecule &molecule);
+
 
 private:
   CrystalTools(); // not implemented

@@ -18,11 +18,13 @@
 
 #include "unitcell.h"
 #include "molecule.h"
+#include <avogadro/core/avospglib.h>
 
 #include <algorithm>
 #include <iostream>
 using std::cout;
 using std::endl;
+using Avogadro::Core::AvoSpglib;
 
 namespace Avogadro {
 namespace Core {
@@ -716,6 +718,27 @@ bool CrystalTools::setFractionalCoordinates(Molecule &molecule,
 
   return true;
 }
+bool CrystalTools::getSpacegroup(Molecule &molecule)
+{
+  AvoSpglib *m_spg = new AvoSpglib(&molecule);
+  int spaceGroup=m_spg->getSpacegroup();
+
+  if(spaceGroup!=0)
+    return true;
+  else
+    return false;
+}
+
+/*bool CrystalTools::primitiveReduce(Molecule &molecule)
+{
+  AvoSpglib *m_spg = new AvoSpglib(&molecule);
+  Array<Vector3> *primCoords;
+  Array<unsigned char> *primNum;
+  m_spg->reduceToPrimitive(&primCoords,&primNum);
+
+  return true;
+}*/
+
 bool CrystalTools::fillUnitCell(Molecule &molecule)
 {
   if(!molecule.unitCell())
