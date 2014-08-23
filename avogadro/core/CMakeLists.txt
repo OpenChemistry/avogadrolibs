@@ -75,25 +75,26 @@ set(SOURCES
   variantmap.cpp
   version.cpp
 )
+
 set(spglib_SRCS
-  spglib/cell.c
-  spglib/debug.c
-  spglib/hall_symbol.c
-  spglib/lattice.c
-  spglib/mathfunc.c
-  spglib/pointgroup.c
-  spglib/primitive.c
-  spglib/refinement.c
-  spglib/spacegroup.c
-  spglib/spg_database.c
-  spglib/spglib.c
-  spglib/symmetry.c
-  spglib/kpoint.c
-  spglib/site_symmetry.c
-  spglib/sitesym_database.c
-  spglib/spglib_f.c
-  spglib/spin.c
-  spglib/tetrahedron_method.c
+ spglib/cell.c
+ spglib/debug.c
+ spglib/hall_symbol.c
+ spglib/kpoint.c
+ spglib/lattice.c
+ spglib/mathfunc.c
+ spglib/pointgroup.c
+ spglib/primitive.c
+ spglib/refinement.c
+ spglib/site_symmetry.c
+ spglib/sitesym_database.c
+ spglib/spacegroup.c
+ spglib/spg_database.c
+ spglib/spglib.c
+ spglib/spglib_f.c
+ spglib/spin.c
+ spglib/symmetry.c
+ spglib/tetrahedron_method.c
 )
 
 avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES} ${spglib_SRCS})

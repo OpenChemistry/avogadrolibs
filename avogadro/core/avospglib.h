@@ -64,7 +64,6 @@ class AVOGADROCORE_EXPORT AvoSpglib
       //items that are given to Spglib
       Array<Vector3> fcoords;
       Array<unsigned char> atomicNums;
-      Array<unsigned int> atomicNumsi;
       Matrix3 cellMatrix;
 
       Array<Vector3> Transform();

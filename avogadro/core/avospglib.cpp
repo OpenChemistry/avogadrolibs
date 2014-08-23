@@ -37,25 +37,14 @@ namespace Core {
     if (m_molecule)
       m_unitcell = dynamic_cast<UnitCell *>(m_molecule->unitCell());
 
-    //space group read
-    //cout << "The unit cell thinks this is the Space Group" << endl;
-    //cout << "  " << m_unitcell->getSpaceGroup() << endl;
-
-
-
-
     //generate the data that will be given to Spglib
+    //Is it correct to make new copies of this data?
     cellMatrix = m_unitcell->cellMatrix();
-    atomicNums=m_molecule->atomicNumbers();
+    atomicNums = m_molecule->atomicNumbers();
     size_t numAtoms = m_molecule->atomCount();
     for (size_t i = 0; i < numAtoms; ++i) {
       Atom atom = m_molecule->atom(i);
       fcoords.push_back(m_unitcell->toFractional(atom.position3d()));
-      atomicNumsi.push_back(atom.atomicNumber());
-      //cout << "atom " << i << endl;
-      cout << "  " << atomicNumsi.at(i);
-      cout << "  " << fcoords.at(i).x() << " " << fcoords.at(i).y() << " " << fcoords.at(i).x() << endl;
-
     }
 
 
@@ -82,7 +71,6 @@ namespace Core {
     }
 
       // find spacegroup data
-    cout << "AvoSpglib determined the Space group to be:" << endl;
     SpglibDataset * ptr = spg_get_dataset(lattice,
                                           positions,
                                           types,
@@ -93,13 +81,17 @@ namespace Core {
         return 0;
     }
 
-    cout << "  " << ptr->hall_symbol << " | " << ptr->hall_number << endl;
-    cout << "  " << ptr->international_symbol << " | " << ptr->spacegroup_number << endl;
+    std::string symb(ptr->international_symbol);
+    std::string hall(ptr->hall_symbol);
+
+    m_unitcell->setSpaceGroup(symb);
+    m_unitcell->setSpaceGroupID(ptr->spacegroup_number);
+    m_unitcell->setSpaceGroupHall(hall,ptr->hall_number);
 
     cout << endl;
 
 
-    return ptr->spacegroup_number;
+    return ptr->hall_number;
   }
 
   /*unsigned int AvoSpglib::reduceToPrimitive(Array<Vector3> pos,Array<Vector3> nums,const double cartTol)

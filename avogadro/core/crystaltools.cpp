@@ -24,6 +24,7 @@
 #include <iostream>
 using std::cout;
 using std::endl;
+using std::string;
 using Avogadro::Core::AvoSpglib;
 
 namespace Avogadro {
@@ -722,6 +723,11 @@ bool CrystalTools::getSpacegroup(Molecule &molecule)
 {
   AvoSpglib *m_spg = new AvoSpglib(&molecule);
   int spaceGroup=m_spg->getSpacegroup();
+
+  cout << "Space group is:" << endl;
+  cout << "  " << molecule.unitCell()->getSpaceGroup()
+    << "(" << molecule.unitCell()->getSpaceGroupID() << ")" << endl;
+  cout << "  " << molecule.unitCell()->getHallSymbol() << endl;
 
   if(spaceGroup!=0)
     return true;

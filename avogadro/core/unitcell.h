@@ -78,8 +78,14 @@ public:
    *  @spg space group
    */
   void setSpaceGroup(std::string spaceGroup) { m_spaceGroup = spaceGroup;}
+  void setSpaceGroupID(int spaceGroupID) {m_spaceGroupID = spaceGroupID;}
+
+  void setSpaceGroupHall(std::string hallSymbol, int hallID)
+    {m_hallSymbol = hallSymbol;m_hallID = hallID;}
 
   std::string getSpaceGroup() { return m_spaceGroup;}
+  std::string getHallSymbol() { return m_hallSymbol;}
+  int getSpaceGroupID() { return m_spaceGroupID;}
 
   /**
    * The volume of the unit cell in cubic Angstroms.
@@ -149,6 +155,9 @@ private:
   Matrix3 m_cellMatrix;
   Matrix3 m_fractionalMatrix;
   std::string m_spaceGroup;
+  std::string m_hallSymbol;
+  int m_spaceGroupID;
+  int m_hallID;
 };
 
 inline UnitCell::UnitCell()

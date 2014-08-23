@@ -23,6 +23,14 @@
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/avospglib.h>
 
+#include <avogadro/rendering/geometrynode.h>
+#include <avogadro/rendering/glrenderer.h>
+#include <avogadro/rendering/groupnode.h>
+#include <avogadro/rendering/scene.h>
+#include <avogadro/rendering/textlabel2d.h>
+#include <avogadro/rendering/textlabel3d.h>
+#include <avogadro/rendering/textproperties.h>
+
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtWidgets/QAction>
@@ -34,6 +42,10 @@ using Avogadro::Core::CrystalTools;
 using Avogadro::Core::AvoSpglib;
 using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
+using Avogadro::Rendering::GeometryNode;
+using Avogadro::Rendering::TextLabel2D;
+using Avogadro::Rendering::TextLabel3D;
+using Avogadro::Rendering::TextProperties;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -206,9 +218,32 @@ void Crystal::fillUnitCell()
 void Crystal::perceiveSpaceGroup()
 {
 
+  //set information in unitCell
   CrystalTools::getSpacegroup(*m_molecule);
-  //AvoSpglib *m_spg = new AvoSpglib(m_molecule);
-  //m_spg->getSpacegroup();
+
+  QString overlayText;
+  QString hallLabel = tr("Hall Symbol:");
+  QString intLabel  = tr("International Symbol:");
+  int labelWidth = -std::max(hallLabel.size(),intLabel.size());
+
+  std::string hallSymb = m_molecule->unitCell()->getHallSymbol();
+
+  overlayText += QString("%1 %2\n")
+    .arg(tr("Hall Symbol:"),labelWidth)
+    .arg(tr(hallSymb.c_str()),hallSymb.size());
+
+  TextProperties overlayTProp;
+  overlayTProp.setFontFamily(TextProperties::Mono);
+  overlayTProp.setColorRgb(64,255,220);
+  overlayTProp.setAlign(TextProperties::HLeft,TextProperties::VTop);
+
+  TextLabel2D *label = new TextLabel2D;
+  label->setText(overlayText.toStdString());
+  label->setTextProperties(overlayTProp);
+  label->setRenderPass(Rendering::Overlay2DPass);
+  label->setAnchor(Vector2i(10,10));
+
+  //don't know what to do next
 
 }
 
