@@ -142,8 +142,10 @@ public:
   void wrapCartesian(const Vector3 &cart, Vector3 &wrapped) const;
   /** @} */
   void AddTransform(const std::string &s);
-  Array<Matrix3> m_transformM;
-  Array<Vector3> m_transformV;
+  void setTransforms(Array<Matrix3> rotate, Array<Vector3> shift)
+    {m_transformM = rotate;m_transformV = shift;}
+  Array<Matrix3> getRotations() { return m_transformM;}
+  Array<Vector3> getTranslations() { return m_transformV;}
 
 private:
   static Real signedAngleRadians(const Vector3 &v1, const Vector3 &v2,
@@ -151,7 +153,8 @@ private:
   void computeCellMatrix() { m_cellMatrix = m_fractionalMatrix.inverse(); }
   void computeFractionalMatrix() {m_fractionalMatrix = m_cellMatrix.inverse(); }
 
-
+  Array<Matrix3> m_transformM;
+  Array<Vector3> m_transformV;
   Matrix3 m_cellMatrix;
   Matrix3 m_fractionalMatrix;
   std::string m_spaceGroup;

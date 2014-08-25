@@ -145,6 +145,8 @@ public:
   static bool fillUnitCell(Molecule &molecule);
   //static bool primitiveReduce(Molecule &molecule);
   static bool getSpacegroup(Molecule &molecule);
+  static void setRotations(Molecule &molecule,const int hallNumber);
+  static void printFractional(Molecule &molecule);
 
 
 private:

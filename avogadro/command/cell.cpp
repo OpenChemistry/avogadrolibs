@@ -94,11 +94,13 @@ int main(int argc, char *argv[])
   }
 
 
+  CrystalTools::setRotations(mol,525);
+
   CrystalTools::fillUnitCell(mol);
   if(CrystalTools::getSpacegroup(mol))
-    cout << "success" << endl;
+    CrystalTools::printFractional(mol);
 
-  //CrystalTools::primitiveReduce(mol);
+
 
 }
 

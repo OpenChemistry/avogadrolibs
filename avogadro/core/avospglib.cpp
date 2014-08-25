@@ -50,6 +50,28 @@ namespace Core {
 
   }
 
+  void AvoSpglib::setRotations(const int hallNumber)
+  {
+    Array<Matrix3> rotate;
+    Array<Vector3> shift;
+    int rotations[192][3][3];
+    double translations[192][3];
+    int numRotations = spg_get_symmetry_from_database(rotations,translations,hallNumber);
+    for (int i = 0;i<numRotations;i++)
+    {
+      Matrix3 m;
+      m << rotations[i][0][0], rotations[i][0][1], rotations[i][0][2],
+           rotations[i][1][0], rotations[i][1][1], rotations[i][1][2],
+           rotations[i][2][0], rotations[i][2][1], rotations[i][2][2];
+      rotate.push_back(m);
+
+      Vector3 v;
+      v << translations[i][0], translations[i][1], translations[i][2];
+      shift.push_back(v);
+    }
+    m_unitcell->setTransforms(rotate,shift);
+  }
+
   unsigned int AvoSpglib::getSpacegroup(const double cartTol)
   {
     // Spglib expects column vecs, so fill with transpose
