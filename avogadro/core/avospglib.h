@@ -58,6 +58,8 @@ class AVOGADROCORE_EXPORT AvoSpglib
 
       //return primitve unit cell and positions
       static unsigned int reduceToPrimitive(Molecule &molecule, Matrix3 &primCell, Array<Vector3> &pos, Array<unsigned char> &nums,const double cartTol = AVOSPGLIB_TOL);
+      static unsigned int refineCell(Molecule &molecule, Matrix3 &symmCell, Array<Vector3> &pos, Array<unsigned char> &nums,const double cartTol = AVOSPGLIB_TOL);
+
 
     private:
       AvoSpglib();  //not implemented

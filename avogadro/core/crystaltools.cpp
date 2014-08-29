@@ -767,7 +767,6 @@ bool CrystalTools::primitiveReduce(Molecule &molecule)
   //unitcell.setCellMatrix(primCell);
 
   //make cartisian positions
-  cout << "primitive atoms" << endl;
   Array<Vector3> cOut;
   for (size_t i = 0; i < primCoords.size(); ++i) {
     cOut.push_back(unitcell.toCartesian(primCoords.at(i)));
@@ -783,7 +782,32 @@ bool CrystalTools::primitiveReduce(Molecule &molecule)
 
   unitcell.setShowPrim(true);
 
+  return true;
+}
 
+bool CrystalTools::symmetrizeCell(Molecule &molecule)
+{
+  Array<Vector3> symmCoords;
+  Array<unsigned char> symmNum;
+  Matrix3 symmCell;
+  AvoSpglib::refineCell(molecule,symmCell,symmCoords,symmNum);
+
+  UnitCell &unitcell = *molecule.unitCell();
+  unitcell.setCellMatrix(symmCell);
+
+  //make cartisian positions
+  Array<Vector3> cOut;
+  for (size_t i = 0; i < symmCoords.size(); ++i) {
+    cOut.push_back(unitcell.toCartesian(symmCoords.at(i)));
+  }
+
+  //let's try to remove the original atoms and add the new ones
+  molecule.clearAtoms();
+  for (size_t i = 0; i < symmNum.size(); ++i) {
+    molecule.addAtom(symmNum.at(i));
+  }
+
+  molecule.setAtomPositions3d(cOut);
 
   return true;
 }
@@ -803,15 +827,12 @@ bool CrystalTools::fillUnitCell(Molecule &molecule)
     return false;
   }
 
-  cout << "Filling unit cell" << endl;
-
   Array<Vector3>      fOut;
   Array<unsigned char> numOut;
 
   //fOut.push_back(fcoords.at(0));
   static double prec=2e-5;
   size_t numAtoms = molecule.atomCount();
-  cout << "  " << numAtoms << " atoms were originally specified" << endl;
   for (size_t i = 0; i < numAtoms; ++i) {
     Atom atom = molecule.atom(i);
     Vector3 fcoords=m_unitcell.toFractional(atom.position3d());
@@ -866,8 +887,6 @@ bool CrystalTools::fillUnitCell(Molecule &molecule)
   }
 
   molecule.setAtomPositions3d(cOut);
-
-  cout << "  " << molecule.atomCount() << " atoms were generated" << endl;
 
   return true;
 

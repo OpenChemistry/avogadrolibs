@@ -127,8 +127,8 @@ namespace Core {
   {
     double lattice[3][3];
     size_t numAtoms = molecule.atomCount();
-    double (*positions)[3] = new double[numAtoms][3];
-    int *types = new int[numAtoms];
+    double (*positions)[3] = new double[4*numAtoms][3];
+    int *types = new int[4*numAtoms];
     prepareMolecule(molecule,lattice,positions,types);
 
     //determine spacegroup data
@@ -175,7 +175,52 @@ namespace Core {
     return numPrimitiveAtoms;
   }
 
+  unsigned int AvoSpglib::refineCell(Molecule &molecule, Matrix3 &symmCell, Array<Vector3> &pos,Array<unsigned char> &nums,const double cartTol)
+  {
+    double lattice[3][3];
+    size_t numAtoms = molecule.atomCount();
+    double (*positions)[3] = new double[4*numAtoms][3];
+    int *types = new int[4*numAtoms];
+    prepareMolecule(molecule,lattice,positions,types);
 
+    //determine spacegroup data
+    SpglibDataset * ptr = spg_get_dataset(lattice,
+                                          positions,
+                                          types,
+                                          numAtoms,
+                                          cartTol);
+    if (!ptr || ptr->spacegroup_number == 0) {
+      cout << "  Cannot determine spacegroup." << endl;
+        return 0;
+    }
+
+    // Refine the structure
+    int numBravaisAtoms =
+      spg_refine_cell(lattice, positions, types,
+      numAtoms, cartTol);
+
+    // if spglib cannot refine the cell, return 0.
+    if (numBravaisAtoms <= 0) {
+      return 0;
+    }
+
+    symmCell <<
+      lattice[0][0], lattice[0][1] , lattice[0][2],
+      lattice[1][0], lattice[1][1] , lattice[1][2],
+      lattice[2][0], lattice[2][1] , lattice[2][2];
+
+    for (int i = 0; i < numBravaisAtoms; ++i) {
+      nums.push_back(types[i]);
+      Vector3 tmp;
+      tmp.x() = positions[i][0];
+      tmp.y() = positions[i][1];
+      tmp.z() = positions[i][2];
+      pos.push_back(tmp);
+    }
+
+    return numBravaisAtoms;
+
+  }
 
 }
 }
