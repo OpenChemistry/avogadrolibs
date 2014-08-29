@@ -721,24 +721,28 @@ bool CrystalTools::setFractionalCoordinates(Molecule &molecule,
 }
 bool CrystalTools::getSpacegroup(Molecule &molecule)
 {
-  AvoSpglib *m_spg = new AvoSpglib(&molecule);
-  int spaceGroup=m_spg->getSpacegroup();
-
-  cout << "Space group is:" << endl;
-  cout << "  " << molecule.unitCell()->getSpaceGroup()
-    << "(" << molecule.unitCell()->getSpaceGroupID() << ")" << endl;
-  cout << "  " << molecule.unitCell()->getHallSymbol() << endl;
+  //AvoSpglib *m_spg = new AvoSpglib(&molecule);
+  //int spaceGroup=m_spg->getSpacegroup();
+  int spaceGroup = AvoSpglib::getSpacegroup(molecule);
 
   if(spaceGroup!=0)
+  {
+    cout << "Space group is:" << endl;
+    cout << "  " << molecule.unitCell()->getSpaceGroup()
+      << "(" << molecule.unitCell()->getSpaceGroupID() << ")" << endl;
+    cout << "  " << molecule.unitCell()->getHallSymbol() << endl;
     return true;
+  }
+
   else
     return false;
 }
 
 void CrystalTools::setRotations(Molecule &molecule, const int hallNumber)
 {
-  AvoSpglib *m_spg = new AvoSpglib(&molecule);
-  m_spg->setRotations(hallNumber);
+  //AvoSpglib *m_spg = new AvoSpglib(&molecule);
+  //m_spg->setRotations(hallNumber);
+  AvoSpglib::setRotations(molecule,hallNumber);
 }
 
 void CrystalTools::printFractional(Molecule &molecule)
@@ -752,23 +756,54 @@ void CrystalTools::printFractional(Molecule &molecule)
   }
 }
 
-/*bool CrystalTools::primitiveReduce(Molecule &molecule)
+bool CrystalTools::primitiveReduce(Molecule &molecule)
 {
-  AvoSpglib *m_spg = new AvoSpglib(&molecule);
-  Array<Vector3> *primCoords;
-  Array<unsigned char> *primNum;
-  m_spg->reduceToPrimitive(&primCoords,&primNum);
+  Array<Vector3> primCoords;
+  Array<unsigned char> primNum;
+  Matrix3 primCell;
+  AvoSpglib::reduceToPrimitive(molecule,primCell,primCoords,primNum);
+
+  UnitCell &unitcell = *molecule.unitCell();
+  //unitcell.setCellMatrix(primCell);
+
+  //make cartisian positions
+  cout << "primitive atoms" << endl;
+  Array<Vector3> cOut;
+  for (size_t i = 0; i < primCoords.size(); ++i) {
+    cOut.push_back(unitcell.toCartesian(primCoords.at(i)));
+  }
+
+  //let's try to remove the original atoms and add the new ones
+  molecule.clearAtoms();
+  for (size_t i = 0; i < primNum.size(); ++i) {
+    molecule.addAtom(primNum.at(i));
+  }
+
+  molecule.setAtomPositions3d(cOut);
+
+  unitcell.setShowPrim(true);
+
+
 
   return true;
-}*/
+}
 
 bool CrystalTools::fillUnitCell(Molecule &molecule)
 {
   if(!molecule.unitCell())
     return false;
 
-  cout << "Filling unit cell" << endl;
   UnitCell &m_unitcell = *molecule.unitCell();
+  Array<Matrix3> rotations = m_unitcell.getRotations();
+  Array<Vector3> shifts    = m_unitcell.getTranslations();
+
+  if(!rotations.size() || !shifts.size())
+  {
+    cout << "Cannot fill unit cell" << endl;
+    return false;
+  }
+
+  cout << "Filling unit cell" << endl;
 
   Array<Vector3>      fOut;
   Array<unsigned char> numOut;
@@ -783,8 +818,6 @@ bool CrystalTools::fillUnitCell(Molecule &molecule)
     unsigned char thisAtom = atom.atomicNumber();
 
     //apply each transformation to this atom
-    Array<Matrix3> rotations = m_unitcell.getRotations();
-    Array<Vector3> shifts    = m_unitcell.getTranslations();
     for (size_t t=0;t<rotations.size();++t) {
       Vector3 tmp = rotations.at(t)*fcoords
         + shifts.at(t);

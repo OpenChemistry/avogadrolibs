@@ -31,27 +31,44 @@ using std::endl;
 
 namespace Avogadro {
 namespace Core {
-
-  AvoSpglib::AvoSpglib(Molecule *mol) : m_molecule(mol)
+  void AvoSpglib::prepareMolecule(Molecule &molecule,
+                       double lattice[3][3],
+                       double positions[][3],
+                       int    types[])
   {
-    if (m_molecule)
-      m_unitcell = dynamic_cast<UnitCell *>(m_molecule->unitCell());
+    if(!molecule.unitCell())
+      return;
 
-    //generate the data that will be given to Spglib
-    //Is it correct to make new copies of this data?
-    cellMatrix = m_unitcell->cellMatrix();
-    atomicNums = m_molecule->atomicNumbers();
-    size_t numAtoms = m_molecule->atomCount();
+    UnitCell &unitcell = *molecule.unitCell();
+
+    // Spglib expects column vecs, so fill with transpose
+    Matrix3 cellMatrix = unitcell.cellMatrix();
+    lattice[0][0]=cellMatrix(0,0);lattice[0][1]=cellMatrix(1,0);lattice[0][2]=cellMatrix(2,0);
+    lattice[1][0]=cellMatrix(0,1);lattice[1][1]=cellMatrix(1,1);lattice[1][2]=cellMatrix(2,1);
+    lattice[2][0]=cellMatrix(0,2);lattice[2][1]=cellMatrix(1,2);lattice[2][2]=cellMatrix(2,2);
+
+    // Build position and type list
+    Vector3 fcoords;
+    size_t numAtoms = molecule.atomCount();
     for (size_t i = 0; i < numAtoms; ++i) {
-      Atom atom = m_molecule->atom(i);
-      fcoords.push_back(m_unitcell->toFractional(atom.position3d()));
+      Atom atom = molecule.atom(i);
+      fcoords=unitcell.toFractional(atom.position3d());
+
+      types[i]          = molecule.atomicNumbers().at(i);
+      positions[i][0]   = fcoords.x();
+      positions[i][1]   = fcoords.y();
+      positions[i][2]   = fcoords.z();
     }
-
-
   }
 
-  void AvoSpglib::setRotations(const int hallNumber)
+
+  void AvoSpglib::setRotations(Molecule &molecule, const int hallNumber)
   {
+    if(!molecule.unitCell())
+      return;
+
+    UnitCell &unitcell = *molecule.unitCell();
+
     Array<Matrix3> rotate;
     Array<Vector3> shift;
     int rotations[192][3][3];
@@ -69,30 +86,18 @@ namespace Core {
       v << translations[i][0], translations[i][1], translations[i][2];
       shift.push_back(v);
     }
-    m_unitcell->setTransforms(rotate,shift);
+    unitcell.setTransforms(rotate,shift);
   }
 
-  unsigned int AvoSpglib::getSpacegroup(const double cartTol)
+  unsigned int AvoSpglib::getSpacegroup(Molecule &molecule, const double cartTol)
   {
-    // Spglib expects column vecs, so fill with transpose
-    double lattice[3][3] = {
-      {cellMatrix(0,0), cellMatrix(1,0), cellMatrix(2,0)},
-      {cellMatrix(0,1), cellMatrix(1,1), cellMatrix(2,1)},
-      {cellMatrix(0,2), cellMatrix(1,2), cellMatrix(2,2)}
-    };
-
-      // Build position and type list
-    size_t numAtoms = m_molecule->atomCount();
+    double lattice[3][3];
+    size_t numAtoms = molecule.atomCount();
     double (*positions)[3] = new double[numAtoms][3];
     int *types = new int[numAtoms];
-    for (int i = 0; i < numAtoms; ++i) {
-      types[i]          = atomicNums.at(i);
-      positions[i][0]   = fcoords.at(i).x();
-      positions[i][1]   = fcoords.at(i).y();
-      positions[i][2]   = fcoords.at(i).z();
-    }
+    prepareMolecule(molecule,lattice,positions,types);
 
-      // find spacegroup data
+    // determine spacegroup data
     SpglibDataset * ptr = spg_get_dataset(lattice,
                                           positions,
                                           types,
@@ -106,9 +111,11 @@ namespace Core {
     std::string symb(ptr->international_symbol);
     std::string hall(ptr->hall_symbol);
 
-    m_unitcell->setSpaceGroup(symb);
-    m_unitcell->setSpaceGroupID(ptr->spacegroup_number);
-    m_unitcell->setSpaceGroupHall(hall,ptr->hall_number);
+    //set data to the unitcell
+    UnitCell &unitcell = *molecule.unitCell();
+    unitcell.setSpaceGroup(symb);
+    unitcell.setSpaceGroupID(ptr->spacegroup_number);
+    unitcell.setSpaceGroupHall(hall,ptr->hall_number);
 
     cout << endl;
 
@@ -116,28 +123,15 @@ namespace Core {
     return ptr->hall_number;
   }
 
-  /*unsigned int AvoSpglib::reduceToPrimitive(Array<Vector3> pos,Array<Vector3> nums,const double cartTol)
+  unsigned int AvoSpglib::reduceToPrimitive(Molecule &molecule, Matrix3 &primCell, Array<Vector3> &pos,Array<unsigned char> &nums,const double cartTol)
   {
-    // Spglib expects column vecs, so fill with transpose
-    double lattice[3][3] = {
-      {cellMatrix(0,0), cellMatrix(1,0), cellMatrix(2,0)},
-      {cellMatrix(0,1), cellMatrix(1,1), cellMatrix(2,1)},
-      {cellMatrix(0,2), cellMatrix(1,2), cellMatrix(2,2)}
-    };
-
-      // Build position and type list
-    size_t numAtoms = m_molecule->atomCount();
+    double lattice[3][3];
+    size_t numAtoms = molecule.atomCount();
     double (*positions)[3] = new double[numAtoms][3];
     int *types = new int[numAtoms];
-    for (int i = 0; i < numAtoms; ++i) {
-      types[i]          = atomicNums.at(i);
-      positions[i][0]   = fcoords.at(i).x();
-      positions[i][1]   = fcoords.at(i).y();
-      positions[i][2]   = fcoords.at(i).z();
-    }
+    prepareMolecule(molecule,lattice,positions,types);
 
-      // find spacegroup data
-    cout << "AvoSpglib determined the Space group to be:" << endl;
+    //determine spacegroup data
     SpglibDataset * ptr = spg_get_dataset(lattice,
                                           positions,
                                           types,
@@ -147,7 +141,6 @@ namespace Core {
       cout << "  Cannot determine spacegroup." << endl;
         return 0;
     }
-
 
     // Refine the structure
     int numBravaisAtoms =
@@ -165,7 +158,11 @@ namespace Core {
       spg_find_primitive(lattice, positions, types,
           numBravaisAtoms, cartTol);
 
-    cout << numPrimitiveAtoms << endl;
+    primCell <<
+      lattice[0][0], lattice[0][1] , lattice[0][2],
+      lattice[1][0], lattice[1][1] , lattice[1][2],
+      lattice[2][0], lattice[2][1] , lattice[2][2];
+
     for (int i = 0; i < numPrimitiveAtoms; ++i) {
       nums.push_back(types[i]);
       Vector3 tmp;
@@ -176,7 +173,7 @@ namespace Core {
     }
 
     return numPrimitiveAtoms;
-  }*/
+  }
 
 
 

@@ -104,6 +104,9 @@ public:
    */
   const Matrix3 &cellMatrix() const;
   void setCellMatrix(const Matrix3 &m);
+
+  const Matrix3 &primitiveCell() const;
+  void setPrimitiveCell(const Matrix3 &m);
   /** @} */
 
   /**
@@ -146,6 +149,8 @@ public:
     {m_transformM = rotate;m_transformV = shift;}
   Array<Matrix3> getRotations() { return m_transformM;}
   Array<Vector3> getTranslations() { return m_transformV;}
+  bool showPrim() const {return m_showPrim;}
+  void setShowPrim(bool showPrim) {m_showPrim = showPrim;}
 
 private:
   static Real signedAngleRadians(const Vector3 &v1, const Vector3 &v2,
@@ -157,10 +162,13 @@ private:
   Array<Vector3> m_transformV;
   Matrix3 m_cellMatrix;
   Matrix3 m_fractionalMatrix;
+  Matrix3 m_primitiveCell;
   std::string m_spaceGroup;
   std::string m_hallSymbol;
   int m_spaceGroupID;
   int m_hallID;
+
+  bool m_showPrim;
 };
 
 inline UnitCell::UnitCell()
@@ -183,6 +191,7 @@ inline UnitCell::UnitCell(const Vector3 &a_,
   m_cellMatrix.col(1) = b_;
   m_cellMatrix.col(2) = c_;
   computeFractionalMatrix();
+  m_showPrim=false;
 }
 
 inline UnitCell::UnitCell(const Matrix3 &cellMatrix_)
@@ -269,6 +278,16 @@ inline void UnitCell::setCellMatrix(const Matrix3 &m)
 {
   m_cellMatrix = m;
   computeFractionalMatrix();
+}
+
+inline const Matrix3 &UnitCell::primitiveCell() const
+{
+  return m_primitiveCell;
+}
+
+inline void UnitCell::setPrimitiveCell(const Matrix3 &m)
+{
+  m_primitiveCell = m;
 }
 
 inline const Matrix3 &UnitCell::fractionalMatrix() const

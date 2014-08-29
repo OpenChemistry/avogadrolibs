@@ -70,6 +70,7 @@ Real UnitCell::signedAngleRadians(const Vector3 &v1, const Vector3 &v2,
   return signDet > 0.f ? angle : -angle;
 }
 
+//borrowed from openbabel
 void UnitCell::AddTransform(const std::string &s)
 {
   Matrix3 m;

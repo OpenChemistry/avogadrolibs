@@ -60,9 +60,23 @@ void CrystalScene::process(const Molecule &molecule, GroupNode &node)
 
     float width = 2.0;
 
-    Vector3f a = cell->aVector().cast<float>();
-    Vector3f b = cell->bVector().cast<float>();
-    Vector3f c = cell->cVector().cast<float>();
+    Vector3f a;
+    Vector3f b;
+    Vector3f c;
+    /*if(cell->showPrim())
+    {
+      Matrix3 primCell = cell->primitiveCell();
+      a = primCell.col(0).cast<float>();
+      b = primCell.col(1).cast<float>();
+      c = primCell.col(2).cast<float>();
+    }
+    else
+    {*/
+      a = cell->aVector().cast<float>();
+      b = cell->bVector().cast<float>();
+      c = cell->cVector().cast<float>();
+    //}
+
 
     Vector3f vertex(Vector3f::Zero());
 

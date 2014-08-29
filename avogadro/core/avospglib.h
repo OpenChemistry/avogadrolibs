@@ -25,6 +25,7 @@
 
 #define AVOSPGLIB_TOL 0.1
 
+
 namespace Avogadro {
 namespace Core {
   class UnitCell;
@@ -42,9 +43,6 @@ class AVOGADROCORE_EXPORT AvoSpglib
   {
 
     public:
-      explicit AvoSpglib(Molecule *mol = 0);
-      ~AvoSpglib();
-
       /**
        * Return the spacegroup number of the crystal described by the
        * arguments.
@@ -53,21 +51,24 @@ class AVOGADROCORE_EXPORT AvoSpglib
        *
        * @return Spacegroup number if found, 0 otherwise.
        */
-      unsigned int getSpacegroup(const double cartTol = AVOSPGLIB_TOL);
-      bool fillUnitCell(const double cartTol = AVOSPGLIB_TOL);
-      void setRotations(const int hallNumber);
-      //unsigned int reduceToPrimitive(Array<Vector3> pos, Array<Vector3> nums,const double cartTol = AVOSPGLIB_TOL);
+      static unsigned int getSpacegroup(Molecule &molecule, const double cartTol = AVOSPGLIB_TOL);
+
+      //grab rotations and translations from spglib
+      static void setRotations(Molecule &molecule, const int hallNumber);
+
+      //return primitve unit cell and positions
+      static unsigned int reduceToPrimitive(Molecule &molecule, Matrix3 &primCell, Array<Vector3> &pos, Array<unsigned char> &nums,const double cartTol = AVOSPGLIB_TOL);
 
     private:
-      Molecule *m_molecule;
-      UnitCell *m_unitcell;
+      AvoSpglib();  //not implemented
+      ~AvoSpglib(); //not implemented
 
-      //items that are given to Spglib
-      Array<Vector3> fcoords;
-      Array<unsigned char> atomicNums;
-      Matrix3 cellMatrix;
-
-      Array<Vector3> Transform();
+      //populate types for use with spglib
+      //should lattice, positions and types be static members?
+      static void prepareMolecule(Molecule &molecule,
+                           double lattice[3][3],
+                           double positions[][3],
+                           int    types[]);
 
 
   };

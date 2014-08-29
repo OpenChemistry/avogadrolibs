@@ -142,10 +142,27 @@ public:
   static bool setFractionalCoordinates(Molecule &molecule,
                                        const Array<Vector3> &coords);
 
-  static bool fillUnitCell(Molecule &molecule);
-  //static bool primitiveReduce(Molecule &molecule);
+  /**
+   * perceive space group
+   * @return
+   */
   static bool getSpacegroup(Molecule &molecule);
+
+  /**
+   * Set the rotation matrices and translation vectors according the
+   * Hall index in Avospg
+   * @return
+   */
   static void setRotations(Molecule &molecule,const int hallNumber);
+
+  /**
+   * Fill the unit cell according to the rotation matrices and translation vectors
+   * defined by the space group.
+   * @return
+   */
+  static bool fillUnitCell(Molecule &molecule);
+
+  static bool primitiveReduce(Molecule &molecule);
   static void printFractional(Molecule &molecule);
 
 

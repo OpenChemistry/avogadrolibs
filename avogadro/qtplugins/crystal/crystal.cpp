@@ -49,7 +49,8 @@ Crystal::Crystal(QObject *parent_) :
   m_toggleUnitCellAction(new QAction(this)),
   m_wrapAtomsToCellAction(new QAction(this)),
   m_fillUnitCell(new QAction(this)),
-  m_perceiveSpaceGroup(new QAction(this))
+  m_perceiveSpaceGroup(new QAction(this)),
+  m_primitiveReduce(new QAction(this))
 {
   // this will be changed when the molecule is set:
   m_toggleUnitCellAction->setText(tr("Toggle Unit Cell"));
@@ -94,10 +95,10 @@ Crystal::Crystal(QObject *parent_) :
   m_actions.push_back(m_perceiveSpaceGroup);
   m_perceiveSpaceGroup->setProperty("menu priority", -380);
 
-  //m_primitiveReduce->setText(tr("Reduce to primitive lattice"));
-  //connect(m_primitiveReduce, SIGNAL(triggered()), SLOT(primitiveReduce()));
-  //m_actions.push_back(m_primitiveReduce);
-  //m_primitiveReduce->setProperty("menu priority", -390);
+  m_primitiveReduce->setText(tr("Reduce to primitive lattice"));
+  connect(m_primitiveReduce, SIGNAL(triggered()), SLOT(primitiveReduce()));
+  m_actions.push_back(m_primitiveReduce);
+  m_primitiveReduce->setProperty("menu priority", -390);
 
   updateActions();
 }
@@ -200,6 +201,14 @@ void Crystal::fillUnitCell()
     return;
   }*/
 
+
+}
+
+void Crystal::primitiveReduce()
+{
+  CrystalTools::primitiveReduce(*m_molecule);
+  m_molecule->emitChanged(Molecule::Modified
+                          | Molecule::Atoms | Molecule::UnitCell);
 
 }
 

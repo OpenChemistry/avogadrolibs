@@ -54,7 +54,7 @@ private slots:
   void wrapAtomsToCell();
   void fillUnitCell();
   void perceiveSpaceGroup();
-  //void primitiveReduce();
+  void primitiveReduce();
 
 private:
   QList<QAction *> m_actions;
@@ -69,7 +69,7 @@ private:
   QAction *m_wrapAtomsToCellAction;
   QAction *m_fillUnitCell;
   QAction *m_perceiveSpaceGroup;
-  //QAction *m_primitiveReduce;
+  QAction *m_primitiveReduce;
 };
 
 inline QString Crystal::description() const

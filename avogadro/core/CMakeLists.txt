@@ -39,7 +39,6 @@ set(HEADERS
   ringperceiver.h
   slaterset.h
   slatersettools.h
-  symmetrytools.h
   symbolatomtyper.h
   types.h
   unitcell.h
@@ -69,7 +68,6 @@ set(SOURCES
   ringperceiver.cpp
   slaterset.cpp
   slatersettools.cpp
-  symmetrytools.cpp
   symbolatomtyper.cpp
   unitcell.cpp
   variantmap.cpp

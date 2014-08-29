@@ -94,11 +94,14 @@ int main(int argc, char *argv[])
   }
 
 
-  CrystalTools::setRotations(mol,525);
+  //CrystalTools::setRotations(mol,525);
+  CrystalTools::printFractional(mol);
 
-  CrystalTools::fillUnitCell(mol);
-  if(CrystalTools::getSpacegroup(mol))
+  if(CrystalTools::fillUnitCell(mol))
     CrystalTools::printFractional(mol);
+
+  if(CrystalTools::getSpacegroup(mol))
+    return 0;
 
 
 
