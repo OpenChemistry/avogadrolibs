@@ -25,10 +25,13 @@
 
 #include <avogadro/qtgui/molecule.h>
 
+#include <QtWidgets/QInputDialog>
+
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMessageBox>
 
 #include <QtCore/QStringList>
+#include <QtCore/QDebug>
 
 using Avogadro::Core::CrystalTools;
 using Avogadro::Core::AvoSpglib;
@@ -51,7 +54,9 @@ Crystal::Crystal(QObject *parent_) :
   m_fillUnitCell(new QAction(this)),
   m_perceiveSpaceGroup(new QAction(this)),
   m_primitiveReduce(new QAction(this)),
-  m_symmetrizeCell(new QAction(this))
+  m_asymmetricReduce(new QAction(this)),
+  m_symmetrizeCell(new QAction(this)),
+  m_setSpaceGroup(new QAction(this))
 {
   // this will be changed when the molecule is set:
   m_toggleUnitCellAction->setText(tr("Toggle Unit Cell"));
@@ -86,7 +91,12 @@ Crystal::Crystal(QObject *parent_) :
   m_actions.push_back(m_niggliReduceAction);
   m_niggliReduceAction->setProperty("menu priority", -350);
 
-  m_fillUnitCell->setText(tr("&Fill Unit Cell"));
+  m_setSpaceGroup->setText(tr("&Set Space Group ..."));
+  connect(m_setSpaceGroup, SIGNAL(triggered()), SLOT(setSpaceGroup()));
+  m_actions.push_back(m_setSpaceGroup);
+  m_setSpaceGroup->setProperty("menu priority", -360);
+
+  m_fillUnitCell->setText(tr("Fill Unit Cell"));
   connect(m_fillUnitCell, SIGNAL(triggered()), SLOT(fillUnitCell()));
   m_actions.push_back(m_fillUnitCell);
   m_fillUnitCell->setProperty("menu priority", -370);
@@ -96,10 +106,15 @@ Crystal::Crystal(QObject *parent_) :
   m_actions.push_back(m_perceiveSpaceGroup);
   m_perceiveSpaceGroup->setProperty("menu priority", -380);
 
-  m_primitiveReduce->setText(tr("Reduce to primitive lattice"));
+  m_primitiveReduce->setText(tr("&Reduce to primitive lattice"));
   connect(m_primitiveReduce, SIGNAL(triggered()), SLOT(primitiveReduce()));
   m_actions.push_back(m_primitiveReduce);
   m_primitiveReduce->setProperty("menu priority", -390);
+
+  m_asymmetricReduce->setText(tr("&Reduce to asymmetric cell"));
+  connect(m_asymmetricReduce, SIGNAL(triggered()), SLOT(asymmetricReduce()));
+  m_actions.push_back(m_asymmetricReduce);
+  m_asymmetricReduce->setProperty("menu priority", -390);
 
   m_symmetrizeCell->setText(tr("Symmetrize Crystal"));
   connect(m_symmetrizeCell, SIGNAL(triggered()), SLOT(symmetrizeCell()));
@@ -183,6 +198,34 @@ void Crystal::updateActions()
   }
 }
 
+void Crystal::setSpaceGroup()
+{
+  int currentHallID = m_molecule->unitCell()->getHallID();
+  QStringList spacegroups;
+  for (unsigned int i = 1; i <= 530; ++i) {
+    spacegroups << QString("%1: %2")
+      .arg(i)
+      .arg(tr("TBD"));
+  }
+  bool ok;
+  QString selection =
+    QInputDialog::getItem(qobject_cast<QWidget*>(parent()),
+        tr("Crystallography"),
+        tr("Set Spacegroup:"),
+        spacegroups,
+        currentHallID-1,
+        false,
+        &ok);
+
+  if(!ok)
+    return;
+
+  unsigned int index = spacegroups.indexOf(selection)+1;
+
+  CrystalTools::setRotations(*m_molecule,index);
+
+}
+
 void Crystal::editUnitCell()
 {
   if (!m_unitCellDialog) {
@@ -208,6 +251,13 @@ void Crystal::fillUnitCell()
   }*/
 
 
+}
+
+void Crystal::asymmetricReduce()
+{
+  CrystalTools::asymmetricReduce(*m_molecule);
+  m_molecule->emitChanged(Molecule::Modified
+                          | Molecule::Atoms | Molecule::UnitCell);
 }
 
 void Crystal::primitiveReduce()

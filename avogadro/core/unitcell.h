@@ -83,6 +83,8 @@ public:
   void setSpaceGroupHall(std::string hallSymbol, int hallID)
     {m_hallSymbol = hallSymbol;m_hallID = hallID;}
 
+  int getHallID() { return m_hallID;}
+
   std::string getSpaceGroup() const { return m_spaceGroup;}
   std::string getHallSymbol() const { return m_hallSymbol;}
   int getSpaceGroupID() { return m_spaceGroupID;}

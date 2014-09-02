@@ -55,7 +55,9 @@ private slots:
   void fillUnitCell();
   void perceiveSpaceGroup();
   void primitiveReduce();
+  void asymmetricReduce();
   void symmetrizeCell();
+  void setSpaceGroup();
 
 private:
   QList<QAction *> m_actions;
@@ -71,7 +73,9 @@ private:
   QAction *m_fillUnitCell;
   QAction *m_perceiveSpaceGroup;
   QAction *m_primitiveReduce;
+  QAction *m_asymmetricReduce;
   QAction *m_symmetrizeCell;
+  QAction *m_setSpaceGroup;
 };
 
 inline QString Crystal::description() const

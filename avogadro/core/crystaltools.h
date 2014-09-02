@@ -163,6 +163,7 @@ public:
   static bool fillUnitCell(Molecule &molecule);
 
   static bool primitiveReduce(Molecule &molecule);
+  static bool asymmetricReduce(Molecule &molecule);
   static bool symmetrizeCell(Molecule &molecule);
   static void printFractional(Molecule &molecule);
 

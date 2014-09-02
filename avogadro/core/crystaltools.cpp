@@ -721,8 +721,6 @@ bool CrystalTools::setFractionalCoordinates(Molecule &molecule,
 }
 bool CrystalTools::getSpacegroup(Molecule &molecule)
 {
-  //AvoSpglib *m_spg = new AvoSpglib(&molecule);
-  //int spaceGroup=m_spg->getSpacegroup();
   int spaceGroup = AvoSpglib::getSpacegroup(molecule);
 
   if(spaceGroup!=0)
@@ -740,8 +738,6 @@ bool CrystalTools::getSpacegroup(Molecule &molecule)
 
 void CrystalTools::setRotations(Molecule &molecule, const int hallNumber)
 {
-  //AvoSpglib *m_spg = new AvoSpglib(&molecule);
-  //m_spg->setRotations(hallNumber);
   AvoSpglib::setRotations(molecule,hallNumber);
 }
 
@@ -887,6 +883,96 @@ bool CrystalTools::fillUnitCell(Molecule &molecule)
   }
 
   molecule.setAtomPositions3d(cOut);
+
+  return true;
+
+}
+
+
+//think of this as the reverse of fillUnitCell
+bool CrystalTools::asymmetricReduce(Molecule &molecule)
+{
+  if(!molecule.unitCell())
+  {
+    cout << "no unit cell?" << endl;
+    return false;
+  }
+
+  int spaceGroup = AvoSpglib::getSpacegroup(molecule);
+
+  if(spaceGroup==0)
+  {
+    cout << "no space group?" << endl;
+    return false;
+  }
+
+  //set the rotations and translations
+  setRotations(molecule,spaceGroup);
+
+  UnitCell &m_unitcell = *molecule.unitCell();
+  Array<Matrix3> rotations = m_unitcell.getRotations();
+  Array<Vector3> shifts    = m_unitcell.getTranslations();
+
+  if(!rotations.size() || !shifts.size())
+  {
+    cout << "Cannot reduce unit cell" << endl;
+    return false;
+  }
+
+  //store the full Array of fractional coordinates
+  Array<Vector3>       fFull;
+  Array<unsigned char> nFull;
+  size_t numFullAtoms=molecule.atomCount();
+  for (size_t i = 0; i < numFullAtoms; ++i)
+  {
+    Atom atom = molecule.atom(i);
+    Vector3 fcoords=m_unitcell.toFractional(atom.position3d());
+    fFull.push_back(fcoords);
+    unsigned char thisAtom = atom.atomicNumber();
+    nFull.push_back(thisAtom);
+  }
+
+  static double prec=2e-5;
+  for (size_t i = 0; i < numFullAtoms; ++i)
+  {
+    Vector3 fcoords=fFull.at(i);
+
+    //apply each transformation to this atom
+    for (size_t t=0;t<rotations.size();++t) {
+      Vector3 tmp = rotations.at(t)*fcoords
+        + shifts.at(t);
+      if (tmp.x() < 0.)
+        tmp.x() += 1.;
+      if (tmp.x() >= 1.)
+        tmp.x() -= 1.;
+      if (tmp.y() < 0.)
+        tmp.y() += 1.;
+      if (tmp.y() >= 1.)
+        tmp.y() -= 1.;
+      if (tmp.z() < 0.)
+        tmp.z() += 1.;
+      if (tmp.z() >= 1.)
+        tmp.z() -= 1.;
+
+      //Check for duplicates in the actual molecule
+      //Here we assume that Atom 0 is the same in both
+      //arrays. (I don't see how that can be false.)
+      bool duplicate = false;
+      size_t numAtomsUpdated = molecule.atomCount();
+
+      for (size_t j = i+1;j<numAtomsUpdated;++j)
+      {
+        Vector3 jPos = fFull.at(j);
+        if (fabs(tmp.x() - jPos.x()) < prec &&
+            fabs(tmp.y() - jPos.y()) < prec &&
+            fabs(tmp.z() - jPos.z()) < prec)
+        {
+          molecule.removeAtom(j);
+        }
+      }
+    }
+  }
+
 
   return true;
 
