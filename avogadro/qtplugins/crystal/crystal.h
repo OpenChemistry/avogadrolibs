@@ -22,6 +22,7 @@
 namespace Avogadro {
 namespace QtPlugins {
 class UnitCellDialog;
+class SpaceGroupDialog;
 
 /**
  * @brief Tools for crystal-specific editing/analysis.
@@ -63,6 +64,7 @@ private:
   QList<QAction *> m_actions;
   QtGui::Molecule *m_molecule;
   UnitCellDialog *m_unitCellDialog;
+  SpaceGroupDialog *m_spaceGroupDialog;
 
   QAction *m_editUnitCellAction;
   QAction *m_niggliReduceAction;

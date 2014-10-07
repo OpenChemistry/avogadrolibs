@@ -26,6 +26,8 @@
 #include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
 #include <avogadro/rendering/glrenderer.h>
+#include <avogadro/core/spacegroups.h>
+
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -112,19 +114,25 @@ void CrystalScene::process(const Molecule &molecule, GroupNode &node)
     strip[1] -= a;
     lines->addLineStrip(strip, width);
 
+    //space group
+    int hallNumber = cell->getSpaceGroup();
+    if(hallNumber == 0)
+      return;
+
     QString overlayText;
     QString hallLabel = tr("Hall Symbol:");
     QString intLabel  = tr("Space Group:");
     int labelWidth = -std::max(hallLabel.size(),intLabel.size());
 
-    std::string intSymb = cell->getSpaceGroup();
+
+    std::string intSymb = SpaceGroups::getInternational(hallNumber);
     if(intSymb.size())
     {
       overlayText += QString("%1 %2\n")
         .arg(tr("SpaceGroup Symbol:"),intLabel.size())
         .arg(tr(intSymb.c_str()),intSymb.size());
     }
-    std::string hallSymb = cell->getHallSymbol();
+    std::string hallSymb = SpaceGroups::getHallSymbol(hallNumber);
     if(hallSymb.size())
     {
       overlayText += QString("%1 %2\n")
@@ -143,7 +151,6 @@ void CrystalScene::process(const Molecule &molecule, GroupNode &node)
     label->setRenderPass(Rendering::Overlay2DPass);
     label->setAnchor(Vector2i(10,500));
 
-    //don't know what to do next
     geometry->addDrawable(label);
   }
 }

@@ -19,6 +19,7 @@
 #include "unitcell.h"
 #include "molecule.h"
 #include <avogadro/core/avospglib.h>
+#include <avogadro/core/spacegroups.h>
 
 #include <algorithm>
 #include <iostream>
@@ -26,6 +27,7 @@ using std::cout;
 using std::endl;
 using std::string;
 using Avogadro::Core::AvoSpglib;
+using Avogadro::Core::SpaceGroups;
 
 namespace Avogadro {
 namespace Core {
@@ -725,20 +727,32 @@ bool CrystalTools::getSpacegroup(Molecule &molecule)
 
   if(spaceGroup!=0)
   {
-    cout << "Space group is:" << endl;
+    /*cout << "Space group is:" << endl;
     cout << "  " << molecule.unitCell()->getSpaceGroup()
       << "(" << molecule.unitCell()->getSpaceGroupID() << ")" << endl;
-    cout << "  " << molecule.unitCell()->getHallSymbol() << endl;
+    cout << "  " << molecule.unitCell()->getHallSymbol() << endl;*/
+    //std::string str = SpaceGroups::getInternational(spaceGroup);
+    //cout << str << endl;
     return true;
   }
+
 
   else
     return false;
 }
 
-void CrystalTools::setRotations(Molecule &molecule, const int hallNumber)
+bool CrystalTools::setSpaceGroup(Molecule &molecule, const int hallNumber)
 {
+  if (!molecule.unitCell())
+    return false;
+
+  molecule.unitCell()->setSpaceGroup(hallNumber);
+
   AvoSpglib::setRotations(molecule,hallNumber);
+
+  fillUnitCell(molecule);
+
+  return true;
 }
 
 void CrystalTools::printFractional(Molecule &molecule)
@@ -907,7 +921,7 @@ bool CrystalTools::asymmetricReduce(Molecule &molecule)
   }
 
   //set the rotations and translations
-  setRotations(molecule,spaceGroup);
+  AvoSpglib::setRotations(molecule,spaceGroup);
 
   UnitCell &m_unitcell = *molecule.unitCell();
   Array<Matrix3> rotations = m_unitcell.getRotations();

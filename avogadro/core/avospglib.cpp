@@ -113,12 +113,10 @@ namespace Core {
 
     //set data to the unitcell
     UnitCell &unitcell = *molecule.unitCell();
-    unitcell.setSpaceGroup(symb);
-    unitcell.setSpaceGroupID(ptr->spacegroup_number);
-    unitcell.setSpaceGroupHall(hall,ptr->hall_number);
-
-    cout << endl;
-
+    //unitcell.setSpaceGroup(symb);
+    //unitcell.setSpaceGroupID(ptr->spacegroup_number);
+    //unitcell.setSpaceGroupHall(hall,ptr->hall_number);
+    unitcell.setSpaceGroup(ptr->hall_number);
 
     return ptr->hall_number;
   }

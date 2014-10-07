@@ -77,17 +77,19 @@ public:
    * Set the space group of the cell
    *  @spg space group
    */
-  void setSpaceGroup(std::string spaceGroup) { m_spaceGroup = spaceGroup;}
-  void setSpaceGroupID(int spaceGroupID) {m_spaceGroupID = spaceGroupID;}
+  //void setSpaceGroup(std::string spaceGroup) { m_spaceGroup = spaceGroup;}
+  //void setSpaceGroupID(int spaceGroupID) {m_spaceGroupID = spaceGroupID;}
 
-  void setSpaceGroupHall(std::string hallSymbol, int hallID)
-    {m_hallSymbol = hallSymbol;m_hallID = hallID;}
+  //void setSpaceGroupHall(std::string hallSymbol, int hallID)
+    //{m_hallSymbol = hallSymbol;m_hallID = hallID;}
 
-  int getHallID() { return m_hallID;}
+  //int getHallID() { return m_hallID;}
 
-  std::string getSpaceGroup() const { return m_spaceGroup;}
-  std::string getHallSymbol() const { return m_hallSymbol;}
-  int getSpaceGroupID() { return m_spaceGroupID;}
+  //std::string getSpaceGroup() const { return m_spaceGroup;}
+  //std::string getHallSymbol() const { return m_hallSymbol;}
+  //int getSpaceGroupID() { return m_spaceGroupID;}
+  void setSpaceGroup(int hallNumber) {m_hallID = hallNumber;}
+  int  getSpaceGroup() const { return m_hallID;}
 
   /**
    * The volume of the unit cell in cubic Angstroms.
@@ -165,9 +167,9 @@ private:
   Matrix3 m_cellMatrix;
   Matrix3 m_fractionalMatrix;
   Matrix3 m_primitiveCell;
-  std::string m_spaceGroup;
-  std::string m_hallSymbol;
-  int m_spaceGroupID;
+  //std::string m_spaceGroup;
+  //std::string m_hallSymbol;
+  //int m_spaceGroupID;
   int m_hallID;
 
   bool m_showPrim;
@@ -177,6 +179,7 @@ inline UnitCell::UnitCell()
   : m_cellMatrix(Matrix3::Identity()),
     m_fractionalMatrix(Matrix3::Identity())
 {
+  m_hallID=0;
 }
 
 inline UnitCell::UnitCell(Real a_, Real b_, Real c_,

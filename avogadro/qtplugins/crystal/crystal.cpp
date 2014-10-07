@@ -17,11 +17,13 @@
 #include "crystal.h"
 
 #include "unitcelldialog.h"
+#include "spacegroupdialog.h"
 #include "volumescalingdialog.h"
 
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/avospglib.h>
+#include <avogadro/core/spacegroups.h>
 
 #include <avogadro/qtgui/molecule.h>
 
@@ -45,6 +47,7 @@ Crystal::Crystal(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
   m_molecule(NULL),
   m_unitCellDialog(NULL),
+  m_spaceGroupDialog(NULL),
   m_editUnitCellAction(new QAction(this)),
   m_niggliReduceAction(new QAction(this)),
   m_scaleVolumeAction(new QAction(this)),
@@ -200,7 +203,18 @@ void Crystal::updateActions()
 
 void Crystal::setSpaceGroup()
 {
-  int currentHallID = m_molecule->unitCell()->getHallID();
+  int currentHallID = m_molecule->unitCell()->getSpaceGroup();
+
+
+  if (!m_spaceGroupDialog) {
+    m_spaceGroupDialog = new SpaceGroupDialog(qobject_cast<QWidget*>(parent()));
+    m_spaceGroupDialog->setMolecule(m_molecule);
+  }
+
+  m_spaceGroupDialog->show();
+
+
+  /*
   QStringList spacegroups;
   for (unsigned int i = 1; i <= 530; ++i) {
     spacegroups << QString("%1: %2")
@@ -219,10 +233,16 @@ void Crystal::setSpaceGroup()
 
   if(!ok)
     return;
+  */
 
+  /*
   unsigned int index = spacegroups.indexOf(selection)+1;
-
-  CrystalTools::setRotations(*m_molecule,index);
+  SpaceGroups::describeSpaceGroup(index);
+  CrystalTools::setSpaceGroup(*m_molecule,index);
+  CrystalTools::fillUnitCell(*m_molecule);
+  m_molecule->emitChanged(Molecule::Modified
+                          | Molecule::Atoms | Molecule::UnitCell);
+  */
 
 }
 

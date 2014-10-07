@@ -153,7 +153,7 @@ public:
    * Hall index in Avospg
    * @return
    */
-  static void setRotations(Molecule &molecule,const int hallNumber);
+  static bool setSpaceGroup(Molecule &molecule, const int hallNumber);
 
   /**
    * Fill the unit cell according to the rotation matrices and translation vectors
