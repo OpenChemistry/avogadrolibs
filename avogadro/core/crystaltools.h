@@ -162,6 +162,15 @@ public:
    */
   static bool fillUnitCell(Molecule &molecule);
 
+  /**
+   * Replicate the cell along the a, b and c vectors
+   * @return
+   */
+  static bool buildSuperCell(Molecule &molecule, const unsigned int v1,
+                                  const unsigned int v2,
+                                  const unsigned int v3);
+  static bool buildSlab(Molecule &molecule, std::vector<int> inputIndices, Vector3 cutoff);
+
   static bool primitiveReduce(Molecule &molecule);
   static bool asymmetricReduce(Molecule &molecule);
   static bool symmetrizeCell(Molecule &molecule);
@@ -171,6 +180,8 @@ public:
 private:
   CrystalTools(); // not implemented
   ~CrystalTools(); // not implemented
+  static int gcdSmall(const int aOriginal, const int bOriginal);
+  static bool vectorNormIsLessThan(Vector3 a, Vector3 b);
 };
 
 } // namespace Core
