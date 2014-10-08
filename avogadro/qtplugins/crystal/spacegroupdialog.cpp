@@ -29,6 +29,7 @@
 #include <QtWidgets/QPlainTextEdit>
 
 #include <QtCore/QRegExp>
+#include <QList>
 
 using Avogadro::Core::UnitCell;
 using Avogadro::Core::SpaceGroups;
@@ -46,6 +47,10 @@ SpaceGroupDialog::SpaceGroupDialog(QWidget *p) :
 
   connect(m_ui->apply, SIGNAL(clicked()), SLOT(apply()));
   connect(m_ui->revert, SIGNAL(clicked()), SLOT(revert()));
+
+  QList<int> widths;
+  widths << 128 << 20 << 128 << 50;
+  m_ui->columnView->setColumnWidths(widths);
 
   QStandardItemModel *mySpg = setSpaceGroups(this);
   m_ui->columnView->setModel(mySpg);
@@ -147,7 +152,7 @@ QStandardItemModel* SpaceGroupDialog::setSpaceGroups(QObject* parent){
 
   std::vector<SpaceGroups::crystalSystem> crystals = SpaceGroups::getCrystalArray();
 
-  QStandardItemModel* model = new QStandardItemModel(8, 1, parent);
+  QStandardItemModel* model = new QStandardItemModel(parent);
   for (int i=0;i<crystals.size();i++)
   {
     SpaceGroups::crystalSystem iCrystal = crystals.at(i);
@@ -166,6 +171,16 @@ QStandardItemModel* SpaceGroupDialog::setSpaceGroups(QObject* parent){
         QString intString = QString::fromStdString(intSymbol.at(k));
         QStandardItem* intNode = new QStandardItem(intString);
         bravaisNode->appendRow(intNode);
+        std::vector<std::string> settings = SpaceGroups::getSettingArray(iCrystal,bravais.at(j),intSymbol.at(k));
+        for (int l=0;l<settings.size();l++)
+        {
+          if(settings.at(l) != "     ")
+          {
+            QString settingString = QString::fromStdString(settings.at(l));
+            QStandardItem* settingNode = new QStandardItem(settingString);
+            intNode->appendRow(settingNode);
+          }
+        }
       }
     }
 
