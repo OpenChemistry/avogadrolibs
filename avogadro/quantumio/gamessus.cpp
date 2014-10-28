@@ -356,13 +356,13 @@ void GAMESSUSOutput::reorderMOs()
           break;
           //L?
         case GaussianSet::D:
-          nPrimGTOs = 7;
+          nPrimGTOs = 6;
           GTOcounter += nPrimGTOs;
           break;
         case GaussianSet::F:
           nPrimGTOs = 10;
           //f functions are the first set to be reordered.
-          //double xxx = m_MOcoeffs.at(MOcounter);
+          //double xxx = m_MOcoeffs.at(GTOcounter);
           yyy = m_MOcoeffs.at(GTOcounter+1);
           zzz = m_MOcoeffs.at(GTOcounter+2);
           xxy = m_MOcoeffs.at(GTOcounter+3);
