@@ -255,7 +255,7 @@ bool Molecule::removeAtom(Index index)
       m_positions3d[index] = m_positions3d.back();
     if (m_hybridizations.size() == m_atomicNumbers.size())
       m_hybridizations[index] = m_hybridizations.back();
-    if (m_formalCharges.size() == m_formalCharges.size())
+    if (m_formalCharges.size() == m_atomicNumbers.size())
       m_formalCharges[index] = m_formalCharges.back();
 
     // Find any bonds to the moved atom and update their index.
