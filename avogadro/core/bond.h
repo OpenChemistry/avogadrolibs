@@ -153,7 +153,7 @@ BondTemplate<Molecule_T> &BondTemplate<Molecule_T>::operator++()
 template <class Molecule_T>
 BondTemplate<Molecule_T> BondTemplate<Molecule_T>::operator++(int)
 {
-  AtomTemplate<MoleculeType> result(m_molecule, m_index++);
+  BondTemplate<MoleculeType> result(m_molecule, m_index++);
   return result;
 }
 
@@ -167,7 +167,7 @@ BondTemplate<Molecule_T> &BondTemplate<Molecule_T>::operator--()
 template <class Molecule_T>
 BondTemplate<Molecule_T> BondTemplate<Molecule_T>::operator--(int)
 {
-  AtomTemplate<MoleculeType> result(m_molecule, m_index--);
+  BondTemplate<MoleculeType> result(m_molecule, m_index--);
   return result;
 }
 

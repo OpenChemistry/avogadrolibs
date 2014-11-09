@@ -23,21 +23,21 @@
 namespace Avogadro {
 namespace Core {
 
-    enum AtomHybridization {
-      PerceivedOctaheadral = -6,
-      PerceivedTrigonalBipyramidal = -5,
-      PerceivedSquarePlanar = -4,
-      PerceivedSP3 = -3,
-      PerceivedSP2 = -2,
-      PerceivedSP = -1,
-      HybridizationUnknown = 0,
-      SP = 1,
-      SP2 = 2,
-      SP3 = 3,
-      SquarePlanar = 4,
-      TrigonalBipyramidal = 5,
-      Octahedral = 6
-    };
+enum AtomHybridization {
+  PerceivedOctaheadral = -6,
+  PerceivedTrigonalBipyramidal = -5,
+  PerceivedSquarePlanar = -4,
+  PerceivedSP3 = -3,
+  PerceivedSP2 = -2,
+  PerceivedSP = -1,
+  HybridizationUnknown = 0,
+  SP = 1,
+  SP2 = 2,
+  SP3 = 3,
+  SquarePlanar = 4,
+  TrigonalBipyramidal = 5,
+  Octahedral = 6
+};
 
 /**
  * @class Atom atom.h <avogadro/core/atom.h>
@@ -284,7 +284,7 @@ template <class Molecule_T>
 template <class Molecule_T>
 void AtomTemplate<Molecule_T>::setFormalCharge(signed char charge)
 {
-  m_molecule->setHybridization(m_index, charge);
+  m_molecule->setFormalCharge(m_index, charge);
 }
 
 template <class Molecule_T>
