@@ -203,6 +203,19 @@ public:
    */
   bool setAtomPosition3d(Index atomId, const Vector3& pos);
 
+  bool setAtomPosition2d(Index, const Vector2&) { return false; }
+  Vector2 atomPosition2d(Index) { return Vector2(0, 0); }
+  const Core::Array<Vector2>& atomPositions2d() const
+  {
+    return m_positions2d;
+  }
+
+  Core::AtomHybridization hybridization(Index) const { return Core::HybridizationUnknown; }
+  bool setHybridization(Index, Core::AtomHybridization) { return false; }
+
+  signed char formalCharge(Index) const { return 0; }
+  bool setFormalCharge(Index, signed char) { return false; }
+
   /**
    * Create a new bond in the molecule.
    * @param atom1 The first atom in the bond.
@@ -415,6 +428,7 @@ protected:
   Core::Array<Index> m_atomUniqueIds;
   Core::Array<Index> m_bondUniqueIds;
   Core::Array<unsigned char> m_atomicNumbers;
+  Core::Array<Vector2> m_positions2d;
   Core::Array<Vector3> m_positions3d;
   Core::Array<std::pair<Index, Index> > m_bondPairs;
   Core::Array<unsigned char> m_bondOrders;

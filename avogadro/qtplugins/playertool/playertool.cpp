@@ -208,7 +208,7 @@ void PlayerTool::recordMovie()
 
   bool bonding = m_dynamicBonding->isChecked();
   int numberLength =
-      static_cast<int>(ceil(log10(m_molecule->coordinate3dCount()) + 1.0));
+      static_cast<int>(ceil(log10(static_cast<float>(m_molecule->coordinate3dCount()) + 1)));
   m_glWidget->resize(800, 600);
   for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
     m_molecule->setCoordinate3d(i);
