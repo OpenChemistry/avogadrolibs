@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>Avogadro::QtPlugins::SlabDialog</class>
+ <widget class="QDialog" name="Avogadro::QtPlugins::SlabDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>447</width>
-    <height>324</height>
+    <width>386</width>
+    <height>308</height>
    </rect>
   </property>
   <property name="windowTitle">

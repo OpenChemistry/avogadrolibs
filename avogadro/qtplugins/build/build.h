@@ -22,6 +22,7 @@
 namespace Avogadro {
 namespace QtPlugins {
   class SuperCellDialog;
+  class SlabDialog;
 
 /**
  * @brief Tools for molecule editing/analysis.
@@ -54,6 +55,7 @@ private:
   QtGui::Molecule *m_molecule;
 
   SuperCellDialog *m_superCellDialog;
+  SlabDialog *m_slabDialog;
 
   QAction *m_buildSuperCellAction;
   QAction *m_buildSlabAction;

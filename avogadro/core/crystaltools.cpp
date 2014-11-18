@@ -1188,10 +1188,10 @@ bool CrystalTools::buildSlab(Molecule &molecule, std::vector<int> inputIndices, 
   yCutoff += 1.0e-6; // add some slop for unit cell boundaries
 
   // Here's the supercell matrix
-  Eigen::Matrix3d surfaceMatrix;
-  surfaceMatrix << m1.x(), m1.y(), 0.0,
-                m2.x(), m2.y(), 0.0,
-                0.0, 0.0, cutoff.z()*8;
+  Matrix3 surfaceMatrix;
+  surfaceMatrix << m1.x(), m2.x(), 0.0,
+                   m1.y(), m2.y(), 0.0,
+                   0.0,    0.0,    cutoff.z()*8;
   // The large z-spacing allows for surface/molecule calculations
 
   // Now rotate, translate, and trim the supercell

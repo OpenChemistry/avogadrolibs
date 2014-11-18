@@ -16,6 +16,7 @@
 
 #include "build.h"
 #include "supercelldialog.h"
+#include "slabdialog.h"
 
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/crystaltools.h>
@@ -43,6 +44,7 @@ Build::Build(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
   m_molecule(NULL),
   m_superCellDialog(NULL),
+  m_slabDialog(NULL),
   m_buildSuperCellAction(new QAction(this)),
   m_buildSlabAction(new QAction(this))
 {
@@ -143,6 +145,12 @@ void Build::buildSlab()
 {
   if(!m_molecule->unitCell())
     return;
+  if (!m_slabDialog) {
+    m_slabDialog = new SlabDialog(qobject_cast<QWidget*>(parent()));
+    m_slabDialog->setMolecule(m_molecule);
+  }
+
+  m_slabDialog->show();
 }
 
 } // namespace QtPlugins
