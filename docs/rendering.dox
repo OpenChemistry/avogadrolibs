@@ -1,0 +1,84 @@
+namespace Avogadro {
+namespace Rendering {
+
+/**
+
+@page Rendering Rendering API
+@brief Overview of the Avogadro 2 rendering API
+
+@section render_modern_opengl Modern OpenGL
+
+Avogadro 2 uses modern OpenGL as the main rendering back-end. Modern OpenGL makes
+use of programmable shaders to replace the fixed rendering pipeline in older
+versions. OpenGL version 2.1 is used since it allows for Avogadro 2 to work on
+older machines while still adhering to modern OpenGL programming practices.
+
+- Modern OpenGL Introduction : http://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Introduction
+
+@section render_overview Rendering Overview
+
+@subsection render_scene_graph Scene Graph
+
+The UML diagram shows most of the classes used rendering for rendering and how
+they interact with each other. The classes in green implement the scene graph,
+a common architecture for high performance rendering applications including
+games. The Scene class contains the root node of the scene graph which is an
+instance of the GroupNode class together with some meta-data about the scene
+(i.e. center and radius). A group node contains 0 or more children and allows
+the scene to be modelled as a forest of nodes.
+
+Operations on the scene graph (e.g. render or determine scene center and radius)
+are performed by visitors. The GLRenderVisitor is used for rendering with OpenGL.
+Similarly, the PovRayVisitor renders the scene using the povray ray-tracing
+software. Finally, the GeometryVisitor visits nodes to determine the center and
+radius without doing any rendering (e.g. to implement "zoom to fit").
+
+@image html scenegraph.png
+@image html visitors.png
+
+@subsection render_render_frame Rendering a Frame
+
+Rendering a single frame (using OpenGL) is initiated by a call to
+GLWidget::paintGL() which simply calls GLRenderer::render(). The later function
+performs the following steps:
+
+- clear the color and depth buffer
+- create a GLRendererVisitor instance
+- render opaque geometry (by calling Node::accept() on root node)
+- render transparent geometry
+- render 3D overlay
+- render 2D overlay
+
+The first 3 rendering passes use the 3D camera while the 2D overlay pass
+uses the overlay camera. When a group node is visited, it visits it's
+children. When a geometry node is visited, all drawables it contains will
+be visited by calling Drawable::accept(). In Drawable::accept(), a call
+is made to the GLRenderVisitor::visit() function matching the derived
+drawable type (e.g. GLRenderVisitor::visit(SphereGeometry&)). Finally,
+a call is made to Drawable::render() to actually render the geometry
+(again on the derived type to be exact).
+
+The GLRenderer also calls GLRenderVisitor::setRenderPass()
+which allows the visitor to only call Drawable::render() if it needs to be
+rendered in the current pass (i.e. a Drawable object specifies it's rendering
+pass).
+
+@subsection render_populate_scene_graph Populating the Scene Graph
+
+Plugins derived from the ScenePlugin class are responsible for populating the
+scene graph. For example, the Van der Waals scene plugin adds a GeometryNode
+to the scene graph and attaches a SphereGeometry drawable to this geometry
+node. The SphereGeometry instance contains all the spheres it needs to render.
+
+- Scene Graph : http://en.wikipedia.org/wiki/Scene_graph
+
+@section render_low_level_opengl Low Level OpenGL Classes
+
+A number of low-level OpenGL classes are provided to make it easier to implement
+derived Drawable::render() functions. These classes are Shader, ShaderProgram,
+BufferObject and Texture2D.
+
+ */
+
+}
+}
