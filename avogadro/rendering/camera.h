@@ -149,6 +149,16 @@ public:
   int height() const { return m_height; }
 
   /**
+   * Set the resolution of the viewport (i.e., from physical to logical pixels)
+   */
+  void setDevicePixelRatio(float scale);
+
+  /**
+   * Get the scale of the viewport pixels. (Better to use native qApp()->devicePixelRatio() instead)
+   */
+  float devicePixelRatio() const { return m_pixelScale; }
+
+  /**
    * Set the model view matrix to the identity. This resets the model view
    * matrix.
    */
@@ -202,6 +212,7 @@ private:
   Eigen::Affine3f m_modelView;
   int m_width;
   int m_height;
+  float m_pixelScale;
   Projection m_projectionType;
   float m_orthographicScale;
 };

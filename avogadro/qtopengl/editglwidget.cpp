@@ -29,6 +29,7 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
+#include <QtWidgets/QApplication>
 
 namespace Avogadro {
 namespace QtOpenGL {
@@ -43,6 +44,8 @@ EditGLWidget::EditGLWidget(QWidget *parent_)
           SIGNAL(pluginStateChanged(Avogadro::QtGui::ScenePlugin*)),
           SLOT(updateScene()));
   m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
+  // set the resolution of the screen for the camera
+  m_renderer.camera().setDevicePixelRatio(qApp->devicePixelRatio());
 }
 
 EditGLWidget::~EditGLWidget()
