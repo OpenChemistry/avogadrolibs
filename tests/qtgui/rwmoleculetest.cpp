@@ -17,12 +17,14 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/qtgui/rwmolecule.h>
+#include <avogadro/qtgui/molecule.h>
 
 #include <algorithm>
 #include <utility>
 
 using Avogadro::Core::Array;
 using Avogadro::QtGui::RWMolecule;
+using Avogadro::QtGui::Molecule;
 using Avogadro::Index;
 using Avogadro::Real;
 using Avogadro::Vector3;
@@ -795,4 +797,42 @@ TEST(RWMoleculeTest, BondType)
   Bond other(&mol, 0);
   EXPECT_EQ(b0, other);
   EXPECT_NE(b1, other);
+}
+
+TEST(RWMoleculeTest, RWMoleculeToMolecule)
+{
+  RWMolecule rwmol;
+  typedef RWMolecule::AtomType Atom;
+  typedef RWMolecule::BondType Bond;
+  Atom a0 = rwmol.addAtom(1);
+  Atom a1 = rwmol.addAtom(6);
+  Atom a2 = rwmol.addAtom(9);
+  Bond b0 = rwmol.addBond(a0, a2);
+  a1.setPosition3d(Vector3(0, 6, 9));
+  b0.setOrder(3);
+
+  Molecule mol(rwmol, 0);
+  EXPECT_EQ(rwmol.atomCount(), mol.atomCount());
+  EXPECT_EQ(rwmol.bondCount(), mol.bondCount());
+  EXPECT_EQ(rwmol.atom(2).atomicNumber(), mol.atom(2).atomicNumber());
+  EXPECT_EQ(rwmol.bond(0).order(), mol.bond(0).order());
+}
+
+TEST(RWMoleculeTest, MoleculeToRWMolecule)
+{
+  Molecule mol;
+  typedef Molecule::AtomType Atom;
+  typedef Molecule::BondType Bond;
+  Atom a0 = mol.addAtom(1);
+  Atom a1 = mol.addAtom(6);
+  Atom a2 = mol.addAtom(9);
+  Bond b0 = mol.addBond(a0, a2);
+  a1.setPosition3d(Vector3(0, 6, 9));
+  b0.setOrder(3);
+
+  RWMolecule rwmol(mol, 0);
+  EXPECT_EQ(rwmol.atomCount(), mol.atomCount());
+  EXPECT_EQ(rwmol.bondCount(), mol.bondCount());
+  EXPECT_EQ(rwmol.atom(2).atomicNumber(), mol.atom(2).atomicNumber());
+  EXPECT_EQ(rwmol.bond(0).order(), mol.bond(0).order());
 }
