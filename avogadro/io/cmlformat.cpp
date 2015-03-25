@@ -34,16 +34,16 @@
 #include <map>
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846
+# define M_PI 3.14159265358979323846
 #endif
-
-namespace {
-const Avogadro::Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
-const Avogadro::Real RAD_TO_DEG = static_cast<Avogadro::Real>(180.0 / M_PI);
-}
 
 namespace Avogadro {
 namespace Io {
+
+namespace {
+const Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
+const Real RAD_TO_DEG = static_cast<Avogadro::Real>(180.0 / M_PI);
+}
 
 using std::string;
 
