@@ -33,9 +33,11 @@
 #if __cplusplus >= 201103L
 # define AVO_OVERRIDE override
 # define AVO_FINAL final
+# define AVO_NULLPTR nullptr
 #else
 # define AVO_OVERRIDE
 # define AVO_FINAL
+# define AVO_NULLPTR NULL
 #endif
 
 /**
@@ -64,15 +66,18 @@ const Index MaxIndex = std::numeric_limits<Index>::max();
 /** Used to represent an invalid atomic number. */
 const unsigned char InvalidElement = 255;
 
-/** Minimum value for atomic numbers that represent custom, non-elemental
+/**
+ * Minimum value for atomic numbers that represent custom, non-elemental
  *  particles. */
 const unsigned char CustomElementMin = 128;
 
-/** Maximum value for atomic numbers that represent custom, non-elemental
+/**
+ * Maximum value for atomic numbers that represent custom, non-elemental
  *  particles. */
 const unsigned char CustomElementMax = 254;
 
-/** Count of atomic number values that are used to represent custom,
+/**
+ * Count of atomic number values that are used to represent custom,
  * non-elemental particles. */
 const unsigned char CustomElementCount =
     CustomElementMax - CustomElementMin + 1;

@@ -18,21 +18,30 @@
 
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 
 #include <jsoncpp.cpp>
 
-using Avogadro::Core::Molecule;
-
 namespace Avogadro {
 namespace Io {
 
 using std::string;
+using std::vector;
 
-using Core::Elements;
+using Json::Value;
+using Json::Reader;
+using Json::StyledStreamWriter;
+
+using Core::Array;
 using Core::Atom;
+using Core::BasisSet;
 using Core::Bond;
+using Core::CrystalTools;
+using Core::Elements;
+using Core::GaussianSet;
+using Core::Molecule;
 using Core::Variant;
 
 CjsonFormat::CjsonFormat()
@@ -43,10 +52,10 @@ CjsonFormat::~CjsonFormat()
 {
 }
 
-bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
+bool CjsonFormat::read(std::istream &file, Molecule &molecule)
 {
-  Json::Value root;
-  Json::Reader reader;
+  Value root;
+  Reader reader;
   bool ok = reader.parse(file, root);
   if (!ok) {
     appendError("Error parsing JSON: " + reader.getFormatedErrorMessages());
@@ -58,7 +67,7 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
     return false;
   }
 
-  Json::Value value = root["chemical json"];
+  Value value = root["chemical json"];
   if (value.empty()) {
     appendError("Error: no \"chemical json\" key found.");
     return false;
@@ -95,7 +104,7 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
   }
 
   // Read in the atomic data.
-  Json::Value atoms = root["atoms"];
+  Value atoms = root["atoms"];
   if (atoms.empty()) {
     appendError("Error: no \"atom\" key found");
     return false;
@@ -132,7 +141,7 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
     return false;
   }
 
-  Json::Value coords = atoms["coords"];
+  Value coords = atoms["coords"];
   if (!coords.empty()) {
     value = coords["3d"];
     if (value.isArray()) {
@@ -173,7 +182,7 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
                     "coordinates.");
         return false;
       }
-      Core::Array<Vector3> fcoords;
+      Array<Vector3> fcoords;
       fcoords.reserve(atomCount);
       for (Index i = 0; i < atomCount; ++i) {
         fcoords.push_back(
@@ -181,12 +190,12 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
                       static_cast<Real>(value.get(i * 3 + 1, 0).asDouble()),
                       static_cast<Real>(value.get(i * 3 + 2, 0).asDouble())));
       }
-      Core::CrystalTools::setFractionalCoordinates(molecule, fcoords);
+      CrystalTools::setFractionalCoordinates(molecule, fcoords);
     }
   }
 
   // Now for the bonding data.
-  Json::Value bonds = root["bonds"];
+  Value bonds = root["bonds"];
   if (!bonds.empty()) {
     value = bonds["connections"];
     if (value.empty()) {
@@ -223,10 +232,10 @@ bool CjsonFormat::read(std::istream &file, Core::Molecule &molecule)
   return true;
 }
 
-bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
+bool CjsonFormat::write(std::ostream &file, const Molecule &molecule)
 {
-  Json::StyledStreamWriter writer("  ");
-  Json::Value root;
+  StyledStreamWriter writer("  ");
+  Value root;
 
   root["chemical json"] = 0;
 
@@ -236,7 +245,7 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
     root["inchi"] = molecule.data("inchi").toString().c_str();
 
   if (molecule.unitCell()) {
-    Json::Value unitCell = Json::Value(Json::objectValue);
+    Value unitCell = Value(Json::objectValue);
     unitCell["a"] = molecule.unitCell()->a();
     unitCell["b"] = molecule.unitCell()->b();
     unitCell["c"] = molecule.unitCell()->c();
@@ -246,9 +255,35 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
     root["unit cell"] = unitCell;
   }
 
+  // Write out the basis set if we have one. FIXME: Complete implemnentation.
+  if (molecule.basisSet()) {
+    Value basis = Value(Json::objectValue);
+    const GaussianSet *gaussian =
+        dynamic_cast<const GaussianSet *>(molecule.basisSet());
+    if (gaussian) {
+      basis["basisType"] = "GTO";
+      string type = "unknown";
+      switch (gaussian->scfType()) {
+      case Core::Rhf:
+        type = "rhf";
+        break;
+      case Core::Rohf:
+        type = "rohf";
+        break;
+      case Core::Uhf:
+        type = "uhf";
+        break;
+      default:
+        type = "unknown";
+      }
+      basis["scfType"] = type;
+      root["basisSet"] = basis;
+    }
+  }
+
   // Create and populate the atom arrays.
   if (molecule.atomCount()) {
-    Json::Value elements(Json::arrayValue);
+    Value elements(Json::arrayValue);
     for (Index i = 0; i < molecule.atomCount(); ++i)
       elements.append(molecule.atom(i).atomicNumber());
     root["atoms"]["elements"]["number"] = elements;
@@ -256,12 +291,12 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
     // 3d positions:
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
       if (molecule.unitCell()) {
-        Json::Value coordsFractional(Json::arrayValue);
-        Core::Array<Vector3> fcoords;
-        Core::CrystalTools::fractionalCoordinates(*molecule.unitCell(),
-                                                  molecule.atomPositions3d(),
-                                                  fcoords);
-        for (std::vector<Vector3>::const_iterator it = fcoords.begin(),
+        Value coordsFractional(Json::arrayValue);
+        Array<Vector3> fcoords;
+        CrystalTools::fractionalCoordinates(*molecule.unitCell(),
+                                            molecule.atomPositions3d(),
+                                            fcoords);
+        for (vector<Vector3>::const_iterator it = fcoords.begin(),
              itEnd = fcoords.end(); it != itEnd; ++it) {
           coordsFractional.append(it->x());
           coordsFractional.append(it->y());
@@ -270,8 +305,8 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
         root["atoms"]["coords"]["3d fractional"] = coordsFractional;
       }
       else {
-        Json::Value coords3d(Json::arrayValue);
-        for (std::vector<Vector3>::const_iterator
+        Value coords3d(Json::arrayValue);
+        for (vector<Vector3>::const_iterator
              it = molecule.atomPositions3d().begin(),
              itEnd = molecule.atomPositions3d().end(); it != itEnd; ++it) {
           coords3d.append(it->x());
@@ -284,8 +319,8 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
 
     // 2d positions:
     if (molecule.atomPositions2d().size() == molecule.atomCount()) {
-      Json::Value coords2d(Json::arrayValue);
-      for (std::vector<Vector2>::const_iterator
+      Value coords2d(Json::arrayValue);
+      for (vector<Vector2>::const_iterator
            it = molecule.atomPositions2d().begin(),
            itEnd = molecule.atomPositions2d().end(); it != itEnd; ++it) {
         coords2d.append(it->x());
@@ -297,12 +332,12 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
 
   // Create and populate the bond arrays.
   if (molecule.bondCount()) {
-    Json::Value connections(Json::arrayValue);
-    Json::Value order(Json::arrayValue);
+    Value connections(Json::arrayValue);
+    Value order(Json::arrayValue);
     for (Index i = 0; i < molecule.bondCount(); ++i) {
       Bond bond = molecule.bond(i);
-      connections.append(static_cast<Json::Value::UInt>(bond.atom1().index()));
-      connections.append(static_cast<Json::Value::UInt>(bond.atom2().index()));
+      connections.append(static_cast<Value::UInt>(bond.atom1().index()));
+      connections.append(static_cast<Value::UInt>(bond.atom2().index()));
       order.append(bond.order());
     }
     root["bonds"]["connections"]["index"] = connections;
@@ -314,16 +349,16 @@ bool CjsonFormat::write(std::ostream &file, const Core::Molecule &molecule)
   return true;
 }
 
-std::vector<std::string> CjsonFormat::fileExtensions() const
+vector<std::string> CjsonFormat::fileExtensions() const
 {
-  std::vector<std::string> ext;
+  vector<std::string> ext;
   ext.push_back("cjson");
   return ext;
 }
 
-std::vector<std::string> CjsonFormat::mimeTypes() const
+vector<std::string> CjsonFormat::mimeTypes() const
 {
-  std::vector<std::string> mime;
+  vector<std::string> mime;
   mime.push_back("chemical/x-cjson");
   return mime;
 }
