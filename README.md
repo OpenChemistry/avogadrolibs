@@ -51,7 +51,7 @@ to coordinate development and to provide support.
 
   [Avogadro2Logo]: http://openchemistry.org/files/logos/avogadro2.png "Avogadro2"
   [OpenChemistry]: http://openchemistry.org/ "Open Chemistry Project"
-  [OpenChemistryLogo]: http://openchemistry.org/opensourcelogos/openchem100.png "Open Chemistry"
+  [OpenChemistryLogo]: http://openchemistry.org/files/logos/openchem128.png "Open Chemistry"
   [Kitware]: http://kitware.com/ "Kitware, Inc."
   [KitwareLogo]: http://www.kitware.com/img/small_logo_over.png "Kitware"
   [Avogadro1]: http://avogadro.openmolecules.net/ "Avogadro 1"
