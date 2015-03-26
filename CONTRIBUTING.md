@@ -14,4 +14,4 @@ to coordinate development and to provide support.
   [Development]: http://wiki.openchemistry.org/Development "Development guide"
   [Wiki]: http://wiki.openchemistry.org/ "Open Chemistry wiki"
   [Doxygen]: http://doc.openchemistry.org/avogadrolibs/api/ "API documentation"
-  [MailingLists]: http://openchemistry.org/OpenChemistry/help/mailing.html
+  [MailingLists]: http://openchemistry.org/mailing-lists "Mailing Lists"
