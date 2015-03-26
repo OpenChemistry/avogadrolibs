@@ -2,6 +2,9 @@ find_package(Eigen3 REQUIRED)
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
 find_package(Qt5Widgets REQUIRED)
+find_package(Qt5OpenGL REQUIRED)
+find_package(Qt5Network REQUIRED)
+find_package(Qt5Concurrent REQUIRED)
 include_directories(SYSTEM ${Qt5Widgets_INCLUDE_DIRS})
 add_definitions(${Qt5Widgets_DEFINITIONS})
 
@@ -72,7 +75,7 @@ function(avogadro_plugin name description type header pluginClass sources)
     ${rc_srcs}
     ${name}Plugin.cpp
   )
-  target_link_libraries(${name} AvogadroCore AvogadroQtGui)
+  target_link_libraries(${name} LINK_PRIVATE AvogadroCore AvogadroQtGui)
 
   if("${_plugin_object}" STREQUAL "STATIC")
     set_target_properties(${name} PROPERTIES COMPILE_DEFINITIONS

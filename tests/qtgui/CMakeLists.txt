@@ -4,6 +4,7 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}"
   "${AvogadroLibs_SOURCE_DIR}/tests/core")
 
 find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Network REQUIRED)
 find_package(Qt5Test REQUIRED)
 
 # Pull in MoleQueue for QtJson
