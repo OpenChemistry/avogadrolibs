@@ -453,7 +453,13 @@ bool CmlFormat::read(std::istream &file, Core::Molecule &mol)
   if (!parser.success)
     appendError(parser.error);
 
-  return parser.success;
+  bool filled = CrystalTools::fillUnitCell(mol);
+  //CrystalTools::buildSuperCell(mol,2,2,2);
+  //std::vector<int> miller(3,1);
+  //Vector3 cutoff(15.0,15.0,5.0);
+  //CrystalTools::buildSlab(mol,miller,cutoff);
+
+  return parser.success; // && filled;
 }
 
 bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)

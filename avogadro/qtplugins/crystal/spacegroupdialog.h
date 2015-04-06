@@ -36,7 +36,7 @@ namespace QtPlugins {
 
 namespace Ui {
 class SpaceGroupDialog;
-class SpaceGroupModel;
+//class SpaceGroupModel;
 }
 
 /**

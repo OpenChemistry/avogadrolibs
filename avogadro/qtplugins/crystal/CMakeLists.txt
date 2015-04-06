@@ -3,6 +3,7 @@ set(crystal_srcs
   unitcelldialog.cpp
   volumescalingdialog.cpp
   spacegroupdialog.cpp
+  spacegroupmodel.cpp
 )
 
 set(crystal_uis

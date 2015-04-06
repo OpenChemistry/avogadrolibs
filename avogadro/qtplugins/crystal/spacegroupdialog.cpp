@@ -17,7 +17,10 @@
 #include "spacegroupdialog.h"
 #include "ui_spacegroupdialog.h"
 
+
 #include <avogadro/qtgui/molecule.h>
+
+//#include "spacegroupmodel.h"
 
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/spacegroups.h>
@@ -54,6 +57,12 @@ SpaceGroupDialog::SpaceGroupDialog(QWidget *p) :
 
   QStandardItemModel *mySpg = setSpaceGroups(this);
   m_ui->columnView->setModel(mySpg);
+
+
+  /*
+  SpaceGroupModel *mySpg = SpaceGroupModel::SpaceGroupModel(this);
+  m_ui->treeView->setModel(mySpg);
+  */
 
 
 }
