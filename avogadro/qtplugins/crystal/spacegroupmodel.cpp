@@ -16,25 +16,16 @@
 
 #include "spacegroupmodel.h"
 
-#include <avogadro/qtgui/molecule.h>
-
-#include <avogadro/core/crystaltools.h>
-#include <avogadro/core/spacegroups.h>
-#include <avogadro/core/unitcell.h>
-
 #include <avogadro/core/spacegroups.h>
 
-
-using Avogadro::Core::UnitCell;
 using Avogadro::Core::SpaceGroups;
-using Avogadro::QtGui::Molecule;
 
 namespace Avogadro {
 namespace QtPlugins {
 
-  SpaceGroupItem::SpaceGroupItem(const QList<QVariant> &data, TreeItem *parent)
+  SpaceGroupItem::SpaceGroupItem(const QList<QVariant> &data, class SpaceGroupItem *parent)
   {
-    parentItem=parent;
+    m_parentItem=parent;
     itemData = data;
   }
 
@@ -53,15 +44,15 @@ namespace QtPlugins {
     return childItems.value(row);
   }
 
-  int SpaceGroupItem::childCount()
+  int SpaceGroupItem::childCount() const
   {
     return childItems.count();
   }
 
   int SpaceGroupItem::row() const
   {
-    if (parentItem)
-      return parentItem->childItems.indexOf(const_cast<SpaceGroupItem*>(this));
+    if (m_parentItem)
+      return m_parentItem->childItems.indexOf(const_cast<SpaceGroupItem*>(this));
 
     return 0;
   }
@@ -76,9 +67,9 @@ namespace QtPlugins {
     return itemData.value(column);
   }
 
-  SpaceGroupItem *SpaceGroupItem::parent()
+  SpaceGroupItem *SpaceGroupItem::parentItem()
   {
-    return parentItem;
+    return m_parentItem;
   }
 
 
@@ -102,14 +93,14 @@ namespace QtPlugins {
       if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-      SpaceGroupModel *parentItem;
+      SpaceGroupItem *parentItem;
 
       if (!parent.isValid())
         parentItem = rootItem;
       else
-        parentItem = static_cast<SpaceGroupModel*>(parent.internalPointer());
+        parentItem = static_cast<SpaceGroupItem*>(parent.internalPointer());
 
-      SpaceGroupModel *childItem = parentItem->child(row);
+      SpaceGroupItem *childItem = parentItem->child(row);
       if (childItem)
         return createIndex(row, column, childItem);
       else
@@ -121,8 +112,8 @@ namespace QtPlugins {
     if (!index.isValid())
       return QModelIndex();
 
-    SpaceGroupModel *childItem = static_cast<SpaceGroupModel*>(index.internalPointer());
-    SpaceGroupModel *parentItem = childItem->parentItem();
+    SpaceGroupItem *childItem = static_cast<SpaceGroupItem*>(index.internalPointer());
+    SpaceGroupItem *parentItem = childItem->parentItem();
 
     if (parentItem == rootItem)
       return QModelIndex();
@@ -132,14 +123,14 @@ namespace QtPlugins {
 
   int SpaceGroupModel::rowCount(const QModelIndex &parent) const
   {
-    SpaceGroupModel *parentItem;
+    SpaceGroupItem *parentItem;
     if (parent.column() > 0)
       return 0;
 
     if (!parent.isValid())
       parentItem = rootItem;
     else
-      parentItem = static_cast<SpaceGroupModel*>(parent.internalPointer());
+      parentItem = static_cast<SpaceGroupItem*>(parent.internalPointer());
 
     return parentItem->childCount();
   }
@@ -147,7 +138,7 @@ namespace QtPlugins {
   int SpaceGroupModel::columnCount(const QModelIndex &parent) const
   {
     if (parent.isValid())
-      return static_cast<SpaceGroupModel*>(parent.internalPointer())->columnCount();
+      return static_cast<SpaceGroupItem*>(parent.internalPointer())->columnCount();
     else
       return rootItem->columnCount();
   }
@@ -160,7 +151,7 @@ namespace QtPlugins {
     if (role != Qt::DisplayRole)
       return QVariant();
 
-    SpaceGroupModel *item = static_cast<SpaceGroupModel*>(index.internalPointer());
+    SpaceGroupItem *item = static_cast<SpaceGroupItem*>(index.internalPointer());
 
     return item->data(index.column());
   }
@@ -182,7 +173,7 @@ namespace QtPlugins {
     return QVariant();
   }
 
-  void SpaceGroupModel::setupModelData(TreeItem *parent)
+  void SpaceGroupModel::setupModelData(SpaceGroupItem *parent)
   {
     QList<SpaceGroupItem*> parents;
     parents << parent;
@@ -195,7 +186,7 @@ namespace QtPlugins {
       QString crystal = QString::fromStdString(SpaceGroups::getCrystalString(crystals.at(i)));
       QList<QVariant> crystalData;
       crystalData << crystal;
-      SpaceGroupItem iCrystal = new SpaceGroupItem(crystalData,parent);
+      SpaceGroupItem *iCrystal = new SpaceGroupItem(crystalData,parent);
       //each crystal is also a parent
       //parents << parents.last()->child(parents.last()->childCount()-1);
 
@@ -206,7 +197,7 @@ namespace QtPlugins {
         QString bravaisStr = QString::fromStdString(bravais.at(j));
         QList<QVariant> bravaisData;
         bravaisData << bravaisStr;
-        SpaceGroupItem jBravais = new SpaceGroupItem(bravaisData,iCrystal);
+        SpaceGroupItem *jBravais = new SpaceGroupItem(bravaisData,iCrystal);
 
         //now we finally have the space group symbol
         std::vector<std::string> intSymbol = SpaceGroups::getIntSymbolArray(crystals.at(i),bravais.at(j));
@@ -215,29 +206,28 @@ namespace QtPlugins {
           QString intString = QString::fromStdString(intSymbol.at(k));
           QList<QVariant> symbolData;
           symbolData << intString;
-          SpaceGroupItem kSymbol = new SpaceGroupItem(symbolData,jBravais);
-          jBravais.appendChild(kSymbol);
+          SpaceGroupItem *kSymbol = new SpaceGroupItem(symbolData,jBravais);
+          //jBravais.appendChild(kSymbol);
 
           //but, there may be more than one setting
           std::vector<std::string> settings = SpaceGroups::getSettingArray(crystals.at(i),bravais.at(j),intSymbol.at(k));
           for (int l=0;l<settings.size();l++)
           {
-            SpaceGroupItem lSetting;
             if(settings.at(l) != "     ")
             {
               QString settingString = QString::fromStdString(settings.at(l));
               QList<QVariant> settingData;
               settingData << settingString;
-              lSetting = new SpaceGroupItem(settingString,kSymbol);
+              SpaceGroupItem *lSetting = new SpaceGroupItem(settingData,kSymbol);
+              //all settings are children of symbols
+              kSymbol->appendChild(lSetting);
             }
-            //all settings are children of symbols
-            kSymbol.appendChild(lSetting);
           }
           //all symbols are children of bravais
-          jBravais.appendChild(kSymbol);
+          jBravais->appendChild(kSymbol);
         }
         //all bravais are children of crystals
-        iCrystal.appendChild(jBravais);
+        iCrystal->appendChild(jBravais);
       }
       //each crystal is a child of root
       parent->appendChild(iCrystal);

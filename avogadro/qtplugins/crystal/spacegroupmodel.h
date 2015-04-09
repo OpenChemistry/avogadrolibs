@@ -17,8 +17,6 @@
 #ifndef AVOGADRO_QTPLUGINS_SPACEGROUPMODEL_H
 #define AVOGADRO_QTPLUGINS_SPACEGROUPMODEL_H
 
-#include <QAbstractItemModel>
-
 #include <avogadro/core/avogadrocore.h>
 
 #include <QList>
@@ -29,9 +27,9 @@
 
 namespace Avogadro {
 
-namespace QtGui {
-class Molecule;
-}
+//namespace QtGui {
+//class Molecule;
+//}
 
 namespace QtPlugins {
 
@@ -52,12 +50,12 @@ class SpaceGroupItem
     int columnCount() const;
     QVariant data(int column) const;
     int row() const;
-    SpaceGroupItem *parent();
+    SpaceGroupItem *parentItem();
 
   private:
     QList<SpaceGroupItem*> childItems;
     QList<QVariant> itemData;
-    SpaceGroupItem *parentItem;
+    SpaceGroupItem *m_parentItem;
 
 };
 
@@ -65,7 +63,7 @@ class SpaceGroupModel : public QAbstractItemModel
 {
   Q_OBJECT
   public:
-    explicit SpaceGroupModel(const QString &data, QObject *parent = 0);
+    explicit SpaceGroupModel(QObject *parent = 0);
     ~SpaceGroupModel();
 
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
@@ -79,9 +77,11 @@ class SpaceGroupModel : public QAbstractItemModel
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
   private:
-    void setupModelData(const QStringList &lines, SpaceGroupItem *parent);
+    void setupModelData(SpaceGroupItem *parent);
 
     SpaceGroupItem *rootItem;
 };
 
+} // namespace QtPlugins
+} // namespace Avogadro
 #endif //AVOGADRO_QTPLUGINS_SPACEGROUPMODEL_H
