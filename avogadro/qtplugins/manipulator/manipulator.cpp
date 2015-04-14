@@ -114,9 +114,10 @@ QUndoCommand * Manipulator::mouseReleaseEvent(QMouseEvent *e)
 QUndoCommand * Manipulator::mouseMoveEvent(QMouseEvent *e)
 {
   e->ignore();
+  const Core::Molecule* mol = &m_molecule->molecule();
   if (m_pressedButtons & Qt::LeftButton
       && m_object.type == Rendering::AtomType
-      && m_object.molecule == m_molecule) {
+      && m_object.molecule == mol) {
     // Update atom position
     RWAtom atom = m_molecule->atom(m_object.index);
     Vector2f windowPos(e->localPos().x(), e->localPos().y());

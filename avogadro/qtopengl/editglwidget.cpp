@@ -76,8 +76,8 @@ void EditGLWidget::updateScene()
 {
   // Build up the scene with the scene plugins, creating the appropriate nodes.
   QtGui::RWMolecule *mol = m_molecule;
-  if (!mol)
-    mol = new QtGui::RWMolecule(this);
+ // if (!mol)
+ //   mol = new QtGui::RWMolecule(this);
   if (mol) {
     Rendering::GroupNode &node = m_renderer.scene().rootNode();
     node.clear();

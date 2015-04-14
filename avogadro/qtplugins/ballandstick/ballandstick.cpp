@@ -60,7 +60,7 @@ void BallAndStick::process(const Molecule &molecule,
   GeometryNode *geometry = new GeometryNode;
   node.addChild(geometry);
   SphereGeometry *spheres = new SphereGeometry;
-  spheres->identifier().molecule = &molecule;
+  spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
 
