@@ -19,6 +19,7 @@
 
 #include <avogadro/qtgui/toolplugin.h>
 
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/rendering/primitive.h>
 
@@ -45,7 +46,12 @@ public:
   QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
   QWidget * toolWidget() const AVO_OVERRIDE;
 
-  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE { }
+  void setMolecule(QtGui::Molecule *mol) AVO_OVERRIDE
+  {
+    if (mol)
+      m_molecule = mol->undoMolecule();
+  }
+
   void setEditMolecule(QtGui::RWMolecule *mol) AVO_OVERRIDE
   {
     m_molecule = mol;

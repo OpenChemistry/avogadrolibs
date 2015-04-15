@@ -40,8 +40,8 @@
 #include <QtGui/QWheelEvent>
 #include <QtWidgets/QWidget>
 
-#include <QtCore/QDebug>
 #include <QtCore/QTimer>
+#include <QtCore/QDebug>
 
 #include <limits>
 
@@ -382,6 +382,7 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   if (atomToBond.isValid()) {
     // If we have a newAtom, destroy it
     if (m_newObject.type == Rendering::AtomType) {
+
       m_molecule->removeAtom(m_newObject.index);
       changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
       m_newObject = Identifier();
@@ -428,7 +429,8 @@ void Editor::atomLeftDrag(QMouseEvent *e)
     changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Added;
     m_newObject.type = Rendering::AtomType;
     m_newObject.index = newAtom.index();
-    m_newObject.molecule = m_molecule;
+    const Core::Molecule *mol = &m_molecule->molecule();
+    m_newObject.molecule = mol;
   }
   else if (m_newObject.type == Rendering::AtomType) {
     // Grab the previously created atom
@@ -436,6 +438,7 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   }
   else {
     // Shouldn't happen
+
     qWarning() << "Editor::atomLeftDrag: m_newObject already set and not an "
                   "atom? This is a bug.";
   }

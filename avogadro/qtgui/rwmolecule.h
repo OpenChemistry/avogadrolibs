@@ -22,6 +22,7 @@
 
 #include "persistentatom.h"
 #include "persistentbond.h"
+#include "molecule.h"
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/atom.h>
@@ -34,8 +35,6 @@
 
 namespace Avogadro {
 namespace QtGui {
-
-class Molecule;
 
 /** Concrete atom/bond proxy classes for RWMolecule. @{ */
 class RWAtom;
@@ -78,13 +77,12 @@ public:
   /** Typedef for PersistentBond class. */
   typedef PersistentBond<RWMolecule> PersistentBondType;
 
-  /** Construct a empty molecule with a clean undo stack. */
-  explicit RWMolecule(QObject *parent = 0);
-
   /** Construct a molecule with the atoms/bonds of mol. */
-  explicit RWMolecule(const Molecule &mol, QObject *parent = 0);
+  explicit RWMolecule(Molecule &mol, QObject *parent = 0);
 
   ~RWMolecule() AVO_OVERRIDE;
+
+  Molecule& molecule() { return m_molecule; }
 
   /**
    * Add a new atom to the molecule.
@@ -207,7 +205,7 @@ public:
   Vector2 atomPosition2d(Index) { return Vector2(0, 0); }
   const Core::Array<Vector2>& atomPositions2d() const
   {
-    return m_positions2d;
+    return m_molecule.m_positions2d;
   }
 
   Core::AtomHybridization hybridization(Index) const { return Core::HybridizationUnknown; }
@@ -425,14 +423,11 @@ protected:
   Index findAtomUniqueId(Index atomId) const;
   Index findBondUniqueId(Index bondId) const;
 
-  Core::Array<Index> m_atomUniqueIds;
-  Core::Array<Index> m_bondUniqueIds;
-  Core::Array<unsigned char> m_atomicNumbers;
-  Core::Array<Vector2> m_positions2d;
-  Core::Array<Vector3> m_positions3d;
-  Core::Array<std::pair<Index, Index> > m_bondPairs;
-  Core::Array<unsigned char> m_bondOrders;
-  Core::UnitCell *m_unitCell;
+  /**
+   * @brief m_molecule still stored all data, this class acts upon it and builds
+   * an undo/redo stack that can be used to offer undo and redo.
+   */
+  Molecule &m_molecule;
   bool m_interactive;
 
   QUndoStack m_undoStack;
@@ -461,8 +456,9 @@ inline RWMolecule::AtomType RWMolecule::atom(Index atomId) const
 
 inline RWMolecule::AtomType RWMolecule::atomByUniqueId(Index atomUId) const
 {
-  return atomUId < m_atomUniqueIds.size()
-      ? AtomType(const_cast<RWMolecule*>(this), m_atomUniqueIds[atomUId])
+  return atomUId < m_molecule.m_atomUniqueIds.size()
+      ? AtomType(const_cast<RWMolecule*>(this),
+                 m_molecule.m_atomUniqueIds[atomUId])
       : AtomType();
 }
 
@@ -478,7 +474,7 @@ inline Index RWMolecule::atomUniqueId(const RWMolecule::AtomType &a) const
 
 inline Index RWMolecule::atomCount() const
 {
-  return m_atomicNumbers.size();
+  return m_molecule.atomCount();
 }
 
 inline bool RWMolecule::removeAtom(const AtomType &a)
@@ -488,23 +484,22 @@ inline bool RWMolecule::removeAtom(const AtomType &a)
 
 inline const Core::Array<unsigned char> &RWMolecule::atomicNumbers() const
 {
-  return m_atomicNumbers;
+  return m_molecule.atomicNumbers();
 }
 
 inline unsigned char RWMolecule::atomicNumber(Index atomId) const
 {
-  return atomId < m_atomicNumbers.size() ? m_atomicNumbers[atomId]
-                                         : InvalidElement;
+  return m_molecule.atomicNumber(atomId);
 }
 
 inline const Core::Array<Vector3> &RWMolecule::atomPositions3d() const
 {
-  return m_positions3d;
+  return m_molecule.atomPositions3d();
 }
 
 inline Vector3 RWMolecule::atomPosition3d(Index atomId) const
 {
-  return atomId < m_positions3d.size() ? m_positions3d[atomId] : Vector3();
+  return m_molecule.atomPosition3d(atomId);
 }
 
 inline RWMolecule::BondType RWMolecule::addBond(const AtomType &atom1,
@@ -531,8 +526,9 @@ inline RWMolecule::BondType RWMolecule::bond(
 
 inline RWMolecule::BondType RWMolecule::bondByUniqueId(Index bondUid) const
 {
-  return bondUid < m_bondUniqueIds.size()
-      ? BondType(const_cast<RWMolecule*>(this), m_bondUniqueIds[bondUid])
+  return bondUid < m_molecule.m_bondUniqueIds.size()
+      ? BondType(const_cast<RWMolecule*>(this),
+                 m_molecule.m_bondUniqueIds[bondUid])
       : BondType();
 }
 
@@ -548,7 +544,7 @@ inline Index RWMolecule::bondUniqueId(const RWMolecule::BondType &b) const
 
 inline Index RWMolecule::bondCount() const
 {
-  return m_bondOrders.size();
+  return m_molecule.bondCount();
 }
 
 inline bool RWMolecule::removeBond(const RWMolecule::BondType &b)
@@ -579,32 +575,32 @@ inline Core::Array<RWMolecule::BondType>
 RWMolecule::bonds(const Index &atomId) const
 {
   Core::Array<RWMolecule::BondType> result;
-  for (Index i = 0; i < m_bondPairs.size(); ++i)
-    if (m_bondPairs[i].first == atomId || m_bondPairs[i].second == atomId)
+  for (Index i = 0; i < m_molecule.m_bondPairs.size(); ++i)
+    if (m_molecule.m_bondPairs[i].first == atomId
+        || m_molecule.m_bondPairs[i].second == atomId)
       result.push_back(BondType(const_cast<RWMolecule*>(this), i));
   return result;
 }
 
 inline const Core::Array<unsigned char> &RWMolecule::bondOrders() const
 {
-  return m_bondOrders;
+  return m_molecule.bondOrders();
 }
 
 inline unsigned char RWMolecule::bondOrder(Index bondId) const
 {
-  return bondId < m_bondOrders.size() ? m_bondOrders[bondId] : 0;
+  return m_molecule.bondOrder(bondId);
 }
 
 inline const Core::Array<std::pair<Index, Index> > &
 RWMolecule::bondPairs() const
 {
-  return m_bondPairs;
+  return m_molecule.bondPairs();
 }
 
 inline std::pair<Index, Index> RWMolecule::bondPair(Index bondId) const
 {
-  return bondId < m_bondPairs.size() ? m_bondPairs[bondId]
-                                       : std::make_pair(MaxIndex, MaxIndex);
+  return m_molecule.bondPair(bondId);
 }
 
 inline void RWMolecule::setInteractive(bool b)
