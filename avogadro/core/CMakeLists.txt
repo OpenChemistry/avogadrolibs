@@ -3,6 +3,11 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
+#Find libspg
+find_package(SymSPG REQUIRED)
+include_directories(SYSTEM ${SymSPG_INCLUDE_DIR})
+
+
 # Check if we need extra include directories for C++11 features.
 if(AvogadroLibs_NEEDS_BOOST)
   include_directories(SYSTEM ${AvogadroLibs_MUTEX_INCLUDE_DIRS})
@@ -76,28 +81,9 @@ set(SOURCES
   version.cpp
 )
 
-set(spglib_SRCS
- spglib/cell.c
- spglib/debug.c
- spglib/hall_symbol.c
- spglib/kpoint.c
- spglib/lattice.c
- spglib/mathfunc.c
- spglib/pointgroup.c
- spglib/primitive.c
- spglib/refinement.c
- spglib/site_symmetry.c
- spglib/sitesym_database.c
- spglib/spacegroup.c
- spglib/spg_database.c
- spglib/spglib.c
- spglib/spglib_f.c
- spglib/spin.c
- spglib/symmetry.c
- spglib/tetrahedron_method.c
-)
+avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
 
-avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES} ${spglib_SRCS})
+target_link_libraries(AvogadroCore ${SymSPG_LIBRARY})
 
 # Additional libraries and compiler definitions necessary when using Boost to
 # replace C++11.
