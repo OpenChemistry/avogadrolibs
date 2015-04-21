@@ -5,7 +5,7 @@ include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
 #Find libspg
 find_package(SymSPG REQUIRED)
-include_directories(SYSTEM ${SymSPG_INCLUDE_DIR})
+include_directories(SYSTEM ${SymSPG_INCLUDE_DIRS})
 
 
 # Check if we need extra include directories for C++11 features.

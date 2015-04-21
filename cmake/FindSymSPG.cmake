@@ -9,7 +9,7 @@
 find_path(SymSPG_INCLUDE_DIR spglib/spglib.h)
 find_library(SymSPG_LIBRARY NAMES SymSPG symspg)
 
-set(SymSPG_INCLUDE_DIRS "${GLEW_INCLUDE_DIR}")
+set(SymSPG_INCLUDE_DIRS "${SymSPG_INCLUDE_DIR}")
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(SymSPG DEFAULT_MSG SymSPG_INCLUDE_DIR SymSPG_LIBRARY)
