@@ -31,7 +31,7 @@ namespace Core {
   class UnitCell;
   class Molecule;
     extern "C" {
-#include "spglib/spglib.h"
+#include <spglib/spglib.h>
     }
 
 /**
