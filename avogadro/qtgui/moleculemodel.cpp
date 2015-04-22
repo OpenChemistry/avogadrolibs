@@ -16,10 +16,10 @@
 
 #include "moleculemodel.h"
 #include "molecule.h"
-#include "rwmolecule.h"
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>
+#include <QtGui/QIcon>
 
 namespace Avogadro {
 namespace QtGui {
@@ -34,86 +34,70 @@ QModelIndex MoleculeModel::parent(const QModelIndex &) const
   return QModelIndex();
 }
 
-int MoleculeModel::rowCount(const QModelIndex &parent_) const
+int MoleculeModel::rowCount(const QModelIndex &p) const
 {
-  if (parent_.isValid())
+  if (p.isValid())
     return 0;
   else
-    return m_molecules.size() + m_rwMolecules.size();
+    return m_molecules.size();
 }
 
 int MoleculeModel::columnCount(const QModelIndex &) const
 {
-  return 1;
+  return 2;
 }
 
 Qt::ItemFlags MoleculeModel::flags(const QModelIndex &idx) const
 {
-    if (idx.column() == 0) {
+    if (idx.column() == 0)
       return static_cast<Qt::ItemFlags>(Qt::ItemIsEditable | Qt::ItemIsEnabled);
-    }
-    else {
+    else
       return Qt::ItemIsEnabled;
-    }
 }
 
-bool MoleculeModel::setData(const QModelIndex &index_, const QVariant &value,
+bool MoleculeModel::setData(const QModelIndex &idx, const QVariant &value,
                             int role)
 {
-  if (!index_.isValid() || index_.column() > 1)
+  if (!idx.isValid() || idx.column() > 2)
     return false;
 
-  QObject *object = static_cast<QObject *>(index_.internalPointer());
+  QObject *object = static_cast<QObject *>(idx.internalPointer());
   Molecule *mol = qobject_cast<Molecule *>(object);
-  RWMolecule *rwMol = qobject_cast<RWMolecule *>(object);
-  if (!mol && !rwMol)
+  if (!mol)
     return false;
 
   switch (role) {
   case Qt::CheckStateRole:
-    if (mol)
-      m_activeMolecule = mol;
-    else
-      m_activeMolecule = rwMol;
+    m_activeMolecule = mol;
     if (value == Qt::Checked /*&& !item->isEnabled()*/) {
       //item->setEnabled(true);
-      if (mol)
-        emit moleculeStateChanged(mol);
-      else
-        emit moleculeStateChanged(rwMol);
+      emit moleculeStateChanged(mol);
     }
     else if (value == Qt::Unchecked /*&& item->isEnabled()*/) {
       //item->setEnabled(false);
-      if (mol)
-        emit moleculeStateChanged(mol);
-      else
-        emit moleculeStateChanged(rwMol);
+      emit moleculeStateChanged(mol);
     }
-    emit dataChanged(index_, index_);
+    emit dataChanged(idx, idx);
     return true;
   case Qt::EditRole:
-    if (mol)
-      mol->setData("name", std::string(value.toString().toLatin1()));
-    //else
-    //  rwMol->setData("name", std::string(value.toString().toLatin1()));
-    emit dataChanged(index_, index_);
+    mol->setData("name", std::string(value.toString().toLatin1()));
+    emit dataChanged(idx, idx);
     return true;
   }
   return false;
 }
 
-QVariant MoleculeModel::data(const QModelIndex &index_, int role) const
+QVariant MoleculeModel::data(const QModelIndex &idx, int role) const
 {
-  if (!index_.isValid() || index_.column() > 1)
+  if (!idx.isValid() || idx.column() > 2)
     return QVariant();
 
-  QObject *object = static_cast<QObject *>(index_.internalPointer());
+  QObject *object = static_cast<QObject *>(idx.internalPointer());
   Molecule *mol = qobject_cast<Molecule *>(object);
-  RWMolecule *rwMol = qobject_cast<RWMolecule *>(object);
-  if (!mol && !rwMol)
+  if (!mol)
     return QVariant();
 
-  if (index_.column() == 0) {
+  if (idx.column() == 0) {
     switch (role) {
     case Qt::DisplayRole: {
       std::string name = tr("Untitled").toStdString();
@@ -124,70 +108,47 @@ QVariant MoleculeModel::data(const QModelIndex &index_, int role) const
         name = QFileInfo(mol->data("fileName").toString().c_str())
                 .fileName().toStdString();
       }
-      //if (rwMol && rwMol->hasData("name")) {
-      //  name = rwMol->data("name").toString();
-      //}
-      //else if (rwMol && rwMol->hasData("fileName")) {
-      //  name = QFileInfo(rwMol->data("fileName").toString().c_str())
-      //          .fileName().toStdString();
-      //}
       if (mol)
         return (name + " (" + mol->formula() + ")").c_str();
       else
         return "Edit molecule";
-      //  return (name + " (" + rwMol->formula() + ")").c_str();
     }
     case Qt::EditRole:
-      if (mol)
-        return mol->data("name").toString().c_str();
-      else
-        return "Edit molecule";
-      //  return rwMol->data("name").toString().c_str();
+      return mol->data("name").toString().c_str();
     case Qt::ToolTipRole:
-      if (mol && mol->hasData("fileName"))
+      if (mol->hasData("fileName"))
         return mol->data("fileName").toString().c_str();
-      //else if (rwMol && rwMol->hasData("fileName"))
-      //  return rwMol->data("fileName").toString().c_str();
       return "Not saved";
     case Qt::WhatsThisRole:
-      if (mol)
-        return mol->formula().c_str();
-      //else
-      //  return rwMol->formula().c_str();
+      return mol->formula().c_str();
     case Qt::ForegroundRole:
-      if ((mol && mol == m_activeMolecule)
-          || (rwMol && rwMol == m_activeMolecule)) {
+      if (mol == m_activeMolecule)
         return QVariant(QColor(Qt::red));
-      }
-      else {
+      else
         return QVariant(QColor(Qt::black));
-      }
     default:
       return QVariant();
     }
+  }
+  else if (idx.column() == 1) {
+    if (role == Qt::DecorationRole)
+      return QIcon(":/icons/fallback/32x32/edit-cut.png");
   }
   return QVariant();
 }
 
 QModelIndex MoleculeModel::index(int row, int column,
-                                 const QModelIndex &parent_) const
+                                 const QModelIndex &p) const
 {
-  if (!parent_.isValid()) {
-    if (row >= 0 && row < m_molecules.size()) {
+  if (!p.isValid())
+    if (row >= 0 && row < m_molecules.size())
       return createIndex(row, column, m_molecules[row]);
-    }
-    else if (row >= m_molecules.size()
-             && row < m_molecules.size() + m_rwMolecules.size()) {
-      return createIndex(row, column, m_rwMolecules[row - m_molecules.size()]);
-    }
-  }
   return QModelIndex();
 }
 
 void MoleculeModel::clear()
 {
   m_molecules.clear();
-  m_rwMolecules.clear();
 }
 
 QList<Molecule *> MoleculeModel::molecules() const
@@ -205,30 +166,15 @@ QList<Molecule *> MoleculeModel::activeMolecules() const
   return result;
 }
 
-QList<RWMolecule *> MoleculeModel::editableMolecules() const
-{
-  return m_rwMolecules;
-}
-
 void MoleculeModel::setActiveMolecule(QObject *active)
 {
   if (m_activeMolecule == active)
     return;
 
   int rowS = m_molecules.indexOf(qobject_cast<Molecule*>(m_activeMolecule));
-  if (rowS < 0) {
-    rowS = m_rwMolecules.indexOf(qobject_cast<RWMolecule*>(m_activeMolecule));
-    if (rowS >= 0)
-      rowS += m_molecules.size();
-  }
 
   m_activeMolecule = active;
   int row = m_molecules.indexOf(qobject_cast<Molecule*>(active));
-  if (row < 0) {
-    row = m_rwMolecules.indexOf(qobject_cast<RWMolecule*>(active));
-    if (row >= 0)
-      row += m_molecules.size();
-  }
 
   if (rowS >= 0)
     emit dataChanged(createIndex(rowS, 0), createIndex(rowS, 0));
@@ -247,35 +193,12 @@ void MoleculeModel::addItem(Molecule *item)
   }
 }
 
-void MoleculeModel::addItem(RWMolecule *item)
-{
-  if (!m_rwMolecules.contains(item)) {
-    int row = m_molecules.size() + m_rwMolecules.size();
-    beginInsertRows(QModelIndex(), row, row);
-    m_rwMolecules.append(item);
-    item->setParent(this);
-    endInsertRows();
-  }
-}
-
 void MoleculeModel::removeItem(Molecule *item)
 {
   if (m_molecules.contains(item)) {
     int row = m_molecules.indexOf(item);
     beginRemoveRows(QModelIndex(), row, row);
     m_molecules.removeAt(row);
-    // Do we want strong ownership of molecules?
-    item->deleteLater();
-    endRemoveRows();
-  }
-}
-
-void MoleculeModel::removeItem(RWMolecule *item)
-{
-  if (m_rwMolecules.contains(item)) {
-    int row = m_molecules.size() + m_rwMolecules.indexOf(item);
-    beginRemoveRows(QModelIndex(), row, row);
-    m_rwMolecules.removeAt(row);
     // Do we want strong ownership of molecules?
     item->deleteLater();
     endRemoveRows();
