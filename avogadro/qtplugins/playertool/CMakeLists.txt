@@ -5,5 +5,5 @@ avogadro_plugin(PlayerTool
   PlayerTool
   "playertool.cpp"
   ""
-  "${playertool.qrc}"
+  playertool.qrc
 )
