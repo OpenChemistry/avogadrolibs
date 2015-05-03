@@ -24,6 +24,8 @@
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/unitcell.h>
 
+#include "spacegroupmodel.h"
+
 class QPlainTextEdit;
 
 namespace Avogadro {
@@ -60,6 +62,8 @@ public slots:
   void apply();
   void revert();
 
+  void selectSpaceGroup();
+
 private:
   bool isCrystal() const;
 
@@ -72,7 +76,8 @@ private:
   Ui::SpaceGroupDialog *m_ui;
   QtGui::Molecule *m_molecule;
   Core::UnitCell m_tempCell;
-  QStandardItemModel* setSpaceGroups(QObject* parent);
+  SpaceGroupModel *mySpg;
+  //QStandardItemModel* setSpaceGroups(QObject* parent);
 };
 
 

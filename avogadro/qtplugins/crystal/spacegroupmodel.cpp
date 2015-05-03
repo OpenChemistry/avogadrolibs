@@ -17,6 +17,7 @@
 #include "spacegroupmodel.h"
 
 #include <avogadro/core/spacegroups.h>
+#include <QDebug>
 
 using Avogadro::Core::SpaceGroups;
 
@@ -70,6 +71,12 @@ namespace QtPlugins {
   SpaceGroupItem *SpaceGroupItem::parentItem()
   {
     return m_parentItem;
+  }
+
+  QVariant SpaceGroupItem::getHallNumber()
+  {
+    //qDebug() << columnCount();
+    return QVariant();
   }
 
 
@@ -148,12 +155,38 @@ namespace QtPlugins {
     if (!index.isValid())
       return QVariant();
 
-    if (role != Qt::DisplayRole)
-      return QVariant();
 
     SpaceGroupItem *item = static_cast<SpaceGroupItem*>(index.internalPointer());
 
+    if (role == 20) {
+      //qDebug() << item->childCount();//item->data(index.column());
+      return item->data(index.column());//getHallNumber();
+    }
+
+    if (role == 200) {
+        return QVariant(spaceGroupInfo(item,index));
+    }
+
+    if (role != Qt::DisplayRole)
+      return QVariant();
+
     return item->data(index.column());
+  }
+
+  QString SpaceGroupModel::spaceGroupInfo(SpaceGroupItem *item, const QModelIndex &index) const
+  {
+    QString display = item->data(index.column()).toString();
+    int nChildren = item->childCount();
+    SpaceGroupItem *parentItem = item->parentItem();
+    if(nChildren==0)
+    {
+      while(parentItem != rootItem) {
+        QString nextLine = QString("%1\n").arg(parentItem->data(index.column()).toString());
+        display.prepend(nextLine);
+        parentItem = parentItem->parentItem();
+      }
+    }
+    return display;
   }
 
   Qt::ItemFlags SpaceGroupModel::flags(const QModelIndex &index) const
@@ -213,6 +246,10 @@ namespace QtPlugins {
           std::vector<std::string> settings = SpaceGroups::getSettingArray(crystals.at(i),bravais.at(j),intSymbol.at(k));
           for (int l=0;l<settings.size();l++)
           {
+            int hall = SpaceGroups::getHallNumber(crystals.at(i),bravais.at(j),intSymbol.at(k),settings.at(l));
+            QList<QVariant> hallData;
+            hallData << hall;
+
             if(settings.at(l) != "     ")
             {
               QString settingString = QString::fromStdString(settings.at(l));
@@ -221,6 +258,14 @@ namespace QtPlugins {
               SpaceGroupItem *lSetting = new SpaceGroupItem(settingData,kSymbol);
               //all settings are children of symbols
               kSymbol->appendChild(lSetting);
+
+              SpaceGroupItem *hallNumber = new SpaceGroupItem(hallData,lSetting);
+              lSetting->appendChild(hallNumber);
+            }
+            else
+            {
+              SpaceGroupItem *hallNumber = new SpaceGroupItem(hallData,kSymbol);
+              kSymbol->appendChild(hallNumber);
             }
           }
           //all symbols are children of bravais

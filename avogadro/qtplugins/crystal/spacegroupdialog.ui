@@ -76,7 +76,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QGraphicsView" name="graphicsView"/>
+      <widget class="QPlainTextEdit" name="text"/>
      </item>
     </layout>
    </item>

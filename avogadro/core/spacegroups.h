@@ -50,6 +50,7 @@ public:
   static std::string getCrystalString(crystalSystem crystal);
   static std::vector<std::string> getIntSymbolArray(crystalSystem crystal,std::string bravais);
   static std::vector<std::string> getSettingArray(crystalSystem crystal, std::string bravais,std::string intSymbol);
+  static int getHallNumber(crystalSystem crystal, std::string bravais,std::string intSymbol, std::string setting);
 
 
   //static void getCrystalSystem(int hallNumber);

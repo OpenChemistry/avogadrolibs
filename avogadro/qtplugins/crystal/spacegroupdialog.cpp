@@ -20,8 +20,6 @@
 
 #include <avogadro/qtgui/molecule.h>
 
-#include "spacegroupmodel.h"
-
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
@@ -33,6 +31,7 @@
 
 #include <QtCore/QRegExp>
 #include <QList>
+#include <QDebug>
 
 using Avogadro::Core::UnitCell;
 using Avogadro::Core::SpaceGroups;
@@ -50,6 +49,8 @@ SpaceGroupDialog::SpaceGroupDialog(QWidget *p) :
 
   connect(m_ui->apply, SIGNAL(clicked()), SLOT(apply()));
   connect(m_ui->revert, SIGNAL(clicked()), SLOT(revert()));
+  connect(m_ui->treeView, SIGNAL(clicked(QModelIndex)),
+      this, SLOT(selectSpaceGroup()));
 
   /*
   QList<int> widths;
@@ -61,8 +62,9 @@ SpaceGroupDialog::SpaceGroupDialog(QWidget *p) :
   */
 
 
-  SpaceGroupModel *mySpg = new SpaceGroupModel::SpaceGroupModel(this);
+  mySpg = new SpaceGroupModel(this);
   m_ui->treeView->setModel(mySpg);
+  m_ui->text->setPlainText("select group");
 
 
 }
@@ -101,6 +103,10 @@ void SpaceGroupDialog::apply()
     return;
   }
 
+  //qDebug() << mySpg->data(m_ui->treeView->currentIndex());
+  QVariant selectedGroup = mySpg->data(m_ui->treeView->currentIndex(),20);
+  //m_ui->text->setPlainText(selectedGroup.toString());
+
   m_molecule->emitChanged(Molecule::Modified
                           | Molecule::Atoms | Molecule::UnitCell);
 }
@@ -113,6 +119,13 @@ void SpaceGroupDialog::revert()
   //revert spacegroup
 
 }
+
+void SpaceGroupDialog::selectSpaceGroup()
+{
+  QVariant selectedGroup = mySpg->data(m_ui->treeView->currentIndex(),200);
+  m_ui->text->setPlainText(selectedGroup.toString());
+}
+
 
 bool SpaceGroupDialog::isCrystal() const
 {
@@ -157,7 +170,7 @@ bool SpaceGroupDialog::validateMatrixEditor(QPlainTextEdit *edit)
 }
 */
 
-QStandardItemModel* SpaceGroupDialog::setSpaceGroups(QObject* parent){
+/*QStandardItemModel* SpaceGroupDialog::setSpaceGroups(QObject* parent){
 
   std::vector<SpaceGroups::crystalSystem> crystals = SpaceGroups::getCrystalArray();
 
@@ -197,7 +210,7 @@ QStandardItemModel* SpaceGroupDialog::setSpaceGroups(QObject* parent){
     model->setItem(i,crystalNode);
   }
     return model;
-}
+}*/
 
 } // namespace QtPlugins
 } // namespace Avogadro

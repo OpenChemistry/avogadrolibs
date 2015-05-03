@@ -241,9 +241,33 @@ namespace Core {
     return setting;
   }
 
-  /*Array<std::string> SpaceGroups::getSettingArray(int intNumber)
+  int SpaceGroups::getHallNumber(crystalSystem crystal, std::string bravais,std::string intSymbol, std::string setting)
   {
-  }*/
+    //std::vector<std::string> setting;
+    int outputHallNumber;
+    for(int hall=0;hall<530;hall++)
+    {
+      if (spacegroup_types[hall].holohedry == crystal)
+      {
+        if(getBravais(hall) == bravais)
+        {
+          if(getInternationalShort(hall) == intSymbol)
+          {
+            //setting.push_back(getSetting(hall));
+            if(getSetting(hall) == setting)
+            {
+              outputHallNumber=hall;
+            }
+          }
+        }
+      }
+    }
+    //sort(setting.begin(), setting.end());
+    //setting.erase(unique(setting.begin(), setting.end()), setting.end());
+
+    return outputHallNumber;
+  }
+
 
 
 
