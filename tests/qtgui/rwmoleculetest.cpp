@@ -23,6 +23,7 @@
 
 using Avogadro::Core::Array;
 using Avogadro::QtGui::RWMolecule;
+using Avogadro::QtGui::Molecule;
 using Avogadro::Index;
 using Avogadro::Real;
 using Avogadro::Vector3;
@@ -78,7 +79,8 @@ std::string formula(const MoleculeType &mol)
 
 TEST(RWMoleculeTest, addAtom)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
 
   mol.addAtom(1); // H
   mol.addAtom(5); // B
@@ -130,7 +132,8 @@ TEST(RWMoleculeTest, addAtom)
 
 TEST(RWMoleculeTest, removeAtom)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   typedef RWMolecule::AtomType Atom;
 
   Atom a0 = mol.addAtom(1); // H
@@ -237,7 +240,8 @@ TEST(RWMoleculeTest, removeAtom)
 
 TEST(RWMoleculeTest, clearAtoms)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   typedef RWMolecule::AtomType Atom;
 
   Atom a0 = mol.addAtom(1); // H
@@ -303,7 +307,8 @@ TEST(RWMoleculeTest, clearAtoms)
 
 TEST(RWMoleculeTest, setAtomicNumbers)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   mol.addAtom(1);
   mol.addAtom(2);
   mol.addAtom(3);
@@ -329,7 +334,8 @@ TEST(RWMoleculeTest, setAtomicNumbers)
 
 TEST(RWMoleculeTest, setAtomicNumber)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   mol.addAtom(1);
   mol.addAtom(2);
   mol.addAtom(3);
@@ -356,7 +362,8 @@ TEST(RWMoleculeTest, setAtomicNumber)
 
 TEST(RWMoleculeTest, setAtomPositions3d)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   mol.addAtom(1);
   mol.addAtom(2);
   mol.addAtom(3);
@@ -406,7 +413,8 @@ TEST(RWMoleculeTest, setAtomPositions3d)
 
 TEST(RWMoleculeTest, setAtomPosition3d)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   mol.addAtom(1);
   mol.addAtom(2);
   mol.addAtom(3);
@@ -463,7 +471,8 @@ TEST(RWMoleculeTest, setAtomPosition3d)
 
 TEST(RWMoleculeTest, addBond)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   RWMolecule::AtomType a0 = mol.addAtom(1);
   RWMolecule::AtomType a1 = mol.addAtom(2);
   mol.addAtom(3);
@@ -492,7 +501,8 @@ TEST(RWMoleculeTest, addBond)
 
 TEST(RWMoleculeTest, removeBond)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   mol.addAtom(1);
   mol.addAtom(2);
   mol.addAtom(3);
@@ -538,7 +548,8 @@ TEST(RWMoleculeTest, removeBond)
 
 TEST(RWMoleculeTest, clearBonds)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   mol.addAtom(1);
   mol.addAtom(2);
   mol.addAtom(3);
@@ -563,7 +574,8 @@ TEST(RWMoleculeTest, clearBonds)
 
 TEST(RWMoleculeTest, setBondOrders)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   mol.addAtom(1);
   mol.addAtom(2);
   mol.addAtom(3);
@@ -594,7 +606,8 @@ TEST(RWMoleculeTest, setBondOrders)
 
 TEST(RWMoleculeTest, setBondOrder)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   mol.addAtom(1);
   mol.addAtom(2);
   mol.addAtom(3);
@@ -654,7 +667,8 @@ inline std::pair<Index, Index> makeBondPair(Index a, Index b)
 
 TEST(RWMoleculeTest, setBondPairs)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   mol.addAtom(1);
   mol.addAtom(2);
   mol.addAtom(3);
@@ -687,7 +701,8 @@ TEST(RWMoleculeTest, setBondPairs)
 
 TEST(RWMoleculeTest, setBondPair)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   mol.addAtom(1);
   mol.addAtom(2);
   mol.addAtom(3);
@@ -734,7 +749,8 @@ TEST(RWMoleculeTest, setBondPair)
 
 TEST(RWMoleculeTest, AtomType)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   typedef RWMolecule::AtomType Atom;
   Atom a0 = mol.addAtom(1);
   Atom a1 = mol.addAtom(2);
@@ -766,7 +782,8 @@ TEST(RWMoleculeTest, AtomType)
 
 TEST(RWMoleculeTest, BondType)
 {
-  RWMolecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   typedef RWMolecule::AtomType Atom;
   typedef RWMolecule::BondType Bond;
   Atom a0 = mol.addAtom(1);

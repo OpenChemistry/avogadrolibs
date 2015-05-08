@@ -56,7 +56,6 @@ public:
   typedef PersistentBond<Molecule> PersistentBondType;
 
   Molecule(QObject *parent_ = 0);
-  Molecule(const RWMolecule &mol, QObject *parent = 0);
   ~Molecule();
   /** copy constructor */
   Molecule(const Molecule &other);
@@ -129,6 +128,8 @@ public:
   Index atomUniqueId(const AtomType &atom) const;
   Index atomUniqueId(Index atom) const;
   /** @} */
+
+  Core::Array<Index>& atomUniqueIds() { return m_atomUniqueIds; }
 
   /**
    * @brief Add a bond between the specified atoms.
@@ -209,12 +210,12 @@ public:
   Index bondUniqueId(Index bond) const;
   /** @} */
 
-  /**
-   * @brief Convert this molecule to an RWMolecule, this will only contain the
-   * atoms and bonds, none of the other data will be moved.
-   * @return An RWMolecule with the atoms and bonds of this molecule.
-   */
-  //RWMolecule toRWMolecule() const;
+  Core::Array<Index>& bondUniqueIds() { return m_bondUniqueIds; }
+
+  Index findAtomUniqueId(Index index) const;
+  Index findBondUniqueId(Index index) const;
+
+  RWMolecule* undoMolecule();
 
 public slots:
   /**
@@ -238,10 +239,9 @@ private:
   Core::Array<Index> m_atomUniqueIds;
   Core::Array<Index> m_bondUniqueIds;
 
-  Index findAtomUniqueId(Index index) const;
-  Index findBondUniqueId(Index index) const;
-
   friend class RWMolecule;
+
+  RWMolecule *m_undoMolecule;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Molecule::MoleculeChanges)

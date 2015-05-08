@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/icons">
         <file>navigator.png</file>
+        <file>navigator@2x.png</file>
     </qresource>
 </RCC>

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>player.png</file>
+        <file>player@2x.png</file>
+    </qresource>
+</RCC>

@@ -16,8 +16,6 @@
 
 #include "rwmolecule.h"
 
-#include "molecule.h"
-
 #include <QtWidgets/QUndoCommand>
 
 #include <algorithm>
@@ -41,12 +39,12 @@ public:
   UndoCommand(RWMolecule &m) : QUndoCommand(tr("Modify Molecule")), m_mol(m) {}
 
 protected:
-  Array<Index>& atomUniqueIds() { return m_mol.m_atomUniqueIds; }
-  Array<Index>& bondUniqueIds() { return m_mol.m_bondUniqueIds; }
-  Array<unsigned char>& atomicNumbers() { return m_mol.m_atomicNumbers; }
-  Array<Vector3>& positions3d() { return m_mol.m_positions3d; }
-  Array<std::pair<Index, Index> >& bondPairs() { return m_mol.m_bondPairs; }
-  Array<unsigned char>& bondOrders() { return m_mol.m_bondOrders; }
+  Array<Index>& atomUniqueIds() { return m_mol.m_molecule.atomUniqueIds(); }
+  Array<Index>& bondUniqueIds() { return m_mol.m_molecule.bondUniqueIds(); }
+  Array<unsigned char>& atomicNumbers() { return m_mol.m_molecule.atomicNumbers(); }
+  Array<Vector3>& positions3d() { return m_mol.m_molecule.atomPositions3d(); }
+  Array<std::pair<Index, Index> >& bondPairs() { return m_mol.m_molecule.bondPairs(); }
+  Array<unsigned char>& bondOrders() { return m_mol.m_molecule.bondOrders(); }
   RWMolecule &m_mol;
 };
 
@@ -75,27 +73,13 @@ public:
 };
 } // end anon namespace
 
-RWMolecule::RWMolecule(QObject *p) :
-  QObject(p),
-  m_unitCell(NULL)
+RWMolecule::RWMolecule(Molecule &mol, QObject *p)
+  : QObject(p), m_molecule(mol)
 {
-}
-
-RWMolecule::RWMolecule(const Molecule &mol, QObject *p)
-  : QObject(p),
-    m_unitCell(NULL)
-{
-  m_atomUniqueIds = mol.m_atomUniqueIds;
-  m_bondUniqueIds = mol.m_bondUniqueIds;
-  m_atomicNumbers = mol.m_atomicNumbers;
-  m_positions3d = mol.m_positions3d;
-  m_bondPairs = mol.m_bondPairs;
-  m_bondOrders = mol.m_bondOrders;
 }
 
 RWMolecule::~RWMolecule()
 {
-  delete m_unitCell;
 }
 
 namespace {
@@ -132,8 +116,8 @@ public:
 
 RWMolecule::AtomType RWMolecule::addAtom(unsigned char num)
 {
-  Index atomId = static_cast<Index>(m_atomicNumbers.size());
-  Index atomUid = static_cast<Index>(m_atomUniqueIds.size());
+  Index atomId = static_cast<Index>(m_molecule.m_atomicNumbers.size());
+  Index atomUid = static_cast<Index>(m_molecule.m_atomUniqueIds.size());
 
   AddAtomCommand *comm = new AddAtomCommand(*this, num, atomId, atomUid);
   comm->setText(tr("Add Atom"));
@@ -143,8 +127,7 @@ RWMolecule::AtomType RWMolecule::addAtom(unsigned char num)
 
 Index RWMolecule::atomCount(unsigned char num) const
 {
-  return static_cast<Index>(std::count(m_atomicNumbers.begin(),
-                                       m_atomicNumbers.end(), num));
+  return m_molecule.atomCount(num);
 }
 
 namespace {
@@ -306,11 +289,11 @@ public:
 
 bool RWMolecule::setAtomicNumbers(const Core::Array<unsigned char> &nums)
 {
-  if (nums.size() != m_atomicNumbers.size())
+  if (nums.size() != m_molecule.m_atomicNumbers.size())
     return false;
 
   SetAtomicNumbersCommand *comm = new SetAtomicNumbersCommand(
-        *this, m_atomicNumbers, nums);
+        *this, m_molecule.m_atomicNumbers, nums);
   comm->setText(tr("Change Elements"));
   m_undoStack.push(comm);
   return true;
@@ -351,7 +334,7 @@ bool RWMolecule::setAtomicNumber(Index atomId, unsigned char num)
     return false;
 
   SetAtomicNumberCommand *comm = new SetAtomicNumberCommand(
-        *this, atomId, m_atomicNumbers[atomId], num);
+        *this, atomId, m_molecule.m_atomicNumbers[atomId], num);
   comm->setText(tr("Change Element"));
   m_undoStack.push(comm);
   return true;
@@ -397,11 +380,11 @@ public:
 
 bool RWMolecule::setAtomPositions3d(const Core::Array<Vector3> &pos)
 {
-  if (pos.size() != m_atomicNumbers.size())
+  if (pos.size() != m_molecule.m_atomicNumbers.size())
     return false;
 
   SetPositions3dCommand *comm = new SetPositions3dCommand(
-        *this, m_positions3d, pos);
+        *this, m_molecule.m_positions3d, pos);
   comm->setText(tr("Change Atom Positions"));
   comm->setCanMerge(m_interactive);
   m_undoStack.push(comm);
@@ -483,11 +466,11 @@ bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3 &pos)
   if (atomId >= atomCount())
     return false;
 
-  if (m_positions3d.size() != m_atomicNumbers.size())
-    m_positions3d.resize(m_atomicNumbers.size(), Vector3::Zero());
+  if (m_molecule.m_positions3d.size() != m_molecule.m_atomicNumbers.size())
+    m_molecule.m_positions3d.resize(m_molecule.m_atomicNumbers.size(), Vector3::Zero());
 
   SetPosition3dCommand *comm = new SetPosition3dCommand(
-        *this, atomId, m_positions3d[atomId], pos);
+        *this, atomId, m_molecule.m_positions3d[atomId], pos);
   comm->setText(tr("Change Atom Position"));
   comm->setCanMerge(m_interactive);
   m_undoStack.push(comm);
@@ -545,7 +528,7 @@ RWMolecule::BondType RWMolecule::addBond(Index atom1, Index atom2,
     return BondType();
 
   Index bondId = bondCount();
-  Index bondUid = static_cast<Index>(m_bondUniqueIds.size());
+  Index bondUid = static_cast<Index>(m_molecule.m_bondUniqueIds.size());
 
   AddBondCommand *comm = new AddBondCommand(
         *this, order, makeBondPair(atom1, atom2), bondId, bondUid);
@@ -556,18 +539,11 @@ RWMolecule::BondType RWMolecule::addBond(Index atom1, Index atom2,
 
 RWMolecule::BondType RWMolecule::bond(Index atom1, Index atom2) const
 {
-  if (std::max(atom1, atom2) >= atomCount())
+  Molecule::BondType b = m_molecule.bond(atom1, atom2);
+  if (b.isValid())
+    return BondType(const_cast<RWMolecule*>(this), b.index());
+  else
     return BondType();
-
-  std::pair<Index, Index> pair = makeBondPair(atom1, atom2);
-  Array<std::pair<Index, Index> >::const_iterator match =
-      std::find(m_bondPairs.begin(), m_bondPairs.end(), pair);
-
-  if (match == m_bondPairs.end())
-    return BondType();
-
-  Index bondId = static_cast<Index>(std::distance(m_bondPairs.begin(), match));
-  return BondType(const_cast<RWMolecule*>(this), bondId);
 }
 
 namespace {
@@ -639,8 +615,8 @@ bool RWMolecule::removeBond(Index bondId)
     return false;
 
   RemoveBondCommand *comm = new RemoveBondCommand(*this, bondId, bondUid,
-                                                  m_bondPairs[bondId],
-                                                  m_bondOrders[bondId]);
+                                                  m_molecule.m_bondPairs[bondId],
+                                                  m_molecule.m_bondOrders[bondId]);
   comm->setText(tr("Removed Bond"));
   m_undoStack.push(comm);
   return true;
@@ -683,11 +659,11 @@ public:
 
 bool RWMolecule::setBondOrders(const Core::Array<unsigned char> &orders)
 {
-  if (orders.size() != m_bondOrders.size())
+  if (orders.size() != m_molecule.m_bondOrders.size())
     return false;
 
   SetBondOrdersCommand *comm =
-      new SetBondOrdersCommand(*this, m_bondOrders, orders);
+      new SetBondOrdersCommand(*this, m_molecule.m_bondOrders, orders);
   comm->setText(tr("Set Bond Orders"));
   m_undoStack.push(comm);
   return true;
@@ -740,7 +716,8 @@ bool RWMolecule::setBondOrder(Index bondId, unsigned char order)
     return false;
 
   SetBondOrderCommand *comm =
-      new SetBondOrderCommand(*this, bondId, m_bondOrders[bondId], order);
+      new SetBondOrderCommand(*this, bondId, m_molecule.m_bondOrders[bondId],
+                              order);
   comm->setText(tr("Change Bond Order"));
   // Always allow merging, but only if bondId is the same.
   comm->setCanMerge(true);
@@ -776,7 +753,7 @@ public:
 
 bool RWMolecule::setBondPairs(const Array<std::pair<Index, Index> > &pairs)
 {
-  if (pairs.size() != m_bondPairs.size())
+  if (pairs.size() != m_molecule.m_bondPairs.size())
     return false;
 
   // Correct any pairs that are ordered improperly:
@@ -790,7 +767,7 @@ bool RWMolecule::setBondPairs(const Array<std::pair<Index, Index> > &pairs)
       swap(p[i].first, p[i].second);
 
   SetBondPairsCommand *comm =
-      new SetBondPairsCommand(*this, m_bondPairs, p);
+      new SetBondPairsCommand(*this, m_molecule.m_bondPairs, p);
   comm->setText(tr("Update Bonds"));
   m_undoStack.push(comm);
   return true;
@@ -832,10 +809,11 @@ bool RWMolecule::setBondPair(Index bondId, const std::pair<Index, Index> &pair)
 
   SetBondPairCommand *comm = NULL;
   if (pair.first < pair.second) {
-    comm = new SetBondPairCommand(*this, bondId, m_bondPairs[bondId], pair);
+    comm = new SetBondPairCommand(*this, bondId, m_molecule.m_bondPairs[bondId],
+                                  pair);
   }
   else {
-    comm = new SetBondPairCommand(*this, bondId, m_bondPairs[bondId],
+    comm = new SetBondPairCommand(*this, bondId, m_molecule.m_bondPairs[bondId],
                                   makeBondPair(pair.first, pair.second));
   }
   comm->setText(tr("Update Bond"));
@@ -845,38 +823,17 @@ bool RWMolecule::setBondPair(Index bondId, const std::pair<Index, Index> &pair)
 
 void RWMolecule::emitChanged(unsigned int change)
 {
-  if (change != Molecule::NoChange)
-    emit changed(change);
+  m_molecule.emitChanged(change);
 }
 
 Index RWMolecule::findAtomUniqueId(Index atomId) const
 {
-  if (atomId == MaxIndex)
-    return MaxIndex;
-
-  Array<Index>::const_iterator match = std::find(m_atomUniqueIds.begin(),
-                                                 m_atomUniqueIds.end(),
-                                                 atomId);
-
-  if (match == m_atomUniqueIds.end())
-    return MaxIndex;
-
-  return static_cast<Index>(std::distance(m_atomUniqueIds.begin(), match));
+  return m_molecule.findAtomUniqueId(atomId);
 }
 
 Index RWMolecule::findBondUniqueId(Index bondId) const
 {
-  if (bondId == MaxIndex)
-    return MaxIndex;
-
-  Array<Index>::const_iterator match = std::find(m_bondUniqueIds.begin(),
-                                                 m_bondUniqueIds.end(),
-                                                 bondId);
-
-  if (match == m_bondUniqueIds.end())
-    return MaxIndex;
-
-  return static_cast<Index>(std::distance(m_bondUniqueIds.begin(), match));
+  return m_molecule.findBondUniqueId(bondId);
 }
 
 } // namespace QtGui

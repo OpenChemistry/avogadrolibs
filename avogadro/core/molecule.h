@@ -477,6 +477,7 @@ public:
    * Get the basis set (if present) for the molecule.
    */
   BasisSet * basisSet() { return m_basisSet; }
+  const BasisSet * basisSet() const { return m_basisSet; }
 
   /**
    * The unit cell for this molecule. May be NULL for non-periodic structures.

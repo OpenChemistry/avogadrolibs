@@ -20,18 +20,11 @@
 namespace Avogadro {
 namespace QtGui {
 
-Molecule::Molecule(QObject *parent_) : QObject(parent_)
+Molecule::Molecule(QObject *parent_)
+  : QObject(parent_),
+    m_undoMolecule(new RWMolecule(*this, this))
 {
-}
-
-Molecule::Molecule(const RWMolecule &mol, QObject *p) : QObject(p)
-{
-  m_atomUniqueIds = mol.m_atomUniqueIds;
-  m_bondUniqueIds = mol.m_bondUniqueIds;
-  m_atomicNumbers = mol.m_atomicNumbers;
-  m_positions3d = mol.m_positions3d;
-  m_bondPairs = mol.m_bondPairs;
-  m_bondOrders = mol.m_bondOrders;
+  m_undoMolecule->setInteractive(true);
 }
 
 Molecule::Molecule(const Molecule &other)
@@ -278,7 +271,7 @@ void Molecule::emitChanged(unsigned int change)
     emit changed(change);
 }
 
-inline Index Molecule::findAtomUniqueId(Index index) const
+Index Molecule::findAtomUniqueId(Index index) const
 {
   for (Index i = 0; i < static_cast<Index>(m_atomUniqueIds.size()); ++i)
     if (m_atomUniqueIds[i] == index)
@@ -286,12 +279,17 @@ inline Index Molecule::findAtomUniqueId(Index index) const
   return MaxIndex;
 }
 
-inline Index Molecule::findBondUniqueId(Index index) const
+Index Molecule::findBondUniqueId(Index index) const
 {
   for (Index i = 0; i < static_cast<Index>(m_bondUniqueIds.size()); ++i)
     if (m_bondUniqueIds[i] == index)
       return i;
   return MaxIndex;
+}
+
+RWMolecule* Molecule::undoMolecule()
+{
+  return m_undoMolecule;
 }
 
 } // end QtGui namespace

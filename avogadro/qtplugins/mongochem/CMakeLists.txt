@@ -11,4 +11,4 @@ avogadro_plugin(MongoChem
   "mongochem.cpp"
   ""
 )
-target_link_libraries(MongoChem AvogadroIO MoleQueueClient)
+target_link_libraries(MongoChem LINK_PRIVATE AvogadroIO MoleQueueClient)

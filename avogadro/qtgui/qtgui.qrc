@@ -12,6 +12,18 @@
         <file>icons/fallback/32x32/edit-cut.png</file>
         <file>icons/fallback/32x32/edit-paste.png</file>
         <file>icons/fallback/32x32/help-about.png</file>
+        <file>icons/fallback/64x64/document-export.png</file>
+        <file>icons/fallback/64x64/document-import.png</file>
+        <file>icons/fallback/64x64/document-new.png</file>
+        <file>icons/fallback/64x64/document-open-recent.png</file>
+        <file>icons/fallback/64x64/document-open.png</file>
+        <file>icons/fallback/64x64/document-save-all.png</file>
+        <file>icons/fallback/64x64/document-save-as.png</file>
+        <file>icons/fallback/64x64/document-save.png</file>
+        <file>icons/fallback/64x64/edit-copy.png</file>
+        <file>icons/fallback/64x64/edit-cut.png</file>
+        <file>icons/fallback/64x64/edit-paste.png</file>
+        <file>icons/fallback/64x64/help-about.png</file>
         <file>icons/fallback/index.theme</file>
     </qresource>
 </RCC>

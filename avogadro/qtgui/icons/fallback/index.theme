@@ -1,7 +1,12 @@
 [Icon Theme]
-Name="Avogadro Fallback"
-Comment="Fallback icons for use in Avogadro"
-Directories="32x32"
+Name=Avogadro Fallback
+Comment=Fallback icons for use in Avogadro
+Directories=32x32,64x64
 
 [32x32]
 Size=32
+Type=Fixed
+
+[64x64]
+Size=64
+Type=Fixed

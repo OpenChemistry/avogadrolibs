@@ -6,13 +6,11 @@ include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 find_package(Qt5OpenGL REQUIRED)
 
 set(HEADERS
-  editglwidget.h
   glwidget.h
   qttextrenderstrategy.h
 )
 
 set(SOURCES
-  editglwidget.cpp
   glwidget.cpp
   qttextrenderstrategy.cpp
 )

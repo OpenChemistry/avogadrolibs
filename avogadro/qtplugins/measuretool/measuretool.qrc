@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/icons">
         <file>measuretool.png</file>
+        <file>measuretool@2x.png</file>
     </qresource>
 </RCC>

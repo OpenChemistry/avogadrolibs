@@ -330,8 +330,12 @@ QWidget * BondCentricTool::toolWidget() const
   return NULL;
 }
 
-void BondCentricTool::setMolecule(QtGui::Molecule *)
+void BondCentricTool::setMolecule(QtGui::Molecule *mol)
 {
+  if (mol && mol->undoMolecule() != m_molecule) {
+    m_molecule = mol->undoMolecule();
+    reset();
+  }
 }
 
 void BondCentricTool::setEditMolecule(QtGui::RWMolecule *mol)
@@ -361,7 +365,8 @@ QUndoCommand * BondCentricTool::mousePressEvent(QMouseEvent *e)
       m_renderer->hit(e->pos().x(), e->pos().y());
 
   // If no hits, return. Also ensure that the hit molecule is the one we expect.
-  if (!ident.isValid() || ident.molecule != m_molecule)
+  const Core::Molecule *mol = &m_molecule->molecule();
+  if (!ident.isValid() || ident.molecule != mol)
     return NULL;
 
   // If the hit is a left click on a bond, make it the selected bond and map
@@ -998,7 +1003,7 @@ void BondCentricTool::drawAtomBondAngles(Rendering::GeometryNode &node,
                                          const RWAtom &atom,
                                          const RWBond &anchorBond)
 {
-  const Array<RWBond> bonds = atom.molecule()->bonds(atom);
+  const Array<RWBond> bonds = m_molecule->bonds(atom);
   Array<RWBond>::const_iterator bondIter(bonds.begin());
   Array<RWBond>::const_iterator bondEnd(bonds.end());
   size_t count = 0;
@@ -1101,7 +1106,7 @@ void BondCentricTool::updatePlaneSnapAngles()
     for (int i = 0; i < 2; ++i) {
       const RWAtom &atom = i == 0 ? atom1 : atom2;
       const Vector3f atomPos(atom.position3d().cast<float>());
-      const Array<RWBond> bonds = atom.molecule()->bonds(atom);
+      const Array<RWBond> bonds = m_molecule->bonds(atom);
       for (std::vector<RWBond>::const_iterator it = bonds.begin(),
            itEnd = bonds.end(); it != itEnd; ++it) {
         if (*it != selectedBond) {
