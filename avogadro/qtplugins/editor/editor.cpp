@@ -31,6 +31,13 @@
 
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/glrenderer.h>
+#include <avogadro/rendering/geometrynode.h>
+
+#include <avogadro/rendering/groupnode.h>
+#include <avogadro/rendering/textlabel2d.h>
+#include <avogadro/rendering/textlabel3d.h>
+#include <avogadro/rendering/textproperties.h>
+
 
 #include <QtWidgets/QAction>
 #include <QtWidgets/QComboBox>
@@ -57,8 +64,14 @@ using QtGui::RWAtom;
 using QtGui::RWBond;
 using QtGui::Molecule;
 using QtGui::RWMolecule;
-using Rendering::Identifier;
 using QtOpenGL::GLWidget;
+
+using Avogadro::Rendering::GeometryNode;
+using Avogadro::Rendering::GroupNode;
+using Avogadro::Rendering::Identifier;
+using Avogadro::Rendering::TextLabel2D;
+using Avogadro::Rendering::TextLabel3D;
+using Avogadro::Rendering::TextProperties;
 
 Editor::Editor(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
@@ -208,6 +221,36 @@ void Editor::adjustHydrogens()
   }
 }
 
+void Editor::draw(Rendering::GroupNode &node)
+{
+  if (fabs(m_bondDistance) < 0.3)
+    return;
+
+  GeometryNode *geo = new GeometryNode;
+  node.addChild(geo);
+
+  // Determine the field width. Negate it to indicate left-alignment.
+  QString distanceLabel = tr("Distance:");
+  int labelWidth = -1*distanceLabel.size();
+
+  QString overlayText = QString("%1 %L2")
+    .arg(tr("Distance:"), labelWidth)
+    .arg(m_bondDistance, 10, 'f', 3);
+
+  TextProperties overlayTProp;
+  overlayTProp.setFontFamily(TextProperties::Mono);
+  overlayTProp.setColorRgb(64, 255, 220);
+  overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
+
+  TextLabel2D *label = new TextLabel2D;
+  label->setText(overlayText.toStdString());
+  label->setTextProperties(overlayTProp);
+  label->setRenderPass(Rendering::Overlay2DPass);
+  label->setAnchor(Vector2i(10, 10));
+
+  geo->addDrawable(label);
+}
+
 void Editor::updatePressedButtons(QMouseEvent *e, bool release)
 {
   /// @todo Use modifier keys on mac
@@ -226,6 +269,9 @@ void Editor::reset()
   m_pressedButtons = Qt::NoButton;
   m_clickedAtomicNumber = INVALID_ATOMIC_NUMBER;
   m_bondAdded = false;
+
+  m_bondDistance = 0.0f;
+  emit drawablesChanged();
 }
 
 void Editor::emptyLeftClick(QMouseEvent *e)
@@ -449,6 +495,12 @@ void Editor::atomLeftDrag(QMouseEvent *e)
     Vector3f newPos = m_renderer->camera().unProject(windowPos, oldPos);
     newAtom.setPosition3d(newPos.cast<double>());
     changes |= Molecule::Atoms | Molecule::Modified;
+
+    RWAtom clickedAtom = m_molecule->atom(m_clickedObject.index);
+    if (clickedAtom.isValid()) {
+      Vector3f bondVector = clickedAtom.position3d().cast<float>() - newPos;
+      m_bondDistance = bondVector.norm();
+    }
   }
 
   m_molecule->emitChanged(changes);
