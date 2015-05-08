@@ -62,6 +62,8 @@ public slots:
   void apply();
   void revert();
 
+  void search();
+
   void selectSpaceGroup();
 
 private:

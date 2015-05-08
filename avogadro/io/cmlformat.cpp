@@ -454,6 +454,7 @@ bool CmlFormat::read(std::istream &file, Core::Molecule &mol)
     appendError(parser.error);
 
   bool filled = CrystalTools::fillUnitCell(mol);
+  CrystalTools::getSpacegroup(mol);
   //CrystalTools::buildSuperCell(mol,2,2,2);
   //std::vector<int> miller(3,1);
   //Vector3 cutoff(15.0,15.0,5.0);

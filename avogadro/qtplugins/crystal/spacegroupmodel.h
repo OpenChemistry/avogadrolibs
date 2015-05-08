@@ -77,12 +77,14 @@ class SpaceGroupModel : public QAbstractItemModel
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QString spaceGroupInfo(SpaceGroupItem *item, const QModelIndex &index) const Q_DECL_OVERRIDE;
+    int spaceGroupHallNumber(SpaceGroupItem *item, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
   private:
     void setupModelData(SpaceGroupItem *parent);
 
     SpaceGroupItem *rootItem;
 };
+
 
 } // namespace QtPlugins
 } // namespace Avogadro

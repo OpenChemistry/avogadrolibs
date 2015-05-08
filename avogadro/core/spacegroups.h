@@ -44,7 +44,7 @@ public:
   static std::string getHallSymbol(int hallNumber);
   static std::string getSetting(int hallNumber);
   static std::string getCrystalSystem(int hallNumber);
-  static void describeSpaceGroup(int hallNumber);
+  static std::string describeSpaceGroup(int hallNumber);
   static std::vector<std::string> getBravaisArray(crystalSystem crys);
   static std::vector<crystalSystem> getCrystalArray();
   static std::string getCrystalString(crystalSystem crystal);
@@ -57,12 +57,12 @@ public:
 /* Copyright (C) 2010 Atsushi Togo */
   typedef struct {
     int number;
-    char schoenflies[7];
-    char hall_symbol[17];
-    char international[32];
-    char international_full[20];
-    char international_short[11];
-    char setting[6];
+    std::string schoenflies;
+    std::string hall_symbol;
+    std::string international;
+    std::string international_full;
+    std::string international_short;
+    std::string setting;
     crystalSystem holohedry;
   } SpaceGroupType;
   //static const SpaceGroupType spacegroup_types[];
@@ -79,11 +79,12 @@ private:
 
 //#include "spacegrouptypes.cpp"
 /* In Hall symbols (3rd column), '=' is used instead of '"'. */
+//http://pmsl.planet.sci.kobe-u.ac.jp/~seto/?page_id=37&lang=en
 using Avogadro::Core::SpaceGroups;
 const SpaceGroups::SpaceGroupType spacegroup_types[]= {
   {  0, "      ", "                ", "                               ", "                   ", "          ", "     ", SpaceGroups::NONE }, /*   0 */
-  {  1, "C1^1  ", "P 1             ", "P 1                            ", "P 1                ", "P1        ", "     ", SpaceGroups::TRICLI }, /*   1 */
-  {  2, "Ci^1  ", "-P 1            ", "P -1                           ", "P -1               ", "P-1       ", "     ", SpaceGroups::TRICLI }, /*   2 */
+  {  1, "C1<sup>1</sup>", "P 1             ", "P 1                            ", "P 1                ", "P1        ", "     ", SpaceGroups::TRICLI }, /*   1 */
+  {  2, "Ci<sup>1</sup>", "-P 1            ", "P -1                           ", "P -1               ", "P-1       ", "     ", SpaceGroups::TRICLI }, /*   2 */
   {  3, "C2^1  ", "P 2y            ", "P 2 = P 1 2 1                  ", "P 1 2 1            ", "P2        ", "b    ", SpaceGroups::MONOCLI }, /*   3 */
   {  3, "C2^1  ", "P 2             ", "P 2 = P 1 1 2                  ", "P 1 1 2            ", "P2        ", "c    ", SpaceGroups::MONOCLI }, /*   4 */
   {  3, "C2^1  ", "P 2x            ", "P 2 = P 2 1 1                  ", "P 2 1 1            ", "P2        ", "a    ", SpaceGroups::MONOCLI }, /*   5 */

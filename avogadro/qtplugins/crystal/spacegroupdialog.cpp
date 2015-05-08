@@ -15,8 +15,6 @@
 ******************************************************************************/
 
 #include "spacegroupdialog.h"
-#include "ui_spacegroupdialog.h"
-
 
 #include <avogadro/qtgui/molecule.h>
 
@@ -28,13 +26,32 @@
 #include <vector>
 
 #include <QtWidgets/QPlainTextEdit>
-
 #include <QtCore/QRegExp>
 #include <QList>
+#include <QColumnView>
+#include <QAbstractItemModel>
+#include <QAbstractItemView>
 #include <QDebug>
+
+/*class spgColumnView : public QColumnView
+{
+  public:
+    spgColumnView(QWidget* p) : QColumnView(p) {}
+    QAbstractItemView * createColumn ( const QModelIndex & index )
+    {
+      Avogadro::QtPlugins::SpaceGroupItem *thisItem = static_cast<Avogadro::QtPlugins::SpaceGroupItem*>(index.internalPointer());
+      QAbstractItemView *view = 0;
+      if(thisItem->childCount() == 0)
+        return view;
+      else
+        return QColumnView::createColumn(index);
+    }
+};*/
+#include "ui_spacegroupdialog.h"
 
 using Avogadro::Core::UnitCell;
 using Avogadro::Core::SpaceGroups;
+using Avogadro::Core::CrystalTools;
 using Avogadro::QtGui::Molecule;
 
 namespace Avogadro {
@@ -49,8 +66,10 @@ SpaceGroupDialog::SpaceGroupDialog(QWidget *p) :
 
   connect(m_ui->apply, SIGNAL(clicked()), SLOT(apply()));
   connect(m_ui->revert, SIGNAL(clicked()), SLOT(revert()));
-  connect(m_ui->treeView, SIGNAL(clicked(QModelIndex)),
+  connect(m_ui->columnView, SIGNAL(clicked(QModelIndex)),
       this, SLOT(selectSpaceGroup()));
+  connect(m_ui->search, SIGNAL(textChanged(QString)),
+      this, SLOT(search()));
 
   /*
   QList<int> widths;
@@ -61,10 +80,18 @@ SpaceGroupDialog::SpaceGroupDialog(QWidget *p) :
   m_ui->columnView->setModel(mySpg);
   */
 
+  QList<int> widths;
+  widths.append(150);
+  widths.append(150);
+  widths.append(150);
+  widths.append(150);
+  widths.append(150);
+  widths.append(150);
+  m_ui->columnView->setColumnWidths(widths);
 
   mySpg = new SpaceGroupModel(this);
-  m_ui->treeView->setModel(mySpg);
-  m_ui->text->setPlainText("select group");
+  m_ui->columnView->setModel(mySpg);
+  m_ui->text->setText("select group");
 
 
 }
@@ -103,9 +130,10 @@ void SpaceGroupDialog::apply()
     return;
   }
 
-  //qDebug() << mySpg->data(m_ui->treeView->currentIndex());
-  QVariant selectedGroup = mySpg->data(m_ui->treeView->currentIndex(),20);
-  //m_ui->text->setPlainText(selectedGroup.toString());
+  QVariant selectedGroup = mySpg->data(m_ui->columnView->currentIndex(),20);
+
+  CrystalTools::setSpaceGroup(*m_molecule,selectedGroup.toInt());
+
 
   m_molecule->emitChanged(Molecule::Modified
                           | Molecule::Atoms | Molecule::UnitCell);
@@ -122,8 +150,17 @@ void SpaceGroupDialog::revert()
 
 void SpaceGroupDialog::selectSpaceGroup()
 {
-  QVariant selectedGroup = mySpg->data(m_ui->treeView->currentIndex(),200);
-  m_ui->text->setPlainText(selectedGroup.toString());
+  //QString current = m_ui->text->toPlainText();
+  QVariant selectedGroup = mySpg->data(m_ui->columnView->currentIndex(),200);
+  if(selectedGroup.toString()!="")
+    m_ui->text->setText(selectedGroup.toString());
+}
+
+void SpaceGroupDialog::search()
+{
+  //qDebug() << "searching for " << m_ui->search->text();
+  //mySpg->match
+  return;
 }
 
 
@@ -214,3 +251,5 @@ bool SpaceGroupDialog::validateMatrixEditor(QPlainTextEdit *edit)
 
 } // namespace QtPlugins
 } // namespace Avogadro
+
+//#include "spacegroupdialog.moc"

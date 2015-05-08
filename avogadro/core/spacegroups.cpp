@@ -15,6 +15,7 @@
 ******************************************************************************/
 
 #include "spacegroups.h"
+#include "avospglib.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -110,7 +111,7 @@ namespace Core {
     return sysString;
   }
 
-  void SpaceGroups::describeSpaceGroup(int hallNumber)
+  std::string SpaceGroups::describeSpaceGroup(int hallNumber)
   {
     std::string shortSymbol = getInternationalShort(hallNumber);
     std::string fullSymbol  = getInternationalFull(hallNumber);
@@ -119,18 +120,18 @@ namespace Core {
     std::string schoenflies  = getSchoenflies(hallNumber);
     std::string setting     = getSetting(hallNumber);
 
-    std::cout <<
-      "Short International Symbol:" << std::endl
-      << "  " << shortSymbol << std::endl
-      << "Schoenflies symbol:" << std::endl
-      << "  " << schoenflies << std::endl
-      << "Space group number:" << std::endl
-      << "  " << number << std::endl
-      << "Full International Symbol:" << std::endl
-      << "  " << fullSymbol << std::endl
-      << "Setting:" << std::endl
-      << "  " << setting << std::endl;
+    std::ostringstream outStream;
 
+    outStream <<
+      "<b>Short International Symbol:</b>" << "  " << shortSymbol << "<br>"
+      << "<b>Schoenflies symbol:</b>" << "  " << schoenflies << "<br>"
+      << "<b>Space group number:</b>" << "  " << number << "<br>"
+      << "<b>Full International Symbol:</b>" << "  " << fullSymbol << "<br>";
+    if(setting != "     ")
+      outStream << "<b>Setting:</b>" << "  " << setting;
+
+    //std::cout << outStream;
+    return outStream.str();
 
   }
 

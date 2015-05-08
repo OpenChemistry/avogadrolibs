@@ -16,6 +16,7 @@
 
 #include "spacegroupmodel.h"
 
+#include <string>
 #include <avogadro/core/spacegroups.h>
 #include <QDebug>
 
@@ -84,7 +85,7 @@ namespace QtPlugins {
     : QAbstractItemModel(parent)
   {
     QList<QVariant> rootData;
-    rootData << "Space Group";
+    rootData << "Space Group" << "Hall Number";
     rootItem = new SpaceGroupItem(rootData);
     setupModelData(rootItem);
   }
@@ -159,8 +160,9 @@ namespace QtPlugins {
     SpaceGroupItem *item = static_cast<SpaceGroupItem*>(index.internalPointer());
 
     if (role == 20) {
-      //qDebug() << item->childCount();//item->data(index.column());
-      return item->data(index.column());//getHallNumber();
+      //qDebug() << item->columnCount();//item->data(index.column());
+      //return item->data(index.column());//getHallNumber();
+      return QVariant(spaceGroupHallNumber(item,index));
     }
 
     if (role == 200) {
@@ -175,19 +177,43 @@ namespace QtPlugins {
 
   QString SpaceGroupModel::spaceGroupInfo(SpaceGroupItem *item, const QModelIndex &index) const
   {
-    QString display = item->data(index.column()).toString();
+    QString display;
     int nChildren = item->childCount();
     SpaceGroupItem *parentItem = item->parentItem();
     if(nChildren==0)
     {
-      while(parentItem != rootItem) {
+      if(item->columnCount() > 1)
+      {
+        std::string spg=SpaceGroups::describeSpaceGroup(item->data(1).toInt());
+        display=QString(spg.c_str());
+      }
+      else
+        display="";
+
+      /*while(parentItem != rootItem) {
         QString nextLine = QString("%1\n").arg(parentItem->data(index.column()).toString());
         display.prepend(nextLine);
         parentItem = parentItem->parentItem();
-      }
+      }*/
     }
     return display;
   }
+
+  int SpaceGroupModel::spaceGroupHallNumber(SpaceGroupItem *item, const QModelIndex &index) const
+  {
+    int nChildren = item->childCount();
+    SpaceGroupItem *parentItem = item->parentItem();
+    if(nChildren==0)
+    {
+      if(item->columnCount() > 1)
+        return item->data(1).toInt();
+      else
+        return 0;
+    }
+    else
+      return 0;
+  }
+
 
   Qt::ItemFlags SpaceGroupModel::flags(const QModelIndex &index) const
   {
@@ -218,7 +244,7 @@ namespace QtPlugins {
     {
       QString crystal = QString::fromStdString(SpaceGroups::getCrystalString(crystals.at(i)));
       QList<QVariant> crystalData;
-      crystalData << crystal;
+      crystalData << crystal << "";
       SpaceGroupItem *iCrystal = new SpaceGroupItem(crystalData,parent);
       //each crystal is also a parent
       //parents << parents.last()->child(parents.last()->childCount()-1);
@@ -229,7 +255,7 @@ namespace QtPlugins {
       {
         QString bravaisStr = QString::fromStdString(bravais.at(j));
         QList<QVariant> bravaisData;
-        bravaisData << bravaisStr;
+        bravaisData << bravaisStr << "";
         SpaceGroupItem *jBravais = new SpaceGroupItem(bravaisData,iCrystal);
 
         //now we finally have the space group symbol
@@ -239,33 +265,49 @@ namespace QtPlugins {
           QString intString = QString::fromStdString(intSymbol.at(k));
           QList<QVariant> symbolData;
           symbolData << intString;
-          SpaceGroupItem *kSymbol = new SpaceGroupItem(symbolData,jBravais);
           //jBravais.appendChild(kSymbol);
 
           //but, there may be more than one setting
           std::vector<std::string> settings = SpaceGroups::getSettingArray(crystals.at(i),bravais.at(j),intSymbol.at(k));
-          for (int l=0;l<settings.size();l++)
-          {
-            int hall = SpaceGroups::getHallNumber(crystals.at(i),bravais.at(j),intSymbol.at(k),settings.at(l));
-            QList<QVariant> hallData;
-            hallData << hall;
+          SpaceGroupItem *kSymbol;
 
-            if(settings.at(l) != "     ")
+          if(settings.at(0) == "     ")
+          {
+            int hall = SpaceGroups::getHallNumber(crystals.at(i),bravais.at(j),intSymbol.at(k),settings.at(0));
+            //int spgNumber = SpaceGroups::getNumber(hall);
+            //add the hall number column
+            symbolData << hall;
+            kSymbol = new SpaceGroupItem(symbolData,jBravais);
+            //kSymbol = new SpaceGroupItem(symbolData,jBravais);
+          }
+
+          else
+          {
+            kSymbol = new SpaceGroupItem(symbolData,jBravais);
+            for (int l=0;l<settings.size();l++)
             {
+              int hall = SpaceGroups::getHallNumber(crystals.at(i),bravais.at(j),intSymbol.at(k),settings.at(l));
+              //int spgNumber = SpaceGroup::getNumber(hall);
+              //QList<QVariant> hallData;
+              //allData << hall << QString("---");
+
+             // if(settings.at(l) != "     ")
+              //{
               QString settingString = QString::fromStdString(settings.at(l));
               QList<QVariant> settingData;
-              settingData << settingString;
+              settingData << settingString << hall;
               SpaceGroupItem *lSetting = new SpaceGroupItem(settingData,kSymbol);
               //all settings are children of symbols
               kSymbol->appendChild(lSetting);
 
-              SpaceGroupItem *hallNumber = new SpaceGroupItem(hallData,lSetting);
-              lSetting->appendChild(hallNumber);
-            }
-            else
-            {
-              SpaceGroupItem *hallNumber = new SpaceGroupItem(hallData,kSymbol);
-              kSymbol->appendChild(hallNumber);
+              //SpaceGroupItem *hallNumber = new SpaceGroupItem(hallData,lSetting);
+              //lSetting->appendChild(hallNumber);
+              //}
+              //else
+              //{
+               // SpaceGroupItem *hallNumber = new SpaceGroupItem(hallData,kSymbol);
+                //kSymbol->appendChild(hallNumber);
+              //}
             }
           }
           //all symbols are children of bravais
@@ -279,5 +321,7 @@ namespace QtPlugins {
 
     }
   }
+
+
 }
 }
