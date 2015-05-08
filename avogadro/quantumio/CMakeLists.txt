@@ -9,6 +9,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(HEADERS
   gamessus.h
   gaussianfchk.h
+  gaussiancube.h
   molden.h
   mopacaux.h
 )
@@ -18,6 +19,7 @@ set(SOURCES
   #gamessukout.cpp
   gamessus.cpp
   gaussianfchk.cpp
+  gaussiancube.cpp
   molden.cpp
   mopacaux.cpp
 )
