@@ -25,6 +25,8 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPolygonF>
 
+#include <QtWidgets/QApplication>
+
 #include <QtCore/QDebug>
 #include <QtCore/QPoint>
 #include <QtCore/QRectF>
@@ -89,7 +91,8 @@ inline QFont textPropertiesToQFont(const TextProperties &prop)
 
   TextProperties::FontStyles style = prop.fontStyles();
 
-  QFont result(family, static_cast<int>(prop.pixelHeight()) / 2 + 1,
+  QFont result(family,
+               static_cast<int>(prop.pixelHeight() * qApp->devicePixelRatio()) / 2 + 1,
                static_cast<bool>(style & TextProperties::Bold) ? QFont::Bold
                                                                : QFont::Normal,
                static_cast<bool>(style & TextProperties::Italic));
@@ -100,13 +103,13 @@ inline QFont textPropertiesToQFont(const TextProperties &prop)
   int iterLimiter = 0; // no more than 5 iterations below:
   do {
     result.setPointSizeF(result.pointSizeF()
-                         * static_cast<qreal>(prop.pixelHeight())
+                         * static_cast<qreal>(prop.pixelHeight() * qApp->devicePixelRatio())
                          / metrics.height());
 
     metrics = QFontMetricsF(result);
   }
   while (std::fabs(metrics.height() -
-                   static_cast<qreal>(prop.pixelHeight()))
+                   static_cast<qreal>(prop.pixelHeight() * qApp->devicePixelRatio()))
          > static_cast<qreal>(0.5)
          && iterLimiter++ < 5);
 
