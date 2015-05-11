@@ -48,30 +48,29 @@ std::vector<std::string> GaussianCube::mimeTypes() const
 
 bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
 {
-  // Using the existing cube class
-  Core::Cube cube;
-
   // Variables we will need
   std::string line;
   std::vector<std::string> list;
 
   int nAtoms;
-  Avogadro::Vector3 min, spacing;
+  Avogadro::Vector3 min;
+  Avogadro::Vector3 spacing;
   Avogadro::Vector3i dim;
 
   // Gaussian Cube format is very specific
 
   // Read and set name
   getline(in, line);
-  cube.setName(line);
+  std::string cubeName = line;
 
   // Read and skip field title (we may be able to use this to setCubeType in the future)
   getline(in, line);   
 
   // Next line contains nAtoms and m_min
   in >> nAtoms;
-  for (auto i = 0; i < 3; ++i) in >> min(i);
-  getline(in, line);
+  for (auto i = 0; i < 3; ++i)
+    in >> min(i);
+  getline(in, line); //capture newline before continuing 
 
   // Next 3 lines contains spacing and dim
   for (auto i = 0; i < 3; ++i) {
@@ -90,21 +89,26 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
     list = Core::split(line, ' ');
     short int atomNum = Core::lexicalCast<short int>(list[0]);
     Core::Atom a = molecule.addAtom(static_cast<unsigned char>(atomNum));
-    for (auto j = 2; j < 5; ++j) pos(j - 2) = Core::lexicalCast<double>(list[j]);
+    for (auto j = 2; j < 5; ++j)
+      pos(j - 2) = Core::lexicalCast<double>(list[j]);
     pos = pos * Avogadro::BOHR_TO_ANGSTROM;
     a.setPosition3d(pos);
   }
 
   // Render molecule  
   molecule.perceiveBondsSimple();
+  
+  // Get a cube object from molecule
+  Core::Cube *cube = molecule.addCube();
 
   // Cube block, set limits and populate data
-  cube.setLimits(min, dim, spacing);
+  cube->setLimits(min, dim, spacing);
   std::vector<double> values;
   // push_back is slow for this, resize vector first
   values.resize(dim(0) * dim(1) * dim(2));
-  for (auto i = 0; i < values.size(); ++i) in >> values[i];
-  cube.setData(values);
+  for (auto i = 0; i < values.size(); ++i)
+    in >> values[i];
+  cube->setData(values);
 
   return true;
 }
