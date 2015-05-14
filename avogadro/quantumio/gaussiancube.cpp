@@ -64,21 +64,21 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
   std::string cubeName = line;
 
   // Read and skip field title (we may be able to use this to setCubeType in the future)
-  getline(in, line);   
+  getline(in, line);
 
   // Next line contains nAtoms and m_min
   in >> nAtoms;
   for (auto i = 0; i < 3; ++i)
     in >> min(i);
-  getline(in, line); //capture newline before continuing 
+  getline(in, line); //capture newline before continuing
 
   // Next 3 lines contains spacing and dim
   for (auto i = 0; i < 3; ++i) {
     getline(in, line);
     line = Core::trimmed(line);
     list = Core::split(line, ' ');
-    dim(i) = Core::lexicalCast<int>(list[0]);  
-    spacing(i) = Core::lexicalCast<double>(list[i + 1]);  
+    dim(i) = Core::lexicalCast<int>(list[0]);
+    spacing(i) = Core::lexicalCast<double>(list[i + 1]);
   }
 
   // Geometry block
@@ -95,9 +95,9 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
     a.setPosition3d(pos);
   }
 
-  // Render molecule  
+  // Render molecule
   molecule.perceiveBondsSimple();
-  
+
   // Get a cube object from molecule
   Core::Cube *cube = molecule.addCube();
 
