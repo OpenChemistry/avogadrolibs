@@ -83,13 +83,12 @@ unsigned char EditorToolWidget::atomicNumber() const
 void EditorToolWidget::setBondOrder(unsigned char order)
 {
   if (order < m_ui->bondOrder->count())
-    m_ui->bondOrder->setCurrentIndex(static_cast<int>(order - 1));
+    m_ui->bondOrder->setCurrentIndex(static_cast<int>(order));
 }
 
 unsigned char EditorToolWidget::bondOrder() const
 {
-  return static_cast<unsigned char>(
-        m_ui->bondOrder->itemData(m_ui->bondOrder->currentIndex()).toUInt());
+  return static_cast<unsigned char>(m_ui->bondOrder->currentIndex());
 }
 
 void EditorToolWidget::elementChanged(int index)
@@ -207,6 +206,7 @@ void EditorToolWidget::buildElements()
 void EditorToolWidget::buildBondOrders()
 {
   m_ui->bondOrder->clear();
+  m_ui->bondOrder->addItem(tr("Automatic"), 0);
   m_ui->bondOrder->addItem(tr("Single"), 1);
   m_ui->bondOrder->addItem(tr("Double"), 2);
   m_ui->bondOrder->addItem(tr("Triple"), 3);
