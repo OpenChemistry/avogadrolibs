@@ -72,6 +72,7 @@ using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::TextLabel2D;
 using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
+using Avogadro::Core::Elements;
 
 Editor::Editor(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
@@ -330,6 +331,25 @@ void Editor::bondRightClick(QMouseEvent *e)
   m_molecule->emitChanged(Molecule::Bonds | Molecule::Removed);
 }
 
+  int expectedBondOrder(RWAtom atom1, RWAtom atom2)
+  {
+    Vector3 bondVector = atom1.position3d() - atom2.position3d();
+    double bondDistance = bondVector.norm();
+    double radiiSum;
+    radiiSum = Elements::radiusCovalent(atom1.atomicNumber()) + Elements::radiusCovalent(atom2.atomicNumber());
+    double ratio = bondDistance / radiiSum;
+
+    int bondOrder;
+    if (ratio > 1.0)
+      bondOrder = 1;
+    else if (ratio > 0.91 && ratio < 1.0)
+      bondOrder = 2;
+    else
+      bondOrder = 3;
+
+    return bondOrder;
+  }
+
 void Editor::atomLeftDrag(QMouseEvent *e)
 {
   // Always accept move events when atoms are clicked:
@@ -451,7 +471,12 @@ void Editor::atomLeftDrag(QMouseEvent *e)
       RWAtom clickedAtom = m_molecule->atom(m_clickedObject.index);
       RWAtom bondedAtom = m_molecule->atom(atomToBond.index);
       if (!m_molecule->bond(clickedAtom, bondedAtom).isValid()) {
-        m_molecule->addBond(clickedAtom, bondedAtom, m_toolWidget->bondOrder());
+        int bondOrder = m_toolWidget->bondOrder();
+        if (bondOrder == 0) {
+          // automatic - guess the size
+          bondOrder = expectedBondOrder(clickedAtom, bondedAtom);
+        }
+        m_molecule->addBond(clickedAtom, bondedAtom, bondOrder);
         m_bondAdded = true;
       }
       m_bondedAtom = atomToBond;
@@ -471,7 +496,15 @@ void Editor::atomLeftDrag(QMouseEvent *e)
     // Add a new atom bonded to the clicked atom
     RWAtom clickedAtom = m_molecule->atom(m_clickedObject.index);
     newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber());
-    m_molecule->addBond(clickedAtom, newAtom, m_toolWidget->bondOrder());
+
+    // Handle the automatic bond order
+    int bondOrder = m_toolWidget->bondOrder();
+    if (bondOrder == 0) {
+      // automatic - guess the size
+      bondOrder = expectedBondOrder(clickedAtom, newAtom);
+    }
+    m_molecule->addBond(clickedAtom, newAtom, bondOrder);
+
     changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Added;
     m_newObject.type = Rendering::AtomType;
     m_newObject.index = newAtom.index();
@@ -494,12 +527,25 @@ void Editor::atomLeftDrag(QMouseEvent *e)
     Vector3f oldPos(newAtom.position3d().cast<float>());
     Vector3f newPos = m_renderer->camera().unProject(windowPos, oldPos);
     newAtom.setPosition3d(newPos.cast<double>());
+
     changes |= Molecule::Atoms | Molecule::Modified;
 
     RWAtom clickedAtom = m_molecule->atom(m_clickedObject.index);
     if (clickedAtom.isValid()) {
       Vector3f bondVector = clickedAtom.position3d().cast<float>() - newPos;
       m_bondDistance = bondVector.norm();
+
+      // need to check if bond order needs to change
+      if (m_toolWidget->bondOrder() == 0) { // automatic
+        RWBond bond = m_molecule->bond(newAtom, clickedAtom);
+        if (bond.isValid()) {
+          int bondOrder = expectedBondOrder(newAtom, clickedAtom);
+          bond.setOrder(bondOrder);
+
+          changes |= Molecule::Bonds | Molecule::Modified;
+        }
+
+      }
     }
   }
 
