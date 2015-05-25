@@ -23,7 +23,7 @@
 namespace Avogadro {
 namespace Rendering {
 
-Camera::Camera() : m_width(0), m_height(0),
+  Camera::Camera() : m_width(0), m_height(0), m_pixelScale(1.0),
   m_projectionType(Perspective), m_orthographicScale(1.0)
 {
   m_projection.setIdentity();
@@ -106,8 +106,8 @@ Vector3f Camera::project(const Vector3f &point) const
 Vector3f Camera::unProject(const Vector3f &point) const
 {
   Eigen::Matrix4f mvp = m_projection.matrix() * m_modelView.matrix();
-  Vector4f result(2.0f * point.x() / static_cast<float>(m_width) - 1.0f,
-                  2.0f * (static_cast<float>(m_height) - point.y()) /
+  Vector4f result(2.0f * m_pixelScale * point.x() / static_cast<float>(m_width) - 1.0f,
+                  2.0f * (static_cast<float>(m_height) - m_pixelScale * point.y()) /
                   static_cast<float>(m_height) - 1.0f,
                   2.0f * point.z() - 1.0f,
                   1.0f);
@@ -164,6 +164,12 @@ void Camera::setViewport(int w, int h)
   m_width = w;
   m_height = h;
 }
+
+void Camera::setDevicePixelRatio(float scale)
+{
+  m_pixelScale = scale;
+}
+
 
 void Camera::setProjection(const Eigen::Affine3f &transform)
 {
