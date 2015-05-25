@@ -23,6 +23,7 @@
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/rendering/primitive.h>
 
+
 #include <QtCore/QPoint>
 
 namespace Avogadro {
@@ -72,6 +73,8 @@ public:
   QUndoCommand * mouseMoveEvent(QMouseEvent *e) AVO_OVERRIDE;
   QUndoCommand * keyPressEvent(QKeyEvent *e) AVO_OVERRIDE;
 
+  void draw(Rendering::GroupNode &node) AVO_OVERRIDE;
+
 private slots:
   void clearKeyPressBuffer() { m_keyPressBuffer.clear(); }
   void adjustHydrogens();
@@ -110,6 +113,8 @@ private:
   unsigned char m_clickedAtomicNumber;
   bool m_bondAdded;
   QString m_keyPressBuffer;
+
+  Real m_bondDistance;
 };
 
 } // namespace QtPlugins
