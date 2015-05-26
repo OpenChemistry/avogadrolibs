@@ -33,6 +33,7 @@
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/quantumio/gamessus.h>
 #include <avogadro/quantumio/gaussianfchk.h>
+#include <avogadro/quantumio/gaussiancube.h>
 #include <avogadro/quantumio/molden.h>
 #include <avogadro/quantumio/mopacaux.h>
 
@@ -80,6 +81,7 @@ QuantumOutput::QuantumOutput(QObject *p) :
   // Register our quantum file format.
   Io::FileFormatManager::registerFormat(new QuantumIO::GAMESSUSOutput);
   Io::FileFormatManager::registerFormat(new QuantumIO::GaussianFchk);
+  Io::FileFormatManager::registerFormat(new QuantumIO::GaussianCube);
   Io::FileFormatManager::registerFormat(new QuantumIO::MoldenFile);
   Io::FileFormatManager::registerFormat(new QuantumIO::MopacAux);
 }
