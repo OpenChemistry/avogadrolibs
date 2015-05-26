@@ -3,7 +3,6 @@
   This source file is part of the Avogadro project.
 
   Copyright 2015 Barry E. Moore II
-  Copyright 2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -52,7 +51,7 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
   std::string line;
   std::vector<std::string> list;
 
-  int nAtoms;
+  unsigned int nAtoms;
   Vector3 min;
   Vector3 spacing;
   Vector3i dim;
