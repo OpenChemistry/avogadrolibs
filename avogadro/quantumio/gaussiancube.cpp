@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2010 Geoffrey R. Hutchison
+  Copyright 2015 Barry E. Moore II
   Copyright 2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
@@ -53,9 +53,9 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
   std::vector<std::string> list;
 
   int nAtoms;
-  Avogadro::Vector3 min;
-  Avogadro::Vector3 spacing;
-  Avogadro::Vector3i dim;
+  Vector3 min;
+  Vector3 spacing;
+  Vector3i dim;
 
   // Gaussian Cube format is very specific
 
@@ -68,12 +68,12 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
 
   // Next line contains nAtoms and m_min
   in >> nAtoms;
-  for (auto i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
     in >> min(i);
   getline(in, line); //capture newline before continuing
 
   // Next 3 lines contains spacing and dim
-  for (auto i = 0; i < 3; ++i) {
+  for (unsigned int i = 0; i < 3; ++i) {
     getline(in, line);
     line = Core::trimmed(line);
     list = Core::split(line, ' ');
@@ -82,16 +82,16 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
   }
 
   // Geometry block
-  Avogadro::Vector3 pos;
-  for (auto i = 0; i < nAtoms; ++i) {
+  Vector3 pos;
+  for (unsigned int i = 0; i < nAtoms; ++i) {
     getline(in, line);
     line = Core::trimmed(line);
     list = Core::split(line, ' ');
     short int atomNum = Core::lexicalCast<short int>(list[0]);
     Core::Atom a = molecule.addAtom(static_cast<unsigned char>(atomNum));
-    for (auto j = 2; j < 5; ++j)
+    for (unsigned int j = 2; j < 5; ++j)
       pos(j - 2) = Core::lexicalCast<double>(list[j]);
-    pos = pos * Avogadro::BOHR_TO_ANGSTROM;
+    pos = pos * BOHR_TO_ANGSTROM;
     a.setPosition3d(pos);
   }
 
@@ -106,7 +106,7 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
   std::vector<double> values;
   // push_back is slow for this, resize vector first
   values.resize(dim(0) * dim(1) * dim(2));
-  for (auto i = 0; i < values.size(); ++i)
+  for (unsigned int i = 0; i < values.size(); ++i)
     in >> values[i];
   cube->setData(values);
 

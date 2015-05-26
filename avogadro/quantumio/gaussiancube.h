@@ -2,8 +2,8 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2010-2013 Kitware, Inc.
+  Copyright 2015 Barry E. Moore II
+  Copyright 2013 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
