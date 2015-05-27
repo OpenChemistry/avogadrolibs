@@ -582,6 +582,8 @@ inline bool Molecule::setHybridizations(const Core::Array<AtomHybridization> &hy
 inline bool Molecule::setHybridization(Index atomId, AtomHybridization hyb)
 {
   if (atomId < atomCount()) {
+    if (atomId >= m_hybridizations.size())
+      m_hybridizations.resize(atomCount(), HybridizationUnknown);
     m_hybridizations[atomId] = hyb;
     return true;
   }
@@ -606,6 +608,8 @@ inline bool Molecule::setFormalCharges(const Core::Array<signed char> &charges)
 inline bool Molecule::setFormalCharge(Index atomId, signed char charge)
 {
   if (atomId < atomCount()) {
+    if (atomId >= m_formalCharges.size())
+      m_formalCharges.resize(atomCount(), 0);
     m_formalCharges[atomId] = charge;
     return true;
   }
