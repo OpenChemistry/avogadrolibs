@@ -213,12 +213,12 @@ QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
 void Editor::adjustHydrogens()
 {
   if (m_molecule) {
-    //Core::HydrogenTools::adjustHydrogens(*m_molecule);
+    Core::HydrogenTools::adjustHydrogens(m_molecule->molecule());
     // Assume bonds and atoms changed...
-    //m_molecule->emitChanged(QtGui::Molecule::Atoms
-    //                        | QtGui::Molecule::Bonds
-    //                        | QtGui::Molecule::Added
-    //                        | QtGui::Molecule::Removed);
+    m_molecule->emitChanged(QtGui::Molecule::Atoms
+                            | QtGui::Molecule::Bonds
+                            | QtGui::Molecule::Added
+                            | QtGui::Molecule::Removed);
   }
 }
 
