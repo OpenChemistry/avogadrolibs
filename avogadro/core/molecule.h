@@ -570,7 +570,7 @@ inline bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
   return hyb;
 }
 
- inline bool Molecule::setHybridizations(const Core::Array<AtomHybridization> &hybs)
+inline bool Molecule::setHybridizations(const Core::Array<AtomHybridization> &hybs)
 {
   if (hybs.size() == atomCount()) {
     m_hybridizations = hybs;
@@ -579,7 +579,7 @@ inline bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
   return false;
 }
 
- inline bool Molecule::setHybridization(Index atomId, AtomHybridization hyb)
+inline bool Molecule::setHybridization(Index atomId, AtomHybridization hyb)
 {
   if (atomId < atomCount()) {
     m_hybridizations[atomId] = hyb;
