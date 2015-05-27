@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2013 Kitware, Inc.
+  Copyright 2013-2015 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -208,11 +208,37 @@ public:
     return m_molecule.m_positions2d;
   }
 
-  Core::AtomHybridization hybridization(Index) const { return Core::HybridizationUnknown; }
-  bool setHybridization(Index, Core::AtomHybridization) { return false; }
+  /**
+   * Get the hybridization for the requested atom.
+   * @param atomId The index of the atom.
+   * @return The hybridization of the atom indexed at @a atomId, or
+   * 0 if @a atomId is invalid.
+   */
+  Core::AtomHybridization hybridization(Index atomId) const;
 
-  signed char formalCharge(Index) const { return 0; }
-  bool setFormalCharge(Index, signed char) { return false; }
+  /**
+   * Set the hybridization of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param hyb The new hybridization.
+   * @return True on success, false otherwise.
+   */
+  bool setHybridization(Index atomId, Core::AtomHybridization hyb);
+
+  /**
+   * Get the formal charge for the requested atom.
+   * @param atomId The index of the atom.
+   * @return The formal charge of the atom indexed at @a atomId, or
+   * 0 if @a atomId is invalid.
+   */
+  signed char formalCharge(Index atomId) const;
+
+  /**
+   * Set the formal charge of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param charge The new formal charge.
+   * @return True on success, false otherwise.
+   */
+  bool setFormalCharge(Index atomId, signed char charge);
 
   /**
    * Create a new bond in the molecule.
@@ -500,6 +526,16 @@ inline const Core::Array<Vector3> &RWMolecule::atomPositions3d() const
 inline Vector3 RWMolecule::atomPosition3d(Index atomId) const
 {
   return m_molecule.atomPosition3d(atomId);
+}
+
+inline Core::AtomHybridization RWMolecule::hybridization(Index atomId) const
+{
+  return m_molecule.hybridization(atomId);
+}
+
+inline signed char RWMolecule::formalCharge(Index atomId) const
+{
+  return m_molecule.formalCharge(atomId);
 }
 
 inline RWMolecule::BondType RWMolecule::addBond(const AtomType &atom1,

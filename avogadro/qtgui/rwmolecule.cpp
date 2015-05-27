@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2013 Kitware, Inc.
+  Copyright 2013-2015 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -21,10 +21,11 @@
 #include <algorithm>
 #include <cassert>
 
-using Avogadro::Core::Array;
-
 namespace Avogadro {
 namespace QtGui {
+
+using Core::Array;
+using Core::AtomHybridization;
 
 // Base class for all undo commands used by this class.
 // Used to expose molecule internals without needing to add explicit friendships
@@ -43,6 +44,8 @@ protected:
   Array<Index>& bondUniqueIds() { return m_mol.m_molecule.bondUniqueIds(); }
   Array<unsigned char>& atomicNumbers() { return m_mol.m_molecule.atomicNumbers(); }
   Array<Vector3>& positions3d() { return m_mol.m_molecule.atomPositions3d(); }
+  Array<AtomHybridization>& hybridizations() { return m_mol.m_molecule.hybridizations(); }
+  Array<signed char>& formalCharges() { return m_mol.m_molecule.formalCharges(); }
   Array<std::pair<Index, Index> >& bondPairs() { return m_mol.m_molecule.bondPairs(); }
   Array<unsigned char>& bondOrders() { return m_mol.m_molecule.bondOrders(); }
   RWMolecule &m_mol;
@@ -473,6 +476,89 @@ bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3 &pos)
         *this, atomId, m_molecule.m_positions3d[atomId], pos);
   comm->setText(tr("Change Atom Position"));
   comm->setCanMerge(m_interactive);
+  m_undoStack.push(comm);
+  return true;
+}
+
+namespace {
+class SetAtomHybridizationCommand : public RWMolecule::UndoCommand
+{
+  Index m_atomId;
+  Core::AtomHybridization m_oldHybridization;
+  Core::AtomHybridization m_newHybridization;
+public:
+  SetAtomHybridizationCommand(RWMolecule &m, Index atomId,
+                              Core::AtomHybridization oldHybridization,
+                              Core::AtomHybridization newHybridization)
+    : UndoCommand(m),
+      m_atomId(atomId),
+      m_oldHybridization(oldHybridization),
+      m_newHybridization(newHybridization)
+  {
+  }
+
+  void redo() AVO_OVERRIDE
+  {
+    hybridizations()[m_atomId] = m_newHybridization;
+  }
+
+  void undo() AVO_OVERRIDE
+  {
+    hybridizations()[m_atomId] = m_oldHybridization;
+  }
+};
+} // end anon namespace
+
+bool RWMolecule::setHybridization(Index atomId, Core::AtomHybridization hyb)
+{
+  if (atomId >= atomCount())
+    return false;
+
+  SetAtomicNumberCommand *comm =
+      new SetAtomicNumberCommand(*this, atomId,
+                                 m_molecule.hybridization(atomId), hyb);
+  comm->setText(tr("Change Atom Hybridization"));
+  m_undoStack.push(comm);
+  return true;
+}
+
+namespace {
+class SetAtomFormalChargeCommand : public RWMolecule::UndoCommand
+{
+  Index m_atomId;
+  signed char m_oldCharge;
+  signed char m_newCharge;
+public:
+  SetAtomFormalChargeCommand(RWMolecule &m, Index atomId,
+                             signed char oldCharge, signed char newCharge)
+    : UndoCommand(m),
+      m_atomId(atomId),
+      m_oldCharge(oldCharge),
+      m_newCharge(newCharge)
+  {
+  }
+
+  void redo() AVO_OVERRIDE
+  {
+    formalCharges()[m_atomId] = m_newCharge;
+  }
+
+  void undo() AVO_OVERRIDE
+  {
+    formalCharges()[m_atomId] = m_oldCharge;
+  }
+};
+} // end anon namespace
+
+bool RWMolecule::setFormalCharge(Index atomId, signed char charge)
+{
+  if (atomId >= atomCount())
+    return false;
+
+  SetAtomFormalChargeCommand *comm =
+      new SetAtomFormalChargeCommand(*this, atomId,
+                                     m_molecule.formalCharge(atomId), charge);
+  comm->setText(tr("Change Atom Formal Charge"));
   m_undoStack.push(comm);
   return true;
 }
