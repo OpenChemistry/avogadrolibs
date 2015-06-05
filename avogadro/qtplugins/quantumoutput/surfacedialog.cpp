@@ -83,7 +83,8 @@ void SurfaceDialog::setCalculationEnabled(bool enable)
 
 void SurfaceDialog::surfaceComboChanged(int n)
 {
-  m_ui->moCombo->setEnabled(n == 1);
+  m_ui->moCombo->setEnabled(n >= 1);
+  m_ui->resolutionCombo->setEnabled(n < 2);
   float isoValue(0.0f);
   switch (n) {
   case 0:

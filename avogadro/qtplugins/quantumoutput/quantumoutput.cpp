@@ -103,10 +103,6 @@ QStringList QuantumOutput::menuPath(QAction *) const
   return path;
 }
 
-// Barry Moore: modifying function to allow cubes
-// to be readily apparent. If basisSet() we 
-// can set m_actions[0,1,2]->setEnabled, but 
-// with cubes only m_actions[2]->setEnabled
 void QuantumOutput::setMolecule(QtGui::Molecule *mol)
 {
   bool isQuantum(false);

@@ -48,7 +48,7 @@
          </item>
          <item>
           <property name="text">
-            <string>Cube</string>
+          <string>Gaussian Cube</string>
           </property>
          </item>
         </widget>

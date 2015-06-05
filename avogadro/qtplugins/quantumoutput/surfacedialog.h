@@ -54,7 +54,7 @@ protected slots:
 signals:
   void calculateMO(int molecularOrbital, float isoValue, float stepSize);
   void calculateElectronDensity(float isoValue, float stepSize);
-  void calculateCube(int molecularOrbital, float isoValue);
+  void calculateCube(int cubeIndex, float isoValue);
 
 private:
   Ui::SurfaceDialog *m_ui;
