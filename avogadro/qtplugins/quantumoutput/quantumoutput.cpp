@@ -103,16 +103,26 @@ QStringList QuantumOutput::menuPath(QAction *) const
   return path;
 }
 
+// Barry Moore: modifying function to allow cubes
+// to be readily apparent. If basisSet() we 
+// can set m_actions[0,1,2]->setEnabled, but 
+// with cubes only m_actions[2]->setEnabled
 void QuantumOutput::setMolecule(QtGui::Molecule *mol)
 {
   bool isQuantum(false);
   if (mol->basisSet()) {
     m_basis = mol->basisSet();
     isQuantum = true;
+    m_actions[0]->setEnabled(isQuantum);
+    m_actions[1]->setEnabled(isQuantum);
+    m_actions[2]->setEnabled(isQuantum);
   }
-  m_actions[0]->setEnabled(isQuantum);
-  m_actions[1]->setEnabled(isQuantum);
-  m_actions[2]->setEnabled(isQuantum);
+  else if (mol->cubes().size() != 0) {
+    m_cubes = mol->cubes();
+    isQuantum = true;
+    m_actions[2]->setEnabled(isQuantum);
+  }
+
   m_molecule = mol;
 }
 
@@ -130,20 +140,34 @@ void QuantumOutput::lumoActivated()
 
 void QuantumOutput::surfacesActivated()
 {
-  if (!m_basis)
+  if (!m_basis && m_cubes.size() == 0)
     return;
 
-  if (!m_dialog) {
-    m_dialog = new SurfaceDialog(qobject_cast<QWidget *>(parent()));
-    connect(m_dialog, SIGNAL(calculateMO(int,float,float)),
-            SLOT(calculateMolecularOrbital(int,float,float)));
-    connect(m_dialog, SIGNAL(calculateElectronDensity(float,float)),
-            SLOT(calculateElectronDensity(float,float)));
-  }
+  // m_basis dialog is different then m_cubes
+  if (m_basis) {
+    if (!m_dialog) {
+      m_dialog = new SurfaceDialog(qobject_cast<QWidget *>(parent()));
+      connect(m_dialog, SIGNAL(calculateMO(int,float,float)),
+              SLOT(calculateMolecularOrbital(int,float,float)));
+      connect(m_dialog, SIGNAL(calculateElectronDensity(float,float)),
+              SLOT(calculateElectronDensity(float,float)));
+    }
 
-  m_dialog->setNumberOfElectrons(m_basis->electronCount(),
-                                 m_basis->molecularOrbitalCount());
-  m_dialog->show();
+    m_dialog->setNumberOfElectrons(m_basis->electronCount(),
+                                  m_basis->molecularOrbitalCount());
+    m_dialog->show();
+  }
+  else if (m_cubes.size() > 0) {
+    if (!m_dialog) {
+      m_dialog = new SurfaceDialog(qobject_cast<QWidget *>(parent()));
+      connect(m_dialog, SIGNAL(calculateCube(int,float)),
+              SLOT(displayCube(int,float)));
+    }
+
+    m_dialog->setNumberOfCubes(m_cubes.size());
+
+    m_dialog->show();
+  }
 }
 
 void QuantumOutput::calculateMolecularOrbital(int molecularOrbital,
@@ -221,13 +245,24 @@ void QuantumOutput::calculateElectronDensity(float isoValue, float stepSize)
   calculateMolecularOrbital(-1, isoValue, stepSize);
 }
 
+void QuantumOutput::displayCube(int cubeIndex, float isoValue)
+{
+  m_cube = m_cubes[cubeIndex - 1];
+  m_isoValue = isoValue;
+  calculateFinished();
+}
+
 void QuantumOutput::calculateFinished()
 {
   qDebug() << "The calculation finished!";
   if (!m_cube)
     return;
 
-  disconnect(&m_concurrent->watcher(), 0, 0, 0);
+  // Barry: I have no clue what disconnect does, but if statement
+  // needed to not crash the cube calculation
+  if (!&m_concurrent->watcher()) {
+    disconnect(&m_concurrent->watcher(), 0, 0, 0);
+  }
 
   if (!m_mesh1)
     m_mesh1 = m_molecule->addMesh();

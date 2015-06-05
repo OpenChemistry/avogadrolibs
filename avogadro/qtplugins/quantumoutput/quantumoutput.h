@@ -73,6 +73,7 @@ private slots:
   void meshFinished();
   void calculateMolecularOrbital(int molecularOrbital, float isoValue,
                                  float stepSize);
+  void displayCube(int cubeIndex, float isoValue);
   void calculateElectronDensity(float isoValue, float stepSize);
 
 private:
@@ -86,6 +87,7 @@ private:
   SlaterSetConcurrent *m_concurrent2;
 
   Core::Cube        *m_cube;
+  std::vector<Core::Cube *>        m_cubes;
   Core::Mesh        *m_mesh1;
   Core::Mesh        *m_mesh2;
   QtGui::MeshGenerator *m_meshGenerator1;

@@ -41,6 +41,21 @@ SurfaceDialog::~SurfaceDialog()
   delete m_ui;
 }
 
+void SurfaceDialog::setNumberOfCubes(int numberOfCubes)
+{
+  if (numberOfCubes < 1)
+    return;
+
+  m_ui->moCombo->setVisible(true);
+  m_ui->moCombo->clear();
+
+  for (int i = 1; i <= numberOfCubes; ++i) {
+    QString text(tr("Cube %L1", "Cube").arg(i));
+    m_ui->moCombo->addItem(text);
+  }
+  m_ui->moCombo->setCurrentIndex(0);
+}  
+
 void SurfaceDialog::setNumberOfElectrons(int numberOfElectrons,
                                          int numberOfMOs)
 {
@@ -73,6 +88,9 @@ void SurfaceDialog::surfaceComboChanged(int n)
   switch (n) {
   case 0:
     isoValue = 0.1f;
+    break;
+  case 2:
+    isoValue = 0.04f;
     break;
   case 1:
   default:
@@ -122,6 +140,8 @@ void SurfaceDialog::calculateClicked()
   m_ui->calculateButton->setEnabled(false);
   if (m_ui->surfaceCombo->currentIndex() == 0)
     emit calculateElectronDensity(isoValue, stepSize);
+  else if (m_ui->surfaceCombo->currentIndex() == 2)
+    emit calculateCube(m_ui->moCombo->currentIndex() + 1, isoValue);
   else
     emit calculateMO(m_ui->moCombo->currentIndex() + 1, isoValue, stepSize);
 }
