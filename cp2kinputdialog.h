@@ -85,6 +85,12 @@ private:
   void buildMultiplicityOptions();
   void buildChargeOptions();
 
+  void buildEWALDTypeOptions();
+
+  void buildSCFGuessOptions();
+  void buildOTMinimizerOptions();
+
+
   void setBasicDefaults();
 
   QString generateJobTitle() const;

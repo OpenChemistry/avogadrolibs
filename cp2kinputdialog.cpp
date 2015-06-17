@@ -78,12 +78,6 @@ enum BasisOption {
   BasisCount
 };
 
-enum StateOption {
-  StateGas = 0,
-  StateWater,
-
-  StateCount
-};
 
 enum MethodOption {
   DFT = 0,
@@ -93,14 +87,37 @@ enum MethodOption {
   MethodCount
 };
 
-enum ChargeOption {
-  ChargeDication = 0,
-  ChargeCation,
-  ChargeNeutral,
-  ChargeAnion,
-  ChargeDianion,
+//MM tab
+enum EWALDTypeOption{
+	EWALD = 0,
+	ewaldNONE,
+	PME,
+	SPME,
 
-  ChargeCount
+	EWALDTypeCount
+};
+//QM tab
+enum SCFGuessOption{
+	ATOMIC = 0,
+	CORE,
+	DENSITIES,
+	HISTORY_RESTART,
+	MOPAC,
+	scfNONE,
+	RANDOM,
+	RESTART,
+	SPARSE,
+
+	SCFGuessCount
+};
+
+enum OTMinimizerOption{
+	CG = 0,
+	BROYDEN,
+	DIIS,
+	SD,
+
+	OTMinimizerCount
 };
 
 Cp2kInputDialog::Cp2kInputDialog(QWidget *parent_, Qt::WindowFlags f)
@@ -170,14 +187,33 @@ void Cp2kInputDialog::connectBasic()
            this, SLOT( updatePreviewText() ) );
   connect(ui.basisCombo, SIGNAL(currentIndexChanged(int)),
           this, SLOT(updateTitlePlaceholder()));
-  connect( ui.stateCombo, SIGNAL( currentIndexChanged( int ) ),
-           this, SLOT( updatePreviewText() ) );
   connect( ui.methodCombo, SIGNAL( currentIndexChanged( int ) ),
            this, SLOT( updatePreviewText() ) );
-  connect( ui.chargeCombo, SIGNAL( currentIndexChanged( int ) ),
+  connect( ui.ewaldtypeCombo, SIGNAL( currentIndexChanged( int ) ),
            this, SLOT( updatePreviewText() ) );
-  connect( ui.emaxSplineSpin, SIGNAL( valueChanged( int ) ),
+  connect( ui.emaxSplineSpin, SIGNAL( valueChanged( double ) ),
            this, SLOT( updatePreviewText() ) );
+  connect( ui.rcutnbSplineSpin, SIGNAL( valueChanged( double ) ),
+           this, SLOT( updatePreviewText() ) );
+  connect( ui.ewaldalphaSpin, SIGNAL( valueChanged( double ) ),
+           this, SLOT( updatePreviewText() ) );
+  connect( ui.ewaldgmaxSpin, SIGNAL( valueChanged( double ) ),
+           this, SLOT( updatePreviewText() ) );
+  connect( ui.lsdcheckBox, SIGNAL( stateChanged( bool ) ),
+           this, SLOT( updatePreviewText() ) );
+  connect( ui.maxscfspinBox, SIGNAL( valueChanged( int ) ),
+           this, SLOT( updatePreviewText() ) );
+  connect( ui.epsscfSpinBox, SIGNAL( valueChanged( double ) ),
+           this, SLOT( updatePreviewText() ) );
+  connect( ui.outerMaxscfSpinBox, SIGNAL( valueChanged( int ) ),
+           this, SLOT( updatePreviewText() ) );
+  connect( ui.outerEpsscfSpinBox, SIGNAL( valueChanged( double ) ),
+           this, SLOT( updatePreviewText() ) );
+  connect( ui.scfguessComboBox, SIGNAL( currentIndexChanged( int ) ),
+           this, SLOT( updatePreviewText() ) );
+  connect( ui.otminimizerComboBox, SIGNAL( currentIndexChanged( int ) ),
+           this, SLOT( updatePreviewText() ) );
+
 
 }
 
@@ -199,9 +235,10 @@ void Cp2kInputDialog::buildOptions()
   buildCalculateOptions();
   buildFunctionalOptions();
   buildBasisOptions();
-  buildStateOptions();
   buildMethodOptions();
-  buildChargeOptions();
+  buildEWALDTypeOptions();
+  buildSCFGuessOptions();
+  buildOTMinimizerOptions();
 }
 
 void Cp2kInputDialog::updateOptionCache()
@@ -210,9 +247,10 @@ void Cp2kInputDialog::updateOptionCache()
   m_optionCache.insert(ui.calculateCombo, ui.calculateCombo->currentIndex());
   m_optionCache.insert(ui.functionalCombo, ui.functionalCombo->currentIndex());
   m_optionCache.insert(ui.basisCombo, ui.basisCombo->currentIndex());
-  m_optionCache.insert(ui.stateCombo, ui.stateCombo->currentIndex());
   m_optionCache.insert(ui.methodCombo, ui.methodCombo->currentIndex());
-  m_optionCache.insert(ui.chargeCombo, ui.chargeCombo->currentIndex());
+  m_optionCache.insert(ui.ewaldtypeCombo, ui.ewaldtypeCombo->currentIndex());
+  m_optionCache.insert(ui.scfguessComboBox, ui.scfguessComboBox->currentIndex());
+  m_optionCache.insert(ui.otminimizerComboBox, ui.otminimizerComboBox->currentIndex());
 
 }
 
@@ -303,23 +341,6 @@ void Cp2kInputDialog::buildBasisOptions()
   }
 }
 
-void Cp2kInputDialog::buildStateOptions()
-{
-  for (int i = 0; i < static_cast<int>(StateCount); ++i) {
-    QString text = "";
-    switch (static_cast<StateOption>(i)) {
-    case StateGas:
-      text = tr("Gas");
-      break;
-    case StateWater:
-      text = tr("Water");
-      break;
-    default:
-      break;
-    }
-    ui.stateCombo->addItem(text);
-  }
-}
 
 void Cp2kInputDialog::buildMethodOptions()
 {
@@ -342,30 +363,88 @@ void Cp2kInputDialog::buildMethodOptions()
   }
 }
 
-void Cp2kInputDialog::buildChargeOptions()
+void Cp2kInputDialog::buildEWALDTypeOptions()
 {
-  for (int i = 0; i < static_cast<int>(ChargeCount); ++i) {
+  for (int i = 0; i < static_cast<int>(EWALDTypeCount); ++i) {
     QString text = "";
-    switch (static_cast<ChargeOption>(i)) {
-    case ChargeDication:
-      text = tr("Dication");
+    switch (static_cast<EWALDTypeOption>(i)) {
+    case EWALD:
+      text = tr("EWALD");
       break;
-    case ChargeCation:
-      text = tr("Cation");
+    case ewaldNONE:
+      text = tr("NONE");
       break;
-    case ChargeNeutral:
-      text = tr("Neutral");
+    case PME:
+      text = tr("PME");
       break;
-    case ChargeAnion:
-      text = tr("Anion");
-      break;
-    case ChargeDianion:
-      text = tr("Dianion");
+    case SPME:
+      text = tr("SPME");
       break;
     default:
       break;
     }
-    ui.chargeCombo->addItem(text);
+    ui.ewaldtypeCombo->addItem(text);
+  }
+}
+void Cp2kInputDialog::buildSCFGuessOptions()
+{
+  for (int i = 0; i < static_cast<int>(SCFGuessCount); ++i) {
+    QString text = "";
+    switch (static_cast<SCFGuessOption>(i)) {
+    case ATOMIC:
+      text = tr("ATOMIC");
+      break;
+    case CORE:
+      text = tr("CORE");
+      break;
+    case DENSITIES:
+      text = tr("DENSITIES");
+      break;
+    case HISTORY_RESTART:
+      text = tr("HISTORY_RESTART");
+      break;
+    case MOPAC:
+      text = tr("MOPAC");
+      break;
+    case scfNONE:
+      text = tr("NONE");
+      break;
+    case RANDOM:
+      text = tr("RANDOM");
+      break;
+    case RESTART:
+      text = tr("RESTART");
+      break;
+    case SPARSE:
+      text = tr("SPARSE");
+      break;
+    default:
+      break;
+    }
+    ui.scfguessComboBox->addItem(text);
+  }
+}
+void Cp2kInputDialog::buildOTMinimizerOptions()
+{
+  for (int i = 0; i < static_cast<int>(OTMinimizerCount); ++i) {
+    QString text = "";
+    switch (static_cast<OTMinimizerOption>(i)) {
+    case BROYDEN:
+      text = tr("BROYDEN");
+      break;
+    case CG:
+      text = tr("Conjugate Gradients");
+      break;
+    case DIIS:
+      text = tr("DIIS");
+      break;
+    case SD:
+      text = tr("Steepest descent");
+      break;
+    default:
+      break;
+    }
+    ui.otminimizerComboBox->addItem(text);
   }
 }
 
@@ -375,10 +454,10 @@ void Cp2kInputDialog::setBasicDefaults()
   ui.calculateCombo->setCurrentIndex( CalculateEnergy );
   ui.functionalCombo->setCurrentIndex( FunctionalBLYP );
   ui.basisCombo->setCurrentIndex( BasisSZVGTH );
-  ui.stateCombo->setCurrentIndex( StateGas );
   ui.methodCombo->setCurrentIndex( DFT );
-  ui.chargeCombo->setCurrentIndex( ChargeNeutral );
-
+  ui.ewaldtypeCombo->setCurrentIndex( SPME );
+  ui.scfguessComboBox->setCurrentIndex( ATOMIC );
+  ui.otminimizerComboBox->setCurrentIndex( CG );
 
 }
 
@@ -397,61 +476,61 @@ QString Cp2kInputDialog::generateJobTitle() const
 
 void Cp2kInputDialog::updatePreviewText()
 {
-	  std::map<char,int> valencee;
+	  std::map<QString,int> valencee;
 
-	  valencee['H'] = 1;
-	  valencee['He'] = 2;
-	  valencee['Li'] = 3;
-	  valencee['Be'] = 4;
-	  valencee['B'] = 3;
-	  valencee['C'] = 4;
-	  valencee['N'] = 5;
-	  valencee['O'] = 6;
-	  valencee['F'] = 7;
-	  valencee['Ne'] = 8;
-	  valencee['Na'] = 9;
-	  valencee['Mg'] = 10;
-	  valencee['Al'] = 3;
-	  valencee['Si'] = 4;
-	  valencee['P'] = 5;
-	  valencee['S'] = 6;
-	  valencee['Cl'] = 7;
-	  valencee['Ar'] = 8;
-	  valencee['K'] = 9;
-	  valencee['Ca'] = 10;
-	  valencee['Sc'] = 11;
-	  valencee['Ti'] = 12;
-	  valencee['V'] = 13;
-	  valencee['Cr'] = 14;
-	  valencee['Mn'] = 15;
-	  valencee['Fe'] = 16;
-	  valencee['Co'] = 17;
-	  valencee['Ni'] = 18;
-	  valencee['Cu'] = 11;
-	  valencee['Zn'] = 12;
-	  valencee['Ga'] = 13;
-	  valencee['Ge'] = 4;
-	  valencee['As'] = 5;
-	  valencee['Se'] = 6;
-	  valencee['Br'] = 7;
-	  valencee['Kr'] = 8;
-	  valencee['As'] = 5;
-	  valencee['Sr'] = 10;
-	  valencee['Y'] = 11;
-	  valencee['Zr'] = 12;
-	  valencee['Mo'] = 14;
-	  valencee['Ru'] = 16;
-	  valencee['Rh'] = 17;
-	  valencee['Pd'] = 18;
-	  valencee['Ag'] = 11;
-	  valencee['In'] = 13;
-	  valencee['Sb'] = 5;
-	  valencee['Te'] = 6;
-	  valencee['I'] = 7;
-	  valencee['Ba'] = 10;
-	  valencee['W'] = 14;
-	  valencee['Au'] = 11;
-	  valencee['Bi'] = 15;
+	  valencee["H"] = 1;
+	  valencee["He"] = 2;
+	  valencee["Li"] = 3;
+	  valencee["Be"] = 4;
+	  valencee["B"] = 3;
+	  valencee["C"] = 4;
+	  valencee["N"] = 5;
+	  valencee["O"] = 6;
+	  valencee["F"] = 7;
+	  valencee["Ne"] = 8;
+	  valencee["Na"] = 9;
+	  valencee["Mg"] = 10;
+	  valencee["Al"] = 3;
+	  valencee["Si"] = 4;
+	  valencee["P"] = 5;
+	  valencee["S"] = 6;
+	  valencee["Cl"] = 7;
+	  valencee["Ar"] = 8;
+	  valencee["K"] = 9;
+	  valencee["Ca"] = 10;
+	  valencee["Sc"] = 11;
+	  valencee["Ti"] = 12;
+	  valencee["V"] = 13;
+	  valencee["Cr"] = 14;
+	  valencee["Mn"] = 15;
+	  valencee["Fe"] = 16;
+	  valencee["Co"] = 17;
+	  valencee["Ni"] = 18;
+	  valencee["Cu"] = 11;
+	  valencee["Zn"] = 12;
+	  valencee["Ga"] = 13;
+	  valencee["Ge"] = 4;
+	  valencee["As"] = 5;
+	  valencee["Se"] = 6;
+	  valencee["Br"] = 7;
+	  valencee["Kr"] = 8;
+	  valencee["As"] = 5;
+	  valencee["Sr"] = 10;
+	  valencee["Y"] = 11;
+	  valencee["Zr"] = 12;
+	  valencee["Mo"] = 14;
+	  valencee["Ru"] = 16;
+	  valencee["Rh"] = 17;
+	  valencee["Pd"] = 18;
+	  valencee["Ag"] = 11;
+	  valencee["In"] = 13;
+	  valencee["Sb"] = 5;
+	  valencee["Te"] = 6;
+	  valencee["I"] = 7;
+	  valencee["Ba"] = 10;
+	  valencee["W"] = 14;
+	  valencee["Au"] = 11;
+	  valencee["Bi"] = 15;
 
 
   // If the dialog is not shown, delay the update in case we need to prompt the
@@ -492,17 +571,24 @@ void Cp2kInputDialog::updatePreviewText()
         static_cast<FunctionalOption>(ui.functionalCombo->currentIndex()));
   BasisOption basis(
         static_cast<BasisOption>(ui.basisCombo->currentIndex()));
-  StateOption state(
-        static_cast<StateOption>(ui.stateCombo->currentIndex()));
   MethodOption method(
         static_cast<MethodOption>(ui.methodCombo->currentIndex()));
-  ChargeOption charge(
-        static_cast<ChargeOption>(ui.chargeCombo->currentIndex()));
+  EWALDTypeOption EWALDType(
+        static_cast<EWALDTypeOption>(ui.ewaldtypeCombo->currentIndex()));
+  SCFGuessOption SCFGuess(
+         static_cast<SCFGuessOption>(ui.scfguessComboBox->currentIndex()));
+  OTMinimizerOption OTMinimizer(
+         static_cast<OTMinimizerOption>(ui.otminimizerComboBox->currentIndex()));
 
-  QString emaxSpline = QString::number(ui.emaxSplineSpin->value());
+ QString emaxSpline = QString::number(ui.emaxSplineSpin->value());
+ QString rcutnb = QString::number(ui.rcutnbSplineSpin->value());
+ QString ewaldalpha = QString::number(ui.ewaldalphaSpin->value());
+ QString ewaldgmax = QString::number(ui.ewaldgmaxSpin->value());
 
-  // Disable basis selection for semiempirical methods.
-  //ui.basisCombo->setEnabled(theory != TheoryAM1 && theory != TheoryPM3);
+ QString maxSCF = QString::number(ui.maxscfspinBox->value());
+ QString epsSCF = QString::number(ui.epsscfSpinBox->value());
+ QString outermaxSCF = QString::number(ui.outerMaxscfSpinBox->value());
+ QString outerepsSCF = QString::number(ui.outerEpsscfSpinBox->value());
 
   // Generate text.
   //   Variables:
@@ -512,7 +598,12 @@ void Cp2kInputDialog::updatePreviewText()
   QString gfunc;
   QString gmethod;
   QString mult;
-  QString iCharg;
+  QString ewaldtype;
+  QString lsd;
+
+
+  QString scfGuess;
+  QString otMinimizer;
 
   // Extra options for lines
   QString extraBasis;
@@ -529,15 +620,12 @@ void Cp2kInputDialog::updatePreviewText()
     break;
   case CalculateEnergyAndForces:
     runTyp = "ENERGY_FORCE";
-    //statPt = " $STATPT OPTTOL=0.0001 NSTEP=20 $END\n";
     break;
   case CalculateMolecularDynamics:
     runTyp = "MOLECULAR_DYNAMICS";
-   // statPt = " $STATPT OPTTOL=0.0001 NSTEP=20 $END\n";
     break;
   case CalculateGeometryOptimization:
     runTyp = "GEO_OPT";
-    //force = " $FORCE METHOD=ANALYTIC VIBANL=.TRUE. $END\n";
     break;
   default:
     break;
@@ -583,16 +671,6 @@ void Cp2kInputDialog::updatePreviewText()
      break;
    }
 
-  switch (state) {
-  case StateGas:
-    break;
-  case StateWater:
-    pcm = " $PCM SOLVNT=WATER $END\n";
-    break;
-  default:
-    break;
-  }
-
   switch (method) {
   case DFT:
     gmethod = "DFT";
@@ -607,44 +685,89 @@ void Cp2kInputDialog::updatePreviewText()
     break;
   }
 
-  switch (charge) {
-  case ChargeDication:
-    iCharg = "2";
+  switch (EWALDType) {
+  case EWALD:
+    ewaldtype = "EWALD";
     break;
-  case ChargeCation:
-    iCharg = "1";
+  case ewaldNONE:
+	ewaldtype = "NONE";
     break;
-  case ChargeNeutral:
-    iCharg = "0";
+  case PME:
+	ewaldtype = "PME";
     break;
-  case ChargeAnion:
-    iCharg = "-1";
+  case SPME:
+  	ewaldtype = "SPME";
     break;
-  case ChargeDianion:
-    iCharg = "-2";
+  default:
+    break;
+    }
+
+
+  switch (SCFGuess) {
+   case ATOMIC:
+     scfGuess = "ATOMIC";
+     break;
+   case CORE:
+	   scfGuess = "CORE";
+     break;
+   case DENSITIES:
+	   scfGuess = "DENSITIES";
+     break;
+   case HISTORY_RESTART:
+	   scfGuess = "HISTORY_RESTART";
+     break;
+   case MOPAC:
+	   scfGuess = "MOPAC";
+     break;
+   case scfNONE:
+	   scfGuess = "NONE";
+     break;
+   case RANDOM:
+	   scfGuess = "RANDOM";
+     break;
+   case RESTART:
+	   scfGuess = "RESTART";
+     break;
+   case SPARSE:
+	   scfGuess = "SPARSE";
+     break;
+   default:
+     break;
+   }
+
+  switch (OTMinimizer) {
+  case BROYDEN:
+    otMinimizer = "BROYDEN";
+    break;
+  case CG:
+	  otMinimizer = "CG";
+    break;
+  case DIIS:
+	  otMinimizer = "DIIS";
+    break;
+  case SD:
+	  otMinimizer = "SD";
     break;
   default:
     break;
   }
+  /*
+  switch (lsdbool) {
+  case true:
+    lsd = "TRUE";
+    break;
+  case false:
+	lsd = "FALSE";
+    break;
+
+  }*/
+
 
   // build up the input file:
   QString file;
-  /*
-  file += QString(" $BASIS GBASIS=%1%2 $END\n").arg(gBasis, extraBasis);
-  file += pcm;
-  file += QString(" $CONTRL SCFTYP=%1 RUNTYP=%2 ICHARG=%3 MULT=%4%5 $END\n")
-      .arg(scfTyp, runTyp, iCharg, mult, extraContrl);
-  file += statPt;
-  file += force;
-  file += "\n";
-  file += " $DATA\n";
-  file += "Title\n";
-  file += "C1\n";
 
-*/
  file += "&GLOBAL\n";
  file += QString("  PROJECT %1\n").arg(title);
- //file += QString("  EMAX_SPLINE %1\n").arg(emaxSpline);
 
  file += QString("  RUN_TYPE %1\n").arg(runTyp);
 
@@ -673,10 +796,11 @@ void Cp2kInputDialog::updatePreviewText()
      }
      if (inlist){
     	 atomList.push_back(atom.atomicNumber());
-     file += QString("    &KIND %1\n").arg(Core::Elements::symbol(atom.atomicNumber()));
+    	 QString symbol = Core::Elements::symbol(atom.atomicNumber());
+     file += QString("    &KIND %1\n").arg(symbol);
      file += QString("        ELEMENT %1\n").arg(Core::Elements::symbol(atom.atomicNumber()));
      file += QString("        BASIS_SET %1\n").arg(gbasis);
-     //file += QString("        POTENTIAL GTH-%1-q%2\n").arg(gfunc).arg(gvalence);
+     file += QString("        POTENTIAL GTH-%1-q%2\n").arg(gfunc).arg(valencee[symbol]);
      }
    }
  }
@@ -703,36 +827,39 @@ if(gmethod == "DFT") {
   file += "  &DFT\n";
   file += "    BASIS_SET_FILE_NAME  BASIS_SET\n";
   file += "    POTENTIAL_FILE_NAME  GTH_POTENTIALS\n";
+  if (ui.lsdcheckBox->isChecked())
+	  file += "    LSD TRUE\n";
 
   file += "    &QS\n";
   file += "      EPS_DEFAULT 1.0E-10\n";
   file += "    &END QS\n";
-/*
+  file += QString("    LSD %1\n").arg(lsd);
+
+
   file += "    &MGRID\n";
-  file += "      NGRIDS "+str(ngrids)+"\n"
-  file += "      CUTOFF "+str(cutoff)+"\n"
-  file += "      REL_CUTOFF "+str(rel_cutoff)+"\n"
+  file += "      CUTOFF 280\n";
+  file += "      COMMENSURATE\n";
   file += "    &END MGRID\n";
 
-  file += "    &XC\n";
-  file += "      &XC_FUNCTIONAL "+functional+"\n";
-  file += "      &END XC_FUNCTIONAL\n";
-  file += "    &END XC\n";
-*/
   file += "    &SCF\n";
-  file += "      SCF_GUESS ATOMIC\n";
-  file += "      EPS_SCF 1.0E-7\n";
-  file += "      MAX_SCF 300\n";
-  file += "      &DIAGONALIZATION\n";
-  file += "        ALGORITHM STANDARD\n";
-  file += "      &END DIAGONALIZATION\n";
-  file += "      &MIXING\n";
-  file += "        METHOD BROYDEN_MIXING\n";
-  file += "        ALPHA 0.4\n";
-  file += "        NBROYDEN 8\n";
-  file += "      &END MIXING\n";
+  file += QString("      MAX_SCF %1\n").arg(maxSCF);
+  file += QString("      EPS_SCF %1\n").arg(epsSCF);
+  file += QString("      SCF_GUESS %1\n").arg(scfGuess);
+  file += "      &OUTER_SCF\n";
+  file += QString("        MAX_SCF %1\n").arg(outermaxSCF);
+  file += QString("        EPS_SCF %1\n").arg(outerepsSCF);
+  file += "      &END\n";
+  file += "      &OT T\n";
+  file += QString("        MINIMIZER %1\n").arg(otMinimizer);
+  file += "        N_DIIS 7\n";
+  file += "      &END OT\n";
 
   file += "    &END SCF\n";
+
+  file += "    &XC\n";
+  file += QString("      &XC_FUNCTIONAL %1\n").arg(functional);
+  file += "      &END XC_FUNCTIONAL\n";
+  file += "    &END XC\n";
 
   file += "  &END DFT\n";
   file += "  &PRINT\n";
@@ -740,7 +867,7 @@ if(gmethod == "DFT") {
   file += "    &END FORCES\n";
   file += "  &END PRINT\n";
 }
-else if(gfunc == "FIST") {
+else if(gmethod == "FIST") {
 
 	 file += "    &TOPOLOGY\n";
 	    file += "      CHARGE_BETA\n";
@@ -758,19 +885,20 @@ else if(gfunc == "FIST") {
 	    file += "  &MM\n";
 
 	    file += "    &FORCEFIELD\n";
-	    file += "      ! Add file name that contains force field parameters\n";
+	    file += "      PARM_FILE_NAME ! Add file name that contains force field parameters\n";
 	    file += "      PARMTYPE AMBER\n";
 
 	    file += "      &SPLINE\n";
-	    file += "        EMAX_SPLINE 10000\n";
+	    file += QString("        EMAX_SPLINE %1\n").arg(emaxSpline);
+	    file += QString("        RCUT_NB %1\n").arg(rcutnb);
 	    file += "      &END SPLINE\n";
 	    file += "    &END FORCEFIELD\n";
 
 	    file += "    &POISSON\n";
 	    file += "      &EWALD\n";
-	    file += "        EWALD_TYPE SPME\n";
-	    file += "        ALPHA .36\n";
-	    file += "        GMAX 128\n";
+	    file += QString("        EWALD_TYPE %1\n").arg(ewaldtype);
+	    file += QString("        ALPHA %1\n").arg(ewaldalpha);
+	    file += QString("        GMAX %1\n").arg(ewaldgmax);
 	    file += "      &END EWALD\n";
 	    file += "    &END POISSON\n";
 
