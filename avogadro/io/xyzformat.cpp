@@ -27,16 +27,22 @@
 #include <string>
 #include <sstream>
 
-using Avogadro::Core::Atom;
-using Avogadro::Core::Elements;
-using Avogadro::Core::Molecule;
-using Avogadro::Core::trimmed;
-
 using std::string;
 using std::endl;
+using std::getline;
+using std::string;
+using std::vector;
 
 namespace Avogadro {
 namespace Io {
+
+using Core::Array;
+using Core::Atom;
+using Core::Elements;
+using Core::Molecule;
+using Core::lexicalCast;
+using Core::split;
+using Core::trimmed;
 
 #ifndef _WIN32
 using std::isalpha;
@@ -58,70 +64,84 @@ bool XyzFormat::read(std::istream &inStream, Core::Molecule &mol)
     return false;
   }
 
-  std::string buffer;
-  std::getline(inStream, buffer); // Finish the first line
-  std::getline(inStream, buffer);
+  string buffer;
+  getline(inStream, buffer); // Finish the first line
+  getline(inStream, buffer);
   if (!buffer.empty())
     mol.setData("name", trimmed(buffer));
 
   // Parse atoms
-  unsigned char atomicNum;
-  Vector3 pos;
   for (size_t i = 0; i < numAtoms; ++i) {
-    if (inStream >> buffer &&
-        inStream >> pos.x() &&
-        inStream >> pos.y() &&
-        inStream >> pos.z()) {
-      if (!buffer.empty()) {
-        if (isalpha(buffer[0])) {
-          atomicNum = Elements::atomicNumberFromSymbol(buffer);
-        }
-        else {
-          short int atomicNumInt = 0;
-          std::istringstream(buffer) >> atomicNumInt;
-          atomicNum = static_cast<unsigned char>(atomicNumInt);
-        }
-        Atom newAtom = mol.addAtom(atomicNum);
-        newAtom.setPosition3d(pos);
-        continue;
-      }
-    }
-    break;
-  }
+    getline(inStream, buffer);
+    vector<string> tokens(split(buffer, ' '));
 
-  // Do we have an animation?
-  size_t numAtoms2;
-  if ((inStream >> numAtoms2) && numAtoms == numAtoms2) {
-    std::getline(inStream, buffer); // Finish the count line
-    std::getline(inStream, buffer); // Skip the blank
-    mol.setCoordinate3d(mol.atomPositions3d(), 0);
-    int coordSet = 1;
-    while (numAtoms == numAtoms2) {
-      Core::Array<Vector3> positions;
-      positions.reserve(numAtoms);
-      for (size_t i = 0; i < numAtoms; ++i) {
-        if (inStream >> buffer && inStream >> pos.x()
-            && inStream >> pos.y() && inStream >> pos.z()) {
-          positions.push_back(pos);
-        }
-      }
-      mol.setCoordinate3d(positions, coordSet++);
-      if (!(inStream >> numAtoms2))
-        break;
-      std::getline(inStream, buffer); // Finish the count line
-      std::getline(inStream, buffer); // Skip the blank
-      positions.clear();
+    if (tokens.size() < 4) {
+      appendError("Not enough tokens in this line: " + buffer);
+      return false;
     }
+
+    unsigned char atomicNum(0);
+    if (isalpha(tokens[0][0]))
+      atomicNum = Elements::atomicNumberFromSymbol(tokens[0]);
+    else
+      atomicNum = static_cast<unsigned char>(lexicalCast<short int>(tokens[0]));
+
+    Vector3 pos(lexicalCast<double>(tokens[1]),
+                lexicalCast<double>(tokens[2]),
+                lexicalCast<double>(tokens[3]));
+
+    Atom newAtom = mol.addAtom(atomicNum);
+    newAtom.setPosition3d(pos);
   }
 
   // Check that all atoms were handled.
   if (mol.atomCount() != numAtoms) {
     std::ostringstream errorStream;
     errorStream << "Error parsing atom at index " << mol.atomCount()
-                << " (line " << 3 + mol.atomCount() << ").";
+                << " (line " << 3 + mol.atomCount() << ").\n" << buffer;
     appendError(errorStream.str());
     return false;
   }
+
+  // Do we have an animation?
+  size_t numAtoms2;
+  if (getline(inStream, buffer) && (numAtoms2 = lexicalCast<int>(buffer))
+      && numAtoms == numAtoms2) {
+    getline(inStream, buffer); // Skip the blank
+    mol.setCoordinate3d(mol.atomPositions3d(), 0);
+    int coordSet = 1;
+    while (numAtoms == numAtoms2) {
+      Array<Vector3> positions;
+      positions.reserve(numAtoms);
+
+      for (size_t i = 0; i < numAtoms; ++i) {
+        getline(inStream, buffer);
+        vector<string> tokens(split(buffer, ' '));
+        if (tokens.size() < 4) {
+          appendError("Not enough tokens in this line: " + buffer);
+          return false;
+        }
+        Vector3 pos(lexicalCast<double>(tokens[1]),
+                    lexicalCast<double>(tokens[2]),
+                    lexicalCast<double>(tokens[3]));
+        positions.push_back(pos);
+      }
+
+      mol.setCoordinate3d(positions, coordSet++);
+
+      if (!getline(inStream, buffer)) {
+        numAtoms2 = lexicalCast<int>(buffer);
+        if (numAtoms == numAtoms2)
+          break;
+      }
+
+      std::getline(inStream, buffer); // Skip the blank
+      positions.clear();
+    }
+  }
+
+  // This format has no connectivity information, so perceive basics at least.
+  mol.perceiveBondsSimple();
 
   return true;
 }
