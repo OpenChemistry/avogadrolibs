@@ -140,6 +140,9 @@ bool XyzFormat::read(std::istream &inStream, Core::Molecule &mol)
     }
   }
 
+  // This format has no connectivity information, so perceive basics at least.
+  mol.perceiveBondsSimple();
+
   return true;
 }
 
