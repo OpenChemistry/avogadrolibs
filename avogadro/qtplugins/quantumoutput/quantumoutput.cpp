@@ -254,11 +254,9 @@ void QuantumOutput::calculateFinished()
   if (!m_cube)
     return;
 
-  // Barry: I have no clue what disconnect does, but if statement
-  // needed to not crash the cube calculation
-  if (!&m_concurrent->watcher()) {
+  // if statement protects from disconnecting from NULL
+  if (!&m_concurrent->watcher())
     disconnect(&m_concurrent->watcher(), 0, 0, 0);
-  }
 
   if (!m_mesh1)
     m_mesh1 = m_molecule->addMesh();
