@@ -6,6 +6,7 @@ set(quantumoutput_srcs
   gaussiansetconcurrent.cpp
   slatersetconcurrent.cpp
   surfacedialog.cpp
+  newsurfacedialog.cpp
   quantumoutput.cpp
 )
 
@@ -16,6 +17,7 @@ avogadro_plugin(QuantumOutput
   QuantumOutput
   "${quantumoutput_srcs}"
   "surfacedialog.ui"
+  "newsurfacedialog.ui"
 )
 
 target_link_libraries(QuantumOutput

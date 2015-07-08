@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SurfaceDialog</class>
- <widget class="QDialog" name="SurfaceDialog">
+ <class>NewSurfaceDialog</class>
+ <widget class="QDialog" name="NewSurfaceDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>449</width>
-    <height>160</height>
+    <width>480</width>
+    <height>217</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,21 +36,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
         <widget class="QComboBox" name="surfaceCombo">
-         <item>
-          <property name="text">
-           <string>Electron Density</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Molecular Orbital</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-          <string>Cube File</string>
-          </property>
-         </item>
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item>
@@ -81,11 +69,6 @@
          <property name="currentIndex">
           <number>0</number>
          </property>
-         <item>
-          <property name="text">
-           <string notr="true">MO 666</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item>
@@ -126,6 +109,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QComboBox" name="resolutionCombo">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="currentIndex">
           <number>2</number>
          </property>
@@ -217,7 +203,11 @@
      <item row="3" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLineEdit" name="isoValueEdit"/>
+        <widget class="QLineEdit" name="isoValueEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer_4">
@@ -235,7 +225,22 @@
       </layout>
      </item>
      <item row="4" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QComboBox" name="displayBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="0" alignment="Qt::AlignRight">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Display:</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
