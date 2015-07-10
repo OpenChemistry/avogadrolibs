@@ -62,8 +62,6 @@ void GLRenderer::initialize()
     m_valid = false;
     return;
   }
-
-  resetCamera();
 }
 
 void GLRenderer::resize(int width, int height)
