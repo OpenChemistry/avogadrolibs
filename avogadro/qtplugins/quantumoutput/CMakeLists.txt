@@ -9,14 +9,48 @@ set(quantumoutput_srcs
   quantumoutput.cpp
 )
 
+set(quantumoutput_hs
+  quantumoutput.h
+)
+
+set(quantumoutput_uis
+  surfacedialog.ui
+)
+
 avogadro_plugin(QuantumOutput
   "Quantum output"
   ExtensionPlugin
-  quantumoutput.h
+  "${quantumoutput_hs}"
   QuantumOutput
   "${quantumoutput_srcs}"
-  "surfacedialog.ui"
+  "${quantumoutput_uis}"
 )
 
 target_link_libraries(QuantumOutput
+  LINK_PRIVATE AvogadroQuantumIO ${Qt5Concurrent_LIBRARIES})
+
+# NewQuantumOutput Plugin
+set(newquantumoutput_srcs
+  newsurfacedialog.cpp
+  newquantumoutput.cpp
+)
+
+set(newquantumoutput_hs
+  newquantumoutput.h
+)
+
+set(newquantumoutput_uis
+  newsurfacedialog.ui
+)
+
+avogadro_plugin(NewQuantumOutput
+  "NEW Quantum output"
+  ExtensionPlugin
+  "${newquantumoutput_hs}"
+  NewQuantumOutput
+  "${newquantumoutput_srcs}"
+  "${newquantumoutput_uis}"
+)
+
+target_link_libraries(NewQuantumOutput
   LINK_PRIVATE AvogadroQuantumIO ${Qt5Concurrent_LIBRARIES})
