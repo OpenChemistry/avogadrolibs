@@ -44,7 +44,8 @@ public:
 
 private slots:
   void newSurfacesActivated();
-  void displaySurface();
+  void calculateSurface(int index, float isosurfaceValue,
+                        float resolutionStepSize);
 
 private:
   QList<QAction *>    m_actions;

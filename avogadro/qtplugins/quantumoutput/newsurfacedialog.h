@@ -18,18 +18,18 @@ public:
   NewSurfaceDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
   ~NewSurfaceDialog();
 
+  void setupBasis(int numElectrons, int numMOs);
+  void setupCube(int numCubes);
+
 public slots:
 
 protected slots:
-  void surfaceTypeComboChanged(int n);
   void resolutionComboChanged(int n);
-  void surfaceComboChanged(int n);
-  void displayComboChanged(int n);
-  void showClicked();
   void calculateClicked();
 
 signals:
-  void showSurface();
+  void calculateClickedSignal(int index, float isosurfaceValue,
+                              float resolutionStepSize);
 
 private:
   Ui::NewSurfaceDialog *m_ui;

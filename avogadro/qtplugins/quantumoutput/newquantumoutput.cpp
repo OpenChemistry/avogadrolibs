@@ -48,7 +48,7 @@ NewQuantumOutput::NewQuantumOutput(QObject *p) :
 {
   QAction *action = new QAction(this);
   action->setEnabled(false);
-  action->setText(tr("Calculate NEW electronic surfaces..."));
+  action->setText(tr("Calculate electronic surfaces..."));
   connect(action, SIGNAL(triggered()), SLOT(newSurfacesActivated()));
   m_actions.push_back(action);
 
@@ -65,6 +65,20 @@ NewQuantumOutput::~NewQuantumOutput()
   delete m_cube;
 }
 
+void NewQuantumOutput::setMolecule(QtGui::Molecule *mol)
+{
+  if (mol->basisSet()) {
+    m_basis = mol->basisSet();
+    m_actions[0]->setEnabled(true);
+  }
+  else if (mol->cubes().size() != 0) {
+    m_cubes = mol->cubes();
+    m_actions[0]->setEnabled(true);
+  }
+
+  m_molecule = mol;
+}
+
 QList<QAction *> NewQuantumOutput::actions() const
 {
   return m_actions;
@@ -77,26 +91,32 @@ QStringList NewQuantumOutput::menuPath(QAction *) const
   return path;
 }
 
-void NewQuantumOutput::setMolecule(QtGui::Molecule *mol)
-{
-  m_actions[0]->setEnabled(true);
-  m_molecule = mol;
-}
-
 void NewQuantumOutput::newSurfacesActivated()
 {
-  // simple setup to show dialog, slots aren't connected
+  if (!m_basis && !m_cubes.size() > 0)
+    return;
+
   if (!m_dialog) {
-      m_dialog = new NewSurfaceDialog(qobject_cast<QWidget *>(parent()));
-      connect(m_dialog, SIGNAL(showSurface()), SLOT(displaySurface()));
+    m_dialog = new NewSurfaceDialog(qobject_cast<QWidget *>(parent()));
+    connect(m_dialog, SIGNAL(calculateClickedSignal(int,float,float)),
+            SLOT(calculateSurface(int,float,float)));
+  }
+
+  if (m_basis) {
+    m_dialog->setupBasis(m_basis->electronCount(),
+                         m_basis->molecularOrbitalCount());
+  }
+  else if (m_cubes.size() > 0) {
+    m_dialog->setupCube(m_cubes.size());
   }
 
   m_dialog->show();
 }
 
-void NewQuantumOutput::displaySurface()
+void calculateSurface(int index, float isosurfaceValue,
+                      float resolutionStepSize)
 {
-  // Test connection
+  //Here, we want to calculate surface and store
 }
 
 }
