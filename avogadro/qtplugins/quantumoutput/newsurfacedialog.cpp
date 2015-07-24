@@ -9,6 +9,8 @@ NewSurfaceDialog::NewSurfaceDialog(QWidget *parent_, Qt::WindowFlags f)
   : QDialog(parent_, f), m_ui(new Ui::NewSurfaceDialog)
 {
   m_ui->setupUi(this);
+
+  connect(m_ui->calculateButton, SIGNAL(clicked()), SLOT(calculateClicked()));
 }
 
 NewSurfaceDialog::~NewSurfaceDialog()
@@ -60,7 +62,7 @@ void NewSurfaceDialog::setupBasis(int numElectrons, int numMOs)
   QString text("Electron Density");
   m_ui->surfaceCombo->addItem(text);
   for (int i = 1; i <= numMOs; ++i) {
-    QString text(tr("MO %L1", "Molecular orbital").arg(i));
+    text = tr("MO %L1", "Molecular orbital").arg(i);
     if (i == numElectrons / 2)
       text += ' ' + tr("(HOMO)", "Highest occupied molecular orbital");
     if (i == numElectrons / 2 + 1)
@@ -97,8 +99,13 @@ void NewSurfaceDialog::calculateClicked()
   float resolutionStepSize(static_cast<float>(m_ui->resolutionDoubleSpinBox->value()));
   float isosurfaceValue(m_ui->isosurfaceLineEdit->text().toFloat());
   m_ui->calculateButton->setEnabled(false);
-  emit calculateClickedSignal(m_ui->moCombo->currentIndex(), isosurfaceValue,
+  emit calculateClickedSignal(m_ui->surfaceCombo->currentIndex(), isosurfaceValue,
                         resolutionStepSize);
+}
+
+void NewSurfaceDialog::reenableCalculateButton()
+{
+  m_ui->calculateButton->setEnabled(true);
 }
 
 } // End namespace QtPlugins

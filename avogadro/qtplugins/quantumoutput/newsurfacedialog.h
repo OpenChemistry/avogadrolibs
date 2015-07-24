@@ -20,6 +20,7 @@ public:
 
   void setupBasis(int numElectrons, int numMOs);
   void setupCube(int numCubes);
+  void reenableCalculateButton();
 
 public slots:
 
