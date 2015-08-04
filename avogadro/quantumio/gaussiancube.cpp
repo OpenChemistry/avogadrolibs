@@ -109,16 +109,16 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
   // Render molecule
   molecule.perceiveBondsSimple();
 
+  // Cube block, set limits and populate data
+  // min and spacing are in bohr units, convert to ANGSTROM
+  for (unsigned int j = 0; j < 3; ++j) {
+    min[j] *= BOHR_TO_ANGSTROM;
+    spacing[j] *= BOHR_TO_ANGSTROM;
+  }
+
   for (unsigned int i = 0; i < nCubes; ++i){
     // Get a cube object from molecule
     Core::Cube *cube = molecule.addCube();
-
-    // Cube block, set limits and populate data
-    // min and spacing are in bohr units, convert to ANGSTROM
-    for (unsigned int j = 0; j < 3; ++j) {
-      min[j] *= BOHR_TO_ANGSTROM;
-      spacing[j] *= BOHR_TO_ANGSTROM;
-    }
 
     cube->setLimits(min, dim, spacing);
     std::vector<double> values;
