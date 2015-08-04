@@ -99,8 +99,8 @@ void NewSurfaceDialog::calculateClicked()
   float resolutionStepSize(static_cast<float>(m_ui->resolutionDoubleSpinBox->value()));
   float isosurfaceValue(m_ui->isosurfaceLineEdit->text().toFloat());
   m_ui->calculateButton->setEnabled(false);
-  emit calculateClickedSignal(m_ui->surfaceCombo->currentIndex(), isosurfaceValue,
-                        resolutionStepSize);
+  emit calculateClickedSignal(m_ui->surfaceCombo->currentIndex(),
+                              isosurfaceValue, resolutionStepSize);
 }
 
 void NewSurfaceDialog::reenableCalculateButton()

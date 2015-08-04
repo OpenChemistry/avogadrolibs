@@ -1,6 +1,6 @@
 #include "newquantumoutput.h"
-
 #include "newsurfacedialog.h"
+
 #include "gaussiansetconcurrent.h"
 #include "slatersetconcurrent.h"
 
@@ -98,12 +98,11 @@ void NewQuantumOutput::newSurfacesActivated()
 
   if (!m_dialog) {
     m_dialog = new NewSurfaceDialog(qobject_cast<QWidget *>(parent()));
-    connect(m_dialog, SIGNAL(calculateClickedSignal(int,float,float)),
-            SLOT(calculateSurface(int,float,float)));
+    connect(m_dialog, SIGNAL(calculateClickedSignal(int, float, float)),
+            SLOT(calculateSurface(int, float, float)));
   }
 
   if (m_basis) {
-    // We will use m_cubes to store calculated cubes. Electron Density will be m_cubes[0]
     m_cubes.resize(m_basis->molecularOrbitalCount() + 1);
     m_dialog->setupBasis(m_basis->electronCount(),
                          m_basis->molecularOrbitalCount());
@@ -139,19 +138,22 @@ void NewQuantumOutput::calculateSurface(int index, float isosurfaceValue,
       m_cube->setLimits(*m_molecule, resolutionStepSize, 5.0);
       QString progressText;
       if (index == 0) {
-        if (dynamic_cast<GaussianSet *>(m_basis))
+        if (dynamic_cast<GaussianSet *>(m_basis)) {
           m_concurrent->calculateElectronDensity(m_cubes[index]);
-        else
+        }
+        else {
           m_concurrent2->calculateElectronDensity(m_cubes[index]);
+        }
         progressText = tr("Calculating electron density");
       }
       else {
-        if (dynamic_cast<GaussianSet *>(m_basis))
+        if (dynamic_cast<GaussianSet *>(m_basis)) {
           m_concurrent->calculateMolecularOrbital(m_cubes[index], index - 1);
-        else
+        }
+        else {
           m_concurrent2->calculateMolecularOrbital(m_cubes[index], index - 1);
-        progressText =
-            tr("Calculating molecular orbital %L1").arg(index - 1);
+        }
+        progressText = tr("Calculating molecular orbital %L1").arg(index - 1);
       }
       // Set up the progress dialog.
       if (dynamic_cast<GaussianSet *>(m_basis)) {
@@ -163,10 +165,10 @@ void NewQuantumOutput::calculateSurface(int index, float isosurfaceValue,
 
         connect(&m_concurrent->watcher(), SIGNAL(progressValueChanged(int)),
                 m_progressDialog, SLOT(setValue(int)));
-        connect(&m_concurrent->watcher(), SIGNAL(progressRangeChanged(int,int)),
-                m_progressDialog, SLOT(setRange(int,int)));
-        //connect(&m_concurrent->watcher(), SIGNAL(canceled()), SLOT(calculateCanceled()));
-        connect(&m_concurrent->watcher(), SIGNAL(finished()), SLOT(displayCube()));
+        connect(&m_concurrent->watcher(), SIGNAL(progressRangeChanged(int, int)),
+                m_progressDialog, SLOT(setRange(int, int)));
+        connect(&m_concurrent->watcher(), SIGNAL(finished()),
+                SLOT(displayCube()));
       }
       else {
         m_progressDialog->setWindowTitle(progressText);
@@ -177,10 +179,10 @@ void NewQuantumOutput::calculateSurface(int index, float isosurfaceValue,
 
         connect(&m_concurrent2->watcher(), SIGNAL(progressValueChanged(int)),
                 m_progressDialog, SLOT(setValue(int)));
-        connect(&m_concurrent2->watcher(), SIGNAL(progressRangeChanged(int,int)),
-                m_progressDialog, SLOT(setRange(int,int)));
-        //connect(&m_concurrent->watcher(), SIGNAL(canceled()), SLOT(calculateCanceled()));
-        connect(&m_concurrent2->watcher(), SIGNAL(finished()), SLOT(displayCube()));
+        connect(&m_concurrent2->watcher(), SIGNAL(progressRangeChanged(int, int)),
+                m_progressDialog, SLOT(setRange(int, int)));
+        connect(&m_concurrent2->watcher(), SIGNAL(finished()),
+                SLOT(displayCube()));
       }
     }
   }
