@@ -10,6 +10,8 @@ NewSurfaceDialog::NewSurfaceDialog(QWidget *parent_, Qt::WindowFlags f)
 {
   m_ui->setupUi(this);
 
+  connect(m_ui->resolutionCombo, SIGNAL(currentIndexChanged(int)),
+          SLOT(resolutionComboChanged(int)));
   connect(m_ui->calculateButton, SIGNAL(clicked()), SLOT(calculateClicked()));
 }
 
@@ -72,7 +74,6 @@ void NewSurfaceDialog::setupBasis(int numElectrons, int numMOs)
   m_ui->surfaceCombo->setCurrentIndex(numElectrons / 2);
 
   m_ui->resolutionCombo->setEnabled(true);
-  m_ui->resolutionDoubleSpinBox->setEnabled(true);
   m_ui->isosurfaceLineEdit->setEnabled(true);
   m_ui->calculateButton->setEnabled(true);
 }

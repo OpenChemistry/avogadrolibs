@@ -46,7 +46,7 @@ private slots:
   void newSurfacesActivated();
   void calculateSurface(int index, float isosurfaceValue,
                         float resolutionStepSize);
-  void displayCube(int index);
+  void displayCube();
   void meshFinished();
 
 private:
