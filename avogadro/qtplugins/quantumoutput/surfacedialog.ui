@@ -46,6 +46,11 @@
            <string>Molecular Orbital</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+          <string>Cube File</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item>
