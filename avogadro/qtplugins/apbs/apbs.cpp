@@ -37,7 +37,9 @@ using Core::Mesh;
 
 Apbs::Apbs(QObject *parent_)
   : QtGui::ExtensionPlugin(parent_),
-    m_molecule(0)
+    m_molecule(NULL),
+    m_progressDialog(NULL),
+    m_dialog(NULL)
 {
   QAction *action = new QAction(this);
   action->setText(tr("Run APBS"));
@@ -48,12 +50,6 @@ Apbs::Apbs(QObject *parent_)
   action->setText(tr("Open Output File"));
   connect(action, SIGNAL(triggered()), this, SLOT(onOpenOutputFile()));
   m_actions.append(action);
-
-  m_dialog = new ApbsDialog;
-  m_dialog->hide();
-
-  m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent_));
-  m_progressDialog->hide();
 }
 
 Apbs::~Apbs()
@@ -111,6 +107,9 @@ void Apbs::onMeshGeneratorProgress(int value)
 
 void Apbs::onRunApbs()
 {
+  if (!m_dialog)
+    m_dialog = new ApbsDialog(qobject_cast<QWidget*>(parent()));
+
   m_dialog->setMolecule(m_molecule);
   int code = m_dialog->exec();
   m_dialog->hide();
@@ -161,6 +160,9 @@ bool Apbs::loadOpenDxFile(const QString &fileName, QtGui::Molecule &molecule)
         tr("Error reading OpenDX file: No cube found"));
     }
     else {
+      if (!m_progressDialog)
+        m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
+
       // generate positive mesh
       m_progressDialog->setLabelText("Generating Positive Potential Mesh");
       m_progressDialog->setRange(0, 100);
