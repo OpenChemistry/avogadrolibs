@@ -277,13 +277,17 @@ void Symmetry::detectSymmetry()
     return;
   }
 
-  if(MSYM_SUCCESS != (ret = msymGetSubgroups(ctx, &msgl, &msg))) {
-    free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
-    m_symmetryWidget->setSymmetryOperations(0, NULL);
+  if(point_group[1] != '0'){
+    if(MSYM_SUCCESS != (ret = msymGetSubgroups(ctx, &msgl, &msg))) {
+      free(elements);
+      m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
+      m_symmetryWidget->setSymmetryOperations(0, NULL);
+      m_symmetryWidget->setSubgroups(0,NULL);
+      qDebug() << "Error:" << msymErrorString(ret) << " " << msymGetErrorDetails();
+      return;
+    }
+  } else {
     m_symmetryWidget->setSubgroups(0,NULL);
-    qDebug() << "Error:" << msymErrorString(ret) << " " << msymGetErrorDetails();
-    return;
   }
 
 
