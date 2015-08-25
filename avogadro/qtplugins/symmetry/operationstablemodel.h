@@ -23,7 +23,6 @@ namespace msym {
   }
 }
 
-#include <QPainter>
 #include <QAbstractTableModel>
 #include <QStyledItemDelegate>
 #include <QTextDocument>
