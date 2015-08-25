@@ -112,6 +112,7 @@ add_subdirectory(networkdatabases)
 add_subdirectory(openbabel)
 add_subdirectory(quantumoutput)
 add_subdirectory(scriptfileformats)
+add_subdirectory(symmetry)
 add_subdirectory(playertool)
 add_subdirectory(povray)
 
