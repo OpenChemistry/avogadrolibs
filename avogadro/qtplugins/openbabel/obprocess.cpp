@@ -54,13 +54,28 @@ OBProcess::OBProcess(QObject *parent_) :
       env.insert("BABEL_DATADIR",
                  QCoreApplication::applicationDirPath() + "/data");
 #else
-      // FIXME: Hardwiring a versioned subdirectory for now.
-      env.insert("BABEL_DATADIR",
-                 QCoreApplication::applicationDirPath()
-                 + "/../share/openbabel/2.3.2");
-      env.insert("BABEL_LIBDIR",
-                 QCoreApplication::applicationDirPath()
-                 + "/../lib/openbabel/2.3.2");
+      QDir dir(QCoreApplication::applicationDirPath() + "/../share/openbabel");
+      QStringList filters;
+      filters << "2.*";
+      QStringList dirs = dir.entryList(filters);
+      if (dirs.size() == 1) {
+        env.insert("BABEL_DATADIR",
+                   QCoreApplication::applicationDirPath()
+                   + "/../share/openbabel/" + dirs[0]);
+      }
+      else {
+        qDebug() << "Error, Open Babel data directory not found.";
+      }
+      dir.setPath(QCoreApplication::applicationDirPath() + "/../lib/openbabel");
+      dirs = dir.entryList(filters);
+      if (dirs.size() == 1) {
+        env.insert("BABEL_LIBDIR",
+                   QCoreApplication::applicationDirPath()
+                   + "/../lib/openbabel/" + dirs[0]);
+      }
+      else {
+        qDebug() << "Error, Open Babel plugins directory not found.";
+      }
 #endif
       m_process->setProcessEnvironment(env);
     }
@@ -89,6 +104,16 @@ void OBProcess::abort()
 {
   m_aborted = true;
   emit aborted();
+}
+
+void OBProcess::obError()
+{
+  qDebug() << "Process encountered an error, and did not execute correctly.";
+  if (m_process) {
+    qDebug() << "\tExit code:" << m_process->exitCode();
+    qDebug() << "\tExit status:" << m_process->exitStatus();
+    qDebug() << "\tExit output:" << m_process->readAll();
+  }
 }
 
 bool OBProcess::queryReadFormats()
@@ -345,6 +370,8 @@ void OBProcess::executeObabel(const QStringList &options,
   if (receiver) {
     connect(m_process, SIGNAL(finished(int)), receiver, slot);
     connect(m_process, SIGNAL(error(QProcess::ProcessError)), receiver, slot);
+    connect(m_process, SIGNAL(error(QProcess::ProcessError)),
+            this, SLOT(obError()));
   }
 
   // Start process
