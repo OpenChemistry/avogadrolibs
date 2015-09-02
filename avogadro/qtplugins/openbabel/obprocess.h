@@ -69,6 +69,11 @@ public slots:
    */
   void abort();
 
+  /**
+   * Called when an error in the process occurs.
+   */
+  void obError();
+
 signals:
   /**
    * Emitted when the abort() method has been called.

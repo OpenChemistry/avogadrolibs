@@ -91,6 +91,16 @@ void OBProcess::abort()
   emit aborted();
 }
 
+void OBProcess::obError()
+{
+  qDebug() << "Process encountered an error, and did not execute correctly.";
+  if (m_process) {
+    qDebug() << "\tExit code:" << m_process->exitCode();
+    qDebug() << "\tExit status:" << m_process->exitStatus();
+    qDebug() << "\tExit output:" << m_process->readAll();
+  }
+}
+
 bool OBProcess::queryReadFormats()
 {
   if (!tryLockProcess()) {
@@ -345,6 +355,8 @@ void OBProcess::executeObabel(const QStringList &options,
   if (receiver) {
     connect(m_process, SIGNAL(finished(int)), receiver, slot);
     connect(m_process, SIGNAL(error(QProcess::ProcessError)), receiver, slot);
+    connect(m_process, SIGNAL(error(QProcess::ProcessError)),
+            this, SLOT(obError()));
   }
 
   // Start process
