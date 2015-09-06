@@ -36,6 +36,7 @@
 #include <avogadro/quantumio/gaussiancube.h>
 #include <avogadro/quantumio/molden.h>
 #include <avogadro/quantumio/mopacaux.h>
+#include <avogadro/quantumio/nwchemlog.h>
 
 #include <QtCore/QDebug>
 #include <QtWidgets/QAction>
@@ -84,6 +85,7 @@ QuantumOutput::QuantumOutput(QObject *p) :
   Io::FileFormatManager::registerFormat(new QuantumIO::GaussianCube);
   Io::FileFormatManager::registerFormat(new QuantumIO::MoldenFile);
   Io::FileFormatManager::registerFormat(new QuantumIO::MopacAux);
+  Io::FileFormatManager::registerFormat(new QuantumIO::NWChemLog);
 }
 
 QuantumOutput::~QuantumOutput()
