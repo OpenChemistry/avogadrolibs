@@ -81,10 +81,15 @@ QVariant VibrationModel::data(const QModelIndex &idx, int role) const
   if (role == Qt::DisplayRole) {
     switch (idx.column()) {
       case 0:
-        return m_molecule->vibrationFrequencies()[idx.row()];
-        break;
+        if (m_molecule->vibrationFrequencies().size() > idx.row())
+          return m_molecule->vibrationFrequencies()[idx.row()];
+        else
+          return "No value";
       case 1:
-        return "No value";
+        if (m_molecule->vibrationIntensities().size() > idx.row())
+          return m_molecule->vibrationIntensities()[idx.row()];
+        else
+          return "No value";
       default:
         return "Invalid";
     }
