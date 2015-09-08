@@ -96,7 +96,7 @@ void NWChemLog::processLine(std::istream &in, Core::Molecule &mol)
   else if (Core::contains(key, "P.Frequency")) {
     readFrequencies(line, in, mol);
   }
-  else if (Core::contains(key, "Projected Infra") {
+  else if (Core::contains(key, "Projected Infra")) {
     readIntensities(in, mol);
   }
 }
@@ -194,6 +194,7 @@ void NWChemLog::readFrequencies(const std::string &firstLine, std::istream &in,
 void NWChemLog::readIntensities(std::istream &in, Core::Molecule &mol)
 {
   string line;
+  bool ok = false;
   // Skip the next two lines, headers, blanks...
   for (int i = 0; i < 2; ++i)
     if (!getline(in, line))
@@ -206,9 +207,9 @@ void NWChemLog::readIntensities(std::istream &in, Core::Molecule &mol)
     // Keep going until the expected number of components is not seen.
     if (parts.size() != 7)
       break;
-    m_intensities.push_back(Core::lexicalCast<double>(parts[5], ok)
+    m_intensities.push_back(Core::lexicalCast<double>(parts[5], ok));
     if (!ok) {
-       appendError("Couldn't convert " + parts[i] + " to double.");
+       appendError("Couldn't convert " + parts[5] + " to double.");
        return;
     }
   }         
