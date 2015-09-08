@@ -88,16 +88,16 @@ void ScriptFileFormats::refreshFileFormats()
 
 void ScriptFileFormats::unregisterFileFormats()
 {
-  for (QList<Io::FileFormat*>::const_iterator it = m_formats.begin(),
-       itEnd = m_formats.end(); it != itEnd; ++it) {
+  for (QList<Io::FileFormat*>::const_iterator it = m_formats.constBegin(),
+       itEnd = m_formats.constEnd(); it != itEnd; ++it) {
     Io::FileFormatManager::unregisterFormat((*it)->identifier());
   }
 }
 
 void ScriptFileFormats::registerFileFormats()
 {
-  for (QList<Io::FileFormat*>::const_iterator it = m_formats.begin(),
-       itEnd = m_formats.end(); it != itEnd; ++it) {
+  for (QList<Io::FileFormat*>::const_iterator it = m_formats.constBegin(),
+       itEnd = m_formats.constEnd(); it != itEnd; ++it) {
     if (!Io::FileFormatManager::registerFormat((*it)->newInstance())) {
       qDebug() << "Could not register format" << (*it)->identifier().c_str()
                << "due to name conflict.";
