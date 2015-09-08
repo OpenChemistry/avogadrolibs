@@ -63,8 +63,10 @@ bool NWChemLog::read(std::istream &in, Core::Molecule &molecule)
   while (!in.eof())
     processLine(in, molecule);
 
-  if (m_frequencies.size() > 0 && m_frequencies.size() == m_Lx.size()) {
+  if (m_frequencies.size() > 0 && m_frequencies.size() == m_Lx.size()
+      && m_frequencies.size() == m_intensities.size()) {
     molecule.setVibrationFrequencies(m_frequencies);
+    molecule.setVibrationIntensities(m_intensities);
     molecule.setVibrationLx(m_Lx);
   }
 
@@ -93,6 +95,9 @@ void NWChemLog::processLine(std::istream &in, Core::Molecule &mol)
   }
   else if (Core::contains(key, "P.Frequency")) {
     readFrequencies(line, in, mol);
+  }
+  else if (Core::contains(key, "Projected Infra") {
+    readIntensities(in, mol);
   }
 }
 
@@ -185,6 +190,30 @@ void NWChemLog::readFrequencies(const std::string &firstLine, std::istream &in,
     m_Lx.push_back(Lx);
   }
 }
+
+void NWChemLog::readIntensities(std::istream &in, Core::Molecule &mol)
+{
+  string line;
+  // Skip the next two lines, headers, blanks...
+  for (int i = 0; i < 2; ++i)
+    if (!getline(in, line))
+      return;
+
+  while (true) {
+    if (!getline(in, line))
+      return;
+    vector<string> parts = Core::split(line, ' ');
+    // Keep going until the expected number of components is not seen.
+    if (parts.size() != 7)
+      break;
+    m_intensities.push_back(Core::lexicalCast<double>(parts[5], ok)
+    if (!ok) {
+       appendError("Couldn't convert " + parts[i] + " to double.");
+       return;
+    }
+  }         
+} 
+
 
 }
 }

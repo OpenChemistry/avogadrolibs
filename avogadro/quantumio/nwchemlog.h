@@ -72,7 +72,11 @@ private:
   void readFrequencies(const std::string &line, std::istream &in,
                        Core::Molecule &mol);
 
+  // Read the projected frequency intensities.
+  void readIntensities(std::istream &in, Core::Molecule &mol);
+
   Core::Array<double> m_frequencies;
+  Core::Array<double> m_intensities;
   Core::Array< Core::Array<Vector3> > m_Lx;
 };
 
