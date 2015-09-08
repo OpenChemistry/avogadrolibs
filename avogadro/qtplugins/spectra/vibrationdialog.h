@@ -43,6 +43,7 @@ public:
   ~VibrationDialog();
 
   void setMolecule(QtGui::Molecule *molecule);
+  int currentMode() const;
 
 protected slots:
   void selectRow(QModelIndex);

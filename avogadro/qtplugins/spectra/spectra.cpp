@@ -22,8 +22,6 @@
 #include <avogadro/core/vector.h>
 
 #include <avogadro/qtgui/molecule.h>
-
-#include <QtCore/QDebug>
 #include <QtCore/QTimer>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QFileDialog>
@@ -141,10 +139,6 @@ void Spectra::setAmplitude(int amplitude)
 void Spectra::startVibrationAnimation()
 {
   // First calculate our frames, and then start our timer.
-  int mode = m_molecule->vibrationFrequencies().size() - 2;
-
-  setMode(mode);
-
   m_totalFrames = m_molecule->coordinate3dCount();
   m_currentFrame = 0;
 

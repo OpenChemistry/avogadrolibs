@@ -19,6 +19,8 @@
 #include "ui_vibrationdialog.h"
 #include "vibrationmodel.h"
 
+#include <avogadro/core/molecule.h>
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -57,6 +59,20 @@ void VibrationDialog::setMolecule(QtGui::Molecule *molecule)
   connect(m_ui->tableView->selectionModel(),
           SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
           SLOT(selectRow(QModelIndex)));
+
+  Core::Array<double> freqs = molecule->vibrationFrequencies();
+  for (size_t i = 0; i < freqs.size(); ++i) {
+    if (freqs[i] > 0.5) {
+      m_ui->tableView->selectRow(static_cast<int>(i));
+      emit modeChanged(i);
+      break;
+    }
+  }
+}
+
+int VibrationDialog::currentMode() const
+{
+  return m_ui->tableView->currentIndex().row();
 }
 
 void VibrationDialog::selectRow(QModelIndex idx)
