@@ -13,6 +13,7 @@ set(HEADERS
   gaussiancube.h
   molden.h
   mopacaux.h
+  nwchemjson.h
   nwchemlog.h
 )
 
@@ -24,6 +25,7 @@ set(SOURCES
   gaussiancube.cpp
   molden.cpp
   mopacaux.cpp
+  nwchemjson.cpp
   nwchemlog.cpp
 )
 
