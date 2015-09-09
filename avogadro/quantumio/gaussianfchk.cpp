@@ -165,10 +165,20 @@ void GaussianFchk::processLine(std::istream &in)
       m_alphaOrbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
       cout << "Alpha MO energies, n = " << m_alphaOrbitalEnergy.size() << endl;
     }
-    else if (key == "Beta Orbital Energies") {
-      m_betaOrbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-      cout << "Beta MO energies, n = " << m_betaOrbitalEnergy.size() << endl;
+  }
+  else if (key == "Beta Orbital Energies") {
+    if (m_scftype != Uhf) {
+      cout << "UHF detected. Reassigning Alpha properties." << endl;
+      m_scftype = Uhf;
+      m_alphaOrbitalEnergy = m_orbitalEnergy;
+      m_orbitalEnergy = vector<double>();
+
+      m_alphaMOcoeffs = m_MOcoeffs;
+      m_MOcoeffs = vector<double>();
     }
+
+    m_betaOrbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
+    cout << "Beta MO energies, n = " << m_betaOrbitalEnergy.size() << endl;
   }
   else if (key == "Alpha MO coefficients" && list.size() > 2) {
     if (m_scftype == Rhf) {
