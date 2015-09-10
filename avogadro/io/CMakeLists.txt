@@ -36,5 +36,5 @@ set(SOURCES
 
 avogadro_add_library(AvogadroIO ${HEADERS} ${SOURCES})
 
-# hdf5 is the HDF5 imported target
-target_link_libraries(AvogadroIO LINK_PUBLIC AvogadroCore LINK_PRIVATE hdf5)
+# HDF5 library paths provided by find module
+target_link_libraries(AvogadroIO LINK_PUBLIC AvogadroCore LINK_PRIVATE ${HDF5_LIBRARIES})
