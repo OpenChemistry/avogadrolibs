@@ -3,6 +3,7 @@ set(tests
   Array
   Atom
   AtomTyper
+  BasisSet
   Bond
   CoordinateBlockGenerator
   CoordinateSet
