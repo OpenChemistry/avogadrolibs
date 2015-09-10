@@ -95,10 +95,7 @@ public:
    */
   bool homo(unsigned int n)
   {
-    if (n + 1 == static_cast<unsigned int>(m_electrons[0] / 2))
-      return true;
-    else
-      return false;
+    return n == homo();
   }
 
   /**
@@ -117,10 +114,7 @@ public:
    */
   bool lumo(unsigned int n)
   {
-    if (n == static_cast<unsigned int>(m_electrons[0] / 2))
-      return true;
-    else
-      return false;
+    return n == lumo();
   }
   /**
    * @return The molecular orbital number corresponding to the LUMO orbital.
