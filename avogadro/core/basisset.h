@@ -18,6 +18,9 @@
 #ifndef AVOGADRO_CORE_BASISSET_H
 #define AVOGADRO_CORE_BASISSET_H
 
+#include <vector>
+#include <iostream>
+
 #include "avogadrocore.h"
 
 namespace Avogadro {
@@ -103,7 +106,7 @@ public:
    */
   unsigned int homo() const
   {
-    return m_electrons[0] / 2;
+    return m_electrons[0];
   }
 
 
@@ -121,7 +124,24 @@ public:
    */
   unsigned int lumo() const
   {
-    return m_electrons[0] / 2 + 1;
+    if (m_betaMOEnergies.empty() || m_alphaMOEnergies.empty()) {
+      // The system is closed shell or we don't have energy information.
+      return m_electrons[0] + 1;
+    }
+    else { // Open shell calculation. Need to check the relative energies.
+      unsigned int alphaLumo = m_electrons[0] + 1;
+      unsigned int betaLumo = m_electrons[1] + 1;
+
+      if (m_alphaMOEnergies.size() < alphaLumo || m_betaMOEnergies.size() < betaLumo) {
+        std::cout << "Malformed basis set detected: more electrons than defined energies.";
+        return 0;
+      }
+
+      if (m_alphaMOEnergies[alphaLumo] >= m_alphaMOEnergies[betaLumo])
+        return alphaLumo;
+      else
+        return betaLumo;
+    }
   }
 
 
@@ -130,6 +150,24 @@ public:
    * Default is true, if false then the basis set is likely unusable.
    */
   virtual bool isValid() = 0;
+
+  /**
+   * Set the orbital energies
+   */
+  bool setOrbitalEnergies(std::vector<double> energies, ElectronType type) {
+    switch(type) {
+      case Paired:
+      case Alpha:
+        m_alphaMOEnergies = energies;
+        break;
+      case Beta:
+        m_betaMOEnergies = energies;
+        break;
+      default:
+        return false;
+    }
+    return true;
+  }
 
 protected:
   /**
@@ -146,6 +184,16 @@ protected:
    */
   Molecule *m_molecule;
 
+  /**
+   * Energies of the alpha molecular orbitals
+   */
+  std::vector<double> m_alphaMOEnergies;
+
+  /**
+   * Energies of the beta molecular orbitals. If the system is restricted the
+   * the beta energies will not be defined.
+   */
+  std::vector<double> m_betaMOEnergies;
 };
 
 inline void BasisSet::setElectronCount(unsigned int n, ElectronType type)
@@ -171,6 +219,7 @@ inline unsigned int BasisSet::electronCount(ElectronType type)
 {
   switch (type) {
   case Paired:
+    return m_electrons[0] * 2;
   case Alpha:
     return m_electrons[0];
   case Beta:
