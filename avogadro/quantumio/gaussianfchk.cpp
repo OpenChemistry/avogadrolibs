@@ -207,6 +207,8 @@ void GaussianFchk::processLine(std::istream &in)
 
 void GaussianFchk::load(GaussianSet* basis)
 {
+  basis->setScfType(m_scftype);
+
   basis->setElectronCount(m_electronsAlpha, Alpha);
   basis->setElectronCount(m_electronsBeta, Beta);
 

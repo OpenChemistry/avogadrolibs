@@ -35,6 +35,8 @@ using Core::Atom;
 using Core::BasisSet;
 using Core::SlaterSet;
 
+using Core::Rhf;
+
 using Core::Alpha;
 using Core::Beta;
 
@@ -161,6 +163,8 @@ void MopacAux::load(SlaterSet* basis)
     cout << "Open shell input not implemented for mopac" << endl;
     return;
   }
+
+  basis->setScfType(Rhf); // TODO: support open shell
 
   // Now load up our basis set
   basis->addSlaterIndices(m_atomIndex);

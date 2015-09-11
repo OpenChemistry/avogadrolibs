@@ -228,6 +228,8 @@ void MoldenFile::load(GaussianSet* basis) {
     cout << "Warning: Open shell Molden files not implemented." << endl;
     return;
   }
+  basis->setScfType(Rhf); // TODO: implement open shell systems?
+
   basis->setElectronCount(m_electrons/2, Alpha);
   basis->setElectronCount(m_electrons/2, Beta);
 
