@@ -173,7 +173,7 @@ void MopacAux::load(SlaterSet* basis)
   basis->addEigenVectors(m_eigenVectors);
   basis->addDensityMatrix(m_density);
 
-  // TODO: these currently arn't read and if they where, open shell systems would fail.
+  // TODO: these currently aren't read and if they where, open shell systems would be wrong.
   if (m_orbitalEnergy.size() > 0) {
     basis->setOrbitalEnergies(m_orbitalEnergy, Alpha);
     basis->setOrbitalEnergies(m_orbitalEnergy, Beta);

@@ -340,13 +340,13 @@ void GAMESSUSOutput::load(GaussianSet* basis)
     basis->setMolecularOrbitals(m_MOcoeffs, Alpha);
     basis->setMolecularOrbitals(m_MOcoeffs, Beta);
   }
-  /*
-  // TODO: we will never get here because we never attempt to set the m_alphaMOcoeffs or m_betaMOcoeffs
+
+  // TODO: we will never get here because we never attempt to read the m_alphaMOcoeffs or m_betaMOcoeffs
   if (m_alphaMOcoeffs.size())
     basis->setMolecularOrbitals(m_alphaMOcoeffs, Alpha);
   if (m_betaMOcoeffs.size())
     basis->setMolecularOrbitals(m_betaMOcoeffs, Beta);
-  */
+
 
   if (m_orbitalEnergy.size() > 0) {
     basis->setOrbitalEnergies(m_orbitalEnergy, Alpha);

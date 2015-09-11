@@ -581,12 +581,7 @@ void GaussianFchk::outputAll()
     cout << i << " : type = " << m_shellTypes.at(i)
          << ", number = " << m_shellNums.at(i)
          << ", atom = " << m_shelltoAtom.at(i) << endl;
-//  if (m_MOcoeffs.size()) {
-//    cout << "MO coefficients:\n";
-//    for (unsigned int i = 0; i < m_MOcoeffs.size(); ++i)
-//      cout << m_MOcoeffs.at(i) << "\t";
-//    cout << endl << endl;
-//  }
+
   if (m_alphaMOcoeffs.size()) {
     cout << "Alpha MO coefficients:\n";
     for (unsigned int i = 0; i < m_alphaMOcoeffs.size(); ++i)
