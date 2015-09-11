@@ -488,6 +488,13 @@ public:
   const UnitCell *unitCell() const { return m_unitCell; }
   /** @} */
 
+  Array<double> vibrationFrequencies() const;
+  void setVibrationFrequencies(const Array<double> &freq);
+  Array<double> vibrationIntensities() const;
+  void setVibrationIntensities(const Array<double> &intensities);
+  Array<Vector3> vibrationLx(int mode) const;
+  void setVibrationLx(const Array< Array<Vector3> > &lx);
+
   /**
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
    */
@@ -509,6 +516,11 @@ protected:
   Array< Array<Vector3> > m_coordinates3d; // Used for conformers/trajectories.
   Array<AtomHybridization> m_hybridizations;
   Array<signed char> m_formalCharges;
+
+  // Vibration data if available.
+  Array<double> m_vibrationFrequencies;
+  Array<double> m_vibrationIntensities;
+  Array< Array<Vector3> > m_vibrationLx;
 
   Array<std::pair<Index, Index> > m_bondPairs;
   Array<unsigned char> m_bondOrders;

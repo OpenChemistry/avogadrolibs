@@ -579,6 +579,38 @@ double Molecule::mass() const
   return m;
 }
 
+Array<double> Molecule::vibrationFrequencies() const
+{
+  return m_vibrationFrequencies;
+}
+
+void Molecule::setVibrationFrequencies(const Array<double> &freq)
+{
+  m_vibrationFrequencies = freq;
+}
+
+Array<double> Molecule::vibrationIntensities() const
+{
+  return m_vibrationIntensities;
+}
+
+void Molecule::setVibrationIntensities(const Array<double> &intensities)
+{
+  m_vibrationIntensities = intensities;
+}
+
+Array<Vector3> Molecule::vibrationLx(int mode) const
+{
+  if (mode >= 0 && mode < static_cast<int>(m_vibrationLx.size()))
+    return m_vibrationLx[mode];
+  return Array<Vector3>();
+}
+
+void Molecule::setVibrationLx(const Array<Array<Vector3> > &lx)
+{
+  m_vibrationLx = lx;
+}
+
 // bond perception code ported from VTK's vtkSimpleBondPerceiver class
 void Molecule::perceiveBondsSimple()
 {
