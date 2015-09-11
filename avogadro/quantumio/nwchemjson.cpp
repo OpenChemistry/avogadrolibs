@@ -124,9 +124,13 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
           molecule.addAtom(static_cast<unsigned char>(jsonAtom["elementNumber"]
                            .asInt()));
       Value pos = jsonAtom["cartesianCoordinates"]["value"];
-      a.setPosition3d(Vector3(pos.get(Json::Value::ArrayIndex(0), 0.0).asDouble() * BOHR_TO_ANGSTROM_D,
-                              pos.get(Json::Value::ArrayIndex(1), 0.0).asDouble() * BOHR_TO_ANGSTROM_D,
-                              pos.get(Json::Value::ArrayIndex(2), 0.0).asDouble() * BOHR_TO_ANGSTROM_D));
+      Vector3 position(pos.get(Json::Value::ArrayIndex(0), 0.0).asDouble(),
+                       pos.get(Json::Value::ArrayIndex(1), 0.0).asDouble(),
+                       pos.get(Json::Value::ArrayIndex(2), 0.0).asDouble());
+      string units = jsonAtom["cartesianCoordinates"]["units"].asString();
+      if (units == "bohr")
+        position *= BOHR_TO_ANGSTROM_D;
+      a.setPosition3d(position);
     }
   }
   // Perceive bonds for the molecule.
