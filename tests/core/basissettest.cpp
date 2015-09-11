@@ -22,11 +22,30 @@
 using namespace Avogadro::Core;
 using Avogadro::Core::SlaterSet;
 
-TEST(BasisSetTest, homo)
+TEST(BasisSetTest, electronCount)
+{
+  SlaterSet basis;
+
+  basis.setElectronCount(1, Alpha);
+  EXPECT_EQ(basis.electronCount(Alpha), 1);
+  EXPECT_EQ(basis.electronCount(Beta), 0);
+}
+
+TEST(BasisSetTest, totalElectronCount)
 {
   SlaterSet basis;
 
   basis.setElectronCount(2, Alpha);
+  basis.setElectronCount(1, Beta);
+
+  EXPECT_EQ(basis.totalElectronCount(), 3);
+}
+
+TEST(BasisSetTest, homo)
+{
+  SlaterSet basis;
+
+  basis.setElectronCount(1, Alpha);
   EXPECT_EQ(basis.homo(Alpha), 1);
   EXPECT_TRUE(basis.homo(basis.homo(Alpha), Alpha));
 
@@ -46,4 +65,3 @@ TEST(BasisSetTest, homo)
 
   EXPECT_TRUE(!basis.homo(basis.homo(Alpha), Beta));
 }
-
