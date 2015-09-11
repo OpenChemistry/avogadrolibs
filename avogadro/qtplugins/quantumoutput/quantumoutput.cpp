@@ -48,6 +48,8 @@ namespace QtPlugins {
 using Core::GaussianSet;
 using Core::Cube;
 
+using Core::Alpha;
+
 QuantumOutput::QuantumOutput(QObject *p) :
   ExtensionPlugin(p),
   m_progressDialog(NULL),
@@ -119,13 +121,13 @@ void QuantumOutput::setMolecule(QtGui::Molecule *mol)
 void QuantumOutput::homoActivated()
 {
   if (m_basis)
-    calculateMolecularOrbital(m_basis->electronCount() / 2, 0.02f, 0.2f);
+    calculateMolecularOrbital(m_basis->totalElectronCount() / 2, 0.02f, 0.2f);
 }
 
 void QuantumOutput::lumoActivated()
 {
   if (m_basis)
-    calculateMolecularOrbital(m_basis->electronCount() / 2 + 1, 0.02f, 0.2f);
+    calculateMolecularOrbital(m_basis->totalElectronCount() / 2 + 1, 0.02f, 0.2f);
 }
 
 void QuantumOutput::surfacesActivated()
@@ -141,8 +143,8 @@ void QuantumOutput::surfacesActivated()
             SLOT(calculateElectronDensity(float,float)));
   }
 
-  m_dialog->setNumberOfElectrons(m_basis->electronCount(),
-                                 m_basis->molecularOrbitalCount());
+  m_dialog->setNumberOfElectrons(m_basis->totalElectronCount(),
+                                 m_basis->molecularOrbitalCount(Alpha)); // TODO: don't hard code Alpha
   m_dialog->show();
 }
 

@@ -96,7 +96,6 @@ private:
   void load(Core::GaussianSet *basis);
 
   double m_coordFactor;
-  int m_electrons;
   int m_electronsA;
   int m_electronsB;
   int m_nMOs;

@@ -32,6 +32,8 @@ using Core::SlaterSet;
 using Core::SlaterSetTools;
 using Core::Cube;
 
+using Core::Alpha;
+
 struct SlaterShell
 {
   SlaterSetTools *tools; // A pointer to the tools, cannot write to member vars
@@ -123,7 +125,8 @@ void SlaterSetConcurrent::processOrbital(SlaterShell &shell)
   Vector3 pos = shell.tCube->position(shell.pos);
   shell.tCube->setValue(shell.pos,
                         shell.tools->calculateMolecularOrbital(pos,
-                                                               shell.state));
+                                                               shell.state,
+                        Alpha));  // TODO: Don't hard code Alpha orbitals
 }
 
 void SlaterSetConcurrent::processDensity(SlaterShell &shell)

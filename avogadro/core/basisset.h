@@ -26,6 +26,25 @@
 namespace Avogadro {
 namespace Core {
 
+/**
+ * Enumeration of the SCF type.
+ */
+enum ScfType {
+  Rhf,    // All orbitals doubly occupied.
+  Uhf,    // Alpha and Beta have separate orbitals and possibly different number of electrons.
+  Rohf,   // Some orbitals doubly occupied and some not.
+  Unknown
+};
+
+/**
+ * @brief The ElectronType enum describes the type of electrons being set or
+ * retrieved. Alpha and Beta both must be set regardless of shell type.
+ */
+enum ElectronType {
+  Alpha,
+  Beta
+};
+
 class Molecule;
 
 /**
@@ -44,7 +63,7 @@ public:
   /**
    * Constructor.
    */
-  BasisSet() {}
+  BasisSet(): m_scfType(Unknown) {}
 
   /**
    * Destructor.
@@ -52,28 +71,25 @@ public:
   virtual ~BasisSet() {}
 
   /**
-   * @brief The ElectronType enum describes the type of electrons being set or
-   * retrieved. If Paired, then Alpha and Beta cannot be set, if Alpha or Beta
-   * then both must be set.
-   */
-  enum ElectronType {
-    Paired,
-    Alpha,
-    Beta
-  };
-
-  /**
    * Set the number of electrons in the BasisSet.
    * @param n The number of electrons in the BasisSet.
-   * @param type The type of the electrons (Alpha, Beta, or Paired).
+   * @param type The type of the electrons (Alpha or Beta).
    */
-  virtual void setElectronCount(unsigned int n, ElectronType type = Paired);
+  virtual void setElectronCount(unsigned int n, ElectronType type);
 
   /**
-   * @param type The type of the electrons (Alpha, Beta, or Paired).
-   * @return The number of electrons in the molecule.
+   * @param type The type of the electrons (Alpha or Beta).
+   * @return The number of electrons in the molecule for the designated spin
    */
-  unsigned int electronCount(ElectronType type = Paired);
+  unsigned int electronCount(ElectronType type) const;
+
+  /**
+   * Get the total electrons, alpha + beta
+   * @return The total number of electrons in the molecule
+   */
+  unsigned int totalElectronCount() const {
+    return electronCount(Alpha) + electronCount(Beta);
+  }
 
   /**
    * Set the molecule for the basis set.
@@ -89,24 +105,32 @@ public:
   /**
    * @return The number of molecular orbitals in the BasisSet.
    */
-  virtual unsigned int molecularOrbitalCount(ElectronType type = Paired) = 0;
+  virtual unsigned int molecularOrbitalCount(ElectronType type) = 0;
 
   /**
    * Check if the given MO number is the HOMO or not.
    * @param n The MO number.
    * @return True if the given MO number is the HOMO.
    */
-  bool homo(unsigned int n)
+  bool homo(unsigned int n, ElectronType type) const
   {
-    return n == homo();
+    return n == homo(type);
   }
 
   /**
    * @return The molecular orbital number corresponding to the HOMO orbital.
    */
-  unsigned int homo() const
+  unsigned int homo(ElectronType type) const
   {
-    return m_electrons[0];
+    switch (type) {
+      case Alpha:
+        return m_electrons[0];
+      case Beta:
+        return m_electrons[1];
+      default:
+        std::cout << "Invalid electron type." << std::endl;
+        return 0;
+    }
   }
 
 
@@ -115,33 +139,16 @@ public:
    * @param n The MO number.
    * @return True if the given MO number is the LUMO.
    */
-  bool lumo(unsigned int n)
+  bool lumo(unsigned int n, ElectronType type) const
   {
-    return n == lumo();
+    return n == lumo(type);
   }
   /**
    * @return The molecular orbital number corresponding to the LUMO orbital.
    */
-  unsigned int lumo() const
+  unsigned int lumo(ElectronType type) const
   {
-    if (m_betaMOEnergies.empty() || m_alphaMOEnergies.empty()) {
-      // The system is closed shell or we don't have energy information.
-      return m_electrons[0] + 1;
-    }
-    else { // Open shell calculation. Need to check the relative energies.
-      unsigned int alphaLumo = m_electrons[0] + 1;
-      unsigned int betaLumo = m_electrons[1] + 1;
-
-      if (m_alphaMOEnergies.size() < alphaLumo || m_betaMOEnergies.size() < betaLumo) {
-        std::cout << "Malformed basis set detected: more electrons than defined energies.";
-        return 0;
-      }
-
-      if (m_alphaMOEnergies[alphaLumo] >= m_alphaMOEnergies[betaLumo])
-        return alphaLumo;
-      else
-        return betaLumo;
-    }
+    return homo(type) + 1;
   }
 
 
@@ -156,7 +163,6 @@ public:
    */
   bool setOrbitalEnergies(std::vector<double> energies, ElectronType type) {
     switch(type) {
-      case Paired:
       case Alpha:
         m_alphaMOEnergies = energies;
         break;
@@ -168,6 +174,16 @@ public:
     }
     return true;
   }
+
+  /**
+   * Set the SCF type for the object.
+   */
+  void setScfType(ScfType type) { m_scfType = type; }
+
+  /**
+   * Get the SCF type for the object.
+   */
+  ScfType scfType() const { return m_scfType; }
 
 protected:
   /**
@@ -194,15 +210,14 @@ protected:
    * the beta energies will not be defined.
    */
   std::vector<double> m_betaMOEnergies;
+
+private:
+  ScfType m_scfType;
 };
 
 inline void BasisSet::setElectronCount(unsigned int n, ElectronType type)
 {
   switch (type) {
-  case Paired:
-    m_electrons[0] = n;
-    m_electrons[1] = 0;
-    break;
   case Alpha:
     m_electrons[0] = n;
     break;
@@ -215,11 +230,9 @@ inline void BasisSet::setElectronCount(unsigned int n, ElectronType type)
   }
 }
 
-inline unsigned int BasisSet::electronCount(ElectronType type)
+inline unsigned int BasisSet::electronCount(ElectronType type) const
 {
   switch (type) {
-  case Paired:
-    return m_electrons[0] * 2;
   case Alpha:
     return m_electrons[0];
   case Beta:

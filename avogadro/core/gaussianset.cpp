@@ -33,7 +33,6 @@ namespace Core {
 
 GaussianSet::GaussianSet() : m_numMOs(0), m_init(false)
 {
-  m_scfType = Rhf;
 }
 
 GaussianSet::~GaussianSet()
@@ -154,7 +153,7 @@ void GaussianSet::outputAll(ElectronType type)
   // Can be called to print out a summary of the basis set as read in
   unsigned int numAtoms = static_cast<unsigned int>(m_molecule->atomCount());
   cout << "\nGaussian Basis Set\nNumber of atoms:" << numAtoms << endl;
-  switch (m_scfType) {
+  switch (scfType()) {
   case Rhf:
     cout << "RHF orbitals" << endl;
     break;
@@ -434,14 +433,14 @@ void GaussianSet::initCalculation()
 
 bool GaussianSet::generateDensity()
 {
-  if (m_scfType == Unknown)
+  if (scfType() == Unknown)
     return false;
 
   m_density.resize(m_numMOs, m_numMOs);
   m_density = MatrixX::Zero(m_numMOs, m_numMOs);
   for (unsigned int iBasis=0; iBasis < m_numMOs; ++iBasis) {
     for (unsigned int jBasis=0;jBasis<=iBasis; ++jBasis) {
-      switch (m_scfType) {
+      switch (scfType()) {
       case Rhf:
         for (unsigned int iMO = 0; iMO < m_electrons[0] / 2; ++iMO) {
           double icoeff = m_moMatrix[0](iBasis, iMO);
@@ -469,7 +468,7 @@ bool GaussianSet::generateDensity()
              << endl;
         break;
       default:
-        cout << "Unhandled scf type:" << m_scfType << endl;
+        cout << "Unhandled scf type:" << scfType() << endl;
       }
     }
   }
@@ -478,7 +477,7 @@ bool GaussianSet::generateDensity()
 
 bool GaussianSet::generateSpinDensity()
 {
-  if (m_scfType != Uhf)
+  if (scfType() != Uhf)
     return false;
 
   m_spinDensity.resize(m_numMOs, m_numMOs);

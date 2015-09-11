@@ -91,7 +91,7 @@ private:
   std::vector<double> m_orbitalEnergy;
   std::vector<double> m_alphaOrbitalEnergy;
   std::vector<double> m_betaOrbitalEnergy;
-  std::vector<double> m_MOcoeffs;
+//  std::vector<double> m_MOcoeffs;
   std::vector<double> m_alphaMOcoeffs;
   std::vector<double> m_betaMOcoeffs;
   MatrixX m_density;     /// Total density matrix

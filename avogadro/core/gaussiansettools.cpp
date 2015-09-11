@@ -42,9 +42,10 @@ GaussianSetTools::~GaussianSetTools()
 }
 
 double GaussianSetTools::calculateMolecularOrbital(const Vector3 &position,
-                                                   int mo) const
+                                                   int mo,
+                                                   ElectronType type) const
 {
-  if (mo > static_cast<int>(m_basis->molecularOrbitalCount()))
+  if (mo > static_cast<int>(m_basis->molecularOrbitalCount(type)))
     return 0.0;
 
   vector<double> values(calculateValues(position));

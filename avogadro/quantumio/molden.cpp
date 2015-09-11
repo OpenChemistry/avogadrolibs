@@ -34,10 +34,14 @@ namespace QuantumIO {
 using Core::Atom;
 using Core::BasisSet;
 using Core::GaussianSet;
+
 using Core::Rhf;
 using Core::Uhf;
 using Core::Rohf;
 using Core::Unknown;
+
+using Core::Alpha;
+using Core::Beta;
 
 MoldenFile::MoldenFile():
   m_coordFactor(1.0),
@@ -218,10 +222,14 @@ void MoldenFile::readAtom(const vector<string> &list)
   m_aPos.push_back(Core::lexicalCast<double>(list[5]) * m_coordFactor);
 }
 
-void MoldenFile::load(GaussianSet* basis)
-{
+void MoldenFile::load(GaussianSet* basis) {
   // Now load up our basis set
-  basis->setElectronCount(m_electrons);
+  if (m_electrons % 2 != 0) {
+    cout << "Warning: Open shell Molden files not implemented." << endl;
+    return;
+  }
+  basis->setElectronCount(m_electrons/2, Alpha);
+  basis->setElectronCount(m_electrons/2, Beta);
 
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
@@ -248,8 +256,10 @@ void MoldenFile::load(GaussianSet* basis)
     }
   }
   // Now to load in the MO coefficients
-  if (m_MOcoeffs.size())
-    basis->setMolecularOrbitals(m_MOcoeffs);
+  if (m_MOcoeffs.size()) {
+    basis->setMolecularOrbitals(m_MOcoeffs, Alpha);
+    basis->setMolecularOrbitals(m_MOcoeffs, Beta);
+  }
 }
 
 void MoldenFile::outputAll()

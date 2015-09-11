@@ -20,6 +20,7 @@
 #define AVOGADRO_CORE_GAUSSIANSETTOOLS_H
 
 #include "avogadrocore.h"
+#include "basisset.h"
 
 #include "vector.h"
 
@@ -52,7 +53,8 @@ public:
    * @return The value of the molecular orbital at the position specified.
    */
   double calculateMolecularOrbital(const Vector3 &position,
-                                   int molecularOrbitalNumber) const;
+                                   int molecularOrbitalNumber,
+                                   ElectronType type) const;
 
   /**
    * @brief Calculate the value of the electron density at the position

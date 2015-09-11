@@ -30,6 +30,9 @@
 
 using Avogadro::Io::FileFormatManager;
 using Avogadro::Core::Cube;
+using Avogadro::Core::ElectronType;
+using Avogadro::Core::Alpha;
+using Avogadro::Core::Beta;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::GaussianSetTools;
 using std::cin;
@@ -58,6 +61,7 @@ int main(int argc, char *argv[])
   // Process the command line arguments, see what has been requested.
   string inFormat;
   int orbitalNumber=0;
+  ElectronType spin(Alpha);
   string inFile;
   bool density = false;
   for (int i = 1; i < argc; ++i) {
@@ -77,6 +81,9 @@ int main(int argc, char *argv[])
     else if (current == "-orb" && i + 1 < argc) {
       orbitalNumber = atoi(argv[++i]);
       //cout << "plot orbital " << orbitalNumber << endl;
+    }
+    else if (current == "-beta" && i < argc) {
+      spin = Beta;
     }
     else if (current == "-dens" && i < argc) {
       density=true;
@@ -164,7 +171,7 @@ int main(int argc, char *argv[])
       printf("\n");
     }
     double value = m_tools->calculateMolecularOrbital(
-        m_qube->position(i),orbitalNumber);
+        m_qube->position(i),orbitalNumber,spin);
     printf("%13.5E",value);
     //line wrapping
     linecount++;
@@ -182,6 +189,6 @@ int main(int argc, char *argv[])
 
 void printHelp()
 {
-  cout << "Usage: qube [-i <input-type>] <infilename> [-dens] [-orb <orbital number>] [-v / --version] \n"
+  cout << "Usage: qube [-i <input-type>] <infilename> [-dens] [-orb <orbital number>] [-beta] [-v / --version] \n"
        << endl;
 }

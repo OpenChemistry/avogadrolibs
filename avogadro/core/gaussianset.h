@@ -30,11 +30,6 @@ namespace Avogadro {
 namespace Core {
 
 /**
- * Enumeration of the SCF type.
- */
-enum ScfType { Rhf, Uhf, Rohf, Unknown };
-
-/**
  * @class GaussianSet gaussianset.h <avogadro/core/gaussianset.h>
  * @brief A container for Gaussian type outputs from QM codes.
  * @author Marcus D. Hanwell
@@ -90,10 +85,10 @@ public:
   /**
    * Set the molecular orbital (MO) coefficients to the GaussianSet.
    * @param MOs Vector containing the MO coefficients for the GaussianSet.
-   * @param type The type of the MOs (Paired, Alpha, Beta).
+   * @param type The type of the MOs (Alpha or Beta).
    */
   void setMolecularOrbitals(const std::vector<double>& MOs,
-                            ElectronType type = Paired);
+                            ElectronType type);
 
   /**
    * Set the SCF density matrix for the GaussianSet.
@@ -114,29 +109,19 @@ public:
   /**
    * @return The number of molecular orbitals in the GaussianSet.
    */
-  unsigned int molecularOrbitalCount(ElectronType type = Paired) AVO_OVERRIDE;
+  unsigned int molecularOrbitalCount(ElectronType type) AVO_OVERRIDE;
 
   /**
    * Debug routine, outputs all of the data in the GaussianSet.
    * @param The electrons to output the information for.
    */
-  void outputAll(ElectronType type = Paired);
+  void outputAll(ElectronType type);
 
   /**
    * @return True of the basis set is valid, false otherwise.
    * Default is true, if false then the basis set is likely unusable.
    */
   bool isValid() AVO_OVERRIDE;
-
-  /**
-   * Set the SCF type for the object.
-   */
-  void setScfType(ScfType type) { m_scfType = type; }
-
-  /**
-   * Get the SCF type for the object.
-   */
-  ScfType scfType() const { return m_scfType; }
 
   /**
    * Initialize the calculation, this must normally be done before anything.
@@ -180,8 +165,6 @@ private:
 
   unsigned int m_numMOs;            //! The number of GTOs (not always!)
   bool m_init;                      //! Has the calculation been initialised?
-
-  ScfType m_scfType;
 
   /**
    * @brief Generate the density matrix if we have the required information.
