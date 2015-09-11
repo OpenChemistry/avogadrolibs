@@ -283,20 +283,32 @@ void GaussianFchk::load(GaussianSet* basis)
   }
   // Now to load in the MO coefficients
   if (basis->isValid()) {
-    if (m_alphaMOcoeffs.size())
+    // Set the MO Coefficients
+    if (m_alphaMOcoeffs.size() > 0)
       basis->setMolecularOrbitals(m_alphaMOcoeffs, Alpha);
 
-    if (m_betaMOcoeffs.size())
+    if (m_betaMOcoeffs.size() > 0)
       basis->setMolecularOrbitals(m_betaMOcoeffs, Beta);
     else if (m_scftype == Rhf)
       basis->setMolecularOrbitals(m_betaMOcoeffs, Beta);
     else
       cout << "WARNING: Beta orbital coeficients undefined" << endl;
 
-    if (m_density.rows())
+    // Set the MO Energies
+    if (m_alphaOrbitalEnergy.size() > 0)
+      basis->setOrbitalEnergies(m_alphaOrbitalEnergy, Alpha);
+
+    if (m_betaOrbitalEnergy.size() > 0)
+      basis->setOrbitalEnergies(m_betaOrbitalEnergy, Beta);
+    else if (m_scftype == Rhf)
+      basis->setOrbitalEnergies(m_alphaOrbitalEnergy, Beta);
+    else
+      cout << "WARNING: Beta orbital energies undefined" << endl;
+
+    if (m_density.rows() > 0)
       basis->setDensityMatrix(m_density);
 
-    if (m_spinDensity.rows())
+    if (m_spinDensity.rows() > 0)
       basis->setSpinDensityMatrix(m_spinDensity);
   }
   else {

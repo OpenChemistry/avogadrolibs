@@ -348,6 +348,11 @@ void GAMESSUSOutput::load(GaussianSet* basis)
     basis->setMolecularOrbitals(m_betaMOcoeffs, Beta);
   */
 
+  if (m_orbitalEnergy.size() > 0) {
+    basis->setOrbitalEnergies(m_orbitalEnergy, Alpha);
+    basis->setOrbitalEnergies(m_orbitalEnergy, Beta);
+  }
+
   //generateDensity();
   //if (m_density.rows())
     //basis->setDensityMatrix(m_density);

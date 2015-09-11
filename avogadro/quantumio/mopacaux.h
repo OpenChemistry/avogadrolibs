@@ -80,7 +80,7 @@ private:
   std::vector<int> m_shelltoAtom;
   std::vector<double> m_c;
   std::vector<double> m_csp;
-  std::vector<double> m_orbitalEnergy;
+  std::vector<double> m_orbitalEnergy;  // TODO: support open shell
   std::vector<double> m_MOcoeffs;
 
   std::vector<int> m_atomIndex;
