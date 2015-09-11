@@ -116,6 +116,26 @@ bool GAMESSUSOutput::read(std::istream &in, Core::Molecule &molecule)
     }
     else if (Core::contains(buffer, "SCFTYP=")) {
       cout << "Found SCF type\n";
+      vector<string> parts = Core::split(buffer,' ');
+      if (parts.size() != 3)
+        cout << "Malformed control line: " << buffer << endl;
+      else {
+        string p = parts[0];
+        parts = Core::split(p, '=');
+        if (parts.size() == 2) {
+          string& strScfType = parts[1];
+          if (strScfType == "RHF")
+            m_scftype = Rhf;
+          else if (strScfType == "UHF")
+            m_scftype = Uhf;
+          else if (strScfType == "ROHF")
+            m_scftype = Rohf;
+          else
+            m_scftype = Unknown;
+        }
+        else
+          cout << "Malformed control line: " << buffer << endl;
+      }
     }
     else if (Core::contains(buffer, "EIGENVECTORS")) {
       readEigenvectors(in);
@@ -303,7 +323,7 @@ void GAMESSUSOutput::load(GaussianSet* basis)
   // Now load up our basis set
   basis->setScfType(m_scftype);
   basis->setElectronCount(m_electronsA, Alpha);
-  basis->setElectronCount(m_electronsA, Beta);
+  basis->setElectronCount(m_electronsB, Beta);
 
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
@@ -338,7 +358,6 @@ void GAMESSUSOutput::load(GaussianSet* basis)
   // Now to load in the MO coefficients
   if (m_MOcoeffs.size() && m_scftype == Rhf) {
     basis->setMolecularOrbitals(m_MOcoeffs, Alpha);
-    basis->setMolecularOrbitals(m_MOcoeffs, Beta);
   }
 
   // TODO: we will never get here because we never attempt to read the m_alphaMOcoeffs or m_betaMOcoeffs
@@ -348,10 +367,9 @@ void GAMESSUSOutput::load(GaussianSet* basis)
     basis->setMolecularOrbitals(m_betaMOcoeffs, Beta);
 
 
-  if (m_orbitalEnergy.size() > 0) {
+  // TODO: broken for open shell systems
+  if (m_orbitalEnergy.size() > 0)
     basis->setOrbitalEnergies(m_orbitalEnergy, Alpha);
-    basis->setOrbitalEnergies(m_orbitalEnergy, Beta);
-  }
 
   //generateDensity();
   //if (m_density.rows())

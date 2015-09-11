@@ -260,14 +260,12 @@ void MoldenFile::load(GaussianSet* basis) {
   // Now to load in the MO coefficients
   if (m_MOcoeffs.size() > 0) {
     basis->setMolecularOrbitals(m_MOcoeffs, Alpha);
-    basis->setMolecularOrbitals(m_MOcoeffs, Beta);
   }
 
   // TODO: Currently these arn't read from the file and if they were, open shell isn't supported.
   // Now load the MO energies
   if (m_orbitalEnergy.size() > 0) {
     basis->setOrbitalEnergies(m_orbitalEnergy, Alpha);
-    basis->setOrbitalEnergies(m_orbitalEnergy, Beta);
   }
 }
 

@@ -207,7 +207,7 @@ protected:
 
   /**
    * Energies of the beta molecular orbitals. If the system is restricted the
-   * the beta energies will be the exact same as the alpha energies.
+   * the beta energies will be unset.
    */
   std::vector<double> m_betaMOEnergies;
 

@@ -160,7 +160,7 @@ void MopacAux::load(SlaterSet* basis)
   }
 
   if (m_electrons % 2 != 0) {
-    cout << "Open shell input not implemented for mopac" << endl;
+    cout << "Open shell input not implemented for MOPAC. Bailing out." << endl;
     return;
   }
 
@@ -178,11 +178,8 @@ void MopacAux::load(SlaterSet* basis)
   basis->addDensityMatrix(m_density);
 
   // TODO: these currently aren't read and if they where, open shell systems would be wrong.
-  if (m_orbitalEnergy.size() > 0) {
+  if (m_orbitalEnergy.size() > 0)
     basis->setOrbitalEnergies(m_orbitalEnergy, Alpha);
-    basis->setOrbitalEnergies(m_orbitalEnergy, Beta);
-  }
-
 }
 
 vector<int> MopacAux::readArrayElements(std::istream &in, unsigned int n)
