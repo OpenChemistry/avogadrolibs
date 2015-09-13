@@ -116,9 +116,6 @@ void GaussianFchk::processLine(std::istream &in)
   else if (key == "Number of atoms" && list.size() > 1) {
     cout << "Number of atoms = " << Core::lexicalCast<int>(list[1]) << endl;
   }
-  //else if (key == "Number of electrons" && list.size() > 1) {
-    //m_electrons = Core::lexicalCast<int>(list[1]);
-  //}
   else if (key == "Number of alpha electrons" && list.size() > 1) {
     m_electronsAlpha = Core::lexicalCast<int>(list[1]);
   }
@@ -291,9 +288,7 @@ void GaussianFchk::load(GaussianSet* basis)
 
     if (m_betaMOcoeffs.size() > 0)
       basis->setMolecularOrbitals(m_betaMOcoeffs, Beta);
-    else if (m_scftype == Rhf)
-      basis->setMolecularOrbitals(m_betaMOcoeffs, Beta);
-    else
+    else if (m_scftype != Rhf)
       cout << "WARNING: Beta orbital coeficients undefined" << endl;
 
     // Set the MO Energies
@@ -302,9 +297,7 @@ void GaussianFchk::load(GaussianSet* basis)
 
     if (m_betaOrbitalEnergy.size() > 0)
       basis->setOrbitalEnergies(m_betaOrbitalEnergy, Beta);
-    else if (m_scftype == Rhf)
-      basis->setOrbitalEnergies(m_alphaOrbitalEnergy, Beta);
-    else
+    else if (m_scftype != Rhf)
       cout << "WARNING: Beta orbital energies undefined" << endl;
 
     if (m_density.rows() > 0)
