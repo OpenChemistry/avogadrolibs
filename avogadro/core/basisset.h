@@ -19,7 +19,6 @@
 #define AVOGADRO_CORE_BASISSET_H
 
 #include <vector>
-#include <iostream>
 
 #include "avogadrocore.h"
 
@@ -128,7 +127,7 @@ public:
       case Beta:
         return m_electrons[1];
       default:
-        std::cout << "Invalid electron type." << std::endl;
+        // shouldn't get here
         return 0;
     }
   }

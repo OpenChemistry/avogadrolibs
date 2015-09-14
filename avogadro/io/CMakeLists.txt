@@ -37,4 +37,4 @@ set(SOURCES
 avogadro_add_library(AvogadroIO ${HEADERS} ${SOURCES})
 
 # HDF5 library paths provided by find module
-target_link_libraries(AvogadroIO LINK_PUBLIC AvogadroCore LINK_PRIVATE hdf5)
+target_link_libraries(AvogadroIO LINK_PUBLIC AvogadroCore LINK_PRIVATE ${HDF5_LIBRARIES})
