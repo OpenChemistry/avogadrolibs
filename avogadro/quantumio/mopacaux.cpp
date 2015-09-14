@@ -35,6 +35,11 @@ using Core::Atom;
 using Core::BasisSet;
 using Core::SlaterSet;
 
+using Core::Rhf;
+
+using Core::Alpha;
+using Core::Beta;
+
 MopacAux::MopacAux()
 {
 }
@@ -153,15 +158,28 @@ void MopacAux::load(SlaterSet* basis)
     //basis->setIsValid(false);
     return;
   }
+
+  if (m_electrons % 2 != 0) {
+    cout << "Open shell input not implemented for MOPAC. Bailing out." << endl;
+    return;
+  }
+
+  basis->setScfType(Rhf); // TODO: support open shell
+
   // Now load up our basis set
   basis->addSlaterIndices(m_atomIndex);
   basis->addSlaterTypes(m_atomSym);
   basis->addZetas(m_zeta);
   basis->addPQNs(m_pqn);
-  basis->setElectronCount(m_electrons);
+  basis->setElectronCount(m_electrons/2, Alpha);
+  basis->setElectronCount(m_electrons/2, Beta);
   basis->addOverlapMatrix(m_overlap);
   basis->addEigenVectors(m_eigenVectors);
   basis->addDensityMatrix(m_density);
+
+  // TODO: these currently aren't read and if they where, open shell systems would be wrong.
+  if (m_orbitalEnergy.size() > 0)
+    basis->setOrbitalEnergies(m_orbitalEnergy, Alpha);
 }
 
 vector<int> MopacAux::readArrayElements(std::istream &in, unsigned int n)

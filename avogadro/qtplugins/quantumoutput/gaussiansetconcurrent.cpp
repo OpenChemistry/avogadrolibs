@@ -33,6 +33,9 @@ using Core::GaussianSet;
 using Core::GaussianSetTools;
 using Core::Cube;
 
+using Core::Alpha;
+
+
 template<typename Derived>
 class BasisSetConcurrent
 {
@@ -134,7 +137,8 @@ void GaussianSetConcurrent::processOrbital(GaussianShell &shell)
   Vector3 pos = shell.tCube->position(shell.pos);
   shell.tCube->setValue(shell.pos,
                         shell.tools->calculateMolecularOrbital(pos,
-                                                               shell.state));
+                                                               shell.state,
+                        Alpha)); // TODO: don't hard code Alpha orbitals.
 }
 
 void GaussianSetConcurrent::processDensity(GaussianShell &shell)

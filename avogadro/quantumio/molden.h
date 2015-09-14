@@ -79,7 +79,7 @@ private:
   std::vector<double> m_a;
   std::vector<double> m_c;
   std::vector<double> m_csp;
-  std::vector<double> m_orbitalEnergy;
+  std::vector<double> m_orbitalEnergy;  // TODO: support open shell
   std::vector<double> m_MOcoeffs;
 
   enum Mode { Atoms, GTO, MO, Unrecognized };

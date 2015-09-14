@@ -34,10 +34,14 @@ namespace QuantumIO {
 using Core::Atom;
 using Core::BasisSet;
 using Core::GaussianSet;
+
 using Core::Rhf;
 using Core::Uhf;
 using Core::Rohf;
 using Core::Unknown;
+
+using Core::Alpha;
+using Core::Beta;
 
 GaussianFchk::GaussianFchk() : m_scftype(Rhf)
 {
@@ -112,9 +116,6 @@ void GaussianFchk::processLine(std::istream &in)
   else if (key == "Number of atoms" && list.size() > 1) {
     cout << "Number of atoms = " << Core::lexicalCast<int>(list[1]) << endl;
   }
-  else if (key == "Number of electrons" && list.size() > 1) {
-    m_electrons = Core::lexicalCast<int>(list[1]);
-  }
   else if (key == "Number of alpha electrons" && list.size() > 1) {
     m_electronsAlpha = Core::lexicalCast<int>(list[1]);
   }
@@ -172,28 +173,15 @@ void GaussianFchk::processLine(std::istream &in)
       m_scftype = Uhf;
       m_alphaOrbitalEnergy = m_orbitalEnergy;
       m_orbitalEnergy = vector<double>();
-
-      m_alphaMOcoeffs = m_MOcoeffs;
-      m_MOcoeffs = vector<double>();
     }
 
     m_betaOrbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
     cout << "Beta MO energies, n = " << m_betaOrbitalEnergy.size() << endl;
   }
   else if (key == "Alpha MO coefficients" && list.size() > 2) {
-    if (m_scftype == Rhf) {
-      m_MOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-      if (static_cast<int>(m_MOcoeffs.size()) == Core::lexicalCast<int>(list[2]))
-        cout << "MO coefficients, n = " << m_MOcoeffs.size() << endl;
-    }
-    else if (m_scftype == Uhf) {
-      m_alphaMOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-      if (static_cast<int>(m_alphaMOcoeffs.size()) == Core::lexicalCast<int>(list[2]))
-        cout << "Alpha MO coefficients, n = " << m_alphaMOcoeffs.size() << endl;
-    }
-    else {
-      cout << "Error, alpha MO coefficients, n = " << m_MOcoeffs.size() << endl;
-    }
+    m_alphaMOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
+    if (static_cast<int>(m_alphaMOcoeffs.size()) == Core::lexicalCast<int>(list[2]))
+      cout << "Alpha MO coefficients, n = " << m_alphaMOcoeffs.size() << endl;
   }
   else if (key == "Beta MO coefficients" && list.size() > 2) {
       m_betaMOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
@@ -216,10 +204,10 @@ void GaussianFchk::processLine(std::istream &in)
 
 void GaussianFchk::load(GaussianSet* basis)
 {
-  // Now load up our basis set
-  basis->setElectronCount(m_electrons);
-  //basis->setElectronCount(m_electronsAlpha, Core::GaussianSet::alpha);
-  //basis->setElectronCount(m_electronsBeta, Core::GaussianSet::beta);
+  basis->setScfType(m_scftype);
+
+  basis->setElectronCount(m_electronsAlpha, Alpha);
+  basis->setElectronCount(m_electronsBeta, Beta);
 
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
@@ -294,17 +282,28 @@ void GaussianFchk::load(GaussianSet* basis)
   }
   // Now to load in the MO coefficients
   if (basis->isValid()) {
-    if (m_MOcoeffs.size())
-      basis->setMolecularOrbitals(m_MOcoeffs);
-    else
-      cout << "Error no MO coefficients...\n";
-    if (m_alphaMOcoeffs.size())
-      basis->setMolecularOrbitals(m_alphaMOcoeffs, BasisSet::Alpha);
-    if (m_betaMOcoeffs.size())
-      basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::Beta);
-    if (m_density.rows())
+    // Set the MO Coefficients
+    if (m_alphaMOcoeffs.size() > 0)
+      basis->setMolecularOrbitals(m_alphaMOcoeffs, Alpha);
+
+    if (m_betaMOcoeffs.size() > 0)
+      basis->setMolecularOrbitals(m_betaMOcoeffs, Beta);
+    else if (m_scftype != Rhf)
+      cout << "WARNING: Beta orbital coeficients undefined" << endl;
+
+    // Set the MO Energies
+    if (m_alphaOrbitalEnergy.size() > 0)
+      basis->setOrbitalEnergies(m_alphaOrbitalEnergy, Alpha);
+
+    if (m_betaOrbitalEnergy.size() > 0)
+      basis->setOrbitalEnergies(m_betaOrbitalEnergy, Beta);
+    else if (m_scftype != Rhf)
+      cout << "WARNING: Beta orbital energies undefined" << endl;
+
+    if (m_density.rows() > 0)
       basis->setDensityMatrix(m_density);
-    if (m_spinDensity.rows())
+
+    if (m_spinDensity.rows() > 0)
       basis->setSpinDensityMatrix(m_spinDensity);
   }
   else {
@@ -577,12 +576,7 @@ void GaussianFchk::outputAll()
     cout << i << " : type = " << m_shellTypes.at(i)
          << ", number = " << m_shellNums.at(i)
          << ", atom = " << m_shelltoAtom.at(i) << endl;
-  if (m_MOcoeffs.size()) {
-    cout << "MO coefficients:\n";
-    for (unsigned int i = 0; i < m_MOcoeffs.size(); ++i)
-      cout << m_MOcoeffs.at(i) << "\t";
-    cout << endl << endl;
-  }
+
   if (m_alphaMOcoeffs.size()) {
     cout << "Alpha MO coefficients:\n";
     for (unsigned int i = 0; i < m_alphaMOcoeffs.size(); ++i)

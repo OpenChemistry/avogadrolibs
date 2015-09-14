@@ -112,7 +112,7 @@ public:
   /**
    * @return The number of molecular orbitals in the BasisSet.
    */
-  unsigned int molecularOrbitalCount(ElectronType type = Paired) AVO_OVERRIDE;
+  unsigned int molecularOrbitalCount(ElectronType type) AVO_OVERRIDE;
 
   /**
    * @return True of the basis set is valid, false otherwise.

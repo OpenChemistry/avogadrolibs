@@ -19,33 +19,49 @@
 #include <avogadro/core/basisset.h>
 #include <avogadro/core/slaterset.h>
 
-using Avogadro::Core::BasisSet;
+using namespace Avogadro::Core;
 using Avogadro::Core::SlaterSet;
+
+TEST(BasisSetTest, electronCount)
+{
+  SlaterSet basis;
+
+  basis.setElectronCount(1, Alpha);
+  EXPECT_EQ(basis.electronCount(Alpha), 1);
+  EXPECT_EQ(basis.electronCount(Beta), 0);
+}
+
+TEST(BasisSetTest, totalElectronCount)
+{
+  SlaterSet basis;
+
+  basis.setElectronCount(2, Alpha);
+  basis.setElectronCount(1, Beta);
+
+  EXPECT_EQ(basis.totalElectronCount(), 3);
+}
 
 TEST(BasisSetTest, homo)
 {
   SlaterSet basis;
 
-  basis.setElectronCount(2, BasisSet::Paired);
-  EXPECT_EQ(basis.homo(), 1);
-  EXPECT_TRUE(basis.homo(basis.homo()));
+  basis.setElectronCount(1, Alpha);
+  EXPECT_EQ(basis.homo(Alpha), 1);
+  EXPECT_TRUE(basis.homo(basis.homo(Alpha), Alpha));
 
-  EXPECT_EQ(basis.lumo(), 2);
-  EXPECT_TRUE(basis.lumo(basis.lumo()));
+  EXPECT_EQ(basis.lumo(Alpha), 2);
+  EXPECT_TRUE(basis.lumo(basis.lumo(Alpha), Alpha));
 
 
   basis = SlaterSet();
-  basis.setElectronCount(2, BasisSet::Alpha);
-  basis.setElectronCount(1, BasisSet::Beta);
+  basis.setElectronCount(2, Alpha);
+  basis.setElectronCount(1, Beta);
 
-  EXPECT_EQ(basis.homo(), 1);
-  EXPECT_TRUE(basis.homo(basis.homo()));
+  EXPECT_EQ(basis.homo(Alpha), 2);
+  EXPECT_EQ(basis.homo(Beta), 1);
 
-  // This is broken: the lumo could be either the 
-  // next alpha or the next beta depending on the 
-  // energetics of the system
+  EXPECT_TRUE(basis.homo(basis.homo(Alpha), Alpha));
+  EXPECT_TRUE(basis.homo(basis.homo(Beta), Beta));
 
-  // EXPECT_EQ(basis.lumo(), 2);
-  // EXPECT_TRUE(basis.lumo(basis.lumo()));
+  EXPECT_TRUE(!basis.homo(basis.homo(Alpha), Beta));
 }
-

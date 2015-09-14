@@ -32,14 +32,18 @@ namespace QuantumIO {
 using Core::Atom;
 using Core::BasisSet;
 using Core::GaussianSet;
+
 using Core::Rhf;
 using Core::Uhf;
 using Core::Rohf;
 using Core::Unknown;
 
+using Core::Alpha;
+using Core::Beta;
+
 GAMESSUSOutput::GAMESSUSOutput() :
   m_coordFactor(1.0),
-  m_scftype(Rhf)
+  m_scftype(Unknown)
 {
 }
 
@@ -86,20 +90,53 @@ bool GAMESSUSOutput::read(std::istream &in, Core::Molecule &molecule)
     }
     else if (Core::contains(buffer, "NUMBER OF ELECTRONS")) {
       vector<string> parts = Core::split(buffer, '=');
-      if (parts.size() == 2)
-        m_electrons = Core::lexicalCast<int>(parts[1]);
+      if (parts.size() == 2) {
+        unsigned int electrons = Core::lexicalCast<int>(parts[1]);
+        cout << "Total electrons: " << electrons << endl;
+      }
       else
         cout << "error" << buffer << endl;
     }
-    /*else if (Core::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (ALPHA)")) {
+    else if (Core::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (ALPHA)")) {
       cout << "Found alpha orbitals\n";
+      vector<string> parts = Core::split(buffer, '=');
+      if (parts.size() == 2)
+        m_electronsB = Core::lexicalCast<int>(parts[1]);
+      else
+        cout << "error" << buffer << endl;
+
     }
     else if (Core::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (BETA )")) {
       cout << "Found alpha orbitals\n";
+      vector<string> parts = Core::split(buffer, '=');
+      if (parts.size() == 2)
+        m_electronsB = Core::lexicalCast<int>(parts[1]);
+      else
+        cout << "error" << buffer << endl;
     }
     else if (Core::contains(buffer, "SCFTYP=")) {
       cout << "Found SCF type\n";
-    }*/
+      vector<string> parts = Core::split(buffer,' ');
+      if (parts.size() != 3)
+        cout << "Malformed control line: " << buffer << endl;
+      else {
+        string p = parts[0];
+        parts = Core::split(p, '=');
+        if (parts.size() == 2) {
+          string& strScfType = parts[1];
+          if (strScfType == "RHF")
+            m_scftype = Rhf;
+          else if (strScfType == "UHF")
+            m_scftype = Uhf;
+          else if (strScfType == "ROHF")
+            m_scftype = Rohf;
+          else
+            m_scftype = Unknown;
+        }
+        else
+          cout << "Malformed control line: " << buffer << endl;
+      }
+    }
     else if (Core::contains(buffer, "EIGENVECTORS")) {
       readEigenvectors(in);
     }
@@ -284,7 +321,9 @@ void GAMESSUSOutput::readEigenvectors(std::istream &in)
 void GAMESSUSOutput::load(GaussianSet* basis)
 {
   // Now load up our basis set
-  basis->setElectronCount(m_electrons);
+  basis->setScfType(m_scftype);
+  basis->setElectronCount(m_electronsA, Alpha);
+  basis->setElectronCount(m_electronsB, Beta);
 
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
@@ -317,18 +356,24 @@ void GAMESSUSOutput::load(GaussianSet* basis)
   //    qDebug() << " loading MOs " << m_MOcoeffs.size();
 
   // Now to load in the MO coefficients
-  if (m_MOcoeffs.size())
-    basis->setMolecularOrbitals(m_MOcoeffs);
+  if (m_MOcoeffs.size() && m_scftype == Rhf) {
+    basis->setMolecularOrbitals(m_MOcoeffs, Alpha);
+  }
+
+  // TODO: we will never get here because we never attempt to read the m_alphaMOcoeffs or m_betaMOcoeffs
   if (m_alphaMOcoeffs.size())
-    basis->setMolecularOrbitals(m_alphaMOcoeffs, BasisSet::Alpha);
+    basis->setMolecularOrbitals(m_alphaMOcoeffs, Alpha);
   if (m_betaMOcoeffs.size())
-    basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::Beta);
+    basis->setMolecularOrbitals(m_betaMOcoeffs, Beta);
+
+
+  // TODO: broken for open shell systems
+  if (m_orbitalEnergy.size() > 0)
+    basis->setOrbitalEnergies(m_orbitalEnergy, Alpha);
 
   //generateDensity();
   //if (m_density.rows())
     //basis->setDensityMatrix(m_density);
-
-  basis->setScfType(m_scftype);
 }
 
 void GAMESSUSOutput::reorderMOs()
@@ -437,11 +482,6 @@ void GAMESSUSOutput::outputAll()
       cout << m_MOcoeffs.at(i) << "\t";
     cout << "\n";
   }
-
-
-
-
-
 
   if (m_alphaMOcoeffs.size())
     cout << "Alpha MO coefficients.\n";
