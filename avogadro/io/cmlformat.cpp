@@ -16,7 +16,9 @@
 
 #include "cmlformat.h"
 
-#include "hdf5dataformat.h"
+#ifdef AVO_USE_HDF5
+# include "hdf5dataformat.h"
+#endif
 
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/molecule.h>
@@ -72,7 +74,9 @@ public:
 
     if (moleculeNode) {
       // Parse the various components we know about.
+#ifdef AVO_USE_HDF5
       data();
+#endif
       success = properties();
       if (success)
         success = atoms();
@@ -105,12 +109,12 @@ public:
     // Unit cell:
     node = moleculeNode.child("crystal");
     if (node) {
-      float a;
-      float b;
-      float c;
-      float alpha;
-      float beta;
-      float gamma;
+      float a(0);
+      float b(0);
+      float c(0);
+      float alpha(0);
+      float beta(0);
+      float gamma(0);
       enum { CellA = 0, CellB, CellC, CellAlpha, CellBeta, CellGamma };
       std::bitset<6> parsedValues;
       for (pugi::xml_node scalar = node.child("scalar"); scalar;
@@ -318,6 +322,7 @@ public:
     return true;
   }
 
+#ifdef AVO_USE_HDF5
   bool data()
   {
     xml_node dataNode = moleculeNode.child("dataMap").first_child();
@@ -403,6 +408,7 @@ public:
     hdf5.closeFile();
     return true;
   }
+#endif
 
   bool success;
   Molecule *molecule;
@@ -457,6 +463,12 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
       "http://www.w3c.org/2001/XMLSchema";
   moleculeNode.append_attribute("xmlns:iupac") = "http://www.iupac.org";
 
+  // Save the name if present into the file.
+  if (mol.data("name").type() == Variant::String) {
+    xml_node node = moleculeNode.append_child("name");
+    node.text() = mol.data("name").toString().c_str();
+  }
+
   // If the InChI is available, embed that in the CML file.
   if (mol.data("inchi").type() == Variant::String) {
     xml_node node = moleculeNode.append_child("identifier");
@@ -464,7 +476,7 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
     node.append_attribute("value") = mol.data("inchi").toString().c_str();
   }
 
-    // Cell specification
+  // Cell specification
   const UnitCell *cell = mol.unitCell();
   if (cell) {
     xml_node crystalNode = moleculeNode.append_child("crystal");
@@ -530,6 +542,7 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
     bondNode.append_attribute("order") = b.order();
   }
 
+#ifdef AVO_USE_HDF5
   Hdf5DataFormat hdf5;
   bool openFile = true;
 
@@ -620,6 +633,7 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
   }
 
   hdf5.closeFile();
+#endif
 
   document.save(out, "  ");
 

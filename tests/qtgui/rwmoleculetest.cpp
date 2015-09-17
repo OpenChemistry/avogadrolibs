@@ -815,25 +815,6 @@ TEST(RWMoleculeTest, BondType)
   EXPECT_NE(b1, other);
 }
 
-TEST(RWMoleculeTest, RWMoleculeToMolecule)
-{
-  RWMolecule rwmol;
-  typedef RWMolecule::AtomType Atom;
-  typedef RWMolecule::BondType Bond;
-  Atom a0 = rwmol.addAtom(1);
-  Atom a1 = rwmol.addAtom(6);
-  Atom a2 = rwmol.addAtom(9);
-  Bond b0 = rwmol.addBond(a0, a2);
-  a1.setPosition3d(Vector3(0, 6, 9));
-  b0.setOrder(3);
-
-  Molecule mol(rwmol, 0);
-  EXPECT_EQ(rwmol.atomCount(), mol.atomCount());
-  EXPECT_EQ(rwmol.bondCount(), mol.bondCount());
-  EXPECT_EQ(rwmol.atom(2).atomicNumber(), mol.atom(2).atomicNumber());
-  EXPECT_EQ(rwmol.bond(0).order(), mol.bond(0).order());
-}
-
 TEST(RWMoleculeTest, MoleculeToRWMolecule)
 {
   Molecule mol;
