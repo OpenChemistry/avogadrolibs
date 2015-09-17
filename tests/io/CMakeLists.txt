@@ -3,10 +3,13 @@ set(tests
   Cjson
   Cml
   FileFormatManager
-  Hdf5
   Mdl
   Xyz
   )
+
+if(USE_HDF5)
+  list(APPEND tests Hdf5)
+endif()
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
 	"${AvogadroLibs_BINARY_DIR}/avogadro/io")

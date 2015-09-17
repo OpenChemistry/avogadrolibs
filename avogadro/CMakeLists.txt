@@ -28,12 +28,6 @@ function(avogadro_add_library name)
     ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
 endfunction()
 
-option(USE_OPENGL "Enable libraries that use OpenGL" ON)
-option(USE_QT "Enable libraries that use Qt 4" ON)
-option(USE_VTK "Enable libraries that use VTK" ON)
-option(USE_PROTOCALL "Enable libraries that use ProtoCall" OFF)
-option(USE_MOLEQUEUE "Enable the MoleQueue dependent functionality" ON)
-
 add_subdirectory(stl)
 add_subdirectory(core)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/core)
