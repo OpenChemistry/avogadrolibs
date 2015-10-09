@@ -92,7 +92,7 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
     if (calcObj.isObject()) {
       string calcType = calcObj["calculationType"].asString();
       // Store the last vibrational frequencies calculation object.
-      if (calcType == "vibrationalFrequencies")
+      if (calcType == "vibrationalModes")
         calculationVib = calcObj;
       Value calcSetup = calcObj["calculationSetup"];
       Value calcMol = calcSetup["molecule"];
