@@ -16,6 +16,7 @@ include_directories(SYSTEM
   ${AvogadroLibs_SOURCE_DIR}
   ${AvogadroLibs_BINARY_DIR}/avogadro/core
   ${AvogadroLibs_BINARY_DIR}/avogadro/io
+  ${AvogadroLibs_BINARY_DIR}/avogadro/quantumio
   ${BOOST_PYTHON_INCLUDES}
   ${PYTHON_INCLUDE_PATH}
   ${EIGEN3_INCLUDE_DIR}
@@ -34,6 +35,7 @@ set_target_properties(avogadro-python
     PREFIX "")
 target_link_libraries(avogadro-python
   AvogadroIO
+  AvogadroQuantumIO
   ${PYTHON_LIBRARIES}
   ${Boost_LIBRARIES}
   )
