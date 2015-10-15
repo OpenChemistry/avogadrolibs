@@ -229,6 +229,36 @@ bool CjsonFormat::read(std::istream &file, Molecule &molecule)
     }
   }
 
+  // Check for vibrational data.
+  Value vibrations = root["vibrations"];
+  if (!vibrations.empty() && vibrations.isObject()) {
+    Value modes = vibrations["modes"];
+    Value freqs = vibrations["frequencies"];
+    Value inten = vibrations["intensities"];
+    Value eigenVectors = vibrations["eigenVectors"];
+    assert(modes.size() == freqs.size());
+    assert(modes.size() == inten.size());
+    assert(modes.size() == eigenVectors.size());
+    Array<double> frequencies;
+    Array<double> intensities;
+    Array< Array<Vector3> > Lx;
+    for (size_t i = 0; i < modes.size(); ++i) {
+      frequencies.push_back(freqs.get(i, 0).asDouble());
+      intensities.push_back(inten.get(i, 0).asDouble());
+      Array<Vector3> modeLx;
+      Value lx = eigenVectors.get(i, 0);
+      if (!lx.empty() && lx.isArray()) {
+        modeLx.resize(lx.size() / 3);
+        for (size_t k = 0; k < lx.size(); ++k)
+          modeLx[k / 3][k % 3] = lx.get(k, 0).asDouble();
+        Lx.push_back(modeLx);
+      }
+    }
+    molecule.setVibrationFrequencies(frequencies);
+    molecule.setVibrationIntensities(intensities);
+    molecule.setVibrationLx(Lx);
+  }
+
   return true;
 }
 
@@ -342,6 +372,37 @@ bool CjsonFormat::write(std::ostream &file, const Molecule &molecule)
     }
     root["bonds"]["connections"]["index"] = connections;
     root["bonds"]["order"] = order;
+  }
+
+  // If there is vibrational data write this out too.
+  if (molecule.vibrationFrequencies().size() > 0) {
+    // A few sanity checks before we begin.
+    assert(molecule.vibrationFrequencies().size()
+           == molecule.vibrationIntensities().size());
+    assert(molecule.vibrationFrequencies().size()
+           == molecule.vibrationLx().size());
+    Value modes(Json::arrayValue);
+    Value freqs(Json::arrayValue);
+    Value inten(Json::arrayValue);
+    Value eigenVectors(Json::arrayValue);
+    for (size_t i = 0; i < molecule.vibrationFrequencies().size(); ++i) {
+      modes.append(static_cast<unsigned int>(i) + 1);
+      freqs.append(molecule.vibrationFrequencies()[i]);
+      inten.append(molecule.vibrationIntensities()[i]);
+      Core::Array<Vector3> atomDisplacements = molecule.vibrationLx(i);
+      Value eigenVector(Json::arrayValue);
+      for (size_t j = 0; j < atomDisplacements.size(); ++j) {
+        Vector3 pos = atomDisplacements[j];
+        eigenVector.append(pos[0]);
+        eigenVector.append(pos[1]);
+        eigenVector.append(pos[2]);
+      }
+      eigenVectors.append(eigenVector);
+    }
+    root["vibrations"]["modes"] = modes;
+    root["vibrations"]["frequencies"] = freqs;
+    root["vibrations"]["intensities"] = inten;
+    root["vibrations"]["eigenVectors"] = eigenVectors;
   }
 
   writer.write(file, root);

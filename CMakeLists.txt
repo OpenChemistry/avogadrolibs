@@ -41,6 +41,7 @@ option(USE_QT "Enable libraries that use Qt 5" ON)
 option(USE_VTK "Enable libraries that use VTK" OFF)
 option(USE_PROTOCALL "Enable libraries that use ProtoCall" OFF)
 option(USE_MOLEQUEUE "Enable the MoleQueue dependent functionality" ON)
+option(USE_BOOST_PYTHON "Use Boost Python to wrap some of our API" OFF)
 
 if(ENABLE_TESTING)
   include(CTest)
@@ -52,6 +53,10 @@ option(BUILD_DOCUMENTATION "Build project documentation" OFF)
 
 if(BUILD_DOCUMENTATION)
   add_subdirectory(docs)
+endif()
+
+if(USE_BOOST_PYTHON)
+  add_subdirectory(boostpython)
 endif()
 
 install(
