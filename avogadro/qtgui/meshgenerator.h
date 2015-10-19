@@ -150,7 +150,7 @@ protected:
   bool m_reverseWinding; /** Whether the winding and normals are reversed */
   const Core::Cube *m_cube;/** The cube that we are generating a Mesh from. */
   Core::Mesh *m_mesh;      /** The mesh that is being generated. */
-  float m_stepSize;      /** The step size of the cube. */
+  Vector3f m_stepSize; /** The step size vector for cube */
   Vector3f m_min; /** The minimum point in the cube. */
   Vector3i m_dim; /** The dimensions of the cube. */
   Core::Array<Vector3f> m_vertices, m_normals;
