@@ -455,11 +455,12 @@ public:
   void clearCubes();
 
   /**
-   * Returns the chemical formula of the molecule
-   * @todo This should eventually be an external algorithm, not a member of
-   * Molecule.
+   * Returns the chemical formula of the molecule.
+   * @param delimiter Delimiter to insert between tokens, defaults to none.
+   * @param showCountsOver Show atom counts above this (defaults to 1).
    */
-  std::string formula() const;
+  std::string formula(const std::string &delimiter = "",
+                      int showCountsOver = 1) const;
 
   /**
    * @return The mass of the molecule obtained by summing constituent atomic

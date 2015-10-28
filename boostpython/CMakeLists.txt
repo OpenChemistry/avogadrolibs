@@ -17,7 +17,7 @@ include_directories(SYSTEM
   ${AvogadroLibs_BINARY_DIR}/avogadro/core
   ${AvogadroLibs_BINARY_DIR}/avogadro/io
   ${AvogadroLibs_BINARY_DIR}/avogadro/quantumio
-  ${BOOST_PYTHON_INCLUDES}
+  ${Boost_INCLUDE_DIRS}
   ${PYTHON_INCLUDE_PATH}
   ${EIGEN3_INCLUDE_DIR}
   )
