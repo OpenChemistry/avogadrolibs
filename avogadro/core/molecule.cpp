@@ -520,7 +520,7 @@ void Molecule::clearCubes()
   }
 }
 
-std::string Molecule::formula() const
+std::string Molecule::formula(const std::string delimiter, int over) const
 {
   // Adapted from chemkit:
   // A map of atomic symbols to their quantity.
@@ -537,16 +537,16 @@ std::string Molecule::formula() const
   iter = composition.find(6);
   if (iter != composition.end()) {
     result << "C";
-    if (iter->second > 1)
+    if (iter->second > over)
       result << iter->second;
     composition.erase(iter);
 
     // If carbon is present, hydrogens are next.
     iter = composition.find(1);
     if (iter != composition.end()) {
-      result << "H";
-      if (iter->second > 1)
-        result << iter->second;
+      result << delimiter << "H";
+      if (iter->second > over)
+        result << delimiter << iter->second;
       composition.erase(iter);
     }
   }
@@ -555,7 +555,7 @@ std::string Molecule::formula() const
   iter = composition.begin();
   while (iter != composition.end()) {
     result << Elements::symbol(iter->first);
-    if (iter->second > 1)
+    if (iter->second > over)
       result << iter->second;
     ++iter;
   }
