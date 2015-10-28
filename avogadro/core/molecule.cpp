@@ -520,7 +520,7 @@ void Molecule::clearCubes()
   }
 }
 
-std::string Molecule::formula(const std::string delimiter, int over) const
+std::string Molecule::formula(const std::string &delimiter, int over) const
 {
   // Adapted from chemkit:
   // A map of atomic symbols to their quantity.

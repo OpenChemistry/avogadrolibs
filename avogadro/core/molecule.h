@@ -459,7 +459,7 @@ public:
    * @param delimiter Delimiter to insert between tokens, defaults to none.
    * @param showCountsOver Show atom counts above this (defaults to 1).
    */
-  std::string formula(const std::string delimiter = "",
+  std::string formula(const std::string &delimiter = "",
                       int showCountsOver = 1) const;
 
   /**
