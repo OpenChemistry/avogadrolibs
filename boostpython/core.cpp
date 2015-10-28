@@ -68,5 +68,11 @@ void exportCore()
     .def("hasCustomElements",
          &Molecule::hasCustomElements,
 	 "Returns true if the molecule contains any custom elements")
+    .def("formula",
+         &Molecule::formula,
+         "The chemical formula of the molecule")
+    .def("mass",
+         &Molecule::mass,
+         "The mass of the molecule")
   ;
 }
