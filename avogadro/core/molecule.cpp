@@ -538,7 +538,7 @@ std::string Molecule::formula(const std::string &delimiter, int over) const
   if (iter != composition.end()) {
     result << "C";
     if (iter->second > over)
-      result << iter->second;
+      result << delimiter << iter->second;
     composition.erase(iter);
 
     // If carbon is present, hydrogens are next.
@@ -554,9 +554,9 @@ std::string Molecule::formula(const std::string &delimiter, int over) const
   // The rest:
   iter = composition.begin();
   while (iter != composition.end()) {
-    result << Elements::symbol(iter->first);
+    result << delimiter << Elements::symbol(iter->first);
     if (iter->second > over)
-      result << iter->second;
+      result << delimiter << iter->second;
     ++iter;
   }
 
