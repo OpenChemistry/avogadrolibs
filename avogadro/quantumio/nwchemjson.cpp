@@ -21,6 +21,7 @@
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
+#include <avogadro/core/utilities.h>
 
 #include <jsoncpp.cpp>
 
@@ -47,6 +48,7 @@ using Core::Elements;
 using Core::GaussianSet;
 using Core::Molecule;
 using Core::Variant;
+using Core::split;
 
 NWChemJson::NWChemJson()
 {
@@ -86,7 +88,10 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
 
   // Iterate through the objects in the array, and print out any molecules.
   Value moleculeArray(Json::arrayValue);
+  Value basisSetArray(Json::arrayValue);
   Value calculationVib;
+  Value molecularOrbitals;
+  int numberOfElectrons = 0;
   for (size_t i = 0; i < calculations.size(); ++i) {
     Value calcObj = calculations.get(i, "");
     if (calcObj.isObject()) {
@@ -96,18 +101,21 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
         calculationVib = calcObj;
       Value calcSetup = calcObj["calculationSetup"];
       Value calcMol = calcSetup["molecule"];
-      string calcMolStr = calcMol.toStyledString();
-      if (!calcMol.isNull() && calcMol.isObject()) {
-        calcMolStr = "Object with id: " + calcMol["id"].asString();
+      numberOfElectrons = calcSetup["numberOfElectrons"].asInt();
+      if (!calcMol.isNull() && calcMol.isObject())
         moleculeArray.append(calcMol);
-      }
+      Value basisSet = calcSetup["basisSet"];
+      if (!basisSet.isNull() && basisSet.isObject())
+        basisSetArray.append(basisSet);
 
       Value calcResults = calcObj["calculationResults"];
       calcMol = calcResults["molecule"];
-      if (!calcMol.isNull() && calcMol.isObject()) {
-        calcMolStr = "Object with id: " + calcMol["id"].asString();
+      if (!calcMol.isNull() && calcMol.isObject())
         moleculeArray.append(calcMol);
-      }
+      // There is currently one id for all, just get the last one we find.
+      if (!calcResults["molecularOrbitals"].isNull()
+          && calcResults["molecularOrbitals"].isObject())
+        molecularOrbitals = calcResults["molecularOrbitals"];
     }
   }
 
@@ -135,6 +143,80 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
   }
   // Perceive bonds for the molecule.
   molecule.perceiveBondsSimple();
+
+  // Add in the electronic structure information if available.
+  if (molecularOrbitals.isObject()
+      && molecularOrbitals["atomicOrbitalDescriptions"].isArray()) {
+    Value basisSet = basisSetArray.get(basisSetArray.size() - 1, 0);
+    Value orbDesc = molecularOrbitals["atomicOrbitalDescriptions"];
+
+    // Figure out the mapping of basis set to molecular orbitals.
+    Array<int> atomNumber;
+    Array<string> atomSymbol;
+    for (size_t i = 0; i < orbDesc.size(); ++i) {
+      string desc = orbDesc.get(i, 0).asString();
+      vector<string> parts = split(desc, ' ');
+      assert(parts.size() == 3);
+      int num = Core::lexicalCast<int>(parts[0]);
+      if (atomNumber.size() > 0 && atomNumber.back() == num)
+        continue;
+      atomNumber.push_back(num);
+      atomSymbol.push_back(parts[1]);
+    }
+
+    // Now create the structure, and expand out the orbitals.
+    GaussianSet *basis = new GaussianSet;
+    basis->setMolecule(&molecule);
+    for (size_t i = 0; i < atomSymbol.size(); ++i) {
+      string symbol = atomSymbol[i];
+      Value basisFunctions = basisSet["basisFunctions"];
+      Value currentFunction;
+      for (size_t j = 0; j < basisFunctions.size(); ++j) {
+        currentFunction = basisFunctions.get(j, 0);
+        if (currentFunction["elementType"].asString() == symbol)
+          break;
+        currentFunction = Json::nullValue;
+      }
+
+      if (currentFunction.isNull())
+        break;
+
+      Value contraction = currentFunction["basisSetContraction"];
+      for (size_t j = 0; j < contraction.size(); ++j) {
+        Value contractionShell = contraction.get(j, Json::nullValue);
+        string shellType = contractionShell["basisSetShell"].asString();
+        Value exponent = contractionShell["basisSetExponent"];
+        Value coefficient = contractionShell["basisSetCoefficient"];
+        assert(exponent.size() == coefficient.size());
+        GaussianSet::orbital type = GaussianSet::UU;
+        if (shellType == "s")
+          type = GaussianSet::S;
+        else if (shellType == "p")
+          type = GaussianSet::P;
+        else if (shellType =="d")
+          type = GaussianSet::D;
+
+        if (type != GaussianSet::UU) {
+          int b = basis->addBasis(i, type);
+          for (size_t k = 0; k < exponent.size(); ++k) {
+            basis->addGto(b, coefficient.get(k, 0).asDouble(),
+                          exponent.get(k, 0).asDouble());
+          }
+        }
+      }
+    }
+    // Now to add the molecular orbital coefficients.
+    Value moCoeffs = molecularOrbitals["molecularOrbital"];
+    vector<double> coeffArray;
+    for (size_t i = 0; i < moCoeffs.size(); ++i) {
+      Value coeff = moCoeffs.get(i, Json::nullValue)["moCoefficients"];
+      for (size_t j = 0; j < coeff.size(); ++j)
+        coeffArray.push_back(coeff.get(j, 0).asDouble());
+    }
+    basis->setMolecularOrbitals(coeffArray);
+    basis->setElectronCount(numberOfElectrons);
+    molecule.setBasisSet(basis);
+  }
 
   // Now to see if there was a vibrational frequencies calculation.
   if (!calculationVib.isNull() && calculationVib.isObject()) {
