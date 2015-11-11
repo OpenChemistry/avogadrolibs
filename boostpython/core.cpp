@@ -1,5 +1,7 @@
 #include <boost/python.hpp>
 
+#include <avogadro/core/cube.h>
+#include <avogadro/core/gaussiansettools.h>
 #include <avogadro/core/molecule.h>
 
 using namespace boost::python;
@@ -38,7 +40,14 @@ void exportCore()
     .def("atom2",
          &Bond::atom2,
          "The second atom")
-    ;
+  ;
+
+  bool (Cube::*setLimits0)(const Molecule&, double, double) = &Cube::setLimits;
+  class_<Cube>("Cube")
+    .def("setLimits",
+         setLimits0,
+         "Set the limits based on the molecule geometry")
+  ;
 
   Index (Molecule::*atomCount0)() const                   = &Molecule::atomCount;
   Index (Molecule::*atomCount1)(unsigned char) const      = &Molecule::atomCount;
@@ -65,6 +74,12 @@ void exportCore()
     .def("bondCount",
          &Molecule::bondCount,
          "The number of bonds")
+    .def("addCube",
+         &Molecule::addCube, return_value_policy<reference_existing_object>(),
+         "Add a new cube")
+    .def("cubeCount",
+         &Molecule::cubeCount,
+         "The number of cubes")
     .def("hasCustomElements",
          &Molecule::hasCustomElements,
 	 "Returns true if the molecule contains any custom elements")
@@ -74,5 +89,13 @@ void exportCore()
     .def("mass",
          &Molecule::mass,
          "The mass of the molecule")
+  ;
+
+  bool (GaussianSetTools::*calculateMolecularOrbital0)(Cube&, int) const
+      = &GaussianSetTools::calculateMolecularOrbital;
+  class_<GaussianSetTools>("GaussianSetTools", init<Molecule*>())
+    .def("calculateMolecularOrbital",
+         calculateMolecularOrbital0,
+         "Calculate the molecular orbital and set values in the cube")
   ;
 }
