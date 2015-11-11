@@ -17,6 +17,7 @@
 #include "cjsonformat.h"
 
 #include <avogadro/core/crystaltools.h>
+#include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
@@ -39,6 +40,7 @@ using Core::Atom;
 using Core::BasisSet;
 using Core::Bond;
 using Core::CrystalTools;
+using Core::Cube;
 using Core::Elements;
 using Core::GaussianSet;
 using Core::Molecule;
@@ -309,6 +311,37 @@ bool CjsonFormat::write(std::ostream &file, const Molecule &molecule)
       basis["scfType"] = type;
       root["basisSet"] = basis;
     }
+  }
+
+  // Write out any cubes that are present in the molecule.
+  if (molecule.cubeCount() > 0) {
+    const Cube *cube = molecule.cube(0);
+    Value cubeData(Json::arrayValue);
+    const std::vector<double> &v = *cube->data();
+    for (vector<double>::const_iterator it = cube->data()->begin(),
+         itEnd = cube->data()->end(); it != itEnd; ++it) {
+      cubeData.append(*it);
+    }
+    // Get the origin, max, spacing, and dimensions to place in the object.
+    Value cubeObj;
+    Value cubeMin(Json::arrayValue);
+    cubeMin.append(cube->min().x());
+    cubeMin.append(cube->min().y());
+    cubeMin.append(cube->min().z());
+    cubeObj["origin"] = cubeMin;
+    Value cubeSpacing(Json::arrayValue);
+    cubeSpacing.append(cube->spacing().x());
+    cubeSpacing.append(cube->spacing().y());
+    cubeSpacing.append(cube->spacing().z());
+    cubeObj["spacing"] = cubeSpacing;
+    Value cubeDims(Json::arrayValue);
+    cubeDims.append(cube->dimensions().x());
+    cubeDims.append(cube->dimensions().y());
+    cubeDims.append(cube->dimensions().z());
+    cubeObj["dimensions"] = cubeDims;
+    cubeObj["scalars"] = cubeData;
+    root["cube"] = cubeObj;
+
   }
 
   // Create and populate the atom arrays.
