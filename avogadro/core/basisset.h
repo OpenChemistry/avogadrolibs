@@ -70,7 +70,7 @@ public:
    * @param type The type of the electrons (Alpha, Beta, or Paired).
    * @return The number of electrons in the molecule.
    */
-  unsigned int electronCount(ElectronType type = Paired);
+  unsigned int electronCount(ElectronType type = Paired) const;
 
   /**
    * Set the molecule for the basis set.
@@ -167,7 +167,7 @@ inline void BasisSet::setElectronCount(unsigned int n, ElectronType type)
   }
 }
 
-inline unsigned int BasisSet::electronCount(ElectronType type)
+inline unsigned int BasisSet::electronCount(ElectronType type) const
 {
   switch (type) {
   case Paired:
