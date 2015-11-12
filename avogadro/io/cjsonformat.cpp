@@ -309,6 +309,7 @@ bool CjsonFormat::write(std::ostream &file, const Molecule &molecule)
         type = "unknown";
       }
       basis["scfType"] = type;
+      basis["electronCount"] = gaussian->electronCount();
       root["basisSet"] = basis;
     }
   }
