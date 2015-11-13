@@ -28,6 +28,7 @@
 namespace Avogadro {
 namespace Core {
 
+class Cube;
 class GaussianSet;
 class Molecule;
 
@@ -43,6 +44,14 @@ class AVOGADROCORE_EXPORT GaussianSetTools
 public:
   explicit GaussianSetTools(Molecule *mol = 0);
   ~GaussianSetTools();
+
+  /**
+   * @brief Populate the cube with values for the molecular orbital.
+   * @param cube The cube to be populated with values.
+   * @param molecularOrbitalNumber The molecular orbital number.
+   * @return True on success, false on failure.
+   */
+  bool calculateMolecularOrbital(Cube &cube, int molecularOrbitalNumber) const;
 
   /**
    * @brief Calculate the value of the specified molecular orbital at the

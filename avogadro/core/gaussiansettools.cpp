@@ -18,6 +18,7 @@
 
 #include "gaussiansettools.h"
 
+#include "cube.h"
 #include "gaussianset.h"
 #include "molecule.h"
 
@@ -39,6 +40,17 @@ GaussianSetTools::GaussianSetTools(Molecule *mol) : m_molecule(mol)
 
 GaussianSetTools::~GaussianSetTools()
 {
+}
+
+
+bool GaussianSetTools::calculateMolecularOrbital(Cube &cube,
+                                                 int moNumber) const
+{
+  for (size_t i = 0; i < cube.data()->size(); ++i) {
+    Vector3 pos = cube.position(i);
+    cube.setValue(i, calculateMolecularOrbital(pos, moNumber));
+  }
+  return true;
 }
 
 double GaussianSetTools::calculateMolecularOrbital(const Vector3 &position,

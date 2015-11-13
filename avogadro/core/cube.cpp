@@ -41,9 +41,9 @@ bool Cube::setLimits(const Vector3 &min_, const Vector3 &max_,
 {
   // We can calculate all necessary properties and initialise our data
   Vector3 delta = max_ - min_;
-  m_spacing = Vector3(delta.x() / (points.x()-1),
-                       delta.y() / (points.y()-1),
-                       delta.z() / (points.z()-1));
+  m_spacing = Vector3(delta.x() / (points.x() - 1),
+                      delta.y() / (points.y() - 1),
+                      delta.z() / (points.z() - 1));
   m_min = min_;
   m_max = max_;
   m_points = points;
@@ -123,6 +123,11 @@ bool Cube::setLimits(const Molecule &mol, double spacing_, double padding)
 }
 
 std::vector<double> * Cube::data()
+{
+  return &m_data;
+}
+
+const std::vector<double> * Cube::data() const
 {
   return &m_data;
 }

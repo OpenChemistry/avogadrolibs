@@ -128,6 +128,7 @@ public:
    * @return Vector containing all the data in a one-dimensional array.
    */
   std::vector<double> * data();
+  const std::vector<double> * data() const;
 
   /**
    * Set the values in the cube to those passed in the vector.

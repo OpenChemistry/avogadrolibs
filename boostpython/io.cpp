@@ -51,6 +51,12 @@ void exportIo()
   class_<FileFormatManager, boost::shared_ptr<FileFormatManager>,
          boost::noncopyable> ("FileFormatManager", no_init)
     .def("__init__", make_constructor(&pyGetFFMSingleton))
+    .def("readFile",
+         &FileFormatManager::readFile,
+         "Read in a molecule from the supplied file path")
+    .def("writeFile",
+         &FileFormatManager::writeFile,
+         "Write the molecule to the supplied file path")
     .def("readString",
          &FileFormatManager::readString,
          "Read in a molecule from the supplied string")
