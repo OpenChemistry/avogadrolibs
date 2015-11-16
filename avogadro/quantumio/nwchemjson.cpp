@@ -173,8 +173,16 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
       Value currentFunction;
       for (size_t j = 0; j < basisFunctions.size(); ++j) {
         currentFunction = basisFunctions.get(j, 0);
-        if (currentFunction["elementType"].asString() == symbol)
+
+        string elementType;
+        if (currentFunction.isMember("elementLabel"))
+          elementType = currentFunction["elementLabel"].asString();
+        else if (currentFunction.isMember("elementType"))
+          elementType = currentFunction["elementType"].asString();
+
+        if (elementType == symbol)
           break;
+
         currentFunction = Json::nullValue;
       }
 
@@ -182,9 +190,15 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
         break;
 
       Value contraction = currentFunction["basisSetContraction"];
+      bool spherical = currentFunction["basisSetHarmonicType"].asString()
+          == "spherical";
       for (size_t j = 0; j < contraction.size(); ++j) {
         Value contractionShell = contraction.get(j, Json::nullValue);
-        string shellType = contractionShell["basisSetShell"].asString();
+        string shellType;
+        if (contractionShell.isMember("basisSetShell"))
+          shellType = contractionShell["basisSetShell"].asString();
+        else if (contractionShell.isMember("basisSetShellType"))
+          shellType = contractionShell["basisSetShellType"].asString();
         Value exponent = contractionShell["basisSetExponent"];
         Value coefficient = contractionShell["basisSetCoefficient"];
         assert(exponent.size() == coefficient.size());
@@ -193,8 +207,14 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
           type = GaussianSet::S;
         else if (shellType == "p")
           type = GaussianSet::P;
-        else if (shellType =="d")
+        else if (shellType == "d" && spherical)
+          type = GaussianSet::D5;
+        else if (shellType == "d")
           type = GaussianSet::D;
+        else if (shellType == "f" && spherical)
+          type = GaussianSet::F7;
+        else if (shellType == "f")
+          type == GaussianSet::F;
 
         if (type != GaussianSet::UU) {
           int b = basis->addBasis(i, type);
