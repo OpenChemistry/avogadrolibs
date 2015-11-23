@@ -310,7 +310,38 @@ bool CjsonFormat::write(std::ostream &file, const Molecule &molecule)
       }
       basis["scfType"] = type;
       basis["electronCount"] = gaussian->electronCount();
+      Value mo(Json::objectValue);
+
+      std::vector<double> energies = gaussian->moEnergy();
+      if (energies.size() > 0) {
+        Value energyData(Json::arrayValue);
+        for (vector<double>::const_iterator it = energies.begin(),
+             itEnd = energies.end(); it != itEnd; ++it) {
+          energyData.append(*it);
+        }
+        mo["energies"] = energyData;
+      }
+      std::vector<unsigned char> occ = gaussian->moOccupancy();
+      if (occ.size() > 0) {
+        Value occData(Json::arrayValue);
+        for (vector<unsigned char>::const_iterator it = occ.begin(),
+             itEnd = occ.end(); it != itEnd; ++it) {
+          occData.append(static_cast<int>(*it));
+        }
+        mo["occpupations"] = occData;
+      }
+      std::vector<unsigned int> num = gaussian->moNumber();
+      if (num.size() > 0) {
+        Value numData(Json::arrayValue);
+        for (vector<unsigned int>::const_iterator it = num.begin(),
+             itEnd = num.end(); it != itEnd; ++it) {
+          numData.append(*it);
+        }
+        mo["numbers"] = numData;
+      }
+
       root["basisSet"] = basis;
+      root["molecularOrbitals"] = mo;
     }
   }
 
