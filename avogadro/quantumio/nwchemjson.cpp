@@ -228,12 +228,25 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
     // Now to add the molecular orbital coefficients.
     Value moCoeffs = molecularOrbitals["molecularOrbital"];
     vector<double> coeffArray;
+    vector<double> energyArray;
+    vector<unsigned char> occArray;
+    vector<unsigned int> numArray;
     for (size_t i = 0; i < moCoeffs.size(); ++i) {
-      Value coeff = moCoeffs.get(i, Json::nullValue)["moCoefficients"];
+      Value currentMO = moCoeffs.get(i, Json::nullValue);
+      Value coeff = currentMO["moCoefficients"];
       for (size_t j = 0; j < coeff.size(); ++j)
         coeffArray.push_back(coeff.get(j, 0).asDouble());
+      if (currentMO.isMember("orbitalEnergy"))
+        energyArray.push_back(currentMO["orbitalEnergy"]["value"].asDouble());
+      if (currentMO.isMember("orbitalOccupancy"))
+        occArray.push_back(static_cast<unsigned char>(currentMO["orbitalOccupancy"].asInt()));
+      if (currentMO.isMember("orbitalNumber"))
+        numArray.push_back(static_cast<unsigned int>(currentMO["orbitalNumber"].asInt()));
     }
     basis->setMolecularOrbitals(coeffArray);
+    basis->setMolecularOrbtitalEnergy(energyArray);
+    basis->setMolecularOrbtitalOccupancy(occArray);
+    basis->setMolecularOrbtitalNumber(numArray);
     basis->setElectronCount(numberOfElectrons);
     molecule.setBasisSet(basis);
   }
