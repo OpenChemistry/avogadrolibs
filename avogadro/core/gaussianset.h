@@ -96,6 +96,31 @@ public:
                             ElectronType type = Paired);
 
   /**
+   * @brief Set the molecular orbtial energies, expected in Hartrees.
+   * @param energies The vector containing energies for the MOs of type
+   * @param type The type of the electrons being set.
+   */
+  void setMolecularOrbtitalEnergy(const std::vector<double> &energies,
+                                  ElectronType type = Paired);
+
+  /**
+   * @brief Set the molecular orbital occupancies.
+   * @param occ The occupancies for the MOs of type.
+   * @param type The type of the electrons being set.
+   */
+  void setMolecularOrbtitalOccupancy(const std::vector<unsigned char> &occ,
+                                     ElectronType type = Paired);
+
+  /**
+   * @brief This enables support of sparse orbital sets, and provides a mapping
+   * from the index in memory to the actual molecular orbital number.
+   * @param nums The MO numbers (starting with an index of 1 for the first one).
+   * @param type The MO type (Paired, Alpha, Beta).
+   */
+  void setMolecularOrbtitalNumber(const std::vector<unsigned int> &nums,
+                                  ElectronType type = Paired);
+
+  /**
    * Set the SCF density matrix for the GaussianSet.
    */
   bool setDensityMatrix(const MatrixX &m);
@@ -154,7 +179,71 @@ public:
   std::vector<double>& gtoA() { return m_gtoA; }
   std::vector<double>& gtoC() { return m_gtoC; }
   std::vector<double>& gtoCN() { initCalculation(); return m_gtoCN; }
-  MatrixX& moMatrix() { return m_moMatrix[0]; }
+
+  MatrixX& moMatrix(ElectronType type = Paired)
+  {
+    if (type == Paired || type == Alpha)
+      return m_moMatrix[0];
+    else
+      return m_moMatrix[1];
+  }
+
+  MatrixX moMatrix(ElectronType type = Paired) const
+  {
+    if (type == Paired || type == Alpha)
+      return m_moMatrix[0];
+    else
+      return m_moMatrix[1];
+  }
+
+  std::vector<double>& moEnergy(ElectronType type = Paired)
+  {
+    if (type == Paired || type == Alpha)
+      return m_moEnergy[0];
+    else
+      return m_moEnergy[1];
+  }
+
+  std::vector<double> moEnergy(ElectronType type = Paired) const
+  {
+    if (type == Paired || type == Alpha)
+      return m_moEnergy[0];
+    else
+      return m_moEnergy[1];
+  }
+
+  std::vector<unsigned char>& moOccupancy(ElectronType type = Paired)
+  {
+    if (type == Paired || type == Alpha)
+      return m_moOccupancy[0];
+    else
+      return m_moOccupancy[1];
+  }
+
+  std::vector<unsigned char> moOccupancy(ElectronType type = Paired) const
+  {
+    if (type == Paired || type == Alpha)
+      return m_moOccupancy[0];
+    else
+      return m_moOccupancy[1];
+  }
+
+  std::vector<unsigned int>& moNumber(ElectronType type = Paired)
+  {
+    if (type == Paired || type == Alpha)
+      return m_moNumber[0];
+    else
+      return m_moNumber[1];
+  }
+
+  std::vector<unsigned int> moNumber(ElectronType type = Paired) const
+  {
+    if (type == Paired || type == Alpha)
+      return m_moNumber[0];
+    else
+      return m_moNumber[1];
+  }
+
   MatrixX& densityMatrix() { return m_density; }
   MatrixX& spinDensityMatrix() { return m_spinDensity; }
 
@@ -170,11 +259,30 @@ private:
   std::vector<double> m_gtoA;              //! The GTO exponent
   std::vector<double> m_gtoC;              //! The GTO contraction coefficient
   std::vector<double> m_gtoCN;             //! The GTO contraction coefficient (normalized)
+
   /**
    * @brief This block can be once (doubly) or in two parts (alpha and beta) for
    * open shell calculations.
    */
   MatrixX m_moMatrix[2];            //! MO coefficient matrix
+
+  /**
+   * @brief This block stores energies for the molecular orbitals (same
+   * convention as the molecular orbital coefficients).
+   */
+  std::vector<double> m_moEnergy[2];
+
+  /**
+   * @brief The occupancy of the molecular orbitals.
+   */
+  std::vector<unsigned char> m_moOccupancy[2];
+
+  /**
+   * @brief This stores the molecular orbital number (when they are sparse). It
+   * is used to lookup the actual index of the molecular orbital data.
+   */
+  std::vector<unsigned int> m_moNumber[2];
+
   MatrixX m_density;                //! Density matrix
   MatrixX m_spinDensity;            //! Spin Density matrix
 
