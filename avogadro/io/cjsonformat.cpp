@@ -23,7 +23,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 
-#include <jsoncpp.cpp>
+#include <json/json.h>
 
 namespace Avogadro {
 namespace Io {
@@ -444,8 +444,6 @@ bool CjsonFormat::write(std::ostream &file, const Molecule &molecule)
     // A few sanity checks before we begin.
     assert(molecule.vibrationFrequencies().size()
            == molecule.vibrationIntensities().size());
-    assert(molecule.vibrationFrequencies().size()
-           == molecule.vibrationLx().size());
     Value modes(Json::arrayValue);
     Value freqs(Json::arrayValue);
     Value inten(Json::arrayValue);

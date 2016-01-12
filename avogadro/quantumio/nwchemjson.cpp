@@ -23,7 +23,7 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
-#include <jsoncpp.cpp>
+#include <json/json.h>
 
 #include <iostream>
 
