@@ -32,6 +32,7 @@ endif()
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR})
 add_subdirectory(utilities)
+add_subdirectory(thirdparty)
 add_subdirectory(avogadro)
 
 option(ENABLE_TESTING "Enable testing and building the tests." OFF)
