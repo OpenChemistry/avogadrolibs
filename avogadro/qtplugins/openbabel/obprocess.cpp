@@ -31,7 +31,7 @@ OBProcess::OBProcess(QObject *parent_) :
   m_processLocked(false),
   m_aborted(false),
   m_process(new QProcess(this)),
-#ifdef _WIN32
+#if defined(_WIN32)
   m_obabelExecutable("obabel.exe")
 #else
   m_obabelExecutable("obabel")
@@ -50,7 +50,7 @@ OBProcess::OBProcess(QObject *parent_) :
         QFileInfo(baseDir.absolutePath() + '/' + m_obabelExecutable).exists()) {
       m_obabelExecutable = baseDir.absolutePath() + '/' + m_obabelExecutable;
       QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-#ifdef Q_WS_WIN
+#if defined(_WIN32)
       env.insert("BABEL_DATADIR",
                  QCoreApplication::applicationDirPath() + "/data");
 #else

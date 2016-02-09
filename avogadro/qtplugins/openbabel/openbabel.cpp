@@ -466,6 +466,7 @@ void OpenBabel::onOptimizeGeometryFinished(const QByteArray &output)
                           tr("Error"),
                           tr("Error interpreting obabel MDL output."),
                           QMessageBox::Ok);
+    qDebug() << "MDL:" << output;
     return;
   }
 
@@ -721,6 +722,7 @@ void OpenBabel::onHydrogenOperationFinished(const QByteArray &mdl)
                           tr("Error"),
                           tr("Error interpreting obabel MDL output."),
                           QMessageBox::Ok);
+    qDebug() << "MDL:" << mdl;
     return;
   }
 
