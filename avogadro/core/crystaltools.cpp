@@ -241,7 +241,7 @@ bool CrystalTools::niggliReduce(Molecule &molecule, Options opts)
   // Initialize change of basis matrices:
   //
   // Although the reduction algorithm produces quantities directly
-  // relatible to a,b,c,alpha,beta,gamma, we will calculate a change
+  // relatable to a,b,c,alpha,beta,gamma, we will calculate a change
   // of basis matrix to use instead, and discard A, B, C, xi, eta,
   // zeta. By multiplying the change of basis matrix against the
   // current cell matrix, we avoid the problem of handling the
