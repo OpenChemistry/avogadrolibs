@@ -60,6 +60,9 @@ public:
   /** copy constructor */
   Molecule(const Molecule &other);
 
+  /** copy constructor to copy data from base instance */
+  Molecule(const Core::Molecule &other);
+
   /** Assignment operator */
   Molecule& operator=(const Molecule& other);
 
