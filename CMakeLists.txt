@@ -31,6 +31,11 @@ endif()
 
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR})
+
+if(USE_BOOST_PYTHON)
+  add_subdirectory(boostpython)
+endif()
+
 add_subdirectory(utilities)
 add_subdirectory(thirdparty)
 add_subdirectory(avogadro)
@@ -54,10 +59,6 @@ option(BUILD_DOCUMENTATION "Build project documentation" OFF)
 
 if(BUILD_DOCUMENTATION)
   add_subdirectory(docs)
-endif()
-
-if(USE_BOOST_PYTHON)
-  add_subdirectory(boostpython)
 endif()
 
 install(
