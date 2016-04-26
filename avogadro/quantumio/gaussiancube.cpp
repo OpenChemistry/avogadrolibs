@@ -51,7 +51,7 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
   std::string line;
   std::vector<std::string> list;
 
-  unsigned int nAtoms;
+  int nAtoms;
   Vector3 min;
   Vector3 spacing;
   Vector3i dim;
@@ -82,7 +82,7 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
 
   // Geometry block
   Vector3 pos;
-  for (unsigned int i = 0; i < nAtoms; ++i) {
+  for (unsigned int i = 0; i < abs(nAtoms); ++i) {
     getline(in, line);
     line = Core::trimmed(line);
     list = Core::split(line, ' ');
@@ -94,20 +94,42 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
     a.setPosition3d(pos);
   }
 
+  // If the nAtoms were negative there is another line before
+  // the data which is necessary, maybe contain 1 or more cubes
+  unsigned int nCubes = 1;
+  if (nAtoms < 0) {
+    in >> nCubes;
+    std::vector<unsigned int> moList(nCubes);
+    for (unsigned int i = 0; i < nCubes; ++i)
+      in >> moList[i];
+    // clear buffer
+    getline(in, line);
+  }
+
   // Render molecule
   molecule.perceiveBondsSimple();
 
-  // Get a cube object from molecule
-  Core::Cube *cube = molecule.addCube();
-
   // Cube block, set limits and populate data
-  cube->setLimits(min, dim, spacing);
-  std::vector<double> values;
-  // push_back is slow for this, resize vector first
-  values.resize(dim(0) * dim(1) * dim(2));
-  for (unsigned int i = 0; i < values.size(); ++i)
-    in >> values[i];
-  cube->setData(values);
+  // min and spacing are in bohr units, convert to ANGSTROM
+  for (unsigned int j = 0; j < 3; ++j) {
+    min[j] *= BOHR_TO_ANGSTROM;
+    spacing[j] *= BOHR_TO_ANGSTROM;
+  }
+
+  for (unsigned int i = 0; i < nCubes; ++i){
+    // Get a cube object from molecule
+    Core::Cube *cube = molecule.addCube();
+
+    cube->setLimits(min, dim, spacing);
+    std::vector<double> values;
+    // push_back is slow for this, resize vector first
+    values.resize(dim(0) * dim(1) * dim(2));
+    for (unsigned int j = 0; j < values.size(); ++j)
+      in >> values[j];
+    // clear buffer, if more than one cube
+    getline(in, line);
+    cube->setData(values);
+  }
 
   return true;
 }

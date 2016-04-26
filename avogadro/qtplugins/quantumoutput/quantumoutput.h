@@ -1,19 +1,3 @@
-/******************************************************************************
-
-  This source file is part of the Avogadro project.
-
-  Copyright 2012-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
-******************************************************************************/
-
 #ifndef AVOGADRO_QTPLUGINS_QUANTUMOUTPUT_H
 #define AVOGADRO_QTPLUGINS_QUANTUMOUTPUT_H
 
@@ -35,13 +19,6 @@ class Mesh;
 }
 
 namespace QtPlugins {
-
-/**
- * @brief The QuantumOutput plugin registers quantum file formats, adds several
- * menu entries to calculate properties if a valid quantum data output file was
- * loaded.
- * @author Marcus D. Hanwell
- */
 
 class GaussianSetConcurrent;
 class SlaterSetConcurrent;
@@ -66,14 +43,11 @@ public:
   void setMolecule(QtGui::Molecule *mol);
 
 private slots:
-  void homoActivated();
-  void lumoActivated();
   void surfacesActivated();
-  void calculateFinished();
+  void calculateSurface(int index, float isosurfaceValue,
+                        float resolutionStepSize);
+  void displayCube();
   void meshFinished();
-  void calculateMolecularOrbital(int molecularOrbital, float isoValue,
-                                 float stepSize);
-  void calculateElectronDensity(float isoValue, float stepSize);
 
 private:
   QList<QAction *>    m_actions;
@@ -86,6 +60,7 @@ private:
   SlaterSetConcurrent *m_concurrent2;
 
   Core::Cube        *m_cube;
+  std::vector<Core::Cube *>        m_cubes;
   Core::Mesh        *m_mesh1;
   Core::Mesh        *m_mesh2;
   QtGui::MeshGenerator *m_meshGenerator1;
