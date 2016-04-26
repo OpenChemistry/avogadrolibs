@@ -335,8 +335,7 @@ void Editor::bondRightClick(QMouseEvent *e)
   {
     Vector3 bondVector = atom1.position3d() - atom2.position3d();
     double bondDistance = bondVector.norm();
-    double radiiSum;
-    radiiSum = Elements::radiusCovalent(atom1.atomicNumber()) + Elements::radiusCovalent(atom2.atomicNumber());
+    double radiiSum = Elements::radiusCovalent(atom1.atomicNumber()) + Elements::radiusCovalent(atom2.atomicNumber());
     double ratio = bondDistance / radiiSum;
 
     int bondOrder;
@@ -348,6 +347,30 @@ void Editor::bondRightClick(QMouseEvent *e)
       bondOrder = 3;
 
     return bondOrder;
+  }
+
+  Vector3 expectedPosition(RWAtom atom1, RWAtom atom2, int bondOrder)
+  {
+    Vector3 bondVector = atom1.position3d() - atom2.position3d();
+    double bondDistance = bondVector.norm();
+    double radiiSum = Elements::radiusCovalent(atom1.atomicNumber()) + Elements::radiusCovalent(atom2.atomicNumber());
+
+    double ratio;
+    switch (bondOrder) {
+    case 3: // C-C = 154 pm, C#C = 137 pm
+      ratio = 0.8896;
+      break;
+    case 2: // C=C = 147 pm
+      ratio = 0.955;
+      break;
+    case 1:
+    default:
+      ratio = 1.0;
+    }
+
+    // expected position for atom 2
+    bondVector.normalize();
+    return atom1.position3d() - ratio*radiiSum*bondVector;
   }
 
 void Editor::atomLeftDrag(QMouseEvent *e)
@@ -526,9 +549,6 @@ void Editor::atomLeftDrag(QMouseEvent *e)
     Vector2f windowPos(e->localPos().x(), e->localPos().y());
     Vector3f oldPos(newAtom.position3d().cast<float>());
     Vector3f newPos = m_renderer->camera().unProject(windowPos, oldPos);
-    newAtom.setPosition3d(newPos.cast<double>());
-
-    changes |= Molecule::Atoms | Molecule::Modified;
 
     RWAtom clickedAtom = m_molecule->atom(m_clickedObject.index);
     if (clickedAtom.isValid()) {
@@ -536,17 +556,29 @@ void Editor::atomLeftDrag(QMouseEvent *e)
       m_bondDistance = bondVector.norm();
 
       // need to check if bond order needs to change
-      if (m_toolWidget->bondOrder() == 0) { // automatic
-        RWBond bond = m_molecule->bond(newAtom, clickedAtom);
-        if (bond.isValid()) {
-          int bondOrder = expectedBondOrder(newAtom, clickedAtom);
+      RWBond bond = m_molecule->bond(newAtom, clickedAtom);
+      if (bond.isValid()) {
+        int bondOrder = bond.order();
+        if (m_toolWidget->bondOrder() == 0) { // automatic
+          bondOrder = expectedBondOrder(newAtom, clickedAtom);
           bond.setOrder(bondOrder);
 
           changes |= Molecule::Bonds | Molecule::Modified;
-        }
+        } // automatic bond order
 
+        // compare an expected distance (given a bond order)
+        // to the mouse position - if it's a small delta, then "stick"
+        // .. helps to get distances that are closer to reality
+        Vector3 expected = expectedPosition(clickedAtom, newAtom, bondOrder);
+        Vector3f difference = newPos - expected.cast<float>();
+        if (difference.norm() < 0.1)
+          newPos = expected.cast<float>();
       }
     }
+
+    // update the position of the new atom
+    newAtom.setPosition3d(newPos.cast<double>());
+    changes |= Molecule::Atoms | Molecule::Modified;
   }
 
   m_molecule->emitChanged(changes);
