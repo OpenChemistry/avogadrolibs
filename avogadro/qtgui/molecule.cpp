@@ -38,6 +38,17 @@ Molecule::Molecule(const Molecule &other)
     m_bondUniqueIds.push_back(i);
 }
 
+Molecule::Molecule(const Core::Molecule &other)
+  : QObject(), Core::Molecule(other)
+{
+  // Now assign the unique ids
+  for (Index i = 0; i < atomCount(); i++)
+    m_atomUniqueIds.push_back(i);
+
+  for (Index i = 0; i < bondCount(); i++)
+    m_bondUniqueIds.push_back(i);
+}
+
 Molecule& Molecule::operator=(const Molecule& other)
 {
   // Call the base classes assigment operator
