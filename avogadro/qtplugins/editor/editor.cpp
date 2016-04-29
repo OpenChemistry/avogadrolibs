@@ -570,9 +570,20 @@ void Editor::atomLeftDrag(QMouseEvent *e)
         // to the mouse position - if it's a small delta, then "stick"
         // .. helps to get distances that are closer to reality
         Vector3 expected = expectedPosition(clickedAtom, newAtom, bondOrder);
+        // what's the difference between the user newPos and expected?
         Vector3f difference = newPos - expected.cast<float>();
-        if (difference.norm() < 0.1)
+        // what's the new bond distance?
+        bondVector = clickedAtom.position3d().cast<float>() - expected.cast<float>();
+        float newDistance = bondVector.norm();
+
+        // if the user position is close to a bond distance
+        // or if the user position is way too short (i.e., less than H2)
+        // or way, way too long
+        if (difference.norm() < 0.1
+        || m_bondDistance < 0.74 || m_bondDistance > 2.5) {
           newPos = expected.cast<float>();
+          m_bondDistance = newDistance;
+        }
       }
     }
 
