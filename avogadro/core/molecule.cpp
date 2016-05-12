@@ -59,7 +59,9 @@ Molecule& Molecule::operator=(const Molecule& other)
   if (this != &other) {
     m_graphDirty = true;
     m_customElementMap = other.m_customElementMap;
+    delete m_basisSet;
     m_basisSet = NULL;
+    delete m_unitCell;
     m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : NULL;
     m_data = other.m_data;
     m_atomicNumbers = other.m_atomicNumbers;
