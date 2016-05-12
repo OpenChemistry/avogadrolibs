@@ -49,6 +49,11 @@ public:
   virtual ~BasisSet() {}
 
   /**
+   * Clone.
+   */
+  virtual BasisSet* clone() const = 0;
+
+  /**
    * @brief The ElectronType enum describes the type of electrons being set or
    * retrieved. If Paired, then Alpha and Beta cannot be set, if Alpha or Beta
    * then both must be set.

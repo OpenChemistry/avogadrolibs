@@ -60,7 +60,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_graphDirty = true;
     m_customElementMap = other.m_customElementMap;
     delete m_basisSet;
-    m_basisSet = NULL;
+    m_basisSet = other.m_basisSet ? other.m_basisSet->clone() : NULL;
     delete m_unitCell;
     m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : NULL;
     m_data = other.m_data;
