@@ -62,6 +62,11 @@ public:
   ~SlaterSet() AVO_OVERRIDE;
 
   /**
+   * Clone.
+   */
+  SlaterSet* clone() const AVO_OVERRIDE { return new SlaterSet(*this); }
+
+  /**
    * Enumeration of the Slater orbital types.
    */
   enum slater { S, PX, PY, PZ, X2, XZ, Z2, YZ, XY, UU };

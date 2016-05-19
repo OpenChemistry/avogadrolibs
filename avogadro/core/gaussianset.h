@@ -66,6 +66,11 @@ public:
   ~GaussianSet() AVO_OVERRIDE;
 
   /**
+   * Clone.
+   */
+  GaussianSet* clone() const AVO_OVERRIDE { return new GaussianSet(*this); }
+
+  /**
    * Enumeration of the Gaussian type orbitals.
    */
    enum orbital { S, SP, P, D, D5, F, F7, G, G9, H, H11, I, I13, UU };
