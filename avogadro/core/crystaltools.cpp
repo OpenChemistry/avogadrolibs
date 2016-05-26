@@ -622,9 +622,8 @@ bool CrystalTools::setCellMatrix(Molecule &molecule,
 {
 
   if (opt & TransformAtoms && molecule.unitCell()) {
-    const Matrix3 xform((newCellColMatrix
-                         * molecule.unitCell()->cellMatrix().inverse())
-                        .transpose());
+    const Matrix3 xform(newCellColMatrix
+                        * molecule.unitCell()->cellMatrix().inverse());
     std::for_each(molecule.atomPositions3d().begin(),
                   molecule.atomPositions3d().end(),
                   TransformAtomsFunctor(xform));
