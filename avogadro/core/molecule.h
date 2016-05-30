@@ -442,8 +442,8 @@ public:
   void clearMeshes();
 
   /**
-   * @brief Add a mesh to the molecule.
-   * @return The mesh object added to the molecule.
+   * @brief Add a cube to the molecule.
+   * @return The cube object added to the molecule.
    */
   Cube* addCube();
 

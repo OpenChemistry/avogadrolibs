@@ -251,4 +251,4 @@ inline bool Cube::setValue(unsigned int i, double value_)
 } // End Core namespace
 } // End Avogadro namespace
 
-#endif // AVOGADRO_QTGUI_CUBE_H
+#endif // AVOGADRO_CORE_CUBE_H
