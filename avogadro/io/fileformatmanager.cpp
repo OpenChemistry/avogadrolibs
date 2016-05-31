@@ -22,6 +22,7 @@
 #include "cjsonformat.h"
 #include "gromacsformat.h"
 #include "mdlformat.h"
+#include "poscarformat.h"
 #include "xyzformat.h"
 
 #include <avogadro/stl/memory_p.h>
@@ -296,6 +297,7 @@ FileFormatManager::FileFormatManager()
   addFormat(new CjsonFormat);
   addFormat(new GromacsFormat);
   addFormat(new MdlFormat);
+  addFormat(new PoscarFormat);
   addFormat(new XyzFormat);
 }
 
