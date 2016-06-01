@@ -60,7 +60,7 @@ public:
   void resetCamera();
 
   /**
-   * Reset the scene geometry, this should be done when the scene geeometry has
+   * Reset the scene geometry, this should be done when the scene geometry has
    * changed in order to ensure correct clipping.
    */
   void resetGeometry();
