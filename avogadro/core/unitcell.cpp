@@ -34,7 +34,7 @@ void UnitCell::setCellParameters(Real a_, Real b_, Real c_,
 
   m_cellMatrix(0, 0) = a_;
   m_cellMatrix(1, 0) = static_cast<Real>(0.0);
-  m_cellMatrix(1, 0) = static_cast<Real>(0.0);
+  m_cellMatrix(2, 0) = static_cast<Real>(0.0);
 
   m_cellMatrix(0, 1) = b_ * cosGamma;
   m_cellMatrix(1, 1) = b_ * sinGamma;
