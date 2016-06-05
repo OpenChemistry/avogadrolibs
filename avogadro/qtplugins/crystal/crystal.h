@@ -22,6 +22,7 @@
 namespace Avogadro {
 namespace QtPlugins {
 class UnitCellDialog;
+class SpaceGroupDialog;
 
 /**
  * @brief Tools for crystal-specific editing/analysis.
@@ -52,11 +53,18 @@ private slots:
   void standardOrientation();
   void toggleUnitCell();
   void wrapAtomsToCell();
+  void fillUnitCell();
+  void perceiveSpaceGroup();
+  void primitiveReduce();
+  void asymmetricReduce();
+  void symmetrizeCell();
+  void setSpaceGroup();
 
 private:
   QList<QAction *> m_actions;
   QtGui::Molecule *m_molecule;
   UnitCellDialog *m_unitCellDialog;
+  SpaceGroupDialog *m_spaceGroupDialog;
 
   QAction *m_editUnitCellAction;
   QAction *m_niggliReduceAction;
@@ -64,6 +72,12 @@ private:
   QAction *m_standardOrientationAction;
   QAction *m_toggleUnitCellAction;
   QAction *m_wrapAtomsToCellAction;
+  QAction *m_fillUnitCell;
+  QAction *m_perceiveSpaceGroup;
+  QAction *m_primitiveReduce;
+  QAction *m_asymmetricReduce;
+  QAction *m_symmetrizeCell;
+  QAction *m_setSpaceGroup;
 };
 
 inline QString Crystal::description() const

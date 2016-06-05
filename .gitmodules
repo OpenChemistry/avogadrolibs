@@ -1,0 +1,3 @@
+[submodule "thirdparty/spglib"]
+	path = thirdparty/spglib
+	url = https://github.com/atztogo/spglib.git

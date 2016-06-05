@@ -142,9 +142,46 @@ public:
   static bool setFractionalCoordinates(Molecule &molecule,
                                        const Array<Vector3> &coords);
 
+  /**
+   * perceive space group
+   * @return
+   */
+  static bool getSpacegroup(Molecule &molecule);
+
+  /**
+   * Set the rotation matrices and translation vectors according the
+   * Hall index in Avospg
+   * @return
+   */
+  static bool setSpaceGroup(Molecule &molecule, const int hallNumber);
+
+  /**
+   * Fill the unit cell according to the rotation matrices and translation vectors
+   * defined by the space group.
+   * @return
+   */
+  static bool fillUnitCell(Molecule &molecule);
+
+  /**
+   * Replicate the cell along the a, b and c vectors
+   * @return
+   */
+  static bool buildSuperCell(Molecule &molecule, const unsigned int v1,
+                                  const unsigned int v2,
+                                  const unsigned int v3);
+  static bool buildSlab(Molecule &molecule, std::vector<int> inputIndices, Vector3 cutoff);
+
+  static bool primitiveReduce(Molecule &molecule);
+  static bool asymmetricReduce(Molecule &molecule);
+  static bool symmetrizeCell(Molecule &molecule);
+  static void printFractional(Molecule &molecule);
+
+
 private:
   CrystalTools(); // not implemented
   ~CrystalTools(); // not implemented
+  static int gcdSmall(const int aOriginal, const int bOriginal);
+  static bool vectorNormIsLessThan(Vector3 a, Vector3 b);
 };
 
 } // namespace Core

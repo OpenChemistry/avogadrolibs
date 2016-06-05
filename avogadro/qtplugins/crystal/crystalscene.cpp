@@ -22,6 +22,12 @@
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/linestripgeometry.h>
+#include <avogadro/rendering/textlabel2d.h>
+#include <avogadro/rendering/textlabel3d.h>
+#include <avogadro/rendering/textproperties.h>
+#include <avogadro/rendering/glrenderer.h>
+#include <avogadro/core/spacegroups.h>
+
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -32,6 +38,9 @@ using Core::UnitCell;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
+using Avogadro::Rendering::TextLabel2D;
+using Avogadro::Rendering::TextLabel3D;
+using Avogadro::Rendering::TextProperties;
 
 CrystalScene::CrystalScene(QObject *p) : ScenePlugin(p), m_enabled(true)
 {
@@ -53,9 +62,23 @@ void CrystalScene::process(const Molecule &molecule, GroupNode &node)
 
     float width = 2.0;
 
-    Vector3f a = cell->aVector().cast<float>();
-    Vector3f b = cell->bVector().cast<float>();
-    Vector3f c = cell->cVector().cast<float>();
+    Vector3f a;
+    Vector3f b;
+    Vector3f c;
+    /*if(cell->showPrim())
+    {
+      Matrix3 primCell = cell->primitiveCell();
+      a = primCell.col(0).cast<float>();
+      b = primCell.col(1).cast<float>();
+      c = primCell.col(2).cast<float>();
+    }
+    else
+    {*/
+      a = cell->aVector().cast<float>();
+      b = cell->bVector().cast<float>();
+      c = cell->cVector().cast<float>();
+    //}
+
 
     Vector3f vertex(Vector3f::Zero());
 
@@ -90,6 +113,45 @@ void CrystalScene::process(const Molecule &molecule, GroupNode &node)
     strip[0] -= a;
     strip[1] -= a;
     lines->addLineStrip(strip, width);
+
+    //space group
+    int hallNumber = cell->getSpaceGroup();
+    if(hallNumber == 0)
+      return;
+
+    QString overlayText;
+    QString hallLabel = tr("Hall Symbol:");
+    QString intLabel  = tr("Space Group:");
+    int labelWidth = -std::max(hallLabel.size(),intLabel.size());
+
+
+    std::string intSymb = SpaceGroups::getInternational(hallNumber);
+    if(intSymb.size())
+    {
+      overlayText += QString("%1 %2\n")
+        .arg(tr("SpaceGroup Symbol:"),intLabel.size())
+        .arg(tr(intSymb.c_str()),intSymb.size());
+    }
+    std::string hallSymb = SpaceGroups::getHallSymbol(hallNumber);
+    if(hallSymb.size())
+    {
+      overlayText += QString("%1 %2\n")
+        .arg(tr("Hall Symbol:"),hallLabel.size())
+        .arg(tr(hallSymb.c_str()),hallSymb.size());
+    }
+
+    TextProperties overlayTProp;
+    overlayTProp.setFontFamily(TextProperties::Mono);
+    overlayTProp.setColorRgb(255,255,255);
+    overlayTProp.setAlign(TextProperties::HLeft,TextProperties::VTop);
+
+    TextLabel2D *label = new TextLabel2D;
+    label->setText(overlayText.toStdString());
+    label->setTextProperties(overlayTProp);
+    label->setRenderPass(Rendering::Overlay2DPass);
+    label->setAnchor(Vector2i(10,500));
+
+    geometry->addDrawable(label);
   }
 }
 
