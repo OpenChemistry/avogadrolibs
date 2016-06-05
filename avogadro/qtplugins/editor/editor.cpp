@@ -198,14 +198,18 @@ QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
   }
 
   bool ok = false;
-  int atomicNum = m_keyPressBuffer.toInt(&ok);
-  if (!ok || atomicNum <= 0 || atomicNum > Core::Elements::elementCount()) {
+  int atomicNum;
+  int bondOrder = m_keyPressBuffer.toInt(&ok);
+
+  if (ok && bondOrder > 0 && bondOrder <= 4) {
+    m_toolWidget->setBondOrder(static_cast<unsigned char>(bondOrder));
+  } else  {
     atomicNum = Core::Elements::atomicNumberFromSymbol(
           m_keyPressBuffer.toStdString());
-  }
 
-  if (atomicNum != Avogadro::InvalidElement)
-    m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
+    if (atomicNum != Avogadro::InvalidElement)
+      m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
+  }
 
   return NULL;
 }

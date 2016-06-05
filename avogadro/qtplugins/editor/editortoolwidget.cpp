@@ -59,7 +59,8 @@ EditorToolWidget::~EditorToolWidget()
 
 void EditorToolWidget::setAtomicNumber(unsigned char atomicNum)
 {
-  m_currentElement = atomicNum;
+  selectElement(atomicNum);
+
   if (m_elementSelector)
     m_elementSelector->setElement(static_cast<int>(atomicNum));
 }
@@ -176,6 +177,13 @@ void EditorToolWidget::selectElement(unsigned char element)
   int curIndex = element > 0 ? m_ui->element->findData(element) : -1;
   if (curIndex >= 0)
     m_ui->element->setCurrentIndex(curIndex);
+  else {
+    addUserElement(element);
+    int curIndex = m_ui->element->findData(element);
+    if (curIndex >= 0)
+      m_ui->element->setCurrentIndex(curIndex);
+    // if we can't find it after adding it, something is very wrong!
+  }
 }
 
 void EditorToolWidget::buildElements()
