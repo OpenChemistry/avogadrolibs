@@ -149,6 +149,55 @@ void HydrogenTools::adjustHydrogens(Molecule &molecule, Adjustment adjustment)
   }
 }
 
+void HydrogenTools::adjustHydrogens(Atom &atom, Adjustment adjustment)
+{
+  // This vector stores indices of hydrogens that need to be removed. Additions
+  // are made first, followed by removals to keep indexing sane.
+  std::vector<size_t> badHIndices;
+
+  // Temporary container for calls to generateNewHydrogenPositions.
+  std::vector<Vector3> newHPos;
+
+  // Convert the adjustment option to a couple of booleans
+  bool doAdd(adjustment == Add || adjustment == AddAndRemove);
+  bool doRemove(adjustment == Remove || adjustment == AddAndRemove);
+
+  Molecule molecule = *atom.molecule();
+
+  // Limit to only the original atoms:
+  const size_t numAtoms = molecule.atomCount();
+
+  int hDiff = valencyAdjustment(atom);
+  // Add hydrogens:
+  if (doAdd && hDiff > 0) {
+    newHPos.clear();
+    generateNewHydrogenPositions(atom, hDiff, newHPos);
+    for (std::vector<Vector3>::const_iterator it = newHPos.begin(),
+      itEnd = newHPos.end(); it != itEnd; ++it) {
+      Atom newH(molecule.addAtom(1));
+      newH.setPosition3d(*it);
+      molecule.addBond(atom, newH, 1);
+    }
+  }
+  // Add bad hydrogens to our list of hydrogens to remove:
+  else if (doRemove && hDiff < 0) {
+    extraHydrogenIndices(atom, -hDiff, badHIndices);
+  }
+
+  // Remove dead hydrogens now. Remove them in reverse-index order to keep
+  // indexing sane.
+  if (doRemove && !badHIndices.empty()) {
+    std::sort(badHIndices.begin(), badHIndices.end());
+    std::vector<size_t>::iterator newEnd(std::unique(badHIndices.begin(),
+                                                     badHIndices.end()));
+    badHIndices.resize(std::distance(badHIndices.begin(), newEnd));
+    for (std::vector<size_t>::const_reverse_iterator it = badHIndices.rbegin(),
+         itEnd = badHIndices.rend(); it != itEnd; ++it) {
+      molecule.removeAtom(*it);
+    }
+  }
+}
+
 int HydrogenTools::valencyAdjustment(const Atom &atom)
 {
   int result = 0;

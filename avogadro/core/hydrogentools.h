@@ -58,6 +58,11 @@ public:
                               Adjustment adjustment = AddAndRemove);
 
   /**
+  * Add/remove hydrogens on @a atom to satisfy valency.
+  */
+  static void adjustHydrogens(Atom &atom, Adjustment adjustment = AddAndRemove);
+
+  /**
    * @return The number of bonds that need to be added or removed from
    * @a atom to satisfy valency. A positive number indicates the number of
    * bonds to add, a negative number indicates the number of bonds that need to
