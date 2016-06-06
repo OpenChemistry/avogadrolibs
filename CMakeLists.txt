@@ -31,9 +31,6 @@ endif()
 
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR})
-add_subdirectory(utilities)
-add_subdirectory(thirdparty)
-add_subdirectory(avogadro)
 
 option(ENABLE_TESTING "Enable testing and building the tests." OFF)
 option(USE_OPENGL "Enable libraries that use OpenGL" ON)
@@ -43,6 +40,10 @@ option(USE_VTK "Enable libraries that use VTK" OFF)
 option(USE_PROTOCALL "Enable libraries that use ProtoCall" OFF)
 option(USE_MOLEQUEUE "Enable the MoleQueue dependent functionality" ON)
 option(USE_BOOST_PYTHON "Use Boost Python to wrap some of our API" OFF)
+
+add_subdirectory(utilities)
+add_subdirectory(thirdparty)
+add_subdirectory(avogadro)
 
 if(ENABLE_TESTING)
   include(CTest)
