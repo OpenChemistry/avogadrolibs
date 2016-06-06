@@ -35,6 +35,7 @@ set(HEADERS
   filebrowsewidget.h
   fileformatdialog.h
   generichighlighter.h
+  hydrogentools.h
   meshgenerator.h
   molecule.h
   moleculemodel.h
@@ -61,6 +62,7 @@ set(SOURCES
   filebrowsewidget.cpp
   fileformatdialog.cpp
   generichighlighter.cpp
+  hydrogentools.cpp
   meshgenerator.cpp
   molecule.cpp
   moleculemodel.cpp

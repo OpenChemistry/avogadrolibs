@@ -21,11 +21,11 @@
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
-#include <avogadro/core/hydrogentools.h>
 #include <avogadro/core/vector.h>
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
+#include <avogadro/qtgui/hydrogentools.h>
 
 #include <avogadro/qtopengl/glwidget.h>
 
@@ -85,7 +85,6 @@ Editor::Editor(QObject *parent_)
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER),
     m_bondAdded(false)
 {
-  connect(m_toolWidget, SIGNAL(adjustHydrogens()), SLOT(adjustHydrogens()));
   m_activateAction->setText(tr("Draw"));
   m_activateAction->setIcon(QIcon(":/icons/editor.png"));
   reset();
@@ -210,18 +209,6 @@ QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
   return NULL;
 }
 
-void Editor::adjustHydrogens()
-{
-  if (m_molecule) {
-    Core::HydrogenTools::adjustHydrogens(m_molecule->molecule());
-    // Assume bonds and atoms changed...
-    m_molecule->emitChanged(QtGui::Molecule::Atoms
-                            | QtGui::Molecule::Bonds
-                            | QtGui::Molecule::Added
-                            | QtGui::Molecule::Removed);
-  }
-}
-
 void Editor::draw(Rendering::GroupNode &node)
 {
   if (fabs(m_bondDistance) < 0.3)
@@ -234,8 +221,7 @@ void Editor::draw(Rendering::GroupNode &node)
   QString distanceLabel = tr("Distance:");
   int labelWidth = -1*distanceLabel.size();
 
-  QString overlayText = QString("%1 %L2")
-    .arg(tr("Distance:"), labelWidth)
+  QString overlayText = tr("Distance: %L1")
     .arg(m_bondDistance, 10, 'f', 3);
 
   TextProperties overlayTProp;
@@ -282,6 +268,10 @@ void Editor::emptyLeftClick(QMouseEvent *e)
   Vector3f atomPos = m_renderer->camera().unProject(windowPos);
   RWAtom newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber());
   newAtom.setPosition3d(atomPos.cast<double>());
+
+  if (m_toolWidget->adjustHydrogens()) {
+    QtGui::HydrogenTools::adjustHydrogens(newAtom);
+  }
 
   // Update the clicked object
   m_clickedObject.type = Rendering::AtomType;
@@ -504,6 +494,12 @@ void Editor::atomLeftDrag(QMouseEvent *e)
       bondOrder = expectedBondOrder(clickedAtom, newAtom);
     }
     m_molecule->addBond(clickedAtom, newAtom, bondOrder);
+
+    // now if we need to adjust hydrogens, do it
+    if (m_toolWidget->adjustHydrogens()) {
+      QtGui::HydrogenTools::adjustHydrogens(clickedAtom);
+      QtGui::HydrogenTools::adjustHydrogens(newAtom);
+    }
 
     changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Added;
     m_newObject.type = Rendering::AtomType;

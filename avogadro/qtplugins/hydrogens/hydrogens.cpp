@@ -16,7 +16,7 @@
 
 #include "hydrogens.h"
 
-#include <avogadro/core/hydrogentools.h>
+#include <avogadro/qtgui/hydrogentools.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtWidgets/QAction>
@@ -76,8 +76,8 @@ void Hydrogens::setMolecule(QtGui::Molecule *mol)
 void Hydrogens::adjustHydrogens()
 {
   if (m_molecule) {
-    Core::HydrogenTools::adjustHydrogens(*m_molecule,
-                                         Core::HydrogenTools::AddAndRemove);
+    QtGui::HydrogenTools::adjustHydrogens(*(m_molecule->undoMolecule()),
+                                         QtGui::HydrogenTools::AddAndRemove);
     // Assume molecule changes...
     m_molecule->emitChanged(QtGui::Molecule::Atoms
                             | QtGui::Molecule::Bonds
@@ -89,7 +89,8 @@ void Hydrogens::adjustHydrogens()
 void Hydrogens::addHydrogens()
 {
   if (m_molecule) {
-    Core::HydrogenTools::adjustHydrogens(*m_molecule, Core::HydrogenTools::Add);
+    QtGui::HydrogenTools::adjustHydrogens(*(m_molecule->undoMolecule()),
+                                         QtGui::HydrogenTools::Add);
     // Assume molecule changes...
     m_molecule->emitChanged(QtGui::Molecule::Atoms
                             | QtGui::Molecule::Bonds
@@ -100,8 +101,8 @@ void Hydrogens::addHydrogens()
 void Hydrogens::removeHydrogens()
 {
   if (m_molecule) {
-    Core::HydrogenTools::adjustHydrogens(*m_molecule,
-                                         Core::HydrogenTools::Remove);
+    QtGui::HydrogenTools::adjustHydrogens(*(m_molecule->undoMolecule()),
+                                         QtGui::HydrogenTools::Remove);
     // Assume molecule changes...
     m_molecule->emitChanged(QtGui::Molecule::Atoms
                             | QtGui::Molecule::Bonds
@@ -112,7 +113,7 @@ void Hydrogens::removeHydrogens()
 void Hydrogens::removeAllHydrogens()
 {
   if (m_molecule) {
-    Core::HydrogenTools::removeAllHydrogens(*m_molecule);
+    QtGui::HydrogenTools::removeAllHydrogens(*(m_molecule->undoMolecule()));
     // Assume molecule changes...
     m_molecule->emitChanged(QtGui::Molecule::Atoms
                             | QtGui::Molecule::Bonds

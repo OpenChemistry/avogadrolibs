@@ -37,25 +37,15 @@
    <item row="1" column="1">
     <widget class="QComboBox" name="bondOrder"/>
    </item>
-   <item row="2" column="0" colspan="2">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="adjustHydrogens">
+     <property name="text">
+      <string>Adjust Hydrogens</string>
      </property>
-     <item>
-      <widget class="QPushButton" name="pushFixHydrogens">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Adjust Hydrogens</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

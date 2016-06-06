@@ -14,20 +14,20 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_CORE_HYDROGENTOOLS_H
-#define AVOGADRO_CORE_HYDROGENTOOLS_H
+#ifndef AVOGADRO_QTGUI_HYDROGENTOOLS_H
+#define AVOGADRO_QTGUI_HYDROGENTOOLS_H
 
-#include "avogadrocoreexport.h"
+#include "avogadroqtguiexport.h"
 
 #include <avogadro/core/vector.h>
-#include <avogadro/core/atom.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <vector>
 
 namespace Avogadro {
-namespace Core {
-class Atom;
-class Molecule;
+namespace QtGui {
+class RWAtom;;
+class RWMolecule;
 
 class AVOGADROCORE_EXPORT HydrogenTools
 {
@@ -36,7 +36,7 @@ public:
   /**
    * Remove all hydrogen atoms from @a molecule.
    */
-  static void removeAllHydrogens(Molecule &molecule);
+  static void removeAllHydrogens(RWMolecule &molecule);
 
   /**
    * Enum values that control the adjustHydrogen function's behavior.
@@ -54,13 +54,13 @@ public:
   /**
    * Add/remove hydrogens on @a molecule to satisfy valency.
    */
-  static void adjustHydrogens(Molecule &molecule,
+  static void adjustHydrogens(RWMolecule &molecule,
                               Adjustment adjustment = AddAndRemove);
 
   /**
   * Add/remove hydrogens on @a atom to satisfy valency.
   */
-  static void adjustHydrogens(Atom &atom, Adjustment adjustment = AddAndRemove);
+  static void adjustHydrogens(RWAtom &atom, Adjustment adjustment = AddAndRemove);
 
   /**
    * @return The number of bonds that need to be added or removed from
@@ -68,7 +68,7 @@ public:
    * bonds to add, a negative number indicates the number of bonds that need to
    * be removed.
    */
-  static int valencyAdjustment(const Atom &atom);
+  static int valencyAdjustment(const RWAtom &atom);
 
   /**
    * Obtain the indices of hydrogens that can be removed from @a atom.
@@ -80,7 +80,7 @@ public:
    * @note This function modifies neither @a atom nor its parent molecule. It
    * only pushes the indices of hydrogens to remove to the end of @a indices.
    */
-  static int extraHydrogenIndices(const Atom &atom, int numberOfHydrogens,
+  static int extraHydrogenIndices(const RWAtom &atom, int numberOfHydrogens,
                                   std::vector<size_t> &indices);
 
   /**
@@ -93,19 +93,20 @@ public:
    * bonded atoms, but this is not guaranteed.
    */
   static void generateNewHydrogenPositions(
-      const Atom &atom, int numberOfHydrogens, std::vector<Vector3> &positions);
+      const RWAtom &atom, int numberOfHydrogens, std::vector<Vector3> &positions);
 
   /**
    * Perceive the geometry / hybridization bonded to @a atom.
    * Ideally, the client should cache the hybridization number
    * by calling setHybridization() later
    */
-  static AtomHybridization perceiveHybridization(const Atom &atom);
+  static Core::AtomHybridization perceiveHybridization(const RWAtom &atom);
 
   /**
    * Generate a new bond vector (unit length)
    */
-  static Vector3 generateNewBondVector(const Atom &atom, std::vector<Vector3> &currentVectors, AtomHybridization hybridization);
+  static Vector3 generateNewBondVector(const RWAtom &atom,
+    std::vector<Vector3> &currentVectors, Core::AtomHybridization hybridization);
 
 private:
   HydrogenTools(); // Not implemented
@@ -113,7 +114,7 @@ private:
 };
 
 
-} // namespace Core
+} // namespace QtGui
 } // namespace Avogadro
 
-#endif // AVOGADRO_CORE_HYDROGENTOOLS_H
+#endif // AVOGADRO_QTGUI_HYDROGENTOOLS_H

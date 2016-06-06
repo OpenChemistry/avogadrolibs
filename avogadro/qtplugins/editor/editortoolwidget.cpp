@@ -46,8 +46,6 @@ EditorToolWidget::EditorToolWidget(QWidget *parent_) :
   connect(m_ui->element, SIGNAL(currentIndexChanged(int)),
           this, SLOT(elementChanged(int)));
 
-  connect(m_ui->pushFixHydrogens, SIGNAL(clicked()), SIGNAL(adjustHydrogens()));
-
   // Show carbon at startup.
   selectElement(6);
 }
@@ -89,6 +87,11 @@ void EditorToolWidget::setBondOrder(unsigned char order)
 unsigned char EditorToolWidget::bondOrder() const
 {
   return static_cast<unsigned char>(m_ui->bondOrder->currentIndex());
+}
+
+bool EditorToolWidget::adjustHydrogens() const
+{
+  return m_ui->adjustHydrogens->isChecked();
 }
 
 void EditorToolWidget::elementChanged(int index)
