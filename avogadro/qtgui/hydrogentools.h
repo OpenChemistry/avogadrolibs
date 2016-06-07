@@ -26,7 +26,7 @@
 
 namespace Avogadro {
 namespace QtGui {
-class RWAtom;;
+class RWAtom;
 class RWMolecule;
 
 class AVOGADROCORE_EXPORT HydrogenTools
