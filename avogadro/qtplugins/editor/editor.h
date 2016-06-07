@@ -111,6 +111,7 @@ private:
   QPoint m_clickPosition;
   unsigned char m_clickedAtomicNumber;
   bool m_bondAdded;
+  bool m_fixValenceLater;
   QString m_keyPressBuffer;
 
   Real m_bondDistance;
