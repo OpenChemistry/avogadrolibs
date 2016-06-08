@@ -16,20 +16,15 @@
 
 #include "hydrogentools.h"
 
-#include "array.h"
-#include "atom.h"
-#include "bond.h"
-#include "elements.h"
-#include "graph.h"
-#include "mdlvalence_p.h"
-#include "molecule.h"
-#include "vector.h"
+#include "../core/mdlvalence_p.h"
+#include <avogadro/core/elements.h>
+#include <avogadro/core/array.h>
+
+#include <QtCore/QDebug>
 
 #include <algorithm>
 #include <cmath>
 #include <vector>
-
-#include <iostream>
 
 // C'mon windows....
 #ifndef M_PI
@@ -40,17 +35,18 @@
 #define M_TETRAHED 109.47122063449069389
 
 using Avogadro::Vector3;
+using Avogadro::Core::Array;
 using Avogadro::Core::atomValence;
-using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
-using Avogadro::Core::Molecule;
+using Avogadro::QtGui::RWAtom;
+using Avogadro::QtGui::RWBond;
+using Avogadro::QtGui::RWMolecule;
 
 namespace {
 
-typedef Avogadro::Core::Array<Bond> NeighborListType;
+typedef Avogadro::Core::Array<RWBond> NeighborListType;
 
 // Return the other atom in the bond.
-inline Atom getOtherAtom(const Atom &atom, const Bond &bond)
+inline RWAtom getOtherAtom(const RWAtom &atom, const RWBond &bond)
 {
   return bond.atom1().index() != atom.index() ? bond.atom1() : bond.atom2();
 }
@@ -65,7 +61,7 @@ inline unsigned int countExistingBonds(const NeighborListType &bonds)
   return result;
 }
 
-inline unsigned int lookupValency(const Atom &atom,
+inline unsigned int lookupValency(const RWAtom &atom,
                                   unsigned int numExistingBonds)
 {
   signed char charge = atom.formalCharge();
@@ -83,9 +79,9 @@ inline float hydrogenBondDistance(unsigned char otherAtomicNumber)
 } // end anon namespace
 
 namespace Avogadro {
-namespace Core {
+namespace QtGui {
 
-void HydrogenTools::removeAllHydrogens(Molecule &molecule)
+void HydrogenTools::removeAllHydrogens(RWMolecule &molecule)
 {
   const Array<unsigned char> atomicNums(molecule.atomicNumbers());
   size_t atomIndex = molecule.atomCount() - 1;
@@ -97,7 +93,7 @@ void HydrogenTools::removeAllHydrogens(Molecule &molecule)
   }
 }
 
-void HydrogenTools::adjustHydrogens(Molecule &molecule, Adjustment adjustment)
+void HydrogenTools::adjustHydrogens(RWMolecule &molecule, Adjustment adjustment)
 {
   // This vector stores indices of hydrogens that need to be removed. Additions
   // are made first, followed by removals to keep indexing sane.
@@ -116,7 +112,7 @@ void HydrogenTools::adjustHydrogens(Molecule &molecule, Adjustment adjustment)
   // Iterate through all atoms in the molecule, adding hydrogens as needed
   // and building up a list of hydrogens that should be removed.
   for (size_t atomIndex = 0; atomIndex < numAtoms; ++atomIndex) {
-    const Atom atom(molecule.atom(atomIndex));
+    const RWAtom atom(molecule.atom(atomIndex));
     int hDiff = valencyAdjustment(atom);
     // Add hydrogens:
     if (doAdd && hDiff > 0) {
@@ -124,7 +120,7 @@ void HydrogenTools::adjustHydrogens(Molecule &molecule, Adjustment adjustment)
       generateNewHydrogenPositions(atom, hDiff, newHPos);
       for (std::vector<Vector3>::const_iterator it = newHPos.begin(),
            itEnd = newHPos.end(); it != itEnd; ++it) {
-        Atom newH(molecule.addAtom(1));
+        RWAtom newH(molecule.addAtom(1));
         newH.setPosition3d(*it);
         molecule.addBond(atom, newH, 1);
       }
@@ -149,7 +145,54 @@ void HydrogenTools::adjustHydrogens(Molecule &molecule, Adjustment adjustment)
   }
 }
 
-int HydrogenTools::valencyAdjustment(const Atom &atom)
+void HydrogenTools::adjustHydrogens(RWAtom &atom, Adjustment adjustment)
+{
+  // Convert the adjustment option to a couple of booleans
+  bool doAdd(adjustment == Add || adjustment == AddAndRemove);
+  bool doRemove(adjustment == Remove || adjustment == AddAndRemove);
+
+  // convenience
+  RWMolecule *molecule = atom.molecule();
+
+  if (doRemove) {
+    // get the list of hydrogens connected to this
+   std::vector<size_t> badHIndices;
+
+   const NeighborListType bonds(molecule->bonds(atom));
+   for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
+     it != itEnd; ++it) {
+       const RWAtom otherAtom = getOtherAtom(atom, *it);
+       if (otherAtom.atomicNumber() == 1) {
+         badHIndices.push_back(otherAtom.index());
+       }
+     } // end loop through bonds
+
+    std::sort(badHIndices.begin(), badHIndices.end());
+    std::vector<size_t>::iterator newEnd(std::unique(badHIndices.begin(),
+                                                     badHIndices.end()));
+    badHIndices.resize(std::distance(badHIndices.begin(), newEnd));
+    for (std::vector<size_t>::const_reverse_iterator it = badHIndices.rbegin(),
+         itEnd = badHIndices.rend(); it != itEnd; ++it) {
+      molecule->removeAtom(*it);
+    }
+  } // end removing H atoms on this one
+
+  int hDiff = valencyAdjustment(atom);
+  // Add hydrogens:
+  if (doAdd && hDiff > 0) {
+    // Temporary container for calls to generateNewHydrogenPositions.
+    std::vector<Vector3> newHPos;
+    generateNewHydrogenPositions(atom, hDiff, newHPos);
+    for (std::vector<Vector3>::const_iterator it = newHPos.begin(),
+      itEnd = newHPos.end(); it != itEnd; ++it) {
+      RWAtom newH(molecule->addAtom(1));
+      newH.setPosition3d(*it);
+      molecule->addBond(atom, newH, 1);
+    }
+  }
+}
+
+int HydrogenTools::valencyAdjustment(const RWAtom &atom)
 {
   int result = 0;
   if (atom.isValid()) {
@@ -159,10 +202,12 @@ int HydrogenTools::valencyAdjustment(const Atom &atom)
     const unsigned int valency(lookupValency(atom, numberOfBonds));
     result = static_cast<int>(valency) - static_cast<int>(numberOfBonds);
   }
+
+//  qDebug() << " valence adjustment " << result;
   return result;
 }
 
-int HydrogenTools::extraHydrogenIndices(const Atom &atom,
+int HydrogenTools::extraHydrogenIndices(const RWAtom &atom,
                                          int numberOfHydrogens,
                                          std::vector<size_t> &indices)
 {
@@ -173,7 +218,7 @@ int HydrogenTools::extraHydrogenIndices(const Atom &atom,
   const NeighborListType bonds(atom.molecule()->bonds(atom));
   for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
        it != itEnd && result < numberOfHydrogens; ++it) {
-    const Atom otherAtom = getOtherAtom(atom, *it);
+    const RWAtom otherAtom = getOtherAtom(atom, *it);
     if (otherAtom.atomicNumber() == 1) {
       indices.push_back(otherAtom.index());
       ++result;
@@ -183,12 +228,12 @@ int HydrogenTools::extraHydrogenIndices(const Atom &atom,
   return result;
 }
 
-  AtomHybridization HydrogenTools::perceiveHybridization(const Atom &atom)
+  Core::AtomHybridization HydrogenTools::perceiveHybridization(const RWAtom &atom)
   {
     const NeighborListType bonds(atom.molecule()->bonds(atom));
     const unsigned int numberOfBonds(countExistingBonds(bonds)); // bond order sum
 
-    AtomHybridization hybridization = SP3; // default to sp3
+    Core::AtomHybridization hybridization = Core::SP3; // default to sp3
 
     // TODO: Handle hypervalent species, SO3, SO4, lone pairs, etc.
 
@@ -208,24 +253,24 @@ int HydrogenTools::extraHydrogenIndices(const Atom &atom,
       }
 
       if (numTripleBonds > 0 || numDoubleBonds > 1)
-        hybridization = SP; // sp
+        hybridization = Core::SP; // sp
       else if (numDoubleBonds > 0)
-        hybridization = SP2; // sp2
+        hybridization = Core::SP2; // sp2
     }
 
     return hybridization;
   }
 
 void HydrogenTools::generateNewHydrogenPositions(
-    const Atom &atom, int numberOfHydrogens,
+    const RWAtom &atom, int numberOfHydrogens,
     std::vector<Vector3> &positions)
 {
   if (!atom.isValid())
     return;
 
   // Get the hybridization
-  AtomHybridization hybridization = atom.hybridization();
-  if (hybridization == HybridizationUnknown) {
+  Core::AtomHybridization hybridization = atom.hybridization();
+  if (hybridization == Core::HybridizationUnknown) {
     // Perceive it
     hybridization = perceiveHybridization(atom);
   }
@@ -239,7 +284,7 @@ void HydrogenTools::generateNewHydrogenPositions(
   allVectors.reserve(bonds.size() + static_cast<size_t>(numberOfHydrogens));
   for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
        it != itEnd; ++it) {
-    Atom otherAtom = getOtherAtom(atom, *it);
+    RWAtom otherAtom = getOtherAtom(atom, *it);
     Vector3 delta = otherAtom.position3d() - atom.position3d();
     if (!delta.isZero(1e-5)) {
       allVectors.push_back(delta.normalized());
@@ -259,7 +304,8 @@ void HydrogenTools::generateNewHydrogenPositions(
   // First, the default fallback (random vectors)
   // Also applies when you have a linear geometry and just need one new vector
   // (it doesn't matter where it goes).
-  Vector3 HydrogenTools::generateNewBondVector(const Atom &atom, std::vector<Vector3> &allVectors, AtomHybridization hybridization)
+  Vector3 HydrogenTools::generateNewBondVector(const RWAtom &atom,
+    std::vector<Vector3> &allVectors, Core::AtomHybridization hybridization)
   {
     Vector3 newPos;
     bool success = false;
@@ -279,11 +325,11 @@ void HydrogenTools::generateNewHydrogenPositions(
       const NeighborListType bonds(atom.molecule()->bonds(atom));
       for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
            it != itEnd; ++it) {
-        Atom a1 = getOtherAtom(atom, *it);
+        RWAtom a1 = getOtherAtom(atom, *it);
         const NeighborListType nbrBonds(atom.molecule()->bonds(a1));
         for (NeighborListType::const_iterator nbIt = nbrBonds.begin(), nbItEnd = nbrBonds.end();
              nbIt != nbItEnd; ++nbIt) {
-          Atom a2 = getOtherAtom(a1, *nbIt);
+          RWAtom a2 = getOtherAtom(a1, *nbIt);
           if (a2.index() == atom.index())
             continue; // we want a *new* atom
 
@@ -326,18 +372,18 @@ void HydrogenTools::generateNewHydrogenPositions(
       v2.normalize();
 
       switch (hybridization) {
-      case SP:
-      case SquarePlanar:
-      case TrigonalBipyramidal:
+      case Core::SP:
+      case Core::SquarePlanar:
+      case Core::TrigonalBipyramidal:
         newPos = bond1; // 180 degrees away from the current neighbor
         break;
-      case SP2: // sp2
+      case Core::SP2: // sp2
         newPos = bond1 - v2 * tan(DEG_TO_RAD*120.0);
         break;
-      case Octahedral: // octahedral
+      case Core::Octahedral: // octahedral
         newPos = bond1 - v2 * tan(DEG_TO_RAD*90.0);
         break;
-      case SP3:
+      case Core::SP3:
       default:
         newPos = (bond1 - v2 * tan(DEG_TO_RAD*M_TETRAHED));
         break;
@@ -354,11 +400,11 @@ void HydrogenTools::generateNewHydrogenPositions(
       v1.normalize();
 
       switch (hybridization) {
-      case SP: // shouldn't happen, but maybe with metal atoms?
-      case SP2:
+      case Core::SP: // shouldn't happen, but maybe with metal atoms?
+      case Core::SP2:
         newPos = v1; // point away from the two existing bonds
         break;
-      case SP3:
+      case Core::SP3:
       default:
         Vector3 v2 = bond1.cross(bond2); // find the perpendicular
         v2.normalize();
@@ -405,5 +451,5 @@ void HydrogenTools::generateNewHydrogenPositions(
   }
 
 
-} // namespace Core
+} // namespace QtGui
 } // namespace Avogadro

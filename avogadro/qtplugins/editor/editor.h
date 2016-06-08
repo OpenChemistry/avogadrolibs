@@ -77,7 +77,6 @@ public:
 
 private slots:
   void clearKeyPressBuffer() { m_keyPressBuffer.clear(); }
-  void adjustHydrogens();
 
 private:
   /**
@@ -112,6 +111,7 @@ private:
   QPoint m_clickPosition;
   unsigned char m_clickedAtomicNumber;
   bool m_bondAdded;
+  bool m_fixValenceLater;
   QString m_keyPressBuffer;
 
   Real m_bondDistance;
