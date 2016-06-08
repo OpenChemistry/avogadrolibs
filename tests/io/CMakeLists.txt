@@ -4,6 +4,7 @@ set(tests
   Cml
   FileFormatManager
   Mdl
+  Poscar
   Xyz
   )
 

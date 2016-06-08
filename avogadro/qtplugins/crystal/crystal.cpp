@@ -16,6 +16,7 @@
 
 #include "crystal.h"
 
+#include "importcrystaldialog.h"
 #include "unitcelldialog.h"
 #include "volumescalingdialog.h"
 
@@ -40,6 +41,7 @@ Crystal::Crystal(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
   m_molecule(NULL),
   m_unitCellDialog(NULL),
+  m_importCrystalClipboardAction(new QAction(this)),
   m_editUnitCellAction(new QAction(this)),
   m_niggliReduceAction(new QAction(this)),
   m_scaleVolumeAction(new QAction(this)),
@@ -47,6 +49,12 @@ Crystal::Crystal(QObject *parent_) :
   m_toggleUnitCellAction(new QAction(this)),
   m_wrapAtomsToCellAction(new QAction(this))
 {
+  m_importCrystalClipboardAction->setText(tr("Import Crystal from Clipboard"));
+  connect(m_importCrystalClipboardAction, SIGNAL(triggered()),
+          SLOT(importCrystalClipboard()));
+  m_actions.push_back(m_importCrystalClipboardAction);
+  m_importCrystalClipboardAction->setProperty("menu priority", 50);
+
   // this will be changed when the molecule is set:
   m_toggleUnitCellAction->setText(tr("Toggle Unit Cell"));
   connect(m_toggleUnitCellAction, SIGNAL(triggered()), SLOT(toggleUnitCell()));
@@ -152,8 +160,21 @@ void Crystal::updateActions()
     foreach (QAction *action, m_actions)
       action->setEnabled(false);
 
+    m_importCrystalClipboardAction->setEnabled(true);
     m_toggleUnitCellAction->setEnabled(true);
     m_toggleUnitCellAction->setText(tr("Add &Unit Cell"));
+  }
+}
+
+void Crystal::importCrystalClipboard()
+{
+  ImportCrystalDialog d;
+  Core::Molecule m;
+  if (d.importCrystalClipboard(m)) {
+    // If we succeeded, update m_molecule
+    *m_molecule = m;
+    m_molecule->emitChanged(Molecule::Added |
+                            Molecule::Atoms | Molecule::UnitCell);
   }
 }
 

@@ -46,6 +46,7 @@ public slots:
 private slots:
   void updateActions();
 
+  void importCrystalClipboard();
   void editUnitCell();
   void niggliReduce();
   void scaleVolume();
@@ -58,6 +59,7 @@ private:
   QtGui::Molecule *m_molecule;
   UnitCellDialog *m_unitCellDialog;
 
+  QAction *m_importCrystalClipboardAction;
   QAction *m_editUnitCellAction;
   QAction *m_niggliReduceAction;
   QAction *m_scaleVolumeAction;
