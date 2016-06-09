@@ -20,7 +20,7 @@ const char* element_symbols[] = {
   "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac",
   "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es",
   "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt",
-  "Ds", "Rg", "Cn", "Uut", "Uuq", "Uup", "Uuh", "Uus", "Uuo" };
+  "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og" };
 
 const char* element_names[] = {
   "Dummy", "Hydrogen", "Helium", "Lithium", "Beryllium",
@@ -45,8 +45,8 @@ const char* element_names[] = {
   "Americium", "Curium", "Berkelium", "Californium", "Einsteinium",
   "Fermium", "Mendelevium", "Nobelium", "Lawrencium", "Rutherfordium",
   "Dubnium", "Seaborgium", "Bohrium", "Hassium", "Meitnerium",
-  "Darmstadtium", "Roentgenium", "Copernicium", "Ununtrium", "Ununquadium",
-  "Ununpentium", "Ununhexium", "Ununseptium", "Ununoctium" };
+  "Darmstadtium", "Roentgenium", "Copernicium", "Nihonium", "Flerovium",
+  "Moscovium", "Livermorium", "Tennessine", "Oganesson" };
 
 double element_masses[] = {
   0, 1.00794, 4.0026, 6.941, 9.01218, 10.811, 12.0107,
