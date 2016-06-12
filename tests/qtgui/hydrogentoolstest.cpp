@@ -16,29 +16,30 @@
 
 #include <gtest/gtest.h>
 
-#include <avogadro/core/atom.h>
-#include <avogadro/core/hydrogentools.h>
-#include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/hydrogentools.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
-using Avogadro::Core::Atom;
-using Avogadro::Core::HydrogenTools;
-using Avogadro::Core::Molecule;
+using Avogadro::QtGui::RWAtom;
+using Avogadro::QtGui::HydrogenTools;
+using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::RWMolecule;
 
 TEST(HydrogenToolsTest, removeAllHydrogens)
 {
-  Molecule mol;
+  Molecule m;
+  RWMolecule mol(m);
   mol.addAtom(1);
   HydrogenTools::removeAllHydrogens(mol);
   EXPECT_EQ(mol.atomCount(), 0);
 
-  Atom C1 = mol.addAtom(6);
-  Atom C2 = mol.addAtom(6);
-  Atom C3 = mol.addAtom(6);
+  RWAtom C1 = mol.addAtom(6);
+  RWAtom C2 = mol.addAtom(6);
+  RWAtom C3 = mol.addAtom(6);
 
   mol.addBond(C1, C2, 1);
   mol.addBond(C2, C3, 1);
 
-  Atom H = mol.addAtom(1);
+  RWAtom H = mol.addAtom(1);
   mol.addBond(C1, H);
   H = mol.addAtom(1);
   mol.addBond(C1, H);
@@ -58,31 +59,33 @@ TEST(HydrogenToolsTest, removeAllHydrogens)
   mol.addBond(C3, H);
 
   HydrogenTools::removeAllHydrogens(mol);
-  EXPECT_EQ(std::string("C3"), mol.formula());
+  EXPECT_EQ(std::string("C3"), mol.molecule().formula());
 }
 
 TEST(HydrogenToolsTest, adjustHydrogens_C3H8)
 {
-  Molecule mol;
-  Atom C1 = mol.addAtom(6);
-  Atom C2 = mol.addAtom(6);
-  Atom C3 = mol.addAtom(6);
+  Molecule m;
+  RWMolecule mol(m);
+  RWAtom C1 = mol.addAtom(6);
+  RWAtom C2 = mol.addAtom(6);
+  RWAtom C3 = mol.addAtom(6);
   mol.addBond(C1, C2, 1);
   mol.addBond(C2, C3, 1);
 
   HydrogenTools::adjustHydrogens(mol);
   EXPECT_EQ(11, mol.atomCount());
   EXPECT_EQ(10, mol.bondCount());
-  EXPECT_EQ(std::string("C3H8"), mol.formula());
+  EXPECT_EQ(std::string("C3H8"), mol.molecule().formula());
 }
 
 TEST(HydrogenToolsTest, adjustHydrogens_C2H7NO)
 {
-  Molecule mol;
-  Atom C1 = mol.addAtom(6);
-  Atom C2 = mol.addAtom(6);
-  Atom O1 = mol.addAtom(8);
-  Atom N1 = mol.addAtom(7);
+  Molecule m;
+  RWMolecule mol(m);
+  RWAtom C1 = mol.addAtom(6);
+  RWAtom C2 = mol.addAtom(6);
+  RWAtom O1 = mol.addAtom(8);
+  RWAtom N1 = mol.addAtom(7);
   mol.addBond(C1, C2, 1);
   mol.addBond(C2, O1, 1);
   mol.addBond(O1, N1, 1);
@@ -90,22 +93,23 @@ TEST(HydrogenToolsTest, adjustHydrogens_C2H7NO)
   HydrogenTools::adjustHydrogens(mol);
   EXPECT_EQ(11, mol.atomCount());
   EXPECT_EQ(10, mol.bondCount());
-  EXPECT_EQ(std::string("C2H7NO"), mol.formula());
+  EXPECT_EQ(std::string("C2H7NO"), mol.molecule().formula());
 }
 
 TEST(HydrogenToolsTest, adjustHydrogens_C2H4O)
 {
-  Molecule mol;
-  Atom C1 = mol.addAtom(6);
-  Atom C2 = mol.addAtom(6);
-  Atom O1 = mol.addAtom(8);
+  Molecule m;
+  RWMolecule mol(m);
+  RWAtom C1 = mol.addAtom(6);
+  RWAtom C2 = mol.addAtom(6);
+  RWAtom O1 = mol.addAtom(8);
   mol.addBond(C1, C2, 1);
   mol.addBond(C2, O1, 2);
 
   HydrogenTools::adjustHydrogens(mol);
   EXPECT_EQ(7, mol.atomCount());
   EXPECT_EQ(6, mol.bondCount());
-  EXPECT_EQ(std::string("C2H4O"), mol.formula());
+  EXPECT_EQ(std::string("C2H4O"), mol.molecule().formula());
 }
 
 TEST(HydrogenToolsTest, adjustHydrogens_adjustments)
@@ -128,8 +132,9 @@ TEST(HydrogenToolsTest, adjustHydrogens_adjustments)
       break;
     }
 
-    Molecule mol;
-    Atom C1 = mol.addAtom(6); // Overbond this atom
+    Molecule m;
+    RWMolecule mol(m);
+    RWAtom C1 = mol.addAtom(6); // Overbond this atom
     mol.addBond(C1, mol.addAtom(1));
     mol.addBond(C1, mol.addAtom(1));
     mol.addBond(C1, mol.addAtom(1));
@@ -140,19 +145,20 @@ TEST(HydrogenToolsTest, adjustHydrogens_adjustments)
     mol.addBond(C1, mol.addAtom(1));
     mol.addBond(C1, mol.addAtom(1));
     mol.addBond(C1, mol.addAtom(1));
-    Atom C2 = mol.addAtom(6); // Underbond this atom
+    RWAtom C2 = mol.addAtom(6); // Underbond this atom
     mol.addBond(C2, mol.addAtom(1));
 
-    EXPECT_EQ(std::string("C2H11"), mol.formula());
+    EXPECT_EQ(std::string("C2H11"), mol.molecule().formula());
     HydrogenTools::adjustHydrogens(mol, adjustment);
-    EXPECT_EQ(expectedFormula, mol.formula());
+    EXPECT_EQ(expectedFormula, mol.molecule().formula());
   }
 }
 
 TEST(HydrogenToolsTest, valencyAdjustment_C)
 {
-  Molecule mol;
-  Atom C = mol.addAtom(6);
+  Molecule m;
+  RWMolecule mol(m);
+  RWAtom C = mol.addAtom(6);
   int expectedAdjustment = 4;
   for (int i = 0; i < 8; ++i, --expectedAdjustment) {
     EXPECT_EQ(expectedAdjustment, HydrogenTools::valencyAdjustment(C));
@@ -162,8 +168,9 @@ TEST(HydrogenToolsTest, valencyAdjustment_C)
 
 TEST(HydrogenToolsTest, valencyAdjustment_N)
 {
-  Molecule mol;
-  Atom N = mol.addAtom(7);
+  Molecule m;
+  RWMolecule mol(m);
+  RWAtom N = mol.addAtom(7);
   int expectedAdjustment = 3;
   for (int i = 0; i < 8; ++i, --expectedAdjustment) {
     if (i == 4) // neutral N can have 3 or 5 bonds in our valence model.
@@ -175,8 +182,9 @@ TEST(HydrogenToolsTest, valencyAdjustment_N)
 
 TEST(HydrogenToolsTest, valencyAdjustment_O)
 {
-  Molecule mol;
-  Atom O = mol.addAtom(8);
+  Molecule m;
+  RWMolecule mol(m);
+  RWAtom O = mol.addAtom(8);
   int expectedAdjustment = 2;
   for (int i = 0; i < 8; ++i, --expectedAdjustment) {
     EXPECT_EQ(expectedAdjustment, HydrogenTools::valencyAdjustment(O));

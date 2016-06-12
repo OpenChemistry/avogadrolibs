@@ -12,7 +12,6 @@ set(tests
   Eigen
   Element
   Graph
-  HydrogenTools
   Mesh
   Molecule
   Mutex
