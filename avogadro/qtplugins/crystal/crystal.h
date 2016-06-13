@@ -48,6 +48,7 @@ private slots:
 
   void importCrystalClipboard();
   void editUnitCell();
+  void buildSupercell();
   void niggliReduce();
   void scaleVolume();
   void standardOrientation();
@@ -61,6 +62,7 @@ private:
 
   QAction *m_importCrystalClipboardAction;
   QAction *m_editUnitCellAction;
+  QAction *m_buildSupercellAction;
   QAction *m_niggliReduceAction;
   QAction *m_scaleVolumeAction;
   QAction *m_standardOrientationAction;

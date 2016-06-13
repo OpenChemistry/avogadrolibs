@@ -603,6 +603,58 @@ bool CrystalTools::isNiggliReduced(const Molecule &molecule)
   return true;
 }
 
+bool CrystalTools::buildSupercell(Molecule &molecule, unsigned int a,
+                                  unsigned int b, unsigned int c)
+{
+  if (!molecule.unitCell())
+    return false;
+
+  // Just a check. Hopefully this won't happen
+  if (a == 0 || b == 0 || c == 0) {
+     std::cerr << "Warning: in buildSupercell(), a, b, or c were set to zero."
+               << "This function will not proceed. Returning false.";
+    return false;
+  }
+
+  // Get the old vectors
+  Vector3 oldA = molecule.unitCell()->aVector();
+  Vector3 oldB = molecule.unitCell()->bVector();
+  Vector3 oldC = molecule.unitCell()->cVector();
+
+  // Calculate new vectors
+  Vector3 newA = oldA * a;
+  Vector3 newB = oldB * b;
+  Vector3 newC = oldC * c;
+
+  // Add in the atoms to the new subcells of the supercell
+  Index numAtoms = molecule.atomCount();
+  Array<Vector3> atoms = molecule.atomPositions3d();
+  Array<unsigned char> atomicNums = molecule.atomicNumbers();
+  for (Index ind_a = 0; ind_a < a; ++ind_a) {
+    for (Index ind_b = 0; ind_b < b; ++ind_b) {
+      for (Index ind_c = 0; ind_c < c; ++ind_c) {
+        // Skip over the subcell that already exists
+        if (ind_a == 0 && ind_b == 0 && ind_c == 0) continue;
+        // The positions of the new atoms are displacements of the old atoms
+        Vector3 displacement = ind_a * oldA + ind_b * oldB + ind_c * oldC;
+        for (Index i = 0; i < numAtoms; ++i) {
+          Atom newAtom = molecule.addAtom(atomicNums.at(i));
+          newAtom.setPosition3d(atoms.at(i) + displacement);
+        }
+      }
+    }
+  }
+
+  // Now set the unit cell
+  molecule.unitCell()->setAVector(newA);
+  molecule.unitCell()->setBVector(newB);
+  molecule.unitCell()->setCVector(newC);
+
+  // We're done!
+  return true;
+}
+
+
 namespace {
 struct TransformAtomsFunctor
 {

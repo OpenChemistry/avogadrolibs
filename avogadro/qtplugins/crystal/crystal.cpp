@@ -17,6 +17,7 @@
 #include "crystal.h"
 
 #include "importcrystaldialog.h"
+#include "supercelldialog.h"
 #include "unitcelldialog.h"
 #include "volumescalingdialog.h"
 
@@ -43,6 +44,7 @@ Crystal::Crystal(QObject *parent_) :
   m_unitCellDialog(NULL),
   m_importCrystalClipboardAction(new QAction(this)),
   m_editUnitCellAction(new QAction(this)),
+  m_buildSupercellAction(new QAction(this)),
   m_niggliReduceAction(new QAction(this)),
   m_scaleVolumeAction(new QAction(this)),
   m_standardOrientationAction(new QAction(this)),
@@ -82,6 +84,11 @@ Crystal::Crystal(QObject *parent_) :
   connect(m_scaleVolumeAction, SIGNAL(triggered()), SLOT(scaleVolume()));
   m_actions.push_back(m_scaleVolumeAction);
   m_scaleVolumeAction->setProperty("menu priority", -275);
+
+  m_buildSupercellAction->setText(tr("Build &Supercell"));
+  connect(m_buildSupercellAction, SIGNAL(triggered()), SLOT(buildSupercell()));
+  m_actions.push_back(m_buildSupercellAction);
+  m_buildSupercellAction->setProperty("menu priority", -300);
 
   m_niggliReduceAction->setText(tr("Reduce Cell (&Niggli)"));
   connect(m_niggliReduceAction, SIGNAL(triggered()), SLOT(niggliReduce()));
@@ -186,6 +193,15 @@ void Crystal::editUnitCell()
   }
 
   m_unitCellDialog->show();
+}
+
+void Crystal::buildSupercell()
+{
+  SupercellDialog d;
+  if (d.buildSupercell(*m_molecule)) {
+    m_molecule->emitChanged(Molecule::Modified |
+                            Molecule::Atoms | Molecule::UnitCell);
+  }
 }
 
 void Crystal::niggliReduce()
