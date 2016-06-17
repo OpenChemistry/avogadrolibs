@@ -73,6 +73,10 @@ QUndoCommand * Manipulator::mousePressEvent(QMouseEvent *e)
   updatePressedButtons(e, false);
   m_lastMousePosition = e->pos();
 
+  if (m_molecule) {
+    m_molecule->setInteractive(true);
+  }
+
   if (m_pressedButtons & Qt::LeftButton) {
     m_object = m_renderer->hit(e->pos().x(), e->pos().y());
 
@@ -97,6 +101,10 @@ QUndoCommand * Manipulator::mouseReleaseEvent(QMouseEvent *e)
 
   if (m_object.type == Rendering::InvalidType)
     return NULL;
+
+  if (m_molecule) {
+    m_molecule->setInteractive(false);
+  }
 
   switch (e->button()) {
   case Qt::LeftButton:
