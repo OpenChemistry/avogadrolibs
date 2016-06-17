@@ -68,9 +68,9 @@ using Rendering::LineStripGeometry;
 using Rendering::MeshGeometry;
 
 namespace {
-const std::string degreeString("\xb0");
+const std::string degreeString("°");
 /// @todo Add wide character support to text renderer.
-const std::string angstromString("A");
+const std::string angstromString("Å");
 
 // Lookup for coloring bond angles:
 const Vector3ub& getColor(size_t i) {

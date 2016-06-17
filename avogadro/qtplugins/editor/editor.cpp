@@ -234,7 +234,7 @@ void Editor::draw(Rendering::GroupNode &node)
   QString distanceLabel = tr("Distance:");
   int labelWidth = -1*distanceLabel.size();
 
-  QString overlayText = tr("Distance: %L1")
+  QString overlayText = tr("Distance: %L1 Å")
     .arg(m_bondDistance, 10, 'f', 3);
 
   TextProperties overlayTProp;
