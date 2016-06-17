@@ -119,6 +119,7 @@ void GLRenderer::resetCamera()
 
 void GLRenderer::resetGeometry()
 {
+  m_scene.setDirty(true);
   m_center = m_scene.center();
   m_radius = m_scene.radius();
 }
