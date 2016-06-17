@@ -1,12 +1,14 @@
 set(crystal_srcs
   crystal.cpp
   importcrystaldialog.cpp
+  supercelldialog.cpp
   unitcelldialog.cpp
   volumescalingdialog.cpp
 )
 
 set(crystal_uis
   importcrystaldialog.ui
+  supercelldialog.ui
   unitcelldialog.ui
   volumescalingdialog.ui
 )

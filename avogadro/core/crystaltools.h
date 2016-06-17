@@ -102,6 +102,18 @@ public:
   static bool isNiggliReduced(const Molecule& mol);
 
   /**
+   * Build a supercell by expanding upon the unit cell of @a molecule. It will
+   * only return false if the molecule does not have a unit cell or if a, b, or
+   * c is set to zero.
+   * @param a The number of units along lattice vector a for the supercell
+   * @param b The number of units along lattice vector b for the supercell
+   * @param c The number of units along lattice vector c for the supercell
+   * @return True on success, false on failure.
+   */
+  static bool buildSupercell(Molecule &molecule, unsigned int a,
+                             unsigned int b, unsigned int c);
+
+  /**
    * Set the unit cell in @a molecule to represent the real-space column-vector
    * unit cell description in @a newCellColMatrix. A unit cell is created if
    * needed.
