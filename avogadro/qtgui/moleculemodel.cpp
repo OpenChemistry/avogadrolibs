@@ -132,7 +132,7 @@ QVariant MoleculeModel::data(const QModelIndex &idx, int role) const
   }
   else if (idx.column() == 1) {
     if (role == Qt::DecorationRole)
-      return QIcon(":/icons/fallback/32x32/edit-cut.png");
+      return QIcon(":/icons/fallback/32x32/edit-delete.png");
   }
   return QVariant();
 }
