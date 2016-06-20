@@ -3,6 +3,9 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
+find_package(Spglib REQUIRED)
+include_directories(SYSTEM ${SPGLIB_INCLUDE_DIR})
+
 # Check if we need extra include directories for C++11 features.
 if(AvogadroLibs_NEEDS_BOOST)
   include_directories(SYSTEM ${AvogadroLibs_MUTEX_INCLUDE_DIRS})
@@ -13,6 +16,7 @@ configure_file("${PROJECT_SOURCE_DIR}/cmake/version.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/version.h")
 
 set(HEADERS
+  avospglib.h
   color3f.h
   array.h
   atom.h
@@ -37,6 +41,7 @@ set(HEADERS
   ringperceiver.h
   slaterset.h
   slatersettools.h
+  spacegroups.h
   symbolatomtyper.h
   types.h
   unitcell.h
@@ -49,6 +54,7 @@ set(HEADERS
 )
 
 set(SOURCES
+  avospglib.cpp
   coordinateblockgenerator.cpp
   crystaltools.cpp
   cube.cpp
@@ -64,6 +70,7 @@ set(SOURCES
   ringperceiver.cpp
   slaterset.cpp
   slatersettools.cpp
+  spacegroups.cpp
   symbolatomtyper.cpp
   unitcell.cpp
   variantmap.cpp
@@ -71,6 +78,7 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
+target_link_libraries(AvogadroCore ${SPGLIB_LIBRARY})
 
 # Additional libraries and compiler definitions necessary when using Boost to
 # replace C++11.
