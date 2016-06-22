@@ -42,7 +42,29 @@ public:
    * @return The Hall number for the crystal.
    */
   static unsigned short getHallNumber(const Molecule &mol,
-                                      double cartTol = 0.05);
+                                      double cartTol = 1e-5);
+
+  /**
+   * Use spglib to reduce the crystal to a primitive cell. Unless the molecule
+   * is missing its unit cell, it will be edited by spglib.
+   *
+   * @param mol The molecule to be reduced to its primitive cell.
+   * @param cartTol The cartesian tolerance for spglib.
+   * @return False if the molecule has no unit cell or if the
+                   spglib algorithm failed. True otherwise.
+   */
+  static bool reduceToPrimitive(Molecule &mol, double cartTol = 1e-5);
+
+  /**
+   * Use spglib to refine the crystal to its conventional cell. Unless the
+   * molecule is missing its unit cell, it will be edited by spglib.
+   *
+   * @param mol The molecule to be conventionalized.
+   * @param cartTol The cartesian tolerance for spglib.
+   * @return False if the molecule has no unit cell or if the
+   *         spglib algorithm failed. True otherwise.
+   */
+  static bool conventionalizeCell(Molecule &mol, double cartTol = 1e-5);
 
 };
 

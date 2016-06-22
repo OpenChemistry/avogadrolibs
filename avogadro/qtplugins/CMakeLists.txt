@@ -112,6 +112,7 @@ add_subdirectory(openbabel)
 add_subdirectory(quantumoutput)
 add_subdirectory(playertool)
 add_subdirectory(povray)
+add_subdirectory(spacegroup)
 add_subdirectory(spectra)
 
 if(USE_MOLEQUEUE)

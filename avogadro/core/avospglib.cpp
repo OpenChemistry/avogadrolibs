@@ -83,5 +83,155 @@ unsigned short AvoSpglib::getHallNumber(const Molecule &mol, double cartTol)
   return hallNumber;
 }
 
+
+bool AvoSpglib::reduceToPrimitive(Molecule &mol, double cartTol)
+{
+  if (!mol.unitCell())
+    return false;
+
+  const UnitCell *uc = mol.unitCell();
+  Matrix3 cellMat = uc->cellMatrix();
+
+  double lattice[3][3];
+  // Spglib expects column vectors
+  for (Index i = 0; i < 3; ++i) {
+    for (Index j = 0; j < 3; ++j) {
+      lattice[i][j] = cellMat(i,j);
+    }
+  }
+
+  Index numAtoms = mol.atomCount();
+  double (*positions)[3] = new double[numAtoms][3];
+  int *types = new int[numAtoms];
+
+  const Array<unsigned char> &atomicNums = mol.atomicNumbers();
+  const Array<Vector3> &pos = mol.atomPositions3d();
+
+  // Positions need to be in fractional coordinates
+  for (Index i = 0; i < numAtoms; ++i) {
+    Vector3 fracCoords = uc->toFractional(pos[i]);
+    positions[i][0] = fracCoords[0];
+    positions[i][1] = fracCoords[1];
+    positions[i][2] = fracCoords[2];
+    types[i] = atomicNums[i];
+  }
+
+  // Run the spglib algorithm
+  Index newNumAtoms = spg_find_primitive(lattice, positions, types,
+                                         numAtoms, cartTol);
+
+  // If 0 is returned, the algorithm failed.
+  if (newNumAtoms == 0) {
+    delete [] positions;
+    delete [] types;
+    return false;
+  }
+
+  // Let's create a new molecule with the primitive information
+  Molecule newMol;
+
+  // First, we will make the unit cell
+  Matrix3 newCellMat;
+  for (Index i = 0; i < 3; ++i) {
+    for (Index j = 0; j < 3; ++j) {
+      newCellMat(i,j) = lattice[i][j];
+    }
+  }
+  UnitCell *newCell = new UnitCell(newCellMat);
+  newMol.setUnitCell(newCell);
+
+  // Next, add in the atoms
+  for (Index i = 0; i < newNumAtoms; ++i) {
+    Atom newAtom = newMol.addAtom(types[i]);
+    Vector3 newAtomPos(positions[i][0], positions[i][1], positions[i][2]);
+    // We must convert it back to cartesian before adding it
+    newAtom.setPosition3d(newCell->toCartesian(newAtomPos));
+  }
+
+  delete [] positions;
+  delete [] types;
+
+  // Set the new molecule
+  mol = newMol;
+  return true;
+}
+
+bool AvoSpglib::conventionalizeCell(Molecule &mol, double cartTol)
+{
+  if (!mol.unitCell())
+    return false;
+
+  const UnitCell *uc = mol.unitCell();
+  Matrix3 cellMat = uc->cellMatrix();
+
+  double lattice[3][3];
+  // Spglib expects column vectors
+  for (Index i = 0; i < 3; ++i) {
+    for (Index j = 0; j < 3; ++j) {
+      lattice[i][j] = cellMat(i,j);
+    }
+  }
+
+  Index numAtoms = mol.atomCount();
+  // spg_refine_cell() can cause the number of atoms to increase by
+  // as much as 4x. So, we must make these arrays at least 4x the number of
+  // atoms.
+  // See http://atztogo.github.io/spglib/api.html#spg-refine-cell
+  double (*positions)[3] = new double[numAtoms * 4][3];
+  int *types = new int[numAtoms * 4];
+
+  const Array<unsigned char> &atomicNums = mol.atomicNumbers();
+  const Array<Vector3> &pos = mol.atomPositions3d();
+
+  // Positions need to be in fractional coordinates
+  for (Index i = 0; i < numAtoms; ++i) {
+    Vector3 fracCoords = uc->toFractional(pos[i]);
+    positions[i][0] = fracCoords[0];
+    positions[i][1] = fracCoords[1];
+    positions[i][2] = fracCoords[2];
+    types[i] = atomicNums[i];
+  }
+
+  // Run the spglib algorithm
+  Index newNumAtoms = spg_refine_cell(lattice, positions, types,
+                                      numAtoms, cartTol);
+
+  // If 0 is returned, the algorithm failed.
+  if (newNumAtoms == 0) {
+    delete [] positions;
+    delete [] types;
+    return false;
+  }
+
+  // Let's create a new molecule with the conventional information
+  Molecule newMol;
+
+  // First, we will make the unit cell
+  Matrix3 newCellMat;
+  for (Index i = 0; i < 3; ++i) {
+    for (Index j = 0; j < 3; ++j) {
+      newCellMat(i,j) = lattice[i][j];
+    }
+  }
+
+  UnitCell *newCell = new UnitCell(newCellMat);
+  newMol.setUnitCell(newCell);
+
+  // Next, add in the atoms
+  for (Index i = 0; i < newNumAtoms; ++i) {
+    Atom newAtom = newMol.addAtom(types[i]);
+    Vector3 newAtomPos(positions[i][0], positions[i][1], positions[i][2]);
+    // We must convert it back to cartesian before adding it
+    newAtom.setPosition3d(newCell->toCartesian(newAtomPos));
+  }
+
+  delete [] positions;
+  delete [] types;
+
+  // Set the new molecule
+  mol = newMol;
+  return true;
+}
+
 } // end Core namespace
 } // end Avogadro namespace
