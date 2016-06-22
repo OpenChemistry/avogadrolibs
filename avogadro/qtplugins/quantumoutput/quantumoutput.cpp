@@ -1,3 +1,18 @@
+/******************************************************************************
+
+  This source file is part of the Avogadro project.
+
+  Copyright 2012-2013 Kitware, Inc.
+
+  This source code is released under the New BSD License, (the "License").
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+******************************************************************************/
 #include "quantumoutput.h"
 #include "surfacedialog.h"
 
@@ -20,6 +35,8 @@
 #include <avogadro/quantumio/gaussiancube.h>
 #include <avogadro/quantumio/molden.h>
 #include <avogadro/quantumio/mopacaux.h>
+#include <avogadro/quantumio/nwchemjson.h>
+#include <avogadro/quantumio/nwchemlog.h>
 
 #include <QtCore/QDebug>
 #include <QtWidgets/QAction>
@@ -58,6 +75,8 @@ QuantumOutput::QuantumOutput(QObject *p) :
   Io::FileFormatManager::registerFormat(new QuantumIO::GaussianCube);
   Io::FileFormatManager::registerFormat(new QuantumIO::MoldenFile);
   Io::FileFormatManager::registerFormat(new QuantumIO::MopacAux);
+  Io::FileFormatManager::registerFormat(new QuantumIO::NWChemJson);
+  Io::FileFormatManager::registerFormat(new QuantumIO::NWChemLog);
 }
 
 QuantumOutput::~QuantumOutput()
