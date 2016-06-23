@@ -454,6 +454,13 @@ public:
 
   void clearCubes();
 
+	/**
+   * @brief Get the cubes vector set (if present) for the molecule.
+   * @return The cube vector for the molecule
+   */
+  std::vector<Cube *> cubes() { return m_cubes; }
+  const std::vector<Cube *> cubes() const { return m_cubes; }
+
   /**
    * Returns the chemical formula of the molecule.
    * @param delimiter Delimiter to insert between tokens, defaults to none.

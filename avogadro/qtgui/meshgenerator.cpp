@@ -36,7 +36,7 @@ MeshGenerator::MeshGenerator(QObject *p) :
   m_reverseWinding(false),
   m_cube(0),
   m_mesh(0),
-  m_stepSize(0.0),
+  m_stepSize(0.0, 0.0, 0.0),
   m_min(0.0, 0.0, 0.0),
   m_dim(0,0,0),
   m_progmin(0),
@@ -51,7 +51,7 @@ MeshGenerator::MeshGenerator(const Cube *cube_, Mesh *mesh_,
   m_reverseWinding(reverse),
   m_cube(0),
   m_mesh(0),
-  m_stepSize(0.0),
+  m_stepSize(0.0, 0.0, 0.0),
   m_min(0.0, 0.0, 0.0),
   m_dim(0, 0, 0),
   m_progmin(0),
@@ -77,7 +77,8 @@ bool MeshGenerator::initialize(const Cube *cube_, Mesh *mesh_, float iso,
     qDebug() << "Cannot get a read lock...";
     return false;
   }
-  m_stepSize = static_cast<float>(m_cube->spacing().x());
+  for (unsigned int i = 0; i < 3; ++i)
+    m_stepSize[i] = static_cast<float>(m_cube->spacing()[i]);
   m_min = m_cube->min().cast<float>();
   m_dim = m_cube->dimensions();
   m_progmax = m_dim.x();
@@ -134,7 +135,7 @@ void MeshGenerator::clear()
   m_iso = 0.0;
   m_cube =0;
   m_mesh = 0;
-  m_stepSize = 0.0;
+  m_stepSize.setZero();
   m_min.setZero();
   m_dim.setZero();
   m_progmin = 0;
@@ -173,7 +174,9 @@ bool MeshGenerator::marchingCube(const Vector3i &pos)
   Vector3f asEdgeNorm[12];
 
   // Calculate the position in the Cube
-  Vector3f fPos(pos.cast<float>() * static_cast<float>(m_stepSize) + m_min);
+  Vector3f fPos;
+  for (unsigned int i = 0; i < 3; ++i)
+  	fPos[i] = static_cast<float>(pos[i]) * m_stepSize[i] + m_min[i];
 
   //Make a local copy of the values at the cube's corners
   for(int i = 0; i < 8; ++i) {
@@ -207,11 +210,11 @@ bool MeshGenerator::marchingCube(const Vector3i &pos)
 
       asEdgeVertex[i] = Vector3f(
             fPos.x() + (a2fVertexOffset[a2iEdgeConnection[i][0]][0]
-          + fOffset * a2fEdgeDirection[i][0]) * m_stepSize,
+          + fOffset * a2fEdgeDirection[i][0]) * m_stepSize[0],
           fPos.y() + (a2fVertexOffset[a2iEdgeConnection[i][0]][1]
-          + fOffset * a2fEdgeDirection[i][1]) * m_stepSize,
+          + fOffset * a2fEdgeDirection[i][1]) * m_stepSize[1],
           fPos.z() + (a2fVertexOffset[a2iEdgeConnection[i][0]][2]
-          + fOffset * a2fEdgeDirection[i][2]) * m_stepSize);
+          + fOffset * a2fEdgeDirection[i][2]) * m_stepSize[2]);
 
       /// FIXME Optimize this to only calculate normals when required
       asEdgeNorm[i] = normal(asEdgeVertex[i]);

@@ -14,7 +14,6 @@
   limitations under the License.
 
 ******************************************************************************/
-
 #ifndef AVOGADRO_QTPLUGINS_SURFACEDIALOG_H
 #define AVOGADRO_QTPLUGINS_SURFACEDIALOG_H
 
@@ -40,19 +39,19 @@ public:
   SurfaceDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
   ~SurfaceDialog();
 
-  void setNumberOfElectrons(int numberOfElectrons, int numberOfMOs);
+  void setupBasis(int numElectrons, int numMOs);
+  void setupCube(int numCubes);
+  void reenableCalculateButton();
 
 public slots:
-  void setCalculationEnabled(bool isEnabled);
 
 protected slots:
-  void surfaceComboChanged(int n);
   void resolutionComboChanged(int n);
   void calculateClicked();
 
 signals:
-  void calculateMO(int molecularOrbital, float isoValue, float stepSize);
-  void calculateElectronDensity(float isoValue, float stepSize);
+  void calculateClickedSignal(int index, float isosurfaceValue,
+                              float resolutionStepSize);
 
 private:
   Ui::SurfaceDialog *m_ui;
