@@ -23,7 +23,7 @@
 
 namespace Avogadro {
 
-namespace Core {
+namespace QtGui {
 class Molecule;
 }
 
@@ -45,7 +45,7 @@ public:
   SupercellDialog(QWidget *p = 0);
   ~SupercellDialog();
 
-  bool buildSupercell(Avogadro::Core::Molecule &mol);
+  bool buildSupercell(Avogadro::QtGui::Molecule &mol);
 
   void displayInvalidFormatMessage();
 
