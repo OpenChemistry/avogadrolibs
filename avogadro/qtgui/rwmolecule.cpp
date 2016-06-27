@@ -245,7 +245,7 @@ bool RWMolecule::removeAtom(Index atomId)
 
   RemoveAtomCommand *comm = new RemoveAtomCommand(
         *this, atomId, uniqueId, atomicNumber(atomId), atomPosition3d(atomId));
-  comm->setText("Remove Atom");
+  comm->setText(tr("Remove Atom"));
 
   m_undoStack.push(comm);
 
@@ -255,7 +255,7 @@ bool RWMolecule::removeAtom(Index atomId)
 
 void RWMolecule::clearAtoms()
 {
-  m_undoStack.beginMacro("Clear Atoms");
+  m_undoStack.beginMacro(tr("Clear Atoms"));
 
   while (atomCount() != 0)
     removeAtom(0);
@@ -710,7 +710,7 @@ bool RWMolecule::removeBond(Index bondId)
 
 void RWMolecule::clearBonds()
 {
-  m_undoStack.beginMacro("Clear Bonds");
+  m_undoStack.beginMacro(tr("Clear Bonds"));
 
   while (bondCount() != 0)
     removeBond(0);
