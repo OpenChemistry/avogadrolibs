@@ -47,6 +47,7 @@ SpaceGroup::SpaceGroup(QObject *parent_) :
   m_perceiveSpaceGroupAction(new QAction(this)),
   m_reduceToPrimitiveAction(new QAction(this)),
   m_conventionalizeCellAction(new QAction(this)),
+  m_symmetrizeAction(new QAction(this)),
   m_setToleranceAction(new QAction(this))
 {
   m_perceiveSpaceGroupAction->setText(tr("Perceive Space Group"));
@@ -66,6 +67,11 @@ SpaceGroup::SpaceGroup(QObject *parent_) :
           SLOT(conventionalizeCell()));
   m_actions.push_back(m_conventionalizeCellAction);
   m_conventionalizeCellAction->setProperty("menu priority", 70);
+
+  m_symmetrizeAction->setText(tr("Symmetrize"));
+  connect(m_symmetrizeAction, SIGNAL(triggered()), SLOT(symmetrize()));
+  m_actions.push_back(m_symmetrizeAction);
+  m_symmetrizeAction->setProperty("menu priority", 60);
 
   m_setToleranceAction->setText(tr("Set Tolerance"));
   connect(m_setToleranceAction, SIGNAL(triggered()), SLOT(setTolerance()));
@@ -225,6 +231,34 @@ void SpaceGroup::conventionalizeCell()
     // Print an error message.
     QMessageBox retMsgBox;
     retMsgBox.setText(tr("Conventionalize cell failed.\n"
+                         "Please check your crystal and try again "
+                         "with a different tolerance."));
+    retMsgBox.exec();
+  }
+  else {
+    m_molecule->emitChanged(Molecule::Added |
+                            Molecule::Atoms | Molecule::UnitCell);
+  }
+}
+
+void SpaceGroup::symmetrize()
+{
+  // Confirm the tolerance
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::question(NULL, tr("Symmetrize Cell"),
+                                tr("The tolerance is currently set to: %1.\n"
+                                   "Proceed with this tolerance?")
+                                  .arg(m_spgTol),
+                                QMessageBox::Yes | QMessageBox::No);
+  if (reply == QMessageBox::No)
+    setTolerance();
+
+  bool success = AvoSpglib::symmetrize(*m_molecule, m_spgTol);
+
+  if (!success) {
+    // Print an error message.
+    QMessageBox retMsgBox;
+    retMsgBox.setText(tr("Symmetrization failed.\n"
                          "Please check your crystal and try again "
                          "with a different tolerance."));
     retMsgBox.exec();
