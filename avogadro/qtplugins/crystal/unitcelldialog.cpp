@@ -18,6 +18,7 @@
 #include "ui_unitcelldialog.h"
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/unitcell.h>
@@ -143,14 +144,9 @@ void UnitCellDialog::apply()
     break;
   default: {
     Core::CrystalTools::Options options = Core::CrystalTools::None;
-    Molecule::MoleculeChanges changes = Molecule::UnitCell | Molecule::Modified;
-    if (m_ui->transformAtoms->isChecked()) {
+    if (m_ui->transformAtoms->isChecked())
       options |= Core::CrystalTools::TransformAtoms;
-      changes |= Molecule::Atoms | Molecule::Modified;
-    }
-    Core::CrystalTools::setCellMatrix(*m_molecule, m_tempCell.cellMatrix(),
-                                      options);
-    m_molecule->emitChanged(changes);
+    m_molecule->undoMolecule()->editUnitCell(m_tempCell.cellMatrix(), options);
     break;
   }
   }

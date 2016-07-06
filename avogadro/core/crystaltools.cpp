@@ -672,7 +672,6 @@ bool CrystalTools::setCellMatrix(Molecule &molecule,
                                  const Matrix3 &newCellColMatrix,
                                  Options opt)
 {
-
   if (opt & TransformAtoms && molecule.unitCell()) {
     const Matrix3 xform(newCellColMatrix
                         * molecule.unitCell()->cellMatrix().inverse());

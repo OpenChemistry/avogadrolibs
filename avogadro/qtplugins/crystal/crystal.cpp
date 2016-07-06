@@ -25,6 +25,7 @@
 #include <avogadro/core/crystaltools.h>
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMessageBox>
@@ -179,9 +180,10 @@ void Crystal::importCrystalClipboard()
   Core::Molecule m;
   if (d.importCrystalClipboard(m)) {
     // If we succeeded, update m_molecule
-    *m_molecule = m;
-    m_molecule->emitChanged(Molecule::Added |
-                            Molecule::Atoms | Molecule::UnitCell);
+    Molecule::MoleculeChanges changes = Molecule::Added |
+                                        Molecule::Atoms | Molecule::UnitCell;
+    QString undoText = tr("Import Crystal from Clipboard");
+    m_molecule->undoMolecule()->modifyMolecule(m, changes, undoText);
   }
 }
 
@@ -198,10 +200,7 @@ void Crystal::editUnitCell()
 void Crystal::buildSupercell()
 {
   SupercellDialog d;
-  if (d.buildSupercell(*m_molecule)) {
-    m_molecule->emitChanged(Molecule::Modified |
-                            Molecule::Atoms | Molecule::UnitCell);
-  }
+  d.buildSupercell(*m_molecule);
 }
 
 void Crystal::niggliReduce()
@@ -213,12 +212,7 @@ void Crystal::niggliReduce()
                              QMessageBox::Ok);
     return;
   }
-  CrystalTools::niggliReduce(*m_molecule, CrystalTools::TransformAtoms);
-  CrystalTools::rotateToStandardOrientation(*m_molecule,
-                                            CrystalTools::TransformAtoms);
-  CrystalTools::wrapAtomsToUnitCell(*m_molecule);
-  m_molecule->emitChanged(Molecule::Modified
-                          | Molecule::Atoms | Molecule::UnitCell);
+  m_molecule->undoMolecule()->niggliReduceCell();
 }
 
 void Crystal::scaleVolume()
@@ -232,46 +226,30 @@ void Crystal::scaleVolume()
   if (reply != QDialog::Accepted)
     return;
 
-  CrystalTools::setVolume(*m_molecule, dlg.newVolume(),
-                          dlg.transformAtoms() ? CrystalTools::TransformAtoms
-                                               : CrystalTools::None);
-  m_molecule->emitChanged(Molecule::Modified | Molecule::UnitCell
-                          | (dlg.transformAtoms() ? Molecule::Atoms
-                                                  : Molecule::NoChange));
+  m_molecule->undoMolecule()->setCellVolume(
+      dlg.newVolume(), dlg.transformAtoms() ? CrystalTools::TransformAtoms
+                                            : CrystalTools::None);
 }
 
 void Crystal::standardOrientation()
 {
-  CrystalTools::rotateToStandardOrientation(*m_molecule,
-                                            CrystalTools::TransformAtoms);
-  m_molecule->emitChanged(Molecule::Modified
-                          | Molecule::Atoms | Molecule::UnitCell);
+  m_molecule->undoMolecule()->rotateCellToStandardOrientation();
 }
 
 void Crystal::toggleUnitCell()
 {
   if (m_molecule->unitCell()) {
-    m_molecule->setUnitCell(NULL);
-    m_molecule->emitChanged(Molecule::UnitCell | Molecule::Removed);
+    m_molecule->undoMolecule()->removeUnitCell();
   }
   else {
-    UnitCell *cell = new UnitCell;
-    cell->setCellParameters(static_cast<Real>(3.0),
-                            static_cast<Real>(3.0),
-                            static_cast<Real>(3.0),
-                            static_cast<Real>(90.0) * DEG_TO_RAD,
-                            static_cast<Real>(90.0) * DEG_TO_RAD,
-                            static_cast<Real>(90.0) * DEG_TO_RAD);
-    m_molecule->setUnitCell(cell);
-    m_molecule->emitChanged(Molecule::UnitCell | Molecule::Added);
+    m_molecule->undoMolecule()->addUnitCell();
     editUnitCell();
   }
 }
 
 void Crystal::wrapAtomsToCell()
 {
-  CrystalTools::wrapAtomsToUnitCell(*m_molecule);
-  m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+  m_molecule->undoMolecule()->wrapAtomsToCell();
 }
 
 } // namespace QtPlugins

@@ -22,6 +22,7 @@
 #include <avogadro/core/spacegroups.h>
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtWidgets/QAction>
 #include <QtWidgets/QInputDialog>
@@ -190,7 +191,7 @@ void SpaceGroup::reduceToPrimitive()
     setTolerance();
 
   // Primitive reduction!
-  bool success = AvoSpglib::reduceToPrimitive(*m_molecule, m_spgTol);
+  bool success = m_molecule->undoMolecule()->reduceCellToPrimitive(m_spgTol);
 
   if (!success) {
     // Print an error message.
@@ -199,10 +200,6 @@ void SpaceGroup::reduceToPrimitive()
                          "Please check your crystal and try again "
                          "with a different tolerance."));
     retMsgBox.exec();
-  }
-  else {
-    m_molecule->emitChanged(Molecule::Added |
-                            Molecule::Atoms | Molecule::UnitCell);
   }
 }
 
@@ -219,7 +216,7 @@ void SpaceGroup::conventionalizeCell()
     setTolerance();
 
   // Conventionalize the cell!
-  bool success = AvoSpglib::conventionalizeCell(*m_molecule, m_spgTol);
+  bool success = m_molecule->undoMolecule()->conventionalizeCell(m_spgTol);
 
   if (!success) {
     // Print an error message.
@@ -228,10 +225,6 @@ void SpaceGroup::conventionalizeCell()
                          "Please check your crystal and try again "
                          "with a different tolerance."));
     retMsgBox.exec();
-  }
-  else {
-    m_molecule->emitChanged(Molecule::Added |
-                            Molecule::Atoms | Molecule::UnitCell);
   }
 }
 

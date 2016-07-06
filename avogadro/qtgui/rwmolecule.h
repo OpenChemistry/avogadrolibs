@@ -28,6 +28,7 @@
 #include <avogadro/core/atom.h>
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/bond.h>
+#include <avogadro/core/crystaltools.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
@@ -398,6 +399,86 @@ public:
    * index is less than the second.
    */
   bool setBondPair(Index bondId, const std::pair<Index, Index> &pair);
+
+  /**
+   * Add a default unit cell to the molecule. Does nothing if there already
+   * is a unit cell. Changes are emitted.
+   */
+  void addUnitCell();
+
+  /**
+   * Remove the unit cell from the molecule. Does nothing if there is
+   * no unit cell. Changes are emitted.
+   */
+  void removeUnitCell();
+
+  /**
+   * Generic edit that changes the current molecule to be @a newMolecule.
+   * Also sets the text for the undo command to be @a undoText. Changes are
+   * emitted.
+   * @param newMolecule The new molecule to be set.
+   * @param changes The changes to be emitted.
+   * @param undoText The text description for the undo command.
+   */
+  void modifyMolecule(const Molecule &newMolecule,
+                      Molecule::MoleculeChanges changes,
+                      const QString &undoText = "Modify Molecule");
+
+  /**
+   * Edit the unit cell by replacing the current cell matrix with a new cell
+   * matrix. Changes are emitted.
+   * @param cellMatrix The new cell matrix to be set.
+   * @param opts If TransformAtoms is specified, the atoms in @a molecule are
+   * adjusted so that their fractional (lattice) coordinates are preserved. This
+   * option is ignored if the input molecule has no unit cell.
+   */
+  void editUnitCell(Matrix3 cellMatrix, Core::CrystalTools::Options opts);
+
+  /**
+   * Wrap atoms to the unit cell. Changes are emitted.
+   */
+  void wrapAtomsToCell();
+
+  /**
+   * Rotate cell to standard orientation. Changes are emitted.
+   */
+  void rotateCellToStandardOrientation();
+
+  /**
+   * Scale a cell's volume. Changes are emitted.
+   * @param newVolume The new volume to be set.
+   * @param options If CrystalTools::TransformAtoms is set, then
+   *                the atoms will be transformed during the scaling.
+   */
+  void setCellVolume(double newVolume, Core::CrystalTools::Options options);
+
+  /**
+   * Build a supercell. Changes are emitted.
+   * @param a The final number of units along the A vector (at least 1).
+   * @param b The final number of units along the B vector (at least 1).
+   * @param c The final number of units along the C vector (at least 1).
+   */
+  void buildSupercell(unsigned int a, unsigned int b, unsigned int c);
+
+  /**
+   * Perform a Niggli reduction on the cell. Changes are emitted.
+   */
+  void niggliReduceCell();
+
+  /**
+   * Use spglib to reduce the cell to its primitive form. Changes are emitted.
+   * @param cartTol Cartesian tolerance for primitive reduction.
+   * @return True if the algorithm succeeded, and false if it failed.
+   */
+  bool reduceCellToPrimitive(double cartTol = 1e-5);
+
+  /**
+   * Use spglib to convert the cell to its conventional form. Changes are
+   * emitted.
+   * @param cartTol Cartesian tolerance for conventionalization.
+   * @return True if the algorithm succeeded, and false if it failed.
+   */
+  bool conventionalizeCell(double cartTol = 1e-5);
 
   /**
    * @brief Begin or end an interactive edit.
