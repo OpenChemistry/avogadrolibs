@@ -48,6 +48,7 @@ private slots:
   void perceiveSpaceGroup();
   void reduceToPrimitive();
   void conventionalizeCell();
+  void symmetrize();
   void setTolerance();
 
 private:
@@ -58,6 +59,7 @@ private:
   QAction *m_perceiveSpaceGroupAction;
   QAction *m_reduceToPrimitiveAction;
   QAction *m_conventionalizeCellAction;
+  QAction *m_symmetrizeAction;
   QAction *m_setToleranceAction;
 };
 

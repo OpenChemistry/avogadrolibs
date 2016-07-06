@@ -46,7 +46,8 @@ public:
 
   /**
    * Use spglib to reduce the crystal to a primitive cell. Unless the molecule
-   * is missing its unit cell, it will be edited by spglib.
+   * is missing its unit cell, it will be edited by spglib. Positions are
+   * not idealized.
    *
    * @param mol The molecule to be reduced to its primitive cell.
    * @param cartTol The cartesian tolerance for spglib.
@@ -57,7 +58,8 @@ public:
 
   /**
    * Use spglib to refine the crystal to its conventional cell. Unless the
-   * molecule is missing its unit cell, it will be edited by spglib.
+   * molecule is missing its unit cell, it will be edited by spglib. Positions
+   * are idealized.
    *
    * @param mol The molecule to be conventionalized.
    * @param cartTol The cartesian tolerance for spglib.
@@ -66,6 +68,23 @@ public:
    */
   static bool conventionalizeCell(Molecule &mol, double cartTol = 1e-5);
 
+  /**
+   * Use spglib to symmetrize the crystal. Unless the molecule is missing
+   * its unit cell, it will be edited by spglib. It will be reduced
+   * to its primitive form, and positions will be idealized.
+   *
+   * @param mol The molecule to be conventionalized.
+   * @param cartTol The cartesian tolerance for spglib.
+   * @return False if the molecule has no unit cell or if the
+   *         spglib algorithm failed. True otherwise.
+   */
+  static bool symmetrize(Molecule &mol, double cartTol = 1e-5);
+
+private:
+  // Called by reduceToPrimitive(), conventionalizeCell(), and symmetrize()
+  // Calls spg_standardize_cell()
+  static bool standardizeCell(Molecule &mol, double cartTol,
+                              bool toPrimitive, bool idealize);
 };
 
 } // end Core namespace
