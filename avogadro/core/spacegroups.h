@@ -91,6 +91,36 @@ public:
    * space group.
    */
   static const char * setting(unsigned short hallNumber);
+
+  /**
+   * Get the number of transforms for a given hall number.
+   * If an invalid hall number is given, 0 will be returned.
+   */
+  static unsigned short transformsCount(unsigned short hallNumber);
+
+  /**
+   * Get an array of transforms for a given hall number and a vector v.
+   * The vector should be in fractional coordinates.
+   * If an invalid hall number is given, an empty array will be returned.
+   */
+  static Array<Vector3> getTransforms(unsigned short hallNumber,
+                                      const Vector3 &v);
+
+  /**
+   * Fill a crystal with atoms by using transforms from a hall number.
+   * Nothing will be done if the molecule does not have a unit cell.
+   * The cartesian tolerance is used to check if an atom is already
+   * present at that location. If there is another atom within that
+   * distance, the new atom will not be placed there.
+   */
+  static void fillUnitCell(Molecule &mol, unsigned short hallNumber,
+                           double cartTol = 1e-5);
+
+private:
+  /**
+   * Get the transforms string stored in the database.
+   */
+  static const char * transformsString(unsigned short hallNumber);
 };
 
 } // end Core namespace

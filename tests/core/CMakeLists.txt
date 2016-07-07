@@ -16,7 +16,7 @@ set(tests
   Molecule
   Mutex
   RingPerceiver
-  Spglib
+  Spacegroup
   Utilities
   UnitCell
   Variant
