@@ -1208,6 +1208,27 @@ bool RWMolecule::conventionalizeCell(double cartTol)
   return true;
 }
 
+bool RWMolecule::symmetrizeCell(double cartTol)
+{
+  // If there is no unit cell, there is nothing to do
+  if (!m_molecule.unitCell())
+    return false;
+
+  // Make a copy of the molecule to edit so we can store the old one
+  // The unit cell, atom positions, and numbers of atoms may all change
+  Molecule newMolecule = m_molecule;
+
+  if (!Core::AvoSpglib::symmetrize(newMolecule, cartTol))
+    return false;
+
+  Molecule::MoleculeChanges changes = Molecule::UnitCell | Molecule::Atoms |
+                                      Molecule::Added;
+  QString undoText = tr("Symmetrize Cell");
+
+  modifyMolecule(newMolecule, changes, undoText);
+  return true;
+}
+
 void RWMolecule::emitChanged(unsigned int change)
 {
   m_molecule.emitChanged(change);
