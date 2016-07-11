@@ -481,6 +481,13 @@ public:
   bool conventionalizeCell(double cartTol = 1e-5);
 
   /**
+   * Use spglib to symmetrize the cell. Changes are emitted.
+   * @param cartTol Cartesian tolerance for symmetrization.
+   * @return True if the algorithm succeeded, and false if it failed.
+   */
+  bool symmetrizeCell(double cartTol = 1e-5);
+
+  /**
    * @brief Begin or end an interactive edit.
    *
    * If enabled, certain undo operations will be merged together. For instance,

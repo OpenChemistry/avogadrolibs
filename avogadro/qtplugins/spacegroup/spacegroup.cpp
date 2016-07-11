@@ -246,7 +246,7 @@ void SpaceGroup::symmetrize()
   if (reply == QMessageBox::No)
     setTolerance();
 
-  bool success = AvoSpglib::symmetrize(*m_molecule, m_spgTol);
+  bool success = m_molecule->undoMolecule()->symmetrizeCell(m_spgTol);
 
   if (!success) {
     // Print an error message.
@@ -255,10 +255,6 @@ void SpaceGroup::symmetrize()
                          "Please check your crystal and try again "
                          "with a different tolerance."));
     retMsgBox.exec();
-  }
-  else {
-    m_molecule->emitChanged(Molecule::Added |
-                            Molecule::Atoms | Molecule::UnitCell);
   }
 }
 
