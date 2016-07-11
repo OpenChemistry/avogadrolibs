@@ -126,7 +126,7 @@ public:
 
   /**
    * @brief Write to the given @p out stream the contents of @p molecule.
-   * @param fileName The output stream to write the data to.
+   * @param out The output stream to write the data to.
    * @param molecule The contents of this molecule will be written to output.
    * @return True on success, false on failure.
    */
