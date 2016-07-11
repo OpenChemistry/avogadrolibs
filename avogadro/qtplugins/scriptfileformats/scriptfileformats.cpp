@@ -74,6 +74,7 @@ void ScriptFileFormats::refreshFileFormats()
       foreach (const QFileInfo &file, dir.entryInfoList(QDir::Files |
                                                         QDir::NoDotAndDotDot)) {
         QString filePath = file.absoluteFilePath();
+        qDebug() << "File format scripts checked are " << filePath;
         FileFormatScript *format = new FileFormatScript(filePath);
         if (format->isValid())
           m_formats.push_back(format);
