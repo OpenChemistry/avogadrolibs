@@ -30,7 +30,7 @@ using Avogadro::Core::Molecule;
 using Avogadro::Core::SpaceGroups;
 using Avogadro::Core::UnitCell;
 
-TEST(SpglibTest, getSpaceGroup)
+TEST(SpaceGroupTest, getSpaceGroup)
 {
   Molecule mol;
 
@@ -72,7 +72,7 @@ TEST(SpglibTest, getSpaceGroup)
 
 // We're going to take a conventional cell, reduce it to the primitive form,
 // and check our results
-TEST(SpglibTest, reduceToPrimitive)
+TEST(SpaceGroupTest, reduceToPrimitive)
 {
   // Let's build a primitive cell of corundum!
   Molecule primMol;
@@ -189,7 +189,7 @@ TEST(SpglibTest, reduceToPrimitive)
 
 // We're going to take a primitive cell, conventionalize it,
 // and check our results
-TEST(SpglibTest, conventionalizeCell)
+TEST(SpaceGroupTest, conventionalizeCell)
 {
   // Let's build a primitive cell of corundum!
   Molecule primMol;
@@ -302,4 +302,131 @@ TEST(SpglibTest, conventionalizeCell)
   // We compare volumes as floats instead of doubles to allow for a little bit
   // of a difference between them.
   ASSERT_FLOAT_EQ(convMol.unitCell()->volume(), primMol.unitCell()->volume());
+}
+
+TEST(SpaceGroupTest, fillUnitCell)
+{
+  double cartTol = 1e-5;
+
+  // MgSiO3 - post-perovskite. Space group: Cmcm. Found in the mantle of the earth.
+  // http://crystallography.net/cod/9009217.html
+  Molecule mol1;
+  Matrix3 mat1;
+  mat1.col(0) = Vector3(2.456, 0.000, 0.000); // A
+  mat1.col(1) = Vector3(0.000, 8.042, 0.000); // B
+  mat1.col(2) = Vector3(0.000, 0.000, 6.093); // C
+
+  UnitCell *uc1 = new UnitCell(mat1);
+  mol1.setUnitCell(uc1);
+
+  mol1.addAtom(12).setPosition3d(uc1->toCartesian(Vector3(0.000, 0.253,
+                                                          0.250)));
+  mol1.addAtom(14).setPosition3d(uc1->toCartesian(Vector3(0.000, 0.000,
+                                                          0.000)));
+  mol1.addAtom(8 ).setPosition3d(uc1->toCartesian(Vector3(0.000, 0.923,
+                                                          0.250)));
+  mol1.addAtom(8 ).setPosition3d(uc1->toCartesian(Vector3(0.000, 0.631,
+                                                          0.436)));
+
+  // Now, let's perform a fillUnitCell. hallNumber 298 is Cmcm
+  // International: 63
+  SpaceGroups::fillUnitCell(mol1, 298, cartTol);
+
+  // It should now have a hall number of 298
+  unsigned short hallNumber1 = AvoSpglib::getHallNumber(mol1, cartTol);
+  ASSERT_EQ(hallNumber1, 298);
+
+  // It should now have 20 atoms
+  ASSERT_EQ(mol1.atomCount(), 20);
+
+
+  // CaMg(CO3)2 - dolomite. Space group: hexagonal R -3. It is a brittle
+  // mineral found in limestones and other common places.
+  // http://crystallography.net/cod/1517795.html
+  Molecule mol2;
+  Matrix3 mat2;
+
+  mat2.col(0) = Vector3( 4.808, 0.00000,  0.000); // A
+  mat2.col(1) = Vector3(-2.404, 4.16385,  0.000); // B
+  mat2.col(2) = Vector3( 0.000, 0.00000, 16.022); // C
+
+  UnitCell *uc2 = new UnitCell(mat2);
+  mol2.setUnitCell(uc2);
+
+  mol2.addAtom(20).setPosition3d(uc2->toCartesian(Vector3(0.0000, 0.0000,
+                                                          0.0000)));
+  mol2.addAtom(12).setPosition3d(uc2->toCartesian(Vector3(0.0000, 0.0000,
+                                                          0.5000)));
+  mol2.addAtom(6 ).setPosition3d(uc2->toCartesian(Vector3(0.0000, 0.0000,
+                                                          0.24287)));
+  mol2.addAtom(8 ).setPosition3d(uc2->toCartesian(Vector3(0.24796, 0.9653,
+                                                          0.24402)));
+
+  // Now, let's perform a fillUnitCell. hallNumber 436 is hexagonal R -3
+  // International: 148
+  SpaceGroups::fillUnitCell(mol2, 436, cartTol);
+
+  // It should now have a hall number of 436
+  unsigned short hallNumber2 = AvoSpglib::getHallNumber(mol2, cartTol);
+  ASSERT_EQ(hallNumber2, 436);
+
+  // It should now have 30 atoms
+  ASSERT_EQ(mol2.atomCount(), 30);
+
+
+  // CaSiO3 - wollastonite. Space group: P -1. It is found in limestones
+  // and other common minerals. Used in ceramics, brakes, clutches,
+  // metalmaking, paint filler, and plastics.
+  // http://crystallography.net/cod/9005777.html
+  Molecule mol3;
+  Matrix3 mat3;
+
+  mat3.col(0) = Vector3( 7.92580, 0.00000, 0.00000); // A
+  mat3.col(1) = Vector3(-1.69967, 7.12014, 0.00000); // B
+  mat3.col(2) = Vector3(-0.64243,-0.16033, 7.03420); // C
+
+  UnitCell *uc3 = new UnitCell(mat3);
+  mol3.setUnitCell(uc3);
+
+  mol3.addAtom(20).setPosition3d(uc3->toCartesian(Vector3(0.198310, 0.42266,
+                                                          0.76060)));
+  mol3.addAtom(20).setPosition3d(uc3->toCartesian(Vector3(0.202410, 0.92919,
+                                                          0.76401)));
+  mol3.addAtom(20).setPosition3d(uc3->toCartesian(Vector3(0.503330, 0.75040,
+                                                          0.52691)));
+  mol3.addAtom(14).setPosition3d(uc3->toCartesian(Vector3(0.185100, 0.38750,
+                                                          0.26840)));
+  mol3.addAtom(14).setPosition3d(uc3->toCartesian(Vector3(0.184900, 0.95420,
+                                                          0.26910)));
+  mol3.addAtom(14).setPosition3d(uc3->toCartesian(Vector3(0.397300, 0.72360,
+                                                          0.05610)));
+  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.303400, 0.46160,
+                                                          0.46280)));
+  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.301400, 0.93850,
+                                                          0.46410)));
+  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.570500, 0.76880,
+                                                          0.19880)));
+  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.983200, 0.37390,
+                                                          0.26550)));
+  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.981900, 0.86770,
+                                                          0.26480)));
+  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.401800, 0.72660,
+                                                          0.82960)));
+  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.218300, 0.17850,
+                                                          0.22540)));
+  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.271300, 0.87040,
+                                                          0.09380)));
+  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.273500, 0.51260,
+                                                          0.09310)));
+
+  // Now, let's perform a fillUnitCell. hallNumber 2 is hexagonal P -1
+  // International: 2
+  SpaceGroups::fillUnitCell(mol3, 2, cartTol);
+
+  // It should now have a hall number of 2
+  unsigned short hallNumber3 = AvoSpglib::getHallNumber(mol3, cartTol);
+  ASSERT_EQ(hallNumber3, 2);
+
+  // It should now have 30 atoms
+  ASSERT_EQ(mol3.atomCount(), 30);
 }

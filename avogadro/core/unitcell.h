@@ -127,6 +127,23 @@ public:
   void wrapCartesian(const Vector3 &cart, Vector3 &wrapped) const;
   /** @} */
 
+  /**
+   * Find the minimum fractional image of a fractional vector @a v.
+   * A minimum image has all fractional coordinates between -0.5 and 0.5.
+   */
+  static Vector3 minimumImageFractional(const Vector3 &v);
+
+  /**
+   * Find the minimum image of a Cartesian vector @a v.
+   * A minimum image has all fractional coordinates between -0.5 and 0.5
+   */
+  Vector3 minimumImage(const Vector3 &v) const;
+
+  /**
+   * Find the shortest distance between vectors @a v1 and @a v2.
+   */
+  Real distance(const Vector3 &v1, const Vector3 &v2) const;
+
 private:
   static Real signedAngleRadians(const Vector3 &v1, const Vector3 &v2,
                                  const Vector3 &axis);
@@ -317,6 +334,24 @@ inline void UnitCell::wrapCartesian(const Vector3 &cart, Vector3 &wrapped) const
   toFractional(cart, wrapped);
   wrapFractional(wrapped, wrapped);
   toCartesian(wrapped, wrapped);
+}
+
+inline Vector3 UnitCell::minimumImageFractional(const Vector3 &v)
+{
+  Real x = v[0] - rint(v[0]);
+  Real y = v[1] - rint(v[1]);
+  Real z = v[2] - rint(v[2]);
+  return Vector3(x, y, z);
+}
+
+inline Vector3 UnitCell::minimumImage(const Vector3 &v) const
+{
+  return toCartesian(minimumImageFractional(toFractional(v)));
+}
+
+inline Real UnitCell::distance(const Vector3 &v1, const Vector3 &v2) const
+{
+  return std::fabs(minimumImage(v1 - v2).norm());
 }
 
 } // namespace Core

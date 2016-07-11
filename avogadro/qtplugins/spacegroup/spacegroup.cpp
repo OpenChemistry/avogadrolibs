@@ -24,11 +24,20 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <QtWidgets/QAbstractItemView>
 #include <QtWidgets/QAction>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QInputDialog>
+#include <QtWidgets/QLayout>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QScrollBar>
+#include <QtWidgets/QTableView>
+#include <QtWidgets/QVBoxLayout>
 
 #include <QtCore/QStringList>
+
+#include <QtGui/QStandardItemModel>
 
 #include <sstream>
 
@@ -49,6 +58,7 @@ SpaceGroup::SpaceGroup(QObject *parent_) :
   m_reduceToPrimitiveAction(new QAction(this)),
   m_conventionalizeCellAction(new QAction(this)),
   m_symmetrizeAction(new QAction(this)),
+  m_fillUnitCellAction(new QAction(this)),
   m_setToleranceAction(new QAction(this))
 {
   m_perceiveSpaceGroupAction->setText(tr("Perceive Space Group"));
@@ -73,6 +83,11 @@ SpaceGroup::SpaceGroup(QObject *parent_) :
   connect(m_symmetrizeAction, SIGNAL(triggered()), SLOT(symmetrize()));
   m_actions.push_back(m_symmetrizeAction);
   m_symmetrizeAction->setProperty("menu priority", 60);
+
+  m_fillUnitCellAction->setText(tr("Fill Unit Cell"));
+  connect(m_fillUnitCellAction, SIGNAL(triggered()), SLOT(fillUnitCell()));
+  m_actions.push_back(m_fillUnitCellAction);
+  m_fillUnitCellAction->setProperty("menu priority", 50);
 
   m_setToleranceAction->setText(tr("Set Tolerance"));
   connect(m_setToleranceAction, SIGNAL(triggered()), SLOT(setTolerance()));
@@ -256,6 +271,56 @@ void SpaceGroup::symmetrize()
                          "with a different tolerance."));
     retMsgBox.exec();
   }
+}
+
+void SpaceGroup::fillUnitCell()
+{
+  QStandardItemModel spacegroups;
+  QStringList modelHeader;
+  modelHeader << tr("International")
+              << tr("Hall")
+              << tr("Hermann-Mauguin");
+  spacegroups.setHorizontalHeaderLabels(modelHeader);
+  for (unsigned int i = 1; i <= 530; ++i) {
+    QList<QStandardItem*> row;
+    row << new QStandardItem(QString::number(
+                                 Core::SpaceGroups::internationalNumber(i)))
+        << new QStandardItem(QString(Core::SpaceGroups::hallSymbol(i)))
+        << new QStandardItem(QString(
+                                 Core::SpaceGroups::internationalShort(i)));
+    spacegroups.appendRow(row);
+  }
+
+  QDialog dialog;
+  dialog.setLayout(new QVBoxLayout);
+  dialog.setWindowTitle(tr("Select Space Group"));
+  QTableView *view = new QTableView;
+  view->setSelectionBehavior(QAbstractItemView::SelectRows);
+  view->setSelectionMode(QAbstractItemView::SingleSelection);
+  view->setCornerButtonEnabled(false);
+  view->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+  view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  view->verticalHeader()->hide();
+  view->setModel(&spacegroups);
+  dialog.layout()->addWidget(view);
+  view->selectRow(0);
+  view->resizeColumnsToContents();
+  view->resizeRowsToContents();
+  view->setMinimumWidth(view->horizontalHeader()->length()
+                        + view->verticalScrollBar()->sizeHint().width());
+  connect(view, SIGNAL(activated(QModelIndex)), &dialog, SLOT(accept()));
+  QDialogButtonBox *buttons =
+    new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  connect(buttons, SIGNAL(accepted()), &dialog, SLOT(accept()));
+  connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
+  dialog.layout()->addWidget(buttons);
+  if (dialog.exec() != QDialog::Accepted)
+    return;
+
+  unsigned short hallNumber = view->currentIndex().row() + 1;
+
+  Core::SpaceGroups::fillUnitCell(*m_molecule, hallNumber, m_spgTol);
+  m_molecule->emitChanged(Molecule::Added | Molecule::Atoms);
 }
 
 void SpaceGroup::setTolerance()
