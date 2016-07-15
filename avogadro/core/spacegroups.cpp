@@ -290,6 +290,48 @@ void SpaceGroups::fillUnitCell(Molecule &mol, unsigned short hallNumber,
   CrystalTools::wrapAtomsToUnitCell(mol);
 }
 
+void SpaceGroups::reduceToAsymmetricUnit(Molecule &mol,
+                                         unsigned short hallNumber,
+                                         double cartTol)
+{
+  if (!mol.unitCell())
+    return;
+  UnitCell *uc = mol.unitCell();
+
+  // The number of atoms may change as we remove atoms, so don't cache
+  // the number of atoms, atomic positions, or atomic numbers
+  // There's no point in looking at the last atom
+  for (Index i = 0; i + 1 < mol.atomCount(); ++i) {
+    unsigned char atomicNum = mol.atomicNumber(i);
+    Vector3 pos = uc->toFractional(mol.atomPosition3d(i));
+    Array<Vector3> transformAtoms = getTransforms(hallNumber, pos);
+
+    // Loop through the rest of the atoms in this crystal and see if any match
+    // up with a transform
+    for (Index j = i + 1; j < mol.atomCount(); ++j) {
+      // If the atomic number does not match, skip over it
+      if (mol.atomicNumber(j) != atomicNum)
+        continue;
+
+      Vector3 trialPos = mol.atomPosition3d(j);
+      // Loop through the transform atoms
+      // We skip 0 because it is the original atom.
+      for (Index k = 1; k < transformAtoms.size(); ++k) {
+        // The transform atoms are in fractional coordinates. Convert to cartesian.
+        Vector3 transformPos = uc->toCartesian(transformAtoms[k]);
+        Real distance = uc->distance(trialPos, transformPos);
+        // Is the atom within the cartesian tolerance distance?
+        if (distance <= cartTol) {
+          // Remove this atom and adjust the index
+          mol.removeAtom(j);
+          --j;
+          break;
+        }
+      }
+    }
+  }
+}
+
 const char * SpaceGroups::transformsString(unsigned short hallNumber)
 {
   if (hallNumber <= 530)

@@ -430,3 +430,81 @@ TEST(SpaceGroupTest, fillUnitCell)
   // It should now have 30 atoms
   ASSERT_EQ(mol3.atomCount(), 30);
 }
+
+TEST(SpaceGroupTest, reduceToAsymmetricUnit)
+{
+  double cartTol = 1e-5;
+
+  // Let's build rutile for the first test
+  Molecule mol1;
+  mol1.setData("name", "TiO2 rutile");
+
+  Matrix3 mat1;
+  mat1.col(0) = Vector3(2.95812, 0.00000, 0.00000); // A
+  mat1.col(1) = Vector3(0.00000, 4.59373, 0.00000); // B
+  mat1.col(2) = Vector3(0.00000, 0.00000, 4.59373); // C
+
+  UnitCell *uc1 = new UnitCell(mat1);
+
+  mol1.setUnitCell(uc1);
+
+  mol1.addAtom(8).setPosition3d(uc1->toCartesian(Vector3(0.0, 0.3053, 0.3053)));
+  mol1.addAtom(8).setPosition3d(uc1->toCartesian(Vector3(0.0, 0.6947, 0.6947)));
+  mol1.addAtom(8).setPosition3d(uc1->toCartesian(Vector3(0.5, 0.1947, 0.8053)));
+  mol1.addAtom(8).setPosition3d(uc1->toCartesian(Vector3(0.5, 0.8053, 0.1947)));
+  mol1.addAtom(22).setPosition3d(uc1->toCartesian(Vector3(0.0, 0.0, 0.0)));
+  mol1.addAtom(22).setPosition3d(uc1->toCartesian(Vector3(0.5, 0.5, 0.5)));
+
+  // This is space group international number 136 - the space group of rutile
+  unsigned short hallNumber1 = 419;
+
+  SpaceGroups::reduceToAsymmetricUnit(mol1, hallNumber1, cartTol);
+
+  // There should now only be two atoms and two types: O and Ti
+  ASSERT_EQ(mol1.atomCount(), 2);
+  ASSERT_EQ(mol1.atomicNumbers().size(), 2);
+
+  // Reducing a cell to its asymmetric unit is essentially the reverse of
+  // filling a unit cell. So let's fill a unit cell, reduce it to its
+  // asymmetric unit, and then check to see if it is back to its original state
+
+  // CaMg(CO3)2 - dolomite. Space group: hexagonal R -3. It is a brittle
+  // mineral found in limestones and other common places.
+  // http://crystallography.net/cod/1517795.html
+  Molecule mol2;
+  Matrix3 mat2;
+
+  mat2.col(0) = Vector3( 4.808, 0.00000,  0.000); // A
+  mat2.col(1) = Vector3(-2.404, 4.16385,  0.000); // B
+  mat2.col(2) = Vector3( 0.000, 0.00000, 16.022); // C
+
+  UnitCell *uc2 = new UnitCell(mat2);
+  mol2.setUnitCell(uc2);
+
+  mol2.addAtom(20).setPosition3d(uc2->toCartesian(Vector3(0.0000, 0.0000,
+                                                          0.0000)));
+  mol2.addAtom(12).setPosition3d(uc2->toCartesian(Vector3(0.0000, 0.0000,
+                                                          0.5000)));
+  mol2.addAtom(6 ).setPosition3d(uc2->toCartesian(Vector3(0.0000, 0.0000,
+                                                          0.24287)));
+  mol2.addAtom(8 ).setPosition3d(uc2->toCartesian(Vector3(0.24796, 0.9653,
+                                                          0.24402)));
+
+  // Now, let's perform a fillUnitCell. hallNumber 436 is hexagonal R -3
+  // International: 148
+  SpaceGroups::fillUnitCell(mol2, 436, cartTol);
+
+  // It should now have a hall number of 436
+  unsigned short hallNumber2 = AvoSpglib::getHallNumber(mol2, cartTol);
+  ASSERT_EQ(hallNumber2, 436);
+
+  // It should now have 30 atoms
+  ASSERT_EQ(mol2.atomCount(), 30);
+
+  // Now let's revert it back to its original state
+  SpaceGroups::reduceToAsymmetricUnit(mol2, 436, cartTol);
+
+  // It should have 4 atoms again and 4 atom types
+  ASSERT_EQ(mol2.atomCount(), 4);
+  ASSERT_EQ(mol2.atomicNumbers().size(), 4);
+}

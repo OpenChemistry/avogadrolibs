@@ -50,9 +50,14 @@ private slots:
   void conventionalizeCell();
   void symmetrize();
   void fillUnitCell();
+  void reduceToAsymmetricUnit();
   void setTolerance();
 
 private:
+  // Pop up a dialog box and ask the user to select a space group.
+  // Returns the hall number for the selected space group.
+  // Returns 0 if the user canceled.
+  unsigned short selectSpaceGroup();
   QList<QAction *> m_actions;
   QtGui::Molecule *m_molecule;
   double m_spgTol;
@@ -62,6 +67,7 @@ private:
   QAction *m_conventionalizeCellAction;
   QAction *m_symmetrizeAction;
   QAction *m_fillUnitCellAction;
+  QAction *m_reduceToAsymmetricUnitAction;
   QAction *m_setToleranceAction;
 };
 

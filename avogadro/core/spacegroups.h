@@ -116,6 +116,16 @@ public:
   static void fillUnitCell(Molecule &mol, unsigned short hallNumber,
                            double cartTol = 1e-5);
 
+  /**
+   * Reduce a cell to its asymmetric unit.
+   * Nothing will be done if the molecule does not have a unit cell.
+   * The cartesian tolerance is used to check if an atom is present
+   * at a location within the tolerance distance.
+   * If an atom is present, the atom gets removed.
+   */
+  static void reduceToAsymmetricUnit(Molecule &mol, unsigned short hallNumber,
+                                     double cartTol = 1e-5);
+
 private:
   /**
    * Get the transforms string stored in the database.
