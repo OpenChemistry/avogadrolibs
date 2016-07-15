@@ -22,6 +22,7 @@
 #include <cassert>
 
 #include <avogadro/core/avospglib.h>
+#include <avogadro/core/spacegroups.h>
 
 namespace Avogadro {
 namespace QtGui {
@@ -1224,6 +1225,25 @@ bool RWMolecule::symmetrizeCell(double cartTol)
   Molecule::MoleculeChanges changes = Molecule::UnitCell | Molecule::Atoms |
                                       Molecule::Added;
   QString undoText = tr("Symmetrize Cell");
+
+  modifyMolecule(newMolecule, changes, undoText);
+  return true;
+}
+
+bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol)
+{
+  // If there is no unit cell, there is nothing to do
+  if (!m_molecule.unitCell())
+    return false;
+
+  // Make a copy of the molecule to edit so we can store the old one
+  // The atom positions and numbers of atoms may change
+  Molecule newMolecule = m_molecule;
+
+  Core::SpaceGroups::fillUnitCell(newMolecule, hallNumber, cartTol);
+
+  Molecule::MoleculeChanges changes = Molecule::Added | Molecule::Atoms;
+  QString undoText = tr("Fill Unit Cell");
 
   modifyMolecule(newMolecule, changes, undoText);
   return true;

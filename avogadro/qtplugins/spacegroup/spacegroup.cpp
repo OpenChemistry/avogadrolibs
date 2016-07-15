@@ -319,8 +319,7 @@ void SpaceGroup::fillUnitCell()
 
   unsigned short hallNumber = view->currentIndex().row() + 1;
 
-  Core::SpaceGroups::fillUnitCell(*m_molecule, hallNumber, m_spgTol);
-  m_molecule->emitChanged(Molecule::Added | Molecule::Atoms);
+  m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol);
 }
 
 void SpaceGroup::setTolerance()
