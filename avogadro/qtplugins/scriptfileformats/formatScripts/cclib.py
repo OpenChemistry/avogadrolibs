@@ -10,8 +10,8 @@ import argparse
 import json
 import sys
 
-from cclib.parser import ccopen
-from cclib.writer import cjsonwriter
+from ..cclib.parser import ccopen
+from ..cclib.writer import CJSON
 
 
 def getMetaData():
@@ -34,7 +34,7 @@ def read():
 
   ccdata = log.parse()
 
-  output_obj = cjsonwriter(ccdata, terse=True)
+  output_obj = CJSON(ccdata, terse=True)
   output = output_obj.generate_repr()
 
   return output
