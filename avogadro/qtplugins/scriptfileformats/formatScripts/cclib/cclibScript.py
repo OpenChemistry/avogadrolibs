@@ -5,13 +5,14 @@
 
 ******************************************************************************/
 """
+from __future__ import absolute_import
 
 import argparse
 import json
 import sys
 
-from ..cclib.parser import ccopen
-from ..cclib.writer import CJSON
+from cclib.parser import ccopen
+from cclib.writer import CJSON
 
 
 def getMetaData():
@@ -53,4 +54,3 @@ if __name__ == "__main__":
     print(read())
   elif args['write']:
     pass
-

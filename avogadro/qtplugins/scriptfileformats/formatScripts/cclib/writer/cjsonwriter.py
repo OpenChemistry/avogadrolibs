@@ -16,13 +16,14 @@ try:
 except ImportError:
     has_openbabel = False
 
-import os.path
-import ntpath
 import json
+import ntpath
 import numpy as np
+import os.path
 
 from . import filewriter
 from cclib.parser import ccData
+
 
 class CJSON(filewriter.Writer):
     """A writer for chemical JSON (CJSON) files."""
