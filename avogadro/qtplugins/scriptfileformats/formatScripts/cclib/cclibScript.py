@@ -5,14 +5,12 @@
 
 ******************************************************************************/
 """
-from __future__ import absolute_import
-
 import argparse
 import json
 import sys
 
-from cclib.parser import ccopen
-from cclib.writer import CJSON
+from cclib.parser.ccio import ccopen
+from cclib.writer.cjsonwriter import CJSON
 
 
 def getMetaData():
@@ -25,14 +23,13 @@ def getMetaData():
   metaData['description'] = "The cclib script provided by the cclib repository is used to " +\
                             "write the CJSON format using the input file provided " +\
                             "to Avogadro2."
-  metaData['fileExtensions'] = ['cjson']
+  metaData['fileExtensions'] = ['cjson', 'out', 'log','adfout','g09']
   metaData['mimeTypes'] = ['To be filled']
   return metaData
 
 def read():
   # Pass the standard input to ccopen:
   log = ccopen(sys.stdin)
-
   ccdata = log.parse()
 
   output_obj = CJSON(ccdata, terse=True)
