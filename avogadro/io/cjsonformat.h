@@ -44,7 +44,7 @@ public:
   std::string name() const AVO_OVERRIDE { return "Chemical JSON"; }
   std::string description() const AVO_OVERRIDE
   {
-    return "TODO: Describe the format.";
+    return "CJSON format is a lightweight intermediate format used to exchange information between Avogadro and other data parsing applications";
   }
 
   std::string specificationUrl() const AVO_OVERRIDE
