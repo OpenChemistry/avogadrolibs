@@ -54,6 +54,65 @@ CjsonFormat::~CjsonFormat()
 {
 }
 
+bool readUnitCell(Value &root, Molecule &molecule){
+  return true;
+}
+
+bool readProperties(Value &root, Molecule &molecule){
+  return true;
+}
+
+bool readAtoms(Value &root, Molecule &molecule){
+  return true;
+}
+
+bool readOptimization(Value &root, Molecule &molecule){
+  return true;
+}
+
+bool readVibrations(Value &root, Molecule &molecule){
+  return true;
+}
+
+bool readBonds(Value &root, Molecule &molecule){
+  return true;
+}
+
+bool readTransitions(Value &root, Molecule &molecule){
+  return true;
+}
+
+bool readFragments(Value &root, Molecule &molecule){
+  return true;
+}
+
+bool testEmpty(Value &value, std::string &key){
+  if (value.empty()) {
+    string errorKey = "Error: no \"" + key +"\" key found";
+    appendError(errorKey);
+    return true;
+  }
+  return false;
+}
+
+bool testIsNotObject(Value &value, std::string &key){
+  if (value.type() != Json::objectValue) {
+    string errorKey = "Error: \"" + key + "\" is not of type object";
+    appendError(errorKey);
+    return true;
+  }
+  return false;
+}
+
+bool testIfArray(Value &value, std::string &key){
+  if(!value.isArray()){
+    appendError("Error: \""+ key + "\" is not of type array");
+    return false;
+  }
+  return true;
+}
+
+
 bool CjsonFormat::read(std::istream &file, Molecule &molecule)
 {
   Value root;
@@ -79,9 +138,14 @@ bool CjsonFormat::read(std::istream &file, Molecule &molecule)
   value = root["name"];
   if (!value.empty() && value.isString())
     molecule.setData("name", value.asString());
+
   value = root["inchi"];
   if (!value.empty() && value.isString())
     molecule.setData("inchi", value.asString());
+
+  value = root["formula"];
+  if (!value.empty() && value.isString())
+    molecule.setData("formula", value.asString());
 
   value = root["unit cell"];
   if (value.type() == Json::objectValue) {
