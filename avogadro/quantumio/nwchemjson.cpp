@@ -244,9 +244,9 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
         numArray.push_back(static_cast<unsigned int>(currentMO["orbitalNumber"].asInt()));
     }
     basis->setMolecularOrbitals(coeffArray);
-    basis->setMolecularOrbtitalEnergy(energyArray);
-    basis->setMolecularOrbtitalOccupancy(occArray);
-    basis->setMolecularOrbtitalNumber(numArray);
+    basis->setMolecularOrbitalEnergy(energyArray);
+    basis->setMolecularOrbitalOccupancy(occArray);
+    basis->setMolecularOrbitalNumber(numArray);
     basis->setElectronCount(numberOfElectrons);
     molecule.setBasisSet(basis);
   }
