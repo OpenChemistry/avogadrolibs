@@ -53,6 +53,33 @@ CjsonFormat::~CjsonFormat()
 {
 }
 
+bool testEmpty(Value &value, std::string &key){
+  if (value.empty()) {
+    string errorKey = "Error: no \"" + key +"\" key found";
+    appendError(errorKey);
+    return true;
+  }
+  return false;
+}
+
+bool testIsNotObject(Value &value, std::string &key){
+  if (value.type() != Json::objectValue) {
+    string errorKey = "Error: \"" + key + "\" is not of type object";
+    appendError(errorKey);
+    return true;
+  }
+  return false;
+}
+
+bool testIfArray(Value &value, std::string &key){
+  if(!value.isArray()){
+    appendError("Error: \""+ key + "\" is not of type array");
+    return false;
+  }
+  return true;
+}
+
+
 bool readUnitCell(Value &root, Molecule &molecule){
   Value value = root["unit cell"];
   if (value.type() == Json::objectValue) {
@@ -86,42 +113,38 @@ bool readProperties(Value &root, Molecule &molecule){
 bool readAtoms(Value &root, Molecule &molecule){
   // Read in the atomic data.
   Value atoms = root["atoms"];
-  if (atoms.empty()) {
-    appendError("Error: no \"atom\" key found");
-    return false;
-  }
-  else if (atoms.type() != Json::objectValue) {
-    appendError("Error: \"atom\" is not of type object");
+  if (testEmpty(atoms,"atoms") || testIsNotObject(atoms,"atoms")){
     return false;
   }
 
-  value =  atoms["elements"];
-  if (value.empty()) {
-    appendError("Error: no \"atoms.elements\" key found");
-    return false;
-  }
-  else if (value.type() != Json::objectValue) {
-    appendError("Error: \"atoms.elements\" is not of type object");
+  //Element values start here:--------------------------------------------------
+  Value value =  atoms["elements"];
+  if (testEmpty(value,"atoms.elements") || testIsNotObject(value,"atoms.elements")){
     return false;
   }
 
   value = value["number"];
-  if (value.empty()) {
-    appendError("Error: no \"atoms.elements.number\" key found");
-    return false;
-  }
-
   Index atomCount(0);
-  if (value.isArray()) {
+
+  if (!testEmpty(value, "atoms.elements.number") && testIfArray(value, "atoms.elements.number") {
     atomCount = static_cast<Index>(value.size());
     for (Index i = 0; i < atomCount; ++i)
       molecule.addAtom(static_cast<unsigned char>(value.get(i, 0).asInt()));
   }
   else {
-    appendError("Error: \"atoms.elements.number\" is not of type array");
     return false;
   }
 
+  value = elements["atom count"];
+  if (!value.empty() && value.isIntegral())
+    molecule.setData("atomCount", value.asInt());
+
+  value = elements["heavy atom count"];
+  if (!value.empty() && value.isIntegral())
+    molecule.setData("heavyAtomCount", value.asInt());
+  //End of elements object -----------------------------------------------------
+
+  //Start of Coords object:-----------------------------------------------------
   Value coords = atoms["coords"];
   if (!coords.empty()) {
     value = coords["3d"];
@@ -174,6 +197,92 @@ bool readAtoms(Value &root, Molecule &molecule){
       CrystalTools::setFractionalCoordinates(molecule, fcoords);
     }
   }
+  //End of coords---------------------------------------------------------------
+
+  //Start of Orbitals-----------------------------------------------------------
+  Value orbitals = atoms["orbitals"];
+  if (testEmpty(value,"atoms.orbitals") || testIsNotObject(value,"atoms.orbitals")){
+    return false;
+  }
+
+  value = orbitals["names"];
+  if(testIfArray(value,"atoms.orbitals.aonames")){
+    // Figure out the mapping of basis set to molecular orbitals.
+    Array<int> atomNumber;
+    Array<string> atomSymbol;
+    for (size_t i = 0; i < value.size(); ++i) {
+      string desc = value.get(i, 0).asString();
+      vector<string> parts = split(desc, '_');
+      assert(parts.size() == 2);
+      int num = 0;
+      string atomSym;
+      if(isdigit(parts[0][1]))
+        num = Core::lexicalCast<int>(parts[0].substr(1));
+        atomSym = parts[0][0];
+      else
+        num = Core::lexicalCast<int>(parts[0].substr(2));
+        atomSym = parts[0].substr(0,2)
+      if (atomNumber.size() > 0 && atomNumber.back() == num)
+        continue;
+      atomNumber.push_back(num);
+      atomSymbol.push_back(atomSym);
+    }
+  }
+
+  value = orbitals["indices"]
+  if(testIfArray(value,"atoms.orbitals.aonames")){
+    //post process the saved data
+  }
+  //End of orbitals-------------------------------------------------------------
+
+  value = atoms["core electrons"];
+  Index coreElectronCount(0);
+
+  if (!testEmpty(value, "atoms.coreElectron") && testIfArray(value, "atoms.coreElectron") {
+    coreElectronCount = static_cast<Index>(value.size());
+    for (Index i = 0; i < coreElectronCount; ++i)
+      //add the derived data to the appropriate place
+  }else {
+    return false;
+  }
+
+  value = atoms["mass"]
+  if(!testEmpty(value, "atoms.atommass") && testIfArray(value, "atoms.atommass") {
+    atomCount = static_cast<Index>(value.size());
+    vector<double> mass(atomCount);
+    for (Index i = 0; i < atomCount; ++i)
+      mass[i] = value.get(i, 0).asDouble();
+
+    molecule.setAtomicMasses(mass)
+  }else{
+    return false
+  }
+
+
+  //Start of atomic spins
+  Value spins = atoms["spins"]
+  if(!testEmpty(value, "atoms.atomspins") && !testIsNotObject(value, "atoms.atomspins") {
+
+    value = spins["mulliken"]
+    if(!value.empty() && value.type() == Json::objectValue){
+      spinCount = static_cast<Index>(value.size());
+      double atomicspins[spinCount];
+      for(Index i = 0; i < spinCount; ++i)
+        atomicspins[i] = value.get(i,0).asDouble
+      molecule.m_data.setValue("mulliken spin", atomicspins)
+    }
+
+    value = spins["lowdin"]
+    if(!value.empty() && value.type() == Json::objectValue){
+      spinCount = static_cast<Index>(value.size());
+      double atomicspins[spinCount];
+      for(Index i = 0; i < spinCount; ++i)
+        atomicspins[i] = value.get(i,0).asDouble
+      molecule.m_data.setValue("lowdin spin", atomicspins)
+    }
+
+  }
+  //End of atomic spins
 
   return true;
 }
@@ -262,33 +371,6 @@ bool readTransitions(Value &root, Molecule &molecule){
 bool readFragments(Value &root, Molecule &molecule){
   return true;
 }
-
-bool testEmpty(Value &value, std::string &key){
-  if (value.empty()) {
-    string errorKey = "Error: no \"" + key +"\" key found";
-    appendError(errorKey);
-    return true;
-  }
-  return false;
-}
-
-bool testIsNotObject(Value &value, std::string &key){
-  if (value.type() != Json::objectValue) {
-    string errorKey = "Error: \"" + key + "\" is not of type object";
-    appendError(errorKey);
-    return true;
-  }
-  return false;
-}
-
-bool testIfArray(Value &value, std::string &key){
-  if(!value.isArray()){
-    appendError("Error: \""+ key + "\" is not of type array");
-    return false;
-  }
-  return true;
-}
-
 
 bool CjsonFormat::read(std::istream &file, Molecule &molecule)
 {

@@ -235,6 +235,14 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   return AtomType(this, static_cast<Index>(m_atomicNumbers.size() - 1));
 }
 
+bool Molecule::setAtomicMasses(std::vector<double> &mass){
+  if(mass.size() != m_atomicNumbers.size())
+    return false
+
+  m_atomicMasses = mass
+}
+
+
 bool Molecule::removeAtom(Index index)
 {
   if (index >= atomCount())

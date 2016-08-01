@@ -324,6 +324,9 @@ public:
   /**  Adds an atom to the molecule. */
   virtual AtomType addAtom(unsigned char atomicNumber);
 
+  /**  set Atomic masses for the molecule. */
+  virtual bool setAtomicMasses(vector<double> &atomicMass);
+
   /**
    * @brief Remove the specified atom from the molecule.
    * @param index The index of the atom to be removed.
@@ -519,6 +522,7 @@ protected:
   VariantMap m_data;
   CustomElementMap m_customElementMap;
   Array<unsigned char> m_atomicNumbers;
+  Array<double> m_atomicMasses;
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
   Array< Array<Vector3> > m_coordinates3d; // Used for conformers/trajectories.
