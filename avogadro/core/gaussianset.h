@@ -105,7 +105,7 @@ public:
    * @param energies The vector containing energies for the MOs of type
    * @param type The type of the electrons being set.
    */
-  void setMolecularOrbtitalEnergy(const std::vector<double> &energies,
+  void setMolecularOrbitalEnergy(const std::vector<double> &energies,
                                   ElectronType type = Paired);
 
   /**
@@ -113,7 +113,7 @@ public:
    * @param occ The occupancies for the MOs of type.
    * @param type The type of the electrons being set.
    */
-  void setMolecularOrbtitalOccupancy(const std::vector<unsigned char> &occ,
+  void setMolecularOrbitalOccupancy(const std::vector<unsigned char> &occ,
                                      ElectronType type = Paired);
 
   /**
@@ -122,7 +122,7 @@ public:
    * @param nums The MO numbers (starting with an index of 1 for the first one).
    * @param type The MO type (Paired, Alpha, Beta).
    */
-  void setMolecularOrbtitalNumber(const std::vector<unsigned int> &nums,
+  void setMolecularOrbitalNumber(const std::vector<unsigned int> &nums,
                                   ElectronType type = Paired);
 
   /**
