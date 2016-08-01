@@ -15,7 +15,6 @@
 ******************************************************************************/
 
 #include "cjsonformat.h"
-
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
@@ -55,99 +54,7 @@ CjsonFormat::~CjsonFormat()
 }
 
 bool readUnitCell(Value &root, Molecule &molecule){
-  return true;
-}
-
-bool readProperties(Value &root, Molecule &molecule){
-  return true;
-}
-
-bool readAtoms(Value &root, Molecule &molecule){
-  return true;
-}
-
-bool readOptimization(Value &root, Molecule &molecule){
-  return true;
-}
-
-bool readVibrations(Value &root, Molecule &molecule){
-  return true;
-}
-
-bool readBonds(Value &root, Molecule &molecule){
-  return true;
-}
-
-bool readTransitions(Value &root, Molecule &molecule){
-  return true;
-}
-
-bool readFragments(Value &root, Molecule &molecule){
-  return true;
-}
-
-bool testEmpty(Value &value, std::string &key){
-  if (value.empty()) {
-    string errorKey = "Error: no \"" + key +"\" key found";
-    appendError(errorKey);
-    return true;
-  }
-  return false;
-}
-
-bool testIsNotObject(Value &value, std::string &key){
-  if (value.type() != Json::objectValue) {
-    string errorKey = "Error: \"" + key + "\" is not of type object";
-    appendError(errorKey);
-    return true;
-  }
-  return false;
-}
-
-bool testIfArray(Value &value, std::string &key){
-  if(!value.isArray()){
-    appendError("Error: \""+ key + "\" is not of type array");
-    return false;
-  }
-  return true;
-}
-
-
-bool CjsonFormat::read(std::istream &file, Molecule &molecule)
-{
-  Value root;
-  Reader reader;
-  bool ok = reader.parse(file, root);
-  if (!ok) {
-    appendError("Error parsing JSON: " + reader.getFormatedErrorMessages());
-    return false;
-  }
-
-  if (!root.isObject()) {
-    appendError("Error: Input is not a JSON object.");
-    return false;
-  }
-
-  Value value = root["chemical json"];
-  if (value.empty()) {
-    appendError("Error: no \"chemical json\" key found.");
-    return false;
-  }
-
-  // It looks like a valid Chemical JSON file - attempt to read data.
-  value = root["name"];
-  if (!value.empty() && value.isString())
-    molecule.setData("name", value.asString());
-
-  value = root["inchi"];
-  if (!value.empty() && value.isString())
-    molecule.setData("inchi", value.asString());
-
-  value = root["formula"];
-  if (!value.empty() && value.isString())
-    molecule.setData("formula", value.asString());
-
-  value = root["unit cell"];
+  Value value = root["unit cell"];
   if (value.type() == Json::objectValue) {
     if (!value["a"].isNumeric() ||
         !value["b"].isNumeric() ||
@@ -169,6 +76,14 @@ bool CjsonFormat::read(std::istream &file, Molecule &molecule)
     molecule.setUnitCell(unitCell);
   }
 
+  return true;
+}
+
+bool readProperties(Value &root, Molecule &molecule){
+  return true;
+}
+
+bool readAtoms(Value &root, Molecule &molecule){
   // Read in the atomic data.
   Value atoms = root["atoms"];
   if (atoms.empty()) {
@@ -260,6 +175,48 @@ bool CjsonFormat::read(std::istream &file, Molecule &molecule)
     }
   }
 
+  return true;
+}
+
+bool readOptimization(Value &root, Molecule &molecule){
+  return true;
+}
+
+bool readVibrations(Value &root, Molecule &molecule){
+  // Check for vibrational data.
+  Value vibrations = root["vibrations"];
+  if (!vibrations.empty() && vibrations.isObject()) {
+    Value modes = vibrations["modes"];
+    Value freqs = vibrations["frequencies"];
+    Value inten = vibrations["intensities"];
+    Value eigenVectors = vibrations["eigenVectors"];
+    assert(modes.size() == freqs.size());
+    assert(modes.size() == inten.size());
+    assert(modes.size() == eigenVectors.size());
+    Array<double> frequencies;
+    Array<double> intensities;
+    Array< Array<Vector3> > Lx;
+    for (size_t i = 0; i < modes.size(); ++i) {
+      frequencies.push_back(freqs.get(i, 0).asDouble());
+      intensities.push_back(inten.get(i, 0).asDouble());
+      Array<Vector3> modeLx;
+      Value lx = eigenVectors.get(i, 0);
+      if (!lx.empty() && lx.isArray()) {
+        modeLx.resize(lx.size() / 3);
+        for (size_t k = 0; k < lx.size(); ++k)
+          modeLx[k / 3][k % 3] = lx.get(k, 0).asDouble();
+        Lx.push_back(modeLx);
+      }
+    }
+    molecule.setVibrationFrequencies(frequencies);
+    molecule.setVibrationIntensities(intensities);
+    molecule.setVibrationLx(Lx);
+  }
+
+  return true;
+}
+
+bool readBonds(Value &root, Molecule &molecule){
   // Now for the bonding data.
   Value bonds = root["bonds"];
   if (!bonds.empty()) {
@@ -295,37 +252,86 @@ bool CjsonFormat::read(std::istream &file, Molecule &molecule)
     }
   }
 
-  // Check for vibrational data.
-  Value vibrations = root["vibrations"];
-  if (!vibrations.empty() && vibrations.isObject()) {
-    Value modes = vibrations["modes"];
-    Value freqs = vibrations["frequencies"];
-    Value inten = vibrations["intensities"];
-    Value eigenVectors = vibrations["eigenVectors"];
-    assert(modes.size() == freqs.size());
-    assert(modes.size() == inten.size());
-    assert(modes.size() == eigenVectors.size());
-    Array<double> frequencies;
-    Array<double> intensities;
-    Array< Array<Vector3> > Lx;
-    for (size_t i = 0; i < modes.size(); ++i) {
-      frequencies.push_back(freqs.get(i, 0).asDouble());
-      intensities.push_back(inten.get(i, 0).asDouble());
-      Array<Vector3> modeLx;
-      Value lx = eigenVectors.get(i, 0);
-      if (!lx.empty() && lx.isArray()) {
-        modeLx.resize(lx.size() / 3);
-        for (size_t k = 0; k < lx.size(); ++k)
-          modeLx[k / 3][k % 3] = lx.get(k, 0).asDouble();
-        Lx.push_back(modeLx);
-      }
-    }
-    molecule.setVibrationFrequencies(frequencies);
-    molecule.setVibrationIntensities(intensities);
-    molecule.setVibrationLx(Lx);
+  return true;
+}
+
+bool readTransitions(Value &root, Molecule &molecule){
+  return true;
+}
+
+bool readFragments(Value &root, Molecule &molecule){
+  return true;
+}
+
+bool testEmpty(Value &value, std::string &key){
+  if (value.empty()) {
+    string errorKey = "Error: no \"" + key +"\" key found";
+    appendError(errorKey);
+    return true;
+  }
+  return false;
+}
+
+bool testIsNotObject(Value &value, std::string &key){
+  if (value.type() != Json::objectValue) {
+    string errorKey = "Error: \"" + key + "\" is not of type object";
+    appendError(errorKey);
+    return true;
+  }
+  return false;
+}
+
+bool testIfArray(Value &value, std::string &key){
+  if(!value.isArray()){
+    appendError("Error: \""+ key + "\" is not of type array");
+    return false;
+  }
+  return true;
+}
+
+
+bool CjsonFormat::read(std::istream &file, Molecule &molecule)
+{
+  Value root;
+  Reader reader;
+  bool ok = reader.parse(file, root);
+  if (!ok) {
+    appendError("Error parsing JSON: " + reader.getFormatedErrorMessages());
+    return false;
   }
 
-  return true;
+  if (!root.isObject()) {
+    appendError("Error: Input is not a JSON object.");
+    return false;
+  }
+
+  Value value = root["chemical json"];
+  if (value.empty()) {
+    appendError("Error: no \"chemical json\" key found.");
+    return false;
+  }
+
+  // It looks like a valid Chemical JSON file - attempt to read data.
+  value = root["name"];
+  if (!value.empty() && value.isString())
+    molecule.setData("name", value.asString());
+
+  value = root["inchi"];
+  if (!value.empty() && value.isString())
+    molecule.setData("inchi", value.asString());
+
+  value = root["formula"];
+  if (!value.empty() && value.isString())
+    molecule.setData("formula", value.asString());
+
+  return readUnitCell(root, molecule) &&
+         readProperties(root, molecule) &&
+         readAtoms(root, molecule) &&
+         readOptimization(root, molecule) &&
+         readVibrations(root, molecule) &&
+         readBonds(root, molecule) &&
+         readTransitions(root, molecule) &&
+         readFragments(root, molecule);
 }
 
 bool CjsonFormat::write(std::ostream &file, const Molecule &molecule)
