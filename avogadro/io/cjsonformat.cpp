@@ -72,7 +72,7 @@ bool testIsNotObject(Value &value, std::string &key){
 }
 
 bool testIfArray(Value &value, std::string &key){
-  if(!value.isArray()){
+  if (!value.isArray()){
     appendError("Error: \""+ key + "\" is not of type array");
     return false;
   }
@@ -113,13 +113,13 @@ bool readProperties(Value &root, Molecule &molecule){
 bool readAtoms(Value &root, Molecule &molecule){
   // Read in the atomic data.
   Value atoms = root["atoms"];
-  if (testEmpty(atoms,"atoms") || testIsNotObject(atoms,"atoms")){
+  if (testEmpty(atoms, "atoms") || testIsNotObject(atoms, "atoms")){
     return false;
   }
 
   //Element values start here:--------------------------------------------------
   Value value =  atoms["elements"];
-  if (testEmpty(value,"atoms.elements") || testIsNotObject(value,"atoms.elements")){
+  if (testEmpty(value, "atoms.elements") || testIsNotObject(value, "atoms.elements")){
     return false;
   }
 
@@ -134,14 +134,6 @@ bool readAtoms(Value &root, Molecule &molecule){
   else {
     return false;
   }
-
-  value = elements["atom count"];
-  if (!value.empty() && value.isIntegral())
-    molecule.setData("atomCount", value.asInt());
-
-  value = elements["heavy atom count"];
-  if (!value.empty() && value.isIntegral())
-    molecule.setData("heavyAtomCount", value.asInt());
   //End of elements object -----------------------------------------------------
 
   //Start of Coords object:-----------------------------------------------------
@@ -201,12 +193,12 @@ bool readAtoms(Value &root, Molecule &molecule){
 
   //Start of Orbitals-----------------------------------------------------------
   Value orbitals = atoms["orbitals"];
-  if (testEmpty(value,"atoms.orbitals") || testIsNotObject(value,"atoms.orbitals")){
+  if (testEmpty(value, "atoms.orbitals") || testIsNotObject(value, "atoms.orbitals")){
     return false;
   }
 
   value = orbitals["names"];
-  if(testIfArray(value,"atoms.orbitals.aonames")){
+  if (testIfArray(value, "atoms.orbitals.aonames")){
     // Figure out the mapping of basis set to molecular orbitals.
     Array<int> atomNumber;
     Array<string> atomSymbol;
@@ -216,12 +208,15 @@ bool readAtoms(Value &root, Molecule &molecule){
       assert(parts.size() == 2);
       int num = 0;
       string atomSym;
-      if(isdigit(parts[0][1]))
+
+      if (isdigit(parts[0][1])){
         num = Core::lexicalCast<int>(parts[0].substr(1));
         atomSym = parts[0][0];
-      else
+      }else{
         num = Core::lexicalCast<int>(parts[0].substr(2));
         atomSym = parts[0].substr(0,2)
+      }
+
       if (atomNumber.size() > 0 && atomNumber.back() == num)
         continue;
       atomNumber.push_back(num);
@@ -230,7 +225,7 @@ bool readAtoms(Value &root, Molecule &molecule){
   }
 
   value = orbitals["indices"]
-  if(testIfArray(value,"atoms.orbitals.aonames")){
+  if (testIfArray(value, "atoms.orbitals.aonames")){
     //post process the saved data
   }
   //End of orbitals-------------------------------------------------------------
@@ -247,7 +242,7 @@ bool readAtoms(Value &root, Molecule &molecule){
   }
 
   value = atoms["mass"]
-  if(!testEmpty(value, "atoms.atommass") && testIfArray(value, "atoms.atommass") {
+  if (!testEmpty(value, "atoms.atommass") && testIfArray(value, "atoms.atommass") {
     atomCount = static_cast<Index>(value.size());
     vector<double> mass(atomCount);
     for (Index i = 0; i < atomCount; ++i)
@@ -261,10 +256,10 @@ bool readAtoms(Value &root, Molecule &molecule){
 
   //Start of atomic spins
   Value spins = atoms["spins"]
-  if(!testEmpty(value, "atoms.atomspins") && !testIsNotObject(value, "atoms.atomspins") {
+  if (!testEmpty(value, "atoms.atomspins") && !testIsNotObject(value, "atoms.atomspins") {
 
     value = spins["mulliken"]
-    if(!value.empty() && value.type() == Json::objectValue){
+    if (!value.empty() && value.type() == Json::objectValue){
       spinCount = static_cast<Index>(value.size());
       double atomicspins[spinCount];
       for(Index i = 0; i < spinCount; ++i)
@@ -273,7 +268,7 @@ bool readAtoms(Value &root, Molecule &molecule){
     }
 
     value = spins["lowdin"]
-    if(!value.empty() && value.type() == Json::objectValue){
+    if (!value.empty() && value.type() == Json::objectValue){
       spinCount = static_cast<Index>(value.size());
       double atomicspins[spinCount];
       for(Index i = 0; i < spinCount; ++i)
