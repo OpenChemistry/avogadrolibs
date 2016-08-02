@@ -21,6 +21,7 @@
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
+#include <avogadro/core/utilities.h>
 
 #include <json/json.h>
 
@@ -44,6 +45,8 @@ using Core::Elements;
 using Core::GaussianSet;
 using Core::Molecule;
 using Core::Variant;
+using Core::split;
+using Core::lexicalCast;
 
 CjsonFormat::CjsonFormat()
 {
@@ -53,319 +56,36 @@ CjsonFormat::~CjsonFormat()
 {
 }
 
-bool testEmpty(Value &value, std::string &key){
+bool CjsonFormat::testEmpty(Value &value, const std::string &key, bool writeError)
+{
   if (value.empty()) {
-    string errorKey = "Error: no \"" + key +"\" key found";
-    appendError(errorKey);
+    if(writeError)
+      appendError("Error: no \"" + key +"\" key found");
     return true;
   }
   return false;
 }
 
-bool testIsNotObject(Value &value, std::string &key){
+bool CjsonFormat::testIsNotObject(Value &value, const std::string &key, bool writeError)
+{
   if (value.type() != Json::objectValue) {
-    string errorKey = "Error: \"" + key + "\" is not of type object";
-    appendError(errorKey);
+    if(writeError)
+      appendError("Error: \"" + key + "\" is not of type object");
     return true;
   }
   return false;
 }
 
-bool testIfArray(Value &value, std::string &key){
-  if (!value.isArray()){
-    appendError("Error: \""+ key + "\" is not of type array");
+bool CjsonFormat::testIfArray(Value &value, const std::string &key, bool writeError)
+{
+  if (!value.isArray()) {
+    if(writeError)
+      appendError("Error: \""+ key + "\" is not of type array");
     return false;
   }
   return true;
 }
 
-
-bool readUnitCell(Value &root, Molecule &molecule){
-  Value value = root["unit cell"];
-  if (value.type() == Json::objectValue) {
-    if (!value["a"].isNumeric() ||
-        !value["b"].isNumeric() ||
-        !value["c"].isNumeric() ||
-        !value["alpha"].isNumeric() ||
-        !value["beta"].isNumeric() ||
-        !value["gamma"].isNumeric()) {
-      appendError("Invalid unit cell specification: a, b, c, alpha, beta, gamma"
-                  " must be present and numeric.");
-      return false;
-    }
-    Real a = static_cast<Real>(value["a"].asDouble());
-    Real b = static_cast<Real>(value["b"].asDouble());
-    Real c = static_cast<Real>(value["c"].asDouble());
-    Real alpha = static_cast<Real>(value["alpha"].asDouble()) * DEG_TO_RAD;
-    Real beta  = static_cast<Real>(value["beta" ].asDouble()) * DEG_TO_RAD;
-    Real gamma = static_cast<Real>(value["gamma"].asDouble()) * DEG_TO_RAD;
-    Core::UnitCell *unitCell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
-    molecule.setUnitCell(unitCell);
-  }
-
-  return true;
-}
-
-bool readProperties(Value &root, Molecule &molecule){
-  return true;
-}
-
-bool readAtoms(Value &root, Molecule &molecule){
-  // Read in the atomic data.
-  Value atoms = root["atoms"];
-  if (testEmpty(atoms, "atoms") || testIsNotObject(atoms, "atoms")){
-    return false;
-  }
-
-  //Element values start here:--------------------------------------------------
-  Value value =  atoms["elements"];
-  if (testEmpty(value, "atoms.elements") || testIsNotObject(value, "atoms.elements")){
-    return false;
-  }
-
-  value = value["number"];
-  Index atomCount(0);
-
-  if (!testEmpty(value, "atoms.elements.number") && testIfArray(value, "atoms.elements.number") {
-    atomCount = static_cast<Index>(value.size());
-    for (Index i = 0; i < atomCount; ++i)
-      molecule.addAtom(static_cast<unsigned char>(value.get(i, 0).asInt()));
-  }
-  else {
-    return false;
-  }
-  //End of elements object -----------------------------------------------------
-
-  //Start of Coords object:-----------------------------------------------------
-  Value coords = atoms["coords"];
-  if (!coords.empty()) {
-    value = coords["3d"];
-    if (value.isArray()) {
-      if (value.size() && atomCount != static_cast<Index>(value.size() / 3)) {
-        appendError("Error: number of elements != number of 3D coordinates.");
-        return false;
-      }
-      for (Index i = 0; i < atomCount; ++i) {
-        Atom a = molecule.atom(i);
-        a.setPosition3d(Vector3(value.get(3 * i + 0, 0).asDouble(),
-                                value.get(3 * i + 1, 0).asDouble(),
-                                value.get(3 * i + 2, 0).asDouble()));
-      }
-    }
-
-    value = coords["2d"];
-    if (value.isArray()) {
-      if (value.size() && atomCount != static_cast<Index>(value.size() / 2)) {
-        appendError("Error: number of elements != number of 2D coordinates.");
-        return false;
-      }
-      for (Index i = 0; i < atomCount; ++i) {
-        Atom a = molecule.atom(i);
-        a.setPosition2d(Vector2(value.get(2 * i + 0, 0).asDouble(),
-                                value.get(2 * i + 1, 0).asDouble()));
-      }
-    }
-
-    value = coords["3d fractional"];
-    if (value.type() == Json::arrayValue) {
-      if (!molecule.unitCell()) {
-        appendError("Cannot interpret fractional coordinates without "
-                    "unit cell.");
-        return false;
-      }
-      if (value.size() && atomCount != static_cast<size_t>(value.size() / 3)) {
-        appendError("Error: number of elements != number of fractional "
-                    "coordinates.");
-        return false;
-      }
-      Array<Vector3> fcoords;
-      fcoords.reserve(atomCount);
-      for (Index i = 0; i < atomCount; ++i) {
-        fcoords.push_back(
-              Vector3(static_cast<Real>(value.get(i * 3 + 0, 0).asDouble()),
-                      static_cast<Real>(value.get(i * 3 + 1, 0).asDouble()),
-                      static_cast<Real>(value.get(i * 3 + 2, 0).asDouble())));
-      }
-      CrystalTools::setFractionalCoordinates(molecule, fcoords);
-    }
-  }
-  //End of coords---------------------------------------------------------------
-
-  //Start of Orbitals-----------------------------------------------------------
-  Value orbitals = atoms["orbitals"];
-  if (testEmpty(value, "atoms.orbitals") || testIsNotObject(value, "atoms.orbitals")){
-    return false;
-  }
-
-  value = orbitals["names"];
-  if (testIfArray(value, "atoms.orbitals.aonames")){
-    // Figure out the mapping of basis set to molecular orbitals.
-    Array<int> atomNumber;
-    Array<string> atomSymbol;
-    for (size_t i = 0; i < value.size(); ++i) {
-      string desc = value.get(i, 0).asString();
-      vector<string> parts = split(desc, '_');
-      assert(parts.size() == 2);
-      int num = 0;
-      string atomSym;
-
-      if (isdigit(parts[0][1])){
-        num = Core::lexicalCast<int>(parts[0].substr(1));
-        atomSym = parts[0][0];
-      }else{
-        num = Core::lexicalCast<int>(parts[0].substr(2));
-        atomSym = parts[0].substr(0,2)
-      }
-
-      if (atomNumber.size() > 0 && atomNumber.back() == num)
-        continue;
-      atomNumber.push_back(num);
-      atomSymbol.push_back(atomSym);
-    }
-  }
-
-  value = orbitals["indices"]
-  if (testIfArray(value, "atoms.orbitals.aonames")){
-    //post process the saved data
-  }
-  //End of orbitals-------------------------------------------------------------
-
-  value = atoms["core electrons"];
-  Index coreElectronCount(0);
-
-  if (!testEmpty(value, "atoms.coreElectron") && testIfArray(value, "atoms.coreElectron") {
-    coreElectronCount = static_cast<Index>(value.size());
-    for (Index i = 0; i < coreElectronCount; ++i)
-      //add the derived data to the appropriate place
-  }else {
-    return false;
-  }
-
-  value = atoms["mass"]
-  if (!testEmpty(value, "atoms.atommass") && testIfArray(value, "atoms.atommass") {
-    atomCount = static_cast<Index>(value.size());
-    vector<double> mass(atomCount);
-    for (Index i = 0; i < atomCount; ++i)
-      mass[i] = value.get(i, 0).asDouble();
-
-    molecule.setAtomicMasses(mass)
-  }else{
-    return false
-  }
-
-
-  //Start of atomic spins
-  Value spins = atoms["spins"]
-  if (!testEmpty(value, "atoms.atomspins") && !testIsNotObject(value, "atoms.atomspins") {
-
-    value = spins["mulliken"]
-    if (!value.empty() && value.type() == Json::objectValue){
-      spinCount = static_cast<Index>(value.size());
-      double atomicspins[spinCount];
-      for(Index i = 0; i < spinCount; ++i)
-        atomicspins[i] = value.get(i,0).asDouble
-      molecule.m_data.setValue("mulliken spin", atomicspins)
-    }
-
-    value = spins["lowdin"]
-    if (!value.empty() && value.type() == Json::objectValue){
-      spinCount = static_cast<Index>(value.size());
-      double atomicspins[spinCount];
-      for(Index i = 0; i < spinCount; ++i)
-        atomicspins[i] = value.get(i,0).asDouble
-      molecule.m_data.setValue("lowdin spin", atomicspins)
-    }
-
-  }
-  //End of atomic spins
-
-  return true;
-}
-
-bool readOptimization(Value &root, Molecule &molecule){
-  return true;
-}
-
-bool readVibrations(Value &root, Molecule &molecule){
-  // Check for vibrational data.
-  Value vibrations = root["vibrations"];
-  if (!vibrations.empty() && vibrations.isObject()) {
-    Value modes = vibrations["modes"];
-    Value freqs = vibrations["frequencies"];
-    Value inten = vibrations["intensities"];
-    Value eigenVectors = vibrations["eigenVectors"];
-    assert(modes.size() == freqs.size());
-    assert(modes.size() == inten.size());
-    assert(modes.size() == eigenVectors.size());
-    Array<double> frequencies;
-    Array<double> intensities;
-    Array< Array<Vector3> > Lx;
-    for (size_t i = 0; i < modes.size(); ++i) {
-      frequencies.push_back(freqs.get(i, 0).asDouble());
-      intensities.push_back(inten.get(i, 0).asDouble());
-      Array<Vector3> modeLx;
-      Value lx = eigenVectors.get(i, 0);
-      if (!lx.empty() && lx.isArray()) {
-        modeLx.resize(lx.size() / 3);
-        for (size_t k = 0; k < lx.size(); ++k)
-          modeLx[k / 3][k % 3] = lx.get(k, 0).asDouble();
-        Lx.push_back(modeLx);
-      }
-    }
-    molecule.setVibrationFrequencies(frequencies);
-    molecule.setVibrationIntensities(intensities);
-    molecule.setVibrationLx(Lx);
-  }
-
-  return true;
-}
-
-bool readBonds(Value &root, Molecule &molecule){
-  // Now for the bonding data.
-  Value bonds = root["bonds"];
-  if (!bonds.empty()) {
-    value = bonds["connections"];
-    if (value.empty()) {
-      appendError("Error: no \"bonds.connections\" key found");
-      return false;
-    }
-
-    value = value["index"];
-    Index bondCount(0);
-    if (value.isArray()) {
-      bondCount = static_cast<Index>(value.size() / 2);
-      for (Index i = 0; i < bondCount * 2; i += 2) {
-        molecule.addBond(
-              molecule.atom(static_cast<Index>(value.get(i + 0, 0).asInt())),
-              molecule.atom(static_cast<Index>(value.get(i + 1, 0).asInt())));
-      }
-    }
-    else {
-      appendError("Warning, no bonding information found.");
-    }
-
-    value = bonds["order"];
-    if (value.isArray()) {
-      if (bondCount != static_cast<Index>(value.size())) {
-        appendError("Error: number of bonds != number of bond orders.");
-        return false;
-      }
-      for (Index i = 0; i < bondCount; ++i)
-        molecule.bond(i).setOrder(
-          static_cast<unsigned char>(value.get(i, 1).asInt()));
-    }
-  }
-
-  return true;
-}
-
-bool readTransitions(Value &root, Molecule &molecule){
-  return true;
-}
-
-bool readFragments(Value &root, Molecule &molecule){
-  return true;
-}
 
 bool CjsonFormat::read(std::istream &file, Molecule &molecule)
 {
@@ -633,6 +353,296 @@ vector<std::string> CjsonFormat::mimeTypes() const
   mime.push_back("chemical/x-cjson");
   return mime;
 }
+
+
+bool CjsonFormat::readUnitCell(Value &root, Molecule &molecule)
+{
+  Value value = root["unit cell"];
+  if (value.type() == Json::objectValue) {
+    if (!value["a"].isNumeric() ||
+        !value["b"].isNumeric() ||
+        !value["c"].isNumeric() ||
+        !value["alpha"].isNumeric() ||
+        !value["beta"].isNumeric() ||
+        !value["gamma"].isNumeric()) {
+       appendError("Invalid unit cell specification: a, b, c, alpha, beta, gamma"
+                   " must be present and numeric.");
+      return false;
+    }
+    Real a = static_cast<Real>(value["a"].asDouble());
+    Real b = static_cast<Real>(value["b"].asDouble());
+    Real c = static_cast<Real>(value["c"].asDouble());
+    Real alpha = static_cast<Real>(value["alpha"].asDouble()) * DEG_TO_RAD;
+    Real beta  = static_cast<Real>(value["beta" ].asDouble()) * DEG_TO_RAD;
+    Real gamma = static_cast<Real>(value["gamma"].asDouble()) * DEG_TO_RAD;
+    Core::UnitCell *unitCell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+    molecule.setUnitCell(unitCell);
+  }
+
+  return true;
+}
+
+bool CjsonFormat::readProperties(Value &root, Molecule &molecule)
+{
+  return true;
+}
+
+bool CjsonFormat::readAtoms(Value &root, Molecule &molecule)
+{
+  // Read in the atomic data.
+  Value atoms = root["atoms"];
+  if (testEmpty(atoms, "atoms") || testIsNotObject(atoms, "atoms")) {
+    return false;
+  }
+
+  //Element values start here:--------------------------------------------------
+  Value value =  atoms["elements"];
+  Index atomCount(0);
+  if (!(testEmpty(value, "atoms.elements") || testIsNotObject(value, "atoms.elements"))) {
+    value = value["number"];
+
+    if (!testEmpty(value, "atoms.elements.number") && testIfArray(value, "atoms.elements.number")) {
+      atomCount = static_cast<Index>(value.size());
+      for (Index i = 0; i < atomCount; ++i)
+        molecule.addAtom(static_cast<unsigned char>(value.get(i, 0).asInt()));
+    }
+    else {
+      return false;
+    }
+  }
+  //End of elements object -----------------------------------------------------
+
+  //Start of Coords object:-----------------------------------------------------
+  Value coords = atoms["coords"];
+  if (!coords.empty()) {
+    value = coords["3d"];
+    if (value.isArray()) {
+      if (value.size() && atomCount != static_cast<Index>(value.size() / 3)) {
+        appendError("Error: number of elements != number of 3D coordinates.");
+        return false;
+      }
+      for (Index i = 0; i < atomCount; ++i) {
+        Atom a = molecule.atom(i);
+        a.setPosition3d(Vector3(value.get(3 * i + 0, 0).asDouble(),
+                                value.get(3 * i + 1, 0).asDouble(),
+                                value.get(3 * i + 2, 0).asDouble()));
+      }
+    }
+
+    value = coords["2d"];
+    if (value.isArray()) {
+      if (value.size() && atomCount != static_cast<Index>(value.size() / 2)) {
+        appendError("Error: number of elements != number of 2D coordinates.");
+        return false;
+      }
+      for (Index i = 0; i < atomCount; ++i) {
+        Atom a = molecule.atom(i);
+        a.setPosition2d(Vector2(value.get(2 * i + 0, 0).asDouble(),
+                                value.get(2 * i + 1, 0).asDouble()));
+      }
+    }
+
+    value = coords["3d fractional"];
+    if (value.type() == Json::arrayValue) {
+      if (!molecule.unitCell()) {
+        appendError("Cannot interpret fractional coordinates without "
+                    "unit cell.");
+        return false;
+      }
+      if (value.size() && atomCount != static_cast<size_t>(value.size() / 3)) {
+        appendError("Error: number of elements != number of fractional "
+                    "coordinates.");
+        return false;
+      }
+      Array<Vector3> fcoords;
+      fcoords.reserve(atomCount);
+      for (Index i = 0; i < atomCount; ++i) {
+        fcoords.push_back(
+              Vector3(static_cast<Real>(value.get(i * 3 + 0, 0).asDouble()),
+                      static_cast<Real>(value.get(i * 3 + 1, 0).asDouble()),
+                      static_cast<Real>(value.get(i * 3 + 2, 0).asDouble())));
+      }
+      CrystalTools::setFractionalCoordinates(molecule, fcoords);
+    }
+  }
+  //End of coords---------------------------------------------------------------
+
+  //Start of Orbitals-----------------------------------------------------------
+  Value orbitals = atoms["orbitals"];
+  if (!(testEmpty(value, "atoms.orbitals") || testIsNotObject(value, "atoms.orbitals"))) {
+    value = orbitals["names"];
+    if (testIfArray(value, "atoms.orbitals.aonames")) {
+      // Figure out the mapping of basis set to molecular orbitals.
+      Array<int> atomNumber;
+      Array<string> atomSymbol;
+      for (size_t i = 0; i < value.size(); ++i) {
+        string desc = value.get(i, 0).asString();
+        vector<string> parts = split(desc, '_');
+        assert(parts.size() == 2);
+        int num = 0;
+        string atomSym;
+
+        if (isdigit(parts[0][1])) {
+          num = lexicalCast<int>(parts[0].substr(1));
+          atomSym = parts[0][0];
+        }
+        else {
+          num = lexicalCast<int>(parts[0].substr(2));
+          atomSym = parts[0].substr(0,2);
+        }
+
+        if (atomNumber.size() > 0 && atomNumber.back() == num)
+          continue;
+        atomNumber.push_back(num);
+        atomSymbol.push_back(atomSym);
+      }
+    }
+
+    value = orbitals["indices"];
+    if (testIfArray(value, "atoms.orbitals.aonames")) {
+      //post process the saved data
+    }
+  }
+  //End of orbitals-------------------------------------------------------------
+
+  value = atoms["core electrons"];
+  Index coreElectronCount(0);
+
+  if (!testEmpty(value, "atoms.coreElectron") && testIfArray(value, "atoms.coreElectron")) {
+    coreElectronCount = static_cast<Index>(value.size());
+    for (Index i = 0; i < coreElectronCount; ++i) {
+      //add the derived data to the appropriate place
+      break;
+    }
+  }
+
+  value = atoms["mass"];
+  if (!testEmpty(value, "atoms.atommass") && testIfArray(value, "atoms.atommass")) {
+    atomCount = static_cast<Index>(value.size());
+    for (Index i = 0; i < atomCount; ++i)
+      molecule.addAtomicMass(value.get(i, 0).asDouble());
+  }
+
+  //Start of atomic spins
+  Value spins = atoms["spins"];
+  if (!testEmpty(value, "atoms.atomspins") && !testIsNotObject(value, "atoms.atomspins")) {
+
+    value = spins["mulliken"];
+    if (!value.empty() && value.type() == Json::objectValue) {
+      int spinCount = static_cast<int>(value.size());
+      double *atomicSpins = new double[spinCount];
+      for(int i = 0; i < spinCount; ++i)
+        atomicSpins[i] = value.get(i,0).asDouble();
+      molecule.setData("mulliken spin", atomicSpins);
+      //should I delete atomicSpins here after assigning that memory?
+    }
+
+    value = spins["lowdin"];
+    if (!value.empty() && value.type() == Json::objectValue) {
+      int                                                                                                                                 spinCount = static_cast<int>(value.size());
+      double *atomicSpins = new double[spinCount];
+      for(int i = 0; i < spinCount; ++i)
+        atomicSpins[i] = value.get(i,0).asDouble();
+      molecule.setData("lowdin spin", atomicSpins);
+      //same as above
+    }
+
+  }
+  //End of atomic spins
+
+  return true;
+}
+
+bool CjsonFormat::readOptimization(Value &root, Molecule &molecule)
+{
+  return true;
+}
+
+bool CjsonFormat::readVibrations(Value &root, Molecule &molecule)
+{
+  // Check for vibrational data.
+  Value vibrations = root["vibrations"];
+  if (!vibrations.empty() && vibrations.isObject()) {
+    Value modes = vibrations["modes"];
+    Value freqs = vibrations["frequencies"];
+    Value inten = vibrations["intensities"];
+    Value eigenVectors = vibrations["eigenVectors"];
+    assert(modes.size() == freqs.size());
+    assert(modes.size() == inten.size());
+    assert(modes.size() == eigenVectors.size());
+    Array<double> frequencies;
+    Array<double> intensities;
+    Array< Array<Vector3> > Lx;
+    for (size_t i = 0; i < modes.size(); ++i) {
+      frequencies.push_back(freqs.get(i, 0).asDouble());
+      intensities.push_back(inten.get(i, 0).asDouble());
+      Array<Vector3> modeLx;
+      Value lx = eigenVectors.get(i, 0);
+      if (!lx.empty() && lx.isArray()) {
+        modeLx.resize(lx.size() / 3);
+        for (size_t k = 0; k < lx.size(); ++k)
+          modeLx[k / 3][k % 3] = lx.get(k, 0).asDouble();
+        Lx.push_back(modeLx);
+      }
+    }
+    molecule.setVibrationFrequencies(frequencies);
+    molecule.setVibrationIntensities(intensities);
+    molecule.setVibrationLx(Lx);
+  }
+
+  return true;
+}
+
+bool CjsonFormat::readBonds(Value &root, Molecule &molecule)
+{
+  // Now for the bonding data.
+  Value bonds = root["bonds"];
+  if (!bonds.empty()) {
+    Value value = bonds["connections"];
+    if (value.empty()) {
+      appendError("Error: no \"bonds.connections\" key found");
+      return false;
+    }
+
+    value = value["index"];
+    Index bondCount(0);
+    if (value.isArray()) {
+      bondCount = static_cast<Index>(value.size() / 2);
+      for (Index i = 0; i < bondCount * 2; i += 2) {
+        molecule.addBond(
+              molecule.atom(static_cast<Index>(value.get(i + 0, 0).asInt())),
+              molecule.atom(static_cast<Index>(value.get(i + 1, 0).asInt())));
+      }
+    }
+    else {
+      appendError("Warning, no bonding information found.");
+    }
+
+    value = bonds["order"];
+    if (value.isArray()) {
+      if (bondCount != static_cast<Index>(value.size())) {
+        appendError("Error: number of bonds != number of bond orders.");
+        return false;
+      }
+      for (Index i = 0; i < bondCount; ++i)
+        molecule.bond(i).setOrder(
+          static_cast<unsigned char>(value.get(i, 1).asInt()));
+    }
+  }
+
+  return true;
+}
+
+bool CjsonFormat::readTransitions(Value &root, Molecule &molecule)
+{
+  return true;
+}
+
+bool CjsonFormat::readFragments(Value &root, Molecule &molecule)
+{
+  return true;
+}
+
 
 } // end Io namespace
 } // end Avogadro namespace
