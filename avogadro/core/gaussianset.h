@@ -168,6 +168,8 @@ public:
    */
   ScfType scfType() const { return m_scfType; }
 
+  void setNMO(int nmo) {  m_numMOs = static_cast<unsigned int>(nmo);  }
+
   /**
    * Initialize the calculation, this must normally be done before anything.
    */
