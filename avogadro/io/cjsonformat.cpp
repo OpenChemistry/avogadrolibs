@@ -384,6 +384,140 @@ bool CjsonFormat::readUnitCell(Value &root, Molecule &molecule)
 
 bool CjsonFormat::readProperties(Value &root, Molecule &molecule)
 {
+  //Read in properties of the molecule
+  Value properties = root["properties"];
+  if (testEmpty(properties, "atoms") || testIsNotObject(properties, "atoms")) {
+    return false;
+  }
+
+  //From C++11 onwards, check compatibility?
+  std::vector<std::string> attributes = {"molecular mass", "charge", "multiplicity", "total dipole moment", "enthalpy",
+                                         "entropy", "temperature"};
+
+  Value value;
+  for (Value::iterator it = properties.begin(); it != properties.end(); ++it) {
+    if (std::find(attributes.begin(), attributes.end(), it.key().asString()) != attributes.end()) {
+      value = *it;
+      if (!value.empty())
+        molecule.setData(it.key().asString(), value.asDouble());
+    }
+  }
+
+  //Energy attributes start here---------------------------------------------------------
+  Value energy = properties["energy"];
+  if (!(testEmpty(energy, "properties.energy") || testIsNotObject(energy, "properties.energy" ))) {
+
+    value = energy["free energy"];
+    if (!value.empty()) {
+      molecule.setData("total free energy", value.asDouble());
+    }
+
+    value = energy["total"];
+    if (!value.empty()) {
+      molecule.setData("total energy", value.asDouble());
+    }
+
+    //alpha/beta -> homo/gap not read in
+
+    value = energy["coupled cluster"];
+    if (!value.empty() && testIfArray(value, "properties.energy.coupled_cluster")) {
+      int energyCount = static_cast<int>(value.size());
+      double *ccEnergies = new double[energyCount];
+      for(int i = 0; i < energyCount; ++i)
+        ccEnergies[i] = value.get(i,0).asDouble();
+      molecule.setData("coupled cluster energies", ccEnergies);
+    }
+
+    value = energy["moller plesset"];
+    if (!value.empty()) {
+      int n = static_cast<int>(value.size());
+      int L = static_cast<int>(value[0].size());
+      MatrixX mpEnergies(n,L);
+      Value orderArray;
+      for (int i = 0; i < n; ++i) {
+        orderArray = value[i];
+        for (int j =0; j < L ; j++) {
+          mpEnergies(i, j) = orderArray.get(j, 0).asDouble();
+        }
+      }
+      molecule.setData("moller plesset energies", mpEnergies);
+    }
+  }
+  //Energy attributes end here-----------------------------------------------------------
+
+  //Partial Charges attributes start here------------------------------------------------
+  Value pCharges = properties["partial charges"];
+  if (!(testEmpty(pCharges, "properties.partialCharges") || testIsNotObject(pCharges, "properties.partialCharges"))) {
+
+    std::vector<std::string> pChargeType = {"mulliken", "lowdin", "natural" };
+
+    for (Value::iterator it = pCharges.begin(); it != pCharges.end(); ++it) {
+      if (std::find(pChargeType.begin(), pChargeType.end(), it.key().asString()) != pChargeType.end()) {
+        value = *it;
+
+        if (!value.empty() && !value.isArray()) {
+          int pcCount = static_cast<int>(value.size());
+          double *partialCharge = new double[pcCount];
+          for(int i = 0; i < pcCount; ++i)
+            partialCharge[i] = value.get(i,0).asDouble();
+
+          string keyName("partialCharge-");
+          keyName += it.key().asString();
+          molecule.setData(keyName, partialCharge);
+        }
+
+      }
+    }
+  }
+  //Partial Charges attributes start here------------------------------------------------
+
+
+  //Orbitals attributes start here-------------------------------------------------------
+  Value orbitals = properties["orbitals"];
+  if (!(testEmpty(energy, "properties.orbitals") || testIsNotObject(energy, "properties.orbitals" ))) {
+
+    // Now create the structure, and expand out the orbitals.
+    GaussianSet *basis = new GaussianSet;
+    basis->setMolecule(&molecule);
+
+    value = orbitals["MO number"];
+    if(!value.empty())
+      basis->setNMO(value.asInt());
+
+    //Basis set energy has a one dimension restriction
+    value = orbitals["energies"];
+    if (!value.empty()) {
+      value = value[0];
+      int energyCount = static_cast<int>(value.size());
+      vector<double> energyArray(energyCount);
+      for (int i = 0; i < energyCount; ++i) {
+        energyArray[i] = value.get(i,0).asDouble();
+      }
+
+      basis->setMolecularOrbitalEnergy(energyArray);
+    }
+
+    //overlap between basis functions (atomic orbitals)
+    value = orbitals["overlaps"];
+    if (!value.empty()) {
+      int rows = static_cast<int>(value.size());
+      int cols = static_cast<int>(value[0].size());
+      MatrixX aoOverlaps(rows,cols);
+      Value basisArray;
+      for (int i = 0; i < rows; ++i) {
+        basisArray = value[i];
+        for (int j =0; j < cols ; j++) {
+          aoOverlaps(i, j) = basisArray.get(j, 0).asDouble();
+        }
+      }
+      molecule.setData("atomic orbital overlaps", aoOverlaps);
+    }
+
+    //To be filled with mocoeffs attribute
+    value = orbitals["coeffs"];
+    molecule.setBasisSet(basis);
+  }
+  //Orbitals attributes end here----------------------------------------------------------
   return true;
 }
 
@@ -528,7 +662,7 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule)
   if (!testEmpty(value, "atoms.atomspins") && !testIsNotObject(value, "atoms.atomspins")) {
 
     value = spins["mulliken"];
-    if (!value.empty() && value.type() == Json::objectValue) {
+    if (!value.empty() && !value.isArray()) {
       int spinCount = static_cast<int>(value.size());
       double *atomicSpins = new double[spinCount];
       for(int i = 0; i < spinCount; ++i)
@@ -538,7 +672,7 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule)
     }
 
     value = spins["lowdin"];
-    if (!value.empty() && value.type() == Json::objectValue) {
+    if (!value.empty() && !value.isArray()) {
       int                                                                                                                                 spinCount = static_cast<int>(value.size());
       double *atomicSpins = new double[spinCount];
       for(int i = 0; i < spinCount; ++i)
