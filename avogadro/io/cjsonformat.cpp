@@ -514,7 +514,35 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
     }
 
     //To be filled with mocoeffs attribute
-    value = orbitals["coeffs"];
+    Value moCoeffs = orbitals["coeffs"];
+    if (!(testEmpty(energy, "properties.orbitals.coeffs") || testIfArray(energy, "properties.orbitals.coeffs" ))) {
+      bool unrestricted = static_cast<int>(moCoeffs.size()) == 2 ? true : false;
+      vector<double> coeffArray;
+
+      value = moCoeffs[0];
+      if(!value.empty()) {
+        for (int i = 0; i < value.size(); ++i) {
+          for (int j = 0; j < value[0].size(); ++j) {
+            coeffArray.push_back(value[i][j].asDouble());
+          }
+        }
+        basis->setMolecularOrbitals(coeffArray);
+
+        if (unrestricted) {
+          coeffArray.clear();
+          value = moCoeffs[1];
+          if(!value.empty()) {
+            for (int i = 0; i < value.size(); ++i) {
+              for (int j = 0; j < value[0].size(); ++j) {
+                coeffArray.push_back(value[i][j].asDouble());
+              }
+            }
+            basis->setMolecularOrbitals(coeffArray, BasisSet::Beta);
+          }
+        }
+      }
+    }
+
   }
   //Orbitals attributes end here----------------------------------------------------------
   return true;
