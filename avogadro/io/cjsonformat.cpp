@@ -18,7 +18,6 @@
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
-#include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
@@ -121,9 +120,18 @@ bool CjsonFormat::read(std::istream &file, Molecule &molecule)
   if (!value.empty() && value.isString())
     molecule.setData("formula", value.asString());
 
+  // Now create the structure, and expand out the orbitals.
+  GaussianSet *basis = new GaussianSet;
+  basis->setMolecule(&molecule);
+
+  if (!(readAtoms(root, molecule, basis) && readProperties(root, molecule, basis))) {
+    return false;
+  }
+  else {
+    molecule.setBasisSet(basis);
+  }
+
   return readUnitCell(root, molecule) &&
-         readProperties(root, molecule) &&
-         readAtoms(root, molecule) &&
          readOptimization(root, molecule) &&
          readVibrations(root, molecule) &&
          readBonds(root, molecule) &&
@@ -382,7 +390,7 @@ bool CjsonFormat::readUnitCell(Value &root, Molecule &molecule)
   return true;
 }
 
-bool CjsonFormat::readProperties(Value &root, Molecule &molecule)
+bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* basis)
 {
   //Read in properties of the molecule
   Value properties = root["properties"];
@@ -476,14 +484,6 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule)
   Value orbitals = properties["orbitals"];
   if (!(testEmpty(energy, "properties.orbitals") || testIsNotObject(energy, "properties.orbitals" ))) {
 
-    // Now create the structure, and expand out the orbitals.
-    GaussianSet *basis = new GaussianSet;
-    basis->setMolecule(&molecule);
-
-    value = orbitals["MO number"];
-    if(!value.empty())
-      basis->setNMO(value.asInt());
-
     //Basis set energy has a one dimension restriction
     value = orbitals["energies"];
     if (!value.empty()) {
@@ -515,13 +515,12 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule)
 
     //To be filled with mocoeffs attribute
     value = orbitals["coeffs"];
-    molecule.setBasisSet(basis);
   }
   //Orbitals attributes end here----------------------------------------------------------
   return true;
 }
 
-bool CjsonFormat::readAtoms(Value &root, Molecule &molecule)
+bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
 {
   // Read in the atomic data.
   Value atoms = root["atoms"];
@@ -601,11 +600,16 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule)
   }
   //End of coords---------------------------------------------------------------
 
+  // Perceive bonds for the molecule.
+  molecule.perceiveBondsSimple();
+
   //Start of Orbitals-----------------------------------------------------------
   Value orbitals = atoms["orbitals"];
   if (!(testEmpty(value, "atoms.orbitals") || testIsNotObject(value, "atoms.orbitals"))) {
+
     value = orbitals["names"];
     if (testIfArray(value, "atoms.orbitals.aonames")) {
+
       // Figure out the mapping of basis set to molecular orbitals.
       Array<int> atomNumber;
       Array<string> atomSymbol;
@@ -616,10 +620,11 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule)
         int num = 0;
         string atomSym;
 
+        //Case where the element symbol is one character, e.g: C, H, O
         if (isdigit(parts[0][1])) {
           num = lexicalCast<int>(parts[0].substr(1));
           atomSym = parts[0][0];
-        }
+        }//Case where the element symbol is two characters, e.g: Cl, He, Ag
         else {
           num = lexicalCast<int>(parts[0].substr(2));
           atomSym = parts[0].substr(0,2);
@@ -630,8 +635,49 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule)
         atomNumber.push_back(num);
         atomSymbol.push_back(atomSym);
       }
+
+      Value basisFunctions = orbitals["basis functions"];
+
+      for (size_t i = 0; i < atomSymbol.size(); ++i ) {
+        string symbol = atomSymbol[i];
+        Value currentFunction = basisFunctions.get(i, 0);
+
+        if (!currentFunction.isArray()) {
+          continue;
+        }
+
+        for ( size_t j = 0; j < currentFunction.size(); ++j) {
+          Value curBasis = currentFunction.get(j, 0);
+          string shellType = curBasis[0].asString();
+
+          bool spherical = false; //is this available in cclib?
+          GaussianSet::orbital type = GaussianSet::UU;
+          if (shellType == "S")
+            type = GaussianSet::S;
+          else if (shellType == "P")
+            type = GaussianSet::P;
+          else if (shellType == "D" && spherical)
+            type = GaussianSet::D5;
+          else if (shellType == "D")
+            type = GaussianSet::D;
+          else if (shellType == "F" && spherical)
+            type = GaussianSet::F7;
+          else if (shellType == "F")
+            type == GaussianSet::F;
+
+          if (type != GaussianSet::UU) {
+            int b = basis->addBasis(i, type);
+            for (int k = 0; k < curBasis[1].size(); ++k) {
+              double exponent = curBasis[1][k][0].asDouble();
+              double coefficient = curBasis[1][k][1].asDouble();
+              basis->addGto(b, coefficient, exponent);
+            }
+          }
+        }
+      }
     }
 
+    //atomic orbital indices for all atoms
     value = orbitals["indices"];
     if (testIfArray(value, "atoms.orbitals.aonames")) {
       //post process the saved data
