@@ -18,6 +18,7 @@
 #define AVOGADRO_IO_CJSONFORMAT_H
 
 #include "fileformat.h"
+#include <avogadro/core/gaussianset.h>
 
 namespace Json{
   class Value;
@@ -66,8 +67,8 @@ public:
   bool testIsNotObject(Json::Value &value,const std::string &key, bool writeError = false);
   bool testIfArray(Json::Value &value,const std::string &key, bool writeError = false);
   bool readUnitCell(Json::Value &root, Core::Molecule &molecule);
-  bool readProperties(Json::Value &root, Core::Molecule &molecule);
-  bool readAtoms(Json::Value &root, Core::Molecule &molecule);
+  bool readProperties(Json::Value &root, Core::Molecule &molecule, Core::GaussianSet *basis);
+  bool readAtoms(Json::Value &root, Core::Molecule &molecule, Core::GaussianSet *basis);
   bool readOptimization(Json::Value &root, Core::Molecule &molecule);
   bool readVibrations(Json::Value &root, Core::Molecule &molecule);
   bool readBonds(Json::Value &root, Core::Molecule &molecule);
