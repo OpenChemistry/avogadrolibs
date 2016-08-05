@@ -484,17 +484,49 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
   Value orbitals = properties["orbitals"];
   if (!(testEmpty(energy, "properties.orbitals") || testIsNotObject(energy, "properties.orbitals" ))) {
 
+    bool unrestricted = false;
+
+    Value homo = orbitals["homos"];
+    if (!homo.empty() && homo.isArray()) {
+      unrestricted = static_cast<int>(homo.size()) == 2 ? true : false;
+
+      int homoIndex = homo[0].asInt();
+      //Asumption: Only closed shell calculations are parsed
+      vector<unsigned char> occArray(homoIndex, static_cast<unsigned char>(2));
+      basis->setMolecularOrbitalOccupancy(occArray);
+
+      if(unrestricted){
+        int betaHomoIndex = homo[1].asInt();
+        vector<unsigned char> betaOccArray(betaHomoIndex, static_cast<unsigned char>(2));
+        basis->setMolecularOrbitalOccupancy(betaOccArray);
+      }
+    }
+
+
     //Basis set energy has a one dimension restriction
-    value = orbitals["energies"];
-    if (!value.empty()) {
-      value = value[0];
+    Value moEnergies = orbitals["energies"];
+    if (!moEnergies.empty() && moEnergies.isArray()) {
+      unrestricted = static_cast<int>(moEnergies.size()) == 2 ? true : false;
+
+      value = moEnergies[0];
       int energyCount = static_cast<int>(value.size());
       vector<double> energyArray(energyCount);
       for (int i = 0; i < energyCount; ++i) {
         energyArray[i] = value.get(i,0).asDouble();
       }
-
       basis->setMolecularOrbitalEnergy(energyArray);
+
+      //For unrestricted calculation beta energies exist
+      if(unrestricted){
+        //Assumption: The number of beta energies will be equivalent to alpha energies
+        vector<double> betaEnergyArray(energyCount);
+        value = moEnergies[1];
+
+        for (int i = 0; i < energyCount;  ++i) {
+          betaEnergyArray[i] = value.get(i,0).asDouble();
+        }
+        basis->setMolecularOrbitalEnergy(betaEnergyArray,  BasisSet::Beta);
+      }
     }
 
     //overlap between basis functions (atomic orbitals)
@@ -516,7 +548,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
     //To be filled with mocoeffs attribute
     Value moCoeffs = orbitals["coeffs"];
     if (!(testEmpty(energy, "properties.orbitals.coeffs") || testIfArray(energy, "properties.orbitals.coeffs" ))) {
-      bool unrestricted = static_cast<int>(moCoeffs.size()) == 2 ? true : false;
+      unrestricted = static_cast<int>(moCoeffs.size()) == 2 ? true : false;
       vector<double> coeffArray;
 
       value = moCoeffs[0];
