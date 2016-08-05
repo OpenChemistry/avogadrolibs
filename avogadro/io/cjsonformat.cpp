@@ -802,34 +802,53 @@ bool CjsonFormat::readVibrations(Value &root, Molecule &molecule)
 {
   // Check for vibrational data.
   Value vibrations = root["vibrations"];
-  if (!vibrations.empty() && vibrations.isObject()) {
-    Value modes = vibrations["modes"];
-    Value freqs = vibrations["frequencies"];
-    Value inten = vibrations["intensities"];
-    Value eigenVectors = vibrations["eigenVectors"];
-    assert(modes.size() == freqs.size());
-    assert(modes.size() == inten.size());
-    assert(modes.size() == eigenVectors.size());
-    Array<double> frequencies;
-    Array<double> intensities;
-    Array< Array<Vector3> > Lx;
-    for (size_t i = 0; i < modes.size(); ++i) {
-      frequencies.push_back(freqs.get(i, 0).asDouble());
-      intensities.push_back(inten.get(i, 0).asDouble());
-      Array<Vector3> modeLx;
-      Value lx = eigenVectors.get(i, 0);
-      if (!lx.empty() && lx.isArray()) {
-        modeLx.resize(lx.size() / 3);
-        for (size_t k = 0; k < lx.size(); ++k)
-          modeLx[k / 3][k % 3] = lx.get(k, 0).asDouble();
-        Lx.push_back(modeLx);
-      }
-    }
-    molecule.setVibrationFrequencies(frequencies);
-    molecule.setVibrationIntensities(intensities);
-    molecule.setVibrationLx(Lx);
-  }
 
+  if (!(testEmpty(vibrations, "vibrations") || testIsNotObject(vibrations, "vibrations"))) {
+
+    Value value = vibrations["frequencies"];
+    if (!value.empty() && value.isArray()) {
+      Array<double> frequencies;
+
+      Index frequencyCount = static_cast<Index>(value.size());
+      for (Index i = 0; i < frequencyCount; ++i)
+        frequencies.push_back(value.get(i, 0).asDouble());
+
+      molecule.setVibrationFrequencies(frequencies);
+    }
+
+    //Assumption: chose the vibir attribute over the vibraman attribute
+    value = vibrations["intensities"]["IR"];
+    if (!value.empty() && value.isArray()) {
+      Array<double> intensities;
+
+      Index intensityCount = static_cast<Index>(value.size());
+      for (Index i = 0; i < intensityCount; ++i)
+        intensities.push_back(value.get(i, 0).asDouble());
+
+      molecule.setVibrationIntensities(intensities);
+    }
+
+    Value displacement = vibrations["displacement"];
+    if (!displacement.empty() && displacement.isArray()) {
+      Array<Array<Vector3> > Lx;
+
+      for (int i = 0; i < displacement.size(); ++i) {
+        value = displacement.get(i, 0);
+        if (!value.empty() && value.isArray()) {
+          Array<Vector3> modeLx;
+          modeLx.resize(value.size());
+          for (int j = 0; j < value.size(); ++j) {
+            Value cartesianDisp = value.get(j, 0);
+            for (int k = 0; k < 3; ++k) {
+              modeLx[j][k] = cartesianDisp.get(k, 0).asDouble();
+            }
+          }
+          Lx.push_back(modeLx);
+        }
+      }
+      molecule.setVibrationLx(Lx);
+    }
+  }
   return true;
 }
 
