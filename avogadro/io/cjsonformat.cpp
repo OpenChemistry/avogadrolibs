@@ -573,6 +573,46 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
           }
         }
       }
+
+      //Set Density matrix
+      //Gaussian set - Density matrix doesn't distinguish between restricted and unrestricted calculations
+      if (orbitals.isMember("basis number") && orbitals.isMember("homos")) {
+        int basisSize = orbitals["basis number"].asInt();
+        int homo = orbitals["homos"][0].asInt() + 1;
+
+        MatrixX densityMatrix(basisSize,basisSize);
+
+        for (int i = 0 ; i < homo ; ++i) {
+          MatrixX column(basisSize, 1);
+          for (int j = 0; j < basisSize; ++j){
+            column(j, 0) = value[i][j].asDouble();
+          }
+
+          MatrixX tempDensity = column * column.transpose();
+          densityMatrix += tempDensity;
+        }
+        basis->setDensityMatrix(densityMatrix);
+
+        if(unrestricted){
+          MatrixX betaDensityMatrix(basisSize,basisSize);
+          value = moCoeffs[1];
+
+          for (int i = 0 ; i < homo ; ++i) {
+            MatrixX column(basisSize, 1);
+            for (int j = 0; j < basisSize; ++j){
+              column(j, 0) = value[i][j].asDouble();
+            }
+
+            MatrixX tempDensity = column * column.transpose();
+            betaDensityMatrix += tempDensity;
+          }
+
+          //Spin Density Matrix = Alpha Density Matrix - Beta Density Matrix
+          MatrixX spinDensityMatrix = densityMatrix - betaDensityMatrix;
+          basis->setSpinDensityMatrix(spinDensityMatrix);
+        }
+
+      }
     }
 
   }
