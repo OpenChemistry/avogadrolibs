@@ -490,13 +490,13 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
     if (!homo.empty() && homo.isArray()) {
       unrestricted = static_cast<int>(homo.size()) == 2 ? true : false;
 
-      int homoIndex = homo[0].asInt();
+      int homoIndex = homo[0].asInt() + 1;
       //Asumption: Only closed shell calculations are parsed
       vector<unsigned char> occArray(homoIndex, static_cast<unsigned char>(2));
       basis->setMolecularOrbitalOccupancy(occArray);
 
       if(unrestricted){
-        int betaHomoIndex = homo[1].asInt();
+        int betaHomoIndex = homo[1].asInt() + 1;
         vector<unsigned char> betaOccArray(betaHomoIndex, static_cast<unsigned char>(2));
         basis->setMolecularOrbitalOccupancy(betaOccArray);
       }
