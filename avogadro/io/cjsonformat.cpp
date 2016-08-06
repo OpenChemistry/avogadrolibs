@@ -482,7 +482,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
 
   //Orbitals attributes start here-------------------------------------------------------
   Value orbitals = properties["orbitals"];
-  if (!(testEmpty(energy, "properties.orbitals") || testIsNotObject(energy, "properties.orbitals" ))) {
+  if (!(testEmpty(orbitals, "properties.orbitals") || testIsNotObject(orbitals, "properties.orbitals" ))) {
 
     bool unrestricted = false;
 
@@ -547,7 +547,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
 
     //To be filled with mocoeffs attribute
     Value moCoeffs = orbitals["coeffs"];
-    if (!(testEmpty(energy, "properties.orbitals.coeffs") || testIfArray(energy, "properties.orbitals.coeffs" ))) {
+    if (!(testEmpty(moCoeffs, "properties.orbitals.coeffs") || testIfArray(moCoeffs, "properties.orbitals.coeffs" ))) {
       unrestricted = static_cast<int>(moCoeffs.size()) == 2 ? true : false;
       vector<double> coeffArray;
 
@@ -665,7 +665,7 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
 
   //Start of Orbitals-----------------------------------------------------------
   Value orbitals = atoms["orbitals"];
-  if (!(testEmpty(value, "atoms.orbitals") || testIsNotObject(value, "atoms.orbitals"))) {
+  if (!(testEmpty(orbitals, "atoms.orbitals") || testIsNotObject(orbitals, "atoms.orbitals"))) {
 
     value = orbitals["names"];
     if (testIfArray(value, "atoms.orbitals.aonames")) {
@@ -765,7 +765,7 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
 
   //Start of atomic spins
   Value spins = atoms["spins"];
-  if (!testEmpty(value, "atoms.atomspins") && !testIsNotObject(value, "atoms.atomspins")) {
+  if (!testEmpty(spins, "atoms.atomspins") && !testIsNotObject(spins, "atoms.atomspins")) {
 
     value = spins["mulliken"];
     if (!value.empty() && !value.isArray()) {
