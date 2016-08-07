@@ -1249,6 +1249,26 @@ bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol)
   return true;
 }
 
+bool RWMolecule::reduceCellToAsymmetricUnit(unsigned short hallNumber,
+                                            double cartTol)
+{
+  // If there is no unit cell, there is nothing to do
+  if (!m_molecule.unitCell())
+    return false;
+
+  // Make a copy of the molecule to edit so we can store the old one
+  // The atom positions and numbers of atoms may change
+  Molecule newMolecule = m_molecule;
+
+  Core::SpaceGroups::reduceToAsymmetricUnit(newMolecule, hallNumber, cartTol);
+
+  Molecule::MoleculeChanges changes = Molecule::Removed | Molecule::Atoms;
+  QString undoText = tr("Reduce Cell to Asymmetric Unit");
+
+  modifyMolecule(newMolecule, changes, undoText);
+  return true;
+}
+
 void RWMolecule::emitChanged(unsigned int change)
 {
   m_molecule.emitChanged(change);

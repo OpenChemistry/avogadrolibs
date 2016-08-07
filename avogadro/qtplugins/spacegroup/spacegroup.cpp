@@ -59,6 +59,7 @@ SpaceGroup::SpaceGroup(QObject *parent_) :
   m_conventionalizeCellAction(new QAction(this)),
   m_symmetrizeAction(new QAction(this)),
   m_fillUnitCellAction(new QAction(this)),
+  m_reduceToAsymmetricUnitAction(new QAction(this)),
   m_setToleranceAction(new QAction(this))
 {
   m_perceiveSpaceGroupAction->setText(tr("Perceive Space Group"));
@@ -88,6 +89,12 @@ SpaceGroup::SpaceGroup(QObject *parent_) :
   connect(m_fillUnitCellAction, SIGNAL(triggered()), SLOT(fillUnitCell()));
   m_actions.push_back(m_fillUnitCellAction);
   m_fillUnitCellAction->setProperty("menu priority", 50);
+
+  m_reduceToAsymmetricUnitAction->setText(tr("Reduce to Asymmetric Unit"));
+  connect(m_reduceToAsymmetricUnitAction, SIGNAL(triggered()),
+          SLOT(reduceToAsymmetricUnit()));
+  m_actions.push_back(m_reduceToAsymmetricUnitAction);
+  m_reduceToAsymmetricUnitAction->setProperty("menu priority", 40);
 
   m_setToleranceAction->setText(tr("Set Tolerance"));
   connect(m_setToleranceAction, SIGNAL(triggered()), SLOT(setTolerance()));
@@ -275,13 +282,75 @@ void SpaceGroup::symmetrize()
 
 void SpaceGroup::fillUnitCell()
 {
+  // Ask the user to select a space group
+  unsigned short hallNumber = selectSpaceGroup();
+  // If the hall number is zero, the user canceled
+  if (hallNumber == 0)
+    return;
+
+  m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol);
+}
+
+void SpaceGroup::reduceToAsymmetricUnit()
+{
+  // Let's gather some information about the space group first
+  unsigned short hallNumber = AvoSpglib::getHallNumber(*m_molecule, m_spgTol);
+  unsigned short intNum = Core::SpaceGroups::internationalNumber(hallNumber);
+  std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
+  std::string intShort =  Core::SpaceGroups::internationalShort(hallNumber);
+
+  // Ask the user if he/she wants to use this space group
+  std::stringstream ss;
+  ss << "With a tolerance of " << m_spgTol << "  Å, "
+     << "the space group information was perceived to be the following:"
+     << "\nSpace Group: " << intNum
+     << "\nHall symbol: " << hallSymbol
+     << "\nInternational symbol: " << intShort
+     << "\n\nProceed with this space group?";
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::question(NULL, tr("Reduce to Asymmetric Unit"),
+                                tr(ss.str().c_str()),
+                                QMessageBox::Yes | QMessageBox::No);
+
+  // If the user does not want to use the perceived space group,
+  // let the user set it.
+  if (reply == QMessageBox::No)
+    hallNumber = selectSpaceGroup();
+
+  // If 0 was set, that means the user cancelled
+  if (hallNumber == 0)
+    return;
+
+  // Perform the operation!
+  m_molecule->undoMolecule()->reduceCellToAsymmetricUnit(hallNumber, m_spgTol);
+}
+
+void SpaceGroup::setTolerance()
+{
+  bool ok;
+  double tol = QInputDialog::getDouble(NULL,
+                                       tr("Avogadro2"), // title
+                                       tr("Select tolerance in Å:"), // label
+                                       m_spgTol, // initial
+                                       1e-5, // min
+                                       0.5, // max
+                                       5, // decimals
+                                       &ok);
+  if (!ok)
+    return;
+
+  m_spgTol = tol;
+}
+
+unsigned short SpaceGroup::selectSpaceGroup()
+{
   QStandardItemModel spacegroups;
   QStringList modelHeader;
   modelHeader << tr("International")
               << tr("Hall")
               << tr("Hermann-Mauguin");
   spacegroups.setHorizontalHeaderLabels(modelHeader);
-  for (unsigned int i = 1; i <= 530; ++i) {
+  for (unsigned short i = 1; i <= 530; ++i) {
     QList<QStandardItem*> row;
     row << new QStandardItem(QString::number(
                                  Core::SpaceGroups::internationalNumber(i)))
@@ -315,28 +384,10 @@ void SpaceGroup::fillUnitCell()
   connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
   dialog.layout()->addWidget(buttons);
   if (dialog.exec() != QDialog::Accepted)
-    return;
+    return 0;
 
-  unsigned short hallNumber = view->currentIndex().row() + 1;
-
-  m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol);
-}
-
-void SpaceGroup::setTolerance()
-{
-  bool ok;
-  double tol = QInputDialog::getDouble(NULL,
-                                       tr("Avogadro2"), // title
-                                       tr("Select tolerance in Å:"), // label
-                                       m_spgTol, // initial
-                                       1e-5, // min
-                                       0.5, // max
-                                       5, // decimals
-                                       &ok);
-  if (!ok)
-    return;
-
-  m_spgTol = tol;
+  // This should be hall number
+  return view->currentIndex().row() + 1;
 }
 
 } // namespace QtPlugins

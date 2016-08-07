@@ -490,10 +490,19 @@ public:
   /**
    * Fill unit cell using transforms for the space group. Changes are emitted.
    * @param hallNumber The hall number to be used for transforming the cell.
-   * @param cartTol Cartesian tolerance for symmetrization.
+   * @param cartTol Cartesian tolerance for comparing atom positions.
    * @return True if the algorithm succeeded, and false if it failed.
    */
   bool fillUnitCell(unsigned short hallNumber, double cartTol = 1e-5);
+
+  /**
+   * Use transforms to reduce a cell to its asymmetric unit. Changes are
+   * emitted.
+   * @param hallNumber The hall number to be used for obtaining the transforms.
+   * @param cartTol Cartesian tolerance for comparing atom positions.
+   * @return True if the algorithm succeeded, and false if it failed.
+   */
+  bool reduceCellToAsymmetricUnit(unsigned short hallNumber, double cartTol = 1e-5);
 
   /**
    * @brief Begin or end an interactive edit.
