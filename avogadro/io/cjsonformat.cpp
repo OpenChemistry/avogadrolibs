@@ -58,7 +58,7 @@ CjsonFormat::~CjsonFormat()
 bool CjsonFormat::testEmpty(Value &value, const std::string &key, bool writeError)
 {
   if (value.empty()) {
-    if(writeError)
+    if (writeError)
       appendError("Error: no \"" + key +"\" key found");
     return true;
   }
@@ -68,7 +68,7 @@ bool CjsonFormat::testEmpty(Value &value, const std::string &key, bool writeErro
 bool CjsonFormat::testIsNotObject(Value &value, const std::string &key, bool writeError)
 {
   if (value.type() != Json::objectValue) {
-    if(writeError)
+    if (writeError)
       appendError("Error: \"" + key + "\" is not of type object");
     return true;
   }
@@ -78,7 +78,7 @@ bool CjsonFormat::testIsNotObject(Value &value, const std::string &key, bool wri
 bool CjsonFormat::testIfArray(Value &value, const std::string &key, bool writeError)
 {
   if (!value.isArray()) {
-    if(writeError)
+    if (writeError)
       appendError("Error: \""+ key + "\" is not of type array");
     return false;
   }
@@ -495,7 +495,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
       vector<unsigned char> occArray(homoIndex, static_cast<unsigned char>(2));
       basis->setMolecularOrbitalOccupancy(occArray);
 
-      if(unrestricted){
+      if (unrestricted) {
         int betaHomoIndex = homo[1].asInt() + 1;
         vector<unsigned char> betaOccArray(betaHomoIndex, static_cast<unsigned char>(2));
         basis->setMolecularOrbitalOccupancy(betaOccArray);
@@ -517,7 +517,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
       basis->setMolecularOrbitalEnergy(energyArray);
 
       //For unrestricted calculation beta energies exist
-      if(unrestricted){
+      if (unrestricted) {
         //Assumption: The number of beta energies will be equivalent to alpha energies
         vector<double> betaEnergyArray(energyCount);
         value = moEnergies[1];
@@ -552,7 +552,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
       vector<double> coeffArray;
 
       value = moCoeffs[0];
-      if(!value.empty()) {
+      if (!value.empty()) {
         for (int i = 0; i < value.size(); ++i) {
           for (int j = 0; j < value[0].size(); ++j) {
             coeffArray.push_back(value[i][j].asDouble());
@@ -563,7 +563,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
         if (unrestricted) {
           coeffArray.clear();
           value = moCoeffs[1];
-          if(!value.empty()) {
+          if (!value.empty()) {
             for (int i = 0; i < value.size(); ++i) {
               for (int j = 0; j < value[0].size(); ++j) {
                 coeffArray.push_back(value[i][j].asDouble());
@@ -584,7 +584,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
 
         for (int i = 0 ; i < homo ; ++i) {
           MatrixX column(basisSize, 1);
-          for (int j = 0; j < basisSize; ++j){
+          for (int j = 0; j < basisSize; ++j) {
             column(j, 0) = value[i][j].asDouble();
           }
 
@@ -593,13 +593,13 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
         }
         basis->setDensityMatrix(densityMatrix);
 
-        if(unrestricted){
+        if (unrestricted) {
           MatrixX betaDensityMatrix(basisSize,basisSize);
           value = moCoeffs[1];
 
           for (int i = 0 ; i < homo ; ++i) {
             MatrixX column(basisSize, 1);
-            for (int j = 0; j < basisSize; ++j){
+            for (int j = 0; j < basisSize; ++j) {
               column(j, 0) = value[i][j].asDouble();
             }
 
@@ -835,6 +835,97 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
 
 bool CjsonFormat::readOptimization(Value &root, Molecule &molecule)
 {
+  Value optimization = root["optimization"];
+
+  if (!(testEmpty(optimization, "optimization") || testIsNotObject(optimization, "optimization"))) {
+
+    if (optimization.isMember("done")) {
+      bool status = optimization["done"].asBool();
+      molecule.setData("optimization status", status);
+    }
+
+    Value value;
+    if (optimization.isMember("geometric targets")) {
+      value = optimization["geometric targets"];
+
+      if (!value.empty() && !value.isArray()) {
+        int targetCount = static_cast<int>(value.size());
+        double *geometricTargets = new double[targetCount];
+        for (int i = 0; i < targetCount; ++i)
+          geometricTargets[i] = value.get(i, 0).asDouble();
+        molecule.setData("geometric targets", geometricTargets);
+      }
+    }
+
+    if (optimization.isMember("geometric values")) {
+      value = optimization["geometric values"];
+
+      if (!value.empty() && !value.isArray()) {
+        int valueCount = static_cast<int>(value.size());
+        double *geometricValues = new double[valueCount];
+        for (int i = 0; i < valueCount; ++i)
+          geometricValues[i] = value.get(i, 0).asDouble();
+        molecule.setData("geometric values", geometricValues);
+      }
+    }
+
+    //Start of SCF object------------------------------------------------------------
+    Value scf = optimization["scf"];
+    if (!scf.empty()) {
+      if (scf.isMember("scf energies")) {
+        value = scf["scf energies"];
+
+        if (!value.empty() && !value.isArray()) {
+          int energyCount = static_cast<int>(value.size());
+          double *scfEnergyValues = new double[energyCount];
+          for (int i = 0; i < energyCount; ++i)
+            scfEnergyValues[i] = value.get(i, 0).asDouble();
+          molecule.setData("scf energy values", scfEnergyValues);
+        }
+      }
+    }
+    //End of SCF object-----------------------------------------------------------------
+
+    //Start of scan object--------------------------------------------------------------
+    Value scan = optimization["scan"];
+    if (!scan.empty()) {
+
+      if (scan.isMember("step geometry")) {
+        Value stepG = scan["step geometry"];
+        if (stepG.isArray()) {
+          vector<vector<vector<double>>> stepGeometry;
+          for (int i = 0 ; i < stepG.size() ; ++i ) {
+            Value innerStep = stepG.get(i, 0);
+            vector<vector<double>> step;
+            for (int j = 0 ; j < innerStep.size() ; ++j) {
+              value = innerStep.get(j,0);
+              vector<double> coordinates;
+              for(int k = 0 ; k < 3; ++k){
+                coordinates.push_back(value[k].asDouble());
+              }
+              step.push_back(coordinates);
+            }
+            stepGeometry.push_back(step);
+          }
+          molecule.setData("step geometry", &stepGeometry);
+        }
+
+      }
+
+      if (scan.isMember("PES energies")){
+        value = scan["PES energies"];
+
+        if (!value.empty() && !value.isArray()) {
+          int pesEnergyCount = static_cast<int>(value.size());
+          double *pesEnergyValues = new double[pesEnergyCount];
+          for (int i = 0; i < pesEnergyCount; ++i)
+            pesEnergyValues[i] = value.get(i, 0).asDouble();
+          molecule.setData("PES energy values", pesEnergyValues);
+        }
+      }
+    }
+  }
+
   return true;
 }
 
