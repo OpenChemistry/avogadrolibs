@@ -1085,7 +1085,68 @@ bool CjsonFormat::readTransitions(Value &root, Molecule &molecule)
 
 bool CjsonFormat::readFragments(Value &root, Molecule &molecule)
 {
-  return true;
+	//Check for fragments data
+	Value fragments = root["fragments"];
+
+	if (!(testEmpty(fragments, "fragments") || testIsNotObject(fragments, "fragments"))) {
+		Value value;
+
+		if (fragments.isMember("fragment names")) {
+			value = fragments["fragment names"];
+
+			if (!value.empty() && !value.isArray()) {
+				int targetCount = static_cast<int>(value.size());
+				string *fragmentNames = new string[targetCount];
+				for (int i = 0; i < targetCount; ++i)
+					fragmentNames[i] = value.get(i, 0).asString();
+				molecule.setData("fragment names", fragmentNames);
+			}
+		}
+
+		value = fragments["atom indices"];
+		if (!value.empty()) {
+			int n = static_cast<int>(value.size());
+			int L = static_cast<int>(value[0].size());
+			MatrixX atomIndices(n,L);
+			Value indicesArray;
+			for (int i = 0; i < n; ++i) {
+				indicesArray = value[i];
+				for (int j =0; j < L ; j++) {
+					atomIndices(i, j) = indicesArray.get(j, 0).asDouble();
+				}
+			}
+			molecule.setData("fragment atom indices", atomIndices);
+		}
+
+		if (fragments.isMember("orbital  names")) {
+			value = fragments["orbital  names"];
+
+			if (!value.empty() && !value.isArray()) {
+				int targetCount = static_cast<int>(value.size());
+				string *orbitalNames = new string[targetCount];
+				for (int i = 0; i < targetCount; ++i)
+					orbitalNames[i] = value.get(i, 0).asString();
+				molecule.setData("fragment orbital  names", orbitalNames);
+			}
+		}
+
+		value = fragments["orbital overlap"];
+		if (!value.empty()) {
+			int n = static_cast<int>(value.size());
+			int L = static_cast<int>(value[0].size());
+			MatrixX overlapIndices(n,L);
+			Value indicesArray;
+			for (int i = 0; i < n; ++i) {
+				indicesArray = value[i];
+				for (int j =0; j < L ; j++) {
+					overlapIndices(i, j) = indicesArray.get(j, 0).asDouble();
+				}
+			}
+			molecule.setData("fragment orbital overlap", overlapIndices);
+		}
+	}
+
+	return true;
 }
 
 
