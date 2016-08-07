@@ -488,6 +488,14 @@ public:
   bool symmetrizeCell(double cartTol = 1e-5);
 
   /**
+   * Fill unit cell using transforms for the space group. Changes are emitted.
+   * @param hallNumber The hall number to be used for transforming the cell.
+   * @param cartTol Cartesian tolerance for symmetrization.
+   * @return True if the algorithm succeeded, and false if it failed.
+   */
+  bool fillUnitCell(unsigned short hallNumber, double cartTol = 1e-5);
+
+  /**
    * @brief Begin or end an interactive edit.
    *
    * If enabled, certain undo operations will be merged together. For instance,
