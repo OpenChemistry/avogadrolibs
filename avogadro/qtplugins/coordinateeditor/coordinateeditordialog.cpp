@@ -19,6 +19,7 @@
 #include "coordinatetextedit.h"
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/coordinateblockgenerator.h>
@@ -290,8 +291,9 @@ void CoordinateEditorDialog::validateInput()
   m_ui->text->resetMarks();
   listenForTextEditChanges(true);
 
-  // No text, nothing to do!
-  if (m_ui->text->document()->isEmpty()) {
+  // No text, nothing to do! Trim the plain text - this fixes a crashing
+  // bug if the user accidentally presses return in a blank document.
+  if (m_ui->text->document()->toPlainText().trimmed().isEmpty()) {
     emit validationFinished(true);
     return;
   }
@@ -338,6 +340,17 @@ void CoordinateEditorDialog::validateInputWorker()
     // Place the entire line in the line cursor's selection.
     lineCursor.movePosition(QTextCursor::StartOfLine, QTextCursor::MoveAnchor);
     lineCursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+
+    // Skip empty lines - this is nice if the user accidentally left some
+    // empty lines at the end of the input
+    if (lineCursor.selectedText().trimmed().isEmpty()) {
+      // So that we don't have an infinite loop...
+      if (!lineCursor.atEnd()) {
+        lineCursor.movePosition(QTextCursor::Down);
+        lineCursor.movePosition(QTextCursor::StartOfLine);
+      }
+      continue;
+    }
 
     // Start the token cursor at the beginning of the current line.
     tokenCursor.setPosition(lineCursor.anchor(), QTextCursor::MoveAnchor);
@@ -481,8 +494,13 @@ void CoordinateEditorDialog::validateInputWorker()
       m_validate->atoms << atom;
     }
 
-    // Move to the next line:
-    lineCursor.movePosition(QTextCursor::NextCharacter);
+    // Move down to the next line if we are not at the end. Moving to the
+    // start of the line after moving down is necessary in case moving down
+    // puts us at the end of the document.
+    if (!lineCursor.atEnd()) {
+      lineCursor.movePosition(QTextCursor::Down);
+      lineCursor.movePosition(QTextCursor::StartOfLine);
+    }
   }
 
   // Reenable validation.
@@ -555,15 +573,17 @@ void CoordinateEditorDialog::applyFinish(bool valid)
   bool hadAtoms(m_molecule->atomCount() > 0);
   bool hadBonds(m_molecule->bondCount() > 0);
 
-  m_molecule->clearAtoms();
+  // Create a new molecule so we can eventually store both in the undo command
+  Molecule newMolecule = *m_molecule;
+  newMolecule.clearAtoms();
   foreach (const AtomStruct &atom, atoms)
-    m_molecule->addAtom(atom.atomicNumber).setPosition3d(atom.pos);
+    newMolecule.addAtom(atom.atomicNumber).setPosition3d(atom.pos);
   if (m_validate->latticePositions) {
-    Core::CrystalTools::setFractionalCoordinates(*m_molecule,
-                                                 m_molecule->atomPositions3d());
+    Core::CrystalTools::setFractionalCoordinates(newMolecule,
+                                                 newMolecule.atomPositions3d());
   }
   else {
-    m_molecule->perceiveBondsSimple();
+    newMolecule.perceiveBondsSimple();
   }
 
   m_ui->text->document()->setModified(false);
@@ -573,13 +593,13 @@ void CoordinateEditorDialog::applyFinish(bool valid)
     change |= Molecule::Atoms | Molecule::Removed;
   if (hadBonds)
     change |= Molecule::Bonds | Molecule::Removed;
-  if (m_molecule->atomCount() > 0)
+  if (newMolecule.atomCount() > 0)
     change |= Molecule::Atoms | Molecule::Added;
-  if (m_molecule->bondCount() > 0)
+  if (newMolecule.bondCount() > 0)
     change |= Molecule::Bonds | Molecule::Added;
 
-  if (change != Molecule::NoChange)
-    m_molecule->emitChanged(change);
+  QString undoText = tr("Edit Atomic Coordinates");
+  m_molecule->undoMolecule()->modifyMolecule(newMolecule, change, undoText);
 }
 
 void CoordinateEditorDialog::textModified(bool modified)
