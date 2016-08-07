@@ -1025,6 +1025,61 @@ bool CjsonFormat::readBonds(Value &root, Molecule &molecule)
 
 bool CjsonFormat::readTransitions(Value &root, Molecule &molecule)
 {
+  //Check for transitions data
+  Value transitions = root["transitions"];
+
+  if (!(testEmpty(transitions, "transitions") || testIsNotObject(transitions, "transitions"))) {
+	  Value value;
+
+	  if (transitions.isMember("electronic transitions")) {
+		  value = transitions["electronic transitions"];
+
+		  if (!value.empty() && !value.isArray()) {
+			  int targetCount = static_cast<int>(value.size());
+			  double *electronicTransitions = new double[targetCount];
+			  for (int i = 0; i < targetCount; ++i)
+				  electronicTransitions[i] = value.get(i, 0).asDouble();
+			  molecule.setData("electronic transitions", electronicTransitions);
+		  }
+	  }
+
+	  if (transitions.isMember("oscillator strength")) {
+		  value = transitions["oscillator strength"];
+
+		  if (!value.empty() && !value.isArray()) {
+			  int targetCount = static_cast<int>(value.size());
+			  double *oscillatorStrength = new double[targetCount];
+			  for (int i = 0; i < targetCount; ++i)
+				  oscillatorStrength[i] = value.get(i, 0).asDouble();
+			  molecule.setData("oscillator strength", oscillatorStrength);
+		  }
+	  }
+
+	  if (transitions.isMember("rotatory strength")) {
+		  value = transitions["rotatory strength"];
+
+		  if (!value.empty() && !value.isArray()) {
+			  int targetCount = static_cast<int>(value.size());
+			  double *rotatoryStrength = new double[targetCount];
+			  for (int i = 0; i < targetCount; ++i)
+				  rotatoryStrength[i] = value.get(i, 0).asDouble();
+			  molecule.setData("rotatory strength", rotatoryStrength);
+		  }
+	  }
+
+	  if (transitions.isMember("symmetry")) {
+		  value = transitions["symmetry"];
+
+		  if (!value.empty() && !value.isArray()) {
+			  int targetCount = static_cast<int>(value.size());
+			  string *transitionSymmetry = new string[targetCount];
+			  for (int i = 0; i < targetCount; ++i)
+				  transitionSymmetry[i] = value.get(i, 0).asString();
+			  molecule.setData("electronic transition symmetry", transitionSymmetry);
+		  }
+	  }
+  }
+
   return true;
 }
 
