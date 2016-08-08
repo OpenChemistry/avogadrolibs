@@ -275,18 +275,14 @@ void Editor::reset()
     if (a2 > a3)
       std::swap(a2, a3);
 
-    RWAtom atom = m_molecule->atom(a3);
-    if (atom.isValid()) {
-      QtGui::HydrogenTools::adjustHydrogens(atom);
-    }
-    atom = m_molecule->atom(a2);
-    if (atom.isValid()) {
-      QtGui::HydrogenTools::adjustHydrogens(atom);
-    }
-    atom = m_molecule->atom(a1);
-    if (atom.isValid()) {
-      QtGui::HydrogenTools::adjustHydrogens(atom);
-    }
+    // This preserves the order so they are adjusted in order.
+    Core::Array<Index> atomIds;
+    atomIds.push_back(a3);
+    atomIds.push_back(a2);
+    atomIds.push_back(a1);
+    // This function checks to make sure the ids are valid, so no need
+    // to check out here.
+    m_molecule->adjustHydrogens(atomIds);
 
     Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Added;
     changes |= Molecule::Bonds | Molecule::Added | Molecule::Removed;
@@ -313,8 +309,8 @@ void Editor::emptyLeftClick(QMouseEvent *e)
   // Add an atom at the clicked position
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
   Vector3f atomPos = m_renderer->camera().unProject(windowPos);
-  RWAtom newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber());
-  newAtom.setPosition3d(atomPos.cast<double>());
+  RWAtom newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber(),
+                                       atomPos.cast<double>());
 
   Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
 
