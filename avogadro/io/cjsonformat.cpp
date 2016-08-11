@@ -479,7 +479,6 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
   }
   //Partial Charges attributes start here------------------------------------------------
 
-
   //Orbitals attributes start here-------------------------------------------------------
   Value orbitals = properties["orbitals"];
   if (!(testEmpty(orbitals, "properties.orbitals") || testIsNotObject(orbitals, "properties.orbitals" ))) {
@@ -615,6 +614,31 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
       }
     }
 
+    //Molecular orbital symmetries
+    Value MOSymmetry = orbitals["molecular orbital symmetry"];
+    if (!(testEmpty(moCoeffs, "properties.orbitals.MOSymmetry") || testIfArray(moCoeffs, "properties.orbitals.MOSymmetry" ))) {
+      unrestricted = static_cast<int>(MOSymmetry.size()) == 2 ? true : false;
+      Array<string> symmetryArray;
+
+      value = MOSymmetry[0];
+      if (!value.empty() && value.isArray()) {
+        for (int i = 0; i < value.size(); ++i) {
+          symmetryArray.push_back(value[i].asString());
+        }
+        molecule.setData("molecular orbital symmetry", symmetryArray);
+
+        if (unrestricted) {
+          Array<string> betaSymmetryArray;
+          value = MOSymmetry[1];
+          if (!value.empty() && value.isArray()) {
+            for (int i = 0; i < value.size(); ++i) {
+              betaSymmetryArray.push_back(value[i].asString());
+            }
+            molecule.setData("beta molecular orbital symmetry", betaSymmetryArray);
+          }
+        }
+      }
+    }
   }
   //Orbitals attributes end here----------------------------------------------------------
   return true;
@@ -947,6 +971,17 @@ bool CjsonFormat::readVibrations(Value &root, Molecule &molecule)
       molecule.setVibrationFrequencies(frequencies);
     }
 
+    value = vibrations["vibration symmetry"];
+    if (!value.empty() && value.isArray()) {
+      Array<string> symmetries;
+
+      Index symmetryCount = static_cast<Index>(value.size());
+      for (Index i = 0; i < symmetryCount; ++i)
+        symmetries.push_back(value.get(i, 0).asString());
+
+      molecule.setData("vibration symmetry", symmetries);
+    }
+
     //Assumption: chose the vibir attribute over the vibraman attribute
     value = vibrations["intensities"]["IR"];
     if (!value.empty() && value.isArray()) {
@@ -1148,7 +1183,6 @@ bool CjsonFormat::readFragments(Value &root, Molecule &molecule)
 
 	return true;
 }
-
 
 } // end Io namespace
 } // end Avogadro namespace
