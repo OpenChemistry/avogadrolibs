@@ -386,14 +386,15 @@ public:
 };
 } // end anon namespace
 
-bool RWMolecule::setAtomPositions3d(const Core::Array<Vector3> &pos)
+bool RWMolecule::setAtomPositions3d(const Core::Array<Vector3> &pos,
+                                    const QString &undoText)
 {
   if (pos.size() != m_molecule.m_atomicNumbers.size())
     return false;
 
   SetPositions3dCommand *comm = new SetPositions3dCommand(
         *this, m_molecule.m_positions3d, pos);
-  comm->setText(tr("Change Atom Positions"));
+  comm->setText(undoText);
   comm->setCanMerge(m_interactive);
   m_undoStack.push(comm);
   return true;
@@ -469,7 +470,8 @@ public:
 };
 } // end anon namespace
 
-bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3 &pos)
+bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3 &pos,
+                                   const QString &undoText)
 {
   if (atomId >= atomCount())
     return false;
@@ -479,7 +481,7 @@ bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3 &pos)
 
   SetPosition3dCommand *comm = new SetPosition3dCommand(
         *this, atomId, m_molecule.m_positions3d[atomId], pos);
-  comm->setText(tr("Change Atom Position"));
+  comm->setText(undoText);
   comm->setCanMerge(m_interactive);
   m_undoStack.push(comm);
   return true;

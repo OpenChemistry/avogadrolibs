@@ -23,6 +23,7 @@
 #include <avogadro/io/fileformatmanager.h>
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -486,7 +487,8 @@ void OpenBabel::onOptimizeGeometryFinished(const QByteArray &output)
     return;
   }
 
-  std::swap(mol.atomPositions3d(), m_molecule->atomPositions3d());
+  m_molecule->undoMolecule()->setAtomPositions3d(mol.atomPositions3d(),
+                                                 tr("Optimize Geometry"));
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified);
   m_progress->reset();
 }
@@ -567,16 +569,19 @@ void OpenBabel::onPerceiveBondsFinished(const QByteArray &output)
     return;
   }
 
-  m_molecule->clearBonds();
+  // Update the undo stack
+  Molecule newMolecule = *m_molecule;
+  newMolecule.clearBonds();
   for (size_t i = 0; i < mol.bondCount(); ++i) {
     Avogadro::Core::Bond bond = mol.bond(i);
-    m_molecule->addBond(m_molecule->atom(bond.atom1().index()),
-                        m_molecule->atom(bond.atom2().index()),
+    newMolecule.addBond(newMolecule.atom(bond.atom1().index()),
+                        newMolecule.atom(bond.atom2().index()),
                         bond.order());
   }
 
-  m_molecule->emitChanged(Molecule::Bonds | Molecule::Added |
-                          Molecule::Removed | Molecule::Modified);
+  Molecule::MoleculeChanges changes = Molecule::Bonds | Molecule::Added |
+                                      Molecule::Removed | Molecule::Modified;
+  m_molecule->undoMolecule()->modifyMolecule(newMolecule, changes, "Perceive Bonds");
   m_progress->reset();
 }
 
@@ -729,22 +734,30 @@ void OpenBabel::onHydrogenOperationFinished(const QByteArray &mdl)
   /// @todo cache a pointer to the current molecule in the above slot, and
   /// verify that we're still operating on the same molecule.
 
-  // Update molecule
-  m_molecule->clearAtoms();
+  // Update the undo stack
+  Molecule newMolecule;
   for (Index i = 0; i < mol.atomCount(); ++i) {
     Core::Atom atom = mol.atom(i);
-    m_molecule->addAtom(atom.atomicNumber()).setPosition3d(atom.position3d());
+    newMolecule.addAtom(atom.atomicNumber()).setPosition3d(atom.position3d());
   }
   for (Index i = 0; i < mol.bondCount(); ++i) {
     Core::Bond bond = mol.bond(i);
-    m_molecule->addBond(m_molecule->atom(bond.atom1().index()),
-                        m_molecule->atom(bond.atom2().index()),
+    newMolecule.addBond(newMolecule.atom(bond.atom1().index()),
+                        newMolecule.atom(bond.atom2().index()),
                         bond.order());
   }
 
-  m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds | Molecule::Added |
-                          Molecule::Removed | Molecule::Modified);
+  Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Bonds |
+                                      Molecule::Added | Molecule::Removed |
+                                      Molecule::Modified;
 
+  // If the number of atoms is greater, we added hydrogens. Else, we removed
+  // them!
+  QString undoString = "Add Hydrogens";
+  if (m_molecule->atomCount() > newMolecule.atomCount())
+    undoString = "Remove Hydrogens";
+
+  m_molecule->undoMolecule()->modifyMolecule(newMolecule, changes, undoString);
   m_progress->reset();
 }
 
