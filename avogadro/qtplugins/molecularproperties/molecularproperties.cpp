@@ -16,7 +16,8 @@
 
 #include "molecularproperties.h"
 
-#include "molecularpropertiesdialog.h"
+#include "generalpropertiesdialog.h"
+#include "energypropertiesdialog.h"
 
 #include <QtWidgets/QAction>
 
@@ -27,13 +28,27 @@ namespace QtPlugins {
 
 MolecularProperties::MolecularProperties(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_action(new QAction(this)),
+  m_actions(QList<QAction *>()),
   m_dialog(NULL),
-  m_molecule(NULL)
+  m_Edialog(NULL),
+  m_molecule(NULL),
+  m_GeneralPropertyAction(new QAction(this)),
+  m_EnergyPropertyAction(new QAction(this))
 {
-  m_action->setEnabled(true);
-  m_action->setText("&Molecular Properties...");
-  connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
+  m_GeneralPropertyAction->setText(tr("General Properties"));
+  connect(m_GeneralPropertyAction, SIGNAL(triggered()),
+          SLOT(showGeneralDialog()));
+  m_actions.push_back(m_GeneralPropertyAction);
+
+  m_EnergyPropertyAction->setText(tr("Energy Properties"));
+  connect(m_EnergyPropertyAction, SIGNAL(triggered()),
+          SLOT(showEnergyDialog()));
+  m_actions.push_back(m_EnergyPropertyAction);
+
+  updateActions();
+  // m_action->setEnabled(true);
+  // m_action->setText("&General Properties");
+  // connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
 MolecularProperties::~MolecularProperties()
@@ -42,17 +57,19 @@ MolecularProperties::~MolecularProperties()
 
 QString MolecularProperties::description() const
 {
-  return tr("View general properties of a molecule.");
+  return tr("View different properties of a molecule.");
 }
 
 QList<QAction *> MolecularProperties::actions() const
 {
-  return QList<QAction*>() << m_action;
+  return m_actions;
 }
 
 QStringList MolecularProperties::menuPath(QAction *) const
 {
-  return QStringList() << tr("&View");
+  QStringList path;
+  path << tr("&View") << tr("Molecular Properties");
+  return path;
 }
 
 void MolecularProperties::setMolecule(QtGui::Molecule *mol)
@@ -63,15 +80,32 @@ void MolecularProperties::setMolecule(QtGui::Molecule *mol)
   m_molecule = mol;
   if (m_dialog)
     m_dialog->setMolecule(m_molecule);
+  if (m_Edialog)
+    m_Edialog->setMolecule(m_molecule);
 }
 
-void MolecularProperties::showDialog()
+void MolecularProperties::updateActions()
+{
+  foreach (QAction *action, m_actions)
+    action->setEnabled(true);
+}
+
+void MolecularProperties::showGeneralDialog()
 {
   if (!m_dialog) {
-    m_dialog = new MolecularPropertiesDialog(
+    m_dialog = new GeneralPropertiesDialog(
           m_molecule, qobject_cast<QWidget*>(this->parent()));
   }
   m_dialog->show();
+}
+
+void MolecularProperties::showEnergyDialog()
+{
+  if (!m_Edialog) {
+    m_Edialog = new EnergyPropertiesDialog(
+          m_molecule, qobject_cast<QWidget*>(this->parent()));
+  }
+  m_Edialog->show();
 }
 
 } // namespace QtPlugins

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Avogadro::QtPlugins::MolecularPropertiesDialog</class>
- <widget class="QDialog" name="Avogadro::QtPlugins::MolecularPropertiesDialog">
+ <class>Avogadro::QtPlugins::GeneralPropertiesDialog</class>
+ <widget class="QDialog" name="Avogadro::QtPlugins::GeneralPropertiesDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>General attributes</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -178,7 +178,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Avogadro::QtPlugins::MolecularPropertiesDialog</receiver>
+   <receiver>Avogadro::QtPlugins::GeneralPropertiesDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -194,7 +194,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Avogadro::QtPlugins::MolecularPropertiesDialog</receiver>
+   <receiver>Avogadro::QtPlugins::GeneralPropertiesDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

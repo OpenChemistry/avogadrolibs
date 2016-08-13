@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2016 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_MOLECULARPROPERTIESDIALOG_H
-#define AVOGADRO_QTGUI_MOLECULARPROPERTIESDIALOG_H
+#ifndef AVOGADRO_QTGUI_ENERGYPROPERTIESDIALOG_H
+#define AVOGADRO_QTGUI_ENERGYPROPERTIESDIALOG_H
 
 #include <QtWidgets/QDialog>
 
@@ -28,24 +28,24 @@ class Molecule;
 namespace QtPlugins {
 
 namespace Ui {
-class MolecularPropertiesDialog;
+class EnergyPropertiesDialog;
 }
 
 /**
- * @class MolecularPropertiesDialog molecularpropertiesdialog.h <avogadrolibs/qtgui/molecularpropertiesdialog.h>
- * @brief The MolecularPropertiesDialog class provides a dialog which displays
+ * @class EnergyPropertiesDialog energypropertiesdialog.h <avogadrolibs/qtgui/energypropertiesdialog.h>
+ * @brief The EnergyPropertiesDialog class provides a dialog which displays
  * basic molecular properties.
  * @author David C. Lonie
  *
  * @todo IUPAC name fetch (need inchi key).
  */
-class MolecularPropertiesDialog : public QDialog
+class EnergyPropertiesDialog : public QDialog
 {
   Q_OBJECT
 
 public:
-  explicit MolecularPropertiesDialog(QtGui::Molecule *mol, QWidget *parent_ = 0);
-  ~MolecularPropertiesDialog();
+  explicit EnergyPropertiesDialog(QtGui::Molecule *mol, QWidget *parent_ = 0);
+  ~EnergyPropertiesDialog();
 
   QtGui::Molecule* molecule() { return m_molecule; }
 
@@ -54,16 +54,14 @@ public slots:
 
 private slots:
   void updateLabels();
-  void updateMassLabel();
-  void updateFormulaLabel();
   void moleculeDestroyed();
 
 private:
   QtGui::Molecule *m_molecule;
-  Ui::MolecularPropertiesDialog *m_ui;
+  Ui::EnergyPropertiesDialog *m_ui;
 };
 
 
 } // namespace QtPlugins
 } // namespace Avogadro
-#endif // AVOGADRO_QTGUI_MOLECULARPROPERTIESDIALOG_H
+#endif // AVOGADRO_QTGUI_ENERGYPROPERTIESDIALOG_H
