@@ -93,6 +93,14 @@ public:
   AtomType addAtom(unsigned char atomicNumber);
 
   /**
+   * Add a new atom to the molecule and set its position.
+   * @param atomicNumber The atomic number of the new atom.
+   * @param position3d The position of the atom.
+   * @return The new Atom object.
+   */
+  AtomType addAtom(unsigned char atomicNumber, const Vector3 &position3d);
+
+  /**
    * Obtain an atom object.
    * @param atomId The index of the atom to return.
    * @return The requested atom object. Will be invalid if @a atomId >= @a
@@ -142,6 +150,21 @@ public:
    * @note This also removes all bonds.
    */
   void clearAtoms();
+
+  /**
+   * Adjust hydrogens for an atom.
+   * @param atomId The index of the atom.
+   * @note Checks to make sure the atom is valid before adjusting the hydrogens.
+   */
+  void adjustHydrogens(Index atomId);
+
+  /**
+   * Adjust hydrogens for multiple atoms.
+   * @param atomIds The indices for the atoms.
+   * @note Checks to make sure the atoms are valid before adjusting the
+   * hydrogens.
+   */
+  void adjustHydrogens(const Core::Array<Index>& atomIds);
 
   /**
    * @return An array containing atomic numbers for all atoms in the molecule,

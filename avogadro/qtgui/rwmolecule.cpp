@@ -22,6 +22,7 @@
 #include <cassert>
 
 #include <avogadro/core/avospglib.h>
+#include <avogadro/qtgui/hydrogentools.h>
 #include <avogadro/core/spacegroups.h>
 
 namespace Avogadro {
@@ -131,6 +132,17 @@ RWMolecule::AtomType RWMolecule::addAtom(unsigned char num)
   comm->setText(tr("Add Atom"));
   m_undoStack.push(comm);
   return AtomType(this, atomId);
+}
+
+RWMolecule::AtomType RWMolecule::addAtom(unsigned char num,
+                                         const Vector3 &position3d)
+{
+  // We will combine the actions in this command.
+  m_undoStack.beginMacro(tr("Add Atom"));
+  AtomType atom = addAtom(num);
+  setAtomPosition3d(atomCount() - 1, position3d);
+  m_undoStack.endMacro();
+  return atom;
 }
 
 Index RWMolecule::atomCount(unsigned char num) const
@@ -265,6 +277,25 @@ void RWMolecule::clearAtoms()
   while (atomCount() != 0)
     removeAtom(0);
 
+  m_undoStack.endMacro();
+}
+
+void RWMolecule::adjustHydrogens(Index atomId)
+{
+  RWAtom atom = this->atom(atomId);
+  if (atom.isValid()) {
+    m_undoStack.beginMacro(tr("Adjust Hydrogens"));
+    QtGui::HydrogenTools::adjustHydrogens(atom);
+    m_undoStack.endMacro();
+  }
+}
+
+void RWMolecule::adjustHydrogens(const Core::Array<Index>& atomIds)
+{
+  m_undoStack.beginMacro(tr("Adjust Hydrogens"));
+  for (Index i = 0; i < atomIds.size(); ++i) {
+    adjustHydrogens(atomIds[i]);
+  }
   m_undoStack.endMacro();
 }
 
