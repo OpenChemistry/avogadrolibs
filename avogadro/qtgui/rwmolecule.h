@@ -502,7 +502,28 @@ public:
    * @param cartTol Cartesian tolerance for comparing atom positions.
    * @return True if the algorithm succeeded, and false if it failed.
    */
-  bool reduceCellToAsymmetricUnit(unsigned short hallNumber, double cartTol = 1e-5);
+  bool reduceCellToAsymmetricUnit(unsigned short hallNumber,
+                                  double cartTol = 1e-5);
+
+  /**
+   * Call this function when you wish to merge all undo commands.
+   * It turns on interactive mode to merge similar undo commands in a series
+   * (in order to save space), and it uses QUndoStack's beginMacro() to merge
+   * dissimilar undo commands together. You must call endMergeMode() to end
+   * the merging section (undo and redo are unavailable while merge mode is
+   * on).
+   * @param undoName The name of the undo command
+   */
+  void beginMergeMode(const QString& undoName = "Draw");
+
+  /**
+   * Call this function when you wish merge mode to end. This will turn off
+   * interactive mode, and it will call QUndoStack's endMacro(). All of the
+   * undo commands pushed between beginMergeMode() and endMergeMode() will be
+   * merged into one undo command. beginMergeMode() should have been called
+   * before this is called.
+   */
+  void endMergeMode();
 
   /**
    * @brief Begin or end an interactive edit.
@@ -742,6 +763,18 @@ RWMolecule::bondPairs() const
 inline std::pair<Index, Index> RWMolecule::bondPair(Index bondId) const
 {
   return m_molecule.bondPair(bondId);
+}
+
+inline void RWMolecule::beginMergeMode(const QString& undoName)
+{
+  m_interactive = true;
+  m_undoStack.beginMacro(undoName);
+}
+
+inline void RWMolecule::endMergeMode()
+{
+  m_interactive = false;
+  m_undoStack.endMacro();
 }
 
 inline void RWMolecule::setInteractive(bool b)
