@@ -341,11 +341,8 @@ void Editor::atomLeftClick(QMouseEvent *e)
 
       Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
 
-      if (m_toolWidget->adjustHydrogens()) {
-        QtGui::HydrogenTools::adjustHydrogens(atom);
-
-        changes |= Molecule::Added | Molecule::Removed;
-      }
+      if (m_toolWidget->adjustHydrogens())
+        m_fixValenceLater = true;
 
       m_molecule->emitChanged(changes);
     }
