@@ -213,17 +213,21 @@ public:
   /**
    * Replace the current array of 3D atomic coordinates.
    * @param pos The new coordinate array. Must be of length atomCount().
+   * @param undoText The undo text to be displayed for undo commands.
    * @return True on success, false otherwise.
    */
-  bool setAtomPositions3d(const Core::Array<Vector3> &pos);
+  bool setAtomPositions3d(const Core::Array<Vector3> &pos,
+                          const QString &undoText = "Change Atom Positions");
 
   /**
    * Set the 3D position of a single atom.
    * @param atomId The index of the atom to modify.
    * @param pos The new position of the atom.
+   * @param undoText The undo text to be displayed for undo commands.
    * @return True on success, false otherwise.
    */
-  bool setAtomPosition3d(Index atomId, const Vector3& pos);
+  bool setAtomPosition3d(Index atomId, const Vector3& pos,
+                         const QString &undoText = "Change Atom Position");
 
   bool setAtomPosition2d(Index, const Vector2&) { return false; }
   Vector2 atomPosition2d(Index) { return Vector2(0, 0); }
