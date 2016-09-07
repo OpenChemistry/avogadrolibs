@@ -95,17 +95,20 @@ namespace {
 class AddAtomCommand : public RWMolecule::UndoCommand
 {
   unsigned char m_atomicNumber;
+  bool m_usingPositions;
   Index m_atomId;
   Index m_uniqueId;
 public:
-  AddAtomCommand(RWMolecule &m, unsigned char aN, Index atomId, Index uid)
-    : UndoCommand(m), m_atomicNumber(aN), m_atomId(atomId), m_uniqueId(uid) {}
+  AddAtomCommand(RWMolecule &m, unsigned char aN, bool usingPositions,
+                 Index atomId, Index uid)
+    : UndoCommand(m), m_atomicNumber(aN), m_usingPositions(usingPositions),
+      m_atomId(atomId), m_uniqueId(uid) {}
 
   void redo() AVO_OVERRIDE
   {
     assert(atomicNumbers().size() == m_atomId);
     atomicNumbers().push_back(m_atomicNumber);
-    if (!positions3d().empty())
+    if (m_usingPositions)
       positions3d().push_back(Vector3::Zero());
     if (m_uniqueId >= atomUniqueIds().size())
       atomUniqueIds().resize(m_uniqueId + 1, MaxIndex);
@@ -116,19 +119,21 @@ public:
   {
     assert(atomicNumbers().size() == m_atomId + 1);
     atomicNumbers().pop_back();
-    if (!positions3d().empty())
+    if (m_usingPositions)
       positions3d().resize(atomicNumbers().size(), Vector3::Zero());
     atomUniqueIds()[m_uniqueId] = MaxIndex;
   }
 };
 } // end anon namespace
 
-RWMolecule::AtomType RWMolecule::addAtom(unsigned char num)
+RWMolecule::AtomType RWMolecule::addAtom(unsigned char num,
+                                         bool usingPositions)
 {
   Index atomId = static_cast<Index>(m_molecule.m_atomicNumbers.size());
   Index atomUid = static_cast<Index>(m_molecule.m_atomUniqueIds.size());
 
-  AddAtomCommand *comm = new AddAtomCommand(*this, num, atomId, atomUid);
+  AddAtomCommand *comm = new AddAtomCommand(*this, num, usingPositions,
+                                            atomId, atomUid);
   comm->setText(tr("Add Atom"));
   m_undoStack.push(comm);
   return AtomType(this, atomId);
