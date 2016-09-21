@@ -114,7 +114,7 @@ bool PoscarFormat::read(std::istream &inStream, Core::Molecule &mol)
   }
 
   // Try a lexical cast here. If it fails, assume we have an atomic symbols list
-  lexicalCast<uint>(trimmed(stringSplit.at(0)), ok);
+  lexicalCast<unsigned int>(trimmed(stringSplit.at(0)), ok);
   vector<string> symbolsList;
   vector<unsigned char> atomicNumbers;
 
@@ -146,9 +146,9 @@ bool PoscarFormat::read(std::istream &inStream, Core::Molecule &mol)
   }
 
   stringSplit = split(line, ' ');
-  vector<uint> atomCounts;
+  vector<unsigned int> atomCounts;
   for (size_t i = 0; i < stringSplit.size(); ++i) {
-    uint atomCount = lexicalCast<uint>(stringSplit.at(i));
+    unsigned int atomCount = lexicalCast<unsigned int>(stringSplit.at(i));
     atomCounts.push_back(atomCount);
   }
 
