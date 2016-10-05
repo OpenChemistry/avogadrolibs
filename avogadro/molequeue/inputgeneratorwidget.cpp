@@ -33,6 +33,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QSpinBox>
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QTextEdit>
 
 #include <QtCore/QJsonDocument>
@@ -835,6 +836,8 @@ QWidget *InputGeneratorWidget::createOptionWidget(const QJsonValue &option)
     return createFilePathWidget(obj);
   else if (type == "integer")
     return createIntegerWidget(obj);
+  else if (type == "float")
+    return createFloatWidget(obj);
   else if (type == "boolean")
     return createBooleanWidget(obj);
 
@@ -903,6 +906,33 @@ QWidget *InputGeneratorWidget::createIntegerWidget(const QJsonObject &obj)
     spin->setSuffix(obj["suffix"].toString());
   }
   connect(spin, SIGNAL(valueChanged(int)), SLOT(updatePreviewText()));
+  return spin;
+}
+
+QWidget *InputGeneratorWidget::createFloatWidget(const QJsonObject &obj)
+{
+  QDoubleSpinBox *spin = new QDoubleSpinBox(this);
+  if (obj.contains("minimum") &&
+      obj.value("minimum").isDouble()) {
+    spin->setMinimum(obj["minimum"].toDouble());
+  }
+  if (obj.contains("maximum") &&
+      obj.value("maximum").isDouble()) {
+    spin->setMaximum(obj["maximum"].toDouble());
+  }
+  if (obj.contains("precision") &&
+      obj.value("precision").isDouble()) {
+    spin->setDecimals(static_cast<int>(obj["precision"].toDouble()));
+  }
+  if (obj.contains("prefix") &&
+      obj.value("prefix").isString()) {
+    spin->setPrefix(obj["prefix"].toString());
+  }
+  if (obj.contains("suffix") &&
+      obj.value("suffix").isString()) {
+    spin->setSuffix(obj["suffix"].toString());
+  }
+  connect(spin, SIGNAL(valueChanged(double)), SLOT(updatePreviewText()));
   return spin;
 }
 
