@@ -9,7 +9,7 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
   add_definitions(-DGLEW_STATIC)
 endif()
 
-find_package(Qt5OpenGL REQUIRED)
+find_package(Qt5 COMPONENTS OpenGL REQUIRED)
 
 find_package(VTK
   COMPONENTS

@@ -3,9 +3,7 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}"
   "${AvogadroLibs_BINARY_DIR}/avogadro/molequeue"
   "${AvogadroLibs_SOURCE_DIR}/tests/core")
 
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Network REQUIRED)
-find_package(Qt5Test REQUIRED)
+find_package(Qt5 COMPONENTS Widgets Network Test REQUIRED)
 
 # Pull in MoleQueue for QtJson
 find_package(MoleQueue REQUIRED NO_MODULE)

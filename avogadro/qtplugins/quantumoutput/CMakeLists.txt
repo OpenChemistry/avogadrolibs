@@ -1,7 +1,3 @@
-find_package(Qt5Concurrent REQUIRED)
-include_directories(SYSTEM ${Qt5Concurrent_INCLUDE_DIRS})
-add_definitions(${Qt5Concurrent_DEFINITIONS})
-
 set(quantumoutput_srcs
   gaussiansetconcurrent.cpp
   slatersetconcurrent.cpp
