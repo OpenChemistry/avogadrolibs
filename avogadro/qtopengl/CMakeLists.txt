@@ -3,7 +3,7 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
-find_package(Qt5OpenGL REQUIRED)
+find_package(Qt5 COMPONENTS OpenGL REQUIRED)
 
 set(HEADERS
   glwidget.h
