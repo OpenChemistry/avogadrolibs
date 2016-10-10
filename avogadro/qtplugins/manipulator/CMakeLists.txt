@@ -1,6 +1,3 @@
-find_package(Qt5OpenGL REQUIRED)
-include_directories(SYSTEM ${Qt5OpenGL_INCLUDE_DIRS})
-
 set(manipulator_srcs
   manipulator.cpp
 )

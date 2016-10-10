@@ -6,7 +6,7 @@ include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/qtgui"
 find_package(OpenGL REQUIRED)
 include_directories(SYSTEM ${OPENGL_INCLUDE_DIR})
 
-find_package(Qt5OpenGL REQUIRED)
+find_package(Qt5 COMPONENTS OpenGL REQUIRED)
 include_directories(SYSTEM ${Qt5OpenGL_INCLUDE_DIRS})
 add_definitions(${Qt5OpenGL_DEFINITIONS})
 
