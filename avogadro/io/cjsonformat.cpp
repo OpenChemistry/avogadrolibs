@@ -821,13 +821,6 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
     }
   }
 
-  value = atoms["mass"];
-  if (!testEmpty(value, "atoms.atommass") && testIfArray(value, "atoms.atommass")) {
-    atomCount = static_cast<Index>(value.size());
-    for (Index i = 0; i < atomCount; ++i)
-      molecule.addAtomicMass(value.get(i, 0).asDouble());
-  }
-
   //Start of atomic spins
   Value spins = atoms["spins"];
   if (!testEmpty(spins, "atoms.atomspins") && !testIsNotObject(spins, "atoms.atomspins")) {

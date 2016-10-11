@@ -131,16 +131,6 @@ const Array<unsigned char> &Molecule::atomicNumbers() const
   return m_atomicNumbers;
 }
 
-Array<double>& Molecule::atomicMasses()
-{
-  return m_atomicMasses;
-}
-
-const Array<double>& Molecule::atomicMasses() const
-{
-  return m_atomicMasses;
-}
-
 Array<AtomHybridization>& Molecule::hybridizations()
 {
   return m_hybridizations;
@@ -244,16 +234,6 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
 
   return AtomType(this, static_cast<Index>(m_atomicNumbers.size() - 1));
 }
-
-bool Molecule::addAtomicMass(double mass){
-  //shouldn't add any more if equal
-  if(m_atomicMasses.size() == m_atomicNumbers.size())
-    return false;
-
-  m_atomicMasses.push_back(mass);
-  return true;
-}
-
 
 bool Molecule::removeAtom(Index index)
 {
