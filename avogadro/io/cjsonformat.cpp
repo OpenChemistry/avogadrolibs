@@ -132,11 +132,11 @@ bool CjsonFormat::read(std::istream &file, Molecule &molecule)
   }
 
   return readUnitCell(root, molecule) &&
-         readOptimization(root, molecule) &&
-         readVibrations(root, molecule) &&
-         readBonds(root, molecule) &&
-         readTransitions(root, molecule) &&
-         readFragments(root, molecule);
+      readOptimization(root, molecule) &&
+      readVibrations(root, molecule) &&
+      readBonds(root, molecule) &&
+      readTransitions(root, molecule) &&
+      readFragments(root, molecule);
 }
 
 bool CjsonFormat::write(std::ostream &file, const Molecule &molecule)
@@ -373,8 +373,8 @@ bool CjsonFormat::readUnitCell(Value &root, Molecule &molecule)
         !value["alpha"].isNumeric() ||
         !value["beta"].isNumeric() ||
         !value["gamma"].isNumeric()) {
-       appendError("Invalid unit cell specification: a, b, c, alpha, beta, gamma"
-                   " must be present and numeric.");
+      appendError("Invalid unit cell specification: a, b, c, alpha, beta, gamma"
+                  " must be present and numeric.");
       return false;
     }
     Real a = static_cast<Real>(value["a"].asDouble());
@@ -1051,7 +1051,7 @@ bool CjsonFormat::readBonds(Value &root, Molecule &molecule)
       }
       for (Index i = 0; i < bondCount; ++i)
         molecule.bond(i).setOrder(
-          static_cast<unsigned char>(value.get(i, 1).asInt()));
+              static_cast<unsigned char>(value.get(i, 1).asInt()));
     }
   }
 
@@ -1064,55 +1064,55 @@ bool CjsonFormat::readTransitions(Value &root, Molecule &molecule)
   Value transitions = root["transitions"];
 
   if (!(testEmpty(transitions, "transitions") || testIsNotObject(transitions, "transitions"))) {
-	  Value value;
+    Value value;
 
-	  if (transitions.isMember("electronic transitions")) {
-		  value = transitions["electronic transitions"];
+    if (transitions.isMember("electronic transitions")) {
+      value = transitions["electronic transitions"];
 
-		  if (!value.empty() && !value.isArray()) {
-			  int targetCount = static_cast<int>(value.size());
-			  double *electronicTransitions = new double[targetCount];
-			  for (int i = 0; i < targetCount; ++i)
-				  electronicTransitions[i] = value.get(i, 0).asDouble();
-			  molecule.setData("electronic transitions", electronicTransitions);
-		  }
-	  }
+      if (!value.empty() && !value.isArray()) {
+        int targetCount = static_cast<int>(value.size());
+        double *electronicTransitions = new double[targetCount];
+        for (int i = 0; i < targetCount; ++i)
+          electronicTransitions[i] = value.get(i, 0).asDouble();
+        molecule.setData("electronic transitions", electronicTransitions);
+      }
+    }
 
-	  if (transitions.isMember("oscillator strength")) {
-		  value = transitions["oscillator strength"];
+    if (transitions.isMember("oscillator strength")) {
+      value = transitions["oscillator strength"];
 
-		  if (!value.empty() && !value.isArray()) {
-			  int targetCount = static_cast<int>(value.size());
-			  double *oscillatorStrength = new double[targetCount];
-			  for (int i = 0; i < targetCount; ++i)
-				  oscillatorStrength[i] = value.get(i, 0).asDouble();
-			  molecule.setData("oscillator strength", oscillatorStrength);
-		  }
-	  }
+      if (!value.empty() && !value.isArray()) {
+        int targetCount = static_cast<int>(value.size());
+        double *oscillatorStrength = new double[targetCount];
+        for (int i = 0; i < targetCount; ++i)
+          oscillatorStrength[i] = value.get(i, 0).asDouble();
+        molecule.setData("oscillator strength", oscillatorStrength);
+      }
+    }
 
-	  if (transitions.isMember("rotatory strength")) {
-		  value = transitions["rotatory strength"];
+    if (transitions.isMember("rotatory strength")) {
+      value = transitions["rotatory strength"];
 
-		  if (!value.empty() && !value.isArray()) {
-			  int targetCount = static_cast<int>(value.size());
-			  double *rotatoryStrength = new double[targetCount];
-			  for (int i = 0; i < targetCount; ++i)
-				  rotatoryStrength[i] = value.get(i, 0).asDouble();
-			  molecule.setData("rotatory strength", rotatoryStrength);
-		  }
-	  }
+      if (!value.empty() && !value.isArray()) {
+        int targetCount = static_cast<int>(value.size());
+        double *rotatoryStrength = new double[targetCount];
+        for (int i = 0; i < targetCount; ++i)
+          rotatoryStrength[i] = value.get(i, 0).asDouble();
+        molecule.setData("rotatory strength", rotatoryStrength);
+      }
+    }
 
-	  if (transitions.isMember("symmetry")) {
-		  value = transitions["symmetry"];
+    if (transitions.isMember("symmetry")) {
+      value = transitions["symmetry"];
 
-		  if (!value.empty() && !value.isArray()) {
-			  int targetCount = static_cast<int>(value.size());
-			  string *transitionSymmetry = new string[targetCount];
-			  for (int i = 0; i < targetCount; ++i)
-				  transitionSymmetry[i] = value.get(i, 0).asString();
-			  molecule.setData("electronic transition symmetry", transitionSymmetry);
-		  }
-	  }
+      if (!value.empty() && !value.isArray()) {
+        int targetCount = static_cast<int>(value.size());
+        string *transitionSymmetry = new string[targetCount];
+        for (int i = 0; i < targetCount; ++i)
+          transitionSymmetry[i] = value.get(i, 0).asString();
+        molecule.setData("electronic transition symmetry", transitionSymmetry);
+      }
+    }
   }
 
   return true;
@@ -1120,68 +1120,68 @@ bool CjsonFormat::readTransitions(Value &root, Molecule &molecule)
 
 bool CjsonFormat::readFragments(Value &root, Molecule &molecule)
 {
-	//Check for fragments data
-	Value fragments = root["fragments"];
+  //Check for fragments data
+  Value fragments = root["fragments"];
 
-	if (!(testEmpty(fragments, "fragments") || testIsNotObject(fragments, "fragments"))) {
-		Value value;
+  if (!(testEmpty(fragments, "fragments") || testIsNotObject(fragments, "fragments"))) {
+    Value value;
 
-		if (fragments.isMember("fragment names")) {
-			value = fragments["fragment names"];
+    if (fragments.isMember("fragment names")) {
+      value = fragments["fragment names"];
 
-			if (!value.empty() && !value.isArray()) {
-				int targetCount = static_cast<int>(value.size());
-				string *fragmentNames = new string[targetCount];
-				for (int i = 0; i < targetCount; ++i)
-					fragmentNames[i] = value.get(i, 0).asString();
-				molecule.setData("fragment names", fragmentNames);
-			}
-		}
+      if (!value.empty() && !value.isArray()) {
+        int targetCount = static_cast<int>(value.size());
+        string *fragmentNames = new string[targetCount];
+        for (int i = 0; i < targetCount; ++i)
+          fragmentNames[i] = value.get(i, 0).asString();
+        molecule.setData("fragment names", fragmentNames);
+      }
+    }
 
-		value = fragments["atom indices"];
-		if (!value.empty()) {
-			int n = static_cast<int>(value.size());
-			int L = static_cast<int>(value[0].size());
-			MatrixX atomIndices(n,L);
-			Value indicesArray;
-			for (int i = 0; i < n; ++i) {
-				indicesArray = value[i];
-				for (int j =0; j < L ; j++) {
-					atomIndices(i, j) = indicesArray.get(j, 0).asDouble();
-				}
-			}
-			molecule.setData("fragment atom indices", atomIndices);
-		}
+    value = fragments["atom indices"];
+    if (!value.empty()) {
+      int n = static_cast<int>(value.size());
+      int L = static_cast<int>(value[0].size());
+      MatrixX atomIndices(n,L);
+      Value indicesArray;
+      for (int i = 0; i < n; ++i) {
+        indicesArray = value[i];
+        for (int j =0; j < L ; j++) {
+          atomIndices(i, j) = indicesArray.get(j, 0).asDouble();
+        }
+      }
+      molecule.setData("fragment atom indices", atomIndices);
+    }
 
-		if (fragments.isMember("orbital  names")) {
-			value = fragments["orbital  names"];
+    if (fragments.isMember("orbital  names")) {
+      value = fragments["orbital  names"];
 
-			if (!value.empty() && !value.isArray()) {
-				int targetCount = static_cast<int>(value.size());
-				string *orbitalNames = new string[targetCount];
-				for (int i = 0; i < targetCount; ++i)
-					orbitalNames[i] = value.get(i, 0).asString();
-				molecule.setData("fragment orbital  names", orbitalNames);
-			}
-		}
+      if (!value.empty() && !value.isArray()) {
+        int targetCount = static_cast<int>(value.size());
+        string *orbitalNames = new string[targetCount];
+        for (int i = 0; i < targetCount; ++i)
+          orbitalNames[i] = value.get(i, 0).asString();
+        molecule.setData("fragment orbital  names", orbitalNames);
+      }
+    }
 
-		value = fragments["orbital overlap"];
-		if (!value.empty()) {
-			int n = static_cast<int>(value.size());
-			int L = static_cast<int>(value[0].size());
-			MatrixX overlapIndices(n,L);
-			Value indicesArray;
-			for (int i = 0; i < n; ++i) {
-				indicesArray = value[i];
-				for (int j =0; j < L ; j++) {
-					overlapIndices(i, j) = indicesArray.get(j, 0).asDouble();
-				}
-			}
-			molecule.setData("fragment orbital overlap", overlapIndices);
-		}
-	}
+    value = fragments["orbital overlap"];
+    if (!value.empty()) {
+      int n = static_cast<int>(value.size());
+      int L = static_cast<int>(value[0].size());
+      MatrixX overlapIndices(n,L);
+      Value indicesArray;
+      for (int i = 0; i < n; ++i) {
+        indicesArray = value[i];
+        for (int j =0; j < L ; j++) {
+          overlapIndices(i, j) = indicesArray.get(j, 0).asDouble();
+        }
+      }
+      molecule.setData("fragment orbital overlap", overlapIndices);
+    }
+  }
 
-	return true;
+  return true;
 }
 
 } // end Io namespace
