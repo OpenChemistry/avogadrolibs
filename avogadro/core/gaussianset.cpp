@@ -118,7 +118,7 @@ void GaussianSet::setMolecularOrbitals(const vector<double>& MOs,
 }
 
 void GaussianSet::setMolecularOrbitalEnergy(const vector<double> &energies,
-                                             ElectronType type)
+                                            ElectronType type)
 {
   if (type == Beta)
     m_moEnergy[1] = energies;
@@ -127,7 +127,7 @@ void GaussianSet::setMolecularOrbitalEnergy(const vector<double> &energies,
 }
 
 void GaussianSet::setMolecularOrbitalOccupancy(const vector<unsigned char> &occ,
-                                                ElectronType type)
+                                               ElectronType type)
 {
   if (type == Beta)
     m_moOccupancy[1] = occ;
@@ -136,7 +136,7 @@ void GaussianSet::setMolecularOrbitalOccupancy(const vector<unsigned char> &occ,
 }
 
 void GaussianSet::setMolecularOrbitalNumber(const vector<unsigned int> &nums,
-                                             ElectronType type)
+                                            ElectronType type)
 {
   if (type == Beta)
     m_moNumber[1] = nums;
