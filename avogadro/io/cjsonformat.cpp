@@ -56,7 +56,8 @@ CjsonFormat::~CjsonFormat()
 {
 }
 
-bool CjsonFormat::testEmpty(Value &value, const std::string &key, bool writeError)
+bool CjsonFormat::testEmpty(Value &value, const std::string &key,
+                            bool writeError)
 {
   if (value.empty()) {
     if (writeError)
@@ -66,7 +67,8 @@ bool CjsonFormat::testEmpty(Value &value, const std::string &key, bool writeErro
   return false;
 }
 
-bool CjsonFormat::testIsNotObject(Value &value, const std::string &key, bool writeError)
+bool CjsonFormat::testIsNotObject(Value &value, const std::string &key,
+                                  bool writeError)
 {
   if (value.type() != Json::objectValue) {
     if (writeError)
@@ -76,7 +78,8 @@ bool CjsonFormat::testIsNotObject(Value &value, const std::string &key, bool wri
   return false;
 }
 
-bool CjsonFormat::testIfArray(Value &value, const std::string &key, bool writeError)
+bool CjsonFormat::testIfArray(Value &value, const std::string &key,
+                              bool writeError)
 {
   if (!value.isArray()) {
     if (writeError)
@@ -125,7 +128,8 @@ bool CjsonFormat::read(std::istream &file, Molecule &molecule)
   GaussianSet *basis = new GaussianSet;
   basis->setMolecule(&molecule);
 
-  if (!(readAtoms(root, molecule, basis) && readProperties(root, molecule, basis))) {
+  if (!(readAtoms(root, molecule, basis) &&
+        readProperties(root, molecule, basis))) {
     return false;
   }
   else {
@@ -391,7 +395,8 @@ bool CjsonFormat::readUnitCell(Value &root, Molecule &molecule)
   return true;
 }
 
-bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* basis)
+bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
+                                 GaussianSet* basis)
 {
   //Read in properties of the molecule
   Value properties = root["properties"];
@@ -400,21 +405,24 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
   }
 
   //From C++11 onwards, check compatibility?
-  std::vector<std::string> attributes = {"molecular mass", "charge", "multiplicity", "total dipole moment", "enthalpy",
-                                         "entropy", "temperature"};
+  std::vector<std::string> attributes = {"molecular mass", "charge",
+                                         "multiplicity", "total dipole moment",
+                                         "enthalpy", "entropy", "temperature"};
 
   Value value;
   for (Value::iterator it = properties.begin(); it != properties.end(); ++it) {
-    if (std::find(attributes.begin(), attributes.end(), it.key().asString()) != attributes.end()) {
+    if (std::find(attributes.begin(), attributes.end(),
+                  it.key().asString()) != attributes.end()) {
       value = *it;
       if (!value.empty())
         molecule.setData(it.key().asString(), value.asDouble());
     }
   }
 
-  //Energy attributes start here---------------------------------------------------------
+  // Energy attributes start here
   Value energy = properties["energy"];
-  if (!(testEmpty(energy, "properties.energy") || testIsNotObject(energy, "properties.energy" ))) {
+  if (!(testEmpty(energy, "properties.energy") ||
+        testIsNotObject(energy, "properties.energy" ))) {
 
     value = energy["free energy"];
     if (!value.empty()) {
@@ -429,7 +437,8 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
     //alpha/beta -> homo/gap not read in
 
     value = energy["coupled cluster"];
-    if (!value.empty() && testIfArray(value, "properties.energy.coupled_cluster")) {
+    if (!value.empty() &&
+        testIfArray(value, "properties.energy.coupled_cluster")) {
       int energyCount = static_cast<int>(value.size());
       double *ccEnergies = new double[energyCount];
       for(int i = 0; i < energyCount; ++i)
@@ -452,16 +461,17 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
       molecule.setData("moller plesset energies", mpEnergies);
     }
   }
-  //Energy attributes end here-----------------------------------------------------------
 
-  //Partial Charges attributes start here------------------------------------------------
+  // Partial Charges attributes start here
   Value pCharges = properties["partial charges"];
-  if (!(testEmpty(pCharges, "properties.partialCharges") || testIsNotObject(pCharges, "properties.partialCharges"))) {
+  if (!(testEmpty(pCharges, "properties.partialCharges") ||
+        testIsNotObject(pCharges, "properties.partialCharges"))) {
 
     std::vector<std::string> pChargeType = {"mulliken", "lowdin", "natural" };
 
     for (Value::iterator it = pCharges.begin(); it != pCharges.end(); ++it) {
-      if (std::find(pChargeType.begin(), pChargeType.end(), it.key().asString()) != pChargeType.end()) {
+      if (std::find(pChargeType.begin(), pChargeType.end(),
+                    it.key().asString()) != pChargeType.end()) {
         value = *it;
 
         if (!value.empty() && !value.isArray()) {
@@ -478,11 +488,11 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
       }
     }
   }
-  //Partial Charges attributes start here------------------------------------------------
 
-  //Orbitals attributes start here-------------------------------------------------------
+  // Orbitals attributes start here
   Value orbitals = properties["orbitals"];
-  if (!(testEmpty(orbitals, "properties.orbitals") || testIsNotObject(orbitals, "properties.orbitals" ))) {
+  if (!(testEmpty(orbitals, "properties.orbitals") ||
+        testIsNotObject(orbitals, "properties.orbitals" ))) {
 
     bool unrestricted = false;
 
@@ -497,13 +507,14 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
 
       if (unrestricted) {
         int betaHomoIndex = homo[1].asInt() + 1;
-        vector<unsigned char> betaOccArray(betaHomoIndex, static_cast<unsigned char>(2));
+        vector<unsigned char> betaOccArray(betaHomoIndex,
+                                           static_cast<unsigned char>(2));
         basis->setMolecularOrbitalOccupancy(betaOccArray);
       }
     }
 
 
-    //Basis set energy has a one dimension restriction
+    // Basis set energy has a one dimension restriction
     Value moEnergies = orbitals["energies"];
     if (!moEnergies.empty() && moEnergies.isArray()) {
       unrestricted = static_cast<int>(moEnergies.size()) == 2 ? true : false;
@@ -518,7 +529,8 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
 
       //For unrestricted calculation beta energies exist
       if (unrestricted) {
-        //Assumption: The number of beta energies will be equivalent to alpha energies
+        // Assumption: The number of beta energies will be equivalent to alpha
+        // energies
         vector<double> betaEnergyArray(energyCount);
         value = moEnergies[1];
 
@@ -529,7 +541,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
       }
     }
 
-    //overlap between basis functions (atomic orbitals)
+    // Overlap between basis functions (atomic orbitals)
     value = orbitals["overlaps"];
     if (!value.empty()) {
       int rows = static_cast<int>(value.size());
@@ -545,9 +557,10 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
       molecule.setData("atomic orbital overlaps", aoOverlaps);
     }
 
-    //To be filled with mocoeffs attribute
+    // To be filled with mocoeffs attribute
     Value moCoeffs = orbitals["coeffs"];
-    if (!(testEmpty(moCoeffs, "properties.orbitals.coeffs") || testIfArray(moCoeffs, "properties.orbitals.coeffs" ))) {
+    if (!(testEmpty(moCoeffs, "properties.orbitals.coeffs") ||
+          testIfArray(moCoeffs, "properties.orbitals.coeffs" ))) {
       unrestricted = static_cast<int>(moCoeffs.size()) == 2 ? true : false;
       vector<double> coeffArray;
 
@@ -574,8 +587,9 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
         }
       }
 
-      //Set Density matrix
-      //Gaussian set - Density matrix doesn't distinguish between restricted and unrestricted calculations
+      // Set Density matrix
+      // Gaussian set - Density matrix doesn't distinguish between restricted
+      // and unrestricted calculations
       if (orbitals.isMember("basis number") && orbitals.isMember("homos")) {
         int basisSize = orbitals["basis number"].asInt();
         int homo = orbitals["homos"][0].asInt() + 1;
@@ -607,7 +621,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
             betaDensityMatrix += tempDensity;
           }
 
-          //Spin Density Matrix = Alpha Density Matrix - Beta Density Matrix
+          // Spin Density Matrix = Alpha Density Matrix - Beta Density Matrix
           MatrixX spinDensityMatrix = densityMatrix - betaDensityMatrix;
           basis->setSpinDensityMatrix(spinDensityMatrix);
         }
@@ -615,9 +629,10 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
       }
     }
 
-    //Molecular orbital symmetries
+    // Molecular orbital symmetries
     Value MOSymmetry = orbitals["molecular orbital symmetry"];
-    if (!(testEmpty(moCoeffs, "properties.orbitals.MOSymmetry") || testIfArray(moCoeffs, "properties.orbitals.MOSymmetry" ))) {
+    if (!(testEmpty(moCoeffs, "properties.orbitals.MOSymmetry") ||
+          testIfArray(moCoeffs, "properties.orbitals.MOSymmetry" ))) {
       unrestricted = static_cast<int>(MOSymmetry.size()) == 2 ? true : false;
       Array<string> symmetryArray;
 
@@ -635,13 +650,14 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule, GaussianSet* b
             for (int i = 0; i < value.size(); ++i) {
               betaSymmetryArray.push_back(value[i].asString());
             }
-            molecule.setData("beta molecular orbital symmetry", betaSymmetryArray);
+            molecule.setData("beta molecular orbital symmetry",
+                             betaSymmetryArray);
           }
         }
       }
     }
   }
-  //Orbitals attributes end here----------------------------------------------------------
+
   return true;
 }
 
@@ -653,13 +669,15 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
     return false;
   }
 
-  //Element values start here:--------------------------------------------------
+  // Element values start here
   Value value =  atoms["elements"];
   Index atomCount(0);
-  if (!(testEmpty(value, "atoms.elements") || testIsNotObject(value, "atoms.elements"))) {
+  if (!(testEmpty(value, "atoms.elements") ||
+        testIsNotObject(value, "atoms.elements"))) {
     value = value["number"];
 
-    if (!testEmpty(value, "atoms.elements.number") && testIfArray(value, "atoms.elements.number")) {
+    if (!testEmpty(value, "atoms.elements.number") &&
+        testIfArray(value, "atoms.elements.number")) {
       atomCount = static_cast<Index>(value.size());
       for (Index i = 0; i < atomCount; ++i)
         molecule.addAtom(static_cast<unsigned char>(value.get(i, 0).asInt()));
@@ -668,9 +686,8 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
       return false;
     }
   }
-  //End of elements object -----------------------------------------------------
 
-  //Start of Coords object:-----------------------------------------------------
+  // Start of Coords object
   Value coords = atoms["coords"];
   if (!coords.empty()) {
     value = coords["3d"];
@@ -723,14 +740,14 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
       CrystalTools::setFractionalCoordinates(molecule, fcoords);
     }
   }
-  //End of coords---------------------------------------------------------------
 
   // Perceive bonds for the molecule.
   molecule.perceiveBondsSimple();
 
-  //Start of Orbitals-----------------------------------------------------------
+  // Start of Orbitals
   Value orbitals = atoms["orbitals"];
-  if (!(testEmpty(orbitals, "atoms.orbitals") || testIsNotObject(orbitals, "atoms.orbitals"))) {
+  if (!(testEmpty(orbitals, "atoms.orbitals") ||
+        testIsNotObject(orbitals, "atoms.orbitals"))) {
 
     value = orbitals["names"];
     if (testIfArray(value, "atoms.orbitals.aonames")) {
@@ -802,28 +819,29 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
       }
     }
 
-    //atomic orbital indices for all atoms
+    // Atomic orbital indices for all atoms
     value = orbitals["indices"];
     if (testIfArray(value, "atoms.orbitals.aonames")) {
       //post process the saved data
     }
   }
-  //End of orbitals-------------------------------------------------------------
 
   value = atoms["core electrons"];
   Index coreElectronCount(0);
 
-  if (!testEmpty(value, "atoms.coreElectron") && testIfArray(value, "atoms.coreElectron")) {
+  if (!testEmpty(value, "atoms.coreElectron") &&
+      testIfArray(value, "atoms.coreElectron")) {
     coreElectronCount = static_cast<Index>(value.size());
     for (Index i = 0; i < coreElectronCount; ++i) {
-      //add the derived data to the appropriate place
+      // Add the derived data to the appropriate place
       break;
     }
   }
 
-  //Start of atomic spins
+  // Start of atomic spins
   Value spins = atoms["spins"];
-  if (!testEmpty(spins, "atoms.atomspins") && !testIsNotObject(spins, "atoms.atomspins")) {
+  if (!testEmpty(spins, "atoms.atomspins") &&
+      !testIsNotObject(spins, "atoms.atomspins")) {
 
     value = spins["mulliken"];
     if (!value.empty() && !value.isArray()) {
@@ -832,21 +850,19 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
       for(int i = 0; i < spinCount; ++i)
         atomicSpins[i] = value.get(i,0).asDouble();
       molecule.setData("mulliken spin", atomicSpins);
-      //should I delete atomicSpins here after assigning that memory?
+      // Should I delete atomicSpins here after assigning that memory?
     }
 
     value = spins["lowdin"];
     if (!value.empty() && !value.isArray()) {
-      int                                                                                                                                 spinCount = static_cast<int>(value.size());
+      int spinCount = static_cast<int>(value.size());
       double *atomicSpins = new double[spinCount];
       for(int i = 0; i < spinCount; ++i)
         atomicSpins[i] = value.get(i,0).asDouble();
       molecule.setData("lowdin spin", atomicSpins);
-      //same as above
+      // Same as above
     }
-
   }
-  //End of atomic spins
 
   return true;
 }
@@ -855,7 +871,8 @@ bool CjsonFormat::readOptimization(Value &root, Molecule &molecule)
 {
   Value optimization = root["optimization"];
 
-  if (!(testEmpty(optimization, "optimization") || testIsNotObject(optimization, "optimization"))) {
+  if (!(testEmpty(optimization, "optimization") ||
+        testIsNotObject(optimization, "optimization"))) {
 
     if (optimization.isMember("done")) {
       bool status = optimization["done"].asBool();
@@ -887,7 +904,7 @@ bool CjsonFormat::readOptimization(Value &root, Molecule &molecule)
       }
     }
 
-    //Start of SCF object------------------------------------------------------------
+    // Start of SCF object
     Value scf = optimization["scf"];
     if (!scf.empty()) {
       if (scf.isMember("scf energies")) {
@@ -902,9 +919,8 @@ bool CjsonFormat::readOptimization(Value &root, Molecule &molecule)
         }
       }
     }
-    //End of SCF object-----------------------------------------------------------------
 
-    //Start of scan object--------------------------------------------------------------
+    // Start of scan object
     Value scan = optimization["scan"];
     if (!scan.empty()) {
 
@@ -952,7 +968,8 @@ bool CjsonFormat::readVibrations(Value &root, Molecule &molecule)
   // Check for vibrational data.
   Value vibrations = root["vibrations"];
 
-  if (!(testEmpty(vibrations, "vibrations") || testIsNotObject(vibrations, "vibrations"))) {
+  if (!(testEmpty(vibrations, "vibrations") ||
+        testIsNotObject(vibrations, "vibrations"))) {
 
     Value value = vibrations["frequencies"];
     if (!value.empty() && value.isArray()) {
@@ -1057,7 +1074,8 @@ bool CjsonFormat::readTransitions(Value &root, Molecule &molecule)
   //Check for transitions data
   Value transitions = root["transitions"];
 
-  if (!(testEmpty(transitions, "transitions") || testIsNotObject(transitions, "transitions"))) {
+  if (!(testEmpty(transitions, "transitions") ||
+        testIsNotObject(transitions, "transitions"))) {
     Value value;
 
     if (transitions.isMember("electronic transitions")) {
@@ -1117,7 +1135,8 @@ bool CjsonFormat::readFragments(Value &root, Molecule &molecule)
   //Check for fragments data
   Value fragments = root["fragments"];
 
-  if (!(testEmpty(fragments, "fragments") || testIsNotObject(fragments, "fragments"))) {
+  if (!(testEmpty(fragments, "fragments") ||
+        testIsNotObject(fragments, "fragments"))) {
     Value value;
 
     if (fragments.isMember("fragment names")) {
