@@ -18,13 +18,15 @@
 #define AVOGADRO_IO_CJSONFORMAT_H
 
 #include "fileformat.h"
-#include <avogadro/core/gaussianset.h>
 
 namespace Json{
   class Value;
 }
 
 namespace Avogadro {
+namespace Core {
+class GaussianSet;
+}
 namespace Io {
 
 /**

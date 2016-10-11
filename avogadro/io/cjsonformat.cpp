@@ -18,6 +18,7 @@
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
