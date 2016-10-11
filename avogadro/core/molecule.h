@@ -89,11 +89,17 @@ public:
   /** \overload */
   VariantMap& dataMap();
 
-  /** Returns a vector of atomic numbers for the atoms in the moleucle. */
+  /** Returns a vector of atomic numbers for the atoms in the molecule. */
   Array<unsigned char>& atomicNumbers();
 
   /** \overload */
   const Array<unsigned char>& atomicNumbers() const;
+
+  /** Returns a vector of atomic masses for the atoms in the molecule. */
+  Array<double>& atomicMasses();
+
+  /** \overload */
+  const Array<double>& atomicMasses() const;
 
   /**
    * Get the atomic number for the requested atom.
@@ -324,6 +330,9 @@ public:
   /**  Adds an atom to the molecule. */
   virtual AtomType addAtom(unsigned char atomicNumber);
 
+  /**  add Atomic masses for the atoms in the molecule. */
+  virtual bool addAtomicMass(double atomicMass);
+
   /**
    * @brief Remove the specified atom from the molecule.
    * @param index The index of the atom to be removed.
@@ -519,6 +528,7 @@ protected:
   VariantMap m_data;
   CustomElementMap m_customElementMap;
   Array<unsigned char> m_atomicNumbers;
+  Array<double> m_atomicMasses;
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
   Array< Array<Vector3> > m_coordinates3d; // Used for conformers/trajectories.
