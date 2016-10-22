@@ -14,11 +14,12 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_MOLEQUEUE_INPUTGENERATOR_H
-#define AVOGADRO_MOLEQUEUE_INPUTGENERATOR_H
+#ifndef AVOGADRO_QTGUI_INTERFACESCRIPT_H
+#define AVOGADRO_QTGUI_INTERFACESCRIPT_H
 
 #include <QtCore/QObject>
-#include "avogadromolequeueexport.h"
+
+#include "avogadroqtguiexport.h"
 
 #include <avogadro/core/avogadrocore.h>
 
@@ -39,14 +40,11 @@ class Molecule;
 namespace QtGui {
 class GenericHighlighter;
 class PythonScript;
-}
 
-namespace MoleQueue {
 /**
- * @class InputGenerator inputgenerator.h <avogadro/molequeue/inputgenerator.h>
- * @brief The InputGenerator class provides an interface to input generator
- * scripts.
- * @sa InputGeneratorWidget
+ * @class InterfaceScript interfacescript.h <avogadro/molequeue/interfacescript.h>
+ * @brief The Interface class provides an interface to external scripts
+ * @sa InterfaceWidget
  *
  * The QuantumInput extension provides a scriptable method for users to add
  * custom input generators to Avogadro. By writing an executable that implements
@@ -415,7 +413,7 @@ namespace MoleQueue {
  * ================================
  *
  * The generation of molecular geometry descriptions may be skipped in the
- * script and deferred to the InputGenerator class by use of a special keyword.
+ * script and deferred to the InterfaceScript class by use of a special keyword.
  * The "contents" string may contain a keyword of the form
 ~~~
 $$coords:[coordSpec]$$
@@ -448,7 +446,7 @@ $$coords:[coordSpec]$$
  * qDebug() stream from within avogadro. The script is free to handle the
  * debug flag as the author wishes.
  */
-class AVOGADROMOLEQUEUE_EXPORT InputGenerator : public QObject
+class AVOGADROQTGUI_EXPORT InterfaceScript : public QObject
 {
   Q_OBJECT
 public:
@@ -456,10 +454,10 @@ public:
    * Constructor
    * @param scriptFilePath_ Absolute path to generator script.
    */
-  explicit InputGenerator(const QString &scriptFilePath_,
+  explicit InterfaceScript(const QString &scriptFilePath_,
                           QObject *parent_ = NULL);
-  explicit InputGenerator(QObject *parent_ = NULL);
-  ~InputGenerator();
+  explicit InterfaceScript(QObject *parent_ = NULL);
+  ~InterfaceScript();
 
   /**
    * @return True if debugging is enabled.
@@ -493,6 +491,16 @@ public:
   QString displayName() const;
 
   /**
+   * Query the script for the menu path (<tt>--menu-path</tt>).
+   * @note The results will be cached the first time this function is called
+   * and reused in subsequent calls.
+   * @note If an error occurs, the error string will be set. Call hasErrors()
+   * to check for success, and errorString() or errorList() to get a
+   * user-friendly description of the error.
+   */
+  QString menuPath() const;
+
+  /**
    * @return The path to the generator file.
    */
   QString scriptFilePath() const;
@@ -507,6 +515,18 @@ public:
    * Clear any cached data and return to an uninitialized state.
    */
   void reset();
+
+  /**
+   * Request input files from the script using the supplied options object and
+   * molecule. See the class documentation for details on the @p options_
+   * object format.
+   *
+   * @return true on success and false on failure.
+   * @note If an error occurs, the error string will be set. Call hasErrors()
+   * to check for success, and errorString() or errorList() to get a
+   * user-friendly description of the error.
+   */
+  bool runWorkflow(const QJsonObject &options_, Core::Molecule &mol);
 
   /**
    * Request input files from the script using the supplied options object and
@@ -610,6 +630,7 @@ private:
   // File extension of requested molecule format
   mutable QString m_moleculeExtension;
   mutable QString m_displayName;
+  mutable QString m_menuPath;
   mutable QJsonObject m_options;
   mutable QStringList m_warnings;
   mutable QStringList m_errors;
@@ -623,13 +644,13 @@ private:
 
 };
 
-inline bool InputGenerator::isValid() const
+inline bool InterfaceScript::isValid() const
 {
   displayName();
   return !hasErrors();
 }
 
-} // namespace MoleQueue
+} // namespace QtGui
 } // namespace Avogadro
 
-#endif // AVOGADRO_MOLEQUEUE_INPUTGENERATOR_H
+#endif // AVOGADRO_MOLEQUEUE_INTERFACESCRIPT_H
