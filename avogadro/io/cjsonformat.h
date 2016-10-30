@@ -73,7 +73,6 @@ private:
                        bool writeError = false);
   bool testIfArray(Json::Value &value,const std::string &key,
                    bool writeError = false);
-  bool readUnitCell(Json::Value &root, Core::Molecule &molecule);
   bool readProperties(Json::Value &root, Core::Molecule &molecule,
                       Core::GaussianSet *basis);
   bool readAtoms(Json::Value &root, Core::Molecule &molecule,

@@ -128,16 +128,19 @@ bool CjsonFormat::read(std::istream &file, Molecule &molecule)
   GaussianSet *basis = new GaussianSet;
   basis->setMolecule(&molecule);
 
-  if (!(readAtoms(root, molecule, basis) &&
-        readProperties(root, molecule, basis))) {
+  if (!readAtoms(root, molecule, basis)) {
+    appendError("Unable to read in the atoms");
     return false;
+  }
+
+  if (!readProperties(root, molecule, basis)) {
+    delete basis;
   }
   else {
     molecule.setBasisSet(basis);
   }
 
-  return readUnitCell(root, molecule) &&
-      readOptimization(root, molecule) &&
+  return readOptimization(root, molecule) &&
       readVibrations(root, molecule) &&
       readBonds(root, molecule) &&
       readTransitions(root, molecule) &&
@@ -365,34 +368,6 @@ vector<std::string> CjsonFormat::mimeTypes() const
   vector<std::string> mime;
   mime.push_back("chemical/x-cjson");
   return mime;
-}
-
-
-bool CjsonFormat::readUnitCell(Value &root, Molecule &molecule)
-{
-  Value value = root["unit cell"];
-  if (value.type() == Json::objectValue) {
-    if (!value["a"].isNumeric() ||
-        !value["b"].isNumeric() ||
-        !value["c"].isNumeric() ||
-        !value["alpha"].isNumeric() ||
-        !value["beta"].isNumeric() ||
-        !value["gamma"].isNumeric()) {
-      appendError("Invalid unit cell specification: a, b, c, alpha, beta, gamma"
-                  " must be present and numeric.");
-      return false;
-    }
-    Real a = static_cast<Real>(value["a"].asDouble());
-    Real b = static_cast<Real>(value["b"].asDouble());
-    Real c = static_cast<Real>(value["c"].asDouble());
-    Real alpha = static_cast<Real>(value["alpha"].asDouble()) * DEG_TO_RAD;
-    Real beta  = static_cast<Real>(value["beta" ].asDouble()) * DEG_TO_RAD;
-    Real gamma = static_cast<Real>(value["gamma"].asDouble()) * DEG_TO_RAD;
-    Core::UnitCell *unitCell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
-    molecule.setUnitCell(unitCell);
-  }
-
-  return true;
 }
 
 bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
@@ -717,6 +692,30 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
       }
     }
 
+    Value value = root["unit cell"];
+    if (value.type() == Json::objectValue) {
+      if (!value["a"].isNumeric() ||
+          !value["b"].isNumeric() ||
+          !value["c"].isNumeric() ||
+          !value["alpha"].isNumeric() ||
+          !value["beta"].isNumeric() ||
+          !value["gamma"].isNumeric()) {
+        appendError("Invalid unit cell specification: a, b, c, alpha, beta, "
+                    "gamma must be present and numeric.");
+        return false;
+      }
+      Real a = static_cast<Real>(value["a"].asDouble());
+      Real b = static_cast<Real>(value["b"].asDouble());
+      Real c = static_cast<Real>(value["c"].asDouble());
+      Real alpha = static_cast<Real>(value["alpha"].asDouble()) * DEG_TO_RAD;
+      Real beta  = static_cast<Real>(value["beta" ].asDouble()) * DEG_TO_RAD;
+      Real gamma = static_cast<Real>(value["gamma"].asDouble()) * DEG_TO_RAD;
+      Core::UnitCell *unitCell = new Core::UnitCell(a, b, c,
+                                                    alpha, beta, gamma);
+      molecule.setUnitCell(unitCell);
+    }
+
+
     value = coords["3d fractional"];
     if (value.type() == Json::arrayValue) {
       if (!molecule.unitCell()) {
@@ -740,9 +739,6 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
       CrystalTools::setFractionalCoordinates(molecule, fcoords);
     }
   }
-
-  // Perceive bonds for the molecule.
-  molecule.perceiveBondsSimple();
 
   // Start of Orbitals
   Value orbitals = atoms["orbitals"];
