@@ -103,27 +103,28 @@ QWidget *Editor::toolWidget() const
 QUndoCommand *Editor::mousePressEvent(QMouseEvent *e)
 {
   clearKeyPressBuffer();
-  if (!m_renderer)
+  if (!m_renderer || !m_molecule)
     return NULL;
 
   updatePressedButtons(e, false);
   m_clickPosition = e->pos();
-
-  if (m_molecule) {
-    m_molecule->setInteractive(true);
-  }
 
   if (m_pressedButtons & Qt::LeftButton) {
     m_clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
 
     switch (m_clickedObject.type) {
     case Rendering::InvalidType:
+      m_molecule->beginMergeMode(tr("Draw Atom"));
       emptyLeftClick(e);
       return NULL;
     case Rendering::AtomType:
+      // We don't know yet if we are drawing a bond/atom or replacing an atom
+      // unfortunately...
+      m_molecule->beginMergeMode(tr("Draw"));
       atomLeftClick(e);
       return NULL;
     case Rendering::BondType:
+      m_molecule->beginMergeMode(tr("Change Bond Type"));
       bondLeftClick(e);
       return NULL;
     }
@@ -133,9 +134,11 @@ QUndoCommand *Editor::mousePressEvent(QMouseEvent *e)
 
     switch (m_clickedObject.type) {
     case Rendering::AtomType:
+      m_molecule->beginMergeMode(tr("Remove Atom"));
       atomRightClick(e);
       return NULL;
     case Rendering::BondType:
+      m_molecule->beginMergeMode(tr("Remove Bond"));
       bondRightClick(e);
       return NULL;
     default:
@@ -148,14 +151,10 @@ QUndoCommand *Editor::mousePressEvent(QMouseEvent *e)
 
 QUndoCommand *Editor::mouseReleaseEvent(QMouseEvent *e)
 {
-  if (!m_renderer)
+  if (!m_renderer || !m_molecule)
     return NULL;
 
   updatePressedButtons(e, true);
-
-  if (m_molecule) {
-    m_molecule->setInteractive(false);
-  }
 
   if (m_clickedObject.type == Rendering::InvalidType)
     return NULL;
@@ -165,6 +164,12 @@ QUndoCommand *Editor::mouseReleaseEvent(QMouseEvent *e)
   case Qt::RightButton:
     reset();
     e->accept();
+    m_molecule->endMergeMode();
+    // Let's cover all possible changes - the undo stack won't update
+    // without this
+    m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds |
+                            Molecule::Added | Molecule::Removed |
+                            Molecule::Modified);
     break;
   default:
     break;
@@ -599,7 +604,8 @@ void Editor::atomLeftDrag(QMouseEvent *e)
         RWBond bond = m_molecule->bond(newAtom, clickedAtom);
         if (bond.isValid()) {
           int bondOrder = expectedBondOrder(newAtom, clickedAtom);
-          bond.setOrder(bondOrder);
+          if (bondOrder != bond.order())
+            bond.setOrder(bondOrder);
 
           changes |= Molecule::Bonds | Molecule::Modified;
         }
