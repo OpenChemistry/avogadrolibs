@@ -28,8 +28,11 @@ Molecule::Molecule(QObject *parent_)
 }
 
 Molecule::Molecule(const Molecule &other)
-  : QObject(), Core::Molecule(other)
+  : QObject()
+  , Core::Molecule(other)
+  , m_undoMolecule(new RWMolecule(*this, this))
 {
+  m_undoMolecule->setInteractive(true);
   // Now assign the unique ids
   for (Index i = 0; i < atomCount(); i++)
     m_atomUniqueIds.push_back(i);
