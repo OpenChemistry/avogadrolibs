@@ -88,9 +88,12 @@ public:
   /**
    * Add a new atom to the molecule.
    * @param atomicNumber The atomic number of the new atom.
+   * @param usingPositions Whether or not to use positions for this atom.
+   *                       Default is true. Set to false if the atom
+   *                       will not be using coordinates.
    * @return The new Atom object.
    */
-  AtomType addAtom(unsigned char atomicNumber);
+  AtomType addAtom(unsigned char atomicNumber, bool usingPositions = true);
 
   /**
    * Add a new atom to the molecule and set its position.
