@@ -61,7 +61,7 @@
 #include <QVector3D>
 
 #include <QList>
-#include <QtConcurrentMap>
+#include <QtConcurrent/QtConcurrentMap>
 #include <QTemporaryFile>
 #include <QFile>
 #include <QDataStream>
