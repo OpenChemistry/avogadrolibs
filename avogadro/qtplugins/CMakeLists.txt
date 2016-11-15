@@ -91,6 +91,7 @@ function(avogadro_plugin name description type header pluginClass sources)
 endfunction()
 
 # Now to make the plugins.
+add_subdirectory(3dmol)
 add_subdirectory(bondcentrictool)
 add_subdirectory(bonding)
 add_subdirectory(coordinateeditor)
