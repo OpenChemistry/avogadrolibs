@@ -365,22 +365,22 @@ QString ElementTranslator::name(int element)
     result = tr("Copernicium");
     break;
   case 113:
-    result = tr("Ununtrium");
+    result = tr("Nihonium");
     break;
   case 114:
-    result = tr("Ununquadium");
+    result = tr("Flerovium");
     break;
   case 115:
-    result = tr("Ununpentium");
+    result = tr("Moscovium");
     break;
   case 116:
-    result = tr("Ununhexium");
+    result = tr("Livermorium");
     break;
   case 117:
-    result = tr("Ununseptium");
+    result = tr("Tennessine");
     break;
   case 118:
-    result = tr("Ununoctium");
+    result = tr("Oganesson");
     break;
 
   default:
