@@ -66,6 +66,11 @@ public:
   virtual QString description() const = 0;
 
   /**
+   * A priority of the tool for sorting in the user interface.
+   */
+  virtual unsigned char priority() const = 0;
+
+  /**
    * @return The QAction that will cause this tool to become active.
    */
   virtual QAction * activateAction() const = 0;
