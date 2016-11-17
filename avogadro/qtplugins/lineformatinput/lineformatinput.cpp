@@ -46,7 +46,7 @@ LineFormatInput::LineFormatInput(QObject *parent_) :
   // These are the line formats that we can load -- key is a user-friendly name,
   // value is the file extension used to identify the file format.
   m_formats.insert(tr("InChI"), std::string("inchi"));
-  m_formats.insert(tr("SMILES"), std::string("smiles"));
+  m_formats.insert(tr("SMILES"), std::string("smi"));
 }
 
 LineFormatInput::~LineFormatInput()
