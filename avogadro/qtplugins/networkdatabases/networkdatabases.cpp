@@ -38,7 +38,7 @@ NetworkDatabases::NetworkDatabases(QObject *parent_)
     m_progressDialog(NULL)
 {
   m_action->setEnabled(true);
-  m_action->setText("&Online databases...");
+  m_action->setText("Download by &Name...");
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
@@ -54,7 +54,7 @@ QList<QAction *> NetworkDatabases::actions() const
 
 QStringList NetworkDatabases::menuPath(QAction *) const
 {
-  return QStringList() << tr("&Extensions");
+  return QStringList() << tr("&File") << tr("&Import");
 }
 
 void NetworkDatabases::setMolecule(QtGui::Molecule *mol)
@@ -67,8 +67,12 @@ bool NetworkDatabases::readMolecule(QtGui::Molecule &mol)
   if (m_moleculeData.isEmpty() || m_moleculeName.isEmpty())
     return false;
 
-  return Io::FileFormatManager::instance().readString(
+  bool readOK = Io::FileFormatManager::instance().readString(
         mol, m_moleculeData.data(), "sdf");
+  if (readOK) // worked, so set the filename
+    mol.setData("name", m_moleculeName.toStdString());
+
+  return readOK;
 }
 
 void NetworkDatabases::showDialog()
@@ -95,12 +99,12 @@ void NetworkDatabases::showDialog()
   // Hard coding the NIH resolver download URL - this could be used for other
   // services
   m_network->get(QNetworkRequest(
-      QUrl("http://cactus.nci.nih.gov/chemical/structure/" + structureName
+      QUrl("https://cactus.nci.nih.gov/chemical/structure/" + structureName
            + "/sdf?get3d=true"
            + "&resolver=name_by_opsin,name_by_cir,name_by_chemspider"
            + "&requester=Avogadro2")));
 
-  m_moleculeName = structureName + ".sdf";
+  m_moleculeName = structureName;
   m_progressDialog->setLabelText(tr("Querying for %1").arg(structureName));
   m_progressDialog->setRange(0, 0);
   m_progressDialog->show();
