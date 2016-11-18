@@ -52,7 +52,7 @@ QList<QAction *> ThreeDMol::actions() const
 
 QStringList ThreeDMol::menuPath(QAction *) const
 {
-  return QStringList() << tr("&Extensions");
+  return QStringList() << tr("&File") << tr("&Export");
 }
 
 void ThreeDMol::setMolecule(QtGui::Molecule *mol)
