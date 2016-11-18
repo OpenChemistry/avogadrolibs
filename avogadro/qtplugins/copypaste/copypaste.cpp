@@ -20,6 +20,7 @@
 #include <avogadro/io/fileformatmanager.h>
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtCore/QMimeData>
 
@@ -33,6 +34,8 @@
 
 namespace Avogadro {
 namespace QtPlugins {
+
+using namespace Avogadro::QtGui;
 
 CopyPaste::CopyPaste(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
@@ -73,32 +76,6 @@ QStringList CopyPaste::menuPath(QAction *) const
 void CopyPaste::setMolecule(QtGui::Molecule *mol)
 {
   m_molecule = mol;
-}
-
-bool CopyPaste::readMolecule(QtGui::Molecule &mol)
-{
-  if (!m_pastedFormat)
-    return false;
-
-  bool success = m_pastedFormat->readString(
-        std::string(m_pastedData.constData(), m_pastedData.size()), mol);
-
-  if (!success) {
-    QMessageBox::warning(
-          qobject_cast<QWidget*>(this->parent()), tr("Error Pasting Molecule"),
-          tr("Error reading clipboard data.") + "\n"
-          + tr("Detected format: %1\n%2", "file format description")
-          .arg(QString::fromStdString(m_pastedFormat->name()))
-          .arg(QString::fromStdString(m_pastedFormat->description()))+ "\n\n"
-          + tr("Reader error:\n%1")
-          .arg(QString::fromStdString(m_pastedFormat->error())));
-  }
-
-  delete m_pastedFormat;
-  m_pastedFormat = NULL;
-  m_pastedData.clear();
-
-  return success;
 }
 
 bool CopyPaste::copy()
@@ -153,6 +130,9 @@ void CopyPaste::paste()
     m_pastedData.clear();
   }
 
+  if (!m_molecule)
+    return; // nothing to do
+
   const QMimeData *mimeData(QApplication::clipboard()->mimeData());
 
   if (!mimeData) {
@@ -180,8 +160,31 @@ void CopyPaste::paste()
     m_pastedData = mimeData->text().toLatin1();
   }
 
-  if (m_pastedFormat)
-    emit moleculeReady(1);
+  if (!m_pastedFormat)
+    return;
+
+  // we have a format, so try to insert the new bits into m_molecule
+  Avogadro::QtGui::Molecule mol(m_molecule->parent());
+  bool success = m_pastedFormat->readString(
+        std::string(m_pastedData.constData(), m_pastedData.size()), mol);
+
+  if (!success) {
+    QMessageBox::warning(
+          qobject_cast<QWidget*>(this->parent()), tr("Error Pasting Molecule"),
+          tr("Error reading clipboard data.") + "\n"
+          + tr("Detected format: %1\n%2", "file format description")
+          .arg(QString::fromStdString(m_pastedFormat->name()))
+          .arg(QString::fromStdString(m_pastedFormat->description()))+ "\n\n"
+          + tr("Reader error:\n%1")
+          .arg(QString::fromStdString(m_pastedFormat->error())));
+  }
+
+  // insert mol into m_molecule
+  m_molecule->undoMolecule()->appendMolecule(mol, "Paste Molecule");
+
+  delete m_pastedFormat;
+  m_pastedFormat = NULL;
+  m_pastedData.clear();
 }
 
 } // namespace QtPlugins

@@ -53,8 +53,6 @@ public:
 public slots:
   void setMolecule(QtGui::Molecule *mol) AVO_OVERRIDE;
 
-  bool readMolecule(QtGui::Molecule &mol) AVO_OVERRIDE;
-
 private slots:
   bool copy(); // returns bool so cut can reuse implementation.
   void cut();
