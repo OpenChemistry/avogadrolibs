@@ -44,7 +44,7 @@ public:
 
   QString name() const AVO_OVERRIDE { return tr("Editor tool"); }
   QString description() const AVO_OVERRIDE { return tr("Editor tool"); }
-  unsigned char priority() const { return 2; }
+  unsigned char priority() const AVO_OVERRIDE { return 2; }
   QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
   QWidget * toolWidget() const AVO_OVERRIDE;
 
