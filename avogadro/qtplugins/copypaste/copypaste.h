@@ -57,6 +57,7 @@ private slots:
   bool copy(); // returns bool so cut can reuse implementation.
   void cut();
   void paste();
+  void clear();
 
 private:
   // Cached between emitting moleculeReady() and calling readMolecule().
@@ -67,6 +68,7 @@ private:
 
   QAction *m_copyAction;
   QAction *m_cutAction;
+  QAction *m_clearAction;
   QAction *m_pasteAction;
 };
 

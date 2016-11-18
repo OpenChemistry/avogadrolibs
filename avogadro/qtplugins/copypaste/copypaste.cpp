@@ -42,19 +42,24 @@ CopyPaste::CopyPaste(QObject *parent_) :
   m_pastedFormat(NULL),
   m_copyAction(new QAction(tr("Copy"), this)),
   m_cutAction(new QAction(tr("Cut"), this)),
+  m_clearAction(new QAction(tr("Clear"), this)),
   m_pasteAction(new QAction(tr("Paste"), this))
 {
-  m_copyAction->setShortcut(QKeySequence("Ctrl+C"));
+  m_copyAction->setShortcut(QKeySequence::Copy);
   m_copyAction->setIcon(QIcon::fromTheme("edit-copy"));
   connect(m_copyAction, SIGNAL(triggered()), SLOT(copy()));
 
-  m_cutAction->setShortcut(QKeySequence("Ctrl+X"));
+  m_cutAction->setShortcut(QKeySequence::Cut);
   m_cutAction->setIcon(QIcon::fromTheme("edit-cut"));
   connect(m_cutAction, SIGNAL(triggered()), SLOT(cut()));
 
-  m_pasteAction->setShortcut(QKeySequence("Ctrl+V"));
+  m_pasteAction->setShortcut(QKeySequence::Paste);
   m_pasteAction->setIcon(QIcon::fromTheme("edit-paste"));
   connect(m_pasteAction, SIGNAL(triggered()), SLOT(paste()));
+
+  m_clearAction->setShortcut(QKeySequence::Delete);
+  m_clearAction->setIcon(QIcon::fromTheme("edit-clear"));
+  connect(m_clearAction, SIGNAL(triggered()), SLOT(clear()));
 }
 
 CopyPaste::~CopyPaste()
@@ -65,7 +70,8 @@ CopyPaste::~CopyPaste()
 QList<QAction *> CopyPaste::actions() const
 {
   QList<QAction *> result;
-  return result << m_copyAction << m_cutAction << m_pasteAction;
+  return result << m_copyAction << m_cutAction
+                << m_pasteAction << m_clearAction;
 }
 
 QStringList CopyPaste::menuPath(QAction *) const
@@ -116,7 +122,14 @@ void CopyPaste::cut()
   if (!copy())
     return;
 
-  m_molecule->clearAtoms();
+  m_molecule->undoMolecule()->clearAtoms();
+  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds
+                          | QtGui::Molecule::Removed );
+}
+
+void CopyPaste::clear()
+{
+  m_molecule->undoMolecule()->clearAtoms();
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds
                           | QtGui::Molecule::Removed );
 }
