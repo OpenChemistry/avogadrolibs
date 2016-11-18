@@ -42,6 +42,7 @@ public:
 
   QString name() const AVO_OVERRIDE { return tr("Manipulate tool"); }
   QString description() const AVO_OVERRIDE { return tr("Manipulate tool"); }
+  unsigned char priority() const AVO_OVERRIDE { return 3; }
   QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
   QWidget * toolWidget() const AVO_OVERRIDE;
 
