@@ -89,12 +89,13 @@ QWidget * PlayerTool::toolWidget() const
     m_animationFPS->setValue(5);
     m_animationFPS->setMinimum(0);
     m_animationFPS->setMaximum(100);
+    m_animationFPS->setSuffix(tr(" FPS", "frames per second"));
     frames->addWidget(m_animationFPS);
     layout->addLayout(frames);
 
     QHBoxLayout *bonding = new QHBoxLayout;
     bonding->addStretch(1);
-    m_dynamicBonding = new QCheckBox("Dynamic bonding?");
+    m_dynamicBonding = new QCheckBox(tr("Dynamic bonding?"));
     m_dynamicBonding->setChecked(true);
     bonding->addWidget(m_dynamicBonding);
     bonding->addStretch(1);
