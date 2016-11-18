@@ -80,8 +80,11 @@ bool MoleculeModel::setData(const QModelIndex &idx, const QVariant &value,
     emit dataChanged(idx, idx);
     return true;
   case Qt::EditRole:
-    mol->setData("name", std::string(value.toString().toLatin1()));
-    emit dataChanged(idx, idx);
+    if (!value.toString().isEmpty()) {
+      // don't set an empty name
+      mol->setData("name", std::string(value.toString().toLatin1()));
+      emit dataChanged(idx, idx);
+    }
     return true;
   }
   return false;
@@ -101,8 +104,10 @@ QVariant MoleculeModel::data(const QModelIndex &idx, int role) const
     switch (role) {
     case Qt::DisplayRole: {
       std::string name = tr("Untitled").toStdString();
-      if (mol && mol->hasData("name")) {
-        name = mol->data("name").toString();
+      if (mol && mol->hasData("name") &&
+       ! (mol->data("name").toString().empty()) ) {
+          // don't set an empty name
+          name = mol->data("name").toString();
       }
       else if (mol && mol->hasData("fileName")) {
         name = QFileInfo(mol->data("fileName").toString().c_str())
