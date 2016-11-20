@@ -71,9 +71,13 @@ void BallAndStick::process(const Molecule &molecule,
       continue;
     const unsigned char *c = Elements::color(atomicNumber);
     Vector3ub color(c[0], c[1], c[2]);
+    float radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
+    if (atom.selected()) {
+      color = Vector3ub(0, 0, 255);
+      radius *= 1.2;
+    }
     spheres->addSphere(atom.position3d().cast<float>(), color,
-                       static_cast<float>(Elements::radiusVDW(atomicNumber))
-                       * 0.3f);
+                       radius * 0.3f);
   }
 
   float bondRadius = 0.1f;
