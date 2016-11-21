@@ -94,7 +94,7 @@ void ElementDetail::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
   // I don't seem to be able to get a nice, cross platform layout working here
   // I would really like to figure out how to make this more portable - ideas?
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
   // Draw the proton number
   QRectF protonNumberRect(-m_width/2 - 10, -m_height/2 + 8,
                           m_width/2, pixelHeight2);
