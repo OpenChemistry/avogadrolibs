@@ -455,6 +455,16 @@ public:
                       const QString &undoText = "Modify Molecule");
 
   /**
+   * Generic edit that adds @a newMolecule to the current molecule.
+   * Also sets the text for the undo command to be @a undoText. Changes are
+   * emitted.
+   * @param addMolecule The new molecule to be set.
+   * @param undoText The text description for the undo command.
+   */
+  void appendMolecule(const Molecule &addMolecule,
+                      const QString &undoText = "Append Molecule");
+
+  /**
    * Edit the unit cell by replacing the current cell matrix with a new cell
    * matrix. Changes are emitted.
    * @param cellMatrix The new cell matrix to be set.

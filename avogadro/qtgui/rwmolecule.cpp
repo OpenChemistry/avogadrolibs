@@ -1072,6 +1072,31 @@ void RWMolecule::modifyMolecule(const Molecule &newMolecule,
   emitChanged(changes);
 }
 
+void RWMolecule::appendMolecule(const Molecule &mol,
+                                const QString &undoText)
+{
+  // We add atoms and bonds, nothing else
+  Molecule::MoleculeChanges changes =
+   (Molecule::Atoms | Molecule::Bonds | Molecule::Added);
+
+  beginMergeMode(undoText);
+  // loop through and add the atoms
+  Index offset = atomCount();
+  for(size_t i = 0; i < mol.atomCount(); ++i) {
+    Core::Atom atom = mol.atom(i);
+    addAtom(atom.atomicNumber(), atom.position3d());
+  }
+  // now loop through and add the bonds
+  for(size_t i = 0; i < mol.bondCount(); ++i) {
+    Core::Bond bond = mol.bond(i);
+    addBond(bond.atom1().index() + offset,
+            bond.atom2().index() + offset,
+            bond.order());
+  }
+  endMergeMode();
+  emitChanged(changes);
+}
+
 void RWMolecule::editUnitCell(Matrix3 cellMatrix,
                               CrystalTools::Options options)
 {
