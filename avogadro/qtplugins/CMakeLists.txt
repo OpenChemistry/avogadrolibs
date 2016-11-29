@@ -1,7 +1,7 @@
 find_package(Eigen3 REQUIRED)
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
-find_package(Qt5 COMPONENTS Widgets OpenGL Network Concurrent REQUIRED)
+find_package(Qt5 COMPONENTS Widgets OpenGL Network Concurrent WebView REQUIRED)
 include_directories(SYSTEM ${Qt5Widgets_INCLUDE_DIRS})
 add_definitions(${Qt5Widgets_DEFINITIONS})
 
@@ -100,6 +100,7 @@ add_subdirectory(crystal)
 add_subdirectory(customelements)
 add_subdirectory(editor)
 add_subdirectory(hydrogens)
+add_subdirectory(importpqr)
 add_subdirectory(lineformatinput)
 add_subdirectory(manipulator)
 add_subdirectory(measuretool)
