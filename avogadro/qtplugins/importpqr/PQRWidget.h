@@ -10,6 +10,7 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QDir>
+#include <QtCore/QSortFilterProxyModel>
 
 #include "PQRRequest.h"
 

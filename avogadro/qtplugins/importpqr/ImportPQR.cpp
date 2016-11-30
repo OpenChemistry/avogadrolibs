@@ -45,7 +45,7 @@ ImportPQR::ImportPQR(QObject *parent_) :
   m_outputFormat(NULL)
 {
   m_action->setEnabled(true);
-  m_action->setText(tr("&ImportPQR"));
+  m_action->setText(tr("&Import From PQR"));
   connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
 }
 
@@ -63,7 +63,7 @@ QList<QAction *> ImportPQR::actions() const
 QStringList ImportPQR::menuPath(QAction *) const
 {
   QStringList path;
-  path << tr("&File") << tr("Import From PQR2");
+  path << tr("&File");
   return path;
 }
 

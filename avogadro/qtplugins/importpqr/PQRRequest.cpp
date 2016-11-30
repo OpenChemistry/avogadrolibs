@@ -6,7 +6,7 @@ namespace QtPlugins {
 * @brief Constuctor to initialize the NetworkAcessManager and set pointers to
 * the widget's ui elements.
 */
-PQRRequest::PQRRequest(QTableWidget* tw, QWebEngineView* gv, QLineEdit* fn, QLineEdit* nd, QLabel* fd)
+PQRRequest::PQRRequest(QTableWidget* tw, QWebEngineView* gv, QLineEdit* fn, QLineEdit* nd, QLabel* fd, QComboBox* ext)
 {
   //set pointers to ui elements now instead of in individual functions
   table = tw; //pointer to ui table
@@ -14,6 +14,7 @@ PQRRequest::PQRRequest(QTableWidget* tw, QWebEngineView* gv, QLineEdit* fn, QLin
   filename = fn; //filename LineEdit
   nameDisplay = nd; //name
   formulaDisplay = fd; //formula
+  extension = ext;
   oNetworkAccessManager = new QNetworkAccessManager(this);
 }
 
@@ -85,11 +86,11 @@ QString PQRRequest::molSelected(int num) {
     QString url = "https://pqr.pitt.edu/static/data/svg/"+ mol2 + ".svg";
 
     //default filename
-    filename->setText(mol2.remove(0, 3));
+    QString file = mol2;
+    filename->setText(file.remove(0, 3));
     formulaDisplay->setText(parseSubscripts(results[num].formula));
     nameDisplay->setText(results[num].name);
 
-    this->updateSVGPreview(url, mol2.remove(0, 3));
     return mol2;
 }
 
@@ -100,8 +101,8 @@ QString PQRRequest::molSelected(int num) {
 */
 void PQRRequest::updateSVGPreview(QString url, QString mol2)
 {
-  svgPreview = new QWebEngineView();
-  svgPreview->load(url);
+//  svgPreview = new QWebEngineView();
+//  svgPreview->load(url);
 /**
   QUrl httpRequest(url);
   QNetworkRequest request;
@@ -158,7 +159,10 @@ void PQRRequest::parseJson()
         //use this to display subscripts, should automatically delete previous QLabel according to documentation
 				table->setCellWidget(i, 1, new QLabel(parseSubscripts(results[i].formula)));
 
-        table->setItem(i, 2, new QTableWidgetItem(QString::number(results[i].mass, 'f', 3) + QString(" g/mol")));
+        //table->setItem(i, 2, new QTableWidgetItem(QString::number(results[i].mass, 'f', 3) + QString(" g/mol")));
+        QTableWidgetItem* massItem = new QTableWidgetItem();
+        massItem->setData(Qt::DisplayRole, results[i].mass);
+        table->setItem(i, 2, massItem);
 			}
 		}
 	}
@@ -184,7 +188,7 @@ void PQRRequest::getFile()
   if(filename->text() == NULL) {
     file = new QFile(currentDownloadFolder + "/" + currentFilename);
   } else {
-    file = new QFile(currentDownloadFolder + "/" + filename->text());
+    file = new QFile(currentDownloadFolder + "/" + filename->text() + "." + extension->currentText());
   }
 	if (file->open(QFile::WriteOnly))
 	{
@@ -194,6 +198,7 @@ void PQRRequest::getFile()
 	}
 	delete file;
 	delete dir;
+  //emit moleculeReady(1);
 	reply->deleteLater();
 }
 

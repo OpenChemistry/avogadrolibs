@@ -20,6 +20,7 @@
 #include <QtWidgets/QGraphicsScene>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QProgressBar>
+#include <QtWidgets/QComboBox>
 
 #include <QtGui/QPixmap>
 #include <QtGui/QIcon>
@@ -51,7 +52,7 @@ public:
 	* @param nd Pointer to the name display
 	* @param fd Pointer to the formula display
 	*/
-	PQRRequest(QTableWidget*, QWebEngineView*, QLineEdit*, QLineEdit*, QLabel*);
+	PQRRequest(QTableWidget*, QWebEngineView*, QLineEdit*, QLineEdit*, QLabel*, QComboBox*);
 
 	/**
 	* @brief Free the ui pointers
@@ -141,6 +142,7 @@ private:
 	QLineEdit* nameDisplay;
 	QLabel* formulaDisplay;
 	QWebEngineView* svgPreview;
+	QComboBox* extension;
 
 	/** Used to render SVG previews */
 

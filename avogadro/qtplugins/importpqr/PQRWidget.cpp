@@ -11,17 +11,17 @@ PQRWidget::PQRWidget(QWidget* parent) :
   ui->setupUi(this);
 
 	ui->tableWidget->setColumnCount(3);
-	ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Name" << "Formula" << "Mass");
+	ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Name" << "Formula" << "Mass (g/mol)");
 	ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
 	ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-
+  ui->tableWidget->setSortingEnabled(true);
   connect(ui->searchButton, SIGNAL(clicked(bool)), this, SLOT(searchAction()));
 	connect(ui->downloadButton, SIGNAL(clicked(bool)), this, SLOT(downloadMol()));
 	connect(ui->tableWidget, SIGNAL(cellDoubleClicked(int, int)),
 		this, SLOT(molSelected(int, int)));
 
-  request = new PQRRequest(ui->tableWidget, ui->svgPreview, ui->filename, ui->nameDisplay, ui->formulaDisplay);
+  request = new PQRRequest(ui->tableWidget, ui->svgPreview, ui->filename, ui->nameDisplay, ui->formulaDisplay, ui->extensionType);
 }
 
 PQRWidget::~PQRWidget()
@@ -48,6 +48,12 @@ void PQRWidget::searchAction()
 void PQRWidget::molSelected(int row, int col)
 {
 	currentlySelectedMol = request->molSelected(row);
+
+  QString url = "https://pqr.pitt.edu/static/data/svg/"+ currentlySelectedMol + ".svg";
+
+  ui->nameDisplay->setText(currentlySelectedMol);
+  ui->svgPreview->load(url);
+  ui->svgPreview->show();
 }
 
 /**
