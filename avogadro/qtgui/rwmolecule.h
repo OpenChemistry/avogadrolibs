@@ -232,6 +232,16 @@ public:
   bool setAtomPosition3d(Index atomId, const Vector3& pos,
                          const QString &undoText = "Change Atom Position");
 
+  /**
+   * Set whether the specified atom is selected or not.
+   */
+  void setAtomSelected(Index atomId, bool selected);
+
+  /**
+   * Query whether the supplied atom index has been selected.
+   */
+  bool atomSelected(Index atomId) const;
+
   bool setAtomPosition2d(Index, const Vector2&) { return false; }
   Vector2 atomPosition2d(Index) { return Vector2(0, 0); }
   const Core::Array<Vector2>& atomPositions2d() const
