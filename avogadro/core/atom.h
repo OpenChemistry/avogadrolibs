@@ -154,6 +154,14 @@ public:
   signed char formalCharge() const;
   /** @} */
 
+  /**
+   * Is the atom selected.
+   * {@
+   */
+  void setSelected(bool selected);
+  bool selected() const;
+  /** @} */
+
 private:
   MoleculeType *m_molecule;
   Index m_index;
@@ -291,6 +299,18 @@ template <class Molecule_T>
 signed char AtomTemplate<Molecule_T>::formalCharge() const
 {
   return m_molecule->formalCharge(m_index);
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setSelected(bool selected)
+{
+  m_molecule->setAtomSelected(m_index, selected);
+}
+
+template <class Molecule_T>
+bool AtomTemplate<Molecule_T>::selected() const
+{
+  return m_molecule->atomSelected(m_index);
 }
 
 } // end Core namespace
