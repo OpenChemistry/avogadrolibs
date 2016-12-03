@@ -45,6 +45,9 @@ ImportPQR::ImportPQR(QObject *parent_) :
 
 ImportPQR::~ImportPQR()
 {
+  delete(m_outputFormat);
+  delete(m_molecule);
+  delete(m_action);
 }
 
 QList<QAction *> ImportPQR::actions() const
@@ -63,31 +66,19 @@ QStringList ImportPQR::menuPath(QAction *) const
 
 void ImportPQR::setMolecule(QtGui::Molecule *mol)
 {
-
   m_molecule = mol;
-
 }
 
 
 bool ImportPQR::readMolecule(QtGui::Molecule &mol)
 {
-
-
   bool readOK = Io::FileFormatManager::instance().readFile(
         mol, m_moleculePath.toStdString());
 
-
   if (readOK) // worked, so set the filename
     mol.setData("name", m_moleculeName.toStdString());
-  QString err = QString::fromStdString(Io::FileFormatManager::instance().error());
-//QMessageBox::warning(qobject_cast<QWidget*>(parent()),
-  //                   tr("Network Download Failed"),
-    //                 tr("Path: %1 Name: %2")
-      //               .arg(err)
-        //             .arg(m_moleculeName));
 
   return readOK;
-
 }
 
 void ImportPQR::menuActivated()
@@ -99,6 +90,7 @@ void ImportPQR::menuActivated()
   m_dialog->show();
 }
 
+//called by widget
 void ImportPQR::setMoleculeData(QString path, QString name)
 {
   m_moleculeName = name;
