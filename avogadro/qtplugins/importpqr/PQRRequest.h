@@ -86,12 +86,6 @@ private slots:
 	*/
 	void getFile();
 
-	/**
-	* @brief Creates a temporary file for the SVG preview and attempts to render
-	* it into the QGraphicsView
-	*/
-	void setSVG();
-
 private:
 	/**
 	* @brief The result struct holds all data received in each result from

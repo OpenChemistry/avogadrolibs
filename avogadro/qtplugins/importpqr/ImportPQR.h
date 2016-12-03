@@ -64,8 +64,6 @@ private:
   QtGui::Molecule *m_molecule;
   PQRWidget *m_dialog;
   const Io::FileFormat *m_outputFormat;
-  QString m_outputFileName;
-  QByteArray m_moleculeData;
   QString m_moleculeName;
   QString m_moleculePath;
 };

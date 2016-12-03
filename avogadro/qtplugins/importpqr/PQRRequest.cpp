@@ -31,10 +31,6 @@ PQRRequest::~PQRRequest()
   delete results;
   delete read;
   delete oNetworkAccessManager;
-  delete table;
-  delete filename;
-  delete formulaDisplay;
-  delete svgPreview;
 }
 
 /**
@@ -188,29 +184,6 @@ void PQRRequest::getFile()
 
 	reply->deleteLater();
 
-}
-
-/**
-* @brief Creates a temporary file for the SVG preview and attempts to render
-* it into the QGraphicsView
-*/
-void PQRRequest::setSVG()
-{
-  QDir *dir = new QDir();
-  dir->mkpath("temp");
-
-  QFile *file = new QFile("temp/currentPreview.svg");
-
-  if (file->open(QFile::WriteOnly))
-  {
-    file->write(reply->readAll());
-    file->flush();
-    file->close();
-  }
-
-  delete file;
-  delete dir;
-  reply->deleteLater();
 }
 
 /**

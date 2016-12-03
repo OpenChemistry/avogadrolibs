@@ -58,8 +58,9 @@ void PQRWidget::molSelected(int row, int col)
   ui->svgPreview->load(url);
   //center svg
   ui->svgPreview->setZoomFactor(1.5);
-  ui->svgPreview->page()->runJavaScript("document.getElementById('topsvg').style.overflow='hidden';");
   //remove scrollbars
+  ui->svgPreview->page()->runJavaScript("document.getElementById('topsvg').style.overflow='hidden';");
+
   ui->svgPreview->show();
 
 
@@ -81,7 +82,6 @@ void PQRWidget::downloadMol()
 
 void PQRWidget::loadMolecule(QString path, QString name)
 {
-
   plugin->setMoleculeData(path, name);
 }
 
