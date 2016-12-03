@@ -85,6 +85,10 @@ public:
   const Camera& camera() const;
   Camera& camera();
 
+  /** Get the overlay camera. */
+  const Camera& overlayCamera() const;
+  Camera& overlayCamera();
+
   /** Get the scene for this renderer. */
   const Scene& scene() const { return m_scene; }
   Scene& scene() { return m_scene; }
@@ -138,6 +142,16 @@ inline const Camera& GLRenderer::camera() const
 }
 
 inline Camera& GLRenderer::camera()
+{
+  return m_camera;
+}
+
+inline const Camera& GLRenderer::overlayCamera() const
+{
+  return m_camera;
+}
+
+inline Camera& GLRenderer::overlayCamera()
 {
   return m_camera;
 }

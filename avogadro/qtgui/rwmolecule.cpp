@@ -523,6 +523,17 @@ bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3 &pos,
   return true;
 }
 
+void RWMolecule::setAtomSelected(Index atomId, bool selected)
+{
+  // FIXME: Add in an implementation (and use it from the selection tool).
+  m_molecule.setAtomSelected(atomId, selected);
+}
+
+bool RWMolecule::atomSelected(Index atomId) const
+{
+  return m_molecule.atomSelected(atomId);
+}
+
 namespace {
 class SetAtomHybridizationCommand : public RWMolecule::UndoCommand
 {
