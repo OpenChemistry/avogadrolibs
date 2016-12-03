@@ -1,7 +1,7 @@
 find_package(MoleQueue)
 find_package(Qt5WebEngineWidgets REQUIRED)
 # find_package(Qt5 COMPONENTS Network WebView REQUIRED)
-include_directories(${MoleQueue_INCLUDE_DIRS})
+
 include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp")
 
 # Extension
@@ -18,6 +18,7 @@ avogadro_plugin(ImportPQR
   ImportPQR
   "${importpqr_srcs}"
   PQRWidget.ui
+  ""
 )
 # qt5_use_modules(ImportPQR Network WebView)
 target_link_libraries(ImportPQR LINK_PRIVATE AvogadroMoleQueue ${Qt5Network_LIBRARIES} ${Qt5WebEngineWidgets_LIBRARIES})

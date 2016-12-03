@@ -18,18 +18,17 @@
 #define AVOGADRO_QTPLUGINS_IMPORTPQR_H
 
 #include <avogadro/qtgui/extensionplugin.h>
+#include <avogadro/io/fileformatmanager.h>
+#include <avogadro/core/avogadrocore.h>
+
+#include <QtNetwork/QNetworkReply>
+
+#include <QtCore/QString>
 
 class QAction;
 class QDialog;
 
-namespace MoleQueue {
-class JobObject;
-}
-
 namespace Avogadro {
-namespace Io {
-class FileFormat;
-}
 
 namespace QtPlugins {
 
@@ -41,24 +40,20 @@ class ImportPQR : public QtGui::ExtensionPlugin
 
 public:
   explicit ImportPQR(QObject *parent = 0);
-  ~ImportPQR();
+  ~ImportPQR() AVO_OVERRIDE;
 
-  QString name() const { return tr("Import From PQR"); }
+  QString name() const AVO_OVERRIDE { return tr("Import From PQR"); }
 
-  QString description() const { return tr("Download a molecule from PQR."); }
+  QString description() const AVO_OVERRIDE { return tr("Download a molecule from PQR."); }
 
-  QList<QAction *> actions() const;
+  QList<QAction *> actions() const AVO_OVERRIDE;
 
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction *) const AVO_OVERRIDE;
 
-  void setMolecule(QtGui::Molecule *mol);
+  void setMoleculeData(QString reply, QString name);
 
 public slots:
-  /**
-   * Emitted when the user requests that a job's output be loaded in Avogadro.
-   */
-  void openJobOutput(const MoleQueue::JobObject &job);
-
+  void setMolecule(QtGui::Molecule *mol);
   bool readMolecule(QtGui::Molecule &mol);
 
 private slots:
@@ -70,6 +65,9 @@ private:
   PQRWidget *m_dialog;
   const Io::FileFormat *m_outputFormat;
   QString m_outputFileName;
+  QByteArray m_moleculeData;
+  QString m_moleculeName;
+  QString m_moleculePath;
 };
 
 }

@@ -12,18 +12,10 @@
 #include <QtCore/QSize>
 #include <QtCore/QDir>
 
-#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTableWidgetItem>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QGraphicsView>
-#include <QtWidgets/QGraphicsScene>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QProgressBar>
-#include <QtWidgets/QComboBox>
-
-#include <QtGui/QPixmap>
-#include <QtGui/QIcon>
 
 #include <QtWebEngineWidgets/QWebEngineView>
 
@@ -35,9 +27,10 @@
  * @brief The PQRRequest class sends and receives network requests to PQR and
  * updates ui elements from the widget.
  */
-
 namespace Avogadro {
 namespace QtPlugins {
+class PQRWidget;
+
 class PQRRequest : public QObject
 {
 	Q_OBJECT
@@ -52,7 +45,7 @@ public:
 	* @param nd Pointer to the name display
 	* @param fd Pointer to the formula display
 	*/
-	PQRRequest(QTableWidget*, QWebEngineView*, QLineEdit*, QLineEdit*, QLabel*, QComboBox*);
+	PQRRequest(QTableWidget*, QWebEngineView*, QLineEdit*, QLineEdit*, QLabel*, PQRWidget*);
 
 	/**
 	* @brief Free the ui pointers
@@ -72,7 +65,7 @@ public:
 	* @param downlaodFolder The path of the download folder
 	* @param ext The file extension to download
 	*/
-	void sendRequest(QString, QString, QString, QString);
+	void sendRequest(QString, QString, QString);
 
 	/**
 	* @brief Called when a molecule is selected to display information about the
@@ -81,13 +74,6 @@ public:
 	* @returns The mol2 of the result for the widget to reference
 	*/
 	QString molSelected(int);
-
-	/**
-	* @brief Sends a network request to get the SVG for the download preview
-	* @param url The url to send request to
-	* @param mol2 The mol2 representation of the molecule to query a SVG for
-	*/
-	void updateSVGPreview(QString, QString);
 
 private slots:
 	/**
@@ -136,22 +122,20 @@ private:
 	/** Used to parse JSON results */
   QVariantMap m_jsonResult;
 
+	/** Pointer to dialog */
+	PQRWidget* widget;
+
 	/** Pointers to a widget's ui elements */
 	QTableWidget* table;
 	QLineEdit* filename;
 	QLineEdit* nameDisplay;
 	QLabel* formulaDisplay;
 	QWebEngineView* svgPreview;
-	QComboBox* extension;
-
-	/** Used to render SVG previews */
-
-	QPixmap svgImage;
-	QGraphicsScene* svgScene;
 
 	/** Variables to fold file downlaod information for getFile() */
 	QString currentFilename;
 	QString currentDownloadFolder;
+	QString currentMolName;
 
 	/**
 	* @brief Takes a formula string and returns a QString with subscript tags

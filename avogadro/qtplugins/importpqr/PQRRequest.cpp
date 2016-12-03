@@ -1,12 +1,12 @@
 #include "PQRRequest.h"
-
+#include "PQRWidget.h"
 namespace Avogadro {
 namespace QtPlugins {
 /**
 * @brief Constuctor to initialize the NetworkAcessManager and set pointers to
 * the widget's ui elements.
 */
-PQRRequest::PQRRequest(QTableWidget* tw, QWebEngineView* gv, QLineEdit* fn, QLineEdit* nd, QLabel* fd, QComboBox* ext)
+PQRRequest::PQRRequest(QTableWidget* tw, QWebEngineView* gv, QLineEdit* fn, QLineEdit* nd, QLabel* fd, PQRWidget* w)
 {
   //set pointers to ui elements now instead of in individual functions
   table = tw; //pointer to ui table
@@ -14,7 +14,9 @@ PQRRequest::PQRRequest(QTableWidget* tw, QWebEngineView* gv, QLineEdit* fn, QLin
   filename = fn; //filename LineEdit
   nameDisplay = nd; //name
   formulaDisplay = fd; //formula
-  extension = ext;
+
+  //used to load molecule in Avogadro when downloaded
+  widget = w;
   oNetworkAccessManager = new QNetworkAccessManager(this);
 }
 
@@ -24,14 +26,12 @@ PQRRequest::PQRRequest(QTableWidget* tw, QWebEngineView* gv, QLineEdit* fn, QLin
 PQRRequest::~PQRRequest()
 {
   delete results;
-  delete reply;
   delete read;
   delete oNetworkAccessManager;
   delete table;
   delete filename;
   delete formulaDisplay;
   delete svgPreview;
-  delete svgScene;
 }
 
 /**
@@ -51,7 +51,7 @@ void PQRRequest::sendRequest(QString url)
 * @param downlaodFolder The path of the download folder
 * @param ext The file extension to download
 */
-void PQRRequest::sendRequest(QString url, QString mol2, QString downloadFolder, QString ext)
+void PQRRequest::sendRequest(QString url, QString mol2, QString downloadFolder)
 {
 	QUrl httpRequest(url);
 	QNetworkRequest request;
@@ -70,8 +70,8 @@ void PQRRequest::sendRequest(QString url, QString mol2, QString downloadFolder, 
 		currentDownloadFolder = downloadFolder;
 	}
 
-	currentFilename = mol2+ext; //default filename to be downloaded
-
+	currentFilename = mol2 + ".mol2"; //default filename to be downloaded
+  currentMolName = nameDisplay->text(); //needed to load mol into Avogadro
 	connect(reply, SIGNAL(finished()), this, SLOT(getFile()));
 }
 
@@ -92,29 +92,6 @@ QString PQRRequest::molSelected(int num) {
     nameDisplay->setText(results[num].name);
 
     return mol2;
-}
-
-/**
-* @brief Sends a network request to get the SVG for the download preview
-* @param url The url to send request to
-* @param mol2 The mol2 representation of the molecule to query a SVG for
-*/
-void PQRRequest::updateSVGPreview(QString url, QString mol2)
-{
-//  svgPreview = new QWebEngineView();
-//  svgPreview->load(url);
-/**
-  QUrl httpRequest(url);
-  QNetworkRequest request;
-  //had trouble grabbing the svgs from PQR without this
-
-  request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36");
-  request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
-  request.setUrl(httpRequest); // Set the url
-
-  reply = oNetworkAccessManager->get(request);
-  connect(reply, SIGNAL(finished()), this, SLOT(setSVG()));
-  **/
 }
 
 /**
@@ -180,26 +157,32 @@ void PQRRequest::parseJson()
 */
 void PQRRequest::getFile()
 {
+
 	QDir *dir = new QDir();
 	dir->mkpath(currentDownloadFolder);
 
 	QFile *file;
+  QString path;
   //make sure filename box isn't blank
   if(filename->text() == NULL) {
-    file = new QFile(currentDownloadFolder + "/" + currentFilename);
+    path = currentDownloadFolder + "/" + currentFilename;
   } else {
-    file = new QFile(currentDownloadFolder + "/" + filename->text() + "." + extension->currentText());
+    path = currentDownloadFolder + "/" + filename->text() + ".mol2";
   }
+  file = new QFile(path);
+
 	if (file->open(QFile::WriteOnly))
 	{
 		file->write(reply->readAll());
 		file->flush();
 		file->close();
+    widget->loadMolecule(path, currentMolName);
 	}
 	delete file;
 	delete dir;
-  //emit moleculeReady(1);
+
 	reply->deleteLater();
+
 }
 
 /**
@@ -219,19 +202,7 @@ void PQRRequest::setSVG()
     file->flush();
     file->close();
   }
-  /**
-  //attempt to render svg WIP
-  svgScene = new QGraphicsScene(this);
-  //svgScene->addPixmap(QIcon("temp/currentPreview.svg").pixmap(100, QIcon::Normal, QIcon::Off));
-  QSvgRenderer *test = new QSvgRenderer(QString("temp/currentPreview.svg"));
-  svgimg = new QGraphicsSvgItem();
-  svgimg->setSharedRenderer(test);
-  svgScene->addItem(svgimg);
-  //svgimg->setTransform(QTransform(test->viewBoxF().width() / (test->viewBoxF().width() + 1.0), 0.0, 0.0, test->viewBoxF().height() / (test->viewBoxF().height() + 1.0), 0.5, 0.5));
-  svgPreview->setScene(svgScene);
-  svgScene->setSceneRect(svgScene->itemsBoundingRect());
-  svgPreview->fitInView(svgimg, Qt::KeepAspectRatio);
-    **/
+
   delete file;
   delete dir;
   reply->deleteLater();

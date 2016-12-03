@@ -8,11 +8,11 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QGraphicsRectItem>
 
+#include <QtNetwork/QNetworkReply>
+
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtCore/QSortFilterProxyModel>
-
-#include "PQRRequest.h"
 
 /**
 * PQRWidget is a class extending QDialog to provide the ui for importing/downloading
@@ -29,13 +29,16 @@ namespace QtGui {
 }
 
 namespace QtPlugins {
+class PQRRequest;
+class ImportPQR;
 class PQRWidget : public QDialog
 {
     Q_OBJECT
 
 public:
-    PQRWidget(QWidget *parent = 0);
+    PQRWidget(QWidget *parent = 0, ImportPQR* p = NULL);
     ~PQRWidget();
+    void loadMolecule(QString, QString);
 
 private slots:
 
@@ -65,6 +68,9 @@ private:
     Ui::PQRWidget *ui;
     /** Pointer to a PQRRequest object to handle network requests */
     PQRRequest *request;
+
+    /** Pointer to the plugin that opened the dialog */
+    ImportPQR *plugin;
 };
 }
 }
