@@ -61,10 +61,10 @@ using Avogadro::Vector3;
 namespace {
 
 // Ensure a cross-platform monospaced font
-#ifdef Q_WS_X11
-static const QString EDITOR_FONT = "Monospace";
-#else // Windows and Mac
+#if defined(Q_OS_WIN) || defined(Q_OS_OSX)
 static const QString EDITOR_FONT = "Courier";
+#else // Linux and other OSes
+static const QString EDITOR_FONT = "Monospace";
 #endif
 
 // Various integer constants.
