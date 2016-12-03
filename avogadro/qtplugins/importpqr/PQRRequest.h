@@ -103,10 +103,6 @@ private:
 		QString mol2url;
 		QString formula;
 		float mass;
-		//useless?
-		QString last_updated;
-		QString *tags;
-		QString *synonyms;
 	};
 	/** An array to hold all results from a query */
 	result *results;
@@ -149,12 +145,6 @@ private:
 	*/
 	float getMolMass(QString);
 
-	/**
-	* @brief Takes a single element string and returns the atomic mass of that element
-	* @param element The element string
-	* @returns The atomic mass
-	*/
-	float elementToMass(std::string);
 };
 
 }
