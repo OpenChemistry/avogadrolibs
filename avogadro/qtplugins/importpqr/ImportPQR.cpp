@@ -22,20 +22,14 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/io/fileformat.h>
 
-#include <molequeue/client/jobobject.h>
-
 #include <QtCore/QDebug>
 #include <QtWidgets/QAction>
 
 #include <QtWidgets/QMessageBox>
 
 namespace Avogadro {
-namespace Core {
-class Molecule;
-}
 namespace QtPlugins {
 
-using ::MoleQueue::JobObject;
 
 ImportPQR::ImportPQR(QObject *parent_) :
   ExtensionPlugin(parent_),
@@ -69,61 +63,58 @@ QStringList ImportPQR::menuPath(QAction *) const
 
 void ImportPQR::setMolecule(QtGui::Molecule *mol)
 {
-  /**
-  if (m_dialog)
-    m_dialog->setMolecule(mol);
+
   m_molecule = mol;
-  **/
+
 }
 
-void ImportPQR::openJobOutput(const JobObject &job)
-{
-  m_outputFormat = NULL;
-  m_outputFileName.clear();
-
-  QString outputPath(job.value("outputDirectory").toString());
-
-  using QtGui::FileFormatDialog;
-  FileFormatDialog::FormatFilePair result =
-      FileFormatDialog::fileToRead(qobject_cast<QWidget*>(parent()),
-                                   tr("Open Output File"), outputPath);
-
-  if (result.first == NULL) // User canceled
-    return;
-
-  m_outputFormat = result.first;
-  m_outputFileName = result.second;
-
-  emit moleculeReady(1);
-}
 
 bool ImportPQR::readMolecule(QtGui::Molecule &mol)
 {
-  Io::FileFormat *reader = m_outputFormat->newInstance();
-  bool success = reader->readFile(m_outputFileName.toStdString(), mol);
-  if (!success) {
-    QMessageBox::information(qobject_cast<QWidget*>(parent()),
-                             tr("Error"),
-                             tr("Error reading output file '%1':\n%2")
-                             .arg(m_outputFileName)
-                             .arg(QString::fromStdString(reader->error())));
-  }
 
-  m_outputFormat = NULL;
-  m_outputFileName.clear();
 
-  return success;
+  bool readOK = Io::FileFormatManager::instance().readFile(
+        mol, m_moleculePath.toStdString());
+
+
+  if (readOK) // worked, so set the filename
+    mol.setData("name", m_moleculeName.toStdString());
+  QString err = QString::fromStdString(Io::FileFormatManager::instance().error());
+//QMessageBox::warning(qobject_cast<QWidget*>(parent()),
+  //                   tr("Network Download Failed"),
+    //                 tr("Path: %1 Name: %2")
+      //               .arg(err)
+        //             .arg(m_moleculeName));
+
+  return readOK;
+
 }
 
 void ImportPQR::menuActivated()
 {
   if (!m_dialog) {
-    m_dialog = new PQRWidget(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(openJobOutput(MoleQueue::JobObject)),
-            this, SLOT(openJobOutput(MoleQueue::JobObject)));
+    m_dialog = new PQRWidget(qobject_cast<QWidget*>(this), this);
+
   }
-//  m_dialog->setMolecule(m_molecule);
   m_dialog->show();
+}
+
+void ImportPQR::setMoleculeData(QString path, QString name)
+{
+  m_moleculeName = name;
+  m_moleculePath = path;
+
+
+
+/**
+    QMessageBox::warning(qobject_cast<QWidget*>(parent()),
+                         tr("Network Download Failed"),
+                         tr("Path: %1 Name: %2")
+                         .arg(path)
+                         .arg(name));
+*/
+  m_dialog->hide();
+  emit moleculeReady(1);
 }
 
 }

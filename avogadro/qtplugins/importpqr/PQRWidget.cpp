@@ -1,13 +1,15 @@
 #include "PQRWidget.h"
 #include "PQRRequest.h"
+#include "ImportPQR.h"
 #include "ui_PQRWidget.h"
 
 namespace Avogadro {
 namespace QtPlugins {
-PQRWidget::PQRWidget(QWidget* parent) :
+PQRWidget::PQRWidget(QWidget* parent, ImportPQR* p) :
     QDialog(parent),
     ui(new Ui::PQRWidget)
 {
+  plugin = p;
   ui->setupUi(this);
 
 	ui->tableWidget->setColumnCount(3);
@@ -21,7 +23,7 @@ PQRWidget::PQRWidget(QWidget* parent) :
 	connect(ui->tableWidget, SIGNAL(cellDoubleClicked(int, int)),
 		this, SLOT(molSelected(int, int)));
 
-  request = new PQRRequest(ui->tableWidget, ui->svgPreview, ui->filename, ui->nameDisplay, ui->formulaDisplay, ui->extensionType);
+  request = new PQRRequest(ui->tableWidget, ui->svgPreview, ui->filename, ui->nameDisplay, ui->formulaDisplay, this);
 }
 
 PQRWidget::~PQRWidget()
@@ -51,7 +53,6 @@ void PQRWidget::molSelected(int row, int col)
 
   QString url = "https://pqr.pitt.edu/static/data/svg/"+ currentlySelectedMol + ".svg";
 
-  ui->nameDisplay->setText(currentlySelectedMol);
   ui->svgPreview->load(url);
   ui->svgPreview->show();
 }
@@ -64,20 +65,16 @@ void PQRWidget::downloadMol()
 {
 	QString mol2url = currentlySelectedMol;
 	if (mol2url != "N/A" && mol2url != "") {
-		QString ext = ui->extensionType->currentText();
-		if (ext == "mol2") {
-			ext = "mol"; //easiest workaround to PQR api using /mol not /mol2
-		}
-		if (ext == "mol" || ext == "json") {
-			mol2url.remove(0, 3); //remove first 3 characters to map to PQR's url
-			QString url = "https://pqr.pitt.edu/api/" + ext + "/" + mol2url;
-			request->sendRequest(url, mol2url, ui->downloadFolder->text(), "."+ext);
-		}
-		else if (ext == "svg") {
-			QString url = "https://pqr.pitt.edu/static/data/svg/"+ mol2url + ".svg";
-			request->sendRequest(url, mol2url.remove(0, 3), ui->downloadFolder->text(), "." + ext);
-		}
+		mol2url.remove(0, 3); //remove first 3 characters to map to PQR's url
+		QString url = "https://pqr.pitt.edu/api/mol/" + mol2url;
+		request->sendRequest(url, mol2url, ui->downloadFolder->text());
 	}
+}
+
+void PQRWidget::loadMolecule(QString path, QString name)
+{
+
+  plugin->setMoleculeData(path, name);
 }
 
 } //namespace QtPlugins

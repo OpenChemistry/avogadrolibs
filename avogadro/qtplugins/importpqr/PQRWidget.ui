@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>1050</width>
-    <height>727</height>
+    <height>675</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Import From PQR</string>
   </property>
   <widget class="QLineEdit" name="molName">
    <property name="geometry">
@@ -117,10 +117,22 @@
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="5" column="2">
-     <widget class="QLineEdit" name="downloadFolder">
+    <item row="0" column="1" colspan="2">
+     <widget class="QWebEngineView" name="svgPreview">
+      <property name="url">
+       <url>
+        <string>about:blank</string>
+       </url>
+      </property>
+      <property name="zoomFactor">
+       <double>1.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QLabel" name="label_6">
       <property name="text">
-       <string>C:/mol2</string>
+       <string>Filename:</string>
       </property>
      </widget>
     </item>
@@ -134,37 +146,11 @@
     <item row="6" column="2">
      <widget class="QLineEdit" name="filename"/>
     </item>
-    <item row="6" column="1">
-     <widget class="QLabel" name="label_6">
+    <item row="5" column="2">
+     <widget class="QLineEdit" name="downloadFolder">
       <property name="text">
-       <string>Filename:</string>
+       <string>C:/mol2</string>
       </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QLineEdit" name="nameDisplay">
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="2">
-     <widget class="QComboBox" name="extensionType">
-      <item>
-       <property name="text">
-        <string>mol2</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>svg</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>json</string>
-       </property>
-      </item>
      </widget>
     </item>
     <item row="4" column="1">
@@ -174,24 +160,10 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="1">
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Download Folder: </string>
-      </property>
-     </widget>
-    </item>
-    <item row="9" column="2">
+    <item row="8" column="2">
      <widget class="QPushButton" name="downloadButton">
       <property name="text">
        <string>Download</string>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="1">
-     <widget class="QLabel" name="label_7">
-      <property name="text">
-       <string>Extension:</string>
       </property>
      </widget>
     </item>
@@ -202,15 +174,17 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="1" colspan="2">
-     <widget class="QWebEngineView" name="svgPreview">
-      <property name="url">
-       <url>
-        <string>about:blank</string>
-       </url>
+    <item row="1" column="2">
+     <widget class="QLineEdit" name="nameDisplay">
+      <property name="readOnly">
+       <bool>true</bool>
       </property>
-      <property name="zoomFactor">
-       <double>1.000000000000000</double>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Download Folder: </string>
       </property>
      </widget>
     </item>
