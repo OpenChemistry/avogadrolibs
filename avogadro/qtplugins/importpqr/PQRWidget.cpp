@@ -50,11 +50,19 @@ void PQRWidget::searchAction()
 void PQRWidget::molSelected(int row, int col)
 {
 	currentlySelectedMol = request->molSelected(row);
+  if(currentlySelectedMol == "N/A") {
+    return;
+  }
 
   QString url = "https://pqr.pitt.edu/static/data/svg/"+ currentlySelectedMol + ".svg";
-
   ui->svgPreview->load(url);
+  //center svg
+  ui->svgPreview->setZoomFactor(1.5);
+  ui->svgPreview->page()->runJavaScript("document.getElementById('topsvg').style.overflow='hidden';");
+  //remove scrollbars
   ui->svgPreview->show();
+
+
 }
 
 /**

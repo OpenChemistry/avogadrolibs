@@ -104,15 +104,6 @@ void ImportPQR::setMoleculeData(QString path, QString name)
   m_moleculeName = name;
   m_moleculePath = path;
 
-
-
-/**
-    QMessageBox::warning(qobject_cast<QWidget*>(parent()),
-                         tr("Network Download Failed"),
-                         tr("Path: %1 Name: %2")
-                         .arg(path)
-                         .arg(name));
-*/
   m_dialog->hide();
   emit moleculeReady(1);
 }
