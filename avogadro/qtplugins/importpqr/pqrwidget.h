@@ -24,21 +24,23 @@ class PQRWidget;
 }
 
 namespace Avogadro {
+
 namespace QtGui {
-  class Molecule;
+class Molecule;
 }
 
 namespace QtPlugins {
 class PQRRequest;
 class ImportPQR;
+
 class PQRWidget : public QDialog
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    PQRWidget(QWidget *parent = 0, ImportPQR* p = NULL);
-    ~PQRWidget();
-    void loadMolecule(QString, QString);
+  PQRWidget(QWidget *parent = 0, ImportPQR* p = NULL);
+  ~PQRWidget();
+  void loadMolecule(QString, QString);
 
 private slots:
 
@@ -53,25 +55,26 @@ private slots:
   * @param row The row of the result selected.
   * @param col The column of the result selected.
   */
-	void molSelected(int, int);
+  void molSelected(int, int);
 
   /**
   * @brief Called when the download button is clicked to send a request to download
   * molecule information from PQR.
   */
-	void downloadMol();
+  void downloadMol();
 
 private:
-    /** The mol2 of the molecule result currently selected */
-    QString currentlySelectedMol;
-    /** Pointer to the ui objects */
-    Ui::PQRWidget *ui;
-    /** Pointer to a PQRRequest object to handle network requests */
-    PQRRequest *request;
+  /** The mol2 of the molecule result currently selected */
+  QString currentlySelectedMol;
+  /** Pointer to the ui objects */
+  Ui::PQRWidget *ui;
+  /** Pointer to a PQRRequest object to handle network requests */
+  PQRRequest *request;
 
-    /** Pointer to the plugin that opened the dialog */
-    ImportPQR *plugin;
+  /** Pointer to the plugin that opened the dialog */
+  ImportPQR *plugin;
 };
+
 }
 }
 #endif // AVOGADRO_PQRWIDGET_H

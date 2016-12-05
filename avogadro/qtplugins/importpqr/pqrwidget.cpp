@@ -5,31 +5,32 @@
 
 namespace Avogadro {
 namespace QtPlugins {
+
 PQRWidget::PQRWidget(QWidget* parent, ImportPQR* p) :
-    QDialog(parent),
-    ui(new Ui::PQRWidget)
+  QDialog(parent),
+  ui(new Ui::PQRWidget)
 {
   plugin = p;
   ui->setupUi(this);
 
-	ui->tableWidget->setColumnCount(3);
-	ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Name" << "Formula" << "Mass (g/mol)");
-	ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
-	ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+  ui->tableWidget->setColumnCount(3);
+  ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Name" << "Formula" << "Mass (g/mol)");
+  ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
+  ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
   ui->tableWidget->setSortingEnabled(true);
   connect(ui->searchButton, SIGNAL(clicked(bool)), this, SLOT(searchAction()));
-	connect(ui->downloadButton, SIGNAL(clicked(bool)), this, SLOT(downloadMol()));
-	connect(ui->tableWidget, SIGNAL(cellDoubleClicked(int, int)),
-		this, SLOT(molSelected(int, int)));
+  connect(ui->downloadButton, SIGNAL(clicked(bool)), this, SLOT(downloadMol()));
+  connect(ui->tableWidget, SIGNAL(cellDoubleClicked(int, int)),
+  this, SLOT(molSelected(int, int)));
 
   request = new PQRRequest(ui->tableWidget, ui->svgPreview, ui->filename, ui->nameDisplay, ui->formulaDisplay, this);
 }
 
 PQRWidget::~PQRWidget()
 {
-    delete request;
-    delete ui;
+  delete request;
+  delete ui;
 }
 
 /**
@@ -37,8 +38,8 @@ PQRWidget::~PQRWidget()
 */
 void PQRWidget::searchAction()
 {
-    QString url = "https://pqr.pitt.edu/api/browse/"+ui->molName->text() + "/" + ui->searchTypeBox->currentText();
-    request->sendRequest(url);
+  QString url = "https://pqr.pitt.edu/api/browse/"+ui->molName->text() + "/" + ui->searchTypeBox->currentText();
+  request->sendRequest(url);
 }
 
 /**
@@ -49,8 +50,8 @@ void PQRWidget::searchAction()
 */
 void PQRWidget::molSelected(int row, int col)
 {
-	currentlySelectedMol = request->molSelected(row);
-  if(currentlySelectedMol == "N/A") {
+  currentlySelectedMol = request->molSelected(row);
+  if (currentlySelectedMol == "N/A") {
     return;
   }
 
@@ -72,12 +73,12 @@ void PQRWidget::molSelected(int row, int col)
 */
 void PQRWidget::downloadMol()
 {
-	QString mol2url = currentlySelectedMol;
-	if (mol2url != "N/A" && mol2url != "") {
-		mol2url.remove(0, 3); //remove first 3 characters to map to PQR's url
-		QString url = "https://pqr.pitt.edu/api/mol/" + mol2url;
-		request->sendRequest(url, mol2url, ui->downloadFolder->text());
-	}
+  QString mol2url = currentlySelectedMol;
+  if (mol2url != "N/A" && mol2url != "") {
+    mol2url.remove(0, 3); //remove first 3 characters to map to PQR's url
+    QString url = "https://pqr.pitt.edu/api/mol/" + mol2url;
+    request->sendRequest(url, mol2url, ui->downloadFolder->text());
+  }
 }
 
 void PQRWidget::loadMolecule(QString path, QString name)

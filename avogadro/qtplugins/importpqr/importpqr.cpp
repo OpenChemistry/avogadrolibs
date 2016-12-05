@@ -73,7 +73,7 @@ void ImportPQR::setMolecule(QtGui::Molecule *mol)
 bool ImportPQR::readMolecule(QtGui::Molecule &mol)
 {
   bool readOK = Io::FileFormatManager::instance().readFile(
-        mol, m_moleculePath.toStdString());
+    mol, m_moleculePath.toStdString());
 
   if (readOK) // worked, so set the filename
     mol.setData("name", m_moleculeName.toStdString());
@@ -83,10 +83,9 @@ bool ImportPQR::readMolecule(QtGui::Molecule &mol)
 
 void ImportPQR::menuActivated()
 {
-  if (!m_dialog) {
+  if (!m_dialog)
     m_dialog = new PQRWidget(qobject_cast<QWidget*>(this), this);
 
-  }
   m_dialog->show();
 }
 
