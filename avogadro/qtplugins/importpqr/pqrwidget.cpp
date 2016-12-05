@@ -21,10 +21,10 @@ PQRWidget::PQRWidget(QWidget* parent, ImportPQR* p) :
   ui->tableWidget->setSortingEnabled(true);
   connect(ui->searchButton, SIGNAL(clicked(bool)), this, SLOT(searchAction()));
   connect(ui->downloadButton, SIGNAL(clicked(bool)), this, SLOT(downloadMol()));
-  connect(ui->tableWidget, SIGNAL(cellDoubleClicked(int, int)),
-  this, SLOT(molSelected(int, int)));
+  connect(ui->tableWidget, SIGNAL(cellClicked(int, int)),
+    this, SLOT(molSelected(int, int)));
 
-  request = new PQRRequest(ui->tableWidget, ui->svgPreview, ui->filename, ui->nameDisplay, ui->formulaDisplay, this);
+  request = new PQRRequest(ui->tableWidget, ui->svgPreview, ui->nameDisplay, ui->formulaDisplay, this);
 }
 
 PQRWidget::~PQRWidget()
@@ -38,6 +38,7 @@ PQRWidget::~PQRWidget()
 */
 void PQRWidget::searchAction()
 {
+  ui->downloadButton->setEnabled(false);
   QString url = "https://pqr.pitt.edu/api/browse/"+ui->molName->text() + "/" + ui->searchTypeBox->currentText();
   request->sendRequest(url);
 }
@@ -51,9 +52,10 @@ void PQRWidget::searchAction()
 void PQRWidget::molSelected(int row, int col)
 {
   currentlySelectedMol = request->molSelected(row);
-  if (currentlySelectedMol == "N/A") {
+  if (currentlySelectedMol == "N/A")
     return;
-  }
+
+	ui->downloadButton->setEnabled(true);
 
   QString url = "https://pqr.pitt.edu/static/data/svg/"+ currentlySelectedMol + ".svg";
   ui->svgPreview->load(url);
@@ -77,13 +79,13 @@ void PQRWidget::downloadMol()
   if (mol2url != "N/A" && mol2url != "") {
     mol2url.remove(0, 3); //remove first 3 characters to map to PQR's url
     QString url = "https://pqr.pitt.edu/api/mol/" + mol2url;
-    request->sendRequest(url, mol2url, ui->downloadFolder->text());
+    request->sendRequest(url, mol2url);
   }
 }
 
-void PQRWidget::loadMolecule(QString path, QString name)
+void PQRWidget::loadMolecule(QByteArray &molData, QString name)
 {
-  plugin->setMoleculeData(path, name);
+  plugin->setMoleculeData(molData, name);
 }
 
 } //namespace QtPlugins

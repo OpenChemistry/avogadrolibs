@@ -60,7 +60,7 @@ QList<QAction *> ImportPQR::actions() const
 QStringList ImportPQR::menuPath(QAction *) const
 {
   QStringList path;
-  path << tr("&File");
+  path << tr("&File") << tr("&Import");
   return path;
 }
 
@@ -72,8 +72,8 @@ void ImportPQR::setMolecule(QtGui::Molecule *mol)
 
 bool ImportPQR::readMolecule(QtGui::Molecule &mol)
 {
-  bool readOK = Io::FileFormatManager::instance().readFile(
-    mol, m_moleculePath.toStdString());
+  bool readOK = Io::FileFormatManager::instance().readString(
+    mol, m_moleculeData.data(),  "mol2");
 
   if (readOK) // worked, so set the filename
     mol.setData("name", m_moleculeName.toStdString());
@@ -90,10 +90,10 @@ void ImportPQR::menuActivated()
 }
 
 //called by widget
-void ImportPQR::setMoleculeData(QString path, QString name)
+void ImportPQR::setMoleculeData(QByteArray &molData, QString name)
 {
   m_moleculeName = name;
-  m_moleculePath = path;
+  m_moleculeData = molData;
 
   m_dialog->hide();
   emit moleculeReady(1);

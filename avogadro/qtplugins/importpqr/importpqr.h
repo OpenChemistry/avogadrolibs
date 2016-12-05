@@ -50,7 +50,7 @@ public:
 
   QStringList menuPath(QAction *) const AVO_OVERRIDE;
 
-  void setMoleculeData(QString reply, QString name);
+  void setMoleculeData(QByteArray &molData, QString name);
 
 public slots:
   void setMolecule(QtGui::Molecule *mol);
@@ -66,6 +66,7 @@ private:
   const Io::FileFormat *m_outputFormat;
   QString m_moleculeName;
   QString m_moleculePath;
+	QByteArray m_moleculeData;
 };
 
 }
