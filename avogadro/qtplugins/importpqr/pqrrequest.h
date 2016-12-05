@@ -41,11 +41,10 @@ public:
   * the widget's ui elements.
   * @param tw Pointer to ui's table widget
   * @param gv Pointer to ui's graphics view for SVG preview
-  * @param fn Pointer to the filename LineEdit
   * @param nd Pointer to the name display
   * @param fd Pointer to the formula display
   */
-  PQRRequest(QTableWidget*, QWebEngineView*, QLineEdit*, QLineEdit*, QLabel*, PQRWidget*);
+  PQRRequest(QTableWidget*, QWebEngineView*, QLineEdit*, QLabel*, PQRWidget*);
 
 	/**
 	* @brief Free the ui pointers
@@ -62,10 +61,8 @@ public:
   * @brief Sends a network request to download a file from PQR
   * @param url The url to send the request to
   * @param mol2 The mol2 representation of the molecule to download
-  * @param downlaodFolder The path of the download folder
-  * @param ext The file extension to download
   */
-  void sendRequest(QString, QString, QString);
+  void sendRequest(QString, QString);
 
   /**
   * @brief Called when a molecule is selected to display information about the
@@ -117,14 +114,11 @@ private:
 
   /** Pointers to a widget's ui elements */
   QTableWidget* table;
-  QLineEdit* filename;
   QLineEdit* nameDisplay;
   QLabel* formulaDisplay;
   QWebEngineView* svgPreview;
 
   /** Variables to fold file downlaod information for getFile() */
-  QString currentFilename;
-  QString currentDownloadFolder;
   QString currentMolName;
 
   /**

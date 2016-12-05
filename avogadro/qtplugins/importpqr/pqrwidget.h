@@ -40,7 +40,7 @@ class PQRWidget : public QDialog
 public:
   PQRWidget(QWidget *parent = 0, ImportPQR* p = NULL);
   ~PQRWidget();
-  void loadMolecule(QString, QString);
+  void loadMolecule(QByteArray&, QString);
 
 private slots:
 

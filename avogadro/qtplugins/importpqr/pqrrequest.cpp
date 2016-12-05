@@ -9,12 +9,11 @@ namespace QtPlugins {
 * @brief Constuctor to initialize the NetworkAcessManager and set pointers to
 * the widget's ui elements.
 */
-PQRRequest::PQRRequest(QTableWidget* tw, QWebEngineView* gv, QLineEdit* fn, QLineEdit* nd, QLabel* fd, PQRWidget* w)
+PQRRequest::PQRRequest(QTableWidget* tw, QWebEngineView* gv, QLineEdit* nd, QLabel* fd, PQRWidget* w)
 {
   //set pointers to ui elements now instead of in individual functions
   table = tw; //pointer to ui table
   svgPreview = gv; //svg GraphicsView
-  filename = fn; //filename LineEdit
   nameDisplay = nd; //name
   formulaDisplay = fd; //formula
 
@@ -50,7 +49,7 @@ void PQRRequest::sendRequest(QString url)
 * @param downlaodFolder The path of the download folder
 * @param ext The file extension to download
 */
-void PQRRequest::sendRequest(QString url, QString mol2, QString downloadFolder)
+void PQRRequest::sendRequest(QString url, QString mol2)
 {
   QUrl httpRequest(url);
   QNetworkRequest request;
@@ -61,15 +60,6 @@ void PQRRequest::sendRequest(QString url, QString mol2, QString downloadFolder)
 
   reply = oNetworkAccessManager->get(request);
 
-  //see if user wants to change the download folder
-  if (downloadFolder.isNull() || downloadFolder.isEmpty()) {
-    currentDownloadFolder = "/";
-  }
-  else {
-	  currentDownloadFolder = downloadFolder;
-  }
-
-  currentFilename = mol2 + ".mol2"; //default filename to be downloaded
   currentMolName = nameDisplay->text(); //needed to load mol into Avogadro
   connect(reply, SIGNAL(finished()), this, SLOT(getFile()));
 }
@@ -82,16 +72,12 @@ void PQRRequest::sendRequest(QString url, QString mol2, QString downloadFolder)
 */
 QString PQRRequest::molSelected(int num)
 {
-  if (results == NULL) {
+  if (results == NULL)
     return QString("N/A");
-  }
 
   QString mol2 = results[num].mol2url;
   QString url = "https://pqr.pitt.edu/static/data/svg/"+ mol2 + ".svg";
 
-  //default filename
-  QString file = mol2;
-  filename->setText(file.remove(0, 3));
   formulaDisplay->setText(parseSubscripts(results[num].formula));
   nameDisplay->setText(results[num].name);
 
@@ -118,7 +104,7 @@ void PQRRequest::parseJson()
     if (resultSize == 0) {
       table->setRowCount(1);
       table->setItem(0, 0, new QTableWidgetItem("No Results!"));
-      table->setItem(0, 1, new QTableWidgetItem("N/A"));
+      table->setCellWidget(0, 1, new QLabel());
       table->setItem(0, 2, new QTableWidgetItem("N/A"));
       results = NULL;
     }
@@ -160,30 +146,8 @@ void PQRRequest::parseJson()
 */
 void PQRRequest::getFile()
 {
-  QDir *dir = new QDir();
-  dir->mkpath(currentDownloadFolder);
-
-  QFile *file;
-  QString path;
-  //make sure filename box isn't blank
-  if (filename->text() == NULL) {
-    path = currentDownloadFolder + "/" + currentFilename;
-  }
-  else {
-    path = currentDownloadFolder + "/" + filename->text() + ".mol2";
-  }
-  file = new QFile(path);
-
-  if (file->open(QFile::WriteOnly))
-  {
-    file->write(reply->readAll());
-    file->flush();
-    file->close();
-    widget->loadMolecule(path, currentMolName);
-  }
-  delete file;
-  delete dir;
-
+  QByteArray molData = reply->readAll();
+  widget->loadMolecule(molData, currentMolName);
   reply->deleteLater();
 }
 

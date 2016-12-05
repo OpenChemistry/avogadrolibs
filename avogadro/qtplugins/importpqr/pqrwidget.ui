@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1050</width>
-    <height>675</height>
+    <width>1062</width>
+    <height>667</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Import From PQR</string>
@@ -113,10 +119,27 @@
      <x>720</x>
      <y>60</y>
      <width>321</width>
-     <height>451</height>
+     <height>391</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
+    <item row="4" column="1">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Formula:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="2">
+     <widget class="QPushButton" name="downloadButton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>Download</string>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="1" colspan="2">
      <widget class="QWebEngineView" name="svgPreview">
       <property name="url">
@@ -129,48 +152,10 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="1">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>Filename:</string>
-      </property>
-     </widget>
-    </item>
     <item row="4" column="2">
      <widget class="QLabel" name="formulaDisplay">
       <property name="text">
        <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="2">
-     <widget class="QLineEdit" name="filename"/>
-    </item>
-    <item row="5" column="2">
-     <widget class="QLineEdit" name="downloadFolder">
-      <property name="text">
-       <string>C:/mol2</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>Formula:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="2">
-     <widget class="QPushButton" name="downloadButton">
-      <property name="text">
-       <string>Download</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Name:</string>
       </property>
      </widget>
     </item>
@@ -181,10 +166,10 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="1">
-     <widget class="QLabel" name="label_3">
+    <item row="1" column="1">
+     <widget class="QLabel" name="label_4">
       <property name="text">
-       <string>Download Folder: </string>
+       <string>Name:</string>
       </property>
      </widget>
     </item>
