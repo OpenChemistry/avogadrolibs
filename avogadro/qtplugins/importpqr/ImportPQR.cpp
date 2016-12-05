@@ -14,9 +14,9 @@
 
 ******************************************************************************/
 
-#include "ImportPQR.h"
+#include "importpqr.h"
 
-#include "PQRWidget.h"
+#include "pqrwidget.h"
 
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>

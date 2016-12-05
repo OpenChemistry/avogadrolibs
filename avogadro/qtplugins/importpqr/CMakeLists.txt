@@ -1,21 +1,21 @@
-find_package(Qt5WebEngineWidgets REQUIRED)
+find_package(Qt5 COMPONENTS WebEngineWidgets REQUIRED)
 
 include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp")
 
 # Extension
 set(importpqr_srcs
-  ImportPQR.cpp
-  PQRWidget.cpp
-  PQRRequest.cpp
+  importpqr.cpp
+  pqrwidget.cpp
+  pqrrequest.cpp
 )
 
 avogadro_plugin(ImportPQR
   "Download molecules from the Pitt Quantum Repository"
   ExtensionPlugin
-  ImportPQR.h
+  importpqr.h
   ImportPQR
   "${importpqr_srcs}"
-  PQRWidget.ui
+  pqrwidget.ui
   ""
 )
 
