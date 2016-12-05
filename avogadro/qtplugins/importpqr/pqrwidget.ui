@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1062</width>
-    <height>667</height>
+    <width>1087</width>
+    <height>674</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,162 +19,160 @@
   <property name="windowTitle">
    <string>Import From PQR</string>
   </property>
-  <widget class="QLineEdit" name="molName">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>25</y>
-     <width>697</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="searchTypeBox">
-   <property name="geometry">
-    <rect>
-     <x>143</x>
-     <y>25</y>
-     <width>80</width>
-     <height>22</height>
-    </rect>
-   </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <property name="text">
-     <string>name</string>
-    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="6">
+      <widget class="QPushButton" name="searchButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Search</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="molName"/>
+     </item>
+     <item row="2" column="5">
+      <widget class="QComboBox" name="searchTypeBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>name</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>tag</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>synonym</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>formula</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>inchi</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="3" column="5" colspan="2">
+      <widget class="QWebEngineView" name="svgPreview">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>300</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>300</width>
+         <height>300</height>
+        </size>
+       </property>
+       <property name="url">
+        <url>
+         <string>about:blank</string>
+        </url>
+       </property>
+       <property name="zoomFactor">
+        <double>1.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Search By: </string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" colspan="2">
+      <widget class="QTableWidget" name="tableWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>5</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>750</width>
+         <height>500</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="5">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Formula:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="6">
+      <widget class="QLabel" name="formulaDisplay">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="6">
+      <widget class="QLineEdit" name="nameDisplay">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="5">
+      <widget class="QPushButton" name="downloadButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Download</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="5">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Name:</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item>
-    <property name="text">
-     <string>tag</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>synonym</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>formula</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>inchi</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QTableWidget" name="tableWidget">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>60</y>
-     <width>671</width>
-     <height>584</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>26</x>
-     <y>22</y>
-     <width>110</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Search By: </string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="searchButton">
-   <property name="geometry">
-    <rect>
-     <x>934</x>
-     <y>22</y>
-     <width>93</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Search</string>
-   </property>
-  </widget>
-  <widget class="Line" name="line">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>60</y>
-     <width>20</width>
-     <height>581</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Vertical</enum>
-   </property>
-  </widget>
-  <widget class="QWidget" name="gridLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>720</x>
-     <y>60</y>
-     <width>321</width>
-     <height>391</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="4" column="1">
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>Formula:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="2">
-     <widget class="QPushButton" name="downloadButton">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="text">
-       <string>Download</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1" colspan="2">
-     <widget class="QWebEngineView" name="svgPreview">
-      <property name="url">
-       <url>
-        <string>about:blank</string>
-       </url>
-      </property>
-      <property name="zoomFactor">
-       <double>1.000000000000000</double>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="2">
-     <widget class="QLabel" name="formulaDisplay">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QLineEdit" name="nameDisplay">
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Name:</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
+  </layout>
  </widget>
  <customwidgets>
   <customwidget>
