@@ -1,7 +1,7 @@
-#include "PQRWidget.h"
-#include "PQRRequest.h"
-#include "ImportPQR.h"
-#include "ui_PQRWidget.h"
+#include "pqrwidget.h"
+#include "pqrrequest.h"
+#include "importpqr.h"
+#include "ui_pqrwidget.h"
 
 namespace Avogadro {
 namespace QtPlugins {

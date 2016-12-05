@@ -1,5 +1,5 @@
-#include "PQRRequest.h"
-#include "PQRWidget.h"
+#include "pqrrequest.h"
+#include "pqrwidget.h"
 
 #include <avogadro/core/elements.h>
 
@@ -11,16 +11,16 @@ namespace QtPlugins {
 */
 PQRRequest::PQRRequest(QTableWidget* tw, QWebEngineView* gv, QLineEdit* fn, QLineEdit* nd, QLabel* fd, PQRWidget* w)
 {
-  //set pointers to ui elements now instead of in individual functions
-  table = tw; //pointer to ui table
-  svgPreview = gv; //svg GraphicsView
-  filename = fn; //filename LineEdit
-  nameDisplay = nd; //name
-  formulaDisplay = fd; //formula
+	//set pointers to ui elements now instead of in individual functions
+	table = tw; //pointer to ui table
+	svgPreview = gv; //svg GraphicsView
+	filename = fn; //filename LineEdit
+	nameDisplay = nd; //name
+	formulaDisplay = fd; //formula
 
-  //used to load molecule in Avogadro when downloaded
-  widget = w;
-  oNetworkAccessManager = new QNetworkAccessManager(this);
+	//used to load molecule in Avogadro when downloaded
+	widget = w;
+	oNetworkAccessManager = new QNetworkAccessManager(this);
 }
 
 /**
@@ -28,9 +28,9 @@ PQRRequest::PQRRequest(QTableWidget* tw, QWebEngineView* gv, QLineEdit* fn, QLin
 */
 PQRRequest::~PQRRequest()
 {
-  delete results;
-  delete read;
-  delete oNetworkAccessManager;
+	delete results;
+	delete read;
+	delete oNetworkAccessManager;
 }
 
 /**
@@ -39,7 +39,7 @@ PQRRequest::~PQRRequest()
 */
 void PQRRequest::sendRequest(QString url)
 {
-  reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
+	reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
 	connect(reply, SIGNAL(finished()), this, SLOT(parseJson()));
 }
 
@@ -70,7 +70,7 @@ void PQRRequest::sendRequest(QString url, QString mol2, QString downloadFolder)
 	}
 
 	currentFilename = mol2 + ".mol2"; //default filename to be downloaded
-  currentMolName = nameDisplay->text(); //needed to load mol into Avogadro
+	currentMolName = nameDisplay->text(); //needed to load mol into Avogadro
 	connect(reply, SIGNAL(finished()), this, SLOT(getFile()));
 }
 
@@ -80,20 +80,22 @@ void PQRRequest::sendRequest(QString url, QString mol2, QString downloadFolder)
 * @param num The row number of the table result selected
 * @returns The mol2 of the result for the widget to reference
 */
-QString PQRRequest::molSelected(int num) {
-  if(results == NULL) {
-    return QString("N/A");
-  }
-		QString mol2 = results[num].mol2url;
-    QString url = "https://pqr.pitt.edu/static/data/svg/"+ mol2 + ".svg";
+QString PQRRequest::molSelected(int num)
+{
+	if(results == NULL) {
+		return QString("N/A");
+	}
 
-    //default filename
-    QString file = mol2;
-    filename->setText(file.remove(0, 3));
-    formulaDisplay->setText(parseSubscripts(results[num].formula));
-    nameDisplay->setText(results[num].name);
+	QString mol2 = results[num].mol2url;
+	QString url = "https://pqr.pitt.edu/static/data/svg/"+ mol2 + ".svg";
 
-    return mol2;
+	//default filename
+	QString file = mol2;
+	filename->setText(file.remove(0, 3));
+	formulaDisplay->setText(parseSubscripts(results[num].formula));
+	nameDisplay->setText(results[num].name);
+
+	return mol2;
 }
 
 /**
@@ -101,20 +103,20 @@ QString PQRRequest::molSelected(int num) {
 */
 void PQRRequest::parseJson()
 {
-    if (reply->error() == QNetworkReply::NoError)
-    {
+	if (reply->error() == QNetworkReply::NoError)
+	{
 		read = new Json::Reader();
-    // Reading the data from the response
-    QByteArray bytes = reply->readAll();
-    QString jsonString(bytes);
+		// Reading the data from the response
+		QByteArray bytes = reply->readAll();
+		QString jsonString(bytes);
 
-    //parse the json
+		//parse the json
 		read->parse(jsonString.toStdString().c_str(), root);
 
 		int resultSize = root.size();
 
 		if (resultSize == 0) {
-      table->setRowCount(1);
+			table->setRowCount(1);
 			table->setItem(0, 0, new QTableWidgetItem("No Results!"));
 			table->setItem(0, 1, new QTableWidgetItem("N/A"));
 			table->setItem(0, 2, new QTableWidgetItem("N/A"));
@@ -132,24 +134,24 @@ void PQRRequest::parseJson()
 
 				table->setItem(i, 0, new QTableWidgetItem(results[i].name));
 
-        //clear possible QTableWidget if there were no results previously
-        table->setItem(i, 1, NULL);
-        //use this to display subscripts, should automatically delete previous QLabel according to documentation
+				//clear possible QTableWidget if there were no results previously
+				table->setItem(i, 1, NULL);
+				//use this to display subscripts, should automatically delete previous QLabel according to documentation
 				table->setCellWidget(i, 1, new QLabel(parseSubscripts(results[i].formula)));
 
-        //table->setItem(i, 2, new QTableWidgetItem(QString::number(results[i].mass, 'f', 3) + QString(" g/mol")));
-        QTableWidgetItem* massItem = new QTableWidgetItem();
-        massItem->setData(Qt::DisplayRole, results[i].mass);
-        table->setItem(i, 2, massItem);
+				//table->setItem(i, 2, new QTableWidgetItem(QString::number(results[i].mass, 'f', 3) + QString(" g/mol")));
+				QTableWidgetItem* massItem = new QTableWidgetItem();
+				massItem->setData(Qt::DisplayRole, results[i].mass);
+				table->setItem(i, 2, massItem);
 			}
 		}
 	}
-  else {
-    table->setRowCount(3);
-    table->setItem(0, 0, new QTableWidgetItem("Network Error!"));
-    table->setItem(0, 1, new QTableWidgetItem("N/A"));
-    table->setItem(0, 2, new QTableWidgetItem(reply->errorString()));
-  }
+	else {
+		table->setRowCount(3);
+		table->setItem(0, 0, new QTableWidgetItem("Network Error!"));
+		table->setItem(0, 1, new QTableWidgetItem("N/A"));
+		table->setItem(0, 2, new QTableWidgetItem(reply->errorString()));
+	}
 	reply->deleteLater();
 }
 
@@ -158,32 +160,31 @@ void PQRRequest::parseJson()
 */
 void PQRRequest::getFile()
 {
-
 	QDir *dir = new QDir();
 	dir->mkpath(currentDownloadFolder);
 
 	QFile *file;
-  QString path;
-  //make sure filename box isn't blank
-  if(filename->text() == NULL) {
-    path = currentDownloadFolder + "/" + currentFilename;
-  } else {
-    path = currentDownloadFolder + "/" + filename->text() + ".mol2";
-  }
-  file = new QFile(path);
+	QString path;
+	//make sure filename box isn't blank
+	if(filename->text() == NULL) {
+		path = currentDownloadFolder + "/" + currentFilename;
+	}
+	else {
+		path = currentDownloadFolder + "/" + filename->text() + ".mol2";
+	}
+	file = new QFile(path);
 
 	if (file->open(QFile::WriteOnly))
 	{
 		file->write(reply->readAll());
 		file->flush();
 		file->close();
-    widget->loadMolecule(path, currentMolName);
+		widget->loadMolecule(path, currentMolName);
 	}
 	delete file;
 	delete dir;
 
 	reply->deleteLater();
-
 }
 
 /**
@@ -192,18 +193,19 @@ void PQRRequest::getFile()
 */
 QString PQRRequest::parseSubscripts(QString formula)
 {
-  std::string str = formula.toStdString();
-  QString toReturn;
-  for(int i = 0; i < str.length(); i++) {
-    if(isdigit(str[i])) {
-      toReturn.append("<sub>");
-      toReturn.append(str[i]);
-      toReturn.append("</sub>");
-    } else {
-      toReturn.append(str[i]);
-    }
-  }
-  return toReturn;
+	std::string str = formula.toStdString();
+	QString toReturn;
+	for(int i = 0; i < str.length(); i++) {
+		if(isdigit(str[i])) {
+			toReturn.append("<sub>");
+			toReturn.append(str[i]);
+			toReturn.append("</sub>");
+		}
+		else {
+			toReturn.append(str[i]);
+		}
+	}
+	return toReturn;
 }
 
 /**
@@ -215,20 +217,20 @@ float PQRRequest::getMolMass(QString formula) {
 	float totalMass = 0.0;
 	int subscript = 1;
 	std::string element;
-  unsigned char atomicNum;
+	unsigned char atomicNum;
 	for (int i = 0; i < str.length(); i++) {
 		//each element will start with a capital letter
 		if (isupper(str[i])) {
 			//if next letter is a lower case then we know the whole element
 			if (islower(str[i + 1])) {
-        element = { str[i], str[i + 1] };
+				element = { str[i], str[i + 1] };
 				//this might be the last element of the formula
-        if(isdigit(str[i + 2])) {
-          subscript = (int)str[i + 2] - '0';
-          i += 2; //increment past lowercase and numeral
-        }
+				if(isdigit(str[i + 2])) {
+					subscript = (int)str[i + 2] - '0';
+					i += 2; //increment past lowercase and numeral
+				}
 				else {
-          i += 1;
+					i += 1;
 					subscript = 1;
 				}
 			}
@@ -253,7 +255,7 @@ float PQRRequest::getMolMass(QString formula) {
 				subscript = 1;
 				element = { str[i] };
 			}
-      atomicNum = Core::Elements::atomicNumberFromSymbol(element);
+			atomicNum = Core::Elements::atomicNumberFromSymbol(element);
 			totalMass += (subscript * Core::Elements::mass(atomicNum));
 		}
 	}
