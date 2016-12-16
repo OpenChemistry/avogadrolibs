@@ -244,6 +244,9 @@ public:
    */
   bool atomSelected(Index atomId) const;
 
+  /** Returns whether the selection is empty or not */
+  bool isSelectionEmpty() const;
+
   /** Returns a vector of pairs of atom indices of the bonds in the molecule. */
   Array<std::pair<Index, Index> >& bondPairs();
 
@@ -711,6 +714,15 @@ inline void Molecule::setAtomSelected(Index atomId, bool selected)
 inline bool Molecule::atomSelected(Index atomId) const
 {
   return atomId < m_selectedAtoms.size() ? m_selectedAtoms[atomId] : false;
+}
+
+inline bool Molecule::isSelectionEmpty() const
+{
+  for(Index i = 0; i < m_selectedAtoms.size(); ++i) {
+    if (m_selectedAtoms[i])
+      return false;
+  }
+  return true;
 }
 
 inline std::pair<Index, Index> Molecule::bondPair(Index bondId) const
