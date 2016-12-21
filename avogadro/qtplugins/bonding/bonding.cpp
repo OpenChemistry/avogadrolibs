@@ -96,14 +96,16 @@ void Bonding::bond2()
       radii[i] = 0.0;
   }
 
+  bool emptySelection = mol->isSelectionEmpty();
+
   // Main bond perception loop based on a simple distance metric.
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-    if (!m_molecule->atomSelected(i))
+    if (!emptySelection && !m_molecule->atomSelected(i))
       continue;
 
     Vector3 ipos = m_molecule->atomPositions3d()[i];
     for (Index j = i + 1; j < m_molecule->atomCount(); ++j) {
-      if (!m_molecule->atomSelected(j))
+      if (!emptySelection && !m_molecule->atomSelected(j))
         continue;
 
       double cutoff = radii[i] + radii[j] + tolerance;
