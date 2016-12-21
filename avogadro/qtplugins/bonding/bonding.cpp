@@ -96,7 +96,7 @@ void Bonding::bond2()
       radii[i] = 0.0;
   }
 
-  bool emptySelection = mol->isSelectionEmpty();
+  bool emptySelection = m_molecule->isSelectionEmpty();
 
   // Main bond perception loop based on a simple distance metric.
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
