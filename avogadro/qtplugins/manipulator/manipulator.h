@@ -81,6 +81,7 @@ private:
   Rendering::Identifier m_object;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;
+  Vector3f m_lastMouse3D;
 };
 
 } // namespace QtOpenGL
