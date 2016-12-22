@@ -234,6 +234,19 @@ public:
    */
   bool setAtomPosition3d(Index atomId, const Vector3& pos);
 
+  /**
+   * Set whether the specified atom is selected or not.
+   */
+  void setAtomSelected(Index atomId, bool selected);
+
+  /**
+   * Query whether the supplied atom index has been selected.
+   */
+  bool atomSelected(Index atomId) const;
+
+  /** Returns whether the selection is empty or not */
+  bool isSelectionEmpty() const;
+
   /** Returns a vector of pairs of atom indices of the bonds in the molecule. */
   Array<std::pair<Index, Index> >& bondPairs();
 
@@ -533,6 +546,9 @@ protected:
   Array<std::pair<Index, Index> > m_bondPairs;
   Array<unsigned char> m_bondOrders;
 
+  // Array declaring whether atoms are selected or not.
+  std::vector<bool> m_selectedAtoms;
+
   std::vector<Mesh *> m_meshes;
   std::vector<Cube *> m_cubes;
 
@@ -684,6 +700,29 @@ inline bool Molecule::setAtomPosition3d(Index atomId, const Vector3 &pos)
     return true;
   }
   return false;
+}
+
+inline void Molecule::setAtomSelected(Index atomId, bool selected)
+{
+  if (atomId < atomCount()) {
+    if (atomId >= m_selectedAtoms.size())
+      m_selectedAtoms.resize(atomCount(), false);
+    m_selectedAtoms[atomId] = selected;
+  }
+}
+
+inline bool Molecule::atomSelected(Index atomId) const
+{
+  return atomId < m_selectedAtoms.size() ? m_selectedAtoms[atomId] : false;
+}
+
+inline bool Molecule::isSelectionEmpty() const
+{
+  for(Index i = 0; i < m_selectedAtoms.size(); ++i) {
+    if (m_selectedAtoms[i])
+      return false;
+  }
+  return true;
 }
 
 inline std::pair<Index, Index> Molecule::bondPair(Index bondId) const

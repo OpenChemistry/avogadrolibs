@@ -29,7 +29,7 @@ namespace QuantumIO {
  * @author Marcus D. Hanwell
  */
 
-class AVOGADROIO_EXPORT NWChemJson : public Io::FileFormat
+class AVOGADROQUANTUMIO_EXPORT NWChemJson : public Io::FileFormat
 {
 public:
   NWChemJson();

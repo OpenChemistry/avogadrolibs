@@ -11,8 +11,8 @@ include(InstallLocation)
 include(DetermineVersion)
 
 # Set up our version.
-set(AvogadroLibs_VERSION_MAJOR   "0")
-set(AvogadroLibs_VERSION_MINOR   "9")
+set(AvogadroLibs_VERSION_MAJOR   "1")
+set(AvogadroLibs_VERSION_MINOR   "90")
 set(AvogadroLibs_VERSION_PATCH   "0")
 set(AvogadroLibs_VERSION
   "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")

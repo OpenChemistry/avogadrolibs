@@ -43,6 +43,7 @@ public:
 
   QString name() const AVO_OVERRIDE { return tr("Player tool"); }
   QString description() const AVO_OVERRIDE { return tr("Play back trajectories"); }
+  unsigned char priority() const AVO_OVERRIDE { return 80; }
   QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
   QWidget * toolWidget() const AVO_OVERRIDE;
 

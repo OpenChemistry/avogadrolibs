@@ -41,7 +41,7 @@ public:
    * @brief The Rule class stores a syntax highlighting rule as a set of QRegExp
    * patterns and a text format.
    */
-  class Rule
+  class AVOGADROQTGUI_EXPORT Rule
   {
   public:
     Rule() {}

@@ -64,6 +64,7 @@ public:
 
   QString name() const AVO_OVERRIDE;
   QString description() const AVO_OVERRIDE;
+  unsigned char priority() const AVO_OVERRIDE { return 40; }
   QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
   QWidget * toolWidget() const AVO_OVERRIDE;
 

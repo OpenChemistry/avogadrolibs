@@ -88,9 +88,12 @@ public:
   /**
    * Add a new atom to the molecule.
    * @param atomicNumber The atomic number of the new atom.
+   * @param usingPositions Whether or not to use positions for this atom.
+   *                       Default is true. Set to false if the atom
+   *                       will not be using coordinates.
    * @return The new Atom object.
    */
-  AtomType addAtom(unsigned char atomicNumber);
+  AtomType addAtom(unsigned char atomicNumber, bool usingPositions = true);
 
   /**
    * Add a new atom to the molecule and set its position.
@@ -228,6 +231,16 @@ public:
    */
   bool setAtomPosition3d(Index atomId, const Vector3& pos,
                          const QString &undoText = "Change Atom Position");
+
+  /**
+   * Set whether the specified atom is selected or not.
+   */
+  void setAtomSelected(Index atomId, bool selected);
+
+  /**
+   * Query whether the supplied atom index has been selected.
+   */
+  bool atomSelected(Index atomId) const;
 
   bool setAtomPosition2d(Index, const Vector2&) { return false; }
   Vector2 atomPosition2d(Index) { return Vector2(0, 0); }
@@ -452,6 +465,16 @@ public:
                       const QString &undoText = "Modify Molecule");
 
   /**
+   * Generic edit that adds @a newMolecule to the current molecule.
+   * Also sets the text for the undo command to be @a undoText. Changes are
+   * emitted.
+   * @param addMolecule The new molecule to be set.
+   * @param undoText The text description for the undo command.
+   */
+  void appendMolecule(const Molecule &addMolecule,
+                      const QString &undoText = "Append Molecule");
+
+  /**
    * Edit the unit cell by replacing the current cell matrix with a new cell
    * matrix. Changes are emitted.
    * @param cellMatrix The new cell matrix to be set.
@@ -529,7 +552,28 @@ public:
    * @param cartTol Cartesian tolerance for comparing atom positions.
    * @return True if the algorithm succeeded, and false if it failed.
    */
-  bool reduceCellToAsymmetricUnit(unsigned short hallNumber, double cartTol = 1e-5);
+  bool reduceCellToAsymmetricUnit(unsigned short hallNumber,
+                                  double cartTol = 1e-5);
+
+  /**
+   * Call this function when you wish to merge all undo commands.
+   * It turns on interactive mode to merge similar undo commands in a series
+   * (in order to save space), and it uses QUndoStack's beginMacro() to merge
+   * dissimilar undo commands together. You must call endMergeMode() to end
+   * the merging section (undo and redo are unavailable while merge mode is
+   * on).
+   * @param undoName The name of the undo command
+   */
+  void beginMergeMode(const QString& undoName = "Draw");
+
+  /**
+   * Call this function when you wish merge mode to end. This will turn off
+   * interactive mode, and it will call QUndoStack's endMacro(). All of the
+   * undo commands pushed between beginMergeMode() and endMergeMode() will be
+   * merged into one undo command. beginMergeMode() should have been called
+   * before this is called.
+   */
+  void endMergeMode();
 
   /**
    * @brief Begin or end an interactive edit.
@@ -769,6 +813,18 @@ RWMolecule::bondPairs() const
 inline std::pair<Index, Index> RWMolecule::bondPair(Index bondId) const
 {
   return m_molecule.bondPair(bondId);
+}
+
+inline void RWMolecule::beginMergeMode(const QString& undoName)
+{
+  m_interactive = true;
+  m_undoStack.beginMacro(undoName);
+}
+
+inline void RWMolecule::endMergeMode()
+{
+  m_interactive = false;
+  m_undoStack.endMacro();
 }
 
 inline void RWMolecule::setInteractive(bool b)

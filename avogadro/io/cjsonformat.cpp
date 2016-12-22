@@ -262,9 +262,13 @@ bool CjsonFormat::write(std::ostream &file, const Molecule &molecule)
   // Create and populate the atom arrays.
   if (molecule.atomCount()) {
     Value elements(Json::arrayValue);
-    for (Index i = 0; i < molecule.atomCount(); ++i)
+    Value selected(Json::arrayValue);
+    for (Index i = 0; i < molecule.atomCount(); ++i) {
       elements.append(molecule.atom(i).atomicNumber());
+      selected.append(static_cast<int>(molecule.atomSelected(i)));
+    }
     root["atoms"]["elements"]["number"] = elements;
+    root["atoms"]["selected"] = selected;
 
     // 3d positions:
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
@@ -659,6 +663,17 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
     }
     else {
       return false;
+    }
+  }
+
+  Value selected = atoms["selected"];
+  if (!selected.empty() && selected.isArray()) {
+    if (selected.size() && atomCount != static_cast<Index>(selected.size())) {
+      appendError("Error: number of selected atoms != number of atoms.");
+      return false;
+    }
+    for (Index i = 0; i < atomCount; ++i) {
+      molecule.setAtomSelected(i, selected.get(i,0).asBool());
     }
   }
 

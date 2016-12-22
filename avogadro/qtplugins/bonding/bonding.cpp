@@ -33,11 +33,14 @@ namespace Avogadro {
 namespace QtPlugins {
 
 using Core::Elements;
+using Core::Array;
+
+typedef Avogadro::Core::Array<Avogadro::Core::Bond> NeighborListType;
 
 Bonding::Bonding(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_action(new QAction(tr("Bond perception"), this)),
-  m_clearAction(new QAction(tr("Bond removal"), this))
+  m_action(new QAction(tr("Bond Atoms"), this)),
+  m_clearAction(new QAction(tr("Remove Bonds"), this))
 {
   m_action->setShortcut(QKeySequence("Ctrl+B"));
   connect(m_action, SIGNAL(triggered()), SLOT(bond2()));
@@ -56,7 +59,7 @@ QList<QAction *> Bonding::actions() const
 
 QStringList Bonding::menuPath(QAction *) const
 {
-  return QStringList() << tr("&Edit");
+  return QStringList() << tr("&Build");
 }
 
 void Bonding::setMolecule(QtGui::Molecule *mol)
@@ -93,10 +96,18 @@ void Bonding::bond2()
       radii[i] = 0.0;
   }
 
+  bool emptySelection = m_molecule->isSelectionEmpty();
+
   // Main bond perception loop based on a simple distance metric.
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (!emptySelection && !m_molecule->atomSelected(i))
+      continue;
+
     Vector3 ipos = m_molecule->atomPositions3d()[i];
     for (Index j = i + 1; j < m_molecule->atomCount(); ++j) {
+      if (!emptySelection && !m_molecule->atomSelected(j))
+        continue;
+
       double cutoff = radii[i] + radii[j] + tolerance;
       Vector3 jpos = m_molecule->atomPositions3d()[j];
       Vector3 diff = jpos - ipos;
@@ -121,7 +132,30 @@ void Bonding::bond2()
 
 void Bonding::clearBonds()
 {
-  m_molecule->clearBonds();
+  // remove any bonds connected to the selected atoms
+  //  Array<BondType> bonds(Index a);
+  if (m_molecule->isSelectionEmpty())
+    m_molecule->clearBonds();
+  else {
+    std::vector<size_t> bondIndices;
+    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+      if (!m_molecule->atomSelected(i))
+        continue;
+
+      // OK, the atom is selected, get the bonds to delete
+      const NeighborListType bonds = m_molecule->bonds(i);
+      for (NeighborListType::const_iterator it = bonds.begin();
+           it != bonds.end(); ++it) {
+             bondIndices.push_back(it->index());
+      }
+    } // end looping through atoms
+
+    // now delete the bonds
+    for (std::vector<size_t>::const_reverse_iterator it = bondIndices.rbegin(),
+         itEnd = bondIndices.rend(); it != itEnd; ++it) {
+      m_molecule->removeBond(*it);
+    }
+  } // end else(selected atoms)
   m_molecule->emitChanged(QtGui::Molecule::Bonds);
 }
 
