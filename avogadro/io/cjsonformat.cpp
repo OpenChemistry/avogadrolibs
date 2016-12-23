@@ -392,7 +392,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
     if (std::find(attributes.begin(), attributes.end(),
                   it.key().asString()) != attributes.end()) {
       value = *it;
-      if (!value.empty())
+      if (!value.empty() && it.key().isString() && value.isNumeric())
         molecule.setData(it.key().asString(), value.asDouble());
     }
   }
@@ -414,6 +414,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
 
     //alpha/beta -> homo/gap not read in
 
+    /* Not integrated, variant doesn't support raw C-style arrays
     value = energy["coupled cluster"];
     if (!value.empty() &&
         testIfArray(value, "properties.energy.coupled_cluster")) {
@@ -423,6 +424,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
         ccEnergies[i] = value.get(i,0).asDouble();
       molecule.setData("coupled cluster energies", ccEnergies);
     }
+    */
 
     value = energy["moller plesset"];
     if (!value.empty()) {
@@ -440,6 +442,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
     }
   }
 
+  /* Not integrated, variant doesn't support raw C-style arrays
   // Partial Charges attributes start here
   Value pCharges = properties["partial charges"];
   if (!(testEmpty(pCharges, "properties.partialCharges") ||
@@ -466,6 +469,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
       }
     }
   }
+  */
 
   // Orbitals attributes start here
   Value orbitals = properties["orbitals"];
@@ -607,6 +611,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
       }
     }
 
+    /* Not integrated, variant doesn't support templated Array class
     // Molecular orbital symmetries
     Value MOSymmetry = orbitals["molecular orbital symmetry"];
     if (!(testEmpty(moCoeffs, "properties.orbitals.MOSymmetry") ||
@@ -634,6 +639,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
         }
       }
     }
+    */
   }
 
   return true;
@@ -853,6 +859,7 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
   if (!testEmpty(spins, "atoms.atomspins") &&
       !testIsNotObject(spins, "atoms.atomspins")) {
 
+    /* Not integrated, variant doesn't support raw C-style arrays
     value = spins["mulliken"];
     if (!value.empty() && !value.isArray()) {
       int spinCount = static_cast<int>(value.size());
@@ -862,7 +869,9 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
       molecule.setData("mulliken spin", atomicSpins);
       // Should I delete atomicSpins here after assigning that memory?
     }
+    */
 
+    /* Not integrated, variant doesn't support raw C-style arrays
     value = spins["lowdin"];
     if (!value.empty() && !value.isArray()) {
       int spinCount = static_cast<int>(value.size());
@@ -872,6 +881,7 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
       molecule.setData("lowdin spin", atomicSpins);
       // Same as above
     }
+    */
   }
 
   return true;
@@ -889,6 +899,7 @@ bool CjsonFormat::readOptimization(Value &root, Molecule &molecule)
       molecule.setData("optimization status", status);
     }
 
+    /* Not integrated, variant doesn't support raw C-style arrays
     Value value;
     if (optimization.isMember("geometric targets")) {
       value = optimization["geometric targets"];
@@ -901,7 +912,9 @@ bool CjsonFormat::readOptimization(Value &root, Molecule &molecule)
         molecule.setData("geometric targets", geometricTargets);
       }
     }
+    */
 
+    /* Not integrated, variant doesn't support raw C-style arrays
     if (optimization.isMember("geometric values")) {
       value = optimization["geometric values"];
 
@@ -913,7 +926,9 @@ bool CjsonFormat::readOptimization(Value &root, Molecule &molecule)
         molecule.setData("geometric values", geometricValues);
       }
     }
+    */
 
+    /* Not integrated, variant doesn't support raw C-style arrays
     // Start of SCF object
     Value scf = optimization["scf"];
     if (!scf.empty()) {
@@ -929,11 +944,12 @@ bool CjsonFormat::readOptimization(Value &root, Molecule &molecule)
         }
       }
     }
+    */
 
+    /* Not integrated, variant doesn't support vector of vector of vectors...
     // Start of scan object
     Value scan = optimization["scan"];
     if (!scan.empty()) {
-
       if (scan.isMember("step geometry")) {
         Value stepG = scan["step geometry"];
         if (stepG.isArray()) {
@@ -953,9 +969,9 @@ bool CjsonFormat::readOptimization(Value &root, Molecule &molecule)
           }
           molecule.setData("step geometry", &stepGeometry);
         }
-
       }
 
+      // Not integrated, variant doesn't support raw C-style arrays
       if (scan.isMember("PES energies")){
         value = scan["PES energies"];
 
@@ -968,6 +984,7 @@ bool CjsonFormat::readOptimization(Value &root, Molecule &molecule)
         }
       }
     }
+    */
   }
 
   return true;
@@ -992,6 +1009,7 @@ bool CjsonFormat::readVibrations(Value &root, Molecule &molecule)
       molecule.setVibrationFrequencies(frequencies);
     }
 
+    /* Not integrated, variant doesn't support templated Array container
     value = vibrations["vibration symmetry"];
     if (!value.empty() && value.isArray()) {
       Array<string> symmetries;
@@ -1002,6 +1020,7 @@ bool CjsonFormat::readVibrations(Value &root, Molecule &molecule)
 
       molecule.setData("vibration symmetry", symmetries);
     }
+    */
 
     //Assumption: chose the vibir attribute over the vibraman attribute
     value = vibrations["intensities"]["IR"];
@@ -1079,15 +1098,16 @@ bool CjsonFormat::readBonds(Value &root, Molecule &molecule)
   return true;
 }
 
-bool CjsonFormat::readTransitions(Value &root, Molecule &molecule)
+bool CjsonFormat::readTransitions(Value &root, Molecule &)
 {
   //Check for transitions data
   Value transitions = root["transitions"];
 
   if (!(testEmpty(transitions, "transitions") ||
         testIsNotObject(transitions, "transitions"))) {
-    Value value;
+    // Value value;
 
+    /* Not integrated, variant doesn't support raw C-style arrays
     if (transitions.isMember("electronic transitions")) {
       value = transitions["electronic transitions"];
 
@@ -1099,7 +1119,9 @@ bool CjsonFormat::readTransitions(Value &root, Molecule &molecule)
         molecule.setData("electronic transitions", electronicTransitions);
       }
     }
+    */
 
+    /* Not integrated, variant doesn't support raw C-style arrays
     if (transitions.isMember("oscillator strength")) {
       value = transitions["oscillator strength"];
 
@@ -1111,7 +1133,9 @@ bool CjsonFormat::readTransitions(Value &root, Molecule &molecule)
         molecule.setData("oscillator strength", oscillatorStrength);
       }
     }
+    */
 
+    /* Not integrated, variant doesn't support raw C-style arrays
     if (transitions.isMember("rotatory strength")) {
       value = transitions["rotatory strength"];
 
@@ -1123,7 +1147,9 @@ bool CjsonFormat::readTransitions(Value &root, Molecule &molecule)
         molecule.setData("rotatory strength", rotatoryStrength);
       }
     }
+    */
 
+    /* Not integrated, variant doesn't support raw C-style arrays
     if (transitions.isMember("symmetry")) {
       value = transitions["symmetry"];
 
@@ -1135,6 +1161,7 @@ bool CjsonFormat::readTransitions(Value &root, Molecule &molecule)
         molecule.setData("electronic transition symmetry", transitionSymmetry);
       }
     }
+    */
   }
 
   return true;
@@ -1149,6 +1176,7 @@ bool CjsonFormat::readFragments(Value &root, Molecule &molecule)
         testIsNotObject(fragments, "fragments"))) {
     Value value;
 
+    /* Not integrated, variant doesn't support raw C-style arrays
     if (fragments.isMember("fragment names")) {
       value = fragments["fragment names"];
 
@@ -1160,6 +1188,7 @@ bool CjsonFormat::readFragments(Value &root, Molecule &molecule)
         molecule.setData("fragment names", fragmentNames);
       }
     }
+    */
 
     value = fragments["atom indices"];
     if (!value.empty()) {
@@ -1176,6 +1205,7 @@ bool CjsonFormat::readFragments(Value &root, Molecule &molecule)
       molecule.setData("fragment atom indices", atomIndices);
     }
 
+    /* Not integrated, variant doesn't support raw C-style arrays
     if (fragments.isMember("orbital  names")) {
       value = fragments["orbital  names"];
 
@@ -1187,12 +1217,13 @@ bool CjsonFormat::readFragments(Value &root, Molecule &molecule)
         molecule.setData("fragment orbital  names", orbitalNames);
       }
     }
+    */
 
     value = fragments["orbital overlap"];
     if (!value.empty()) {
       int n = static_cast<int>(value.size());
       int L = static_cast<int>(value[0].size());
-      MatrixX overlapIndices(n,L);
+      MatrixX overlapIndices(n, L);
       Value indicesArray;
       for (int i = 0; i < n; ++i) {
         indicesArray = value[i];
