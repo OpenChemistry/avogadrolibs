@@ -232,7 +232,6 @@ bool CjsonFormat::write(std::ostream &file, const Molecule &molecule)
   if (molecule.cubeCount() > 0) {
     const Cube *cube = molecule.cube(0);
     Value cubeData(Json::arrayValue);
-    const std::vector<double> &v = *cube->data();
     for (vector<double>::const_iterator it = cube->data()->begin(),
          itEnd = cube->data()->end(); it != itEnd; ++it) {
       cubeData.append(*it);
@@ -545,8 +544,8 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
 
       value = moCoeffs[0];
       if (!value.empty()) {
-        for (int i = 0; i < value.size(); ++i) {
-          for (int j = 0; j < value[0].size(); ++j) {
+        for (Json::ArrayIndex i = 0; i < value.size(); ++i) {
+          for (Json::ArrayIndex j = 0; j < value[0].size(); ++j) {
             coeffArray.push_back(value[i][j].asDouble());
           }
         }
@@ -556,8 +555,8 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
           coeffArray.clear();
           value = moCoeffs[1];
           if (!value.empty()) {
-            for (int i = 0; i < value.size(); ++i) {
-              for (int j = 0; j < value[0].size(); ++j) {
+            for (Json::ArrayIndex i = 0; i < value.size(); ++i) {
+              for (Json::ArrayIndex j = 0; j < value[0].size(); ++j) {
                 coeffArray.push_back(value[i][j].asDouble());
               }
             }
@@ -571,11 +570,11 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
       // and unrestricted calculations
       if (orbitals.isMember("basis number") && orbitals.isMember("homos")) {
         int basisSize = orbitals["basis number"].asInt();
-        int homo = orbitals["homos"][0].asInt() + 1;
+        int homoIndex = orbitals["homos"][0].asInt() + 1;
 
         MatrixX densityMatrix(basisSize,basisSize);
 
-        for (int i = 0 ; i < homo ; ++i) {
+        for (int i = 0 ; i < homoIndex ; ++i) {
           MatrixX column(basisSize, 1);
           for (int j = 0; j < basisSize; ++j) {
             column(j, 0) = value[i][j].asDouble();
@@ -590,7 +589,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
           MatrixX betaDensityMatrix(basisSize,basisSize);
           value = moCoeffs[1];
 
-          for (int i = 0 ; i < homo ; ++i) {
+          for (int i = 0; i < homoIndex; ++i) {
             MatrixX column(basisSize, 1);
             for (int j = 0; j < basisSize; ++j) {
               column(j, 0) = value[i][j].asDouble();
@@ -617,7 +616,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
 
       value = MOSymmetry[0];
       if (!value.empty() && value.isArray()) {
-        for (int i = 0; i < value.size(); ++i) {
+        for (Json::ArrayIndex i = 0; i < value.size(); ++i) {
           symmetryArray.push_back(value[i].asString());
         }
         molecule.setData("molecular orbital symmetry", symmetryArray);
@@ -626,7 +625,7 @@ bool CjsonFormat::readProperties(Value &root, Molecule &molecule,
           Array<string> betaSymmetryArray;
           value = MOSymmetry[1];
           if (!value.empty() && value.isArray()) {
-            for (int i = 0; i < value.size(); ++i) {
+            for (Json::ArrayIndex i = 0; i < value.size(); ++i) {
               betaSymmetryArray.push_back(value[i].asString());
             }
             molecule.setData("beta molecular orbital symmetry",
@@ -673,7 +672,7 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
       return false;
     }
     for (Index i = 0; i < atomCount; ++i) {
-      molecule.setAtomSelected(i, selected.get(i,0).asBool());
+      molecule.setAtomSelected(i, selected.get(i, 0).asBool());
     }
   }
 
@@ -707,27 +706,27 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
       }
     }
 
-    Value value = root["unit cell"];
-    if (value.type() == Json::objectValue) {
-      if (!value["a"].isNumeric() ||
-          !value["b"].isNumeric() ||
-          !value["c"].isNumeric() ||
-          !value["alpha"].isNumeric() ||
-          !value["beta"].isNumeric() ||
-          !value["gamma"].isNumeric()) {
+    Value unitCell = root["unit cell"];
+    if (unitCell.type() == Json::objectValue) {
+      if (!unitCell["a"].isNumeric() ||
+          !unitCell["b"].isNumeric() ||
+          !unitCell["c"].isNumeric() ||
+          !unitCell["alpha"].isNumeric() ||
+          !unitCell["beta"].isNumeric() ||
+          !unitCell["gamma"].isNumeric()) {
         appendError("Invalid unit cell specification: a, b, c, alpha, beta, "
                     "gamma must be present and numeric.");
         return false;
       }
-      Real a = static_cast<Real>(value["a"].asDouble());
-      Real b = static_cast<Real>(value["b"].asDouble());
-      Real c = static_cast<Real>(value["c"].asDouble());
-      Real alpha = static_cast<Real>(value["alpha"].asDouble()) * DEG_TO_RAD;
-      Real beta  = static_cast<Real>(value["beta" ].asDouble()) * DEG_TO_RAD;
-      Real gamma = static_cast<Real>(value["gamma"].asDouble()) * DEG_TO_RAD;
-      Core::UnitCell *unitCell = new Core::UnitCell(a, b, c,
-                                                    alpha, beta, gamma);
-      molecule.setUnitCell(unitCell);
+      Real a = static_cast<Real>(unitCell["a"].asDouble());
+      Real b = static_cast<Real>(unitCell["b"].asDouble());
+      Real c = static_cast<Real>(unitCell["c"].asDouble());
+      Real alpha = static_cast<Real>(unitCell["alpha"].asDouble()) * DEG_TO_RAD;
+      Real beta  = static_cast<Real>(unitCell["beta" ].asDouble()) * DEG_TO_RAD;
+      Real gamma = static_cast<Real>(unitCell["gamma"].asDouble()) * DEG_TO_RAD;
+      Core::UnitCell *unitCellObject = new Core::UnitCell(a, b, c,
+                                                          alpha, beta, gamma);
+      molecule.setUnitCell(unitCellObject);
     }
 
 
@@ -816,11 +815,11 @@ bool CjsonFormat::readAtoms(Value &root, Molecule &molecule, GaussianSet* basis)
           else if (shellType == "F" && spherical)
             type = GaussianSet::F7;
           else if (shellType == "F")
-            type == GaussianSet::F;
+            type = GaussianSet::F;
 
           if (type != GaussianSet::UU) {
             int b = basis->addBasis(i, type);
-            for (int k = 0; k < curBasis[1].size(); ++k) {
+            for (Json::ArrayIndex k = 0; k < curBasis[1].size(); ++k) {
               double exponent = curBasis[1][k][0].asDouble();
               double coefficient = curBasis[1][k][1].asDouble();
               basis->addGto(b, coefficient, exponent);
@@ -939,10 +938,10 @@ bool CjsonFormat::readOptimization(Value &root, Molecule &molecule)
         Value stepG = scan["step geometry"];
         if (stepG.isArray()) {
           vector<vector<vector<double>>> stepGeometry;
-          for (int i = 0 ; i < stepG.size() ; ++i ) {
+          for (Json::ArrayIndex i = 0 ; i < stepG.size() ; ++i ) {
             Value innerStep = stepG.get(i, 0);
             vector<vector<double>> step;
-            for (int j = 0 ; j < innerStep.size() ; ++j) {
+            for (Json::ArrayIndex j = 0 ; j < innerStep.size() ; ++j) {
               value = innerStep.get(j,0);
               vector<double> coordinates;
               for(int k = 0 ; k < 3; ++k){
@@ -1020,12 +1019,12 @@ bool CjsonFormat::readVibrations(Value &root, Molecule &molecule)
     if (!displacement.empty() && displacement.isArray()) {
       Array<Array<Vector3> > Lx;
 
-      for (int i = 0; i < displacement.size(); ++i) {
+      for (Json::ArrayIndex i = 0; i < displacement.size(); ++i) {
         value = displacement.get(i, 0);
         if (!value.empty() && value.isArray()) {
           Array<Vector3> modeLx;
           modeLx.resize(value.size());
-          for (int j = 0; j < value.size(); ++j) {
+          for (Json::ArrayIndex j = 0; j < value.size(); ++j) {
             Value cartesianDisp = value.get(j, 0);
             for (int k = 0; k < 3; ++k) {
               modeLx[j][k] = cartesianDisp.get(k, 0).asDouble();
