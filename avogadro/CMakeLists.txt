@@ -5,18 +5,12 @@ function(avogadro_add_library name)
   # Use the new AUTOMOC support for Qt libraries (CMake 2.8.6).
   if(${name} MATCHES "^AvogadroQt")
     set_target_properties(${name} PROPERTIES AUTOMOC TRUE)
-    message("Using automoc for Qt library")
   endif()
   string(TOLOWER ${name} lowerName)
   # Generate the necessary export headers.
   generate_export_header(${name} EXPORT_FILE_NAME ${lowerName}export.h)
   list(APPEND HEADERS "${CMAKE_CURRENT_BINARY_DIR}/${lowerName}export.h")
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
-  add_compiler_export_flags(avogadro_export_flags)
-  # Use visibility support where available.
-  add_compiler_export_flags(avogadro_export_flags)
-  set_property(TARGET ${name} APPEND
-    PROPERTY COMPILE_FLAGS ${avogadro_export_flags})
   # Now install everything.
   string(REGEX REPLACE "^avogadro" "" module ${lowerName})
   install(FILES ${HEADERS}
