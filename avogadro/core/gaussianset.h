@@ -105,16 +105,16 @@ public:
    * @param energies The vector containing energies for the MOs of type
    * @param type The type of the electrons being set.
    */
-  void setMolecularOrbtitalEnergy(const std::vector<double> &energies,
-                                  ElectronType type = Paired);
+  void setMolecularOrbitalEnergy(const std::vector<double> &energies,
+                                 ElectronType type = Paired);
 
   /**
    * @brief Set the molecular orbital occupancies.
    * @param occ The occupancies for the MOs of type.
    * @param type The type of the electrons being set.
    */
-  void setMolecularOrbtitalOccupancy(const std::vector<unsigned char> &occ,
-                                     ElectronType type = Paired);
+  void setMolecularOrbitalOccupancy(const std::vector<unsigned char> &occ,
+                                    ElectronType type = Paired);
 
   /**
    * @brief This enables support of sparse orbital sets, and provides a mapping
@@ -122,8 +122,8 @@ public:
    * @param nums The MO numbers (starting with an index of 1 for the first one).
    * @param type The MO type (Paired, Alpha, Beta).
    */
-  void setMolecularOrbtitalNumber(const std::vector<unsigned int> &nums,
-                                  ElectronType type = Paired);
+  void setMolecularOrbitalNumber(const std::vector<unsigned int> &nums,
+                                 ElectronType type = Paired);
 
   /**
    * Set the SCF density matrix for the GaussianSet.

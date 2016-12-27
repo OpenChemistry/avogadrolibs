@@ -19,7 +19,14 @@
 
 #include "fileformat.h"
 
+namespace Json{
+  class Value;
+}
+
 namespace Avogadro {
+namespace Core {
+class GaussianSet;
+}
 namespace Io {
 
 /**
@@ -44,7 +51,8 @@ public:
   std::string name() const AVO_OVERRIDE { return "Chemical JSON"; }
   std::string description() const AVO_OVERRIDE
   {
-    return "TODO: Describe the format.";
+    return "CJSON format is a lightweight intermediate format used to exchange "
+        "information between Avogadro and other data parsing applications";
   }
 
   std::string specificationUrl() const AVO_OVERRIDE
@@ -57,6 +65,23 @@ public:
 
   bool read(std::istream &in, Core::Molecule &molecule) AVO_OVERRIDE;
   bool write(std::ostream &out, const Core::Molecule &molecule) AVO_OVERRIDE;
+
+private:
+  bool testEmpty(Json::Value &value,const std::string &key,
+                 bool writeError = false);
+  bool testIsNotObject(Json::Value &value,const std::string &key,
+                       bool writeError = false);
+  bool testIfArray(Json::Value &value,const std::string &key,
+                   bool writeError = false);
+  bool readProperties(Json::Value &root, Core::Molecule &molecule,
+                      Core::GaussianSet *basis);
+  bool readAtoms(Json::Value &root, Core::Molecule &molecule,
+                 Core::GaussianSet *basis);
+  bool readOptimization(Json::Value &root, Core::Molecule &molecule);
+  bool readVibrations(Json::Value &root, Core::Molecule &molecule);
+  bool readBonds(Json::Value &root, Core::Molecule &molecule);
+  bool readTransitions(Json::Value &root, Core::Molecule &molecule);
+  bool readFragments(Json::Value &root, Core::Molecule &molecule);
 };
 
 } // end Io namespace

@@ -89,7 +89,7 @@ public:
   /** \overload */
   VariantMap& dataMap();
 
-  /** Returns a vector of atomic numbers for the atoms in the moleucle. */
+  /** Returns a vector of atomic numbers for the atoms in the molecule. */
   Array<unsigned char>& atomicNumbers();
 
   /** \overload */
