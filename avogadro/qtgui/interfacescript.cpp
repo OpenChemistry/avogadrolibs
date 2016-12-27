@@ -162,7 +162,7 @@ void InterfaceScript::reset()
 }
 
 bool InterfaceScript::runWorkflow(const QJsonObject &options_,
-                                  Core::Molecule &mol)
+                                  Core::Molecule *mol)
 {
   m_errors.clear();
   m_warnings.clear();
@@ -174,7 +174,7 @@ bool InterfaceScript::runWorkflow(const QJsonObject &options_,
 
   // Add the molecule file to the options
   QJsonObject allOptions(options_);
-  if (!insertMolecule(allOptions, mol))
+  if (!insertMolecule(allOptions, *mol))
     return false;
 
   QByteArray json(m_interpreter->execute(QStringList() << "--run-workflow",
@@ -218,11 +218,13 @@ bool InterfaceScript::runWorkflow(const QJsonObject &options_,
     QJsonDocument doc(cjsonObj);
     QString strCJSON(doc.toJson(QJsonDocument::Compact));
     if (!strCJSON.isEmpty()) {
-      result = format->readString(strCJSON.toStdString(), mol);
+      QtGui::Molecule *guiMol = static_cast<QtGui::Molecule *>(mol);
+      QtGui::Molecule newMol(guiMol->parent());
+      result = format->readString(strCJSON.toStdString(), newMol);
       // TODO: need to indicate changes to the QtGui Molecule
       Molecule::MoleculeChanges changes =
        (Molecule::Atoms | Molecule::Bonds | Molecule::Added | Molecule::Removed);
-      //      guiMol.undoMolecule()->modifyMolecule(newMol, changes, "Run Script");
+      guiMol->undoMolecule()->modifyMolecule(newMol, changes, "Run Script");
     }
   }
   return result;

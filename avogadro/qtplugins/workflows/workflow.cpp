@@ -172,7 +172,7 @@ void Workflow::run()
     QJsonObject options = m_currentInterface->collectOptions();
     QString scriptFilePath = m_currentInterface->interfaceScript().scriptFilePath();
     InterfaceScript gen(scriptFilePath);
-    gen.runWorkflow(options, *m_molecule);
+    gen.runWorkflow(options, m_molecule);
     // collect errors
   }
 }
