@@ -30,5 +30,5 @@ if(INSTALL_TEST_WORKFLOWS)
   list(APPEND workflows scripts/test.py)
 endif()
 
-install(PROGRAMS ${input_generators}
+install(PROGRAMS ${workflows}
   DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/workflows/")
