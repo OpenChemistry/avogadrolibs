@@ -118,6 +118,7 @@ add_subdirectory(select)
 add_subdirectory(selectiontool)
 add_subdirectory(spacegroup)
 add_subdirectory(spectra)
+add_subdirectory(workflows)
 
 if(USE_MOLEQUEUE)
   add_subdirectory(apbs)

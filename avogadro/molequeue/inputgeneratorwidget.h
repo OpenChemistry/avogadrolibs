@@ -242,6 +242,7 @@ private:
   QWidget* createStringWidget(const QJsonObject &obj);
   QWidget* createFilePathWidget(const QJsonObject &obj);
   QWidget* createIntegerWidget(const QJsonObject &obj);
+  QWidget* createFloatWidget(const QJsonObject &obj);
   QWidget* createBooleanWidget(const QJsonObject &obj);
   /**@}*/
 

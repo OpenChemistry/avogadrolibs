@@ -29,7 +29,7 @@ namespace QtGui {
 class RWAtom;
 class RWMolecule;
 
-class AVOGADROCORE_EXPORT HydrogenTools
+class AVOGADROQTGUI_EXPORT HydrogenTools
 {
 public:
 
