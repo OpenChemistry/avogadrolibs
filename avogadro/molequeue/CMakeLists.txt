@@ -11,6 +11,7 @@ find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
 
 set(HEADERS
   batchjob.h
+  inputgenerator.h
   inputgeneratordialog.h
   inputgeneratorwidget.h
   molequeuedialog.h
@@ -21,6 +22,7 @@ set(HEADERS
 
 set(SOURCES
   batchjob.cpp
+  inputgenerator.cpp
   inputgeneratordialog.cpp
   inputgeneratorwidget.cpp
   molequeuedialog.cpp
