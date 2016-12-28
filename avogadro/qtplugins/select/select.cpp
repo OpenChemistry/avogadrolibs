@@ -42,7 +42,7 @@ Select::Select(QObject *parent_) :
   connect(action, SIGNAL(triggered()), SLOT(selectNone()));
   m_actions.append(action);
 
-  action = new QAction("-", this);
+  action = new QAction(this);
   action->setSeparator(true);
   m_actions.append(action);
 
