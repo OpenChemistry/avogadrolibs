@@ -209,7 +209,7 @@ bool InterfaceScript::runWorkflow(const QJsonObject &options_,
       }
     }
 
-    // TODO: add undo / redo and smart updates
+    // TODO: add smart updates
     Io::FileFormatManager &formats = Io::FileFormatManager::instance();
     QScopedPointer<Io::FileFormat> format(formats.newFormatFromFileExtension(
                                             "cjson"));
@@ -221,10 +221,14 @@ bool InterfaceScript::runWorkflow(const QJsonObject &options_,
       QtGui::Molecule *guiMol = static_cast<QtGui::Molecule *>(mol);
       QtGui::Molecule newMol(guiMol->parent());
       result = format->readString(strCJSON.toStdString(), newMol);
-      // TODO: need to indicate changes to the QtGui Molecule
-      Molecule::MoleculeChanges changes =
-       (Molecule::Atoms | Molecule::Bonds | Molecule::Added | Molecule::Removed);
-      guiMol->undoMolecule()->modifyMolecule(newMol, changes, "Run Script");
+
+      if (obj["append"].toBool()) { // just append some new bits
+        guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
+      } else { // replace the whole molecule
+        Molecule::MoleculeChanges changes =
+         (Molecule::Atoms | Molecule::Bonds | Molecule::Added | Molecule::Removed);
+        guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
+      }
     }
   }
   return result;
