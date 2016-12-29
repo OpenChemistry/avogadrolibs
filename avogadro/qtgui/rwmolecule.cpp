@@ -1096,6 +1096,7 @@ void RWMolecule::appendMolecule(const Molecule &mol,
   for(size_t i = 0; i < mol.atomCount(); ++i) {
     Core::Atom atom = mol.atom(i);
     addAtom(atom.atomicNumber(), atom.position3d());
+    setAtomSelected(atomCount() - 1, true);
   }
   // now loop through and add the bonds
   for(size_t i = 0; i < mol.bondCount(); ++i) {
