@@ -27,7 +27,7 @@ CoordinateEditor::CoordinateEditor(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
   m_dialog(NULL),
   m_molecule(NULL),
-  m_action(new QAction(tr("Atomic &Coordinate Editor"), this))
+  m_action(new QAction(tr("Atomic &Coordinate Editor..."), this))
 {
   connect(m_action, SIGNAL(triggered()), SLOT(triggered()));
 }
@@ -43,7 +43,7 @@ QList<QAction *> CoordinateEditor::actions() const
 
 QStringList CoordinateEditor::menuPath(QAction *) const
 {
-  return QStringList() << tr("&Edit");
+  return QStringList() << tr("&Build");
 }
 
 void CoordinateEditor::setMolecule(QtGui::Molecule *mol)
