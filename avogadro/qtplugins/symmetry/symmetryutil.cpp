@@ -42,19 +42,19 @@ namespace QtPlugins {
     {
       QString symbol;
       switch(operation->type) {
-        case msym::IDENTITY :
+        case IDENTITY :
         symbol = QString("E");
         break;
-        case msym::INVERSION :
+        case INVERSION :
         symbol = QString("i");
         break;
-        case msym::PROPER_ROTATION :
+        case PROPER_ROTATION :
         symbol = QString("C<sub>%1</sub><sup>%2</sup>").arg(QString::number(operation->order),QString::number(operation->power));
         break;
-        case msym::IMPROPER_ROTATION :
+        case IMPROPER_ROTATION :
         symbol = QString("S<sub>%1</sub><sup>%2</sup>").arg(QString::number(operation->order),QString::number(operation->power));
         break;
-        case msym::REFLECTION :
+        case REFLECTION :
         symbol = QString("&sigma;");
         break;
         default : symbol = QString();

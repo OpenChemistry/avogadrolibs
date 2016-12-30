@@ -17,6 +17,7 @@
 #include "symmetryscene.h"
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/molecule.h>
@@ -126,8 +127,9 @@ void SymmetryScene::process(const Core::Molecule &coreMolecule, Rendering::Group
   qDebug() << "SymmetryScene::process do stuff " << qorigo;
 }
 
-void SymmetryScene::processEditable(const Core::Molecule &coreMolecule, Rendering::GroupNode &node){
-  process(coreMolecule,node);
+void SymmetryScene::processEditable(const QtGui::RWMolecule &molecule,
+                                    Rendering::GroupNode &node){
+  process(molecule.molecule(),node);
 }
 
 

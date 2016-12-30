@@ -51,7 +51,7 @@ Symmetry::Symmetry(QObject *parent_) :
 
   ctx = msymCreateContext();
 
-  m_viewSymmetryAction->setText(tr("View Symmetry..."));
+  m_viewSymmetryAction->setText(tr("Symmetry Properties..."));
   connect(m_viewSymmetryAction, SIGNAL(triggered()), SLOT(viewSymmetry()));
   m_actions.push_back(m_viewSymmetryAction);
   m_viewSymmetryAction->setProperty("menu priority", -50);
@@ -93,7 +93,7 @@ QList<QAction *> Symmetry::actions() const
 
 QStringList Symmetry::menuPath(QAction *) const
 {
-  return QStringList() << tr("&Symmetry");
+  return QStringList() << tr("&View");
 }
 
 void Symmetry::setMolecule(QtGui::Molecule *mol)
@@ -241,7 +241,7 @@ void Symmetry::detectSymmetry()
   }
 
   /* Get the point group name */
-  if(MSYM_SUCCESS != (ret = msymGetPointGroup(ctx, sizeof(char[6]), point_group))) {
+  if(MSYM_SUCCESS != (ret = msymGetPointGroupName(ctx, sizeof(char[6]), point_group))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
     m_symmetryWidget->setSymmetryOperations(0, NULL);
@@ -322,7 +322,7 @@ void Symmetry::symmetrizeMolecule()
   msym_error_t ret = MSYM_SUCCESS;
 
     //detectSymmetry();
-  if(MSYM_SUCCESS != (ret = msymSymmetrizeMolecule(ctx, &symerr)))
+  if(MSYM_SUCCESS != (ret = msymSymmetrizeElements(ctx, &symerr)))
     return;
 
   if(MSYM_SUCCESS != (ret = msymGetElements(ctx, &mlength, &melements)))
