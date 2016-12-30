@@ -194,6 +194,7 @@ void CopyPaste::paste()
 
   // insert mol into m_molecule
   m_molecule->undoMolecule()->appendMolecule(mol, "Paste Molecule");
+  emit requestActiveTool("Manipulator");
 
   delete m_pastedFormat;
   m_pastedFormat = NULL;
