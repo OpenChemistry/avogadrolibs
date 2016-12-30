@@ -25,6 +25,22 @@ namespace msym {
   }
 }
 
+#ifndef IDENTITY
+#define IDENTITY msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_IDENTITY
+#endif
+#ifndef REFLECTION
+#define REFLECTION msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_REFLECTION
+#endif
+#ifndef INVERSION
+#define INVERSION msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_INVERSION
+#endif
+#ifndef PROPER_ROTATION
+#define PROPER_ROTATION msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_PROPER_ROTATION
+#endif
+#ifndef IMPROPER_ROTATION
+#define IMPROPER_ROTATION msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_IMPROPER_ROTATION
+#endif
+
 namespace Avogadro {
 namespace QtPlugins {
 

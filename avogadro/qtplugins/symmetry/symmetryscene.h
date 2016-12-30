@@ -25,7 +25,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 /**
- * @brief Render the unit cell boundaries.
+ * @brief Render the symmetry elements
  */
 class SymmetryScene : public QtGui::ScenePlugin
 {
@@ -38,10 +38,10 @@ public:
   void process(const Core::Molecule &molecule,
                Rendering::GroupNode &node) AVO_OVERRIDE;
 
-  void processEditable(const Core::Molecule &molecule,
+  void processEditable(const QtGui::RWMolecule &molecule,
                Rendering::GroupNode &node) AVO_OVERRIDE;
 
-  QString name() const { return tr("Symmetry elements"); }
+  QString name() const { return tr("Symmetry Elements"); }
 
   QString description() const { return tr("Render symmetry elements."); }
 

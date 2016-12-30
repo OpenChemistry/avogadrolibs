@@ -26,7 +26,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="esTab">
     <attribute name="title">
@@ -105,66 +105,6 @@
       </item>
       <item>
        <widget class="QPushButton" name="symmetrizeMoleculeButton">
-        <property name="text">
-         <string>Symmetrize</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="orbitalTab">
-    <attribute name="title">
-     <string>Orbitals</string>
-    </attribute>
-    <widget class="QLabel" name="orbitalLabel">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>0</y>
-       <width>341</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Symmetrized adapted linear combinations:</string>
-     </property>
-    </widget>
-    <widget class="QTreeView" name="orbitalTree">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>341</width>
-       <height>341</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QWidget" name="horizontalLayoutWidget_3">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>390</y>
-       <width>341</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayoutOrbitals">
-      <item>
-       <spacer name="horizontalSpacerOrbitals">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="symmetrizeOrbitalsButton">
         <property name="text">
          <string>Symmetrize</string>
         </property>

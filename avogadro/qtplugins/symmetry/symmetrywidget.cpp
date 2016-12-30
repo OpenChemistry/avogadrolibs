@@ -21,20 +21,14 @@
 
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtWidgets/QPlainTextEdit>
-
 #include <QtCore/QRegExp>
-
 #include <QtCore/QDebug>
-
-
-
+#include <QtWidgets/QPlainTextEdit>
 
 using Avogadro::QtGui::Molecule;
 
 using namespace msym;
 using namespace Avogadro::QtPlugins::SymmetryUtil;
-
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -210,7 +204,7 @@ void SymmetryWidget::subgroupsSelectionChanged(const QItemSelection & selected, 
 
   QItemSelection selection;
 
-  for(int i = 0;i < sg->sopsl;i++){
+  for(int i = 0;i < sg->order;i++){
     int row = static_cast<int>(sg->sops[i] - m_sops);
     QModelIndex left = m_operationsTableModel->index(row,0);
     QModelIndex right = m_operationsTableModel->index(row,m_operationsTableModel->columnCount(left)-1);
@@ -266,21 +260,21 @@ void SymmetryWidget::setSubgroups(int sgl, msym::msym_subgroup_t *sg){
   m_subgroupsTreeModel->clear();
   fprintf(stderr,"setSubgroups\n");
   for(int i = 0;i < sgl;i++){
-    if(sg[i].sopsl <= 2) continue;
+    if(sg[i].order <= 2) continue;
     fprintf(stderr,"setSubgroups loop\n");
     QStandardItem * const parent = new QStandardItem;
     parent->setText(pointGroupSymbol(sg[i].name));
     parent->setData(i,Qt::UserRole);
     m_subgroupsTreeModel->appendRow(parent);
     for(int j = 0;j < 2;j++){
-      if(sg[i].subgroup[j] == NULL) continue;
+      if(sg[i].generators[j] == NULL) continue;
       fprintf(stderr,"setChild\n");
-      qDebug() << "child " << sg[i].subgroup[j]-m_sg << " " << sg[i].subgroup[j] << " " << m_sg;
-      fprintf(stderr,"%s\n",sg[i].subgroup[j]->name);
+      qDebug() << "child " << sg[i].generators[j]-m_sg << " " << sg[i].generators[j] << " " << m_sg;
+      fprintf(stderr,"%s\n",sg[i].generators[j]->name);
       QStandardItem * const child = new QStandardItem;
-      child->setText(pointGroupSymbol(sg[i].subgroup[j]->name));
+      child->setText(pointGroupSymbol(sg[i].generators[j]->name));
 
-      child->setData(static_cast<int>(sg[i].subgroup[j]-m_sg),Qt::UserRole);
+      child->setData(static_cast<int>(sg[i].generators[j]-m_sg),Qt::UserRole);
       parent->appendRow(child);
     }
   }
