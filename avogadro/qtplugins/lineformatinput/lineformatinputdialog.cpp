@@ -51,6 +51,13 @@ QString LineFormatInputDialog::format() const
   return m_ui->formats->currentText();
 }
 
+void LineFormatInputDialog::setCurrentFormat(const QString &format)
+{
+  int index = m_ui->formats->findText(format);
+  if (index >= 0)
+    m_ui->formats->setCurrentIndex(index);
+}
+
 QString LineFormatInputDialog::descriptor() const
 {
   return m_ui->descriptor->text();

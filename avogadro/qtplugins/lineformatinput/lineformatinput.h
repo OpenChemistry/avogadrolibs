@@ -45,8 +45,7 @@ public:
   QStringList menuPath(QAction *) const;
 
 public slots:
-  bool readMolecule(QtGui::Molecule &mol);
-  void setMolecule(QtGui::Molecule *) {}
+  void setMolecule(QtGui::Molecule *);
 
 private slots:
   void showDialog();
@@ -56,6 +55,7 @@ private:
   /// Maps identifier to extension:
   QMap<QString, std::string> m_formats;
 
+  QtGui::Molecule *m_molecule;
   Io::FileFormat *m_reader;
   std::string m_descriptor;
 };
