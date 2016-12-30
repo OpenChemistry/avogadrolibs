@@ -39,6 +39,9 @@ public:
 
   void setFormats(const QStringList &indents);
   QString format() const;
+
+  void setCurrentFormat(const QString &format);
+
   QString descriptor() const;
 
 protected slots:

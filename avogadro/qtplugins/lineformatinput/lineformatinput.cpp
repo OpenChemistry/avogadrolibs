@@ -20,6 +20,7 @@
 
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
@@ -37,9 +38,16 @@ namespace QtPlugins {
 
 LineFormatInput::LineFormatInput(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_reader(NULL)
+  m_reader(NULL),
+  m_molecule(NULL)
 {
-  QAction *action = new QAction(tr("Paste Molecule Descriptor..."), this);
+  QAction *action = new QAction(tr("SMILES..."), this);
+  action->setData("SMILES");
+  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  m_actions.append(action);
+
+  action = new QAction(tr("InChI..."), this);
+  action->setData("InChI");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
@@ -61,46 +69,21 @@ QList<QAction *> LineFormatInput::actions() const
 
 QStringList LineFormatInput::menuPath(QAction *) const
 {
-  return QStringList() << tr("&Edit");
+  return QStringList() << tr("&Build") << tr("&Insert");
 }
 
-bool LineFormatInput::readMolecule(QtGui::Molecule &mol)
+void LineFormatInput::setMolecule(QtGui::Molecule *mol)
 {
-  QWidget *parentAsWidget = qobject_cast<QWidget*>(parent());
-  if (!m_reader) {
-    QMessageBox::warning(parentAsWidget, tr("Paste Molecule Descriptor"),
-                         tr("An internal error occurred."), QMessageBox::Ok);
-    return false;
-  }
-
-  QProgressDialog dlg(parentAsWidget);
-  dlg.setModal(true);
-  dlg.setWindowTitle(tr("Paste Molecule Descriptor"));
-  dlg.setLabelText(tr("Generating 3D molecule..."));
-  dlg.setRange(0, 0);
-  dlg.setValue(0);
-  dlg.show();
-  bool success = m_reader->readString(m_descriptor, mol);
-  dlg.hide();
-
-  if (!success && !dlg.wasCanceled()) {
-    QMessageBox::warning(parentAsWidget, tr("Paste Molecule Descriptor"),
-                         tr("Error parsing descriptor:\n'%1'\nDescriptor: '%2'")
-                         .arg(QString::fromStdString(m_reader->error()))
-                         .arg(QString::fromStdString(m_descriptor)),
-                         QMessageBox::Ok);
-  }
-
-  m_descriptor.clear();
-  delete m_reader;
-  m_reader = NULL;
-
-  return success && !dlg.wasCanceled();
+  m_molecule = mol;
 }
 
 void LineFormatInput::showDialog()
 {
+  if (!m_molecule)
+    return;
+
   QWidget *parentAsWidget = qobject_cast<QWidget*>(parent());
+  QAction *theSender = qobject_cast<QAction*>(sender());
 
   // Create a list of file formats that we can read:
   QStringList availableFormats;
@@ -113,7 +96,7 @@ void LineFormatInput::showDialog()
   }
 
   if (availableFormats.empty()) {
-    QMessageBox::information(parentAsWidget, tr("No descriptors found!"),
+    QMessageBox::warning(parentAsWidget, tr("No descriptors found!"),
                              tr("No line format readers found!"),
                              QMessageBox::Ok);
     return;
@@ -122,26 +105,48 @@ void LineFormatInput::showDialog()
   // Prompt user for input:
   LineFormatInputDialog dlg;
   dlg.setFormats(availableFormats);
+  if (theSender != NULL)
+    dlg.setCurrentFormat(theSender->data().toString());
   dlg.exec();
+
+  // check if the reply is empty
+  if (dlg.descriptor().isEmpty())
+    return; // nothing to do
 
   // Resolve any format conflicts:
   const std::string &ext = m_formats[dlg.format()];
 
   const FileFormat *fmt = FileFormatDialog::findFileFormat(
-        parentAsWidget, tr("Paste Molecular Descriptor"),
+        parentAsWidget, tr("Insert Molecule..."),
         QString("file.%1").arg(QString::fromStdString(ext)), ops);
 
   if (fmt == NULL) {
-    QMessageBox::information(parentAsWidget, tr("No descriptors found!"),
+    QMessageBox::warning(parentAsWidget, tr("No descriptors found!"),
                              tr("Unable to load requested format reader."),
                              QMessageBox::Ok);
     return;
   }
 
-  // Let the application know that we're ready.
   m_reader = fmt->newInstance();
   m_descriptor = dlg.descriptor().toStdString();
-  emit moleculeReady(1);
+
+  QProgressDialog progDlg(parentAsWidget);
+  progDlg.setModal(true);
+  progDlg.setWindowTitle(tr("Insert Molecule..."));
+  progDlg.setLabelText(tr("Generating 3D molecule..."));
+  progDlg.setRange(0, 0);
+  progDlg.setValue(0);
+  progDlg.show();
+
+  QtGui::Molecule newMol;
+  bool success = m_reader->readString(m_descriptor, newMol);
+  m_molecule->undoMolecule()->appendMolecule(newMol, "Insert Molecule");
+  emit requestActiveTool("Manipulator");
+  dlg.hide();
+
+  m_descriptor.clear();
+  delete m_reader;
+  m_reader = NULL;
 }
 
 } // namespace QtPlugins
