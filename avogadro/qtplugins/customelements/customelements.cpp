@@ -52,7 +52,7 @@ QList<QAction *> CustomElements::actions() const
 
 QStringList CustomElements::menuPath(QAction *) const
 {
-  return QStringList() << tr("&Edit");
+  return QStringList() << tr("&Build");
 }
 
 void CustomElements::setMolecule(QtGui::Molecule *mol)
