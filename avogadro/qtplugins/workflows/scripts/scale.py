@@ -58,8 +58,8 @@ def scale(opts, mol):
     coords = mol['atoms']['coords']['3d']
     for i in range(0, len(coords), 3):
         coords[i] = coords[i] * xScale
-        coords[i+1] = coords[i+1] * yScale
-        coords[i+2] = coords[i+2] * zScale
+        coords[i + 1] = coords[i + 1] * yScale
+        coords[i + 2] = coords[i + 2] * zScale
 
     return mol
 
