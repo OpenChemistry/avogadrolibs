@@ -26,7 +26,8 @@ class Molecule;
 }
 
 namespace QtPlugins {
-class MolecularPropertiesDialog;
+class GeneralPropertiesDialog;
+class EnergyPropertiesDialog;
 
 /**
  * @brief The MolecularProperties class is an extension to launch
@@ -48,12 +49,19 @@ public slots:
   void setMolecule(QtGui::Molecule *mol);
 
 private slots:
-  void showDialog();
+  void updateActions();
+
+  void showGeneralDialog();
+  void showEnergyDialog();
 
 private:
-  QAction *m_action;
-  MolecularPropertiesDialog *m_dialog;
+  QList<QAction *> m_actions;
+  GeneralPropertiesDialog *m_dialog;
+  EnergyPropertiesDialog *m_Edialog;
   QtGui::Molecule *m_molecule;
+
+  QAction *m_GeneralPropertyAction;
+  QAction *m_EnergyPropertyAction;
 };
 
 } // namespace QtPlugins

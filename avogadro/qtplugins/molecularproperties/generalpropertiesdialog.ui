@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Avogadro::QtPlugins::MolecularPropertiesDialog</class>
- <widget class="QDialog" name="Avogadro::QtPlugins::MolecularPropertiesDialog">
+ <class>Avogadro::QtPlugins::GeneralPropertiesDialog</class>
+ <widget class="QDialog" name="Avogadro::QtPlugins::GeneralPropertiesDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>General attributes</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -75,6 +75,90 @@
        </property>
       </widget>
      </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>Temperature:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="temperatureLabel">
+       <property name="text">
+        <string>TODO</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>Charge:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLabel" name="chargeLabel">
+       <property name="text">
+        <string>TODO</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>Enthalpy:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="enthalpyLabel">
+       <property name="text">
+        <string>TODO</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_12">
+       <property name="text">
+        <string>Entropy:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLabel" name="entropyLabel">
+       <property name="text">
+        <string>TODO</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_13">
+       <property name="text">
+        <string>Multiplicity:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QLabel" name="multiplicityLabel">
+       <property name="text">
+        <string>TODO</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_14">
+       <property name="text">
+        <string>Dipole moment:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QLabel" name="dipoleMomentLabel">
+       <property name="text">
+        <string>TODO</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -94,7 +178,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Avogadro::QtPlugins::MolecularPropertiesDialog</receiver>
+   <receiver>Avogadro::QtPlugins::GeneralPropertiesDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -110,7 +194,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Avogadro::QtPlugins::MolecularPropertiesDialog</receiver>
+   <receiver>Avogadro::QtPlugins::GeneralPropertiesDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

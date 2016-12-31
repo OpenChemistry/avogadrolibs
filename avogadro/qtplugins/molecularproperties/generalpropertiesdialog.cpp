@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2012 Kitware, Inc.
+  Copyright 2016 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#include "molecularpropertiesdialog.h"
-#include "ui_molecularpropertiesdialog.h"
+#include "generalpropertiesdialog.h"
+#include "ui_generalpropertiesdialog.h"
 
 #include <avogadro/core/elements.h>
 #include <avogadro/qtgui/molecule.h>
@@ -25,23 +25,23 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro {
 namespace QtPlugins {
 
-MolecularPropertiesDialog::MolecularPropertiesDialog(QtGui::Molecule *mol,
+GeneralPropertiesDialog::GeneralPropertiesDialog(QtGui::Molecule *mol,
                                                      QWidget *parent_)
   : QDialog(parent_),
     m_molecule(NULL),
-    m_ui(new Ui::MolecularPropertiesDialog)
+    m_ui(new Ui::GeneralPropertiesDialog)
 {
   m_ui->setupUi(this);
 
   setMolecule(mol);
 }
 
-MolecularPropertiesDialog::~MolecularPropertiesDialog()
+GeneralPropertiesDialog::~GeneralPropertiesDialog()
 {
   delete m_ui;
 }
 
-void MolecularPropertiesDialog::setMolecule(QtGui::Molecule *mol)
+void GeneralPropertiesDialog::setMolecule(QtGui::Molecule *mol)
 {
   if (mol == m_molecule)
     return;
@@ -59,23 +59,53 @@ void MolecularPropertiesDialog::setMolecule(QtGui::Molecule *mol)
   updateLabels();
 }
 
-void MolecularPropertiesDialog::updateLabels()
+void GeneralPropertiesDialog::updateLabels()
 {
   if (m_molecule) {
     updateMassLabel();
     updateFormulaLabel();
     m_ui->atomCountLabel->setText(QString::number(m_molecule->atomCount()));
     m_ui->bondCountLabel->setText(QString::number(m_molecule->bondCount()));
+
+    if(m_molecule->hasData("temperature"))
+      m_ui->temperatureLabel->setText(QString::number((m_molecule->data("temperature").toDouble())));
+    else
+      m_ui->temperatureLabel->setText(QString("N/A"));
+    if(m_molecule->hasData("charge"))
+      m_ui->chargeLabel->setText(QString::number((m_molecule->data("charge").toInt())));
+    else
+      m_ui->chargeLabel->setText(QString("N/A"));
+    if(m_molecule->hasData("enthalpy"))
+      m_ui->enthalpyLabel->setText(QString::number((m_molecule->data("enthalpy").toDouble())));
+    else
+      m_ui->enthalpyLabel->setText(QString("N/A"));
+    if(m_molecule->hasData("entropy"))
+      m_ui->entropyLabel->setText(QString::number((m_molecule->data("entropy").toDouble())));
+    else
+      m_ui->entropyLabel->setText(QString("N/A"));
+    if(m_molecule->hasData("multiplicity"))
+      m_ui->multiplicityLabel->setText(QString::number((m_molecule->data("multiplicity").toDouble())));
+    else
+      m_ui->multiplicityLabel->setText(QString("N/A"));
+    if(m_molecule->hasData("total dipole moment"))
+      m_ui->dipoleMomentLabel->setText(QString::number((m_molecule->data("total dipole moment").toDouble())));
+    else
+      m_ui->dipoleMomentLabel->setText(QString("N/A"));
+
   }
   else {
     m_ui->molMassLabel->clear();
     m_ui->formulaLabel->clear();
     m_ui->atomCountLabel->clear();
     m_ui->bondCountLabel->clear();
+    m_ui->temperatureLabel->clear();
+    m_ui->chargeLabel->clear();
+    m_ui->enthalpyLabel->clear();
+    m_ui->multiplicityLabel->clear();
   }
 }
 
-void MolecularPropertiesDialog::updateMassLabel()
+void GeneralPropertiesDialog::updateMassLabel()
 {
   double mass = 0.0;
   for (size_t i = 0; i < m_molecule->atomCount(); ++i)
@@ -83,7 +113,7 @@ void MolecularPropertiesDialog::updateMassLabel()
   m_ui->molMassLabel->setText(QString::number(mass, 'f', 3));
 }
 
-void MolecularPropertiesDialog::updateFormulaLabel()
+void GeneralPropertiesDialog::updateFormulaLabel()
 {
   QString formula = QString::fromStdString(m_molecule->formula());
   QRegExp digitParser("(\\d+)");
@@ -98,7 +128,7 @@ void MolecularPropertiesDialog::updateFormulaLabel()
   m_ui->formulaLabel->setText(formula);
 }
 
-void MolecularPropertiesDialog::moleculeDestroyed()
+void GeneralPropertiesDialog::moleculeDestroyed()
 {
   m_molecule = NULL;
   updateLabels();

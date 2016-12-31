@@ -5,6 +5,6 @@ avogadro_plugin(MolecularProperties
   ExtensionPlugin
   molecularproperties.h
   MolecularProperties
-  "molecularproperties.cpp;molecularpropertiesdialog.cpp"
-  "molecularpropertiesdialog.ui"
+  "molecularproperties.cpp;generalpropertiesdialog.cpp;energypropertiesdialog.cpp"
+  "generalpropertiesdialog.ui;energypropertiesdialog.ui"
 )
