@@ -32,31 +32,31 @@ class AVOGADROIO_EXPORT XyzFormat : public FileFormat
 {
 public:
   XyzFormat();
-  ~XyzFormat() AVO_OVERRIDE;
+  ~XyzFormat() override;
 
-  Operations supportedOperations() const AVO_OVERRIDE
+  Operations supportedOperations() const override
   {
     return ReadWrite | MultiMolecule | File | Stream | String;
   }
 
-  FileFormat * newInstance() const AVO_OVERRIDE { return new XyzFormat; }
-  std::string identifier() const AVO_OVERRIDE { return "Avogadro: XYZ"; }
-  std::string name() const AVO_OVERRIDE { return "XYZ"; }
-  std::string description() const AVO_OVERRIDE
+  FileFormat * newInstance() const override { return new XyzFormat; }
+  std::string identifier() const override { return "Avogadro: XYZ"; }
+  std::string name() const override { return "XYZ"; }
+  std::string description() const override
   {
     return "Generic format that tabulates atomic symbols and 3D positions.";
   }
 
-  std::string specificationUrl() const AVO_OVERRIDE
+  std::string specificationUrl() const override
   {
     return "http://openbabel.org/wiki/XYZ";
   }
 
-  std::vector<std::string> fileExtensions() const AVO_OVERRIDE;
-  std::vector<std::string> mimeTypes() const AVO_OVERRIDE;
+  std::vector<std::string> fileExtensions() const override;
+  std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &inStream, Core::Molecule &molecule) AVO_OVERRIDE;
-  bool write(std::ostream &outStream, const Core::Molecule &molecule) AVO_OVERRIDE;
+  bool read(std::istream &inStream, Core::Molecule &molecule) override;
+  bool write(std::ostream &outStream, const Core::Molecule &molecule) override;
 };
 
 } // end Io namespace

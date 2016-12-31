@@ -45,7 +45,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueDialog : public QDialog
   Q_OBJECT
 public:
   explicit MoleQueueDialog(QWidget *parent_ = 0);
-  ~MoleQueueDialog() AVO_OVERRIDE;
+  ~MoleQueueDialog() override;
 
   /**
    * @brief Options controlling job submission behavior in the submitJob method.

@@ -49,7 +49,7 @@ public:
   /**
    * Accept a visit from our friendly visitor.
    */
-  void accept(Visitor &) AVO_OVERRIDE;
+  void accept(Visitor &) override;
 
   /**
    * @brief Add a drawable object to the geometry node.

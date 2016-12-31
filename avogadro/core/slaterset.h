@@ -59,12 +59,12 @@ public:
   /**
    * Destructor.
    */
-  ~SlaterSet() AVO_OVERRIDE;
+  ~SlaterSet() override;
 
   /**
    * Clone.
    */
-  SlaterSet* clone() const AVO_OVERRIDE { return new SlaterSet(*this); }
+  SlaterSet* clone() const override { return new SlaterSet(*this); }
 
   /**
    * Enumeration of the Slater orbital types.
@@ -117,13 +117,13 @@ public:
   /**
    * @return The number of molecular orbitals in the BasisSet.
    */
-  unsigned int molecularOrbitalCount(ElectronType type = Paired) AVO_OVERRIDE;
+  unsigned int molecularOrbitalCount(ElectronType type = Paired) override;
 
   /**
    * @return True of the basis set is valid, false otherwise.
    * Default is true, if false then the basis set is likely unusable.
    */
-  bool isValid() AVO_OVERRIDE { return true; }
+  bool isValid() override { return true; }
 
   /**
    * Initialize the calculation, this must normally be done before anything.

@@ -34,7 +34,7 @@ public:
   ~CrystalScene();
 
   void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) AVO_OVERRIDE;
+               Rendering::GroupNode &node) override;
 
   QString name() const { return tr("Crystal Lattice"); }
 

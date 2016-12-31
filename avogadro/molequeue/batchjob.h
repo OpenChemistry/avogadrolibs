@@ -90,7 +90,7 @@ public:
    */
   explicit BatchJob(QObject *parent = NULL);
   explicit BatchJob(const QString &scriptFilePath, QObject *parent = NULL);
-  ~BatchJob() AVO_OVERRIDE;
+  ~BatchJob() override;
 
   /**
    * Options for the input generator.

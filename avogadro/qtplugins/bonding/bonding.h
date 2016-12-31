@@ -31,21 +31,21 @@ class Bonding : public QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit Bonding(QObject *parent_ = 0);
-  ~Bonding() AVO_OVERRIDE;
+  ~Bonding() override;
 
-  QString name() const AVO_OVERRIDE { return tr("Bonding"); }
+  QString name() const override { return tr("Bonding"); }
 
-  QString description() const AVO_OVERRIDE
+  QString description() const override
   {
     return tr("Perform bonding operations.");
   }
 
-  QList<QAction *> actions() const AVO_OVERRIDE;
+  QList<QAction *> actions() const override;
 
-  QStringList menuPath(QAction *action) const AVO_OVERRIDE;
+  QStringList menuPath(QAction *action) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol) AVO_OVERRIDE;
+  void setMolecule(QtGui::Molecule *mol) override;
 
 private slots:
   void bond();

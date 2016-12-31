@@ -34,20 +34,20 @@ class ScriptFileFormats : public QtGui::ExtensionPlugin
 
 public:
   explicit ScriptFileFormats(QObject *parent = 0);
-  ~ScriptFileFormats() AVO_OVERRIDE;
+  ~ScriptFileFormats() override;
 
-  QString name() const AVO_OVERRIDE { return tr("Script File Formats"); }
+  QString name() const override { return tr("Script File Formats"); }
 
-  QString description() const AVO_OVERRIDE
+  QString description() const override
   {
     return tr("Load file reader/writers from external scripts.");
   }
 
-  QList<QAction *> actions() const AVO_OVERRIDE;
+  QList<QAction *> actions() const override;
 
-  QStringList menuPath(QAction *) const AVO_OVERRIDE;
+  QStringList menuPath(QAction *) const override;
 
-  void setMolecule(QtGui::Molecule *mol) AVO_OVERRIDE;
+  void setMolecule(QtGui::Molecule *mol) override;
 
 private:
   QList<Io::FileFormat *> m_formats;

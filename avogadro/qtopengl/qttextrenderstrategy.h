@@ -35,16 +35,16 @@ class AVOGADROQTOPENGL_EXPORT QtTextRenderStrategy
 {
 public:
   QtTextRenderStrategy();
-  ~QtTextRenderStrategy() AVO_OVERRIDE;
+  ~QtTextRenderStrategy() override;
 
-  TextRenderStrategy* newInstance() const AVO_OVERRIDE;
+  TextRenderStrategy* newInstance() const override;
 
   void boundingBox(const std::string &string,
                    const Rendering::TextProperties &tprop,
-                   int bbox[4]) const AVO_OVERRIDE;
+                   int bbox[4]) const override;
 
   void render(const std::string &string, const Rendering::TextProperties &tprop,
-              unsigned char *buffer, const Vector2i &dims) const AVO_OVERRIDE;
+              unsigned char *buffer, const Vector2i &dims) const override;
 
   /**
    * Keep the buffer as a QImage::Format_ARGB32_Premultiplied image. Useful

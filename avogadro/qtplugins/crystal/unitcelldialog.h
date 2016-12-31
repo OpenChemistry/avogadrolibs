@@ -49,7 +49,7 @@ public:
   enum Mode { Clean, Invalid, Parameters, CellMatrix, FractionalMatrix };
 
   explicit UnitCellDialog(QWidget *parent = 0);
-  ~UnitCellDialog() AVO_OVERRIDE;
+  ~UnitCellDialog() override;
 
   void setMolecule(QtGui::Molecule *molecule);
 

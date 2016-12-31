@@ -40,31 +40,31 @@ public:
   explicit Manipulator(QObject *parent_ = NULL);
   ~Manipulator();
 
-  QString name() const AVO_OVERRIDE { return tr("Manipulate tool"); }
-  QString description() const AVO_OVERRIDE { return tr("Manipulate tool"); }
-  unsigned char priority() const AVO_OVERRIDE { return 30; }
-  QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
-  QWidget * toolWidget() const AVO_OVERRIDE;
+  QString name() const override { return tr("Manipulate tool"); }
+  QString description() const override { return tr("Manipulate tool"); }
+  unsigned char priority() const override { return 30; }
+  QAction * activateAction() const override { return m_activateAction; }
+  QWidget * toolWidget() const override;
 
-  void setMolecule(QtGui::Molecule *mol) AVO_OVERRIDE
+  void setMolecule(QtGui::Molecule *mol) override
   {
     if (mol)
       m_molecule = mol->undoMolecule();
   }
 
-  void setEditMolecule(QtGui::RWMolecule *mol) AVO_OVERRIDE
+  void setEditMolecule(QtGui::RWMolecule *mol) override
   {
     m_molecule = mol;
   }
 
-  void setGLRenderer(Rendering::GLRenderer *renderer) AVO_OVERRIDE
+  void setGLRenderer(Rendering::GLRenderer *renderer) override
   {
     m_renderer = renderer;
   }
 
-  QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * mouseMoveEvent(QMouseEvent *e) AVO_OVERRIDE;
+  QUndoCommand * mousePressEvent(QMouseEvent *e) override;
+  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) override;
+  QUndoCommand * mouseMoveEvent(QMouseEvent *e) override;
 
 private:
   /**

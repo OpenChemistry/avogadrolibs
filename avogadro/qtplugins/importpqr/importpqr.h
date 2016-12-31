@@ -40,15 +40,15 @@ class ImportPQR : public QtGui::ExtensionPlugin
 
 public:
   explicit ImportPQR(QObject *parent = 0);
-  ~ImportPQR() AVO_OVERRIDE;
+  ~ImportPQR() override;
 
-  QString name() const AVO_OVERRIDE { return tr("Import From PQR"); }
+  QString name() const override { return tr("Import From PQR"); }
 
-  QString description() const AVO_OVERRIDE { return tr("Download a molecule from PQR."); }
+  QString description() const override { return tr("Download a molecule from PQR."); }
 
-  QList<QAction *> actions() const AVO_OVERRIDE;
+  QList<QAction *> actions() const override;
 
-  QStringList menuPath(QAction *) const AVO_OVERRIDE;
+  QStringList menuPath(QAction *) const override;
 
   void setMoleculeData(QByteArray &molData, QString name);
 

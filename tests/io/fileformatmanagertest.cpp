@@ -153,22 +153,22 @@ public:
     : FileFormat(), m_ops(ops), m_ident(ident)
   {
   }
-  Operations supportedOperations() const AVO_OVERRIDE { return m_ops; }
-  bool read(std::istream &, Molecule &) AVO_OVERRIDE { return false; }
-  bool write(std::ostream &, const Molecule &) AVO_OVERRIDE { return false; }
-  FileFormat *newInstance() const AVO_OVERRIDE
+  Operations supportedOperations() const override { return m_ops; }
+  bool read(std::istream &, Molecule &) override { return false; }
+  bool write(std::ostream &, const Molecule &) override { return false; }
+  FileFormat *newInstance() const override
     { return new Format(m_ident, m_ops); }
-  std::string identifier() const AVO_OVERRIDE { return m_ident; }
-  std::string name() const AVO_OVERRIDE { return m_ident; }
-  std::string description() const AVO_OVERRIDE { return m_ident; }
-  std::string specificationUrl() const AVO_OVERRIDE { return ""; }
-  std::vector<std::string> fileExtensions() const AVO_OVERRIDE
+  std::string identifier() const override { return m_ident; }
+  std::string name() const override { return m_ident; }
+  std::string description() const override { return m_ident; }
+  std::string specificationUrl() const override { return ""; }
+  std::vector<std::string> fileExtensions() const override
   {
     std::vector<std::string> result;
     result.push_back("asdfjkl;");
     return result;
   }
-  std::vector<std::string> mimeTypes() const AVO_OVERRIDE
+  std::vector<std::string> mimeTypes() const override
   {
     std::vector<std::string> result;
     result.push_back("chemical/x-doodie");

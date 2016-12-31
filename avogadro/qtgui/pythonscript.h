@@ -49,7 +49,7 @@ public:
   explicit PythonScript(QObject *parent_ = NULL);
   /**@}*/
 
-  ~PythonScript() AVO_OVERRIDE;
+  ~PythonScript() override;
 
   /**
    * @return True if debugging of python I/O is enabled.

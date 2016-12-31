@@ -65,7 +65,7 @@ public:
   /** Construct a highlighter with an empty rule set. */
   explicit GenericHighlighter(QObject *parent_ = 0);
 
-  ~GenericHighlighter() AVO_OVERRIDE;
+  ~GenericHighlighter() override;
 
   /** Construct a new highlighter using the rule set of @a other. */
   GenericHighlighter(const GenericHighlighter &other);

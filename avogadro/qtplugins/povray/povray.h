@@ -31,23 +31,23 @@ class POVRay : public QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit POVRay(QObject *p = 0);
-  ~POVRay() AVO_OVERRIDE;
+  ~POVRay() override;
 
-  QString name() const AVO_OVERRIDE { return tr("POVRay"); }
+  QString name() const override { return tr("POVRay"); }
 
-  QString description() const AVO_OVERRIDE
+  QString description() const override
   {
     return tr("Render the scene using POV-Ray.");
   }
 
-  QList<QAction *> actions() const AVO_OVERRIDE;
+  QList<QAction *> actions() const override;
 
-  QStringList menuPath(QAction *action) const AVO_OVERRIDE;
+  QStringList menuPath(QAction *action) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol) AVO_OVERRIDE;
-  void setScene(Rendering::Scene *scene) AVO_OVERRIDE;
-  void setCamera(Rendering::Camera *camera) AVO_OVERRIDE;
+  void setMolecule(QtGui::Molecule *mol) override;
+  void setScene(Rendering::Scene *scene) override;
+  void setCamera(Rendering::Camera *camera) override;
 
 private slots:
   void render();

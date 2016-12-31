@@ -34,21 +34,21 @@ class CoordinateEditor : public Avogadro::QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit CoordinateEditor(QObject *parent_ = 0);
-  ~CoordinateEditor() AVO_OVERRIDE;
+  ~CoordinateEditor() override;
 
-  QString name() const AVO_OVERRIDE { return tr("Coordinate editor"); }
+  QString name() const override { return tr("Coordinate editor"); }
 
-  QString description() const AVO_OVERRIDE
+  QString description() const override
   {
     return tr("Text editing of atomic coordinates.");
   }
 
-  QList<QAction *> actions() const AVO_OVERRIDE;
+  QList<QAction *> actions() const override;
 
-  QStringList menuPath(QAction *action) const AVO_OVERRIDE;
+  QStringList menuPath(QAction *action) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol) AVO_OVERRIDE;
+  void setMolecule(QtGui::Molecule *mol) override;
 
 private slots:
   void triggered();

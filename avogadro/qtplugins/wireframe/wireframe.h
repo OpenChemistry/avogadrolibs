@@ -31,23 +31,23 @@ class Wireframe : public QtGui::ScenePlugin
 
 public:
   explicit Wireframe(QObject *parent = 0);
-  ~Wireframe() AVO_OVERRIDE;
+  ~Wireframe() override;
 
   void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) AVO_OVERRIDE;
+               Rendering::GroupNode &node) override;
 
-  QString name() const AVO_OVERRIDE { return tr("Wireframe"); }
+  QString name() const override { return tr("Wireframe"); }
 
-  QString description() const AVO_OVERRIDE
+  QString description() const override
   {
     return tr("Render the molecule as a wireframe.");
   }
 
-  bool isEnabled() const AVO_OVERRIDE;
+  bool isEnabled() const override;
 
-  void setEnabled(bool enable) AVO_OVERRIDE;
+  void setEnabled(bool enable) override;
 
-  QWidget * setupWidget() AVO_OVERRIDE;
+  QWidget * setupWidget() override;
 
 private slots:
   void multiBonds(bool show);

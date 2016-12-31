@@ -31,21 +31,21 @@ class QTAIMEngine : public QtGui::ScenePlugin
   Q_OBJECT
 public:
   explicit QTAIMEngine(QObject *parent=0);
-  virtual ~QTAIMEngine() AVO_OVERRIDE;
+  virtual ~QTAIMEngine() override;
 
   void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) AVO_OVERRIDE;
+               Rendering::GroupNode &node) override;
 
-  QString name() const AVO_OVERRIDE { return tr("QTAIM"); }
+  QString name() const override { return tr("QTAIM"); }
 
-  QString description() const AVO_OVERRIDE
+  QString description() const override
   {
     return tr("Renders primitives using QTAIM properties");
   }
 
-  bool isEnabled() const AVO_OVERRIDE { return m_enabled; }
+  bool isEnabled() const override { return m_enabled; }
 
-  void setEnabled(bool enable) AVO_OVERRIDE { m_enabled = enable; }
+  void setEnabled(bool enable) override { m_enabled = enable; }
 
 private:
   bool m_enabled;

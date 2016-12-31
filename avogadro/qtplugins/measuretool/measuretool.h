@@ -45,21 +45,21 @@ public:
   explicit MeasureTool(QObject *parent_ = NULL);
   ~MeasureTool();
 
-  QString name() const AVO_OVERRIDE { return tr("Measure tool"); }
-  QString description() const AVO_OVERRIDE { return tr("Measure tool"); }
-  unsigned char priority() const AVO_OVERRIDE { return 60; }
-  QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
-  QWidget * toolWidget() const AVO_OVERRIDE;
+  QString name() const override { return tr("Measure tool"); }
+  QString description() const override { return tr("Measure tool"); }
+  unsigned char priority() const override { return 60; }
+  QAction * activateAction() const override { return m_activateAction; }
+  QWidget * toolWidget() const override;
 
-  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE;
-  void setEditMolecule(QtGui::RWMolecule *) AVO_OVERRIDE;
-  void setGLRenderer(Rendering::GLRenderer *renderer) AVO_OVERRIDE;
+  void setMolecule(QtGui::Molecule *) override;
+  void setEditMolecule(QtGui::RWMolecule *) override;
+  void setGLRenderer(Rendering::GLRenderer *renderer) override;
 
-  QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) AVO_OVERRIDE;
+  QUndoCommand * mousePressEvent(QMouseEvent *e) override;
+  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) override;
+  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) override;
 
-  void draw(Rendering::GroupNode &node) AVO_OVERRIDE;
+  void draw(Rendering::GroupNode &node) override;
 
 private:
   Vector3ub contrastingColor(const Vector3ub &rgb) const;

@@ -34,31 +34,31 @@ class AVOGADROIO_EXPORT MdlFormat : public FileFormat
 {
 public:
   MdlFormat();
-  ~MdlFormat() AVO_OVERRIDE;
+  ~MdlFormat() override;
 
-  Operations supportedOperations() const AVO_OVERRIDE
+  Operations supportedOperations() const override
   {
     return ReadWrite | MultiMolecule | File | Stream | String;
   }
 
-  FileFormat * newInstance() const AVO_OVERRIDE { return new MdlFormat; }
-  std::string identifier() const AVO_OVERRIDE { return "Avogadro: MDL"; }
-  std::string name() const AVO_OVERRIDE { return "MDL"; }
-  std::string description() const AVO_OVERRIDE
+  FileFormat * newInstance() const override { return new MdlFormat; }
+  std::string identifier() const override { return "Avogadro: MDL"; }
+  std::string name() const override { return "MDL"; }
+  std::string description() const override
   {
     return "Generic format that contains atoms, bonds, positions.";
   }
 
-  std::string specificationUrl() const AVO_OVERRIDE
+  std::string specificationUrl() const override
   {
     return "http://download.accelrys.com/freeware/ctfile-formats/ctfile-formats.zip";
   }
 
-  std::vector<std::string> fileExtensions() const AVO_OVERRIDE;
-  std::vector<std::string> mimeTypes() const AVO_OVERRIDE;
+  std::vector<std::string> fileExtensions() const override;
+  std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) AVO_OVERRIDE;
-  bool write(std::ostream &out, const Core::Molecule &molecule) AVO_OVERRIDE;
+  bool read(std::istream &in, Core::Molecule &molecule) override;
+  bool write(std::ostream &out, const Core::Molecule &molecule) override;
 };
 
 } // end Io namespace

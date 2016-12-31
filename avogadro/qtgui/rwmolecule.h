@@ -81,7 +81,7 @@ public:
   /** Construct a molecule with the atoms/bonds of mol. */
   explicit RWMolecule(Molecule &mol, QObject *parent = 0);
 
-  ~RWMolecule() AVO_OVERRIDE;
+  ~RWMolecule() override;
 
   Molecule& molecule() { return m_molecule; }
 
