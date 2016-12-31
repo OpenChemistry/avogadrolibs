@@ -25,9 +25,10 @@
 #include "poscarformat.h"
 #include "xyzformat.h"
 
-#include <avogadro/stl/memory_p.h>
-
 #include <algorithm>
+#include <memory>
+
+using std::unique_ptr;
 
 namespace Avogadro {
 namespace Io {
@@ -58,7 +59,7 @@ bool FileFormatManager::readFile(Core::Molecule &molecule,
   if (!format)
     return false;
 
-  AVO_UNIQUE_PTR<FileFormat> formatInstance(format->newInstance());
+  unique_ptr<FileFormat> formatInstance(format->newInstance());
   return formatInstance->readFile(fileName, molecule);
 }
 
@@ -82,7 +83,7 @@ bool FileFormatManager::writeFile(const Core::Molecule &molecule,
   if (!format)
     return false;
 
-  AVO_UNIQUE_PTR<FileFormat> formatInstance(format->newInstance());
+  unique_ptr<FileFormat> formatInstance(format->newInstance());
   return formatInstance->writeFile(fileName, molecule);
 }
 
@@ -96,7 +97,7 @@ bool FileFormatManager::readString(Core::Molecule &molecule,
   if (!format)
     return false;
 
-  AVO_UNIQUE_PTR<FileFormat> formatInstance(format->newInstance());
+  unique_ptr<FileFormat> formatInstance(format->newInstance());
   return formatInstance->readString(string, molecule);
 }
 
@@ -110,7 +111,7 @@ bool FileFormatManager::writeString(const Core::Molecule &molecule,
   if (!format)
     return false;
 
-  AVO_UNIQUE_PTR<FileFormat> formatInstance(format->newInstance());
+  unique_ptr<FileFormat> formatInstance(format->newInstance());
   return formatInstance->writeString(string, molecule);
 }
 
