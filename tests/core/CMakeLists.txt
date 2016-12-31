@@ -7,7 +7,6 @@ set(tests
   Bond
   CoordinateBlockGenerator
   CoordinateSet
-  CPP11
   Cube
   Eigen
   Element

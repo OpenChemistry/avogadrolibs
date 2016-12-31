@@ -22,7 +22,6 @@ function(avogadro_add_library name)
     ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
 endfunction()
 
-add_subdirectory(stl)
 add_subdirectory(core)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/core)
 

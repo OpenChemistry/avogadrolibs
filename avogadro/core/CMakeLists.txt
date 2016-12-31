@@ -6,11 +6,6 @@ include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 find_package(Spglib REQUIRED)
 include_directories(SYSTEM ${SPGLIB_INCLUDE_DIR})
 
-# Check if we need extra include directories for C++11 features.
-if(AvogadroLibs_NEEDS_BOOST)
-  include_directories(SYSTEM ${AvogadroLibs_MUTEX_INCLUDE_DIRS})
-endif()
-
 # configure the version header
 configure_file("${PROJECT_SOURCE_DIR}/cmake/version.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/version.h")
@@ -78,12 +73,4 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroCore ${SPGLIB_LIBRARY})
-
-# Additional libraries and compiler definitions necessary when using Boost to
-# replace C++11.
-if(AvogadroLibs_NEEDS_BOOST)
-  target_link_libraries(AvogadroCore
-    LINK_PRIVATE ${AvogadroLibs_MUTEX_BOOST_LIBRARIES})
-  add_definitions(${AvogadroLibs_BOOST_DEFINITIONS})
-endif()
+target_link_libraries(AvogadroCore LINK_PRIVATE ${SPGLIB_LIBRARY})
