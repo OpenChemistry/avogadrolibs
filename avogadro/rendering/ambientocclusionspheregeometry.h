@@ -55,7 +55,7 @@ public:
   /**
    * Accept a visit from our friendly visitor.
    */
-  void accept(Visitor &) AVO_OVERRIDE;
+  void accept(Visitor &) override;
 
   /**
    * @brief Update the VBOs, IBOs etc ready for rendering.

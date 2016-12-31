@@ -56,7 +56,7 @@ bool Shader::compile()
   GLenum type_ = m_type == Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
   GLuint handle_ = glCreateShader(type_);
   const GLchar *source_ = static_cast<const GLchar *>(m_source.c_str());
-  glShaderSource(handle_, 1, &source_, NULL);
+  glShaderSource(handle_, 1, &source_, nullptr);
   glCompileShader(handle_);
   GLint isCompiled;
   glGetShaderiv(handle_, GL_COMPILE_STATUS, &isCompiled);
@@ -67,7 +67,7 @@ bool Shader::compile()
     glGetShaderiv(handle_, GL_INFO_LOG_LENGTH, &length);
     if (length > 1) {
       char *logMessage = new char[length];
-      glGetShaderInfoLog(handle_, length, NULL, logMessage);
+      glGetShaderInfoLog(handle_, length, nullptr, logMessage);
       m_error = logMessage;
       delete[] logMessage;
     }

@@ -85,7 +85,7 @@ public:
    * Respond to user-input events.
    * @param e The QEvent object.
    * @return A QUndoCommand that can be used to undo any changes to the
-   * molecule. If no undoable change is made, the method may return NULL.
+   * molecule. If no undoable change is made, the method may return nullptr.
    * @{
    */
   virtual QUndoCommand * mousePressEvent(QMouseEvent *e);

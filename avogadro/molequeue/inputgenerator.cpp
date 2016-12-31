@@ -335,7 +335,7 @@ QString InputGenerator::fileContents(const QString &fileName) const
 GenericHighlighter *
 InputGenerator::createFileHighlighter(const QString &fileName) const
 {
-  GenericHighlighter *toClone(m_fileHighlighters.value(fileName, NULL));
+  GenericHighlighter *toClone(m_fileHighlighters.value(fileName, nullptr));
   return toClone ? new GenericHighlighter(*toClone) : toClone;
 }
 

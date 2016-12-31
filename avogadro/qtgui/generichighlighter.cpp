@@ -31,7 +31,7 @@ GenericHighlighter::~GenericHighlighter()
 }
 
 GenericHighlighter::GenericHighlighter(const GenericHighlighter &other)
-  : QSyntaxHighlighter(static_cast<QTextDocument *>(NULL))
+  : QSyntaxHighlighter(static_cast<QTextDocument *>(nullptr))
 {
   m_rules = other.m_rules;
 }

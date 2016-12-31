@@ -54,7 +54,7 @@ protected:
 };
 
 MultiViewWidget::MultiViewWidget(QWidget *p, Qt::WindowFlags f)
-  : QWidget(p, f), m_factory(NULL), m_activeWidget(NULL),
+  : QWidget(p, f), m_factory(nullptr), m_activeWidget(nullptr),
     m_activeFilter(new ActiveWidgetFilter(this))
 {
 }
@@ -90,13 +90,13 @@ QWidget * MultiViewWidget::activeWidget()
 void MultiViewWidget::setActiveWidget(QWidget *widget)
 {
   if (m_activeWidget != widget) {
-    ContainerWidget *container(NULL);
+    ContainerWidget *container(nullptr);
     if (m_activeWidget)
       container = qobject_cast<ContainerWidget *>(m_activeWidget->parentWidget());
     if (container)
       container->setActive(false);
     m_activeWidget = widget;
-    container = NULL;
+    container = nullptr;
     if (widget)
       container = qobject_cast<ContainerWidget *>(widget->parentWidget());
     if (container)

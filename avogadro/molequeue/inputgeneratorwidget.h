@@ -71,7 +71,7 @@ public:
    * InputGenerator script specified by scriptFilePath.
    */
   explicit InputGeneratorWidget(QWidget *parent_ = 0);
-  ~InputGeneratorWidget() AVO_OVERRIDE;
+  ~InputGeneratorWidget() override;
 
   /**
    * Use the input generator script pointed to by scriptFilePath.
@@ -124,7 +124,7 @@ protected:
    * Reimplemented to update preview text. Hidden dialogs will wait until they
    * are reshown to update the text to prevent overwriting any modified buffers.
    */
-  void showEvent(QShowEvent *e) AVO_OVERRIDE;
+  void showEvent(QShowEvent *e) override;
 
 private slots:
   /**

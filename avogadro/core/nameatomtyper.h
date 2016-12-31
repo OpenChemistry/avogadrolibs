@@ -34,11 +34,11 @@ namespace Core {
 class AVOGADROCORE_EXPORT NameAtomTyper : public AtomTyper<std::string>
 {
 public:
-  explicit NameAtomTyper(const Molecule *mol = NULL);
-  ~NameAtomTyper() AVO_OVERRIDE;
+  explicit NameAtomTyper(const Molecule *mol = nullptr);
+  ~NameAtomTyper() override;
 
 protected:
-  std::string type(const Atom &atom) AVO_OVERRIDE;
+  std::string type(const Atom &atom) override;
 };
 
 } // namespace Core

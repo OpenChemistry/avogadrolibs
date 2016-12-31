@@ -38,8 +38,8 @@ namespace QtPlugins {
 
 LineFormatInput::LineFormatInput(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_reader(NULL),
-  m_molecule(NULL)
+  m_reader(nullptr),
+  m_molecule(nullptr)
 {
   QAction *action = new QAction(tr("SMILES..."), this);
   action->setData("SMILES");
@@ -105,7 +105,7 @@ void LineFormatInput::showDialog()
   // Prompt user for input:
   LineFormatInputDialog dlg;
   dlg.setFormats(availableFormats);
-  if (theSender != NULL)
+  if (theSender != nullptr)
     dlg.setCurrentFormat(theSender->data().toString());
   dlg.exec();
 
@@ -120,7 +120,7 @@ void LineFormatInput::showDialog()
         parentAsWidget, tr("Insert Molecule..."),
         QString("file.%1").arg(QString::fromStdString(ext)), ops);
 
-  if (fmt == NULL) {
+  if (fmt == nullptr) {
     QMessageBox::warning(parentAsWidget, tr("No descriptors found!"),
                              tr("Unable to load requested format reader."),
                              QMessageBox::Ok);
@@ -146,7 +146,7 @@ void LineFormatInput::showDialog()
 
   m_descriptor.clear();
   delete m_reader;
-  m_reader = NULL;
+  m_reader = nullptr;
 }
 
 } // namespace QtPlugins

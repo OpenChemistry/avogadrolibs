@@ -44,7 +44,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueManager : public QObject
   Q_OBJECT
 public:
   explicit MoleQueueManager(QObject *parent_ = 0);
-  ~MoleQueueManager() AVO_OVERRIDE;
+  ~MoleQueueManager() override;
 
   /**
    * @return The singleton instance.

@@ -25,8 +25,8 @@ namespace QtPlugins {
 
 CoordinateEditor::CoordinateEditor(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_dialog(NULL),
-  m_molecule(NULL),
+  m_dialog(nullptr),
+  m_molecule(nullptr),
   m_action(new QAction(tr("Atomic &Coordinate Editor..."), this))
 {
   connect(m_action, SIGNAL(triggered()), SLOT(triggered()));

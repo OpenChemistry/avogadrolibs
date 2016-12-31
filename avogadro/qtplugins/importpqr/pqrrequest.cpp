@@ -72,7 +72,7 @@ void PQRRequest::sendRequest(QString url, QString mol2)
 */
 QString PQRRequest::molSelected(int num)
 {
-  if (results == NULL)
+  if (results == nullptr)
     return QString("N/A");
 
   QString mol2 = results[num].mol2url;
@@ -106,7 +106,7 @@ void PQRRequest::parseJson()
       table->setItem(0, 0, new QTableWidgetItem("No Results!"));
       table->setCellWidget(0, 1, new QLabel());
       table->setItem(0, 2, new QTableWidgetItem("N/A"));
-      results = NULL;
+      results = nullptr;
     }
     else {
       results = new result[root.size()];
@@ -121,7 +121,7 @@ void PQRRequest::parseJson()
         table->setItem(i, 0, new QTableWidgetItem(results[i].name));
 
         //clear possible QTableWidget if there were no results previously
-        table->setItem(i, 1, NULL);
+        table->setItem(i, 1, nullptr);
         //use this to display subscripts, should automatically delete previous QLabel according to documentation
         table->setCellWidget(i, 1, new QLabel(parseSubscripts(results[i].formula)));
 
@@ -215,7 +215,7 @@ float PQRRequest::getMolMass(QString formula) {
         }
       }
       //if the next letter is another uppercase or null, the current subscript is 1
-      else if (isupper(str[i + 1]) || str[i + 1] == NULL) {
+      else if (isupper(str[i + 1]) || str[i + 1] == nullptr) {
         subscript = 1;
         element = { str[i] };
       }

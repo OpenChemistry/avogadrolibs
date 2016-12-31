@@ -50,8 +50,8 @@ using ::MoleQueue::JobObject;
 
 QuantumInput::QuantumInput(QObject *parent_) :
   ExtensionPlugin(parent_),
-  m_molecule(NULL),
-  m_outputFormat(NULL)
+  m_molecule(nullptr),
+  m_outputFormat(nullptr)
 {
   refreshGenerators();
 }
@@ -87,7 +87,7 @@ void QuantumInput::setMolecule(QtGui::Molecule *mol)
 
 void QuantumInput::openJobOutput(const JobObject &job)
 {
-  m_outputFormat = NULL;
+  m_outputFormat = nullptr;
   m_outputFileName.clear();
 
   QString outputPath(job.value("outputDirectory").toString());
@@ -97,7 +97,7 @@ void QuantumInput::openJobOutput(const JobObject &job)
       FileFormatDialog::fileToRead(qobject_cast<QWidget*>(parent()),
                                    tr("Open Output File"), outputPath);
 
-  if (result.first == NULL) // User canceled
+  if (result.first == nullptr) // User canceled
     return;
 
   m_outputFormat = result.first;
@@ -118,7 +118,7 @@ bool QuantumInput::readMolecule(QtGui::Molecule &mol)
                              .arg(QString::fromStdString(reader->error())));
   }
 
-  m_outputFormat = NULL;
+  m_outputFormat = nullptr;
   m_outputFileName.clear();
 
   return success;
@@ -138,7 +138,7 @@ void QuantumInput::menuActivated()
 
   QString scriptFileName = theSender->data().toString();
   QWidget *theParent = qobject_cast<QWidget*>(parent());
-  InputGeneratorDialog *dlg = m_dialogs.value(scriptFileName, NULL);
+  InputGeneratorDialog *dlg = m_dialogs.value(scriptFileName, nullptr);
 
   if (!dlg) {
     dlg = new InputGeneratorDialog(scriptFileName, theParent);

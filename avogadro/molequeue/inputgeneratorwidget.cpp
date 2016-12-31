@@ -50,7 +50,7 @@ using ::MoleQueue::JobObject;
 InputGeneratorWidget::InputGeneratorWidget(QWidget *parent_) :
   QWidget(parent_),
   m_ui(new Ui::InputGeneratorWidget),
-  m_molecule(NULL),
+  m_molecule(nullptr),
   m_updatePending(false),
   m_batchMode(false),
   m_inputGenerator(QString())
@@ -443,7 +443,7 @@ void InputGeneratorWidget::textEditModified()
 void InputGeneratorWidget::updateTitlePlaceholder()
 {
   if (QLineEdit *titleEdit =
-        qobject_cast<QLineEdit*>(m_widgets.value("Title", NULL))) {
+        qobject_cast<QLineEdit*>(m_widgets.value("Title", nullptr))) {
     titleEdit->setPlaceholderText(generateJobTitle());
   }
 }
@@ -479,7 +479,7 @@ void InputGeneratorWidget::saveSingleFile(const QString &fileName)
     return;
   }
 
-  QTextEdit *edit = m_textEdits.value(fileName, NULL);
+  QTextEdit *edit = m_textEdits.value(fileName, nullptr);
   if (!edit) {
     showError(tr("Internal error: could not find text widget for filename '%1'")
               .arg(fileName));
@@ -777,17 +777,17 @@ void InputGeneratorWidget::buildOptionGui()
 
   // Make connections for standard options:
   if (QComboBox *combo = qobject_cast<QComboBox*>(
-        m_widgets.value("Calculation Type", NULL))) {
+        m_widgets.value("Calculation Type", nullptr))) {
     connect(combo, SIGNAL(currentIndexChanged(int)),
             SLOT(updateTitlePlaceholder()));
   }
   if (QComboBox *combo = qobject_cast<QComboBox*>(
-        m_widgets.value("Theory", NULL))) {
+        m_widgets.value("Theory", nullptr))) {
     connect(combo, SIGNAL(currentIndexChanged(int)),
             SLOT(updateTitlePlaceholder()));
   }
   if (QComboBox *combo = qobject_cast<QComboBox*>(
-        m_widgets.value("Basis", NULL))) {
+        m_widgets.value("Basis", nullptr))) {
     connect(combo, SIGNAL(currentIndexChanged(int)),
             SLOT(updateTitlePlaceholder()));
   }
@@ -818,13 +818,13 @@ void InputGeneratorWidget::addOptionRow(const QString &label,
 QWidget *InputGeneratorWidget::createOptionWidget(const QJsonValue &option)
 {
   if (!option.isObject())
-    return NULL;
+    return nullptr;
 
   QJsonObject obj = option.toObject();
 
   if (!obj.contains("type") ||
       !obj.value("type").isString())
-    return NULL;
+    return nullptr;
 
   QString type = obj["type"].toString();
 
@@ -842,7 +842,7 @@ QWidget *InputGeneratorWidget::createOptionWidget(const QJsonValue &option)
     return createBooleanWidget(obj);
 
   qDebug() << "Unrecognized option type:" << type;
-  return NULL;
+  return nullptr;
 }
 
 QWidget *InputGeneratorWidget::createStringListWidget(const QJsonObject &obj)
@@ -850,7 +850,7 @@ QWidget *InputGeneratorWidget::createStringListWidget(const QJsonObject &obj)
   if (!obj.contains("values") || !obj["values"].isArray()) {
     qDebug() << "QuantumInputDialog::createStringListWidget()"
                 "values missing, or not array!";
-    return NULL;
+    return nullptr;
   }
 
   QJsonArray valueArray = obj["values"].toArray();
@@ -998,7 +998,7 @@ void InputGeneratorWidget::setOption(const QString &name,
 void InputGeneratorWidget::setStringListOption(const QString &name,
                                                const QJsonValue &value)
 {
-  QComboBox *combo = qobject_cast<QComboBox*>(m_widgets.value(name, NULL));
+  QComboBox *combo = qobject_cast<QComboBox*>(m_widgets.value(name, nullptr));
   if (!combo) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
@@ -1034,7 +1034,7 @@ void InputGeneratorWidget::setStringListOption(const QString &name,
 void InputGeneratorWidget::setStringOption(const QString &name,
                                            const QJsonValue &value)
 {
-  QLineEdit *lineEdit = qobject_cast<QLineEdit*>(m_widgets.value(name, NULL));
+  QLineEdit *lineEdit = qobject_cast<QLineEdit*>(m_widgets.value(name, nullptr));
   if (!lineEdit) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
@@ -1057,7 +1057,7 @@ void InputGeneratorWidget::setFilePathOption(const QString &name,
                                              const QJsonValue &value)
 {
   QtGui::FileBrowseWidget *fileBrowse =
-      qobject_cast<QtGui::FileBrowseWidget*>(m_widgets.value(name, NULL));
+      qobject_cast<QtGui::FileBrowseWidget*>(m_widgets.value(name, nullptr));
   if (!fileBrowse) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
@@ -1079,7 +1079,7 @@ void InputGeneratorWidget::setFilePathOption(const QString &name,
 void InputGeneratorWidget::setIntegerOption(const QString &name,
                                             const QJsonValue &value)
 {
-  QSpinBox *spin = qobject_cast<QSpinBox*>(m_widgets.value(name, NULL));
+  QSpinBox *spin = qobject_cast<QSpinBox*>(m_widgets.value(name, nullptr));
   if (!spin) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
@@ -1102,7 +1102,7 @@ void InputGeneratorWidget::setIntegerOption(const QString &name,
 void InputGeneratorWidget::setBooleanOption(const QString &name,
                                             const QJsonValue &value)
 {
-  QCheckBox *checkBox = qobject_cast<QCheckBox*>(m_widgets.value(name, NULL));
+  QCheckBox *checkBox = qobject_cast<QCheckBox*>(m_widgets.value(name, nullptr));
   if (!checkBox) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
@@ -1124,7 +1124,7 @@ void InputGeneratorWidget::setBooleanOption(const QString &name,
 bool InputGeneratorWidget::optionString(const QString &option,
                                         QString &value) const
 {
-  QWidget *widget = m_widgets.value(option, NULL);
+  QWidget *widget = m_widgets.value(option, nullptr);
   bool retval = false;
   value.clear();
 
@@ -1158,7 +1158,7 @@ QJsonObject InputGeneratorWidget::collectOptions() const
   QJsonObject ret;
 
   foreach (QString label, m_widgets.keys()) {
-    QWidget *widget = m_widgets.value(label, NULL);
+    QWidget *widget = m_widgets.value(label, nullptr);
     if (QComboBox *combo = qobject_cast<QComboBox*>(widget)) {
       ret.insert(label, combo->currentText());
     }

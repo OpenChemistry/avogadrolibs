@@ -33,9 +33,9 @@ namespace QtPlugins {
 
 Spectra::Spectra(QObject *p) :
   ExtensionPlugin(p),
-  m_molecule(NULL),
-  m_dialog(NULL),
-  m_timer(NULL),
+  m_molecule(nullptr),
+  m_dialog(nullptr),
+  m_timer(nullptr),
   m_mode(0),
   m_amplitude(20)
 {

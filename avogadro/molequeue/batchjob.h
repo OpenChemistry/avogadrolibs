@@ -88,9 +88,9 @@ public:
    * Construct a new BatchJob object. If provided, ese scriptFilePath to setup
    * the input generator.
    */
-  explicit BatchJob(QObject *parent = NULL);
-  explicit BatchJob(const QString &scriptFilePath, QObject *parent = NULL);
-  ~BatchJob() AVO_OVERRIDE;
+  explicit BatchJob(QObject *parent = nullptr);
+  explicit BatchJob(const QString &scriptFilePath, QObject *parent = nullptr);
+  ~BatchJob() override;
 
   /**
    * Options for the input generator.

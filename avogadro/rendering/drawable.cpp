@@ -22,7 +22,7 @@ namespace Avogadro {
 namespace Rendering {
 
 Drawable::Drawable() :
-  m_parent(NULL),
+  m_parent(nullptr),
   m_visible(true),
   m_renderPass(OpaquePass)
 {

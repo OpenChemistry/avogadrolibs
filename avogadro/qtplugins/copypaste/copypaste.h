@@ -37,21 +37,21 @@ class CopyPaste : public QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit CopyPaste(QObject *parent_ = 0);
-  ~CopyPaste() AVO_OVERRIDE;
+  ~CopyPaste() override;
 
-  QString name() const AVO_OVERRIDE { return tr("Copy and paste"); }
+  QString name() const override { return tr("Copy and paste"); }
 
-  QString description() const AVO_OVERRIDE
+  QString description() const override
   {
     return tr("Interact with the clipboard.");
   }
 
-  QList<QAction *> actions() const AVO_OVERRIDE;
+  QList<QAction *> actions() const override;
 
-  QStringList menuPath(QAction *action) const AVO_OVERRIDE;
+  QStringList menuPath(QAction *action) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol) AVO_OVERRIDE;
+  void setMolecule(QtGui::Molecule *mol) override;
 
 private slots:
   bool copy(); // returns bool so cut can reuse implementation.

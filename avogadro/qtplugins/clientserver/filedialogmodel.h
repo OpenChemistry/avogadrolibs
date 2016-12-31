@@ -63,7 +63,7 @@ public:
     };
 
   FileDialogModel(ProtoCall::Runtime::vtkCommunicatorChannel* server,
-      QObject* Parent = NULL);
+      QObject* Parent = nullptr);
   ~FileDialogModel();
 
   /// Sets the path that the file dialog will display

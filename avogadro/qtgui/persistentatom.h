@@ -40,7 +40,7 @@ public:
    * @param m The molecule the persistent atom belongs to.
    * @param uniqueId The unique identifier for the atom.
    */
-  explicit PersistentAtom(MoleculeType *m = NULL, Index uniqueId = MaxIndex)
+  explicit PersistentAtom(MoleculeType *m = nullptr, Index uniqueId = MaxIndex)
     : m_molecule(m), m_uniqueId(uniqueId)
   {
   }
@@ -120,7 +120,7 @@ void PersistentAtom<Molecule_T>::set(const AtomType &a)
 template <typename Molecule_T>
 void PersistentAtom<Molecule_T>::reset()
 {
-  set(NULL, MaxIndex);
+  set(nullptr, MaxIndex);
 }
 
 template <typename Molecule_T>

@@ -42,18 +42,18 @@ class NetworkDatabases : public QtGui::ExtensionPlugin
 
 public:
   explicit NetworkDatabases(QObject *parent = 0);
-  ~NetworkDatabases() AVO_OVERRIDE;
+  ~NetworkDatabases() override;
 
-  QString name() const AVO_OVERRIDE { return tr("Network Databases"); }
+  QString name() const override { return tr("Network Databases"); }
 
-  QString description() const AVO_OVERRIDE
+  QString description() const override
   {
     return tr("Interact with online databases, query structures etc.");
   }
 
-  QList<QAction *> actions() const AVO_OVERRIDE;
+  QList<QAction *> actions() const override;
 
-  QStringList menuPath(QAction *) const AVO_OVERRIDE;
+  QStringList menuPath(QAction *) const override;
 
 public slots:
   void setMolecule(QtGui::Molecule *mol);

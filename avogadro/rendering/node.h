@@ -48,7 +48,7 @@ public:
 
   /**
    * @brief Get a pointer to the node's parent.
-   * @return Pointer to the parent node, NULL if no parent.
+   * @return Pointer to the parent node, nullptr if no parent.
    */
   const GroupNode * parent() const { return m_parent; }
   GroupNode * parent() { return m_parent; }
@@ -77,7 +77,7 @@ protected:
 
   /**
    * @brief Set the parent node for the node.
-   * @param parent The parent, a value of NULL denotes no parent node.
+   * @param parent The parent, a value of nullptr denotes no parent node.
    */
   void setParent(GroupNode *parent);
 

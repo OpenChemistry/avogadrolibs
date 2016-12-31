@@ -31,32 +31,32 @@ class AVOGADROQUANTUMIO_EXPORT MopacAux : public Io::FileFormat
 {
 public:
   MopacAux();
-  ~MopacAux() AVO_OVERRIDE;
+  ~MopacAux() override;
   void outputAll();
 
-  Operations supportedOperations() const AVO_OVERRIDE
+  Operations supportedOperations() const override
   {
     return Read | File | Stream | String;
   }
 
-  FileFormat * newInstance() const AVO_OVERRIDE { return new MopacAux; }
-  std::string identifier() const AVO_OVERRIDE { return "Avogadro: MOPAC"; }
-  std::string name() const AVO_OVERRIDE { return "MOPAC AUX"; }
-  std::string description() const AVO_OVERRIDE
+  FileFormat * newInstance() const override { return new MopacAux; }
+  std::string identifier() const override { return "Avogadro: MOPAC"; }
+  std::string name() const override { return "MOPAC AUX"; }
+  std::string description() const override
   {
     return "MOPAC AUX file format.";
   }
 
-  std::string specificationUrl() const AVO_OVERRIDE
+  std::string specificationUrl() const override
   {
     return "http://openmopac.net/manual/auxiliary.html";
   }
 
-  std::vector<std::string> fileExtensions() const AVO_OVERRIDE;
-  std::vector<std::string> mimeTypes() const AVO_OVERRIDE;
+  std::vector<std::string> fileExtensions() const override;
+  std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) AVO_OVERRIDE;
-  bool write(std::ostream &, const Core::Molecule &) AVO_OVERRIDE
+  bool read(std::istream &in, Core::Molecule &molecule) override;
+  bool write(std::ostream &, const Core::Molecule &) override
   {
     // Empty, as we do not write out MOPAC AUX files.
     return false;

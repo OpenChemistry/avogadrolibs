@@ -63,12 +63,12 @@ public:
   /**
    * Destructor.
    */
-  ~GaussianSet() AVO_OVERRIDE;
+  ~GaussianSet() override;
 
   /**
    * Clone.
    */
-  GaussianSet* clone() const AVO_OVERRIDE { return new GaussianSet(*this); }
+  GaussianSet* clone() const override { return new GaussianSet(*this); }
 
   /**
    * Enumeration of the Gaussian type orbitals.
@@ -144,7 +144,7 @@ public:
   /**
    * @return The number of molecular orbitals in the GaussianSet.
    */
-  unsigned int molecularOrbitalCount(ElectronType type = Paired) AVO_OVERRIDE;
+  unsigned int molecularOrbitalCount(ElectronType type = Paired) override;
 
   /**
    * Debug routine, outputs all of the data in the GaussianSet.
@@ -156,7 +156,7 @@ public:
    * @return True of the basis set is valid, false otherwise.
    * Default is true, if false then the basis set is likely unusable.
    */
-  bool isValid() AVO_OVERRIDE;
+  bool isValid() override;
 
   /**
    * Set the SCF type for the object.

@@ -22,7 +22,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 VibrationModel::VibrationModel(QObject *p)
-  : QAbstractItemModel(p), m_molecule(NULL)
+  : QAbstractItemModel(p), m_molecule(nullptr)
 {
 }
 

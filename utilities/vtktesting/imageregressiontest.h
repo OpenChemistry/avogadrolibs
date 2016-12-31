@@ -181,7 +181,7 @@ inline ImageRegressionTest::ImageRegressionTest(int argc, char *argv[])
     else if (arg == "--name" && i + 1 < argc)
       m_name = argv[++i];
     else if (arg == "--threshold" && i + 1 < argc)
-      m_threshold = strtod(argv[++i], NULL);
+      m_threshold = strtod(argv[++i], nullptr);
   }
   if (!m_baselinePath.empty() && !m_temporaryPath.empty() && !m_name.empty())
     m_valid = true;

@@ -78,7 +78,7 @@ public:
   MergeUndoCommand(RWMolecule &m) : UndoCommand(m), m_canMerge(false) {}
   void setCanMerge(bool merge) { m_canMerge = merge; }
   bool canMerge() const { return m_canMerge; }
-  int id() const AVO_OVERRIDE { return m_canMerge ? Id : -1; }
+  int id() const override { return m_canMerge ? Id : -1; }
 };
 } // end anon namespace
 
@@ -104,7 +104,7 @@ public:
     : UndoCommand(m), m_atomicNumber(aN), m_usingPositions(usingPositions),
       m_atomId(atomId), m_uniqueId(uid) {}
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     assert(atomicNumbers().size() == m_atomId);
     atomicNumbers().push_back(m_atomicNumber);
@@ -115,7 +115,7 @@ public:
     atomUniqueIds()[m_uniqueId] = m_atomId;
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     assert(atomicNumbers().size() == m_atomId + 1);
     atomicNumbers().pop_back();
@@ -168,7 +168,7 @@ public:
     : UndoCommand(m), m_atomId(atomId), m_atomUid(uid), m_atomicNumber(aN),
       m_position3d(pos) {}
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     assert(m_atomUid < atomUniqueIds().size());
     atomUniqueIds()[m_atomUid] = MaxIndex;
@@ -203,7 +203,7 @@ public:
     atomicNumbers().resize(movedId, 0);
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     // Append removed atom's info to the end of the arrays:
     if (positions3d().size() == atomicNumbers().size())
@@ -319,12 +319,12 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     atomicNumbers() = m_newAtomicNumbers;
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     atomicNumbers() = m_oldAtomicNumbers;
   }
@@ -360,12 +360,12 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     atomicNumbers()[m_atomId] = m_newAtomicNumber;
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     atomicNumbers()[m_atomId] = m_oldAtomicNumber;
   }
@@ -399,12 +399,12 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     positions3d() = m_newPositions3d;
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     positions3d() = m_oldPositions3d;
   }
@@ -453,13 +453,13 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     for (size_t i = 0; i < m_atomIds.size(); ++i)
       positions3d()[m_atomIds[i]] = m_newPosition3ds[i];
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     for (size_t i = 0; i < m_atomIds.size(); ++i)
       positions3d()[m_atomIds[i]] = m_oldPosition3ds[i];
@@ -551,12 +551,12 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     hybridizations()[m_atomId] = m_newHybridization;
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     hybridizations()[m_atomId] = m_oldHybridization;
   }
@@ -592,12 +592,12 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     formalCharges()[m_atomId] = m_newCharge;
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     formalCharges()[m_atomId] = m_oldCharge;
   }
@@ -631,7 +631,7 @@ public:
     : UndoCommand(m), m_bondOrder(order), m_bondPair(bondPair),
       m_bondId(bondId), m_uniqueId(uid) {}
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     assert(bondOrders().size() == m_bondId);
     assert(bondPairs().size() == m_bondId);
@@ -642,7 +642,7 @@ public:
     bondUniqueIds()[m_uniqueId] = m_bondId;
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     assert(bondOrders().size() == m_bondId + 1);
     assert(bondPairs().size() == m_bondId + 1);
@@ -700,7 +700,7 @@ public:
     : UndoCommand(m), m_bondId(bondId), m_bondUid(bondUid), m_bondPair(bondPair),
       m_bondOrder(bondOrder) {}
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     // Clear removed bond's UID
     bondUniqueIds()[m_bondUid] = MaxIndex;
@@ -720,7 +720,7 @@ public:
     bondPairs().pop_back();
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     // Push the removed bond's info to the end of the arrays:
     bondOrders().push_back(m_bondOrder);
@@ -785,12 +785,12 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     bondOrders() = m_newBondOrders;
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     bondOrders() = m_oldBondOrders;
   }
@@ -826,12 +826,12 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     bondOrders()[m_bondId] = m_newBondOrder;
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     bondOrders()[m_bondId] = m_oldBondOrder;
   }
@@ -879,12 +879,12 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     bondPairs() = m_newBondPairs;
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     bondPairs() = m_oldBondPairs;
   }
@@ -930,12 +930,12 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     bondPairs()[m_bondId] = m_newBondPair;
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     bondPairs()[m_bondId] = m_oldBondPair;
   }
@@ -947,7 +947,7 @@ bool RWMolecule::setBondPair(Index bondId, const std::pair<Index, Index> &pair)
   if (bondId >= bondCount() || pair.first == pair.second)
     return false;
 
-  SetBondPairCommand *comm = NULL;
+  SetBondPairCommand *comm = nullptr;
   if (pair.first < pair.second) {
     comm = new SetBondPairCommand(*this, bondId, m_molecule.m_bondPairs[bondId],
                                   pair);
@@ -971,14 +971,14 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     m_mol.molecule().setUnitCell(new UnitCell(m_newUnitCell));
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
-    m_mol.molecule().setUnitCell(NULL);
+    m_mol.molecule().setUnitCell(nullptr);
   }
 };
 } // end anon namespace
@@ -1015,12 +1015,12 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
-    m_mol.molecule().setUnitCell(NULL);
+    m_mol.molecule().setUnitCell(nullptr);
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     m_mol.molecule().setUnitCell(new UnitCell(m_oldUnitCell));
   }
@@ -1039,7 +1039,7 @@ void RWMolecule::removeUnitCell()
   comm->setText(tr("Remove Unit Cell"));
   m_undoStack.push(comm);
 
-  m_molecule.setUnitCell(NULL);
+  m_molecule.setUnitCell(nullptr);
   emitChanged(Molecule::UnitCell | Molecule::Removed);
 }
 
@@ -1056,12 +1056,12 @@ public:
   {
   }
 
-  void redo() AVO_OVERRIDE
+  void redo() override
   {
     m_mol.molecule() = m_newMolecule;
   }
 
-  void undo() AVO_OVERRIDE
+  void undo() override
   {
     m_mol.molecule() = m_oldMolecule;
   }

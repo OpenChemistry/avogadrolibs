@@ -33,7 +33,7 @@ class FileDialogFilter :
   Q_OBJECT
 
 public:
-  FileDialogFilter(FileDialogModel* sourceModel, QObject* Parent = NULL);
+  FileDialogFilter(FileDialogModel* sourceModel, QObject* Parent = nullptr);
   ~FileDialogFilter();
 
 public slots:

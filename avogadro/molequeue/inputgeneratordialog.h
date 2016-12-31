@@ -48,7 +48,7 @@ public:
   explicit InputGeneratorDialog(QWidget *parent_ = 0);
   explicit InputGeneratorDialog(const QString &scriptFileName,
                                 QWidget *parent_ = 0);
-  ~InputGeneratorDialog() AVO_OVERRIDE;
+  ~InputGeneratorDialog() override;
 
   /**
    * Use the input generator script pointed to by scriptFilePath.

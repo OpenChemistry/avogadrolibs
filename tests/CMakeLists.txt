@@ -9,13 +9,6 @@ include_directories(SYSTEM
   ${GTEST_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR})
 
-# Check if we need extra include directories for C++11 features.
-if(AvogadroLibs_NEEDS_BOOST)
-  include_directories(SYSTEM
-    ${AvogadroLibs_MUTEX_INCLUDE_DIRS}
-    ${AvogadroLibs_MEMORY_INCLUDE_DIRS})
-endif()
-
 include(CheckIncludeFileCXX)
 include(CheckCXXSymbolExists)
 check_include_file_cxx("gtest/gtest.h" HAVE_GTEST_HPP)

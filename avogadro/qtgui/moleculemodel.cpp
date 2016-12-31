@@ -25,7 +25,7 @@ namespace Avogadro {
 namespace QtGui {
 
 MoleculeModel::MoleculeModel(QObject *p)
-  : QAbstractItemModel(p), m_activeMolecule(NULL)
+  : QAbstractItemModel(p), m_activeMolecule(nullptr)
 {
 }
 

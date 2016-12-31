@@ -45,7 +45,7 @@ public:
   TextLabelBase& operator=(TextLabelBase other);
   friend void swap(TextLabelBase &lhs, TextLabelBase &rhs);
 
-  void render(const Camera &camera) AVO_OVERRIDE;
+  void render(const Camera &camera) override;
 
   /**
    * Render the string to the internal texture buffer.

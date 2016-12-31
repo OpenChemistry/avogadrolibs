@@ -119,7 +119,7 @@ private:
 
 template <class Molecule_T>
 BondTemplate<Molecule_T>::BondTemplate()
-  : m_molecule(NULL),
+  : m_molecule(nullptr),
     m_index(MaxIndex)
 {
 }

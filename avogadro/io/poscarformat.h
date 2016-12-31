@@ -32,28 +32,28 @@ class AVOGADROIO_EXPORT PoscarFormat : public FileFormat
 {
 public:
   PoscarFormat();
-  ~PoscarFormat() AVO_OVERRIDE;
+  ~PoscarFormat() override;
 
-  Operations supportedOperations() const AVO_OVERRIDE
+  Operations supportedOperations() const override
   {
     return ReadWrite | File | Stream | String;
   }
 
-  FileFormat * newInstance() const AVO_OVERRIDE { return new PoscarFormat; }
-  std::string identifier() const AVO_OVERRIDE { return "Avogadro: POSCAR"; }
-  std::string name() const AVO_OVERRIDE { return "POSCAR"; }
-  std::string description() const AVO_OVERRIDE
+  FileFormat * newInstance() const override { return new PoscarFormat; }
+  std::string identifier() const override { return "Avogadro: POSCAR"; }
+  std::string name() const override { return "POSCAR"; }
+  std::string description() const override
   {
     return "Format used by VASP that contains crystal cell and atom info.";
   }
 
-  std::string specificationUrl() const AVO_OVERRIDE
+  std::string specificationUrl() const override
   {
     return "http://cms.mpi.univie.ac.at/vasp/guide/node59.html";
   }
 
-  std::vector<std::string> fileExtensions() const AVO_OVERRIDE;
-  std::vector<std::string> mimeTypes() const AVO_OVERRIDE;
+  std::vector<std::string> fileExtensions() const override;
+  std::vector<std::string> mimeTypes() const override;
 
   bool read(std::istream &inStream, Core::Molecule &mol);
   bool write(std::ostream &outStream, const Core::Molecule &mol);

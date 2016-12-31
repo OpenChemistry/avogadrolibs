@@ -39,32 +39,32 @@ class AVOGADROIO_EXPORT CjsonFormat : public FileFormat
 {
 public:
   CjsonFormat();
-  ~CjsonFormat() AVO_OVERRIDE;
+  ~CjsonFormat() override;
 
-  Operations supportedOperations() const AVO_OVERRIDE
+  Operations supportedOperations() const override
   {
     return ReadWrite | File | Stream | String;
   }
 
-  FileFormat * newInstance() const AVO_OVERRIDE { return new CjsonFormat; }
-  std::string identifier() const AVO_OVERRIDE { return "Avogadro: CJSON"; }
-  std::string name() const AVO_OVERRIDE { return "Chemical JSON"; }
-  std::string description() const AVO_OVERRIDE
+  FileFormat * newInstance() const override { return new CjsonFormat; }
+  std::string identifier() const override { return "Avogadro: CJSON"; }
+  std::string name() const override { return "Chemical JSON"; }
+  std::string description() const override
   {
     return "CJSON format is a lightweight intermediate format used to exchange "
         "information between Avogadro and other data parsing applications";
   }
 
-  std::string specificationUrl() const AVO_OVERRIDE
+  std::string specificationUrl() const override
   {
     return "http://wiki.openchemistry.org/Chemical_JSON";
   }
 
-  std::vector<std::string> fileExtensions() const AVO_OVERRIDE;
-  std::vector<std::string> mimeTypes() const AVO_OVERRIDE;
+  std::vector<std::string> fileExtensions() const override;
+  std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) AVO_OVERRIDE;
-  bool write(std::ostream &out, const Core::Molecule &molecule) AVO_OVERRIDE;
+  bool read(std::istream &in, Core::Molecule &molecule) override;
+  bool write(std::ostream &out, const Core::Molecule &molecule) override;
 
 private:
   bool testEmpty(Json::Value &value,const std::string &key,

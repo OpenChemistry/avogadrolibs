@@ -7,7 +7,6 @@ set(tests
   Bond
   CoordinateBlockGenerator
   CoordinateSet
-  CPP11
   Cube
   Eigen
   Element
@@ -36,12 +35,6 @@ message(STATUS "Test source files: ${testSrcs}")
 add_executable(AvogadroTests ${testSrcs})
 target_link_libraries(AvogadroTests AvogadroCore
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
-# Additional libraries and compiler definitions necessary when using Boost to
-# replace C++11.
-if(AvogadroLibs_NEEDS_BOOST)
-  target_link_libraries(AvogadroTests ${AvogadroLibs_MUTEX_BOOST_LIBRARIES})
-  add_definitions(${AvogadroLibs_BOOST_DEFINITIONS})
-endif()
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.

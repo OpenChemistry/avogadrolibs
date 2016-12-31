@@ -33,31 +33,31 @@ class AVOGADROIO_EXPORT GromacsFormat : public FileFormat
 {
 public:
   GromacsFormat();
-  ~GromacsFormat() AVO_OVERRIDE;
+  ~GromacsFormat() override;
 
-  Operations supportedOperations() const AVO_OVERRIDE
+  Operations supportedOperations() const override
   {
     return Read | File | Stream | String;
   }
 
-  FileFormat * newInstance() const AVO_OVERRIDE { return new GromacsFormat; }
-  std::string identifier() const AVO_OVERRIDE { return "Avogadro: GROMACS"; }
-  std::string name() const AVO_OVERRIDE { return "GROMACS"; }
-  std::string description() const AVO_OVERRIDE
+  FileFormat * newInstance() const override { return new GromacsFormat; }
+  std::string identifier() const override { return "Avogadro: GROMACS"; }
+  std::string name() const override { return "GROMACS"; }
+  std::string description() const override
   {
     return "Read GROMACS .gro files.";
   }
 
-  std::string specificationUrl() const AVO_OVERRIDE
+  std::string specificationUrl() const override
   {
     return "http://www.gromacs.org/Documentation/File_Formats/.gro_File";
   }
 
-  std::vector<std::string> fileExtensions() const AVO_OVERRIDE;
-  std::vector<std::string> mimeTypes() const AVO_OVERRIDE;
+  std::vector<std::string> fileExtensions() const override;
+  std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) AVO_OVERRIDE;
-  bool write(std::ostream &out, const Core::Molecule &molecule) AVO_OVERRIDE;
+  bool read(std::istream &in, Core::Molecule &molecule) override;
+  bool write(std::ostream &out, const Core::Molecule &molecule) override;
 };
 
 } // namespace Io

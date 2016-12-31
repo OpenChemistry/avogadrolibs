@@ -37,9 +37,9 @@ using Core::Mesh;
 
 Apbs::Apbs(QObject *parent_)
   : QtGui::ExtensionPlugin(parent_),
-    m_molecule(NULL),
-    m_progressDialog(NULL),
-    m_dialog(NULL)
+    m_molecule(nullptr),
+    m_progressDialog(nullptr),
+    m_dialog(nullptr)
 {
   QAction *action = new QAction(this);
   action->setText(tr("Run APBS"));

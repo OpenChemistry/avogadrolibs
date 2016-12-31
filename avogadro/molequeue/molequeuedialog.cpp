@@ -73,7 +73,7 @@ MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
     if (options & WaitForSubmissionResponse
         || dlg.widget().openOutput()) {
       QProgressDialog progress;
-      progress.setCancelButton(NULL);
+      progress.setCancelButton(nullptr);
       progress.setLabelText(tr("Submitting job to MoleQueue..."));
       progress.setRange(0, 0);
       progress.setValue(0);
@@ -90,9 +90,9 @@ MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
       }
 
       if (dlg.widget().submissionSuccess()) {
-        if (submissionRequestId != NULL)
+        if (submissionRequestId != nullptr)
           *submissionRequestId = dlg.widget().requestId();
-        if (moleQueueId != NULL)
+        if (moleQueueId != nullptr)
           *moleQueueId = dlg.widget().moleQueueId();
 
         // Do we need to wait for the job to finish?
@@ -123,7 +123,7 @@ MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
 
         // Update progress bar:
         progress.setLabelText(tr("Fetching completed job information..."));
-        progress.setCancelButton(NULL);
+        progress.setCancelButton(nullptr);
 
         // Job completed -- overwrite job template with updated job details.
         connect(&dlg.widget(), SIGNAL(jobUpdated(MoleQueue::JobObject)),
@@ -153,7 +153,7 @@ MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
     }
     else {
       if (requestId >= 0) {
-        if (submissionRequestId != NULL)
+        if (submissionRequestId != nullptr)
           *submissionRequestId = requestId;
         return SubmissionAttempted;
       }

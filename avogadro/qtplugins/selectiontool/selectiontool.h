@@ -39,25 +39,25 @@ class SelectionTool : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit SelectionTool(QObject *parent_ = NULL);
+  explicit SelectionTool(QObject *parent_ = nullptr);
   ~SelectionTool();
 
-  QString name() const AVO_OVERRIDE { return tr("Selection tool"); }
-  QString description() const AVO_OVERRIDE { return tr("Selection tool"); }
-  unsigned char priority() const AVO_OVERRIDE { return 25; }
-  QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
-  QWidget * toolWidget() const AVO_OVERRIDE;
+  QString name() const override { return tr("Selection tool"); }
+  QString description() const override { return tr("Selection tool"); }
+  unsigned char priority() const override { return 25; }
+  QAction * activateAction() const override { return m_activateAction; }
+  QWidget * toolWidget() const override;
 
-  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE;
-  void setGLRenderer(Rendering::GLRenderer *renderer) AVO_OVERRIDE;
+  void setMolecule(QtGui::Molecule *) override;
+  void setGLRenderer(Rendering::GLRenderer *renderer) override;
 
-  QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * mouseMoveEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * keyPressEvent(QKeyEvent *e) AVO_OVERRIDE;
+  QUndoCommand * mousePressEvent(QMouseEvent *e) override;
+  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) override;
+  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) override;
+  QUndoCommand * mouseMoveEvent(QMouseEvent *e) override;
+  QUndoCommand * keyPressEvent(QKeyEvent *e) override;
 
-  void draw(Rendering::GroupNode &node) AVO_OVERRIDE;
+  void draw(Rendering::GroupNode &node) override;
 
 private:
   bool addAtom(const Rendering::Identifier &atom);

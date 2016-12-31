@@ -45,7 +45,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueDialog : public QDialog
   Q_OBJECT
 public:
   explicit MoleQueueDialog(QWidget *parent_ = 0);
-  ~MoleQueueDialog() AVO_OVERRIDE;
+  ~MoleQueueDialog() override;
 
   /**
    * @brief Options controlling job submission behavior in the submitJob method.
@@ -125,12 +125,12 @@ public:
    * successfully, this will be overwritten with the current job details, and
    * JobFinished is returned.
    * @param options Bitwise combination of flags that control dialog behavior.
-   * @param moleQueueId If not NULL, the variable referenced by this pointer
+   * @param moleQueueId If not nullptr, the variable referenced by this pointer
    * will be overwritten by the MoleQueue Id of the submitted job when the
    * option WaitForSubmissionResponse is set.
    * If an error occurs or the required option is not set, this value will be
    * set to MoleQueueWidget::InvalidMoleQueueId.
-   * @param submissionRequestId If not NULL, the variable referenced by this
+   * @param submissionRequestId If not nullptr, the variable referenced by this
    * pointer will be overwritten by the submitJob JSON-RPC 2.0 request id.
    * If an error occurs, this value will be set to -1.
    * @return A SubmitStatus enum value indicating the result of the submission.
@@ -138,8 +138,8 @@ public:
   static SubmitStatus submitJob(QWidget *parent_, const QString &caption,
                                 ::MoleQueue::JobObject &jobTemplate,
                                 SubmitOptions options,
-                                unsigned int *moleQueueId = NULL,
-                                int *submissionRequestId = NULL);
+                                unsigned int *moleQueueId = nullptr,
+                                int *submissionRequestId = nullptr);
 
   /**
    * Show a job configuration dialog and collect the user's selected options.

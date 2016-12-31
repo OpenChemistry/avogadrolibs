@@ -1073,7 +1073,7 @@ namespace QtPlugins {
       m_nyh=nyh;
 
       yh = ( double ** ) malloc( ( 1 + lenyh ) * sizeof( *yh ) );
-      if ( yh == NULL ) {
+      if ( yh == nullptr ) {
         qDebug( "lsoda -- insufficient memory for your problem" );
         terminate( istate );
         return;
@@ -1082,7 +1082,7 @@ namespace QtPlugins {
         yh[i] = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
 
       wm = ( double ** ) malloc( ( 1 + nyh ) * sizeof( *wm ) );
-      if ( wm == NULL ) {
+      if ( wm == nullptr ) {
         free( yh );
         qDebug( "lsoda -- insufficient memory for your problem" );
         terminate( istate );
@@ -1092,7 +1092,7 @@ namespace QtPlugins {
         wm[i] = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
 
       ewt = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
-      if ( ewt == NULL ) {
+      if ( ewt == nullptr ) {
         free( yh );
         free( wm );
         qDebug( "lsoda -- insufficient memory for your problem" );
@@ -1101,7 +1101,7 @@ namespace QtPlugins {
       }
 
       savf = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
-      if ( savf == NULL ) {
+      if ( savf == nullptr ) {
         free( yh );
         free( wm );
         free( ewt );
@@ -1111,7 +1111,7 @@ namespace QtPlugins {
       }
 
       acor = ( double * ) malloc( ( 1 + nyh ) * sizeof( double ) );
-      if ( acor == NULL ) {
+      if ( acor == nullptr ) {
         free( yh );
         free( wm );
         free( ewt );
@@ -1122,7 +1122,7 @@ namespace QtPlugins {
       }
 
       ipvt = ( int * ) malloc( ( 1 + nyh ) * sizeof( int ) );
-      if ( ipvt == NULL ) {
+      if ( ipvt == nullptr ) {
         free( yh );
         free( wm );
         free( ewt );

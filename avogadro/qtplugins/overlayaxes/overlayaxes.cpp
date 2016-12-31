@@ -43,9 +43,9 @@ class CustomMesh : public MeshGeometry
 {
 public:
   CustomMesh() { setRenderPass(Avogadro::Rendering::Overlay3DPass); }
-  ~CustomMesh() AVO_OVERRIDE {}
+  ~CustomMesh() override {}
 
-  void render(const Camera &camera) AVO_OVERRIDE;
+  void render(const Camera &camera) override;
 };
 
 void CustomMesh::render(const Camera &camera)

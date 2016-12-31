@@ -88,7 +88,7 @@ public:
    * Add an atom with @p atomicNumber to the molecule.
    * @return The atom created.
    */
-  AtomType addAtom(unsigned char atomicNumber) AVO_OVERRIDE;
+  AtomType addAtom(unsigned char atomicNumber) override;
 
   /**
    * Add an atom with @p atomicNumber and @p uniqueId to the molecule.
@@ -102,7 +102,7 @@ public:
    * @param index The index of the atom to be removed.
    * @return True on success, false if the atom was not found.
    */
-  bool removeAtom(Index index) AVO_OVERRIDE;
+  bool removeAtom(Index index) override;
 
   /**
    * @brief Remove the specified atom from the molecule.
@@ -110,7 +110,7 @@ public:
    * @return True on success, false if the atom was not found.
    * @overload
    */
-  bool removeAtom(const AtomType &atom) AVO_OVERRIDE;
+  bool removeAtom(const AtomType &atom) override;
 
   /**
    * @brief Get the atom referenced by the @p uniqueId, the isValid method
@@ -142,7 +142,7 @@ public:
    * @return The bond created.
    */
   BondType addBond(const AtomType &a, const AtomType &b,
-                   unsigned char bondOrder = 1) AVO_OVERRIDE;
+                   unsigned char bondOrder = 1) override;
 
   /**
    * @brief Add a bond between the specified atoms.
@@ -152,7 +152,7 @@ public:
    * @return The bond created.
    */
   BondType addBond(Index atomId1, Index atomId2,
-                   unsigned char bondOrder = 1) AVO_OVERRIDE;
+                   unsigned char bondOrder = 1) override;
 
   /**
    * @brief Add a bond between the specified atoms.
@@ -171,7 +171,7 @@ public:
    * @param index The index of the bond to be removed.
    * @return True on success, false if the bond was not found.
    */
-  bool removeBond(Index index) AVO_OVERRIDE;
+  bool removeBond(Index index) override;
 
   /**
    * @brief Remove the specified bond.
@@ -179,7 +179,7 @@ public:
    * @return True on success, false if the bond was not found.
    * @overload
    */
-  bool removeBond(const BondType &bond) AVO_OVERRIDE;
+  bool removeBond(const BondType &bond) override;
 
   /**
    * @brief Remove the specified bond.
@@ -189,8 +189,8 @@ public:
    * @overload
    * @{
    */
-  bool removeBond(const AtomType &atom1, const AtomType &atom2) AVO_OVERRIDE;
-  bool removeBond(Index atom1, Index atom2) AVO_OVERRIDE;
+  bool removeBond(const AtomType &atom1, const AtomType &atom2) override;
+  bool removeBond(Index atom1, Index atom2) override;
   /** @} */
 
   /**

@@ -41,7 +41,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueWidget : public QWidget
   Q_OBJECT
 public:
   explicit MoleQueueWidget(QWidget *parent_ = 0);
-  ~MoleQueueWidget() AVO_OVERRIDE;
+  ~MoleQueueWidget() override;
 
   /**
    * A "template" MoleQueue::JobObject that is used to initialize the GUI.

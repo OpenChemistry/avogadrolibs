@@ -39,7 +39,7 @@ class AVOGADRORENDERING_EXPORT POVRayVisitor : public Visitor
 {
 public:
   POVRayVisitor(const Camera &camera);
-  ~POVRayVisitor() AVO_OVERRIDE;
+  ~POVRayVisitor() override;
 
   void begin();
   void end();
@@ -47,17 +47,17 @@ public:
   /**
    * The overloaded visit functions, the base versions of which do nothing.
    */
-  void visit(Node &) AVO_OVERRIDE { return; }
-  void visit(GroupNode &) AVO_OVERRIDE { return; }
-  void visit(GeometryNode &) AVO_OVERRIDE { return; }
-  void visit(Drawable &) AVO_OVERRIDE;
-  void visit(SphereGeometry &) AVO_OVERRIDE;
-  void visit(AmbientOcclusionSphereGeometry &) AVO_OVERRIDE;
-  void visit(CylinderGeometry &) AVO_OVERRIDE;
-  void visit(MeshGeometry &) AVO_OVERRIDE;
-  void visit(TextLabel2D &) AVO_OVERRIDE { return; }
-  void visit(TextLabel3D &) AVO_OVERRIDE { return; }
-  void visit(LineStripGeometry &geometry) AVO_OVERRIDE;
+  void visit(Node &) override { return; }
+  void visit(GroupNode &) override { return; }
+  void visit(GeometryNode &) override { return; }
+  void visit(Drawable &) override;
+  void visit(SphereGeometry &) override;
+  void visit(AmbientOcclusionSphereGeometry &) override;
+  void visit(CylinderGeometry &) override;
+  void visit(MeshGeometry &) override;
+  void visit(TextLabel2D &) override { return; }
+  void visit(TextLabel3D &) override { return; }
+  void visit(LineStripGeometry &geometry) override;
 
   void setCamera(const Camera &c) { m_camera = c; }
   Camera camera() const { return m_camera; }

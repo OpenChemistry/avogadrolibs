@@ -342,7 +342,7 @@ bool CrystalTools::niggliReduce(Molecule &molecule, Options opts)
     // Use exact comparisons for steps 3 and 4
     else { // either step 3 or 4 should run
       // Update change of basis matrix:
-      Real *p = NULL;
+      Real *p = nullptr;
       Real i = 1;
       Real j = 1;
       Real k = 1;

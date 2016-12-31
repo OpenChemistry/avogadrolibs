@@ -211,7 +211,7 @@ bool ShaderProgram::link()
     glGetShaderiv(static_cast<GLuint>(m_handle), GL_INFO_LOG_LENGTH, &length);
     if (length > 1) {
       char *logMessage = new char[length];
-      glGetShaderInfoLog(static_cast<GLuint>(m_handle), length, NULL, logMessage);
+      glGetShaderInfoLog(static_cast<GLuint>(m_handle), length, nullptr, logMessage);
       m_error = logMessage;
       delete[] logMessage;
     }
@@ -259,7 +259,7 @@ bool ShaderProgram::disableAttributeArray(const std::string &name)
   return true;
 }
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
+#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
 bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
                                       size_t stride, Type elementType,

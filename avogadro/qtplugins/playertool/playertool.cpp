@@ -46,11 +46,11 @@ using QtGui::Molecule;
 PlayerTool::PlayerTool(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
     m_activateAction(new QAction(this)),
-    m_molecule(NULL),
-    m_renderer(NULL),
+    m_molecule(nullptr),
+    m_renderer(nullptr),
     m_currentFrame(0),
-    m_toolWidget(NULL),
-    m_info(NULL)
+    m_toolWidget(nullptr),
+    m_info(nullptr)
 {
   m_activateAction->setText(tr("Player"));
   m_activateAction->setIcon(QIcon(":/icons/player.png"));
@@ -120,17 +120,17 @@ QWidget * PlayerTool::toolWidget() const
 
 QUndoCommand * PlayerTool::mousePressEvent(QMouseEvent *)
 {
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * PlayerTool::mouseReleaseEvent(QMouseEvent *)
 {
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *PlayerTool::mouseDoubleClickEvent(QMouseEvent *)
 {
-  return NULL;
+  return nullptr;
 }
 
 void PlayerTool::setActiveWidget(QWidget *widget)

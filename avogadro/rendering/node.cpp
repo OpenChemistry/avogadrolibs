@@ -19,7 +19,7 @@
 namespace Avogadro {
 namespace Rendering {
 
-Node::Node() : m_parent(NULL), m_visible(true)
+Node::Node() : m_parent(nullptr), m_visible(true)
 {
 }
 

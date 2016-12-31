@@ -30,37 +30,37 @@ ToolPlugin::~ToolPlugin()
 
 QUndoCommand *ToolPlugin::mousePressEvent(QMouseEvent *)
 {
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *ToolPlugin::mouseReleaseEvent(QMouseEvent *)
 {
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *ToolPlugin::mouseMoveEvent(QMouseEvent *)
 {
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *ToolPlugin::mouseDoubleClickEvent(QMouseEvent *)
 {
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *ToolPlugin::wheelEvent(QWheelEvent *)
 {
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *ToolPlugin::keyPressEvent(QKeyEvent *)
 {
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *ToolPlugin::keyReleaseEvent(QKeyEvent *)
 {
-  return NULL;
+  return nullptr;
 }
 
 void ToolPlugin::draw(Rendering::GroupNode &)

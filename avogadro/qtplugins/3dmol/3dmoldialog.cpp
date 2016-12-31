@@ -32,7 +32,7 @@ namespace QtPlugins {
 
 ThreeDMolDialog::ThreeDMolDialog(QtGui::Molecule *mol, QWidget *parent_)
   : QDialog(parent_),
-    m_molecule(NULL),
+    m_molecule(nullptr),
     m_ui(new Ui::ThreeDMolDialog)
 {
   m_ui->setupUi(this);
@@ -109,7 +109,7 @@ void ThreeDMolDialog::updateTextBrowser()
 
 void ThreeDMolDialog::moleculeDestroyed()
 {
-  m_molecule = NULL;
+  m_molecule = nullptr;
   updateLabels();
 }
 

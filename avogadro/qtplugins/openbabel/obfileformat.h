@@ -38,7 +38,7 @@ public:
                bool fileOnly_ = false);
   ~OBFileFormat();
 
-  Operations supportedOperations() const AVO_OVERRIDE
+  Operations supportedOperations() const override
   {
     return m_rwFlags | File | (m_fileOnly ? None : Stream | String);
   }
@@ -50,19 +50,19 @@ public:
 
   FileFormat *newInstance() const;
 
-  std::string description() const AVO_OVERRIDE { return m_description; }
-  std::string identifier() const AVO_OVERRIDE { return m_identifier; }
-  std::string name() const AVO_OVERRIDE { return m_name; }
-  std::string specificationUrl() const AVO_OVERRIDE
+  std::string description() const override { return m_description; }
+  std::string identifier() const override { return m_identifier; }
+  std::string name() const override { return m_name; }
+  std::string specificationUrl() const override
   {
     return m_specificationUrl;
   }
 
-  std::vector<std::string> fileExtensions() const AVO_OVERRIDE
+  std::vector<std::string> fileExtensions() const override
   {
     return m_fileExtensions;
   }
-  std::vector<std::string> mimeTypes() const AVO_OVERRIDE
+  std::vector<std::string> mimeTypes() const override
   {
     return m_mimeTypes;
   }

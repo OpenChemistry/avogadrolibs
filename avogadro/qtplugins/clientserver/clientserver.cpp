@@ -46,8 +46,8 @@ namespace QtPlugins {
 
 ClientServer::ClientServer(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_dialog(NULL), m_openAction(new QAction(this)), m_settingsAction(new QAction(this)),
-  m_molecule(NULL), m_controller(NULL), m_communicator(NULL), m_channel(NULL)
+  m_dialog(nullptr), m_openAction(new QAction(this)), m_settingsAction(new QAction(this)),
+  m_molecule(nullptr), m_controller(nullptr), m_communicator(nullptr), m_channel(nullptr)
 {
   m_openAction->setEnabled(true);
   m_openAction->setText("Open Molecule");
@@ -88,7 +88,7 @@ void ClientServer::disconnect() {
     m_communicator->CloseConnection();
 
   delete m_channel;
-  m_channel = NULL;
+  m_channel = nullptr;
   if (m_communicator)
     m_communicator->Delete();
   if (m_controller)
@@ -109,7 +109,7 @@ void ClientServer::select() {
 
 bool ClientServer::isConnected()
 {
-  return m_channel != NULL;
+  return m_channel != nullptr;
 }
 
 bool ClientServer::connectToServer(const QString &host, int port) {
@@ -271,7 +271,7 @@ void ClientServer::handleFileFormatsResponse(FileFormats *response)
   qDebug() << filters.join(";;");
 
   QString dir = settings.value(lastOpenDirSettingPath()).toString();
-  FileDialog *remoteFileDialog = new FileDialog(m_channel, NULL,
+  FileDialog *remoteFileDialog = new FileDialog(m_channel, nullptr,
       QString("Remote File Dialog"), dir, filters.join(";;"));
 
   connect(remoteFileDialog, SIGNAL(accepted()), this, SLOT(onAccepted()));

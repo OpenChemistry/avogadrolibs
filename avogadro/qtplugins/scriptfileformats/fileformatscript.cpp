@@ -153,7 +153,7 @@ FileFormatScript::createFileFormat(FileFormatScript::Format fmt)
     return new Io::XyzFormat;
   default:
   case NotUsed:
-    return NULL;
+    return nullptr;
   }
 }
 

@@ -49,7 +49,7 @@ public:
   /**
    * Accept a visit from our friendly visitor.
    */
-  void accept(Visitor &) AVO_OVERRIDE;
+  void accept(Visitor &) override;
 
   /**
    * @brief Add a drawable object to the geometry node.
@@ -67,7 +67,7 @@ public:
   /**
    * @brief Get the child Node at the specified index.
    * @param index The index of the child.
-   * @return A pointer to the child node, or NULL if the index is out of range.
+   * @return A pointer to the child node, or nullptr if the index is out of range.
    */
   Drawable * drawable(size_t index);
 

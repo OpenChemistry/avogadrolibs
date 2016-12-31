@@ -85,7 +85,7 @@ public:
    * @endcode
    *
    * @param name The identifier of the plugin factory.
-   * @return The plugin factory if the plugin was found, NULL otherwise.
+   * @return The plugin factory if the plugin was found, nullptr otherwise.
    */
   template<typename T> T * pluginFactory(const QString &id) const;
 

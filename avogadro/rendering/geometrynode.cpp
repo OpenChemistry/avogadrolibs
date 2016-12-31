@@ -60,7 +60,7 @@ bool GeometryNode::removeDrawable(Drawable *object)
   for (std::vector<Drawable *>::iterator it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
     if (*it == object) {
-      (*it)->setParent(NULL);
+      (*it)->setParent(nullptr);
       m_drawables.erase(it);
       return true;
     }
@@ -71,7 +71,7 @@ bool GeometryNode::removeDrawable(Drawable *object)
 Drawable * GeometryNode::drawable(size_t index)
 {
   if (index >= m_drawables.size())
-    return NULL;
+    return nullptr;
   else
     return m_drawables[index];
 }

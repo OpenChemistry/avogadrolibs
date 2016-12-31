@@ -59,26 +59,26 @@ class BondCentricTool : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit BondCentricTool(QObject *parent_ = NULL);
+  explicit BondCentricTool(QObject *parent_ = nullptr);
   ~BondCentricTool();
 
-  QString name() const AVO_OVERRIDE;
-  QString description() const AVO_OVERRIDE;
-  unsigned char priority() const AVO_OVERRIDE { return 40; }
-  QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
-  QWidget * toolWidget() const AVO_OVERRIDE;
+  QString name() const override;
+  QString description() const override;
+  unsigned char priority() const override { return 40; }
+  QAction * activateAction() const override { return m_activateAction; }
+  QWidget * toolWidget() const override;
 
-  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE;
-  void setEditMolecule(QtGui::RWMolecule *) AVO_OVERRIDE;
-  void setGLWidget(QtOpenGL::GLWidget *widget) AVO_OVERRIDE;
-  void setGLRenderer(Rendering::GLRenderer *ren) AVO_OVERRIDE;
+  void setMolecule(QtGui::Molecule *) override;
+  void setEditMolecule(QtGui::RWMolecule *) override;
+  void setGLWidget(QtOpenGL::GLWidget *widget) override;
+  void setGLRenderer(Rendering::GLRenderer *ren) override;
 
-  QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * mouseMoveEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) AVO_OVERRIDE;
+  QUndoCommand * mousePressEvent(QMouseEvent *e) override;
+  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) override;
+  QUndoCommand * mouseMoveEvent(QMouseEvent *e) override;
+  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) override;
 
-  void draw(Rendering::GroupNode &node) AVO_OVERRIDE;
+  void draw(Rendering::GroupNode &node) override;
 
 private:
   enum MoveState {

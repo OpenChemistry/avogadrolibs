@@ -32,9 +32,9 @@ class AVOGADRORENDERING_EXPORT TextLabel2D : public TextLabelBase
 {
 public:
   TextLabel2D();
-  ~TextLabel2D() AVO_OVERRIDE;
+  ~TextLabel2D() override;
 
-  void accept(Visitor &) AVO_OVERRIDE;
+  void accept(Visitor &) override;
 
   /**
    * The anchor point in window coordinates, taking the origin at the upper-left

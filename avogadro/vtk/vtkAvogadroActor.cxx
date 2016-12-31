@@ -34,7 +34,7 @@ using Avogadro::Rendering::GLRenderVisitor;
 vtkStandardNewMacro(vtkAvogadroActor)
 
 vtkAvogadroActor::vtkAvogadroActor()
-  : m_scene(NULL), m_initialized(false)
+  : m_scene(nullptr), m_initialized(false)
 {
   for (short i = 0; i < 6; ++i)
     m_bounds[i] = 0.0;

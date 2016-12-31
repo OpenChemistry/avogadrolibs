@@ -30,15 +30,15 @@ class QTAIMExtension : public QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit QTAIMExtension(QObject *parent=0);
-  ~QTAIMExtension() AVO_OVERRIDE;
+  ~QTAIMExtension() override;
 
-  QString name() const AVO_OVERRIDE { return tr("QTAIM"); }
-  QString description() const AVO_OVERRIDE { return tr("QTAIM extension"); }
-  QList<QAction *> actions() const AVO_OVERRIDE;
-  QStringList menuPath(QAction *action) const AVO_OVERRIDE;
+  QString name() const override { return tr("QTAIM"); }
+  QString description() const override { return tr("QTAIM extension"); }
+  QList<QAction *> actions() const override;
+  QStringList menuPath(QAction *action) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *molecule) AVO_OVERRIDE;
+  void setMolecule(QtGui::Molecule *molecule) override;
 
 private slots:
   void triggered();

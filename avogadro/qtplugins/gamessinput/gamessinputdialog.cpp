@@ -107,8 +107,8 @@ enum ChargeOption {
 
 GamessInputDialog::GamessInputDialog(QWidget *parent_, Qt::WindowFlags f)
   : QDialog( parent_, f ),
-    m_molecule(NULL),
-    m_highlighter(NULL),
+    m_molecule(nullptr),
+    m_highlighter(nullptr),
     m_updatePending(false)
 {
   ui.setupUi(this);

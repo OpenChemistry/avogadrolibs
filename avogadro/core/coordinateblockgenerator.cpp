@@ -28,7 +28,7 @@ namespace Avogadro {
 namespace Core {
 
 CoordinateBlockGenerator::CoordinateBlockGenerator()
-  : m_molecule(NULL),
+  : m_molecule(nullptr),
     m_distanceUnit(Angstrom)
 {
 }
@@ -81,7 +81,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   const char *name;
   Vector3 pos3d;
   Vector3 fpos3d;
-  const UnitCell *cell = needFractionalPosition ? molecule()->unitCell() : NULL;
+  const UnitCell *cell = needFractionalPosition ? molecule()->unitCell() : nullptr;
 
   // widths/precisions
   enum {

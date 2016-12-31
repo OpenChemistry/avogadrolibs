@@ -45,11 +45,11 @@ public:
    * @{
    */
   explicit PythonScript(const QString &scriptFilePath_,
-                        QObject *parent_ = NULL);
-  explicit PythonScript(QObject *parent_ = NULL);
+                        QObject *parent_ = nullptr);
+  explicit PythonScript(QObject *parent_ = nullptr);
   /**@}*/
 
-  ~PythonScript() AVO_OVERRIDE;
+  ~PythonScript() override;
 
   /**
    * @return True if debugging of python I/O is enabled.

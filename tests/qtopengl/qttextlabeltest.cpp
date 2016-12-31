@@ -73,8 +73,8 @@ int qttextlabeltest(int argc, char *argv[])
   TextProperties tprop;
 
   // Test alignment:
-  TextLabel3D *l3 = NULL;
-  TextLabel2D *l2 = NULL;
+  TextLabel3D *l3 = nullptr;
+  TextLabel2D *l2 = nullptr;
 
   // 3D:
   tprop.setColorRgb(255, 0, 0);

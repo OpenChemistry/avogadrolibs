@@ -38,23 +38,23 @@ class PlayerTool : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit PlayerTool(QObject *p = NULL);
+  explicit PlayerTool(QObject *p = nullptr);
   ~PlayerTool();
 
-  QString name() const AVO_OVERRIDE { return tr("Player tool"); }
-  QString description() const AVO_OVERRIDE { return tr("Play back trajectories"); }
-  unsigned char priority() const AVO_OVERRIDE { return 80; }
-  QAction * activateAction() const AVO_OVERRIDE { return m_activateAction; }
-  QWidget * toolWidget() const AVO_OVERRIDE;
+  QString name() const override { return tr("Player tool"); }
+  QString description() const override { return tr("Play back trajectories"); }
+  unsigned char priority() const override { return 80; }
+  QAction * activateAction() const override { return m_activateAction; }
+  QWidget * toolWidget() const override;
 
-  QUndoCommand * mousePressEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) AVO_OVERRIDE;
-  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) AVO_OVERRIDE;
+  QUndoCommand * mousePressEvent(QMouseEvent *e) override;
+  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) override;
+  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE;
-  void setGLRenderer(Rendering::GLRenderer *renderer) AVO_OVERRIDE;
-  void setActiveWidget(QWidget *widget) AVO_OVERRIDE;
+  void setMolecule(QtGui::Molecule *) override;
+  void setGLRenderer(Rendering::GLRenderer *renderer) override;
+  void setActiveWidget(QWidget *widget) override;
 
 protected slots:
   void back();

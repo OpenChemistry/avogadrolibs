@@ -33,13 +33,13 @@ TEST(FileFormatManagerTest, readFile)
 {
   FileFormat *format =
     FileFormatManager::instance().newFormatFromIdentifier("Avogadro: CML");
-  EXPECT_TRUE(format != NULL);
+  EXPECT_TRUE(format != nullptr);
   if (!format)
     return;
   Molecule molecule;
   format->readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
   delete format;
-  format = NULL;
+  format = nullptr;
 
   EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -153,22 +153,22 @@ public:
     : FileFormat(), m_ops(ops), m_ident(ident)
   {
   }
-  Operations supportedOperations() const AVO_OVERRIDE { return m_ops; }
-  bool read(std::istream &, Molecule &) AVO_OVERRIDE { return false; }
-  bool write(std::ostream &, const Molecule &) AVO_OVERRIDE { return false; }
-  FileFormat *newInstance() const AVO_OVERRIDE
+  Operations supportedOperations() const override { return m_ops; }
+  bool read(std::istream &, Molecule &) override { return false; }
+  bool write(std::ostream &, const Molecule &) override { return false; }
+  FileFormat *newInstance() const override
     { return new Format(m_ident, m_ops); }
-  std::string identifier() const AVO_OVERRIDE { return m_ident; }
-  std::string name() const AVO_OVERRIDE { return m_ident; }
-  std::string description() const AVO_OVERRIDE { return m_ident; }
-  std::string specificationUrl() const AVO_OVERRIDE { return ""; }
-  std::vector<std::string> fileExtensions() const AVO_OVERRIDE
+  std::string identifier() const override { return m_ident; }
+  std::string name() const override { return m_ident; }
+  std::string description() const override { return m_ident; }
+  std::string specificationUrl() const override { return ""; }
+  std::vector<std::string> fileExtensions() const override
   {
     std::vector<std::string> result;
     result.push_back("asdfjkl;");
     return result;
   }
-  std::vector<std::string> mimeTypes() const AVO_OVERRIDE
+  std::vector<std::string> mimeTypes() const override
   {
     std::vector<std::string> result;
     result.push_back("chemical/x-doodie");
@@ -186,25 +186,25 @@ TEST(FileFormatManagerTest, filtering)
   FileFormatManager::registerFormat(writeOnly.newInstance());
 
   FileFormatManager &manager = FileFormatManager::instance();
-  FileFormat *format = NULL;
+  FileFormat *format = nullptr;
 
   format = manager.newFormatFromFileExtension("asdfjkl;", Format::Read);
-  ASSERT_TRUE(format != NULL);
+  ASSERT_TRUE(format != nullptr);
   EXPECT_EQ(format->identifier(), std::string("readOnly"));
   delete format;
 
   format = manager.newFormatFromFileExtension("asdfjkl;", Format::Write);
-  ASSERT_TRUE(format != NULL);
+  ASSERT_TRUE(format != nullptr);
   EXPECT_EQ(format->identifier(), std::string("writeOnly"));
   delete format;
 
   format = manager.newFormatFromMimeType("chemical/x-doodie", Format::Write);
-  ASSERT_TRUE(format != NULL);
+  ASSERT_TRUE(format != nullptr);
   EXPECT_EQ(format->identifier(), std::string("writeOnly"));
   delete format;
 
   format = manager.newFormatFromMimeType("chemical/x-doodie", Format::Read);
-  ASSERT_TRUE(format != NULL);
+  ASSERT_TRUE(format != nullptr);
   EXPECT_EQ(format->identifier(), std::string("readOnly"));
   delete format;
 }
@@ -216,11 +216,11 @@ TEST(FileFormatManagerTest, unregister)
 
   FileFormatManager &manager = FileFormatManager::instance();
   FileFormat *format = manager.newFormatFromIdentifier("testingFormat");
-  ASSERT_TRUE(format != NULL);
+  ASSERT_TRUE(format != nullptr);
   EXPECT_EQ(format->identifier(), std::string("testingFormat"));
   delete format;
 
   EXPECT_TRUE(FileFormatManager::unregisterFormat("testingFormat"));
   format = manager.newFormatFromIdentifier("testingFormat");
-  ASSERT_TRUE(format == NULL);
+  ASSERT_TRUE(format == nullptr);
 }

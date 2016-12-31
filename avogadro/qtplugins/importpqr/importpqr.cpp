@@ -34,9 +34,9 @@ namespace QtPlugins {
 ImportPQR::ImportPQR(QObject *parent_) :
   ExtensionPlugin(parent_),
   m_action(new QAction(this)),
-  m_molecule(NULL),
-  m_dialog(NULL),
-  m_outputFormat(NULL)
+  m_molecule(nullptr),
+  m_dialog(nullptr),
+  m_outputFormat(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("&Import From PQR"));

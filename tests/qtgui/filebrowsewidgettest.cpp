@@ -32,7 +32,7 @@ using Avogadro::QtGui::FileBrowseWidget;
 #define START_QAPP \
   int argc = 1; \
   char argName[] = "FakeApp.exe"; \
-  char *argv[2] = {argName, NULL}; \
+  char *argv[2] = {argName, nullptr}; \
   QApplication app(argc, argv); \
   Q_UNUSED(app)
 

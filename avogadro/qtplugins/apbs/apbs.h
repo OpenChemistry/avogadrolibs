@@ -37,17 +37,17 @@ class Apbs : public QtGui::ExtensionPlugin
 
 public:
   explicit Apbs(QObject *parent_ = 0);
-  ~Apbs() AVO_OVERRIDE;
+  ~Apbs() override;
 
-  QString name() const AVO_OVERRIDE { return tr("APBS"); }
-  QString description() const AVO_OVERRIDE
+  QString name() const override { return tr("APBS"); }
+  QString description() const override
   {
     return tr("Interact with APBS utilities.");
   }
-  QList<QAction *> actions() const AVO_OVERRIDE { return m_actions; }
-  QStringList menuPath(QAction *) const AVO_OVERRIDE;
-  void setMolecule(QtGui::Molecule *) AVO_OVERRIDE;
-  bool readMolecule(QtGui::Molecule &) AVO_OVERRIDE;
+  QList<QAction *> actions() const override { return m_actions; }
+  QStringList menuPath(QAction *) const override;
+  void setMolecule(QtGui::Molecule *) override;
+  bool readMolecule(QtGui::Molecule &) override;
 
 private slots:
   void onOpenOutputFile();

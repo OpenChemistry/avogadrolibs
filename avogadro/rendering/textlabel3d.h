@@ -32,9 +32,9 @@ class AVOGADRORENDERING_EXPORT TextLabel3D : public TextLabelBase
 {
 public:
   TextLabel3D();
-  ~TextLabel3D() AVO_OVERRIDE;
+  ~TextLabel3D() override;
 
-  void accept(Visitor &) AVO_OVERRIDE;
+  void accept(Visitor &) override;
 
   /**
    * The anchor position in world coordinates.

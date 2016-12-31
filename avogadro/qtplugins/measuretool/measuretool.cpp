@@ -59,9 +59,9 @@ namespace QtPlugins {
 MeasureTool::MeasureTool(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
     m_activateAction(new QAction(this)),
-    m_molecule(NULL),
-    m_rwMolecule(NULL),
-    m_renderer(NULL)
+    m_molecule(nullptr),
+    m_rwMolecule(nullptr),
+    m_renderer(nullptr)
 {
   m_activateAction->setText(tr("Measure"));
   m_activateAction->setIcon(QIcon(":/icons/measuretool.png"));
@@ -73,13 +73,13 @@ MeasureTool::~MeasureTool()
 
 QWidget * MeasureTool::toolWidget() const
 {
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * MeasureTool::mousePressEvent(QMouseEvent *e)
 {
   if (e->button() != Qt::LeftButton || !m_renderer)
-    return NULL;
+    return nullptr;
 
   Identifier hit = m_renderer->hit(e->pos().x(), e->pos().y());
 
@@ -89,14 +89,14 @@ QUndoCommand * MeasureTool::mousePressEvent(QMouseEvent *e)
   if (hit.type == Rendering::AtomType)
     e->accept();
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * MeasureTool::mouseReleaseEvent(QMouseEvent *e)
 {
   // If the click is released on an atom, add it to the list
   if (e->button() != Qt::LeftButton || !m_renderer)
-    return NULL;
+    return nullptr;
 
   Identifier hit = m_renderer->hit(e->pos().x(), e->pos().y());
 
@@ -107,7 +107,7 @@ QUndoCommand * MeasureTool::mouseReleaseEvent(QMouseEvent *e)
     e->accept();
   }
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *MeasureTool::mouseDoubleClickEvent(QMouseEvent *e)
@@ -118,7 +118,7 @@ QUndoCommand *MeasureTool::mouseDoubleClickEvent(QMouseEvent *e)
     emit drawablesChanged();
     e->accept();
   }
-  return NULL;
+  return nullptr;
 }
 
 template<typename T>
@@ -132,7 +132,7 @@ void MeasureTool::createLabels(T *mol, GeometryNode *geo,
   for (int i = 0; i < m_atoms.size(); ++i) {
     Identifier &ident = m_atoms[i];
     Q_ASSERT(ident.type == Rendering::AtomType);
-    Q_ASSERT(ident.molecule != NULL);
+    Q_ASSERT(ident.molecule != nullptr);
 
     typename T::AtomType atom = mol->atom(ident.index);
     Q_ASSERT(atom.isValid());

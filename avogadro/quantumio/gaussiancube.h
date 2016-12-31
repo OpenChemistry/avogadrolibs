@@ -29,31 +29,31 @@ class AVOGADROQUANTUMIO_EXPORT GaussianCube : public Io::FileFormat
 {
 public:
   GaussianCube();
-  ~GaussianCube() AVO_OVERRIDE;
+  ~GaussianCube() override;
 
-  Operations supportedOperations() const AVO_OVERRIDE
+  Operations supportedOperations() const override
   {
     return Read | File | Stream | String;
   }
 
-  FileFormat * newInstance() const AVO_OVERRIDE { return new GaussianCube; }
-  std::string identifier() const AVO_OVERRIDE { return "Avogadro: GaussianCube"; }
-  std::string name() const AVO_OVERRIDE { return "Gaussian"; }
-  std::string description() const AVO_OVERRIDE
+  FileFormat * newInstance() const override { return new GaussianCube; }
+  std::string identifier() const override { return "Avogadro: GaussianCube"; }
+  std::string name() const override { return "Gaussian"; }
+  std::string description() const override
   {
     return "Gaussian cube file format.";
   }
 
-  std::string specificationUrl() const AVO_OVERRIDE
+  std::string specificationUrl() const override
   {
     return "http://www.gaussian.com/g_tech/g_ur/u_cubegen.htm";
   }
 
-  std::vector<std::string> fileExtensions() const AVO_OVERRIDE;
-  std::vector<std::string> mimeTypes() const AVO_OVERRIDE;
+  std::vector<std::string> fileExtensions() const override;
+  std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) AVO_OVERRIDE;
-  bool write(std::ostream &out, const Core::Molecule &molecule) AVO_OVERRIDE;
+  bool read(std::istream &in, Core::Molecule &molecule) override;
+  bool write(std::ostream &out, const Core::Molecule &molecule) override;
 
 private:
   void outputAll();

@@ -16,12 +16,12 @@
 
 #include "mutex.h"
 
-#include <avogadro/stl/mutex_p.h>
+#include <mutex>
 
 namespace Avogadro {
 namespace Core {
 
-using Stl::mutex;
+using std::mutex;
 
 class Mutex::PIMPL
 {
