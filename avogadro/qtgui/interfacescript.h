@@ -455,8 +455,8 @@ public:
    * @param scriptFilePath_ Absolute path to generator script.
    */
   explicit InterfaceScript(const QString &scriptFilePath_,
-                          QObject *parent_ = NULL);
-  explicit InterfaceScript(QObject *parent_ = NULL);
+                          QObject *parent_ = nullptr);
+  explicit InterfaceScript(QObject *parent_ = nullptr);
   ~InterfaceScript();
 
   /**
@@ -576,7 +576,7 @@ public:
   /**
    * @return A syntax highlighter for the file @a fileName. Must call
    * generateInput() first. The caller takes ownership of the returned object.
-   * If no syntax highlighter is defined, this function returns NULL.
+   * If no syntax highlighter is defined, this function returns nullptr.
    * @sa fileNames
    */
   QtGui::GenericHighlighter *createFileHighlighter(const QString &fileName) const;

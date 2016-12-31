@@ -35,7 +35,7 @@ class AtomTyper
 public:
   typedef OutputType ValueType;
 
-  explicit AtomTyper(const Molecule *mol = NULL);
+  explicit AtomTyper(const Molecule *mol = nullptr);
   virtual ~AtomTyper();
 
   /**

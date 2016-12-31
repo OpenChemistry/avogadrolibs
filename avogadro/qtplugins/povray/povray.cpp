@@ -36,7 +36,7 @@ namespace QtPlugins {
 
 POVRay::POVRay(QObject *p) :
   Avogadro::QtGui::ExtensionPlugin(p),
-  m_molecule(NULL), m_scene(NULL), m_camera(NULL),
+  m_molecule(nullptr), m_scene(nullptr), m_camera(nullptr),
   m_action(new QAction(tr("Render with POV-Ray"), this))
 {
   connect(m_action, SIGNAL(triggered()), SLOT(render()));

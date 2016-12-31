@@ -947,7 +947,7 @@ bool RWMolecule::setBondPair(Index bondId, const std::pair<Index, Index> &pair)
   if (bondId >= bondCount() || pair.first == pair.second)
     return false;
 
-  SetBondPairCommand *comm = NULL;
+  SetBondPairCommand *comm = nullptr;
   if (pair.first < pair.second) {
     comm = new SetBondPairCommand(*this, bondId, m_molecule.m_bondPairs[bondId],
                                   pair);
@@ -978,7 +978,7 @@ public:
 
   void undo() override
   {
-    m_mol.molecule().setUnitCell(NULL);
+    m_mol.molecule().setUnitCell(nullptr);
   }
 };
 } // end anon namespace
@@ -1017,7 +1017,7 @@ public:
 
   void redo() override
   {
-    m_mol.molecule().setUnitCell(NULL);
+    m_mol.molecule().setUnitCell(nullptr);
   }
 
   void undo() override
@@ -1039,7 +1039,7 @@ void RWMolecule::removeUnitCell()
   comm->setText(tr("Remove Unit Cell"));
   m_undoStack.push(comm);
 
-  m_molecule.setUnitCell(NULL);
+  m_molecule.setUnitCell(nullptr);
   emitChanged(Molecule::UnitCell | Molecule::Removed);
 }
 

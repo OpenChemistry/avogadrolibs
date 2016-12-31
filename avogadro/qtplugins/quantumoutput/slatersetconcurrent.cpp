@@ -41,7 +41,7 @@ struct SlaterShell
 };
 
 SlaterSetConcurrent::SlaterSetConcurrent(QObject *p) : QObject(p),
-  m_shells(NULL), m_set(NULL), m_tools(NULL)
+  m_shells(nullptr), m_set(nullptr), m_tools(nullptr)
 {
 }
 

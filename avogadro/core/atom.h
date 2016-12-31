@@ -169,7 +169,7 @@ private:
 
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate()
-  : m_molecule(NULL),
+  : m_molecule(nullptr),
     m_index(MaxIndex)
 {
 }

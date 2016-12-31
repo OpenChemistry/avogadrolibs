@@ -221,7 +221,7 @@ public:
    */
   bool writeDataset(const std::string &path,
                     const std::vector<double> &data,
-                    int ndims = 1, size_t *dims = NULL) const;
+                    int ndims = 1, size_t *dims = nullptr) const;
 
   /**
    * @brief writeDataset Write the data to the currently opened file at the
@@ -238,7 +238,7 @@ public:
    */
   bool writeDataset(const std::string &path,
                     const Core::Array<double> &data,
-                    int ndims = 1, size_t *dims = NULL) const;
+                    int ndims = 1, size_t *dims = nullptr) const;
 
   /**
    * @brief readDataset Populate the data container @data with data at from the
@@ -259,7 +259,7 @@ public:
    * deserialized. @a data will be resized to fit the data.
    * @return A vector containing the dimensionality of the dataset, major
    * dimension first. If an error occurs, an empty vector is returned and *data
-   * will be set to NULL.
+   * will be set to nullptr.
    */
   std::vector<int> readDataset(const std::string &path,
                                std::vector<double> &data) const;
@@ -272,7 +272,7 @@ public:
    * deserialized. @a data will be resized to fit the data.
    * @return A vector containing the dimensionality of the dataset, major
    * dimension first. If an error occurs, an empty vector is returned and *data
-   * will be set to NULL.
+   * will be set to nullptr.
    */
   std::vector<int> readDataset(const std::string &path,
                                Core::Array<double> &data) const;

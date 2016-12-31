@@ -36,7 +36,7 @@ namespace Rendering {
 
 GLRenderer::GLRenderer()
   : m_valid(false),
-    m_textRenderStrategy(NULL),
+    m_textRenderStrategy(nullptr),
     m_center(Vector3f::Zero()),
     m_radius(20.0)
 {

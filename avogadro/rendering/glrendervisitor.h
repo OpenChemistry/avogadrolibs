@@ -38,7 +38,7 @@ class AVOGADRORENDERING_EXPORT GLRenderVisitor : public Visitor
 {
 public:
   explicit GLRenderVisitor(const Camera &camera = Camera(),
-                           const TextRenderStrategy *trs = NULL);
+                           const TextRenderStrategy *trs = nullptr);
   ~GLRenderVisitor() override;
 
   /**
@@ -70,7 +70,7 @@ public:
 
   /**
    * A TextRenderStrategy implementation used to render text for annotations.
-   * If NULL, no text will be produced.
+   * If nullptr, no text will be produced.
    * @{
    */
   void setTextRenderStrategy(TextRenderStrategy *trs)

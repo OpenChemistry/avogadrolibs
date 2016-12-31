@@ -144,7 +144,7 @@ public:
 CoordinateEditorDialog::CoordinateEditorDialog(QWidget *parent_) :
   QDialog(parent_),
   m_ui(new Ui::CoordinateEditorDialog),
-  m_molecule(NULL),
+  m_molecule(nullptr),
   m_validate(new ValidateStorage),
   m_defaultSpec("SZxyz#N")
 {

@@ -39,7 +39,7 @@ class SelectionTool : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit SelectionTool(QObject *parent_ = NULL);
+  explicit SelectionTool(QObject *parent_ = nullptr);
   ~SelectionTool();
 
   QString name() const override { return tr("Selection tool"); }

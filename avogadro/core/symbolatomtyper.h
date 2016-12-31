@@ -34,7 +34,7 @@ namespace Core {
 class AVOGADROCORE_EXPORT SymbolAtomTyper : public AtomTyper<std::string>
 {
 public:
-  explicit SymbolAtomTyper(const Molecule *mol = NULL);
+  explicit SymbolAtomTyper(const Molecule *mol = nullptr);
   ~SymbolAtomTyper() override;
 
 protected:

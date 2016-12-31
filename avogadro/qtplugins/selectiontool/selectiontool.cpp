@@ -51,8 +51,8 @@ namespace QtPlugins {
 SelectionTool::SelectionTool(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
     m_activateAction(new QAction(this)),
-    m_molecule(NULL),
-    m_renderer(NULL),
+    m_molecule(nullptr),
+    m_renderer(nullptr),
     m_drawSelectionBox(false)
 {
   m_activateAction->setText(tr("Selection"));
@@ -65,13 +65,13 @@ SelectionTool::~SelectionTool()
 
 QWidget * SelectionTool::toolWidget() const
 {
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * SelectionTool::mousePressEvent(QMouseEvent *e)
 {
   if (e->button() != Qt::LeftButton || !m_renderer)
-    return NULL;
+    return nullptr;
 
   m_drawSelectionBox = false;
   m_start = Vector2(e->pos().x(), e->pos().y());
@@ -88,14 +88,14 @@ QUndoCommand * SelectionTool::mousePressEvent(QMouseEvent *e)
   // rendered as the selection code is not yet in place for the scene.
   //e->accept();
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * SelectionTool::mouseReleaseEvent(QMouseEvent *e)
 {
   // If the click is released on an atom, add it to the list
   if (e->button() != Qt::LeftButton || !m_renderer)
-    return NULL;
+    return nullptr;
 
   m_drawSelectionBox = false;
   m_start = Vector2(e->pos().x(), e->pos().y());
@@ -115,7 +115,7 @@ QUndoCommand * SelectionTool::mouseReleaseEvent(QMouseEvent *e)
   e->accept();
 #endif
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * SelectionTool::mouseDoubleClickEvent(QMouseEvent *e)
@@ -126,7 +126,7 @@ QUndoCommand * SelectionTool::mouseDoubleClickEvent(QMouseEvent *e)
     emit drawablesChanged();
     e->accept();
   }
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * SelectionTool::mouseMoveEvent(QMouseEvent *)
@@ -139,12 +139,12 @@ QUndoCommand * SelectionTool::mouseMoveEvent(QMouseEvent *)
 
   e->accept();
 #endif
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * SelectionTool::keyPressEvent(QKeyEvent *e)
 {
-  return NULL;
+  return nullptr;
 }
 
 void SelectionTool::draw(Rendering::GroupNode &node)

@@ -40,7 +40,7 @@ public:
    * @param m The molecule the persistent bond belongs to.
    * @param uniqueId The unique identifier for the bond.
    */
-  explicit PersistentBond(MoleculeType *m = NULL, Index uniqueId = MaxIndex)
+  explicit PersistentBond(MoleculeType *m = nullptr, Index uniqueId = MaxIndex)
     : m_molecule(m), m_uniqueId(uniqueId)
   {
   }
@@ -120,7 +120,7 @@ void PersistentBond<Molecule_T>::set(const BondType &b)
 template <typename Molecule_T>
 void PersistentBond<Molecule_T>::reset()
 {
-  set(NULL, MaxIndex);
+  set(nullptr, MaxIndex);
 }
 
 template <typename Molecule_T>

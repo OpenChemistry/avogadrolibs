@@ -51,7 +51,7 @@ struct GaussianShell
 };
 
 GaussianSetConcurrent::GaussianSetConcurrent(QObject *p) : QObject(p),
-  m_gaussianShells(NULL), m_set(NULL), m_tools(NULL)
+  m_gaussianShells(nullptr), m_set(nullptr), m_tools(nullptr)
 {
 }
 

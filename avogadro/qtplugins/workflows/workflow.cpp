@@ -47,10 +47,10 @@ using Avogadro::QtGui::InterfaceWidget;
 
 Workflow::Workflow(QObject *parent_) :
   ExtensionPlugin(parent_),
-  m_molecule(NULL),
-  m_currentDialog(NULL),
-  m_currentInterface(NULL),
-  m_outputFormat(NULL)
+  m_molecule(nullptr),
+  m_currentDialog(nullptr),
+  m_currentInterface(nullptr),
+  m_outputFormat(nullptr)
 {
   refreshScripts();
 }
@@ -113,7 +113,7 @@ bool Workflow::readMolecule(QtGui::Molecule &mol)
                              .arg(QString::fromStdString(reader->error())));
   }
 
-  m_outputFormat = NULL;
+  m_outputFormat = nullptr;
   m_outputFileName.clear();
 
   return success;
@@ -133,7 +133,7 @@ void Workflow::menuActivated()
 
   QString scriptFileName = theSender->data().toString();
   QWidget *theParent = qobject_cast<QWidget*>(parent());
-  InterfaceWidget *widget = m_dialogs.value(scriptFileName, NULL);
+  InterfaceWidget *widget = m_dialogs.value(scriptFileName, nullptr);
 
   if (!widget) {
     widget = new InterfaceWidget(scriptFileName, theParent);

@@ -39,7 +39,7 @@ class Editor : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit Editor(QObject *parent_ = NULL);
+  explicit Editor(QObject *parent_ = nullptr);
   ~Editor();
 
   QString name() const override { return tr("Editor tool"); }

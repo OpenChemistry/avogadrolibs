@@ -29,7 +29,7 @@ class Molecule;
 
 struct MoleculeSystem
 {
-  MoleculeSystem() : m_molecule(NULL), m_dirty(false), m_active(false) { }
+  MoleculeSystem() : m_molecule(nullptr), m_dirty(false), m_active(false) { }
 
   Molecule *m_molecule;
   Eigen::Affine3f m_modelView;

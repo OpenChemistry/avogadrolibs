@@ -246,7 +246,7 @@ static region make_region(const hypercube *h, unsigned int fdim)
   R.h = make_hypercube(h->dim, h->data, h->data + h->dim);
   R.splitDim = 0;
   R.fdim = fdim;
-  R.ee = R.h.data ? (esterr *) malloc(sizeof(esterr) * fdim) : NULL;
+  R.ee = R.h.data ? (esterr *) malloc(sizeof(esterr) * fdim) : nullptr;
   return R;
 }
 
@@ -268,7 +268,7 @@ static int cut_region(region *R, region *R2)
   R->h.data[d] -= R->h.data[d + dim];
   R2->h.data[d] += R->h.data[d + dim];
   R2->ee = (esterr *) malloc(sizeof(esterr) * R2->fdim);
-  return R2->ee == NULL;
+  return R2->ee == nullptr;
 }
 
 struct rule_s; /* forward declaration */
@@ -303,7 +303,7 @@ static int alloc_rule_pts(rule *r, unsigned int num_regions)
 {
   if (num_regions > r->num_regions) {
     free(r->pts);
-    r->pts = r->vals = NULL;
+    r->pts = r->vals = nullptr;
     r->num_regions = 0;
     num_regions *= 2; /* allocate extra so that
              repeatedly calling alloc_rule_pts with
@@ -325,10 +325,10 @@ static rule *make_rule(size_t sz, /* >= sizeof(rule) */
 {
   rule *r;
 
-  if (sz < sizeof(rule)) return NULL;
+  if (sz < sizeof(rule)) return nullptr;
   r = (rule *) malloc(sz);
-  if (!r) return NULL;
-  r->pts = r->vals = NULL;
+  if (!r) return nullptr;
+  r->pts = r->vals = nullptr;
   r->num_regions = 0;
   r->dim = dim; r->fdim = fdim; r->num_points = num_points;
   r->evalError = evalError;
@@ -631,14 +631,14 @@ static rule *make_rule75genzmalik(unsigned int dim, unsigned int fdim)
 {
   rule75genzmalik *r;
 
-  if (dim < 2) return NULL; /* this rule does not support 1d integrals */
+  if (dim < 2) return nullptr; /* this rule does not support 1d integrals */
 
   /* Because of the use of a bit-field in evalR_Rfs, we are limited
   to be < 32 dimensions (or however many bits are in unsigned int).
   This is not a practical limitation...long before you reach
   32 dimensions, the Genz-Malik cubature becomes excruciatingly
   slow and is superseded by other methods (e.g. Monte-Carlo). */
-  if (dim >= sizeof(unsigned int) * 8) return NULL;
+  if (dim >= sizeof(unsigned int) * 8) return nullptr;
 
   r = (rule75genzmalik *) make_rule(sizeof(rule75genzmalik),
                                     dim, fdim,
@@ -646,7 +646,7 @@ static rule *make_rule75genzmalik(unsigned int dim, unsigned int fdim)
                                     + numRR0_0fs(dim) + numR_Rfs(dim),
                                     rule75genzmalik_evalError,
                                     destroy_rule75genzmalik);
-  if (!r) return NULL;
+  if (!r) return nullptr;
 
   r->weight1 = (real(12824 - 9120 * to_int(dim) + 400 * isqr(to_int(dim)))
                 / real(19683));
@@ -657,7 +657,7 @@ static rule *make_rule75genzmalik(unsigned int dim, unsigned int fdim)
   r->weightE3 = real(265 - 100 * to_int(dim)) / real(1458);
 
   r->p = (double *) malloc(sizeof(double) * dim * 3);
-  if (!r->p) { destroy_rule((rule *) r); return NULL; }
+  if (!r->p) { destroy_rule((rule *) r); return nullptr; }
   r->widthLambda = r->p + dim;
   r->widthLambda2 = r->p + 2 * dim;
 
@@ -805,7 +805,7 @@ static int rule15gauss_evalError(rule *r,
 
 static rule *make_rule15gauss(unsigned int dim, unsigned int fdim)
 {
-  if (dim != 1) return NULL; /* this rule is only for 1d integrals */
+  if (dim != 1) return nullptr; /* this rule is only for 1d integrals */
 
   return make_rule(sizeof(rule), dim, fdim, 15,
                    rule15gauss_evalError, 0);
@@ -940,9 +940,9 @@ static int ruleadapt_integrate(rule *r, unsigned int fdim, integrand_v f, void *
   unsigned int numEval = 0;
   heap regions;
   unsigned int i, j;
-  region *R = NULL; /* array of regions to evaluate */
+  region *R = nullptr; /* array of regions to evaluate */
   unsigned int nR_alloc = 0;
-  esterr *ee = NULL;
+  esterr *ee = nullptr;
 
   regions = heap_alloc(1, fdim);
   if (!regions.ee || !regions.items) goto bad;

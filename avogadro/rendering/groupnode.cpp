@@ -61,7 +61,7 @@ bool GroupNode::removeChild(Node *node)
   for (std::vector<Node *>::iterator it = m_children.begin();
        it != m_children.end(); ++it) {
     if (*it == node) {
-      (*it)->setParent(NULL);
+      (*it)->setParent(nullptr);
       m_children.erase(it);
       return true;
     }
@@ -72,7 +72,7 @@ bool GroupNode::removeChild(Node *node)
 Node * GroupNode::child(size_t index)
 {
   if (index >= m_children.size())
-    return NULL;
+    return nullptr;
   else
     return m_children[index];
 }

@@ -501,7 +501,7 @@ public:
   const BasisSet * basisSet() const { return m_basisSet; }
 
   /**
-   * The unit cell for this molecule. May be NULL for non-periodic structures.
+   * The unit cell for this molecule. May be nullptr for non-periodic structures.
    * @{
    */
   void setUnitCell(UnitCell *uc);

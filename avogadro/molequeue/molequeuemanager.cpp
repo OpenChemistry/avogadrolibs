@@ -19,7 +19,7 @@
 namespace Avogadro {
 namespace MoleQueue {
 
-MoleQueueManager *MoleQueueManager::m_instance = NULL;
+MoleQueueManager *MoleQueueManager::m_instance = nullptr;
 
 MoleQueueManager::MoleQueueManager(QObject *parent_) :
   QObject(parent_),

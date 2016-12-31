@@ -28,7 +28,7 @@ namespace QtPlugins {
 MolecularPropertiesDialog::MolecularPropertiesDialog(QtGui::Molecule *mol,
                                                      QWidget *parent_)
   : QDialog(parent_),
-    m_molecule(NULL),
+    m_molecule(nullptr),
     m_ui(new Ui::MolecularPropertiesDialog)
 {
   m_ui->setupUi(this);
@@ -100,7 +100,7 @@ void MolecularPropertiesDialog::updateFormulaLabel()
 
 void MolecularPropertiesDialog::moleculeDestroyed()
 {
-  m_molecule = NULL;
+  m_molecule = nullptr;
   updateLabels();
 }
 

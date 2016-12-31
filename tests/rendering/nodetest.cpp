@@ -47,7 +47,7 @@ TEST(NodeTest, removeChild)
   EXPECT_EQ(root.removeChild(child1), true);
   EXPECT_EQ(root.removeChild(child1), false);
   EXPECT_EQ(child2, root.child(0));
-  EXPECT_EQ(NULL, child1->parent());
+  EXPECT_EQ(nullptr, child1->parent());
   EXPECT_EQ(&root, child2->parent());
   EXPECT_EQ(root.removeChild(child2), true);
   delete child1;

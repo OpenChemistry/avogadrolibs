@@ -42,7 +42,7 @@ using Rendering::SphereGeometry;
 using Rendering::CylinderGeometry;
 
 BallAndStick::BallAndStick(QObject *p) : ScenePlugin(p), m_enabled(true),
-  m_group(NULL), m_setupWidget(NULL), m_multiBonds(true), m_showHydrogens(true)
+  m_group(nullptr), m_setupWidget(nullptr), m_multiBonds(true), m_showHydrogens(true)
 {
 }
 

@@ -37,9 +37,9 @@ namespace QtOpenGL {
 
 GLWidget::GLWidget(QWidget *parent_)
   : QGLWidget(parent_),
-    m_activeTool(NULL),
-    m_defaultTool(NULL),
-    m_renderTimer(NULL)
+    m_activeTool(nullptr),
+    m_defaultTool(nullptr),
+    m_renderTimer(nullptr)
 {
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins,
@@ -225,7 +225,7 @@ void GLWidget::updateTimeout()
 {
   if (m_renderTimer) {
     m_renderTimer->deleteLater();
-    m_renderTimer = NULL;
+    m_renderTimer = nullptr;
   }
   updateGL();
 }

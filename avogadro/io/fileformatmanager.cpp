@@ -43,7 +43,7 @@ bool FileFormatManager::readFile(Core::Molecule &molecule,
                                  const std::string &fileName,
                                  const std::string &fileExtension) const
 {
-  FileFormat *format(NULL);
+  FileFormat *format(nullptr);
   if (fileExtension.empty()) {
     // We need to guess the file extension.
     size_t pos = fileName.find_last_of('.');
@@ -67,7 +67,7 @@ bool FileFormatManager::writeFile(const Core::Molecule &molecule,
                                   const std::string &fileName,
                                   const std::string &fileExtension) const
 {
-  FileFormat *format(NULL);
+  FileFormat *format(nullptr);
   if (fileExtension.empty()) {
     // We need to guess the file extension.
     size_t pos = fileName.find_last_of('.');
@@ -197,13 +197,13 @@ bool FileFormatManager::removeFormat(const std::string &identifier)
        it != itEnd; ++it) {
     FileFormat *fmt = m_formats[*it];
 
-    if (fmt == NULL)
+    if (fmt == nullptr)
       continue;
 
     removeFromMap(m_mimeTypes, fmt->mimeTypes(), *it);
     removeFromMap(m_fileExtensions, fmt->fileExtensions(), *it);
 
-    m_formats[*it] = NULL;
+    m_formats[*it] = nullptr;
     delete fmt;
   }
 
@@ -215,7 +215,7 @@ FileFormatManager::newFormatFromIdentifier(const std::string &id,
                                            FileFormat::Operations filter) const
 {
   FileFormat *format(filteredFormatFromFormatMap(id, filter, m_identifiers));
-  return format ? format->newInstance() : NULL;
+  return format ? format->newInstance() : nullptr;
 }
 
 FileFormat *
@@ -223,7 +223,7 @@ FileFormatManager::newFormatFromMimeType(const std::string &mime,
                                          FileFormat::Operations filter) const
 {
   FileFormat *format(filteredFormatFromFormatMap(mime, filter, m_mimeTypes));
-  return format ? format->newInstance() : NULL;
+  return format ? format->newInstance() : nullptr;
 }
 
 FileFormat * FileFormatManager::newFormatFromFileExtension(
@@ -231,7 +231,7 @@ FileFormat * FileFormatManager::newFormatFromFileExtension(
 {
   FileFormat *format(filteredFormatFromFormatMap(extension, filter,
                                                  m_fileExtensions));
-  return format ? format->newInstance() : NULL;
+  return format ? format->newInstance() : nullptr;
 }
 
 std::vector<std::string>
@@ -351,7 +351,7 @@ FileFormat *FileFormatManager::filteredFormatFromFormatMap(
   if (it != fmap.end())
     return filteredFormatFromFormatVector(filter, it->second);
 
-  return NULL;
+  return nullptr;
 }
 
 std::vector<FileFormat *> FileFormatManager::filteredFormatsFromFormatVector(
@@ -378,7 +378,7 @@ FileFormat *FileFormatManager::filteredFormatFromFormatVector(
       return m_formats[*it];
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 void FileFormatManager::appendError(const std::string &errorMessage)

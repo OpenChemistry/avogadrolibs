@@ -30,7 +30,7 @@ namespace QtPlugins {
 MongoChem::MongoChem(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
   m_action(new QAction(this)),
-  m_molecule(NULL)
+  m_molecule(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText("&Show Similar Molecules in MongoChem...");

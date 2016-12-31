@@ -46,7 +46,7 @@ public:
   /**
    * @brief Create a named view, the caller assumes ownership of the widget.
    * @param view The name of the view.
-   * @return A new widget of the requested type, NULL if none exists.
+   * @return A new widget of the requested type, nullptr if none exists.
    */
   virtual QWidget * createView(const QString &view) = 0;
 };

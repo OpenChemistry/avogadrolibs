@@ -54,7 +54,7 @@ TEST(InputGeneratorWidgetTest, exercise)
   // Fake a QApplication -- needed to instantiate widgets.
   int argc = 1;
   char argName[] = "FakeApp.exe";
-  char *argv[2] = {argName, NULL};
+  char *argv[2] = {argName, nullptr};
   QApplication app(argc, argv);
   Q_UNUSED(app);
 
@@ -74,11 +74,11 @@ TEST(InputGeneratorWidgetTest, exercise)
             std::string("Input Generator Test"));
 
   // Verify that appropriate widgets are produced for each parameter type:
-  EXPECT_TRUE(widget.findChild<QComboBox*>("Test StringList") != NULL);
-  EXPECT_TRUE(widget.findChild<QLineEdit*>("Test String") != NULL);
-  EXPECT_TRUE(widget.findChild<QSpinBox*>("Test Integer") != NULL);
-  EXPECT_TRUE(widget.findChild<QCheckBox*>("Test Boolean") != NULL);
-  EXPECT_TRUE(widget.findChild<FileBrowseWidget*>("Test FilePath") != NULL);
+  EXPECT_TRUE(widget.findChild<QComboBox*>("Test StringList") != nullptr);
+  EXPECT_TRUE(widget.findChild<QLineEdit*>("Test String") != nullptr);
+  EXPECT_TRUE(widget.findChild<QSpinBox*>("Test Integer") != nullptr);
+  EXPECT_TRUE(widget.findChild<QCheckBox*>("Test Boolean") != nullptr);
+  EXPECT_TRUE(widget.findChild<FileBrowseWidget*>("Test FilePath") != nullptr);
 
   // Set a test filepath
   FileBrowseWidget *testFilePathWidget(

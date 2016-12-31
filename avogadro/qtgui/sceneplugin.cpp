@@ -33,7 +33,7 @@ void ScenePlugin::processEditable(const RWMolecule &, Rendering::GroupNode &)
 
 QWidget * ScenePlugin::setupWidget()
 {
-  return NULL;
+  return nullptr;
 }
 
 } // End QtGui namespace

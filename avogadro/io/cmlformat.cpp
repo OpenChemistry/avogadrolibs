@@ -63,7 +63,7 @@ public:
   CmlFormatPrivate(Molecule *mol, xml_document &document, std::string filename_)
     : success(false),
       molecule(mol),
-      moleculeNode(NULL),
+      moleculeNode(nullptr),
       filename(filename_)
   {
     // Parse the CML document, and create molecules/elements as necessary.

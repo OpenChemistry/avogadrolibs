@@ -37,7 +37,7 @@ using Avogadro::Vector2i;
 #define START_QAPP \
   int argc = 1; \
   char argName[] = "FakeApp.exe"; \
-  char *argv[2] = {argName, NULL}; \
+  char *argv[2] = {argName, nullptr}; \
   QApplication app(argc, argv); \
   Q_UNUSED(app)
 
@@ -48,7 +48,7 @@ bool newInstance()
   bool result = true;
   Strategy orig;
   Interface *clone = orig.newInstance();
-  if (dynamic_cast<Strategy*>(clone) == NULL)
+  if (dynamic_cast<Strategy*>(clone) == nullptr)
     result = false;
   delete clone;
   return result;

@@ -122,7 +122,7 @@ public:
    * @param identifier The unique identifier of the format.
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
-   * @return Instance of the format, NULL if not found. Ownership passes to the
+   * @return Instance of the format, nullptr if not found. Ownership passes to the
    * caller.
    */
   FileFormat * newFormatFromIdentifier(
@@ -135,7 +135,7 @@ public:
    * @param mimeType The MIME type (in lower case).
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
-   * @return Instance of the format, NULL if not found. Ownership passes to the
+   * @return Instance of the format, nullptr if not found. Ownership passes to the
    * caller.
    */
   FileFormat * newFormatFromMimeType(
@@ -148,7 +148,7 @@ public:
    * @param extension The file extension (in lower case).
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
-   * @return Instance of the format, NULL if not found. Ownership passes to the
+   * @return Instance of the format, nullptr if not found. Ownership passes to the
    * caller.
    */
   FileFormat * newFormatFromFileExtension(

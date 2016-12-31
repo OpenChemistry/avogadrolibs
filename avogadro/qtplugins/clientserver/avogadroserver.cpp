@@ -67,10 +67,10 @@ void AvogadroServer::listen(int port)
 
 void AvogadroServer::accept()
 {
-  vtkCommunicatorChannel *channel = NULL;
+  vtkCommunicatorChannel *channel = nullptr;
 
   while (!channel) {
-    vtkClientSocket* clientSocket = NULL;
+    vtkClientSocket* clientSocket = nullptr;
     clientSocket = m_socket->WaitForConnection(100);
 
     if (!clientSocket)

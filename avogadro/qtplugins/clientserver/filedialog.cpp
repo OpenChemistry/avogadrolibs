@@ -118,9 +118,9 @@ public:
 
   Private(FileDialog* p, vtkCommunicatorChannel *server) :
     QObject(p),
-    m_model(new FileDialogModel(server, NULL)),
+    m_model(new FileDialogModel(server, nullptr)),
     m_fileFilter(m_model),
-    m_completer(new QCompleter(&m_fileFilter, NULL))
+    m_completer(new QCompleter(&m_fileFilter, nullptr))
   {
 
   }

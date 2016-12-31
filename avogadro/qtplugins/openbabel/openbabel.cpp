@@ -45,11 +45,11 @@ namespace QtPlugins {
 
 OpenBabel::OpenBabel(QObject *p) :
   ExtensionPlugin(p),
-  m_molecule(NULL),
+  m_molecule(nullptr),
   m_process(new OBProcess(this)),
   m_readFormatsPending(true),
   m_writeFormatsPending(true),
-  m_progress(NULL)
+  m_progress(nullptr)
 {
   QAction *action = new QAction(this);
   action->setEnabled(true);

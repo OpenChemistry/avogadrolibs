@@ -33,13 +33,13 @@ TEST(FileFormatManagerTest, readFile)
 {
   FileFormat *format =
     FileFormatManager::instance().newFormatFromIdentifier("Avogadro: CML");
-  EXPECT_TRUE(format != NULL);
+  EXPECT_TRUE(format != nullptr);
   if (!format)
     return;
   Molecule molecule;
   format->readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
   delete format;
-  format = NULL;
+  format = nullptr;
 
   EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -186,25 +186,25 @@ TEST(FileFormatManagerTest, filtering)
   FileFormatManager::registerFormat(writeOnly.newInstance());
 
   FileFormatManager &manager = FileFormatManager::instance();
-  FileFormat *format = NULL;
+  FileFormat *format = nullptr;
 
   format = manager.newFormatFromFileExtension("asdfjkl;", Format::Read);
-  ASSERT_TRUE(format != NULL);
+  ASSERT_TRUE(format != nullptr);
   EXPECT_EQ(format->identifier(), std::string("readOnly"));
   delete format;
 
   format = manager.newFormatFromFileExtension("asdfjkl;", Format::Write);
-  ASSERT_TRUE(format != NULL);
+  ASSERT_TRUE(format != nullptr);
   EXPECT_EQ(format->identifier(), std::string("writeOnly"));
   delete format;
 
   format = manager.newFormatFromMimeType("chemical/x-doodie", Format::Write);
-  ASSERT_TRUE(format != NULL);
+  ASSERT_TRUE(format != nullptr);
   EXPECT_EQ(format->identifier(), std::string("writeOnly"));
   delete format;
 
   format = manager.newFormatFromMimeType("chemical/x-doodie", Format::Read);
-  ASSERT_TRUE(format != NULL);
+  ASSERT_TRUE(format != nullptr);
   EXPECT_EQ(format->identifier(), std::string("readOnly"));
   delete format;
 }
@@ -216,11 +216,11 @@ TEST(FileFormatManagerTest, unregister)
 
   FileFormatManager &manager = FileFormatManager::instance();
   FileFormat *format = manager.newFormatFromIdentifier("testingFormat");
-  ASSERT_TRUE(format != NULL);
+  ASSERT_TRUE(format != nullptr);
   EXPECT_EQ(format->identifier(), std::string("testingFormat"));
   delete format;
 
   EXPECT_TRUE(FileFormatManager::unregisterFormat("testingFormat"));
   format = manager.newFormatFromIdentifier("testingFormat");
-  ASSERT_TRUE(format == NULL);
+  ASSERT_TRUE(format == nullptr);
 }

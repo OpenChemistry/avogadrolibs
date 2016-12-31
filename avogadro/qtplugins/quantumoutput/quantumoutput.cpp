@@ -51,17 +51,17 @@ using Core::Cube;
 
 QuantumOutput::QuantumOutput(QObject *p) :
   ExtensionPlugin(p),
-  m_progressDialog(NULL),
-  m_molecule(NULL),
-  m_basis(NULL),
-  m_concurrent(NULL),
-  m_concurrent2(NULL),
-  m_cube(NULL),
-  m_mesh1(NULL),
-  m_mesh2(NULL),
-  m_meshGenerator1(NULL),
-  m_meshGenerator2(NULL),
-  m_dialog(NULL)
+  m_progressDialog(nullptr),
+  m_molecule(nullptr),
+  m_basis(nullptr),
+  m_concurrent(nullptr),
+  m_concurrent2(nullptr),
+  m_cube(nullptr),
+  m_mesh1(nullptr),
+  m_mesh2(nullptr),
+  m_meshGenerator1(nullptr),
+  m_meshGenerator2(nullptr),
+  m_dialog(nullptr)
 {
   QAction *action = new QAction(this);
   action->setEnabled(false);
@@ -139,7 +139,7 @@ void QuantumOutput::calculateSurface(int index, float isosurfaceValue,
   if (m_basis) {
     if (!m_progressDialog) {
       m_progressDialog = new QProgressDialog(qobject_cast<QWidget *>(parent()));
-      m_progressDialog->setCancelButtonText(NULL);
+      m_progressDialog->setCancelButtonText(nullptr);
       m_progressDialog->setWindowModality(Qt::NonModal);
     }
 

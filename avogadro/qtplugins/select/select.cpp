@@ -30,7 +30,7 @@ namespace QtPlugins {
 
 Select::Select(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_molecule(NULL)
+  m_molecule(nullptr)
 {
   QAction *action = new QAction(tr("Select All"), this);
   action->setShortcut(QKeySequence("Ctrl+A"));

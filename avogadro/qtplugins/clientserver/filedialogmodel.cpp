@@ -339,7 +339,7 @@ public:
   const FileDialogModelFileInfo* infoForIndex(const QModelIndex& idx) const
   {
     if (idx.isValid() &&
-       NULL == idx.internalPointer() &&
+       nullptr == idx.internalPointer() &&
        idx.row() >= 0 &&
        idx.row() < m_fileList.size()) {
       return &m_fileList[idx.row()];
@@ -353,7 +353,7 @@ public:
       }
     }
 
-    return NULL;
+    return nullptr;
   }
 
 private:
@@ -674,7 +674,7 @@ QModelIndex FileDialogModel::index(int row, int column,
 
   if (p.row() >= 0 &&
      p.row() < m_implementation->m_fileList.size() &&
-     NULL == p.internalPointer()) {
+     nullptr == p.internalPointer()) {
     FileDialogModelFileInfo* fi = &m_implementation->m_fileList[p.row()];
     return createIndex(row, column, fi);
   }
@@ -698,7 +698,7 @@ int FileDialogModel::rowCount(const QModelIndex& idx) const
   if (!idx.isValid())
     return m_implementation->m_fileList.size();
 
-  if (NULL == idx.internalPointer() &&
+  if (nullptr == idx.internalPointer() &&
      idx.row() >= 0 &&
      idx.row() < m_implementation->m_fileList.size())
     return m_implementation->m_fileList[idx.row()].group().size();
@@ -711,7 +711,7 @@ bool FileDialogModel::hasChildren(const QModelIndex& idx) const
   if (!idx.isValid())
     return true;
 
-  if (NULL == idx.internalPointer() &&
+  if (nullptr == idx.internalPointer() &&
      idx.row() >= 0 &&
      idx.row() < m_implementation->m_fileList.size())
     return m_implementation->m_fileList[idx.row()].isGroup();

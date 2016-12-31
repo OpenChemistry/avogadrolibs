@@ -117,9 +117,9 @@ TEST(InputGeneratorTest, exercise)
 
   // Highlight styles:
   GenericHighlighter *highlighter(gen.createFileHighlighter("job.opts"));
-  EXPECT_TRUE(highlighter != NULL);
+  EXPECT_TRUE(highlighter != nullptr);
   delete highlighter;
   highlighter = gen.createFileHighlighter("debug_info");
-  EXPECT_TRUE(highlighter == NULL);
+  EXPECT_TRUE(highlighter == nullptr);
   delete highlighter;
 }

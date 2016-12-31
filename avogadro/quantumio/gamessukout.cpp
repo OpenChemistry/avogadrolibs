@@ -245,19 +245,19 @@ bool GamessukOut::parseFile(std::ifstream &ifs)
   while (ifs.good() && ifs.getline(buffer,BUFF_SIZE)) {
 
     // First find oriented geometry - use this for single-point calculations
-    if ( strstr(buffer,"         *     atom   atomic                coordinates") != NULL )
+    if ( strstr(buffer,"         *     atom   atomic                coordinates") != nullptr )
     {
       readInitialCoordinates(ifs);
     }
 
     // The basis set definition
-    if ( strstr(buffer," atom        shell   type  prim       exponents            contraction coefficients") != NULL )
+    if ( strstr(buffer," atom        shell   type  prim       exponents            contraction coefficients") != nullptr )
     {
       readBasisSet(ifs);
     }
 
     // Determine the scftype - can't do uhf yet
-    if (strstr(buffer," * SCF TYPE") != NULL){
+    if (strstr(buffer," * SCF TYPE") != nullptr){
       tokenize(tokens,buffer," \t\n");
       if(tokens[3].compare(0,6,"rhf")!=0){
         std::cerr << "ERROR: can currently only do rhf!\n";
@@ -267,15 +267,15 @@ bool GamessukOut::parseFile(std::ifstream &ifs)
 
 
     // The converged geometry
-    if ( strstr(buffer,"optimization converged") != NULL )
+    if ( strstr(buffer,"optimization converged") != nullptr )
     {
       readOptimisedCoordinates(ifs);
       if (gotMOs) gotMOs = false; // If we read in some MOs they are now redundant
     }
 
     // The molecular orbitals
-    if ( strstr(buffer,"                                                  eigenvectors") != NULL ||
-         strstr(buffer,"          molecular orbitals") != NULL)
+    if ( strstr(buffer,"                                                  eigenvectors") != nullptr ||
+         strstr(buffer,"          molecular orbitals") != nullptr)
     {
       readMOs(ifs);
       gotMOs = true;
@@ -298,7 +298,7 @@ void GamessukOut::readInitialCoordinates(std::ifstream &ifs)
       ifs.getline(buffer, BUFF_SIZE) &&
       ifs.getline(buffer, BUFF_SIZE);
 
-  while ( strstr(buffer, coordEnd) == NULL )
+  while ( strstr(buffer, coordEnd) == nullptr )
   {
     //std::cout << "COORD line" << buffer << std::endl;
     //ifs.getline(buffer, BUFF_SIZE);
@@ -499,7 +499,7 @@ void GamessukOut::readBasisSet(std::ifstream &ifs)
 
   // nShell
   ifs.getline(buffer, BUFF_SIZE);
-  if (strstr(buffer," total number of shells")==NULL) std::cerr << "Error reading nShell!: " << line << std::endl;
+  if (strstr(buffer," total number of shells")==nullptr) std::cerr << "Error reading nShell!: " << line << std::endl;
   // reuse nshell from above as temporary variable
   tokenize(tokens, buffer, " \t\n");
   from_string<int>(nshell, tokens.at(4), std::dec);
@@ -508,7 +508,7 @@ void GamessukOut::readBasisSet(std::ifstream &ifs)
 
   // nBasisFunctions
   ifs.getline(buffer, BUFF_SIZE);
-  if (strstr(buffer," total number of basis")==NULL) std::cerr << "Error reading nBasisFunctions!: " << line << std::endl;
+  if (strstr(buffer," total number of basis")==nullptr) std::cerr << "Error reading nBasisFunctions!: " << line << std::endl;
   tokenize(tokens, buffer, " \t\n");
   // reuse nshell from above as temporary variable
   from_string<int>(nshell, tokens.at(5), std::dec);
@@ -516,7 +516,7 @@ void GamessukOut::readBasisSet(std::ifstream &ifs)
 
   // nElectrons
   ifs.getline(buffer, BUFF_SIZE);
-  if (strstr(buffer," number of electrons")==NULL) std::cerr << "Error reading nElectrons!: " << line << std::endl;
+  if (strstr(buffer," number of electrons")==nullptr) std::cerr << "Error reading nElectrons!: " << line << std::endl;
   tokenize(tokens, buffer, " \t\n");
   // reuse nshell from above as temporary variable
   from_string<int>(nshell, tokens.at(3), std::dec);
@@ -574,7 +574,7 @@ void GamessukOut::readOptimisedCoordinates(std::ifstream &ifs)
   {
 
     // This for some optimize runtypes
-    if ( strstr(buffer,"         x              y              z            chg  tag") != NULL )
+    if ( strstr(buffer,"         x              y              z            chg  tag") != nullptr )
     {
       //std::cout << "start of opt coord\n";
       // Skip 2 lines - should then be at the coordinates
@@ -583,7 +583,7 @@ void GamessukOut::readOptimisedCoordinates(std::ifstream &ifs)
       while( ! ifs.eof() )
       {
         // End of geometry block
-        if ( strstr(buffer, "  ============================================================") != NULL) return;
+        if ( strstr(buffer, "  ============================================================") != nullptr) return;
 
         tokenize(tokens, buffer, " \t\n");
 
@@ -597,7 +597,7 @@ void GamessukOut::readOptimisedCoordinates(std::ifstream &ifs)
         ifs.getline(buffer, BUFF_SIZE);
       } // end while
     }
-    else if ( strstr(buffer,"atom     znuc       x             y             z") != NULL )
+    else if ( strstr(buffer,"atom     znuc       x             y             z") != nullptr )
     {
 
       // print "start of opt coord 2"
@@ -609,7 +609,7 @@ void GamessukOut::readOptimisedCoordinates(std::ifstream &ifs)
       while( ! ifs.eof() )
       {
         // End of geometry block
-        if ( strstr(buffer, "*************************") != NULL) return;
+        if ( strstr(buffer, "*************************") != nullptr) return;
 
 
         tokenize(tokens, buffer, " \t\n");

@@ -52,7 +52,7 @@ namespace QtPlugins {
 SpaceGroup::SpaceGroup(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
   m_actions(QList<QAction *>()),
-  m_molecule(NULL),
+  m_molecule(nullptr),
   m_spgTol(1e-5),
   m_perceiveSpaceGroupAction(new QAction(this)),
   m_reduceToPrimitiveAction(new QAction(this)),
@@ -151,7 +151,7 @@ void SpaceGroup::moleculeChanged(unsigned int c)
 
 void SpaceGroup::updateActions()
 {
-  // Disable everything for NULL molecules.
+  // Disable everything for nullptr molecules.
   if (!m_molecule) {
     foreach (QAction *action, m_actions)
       action->setEnabled(false);
@@ -194,7 +194,7 @@ void SpaceGroup::perceiveSpaceGroup()
   else {
     // Ask if the user wants to try again with a different tolerance
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(NULL, tr("Failure"),
+    reply = QMessageBox::question(nullptr, tr("Failure"),
                                   tr("Space group perception failed.\n"
                                      "Would you like to try again with a "
                                      "different tolerance?"),
@@ -210,7 +210,7 @@ void SpaceGroup::reduceToPrimitive()
 {
   // Confirm the tolerance
   QMessageBox::StandardButton reply;
-  reply = QMessageBox::question(NULL, tr("Primitive Reduction"),
+  reply = QMessageBox::question(nullptr, tr("Primitive Reduction"),
                                 tr("The tolerance is currently set to: %1.\n"
                                    "Proceed with this tolerance?")
                                   .arg(m_spgTol),
@@ -235,7 +235,7 @@ void SpaceGroup::conventionalizeCell()
 {
   // Confirm the tolerance
   QMessageBox::StandardButton reply;
-  reply = QMessageBox::question(NULL, tr("Conventionalize Cell"),
+  reply = QMessageBox::question(nullptr, tr("Conventionalize Cell"),
                                 tr("The tolerance is currently set to: %1.\n"
                                    "Proceed with this tolerance?")
                                   .arg(m_spgTol),
@@ -260,7 +260,7 @@ void SpaceGroup::symmetrize()
 {
   // Confirm the tolerance
   QMessageBox::StandardButton reply;
-  reply = QMessageBox::question(NULL, tr("Symmetrize Cell"),
+  reply = QMessageBox::question(nullptr, tr("Symmetrize Cell"),
                                 tr("The tolerance is currently set to: %1.\n"
                                    "Proceed with this tolerance?")
                                   .arg(m_spgTol),
@@ -308,7 +308,7 @@ void SpaceGroup::reduceToAsymmetricUnit()
      << "\nInternational symbol: " << intShort
      << "\n\nProceed with this space group?";
   QMessageBox::StandardButton reply;
-  reply = QMessageBox::question(NULL, tr("Reduce to Asymmetric Unit"),
+  reply = QMessageBox::question(nullptr, tr("Reduce to Asymmetric Unit"),
                                 tr(ss.str().c_str()),
                                 QMessageBox::Yes | QMessageBox::No);
 
@@ -328,7 +328,7 @@ void SpaceGroup::reduceToAsymmetricUnit()
 void SpaceGroup::setTolerance()
 {
   bool ok;
-  double tol = QInputDialog::getDouble(NULL,
+  double tol = QInputDialog::getDouble(nullptr,
                                        tr("Avogadro2"), // title
                                        tr("Select tolerance in Å:"), // label
                                        m_spgTol, // initial

@@ -36,7 +36,7 @@ namespace Core {
 class ArraySet
 {
 public:
-  ArraySet() : m_content(NULL), m_data(NULL) {}
+  ArraySet() : m_content(nullptr), m_data(nullptr) {}
   ~ArraySet()
   {
     delete m_content;

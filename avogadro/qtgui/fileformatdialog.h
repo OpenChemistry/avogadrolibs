@@ -44,7 +44,7 @@ public:
   /**
    * Container for a filename and a compatible file format, used as return
    * values in static functions.
-   * @note The FileFormat will be set to NULL to indicate an error.
+   * @note The FileFormat will be set to nullptr to indicate an error.
    * @note The FileFormat points to the reference instance held by the
    * FileFormatManager. Use FileFormat::newInstance() to create a usable copy.
    */
@@ -62,7 +62,7 @@ public:
    * default list of all suitable registered formats will be used.
    * @return A FormatFilePair object containing the absolute file path and a
    * compatible file reader. If an error occurs, the format pointer will be
-   * NULL.
+   * nullptr.
    */
   static FormatFilePair fileToRead(QWidget *parent,
                                    const QString &caption = QString(),
@@ -81,7 +81,7 @@ public:
    * default list of all suitable registered formats will be used.
    * @return A FormatFilePair object containing the absolute file path and a
    * compatible file writer. If an error occurs, the format pointer will be
-   * NULL.
+   * nullptr.
    */
   static FormatFilePair fileToWrite(QWidget *parent,
                                     const QString &caption = QString(),
@@ -92,7 +92,7 @@ public:
    * Given a filename and a set of Io::FileFormat::Operation flags, find a
    * suitable file format from the FileFormatManager. If multiple readers are
    * found, ask the user to select one. If no suitable format is found, return
-   * NULL.
+   * nullptr.
    * @param parentWidget Parent for any dialog windows that will appear.
    * @param caption Window title for any dialog windows.
    * @param fileName Filename to use when searching for a format. Formats are
@@ -100,7 +100,7 @@ public:
    * @param formatFlags Operations that the format must support. Most likely
    * (Io::FileFormat::)Read | File or Write | File.
    * @param formatPrefix Filter on the supplied prefix (default to none).
-   * @return The selected matching reader, or NULL if no reader is found.
+   * @return The selected matching reader, or nullptr if no reader is found.
    */
   static const Io::FileFormat *findFileFormat(QWidget *parentWidget,
                                               const QString &caption,
@@ -114,7 +114,7 @@ private:
    * may be made public at some point if additional API is needed or more
    * complex use cases arise.
    */
-  explicit FileFormatDialog(QWidget *parent = NULL);
+  explicit FileFormatDialog(QWidget *parent = nullptr);
   ~FileFormatDialog();
 
   /**

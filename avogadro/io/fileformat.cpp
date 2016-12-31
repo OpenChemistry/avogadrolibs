@@ -28,7 +28,7 @@ using std::locale;
 using std::ofstream;
 
 FileFormat::FileFormat()
-  : m_mode(None), m_in(NULL), m_out(NULL)
+  : m_mode(None), m_in(nullptr), m_out(nullptr)
 {
 }
 
@@ -78,11 +78,11 @@ void FileFormat::close()
 {
   if (m_in) {
     delete m_in;
-    m_in = NULL;
+    m_in = nullptr;
   }
   if (m_out) {
     delete m_out;
-    m_out = NULL;
+    m_out = nullptr;
   }
   m_mode = None;
 }

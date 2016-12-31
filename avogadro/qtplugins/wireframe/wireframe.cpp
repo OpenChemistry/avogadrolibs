@@ -40,7 +40,7 @@ using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
 
 Wireframe::Wireframe(QObject *p) : ScenePlugin(p), m_enabled(false),
-  m_group(NULL), m_setupWidget(NULL), m_multiBonds(true), m_showHydrogens(true)
+  m_group(nullptr), m_setupWidget(nullptr), m_multiBonds(true), m_showHydrogens(true)
 {
 }
 

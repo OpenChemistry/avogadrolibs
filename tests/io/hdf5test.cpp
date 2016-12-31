@@ -29,7 +29,7 @@ namespace {
 bool fileExists(const char *filename)
 {
   FILE *handle = fopen(filename, "r");
-  if (handle != NULL) {
+  if (handle != nullptr) {
     fclose(handle);
     return true;
   }

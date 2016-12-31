@@ -46,7 +46,7 @@ FileFormatDialog::FormatFilePair
 FileFormatDialog::fileToRead(QWidget *parent, const QString &caption,
                              const QString &dir, const QString &filter)
 {
-  FormatFilePair result(NULL, QString());
+  FormatFilePair result(nullptr, QString());
   // Use the default read filter if none specified:
   const QString realFilter = filter.isEmpty() ? readFileFilter() : filter;
 
@@ -92,7 +92,7 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
     QWidget *parentWidget, const QString &caption, const QString &dir,
     const QString &filter)
 {
-  FormatFilePair result(NULL, QString());
+  FormatFilePair result(nullptr, QString());
   // Use the default read filter if none specified:
   const QString realFilter = filter.isEmpty() ? writeFileFilter() : filter;
 
@@ -138,7 +138,7 @@ const Io::FileFormat *FileFormatDialog::findFileFormat(
     const QString &formatPrefix)
 {
   if (fileName.isEmpty())
-    return NULL;
+    return nullptr;
 
   // Extract extension from filename.
   QFileInfo fileInfo(fileName);
@@ -280,7 +280,7 @@ const Io::FileFormat *FileFormatDialog::selectFileFormat(
     const QString &formatPrefix)
 {
   if (ffs.empty())
-    return NULL;
+    return nullptr;
   else if (ffs.size() == 1)
     return ffs[0];
 
@@ -317,7 +317,7 @@ const Io::FileFormat *FileFormatDialog::selectFileFormat(
   if (!ok
       || index < 0
       || index + 1 > static_cast<int>(ffs.size()))
-    return NULL;
+    return nullptr;
 
   // Store chosen reader for next time
   if (!settingsKey.isNull())

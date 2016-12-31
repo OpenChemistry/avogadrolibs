@@ -55,7 +55,7 @@ vtkVolume * cubeVolume(Core::Cube *cube)
   qDebug() << cube->data()->size();
 
   vtkNew<vtkImageData> data;
- // data->SetNumberOfScalarComponents(1, NULL);
+ // data->SetNumberOfScalarComponents(1, nullptr);
   Eigen::Vector3i dim = cube->dimensions();
   data->SetExtent(0, dim.x()-1, 0, dim.y()-1, 0, dim.z()-1);
 
@@ -147,8 +147,8 @@ vtkVolume * cubeVolume(Core::Cube *cube)
 vtkGLWidget::vtkGLWidget(QWidget* p, const QGLWidget* shareWidget,
                          Qt::WindowFlags f)
   : QVTKWidget2(p, shareWidget, f),
-    m_activeTool(NULL),
-    m_defaultTool(NULL)
+    m_activeTool(nullptr),
+    m_defaultTool(nullptr)
 {
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins,

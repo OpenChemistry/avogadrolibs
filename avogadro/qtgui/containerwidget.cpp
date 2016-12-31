@@ -25,7 +25,7 @@ namespace Avogadro {
 namespace QtGui {
 
 ContainerWidget::ContainerWidget(QWidget *p, Qt::WindowFlags f)
-  : QWidget(p, f), m_viewWidget(NULL), m_label(new QLabel("   ", this)),
+  : QWidget(p, f), m_viewWidget(nullptr), m_label(new QLabel("   ", this)),
     m_active(false)
 {
   QHBoxLayout *h = new QHBoxLayout;

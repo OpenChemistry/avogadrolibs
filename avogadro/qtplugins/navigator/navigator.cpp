@@ -40,9 +40,9 @@ const float ROTATION_SPEED = 0.005f;
 Navigator::Navigator(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
     m_activateAction(new QAction(this)),
-    m_molecule(NULL),
-    m_glWidget(NULL),
-    m_renderer(NULL),
+    m_molecule(nullptr),
+    m_glWidget(nullptr),
+    m_renderer(nullptr),
     m_pressedButtons(Qt::NoButton),
     m_currentAction(Nothing)
 {
@@ -56,7 +56,7 @@ Navigator::~Navigator()
 
 QWidget * Navigator::toolWidget() const
 {
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * Navigator::mousePressEvent(QMouseEvent *e)
@@ -81,7 +81,7 @@ QUndoCommand * Navigator::mousePressEvent(QMouseEvent *e)
     m_currentAction = Translation;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * Navigator::mouseReleaseEvent(QMouseEvent *e)
@@ -90,7 +90,7 @@ QUndoCommand * Navigator::mouseReleaseEvent(QMouseEvent *e)
   m_lastMousePosition = QPoint();
   m_currentAction = Nothing;
   e->accept();
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
@@ -127,7 +127,7 @@ QUndoCommand * Navigator::mouseMoveEvent(QMouseEvent *e)
   if (e->isAccepted())
     emit updateRequested();
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * Navigator::mouseDoubleClickEvent(QMouseEvent *e)
@@ -140,7 +140,7 @@ QUndoCommand * Navigator::mouseDoubleClickEvent(QMouseEvent *e)
       emit updateRequested();
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * Navigator::wheelEvent(QWheelEvent *e)
@@ -151,7 +151,7 @@ QUndoCommand * Navigator::wheelEvent(QWheelEvent *e)
 
   e->accept();
   emit updateRequested();
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * Navigator::keyPressEvent(QKeyEvent *e)
@@ -206,14 +206,14 @@ QUndoCommand * Navigator::keyPressEvent(QKeyEvent *e)
     e->ignore();
   }
   emit updateRequested();
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * Navigator::keyReleaseEvent(QKeyEvent *e)
 {
   /// @todo
   e->ignore();
-  return NULL;
+  return nullptr;
 }
 
 inline void Navigator::updatePressedButtons(QMouseEvent *e, bool release)

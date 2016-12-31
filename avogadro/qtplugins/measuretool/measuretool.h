@@ -42,7 +42,7 @@ class MeasureTool : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit MeasureTool(QObject *parent_ = NULL);
+  explicit MeasureTool(QObject *parent_ = nullptr);
   ~MeasureTool();
 
   QString name() const override { return tr("Measure tool"); }
@@ -82,7 +82,7 @@ inline void MeasureTool::setMolecule(QtGui::Molecule *mol)
   if (m_molecule != mol) {
     m_atoms.clear();
     m_molecule = mol;
-    m_rwMolecule = NULL;
+    m_rwMolecule = nullptr;
   }
 }
 
@@ -91,7 +91,7 @@ inline void MeasureTool::setEditMolecule(QtGui::RWMolecule *mol)
   if (m_rwMolecule != mol) {
     m_atoms.clear();
     m_rwMolecule = mol;
-    m_molecule = NULL;
+    m_molecule = nullptr;
   }
 }
 

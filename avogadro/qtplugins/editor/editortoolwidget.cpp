@@ -35,7 +35,7 @@ namespace QtPlugins {
 EditorToolWidget::EditorToolWidget(QWidget *parent_) :
   QWidget(parent_),
   m_ui(new Ui::EditorToolWidget),
-  m_elementSelector(NULL),
+  m_elementSelector(nullptr),
   m_currentElement(6)
 {
   m_ui->setupUi(this);

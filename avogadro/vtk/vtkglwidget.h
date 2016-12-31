@@ -47,7 +47,7 @@ class AVOGADROVTK_EXPORT vtkGLWidget : public QVTKWidget2
   Q_OBJECT
 
 public:
-  vtkGLWidget(QWidget* p = NULL, const QGLWidget* shareWidget = 0,
+  vtkGLWidget(QWidget* p = nullptr, const QGLWidget* shareWidget = 0,
               Qt::WindowFlags f = 0);
   ~vtkGLWidget();
 

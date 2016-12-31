@@ -38,7 +38,7 @@ class PlayerTool : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit PlayerTool(QObject *p = NULL);
+  explicit PlayerTool(QObject *p = nullptr);
   ~PlayerTool();
 
   QString name() const override { return tr("Player tool"); }

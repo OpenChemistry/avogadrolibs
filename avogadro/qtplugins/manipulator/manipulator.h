@@ -37,7 +37,7 @@ class Manipulator : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit Manipulator(QObject *parent_ = NULL);
+  explicit Manipulator(QObject *parent_ = nullptr);
   ~Manipulator();
 
   QString name() const override { return tr("Manipulate tool"); }

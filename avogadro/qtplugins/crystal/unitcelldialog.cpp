@@ -47,7 +47,7 @@ namespace QtPlugins {
 UnitCellDialog::UnitCellDialog(QWidget *p) :
   QDialog(p),
   m_ui(new Ui::UnitCellDialog),
-  m_molecule(NULL),
+  m_molecule(nullptr),
   m_mode(Invalid)
 {
   m_ui->setupUi(this);

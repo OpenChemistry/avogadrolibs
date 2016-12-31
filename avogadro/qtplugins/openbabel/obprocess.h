@@ -336,8 +336,8 @@ executeObabel(options, this, SLOT(mySlot()));
    * m_obabelExecutable and options as arguments. If provided, the obabelStdin
    * data will be written to the obabel stdin channel.
    */
-  void executeObabel(const QStringList &options, QObject *receiver = NULL,
-                     const char *slot = NULL,
+  void executeObabel(const QStringList &options, QObject *receiver = nullptr,
+                     const char *slot = nullptr,
                      const QByteArray &obabelStdin = QByteArray());
 
   void resetState();

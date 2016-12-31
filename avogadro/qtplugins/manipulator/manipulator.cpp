@@ -48,8 +48,8 @@ using Rendering::Identifier;
 Manipulator::Manipulator(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
     m_activateAction(new QAction(this)),
-    m_molecule(NULL),
-    m_renderer(NULL),
+    m_molecule(nullptr),
+    m_renderer(nullptr),
     m_pressedButtons(Qt::NoButton)
 {
   m_activateAction->setText(tr("Manipulate"));
@@ -62,13 +62,13 @@ Manipulator::~Manipulator()
 
 QWidget *Manipulator::toolWidget() const
 {
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * Manipulator::mousePressEvent(QMouseEvent *e)
 {
   if (!m_renderer)
-    return NULL;
+    return nullptr;
 
   updatePressedButtons(e, false);
   m_lastMousePosition = e->pos();
@@ -85,24 +85,24 @@ QUndoCommand * Manipulator::mousePressEvent(QMouseEvent *e)
     switch (m_object.type) {
     case Rendering::AtomType:
       e->accept();
-      return NULL;
+      return nullptr;
     default:
       break;
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * Manipulator::mouseReleaseEvent(QMouseEvent *e)
 {
   if (!m_renderer)
-    return NULL;
+    return nullptr;
 
   updatePressedButtons(e, true);
 
   if (m_object.type == Rendering::InvalidType)
-    return NULL;
+    return nullptr;
 
   if (m_molecule) {
     m_molecule->setInteractive(false);
@@ -118,14 +118,14 @@ QUndoCommand * Manipulator::mouseReleaseEvent(QMouseEvent *e)
     break;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand * Manipulator::mouseMoveEvent(QMouseEvent *e)
 {
   e->ignore();
   if (!(m_pressedButtons & Qt::LeftButton))
-    return NULL;
+    return nullptr;
 
   const Core::Molecule* mol = &m_molecule->molecule();
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
@@ -157,7 +157,7 @@ QUndoCommand * Manipulator::mouseMoveEvent(QMouseEvent *e)
 
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
   e->accept();
-  return NULL;
+  return nullptr;
 }
 
 void Manipulator::updatePressedButtons(QMouseEvent *e, bool release)

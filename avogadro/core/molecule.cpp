@@ -29,7 +29,7 @@
 namespace Avogadro {
 namespace Core {
 
-Molecule::Molecule() : m_graphDirty(false), m_basisSet(NULL), m_unitCell(NULL)
+Molecule::Molecule() : m_graphDirty(false), m_basisSet(nullptr), m_unitCell(nullptr)
 {
 }
 
@@ -44,8 +44,8 @@ Molecule::Molecule(const Molecule &other)
     m_formalCharges(other.m_formalCharges),
     m_bondPairs(other.m_bondPairs),
     m_bondOrders(other.m_bondOrders),
-    m_basisSet(NULL),
-    m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : NULL)
+    m_basisSet(nullptr),
+    m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr)
 {
   // Copy over any meshes
   for(Index i = 0; i < other.meshCount(); ++i) {
@@ -60,9 +60,9 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_graphDirty = true;
     m_customElementMap = other.m_customElementMap;
     delete m_basisSet;
-    m_basisSet = other.m_basisSet ? other.m_basisSet->clone() : NULL;
+    m_basisSet = other.m_basisSet ? other.m_basisSet->clone() : nullptr;
     delete m_unitCell;
-    m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : NULL;
+    m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr;
     m_data = other.m_data;
     m_atomicNumbers = other.m_atomicNumbers;
     m_positions2d = other.m_positions2d;
@@ -473,7 +473,7 @@ Mesh* Molecule::mesh(Index index)
   if (index < static_cast<Index>(m_meshes.size()))
     return m_meshes[index];
   else
-    return NULL;
+    return nullptr;
 }
 
 const Mesh* Molecule::mesh(Index index) const
@@ -481,7 +481,7 @@ const Mesh* Molecule::mesh(Index index) const
   if (index < static_cast<Index>(m_meshes.size()))
     return m_meshes[index];
   else
-    return NULL;
+    return nullptr;
 }
 
 void Molecule::clearMeshes()
@@ -503,7 +503,7 @@ Cube* Molecule::cube(Index index)
   if (index < static_cast<Index>(m_cubes.size()))
     return m_cubes[index];
   else
-    return NULL;
+    return nullptr;
 }
 
 const Cube* Molecule::cube(Index index) const
@@ -511,7 +511,7 @@ const Cube* Molecule::cube(Index index) const
   if (index < static_cast<Index>(m_cubes.size()))
     return m_cubes[index];
   else
-    return NULL;
+    return nullptr;
 }
 
 void Molecule::clearCubes()

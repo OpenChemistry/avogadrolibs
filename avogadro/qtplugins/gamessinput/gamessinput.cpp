@@ -39,9 +39,9 @@ using ::MoleQueue::JobObject;
 GamessInput::GamessInput(QObject *parent_) :
   ExtensionPlugin(parent_),
   m_action(new QAction(this)),
-  m_molecule(NULL),
-  m_dialog(NULL),
-  m_outputFormat(NULL)
+  m_molecule(nullptr),
+  m_dialog(nullptr),
+  m_outputFormat(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("&GAMESS"));
@@ -75,7 +75,7 @@ void GamessInput::setMolecule(QtGui::Molecule *mol)
 
 void GamessInput::openJobOutput(const JobObject &job)
 {
-  m_outputFormat = NULL;
+  m_outputFormat = nullptr;
   m_outputFileName.clear();
 
   QString outputPath(job.value("outputDirectory").toString());
@@ -85,7 +85,7 @@ void GamessInput::openJobOutput(const JobObject &job)
       FileFormatDialog::fileToRead(qobject_cast<QWidget*>(parent()),
                                    tr("Open Output File"), outputPath);
 
-  if (result.first == NULL) // User canceled
+  if (result.first == nullptr) // User canceled
     return;
 
   m_outputFormat = result.first;
@@ -106,7 +106,7 @@ bool GamessInput::readMolecule(QtGui::Molecule &mol)
                              .arg(QString::fromStdString(reader->error())));
   }
 
-  m_outputFormat = NULL;
+  m_outputFormat = nullptr;
   m_outputFileName.clear();
 
   return success;

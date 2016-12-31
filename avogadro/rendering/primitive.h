@@ -46,7 +46,7 @@ struct Identifier {
 
   bool isValid() const
   {
-    return type != InvalidType && molecule != NULL;
+    return type != InvalidType && molecule != nullptr;
   }
 
   const void* molecule;

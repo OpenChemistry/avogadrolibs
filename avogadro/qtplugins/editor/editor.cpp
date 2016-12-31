@@ -77,9 +77,9 @@ using Avogadro::Core::Elements;
 Editor::Editor(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
     m_activateAction(new QAction(this)),
-    m_molecule(NULL),
-    m_glWidget(NULL),
-    m_renderer(NULL),
+    m_molecule(nullptr),
+    m_glWidget(nullptr),
+    m_renderer(nullptr),
     m_toolWidget(new EditorToolWidget(qobject_cast<QWidget*>(parent_))),
     m_pressedButtons(Qt::NoButton),
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER),
@@ -104,7 +104,7 @@ QUndoCommand *Editor::mousePressEvent(QMouseEvent *e)
 {
   clearKeyPressBuffer();
   if (!m_renderer || !m_molecule)
-    return NULL;
+    return nullptr;
 
   updatePressedButtons(e, false);
   m_clickPosition = e->pos();
@@ -116,17 +116,17 @@ QUndoCommand *Editor::mousePressEvent(QMouseEvent *e)
     case Rendering::InvalidType:
       m_molecule->beginMergeMode(tr("Draw Atom"));
       emptyLeftClick(e);
-      return NULL;
+      return nullptr;
     case Rendering::AtomType:
       // We don't know yet if we are drawing a bond/atom or replacing an atom
       // unfortunately...
       m_molecule->beginMergeMode(tr("Draw"));
       atomLeftClick(e);
-      return NULL;
+      return nullptr;
     case Rendering::BondType:
       m_molecule->beginMergeMode(tr("Change Bond Type"));
       bondLeftClick(e);
-      return NULL;
+      return nullptr;
     }
   }
   else if (m_pressedButtons & Qt::RightButton) {
@@ -136,28 +136,28 @@ QUndoCommand *Editor::mousePressEvent(QMouseEvent *e)
     case Rendering::AtomType:
       m_molecule->beginMergeMode(tr("Remove Atom"));
       atomRightClick(e);
-      return NULL;
+      return nullptr;
     case Rendering::BondType:
       m_molecule->beginMergeMode(tr("Remove Bond"));
       bondRightClick(e);
-      return NULL;
+      return nullptr;
     default:
       break;
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *Editor::mouseReleaseEvent(QMouseEvent *e)
 {
   if (!m_renderer || !m_molecule)
-    return NULL;
+    return nullptr;
 
   updatePressedButtons(e, true);
 
   if (m_clickedObject.type == Rendering::InvalidType)
-    return NULL;
+    return nullptr;
 
   switch (e->button()) {
   case Qt::LeftButton:
@@ -175,25 +175,25 @@ QUndoCommand *Editor::mouseReleaseEvent(QMouseEvent *e)
     break;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *Editor::mouseMoveEvent(QMouseEvent *e)
 {
   if (!m_renderer)
-    return NULL;
+    return nullptr;
 
   if (m_pressedButtons & Qt::LeftButton)
     if (m_clickedObject.type == Rendering::AtomType)
       atomLeftDrag(e);
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
 {
   if (e->text().isEmpty())
-    return NULL;
+    return nullptr;
 
   e->accept();
 
@@ -207,7 +207,7 @@ QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
 
   if (m_keyPressBuffer.size() >= 3) {
     clearKeyPressBuffer();
-    return NULL;
+    return nullptr;
   }
 
   bool ok = false;
@@ -224,7 +224,7 @@ QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
       m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
   }
 
-  return NULL;
+  return nullptr;
 }
 
 void Editor::draw(Rendering::GroupNode &node)

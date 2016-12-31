@@ -41,8 +41,8 @@ namespace QtPlugins {
 
 Crystal::Crystal(QObject *parent_) :
   Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_molecule(NULL),
-  m_unitCellDialog(NULL),
+  m_molecule(nullptr),
+  m_unitCellDialog(nullptr),
   m_importCrystalClipboardAction(new QAction(this)),
   m_editUnitCellAction(new QAction(this)),
   m_buildSupercellAction(new QAction(this)),
@@ -151,7 +151,7 @@ void Crystal::moleculeChanged(unsigned int c)
 
 void Crystal::updateActions()
 {
-  // Disable everything for NULL molecules.
+  // Disable everything for nullptr molecules.
   if (!m_molecule) {
     foreach (QAction *action, m_actions)
       action->setEnabled(false);

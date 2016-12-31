@@ -38,7 +38,7 @@ TEST(AtomTyper, singleAtomTyping)
   class MassTyper : public AtomTyper<double>
   {
   public:
-    MassTyper() : AtomTyper<double>(NULL) {}
+    MassTyper() : AtomTyper<double>(nullptr) {}
     Array<double>& typesRef() { return m_types; }
   protected:
     double type(const Atom &atom)
