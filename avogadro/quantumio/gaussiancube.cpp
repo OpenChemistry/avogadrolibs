@@ -60,7 +60,7 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
 
   // Read and set name
   getline(in, line);
-  std::string cubeName = line;
+  molecule.setData("name", line);
 
   // Read and skip field title (we may be able to use this to setCubeType in the future)
   getline(in, line);
