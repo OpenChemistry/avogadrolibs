@@ -215,7 +215,7 @@ float PQRRequest::getMolMass(QString formula) {
         }
       }
       //if the next letter is another uppercase or null, the current subscript is 1
-      else if (isupper(str[i + 1]) || str[i + 1] == nullptr) {
+      else if (isupper(str[i + 1]) || str[i + 1] == 0) {
         subscript = 1;
         element = { str[i] };
       }
