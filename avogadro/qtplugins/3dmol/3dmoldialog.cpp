@@ -23,7 +23,6 @@
 #include <avogadro/io/fileformatmanager.h>
 
 #include <string>
-#include <QtGui/QClipboard>
 
 using Avogadro::QtGui::Molecule;
 

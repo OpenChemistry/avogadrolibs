@@ -18,7 +18,6 @@
 #define AVOGADRO_QTGUI_ThreeDMOLDIALOG_H
 
 #include <QtWidgets/QDialog>
-#include <QtGui/QClipboard>
 
 namespace Avogadro {
 
