@@ -18,6 +18,7 @@
 #define AVOGADRO_QTGUI_ThreeDMOLDIALOG_H
 
 #include <QtWidgets/QDialog>
+#include <QtGui/QClipboard>
 
 namespace Avogadro {
 
@@ -56,6 +57,7 @@ private slots:
   void updateLabels();
   void updateTextBrowser();
   void moleculeDestroyed();
+  void copyToClipboard();
 
 private:
   QtGui::Molecule *m_molecule;
