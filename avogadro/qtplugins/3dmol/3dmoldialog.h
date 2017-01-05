@@ -56,6 +56,7 @@ private slots:
   void updateLabels();
   void updateTextBrowser();
   void moleculeDestroyed();
+  void copyToClipboard();
 
 private:
   QtGui::Molecule *m_molecule;
