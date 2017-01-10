@@ -1,5 +1,5 @@
 #include "plugindownloader.h"
-
+#include "downloaderwidget.h"
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
 
@@ -11,6 +11,7 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtCore/QList>
 
+//#include <libarchive/archive.h>
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -18,8 +19,7 @@ PluginDownloader::PluginDownloader(QObject *parent_)
   : ExtensionPlugin(parent_),
     m_action(new QAction(this)),
     m_molecule(nullptr),
-    m_network(nullptr),
-    m_progressDialog(nullptr)
+    m_network(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText("Plugin Downloader");
@@ -48,18 +48,19 @@ void PluginDownloader::setMolecule(QtGui::Molecule *mol)
 
 bool PluginDownloader::readMolecule(QtGui::Molecule &mol)
 {
-
+	return true;
 }
 
 void PluginDownloader::showDialog()
 {
   QList<QString> repos;
-	m_dialog->show();
+	DownloaderWidget *widget = new DownloaderWidget();
+	widget->show();
 }
 
 void PluginDownloader::replyFinished(QNetworkReply *reply)
 {
-  m_tableDialog->hide();
+
   // Read in all the data
   if (!reply->isReadable()) {
     QMessageBox::warning(qobject_cast<QWidget*>(parent()),

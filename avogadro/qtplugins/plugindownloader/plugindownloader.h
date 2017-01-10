@@ -52,7 +52,7 @@ private:
   QNetworkAccessManager *m_network;
   QString m_moleculeName;
   QByteArray m_moleculeData;
-  QProgressDialog *m_dialog; //TODO: change
+
 };
 
 }
