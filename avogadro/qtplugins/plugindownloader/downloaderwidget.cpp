@@ -80,8 +80,9 @@ void DownloaderWidget::updateRepos()
   	QVariant statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
 		if(statusCode.toInt() == 302)
 		{
+			ui->readmeBrowser->append("redirect");
 			QVariant possibleRedirectUrl =
-			  reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+			reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
 
 			QUrl _urlRedirectedTo = possibleRedirectUrl.toUrl();
 
@@ -97,21 +98,33 @@ void DownloaderWidget::updateRepos()
 		else
   	{
 		//done with redirect
-
+		ui->readmeBrowser->append("done with redirect");
 		QByteArray fileData = reply->readAll();
 
 		QDir().mkpath(filePath);
-		QString absolutePath = filePath + "/" + nameList.takeFirst() + ".zip";
+		QString repoName = nameList.takeFirst();
+		QString filename = repoName + ".zip";
+
+		QString absolutePath = filePath + "/" + filename;
+		QString extractdirectory = filePath + "/";
+
 		QFile out(absolutePath);
 		ui->readmeBrowser->append("file downloaded");
 		ui->readmeBrowser->append(filePath);
 		out.open(QIODevice::WriteOnly);
     QDataStream outstr(&out);
     outstr << fileData;
+		out.close();
 
-		QByteArray ba = absolutePath.toLatin1();
-		const char *abspath = ba.data();
-		ZipExtracter::extract(abspath);
+		QByteArray ba = filename.toLatin1();
+		const char *filen = ba.data();
+		ba = extractdirectory.toLatin1();
+		const char *extractdir = ba.data();
+		ba = absolutePath.toLatin1();
+		const char *absolutep = ba.data();
+
+		ui->readmeBrowser->append("extractdir: " + extractdirectory);
+		ZipExtracter::extract(filen, extractdir, absolutep);
 
 		reply->deleteLater();
 		downloadNext();
@@ -119,6 +132,7 @@ void DownloaderWidget::updateRepos()
 	}
 	else
 	{
+		ui->readmeBrowser->append("error in reply");
 		ready = true;
 	  reply->deleteLater();
 		if(!nameList.isEmpty())

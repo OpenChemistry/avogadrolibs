@@ -35,15 +35,22 @@ int ZipExtracter::copy_data(struct archive *ar, struct archive *aw)
   }
 }
 
-int ZipExtracter::extract(const char *filename)
+char* ZipExtracter::convert(const std::string& str) {
+    char* result = new char[str.length()+1];
+    strcpy(result,str.c_str());
+    return result;
+}
+
+int ZipExtracter::extract(const char *filename, const char *extractdir, const char *absolutepath)
 {
   struct archive *a;
   struct archive *ext;
   struct archive_entry *entry;
   int flags;
   int r;
-
-  /* Select which attributes we want to restore. */
+	std::string newFilename;
+	std::string currentFilename;
+	/* Select which attributes we want to restore. */
   flags = ARCHIVE_EXTRACT_TIME;
   flags |= ARCHIVE_EXTRACT_PERM;
   flags |= ARCHIVE_EXTRACT_ACL;
@@ -54,16 +61,23 @@ int ZipExtracter::extract(const char *filename)
   ext = archive_write_disk_new();
   archive_write_disk_set_options(ext, flags);
   archive_write_disk_set_standard_lookup(ext);
-  if ((r = archive_read_open_filename(a, filename, 10240)))
+  if ((r = archive_read_open_filename(a, absolutepath, 10240)))
     return 1;
+
   for (;;) {
     r = archive_read_next_header(a, &entry);
+
     if (r == ARCHIVE_EOF)
       break;
     if (r < ARCHIVE_OK)
       fprintf(stderr, "%s\n", archive_error_string(a));
     if (r < ARCHIVE_WARN)
       return 1;
+
+			currentFilename = archive_entry_pathname(entry);
+			newFilename = extractdir;
+			newFilename.append(currentFilename);
+			archive_entry_set_pathname(entry, convert(newFilename));
     r = archive_write_header(ext, entry);
     if (r < ARCHIVE_OK)
       fprintf(stderr, "%s\n", archive_error_string(ext));
