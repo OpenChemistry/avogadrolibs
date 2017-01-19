@@ -14,6 +14,7 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QList>
 #include <QtCore/QFile>
+#include <QtCore/QMutex>
 #include <QtCore/QDir>
 #include <QtCore/QStringList>
 #include <json/json.h>
@@ -42,8 +43,15 @@ public slots:
 	void updateRepos();
 	void showREADME();
 	void downloadREADME(int, int);
-
+	void updateRepoData();
 private:
+	typedef struct repo
+	{
+		QString name;
+		QString description;
+		QString release;
+	};
+	void getRepoData(QList<QString>&);
 	void downloadNext();
 	bool checkSHA1(QByteArray);
 
@@ -56,11 +64,13 @@ private:
   Json::Value root;
 	/** Used to parse JSON results */
 	QVariantMap m_jsonResult;
-
+	QList<repo> repoData;
 	QString filePath;
-
+	QMutex tableLock;
+	int currentTableIndex = 0;
 	int numRepos;
 	int numProcessed;
+	QList<QString> repos;
 	QList<QString> downloadList;
 	QList<QString> nameList;
 	bool ready;

@@ -17,20 +17,22 @@ DownloaderWidget::DownloaderWidget(QWidget* parent) :
   connect(ui->downloadButton, SIGNAL(clicked(bool)), this, SLOT(downloadRepos()));
 	connect(ui->repoTable, SIGNAL(cellClicked(int, int)),
 		this, SLOT(downloadREADME(int, int)));
-	QList<QString> repos;
+
 	repos.append(QString("https://github.com/OpenChemistry/crystals"));
 	repos.append(QString("https://github.com/OpenChemistry/avogenerators"));
-	ui->repoTable->setColumnCount(1);
-	ui->repoTable->setHorizontalHeaderLabels(QStringList() << "Repository");
+	ui->repoTable->setColumnCount(4);
+	ui->repoTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+	ui->repoTable->setHorizontalHeaderLabels(QStringList() << "Update" << "Name" << "Description" << "Releases");
 	ui->repoTable->horizontalHeader()->setStretchLastSection(true);
 
 	numRepos = repos.size();
 
 	ui->repoTable->setRowCount(numRepos);
+
+	getRepoData(repos);
+
 	for(int i = 0; i < numRepos; i++) {
 		QString url = repos.at(i);
-		ui->repoTable->setItem(i, 0, new QTableWidgetItem(url));
-
 		QStringList urlparts = url.split('/', QString::SkipEmptyParts);
 		nameList.append(urlparts[3]);
 	}
@@ -40,11 +42,65 @@ DownloaderWidget::~DownloaderWidget()
 {
   delete ui;
 }
+
+void DownloaderWidget::getRepoData(QList<QString> &repos)
+{
+	for(int i = 0; i < repos.size(); i++)
+	{
+		QString url = "https://api.github.com/repos/";
+		QString slug = repos.at(i);
+		slug.remove(0, 19);
+		url.append(slug);
+		ui->readmeBrowser->append(url);
+		QNetworkRequest request;
+		request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+		request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36");
+		request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
+		request.setUrl(url); // Set the url
+		reply = oNetworkAccessManager->get(request);
+		connect(reply, SIGNAL(finished()), this, SLOT(updateRepoData()));
+	}
+}
+
+void DownloaderWidget::updateRepoData()
+{
+	tableLock.lock();
+	if (reply->error() == QNetworkReply::NoError)
+	{
+
+		read = new Json::Reader();
+		// Reading the data from the response
+		QByteArray bytes = reply->readAll();
+		QString jsonString(bytes);
+
+		//parse the json
+		read->parse(jsonString.toStdString().c_str(), root);
+
+		repo tempData;
+		tempData.name = root.get("name", "ERROR").asCString();
+		tempData.description = root.get("description", "ERROR").asCString();
+		tempData.release = root.get("updated_at", "ERROR").asCString();
+		repoData.append(tempData);
+		ui->readmeBrowser->append(tempData.name);
+
+		QTableWidgetItem *checkbox = new QTableWidgetItem();
+		checkbox->setCheckState(Qt::Unchecked);
+		ui->repoTable->setItem(currentTableIndex, 0, checkbox);
+		ui->repoTable->setItem(currentTableIndex, 1, new QTableWidgetItem(tempData.name));
+		ui->repoTable->setItem(currentTableIndex, 2, new QTableWidgetItem(tempData.description));
+		ui->repoTable->setItem(currentTableIndex, 3, new QTableWidgetItem(tempData.release));
+		currentTableIndex++;
+
+	}
+	//reply->deleteLater();
+	tableLock.unlock();
+}
 bool DownloaderWidget::checkSHA1(QByteArray file)
 {
 //TODO
 return false;
 }
+
 void DownloaderWidget::downloadNext()
 {
 	if(!downloadList.isEmpty())
@@ -74,7 +130,7 @@ void DownloaderWidget::downloadRepos()
 }
 void DownloaderWidget::updateRepos()
 {
-	ui->readmeBrowser->append("updateRepos called");
+//	ui->readmeBrowser->append("updateRepos called");
 	if (reply->error() == QNetworkReply::NoError)
 	{
   	QVariant statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
@@ -147,7 +203,7 @@ void DownloaderWidget::downloadREADME(int row, int col)
  ui->readmeBrowser->clear();
  ui->readmeBrowser->append(QString(row));
  QString url = "https://api.github.com/repos/";
- QString slug = ui->repoTable->item(row, 0)->text();
+ QString slug = repos.at(row);
  slug.remove(0, 19);
  url.append(slug);
  url.append("/readme");
