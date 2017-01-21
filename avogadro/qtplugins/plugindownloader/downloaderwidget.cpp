@@ -29,13 +29,8 @@ DownloaderWidget::DownloaderWidget(QWidget* parent) :
 
 	ui->repoTable->setRowCount(numRepos);
 
-	getRepoData(repos);
+	getRepoData();
 
-	for(int i = 0; i < numRepos; i++) {
-		QString url = repos.at(i);
-		QStringList urlparts = url.split('/', QString::SkipEmptyParts);
-		nameList.append(urlparts[3]);
-	}
 }
 
 DownloaderWidget::~DownloaderWidget()
@@ -43,12 +38,11 @@ DownloaderWidget::~DownloaderWidget()
   delete ui;
 }
 
-void DownloaderWidget::getRepoData(QList<QString> &repos)
+void DownloaderWidget::getRepoData()
 {
-	for(int i = 0; i < repos.size(); i++)
-	{
+	if(currentTableIndex <= repos.size()){
 		QString url = "https://api.github.com/repos/";
-		QString slug = repos.at(i);
+		QString slug = repos.at(currentTableIndex);
 		slug.remove(0, 19);
 		url.append(slug);
 		ui->readmeBrowser->append(url);
@@ -64,7 +58,7 @@ void DownloaderWidget::getRepoData(QList<QString> &repos)
 
 void DownloaderWidget::updateRepoData()
 {
-	tableLock.lock();
+
 	if (reply->error() == QNetworkReply::NoError)
 	{
 
@@ -89,11 +83,13 @@ void DownloaderWidget::updateRepoData()
 		ui->repoTable->setItem(currentTableIndex, 1, new QTableWidgetItem(tempData.name));
 		ui->repoTable->setItem(currentTableIndex, 2, new QTableWidgetItem(tempData.description));
 		ui->repoTable->setItem(currentTableIndex, 3, new QTableWidgetItem(tempData.release));
-		currentTableIndex++;
+
 
 	}
-	//reply->deleteLater();
-	tableLock.unlock();
+	currentTableIndex++;
+	reply->deleteLater();
+	if(currentTableIndex < repos.size())
+		getRepoData();
 }
 bool DownloaderWidget::checkSHA1(QByteArray file)
 {
@@ -111,24 +107,136 @@ void DownloaderWidget::downloadNext()
 		request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36");
 		request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
 		request.setUrl(url); // Set the url
-		ui->readmeBrowser->append(url);
+		ui->readmeBrowser->append("making download request to: " + url);
 		reply = oNetworkAccessManager->get(request);
-		connect(reply, SIGNAL(finished()), this, SLOT(updateRepos()));
+		connect(reply, SIGNAL(finished()), this, SLOT(handleRedirect()));
 	}
 }
+
+void DownloaderWidget::downloadNextPlugin()
+{
+	if(!pluginList.isEmpty())
+	{
+		QString url = pluginList.takeFirst();
+		QNetworkRequest request;
+		request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+		request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36");
+		request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
+		request.setUrl(url); // Set the url
+		ui->readmeBrowser->append(url);
+		reply = oNetworkAccessManager->get(request);
+		connect(reply, SIGNAL(finished()), this, SLOT(parsePluginType()));
+	} else {
+		for(int i = 0; i < pluginTypes.size(); i++) {
+			ui->readmeBrowser->append("plugin #" + QString::number(i) + " is: " + pluginTypes.at(i));
+		}
+		downloadNext();
+	}
+}
+
+void DownloaderWidget::parsePluginType()
+{
+	if (reply->error() == QNetworkReply::NoError)
+	{
+
+		read = new Json::Reader();
+		// Reading the data from the response
+		QByteArray bytes = reply->readAll();
+		QString jsonString(bytes);
+
+		//parse the json
+		read->parse(jsonString.toStdString().c_str(), root);
+		QByteArray encodedType = root.get("content", "ERROR").asCString();
+
+		read = new Json::Reader();
+
+		QByteArray pluginJSON = QByteArray::fromBase64(encodedType);
+		QString pluginString(pluginJSON);
+		read->parse(pluginString.toStdString().c_str(), root);
+		pluginTypes.append(root.get("type", "other").asCString());
+	}
+	downloadNextPlugin();
+}
+
 void DownloaderWidget::downloadRepos()
 {
+
 	for(int i = 0; i < numRepos; i++) {
-		QString url = "https://api.github.com/repos/";
-		QString slug = ui->repoTable->item(i, 0)->text();
-		slug.remove(0, 19);
-		url.append(slug);
-		url.append("/zipball/master");
-		downloadList.append(url);
+		if(ui->repoTable->item(i, 0)->checkState() == Qt::Checked) {
+			QString url = "https://api.github.com/repos/";
+			QString slug = repos.at(i);
+			slug.remove(0, 19);
+			url.append(slug);
+			url.append("/zipball/master");
+			downloadList.append(url);
+
+			QString pluginURL = "https://api.github.com/repos/";
+			pluginURL.append(slug);
+			pluginURL.append("/contents/plugin.json");
+			pluginList.append(pluginURL);
+
+			QString repoURL = repos.at(i);
+			QStringList urlparts = repoURL.split('/', QString::SkipEmptyParts);
+			nameList.append(urlparts[3]);
+	  }
   }
-	downloadNext();
+	//get "type" form plugin.json
+	downloadNextPlugin();
+	//download the repos
+	//downloadNext();
 }
 void DownloaderWidget::updateRepos()
+{
+	if (reply->error() == QNetworkReply::NoError) {
+		//done with redirect
+		ui->readmeBrowser->append("done with redirect" );
+		QByteArray fileData = reply->readAll();
+		ui->readmeBrowser->append("fileData size: " + QString::number(fileData.size()));
+		QDir().mkpath(filePath);
+		QString repoName = nameList.takeFirst();
+		QString filename = repoName + ".zip";
+
+		QString absolutePath = filePath + "/" + filename;
+		QString extractdirectory;
+			QString subdir = pluginTypes.takeFirst();
+		ui->readmeBrowser->append("subdir: " + subdir);
+
+		extractdirectory = filePath + "/" + subdir + "/";
+
+
+		QDir().mkpath(extractdirectory);
+
+		QFile out(absolutePath);
+		ui->readmeBrowser->append("file downloaded");
+		ui->readmeBrowser->append(filePath);
+		out.open(QIODevice::WriteOnly);
+		QDataStream outstr(&out);
+		outstr << fileData;
+		out.close();
+
+		QByteArray ba = filename.toLatin1();
+		const char *filen = ba.data();
+
+		std::string extractdir = extractdirectory.toStdString();
+
+		std::string absolutep = absolutePath.toStdString();
+
+		ZipExtracter unzip;
+
+		ui->readmeBrowser->append("filename: " + filename);
+		ui->readmeBrowser->append("absolutePath: " + absolutePath);
+		ui->readmeBrowser->append("extractdir: " + extractdirectory);
+		QList<QString> extractres = unzip.extract(filen, extractdir, absolutep);
+		ui->readmeBrowser->append("check extractdir: " + QString::fromStdString(extractdir));
+		ui->readmeBrowser->append("extracres size: " + QString::number(extractres.size()));
+	//	for(int i = 0; i < extractres.size(); i++) {
+	//		ui->readmeBrowser->append("filename: " + QString::number(i) + ": " + extractres.at(i));
+	//	}
+		reply->deleteLater();
+		downloadNext();
+  }
+}
+void DownloaderWidget::handleRedirect()
 {
 //	ui->readmeBrowser->append("updateRepos called");
 	if (reply->error() == QNetworkReply::NoError)
@@ -147,44 +255,14 @@ void DownloaderWidget::updateRepos()
 			request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36");
 			request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
 			request.setUrl(_urlRedirectedTo); // Set the url
-
+			//reply->deleteLater();
 			reply = oNetworkAccessManager->get(request);
 	    connect(reply, SIGNAL(finished()), this, SLOT(updateRepos()));
-    }
-		else
-  	{
-		//done with redirect
-		ui->readmeBrowser->append("done with redirect");
-		QByteArray fileData = reply->readAll();
 
-		QDir().mkpath(filePath);
-		QString repoName = nameList.takeFirst();
-		QString filename = repoName + ".zip";
+    } else {
+				ui->readmeBrowser->append("error handling redirect: " + QString::number(statusCode.toInt()));
 
-		QString absolutePath = filePath + "/" + filename;
-		QString extractdirectory = filePath + "/";
-
-		QFile out(absolutePath);
-		ui->readmeBrowser->append("file downloaded");
-		ui->readmeBrowser->append(filePath);
-		out.open(QIODevice::WriteOnly);
-    QDataStream outstr(&out);
-    outstr << fileData;
-		out.close();
-
-		QByteArray ba = filename.toLatin1();
-		const char *filen = ba.data();
-		ba = extractdirectory.toLatin1();
-		const char *extractdir = ba.data();
-		ba = absolutePath.toLatin1();
-		const char *absolutep = ba.data();
-
-		ui->readmeBrowser->append("extractdir: " + extractdirectory);
-		ZipExtracter::extract(filen, extractdir, absolutep);
-
-		reply->deleteLater();
-		downloadNext();
-	  }
+		}
 	}
 	else
 	{

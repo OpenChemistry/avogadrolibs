@@ -1,6 +1,8 @@
 #include "archive.h"
 #include "archive_entry.h"
 #include <string>
+#include <QtCore/QList>
+
 namespace Avogadro {
 
 namespace QtPlugins {
@@ -10,9 +12,9 @@ class ZipExtracter {
 public:
 	ZipExtracter();
 	~ZipExtracter();
-	static char* convert(const std::string&);
-	static int copy_data(struct archive *ar, struct archive *aw);
-	static int extract(const char *filename, const char* extractdir, const char* filefolder);
+	char* convert(const std::string&);
+	int copy_data(struct archive *ar, struct archive *aw);
+	QList<QString> extract(const char *filename, std::string extractdir, std::string absolutepath);
 
 };
 }

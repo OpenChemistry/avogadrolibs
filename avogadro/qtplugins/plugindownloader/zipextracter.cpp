@@ -41,15 +41,18 @@ char* ZipExtracter::convert(const std::string& str) {
     return result;
 }
 
-int ZipExtracter::extract(const char *filename, const char *extractdir, const char *absolutepath)
+QList<QString> ZipExtracter::extract(const char *filename, std::string extractdir, std::string absolutepath)
 {
   struct archive *a;
   struct archive *ext;
   struct archive_entry *entry;
   int flags;
   int r;
+	QList<QString> toReturn;
+	std::string extractdirectory = extractdir;
 	std::string newFilename;
 	std::string currentFilename;
+
 	/* Select which attributes we want to restore. */
   flags = ARCHIVE_EXTRACT_TIME;
   flags |= ARCHIVE_EXTRACT_PERM;
@@ -61,23 +64,36 @@ int ZipExtracter::extract(const char *filename, const char *extractdir, const ch
   ext = archive_write_disk_new();
   archive_write_disk_set_options(ext, flags);
   archive_write_disk_set_standard_lookup(ext);
-  if ((r = archive_read_open_filename(a, absolutepath, 10240)))
-    return 1;
-
+  if ((r = archive_read_open_filename(a, convert(absolutepath), 10240))) {
+		toReturn.append("ERROR - archive_read_open_filename == true");
+		toReturn.append(QString::number(r));
+		QString errorMsg = archive_error_string(a);
+		toReturn.append(errorMsg);
+    return toReturn;
+	}
+	long itrCount = 0;
   for (;;) {
+
     r = archive_read_next_header(a, &entry);
 
     if (r == ARCHIVE_EOF)
       break;
     if (r < ARCHIVE_OK)
       fprintf(stderr, "%s\n", archive_error_string(a));
-    if (r < ARCHIVE_WARN)
-      return 1;
+    if (r < ARCHIVE_WARN) {
+			toReturn.append("ERROR - r < ARCHIVE_WARN");
+		  return toReturn;
+		}
 
-			currentFilename = archive_entry_pathname(entry);
-			newFilename = extractdir;
-			newFilename.append(currentFilename);
-			archive_entry_set_pathname(entry, convert(newFilename));
+
+		currentFilename = archive_entry_pathname(entry);
+		newFilename = extractdirectory;
+		newFilename.append(currentFilename);
+
+		toReturn.append(QString::fromStdString(extractdirectory));
+		toReturn.append(QString::fromStdString(currentFilename));
+
+		archive_entry_set_pathname(entry, convert(newFilename));
     r = archive_write_header(ext, entry);
     if (r < ARCHIVE_OK)
       fprintf(stderr, "%s\n", archive_error_string(ext));
@@ -85,20 +101,24 @@ int ZipExtracter::extract(const char *filename, const char *extractdir, const ch
       r = copy_data(a, ext);
       if (r < ARCHIVE_OK)
         fprintf(stderr, "%s\n", archive_error_string(ext));
-      if (r < ARCHIVE_WARN)
-        return 1;
+      if (r < ARCHIVE_WARN) {
+				toReturn.append("ERROR - r < ARCHIVE_WARN");
+			  return toReturn;
+			}
     }
     r = archive_write_finish_entry(ext);
     if (r < ARCHIVE_OK)
       fprintf(stderr, "%s\n", archive_error_string(ext));
-    if (r < ARCHIVE_WARN)
-      return 1;
+    if (r < ARCHIVE_WARN) {
+			toReturn.append("ERROR - r < ARCHIVE_WARN");
+		  return toReturn;
+		}
   }
   archive_read_close(a);
   archive_read_free(a);
   archive_write_close(ext);
   archive_write_free(ext);
-  return 0;
+  return toReturn;
 }
 
 }

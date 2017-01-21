@@ -39,11 +39,13 @@ public:
   ~DownloaderWidget();
 
 public slots:
+	void handleRedirect();
 	void downloadRepos();
 	void updateRepos();
 	void showREADME();
 	void downloadREADME(int, int);
 	void updateRepoData();
+	void parsePluginType();
 private:
 	typedef struct repo
 	{
@@ -51,7 +53,8 @@ private:
 		QString description;
 		QString release;
 	};
-	void getRepoData(QList<QString>&);
+	void downloadNextPlugin();
+	void getRepoData();
 	void downloadNext();
 	bool checkSHA1(QByteArray);
 
@@ -72,6 +75,8 @@ private:
 	int numProcessed;
 	QList<QString> repos;
 	QList<QString> downloadList;
+	QList<QString> pluginList;
+	QList<QString> pluginTypes;
 	QList<QString> nameList;
 	bool ready;
 };
