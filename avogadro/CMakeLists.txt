@@ -6,6 +6,10 @@ function(avogadro_add_library name)
   if(${name} MATCHES "^AvogadroQt")
     set_target_properties(${name} PROPERTIES AUTOMOC TRUE)
   endif()
+  if(BUILD_SHARED_LIBS)
+  set_target_properties(${name} PROPERTIES VERSION "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}"
+   					   SOVERSION ${AvogadroLibs_VERSION_MAJOR})
+  endif()
   string(TOLOWER ${name} lowerName)
   # Generate the necessary export headers.
   generate_export_header(${name} EXPORT_FILE_NAME ${lowerName}export.h)
