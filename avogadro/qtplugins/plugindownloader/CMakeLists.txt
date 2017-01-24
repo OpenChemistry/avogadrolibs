@@ -5,14 +5,14 @@ include_directories(SYSTEM ${LIBARCHIVE_INCLUDE_DIR})
 # Extension
 set(plugindownloader_srcs
   plugindownloader.cpp
-	downloaderwidget.cpp
-	zipextracter.cpp
+  downloaderwidget.cpp
+  zipextracter.cpp
 )
 
 avogadro_plugin(PluginDownloader
   "Download plugins from Github repositories"
   ExtensionPlugin
-	plugindownloader.h
+  plugindownloader.h
   PluginDownloader
   "${plugindownloader_srcs}"
   downloaderwidget.ui

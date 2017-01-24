@@ -19,18 +19,16 @@ namespace QtPlugins {
  * folder for plugins, molecule data, etc..
  */
 
-class PluginDownloader : public QtGui::ExtensionPlugin
-{
+class PluginDownloader : public QtGui::ExtensionPlugin {
   Q_OBJECT
 
-public:
+ public:
   explicit PluginDownloader(QObject *parent = 0);
   ~PluginDownloader() override;
 
   QString name() const override { return tr("Plugin Downloader"); }
 
-  QString description() const override
-  {
+  QString description() const override {
     return tr("Downloader plugins from Github repositories.");
   }
 
@@ -38,24 +36,22 @@ public:
 
   QStringList menuPath(QAction *) const override;
 
-public slots:
+ public slots:
   void setMolecule(QtGui::Molecule *mol);
   bool readMolecule(QtGui::Molecule &mol);
 
-private slots:
+ private slots:
   void showDialog();
-  void replyFinished(QNetworkReply*);
+  void replyFinished(QNetworkReply *);
 
-private:
+ private:
   QAction *m_action;
   QtGui::Molecule *m_molecule;
   QNetworkAccessManager *m_network;
   QString m_moleculeName;
   QByteArray m_moleculeData;
-
 };
-
 }
 }
 
-#endif // AVOGADRO_QTPLUGINS_PLUGINDOWNLOADER_H
+#endif  // AVOGADRO_QTPLUGINS_PLUGINDOWNLOADER_H

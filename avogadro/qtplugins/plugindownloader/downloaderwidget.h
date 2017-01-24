@@ -25,67 +25,61 @@ class DownloaderWidget;
 
 namespace Avogadro {
 
-
 namespace QtPlugins {
-//class PQRRequest;
-//class ImportPQR;
+// class PQRRequest;
+// class ImportPQR;
 
-class DownloaderWidget : public QDialog
-{
+class DownloaderWidget : public QDialog {
   Q_OBJECT
 
-public:
+ public:
   DownloaderWidget(QWidget *parent = 0);
   ~DownloaderWidget();
 
-public slots:
-	void showREADME();
-	void downloadREADME(int, int);
-	void updateRepoData();
-	void getCheckedRepos();
-	void handleRedirect();
-	void unzipPlugin();
-private:
-	typedef struct repo
-	{
-		QString name;
-		QString description;
-		QString release_version;
-		QString updated_at;
-		QString zipball_url;
-		QString readme_url;
-		bool has_release;
-	};
+ public slots:
+  void showREADME();
+  void downloadREADME(int, int);
+  void updateRepoData();
+  void getCheckedRepos();
+  void handleRedirect();
+  void unzipPlugin();
 
-	typedef struct downloadEntry
-	{
-		QString url;
-		QString name;
-		QString type;
-	};
-	void downloadNextPlugin();
-	void getRepoData();
-	void downloadNext();
-	bool checkSHA1(QByteArray);
-	struct repo* repoList;
+ private:
+  typedef struct repo {
+    QString name;
+    QString description;
+    QString release_version;
+    QString updated_at;
+    QString zipball_url;
+    QString readme_url;
+    bool has_release;
+  };
+
+  typedef struct downloadEntry {
+    QString url;
+    QString name;
+    QString type;
+  };
+  void downloadNextPlugin();
+  void getRepoData();
+  void downloadNext();
+  bool checkSHA1(QByteArray);
+  struct repo *repoList;
   Ui::DownloaderWidget *ui;
-	QNetworkAccessManager *oNetworkAccessManager;
-	QNetworkReply *reply;
+  QNetworkAccessManager *oNetworkAccessManager;
+  QNetworkReply *reply;
   /** Jsoncpp reader to read JSON results */
   Json::Reader *read;
   /** Holds a node of JSON results */
   Json::Value root;
-	/** Used to parse JSON results */
-	QVariantMap m_jsonResult;
+  /** Used to parse JSON results */
+  QVariantMap m_jsonResult;
 
+  QString filePath;
 
-	QString filePath;
-
-	QList<downloadEntry> downloadList;
-	int numRepos;
-
+  QList<downloadEntry> downloadList;
+  int numRepos;
 };
-
 }
 }
-#endif // AVOGADRO_DOWNLOADERWIDGET_H
+#endif  // AVOGADRO_DOWNLOADERWIDGET_H
