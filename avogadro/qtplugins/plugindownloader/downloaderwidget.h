@@ -39,25 +39,35 @@ public:
   ~DownloaderWidget();
 
 public slots:
-	void handleRedirect();
-	void downloadRepos();
-	void updateRepos();
 	void showREADME();
 	void downloadREADME(int, int);
 	void updateRepoData();
-	void parsePluginType();
+	void getCheckedRepos();
+	void handleRedirect();
+	void unzipPlugin();
 private:
 	typedef struct repo
 	{
 		QString name;
 		QString description;
-		QString release;
+		QString release_version;
+		QString updated_at;
+		QString zipball_url;
+		QString readme_url;
+		bool has_release;
+	};
+
+	typedef struct downloadEntry
+	{
+		QString url;
+		QString name;
+		QString type;
 	};
 	void downloadNextPlugin();
 	void getRepoData();
 	void downloadNext();
 	bool checkSHA1(QByteArray);
-
+	struct repo* repoList;
   Ui::DownloaderWidget *ui;
 	QNetworkAccessManager *oNetworkAccessManager;
 	QNetworkReply *reply;
@@ -67,18 +77,13 @@ private:
   Json::Value root;
 	/** Used to parse JSON results */
 	QVariantMap m_jsonResult;
-	QList<repo> repoData;
+
+
 	QString filePath;
-	QMutex tableLock;
-	int currentTableIndex = 0;
+
+	QList<downloadEntry> downloadList;
 	int numRepos;
-	int numProcessed;
-	QList<QString> repos;
-	QList<QString> downloadList;
-	QList<QString> pluginList;
-	QList<QString> pluginTypes;
-	QList<QString> nameList;
-	bool ready;
+
 };
 
 }
