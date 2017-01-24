@@ -33,7 +33,6 @@ DownloaderWidget::~DownloaderWidget() { delete ui; }
 
 void DownloaderWidget::getRepoData() {
   QString url = "https://avogadro.cc/plugins.json";
-  ui->readmeBrowser->append(url);
   QNetworkRequest request;
   request.setRawHeader("Accept",
                        "text/html,application/xhtml+xml,application/"
@@ -76,7 +75,7 @@ void DownloaderWidget::updateRepoData() {
       urlParts.removeLast();  // remove /zipball/(version/branch)
       urlParts.append("readme");
       QString readmeUrl = urlParts.join("/");
-      ui->readmeBrowser->append("readme url: " + readmeUrl);
+
       repoList[i].readme_url = readmeUrl;
       QTableWidgetItem *checkbox = new QTableWidgetItem();
       checkbox->setCheckState(Qt::Unchecked);
@@ -167,7 +166,6 @@ void DownloaderWidget::handleRedirect() {
     QVariant statusCode =
         reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     if (statusCode.toInt() == 302) {
-      ui->readmeBrowser->append("redirect");
       QVariant possibleRedirectUrl =
           reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
 
@@ -187,12 +185,8 @@ void DownloaderWidget::handleRedirect() {
       reply = oNetworkAccessManager->get(request);
       connect(reply, SIGNAL(finished()), this, SLOT(unzipPlugin()));
 
-    } else
-      ui->readmeBrowser->append("error handling redirect: " +
-                                QString::number(statusCode.toInt()));
+    }
   } else {
-    ui->readmeBrowser->append("error in reply");
-
     reply->deleteLater();
     downloadList.removeLast();
     downloadNext();
@@ -202,10 +196,7 @@ void DownloaderWidget::handleRedirect() {
 void DownloaderWidget::unzipPlugin() {
   if (reply->error() == QNetworkReply::NoError) {
     // done with redirect
-    ui->readmeBrowser->append("done with redirect");
     QByteArray fileData = reply->readAll();
-    ui->readmeBrowser->append("fileData size: " +
-                              QString::number(fileData.size()));
     QDir().mkpath(filePath);
     QString repoName = downloadList.last().name;
     QString filename = repoName + ".zip";
@@ -213,15 +204,12 @@ void DownloaderWidget::unzipPlugin() {
     QString absolutePath = filePath + "/" + filename;
     QString extractdirectory;
     QString subdir = downloadList.last().type;
-    ui->readmeBrowser->append("subdir: " + subdir);
 
     extractdirectory = filePath + "/" + subdir + "/";
 
     QDir().mkpath(extractdirectory);
 
     QFile out(absolutePath);
-    ui->readmeBrowser->append("file downloaded");
-    ui->readmeBrowser->append(filePath);
     out.open(QIODevice::WriteOnly);
     QDataStream outstr(&out);
     outstr << fileData;
@@ -229,25 +217,12 @@ void DownloaderWidget::unzipPlugin() {
 
     QByteArray ba = filename.toLatin1();
     const char *filen = ba.data();
-
     std::string extractdir = extractdirectory.toStdString();
-
     std::string absolutep = absolutePath.toStdString();
-
     ZipExtracter unzip;
 
-    ui->readmeBrowser->append("filename: " + filename);
-    ui->readmeBrowser->append("absolutePath: " + absolutePath);
-    ui->readmeBrowser->append("extractdir: " + extractdirectory);
-    QList<QString> extractres = unzip.extract(filen, extractdir, absolutep);
-    ui->readmeBrowser->append("check extractdir: " +
-                              QString::fromStdString(extractdir));
-    ui->readmeBrowser->append("extracres size: " +
-                              QString::number(extractres.size()));
-    //  for(int i = 0; i < extractres.size(); i++) {
-    //    ui->readmeBrowser->append("filename: " + QString::number(i) + ": " +
-    //extractres.at(i));
-    //  }
+    unzip.extract(filen, extractdir, absolutep);
+
     reply->deleteLater();
     downloadList.removeLast();
     downloadNext();
