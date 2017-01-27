@@ -29,8 +29,13 @@ DownloaderWidget::DownloaderWidget(QWidget *parent)
   getRepoData();
 }
 
-DownloaderWidget::~DownloaderWidget() { delete ui; }
+DownloaderWidget::~DownloaderWidget() {
+  delete ui;
+  delete repoList;
+  delete read;	
+}
 
+//download master plugin.json from Avogadro.cc
 void DownloaderWidget::getRepoData() {
   QString url = "https://avogadro.cc/plugins.json";
   QNetworkRequest request;
@@ -47,6 +52,7 @@ void DownloaderWidget::getRepoData() {
   connect(reply, SIGNAL(finished()), this, SLOT(updateRepoData()));
 }
 
+//Process the master plugin.json hosted on Avogadro.cc
 void DownloaderWidget::updateRepoData() {
   if (reply->error() == QNetworkReply::NoError) {
     read = new Json::Reader();
@@ -94,6 +100,7 @@ void DownloaderWidget::updateRepoData() {
   reply->deleteLater();
 }
 
+//Grab README data from Github
 void DownloaderWidget::downloadREADME(int row, int col) {
   ui->readmeBrowser->clear();
   QString url = repoList[row].readme_url;
@@ -112,6 +119,7 @@ void DownloaderWidget::downloadREADME(int row, int col) {
   connect(reply, SIGNAL(finished()), this, SLOT(showREADME()));
 }
 
+//display README when the user clicks a row
 void DownloaderWidget::showREADME() {
   if (reply->error() == QNetworkReply::NoError) {
     read = new Json::Reader();
@@ -128,6 +136,7 @@ void DownloaderWidget::showREADME() {
   }
 }
 
+//see which repositories the user checked
 void DownloaderWidget::getCheckedRepos() {
   downloadList.clear();
   for (int i = 0; i < numRepos; i++) {
@@ -142,6 +151,7 @@ void DownloaderWidget::getCheckedRepos() {
   downloadNext();
 }
 
+//Used to download one zip at a time so we know which plugin data we're getting
 void DownloaderWidget::downloadNext() {
   if (!downloadList.isEmpty()) {
     QString url = downloadList.last().url;
@@ -161,6 +171,7 @@ void DownloaderWidget::downloadNext() {
   }
 }
 
+//The download url for Github is always a redirect to the actual zip
 void DownloaderWidget::handleRedirect() {
   if (reply->error() == QNetworkReply::NoError) {
     QVariant statusCode =
@@ -181,7 +192,6 @@ void DownloaderWidget::handleRedirect() {
                            "Chrome/54.0.2840.71 Safari/537.36");
       request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
       request.setUrl(_urlRedirectedTo);  // Set the url
-      // reply->deleteLater();
       reply = oNetworkAccessManager->get(request);
       connect(reply, SIGNAL(finished()), this, SLOT(unzipPlugin()));
 
@@ -193,6 +203,7 @@ void DownloaderWidget::handleRedirect() {
   }
 }
 
+//Save and unzip the plugin zipball
 void DownloaderWidget::unzipPlugin() {
   if (reply->error() == QNetworkReply::NoError) {
     // done with redirect

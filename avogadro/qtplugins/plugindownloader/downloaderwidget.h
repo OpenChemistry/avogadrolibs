@@ -14,7 +14,6 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QList>
 #include <QtCore/QFile>
-#include <QtCore/QMutex>
 #include <QtCore/QDir>
 #include <QtCore/QStringList>
 #include <json/json.h>
@@ -26,8 +25,6 @@ class DownloaderWidget;
 namespace Avogadro {
 
 namespace QtPlugins {
-// class PQRRequest;
-// class ImportPQR;
 
 class DownloaderWidget : public QDialog {
   Q_OBJECT
@@ -64,6 +61,7 @@ class DownloaderWidget : public QDialog {
   void getRepoData();
   void downloadNext();
   bool checkSHA1(QByteArray);
+
   struct repo *repoList;
   Ui::DownloaderWidget *ui;
   QNetworkAccessManager *oNetworkAccessManager;

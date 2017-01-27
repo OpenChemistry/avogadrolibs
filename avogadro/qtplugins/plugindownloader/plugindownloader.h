@@ -49,7 +49,6 @@ class PluginDownloader : public QtGui::ExtensionPlugin {
   QtGui::Molecule *m_molecule;
   QNetworkAccessManager *m_network;
   QString m_moleculeName;
-  QByteArray m_moleculeData;
 };
 }
 }

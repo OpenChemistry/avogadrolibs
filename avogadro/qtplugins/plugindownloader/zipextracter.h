@@ -13,8 +13,7 @@ class ZipExtracter {
   ~ZipExtracter();
   char *convert(const std::string &);
   int copy_data(struct archive *ar, struct archive *aw);
-  QList<QString> extract(const char *filename, std::string extractdir,
-                         std::string absolutepath);
+  QList<QString> extract(std::string extractdir, std::string absolutepath);
 };
 }
 }

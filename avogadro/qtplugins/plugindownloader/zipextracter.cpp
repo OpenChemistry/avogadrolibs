@@ -32,8 +32,8 @@ char *ZipExtracter::convert(const std::string &str) {
   return result;
 }
 
-QList<QString> ZipExtracter::extract(const char *filename,
-                                     std::string extractdir,
+//Extract method from libarchive docs, changed to return QList of errors
+QList<QString> ZipExtracter::extract(std::string extractdir,
                                      std::string absolutepath) {
   struct archive *a;
   struct archive *ext;
