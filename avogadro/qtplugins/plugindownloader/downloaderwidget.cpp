@@ -32,7 +32,7 @@ DownloaderWidget::DownloaderWidget(QWidget *parent)
 DownloaderWidget::~DownloaderWidget() {
   delete ui;
   delete repoList;
-  delete read;	
+  delete read;
 }
 
 //download master plugin.json from Avogadro.cc
@@ -226,13 +226,11 @@ void DownloaderWidget::unzipPlugin() {
     outstr << fileData;
     out.close();
 
-    QByteArray ba = filename.toLatin1();
-    const char *filen = ba.data();
     std::string extractdir = extractdirectory.toStdString();
     std::string absolutep = absolutePath.toStdString();
-    ZipExtracter unzip;
 
-    unzip.extract(filen, extractdir, absolutep);
+		ZipExtracter unzip;
+    unzip.extract(extractdir, absolutep);
 
     reply->deleteLater();
     downloadList.removeLast();
