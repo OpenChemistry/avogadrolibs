@@ -54,6 +54,33 @@ Molecule::Molecule(const Molecule &other)
   }
 }
 
+Molecule::Molecule(Molecule &&other) noexcept
+  : m_graph(std::move(other.m_graph)),
+    m_graphDirty(std::move(other.m_graphDirty)),
+    m_data(std::move(other.m_data)),
+    m_customElementMap(std::move(other.m_customElementMap)),
+    m_atomicNumbers(std::move(other.atomicNumbers())),
+    m_positions2d(std::move(other.m_positions2d)),
+    m_positions3d(std::move(other.m_positions3d)),
+    m_coordinates3d(std::move(other.m_coordinates3d)),
+    m_hybridizations(std::move(other.m_hybridizations)),
+    m_formalCharges(std::move(other.m_formalCharges)),
+    m_vibrationFrequencies(std::move(other.m_vibrationFrequencies)),
+    m_vibrationIntensities(std::move(other.m_vibrationIntensities)),
+    m_vibrationLx(std::move(other.m_vibrationLx)),
+    m_bondPairs(std::move(other.m_bondPairs)),
+    m_bondOrders(std::move(other.m_bondOrders)),
+    m_selectedAtoms(std::move(other.m_selectedAtoms)),
+    m_meshes(std::move(other.m_meshes)),
+    m_cubes(std::move(other.m_cubes))
+{
+  m_basisSet = other.m_basisSet;
+  other.m_basisSet = nullptr;
+
+  m_unitCell = other.m_unitCell;
+  other.m_unitCell = nullptr;
+}
+
 Molecule& Molecule::operator=(const Molecule& other)
 {
   if (this != &other) {
@@ -79,6 +106,44 @@ Molecule& Molecule::operator=(const Molecule& other)
       Mesh *m = addMesh();
       *m = *other.mesh(i);
     }
+  }
+
+  return *this;
+}
+
+Molecule& Molecule::operator=(Molecule &&other) noexcept
+{
+  if (this != &other) {
+    m_graph = std::move(other.m_graph);
+    m_graphDirty = std::move(other.m_graphDirty);
+    m_data = std::move(other.m_data);
+    m_customElementMap = std::move(other.m_customElementMap);
+    m_atomicNumbers = std::move(other.m_atomicNumbers);
+    m_positions2d = std::move(other.m_positions2d);
+    m_positions3d = std::move(other.m_positions3d);
+    m_coordinates3d = std::move(other.m_coordinates3d);
+    m_hybridizations = std::move(other.m_hybridizations);
+    m_formalCharges = std::move(other.m_formalCharges);
+    m_vibrationFrequencies = std::move(other.m_vibrationFrequencies);
+    m_vibrationIntensities = std::move(other.m_vibrationIntensities);
+    m_vibrationLx = std::move(other.m_vibrationLx);
+    m_bondPairs = std::move(other.m_bondPairs);
+    m_bondOrders = std::move(other.m_bondOrders);
+    m_selectedAtoms = std::move(other.m_selectedAtoms);
+
+    clearMeshes();
+    m_meshes = std::move(other.m_meshes);
+
+    clearCubes();
+    m_cubes = std::move(other.m_cubes);
+
+    delete m_basisSet;
+    m_basisSet = other.m_basisSet;
+    other.m_basisSet = nullptr;
+
+    delete m_unitCell;
+    m_unitCell = other.m_unitCell;
+    other.m_unitCell = nullptr;
   }
 
   return *this;
