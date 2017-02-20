@@ -48,9 +48,15 @@ Molecule::Molecule(const Molecule &other)
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr)
 {
   // Copy over any meshes
-  for(Index i = 0; i < other.meshCount(); ++i) {
+  for (Index i = 0; i < other.meshCount(); ++i) {
     Mesh *m = addMesh();
     *m = *other.mesh(i);
+  }
+
+  // Copy over any cubes
+  for (Index i = 0; i < other.cubeCount(); ++i) {
+    Cube *c = addCube();
+    *c = *other.cube(i);
   }
 }
 
@@ -75,9 +81,17 @@ Molecule& Molecule::operator=(const Molecule& other)
     clearMeshes();
 
     // Copy over any meshes
-    for(Index i = 0; i < other.meshCount(); ++i) {
+    for (Index i = 0; i < other.meshCount(); ++i) {
       Mesh *m = addMesh();
       *m = *other.mesh(i);
+    }
+
+    clearCubes();
+
+    // Copy over any cubes
+    for (Index i = 0; i < other.cubeCount(); ++i) {
+      Cube *c = addCube();
+      *c = *other.cube(i);
     }
   }
 
@@ -89,6 +103,7 @@ Molecule::~Molecule()
   delete m_basisSet;
   delete m_unitCell;
   clearMeshes();
+  clearCubes();
 }
 
 void Molecule::setData(const std::string &name, const Variant &value)
