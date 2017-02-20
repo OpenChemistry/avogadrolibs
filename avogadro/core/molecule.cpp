@@ -23,33 +23,30 @@
 #include "mesh.h"
 #include "unitcell.h"
 
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 
 namespace Avogadro {
 namespace Core {
 
-Molecule::Molecule() : m_graphDirty(false), m_basisSet(nullptr), m_unitCell(nullptr)
+Molecule::Molecule()
+  : m_graphDirty(false), m_basisSet(nullptr), m_unitCell(nullptr)
 {
 }
 
-Molecule::Molecule(const Molecule &other)
-  : m_graphDirty(true),
-    m_data(other.m_data),
+Molecule::Molecule(const Molecule& other)
+  : m_graphDirty(true), m_data(other.m_data),
     m_customElementMap(other.m_customElementMap),
-    m_atomicNumbers(other.atomicNumbers()),
-    m_positions2d(other.m_positions2d),
+    m_atomicNumbers(other.atomicNumbers()), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d),
     m_hybridizations(other.m_hybridizations),
-    m_formalCharges(other.m_formalCharges),
-    m_bondPairs(other.m_bondPairs),
-    m_bondOrders(other.m_bondOrders),
-    m_basisSet(nullptr),
+    m_formalCharges(other.m_formalCharges), m_bondPairs(other.m_bondPairs),
+    m_bondOrders(other.m_bondOrders), m_basisSet(nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr)
 {
   // Copy over any meshes
-  for(Index i = 0; i < other.meshCount(); ++i) {
-    Mesh *m = addMesh();
+  for (Index i = 0; i < other.meshCount(); ++i) {
+    Mesh* m = addMesh();
     *m = *other.mesh(i);
   }
 }
@@ -75,8 +72,8 @@ Molecule& Molecule::operator=(const Molecule& other)
     clearMeshes();
 
     // Copy over any meshes
-    for(Index i = 0; i < other.meshCount(); ++i) {
-      Mesh *m = addMesh();
+    for (Index i = 0; i < other.meshCount(); ++i) {
+      Mesh* m = addMesh();
       *m = *other.mesh(i);
     }
   }
@@ -91,32 +88,32 @@ Molecule::~Molecule()
   clearMeshes();
 }
 
-void Molecule::setData(const std::string &name, const Variant &value)
+void Molecule::setData(const std::string& name, const Variant& value)
 {
   m_data.setValue(name, value);
 }
 
-Variant Molecule::data(const std::string &name) const
+Variant Molecule::data(const std::string& name) const
 {
   return m_data.value(name);
 }
 
-bool Molecule::hasData(const std::string &name) const
+bool Molecule::hasData(const std::string& name) const
 {
   return m_data.hasValue(name);
 }
 
-void Molecule::setDataMap(const VariantMap &map)
+void Molecule::setDataMap(const VariantMap& map)
 {
   m_data = map;
 }
 
-const VariantMap &Molecule::dataMap() const
+const VariantMap& Molecule::dataMap() const
 {
   return m_data;
 }
 
-VariantMap &Molecule::dataMap()
+VariantMap& Molecule::dataMap()
 {
   return m_data;
 }
@@ -126,7 +123,7 @@ Array<unsigned char>& Molecule::atomicNumbers()
   return m_atomicNumbers;
 }
 
-const Array<unsigned char> &Molecule::atomicNumbers() const
+const Array<unsigned char>& Molecule::atomicNumbers() const
 {
   return m_atomicNumbers;
 }
@@ -136,7 +133,7 @@ Array<AtomHybridization>& Molecule::hybridizations()
   return m_hybridizations;
 }
 
-const Array<AtomHybridization> &Molecule::hybridizations() const
+const Array<AtomHybridization>& Molecule::hybridizations() const
 {
   return m_hybridizations;
 }
@@ -146,47 +143,47 @@ Array<signed char>& Molecule::formalCharges()
   return m_formalCharges;
 }
 
-const Array<signed char> &Molecule::formalCharges() const
+const Array<signed char>& Molecule::formalCharges() const
 {
   return m_formalCharges;
 }
 
-Array<Vector2> &Molecule::atomPositions2d()
+Array<Vector2>& Molecule::atomPositions2d()
 {
   return m_positions2d;
 }
 
-const Array<Vector2> &Molecule::atomPositions2d() const
+const Array<Vector2>& Molecule::atomPositions2d() const
 {
   return m_positions2d;
 }
 
-Array<Vector3> &Molecule::atomPositions3d()
+Array<Vector3>& Molecule::atomPositions3d()
 {
   return m_positions3d;
 }
 
-const Array<Vector3> &Molecule::atomPositions3d() const
+const Array<Vector3>& Molecule::atomPositions3d() const
 {
   return m_positions3d;
 }
 
-Array<std::pair<Index, Index> > &Molecule::bondPairs()
+Array<std::pair<Index, Index>>& Molecule::bondPairs()
 {
   return m_bondPairs;
 }
 
-const Array<std::pair<Index, Index> > &Molecule::bondPairs() const
+const Array<std::pair<Index, Index>>& Molecule::bondPairs() const
 {
   return m_bondPairs;
 }
 
-Array<unsigned char> &Molecule::bondOrders()
+Array<unsigned char>& Molecule::bondOrders()
 {
   return m_bondOrders;
 }
 
-const Array<unsigned char> &Molecule::bondOrders() const
+const Array<unsigned char>& Molecule::bondOrders() const
 {
   return m_bondOrders;
 }
@@ -203,20 +200,20 @@ const Graph& Molecule::graph() const
   return m_graph;
 }
 
-const Molecule::CustomElementMap &Molecule::customElementMap() const
+const Molecule::CustomElementMap& Molecule::customElementMap() const
 {
   return m_customElementMap;
 }
 
-void Molecule::setCustomElementMap(const Molecule::CustomElementMap &map)
+void Molecule::setCustomElementMap(const Molecule::CustomElementMap& map)
 {
   m_customElementMap = map;
 }
 
 bool Molecule::hasCustomElements() const
 {
-  for (Array<unsigned char>::const_iterator
-       it = m_atomicNumbers.begin(), itEnd = m_atomicNumbers.end();
+  for (Array<unsigned char>::const_iterator it = m_atomicNumbers.begin(),
+                                            itEnd = m_atomicNumbers.end();
        it != itEnd; ++it) {
     if (Core::isCustomElement(*it))
       return true;
@@ -263,7 +260,8 @@ bool Molecule::removeAtom(Index index)
     // Find any bonds to the moved atom and update their index.
     atomBonds = bonds(atom(newSize));
     for (Array<BondType>::const_iterator it = atomBonds.begin(),
-         itEnd = atomBonds.end(); it != itEnd; ++it) {
+                                         itEnd = atomBonds.end();
+         it != itEnd; ++it) {
       std::pair<Index, Index> pair = m_bondPairs[it->index()];
       if (pair.first == newSize)
         pair.first = index;
@@ -286,7 +284,7 @@ bool Molecule::removeAtom(Index index)
   return true;
 }
 
-bool Molecule::removeAtom(const AtomType &atom_)
+bool Molecule::removeAtom(const AtomType& atom_)
 {
   return removeAtom(atom_.index());
 }
@@ -323,7 +321,7 @@ namespace {
 // Make an std::pair where the lower index is always first in the pair. This
 // offers us the guarantee that any given pair of atoms will always result in
 // a pair that is the same no matter what the order of the atoms given.
-std::pair<Index, Index> makeBondPair(const Index &a, const Index &b)
+std::pair<Index, Index> makeBondPair(const Index& a, const Index& b)
 {
   return a < b ? std::make_pair(a, b) : std::make_pair(b, a);
 }
@@ -342,7 +340,7 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
   return BondType(this, bondCount() - 1);
 }
 
-Molecule::BondType Molecule::addBond(const AtomType &a, const AtomType &b,
+Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
                                      unsigned char order)
 {
   assert(a.isValid() && a.molecule() == this);
@@ -370,7 +368,7 @@ bool Molecule::removeBond(Index index)
   return true;
 }
 
-bool Molecule::removeBond(const BondType &bond_)
+bool Molecule::removeBond(const BondType& bond_)
 {
   return removeBond(bond_.index());
 }
@@ -380,7 +378,7 @@ bool Molecule::removeBond(Index a, Index b)
   return removeBond(bond(a, b).index());
 }
 
-bool Molecule::removeBond(const AtomType &a, const AtomType &b)
+bool Molecule::removeBond(const AtomType& a, const AtomType& b)
 {
   return removeBond(bond(a, b).index());
 }
@@ -398,14 +396,14 @@ Molecule::BondType Molecule::bond(Index index) const
   return BondType(const_cast<Molecule*>(this), index);
 }
 
-Molecule::BondType Molecule::bond(const AtomType &a, const AtomType &b) const
+Molecule::BondType Molecule::bond(const AtomType& a, const AtomType& b) const
 {
   assert(a.isValid() && a.molecule() == this);
   assert(b.isValid() && b.molecule() == this);
 
   std::pair<Index, Index> pair = makeBondPair(a.index(), b.index());
 
-  Array<std::pair<Index, Index> >::const_iterator iter =
+  Array<std::pair<Index, Index>>::const_iterator iter =
     std::find(m_bondPairs.begin(), m_bondPairs.end(), pair);
 
   if (iter == m_bondPairs.end())
@@ -413,7 +411,7 @@ Molecule::BondType Molecule::bond(const AtomType &a, const AtomType &b) const
 
   Index index = static_cast<Index>(std::distance(m_bondPairs.begin(), iter));
 
-  return BondType(const_cast<Molecule *>(this), index);
+  return BondType(const_cast<Molecule*>(this), index);
 }
 
 Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
@@ -423,18 +421,18 @@ Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
 
   std::pair<Index, Index> pair = makeBondPair(atomId1, atomId2);
 
-  Array<std::pair<Index, Index> >::const_iterator iter =
-      std::find(m_bondPairs.begin(), m_bondPairs.end(), pair);
+  Array<std::pair<Index, Index>>::const_iterator iter =
+    std::find(m_bondPairs.begin(), m_bondPairs.end(), pair);
 
   if (iter == m_bondPairs.end())
     return BondType();
 
   Index index = static_cast<Index>(std::distance(m_bondPairs.begin(), iter));
 
-  return BondType(const_cast<Molecule *>(this), index);
+  return BondType(const_cast<Molecule*>(this), index);
 }
 
-Array<Molecule::BondType> Molecule::bonds(const AtomType &a)
+Array<Molecule::BondType> Molecule::bonds(const AtomType& a)
 {
   if (!a.isValid())
     return Array<BondType>();
@@ -486,7 +484,7 @@ const Mesh* Molecule::mesh(Index index) const
 
 void Molecule::clearMeshes()
 {
-  while(!m_meshes.empty()) {
+  while (!m_meshes.empty()) {
     delete m_meshes.back();
     m_meshes.pop_back();
   }
@@ -516,19 +514,20 @@ const Cube* Molecule::cube(Index index) const
 
 void Molecule::clearCubes()
 {
-  while(!m_cubes.empty()) {
+  while (!m_cubes.empty()) {
     delete m_cubes.back();
     m_cubes.pop_back();
   }
 }
 
-std::string Molecule::formula(const std::string &delimiter, int over) const
+std::string Molecule::formula(const std::string& delimiter, int over) const
 {
   // Adapted from chemkit:
   // A map of atomic symbols to their quantity.
   std::map<unsigned char, size_t> composition;
   for (Array<unsigned char>::const_iterator it = m_atomicNumbers.begin(),
-       itEnd = m_atomicNumbers.end(); it != itEnd; ++it) {
+                                            itEnd = m_atomicNumbers.end();
+       it != itEnd; ++it) {
     composition[*it]++;
   }
 
@@ -565,7 +564,7 @@ std::string Molecule::formula(const std::string &delimiter, int over) const
   return result.str();
 }
 
-void Molecule::setUnitCell(UnitCell *uc)
+void Molecule::setUnitCell(UnitCell* uc)
 {
   if (uc != m_unitCell) {
     delete m_unitCell;
@@ -586,7 +585,7 @@ Array<double> Molecule::vibrationFrequencies() const
   return m_vibrationFrequencies;
 }
 
-void Molecule::setVibrationFrequencies(const Array<double> &freq)
+void Molecule::setVibrationFrequencies(const Array<double>& freq)
 {
   m_vibrationFrequencies = freq;
 }
@@ -596,7 +595,7 @@ Array<double> Molecule::vibrationIntensities() const
   return m_vibrationIntensities;
 }
 
-void Molecule::setVibrationIntensities(const Array<double> &intensities)
+void Molecule::setVibrationIntensities(const Array<double>& intensities)
 {
   m_vibrationIntensities = intensities;
 }
@@ -608,7 +607,7 @@ Array<Vector3> Molecule::vibrationLx(int mode) const
   return Array<Vector3>();
 }
 
-void Molecule::setVibrationLx(const Array<Array<Vector3> > &lx)
+void Molecule::setVibrationLx(const Array<Array<Vector3>>& lx)
 {
   m_vibrationLx = lx;
 }
@@ -639,8 +638,7 @@ void Molecule::perceiveBondsSimple()
       Vector3 jpos = m_positions3d[j];
       Vector3 diff = jpos - ipos;
 
-      if (std::fabs(diff[0]) > cutoff ||
-          std::fabs(diff[1]) > cutoff ||
+      if (std::fabs(diff[0]) > cutoff || std::fabs(diff[1]) > cutoff ||
           std::fabs(diff[2]) > cutoff ||
           (m_atomicNumbers[i] == 1 && m_atomicNumbers[j] == 1))
         continue;
@@ -674,7 +672,7 @@ int Molecule::coordinate3d() const
   return 0;
 }
 
-bool Molecule::setCoordinate3d(const Array<Vector3> &coords, int index)
+bool Molecule::setCoordinate3d(const Array<Vector3>& coords, int index)
 {
   if (static_cast<int>(m_coordinates3d.size()) <= index)
     m_coordinates3d.resize(index + 1);
@@ -689,7 +687,7 @@ void Molecule::updateGraph() const
   m_graphDirty = false;
   m_graph.clear();
   m_graph.setSize(atomCount());
-  typedef Array<std::pair<Index, Index> >::const_iterator IterType;
+  typedef Array<std::pair<Index, Index>>::const_iterator IterType;
   for (IterType it = m_bondPairs.begin(); it != m_bondPairs.end(); ++it) {
     m_graph.addEdge(it->first, it->second);
   }

@@ -61,7 +61,7 @@ public:
   Molecule();
 
   /** Copy constructor  */
-  Molecule(const Molecule &other);
+  Molecule(const Molecule& other);
 
   /** Assignment operator */
   Molecule& operator=(const Molecule& other);
@@ -70,18 +70,18 @@ public:
   virtual ~Molecule();
 
   /** Sets the data value with @p name to @p value. */
-  void setData(const std::string &name, const Variant &value);
+  void setData(const std::string& name, const Variant& value);
 
   /** Returns the data value for @p name. */
-  Variant data(const std::string &name) const;
+  Variant data(const std::string& name) const;
 
   /**
    * Returns true if the molecule has data with the given key, false otherwise.
    */
-  bool hasData(const std::string &name) const;
+  bool hasData(const std::string& name) const;
 
   /** Set the molecule's variant data to the entries in map. */
-  void setDataMap(const VariantMap &map);
+  void setDataMap(const VariantMap& map);
 
   /** Return the molecule's variant data. */
   const VariantMap& dataMap() const;
@@ -108,7 +108,7 @@ public:
    * @param nums The new atomic number array. Must be of length atomCount().
    * @return True on success, false otherwise.
    */
-  bool setAtomicNumbers(const Core::Array<unsigned char> &nums);
+  bool setAtomicNumbers(const Core::Array<unsigned char>& nums);
 
   /**
    * Set the atomic number of a single atom.
@@ -137,7 +137,7 @@ public:
    * @param hybs The new hybridization array. Must be of length atomCount().
    * @return True on success, false otherwise.
    */
-  bool setHybridizations(const Core::Array<AtomHybridization> &hybs);
+  bool setHybridizations(const Core::Array<AtomHybridization>& hybs);
 
   /**
    * Set the hybridization of a single atom.
@@ -166,7 +166,7 @@ public:
    * @param charges The new formal charge array. Must be of length atomCount().
    * @return True on success, false otherwise.
    */
-  bool setFormalCharges(const Core::Array<signed char> &charges);
+  bool setFormalCharges(const Core::Array<signed char>& charges);
 
   /**
    * Set the formal charge of a single atom.
@@ -195,7 +195,7 @@ public:
    * @param pos The new coordinate array. Must be of length atomCount().
    * @return True on success, false otherwise.
    */
-  bool setAtomPositions2d(const Core::Array<Vector2> &pos);
+  bool setAtomPositions2d(const Core::Array<Vector2>& pos);
 
   /**
    * Set the 2D position of a single atom.
@@ -224,7 +224,7 @@ public:
    * @param pos The new coordinate array. Must be of length atomCount().
    * @return True on success, false otherwise.
    */
-  bool setAtomPositions3d(const Core::Array<Vector3> &pos);
+  bool setAtomPositions3d(const Core::Array<Vector3>& pos);
 
   /**
    * Set the 3D position of a single atom.
@@ -248,10 +248,10 @@ public:
   bool isSelectionEmpty() const;
 
   /** Returns a vector of pairs of atom indices of the bonds in the molecule. */
-  Array<std::pair<Index, Index> >& bondPairs();
+  Array<std::pair<Index, Index>>& bondPairs();
 
   /** \overload */
-  const Array<std::pair<Index, Index> >& bondPairs() const;
+  const Array<std::pair<Index, Index>>& bondPairs() const;
 
   /**
    * Get the set of bonded atoms corresponding to @a bondId.
@@ -268,7 +268,7 @@ public:
    * @note If needed, the elements in @a pairs will be modified to ensure that
    * the first atom index is less than the second.
    */
-  bool setBondPairs(const Array<std::pair<Index, Index> > &pairs);
+  bool setBondPairs(const Array<std::pair<Index, Index>>& pairs);
 
   /**
    * Set the bonded atoms for a bond.
@@ -278,7 +278,7 @@ public:
    * @note If needed, @a pair will be modified to ensure that the first atom
    * index is less than the second.
    */
-  bool setBondPair(Index bondId, const std::pair<Index, Index> &pair);
+  bool setBondPair(Index bondId, const std::pair<Index, Index>& pair);
 
   /** Returns a vector of the bond orders for the bonds in the molecule. */
   Array<unsigned char>& bondOrders();
@@ -298,7 +298,7 @@ public:
    * @param orders The new array.
    * @return True on success, false on failure.
    */
-  bool setBondOrders(const Array<unsigned char> &orders);
+  bool setBondOrders(const Array<unsigned char>& orders);
 
   /**
    * Set the order of a bond in the molecule.
@@ -323,8 +323,8 @@ public:
    * @sa Avogadro::QtGui::CustomElementDialog
    * @sa hasCustomElements
    * @{ */
-  const CustomElementMap & customElementMap() const;
-  void setCustomElementMap(const CustomElementMap &map);
+  const CustomElementMap& customElementMap() const;
+  void setCustomElementMap(const CustomElementMap& map);
   /** @} */
 
   /**
@@ -350,7 +350,7 @@ public:
    * @return True on success, false if the atom was not found.
    * @overload
    */
-  virtual bool removeAtom(const AtomType &atom);
+  virtual bool removeAtom(const AtomType& atom);
 
   /**
    * Remove all atoms from the molecule.
@@ -384,7 +384,7 @@ public:
    * @{
    */
   virtual BondType addBond(Index atom1, Index atom2, unsigned char order = 1);
-  virtual BondType addBond(const AtomType &atom1, const AtomType &atom2,
+  virtual BondType addBond(const AtomType& atom1, const AtomType& atom2,
                            unsigned char order = 1);
   /** @} */
 
@@ -401,7 +401,7 @@ public:
    * @return True on success, false if the bond was not found.
    * @overload
    */
-  virtual bool removeBond(const BondType &bond);
+  virtual bool removeBond(const BondType& bond);
 
   /**
    * @brief Remove the specified bond.
@@ -412,7 +412,7 @@ public:
    * @{
    */
   virtual bool removeBond(Index atom1, Index atom2);
-  virtual bool removeBond(const AtomType &atom1, const AtomType &atom2);
+  virtual bool removeBond(const AtomType& atom1, const AtomType& atom2);
   /** @} */
 
   /**
@@ -424,7 +424,7 @@ public:
   BondType bond(Index index) const;
 
   /** Returns the bond between atoms @p a and @p b. */
-  BondType bond(const AtomType &a, const AtomType &b) const;
+  BondType bond(const AtomType& a, const AtomType& b) const;
 
   /** Returns the bond between atomId1 and atomId2. */
   BondType bond(Index atomId1, Index atomId2) const;
@@ -434,7 +434,7 @@ public:
    * @return A vector of bonds to the supplied atom @p a.
    * @{
    */
-  Array<BondType> bonds(const AtomType &a);
+  Array<BondType> bonds(const AtomType& a);
   Array<BondType> bonds(Index a);
   /** @} */
 
@@ -467,19 +467,19 @@ public:
 
   void clearCubes();
 
-	/**
-   * @brief Get the cubes vector set (if present) for the molecule.
-   * @return The cube vector for the molecule
-   */
-  std::vector<Cube *> cubes() { return m_cubes; }
-  const std::vector<Cube *> cubes() const { return m_cubes; }
+  /**
+* @brief Get the cubes vector set (if present) for the molecule.
+* @return The cube vector for the molecule
+*/
+  std::vector<Cube*> cubes() { return m_cubes; }
+  const std::vector<Cube*> cubes() const { return m_cubes; }
 
   /**
    * Returns the chemical formula of the molecule.
    * @param delimiter Delimiter to insert between tokens, defaults to none.
    * @param showCountsOver Show atom counts above this (defaults to 1).
    */
-  std::string formula(const std::string &delimiter = "",
+  std::string formula(const std::string& delimiter = "",
                       int showCountsOver = 1) const;
 
   /**
@@ -492,29 +492,30 @@ public:
    * Set the basis set for the molecule, note that the molecule takes ownership
    * of the object.
    */
-  void setBasisSet(BasisSet *basis) { m_basisSet = basis; }
+  void setBasisSet(BasisSet* basis) { m_basisSet = basis; }
 
   /**
    * Get the basis set (if present) for the molecule.
    */
-  BasisSet * basisSet() { return m_basisSet; }
-  const BasisSet * basisSet() const { return m_basisSet; }
+  BasisSet* basisSet() { return m_basisSet; }
+  const BasisSet* basisSet() const { return m_basisSet; }
 
   /**
-   * The unit cell for this molecule. May be nullptr for non-periodic structures.
+   * The unit cell for this molecule. May be nullptr for non-periodic
+   * structures.
    * @{
    */
-  void setUnitCell(UnitCell *uc);
-  UnitCell *unitCell() { return m_unitCell; }
-  const UnitCell *unitCell() const { return m_unitCell; }
+  void setUnitCell(UnitCell* uc);
+  UnitCell* unitCell() { return m_unitCell; }
+  const UnitCell* unitCell() const { return m_unitCell; }
   /** @} */
 
   Array<double> vibrationFrequencies() const;
-  void setVibrationFrequencies(const Array<double> &freq);
+  void setVibrationFrequencies(const Array<double>& freq);
   Array<double> vibrationIntensities() const;
-  void setVibrationIntensities(const Array<double> &intensities);
+  void setVibrationIntensities(const Array<double>& intensities);
   Array<Vector3> vibrationLx(int mode) const;
-  void setVibrationLx(const Array< Array<Vector3> > &lx);
+  void setVibrationLx(const Array<Array<Vector3>>& lx);
 
   /**
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
@@ -524,36 +525,36 @@ public:
   int coordinate3dCount();
   bool setCoordinate3d(int coord);
   int coordinate3d() const;
-  bool setCoordinate3d(const Array<Vector3> &coords, int index);
+  bool setCoordinate3d(const Array<Vector3>& coords, int index);
 
 protected:
-  mutable Graph m_graph; // A transformation of the molecule to a graph.
+  mutable Graph m_graph;     // A transformation of the molecule to a graph.
   mutable bool m_graphDirty; // Should the graph be rebuilt before returning it?
   VariantMap m_data;
   CustomElementMap m_customElementMap;
   Array<unsigned char> m_atomicNumbers;
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
-  Array< Array<Vector3> > m_coordinates3d; // Used for conformers/trajectories.
+  Array<Array<Vector3>> m_coordinates3d; // Used for conformers/trajectories.
   Array<AtomHybridization> m_hybridizations;
   Array<signed char> m_formalCharges;
 
   // Vibration data if available.
   Array<double> m_vibrationFrequencies;
   Array<double> m_vibrationIntensities;
-  Array< Array<Vector3> > m_vibrationLx;
+  Array<Array<Vector3>> m_vibrationLx;
 
-  Array<std::pair<Index, Index> > m_bondPairs;
+  Array<std::pair<Index, Index>> m_bondPairs;
   Array<unsigned char> m_bondOrders;
 
   // Array declaring whether atoms are selected or not.
   std::vector<bool> m_selectedAtoms;
 
-  std::vector<Mesh *> m_meshes;
-  std::vector<Cube *> m_cubes;
+  std::vector<Mesh*> m_meshes;
+  std::vector<Cube*> m_cubes;
 
-  BasisSet *m_basisSet;
-  UnitCell *m_unitCell;
+  BasisSet* m_basisSet;
+  UnitCell* m_unitCell;
 
   /** Update the graph to correspond to the current molecule. */
   void updateGraph() const;
@@ -563,23 +564,23 @@ class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
 {
 public:
   Atom() : AtomTemplate<Molecule>() {}
-  Atom(Molecule *m, Index i) : AtomTemplate<Molecule>(m, i) {}
+  Atom(Molecule* m, Index i) : AtomTemplate<Molecule>(m, i) {}
 };
 
 class AVOGADROCORE_EXPORT Bond : public BondTemplate<Molecule>
 {
 public:
   Bond() : BondTemplate<Molecule>() {}
-  Bond(Molecule *m, Index i) : BondTemplate<Molecule>(m, i) {}
+  Bond(Molecule* m, Index i) : BondTemplate<Molecule>(m, i) {}
 };
 
 inline unsigned char Molecule::atomicNumber(Index atomId) const
 {
   return atomId < m_atomicNumbers.size() ? m_atomicNumbers[atomId]
-                                           : InvalidElement;
+                                         : InvalidElement;
 }
 
-inline bool Molecule::setAtomicNumbers(const Core::Array<unsigned char> &nums)
+inline bool Molecule::setAtomicNumbers(const Core::Array<unsigned char>& nums)
 {
   if (nums.size() == atomCount()) {
     m_atomicNumbers = nums;
@@ -597,7 +598,7 @@ inline bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
   return false;
 }
 
- inline AtomHybridization Molecule::hybridization(Index atomId) const
+inline AtomHybridization Molecule::hybridization(Index atomId) const
 {
   AtomHybridization hyb = HybridizationUnknown;
   if (atomId < m_hybridizations.size())
@@ -606,7 +607,8 @@ inline bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
   return hyb;
 }
 
-inline bool Molecule::setHybridizations(const Core::Array<AtomHybridization> &hybs)
+inline bool Molecule::setHybridizations(
+  const Core::Array<AtomHybridization>& hybs)
 {
   if (hybs.size() == atomCount()) {
     m_hybridizations = hybs;
@@ -628,11 +630,10 @@ inline bool Molecule::setHybridization(Index atomId, AtomHybridization hyb)
 
 inline signed char Molecule::formalCharge(Index atomId) const
 {
-  return atomId < m_formalCharges.size() ? m_formalCharges[atomId]
-                                           : 0;
+  return atomId < m_formalCharges.size() ? m_formalCharges[atomId] : 0;
 }
 
-inline bool Molecule::setFormalCharges(const Core::Array<signed char> &charges)
+inline bool Molecule::setFormalCharges(const Core::Array<signed char>& charges)
 {
   if (charges.size() == atomCount()) {
     m_formalCharges = charges;
@@ -657,7 +658,7 @@ inline Vector2 Molecule::atomPosition2d(Index atomId) const
   return atomId < m_positions2d.size() ? m_positions2d[atomId] : Vector2();
 }
 
-inline bool Molecule::setAtomPositions2d(const Core::Array<Vector2> &pos)
+inline bool Molecule::setAtomPositions2d(const Core::Array<Vector2>& pos)
 {
   if (pos.size() == atomCount() || pos.size() == 0) {
     m_positions2d = pos;
@@ -666,7 +667,7 @@ inline bool Molecule::setAtomPositions2d(const Core::Array<Vector2> &pos)
   return false;
 }
 
-inline bool Molecule::setAtomPosition2d(Index atomId, const Vector2 &pos)
+inline bool Molecule::setAtomPosition2d(Index atomId, const Vector2& pos)
 {
   if (atomId < atomCount()) {
     if (atomId >= m_positions2d.size())
@@ -682,7 +683,7 @@ inline Vector3 Molecule::atomPosition3d(Index atomId) const
   return atomId < m_positions3d.size() ? m_positions3d[atomId] : Vector3();
 }
 
-inline bool Molecule::setAtomPositions3d(const Core::Array<Vector3> &pos)
+inline bool Molecule::setAtomPositions3d(const Core::Array<Vector3>& pos)
 {
   if (pos.size() == atomCount() || pos.size() == 0) {
     m_positions3d = pos;
@@ -691,7 +692,7 @@ inline bool Molecule::setAtomPositions3d(const Core::Array<Vector3> &pos)
   return false;
 }
 
-inline bool Molecule::setAtomPosition3d(Index atomId, const Vector3 &pos)
+inline bool Molecule::setAtomPosition3d(Index atomId, const Vector3& pos)
 {
   if (atomId < atomCount()) {
     if (atomId >= m_positions3d.size())
@@ -718,7 +719,7 @@ inline bool Molecule::atomSelected(Index atomId) const
 
 inline bool Molecule::isSelectionEmpty() const
 {
-  for(Index i = 0; i < m_selectedAtoms.size(); ++i) {
+  for (Index i = 0; i < m_selectedAtoms.size(); ++i) {
     if (m_selectedAtoms[i])
       return false;
   }
@@ -731,7 +732,7 @@ inline std::pair<Index, Index> Molecule::bondPair(Index bondId) const
                               : std::make_pair(MaxIndex, MaxIndex);
 }
 
-inline bool Molecule::setBondPairs(const Array<std::pair<Index, Index> > &pairs)
+inline bool Molecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
 {
   if (pairs.size() == bondCount()) {
     m_bondPairs = pairs;
@@ -741,7 +742,7 @@ inline bool Molecule::setBondPairs(const Array<std::pair<Index, Index> > &pairs)
 }
 
 inline bool Molecule::setBondPair(Index bondId,
-                                  const std::pair<Index, Index> &pair)
+                                  const std::pair<Index, Index>& pair)
 {
   if (bondId < bondCount()) {
     m_bondPairs[bondId] = pair;
@@ -755,7 +756,7 @@ inline unsigned char Molecule::bondOrder(Index bondId) const
   return bondId < m_bondOrders.size() ? m_bondOrders[bondId] : 0;
 }
 
-inline bool Molecule::setBondOrders(const Array<unsigned char> &orders)
+inline bool Molecule::setBondOrders(const Array<unsigned char>& orders)
 {
   if (orders.size() == bondCount()) {
     m_bondOrders = orders;
