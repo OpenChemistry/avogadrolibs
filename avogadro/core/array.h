@@ -29,7 +29,7 @@ using std::size_t;
 
 namespace internal {
 
-template<typename T>
+template <typename T>
 class ArrayRefContainer
 {
 public:
@@ -50,31 +50,26 @@ public:
   typedef typename Parent::difference_type difference_type;
   typedef typename Parent::size_type size_type;
 
-  ArrayRefContainer() : m_ref(1), data()
-  {
-  }
+  ArrayRefContainer() : m_ref(1), data() {}
 
-  explicit ArrayRefContainer(const size_t n, const ValueType &value = ValueType())
+  explicit ArrayRefContainer(const size_t n,
+                             const ValueType& value = ValueType())
     : m_ref(1), data(n, value)
   {
   }
 
-  ArrayRefContainer(const ArrayRefContainer &other)
-    : m_ref(1), data(other.data)
+  ArrayRefContainer(const ArrayRefContainer& other) : m_ref(1), data(other.data)
   {
   }
 
-  template<typename InputIterator>
+  template <typename InputIterator>
   ArrayRefContainer(InputIterator first, InputIterator last)
     : m_ref(1), data(first, last)
   {
   }
 
   // Increment the reference count.
-  void reref()
-  {
-    ++m_ref;
-  }
+  void reref() { ++m_ref; }
 
   // Decrement the reference count, return true unless the reference count has
   // dropped to zero. When it returns false, this object should be deleted.
@@ -85,10 +80,7 @@ public:
     return m_ref > 0;
   }
 
-  unsigned int ref() const
-  {
-    return m_ref;
-  }
+  unsigned int ref() const { return m_ref; }
 
   // Reference count
   unsigned int m_ref;
@@ -111,7 +103,7 @@ public:
  * reference count is 1, and will perform a deep copy when the reference count
  * is greater than 1.
  */
-template<typename T>
+template <typename T>
 class Array
 {
 public:
@@ -136,23 +128,20 @@ public:
   /** @} */
 
   /** Constructors for new containers. */
-  Array() : d(new Container())
-  {
-  }
+  Array() : d(new Container()) {}
 
-  explicit Array(const size_t n, const ValueType &value = ValueType())
+  explicit Array(const size_t n, const ValueType& value = ValueType())
     : d(new Container(n, value))
   {
   }
 
-  template<typename InputIterator>
-  Array(InputIterator first, InputIterator last)
-    : d(new Container(first, last))
+  template <typename InputIterator>
+  Array(InputIterator first, InputIterator last) : d(new Container(first, last))
   {
   }
 
   /** Copy constructor, note the copy made of the internal data of other. */
-  Array(const Array &other)
+  Array(const Array& other)
   {
     other.d->reref();
     d = other.d;
@@ -174,35 +163,17 @@ public:
     return &d->data[0];
   }
 
-  const T* data() const
-  {
-    return &d->data[0];
-  }
+  const T* data() const { return &d->data[0]; }
 
-  const T* constData() const
-  {
-    return &d->data[0];
-  }
+  const T* constData() const { return &d->data[0]; }
 
-  size_t size() const
-  {
-    return d->data.size();
-  }
+  size_t size() const { return d->data.size(); }
 
-  size_t max_size() const
-  {
-    return d->data.max_size();
-  }
+  size_t max_size() const { return d->data.max_size(); }
 
-  bool empty() const
-  {
-    return d->data.empty();
-  }
+  bool empty() const { return d->data.empty(); }
 
-  size_t capacity() const
-  {
-    return d->data.capacity();
-  }
+  size_t capacity() const { return d->data.capacity(); }
 
   void reserve(const size_t& sz)
   {
@@ -213,7 +184,7 @@ public:
   void resize(const size_t& sz, ValueType t = ValueType())
   {
     detach();
-    d->data.resize(sz,t);
+    d->data.resize(sz, t);
   }
 
   void clear()
@@ -222,15 +193,9 @@ public:
     d->data.clear();
   }
 
-  const_iterator begin() const
-  {
-    return d->data.begin();
-  }
+  const_iterator begin() const { return d->data.begin(); }
 
-  const_iterator end() const
-  {
-    return d->data.end();
-  }
+  const_iterator end() const { return d->data.end(); }
 
   iterator begin()
   {
@@ -244,15 +209,9 @@ public:
     return d->data.end();
   }
 
-  const_reverse_iterator rbegin() const
-  {
-    return d->data.rbegin();
-  }
+  const_reverse_iterator rbegin() const { return d->data.rbegin(); }
 
-  const_reverse_iterator rend() const
-  {
-    return d->data.rend();
-  }
+  const_reverse_iterator rend() const { return d->data.rend(); }
 
   reverse_iterator rbegin()
   {
@@ -272,10 +231,7 @@ public:
     return d->data.front();
   }
 
-  const_reference front() const
-  {
-    return d->data.front();
-  }
+  const_reference front() const { return d->data.front(); }
 
   reference back()
   {
@@ -283,10 +239,7 @@ public:
     return d->data.back();
   }
 
-  const_reference back() const
-  {
-    return d->data.back();
-  }
+  const_reference back() const { return d->data.back(); }
 
   template <class InputIterator>
   void assign(InputIterator first, InputIterator last)
@@ -295,7 +248,7 @@ public:
     d->data.assign(first, last);
   }
 
-  void assign(size_type n, const value_type &val)
+  void assign(size_type n, const value_type& val)
   {
     detach();
     d->data.assign(n, val);
@@ -313,13 +266,13 @@ public:
     d->data.pop_back();
   }
 
-  iterator insert(iterator position, const value_type &val)
+  iterator insert(iterator position, const value_type& val)
   {
     detach();
     return d->data.insert(position, val);
   }
 
-  void insert(iterator position, size_type n, const value_type &val)
+  void insert(iterator position, size_type n, const value_type& val)
   {
     detach();
     d->data.insert(position, n, val);
@@ -344,112 +297,109 @@ public:
     return d->data.erase(first, last);
   }
 
-  const ValueType& operator [](const std::size_t& idx) const
+  const ValueType& operator[](const std::size_t& idx) const
   {
     return d->data[idx];
   }
 
-  ValueType& operator [](const std::size_t& idx)
+  ValueType& operator[](const std::size_t& idx)
   {
     detach();
     return d->data[idx];
   }
 
-  ValueType at(const std::size_t& idx) const
-  {
-    return d->data.at(idx);
-  }
+  ValueType at(const std::size_t& idx) const { return d->data.at(idx); }
 
-  template<typename OtherT>
-  Array &operator=(const std::vector<OtherT> &v)
+  template <typename OtherT>
+  Array& operator=(const std::vector<OtherT>& v)
   {
     detach();
     d->data = v;
     return *this;
   }
 
-  template<typename OtherT>
-  Array &operator=(const Array<OtherT> &v)
+  template <typename OtherT>
+  Array& operator=(const Array<OtherT>& v)
   {
     detach();
     d->data = v.d->data;
     return *this;
   }
 
-  Array &operator=(const Array &v)
+  Array& operator=(const Array& v)
   {
     detach();
     d->data = v.d->data;
     return *this;
   }
 
-  void swap(Array<ValueType> &other)
+  void swap(Array<ValueType>& other)
   {
     using std::swap;
     swap(d, other.d);
   }
 
 protected:
-  Container *d;
+  Container* d;
 };
 
-template<typename T>
+template <typename T>
 inline Array<T>::~Array()
 {
   if (d && !d->deref())
     delete d;
 }
 
-template<typename T>
+template <typename T>
 inline void Array<T>::detach()
 {
   if (d && d->ref() != 1) {
-    Container *o = new Container(*d);
+    Container* o = new Container(*d);
     d->deref();
     d = o;
   }
 }
 
 template <typename T>
-inline bool operator==(const Array<T> &lhs, const Array<T> &rhs)
+inline bool operator==(const Array<T>& lhs, const Array<T>& rhs)
 {
-  return lhs.size() == rhs.size()
-      && std::equal(lhs.begin(), lhs.end(), rhs.begin());
+  return lhs.size() == rhs.size() &&
+         std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
 template <typename T>
-inline bool operator!=(const Array<T> &lhs, const Array<T> &rhs)
+inline bool operator!=(const Array<T>& lhs, const Array<T>& rhs)
 {
   return !(lhs == rhs);
 }
 
 template <typename T>
-inline bool operator<(const Array<T> &lhs, const Array<T> &rhs)
+inline bool operator<(const Array<T>& lhs, const Array<T>& rhs)
 {
-  return std::lexicographical_compare(lhs.begin(), lhs.end(),
-                                      rhs.begin(), rhs.end());
+  return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
+                                      rhs.end());
 }
 
 template <typename T>
-inline bool operator>(const Array<T> &lhs, const Array<T> &rhs)
+inline bool operator>(const Array<T>& lhs, const Array<T>& rhs)
 {
   return rhs < lhs;
 }
 
 template <typename T>
-inline bool operator<=(const Array<T> &lhs, const Array<T> &rhs)
+inline bool operator<=(const Array<T>& lhs, const Array<T>& rhs)
 {
   return !(rhs < lhs);
 }
 
 template <typename T>
-inline bool operator>=(const Array<T> &lhs, const Array<T> &rhs)
+inline bool operator>=(const Array<T>& lhs, const Array<T>& rhs)
 {
   return !(lhs < rhs);
 }
 
 template <typename T>
-inline void swap(Array<T> &lhs, Array<T> &rhs)
+inline void swap(Array<T>& lhs, Array<T>& rhs)
 {
   lhs.swap(rhs);
 }
