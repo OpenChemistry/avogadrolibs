@@ -1,15 +1,44 @@
+/******************************************************************************
+
+  This source file is part of the Avogadro project.
+
+  Copyright 2017 Kitware, Inc.
+
+	This source code is released under the New BSD License, (the "License").
+
+	Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+******************************************************************************/
+
 #include "downloaderwidget.h"
 #include "zipextracter.h"
 #include "ui_downloaderwidget.h"
+
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtCore/QStandardPaths>
+
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QTableWidgetItem>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QGraphicsRectItem>
+
+#include <QtNetwork/QNetworkRequest>
 
 namespace Avogadro {
 namespace QtPlugins {
 
 DownloaderWidget::DownloaderWidget(QWidget *parent)
-    : QDialog(parent), ui(new Ui::DownloaderWidget) {
-  numRepos = 0;
-  filePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-  oNetworkAccessManager = new QNetworkAccessManager(this);
+    : QDialog(parent), ui(new Ui::DownloaderWidget)
+{
+  m_numRepos = 0;
+  m_filePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+  m_NetworkAccessManager = new QNetworkAccessManager(this);
   ui->setupUi(this);
   connect(ui->downloadButton, SIGNAL(clicked(bool)), this,
           SLOT(getCheckedRepos()));
@@ -29,14 +58,16 @@ DownloaderWidget::DownloaderWidget(QWidget *parent)
   getRepoData();
 }
 
-DownloaderWidget::~DownloaderWidget() {
+DownloaderWidget::~DownloaderWidget()
+{
   delete ui;
-  delete repoList;
-  delete read;
+  delete m_repoList;
+  delete m_read;
 }
 
 //download master plugin.json from Avogadro.cc
-void DownloaderWidget::getRepoData() {
+void DownloaderWidget::getRepoData()
+{
   QString url = "https://avogadro.cc/plugins.json";
   QNetworkRequest request;
   request.setRawHeader("Accept",
@@ -48,62 +79,64 @@ void DownloaderWidget::getRepoData() {
                        "Chrome/54.0.2840.71 Safari/537.36");
   request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
   request.setUrl(url);  // Set the url
-  reply = oNetworkAccessManager->get(request);
-  connect(reply, SIGNAL(finished()), this, SLOT(updateRepoData()));
+  m_reply = m_NetworkAccessManager->get(request);
+  connect(m_reply, SIGNAL(finished()), this, SLOT(updateRepoData()));
 }
 
 //Process the master plugin.json hosted on Avogadro.cc
-void DownloaderWidget::updateRepoData() {
-  if (reply->error() == QNetworkReply::NoError) {
-    read = new Json::Reader();
+void DownloaderWidget::updateRepoData()
+{
+  if (m_reply->error() == QNetworkReply::NoError) {
+    m_read = new Json::Reader();
     // Reading the data from the response
-    QByteArray bytes = reply->readAll();
+    QByteArray bytes = m_reply->readAll();
     QString jsonString(bytes);
 
     // parse the json
-    read->parse(jsonString.toStdString().c_str(), root);
-    numRepos = root.size();
-    repoList = new repo[numRepos];
-    ui->repoTable->setRowCount(numRepos);
-    for (int i = 0; i < numRepos; i++) {
-      repoList[i].name = root[i].get("name", "Error").asCString();
-      repoList[i].description = root[i].get("description", "Error").asCString();
-      repoList[i].release_version =
-          root[i].get("release_version", "Error").asCString();
-      repoList[i].updated_at = root[i].get("updated_at", "Error").asCString();
-      repoList[i].zipball_url = root[i].get("zipball_url", "Error").asCString();
-      repoList[i].has_release = root[i].get("has_release", false).asBool();
+    m_read->parse(jsonString.toStdString().c_str(), m_root);
+    m_numRepos = m_root.size();
+    m_repoList = new repo[m_numRepos];
+    ui->repoTable->setRowCount(m_numRepos);
+    for (int i = 0; i < m_numRepos; i++) {
+      m_repoList[i].name = m_root[i].get("name", "Error").asCString();
+      m_repoList[i].description = m_root[i].get("description", "Error").asCString();
+      m_repoList[i].releaseVersion =
+          m_root[i].get("release_version", "Error").asCString();
+      m_repoList[i].updatedAt = m_root[i].get("updated_at", "Error").asCString();
+      m_repoList[i].zipballUrl = m_root[i].get("zipball_url", "Error").asCString();
+      m_repoList[i].hasRelease = m_root[i].get("has_release", false).asBool();
 
       // readme should be included or at least the repo url so we don't have to
       // do this
-      QStringList urlParts = repoList[i].zipball_url.split("/");
+      QStringList urlParts = m_repoList[i].zipballUrl.split("/");
       urlParts.removeLast();
       urlParts.removeLast();  // remove /zipball/(version/branch)
       urlParts.append("readme");
       QString readmeUrl = urlParts.join("/");
 
-      repoList[i].readme_url = readmeUrl;
+      m_repoList[i].readmeUrl = readmeUrl;
       QTableWidgetItem *checkbox = new QTableWidgetItem();
       checkbox->setCheckState(Qt::Unchecked);
       ui->repoTable->setItem(i, 0, checkbox);
-      ui->repoTable->setItem(i, 1, new QTableWidgetItem(repoList[i].name));
+      ui->repoTable->setItem(i, 1, new QTableWidgetItem(m_repoList[i].name));
       ui->repoTable->setItem(i, 2,
-                             new QTableWidgetItem(repoList[i].description));
-      if (repoList[i].has_release)
+                             new QTableWidgetItem(m_repoList[i].description));
+      if (m_repoList[i].hasRelease)
         ui->repoTable->setItem(
-            i, 3, new QTableWidgetItem(repoList[i].release_version));
+            i, 3, new QTableWidgetItem(m_repoList[i].releaseVersion));
       else
         ui->repoTable->setItem(i, 3,
-                               new QTableWidgetItem(repoList[i].updated_at));
+                               new QTableWidgetItem(m_repoList[i].updatedAt));
     }
   }
-  reply->deleteLater();
+  m_reply->deleteLater();
 }
 
 //Grab README data from Github
-void DownloaderWidget::downloadREADME(int row, int col) {
+void DownloaderWidget::downloadREADME(int row, int col)
+{
   ui->readmeBrowser->clear();
-  QString url = repoList[row].readme_url;
+  QString url = m_repoList[row].readmeUrl;
   QNetworkRequest request;
   request.setRawHeader("Accept",
                        "text/html,application/xhtml+xml,application/"
@@ -115,46 +148,49 @@ void DownloaderWidget::downloadREADME(int row, int col) {
   request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
   request.setUrl(url);  // Set the url
 
-  reply = oNetworkAccessManager->get(request);
-  connect(reply, SIGNAL(finished()), this, SLOT(showREADME()));
+  m_reply = m_NetworkAccessManager->get(request);
+  connect(m_reply, SIGNAL(finished()), this, SLOT(showREADME()));
 }
 
 //display README when the user clicks a row
-void DownloaderWidget::showREADME() {
-  if (reply->error() == QNetworkReply::NoError) {
-    read = new Json::Reader();
+void DownloaderWidget::showREADME()
+{
+  if (m_reply->error() == QNetworkReply::NoError) {
+    m_read = new Json::Reader();
     // Reading the data from the response
-    QByteArray bytes = reply->readAll();
+    QByteArray bytes = m_reply->readAll();
     QString jsonString(bytes);
 
     // parse the json
-    read->parse(jsonString.toStdString().c_str(), root);
+    m_read->parse(jsonString.toStdString().c_str(), m_root);
 
-    int resultSize = root.size();
-    QByteArray content = root.get("content", "ERROR").asCString();
+    int resultSize = m_root.size();
+    QByteArray content = m_root.get("content", "ERROR").asCString();
     ui->readmeBrowser->append(QByteArray::fromBase64(content).data());
   }
 }
 
 //see which repositories the user checked
-void DownloaderWidget::getCheckedRepos() {
-  downloadList.clear();
-  for (int i = 0; i < numRepos; i++) {
+void DownloaderWidget::getCheckedRepos()
+{
+  m_downloadList.clear();
+  for (int i = 0; i < m_numRepos; i++) {
     if (ui->repoTable->item(i, 0)->checkState() == Qt::Checked) {
       downloadEntry newEntry;
-      newEntry.url = repoList[i].zipball_url;
-      newEntry.name = repoList[i].name;
+      newEntry.url = m_repoList[i].zipballUrl;
+      newEntry.name = m_repoList[i].name;
       newEntry.type = "other";  // change when type added to plugin.json
-      downloadList.append(newEntry);
+      m_downloadList.append(newEntry);
     }
   }
   downloadNext();
 }
 
 //Used to download one zip at a time so we know which plugin data we're getting
-void DownloaderWidget::downloadNext() {
-  if (!downloadList.isEmpty()) {
-    QString url = downloadList.last().url;
+void DownloaderWidget::downloadNext()
+{
+  if (!m_downloadList.isEmpty()) {
+    QString url = m_downloadList.last().url;
     QNetworkRequest request;
     request.setRawHeader("Accept",
                          "text/html,application/xhtml+xml,application/"
@@ -166,19 +202,20 @@ void DownloaderWidget::downloadNext() {
     request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
     request.setUrl(url);  // Set the url
 
-    reply = oNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(finished()), this, SLOT(handleRedirect()));
+    m_reply = m_NetworkAccessManager->get(request);
+    connect(m_reply, SIGNAL(finished()), this, SLOT(handleRedirect()));
   }
 }
 
 //The download url for Github is always a redirect to the actual zip
-void DownloaderWidget::handleRedirect() {
-  if (reply->error() == QNetworkReply::NoError) {
+void DownloaderWidget::handleRedirect()
+{
+  if (m_reply->error() == QNetworkReply::NoError) {
     QVariant statusCode =
-        reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+        m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     if (statusCode.toInt() == 302) {
       QVariant possibleRedirectUrl =
-          reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+          m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
 
       QUrl _urlRedirectedTo = possibleRedirectUrl.toUrl();
 
@@ -192,31 +229,32 @@ void DownloaderWidget::handleRedirect() {
                            "Chrome/54.0.2840.71 Safari/537.36");
       request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
       request.setUrl(_urlRedirectedTo);  // Set the url
-      reply = oNetworkAccessManager->get(request);
-      connect(reply, SIGNAL(finished()), this, SLOT(unzipPlugin()));
+      m_reply = m_NetworkAccessManager->get(request);
+      connect(m_reply, SIGNAL(finished()), this, SLOT(unzipPlugin()));
 
     }
   } else {
-    reply->deleteLater();
-    downloadList.removeLast();
+    m_reply->deleteLater();
+    m_downloadList.removeLast();
     downloadNext();
   }
 }
 
 //Save and unzip the plugin zipball
-void DownloaderWidget::unzipPlugin() {
-  if (reply->error() == QNetworkReply::NoError) {
+void DownloaderWidget::unzipPlugin()
+{
+  if (m_reply->error() == QNetworkReply::NoError) {
     // done with redirect
-    QByteArray fileData = reply->readAll();
-    QDir().mkpath(filePath);
-    QString repoName = downloadList.last().name;
+    QByteArray fileData = m_reply->readAll();
+    QDir().mkpath(m_filePath);
+    QString repoName = m_downloadList.last().name;
     QString filename = repoName + ".zip";
 
-    QString absolutePath = filePath + "/" + filename;
+    QString absolutePath = m_filePath + "/" + filename;
     QString extractdirectory;
-    QString subdir = downloadList.last().type;
+    QString subdir = m_downloadList.last().type;
 
-    extractdirectory = filePath + "/" + subdir + "/";
+    extractdirectory = m_filePath + "/" + subdir + "/";
 
     QDir().mkpath(extractdirectory);
 
@@ -232,8 +270,8 @@ void DownloaderWidget::unzipPlugin() {
 		ZipExtracter unzip;
     unzip.extract(extractdir, absolutep);
 
-    reply->deleteLater();
-    downloadList.removeLast();
+    m_reply->deleteLater();
+    m_downloadList.removeLast();
     downloadNext();
   }
 }

@@ -1,21 +1,31 @@
+/******************************************************************************
+
+  This source file is part of the Avogadro project.
+
+  Copyright 2017 Kitware, Inc.
+
+	This source code is released under the New BSD License, (the "License").
+
+	Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+******************************************************************************/
+
 #ifndef AVOGADRO_DOWNLOADERWIDGET_H
 #define AVOGADRO_DOWNLOADERWIDGET_H
 
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkRequest>
+
 #include <QtCore/QVariantMap>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QTableWidgetItem>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QGraphicsRectItem>
-#include <QtCore/QStandardPaths>
 #include <QtCore/QList>
-#include <QtCore/QFile>
-#include <QtCore/QDir>
 #include <QtCore/QStringList>
+
+#include <QtWidgets/QDialog>
+
 #include <json/json.h>
 
 namespace Ui {
@@ -26,14 +36,15 @@ namespace Avogadro {
 
 namespace QtPlugins {
 
-class DownloaderWidget : public QDialog {
-  Q_OBJECT
+class DownloaderWidget : public QDialog
+{
+Q_OBJECT
 
- public:
+public:
   DownloaderWidget(QWidget *parent = 0);
   ~DownloaderWidget();
 
- public slots:
+public slots:
   void showREADME();
   void downloadREADME(int, int);
   void updateRepoData();
@@ -41,18 +52,20 @@ class DownloaderWidget : public QDialog {
   void handleRedirect();
   void unzipPlugin();
 
- private:
-  typedef struct repo {
+private:
+  typedef struct repo
+	{
     QString name;
     QString description;
-    QString release_version;
-    QString updated_at;
-    QString zipball_url;
-    QString readme_url;
-    bool has_release;
+    QString releaseVersion;
+    QString updatedAt;
+    QString zipballUrl;
+    QString readmeUrl;
+    bool hasRelease;
   };
 
-  typedef struct downloadEntry {
+  typedef struct downloadEntry
+	{
     QString url;
     QString name;
     QString type;
@@ -62,21 +75,21 @@ class DownloaderWidget : public QDialog {
   void downloadNext();
   bool checkSHA1(QByteArray);
 
-  struct repo *repoList;
+  struct repo *m_repoList;
   Ui::DownloaderWidget *ui;
-  QNetworkAccessManager *oNetworkAccessManager;
-  QNetworkReply *reply;
+  QNetworkAccessManager *m_NetworkAccessManager;
+  QNetworkReply *m_reply;
   /** Jsoncpp reader to read JSON results */
-  Json::Reader *read;
+  Json::Reader *m_read;
   /** Holds a node of JSON results */
-  Json::Value root;
+  Json::Value m_root;
   /** Used to parse JSON results */
   QVariantMap m_jsonResult;
 
-  QString filePath;
+  QString m_filePath;
 
-  QList<downloadEntry> downloadList;
-  int numRepos;
+  QList<downloadEntry> m_downloadList;
+  int m_numRepos;
 };
 }
 }

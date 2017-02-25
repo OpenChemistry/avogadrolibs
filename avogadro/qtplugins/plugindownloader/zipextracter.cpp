@@ -1,3 +1,19 @@
+/******************************************************************************
+
+  This source file is part of the Avogadro project.
+
+  Copyright 2017 Kitware, Inc.
+
+	This source code is released under the New BSD License, (the "License").
+
+	Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+******************************************************************************/
+
 #include "zipextracter.h"
 
 namespace Avogadro {
@@ -8,7 +24,8 @@ ZipExtracter::ZipExtracter() {}
 
 ZipExtracter::~ZipExtracter() {}
 
-int ZipExtracter::copy_data(struct archive *ar, struct archive *aw) {
+int ZipExtracter::copyData(struct archive *ar, struct archive *aw)
+{
   int r;
   const void *buff;
   size_t size;
@@ -26,7 +43,8 @@ int ZipExtracter::copy_data(struct archive *ar, struct archive *aw) {
   }
 }
 
-char *ZipExtracter::convert(const std::string &str) {
+char *ZipExtracter::convert(const std::string &str)
+{
   char *result = new char[str.length() + 1];
   strcpy(result, str.c_str());
   return result;
@@ -34,7 +52,8 @@ char *ZipExtracter::convert(const std::string &str) {
 
 //Extract method from libarchive docs, changed to return QList of errors
 QList<QString> ZipExtracter::extract(std::string extractdir,
-                                     std::string absolutepath) {
+                                     std::string absolutepath)
+{
   struct archive *a;
   struct archive *ext;
   struct archive_entry *entry;
@@ -86,7 +105,7 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
     if (r < ARCHIVE_OK)
       fprintf(stderr, "%s\n", archive_error_string(ext));
     else if (archive_entry_size(entry) > 0) {
-      r = copy_data(a, ext);
+      r = copyData(a, ext);
       if (r < ARCHIVE_OK) fprintf(stderr, "%s\n", archive_error_string(ext));
       if (r < ARCHIVE_WARN) {
         toReturn.append("ERROR - r < ARCHIVE_WARN");
