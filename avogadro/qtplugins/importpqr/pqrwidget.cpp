@@ -24,7 +24,7 @@ PQRWidget::PQRWidget(QWidget* parent, ImportPQR* p) :
   connect(ui->tableWidget, SIGNAL(cellClicked(int, int)),
     this, SLOT(molSelected(int, int)));
 
-  request = new PQRRequest(ui->tableWidget, ui->svgPreview, ui->nameDisplay, ui->formulaDisplay, this);
+  request = new PQRRequest(ui->tableWidget, ui->pngPreview, ui->nameDisplay, ui->formulaDisplay, this);
 }
 
 PQRWidget::~PQRWidget()
@@ -56,17 +56,18 @@ void PQRWidget::molSelected(int row, int col)
     return;
 
 	ui->downloadButton->setEnabled(true);
+}
 
-  QString url = "https://pqr.pitt.edu/static/data/svg/"+ currentlySelectedMol + ".svg";
-  ui->svgPreview->load(url);
-  //center svg
-  ui->svgPreview->setZoomFactor(1.5);
-  //remove scrollbars
-  ui->svgPreview->page()->runJavaScript("document.getElementById('topsvg').style.overflow='hidden';");
-
-  ui->svgPreview->show();
-
-
+/**
+* @brief Called when PNG data is ready to be loaded
+*/
+void PQRWidget::loadPNG(QByteArray& data)
+{
+	QPixmap pixmap;
+	pixmap.loadFromData(data, "PNG");
+	pixmap = pixmap.scaled(300, 300);
+	ui->pngPreview->setPixmap(pixmap);
+	ui->pngPreview->show();
 }
 
 /**
