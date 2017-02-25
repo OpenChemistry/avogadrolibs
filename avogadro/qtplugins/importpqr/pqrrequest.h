@@ -44,9 +44,9 @@ public:
   */
   PQRRequest(QTableWidget*, QLabel*, QLineEdit*, QLabel*, PQRWidget*);
 
-	/**
-	* @brief Free the ui pointers
-	*/
+  /**
+  * @brief Free the ui pointers
+  */
   ~PQRRequest();
 
   /**
@@ -62,11 +62,11 @@ public:
   */
   void sendRequest(QString, QString);
 
-	/**
-	* @brief Sends a network request to download a png form PQR
-	* @param url The url to send the request to
-	*/
-	void sendPNGRequest(QString url);
+  /**
+  * @brief Sends a network request to download a png form PQR
+  * @param url The url to send the request to
+  */
+  void sendPNGRequest(QString url);
 
   /**
   * @brief Called when a molecule is selected to display information about the
@@ -87,10 +87,10 @@ private slots:
   */
   void getFile();
 
-	/**
-	* @brief Loads PNG data after sending a request
-	*/
-	void SetPNG();
+  /**
+  * @brief Loads PNG data after sending a request
+  */
+  void SetPNG();
 
 private:
   /**

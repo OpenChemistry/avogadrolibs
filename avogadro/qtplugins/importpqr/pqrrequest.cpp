@@ -95,7 +95,7 @@ QString PQRRequest::molSelected(int num)
 
   QString mol2 = results[num].mol2url;
   QString url = "https://pqr.pitt.edu/static/data/png/"+ mol2 + ".png";
-	sendPNGRequest(url);
+  sendPNGRequest(url);
 
   formulaDisplay->setText(parseSubscripts(results[num].formula));
   nameDisplay->setText(results[num].name);

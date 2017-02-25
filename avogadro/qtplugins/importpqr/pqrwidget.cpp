@@ -55,7 +55,7 @@ void PQRWidget::molSelected(int row, int col)
   if (currentlySelectedMol == "N/A")
     return;
 
-	ui->downloadButton->setEnabled(true);
+  ui->downloadButton->setEnabled(true);
 }
 
 /**
@@ -63,11 +63,11 @@ void PQRWidget::molSelected(int row, int col)
 */
 void PQRWidget::loadPNG(QByteArray& data)
 {
-	QPixmap pixmap;
-	pixmap.loadFromData(data, "PNG");
-	pixmap = pixmap.scaled(300, 300);
-	ui->pngPreview->setPixmap(pixmap);
-	ui->pngPreview->show();
+  QPixmap pixmap;
+  pixmap.loadFromData(data, "PNG");
+  pixmap = pixmap.scaled(300, 300);
+  ui->pngPreview->setPixmap(pixmap);
+  ui->pngPreview->show();
 }
 
 /**

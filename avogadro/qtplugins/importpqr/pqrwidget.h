@@ -43,7 +43,7 @@ public:
   PQRWidget(QWidget *parent = 0, ImportPQR* p = nullptr);
   ~PQRWidget();
   void loadMolecule(QByteArray&, QString);
-	void loadPNG(QByteArray&);
+  void loadPNG(QByteArray&);
 
 private slots:
 
