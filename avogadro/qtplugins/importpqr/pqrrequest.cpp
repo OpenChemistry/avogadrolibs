@@ -51,15 +51,7 @@ void PQRRequest::sendRequest(QString url)
 */
 void PQRRequest::sendRequest(QString url, QString mol2)
 {
-  QUrl httpRequest(url);
-  QNetworkRequest request;
-  request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-  request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36");
-  request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
-  request.setUrl(httpRequest); // Set the url
-
-  reply = oNetworkAccessManager->get(request);
-
+  reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
   currentMolName = nameDisplay->text(); //needed to load mol into Avogadro
   connect(reply, SIGNAL(finished()), this, SLOT(getFile()));
 }
@@ -70,15 +62,7 @@ void PQRRequest::sendRequest(QString url, QString mol2)
 */
 void PQRRequest::sendPNGRequest(QString url)
 {
-  QUrl httpRequest(url);
-  QNetworkRequest request;
-  request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-  request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36");
-  request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
-  request.setUrl(httpRequest); // Set the url
-
-  reply = oNetworkAccessManager->get(request);
-
+  reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
   connect(reply, SIGNAL(finished()), this, SLOT(SetPNG()));
 }
 
