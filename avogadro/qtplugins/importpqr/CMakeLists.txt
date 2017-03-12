@@ -1,5 +1,3 @@
-find_package(Qt5 COMPONENTS WebEngineWidgets REQUIRED)
-
 include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp")
 
 # Extension
@@ -19,4 +17,4 @@ avogadro_plugin(ImportPQR
   ""
 )
 
-target_link_libraries(ImportPQR LINK_PRIVATE ${Qt5Network_LIBRARIES} ${Qt5WebEngineWidgets_LIBRARIES})
+target_link_libraries(ImportPQR LINK_PRIVATE ${Qt5Network_LIBRARIES})

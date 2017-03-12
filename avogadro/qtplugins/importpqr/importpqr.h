@@ -66,7 +66,7 @@ private:
   const Io::FileFormat *m_outputFormat;
   QString m_moleculeName;
   QString m_moleculePath;
-	QByteArray m_moleculeData;
+  QByteArray m_moleculeData;
 };
 
 }

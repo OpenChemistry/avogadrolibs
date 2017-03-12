@@ -73,36 +73,6 @@
        </item>
       </widget>
      </item>
-     <item row="3" column="5" colspan="2">
-      <widget class="QWebEngineView" name="svgPreview">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>300</width>
-         <height>300</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>300</width>
-         <height>300</height>
-        </size>
-       </property>
-       <property name="url">
-        <url>
-         <string>about:blank</string>
-        </url>
-       </property>
-       <property name="zoomFactor">
-        <double>1.000000000000000</double>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label">
        <property name="sizePolicy">
@@ -113,6 +83,27 @@
        </property>
        <property name="text">
         <string>Search By: </string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="6">
+      <widget class="QLineEdit" name="nameDisplay">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="6">
+      <widget class="QLabel" name="formulaDisplay">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="5">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Formula:</string>
        </property>
       </widget>
      </item>
@@ -129,27 +120,6 @@
          <width>750</width>
          <height>500</height>
         </size>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="5">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Formula:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="6">
-      <widget class="QLabel" name="formulaDisplay">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="6">
-      <widget class="QLineEdit" name="nameDisplay">
-       <property name="readOnly">
-        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -170,17 +140,35 @@
        </property>
       </widget>
      </item>
+     <item row="3" column="5" colspan="2">
+      <widget class="QLabel" name="pngPreview">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>300</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>300</width>
+         <height>300</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QWebEngineView</class>
-   <extends>QWidget</extends>
-   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

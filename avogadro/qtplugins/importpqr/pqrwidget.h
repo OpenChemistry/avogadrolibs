@@ -8,6 +8,8 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QGraphicsRectItem>
 
+#include <QtGui/QPixmap>
+
 #include <QtNetwork/QNetworkReply>
 
 #include <QtCore/QFile>
@@ -41,6 +43,7 @@ public:
   PQRWidget(QWidget *parent = 0, ImportPQR* p = nullptr);
   ~PQRWidget();
   void loadMolecule(QByteArray&, QString);
+  void loadPNG(QByteArray&);
 
 private slots:
 
@@ -70,7 +73,6 @@ private:
   Ui::PQRWidget *ui;
   /** Pointer to a PQRRequest object to handle network requests */
   PQRRequest *request;
-
   /** Pointer to the plugin that opened the dialog */
   ImportPQR *plugin;
 };

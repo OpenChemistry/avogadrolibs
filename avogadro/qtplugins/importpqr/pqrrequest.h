@@ -17,8 +17,6 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QLabel>
 
-#include <QtWebEngineWidgets/QWebEngineView>
-
 #include <cctype>
 
 #include <json/json.h>
@@ -44,11 +42,11 @@ public:
   * @param nd Pointer to the name display
   * @param fd Pointer to the formula display
   */
-  PQRRequest(QTableWidget*, QWebEngineView*, QLineEdit*, QLabel*, PQRWidget*);
+  PQRRequest(QTableWidget*, QLabel*, QLineEdit*, QLabel*, PQRWidget*);
 
-	/**
-	* @brief Free the ui pointers
-	*/
+  /**
+  * @brief Free the ui pointers
+  */
   ~PQRRequest();
 
   /**
@@ -63,6 +61,12 @@ public:
   * @param mol2 The mol2 representation of the molecule to download
   */
   void sendRequest(QString, QString);
+
+  /**
+  * @brief Sends a network request to download a png form PQR
+  * @param url The url to send the request to
+  */
+  void sendPNGRequest(QString url);
 
   /**
   * @brief Called when a molecule is selected to display information about the
@@ -82,6 +86,11 @@ private slots:
   * @brief Creates a file after requesting a file from PQR
   */
   void getFile();
+
+  /**
+  * @brief Loads PNG data after sending a request
+  */
+  void SetPNG();
 
 private:
   /**
@@ -116,7 +125,7 @@ private:
   QTableWidget* table;
   QLineEdit* nameDisplay;
   QLabel* formulaDisplay;
-  QWebEngineView* svgPreview;
+  QLabel* pngPreview;
 
   /** Variables to fold file downlaod information for getFile() */
   QString currentMolName;
