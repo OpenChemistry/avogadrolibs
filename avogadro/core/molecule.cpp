@@ -35,13 +35,25 @@ Molecule::Molecule()
 }
 
 Molecule::Molecule(const Molecule& other)
-  : m_graphDirty(true), m_data(other.m_data),
+  : m_graph(other.m_graph),
+    m_graphDirty(true),
+    m_data(other.m_data),
     m_customElementMap(other.m_customElementMap),
-    m_atomicNumbers(other.atomicNumbers()), m_positions2d(other.m_positions2d),
+    m_atomicNumbers(other.atomicNumbers()),
+    m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d),
+    m_coordinates3d(other.m_coordinates3d),
     m_hybridizations(other.m_hybridizations),
-    m_formalCharges(other.m_formalCharges), m_bondPairs(other.m_bondPairs),
-    m_bondOrders(other.m_bondOrders), m_basisSet(nullptr),
+    m_formalCharges(other.m_formalCharges),
+    m_vibrationFrequencies(other.m_vibrationFrequencies),
+    m_vibrationIntensities(other.m_vibrationIntensities),
+    m_vibrationLx(other.m_vibrationLx),
+    m_bondPairs(other.m_bondPairs),
+    m_bondOrders(other.m_bondOrders),
+    m_selectedAtoms(other.m_selectedAtoms),
+    m_meshes(std::vector<Mesh*>()),
+    m_cubes(std::vector<Cube*>()),
+    m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr)
 {
   // Copy over any meshes
@@ -60,20 +72,22 @@ Molecule::Molecule(const Molecule& other)
 Molecule& Molecule::operator=(const Molecule& other)
 {
   if (this != &other) {
+    m_graph = other.m_graph;
     m_graphDirty = true;
-    m_customElementMap = other.m_customElementMap;
-    delete m_basisSet;
-    m_basisSet = other.m_basisSet ? other.m_basisSet->clone() : nullptr;
-    delete m_unitCell;
-    m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr;
     m_data = other.m_data;
+    m_customElementMap = other.m_customElementMap;
     m_atomicNumbers = other.m_atomicNumbers;
     m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
+    m_coordinates3d = other.m_coordinates3d;
     m_hybridizations = other.m_hybridizations;
     m_formalCharges = other.m_formalCharges;
+    m_vibrationFrequencies = other.m_vibrationFrequencies;
+    m_vibrationIntensities = other.m_vibrationIntensities;
+    m_vibrationLx = other.m_vibrationLx;
     m_bondPairs = other.m_bondPairs;
     m_bondOrders = other.m_bondOrders;
+    m_selectedAtoms = other.m_selectedAtoms;
 
     clearMeshes();
 
@@ -90,6 +104,11 @@ Molecule& Molecule::operator=(const Molecule& other)
       Cube* c = addCube();
       *c = *other.cube(i);
     }
+
+    delete m_basisSet;
+    m_basisSet = other.m_basisSet ? other.m_basisSet->clone() : nullptr;
+    delete m_unitCell;
+    m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr;
   }
 
   return *this;
