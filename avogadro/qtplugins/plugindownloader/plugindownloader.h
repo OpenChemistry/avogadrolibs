@@ -46,7 +46,7 @@ public:
   QString name() const override { return tr("Plugin Downloader"); }
 
   QString description() const override
-	{
+  {
     return tr("Downloader plugins from Github repositories.");
   }
 

@@ -42,7 +42,7 @@ PluginDownloader::PluginDownloader(QObject *parent_)
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
-PluginDownloader::~PluginDownloader() {}
+PluginDownloader::~PluginDownloader() = default;
 
 QList<QAction *> PluginDownloader::actions() const
 {

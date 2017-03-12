@@ -17,9 +17,6 @@
 #ifndef AVOGADRO_DOWNLOADERWIDGET_H
 #define AVOGADRO_DOWNLOADERWIDGET_H
 
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkReply>
-
 #include <QtCore/QVariantMap>
 #include <QtCore/QList>
 #include <QtCore/QStringList>
@@ -27,6 +24,9 @@
 #include <QtWidgets/QDialog>
 
 #include <json/json.h>
+
+class QNetworkAccessManager;
+class QNetworkReply;
 
 namespace Ui {
 class DownloaderWidget;
@@ -53,8 +53,7 @@ public slots:
   void unzipPlugin();
 
 private:
-  typedef struct repo
-	{
+  struct repo {
     QString name;
     QString description;
     QString releaseVersion;
@@ -64,19 +63,19 @@ private:
     bool hasRelease;
   };
 
-  typedef struct downloadEntry
-	{
+  struct downloadEntry {
     QString url;
     QString name;
     QString type;
   };
+
   void downloadNextPlugin();
   void getRepoData();
   void downloadNext();
   bool checkSHA1(QByteArray);
 
   struct repo *m_repoList;
-  Ui::DownloaderWidget *ui;
+  Ui::DownloaderWidget *m_ui;
   QNetworkAccessManager *m_NetworkAccessManager;
   QNetworkReply *m_reply;
   /** Jsoncpp reader to read JSON results */

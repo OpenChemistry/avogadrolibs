@@ -29,38 +29,40 @@
 #include <QtWidgets/QGraphicsRectItem>
 
 #include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
 
 namespace Avogadro {
 namespace QtPlugins {
 
 DownloaderWidget::DownloaderWidget(QWidget *parent)
-    : QDialog(parent), ui(new Ui::DownloaderWidget)
+    : QDialog(parent), m_ui(new Ui::DownloaderWidget)
 {
   m_numRepos = 0;
   m_filePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
   m_NetworkAccessManager = new QNetworkAccessManager(this);
-  ui->setupUi(this);
-  connect(ui->downloadButton, SIGNAL(clicked(bool)), this,
+  m_ui->setupUi(this);
+  connect(m_ui->downloadButton, SIGNAL(clicked(bool)), this,
           SLOT(getCheckedRepos()));
-  connect(ui->repoTable, SIGNAL(cellClicked(int, int)), this,
+  connect(m_ui->repoTable, SIGNAL(cellClicked(int, int)), this,
           SLOT(downloadREADME(int, int)));
 
-  ui->repoTable->setColumnCount(4);
-  ui->repoTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-  ui->repoTable->setHorizontalHeaderLabels(QStringList() << "Update"
-                                                         << "Name"
-                                                         << "Description"
-                                                         << "Releases");
-  ui->repoTable->horizontalHeader()->setStretchLastSection(true);
+  m_ui->repoTable->setColumnCount(4);
+  m_ui->repoTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+  m_ui->repoTable->setHorizontalHeaderLabels(QStringList() << "Update"
+                                                           << "Name"
+                                                           << "Description"
+                                                           << "Releases");
+  m_ui->repoTable->horizontalHeader()->setStretchLastSection(true);
 
-  ui->repoTable->setRowCount(0);
+  m_ui->repoTable->setRowCount(0);
 
   getRepoData();
 }
 
 DownloaderWidget::~DownloaderWidget()
 {
-  delete ui;
+  delete m_ui;
   delete m_repoList;
   delete m_read;
 }
@@ -96,7 +98,7 @@ void DownloaderWidget::updateRepoData()
     m_read->parse(jsonString.toStdString().c_str(), m_root);
     m_numRepos = m_root.size();
     m_repoList = new repo[m_numRepos];
-    ui->repoTable->setRowCount(m_numRepos);
+    m_ui->repoTable->setRowCount(m_numRepos);
     for (int i = 0; i < m_numRepos; i++) {
       m_repoList[i].name = m_root[i].get("name", "Error").asCString();
       m_repoList[i].description = m_root[i].get("description", "Error").asCString();
@@ -117,16 +119,16 @@ void DownloaderWidget::updateRepoData()
       m_repoList[i].readmeUrl = readmeUrl;
       QTableWidgetItem *checkbox = new QTableWidgetItem();
       checkbox->setCheckState(Qt::Unchecked);
-      ui->repoTable->setItem(i, 0, checkbox);
-      ui->repoTable->setItem(i, 1, new QTableWidgetItem(m_repoList[i].name));
-      ui->repoTable->setItem(i, 2,
-                             new QTableWidgetItem(m_repoList[i].description));
+      m_ui->repoTable->setItem(i, 0, checkbox);
+      m_ui->repoTable->setItem(i, 1, new QTableWidgetItem(m_repoList[i].name));
+      m_ui->repoTable->setItem(i, 2,
+                               new QTableWidgetItem(m_repoList[i].description));
       if (m_repoList[i].hasRelease)
-        ui->repoTable->setItem(
+        m_ui->repoTable->setItem(
             i, 3, new QTableWidgetItem(m_repoList[i].releaseVersion));
       else
-        ui->repoTable->setItem(i, 3,
-                               new QTableWidgetItem(m_repoList[i].updatedAt));
+        m_ui->repoTable->setItem(i, 3,
+                                 new QTableWidgetItem(m_repoList[i].updatedAt));
     }
   }
   m_reply->deleteLater();
@@ -135,7 +137,7 @@ void DownloaderWidget::updateRepoData()
 //Grab README data from Github
 void DownloaderWidget::downloadREADME(int row, int col)
 {
-  ui->readmeBrowser->clear();
+  m_ui->readmeBrowser->clear();
   QString url = m_repoList[row].readmeUrl;
   QNetworkRequest request;
   request.setRawHeader("Accept",
@@ -166,7 +168,7 @@ void DownloaderWidget::showREADME()
 
     int resultSize = m_root.size();
     QByteArray content = m_root.get("content", "ERROR").asCString();
-    ui->readmeBrowser->append(QByteArray::fromBase64(content).data());
+    m_ui->readmeBrowser->append(QByteArray::fromBase64(content).data());
   }
 }
 
@@ -175,7 +177,7 @@ void DownloaderWidget::getCheckedRepos()
 {
   m_downloadList.clear();
   for (int i = 0; i < m_numRepos; i++) {
-    if (ui->repoTable->item(i, 0)->checkState() == Qt::Checked) {
+    if (m_ui->repoTable->item(i, 0)->checkState() == Qt::Checked) {
       downloadEntry newEntry;
       newEntry.url = m_repoList[i].zipballUrl;
       newEntry.name = m_repoList[i].name;
