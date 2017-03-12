@@ -63,8 +63,14 @@ public:
   /** Copy constructor  */
   Molecule(const Molecule& other);
 
+  /** Move constructor */
+  Molecule(Molecule &&other) noexcept;
+
   /** Assignment operator */
   Molecule& operator=(const Molecule& other);
+
+  /** Move assignment operator */
+  Molecule& operator=(Molecule &&other) noexcept;
 
   /** Destroys the molecule object. */
   virtual ~Molecule();
