@@ -57,6 +57,7 @@ private:
     QString name;
     QString description;
     QString releaseVersion;
+		QString type;
     QString updatedAt;
     QString zipballUrl;
     QString readmeUrl;

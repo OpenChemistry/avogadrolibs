@@ -104,6 +104,7 @@ void DownloaderWidget::updateRepoData()
       m_repoList[i].description = m_root[i].get("description", "Error").asCString();
       m_repoList[i].releaseVersion =
           m_root[i].get("release_version", "Error").asCString();
+			m_repoList[i].type = m_root[i].get("type", "other").asCString();
       m_repoList[i].updatedAt = m_root[i].get("updated_at", "Error").asCString();
       m_repoList[i].zipballUrl = m_root[i].get("zipball_url", "Error").asCString();
       m_repoList[i].hasRelease = m_root[i].get("has_release", false).asBool();
@@ -182,7 +183,7 @@ void DownloaderWidget::getCheckedRepos()
       downloadEntry newEntry;
       newEntry.url = m_repoList[i].zipballUrl;
       newEntry.name = m_repoList[i].name;
-      newEntry.type = "other";  // change when type added to plugin.json
+      newEntry.type = m_repoList[i].type;
       m_downloadList.append(newEntry);
     }
   }
@@ -267,7 +268,6 @@ void DownloaderWidget::unzipPlugin()
     out.open(QIODevice::WriteOnly);
     QDataStream outstr(&out);
     outstr << fileData;
-    out.close();
 
     std::string extractdir = extractdirectory.toStdString();
     std::string absolutep = absolutePath.toStdString();
@@ -283,6 +283,7 @@ void DownloaderWidget::unzipPlugin()
       m_ui->readmeBrowser->append("Error while extracting: " + ret.first());
     }
 
+		out.remove();
     m_reply->deleteLater();
     m_downloadList.removeLast();
     downloadNext();
