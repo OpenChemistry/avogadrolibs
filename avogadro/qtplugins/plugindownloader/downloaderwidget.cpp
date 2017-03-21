@@ -104,7 +104,7 @@ void DownloaderWidget::updateRepoData()
       m_repoList[i].description = m_root[i].get("description", "Error").asCString();
       m_repoList[i].releaseVersion =
           m_root[i].get("release_version", "Error").asCString();
-			m_repoList[i].type = m_root[i].get("type", "other").asCString();
+      m_repoList[i].type = m_root[i].get("type", "other").asCString();
       m_repoList[i].updatedAt = m_root[i].get("updated_at", "Error").asCString();
       m_repoList[i].zipballUrl = m_root[i].get("zipball_url", "Error").asCString();
       m_repoList[i].hasRelease = m_root[i].get("has_release", false).asBool();
@@ -283,7 +283,7 @@ void DownloaderWidget::unzipPlugin()
       m_ui->readmeBrowser->append("Error while extracting: " + ret.first());
     }
 
-		out.remove();
+    out.remove();
     m_reply->deleteLater();
     m_downloadList.removeLast();
     downloadNext();
