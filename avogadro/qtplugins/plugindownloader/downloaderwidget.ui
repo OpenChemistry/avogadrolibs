@@ -17,7 +17,7 @@
    <item row="1" column="0">
     <widget class="QPushButton" name="downloadButton">
      <property name="text">
-      <string>Download All</string>
+      <string>Download Selected</string>
      </property>
     </widget>
    </item>

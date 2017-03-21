@@ -97,9 +97,6 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
     newFilename = extractdirectory;
     newFilename.append(currentFilename);
 
-    toReturn.append(QString::fromStdString(extractdirectory));
-    toReturn.append(QString::fromStdString(currentFilename));
-
     archive_entry_set_pathname(entry, convert(newFilename));
     r = archive_write_header(ext, entry);
     if (r < ARCHIVE_OK)

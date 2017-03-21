@@ -175,6 +175,7 @@ void DownloaderWidget::showREADME()
 //see which repositories the user checked
 void DownloaderWidget::getCheckedRepos()
 {
+	m_ui->readmeBrowser->clear();
   m_downloadList.clear();
   for (int i = 0; i < m_numRepos; i++) {
     if (m_ui->repoTable->item(i, 0)->checkState() == Qt::Checked) {
@@ -260,6 +261,8 @@ void DownloaderWidget::unzipPlugin()
 
     QDir().mkpath(extractdirectory);
 
+		m_ui->readmeBrowser->append("\nDownloading " + filename + " to " + m_filePath);
+
     QFile out(absolutePath);
     out.open(QIODevice::WriteOnly);
     QDataStream outstr(&out);
@@ -270,7 +273,14 @@ void DownloaderWidget::unzipPlugin()
     std::string absolutep = absolutePath.toStdString();
 
 		ZipExtracter unzip;
-    unzip.extract(extractdir, absolutep);
+
+		m_ui->readmeBrowser->append("Extracting " + absolutePath + " to " + extractdirectory);
+    QList<QString> ret = unzip.extract(extractdir, absolutep);
+		if (ret.empty()) {
+			m_ui->readmeBrowser->append("Extraction successful");
+		} else {
+			m_ui->readmeBrowser->append("Error while extracting: " + ret.first());
+		}
 
     m_reply->deleteLater();
     m_downloadList.removeLast();

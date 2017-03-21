@@ -60,7 +60,7 @@ bool PluginDownloader::readMolecule(QtGui::Molecule &mol) { return true; }
 
 void PluginDownloader::showDialog()
 {
-  DownloaderWidget *widget = new DownloaderWidget();
+  DownloaderWidget *widget = new DownloaderWidget(qobject_cast<QWidget *>(parent()));
   widget->show();
 }
 
