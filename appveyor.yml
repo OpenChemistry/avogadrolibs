@@ -1,0 +1,34 @@
+version: 1.0.{build}
+image: Visual Studio 2015
+configuration:
+- Release
+clone_folder: C:/openchemistry/avogadrolibs
+init:
+- cmd:
+environment:
+  PATH: '%PATH%;%QTDIR%\bin'
+  matrix:
+  - CMAKE_GENERATOR: '"Visual Studio 14 2015 Win64"'
+    QTDIR: C:\Qt\5.6\msvc2015_64
+    platform: x64
+build_script:
+- cmd: >-
+    cd ..
+
+    git init .
+
+    git remote add origin git://github.com/OpenChemistry/openchemistry.git
+
+    git pull origin master
+
+    git -c submodule.avogadrolibs.update=none submodule update --init
+
+    cd ../
+
+    mkdir openchemistry-build
+
+    cd openchemistry-build
+
+    cmake -G %CMAKE_GENERATOR% ../openchemistry
+
+    cmake --build . --target avogadrolibs --config Release -- /verbosity:detailed
