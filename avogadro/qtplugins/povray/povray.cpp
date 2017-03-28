@@ -36,8 +36,8 @@ namespace QtPlugins {
 
 POVRay::POVRay(QObject *p) :
   Avogadro::QtGui::ExtensionPlugin(p),
-  m_molecule(nullptr), m_scene(nullptr), m_camera(nullptr),
-  m_action(new QAction(tr("Render with POV-Ray"), this))
+  m_molecule(NULL), m_scene(NULL), m_camera(NULL),
+  m_action(new QAction(tr("POV-Ray Render"), this))
 {
   connect(m_action, SIGNAL(triggered()), SLOT(render()));
 }
@@ -49,12 +49,12 @@ POVRay::~POVRay()
 QList<QAction *> POVRay::actions() const
 {
   QList<QAction *> result;
-  return result;// << m_action;
+  return result << m_action;
 }
 
 QStringList POVRay::menuPath(QAction *) const
 {
-  return QStringList() << tr("&File");
+  return QStringList() << tr("&File") << tr("&Export");
 }
 
 void POVRay::setMolecule(QtGui::Molecule *mol)
@@ -76,6 +76,8 @@ void POVRay::render()
 {
   if (!m_scene || !m_camera)
     return;
+
+  // TODO: Needs to save to a file!
 
   Rendering::POVRayVisitor visitor(*m_camera);
   visitor.begin();
