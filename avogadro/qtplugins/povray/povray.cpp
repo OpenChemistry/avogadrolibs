@@ -27,6 +27,8 @@
 #include <QtGui/QIcon>
 #include <QtGui/QKeySequence>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
+#include <QtCore/QTextStream>
 
 #include <string>
 #include <vector>
@@ -77,12 +79,19 @@ void POVRay::render()
   if (!m_scene || !m_camera)
     return;
 
-  // TODO: Needs to save to a file!
+  QString filename = QFileDialog::getSaveFileName(qobject_cast<QWidget*>(parent()), tr("Save File"),
+    QDir::homePath(), tr("Pov-Ray (*.pov);;Text file (*.txt)"));
+  QFile file(filename);
+  if (!file.open(QIODevice::WriteOnly))
+    return;
 
+  QTextStream fileStream(&file);
   Rendering::POVRayVisitor visitor(*m_camera);
   visitor.begin();
   m_scene->rootNode().accept(visitor);
-  visitor.end();
+  fileStream << visitor.end().c_str();
+
+  file.close();
 }
 
 

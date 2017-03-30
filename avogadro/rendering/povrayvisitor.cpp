@@ -29,9 +29,11 @@ namespace Avogadro {
 namespace Rendering {
 
 using std::cout;
+using std::string;
 using std::endl;
 using std::ostringstream;
 using std::ostream;
+using std::ofstream;
 
 namespace {
 ostream& operator<<(ostream& os, const Vector3f &v)
@@ -108,8 +110,9 @@ void POVRayVisitor::begin()
   m_sceneData = str.str();
 }
 
-void POVRayVisitor::end()
+string POVRayVisitor::end()
 {
+  return m_sceneData;
 }
 
 void POVRayVisitor::visit(Drawable &geometry)
@@ -127,8 +130,6 @@ void POVRayVisitor::visit(SphereGeometry &geometry)
         << "\n\tpigment { rgbt <" << s.color << ", 0.0> }\n}\n";
   }
   m_sceneData += str.str();
-
-  cout << "POV data:\n" << m_sceneData << endl;
 }
 
 void POVRayVisitor::visit(AmbientOcclusionSphereGeometry &geometry)
@@ -147,8 +148,6 @@ void POVRayVisitor::visit(CylinderGeometry &geometry)
       << "\n\tpigment { rgbt <" << c.color << ", 0.0> }\n}\n";
   }
   m_sceneData += str.str();
-
-  cout << "POV data:\n" << m_sceneData << endl;
 }
 
 void POVRayVisitor::visit(MeshGeometry &geometry)
