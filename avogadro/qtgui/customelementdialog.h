@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_QTGUI_CUSTOMELEMENTDIALOG_H
 #define AVOGADRO_QTGUI_CUSTOMELEMENTDIALOG_H
 
-#include <QtWidgets/QDialog>
 #include "avogadroqtguiexport.h"
+#include <QtWidgets/QDialog>
 
 #include <avogadro/core/avogadrocore.h>
 
@@ -39,29 +39,28 @@ class AVOGADROQTGUI_EXPORT CustomElementDialog : public QDialog
 {
   Q_OBJECT
 public:
-  explicit CustomElementDialog(Molecule &mol, QWidget *parent = 0);
+  explicit CustomElementDialog(Molecule& mol, QWidget* parent = 0);
   ~CustomElementDialog() override;
 
   /**
    * Static entry point for using this dialog. @a parent is the parent of the
    * dialog, @a mol is the molecule to operate on.
    */
-  static void resolve(QWidget *parent, Molecule &mol);
+  static void resolve(QWidget* parent, Molecule& mol);
 
 public slots:
   /** Apply the changes to the molecule. */
   void apply();
 
 private:
-  Ui::CustomElementDialog *m_ui;
-  Molecule &m_molecule;
+  Ui::CustomElementDialog* m_ui;
+  Molecule& m_molecule;
   QStringList m_elements;
 
   void prepareElements();
   void prepareForm();
-  void addRow(unsigned char customElementId, const QString &name);
+  void addRow(unsigned char customElementId, const QString& name);
 };
-
 
 } // namespace QtGui
 } // namespace Avogadro

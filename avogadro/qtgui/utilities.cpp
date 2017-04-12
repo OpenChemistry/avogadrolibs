@@ -24,7 +24,6 @@ QString libraryDirectory()
 {
   return QString(AvogadroLibs_LIB_DIR);
 }
-
 }
 }
 }

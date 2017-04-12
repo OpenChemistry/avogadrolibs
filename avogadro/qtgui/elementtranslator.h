@@ -25,7 +25,8 @@ namespace Avogadro {
 namespace QtGui {
 
 /**
- * @class ElementTranslator elementtranslator.h <avogadro/qtgui/elementtranslator.h>
+ * @class ElementTranslator elementtranslator.h
+ * <avogadro/qtgui/elementtranslator.h>
  * @brief Internationalization of element names.
  * @author Geoff Hutchison
  *

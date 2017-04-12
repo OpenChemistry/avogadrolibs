@@ -48,17 +48,17 @@ class AVOGADROQTGUI_EXPORT ScenePlugin : public QObject
   Q_OBJECT
 
 public:
-  explicit ScenePlugin(QObject *parent = 0);
+  explicit ScenePlugin(QObject* parent = 0);
   ~ScenePlugin();
 
   /**
    * Process the supplied atom, and add the necessary primitives to the scene.
    */
-  virtual void process(const Core::Molecule &molecule,
-                       Rendering::GroupNode &node) = 0;
+  virtual void process(const Core::Molecule& molecule,
+                       Rendering::GroupNode& node) = 0;
 
-  virtual void processEditable(const RWMolecule &molecule,
-                               Rendering::GroupNode &node);
+  virtual void processEditable(const RWMolecule& molecule,
+                               Rendering::GroupNode& node);
 
   /**
    * The name of the scene plugin, will be displayed in the user interface.
@@ -80,7 +80,7 @@ public:
    */
   virtual void setEnabled(bool enable) = 0;
 
-  virtual QWidget * setupWidget();
+  virtual QWidget* setupWidget();
 
 signals:
   void drawablesChanged();

@@ -20,7 +20,7 @@
 
 #include <QtWidgets/QGraphicsItem>
 
-namespace Avogadro{
+namespace Avogadro {
 namespace QtGui {
 
 /**
@@ -58,8 +58,8 @@ public:
    * This is where most of the action takes place. The element box is drawn
    * along with its symbol.
    */
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-             QWidget *widget);
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
+             QWidget* widget);
 
 private:
   /** Indicates if element is well-formed (e.g., has non-empty symbol). */

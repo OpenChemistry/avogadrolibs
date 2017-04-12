@@ -17,26 +17,26 @@
 #include "containerwidget.h"
 
 #include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QPushButton>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QVBoxLayout>
 
 namespace Avogadro {
 namespace QtGui {
 
-ContainerWidget::ContainerWidget(QWidget *p, Qt::WindowFlags f)
+ContainerWidget::ContainerWidget(QWidget* p, Qt::WindowFlags f)
   : QWidget(p, f), m_viewWidget(nullptr), m_label(new QLabel("   ", this)),
     m_active(false)
 {
-  QHBoxLayout *h = new QHBoxLayout;
+  QHBoxLayout* h = new QHBoxLayout;
   h->setContentsMargins(0, 0, 0, 0);
-  QVBoxLayout *v = new QVBoxLayout;
+  QVBoxLayout* v = new QVBoxLayout;
   v->setContentsMargins(0, 0, 0, 0);
   v->setSpacing(0);
 
   h->addWidget(m_label);
   h->addStretch();
-  QPushButton *button = new QPushButton(tr("Split Horizontal"), this);
+  QPushButton* button = new QPushButton(tr("Split Horizontal"), this);
   connect(button, SIGNAL(clicked()), SIGNAL(splitHorizontal()));
   h->addWidget(button);
   button = new QPushButton(tr("Split Vertical"), this);
@@ -53,7 +53,7 @@ ContainerWidget::~ContainerWidget()
 {
 }
 
-void ContainerWidget::setViewWidget(QWidget *widget)
+void ContainerWidget::setViewWidget(QWidget* widget)
 {
   if (m_viewWidget)
     m_viewWidget->deleteLater();
@@ -61,7 +61,7 @@ void ContainerWidget::setViewWidget(QWidget *widget)
   layout()->addWidget(widget);
 }
 
-QWidget * ContainerWidget::viewWidget()
+QWidget* ContainerWidget::viewWidget()
 {
   return m_viewWidget;
 }

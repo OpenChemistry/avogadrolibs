@@ -16,20 +16,20 @@
 ******************************************************************************/
 
 #include "periodictablescene_p.h"
-#include "elementitem_p.h"
 #include "elementdetail_p.h"
+#include "elementitem_p.h"
 #include "elementtranslator.h"
 
-#include <QtWidgets/QGraphicsSceneMouseEvent>
-#include <QtGui/QPainter>
-#include <QtWidgets/QStyleOption>
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>
+#include <QtGui/QPainter>
+#include <QtWidgets/QGraphicsSceneMouseEvent>
+#include <QtWidgets/QStyleOption>
 
 namespace Avogadro {
 namespace QtGui {
 
-PeriodicTableScene::PeriodicTableScene(QObject *parent_)
+PeriodicTableScene::PeriodicTableScene(QObject* parent_)
   : QGraphicsScene(parent_)
 {
   int width_ = 26;
@@ -39,8 +39,8 @@ PeriodicTableScene::PeriodicTableScene(QObject *parent_)
   m_detail->setPos(6.5 * width_, 0.75 * height_);
   addItem(m_detail);
 
-  ElementItem *item = new ElementItem(1);
-  item->setPos( 0 * width_, 0 * height_);
+  ElementItem* item = new ElementItem(1);
+  item->setPos(0 * width_, 0 * height_);
   addItem(item);
 
   item = new ElementItem(2);
@@ -48,11 +48,11 @@ PeriodicTableScene::PeriodicTableScene(QObject *parent_)
   addItem(item);
 
   item = new ElementItem(3);
-  item->setPos( 0 * width_, 1 * height_);
+  item->setPos(0 * width_, 1 * height_);
   addItem(item);
 
   item = new ElementItem(4);
-  item->setPos( 1 * width_, 1 * height_);
+  item->setPos(1 * width_, 1 * height_);
   addItem(item);
 
   item = new ElementItem(5);
@@ -80,11 +80,11 @@ PeriodicTableScene::PeriodicTableScene(QObject *parent_)
   addItem(item);
 
   item = new ElementItem(11);
-  item->setPos( 0 * width_, 2 * height_);
+  item->setPos(0 * width_, 2 * height_);
   addItem(item);
 
   item = new ElementItem(12);
-  item->setPos( 1 * width_, 2 * height_);
+  item->setPos(1 * width_, 2 * height_);
   addItem(item);
 
   item = new ElementItem(13);
@@ -137,11 +137,11 @@ PeriodicTableScene::PeriodicTableScene(QObject *parent_)
   }
 
   item = new ElementItem(element++);
-  item->setPos( 0 * width_, 6 * height_);
+  item->setPos(0 * width_, 6 * height_);
   addItem(item);
 
   item = new ElementItem(element++);
-  item->setPos( 1 * width_, 6 * height_);
+  item->setPos(1 * width_, 6 * height_);
   addItem(item);
 
   element = 103;
@@ -167,13 +167,13 @@ PeriodicTableScene::PeriodicTableScene(QObject *parent_)
   }
 }
 
-void PeriodicTableScene::mousePressEvent(QGraphicsSceneMouseEvent *event_)
+void PeriodicTableScene::mousePressEvent(QGraphicsSceneMouseEvent* event_)
 {
   if (event_->button() != Qt::LeftButton)
     return;
 
-  QGraphicsItem *item = QGraphicsScene::itemAt(event_->scenePos(),
-                                               QTransform());
+  QGraphicsItem* item =
+    QGraphicsScene::itemAt(event_->scenePos(), QTransform());
   if (item->data(0).toInt() > 0 && item->data(0).toInt() < 119) {
     emit(elementChanged(item->data(0).toInt()));
     m_detail->setElement(item->data(0).toInt());
@@ -185,7 +185,7 @@ void PeriodicTableScene::mousePressEvent(QGraphicsSceneMouseEvent *event_)
 void PeriodicTableScene::changeElement(int element)
 {
   // Find the item to select
-  foreach (QGraphicsItem *item, items()) {
+  foreach (QGraphicsItem* item, items()) {
     if (item->data(0).toInt() == element)
       item->setSelected(true);
     else
@@ -195,7 +195,6 @@ void PeriodicTableScene::changeElement(int element)
   // Emit a signal the element changed, and update the detail item.
   emit(elementChanged(element));
   m_detail->setElement(element);
-
 }
 
 } // End namespace QtGui

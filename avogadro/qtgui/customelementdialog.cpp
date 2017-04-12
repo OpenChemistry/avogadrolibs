@@ -31,10 +31,8 @@ using Avogadro::Core::Elements;
 namespace Avogadro {
 namespace QtGui {
 
-CustomElementDialog::CustomElementDialog(Molecule &mol, QWidget *p) :
-  QDialog(p),
-  m_ui(new Ui::CustomElementDialog),
-  m_molecule(mol)
+CustomElementDialog::CustomElementDialog(Molecule& mol, QWidget* p)
+  : QDialog(p), m_ui(new Ui::CustomElementDialog), m_molecule(mol)
 {
   m_ui->setupUi(this);
   prepareElements();
@@ -46,7 +44,7 @@ CustomElementDialog::~CustomElementDialog()
   delete m_ui;
 }
 
-void CustomElementDialog::resolve(QWidget *p, Molecule &mol)
+void CustomElementDialog::resolve(QWidget* p, Molecule& mol)
 {
   CustomElementDialog dlg(mol, p);
   int reply = dlg.exec();
@@ -58,10 +56,10 @@ namespace {
 struct RemapAtomicNumbers
 {
   typedef std::map<unsigned char, unsigned char> MapType;
-  const MapType &map;
+  const MapType& map;
 
   RemapAtomicNumbers(const MapType& m) : map(m) {}
-  RemapAtomicNumbers(const RemapAtomicNumbers &o) : map(o.map) {}
+  RemapAtomicNumbers(const RemapAtomicNumbers& o) : map(o.map) {}
 
   unsigned char operator()(unsigned char old) const
   {
@@ -78,11 +76,11 @@ void CustomElementDialog::apply()
 {
   RemapAtomicNumbers::MapType oldToNew;
   Molecule::CustomElementMap newMap;
-  const Molecule::CustomElementMap &oldMap = m_molecule.customElementMap();
+  const Molecule::CustomElementMap& oldMap = m_molecule.customElementMap();
   unsigned char newIdGenerator = CustomElementMin;
   foreach (QComboBox* combo, findChildren<QComboBox*>()) {
     unsigned char oldId =
-        static_cast<unsigned char>(combo->property("id").toUInt());
+      static_cast<unsigned char>(combo->property("id").toUInt());
 
     int currentIndex = combo->currentIndex();
 
@@ -92,8 +90,7 @@ void CustomElementDialog::apply()
       Molecule::CustomElementMap::const_iterator it = oldMap.find(oldId);
       newMap.insert(std::make_pair(newId, it->second));
       oldToNew.insert(std::make_pair(oldId, newId));
-    }
-    else {
+    } else {
       // New element assigned:
       unsigned char newId = static_cast<unsigned char>(currentIndex);
       oldToNew.insert(std::make_pair(oldId, newId));
@@ -101,7 +98,7 @@ void CustomElementDialog::apply()
   }
 
   if (newMap.size() != oldMap.size()) {
-    Core::Array<unsigned char> &atomicNumbers = m_molecule.atomicNumbers();
+    Core::Array<unsigned char>& atomicNumbers = m_molecule.atomicNumbers();
     std::transform(atomicNumbers.begin(), atomicNumbers.end(),
                    atomicNumbers.begin(), RemapAtomicNumbers(oldToNew));
     m_molecule.setCustomElementMap(newMap);
@@ -127,25 +124,22 @@ struct CustomElementFilter
       customElements.insert(atomicNumber);
   }
 
-  operator std::set<unsigned char>() const
-  {
-    return customElements;
-  }
+  operator std::set<unsigned char>() const { return customElements; }
 };
 }
 
 void CustomElementDialog::prepareForm()
 {
-  const Molecule::CustomElementMap &map = m_molecule.customElementMap();
-  const Core::Array<unsigned char> &atomicNumbers = m_molecule.atomicNumbers();
+  const Molecule::CustomElementMap& map = m_molecule.customElementMap();
+  const Core::Array<unsigned char>& atomicNumbers = m_molecule.atomicNumbers();
 
-  std::set<unsigned char> customElements =
-      std::for_each(atomicNumbers.begin(), atomicNumbers.end(),
-                    CustomElementFilter());
+  std::set<unsigned char> customElements = std::for_each(
+    atomicNumbers.begin(), atomicNumbers.end(), CustomElementFilter());
 
   Molecule::CustomElementMap::const_iterator match;
   for (std::set<unsigned char>::const_iterator it = customElements.begin(),
-       itEnd = customElements.end(); it != itEnd; ++it) {
+                                               itEnd = customElements.end();
+       it != itEnd; ++it) {
     if ((match = map.find(*it)) != map.end())
       addRow(*it, QString::fromStdString(match->second));
     else
@@ -153,9 +147,9 @@ void CustomElementDialog::prepareForm()
   }
 }
 
-void CustomElementDialog::addRow(unsigned char elementId, const QString &name)
+void CustomElementDialog::addRow(unsigned char elementId, const QString& name)
 {
-  QComboBox *combo = new QComboBox(this);
+  QComboBox* combo = new QComboBox(this);
   combo->setProperty("id", static_cast<unsigned int>(elementId));
   combo->addItem(name);
   combo->addItems(m_elements);

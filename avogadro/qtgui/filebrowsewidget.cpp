@@ -30,15 +30,12 @@
 namespace Avogadro {
 namespace QtGui {
 
-FileBrowseWidget::FileBrowseWidget(QWidget *theParent) :
-  QWidget(theParent),
-  m_mode(), // use the setter to initialize filters.
-  m_valid(false),
-  m_fileSystemModel(new QFileSystemModel(this)),
-  m_button(new QPushButton(tr("Browse"))),
-  m_edit(new QLineEdit)
+FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
+  : QWidget(theParent), m_mode(), // use the setter to initialize filters.
+    m_valid(false), m_fileSystemModel(new QFileSystemModel(this)),
+    m_button(new QPushButton(tr("Browse"))), m_edit(new QLineEdit)
 {
-  QHBoxLayout *hbox = new QHBoxLayout;
+  QHBoxLayout* hbox = new QHBoxLayout;
   hbox->addWidget(m_edit);
   hbox->addWidget(m_button);
   setLayout(hbox);
@@ -50,7 +47,7 @@ FileBrowseWidget::FileBrowseWidget(QWidget *theParent) :
 
   // Setup completion
   m_fileSystemModel->setRootPath(QDir::rootPath());
-  QCompleter *fsCompleter = new QCompleter(m_fileSystemModel, this);
+  QCompleter* fsCompleter = new QCompleter(m_fileSystemModel, this);
   m_edit->setCompleter(fsCompleter);
 
   // Connections:
@@ -71,17 +68,17 @@ QString FileBrowseWidget::fileName() const
   return m_edit->text();
 }
 
-QPushButton *FileBrowseWidget::browseButton() const
+QPushButton* FileBrowseWidget::browseButton() const
 {
   return m_button;
 }
 
-QLineEdit *FileBrowseWidget::lineEdit() const
+QLineEdit* FileBrowseWidget::lineEdit() const
 {
   return m_edit;
 }
 
-void FileBrowseWidget::setFileName(const QString &fname)
+void FileBrowseWidget::setFileName(const QString& fname)
 {
   m_edit->setText(fname);
 }
@@ -94,8 +91,7 @@ void FileBrowseWidget::browse()
 
   if (info.isAbsolute()) {
     initialFilePath = info.absolutePath();
-  }
-  else if (m_mode == ExecutableFile) {
+  } else if (m_mode == ExecutableFile) {
     initialFilePath = searchSystemPathForFile(fname);
     if (!initialFilePath.isEmpty())
       initialFilePath = QFileInfo(initialFilePath).absolutePath();
@@ -110,20 +106,21 @@ void FileBrowseWidget::browse()
 
   QFileDialog dlg(this);
   switch (m_mode) {
-  default:
-  case ExistingFile:
-    dlg.setWindowTitle(tr("Select file:"));
-    break;
-  case ExecutableFile:
-    dlg.setWindowTitle(tr("Select executable:"));
-    dlg.setFilter(QDir::Executable);
-    break;
+    default:
+    case ExistingFile:
+      dlg.setWindowTitle(tr("Select file:"));
+      break;
+    case ExecutableFile:
+      dlg.setWindowTitle(tr("Select executable:"));
+      dlg.setFilter(QDir::Executable);
+      break;
   }
   dlg.setFileMode(QFileDialog::ExistingFile);
   dlg.setDirectory(info.absolutePath());
   dlg.selectFile(info.fileName());
-  if (static_cast<QFileDialog::DialogCode>(dlg.exec()) == QFileDialog::Accepted
-      && !dlg.selectedFiles().isEmpty())
+  if (static_cast<QFileDialog::DialogCode>(dlg.exec()) ==
+        QFileDialog::Accepted &&
+      !dlg.selectedFiles().isEmpty())
     setFileName(dlg.selectedFiles().first());
 }
 
@@ -132,14 +129,12 @@ void FileBrowseWidget::testFileName()
   QFileInfo info(fileName());
   if (info.isAbsolute()) {
     if (info.exists()) {
-      if (m_mode != ExecutableFile
-          || info.isExecutable()) {
+      if (m_mode != ExecutableFile || info.isExecutable()) {
         fileNameMatch();
         return;
       }
     }
-  }
-  else if (m_mode == ExecutableFile) {
+  } else if (m_mode == ExecutableFile) {
     // for non-absolute executables, search PATH
     QString absoluteFilePath = searchSystemPathForFile(fileName());
     if (!absoluteFilePath.isNull()) {
@@ -167,7 +162,7 @@ void FileBrowseWidget::fileNameNoMatch()
   m_valid = false;
 }
 
-QString FileBrowseWidget::searchSystemPathForFile(const QString &exec)
+QString FileBrowseWidget::searchSystemPathForFile(const QString& exec)
 {
   QString result;
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
@@ -176,18 +171,17 @@ QString FileBrowseWidget::searchSystemPathForFile(const QString &exec)
 
   static QRegExp pathSplitter = QRegExp(
 #ifdef Q_OS_WIN32
-        ";"
-#else // WIN32
-        ":"
-#endif// WIN32
-        );
+    ";"
+#else  // WIN32
+    ":"
+#endif // WIN32
+    );
   QStringList paths =
-      env.value("PATH").split(pathSplitter, QString::SkipEmptyParts);
+    env.value("PATH").split(pathSplitter, QString::SkipEmptyParts);
 
-  foreach (const QString &path, paths) {
+  foreach (const QString& path, paths) {
     QFileInfo info(path + "/" + exec);
-    if (!info.exists()
-        || !info.isFile()) {
+    if (!info.exists() || !info.isFile()) {
       continue;
     }
     result = info.absoluteFilePath();
@@ -201,7 +195,7 @@ void FileBrowseWidget::setMode(FileBrowseWidget::Mode m)
 {
   m_mode = m;
   QDir::Filters modelFilters =
-      QDir::Files | QDir::AllDirs | QDir::NoDot | QDir::Drives;
+    QDir::Files | QDir::AllDirs | QDir::NoDot | QDir::Drives;
 
   // This should go here, but unfortunately this also filters out a ton of
   // directories as well...

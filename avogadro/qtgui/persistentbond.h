@@ -40,7 +40,7 @@ public:
    * @param m The molecule the persistent bond belongs to.
    * @param uniqueId The unique identifier for the bond.
    */
-  explicit PersistentBond(MoleculeType *m = nullptr, Index uniqueId = MaxIndex)
+  explicit PersistentBond(MoleculeType* m = nullptr, Index uniqueId = MaxIndex)
     : m_molecule(m), m_uniqueId(uniqueId)
   {
   }
@@ -49,20 +49,20 @@ public:
    * @brief Create a persistent bond from a standard bond object.
    * @param b The bond that a persistent reference should be created for.
    */
-  explicit PersistentBond(const BondType &b);
+  explicit PersistentBond(const BondType& b);
 
   /**
    * @brief Set the molecule and unique ID for the persistent object.
    * @param m The molecule that contains the bond.
    * @param uniqueId The unique ID of the bond.
    */
-  void set(MoleculeType *m, Index uniqueId);
+  void set(MoleculeType* m, Index uniqueId);
 
   /**
    * @brief Set the persistent bond from a standard bond object.
    * @param b The bond that a persistent reference should be created for.
    */
-  void set(const BondType &b);
+  void set(const BondType& b);
 
   /**
    * @brief Reset the the object to an invalid state.
@@ -92,26 +92,26 @@ public:
   BondType bond() const;
 
 private:
-  MoleculeType *m_molecule;
+  MoleculeType* m_molecule;
   Index m_uniqueId;
 };
 
 template <typename Molecule_T>
-PersistentBond<Molecule_T>::PersistentBond(const BondType &b)
+PersistentBond<Molecule_T>::PersistentBond(const BondType& b)
   : m_molecule(dynamic_cast<MoleculeType*>(b.molecule()))
 {
   m_uniqueId = m_molecule ? m_molecule->bondUniqueId(b) : MaxIndex;
 }
 
 template <typename Molecule_T>
-void PersistentBond<Molecule_T>::set(MoleculeType *m, Index uniqueId)
+void PersistentBond<Molecule_T>::set(MoleculeType* m, Index uniqueId)
 {
   m_molecule = m;
   m_uniqueId = uniqueId;
 }
 
 template <typename Molecule_T>
-void PersistentBond<Molecule_T>::set(const BondType &b)
+void PersistentBond<Molecule_T>::set(const BondType& b)
 {
   m_molecule = dynamic_cast<MoleculeType*>(b.molecule());
   m_uniqueId = m_molecule ? m_molecule->bondUniqueId(b) : MaxIndex;

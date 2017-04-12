@@ -40,7 +40,7 @@ class PeriodicTableScene : public QGraphicsScene
 
 public:
   /** Constructor. */
-  explicit PeriodicTableScene(QObject *parent = 0);
+  explicit PeriodicTableScene(QObject* parent = 0);
 
 signals:
   /**
@@ -58,10 +58,10 @@ protected:
   /**
    * Handles the mouse press events to change the active element.
    */
-  void mousePressEvent(QGraphicsSceneMouseEvent *event);
+  void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
 private:
-  ElementDetail *m_detail;
+  ElementDetail* m_detail;
 };
 
 } // End namespace QtGui

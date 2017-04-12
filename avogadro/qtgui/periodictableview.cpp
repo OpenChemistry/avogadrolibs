@@ -27,14 +27,13 @@ namespace QtGui {
 
 using Core::Elements;
 
-PeriodicTableView::PeriodicTableView(QWidget *parent_)
-  : QGraphicsView(parent_),
-    m_element(6) // Everyone loves carbon.
+PeriodicTableView::PeriodicTableView(QWidget* parent_)
+  : QGraphicsView(parent_), m_element(6) // Everyone loves carbon.
 {
   // Make the periodic table view a standard dialog.
   setWindowFlags(Qt::Dialog);
 
-  PeriodicTableScene *table = new PeriodicTableScene;
+  PeriodicTableScene* table = new PeriodicTableScene;
   table->setSceneRect(-20, -20, 480, 260);
   table->setItemIndexMethod(QGraphicsScene::NoIndex);
   table->setBackgroundBrush(Qt::white);
@@ -44,8 +43,7 @@ PeriodicTableView::PeriodicTableView(QWidget *parent_)
   setRenderHint(QPainter::Antialiasing);
   setWindowTitle(tr("Periodic Table"));
   resize(490, 270);
-  connect(table, SIGNAL(elementChanged(int)),
-          this, SLOT(elementClicked(int)));
+  connect(table, SIGNAL(elementChanged(int)), this, SLOT(elementClicked(int)));
 }
 
 PeriodicTableView::~PeriodicTableView()
@@ -56,7 +54,7 @@ PeriodicTableView::~PeriodicTableView()
 void PeriodicTableView::setElement(int element_)
 {
   m_element = element_;
-  PeriodicTableScene *table = qobject_cast<PeriodicTableScene *>(scene());
+  PeriodicTableScene* table = qobject_cast<PeriodicTableScene*>(scene());
   if (table)
     table->changeElement(element_);
 }
@@ -67,7 +65,7 @@ void PeriodicTableView::elementClicked(int id)
   emit(elementChanged(id));
 }
 
-void PeriodicTableView::mouseDoubleClickEvent(QMouseEvent *)
+void PeriodicTableView::mouseDoubleClickEvent(QMouseEvent*)
 {
   close();
 }
@@ -77,7 +75,7 @@ void PeriodicTableView::clearKeyPressBuffer()
   m_keyPressBuffer.clear();
 }
 
-void PeriodicTableView::keyPressEvent(QKeyEvent *event_)
+void PeriodicTableView::keyPressEvent(QKeyEvent* event_)
 {
   if (m_keyPressBuffer.isEmpty()) {
     // This is the first character typed.
@@ -93,11 +91,10 @@ void PeriodicTableView::keyPressEvent(QKeyEvent *event_)
     // Not a valid number, have we tried 2- and 3-character symbols?
     if (m_keyPressBuffer.length() > 3) {
       clearKeyPressBuffer();
-    }
-    else {
+    } else {
       // try parsing as a symbol
-      elem = static_cast<int>(Elements::atomicNumberFromSymbol(
-                                m_keyPressBuffer.toLatin1().data()));
+      elem = static_cast<int>(
+        Elements::atomicNumberFromSymbol(m_keyPressBuffer.toLatin1().data()));
     }
   }
 
@@ -108,7 +105,7 @@ void PeriodicTableView::keyPressEvent(QKeyEvent *event_)
   QGraphicsView::keyPressEvent(event_);
 }
 
-void PeriodicTableView::resizeEvent(QResizeEvent *e)
+void PeriodicTableView::resizeEvent(QResizeEvent* e)
 {
   double scale_(double(e->size().width()) / 500.0);
   QTransform scaleTransform(QTransform::fromScale(scale_, scale_));

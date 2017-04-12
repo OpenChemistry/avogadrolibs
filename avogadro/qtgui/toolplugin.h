@@ -52,7 +52,7 @@ class AVOGADROQTGUI_EXPORT ToolPlugin : public QObject
   Q_OBJECT
 
 public:
-  explicit ToolPlugin(QObject *parent = 0);
+  explicit ToolPlugin(QObject* parent = 0);
   ~ToolPlugin();
 
   /**
@@ -73,13 +73,13 @@ public:
   /**
    * @return The QAction that will cause this tool to become active.
    */
-  virtual QAction * activateAction() const = 0;
+  virtual QAction* activateAction() const = 0;
 
   /**
    * @return A QWidget that will be displayed to the user while this tool is
    * active.
    */
-  virtual QWidget * toolWidget() const = 0;
+  virtual QWidget* toolWidget() const = 0;
 
   /**
    * Respond to user-input events.
@@ -88,19 +88,19 @@ public:
    * molecule. If no undoable change is made, the method may return nullptr.
    * @{
    */
-  virtual QUndoCommand * mousePressEvent(QMouseEvent *e);
-  virtual QUndoCommand * mouseReleaseEvent(QMouseEvent *e);
-  virtual QUndoCommand * mouseMoveEvent(QMouseEvent *e);
-  virtual QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e);
-  virtual QUndoCommand * wheelEvent(QWheelEvent *e);
-  virtual QUndoCommand * keyPressEvent(QKeyEvent *e);
-  virtual QUndoCommand * keyReleaseEvent(QKeyEvent *e);
+  virtual QUndoCommand* mousePressEvent(QMouseEvent* e);
+  virtual QUndoCommand* mouseReleaseEvent(QMouseEvent* e);
+  virtual QUndoCommand* mouseMoveEvent(QMouseEvent* e);
+  virtual QUndoCommand* mouseDoubleClickEvent(QMouseEvent* e);
+  virtual QUndoCommand* wheelEvent(QWheelEvent* e);
+  virtual QUndoCommand* keyPressEvent(QKeyEvent* e);
+  virtual QUndoCommand* keyReleaseEvent(QKeyEvent* e);
   /**@}*/
 
   /**
    * Override this method to add drawables to the scene graph.
    */
-  virtual void draw(Rendering::GroupNode &node);
+  virtual void draw(Rendering::GroupNode& node);
 
 signals:
   /**
@@ -118,24 +118,24 @@ public slots:
   /**
    * Called when the current molecule changes.
    */
-  virtual void setMolecule(QtGui::Molecule *mol) = 0;
-  virtual void setEditMolecule(QtGui::RWMolecule *) { }
+  virtual void setMolecule(QtGui::Molecule* mol) = 0;
+  virtual void setEditMolecule(QtGui::RWMolecule*) {}
 
   /**
    * Set the GLWidget used by the tool.
    */
-  virtual void setGLWidget(QtOpenGL::GLWidget *) { }
+  virtual void setGLWidget(QtOpenGL::GLWidget*) {}
 
   /**
    * Set the active widget used by the tool, this can be anything derived from
    * QWidget.
    */
-  virtual void setActiveWidget(QWidget *) { }
+  virtual void setActiveWidget(QWidget*) {}
 
   /**
    * Set the GLRenderer used by the tool.
    */
-  virtual void setGLRenderer(Rendering::GLRenderer *) { }
+  virtual void setGLRenderer(Rendering::GLRenderer*) {}
 };
 
 /**
@@ -148,7 +148,7 @@ class AVOGADROQTGUI_EXPORT ToolPluginFactory
 public:
   virtual ~ToolPluginFactory();
 
-  virtual ToolPlugin * createInstance() = 0;
+  virtual ToolPlugin* createInstance() = 0;
   virtual QString identifier() const = 0;
 };
 

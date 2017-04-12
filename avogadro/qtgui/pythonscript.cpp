@@ -25,17 +25,15 @@
 namespace Avogadro {
 namespace QtGui {
 
-PythonScript::PythonScript(const QString &scriptFilePath_, QObject *parent_)
-  : QObject(parent_),
-    m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
+PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
+  : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
     m_scriptFilePath(scriptFilePath_)
 {
   setDefaultPythonInterpretor();
 }
 
-PythonScript::PythonScript(QObject *parent_)
-  : QObject(parent_),
-    m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty())
+PythonScript::PythonScript(QObject* parent_)
+  : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty())
 {
   setDefaultPythonInterpretor();
 }
@@ -44,7 +42,7 @@ PythonScript::~PythonScript()
 {
 }
 
-void PythonScript::setScriptFilePath(const QString &scriptFile)
+void PythonScript::setScriptFilePath(const QString& scriptFile)
 {
   m_scriptFilePath = scriptFile;
 }
@@ -53,15 +51,14 @@ void PythonScript::setDefaultPythonInterpretor()
 {
   m_pythonInterpreter = qgetenv("AVO_PYTHON_INTERPRETER");
   if (m_pythonInterpreter.isEmpty()) {
-    m_pythonInterpreter = QSettings().value(
-          "interpreters/python").toString();
-    }
+    m_pythonInterpreter = QSettings().value("interpreters/python").toString();
+  }
   if (m_pythonInterpreter.isEmpty())
     m_pythonInterpreter = pythonInterpreterPath;
 }
 
-QByteArray PythonScript::execute(const QStringList &args,
-                                 const QByteArray &scriptStdin)
+QByteArray PythonScript::execute(const QStringList& args,
+                                 const QByteArray& scriptStdin)
 {
   clearErrors();
   QProcess proc;
@@ -77,9 +74,9 @@ QByteArray PythonScript::execute(const QStringList &args,
   // Start script
   realArgs.prepend(m_scriptFilePath);
   if (m_debug) {
-    qDebug() << "Executing" << m_pythonInterpreter << realArgs.join(" ")
-             << "<" << scriptStdin;
-    }
+    qDebug() << "Executing" << m_pythonInterpreter << realArgs.join(" ") << "<"
+             << scriptStdin;
+  }
   proc.start(m_pythonInterpreter, realArgs);
 
   // Write scriptStdin to the process's stdin
@@ -87,42 +84,44 @@ QByteArray PythonScript::execute(const QStringList &args,
     if (!proc.waitForStarted(5000)) {
       m_errors << tr("Error running script '%1 %2': Timed out waiting for "
                      "start (%3).")
-                  .arg(m_pythonInterpreter, realArgs.join(" "),
-                       processErrorString(proc));
+                    .arg(m_pythonInterpreter, realArgs.join(" "),
+                         processErrorString(proc));
       return QByteArray();
-      }
+    }
 
     qint64 len = proc.write(scriptStdin);
     if (len != static_cast<qint64>(scriptStdin.size())) {
       m_errors << tr("Error running script '%1 %2': failed to write to stdin "
                      "(len=%3, wrote %4 bytes, QProcess error: %5).")
-                  .arg(m_pythonInterpreter).arg(realArgs.join(" "))
-                  .arg(scriptStdin.size()).arg(len)
-                  .arg(processErrorString(proc));
+                    .arg(m_pythonInterpreter)
+                    .arg(realArgs.join(" "))
+                    .arg(scriptStdin.size())
+                    .arg(len)
+                    .arg(processErrorString(proc));
       return QByteArray();
-      }
-    proc.closeWriteChannel();
     }
+    proc.closeWriteChannel();
+  }
 
   if (!proc.waitForFinished(5000)) {
     m_errors << tr("Error running script '%1 %2': Timed out waiting for "
                    "finish (%3).")
-                .arg(m_pythonInterpreter, realArgs.join(" "),
-                     processErrorString(proc));
+                  .arg(m_pythonInterpreter, realArgs.join(" "),
+                       processErrorString(proc));
     return QByteArray();
-    }
+  }
 
   if (proc.exitStatus() != QProcess::NormalExit || proc.exitCode() != 0) {
     m_errors << tr("Error running script '%1 %2': Abnormal exit status %3 "
                    "(%4: %5)\n\nOutput:\n%6")
-                .arg(m_pythonInterpreter)
-                .arg(realArgs.join(" "))
-                .arg(proc.exitCode())
-                .arg(processErrorString(proc))
-                .arg(proc.errorString())
-                .arg(QString(proc.readAll()));
+                  .arg(m_pythonInterpreter)
+                  .arg(realArgs.join(" "))
+                  .arg(proc.exitCode())
+                  .arg(processErrorString(proc))
+                  .arg(proc.errorString())
+                  .arg(QString(proc.readAll()));
     return QByteArray();
-    }
+  }
 
   QByteArray result(proc.readAll());
 
@@ -132,7 +131,7 @@ QByteArray PythonScript::execute(const QStringList &args,
   return result;
 }
 
-QString PythonScript::processErrorString(const QProcess &proc) const
+QString PythonScript::processErrorString(const QProcess& proc) const
 {
   QString result;
   switch (proc.error()) {
@@ -155,7 +154,7 @@ QString PythonScript::processErrorString(const QProcess &proc) const
     case QProcess::UnknownError:
       result = tr("Unknown error.");
       break;
-    }
+  }
   return result;
 }
 

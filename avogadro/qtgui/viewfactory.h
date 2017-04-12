@@ -48,7 +48,7 @@ public:
    * @param view The name of the view.
    * @return A new widget of the requested type, nullptr if none exists.
    */
-  virtual QWidget * createView(const QString &view) = 0;
+  virtual QWidget* createView(const QString& view) = 0;
 };
 
 } // End QtGui namespace

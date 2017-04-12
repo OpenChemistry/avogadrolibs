@@ -55,13 +55,13 @@ public:
   /** Typedef for PersistentBond class. */
   typedef PersistentBond<Molecule> PersistentBondType;
 
-  Molecule(QObject *parent_ = 0);
+  Molecule(QObject* parent_ = 0);
   ~Molecule();
   /** copy constructor */
-  Molecule(const Molecule &other);
+  Molecule(const Molecule& other);
 
   /** copy constructor to copy data from base instance */
-  Molecule(const Core::Molecule &other);
+  Molecule(const Core::Molecule& other);
 
   /** Assignment operator */
   Molecule& operator=(const Molecule& other);
@@ -70,7 +70,8 @@ public:
   Molecule& operator=(const Core::Molecule& other);
 
   /** \enum Enumeration of change types that can be given. */
-  enum MoleculeChange {
+  enum MoleculeChange
+  {
     /** Useful for initializing MoleculeChange variables. */
     NoChange = 0x0,
     /** Object types that can be changed. */
@@ -78,8 +79,8 @@ public:
     Bonds = 0x02,
     UnitCell = 0x04,
     /** Operations that can affect the above types. */
-    Added    = 0x1024,
-    Removed  = 0x2048,
+    Added = 0x1024,
+    Removed = 0x2048,
     Modified = 0x4096
   };
   Q_DECLARE_FLAGS(MoleculeChanges, MoleculeChange)
@@ -110,7 +111,7 @@ public:
    * @return True on success, false if the atom was not found.
    * @overload
    */
-  bool removeAtom(const AtomType &atom) override;
+  bool removeAtom(const AtomType& atom) override;
 
   /**
    * @brief Get the atom referenced by the @p uniqueId, the isValid method
@@ -128,7 +129,7 @@ public:
    * or does not belong to this molecule.
    * @{
    */
-  Index atomUniqueId(const AtomType &atom) const;
+  Index atomUniqueId(const AtomType& atom) const;
   Index atomUniqueId(Index atom) const;
   /** @} */
 
@@ -141,7 +142,7 @@ public:
    * @param bondOrder The order of the bond.
    * @return The bond created.
    */
-  BondType addBond(const AtomType &a, const AtomType &b,
+  BondType addBond(const AtomType& a, const AtomType& b,
                    unsigned char bondOrder = 1) override;
 
   /**
@@ -163,7 +164,7 @@ public:
    * @return The bond created. This can be invalid if the unique ID was already
    * in use.
    */
-  virtual BondType addBond(const AtomType &a, const AtomType &b,
+  virtual BondType addBond(const AtomType& a, const AtomType& b,
                            unsigned char bondOrder, Index uniqueId);
 
   /**
@@ -179,7 +180,7 @@ public:
    * @return True on success, false if the bond was not found.
    * @overload
    */
-  bool removeBond(const BondType &bond) override;
+  bool removeBond(const BondType& bond) override;
 
   /**
    * @brief Remove the specified bond.
@@ -189,7 +190,7 @@ public:
    * @overload
    * @{
    */
-  bool removeBond(const AtomType &atom1, const AtomType &atom2) override;
+  bool removeBond(const AtomType& atom1, const AtomType& atom2) override;
   bool removeBond(Index atom1, Index atom2) override;
   /** @} */
 
@@ -209,7 +210,7 @@ public:
    * or does not belong to this molecule.
    * @{
    */
-  Index bondUniqueId(const BondType &bond) const;
+  Index bondUniqueId(const BondType& bond) const;
   Index bondUniqueId(Index bond) const;
   /** @} */
 
@@ -244,7 +245,7 @@ private:
 
   friend class RWMolecule;
 
-  RWMolecule *m_undoMolecule;
+  RWMolecule* m_undoMolecule;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Molecule::MoleculeChanges)

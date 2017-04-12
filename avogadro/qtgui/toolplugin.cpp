@@ -19,8 +19,7 @@
 namespace Avogadro {
 namespace QtGui {
 
-ToolPlugin::ToolPlugin(QObject *parent_)
-  : QObject(parent_)
+ToolPlugin::ToolPlugin(QObject* parent_) : QObject(parent_)
 {
 }
 
@@ -28,42 +27,42 @@ ToolPlugin::~ToolPlugin()
 {
 }
 
-QUndoCommand *ToolPlugin::mousePressEvent(QMouseEvent *)
+QUndoCommand* ToolPlugin::mousePressEvent(QMouseEvent*)
 {
   return nullptr;
 }
 
-QUndoCommand *ToolPlugin::mouseReleaseEvent(QMouseEvent *)
+QUndoCommand* ToolPlugin::mouseReleaseEvent(QMouseEvent*)
 {
   return nullptr;
 }
 
-QUndoCommand *ToolPlugin::mouseMoveEvent(QMouseEvent *)
+QUndoCommand* ToolPlugin::mouseMoveEvent(QMouseEvent*)
 {
   return nullptr;
 }
 
-QUndoCommand *ToolPlugin::mouseDoubleClickEvent(QMouseEvent *)
+QUndoCommand* ToolPlugin::mouseDoubleClickEvent(QMouseEvent*)
 {
   return nullptr;
 }
 
-QUndoCommand *ToolPlugin::wheelEvent(QWheelEvent *)
+QUndoCommand* ToolPlugin::wheelEvent(QWheelEvent*)
 {
   return nullptr;
 }
 
-QUndoCommand *ToolPlugin::keyPressEvent(QKeyEvent *)
+QUndoCommand* ToolPlugin::keyPressEvent(QKeyEvent*)
 {
   return nullptr;
 }
 
-QUndoCommand *ToolPlugin::keyReleaseEvent(QKeyEvent *)
+QUndoCommand* ToolPlugin::keyReleaseEvent(QKeyEvent*)
 {
   return nullptr;
 }
 
-void ToolPlugin::draw(Rendering::GroupNode &)
+void ToolPlugin::draw(Rendering::GroupNode&)
 {
 }
 

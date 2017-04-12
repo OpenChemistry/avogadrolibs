@@ -26,7 +26,6 @@ namespace QtGui {
 namespace Utilities {
 
 AVOGADROQTGUI_EXPORT QString libraryDirectory();
-
 }
 }
 }

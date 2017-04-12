@@ -48,14 +48,14 @@ public:
     ~Rule() {}
 
     /** Add the pattern @a regexp to this Rule. */
-    void addPattern(const QRegExp &regexp);
+    void addPattern(const QRegExp& regexp);
 
     /** Set this Rule's text format. */
-    void setFormat(const QTextCharFormat &format);
+    void setFormat(const QTextCharFormat& format);
 
     /** Apply this rule to the string of text, updating the highlighter if any
      *  matches are found. */
-    void apply(const QString &text, GenericHighlighter &highlighter);
+    void apply(const QString& text, GenericHighlighter& highlighter);
 
   private:
     QList<QRegExp> m_patterns;
@@ -63,18 +63,18 @@ public:
   };
 
   /** Construct a highlighter with an empty rule set. */
-  explicit GenericHighlighter(QObject *parent_ = 0);
+  explicit GenericHighlighter(QObject* parent_ = 0);
 
   ~GenericHighlighter() override;
 
   /** Construct a new highlighter using the rule set of @a other. */
-  GenericHighlighter(const GenericHighlighter &other);
+  GenericHighlighter(const GenericHighlighter& other);
 
   /** Replace this highlighter's rule set with that of @a other. */
   GenericHighlighter& operator=(GenericHighlighter other);
 
   /** Concatenate @a other's rule set with this highlighter's rule set. */
-  GenericHighlighter& operator+=(const GenericHighlighter &other);
+  GenericHighlighter& operator+=(const GenericHighlighter& other);
 
   /** Add a new rule to this highlighter, returning a reference to the new
    *  rule. */
@@ -92,14 +92,14 @@ public:
   /** @return An ordered list of this highlighter's rules. */
   QList<Rule> rules() const;
 
-  friend void swap(GenericHighlighter &first, GenericHighlighter &second)
+  friend void swap(GenericHighlighter& first, GenericHighlighter& second)
   {
     using std::swap;
     swap(first.m_rules, second.m_rules);
   }
 
 protected:
-  void highlightBlock(const QString &text);
+  void highlightBlock(const QString& text);
 
 private:
   QList<Rule> m_rules;

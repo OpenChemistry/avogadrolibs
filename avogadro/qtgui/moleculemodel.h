@@ -19,8 +19,8 @@
 
 #include "avogadroqtguiexport.h"
 
-#include <QtCore/QAbstractItemModel>
 #include <Eigen/Geometry>
+#include <QtCore/QAbstractItemModel>
 
 namespace Avogadro {
 namespace QtGui {
@@ -29,9 +29,9 @@ class Molecule;
 
 struct MoleculeSystem
 {
-  MoleculeSystem() : m_molecule(nullptr), m_dirty(false), m_active(false) { }
+  MoleculeSystem() : m_molecule(nullptr), m_dirty(false), m_active(false) {}
 
-  Molecule *m_molecule;
+  Molecule* m_molecule;
   Eigen::Affine3f m_modelView;
   bool m_dirty;
   bool m_active;
@@ -48,39 +48,39 @@ class AVOGADROQTGUI_EXPORT MoleculeModel : public QAbstractItemModel
   Q_OBJECT
 
 public:
-  explicit MoleculeModel(QObject *p = 0);
+  explicit MoleculeModel(QObject* p = 0);
 
-  QModelIndex parent(const QModelIndex &child) const;
-  int rowCount(const QModelIndex &parent) const;
-  int columnCount(const QModelIndex &parent) const;
+  QModelIndex parent(const QModelIndex& child) const;
+  int rowCount(const QModelIndex& parent) const;
+  int columnCount(const QModelIndex& parent) const;
 
-  Qt::ItemFlags flags(const QModelIndex &index) const;
+  Qt::ItemFlags flags(const QModelIndex& index) const;
 
-  bool setData(const QModelIndex &index, const QVariant &value, int role);
-  QVariant data(const QModelIndex &index, int role) const;
+  bool setData(const QModelIndex& index, const QVariant& value, int role);
+  QVariant data(const QModelIndex& index, int role) const;
 
   QModelIndex index(int row, int column,
-                    const QModelIndex &parent = QModelIndex()) const;
+                    const QModelIndex& parent = QModelIndex()) const;
 
   void clear();
 
-  QList<Molecule *> molecules() const;
-  QList<Molecule *> activeMolecules() const;
+  QList<Molecule*> molecules() const;
+  QList<Molecule*> activeMolecules() const;
 
-  QObject * activeMolecule() const { return m_activeMolecule; }
+  QObject* activeMolecule() const { return m_activeMolecule; }
 
 signals:
-  void moleculeStateChanged(Avogadro::QtGui::Molecule *);
+  void moleculeStateChanged(Avogadro::QtGui::Molecule*);
 
 public slots:
-  void setActiveMolecule(QObject *active);
-  void addItem(Avogadro::QtGui::Molecule *item);
-  void removeItem(Avogadro::QtGui::Molecule *item);
+  void setActiveMolecule(QObject* active);
+  void addItem(Avogadro::QtGui::Molecule* item);
+  void removeItem(Avogadro::QtGui::Molecule* item);
   void itemChanged();
 
 private:
-  QList<Molecule *> m_molecules;
-  QObject *m_activeMolecule;
+  QList<Molecule*> m_molecules;
+  QObject* m_activeMolecule;
 };
 
 } // End QtGui namespace
