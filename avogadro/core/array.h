@@ -154,12 +154,18 @@ public:
    * normally necessary, but can be useful when you want to ensure you have a
    * copy of all data.
    */
+  void detachWithCopy();
+
+  /**
+   * Explicitly detach from any other implicitly shared containers. This
+   * version does not copy the data.
+   */
   void detach();
 
   /** Retrieve a pointer to the underlying data. */
   T* data()
   {
-    detach();
+    detachWithCopy();
     return &d->data[0];
   }
 
@@ -177,13 +183,13 @@ public:
 
   void reserve(const size_t& sz)
   {
-    detach();
+    detachWithCopy();
     d->data.reserve(sz);
   }
 
   void resize(const size_t& sz, ValueType t = ValueType())
   {
-    detach();
+    detachWithCopy();
     d->data.resize(sz, t);
   }
 
@@ -199,13 +205,13 @@ public:
 
   iterator begin()
   {
-    detach();
+    detachWithCopy();
     return d->data.begin();
   }
 
   iterator end()
   {
-    detach();
+    detachWithCopy();
     return d->data.end();
   }
 
@@ -215,19 +221,19 @@ public:
 
   reverse_iterator rbegin()
   {
-    detach();
+    detachWithCopy();
     return d->data.rbegin();
   }
 
   reverse_iterator rend()
   {
-    detach();
+    detachWithCopy();
     return d->data.rend();
   }
 
   reference front()
   {
-    detach();
+    detachWithCopy();
     return d->data.front();
   }
 
@@ -235,7 +241,7 @@ public:
 
   reference back()
   {
-    detach();
+    detachWithCopy();
     return d->data.back();
   }
 
@@ -244,56 +250,56 @@ public:
   template <class InputIterator>
   void assign(InputIterator first, InputIterator last)
   {
-    detach();
+    detachWithCopy();
     d->data.assign(first, last);
   }
 
   void assign(size_type n, const value_type& val)
   {
-    detach();
+    detachWithCopy();
     d->data.assign(n, val);
   }
 
   void push_back(const ValueType& v)
   {
-    detach();
+    detachWithCopy();
     d->data.push_back(v);
   }
 
   void pop_back()
   {
-    detach();
+    detachWithCopy();
     d->data.pop_back();
   }
 
   iterator insert(iterator position, const value_type& val)
   {
-    detach();
+    detachWithCopy();
     return d->data.insert(position, val);
   }
 
   void insert(iterator position, size_type n, const value_type& val)
   {
-    detach();
+    detachWithCopy();
     d->data.insert(position, n, val);
   }
 
   template <class InputIterator>
   void insert(iterator position, InputIterator first, InputIterator last)
   {
-    detach();
+    detachWithCopy();
     d->data.insert(position, first, last);
   }
 
   iterator erase(iterator position)
   {
-    detach();
+    detachWithCopy();
     return d->data.erase(position);
   }
 
   iterator erase(iterator first, iterator last)
   {
-    detach();
+    detachWithCopy();
     return d->data.erase(first, last);
   }
 
@@ -304,7 +310,7 @@ public:
 
   ValueType& operator[](const std::size_t& idx)
   {
-    detach();
+    detachWithCopy();
     return d->data[idx];
   }
 
@@ -328,8 +334,10 @@ public:
 
   Array& operator=(const Array& v)
   {
-    detach();
-    d->data = v.d->data;
+    if (this != &v) {
+      detach();
+      d->data = v.d->data;
+    }
     return *this;
   }
 
@@ -351,12 +359,21 @@ inline Array<T>::~Array()
 }
 
 template <typename T>
-inline void Array<T>::detach()
+inline void Array<T>::detachWithCopy()
 {
   if (d && d->ref() != 1) {
     Container* o = new Container(*d);
     d->deref();
     d = o;
+  }
+}
+
+template <typename T>
+inline void Array<T>::detach()
+{
+  if (d && d->ref() != 1) {
+    d->deref();
+    d = new Container;
   }
 }
 
