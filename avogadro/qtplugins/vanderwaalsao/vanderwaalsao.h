@@ -32,15 +32,18 @@ class VanDerWaalsAO : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit VanDerWaalsAO(QObject *parent = 0);
+  explicit VanDerWaalsAO(QObject* parent = 0);
   ~VanDerWaalsAO();
 
-  void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) override;
+  void process(const Core::Molecule& molecule,
+               Rendering::GroupNode& node) override;
 
   QString name() const { return tr("Van der Waals (AO)"); }
 
-  QString description() const { return tr("Simple display of VdW spheres with ambient occlusion."); }
+  QString description() const
+  {
+    return tr("Simple display of VdW spheres with ambient occlusion.");
+  }
 
   bool isEnabled() const;
 
@@ -49,7 +52,6 @@ public:
 private:
   bool m_enabled;
 };
-
 }
 }
 

@@ -17,9 +17,9 @@
 #ifndef AVOGADRO_QTPLUGINS_IMPORTPQR_H
 #define AVOGADRO_QTPLUGINS_IMPORTPQR_H
 
-#include <avogadro/qtgui/extensionplugin.h>
-#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/io/fileformatmanager.h>
+#include <avogadro/qtgui/extensionplugin.h>
 
 #include <QtNetwork/QNetworkReply>
 
@@ -39,36 +39,38 @@ class ImportPQR : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit ImportPQR(QObject *parent = 0);
+  explicit ImportPQR(QObject* parent = 0);
   ~ImportPQR() override;
 
   QString name() const override { return tr("Import From PQR"); }
 
-  QString description() const override { return tr("Download a molecule from PQR."); }
+  QString description() const override
+  {
+    return tr("Download a molecule from PQR.");
+  }
 
-  QList<QAction *> actions() const override;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction *) const override;
+  QStringList menuPath(QAction*) const override;
 
-  void setMoleculeData(QByteArray &molData, QString name);
+  void setMoleculeData(QByteArray& molData, QString name);
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
-  bool readMolecule(QtGui::Molecule &mol);
+  void setMolecule(QtGui::Molecule* mol);
+  bool readMolecule(QtGui::Molecule& mol);
 
 private slots:
   void menuActivated();
 
 private:
-  QAction *m_action;
-  QtGui::Molecule *m_molecule;
-  PQRWidget *m_dialog;
-  const Io::FileFormat *m_outputFormat;
+  QAction* m_action;
+  QtGui::Molecule* m_molecule;
+  PQRWidget* m_dialog;
+  const Io::FileFormat* m_outputFormat;
   QString m_moleculeName;
   QString m_moleculePath;
   QByteArray m_moleculeData;
 };
-
 }
 }
 

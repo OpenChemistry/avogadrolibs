@@ -21,8 +21,8 @@
 #include "unitcelldialog.h"
 #include "volumescalingdialog.h"
 
-#include <avogadro/core/unitcell.h>
 #include <avogadro/core/crystaltools.h>
+#include <avogadro/core/unitcell.h>
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -39,18 +39,17 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro {
 namespace QtPlugins {
 
-Crystal::Crystal(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_molecule(nullptr),
-  m_unitCellDialog(nullptr),
-  m_importCrystalClipboardAction(new QAction(this)),
-  m_editUnitCellAction(new QAction(this)),
-  m_buildSupercellAction(new QAction(this)),
-  m_niggliReduceAction(new QAction(this)),
-  m_scaleVolumeAction(new QAction(this)),
-  m_standardOrientationAction(new QAction(this)),
-  m_toggleUnitCellAction(new QAction(this)),
-  m_wrapAtomsToCellAction(new QAction(this))
+Crystal::Crystal(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_unitCellDialog(nullptr),
+    m_importCrystalClipboardAction(new QAction(this)),
+    m_editUnitCellAction(new QAction(this)),
+    m_buildSupercellAction(new QAction(this)),
+    m_niggliReduceAction(new QAction(this)),
+    m_scaleVolumeAction(new QAction(this)),
+    m_standardOrientationAction(new QAction(this)),
+    m_toggleUnitCellAction(new QAction(this)),
+    m_wrapAtomsToCellAction(new QAction(this))
 {
   m_importCrystalClipboardAction->setText(tr("Import Crystal from Clipboard"));
   connect(m_importCrystalClipboardAction, SIGNAL(triggered()),
@@ -108,17 +107,17 @@ Crystal::~Crystal()
   m_actions.clear();
 }
 
-QList<QAction *> Crystal::actions() const
+QList<QAction*> Crystal::actions() const
 {
   return m_actions;
 }
 
-QStringList Crystal::menuPath(QAction *) const
+QStringList Crystal::menuPath(QAction*) const
 {
   return QStringList() << tr("&Crystal");
 }
 
-void Crystal::setMolecule(QtGui::Molecule *mol)
+void Crystal::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule == mol)
     return;
@@ -140,8 +139,7 @@ void Crystal::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
 
-  Molecule::MoleculeChanges changes =
-      static_cast<Molecule::MoleculeChanges>(c);
+  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
 
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
@@ -153,19 +151,18 @@ void Crystal::updateActions()
 {
   // Disable everything for nullptr molecules.
   if (!m_molecule) {
-    foreach (QAction *action, m_actions)
+    foreach (QAction* action, m_actions)
       action->setEnabled(false);
     return;
   }
 
   if (m_molecule->unitCell()) {
-    foreach (QAction *action, m_actions)
+    foreach (QAction* action, m_actions)
       action->setEnabled(true);
 
     m_toggleUnitCellAction->setText(tr("Remove &Unit Cell"));
-  }
-  else {
-    foreach (QAction *action, m_actions)
+  } else {
+    foreach (QAction* action, m_actions)
       action->setEnabled(false);
 
     m_importCrystalClipboardAction->setEnabled(true);
@@ -180,8 +177,8 @@ void Crystal::importCrystalClipboard()
   Core::Molecule m;
   if (d.importCrystalClipboard(m)) {
     // If we succeeded, update m_molecule
-    Molecule::MoleculeChanges changes = Molecule::Added |
-                                        Molecule::Atoms | Molecule::UnitCell;
+    Molecule::MoleculeChanges changes =
+      Molecule::Added | Molecule::Atoms | Molecule::UnitCell;
     QString undoText = tr("Import Crystal from Clipboard");
     m_molecule->undoMolecule()->modifyMolecule(m, changes, undoText);
   }
@@ -206,10 +203,9 @@ void Crystal::buildSupercell()
 void Crystal::niggliReduce()
 {
   if (CrystalTools::isNiggliReduced(*m_molecule)) {
-    QMessageBox::information(qobject_cast<QWidget*>(parent()),
-                             tr("Niggli Reduce Crystal"),
-                             tr("The unit cell is already reduced."),
-                             QMessageBox::Ok);
+    QMessageBox::information(
+      qobject_cast<QWidget*>(parent()), tr("Niggli Reduce Crystal"),
+      tr("The unit cell is already reduced."), QMessageBox::Ok);
     return;
   }
   m_molecule->undoMolecule()->niggliReduceCell();
@@ -227,8 +223,8 @@ void Crystal::scaleVolume()
     return;
 
   m_molecule->undoMolecule()->setCellVolume(
-      dlg.newVolume(), dlg.transformAtoms() ? CrystalTools::TransformAtoms
-                                            : CrystalTools::None);
+    dlg.newVolume(),
+    dlg.transformAtoms() ? CrystalTools::TransformAtoms : CrystalTools::None);
 }
 
 void Crystal::standardOrientation()
@@ -240,8 +236,7 @@ void Crystal::toggleUnitCell()
 {
   if (m_molecule->unitCell()) {
     m_molecule->undoMolecule()->removeUnitCell();
-  }
-  else {
+  } else {
     m_molecule->undoMolecule()->addUnitCell();
     editUnitCell();
   }

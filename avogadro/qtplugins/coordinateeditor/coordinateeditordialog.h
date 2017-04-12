@@ -38,10 +38,10 @@ class CoordinateEditorDialog : public QDialog
 {
   Q_OBJECT
 public:
-  explicit CoordinateEditorDialog(QWidget *parent_ = 0);
+  explicit CoordinateEditorDialog(QWidget* parent_ = 0);
   ~CoordinateEditorDialog();
 
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 signals:
   void validationFinished(bool valid);
@@ -77,16 +77,15 @@ private:
 
   QString detectInputFormat() const;
 
-  Ui::CoordinateEditorDialog *m_ui;
-  QtGui::Molecule *m_molecule;
+  Ui::CoordinateEditorDialog* m_ui;
+  QtGui::Molecule* m_molecule;
 
   // State storage for validateInput methods. PIMPL'd for organization.
   class ValidateStorage;
-  ValidateStorage *m_validate;
+  ValidateStorage* m_validate;
 
   QString m_defaultSpec;
 };
-
 
 } // namespace QtPlugins
 } // namespace Avogadro

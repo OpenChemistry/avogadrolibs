@@ -47,7 +47,7 @@ public:
    * Reads the file with the given @fileName. Returns false if an error
    * occurs.
    */
-  bool readFile(const QString &fileName);
+  bool readFile(const QString& fileName);
 
   /**
    * @return String describing the last error that occured.
@@ -61,10 +61,9 @@ public:
   Core::Cube* cube() const;
 
 private:
-  Core::Cube *m_cube;
+  Core::Cube* m_cube;
   QString m_errorString;
 };
-
 }
 }
 

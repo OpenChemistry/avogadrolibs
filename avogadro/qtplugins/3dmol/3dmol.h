@@ -36,24 +36,24 @@ class ThreeDMol : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit ThreeDMol(QObject *parent_ = 0);
+  explicit ThreeDMol(QObject* parent_ = 0);
   ~ThreeDMol();
 
   QString name() const { return tr("ThreeDMol"); }
   QString description() const;
   QList<QAction*> actions() const;
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 private slots:
   void showDialog();
 
 private:
-  QAction *m_action;
-  ThreeDMolDialog *m_dialog;
-  QtGui::Molecule *m_molecule;
+  QAction* m_action;
+  ThreeDMolDialog* m_dialog;
+  QtGui::Molecule* m_molecule;
 };
 
 } // namespace QtPlugins

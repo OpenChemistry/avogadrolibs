@@ -42,18 +42,18 @@ class ImportCrystalDialog : public QDialog
 {
   Q_OBJECT
 public:
-  ImportCrystalDialog(QWidget *p = 0);
+  ImportCrystalDialog(QWidget* p = 0);
   ~ImportCrystalDialog();
 
   // Avogadro::Core::Molecule is required for the format function
-  bool importCrystalClipboard(Avogadro::Core::Molecule &mol);
+  bool importCrystalClipboard(Avogadro::Core::Molecule& mol);
 
   void displayInvalidFormatMessage();
 
 private:
   AVO_DISABLE_COPY(ImportCrystalDialog)
 
-  Ui::ImportCrystalDialog *m_ui;
+  Ui::ImportCrystalDialog* m_ui;
 };
 
 } // namespace QtPlugins

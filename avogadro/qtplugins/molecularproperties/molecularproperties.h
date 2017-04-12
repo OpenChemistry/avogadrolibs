@@ -36,24 +36,24 @@ class MolecularProperties : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit MolecularProperties(QObject *parent_ = 0);
+  explicit MolecularProperties(QObject* parent_ = 0);
   ~MolecularProperties();
 
   QString name() const { return tr("Molecular Properties"); }
   QString description() const;
   QList<QAction*> actions() const;
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 private slots:
   void showDialog();
 
 private:
-  QAction *m_action;
-  MolecularPropertiesDialog *m_dialog;
-  QtGui::Molecule *m_molecule;
+  QAction* m_action;
+  MolecularPropertiesDialog* m_dialog;
+  QtGui::Molecule* m_molecule;
 };
 
 } // namespace QtPlugins

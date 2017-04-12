@@ -28,34 +28,33 @@ namespace QtPlugins {
 class VibrationModel : public QAbstractItemModel
 {
 public:
-  explicit VibrationModel(QObject *p = 0);
+  explicit VibrationModel(QObject* p = 0);
 
-  QModelIndex parent(const QModelIndex &child) const;
-  int rowCount(const QModelIndex &parent) const;
-  int columnCount(const QModelIndex &parent) const;
+  QModelIndex parent(const QModelIndex& child) const;
+  int rowCount(const QModelIndex& parent) const;
+  int columnCount(const QModelIndex& parent) const;
 
-  Qt::ItemFlags flags(const QModelIndex &index) const;
+  Qt::ItemFlags flags(const QModelIndex& index) const;
 
   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
-  bool setData(const QModelIndex &index, const QVariant &value, int role);
-  QVariant data(const QModelIndex &index, int role) const;
+  bool setData(const QModelIndex& index, const QVariant& value, int role);
+  QVariant data(const QModelIndex& index, int role) const;
 
   QModelIndex index(int row, int column,
-                    const QModelIndex &parent = QModelIndex()) const;
+                    const QModelIndex& parent = QModelIndex()) const;
 
   void clear();
 
-  void setMolecule(QtGui::Molecule *mol) { m_molecule = mol; }
+  void setMolecule(QtGui::Molecule* mol) { m_molecule = mol; }
 
 signals:
 
 public slots:
 
 private:
-  QtGui::Molecule * m_molecule;
+  QtGui::Molecule* m_molecule;
 };
-
 }
 }
 

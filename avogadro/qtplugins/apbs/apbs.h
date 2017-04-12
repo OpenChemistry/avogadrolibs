@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_QTPLUGINS_APBS_APBS_H
 #define AVOGADRO_QTPLUGINS_APBS_APBS_H
 
-#include <avogadro/qtgui/extensionplugin.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/qtgui/extensionplugin.h>
 
 class QProgressDialog;
 
@@ -36,7 +36,7 @@ class Apbs : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit Apbs(QObject *parent_ = 0);
+  explicit Apbs(QObject* parent_ = 0);
   ~Apbs() override;
 
   QString name() const override { return tr("APBS"); }
@@ -44,10 +44,10 @@ public:
   {
     return tr("Interact with APBS utilities.");
   }
-  QList<QAction *> actions() const override { return m_actions; }
-  QStringList menuPath(QAction *) const override;
-  void setMolecule(QtGui::Molecule *) override;
-  bool readMolecule(QtGui::Molecule &) override;
+  QList<QAction*> actions() const override { return m_actions; }
+  QStringList menuPath(QAction*) const override;
+  void setMolecule(QtGui::Molecule*) override;
+  bool readMolecule(QtGui::Molecule&) override;
 
 private slots:
   void onOpenOutputFile();
@@ -59,17 +59,16 @@ private:
   /**
    * Loads the cube from the OpenDX file and adds the meshes to the molecule.
    */
-  bool loadOpenDxFile(const QString &fileName, QtGui::Molecule &molecule);
+  bool loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule);
 
 private:
-  QtGui::Molecule *m_molecule;
-  QList<QAction *> m_actions;
-  QProgressDialog *m_progressDialog;
-  ApbsDialog *m_dialog;
+  QtGui::Molecule* m_molecule;
+  QList<QAction*> m_actions;
+  QProgressDialog* m_progressDialog;
+  ApbsDialog* m_dialog;
   QString m_pqrFileName;
   QString m_cubeFileName;
 };
-
 }
 }
 

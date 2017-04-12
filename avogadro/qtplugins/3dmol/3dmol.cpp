@@ -25,11 +25,9 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-ThreeDMol::ThreeDMol(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_action(new QAction(this)),
-  m_dialog(nullptr),
-  m_molecule(nullptr)
+ThreeDMol::ThreeDMol(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_action(new QAction(this)),
+    m_dialog(nullptr), m_molecule(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText("&3DMol HTML Snippet...");
@@ -45,17 +43,17 @@ QString ThreeDMol::description() const
   return tr("ThreeDMol HTML Block.");
 }
 
-QList<QAction *> ThreeDMol::actions() const
+QList<QAction*> ThreeDMol::actions() const
 {
   return QList<QAction*>() << m_action;
 }
 
-QStringList ThreeDMol::menuPath(QAction *) const
+QStringList ThreeDMol::menuPath(QAction*) const
 {
   return QStringList() << tr("&File") << tr("&Export");
 }
 
-void ThreeDMol::setMolecule(QtGui::Molecule *mol)
+void ThreeDMol::setMolecule(QtGui::Molecule* mol)
 {
   if (mol == m_molecule)
     return;
@@ -68,8 +66,8 @@ void ThreeDMol::setMolecule(QtGui::Molecule *mol)
 void ThreeDMol::showDialog()
 {
   if (!m_dialog) {
-    m_dialog = new ThreeDMolDialog(
-          m_molecule, qobject_cast<QWidget*>(this->parent()));
+    m_dialog =
+      new ThreeDMolDialog(m_molecule, qobject_cast<QWidget*>(this->parent()));
   }
   m_dialog->show();
 }

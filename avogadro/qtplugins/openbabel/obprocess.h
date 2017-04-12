@@ -37,7 +37,7 @@ class OBProcess : public QObject
 {
   Q_OBJECT
 public:
-  explicit OBProcess(QObject *parent_ = 0);
+  explicit OBProcess(QObject* parent_ = 0);
 
   /**
    * @return The output of obabel -V.
@@ -186,9 +186,9 @@ public slots:
    *
    * @return True if the process started succesfully, false otherwise.
    */
-  bool convert(const QByteArray &input, const QString &inFormat,
-               const QString &outFormat,
-               const QStringList &options = QStringList());
+  bool convert(const QByteArray& input, const QString& inFormat,
+               const QString& outFormat,
+               const QStringList& options = QStringList());
 
   /**
    * Convert the file @a filename from @a inFormat to @a outFormat.
@@ -209,9 +209,9 @@ public slots:
    *
    * @return True if the process started succesfully, false otherwise.
    */
-  bool convert(const QString &filename, const QString &inFormat,
-               const QString &outFormat,
-               const QStringList &options = QStringList());
+  bool convert(const QString& filename, const QString& inFormat,
+               const QString& outFormat,
+               const QStringList& options = QStringList());
 
 signals:
   /**
@@ -219,7 +219,7 @@ signals:
    * @param output The molecule in CML format, or an empty QByteArray if an e
    * error occurred.
    */
-  void convertFinished(const QByteArray &output);
+  void convertFinished(const QByteArray& output);
 
 private slots:
   void convertPrepareOutput();
@@ -261,7 +261,7 @@ signals:
    *
    * If an error occurs, forceFields will be empty.
    */
-  void queryForceFieldsFinished(const QMap<QString, QString> &forceFields);
+  void queryForceFieldsFinished(const QMap<QString, QString>& forceFields);
 
 private slots:
   void queryForceFieldsPrepare();
@@ -289,13 +289,13 @@ public slots:
    *
    * @return True if the process started successfully, false otherwise.
    */
-  bool optimizeGeometry(const QByteArray &cml, const QStringList &options);
+  bool optimizeGeometry(const QByteArray& cml, const QStringList& options);
 signals:
   /**
    * Emitted with the standard output of the process when it finishes.
    * If an error occurs, the argument will not be valid CML.
    */
-  void optimizeGeometryFinished(const QByteArray &cml);
+  void optimizeGeometryFinished(const QByteArray& cml);
   /**
    * Emitted every 10 steps of the optimization to indicate the current
    * progress.
@@ -336,9 +336,9 @@ executeObabel(options, this, SLOT(mySlot()));
    * m_obabelExecutable and options as arguments. If provided, the obabelStdin
    * data will be written to the obabel stdin channel.
    */
-  void executeObabel(const QStringList &options, QObject *receiver = nullptr,
-                     const char *slot = nullptr,
-                     const QByteArray &obabelStdin = QByteArray());
+  void executeObabel(const QStringList& options, QObject* receiver = nullptr,
+                     const char* slot = nullptr,
+                     const QByteArray& obabelStdin = QByteArray());
 
   void resetState();
 
@@ -352,20 +352,16 @@ executeObabel(options, this, SLOT(mySlot()));
     return true;
   }
 
-  void releaseProcess()
-  {
-    m_processLocked = false;
-  }
+  void releaseProcess() { m_processLocked = false; }
 
   bool m_processLocked;
   bool m_aborted;
-  QProcess *m_process;
+  QProcess* m_process;
   QString m_obabelExecutable;
 
   // Optimize geometry ivars:
   int m_optimizeGeometryMaxSteps;
   QString m_optimizeGeometryLog;
-
 };
 
 } // namespace QtPlugins

@@ -50,24 +50,24 @@ class ClientServer : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit ClientServer(QObject *parent_ = 0);
+  explicit ClientServer(QObject* parent_ = 0);
   ~ClientServer();
 
   QString name() const { return tr("Client server"); }
   QString description() const;
   QList<QAction*> actions() const;
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
-  bool readMolecule(QtGui::Molecule &mol);
+  void setMolecule(QtGui::Molecule* mol);
+  bool readMolecule(QtGui::Molecule& mol);
 
 signals:
   void connectionError();
 
 private slots:
   void openFile();
-  void openFile(const QString &filePath);
+  void openFile(const QString& filePath);
   void openSettings();
   void onConnectionError();
   void select();
@@ -76,23 +76,21 @@ private slots:
   void disconnect();
 
 private:
-  ConnectionSettingsDialog *m_dialog;
-  QAction *m_openAction;
-  QAction *m_settingsAction;
-  Core::Molecule *m_molecule;
-  vtkSocketController *m_controller;
-  vtkSocketCommunicator *m_communicator;
-  ProtoCall::Runtime::vtkCommunicatorChannel *m_channel;
-  QList<QAction *> m_actions;
+  ConnectionSettingsDialog* m_dialog;
+  QAction* m_openAction;
+  QAction* m_settingsAction;
+  Core::Molecule* m_molecule;
+  vtkSocketController* m_controller;
+  vtkSocketCommunicator* m_communicator;
+  ProtoCall::Runtime::vtkCommunicatorChannel* m_channel;
+  QList<QAction*> m_actions;
 
-  void handleOpenResponse(OpenResponse *response);
-  void handleFileFormatsResponse(FileFormats *response);
-  bool connectToServer(const QString &host, int port);
+  void handleOpenResponse(OpenResponse* response);
+  void handleFileFormatsResponse(FileFormats* response);
+  bool connectToServer(const QString& host, int port);
 
   bool isConnected();
   QString lastOpenDirSettingPath();
-
-
 };
 
 } // namespace QtPlugins

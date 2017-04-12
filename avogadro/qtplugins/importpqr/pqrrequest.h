@@ -5,17 +5,17 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 
-#include <QtCore/QUrl>
-#include <QtCore/QVariantMap>
 #include <QtCore/QDateTime>
+#include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QSize>
-#include <QtCore/QDir>
+#include <QtCore/QUrl>
+#include <QtCore/QVariantMap>
 
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTableWidgetItem>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QLabel>
 
 #include <cctype>
 
@@ -97,7 +97,8 @@ private:
   * @brief The result struct holds all data received in each result from
   * querying PQR
   */
-  struct result {
+  struct result
+  {
     QString inchikey;
     QString name;
     QString mol2url;
@@ -105,16 +106,16 @@ private:
     float mass;
   };
   /** An array to hold all results from a query */
-  result *results;
+  result* results;
 
   /** Holds a reply from a network request */
-  QNetworkReply *reply;
+  QNetworkReply* reply;
   /** Jsoncpp reader to read JSON results */
-  Json::Reader *read;
+  Json::Reader* read;
   /** Holds a node of JSON results */
   Json::Value root;
   /** Used to send/receive network request */
-  QNetworkAccessManager *oNetworkAccessManager;
+  QNetworkAccessManager* oNetworkAccessManager;
   /** Used to parse JSON results */
   QVariantMap m_jsonResult;
 
@@ -141,9 +142,7 @@ private:
   * @param formula The formula string
   */
   float getMolMass(QString);
-
 };
-
 }
 }
 #endif // PQRRequest_H

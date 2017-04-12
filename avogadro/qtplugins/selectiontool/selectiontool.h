@@ -23,9 +23,9 @@
 
 #include <avogadro/qtgui/toolplugin.h>
 
-#include <avogadro/rendering/primitive.h>
-#include <avogadro/rendering/geometrynode.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/rendering/geometrynode.h>
+#include <avogadro/rendering/primitive.h>
 
 #include <QtCore/QVector>
 
@@ -39,39 +39,39 @@ class SelectionTool : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit SelectionTool(QObject *parent_ = nullptr);
+  explicit SelectionTool(QObject* parent_ = nullptr);
   ~SelectionTool();
 
   QString name() const override { return tr("Selection tool"); }
   QString description() const override { return tr("Selection tool"); }
   unsigned char priority() const override { return 25; }
-  QAction * activateAction() const override { return m_activateAction; }
-  QWidget * toolWidget() const override;
+  QAction* activateAction() const override { return m_activateAction; }
+  QWidget* toolWidget() const override;
 
-  void setMolecule(QtGui::Molecule *) override;
-  void setGLRenderer(Rendering::GLRenderer *renderer) override;
+  void setMolecule(QtGui::Molecule*) override;
+  void setGLRenderer(Rendering::GLRenderer* renderer) override;
 
-  QUndoCommand * mousePressEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseMoveEvent(QMouseEvent *e) override;
-  QUndoCommand * keyPressEvent(QKeyEvent *e) override;
+  QUndoCommand* mousePressEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseDoubleClickEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseMoveEvent(QMouseEvent* e) override;
+  QUndoCommand* keyPressEvent(QKeyEvent* e) override;
 
-  void draw(Rendering::GroupNode &node) override;
+  void draw(Rendering::GroupNode& node) override;
 
 private:
-  bool addAtom(const Rendering::Identifier &atom);
+  bool addAtom(const Rendering::Identifier& atom);
 
-  QAction *m_activateAction;
-  QtGui::Molecule *m_molecule;
-  Rendering::GLRenderer *m_renderer;
+  QAction* m_activateAction;
+  QtGui::Molecule* m_molecule;
+  Rendering::GLRenderer* m_renderer;
   QVector<Rendering::Identifier> m_atoms;
   bool m_drawSelectionBox;
   Vector2 m_start;
   Vector2 m_end;
 };
 
-inline void SelectionTool::setMolecule(QtGui::Molecule *mol)
+inline void SelectionTool::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule != mol) {
     m_atoms.clear();
@@ -79,7 +79,7 @@ inline void SelectionTool::setMolecule(QtGui::Molecule *mol)
   }
 }
 
-inline void SelectionTool::setGLRenderer(Rendering::GLRenderer *renderer)
+inline void SelectionTool::setGLRenderer(Rendering::GLRenderer* renderer)
 {
   m_renderer = renderer;
 }

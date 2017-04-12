@@ -33,11 +33,9 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-FileFormatScript::FileFormatScript(const QString &scriptFileName_)
-  : m_interpreter(new QtGui::PythonScript(scriptFileName_)),
-    m_valid(false),
-    m_inputFormat(NotUsed),
-    m_outputFormat(NotUsed)
+FileFormatScript::FileFormatScript(const QString& scriptFileName_)
+  : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(false),
+    m_inputFormat(NotUsed), m_outputFormat(NotUsed)
 {
   readMetaData();
 }
@@ -52,12 +50,12 @@ QString FileFormatScript::scriptFilePath() const
   return m_interpreter->scriptFilePath();
 }
 
-Io::FileFormat *FileFormatScript::newInstance() const
+Io::FileFormat* FileFormatScript::newInstance() const
 {
   return new FileFormatScript(m_interpreter->scriptFilePath());
 }
 
-bool FileFormatScript::read(std::istream &in, Core::Molecule &molecule)
+bool FileFormatScript::read(std::istream& in, Core::Molecule& molecule)
 {
   // Create intermediate format reader
   QScopedPointer<FileFormat> format(createFileFormat(m_outputFormat));
@@ -83,7 +81,7 @@ bool FileFormatScript::read(std::istream &in, Core::Molecule &molecule)
   QByteArray result = m_interpreter->execute(QStringList() << "--read", buffer);
 
   if (m_interpreter->hasErrors()) {
-    foreach (const QString &err, m_interpreter->errorList())
+    foreach (const QString& err, m_interpreter->errorList())
       appendError(err.toStdString());
     return false;
   }
@@ -97,7 +95,7 @@ bool FileFormatScript::read(std::istream &in, Core::Molecule &molecule)
   return true;
 }
 
-bool FileFormatScript::write(std::ostream &out, const Core::Molecule &molecule)
+bool FileFormatScript::write(std::ostream& out, const Core::Molecule& molecule)
 {
   // Create the intermediate format writer
   std::string intermediate;
@@ -115,11 +113,11 @@ bool FileFormatScript::write(std::ostream &out, const Core::Molecule &molecule)
 
   // Call the script to convert the file
   QByteArray result = m_interpreter->execute(
-        QStringList() << "--write",
-        QByteArray::fromRawData(intermediate.c_str(), intermediate.size()));
+    QStringList() << "--write",
+    QByteArray::fromRawData(intermediate.c_str(), intermediate.size()));
 
   if (m_interpreter->hasErrors()) {
-    foreach (const QString &err, m_interpreter->errorList())
+    foreach (const QString& err, m_interpreter->errorList())
       appendError(err.toStdString());
     return false;
   }
@@ -129,8 +127,8 @@ bool FileFormatScript::write(std::ostream &out, const Core::Molecule &molecule)
   return true;
 }
 
-FileFormatScript::Format
-FileFormatScript::stringToFormat(const std::string &str)
+FileFormatScript::Format FileFormatScript::stringToFormat(
+  const std::string& str)
 {
   if (str == "cjson")
     return Cjson;
@@ -141,19 +139,18 @@ FileFormatScript::stringToFormat(const std::string &str)
   return NotUsed;
 }
 
-Io::FileFormat *
-FileFormatScript::createFileFormat(FileFormatScript::Format fmt)
+Io::FileFormat* FileFormatScript::createFileFormat(FileFormatScript::Format fmt)
 {
   switch (fmt) {
-  case Cjson:
-    return new Io::CjsonFormat;
-  case Cml:
-    return new Io::CmlFormat;
-  case Xyz:
-    return new Io::XyzFormat;
-  default:
-  case NotUsed:
-    return nullptr;
+    case Cjson:
+      return new Io::CjsonFormat;
+    case Cml:
+      return new Io::CmlFormat;
+    case Xyz:
+      return new Io::XyzFormat;
+    default:
+    case NotUsed:
+      return nullptr;
   }
 }
 
@@ -178,7 +175,8 @@ void FileFormatScript::readMetaData()
 
   if (m_interpreter->hasErrors()) {
     qWarning() << "Error retrieving metadata for file format script:"
-               << scriptFilePath() << "\n" << m_interpreter->errorList();
+               << scriptFilePath() << "\n"
+               << m_interpreter->errorList();
     return;
   }
 
@@ -186,8 +184,9 @@ void FileFormatScript::readMetaData()
   QJsonDocument doc(QJsonDocument::fromJson(output, &parseError));
   if (parseError.error != QJsonParseError::NoError) {
     qWarning() << "Error parsing metadata for file format script:"
-               << scriptFilePath() << "\n" << parseError.errorString()
-               << "(at offset" << parseError.offset << ")";
+               << scriptFilePath() << "\n"
+               << parseError.errorString() << "(at offset" << parseError.offset
+               << ")";
     return;
   }
 
@@ -206,7 +205,8 @@ void FileFormatScript::readMetaData()
     qWarning() << "Error parsing metadata for file format script:"
                << scriptFilePath() << "\n"
                << "Error parsing required member 'operations'"
-               << "\n" << output;
+               << "\n"
+               << output;
     return;
   }
 
@@ -222,8 +222,8 @@ void FileFormatScript::readMetaData()
     else {
       qWarning() << "Error parsing metadata for file format script:"
                  << scriptFilePath() << "\n"
-                 << "Unrecognized operation:" << it->c_str()
-                 << "\n" << output;
+                 << "Unrecognized operation:" << it->c_str() << "\n"
+                 << output;
       return;
     }
   }
@@ -233,7 +233,8 @@ void FileFormatScript::readMetaData()
     qWarning() << "Error parsing metadata for file format script:"
                << scriptFilePath() << "\n"
                << "Error parsing required member 'operations'"
-               << "\n" << output;
+               << "\n"
+               << output;
     return;
   }
 
@@ -242,7 +243,8 @@ void FileFormatScript::readMetaData()
     qWarning() << "Error parsing metadata for file format script:"
                << scriptFilePath() << "\n"
                << "Error parsing required member 'name'"
-               << "\n" << output;
+               << "\n"
+               << output;
     return;
   }
 
@@ -254,7 +256,8 @@ void FileFormatScript::readMetaData()
       qWarning() << "Error parsing metadata for file format script:"
                  << scriptFilePath() << "\n"
                  << "Member 'inputFormat' required for writable formats."
-                 << "\n" << output;
+                 << "\n"
+                 << output;
       return;
     }
 
@@ -265,7 +268,8 @@ void FileFormatScript::readMetaData()
                  << scriptFilePath() << "\n"
                  << "Member 'inputFormat' not recognized:"
                  << inputFormatStrTmp.c_str()
-                 << "\nValid values are cjson, cml, or xyz.\n" << output;
+                 << "\nValid values are cjson, cml, or xyz.\n"
+                 << output;
       return;
     }
   }
@@ -278,7 +282,8 @@ void FileFormatScript::readMetaData()
       qWarning() << "Error parsing metadata for file format script:"
                  << scriptFilePath() << "\n"
                  << "Member 'outputFormat' required for readable formats."
-                 << "\n" << output;
+                 << "\n"
+                 << output;
       return;
     }
 
@@ -289,16 +294,15 @@ void FileFormatScript::readMetaData()
                  << scriptFilePath() << "\n"
                  << "Member 'outputFormat' not recognized:"
                  << outputFormatStrTmp.c_str()
-                 << "\nValid values are cjson, cml, or xyz.\n" << output;
+                 << "\nValid values are cjson, cml, or xyz.\n"
+                 << output;
       return;
     }
   }
 
   // If all required data is present, go ahead and set the member vars:
-  m_operations = operationsTmp
-      | Io::FileFormat::File
-      | Io::FileFormat::Stream
-      | Io::FileFormat::String;
+  m_operations = operationsTmp | Io::FileFormat::File | Io::FileFormat::Stream |
+                 Io::FileFormat::String;
   m_inputFormat = inputFormatTmp;
   m_outputFormat = outputFormatTmp;
   m_identifier = std::string("User Script: ") + identifierTmp;
@@ -312,8 +316,8 @@ void FileFormatScript::readMetaData()
   m_valid = true;
 }
 
-bool FileFormatScript::parseString(const QJsonObject &ob,
-                                   const QString &key, std::string &str)
+bool FileFormatScript::parseString(const QJsonObject& ob, const QString& key,
+                                   std::string& str)
 {
   if (!ob[key].isString())
     return false;
@@ -323,16 +327,16 @@ bool FileFormatScript::parseString(const QJsonObject &ob,
   return !str.empty();
 }
 
-bool FileFormatScript::parseStringArray(const QJsonObject &ob,
-                                        const QString &key,
-                                        std::vector<std::string> &array)
+bool FileFormatScript::parseStringArray(const QJsonObject& ob,
+                                        const QString& key,
+                                        std::vector<std::string>& array)
 {
   array.clear();
 
   if (!ob[key].isArray())
     return false;
 
-  foreach (const QJsonValue &val, ob[key].toArray()) {
+  foreach (const QJsonValue& val, ob[key].toArray()) {
     if (!val.isString())
       return false;
 

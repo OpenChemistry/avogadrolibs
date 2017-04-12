@@ -19,10 +19,9 @@
 
 #include <avogadro/qtgui/toolplugin.h>
 
-#include <avogadro/qtgui/molecule.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/primitive.h>
-
 
 #include <QtCore/QPoint>
 
@@ -39,42 +38,36 @@ class Editor : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit Editor(QObject *parent_ = nullptr);
+  explicit Editor(QObject* parent_ = nullptr);
   ~Editor();
 
   QString name() const override { return tr("Editor tool"); }
   QString description() const override { return tr("Editor tool"); }
   unsigned char priority() const override { return 20; }
-  QAction * activateAction() const override { return m_activateAction; }
-  QWidget * toolWidget() const override;
+  QAction* activateAction() const override { return m_activateAction; }
+  QWidget* toolWidget() const override;
 
-  void setMolecule(QtGui::Molecule *mol) override
+  void setMolecule(QtGui::Molecule* mol) override
   {
     if (mol)
       m_molecule = mol->undoMolecule();
   }
 
-  void setEditMolecule(QtGui::RWMolecule *mol) override
-  {
-    m_molecule = mol;
-  }
+  void setEditMolecule(QtGui::RWMolecule* mol) override { m_molecule = mol; }
 
-  void setGLWidget(QtOpenGL::GLWidget *widget) override
-  {
-    m_glWidget = widget;
-  }
+  void setGLWidget(QtOpenGL::GLWidget* widget) override { m_glWidget = widget; }
 
-  void setGLRenderer(Rendering::GLRenderer *renderer) override
+  void setGLRenderer(Rendering::GLRenderer* renderer) override
   {
     m_renderer = renderer;
   }
 
-  QUndoCommand * mousePressEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseMoveEvent(QMouseEvent *e) override;
-  QUndoCommand * keyPressEvent(QKeyEvent *e) override;
+  QUndoCommand* mousePressEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseMoveEvent(QMouseEvent* e) override;
+  QUndoCommand* keyPressEvent(QKeyEvent* e) override;
 
-  void draw(Rendering::GroupNode &node) override;
+  void draw(Rendering::GroupNode& node) override;
 
 private slots:
   void clearKeyPressBuffer() { m_keyPressBuffer.clear(); }
@@ -84,27 +77,27 @@ private:
    * Update the currently pressed buttons, accounting for modifier keys.
    * @todo Account for modifier keys.
    */
-  void updatePressedButtons(QMouseEvent *, bool release);
+  void updatePressedButtons(QMouseEvent*, bool release);
 
   /**
    * Reset all state for this tool.
    */
   void reset();
 
-  void emptyLeftClick(QMouseEvent *e);
-  void atomLeftClick(QMouseEvent *e);
-  void bondLeftClick(QMouseEvent *e);
+  void emptyLeftClick(QMouseEvent* e);
+  void atomLeftClick(QMouseEvent* e);
+  void bondLeftClick(QMouseEvent* e);
 
-  void atomRightClick(QMouseEvent *e);
-  void bondRightClick(QMouseEvent *e);
+  void atomRightClick(QMouseEvent* e);
+  void bondRightClick(QMouseEvent* e);
 
-  void atomLeftDrag(QMouseEvent *e);
+  void atomLeftDrag(QMouseEvent* e);
 
-  QAction *m_activateAction;
-  QtGui::RWMolecule *m_molecule;
-  QtOpenGL::GLWidget *m_glWidget;
-  Rendering::GLRenderer *m_renderer;
-  EditorToolWidget *m_toolWidget;
+  QAction* m_activateAction;
+  QtGui::RWMolecule* m_molecule;
+  QtOpenGL::GLWidget* m_glWidget;
+  Rendering::GLRenderer* m_renderer;
+  EditorToolWidget* m_toolWidget;
   Rendering::Identifier m_clickedObject;
   Rendering::Identifier m_newObject;
   Rendering::Identifier m_bondedAtom;

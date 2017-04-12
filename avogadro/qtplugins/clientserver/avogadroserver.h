@@ -17,8 +17,8 @@
 #ifndef AVOGADROSERVER_H
 #define AVOGADROSERVER_H
 
-#include <string>
 #include <list>
+#include <string>
 
 namespace ProtoCall {
 namespace Runtime {
@@ -42,12 +42,11 @@ public:
   void listen(int port);
 
 private:
-  vtkServerSocket *m_socket;
-  std::list<ProtoCall::Runtime::vtkCommunicatorChannel *> m_clientChannels;
+  vtkServerSocket* m_socket;
+  std::list<ProtoCall::Runtime::vtkCommunicatorChannel*> m_clientChannels;
 
   void processConnectionEvents();
   void accept();
-
 };
 
 #endif /* AVOGADROSERVER_H */

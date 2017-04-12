@@ -26,15 +26,13 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-OBProcess::OBProcess(QObject *parent_) :
-  QObject(parent_),
-  m_processLocked(false),
-  m_aborted(false),
-  m_process(new QProcess(this)),
+OBProcess::OBProcess(QObject* parent_)
+  : QObject(parent_), m_processLocked(false), m_aborted(false),
+    m_process(new QProcess(this)),
 #if defined(_WIN32)
-  m_obabelExecutable("obabel.exe")
+    m_obabelExecutable("obabel.exe")
 #else
-  m_obabelExecutable("obabel")
+    m_obabelExecutable("obabel")
 #endif
 {
   // Read the AVO_OBABEL_EXECUTABLE env var to optionally override the
@@ -42,8 +40,7 @@ OBProcess::OBProcess(QObject *parent_) :
   QByteArray obabelExec = qgetenv("AVO_OBABEL_EXECUTABLE");
   if (!obabelExec.isEmpty()) {
     m_obabelExecutable = obabelExec;
-  }
-  else {
+  } else {
     // If not overridden, look for an obabel next to the executable.
     QDir baseDir(QCoreApplication::applicationDirPath());
     if (!baseDir.absolutePath().startsWith("/usr/") &&
@@ -59,21 +56,17 @@ OBProcess::OBProcess(QObject *parent_) :
       filters << "2.*";
       QStringList dirs = dir.entryList(filters);
       if (dirs.size() == 1) {
-        env.insert("BABEL_DATADIR",
-                   QCoreApplication::applicationDirPath()
-                   + "/../share/openbabel/" + dirs[0]);
-      }
-      else {
+        env.insert("BABEL_DATADIR", QCoreApplication::applicationDirPath() +
+                                      "/../share/openbabel/" + dirs[0]);
+      } else {
         qDebug() << "Error, Open Babel data directory not found.";
       }
       dir.setPath(QCoreApplication::applicationDirPath() + "/../lib/openbabel");
       dirs = dir.entryList(filters);
       if (dirs.size() == 1) {
-        env.insert("BABEL_LIBDIR",
-                   QCoreApplication::applicationDirPath()
-                   + "/../lib/openbabel/" + dirs[0]);
-      }
-      else {
+        env.insert("BABEL_LIBDIR", QCoreApplication::applicationDirPath() +
+                                     "/../lib/openbabel/" + dirs[0]);
+      } else {
         qDebug() << "Error, Open Babel plugins directory not found.";
       }
 #endif
@@ -125,7 +118,9 @@ bool OBProcess::queryReadFormats()
 
   // Setup options
   QStringList options;
-  options << "-L" << "formats" << "read";
+  options << "-L"
+          << "formats"
+          << "read";
 
   executeObabel(options, this, SLOT(queryReadFormatsPrepare()));
   return true;
@@ -140,7 +135,9 @@ bool OBProcess::queryWriteFormats()
 
   // Setup options
   QStringList options;
-  options << "-L" << "formats" << "write";
+  options << "-L"
+          << "formats"
+          << "write";
 
   executeObabel(options, this, SLOT(queryWriteFormatsPrepare()));
   return true;
@@ -196,8 +193,8 @@ void OBProcess::queryWriteFormatsPrepare()
   return;
 }
 
-bool OBProcess::convert(const QByteArray &input, const QString &inFormat,
-                        const QString &outFormat, const QStringList &options)
+bool OBProcess::convert(const QByteArray& input, const QString& inFormat,
+                        const QString& outFormat, const QStringList& options)
 {
   if (!tryLockProcess()) {
     qWarning() << "OBProcess::convert: process already in use.";
@@ -205,16 +202,15 @@ bool OBProcess::convert(const QByteArray &input, const QString &inFormat,
   }
 
   QStringList realOptions;
-  realOptions << QString("-i%1").arg(inFormat)
-              << QString("-o%1").arg(outFormat)
+  realOptions << QString("-i%1").arg(inFormat) << QString("-o%1").arg(outFormat)
               << options;
 
   executeObabel(realOptions, this, SLOT(convertPrepareOutput()), input);
   return true;
 }
 
-bool OBProcess::convert(const QString &filename, const QString &inFormat,
-                        const QString &outFormat, const QStringList &options)
+bool OBProcess::convert(const QString& filename, const QString& inFormat,
+                        const QString& outFormat, const QStringList& options)
 {
   if (!tryLockProcess()) {
     qWarning() << "OBProcess::convert: process already in use.";
@@ -222,10 +218,8 @@ bool OBProcess::convert(const QString &filename, const QString &inFormat,
   }
 
   QStringList realOptions;
-  realOptions << QString("-i%1").arg(inFormat)
-              << filename
-              << QString("-o%1").arg(outFormat)
-              << options;
+  realOptions << QString("-i%1").arg(inFormat) << filename
+              << QString("-o%1").arg(outFormat) << options;
 
   executeObabel(realOptions, this, SLOT(convertPrepareOutput()));
   return true;
@@ -243,7 +237,8 @@ void OBProcess::convertPrepareOutput()
 
   // Check for errors.
   QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
-  QRegExp errorChecker("\\b0 molecules converted\\b" "|"
+  QRegExp errorChecker("\\b0 molecules converted\\b"
+                       "|"
                        "obabel: cannot read input format!");
   if (!errorOutput.contains(errorChecker)) {
     if (m_process->exitStatus() == QProcess::NormalExit)
@@ -266,7 +261,8 @@ bool OBProcess::queryForceFields()
   }
 
   QStringList options;
-  options << "-L" << "forcefields";
+  options << "-L"
+          << "forcefields";
 
   executeObabel(options, this, SLOT(queryForceFieldsPrepare()));
   return true;
@@ -296,8 +292,8 @@ void OBProcess::queryForceFieldsPrepare()
   emit queryForceFieldsFinished(result);
 }
 
-bool OBProcess::optimizeGeometry(const QByteArray &mol,
-                                 const QStringList &options)
+bool OBProcess::optimizeGeometry(const QByteArray& mol,
+                                 const QStringList& options)
 {
   if (!tryLockProcess()) {
     qWarning() << "OBProcess::optimizeGeometry(): process already in use.";
@@ -305,7 +301,10 @@ bool OBProcess::optimizeGeometry(const QByteArray &mol,
   }
 
   QStringList realOptions;
-  realOptions << "-imol" << "-omol" << "--minimize" << "--log" << options;
+  realOptions << "-imol"
+              << "-omol"
+              << "--minimize"
+              << "--log" << options;
 
   // We'll need to read the log (printed to stderr) to update progress
   connect(m_process, SIGNAL(readyReadStandardError()),
@@ -337,15 +336,15 @@ void OBProcess::optimizeGeometryReadLog()
 {
   // Append the current stderr to the log
   m_optimizeGeometryLog +=
-      QString::fromLatin1(m_process->readAllStandardError());
+    QString::fromLatin1(m_process->readAllStandardError());
 
   // Search for the maximum number of steps if we haven't found it yet
   if (m_optimizeGeometryMaxSteps < 0) {
     QRegExp maxStepsParser("\nSTEPS = ([0-9]+)\n\n");
     if (maxStepsParser.indexIn(m_optimizeGeometryLog) != -1) {
       m_optimizeGeometryMaxSteps = maxStepsParser.cap(1).toInt();
-      emit optimizeGeometryStatusUpdate(0, m_optimizeGeometryMaxSteps,
-                                        0.0, 0.0);
+      emit optimizeGeometryStatusUpdate(0, m_optimizeGeometryMaxSteps, 0.0,
+                                        0.0);
     }
   }
 
@@ -353,30 +352,30 @@ void OBProcess::optimizeGeometryReadLog()
   if (m_optimizeGeometryMaxSteps >= 0) {
     QRegExp lastStepParser("\\n\\s*([0-9]+)\\s+([-0-9.]+)\\s+([-0-9.]+)\\n");
     if (lastStepParser.lastIndexIn(m_optimizeGeometryLog) != -1) {
-     int step = lastStepParser.cap(1).toInt();
-     double energy = lastStepParser.cap(2).toDouble();
-     double lastEnergy = lastStepParser.cap(3).toDouble();
-     emit optimizeGeometryStatusUpdate(step, m_optimizeGeometryMaxSteps,
-                                       energy, lastEnergy);
+      int step = lastStepParser.cap(1).toInt();
+      double energy = lastStepParser.cap(2).toDouble();
+      double lastEnergy = lastStepParser.cap(3).toDouble();
+      emit optimizeGeometryStatusUpdate(step, m_optimizeGeometryMaxSteps,
+                                        energy, lastEnergy);
     }
   }
 }
 
-void OBProcess::executeObabel(const QStringList &options,
-                              QObject *receiver, const char *slot,
-                              const QByteArray &obabelStdin)
+void OBProcess::executeObabel(const QStringList& options, QObject* receiver,
+                              const char* slot, const QByteArray& obabelStdin)
 {
   // Setup exit handler
   if (receiver) {
     connect(m_process, SIGNAL(finished(int)), receiver, slot);
     connect(m_process, SIGNAL(error(QProcess::ProcessError)), receiver, slot);
-    connect(m_process, SIGNAL(error(QProcess::ProcessError)),
-            this, SLOT(obError()));
+    connect(m_process, SIGNAL(error(QProcess::ProcessError)), this,
+            SLOT(obError()));
   }
 
   // Start process
   qDebug() << "OBProcess::executeObabel: "
-              "Running" << m_obabelExecutable << options.join(" ");
+              "Running"
+           << m_obabelExecutable << options.join(" ");
   m_process->start(m_obabelExecutable, options);
   if (!obabelStdin.isNull()) {
     m_process->write(obabelStdin);

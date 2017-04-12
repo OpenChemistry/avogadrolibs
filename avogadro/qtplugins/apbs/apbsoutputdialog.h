@@ -41,7 +41,7 @@ public:
   /**
    * Constructor for ApbsOutputDialog.
    */
-  ApbsOutputDialog(QWidget *parent_ = 0);
+  ApbsOutputDialog(QWidget* parent_ = 0);
 
   /**
    * Destructor for ApbsOutputDialog.
@@ -59,9 +59,8 @@ public:
   bool loadCubeFile() const;
 
 private:
-  Ui::ApbsOutputDialog *m_ui;
+  Ui::ApbsOutputDialog* m_ui;
 };
-
 }
 }
 

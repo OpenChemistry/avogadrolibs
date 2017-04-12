@@ -29,10 +29,9 @@ namespace QtPlugins {
 class OBFileFormat : public Avogadro::Io::FileFormat
 {
 public:
-  OBFileFormat(const std::string &name_,
-               const std::string &identifier_,
-               const std::string &description_,
-               const std::string &specificationUrl_,
+  OBFileFormat(const std::string& name_, const std::string& identifier_,
+               const std::string& description_,
+               const std::string& specificationUrl_,
                const std::vector<std::string> fileExtensions_,
                const std::vector<std::string> mimeTypes_,
                bool fileOnly_ = false);
@@ -43,37 +42,28 @@ public:
     return m_rwFlags | File | (m_fileOnly ? None : Stream | String);
   }
 
-  bool read(std::istream &in, Core::Molecule &molecule);
-  bool write(std::ostream &out, const Core::Molecule &molecule);
+  bool read(std::istream& in, Core::Molecule& molecule);
+  bool write(std::ostream& out, const Core::Molecule& molecule);
 
   void clear();
 
-  FileFormat *newInstance() const;
+  FileFormat* newInstance() const;
 
   std::string description() const override { return m_description; }
   std::string identifier() const override { return m_identifier; }
   std::string name() const override { return m_name; }
-  std::string specificationUrl() const override
-  {
-    return m_specificationUrl;
-  }
+  std::string specificationUrl() const override { return m_specificationUrl; }
 
   std::vector<std::string> fileExtensions() const override
   {
     return m_fileExtensions;
   }
-  std::vector<std::string> mimeTypes() const override
-  {
-    return m_mimeTypes;
-  }
+  std::vector<std::string> mimeTypes() const override { return m_mimeTypes; }
 
   /**
    * Set whether this format supports read and/or write operations.
    */
-  void setReadWriteFlags(Operations ops)
-  {
-    m_rwFlags = ops & ReadWrite;
-  }
+  void setReadWriteFlags(Operations ops) { m_rwFlags = ops & ReadWrite; }
 
   /** Whether or not the format supports files only. This is needed for
    * multifile formats. */

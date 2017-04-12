@@ -2,22 +2,23 @@
 #define AVOGADRO_PQRWIDGET_H
 
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QGraphicsRectItem>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTableWidgetItem>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QGraphicsRectItem>
 
 #include <QtGui/QPixmap>
 
 #include <QtNetwork/QNetworkReply>
 
-#include <QtCore/QFile>
 #include <QtCore/QDir>
+#include <QtCore/QFile>
 #include <QtCore/QSortFilterProxyModel>
 
 /**
-* PQRWidget is a class extending QDialog to provide the ui for importing/downloading
+* PQRWidget is a class extending QDialog to provide the ui for
+* importing/downloading
 * molecules from PQR.
 */
 
@@ -40,7 +41,7 @@ class PQRWidget : public QDialog
   Q_OBJECT
 
 public:
-  PQRWidget(QWidget *parent = 0, ImportPQR* p = nullptr);
+  PQRWidget(QWidget* parent = 0, ImportPQR* p = nullptr);
   ~PQRWidget();
   void loadMolecule(QByteArray&, QString);
   void loadPNG(QByteArray&);
@@ -53,7 +54,8 @@ private slots:
   void searchAction();
 
   /**
-  * @brief Called when a table result is double clicked to display preview information
+  * @brief Called when a table result is double clicked to display preview
+  * information
   * about the result before downloading.
   * @param row The row of the result selected.
   * @param col The column of the result selected.
@@ -61,7 +63,8 @@ private slots:
   void molSelected(int, int);
 
   /**
-  * @brief Called when the download button is clicked to send a request to download
+  * @brief Called when the download button is clicked to send a request to
+  * download
   * molecule information from PQR.
   */
   void downloadMol();
@@ -70,13 +73,12 @@ private:
   /** The mol2 of the molecule result currently selected */
   QString currentlySelectedMol;
   /** Pointer to the ui objects */
-  Ui::PQRWidget *ui;
+  Ui::PQRWidget* ui;
   /** Pointer to a PQRRequest object to handle network requests */
-  PQRRequest *request;
+  PQRRequest* request;
   /** Pointer to the plugin that opened the dialog */
-  ImportPQR *plugin;
+  ImportPQR* plugin;
 };
-
 }
 }
 #endif // AVOGADRO_PQRWIDGET_H

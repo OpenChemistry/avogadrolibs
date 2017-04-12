@@ -23,38 +23,37 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/vector.h>
 
+#include <avogadro/qtgui/hydrogentools.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
-#include <avogadro/qtgui/hydrogentools.h>
 
 #include <avogadro/qtopengl/glwidget.h>
 
 #include <avogadro/rendering/camera.h>
-#include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/geometrynode.h>
+#include <avogadro/rendering/glrenderer.h>
 
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/textlabel2d.h>
 #include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
 
-
-#include <QtWidgets/QAction>
-#include <QtWidgets/QComboBox>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QWidget>
 
-#include <QtCore/QTimer>
 #include <QtCore/QDebug>
+#include <QtCore/QTimer>
 
 #include <limits>
 
 namespace {
 const unsigned char INVALID_ATOMIC_NUMBER =
-    std::numeric_limits<unsigned char>::max();
+  std::numeric_limits<unsigned char>::max();
 }
 
 namespace Avogadro {
@@ -74,16 +73,12 @@ using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
 using Avogadro::Core::Elements;
 
-Editor::Editor(QObject *parent_)
-  : QtGui::ToolPlugin(parent_),
-    m_activateAction(new QAction(this)),
-    m_molecule(nullptr),
-    m_glWidget(nullptr),
-    m_renderer(nullptr),
+Editor::Editor(QObject* parent_)
+  : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
+    m_molecule(nullptr), m_glWidget(nullptr), m_renderer(nullptr),
     m_toolWidget(new EditorToolWidget(qobject_cast<QWidget*>(parent_))),
     m_pressedButtons(Qt::NoButton),
-    m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER),
-    m_bondAdded(false),
+    m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER), m_bondAdded(false),
     m_fixValenceLater(false)
 {
   m_activateAction->setText(tr("Draw"));
@@ -95,12 +90,12 @@ Editor::~Editor()
 {
 }
 
-QWidget *Editor::toolWidget() const
+QWidget* Editor::toolWidget() const
 {
   return m_toolWidget;
 }
 
-QUndoCommand *Editor::mousePressEvent(QMouseEvent *e)
+QUndoCommand* Editor::mousePressEvent(QMouseEvent* e)
 {
   clearKeyPressBuffer();
   if (!m_renderer || !m_molecule)
@@ -113,43 +108,42 @@ QUndoCommand *Editor::mousePressEvent(QMouseEvent *e)
     m_clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
 
     switch (m_clickedObject.type) {
-    case Rendering::InvalidType:
-      m_molecule->beginMergeMode(tr("Draw Atom"));
-      emptyLeftClick(e);
-      return nullptr;
-    case Rendering::AtomType:
-      // We don't know yet if we are drawing a bond/atom or replacing an atom
-      // unfortunately...
-      m_molecule->beginMergeMode(tr("Draw"));
-      atomLeftClick(e);
-      return nullptr;
-    case Rendering::BondType:
-      m_molecule->beginMergeMode(tr("Change Bond Type"));
-      bondLeftClick(e);
-      return nullptr;
+      case Rendering::InvalidType:
+        m_molecule->beginMergeMode(tr("Draw Atom"));
+        emptyLeftClick(e);
+        return nullptr;
+      case Rendering::AtomType:
+        // We don't know yet if we are drawing a bond/atom or replacing an atom
+        // unfortunately...
+        m_molecule->beginMergeMode(tr("Draw"));
+        atomLeftClick(e);
+        return nullptr;
+      case Rendering::BondType:
+        m_molecule->beginMergeMode(tr("Change Bond Type"));
+        bondLeftClick(e);
+        return nullptr;
     }
-  }
-  else if (m_pressedButtons & Qt::RightButton) {
+  } else if (m_pressedButtons & Qt::RightButton) {
     m_clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
 
     switch (m_clickedObject.type) {
-    case Rendering::AtomType:
-      m_molecule->beginMergeMode(tr("Remove Atom"));
-      atomRightClick(e);
-      return nullptr;
-    case Rendering::BondType:
-      m_molecule->beginMergeMode(tr("Remove Bond"));
-      bondRightClick(e);
-      return nullptr;
-    default:
-      break;
+      case Rendering::AtomType:
+        m_molecule->beginMergeMode(tr("Remove Atom"));
+        atomRightClick(e);
+        return nullptr;
+      case Rendering::BondType:
+        m_molecule->beginMergeMode(tr("Remove Bond"));
+        bondRightClick(e);
+        return nullptr;
+      default:
+        break;
     }
   }
 
   return nullptr;
 }
 
-QUndoCommand *Editor::mouseReleaseEvent(QMouseEvent *e)
+QUndoCommand* Editor::mouseReleaseEvent(QMouseEvent* e)
 {
   if (!m_renderer || !m_molecule)
     return nullptr;
@@ -160,25 +154,25 @@ QUndoCommand *Editor::mouseReleaseEvent(QMouseEvent *e)
     return nullptr;
 
   switch (e->button()) {
-  case Qt::LeftButton:
-  case Qt::RightButton:
-    reset();
-    e->accept();
-    m_molecule->endMergeMode();
-    // Let's cover all possible changes - the undo stack won't update
-    // without this
-    m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds |
-                            Molecule::Added | Molecule::Removed |
-                            Molecule::Modified);
-    break;
-  default:
-    break;
+    case Qt::LeftButton:
+    case Qt::RightButton:
+      reset();
+      e->accept();
+      m_molecule->endMergeMode();
+      // Let's cover all possible changes - the undo stack won't update
+      // without this
+      m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds |
+                              Molecule::Added | Molecule::Removed |
+                              Molecule::Modified);
+      break;
+    default:
+      break;
   }
 
   return nullptr;
 }
 
-QUndoCommand *Editor::mouseMoveEvent(QMouseEvent *e)
+QUndoCommand* Editor::mouseMoveEvent(QMouseEvent* e)
 {
   if (!m_renderer)
     return nullptr;
@@ -190,7 +184,7 @@ QUndoCommand *Editor::mouseMoveEvent(QMouseEvent *e)
   return nullptr;
 }
 
-QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
+QUndoCommand* Editor::keyPressEvent(QKeyEvent* e)
 {
   if (e->text().isEmpty())
     return nullptr;
@@ -201,9 +195,8 @@ QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
   if (m_keyPressBuffer.isEmpty())
     QTimer::singleShot(2000, this, SLOT(clearKeyPressBuffer()));
 
-  m_keyPressBuffer.append(m_keyPressBuffer.isEmpty()
-                          ? e->text().toUpper()
-                          : e->text().toLower());
+  m_keyPressBuffer.append(m_keyPressBuffer.isEmpty() ? e->text().toUpper()
+                                                     : e->text().toLower());
 
   if (m_keyPressBuffer.size() >= 3) {
     clearKeyPressBuffer();
@@ -216,9 +209,9 @@ QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
 
   if (ok && bondOrder > 0 && bondOrder <= 4) {
     m_toolWidget->setBondOrder(static_cast<unsigned char>(bondOrder));
-  } else  {
-    atomicNum = Core::Elements::atomicNumberFromSymbol(
-          m_keyPressBuffer.toStdString());
+  } else {
+    atomicNum =
+      Core::Elements::atomicNumberFromSymbol(m_keyPressBuffer.toStdString());
 
     if (atomicNum != Avogadro::InvalidElement)
       m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
@@ -227,27 +220,26 @@ QUndoCommand *Editor::keyPressEvent(QKeyEvent *e)
   return nullptr;
 }
 
-void Editor::draw(Rendering::GroupNode &node)
+void Editor::draw(Rendering::GroupNode& node)
 {
   if (fabs(m_bondDistance) < 0.3)
     return;
 
-  GeometryNode *geo = new GeometryNode;
+  GeometryNode* geo = new GeometryNode;
   node.addChild(geo);
 
   // Determine the field width. Negate it to indicate left-alignment.
   QString distanceLabel = tr("Distance:");
-  int labelWidth = -1*distanceLabel.size();
+  int labelWidth = -1 * distanceLabel.size();
 
-  QString overlayText = tr("Distance: %L1 Å")
-    .arg(m_bondDistance, 10, 'f', 3);
+  QString overlayText = tr("Distance: %L1 Å").arg(m_bondDistance, 10, 'f', 3);
 
   TextProperties overlayTProp;
   overlayTProp.setFontFamily(TextProperties::Mono);
   overlayTProp.setColorRgb(64, 255, 220);
   overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
 
-  TextLabel2D *label = new TextLabel2D;
+  TextLabel2D* label = new TextLabel2D;
   label->setText(overlayText.toStdString());
   label->setTextProperties(overlayTProp);
   label->setRenderPass(Rendering::Overlay2DPass);
@@ -256,7 +248,7 @@ void Editor::draw(Rendering::GroupNode &node)
   geo->addDrawable(label);
 }
 
-void Editor::updatePressedButtons(QMouseEvent *e, bool release)
+void Editor::updatePressedButtons(QMouseEvent* e, bool release)
 {
   /// @todo Use modifier keys on mac
   if (release)
@@ -309,13 +301,13 @@ void Editor::reset()
   emit drawablesChanged();
 }
 
-void Editor::emptyLeftClick(QMouseEvent *e)
+void Editor::emptyLeftClick(QMouseEvent* e)
 {
   // Add an atom at the clicked position
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
   Vector3f atomPos = m_renderer->camera().unProject(windowPos);
-  RWAtom newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber(),
-                                       atomPos.cast<double>());
+  RWAtom newAtom =
+    m_molecule->addAtom(m_toolWidget->atomicNumber(), atomPos.cast<double>());
 
   Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
 
@@ -334,7 +326,7 @@ void Editor::emptyLeftClick(QMouseEvent *e)
   e->accept();
 }
 
-void Editor::atomLeftClick(QMouseEvent *e)
+void Editor::atomLeftClick(QMouseEvent* e)
 {
   RWAtom atom = m_molecule->atom(m_clickedObject.index);
   if (atom.isValid()) {
@@ -355,10 +347,10 @@ void Editor::atomLeftClick(QMouseEvent *e)
   }
 }
 
-void Editor::bondLeftClick(QMouseEvent *e)
+void Editor::bondLeftClick(QMouseEvent* e)
 {
   RWBond bond = m_molecule->bond(m_clickedObject.index);
-  bond.setOrder(static_cast<unsigned char>((bond.order() % 3)  + 1));
+  bond.setOrder(static_cast<unsigned char>((bond.order() % 3) + 1));
 
   Molecule::MoleculeChanges changes = Molecule::Bonds | Molecule::Modified;
 
@@ -376,41 +368,41 @@ void Editor::bondLeftClick(QMouseEvent *e)
   e->accept();
 }
 
-void Editor::atomRightClick(QMouseEvent *e)
+void Editor::atomRightClick(QMouseEvent* e)
 {
   e->accept();
   m_molecule->removeAtom(m_clickedObject.index);
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Removed);
 }
 
-void Editor::bondRightClick(QMouseEvent *e)
+void Editor::bondRightClick(QMouseEvent* e)
 {
   e->accept();
   m_molecule->removeBond(m_clickedObject.index);
   m_molecule->emitChanged(Molecule::Bonds | Molecule::Removed);
 }
 
-  int expectedBondOrder(RWAtom atom1, RWAtom atom2)
-  {
-    Vector3 bondVector = atom1.position3d() - atom2.position3d();
-    double bondDistance = bondVector.norm();
-    double radiiSum;
-    radiiSum = Elements::radiusCovalent(atom1.atomicNumber())
-             + Elements::radiusCovalent(atom2.atomicNumber());
-    double ratio = bondDistance / radiiSum;
+int expectedBondOrder(RWAtom atom1, RWAtom atom2)
+{
+  Vector3 bondVector = atom1.position3d() - atom2.position3d();
+  double bondDistance = bondVector.norm();
+  double radiiSum;
+  radiiSum = Elements::radiusCovalent(atom1.atomicNumber()) +
+             Elements::radiusCovalent(atom2.atomicNumber());
+  double ratio = bondDistance / radiiSum;
 
-    int bondOrder;
-    if (ratio > 1.0)
-      bondOrder = 1;
-    else if (ratio > 0.91 && ratio < 1.0)
-      bondOrder = 2;
-    else
-      bondOrder = 3;
+  int bondOrder;
+  if (ratio > 1.0)
+    bondOrder = 1;
+  else if (ratio > 0.91 && ratio < 1.0)
+    bondOrder = 2;
+  else
+    bondOrder = 3;
 
-    return bondOrder;
-  }
+  return bondOrder;
+}
 
-void Editor::atomLeftDrag(QMouseEvent *e)
+void Editor::atomLeftDrag(QMouseEvent* e)
 {
   // Always accept move events when atoms are clicked:
   e->accept();
@@ -420,12 +412,14 @@ void Editor::atomLeftDrag(QMouseEvent *e)
 
   // Get the list of hits at the current mouse position:
   std::multimap<float, Identifier> hits =
-      m_renderer->hits(e->pos().x(), e->pos().y());
+    m_renderer->hits(e->pos().x(), e->pos().y());
 
   // Check if the previously clicked atom is still under the mouse.
   float depth = -1.0f;
   for (std::multimap<float, Rendering::Identifier>::const_iterator
-       it = hits.begin(), itEnd = hits.end(); it != itEnd; ++it) {
+         it = hits.begin(),
+         itEnd = hits.end();
+       it != itEnd; ++it) {
     if (it->second == m_clickedObject) {
       depth = it->first;
       break;
@@ -436,8 +430,8 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   if (depth >= 0.f) {
     // ...and we've created a new atom, remove the new atom and reset the
     // clicked atom's atomic number
-    if (m_newObject.type == Rendering::AtomType
-        && m_molecule == m_newObject.molecule) {
+    if (m_newObject.type == Rendering::AtomType &&
+        m_molecule == m_newObject.molecule) {
       m_molecule->removeAtom(m_newObject.index);
       changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
       m_newObject = Identifier();
@@ -469,8 +463,9 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   if (m_bondedAtom.isValid()) {
     // Is it still under the mouse?
     depth = -1.0f;
-    for (std::multimap<float, Identifier>::const_iterator
-         it = hits.begin(), itEnd = hits.end(); it != itEnd; ++it) {
+    for (std::multimap<float, Identifier>::const_iterator it = hits.begin(),
+                                                          itEnd = hits.end();
+         it != itEnd; ++it) {
       if (it->second == m_bondedAtom) {
         depth = it->first;
         break;
@@ -492,9 +487,10 @@ void Editor::atomLeftDrag(QMouseEvent *e)
   // Is there another atom under the cursor, besides newAtom? If so, we'll draw
   // a bond to it.
   Identifier atomToBond;
-  for (std::multimap<float, Identifier>::const_iterator
-       it = hits.begin(), itEnd = hits.end(); it != itEnd; ++it) {
-    const Identifier &ident = it->second;
+  for (std::multimap<float, Identifier>::const_iterator it = hits.begin(),
+                                                        itEnd = hits.end();
+       it != itEnd; ++it) {
+    const Identifier& ident = it->second;
     // Are we on an atom
     if (ident.type == Rendering::AtomType)
       // besides the one that was clicked or a new atom
@@ -502,7 +498,7 @@ void Editor::atomLeftDrag(QMouseEvent *e)
         // then we have an atom that we should be drawing a bond to.
         atomToBond = ident;
         break;
-    }
+      }
   }
 
   if (atomToBond.isValid()) {
@@ -518,9 +514,8 @@ void Editor::atomLeftDrag(QMouseEvent *e)
     if (m_bondedAtom != atomToBond) {
       // If the currently bonded atom exists, break the bond
       if (m_bondedAtom.isValid()) {
-        if (m_molecule->removeBond(
-              m_molecule->atom(m_bondedAtom.index),
-              m_molecule->atom(m_clickedObject.index))) {
+        if (m_molecule->removeBond(m_molecule->atom(m_bondedAtom.index),
+                                   m_molecule->atom(m_clickedObject.index))) {
           ;
           changes |= Molecule::Bonds | Molecule::Removed;
         }
@@ -572,14 +567,12 @@ void Editor::atomLeftDrag(QMouseEvent *e)
     changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Added;
     m_newObject.type = Rendering::AtomType;
     m_newObject.index = newAtom.index();
-    const Core::Molecule *mol = &m_molecule->molecule();
+    const Core::Molecule* mol = &m_molecule->molecule();
     m_newObject.molecule = mol;
-  }
-  else if (m_newObject.type == Rendering::AtomType) {
+  } else if (m_newObject.type == Rendering::AtomType) {
     // Grab the previously created atom
     newAtom = m_molecule->atom(m_newObject.index);
-  }
-  else {
+  } else {
     // Shouldn't happen
 
     qWarning() << "Editor::atomLeftDrag: m_newObject already set and not an "
@@ -609,7 +602,6 @@ void Editor::atomLeftDrag(QMouseEvent *e)
 
           changes |= Molecule::Bonds | Molecule::Modified;
         }
-
       }
     }
   }

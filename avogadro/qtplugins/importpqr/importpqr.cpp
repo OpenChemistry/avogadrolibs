@@ -18,9 +18,9 @@
 
 #include "pqrwidget.h"
 
+#include <avogadro/io/fileformat.h>
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/io/fileformat.h>
 
 #include <QtCore/QDebug>
 #include <QtWidgets/QAction>
@@ -30,13 +30,9 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-
-ImportPQR::ImportPQR(QObject *parent_) :
-  ExtensionPlugin(parent_),
-  m_action(new QAction(this)),
-  m_molecule(nullptr),
-  m_dialog(nullptr),
-  m_outputFormat(nullptr)
+ImportPQR::ImportPQR(QObject* parent_)
+  : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
+    m_dialog(nullptr), m_outputFormat(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("&Import From PQR"));
@@ -45,35 +41,34 @@ ImportPQR::ImportPQR(QObject *parent_) :
 
 ImportPQR::~ImportPQR()
 {
-  delete(m_outputFormat);
-  delete(m_molecule);
-  delete(m_action);
+  delete (m_outputFormat);
+  delete (m_molecule);
+  delete (m_action);
 }
 
-QList<QAction *> ImportPQR::actions() const
+QList<QAction*> ImportPQR::actions() const
 {
-  QList<QAction *> actions_;
+  QList<QAction*> actions_;
   actions_.append(m_action);
   return actions_;
 }
 
-QStringList ImportPQR::menuPath(QAction *) const
+QStringList ImportPQR::menuPath(QAction*) const
 {
   QStringList path;
   path << tr("&File") << tr("&Import");
   return path;
 }
 
-void ImportPQR::setMolecule(QtGui::Molecule *mol)
+void ImportPQR::setMolecule(QtGui::Molecule* mol)
 {
   m_molecule = mol;
 }
 
-
-bool ImportPQR::readMolecule(QtGui::Molecule &mol)
+bool ImportPQR::readMolecule(QtGui::Molecule& mol)
 {
   bool readOK = Io::FileFormatManager::instance().readString(
-    mol, m_moleculeData.data(),  "mol2");
+    mol, m_moleculeData.data(), "mol2");
 
   if (readOK) // worked, so set the filename
     mol.setData("name", m_moleculeName.toStdString());
@@ -89,8 +84,8 @@ void ImportPQR::menuActivated()
   m_dialog->show();
 }
 
-//called by widget
-void ImportPQR::setMoleculeData(QByteArray &molData, QString name)
+// called by widget
+void ImportPQR::setMoleculeData(QByteArray& molData, QString name)
 {
   m_moleculeName = name;
   m_moleculeData = molData;
@@ -98,6 +93,5 @@ void ImportPQR::setMoleculeData(QByteArray &molData, QString name)
   m_dialog->hide();
   emit moleculeReady(1);
 }
-
 }
 }

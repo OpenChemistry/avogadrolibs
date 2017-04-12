@@ -31,11 +31,11 @@ class VanDerWaals : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit VanDerWaals(QObject *parent = 0);
+  explicit VanDerWaals(QObject* parent = 0);
   ~VanDerWaals();
 
-  void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) override;
+  void process(const Core::Molecule& molecule,
+               Rendering::GroupNode& node) override;
 
   QString name() const { return tr("Van der Waals"); }
 
@@ -48,7 +48,6 @@ public:
 private:
   bool m_enabled;
 };
-
 }
 }
 

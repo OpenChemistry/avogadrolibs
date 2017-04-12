@@ -37,18 +37,21 @@ class Spectra : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit Spectra(QObject *parent = 0);
+  explicit Spectra(QObject* parent = 0);
   ~Spectra();
 
   QString name() const { return tr("Spectra and Vibrations"); }
 
-  QString description() const { return tr("Display spectra and vibrational modes."); }
+  QString description() const
+  {
+    return tr("Display spectra and vibrational modes.");
+  }
 
-  QList<QAction *> actions() const;
+  QList<QAction*> actions() const;
 
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 public slots:
   void setMode(int mode);
@@ -61,20 +64,19 @@ private slots:
   void advanceFrame();
 
 private:
-  QList<QAction *>    m_actions;
+  QList<QAction*> m_actions;
 
-  QtGui::Molecule    *m_molecule;
+  QtGui::Molecule* m_molecule;
 
-  VibrationDialog *m_dialog;
+  VibrationDialog* m_dialog;
 
-  QTimer *m_timer;
+  QTimer* m_timer;
 
   int m_currentFrame;
   int m_totalFrames;
   int m_mode;
   int m_amplitude;
 };
-
 }
 }
 

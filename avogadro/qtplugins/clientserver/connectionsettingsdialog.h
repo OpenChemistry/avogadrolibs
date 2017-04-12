@@ -36,7 +36,7 @@ class ConnectionSettingsDialog : public QDialog
 {
   Q_OBJECT
 public:
-  explicit ConnectionSettingsDialog(QWidget *parent_ = 0);
+  explicit ConnectionSettingsDialog(QWidget* parent_ = 0);
   virtual ~ConnectionSettingsDialog();
 
   static const QString defaultHost;
@@ -50,7 +50,7 @@ private slots:
   void updateSettings();
 
 private:
-  Ui::ConnectionSettingsDialog *m_ui;
+  Ui::ConnectionSettingsDialog* m_ui;
 };
 
 } /* namespace QtPlugins */

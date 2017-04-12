@@ -36,27 +36,27 @@ class LineFormatInput : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit LineFormatInput(QObject *parent_ = 0);
+  explicit LineFormatInput(QObject* parent_ = 0);
   ~LineFormatInput();
 
   QString name() const { return tr("LineFormatInput"); }
   QString description() const;
   QList<QAction*> actions() const;
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
 public slots:
-  void setMolecule(QtGui::Molecule *);
+  void setMolecule(QtGui::Molecule*);
 
 private slots:
   void showDialog();
 
 private:
-  QList<QAction *> m_actions;
+  QList<QAction*> m_actions;
   /// Maps identifier to extension:
   QMap<QString, std::string> m_formats;
 
-  QtGui::Molecule *m_molecule;
-  Io::FileFormat *m_reader;
+  QtGui::Molecule* m_molecule;
+  Io::FileFormat* m_reader;
   std::string m_descriptor;
 };
 

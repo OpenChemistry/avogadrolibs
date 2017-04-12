@@ -25,8 +25,8 @@
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/groupnode.h>
-#include <avogadro/rendering/scene.h>
 #include <avogadro/rendering/meshgeometry.h>
+#include <avogadro/rendering/scene.h>
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/atom.h>
@@ -48,12 +48,9 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro {
 namespace QtPlugins {
 
-SelectionTool::SelectionTool(QObject *parent_)
-  : QtGui::ToolPlugin(parent_),
-    m_activateAction(new QAction(this)),
-    m_molecule(nullptr),
-    m_renderer(nullptr),
-    m_drawSelectionBox(false)
+SelectionTool::SelectionTool(QObject* parent_)
+  : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
+    m_molecule(nullptr), m_renderer(nullptr), m_drawSelectionBox(false)
 {
   m_activateAction->setText(tr("Selection"));
   m_activateAction->setIcon(QIcon(":/icons/selectiontool.png"));
@@ -63,12 +60,12 @@ SelectionTool::~SelectionTool()
 {
 }
 
-QWidget * SelectionTool::toolWidget() const
+QWidget* SelectionTool::toolWidget() const
 {
   return nullptr;
 }
 
-QUndoCommand * SelectionTool::mousePressEvent(QMouseEvent *e)
+QUndoCommand* SelectionTool::mousePressEvent(QMouseEvent* e)
 {
   if (e->button() != Qt::LeftButton || !m_renderer)
     return nullptr;
@@ -86,12 +83,12 @@ QUndoCommand * SelectionTool::mousePressEvent(QMouseEvent *e)
 
   // Remove the global accept to prevent the rectangle selection area from being
   // rendered as the selection code is not yet in place for the scene.
-  //e->accept();
+  // e->accept();
 
   return nullptr;
 }
 
-QUndoCommand * SelectionTool::mouseReleaseEvent(QMouseEvent *e)
+QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
 {
   // If the click is released on an atom, add it to the list
   if (e->button() != Qt::LeftButton || !m_renderer)
@@ -109,7 +106,7 @@ QUndoCommand * SelectionTool::mouseReleaseEvent(QMouseEvent *e)
     e->accept();
   }
 
-  // Disable this code until rectange selection is ready.
+// Disable this code until rectange selection is ready.
 #if 0
   emit drawablesChanged();
   e->accept();
@@ -118,7 +115,7 @@ QUndoCommand * SelectionTool::mouseReleaseEvent(QMouseEvent *e)
   return nullptr;
 }
 
-QUndoCommand * SelectionTool::mouseDoubleClickEvent(QMouseEvent *e)
+QUndoCommand* SelectionTool::mouseDoubleClickEvent(QMouseEvent* e)
 {
   // Reset the atom list
   if (e->button() == Qt::LeftButton && !m_atoms.isEmpty()) {
@@ -129,9 +126,9 @@ QUndoCommand * SelectionTool::mouseDoubleClickEvent(QMouseEvent *e)
   return nullptr;
 }
 
-QUndoCommand * SelectionTool::mouseMoveEvent(QMouseEvent *)
+QUndoCommand* SelectionTool::mouseMoveEvent(QMouseEvent*)
 {
-  // Disable this code until rectange selection is ready.
+// Disable this code until rectange selection is ready.
 #if 0
   m_drawSelectionBox = true;
   m_end = Vector2(e->pos().x(), e->pos().y());
@@ -142,21 +139,21 @@ QUndoCommand * SelectionTool::mouseMoveEvent(QMouseEvent *)
   return nullptr;
 }
 
-QUndoCommand * SelectionTool::keyPressEvent(QKeyEvent *e)
+QUndoCommand* SelectionTool::keyPressEvent(QKeyEvent* e)
 {
   return nullptr;
 }
 
-void SelectionTool::draw(Rendering::GroupNode &node)
+void SelectionTool::draw(Rendering::GroupNode& node)
 {
   if (!m_drawSelectionBox) {
     node.clear();
     return;
   }
 
-  GeometryNode *geo = new GeometryNode;
+  GeometryNode* geo = new GeometryNode;
   node.addChild(geo);
-  MeshGeometry *mesh = new MeshGeometry;
+  MeshGeometry* mesh = new MeshGeometry;
 
   mesh->setRenderPass(Rendering::Overlay2DPass);
 
@@ -192,7 +189,7 @@ void SelectionTool::draw(Rendering::GroupNode &node)
   geo->addDrawable(mesh);
 }
 
-bool SelectionTool::addAtom(const Rendering::Identifier &atom)
+bool SelectionTool::addAtom(const Rendering::Identifier& atom)
 {
   int idx = m_atoms.indexOf(atom);
   if (idx >= 0) {

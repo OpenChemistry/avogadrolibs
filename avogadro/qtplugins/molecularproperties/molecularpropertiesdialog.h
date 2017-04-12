@@ -32,7 +32,8 @@ class MolecularPropertiesDialog;
 }
 
 /**
- * @class MolecularPropertiesDialog molecularpropertiesdialog.h <avogadrolibs/qtgui/molecularpropertiesdialog.h>
+ * @class MolecularPropertiesDialog molecularpropertiesdialog.h
+ * <avogadrolibs/qtgui/molecularpropertiesdialog.h>
  * @brief The MolecularPropertiesDialog class provides a dialog which displays
  * basic molecular properties.
  * @author David C. Lonie
@@ -44,13 +45,14 @@ class MolecularPropertiesDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit MolecularPropertiesDialog(QtGui::Molecule *mol, QWidget *parent_ = 0);
+  explicit MolecularPropertiesDialog(QtGui::Molecule* mol,
+                                     QWidget* parent_ = 0);
   ~MolecularPropertiesDialog();
 
   QtGui::Molecule* molecule() { return m_molecule; }
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 private slots:
   void updateLabels();
@@ -59,10 +61,9 @@ private slots:
   void moleculeDestroyed();
 
 private:
-  QtGui::Molecule *m_molecule;
-  Ui::MolecularPropertiesDialog *m_ui;
+  QtGui::Molecule* m_molecule;
+  Ui::MolecularPropertiesDialog* m_ui;
 };
-
 
 } // namespace QtPlugins
 } // namespace Avogadro

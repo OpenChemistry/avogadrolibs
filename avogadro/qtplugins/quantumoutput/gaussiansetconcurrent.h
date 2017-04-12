@@ -17,9 +17,9 @@
 #ifndef GAUSSIANSETCONCURRENT_H
 #define GAUSSIANSETCONCURRENT_H
 
-#include <QtCore/QObject>
 #include <QtCore/QFuture>
 #include <QtCore/QFutureWatcher>
+#include <QtCore/QObject>
 
 namespace Avogadro {
 
@@ -45,16 +45,16 @@ class GaussianSetConcurrent : public QObject
   Q_OBJECT
 
 public:
-  explicit GaussianSetConcurrent(QObject *p = 0);
+  explicit GaussianSetConcurrent(QObject* p = 0);
   ~GaussianSetConcurrent();
 
-  void setMolecule(Core::Molecule *mol);
+  void setMolecule(Core::Molecule* mol);
 
-  bool calculateMolecularOrbital(Core::Cube *cube, unsigned int state);
-  bool calculateElectronDensity(Core::Cube *cube);
-  bool calculateSpinDensity(Core::Cube *cube);
+  bool calculateMolecularOrbital(Core::Cube* cube, unsigned int state);
+  bool calculateElectronDensity(Core::Cube* cube);
+  bool calculateSpinDensity(Core::Cube* cube);
 
-  QFutureWatcher<void> & watcher() { return m_watcher; }
+  QFutureWatcher<void>& watcher() { return m_watcher; }
 
 signals:
   /**
@@ -71,20 +71,19 @@ private slots:
 private:
   QFuture<void> m_future;
   QFutureWatcher<void> m_watcher;
-  Core::Cube *m_cube;
-  QVector<GaussianShell> *m_gaussianShells;
+  Core::Cube* m_cube;
+  QVector<GaussianShell>* m_gaussianShells;
 
-  Core::GaussianSet *m_set;
-  Core::GaussianSetTools *m_tools;
+  Core::GaussianSet* m_set;
+  Core::GaussianSetTools* m_tools;
 
-  bool setUpCalculation(Core::Cube *cube, unsigned int state,
-                        void (*func)(GaussianShell &));
+  bool setUpCalculation(Core::Cube* cube, unsigned int state,
+                        void (*func)(GaussianShell&));
 
-  static void processOrbital(GaussianShell &shell);
-  static void processDensity(GaussianShell &shell);
-  static void processSpinDensity(GaussianShell &shell);
+  static void processOrbital(GaussianShell& shell);
+  static void processDensity(GaussianShell& shell);
+  static void processSpinDensity(GaussianShell& shell);
 };
-
 }
 }
 

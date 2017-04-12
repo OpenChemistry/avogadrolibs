@@ -33,7 +33,7 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
 
-CrystalScene::CrystalScene(QObject *p) : ScenePlugin(p), m_enabled(true)
+CrystalScene::CrystalScene(QObject* p) : ScenePlugin(p), m_enabled(true)
 {
 }
 
@@ -41,12 +41,12 @@ CrystalScene::~CrystalScene()
 {
 }
 
-void CrystalScene::process(const Molecule &molecule, GroupNode &node)
+void CrystalScene::process(const Molecule& molecule, GroupNode& node)
 {
-  if (const UnitCell *cell = molecule.unitCell()) {
-    GeometryNode *geometry = new GeometryNode;
+  if (const UnitCell* cell = molecule.unitCell()) {
+    GeometryNode* geometry = new GeometryNode;
     node.addChild(geometry);
-    LineStripGeometry *lines = new LineStripGeometry;
+    LineStripGeometry* lines = new LineStripGeometry;
     geometry->addDrawable(lines);
 
     lines->setColor(Vector3ub(255, 255, 255));
@@ -102,6 +102,5 @@ void CrystalScene::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-
 }
 }

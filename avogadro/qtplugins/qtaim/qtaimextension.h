@@ -29,23 +29,23 @@ class QTAIMExtension : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit QTAIMExtension(QObject *parent=0);
+  explicit QTAIMExtension(QObject* parent = 0);
   ~QTAIMExtension() override;
 
   QString name() const override { return tr("QTAIM"); }
   QString description() const override { return tr("QTAIM extension"); }
-  QList<QAction *> actions() const override;
-  QStringList menuPath(QAction *action) const override;
+  QList<QAction*> actions() const override;
+  QStringList menuPath(QAction* action) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *molecule) override;
+  void setMolecule(QtGui::Molecule* molecule) override;
 
 private slots:
   void triggered();
 
 private:
-  QList<QAction *> m_actions;
-  QtGui::Molecule *m_molecule;
+  QList<QAction*> m_actions;
+  QtGui::Molecule* m_molecule;
 };
 
 } // end namespace QtPlugins

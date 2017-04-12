@@ -34,13 +34,13 @@ class LineFormatInputDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit LineFormatInputDialog(QWidget *parent = 0);
+  explicit LineFormatInputDialog(QWidget* parent = 0);
   ~LineFormatInputDialog();
 
-  void setFormats(const QStringList &indents);
+  void setFormats(const QStringList& indents);
   QString format() const;
 
-  void setCurrentFormat(const QString &format);
+  void setCurrentFormat(const QString& format);
 
   QString descriptor() const;
 
@@ -48,9 +48,8 @@ protected slots:
   void accept();
 
 private:
-  Ui::LineFormatInputDialog *m_ui;
+  Ui::LineFormatInputDialog* m_ui;
 };
-
 
 } // namespace QtPlugins
 } // namespace Avogadro

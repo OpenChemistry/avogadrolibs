@@ -25,10 +25,9 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro {
 namespace QtPlugins {
 
-MolecularPropertiesDialog::MolecularPropertiesDialog(QtGui::Molecule *mol,
-                                                     QWidget *parent_)
-  : QDialog(parent_),
-    m_molecule(nullptr),
+MolecularPropertiesDialog::MolecularPropertiesDialog(QtGui::Molecule* mol,
+                                                     QWidget* parent_)
+  : QDialog(parent_), m_molecule(nullptr),
     m_ui(new Ui::MolecularPropertiesDialog)
 {
   m_ui->setupUi(this);
@@ -41,7 +40,7 @@ MolecularPropertiesDialog::~MolecularPropertiesDialog()
   delete m_ui;
 }
 
-void MolecularPropertiesDialog::setMolecule(QtGui::Molecule *mol)
+void MolecularPropertiesDialog::setMolecule(QtGui::Molecule* mol)
 {
   if (mol == m_molecule)
     return;
@@ -66,8 +65,7 @@ void MolecularPropertiesDialog::updateLabels()
     updateFormulaLabel();
     m_ui->atomCountLabel->setText(QString::number(m_molecule->atomCount()));
     m_ui->bondCountLabel->setText(QString::number(m_molecule->bondCount()));
-  }
-  else {
+  } else {
     m_ui->molMassLabel->clear();
     m_ui->formulaLabel->clear();
     m_ui->atomCountLabel->clear();

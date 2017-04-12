@@ -18,8 +18,8 @@
 
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtWidgets/QAction>
 #include <QtGui/QKeySequence>
+#include <QtWidgets/QAction>
 
 #include <QtCore/QStringList>
 
@@ -28,11 +28,10 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro {
 namespace QtPlugins {
 
-Select::Select(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_molecule(nullptr)
+Select::Select(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr)
 {
-  QAction *action = new QAction(tr("Select All"), this);
+  QAction* action = new QAction(tr("Select All"), this);
   action->setShortcut(QKeySequence("Ctrl+A"));
   connect(action, SIGNAL(triggered()), SLOT(selectAll()));
   m_actions.append(action);
@@ -60,17 +59,17 @@ QString Select::description() const
   return tr("Change selections");
 }
 
-QList<QAction *> Select::actions() const
+QList<QAction*> Select::actions() const
 {
   return m_actions;
 }
 
-QStringList Select::menuPath(QAction *) const
+QStringList Select::menuPath(QAction*) const
 {
   return QStringList() << tr("&Select");
 }
 
-void Select::setMolecule(QtGui::Molecule *mol)
+void Select::setMolecule(QtGui::Molecule* mol)
 {
   m_molecule = mol;
 }

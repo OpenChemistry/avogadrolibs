@@ -16,9 +16,9 @@
 
 #include "coordinatetextedit.h"
 
-#include <QtWidgets/QApplication>
 #include <QtGui/QHelpEvent>
 #include <QtGui/QTextCursor>
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QToolTip>
 
 #include <QtCore/QListIterator>
@@ -26,9 +26,8 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-CoordinateTextEdit::CoordinateTextEdit(QWidget *p)
-  : QTextEdit(p),
-    m_hasInvalidMarks(false)
+CoordinateTextEdit::CoordinateTextEdit(QWidget* p)
+  : QTextEdit(p), m_hasInvalidMarks(false)
 {
   setMouseTracking(true);
 
@@ -55,30 +54,30 @@ void CoordinateTextEdit::resetMarks()
   }
 }
 
-void CoordinateTextEdit::markInvalid(QTextCursor &cur, const QString &tooltip)
+void CoordinateTextEdit::markInvalid(QTextCursor& cur, const QString& tooltip)
 {
   m_hasInvalidMarks = true;
   cur.mergeCharFormat(m_invalidFormat);
   m_marks.append(Mark(cur.anchor(), cur.position(), tooltip));
 }
 
-void CoordinateTextEdit::markValid(QTextCursor &cur, const QString &tooltip)
+void CoordinateTextEdit::markValid(QTextCursor& cur, const QString& tooltip)
 {
   cur.mergeCharFormat(m_validFormat);
   m_marks.append(Mark(cur.anchor(), cur.position(), tooltip));
 }
 
-bool CoordinateTextEdit::event(QEvent *e)
+bool CoordinateTextEdit::event(QEvent* e)
 {
   if (e->type() == QEvent::ToolTip) {
-    QHelpEvent *helpEvent = static_cast<QHelpEvent*>(e);
+    QHelpEvent* helpEvent = static_cast<QHelpEvent*>(e);
     showToolTip(helpEvent);
     return true;
   }
   return QTextEdit::event(e);
 }
 
-void CoordinateTextEdit::showToolTip(QHelpEvent *e) const
+void CoordinateTextEdit::showToolTip(QHelpEvent* e) const
 {
   int position(cursorForPosition(e->pos()).position());
   bool handled(false);
@@ -89,7 +88,7 @@ void CoordinateTextEdit::showToolTip(QHelpEvent *e) const
     QListIterator<Mark> iter(m_marks);
     iter.toBack();
     while (iter.hasPrevious()) {
-      const Mark &mark = iter.previous();
+      const Mark& mark = iter.previous();
       if (mark.contains(position)) {
         QToolTip::showText(e->globalPos(), mark.tooltip);
         handled = true;

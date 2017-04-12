@@ -16,12 +16,12 @@
 
 #include "licorice.h"
 
-#include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/molecule.h>
+#include <avogadro/rendering/cylindergeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
-#include <avogadro/rendering/cylindergeometry.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -33,7 +33,7 @@ using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 using Rendering::CylinderGeometry;
 
-Licorice::Licorice(QObject *p) : ScenePlugin(p), m_enabled(false)
+Licorice::Licorice(QObject* p) : ScenePlugin(p), m_enabled(false)
 {
 }
 
@@ -41,16 +41,15 @@ Licorice::~Licorice()
 {
 }
 
-void Licorice::process(const Molecule &molecule,
-                           Rendering::GroupNode &node)
+void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
   // Use a common radius for all spheres and cylinders.
   float radius(0.2f);
 
   // Add a sphere node to contain all of the spheres.
-  GeometryNode *geometry = new GeometryNode;
+  GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
-  SphereGeometry *spheres = new SphereGeometry;
+  SphereGeometry* spheres = new SphereGeometry;
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
@@ -60,7 +59,7 @@ void Licorice::process(const Molecule &molecule,
     spheres->addSphere(atom.position3d().cast<float>(), color, radius);
   }
 
-  CylinderGeometry *cylinders = new CylinderGeometry;
+  CylinderGeometry* cylinders = new CylinderGeometry;
   cylinders->identifier().molecule = &molecule;
   cylinders->identifier().type = Rendering::BondType;
   geometry->addDrawable(cylinders);
@@ -87,6 +86,5 @@ void Licorice::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-
 }
 }

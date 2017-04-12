@@ -17,9 +17,9 @@
 #include "spacegroup.h"
 
 #include <avogadro/core/avospglib.h>
-#include <avogadro/core/unitcell.h>
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/spacegroups.h>
+#include <avogadro/core/unitcell.h>
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -49,18 +49,16 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro {
 namespace QtPlugins {
 
-SpaceGroup::SpaceGroup(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_actions(QList<QAction *>()),
-  m_molecule(nullptr),
-  m_spgTol(1e-5),
-  m_perceiveSpaceGroupAction(new QAction(this)),
-  m_reduceToPrimitiveAction(new QAction(this)),
-  m_conventionalizeCellAction(new QAction(this)),
-  m_symmetrizeAction(new QAction(this)),
-  m_fillUnitCellAction(new QAction(this)),
-  m_reduceToAsymmetricUnitAction(new QAction(this)),
-  m_setToleranceAction(new QAction(this))
+SpaceGroup::SpaceGroup(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
+    m_molecule(nullptr), m_spgTol(1e-5),
+    m_perceiveSpaceGroupAction(new QAction(this)),
+    m_reduceToPrimitiveAction(new QAction(this)),
+    m_conventionalizeCellAction(new QAction(this)),
+    m_symmetrizeAction(new QAction(this)),
+    m_fillUnitCellAction(new QAction(this)),
+    m_reduceToAsymmetricUnitAction(new QAction(this)),
+    m_setToleranceAction(new QAction(this))
 {
   m_perceiveSpaceGroupAction->setText(tr("Perceive Space Group"));
   connect(m_perceiveSpaceGroupAction, SIGNAL(triggered()),
@@ -110,17 +108,17 @@ SpaceGroup::~SpaceGroup()
   m_actions.clear();
 }
 
-QList<QAction *> SpaceGroup::actions() const
+QList<QAction*> SpaceGroup::actions() const
 {
   return m_actions;
 }
 
-QStringList SpaceGroup::menuPath(QAction *) const
+QStringList SpaceGroup::menuPath(QAction*) const
 {
   return QStringList() << tr("&Crystal") << tr("Space Group");
 }
 
-void SpaceGroup::setMolecule(QtGui::Molecule *mol)
+void SpaceGroup::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule == mol)
     return;
@@ -140,8 +138,7 @@ void SpaceGroup::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
 
-  Molecule::MoleculeChanges changes =
-      static_cast<Molecule::MoleculeChanges>(c);
+  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
 
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
@@ -153,18 +150,17 @@ void SpaceGroup::updateActions()
 {
   // Disable everything for nullptr molecules.
   if (!m_molecule) {
-    foreach (QAction *action, m_actions)
+    foreach (QAction* action, m_actions)
       action->setEnabled(false);
     return;
   }
 
   if (m_molecule->unitCell()) {
-    foreach (QAction *action, m_actions)
+    foreach (QAction* action, m_actions)
       action->setEnabled(true);
 
-  }
-  else {
-    foreach (QAction *action, m_actions)
+  } else {
+    foreach (QAction* action, m_actions)
       action->setEnabled(false);
   }
 }
@@ -174,15 +170,14 @@ void SpaceGroup::perceiveSpaceGroup()
   unsigned short hallNumber = AvoSpglib::getHallNumber(*m_molecule, m_spgTol);
   unsigned short intNum = Core::SpaceGroups::internationalNumber(hallNumber);
   std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
-  std::string intShort =  Core::SpaceGroups::internationalShort(hallNumber);
+  std::string intShort = Core::SpaceGroups::internationalShort(hallNumber);
 
   // Success!
   if (hallNumber != 0) {
     // Let's make the message
     std::stringstream ss;
     ss << "Tolerance: " << m_spgTol << "  Å"
-       << "\nSpace Group: " << intNum
-       << "\nHall symbol: " << hallSymbol
+       << "\nSpace Group: " << intNum << "\nHall symbol: " << hallSymbol
        << "\nInternational symbol: " << intShort;
 
     // Now let's make the Message Box
@@ -297,14 +292,13 @@ void SpaceGroup::reduceToAsymmetricUnit()
   unsigned short hallNumber = AvoSpglib::getHallNumber(*m_molecule, m_spgTol);
   unsigned short intNum = Core::SpaceGroups::internationalNumber(hallNumber);
   std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
-  std::string intShort =  Core::SpaceGroups::internationalShort(hallNumber);
+  std::string intShort = Core::SpaceGroups::internationalShort(hallNumber);
 
   // Ask the user if he/she wants to use this space group
   std::stringstream ss;
   ss << "With a tolerance of " << m_spgTol << "  Å, "
      << "the space group information was perceived to be the following:"
-     << "\nSpace Group: " << intNum
-     << "\nHall symbol: " << hallSymbol
+     << "\nSpace Group: " << intNum << "\nHall symbol: " << hallSymbol
      << "\nInternational symbol: " << intShort
      << "\n\nProceed with this space group?";
   QMessageBox::StandardButton reply;
@@ -329,12 +323,12 @@ void SpaceGroup::setTolerance()
 {
   bool ok;
   double tol = QInputDialog::getDouble(nullptr,
-                                       tr("Avogadro2"), // title
+                                       tr("Avogadro2"),              // title
                                        tr("Select tolerance in Å:"), // label
-                                       m_spgTol, // initial
-                                       1e-5, // min
-                                       0.5, // max
-                                       5, // decimals
+                                       m_spgTol,                     // initial
+                                       1e-5,                         // min
+                                       0.5,                          // max
+                                       5,                            // decimals
                                        &ok);
   if (!ok)
     return;
@@ -346,24 +340,21 @@ unsigned short SpaceGroup::selectSpaceGroup()
 {
   QStandardItemModel spacegroups;
   QStringList modelHeader;
-  modelHeader << tr("International")
-              << tr("Hall")
-              << tr("Hermann-Mauguin");
+  modelHeader << tr("International") << tr("Hall") << tr("Hermann-Mauguin");
   spacegroups.setHorizontalHeaderLabels(modelHeader);
   for (unsigned short i = 1; i <= 530; ++i) {
     QList<QStandardItem*> row;
-    row << new QStandardItem(QString::number(
-                                 Core::SpaceGroups::internationalNumber(i)))
+    row << new QStandardItem(
+             QString::number(Core::SpaceGroups::internationalNumber(i)))
         << new QStandardItem(QString(Core::SpaceGroups::hallSymbol(i)))
-        << new QStandardItem(QString(
-                                 Core::SpaceGroups::internationalShort(i)));
+        << new QStandardItem(QString(Core::SpaceGroups::internationalShort(i)));
     spacegroups.appendRow(row);
   }
 
   QDialog dialog;
   dialog.setLayout(new QVBoxLayout);
   dialog.setWindowTitle(tr("Select Space Group"));
-  QTableView *view = new QTableView;
+  QTableView* view = new QTableView;
   view->setSelectionBehavior(QAbstractItemView::SelectRows);
   view->setSelectionMode(QAbstractItemView::SingleSelection);
   view->setCornerButtonEnabled(false);
@@ -375,10 +366,10 @@ unsigned short SpaceGroup::selectSpaceGroup()
   view->selectRow(0);
   view->resizeColumnsToContents();
   view->resizeRowsToContents();
-  view->setMinimumWidth(view->horizontalHeader()->length()
-                        + view->verticalScrollBar()->sizeHint().width());
+  view->setMinimumWidth(view->horizontalHeader()->length() +
+                        view->verticalScrollBar()->sizeHint().width());
   connect(view, SIGNAL(activated(QModelIndex)), &dialog, SLOT(accept()));
-  QDialogButtonBox *buttons =
+  QDialogButtonBox* buttons =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   connect(buttons, SIGNAL(accepted()), &dialog, SLOT(accept()));
   connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));

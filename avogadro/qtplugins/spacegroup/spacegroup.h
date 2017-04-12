@@ -29,16 +29,16 @@ class SpaceGroup : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit SpaceGroup(QObject *parent_ = 0);
+  explicit SpaceGroup(QObject* parent_ = 0);
   ~SpaceGroup();
 
   QString name() const { return tr("SpaceGroup"); }
   QString description() const;
   QList<QAction*> actions() const;
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
   void moleculeChanged(unsigned int changes);
 
@@ -58,17 +58,17 @@ private:
   // Returns the hall number for the selected space group.
   // Returns 0 if the user canceled.
   unsigned short selectSpaceGroup();
-  QList<QAction *> m_actions;
-  QtGui::Molecule *m_molecule;
+  QList<QAction*> m_actions;
+  QtGui::Molecule* m_molecule;
   double m_spgTol;
 
-  QAction *m_perceiveSpaceGroupAction;
-  QAction *m_reduceToPrimitiveAction;
-  QAction *m_conventionalizeCellAction;
-  QAction *m_symmetrizeAction;
-  QAction *m_fillUnitCellAction;
-  QAction *m_reduceToAsymmetricUnitAction;
-  QAction *m_setToleranceAction;
+  QAction* m_perceiveSpaceGroupAction;
+  QAction* m_reduceToPrimitiveAction;
+  QAction* m_conventionalizeCellAction;
+  QAction* m_symmetrizeAction;
+  QAction* m_fillUnitCellAction;
+  QAction* m_reduceToAsymmetricUnitAction;
+  QAction* m_setToleranceAction;
 };
 
 inline QString SpaceGroup::description() const

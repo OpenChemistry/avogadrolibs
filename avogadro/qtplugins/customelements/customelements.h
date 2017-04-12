@@ -29,24 +29,24 @@ class CustomElements : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit CustomElements(QObject *parent_ = 0);
+  explicit CustomElements(QObject* parent_ = 0);
   ~CustomElements();
 
   QString name() const { return tr("Custom Elements"); }
   QString description() const;
   QList<QAction*> actions() const;
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 private slots:
   void moleculeChanged(unsigned int changes);
   void reassign();
 
 private:
-  QtGui::Molecule *m_molecule;
-  QAction *m_reassignAction;
+  QtGui::Molecule* m_molecule;
+  QAction* m_reassignAction;
 
   void updateReassignAction();
 };

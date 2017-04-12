@@ -37,18 +37,16 @@ const int MATRIX_PREC = 5;
 const char MATRIX_FMT = 'f';
 
 // Valid value separators in matrix editors:
-const static QRegExp MATRIX_SEP
-("\\s|,|;|\\||\\[|\\]|\\{|\\}|\\(|\\)|\\&|/|<|>");
+const static QRegExp MATRIX_SEP(
+  "\\s|,|;|\\||\\[|\\]|\\{|\\}|\\(|\\)|\\&|/|<|>");
 }
 
 namespace Avogadro {
 namespace QtPlugins {
 
-UnitCellDialog::UnitCellDialog(QWidget *p) :
-  QDialog(p),
-  m_ui(new Ui::UnitCellDialog),
-  m_molecule(nullptr),
-  m_mode(Invalid)
+UnitCellDialog::UnitCellDialog(QWidget* p)
+  : QDialog(p), m_ui(new Ui::UnitCellDialog), m_molecule(nullptr),
+    m_mode(Invalid)
 {
   m_ui->setupUi(this);
 
@@ -56,7 +54,7 @@ UnitCellDialog::UnitCellDialog(QWidget *p) :
   connect(m_ui->b, SIGNAL(valueChanged(double)), SLOT(parametersEdited()));
   connect(m_ui->c, SIGNAL(valueChanged(double)), SLOT(parametersEdited()));
   connect(m_ui->alpha, SIGNAL(valueChanged(double)), SLOT(parametersEdited()));
-  connect(m_ui->beta , SIGNAL(valueChanged(double)), SLOT(parametersEdited()));
+  connect(m_ui->beta, SIGNAL(valueChanged(double)), SLOT(parametersEdited()));
   connect(m_ui->gamma, SIGNAL(valueChanged(double)), SLOT(parametersEdited()));
 
   connect(m_ui->cellMatrix, SIGNAL(textChanged()), SLOT(cellMatrixEdited()));
@@ -73,7 +71,7 @@ UnitCellDialog::~UnitCellDialog()
   delete m_ui;
 }
 
-void UnitCellDialog::setMolecule(QtGui::Molecule *molecule)
+void UnitCellDialog::setMolecule(QtGui::Molecule* molecule)
 {
   if (molecule != m_molecule) {
     if (m_molecule)
@@ -110,8 +108,7 @@ void UnitCellDialog::cellMatrixEdited()
     revertParameters();
     revertFractionalMatrix();
     enableApply(true);
-  }
-  else {
+  } else {
     enableApply(false);
   }
 }
@@ -124,8 +121,7 @@ void UnitCellDialog::fractionalMatrixEdited()
     revertParameters();
     revertCellMatrix();
     enableApply(true);
-  }
-  else {
+  } else {
     enableApply(false);
   }
 }
@@ -138,17 +134,18 @@ void UnitCellDialog::apply()
   }
 
   switch (m_mode) {
-  case Invalid:
-  case Clean:
-    revert();
-    break;
-  default: {
-    Core::CrystalTools::Options options = Core::CrystalTools::None;
-    if (m_ui->transformAtoms->isChecked())
-      options |= Core::CrystalTools::TransformAtoms;
-    m_molecule->undoMolecule()->editUnitCell(m_tempCell.cellMatrix(), options);
-    break;
-  }
+    case Invalid:
+    case Clean:
+      revert();
+      break;
+    default: {
+      Core::CrystalTools::Options options = Core::CrystalTools::None;
+      if (m_ui->transformAtoms->isChecked())
+        options |= Core::CrystalTools::TransformAtoms;
+      m_molecule->undoMolecule()->editUnitCell(m_tempCell.cellMatrix(),
+                                               options);
+      break;
+    }
   }
 }
 
@@ -241,10 +238,9 @@ void UnitCellDialog::revertParameters()
     m_ui->b->setValue(static_cast<double>(m_tempCell.b()));
     m_ui->c->setValue(static_cast<double>(m_tempCell.c()));
     m_ui->alpha->setValue(static_cast<double>(m_tempCell.alpha() * RAD_TO_DEG));
-    m_ui->beta->setValue( static_cast<double>(m_tempCell.beta()  * RAD_TO_DEG));
+    m_ui->beta->setValue(static_cast<double>(m_tempCell.beta() * RAD_TO_DEG));
     m_ui->gamma->setValue(static_cast<double>(m_tempCell.gamma() * RAD_TO_DEG));
-  }
-  else {
+  } else {
     enableParameters(false);
     m_ui->a->setValue(3.);
     m_ui->b->setValue(3.);
@@ -261,8 +257,7 @@ void UnitCellDialog::revertCellMatrix()
   blockCellMatrixSignals(true);
   if (isCrystal()) {
     m_ui->cellMatrix->setPlainText(matrixToString(m_tempCell.cellMatrix()));
-  }
-  else {
+  } else {
     enableCellMatrix(false);
     m_ui->cellMatrix->setPlainText(tr("No unit cell present."));
   }
@@ -274,9 +269,8 @@ void UnitCellDialog::revertFractionalMatrix()
   blockFractionalMatrixSignals(true);
   if (isCrystal()) {
     m_ui->fractionalMatrix->setPlainText(
-          matrixToString(m_tempCell.fractionalMatrix()));
-  }
-  else {
+      matrixToString(m_tempCell.fractionalMatrix()));
+  } else {
     enableFractionalMatrix(false);
     m_ui->fractionalMatrix->setPlainText(tr("No unit cell present."));
   }
@@ -286,12 +280,11 @@ void UnitCellDialog::revertFractionalMatrix()
 void UnitCellDialog::updateParameters()
 {
   m_tempCell.setCellParameters(
-        static_cast<Real>(m_ui->a->value()),
-        static_cast<Real>(m_ui->b->value()),
-        static_cast<Real>(m_ui->c->value()),
-        static_cast<Real>(m_ui->alpha->value()) * DEG_TO_RAD,
-        static_cast<Real>(m_ui->beta->value())  * DEG_TO_RAD,
-        static_cast<Real>(m_ui->gamma->value()) * DEG_TO_RAD);
+    static_cast<Real>(m_ui->a->value()), static_cast<Real>(m_ui->b->value()),
+    static_cast<Real>(m_ui->c->value()),
+    static_cast<Real>(m_ui->alpha->value()) * DEG_TO_RAD,
+    static_cast<Real>(m_ui->beta->value()) * DEG_TO_RAD,
+    static_cast<Real>(m_ui->gamma->value()) * DEG_TO_RAD);
 }
 
 void UnitCellDialog::updateCellMatrix()
@@ -302,7 +295,7 @@ void UnitCellDialog::updateCellMatrix()
 void UnitCellDialog::updateFractionalMatrix()
 {
   m_tempCell.setFractionalMatrix(
-        stringToMatrix(m_ui->fractionalMatrix->toPlainText()));
+    stringToMatrix(m_ui->fractionalMatrix->toPlainText()));
 }
 
 bool UnitCellDialog::validateCellMatrix()
@@ -315,7 +308,7 @@ bool UnitCellDialog::validateFractionalMatrix()
   return validateMatrixEditor(m_ui->fractionalMatrix);
 }
 
-void UnitCellDialog::initializeMatrixEditor(QPlainTextEdit *edit)
+void UnitCellDialog::initializeMatrixEditor(QPlainTextEdit* edit)
 {
 #if defined(Q_OS_WIN) || defined(Q_OS_OSX)
   QFont font("Courier");
@@ -332,7 +325,7 @@ void UnitCellDialog::initializeMatrixEditor(QPlainTextEdit *edit)
   edit->setMinimumSize(minWidth, minHeight);
 }
 
-bool UnitCellDialog::validateMatrixEditor(QPlainTextEdit *edit)
+bool UnitCellDialog::validateMatrixEditor(QPlainTextEdit* edit)
 {
   bool valid = stringToMatrix(edit->toPlainText()) != Matrix3::Zero();
   QPalette pal = edit->palette();
@@ -341,7 +334,7 @@ bool UnitCellDialog::validateMatrixEditor(QPlainTextEdit *edit)
   return valid;
 }
 
-QString UnitCellDialog::matrixToString(const Matrix3 &mat)
+QString UnitCellDialog::matrixToString(const Matrix3& mat)
 {
   // Transpose into the more intuitive row-vector format.
   return QString("%1 %2 %3\n%4 %5 %6\n%7 %8 %9")
@@ -356,7 +349,7 @@ QString UnitCellDialog::matrixToString(const Matrix3 &mat)
     .arg(static_cast<double>(mat(2, 2)), MATRIX_WIDTH, MATRIX_FMT, MATRIX_PREC);
 }
 
-Matrix3 UnitCellDialog::stringToMatrix(const QString &str)
+Matrix3 UnitCellDialog::stringToMatrix(const QString& str)
 {
   Matrix3 result;
   QStringList lines = str.split('\n');
@@ -366,12 +359,12 @@ Matrix3 UnitCellDialog::stringToMatrix(const QString &str)
   bool ok;
   int row = 0;
   int col = 0;
-  foreach (const QString &line, lines) {
+  foreach (const QString& line, lines) {
     QStringList values = line.split(MATRIX_SEP, QString::SkipEmptyParts);
     if (values.size() != 3)
       return Matrix3::Zero();
 
-    foreach (const QString &value, values) {
+    foreach (const QString& value, values) {
       Real val = static_cast<Real>(value.toDouble(&ok));
       if (!ok)
         return Matrix3::Zero();

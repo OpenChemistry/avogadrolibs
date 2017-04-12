@@ -18,9 +18,9 @@
 
 #include "gamessinputdialog.h"
 
+#include <avogadro/io/fileformat.h>
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/io/fileformat.h>
 
 #include <molequeue/client/jobobject.h>
 
@@ -36,12 +36,9 @@ namespace QtPlugins {
 
 using ::MoleQueue::JobObject;
 
-GamessInput::GamessInput(QObject *parent_) :
-  ExtensionPlugin(parent_),
-  m_action(new QAction(this)),
-  m_molecule(nullptr),
-  m_dialog(nullptr),
-  m_outputFormat(nullptr)
+GamessInput::GamessInput(QObject* parent_)
+  : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
+    m_dialog(nullptr), m_outputFormat(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("&GAMESS"));
@@ -52,28 +49,28 @@ GamessInput::~GamessInput()
 {
 }
 
-QList<QAction *> GamessInput::actions() const
+QList<QAction*> GamessInput::actions() const
 {
-  QList<QAction *> actions_;
+  QList<QAction*> actions_;
   actions_.append(m_action);
   return actions_;
 }
 
-QStringList GamessInput::menuPath(QAction *) const
+QStringList GamessInput::menuPath(QAction*) const
 {
   QStringList path;
   path << tr("&Quantum") << tr("Input Generators");
   return path;
 }
 
-void GamessInput::setMolecule(QtGui::Molecule *mol)
+void GamessInput::setMolecule(QtGui::Molecule* mol)
 {
   if (m_dialog)
     m_dialog->setMolecule(mol);
   m_molecule = mol;
 }
 
-void GamessInput::openJobOutput(const JobObject &job)
+void GamessInput::openJobOutput(const JobObject& job)
 {
   m_outputFormat = nullptr;
   m_outputFileName.clear();
@@ -81,9 +78,8 @@ void GamessInput::openJobOutput(const JobObject &job)
   QString outputPath(job.value("outputDirectory").toString());
 
   using QtGui::FileFormatDialog;
-  FileFormatDialog::FormatFilePair result =
-      FileFormatDialog::fileToRead(qobject_cast<QWidget*>(parent()),
-                                   tr("Open Output File"), outputPath);
+  FileFormatDialog::FormatFilePair result = FileFormatDialog::fileToRead(
+    qobject_cast<QWidget*>(parent()), tr("Open Output File"), outputPath);
 
   if (result.first == nullptr) // User canceled
     return;
@@ -94,16 +90,15 @@ void GamessInput::openJobOutput(const JobObject &job)
   emit moleculeReady(1);
 }
 
-bool GamessInput::readMolecule(QtGui::Molecule &mol)
+bool GamessInput::readMolecule(QtGui::Molecule& mol)
 {
-  Io::FileFormat *reader = m_outputFormat->newInstance();
+  Io::FileFormat* reader = m_outputFormat->newInstance();
   bool success = reader->readFile(m_outputFileName.toStdString(), mol);
   if (!success) {
-    QMessageBox::information(qobject_cast<QWidget*>(parent()),
-                             tr("Error"),
+    QMessageBox::information(qobject_cast<QWidget*>(parent()), tr("Error"),
                              tr("Error reading output file '%1':\n%2")
-                             .arg(m_outputFileName)
-                             .arg(QString::fromStdString(reader->error())));
+                               .arg(m_outputFileName)
+                               .arg(QString::fromStdString(reader->error())));
   }
 
   m_outputFormat = nullptr;
@@ -116,12 +111,11 @@ void GamessInput::menuActivated()
 {
   if (!m_dialog) {
     m_dialog = new GamessInputDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(openJobOutput(MoleQueue::JobObject)),
-            this, SLOT(openJobOutput(MoleQueue::JobObject)));
+    connect(m_dialog, SIGNAL(openJobOutput(MoleQueue::JobObject)), this,
+            SLOT(openJobOutput(MoleQueue::JobObject)));
   }
   m_dialog->setMolecule(m_molecule);
   m_dialog->show();
 }
-
 }
 }

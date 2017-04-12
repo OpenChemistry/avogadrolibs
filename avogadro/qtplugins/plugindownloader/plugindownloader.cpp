@@ -19,23 +19,21 @@
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <QtCore/QList>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkReply>
-#include <QtCore/QList>
 
 //#include <libarchive/archive.h>
 namespace Avogadro {
 namespace QtPlugins {
 
-PluginDownloader::PluginDownloader(QObject *parent_)
-    : ExtensionPlugin(parent_),
-      m_action(new QAction(this)),
-      m_molecule(nullptr),
-      m_network(nullptr)
+PluginDownloader::PluginDownloader(QObject* parent_)
+  : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
+    m_network(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText("Plugin Downloader");
@@ -44,27 +42,34 @@ PluginDownloader::PluginDownloader(QObject *parent_)
 
 PluginDownloader::~PluginDownloader() = default;
 
-QList<QAction *> PluginDownloader::actions() const
+QList<QAction*> PluginDownloader::actions() const
 {
-  return QList<QAction *>() << m_action;
+  return QList<QAction*>() << m_action;
 }
 
-QStringList PluginDownloader::menuPath(QAction *) const
+QStringList PluginDownloader::menuPath(QAction*) const
 {
   return QStringList() << tr("&Extensions");
 }
 
-void PluginDownloader::setMolecule(QtGui::Molecule *mol) {}
+void PluginDownloader::setMolecule(QtGui::Molecule* mol)
+{
+}
 
-bool PluginDownloader::readMolecule(QtGui::Molecule &mol) { return true; }
+bool PluginDownloader::readMolecule(QtGui::Molecule& mol)
+{
+  return true;
+}
 
 void PluginDownloader::showDialog()
 {
-  DownloaderWidget *widget = new DownloaderWidget(qobject_cast<QWidget *>(parent()));
+  DownloaderWidget* widget =
+    new DownloaderWidget(qobject_cast<QWidget*>(parent()));
   widget->show();
 }
 
-void PluginDownloader::replyFinished(QNetworkReply *reply) {}
-
+void PluginDownloader::replyFinished(QNetworkReply* reply)
+{
+}
 }
 }

@@ -22,9 +22,8 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-LineFormatInputDialog::LineFormatInputDialog(QWidget *aParent) :
-  QDialog(aParent),
-  m_ui(new Ui::LineFormatInputDialog)
+LineFormatInputDialog::LineFormatInputDialog(QWidget* aParent)
+  : QDialog(aParent), m_ui(new Ui::LineFormatInputDialog)
 {
   m_ui->setupUi(this);
 }
@@ -34,7 +33,7 @@ LineFormatInputDialog::~LineFormatInputDialog()
   delete m_ui;
 }
 
-void LineFormatInputDialog::setFormats(const QStringList &indents)
+void LineFormatInputDialog::setFormats(const QStringList& indents)
 {
   m_ui->formats->clear();
   m_ui->formats->addItems(indents);
@@ -51,7 +50,7 @@ QString LineFormatInputDialog::format() const
   return m_ui->formats->currentText();
 }
 
-void LineFormatInputDialog::setCurrentFormat(const QString &format)
+void LineFormatInputDialog::setCurrentFormat(const QString& format)
 {
   int index = m_ui->formats->findText(format);
   if (index >= 0)

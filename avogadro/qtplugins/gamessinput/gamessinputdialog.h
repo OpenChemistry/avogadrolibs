@@ -17,8 +17,8 @@
 #ifndef GAMESSINPUTDIALOG_H
 #define GAMESSINPUTDIALOG_H
 
-#include <QDialog>
 #include <QButtonGroup>
+#include <QDialog>
 #include <QModelIndex>
 
 #include "ui_gamessinputdialog.h"
@@ -44,19 +44,19 @@ class GamessInputDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit GamessInputDialog(QWidget *parent_ = 0, Qt::WindowFlags f = 0 );
+  explicit GamessInputDialog(QWidget* parent_ = 0, Qt::WindowFlags f = 0);
   ~GamessInputDialog();
 
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 signals:
-   /**
-    * Emitted when the user requests that a job's output be loaded in Avogadro.
-    */
-  void openJobOutput(const MoleQueue::JobObject &job);
+  /**
+   * Emitted when the user requests that a job's output be loaded in Avogadro.
+   */
+  void openJobOutput(const MoleQueue::JobObject& job);
 
 protected:
-  void showEvent(QShowEvent *e);
+  void showEvent(QShowEvent* e);
 
 private slots:
   void updatePreviewText();
@@ -89,11 +89,11 @@ private:
   QString generateJobTitle() const;
 
   Ui::GamessInputDialog ui;
-  QtGui::Molecule *m_molecule;
-  GamessHighlighter *m_highlighter;
+  QtGui::Molecule* m_molecule;
+  GamessHighlighter* m_highlighter;
 
   bool m_updatePending;
-  QMap<QComboBox *, int> m_optionCache;
+  QMap<QComboBox*, int> m_optionCache;
 };
 
 } // end namespace QtPlugins

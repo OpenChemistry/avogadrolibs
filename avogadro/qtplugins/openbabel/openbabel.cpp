@@ -43,15 +43,11 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro {
 namespace QtPlugins {
 
-OpenBabel::OpenBabel(QObject *p) :
-  ExtensionPlugin(p),
-  m_molecule(nullptr),
-  m_process(new OBProcess(this)),
-  m_readFormatsPending(true),
-  m_writeFormatsPending(true),
-  m_progress(nullptr)
+OpenBabel::OpenBabel(QObject* p)
+  : ExtensionPlugin(p), m_molecule(nullptr), m_process(new OBProcess(this)),
+    m_readFormatsPending(true), m_writeFormatsPending(true), m_progress(nullptr)
 {
-  QAction *action = new QAction(this);
+  QAction* action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Optimize geometry"));
   action->setShortcut(QKeySequence("Ctrl+Alt+O"));
@@ -95,11 +91,10 @@ OpenBabel::OpenBabel(QObject *p) :
   QString info = openBabelInfo();
   if (info.isEmpty()) {
     qWarning() << tr("%1 not found! Disabling Open Babel plugin actions.")
-                  .arg(OBProcess().obabelExecutable());
-    foreach(QAction *a, m_actions)
+                    .arg(OBProcess().obabelExecutable());
+    foreach (QAction* a, m_actions)
       a->setEnabled(false);
-  }
-  else {
+  } else {
     qDebug() << OBProcess().obabelExecutable() << " found: " << info;
   }
 }
@@ -108,17 +103,17 @@ OpenBabel::~OpenBabel()
 {
 }
 
-QList<QAction *> OpenBabel::actions() const
+QList<QAction*> OpenBabel::actions() const
 {
   return m_actions;
 }
 
-QStringList OpenBabel::menuPath(QAction *) const
+QStringList OpenBabel::menuPath(QAction*) const
 {
   return QStringList() << tr("&Extensions") << tr("&Open Babel");
 }
 
-QList<Io::FileFormat *> OpenBabel::fileFormats() const
+QList<Io::FileFormat*> OpenBabel::fileFormats() const
 {
   // Return empty list if not ready yet, and print a warning.
   if (m_readFormatsPending || m_writeFormatsPending) {
@@ -146,7 +141,7 @@ QList<Io::FileFormat *> OpenBabel::fileFormats() const
   QList<QString> multifileFormatDescriptions;
   multifileFormatDescriptions << "VASP format";
 
-  foreach (const QString &qdesc, formatDescriptions) {
+  foreach (const QString& qdesc, formatDescriptions) {
     mapDesc = qdesc.toStdString();
     fname = mapDesc;
     fidentifier = std::string("OpenBabel: ") + mapDesc;
@@ -167,12 +162,12 @@ QList<Io::FileFormat *> OpenBabel::fileFormats() const
       rw |= Io::FileFormat::Write;
     }
 
-    foreach (const QString &ext, formatExtensions)
+    foreach (const QString& ext, formatExtensions)
       fexts.push_back(ext.toStdString());
 
-    OBFileFormat *fmt = new OBFileFormat(fname, fidentifier, fdescription,
-                                         fspecificationUrl, fexts, fmime,
-                                         fileOnly);
+    OBFileFormat* fmt =
+      new OBFileFormat(fname, fidentifier, fdescription, fspecificationUrl,
+                       fexts, fmime, fileOnly);
 
     fmt->setReadWriteFlags(rw);
     result.append(fmt);
@@ -190,46 +185,41 @@ QString OpenBabel::openBabelInfo() const
   return QString("%1: %2").arg(proc.obabelExecutable(), version);
 }
 
-void OpenBabel::setMolecule(QtGui::Molecule *mol)
+void OpenBabel::setMolecule(QtGui::Molecule* mol)
 {
   if (mol != m_molecule)
     m_molecule = mol;
 }
 
-bool OpenBabel::readMolecule(QtGui::Molecule &mol)
+bool OpenBabel::readMolecule(QtGui::Molecule& mol)
 {
   m_progress->setLabelText(tr("Loading molecule from CML..."));
 
   bool result = false;
 
   if (m_moleculeQueue.isEmpty()) {
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Error"),
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                           tr("An internal error occurred: "
                              "OpenBabel::readMolecule called, but no obabel "
                              "output is available to parse!"),
                           QMessageBox::Ok);
-  }
-  else {
+  } else {
     QByteArray output = m_moleculeQueue.takeFirst();
     // Empty output means openbabel crashed, etc.
     if (output.isEmpty()) {
-      QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                            tr("Error"),
+      QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                             tr("An error occurred while running OpenBabel "
                                "(%1).")
-                            .arg(m_process->obabelExecutable()),
+                              .arg(m_process->obabelExecutable()),
                             QMessageBox::Ok);
-    }
-    else {
+    } else {
       result = Io::FileFormatManager::instance().readString(
-            mol, output.constData(), "cml");
+        mol, output.constData(), "cml");
       if (!result) {
         qWarning() << "Error parsing OpenBabel CML output:\n" << output;
-        QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                              tr("Error"),
+        QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                               tr("Error parsing openbabel output."),
-                            QMessageBox::Ok);
+                              QMessageBox::Ok);
       }
     }
   }
@@ -242,20 +232,19 @@ void OpenBabel::refreshReadFormats()
 {
   // No need to check if the member process is in use -- we use a temporary
   // process for the refresh methods.
-  OBProcess *proc = new OBProcess(this);
+  OBProcess* proc = new OBProcess(this);
 
-  connect(proc,
-          SIGNAL(queryReadFormatsFinished(QMap<QString,QString>)),
-          SLOT(handleReadFormatUpdate(QMap<QString,QString>)));
+  connect(proc, SIGNAL(queryReadFormatsFinished(QMap<QString, QString>)),
+          SLOT(handleReadFormatUpdate(QMap<QString, QString>)));
 
   proc->queryReadFormats();
 }
 
-void OpenBabel::handleReadFormatUpdate(const QMap<QString, QString> &fmts)
+void OpenBabel::handleReadFormatUpdate(const QMap<QString, QString>& fmts)
 {
   m_readFormatsPending = false;
 
-  OBProcess *proc = qobject_cast<OBProcess*>(sender());
+  OBProcess* proc = qobject_cast<OBProcess*>(sender());
   if (proc)
     proc->deleteLater();
 
@@ -271,20 +260,19 @@ void OpenBabel::refreshWriteFormats()
 {
   // No need to check if the member process is in use -- we use a temporary
   // process for the refresh methods.
-  OBProcess *proc = new OBProcess(this);
+  OBProcess* proc = new OBProcess(this);
 
-  connect(proc,
-          SIGNAL(queryWriteFormatsFinished(QMap<QString,QString>)),
-          SLOT(handleWriteFormatUpdate(QMap<QString,QString>)));
+  connect(proc, SIGNAL(queryWriteFormatsFinished(QMap<QString, QString>)),
+          SLOT(handleWriteFormatUpdate(QMap<QString, QString>)));
 
   proc->queryWriteFormats();
 }
 
-void OpenBabel::handleWriteFormatUpdate(const QMap<QString, QString> &fmts)
+void OpenBabel::handleWriteFormatUpdate(const QMap<QString, QString>& fmts)
 {
   m_writeFormatsPending = false;
 
-  OBProcess *proc = qobject_cast<OBProcess*>(sender());
+  OBProcess* proc = qobject_cast<OBProcess*>(sender());
   if (proc)
     proc->deleteLater();
 
@@ -300,18 +288,17 @@ void OpenBabel::refreshForceFields()
 {
   // No need to check if the member process is in use -- we use a temporary
   // process for the refresh methods.
-  OBProcess *proc = new OBProcess(this);
+  OBProcess* proc = new OBProcess(this);
 
-  connect(proc,
-          SIGNAL(queryForceFieldsFinished(QMap<QString,QString>)),
-          SLOT(handleForceFieldsUpdate(QMap<QString,QString>)));
+  connect(proc, SIGNAL(queryForceFieldsFinished(QMap<QString, QString>)),
+          SLOT(handleForceFieldsUpdate(QMap<QString, QString>)));
 
   proc->queryForceFields();
 }
 
-void OpenBabel::handleForceFieldsUpdate(const QMap<QString, QString> &ffMap)
+void OpenBabel::handleForceFieldsUpdate(const QMap<QString, QString>& ffMap)
 {
-  OBProcess *proc = qobject_cast<OBProcess*>(sender());
+  OBProcess* proc = qobject_cast<OBProcess*>(sender());
   if (proc)
     proc->deleteLater();
 
@@ -323,18 +310,17 @@ void OpenBabel::onConfigureGeometryOptimization()
   // If the force field map is empty, there is probably a problem with the
   // obabel executable. Warn the user and return.
   if (m_forceFields.isEmpty()) {
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Error"),
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                           tr("An error occurred while retrieving the list of "
                              "supported forcefields. (using '%1').")
-                          .arg(m_process->obabelExecutable()),
+                            .arg(m_process->obabelExecutable()),
                           QMessageBox::Ok);
     return;
   }
 
   QSettings settings;
   QStringList options =
-      settings.value("openbabel/optimizeGeometry/lastOptions").toStringList();
+    settings.value("openbabel/optimizeGeometry/lastOptions").toStringList();
 
   options = OBForceFieldDialog::prompt(qobject_cast<QWidget*>(parent()),
                                        m_forceFields.keys(), options,
@@ -350,8 +336,7 @@ void OpenBabel::onConfigureGeometryOptimization()
 void OpenBabel::onOptimizeGeometry()
 {
   if (!m_molecule || m_molecule->atomCount() == 0) {
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Error"),
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                           tr("Molecule invalid. Cannot optimize geometry."),
                           QMessageBox::Ok);
     return;
@@ -360,11 +345,10 @@ void OpenBabel::onOptimizeGeometry()
   // If the force field map is empty, there is probably a problem with the
   // obabel executable. Warn the user and return.
   if (m_forceFields.isEmpty()) {
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Error"),
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                           tr("An error occurred while retrieving the list of "
                              "supported forcefields. (using '%1').")
-                          .arg(m_process->obabelExecutable()),
+                            .arg(m_process->obabelExecutable()),
                           QMessageBox::Ok);
     return;
   }
@@ -377,9 +361,9 @@ void OpenBabel::onOptimizeGeometry()
 
   QSettings settings;
   QStringList options =
-      settings.value("openbabel/optimizeGeometry/lastOptions").toStringList();
+    settings.value("openbabel/optimizeGeometry/lastOptions").toStringList();
   bool autoDetect =
-      settings.value("openbabel/optimizeGeometry/autoDetect", true).toBool();
+    settings.value("openbabel/optimizeGeometry/autoDetect", true).toBool();
 
   if (autoDetect) {
     QString ff = autoDetectForceField();
@@ -390,8 +374,7 @@ void OpenBabel::onOptimizeGeometry()
         options << ff;
       else
         options[ffIndex + 1] = ff;
-    }
-    else {
+    } else {
       options << "--ff" << ff;
     }
   }
@@ -405,8 +388,8 @@ void OpenBabel::onOptimizeGeometry()
   m_process->disconnect(this);
   connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
   connect(m_process,
-          SIGNAL(optimizeGeometryStatusUpdate(int,int,double,double)),
-          SLOT(onOptimizeGeometryStatusUpdate(int,int,double,double)));
+          SIGNAL(optimizeGeometryStatusUpdate(int, int, double, double)),
+          SLOT(onOptimizeGeometryStatusUpdate(int, int, double, double)));
   connect(m_process, SIGNAL(optimizeGeometryFinished(QByteArray)),
           SLOT(onOptimizeGeometryFinished(QByteArray)));
 
@@ -414,8 +397,7 @@ void OpenBabel::onOptimizeGeometry()
   std::string mol;
   if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol, "mol")) {
     m_progress->reset();
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Error"),
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                           tr("An internal error occurred while generating an "
                              "MDL representation of the current molecule."),
                           QMessageBox::Ok);
@@ -423,7 +405,7 @@ void OpenBabel::onOptimizeGeometry()
   }
 
   m_progress->setLabelText(tr("Starting %1...", "arg is an executable file.")
-                           .arg(m_process->obabelExecutable()));
+                             .arg(m_process->obabelExecutable()));
 
   // Run obabel
   m_process->optimizeGeometry(QByteArray(mol.c_str()), options);
@@ -436,17 +418,18 @@ void OpenBabel::onOptimizeGeometryStatusUpdate(int step, int numSteps,
 
   if (step == 0) {
     status = tr("Step %1 of %2\nCurrent energy: %3\ndE: %4")
-        .arg(step).arg(numSteps)
-        .arg(fabs(energy) > 1e-10 ? QString::number(energy, 'g', 5)
-                                  : QString("(pending)"))
-        .arg("(pending)");
-  }
-  else {
+               .arg(step)
+               .arg(numSteps)
+               .arg(fabs(energy) > 1e-10 ? QString::number(energy, 'g', 5)
+                                         : QString("(pending)"))
+               .arg("(pending)");
+  } else {
     double dE = energy - lastEnergy;
     status = tr("Step %1 of %2\nCurrent energy: %3\ndE: %4")
-        .arg(step).arg(numSteps)
-        .arg(energy, 0, 'g', 5)
-        .arg(dE, 0, 'g', 5);
+               .arg(step)
+               .arg(numSteps)
+               .arg(energy, 0, 'g', 5)
+               .arg(dE, 0, 'g', 5);
   }
 
   m_progress->setRange(0, numSteps);
@@ -454,7 +437,7 @@ void OpenBabel::onOptimizeGeometryStatusUpdate(int step, int numSteps,
   m_progress->setLabelText(status);
 }
 
-void OpenBabel::onOptimizeGeometryFinished(const QByteArray &output)
+void OpenBabel::onOptimizeGeometryFinished(const QByteArray& output)
 {
   m_progress->setLabelText(tr("Updating molecule..."));
 
@@ -463,8 +446,7 @@ void OpenBabel::onOptimizeGeometryFinished(const QByteArray &output)
   if (!Io::FileFormatManager::instance().readString(mol, output.constData(),
                                                     "mol")) {
     m_progress->reset();
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Error"),
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                           tr("Error interpreting obabel MDL output."),
                           QMessageBox::Ok);
     qDebug() << "MDL:" << output;
@@ -477,12 +459,12 @@ void OpenBabel::onOptimizeGeometryFinished(const QByteArray &output)
   // Check that the atom count hasn't changed:
   if (mol.atomCount() != m_molecule->atomCount()) {
     m_progress->reset();
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Error"),
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                           tr("Number of atoms in obabel output (%1) does not "
                              "match the number of atoms in the original "
                              "molecule (%2).")
-                          .arg(mol.atomCount()).arg(m_molecule->atomCount()),
+                            .arg(mol.atomCount())
+                            .arg(m_molecule->atomCount()),
                           QMessageBox::Ok);
     return;
   }
@@ -502,8 +484,7 @@ void OpenBabel::onPerceiveBonds()
   }
 
   if (!m_molecule || m_molecule->atomCount() < 2) {
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Error"),
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                           tr("Invalid molecule: Cannot perceive bonds."),
                           QMessageBox::Ok);
     return;
@@ -518,8 +499,7 @@ void OpenBabel::onPerceiveBonds()
   if (!Io::FileFormatManager::instance().writeString(*m_molecule, xyz, "xyz")) {
     m_progress->reset();
     QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
-                          tr("Error generating XYZ string."),
-                          QMessageBox::Ok);
+                          tr("Error generating XYZ string."), QMessageBox::Ok);
     return;
   }
 
@@ -530,14 +510,14 @@ void OpenBabel::onPerceiveBonds()
   connect(m_process, SIGNAL(convertFinished(QByteArray)),
           SLOT(onPerceiveBondsFinished(QByteArray)));
 
-  m_progress->setLabelText(tr("Converting XYZ to CML with %1...")
-                           .arg(m_process->obabelExecutable()));
+  m_progress->setLabelText(
+    tr("Converting XYZ to CML with %1...").arg(m_process->obabelExecutable()));
 
   // Run process
   m_process->convert(QByteArray(xyz.c_str(), xyz.size()), "xyz", "cml");
 }
 
-void OpenBabel::onPerceiveBondsFinished(const QByteArray &output)
+void OpenBabel::onPerceiveBondsFinished(const QByteArray& output)
 {
   m_progress->setLabelText(tr("Updating molecule from CML..."));
 
@@ -546,8 +526,7 @@ void OpenBabel::onPerceiveBondsFinished(const QByteArray &output)
   if (!Io::FileFormatManager::instance().readString(mol, output.constData(),
                                                     "cml")) {
     m_progress->reset();
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Error"),
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                           tr("Error interpreting obabel CML output."),
                           QMessageBox::Ok);
     return;
@@ -559,12 +538,12 @@ void OpenBabel::onPerceiveBondsFinished(const QByteArray &output)
   // Check that the atom count hasn't changed:
   if (mol.atomCount() != m_molecule->atomCount()) {
     m_progress->reset();
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Error"),
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                           tr("Number of atoms in obabel output (%1) does not "
                              "match the number of atoms in the original "
                              "molecule (%2).")
-                          .arg(mol.atomCount()).arg(m_molecule->atomCount()),
+                            .arg(mol.atomCount())
+                            .arg(m_molecule->atomCount()),
                           QMessageBox::Ok);
     return;
   }
@@ -575,13 +554,13 @@ void OpenBabel::onPerceiveBondsFinished(const QByteArray &output)
   for (size_t i = 0; i < mol.bondCount(); ++i) {
     Avogadro::Core::Bond bond = mol.bond(i);
     newMolecule.addBond(newMolecule.atom(bond.atom1().index()),
-                        newMolecule.atom(bond.atom2().index()),
-                        bond.order());
+                        newMolecule.atom(bond.atom2().index()), bond.order());
   }
 
-  Molecule::MoleculeChanges changes = Molecule::Bonds | Molecule::Added |
-                                      Molecule::Removed | Molecule::Modified;
-  m_molecule->undoMolecule()->modifyMolecule(newMolecule, changes, "Perceive Bonds");
+  Molecule::MoleculeChanges changes =
+    Molecule::Bonds | Molecule::Added | Molecule::Removed | Molecule::Modified;
+  m_molecule->undoMolecule()->modifyMolecule(newMolecule, changes,
+                                             "Perceive Bonds");
   m_progress->reset();
 }
 
@@ -605,8 +584,7 @@ void OpenBabel::onAddHydrogens()
   if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol, "mol")) {
     m_progress->reset();
     QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
-                          tr("Error generating MDL string."),
-                          QMessageBox::Ok);
+                          tr("Error generating MDL string."), QMessageBox::Ok);
     return;
   }
 
@@ -617,8 +595,8 @@ void OpenBabel::onAddHydrogens()
   connect(m_process, SIGNAL(convertFinished(QByteArray)),
           SLOT(onHydrogenOperationFinished(QByteArray)));
 
-  m_progress->setLabelText(tr("Running %1...")
-                           .arg(m_process->obabelExecutable()));
+  m_progress->setLabelText(
+    tr("Running %1...").arg(m_process->obabelExecutable()));
 
   // Run process
   m_process->convert(QByteArray(mol.c_str(), mol.size()), "mol", "mol",
@@ -639,8 +617,8 @@ void OpenBabel::onAddHydrogensPh()
   // Prompt for pH
   bool ok = false;
   double pH = QInputDialog::getDouble(qobject_cast<QWidget*>(parent()),
-                                      tr("Add hydrogens for pH"),
-                                      tr("pH:"), 7.4, 0, 14, 2, &ok);
+                                      tr("Add hydrogens for pH"), tr("pH:"),
+                                      7.4, 0, 14, 2, &ok);
   if (!ok) // user cancel
     return;
 
@@ -653,8 +631,7 @@ void OpenBabel::onAddHydrogensPh()
   if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol, "mol")) {
     m_progress->reset();
     QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
-                          tr("Error generating MDL string."),
-                          QMessageBox::Ok);
+                          tr("Error generating MDL string."), QMessageBox::Ok);
     return;
   }
 
@@ -665,8 +642,8 @@ void OpenBabel::onAddHydrogensPh()
   connect(m_process, SIGNAL(convertFinished(QByteArray)),
           SLOT(onHydrogenOperationFinished(QByteArray)));
 
-  m_progress->setLabelText(tr("Running %1...")
-                           .arg(m_process->obabelExecutable()));
+  m_progress->setLabelText(
+    tr("Running %1...").arg(m_process->obabelExecutable()));
 
   // Run process
   m_process->convert(QByteArray(mol.c_str(), mol.size()), "mol", "mol",
@@ -693,8 +670,7 @@ void OpenBabel::onRemoveHydrogens()
   if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol, "mol")) {
     m_progress->reset();
     QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
-                          tr("Error generating MDL string."),
-                          QMessageBox::Ok);
+                          tr("Error generating MDL string."), QMessageBox::Ok);
     return;
   }
 
@@ -705,15 +681,15 @@ void OpenBabel::onRemoveHydrogens()
   connect(m_process, SIGNAL(convertFinished(QByteArray)),
           SLOT(onHydrogenOperationFinished(QByteArray)));
 
-  m_progress->setLabelText(tr("Running %1...")
-                           .arg(m_process->obabelExecutable()));
+  m_progress->setLabelText(
+    tr("Running %1...").arg(m_process->obabelExecutable()));
 
   // Run process
   m_process->convert(QByteArray(mol.c_str(), mol.size()), "mol", "mol",
                      QStringList() << "-d");
 }
 
-void OpenBabel::onHydrogenOperationFinished(const QByteArray &mdl)
+void OpenBabel::onHydrogenOperationFinished(const QByteArray& mdl)
 {
   m_progress->setLabelText(tr("Reading obabel output..."));
 
@@ -723,8 +699,7 @@ void OpenBabel::onHydrogenOperationFinished(const QByteArray &mdl)
                                                     "mol")) {
     m_progress->reset();
     qWarning() << "Bad MDL: " << mdl;
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Error"),
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                           tr("Error interpreting obabel MDL output."),
                           QMessageBox::Ok);
     qDebug() << "MDL:" << mdl;
@@ -743,8 +718,7 @@ void OpenBabel::onHydrogenOperationFinished(const QByteArray &mdl)
   for (Index i = 0; i < mol.bondCount(); ++i) {
     Core::Bond bond = mol.bond(i);
     newMolecule.addBond(newMolecule.atom(bond.atom1().index()),
-                        newMolecule.atom(bond.atom2().index()),
-                        bond.order());
+                        newMolecule.atom(bond.atom2().index()), bond.order());
   }
 
   Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Bonds |
@@ -761,10 +735,9 @@ void OpenBabel::onHydrogenOperationFinished(const QByteArray &mdl)
   m_progress->reset();
 }
 
-void OpenBabel::initializeProgressDialog(const QString &title,
-                                         const QString &label,
-                                         int min, int max, int value,
-                                         bool showDialog)
+void OpenBabel::initializeProgressDialog(const QString& title,
+                                         const QString& label, int min, int max,
+                                         int value, bool showDialog)
 {
   if (!m_progress)
     m_progress = new QProgressDialog(qobject_cast<QWidget*>(parent()));
@@ -778,7 +751,7 @@ void OpenBabel::initializeProgressDialog(const QString &title,
     m_progress->show();
 }
 
-void OpenBabel::showProcessInUseError(const QString &title) const
+void OpenBabel::showProcessInUseError(const QString& title) const
 {
   QMessageBox::critical(qobject_cast<QWidget*>(parent()), title,
                         tr("Already running OpenBabel. Wait for the other "
@@ -792,35 +765,23 @@ QString OpenBabel::autoDetectForceField() const
   // See discussion at
   // http://forums.openbabel.org/Heuristic-for-selecting-best-forcefield-td4655917.html
   QString formula = QString::fromStdString(m_molecule->formula());
-  QStringList elementTypes = formula.split(QRegExp("\\d+"),
-                                           QString::SkipEmptyParts);
+  QStringList elementTypes =
+    formula.split(QRegExp("\\d+"), QString::SkipEmptyParts);
   bool mmff94Valid = true;
   bool gaffValid = true;
   QStringList::const_iterator eleIter = elementTypes.constBegin();
   while (eleIter != elementTypes.constEnd() && (mmff94Valid || gaffValid)) {
     // These are supported by GAFF and MMFF94s
-    if (*eleIter != "C"  &&
-        *eleIter != "H"  &&
-        *eleIter != "F"  &&
-        *eleIter != "Cl" &&
-        *eleIter != "Br" &&
-        *eleIter != "I"  &&
-        *eleIter != "N"  &&
-        *eleIter != "O"  &&
-        *eleIter != "P"  &&
-        *eleIter != "S"  ){
+    if (*eleIter != "C" && *eleIter != "H" && *eleIter != "F" &&
+        *eleIter != "Cl" && *eleIter != "Br" && *eleIter != "I" &&
+        *eleIter != "N" && *eleIter != "O" && *eleIter != "P" &&
+        *eleIter != "S") {
       gaffValid = false;
 
       // These are supported by MMFF94 (but not GAFF)
-      if (*eleIter != "Fe" &&
-          *eleIter != "Li" &&
-          *eleIter != "Na" &&
-          *eleIter != "K"  &&
-          *eleIter != "Zn" &&
-          *eleIter != "Ca" &&
-          *eleIter != "Cu" &&
-          *eleIter != "Mg" &&
-          *eleIter != "Na" ){
+      if (*eleIter != "Fe" && *eleIter != "Li" && *eleIter != "Na" &&
+          *eleIter != "K" && *eleIter != "Zn" && *eleIter != "Ca" &&
+          *eleIter != "Cu" && *eleIter != "Mg" && *eleIter != "Na") {
         mmff94Valid = false;
       }
     }
@@ -842,6 +803,5 @@ QString OpenBabel::autoDetectForceField() const
 
   return result;
 }
-
 }
 }

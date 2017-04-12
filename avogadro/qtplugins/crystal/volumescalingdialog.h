@@ -35,7 +35,7 @@ class VolumeScalingDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit VolumeScalingDialog(QWidget *parent = 0);
+  explicit VolumeScalingDialog(QWidget* parent = 0);
   ~VolumeScalingDialog();
 
   void setCurrentVolume(double vol);
@@ -47,7 +47,7 @@ private slots:
   void factorEdited();
 
 private:
-  Ui::VolumeScalingDialog *m_ui;
+  Ui::VolumeScalingDialog* m_ui;
   double m_currentVolume;
 };
 

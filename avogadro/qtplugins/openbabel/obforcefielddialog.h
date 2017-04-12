@@ -38,8 +38,8 @@ public:
   /**
    * Construct a new dialog using the forcefields in @a forceFields.
    */
-  explicit OBForceFieldDialog(const QStringList &forceFields,
-                              QWidget *parent_ = 0);
+  explicit OBForceFieldDialog(const QStringList& forceFields,
+                              QWidget* parent_ = 0);
   ~OBForceFieldDialog();
 
   /**
@@ -51,9 +51,9 @@ public:
    * When the user closes the dialog, the options they selected are returned. If
    * the user cancels the dialog, an empty list is returned.
    */
-  static QStringList prompt(QWidget *parent_,  const QStringList &forceFields,
-                            const QStringList &startingOptions,
-                            const QString &recommendedForceField_ = QString());
+  static QStringList prompt(QWidget* parent_, const QStringList& forceFields,
+                            const QStringList& startingOptions,
+                            const QString& recommendedForceField_ = QString());
 
   /**
    * Get/set the options displayed in the dialog. The option format is a list of
@@ -82,7 +82,7 @@ obabel -icml -ocml --minimize --log --crit 1e-05 --ff Ghemical --sd"
    * @{
    */
   QStringList options() const;
-  void setOptions(const QStringList &opts);
+  void setOptions(const QStringList& opts);
   /**@}*/
 
   /**
@@ -96,7 +96,7 @@ obabel -icml -ocml --minimize --log --crit 1e-05 --ff Ghemical --sd"
    * @{
    */
   QString recommendedForceField() const { return m_recommendedForceField; }
-  void setRecommendedForceField(const QString &rff);
+  void setRecommendedForceField(const QString& rff);
   /**@}*/
 
 private slots:
@@ -105,10 +105,9 @@ private slots:
 private:
   void updateRecommendedForceField();
 
-  Ui::OBForceFieldDialog *ui;
+  Ui::OBForceFieldDialog* ui;
   QString m_recommendedForceField;
 };
-
 
 } // namespace QtPlugins
 } // namespace Avogadro

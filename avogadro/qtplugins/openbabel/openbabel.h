@@ -41,7 +41,7 @@ class OpenBabel : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit OpenBabel(QObject *parent = 0);
+  explicit OpenBabel(QObject* parent = 0);
   ~OpenBabel();
 
   QString name() const { return tr("OpenBabel"); }
@@ -51,62 +51,62 @@ public:
     return tr("Interact with OpenBabel utilities.");
   }
 
-  QList<QAction *> actions() const;
+  QList<QAction*> actions() const;
 
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
-  QList<Io::FileFormat *> fileFormats() const;
+  QList<Io::FileFormat*> fileFormats() const;
 
   QString openBabelInfo() const;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
-  bool readMolecule(QtGui::Molecule &mol);
+  bool readMolecule(QtGui::Molecule& mol);
 
 private slots:
   void refreshReadFormats();
-  void handleReadFormatUpdate(const QMap<QString, QString> &fmts);
+  void handleReadFormatUpdate(const QMap<QString, QString>& fmts);
 
   void refreshWriteFormats();
-  void handleWriteFormatUpdate(const QMap<QString, QString> &fmts);
+  void handleWriteFormatUpdate(const QMap<QString, QString>& fmts);
 
   void refreshForceFields();
-  void handleForceFieldsUpdate(const QMap<QString, QString> &ffMap);
+  void handleForceFieldsUpdate(const QMap<QString, QString>& ffMap);
 
   void onConfigureGeometryOptimization();
 
   void onOptimizeGeometry();
-  void onOptimizeGeometryStatusUpdate(int step, int numSteps,
-                                      double energy, double lastEnergy);
-  void onOptimizeGeometryFinished(const QByteArray &output);
+  void onOptimizeGeometryStatusUpdate(int step, int numSteps, double energy,
+                                      double lastEnergy);
+  void onOptimizeGeometryFinished(const QByteArray& output);
 
   void onPerceiveBonds();
-  void onPerceiveBondsFinished(const QByteArray &output);
+  void onPerceiveBondsFinished(const QByteArray& output);
 
   void onAddHydrogens();
   void onAddHydrogensPh();
   void onRemoveHydrogens();
-  void onHydrogenOperationFinished(const QByteArray &cml);
+  void onHydrogenOperationFinished(const QByteArray& cml);
 
 private:
-  void initializeProgressDialog(const QString &title, const QString &label,
-                                int min, int max, int value, bool showDialog = true);
-  void showProcessInUseError(const QString &title) const;
+  void initializeProgressDialog(const QString& title, const QString& label,
+                                int min, int max, int value,
+                                bool showDialog = true);
+  void showProcessInUseError(const QString& title) const;
   QString autoDetectForceField() const;
 
-  QtGui::Molecule *m_molecule;
-  OBProcess *m_process;
-  QList<QAction *> m_actions;
+  QtGui::Molecule* m_molecule;
+  OBProcess* m_process;
+  QList<QAction*> m_actions;
   QList<QByteArray> m_moleculeQueue;
   bool m_readFormatsPending;
   bool m_writeFormatsPending;
   QMap<QString, QString> m_readFormats;
   QMap<QString, QString> m_writeFormats;
   QMap<QString, QString> m_forceFields;
-  QProgressDialog *m_progress;
+  QProgressDialog* m_progress;
 };
-
 }
 }
 

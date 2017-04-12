@@ -54,7 +54,7 @@
 #include <QPair>
 
 //#ifdef __cplusplus
-//extern "C"
+// extern "C"
 //{
 //#endif /* __cplusplus */
 
@@ -68,15 +68,15 @@
    of length fdim).   The void* parameter is there in case you have
    to pass any additional data through to your function (it corresponds
    to the fdata parameter you pass to adapt_integrate). */
-typedef void (*integrand) (unsigned int ndim, const double *x, void *,
-                           unsigned int fdim, double *fval);
+typedef void (*integrand)(unsigned int ndim, const double* x, void*,
+                          unsigned int fdim, double* fval);
 
 /* a vector integrand of a vector of npt points: x[i*ndim + j] is the
    j-th coordinate of the i-th point, and the k-th function evaluation
    for the i-th point is returned in fval[k*npt + i]. */
-typedef void (*integrand_v) (unsigned int ndim, unsigned int npt,
-                             const double *x, void *,
-                             unsigned int fdim, double *fval);
+typedef void (*integrand_v)(unsigned int ndim, unsigned int npt,
+                            const double* x, void*, unsigned int fdim,
+                            double* fval);
 
 /* Integrate the function f from xmin[dim] to xmax[dim], with at most
    maxEval function evaluations (0 for no limit), until the given
@@ -85,58 +85,57 @@ typedef void (*integrand_v) (unsigned int ndim, unsigned int npt,
    of these are arrays of length fdim, the dimension of the vector
    integrand f(x). The return value of the function is 0 on success
    and non-zero if there  was an error. */
-int adapt_integrate(unsigned int fdim, integrand f, void *fdata,
-                    unsigned int dim, const double *xmin, const double *xmax,
-                    unsigned int maxEval, double reqAbsError, double reqRelError,
-                    double *val, double *err);
+int adapt_integrate(unsigned int fdim, integrand f, void* fdata,
+                    unsigned int dim, const double* xmin, const double* xmax,
+                    unsigned int maxEval, double reqAbsError,
+                    double reqRelError, double* val, double* err);
 
 /* as adapt_integrate, but vectorized integrand */
-int adapt_integrate_v(unsigned int fdim, integrand_v f, void *fdata,
-                      unsigned int dim, const double *xmin, const double *xmax,
-                      unsigned int maxEval, double reqAbsError, double reqRelError,
-                      double *val, double *err);
+int adapt_integrate_v(unsigned int fdim, integrand_v f, void* fdata,
+                      unsigned int dim, const double* xmin, const double* xmax,
+                      unsigned int maxEval, double reqAbsError,
+                      double reqRelError, double* val, double* err);
 
 //#ifdef __cplusplus
 //}  /* extern "C" */
 //#endif /* __cplusplus */
 
-#include "qtaimwavefunction.h"
-#include "qtaimwavefunctionevaluator.h"
 #include "qtaimcriticalpointlocator.h"
-#include "qtaimodeintegrator.h"
 #include "qtaimlsodaintegrator.h"
 #include "qtaimmathutilities.h"
+#include "qtaimodeintegrator.h"
+#include "qtaimwavefunction.h"
+#include "qtaimwavefunctionevaluator.h"
 
 namespace Avogadro {
 namespace QtPlugins {
 
-  class QTAIMCubature
+class QTAIMCubature
+{
+public:
+  enum
   {
-  public:
-    enum
-    {
-      ElectronDensity=0,
-      ElectronDensityLaplacian=1
-                             };
-
-    explicit QTAIMCubature(QTAIMWavefunction &wfn);
-    ~QTAIMCubature();
-
-    QList<QPair<qreal,qreal> > integrate(qint64 mode, QList<qint64> basins );
-
-    void setMode(qint64 mode);
-
-  private:
-    QTAIMWavefunction *m_wfn;
-    qint64 m_mode;
-    QList<qint64> m_basins;
-
-    QString m_temporaryFileName;
-    QString temporaryFileName();
-
-    QList<QVector3D> m_ncpList;
-
+    ElectronDensity = 0,
+    ElectronDensityLaplacian = 1
   };
+
+  explicit QTAIMCubature(QTAIMWavefunction& wfn);
+  ~QTAIMCubature();
+
+  QList<QPair<qreal, qreal>> integrate(qint64 mode, QList<qint64> basins);
+
+  void setMode(qint64 mode);
+
+private:
+  QTAIMWavefunction* m_wfn;
+  qint64 m_mode;
+  QList<qint64> m_basins;
+
+  QString m_temporaryFileName;
+  QString temporaryFileName();
+
+  QList<QVector3D> m_ncpList;
+};
 
 } /* namespace QtPlugins */
 } /* namespace Avogadro */

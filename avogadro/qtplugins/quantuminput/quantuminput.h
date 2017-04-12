@@ -50,18 +50,21 @@ class QuantumInput : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit QuantumInput(QObject *parent = 0);
+  explicit QuantumInput(QObject* parent = 0);
   ~QuantumInput();
 
   QString name() const { return tr("Quantum input"); }
 
-  QString description() const { return tr("Generate input for quantum codes."); }
+  QString description() const
+  {
+    return tr("Generate input for quantum codes.");
+  }
 
-  QList<QAction *> actions() const;
+  QList<QAction*> actions() const;
 
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 public slots:
   /**
@@ -72,9 +75,9 @@ public slots:
   /**
    * Emitted when the user requests that a job's output be loaded in Avogadro.
    */
-  void openJobOutput(const ::MoleQueue::JobObject &job);
+  void openJobOutput(const ::MoleQueue::JobObject& job);
 
-  bool readMolecule(QtGui::Molecule &mol);
+  bool readMolecule(QtGui::Molecule& mol);
 
 private slots:
   void menuActivated();
@@ -83,21 +86,20 @@ private slots:
 private:
   void updateInputGeneratorScripts();
   void updateActions();
-  void addAction(const QString &label, const QString &scriptFilePath);
-  bool queryProgramName(const QString &scriptFilePath, QString &displayName);
+  void addAction(const QString& label, const QString& scriptFilePath);
+  bool queryProgramName(const QString& scriptFilePath, QString& displayName);
 
   QList<QAction*> m_actions;
-  QtGui::Molecule *m_molecule;
+  QtGui::Molecule* m_molecule;
   // keyed on script file path
   QMultiMap<QString, MoleQueue::InputGeneratorDialog*> m_dialogs;
 
   // maps program name --> script file path
   QMultiMap<QString, QString> m_inputGeneratorScripts;
 
-  const Io::FileFormat *m_outputFormat;
+  const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;
 };
-
 }
 }
 

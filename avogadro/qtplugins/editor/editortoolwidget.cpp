@@ -32,19 +32,17 @@ const int ELEMENT_SELECTOR_TAG = 255;
 namespace Avogadro {
 namespace QtPlugins {
 
-EditorToolWidget::EditorToolWidget(QWidget *parent_) :
-  QWidget(parent_),
-  m_ui(new Ui::EditorToolWidget),
-  m_elementSelector(nullptr),
-  m_currentElement(6)
+EditorToolWidget::EditorToolWidget(QWidget* parent_)
+  : QWidget(parent_), m_ui(new Ui::EditorToolWidget),
+    m_elementSelector(nullptr), m_currentElement(6)
 {
   m_ui->setupUi(this);
 
   buildElements();
   buildBondOrders();
 
-  connect(m_ui->element, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(elementChanged(int)));
+  connect(m_ui->element, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(elementChanged(int)));
 
   // Show carbon at startup.
   selectElement(6);
@@ -102,13 +100,12 @@ void EditorToolWidget::elementChanged(int index)
     if (itemData.toInt() == ELEMENT_SELECTOR_TAG) {
       if (!m_elementSelector) {
         m_elementSelector = new QtGui::PeriodicTableView(this);
-        connect(m_elementSelector, SIGNAL(elementChanged(int)),
-                this, SLOT(elementSelectedFromTable(int)));
+        connect(m_elementSelector, SIGNAL(elementChanged(int)), this,
+                SLOT(elementSelectedFromTable(int)));
       }
       m_elementSelector->setElement(m_currentElement);
       m_elementSelector->show();
-    }
-    else {
+    } else {
       if (m_elementSelector)
         m_elementSelector->setElement(itemData.toInt());
       m_currentElement = static_cast<unsigned char>(itemData.toInt());
@@ -133,16 +130,16 @@ void EditorToolWidget::updateElementCombo()
   // Clear and repopulate combo
   m_ui->element->clear();
   foreach (unsigned char atomicNum, allElements) {
-    m_ui->element->addItem(QString("%1 (%2)")
-                           .arg(Core::Elements::name(atomicNum))
-                           .arg(atomicNum), atomicNum);
+    m_ui->element->addItem(
+      QString("%1 (%2)").arg(Core::Elements::name(atomicNum)).arg(atomicNum),
+      atomicNum);
   }
   m_ui->element->insertSeparator(m_ui->element->count());
   m_ui->element->addItem(tr("Other..."), ELEMENT_SELECTOR_TAG);
 
   // Reset the element if it still exists
-  selectElement(static_cast<unsigned char>(selectedData.isValid()
-                                           ? selectedData.toInt() : -1));
+  selectElement(static_cast<unsigned char>(
+    selectedData.isValid() ? selectedData.toInt() : -1));
 }
 
 void EditorToolWidget::addUserElement(unsigned char element)
@@ -207,8 +204,8 @@ void EditorToolWidget::buildElements()
 
   // User-added elements
   QVariantList userElementsVar =
-      QSettings().value("editortool/userElements").toList();
-  foreach (const QVariant &var, userElementsVar)
+    QSettings().value("editortool/userElements").toList();
+  foreach (const QVariant& var, userElementsVar)
     m_userElements << static_cast<unsigned char>(var.toUInt());
 
   updateElementCombo();

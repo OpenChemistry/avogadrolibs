@@ -18,30 +18,28 @@
 #include "apbsdialog.h"
 #include "opendxreader.h"
 
-#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/core/cube.h>
 #include <avogadro/core/mesh.h>
-#include <avogadro/qtgui/molecule.h>
+#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/meshgenerator.h>
+#include <avogadro/qtgui/molecule.h>
 
 #include <QAction>
-#include <QFileDialog>
-#include <QProgressDialog>
-#include <QMessageBox>
 #include <QApplication>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QProgressDialog>
 
 namespace Avogadro {
 namespace QtPlugins {
 
 using Core::Mesh;
 
-Apbs::Apbs(QObject *parent_)
-  : QtGui::ExtensionPlugin(parent_),
-    m_molecule(nullptr),
-    m_progressDialog(nullptr),
-    m_dialog(nullptr)
+Apbs::Apbs(QObject* parent_)
+  : QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_progressDialog(nullptr), m_dialog(nullptr)
 {
-  QAction *action = new QAction(this);
+  QAction* action = new QAction(this);
   action->setText(tr("Run APBS"));
   connect(action, SIGNAL(triggered()), this, SLOT(onRunApbs()));
   m_actions.append(action);
@@ -58,12 +56,12 @@ Apbs::~Apbs()
   delete m_progressDialog;
 }
 
-QStringList Apbs::menuPath(QAction *) const
+QStringList Apbs::menuPath(QAction*) const
 {
   return QStringList() << tr("&Extensions") << tr("&APBS");
 }
 
-void Apbs::setMolecule(QtGui::Molecule *mol)
+void Apbs::setMolecule(QtGui::Molecule* mol)
 {
   if (mol != m_molecule)
     m_molecule = mol;
@@ -71,10 +69,9 @@ void Apbs::setMolecule(QtGui::Molecule *mol)
 
 void Apbs::onOpenOutputFile()
 {
-  QString fileName =
-    QFileDialog::getOpenFileName(qobject_cast<QWidget *>(parent()),
-                                 tr("Open Output File"), QString(),
-                                 tr("OpenDX File (*.dx)"));
+  QString fileName = QFileDialog::getOpenFileName(
+    qobject_cast<QWidget*>(parent()), tr("Open Output File"), QString(),
+    tr("OpenDX File (*.dx)"));
   if (fileName.isEmpty())
     return;
 
@@ -86,8 +83,8 @@ void Apbs::onOpenOutputFile()
 
 void Apbs::meshGeneratorFinished()
 {
-  QtGui::MeshGenerator *generator =
-    qobject_cast<QtGui::MeshGenerator *>(sender());
+  QtGui::MeshGenerator* generator =
+    qobject_cast<QtGui::MeshGenerator*>(sender());
   if (!generator) {
     return;
   }
@@ -121,14 +118,14 @@ void Apbs::onRunApbs()
   }
 }
 
-bool Apbs::readMolecule(QtGui::Molecule &molecule)
+bool Apbs::readMolecule(QtGui::Molecule& molecule)
 {
-  bool ok = Io::FileFormatManager::instance().readFile(molecule,
-    m_pqrFileName.toStdString());
+  bool ok = Io::FileFormatManager::instance().readFile(
+    molecule, m_pqrFileName.toStdString());
   if (!ok) {
-    QMessageBox::critical(qobject_cast<QWidget *>(parent()),
-     tr("IO Error"), tr("Error reading structure file (%1).").arg(
-       m_pqrFileName));
+    QMessageBox::critical(
+      qobject_cast<QWidget*>(parent()), tr("IO Error"),
+      tr("Error reading structure file (%1).").arg(m_pqrFileName));
     return false;
   }
 
@@ -142,26 +139,25 @@ bool Apbs::readMolecule(QtGui::Molecule &molecule)
   return true;
 }
 
-bool Apbs::loadOpenDxFile(const QString &fileName, QtGui::Molecule &molecule)
+bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
 {
   OpenDxReader reader;
   bool ok = reader.readFile(fileName);
   if (!ok) {
-    QMessageBox::critical(qobject_cast<QWidget *>(parent()),
-      tr("OpenDX Error"),
+    QMessageBox::critical(
+      qobject_cast<QWidget*>(parent()), tr("OpenDX Error"),
       tr("Error reading OpenDX file: %1").arg(reader.errorString()));
-  }
-  else {
-    const Core::Cube *cube = reader.cube();
+  } else {
+    const Core::Cube* cube = reader.cube();
 
     if (!cube) {
-      QMessageBox::critical(qobject_cast<QWidget *>(parent()),
-        tr("OpenDX Error"),
-        tr("Error reading OpenDX file: No cube found"));
-    }
-    else {
+      QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                            tr("OpenDX Error"),
+                            tr("Error reading OpenDX file: No cube found"));
+    } else {
       if (!m_progressDialog)
-        m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
+        m_progressDialog =
+          new QProgressDialog(qobject_cast<QWidget*>(parent()));
 
       // generate positive mesh
       m_progressDialog->setLabelText("Generating Positive Potential Mesh");
@@ -169,13 +165,13 @@ bool Apbs::loadOpenDxFile(const QString &fileName, QtGui::Molecule &molecule)
       m_progressDialog->setValue(1);
       qApp->processEvents();
 
-      Mesh *mesh = molecule.addMesh();
-      QtGui::MeshGenerator *meshGenerator =
+      Mesh* mesh = molecule.addMesh();
+      QtGui::MeshGenerator* meshGenerator =
         new QtGui::MeshGenerator(cube, mesh, 0.1f);
-      connect(meshGenerator, SIGNAL(finished()),
-              this, SLOT(meshGeneratorFinished()));
-      connect(meshGenerator, SIGNAL(progressValueChanged(int)),
-              this, SLOT(onMeshGeneratorProgress(int)));
+      connect(meshGenerator, SIGNAL(finished()), this,
+              SLOT(meshGeneratorFinished()));
+      connect(meshGenerator, SIGNAL(progressValueChanged(int)), this,
+              SLOT(onMeshGeneratorProgress(int)));
       meshGenerator->run();
 
       // generate negative mesh
@@ -186,10 +182,10 @@ bool Apbs::loadOpenDxFile(const QString &fileName, QtGui::Molecule &molecule)
 
       mesh = molecule.addMesh();
       meshGenerator = new QtGui::MeshGenerator(cube, mesh, -0.1f);
-      connect(meshGenerator, SIGNAL(finished()),
-              this, SLOT(meshGeneratorFinished()));
-      connect(meshGenerator, SIGNAL(progressValueChanged(int)),
-              this, SLOT(onMeshGeneratorProgress(int)));
+      connect(meshGenerator, SIGNAL(finished()), this,
+              SLOT(meshGeneratorFinished()));
+      connect(meshGenerator, SIGNAL(progressValueChanged(int)), this,
+              SLOT(onMeshGeneratorProgress(int)));
       meshGenerator->run();
 
       m_progressDialog->setValue(100);
@@ -199,6 +195,5 @@ bool Apbs::loadOpenDxFile(const QString &fileName, QtGui::Molecule &molecule)
 
   return true;
 }
-
 }
 }

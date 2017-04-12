@@ -31,14 +31,14 @@ class BallAndStick : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit BallAndStick(QObject *parent = 0);
+  explicit BallAndStick(QObject* parent = 0);
   ~BallAndStick() override;
 
-  void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) override;
+  void process(const Core::Molecule& molecule,
+               Rendering::GroupNode& node) override;
 
-  void processEditable(const QtGui::RWMolecule &molecule,
-                       Rendering::GroupNode &node) override;
+  void processEditable(const QtGui::RWMolecule& molecule,
+                       Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("Ball and Stick"); }
 
@@ -51,7 +51,7 @@ public:
 
   void setEnabled(bool enable) override;
 
-  QWidget * setupWidget() override;
+  QWidget* setupWidget() override;
 
 private slots:
   void multiBonds(bool show);
@@ -60,9 +60,9 @@ private slots:
 private:
   bool m_enabled;
 
-  Rendering::GroupNode *m_group;
+  Rendering::GroupNode* m_group;
 
-  QWidget *m_setupWidget;
+  QWidget* m_setupWidget;
   bool m_multiBonds;
   bool m_showHydrogens;
 };

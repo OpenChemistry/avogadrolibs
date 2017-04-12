@@ -14,12 +14,11 @@
 
 ******************************************************************************/
 
-
 #ifndef AVOGADRO_QTPLUGINS_FILEDIALOGFILTER_H
 #define AVOGADRO_QTPLUGINS_FILEDIALOGFILTER_H
 
-#include <QSortFilterProxyModel>
 #include <QRegExp>
+#include <QSortFilterProxyModel>
 class FileDialogModel;
 
 /**
@@ -27,8 +26,7 @@ class FileDialogModel;
  * <avogadro/qtplugins/clientserver/filedialogfilter.h>
  * @brief Filter used to filter data in file dialog model
  */
-class FileDialogFilter :
-  public QSortFilterProxyModel
+class FileDialogFilter : public QSortFilterProxyModel
 {
   Q_OBJECT
 
@@ -38,8 +36,8 @@ public:
 
 public slots:
   void setFilter(const QString& filter);
-  void setShowHidden( const bool &hidden);
-  bool getShowHidden(){return m_showHidden;};
+  void setShowHidden(const bool& hidden);
+  bool getShowHidden() { return m_showHidden; };
 
 protected:
   bool filterAcceptsRow(int row_source, const QModelIndex& source_parent) const;

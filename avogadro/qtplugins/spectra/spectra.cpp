@@ -17,29 +17,25 @@
 #include "spectra.h"
 #include "vibrationdialog.h"
 
-#include <avogadro/core/variant.h>
 #include <avogadro/core/array.h>
+#include <avogadro/core/variant.h>
 #include <avogadro/core/vector.h>
 
-#include <avogadro/qtgui/molecule.h>
 #include <QtCore/QTimer>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QFileDialog>
+#include <avogadro/qtgui/molecule.h>
 
 #include <jsoncpp.cpp>
 
 namespace Avogadro {
 namespace QtPlugins {
 
-Spectra::Spectra(QObject *p) :
-  ExtensionPlugin(p),
-  m_molecule(nullptr),
-  m_dialog(nullptr),
-  m_timer(nullptr),
-  m_mode(0),
-  m_amplitude(20)
+Spectra::Spectra(QObject* p)
+  : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr),
+    m_timer(nullptr), m_mode(0), m_amplitude(20)
 {
-  QAction *action = new QAction(this);
+  QAction* action = new QAction(this);
   action->setEnabled(false);
   action->setText(tr("Vibrational modes..."));
   connect(action, SIGNAL(triggered()), SLOT(openDialog()));
@@ -50,19 +46,19 @@ Spectra::~Spectra()
 {
 }
 
-QList<QAction *> Spectra::actions() const
+QList<QAction*> Spectra::actions() const
 {
   return m_actions;
 }
 
-QStringList Spectra::menuPath(QAction *) const
+QStringList Spectra::menuPath(QAction*) const
 {
   QStringList path;
   path << tr("&Quantum");
   return path;
 }
 
-void Spectra::setMolecule(QtGui::Molecule *mol)
+void Spectra::setMolecule(QtGui::Molecule* mol)
 {
   bool isVibrational(false);
   if (mol->vibrationFrequencies().size())
@@ -76,8 +72,8 @@ void Spectra::setMolecule(QtGui::Molecule *mol)
 
 void Spectra::setMode(int mode)
 {
-  if (mode >= 0
-      && mode < static_cast<int>(m_molecule->vibrationFrequencies().size())) {
+  if (mode >= 0 &&
+      mode < static_cast<int>(m_molecule->vibrationFrequencies().size())) {
     m_mode = mode;
 
     // Now calculate the frames and set them on the molecule.
@@ -95,17 +91,19 @@ void Spectra::setMode(int mode)
     for (int i = 1; i <= frames; ++i) {
       Core::Array<Vector3> framePositions;
       for (Index atom = 0; atom < m_molecule->atomCount(); ++atom) {
-        framePositions.push_back(atomPositions[atom] + atomDisplacements[atom]
-                                 * factor * (double(i) / frames));
+        framePositions.push_back(atomPositions[atom] +
+                                 atomDisplacements[atom] * factor *
+                                   (double(i) / frames));
       }
       m_molecule->setCoordinate3d(framePositions, frameCounter++);
     }
     // + displacement back to original.
-    for (int i = frames - 1; i >=0; --i) {
+    for (int i = frames - 1; i >= 0; --i) {
       Core::Array<Vector3> framePositions;
       for (Index atom = 0; atom < m_molecule->atomCount(); ++atom) {
-        framePositions.push_back(atomPositions[atom] + atomDisplacements[atom]
-                                 * factor *(double(i) / frames));
+        framePositions.push_back(atomPositions[atom] +
+                                 atomDisplacements[atom] * factor *
+                                   (double(i) / frames));
       }
       m_molecule->setCoordinate3d(framePositions, frameCounter++);
     }
@@ -113,17 +111,19 @@ void Spectra::setMode(int mode)
     for (int i = 1; i <= frames; ++i) {
       Core::Array<Vector3> framePositions;
       for (Index atom = 0; atom < m_molecule->atomCount(); ++atom) {
-        framePositions.push_back(atomPositions[atom] - atomDisplacements[atom]
-                                 * factor *(double(i) / frames));
+        framePositions.push_back(atomPositions[atom] -
+                                 atomDisplacements[atom] * factor *
+                                   (double(i) / frames));
       }
       m_molecule->setCoordinate3d(framePositions, frameCounter++);
     }
     // - displacement back to original.
-    for (int i = frames - 1; i >=0; --i) {
+    for (int i = frames - 1; i >= 0; --i) {
       Core::Array<Vector3> framePositions;
       for (Index atom = 0; atom < m_molecule->atomCount(); ++atom) {
-        framePositions.push_back(atomPositions[atom] - atomDisplacements[atom]
-                                 * factor *(double(i) / frames));
+        framePositions.push_back(atomPositions[atom] -
+                                 atomDisplacements[atom] * factor *
+                                   (double(i) / frames));
       }
       m_molecule->setCoordinate3d(framePositions, frameCounter++);
     }
@@ -167,7 +167,8 @@ void Spectra::openDialog()
     m_dialog = new VibrationDialog(qobject_cast<QWidget*>(parent()));
     connect(m_dialog, SIGNAL(modeChanged(int)), SLOT(setMode(int)));
     connect(m_dialog, SIGNAL(amplitudeChanged(int)), SLOT(setAmplitude(int)));
-    connect(m_dialog, SIGNAL(startAnimation()), SLOT(startVibrationAnimation()));
+    connect(m_dialog, SIGNAL(startAnimation()),
+            SLOT(startVibrationAnimation()));
     connect(m_dialog, SIGNAL(stopAnimation()), SLOT(stopVibrationAnimation()));
   }
   if (m_molecule)
@@ -182,6 +183,5 @@ void Spectra::advanceFrame()
   m_molecule->setCoordinate3d(m_currentFrame);
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
 }
-
 }
 }

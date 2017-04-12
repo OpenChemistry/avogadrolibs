@@ -29,16 +29,16 @@ class Select : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit Select(QObject *parent_ = 0);
+  explicit Select(QObject* parent_ = 0);
   ~Select();
 
   QString name() const { return tr("Select"); }
   QString description() const;
   QList<QAction*> actions() const;
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 private slots:
   void selectAll();
@@ -46,8 +46,8 @@ private slots:
   void invertSelection();
 
 private:
-  QList<QAction *> m_actions;
-  QtGui::Molecule *m_molecule;
+  QList<QAction*> m_actions;
+  QtGui::Molecule* m_molecule;
 };
 
 } // namespace QtPlugins

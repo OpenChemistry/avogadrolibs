@@ -34,23 +34,23 @@ class MongoChem : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit MongoChem(QObject *parent_ = 0);
+  explicit MongoChem(QObject* parent_ = 0);
   ~MongoChem();
 
   QString name() const { return tr("Molecular Properties"); }
   QString description() const;
   QList<QAction*> actions() const;
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 private slots:
   void showSimilarMolecules();
 
 private:
-  QAction *m_action;
-  QtGui::Molecule *m_molecule;
+  QAction* m_action;
+  QtGui::Molecule* m_molecule;
 };
 
 } // namespace QtPlugins

@@ -17,9 +17,9 @@
 #ifndef AVOGADRO_QTPLUGINS_SLATERSETCONCURRENT_H
 #define AVOGADRO_QTPLUGINS_SLATERSETCONCURRENT_H
 
-#include <QtCore/QObject>
 #include <QtCore/QFuture>
 #include <QtCore/QFutureWatcher>
+#include <QtCore/QObject>
 
 namespace Avogadro {
 
@@ -45,16 +45,16 @@ class SlaterSetConcurrent : public QObject
   Q_OBJECT
 
 public:
-  explicit SlaterSetConcurrent(QObject *p = 0);
+  explicit SlaterSetConcurrent(QObject* p = 0);
   ~SlaterSetConcurrent();
 
-  void setMolecule(Core::Molecule *mol);
+  void setMolecule(Core::Molecule* mol);
 
-  bool calculateMolecularOrbital(Core::Cube *cube, unsigned int state);
-  bool calculateElectronDensity(Core::Cube *cube);
-  bool calculateSpinDensity(Core::Cube *cube);
+  bool calculateMolecularOrbital(Core::Cube* cube, unsigned int state);
+  bool calculateElectronDensity(Core::Cube* cube);
+  bool calculateSpinDensity(Core::Cube* cube);
 
-  QFutureWatcher<void> & watcher() { return m_watcher; }
+  QFutureWatcher<void>& watcher() { return m_watcher; }
 
 signals:
   /**
@@ -71,20 +71,19 @@ private slots:
 private:
   QFuture<void> m_future;
   QFutureWatcher<void> m_watcher;
-  Core::Cube *m_cube;
-  QVector<SlaterShell> *m_shells;
+  Core::Cube* m_cube;
+  QVector<SlaterShell>* m_shells;
 
-  Core::SlaterSet *m_set;
-  Core::SlaterSetTools *m_tools;
+  Core::SlaterSet* m_set;
+  Core::SlaterSetTools* m_tools;
 
-  bool setUpCalculation(Core::Cube *cube, unsigned int state,
-                        void (*func)(SlaterShell &));
+  bool setUpCalculation(Core::Cube* cube, unsigned int state,
+                        void (*func)(SlaterShell&));
 
-  static void processOrbital(SlaterShell &shell);
-  static void processDensity(SlaterShell &shell);
-  static void processSpinDensity(SlaterShell &shell);
+  static void processOrbital(SlaterShell& shell);
+  static void processDensity(SlaterShell& shell);
+  static void processSpinDensity(SlaterShell& shell);
 };
-
 }
 }
 

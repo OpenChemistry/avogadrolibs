@@ -31,11 +31,11 @@ class Meshes : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit Meshes(QObject *parent = 0);
+  explicit Meshes(QObject* parent = 0);
   ~Meshes();
 
-  void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) override;
+  void process(const Core::Molecule& molecule,
+               Rendering::GroupNode& node) override;
 
   QString name() const { return tr("Meshes"); }
 

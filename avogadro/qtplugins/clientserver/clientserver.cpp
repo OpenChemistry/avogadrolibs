@@ -19,24 +19,24 @@
 #include "connectionsettingsdialog.h"
 #include "filedialog.h"
 
-#include <QtGui/QAction>
-#include <QtGui/QMessageBox>
 #include <QtCore/QDebug>
-#include <QtCore/QStringList>
-#include <QtGui/QFileDialog>
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
+#include <QtCore/QStringList>
 #include <QtCore/QTimer>
+#include <QtGui/QAction>
+#include <QtGui/QFileDialog>
+#include <QtGui/QMessageBox>
 
 #include <vtkNew.h>
-#include <vtkSocketController.h>
 #include <vtkSocketCommunicator.h>
+#include <vtkSocketController.h>
 
-#include <avogadro/qtgui/molecule.h>
 #include <avogadro/io/fileformatmanager.h>
+#include <avogadro/qtgui/molecule.h>
 
-#include <protocall/runtime/vtkcommunicatorchannel.h>
 #include <google/protobuf/stubs/common.h>
+#include <protocall/runtime/vtkcommunicatorchannel.h>
 
 using namespace google::protobuf;
 using namespace ProtoCall::Runtime;
@@ -44,10 +44,11 @@ using namespace ProtoCall::Runtime;
 namespace Avogadro {
 namespace QtPlugins {
 
-ClientServer::ClientServer(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_dialog(nullptr), m_openAction(new QAction(this)), m_settingsAction(new QAction(this)),
-  m_molecule(nullptr), m_controller(nullptr), m_communicator(nullptr), m_channel(nullptr)
+ClientServer::ClientServer(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_dialog(nullptr),
+    m_openAction(new QAction(this)), m_settingsAction(new QAction(this)),
+    m_molecule(nullptr), m_controller(nullptr), m_communicator(nullptr),
+    m_channel(nullptr)
 {
   m_openAction->setEnabled(true);
   m_openAction->setText("Open Molecule");
@@ -72,17 +73,18 @@ QString ClientServer::description() const
   return tr("Client server operations.");
 }
 
-QList<QAction *> ClientServer::actions() const
+QList<QAction*> ClientServer::actions() const
 {
   return m_actions;
 }
 
-QStringList ClientServer::menuPath(QAction *) const
+QStringList ClientServer::menuPath(QAction*) const
 {
   return QStringList() << tr("&Extensions") << tr("S&erver");
 }
 
-void ClientServer::disconnect() {
+void ClientServer::disconnect()
+{
 
   if (m_communicator)
     m_communicator->CloseConnection();
@@ -95,7 +97,8 @@ void ClientServer::disconnect() {
     m_controller->Delete();
 }
 
-void ClientServer::select() {
+void ClientServer::select()
+{
   if (m_channel) {
     if (m_channel->select()) {
       if (!m_channel->receive()) {
@@ -112,7 +115,8 @@ bool ClientServer::isConnected()
   return m_channel != nullptr;
 }
 
-bool ClientServer::connectToServer(const QString &host, int port) {
+bool ClientServer::connectToServer(const QString& host, int port)
+{
 
   if (m_channel)
     disconnect();
@@ -143,28 +147,33 @@ void ClientServer::openFile()
   if (!isConnected()) {
     QString host = settings
                      .value("clientServer/connectionSettings/hostName",
-                         ConnectionSettingsDialog::defaultHost).toString();
-    int port = settings.value("clientServer/connectionSettings/port",
-        ConnectionSettingsDialog::defaultPort).toInt();
+                            ConnectionSettingsDialog::defaultHost)
+                     .toString();
+    int port = settings
+                 .value("clientServer/connectionSettings/port",
+                        ConnectionSettingsDialog::defaultPort)
+                 .toInt();
 
     if (!connectToServer(host.toLocal8Bit().data(), port)) {
       QMessageBox::critical(qobject_cast<QWidget*>(parent()),
                             tr("Connection failed"),
                             tr("The connection to %2:%3 failed: connection"
-                               " refused.").arg(host).arg(port));
+                               " refused.")
+                              .arg(host)
+                              .arg(port));
       return;
     }
   }
 
   RemoteMoleculeService::Proxy proxy(m_channel);
-  FileFormats *response = new FileFormats();
-  Closure *callback = NewCallback(this,
-                        &ClientServer::handleFileFormatsResponse, response);
+  FileFormats* response = new FileFormats();
+  Closure* callback =
+    NewCallback(this, &ClientServer::handleFileFormatsResponse, response);
 
   proxy.fileFormats(response, callback);
 }
 
-void ClientServer::openFile(const QString &filePath)
+void ClientServer::openFile(const QString& filePath)
 {
   QSettings settings;
   QFileInfo fileInfo(filePath);
@@ -175,19 +184,20 @@ void ClientServer::openFile(const QString &filePath)
   OpenRequest request;
   request.set_path(filePath.toStdString());
 
-  OpenResponse *response = new OpenResponse();
-  Closure *callback = NewCallback(this, &ClientServer::handleOpenResponse,
-     response);
+  OpenResponse* response = new OpenResponse();
+  Closure* callback =
+    NewCallback(this, &ClientServer::handleOpenResponse, response);
 
- proxy.open(&request, response, callback);
+  proxy.open(&request, response, callback);
 }
 
-void ClientServer::setMolecule(QtGui::Molecule *mol)
+void ClientServer::setMolecule(QtGui::Molecule* mol)
 {
   // Do nothing
 }
 
-bool ClientServer::readMolecule(QtGui::Molecule &mol) {
+bool ClientServer::readMolecule(QtGui::Molecule& mol)
+{
   if (m_molecule) {
     mol = *m_molecule;
 
@@ -197,17 +207,16 @@ bool ClientServer::readMolecule(QtGui::Molecule &mol) {
   return false;
 }
 
-void ClientServer::handleOpenResponse(OpenResponse *response)
+void ClientServer::handleOpenResponse(OpenResponse* response)
 {
   if (!response->hasError()) {
     m_molecule = response->mutable_molecule()->get();
 
     emit ExtensionPlugin::moleculeReady(1);
-  }
-  else {
+  } else {
     QMessageBox::warning(qobject_cast<QWidget*>(parent()),
-                           tr("Remote service error"),
-                           response->errorString().c_str());
+                         tr("Remote service error"),
+                         response->errorString().c_str());
     return;
   }
 
@@ -216,10 +225,9 @@ void ClientServer::handleOpenResponse(OpenResponse *response)
 
 void ClientServer::onConnectionError()
 {
-  QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                        tr("Remote service error"),
-                        tr("Connection failed with: %1").arg(
-                        m_channel->errorString().c_str()));
+  QMessageBox::critical(
+    qobject_cast<QWidget*>(parent()), tr("Remote service error"),
+    tr("Connection failed with: %1").arg(m_channel->errorString().c_str()));
   disconnect();
 }
 
@@ -232,35 +240,32 @@ void ClientServer::openSettings()
   m_dialog->show();
 }
 
-
 QString ClientServer::lastOpenDirSettingPath()
 {
   QSettings settings;
-  QString host = settings.value("clientServer/connectionSettings/hostName")
-                      .toString();
-  QString port = settings.value("clientServer/connectionSettings/port")
-                      .toString();
+  QString host =
+    settings.value("clientServer/connectionSettings/hostName").toString();
+  QString port =
+    settings.value("clientServer/connectionSettings/port").toString();
 
-  QString settingsPath = tr("clientServer/%1:%2/lastOpenDir")
-                          .arg(host).arg(port);
+  QString settingsPath =
+    tr("clientServer/%1:%2/lastOpenDir").arg(host).arg(port);
 
   return settingsPath;
 }
 
-void ClientServer::handleFileFormatsResponse(FileFormats *response)
+void ClientServer::handleFileFormatsResponse(FileFormats* response)
 {
   QSettings settings;
 
   QStringList filters;
-  for (int i=0; i<response->formats_size(); i++)
-  {
+  for (int i = 0; i < response->formats_size(); i++) {
     FileFormat format = response->formats(i);
     QString filter = tr("%1 (").arg(QString::fromStdString(format.name()));
-    for (int j=0; j<format.extension_size(); j++)
-    {
+    for (int j = 0; j < format.extension_size(); j++) {
       filter += tr("*.%1").arg(QString::fromStdString(format.extension(j)));
 
-      if (j != format.extension_size()-1)
+      if (j != format.extension_size() - 1)
         filter += " ";
     }
 
@@ -271,8 +276,8 @@ void ClientServer::handleFileFormatsResponse(FileFormats *response)
   qDebug() << filters.join(";;");
 
   QString dir = settings.value(lastOpenDirSettingPath()).toString();
-  FileDialog *remoteFileDialog = new FileDialog(m_channel, nullptr,
-      QString("Remote File Dialog"), dir, filters.join(";;"));
+  FileDialog* remoteFileDialog = new FileDialog(
+    m_channel, nullptr, QString("Remote File Dialog"), dir, filters.join(";;"));
 
   connect(remoteFileDialog, SIGNAL(accepted()), this, SLOT(onAccepted()));
   connect(remoteFileDialog, SIGNAL(finished(int)), this, SLOT(onFinished(int)));
@@ -284,7 +289,7 @@ void ClientServer::handleFileFormatsResponse(FileFormats *response)
 
 void ClientServer::onAccepted()
 {
-  FileDialog *dialog = qobject_cast<FileDialog*>(sender());
+  FileDialog* dialog = qobject_cast<FileDialog*>(sender());
 
   if (!dialog)
     return;
@@ -297,7 +302,7 @@ void ClientServer::onAccepted()
 
 void ClientServer::onFinished(int result)
 {
-  FileDialog *dialog = qobject_cast<FileDialog*>(sender());
+  FileDialog* dialog = qobject_cast<FileDialog*>(sender());
 
   if (dialog)
     dialog->deleteLater();

@@ -16,20 +16,20 @@
 
 #include "ballandstick.h"
 
-#include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
+#include <avogadro/rendering/cylindergeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
-#include <avogadro/rendering/cylindergeometry.h>
-#include <avogadro/qtgui/rwmolecule.h>
 
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QCheckBox>
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QWidget>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -41,8 +41,9 @@ using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 using Rendering::CylinderGeometry;
 
-BallAndStick::BallAndStick(QObject *p) : ScenePlugin(p), m_enabled(true),
-  m_group(nullptr), m_setupWidget(nullptr), m_multiBonds(true), m_showHydrogens(true)
+BallAndStick::BallAndStick(QObject* p)
+  : ScenePlugin(p), m_enabled(true), m_group(nullptr), m_setupWidget(nullptr),
+    m_multiBonds(true), m_showHydrogens(true)
 {
 }
 
@@ -52,14 +53,13 @@ BallAndStick::~BallAndStick()
     m_setupWidget->deleteLater();
 }
 
-void BallAndStick::process(const Molecule &molecule,
-                           Rendering::GroupNode &node)
+void BallAndStick::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
   // Add a sphere node to contain all of the spheres.
   m_group = &node;
-  GeometryNode *geometry = new GeometryNode;
+  GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
-  SphereGeometry *spheres = new SphereGeometry;
+  SphereGeometry* spheres = new SphereGeometry;
   spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
@@ -69,26 +69,25 @@ void BallAndStick::process(const Molecule &molecule,
     unsigned char atomicNumber = atom.atomicNumber();
     if (atomicNumber == 1 && !m_showHydrogens)
       continue;
-    const unsigned char *c = Elements::color(atomicNumber);
+    const unsigned char* c = Elements::color(atomicNumber);
     Vector3ub color(c[0], c[1], c[2]);
     float radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
     if (atom.selected()) {
       color = Vector3ub(0, 0, 255);
       radius *= 1.2;
     }
-    spheres->addSphere(atom.position3d().cast<float>(), color,
-                       radius * 0.3f);
+    spheres->addSphere(atom.position3d().cast<float>(), color, radius * 0.3f);
   }
 
   float bondRadius = 0.1f;
-  CylinderGeometry *cylinders = new CylinderGeometry;
+  CylinderGeometry* cylinders = new CylinderGeometry;
   cylinders->identifier().molecule = &molecule;
   cylinders->identifier().type = Rendering::BondType;
   geometry->addDrawable(cylinders);
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
-    if (!m_showHydrogens
-        && (bond.atom1().atomicNumber() == 1 || bond.atom2().atomicNumber() == 1)) {
+    if (!m_showHydrogens && (bond.atom1().atomicNumber() == 1 ||
+                             bond.atom2().atomicNumber() == 1)) {
       continue;
     }
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
@@ -99,36 +98,36 @@ void BallAndStick::process(const Molecule &molecule,
     float bondLength = bondVector.norm();
     bondVector /= bondLength;
     switch (m_multiBonds ? bond.order() : 1) {
-    case 3: {
-      Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
-      cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius,
-                             color1, color2, i);
-      cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius,
-                             color1, color2, i);
-    }
-    default:
-    case 1:
-      cylinders->addCylinder(pos1, pos2, bondRadius, color1, color2, i);
-      break;
-    case 2: {
-      Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
-      cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius,
-                             color1, color2, i);
-      cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius,
-                             color1, color2, i);
-    }
+      case 3: {
+        Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
+        cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius, color1,
+                               color2, i);
+        cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius, color1,
+                               color2, i);
+      }
+      default:
+      case 1:
+        cylinders->addCylinder(pos1, pos2, bondRadius, color1, color2, i);
+        break;
+      case 2: {
+        Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
+        cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius, color1,
+                               color2, i);
+        cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius, color1,
+                               color2, i);
+      }
     }
   }
 }
 
-void BallAndStick::processEditable(const QtGui::RWMolecule &molecule,
-                                   Rendering::GroupNode &node)
+void BallAndStick::processEditable(const QtGui::RWMolecule& molecule,
+                                   Rendering::GroupNode& node)
 {
   // Add a sphere node to contain all of the spheres.
   m_group = &node;
-  GeometryNode *geometry = new GeometryNode;
+  GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
-  SphereGeometry *spheres = new SphereGeometry;
+  SphereGeometry* spheres = new SphereGeometry;
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
@@ -138,22 +137,22 @@ void BallAndStick::processEditable(const QtGui::RWMolecule &molecule,
     unsigned char atomicNumber = atom.atomicNumber();
     if (atomicNumber == 1 && !m_showHydrogens)
       continue;
-    const unsigned char *c = Elements::color(atomicNumber);
+    const unsigned char* c = Elements::color(atomicNumber);
     Vector3ub color(c[0], c[1], c[2]);
     spheres->addSphere(atom.position3d().cast<float>(), color,
-                       static_cast<float>(Elements::radiusVDW(atomicNumber))
-                       * 0.3f);
+                       static_cast<float>(Elements::radiusVDW(atomicNumber)) *
+                         0.3f);
   }
 
   float bondRadius = 0.1f;
-  CylinderGeometry *cylinders = new CylinderGeometry;
+  CylinderGeometry* cylinders = new CylinderGeometry;
   cylinders->identifier().molecule = &molecule;
   cylinders->identifier().type = Rendering::BondType;
   geometry->addDrawable(cylinders);
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     QtGui::RWBond bond = molecule.bond(i);
-    if (!m_showHydrogens
-        && (bond.atom1().atomicNumber() == 1 || bond.atom2().atomicNumber() == 1)) {
+    if (!m_showHydrogens && (bond.atom1().atomicNumber() == 1 ||
+                             bond.atom2().atomicNumber() == 1)) {
       continue;
     }
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
@@ -164,24 +163,24 @@ void BallAndStick::processEditable(const QtGui::RWMolecule &molecule,
     float bondLength = bondVector.norm();
     bondVector /= bondLength;
     switch (m_multiBonds ? bond.order() : 1) {
-    case 3: {
-      Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
-      cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius,
-                             color1, color2, i);
-      cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius,
-                             color1, color2, i);
-    }
-    default:
-    case 1:
-      cylinders->addCylinder(pos1, pos2, bondRadius, color1, color2, i);
-      break;
-    case 2: {
-      Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
-      cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius,
-                             color1, color2, i);
-      cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius,
-                             color1, color2, i);
-    }
+      case 3: {
+        Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
+        cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius, color1,
+                               color2, i);
+        cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius, color1,
+                               color2, i);
+      }
+      default:
+      case 1:
+        cylinders->addCylinder(pos1, pos2, bondRadius, color1, color2, i);
+        break;
+      case 2: {
+        Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
+        cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius, color1,
+                               color2, i);
+        cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius, color1,
+                               color2, i);
+      }
     }
   }
 }
@@ -196,12 +195,12 @@ void BallAndStick::setEnabled(bool enable)
   m_enabled = enable;
 }
 
-QWidget * BallAndStick::setupWidget()
+QWidget* BallAndStick::setupWidget()
 {
   if (!m_setupWidget) {
     m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
-    QVBoxLayout *v = new QVBoxLayout;
-    QCheckBox *check = new QCheckBox(tr("Show multiple bonds?"));
+    QVBoxLayout* v = new QVBoxLayout;
+    QCheckBox* check = new QCheckBox(tr("Show multiple bonds?"));
     check->setChecked(m_multiBonds);
     connect(check, SIGNAL(clicked(bool)), SLOT(multiBonds(bool)));
     v->addWidget(check);
@@ -229,6 +228,5 @@ void BallAndStick::showHydrogens(bool show)
     emit drawablesChanged();
   }
 }
-
 }
 }

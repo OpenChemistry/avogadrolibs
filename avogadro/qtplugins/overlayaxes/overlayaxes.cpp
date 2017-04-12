@@ -45,10 +45,10 @@ public:
   CustomMesh() { setRenderPass(Avogadro::Rendering::Overlay3DPass); }
   ~CustomMesh() override {}
 
-  void render(const Camera &camera) override;
+  void render(const Camera& camera) override;
 };
 
-void CustomMesh::render(const Camera &camera)
+void CustomMesh::render(const Camera& camera)
 {
   // Swap in a new viewport/camera for the overlay
   /// @todo This is messy, it would be better to specify camera/viewport in a
@@ -66,15 +66,13 @@ void CustomMesh::render(const Camera &camera)
   meshCamera.setModelView(mv);
   meshCamera.calculateOrthographic(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
 
-  glViewport(static_cast<GLint>(10),
-             static_cast<GLsizei>(10),
+  glViewport(static_cast<GLint>(10), static_cast<GLsizei>(10),
              static_cast<GLint>(meshCamera.width()),
              static_cast<GLsizei>(meshCamera.height()));
 
   MeshGeometry::render(meshCamera);
 
-  glViewport(static_cast<GLint>(0),
-             static_cast<GLsizei>(0),
+  glViewport(static_cast<GLint>(0), static_cast<GLsizei>(0),
              static_cast<GLint>(camera.width()),
              static_cast<GLsizei>(camera.height()));
 }
@@ -89,16 +87,15 @@ public:
   RenderImpl();
   ~RenderImpl();
 
-  CustomMesh *mesh;
+  CustomMesh* mesh;
 
 private:
   void buildMesh();
   // axis must be normalized:
-  void addAxis(const Vector3f &axis, const Vector3ub &color);
+  void addAxis(const Vector3f& axis, const Vector3ub& color);
 };
 
-OverlayAxes::RenderImpl::RenderImpl()
-  : mesh(new CustomMesh)
+OverlayAxes::RenderImpl::RenderImpl() : mesh(new CustomMesh)
 {
   buildMesh();
 }
@@ -115,8 +112,8 @@ void OverlayAxes::RenderImpl::buildMesh()
   addAxis(Vector3f(0.f, 0.f, 1.f), Vector3ub(0, 0, 255));
 }
 
-void OverlayAxes::RenderImpl::addAxis(const Vector3f &axis,
-                                      const Vector3ub &color)
+void OverlayAxes::RenderImpl::addAxis(const Vector3f& axis,
+                                      const Vector3ub& color)
 {
   mesh->setColor(color);
 
@@ -179,7 +176,8 @@ void OverlayAxes::RenderImpl::addAxis(const Vector3f &axis,
     //  /_____|
     //    coneRadial
     coneSideNormal = -(coneVector.cross(coneRadial))
-        .cross(coneVector - coneRadial).normalized();
+                        .cross(coneVector - coneRadial)
+                        .normalized();
 
     vertices[coneBaseRadialsOffset + i] = coneRadial;
     normals[coneBaseRadialsOffset + i] = -axis;
@@ -210,7 +208,7 @@ void OverlayAxes::RenderImpl::addAxis(const Vector3f &axis,
 
   // Stitch the vertices together:
   Array<unsigned int> triangles(3 * 4 * res); // 3 verts * 4 tri * nsamples
-  unsigned int *ptr = triangles.data();
+  unsigned int* ptr = triangles.data();
   for (unsigned int i = 0; i < res; ++i) {
     unsigned int i2 = (i + 1) % res;
     // Cone sides:
@@ -237,10 +235,8 @@ void OverlayAxes::RenderImpl::addAxis(const Vector3f &axis,
   mesh->addTriangles(triangles);
 }
 
-OverlayAxes::OverlayAxes(QObject *p)
-  : ScenePlugin(p),
-    m_enabled(true),
-    m_render(new RenderImpl)
+OverlayAxes::OverlayAxes(QObject* p)
+  : ScenePlugin(p), m_enabled(true), m_render(new RenderImpl)
 {
 }
 
@@ -249,25 +245,24 @@ OverlayAxes::~OverlayAxes()
   delete m_render;
 }
 
-void OverlayAxes::process(const Core::Molecule &, Rendering::GroupNode &node)
+void OverlayAxes::process(const Core::Molecule&, Rendering::GroupNode& node)
 {
-  GeometryNode *geo = new GeometryNode;
+  GeometryNode* geo = new GeometryNode;
   // Since our geometry doesn't change, we just make a copy of the pre-built
   // set of axes.
   geo->addDrawable(new CustomMesh(*m_render->mesh));
   node.addChild(geo);
 }
 
-void OverlayAxes::processEditable(const QtGui::RWMolecule &,
-                                  Rendering::GroupNode &node)
+void OverlayAxes::processEditable(const QtGui::RWMolecule&,
+                                  Rendering::GroupNode& node)
 {
-  GeometryNode *geo = new GeometryNode;
+  GeometryNode* geo = new GeometryNode;
   // Since our geometry doesn't change, we just make a copy of the pre-built
   // set of axes.
   geo->addDrawable(new CustomMesh(*m_render->mesh));
   node.addChild(geo);
 }
-
 
 bool OverlayAxes::isEnabled() const
 {
@@ -278,6 +273,5 @@ void OverlayAxes::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-
 }
 }

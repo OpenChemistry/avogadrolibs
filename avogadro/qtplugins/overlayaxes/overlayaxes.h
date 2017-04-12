@@ -29,14 +29,14 @@ class OverlayAxes : public QtGui::ScenePlugin
 {
   Q_OBJECT
 public:
-  explicit OverlayAxes(QObject *parent = 0);
+  explicit OverlayAxes(QObject* parent = 0);
   ~OverlayAxes();
 
-  void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) override;
+  void process(const Core::Molecule& molecule,
+               Rendering::GroupNode& node) override;
 
-  void processEditable(const QtGui::RWMolecule &molecule,
-                       Rendering::GroupNode &node) override;
+  void processEditable(const QtGui::RWMolecule& molecule,
+                       Rendering::GroupNode& node) override;
 
   QString name() const { return tr("Reference Axes Overlay"); }
 
@@ -53,7 +53,7 @@ private:
   bool m_enabled;
 
   class RenderImpl;
-  RenderImpl * const m_render;
+  RenderImpl* const m_render;
 };
 
 } // end namespace QtPlugins

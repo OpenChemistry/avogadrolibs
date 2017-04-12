@@ -51,18 +51,18 @@ class QuantumOutput : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit QuantumOutput(QObject *parent = 0);
+  explicit QuantumOutput(QObject* parent = 0);
   ~QuantumOutput();
 
   QString name() const { return tr("Quantum output"); }
 
   QString description() const { return tr("Read output from quantum codes."); }
 
-  QList<QAction *> actions() const;
+  QList<QAction*> actions() const;
 
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 private slots:
   void surfacesActivated();
@@ -72,27 +72,26 @@ private slots:
   void meshFinished();
 
 private:
-  QList<QAction *>    m_actions;
-  QProgressDialog    *m_progressDialog;
+  QList<QAction*> m_actions;
+  QProgressDialog* m_progressDialog;
 
-  QtGui::Molecule    *m_molecule;
-  Core::BasisSet     *m_basis;
+  QtGui::Molecule* m_molecule;
+  Core::BasisSet* m_basis;
 
-  GaussianSetConcurrent *m_concurrent;
-  SlaterSetConcurrent *m_concurrent2;
+  GaussianSetConcurrent* m_concurrent;
+  SlaterSetConcurrent* m_concurrent2;
 
-  Core::Cube        *m_cube;
-  std::vector<Core::Cube *>        m_cubes;
-  Core::Mesh        *m_mesh1;
-  Core::Mesh        *m_mesh2;
-  QtGui::MeshGenerator *m_meshGenerator1;
-  QtGui::MeshGenerator *m_meshGenerator2;
+  Core::Cube* m_cube;
+  std::vector<Core::Cube*> m_cubes;
+  Core::Mesh* m_mesh1;
+  Core::Mesh* m_mesh2;
+  QtGui::MeshGenerator* m_meshGenerator1;
+  QtGui::MeshGenerator* m_meshGenerator2;
 
   float m_isoValue;
 
-  SurfaceDialog *m_dialog;
+  SurfaceDialog* m_dialog;
 };
-
 }
 }
 

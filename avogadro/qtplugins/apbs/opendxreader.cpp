@@ -27,8 +27,7 @@ namespace QtPlugins {
 
 using Core::Cube;
 
-OpenDxReader::OpenDxReader()
-  : m_cube(0)
+OpenDxReader::OpenDxReader() : m_cube(0)
 {
 }
 
@@ -36,7 +35,7 @@ OpenDxReader::~OpenDxReader()
 {
 }
 
-bool OpenDxReader::readFile(const QString &fileName)
+bool OpenDxReader::readFile(const QString& fileName)
 {
   QFile file(fileName);
   if (!file.open(QFile::ReadOnly)) {
@@ -58,35 +57,28 @@ bool OpenDxReader::readFile(const QString &fileName)
     if (line.isEmpty()) {
       // skip empty line
       continue;
-    }
-    else if (line[0] == '#') {
+    } else if (line[0] == '#') {
       // skip comment line
       continue;
-    }
-    else if (line.startsWith("object")) {
+    } else if (line.startsWith("object")) {
       if (dim[0] != 0)
         continue;
       QString unused;
       stream >> unused >> unused >> unused >> unused >> unused;
       stream >> dim[0] >> dim[1] >> dim[2];
-    }
-    else if (line.startsWith("origin")) {
+    } else if (line.startsWith("origin")) {
       QString unused;
       stream >> unused >> origin[0] >> origin[1] >> origin[2];
-    }
-    else if (line.startsWith("delta")) {
+    } else if (line.startsWith("delta")) {
       QString unused;
       Vector3 delta;
       stream >> unused >> delta[0] >> delta[1] >> delta[2];
       spacings.append(delta);
-    }
-    else if (line.startsWith("attribute")) {
+    } else if (line.startsWith("attribute")) {
       continue;
-    }
-    else if (line.startsWith("component")) {
+    } else if (line.startsWith("component")) {
       continue;
-    }
-    else {
+    } else {
       // data line
       while (!stream.atEnd()) {
         double value;
@@ -117,6 +109,5 @@ Cube* OpenDxReader::cube() const
 {
   return m_cube;
 }
-
 }
 }

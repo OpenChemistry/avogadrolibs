@@ -19,19 +19,18 @@
 #include <avogadro/qtgui/hydrogentools.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtWidgets/QAction>
 #include <QtGui/QKeySequence>
+#include <QtWidgets/QAction>
 
 #include <QtCore/QStringList>
 
 namespace Avogadro {
 namespace QtPlugins {
 
-Hydrogens::Hydrogens(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_molecule(nullptr)
+Hydrogens::Hydrogens(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr)
 {
-  QAction *action = new QAction(tr("&Adjust Hydrogens"), this);
+  QAction* action = new QAction(tr("&Adjust Hydrogens"), this);
   action->setShortcut(QKeySequence("Ctrl+Alt+H"));
   connect(action, SIGNAL(triggered()), SLOT(adjustHydrogens()));
   m_actions.append(action);
@@ -58,17 +57,17 @@ QString Hydrogens::description() const
   return tr("Add/remove hydrogens from the current molecule.");
 }
 
-QList<QAction *> Hydrogens::actions() const
+QList<QAction*> Hydrogens::actions() const
 {
   return m_actions;
 }
 
-QStringList Hydrogens::menuPath(QAction *) const
+QStringList Hydrogens::menuPath(QAction*) const
 {
   return QStringList() << tr("&Build") << tr("&Hydrogens");
 }
 
-void Hydrogens::setMolecule(QtGui::Molecule *mol)
+void Hydrogens::setMolecule(QtGui::Molecule* mol)
 {
   m_molecule = mol;
 }
@@ -77,12 +76,10 @@ void Hydrogens::adjustHydrogens()
 {
   if (m_molecule) {
     QtGui::HydrogenTools::adjustHydrogens(*(m_molecule->undoMolecule()),
-                                         QtGui::HydrogenTools::AddAndRemove);
+                                          QtGui::HydrogenTools::AddAndRemove);
     // Assume molecule changes...
-    m_molecule->emitChanged(QtGui::Molecule::Atoms
-                            | QtGui::Molecule::Bonds
-                            | QtGui::Molecule::Added
-                            | QtGui::Molecule::Removed);
+    m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |
+                            QtGui::Molecule::Added | QtGui::Molecule::Removed);
   }
 }
 
@@ -90,11 +87,10 @@ void Hydrogens::addHydrogens()
 {
   if (m_molecule) {
     QtGui::HydrogenTools::adjustHydrogens(*(m_molecule->undoMolecule()),
-                                         QtGui::HydrogenTools::Add);
+                                          QtGui::HydrogenTools::Add);
     // Assume molecule changes...
-    m_molecule->emitChanged(QtGui::Molecule::Atoms
-                            | QtGui::Molecule::Bonds
-                            | QtGui::Molecule::Added);
+    m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |
+                            QtGui::Molecule::Added);
   }
 }
 
@@ -102,11 +98,10 @@ void Hydrogens::removeHydrogens()
 {
   if (m_molecule) {
     QtGui::HydrogenTools::adjustHydrogens(*(m_molecule->undoMolecule()),
-                                         QtGui::HydrogenTools::Remove);
+                                          QtGui::HydrogenTools::Remove);
     // Assume molecule changes...
-    m_molecule->emitChanged(QtGui::Molecule::Atoms
-                            | QtGui::Molecule::Bonds
-                            | QtGui::Molecule::Removed);
+    m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |
+                            QtGui::Molecule::Removed);
   }
 }
 
@@ -115,9 +110,8 @@ void Hydrogens::removeAllHydrogens()
   if (m_molecule) {
     QtGui::HydrogenTools::removeAllHydrogens(*(m_molecule->undoMolecule()));
     // Assume molecule changes...
-    m_molecule->emitChanged(QtGui::Molecule::Atoms
-                            | QtGui::Molecule::Bonds
-                            | QtGui::Molecule::Removed);
+    m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |
+                            QtGui::Molecule::Removed);
   }
 }
 

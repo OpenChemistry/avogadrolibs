@@ -18,22 +18,20 @@
 #include "ui_connectionsettingsdialog.h"
 
 #include <vtkNew.h>
-#include <vtkSocketController.h>
 #include <vtkSocketCommunicator.h>
+#include <vtkSocketController.h>
 
-#include <QtGui/QMessageBox>
 #include <QtCore/QSettings>
 #include <QtCore/QVariant>
+#include <QtGui/QMessageBox>
 
-namespace Avogadro
-{
-namespace QtPlugins
-{
+namespace Avogadro {
+namespace QtPlugins {
 
 const QString ConnectionSettingsDialog::defaultHost = "localhost";
 
-ConnectionSettingsDialog::ConnectionSettingsDialog(QWidget *parent_) :
-  QDialog(parent_), m_ui(new Ui::ConnectionSettingsDialog)
+ConnectionSettingsDialog::ConnectionSettingsDialog(QWidget* parent_)
+  : QDialog(parent_), m_ui(new Ui::ConnectionSettingsDialog)
 {
   m_ui->setupUi(this);
 
@@ -41,10 +39,11 @@ ConnectionSettingsDialog::ConnectionSettingsDialog(QWidget *parent_) :
   connect(m_ui->buttonBox, SIGNAL(accepted()), SLOT(updateSettings()));
 
   QSettings settings;
-  QString host = settings.value("clientServer/connectionSettings/hostName",
-      defaultHost).toString();
-  int port = settings.value("clientServer/connectionSettings/port", defaultPort)
-      .toInt();
+  QString host =
+    settings.value("clientServer/connectionSettings/hostName", defaultHost)
+      .toString();
+  int port =
+    settings.value("clientServer/connectionSettings/port", defaultPort).toInt();
 
   m_ui->editHostName->setText(host);
   m_ui->spinPort->setValue(port);
@@ -52,7 +51,6 @@ ConnectionSettingsDialog::ConnectionSettingsDialog(QWidget *parent_) :
 
 ConnectionSettingsDialog::~ConnectionSettingsDialog()
 {
-
 }
 
 void ConnectionSettingsDialog::testConnection()
@@ -67,14 +65,15 @@ void ConnectionSettingsDialog::testConnection()
 
   if (!communicator->ConnectTo(host.toLocal8Bit().data(), port)) {
     QMessageBox::critical(this, tr("Connection refused"),
-                        tr("The connection to %2:%3 failed: connection"
-                           " refused.").arg(host).arg(port));
+                          tr("The connection to %2:%3 failed: connection"
+                             " refused.")
+                            .arg(host)
+                            .arg(port));
 
-  }
-  else {
-    QMessageBox::information(this, tr("Success"),
-                             tr("Connection to %2:%3 succeeded!")
-                             .arg(host).arg(port));
+  } else {
+    QMessageBox::information(
+      this, tr("Success"),
+      tr("Connection to %2:%3 succeeded!").arg(host).arg(port));
 
     communicator->CloseConnection();
   }

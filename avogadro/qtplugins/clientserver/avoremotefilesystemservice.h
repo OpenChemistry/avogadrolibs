@@ -31,19 +31,18 @@ public:
   virtual ~AvoRemoteFileSystemService();
 
   void ls(const Path* input, Listing* output,
-      ::google::protobuf::Closure* done);
+          ::google::protobuf::Closure* done);
 
   void cwd(Path* output, ::google::protobuf::Closure* done);
 
   void separator(Separator* output, ::google::protobuf::Closure* done);
 
-  void specialDirectories(Paths* output, ::google::protobuf::Closure* done) {};
+  void specialDirectories(Paths* output, ::google::protobuf::Closure* done){};
   void absolutePath(const Path* input, Path* output,
-      ::google::protobuf::Closure* done);
+                    ::google::protobuf::Closure* done);
 
 private:
   void ls(const std::string path, Listing* output);
-
 };
 
 #endif /* AVOREMOTEFILESYSTEMSERVICE_H */

@@ -36,12 +36,11 @@ using Avogadro::QtGui::FileFormatDialog;
 namespace Avogadro {
 namespace QtPlugins {
 
-LineFormatInput::LineFormatInput(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_reader(nullptr),
-  m_molecule(nullptr)
+LineFormatInput::LineFormatInput(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_reader(nullptr),
+    m_molecule(nullptr)
 {
-  QAction *action = new QAction(tr("SMILES..."), this);
+  QAction* action = new QAction(tr("SMILES..."), this);
   action->setData("SMILES");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
@@ -62,17 +61,17 @@ LineFormatInput::~LineFormatInput()
   delete m_reader;
 }
 
-QList<QAction *> LineFormatInput::actions() const
+QList<QAction*> LineFormatInput::actions() const
 {
   return m_actions;
 }
 
-QStringList LineFormatInput::menuPath(QAction *) const
+QStringList LineFormatInput::menuPath(QAction*) const
 {
   return QStringList() << tr("&Build") << tr("&Insert");
 }
 
-void LineFormatInput::setMolecule(QtGui::Molecule *mol)
+void LineFormatInput::setMolecule(QtGui::Molecule* mol)
 {
   m_molecule = mol;
 }
@@ -82,23 +81,22 @@ void LineFormatInput::showDialog()
   if (!m_molecule)
     return;
 
-  QWidget *parentAsWidget = qobject_cast<QWidget*>(parent());
-  QAction *theSender = qobject_cast<QAction*>(sender());
+  QWidget* parentAsWidget = qobject_cast<QWidget*>(parent());
+  QAction* theSender = qobject_cast<QAction*>(sender());
 
   // Create a list of file formats that we can read:
   QStringList availableFormats;
-  FileFormatManager &ffm = FileFormatManager::instance();
+  FileFormatManager& ffm = FileFormatManager::instance();
   const FileFormat::Operations ops = FileFormat::Read | FileFormat::String;
-  foreach (const QString &ident, m_formats.keys()) {
-    const std::string &ext = m_formats[ident];
+  foreach (const QString& ident, m_formats.keys()) {
+    const std::string& ext = m_formats[ident];
     if (!ffm.fileFormatsFromFileExtension(ext, ops).empty())
       availableFormats.push_back(ident);
   }
 
   if (availableFormats.empty()) {
     QMessageBox::warning(parentAsWidget, tr("No descriptors found!"),
-                             tr("No line format readers found!"),
-                             QMessageBox::Ok);
+                         tr("No line format readers found!"), QMessageBox::Ok);
     return;
   }
 
@@ -114,16 +112,16 @@ void LineFormatInput::showDialog()
     return; // nothing to do
 
   // Resolve any format conflicts:
-  const std::string &ext = m_formats[dlg.format()];
+  const std::string& ext = m_formats[dlg.format()];
 
-  const FileFormat *fmt = FileFormatDialog::findFileFormat(
-        parentAsWidget, tr("Insert Molecule..."),
-        QString("file.%1").arg(QString::fromStdString(ext)), ops);
+  const FileFormat* fmt = FileFormatDialog::findFileFormat(
+    parentAsWidget, tr("Insert Molecule..."),
+    QString("file.%1").arg(QString::fromStdString(ext)), ops);
 
   if (fmt == nullptr) {
     QMessageBox::warning(parentAsWidget, tr("No descriptors found!"),
-                             tr("Unable to load requested format reader."),
-                             QMessageBox::Ok);
+                         tr("Unable to load requested format reader."),
+                         QMessageBox::Ok);
     return;
   }
 

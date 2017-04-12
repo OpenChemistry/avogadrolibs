@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_QTPLUGINS_POVRAY_H
 #define AVOGADRO_QTPLUGINS_POVRAY_H
 
-#include <avogadro/qtgui/extensionplugin.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/qtgui/extensionplugin.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -30,7 +30,7 @@ class POVRay : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit POVRay(QObject *p = 0);
+  explicit POVRay(QObject* p = 0);
   ~POVRay() override;
 
   QString name() const override { return tr("POVRay"); }
@@ -40,24 +40,24 @@ public:
     return tr("Render the scene using POV-Ray.");
   }
 
-  QList<QAction *> actions() const override;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction *action) const override;
+  QStringList menuPath(QAction* action) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol) override;
-  void setScene(Rendering::Scene *scene) override;
-  void setCamera(Rendering::Camera *camera) override;
+  void setMolecule(QtGui::Molecule* mol) override;
+  void setScene(Rendering::Scene* scene) override;
+  void setCamera(Rendering::Camera* camera) override;
 
 private slots:
   void render();
 
 private:
-  QtGui::Molecule *m_molecule;
-  Rendering::Scene *m_scene;
-  Rendering::Camera *m_camera;
+  QtGui::Molecule* m_molecule;
+  Rendering::Scene* m_scene;
+  Rendering::Camera* m_camera;
 
-  QAction *m_action;
+  QAction* m_action;
 };
 
 } // namespace QtPlugins

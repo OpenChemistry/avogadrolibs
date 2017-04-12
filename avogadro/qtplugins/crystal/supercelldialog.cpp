@@ -17,8 +17,8 @@
 #include "supercelldialog.h"
 #include "ui_supercelldialog.h"
 
-#include <avogadro/core/molecule.h>
 #include <avogadro/core/crystaltools.h>
+#include <avogadro/core/molecule.h>
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -28,9 +28,8 @@ using Avogadro::Core::CrystalTools;
 namespace Avogadro {
 namespace QtPlugins {
 
-SupercellDialog::SupercellDialog(QWidget *p) :
-  QDialog(p),
-  m_ui(new Ui::SupercellDialog)
+SupercellDialog::SupercellDialog(QWidget* p)
+  : QDialog(p), m_ui(new Ui::SupercellDialog)
 {
   m_ui->setupUi(this);
 }
@@ -40,7 +39,7 @@ SupercellDialog::~SupercellDialog()
   delete m_ui;
 }
 
-bool SupercellDialog::buildSupercell(Avogadro::QtGui::Molecule &mol)
+bool SupercellDialog::buildSupercell(Avogadro::QtGui::Molecule& mol)
 {
   // If the user rejected, just return false
   if (this->exec() == QDialog::Rejected)

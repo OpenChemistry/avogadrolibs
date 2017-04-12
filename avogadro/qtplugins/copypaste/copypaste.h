@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_QTPLUGINS_COPYPASTE_H
 #define AVOGADRO_QTPLUGINS_COPYPASTE_H
 
-#include <avogadro/qtgui/extensionplugin.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/qtgui/extensionplugin.h>
 
 #include <QtGui/QIcon>
 
@@ -36,7 +36,7 @@ class CopyPaste : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit CopyPaste(QObject *parent_ = 0);
+  explicit CopyPaste(QObject* parent_ = 0);
   ~CopyPaste() override;
 
   QString name() const override { return tr("Copy and paste"); }
@@ -46,12 +46,12 @@ public:
     return tr("Interact with the clipboard.");
   }
 
-  QList<QAction *> actions() const override;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction *action) const override;
+  QStringList menuPath(QAction* action) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol) override;
+  void setMolecule(QtGui::Molecule* mol) override;
 
 private slots:
   bool copy(); // returns bool so cut can reuse implementation.
@@ -62,14 +62,14 @@ private slots:
 private:
   // Cached between emitting moleculeReady() and calling readMolecule().
   QByteArray m_pastedData;
-  Io::FileFormat *m_pastedFormat;
+  Io::FileFormat* m_pastedFormat;
 
-  QtGui::Molecule *m_molecule;
+  QtGui::Molecule* m_molecule;
 
-  QAction *m_copyAction;
-  QAction *m_cutAction;
-  QAction *m_clearAction;
-  QAction *m_pasteAction;
+  QAction* m_copyAction;
+  QAction* m_cutAction;
+  QAction* m_clearAction;
+  QAction* m_pasteAction;
 };
 
 } // namespace QtPlugins
