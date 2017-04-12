@@ -26,8 +26,7 @@ Graph::Graph()
 {
 }
 
-Graph::Graph(size_t n)
-  : m_adjacencyList(n)
+Graph::Graph(size_t n) : m_adjacencyList(n)
 {
 }
 
@@ -87,8 +86,8 @@ void Graph::addEdge(size_t a, size_t b)
   assert(a < size());
   assert(b < size());
 
-  std::vector<size_t> &neighborsA = m_adjacencyList[a];
-  std::vector<size_t> &neighborsB = m_adjacencyList[b];
+  std::vector<size_t>& neighborsA = m_adjacencyList[a];
+  std::vector<size_t>& neighborsB = m_adjacencyList[b];
 
   // Ensure edge does not exist already.
   if (std::find(neighborsA.begin(), neighborsA.end(), b) != neighborsA.end())
@@ -104,12 +103,11 @@ void Graph::removeEdge(size_t a, size_t b)
   assert(a < size());
   assert(b < size());
 
-  std::vector<size_t> &neighborsA = m_adjacencyList[a];
-  std::vector<size_t> &neighborsB = m_adjacencyList[b];
+  std::vector<size_t>& neighborsA = m_adjacencyList[a];
+  std::vector<size_t>& neighborsB = m_adjacencyList[b];
 
-  std::vector<size_t>::iterator iter = std::find(neighborsA.begin(),
-                                                 neighborsA.end(),
-                                                 b);
+  std::vector<size_t>::iterator iter =
+    std::find(neighborsA.begin(), neighborsA.end(), b);
 
   if (iter != neighborsA.end()) {
     neighborsA.erase(iter);
@@ -125,15 +123,14 @@ void Graph::removeEdges()
 
 void Graph::removeEdges(size_t index)
 {
-  const std::vector<size_t> &nbrs = m_adjacencyList[index];
+  const std::vector<size_t>& nbrs = m_adjacencyList[index];
 
   for (size_t i = 0; i < nbrs.size(); ++i) {
-    std::vector<size_t> &neighborsList = m_adjacencyList[nbrs[i]];
+    std::vector<size_t>& neighborsList = m_adjacencyList[nbrs[i]];
 
     // Remove vertex from its neighbors' adjacency list.
-    neighborsList.erase(std::find(neighborsList.begin(),
-                                  neighborsList.end(),
-                                  index));
+    neighborsList.erase(
+      std::find(neighborsList.begin(), neighborsList.end(), index));
   }
 }
 
@@ -163,14 +160,14 @@ bool Graph::containsEdge(size_t a, size_t b) const
   assert(a < size());
   assert(b < size());
 
-  const std::vector<size_t> &neighborsA = neighbors(a);
+  const std::vector<size_t>& neighborsA = neighbors(a);
 
   return std::find(neighborsA.begin(), neighborsA.end(), b) != neighborsA.end();
 }
 
-std::vector<std::vector<size_t> > Graph::connectedComponents() const
+std::vector<std::vector<size_t>> Graph::connectedComponents() const
 {
-  std::vector<std::vector<size_t> > components;
+  std::vector<std::vector<size_t>> components;
 
   // Position of next vertex to the root of the depth-first search.
   size_t position = 0;
@@ -196,7 +193,7 @@ std::vector<std::vector<size_t> > Graph::connectedComponents() const
         visited[vertex] = true;
 
         // Iterate through each neighbor.
-        const std::vector<size_t> &nbrs = m_adjacencyList[vertex];
+        const std::vector<size_t>& nbrs = m_adjacencyList[vertex];
         for (size_t j = 0; j < nbrs.size(); ++j)
           if (visited[nbrs[j]] == false)
             nextRow.push_back(nbrs[j]);

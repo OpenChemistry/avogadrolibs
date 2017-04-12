@@ -37,63 +37,50 @@ class ArraySet
 {
 public:
   ArraySet() : m_content(nullptr), m_data(nullptr) {}
-  ~ArraySet()
-  {
-    delete m_content;
-  }
+  ~ArraySet() { delete m_content; }
 
   /** @return true if the type of the array matches the input type. */
-  template<typename T>
+  template <typename T>
   bool isType(const T&) const
   {
     return m_content ? typeid(T) == m_content->type() : false;
   }
-/*
-  template<typename T>
-  std::vector<T> data()
-  {
-    if (m_data && isType(T))
-      return static_cast<std::vector<T> &>(*m_data);
-    else
-      return std::vector<T>();
-  }
-*/
+  /*
+    template<typename T>
+    std::vector<T> data()
+    {
+      if (m_data && isType(T))
+        return static_cast<std::vector<T> &>(*m_data);
+      else
+        return std::vector<T>();
+    }
+  */
 protected:
   class PlaceHolder
   {
   public:
-    virtual ~PlaceHolder()
-    {
-    }
+    virtual ~PlaceHolder() {}
 
-    virtual const std::type_info & type() const = 0;
+    virtual const std::type_info& type() const = 0;
 
-    virtual PlaceHolder * clone() const = 0;
+    virtual PlaceHolder* clone() const = 0;
   };
 
-  template<typename ValueType>
+  template <typename ValueType>
   class Holder : public PlaceHolder
   {
   public:
-    Holder(const ValueType &value) : m_content(value)
-    {
-    }
+    Holder(const ValueType& value) : m_content(value) {}
 
-    const std::type_info & type() const
-    {
-      return typeid(ValueType);
-    }
+    const std::type_info& type() const { return typeid(ValueType); }
 
-    PlaceHolder * clone() const
-    {
-      return new Holder(m_content);
-    }
+    PlaceHolder* clone() const { return new Holder(m_content); }
 
     ValueType m_content;
   };
 
-  PlaceHolder *m_content;
-  void *m_data;
+  PlaceHolder* m_content;
+  void* m_data;
 };
 
 /**
@@ -104,14 +91,11 @@ protected:
  * of data. This class should be used to store concrete arrays, and can be
  * cast to ArraySet when stored in generic containers.
  */
-template<typename T>
+template <typename T>
 class CoordinateSet : public ArraySet
 {
 public:
-  CoordinateSet()
-  {
-    m_content = new Holder<T>(T());
-  }
+  CoordinateSet() { m_content = new Holder<T>(T()); }
 
   ~CoordinateSet() {}
 

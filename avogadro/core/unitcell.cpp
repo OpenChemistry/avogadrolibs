@@ -21,14 +21,14 @@
 namespace Avogadro {
 namespace Core {
 
-void UnitCell::setCellParameters(Real a_, Real b_, Real c_,
-                                 Real al, Real be, Real ga)
+void UnitCell::setCellParameters(Real a_, Real b_, Real c_, Real al, Real be,
+                                 Real ga)
 {
   // Convert parameters to matrix. See "Appendix 2: Coordinate Systems and
   // Transformations" of the PDB guide (ref v2.2, 4/23/13,
   // http://www.bmsc.washington.edu/CrystaLinks/man/pdb/guide2.2_frame.html)
   const Real cosAlpha = std::cos(al);
-  const Real cosBeta  = std::cos(be);
+  const Real cosBeta = std::cos(be);
   const Real cosGamma = std::cos(ga);
   const Real sinGamma = std::sin(ga);
 
@@ -42,15 +42,17 @@ void UnitCell::setCellParameters(Real a_, Real b_, Real c_,
 
   m_cellMatrix(0, 2) = c_ * cosBeta;
   m_cellMatrix(1, 2) = c_ * (cosAlpha - cosBeta * cosGamma) / sinGamma;
-  m_cellMatrix(2, 2) = (c_ / sinGamma) * std::sqrt(
-        static_cast<Real>(1.0)
-        - ((cosAlpha * cosAlpha) + (cosBeta * cosBeta) + (cosGamma * cosGamma))
-        + (static_cast<Real>(2.0) * cosAlpha * cosBeta * cosGamma));
+  m_cellMatrix(2, 2) =
+    (c_ / sinGamma) *
+    std::sqrt(
+      static_cast<Real>(1.0) -
+      ((cosAlpha * cosAlpha) + (cosBeta * cosBeta) + (cosGamma * cosGamma)) +
+      (static_cast<Real>(2.0) * cosAlpha * cosBeta * cosGamma));
   computeFractionalMatrix();
 }
 
-Real UnitCell::signedAngleRadians(const Vector3 &v1, const Vector3 &v2,
-                                  const Vector3 &axis)
+Real UnitCell::signedAngleRadians(const Vector3& v1, const Vector3& v2,
+                                  const Vector3& axis)
 {
   const Vector3 crossProduct(v1.cross(v2));
   const Real crossProductNorm(crossProduct.norm());

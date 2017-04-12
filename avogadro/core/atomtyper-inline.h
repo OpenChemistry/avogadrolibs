@@ -26,8 +26,7 @@ namespace Avogadro {
 namespace Core {
 
 template <typename OutputType>
-AtomTyper<OutputType>::AtomTyper(const Molecule *mol)
-  : m_molecule(mol)
+AtomTyper<OutputType>::AtomTyper(const Molecule* mol) : m_molecule(mol)
 {
 }
 
@@ -37,7 +36,7 @@ AtomTyper<OutputType>::~AtomTyper()
 }
 
 template <typename OutputType>
-void AtomTyper<OutputType>::setMolecule(const Molecule *mol)
+void AtomTyper<OutputType>::setMolecule(const Molecule* mol)
 {
   if (m_molecule != mol) {
     m_molecule = mol;
@@ -57,7 +56,7 @@ void AtomTyper<OutputType>::run()
 }
 
 template <typename OutputType>
-OutputType AtomTyper<OutputType>::atomType(const Atom &atom)
+OutputType AtomTyper<OutputType>::atomType(const Atom& atom)
 {
   OutputType result;
   if (atom.isValid() && atom.molecule() == m_molecule) {
@@ -65,8 +64,7 @@ OutputType AtomTyper<OutputType>::atomType(const Atom &atom)
     // Return the calculated value if we've already run the typer.
     if (atom.index() < m_types.size()) {
       result = m_types[atom.index()];
-    }
-    else {
+    } else {
       initialize();
       result = type(atom);
     }

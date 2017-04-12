@@ -19,8 +19,8 @@
 
 #include <avogadrocoreexport.h>
 
-#include <string>
 #include <sstream>
+#include <string>
 
 namespace Avogadro {
 namespace Core {
@@ -48,8 +48,8 @@ public:
    * The molecule used as input.
    * @}
    */
-  void setMolecule(const Molecule *mol) { m_molecule = mol; }
-  const Molecule *molecule() const { return m_molecule; }
+  void setMolecule(const Molecule* mol) { m_molecule = mol; }
+  const Molecule* molecule() const { return m_molecule; }
   /** @} */
 
   /**
@@ -89,12 +89,13 @@ __SZxyz110
   H  1   -2.396173  0.450760  0.000000 1 1 0
 ~~~
    */
-  void setSpecification(const std::string &spec) { m_specification = spec; }
+  void setSpecification(const std::string& spec) { m_specification = spec; }
   std::string specification() const { return m_specification; }
   /** @} */
 
   /** Distance unit used in the output. @{ */
-  enum DistanceUnit {
+  enum DistanceUnit
+  {
     Angstrom = 0,
     Bohr
   };
@@ -108,7 +109,7 @@ __SZxyz110
   std::string generateCoordinateBlock();
 
 private:
-  const Molecule *m_molecule;
+  const Molecule* m_molecule;
   std::string m_specification;
   DistanceUnit m_distanceUnit;
   std::stringstream m_stream;

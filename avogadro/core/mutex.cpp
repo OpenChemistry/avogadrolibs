@@ -26,9 +26,7 @@ using std::mutex;
 class Mutex::PIMPL
 {
 public:
-  PIMPL()
-  {
-  }
+  PIMPL() {}
 
   mutex lock;
 };
@@ -56,6 +54,5 @@ void Mutex::unlock()
 {
   d->lock.unlock();
 }
-
 }
 }

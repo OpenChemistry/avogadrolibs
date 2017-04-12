@@ -53,7 +53,7 @@ public:
   /**
    * Copy constructor
    */
-  Mesh(const Mesh &other);
+  Mesh(const Mesh& other);
 
   /**
    * Destructor.
@@ -117,7 +117,7 @@ public:
   /**
    * @return Array containing all of the vertices in a one dimensional array.
    */
-  const Core::Array<Vector3f> & vertices() const;
+  const Core::Array<Vector3f>& vertices() const;
 
   /**
    * @return The number of vertices.
@@ -130,23 +130,23 @@ public:
   /**
    * @return Pointer to the first vertex of the specified triangle.
    */
-  const Vector3f * vertex(int n) const;
+  const Vector3f* vertex(int n) const;
 
   /**
    * Clear the vertices vector and assign new values.
    */
-  bool setVertices(const Core::Array<Vector3f> &values);
+  bool setVertices(const Core::Array<Vector3f>& values);
 
   /**
    * Add one or more vertices, i.e., the array is expected to be of length
    * 3 x n where n is an integer.
    */
-  bool addVertices(const Core::Array<Vector3f> &values);
+  bool addVertices(const Core::Array<Vector3f>& values);
 
   /**
    * @return Array containing all of the normals in a one-dimensional array.
    */
-  const Core::Array<Vector3f> & normals() const;
+  const Core::Array<Vector3f>& normals() const;
 
   /**
    * @return The number of normals.
@@ -159,39 +159,39 @@ public:
   /**
    * @return Pointer to the first normal of the specified triangle.
    */
-  const Vector3f * normal(int n) const;
+  const Vector3f* normal(int n) const;
 
   /**
    * Clear the normals array and assign new values.
    */
-  bool setNormals(const Core::Array<Vector3f> &values);
+  bool setNormals(const Core::Array<Vector3f>& values);
 
   /**
    * Add one or more normals, i.e., the array is expected to be of length
    * 3 x n where n is an integer.
    */
-  bool addNormals(const Core::Array<Vector3f> &values);
+  bool addNormals(const Core::Array<Vector3f>& values);
 
   /**
    * @return Array containing all of the colors in a one-dimensional array.
    */
-  const Core::Array<Color3f> & colors() const;
+  const Core::Array<Color3f>& colors() const;
 
   /**
    * @return Pointer to the first color of the specified triangle.
    */
-  const Color3f * color(int n) const;
+  const Color3f* color(int n) const;
 
   /**
    * Clear the colors array and assign new values.
    */
-  bool setColors(const Core::Array<Color3f> &values);
+  bool setColors(const Core::Array<Color3f>& values);
 
   /**
    * Add one or more normals, i.e., the array is expected to be of length
    * 3 x n where n is an integer.
    */
-  bool addColors(const Core::Array<Color3f> &values);
+  bool addColors(const Core::Array<Color3f>& values);
 
   /**
    * Sanity checking function - is the mesh sane?
@@ -214,7 +214,7 @@ public:
   /**
    * Set the name of the Mesh.
    */
-  void setName(const std::string &name_) { m_name = name_; }
+  void setName(const std::string& name_) { m_name = name_; }
 
   /**
    * @return The name of the Mesh.
@@ -224,7 +224,7 @@ public:
   /**
    * Provides locking.
    */
-  Mutex * lock() const { return m_lock; }
+  Mutex* lock() const { return m_lock; }
 
   friend class Molecule;
 
@@ -236,11 +236,11 @@ private:
   bool m_stable;
   float m_isoValue;
   unsigned int m_other; // Unique id of the other mesh if this is part of a pair
-  unsigned int m_cube; // Unique id of the cube this mesh was generated from
-  Mutex *m_lock;
+  unsigned int m_cube;  // Unique id of the cube this mesh was generated from
+  Mutex* m_lock;
 };
 
 } // End namespace Core
 } // End namespace Avogadro
 
-#endif //AVOGADRO_CORE_MESH_H
+#endif // AVOGADRO_CORE_MESH_H

@@ -35,13 +35,13 @@ class AtomTyper
 public:
   typedef OutputType ValueType;
 
-  explicit AtomTyper(const Molecule *mol = nullptr);
+  explicit AtomTyper(const Molecule* mol = nullptr);
   virtual ~AtomTyper();
 
   /**
    * @param mol The molecule with atoms to type.
    */
-  void setMolecule(const Molecule *mol);
+  void setMolecule(const Molecule* mol);
 
   /**
    * Iterate through the molecule and generate type descriptions for each atom.
@@ -54,7 +54,7 @@ public:
    * previously, a cached result is returned.
    * @return The type of @a atom.
    */
-  virtual OutputType atomType(const Atom &atom);
+  virtual OutputType atomType(const Atom& atom);
 
   /**
    * @return An Array of OutputType objects. There will be one object for each
@@ -70,7 +70,6 @@ public:
   virtual void reset();
 
 protected:
-
   /**
    * Perform any setup needed that needs to be done prior to calling type(). The
    * base implementation of this function reserves enough room in the m_types
@@ -83,10 +82,10 @@ protected:
    * @param atom The atom to type.
    * @return The type of @a atom.
    */
-  virtual OutputType type(const Atom &atom) = 0;
+  virtual OutputType type(const Atom& atom) = 0;
 
   /** The molecule on which to operate. */
-  const Molecule *m_molecule;
+  const Molecule* m_molecule;
 
   /** The array of types to be populated. */
   Array<OutputType> m_types;

@@ -45,7 +45,8 @@ public:
   /**
    * \enum Different Cube types relating to the data
    */
-  enum Type{
+  enum Type
+  {
     VdW,
     ESP,
     ElectronDensity,
@@ -80,8 +81,8 @@ public:
    * @param max The maximum point in the cube.
    * @param points The number of (integer) points in the cube.
    */
-  bool setLimits(const Vector3 &min, const Vector3 &max,
-                 const Vector3i &points);
+  bool setLimits(const Vector3& min, const Vector3& max,
+                 const Vector3i& points);
 
   /**
    * Set the limits of the cube.
@@ -89,8 +90,7 @@ public:
    * @param max The maximum point in the cube.
    * @param spacing The interval between points in the cube.
    */
-  bool setLimits(const Vector3 &min, const Vector3 &max,
-                 double spacing);
+  bool setLimits(const Vector3& min, const Vector3& max, double spacing);
 
   /**
    * Set the limits of the cube.
@@ -98,8 +98,7 @@ public:
    * @param dim The integer dimensions of the cube in x, y and z.
    * @param spacing The interval between points in the cube.
    */
-  bool setLimits(const Vector3 &min, const Vector3i &dim,
-                 double spacing);
+  bool setLimits(const Vector3& min, const Vector3i& dim, double spacing);
 
   /**
    * Set the limits of the cube.
@@ -107,14 +106,14 @@ public:
    * @param dim The integer dimensions of the cube in x, y and z.
    * @param spacing The interval between points in the cube.
    */
-  bool setLimits(const Vector3 &min, const Vector3i &dim,
-                 const Vector3 &spacing);
+  bool setLimits(const Vector3& min, const Vector3i& dim,
+                 const Vector3& spacing);
 
   /**
    * Set the limits of the cube - copy the limits of an existing Cube.
    * @param cube Existing Cube to copy the limits from.
    */
-  bool setLimits(const Cube &cube);
+  bool setLimits(const Cube& cube);
 
   /**
    * Set the limits of the cube.
@@ -122,35 +121,35 @@ public:
    * @param spacing The spacing of the regular grid
    * @param padding Padding around the molecule
    */
-  bool setLimits(const Molecule &mol, double spacing, double padding);
+  bool setLimits(const Molecule& mol, double spacing, double padding);
 
   /**
    * @return Vector containing all the data in a one-dimensional array.
    */
-  std::vector<double> * data();
-  const std::vector<double> * data() const;
+  std::vector<double>* data();
+  const std::vector<double>* data() const;
 
   /**
    * Set the values in the cube to those passed in the vector.
    */
-  bool setData(const std::vector<double> &values);
+  bool setData(const std::vector<double>& values);
 
   /**
    * Adds the values in the cube to those passed in the vector.
    */
-  bool addData(const std::vector<double> &values);
+  bool addData(const std::vector<double>& values);
 
   /**
    * @return Index of the point closest to the position supplied.
    * @param pos Position to get closest index for.
    */
-  unsigned int closestIndex(const Vector3 &pos) const;
+  unsigned int closestIndex(const Vector3& pos) const;
 
   /**
    * @param pos Position to get closest index for.
    * @return The i, j, k index closest to the position supplied.
    */
-  Vector3i indexVector(const Vector3 &pos) const;
+  Vector3i indexVector(const Vector3& pos) const;
 
   /**
    * @param index Index to be translated to a position.
@@ -168,7 +167,7 @@ public:
    * This function is very quick as it just returns the value at the point.
    * @return Cube value at the integer point pos.
    */
-  double value(const Vector3i &pos) const;
+  double value(const Vector3i& pos) const;
 
   /**
    * This function uses trilinear interpolation to find the value at points
@@ -177,7 +176,7 @@ public:
    * @warning This function is quite computationally expensive and should be
    * avoided where possible.
    */
-  float valuef(const Vector3f &pos) const;
+  float valuef(const Vector3f& pos) const;
 
   /**
    * This function uses trilinear interpolation to find the value at points
@@ -186,7 +185,7 @@ public:
    * @warning This function is quite computationally expensive and should be
    * avoided where possible.
    */
-  double value(const Vector3 &pos) const;
+  double value(const Vector3& pos) const;
 
   /**
    * Sets the value at the specified point in the cube.
@@ -213,7 +212,7 @@ public:
    */
   double maxValue() const { return m_maxValue; }
 
-  void setName(const std::string &name_) { m_name = name_; }
+  void setName(const std::string& name_) { m_name = name_; }
   std::string name() const { return m_name; }
 
   void setCubeType(Type type) { m_cubeType = type; }
@@ -222,7 +221,7 @@ public:
   /**
    * Provides locking.
    */
-  Mutex * lock() const { return m_lock; }
+  Mutex* lock() const { return m_lock; }
 
 protected:
   std::vector<double> m_data;
@@ -230,8 +229,8 @@ protected:
   Vector3i m_points;
   double m_minValue, m_maxValue;
   std::string m_name;
-  Type    m_cubeType;
-  Mutex *m_lock;
+  Type m_cubeType;
+  Mutex* m_lock;
 };
 
 inline bool Cube::setValue(unsigned int i, double value_)
@@ -243,8 +242,7 @@ inline bool Cube::setValue(unsigned int i, double value_)
     if (value_ < m_minValue)
       m_minValue = value_;
     return true;
-  }
-  else
+  } else
     return false;
 }
 

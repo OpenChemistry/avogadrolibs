@@ -30,14 +30,14 @@
  * This macro marks a parameter as unused. Its purpose is to disable the
  * compiler from emitting unused parameter warnings.
  */
-#define AVO_UNUSED(variable) (void) variable
+#define AVO_UNUSED(variable) (void)variable
 
 /**
  * This macro marks a class as not copyable. It should be used in the private
  * section of a class's declaration.
  */
-#define AVO_DISABLE_COPY(Class) \
-  Class(const Class&); \
+#define AVO_DISABLE_COPY(Class)                                                \
+  Class(const Class&);                                                         \
   Class& operator=(const Class&);
 
 namespace Avogadro {
@@ -66,7 +66,7 @@ const unsigned char CustomElementMax = 254;
  * Count of atomic number values that are used to represent custom,
  * non-elemental particles. */
 const unsigned char CustomElementCount =
-    CustomElementMax - CustomElementMin + 1;
+  CustomElementMax - CustomElementMin + 1;
 
 /**
  * @return True if @a atomicNumber denotes a custom element type.

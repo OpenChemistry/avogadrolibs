@@ -22,8 +22,7 @@
 namespace Avogadro {
 namespace Core {
 
-NameAtomTyper::NameAtomTyper(const Molecule *mol)
-  : AtomTyper<std::string>(mol)
+NameAtomTyper::NameAtomTyper(const Molecule* mol) : AtomTyper<std::string>(mol)
 {
 }
 
@@ -31,7 +30,7 @@ NameAtomTyper::~NameAtomTyper()
 {
 }
 
-std::string NameAtomTyper::type(const Atom &atom)
+std::string NameAtomTyper::type(const Atom& atom)
 {
   return std::string(Elements::name(atom.atomicNumber()));
 }

@@ -43,18 +43,18 @@ public:
   /**
    * Creates a bond object representing a bond at index @p i in molecule @p m.
    */
-  BondTemplate(MoleculeType *m, Index i);
+  BondTemplate(MoleculeType* m, Index i);
 
   /**
    * @return True if @a this and @a other share the same index and molecule.
    */
-  bool operator==(const BondTemplate<MoleculeType> &other) const;
+  bool operator==(const BondTemplate<MoleculeType>& other) const;
 
   /**
    * @return True if @a this and @a other do not share the same index or
    * molecule.
    */
-  bool operator!=(const BondTemplate<MoleculeType> &other) const;
+  bool operator!=(const BondTemplate<MoleculeType>& other) const;
 
   /**
    * Prefix increment operator. Increment this Bond's index by 1 and return a
@@ -113,38 +113,38 @@ public:
   /** @} */
 
 private:
-  MoleculeType *m_molecule;
+  MoleculeType* m_molecule;
   Index m_index;
 };
 
 template <class Molecule_T>
 BondTemplate<Molecule_T>::BondTemplate()
-  : m_molecule(nullptr),
-    m_index(MaxIndex)
+  : m_molecule(nullptr), m_index(MaxIndex)
 {
 }
 
 template <class Molecule_T>
-BondTemplate<Molecule_T>::BondTemplate(MoleculeType *m, Index i)
-  : m_molecule(m),
-    m_index(i)
+BondTemplate<Molecule_T>::BondTemplate(MoleculeType* m, Index i)
+  : m_molecule(m), m_index(i)
 {
 }
 
 template <class Molecule_T>
-bool BondTemplate<Molecule_T>::operator==(const BondTemplate<MoleculeType> &other) const
+bool BondTemplate<Molecule_T>::operator==(
+  const BondTemplate<MoleculeType>& other) const
 {
   return m_molecule == other.m_molecule && m_index == other.m_index;
 }
 
 template <class Molecule_T>
-bool BondTemplate<Molecule_T>::operator!=(const BondTemplate<MoleculeType> &other) const
+bool BondTemplate<Molecule_T>::operator!=(
+  const BondTemplate<MoleculeType>& other) const
 {
   return m_molecule != other.m_molecule || m_index != other.m_index;
 }
 
 template <class Molecule_T>
-BondTemplate<Molecule_T> &BondTemplate<Molecule_T>::operator++()
+BondTemplate<Molecule_T>& BondTemplate<Molecule_T>::operator++()
 {
   ++m_index;
   return *this;
@@ -158,7 +158,7 @@ BondTemplate<Molecule_T> BondTemplate<Molecule_T>::operator++(int)
 }
 
 template <class Molecule_T>
-BondTemplate<Molecule_T> &BondTemplate<Molecule_T>::operator--()
+BondTemplate<Molecule_T>& BondTemplate<Molecule_T>::operator--()
 {
   --m_index;
   return *this;
@@ -178,7 +178,8 @@ bool BondTemplate<Molecule_T>::isValid() const
 }
 
 template <class Molecule_T>
-typename BondTemplate<Molecule_T>::MoleculeType *BondTemplate<Molecule_T>::molecule() const
+typename BondTemplate<Molecule_T>::MoleculeType*
+BondTemplate<Molecule_T>::molecule() const
 {
   return m_molecule;
 }
@@ -190,13 +191,15 @@ Index BondTemplate<Molecule_T>::index() const
 }
 
 template <class Molecule_T>
-typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom1() const
+typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom1()
+  const
 {
   return AtomType(m_molecule, m_molecule->bondPairs()[m_index].first);
 }
 
 template <class Molecule_T>
-typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom2() const
+typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom2()
+  const
 {
   return AtomType(m_molecule, m_molecule->bondPairs()[m_index].second);
 }

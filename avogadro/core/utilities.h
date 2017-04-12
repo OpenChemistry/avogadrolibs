@@ -17,9 +17,9 @@
 #ifndef AVOGADRO_CORE_UTILITIES_H
 #define AVOGADRO_CORE_UTILITIES_H
 
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
 
 namespace Avogadro {
 namespace Core {
@@ -31,7 +31,7 @@ namespace Core {
  * @param skipEmpty If true any empty items will be skipped.
  * @return A vector containing the items.
  */
-inline std::vector<std::string> split(const std::string &string, char delimiter,
+inline std::vector<std::string> split(const std::string& string, char delimiter,
                                       bool skipEmpty = true)
 {
   std::vector<std::string> elements;
@@ -51,7 +51,7 @@ inline std::vector<std::string> split(const std::string &string, char delimiter,
  * @param search String that will be searched for.
  * @return True if the string contains search, false otherwise.
  */
-inline bool contains(const std::string &input, const std::string &search)
+inline bool contains(const std::string& input, const std::string& search)
 {
   size_t found = input.find(search);
   return found != std::string::npos;
@@ -63,16 +63,16 @@ inline bool contains(const std::string &input, const std::string &search)
  * @param search String that will be searched for.
  * @return True if the string starts with search, false otherwise.
  */
-inline bool startsWith(const std::string &input, const std::string &search)
+inline bool startsWith(const std::string& input, const std::string& search)
 {
-  return input.size() >= search.size() && input.compare(0, search.size(),
-                                                        search) == 0;
+  return input.size() >= search.size() &&
+         input.compare(0, search.size(), search) == 0;
 }
 
 /**
  * @brief Trim a string of whitespace from the left and right.
  */
-inline std::string trimmed(const std::string &input)
+inline std::string trimmed(const std::string& input)
 {
   size_t start = input.find_first_not_of(" \n\r\t");
   size_t end = input.find_last_not_of(" \n\r\t");
@@ -85,7 +85,8 @@ inline std::string trimmed(const std::string &input)
  * @brief Cast the inputString to the specified type.
  * @param inputString String to cast to the specified type.
  */
-template<typename T> T lexicalCast(const std::string &inputString)
+template <typename T>
+T lexicalCast(const std::string& inputString)
 {
   T value;
   std::istringstream(inputString) >> value;
@@ -98,7 +99,8 @@ template<typename T> T lexicalCast(const std::string &inputString)
  * @param ok Set to true on success, and false if the string could not be
  * converted to the specified type.
  */
-template<typename T> T lexicalCast(const std::string &inputString, bool &ok)
+template <typename T>
+T lexicalCast(const std::string& inputString, bool& ok)
 {
   T value;
   std::istringstream stream(inputString);

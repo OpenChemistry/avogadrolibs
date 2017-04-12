@@ -21,8 +21,8 @@
 
 #include "basisset.h"
 
-#include <avogadro/core/vector.h>
 #include <avogadro/core/matrix.h>
+#include <avogadro/core/vector.h>
 
 #include <vector>
 
@@ -32,7 +32,13 @@ namespace Core {
 /**
  * Enumeration of the SCF type.
  */
-enum ScfType { Rhf, Uhf, Rohf, Unknown };
+enum ScfType
+{
+  Rhf,
+  Uhf,
+  Rohf,
+  Unknown
+};
 
 /**
  * @class GaussianSet gaussianset.h <avogadro/core/gaussianset.h>
@@ -73,7 +79,23 @@ public:
   /**
    * Enumeration of the Gaussian type orbitals.
    */
-   enum orbital { S, SP, P, D, D5, F, F7, G, G9, H, H11, I, I13, UU };
+  enum orbital
+  {
+    S,
+    SP,
+    P,
+    D,
+    D5,
+    F,
+    F7,
+    G,
+    G9,
+    H,
+    H11,
+    I,
+    I13,
+    UU
+  };
 
   /**
    * Add a basis to the basis set.
@@ -105,7 +127,7 @@ public:
    * @param energies The vector containing energies for the MOs of type
    * @param type The type of the electrons being set.
    */
-  void setMolecularOrbitalEnergy(const std::vector<double> &energies,
+  void setMolecularOrbitalEnergy(const std::vector<double>& energies,
                                  ElectronType type = Paired);
 
   /**
@@ -113,7 +135,7 @@ public:
    * @param occ The occupancies for the MOs of type.
    * @param type The type of the electrons being set.
    */
-  void setMolecularOrbitalOccupancy(const std::vector<unsigned char> &occ,
+  void setMolecularOrbitalOccupancy(const std::vector<unsigned char>& occ,
                                     ElectronType type = Paired);
 
   /**
@@ -122,18 +144,18 @@ public:
    * @param nums The MO numbers (starting with an index of 1 for the first one).
    * @param type The MO type (Paired, Alpha, Beta).
    */
-  void setMolecularOrbitalNumber(const std::vector<unsigned int> &nums,
+  void setMolecularOrbitalNumber(const std::vector<unsigned int>& nums,
                                  ElectronType type = Paired);
 
   /**
    * Set the SCF density matrix for the GaussianSet.
    */
-  bool setDensityMatrix(const MatrixX &m);
+  bool setDensityMatrix(const MatrixX& m);
 
   /**
    * Set the spin density matrix for the GaussianSet.
    */
-  bool setSpinDensityMatrix(const MatrixX &m);
+  bool setSpinDensityMatrix(const MatrixX& m);
 
   /**
    * @brief Generate the density matrix if we have the required information.
@@ -183,7 +205,11 @@ public:
   std::vector<unsigned int>& cIndices() { return m_cIndices; }
   std::vector<double>& gtoA() { return m_gtoA; }
   std::vector<double>& gtoC() { return m_gtoC; }
-  std::vector<double>& gtoCN() { initCalculation(); return m_gtoCN; }
+  std::vector<double>& gtoCN()
+  {
+    initCalculation();
+    return m_gtoCN;
+  }
 
   MatrixX& moMatrix(ElectronType type = Paired)
   {
@@ -258,18 +284,18 @@ private:
    */
   std::vector<int> m_symmetry;             //! Symmetry of the basis, S, P...
   std::vector<unsigned int> m_atomIndices; //! Indices into the atomPos vector
-  std::vector<unsigned int> m_moIndices;   //! Indices into the MO/density matrix
-  std::vector<unsigned int> m_gtoIndices;  //! Indices into the GTO vector
-  std::vector<unsigned int> m_cIndices;    //! Indices into m_gtoCN
-  std::vector<double> m_gtoA;              //! The GTO exponent
-  std::vector<double> m_gtoC;              //! The GTO contraction coefficient
-  std::vector<double> m_gtoCN;             //! The GTO contraction coefficient (normalized)
+  std::vector<unsigned int> m_moIndices;  //! Indices into the MO/density matrix
+  std::vector<unsigned int> m_gtoIndices; //! Indices into the GTO vector
+  std::vector<unsigned int> m_cIndices;   //! Indices into m_gtoCN
+  std::vector<double> m_gtoA;             //! The GTO exponent
+  std::vector<double> m_gtoC;             //! The GTO contraction coefficient
+  std::vector<double> m_gtoCN; //! The GTO contraction coefficient (normalized)
 
   /**
    * @brief This block can be once (doubly) or in two parts (alpha and beta) for
    * open shell calculations.
    */
-  MatrixX m_moMatrix[2];            //! MO coefficient matrix
+  MatrixX m_moMatrix[2]; //! MO coefficient matrix
 
   /**
    * @brief This block stores energies for the molecular orbitals (same
@@ -288,11 +314,11 @@ private:
    */
   std::vector<unsigned int> m_moNumber[2];
 
-  MatrixX m_density;                //! Density matrix
-  MatrixX m_spinDensity;            //! Spin Density matrix
+  MatrixX m_density;     //! Density matrix
+  MatrixX m_spinDensity; //! Spin Density matrix
 
-  unsigned int m_numMOs;            //! The number of GTOs (not always!)
-  bool m_init;                      //! Has the calculation been initialised?
+  unsigned int m_numMOs; //! The number of GTOs (not always!)
+  bool m_init;           //! Has the calculation been initialised?
 
   ScfType m_scfType;
 
@@ -303,7 +329,8 @@ private:
   bool generateDensity();
 
   /**
-   * @brief Generate the spin density matrix if we have the required information.
+   * @brief Generate the spin density matrix if we have the required
+   * information.
    * @return True on success, false on failure.
    */
   bool generateSpinDensity();

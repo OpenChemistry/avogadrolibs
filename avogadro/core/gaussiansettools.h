@@ -42,7 +42,7 @@ class Molecule;
 class AVOGADROCORE_EXPORT GaussianSetTools
 {
 public:
-  explicit GaussianSetTools(Molecule *mol = 0);
+  explicit GaussianSetTools(Molecule* mol = 0);
   ~GaussianSetTools();
 
   /**
@@ -51,7 +51,7 @@ public:
    * @param molecularOrbitalNumber The molecular orbital number.
    * @return True on success, false on failure.
    */
-  bool calculateMolecularOrbital(Cube &cube, int molecularOrbitalNumber) const;
+  bool calculateMolecularOrbital(Cube& cube, int molecularOrbitalNumber) const;
 
   /**
    * @brief Calculate the value of the specified molecular orbital at the
@@ -60,7 +60,7 @@ public:
    * @param molecularOrbitalNumber The molecular orbital number.
    * @return The value of the molecular orbital at the position specified.
    */
-  double calculateMolecularOrbital(const Vector3 &position,
+  double calculateMolecularOrbital(const Vector3& position,
                                    int molecularOrbitalNumber) const;
 
   /**
@@ -69,7 +69,7 @@ public:
    * @param position The position in space to calculate the value.
    * @return The value of the electron density at the position specified.
    */
-  double calculateElectronDensity(const Vector3 &position) const;
+  double calculateElectronDensity(const Vector3& position) const;
 
   /**
    * @brief Calculate the value of the electron spin density at the position
@@ -77,7 +77,7 @@ public:
    * @param position The position in space to calculate the value.
    * @return The value of the spin density at the position specified.
    */
-  double calculateSpinDensity(const Vector3 &position) const;
+  double calculateSpinDensity(const Vector3& position) const;
 
   /**
    * @brief Check that the basis set is valid and can be used.
@@ -86,8 +86,8 @@ public:
   bool isValid() const;
 
 private:
-  Molecule *m_molecule;
-  GaussianSet *m_basis;
+  Molecule* m_molecule;
+  GaussianSet* m_basis;
 
   bool isSmall(double value) const;
 
@@ -97,20 +97,20 @@ private:
    * molecular orbital or density matrix elements.
    * @param position The position in space to calculate the value.
    */
-  std::vector<double> calculateValues(const Vector3 &position) const;
+  std::vector<double> calculateValues(const Vector3& position) const;
 
   void pointS(unsigned int index, double dr2,
-              std::vector<double> &values) const;
-  void pointP(unsigned int index, const Vector3 &delta, double dr2,
-              std::vector<double> &values) const;
-  void pointD(unsigned int index, const Vector3 &delta, double dr2,
-              std::vector<double> &values) const;
-  void pointD5(unsigned int index, const Vector3 &delta, double dr2,
-               std::vector<double> &values) const;
-  void pointF(unsigned int index, const Vector3 &delta, double dr2,
-               std::vector<double> &values) const;
-  void pointF7(unsigned int index, const Vector3 &delta, double dr2,
-               std::vector<double> &values) const;
+              std::vector<double>& values) const;
+  void pointP(unsigned int index, const Vector3& delta, double dr2,
+              std::vector<double>& values) const;
+  void pointD(unsigned int index, const Vector3& delta, double dr2,
+              std::vector<double>& values) const;
+  void pointD5(unsigned int index, const Vector3& delta, double dr2,
+               std::vector<double>& values) const;
+  void pointF(unsigned int index, const Vector3& delta, double dr2,
+              std::vector<double>& values) const;
+  void pointF7(unsigned int index, const Vector3& delta, double dr2,
+               std::vector<double>& values) const;
 };
 
 } // End Core namespace

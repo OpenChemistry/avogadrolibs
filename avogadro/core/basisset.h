@@ -58,7 +58,8 @@ public:
    * retrieved. If Paired, then Alpha and Beta cannot be set, if Alpha or Beta
    * then both must be set.
    */
-  enum ElectronType {
+  enum ElectronType
+  {
     Paired,
     Alpha,
     Beta
@@ -80,13 +81,13 @@ public:
   /**
    * Set the molecule for the basis set.
    */
-  void setMolecule(Molecule *molecule_) { m_molecule = molecule_; }
+  void setMolecule(Molecule* molecule_) { m_molecule = molecule_; }
 
   /**
    * Get the molecule this basis set belongs to.
    */
-  Molecule * molecule() { return m_molecule; }
-  const Molecule * molecule() const { return m_molecule; }
+  Molecule* molecule() { return m_molecule; }
+  const Molecule* molecule() const { return m_molecule; }
 
   /**
    * @return The number of molecular orbitals in the BasisSet.
@@ -98,37 +99,23 @@ public:
    * @param n The MO number.
    * @return True if the given MO number is the HOMO.
    */
-  bool homo(unsigned int n)
-  {
-    return n == homo();
-  }
+  bool homo(unsigned int n) { return n == homo(); }
 
   /**
    * @return The molecular orbital number corresponding to the HOMO orbital.
    */
-  unsigned int homo() const
-  {
-    return m_electrons[0] / 2;
-  }
-
+  unsigned int homo() const { return m_electrons[0] / 2; }
 
   /**
    * Check if the given MO number is the LUMO or not.
    * @param n The MO number.
    * @return True if the given MO number is the LUMO.
    */
-  bool lumo(unsigned int n)
-  {
-    return n == lumo();
-  }
+  bool lumo(unsigned int n) { return n == lumo(); }
   /**
    * @return The molecular orbital number corresponding to the LUMO orbital.
    */
-  unsigned int lumo() const
-  {
-    return m_electrons[0] / 2 + 1;
-  }
-
+  unsigned int lumo() const { return m_electrons[0] / 2 + 1; }
 
   /**
    * @return True of the basis set is valid, false otherwise.
@@ -149,40 +136,39 @@ protected:
    * file. Most basis sets have orbitals around these atoms, but this is not
    * necessarily the case.
    */
-  Molecule *m_molecule;
-
+  Molecule* m_molecule;
 };
 
 inline void BasisSet::setElectronCount(unsigned int n, ElectronType type)
 {
   switch (type) {
-  case Paired:
-    m_electrons[0] = n;
-    m_electrons[1] = 0;
-    break;
-  case Alpha:
-    m_electrons[0] = n;
-    break;
-  case Beta:
-    m_electrons[1] = n;
-    break;
-  default:
-    // Shouldn't hit this condition.
-    ;
+    case Paired:
+      m_electrons[0] = n;
+      m_electrons[1] = 0;
+      break;
+    case Alpha:
+      m_electrons[0] = n;
+      break;
+    case Beta:
+      m_electrons[1] = n;
+      break;
+    default:
+      // Shouldn't hit this condition.
+      ;
   }
 }
 
 inline unsigned int BasisSet::electronCount(ElectronType type) const
 {
   switch (type) {
-  case Paired:
-  case Alpha:
-    return m_electrons[0];
-  case Beta:
-    return m_electrons[1];
-  default:
-    // Shouldn't hit this condition.
-    return 0;
+    case Paired:
+    case Alpha:
+      return m_electrons[0];
+    case Beta:
+      return m_electrons[1];
+    default:
+      // Shouldn't hit this condition.
+      return 0;
   }
 }
 

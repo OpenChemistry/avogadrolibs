@@ -58,9 +58,8 @@ public:
 
 private:
   class PIMPL;
-  PIMPL *d;
+  PIMPL* d;
 };
-
 }
 }
 

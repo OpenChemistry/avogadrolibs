@@ -18,12 +18,12 @@
 
 #include "molecule.h"
 
-#include <set>
-#include <limits>
-#include <vector>
+#include <algorithm>
 #include <cstring>
 #include <iterator>
-#include <algorithm>
+#include <limits>
+#include <set>
+#include <vector>
 
 namespace Avogadro {
 namespace Core {
@@ -44,19 +44,19 @@ public:
 
 private:
   size_t m_size;
-  size_t *m_values;
+  size_t* m_values;
 };
 
 DistanceMatrix::DistanceMatrix(size_t size)
 {
   m_size = size;
-  m_values = new size_t[size*size];
-  memset(m_values, 0, size*size*sizeof(size_t));
+  m_values = new size_t[size * size];
+  memset(m_values, 0, size * size * sizeof(size_t));
 }
 
 DistanceMatrix::~DistanceMatrix()
 {
-  delete [] m_values;
+  delete[] m_values;
 }
 
 size_t DistanceMatrix::operator()(size_t i, size_t j) const
@@ -79,86 +79,80 @@ public:
   ~PidMatrix();
 
   // paths
-  std::vector<std::vector<size_t> >& paths(size_t i, size_t j);
+  std::vector<std::vector<size_t>>& paths(size_t i, size_t j);
   void addPaths(size_t i, size_t j,
-                const std::vector<std::vector<size_t> > &paths);
-  std::vector<std::vector<size_t> > splice(size_t i, size_t j, size_t k);
+                const std::vector<std::vector<size_t>>& paths);
+  std::vector<std::vector<size_t>> splice(size_t i, size_t j, size_t k);
 
   // operators
-  std::vector<std::vector<size_t> >& operator()(size_t i, size_t j);
+  std::vector<std::vector<size_t>>& operator()(size_t i, size_t j);
 
 private:
   size_t m_size;
-  std::vector<std::vector<size_t> > *m_values;
+  std::vector<std::vector<size_t>>* m_values;
 };
 
 // --- Construction and Destruction ---------------------------------------- //
 PidMatrix::PidMatrix(size_t size)
 {
   m_size = size;
-  m_values = new std::vector<std::vector<size_t> >[size*size];
+  m_values = new std::vector<std::vector<size_t>>[ size * size ];
 }
 
 PidMatrix::~PidMatrix()
 {
-  delete [] m_values;
+  delete[] m_values;
 }
 
 // --- Paths --------------------------------------------------------------- //
-std::vector<std::vector<size_t> >& PidMatrix::paths(size_t i, size_t j)
+std::vector<std::vector<size_t>>& PidMatrix::paths(size_t i, size_t j)
 {
   return m_values[i * m_size + j];
 }
 
-void PidMatrix::addPaths(size_t i, size_t j, const std::vector<std::vector<size_t> > &p)
+void PidMatrix::addPaths(size_t i, size_t j,
+                         const std::vector<std::vector<size_t>>& p)
 {
-  std::vector<std::vector<size_t> > &current = m_values[i * m_size + j];
+  std::vector<std::vector<size_t>>& current = m_values[i * m_size + j];
   current.insert(current.end(), p.begin(), p.end());
 }
 
-std::vector<std::vector<size_t> >& PidMatrix::operator()(size_t i, size_t j)
+std::vector<std::vector<size_t>>& PidMatrix::operator()(size_t i, size_t j)
 {
   return paths(i, j);
 }
 
-std::vector<std::vector<size_t> > PidMatrix::splice(size_t i, size_t j, size_t k)
+std::vector<std::vector<size_t>> PidMatrix::splice(size_t i, size_t j, size_t k)
 {
-  std::vector<std::vector<size_t> > splicedPaths;
+  std::vector<std::vector<size_t>> splicedPaths;
 
-  std::vector<std::vector<size_t> > ijPaths = paths(i, j);
-  std::vector<std::vector<size_t> > jkPaths = paths(j, k);
+  std::vector<std::vector<size_t>> ijPaths = paths(i, j);
+  std::vector<std::vector<size_t>> jkPaths = paths(j, k);
 
   if (ijPaths.empty() && jkPaths.empty()) {
     std::vector<size_t> path;
     path.push_back(j);
     splicedPaths.push_back(path);
-  }
-  else if (ijPaths.empty()) {
-    for (std::vector<std::vector<size_t> >::iterator iter = jkPaths.begin();
-         iter != jkPaths.end();
-         ++iter) {
+  } else if (ijPaths.empty()) {
+    for (std::vector<std::vector<size_t>>::iterator iter = jkPaths.begin();
+         iter != jkPaths.end(); ++iter) {
       std::vector<size_t> path;
       path.push_back(j);
       path.insert(path.end(), iter->begin(), iter->end());
       splicedPaths.push_back(path);
     }
-  }
-  else if (jkPaths.empty()) {
-    for (std::vector<std::vector<size_t> >::iterator iter = ijPaths.begin();
-         iter != ijPaths.end();
-         ++iter) {
+  } else if (jkPaths.empty()) {
+    for (std::vector<std::vector<size_t>>::iterator iter = ijPaths.begin();
+         iter != ijPaths.end(); ++iter) {
       std::vector<size_t> path = *iter;
       path.push_back(j);
       splicedPaths.push_back(path);
     }
-  }
-  else {
-    for (std::vector<std::vector<size_t> >::iterator ijIter = ijPaths.begin();
-         ijIter != ijPaths.end();
-         ++ijIter) {
-      for (std::vector<std::vector<size_t> >::iterator jkIter = jkPaths.begin();
-           jkIter != jkPaths.end();
-           ++jkIter) {
+  } else {
+    for (std::vector<std::vector<size_t>>::iterator ijIter = ijPaths.begin();
+         ijIter != ijPaths.end(); ++ijIter) {
+      for (std::vector<std::vector<size_t>>::iterator jkIter = jkPaths.begin();
+           jkIter != jkPaths.end(); ++jkIter) {
         std::vector<size_t> path = *ijIter;
         path.push_back(j);
         path.insert(path.end(), jkIter->begin(), jkIter->end());
@@ -183,7 +177,7 @@ public:
   size_t end() const;
 
   // static methods
-  static bool compareSize(const RingCandidate &a, const RingCandidate &b);
+  static bool compareSize(const RingCandidate& a, const RingCandidate& b);
 
 private:
   size_t m_size;
@@ -216,7 +210,7 @@ size_t RingCandidate::end() const
 }
 
 // --- Static Methods ------------------------------------------------------ //
-bool RingCandidate::compareSize(const RingCandidate &a, const RingCandidate &b)
+bool RingCandidate::compareSize(const RingCandidate& a, const RingCandidate& b)
 {
   return a.size() < b.size();
 }
@@ -234,13 +228,13 @@ public:
   bool isEmpty() const;
 
   // rings
-  const std::vector<std::vector<size_t> >& rings() const;
-  void append(const std::vector<size_t> &ring);
-  bool isValid(const std::vector<size_t> &ring) const;
-  bool isUnique(const std::vector<size_t> &ring) const;
+  const std::vector<std::vector<size_t>>& rings() const;
+  void append(const std::vector<size_t>& ring);
+  bool isValid(const std::vector<size_t>& ring) const;
+  bool isUnique(const std::vector<size_t>& ring) const;
 
 private:
-  std::vector<std::vector<size_t> > m_rings;
+  std::vector<std::vector<size_t>> m_rings;
 };
 
 // --- Construction and Destruction ---------------------------------------- //
@@ -264,17 +258,17 @@ bool Sssr::isEmpty() const
 }
 
 // --- Rings --------------------------------------------------------------- //
-const std::vector<std::vector<size_t> >& Sssr::rings() const
+const std::vector<std::vector<size_t>>& Sssr::rings() const
 {
   return m_rings;
 }
 
-void Sssr::append(const std::vector<size_t> &ring)
+void Sssr::append(const std::vector<size_t>& ring)
 {
   m_rings.push_back(ring);
 }
 
-bool Sssr::isValid(const std::vector<size_t> &ring) const
+bool Sssr::isValid(const std::vector<size_t>& ring) const
 {
   // Check for any duplicate atoms.
   for (size_t i = 0; i < ring.size(); ++i)
@@ -285,7 +279,7 @@ bool Sssr::isValid(const std::vector<size_t> &ring) const
   return true;
 }
 
-bool Sssr::isUnique(const std::vector<size_t> &path) const
+bool Sssr::isUnique(const std::vector<size_t>& path) const
 {
   // Must be unique if sssr is empty.
   if (isEmpty())
@@ -295,10 +289,9 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
   std::set<size_t> pathSet;
   pathSet.insert(path.begin(), path.end());
 
-  for (std::vector<std::vector<size_t> >::const_iterator iter = m_rings.begin();
-       iter != m_rings.end();
-       ++iter) {
-    const std::vector<size_t> &ring = *iter;
+  for (std::vector<std::vector<size_t>>::const_iterator iter = m_rings.begin();
+       iter != m_rings.end(); ++iter) {
+    const std::vector<size_t>& ring = *iter;
 
     std::set<size_t> ringSet;
     ringSet.insert(ring.begin(), ring.end());
@@ -307,8 +300,8 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
     std::sort(sortedRing.begin(), sortedRing.end());
 
     std::set<size_t> intersection;
-    std::set_intersection(pathSet.begin(), pathSet.end(),
-                          ringSet.begin(), ringSet.end(),
+    std::set_intersection(pathSet.begin(), pathSet.end(), ringSet.begin(),
+                          ringSet.end(),
                           std::inserter(intersection, intersection.begin()));
 
     if (intersection.size() == ring.size())
@@ -316,27 +309,26 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
   }
 
   // Build the set of bonds in the path.
-  std::set<std::pair<size_t, size_t> > pathBonds;
-  for (size_t i = 0; i < path.size()-1; i++) {
-    pathBonds.insert(std::make_pair(std::min(path[i], path[i+1]),
-                                    std::max(path[i], path[i+1])));
+  std::set<std::pair<size_t, size_t>> pathBonds;
+  for (size_t i = 0; i < path.size() - 1; i++) {
+    pathBonds.insert(std::make_pair(std::min(path[i], path[i + 1]),
+                                    std::max(path[i], path[i + 1])));
   }
 
   pathBonds.insert(std::make_pair(std::min(path.front(), path.back()),
                                   std::max(path.front(), path.back())));
 
   // Remove bonds from path bonds that are already in a smaller ring.
-  for (std::vector<std::vector<size_t> >::const_iterator iter = m_rings.begin();
-       iter != m_rings.end();
-       ++iter) {
-    const std::vector<size_t> &ring = *iter;
+  for (std::vector<std::vector<size_t>>::const_iterator iter = m_rings.begin();
+       iter != m_rings.end(); ++iter) {
+    const std::vector<size_t>& ring = *iter;
 
     if (ring.size() >= path.size())
       continue;
 
     for (size_t i = 0; i < ring.size(); i++) {
-      pathBonds.erase(std::make_pair(std::min(ring[i], ring[i+1]),
-                                     std::max(ring[i], ring[i+1])));
+      pathBonds.erase(std::make_pair(std::min(ring[i], ring[i + 1]),
+                                     std::max(ring[i], ring[i + 1])));
     }
 
     pathBonds.erase(std::make_pair(std::min(ring.front(), ring.back()),
@@ -344,17 +336,16 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
   }
 
   // Check if any other ring contains the same bonds.
-  for (std::vector<std::vector<size_t> >::const_iterator iter = m_rings.begin();
-       iter != m_rings.end();
-       ++iter) {
-    const std::vector<size_t> &ring = *iter;
+  for (std::vector<std::vector<size_t>>::const_iterator iter = m_rings.begin();
+       iter != m_rings.end(); ++iter) {
+    const std::vector<size_t>& ring = *iter;
 
-    std::set<std::pair<size_t, size_t> > ringBonds;
+    std::set<std::pair<size_t, size_t>> ringBonds;
 
     // Add ring bonds.
-    for (size_t i = 0; i < ring.size()-1; i++) {
-      ringBonds.insert(std::make_pair(std::min(ring[i], ring[i+1]),
-                                      std::max(ring[i], ring[i+1])));
+    for (size_t i = 0; i < ring.size() - 1; i++) {
+      ringBonds.insert(std::make_pair(std::min(ring[i], ring[i + 1]),
+                                      std::max(ring[i], ring[i + 1])));
     }
 
     // Add closure bond.
@@ -362,9 +353,9 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
                                     std::max(ring.front(), ring.back())));
 
     // Check intersection.
-    std::set<std::pair<size_t, size_t> > intersection;
-    std::set_intersection(pathBonds.begin(), pathBonds.end(),
-                          ringBonds.begin(), ringBonds.end(),
+    std::set<std::pair<size_t, size_t>> intersection;
+    std::set_intersection(pathBonds.begin(), pathBonds.end(), ringBonds.begin(),
+                          ringBonds.end(),
                           std::inserter(intersection, intersection.begin()));
 
     if (intersection.size() == pathBonds.size())
@@ -374,13 +365,13 @@ bool Sssr::isUnique(const std::vector<size_t> &path) const
   return true;
 }
 
-std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
+std::vector<std::vector<size_t>> perceiveRings(const Graph& graph)
 {
   size_t n = graph.size();
 
   size_t ringCount = graph.vertexCount() - graph.edgeCount() + 1;
   if (ringCount == 0)
-    return std::vector<std::vector<size_t> >();
+    return std::vector<std::vector<size_t>>();
 
   // Algorithm 1 - create the distance and pid matrices.
   DistanceMatrix D(n);
@@ -412,11 +403,9 @@ std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
 
           D(i, j) = D(i, k) + D(k, j);
           P(i, j) = P.splice(i, k, j);
-        }
-        else if (D(i, j) == D(i, k) + D(k, j)) {
+        } else if (D(i, j) == D(i, k) + D(k, j)) {
           P.addPaths(i, j, P.splice(i, k, j));
-        }
-        else if (D(i, j) == D(i, k) + D(k, j) - 1) {
+        } else if (D(i, j) == D(i, k) + D(k, j) - 1) {
           Pt.addPaths(i, j, P.splice(i, k, j));
         }
       }
@@ -429,8 +418,7 @@ std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
     for (size_t j = i + 1; j < n; j++) {
       if (P(i, j).size() == 1 && Pt(i, j).size() == 0) {
         continue;
-      }
-      else {
+      } else {
         size_t size;
 
         if (P(i, j).size() > 1)
@@ -451,9 +439,8 @@ std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
   Sssr sssr;
 
   for (std::vector<RingCandidate>::iterator iter = candidates.begin();
-       iter != candidates.end();
-       ++iter) {
-    const RingCandidate &candidate = *iter;
+       iter != candidates.end(); ++iter) {
+    const RingCandidate& candidate = *iter;
 
     // odd sized ring
     if (candidate.size() & 1) {
@@ -461,7 +448,7 @@ std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
            ++i) {
         std::vector<size_t> ring;
         ring.push_back(candidate.start());
-        std::vector<size_t> &path = Pt(candidate.start(), candidate.end())[i];
+        std::vector<size_t>& path = Pt(candidate.start(), candidate.end())[i];
         ring.insert(ring.end(), path.begin(), path.end());
         ring.push_back(candidate.end());
         if (!P(candidate.end(), candidate.start()).empty()) {
@@ -483,10 +470,10 @@ std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
            ++i) {
         std::vector<size_t> ring;
         ring.push_back(candidate.start());
-        std::vector<size_t> &path = P(candidate.start(), candidate.end())[i];
+        std::vector<size_t>& path = P(candidate.start(), candidate.end())[i];
         ring.insert(ring.end(), path.begin(), path.end());
         ring.push_back(candidate.end());
-        path = P(candidate.end(), candidate.start())[i+1];
+        path = P(candidate.end(), candidate.start())[i + 1];
         ring.insert(ring.end(), path.begin(), path.end());
 
         // check if ring is valid and unique
@@ -506,7 +493,7 @@ std::vector<std::vector<size_t> > perceiveRings(const Graph &graph)
 
 } // end anonymous namespace
 
-RingPerceiver::RingPerceiver(const Molecule *m)
+RingPerceiver::RingPerceiver(const Molecule* m)
   : m_ringsPerceived(false), m_molecule(m)
 {
 }
@@ -515,7 +502,7 @@ RingPerceiver::~RingPerceiver()
 {
 }
 
-void RingPerceiver::setMolecule(const Molecule *m)
+void RingPerceiver::setMolecule(const Molecule* m)
 {
   m_molecule = m;
   m_ringsPerceived = false;
@@ -526,7 +513,7 @@ const Molecule* RingPerceiver::molecule() const
   return m_molecule;
 }
 
-std::vector<std::vector<size_t> >& RingPerceiver::rings()
+std::vector<std::vector<size_t>>& RingPerceiver::rings()
 {
   if (!m_ringsPerceived) {
     if (m_molecule)
