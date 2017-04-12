@@ -50,9 +50,8 @@ public:
    * @param tprop The properties.
    * @param bbox The result in pixels (left, right, top, bottom).
    */
-  virtual void boundingBox(const std::string &string,
-                           const TextProperties &tprop,
-                           int bbox[4]) const = 0;
+  virtual void boundingBox(const std::string& string,
+                           const TextProperties& tprop, int bbox[4]) const = 0;
 
   /**
    * @brief render Render the string.
@@ -63,10 +62,8 @@ public:
    * scan row at the beginning.
    * @param dims Dimensions in pixels of the target buffer.
    */
-  virtual void render(const std::string &string,
-                      const TextProperties &tprop,
-                      unsigned char *buffer,
-                      const Vector2i &dims) const = 0;
+  virtual void render(const std::string& string, const TextProperties& tprop,
+                      unsigned char* buffer, const Vector2i& dims) const = 0;
 };
 
 } // namespace Rendering

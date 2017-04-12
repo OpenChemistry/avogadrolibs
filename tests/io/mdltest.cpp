@@ -33,8 +33,8 @@ TEST(MdlTest, readFile)
 {
   MdlFormat mdl;
   Molecule molecule;
-  bool success = mdl.readFile(std::string(AVOGADRO_DATA) +
-                                "/data/ethane.mol", molecule);
+  bool success =
+    mdl.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.mol", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(mdl.error(), "");
   EXPECT_EQ(molecule.data("name").type(), Variant::String);
@@ -45,8 +45,8 @@ TEST(MdlTest, atoms)
 {
   MdlFormat mdl;
   Molecule molecule;
-  bool success = mdl.readFile(std::string(AVOGADRO_DATA) +
-                                "/data/ethane.mol", molecule);
+  bool success =
+    mdl.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.mol", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(mdl.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -55,14 +55,14 @@ TEST(MdlTest, atoms)
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   atom = molecule.atom(1);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(6));
-  EXPECT_DOUBLE_EQ(atom.position3d().x(),  0.7516);
+  EXPECT_DOUBLE_EQ(atom.position3d().x(), 0.7516);
   EXPECT_DOUBLE_EQ(atom.position3d().y(), -0.0224);
   EXPECT_DOUBLE_EQ(atom.position3d().z(), -0.0208);
 
   atom = molecule.atom(7);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   EXPECT_DOUBLE_EQ(atom.position3d().x(), -1.1850);
-  EXPECT_DOUBLE_EQ(atom.position3d().y(),  0.0044);
+  EXPECT_DOUBLE_EQ(atom.position3d().y(), 0.0044);
   EXPECT_DOUBLE_EQ(atom.position3d().z(), -0.9875);
 }
 
@@ -70,8 +70,8 @@ TEST(MdlTest, bonds)
 {
   MdlFormat mdl;
   Molecule molecule;
-  bool success = mdl.readFile(std::string(AVOGADRO_DATA) +
-                                "/data/ethane.mol", molecule);
+  bool success =
+    mdl.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.mol", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(mdl.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -92,9 +92,8 @@ TEST(MdlTest, saveFile)
 {
   MdlFormat mdl;
   Molecule savedMolecule, molecule;
-  bool success = mdl.readFile(std::string(AVOGADRO_DATA) +
-                                "/data/ethane.mol",
-                                savedMolecule);
+  bool success = mdl.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.mol",
+                              savedMolecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(mdl.error(), "");
 
@@ -112,7 +111,7 @@ TEST(MdlTest, saveFile)
   Atom atom = molecule.atom(7);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   EXPECT_DOUBLE_EQ(atom.position3d().x(), -1.1850);
-  EXPECT_DOUBLE_EQ(atom.position3d().y(),  0.0044);
+  EXPECT_DOUBLE_EQ(atom.position3d().y(), 0.0044);
   EXPECT_DOUBLE_EQ(atom.position3d().z(), -0.9875);
   Bond bond = molecule.bond(0);
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
@@ -142,7 +141,7 @@ TEST(MdlTest, readMulti)
   EXPECT_EQ(molecule.atom(4).atomicNumber(), 1);
 
   EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().x(), -0.5134);
-  EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().y(),  0.8892);
+  EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().y(), 0.8892);
   EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().z(), -0.3630);
 
   // Now read in the second structure.
@@ -200,12 +199,14 @@ TEST(MdlTest, readSdfData)
   EXPECT_TRUE(multi.readMolecule(mol[1]));
 
   // Check a few of the data parameters in the first few molecules.
-  EXPECT_EQ(mol[0].data("PUBCHEM_IUPAC_INCHI").toString(),
-            "InChI=1S/C9H17NO4/c1-7(11)14-8(5-9(12)13)6-10(2,3)4/h8H,5-6H2,1-4H3");
+  EXPECT_EQ(
+    mol[0].data("PUBCHEM_IUPAC_INCHI").toString(),
+    "InChI=1S/C9H17NO4/c1-7(11)14-8(5-9(12)13)6-10(2,3)4/h8H,5-6H2,1-4H3");
   EXPECT_EQ(mol[0].data("PUBCHEM_OPENEYE_CAN_SMILES").toString(),
             "CC(=O)OC(CC(=O)[O-])C[N+](C)(C)C");
-  EXPECT_EQ(mol[1].data("PUBCHEM_IUPAC_INCHI").toString(),
-            "InChI=1S/C9H17NO4/c1-7(11)14-8(5-9(12)13)6-10(2,3)4/h8H,5-6H2,1-4H3/p+1");
+  EXPECT_EQ(
+    mol[1].data("PUBCHEM_IUPAC_INCHI").toString(),
+    "InChI=1S/C9H17NO4/c1-7(11)14-8(5-9(12)13)6-10(2,3)4/h8H,5-6H2,1-4H3/p+1");
   EXPECT_EQ(mol[1].data("PUBCHEM_OPENEYE_CAN_SMILES").toString(),
             "CC(=O)OC(CC(=O)O)C[N+](C)(C)C");
 }

@@ -24,14 +24,14 @@
 #include <avogadro/io/fileformatmanager.h>
 
 #include <avogadro/qtgui/generichighlighter.h>
-#include <avogadro/qtgui/pythonscript.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/pythonscript.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-#include <QtCore/QJsonDocument>
-#include <QtCore/QJsonArray>
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
 
 namespace Avogadro {
 namespace QtGui {
@@ -39,16 +39,15 @@ namespace QtGui {
 using QtGui::PythonScript;
 using QtGui::GenericHighlighter;
 
-InterfaceScript::InterfaceScript(const QString &scriptFilePath_, QObject *parent_)
-  : QObject(parent_),
-    m_interpreter(new PythonScript(scriptFilePath_, this)),
+InterfaceScript::InterfaceScript(const QString& scriptFilePath_,
+                                 QObject* parent_)
+  : QObject(parent_), m_interpreter(new PythonScript(scriptFilePath_, this)),
     m_moleculeExtension("cjson")
 {
 }
 
-InterfaceScript::InterfaceScript(QObject *parent_)
-  : QObject(parent_),
-    m_interpreter(new PythonScript(this)),
+InterfaceScript::InterfaceScript(QObject* parent_)
+  : QObject(parent_), m_interpreter(new PythonScript(this)),
     m_moleculeExtension("cjson")
 {
 }
@@ -70,8 +69,8 @@ QJsonObject InterfaceScript::options() const
     m_highlightStyles.clear();
 
     // Retrieve/set options
-    QByteArray json = m_interpreter->execute(
-          QStringList() << "--print-options");
+    QByteArray json =
+      m_interpreter->execute(QStringList() << "--print-options");
 
     if (m_interpreter->hasErrors()) {
       m_errors << m_interpreter->errorList();
@@ -84,7 +83,8 @@ QJsonObject InterfaceScript::options() const
 
     if (!doc.isObject()) {
       m_errors << tr("script --print-options output must be an JSON object "
-                     "at top level. Received:\n%1").arg(json.constData());
+                     "at top level. Received:\n%1")
+                    .arg(json.constData());
       return m_options;
     }
 
@@ -97,8 +97,8 @@ QJsonObject InterfaceScript::options() const
       m_moleculeExtension = m_options["inputMoleculeFormat"].toString();
     }
 
-    if (m_options.contains("highlightStyles")
-        && m_options.value("highlightStyles").isArray()) {
+    if (m_options.contains("highlightStyles") &&
+        m_options.value("highlightStyles").isArray()) {
       if (!parseHighlightStyles(m_options.value("highlightStyles").toArray())) {
         qDebug() << "Failed to parse highlighting styles.";
       }
@@ -112,8 +112,8 @@ QString InterfaceScript::displayName() const
 {
   m_errors.clear();
   if (m_displayName.isEmpty()) {
-    m_displayName = QString(m_interpreter->execute(
-                              QStringList() << "--display-name"));
+    m_displayName =
+      QString(m_interpreter->execute(QStringList() << "--display-name"));
     m_errors << m_interpreter->errorList();
     m_displayName = m_displayName.trimmed();
   }
@@ -125,8 +125,8 @@ QString InterfaceScript::menuPath() const
 {
   m_errors.clear();
   if (m_menuPath.isEmpty()) {
-    m_menuPath = QString(m_interpreter->execute(
-                          QStringList() << "--menu-path"));
+    m_menuPath =
+      QString(m_interpreter->execute(QStringList() << "--menu-path"));
     m_errors << m_interpreter->errorList();
     m_menuPath = m_menuPath.trimmed();
   }
@@ -139,7 +139,7 @@ QString InterfaceScript::scriptFilePath() const
   return m_interpreter->scriptFilePath();
 }
 
-void InterfaceScript::setScriptFilePath(const QString &scriptFile)
+void InterfaceScript::setScriptFilePath(const QString& scriptFile)
 {
   reset();
   m_interpreter->setScriptFilePath(scriptFile);
@@ -161,8 +161,8 @@ void InterfaceScript::reset()
   m_highlightStyles.clear();
 }
 
-bool InterfaceScript::runWorkflow(const QJsonObject &options_,
-                                  Core::Molecule *mol)
+bool InterfaceScript::runWorkflow(const QJsonObject& options_,
+                                  Core::Molecule* mol)
 {
   m_errors.clear();
   m_warnings.clear();
@@ -197,28 +197,27 @@ bool InterfaceScript::runWorkflow(const QJsonObject &options_,
     // Check for any warnings:
     if (obj.contains("warnings")) {
       if (obj["warnings"].isArray()) {
-        foreach (const QJsonValue &warning, obj["warnings"].toArray()) {
+        foreach (const QJsonValue& warning, obj["warnings"].toArray()) {
           if (warning.isString())
             m_warnings << warning.toString();
           else
             m_errors << tr("Non-string warning returned.");
         }
-      }
-      else {
+      } else {
         m_errors << tr("'warnings' member is not an array.");
       }
     }
 
     // TODO: add smart updates
-    Io::FileFormatManager &formats = Io::FileFormatManager::instance();
-    QScopedPointer<Io::FileFormat> format(formats.newFormatFromFileExtension(
-                                            "cjson"));
+    Io::FileFormatManager& formats = Io::FileFormatManager::instance();
+    QScopedPointer<Io::FileFormat> format(
+      formats.newFormatFromFileExtension("cjson"));
     // convert the "cjson" field to a string
     QJsonObject cjsonObj = obj["cjson"].toObject();
     QJsonDocument doc(cjsonObj);
     QString strCJSON(doc.toJson(QJsonDocument::Compact));
     if (!strCJSON.isEmpty()) {
-      QtGui::Molecule *guiMol = static_cast<QtGui::Molecule *>(mol);
+      QtGui::Molecule* guiMol = static_cast<QtGui::Molecule*>(mol);
       QtGui::Molecule newMol(guiMol->parent());
       result = format->readString(strCJSON.toStdString(), newMol);
 
@@ -226,7 +225,8 @@ bool InterfaceScript::runWorkflow(const QJsonObject &options_,
         guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
       } else { // replace the whole molecule
         Molecule::MoleculeChanges changes =
-         (Molecule::Atoms | Molecule::Bonds | Molecule::Added | Molecule::Removed);
+          (Molecule::Atoms | Molecule::Bonds | Molecule::Added |
+           Molecule::Removed);
         guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
       }
     }
@@ -234,8 +234,8 @@ bool InterfaceScript::runWorkflow(const QJsonObject &options_,
   return result;
 }
 
-bool InterfaceScript::generateInput(const QJsonObject &options_,
-                                   const Core::Molecule &mol)
+bool InterfaceScript::generateInput(const QJsonObject& options_,
+                                    const Core::Molecule& mol)
 {
   m_errors.clear();
   m_warnings.clear();
@@ -270,14 +270,13 @@ bool InterfaceScript::generateInput(const QJsonObject &options_,
     // Check for any warnings:
     if (obj.contains("warnings")) {
       if (obj["warnings"].isArray()) {
-        foreach (const QJsonValue &warning, obj["warnings"].toArray()) {
+        foreach (const QJsonValue& warning, obj["warnings"].toArray()) {
           if (warning.isString())
             m_warnings << warning.toString();
           else
             m_errors << tr("Non-string warning returned.");
         }
-      }
-      else {
+      } else {
         m_errors << tr("'warnings' member is not an array.");
       }
     }
@@ -285,7 +284,7 @@ bool InterfaceScript::generateInput(const QJsonObject &options_,
     // Extract input file text:
     if (obj.contains("files")) {
       if (obj["files"].isArray()) {
-        foreach (const QJsonValue &file, obj["files"].toArray()) {
+        foreach (const QJsonValue& file, obj["files"].toArray()) {
           if (file.isObject()) {
             QJsonObject fileObj = file.toObject();
             if (fileObj["filename"].isString()) {
@@ -293,23 +292,20 @@ bool InterfaceScript::generateInput(const QJsonObject &options_,
               QString contents;
               if (fileObj["contents"].isString()) {
                 contents = fileObj["contents"].toString();
-              }
-              else if (fileObj["filePath"].isString()) {
+              } else if (fileObj["filePath"].isString()) {
                 QFile refFile(fileObj["filePath"].toString());
                 if (refFile.exists() && refFile.open(QFile::ReadOnly)) {
                   contents = QString(refFile.readAll());
-                }
-                else {
+                } else {
                   contents = tr("Reference file '%1' does not exist.")
-                      .arg(refFile.fileName());
+                               .arg(refFile.fileName());
                   m_warnings << tr("Error populating file %1: %2")
-                                .arg(fileName, contents);
+                                  .arg(fileName, contents);
                 }
-              }
-              else {
+              } else {
                 m_errors << tr("File '%1' poorly formed. Missing string "
                                "'contents' or 'filePath' members.")
-                            .arg(fileName);
+                              .arg(fileName);
                 contents = m_errors.back();
                 result = false;
               }
@@ -319,18 +315,16 @@ bool InterfaceScript::generateInput(const QJsonObject &options_,
 
               // Concatenate the requested styles for this input file.
               if (fileObj["highlightStyles"].isArray()) {
-                GenericHighlighter *highlighter(new GenericHighlighter(this));
-                foreach (const QJsonValue &styleVal,
+                GenericHighlighter* highlighter(new GenericHighlighter(this));
+                foreach (const QJsonValue& styleVal,
                          fileObj["highlightStyles"].toArray()) {
                   if (styleVal.isString()) {
                     QString styleName(styleVal.toString());
                     if (m_highlightStyles.contains(styleName)) {
                       *highlighter += *m_highlightStyles[styleName];
-                    }
-                    else {
-                      qDebug() << "Cannot find highlight style '"
-                               << styleName << "' for file '"
-                               << fileName << "'";
+                    } else {
+                      qDebug() << "Cannot find highlight style '" << styleName
+                               << "' for file '" << fileName << "'";
                     }
                   }
                 }
@@ -339,27 +333,23 @@ bool InterfaceScript::generateInput(const QJsonObject &options_,
                 else
                   highlighter->deleteLater();
               }
-            }
-            else {
+            } else {
               result = false;
               m_errors << tr("Malformed file entry: filename/contents missing"
                              " or not strings:\n%1")
-                          .arg(QString(QJsonDocument(fileObj).toJson()));
+                            .arg(QString(QJsonDocument(fileObj).toJson()));
             } // end if/else filename and contents are strings
-          }
-          else {
+          } else {
             result = false;
             m_errors << tr("Malformed file entry at index %1: Not an object.")
-                        .arg(m_filenames.size());
+                          .arg(m_filenames.size());
           } // end if/else file is JSON object
-        } // end foreach file
-      }
-      else {
+        }   // end foreach file
+      } else {
         result = false;
         m_errors << tr("'files' member not an array.");
       } // end if obj["files"] is JSON array
-    }
-    else {
+    } else {
       result = false;
       m_errors << tr("'files' member missing.");
     } // end if obj contains "files"
@@ -370,27 +360,23 @@ bool InterfaceScript::generateInput(const QJsonObject &options_,
         QString mainFile = obj["mainFile"].toString();
         if (m_filenames.contains(mainFile)) {
           m_mainFileName = mainFile;
-        }
-        else {
+        } else {
           result = false;
           m_errors << tr("'mainFile' member does not refer to an entry in "
                          "'files'.");
         } // end if/else mainFile is known
-      }
-      else {
+      } else {
         result = false;
         m_errors << tr("'mainFile' member must be a string.");
       } // end if/else mainFile is string
-    }
-    else {
+    } else {
       // If no mainFile is specified and there is only one file, use it as the
       // main file. Otherwise, don't set a main input file -- all files will
       // be treated as supplemental input files
       if (m_filenames.size() == 1)
         m_mainFileName = m_filenames.first();
     } // end if/else object contains mainFile
-  }
-  else {
+  } else {
     result = false;
     m_errors << tr("Response must be a JSON object at top-level.");
   }
@@ -416,15 +402,15 @@ QString InterfaceScript::mainFileName() const
   return m_mainFileName;
 }
 
-QString InterfaceScript::fileContents(const QString &fileName) const
+QString InterfaceScript::fileContents(const QString& fileName) const
 {
   return m_files.value(fileName, QString());
 }
 
-GenericHighlighter *
-InterfaceScript::createFileHighlighter(const QString &fileName) const
+GenericHighlighter* InterfaceScript::createFileHighlighter(
+  const QString& fileName) const
 {
-  GenericHighlighter *toClone(m_fileHighlighters.value(fileName, nullptr));
+  GenericHighlighter* toClone(m_fileHighlighters.value(fileName, nullptr));
   return toClone ? new GenericHighlighter(*toClone) : toClone;
 }
 
@@ -433,21 +419,24 @@ void InterfaceScript::setDebug(bool d)
   m_interpreter->setDebug(d);
 }
 
-bool InterfaceScript::parseJson(const QByteArray &json, QJsonDocument &doc) const
+bool InterfaceScript::parseJson(const QByteArray& json,
+                                QJsonDocument& doc) const
 {
   QJsonParseError error;
   doc = QJsonDocument::fromJson(json, &error);
 
   if (error.error != QJsonParseError::NoError) {
     m_errors << tr("Parse error at offset %L1: '%2'\nRaw JSON:\n\n%3")
-                .arg(error.offset).arg(error.errorString()).arg(QString(json));
+                  .arg(error.offset)
+                  .arg(error.errorString())
+                  .arg(QString(json));
     return false;
   }
   return true;
 }
 
-bool InterfaceScript::insertMolecule(QJsonObject &json,
-                                    const Core::Molecule &mol) const
+bool InterfaceScript::insertMolecule(QJsonObject& json,
+                                     const Core::Molecule& mol) const
 {
   // Update the cached options if the format is not set
   if (m_moleculeExtension == "Unknown")
@@ -456,40 +445,43 @@ bool InterfaceScript::insertMolecule(QJsonObject &json,
   if (m_moleculeExtension == "None")
     return true;
 
-  Io::FileFormatManager &formats = Io::FileFormatManager::instance();
-  QScopedPointer<Io::FileFormat> format(formats.newFormatFromFileExtension(
-                                          m_moleculeExtension.toStdString()));
+  Io::FileFormatManager& formats = Io::FileFormatManager::instance();
+  QScopedPointer<Io::FileFormat> format(
+    formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
 
   if (format.isNull()) {
     m_errors << tr("Error writing molecule representation to string: "
-                   "Unrecognized file format: %1").arg(m_moleculeExtension);
+                   "Unrecognized file format: %1")
+                  .arg(m_moleculeExtension);
     return false;
   }
 
   std::string str;
   if (!format->writeString(str, mol)) {
     m_errors << tr("Error writing molecule representation to string: %1")
-                   .arg(QString::fromStdString(format->error()));
+                  .arg(QString::fromStdString(format->error()));
     return false;
   }
 
   if (m_moleculeExtension != "cjson") {
     json.insert(m_moleculeExtension, QJsonValue(QString::fromStdString(str)));
-  }
-  else {
+  } else {
     // If cjson was requested, embed the actual JSON, rather than the string.
     QJsonParseError error;
     QJsonDocument doc = QJsonDocument::fromJson(str.c_str(), &error);
     if (error.error != QJsonParseError::NoError) {
       m_errors << tr("Error generating cjson object: Parse error at offset %1: "
-                     "%2\nRaw JSON:\n\n%3").arg(error.offset)
-                  .arg(error.errorString()).arg(QString::fromStdString(str));
+                     "%2\nRaw JSON:\n\n%3")
+                    .arg(error.offset)
+                    .arg(error.errorString())
+                    .arg(QString::fromStdString(str));
       return false;
     }
 
     if (!doc.isObject()) {
       m_errors << tr("Error generator cjson object: Parsed JSON is not an "
-                     "object:\n%1").arg(QString::fromStdString(str));
+                     "object:\n%1")
+                    .arg(QString::fromStdString(str));
       return false;
     }
 
@@ -499,8 +491,8 @@ bool InterfaceScript::insertMolecule(QJsonObject &json,
   return true;
 }
 
-QString InterfaceScript::generateCoordinateBlock(const QString &spec,
-                                                const Core::Molecule &mol) const
+QString InterfaceScript::generateCoordinateBlock(
+  const QString& spec, const Core::Molecule& mol) const
 {
   Core::CoordinateBlockGenerator gen;
   gen.setMolecule(&mol);
@@ -511,8 +503,8 @@ QString InterfaceScript::generateCoordinateBlock(const QString &spec,
   return QString::fromStdString(tmp);
 }
 
-void InterfaceScript::replaceKeywords(QString &str,
-                                     const Core::Molecule &mol) const
+void InterfaceScript::replaceKeywords(QString& str,
+                                      const Core::Molecule& mol) const
 {
   // Simple keywords:
   str.replace("$$atomCount$$", QString::number(mol.atomCount()));
@@ -533,7 +525,7 @@ void InterfaceScript::replaceKeywords(QString &str,
   } // end for coordinate block
 }
 
-bool InterfaceScript::parseHighlightStyles(const QJsonArray &json) const
+bool InterfaceScript::parseHighlightStyles(const QJsonArray& json) const
 {
   bool result(true);
   foreach (QJsonValue styleVal, json) {
@@ -575,8 +567,8 @@ bool InterfaceScript::parseHighlightStyles(const QJsonArray &json) const
     }
     QJsonArray rulesArray(styleObj.value("rules").toArray());
 
-    GenericHighlighter *highlighter(new GenericHighlighter(
-                                      const_cast<InterfaceScript*>(this)));
+    GenericHighlighter* highlighter(
+      new GenericHighlighter(const_cast<InterfaceScript*>(this)));
     if (!parseRules(rulesArray, *highlighter)) {
       qDebug() << "Error parsing style" << styleName << endl
                << QString(QJsonDocument(styleObj).toJson());
@@ -590,8 +582,8 @@ bool InterfaceScript::parseHighlightStyles(const QJsonArray &json) const
   return result;
 }
 
-bool InterfaceScript::parseRules(const QJsonArray &json,
-                                GenericHighlighter &highligher) const
+bool InterfaceScript::parseRules(const QJsonArray& json,
+                                 GenericHighlighter& highligher) const
 {
   bool result(true);
   foreach (QJsonValue ruleVal, json) {
@@ -630,13 +622,13 @@ bool InterfaceScript::parseRules(const QJsonArray &json,
     }
     QJsonObject formatObj(ruleObj.value("format").toObject());
 
-    GenericHighlighter::Rule &rule = highligher.addRule();
+    GenericHighlighter::Rule& rule = highligher.addRule();
 
     foreach (QJsonValue patternVal, patternsArray) {
       QRegExp pattern;
       if (!parsePattern(patternVal, pattern)) {
         qDebug() << "Error while parsing pattern:" << endl
-            << QString(QJsonDocument(patternVal.toObject()).toJson());
+                 << QString(QJsonDocument(patternVal.toObject()).toJson());
         result = false;
         continue;
       }
@@ -655,8 +647,8 @@ bool InterfaceScript::parseRules(const QJsonArray &json,
   return result;
 }
 
-bool InterfaceScript::parseFormat(const QJsonObject &json,
-                                 QTextCharFormat &format) const
+bool InterfaceScript::parseFormat(const QJsonObject& json,
+                                  QTextCharFormat& format) const
 {
   // Check for presets first:
   if (json.contains("preset")) {
@@ -672,25 +664,20 @@ bool InterfaceScript::parseFormat(const QJsonObject &json,
       format.setFontFamily("serif");
       format.setForeground(Qt::darkGreen);
       format.setFontWeight(QFont::Bold);
-    }
-    else if (preset == "keyword") {
+    } else if (preset == "keyword") {
       format.setFontFamily("mono");
       format.setForeground(Qt::darkBlue);
-    }
-    else if (preset == "property") {
+    } else if (preset == "property") {
       format.setFontFamily("mono");
       format.setForeground(Qt::darkRed);
-    }
-    else if (preset == "literal") {
+    } else if (preset == "literal") {
       format.setFontFamily("mono");
       format.setForeground(Qt::darkMagenta);
-    }
-    else if (preset == "comment") {
+    } else if (preset == "comment") {
       format.setFontFamily("serif");
       format.setForeground(Qt::darkGreen);
       format.setFontItalic(true);
-    }
-    else {
+    } else {
       qDebug() << "Invalid style preset: " << preset;
       return false;
     }
@@ -698,8 +685,9 @@ bool InterfaceScript::parseFormat(const QJsonObject &json,
   }
 
   // Extract an RGB tuple from 'array' as a QBrush:
-  struct {
-    QBrush operator()(const QJsonArray &array, bool *ok)
+  struct
+  {
+    QBrush operator()(const QJsonArray& array, bool* ok)
     {
       *ok = false;
       QBrush result;
@@ -725,8 +713,7 @@ bool InterfaceScript::parseFormat(const QJsonObject &json,
     }
   } colorParser;
 
-  if (json.contains("foreground")
-      && json.value("foreground").isArray()) {
+  if (json.contains("foreground") && json.value("foreground").isArray()) {
     QJsonArray foregroundArray(json.value("foreground").toArray());
     bool ok;
     format.setForeground(colorParser(foregroundArray, &ok));
@@ -734,8 +721,7 @@ bool InterfaceScript::parseFormat(const QJsonObject &json,
       return false;
   }
 
-  if (json.contains("background")
-      && json.value("background").isArray()) {
+  if (json.contains("background") && json.value("background").isArray()) {
     QJsonArray backgroundArray(json.value("background").toArray());
     bool ok;
     format.setBackground(colorParser(backgroundArray, &ok));
@@ -743,54 +729,50 @@ bool InterfaceScript::parseFormat(const QJsonObject &json,
       return false;
   }
 
-  if (json.contains("attributes")
-      && json.value("attributes").isArray()) {
+  if (json.contains("attributes") && json.value("attributes").isArray()) {
     QJsonArray attributesArray(json.value("attributes").toArray());
     format.setFontWeight(attributesArray.contains(QLatin1String("bold"))
-                         ? QFont::Bold : QFont::Normal);
+                           ? QFont::Bold
+                           : QFont::Normal);
     format.setFontItalic(attributesArray.contains(QLatin1String("italic")));
     format.setFontUnderline(
-          attributesArray.contains(QLatin1String("underline")));
+      attributesArray.contains(QLatin1String("underline")));
   }
 
-  if (json.contains("family")
-      && json.value("family").isString()) {
+  if (json.contains("family") && json.value("family").isString()) {
     format.setFontFamily(json.value("family").toString());
   }
 
   return true;
 }
 
-bool InterfaceScript::parsePattern(const QJsonValue &json,
-                                  QRegExp &pattern) const
+bool InterfaceScript::parsePattern(const QJsonValue& json,
+                                   QRegExp& pattern) const
 {
   if (!json.isObject())
     return false;
 
   QJsonObject patternObj(json.toObject());
 
-  if (patternObj.contains("regexp")
-      && patternObj.value("regexp").isString()) {
+  if (patternObj.contains("regexp") && patternObj.value("regexp").isString()) {
     pattern.setPatternSyntax(QRegExp::RegExp2);
     pattern.setPattern(patternObj.value("regexp").toString());
-  }
-  else if (patternObj.contains("wildcard")
-           && patternObj.value("wildcard").isString()) {
+  } else if (patternObj.contains("wildcard") &&
+             patternObj.value("wildcard").isString()) {
     pattern.setPatternSyntax(QRegExp::WildcardUnix);
     pattern.setPattern(patternObj.value("wildcard").toString());
-  }
-  else if (patternObj.contains("string")
-           && patternObj.value("string").isString()) {
+  } else if (patternObj.contains("string") &&
+             patternObj.value("string").isString()) {
     pattern.setPatternSyntax(QRegExp::FixedString);
     pattern.setPattern(patternObj.value("string").toString());
-  }
-  else {
+  } else {
     return false;
   }
 
   if (patternObj.contains("caseSensitive")) {
     pattern.setCaseSensitivity(patternObj.value("caseSensitive").toBool(true)
-                               ? Qt::CaseSensitive : Qt::CaseInsensitive);
+                                 ? Qt::CaseSensitive
+                                 : Qt::CaseInsensitive);
   }
 
   return true;

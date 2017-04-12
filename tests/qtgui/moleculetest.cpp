@@ -16,13 +16,13 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/array.h>
+#include <avogadro/core/color3f.h>
+#include <avogadro/core/mesh.h>
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/persistentatom.h>
 #include <avogadro/qtgui/persistentbond.h>
-#include <avogadro/core/array.h>
-#include <avogadro/core/mesh.h>
-#include <avogadro/core/color3f.h>
-#include <avogadro/core/vector.h>
 
 #include "utils.h"
 
@@ -67,7 +67,7 @@ MoleculeTest::MoleculeTest()
   data.setValue("test", Avogadro::Core::Variant("test"));
   m_testMolecule.setDataMap(data);
 
-  Mesh *mesh = m_testMolecule.addMesh();
+  Mesh* mesh = m_testMolecule.addMesh();
 
   Array<Avogadro::Vector3f> vertices;
   Array<Avogadro::Vector3f> normals;
@@ -568,7 +568,7 @@ TEST_F(MoleculeTest, baseAssignment)
   data.setValue("test", Avogadro::Core::Variant("test"));
   baseMolecule.setDataMap(data);
 
-  Mesh *mesh = baseMolecule.addMesh();
+  Mesh* mesh = baseMolecule.addMesh();
 
   Array<Avogadro::Vector3f> vertices;
   Array<Avogadro::Vector3f> normals;

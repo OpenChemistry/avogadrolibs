@@ -30,11 +30,11 @@ class QTAIMEngine : public QtGui::ScenePlugin
 {
   Q_OBJECT
 public:
-  explicit QTAIMEngine(QObject *parent=0);
+  explicit QTAIMEngine(QObject* parent = 0);
   virtual ~QTAIMEngine() override;
 
-  void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) override;
+  void process(const Core::Molecule& molecule,
+               Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("QTAIM"); }
 

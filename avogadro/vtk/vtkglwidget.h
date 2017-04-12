@@ -22,14 +22,14 @@
 #include <vtkNew.h>
 #include <vtkSmartPointer.h>
 
-#include <avogadro/rendering/glrenderer.h>
 #include <avogadro/qtgui/scenepluginmodel.h>
+#include <avogadro/rendering/glrenderer.h>
 
 #include <QtCore/QPointer>
 
 class vtkAvogadroActor;
 class vtkLookupTable;
-//class vtkRenderViewBase;
+// class vtkRenderViewBase;
 class vtkRenderer;
 class vtkVolume;
 
@@ -52,14 +52,14 @@ public:
   ~vtkGLWidget();
 
   /** Set the molecule the widget will render. */
-  void setMolecule(QtGui::Molecule *molecule);
+  void setMolecule(QtGui::Molecule* molecule);
 
   /**
    * Get the molecule being rendered by the widget.
    * @{
    */
-  QtGui::Molecule * molecule();
-  const QtGui::Molecule * molecule() const;
+  QtGui::Molecule* molecule();
+  const QtGui::Molecule* molecule() const;
   /** @}*/
 
   /** Get a reference to the renderer for the widget. */
@@ -95,18 +95,17 @@ public slots:
 private:
   QPointer<QtGui::Molecule> m_molecule;
   QList<QtGui::ToolPlugin*> m_tools;
-  QtGui::ToolPlugin *m_activeTool;
-  QtGui::ToolPlugin *m_defaultTool;
+  QtGui::ToolPlugin* m_activeTool;
+  QtGui::ToolPlugin* m_defaultTool;
   Rendering::GLRenderer m_renderer;
   QtGui::ScenePluginModel m_scenePlugins;
 
   vtkNew<vtkAvogadroActor> m_actor;
-  //vtkNew<vtkRenderViewBase> m_context;
+  // vtkNew<vtkRenderViewBase> m_context;
   vtkNew<vtkRenderer> m_vtkRenderer;
   vtkNew<vtkLookupTable> m_lut;
   vtkSmartPointer<vtkVolume> m_volume;
 };
-
 }
 }
 

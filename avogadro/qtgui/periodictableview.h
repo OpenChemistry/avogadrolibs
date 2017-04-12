@@ -26,7 +26,8 @@ namespace Avogadro {
 namespace QtGui {
 
 /**
- * @class PeriodicTableView periodictableview.h <avogadro/qtgui/periodictableview.h>
+ * @class PeriodicTableView periodictableview.h
+ * <avogadro/qtgui/periodictableview.h>
  * @author Marcus D. Hanwell
  * @brief This class implements the view of the periodic table showing all
  * elements.
@@ -44,7 +45,7 @@ public:
    * Constructor - contructs a new PeriodicTableView with an internal instance
    * of PeriodicTableScene.
    */
-  explicit PeriodicTableView(QWidget *parent_ = 0);
+  explicit PeriodicTableView(QWidget* parent_ = 0);
   ~PeriodicTableView();
 
   /**
@@ -79,17 +80,17 @@ protected:
   /**
    * Double click event - select an element and hide the PeriodicTableView.
    */
-  void mouseDoubleClickEvent(QMouseEvent *event);
+  void mouseDoubleClickEvent(QMouseEvent* event);
 
   /**
    * Handles the keyboard events to change the active element.
    */
-  void keyPressEvent(QKeyEvent *event_);
+  void keyPressEvent(QKeyEvent* event_);
 
   /**
    * Handle resize events.
    */
-  void resizeEvent(QResizeEvent *event);
+  void resizeEvent(QResizeEvent* event);
 
 private:
   /**
@@ -97,7 +98,7 @@ private:
    */
   int m_element;
 
-  QString   m_keyPressBuffer;
+  QString m_keyPressBuffer;
 };
 
 } // End of QtGui namespace

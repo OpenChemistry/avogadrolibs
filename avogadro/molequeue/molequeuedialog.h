@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEDIALOG_H
 #define AVOGADRO_MOLEQUEUE_MOLEQUEUEDIALOG_H
 
-#include <QtWidgets/QDialog>
 #include "avogadromolequeueexport.h"
+#include <QtWidgets/QDialog>
 
 #include <avogadro/core/avogadrocore.h>
 
@@ -35,7 +35,8 @@ class MoleQueueDialog;
 }
 
 /**
- * @class MoleQueueDialog molequeuedialog.h <avogadro/molequeue/molequeuedialog.h>
+ * @class MoleQueueDialog molequeuedialog.h
+ * <avogadro/molequeue/molequeuedialog.h>
  * @brief The MoleQueueDialog class provides a thin wrapper around
  * MoleQueueWidget for standalone use.
  * @sa MoleQueueWidget MoleQueueManager
@@ -44,13 +45,14 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueDialog : public QDialog
 {
   Q_OBJECT
 public:
-  explicit MoleQueueDialog(QWidget *parent_ = 0);
+  explicit MoleQueueDialog(QWidget* parent_ = 0);
   ~MoleQueueDialog() override;
 
   /**
    * @brief Options controlling job submission behavior in the submitJob method.
    */
-  enum SubmitOption {
+  enum SubmitOption
+  {
     /**
      * Keep the dialog open until MoleQueue replies to the submission request.
      * If a submission error occurs, the user will have to opportunity to fix
@@ -72,7 +74,8 @@ public:
   /**
    * @brief Return values from submitJob indicating result.
    */
-  enum SubmitStatus {
+  enum SubmitStatus
+  {
     /**
      * The job was accepted by MoleQueue.
      * This can only be returned when WaitForSubmissionResponse IS set as an
@@ -135,11 +138,11 @@ public:
    * If an error occurs, this value will be set to -1.
    * @return A SubmitStatus enum value indicating the result of the submission.
    */
-  static SubmitStatus submitJob(QWidget *parent_, const QString &caption,
-                                ::MoleQueue::JobObject &jobTemplate,
+  static SubmitStatus submitJob(QWidget* parent_, const QString& caption,
+                                ::MoleQueue::JobObject& jobTemplate,
                                 SubmitOptions options,
-                                unsigned int *moleQueueId = nullptr,
-                                int *submissionRequestId = nullptr);
+                                unsigned int* moleQueueId = nullptr,
+                                int* submissionRequestId = nullptr);
 
   /**
    * Show a job configuration dialog and collect the user's selected options.
@@ -149,22 +152,22 @@ public:
    * with the configured job options.
    * @return True on success, false otherwise.
    */
-  static bool promptForJobOptions(QWidget *windowParent, const QString &caption,
-                                  ::MoleQueue::JobObject &jobTemplate);
+  static bool promptForJobOptions(QWidget* windowParent, const QString& caption,
+                                  ::MoleQueue::JobObject& jobTemplate);
 
   /**
    * @return A reference to the internal MoleQueueWidget instance.
    * @{
    */
-  MoleQueueWidget &widget();
-  const MoleQueueWidget &widget() const;
+  MoleQueueWidget& widget();
+  const MoleQueueWidget& widget() const;
   /** @} */
 
 public slots:
   void done(int r);
 
 private:
-  typedef QPair<QObject *, const char*> MetaMethod;
+  typedef QPair<QObject*, const char*> MetaMethod;
   /**
    * Wait @a timeout milliseconds for @a source to emit @a signal.
    * @param signalList List of QObject* and const char* (signals) to listen for.
@@ -172,10 +175,10 @@ private:
    * forever.
    * @return True if a signal in @a signalList is received, false on timeout.
    */
-  bool waitForSignal(const QList<MetaMethod> &signalList,
+  bool waitForSignal(const QList<MetaMethod>& signalList,
                      int msTimeout = 5000) const;
 
-  Ui::MoleQueueDialog *m_ui;
+  Ui::MoleQueueDialog* m_ui;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(MoleQueueDialog::SubmitOptions)

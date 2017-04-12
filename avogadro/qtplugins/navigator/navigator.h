@@ -36,53 +36,51 @@ class Navigator : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit Navigator(QObject *parent_ = nullptr);
+  explicit Navigator(QObject* parent_ = nullptr);
   ~Navigator();
 
   QString name() const override { return tr("Navigate tool"); }
   QString description() const override { return tr("Navigate tool"); }
   unsigned char priority() const override { return 10; }
-  QAction * activateAction() const override { return m_activateAction; }
-  QWidget * toolWidget() const override;
+  QAction* activateAction() const override { return m_activateAction; }
+  QWidget* toolWidget() const override;
 
-  void setMolecule(QtGui::Molecule *mol) override { m_molecule = mol; }
-  void setGLWidget(QtOpenGL::GLWidget *widget) override
-  {
-    m_glWidget = widget;
-  }
-  void setGLRenderer(Rendering::GLRenderer *renderer) override
+  void setMolecule(QtGui::Molecule* mol) override { m_molecule = mol; }
+  void setGLWidget(QtOpenGL::GLWidget* widget) override { m_glWidget = widget; }
+  void setGLRenderer(Rendering::GLRenderer* renderer) override
   {
     m_renderer = renderer;
   }
 
-  QUndoCommand * mousePressEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseMoveEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) override;
-  QUndoCommand * wheelEvent(QWheelEvent *e) override;
-  QUndoCommand * keyPressEvent(QKeyEvent *e) override;
-  QUndoCommand * keyReleaseEvent(QKeyEvent *e) override;
+  QUndoCommand* mousePressEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseMoveEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseDoubleClickEvent(QMouseEvent* e) override;
+  QUndoCommand* wheelEvent(QWheelEvent* e) override;
+  QUndoCommand* keyPressEvent(QKeyEvent* e) override;
+  QUndoCommand* keyReleaseEvent(QKeyEvent* e) override;
 
 private:
   /**
    * Update the currently pressed buttons, accounting for modifier keys.
    * \todo Account for modifier keys.
    */
-  void updatePressedButtons(QMouseEvent *, bool release);
+  void updatePressedButtons(QMouseEvent*, bool release);
 
-  void rotate(const Vector3f &ref, float x, float y, float z);
-  void zoom(const Vector3f &ref, float d);
-  void translate(const Vector3f &ref, float x, float y);
-  void translate(const Vector3f &ref, const Vector2f &from, const Vector2f &to);
+  void rotate(const Vector3f& ref, float x, float y, float z);
+  void zoom(const Vector3f& ref, float d);
+  void translate(const Vector3f& ref, float x, float y);
+  void translate(const Vector3f& ref, const Vector2f& from, const Vector2f& to);
 
-  QAction *m_activateAction;
-  QtGui::Molecule *m_molecule;
-  QtOpenGL::GLWidget *m_glWidget;
-  Rendering::GLRenderer *m_renderer;
+  QAction* m_activateAction;
+  QtGui::Molecule* m_molecule;
+  QtOpenGL::GLWidget* m_glWidget;
+  Rendering::GLRenderer* m_renderer;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;
 
-  enum ToolAction {
+  enum ToolAction
+  {
     Nothing = 0,
     Rotation,
     Translation,

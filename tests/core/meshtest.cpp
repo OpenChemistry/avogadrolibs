@@ -17,19 +17,21 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/array.h>
+#include <avogadro/core/color3f.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/vector.h>
-#include <avogadro/core/color3f.h>
 
 using Avogadro::Vector3f;
 using Avogadro::Core::Array;
 using Avogadro::Core::Color3f;
 using Avogadro::Core::Mesh;
 
-class MeshTest : public testing::Test {
+class MeshTest : public testing::Test
+{
 public:
   MeshTest();
-  void assertEquals(const Mesh &m1, const Mesh &m2);
+  void assertEquals(const Mesh& m1, const Mesh& m2);
+
 protected:
   Mesh m_testMesh;
 };
@@ -56,7 +58,7 @@ MeshTest::MeshTest()
   m_testMesh.setOtherMesh(1);
 }
 
-void MeshTest::assertEquals(const Mesh &m1, const Mesh &m2)
+void MeshTest::assertEquals(const Mesh& m1, const Mesh& m2)
 {
   EXPECT_EQ(m1.otherMesh(), m2.otherMesh());
   EXPECT_EQ(m1.name(), m2.name());
@@ -70,7 +72,8 @@ void MeshTest::assertEquals(const Mesh &m1, const Mesh &m2)
 
   int i = 0;
   for (Array<Color3f>::const_iterator it = colors1.begin(),
-          itEnd = colors1.end(); it != itEnd; ++it) {
+                                      itEnd = colors1.end();
+       it != itEnd; ++it) {
     EXPECT_EQ(it->red(), colors2[i].red());
     EXPECT_EQ(it->green(), colors2[i].green());
     EXPECT_EQ(it->blue(), colors2[i].blue());

@@ -38,23 +38,23 @@ class PlayerTool : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit PlayerTool(QObject *p = nullptr);
+  explicit PlayerTool(QObject* p = nullptr);
   ~PlayerTool();
 
   QString name() const override { return tr("Player tool"); }
   QString description() const override { return tr("Play back trajectories"); }
   unsigned char priority() const override { return 80; }
-  QAction * activateAction() const override { return m_activateAction; }
-  QWidget * toolWidget() const override;
+  QAction* activateAction() const override { return m_activateAction; }
+  QWidget* toolWidget() const override;
 
-  QUndoCommand * mousePressEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) override;
+  QUndoCommand* mousePressEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseDoubleClickEvent(QMouseEvent* e) override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *) override;
-  void setGLRenderer(Rendering::GLRenderer *renderer) override;
-  void setActiveWidget(QWidget *widget) override;
+  void setMolecule(QtGui::Molecule*) override;
+  void setGLRenderer(Rendering::GLRenderer* renderer) override;
+  void setActiveWidget(QWidget* widget) override;
 
 protected slots:
   void back();
@@ -66,19 +66,19 @@ protected slots:
   void recordMovie();
 
 private:
-  QAction *m_activateAction;
-  QtGui::Molecule *m_molecule;
-  Rendering::GLRenderer *m_renderer;
+  QAction* m_activateAction;
+  QtGui::Molecule* m_molecule;
+  Rendering::GLRenderer* m_renderer;
   int m_currentFrame;
-  mutable QWidget *m_toolWidget;
+  mutable QWidget* m_toolWidget;
   QTimer m_timer;
-  mutable QLabel *m_info;
-  mutable QSpinBox *m_animationFPS;
-  mutable QCheckBox *m_dynamicBonding;
-  mutable QGLWidget *m_glWidget;
+  mutable QLabel* m_info;
+  mutable QSpinBox* m_animationFPS;
+  mutable QCheckBox* m_dynamicBonding;
+  mutable QGLWidget* m_glWidget;
 };
 
-inline void PlayerTool::setMolecule(QtGui::Molecule *mol)
+inline void PlayerTool::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule != mol) {
     m_molecule = mol;
@@ -86,7 +86,7 @@ inline void PlayerTool::setMolecule(QtGui::Molecule *mol)
   }
 }
 
-inline void PlayerTool::setGLRenderer(Rendering::GLRenderer *renderer)
+inline void PlayerTool::setGLRenderer(Rendering::GLRenderer* renderer)
 {
   m_renderer = renderer;
 }

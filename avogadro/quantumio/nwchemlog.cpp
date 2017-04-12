@@ -56,21 +56,21 @@ std::vector<std::string> NWChemLog::mimeTypes() const
   return std::vector<std::string>();
 }
 
-bool NWChemLog::read(std::istream &in, Core::Molecule &molecule)
+bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line, most sections are terminated by an empty
   // line, so they should be retained.
   while (!in.eof())
     processLine(in, molecule);
 
-  if (m_frequencies.size() > 0 && m_frequencies.size() == m_Lx.size()
-      && m_frequencies.size() == m_intensities.size()) {
+  if (m_frequencies.size() > 0 && m_frequencies.size() == m_Lx.size() &&
+      m_frequencies.size() == m_intensities.size()) {
     molecule.setVibrationFrequencies(m_frequencies);
     molecule.setVibrationIntensities(m_intensities);
     molecule.setVibrationLx(m_Lx);
   }
 
-  //GaussianSet *basis = new GaussianSet;
+  // GaussianSet *basis = new GaussianSet;
 
   // Do simple bond perception.
   molecule.perceiveBondsSimple();
@@ -78,7 +78,7 @@ bool NWChemLog::read(std::istream &in, Core::Molecule &molecule)
   return true;
 }
 
-void NWChemLog::processLine(std::istream &in, Core::Molecule &mol)
+void NWChemLog::processLine(std::istream& in, Core::Molecule& mol)
 {
   // First truncate the line, remove trailing white space and check
   string line;
@@ -92,16 +92,14 @@ void NWChemLog::processLine(std::istream &in, Core::Molecule &mol)
     if (mol.atomCount())
       mol.clearAtoms();
     readAtoms(in, mol);
-  }
-  else if (Core::contains(key, "P.Frequency")) {
+  } else if (Core::contains(key, "P.Frequency")) {
     readFrequencies(line, in, mol);
-  }
-  else if (Core::contains(key, "Projected Infra")) {
+  } else if (Core::contains(key, "Projected Infra")) {
     readIntensities(in, mol);
   }
 }
 
-void NWChemLog::readAtoms(std::istream &in, Core::Molecule &mol)
+void NWChemLog::readAtoms(std::istream& in, Core::Molecule& mol)
 {
   string line;
   // Skip the next three lines, headers, blanks...
@@ -126,8 +124,8 @@ void NWChemLog::readAtoms(std::istream &in, Core::Molecule &mol)
       bool ok = false;
       p[i] = Core::lexicalCast<double>(parts[i + 3], ok);
       if (!ok) {
-        appendError("Couldn't convert coordinate component to double: "
-                    + parts[i + 3]);
+        appendError("Couldn't convert coordinate component to double: " +
+                    parts[i + 3]);
         return;
       }
     }
@@ -136,8 +134,8 @@ void NWChemLog::readAtoms(std::istream &in, Core::Molecule &mol)
   }
 }
 
-void NWChemLog::readFrequencies(const std::string &firstLine, std::istream &in,
-                                Core::Molecule &)
+void NWChemLog::readFrequencies(const std::string& firstLine, std::istream& in,
+                                Core::Molecule&)
 {
   string line = firstLine;
   bool ok = false;
@@ -163,7 +161,7 @@ void NWChemLog::readFrequencies(const std::string &firstLine, std::istream &in,
   if (parts.size() < 2)
     return;
 
-  vector< vector<double> > cols;
+  vector<vector<double>> cols;
   cols.resize(parts.size() - 1);
 
   // Main block of numbers.
@@ -183,15 +181,13 @@ void NWChemLog::readFrequencies(const std::string &firstLine, std::istream &in,
     m_frequencies.push_back(frequencies[i]);
     Core::Array<Vector3> Lx;
     for (size_t j = 0; j < cols[i].size(); j += 3) {
-      Lx.push_back(Vector3(cols[i][j + 0],
-                           cols[i][j + 1],
-                           cols[i][j + 2]));
+      Lx.push_back(Vector3(cols[i][j + 0], cols[i][j + 1], cols[i][j + 2]));
     }
     m_Lx.push_back(Lx);
   }
 }
 
-void NWChemLog::readIntensities(std::istream &in, Core::Molecule &mol)
+void NWChemLog::readIntensities(std::istream& in, Core::Molecule& mol)
 {
   string line;
   bool ok = false;
@@ -209,12 +205,10 @@ void NWChemLog::readIntensities(std::istream &in, Core::Molecule &mol)
       break;
     m_intensities.push_back(Core::lexicalCast<double>(parts[5], ok));
     if (!ok) {
-       appendError("Couldn't convert " + parts[5] + " to double.");
-       return;
+      appendError("Couldn't convert " + parts[5] + " to double.");
+      return;
     }
-  }         
-} 
-
-
+  }
+}
 }
 }

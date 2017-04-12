@@ -24,8 +24,8 @@ using Avogadro::Rendering::GroupNode;
 TEST(NodeTest, children)
 {
   GroupNode root;
-  Node *child1 = new Node;
-  Node *child2 = new Node;
+  Node* child1 = new Node;
+  Node* child2 = new Node;
   root.addChild(child1);
   root.addChild(child2);
 
@@ -38,8 +38,8 @@ TEST(NodeTest, children)
 TEST(NodeTest, removeChild)
 {
   GroupNode root;
-  Node *child1 = new Node;
-  Node *child2 = new Node;
+  Node* child1 = new Node;
+  Node* child2 = new Node;
   root.addChild(child1);
   root.addChild(child2);
 

@@ -50,7 +50,8 @@ public:
    * state is added to identify jobs that rejected by molequeue prior to having
    * a MoleQueue id (ServerId) set.
    */
-  enum JobState {
+  enum JobState
+  {
     Rejected = -2,
     Unknown = -1,
     None = 0,
@@ -88,15 +89,15 @@ public:
    * Construct a new BatchJob object. If provided, ese scriptFilePath to setup
    * the input generator.
    */
-  explicit BatchJob(QObject *parent = nullptr);
-  explicit BatchJob(const QString &scriptFilePath, QObject *parent = nullptr);
+  explicit BatchJob(QObject* parent = nullptr);
+  explicit BatchJob(const QString& scriptFilePath, QObject* parent = nullptr);
   ~BatchJob() override;
 
   /**
    * Options for the input generator.
    * @{
    */
-  void setInputGeneratorOptions(const QJsonObject &opts);
+  void setInputGeneratorOptions(const QJsonObject& opts);
   QJsonObject inputGeneratorOptions() const;
   /**@}*/
 
@@ -104,7 +105,7 @@ public:
    * Options for MoleQueue.
    * @{
    */
-  void setMoleQueueOptions(const QJsonObject &opts);
+  void setMoleQueueOptions(const QJsonObject& opts);
   QJsonObject moleQueueOptions() const;
   ::MoleQueue::JobObject moleQueueJobTemplate() const;
   /**@}*/
@@ -113,8 +114,8 @@ public:
    * The internal InputGenerator.
    * @{
    */
-  const InputGenerator &inputGenerator() const;
-  InputGenerator &inputGenerator();
+  const InputGenerator& inputGenerator() const;
+  InputGenerator& inputGenerator();
   /**@}*/
 
   /**
@@ -169,7 +170,7 @@ public slots:
    * Submit a job using the current configuration for @a mol.
    * @return The BatchId of the job, or InvalidBatchId if there was an error.
    */
-  virtual BatchId submitNextJob(const Core::Molecule &mol);
+  virtual BatchId submitNextJob(const Core::Molecule& mol);
 
   /**
    * Request updated job details from the MoleQueue server for the job with
@@ -199,12 +200,12 @@ signals:
 
 private slots:
   void handleSubmissionReply(int requestId, unsigned int serverId);
-  void handleJobStateChange(unsigned int serverId, const QString &oldState,
-                            const QString &newState);
-  void handleLookupJobReply(int requestId, const QJsonObject &jobInfo);
+  void handleJobStateChange(unsigned int serverId, const QString& oldState,
+                            const QString& newState);
+  void handleLookupJobReply(int requestId, const QJsonObject& jobInfo);
   void handleErrorResponse(int requestId, int errorCode,
-                           const QString &errorMessage,
-                           const QJsonValue &errorData);
+                           const QString& errorMessage,
+                           const QJsonValue& errorData);
 
 private: // structs
   /**
@@ -212,7 +213,8 @@ private: // structs
    */
   struct Request
   {
-    enum Type {
+    enum Type
+    {
       InvalidType,
       SubmitJob,
       LookupJob
@@ -226,7 +228,7 @@ private: // structs
 
 private: // methods
   void setup();
-  static JobState stringToState(const QString &string);
+  static JobState stringToState(const QString& string);
   static QString stateToString(JobState state);
 
 private: // variables
@@ -235,7 +237,7 @@ private: // variables
   QJsonObject m_moleQueueOptions;
 
   /// Cached job states.
-  QList< ::MoleQueue::JobObject > m_jobObjects;
+  QList<::MoleQueue::JobObject> m_jobObjects;
   /// Lookup batch ids from server ids.
   QMap<ServerId, BatchId> m_serverIds;
   /// Job states. For fast lookups without string conversions.
@@ -244,9 +246,11 @@ private: // variables
   QMap<RequestId, Request> m_requests;
 };
 
-inline BatchJob::Request::Request(Type t, BatchId b) : type(t), batchId(b) {}
+inline BatchJob::Request::Request(Type t, BatchId b) : type(t), batchId(b)
+{
+}
 
-inline void BatchJob::setInputGeneratorOptions(const QJsonObject &opts)
+inline void BatchJob::setInputGeneratorOptions(const QJsonObject& opts)
 {
   m_inputGeneratorOptions = opts;
 }
@@ -256,7 +260,7 @@ inline QJsonObject BatchJob::inputGeneratorOptions() const
   return m_inputGeneratorOptions;
 }
 
-inline void BatchJob::setMoleQueueOptions(const QJsonObject &opts)
+inline void BatchJob::setMoleQueueOptions(const QJsonObject& opts)
 {
   m_moleQueueOptions = opts;
 }
@@ -273,12 +277,12 @@ inline ::MoleQueue::JobObject BatchJob::moleQueueJobTemplate() const
   return result;
 }
 
-inline const InputGenerator &BatchJob::inputGenerator() const
+inline const InputGenerator& BatchJob::inputGenerator() const
 {
   return m_inputGenerator;
 }
 
-inline InputGenerator &BatchJob::inputGenerator()
+inline InputGenerator& BatchJob::inputGenerator()
 {
   return m_inputGenerator;
 }
@@ -296,8 +300,10 @@ inline BatchJob::JobState BatchJob::jobState(BatchJob::BatchId id) const
 inline BatchJob::ServerId BatchJob::serverId(BatchJob::BatchId id) const
 {
   return id < m_jobObjects.size()
-      ? m_jobObjects[id].value("moleQueueId", InvalidServerId).value<ServerId>()
-      : InvalidServerId;
+           ? m_jobObjects[id]
+               .value("moleQueueId", InvalidServerId)
+               .value<ServerId>()
+           : InvalidServerId;
 }
 
 inline ::MoleQueue::JobObject BatchJob::jobObject(BatchJob::BatchId id) const
@@ -308,20 +314,21 @@ inline ::MoleQueue::JobObject BatchJob::jobObject(BatchJob::BatchId id) const
 inline bool BatchJob::isTerminal(BatchJob::JobState state)
 {
   switch (state) {
-  case Rejected:
-  case Finished:
-  case Canceled:
-  case Error:
-    return true;
-  default:
-    return false;
+    case Rejected:
+    case Finished:
+    case Canceled:
+    case Error:
+      return true;
+    default:
+      return false;
   }
 }
 
 inline bool BatchJob::hasUnfinishedJobs() const
 {
   for (QVector<JobState>::const_iterator it = m_states.begin(),
-       itEnd = m_states.end(); it != itEnd; ++it) {
+                                         itEnd = m_states.end();
+       it != itEnd; ++it) {
     if (!isTerminal(*it))
       return true;
   }
@@ -332,7 +339,8 @@ inline int BatchJob::unfinishedJobCount() const
 {
   int result = 0;
   for (QVector<JobState>::const_iterator it = m_states.begin(),
-       itEnd = m_states.end(); it != itEnd; ++it) {
+                                         itEnd = m_states.end();
+       it != itEnd; ++it) {
     if (!isTerminal(*it))
       ++result;
   }
@@ -343,7 +351,8 @@ inline int BatchJob::finishedJobCount() const
 {
   int result = 0;
   for (QVector<JobState>::const_iterator it = m_states.begin(),
-       itEnd = m_states.end(); it != itEnd; ++it) {
+                                         itEnd = m_states.end();
+       it != itEnd; ++it) {
     if (isTerminal(*it))
       ++result;
   }
@@ -355,7 +364,7 @@ inline int BatchJob::jobCount() const
   return m_serverIds.size();
 }
 
-inline BatchJob::JobState BatchJob::stringToState(const QString &str)
+inline BatchJob::JobState BatchJob::stringToState(const QString& str)
 {
   if (str == QLatin1String("None"))
     return None;
@@ -386,31 +395,31 @@ inline BatchJob::JobState BatchJob::stringToState(const QString &str)
 inline QString BatchJob::stateToString(BatchJob::JobState state)
 {
   switch (state) {
-  case None:
-    return QString("None");
-  case Accepted:
-    return QString("Accepted");
-  case Rejected:
-    return QString("Rejected");
-  case QueuedLocal:
-    return QString("QueuedLocal");
-  case Submitted:
-    return QString("Submitted");
-  case QueuedRemote:
-    return QString("QueuedRemote");
-  case RunningLocal:
-    return QString("RunningLocal");
-  case RunningRemote:
-    return QString("RunningRemote");
-  case Finished:
-    return QString("Finished");
-  case Canceled:
-    return QString("Canceled");
-  case Error:
-    return QString("Error");
-  default:
-  case Unknown:
-    return QString("Unknown");
+    case None:
+      return QString("None");
+    case Accepted:
+      return QString("Accepted");
+    case Rejected:
+      return QString("Rejected");
+    case QueuedLocal:
+      return QString("QueuedLocal");
+    case Submitted:
+      return QString("Submitted");
+    case QueuedRemote:
+      return QString("QueuedRemote");
+    case RunningLocal:
+      return QString("RunningLocal");
+    case RunningRemote:
+      return QString("RunningRemote");
+    case Finished:
+      return QString("Finished");
+    case Canceled:
+      return QString("Canceled");
+    case Error:
+      return QString("Error");
+    default:
+    case Unknown:
+      return QString("Unknown");
   }
 }
 

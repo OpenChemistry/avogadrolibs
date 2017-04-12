@@ -58,17 +58,17 @@ TEST(AbsoluteOverlayQuadStrategyTest, exercise)
 
   EXPECT_FLOAT_EQ(15, quad[0][0]);
   EXPECT_FLOAT_EQ(86, quad[0][1]);
-  EXPECT_FLOAT_EQ(0,  quad[0][2]);
+  EXPECT_FLOAT_EQ(0, quad[0][2]);
 
   EXPECT_FLOAT_EQ(65, quad[1][0]);
   EXPECT_FLOAT_EQ(86, quad[1][1]);
-  EXPECT_FLOAT_EQ(0,  quad[1][2]);
+  EXPECT_FLOAT_EQ(0, quad[1][2]);
 
   EXPECT_FLOAT_EQ(15, quad[2][0]);
   EXPECT_FLOAT_EQ(25, quad[2][1]);
-  EXPECT_FLOAT_EQ(0,  quad[2][2]);
+  EXPECT_FLOAT_EQ(0, quad[2][2]);
 
   EXPECT_FLOAT_EQ(65, quad[3][0]);
   EXPECT_FLOAT_EQ(25, quad[3][1]);
-  EXPECT_FLOAT_EQ(0,  quad[3][2]);
+  EXPECT_FLOAT_EQ(0, quad[3][2]);
 }

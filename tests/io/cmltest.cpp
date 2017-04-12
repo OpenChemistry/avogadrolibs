@@ -58,14 +58,14 @@ TEST(CmlTest, atoms)
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   atom = molecule.atom(1);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(6));
-  EXPECT_EQ(atom.position3d().x(),  0.751621);
+  EXPECT_EQ(atom.position3d().x(), 0.751621);
   EXPECT_EQ(atom.position3d().y(), -0.022441);
   EXPECT_EQ(atom.position3d().z(), -0.020839);
 
   atom = molecule.atom(7);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   EXPECT_EQ(atom.position3d().x(), -1.184988);
-  EXPECT_EQ(atom.position3d().y(),  0.004424);
+  EXPECT_EQ(atom.position3d().y(), 0.004424);
   EXPECT_EQ(atom.position3d().z(), -0.987522);
 }
 
@@ -92,32 +92,31 @@ TEST(CmlTest, bonds)
 TEST(CmlTest, fractionalCoords)
 {
   std::string cmlStr(
-        "<?xml version=\"1.0\"?>"
-        "<molecule xmlns=\"http://www.xml-cml.org/schema\">"
-        "<crystal>"
-        "<scalar title=\"a\" units=\"units:angstrom\">5.3</scalar>"
-        "<scalar title=\"b\" units=\"units:angstrom\">2.4</scalar>"
-        "<scalar title=\"c\" units=\"units:angstrom\">1.8</scalar>"
-        "<scalar title=\"alpha\" units=\"units:degree\">85.000000</scalar>"
-        "<scalar title=\"beta\" units=\"units:degree\">90.000000</scalar>"
-        "<scalar title=\"gamma\" units=\"units:degree\">105.000000</scalar>"
-        "</crystal>"
-        "<atomArray>"
-        "<atom id=\"a\" elementType=\"H\" "
-        "xFract=\"0.5\" yFract=\"0.5\" zFract=\"0.5\"/>"
-        "</atomArray>"
-        "</molecule>"
-        );
+    "<?xml version=\"1.0\"?>"
+    "<molecule xmlns=\"http://www.xml-cml.org/schema\">"
+    "<crystal>"
+    "<scalar title=\"a\" units=\"units:angstrom\">5.3</scalar>"
+    "<scalar title=\"b\" units=\"units:angstrom\">2.4</scalar>"
+    "<scalar title=\"c\" units=\"units:angstrom\">1.8</scalar>"
+    "<scalar title=\"alpha\" units=\"units:degree\">85.000000</scalar>"
+    "<scalar title=\"beta\" units=\"units:degree\">90.000000</scalar>"
+    "<scalar title=\"gamma\" units=\"units:degree\">105.000000</scalar>"
+    "</crystal>"
+    "<atomArray>"
+    "<atom id=\"a\" elementType=\"H\" "
+    "xFract=\"0.5\" yFract=\"0.5\" zFract=\"0.5\"/>"
+    "</atomArray>"
+    "</molecule>");
   CmlFormat cml;
   Molecule molecule;
   cml.readString(cmlStr, molecule);
   ASSERT_EQ(1, molecule.atomCount());
   Atom atom = molecule.atom(0);
   EXPECT_EQ(1, atom.atomicNumber());
-  EXPECT_TRUE(atom.position3d().isApprox(
-                Vector3(static_cast<Real>(2.33942),
-                        static_cast<Real>(1.24032),
-                        static_cast<Real>(0.89633)), 1e-5));
+  EXPECT_TRUE(atom.position3d().isApprox(Vector3(static_cast<Real>(2.33942),
+                                                 static_cast<Real>(1.24032),
+                                                 static_cast<Real>(0.89633)),
+                                         1e-5));
 
   cmlStr.clear();
   cml.writeString(cmlStr, molecule);
@@ -154,7 +153,7 @@ TEST(CmlTest, saveFile)
   Atom atom = writeMol.atom(7);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   EXPECT_EQ(atom.position3d().x(), -1.18499);
-  EXPECT_EQ(atom.position3d().y(),  0.004424);
+  EXPECT_EQ(atom.position3d().y(), 0.004424);
   EXPECT_EQ(atom.position3d().z(), -0.987522);
   Bond bond = writeMol.bond(0);
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
@@ -186,8 +185,9 @@ TEST(CmlTest, writeString)
 {
   CmlFormat cml;
   Molecule molecule;
-  EXPECT_EQ(cml.readFile(std::string(AVOGADRO_DATA)
-                         + "/data/ethane.cml", molecule), true);
+  EXPECT_EQ(
+    cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule),
+    true);
   std::string file;
   EXPECT_EQ(cml.writeString(file, molecule), true);
 }
@@ -196,8 +196,9 @@ TEST(CmlTest, readString)
 {
   CmlFormat cml;
   Molecule molecule;
-  EXPECT_EQ(cml.readFile(std::string(AVOGADRO_DATA)
-                         + "/data/ethane.cml", molecule), true);
+  EXPECT_EQ(
+    cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule),
+    true);
   std::string file;
   EXPECT_EQ(cml.writeString(file, molecule), true);
   Molecule moleculeFromString;

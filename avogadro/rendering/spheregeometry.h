@@ -28,7 +28,9 @@ namespace Rendering {
 struct SphereColor
 {
   SphereColor(Vector3f centre, float r, Vector3ub c)
-    : center(centre), radius(r), color(c) {}
+    : center(centre), radius(r), color(c)
+  {
+  }
   Vector3f center;
   float radius;
   Vector3ub color;
@@ -50,16 +52,16 @@ class AVOGADRORENDERING_EXPORT SphereGeometry : public Drawable
 {
 public:
   SphereGeometry();
-  SphereGeometry(const SphereGeometry &other);
+  SphereGeometry(const SphereGeometry& other);
   ~SphereGeometry();
 
-  SphereGeometry & operator=(SphereGeometry);
-  friend void swap(SphereGeometry &lhs, SphereGeometry &rhs);
+  SphereGeometry& operator=(SphereGeometry);
+  friend void swap(SphereGeometry& lhs, SphereGeometry& rhs);
 
   /**
    * Accept a visit from our friendly visitor.
    */
-  void accept(Visitor &) override;
+  void accept(Visitor&) override;
 
   /**
    * @brief Update the VBOs, IBOs etc ready for rendering.
@@ -70,7 +72,7 @@ public:
    * @brief Render the sphere geometry.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera &camera);
+  void render(const Camera& camera);
 
   /**
    * Return the primitives that are hit by the ray.
@@ -79,14 +81,14 @@ public:
    * @param rayDirection Normalized direction of the ray.
    * @return Sorted collection of primitives that were hit.
    */
-  std::multimap<float, Identifier> hits(const Vector3f &rayOrigin,
-                                        const Vector3f &rayEnd,
-                                        const Vector3f &rayDirection) const;
+  std::multimap<float, Identifier> hits(const Vector3f& rayOrigin,
+                                        const Vector3f& rayEnd,
+                                        const Vector3f& rayDirection) const;
 
   /**
    * Add a sphere to the geometry object.
    */
-  void addSphere(const Vector3f &position, const Vector3ub &color,
+  void addSphere(const Vector3f& position, const Vector3ub& color,
                  float radius);
 
   /**
@@ -112,17 +114,17 @@ private:
   bool m_dirty;
 
   class Private;
-  Private *d;
+  Private* d;
 };
 
-inline SphereGeometry &SphereGeometry::operator=(SphereGeometry other)
+inline SphereGeometry& SphereGeometry::operator=(SphereGeometry other)
 {
   using std::swap;
   swap(*this, other);
   return *this;
 }
 
-inline void swap(SphereGeometry &lhs, SphereGeometry &rhs)
+inline void swap(SphereGeometry& lhs, SphereGeometry& rhs)
 {
   using std::swap;
   swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));

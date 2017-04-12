@@ -19,10 +19,10 @@
 
 #include "avogadrorenderingexport.h"
 
-#include "camera.h"
-#include "scene.h"
 #include "bufferobject.h"
+#include "camera.h"
 #include "primitive.h"
+#include "scene.h"
 #include "shader.h"
 #include "shaderprogram.h"
 
@@ -97,9 +97,9 @@ public:
    * Get/set the text rendering strategy for this object. The renderer takes
    * ownership of the strategy object. @{
    */
-  const TextRenderStrategy *textRenderStrategy() const;
-  TextRenderStrategy *textRenderStrategy();
-  void setTextRenderStrategy(TextRenderStrategy *tren);
+  const TextRenderStrategy* textRenderStrategy() const;
+  TextRenderStrategy* textRenderStrategy();
+  void setTextRenderStrategy(TextRenderStrategy* tren);
   /** @} */
 
 private:
@@ -111,26 +111,25 @@ private:
   /**
    * @brief Detect hits in a group node.
    */
-  std::multimap<float, Identifier> hits(const GroupNode *group,
-                                        const Vector3f &rayOrigin,
-                                        const Vector3f &rayEnd,
-                                        const Vector3f &rayDirection) const;
+  std::multimap<float, Identifier> hits(const GroupNode* group,
+                                        const Vector3f& rayOrigin,
+                                        const Vector3f& rayEnd,
+                                        const Vector3f& rayDirection) const;
 
   /**
    * @brief Detect hits in a geometry node.
    */
-  std::multimap<float, Identifier> hits(const GeometryNode *geometry,
-                                        const Vector3f &rayOrigin,
-                                        const Vector3f &rayEnd,
-                                        const Vector3f &rayDirection) const;
-
+  std::multimap<float, Identifier> hits(const GeometryNode* geometry,
+                                        const Vector3f& rayOrigin,
+                                        const Vector3f& rayEnd,
+                                        const Vector3f& rayDirection) const;
 
   bool m_valid;
   std::string m_error;
   Camera m_camera;
   Camera m_overlayCamera;
   Scene m_scene;
-  TextRenderStrategy *m_textRenderStrategy;
+  TextRenderStrategy* m_textRenderStrategy;
 
   Vector3f m_center;
   float m_radius;
@@ -156,12 +155,12 @@ inline Camera& GLRenderer::overlayCamera()
   return m_camera;
 }
 
-inline const TextRenderStrategy *GLRenderer::textRenderStrategy() const
+inline const TextRenderStrategy* GLRenderer::textRenderStrategy() const
 {
   return m_textRenderStrategy;
 }
 
-inline TextRenderStrategy *GLRenderer::textRenderStrategy()
+inline TextRenderStrategy* GLRenderer::textRenderStrategy()
 {
   return m_textRenderStrategy;
 }

@@ -15,8 +15,8 @@
 ******************************************************************************/
 
 #include "molequeuedialog.h"
-#include "ui_molequeuedialog.h"
 #include "molequeuewidget.h"
+#include "ui_molequeuedialog.h"
 
 #include <molequeue/client/jobobject.h>
 
@@ -31,9 +31,8 @@ namespace MoleQueue {
 
 using ::MoleQueue::JobObject;
 
-MoleQueueDialog::MoleQueueDialog(QWidget *parent_) :
-  QDialog(parent_),
-  m_ui(new Ui::MoleQueueDialog)
+MoleQueueDialog::MoleQueueDialog(QWidget* parent_)
+  : QDialog(parent_), m_ui(new Ui::MoleQueueDialog)
 {
   m_ui->setupUi(this);
 }
@@ -43,11 +42,9 @@ MoleQueueDialog::~MoleQueueDialog()
   delete m_ui;
 }
 
-MoleQueueDialog::SubmitStatus
-MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
-                           JobObject &jobTemplate,
-                           SubmitOptions options, unsigned int *moleQueueId,
-                           int *submissionRequestId)
+MoleQueueDialog::SubmitStatus MoleQueueDialog::submitJob(
+  QWidget* parent_, const QString& caption, JobObject& jobTemplate,
+  SubmitOptions options, unsigned int* moleQueueId, int* submissionRequestId)
 {
   // initialize return args
   if (moleQueueId)
@@ -70,8 +67,7 @@ MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
 
     int requestId = dlg.widget().submitJobRequest();
 
-    if (options & WaitForSubmissionResponse
-        || dlg.widget().openOutput()) {
+    if (options & WaitForSubmissionResponse || dlg.widget().openOutput()) {
       QProgressDialog progress;
       progress.setCancelButton(nullptr);
       progress.setLabelText(tr("Submitting job to MoleQueue..."));
@@ -101,15 +97,15 @@ MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
 
         // Update progress dialog
         progress.setLabelText(tr("Waiting for job %1 '%2' to finish...")
-                              .arg(dlg.widget().moleQueueId())
-                              .arg(jobTemplate.description()));
+                                .arg(dlg.widget().moleQueueId())
+                                .arg(jobTemplate.description()));
         progress.setCancelButtonText(tr("Stop waiting"));
 
         // Wait for job completion or progress bar cancellation.
         QList<MetaMethod> completionSignals;
-        completionSignals
-            << MetaMethod(&dlg.widget(), SIGNAL(jobFinished(bool)))
-            << MetaMethod(&progress, SIGNAL(canceled()));
+        completionSignals << MetaMethod(&dlg.widget(),
+                                        SIGNAL(jobFinished(bool)))
+                          << MetaMethod(&progress, SIGNAL(canceled()));
 
         dlg.waitForSignal(completionSignals, -1);
 
@@ -142,31 +138,28 @@ MoleQueueDialog::submitJob(QWidget *parent_, const QString &caption,
 
         jobTemplate = dlg.widget().jobTemplate();
         return JobFinished;
-      }
-      else {
+      } else {
         progress.hide();
         QMessageBox::warning(&dlg, tr("Error Submitting Job"),
                              tr("The job has been rejected by MoleQueue: %1")
-                             .arg(dlg.widget().submissionError()));
+                               .arg(dlg.widget().submissionError()));
         continue;
       }
-    }
-    else {
+    } else {
       if (requestId >= 0) {
         if (submissionRequestId != nullptr)
           *submissionRequestId = requestId;
         return SubmissionAttempted;
-      }
-      else {
+      } else {
         return SubmissionFailed;
       }
     }
   }
 }
 
-bool MoleQueueDialog::promptForJobOptions(QWidget *windowParent,
-                                          const QString &caption,
-                                          MoleQueue::JobObject &jobTemplate)
+bool MoleQueueDialog::promptForJobOptions(QWidget* windowParent,
+                                          const QString& caption,
+                                          MoleQueue::JobObject& jobTemplate)
 {
   MoleQueueDialog dlg(windowParent);
   dlg.setWindowTitle(caption);
@@ -182,22 +175,22 @@ bool MoleQueueDialog::promptForJobOptions(QWidget *windowParent,
   return true;
 }
 
-MoleQueueWidget &MoleQueueDialog::widget()
+MoleQueueWidget& MoleQueueDialog::widget()
 {
   return *m_ui->widget;
 }
 
-const MoleQueueWidget &MoleQueueDialog::widget() const
+const MoleQueueWidget& MoleQueueDialog::widget() const
 {
   return *m_ui->widget;
 }
 
-bool MoleQueueDialog::waitForSignal(const QList<MetaMethod> &signalList,
+bool MoleQueueDialog::waitForSignal(const QList<MetaMethod>& signalList,
                                     int msTimeout) const
 {
   QEventLoop waiter;
 
-  foreach (const MetaMethod &sig, signalList)
+  foreach (const MetaMethod& sig, signalList)
     connect(sig.first, sig.second, &waiter, SLOT(quit()));
 
   QTimer limiter;
@@ -215,11 +208,10 @@ bool MoleQueueDialog::waitForSignal(const QList<MetaMethod> &signalList,
 void MoleQueueDialog::done(int r)
 {
   if (r == QDialog::Accepted && !widget().programSelected()) {
-      QMessageBox::information(parentWidget(), tr("No program selected."),
-                               tr("Please select the target program from the "
-                                  "\"Queue and Program\" list."));
-  }
-  else {
+    QMessageBox::information(parentWidget(), tr("No program selected."),
+                             tr("Please select the target program from the "
+                                "\"Queue and Program\" list."));
+  } else {
     QDialog::done(r);
   }
 }

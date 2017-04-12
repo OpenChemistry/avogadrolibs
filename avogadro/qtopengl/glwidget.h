@@ -19,11 +19,11 @@
 
 #include "avogadroqtopenglexport.h"
 
-#include <avogadro/rendering/glrenderer.h>
 #include <avogadro/qtgui/scenepluginmodel.h>
+#include <avogadro/rendering/glrenderer.h>
 
-#include <QtOpenGL/QGLWidget>
 #include <QtCore/QPointer>
+#include <QtOpenGL/QGLWidget>
 
 class QTimer;
 
@@ -57,18 +57,18 @@ class AVOGADROQTOPENGL_EXPORT GLWidget : public QGLWidget
   Q_OBJECT
 
 public:
-  explicit GLWidget(QWidget *parent = 0);
+  explicit GLWidget(QWidget* parent = 0);
   ~GLWidget();
 
   /** Set the molecule the widget will render. */
-  void setMolecule(QtGui::Molecule *molecule);
+  void setMolecule(QtGui::Molecule* molecule);
 
   /**
    * Get the molecule being rendered by the widget.
    * @{
    */
-  QtGui::Molecule * molecule();
-  const QtGui::Molecule * molecule() const;
+  QtGui::Molecule* molecule();
+  const QtGui::Molecule* molecule() const;
   /** @}*/
 
   /** Get a reference to the renderer for the widget. */
@@ -82,12 +82,12 @@ public:
   /**
    * @return The active tool.
    */
-  QtGui::ToolPlugin * activeTool() const { return m_activeTool; }
+  QtGui::ToolPlugin* activeTool() const { return m_activeTool; }
 
   /**
    * @return The default tool.
    */
-  QtGui::ToolPlugin * defaultTool() const { return m_defaultTool; }
+  QtGui::ToolPlugin* defaultTool() const { return m_defaultTool; }
 
   /**
    * Get the GLWidget's ScenePluginModel, used to add, delete and modify the
@@ -137,20 +137,20 @@ public slots:
    * Make the tools in toolList available to the GLWidget. The GLWidget takes
    * ownership of the tools.
    */
-  void setTools(const QList<QtGui::ToolPlugin*> &toolList);
+  void setTools(const QList<QtGui::ToolPlugin*>& toolList);
 
   /**
    * Make tool available to the GLWidget. The GLWidget takes ownership of the
    * tool.
    */
-  void addTool(QtGui::ToolPlugin *tool);
+  void addTool(QtGui::ToolPlugin* tool);
 
   /**
    * Set the active tool. This is the tool that will be used to handle input
    * events first.
    * @{
    */
-  void setActiveTool(const QString &name);
+  void setActiveTool(const QString& name);
   void setActiveTool(QtGui::ToolPlugin* tool);
   /**@}*/
 
@@ -159,7 +159,7 @@ public slots:
    * events that are ignored by the active tool.
    * @{
    */
-  void setDefaultTool(const QString &name);
+  void setDefaultTool(const QString& name);
   void setDefaultTool(QtGui::ToolPlugin* tool);
   /**@}*/
 
@@ -187,24 +187,24 @@ protected:
   void paintGL();
 
   /** Reimplemented from QGLWidget @{ */
-  void mouseDoubleClickEvent(QMouseEvent *);
-  void mousePressEvent(QMouseEvent *);
-  void mouseMoveEvent(QMouseEvent *);
-  void mouseReleaseEvent(QMouseEvent *);
-  void wheelEvent(QWheelEvent *);
-  void keyPressEvent(QKeyEvent *);
-  void keyReleaseEvent(QKeyEvent *);
+  void mouseDoubleClickEvent(QMouseEvent*);
+  void mousePressEvent(QMouseEvent*);
+  void mouseMoveEvent(QMouseEvent*);
+  void mouseReleaseEvent(QMouseEvent*);
+  void wheelEvent(QWheelEvent*);
+  void keyPressEvent(QKeyEvent*);
+  void keyReleaseEvent(QKeyEvent*);
   /** @} */
 
 private:
   QPointer<QtGui::Molecule> m_molecule;
   QList<QtGui::ToolPlugin*> m_tools;
-  QtGui::ToolPlugin *m_activeTool;
-  QtGui::ToolPlugin *m_defaultTool;
+  QtGui::ToolPlugin* m_activeTool;
+  QtGui::ToolPlugin* m_defaultTool;
   Rendering::GLRenderer m_renderer;
   QtGui::ScenePluginModel m_scenePlugins;
 
-  QTimer *m_renderTimer;
+  QTimer* m_renderTimer;
 };
 
 } // End QtOpenGL namespace

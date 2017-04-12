@@ -18,8 +18,8 @@
 
 #include "matrixserialization.h"
 #include <avogadro/io/fileformatmanager.h>
-#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 #include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 
 #include <iostream>
 
@@ -37,13 +37,12 @@ using google::protobuf::uint8;
 namespace Avogadro {
 namespace Core {
 
-MoleculeDeserializer::MoleculeDeserializer(Molecule *molecule)
+MoleculeDeserializer::MoleculeDeserializer(Molecule* molecule)
   : m_molecule(molecule)
 {
-
 }
 
-bool MoleculeDeserializer::deserialize(const void *data, size_t size)
+bool MoleculeDeserializer::deserialize(const void* data, size_t size)
 {
   ArrayInputStream ais(data, size);
   CodedInputStream cis(&ais);
@@ -71,9 +70,8 @@ bool MoleculeDeserializer::deserialize(const void *data, size_t size)
   return true;
 }
 
-
 bool MoleculeDeserializer::deserializeAtomicNumbers(
-    google::protobuf::io::CodedInputStream *stream)
+  google::protobuf::io::CodedInputStream* stream)
 {
   // Read the atoms
   m_molecule->clearAtoms();
@@ -90,9 +88,8 @@ bool MoleculeDeserializer::deserializeAtomicNumbers(
   return true;
 }
 
-
 bool MoleculeDeserializer::deserializePositions2d(
-    google::protobuf::io::CodedInputStream *stream)
+  google::protobuf::io::CodedInputStream* stream)
 {
   // Get the count
   uint32 posCount;
@@ -110,9 +107,8 @@ bool MoleculeDeserializer::deserializePositions2d(
   return true;
 }
 
-
 bool MoleculeDeserializer::deserializePostions3d(
-    google::protobuf::io::CodedInputStream *stream)
+  google::protobuf::io::CodedInputStream* stream)
 {
   // Get the count
   uint32 posCount;
@@ -131,7 +127,7 @@ bool MoleculeDeserializer::deserializePostions3d(
 }
 
 bool MoleculeDeserializer::deserializeBondPairs(
-    google::protobuf::io::CodedInputStream *stream)
+  google::protobuf::io::CodedInputStream* stream)
 {
   uint32 bondCount;
   if (!stream->ReadLittleEndian32(&bondCount))
@@ -156,7 +152,7 @@ bool MoleculeDeserializer::deserializeBondPairs(
 }
 
 bool MoleculeDeserializer::deserializeBondOrders(
-    google::protobuf::io::CodedInputStream *stream)
+  google::protobuf::io::CodedInputStream* stream)
 {
   uint32 bondOrderCount;
   if (!stream->ReadLittleEndian32(&bondOrderCount))

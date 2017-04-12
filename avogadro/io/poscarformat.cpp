@@ -17,11 +17,11 @@
 #include "poscarformat.h"
 
 #include <avogadro/core/elements.h> // for atomicNumberFromSymbol()
-#include <avogadro/core/matrix.h> // for matrix3
+#include <avogadro/core/matrix.h>   // for matrix3
 #include <avogadro/core/molecule.h>
-#include <avogadro/core/vector.h> // for Vector3
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h> // for split(), trimmed(), lexicalCast()
+#include <avogadro/core/vector.h>    // for Vector3
 
 #include <algorithm> // for std::count()
 #include <iomanip>
@@ -51,12 +51,13 @@ PoscarFormat::~PoscarFormat()
 {
 }
 
-bool PoscarFormat::read(std::istream &inStream, Core::Molecule &mol)
+bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
   size_t numLines = std::count(std::istreambuf_iterator<char>(inStream),
                                std::istreambuf_iterator<char>(), '\n');
 
-  // There must be at least 7 "\n"'s to have a minimum crystal (including 1 atom)
+  // There must be at least 7 "\n"'s to have a minimum crystal (including 1
+  // atom)
   if (numLines < 7) {
     appendError("Error: POSCAR file is 7 or fewer lines long");
     return false;
@@ -99,9 +100,9 @@ bool PoscarFormat::read(std::istream &inStream, Core::Molecule &mol)
       return false;
     }
     // UnitCell expects a matrix of this form
-    cellMat(0,i) = lexicalCast<double>(stringSplit.at(0)) * scalingFactor;
-    cellMat(1,i) = lexicalCast<double>(stringSplit.at(1)) * scalingFactor;
-    cellMat(2,i) = lexicalCast<double>(stringSplit.at(2)) * scalingFactor;
+    cellMat(0, i) = lexicalCast<double>(stringSplit.at(0)) * scalingFactor;
+    cellMat(1, i) = lexicalCast<double>(stringSplit.at(1)) * scalingFactor;
+    cellMat(2, i) = lexicalCast<double>(stringSplit.at(2)) * scalingFactor;
   }
 
   // Sometimes, atomic symbols go here.
@@ -141,7 +142,8 @@ bool PoscarFormat::read(std::istream &inStream, Core::Molecule &mol)
       // Now get the symbols with a simple space split
       symbolsList = split(trimmedFormula, ' ');
       for (size_t i = 0; i < symbolsList.size(); ++i)
-        atomicNumbers.push_back(Elements::atomicNumberFromSymbol(symbolsList.at(i)));
+        atomicNumbers.push_back(
+          Elements::atomicNumberFromSymbol(symbolsList.at(i)));
     }
   }
 
@@ -155,7 +157,8 @@ bool PoscarFormat::read(std::istream &inStream, Core::Molecule &mol)
   // If we never filled up the atomic numbers, fill them up
   // now with "1, 2, 3..."
   if (atomicNumbers.size() == 0)
-    for (size_t i = 1; i <= atomCounts.size(); ++i) atomicNumbers.push_back(i);
+    for (size_t i = 1; i <= atomCounts.size(); ++i)
+      atomicNumbers.push_back(i);
 
   if (atomicNumbers.size() != atomCounts.size()) {
     appendError("Error: numSymbols and numTypes are not equal in POSCAR!");
@@ -179,8 +182,8 @@ bool PoscarFormat::read(std::istream &inStream, Core::Molecule &mol)
 
   bool cart;
   // Check if we're using cartesian or fractional coordinates:
-  if (line.at(0) == 'K' || line.at(0) == 'k' ||
-      line.at(0) == 'C' || line.at(0) == 'c' ) {
+  if (line.at(0) == 'K' || line.at(0) == 'k' || line.at(0) == 'C' ||
+      line.at(0) == 'c') {
     cart = true;
   }
   // Assume direct if one of these was not found
@@ -239,7 +242,7 @@ bool PoscarFormat::read(std::istream &inStream, Core::Molecule &mol)
   return true;
 }
 
-bool PoscarFormat::write(std::ostream &outStream, const Core::Molecule &mol)
+bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 {
   // Title
   if (mol.data("name").toString().length())
@@ -251,11 +254,11 @@ bool PoscarFormat::write(std::ostream &outStream, const Core::Molecule &mol)
   outStream << " 1.00000000" << std::endl;
 
   // 3x3 matrix. Transpose is needed to orient the matrix correctly.
-  const Matrix3 &mat = mol.unitCell()->cellMatrix().transpose();
+  const Matrix3& mat = mol.unitCell()->cellMatrix().transpose();
   for (size_t i = 0; i < 3; ++i) {
     for (size_t j = 0; j < 3; ++j) {
       outStream << "   " << std::setw(10) << std::right << std::fixed
-                << std::setprecision(8) << mat(i,j);
+                << std::setprecision(8) << mat(i, j);
     }
     outStream << std::endl;
   }
@@ -265,7 +268,8 @@ bool PoscarFormat::write(std::ostream &outStream, const Core::Molecule &mol)
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
   std::map<unsigned char, size_t> composition;
   for (Array<unsigned char>::const_iterator it = atomicNumbers.begin(),
-       itEnd = atomicNumbers.end(); it != itEnd; ++it) {
+                                            itEnd = atomicNumbers.end();
+       it != itEnd; ++it) {
     composition[*it]++;
   }
 
@@ -307,16 +311,12 @@ bool PoscarFormat::write(std::ostream &outStream, const Core::Molecule &mol)
         return false;
       }
       Vector3 fracCoords = mol.unitCell()->toFractional(atom.position3d());
-      outStream << "  "
+      outStream << "  " << std::setw(10) << std::right << std::fixed
+                << std::setprecision(8) << fracCoords.x() << "  "
                 << std::setw(10) << std::right << std::fixed
-                << std::setprecision(8)
-                << fracCoords.x() << "  "
+                << std::setprecision(8) << fracCoords.y() << "  "
                 << std::setw(10) << std::right << std::fixed
-                << std::setprecision(8)
-                << fracCoords.y() << "  "
-                << std::setw(10) << std::right << std::fixed
-                << std::setprecision(8)
-                << fracCoords.z() << "\n";
+                << std::setprecision(8) << fracCoords.z() << "\n";
     }
     ++iter;
   }

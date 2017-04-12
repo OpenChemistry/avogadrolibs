@@ -23,11 +23,10 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-CoordinateEditor::CoordinateEditor(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_dialog(nullptr),
-  m_molecule(nullptr),
-  m_action(new QAction(tr("Atomic &Coordinate Editor..."), this))
+CoordinateEditor::CoordinateEditor(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_dialog(nullptr),
+    m_molecule(nullptr),
+    m_action(new QAction(tr("Atomic &Coordinate Editor..."), this))
 {
   connect(m_action, SIGNAL(triggered()), SLOT(triggered()));
 }
@@ -36,17 +35,17 @@ CoordinateEditor::~CoordinateEditor()
 {
 }
 
-QList<QAction *> CoordinateEditor::actions() const
+QList<QAction*> CoordinateEditor::actions() const
 {
   return QList<QAction*>() << m_action;
 }
 
-QStringList CoordinateEditor::menuPath(QAction *) const
+QStringList CoordinateEditor::menuPath(QAction*) const
 {
   return QStringList() << tr("&Build");
 }
 
-void CoordinateEditor::setMolecule(QtGui::Molecule *mol)
+void CoordinateEditor::setMolecule(QtGui::Molecule* mol)
 {
   m_molecule = mol;
   if (m_dialog)

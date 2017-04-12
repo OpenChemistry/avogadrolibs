@@ -19,61 +19,74 @@
 
 #include <QDebug>
 #include <QList>
-#include <QVector3D>
 #include <QPair>
+#include <QVector3D>
 
+#include "qtaimmathutilities.h"
 #include "qtaimwavefunction.h"
 #include "qtaimwavefunctionevaluator.h"
-#include "qtaimmathutilities.h"
 
 namespace Avogadro {
 namespace QtPlugins {
 
-  class QTAIMCriticalPointLocator
+class QTAIMCriticalPointLocator
+{
+
+public:
+  explicit QTAIMCriticalPointLocator(QTAIMWavefunction& wfn);
+  void locateNuclearCriticalPoints();
+  void locateBondCriticalPoints();
+
+  void locateElectronDensitySources();
+  void locateElectronDensitySinks();
+
+  QList<QVector3D> nuclearCriticalPoints() const
   {
+    return m_nuclearCriticalPoints;
+  }
+  QList<QVector3D> bondCriticalPoints() const { return m_bondCriticalPoints; }
+  QList<QVector3D> ringCriticalPoints() const { return m_ringCriticalPoints; }
+  QList<QVector3D> cageCriticalPoints() const { return m_cageCriticalPoints; }
 
-  public:
-    explicit QTAIMCriticalPointLocator(QTAIMWavefunction &wfn);
-    void locateNuclearCriticalPoints();
-    void locateBondCriticalPoints();
+  QList<qreal> laplacianAtBondCriticalPoints() const
+  {
+    return m_laplacianAtBondCriticalPoints;
+  }
+  QList<qreal> ellipticityAtBondCriticalPoints() const
+  {
+    return m_ellipticityAtBondCriticalPoints;
+  }
 
-    void locateElectronDensitySources();
-    void locateElectronDensitySinks();
+  QList<QList<QVector3D>> bondPaths() { return m_bondPaths; }
+  QList<QPair<qint64, qint64>> bondedAtoms() { return m_bondedAtoms; }
 
-    QList<QVector3D> nuclearCriticalPoints() const { return m_nuclearCriticalPoints; }
-    QList<QVector3D> bondCriticalPoints() const { return m_bondCriticalPoints; }
-    QList<QVector3D> ringCriticalPoints() const { return m_ringCriticalPoints; }
-    QList<QVector3D> cageCriticalPoints() const { return m_cageCriticalPoints; }
+  QList<QVector3D> electronDensitySources() const
+  {
+    return m_electronDensitySources;
+  }
+  QList<QVector3D> electronDensitySinks() const
+  {
+    return m_electronDensitySinks;
+  }
 
-    QList<qreal> laplacianAtBondCriticalPoints() const { return m_laplacianAtBondCriticalPoints; }
-    QList<qreal> ellipticityAtBondCriticalPoints() const { return m_ellipticityAtBondCriticalPoints; }
+private:
+  QTAIMWavefunction* m_wfn;
 
-    QList<QList<QVector3D> > bondPaths() {return m_bondPaths; }
-    QList<QPair<qint64,qint64> > bondedAtoms() {return m_bondedAtoms; }
+  QList<QVector3D> m_nuclearCriticalPoints;
+  QList<QVector3D> m_bondCriticalPoints;
+  QList<QVector3D> m_ringCriticalPoints;
+  QList<QVector3D> m_cageCriticalPoints;
 
-    QList<QVector3D> electronDensitySources() const { return m_electronDensitySources; }
-    QList<QVector3D> electronDensitySinks() const { return m_electronDensitySinks; }
+  QList<qreal> m_laplacianAtBondCriticalPoints;
+  QList<qreal> m_ellipticityAtBondCriticalPoints;
+  QList<QPair<qint64, qint64>> m_bondedAtoms;
+  QList<QList<QVector3D>> m_bondPaths;
 
-  private:
+  QList<QVector3D> m_electronDensitySources;
+  QList<QVector3D> m_electronDensitySinks;
 
-    QTAIMWavefunction *m_wfn;
-
-    QList<QVector3D> m_nuclearCriticalPoints;
-    QList<QVector3D> m_bondCriticalPoints;
-    QList<QVector3D> m_ringCriticalPoints;
-    QList<QVector3D> m_cageCriticalPoints;
-
-    QList<qreal> m_laplacianAtBondCriticalPoints;
-    QList<qreal> m_ellipticityAtBondCriticalPoints;
-    QList<QPair<qint64, qint64> > m_bondedAtoms;
-    QList<QList<QVector3D> > m_bondPaths;
-
-    QList<QVector3D> m_electronDensitySources;
-    QList<QVector3D> m_electronDensitySinks;
-
-    QString temporaryFileName();
-
-  };
+  QString temporaryFileName();
+};
 
 } // namespace QtPlugins
 } // namespace Avogadro

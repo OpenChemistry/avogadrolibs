@@ -30,11 +30,11 @@ class Wireframe : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit Wireframe(QObject *parent = 0);
+  explicit Wireframe(QObject* parent = 0);
   ~Wireframe() override;
 
-  void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) override;
+  void process(const Core::Molecule& molecule,
+               Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("Wireframe"); }
 
@@ -47,7 +47,7 @@ public:
 
   void setEnabled(bool enable) override;
 
-  QWidget * setupWidget() override;
+  QWidget* setupWidget() override;
 
 private slots:
   void multiBonds(bool show);
@@ -56,9 +56,9 @@ private slots:
 private:
   bool m_enabled;
 
-  Rendering::GroupNode *m_group;
+  Rendering::GroupNode* m_group;
 
-  QWidget *m_setupWidget;
+  QWidget* m_setupWidget;
   bool m_multiBonds;
   bool m_showHydrogens;
 };

@@ -23,9 +23,9 @@
 
 #include <avogadro/qtgui/toolplugin.h>
 
-#include <avogadro/rendering/primitive.h>
-#include <avogadro/rendering/geometrynode.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/rendering/geometrynode.h>
+#include <avogadro/rendering/primitive.h>
 
 #include <QtCore/QVector>
 
@@ -42,42 +42,43 @@ class MeasureTool : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit MeasureTool(QObject *parent_ = nullptr);
+  explicit MeasureTool(QObject* parent_ = nullptr);
   ~MeasureTool();
 
   QString name() const override { return tr("Measure tool"); }
   QString description() const override { return tr("Measure tool"); }
   unsigned char priority() const override { return 60; }
-  QAction * activateAction() const override { return m_activateAction; }
-  QWidget * toolWidget() const override;
+  QAction* activateAction() const override { return m_activateAction; }
+  QWidget* toolWidget() const override;
 
-  void setMolecule(QtGui::Molecule *) override;
-  void setEditMolecule(QtGui::RWMolecule *) override;
-  void setGLRenderer(Rendering::GLRenderer *renderer) override;
+  void setMolecule(QtGui::Molecule*) override;
+  void setEditMolecule(QtGui::RWMolecule*) override;
+  void setGLRenderer(Rendering::GLRenderer* renderer) override;
 
-  QUndoCommand * mousePressEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) override;
+  QUndoCommand* mousePressEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseDoubleClickEvent(QMouseEvent* e) override;
 
-  void draw(Rendering::GroupNode &node) override;
+  void draw(Rendering::GroupNode& node) override;
 
 private:
-  Vector3ub contrastingColor(const Vector3ub &rgb) const;
+  Vector3ub contrastingColor(const Vector3ub& rgb) const;
   // for four atoms a,b,c,d, b1 = b-a, b2 = c-b, b3 = d-c. Returns degrees.
-  float dihedralAngle(const Vector3 &b1, const Vector3 &b2,
-                      const Vector3 &b3) const;
-  bool toggleAtom(const Rendering::Identifier &atom);
-  template<typename T> void createLabels(T *mol, Rendering::GeometryNode *geo,
-                                         QVector<Vector3> &positions);
+  float dihedralAngle(const Vector3& b1, const Vector3& b2,
+                      const Vector3& b3) const;
+  bool toggleAtom(const Rendering::Identifier& atom);
+  template <typename T>
+  void createLabels(T* mol, Rendering::GeometryNode* geo,
+                    QVector<Vector3>& positions);
 
-  QAction *m_activateAction;
-  QtGui::Molecule *m_molecule;
-  QtGui::RWMolecule *m_rwMolecule;
-  Rendering::GLRenderer *m_renderer;
+  QAction* m_activateAction;
+  QtGui::Molecule* m_molecule;
+  QtGui::RWMolecule* m_rwMolecule;
+  Rendering::GLRenderer* m_renderer;
   QVector<Rendering::Identifier> m_atoms;
 };
 
-inline void MeasureTool::setMolecule(QtGui::Molecule *mol)
+inline void MeasureTool::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule != mol) {
     m_atoms.clear();
@@ -86,7 +87,7 @@ inline void MeasureTool::setMolecule(QtGui::Molecule *mol)
   }
 }
 
-inline void MeasureTool::setEditMolecule(QtGui::RWMolecule *mol)
+inline void MeasureTool::setEditMolecule(QtGui::RWMolecule* mol)
 {
   if (m_rwMolecule != mol) {
     m_atoms.clear();
@@ -95,7 +96,7 @@ inline void MeasureTool::setEditMolecule(QtGui::RWMolecule *mol)
   }
 }
 
-inline void MeasureTool::setGLRenderer(Rendering::GLRenderer *renderer)
+inline void MeasureTool::setGLRenderer(Rendering::GLRenderer* renderer)
 {
   m_renderer = renderer;
 }

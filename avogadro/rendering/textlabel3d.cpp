@@ -30,12 +30,12 @@ TextLabel3D::~TextLabel3D()
 {
 }
 
-void TextLabel3D::accept(Visitor &visitor)
+void TextLabel3D::accept(Visitor& visitor)
 {
   visitor.visit(*this);
 }
 
-void TextLabel3D::setAnchor(const Vector3f &position)
+void TextLabel3D::setAnchor(const Vector3f& position)
 {
   setAnchorInternal(position);
 }

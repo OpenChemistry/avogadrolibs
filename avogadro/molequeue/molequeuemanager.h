@@ -43,7 +43,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueManager : public QObject
 {
   Q_OBJECT
 public:
-  explicit MoleQueueManager(QObject *parent_ = 0);
+  explicit MoleQueueManager(QObject* parent_ = 0);
   ~MoleQueueManager() override;
 
   /**
@@ -69,7 +69,7 @@ public:
   /**
    * @return A QAbstractItemModel subclass representing the queue/program tree.
    */
-  MoleQueueQueueListModel &queueListModel();
+  MoleQueueQueueListModel& queueListModel();
 
 public slots:
   /**
@@ -85,13 +85,12 @@ signals:
   void queueListUpdated();
 
 private slots:
-  void updateQueueModel(const QJsonObject &queueList);
+  void updateQueueModel(const QJsonObject& queueList);
 
 private:
-  static MoleQueueManager *m_instance;
+  static MoleQueueManager* m_instance;
   ::MoleQueue::Client m_client;
   MoleQueueQueueListModel m_queueModel;
-
 };
 
 } // namespace MoleQueue

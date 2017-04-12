@@ -70,24 +70,24 @@ public:
    * Construct a widget that dynamically generates a GUI to configure the
    * InputGenerator script specified by scriptFilePath.
    */
-  explicit InputGeneratorWidget(QWidget *parent_ = 0);
+  explicit InputGeneratorWidget(QWidget* parent_ = 0);
   ~InputGeneratorWidget() override;
 
   /**
    * Use the input generator script pointed to by scriptFilePath.
    * @param scriptFilePath Absolute path to generator script.
    */
-  void setInputGeneratorScript(const QString &scriptFilePath);
+  void setInputGeneratorScript(const QString& scriptFilePath);
 
   /**
    * Set the molecule used in the simulation.
    */
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
   /**
    * Access to the underlying input generator object. @{
    */
-  const InputGenerator &inputGenerator() const { return m_inputGenerator; }
+  const InputGenerator& inputGenerator() const { return m_inputGenerator; }
 
   /**
    * @return True if the widget is in batch mode. See the class documentation
@@ -99,7 +99,7 @@ public:
    * Collect the current calculation parameters and prompt for MoleQueue
    * options. Both option sets are stored in @a batch.
    */
-  bool configureBatchJob(BatchJob &batch) const;
+  bool configureBatchJob(BatchJob& batch) const;
 
 public slots:
   /**
@@ -117,14 +117,14 @@ signals:
   /**
    * Emitted when the user requests that a job's output be loaded in Avogadro.
    */
-  void openJobOutput(const ::MoleQueue::JobObject &job);
+  void openJobOutput(const ::MoleQueue::JobObject& job);
 
 protected:
   /**
    * Reimplemented to update preview text. Hidden dialogs will wait until they
    * are reshown to update the text to prevent overwriting any modified buffers.
    */
-  void showEvent(QShowEvent *e) override;
+  void showEvent(QShowEvent* e) override;
 
 private slots:
   /**
@@ -159,7 +159,7 @@ private slots:
    * Show the user an warning. These are messages returned by the input
    * generator script.
    */
-  void setWarning(const QString &warn);
+  void setWarning(const QString& warn);
 
   /**
    * Toggle the visibility of the warning text.
@@ -185,7 +185,7 @@ private slots:
    * Show the user an error message. These are errors that have occurred
    * in this extension, not necessarily in the input generator script.
    */
-  void showError(const QString &err);
+  void showError(const QString& err);
 
   /**
    * Triggered when an input file's text edit is modified.
@@ -206,13 +206,13 @@ private:
    * @todo Display names are not necessarily unique, but paths are too long.
    * Maybe add a namespace qualifier to the script display names?
    */
-  QString settingsKey(const QString &identifier) const;
+  QString settingsKey(const QString& identifier) const;
 
   /**
    * Write the input file(s) to disk. Prompts user for target location.
    * @{
    */
-  void saveSingleFile(const QString &fileName);
+  void saveSingleFile(const QString& fileName);
   void saveDirectory();
   /**@}*/
 
@@ -228,7 +228,7 @@ private:
    * Given the name of a user-option in m_options, return the type string.
    * If an error occurs, an empty string will be returned.
    */
-  QString lookupOptionType(const QString &name) const;
+  QString lookupOptionType(const QString& name) const;
 
   /**
    * Used to construct the script-specific GUI.
@@ -236,14 +236,14 @@ private:
    */
   void updateOptions();
   void buildOptionGui();
-  void addOptionRow(const QString &label, const QJsonValue &option);
-  QWidget* createOptionWidget(const QJsonValue &option);
-  QWidget* createStringListWidget(const QJsonObject &obj);
-  QWidget* createStringWidget(const QJsonObject &obj);
-  QWidget* createFilePathWidget(const QJsonObject &obj);
-  QWidget* createIntegerWidget(const QJsonObject &obj);
-  QWidget* createFloatWidget(const QJsonObject &obj);
-  QWidget* createBooleanWidget(const QJsonObject &obj);
+  void addOptionRow(const QString& label, const QJsonValue& option);
+  QWidget* createOptionWidget(const QJsonValue& option);
+  QWidget* createStringListWidget(const QJsonObject& obj);
+  QWidget* createStringWidget(const QJsonObject& obj);
+  QWidget* createFilePathWidget(const QJsonObject& obj);
+  QWidget* createIntegerWidget(const QJsonObject& obj);
+  QWidget* createFloatWidget(const QJsonObject& obj);
+  QWidget* createBooleanWidget(const QJsonObject& obj);
   /**@}*/
 
   /**
@@ -251,12 +251,12 @@ private:
    * @{
    */
   void setOptionDefaults();
-  void setOption(const QString &name, const QJsonValue &defaultValue);
-  void setStringListOption(const QString &name, const QJsonValue &value);
-  void setStringOption(const QString &name, const QJsonValue &value);
-  void setFilePathOption(const QString &name, const QJsonValue &value);
-  void setIntegerOption(const QString &name, const QJsonValue &value);
-  void setBooleanOption(const QString &name, const QJsonValue &value);
+  void setOption(const QString& name, const QJsonValue& defaultValue);
+  void setStringListOption(const QString& name, const QJsonValue& value);
+  void setStringOption(const QString& name, const QJsonValue& value);
+  void setFilePathOption(const QString& name, const QJsonValue& value);
+  void setIntegerOption(const QString& name, const QJsonValue& value);
+  void setBooleanOption(const QString& name, const QJsonValue& value);
   /**@}*/
 
   /**
@@ -267,7 +267,7 @@ private:
    * @return True if value is overwritten, false if the option is not found or
    * cannot be converted to a string.
    */
-  bool optionString(const QString &option, QString &value) const;
+  bool optionString(const QString& option, QString& value) const;
 
   /**
    * Collect all of the user-specified options into a JSON object, to be sent
@@ -280,15 +280,15 @@ private:
    * by this method will have their signals blocked while modifying their
    * values.
    */
-  void applyOptions(const QJsonObject &opts);
+  void applyOptions(const QJsonObject& opts);
 
   /**
    * Update the autogenerated job title in the GUI.
    */
   QString generateJobTitle() const;
 
-  Ui::InputGeneratorWidget *m_ui;
-  QtGui::Molecule *m_molecule;
+  Ui::InputGeneratorWidget* m_ui;
+  QtGui::Molecule* m_molecule;
   QJsonObject m_options;
   QJsonObject m_optionCache; // For reverting changes
   bool m_updatePending;
@@ -299,7 +299,6 @@ private:
   QMap<QString, QWidget*> m_widgets;
   QMap<QString, QTextEdit*> m_textEdits;
 };
-
 
 } // namespace MoleQueue
 } // namespace Avogadro

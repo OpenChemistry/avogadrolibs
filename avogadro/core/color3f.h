@@ -42,7 +42,8 @@ public:
    * Constructor, results in a black Color3f object unless the RGB values are
    * set.
    * @param red Intensity (from 0.0 to 1.0) of the red component of the color.
-   * @param green Intensity (from 0.0 to 1.0) of the green component of the color.
+   * @param green Intensity (from 0.0 to 1.0) of the green component of the
+   * color.
    * @param blue Intensity (from 0.0 to 1.0) of the blue component of the color.
    */
   Color3f(float red = 0.0, float green = 0.0, float blue = 0.0);
@@ -58,7 +59,8 @@ public:
   /**
    * Sets the color objects components.
    * @param red Intensity (from 0.0 to 1.0) of the red component of the color.
-   * @param green Intensity (from 0.0 to 1.0) of the green component of the color.
+   * @param green Intensity (from 0.0 to 1.0) of the green component of the
+   * color.
    * @param blue Intensity (from 0.0 to 1.0) of the blue component of the color.
    */
   void set(float red, float green, float blue);
@@ -81,14 +83,14 @@ public:
   /**
    * @return Direct access to the underlying float array of size 3.
    */
-  float * data();
+  float* data();
 
   /**
    * This function is useful when calling OpenGL functions which expect a
    * float * array of size 3.
    * @return Direct access to the underlying float array of size 3.
    */
-  const float * data() const;
+  const float* data() const;
 
 protected:
   float m_data[3];
@@ -115,12 +117,12 @@ inline void Color3f::set(float r, float g, float b)
   m_data[2] = b;
 }
 
-inline float * Color3f::data()
+inline float* Color3f::data()
 {
   return &(m_data[0]);
 }
 
-inline const float * Color3f::data() const
+inline const float* Color3f::data() const
 {
   return &(m_data[0]);
 }

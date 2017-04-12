@@ -21,7 +21,7 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-SurfaceDialog::SurfaceDialog(QWidget *parent_, Qt::WindowFlags f)
+SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
   : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog)
 {
   m_ui->setupUi(this);
@@ -39,34 +39,34 @@ SurfaceDialog::~SurfaceDialog()
 void SurfaceDialog::resolutionComboChanged(int n)
 {
   switch (n) {
-  case 0: // Very low resolution
-    m_ui->resolutionDoubleSpinBox->setValue(0.5);
-    m_ui->resolutionDoubleSpinBox->setEnabled(false);
-    break;
-  case 1: // Low resolution
-    m_ui->resolutionDoubleSpinBox->setValue(0.35);
-    m_ui->resolutionDoubleSpinBox->setEnabled(false);
-    break;
-  case 2: // Medium resolution
-    m_ui->resolutionDoubleSpinBox->setValue(0.18);
-    m_ui->resolutionDoubleSpinBox->setEnabled(false);
-    break;
-  case 3: // High resolution
-    m_ui->resolutionDoubleSpinBox->setValue(0.1);
-    m_ui->resolutionDoubleSpinBox->setEnabled(false);
-    break;
-  case 4: // Very high resolution
-    m_ui->resolutionDoubleSpinBox->setValue(0.05);
-    m_ui->resolutionDoubleSpinBox->setEnabled(false);
-    break;
-  case 5: // Custom resolution
-    m_ui->resolutionDoubleSpinBox->setValue(0.18);
-    m_ui->resolutionDoubleSpinBox->setEnabled(true);
-    break;
-  default:
-    m_ui->resolutionDoubleSpinBox->setValue(0.18);
-    m_ui->resolutionDoubleSpinBox->setEnabled(false);
-    break;
+    case 0: // Very low resolution
+      m_ui->resolutionDoubleSpinBox->setValue(0.5);
+      m_ui->resolutionDoubleSpinBox->setEnabled(false);
+      break;
+    case 1: // Low resolution
+      m_ui->resolutionDoubleSpinBox->setValue(0.35);
+      m_ui->resolutionDoubleSpinBox->setEnabled(false);
+      break;
+    case 2: // Medium resolution
+      m_ui->resolutionDoubleSpinBox->setValue(0.18);
+      m_ui->resolutionDoubleSpinBox->setEnabled(false);
+      break;
+    case 3: // High resolution
+      m_ui->resolutionDoubleSpinBox->setValue(0.1);
+      m_ui->resolutionDoubleSpinBox->setEnabled(false);
+      break;
+    case 4: // Very high resolution
+      m_ui->resolutionDoubleSpinBox->setValue(0.05);
+      m_ui->resolutionDoubleSpinBox->setEnabled(false);
+      break;
+    case 5: // Custom resolution
+      m_ui->resolutionDoubleSpinBox->setValue(0.18);
+      m_ui->resolutionDoubleSpinBox->setEnabled(true);
+      break;
+    default:
+      m_ui->resolutionDoubleSpinBox->setValue(0.18);
+      m_ui->resolutionDoubleSpinBox->setEnabled(false);
+      break;
   }
 }
 
@@ -113,7 +113,8 @@ void SurfaceDialog::setupCube(int numCubes)
 
 void SurfaceDialog::calculateClicked()
 {
-  float resolutionStepSize(static_cast<float>(m_ui->resolutionDoubleSpinBox->value()));
+  float resolutionStepSize(
+    static_cast<float>(m_ui->resolutionDoubleSpinBox->value()));
   float isosurfaceValue(m_ui->isosurfaceLineEdit->text().toFloat());
   m_ui->calculateButton->setEnabled(false);
   emit calculateClickedSignal(m_ui->surfaceCombo->currentIndex(),

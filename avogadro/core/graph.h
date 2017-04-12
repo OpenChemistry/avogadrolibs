@@ -19,8 +19,8 @@
 
 #include "avogadrocore.h"
 
-#include <vector>
 #include <cstddef>
+#include <vector>
 
 namespace Avogadro {
 namespace Core {
@@ -100,10 +100,10 @@ public:
    * Returns a vector of vector containing the indicies of each vertex in each
    * connected component in the graph.
    */
-  std::vector<std::vector<size_t> > connectedComponents() const;
+  std::vector<std::vector<size_t>> connectedComponents() const;
 
 private:
-  std::vector<std::vector<size_t> > m_adjacencyList;
+  std::vector<std::vector<size_t>> m_adjacencyList;
 };
 
 } // end Core namespace

@@ -17,15 +17,14 @@
 #ifndef AVOGADRO_QTPLUGINS_FILEDIALOG_H
 #define AVOGADRO_QTPLUGINS_FILEDIALOG_H
 
-#include <QStringList>
 #include <QDialog>
+#include <QStringList>
 
 class QModelIndex;
 class QPoint;
 class QShowEvent;
 
-namespace ProtoCall
-{
+namespace ProtoCall {
 namespace Runtime {
 class vtkCommunicatorChannel;
 }
@@ -39,12 +38,10 @@ class FileDialog : public QDialog
 {
   Q_OBJECT
 public:
-
-  FileDialog(ProtoCall::Runtime::vtkCommunicatorChannel*,
-    QWidget* Parent,
-    const QString& Title = QString(),
-    const QString& Directory = QString(),
-    const QString& Filter = QString());
+  FileDialog(ProtoCall::Runtime::vtkCommunicatorChannel*, QWidget* Parent,
+             const QString& Title = QString(),
+             const QString& Directory = QString(),
+             const QString& Filter = QString());
   ~FileDialog();
 
   /// set the most recently used file extension
@@ -60,9 +57,9 @@ public:
   bool selectFile(const QString&);
 
   /// set if we show hidden files and holders
-  void setShowHidden( const bool& hidden);
+  void setShowHidden(const bool& hidden);
 
-  ///returns the state of the show hidden flag
+  /// returns the state of the show hidden flag
   bool getShowHidden();
 
 signals:
@@ -77,9 +74,9 @@ protected:
   void acceptExistingFiles();
   void acceptDefault();
 
-  QStringList buildFileGroup(const QString &filename);
+  QStringList buildFileGroup(const QString& filename);
 
-  virtual void showEvent( QShowEvent *showEvent );
+  virtual void showEvent(QShowEvent* showEvent);
 
 private slots:
   void onModelReset();
@@ -90,17 +87,17 @@ private slots:
   void onNavigateDown(const QModelIndex&);
   void onFilterChange(const QString&);
 
-  void onDoubleClickFile( const QModelIndex& );
+  void onDoubleClickFile(const QModelIndex&);
 
   void onTextEdited(const QString&);
 
-  void onShowHiddenFiles( const bool &hide );
+  void onShowHiddenFiles(const bool& hide);
 
   // Called when the user changes the file selection.
   void fileSelectionChanged();
 
   // Called when the user right-clicks in the file qtreeview
-  void onContextMenuRequested(const QPoint &pos);
+  void onContextMenuRequested(const QPoint& pos);
 
   // Set the selected file
   void setSelectedFile(const QString&);
@@ -117,9 +114,9 @@ private:
   class Private;
   Private* const m_implementation;
 
-  //returns if true if files are loaded
+  // returns if true if files are loaded
   void acceptInternal(const QStringList& selected_files,
-      const bool &doubleclicked);
+                      const bool& doubleclicked);
   QString fixFileExtension(const QString& filename, const QString& filter);
 };
 

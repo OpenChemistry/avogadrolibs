@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEQUEUELISTMODEL_H
 #define AVOGADRO_MOLEQUEUE_MOLEQUEUEQUEUELISTMODEL_H
 
-#include <QtCore/QAbstractItemModel>
 #include "avogadromolequeueexport.h"
+#include <QtCore/QAbstractItemModel>
 
 #include <QtCore/QStringList>
 
@@ -50,7 +50,8 @@ class MoleQueueManager;
  * MoleQueueManager::instance().requestQueueList() and waiting for the
  * MoleQueueManager::queueListUpdated() signal.
  */
-class AVOGADROMOLEQUEUE_EXPORT MoleQueueQueueListModel : public QAbstractItemModel
+class AVOGADROMOLEQUEUE_EXPORT MoleQueueQueueListModel
+  : public QAbstractItemModel
 {
   Q_OBJECT
 public:
@@ -64,13 +65,13 @@ public:
   /**
    * @return A list of programs belonging to @a queue.
    */
-  QStringList programs(const QString &queue) const;
+  QStringList programs(const QString& queue) const;
 
   /**
    * @return A QModelIndexList containing indices for queues that contain the
    * string @a filter. Matches are case-insensitive.
    */
-  QModelIndexList findQueueIndices(const QString &filter = QString()) const;
+  QModelIndexList findQueueIndices(const QString& filter = QString()) const;
 
   /**
    * @return A QModelIndexList containing indices for programs that contain the
@@ -78,8 +79,8 @@ public:
    * Matches are case-insensitive.
    */
   QModelIndexList findProgramIndices(
-      const QString &programFilter = QString(),
-      const QString &queueFilter = QString()) const;
+    const QString& programFilter = QString(),
+    const QString& queueFilter = QString()) const;
 
   /**
    * Translate a QModelIndex for a program node into queue and program strings.
@@ -88,18 +89,18 @@ public:
    * @param programName String reference to be overwritten with the queue name.
    * @return True if the index matched a program node, false otherwise.
    */
-  bool lookupProgram(const QModelIndex &idx,
-                     QString &queueName, QString &programName) const;
+  bool lookupProgram(const QModelIndex& idx, QString& queueName,
+                     QString& programName) const;
 
   // QAbstractItemModel virtuals
-  QVariant data(const QModelIndex &idx, int role) const;
-  Qt::ItemFlags flags(const QModelIndex &idx = QModelIndex()) const;
+  QVariant data(const QModelIndex& idx, int role) const;
+  Qt::ItemFlags flags(const QModelIndex& idx = QModelIndex()) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
   QModelIndex index(int row, int column,
-                    const QModelIndex &parent_ = QModelIndex()) const;
-  QModelIndex parent(const QModelIndex &child) const;
-  int rowCount(const QModelIndex &parent_ = QModelIndex()) const;
-  int columnCount(const QModelIndex &parent_ = QModelIndex()) const;
+                    const QModelIndex& parent_ = QModelIndex()) const;
+  QModelIndex parent(const QModelIndex& child) const;
+  int rowCount(const QModelIndex& parent_ = QModelIndex()) const;
+  int columnCount(const QModelIndex& parent_ = QModelIndex()) const;
 
 protected:
   friend class MoleQueueManager;
@@ -108,13 +109,16 @@ protected:
   /**
    * Protected constructor. Keeps objects isolated to MoleQueueManager ivars.
    */
-  explicit MoleQueueQueueListModel(QObject *parent_ = 0);
+  explicit MoleQueueQueueListModel(QObject* parent_ = 0);
 
   /**
    * Used to retrieve a QStringList with [queueName, programName] from data()
    * given a program model index.
    */
-  enum { QueueProgramRole = Qt::UserRole };
+  enum
+  {
+    QueueProgramRole = Qt::UserRole
+  };
 
   /**
    * Merge the queue and program lists with the existing model.
@@ -122,16 +126,16 @@ protected:
   void setQueueList(QList<QString> queueList, QList<QStringList> programList);
 
 private:
-  void insertQueue(int row, const QString &queue, const QStringList &progs);
+  void insertQueue(int row, const QString& queue, const QStringList& progs);
   void removeQueue(int row);
-  void mergeQueue(int row, const QStringList &newProgs);
-  void insertProgram(int queueRow, int progRow, const QString &progName);
+  void mergeQueue(int row, const QStringList& newProgs);
+  void insertProgram(int queueRow, int progRow, const QString& progName);
   void removeProgram(int queueRow, int progRow);
 
-  bool isQueueIndex(const QModelIndex &i) const;
-  bool isProgramIndex(const QModelIndex &i) const;
+  bool isQueueIndex(const QModelIndex& i) const;
+  bool isProgramIndex(const QModelIndex& i) const;
 
-  quint32 lookupUid(const QString &queue, const QString &prog);
+  quint32 lookupUid(const QString& queue, const QString& prog);
   quint32 lookupUid(const int queueRow, const int progRow);
   int programUidToQueueRow(quint32 uid) const;
 

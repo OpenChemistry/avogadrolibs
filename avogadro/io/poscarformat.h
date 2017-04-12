@@ -39,7 +39,7 @@ public:
     return ReadWrite | File | Stream | String;
   }
 
-  FileFormat * newInstance() const override { return new PoscarFormat; }
+  FileFormat* newInstance() const override { return new PoscarFormat; }
   std::string identifier() const override { return "Avogadro: POSCAR"; }
   std::string name() const override { return "POSCAR"; }
   std::string description() const override
@@ -55,12 +55,11 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &inStream, Core::Molecule &mol);
-  bool write(std::ostream &outStream, const Core::Molecule &mol);
+  bool read(std::istream& inStream, Core::Molecule& mol);
+  bool write(std::ostream& outStream, const Core::Molecule& mol);
 };
 
 } // end Io namespace
 } // end Avogadro namespace
 
 #endif // AVOGADRO_IO_POSCARFORMAT_H
-

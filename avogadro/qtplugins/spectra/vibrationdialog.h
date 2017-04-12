@@ -39,10 +39,10 @@ class VibrationDialog : public QDialog
   Q_OBJECT
 
 public:
-  VibrationDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+  VibrationDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
   ~VibrationDialog();
 
-  void setMolecule(QtGui::Molecule *molecule);
+  void setMolecule(QtGui::Molecule* molecule);
   int currentMode() const;
 
 protected slots:
@@ -55,7 +55,7 @@ signals:
   void stopAnimation();
 
 private:
-  Ui::VibrationDialog *m_ui;
+  Ui::VibrationDialog* m_ui;
 };
 
 } // End namespace QtPlugins

@@ -52,7 +52,7 @@ class AVOGADROQTGUI_EXPORT ExtensionPlugin : public QObject
   Q_OBJECT
 
 public:
-  explicit ExtensionPlugin(QObject *parent = 0);
+  explicit ExtensionPlugin(QObject* parent = 0);
   ~ExtensionPlugin();
 
   /**
@@ -61,57 +61,58 @@ public:
   virtual QString name() const = 0;
 
   /**
-   * A description of the extension plugin, may be displayed in the user interface.
+   * A description of the extension plugin, may be displayed in the user
+   * interface.
    */
   virtual QString description() const = 0;
 
   /**
    * @return The QActions for this extension (should be at least one).
    */
-  virtual QList<QAction *> actions() const = 0;
+  virtual QList<QAction*> actions() const = 0;
 
   /**
    * @return The menu path of the supplied action. This can be empty if the
    * action was not recognized, or contain two or more strings (top level, plus
    * name, e.g. File, &Open).
    */
-  virtual QStringList menuPath(QAction *action = 0) const = 0;
+  virtual QStringList menuPath(QAction* action = 0) const = 0;
 
   /**
    * @return A list of file format readers/writers.
    *
    * The caller takes ownership of the objects in the returned list.
    */
-  virtual QList<Io::FileFormat *> fileFormats() const;
+  virtual QList<Io::FileFormat*> fileFormats() const;
 
 public slots:
   /**
    * Called when the current molecule changes.
    */
-  virtual void setMolecule(QtGui::Molecule *mol) = 0;
+  virtual void setMolecule(QtGui::Molecule* mol) = 0;
 
   /**
    * Call this slot when the moleculeReady signal indicated that a molecule is
    * ready to be read. The @p molecule will have the data read into it. The slot
    * will @return true if a molecule was successfully read in.
    */
-  virtual bool readMolecule(QtGui::Molecule &mol);
+  virtual bool readMolecule(QtGui::Molecule& mol);
 
   /**
    * Called when the current scene changes.
    */
-  virtual void setScene(Rendering::Scene *scene);
+  virtual void setScene(Rendering::Scene* scene);
 
   /**
    * Called when the active camera for the view changes.
    */
-  virtual void setCamera(Rendering::Camera *camera);
+  virtual void setCamera(Rendering::Camera* camera);
 
   /**
    * Called when the active widget changes. This must be used carefully, and
    * should check that the widget has been cast if used.
    */
-  virtual void setActiveWidget(QWidget *widget);
+  virtual void setActiveWidget(QWidget* widget);
 
 signals:
   /**
@@ -144,7 +145,8 @@ signals:
 };
 
 /**
- * @class ExtensionPluginFactory extensionplugin.h <avogadro/qtgui/extensionplugin.h>
+ * @class ExtensionPluginFactory extensionplugin.h
+ * <avogadro/qtgui/extensionplugin.h>
  * @brief The base class for extension plugin factories in Avogadro.
  * @author Marcus D. Hanwell
  */

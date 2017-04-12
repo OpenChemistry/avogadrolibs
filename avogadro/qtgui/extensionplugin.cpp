@@ -19,7 +19,7 @@
 namespace Avogadro {
 namespace QtGui {
 
-ExtensionPlugin::ExtensionPlugin(QObject *parent_) : QObject(parent_)
+ExtensionPlugin::ExtensionPlugin(QObject* parent_) : QObject(parent_)
 {
 }
 
@@ -27,7 +27,7 @@ ExtensionPlugin::~ExtensionPlugin()
 {
 }
 
-QList<Io::FileFormat *> ExtensionPlugin::fileFormats() const
+QList<Io::FileFormat*> ExtensionPlugin::fileFormats() const
 {
   return QList<Io::FileFormat*>();
 }
@@ -36,20 +36,20 @@ ExtensionPluginFactory::~ExtensionPluginFactory()
 {
 }
 
-bool ExtensionPlugin::readMolecule(Molecule &)
+bool ExtensionPlugin::readMolecule(Molecule&)
 {
   return false;
 }
 
-void ExtensionPlugin::setScene(Rendering::Scene *)
+void ExtensionPlugin::setScene(Rendering::Scene*)
 {
 }
 
-void ExtensionPlugin::setCamera(Rendering::Camera *camera)
+void ExtensionPlugin::setCamera(Rendering::Camera* camera)
 {
 }
 
-void ExtensionPlugin::setActiveWidget(QWidget *widget)
+void ExtensionPlugin::setActiveWidget(QWidget* widget)
 {
 }
 

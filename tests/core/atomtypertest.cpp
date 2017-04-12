@@ -41,7 +41,7 @@ TEST(AtomTyper, singleAtomTyping)
     MassTyper() : AtomTyper<double>(nullptr) {}
     Array<double>& typesRef() { return m_types; }
   protected:
-    double type(const Atom &atom)
+    double type(const Atom& atom)
     {
       return Elements::mass(atom.atomicNumber());
     }
@@ -52,7 +52,7 @@ TEST(AtomTyper, singleAtomTyping)
   // Check that the single atom typing method works as expected
   for (Avogadro::Index i = 0; i < molecule.atomCount(); ++i) {
     EXPECT_EQ(ref[i], typer.atomType(molecule.atom(i)))
-              << "run(Atom): Mismatch at index " << i;
+      << "run(Atom): Mismatch at index " << i;
   }
 
   // Verify that we haven't populated the internal array
@@ -71,7 +71,7 @@ TEST(AtomTyper, singleAtomTyping)
   const double testVal = -192.34;
   typer.typesRef()[4] = testVal;
   EXPECT_EQ(testVal, typer.atomType(molecule.atom(4)))
-      << "Failed getting cached result.";
+    << "Failed getting cached result.";
 }
 
 TEST(AtomTyper, resetOnMoleculeChange)

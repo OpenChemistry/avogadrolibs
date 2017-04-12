@@ -16,8 +16,8 @@
 
 #include "vanderwaals.h"
 
-#include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
@@ -30,7 +30,7 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 
-VanDerWaals::VanDerWaals(QObject *p) : ScenePlugin(p), m_enabled(false)
+VanDerWaals::VanDerWaals(QObject* p) : ScenePlugin(p), m_enabled(false)
 {
 }
 
@@ -38,13 +38,13 @@ VanDerWaals::~VanDerWaals()
 {
 }
 
-void VanDerWaals::process(const Core::Molecule &molecule,
-                          Rendering::GroupNode &node)
+void VanDerWaals::process(const Core::Molecule& molecule,
+                          Rendering::GroupNode& node)
 {
   // Add a sphere node to contain all of the VdW spheres.
-  GeometryNode *geometry = new GeometryNode;
+  GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
-  SphereGeometry *spheres = new SphereGeometry;
+  SphereGeometry* spheres = new SphereGeometry;
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
@@ -52,7 +52,7 @@ void VanDerWaals::process(const Core::Molecule &molecule,
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
     unsigned char atomicNumber = atom.atomicNumber();
-    const unsigned char *c = Elements::color(atomicNumber);
+    const unsigned char* c = Elements::color(atomicNumber);
     Vector3ub color(c[0], c[1], c[2]);
     spheres->addSphere(atom.position3d().cast<float>(), color,
                        static_cast<float>(Elements::radiusVDW(atomicNumber)));
@@ -68,6 +68,5 @@ void VanDerWaals::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-
 }
 }

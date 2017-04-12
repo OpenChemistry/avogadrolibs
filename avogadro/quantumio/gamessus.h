@@ -38,7 +38,7 @@ public:
     return Read | File | Stream | String;
   }
 
-  FileFormat * newInstance() const override { return new GAMESSUSOutput; }
+  FileFormat* newInstance() const override { return new GAMESSUSOutput; }
   std::string identifier() const override { return "Avogadro: GAMESS"; }
   std::string name() const override { return "GAMESS"; }
   std::string description() const override
@@ -46,16 +46,13 @@ public:
     return "GAMESS US log file output parser.";
   }
 
-  std::string specificationUrl() const override
-  {
-    return "";
-  }
+  std::string specificationUrl() const override { return ""; }
 
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) override;
-  bool write(std::ostream &, const Core::Molecule &) override
+  bool read(std::istream& in, Core::Molecule& molecule) override;
+  bool write(std::ostream&, const Core::Molecule&) override
   {
     // Empty, as we do not write out GAMESS log files.
     return false;
@@ -68,17 +65,17 @@ private:
    * @param molecule The molecule to add the atoms to.
    * @param angs Whether the units are Angstroms (true) or Bohr (false).
    */
-  void readAtomBlock(std::istream &in, Core::Molecule &molecule, bool angs);
+  void readAtomBlock(std::istream& in, Core::Molecule& molecule, bool angs);
 
   /**
    * Read in the basis set block.
    */
-  void readBasisSet(std::istream &in);
+  void readBasisSet(std::istream& in);
 
   /**
    * Read in the molecular orbitals.
    */
-  void readEigenvectors(std::istream &in);
+  void readEigenvectors(std::istream& in);
 
   /**
    * Reorder the molecular orbitals.
@@ -93,7 +90,7 @@ private:
   /**
    * Load the basis with the properties read in from the file.
    */
-  void load(Core::GaussianSet *basis);
+  void load(Core::GaussianSet* basis);
 
   double m_coordFactor;
   int m_electrons;
@@ -115,9 +112,8 @@ private:
   std::vector<double> m_alphaMOcoeffs;
   std::vector<double> m_betaMOcoeffs;
 
-  MatrixX m_density;     /// Total density matrix
+  MatrixX m_density; /// Total density matrix
 };
-
 }
 }
 

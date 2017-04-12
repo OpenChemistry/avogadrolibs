@@ -44,13 +44,13 @@ class ThreeDMolDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit ThreeDMolDialog(QtGui::Molecule *mol, QWidget *parent_ = 0);
+  explicit ThreeDMolDialog(QtGui::Molecule* mol, QWidget* parent_ = 0);
   ~ThreeDMolDialog();
 
   QtGui::Molecule* molecule() { return m_molecule; }
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 private slots:
   void updateLabels();
@@ -59,10 +59,9 @@ private slots:
   void copyToClipboard();
 
 private:
-  QtGui::Molecule *m_molecule;
-  Ui::ThreeDMolDialog *m_ui;
+  QtGui::Molecule* m_molecule;
+  Ui::ThreeDMolDialog* m_ui;
 };
-
 
 } // namespace QtPlugins
 } // namespace Avogadro

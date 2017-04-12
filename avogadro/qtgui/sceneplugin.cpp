@@ -19,7 +19,7 @@
 namespace Avogadro {
 namespace QtGui {
 
-ScenePlugin::ScenePlugin(QObject *parent_) : QObject(parent_)
+ScenePlugin::ScenePlugin(QObject* parent_) : QObject(parent_)
 {
 }
 
@@ -27,11 +27,11 @@ ScenePlugin::~ScenePlugin()
 {
 }
 
-void ScenePlugin::processEditable(const RWMolecule &, Rendering::GroupNode &)
+void ScenePlugin::processEditable(const RWMolecule&, Rendering::GroupNode&)
 {
 }
 
-QWidget * ScenePlugin::setupWidget()
+QWidget* ScenePlugin::setupWidget()
 {
   return nullptr;
 }

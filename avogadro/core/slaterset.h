@@ -20,8 +20,8 @@
 
 #include "basisset.h"
 
-#include <avogadro/core/vector.h>
 #include <avogadro/core/matrix.h>
+#include <avogadro/core/vector.h>
 
 #include <vector>
 
@@ -69,50 +69,62 @@ public:
   /**
    * Enumeration of the Slater orbital types.
    */
-  enum slater { S, PX, PY, PZ, X2, XZ, Z2, YZ, XY, UU };
+  enum slater
+  {
+    S,
+    PX,
+    PY,
+    PZ,
+    X2,
+    XZ,
+    Z2,
+    YZ,
+    XY,
+    UU
+  };
 
   /**
    * Add a basis to the basis set.
    * @param i Index of the atom to add the Basis too.
    * @return The index of the added Basis.
    */
-  bool addSlaterIndices(const std::vector<int> &i);
+  bool addSlaterIndices(const std::vector<int>& i);
 
   /**
    * Add the symmetry types for the orbitals.
    * @param t Vector containing the types of symmetry using the slater enum.
    */
-  bool addSlaterTypes(const std::vector<int> &t);
+  bool addSlaterTypes(const std::vector<int>& t);
 
   /**
    * Add a STO to the supplied basis.
    * @param zetas The exponents of the STOs
    * @return True if successful.
    */
-  bool addZetas(const std::vector<double> &zetas);
+  bool addZetas(const std::vector<double>& zetas);
 
   /**
    * The PQNs for the orbitals.
    */
-  bool addPQNs(const std::vector<int> &pqns);
+  bool addPQNs(const std::vector<int>& pqns);
 
   /**
    * The overlap matrix.
    * @param m Matrix containing the overlap matrix for the basis.
    */
-  bool addOverlapMatrix(const Eigen::MatrixXd &m);
+  bool addOverlapMatrix(const Eigen::MatrixXd& m);
 
   /**
    * Add Eigen Vectors to the SlaterSet.
    * @param MOs Matrix of the eigen vectors for the SlaterSet.
    */
-  bool addEigenVectors(const Eigen::MatrixXd &e);
+  bool addEigenVectors(const Eigen::MatrixXd& e);
 
   /**
    * Add the density matrix to the SlaterSet.
    * @param d Density matrix for the SlaterSet.
    */
-  bool addDensityMatrix(const Eigen::MatrixXd &d);
+  bool addDensityMatrix(const Eigen::MatrixXd& d);
 
   /**
    * @return The number of molecular orbitals in the BasisSet.

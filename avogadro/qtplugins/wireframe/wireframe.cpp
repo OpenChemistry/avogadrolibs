@@ -16,18 +16,18 @@
 
 #include "wireframe.h"
 
-#include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/linestripgeometry.h>
 
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QCheckBox>
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QWidget>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -39,8 +39,9 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
 
-Wireframe::Wireframe(QObject *p) : ScenePlugin(p), m_enabled(false),
-  m_group(nullptr), m_setupWidget(nullptr), m_multiBonds(true), m_showHydrogens(true)
+Wireframe::Wireframe(QObject* p)
+  : ScenePlugin(p), m_enabled(false), m_group(nullptr), m_setupWidget(nullptr),
+    m_multiBonds(true), m_showHydrogens(true)
 {
 }
 
@@ -50,22 +51,21 @@ Wireframe::~Wireframe()
     m_setupWidget->deleteLater();
 }
 
-void Wireframe::process(const Molecule &molecule,
-                           Rendering::GroupNode &node)
+void Wireframe::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
   // Add a sphere node to contain all of the spheres.
   m_group = &node;
-  GeometryNode *geometry = new GeometryNode;
+  GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  LineStripGeometry *lines = new LineStripGeometry;
+  LineStripGeometry* lines = new LineStripGeometry;
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
   geometry->addDrawable(lines);
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
-    if (!m_showHydrogens
-        && (bond.atom1().atomicNumber() == 1 || bond.atom2().atomicNumber() == 1)) {
+    if (!m_showHydrogens && (bond.atom1().atomicNumber() == 1 ||
+                             bond.atom2().atomicNumber() == 1)) {
       continue;
     }
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
@@ -92,12 +92,12 @@ void Wireframe::setEnabled(bool enable)
   m_enabled = enable;
 }
 
-QWidget * Wireframe::setupWidget()
+QWidget* Wireframe::setupWidget()
 {
   if (!m_setupWidget) {
     m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
-    QVBoxLayout *v = new QVBoxLayout;
-    QCheckBox *check = new QCheckBox(tr("Show multiple bonds?"));
+    QVBoxLayout* v = new QVBoxLayout;
+    QCheckBox* check = new QCheckBox(tr("Show multiple bonds?"));
     check->setChecked(m_multiBonds);
     connect(check, SIGNAL(clicked(bool)), SLOT(multiBonds(bool)));
     v->addWidget(check);
@@ -125,6 +125,5 @@ void Wireframe::showHydrogens(bool show)
     emit drawablesChanged();
   }
 }
-
 }
 }

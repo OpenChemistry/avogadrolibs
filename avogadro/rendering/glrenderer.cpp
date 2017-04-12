@@ -18,10 +18,10 @@
 
 #include "avogadrogl.h"
 
-#include "shader.h"
-#include "shaderprogram.h"
 #include "geometrynode.h"
 #include "glrendervisitor.h"
+#include "shader.h"
+#include "shaderprogram.h"
 #include "textlabel2d.h"
 #include "textlabel3d.h"
 #include "textrenderstrategy.h"
@@ -35,9 +35,7 @@ namespace Avogadro {
 namespace Rendering {
 
 GLRenderer::GLRenderer()
-  : m_valid(false),
-    m_textRenderStrategy(nullptr),
-    m_center(Vector3f::Zero()),
+  : m_valid(false), m_textRenderStrategy(nullptr), m_center(Vector3f::Zero()),
     m_radius(20.0)
 {
   m_overlayCamera.setIdentity();
@@ -124,25 +122,25 @@ void GLRenderer::resetGeometry()
   m_radius = m_scene.radius();
 }
 
-void GLRenderer::setTextRenderStrategy(TextRenderStrategy *tren)
+void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
 {
   if (tren != m_textRenderStrategy) {
     // Force all labels to be regenerated on the next render:
     class ResetTextLabelVisitor : public Visitor
     {
     public:
-      void visit(Node &) { return; }
-      void visit(GroupNode &) { return; }
-      void visit(GeometryNode &) { return; }
-      void visit(Drawable &) { return; }
-      void visit(SphereGeometry &) { return; }
-      void visit(AmbientOcclusionSphereGeometry &) { return; }
-      void visit(CylinderGeometry &) { return; }
-      void visit(MeshGeometry &) { return; }
-      void visit(Texture2D &) { return; }
-      void visit(TextLabel2D &l) { l.resetTexture(); }
-      void visit(TextLabel3D &l) { l.resetTexture(); }
-      void visit(LineStripGeometry &) { return; }
+      void visit(Node&) { return; }
+      void visit(GroupNode&) { return; }
+      void visit(GeometryNode&) { return; }
+      void visit(Drawable&) { return; }
+      void visit(SphereGeometry&) { return; }
+      void visit(AmbientOcclusionSphereGeometry&) { return; }
+      void visit(CylinderGeometry&) { return; }
+      void visit(MeshGeometry&) { return; }
+      void visit(Texture2D&) { return; }
+      void visit(TextLabel2D& l) { l.resetTexture(); }
+      void visit(TextLabel3D& l) { l.resetTexture(); }
+      void visit(LineStripGeometry&) { return; }
     } labelResetter;
 
     m_scene.rootNode().accept(labelResetter);
@@ -156,44 +154,40 @@ void GLRenderer::applyProjection()
 {
   float distance = m_camera.distance(m_center);
   if (m_camera.projectionType() == Perspective) {
-    m_camera.calculatePerspective(40.0f,
-                                  std::max(2.0f, distance - m_radius),
+    m_camera.calculatePerspective(40.0f, std::max(2.0f, distance - m_radius),
                                   distance + m_radius);
-  }
-  else {
+  } else {
     // Renders the orthographic projection of the molecule
     const double halfHeight = m_radius;
     const double halfWidth = halfHeight * m_camera.width() / m_camera.height();
-    m_camera.calculateOrthographic(-halfWidth, halfWidth,
-                                   -halfHeight, halfHeight,
-                                   std::max(2.0f, distance - m_radius),
-                                   distance + m_radius);
+    m_camera.calculateOrthographic(
+      -halfWidth, halfWidth, -halfHeight, halfHeight,
+      std::max(2.0f, distance - m_radius), distance + m_radius);
   }
   m_overlayCamera.calculateOrthographic(
-        0.f, static_cast<float>(m_overlayCamera.width()),
-        0.f, static_cast<float>(m_overlayCamera.height()),
-        -1.f, 1.f);
+    0.f, static_cast<float>(m_overlayCamera.width()), 0.f,
+    static_cast<float>(m_overlayCamera.height()), -1.f, 1.f);
 }
 
-std::multimap<float, Identifier>
-GLRenderer::hits(const GroupNode *group, const Vector3f &rayOrigin,
-                 const Vector3f &rayEnd, const Vector3f &rayDirection) const
+std::multimap<float, Identifier> GLRenderer::hits(
+  const GroupNode* group, const Vector3f& rayOrigin, const Vector3f& rayEnd,
+  const Vector3f& rayDirection) const
 {
   std::multimap<float, Identifier> result;
   if (!group)
     return result;
 
-  for (std::vector<Node *>::const_iterator it = group->children().begin();
+  for (std::vector<Node*>::const_iterator it = group->children().begin();
        it != group->children().end(); ++it) {
     std::multimap<float, Identifier> loopHits;
-    const Node *itNode = *it;
-    const GroupNode *childGroup = dynamic_cast<const GroupNode *>(itNode);
+    const Node* itNode = *it;
+    const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
       loopHits = hits(childGroup, rayOrigin, rayEnd, rayDirection);
       result.insert(loopHits.begin(), loopHits.end());
       continue;
     }
-    const GeometryNode *childGeometry = (*it)->cast<GeometryNode>();
+    const GeometryNode* childGeometry = (*it)->cast<GeometryNode>();
     if (childGeometry) {
       loopHits = hits(childGeometry, rayOrigin, rayEnd, rayDirection);
       result.insert(loopHits.begin(), loopHits.end());
@@ -203,9 +197,9 @@ GLRenderer::hits(const GroupNode *group, const Vector3f &rayOrigin,
   return result;
 }
 
-std::multimap<float, Identifier>
-GLRenderer::hits(const GeometryNode *geometry, const Vector3f &rayOrigin,
-                 const Vector3f &rayEnd, const Vector3f &rayDirection) const
+std::multimap<float, Identifier> GLRenderer::hits(
+  const GeometryNode* geometry, const Vector3f& rayOrigin,
+  const Vector3f& rayEnd, const Vector3f& rayDirection) const
 {
   if (!geometry)
     return std::multimap<float, Identifier>();
@@ -215,11 +209,10 @@ GLRenderer::hits(const GeometryNode *geometry, const Vector3f &rayOrigin,
 std::multimap<float, Identifier> GLRenderer::hits(int x, int y) const
 {
   // Our ray:
-  const Vector3f origin(m_camera.unProject(Vector3f(static_cast<float>(x),
-                                                    static_cast<float>(y),
-                                                    0.f)));
-  const Vector3f end(m_camera.unProject(Vector3f(static_cast<float>(x),
-                                                 static_cast<float>(y), 1.f)));
+  const Vector3f origin(m_camera.unProject(
+    Vector3f(static_cast<float>(x), static_cast<float>(y), 0.f)));
+  const Vector3f end(m_camera.unProject(
+    Vector3f(static_cast<float>(x), static_cast<float>(y), 1.f)));
   const Vector3f direction((end - origin).normalized());
 
   return hits(&m_scene.rootNode(), origin, end, direction);

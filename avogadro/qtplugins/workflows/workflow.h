@@ -27,12 +27,12 @@ class QDialog;
 
 namespace Avogadro {
 namespace Io {
-  class FileFormat;
+class FileFormat;
 }
 
 namespace QtGui {
-  class InterfaceScript;
-  class InterfaceWidget;
+class InterfaceScript;
+class InterfaceWidget;
 }
 
 namespace QtPlugins {
@@ -47,18 +47,18 @@ class Workflow : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit Workflow(QObject *parent = 0);
+  explicit Workflow(QObject* parent = 0);
   ~Workflow();
 
   QString name() const { return tr("Workflow scripts"); }
 
   QString description() const { return tr("Run external workflow commands"); }
 
-  QList<QAction *> actions() const;
+  QList<QAction*> actions() const;
 
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 public slots:
   /**
@@ -68,7 +68,7 @@ public slots:
 
   void run();
 
-  bool readMolecule(QtGui::Molecule &mol);
+  bool readMolecule(QtGui::Molecule& mol);
 
 private slots:
   void menuActivated();
@@ -77,23 +77,22 @@ private slots:
 private:
   void updateScripts();
   void updateActions();
-  void addAction(const QString &label, const QString &scriptFilePath);
-  bool queryProgramName(const QString &scriptFilePath, QString &displayName);
+  void addAction(const QString& label, const QString& scriptFilePath);
+  bool queryProgramName(const QString& scriptFilePath, QString& displayName);
 
   QList<QAction*> m_actions;
-  QtGui::Molecule *m_molecule;
+  QtGui::Molecule* m_molecule;
   // keyed on script file path
   QMultiMap<QString, QtGui::InterfaceWidget*> m_dialogs;
-  QDialog *m_currentDialog;
-  QtGui::InterfaceWidget *m_currentInterface;
+  QDialog* m_currentDialog;
+  QtGui::InterfaceWidget* m_currentInterface;
 
   // maps program name --> script file path
   QMultiMap<QString, QString> m_workflowScripts;
 
-  const Io::FileFormat *m_outputFormat;
+  const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;
 };
-
 }
 }
 

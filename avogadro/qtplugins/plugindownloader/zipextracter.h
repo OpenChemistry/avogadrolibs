@@ -16,8 +16,8 @@
 
 #include "archive.h"
 #include "archive_entry.h"
-#include <string>
 #include <QtCore/QList>
+#include <string>
 
 namespace Avogadro {
 
@@ -28,8 +28,8 @@ class ZipExtracter
 public:
   ZipExtracter();
   ~ZipExtracter();
-  char *convert(const std::string &);
-  int copyData(struct archive *ar, struct archive *aw);
+  char* convert(const std::string&);
+  int copyData(struct archive* ar, struct archive* aw);
   QList<QString> extract(std::string extractdir, std::string absolutepath);
 };
 }

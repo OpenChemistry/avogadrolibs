@@ -32,16 +32,16 @@ class RWMolecule;
 class AVOGADROQTGUI_EXPORT HydrogenTools
 {
 public:
-
   /**
    * Remove all hydrogen atoms from @a molecule.
    */
-  static void removeAllHydrogens(RWMolecule &molecule);
+  static void removeAllHydrogens(RWMolecule& molecule);
 
   /**
    * Enum values that control the adjustHydrogen function's behavior.
    */
-  enum Adjustment {
+  enum Adjustment
+  {
     /** Only add hydrogens to underbonded atoms. */
     Add = 0,
     /** Only remove hydrogens from overbonded atoms. */
@@ -54,13 +54,14 @@ public:
   /**
    * Add/remove hydrogens on @a molecule to satisfy valency.
    */
-  static void adjustHydrogens(RWMolecule &molecule,
+  static void adjustHydrogens(RWMolecule& molecule,
                               Adjustment adjustment = AddAndRemove);
 
   /**
   * Add/remove hydrogens on @a atom to satisfy valency.
   */
-  static void adjustHydrogens(RWAtom &atom, Adjustment adjustment = AddAndRemove);
+  static void adjustHydrogens(RWAtom& atom,
+                              Adjustment adjustment = AddAndRemove);
 
   /**
    * @return The number of bonds that need to be added or removed from
@@ -68,7 +69,7 @@ public:
    * bonds to add, a negative number indicates the number of bonds that need to
    * be removed.
    */
-  static int valencyAdjustment(const RWAtom &atom);
+  static int valencyAdjustment(const RWAtom& atom);
 
   /**
    * Obtain the indices of hydrogens that can be removed from @a atom.
@@ -80,8 +81,8 @@ public:
    * @note This function modifies neither @a atom nor its parent molecule. It
    * only pushes the indices of hydrogens to remove to the end of @a indices.
    */
-  static int extraHydrogenIndices(const RWAtom &atom, int numberOfHydrogens,
-                                  std::vector<size_t> &indices);
+  static int extraHydrogenIndices(const RWAtom& atom, int numberOfHydrogens,
+                                  std::vector<size_t>& indices);
 
   /**
    * Generate positions for @a numberOfHydrogens hydrogens bonded to @a atom.
@@ -92,27 +93,28 @@ public:
    * hydrogen's covalent radii. Effort is made to prevent overlap with other
    * bonded atoms, but this is not guaranteed.
    */
-  static void generateNewHydrogenPositions(
-      const RWAtom &atom, int numberOfHydrogens, std::vector<Vector3> &positions);
+  static void generateNewHydrogenPositions(const RWAtom& atom,
+                                           int numberOfHydrogens,
+                                           std::vector<Vector3>& positions);
 
   /**
    * Perceive the geometry / hybridization bonded to @a atom.
    * Ideally, the client should cache the hybridization number
    * by calling setHybridization() later
    */
-  static Core::AtomHybridization perceiveHybridization(const RWAtom &atom);
+  static Core::AtomHybridization perceiveHybridization(const RWAtom& atom);
 
   /**
    * Generate a new bond vector (unit length)
    */
-  static Vector3 generateNewBondVector(const RWAtom &atom,
-    std::vector<Vector3> &currentVectors, Core::AtomHybridization hybridization);
+  static Vector3 generateNewBondVector(const RWAtom& atom,
+                                       std::vector<Vector3>& currentVectors,
+                                       Core::AtomHybridization hybridization);
 
 private:
-  HydrogenTools(); // Not implemented
+  HydrogenTools();  // Not implemented
   ~HydrogenTools(); // Not implemented
 };
-
 
 } // namespace QtGui
 } // namespace Avogadro

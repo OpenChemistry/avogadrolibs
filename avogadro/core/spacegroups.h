@@ -25,8 +25,18 @@ namespace Core {
 /**
  * Enumeration of the crystal system.
  */
-enum CrystalSystem { None, Triclinic, Monoclinic, Orthorhombic, Tetragonal,
-                     Trigonal, Rhombohedral, Hexagonal, Cubic };
+enum CrystalSystem
+{
+  None,
+  Triclinic,
+  Monoclinic,
+  Orthorhombic,
+  Tetragonal,
+  Trigonal,
+  Rhombohedral,
+  Hexagonal,
+  Cubic
+};
 
 /**
  * @class SpaceGroups spacegroups.h <avogadro/core/spacegroups.h>
@@ -58,31 +68,31 @@ public:
    * Get the Schoenflies symbol for a given hall number.
    * If an invalid hall number is given, an empty string will be returned.
    */
-  static const char * schoenflies(unsigned short hallNumber);
+  static const char* schoenflies(unsigned short hallNumber);
 
   /**
    * Get the Hall symbol for a given hall number. '=' is used instead of '"'.
    * If an invalid hall number is given, an empty string will be returned.
    */
-  static const char * hallSymbol(unsigned short hallNumber);
+  static const char* hallSymbol(unsigned short hallNumber);
 
   /**
    * Get the international symbol for a given hall number.
    * If an invalid hall number is given, an empty string will be returned.
    */
-  static const char * international(unsigned short hallNumber);
+  static const char* international(unsigned short hallNumber);
 
   /**
    * Get the full international symbol for a given hall number.
    * If an invalid hall number is given, an empty string will be returned.
    */
-  static const char * internationalFull(unsigned short hallNumber);
+  static const char* internationalFull(unsigned short hallNumber);
 
   /**
    * Get the short international symbol for a given hall number.
    * If an invalid hall number is given, an empty string will be returned.
    */
-  static const char * internationalShort(unsigned short hallNumber);
+  static const char* internationalShort(unsigned short hallNumber);
 
   /**
    * Get the setting for a given hall number.
@@ -90,7 +100,7 @@ public:
    * An empty string may also be returned if there are no settings for this
    * space group.
    */
-  static const char * setting(unsigned short hallNumber);
+  static const char* setting(unsigned short hallNumber);
 
   /**
    * Get the number of transforms for a given hall number.
@@ -104,7 +114,7 @@ public:
    * If an invalid hall number is given, an empty array will be returned.
    */
   static Array<Vector3> getTransforms(unsigned short hallNumber,
-                                      const Vector3 &v);
+                                      const Vector3& v);
 
   /**
    * Fill a crystal with atoms by using transforms from a hall number.
@@ -113,7 +123,7 @@ public:
    * present at that location. If there is another atom within that
    * distance, the new atom will not be placed there.
    */
-  static void fillUnitCell(Molecule &mol, unsigned short hallNumber,
+  static void fillUnitCell(Molecule& mol, unsigned short hallNumber,
                            double cartTol = 1e-5);
 
   /**
@@ -123,17 +133,17 @@ public:
    * at a location within the tolerance distance.
    * If an atom is present, the atom gets removed.
    */
-  static void reduceToAsymmetricUnit(Molecule &mol, unsigned short hallNumber,
+  static void reduceToAsymmetricUnit(Molecule& mol, unsigned short hallNumber,
                                      double cartTol = 1e-5);
 
 private:
   /**
    * Get the transforms string stored in the database.
    */
-  static const char * transformsString(unsigned short hallNumber);
+  static const char* transformsString(unsigned short hallNumber);
 };
 
 } // end Core namespace
 } // end Avogadro namespace
 
-#endif //AVOGADRO_CORE_SPACE_GROUPS_H
+#endif // AVOGADRO_CORE_SPACE_GROUPS_H

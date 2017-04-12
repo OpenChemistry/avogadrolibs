@@ -39,7 +39,7 @@ public:
     return ReadWrite | File | Stream | String;
   }
 
-  FileFormat * newInstance() const override { return new CmlFormat; }
+  FileFormat* newInstance() const override { return new CmlFormat; }
   std::string identifier() const override { return "Avogadro: CML"; }
   std::string name() const override { return "Chemical Markup Language"; }
   std::string description() const override
@@ -55,8 +55,8 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) override;
-  bool write(std::ostream &out, const Core::Molecule &molecule) override;
+  bool read(std::istream& in, Core::Molecule& molecule) override;
+  bool write(std::ostream& out, const Core::Molecule& molecule) override;
 };
 
 } // end Io namespace

@@ -42,17 +42,17 @@ class SupercellDialog : public QDialog
 {
   Q_OBJECT
 public:
-  SupercellDialog(QWidget *p = 0);
+  SupercellDialog(QWidget* p = 0);
   ~SupercellDialog();
 
-  bool buildSupercell(Avogadro::QtGui::Molecule &mol);
+  bool buildSupercell(Avogadro::QtGui::Molecule& mol);
 
   void displayInvalidFormatMessage();
 
 private:
   AVO_DISABLE_COPY(SupercellDialog)
 
-  Ui::SupercellDialog *m_ui;
+  Ui::SupercellDialog* m_ui;
 };
 
 } // namespace QtPlugins

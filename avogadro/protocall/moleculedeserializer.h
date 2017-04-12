@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_PROTOCALL_MOLECULEDESERIALIZER_H
 #define AVOGADRO_PROTOCALL_MOLECULEDESERIALIZER_H
 
-#include "avogadroprotocallexport.h"
 #include "avogadro/core/molecule.h"
+#include "avogadroprotocallexport.h"
 #include <google/protobuf/io/coded_stream.h>
 #include <protocall/serialization/deserializer.h>
 
@@ -38,7 +38,7 @@ public:
   /**
    * @param The molecule to deserialize into.
    */
-  MoleculeDeserializer(Molecule *molecule);
+  MoleculeDeserializer(Molecule* molecule);
 
   /**
    * Deserialize buffer into molecules.
@@ -48,7 +48,7 @@ public:
    *
    * @return true if successful, false otherwise.
    */
-  bool deserialize(const void *data, size_t size);
+  bool deserialize(const void* data, size_t size);
 
 private:
   /**
@@ -56,7 +56,7 @@ private:
    *
    * @return true if successful, false otherwise.
    */
-  bool deserializeBondPairs(google::protobuf::io::CodedInputStream *stream);
+  bool deserializeBondPairs(google::protobuf::io::CodedInputStream* stream);
 
   /**
    *
@@ -64,30 +64,30 @@ private:
    *
    * @return true if successful, false otherwise.
    */
-  bool deserializeBondOrders(google::protobuf::io::CodedInputStream *stream);
+  bool deserializeBondOrders(google::protobuf::io::CodedInputStream* stream);
 
   /**
    * Deserialize atomic numbers from stream.
    *
    * @return true if successful, false otherwise.
    */
-  bool deserializeAtomicNumbers(google::protobuf::io::CodedInputStream *stream);
+  bool deserializeAtomicNumbers(google::protobuf::io::CodedInputStream* stream);
 
   /**
    * Deserialize 2d positions from stream.
    *
    * @return true if successful, false otherwise.
    */
-  bool deserializePositions2d(google::protobuf::io::CodedInputStream *stream);
+  bool deserializePositions2d(google::protobuf::io::CodedInputStream* stream);
 
   /**
    * Deserialize 3d positions from stream.
    *
    * @return true if successful, false otherwise.
    */
-  bool deserializePostions3d(google::protobuf::io::CodedInputStream *stream);
+  bool deserializePostions3d(google::protobuf::io::CodedInputStream* stream);
 
-  Molecule *m_molecule;
+  Molecule* m_molecule;
 };
 
 } // namespace Core

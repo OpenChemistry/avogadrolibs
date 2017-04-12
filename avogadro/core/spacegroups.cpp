@@ -53,23 +53,23 @@ CrystalSystem SpaceGroups::crystalSystem(unsigned short hallNumber)
   if (hallNumber >= 430 && hallNumber <= 461) {
     // 14 of these are rhombohedral and the rest are trigonal
     switch (hallNumber) {
-    case 433:
-    case 434:
-    case 436:
-    case 437:
-    case 444:
-    case 445:
-    case 450:
-    case 451:
-    case 452:
-    case 453:
-    case 458:
-    case 459:
-    case 460:
-    case 461:
-      return Rhombohedral;
-    default:
-      return Trigonal;
+      case 433:
+      case 434:
+      case 436:
+      case 437:
+      case 444:
+      case 445:
+      case 450:
+      case 451:
+      case 452:
+      case 453:
+      case 458:
+      case 459:
+      case 460:
+      case 461:
+        return Rhombohedral;
+      default:
+        return Trigonal;
     }
   }
   if (hallNumber >= 462 && hallNumber <= 488)
@@ -78,7 +78,7 @@ CrystalSystem SpaceGroups::crystalSystem(unsigned short hallNumber)
     return Cubic;
   // hallNumber must be 0 or > 531
   return None;
-  //for (unsigned short i = 0; i < hallNumberCount; ++i)
+  // for (unsigned short i = 0; i < hallNumberCount; ++i)
 }
 
 unsigned short SpaceGroups::internationalNumber(unsigned short hallNumber)
@@ -89,7 +89,7 @@ unsigned short SpaceGroups::internationalNumber(unsigned short hallNumber)
     return space_group_international_number[0];
 }
 
-const char * SpaceGroups::schoenflies(unsigned short hallNumber)
+const char* SpaceGroups::schoenflies(unsigned short hallNumber)
 {
   if (hallNumber <= 530)
     return space_group_schoenflies[hallNumber];
@@ -97,7 +97,7 @@ const char * SpaceGroups::schoenflies(unsigned short hallNumber)
     return space_group_schoenflies[0];
 }
 
-const char * SpaceGroups::hallSymbol(unsigned short hallNumber)
+const char* SpaceGroups::hallSymbol(unsigned short hallNumber)
 {
   if (hallNumber <= 530)
     return space_group_hall_symbol[hallNumber];
@@ -105,7 +105,7 @@ const char * SpaceGroups::hallSymbol(unsigned short hallNumber)
     return space_group_hall_symbol[0];
 }
 
-const char * SpaceGroups::international(unsigned short hallNumber)
+const char* SpaceGroups::international(unsigned short hallNumber)
 {
   if (hallNumber <= 530)
     return space_group_international[hallNumber];
@@ -113,7 +113,7 @@ const char * SpaceGroups::international(unsigned short hallNumber)
     return space_group_international[0];
 }
 
-const char * SpaceGroups::internationalFull(unsigned short hallNumber)
+const char* SpaceGroups::internationalFull(unsigned short hallNumber)
 {
   if (hallNumber <= 530)
     return space_group_international_full[hallNumber];
@@ -121,7 +121,7 @@ const char * SpaceGroups::internationalFull(unsigned short hallNumber)
     return space_group_international_full[0];
 }
 
-const char * SpaceGroups::internationalShort(unsigned short hallNumber)
+const char* SpaceGroups::internationalShort(unsigned short hallNumber)
 {
   if (hallNumber <= 530)
     return space_group_international_short[hallNumber];
@@ -129,7 +129,7 @@ const char * SpaceGroups::internationalShort(unsigned short hallNumber)
     return space_group_international_short[0];
 }
 
-const char * SpaceGroups::setting(unsigned short hallNumber)
+const char* SpaceGroups::setting(unsigned short hallNumber)
 {
   if (hallNumber <= 530)
     return space_group_setting[hallNumber];
@@ -142,14 +142,12 @@ unsigned short SpaceGroups::transformsCount(unsigned short hallNumber)
   if (hallNumber <= 530) {
     std::string s = transformsString(hallNumber);
     return std::count(s.begin(), s.end(), ' ') + 1;
-  }
-  else {
+  } else {
     return 0;
   }
 }
 
-Real readTransformCoordinate(const std::string &coordinate,
-                             const Vector3 &v)
+Real readTransformCoordinate(const std::string& coordinate, const Vector3& v)
 {
   // The coordinate should be at least 1 character
   assert(coordinate.size() != 0);
@@ -187,20 +185,16 @@ Real readTransformCoordinate(const std::string &coordinate,
 
       ret += fraction;
       i += 3;
-    }
-    else if (coordinate[i] == 'x') {
+    } else if (coordinate[i] == 'x') {
       ret += (isNeg) ? -1.0 * v[0] : v[0];
       ++i;
-    }
-    else if (coordinate[i] == 'y') {
+    } else if (coordinate[i] == 'y') {
       ret += (isNeg) ? -1.0 * v[1] : v[1];
       ++i;
-    }
-    else if (coordinate[i] == 'z') {
+    } else if (coordinate[i] == 'z') {
       ret += (isNeg) ? -1.0 * v[2] : v[2];
       ++i;
-    }
-    else {
+    } else {
       std::cerr << "In " << __FUNCTION__ << ", error reading string: '"
                 << coordinate << "'\n";
       return 0;
@@ -209,8 +203,7 @@ Real readTransformCoordinate(const std::string &coordinate,
   return ret;
 }
 
-Vector3 getSingleTransform(const std::string &transform,
-                           const Vector3 &v)
+Vector3 getSingleTransform(const std::string& transform, const Vector3& v)
 {
   Vector3 ret;
   std::vector<std::string> coordinates = split(transform, ',');
@@ -225,7 +218,7 @@ Vector3 getSingleTransform(const std::string &transform,
 }
 
 Array<Vector3> SpaceGroups::getTransforms(unsigned short hallNumber,
-                                          const Vector3 &v)
+                                          const Vector3& v)
 {
   if (hallNumber == 0 || hallNumber > 530)
     return Array<Vector3>();
@@ -242,12 +235,12 @@ Array<Vector3> SpaceGroups::getTransforms(unsigned short hallNumber,
   return ret;
 }
 
-void SpaceGroups::fillUnitCell(Molecule &mol, unsigned short hallNumber,
+void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
                                double cartTol)
 {
   if (!mol.unitCell())
     return;
-  UnitCell *uc = mol.unitCell();
+  UnitCell* uc = mol.unitCell();
 
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
   Array<Vector3> positions = mol.atomPositions3d();
@@ -290,13 +283,13 @@ void SpaceGroups::fillUnitCell(Molecule &mol, unsigned short hallNumber,
   CrystalTools::wrapAtomsToUnitCell(mol);
 }
 
-void SpaceGroups::reduceToAsymmetricUnit(Molecule &mol,
+void SpaceGroups::reduceToAsymmetricUnit(Molecule& mol,
                                          unsigned short hallNumber,
                                          double cartTol)
 {
   if (!mol.unitCell())
     return;
-  UnitCell *uc = mol.unitCell();
+  UnitCell* uc = mol.unitCell();
 
   // The number of atoms may change as we remove atoms, so don't cache
   // the number of atoms, atomic positions, or atomic numbers
@@ -317,7 +310,8 @@ void SpaceGroups::reduceToAsymmetricUnit(Molecule &mol,
       // Loop through the transform atoms
       // We skip 0 because it is the original atom.
       for (Index k = 1; k < transformAtoms.size(); ++k) {
-        // The transform atoms are in fractional coordinates. Convert to cartesian.
+        // The transform atoms are in fractional coordinates. Convert to
+        // cartesian.
         Vector3 transformPos = uc->toCartesian(transformAtoms[k]);
         Real distance = uc->distance(trialPos, transformPos);
         // Is the atom within the cartesian tolerance distance?
@@ -332,7 +326,7 @@ void SpaceGroups::reduceToAsymmetricUnit(Molecule &mol,
   }
 }
 
-const char * SpaceGroups::transformsString(unsigned short hallNumber)
+const char* SpaceGroups::transformsString(unsigned short hallNumber)
 {
   if (hallNumber <= 530)
     return space_group_transforms[hallNumber];

@@ -17,9 +17,9 @@
 #ifndef AVOGADRO_DOWNLOADERWIDGET_H
 #define AVOGADRO_DOWNLOADERWIDGET_H
 
-#include <QtCore/QVariantMap>
 #include <QtCore/QList>
 #include <QtCore/QStringList>
+#include <QtCore/QVariantMap>
 
 #include <QtWidgets/QDialog>
 
@@ -38,10 +38,10 @@ namespace QtPlugins {
 
 class DownloaderWidget : public QDialog
 {
-Q_OBJECT
+  Q_OBJECT
 
 public:
-  DownloaderWidget(QWidget *parent = 0);
+  DownloaderWidget(QWidget* parent = 0);
   ~DownloaderWidget();
 
 public slots:
@@ -53,18 +53,20 @@ public slots:
   void unzipPlugin();
 
 private:
-  struct repo {
+  struct repo
+  {
     QString name;
     QString description;
     QString releaseVersion;
-		QString type;
+    QString type;
     QString updatedAt;
     QString zipballUrl;
     QString readmeUrl;
     bool hasRelease;
   };
 
-  struct downloadEntry {
+  struct downloadEntry
+  {
     QString url;
     QString name;
     QString type;
@@ -75,12 +77,12 @@ private:
   void downloadNext();
   bool checkSHA1(QByteArray);
 
-  struct repo *m_repoList;
-  Ui::DownloaderWidget *m_ui;
-  QNetworkAccessManager *m_NetworkAccessManager;
-  QNetworkReply *m_reply;
+  struct repo* m_repoList;
+  Ui::DownloaderWidget* m_ui;
+  QNetworkAccessManager* m_NetworkAccessManager;
+  QNetworkReply* m_reply;
   /** Jsoncpp reader to read JSON results */
-  Json::Reader *m_read;
+  Json::Reader* m_read;
   /** Holds a node of JSON results */
   Json::Value m_root;
   /** Used to parse JSON results */
@@ -93,4 +95,4 @@ private:
 };
 }
 }
-#endif  // AVOGADRO_DOWNLOADERWIDGET_H
+#endif // AVOGADRO_DOWNLOADERWIDGET_H

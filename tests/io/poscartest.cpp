@@ -46,11 +46,11 @@ TEST(PoscarTest, read)
   ASSERT_EQ(poscar.error(), std::string());
 
   // First, let's check the unit cell
-  UnitCell *uc = molecule.unitCell();
+  UnitCell* uc = molecule.unitCell();
 
-  EXPECT_EQ(uc->aVector(), Vector3(2.95812000,0.00000000,0.00000000));
-  EXPECT_EQ(uc->bVector(), Vector3(0.00000000,4.59373000,0.00000000));
-  EXPECT_EQ(uc->cVector(), Vector3(0.00000000,0.00000000,4.59373000));
+  EXPECT_EQ(uc->aVector(), Vector3(2.95812000, 0.00000000, 0.00000000));
+  EXPECT_EQ(uc->bVector(), Vector3(0.00000000, 4.59373000, 0.00000000));
+  EXPECT_EQ(uc->cVector(), Vector3(0.00000000, 0.00000000, 4.59373000));
 
   // Check that the number of atoms and number of bonds were read correctly
   EXPECT_EQ(molecule.atomCount(), 6);
@@ -88,18 +88,18 @@ TEST(PoscarTest, write)
   mat.col(1) = Vector3(0.00000, 4.59373, 0.00000); // B
   mat.col(2) = Vector3(0.00000, 0.00000, 4.59373); // C
 
-  UnitCell *uc = new UnitCell(mat);
+  UnitCell* uc = new UnitCell(mat);
 
   molecule.setUnitCell(uc);
 
-  molecule.addAtom(8).setPosition3d(uc->toCartesian(Vector3(0.0, 0.3053,
-                                                            0.3053)));
-  molecule.addAtom(8).setPosition3d(uc->toCartesian(Vector3(0.0, 0.6947,
-                                                            0.6947)));
-  molecule.addAtom(8).setPosition3d(uc->toCartesian(Vector3(0.5, 0.1947,
-                                                            0.8053)));
-  molecule.addAtom(8).setPosition3d(uc->toCartesian(Vector3(0.5, 0.8053,
-                                                            0.1947)));
+  molecule.addAtom(8).setPosition3d(
+    uc->toCartesian(Vector3(0.0, 0.3053, 0.3053)));
+  molecule.addAtom(8).setPosition3d(
+    uc->toCartesian(Vector3(0.0, 0.6947, 0.6947)));
+  molecule.addAtom(8).setPosition3d(
+    uc->toCartesian(Vector3(0.5, 0.1947, 0.8053)));
+  molecule.addAtom(8).setPosition3d(
+    uc->toCartesian(Vector3(0.5, 0.8053, 0.1947)));
   molecule.addAtom(22).setPosition3d(uc->toCartesian(Vector3(0.0, 0.0, 0.0)));
   molecule.addAtom(22).setPosition3d(uc->toCartesian(Vector3(0.5, 0.5, 0.5)));
 
@@ -123,7 +123,8 @@ TEST(PoscarTest, write)
 
 TEST(PoscarTest, modes)
 {
-  // This tests some of the mode setting/checking code, not explicitly Poscar but
+  // This tests some of the mode setting/checking code, not explicitly Poscar
+  // but
   // a concrete implementation is required in order to test.
   PoscarFormat format;
   format.open(AVOGADRO_DATA "/data/rutile.POSCAR", FileFormat::Read);
@@ -131,4 +132,3 @@ TEST(PoscarTest, modes)
   EXPECT_TRUE(format.mode() & FileFormat::Read);
   EXPECT_FALSE(format.isMode(FileFormat::Write));
 }
-

@@ -17,25 +17,24 @@
 #include <iostream>
 
 #include "apbsoutputdialog.h"
-#include "ui_apbsoutputdialog.h"
 #include "opendxreader.h"
+#include "ui_apbsoutputdialog.h"
 
-#include <QProcess>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QProcess>
 
-#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/core/cube.h>
 #include <avogadro/core/mesh.h>
-#include <avogadro/qtgui/molecule.h>
+#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/meshgenerator.h>
+#include <avogadro/qtgui/molecule.h>
 
 namespace Avogadro {
 namespace QtPlugins {
 
-ApbsOutputDialog::ApbsOutputDialog(QWidget *parent_)
-  : QDialog(parent_),
-    m_ui(new Ui::ApbsOutputDialog)
+ApbsOutputDialog::ApbsOutputDialog(QWidget* parent_)
+  : QDialog(parent_), m_ui(new Ui::ApbsOutputDialog)
 {
   m_ui->setupUi(this);
 }
@@ -53,6 +52,5 @@ bool ApbsOutputDialog::loadCubeFile() const
 {
   return m_ui->loadCubeCheckBox->isChecked();
 }
-
 }
 }

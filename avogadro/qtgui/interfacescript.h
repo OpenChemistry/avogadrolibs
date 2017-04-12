@@ -42,7 +42,8 @@ class GenericHighlighter;
 class PythonScript;
 
 /**
- * @class InterfaceScript interfacescript.h <avogadro/molequeue/interfacescript.h>
+ * @class InterfaceScript interfacescript.h
+<avogadro/molequeue/interfacescript.h>
  * @brief The Interface class provides an interface to external scripts
  * @sa InterfaceWidget
  *
@@ -212,16 +213,23 @@ class PythonScript;
  * consistent interface and ensure that MoleQueue job staging uses correct
  * values where appropriate.
  *
- * | Option name        | type       | description                                                         |
- * | :----------------: | :--------: | :------------------------------------------------------------------ |
- * | "Title"            | string     | Input file title comment, MoleQueue job description.                |
- * | "Filename Base"    | string     | Input file base name, e.g. "job" in "job.inp".                      |
- * | "Processor Cores"  | integer    | Number of cores to use. Will be passed to MoleQueue.                |
- * | "Calculation Type" | stringList | Type of calculation, e.g. "Single Point" or "Equilibrium Geometry". |
- * | "Theory"           | stringList | Levels of QM theory, e.g. "RHF", "B3LYP", "MP2", "CCSD", etc.       |
- * | "Basis"            | stringList | Available basis sets, e.g. "STO-3G", "6-31G**", etc.                |
- * | "Charge"           | integer    | Charge on the system.                                               |
- * | "Multiplicity"     | integer    | Spin multiplicity of the system.                                    |
+ * | Option name        | type       | description |
+ * | :----------------: | :--------: |
+:------------------------------------------------------------------ |
+ * | "Title"            | string     | Input file title comment, MoleQueue job
+description.                |
+ * | "Filename Base"    | string     | Input file base name, e.g. "job" in
+"job.inp".                      |
+ * | "Processor Cores"  | integer    | Number of cores to use. Will be passed to
+MoleQueue.                |
+ * | "Calculation Type" | stringList | Type of calculation, e.g. "Single Point"
+or "Equilibrium Geometry". |
+ * | "Theory"           | stringList | Levels of QM theory, e.g. "RHF", "B3LYP",
+"MP2", "CCSD", etc.       |
+ * | "Basis"            | stringList | Available basis sets, e.g. "STO-3G",
+"6-31G**", etc.                |
+ * | "Charge"           | integer    | Charge on the system. |
+ * | "Multiplicity"     | integer    | Spin multiplicity of the system. |
  *
  * Syntax Highlighting
  * -------------------
@@ -454,9 +462,9 @@ public:
    * Constructor
    * @param scriptFilePath_ Absolute path to generator script.
    */
-  explicit InterfaceScript(const QString &scriptFilePath_,
-                          QObject *parent_ = nullptr);
-  explicit InterfaceScript(QObject *parent_ = nullptr);
+  explicit InterfaceScript(const QString& scriptFilePath_,
+                           QObject* parent_ = nullptr);
+  explicit InterfaceScript(QObject* parent_ = nullptr);
   ~InterfaceScript();
 
   /**
@@ -509,7 +517,7 @@ public:
    * Set the path to the input generator script file. This will reset any
    * cached data held by this class.
    */
-  void setScriptFilePath(const QString &scriptFile);
+  void setScriptFilePath(const QString& scriptFile);
 
   /**
    * Clear any cached data and return to an uninitialized state.
@@ -526,7 +534,7 @@ public:
    * to check for success, and errorString() or errorList() to get a
    * user-friendly description of the error.
    */
-  bool runWorkflow(const QJsonObject &options_, Core::Molecule *mol);
+  bool runWorkflow(const QJsonObject& options_, Core::Molecule* mol);
 
   /**
    * Request input files from the script using the supplied options object and
@@ -541,7 +549,7 @@ public:
    * to check for success, and errorString() or errorList() to get a
    * user-friendly description of the error.
    */
-  bool generateInput(const QJsonObject &options_, const Core::Molecule &mol);
+  bool generateInput(const QJsonObject& options_, const Core::Molecule& mol);
 
   /**
    * @return The number of input files stored by generateInput().
@@ -571,7 +579,7 @@ public:
    * generateInput() first.
    * @sa fileNames
    */
-  QString fileContents(const QString &fileName) const;
+  QString fileContents(const QString& fileName) const;
 
   /**
    * @return A syntax highlighter for the file @a fileName. Must call
@@ -579,7 +587,8 @@ public:
    * If no syntax highlighter is defined, this function returns nullptr.
    * @sa fileNames
    */
-  QtGui::GenericHighlighter *createFileHighlighter(const QString &fileName) const;
+  QtGui::GenericHighlighter* createFileHighlighter(
+    const QString& fileName) const;
 
   /**
    * @return True if an error is set.
@@ -611,21 +620,22 @@ public slots:
   void setDebug(bool d);
 
 private:
-  QtGui::PythonScript *m_interpreter;
+  QtGui::PythonScript* m_interpreter;
 
   void setDefaultPythonInterpretor();
-  QByteArray execute(const QStringList &args,
-                     const QByteArray &scriptStdin = QByteArray()) const;
-  bool parseJson(const QByteArray &json, QJsonDocument &doc) const;
-  QString processErrorString(const QProcess &proc) const;
-  bool insertMolecule(QJsonObject &json, const Core::Molecule &mol) const;
-  QString generateCoordinateBlock(const QString &spec,
-                                  const Core::Molecule &mol) const;
-  void replaceKeywords(QString &str, const Core::Molecule &mol) const;
-  bool parseHighlightStyles(const QJsonArray &json) const;
-  bool parseRules(const QJsonArray &json, QtGui::GenericHighlighter &highligher) const;
-  bool parseFormat(const QJsonObject &json, QTextCharFormat &format) const;
-  bool parsePattern(const QJsonValue &json, QRegExp &pattern) const;
+  QByteArray execute(const QStringList& args,
+                     const QByteArray& scriptStdin = QByteArray()) const;
+  bool parseJson(const QByteArray& json, QJsonDocument& doc) const;
+  QString processErrorString(const QProcess& proc) const;
+  bool insertMolecule(QJsonObject& json, const Core::Molecule& mol) const;
+  QString generateCoordinateBlock(const QString& spec,
+                                  const Core::Molecule& mol) const;
+  void replaceKeywords(QString& str, const Core::Molecule& mol) const;
+  bool parseHighlightStyles(const QJsonArray& json) const;
+  bool parseRules(const QJsonArray& json,
+                  QtGui::GenericHighlighter& highligher) const;
+  bool parseFormat(const QJsonObject& json, QTextCharFormat& format) const;
+  bool parsePattern(const QJsonValue& json, QRegExp& pattern) const;
 
   // File extension of requested molecule format
   mutable QString m_moleculeExtension;
@@ -641,7 +651,6 @@ private:
   QMap<QString, QtGui::GenericHighlighter*> m_fileHighlighters;
 
   mutable QMap<QString, QtGui::GenericHighlighter*> m_highlightStyles;
-
 };
 
 inline bool InterfaceScript::isValid() const

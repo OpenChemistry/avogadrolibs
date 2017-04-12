@@ -30,16 +30,16 @@ class Crystal : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit Crystal(QObject *parent_ = 0);
+  explicit Crystal(QObject* parent_ = 0);
   ~Crystal();
 
   QString name() const { return tr("Crystal"); }
   QString description() const;
   QList<QAction*> actions() const;
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
   void moleculeChanged(unsigned int changes);
 
@@ -56,18 +56,18 @@ private slots:
   void wrapAtomsToCell();
 
 private:
-  QList<QAction *> m_actions;
-  QtGui::Molecule *m_molecule;
-  UnitCellDialog *m_unitCellDialog;
+  QList<QAction*> m_actions;
+  QtGui::Molecule* m_molecule;
+  UnitCellDialog* m_unitCellDialog;
 
-  QAction *m_importCrystalClipboardAction;
-  QAction *m_editUnitCellAction;
-  QAction *m_buildSupercellAction;
-  QAction *m_niggliReduceAction;
-  QAction *m_scaleVolumeAction;
-  QAction *m_standardOrientationAction;
-  QAction *m_toggleUnitCellAction;
-  QAction *m_wrapAtomsToCellAction;
+  QAction* m_importCrystalClipboardAction;
+  QAction* m_editUnitCellAction;
+  QAction* m_buildSupercellAction;
+  QAction* m_niggliReduceAction;
+  QAction* m_scaleVolumeAction;
+  QAction* m_standardOrientationAction;
+  QAction* m_toggleUnitCellAction;
+  QAction* m_wrapAtomsToCellAction;
 };
 
 inline QString Crystal::description() const

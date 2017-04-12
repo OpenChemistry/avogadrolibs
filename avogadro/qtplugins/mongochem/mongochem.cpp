@@ -16,21 +16,20 @@
 
 #include "mongochem.h"
 
-#include <QtWidgets/QAction>
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
+#include <QtWidgets/QAction>
 
-#include <avogadro/qtgui/molecule.h>
 #include <avogadro/io/fileformatmanager.h>
+#include <avogadro/qtgui/molecule.h>
 #include <molequeue/client/jsonrpcclient.h>
 
 namespace Avogadro {
 namespace QtPlugins {
 
-MongoChem::MongoChem(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_action(new QAction(this)),
-  m_molecule(nullptr)
+MongoChem::MongoChem(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_action(new QAction(this)),
+    m_molecule(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText("&Show Similar Molecules in MongoChem...");
@@ -46,12 +45,12 @@ QString MongoChem::description() const
   return tr("View general properties of a molecule.");
 }
 
-QList<QAction *> MongoChem::actions() const
+QList<QAction*> MongoChem::actions() const
 {
   return QList<QAction*>() << m_action;
 }
 
-void MongoChem::setMolecule(QtGui::Molecule *mol)
+void MongoChem::setMolecule(QtGui::Molecule* mol)
 {
   if (mol == m_molecule)
     return;
@@ -59,7 +58,7 @@ void MongoChem::setMolecule(QtGui::Molecule *mol)
   m_molecule = mol;
 }
 
-QStringList MongoChem::menuPath(QAction *) const
+QStringList MongoChem::menuPath(QAction*) const
 {
   return QStringList() << tr("&Extensions");
 }
@@ -71,17 +70,17 @@ void MongoChem::showSimilarMolecules()
 
   // get inchi for molecule
   std::string inchi;
-  Io::FileFormatManager &ffm = Io::FileFormatManager::instance();
-  if (!ffm.writeString(*m_molecule, inchi, "inchi")){
+  Io::FileFormatManager& ffm = Io::FileFormatManager::instance();
+  if (!ffm.writeString(*m_molecule, inchi, "inchi")) {
     qDebug() << "error converting molecule to inchi.";
     return;
   }
 
   // connect to mongochem
-  MoleQueue::JsonRpcClient *client = new MoleQueue::JsonRpcClient(this);
+  MoleQueue::JsonRpcClient* client = new MoleQueue::JsonRpcClient(this);
   if (!client->connectToServer("mongochem")) {
-      qDebug() << "failed to connect to mongochem";
-      return;
+    qDebug() << "failed to connect to mongochem";
+    return;
   }
 
   // send request

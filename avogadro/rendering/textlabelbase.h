@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_RENDERING_TEXTLABELBASE_H
 #define AVOGADRO_RENDERING_TEXTLABELBASE_H
 
-#include "drawable.h"
 #include "avogadrorenderingexport.h"
+#include "drawable.h"
 
 #include <avogadro/rendering/textproperties.h>
 
@@ -39,35 +39,35 @@ class AVOGADRORENDERING_EXPORT TextLabelBase : public Drawable
 {
 public:
   TextLabelBase();
-  TextLabelBase(const TextLabelBase &other);
+  TextLabelBase(const TextLabelBase& other);
   ~TextLabelBase();
 
   TextLabelBase& operator=(TextLabelBase other);
-  friend void swap(TextLabelBase &lhs, TextLabelBase &rhs);
+  friend void swap(TextLabelBase& lhs, TextLabelBase& rhs);
 
-  void render(const Camera &camera) override;
+  void render(const Camera& camera) override;
 
   /**
    * Render the string to the internal texture buffer.
    * @param tren The text rendering strategy to use.
    */
-  void buildTexture(const TextRenderStrategy &tren);
+  void buildTexture(const TextRenderStrategy& tren);
 
   /**
    * The text that will be rendered.
    * @{
    */
-  void setText(const std::string &str);
-  const std::string & text() const;
+  void setText(const std::string& str);
+  const std::string& text() const;
   /** @} */
 
   /**
    * The properties of the rendered text.
    * @{
    */
-  void setTextProperties(const TextProperties &tprop);
-  const TextProperties & textProperties() const;
-   /** @} */
+  void setTextProperties(const TextProperties& tprop);
+  const TextProperties& textProperties() const;
+  /** @} */
 
   /**
    * Clear the texture, forcing it to be regenerated on the next render.
@@ -81,7 +81,7 @@ protected:
   Core::Array<unsigned char> m_imageRgba;
 
   // Subclasses use this to update the text position:
-  void setAnchorInternal(const Vector3f &anchor);
+  void setAnchorInternal(const Vector3f& anchor);
   Vector3f getAnchorInternal() const;
 
   // ...and the radius.
@@ -93,17 +93,17 @@ protected:
 private:
   // Container for rendering cache:
   class RenderImpl;
-  RenderImpl * const m_render;
+  RenderImpl* const m_render;
 };
 
-inline TextLabelBase &TextLabelBase::operator=(TextLabelBase other)
+inline TextLabelBase& TextLabelBase::operator=(TextLabelBase other)
 {
   using std::swap;
   swap(*this, other);
   return *this;
 }
 
-inline void swap(TextLabelBase &lhs, TextLabelBase &rhs)
+inline void swap(TextLabelBase& lhs, TextLabelBase& rhs)
 {
   using std::swap;
   swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));

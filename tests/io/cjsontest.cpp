@@ -38,8 +38,8 @@ TEST(CjsonTest, readFile)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  bool success = cjson.readFile(std::string(AVOGADRO_DATA) +
-                                "/data/ethane.cjson", molecule);
+  bool success =
+    cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").type(), Variant::String);
@@ -53,8 +53,8 @@ TEST(CjsonTest, atoms)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  bool success = cjson.readFile(std::string(AVOGADRO_DATA) +
-                                "/data/ethane.cjson", molecule);
+  bool success =
+    cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -63,14 +63,14 @@ TEST(CjsonTest, atoms)
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   atom = molecule.atom(1);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(6));
-  EXPECT_EQ(atom.position3d().x(),  0.751621);
+  EXPECT_EQ(atom.position3d().x(), 0.751621);
   EXPECT_EQ(atom.position3d().y(), -0.022441);
   EXPECT_EQ(atom.position3d().z(), -0.020839);
 
   atom = molecule.atom(7);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   EXPECT_EQ(atom.position3d().x(), -1.184988);
-  EXPECT_EQ(atom.position3d().y(),  0.004424);
+  EXPECT_EQ(atom.position3d().y(), 0.004424);
   EXPECT_EQ(atom.position3d().z(), -0.987522);
 }
 
@@ -78,8 +78,8 @@ TEST(CjsonTest, bonds)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  bool success = cjson.readFile(std::string(AVOGADRO_DATA) +
-                                "/data/ethane.cjson", molecule);
+  bool success =
+    cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -100,21 +100,21 @@ TEST(CjsonTest, crystal)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  bool success = cjson.readFile(std::string(AVOGADRO_DATA) +
-                                "/data/rutile.cjson", molecule);
+  bool success =
+    cjson.readFile(std::string(AVOGADRO_DATA) + "/data/rutile.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "TiO2 rutile");
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(6));
   EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(0));
 
-  const UnitCell *unitCell = molecule.unitCell();
+  const UnitCell* unitCell = molecule.unitCell();
   ASSERT_NE(unitCell, (UnitCell*)nullptr);
   EXPECT_TRUE(std::fabs((float)unitCell->a() - 2.95812f) < 1e-5f);
   EXPECT_TRUE(std::fabs((float)unitCell->b() - 4.59373f) < 1e-5f);
   EXPECT_TRUE(std::fabs((float)unitCell->c() - 4.59373f) < 1e-5f);
   EXPECT_TRUE(std::fabs((float)unitCell->alpha() - (.5f * PI_F)) < 1e-5f);
-  EXPECT_TRUE(std::fabs((float)unitCell->beta()  - (.5f * PI_F)) < 1e-5f);
+  EXPECT_TRUE(std::fabs((float)unitCell->beta() - (.5f * PI_F)) < 1e-5f);
   EXPECT_TRUE(std::fabs((float)unitCell->gamma() - (.5f * PI_F)) < 1e-5f);
 
   Atom atom = molecule.atom(5);
@@ -128,13 +128,13 @@ TEST(CjsonTest, crystal)
   Molecule otherMolecule;
   cjson.readString(cjsonStr, otherMolecule);
 
-  const UnitCell *otherUnitCell = otherMolecule.unitCell();
+  const UnitCell* otherUnitCell = otherMolecule.unitCell();
   ASSERT_NE(otherUnitCell, (UnitCell*)nullptr);
-  EXPECT_FLOAT_EQ((float)otherUnitCell->a(),     (float)unitCell->a());
-  EXPECT_FLOAT_EQ((float)otherUnitCell->b(),     (float)unitCell->b());
-  EXPECT_FLOAT_EQ((float)otherUnitCell->c(),     (float)unitCell->c());
+  EXPECT_FLOAT_EQ((float)otherUnitCell->a(), (float)unitCell->a());
+  EXPECT_FLOAT_EQ((float)otherUnitCell->b(), (float)unitCell->b());
+  EXPECT_FLOAT_EQ((float)otherUnitCell->c(), (float)unitCell->c());
   EXPECT_FLOAT_EQ((float)otherUnitCell->alpha(), (float)unitCell->alpha());
-  EXPECT_FLOAT_EQ((float)otherUnitCell->beta(),  (float)unitCell->beta());
+  EXPECT_FLOAT_EQ((float)otherUnitCell->beta(), (float)unitCell->beta());
   EXPECT_FLOAT_EQ((float)otherUnitCell->gamma(), (float)unitCell->gamma());
 
   Atom otherAtom = otherMolecule.atom(5);
@@ -151,9 +151,8 @@ TEST(CjsonTest, saveFile)
 {
   CjsonFormat cjson;
   Molecule savedMolecule, molecule;
-  bool success = cjson.readFile(std::string(AVOGADRO_DATA) +
-                                "/data/ethane.cjson",
-                                savedMolecule);
+  bool success = cjson.readFile(
+    std::string(AVOGADRO_DATA) + "/data/ethane.cjson", savedMolecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
 
@@ -171,7 +170,7 @@ TEST(CjsonTest, saveFile)
   Atom atom = molecule.atom(7);
   EXPECT_EQ(atom.atomicNumber(), static_cast<unsigned char>(1));
   EXPECT_EQ(atom.position3d().x(), -1.184988);
-  EXPECT_EQ(atom.position3d().y(),  0.004424);
+  EXPECT_EQ(atom.position3d().y(), 0.004424);
   EXPECT_EQ(atom.position3d().z(), -0.987522);
   Bond bond = molecule.bond(0);
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));

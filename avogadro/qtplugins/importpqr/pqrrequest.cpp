@@ -9,15 +9,16 @@ namespace QtPlugins {
 * @brief Constuctor to initialize the NetworkAcessManager and set pointers to
 * the widget's ui elements.
 */
-PQRRequest::PQRRequest(QTableWidget* tw, QLabel* gv, QLineEdit* nd, QLabel* fd, PQRWidget* w)
+PQRRequest::PQRRequest(QTableWidget* tw, QLabel* gv, QLineEdit* nd, QLabel* fd,
+                       PQRWidget* w)
 {
-  //set pointers to ui elements now instead of in individual functions
-  table = tw; //pointer to ui table
-  pngPreview = gv; //png QLabel
-  nameDisplay = nd; //name
-  formulaDisplay = fd; //formula
+  // set pointers to ui elements now instead of in individual functions
+  table = tw;          // pointer to ui table
+  pngPreview = gv;     // png QLabel
+  nameDisplay = nd;    // name
+  formulaDisplay = fd; // formula
 
-  //used to load molecule in Avogadro when downloaded
+  // used to load molecule in Avogadro when downloaded
   widget = w;
   oNetworkAccessManager = new QNetworkAccessManager(this);
 }
@@ -52,7 +53,7 @@ void PQRRequest::sendRequest(QString url)
 void PQRRequest::sendRequest(QString url, QString mol2)
 {
   reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
-  currentMolName = nameDisplay->text(); //needed to load mol into Avogadro
+  currentMolName = nameDisplay->text(); // needed to load mol into Avogadro
   connect(reply, SIGNAL(finished()), this, SLOT(getFile()));
 }
 
@@ -78,7 +79,7 @@ QString PQRRequest::molSelected(int num)
     return QString("N/A");
 
   QString mol2 = results[num].mol2url;
-  QString url = "https://pqr.pitt.edu/static/data/png/"+ mol2 + ".png";
+  QString url = "https://pqr.pitt.edu/static/data/png/" + mol2 + ".png";
   sendPNGRequest(url);
 
   formulaDisplay->setText(parseSubscripts(results[num].formula));
@@ -92,14 +93,13 @@ QString PQRRequest::molSelected(int num)
 */
 void PQRRequest::parseJson()
 {
-  if (reply->error() == QNetworkReply::NoError)
-  {
+  if (reply->error() == QNetworkReply::NoError) {
     read = new Json::Reader();
     // Reading the data from the response
     QByteArray bytes = reply->readAll();
     QString jsonString(bytes);
 
-    //parse the json
+    // parse the json
     read->parse(jsonString.toStdString().c_str(), root);
 
     int resultSize = root.size();
@@ -110,8 +110,7 @@ void PQRRequest::parseJson()
       table->setCellWidget(0, 1, new QLabel());
       table->setItem(0, 2, new QTableWidgetItem("N/A"));
       results = nullptr;
-    }
-    else {
+    } else {
       results = new result[root.size()];
       table->setRowCount(resultSize);
       for (int i = 0; i < resultSize; i++) {
@@ -123,19 +122,22 @@ void PQRRequest::parseJson()
 
         table->setItem(i, 0, new QTableWidgetItem(results[i].name));
 
-        //clear possible QTableWidget if there were no results previously
+        // clear possible QTableWidget if there were no results previously
         table->setItem(i, 1, nullptr);
-        //use this to display subscripts, should automatically delete previous QLabel according to documentation
-        table->setCellWidget(i, 1, new QLabel(parseSubscripts(results[i].formula)));
+        // use this to display subscripts, should automatically delete previous
+        // QLabel according to documentation
+        table->setCellWidget(i, 1,
+                             new QLabel(parseSubscripts(results[i].formula)));
 
-        //table->setItem(i, 2, new QTableWidgetItem(QString::number(results[i].mass, 'f', 3) + QString(" g/mol")));
+        // table->setItem(i, 2, new
+        // QTableWidgetItem(QString::number(results[i].mass, 'f', 3) + QString("
+        // g/mol")));
         QTableWidgetItem* massItem = new QTableWidgetItem();
         massItem->setData(Qt::DisplayRole, results[i].mass);
         table->setItem(i, 2, massItem);
       }
     }
-  }
-  else {
+  } else {
     table->setRowCount(3);
     table->setItem(0, 0, new QTableWidgetItem("Network Error!"));
     table->setItem(0, 1, new QTableWidgetItem("N/A"));
@@ -177,8 +179,7 @@ QString PQRRequest::parseSubscripts(QString formula)
       toReturn.append("<sub>");
       toReturn.append(str[i]);
       toReturn.append("</sub>");
-    }
-    else {
+    } else {
       toReturn.append(str[i]);
     }
   }
@@ -189,45 +190,45 @@ QString PQRRequest::parseSubscripts(QString formula)
 * @brief Takes a formula string and returns the molecular mass of the molecule
 * @param formula The formula string
 */
-float PQRRequest::getMolMass(QString formula) {
+float PQRRequest::getMolMass(QString formula)
+{
   std::string str = formula.toStdString();
   float totalMass = 0.0;
   int subscript = 1;
   std::string element;
   unsigned char atomicNum;
   for (int i = 0; i < str.length(); i++) {
-    //each element will start with a capital letter
+    // each element will start with a capital letter
     if (isupper(str[i])) {
-      //if next letter is a lower case then we know the whole element
+      // if next letter is a lower case then we know the whole element
       if (islower(str[i + 1])) {
         element = { str[i], str[i + 1] };
-        //this might be the last element of the formula
+        // this might be the last element of the formula
         if (isdigit(str[i + 2])) {
           subscript = (int)str[i + 2] - '0';
-          i += 2; //increment past lowercase and numeral
-        }
-        else {
+          i += 2; // increment past lowercase and numeral
+        } else {
           i += 1;
           subscript = 1;
         }
       }
-      //get the subscript
+      // get the subscript
       else if (isdigit(str[i + 1])) {
         if (isdigit(str[i + 2])) {
-          //might be 2 digit subscript
+          // might be 2 digit subscript
           subscript = (int)str[i + 1] - '0';
-          subscript *= 10; //shift forward one decimal place
+          subscript *= 10; // shift forward one decimal place
           subscript += (int)str[i + 2] - '0';
           element = { str[i] };
           i += 2;
-        }
-        else {
+        } else {
           subscript = (int)str[i + 1] - '0';
           element = { str[i] };
           i += 1;
         }
       }
-      //if the next letter is another uppercase or null, the current subscript is 1
+      // if the next letter is another uppercase or null, the current subscript
+      // is 1
       else if (isupper(str[i + 1]) || str[i + 1] == 0) {
         subscript = 1;
         element = { str[i] };
@@ -238,6 +239,5 @@ float PQRRequest::getMolMass(QString formula) {
   }
   return totalMass;
 }
-
 }
 }

@@ -41,23 +41,23 @@ class AVOGADROQTGUI_EXPORT MultiViewWidget : public QWidget
   Q_OBJECT
 
 public:
-  explicit MultiViewWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+  explicit MultiViewWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
   ~MultiViewWidget();
 
-  void addWidget(QWidget *widget);
+  void addWidget(QWidget* widget);
 
   /**
    * @brief Get the currently active widget.
    * @return The active widget.
    */
-  QWidget * activeWidget();
-  void setActiveWidget(QWidget *widget);
+  QWidget* activeWidget();
+  void setActiveWidget(QWidget* widget);
 
-  void setFactory(ViewFactory *factory) { m_factory = factory; }
-  void setDefaultView(const QString &viewName) { m_defaultView = viewName; }
+  void setFactory(ViewFactory* factory) { m_factory = factory; }
+  void setDefaultView(const QString& viewName) { m_defaultView = viewName; }
 
 signals:
-  void activeWidgetChanged(QWidget *widget);
+  void activeWidgetChanged(QWidget* widget);
 
 public slots:
   void splitHorizontal();
@@ -66,15 +66,15 @@ public slots:
   void removeView();
 
 private:
-  QList<ContainerWidget *> m_children;
-  ViewFactory *m_factory;
+  QList<ContainerWidget*> m_children;
+  ViewFactory* m_factory;
   QString m_defaultView;
-  QWidget *m_activeWidget;
-  ActiveWidgetFilter *m_activeFilter;
+  QWidget* m_activeWidget;
+  ActiveWidgetFilter* m_activeFilter;
 
-  ContainerWidget * createContainer(QWidget *widget = 0);
+  ContainerWidget* createContainer(QWidget* widget = 0);
 
-  void splitView(Qt::Orientation orient, ContainerWidget *container);
+  void splitView(Qt::Orientation orient, ContainerWidget* container);
 };
 
 } // End QtGui namespace

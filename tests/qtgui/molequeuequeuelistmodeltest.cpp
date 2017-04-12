@@ -27,8 +27,9 @@ class MoleQueueQueueListModelTestBridge
 {
 private:
   MoleQueueQueueListModel m_model;
+
 public:
-  MoleQueueQueueListModel &model() { return m_model; }
+  MoleQueueQueueListModel& model() { return m_model; }
 
   void setQueueList(QList<QString> queueList, QList<QStringList> programList)
   {
@@ -43,17 +44,15 @@ namespace {
 // Queues are named "Queue M", where M is in the range (0, numQueues].
 // Programs are named "QMPN", where M is the queue id, and N is the program id.
 // The number of programs is determined by N = ((M+3) * (M+2)) % 5 + 2.
-void populateModel(MoleQueueQueueListModelTestBridge &model,
-                   int numQueues,
-                   QStringList &queues,
-                   QList<QStringList> &programs)
+void populateModel(MoleQueueQueueListModelTestBridge& model, int numQueues,
+                   QStringList& queues, QList<QStringList>& programs)
 {
   queues.clear();
   programs.clear();
   for (int queueId = 1; queueId <= numQueues; ++queueId) {
     queues.append(QString("Queue %1").arg(queueId));
     programs.append(QStringList());
-    QStringList &programList = programs.back();
+    QStringList& programList = programs.back();
     const int numPrograms = ((queueId + 3) * (queueId + 2)) % 5 + 2;
     for (int programId = 1; programId <= numPrograms; ++programId)
       programList.append(QString("Q%1P%2").arg(queueId).arg(programId));
@@ -66,7 +65,7 @@ void populateModel(MoleQueueQueueListModelTestBridge &model,
 TEST(MoleQueueQueueListModelTest, setQueues)
 {
   MoleQueueQueueListModelTestBridge modelBridge;
-  MoleQueueQueueListModel &model = modelBridge.model();
+  MoleQueueQueueListModel& model = modelBridge.model();
   QStringList refQueues;
   QList<QStringList> refPrograms;
   populateModel(modelBridge, 10, refQueues, refPrograms);
@@ -79,37 +78,37 @@ TEST(MoleQueueQueueListModelTest, setQueues)
   while (queueIter.hasNext() && programIter.hasNext())
     EXPECT_EQ(programIter.next(), model.programs(queueIter.next()));
   EXPECT_FALSE(programIter.hasNext() || queueIter.hasNext())
-      << "queue/program size mismatch.";
+    << "queue/program size mismatch.";
 }
 
 TEST(MoleQueueQueueListModelTest, findQueueIndices)
 {
   MoleQueueQueueListModelTestBridge modelBridge;
-  MoleQueueQueueListModel &model = modelBridge.model();
+  MoleQueueQueueListModel& model = modelBridge.model();
   QStringList refQueues;
   QList<QStringList> refPrograms;
   populateModel(modelBridge, 10, refQueues, refPrograms);
 
   QModelIndexList matches = model.findQueueIndices("Queue 7");
   EXPECT_EQ(1, matches.size());
-  EXPECT_EQ(model.data(matches.front(),
-                       Qt::DisplayRole).toString().toStdString(),
-            std::string("Queue 7"));
+  EXPECT_EQ(
+    model.data(matches.front(), Qt::DisplayRole).toString().toStdString(),
+    std::string("Queue 7"));
 }
 
 TEST(MoleQueueQueueListModelTest, findProgramIndices)
 {
   MoleQueueQueueListModelTestBridge modelBridge;
-  MoleQueueQueueListModel &model = modelBridge.model();
+  MoleQueueQueueListModel& model = modelBridge.model();
   QStringList refQueues;
   QList<QStringList> refPrograms;
   populateModel(modelBridge, 10, refQueues, refPrograms);
 
   QModelIndexList matches = model.findProgramIndices("Q7P2");
   EXPECT_EQ(1, matches.size());
-  EXPECT_EQ(model.data(matches.front(),
-                       Qt::DisplayRole).toString().toStdString(),
-            std::string("Q7P2"));
+  EXPECT_EQ(
+    model.data(matches.front(), Qt::DisplayRole).toString().toStdString(),
+    std::string("Q7P2"));
 
   // All 10 queues should have a program #2:
   matches = model.findProgramIndices("P2");
@@ -127,7 +126,7 @@ TEST(MoleQueueQueueListModelTest, findProgramIndices)
 TEST(MoleQueueQueueListModelTest, lookupProgram)
 {
   MoleQueueQueueListModelTestBridge modelBridge;
-  MoleQueueQueueListModel &model = modelBridge.model();
+  MoleQueueQueueListModel& model = modelBridge.model();
   QStringList refQueues;
   QList<QStringList> refPrograms;
   populateModel(modelBridge, 10, refQueues, refPrograms);

@@ -33,7 +33,7 @@ class ScriptFileFormats : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit ScriptFileFormats(QObject *parent = 0);
+  explicit ScriptFileFormats(QObject* parent = 0);
   ~ScriptFileFormats() override;
 
   QString name() const override { return tr("Script File Formats"); }
@@ -43,20 +43,19 @@ public:
     return tr("Load file reader/writers from external scripts.");
   }
 
-  QList<QAction *> actions() const override;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction *) const override;
+  QStringList menuPath(QAction*) const override;
 
-  void setMolecule(QtGui::Molecule *mol) override;
+  void setMolecule(QtGui::Molecule* mol) override;
 
 private:
-  QList<Io::FileFormat *> m_formats;
+  QList<Io::FileFormat*> m_formats;
 
   void refreshFileFormats();
   void unregisterFileFormats();
   void registerFileFormats();
 };
-
 }
 }
 

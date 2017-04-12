@@ -122,9 +122,15 @@ class FileFormatScript : public Avogadro::Io::FileFormat
 {
 public:
   /** Formats that may be written to the script's input/output formats. */
-  enum Format {NotUsed, Cjson, Cml, Xyz};
+  enum Format
+  {
+    NotUsed,
+    Cjson,
+    Cml,
+    Xyz
+  };
 
-  FileFormatScript(const QString &scriptFileName);
+  FileFormatScript(const QString& scriptFileName);
   ~FileFormatScript() override;
 
   QString scriptFilePath() const;
@@ -135,59 +141,40 @@ public:
 
   bool isValid() const { return m_valid; }
 
-  FileFormat *newInstance() const override;
+  FileFormat* newInstance() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) override;
+  bool read(std::istream& in, Core::Molecule& molecule) override;
 
-  bool write(std::ostream &out, const Core::Molecule &molecule) override;
+  bool write(std::ostream& out, const Core::Molecule& molecule) override;
 
-  Operations supportedOperations() const override
-  {
-    return m_operations;
-  }
+  Operations supportedOperations() const override { return m_operations; }
 
-  std::string identifier() const override
-  {
-    return m_identifier;
-  }
+  std::string identifier() const override { return m_identifier; }
 
-  std::string name() const override
-  {
-    return m_name;
-  }
+  std::string name() const override { return m_name; }
 
-  std::string description() const override
-  {
-    return m_description;
-  }
+  std::string description() const override { return m_description; }
 
-  std::string specificationUrl() const override
-  {
-    return m_specificationUrl;
-  }
+  std::string specificationUrl() const override { return m_specificationUrl; }
 
   std::vector<std::string> fileExtensions() const override
   {
     return m_fileExtensions;
   }
 
-  std::vector<std::string> mimeTypes() const override
-  {
-    return m_mimeTypes;
-  }
+  std::vector<std::string> mimeTypes() const override { return m_mimeTypes; }
 
 private:
-  static Format stringToFormat(const std::string &str);
+  static Format stringToFormat(const std::string& str);
   static Io::FileFormat* createFileFormat(Format fmt);
   void resetMetaData();
   void readMetaData();
-  bool parseString(const QJsonObject &ob, const QString &key,
-                   std::string &str);
-  bool parseStringArray(const QJsonObject &ob, const QString &key,
-                        std::vector<std::string> &array);
+  bool parseString(const QJsonObject& ob, const QString& key, std::string& str);
+  bool parseStringArray(const QJsonObject& ob, const QString& key,
+                        std::vector<std::string>& array);
 
 private:
-  QtGui::PythonScript *m_interpreter;
+  QtGui::PythonScript* m_interpreter;
   bool m_valid;
   Operations m_operations;
   Format m_inputFormat;

@@ -21,9 +21,9 @@
 
 #include "fileformat.h" // For FileFormat::Operation enum.
 
-#include <vector>
 #include <map>
 #include <string>
+#include <vector>
 
 namespace Avogadro {
 namespace Core {
@@ -32,7 +32,8 @@ class Molecule;
 namespace Io {
 
 /**
- * @class FileFormatManager fileformatmanager.h <avogadro/io/fileformatmanager.h>
+ * @class FileFormatManager fileformatmanager.h
+ * <avogadro/io/fileformatmanager.h>
  * @brief Class to manage registration, searching and creation of file formats.
  * @author Marcus D. Hanwell
  *
@@ -53,39 +54,39 @@ public:
    * Get the singleton instance of the file format manager. This instance should
    * not be deleted.
    */
-  static FileFormatManager & instance();
+  static FileFormatManager& instance();
 
   /**
    * Load @p molecule with the @p fileName contents supplied, inferring the
    * @p fileExtension if it is empty.
    * @return True on success, false on failure.
    */
-  bool readFile(Core::Molecule &molecule, const std::string &fileName,
-                const std::string &fileExtension = std::string()) const;
+  bool readFile(Core::Molecule& molecule, const std::string& fileName,
+                const std::string& fileExtension = std::string()) const;
 
   /**
    * Write @p molecule to the @p fileName supplied, inferring the
    * @p fileExtension if it is empty.
    * @return True on success, false on failure.
    */
-  bool writeFile(const Core::Molecule &molecule, const std::string &fileName,
-                 const std::string &fileExtension = std::string()) const;
+  bool writeFile(const Core::Molecule& molecule, const std::string& fileName,
+                 const std::string& fileExtension = std::string()) const;
 
   /**
    * Load @p molecule with the contents of @p string, using the supplied
    * @p fileExtension to determine the format.
    * @return True on success, false on failure.
    */
-  bool readString(Core::Molecule &molecule, const std::string &string,
-                  const std::string &fileExtension) const;
+  bool readString(Core::Molecule& molecule, const std::string& string,
+                  const std::string& fileExtension) const;
 
   /**
    * Write @p molecule to the @p string, using the supplied @p fileExtension
    * to determine the format.
    * @return True on success, false on failure.
    */
-  bool writeString(const Core::Molecule &molecule, std::string &string,
-                   const std::string &fileExtension) const;
+  bool writeString(const Core::Molecule& molecule, std::string& string,
+                   const std::string& fileExtension) const;
 
   /**
    * @brief Register a new file format with the format manager.
@@ -93,14 +94,14 @@ public:
    * ownership of the object passed in.
    * @return True on success, false on failure.
    */
-  static bool registerFormat(FileFormat *format);
+  static bool registerFormat(FileFormat* format);
 
   /**
    * @brief Unregister a file format from the format manager.
    * @param identifier The identifier for the format to remove.
    * @return True on success, false on failure.
    */
-  static bool unregisterFormat(const std::string &identifier);
+  static bool unregisterFormat(const std::string& identifier);
 
   /**
    * Add the supplied @p format to the manager, registering its ID, MIME type,
@@ -108,13 +109,13 @@ public:
    * assumes ownership of the supplied object.
    * @return True on success, false on failure.
    */
-  bool addFormat(FileFormat *format);
+  bool addFormat(FileFormat* format);
 
   /**
    * Remove the format with the identifier @a identifier from the manager.
    * @return True on success, false on failure.
    */
-  bool removeFormat(const std::string &identifier);
+  bool removeFormat(const std::string& identifier);
 
   /**
    * New instance of the format for the specified @p identifier. Ownership
@@ -122,12 +123,13 @@ public:
    * @param identifier The unique identifier of the format.
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
-   * @return Instance of the format, nullptr if not found. Ownership passes to the
+   * @return Instance of the format, nullptr if not found. Ownership passes to
+   * the
    * caller.
    */
-  FileFormat * newFormatFromIdentifier(
-      const std::string &identifier,
-      FileFormat::Operations filter = FileFormat::None) const;
+  FileFormat* newFormatFromIdentifier(
+    const std::string& identifier,
+    FileFormat::Operations filter = FileFormat::None) const;
 
   /**
    * New instance of the format for the specified @p mimeType. Ownership
@@ -135,12 +137,13 @@ public:
    * @param mimeType The MIME type (in lower case).
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
-   * @return Instance of the format, nullptr if not found. Ownership passes to the
+   * @return Instance of the format, nullptr if not found. Ownership passes to
+   * the
    * caller.
    */
-  FileFormat * newFormatFromMimeType(
-      const std::string &mimeType,
-      FileFormat::Operations filter = FileFormat::None) const;
+  FileFormat* newFormatFromMimeType(
+    const std::string& mimeType,
+    FileFormat::Operations filter = FileFormat::None) const;
 
   /**
    * New instance of the format for the specified file @p extention. Ownership
@@ -148,12 +151,13 @@ public:
    * @param extension The file extension (in lower case).
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
-   * @return Instance of the format, nullptr if not found. Ownership passes to the
+   * @return Instance of the format, nullptr if not found. Ownership passes to
+   * the
    * caller.
    */
-  FileFormat * newFormatFromFileExtension(
-      const std::string &extension,
-      FileFormat::Operations filter = FileFormat::None) const;
+  FileFormat* newFormatFromFileExtension(
+    const std::string& extension,
+    FileFormat::Operations filter = FileFormat::None) const;
 
   /**
    * Get a list of all loaded identifiers, optionally matching the specified
@@ -161,8 +165,8 @@ public:
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
    */
-  std::vector<std::string>
-  identifiers(FileFormat::Operations filter = FileFormat::None) const;
+  std::vector<std::string> identifiers(
+    FileFormat::Operations filter = FileFormat::None) const;
 
   /**
    * Get a list of all loaded MIME types, optionally matching the specified
@@ -170,8 +174,8 @@ public:
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
    */
-  std::vector<std::string>
-  mimeTypes(FileFormat::Operations filter = FileFormat::None) const;
+  std::vector<std::string> mimeTypes(
+    FileFormat::Operations filter = FileFormat::None) const;
 
   /**
    * Get a list of the file extensions supported, optionally matching the
@@ -179,8 +183,8 @@ public:
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
    */
-  std::vector<std::string>
-  fileExtensions(FileFormat::Operations filter = FileFormat::None) const;
+  std::vector<std::string> fileExtensions(
+    FileFormat::Operations filter = FileFormat::None) const;
 
   /**
    * Get a list of known FileFormat objects, optionally matching the
@@ -191,8 +195,8 @@ public:
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
    */
-  std::vector<const FileFormat *>
-  fileFormats(FileFormat::Operations filter = FileFormat::None) const;
+  std::vector<const FileFormat*> fileFormats(
+    FileFormat::Operations filter = FileFormat::None) const;
 
   /**
    * Get a list of known FileFormat objects that handle the specified MIME type,
@@ -204,10 +208,9 @@ public:
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
    */
-  std::vector<const FileFormat *>
-  fileFormatsFromMimeType(
-      const std::string &mimeType,
-      FileFormat::Operations filter = FileFormat::None) const;
+  std::vector<const FileFormat*> fileFormatsFromMimeType(
+    const std::string& mimeType,
+    FileFormat::Operations filter = FileFormat::None) const;
 
   /**
    * Get a list of known FileFormat objects that handle the specified file
@@ -219,10 +222,9 @@ public:
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
    */
-  std::vector<const FileFormat *>
-  fileFormatsFromFileExtension(
-      const std::string &extension,
-      FileFormat::Operations filter = FileFormat::None) const;
+  std::vector<const FileFormat*> fileFormatsFromFileExtension(
+    const std::string& extension,
+    FileFormat::Operations filter = FileFormat::None) const;
 
   /**
    * Get any errors that have been logged when loading formats.
@@ -246,9 +248,8 @@ private:
    * represents the minimum required capabilities.
    * @param fmap The FormatMap to operate on.
    */
-  std::vector<std::string>
-  filteredKeysFromFormatMap(FileFormat::Operations filter,
-                            const FormatIdMap &fmap) const;
+  std::vector<std::string> filteredKeysFromFormatMap(
+    FileFormat::Operations filter, const FormatIdMap& fmap) const;
 
   /**
    * @brief Return formats from a map that match the supplied key and operation
@@ -260,10 +261,9 @@ private:
    * represents the minimum required capabilities.
    * @param fmap The FormatIdMap to operate on.
    */
-  std::vector<FileFormat*>
-  filteredFormatsFromFormatMap(const std::string &key,
-                               FileFormat::Operations filter,
-                               const FormatIdMap &fmap) const;
+  std::vector<FileFormat*> filteredFormatsFromFormatMap(
+    const std::string& key, FileFormat::Operations filter,
+    const FormatIdMap& fmap) const;
 
   /**
    * @brief Return a format from a map that matches the supplied key and
@@ -275,9 +275,9 @@ private:
    * represents the minimum required capabilities.
    * @param fmap The FormatIdMap to operate on.
    */
-  FileFormat * filteredFormatFromFormatMap(const std::string &key,
-                                           FileFormat::Operations filter,
-                                           const FormatIdMap &fmap) const;
+  FileFormat* filteredFormatFromFormatMap(const std::string& key,
+                                          FileFormat::Operations filter,
+                                          const FormatIdMap& fmap) const;
 
   /**
    * @brief Return formats from a vector that match the supplied operation
@@ -288,9 +288,8 @@ private:
    * represents the minimum required capabilities.
    * @param fvec The FormatIdVector to operate on.
    */
-  std::vector<FileFormat*>
-  filteredFormatsFromFormatVector(FileFormat::Operations filter,
-                                  const FormatIdVector &fvec) const;
+  std::vector<FileFormat*> filteredFormatsFromFormatVector(
+    FileFormat::Operations filter, const FormatIdVector& fvec) const;
 
   /**
    * @brief Return the first format from a vector that matches the supplied
@@ -301,17 +300,16 @@ private:
    * represents the minimum required capabilities.
    * @param fmap The FormatIdVector to operate on.
    */
-  FileFormat *
-  filteredFormatFromFormatVector(FileFormat::Operations filter,
-                                 const FormatIdVector &fvec) const;
+  FileFormat* filteredFormatFromFormatVector(FileFormat::Operations filter,
+                                             const FormatIdVector& fvec) const;
 
   /**
    * @brief Append warnings/errors to the error message string.
    * @param errorMessage The error message to append.
    */
-  void appendError(const std::string &errorMessage);
+  void appendError(const std::string& errorMessage);
 
-  std::vector<FileFormat *> m_formats;
+  std::vector<FileFormat*> m_formats;
 
   FormatIdMap m_identifiers;
   FormatIdMap m_mimeTypes;

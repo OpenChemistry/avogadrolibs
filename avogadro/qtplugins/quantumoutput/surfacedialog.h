@@ -36,7 +36,7 @@ class SurfaceDialog : public QDialog
   Q_OBJECT
 
 public:
-  SurfaceDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+  SurfaceDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
   ~SurfaceDialog();
 
   void setupBasis(int numElectrons, int numMOs);
@@ -54,7 +54,7 @@ signals:
                               float resolutionStepSize);
 
 private:
-  Ui::SurfaceDialog *m_ui;
+  Ui::SurfaceDialog* m_ui;
 };
 
 } // End namespace QtPlugins

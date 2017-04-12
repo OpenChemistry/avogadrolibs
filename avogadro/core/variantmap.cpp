@@ -46,12 +46,12 @@ std::vector<std::string> VariantMap::names() const
   return result;
 }
 
-void VariantMap::setValue(const std::string &name, const Variant &v)
+void VariantMap::setValue(const std::string& name, const Variant& v)
 {
   m_map[name] = v;
 }
 
-Variant VariantMap::value(const std::string &name) const
+Variant VariantMap::value(const std::string& name) const
 {
   std::map<std::string, Variant>::const_iterator iter = m_map.find(name);
   if (iter == m_map.end())
@@ -60,7 +60,7 @@ Variant VariantMap::value(const std::string &name) const
   return iter->second;
 }
 
-bool VariantMap::hasValue(const std::string &name) const
+bool VariantMap::hasValue(const std::string& name) const
 {
   return m_map.find(name) != m_map.end();
 }

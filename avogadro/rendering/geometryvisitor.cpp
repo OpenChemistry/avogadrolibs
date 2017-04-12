@@ -16,15 +16,15 @@
 
 #include "geometryvisitor.h"
 
-#include "spheregeometry.h"
 #include "ambientocclusionspheregeometry.h"
 #include "linestripgeometry.h"
+#include "spheregeometry.h"
 
 namespace Avogadro {
 namespace Rendering {
 
-GeometryVisitor::GeometryVisitor() : m_center(Vector3f::Zero()), m_radius(0.0f),
-  m_dirty(false)
+GeometryVisitor::GeometryVisitor()
+  : m_center(Vector3f::Zero()), m_radius(0.0f), m_dirty(false)
 {
 }
 
@@ -32,13 +32,13 @@ GeometryVisitor::~GeometryVisitor()
 {
 }
 
-void GeometryVisitor::visit(Drawable &)
+void GeometryVisitor::visit(Drawable&)
 {
 }
 
-void GeometryVisitor::visit(SphereGeometry &geometry)
+void GeometryVisitor::visit(SphereGeometry& geometry)
 {
-  const Core::Array<SphereColor> &spheres = geometry.spheres();
+  const Core::Array<SphereColor>& spheres = geometry.spheres();
   if (!spheres.size())
     return;
 
@@ -65,9 +65,9 @@ void GeometryVisitor::visit(SphereGeometry &geometry)
   m_radii.push_back(tmpRadius);
 }
 
-void GeometryVisitor::visit(AmbientOcclusionSphereGeometry &geometry)
+void GeometryVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
 {
-  const Core::Array<SphereColor> &spheres = geometry.spheres();
+  const Core::Array<SphereColor>& spheres = geometry.spheres();
   if (!spheres.size())
     return;
 
@@ -94,7 +94,7 @@ void GeometryVisitor::visit(AmbientOcclusionSphereGeometry &geometry)
   m_radii.push_back(tmpRadius);
 }
 
-void GeometryVisitor::visit(LineStripGeometry &lsg)
+void GeometryVisitor::visit(LineStripGeometry& lsg)
 {
   typedef Core::Array<LineStripGeometry::PackedVertex> VertexArray;
   const VertexArray verts(lsg.vertices());
@@ -153,8 +153,7 @@ void GeometryVisitor::average()
   if (m_centers.size() == 1) {
     m_center = m_centers[0];
     m_radius = m_radii[0];
-  }
-  else {
+  } else {
     m_center = Vector3f::Zero();
     std::vector<Vector3f>::const_iterator cit;
     for (cit = m_centers.begin(); cit != m_centers.end(); ++cit)

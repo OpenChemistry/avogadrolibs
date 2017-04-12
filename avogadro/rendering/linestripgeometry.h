@@ -33,11 +33,12 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT LineStripGeometry : public Drawable
 {
 public:
-  struct PackedVertex { // 16 bytes total:
-    Vector3f vertex;    // 12 bytes
-    Vector4ub color;    //  4 bytes
+  struct PackedVertex
+  {                  // 16 bytes total:
+    Vector3f vertex; // 12 bytes
+    Vector4ub color; //  4 bytes
 
-    PackedVertex(const Vector3f &v, const Vector4ub &c) : vertex(v), color(c) {}
+    PackedVertex(const Vector3f& v, const Vector4ub& c) : vertex(v), color(c) {}
     static int vertexOffset() { return 0; }
     static int colorOffset() { return static_cast<int>(sizeof(Vector3f)); }
   };
@@ -45,22 +46,22 @@ public:
   static const size_t InvalidIndex;
 
   LineStripGeometry();
-  LineStripGeometry(const LineStripGeometry &other);
+  LineStripGeometry(const LineStripGeometry& other);
   ~LineStripGeometry();
 
-  LineStripGeometry & operator=(LineStripGeometry);
-  friend void swap(LineStripGeometry &lhs, LineStripGeometry &rhs);
+  LineStripGeometry& operator=(LineStripGeometry);
+  friend void swap(LineStripGeometry& lhs, LineStripGeometry& rhs);
 
   /**
    * Accept a visit from our friendly visitor.
    */
-  void accept(Visitor &) override;
+  void accept(Visitor&) override;
 
   /**
    * @brief Render the line strips.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera &camera);
+  void render(const Camera& camera);
 
   /**
    * Clear the contents of the node.
@@ -79,14 +80,11 @@ public:
    * @return The index of the first vertex added by this call.
    * @{
    */
-  size_t addLineStrip(const Core::Array<Vector3f> &vertices,
-                      const Core::Array<Vector4ub> &color,
-                      float lineWidth);
-  size_t addLineStrip(const Core::Array<Vector3f> &vertices,
-                      const Core::Array<Vector3ub> &color,
-                      float lineWidth);
-  size_t addLineStrip(const Core::Array<Vector3f> &vertices,
-                      float lineWidth);
+  size_t addLineStrip(const Core::Array<Vector3f>& vertices,
+                      const Core::Array<Vector4ub>& color, float lineWidth);
+  size_t addLineStrip(const Core::Array<Vector3f>& vertices,
+                      const Core::Array<Vector3ub>& color, float lineWidth);
+  size_t addLineStrip(const Core::Array<Vector3f>& vertices, float lineWidth);
   /** @} */
 
   /**
@@ -94,7 +92,7 @@ public:
    * vertices when no explicit vertex color is specified.
    * @{
    */
-  void setColor(const Vector3ub &c) { m_color = c; }
+  void setColor(const Vector3ub& c) { m_color = c; }
   Vector3ub color() const { return m_color; }
   /** @} */
 
@@ -126,17 +124,17 @@ private:
   bool m_dirty;
 
   class Private;
-  Private *d;
+  Private* d;
 };
 
-inline LineStripGeometry &LineStripGeometry::operator=(LineStripGeometry other)
+inline LineStripGeometry& LineStripGeometry::operator=(LineStripGeometry other)
 {
   using std::swap;
   swap(*this, other);
   return *this;
 }
 
-inline void swap(LineStripGeometry &lhs, LineStripGeometry &rhs)
+inline void swap(LineStripGeometry& lhs, LineStripGeometry& rhs)
 {
   using std::swap;
   swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));

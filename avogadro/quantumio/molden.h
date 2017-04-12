@@ -38,13 +38,10 @@ public:
     return Read | File | Stream | String;
   }
 
-  FileFormat * newInstance() const override { return new MoldenFile; }
+  FileFormat* newInstance() const override { return new MoldenFile; }
   std::string identifier() const override { return "Avogadro: Molden"; }
   std::string name() const override { return "Molden"; }
-  std::string description() const override
-  {
-    return "Molden file format.";
-  }
+  std::string description() const override { return "Molden file format."; }
 
   std::string specificationUrl() const override
   {
@@ -54,8 +51,8 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) override;
-  bool write(std::ostream &, const Core::Molecule &) override
+  bool read(std::istream& in, Core::Molecule& molecule) override;
+  bool write(std::ostream&, const Core::Molecule&) override
   {
     // Empty, as we do not write out Molden files.
     return false;
@@ -64,8 +61,8 @@ public:
 private:
   void outputAll();
 
-  void processLine(std::istream &in);
-  void readAtom(const std::vector<std::string> &list);
+  void processLine(std::istream& in);
+  void readAtom(const std::vector<std::string>& list);
   void load(Core::GaussianSet* basis);
 
   double m_coordFactor;
@@ -82,7 +79,13 @@ private:
   std::vector<double> m_orbitalEnergy;
   std::vector<double> m_MOcoeffs;
 
-  enum Mode { Atoms, GTO, MO, Unrecognized };
+  enum Mode
+  {
+    Atoms,
+    GTO,
+    MO,
+    Unrecognized
+  };
   Mode m_mode;
 };
 

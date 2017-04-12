@@ -46,12 +46,19 @@ class UnitCellDialog : public QDialog
   Q_OBJECT
 
 public:
-  enum Mode { Clean, Invalid, Parameters, CellMatrix, FractionalMatrix };
+  enum Mode
+  {
+    Clean,
+    Invalid,
+    Parameters,
+    CellMatrix,
+    FractionalMatrix
+  };
 
-  explicit UnitCellDialog(QWidget *parent = 0);
+  explicit UnitCellDialog(QWidget* parent = 0);
   ~UnitCellDialog() override;
 
-  void setMolecule(QtGui::Molecule *molecule);
+  void setMolecule(QtGui::Molecule* molecule);
 
 public slots:
   void moleculeChanged(unsigned int changes);
@@ -91,18 +98,17 @@ private:
   bool validateCellMatrix();
   bool validateFractionalMatrix();
 
-  static void initializeMatrixEditor(QPlainTextEdit *edit);
-  static bool validateMatrixEditor(QPlainTextEdit *edit);
-  static QString matrixToString(const Matrix3 &mat);
-  static Matrix3 stringToMatrix(const QString &str);
+  static void initializeMatrixEditor(QPlainTextEdit* edit);
+  static bool validateMatrixEditor(QPlainTextEdit* edit);
+  static QString matrixToString(const Matrix3& mat);
+  static Matrix3 stringToMatrix(const QString& str);
 
 private:
-  Ui::UnitCellDialog *m_ui;
-  QtGui::Molecule *m_molecule;
+  Ui::UnitCellDialog* m_ui;
+  QtGui::Molecule* m_molecule;
   Core::UnitCell m_tempCell;
   Mode m_mode;
 };
-
 
 } // namespace QtPlugins
 } // namespace Avogadro

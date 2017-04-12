@@ -17,15 +17,14 @@
 #ifndef AVOGADRO_QTPLUGINS_FILEDIALOGMODEL_H
 #define AVOGADRO_QTPLUGINS_FILEDIALOGMODEL_H
 
-#include <QObject>
 #include <QAbstractItemModel>
 #include <QFileIconProvider>
+#include <QObject>
 
 class vtkProcessModule;
 class QModelIndex;
 
-namespace ProtoCall
-{
+namespace ProtoCall {
 namespace Runtime {
 class RpcChannel;
 class vtkCommunicatorChannel;
@@ -48,8 +47,8 @@ class FileDialogModel : public QAbstractItemModel
 
 public:
   enum FileType
-    {
-    INVALID=0,
+  {
+    INVALID = 0,
     SINGLE_FILE,
     SINGLE_FILE_LINK,
     DIRECTORY,
@@ -60,10 +59,10 @@ public:
     NETWORK_DOMAIN,
     NETWORK_SERVER,
     NETWORK_SHARE
-    };
+  };
 
   FileDialogModel(ProtoCall::Runtime::vtkCommunicatorChannel* server,
-      QObject* Parent = nullptr);
+                  QObject* Parent = nullptr);
   ~FileDialogModel();
 
   /// Sets the path that the file dialog will display
@@ -73,7 +72,7 @@ public:
   QString getCurrentPath();
 
   /// Return true if the file at the index is hidden
-  bool isHidden( const QModelIndex& );
+  bool isHidden(const QModelIndex&);
 
   /// Return true if the given row is a directory
   bool isDir(const QModelIndex&);
@@ -89,21 +88,21 @@ public:
 
   /// Returns whether the file exists
   /// also returns the full path, which could be a resolved shortcut
-  void fileExists(const QString& file, const QObject *requestor,
-      const char *resultSlot);
+  void fileExists(const QString& file, const QObject* requestor,
+                  const char* resultSlot);
 
   /// Returns whether a directory exists
   /// also returns the full path, which could be a resolved shortcut
-  void dirExists(const QString& dir, const QObject *requestor,
-      const char *resultSlot);
+  void dirExists(const QString& dir, const QObject* requestor,
+                 const char* resultSlot);
 
   /// returns the path delimiter, could be \ or / depending on the platform
   /// this model is browsing
   QChar separator() const;
 
   /// return the absolute path for this file
-  void absoluteFilePath(const QString &path, const QObject *requester,
-      const char *resultSlot);
+  void absoluteFilePath(const QString& path, const QObject* requester,
+                        const char* resultSlot);
 
   /// Returns the set of file paths associated with the given row
   /// (a row may represent one-to-many paths if grouping is implemented)
@@ -118,7 +117,7 @@ public:
   /// return the number of columns in the model
   int columnCount(const QModelIndex&) const;
   /// return the data for an item
-  QVariant data(const QModelIndex & idx, int role) const;
+  QVariant data(const QModelIndex& idx, int role) const;
   /// return an index from another index
   QModelIndex index(int row, int column, const QModelIndex&) const;
   /// return the parent index of an index
@@ -136,28 +135,35 @@ public:
   static bool isFile(FileDialogModel::FileType type);
 
 signals:
-  void fileExistsComplete(const QString  &path, bool exists);
-  void dirExistsComplete(const QString &path, bool exits);
-  void absoluteFilePathComplete(const QString &path);
+  void fileExistsComplete(const QString& path, bool exists);
+  void dirExistsComplete(const QString& path, bool exits);
+  void absoluteFilePathComplete(const QString& path);
 
 private:
   class Private;
   Private* const m_implementation;
 
-  void handleFileExists(Listing *listing);
-  void handleDirExists(Listing *listing);
-  void handleAbsolutePathResponse(Path *response);
+  void handleFileExists(Listing* listing);
+  void handleDirExists(Listing* listing);
+  void handleAbsolutePathResponse(Path* response);
 
 private slots:
   void cleanup();
 };
 
-
 class FileDialogModelIconProvider : protected QFileIconProvider
 {
 public:
-  enum IconType { Computer, Drive, Folder, File, FolderLink, FileLink,
-                  NetworkFolder };
+  enum IconType
+  {
+    Computer,
+    Drive,
+    Folder,
+    File,
+    FolderLink,
+    FileLink,
+    NetworkFolder
+  };
   FileDialogModelIconProvider();
   QIcon icon(IconType t) const;
   QIcon icon(FileDialogModel::FileType f) const;
@@ -169,6 +175,5 @@ protected:
   QIcon m_folderLinkIcon;
   QIcon m_fileLinkIcon;
 };
-
 
 #endif

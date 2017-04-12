@@ -39,7 +39,8 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT BufferObject
 {
 public:
-  enum ObjectType {
+  enum ObjectType
+  {
     ArrayBuffer,
     ElementArrayBuffer
   };
@@ -67,7 +68,7 @@ public:
    * supported containers.
    */
   template <class ContainerT>
-  bool upload(const ContainerT &array, ObjectType type);
+  bool upload(const ContainerT& array, ObjectType type);
 
   /** Bind the buffer object ready for rendering.
    * @note Only one ARRAY_BUFFER and one ELEMENT_ARRAY_BUFFER may be bound at
@@ -81,17 +82,17 @@ public:
   std::string error() const { return m_error; }
 
 private:
-  bool uploadInternal(const void *buffer, size_t size, ObjectType objectType);
+  bool uploadInternal(const void* buffer, size_t size, ObjectType objectType);
 
   struct Private;
-  Private *d;
-  bool  m_dirty;
+  Private* d;
+  bool m_dirty;
 
   std::string m_error;
 };
 
 template <class ContainerT>
-inline bool BufferObject::upload(const ContainerT &array,
+inline bool BufferObject::upload(const ContainerT& array,
                                  BufferObject::ObjectType objectType)
 {
   if (array.empty()) {
@@ -99,7 +100,8 @@ inline bool BufferObject::upload(const ContainerT &array,
     return false;
   }
   return uploadInternal(&array[0],
-      array.size() * sizeof(typename ContainerT::value_type), objectType);
+                        array.size() * sizeof(typename ContainerT::value_type),
+                        objectType);
 }
 
 } // End Rendering namespace

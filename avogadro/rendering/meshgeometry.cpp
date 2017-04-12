@@ -32,8 +32,8 @@
 #include <limits>
 
 namespace {
-#include "mesh_vs.h"
 #include "mesh_fs.h"
+#include "mesh_vs.h"
 }
 
 using Avogadro::Vector3f;
@@ -47,12 +47,12 @@ namespace Avogadro {
 namespace Rendering {
 
 const unsigned int MeshGeometry::InvalidIndex =
-    std::numeric_limits<unsigned int>::max();
+  std::numeric_limits<unsigned int>::max();
 
 class MeshGeometry::Private
 {
 public:
-  Private() { }
+  Private() {}
 
   BufferObject vbo;
   BufferObject ibo;
@@ -65,17 +65,14 @@ public:
   size_t numberOfIndices;
 };
 
-MeshGeometry::MeshGeometry() : m_color(255, 0, 0), m_opacity(255),
-  m_dirty(false), d(new Private)
+MeshGeometry::MeshGeometry()
+  : m_color(255, 0, 0), m_opacity(255), m_dirty(false), d(new Private)
 {
 }
 
-MeshGeometry::MeshGeometry(const MeshGeometry &other)
-  : Drawable(other),
-    m_vertices(other.m_vertices),
-    m_indices(other.m_indices),
-    m_color(other.m_color),
-    m_opacity(other.m_opacity),
+MeshGeometry::MeshGeometry(const MeshGeometry& other)
+  : Drawable(other), m_vertices(other.m_vertices), m_indices(other.m_indices),
+    m_color(other.m_color), m_opacity(other.m_opacity),
     m_dirty(true), // Force rendering internals to be rebuilt
     d(new Private)
 {
@@ -86,7 +83,7 @@ MeshGeometry::~MeshGeometry()
   delete d;
 }
 
-void MeshGeometry::accept(Visitor &visitor)
+void MeshGeometry::accept(Visitor& visitor)
 {
   visitor.visit(*this);
 }
@@ -122,7 +119,7 @@ void MeshGeometry::update()
   }
 }
 
-void MeshGeometry::render(const Camera &camera)
+void MeshGeometry::render(const Camera& camera)
 {
   if (m_indices.empty() || m_vertices.empty())
     return;
@@ -140,45 +137,41 @@ void MeshGeometry::render(const Camera &camera)
   if (!d->program.enableAttributeArray("vertex"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("vertex", PackedVertex::vertexOffset(),
-                                    sizeof(PackedVertex),
-                                    FloatType, 3, ShaderProgram::NoNormalize)) {
+                                    sizeof(PackedVertex), FloatType, 3,
+                                    ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("color"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("color", PackedVertex::colorOffset(),
-                                    sizeof(PackedVertex),
-                                    UCharType, 4, ShaderProgram::Normalize)) {
+                                    sizeof(PackedVertex), UCharType, 4,
+                                    ShaderProgram::Normalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("normal"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("normal", PackedVertex::normalOffset(),
-                                    sizeof(PackedVertex),
-                                    FloatType, 3, ShaderProgram::NoNormalize)) {
+                                    sizeof(PackedVertex), FloatType, 3,
+                                    ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
 
   // Set up our uniforms (model-view and projection matrices right now).
-  if (!d->program.setUniformValue("modelView",
-                                  camera.modelView().matrix())) {
+  if (!d->program.setUniformValue("modelView", camera.modelView().matrix())) {
     cout << d->program.error() << endl;
   }
-  if (!d->program.setUniformValue("projection",
-                                  camera.projection().matrix())) {
+  if (!d->program.setUniformValue("projection", camera.projection().matrix())) {
     cout << d->program.error() << endl;
   }
-  Matrix3f normalMatrix =
-      camera.modelView().linear().inverse().transpose();
+  Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
   if (!d->program.setUniformValue("normalMatrix", normalMatrix))
     std::cout << d->program.error() << std::endl;
 
   // Render the loaded spheres using the shader and bound VBO.
   glDrawRangeElements(GL_TRIANGLES, 0,
                       static_cast<GLuint>(d->numberOfVertices - 1),
-                      static_cast<GLsizei>(d->numberOfIndices),
-                      GL_UNSIGNED_INT,
-                      reinterpret_cast<const GLvoid *>(NULL));
+                      static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
+                      reinterpret_cast<const GLvoid*>(NULL));
 
   d->vbo.release();
   d->ibo.release();
@@ -190,9 +183,9 @@ void MeshGeometry::render(const Camera &camera)
   d->program.release();
 }
 
-unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
-                                       const Core::Array<Vector3f> &n,
-                                       const Core::Array<Vector4ub> &c)
+unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
+                                       const Core::Array<Vector3f>& n,
+                                       const Core::Array<Vector4ub>& c)
 {
   if (v.size() != n.size() || n.size() != c.size())
     return InvalidIndex;
@@ -212,9 +205,9 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
   return static_cast<unsigned int>(result);
 }
 
-unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
-                                       const Core::Array<Vector3f> &n,
-                                       const Core::Array<Vector3ub> &c)
+unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
+                                       const Core::Array<Vector3f>& n,
+                                       const Core::Array<Vector3ub>& c)
 {
   if (v.size() != n.size() || n.size() != c.size())
     return InvalidIndex;
@@ -237,8 +230,8 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
   return static_cast<unsigned int>(result);
 }
 
-unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f> &v,
-                                       const Core::Array<Vector3f> &n)
+unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
+                                       const Core::Array<Vector3f>& n)
 {
   if (v.size() != n.size())
     return InvalidIndex;
@@ -267,7 +260,7 @@ void MeshGeometry::addTriangle(unsigned int index1, unsigned int index2,
   m_dirty = true;
 }
 
-void MeshGeometry::addTriangles(const Core::Array<unsigned int> &indiceArray)
+void MeshGeometry::addTriangles(const Core::Array<unsigned int>& indiceArray)
 {
   m_indices.reserve(m_indices.size() + indiceArray.size());
   std::copy(indiceArray.begin(), indiceArray.end(),

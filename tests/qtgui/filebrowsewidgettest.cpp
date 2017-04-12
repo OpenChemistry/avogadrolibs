@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#include <gtest/gtest.h>
 #include "qtguitests.h"
+#include <gtest/gtest.h>
 
 #include <avogadro/qtgui/filebrowsewidget.h>
 
@@ -29,11 +29,11 @@
 using Avogadro::QtGui::FileBrowseWidget;
 
 // Need a QApplication to instantiate widget
-#define START_QAPP \
-  int argc = 1; \
-  char argName[] = "FakeApp.exe"; \
-  char *argv[2] = {argName, nullptr}; \
-  QApplication app(argc, argv); \
+#define START_QAPP                                                             \
+  int argc = 1;                                                                \
+  char argName[] = "FakeApp.exe";                                              \
+  char* argv[2] = { argName, nullptr };                                        \
+  QApplication app(argc, argv);                                                \
   Q_UNUSED(app)
 
 TEST(FileBrowseWidgetTest, setFileName)
@@ -73,7 +73,7 @@ TEST(FileBrowseWidgetTest, validExecutableFile)
 #ifndef Q_OS_WIN32 // Qt doesn't identify python files as exec on windows:
   widget.setFileName(AVOGADRO_DATA
                      "/tests/avogadro/scripts/inputgeneratortest.py");
-#else // Q_OS_WIN32
+#else  // Q_OS_WIN32
   widget.setFileName("C:/Windows/System32/cmd.exe");
 #endif // Q_OS_WIN32
   EXPECT_TRUE(widget.validFileName());

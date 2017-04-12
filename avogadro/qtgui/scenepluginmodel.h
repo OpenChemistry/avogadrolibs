@@ -27,7 +27,8 @@ namespace QtGui {
 class ScenePlugin;
 
 /**
- * @class ScenePluginModel scenepluginmodel.h <avogadro/qtgui/scenepluginmodel.h>
+ * @class ScenePluginModel scenepluginmodel.h
+ * <avogadro/qtgui/scenepluginmodel.h>
  * @brief A model containing scene plugins that will build up the scene.
  * @author Marcus D. Hanwell
  */
@@ -37,36 +38,36 @@ class AVOGADROQTGUI_EXPORT ScenePluginModel : public QAbstractItemModel
   Q_OBJECT
 
 public:
-  explicit ScenePluginModel(QObject *parent = 0);
+  explicit ScenePluginModel(QObject* parent = 0);
 
-  QModelIndex parent(const QModelIndex &child) const;
-  int rowCount(const QModelIndex &parent) const;
-  int columnCount(const QModelIndex &parent) const;
+  QModelIndex parent(const QModelIndex& child) const;
+  int rowCount(const QModelIndex& parent) const;
+  int columnCount(const QModelIndex& parent) const;
 
-  Qt::ItemFlags flags(const QModelIndex &index) const;
+  Qt::ItemFlags flags(const QModelIndex& index) const;
 
-  bool setData(const QModelIndex &index, const QVariant &value, int role);
-  QVariant data(const QModelIndex &index, int role) const;
+  bool setData(const QModelIndex& index, const QVariant& value, int role);
+  QVariant data(const QModelIndex& index, int role) const;
 
   QModelIndex index(int row, int column,
-                    const QModelIndex &parent = QModelIndex()) const;
+                    const QModelIndex& parent = QModelIndex()) const;
 
   void clear();
 
-  QList<ScenePlugin *> scenePlugins() const;
-  QList<ScenePlugin *> activeScenePlugins() const;
+  QList<ScenePlugin*> scenePlugins() const;
+  QList<ScenePlugin*> activeScenePlugins() const;
 
 signals:
-  void pluginStateChanged(Avogadro::QtGui::ScenePlugin *);
+  void pluginStateChanged(Avogadro::QtGui::ScenePlugin*);
   void pluginConfigChanged();
 
 public slots:
-  void addItem(Avogadro::QtGui::ScenePlugin *item);
-  void removeItem(Avogadro::QtGui::ScenePlugin *item);
+  void addItem(Avogadro::QtGui::ScenePlugin* item);
+  void removeItem(Avogadro::QtGui::ScenePlugin* item);
   void itemChanged();
 
 private:
-  QList<ScenePlugin *> m_scenePlugins;
+  QList<ScenePlugin*> m_scenePlugins;
 };
 
 } // End QtGui namespace

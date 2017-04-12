@@ -20,17 +20,17 @@
 #include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QMutex>
-#include <QtCore/QPluginLoader>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#include <QtCore/QMutex>
+#include <QtCore/QPluginLoader>
 
 #include <QtCore/QDebug>
 
 namespace Avogadro {
 namespace QtPlugins {
 
-PluginManager::PluginManager(QObject *p)
+PluginManager::PluginManager(QObject* p)
   : QObject(p), m_staticPluginsLoaded(false)
 {
   QString libDir(QtGui::Utilities::libraryDirectory());
@@ -61,14 +61,13 @@ PluginManager::PluginManager(QObject *p)
   if (debugPlugins)
     qDebug() << "  baseDir:" << baseDir.absolutePath();
 
-  QDir pluginsDir(baseDir.absolutePath() + "/" + libDir
-                  + "/avogadro2/plugins");
+  QDir pluginsDir(baseDir.absolutePath() + "/" + libDir + "/avogadro2/plugins");
   m_pluginDirs.append(pluginsDir.absolutePath());
 
   if (debugPlugins) {
     qDebug() << "  pluginsDir:" << pluginsDir.absolutePath();
     int count = 0;
-    foreach(const QString &pluginPath, pluginsDir.entryList(QDir::Files)) {
+    foreach (const QString& pluginPath, pluginsDir.entryList(QDir::Files)) {
       ++count;
       qDebug() << " " << pluginsDir.absolutePath() + "/" + pluginPath;
     }
@@ -85,11 +84,11 @@ PluginManager::~PluginManager()
 {
 }
 
-PluginManager * PluginManager::instance()
+PluginManager* PluginManager::instance()
 {
   static QMutex mutex;
   // Compiler initializes this static pointer to 0.
-  static PluginManager *pluginManagerInstance;
+  static PluginManager* pluginManagerInstance;
   if (!pluginManagerInstance) {
     mutex.lock();
     if (!pluginManagerInstance)
@@ -101,22 +100,22 @@ PluginManager * PluginManager::instance()
 
 void PluginManager::load()
 {
-  foreach(const QString &dir, m_pluginDirs)
+  foreach (const QString& dir, m_pluginDirs)
     load(dir);
 }
 
-void PluginManager::load(const QString &path)
+void PluginManager::load(const QString& path)
 {
   // Load any static plugins first.
   if (!m_staticPluginsLoaded) {
     QObjectList staticPlugins = QPluginLoader::staticInstances();
-    foreach (QObject *pluginInstance, staticPlugins)
+    foreach (QObject* pluginInstance, staticPlugins)
       m_plugins.append(pluginInstance);
     m_staticPluginsLoaded = true;
   }
 
   QDir dir(path);
-  foreach (const QString &pluginPath, dir.entryList(QDir::Files)) {
+  foreach (const QString& pluginPath, dir.entryList(QDir::Files)) {
     QPluginLoader pluginLoader(dir.absolutePath() + "/" + pluginPath);
 
     // We only want to count plugins once, the || should not be necessary but
@@ -125,7 +124,7 @@ void PluginManager::load(const QString &path)
     if (pluginLoader.isLoaded() || m_plugins.contains(pluginLoader.instance()))
       continue;
 
-    QObject *pluginInstance = pluginLoader.instance();
+    QObject* pluginInstance = pluginLoader.instance();
 
     // Check if the plugin loaded correctly. Keep debug output for now, should
     // go away once we have verified this (or added to a logger).

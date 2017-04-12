@@ -24,8 +24,8 @@
 #include <iomanip>
 #include <istream>
 #include <ostream>
-#include <string>
 #include <sstream>
+#include <string>
 
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
@@ -52,7 +52,7 @@ MdlFormat::~MdlFormat()
 {
 }
 
-bool MdlFormat::read(std::istream &in, Core::Molecule &mol)
+bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 {
   string buffer;
 
@@ -116,8 +116,7 @@ bool MdlFormat::read(std::istream &in, Core::Molecule &mol)
       Atom newAtom = mol.addAtom(atomicNum);
       newAtom.setPosition3d(pos);
       continue;
-    }
-    else {
+    } else {
       appendError("Error parsing atom block: " + buffer);
       return false;
     }
@@ -164,12 +163,12 @@ bool MdlFormat::read(std::istream &in, Core::Molecule &mol)
   }
 
   // Check that all atoms were handled.
-  if (mol.atomCount() != static_cast<size_t>(numAtoms)
-      || mol.bondCount() != static_cast<size_t>(numBonds)) {
+  if (mol.atomCount() != static_cast<size_t>(numAtoms) ||
+      mol.bondCount() != static_cast<size_t>(numBonds)) {
     std::ostringstream errorStream;
     errorStream << "Error parsing file, got " << mol.atomCount()
-                << "atoms, expected " << numAtoms << ", got "
-                << mol.bondCount() << ", expected " << numBonds << ".";
+                << "atoms, expected " << numAtoms << ", got " << mol.bondCount()
+                << ", expected " << numBonds << ".";
     appendError(errorStream.str());
     return false;
   }
@@ -187,14 +186,12 @@ bool MdlFormat::read(std::istream &in, Core::Molecule &mol)
         dataName.clear();
         dataValue.clear();
         inValue = false;
-      }
-      else {
+      } else {
         if (dataValue.length())
           dataValue += "\n";
         dataValue += buffer;
       }
-    }
-    else if (startsWith(buffer, "> <")) {
+    } else if (startsWith(buffer, "> <")) {
       // This is a data header, read the name of the entry, and the value on the
       // following lines.
       dataName = trimmed(buffer).substr(3, buffer.length() - 4);
@@ -205,29 +202,29 @@ bool MdlFormat::read(std::istream &in, Core::Molecule &mol)
   return true;
 }
 
-bool MdlFormat::write(std::ostream &out, const Core::Molecule &mol)
+bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
 {
   // Header lines.
   out << mol.data("name").toString() << "\n  Avogadro\n\n";
   // Counts line.
-  out << setw(3) << std::right << mol.atomCount()
-      << setw(3) << mol.bondCount() << "  0  0  0  0  0  0  0  0999 V2000\n";
+  out << setw(3) << std::right << mol.atomCount() << setw(3) << mol.bondCount()
+      << "  0  0  0  0  0  0  0  0999 V2000\n";
   // Atom block.
   for (size_t i = 0; i < mol.atomCount(); ++i) {
     Atom atom = mol.atom(i);
     out << setw(10) << std::right << std::fixed << setprecision(4)
         << atom.position3d().x() << setw(10) << atom.position3d().y()
-        << setw(10) << atom.position3d().z()
-        << " " << setw(3) << std::left << Elements::symbol(atom.atomicNumber())
+        << setw(10) << atom.position3d().z() << " " << setw(3) << std::left
+        << Elements::symbol(atom.atomicNumber())
         << "  0  0  0  0  0  0  0  0  0  0  0  0\n";
   }
   // Bond block.
   for (size_t i = 0; i < mol.bondCount(); ++i) {
     Bond bond = mol.bond(i);
     out.unsetf(std::ios::floatfield);
-    out << setw(3) << std::right << bond.atom1().index() + 1
-        << setw(3) << bond.atom2().index() + 1
-        << setw(3) << static_cast<int>(bond.order()) << "  0  0  0  0\n";
+    out << setw(3) << std::right << bond.atom1().index() + 1 << setw(3)
+        << bond.atom2().index() + 1 << setw(3) << static_cast<int>(bond.order())
+        << "  0  0  0  0\n";
   }
   out << "M  END\n";
 

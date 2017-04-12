@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_RENDERING_TEXTLABEL3D_H
 #define AVOGADRO_RENDERING_TEXTLABEL3D_H
 
-#include "textlabelbase.h"
 #include "avogadrorenderingexport.h"
+#include "textlabelbase.h"
 
 namespace Avogadro {
 namespace Rendering {
@@ -34,13 +34,13 @@ public:
   TextLabel3D();
   ~TextLabel3D() override;
 
-  void accept(Visitor &) override;
+  void accept(Visitor&) override;
 
   /**
    * The anchor position in world coordinates.
    * @{
    */
-  void setAnchor(const Vector3f &position);
+  void setAnchor(const Vector3f& position);
   Vector3f anchor() const;
   /** @} */
 

@@ -39,13 +39,10 @@ public:
     return Read | File | Stream | String;
   }
 
-  FileFormat * newInstance() const override { return new MopacAux; }
+  FileFormat* newInstance() const override { return new MopacAux; }
   std::string identifier() const override { return "Avogadro: MOPAC"; }
   std::string name() const override { return "MOPAC AUX"; }
-  std::string description() const override
-  {
-    return "MOPAC AUX file format.";
-  }
+  std::string description() const override { return "MOPAC AUX file format."; }
 
   std::string specificationUrl() const override
   {
@@ -55,24 +52,24 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) override;
-  bool write(std::ostream &, const Core::Molecule &) override
+  bool read(std::istream& in, Core::Molecule& molecule) override;
+  bool write(std::ostream&, const Core::Molecule&) override
   {
     // Empty, as we do not write out MOPAC AUX files.
     return false;
   }
 
 private:
-  void processLine(std::istream &in);
+  void processLine(std::istream& in);
   void load(Core::SlaterSet* basis);
-  std::vector<int> readArrayElements(std::istream &in, unsigned int n);
-  std::vector<int> readArrayI(std::istream &in, unsigned int n);
-  std::vector<double> readArrayD(std::istream &in, unsigned int n);
-  std::vector<int> readArraySym(std::istream &in, unsigned int n);
-  std::vector<Vector3> readArrayVec(std::istream &in, unsigned int n);
-  bool readOverlapMatrix(std::istream &in, unsigned int n);
-  bool readEigenVectors(std::istream &in, unsigned int n);
-  bool readDensityMatrix(std::istream &in, unsigned int n);
+  std::vector<int> readArrayElements(std::istream& in, unsigned int n);
+  std::vector<int> readArrayI(std::istream& in, unsigned int n);
+  std::vector<double> readArrayD(std::istream& in, unsigned int n);
+  std::vector<int> readArraySym(std::istream& in, unsigned int n);
+  std::vector<Vector3> readArrayVec(std::istream& in, unsigned int n);
+  bool readOverlapMatrix(std::istream& in, unsigned int n);
+  bool readEigenVectors(std::istream& in, unsigned int n);
+  bool readDensityMatrix(std::istream& in, unsigned int n);
 
   int m_electrons;
   std::vector<int> m_shellTypes;
@@ -90,9 +87,9 @@ private:
   std::vector<int> m_pqn;
   std::vector<Eigen::Vector3d> m_atomPos;
 
-  Eigen::MatrixXd m_overlap;     /// Overlap matrix
+  Eigen::MatrixXd m_overlap; /// Overlap matrix
   Eigen::MatrixXd m_eigenVectors;
-  Eigen::MatrixXd m_density;     /// Total density matrix
+  Eigen::MatrixXd m_density; /// Total density matrix
 };
 
 } // End namespace QuantumIO

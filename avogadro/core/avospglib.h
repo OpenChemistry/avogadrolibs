@@ -41,7 +41,7 @@ public:
    * @param cartTol The cartesian tolerance for spglib.
    * @return The Hall number for the crystal.
    */
-  static unsigned short getHallNumber(const Molecule &mol,
+  static unsigned short getHallNumber(const Molecule& mol,
                                       double cartTol = 1e-5);
 
   /**
@@ -54,7 +54,7 @@ public:
    * @return False if the molecule has no unit cell or if the
                    spglib algorithm failed. True otherwise.
    */
-  static bool reduceToPrimitive(Molecule &mol, double cartTol = 1e-5);
+  static bool reduceToPrimitive(Molecule& mol, double cartTol = 1e-5);
 
   /**
    * Use spglib to refine the crystal to its conventional cell. Unless the
@@ -66,7 +66,7 @@ public:
    * @return False if the molecule has no unit cell or if the
    *         spglib algorithm failed. True otherwise.
    */
-  static bool conventionalizeCell(Molecule &mol, double cartTol = 1e-5);
+  static bool conventionalizeCell(Molecule& mol, double cartTol = 1e-5);
 
   /**
    * Use spglib to symmetrize the crystal. Unless the molecule is missing
@@ -78,13 +78,13 @@ public:
    * @return False if the molecule has no unit cell or if the
    *         spglib algorithm failed. True otherwise.
    */
-  static bool symmetrize(Molecule &mol, double cartTol = 1e-5);
+  static bool symmetrize(Molecule& mol, double cartTol = 1e-5);
 
 private:
   // Called by reduceToPrimitive(), conventionalizeCell(), and symmetrize()
   // Calls spg_standardize_cell()
-  static bool standardizeCell(Molecule &mol, double cartTol,
-                              bool toPrimitive, bool idealize);
+  static bool standardizeCell(Molecule& mol, double cartTol, bool toPrimitive,
+                              bool idealize);
 };
 
 } // end Core namespace

@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_QTPLUGINS_BONDING_H
 #define AVOGADRO_QTPLUGINS_BONDING_H
 
-#include <avogadro/qtgui/extensionplugin.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/qtgui/extensionplugin.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -30,7 +30,7 @@ class Bonding : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit Bonding(QObject *parent_ = 0);
+  explicit Bonding(QObject* parent_ = 0);
   ~Bonding() override;
 
   QString name() const override { return tr("Bonding"); }
@@ -40,12 +40,12 @@ public:
     return tr("Perform bonding operations.");
   }
 
-  QList<QAction *> actions() const override;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction *action) const override;
+  QStringList menuPath(QAction* action) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol) override;
+  void setMolecule(QtGui::Molecule* mol) override;
 
 private slots:
   void bond();
@@ -53,10 +53,10 @@ private slots:
   void clearBonds();
 
 private:
-  QtGui::Molecule *m_molecule;
+  QtGui::Molecule* m_molecule;
 
-  QAction *m_action;
-  QAction *m_clearAction;
+  QAction* m_action;
+  QAction* m_clearAction;
 };
 
 } // namespace QtPlugins

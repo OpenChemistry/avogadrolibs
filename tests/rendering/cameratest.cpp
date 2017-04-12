@@ -25,7 +25,7 @@
 using Avogadro::Rendering::Camera;
 using Avogadro::Vector3f;
 
-void setUpOrthographic(Camera &camera)
+void setUpOrthographic(Camera& camera)
 {
   camera.calculateOrthographic(0, 10, 0, 10, 0, 1);
 }
@@ -37,15 +37,14 @@ TEST(CameraTest, perspective)
 
   // Load in a known value for the result of this matrix.
   Eigen::Matrix4f expected;
-  expected << 1.83165f, 0.0f, 0.0f, 0.0f,
-              0.0f, 2.74748f, 0.0f, 0.0f,
-              0.0f, 0.0f, -1.22222f, -2.22222f,
-              0.0f, 0.0f, -1.0f, 0.0f;
+  expected << 1.83165f, 0.0f, 0.0f, 0.0f, 0.0f, 2.74748f, 0.0f, 0.0f, 0.0f,
+    0.0f, -1.22222f, -2.22222f, 0.0f, 0.0f, -1.0f, 0.0f;
   EXPECT_TRUE(camera.projection().matrix().isApprox(expected));
   // If it is incorrect then print out the result.
   if (!camera.projection().matrix().isApprox(expected)) {
-    std::cout << "Error: No match\n" << camera.projection().matrix()
-              << "\nexpected\n" << expected << std::endl;
+    std::cout << "Error: No match\n"
+              << camera.projection().matrix() << "\nexpected\n"
+              << expected << std::endl;
   }
 }
 
@@ -56,15 +55,14 @@ TEST(CameraTest, orthographic)
 
   // Load in a known value for the result of this matrix.
   Eigen::Matrix4f expected;
-  expected << 0.2f, 0.0f, 0.0f,-1.0f,
-              0.0f, 0.2f, 0.0f,-1.0f,
-              0.0f, 0.0f,-2.0f,-1.0f,
-              0.0f, 0.0f, 0.0f, 1.0f;
+  expected << 0.2f, 0.0f, 0.0f, -1.0f, 0.0f, 0.2f, 0.0f, -1.0f, 0.0f, 0.0f,
+    -2.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f;
   EXPECT_TRUE(camera.projection().matrix().isApprox(expected));
   // If it is incorrect then print out the result.
   if (!camera.projection().matrix().isApprox(expected)) {
-    std::cout << "Error: No match\n" << camera.projection().matrix()
-              << "\nexpected\n" << expected << std::endl;
+    std::cout << "Error: No match\n"
+              << camera.projection().matrix() << "\nexpected\n"
+              << expected << std::endl;
   }
 }
 

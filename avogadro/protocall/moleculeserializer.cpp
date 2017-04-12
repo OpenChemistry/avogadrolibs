@@ -18,8 +18,8 @@
 
 #include "matrixserialization.h"
 #include <avogadro/io/fileformatmanager.h>
-#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 #include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 
 #include <iostream>
 
@@ -36,13 +36,12 @@ using google::protobuf::io::CodedInputStream;
 using google::protobuf::uint32;
 using google::protobuf::uint8;
 
-MoleculeSerializer::MoleculeSerializer(const Avogadro::Core::Molecule *molecule)
+MoleculeSerializer::MoleculeSerializer(const Avogadro::Core::Molecule* molecule)
   : m_molecule(molecule)
 {
-
 }
 
-bool MoleculeSerializer::serialize(void *data, size_t size_)
+bool MoleculeSerializer::serialize(void* data, size_t size_)
 {
   ArrayOutputStream aos(data, size_);
   CodedOutputStream cos(&aos);
@@ -73,22 +72,22 @@ bool MoleculeSerializer::serialize(void *data, size_t size_)
 size_t MoleculeSerializer::size()
 {
   // atomicNumbers
-  size_t moleSize = sizeof(uint32) +
-      m_molecule->atomicNumbers().size()*sizeof(unsigned char);
+  size_t moleSize =
+    sizeof(uint32) + m_molecule->atomicNumbers().size() * sizeof(unsigned char);
 
   // positions2d
   moleSize += sizeof(uint32);
   std::vector<Avogadro::Vector2> pos2d = m_molecule->atomPositions2d();
-  for (std::vector<Avogadro::Vector2>::iterator it
-      = pos2d.begin(); it != pos2d.end(); ++it) {
+  for (std::vector<Avogadro::Vector2>::iterator it = pos2d.begin();
+       it != pos2d.end(); ++it) {
     moleSize += ProtoCall::MatrixSerialization::sizeOf(*it);
   }
 
   // positions3d
   moleSize += sizeof(uint32);
   std::vector<Avogadro::Vector3> pos3d = m_molecule->atomPositions3d();
-  for (std::vector<Avogadro::Vector3>::iterator it
-      = pos3d.begin(); it != pos3d.end(); ++it) {
+  for (std::vector<Avogadro::Vector3>::iterator it = pos3d.begin();
+       it != pos3d.end(); ++it) {
     moleSize += ProtoCall::MatrixSerialization::sizeOf(*it);
   }
 
@@ -101,7 +100,7 @@ size_t MoleculeSerializer::size()
 }
 
 bool MoleculeSerializer::serializeAtomicNumbers(
-    google::protobuf::io::CodedOutputStream *stream)
+  google::protobuf::io::CodedOutputStream* stream)
 {
   // Write atomic numbers
   uint32 numberOfAtoms = m_molecule->atomicNumbers().size();
@@ -117,14 +116,14 @@ bool MoleculeSerializer::serializeAtomicNumbers(
 }
 
 bool MoleculeSerializer::serializePositons2d(
-    google::protobuf::io::CodedOutputStream *stream)
+  google::protobuf::io::CodedOutputStream* stream)
 {
   std::vector<Avogadro::Vector2> pos2d = m_molecule->atomPositions2d();
   stream->WriteLittleEndian32(pos2d.size());
   if (stream->HadError())
-      return false;
+    return false;
   for (std::vector<Avogadro::Vector2>::iterator it = pos2d.begin();
-      it != pos2d.end(); ++it) {
+       it != pos2d.end(); ++it) {
     if (!ProtoCall::MatrixSerialization::serialize(*it, stream))
       return false;
   }
@@ -133,7 +132,7 @@ bool MoleculeSerializer::serializePositons2d(
 }
 
 bool MoleculeSerializer::serializePostions3d(
-    google::protobuf::io::CodedOutputStream *stream)
+  google::protobuf::io::CodedOutputStream* stream)
 {
   // position3d
   std::vector<Avogadro::Vector3> pos3d = m_molecule->atomPositions3d();
@@ -141,7 +140,7 @@ bool MoleculeSerializer::serializePostions3d(
   if (stream->HadError())
     return false;
   for (std::vector<Avogadro::Vector3>::iterator it = pos3d.begin();
-      it != pos3d.end(); ++it) {
+       it != pos3d.end(); ++it) {
     if (!ProtoCall::MatrixSerialization::serialize(*it, stream))
       return false;
   }
@@ -155,7 +154,7 @@ size_t MoleculeSerializer::sizeOfBondPairs()
 }
 
 bool MoleculeSerializer::serializeBondPairs(
-    google::protobuf::io::CodedOutputStream *stream)
+  google::protobuf::io::CodedOutputStream* stream)
 {
   // Write the number of pairs
   stream->WriteLittleEndian32(m_molecule->bondPairs().size());
@@ -163,9 +162,9 @@ bool MoleculeSerializer::serializeBondPairs(
   if (stream->HadError())
     return false;
 
-  for (std::vector<std::pair<size_t, size_t> >::const_iterator it
-      = m_molecule->bondPairs().begin();
-      it != m_molecule->bondPairs().end(); ++it) {
+  for (std::vector<std::pair<size_t, size_t>>::const_iterator it =
+         m_molecule->bondPairs().begin();
+       it != m_molecule->bondPairs().end(); ++it) {
     std::pair<size_t, size_t> bond = *it;
     stream->WriteLittleEndian32(bond.first);
     if (stream->HadError())
@@ -180,19 +179,19 @@ bool MoleculeSerializer::serializeBondPairs(
 
 size_t MoleculeSerializer::sizeOfBondOrders()
 {
-  return sizeof(uint32)
-         + m_molecule->bondOrders().size() * sizeof(unsigned char);
+  return sizeof(uint32) +
+         m_molecule->bondOrders().size() * sizeof(unsigned char);
 }
 
 bool MoleculeSerializer::serializeBondOrders(
-    google::protobuf::io::CodedOutputStream *stream)
+  google::protobuf::io::CodedOutputStream* stream)
 {
   stream->WriteLittleEndian32(m_molecule->bondOrders().size());
   if (stream->HadError())
     return false;
 
   stream->WriteRaw(&m_molecule->bondOrders()[0],
-      m_molecule->bondOrders().size());
+                   m_molecule->bondOrders().size());
   if (stream->HadError())
     return false;
 

@@ -41,7 +41,7 @@ class NetworkDatabases : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit NetworkDatabases(QObject *parent = 0);
+  explicit NetworkDatabases(QObject* parent = 0);
   ~NetworkDatabases() override;
 
   QString name() const override { return tr("Network Databases"); }
@@ -51,27 +51,26 @@ public:
     return tr("Interact with online databases, query structures etc.");
   }
 
-  QList<QAction *> actions() const override;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction *) const override;
+  QStringList menuPath(QAction*) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
-  bool readMolecule(QtGui::Molecule &mol);
+  void setMolecule(QtGui::Molecule* mol);
+  bool readMolecule(QtGui::Molecule& mol);
 
 private slots:
   void showDialog();
   void replyFinished(QNetworkReply*);
 
 private:
-  QAction *m_action;
-  QtGui::Molecule *m_molecule;
-  QNetworkAccessManager *m_network;
+  QAction* m_action;
+  QtGui::Molecule* m_molecule;
+  QNetworkAccessManager* m_network;
   QString m_moleculeName;
   QByteArray m_moleculeData;
-  QProgressDialog *m_progressDialog;
+  QProgressDialog* m_progressDialog;
 };
-
 }
 }
 

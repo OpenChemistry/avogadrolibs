@@ -40,7 +40,7 @@ public:
    * @param m The molecule the persistent atom belongs to.
    * @param uniqueId The unique identifier for the atom.
    */
-  explicit PersistentAtom(MoleculeType *m = nullptr, Index uniqueId = MaxIndex)
+  explicit PersistentAtom(MoleculeType* m = nullptr, Index uniqueId = MaxIndex)
     : m_molecule(m), m_uniqueId(uniqueId)
   {
   }
@@ -49,20 +49,20 @@ public:
    * @brief Create a persistent atom from a standard atom object.
    * @param a The atom that a persistent reference should be created for.
    */
-  explicit PersistentAtom(const AtomType &a);
+  explicit PersistentAtom(const AtomType& a);
 
   /**
    * @brief Set the molecule and unique ID for the persistent object.
    * @param m The molecule that contains the atom.
    * @param uniqueId The unique ID of the atom.
    */
-  void set(MoleculeType *m, Index uniqueId);
+  void set(MoleculeType* m, Index uniqueId);
 
   /**
    * @brief Set the persistent atom from a standard atom object.
    * @param a The atom that a persistent reference should be created for.
    */
-  void set(const AtomType &a);
+  void set(const AtomType& a);
 
   /**
    * @brief Reset the the object to an invalid state.
@@ -92,26 +92,26 @@ public:
   AtomType atom() const;
 
 private:
-  MoleculeType *m_molecule;
+  MoleculeType* m_molecule;
   Index m_uniqueId;
 };
 
 template <typename Molecule_T>
-PersistentAtom<Molecule_T>::PersistentAtom(const AtomType &a)
+PersistentAtom<Molecule_T>::PersistentAtom(const AtomType& a)
   : m_molecule(dynamic_cast<MoleculeType*>(a.molecule()))
 {
   m_uniqueId = m_molecule ? m_molecule->atomUniqueId(a) : MaxIndex;
 }
 
 template <typename Molecule_T>
-void PersistentAtom<Molecule_T>::set(MoleculeType *m, Index uniqueId)
+void PersistentAtom<Molecule_T>::set(MoleculeType* m, Index uniqueId)
 {
   m_molecule = m;
   m_uniqueId = uniqueId;
 }
 
 template <typename Molecule_T>
-void PersistentAtom<Molecule_T>::set(const AtomType &a)
+void PersistentAtom<Molecule_T>::set(const AtomType& a)
 {
   m_molecule = dynamic_cast<MoleculeType*>(a.molecule());
   m_uniqueId = m_molecule ? m_molecule->atomUniqueId(a) : MaxIndex;

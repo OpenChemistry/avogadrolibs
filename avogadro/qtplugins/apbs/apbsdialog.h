@@ -46,14 +46,14 @@ public:
   /**
    * Constructor for ApbsDialog.
    */
-  ApbsDialog(QWidget *parent_ = 0);
+  ApbsDialog(QWidget* parent_ = 0);
 
   /**
    * Destructor for ApbsDialog.
    */
   ~ApbsDialog();
 
-  void setMolecule(QtGui::Molecule *molecule);
+  void setMolecule(QtGui::Molecule* molecule);
 
   /**
    * Returns the file name for the input .pqr file.
@@ -71,21 +71,20 @@ private slots:
   void runApbs();
   void runPdb2Pqr();
   void saveInputFile();
-  void saveInputFile(const QString &fileName);
+  void saveInputFile(const QString& fileName);
 
 private:
   void updatePreviewTextImmediately();
 
 private:
-  Ui::ApbsDialog *m_ui;
+  Ui::ApbsDialog* m_ui;
   QString m_generatedPqrFileName;
-  QtGui::Molecule *m_molecule;
-  MoleQueue::InputGenerator *m_inputGenerator;
+  QtGui::Molecule* m_molecule;
+  MoleQueue::InputGenerator* m_inputGenerator;
   QString m_cubeFileName;
   bool m_loadStructureFile;
   bool m_loadCubeFile;
 };
-
 }
 }
 

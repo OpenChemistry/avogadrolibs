@@ -21,17 +21,17 @@
 namespace Avogadro {
 namespace QtGui {
 
-ScenePluginModel::ScenePluginModel(QObject *parent_)
+ScenePluginModel::ScenePluginModel(QObject* parent_)
   : QAbstractItemModel(parent_)
 {
 }
 
-QModelIndex ScenePluginModel::parent(const QModelIndex &) const
+QModelIndex ScenePluginModel::parent(const QModelIndex&) const
 {
   return QModelIndex();
 }
 
-int ScenePluginModel::rowCount(const QModelIndex &parent_) const
+int ScenePluginModel::rowCount(const QModelIndex& parent_) const
 {
   if (parent_.isValid())
     return 0;
@@ -39,12 +39,12 @@ int ScenePluginModel::rowCount(const QModelIndex &parent_) const
     return m_scenePlugins.size();
 }
 
-int ScenePluginModel::columnCount(const QModelIndex &) const
+int ScenePluginModel::columnCount(const QModelIndex&) const
 {
   return 1;
 }
 
-Qt::ItemFlags ScenePluginModel::flags(const QModelIndex &index_) const
+Qt::ItemFlags ScenePluginModel::flags(const QModelIndex& index_) const
 {
   if (index_.column() == 0)
     return Qt::ItemIsEditable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled;
@@ -52,65 +52,64 @@ Qt::ItemFlags ScenePluginModel::flags(const QModelIndex &index_) const
     return Qt::ItemIsEnabled;
 }
 
-bool ScenePluginModel::setData(const QModelIndex &index_, const QVariant &value,
+bool ScenePluginModel::setData(const QModelIndex& index_, const QVariant& value,
                                int role)
 {
   if (!index_.isValid() || index_.column() > 1)
     return false;
 
-  ScenePlugin *item =
-    qobject_cast<ScenePlugin *>(static_cast<QObject *>(index_.internalPointer()));
+  ScenePlugin* item =
+    qobject_cast<ScenePlugin*>(static_cast<QObject*>(index_.internalPointer()));
   if (!item)
     return false;
 
   switch (role) {
-  case Qt::CheckStateRole:
-    if (value == Qt::Checked && !item->isEnabled()) {
-      item->setEnabled(true);
-      emit pluginStateChanged(item);
-    }
-    else if (value == Qt::Unchecked && item->isEnabled()) {
-      item->setEnabled(false);
-      emit pluginStateChanged(item);
-    }
-    emit dataChanged(index_, index_);
-    return true;
+    case Qt::CheckStateRole:
+      if (value == Qt::Checked && !item->isEnabled()) {
+        item->setEnabled(true);
+        emit pluginStateChanged(item);
+      } else if (value == Qt::Unchecked && item->isEnabled()) {
+        item->setEnabled(false);
+        emit pluginStateChanged(item);
+      }
+      emit dataChanged(index_, index_);
+      return true;
   }
   return false;
 }
 
-QVariant ScenePluginModel::data(const QModelIndex &index_, int role) const
+QVariant ScenePluginModel::data(const QModelIndex& index_, int role) const
 {
   if (!index_.isValid() || index_.column() > 1)
     return QVariant();
 
-  QObject *object = static_cast<QObject *>(index_.internalPointer());
-  ScenePlugin *item = qobject_cast<ScenePlugin *>(object);
+  QObject* object = static_cast<QObject*>(index_.internalPointer());
+  ScenePlugin* item = qobject_cast<ScenePlugin*>(object);
   if (!item)
     return QVariant();
 
   if (index_.column() == 0) {
     switch (role) {
-    case Qt::DisplayRole:
-    case Qt::EditRole:
-      return item->name();
-    case Qt::CheckStateRole:
-      if (item->isEnabled())
-        return Qt::Checked;
-      else
-        return Qt::Unchecked;
-    case Qt::ToolTipRole:
-    case Qt::WhatsThisRole:
-      return item->description();
-    default:
-      return QVariant();
+      case Qt::DisplayRole:
+      case Qt::EditRole:
+        return item->name();
+      case Qt::CheckStateRole:
+        if (item->isEnabled())
+          return Qt::Checked;
+        else
+          return Qt::Unchecked;
+      case Qt::ToolTipRole:
+      case Qt::WhatsThisRole:
+        return item->description();
+      default:
+        return QVariant();
     }
   }
   return QVariant();
 }
 
 QModelIndex ScenePluginModel::index(int row, int column,
-                                    const QModelIndex &parent_) const
+                                    const QModelIndex& parent_) const
 {
   if (!parent_.isValid() && row >= 0 && row < m_scenePlugins.size())
     return createIndex(row, column, m_scenePlugins[row]);
@@ -123,22 +122,22 @@ void ScenePluginModel::clear()
   m_scenePlugins.clear();
 }
 
-QList<ScenePlugin *> ScenePluginModel::scenePlugins() const
+QList<ScenePlugin*> ScenePluginModel::scenePlugins() const
 {
   return m_scenePlugins;
 }
 
-QList<ScenePlugin *> ScenePluginModel::activeScenePlugins() const
+QList<ScenePlugin*> ScenePluginModel::activeScenePlugins() const
 {
-  QList<ScenePlugin *> result;
-  foreach (ScenePlugin *plugin, m_scenePlugins) {
+  QList<ScenePlugin*> result;
+  foreach (ScenePlugin* plugin, m_scenePlugins) {
     if (plugin->isEnabled())
       result << plugin;
   }
   return result;
 }
 
-void ScenePluginModel::addItem(ScenePlugin *item)
+void ScenePluginModel::addItem(ScenePlugin* item)
 {
   if (!m_scenePlugins.contains(item)) {
     m_scenePlugins.append(item);
@@ -147,14 +146,14 @@ void ScenePluginModel::addItem(ScenePlugin *item)
   }
 }
 
-void ScenePluginModel::removeItem(ScenePlugin *item)
+void ScenePluginModel::removeItem(ScenePlugin* item)
 {
   m_scenePlugins.removeAll(item);
 }
 
 void ScenePluginModel::itemChanged()
 {
-  ScenePlugin *item = qobject_cast<ScenePlugin *>(sender());
+  ScenePlugin* item = qobject_cast<ScenePlugin*>(sender());
   if (item) {
     int row = m_scenePlugins.indexOf(item);
     if (row >= 0)

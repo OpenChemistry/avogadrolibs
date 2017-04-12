@@ -15,8 +15,8 @@
 ******************************************************************************/
 
 #include "coordinateeditordialog.h"
-#include "ui_coordinateeditordialog.h"
 #include "coordinatetextedit.h"
+#include "ui_coordinateeditordialog.h"
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -27,15 +27,15 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/vector.h>
 
-#include <QtWidgets/QApplication>
 #include <QtGui/QClipboard>
 #include <QtGui/QFont>
 #include <QtGui/QIcon>
-#include <QtWidgets/QMessageBox>
+#include <QtGui/QRegExpValidator>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextDocument>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QToolTip>
-#include <QtGui/QRegExpValidator>
 
 #include <QtCore/QDebug>
 #include <QtCore/QMimeData>
@@ -68,18 +68,21 @@ static const QString EDITOR_FONT = "Monospace";
 #endif
 
 // Various integer constants.
-enum {
+enum
+{
   CustomPreset = 0
 };
 
 // Distance unit indices -- keep in sync with the .ui file.
-enum DistanceUnitIndex {
+enum DistanceUnitIndex
+{
   Angstrom = 0,
   Bohr
 };
 
 // Types of tokens, used while parsing.
-enum TokenType {
+enum TokenType
+{
   Integer = 0,
   Double,
   String
@@ -89,18 +92,18 @@ enum TokenType {
 static const QRegExp TOKEN_SEPARATOR("[\\s,;]+");
 static const QRegExp VALID_TOKEN("[^\\s,;]+");
 static const QRegExp INT_CHECKER("(:?[+-])?\\d+");
-static const QRegExp DOUBLE_CHECKER(
-    "(:?[+-])?"                   // Leading sign
-    "(:?"                         // Must match one of the following:
-    "\\d*\\.\\d*"                 // Fractional part
-    "|"                           // or
-    "\\d+[Ee](:?[+-])?\\d+"       // Exponential part
-    "|"                           // or
-    "\\d*\\.\\d*"                 // Fractional part and
-    "[Ee](:?[+-])?\\d+"           // Exponential part
-    ")");
+static const QRegExp DOUBLE_CHECKER("(:?[+-])?" // Leading sign
+                                    "(:?" // Must match one of the following:
+                                    "\\d*\\.\\d*"           // Fractional part
+                                    "|"                     // or
+                                    "\\d+[Ee](:?[+-])?\\d+" // Exponential part
+                                    "|"                     // or
+                                    "\\d*\\.\\d*"       // Fractional part and
+                                    "[Ee](:?[+-])?\\d+" // Exponential part
+                                    ")");
 
-struct AtomStruct {
+struct AtomStruct
+{
   unsigned char atomicNumber;
   Vector3 pos;
 };
@@ -115,13 +118,10 @@ class CoordinateEditorDialog::ValidateStorage
 {
 public:
   ValidateStorage()
-    : isValidating(false),
-      restartWhenFinished(false),
-      collectAtoms(false),
-      convertDistance(false),
-      latticePositions(false),
-      distanceConversion(1.f)
-  {}
+    : isValidating(false), restartWhenFinished(false), collectAtoms(false),
+      convertDistance(false), latticePositions(false), distanceConversion(1.f)
+  {
+  }
 
   bool isValidating;
   bool restartWhenFinished;
@@ -141,12 +141,9 @@ public:
   QVector<AtomStruct> atoms;
 };
 
-CoordinateEditorDialog::CoordinateEditorDialog(QWidget *parent_) :
-  QDialog(parent_),
-  m_ui(new Ui::CoordinateEditorDialog),
-  m_molecule(nullptr),
-  m_validate(new ValidateStorage),
-  m_defaultSpec("SZxyz#N")
+CoordinateEditorDialog::CoordinateEditorDialog(QWidget* parent_)
+  : QDialog(parent_), m_ui(new Ui::CoordinateEditorDialog), m_molecule(nullptr),
+    m_validate(new ValidateStorage), m_defaultSpec("SZxyz#N")
 {
   m_ui->setupUi(this);
 
@@ -157,7 +154,7 @@ CoordinateEditorDialog::CoordinateEditorDialog(QWidget *parent_) :
 
   // Setup spec edit
   QRegExp specRegExp("[#ZGSNabcxyz01_]*");
-  QRegExpValidator *specValidator = new QRegExpValidator(specRegExp, this);
+  QRegExpValidator* specValidator = new QRegExpValidator(specRegExp, this);
   m_ui->spec->setValidator(specValidator);
   connect(m_ui->presets, SIGNAL(currentIndexChanged(int)),
           SLOT(presetChanged(int)));
@@ -167,13 +164,13 @@ CoordinateEditorDialog::CoordinateEditorDialog(QWidget *parent_) :
   connect(m_ui->distanceUnit, SIGNAL(currentIndexChanged(int)),
           SLOT(updateText()));
 
-  connect(m_ui->help,   SIGNAL(clicked()), SLOT(helpClicked()));
-  connect(m_ui->cut,    SIGNAL(clicked()), SLOT(cutClicked()));
-  connect(m_ui->copy,   SIGNAL(clicked()), SLOT(copyClicked()));
-  connect(m_ui->paste,  SIGNAL(clicked()), SLOT(pasteClicked()));
+  connect(m_ui->help, SIGNAL(clicked()), SLOT(helpClicked()));
+  connect(m_ui->cut, SIGNAL(clicked()), SLOT(cutClicked()));
+  connect(m_ui->copy, SIGNAL(clicked()), SLOT(copyClicked()));
+  connect(m_ui->paste, SIGNAL(clicked()), SLOT(pasteClicked()));
   connect(m_ui->revert, SIGNAL(clicked()), SLOT(revertClicked()));
-  connect(m_ui->clear,  SIGNAL(clicked()), SLOT(clearClicked()));
-  connect(m_ui->apply,  SIGNAL(clicked()), SLOT(applyClicked()));
+  connect(m_ui->clear, SIGNAL(clicked()), SLOT(clearClicked()));
+  connect(m_ui->apply, SIGNAL(clicked()), SLOT(applyClicked()));
 
   m_ui->cut->setIcon(QIcon::fromTheme("edit-cut"));
   m_ui->copy->setIcon(QIcon::fromTheme("edit-copy"));
@@ -188,7 +185,7 @@ CoordinateEditorDialog::~CoordinateEditorDialog()
   delete m_ui;
 }
 
-void CoordinateEditorDialog::setMolecule(QtGui::Molecule *mol)
+void CoordinateEditorDialog::setMolecule(QtGui::Molecule* mol)
 {
   if (mol != m_molecule) {
     if (m_molecule)
@@ -213,8 +210,7 @@ void CoordinateEditorDialog::presetChanged(int ind)
   bool isCustom(itemData.type() != QVariant::String);
 
   // Changing the spec text will update the editor text.
-  m_ui->spec->setText(isCustom ? m_defaultSpec
-                               : itemData.toString());
+  m_ui->spec->setText(isCustom ? m_defaultSpec : itemData.toString());
 }
 
 void CoordinateEditorDialog::specChanged()
@@ -237,13 +233,12 @@ void CoordinateEditorDialog::specEdited()
 void CoordinateEditorDialog::updateText()
 {
   if (m_ui->text->document()->isModified()) {
-    int reply =
-        QMessageBox::question(this, tr("Overwrite changes?"),
-                              tr("The text document has been modified. Would "
-                                 "you like to discard your changes and revert "
-                                 "to the current molecule?"),
-                          QMessageBox::Yes | QMessageBox::No,
-                          QMessageBox::No);
+    int reply = QMessageBox::question(
+      this, tr("Overwrite changes?"),
+      tr("The text document has been modified. Would "
+         "you like to discard your changes and revert "
+         "to the current molecule?"),
+      QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (reply != QMessageBox::Yes)
       return;
   }
@@ -252,19 +247,19 @@ void CoordinateEditorDialog::updateText()
   gen.setMolecule(m_molecule);
   gen.setSpecification(m_ui->spec->text().toStdString());
   switch (m_ui->distanceUnit->currentIndex()) {
-  default:
-  case Angstrom:
-    gen.setDistanceUnit(Core::CoordinateBlockGenerator::Angstrom);
-    break;
-  case Bohr:
-    gen.setDistanceUnit(Core::CoordinateBlockGenerator::Bohr);
-    break;
+    default:
+    case Angstrom:
+      gen.setDistanceUnit(Core::CoordinateBlockGenerator::Angstrom);
+      break;
+    case Bohr:
+      gen.setDistanceUnit(Core::CoordinateBlockGenerator::Bohr);
+      break;
   }
 
   // Disable markup for the generated text.
   listenForTextEditChanges(false);
   m_ui->text->document()->setPlainText(
-        QString::fromStdString(gen.generateCoordinateBlock()));
+    QString::fromStdString(gen.generateCoordinateBlock()));
   listenForTextEditChanges(true);
   m_ui->text->document()->setModified(false);
 }
@@ -324,11 +319,11 @@ void CoordinateEditorDialog::validateInputWorker()
   listenForTextEditChanges(false);
 
   // Setup some aliases to keep code concise:
-  const QString &spec(m_validate->spec);
-  QTextCursor &lineCursor(m_validate->lineCursor);
-  QTextCursor &tokenCursor(m_validate->tokenCursor);
+  const QString& spec(m_validate->spec);
+  QTextCursor& lineCursor(m_validate->lineCursor);
+  QTextCursor& tokenCursor(m_validate->tokenCursor);
 
-  QTextDocument *doc(m_ui->text->document());
+  QTextDocument* doc(m_ui->text->document());
   QString::const_iterator begin(spec.constBegin());
   QString::const_iterator end(spec.constEnd());
   QString::const_iterator iter;
@@ -365,125 +360,125 @@ void CoordinateEditorDialog::validateInputWorker()
 
       // If the token cursor has moved off of the current line, mark the entire
       // line as invalid and move on.
-      if (tokenCursor.isNull()
-          || tokenCursor.position() > lineCursor.position()) {
+      if (tokenCursor.isNull() ||
+          tokenCursor.position() > lineCursor.position()) {
         m_ui->text->markInvalid(lineCursor, tr("Too few entries on line."));
         break;
       }
 
       switch (iter->toLatin1()) {
-      case '?': // Nothing to validate other than that this is a valid token.
-        break;
+        case '?': // Nothing to validate other than that this is a valid token.
+          break;
 
-      case 'N': {
-        // Validate name:
-        QString cleanToken(tokenCursor.selectedText().toLower());
-        if (!cleanToken.isEmpty())
-          cleanToken.replace(0, 1, cleanToken[0].toUpper());
-        std::string tokenStd(cleanToken.toStdString());
-        atom.atomicNumber = Elements::atomicNumberFromName(tokenStd);
-        if (atom.atomicNumber == Avogadro::InvalidElement)
-          m_ui->text->markInvalid(tokenCursor, tr("Invalid element name."));
-        else
-          m_ui->text->markValid(tokenCursor, tr("Element name."));
-        break;
-      }
+        case 'N': {
+          // Validate name:
+          QString cleanToken(tokenCursor.selectedText().toLower());
+          if (!cleanToken.isEmpty())
+            cleanToken.replace(0, 1, cleanToken[0].toUpper());
+          std::string tokenStd(cleanToken.toStdString());
+          atom.atomicNumber = Elements::atomicNumberFromName(tokenStd);
+          if (atom.atomicNumber == Avogadro::InvalidElement)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid element name."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("Element name."));
+          break;
+        }
 
-      case 'S': {
-        // Validate symbol:
-        QString cleanToken(tokenCursor.selectedText().toLower());
-        if (!cleanToken.isEmpty())
-          cleanToken.replace(0, 1, cleanToken[0].toUpper());
-        std::string tokenStd(cleanToken.toStdString());
-        atom.atomicNumber = Elements::atomicNumberFromSymbol(tokenStd);
-        if (atom.atomicNumber == Avogadro::InvalidElement)
-          m_ui->text->markInvalid(tokenCursor, tr("Invalid element symbol."));
-        else
-          m_ui->text->markValid(tokenCursor, tr("Element symbol."));
-        break;
-      }
+        case 'S': {
+          // Validate symbol:
+          QString cleanToken(tokenCursor.selectedText().toLower());
+          if (!cleanToken.isEmpty())
+            cleanToken.replace(0, 1, cleanToken[0].toUpper());
+          std::string tokenStd(cleanToken.toStdString());
+          atom.atomicNumber = Elements::atomicNumberFromSymbol(tokenStd);
+          if (atom.atomicNumber == Avogadro::InvalidElement)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid element symbol."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("Element symbol."));
+          break;
+        }
 
-      case 'Z': {
-        // Validate integer:
-        bool isInt;
-        atom.atomicNumber = static_cast<unsigned char>(
-              tokenCursor.selectedText().toInt(&isInt));
-        if (!isInt)
-          m_ui->text->markInvalid(tokenCursor, tr("Invalid atomic number."));
-        else
-          m_ui->text->markValid(tokenCursor, tr("Atomic number."));
-        break;
-      }
+        case 'Z': {
+          // Validate integer:
+          bool isInt;
+          atom.atomicNumber = static_cast<unsigned char>(
+            tokenCursor.selectedText().toInt(&isInt));
+          if (!isInt)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid atomic number."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("Atomic number."));
+          break;
+        }
 
-      case 'x': {
-        // Validate real:
-        bool isReal;
-        atom.pos.x() = tokenCursor.selectedText().toDouble(&isReal);
-        if (!isReal)
-          m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
-        else
-          m_ui->text->markValid(tokenCursor, tr("X coordinate."));
-        break;
-      }
+        case 'x': {
+          // Validate real:
+          bool isReal;
+          atom.pos.x() = tokenCursor.selectedText().toDouble(&isReal);
+          if (!isReal)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("X coordinate."));
+          break;
+        }
 
-      case 'y': {
-        // Validate real:
-        bool isReal;
-        atom.pos.y() = tokenCursor.selectedText().toDouble(&isReal);
-        if (!isReal)
-          m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
-        else
-          m_ui->text->markValid(tokenCursor, tr("Y coordinate."));
-        break;
-      }
+        case 'y': {
+          // Validate real:
+          bool isReal;
+          atom.pos.y() = tokenCursor.selectedText().toDouble(&isReal);
+          if (!isReal)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("Y coordinate."));
+          break;
+        }
 
-      case 'z': {
-        // Validate real:
-        bool isReal;
-        atom.pos.z() = tokenCursor.selectedText().toDouble(&isReal);
-        if (!isReal)
-          m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
-        else
-          m_ui->text->markValid(tokenCursor, tr("Z coordinate."));
-        break;
-      }
+        case 'z': {
+          // Validate real:
+          bool isReal;
+          atom.pos.z() = tokenCursor.selectedText().toDouble(&isReal);
+          if (!isReal)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("Z coordinate."));
+          break;
+        }
 
-      case 'a': {
-        // Validate real:
-        bool isReal;
-        atom.pos.x() = tokenCursor.selectedText().toDouble(&isReal);
-        if (!isReal)
-          m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
-        else
-          m_ui->text->markValid(tokenCursor, tr("'a' lattice coordinate."));
-        break;
-      }
+        case 'a': {
+          // Validate real:
+          bool isReal;
+          atom.pos.x() = tokenCursor.selectedText().toDouble(&isReal);
+          if (!isReal)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("'a' lattice coordinate."));
+          break;
+        }
 
-      case 'b': {
-        // Validate real:
-        bool isReal;
-        atom.pos.y() = tokenCursor.selectedText().toDouble(&isReal);
-        if (!isReal)
-          m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
-        else
-          m_ui->text->markValid(tokenCursor, tr("'b' lattice coordinate."));
-        break;
-      }
+        case 'b': {
+          // Validate real:
+          bool isReal;
+          atom.pos.y() = tokenCursor.selectedText().toDouble(&isReal);
+          if (!isReal)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("'b' lattice coordinate."));
+          break;
+        }
 
-      case 'c': {
-        // Validate real:
-        bool isReal;
-        atom.pos.z() = tokenCursor.selectedText().toDouble(&isReal);
-        if (!isReal)
-          m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
-        else
-          m_ui->text->markValid(tokenCursor, tr("'c' coordinate."));
-        break;
-      }
+        case 'c': {
+          // Validate real:
+          bool isReal;
+          atom.pos.z() = tokenCursor.selectedText().toDouble(&isReal);
+          if (!isReal)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("'c' coordinate."));
+          break;
+        }
 
-      default:
-        qWarning() << "Unhandled character in detected spec: " << *iter;
-        break;
+        default:
+          qWarning() << "Unhandled character in detected spec: " << *iter;
+          break;
       }
     }
 
@@ -509,8 +504,7 @@ void CoordinateEditorDialog::validateInputWorker()
   // If we're not at the end, post this method back into the event loop.
   if (!lineCursor.atEnd()) {
     QTimer::singleShot(0, this, SLOT(validateInputWorker()));
-  }
-  else {
+  } else {
     // Otherwise emit the finished signal.
     emit validationFinished(!m_ui->text->hasInvalidMarks());
     m_validate->isValidating = false;
@@ -538,14 +532,14 @@ void CoordinateEditorDialog::applyClicked()
   m_validate->atoms.clear();
 
   switch (m_ui->distanceUnit->currentIndex()) {
-  case Bohr:
-    m_validate->convertDistance = true;
-    m_validate->distanceConversion = BOHR_TO_ANGSTROM_F;
-    break;
-  default:
-    m_validate->convertDistance = false;
-    m_validate->distanceConversion = 1.f;
-    break;
+    case Bohr:
+      m_validate->convertDistance = true;
+      m_validate->distanceConversion = BOHR_TO_ANGSTROM_F;
+      break;
+    default:
+      m_validate->convertDistance = false;
+      m_validate->distanceConversion = 1.f;
+      break;
   }
 
   connect(this, SIGNAL(validationFinished(bool)), SLOT(applyFinish(bool)));
@@ -558,8 +552,8 @@ void CoordinateEditorDialog::applyFinish(bool valid)
   m_validate->collectAtoms = false;
   QVector<AtomStruct> atoms(m_validate->atoms);
   m_validate->atoms.clear();
-  disconnect(this, SIGNAL(validationFinished(bool)),
-             this, SLOT(applyFinish(bool)));
+  disconnect(this, SIGNAL(validationFinished(bool)), this,
+             SLOT(applyFinish(bool)));
 
   if (!valid) {
     QMessageBox::critical(this, tr("Error applying geometry"),
@@ -576,13 +570,12 @@ void CoordinateEditorDialog::applyFinish(bool valid)
   // Create a new molecule so we can eventually store both in the undo command
   Molecule newMolecule = *m_molecule;
   newMolecule.clearAtoms();
-  foreach (const AtomStruct &atom, atoms)
+  foreach (const AtomStruct& atom, atoms)
     newMolecule.addAtom(atom.atomicNumber).setPosition3d(atom.pos);
   if (m_validate->latticePositions) {
     Core::CrystalTools::setFractionalCoordinates(newMolecule,
                                                  newMolecule.atomPositions3d());
-  }
-  else {
+  } else {
     newMolecule.perceiveBondsSimple();
   }
 
@@ -656,9 +649,9 @@ QString CoordinateEditorDialog::detectInputFormat() const
   QList<QString> tokens(sample.split(TOKEN_SEPARATOR, QString::SkipEmptyParts));
   QList<TokenType> tokenTypes;
   tokenTypes.reserve(tokens.size());
-  size_t tokenTypeCounts[3] = {0, 0, 0};
+  size_t tokenTypeCounts[3] = { 0, 0, 0 };
 
-  foreach (const QString &token, tokens) {
+  foreach (const QString& token, tokens) {
     TokenType tokenType = String;
     if (INT_CHECKER.exactMatch(token))
       tokenType = Integer;
@@ -668,15 +661,12 @@ QString CoordinateEditorDialog::detectInputFormat() const
     tokenTypes << tokenType;
   }
 
-  FORMAT_DEBUG(
-    qDebug() << "\nDetected types:";
-    qDebug() << tokens;
-    qDebug() << tokenTypes;
-  );
+  FORMAT_DEBUG(qDebug() << "\nDetected types:"; qDebug() << tokens;
+               qDebug() << tokenTypes;);
 
   // If less than three doubles are present, promote some integers to doubles.
-  if (tokenTypeCounts[Double] < 3
-      && tokenTypeCounts[Double] + tokenTypeCounts[Integer] >= 3) {
+  if (tokenTypeCounts[Double] < 3 &&
+      tokenTypeCounts[Double] + tokenTypeCounts[Integer] >= 3) {
 
     // If numInts + numDoubles is greater than 3, leave the first integer as is,
     // we'll assume it's the atomic number.
@@ -691,25 +681,21 @@ QString CoordinateEditorDialog::detectInputFormat() const
           --intsToPromote;
           --tokenTypeCounts[Integer];
           ++tokenTypeCounts[Double];
-        }
-        else {
+        } else {
           skipNextInt = false;
         }
       }
     }
   }
 
-  FORMAT_DEBUG(
-    qDebug() << "\nAfter promotion:";
-    qDebug() << tokens;
-    qDebug() << tokenTypes;
-  )
+  FORMAT_DEBUG(qDebug() << "\nAfter promotion:"; qDebug() << tokens;
+               qDebug() << tokenTypes;)
 
   // If there are no strings or integers, bail out -- we can't determine the
   // atom types. Likewise if there are less than 3 doubles, the coordinates
   // are incomplete.
-  if ((tokenTypeCounts[Integer] == 0 && tokenTypeCounts[String] == 0)
-      || tokenTypeCounts[Double] < 3) {
+  if ((tokenTypeCounts[Integer] == 0 && tokenTypeCounts[String] == 0) ||
+      tokenTypeCounts[Double] < 3) {
     return "";
   }
 
@@ -724,58 +710,56 @@ QString CoordinateEditorDialog::detectInputFormat() const
     QChar current = '?';
 
     switch (tokenTypes[i]) {
-    case Integer:
-      if (!atomTypeSet) {
-        int tokenAsInt = tokens[i].toInt();
-        if (tokenAsInt >= 0 && tokenAsInt <= numberOfElements) {
-          current = 'Z';
-          atomTypeSet = true;
-        }
-      }
-      break;
-
-    case Double:
-      switch (numCoordsSet) {
-      case 0:
-        current = 'x';
-        ++numCoordsSet;
-        break;
-      case 1:
-        current = 'y';
-        ++numCoordsSet;
-        break;
-      case 2:
-        current = 'z';
-        ++numCoordsSet;
-        break;
-      default:
-        break;
-      }
-      break;
-
-    case String:
-      if (!atomTypeSet) {
-        QString cleanToken(tokens[i].toLower());
-        if (!cleanToken.isEmpty())
-          cleanToken.replace(0, 1, cleanToken[0].toUpper());
-
-        if (cleanToken.size() <= 3) {
-          if (Elements::atomicNumberFromSymbol(cleanToken.toStdString()) !=
-              Avogadro::InvalidElement) {
-            current = 'S';
+      case Integer:
+        if (!atomTypeSet) {
+          int tokenAsInt = tokens[i].toInt();
+          if (tokenAsInt >= 0 && tokenAsInt <= numberOfElements) {
+            current = 'Z';
             atomTypeSet = true;
           }
         }
-        else {
-          if (Elements::atomicNumberFromName(cleanToken.toStdString()) !=
-              Avogadro::InvalidElement) {
-            current = 'N';
-            atomTypeSet = true;
+        break;
+
+      case Double:
+        switch (numCoordsSet) {
+          case 0:
+            current = 'x';
+            ++numCoordsSet;
+            break;
+          case 1:
+            current = 'y';
+            ++numCoordsSet;
+            break;
+          case 2:
+            current = 'z';
+            ++numCoordsSet;
+            break;
+          default:
+            break;
+        }
+        break;
+
+      case String:
+        if (!atomTypeSet) {
+          QString cleanToken(tokens[i].toLower());
+          if (!cleanToken.isEmpty())
+            cleanToken.replace(0, 1, cleanToken[0].toUpper());
+
+          if (cleanToken.size() <= 3) {
+            if (Elements::atomicNumberFromSymbol(cleanToken.toStdString()) !=
+                Avogadro::InvalidElement) {
+              current = 'S';
+              atomTypeSet = true;
+            }
+          } else {
+            if (Elements::atomicNumberFromName(cleanToken.toStdString()) !=
+                Avogadro::InvalidElement) {
+              current = 'N';
+              atomTypeSet = true;
+            }
           }
         }
-      }
-      break;
-
+        break;
     }
 
     FORMAT_DEBUG(qDebug() << current << tokens[i];)
@@ -789,9 +773,8 @@ QString CoordinateEditorDialog::detectInputFormat() const
   const QString currentSpec(m_ui->spec->text());
   int cartesianIndex = currentSpec.indexOf(cartesianSniffer);
   int fractionalIndex = currentSpec.indexOf(fractionalSniffer);
-  if (fractionalIndex != -1
-      && (cartesianIndex == -1
-          || fractionalIndex < cartesianIndex)) {
+  if (fractionalIndex != -1 &&
+      (cartesianIndex == -1 || fractionalIndex < cartesianIndex)) {
     resultSpec.replace('x', 'a');
     resultSpec.replace('y', 'b');
     resultSpec.replace('z', 'c');
@@ -800,7 +783,7 @@ QString CoordinateEditorDialog::detectInputFormat() const
 
   FORMAT_DEBUG(qDebug() << "Detected format:" << resultSpec);
 
-  return (!atomTypeSet || numCoordsSet < 3) ? QString(): resultSpec;
+  return (!atomTypeSet || numCoordsSet < 3) ? QString() : resultSpec;
 }
 
 void CoordinateEditorDialog::cutClicked()
@@ -816,10 +799,9 @@ void CoordinateEditorDialog::copyClicked()
 
 void CoordinateEditorDialog::pasteClicked()
 {
-  const QMimeData *mimeData = qApp->clipboard()->mimeData();
-  m_ui->text->document()->setPlainText((mimeData && mimeData->hasText())
-                                       ? mimeData->text()
-                                       : "");
+  const QMimeData* mimeData = qApp->clipboard()->mimeData();
+  m_ui->text->document()->setPlainText(
+    (mimeData && mimeData->hasText()) ? mimeData->text() : "");
 }
 
 void CoordinateEditorDialog::revertClicked()

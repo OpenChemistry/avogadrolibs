@@ -37,7 +37,8 @@ class AVOGADROCORE_EXPORT Variant
 {
 public:
   // enumerations
-  enum Type {
+  enum Type
+  {
     Null,
     Bool,
     Int,
@@ -53,10 +54,11 @@ public:
   inline Variant();
 
   /** Creates a variant to store @p value. */
-  template<typename T> Variant(T value);
+  template <typename T>
+  Variant(T value);
 
   /** Creates a new copy of @p variant. */
-  inline Variant(const Variant &variant);
+  inline Variant(const Variant& variant);
 
   /** Destroys the variant object. */
   inline ~Variant();
@@ -68,10 +70,12 @@ public:
   inline bool isNull() const;
 
   /** Sets the value of the variant to @p value. */
-  template<typename T> bool setValue(T value);
+  template <typename T>
+  bool setValue(T value);
 
   /** Returns the value of the variant in the type given by \c T. */
-  template<typename T> T value() const;
+  template <typename T>
+  T value() const;
 
   /** Clears the variant's data and sets the variant to null. */
   inline void clear();
@@ -129,23 +133,25 @@ public:
   inline const MatrixX& toMatrixRef() const;
 
   // operators
-  inline Variant& operator=(const Variant &variant);
+  inline Variant& operator=(const Variant& variant);
 
 private:
-  template<typename T> static T lexical_cast(const std::string &string);
+  template <typename T>
+  static T lexical_cast(const std::string& string);
 
 private:
   Type m_type;
-  union {
+  union
+  {
     bool _bool;
     char _char;
     int _int;
     long _long;
     float _float;
     double _double;
-    void *pointer;
-    std::string *string;
-    MatrixX *matrix;
+    void* pointer;
+    std::string* string;
+    MatrixX* matrix;
   } m_value;
 };
 

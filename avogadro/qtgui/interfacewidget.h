@@ -19,9 +19,9 @@
 
 #include "avogadroqtguiexport.h"
 
-#include <QtWidgets/QWidget>
-#include <QtCore/QMap>
 #include <QtCore/QJsonObject>
+#include <QtCore/QMap>
+#include <QtWidgets/QWidget>
 
 #include "interfacescript.h"
 
@@ -53,24 +53,27 @@ public:
    * Construct a widget that dynamically generates a GUI to configure the
    * script specified by scriptFilePath.
    */
-  explicit InterfaceWidget(const QString &scriptFilePath, QWidget *parent_ = 0);
+  explicit InterfaceWidget(const QString& scriptFilePath, QWidget* parent_ = 0);
   ~InterfaceWidget();
 
   /**
    * Use the script pointed to by scriptFilePath.
    * @param scriptFilePath Absolute path to script.
    */
-  void setInterfaceScript(const QString &scriptFilePath);
+  void setInterfaceScript(const QString& scriptFilePath);
 
   /**
    * Set the molecule used in the simulation.
    */
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
   /**
    * Access to the underlying input generator object.
    */
-  const QtGui::InterfaceScript &interfaceScript() const { return m_interfaceScript; }
+  const QtGui::InterfaceScript& interfaceScript() const
+  {
+    return m_interfaceScript;
+  }
 
   /**
    * Collect all of the user-specified options into a JSON object, to be sent
@@ -83,7 +86,7 @@ public:
    * by this method will have their signals blocked while modifying their
    * values.
    */
-  void applyOptions(const QJsonObject &opts);
+  void applyOptions(const QJsonObject& opts);
 
 private slots:
   /**
@@ -95,7 +98,7 @@ private slots:
    * Show the user an warning. These are messages returned by the input
    *  script.
    */
-  void setWarningText(const QString &warn);
+  void setWarningText(const QString& warn);
 
   /**
    * Show the warning text.
@@ -106,7 +109,7 @@ private slots:
    * Show the user an error message. These are errors that have occurred
    * in this extension, not necessarily in the input generator script.
    */
-  void showError(const QString &err);
+  void showError(const QString& err);
 
 private:
   /**
@@ -117,13 +120,13 @@ private:
    * @todo Display names are not necessarily unique, but paths are too long.
    * Maybe add a namespace qualifier to the script display names?
    */
-  QString settingsKey(const QString &identifier) const;
+  QString settingsKey(const QString& identifier) const;
 
   /**
    * Given the name of a user-option in m_options, return the type string.
    * If an error occurs, an empty string will be returned.
    */
-  QString lookupOptionType(const QString &name) const;
+  QString lookupOptionType(const QString& name) const;
 
   /**
    * Used to construct the script-specific GUI.
@@ -131,15 +134,15 @@ private:
    */
   void updateOptions();
   void buildOptionGui();
-  void addOptionRow(const QString &label, const QJsonValue &option);
+  void addOptionRow(const QString& label, const QJsonValue& option);
 
-  QWidget* createOptionWidget(const QJsonValue &option);
-  QWidget* createStringListWidget(const QJsonObject &obj);
-  QWidget* createStringWidget(const QJsonObject &obj);
-  QWidget* createFilePathWidget(const QJsonObject &obj);
-  QWidget* createIntegerWidget(const QJsonObject &obj);
-  QWidget* createFloatWidget(const QJsonObject &obj);
-  QWidget* createBooleanWidget(const QJsonObject &obj);
+  QWidget* createOptionWidget(const QJsonValue& option);
+  QWidget* createStringListWidget(const QJsonObject& obj);
+  QWidget* createStringWidget(const QJsonObject& obj);
+  QWidget* createFilePathWidget(const QJsonObject& obj);
+  QWidget* createIntegerWidget(const QJsonObject& obj);
+  QWidget* createFloatWidget(const QJsonObject& obj);
+  QWidget* createBooleanWidget(const QJsonObject& obj);
   /**@}*/
 
   /**
@@ -147,13 +150,13 @@ private:
    * @{
    */
   void setOptionDefaults();
-  void setOption(const QString &name, const QJsonValue &defaultValue);
-  void setStringListOption(const QString &name, const QJsonValue &value);
-  void setStringOption(const QString &name, const QJsonValue &value);
-  void setFilePathOption(const QString &name, const QJsonValue &value);
-  void setIntegerOption(const QString &name, const QJsonValue &value);
-  void setFloatOption(const QString &name, const QJsonValue &value);
-  void setBooleanOption(const QString &name, const QJsonValue &value);
+  void setOption(const QString& name, const QJsonValue& defaultValue);
+  void setStringListOption(const QString& name, const QJsonValue& value);
+  void setStringOption(const QString& name, const QJsonValue& value);
+  void setFilePathOption(const QString& name, const QJsonValue& value);
+  void setIntegerOption(const QString& name, const QJsonValue& value);
+  void setFloatOption(const QString& name, const QJsonValue& value);
+  void setBooleanOption(const QString& name, const QJsonValue& value);
   /**@}*/
 
   /**
@@ -164,14 +167,14 @@ private:
    * @return True if value is overwritten, false if the option is not found or
    * cannot be converted to a string.
    */
-  bool optionString(const QString &option, QString &value) const;
+  bool optionString(const QString& option, QString& value) const;
 
   /**
    * Update the autogenerated job title in the GUI.
    */
   QString generateJobTitle() const;
 
-  QtGui::Molecule *m_molecule;
+  QtGui::Molecule* m_molecule;
   QJsonObject m_options;
   QJsonObject m_optionCache; // For reverting changes
   QList<QTextEdit*> m_dirtyTextEdits;

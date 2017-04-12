@@ -53,19 +53,18 @@ inline std::string encodeCustomElement(unsigned char atomicNumber)
   return result;
 }
 
-inline unsigned char decodeCustomElement(const std::string &str)
+inline unsigned char decodeCustomElement(const std::string& str)
 {
   if (str.size() == 2) {
     if (str[0] >= 'a' && str[0] <= 'z' && str[1] >= 'a' && str[1] <= 'z') {
-      return CustomElementMin
-          + static_cast<unsigned char>(str[0] - 'a') * 26
-          + static_cast<unsigned char>(str[1] - 'a');
+      return CustomElementMin + static_cast<unsigned char>(str[0] - 'a') * 26 +
+             static_cast<unsigned char>(str[1] - 'a');
     }
   }
   return Avogadro::InvalidElement;
 }
 
-inline unsigned char interpretCustomElementName(const std::string &name)
+inline unsigned char interpretCustomElementName(const std::string& name)
 {
   if (startsWith(name, CustomElementNamePrefix)) {
     const std::string number(name.substr(CustomElementNamePrefix.size()));
@@ -79,12 +78,12 @@ inline std::string createCustomElementName(unsigned char atomicNumber)
   return CustomElementNamePrefix + encodeCustomElement(atomicNumber);
 }
 
-inline const char * customElementName(unsigned char atomicNumber)
+inline const char* customElementName(unsigned char atomicNumber)
 {
   return CustomElementNames[atomicNumber - CustomElementMin].c_str();
 }
 
-inline unsigned char interpretCustomElementSymbol(const std::string &symbol)
+inline unsigned char interpretCustomElementSymbol(const std::string& symbol)
 {
   if (symbol.size() == 3)
     return decodeCustomElement(symbol.substr(1));
@@ -96,12 +95,12 @@ inline std::string createCustomElementSymbol(unsigned char atomicNumber)
   return CustomElementSymbolPrefix + encodeCustomElement(atomicNumber);
 }
 
-inline const char * customElementSymbol(unsigned char atomicNumber)
+inline const char* customElementSymbol(unsigned char atomicNumber)
 {
   return CustomElementSymbols[atomicNumber - CustomElementMin].c_str();
 }
 
-inline unsigned char * customElementColor(unsigned char atomicNumber)
+inline unsigned char* customElementColor(unsigned char atomicNumber)
 {
   return Core::element_color[atomicNumber % element_count];
 }
@@ -118,9 +117,9 @@ public:
     for (unsigned char i = CustomElementMin; i <= CustomElementMax; ++i) {
       suffix = encodeCustomElement(i);
       CustomElementSymbols[i - CustomElementMin] =
-          CustomElementSymbolPrefix + suffix;
+        CustomElementSymbolPrefix + suffix;
       CustomElementNames[i - CustomElementMin] =
-          CustomElementNamePrefix + suffix;
+        CustomElementNamePrefix + suffix;
     }
   }
 } CustomElementTableInitializer;
@@ -140,7 +139,7 @@ unsigned char Elements::elementCount()
   return element_count;
 }
 
-unsigned char Elements::atomicNumberFromName(const std::string &name)
+unsigned char Elements::atomicNumberFromName(const std::string& name)
 {
   for (unsigned char i = 0; i < element_count; ++i)
     if (name == element_names[i])
@@ -149,43 +148,42 @@ unsigned char Elements::atomicNumberFromName(const std::string &name)
   return interpretCustomElementName(name);
 }
 
-unsigned char Elements::atomicNumberFromSymbol(const std::string &symbol)
+unsigned char Elements::atomicNumberFromSymbol(const std::string& symbol)
 {
   if (symbol.length() == 1) {
     switch (symbol[0]) {
-    case 'H':
-      return 1;
-    case 'B':
-      return 5;
-    case 'C':
-      return 6;
-    case 'N':
-      return 7;
-    case 'O':
-      return 8;
-    case 'F':
-      return 9;
-    case 'P':
-      return 15;
-    case 'S':
-      return 16;
-    case 'K':
-      return 19;
-    case 'V':
-      return 23;
-    case 'Y':
-      return 39;
-    case 'I':
-      return 53;
-    case 'W':
-      return 74;
-    case 'U':
-      return 92;
-    default:
-      return InvalidElement;
+      case 'H':
+        return 1;
+      case 'B':
+        return 5;
+      case 'C':
+        return 6;
+      case 'N':
+        return 7;
+      case 'O':
+        return 8;
+      case 'F':
+        return 9;
+      case 'P':
+        return 15;
+      case 'S':
+        return 16;
+      case 'K':
+        return 19;
+      case 'V':
+        return 23;
+      case 'Y':
+        return 39;
+      case 'I':
+        return 53;
+      case 'W':
+        return 74;
+      case 'U':
+        return 92;
+      default:
+        return InvalidElement;
     }
-  }
-  else {
+  } else {
     for (unsigned char i = 0; i < element_count; ++i)
       if (symbol == element_symbols[i])
         return i;
@@ -193,7 +191,7 @@ unsigned char Elements::atomicNumberFromSymbol(const std::string &symbol)
   }
 }
 
-unsigned char Elements::guessAtomicNumber(const std::string &inputStr)
+unsigned char Elements::guessAtomicNumber(const std::string& inputStr)
 {
   std::string str(trimmed(inputStr));
   if (str.empty())
@@ -224,7 +222,7 @@ unsigned char Elements::guessAtomicNumber(const std::string &inputStr)
   return atomicNumber;
 }
 
-const char * Elements::name(unsigned char atomicNumber)
+const char* Elements::name(unsigned char atomicNumber)
 {
   if (atomicNumber < element_count)
     return element_names[atomicNumber];
@@ -234,7 +232,7 @@ const char * Elements::name(unsigned char atomicNumber)
     return element_names[0];
 }
 
-const char * Elements::symbol(unsigned char atomicNumber)
+const char* Elements::symbol(unsigned char atomicNumber)
 {
   if (atomicNumber < element_count)
     return element_symbols[atomicNumber];
@@ -272,7 +270,7 @@ double Elements::radiusCovalent(unsigned char atomicNumber)
     return element_covalent[0];
 }
 
-const unsigned char * Elements::color(unsigned char atomicNumber)
+const unsigned char* Elements::color(unsigned char atomicNumber)
 {
   if (atomicNumber < element_count)
     return element_color[atomicNumber];

@@ -55,8 +55,8 @@ public:
    * This is where most of the action takes place. The element box is drawn
    * along with its symbol, proton number, mass and full name.
    */
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-             QWidget *widget);
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
+             QWidget* widget);
 
   /**
    * Change the element displayed in the detail object.

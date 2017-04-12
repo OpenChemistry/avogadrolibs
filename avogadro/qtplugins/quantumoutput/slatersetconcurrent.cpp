@@ -34,14 +34,14 @@ using Core::Cube;
 
 struct SlaterShell
 {
-  SlaterSetTools *tools; // A pointer to the tools, cannot write to member vars
-  Cube *tCube;        // The target cube, used to initialise temp cubes too
-  unsigned int pos;   // The index of the point to calculate the MO for
-  unsigned int state; // The MO number to calculate
+  SlaterSetTools* tools; // A pointer to the tools, cannot write to member vars
+  Cube* tCube;           // The target cube, used to initialise temp cubes too
+  unsigned int pos;      // The index of the point to calculate the MO for
+  unsigned int state;    // The MO number to calculate
 };
 
-SlaterSetConcurrent::SlaterSetConcurrent(QObject *p) : QObject(p),
-  m_shells(nullptr), m_set(nullptr), m_tools(nullptr)
+SlaterSetConcurrent::SlaterSetConcurrent(QObject* p)
+  : QObject(p), m_shells(nullptr), m_set(nullptr), m_tools(nullptr)
 {
 }
 
@@ -50,28 +50,28 @@ SlaterSetConcurrent::~SlaterSetConcurrent()
   delete m_shells;
 }
 
-void SlaterSetConcurrent::setMolecule(Core::Molecule *mol)
+void SlaterSetConcurrent::setMolecule(Core::Molecule* mol)
 {
   if (!mol)
     return;
-  m_set = dynamic_cast<SlaterSet *>(mol->basisSet());
+  m_set = dynamic_cast<SlaterSet*>(mol->basisSet());
   if (m_tools)
     delete m_tools;
   m_tools = new SlaterSetTools(mol);
 }
 
-bool SlaterSetConcurrent::calculateMolecularOrbital(Core::Cube *cube,
+bool SlaterSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
                                                     unsigned int state)
 {
   return setUpCalculation(cube, state, SlaterSetConcurrent::processOrbital);
 }
 
-bool SlaterSetConcurrent::calculateElectronDensity(Core::Cube *cube)
+bool SlaterSetConcurrent::calculateElectronDensity(Core::Cube* cube)
 {
   return setUpCalculation(cube, 0, SlaterSetConcurrent::processDensity);
 }
 
-bool SlaterSetConcurrent::calculateSpinDensity(Core::Cube *cube)
+bool SlaterSetConcurrent::calculateSpinDensity(Core::Cube* cube)
 {
   return setUpCalculation(cube, 0, SlaterSetConcurrent::processSpinDensity);
 }
@@ -85,9 +85,8 @@ void SlaterSetConcurrent::calculationComplete()
   emit finished();
 }
 
-bool SlaterSetConcurrent::setUpCalculation(Core::Cube *cube,
-                                           unsigned int state,
-                                           void (*func)(SlaterShell &))
+bool SlaterSetConcurrent::setUpCalculation(Core::Cube* cube, unsigned int state,
+                                           void (*func)(SlaterShell&))
 {
   if (!m_set || !m_tools)
     return false;
@@ -118,27 +117,23 @@ bool SlaterSetConcurrent::setUpCalculation(Core::Cube *cube,
   return true;
 }
 
-void SlaterSetConcurrent::processOrbital(SlaterShell &shell)
+void SlaterSetConcurrent::processOrbital(SlaterShell& shell)
 {
   Vector3 pos = shell.tCube->position(shell.pos);
-  shell.tCube->setValue(shell.pos,
-                        shell.tools->calculateMolecularOrbital(pos,
-                                                               shell.state));
+  shell.tCube->setValue(
+    shell.pos, shell.tools->calculateMolecularOrbital(pos, shell.state));
 }
 
-void SlaterSetConcurrent::processDensity(SlaterShell &shell)
+void SlaterSetConcurrent::processDensity(SlaterShell& shell)
 {
   Vector3 pos = shell.tCube->position(shell.pos);
-  shell.tCube->setValue(shell.pos,
-                        shell.tools->calculateElectronDensity(pos));
+  shell.tCube->setValue(shell.pos, shell.tools->calculateElectronDensity(pos));
 }
 
-void SlaterSetConcurrent::processSpinDensity(SlaterShell &shell)
+void SlaterSetConcurrent::processSpinDensity(SlaterShell& shell)
 {
   Vector3 pos = shell.tCube->position(shell.pos);
-  shell.tCube->setValue(shell.pos,
-                        shell.tools->calculateSpinDensity(pos));
+  shell.tCube->setValue(shell.pos, shell.tools->calculateSpinDensity(pos));
 }
-
 }
 }

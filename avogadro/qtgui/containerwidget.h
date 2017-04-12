@@ -38,11 +38,11 @@ class AVOGADROQTGUI_EXPORT ContainerWidget : public QWidget
   Q_OBJECT
 
 public:
-  explicit ContainerWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+  explicit ContainerWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
   ~ContainerWidget();
 
-  void setViewWidget(QWidget *widget);
-  QWidget * viewWidget();
+  void setViewWidget(QWidget* widget);
+  QWidget* viewWidget();
 
   void setActive(bool active);
   bool isActive() const { return m_active; }
@@ -53,8 +53,8 @@ signals:
   void closeView();
 
 private:
-  QWidget *m_viewWidget;
-  QLabel *m_label;
+  QWidget* m_viewWidget;
+  QLabel* m_label;
   bool m_active;
 };
 

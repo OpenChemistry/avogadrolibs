@@ -24,20 +24,17 @@
 namespace Avogadro {
 namespace Core {
 
-inline Variant::Variant()
-  : m_type(Null)
+inline Variant::Variant() : m_type(Null)
 {
 }
 
-template<typename T>
-inline Variant::Variant(T v)
-  : m_type(Null)
+template <typename T>
+inline Variant::Variant(T v) : m_type(Null)
 {
   setValue(v);
 }
 
-inline Variant::Variant(const Variant &variant)
-  : m_type(variant.type())
+inline Variant::Variant(const Variant& variant) : m_type(variant.type())
 {
   if (m_type == String)
     m_value.string = new std::string(variant.toString());
@@ -62,7 +59,7 @@ inline bool Variant::isNull() const
   return m_type == Null;
 }
 
-template<typename T>
+template <typename T>
 inline bool Variant::setValue(T v)
 {
   AVO_UNUSED(v);
@@ -72,7 +69,7 @@ inline bool Variant::setValue(T v)
   return false;
 }
 
-template<>
+template <>
 inline bool Variant::setValue(bool v)
 {
   clear();
@@ -83,7 +80,7 @@ inline bool Variant::setValue(bool v)
   return true;
 }
 
-template<>
+template <>
 inline bool Variant::setValue(char v)
 {
   clear();
@@ -94,7 +91,7 @@ inline bool Variant::setValue(char v)
   return true;
 }
 
-template<>
+template <>
 inline bool Variant::setValue(short v)
 {
   clear();
@@ -105,7 +102,7 @@ inline bool Variant::setValue(short v)
   return true;
 }
 
-template<>
+template <>
 inline bool Variant::setValue(int v)
 {
   clear();
@@ -116,7 +113,7 @@ inline bool Variant::setValue(int v)
   return true;
 }
 
-template<>
+template <>
 inline bool Variant::setValue(long v)
 {
   clear();
@@ -127,7 +124,7 @@ inline bool Variant::setValue(long v)
   return true;
 }
 
-template<>
+template <>
 inline bool Variant::setValue(float v)
 {
   clear();
@@ -138,7 +135,7 @@ inline bool Variant::setValue(float v)
   return true;
 }
 
-template<>
+template <>
 inline bool Variant::setValue(double v)
 {
   clear();
@@ -149,7 +146,7 @@ inline bool Variant::setValue(double v)
   return true;
 }
 
-template<>
+template <>
 inline bool Variant::setValue(std::string string)
 {
   clear();
@@ -160,14 +157,14 @@ inline bool Variant::setValue(std::string string)
   return true;
 }
 
-template<>
-inline bool Variant::setValue(const char *string)
+template <>
+inline bool Variant::setValue(const char* string)
 {
   return setValue(std::string(string));
 }
 
-template<>
-inline bool Variant::setValue(void *pointer)
+template <>
+inline bool Variant::setValue(void* pointer)
 {
   clear();
 
@@ -177,7 +174,7 @@ inline bool Variant::setValue(void *pointer)
   return true;
 }
 
-template<>
+template <>
 inline bool Variant::setValue(MatrixX matrix)
 {
   clear();
@@ -188,13 +185,13 @@ inline bool Variant::setValue(MatrixX matrix)
   return true;
 }
 
-template<typename T>
+template <typename T>
 inline T Variant::value() const
 {
   return 0;
 }
 
-template<>
+template <>
 inline bool Variant::value() const
 {
   if (m_type == Bool)
@@ -205,7 +202,7 @@ inline bool Variant::value() const
   return false;
 }
 
-template<>
+template <>
 inline char Variant::value() const
 {
   if (m_type == Int)
@@ -216,7 +213,7 @@ inline char Variant::value() const
   return '\0';
 }
 
-template<>
+template <>
 inline short Variant::value() const
 {
   if (m_type == Int)
@@ -227,7 +224,7 @@ inline short Variant::value() const
   return 0;
 }
 
-template<>
+template <>
 inline int Variant::value() const
 {
   if (m_type == Int)
@@ -244,7 +241,7 @@ inline int Variant::value() const
   return 0;
 }
 
-template<>
+template <>
 inline long Variant::value() const
 {
   if (m_type == Long)
@@ -257,7 +254,7 @@ inline long Variant::value() const
   return 0;
 }
 
-template<>
+template <>
 inline float Variant::value() const
 {
   if (m_type == Float)
@@ -272,7 +269,7 @@ inline float Variant::value() const
   return 0;
 }
 
-template<>
+template <>
 inline double Variant::value() const
 {
   if (m_type == Double)
@@ -287,7 +284,7 @@ inline double Variant::value() const
   return 0;
 }
 
-template<>
+template <>
 inline void* Variant::value() const
 {
   if (m_type == Pointer)
@@ -296,7 +293,7 @@ inline void* Variant::value() const
   return 0;
 }
 
-template<>
+template <>
 inline std::string Variant::value() const
 {
   if (m_type == String)
@@ -314,7 +311,7 @@ inline std::string Variant::value() const
   return string.str();
 }
 
-template<>
+template <>
 inline MatrixX Variant::value() const
 {
   if (m_type == Matrix)
@@ -323,14 +320,14 @@ inline MatrixX Variant::value() const
   return MatrixX();
 }
 
-template<>
+template <>
 inline const MatrixX& Variant::value() const
 {
   if (m_type == Matrix)
     return *m_value.matrix;
 
   // Use a static null matrix for the reference.
-  static MatrixX nullMatrix(0,0);
+  static MatrixX nullMatrix(0, 0);
   return nullMatrix;
 }
 
@@ -339,8 +336,7 @@ inline void Variant::clear()
   if (m_type == String) {
     delete m_value.string;
     m_value.string = 0;
-  }
-  else if (m_type == Matrix) {
+  } else if (m_type == Matrix) {
     delete m_value.matrix;
     m_value.matrix = 0;
   }
@@ -410,7 +406,7 @@ inline Real Variant::toReal() const
 
 inline void* Variant::toPointer() const
 {
-  return value<void *>();
+  return value<void*>();
 }
 
 inline std::string Variant::toString() const
@@ -423,13 +419,13 @@ inline MatrixX Variant::toMatrix() const
   return value<MatrixX>();
 }
 
-inline const MatrixX &Variant::toMatrixRef() const
+inline const MatrixX& Variant::toMatrixRef() const
 {
   return value<const MatrixX&>();
 }
 
 // --- Operators ----------------------------------------------------------- //
-inline Variant& Variant::operator=(const Variant &variant)
+inline Variant& Variant::operator=(const Variant& variant)
 {
   if (this != &variant) {
     // Clear previous data,
@@ -451,8 +447,8 @@ inline Variant& Variant::operator=(const Variant &variant)
 }
 
 // --- Internal Methods ---------------------------------------------------- //
-template<typename T>
-inline T Variant::lexical_cast(const std::string &str)
+template <typename T>
+inline T Variant::lexical_cast(const std::string& str)
 {
   T value;
   std::istringstream(str) >> value;

@@ -33,7 +33,7 @@ class CoordinateEditor : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit CoordinateEditor(QObject *parent_ = 0);
+  explicit CoordinateEditor(QObject* parent_ = 0);
   ~CoordinateEditor() override;
 
   QString name() const override { return tr("Coordinate editor"); }
@@ -43,20 +43,20 @@ public:
     return tr("Text editing of atomic coordinates.");
   }
 
-  QList<QAction *> actions() const override;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction *action) const override;
+  QStringList menuPath(QAction* action) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol) override;
+  void setMolecule(QtGui::Molecule* mol) override;
 
 private slots:
   void triggered();
 
 private:
-  CoordinateEditorDialog *m_dialog;
-  QtGui::Molecule *m_molecule;
-  QAction *m_action;
+  CoordinateEditorDialog* m_dialog;
+  QtGui::Molecule* m_molecule;
+  QAction* m_action;
 };
 
 } // namespace QtPlugins

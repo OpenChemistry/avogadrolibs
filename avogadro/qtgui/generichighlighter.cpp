@@ -21,8 +21,8 @@
 namespace Avogadro {
 namespace QtGui {
 
-GenericHighlighter::GenericHighlighter(QObject *parent_) :
-  QSyntaxHighlighter(parent_)
+GenericHighlighter::GenericHighlighter(QObject* parent_)
+  : QSyntaxHighlighter(parent_)
 {
 }
 
@@ -30,8 +30,8 @@ GenericHighlighter::~GenericHighlighter()
 {
 }
 
-GenericHighlighter::GenericHighlighter(const GenericHighlighter &other)
-  : QSyntaxHighlighter(static_cast<QTextDocument *>(nullptr))
+GenericHighlighter::GenericHighlighter(const GenericHighlighter& other)
+  : QSyntaxHighlighter(static_cast<QTextDocument*>(nullptr))
 {
   m_rules = other.m_rules;
 }
@@ -42,14 +42,14 @@ GenericHighlighter& GenericHighlighter::operator=(GenericHighlighter other)
   return *this;
 }
 
-GenericHighlighter &
-GenericHighlighter::operator +=(const GenericHighlighter &other)
+GenericHighlighter& GenericHighlighter::operator+=(
+  const GenericHighlighter& other)
 {
   m_rules.append(other.m_rules);
   return *this;
 }
 
-GenericHighlighter::Rule &GenericHighlighter::addRule()
+GenericHighlighter::Rule& GenericHighlighter::addRule()
 {
   m_rules.push_back(Rule());
   return m_rules.back();
@@ -60,13 +60,13 @@ int GenericHighlighter::ruleCount() const
   return m_rules.size();
 }
 
-GenericHighlighter::Rule &GenericHighlighter::rule(int idx)
+GenericHighlighter::Rule& GenericHighlighter::rule(int idx)
 {
   assert("idx in bounds" && idx < m_rules.size());
   return m_rules[idx];
 }
 
-const GenericHighlighter::Rule &GenericHighlighter::rule(int idx) const
+const GenericHighlighter::Rule& GenericHighlighter::rule(int idx) const
 {
   assert("idx in bounds" && idx < m_rules.size());
   return m_rules[idx];
@@ -77,19 +77,19 @@ QList<GenericHighlighter::Rule> GenericHighlighter::rules() const
   return m_rules;
 }
 
-void GenericHighlighter::highlightBlock(const QString &text)
+void GenericHighlighter::highlightBlock(const QString& text)
 {
   typedef QList<Rule>::iterator RuleIter;
   for (RuleIter it = m_rules.begin(), end = m_rules.end(); it != end; ++it)
     it->apply(text, *this);
 }
 
-void GenericHighlighter::Rule::apply(const QString &text,
-                                     GenericHighlighter &highlighter)
+void GenericHighlighter::Rule::apply(const QString& text,
+                                     GenericHighlighter& highlighter)
 {
   typedef QList<QRegExp>::iterator PatternIter;
-  for (PatternIter it = m_patterns.begin(), end = m_patterns.end();
-       it != end; ++it) {
+  for (PatternIter it = m_patterns.begin(), end = m_patterns.end(); it != end;
+       ++it) {
     int index = it->indexIn(text);
     while (index >= 0) {
       // If using a regex with capture groups defined, only highlight the
@@ -97,7 +97,7 @@ void GenericHighlighter::Rule::apply(const QString &text,
       if (it->captureCount() > 0) {
         QStringList capturedTexts(it->capturedTexts());
         QString match(capturedTexts.takeFirst());
-        foreach (const QString &capture, capturedTexts) {
+        foreach (const QString& capture, capturedTexts) {
           int capOffset(match.indexOf(capture));
           while (capOffset > 0) {
             int capLength(capture.size());
@@ -106,8 +106,7 @@ void GenericHighlighter::Rule::apply(const QString &text,
           }
         }
         index = it->indexIn(text, index + match.size());
-      }
-      else {
+      } else {
         int length(it->matchedLength());
         highlighter.setFormat(index, length, m_format);
         index = it->indexIn(text, index + length);
@@ -116,12 +115,12 @@ void GenericHighlighter::Rule::apply(const QString &text,
   }
 }
 
-void GenericHighlighter::Rule::addPattern(const QRegExp &regexp)
+void GenericHighlighter::Rule::addPattern(const QRegExp& regexp)
 {
   m_patterns.append(regexp);
 }
 
-void GenericHighlighter::Rule::setFormat(const QTextCharFormat &format)
+void GenericHighlighter::Rule::setFormat(const QTextCharFormat& format)
 {
   m_format = format;
 }

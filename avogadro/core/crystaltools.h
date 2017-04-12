@@ -39,7 +39,8 @@ public:
    * @brief The Option enum provides bitwise option flags for the various
    * algorithms.
    */
-  enum Option {
+  enum Option
+  {
     /** No options specified. */
     None = 0x0,
     /** Transform atoms along with the unit cell. */
@@ -52,7 +53,7 @@ public:
    * coordinates of all atoms are in the range [0, 1].
    * @return True on success, false otherwise.
    */
-  static bool wrapAtomsToUnitCell(Molecule &molecule);
+  static bool wrapAtomsToUnitCell(Molecule& molecule);
 
   /**
    * This function will rotate the input molecule so that the unit cell's 'a'
@@ -66,7 +67,7 @@ public:
    * rotated along with the unit cell.
    * @return True on success, false otherwise.
    */
-  static bool rotateToStandardOrientation(Molecule &molecule,
+  static bool rotateToStandardOrientation(Molecule& molecule,
                                           Options opts = None);
 
   /**
@@ -76,7 +77,7 @@ public:
    * adjusted so that their fractional (lattice) coordinates are preserved.
    * @return True on success, false on failure.
    */
-  static bool setVolume(Molecule &molecule, Real newVolume,
+  static bool setVolume(Molecule& molecule, Real newVolume,
                         Options opts = None);
 
   /**
@@ -92,7 +93,7 @@ public:
    * represented by the output.
    * @return True on success, false on failure.
    */
-  static bool niggliReduce(Molecule &molecule, Options opts = None);
+  static bool niggliReduce(Molecule& molecule, Options opts = None);
 
   /**
    * Return true if the unit cell in @a molecule is already Niggli-reduced. This
@@ -110,8 +111,8 @@ public:
    * @param c The number of units along lattice vector c for the supercell
    * @return True on success, false on failure.
    */
-  static bool buildSupercell(Molecule &molecule, unsigned int a,
-                             unsigned int b, unsigned int c);
+  static bool buildSupercell(Molecule& molecule, unsigned int a, unsigned int b,
+                             unsigned int c);
 
   /**
    * Set the unit cell in @a molecule to represent the real-space column-vector
@@ -122,7 +123,7 @@ public:
    * option is ignored if the input molecule has no unit cell.
    * @return True on success, false otherwise.
    */
-  static bool setCellMatrix(Molecule &molecule, const Matrix3 &newCellColMatrix,
+  static bool setCellMatrix(Molecule& molecule, const Matrix3& newCellColMatrix,
                             Options opt = None);
 
   /**
@@ -131,9 +132,9 @@ public:
    * coordinate transformation.
    * @return True on success, false otherwise.
    */
-  static bool fractionalCoordinates(const UnitCell &unitCell,
-                                    const Array<Vector3> &cart,
-                                    Array<Vector3> &frac);
+  static bool fractionalCoordinates(const UnitCell& unitCell,
+                                    const Array<Vector3>& cart,
+                                    Array<Vector3>& frac);
 
   /**
    * Populate the @a coords vector with the fractional coordinates of the atoms
@@ -142,8 +143,8 @@ public:
    * Molecule::atomPositions3d() result.
    * @return True on success, false otherwise.
    */
-  static bool fractionalCoordinates(const Molecule &molecule,
-                                    Array<Vector3> &coords);
+  static bool fractionalCoordinates(const Molecule& molecule,
+                                    Array<Vector3>& coords);
 
   /**
    * Set the atomic positions of @a molecule to the fractional coordinates in
@@ -151,11 +152,11 @@ public:
    * transformation.
    * @return
    */
-  static bool setFractionalCoordinates(Molecule &molecule,
-                                       const Array<Vector3> &coords);
+  static bool setFractionalCoordinates(Molecule& molecule,
+                                       const Array<Vector3>& coords);
 
 private:
-  CrystalTools(); // not implemented
+  CrystalTools();  // not implemented
   ~CrystalTools(); // not implemented
 };
 

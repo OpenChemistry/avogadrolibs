@@ -20,10 +20,10 @@
 #include "avogadroioexport.h"
 #include <avogadro/core/avogadrocore.h>
 
-#include <string>
-#include <vector>
 #include <istream>
 #include <ostream>
+#include <string>
+#include <vector>
 
 namespace Avogadro {
 
@@ -54,19 +54,20 @@ public:
   /**
    * @brief Flags defining supported operations.
    */
-  enum Operation {
-    None      = 0x0,
-    Read      = 0x1,
-    Write     = 0x2,
+  enum Operation
+  {
+    None = 0x0,
+    Read = 0x1,
+    Write = 0x2,
     ReadWrite = Read | Write,
 
     MultiMolecule = 0x4,
 
-    Stream    = 0x10,
-    String    = 0x20,
-    File      = 0x40,
+    Stream = 0x10,
+    String = 0x20,
+    File = 0x40,
 
-    All       = ReadWrite | MultiMolecule | Stream | String | File
+    All = ReadWrite | MultiMolecule | Stream | String | File
   };
   typedef int Operations;
 
@@ -79,7 +80,7 @@ public:
    * @brief Open the specified file in Read or Write mode.
    * @return True on success, false on failure.
    */
-  bool open(const std::string &fileName, Operation mode);
+  bool open(const std::string& fileName, Operation mode);
 
   /**
    * @brief The mode the format is currently operating in.
@@ -106,7 +107,7 @@ public:
    * @param molecule The molecule the data will be read into.
    * @return True on success, false on failure.
    */
-  bool readMolecule(Core::Molecule &molecule);
+  bool readMolecule(Core::Molecule& molecule);
 
   /**
    * @brief Write out a molecule. This can be used to write one or more
@@ -114,7 +115,7 @@ public:
    * @param molecule The molecule the data will be written from.
    * @return True on success, false on failure.
    */
-  bool writeMolecule(const Core::Molecule &molecule);
+  bool writeMolecule(const Core::Molecule& molecule);
 
   /**
    * @brief Read the given @p in stream and load it into @p molecule.
@@ -122,7 +123,7 @@ public:
    * @param molecule The molecule the data will be read into.
    * @return True on success, false on failure.
    */
-  virtual bool read(std::istream &in, Core::Molecule &molecule) = 0;
+  virtual bool read(std::istream& in, Core::Molecule& molecule) = 0;
 
   /**
    * @brief Write to the given @p out stream the contents of @p molecule.
@@ -130,7 +131,7 @@ public:
    * @param molecule The contents of this molecule will be written to output.
    * @return True on success, false on failure.
    */
-  virtual bool write(std::ostream &out, const Core::Molecule &molecule) = 0;
+  virtual bool write(std::ostream& out, const Core::Molecule& molecule) = 0;
 
   /**
    * @brief Read the given @p fileName and load it into @p molecule.
@@ -138,7 +139,7 @@ public:
    * @param molecule The molecule the data will be read into.
    * @return True on success, false on failure.
    */
-  bool readFile(const std::string &fileName, Core::Molecule &molecule);
+  bool readFile(const std::string& fileName, Core::Molecule& molecule);
 
   /**
    * @brief Write to the given @p fileName the contents of @p molecule.
@@ -146,7 +147,7 @@ public:
    * @param molecule The contents of this molecule will be written to the file.
    * @return True on success, false on failure.
    */
-  bool writeFile(const std::string &fileName, const Core::Molecule &molecule);
+  bool writeFile(const std::string& fileName, const Core::Molecule& molecule);
 
   /**
    * @brief Read the given @p string and load it into @p molecule.
@@ -154,15 +155,16 @@ public:
    * @param molecule The molecule the data will be read into.
    * @return True on success, false on failure.
    */
-  bool readString(const std::string &string, Core::Molecule &molecule);
+  bool readString(const std::string& string, Core::Molecule& molecule);
 
   /**
    * @brief Write to the given @p string the contents of @p molecule.
    * @param string The string to write the contents of the molecule into.
-   * @param molecule The contents of this molecule will be written to the string.
+   * @param molecule The contents of this molecule will be written to the
+   * string.
    * @return True on success, false on failure.
    */
-  bool writeString(std::string &string, const Core::Molecule &molecule);
+  bool writeString(std::string& string, const Core::Molecule& molecule);
 
   /**
    * @brief Get the error string, contains errors/warnings encountered.
@@ -185,7 +187,7 @@ public:
    * Create a new instance of the file format class. Ownership passes to the
    * caller.
    */
-  virtual FileFormat * newInstance() const = 0;
+  virtual FileFormat* newInstance() const = 0;
 
   /**
    * @brief A unique identifier, used to retrieve formats programatically.
@@ -229,7 +231,7 @@ protected:
    * @param errorString The error to be added.
    * @param newLine Add a new line after the error string?
    */
-  void appendError(const std::string &errorString, bool newLine = true);
+  void appendError(const std::string& errorString, bool newLine = true);
 
 private:
   std::string m_error;
@@ -237,15 +239,15 @@ private:
 
   // Streams for reading/writing data, especially streaming data in/out.
   Operation m_mode;
-  std::istream *m_in;
-  std::ostream *m_out;
+  std::istream* m_in;
+  std::ostream* m_out;
 };
 
 inline FileFormat::Operation operator|(FileFormat::Operation a,
                                        FileFormat::Operation b)
 {
-  return static_cast<FileFormat::Operation>(static_cast<int>(a)
-                                            | static_cast<int>(b));
+  return static_cast<FileFormat::Operation>(static_cast<int>(a) |
+                                            static_cast<int>(b));
 }
 
 } // end Io namespace

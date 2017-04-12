@@ -30,12 +30,12 @@ TextLabel2D::~TextLabel2D()
 {
 }
 
-void TextLabel2D::accept(Visitor &visitor)
+void TextLabel2D::accept(Visitor& visitor)
 {
   visitor.visit(*this);
 }
 
-void TextLabel2D::setAnchor(const Vector2i &windowCoords)
+void TextLabel2D::setAnchor(const Vector2i& windowCoords)
 {
   setAnchorInternal(Vector3f(static_cast<float>(windowCoords.x()),
                              static_cast<float>(windowCoords.y()), 0.f));

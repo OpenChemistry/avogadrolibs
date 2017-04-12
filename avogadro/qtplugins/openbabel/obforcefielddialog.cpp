@@ -27,20 +27,21 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-enum OptimizationAlgorithm {
+enum OptimizationAlgorithm
+{
   SteepestDescent = 0,
   ConjugateGradient
 };
 
-enum LineSearchMethod {
+enum LineSearchMethod
+{
   Simple = 0,
   Newton
 };
 
-OBForceFieldDialog::OBForceFieldDialog(const QStringList &forceFields,
-                                       QWidget *parent_) :
-  QDialog(parent_),
-  ui(new Ui::OBForceFieldDialog)
+OBForceFieldDialog::OBForceFieldDialog(const QStringList& forceFields,
+                                       QWidget* parent_)
+  : QDialog(parent_), ui(new Ui::OBForceFieldDialog)
 {
   ui->setupUi(this);
   ui->forceField->addItems(forceFields);
@@ -50,8 +51,8 @@ OBForceFieldDialog::OBForceFieldDialog(const QStringList &forceFields,
           SLOT(useRecommendedForceFieldToggled(bool)));
 
   QSettings settings;
-  bool autoDetect = settings.value("openbabel/optimizeGeometry/autoDetect",
-                                   true).toBool();
+  bool autoDetect =
+    settings.value("openbabel/optimizeGeometry/autoDetect", true).toBool();
   ui->useRecommended->setChecked(autoDetect);
 }
 
@@ -60,10 +61,10 @@ OBForceFieldDialog::~OBForceFieldDialog()
   delete ui;
 }
 
-QStringList OBForceFieldDialog::prompt(QWidget *parent_,
-                                       const QStringList &forceFields,
-                                       const QStringList &startingOptions,
-                                       const QString &recommendedForceField_)
+QStringList OBForceFieldDialog::prompt(QWidget* parent_,
+                                       const QStringList& forceFields,
+                                       const QStringList& startingOptions,
+                                       const QString& recommendedForceField_)
 {
   OBForceFieldDialog dlg(forceFields, parent_);
   dlg.setOptions(startingOptions);
@@ -82,28 +83,28 @@ QStringList OBForceFieldDialog::options() const
 
   opts << "--crit"
        << QString::number(std::pow(10.0f, ui->energyConv->value()), 'e', 0)
-       << "--ff" << ui->forceField->currentText()
-       << "--steps" << QString::number(ui->stepLimit->value())
-       << "--rvdw" << QString::number(ui->vdwCutoff->value())
-       << "--rele" << QString::number(ui->eleCutoff->value())
-       << "--freq" << QString::number(ui->pairFreq->value());
+       << "--ff" << ui->forceField->currentText() << "--steps"
+       << QString::number(ui->stepLimit->value()) << "--rvdw"
+       << QString::number(ui->vdwCutoff->value()) << "--rele"
+       << QString::number(ui->eleCutoff->value()) << "--freq"
+       << QString::number(ui->pairFreq->value());
 
   switch (static_cast<OptimizationAlgorithm>(ui->algorithm->currentIndex())) {
-  case SteepestDescent:
-    opts << "--sd";
-    break;
-  default:
-  case ConjugateGradient:
-    break;
+    case SteepestDescent:
+      opts << "--sd";
+      break;
+    default:
+    case ConjugateGradient:
+      break;
   }
 
   switch (static_cast<LineSearchMethod>(ui->lineSearch->currentIndex())) {
-  case Newton:
-    opts << "--newton";
-    break;
-  default:
-  case Simple:
-    break;
+    case Newton:
+      opts << "--newton";
+      break;
+    default:
+    case Simple:
+      break;
   }
 
   if (ui->enableCutoffs->isChecked())
@@ -112,7 +113,7 @@ QStringList OBForceFieldDialog::options() const
   return opts;
 }
 
-void OBForceFieldDialog::setOptions(const QStringList &opts)
+void OBForceFieldDialog::setOptions(const QStringList& opts)
 {
   // Set some defaults. These match the defaults in obabel -L minimize
   ui->energyConv->setValue(-6);
@@ -125,7 +126,8 @@ void OBForceFieldDialog::setOptions(const QStringList &opts)
   ui->pairFreq->setValue(10);
 
   for (QStringList::const_iterator it = opts.constBegin(),
-       itEnd = opts.constEnd(); it < itEnd; ++it) {
+                                   itEnd = opts.constEnd();
+       it < itEnd; ++it) {
 
     // We'll always use log:
     if (*it == "--log") {
@@ -145,7 +147,8 @@ void OBForceFieldDialog::setOptions(const QStringList &opts)
       float econv = it->toFloat(&ok);
       if (!ok) {
         qWarning() << "OBForceFieldDialog::setOptions: "
-                      "--crit is not numeric: " << *it;
+                      "--crit is not numeric: "
+                   << *it;
         continue;
       }
 
@@ -179,7 +182,8 @@ void OBForceFieldDialog::setOptions(const QStringList &opts)
       int index = ui->forceField->findText(*it);
       if (index < 0) {
         qWarning() << "OBForceFieldDialog::setOptions: "
-                      "--ff unknown: " << *it;
+                      "--ff unknown: "
+                   << *it;
         continue;
       }
 
@@ -200,7 +204,8 @@ void OBForceFieldDialog::setOptions(const QStringList &opts)
       int numSteps = it->toInt(&ok);
       if (!ok) {
         qWarning() << "OBForceFieldDialog::setOptions: "
-                      "--steps is not numeric: " << *it;
+                      "--steps is not numeric: "
+                   << *it;
         continue;
       }
 
@@ -227,7 +232,8 @@ void OBForceFieldDialog::setOptions(const QStringList &opts)
       double cutoff = it->toDouble(&ok);
       if (!ok) {
         qWarning() << "OBForceFieldDialog::setOptions: "
-                      "--rvdw is not numeric: " << *it;
+                      "--rvdw is not numeric: "
+                   << *it;
         continue;
       }
 
@@ -248,7 +254,8 @@ void OBForceFieldDialog::setOptions(const QStringList &opts)
       double cutoff = it->toDouble(&ok);
       if (!ok) {
         qWarning() << "OBForceFieldDialog::setOptions: "
-                      "--rele is not numeric: " << *it;
+                      "--rele is not numeric: "
+                   << *it;
         continue;
       }
 
@@ -269,7 +276,8 @@ void OBForceFieldDialog::setOptions(const QStringList &opts)
       int numSteps = it->toInt(&ok);
       if (!ok) {
         qWarning() << "OBForceFieldDialog::setOptions: "
-                      "--freq is not numeric: " << *it;
+                      "--freq is not numeric: "
+                   << *it;
         continue;
       }
 
@@ -280,12 +288,13 @@ void OBForceFieldDialog::setOptions(const QStringList &opts)
     // ?????
     else {
       qWarning() << "OBForceFieldDialog::setOptions: "
-                    "Unrecognized option: " << *it;
+                    "Unrecognized option: "
+                 << *it;
     }
   }
 }
 
-void OBForceFieldDialog::setRecommendedForceField(const QString &rff)
+void OBForceFieldDialog::setRecommendedForceField(const QString& rff)
 {
   if (rff == m_recommendedForceField)
     return;
@@ -317,10 +326,9 @@ void OBForceFieldDialog::updateRecommendedForceField()
   if (m_recommendedForceField.isEmpty()) {
     ui->useRecommended->hide();
     ui->forceField->setEnabled(true);
-  }
-  else {
-    ui->useRecommended->setText(tr("Autodetect (%1)")
-                                .arg(m_recommendedForceField));
+  } else {
+    ui->useRecommended->setText(
+      tr("Autodetect (%1)").arg(m_recommendedForceField));
     // Force the combo box to update if needed:
     useRecommendedForceFieldToggled(ui->useRecommended->isChecked());
     ui->useRecommended->show();

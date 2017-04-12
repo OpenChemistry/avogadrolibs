@@ -22,7 +22,8 @@
 namespace Avogadro {
 
 /** Symbolic constants representing various built-in C++ types. */
-enum Type {
+enum Type
+{
   UnknownType = -1,
   CharType,
   UCharType,
@@ -38,72 +39,99 @@ template <typename T>
 class TypeTraits
 {
 public:
-  enum { EnumValue = -1 };
-  static const char * name() { return "Unsupported type."; }
+  enum
+  {
+    EnumValue = -1
+  };
+  static const char* name() { return "Unsupported type."; }
 };
 
-template < >
+template <>
 class TypeTraits<char>
 {
 public:
-  enum { EnumValue = CharType };
-  static const char * name() { return "char"; }
+  enum
+  {
+    EnumValue = CharType
+  };
+  static const char* name() { return "char"; }
 };
 
-template < >
+template <>
 class TypeTraits<unsigned char>
 {
 public:
-  enum { EnumValue = UCharType };
-  static const char * name() { return "unsigned char"; }
+  enum
+  {
+    EnumValue = UCharType
+  };
+  static const char* name() { return "unsigned char"; }
 };
 
-template < >
+template <>
 class TypeTraits<short>
 {
 public:
-  enum { EnumValue = ShortType };
-  static const char * name() { return "short"; }
+  enum
+  {
+    EnumValue = ShortType
+  };
+  static const char* name() { return "short"; }
 };
 
-template < >
+template <>
 class TypeTraits<unsigned short>
 {
 public:
-  enum { EnumValue = UShortType };
-  static const char * name() { return "unsigned short"; }
+  enum
+  {
+    EnumValue = UShortType
+  };
+  static const char* name() { return "unsigned short"; }
 };
 
-template < >
+template <>
 class TypeTraits<int>
 {
 public:
-  enum { EnumValue = IntType };
-  static const char * name() { return "int"; }
+  enum
+  {
+    EnumValue = IntType
+  };
+  static const char* name() { return "int"; }
 };
 
-template < >
+template <>
 class TypeTraits<unsigned int>
 {
 public:
-  enum { EnumValue = UIntType };
-  static const char * name() { return "unsigned int"; }
+  enum
+  {
+    EnumValue = UIntType
+  };
+  static const char* name() { return "unsigned int"; }
 };
 
-template < >
+template <>
 class TypeTraits<float>
 {
 public:
-  enum { EnumValue = FloatType };
-  static const char * name() { return "float"; }
+  enum
+  {
+    EnumValue = FloatType
+  };
+  static const char* name() { return "float"; }
 };
 
-template < >
+template <>
 class TypeTraits<double>
 {
 public:
-  enum { EnumValue = DoubleType };
-  static const char * name() { return "double"; }
+  enum
+  {
+    EnumValue = DoubleType
+  };
+  static const char* name() { return "double"; }
 };
 
 } // end Avogadro namespace

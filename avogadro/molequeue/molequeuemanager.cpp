@@ -19,12 +19,10 @@
 namespace Avogadro {
 namespace MoleQueue {
 
-MoleQueueManager *MoleQueueManager::m_instance = nullptr;
+MoleQueueManager* MoleQueueManager::m_instance = nullptr;
 
-MoleQueueManager::MoleQueueManager(QObject *parent_) :
-  QObject(parent_),
-  m_client(this),
-  m_queueModel(this)
+MoleQueueManager::MoleQueueManager(QObject* parent_)
+  : QObject(parent_), m_client(this), m_queueModel(this)
 {
   connect(&m_client, SIGNAL(queueListReceived(QJsonObject)),
           SLOT(updateQueueModel(QJsonObject)));
@@ -34,7 +32,7 @@ MoleQueueManager::~MoleQueueManager()
 {
 }
 
-MoleQueueManager &MoleQueueManager::instance()
+MoleQueueManager& MoleQueueManager::instance()
 {
   return m_instance ? *m_instance : *(m_instance = new MoleQueueManager());
 }
@@ -44,12 +42,12 @@ bool MoleQueueManager::connectIfNeeded()
   return m_client.isConnected() || m_client.connectToServer();
 }
 
-::MoleQueue::Client &MoleQueueManager::client()
+::MoleQueue::Client& MoleQueueManager::client()
 {
   return m_client;
 }
 
-const ::MoleQueue::Client &MoleQueueManager::client() const
+const ::MoleQueue::Client& MoleQueueManager::client() const
 {
   return m_client;
 }
@@ -64,15 +62,15 @@ bool MoleQueueManager::requestQueueList()
   return m_client.isConnected() && m_client.requestQueueList() >= 0;
 }
 
-void MoleQueueManager::updateQueueModel(const QJsonObject &json)
+void MoleQueueManager::updateQueueModel(const QJsonObject& json)
 {
   QList<QString> queueList;
   QList<QStringList> programList;
-  foreach (const QString &queue, json.keys()) {
+  foreach (const QString& queue, json.keys()) {
     queueList.append(queue);
     programList.append(QStringList());
-    QStringList &progs = programList.back();
-    foreach (const QJsonValue &program, json.value(queue).toArray()) {
+    QStringList& progs = programList.back();
+    foreach (const QJsonValue& program, json.value(queue).toArray()) {
       if (program.isString())
         progs << program.toString();
     }

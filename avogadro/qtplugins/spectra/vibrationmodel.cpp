@@ -21,17 +21,17 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-VibrationModel::VibrationModel(QObject *p)
+VibrationModel::VibrationModel(QObject* p)
   : QAbstractItemModel(p), m_molecule(nullptr)
 {
 }
 
-QModelIndex VibrationModel::parent(const QModelIndex &) const
+QModelIndex VibrationModel::parent(const QModelIndex&) const
 {
   return QModelIndex();
 }
 
-int VibrationModel::rowCount(const QModelIndex &p) const
+int VibrationModel::rowCount(const QModelIndex& p) const
 {
   if (p.isValid() || !m_molecule)
     return 0;
@@ -39,12 +39,12 @@ int VibrationModel::rowCount(const QModelIndex &p) const
     return m_molecule->vibrationFrequencies().size();
 }
 
-int VibrationModel::columnCount(const QModelIndex &) const
+int VibrationModel::columnCount(const QModelIndex&) const
 {
   return 2;
 }
 
-Qt::ItemFlags VibrationModel::flags(const QModelIndex &) const
+Qt::ItemFlags VibrationModel::flags(const QModelIndex&) const
 {
   return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
@@ -65,16 +65,15 @@ QVariant VibrationModel::headerData(int section, Qt::Orientation orientation,
   return QVariant();
 }
 
-
-bool VibrationModel::setData(const QModelIndex &, const QVariant &, int)
+bool VibrationModel::setData(const QModelIndex&, const QVariant&, int)
 {
   return false;
 }
 
-QVariant VibrationModel::data(const QModelIndex &idx, int role) const
+QVariant VibrationModel::data(const QModelIndex& idx, int role) const
 {
-  if (!idx.isValid() || idx.column() > 2 || !m_molecule
-      || m_molecule->vibrationFrequencies().size() <= idx.row()) {
+  if (!idx.isValid() || idx.column() > 2 || !m_molecule ||
+      m_molecule->vibrationFrequencies().size() <= idx.row()) {
     return QVariant();
   }
 
@@ -99,10 +98,11 @@ QVariant VibrationModel::data(const QModelIndex &idx, int role) const
 }
 
 QModelIndex VibrationModel::index(int row, int column,
-                                 const QModelIndex &p) const
+                                  const QModelIndex& p) const
 {
   if (!p.isValid())
-    if (row >= 0 && m_molecule && row < m_molecule->vibrationFrequencies().size())
+    if (row >= 0 && m_molecule &&
+        row < m_molecule->vibrationFrequencies().size())
       return createIndex(row, column);
   return QModelIndex();
 }
@@ -110,6 +110,5 @@ QModelIndex VibrationModel::index(int row, int column,
 void VibrationModel::clear()
 {
 }
-
 }
 }

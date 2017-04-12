@@ -36,7 +36,7 @@ class OBFileFormat::ProcessListener : public QObject
 public:
   ProcessListener() : QObject(), m_finished(false) {}
 
-  bool waitForOutput(QByteArray &output, int msTimeout = 120000)
+  bool waitForOutput(QByteArray& output, int msTimeout = 120000)
   {
     if (!wait(msTimeout))
       return false;
@@ -47,7 +47,7 @@ public:
   }
 
 public slots:
-  void responseReceived(const QByteArray &output)
+  void responseReceived(const QByteArray& output)
   {
     m_finished = true;
     m_output = output;
@@ -65,26 +65,22 @@ private:
     return m_finished;
   }
 
-  OBProcess *m_process;
+  OBProcess* m_process;
   bool m_finished;
   QByteArray m_output;
 };
 
-OBFileFormat::OBFileFormat(const std::string &name_,
-                           const std::string &identifier_,
-                           const std::string &description_,
-                           const std::string &specificationUrl_,
+OBFileFormat::OBFileFormat(const std::string& name_,
+                           const std::string& identifier_,
+                           const std::string& description_,
+                           const std::string& specificationUrl_,
                            const std::vector<std::string> fileExtensions_,
                            const std::vector<std::string> mimeTypes_,
                            bool fileOnly_)
-  : Io::FileFormat(),
-    m_description(description_),
-    m_fileExtensions(fileExtensions_),
-    m_mimeTypes(mimeTypes_),
-    m_identifier(identifier_),
-    m_name(name_),
-    m_specificationUrl(specificationUrl_),
-    m_fileOnly(fileOnly_)
+  : Io::FileFormat(), m_description(description_),
+    m_fileExtensions(fileExtensions_), m_mimeTypes(mimeTypes_),
+    m_identifier(identifier_), m_name(name_),
+    m_specificationUrl(specificationUrl_), m_fileOnly(fileOnly_)
 {
 }
 
@@ -92,13 +88,13 @@ OBFileFormat::~OBFileFormat()
 {
 }
 
-bool OBFileFormat::read(std::istream &in, Core::Molecule &molecule)
+bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 {
   // Allow blocking until the read is completed.
   OBProcess proc;
   ProcessListener listener;
-  QObject::connect(&proc, SIGNAL(convertFinished(QByteArray)),
-                   &listener, SLOT(responseReceived(QByteArray)));
+  QObject::connect(&proc, SIGNAL(convertFinished(QByteArray)), &listener,
+                   SLOT(responseReceived(QByteArray)));
 
   // Just grab the first file extension from the list -- all extensions for a
   // given format map to the same parsers in OB.
@@ -110,7 +106,9 @@ bool OBFileFormat::read(std::istream &in, Core::Molecule &molecule)
   // If we are reading a pure-2D format, generate 3D coordinates:
   QStringList options;
   QStringList formats2D;
-  formats2D << "smi" << "inchi" << "can";
+  formats2D << "smi"
+            << "inchi"
+            << "can";
   if (formats2D.contains(QString::fromStdString(m_fileExtensions.front())))
     options << "--gen3d";
 
@@ -136,20 +134,19 @@ bool OBFileFormat::read(std::istream &in, Core::Molecule &molecule)
       appendError("OpenBabel conversion failed!");
       return false;
     }
-  }
-  else {
+  } else {
     // Can only read files. Need absolute path.
     QString filename = QString::fromStdString(fileName());
     if (!QFileInfo(filename).isAbsolute()) {
-      appendError("Internal error -- filename must be absolute! "
-                  + filename.toStdString());
+      appendError("Internal error -- filename must be absolute! " +
+                  filename.toStdString());
       return false;
     }
 
     // Perform the conversion.
     if (!proc.convert(filename,
-                      QString::fromStdString(m_fileExtensions.front()),
-                      "cml", options)) {
+                      QString::fromStdString(m_fileExtensions.front()), "cml",
+                      options)) {
       appendError("OpenBabel conversion failed!");
       return false;
     }
@@ -176,7 +173,7 @@ bool OBFileFormat::read(std::istream &in, Core::Molecule &molecule)
   return true;
 }
 
-bool OBFileFormat::write(std::ostream &out, const Core::Molecule &molecule)
+bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
 {
   // Generate CML to give to OpenBabel
   std::string cml;
@@ -190,8 +187,8 @@ bool OBFileFormat::write(std::ostream &out, const Core::Molecule &molecule)
   // Block until the OpenBabel conversion finishes:
   OBProcess proc;
   ProcessListener listener;
-  QObject::connect(&proc, SIGNAL(convertFinished(QByteArray)),
-                   &listener, SLOT(responseReceived(QByteArray)));
+  QObject::connect(&proc, SIGNAL(convertFinished(QByteArray)), &listener,
+                   SLOT(responseReceived(QByteArray)));
 
   // Just grab the first file extension from the list -- all extensions for a
   // given format map to the same parsers in OB.
@@ -223,7 +220,7 @@ void OBFileFormat::clear()
   Io::FileFormat::clear();
 }
 
-Io::FileFormat *OBFileFormat::newInstance() const
+Io::FileFormat* OBFileFormat::newInstance() const
 {
   return new OBFileFormat(m_name, m_identifier, m_description,
                           m_specificationUrl, m_fileExtensions, m_mimeTypes,

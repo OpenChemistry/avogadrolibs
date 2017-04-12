@@ -69,19 +69,19 @@ TEST(BillboardQuadStrategyTest, exercise)
 
   ASSERT_EQ(4, quad.size());
 
-  EXPECT_FLOAT_EQ(243.83968f,  quad[0][0]);
+  EXPECT_FLOAT_EQ(243.83968f, quad[0][0]);
   EXPECT_FLOAT_EQ(-185.99776f, quad[0][1]);
-  EXPECT_FLOAT_EQ(730.30627f,  quad[0][2]);
+  EXPECT_FLOAT_EQ(730.30627f, quad[0][2]);
 
-  EXPECT_FLOAT_EQ(389.97992f,  quad[1][0]);
-  EXPECT_FLOAT_EQ(194.00380f,  quad[1][1]);
-  EXPECT_FLOAT_EQ(437.99942f,  quad[1][2]);
+  EXPECT_FLOAT_EQ(389.97992f, quad[1][0]);
+  EXPECT_FLOAT_EQ(194.00380f, quad[1][1]);
+  EXPECT_FLOAT_EQ(437.99942f, quad[1][2]);
 
   EXPECT_FLOAT_EQ(-134.35634f, quad[2][0]);
   EXPECT_FLOAT_EQ(-379.83984f, quad[2][1]);
-  EXPECT_FLOAT_EQ(289.22885f,  quad[2][2]);
+  EXPECT_FLOAT_EQ(289.22885f, quad[2][2]);
 
-  EXPECT_FLOAT_EQ(11.783905f,  quad[3][0]);
+  EXPECT_FLOAT_EQ(11.783905f, quad[3][0]);
   EXPECT_FLOAT_EQ(0.16171265f, quad[3][1]);
   EXPECT_FLOAT_EQ(-3.0780029f, quad[3][2]);
 
@@ -94,19 +94,19 @@ TEST(BillboardQuadStrategyTest, exercise)
 
   ASSERT_EQ(4, quad.size());
 
-  EXPECT_FLOAT_EQ(538.01459f,  quad[0][0]);
-  EXPECT_FLOAT_EQ(371.01038f,  quad[0][1]);
-  EXPECT_FLOAT_EQ(457.25916f,  quad[0][2]);
+  EXPECT_FLOAT_EQ(538.01459f, quad[0][0]);
+  EXPECT_FLOAT_EQ(371.01038f, quad[0][1]);
+  EXPECT_FLOAT_EQ(457.25916f, quad[0][2]);
 
-  EXPECT_FLOAT_EQ(387.27307f,  quad[1][0]);
-  EXPECT_FLOAT_EQ(484.04947f,  quad[1][1]);
+  EXPECT_FLOAT_EQ(387.27307f, quad[1][0]);
+  EXPECT_FLOAT_EQ(484.04947f, quad[1][1]);
   EXPECT_FLOAT_EQ(-7.1766663f, quad[1][2]);
 
-  EXPECT_FLOAT_EQ(162.52542f,  quad[2][0]);
+  EXPECT_FLOAT_EQ(162.52542f, quad[2][0]);
   EXPECT_FLOAT_EQ(-112.87738f, quad[2][1]);
-  EXPECT_FLOAT_EQ(461.35785f,  quad[2][2]);
+  EXPECT_FLOAT_EQ(461.35785f, quad[2][2]);
 
-  EXPECT_FLOAT_EQ(11.783905f,  quad[3][0]);
+  EXPECT_FLOAT_EQ(11.783905f, quad[3][0]);
   EXPECT_FLOAT_EQ(0.16171265f, quad[3][1]);
   EXPECT_FLOAT_EQ(-3.0779662f, quad[3][2]);
 
@@ -117,19 +117,19 @@ TEST(BillboardQuadStrategyTest, exercise)
 
   ASSERT_EQ(4, quad.size());
 
-  EXPECT_FLOAT_EQ(727.31494f,  quad[0][0]);
-  EXPECT_FLOAT_EQ(218.08212f,  quad[0][1]);
+  EXPECT_FLOAT_EQ(727.31494f, quad[0][0]);
+  EXPECT_FLOAT_EQ(218.08212f, quad[0][1]);
   EXPECT_FLOAT_EQ(-255.12888f, quad[0][2]);
 
-  EXPECT_FLOAT_EQ(383.45709f,  quad[1][0]);
-  EXPECT_FLOAT_EQ(486.99631f,  quad[1][1]);
+  EXPECT_FLOAT_EQ(383.45709f, quad[1][0]);
+  EXPECT_FLOAT_EQ(486.99631f, quad[1][1]);
   EXPECT_FLOAT_EQ(-8.8598633f, quad[1][2]);
 
-  EXPECT_FLOAT_EQ(351.82578f,  quad[2][0]);
+  EXPECT_FLOAT_EQ(351.82578f, quad[2][0]);
   EXPECT_FLOAT_EQ(-265.80563f, quad[2][1]);
   EXPECT_FLOAT_EQ(-251.03018f, quad[2][2]);
 
-  EXPECT_FLOAT_EQ(7.967926f,   quad[3][0]);
-  EXPECT_FLOAT_EQ(3.108551f,   quad[3][1]);
+  EXPECT_FLOAT_EQ(7.967926f, quad[3][0]);
+  EXPECT_FLOAT_EQ(3.108551f, quad[3][1]);
   EXPECT_FLOAT_EQ(-4.7611632f, quad[3][2]);
 }

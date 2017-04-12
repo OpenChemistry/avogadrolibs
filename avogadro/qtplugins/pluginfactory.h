@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_QTPLUGINS_PLUGINFACTORY_H
 #define AVOGADRO_QTPLUGINS_PLUGINFACTORY_H
 
-#include <QtCore/QString>
 #include <QtCore/QObject>
+#include <QtCore/QString>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -27,13 +27,13 @@ namespace QtPlugins {
  * @class PluginFactory pluginfactory.h <avogadro/qtplugins/pluginfactory.h>
  * @brief The base class for plugin factories in Avogadro.
  */
-template<typename T>
+template <typename T>
 class PluginFactory
 {
 public:
   virtual ~PluginFactory() {}
 
-  virtual T * createInstance() = 0;
+  virtual T* createInstance() = 0;
   virtual QString identifier() const = 0;
   virtual QString description() const = 0;
 };

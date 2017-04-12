@@ -56,18 +56,18 @@ public:
   std::vector<std::string> names() const;
 
   /** Sets the value of @p name to @p v. */
-  void setValue(const std::string &name, const Variant &v);
+  void setValue(const std::string& name, const Variant& v);
 
   /**
    * Returns the value for @p name. If @p name is not found a null variant is
    * returned.
    */
-  Variant value(const std::string &name) const;
+  Variant value(const std::string& name) const;
 
   /**
    * Returns true if the key exists in the map.
    */
-  bool hasValue(const std::string &name) const;
+  bool hasValue(const std::string& name) const;
 
   /** Return an iterator pointing to the beginning of the map. */
   iterator begin();

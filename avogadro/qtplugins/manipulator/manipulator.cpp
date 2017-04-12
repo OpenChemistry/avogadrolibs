@@ -18,19 +18,19 @@
 
 #include <avogadro/core/vector.h>
 
-#include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <avogadro/qtopengl/glwidget.h>
 
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/glrenderer.h>
 
-#include <QtWidgets/QAction>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
+#include <QtWidgets/QAction>
 
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
@@ -45,12 +45,9 @@ using QtGui::Molecule;
 using QtGui::RWMolecule;
 using Rendering::Identifier;
 
-Manipulator::Manipulator(QObject *parent_)
-  : QtGui::ToolPlugin(parent_),
-    m_activateAction(new QAction(this)),
-    m_molecule(nullptr),
-    m_renderer(nullptr),
-    m_pressedButtons(Qt::NoButton)
+Manipulator::Manipulator(QObject* parent_)
+  : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
+    m_molecule(nullptr), m_renderer(nullptr), m_pressedButtons(Qt::NoButton)
 {
   m_activateAction->setText(tr("Manipulate"));
   m_activateAction->setIcon(QIcon(":/icons/manipulator.png"));
@@ -60,12 +57,12 @@ Manipulator::~Manipulator()
 {
 }
 
-QWidget *Manipulator::toolWidget() const
+QWidget* Manipulator::toolWidget() const
 {
   return nullptr;
 }
 
-QUndoCommand * Manipulator::mousePressEvent(QMouseEvent *e)
+QUndoCommand* Manipulator::mousePressEvent(QMouseEvent* e)
 {
   if (!m_renderer)
     return nullptr;
@@ -83,18 +80,18 @@ QUndoCommand * Manipulator::mousePressEvent(QMouseEvent *e)
     m_object = m_renderer->hit(e->pos().x(), e->pos().y());
 
     switch (m_object.type) {
-    case Rendering::AtomType:
-      e->accept();
-      return nullptr;
-    default:
-      break;
+      case Rendering::AtomType:
+        e->accept();
+        return nullptr;
+      default:
+        break;
     }
   }
 
   return nullptr;
 }
 
-QUndoCommand * Manipulator::mouseReleaseEvent(QMouseEvent *e)
+QUndoCommand* Manipulator::mouseReleaseEvent(QMouseEvent* e)
 {
   if (!m_renderer)
     return nullptr;
@@ -109,19 +106,19 @@ QUndoCommand * Manipulator::mouseReleaseEvent(QMouseEvent *e)
   }
 
   switch (e->button()) {
-  case Qt::LeftButton:
-  case Qt::RightButton:
-    resetObject();
-    e->accept();
-    break;
-  default:
-    break;
+    case Qt::LeftButton:
+    case Qt::RightButton:
+      resetObject();
+      e->accept();
+      break;
+    default:
+      break;
   }
 
   return nullptr;
 }
 
-QUndoCommand * Manipulator::mouseMoveEvent(QMouseEvent *e)
+QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
 {
   e->ignore();
   if (!(m_pressedButtons & Qt::LeftButton))
@@ -130,16 +127,14 @@ QUndoCommand * Manipulator::mouseMoveEvent(QMouseEvent *e)
   const Core::Molecule* mol = &m_molecule->molecule();
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
 
-  if (mol->isSelectionEmpty()
-      && m_object.type == Rendering::AtomType
-      && m_object.molecule == mol) {
+  if (mol->isSelectionEmpty() && m_object.type == Rendering::AtomType &&
+      m_object.molecule == mol) {
     // Update single atom position
     RWAtom atom = m_molecule->atom(m_object.index);
     Vector3f oldPos(atom.position3d().cast<float>());
     Vector3f newPos = m_renderer->camera().unProject(windowPos, oldPos);
     atom.setPosition3d(newPos.cast<double>());
-  }
-  else if (!mol->isSelectionEmpty()) {
+  } else if (!mol->isSelectionEmpty()) {
     // update all selected atoms
     Vector3f newPos = m_renderer->camera().unProject(windowPos);
     Vector3f delta = newPos - m_lastMouse3D;
@@ -160,7 +155,7 @@ QUndoCommand * Manipulator::mouseMoveEvent(QMouseEvent *e)
   return nullptr;
 }
 
-void Manipulator::updatePressedButtons(QMouseEvent *e, bool release)
+void Manipulator::updatePressedButtons(QMouseEvent* e, bool release)
 {
   /// @todo Use modifier keys on mac
   if (release)

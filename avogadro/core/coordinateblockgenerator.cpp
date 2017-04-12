@@ -28,8 +28,7 @@ namespace Avogadro {
 namespace Core {
 
 CoordinateBlockGenerator::CoordinateBlockGenerator()
-  : m_molecule(nullptr),
-    m_distanceUnit(Angstrom)
+  : m_molecule(nullptr), m_distanceUnit(Angstrom)
 {
 }
 
@@ -54,22 +53,22 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   bool needFractionalPosition(false);
   for (it = begin; it != end; ++it) {
     switch (*it) {
-    case 'S':
-      needElementSymbol = true;
-      break;
-    case 'N':
-      needElementName = true;
-      break;
-    case 'x':
-    case 'y':
-    case 'z':
-      needPosition = true;
-      break;
-    case 'a':
-    case 'b':
-    case 'c':
-      needFractionalPosition = true;
-      break;
+      case 'S':
+        needElementSymbol = true;
+        break;
+      case 'N':
+        needElementName = true;
+        break;
+      case 'x':
+      case 'y':
+      case 'z':
+        needPosition = true;
+        break;
+      case 'a':
+      case 'b':
+      case 'c':
+        needFractionalPosition = true;
+        break;
     }
   }
 
@@ -77,25 +76,27 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   const Index numAtoms = m_molecule->atomCount();
   Atom atom;
   unsigned char atomicNumber;
-  const char *symbol;
-  const char *name;
+  const char* symbol;
+  const char* name;
   Vector3 pos3d;
   Vector3 fpos3d;
-  const UnitCell *cell = needFractionalPosition ? molecule()->unitCell() : nullptr;
+  const UnitCell* cell =
+    needFractionalPosition ? molecule()->unitCell() : nullptr;
 
   // widths/precisions
-  enum {
-    atomicNumberPrecision       = 0,
-    atomicNumberWidth           = 3,
-    coordinatePrecision         = 6,
-    coordinateWidth             = 11,
-    elementNameWidth            = 13, // Currently the longest element name
-    elementSymbolWidth          = 3,
+  enum
+  {
+    atomicNumberPrecision = 0,
+    atomicNumberWidth = 3,
+    coordinatePrecision = 6,
+    coordinateWidth = 11,
+    elementNameWidth = 13, // Currently the longest element name
+    elementSymbolWidth = 3,
     gamessAtomicNumberPrecision = 1,
-    gamessAtomicNumberWidth     = 5
+    gamessAtomicNumberWidth = 5
   };
-  const int indexWidth(static_cast<int>(
-                         std::log10(static_cast<float>(numAtoms))) + 1);
+  const int indexWidth(
+    static_cast<int>(std::log10(static_cast<float>(numAtoms))) + 1);
 
   // Use fixed number format.
   m_stream << std::fixed;
@@ -111,127 +112,95 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
     if (needPosition)
       pos3d = atom.position3d();
     if (needFractionalPosition)
-      fpos3d = cell ? cell->toFractional(atom.position3d()) : Vector3::Zero() ;
+      fpos3d = cell ? cell->toFractional(atom.position3d()) : Vector3::Zero();
 
     switch (m_distanceUnit) {
-    case Bohr:
-      pos3d *= ANGSTROM_TO_BOHR_F;
-      break;
-    default:
-    case Angstrom:
-      break;
+      case Bohr:
+        pos3d *= ANGSTROM_TO_BOHR_F;
+        break;
+      default:
+      case Angstrom:
+        break;
     }
 
     for (it = begin; it != end; ++it) {
       switch (*it) {
-      case '_':
-        // Space character. If we are not at the end of the spec, a space will
-        // be added by default after the switch clause. If we are at the end,
-        // add a space before the newline that will be added.
-        if (it + 1 == end)
-          m_stream << std::setw(1) << " ";
-        break;
-      case '#':
-        m_stream << std::left
-                 << std::setw(indexWidth)
-                 << static_cast<int>(atomI + 1);
-        break;
-      case 'Z':
-        m_stream << std::left
-                 << std::setw(atomicNumberWidth)
-                 << std::setprecision(atomicNumberPrecision)
-                 << static_cast<int>(atomicNumber);
-        break;
-      case 'G':
-        m_stream << std::right
-                 << std::setw(gamessAtomicNumberWidth)
-                 << std::setprecision(gamessAtomicNumberPrecision)
-                 << static_cast<float>(atomicNumber);
-        break;
-      case 'S':
-        m_stream << std::left
-                 << std::setw(elementSymbolWidth)
-                 << symbol;
-        break;
-      case 'N':
-        m_stream << std::left
-                 << std::setw(elementNameWidth)
-                 << name;
-        break;
-      case 'x':
-        m_stream << std::right
-                 << std::setw(coordinateWidth)
-                 << std::setprecision(coordinatePrecision)
-                 << pos3d.x();
-        break;
-      case 'y':
-        m_stream << std::right
-                 << std::setw(coordinateWidth)
-                 << std::setprecision(coordinatePrecision)
-                 << pos3d.y();
-        break;
-      case 'z':
-        m_stream << std::right
-                 << std::setw(coordinateWidth)
-                 << std::setprecision(coordinatePrecision)
-                 << pos3d.z();
-        break;
-      case '0':
-        m_stream << std::left
-                 << std::setw(1)
-                 << 0;
-        break;
-      case '1':
-        m_stream << std::left
-                 << std::setw(1)
-                 << 1;
-        break;
-      case 'a':
-        if (cell) {
-          m_stream << std::right
-                   << std::setw(coordinateWidth)
-                   << std::setprecision(coordinatePrecision)
-                   << fpos3d.x();
-        }
-        else {
-          m_stream << std::right
-                   << std::setw(coordinateWidth)
-                   << "N/A";
-        }
-        break;
-      case 'b':
-        if (cell) {
-          m_stream << std::right
-                   << std::setw(coordinateWidth)
-                   << std::setprecision(coordinatePrecision)
-                   << fpos3d.y();
-        }
-        else {
-          m_stream << std::right
-                   << std::setw(coordinateWidth)
-                   << "N/A";
-        }
-        break;
-      case 'c':
-        if (cell) {
-          m_stream << std::right
-                   << std::setw(coordinateWidth)
-                   << std::setprecision(coordinatePrecision)
-                   << fpos3d.z();
-        }
-        else {
-          m_stream << std::right
-                   << std::setw(coordinateWidth)
-                   << "N/A";
-        }
-        break;
+        case '_':
+          // Space character. If we are not at the end of the spec, a space will
+          // be added by default after the switch clause. If we are at the end,
+          // add a space before the newline that will be added.
+          if (it + 1 == end)
+            m_stream << std::setw(1) << " ";
+          break;
+        case '#':
+          m_stream << std::left << std::setw(indexWidth)
+                   << static_cast<int>(atomI + 1);
+          break;
+        case 'Z':
+          m_stream << std::left << std::setw(atomicNumberWidth)
+                   << std::setprecision(atomicNumberPrecision)
+                   << static_cast<int>(atomicNumber);
+          break;
+        case 'G':
+          m_stream << std::right << std::setw(gamessAtomicNumberWidth)
+                   << std::setprecision(gamessAtomicNumberPrecision)
+                   << static_cast<float>(atomicNumber);
+          break;
+        case 'S':
+          m_stream << std::left << std::setw(elementSymbolWidth) << symbol;
+          break;
+        case 'N':
+          m_stream << std::left << std::setw(elementNameWidth) << name;
+          break;
+        case 'x':
+          m_stream << std::right << std::setw(coordinateWidth)
+                   << std::setprecision(coordinatePrecision) << pos3d.x();
+          break;
+        case 'y':
+          m_stream << std::right << std::setw(coordinateWidth)
+                   << std::setprecision(coordinatePrecision) << pos3d.y();
+          break;
+        case 'z':
+          m_stream << std::right << std::setw(coordinateWidth)
+                   << std::setprecision(coordinatePrecision) << pos3d.z();
+          break;
+        case '0':
+          m_stream << std::left << std::setw(1) << 0;
+          break;
+        case '1':
+          m_stream << std::left << std::setw(1) << 1;
+          break;
+        case 'a':
+          if (cell) {
+            m_stream << std::right << std::setw(coordinateWidth)
+                     << std::setprecision(coordinatePrecision) << fpos3d.x();
+          } else {
+            m_stream << std::right << std::setw(coordinateWidth) << "N/A";
+          }
+          break;
+        case 'b':
+          if (cell) {
+            m_stream << std::right << std::setw(coordinateWidth)
+                     << std::setprecision(coordinatePrecision) << fpos3d.y();
+          } else {
+            m_stream << std::right << std::setw(coordinateWidth) << "N/A";
+          }
+          break;
+        case 'c':
+          if (cell) {
+            m_stream << std::right << std::setw(coordinateWidth)
+                     << std::setprecision(coordinatePrecision) << fpos3d.z();
+          } else {
+            m_stream << std::right << std::setw(coordinateWidth) << "N/A";
+          }
+          break;
       } // end switch
 
       // Prepare for next value. Push a space into the output stream if we are
       // not at the end of the line, or a newline if we are.
       m_stream << std::setw(1) << (it + 1 != end ? ' ' : '\n');
     } // end spec char
-  } // end for atom
+  }   // end for atom
 
   return m_stream.str();
 }

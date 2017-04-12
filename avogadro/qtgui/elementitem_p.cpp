@@ -20,19 +20,20 @@
 
 #include <avogadro/core/elements.h>
 
-#include <QtWidgets/QGraphicsSceneMouseEvent>
-#include <QtGui/QPainter>
-#include <QtWidgets/QStyleOption>
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>
+#include <QtGui/QPainter>
+#include <QtWidgets/QGraphicsSceneMouseEvent>
+#include <QtWidgets/QStyleOption>
 
 namespace Avogadro {
 namespace QtGui {
 
 using Core::Elements;
 
-ElementItem::ElementItem(int elementNumber) : m_valid(false), m_color(Qt::white),
-  m_width(26), m_height(26), m_element(elementNumber)
+ElementItem::ElementItem(int elementNumber)
+  : m_valid(false), m_color(Qt::white), m_width(26), m_height(26),
+    m_element(elementNumber)
 {
   // Want these items to be selectable
   setFlags(QGraphicsItem::ItemIsSelectable);
@@ -40,11 +41,10 @@ ElementItem::ElementItem(int elementNumber) : m_valid(false), m_color(Qt::white)
   m_symbol = Elements::symbol(static_cast<unsigned char>(m_element));
   if (!m_symbol.isEmpty())
     m_valid = true;
-  const unsigned char *color =
-      Elements::color(static_cast<unsigned char>(m_element));
+  const unsigned char* color =
+    Elements::color(static_cast<unsigned char>(m_element));
   if (color) {
-    m_color.setRgb(static_cast<int>(color[0]),
-                   static_cast<int>(color[1]),
+    m_color.setRgb(static_cast<int>(color[0]), static_cast<int>(color[1]),
                    static_cast<int>(color[2]));
   }
   // Set some custom data to make it easy to figure out which element we are
@@ -57,18 +57,18 @@ ElementItem::~ElementItem()
 
 QRectF ElementItem::boundingRect() const
 {
-  return QRectF(-m_width/2, -m_height/2, m_width, m_height);
+  return QRectF(-m_width / 2, -m_height / 2, m_width, m_height);
 }
 
 QPainterPath ElementItem::shape() const
 {
   QPainterPath path;
-  path.addRect(-m_width/2, -m_height/2, m_width, m_height);
+  path.addRect(-m_width / 2, -m_height / 2, m_width, m_height);
   return path;
 }
 
-void ElementItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
-                        QWidget *)
+void ElementItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*,
+                        QWidget*)
 {
   if (!m_valid)
     return;
@@ -80,13 +80,12 @@ void ElementItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     bgColor = QColor(m_color).lighter(150);
     pen.setColor(QColor(m_color).darker(150));
     pen.setWidth(4);
-  }
-  else {
+  } else {
     bgColor = QColor(m_color);
   }
   painter->setPen(pen);
   painter->setBrush(bgColor);
-  QRectF rect(-m_width/2, -m_height/2, m_width, m_height);
+  QRectF rect(-m_width / 2, -m_height / 2, m_width, m_height);
   painter->drawRect(rect);
   // Handle the case where the item is selected
   if (bgColor.value() < 150)

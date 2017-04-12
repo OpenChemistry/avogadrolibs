@@ -33,7 +33,6 @@ TEST(BasisSetTest, homo)
   EXPECT_EQ(basis.lumo(), 2);
   EXPECT_TRUE(basis.lumo(basis.lumo()));
 
-
   basis = SlaterSet();
   basis.setElectronCount(2, BasisSet::Alpha);
   basis.setElectronCount(1, BasisSet::Beta);
@@ -41,11 +40,10 @@ TEST(BasisSetTest, homo)
   EXPECT_EQ(basis.homo(), 1);
   EXPECT_TRUE(basis.homo(basis.homo()));
 
-  // This is broken: the lumo could be either the 
-  // next alpha or the next beta depending on the 
+  // This is broken: the lumo could be either the
+  // next alpha or the next beta depending on the
   // energetics of the system
 
   // EXPECT_EQ(basis.lumo(), 2);
   // EXPECT_TRUE(basis.lumo(basis.lumo()));
 }
-

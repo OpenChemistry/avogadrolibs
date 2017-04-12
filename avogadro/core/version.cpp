@@ -18,7 +18,7 @@
 
 namespace Avogadro {
 
-const char *version()
+const char* version()
 {
   return AvogadroLibs_VERSION;
 }

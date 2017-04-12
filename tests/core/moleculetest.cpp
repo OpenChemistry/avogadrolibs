@@ -19,10 +19,10 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/array.h>
-#include <avogadro/core/molecule.h>
-#include <avogadro/core/vector.h>
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/mesh.h>
+#include <avogadro/core/molecule.h>
+#include <avogadro/core/vector.h>
 
 using Avogadro::Index;
 using Avogadro::Vector2;
@@ -68,7 +68,7 @@ MoleculeTest::MoleculeTest()
   // Add some bonds
   m_testMolecule.perceiveBondsSimple();
 
-  Mesh *mesh = m_testMolecule.addMesh();
+  Mesh* mesh = m_testMolecule.addMesh();
 
   Array<Vector3f> vertices;
   Array<Vector3f> normals;

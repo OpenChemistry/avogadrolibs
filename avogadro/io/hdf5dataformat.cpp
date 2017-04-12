@@ -31,11 +31,12 @@ namespace Io {
 class Hdf5DataFormat::ResizeContainer
 {
 public:
-  virtual ~ResizeContainer() {};
-  virtual bool resize(const std::vector<int> &dims) = 0;
-  virtual void *dataPointer() = 0;
+  virtual ~ResizeContainer(){};
+  virtual bool resize(const std::vector<int>& dims) = 0;
+  virtual void* dataPointer() = 0;
+
 protected:
-  int dimsToNumberOfElements(const std::vector<int> &vec)
+  int dimsToNumberOfElements(const std::vector<int>& vec)
   {
     if (vec.empty())
       return 0;
@@ -50,11 +51,7 @@ protected:
 class Hdf5DataFormat::Private
 {
 public:
-  Private() :
-    fileId(H5I_INVALID_HID),
-    threshold(1024)
-  {
-  }
+  Private() : fileId(H5I_INVALID_HID), threshold(1024) {}
 
   std::string filename;
   hid_t fileId;
@@ -70,14 +67,14 @@ class ListDatasetsVisitor
 {
 public:
   std::vector<std::string> datasets;
-  static herr_t operation(hid_t /*o_id*/, const char *name,
-                          const H5O_info_t *object_info, void *op_data)
+  static herr_t operation(hid_t /*o_id*/, const char* name,
+                          const H5O_info_t* object_info, void* op_data)
   {
     // If this object isn't a dataset, continue
     if (object_info->type != H5O_TYPE_DATASET)
       return 0;
 
-    ListDatasetsVisitor *self = reinterpret_cast<ListDatasetsVisitor*>(op_data);
+    ListDatasetsVisitor* self = reinterpret_cast<ListDatasetsVisitor*>(op_data);
     self->datasets.push_back(std::string(name));
     return 0;
   }
@@ -85,43 +82,46 @@ public:
 
 class ResizeMatrixX : public Avogadro::Io::Hdf5DataFormat::ResizeContainer
 {
-  MatrixX &m_data;
+  MatrixX& m_data;
+
 public:
-  ResizeMatrixX(MatrixX &data) : m_data(data) {}
-  bool resize(const std::vector<int> &dims)
+  ResizeMatrixX(MatrixX& data) : m_data(data) {}
+  bool resize(const std::vector<int>& dims)
   {
     if (dims.size() != 2)
       return false;
     m_data.resize(dims[0], dims[1]);
     return true;
   }
-  void *dataPointer() { return m_data.data(); }
+  void* dataPointer() { return m_data.data(); }
 };
 
 class ResizeVector : public Avogadro::Io::Hdf5DataFormat::ResizeContainer
 {
-  std::vector<double> &m_data;
+  std::vector<double>& m_data;
+
 public:
-  ResizeVector(std::vector<double> &data) : m_data(data) {}
-  bool resize(const std::vector<int> &dims)
+  ResizeVector(std::vector<double>& data) : m_data(data) {}
+  bool resize(const std::vector<int>& dims)
   {
     m_data.resize(dimsToNumberOfElements(dims));
     return true;
   }
-  void *dataPointer() { return &m_data[0]; }
+  void* dataPointer() { return &m_data[0]; }
 };
 
 class ResizeArray : public Avogadro::Io::Hdf5DataFormat::ResizeContainer
 {
-  Avogadro::Core::Array<double> &m_data;
+  Avogadro::Core::Array<double>& m_data;
+
 public:
-  ResizeArray(Avogadro::Core::Array<double> &data) : m_data(data) {}
-  bool resize(const std::vector<int> &dims)
+  ResizeArray(Avogadro::Core::Array<double>& data) : m_data(data) {}
+  bool resize(const std::vector<int>& dims)
   {
     m_data.resize(dimsToNumberOfElements(dims));
     return true;
   }
-  void *dataPointer() { return &m_data[0]; }
+  void* dataPointer() { return &m_data[0]; }
 };
 
 } // end unnamed namespace
@@ -129,8 +129,7 @@ public:
 // end doxygen exclude:
 /// @endcond
 
-Hdf5DataFormat::Hdf5DataFormat()
-  : d(new Private())
+Hdf5DataFormat::Hdf5DataFormat() : d(new Private())
 {
 }
 
@@ -146,7 +145,7 @@ bool Hdf5DataFormat::isOpen() const
   return d->fileId != H5I_INVALID_HID;
 }
 
-bool Hdf5DataFormat::openFile(const std::string &filename_,
+bool Hdf5DataFormat::openFile(const std::string& filename_,
                               Hdf5DataFormat::OpenMode mode)
 {
   // File already open?
@@ -154,28 +153,27 @@ bool Hdf5DataFormat::openFile(const std::string &filename_,
     return false;
 
   switch (mode) {
-  case ReadOnly:
-    // File must exist -- use open
-    d->fileId = H5Fopen(filename_.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
-    break;
-  case ReadWriteTruncate:
-    // Create new file:
-    d->fileId = H5Fcreate(filename_.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT,
-                          H5P_DEFAULT);
-    break;
-  case ReadWriteAppend:
-    // Test if the file exists:
-    if (FILE *handle = fopen(filename_.c_str(), "r")) {
-      // Exists! Use open
-      fclose(handle);
-      d->fileId = H5Fopen(filename_.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
-    }
-    else {
-      // File doesn't exist yet. Create it.
-      d->fileId = H5Fcreate(filename_.c_str(), H5F_ACC_EXCL, H5P_DEFAULT,
-                            H5P_DEFAULT);
-    }
-    break;
+    case ReadOnly:
+      // File must exist -- use open
+      d->fileId = H5Fopen(filename_.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+      break;
+    case ReadWriteTruncate:
+      // Create new file:
+      d->fileId =
+        H5Fcreate(filename_.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+      break;
+    case ReadWriteAppend:
+      // Test if the file exists:
+      if (FILE* handle = fopen(filename_.c_str(), "r")) {
+        // Exists! Use open
+        fclose(handle);
+        d->fileId = H5Fopen(filename_.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
+      } else {
+        // File doesn't exist yet. Create it.
+        d->fileId =
+          H5Fcreate(filename_.c_str(), H5F_ACC_EXCL, H5P_DEFAULT, H5P_DEFAULT);
+      }
+      break;
   }
 
   // Error opening if file id is negative
@@ -223,22 +221,22 @@ bool Hdf5DataFormat::exceedsThreshold(size_t bytes) const
   return bytes > d->threshold;
 }
 
-bool Hdf5DataFormat::exceedsThreshold(const MatrixX &data) const
+bool Hdf5DataFormat::exceedsThreshold(const MatrixX& data) const
 {
   return exceedsThreshold(data.rows() * data.cols() * sizeof(double));
 }
 
-bool Hdf5DataFormat::exceedsThreshold(const std::vector<double> &data) const
+bool Hdf5DataFormat::exceedsThreshold(const std::vector<double>& data) const
 {
   return exceedsThreshold(data.size() * sizeof(double));
 }
 
-bool Hdf5DataFormat::exceedsThreshold(const Core::Array<double> &data) const
+bool Hdf5DataFormat::exceedsThreshold(const Core::Array<double>& data) const
 {
   return exceedsThreshold(data.size() * sizeof(double));
 }
 
-bool Hdf5DataFormat::datasetExists(const std::string &path) const
+bool Hdf5DataFormat::datasetExists(const std::string& path) const
 {
   if (!isOpen())
     return false;
@@ -250,10 +248,10 @@ bool Hdf5DataFormat::datasetExists(const std::string &path) const
   // Verify that all paths leading to the target exist, one by one (grr...)
   size_t slashIndex = 0;
   do {
-    slashIndex = path.find('/', slashIndex+1);
+    slashIndex = path.find('/', slashIndex + 1);
     if (slashIndex != std::string::npos) {
-      htri_t exists = H5Lexists(d->fileId, path.substr(0, slashIndex).c_str(),
-                                H5P_DEFAULT);
+      htri_t exists =
+        H5Lexists(d->fileId, path.substr(0, slashIndex).c_str(), H5P_DEFAULT);
       if (exists != 1)
         return false;
     }
@@ -275,7 +273,7 @@ bool Hdf5DataFormat::datasetExists(const std::string &path) const
   return info.type == H5O_TYPE_DATASET;
 }
 
-bool Hdf5DataFormat::removeDataset(const std::string &path) const
+bool Hdf5DataFormat::removeDataset(const std::string& path) const
 {
   if (!isOpen())
     return false;
@@ -283,8 +281,8 @@ bool Hdf5DataFormat::removeDataset(const std::string &path) const
   return H5Ldelete(d->fileId, path.c_str(), H5P_DEFAULT) >= 0;
 }
 
-std::vector<int>
-Hdf5DataFormat::datasetDimensions(const std::string &path) const
+std::vector<int> Hdf5DataFormat::datasetDimensions(
+  const std::string& path) const
 {
   std::vector<int> result;
   if (!isOpen())
@@ -315,7 +313,7 @@ Hdf5DataFormat::datasetDimensions(const std::string &path) const
   }
 
   // Get actual dimensions.
-  hsize_t *hdims = new hsize_t[ndims];
+  hsize_t* hdims = new hsize_t[ndims];
   int checkDims = H5Sget_simple_extent_dims(dataspace_id, hdims, nullptr);
 
   // Copy dimensions if successful.
@@ -325,16 +323,16 @@ Hdf5DataFormat::datasetDimensions(const std::string &path) const
   }
 
   // Cleanup.
-  delete [] hdims;
+  delete[] hdims;
   H5Sclose(dataspace_id);
   H5Dclose(dataset_id);
 
   return result;
 }
 
-bool Hdf5DataFormat::writeRawDataset(const std::string &path,
-                                     const double data[],
-                                     int ndims, size_t dims[]) const
+bool Hdf5DataFormat::writeRawDataset(const std::string& path,
+                                     const double data[], int ndims,
+                                     size_t dims[]) const
 {
   if (!isOpen())
     return false;
@@ -346,14 +344,14 @@ bool Hdf5DataFormat::writeRawDataset(const std::string &path,
   }
 
   // Get dimensions of data.
-  hsize_t *hdims = new hsize_t[ndims];
+  hsize_t* hdims = new hsize_t[ndims];
   for (int i = 0; i < ndims; ++i) {
     hdims[i] = static_cast<hsize_t>(dims[i]);
   }
 
   // Create a dataspace description.
   hid_t dataspace_id = H5Screate_simple(ndims, hdims, nullptr);
-  delete [] hdims;
+  delete[] hdims;
   if (dataspace_id < 0)
     return false;
 
@@ -386,33 +384,33 @@ bool Hdf5DataFormat::writeRawDataset(const std::string &path,
   return true;
 }
 
-bool Hdf5DataFormat::writeDataset(const std::string &path,
-                                  const MatrixX &data) const
+bool Hdf5DataFormat::writeDataset(const std::string& path,
+                                  const MatrixX& data) const
 {
-  size_t dims[2] = {static_cast<size_t>(data.rows()),
-                    static_cast<size_t>(data.cols())};
+  size_t dims[2] = { static_cast<size_t>(data.rows()),
+                     static_cast<size_t>(data.cols()) };
   // Transpose data -- Eigen uses column-major ordering.
   return this->writeRawDataset(path, data.transpose().data(), 2, dims);
 }
 
-bool Hdf5DataFormat::writeDataset(const std::string &path,
-                                  const std::vector<double> &data, int ndims,
-                                  size_t *dims) const
+bool Hdf5DataFormat::writeDataset(const std::string& path,
+                                  const std::vector<double>& data, int ndims,
+                                  size_t* dims) const
 {
   size_t size = data.size();
   return this->writeRawDataset(path, &(data[0]), ndims, dims ? dims : &size);
 }
 
-bool Hdf5DataFormat::writeDataset(const std::string &path,
-                                  const Core::Array<double> &data, int ndims,
-                                  size_t *dims) const
+bool Hdf5DataFormat::writeDataset(const std::string& path,
+                                  const Core::Array<double>& data, int ndims,
+                                  size_t* dims) const
 {
   size_t size = data.size();
   return this->writeRawDataset(path, &(data[0]), ndims, dims ? dims : &size);
 }
 
-std::vector<int> Hdf5DataFormat::readRawDataset(const std::string &path,
-                                                ResizeContainer &container) const
+std::vector<int> Hdf5DataFormat::readRawDataset(
+  const std::string& path, ResizeContainer& container) const
 {
   std::vector<int> result;
   if (!isOpen())
@@ -443,9 +441,9 @@ std::vector<int> Hdf5DataFormat::readRawDataset(const std::string &path,
   }
 
   // Get actual dimensions.
-  hsize_t *hdims = new hsize_t[ndims];
+  hsize_t* hdims = new hsize_t[ndims];
   if (H5Sget_simple_extent_dims(dataspace_id, hdims, nullptr) != ndims) {
-    delete [] hdims;
+    delete[] hdims;
     H5Sclose(dataspace_id);
     H5Dclose(dataset_id);
     return result;
@@ -479,22 +477,21 @@ std::vector<int> Hdf5DataFormat::readRawDataset(const std::string &path,
   return result;
 }
 
-bool Hdf5DataFormat::readDataset(const std::string &path,
-                                 MatrixX &data) const
+bool Hdf5DataFormat::readDataset(const std::string& path, MatrixX& data) const
 {
   ResizeMatrixX container(data);
   return !readRawDataset(path, container).empty();
 }
 
-std::vector<int> Hdf5DataFormat::readDataset(const std::string &path,
-                                             std::vector<double> &data) const
+std::vector<int> Hdf5DataFormat::readDataset(const std::string& path,
+                                             std::vector<double>& data) const
 {
   ResizeVector container(data);
   return readRawDataset(path, container);
 }
 
-std::vector<int> Hdf5DataFormat::readDataset(const std::string &path,
-                                             Core::Array<double> &data) const
+std::vector<int> Hdf5DataFormat::readDataset(const std::string& path,
+                                             Core::Array<double>& data) const
 {
   ResizeArray container(data);
   return readRawDataset(path, container);

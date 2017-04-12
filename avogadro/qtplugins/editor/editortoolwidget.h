@@ -35,7 +35,7 @@ class EditorToolWidget : public QWidget
   Q_OBJECT
 
 public:
-  explicit EditorToolWidget(QWidget *parent_ = 0);
+  explicit EditorToolWidget(QWidget* parent_ = 0);
   ~EditorToolWidget();
 
   void setAtomicNumber(unsigned char atomicNum);
@@ -58,8 +58,8 @@ private:
   void buildBondOrders();
   void saveElements();
 
-  Ui::EditorToolWidget *m_ui;
-  QtGui::PeriodicTableView *m_elementSelector;
+  Ui::EditorToolWidget* m_ui;
+  QtGui::PeriodicTableView* m_elementSelector;
   QList<unsigned char> m_defaultElements;
   QList<unsigned char> m_userElements;
   unsigned char m_currentElement;

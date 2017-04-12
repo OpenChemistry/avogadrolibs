@@ -33,29 +33,30 @@ class AVOGADROQTGUI_EXPORT FileBrowseWidget : public QWidget
   Q_OBJECT
 
 public:
-  enum Mode {
+  enum Mode
+  {
     ExistingFile = 0,
     ExecutableFile
   };
 
-  explicit FileBrowseWidget(QWidget *theParent = 0);
+  explicit FileBrowseWidget(QWidget* theParent = 0);
   ~FileBrowseWidget();
 
   QString fileName() const;
 
   bool validFileName() const { return m_valid; }
 
-  QPushButton *browseButton() const;
-  QLineEdit *lineEdit() const;
+  QPushButton* browseButton() const;
+  QLineEdit* lineEdit() const;
 
   void setMode(Mode m);
   Mode mode() const;
 
 signals:
-  void fileNameChanged(const QString &filename);
+  void fileNameChanged(const QString& filename);
 
 public slots:
-  void setFileName(const QString &fname);
+  void setFileName(const QString& fname);
 
 private slots:
   void browse();
@@ -71,13 +72,13 @@ private:
    * @return The absolute path to the file on the system, or a null QString if
    * not found.
    */
-  static QString searchSystemPathForFile(const QString &exec);
+  static QString searchSystemPathForFile(const QString& exec);
 
   Mode m_mode;
   bool m_valid;
-  QFileSystemModel *m_fileSystemModel;
-  QPushButton *m_button;
-  QLineEdit *m_edit;
+  QFileSystemModel* m_fileSystemModel;
+  QPushButton* m_button;
+  QLineEdit* m_edit;
 };
 
 } // namespace QtGui

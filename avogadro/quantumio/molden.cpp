@@ -39,10 +39,8 @@ using Core::Uhf;
 using Core::Rohf;
 using Core::Unknown;
 
-MoldenFile::MoldenFile():
-  m_coordFactor(1.0),
-  m_electrons(0),
-  m_mode(Unrecognized)
+MoldenFile::MoldenFile()
+  : m_coordFactor(1.0), m_electrons(0), m_mode(Unrecognized)
 {
 }
 
@@ -64,19 +62,19 @@ std::vector<std::string> MoldenFile::mimeTypes() const
   return std::vector<std::string>();
 }
 
-bool MoldenFile::read(std::istream &in, Core::Molecule &molecule)
+bool MoldenFile::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line, most sections are terminated by an empty
   // line, so they should be retained.
   while (!in.eof())
     processLine(in);
 
-  GaussianSet *basis = new GaussianSet;
+  GaussianSet* basis = new GaussianSet;
 
   int nAtom = 0;
   for (unsigned int i = 0; i < m_aPos.size(); i += 3) {
     Atom a = molecule.addAtom(static_cast<unsigned char>(m_aNums[nAtom++]));
-    a.setPosition3d(Vector3(m_aPos[i    ], m_aPos[i + 1], m_aPos[i + 2]));
+    a.setPosition3d(Vector3(m_aPos[i], m_aPos[i + 1], m_aPos[i + 2]));
   }
   // Do simple bond perception.
   molecule.perceiveBondsSimple();
@@ -86,7 +84,7 @@ bool MoldenFile::read(std::istream &in, Core::Molecule &molecule)
   return true;
 }
 
-void MoldenFile::processLine(std::istream &in)
+void MoldenFile::processLine(std::istream& in)
 {
   // First truncate the line, remove trailing white space and check for blanks.
   string line;
@@ -103,111 +101,105 @@ void MoldenFile::processLine(std::istream &in)
     if (list.size() > 1 && Core::contains(list[1], "AU"))
       m_coordFactor = BOHR_TO_ANGSTROM_D;
     m_mode = Atoms;
-  }
-  else if (Core::contains(line, "[GTO]")) {
+  } else if (Core::contains(line, "[GTO]")) {
     m_mode = GTO;
-  }
-  else if (Core::contains(line, "[MO]")) {
+  } else if (Core::contains(line, "[MO]")) {
     m_mode = MO;
-  }
-  else if (Core::contains(line, "[")) { // unknown section
+  } else if (Core::contains(line, "[")) { // unknown section
     m_mode = Unrecognized;
-  }
-  else {
+  } else {
     // We are in a section, and must parse the lines in that section.
     string shell;
     GaussianSet::orbital shellType;
 
     // Parsing a line of data in a section - what mode are we in?
     switch (m_mode) {
-    case Atoms:
-      readAtom(list);
-      break;
-    case GTO: {
-      // TODO: detect dead files and make bullet-proof
-      int atom = Core::lexicalCast<int>(list[0]);
+      case Atoms:
+        readAtom(list);
+        break;
+      case GTO: {
+        // TODO: detect dead files and make bullet-proof
+        int atom = Core::lexicalCast<int>(list[0]);
 
-      getline(in, line);
-      line = Core::trimmed(line);
-      while (!line.empty()) { // Read the shell types in this GTO.
-        list = Core::split(line, ' ');
-        if (list.size() < 1)
-          break;
-        shell = list[0];
-        shellType = GaussianSet::UU;
-        if (shell == "sp")
-          shellType = GaussianSet::SP;
-        else if (shell == "s")
-          shellType = GaussianSet::S;
-        else if (shell == "p")
-          shellType = GaussianSet::P;
-        else if (shell == "d")
-          shellType = GaussianSet::D;
-        else if (shell == "f")
-          shellType = GaussianSet::F;
-        else if (shell == "g")
-          shellType = GaussianSet::G;
+        getline(in, line);
+        line = Core::trimmed(line);
+        while (!line.empty()) { // Read the shell types in this GTO.
+          list = Core::split(line, ' ');
+          if (list.size() < 1)
+            break;
+          shell = list[0];
+          shellType = GaussianSet::UU;
+          if (shell == "sp")
+            shellType = GaussianSet::SP;
+          else if (shell == "s")
+            shellType = GaussianSet::S;
+          else if (shell == "p")
+            shellType = GaussianSet::P;
+          else if (shell == "d")
+            shellType = GaussianSet::D;
+          else if (shell == "f")
+            shellType = GaussianSet::F;
+          else if (shell == "g")
+            shellType = GaussianSet::G;
 
-        if (shellType != GaussianSet::UU) {
-          m_shellTypes.push_back(shellType);
-          m_shelltoAtom.push_back(atom);
+          if (shellType != GaussianSet::UU) {
+            m_shellTypes.push_back(shellType);
+            m_shelltoAtom.push_back(atom);
+          } else {
+            return;
+          }
+
+          int numGTOs = Core::lexicalCast<int>(list[1]);
+          m_shellNums.push_back(numGTOs);
+
+          // Now read all the exponents and contraction coefficients.
+          for (int gto = 0; gto < numGTOs; ++gto) {
+            getline(in, line);
+            line = Core::trimmed(line);
+            list = Core::split(line, ' ');
+            if (list.size() > 1) {
+              m_a.push_back(Core::lexicalCast<double>(list[0]));
+              m_c.push_back(Core::lexicalCast<double>(list[1]));
+            }
+            if (shellType == GaussianSet::SP && list.size() > 2)
+              m_csp.push_back(Core::lexicalCast<double>(list[2]));
+          }
+          // Start reading the next shell.
+          getline(in, line);
+          line = Core::trimmed(line);
         }
-        else {
-          return;
-        }
+      } break;
 
-        int numGTOs = Core::lexicalCast<int>(list[1]);
-        m_shellNums.push_back(numGTOs);
-
-        // Now read all the exponents and contraction coefficients.
-        for (int gto = 0; gto < numGTOs; ++gto) {
+      case MO:
+        // Parse the occupation, spin, energy, etc (Occup, Spin, Ene).
+        while (!line.empty() && Core::contains(line, "=")) {
           getline(in, line);
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
-          if (list.size() > 1) {
-            m_a.push_back(Core::lexicalCast<double>(list[0]));
-            m_c.push_back(Core::lexicalCast<double>(list[1]));
-          }
-          if (shellType == GaussianSet::SP && list.size() > 2)
-            m_csp.push_back(Core::lexicalCast<double>(list[2]));
+          if (Core::contains(line, "Occup"))
+            m_electrons += Core::lexicalCast<int>(list[1]);
         }
-        // Start reading the next shell.
-        getline(in, line);
-        line = Core::trimmed(line);
-      }
-    }
-    break;
 
-    case MO:
-      // Parse the occupation, spin, energy, etc (Occup, Spin, Ene).
-      while (!line.empty() && Core::contains(line, "=")) {
-        getline(in, line);
-        line = Core::trimmed(line);
-        list = Core::split(line, ' ');
-        if (Core::contains(line, "Occup"))
-          m_electrons += Core::lexicalCast<int>(list[1]);
-      }
+        // Parse the molecular orbital coefficients.
+        while (!line.empty() && !Core::contains(line, "=")) {
+          list = Core::split(line, ' ');
+          if (list.size() < 2)
+            break;
 
-      // Parse the molecular orbital coefficients.
-      while (!line.empty() && !Core::contains(line, "=")) {
-        list = Core::split(line, ' ');
-        if (list.size() < 2)
-          break;
+          m_MOcoeffs.push_back(Core::lexicalCast<double>(list[1]));
 
-        m_MOcoeffs.push_back(Core::lexicalCast<double>(list[1]));
-
-        getline(in, line);
-        line = Core::trimmed(line);
-        list = Core::split(line, ' ');
-      }
-      break;
-    default:
-      break;
+          getline(in, line);
+          line = Core::trimmed(line);
+          list = Core::split(line, ' ');
+        }
+        break;
+      default:
+        break;
     }
   }
 }
 
-void MoldenFile::readAtom(const vector<string> &list)
+void MoldenFile::readAtom(const vector<string>& list)
 {
   // element_name number atomic_number x y z
   if (list.size() < 6)
@@ -228,7 +220,7 @@ void MoldenFile::load(GaussianSet* basis)
   int nSP = 0; // number of SP shells
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i) {
     // Handle the SP case separately - this should possibly be a distinct type
-    if (m_shellTypes.at(i) == GaussianSet::SP)  {
+    if (m_shellTypes.at(i) == GaussianSet::SP) {
       // SP orbital type - currently have to unroll into two shells
       int s = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::S);
       int p = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::P);
@@ -238,8 +230,7 @@ void MoldenFile::load(GaussianSet* basis)
         ++nSP;
         ++nGTO;
       }
-    }
-    else {
+    } else {
       int b = basis->addBasis(m_shelltoAtom[i] - 1, m_shellTypes[i]);
       for (int j = 0; j < m_shellNums[i]; ++j) {
         basis->addGto(b, m_c[nGTO], m_a[nGTO]);
@@ -264,6 +255,5 @@ void MoldenFile::outputAll()
     cout << m_MOcoeffs.at(i) << "\t";
   cout << endl;
 }
-
 }
 }

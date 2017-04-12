@@ -27,8 +27,8 @@
 #include "visitor.h"
 
 namespace {
-#include "spheres_vs.h"
 #include "spheres_fs.h"
+#include "spheres_vs.h"
 }
 
 #include "avogadrogl.h"
@@ -44,7 +44,7 @@ namespace Rendering {
 class SphereGeometry::Private
 {
 public:
-  Private() { }
+  Private() {}
 
   BufferObject vbo;
   BufferObject ibo;
@@ -61,12 +61,9 @@ SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private)
 {
 }
 
-SphereGeometry::SphereGeometry(const SphereGeometry &other)
-  : Drawable(other),
-    m_spheres(other.m_spheres),
-    m_indices(other.m_indices),
-    m_dirty(true),
-    d(new Private)
+SphereGeometry::SphereGeometry(const SphereGeometry& other)
+  : Drawable(other), m_spheres(other.m_spheres), m_indices(other.m_indices),
+    m_dirty(true), d(new Private)
 {
 }
 
@@ -75,7 +72,7 @@ SphereGeometry::~SphereGeometry()
   delete d;
 }
 
-void SphereGeometry::accept(Visitor &visitor)
+void SphereGeometry::accept(Visitor& visitor)
 {
   visitor.visit(*this);
 }
@@ -106,9 +103,9 @@ void SphereGeometry::update()
       sphereVertices.push_back(vert);
       vert.textureCoord = Vector2f(-r, r);
       sphereVertices.push_back(vert);
-      vert.textureCoord = Vector2f( r,-r);
+      vert.textureCoord = Vector2f(r, -r);
       sphereVertices.push_back(vert);
-      vert.textureCoord = Vector2f( r, r);
+      vert.textureCoord = Vector2f(r, r);
       sphereVertices.push_back(vert);
 
       // 6 indexed vertices to draw a quad...
@@ -119,7 +116,7 @@ void SphereGeometry::update()
       sphereIndices.push_back(index + 2);
       sphereIndices.push_back(index + 1);
 
-      //m_spheres.push_back(Sphere(position, r, id, color));
+      // m_spheres.push_back(Sphere(position, r, id, color));
     }
 
     if (!d->vbo.upload(sphereVertices, BufferObject::ArrayBuffer))
@@ -151,7 +148,7 @@ void SphereGeometry::update()
   }
 }
 
-void SphereGeometry::render(const Camera &camera)
+void SphereGeometry::render(const Camera& camera)
 {
   if (m_indices.empty() || m_spheres.empty())
     return;
@@ -168,45 +165,38 @@ void SphereGeometry::render(const Camera &camera)
   // Set up our attribute arrays.
   if (!d->program.enableAttributeArray("vertex"))
     cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("vertex",
-                                    ColorTextureVertex::vertexOffset(),
-                                    sizeof(ColorTextureVertex),
-                                    FloatType, 3, ShaderProgram::NoNormalize)) {
+  if (!d->program.useAttributeArray(
+        "vertex", ColorTextureVertex::vertexOffset(),
+        sizeof(ColorTextureVertex), FloatType, 3, ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("color"))
     cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("color",
-                                    ColorTextureVertex::colorOffset(),
-                                    sizeof(ColorTextureVertex),
-                                    UCharType, 3, ShaderProgram::Normalize)) {
+  if (!d->program.useAttributeArray("color", ColorTextureVertex::colorOffset(),
+                                    sizeof(ColorTextureVertex), UCharType, 3,
+                                    ShaderProgram::Normalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("texCoordinate"))
     cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("texCoordinate",
-                                    ColorTextureVertex::textureCoordOffset(),
-                                    sizeof(ColorTextureVertex),
-                                    FloatType, 2, ShaderProgram::NoNormalize)) {
+  if (!d->program.useAttributeArray(
+        "texCoordinate", ColorTextureVertex::textureCoordOffset(),
+        sizeof(ColorTextureVertex), FloatType, 2, ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
 
   // Set up our uniforms (model-view and projection matrices right now).
-  if (!d->program.setUniformValue("modelView",
-                                  camera.modelView().matrix())) {
+  if (!d->program.setUniformValue("modelView", camera.modelView().matrix())) {
     cout << d->program.error() << endl;
   }
-  if (!d->program.setUniformValue("projection",
-                                  camera.projection().matrix())) {
+  if (!d->program.setUniformValue("projection", camera.projection().matrix())) {
     cout << d->program.error() << endl;
   }
 
   // Render the loaded spheres using the shader and bound VBO.
-  glDrawRangeElements(GL_TRIANGLES, 0,
-                      static_cast<GLuint>(d->numberOfVertices),
-                      static_cast<GLsizei>(d->numberOfIndices),
-                      GL_UNSIGNED_INT,
-                      reinterpret_cast<const GLvoid *>(NULL));
+  glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),
+                      static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
+                      reinterpret_cast<const GLvoid*>(NULL));
 
   d->vbo.release();
   d->ibo.release();
@@ -218,16 +208,15 @@ void SphereGeometry::render(const Camera &camera)
   d->program.release();
 }
 
-std::multimap<float, Identifier>
-SphereGeometry::hits(const Vector3f &rayOrigin,
-                     const Vector3f &rayEnd,
-                     const Vector3f &rayDirection) const
+std::multimap<float, Identifier> SphereGeometry::hits(
+  const Vector3f& rayOrigin, const Vector3f& rayEnd,
+  const Vector3f& rayDirection) const
 {
   std::multimap<float, Identifier> result;
 
   // Check for intersection.
   for (size_t i = 0; i < m_spheres.size(); ++i) {
-    const SphereColor &sphere = m_spheres[i];
+    const SphereColor& sphere = m_spheres[i];
 
     Vector3f distance = sphere.center - rayOrigin;
     float B = distance.dot(rayDirection);
@@ -255,7 +244,7 @@ SphereGeometry::hits(const Vector3f &rayOrigin,
   return result;
 }
 
-void SphereGeometry::addSphere(const Vector3f &position, const Vector3ub &color,
+void SphereGeometry::addSphere(const Vector3f& position, const Vector3ub& color,
                                float radius)
 {
   m_dirty = true;

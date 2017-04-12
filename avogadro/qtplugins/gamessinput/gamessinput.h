@@ -40,38 +40,37 @@ class GamessInput : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit GamessInput(QObject *parent = 0);
+  explicit GamessInput(QObject* parent = 0);
   ~GamessInput();
 
   QString name() const { return tr("GAMESS input"); }
 
   QString description() const { return tr("Generate input for GAMESS."); }
 
-  QList<QAction *> actions() const;
+  QList<QAction*> actions() const;
 
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 public slots:
   /**
    * Emitted when the user requests that a job's output be loaded in Avogadro.
    */
-  void openJobOutput(const MoleQueue::JobObject &job);
+  void openJobOutput(const MoleQueue::JobObject& job);
 
-  bool readMolecule(QtGui::Molecule &mol);
+  bool readMolecule(QtGui::Molecule& mol);
 
 private slots:
   void menuActivated();
 
 private:
-  QAction *m_action;
-  QtGui::Molecule *m_molecule;
-  GamessInputDialog *m_dialog;
-  const Io::FileFormat *m_outputFormat;
+  QAction* m_action;
+  QtGui::Molecule* m_molecule;
+  GamessInputDialog* m_dialog;
+  const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;
 };
-
 }
 }
 

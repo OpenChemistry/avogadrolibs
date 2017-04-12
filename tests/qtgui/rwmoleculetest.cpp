@@ -16,8 +16,8 @@
 
 #include <gtest/gtest.h>
 
-#include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <algorithm>
 #include <utility>
@@ -30,18 +30,19 @@ using Avogadro::Real;
 using Avogadro::Vector3;
 
 // TODO move this to an algorithms header
+#include <avogadro/core/elements.h>
 #include <map>
 #include <sstream>
 #include <string>
-#include <avogadro/core/elements.h>
 template <class MoleculeType>
-std::string formula(const MoleculeType &mol)
+std::string formula(const MoleculeType& mol)
 {
   // Adapted from chemkit:
   // A map of atomic symbols to their quantity.
   std::map<unsigned char, size_t> composition;
   for (Array<unsigned char>::const_iterator it = mol.atomicNumbers().begin(),
-       itEnd = mol.atomicNumbers().end(); it != itEnd; ++it) {
+                                            itEnd = mol.atomicNumbers().end();
+       it != itEnd; ++it) {
     composition[*it]++;
   }
 
@@ -221,9 +222,9 @@ TEST(RWMoleculeTest, removeAtom)
     EXPECT_EQ(i, mol.atomUniqueId(i));
   }
 
-#define VALIDATE_BOND(ind, atom1, atom2, order, uid) \
-  EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind)); \
-  EXPECT_EQ(static_cast<unsigned char>(order), mol.bondOrder(ind)); \
+#define VALIDATE_BOND(ind, atom1, atom2, order, uid)                           \
+  EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind));    \
+  EXPECT_EQ(static_cast<unsigned char>(order), mol.bondOrder(ind));            \
   EXPECT_EQ(uid, mol.bondUniqueId(ind))
 
   VALIDATE_BOND(0, 0, 1, 0, 0);
@@ -288,9 +289,9 @@ TEST(RWMoleculeTest, clearAtoms)
     EXPECT_EQ(i, mol.atomUniqueId(i));
   }
 
-#define VALIDATE_BOND(ind, atom1, atom2, order, uid) \
-  EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind)); \
-  EXPECT_EQ(static_cast<unsigned char>(order), mol.bondOrder(ind)); \
+#define VALIDATE_BOND(ind, atom1, atom2, order, uid)                           \
+  EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind));    \
+  EXPECT_EQ(static_cast<unsigned char>(order), mol.bondOrder(ind));            \
   EXPECT_EQ(uid, mol.bondUniqueId(ind))
 
   VALIDATE_BOND(0, 0, 1, 0, 0);
@@ -374,11 +375,16 @@ TEST(RWMoleculeTest, setAtomPositions3d)
 
   Array<Vector3> pos;
   Real gen = 1;
-  pos.push_back(Vector3(gen, gen, gen)); gen++;
-  pos.push_back(Vector3(gen, gen, gen)); gen++;
-  pos.push_back(Vector3(gen, gen, gen)); gen++;
-  pos.push_back(Vector3(gen, gen, gen)); gen++;
-  pos.push_back(Vector3(gen, gen, gen)); gen++;
+  pos.push_back(Vector3(gen, gen, gen));
+  gen++;
+  pos.push_back(Vector3(gen, gen, gen));
+  gen++;
+  pos.push_back(Vector3(gen, gen, gen));
+  gen++;
+  pos.push_back(Vector3(gen, gen, gen));
+  gen++;
+  pos.push_back(Vector3(gen, gen, gen));
+  gen++;
 
   mol.setAtomPositions3d(pos);
   EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
@@ -466,8 +472,8 @@ TEST(RWMoleculeTest, setAtomPosition3d)
   for (Index i = 1; i < 5; ++i)
     EXPECT_EQ(Vector3::Zero(), mol.atomPosition3d(i));
   mol.undoStack().redo();
-  EXPECT_TRUE(std::equal(pos.begin(), pos.end(),
-                         mol.atomPositions3d().begin()));
+  EXPECT_TRUE(
+    std::equal(pos.begin(), pos.end(), mol.atomPositions3d().begin()));
 }
 
 TEST(RWMoleculeTest, addBond)
@@ -514,9 +520,9 @@ TEST(RWMoleculeTest, removeBond)
   ASSERT_EQ(3, mol.bondCount());
   mol.undoStack().clear();
 
-#define VALIDATE_BOND(ind, atom1, atom2, order, uid) \
-  EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind)); \
-  EXPECT_EQ(static_cast<unsigned char>(order), mol.bondOrder(ind)); \
+#define VALIDATE_BOND(ind, atom1, atom2, order, uid)                           \
+  EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind));    \
+  EXPECT_EQ(static_cast<unsigned char>(order), mol.bondOrder(ind));            \
   EXPECT_EQ(uid, mol.bondUniqueId(ind))
 
   VALIDATE_BOND(0, 0, 1, 1, 0);
@@ -561,7 +567,7 @@ TEST(RWMoleculeTest, clearBonds)
   ASSERT_EQ(3, mol.bondCount());
   mol.undoStack().clear();
 
-  Array<std::pair<Index, Index> > pairs(mol.bondPairs());
+  Array<std::pair<Index, Index>> pairs(mol.bondPairs());
   Array<unsigned char> ords(mol.bondOrders());
 
   mol.clearBonds();
@@ -632,9 +638,9 @@ TEST(RWMoleculeTest, setBondOrder)
   mol.setBondOrder(2, 1);
   EXPECT_EQ(2, mol.undoStack().count());
 
-#define VALIDATE_BOND(ind, atom1, atom2, order, uid) \
-  EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind)); \
-  EXPECT_EQ(static_cast<unsigned char>(order), mol.bondOrder(ind)); \
+#define VALIDATE_BOND(ind, atom1, atom2, order, uid)                           \
+  EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind));    \
+  EXPECT_EQ(static_cast<unsigned char>(order), mol.bondOrder(ind));            \
   EXPECT_EQ(uid, mol.bondUniqueId(ind))
 
   VALIDATE_BOND(0, 0, 1, 3, 0);
@@ -721,9 +727,9 @@ TEST(RWMoleculeTest, setBondPair)
   mol.setBondPair(0, makeBondPair(0, 2));
   mol.setBondPair(2, makeBondPair(2, 4));
 
-#define VALIDATE_BOND(ind, atom1, atom2, order, uid) \
-  EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind)); \
-  EXPECT_EQ(static_cast<unsigned char>(order), mol.bondOrder(ind)); \
+#define VALIDATE_BOND(ind, atom1, atom2, order, uid)                           \
+  EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind));    \
+  EXPECT_EQ(static_cast<unsigned char>(order), mol.bondOrder(ind));            \
   EXPECT_EQ(uid, mol.bondUniqueId(ind))
 
   VALIDATE_BOND(0, 0, 2, 1, 0);

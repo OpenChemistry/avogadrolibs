@@ -27,7 +27,8 @@
 
 namespace Avogadro {
 namespace Core {
-template <typename T> class Array;
+template <typename T>
+class Array;
 }
 namespace Io {
 
@@ -72,7 +73,8 @@ public:
   ~Hdf5DataFormat();
 
   /** Open modes for use with openFile(). */
-  enum OpenMode {
+  enum OpenMode
+  {
     /** Open an existing file in read-only mode. The file must exist. */
     ReadOnly = 0,
     /**
@@ -99,7 +101,7 @@ public:
    * @return True if the file is successfully opened/create by the HDF5
    * subsystem, false otherwise.
    */
-  bool openFile(const std::string &filename_, OpenMode mode = ReadWriteAppend);
+  bool openFile(const std::string& filename_, OpenMode mode = ReadWriteAppend);
 
   /**
    * @return The name of the open file, or an empty string if no file is open.
@@ -115,7 +117,8 @@ public:
 
   /**
    * @brief setThreshold Set the threshold size in bytes that will be used in
-   * the exceedsThreshold functions. The threshold can be used to determine which
+   * the exceedsThreshold functions. The threshold can be used to determine
+   * which
    * data is considered "large enough" to be stored in HDF5, rather than an
    * accompanying format.
    * @param bytes The size in bytes for the threshold. Default: 1KB.
@@ -144,7 +147,7 @@ public:
    * @return true if the size of the serializable data in @a data exceeds the
    * threshold set by setThreshold.
    */
-  bool exceedsThreshold(const MatrixX &data) const;
+  bool exceedsThreshold(const MatrixX& data) const;
 
   /**
    * @brief exceedsThreshold Test if a data set is "large enough" to be stored
@@ -155,7 +158,7 @@ public:
    * @return true if the size of the serializable data in @a data exceeds the
    * threshold set by setThreshold.
    */
-  bool exceedsThreshold(const std::vector<double> &data) const;
+  bool exceedsThreshold(const std::vector<double>& data) const;
 
   /**
    * @brief exceedsThreshold Test if a data set is "large enough" to be stored
@@ -166,7 +169,7 @@ public:
    * @return true if the size of the serializable data in @a data exceeds the
    * threshold set by setThreshold.
    */
-  bool exceedsThreshold(const Core::Array<double> &data) const;
+  bool exceedsThreshold(const Core::Array<double>& data) const;
 
   /**
    * @brief datasetExists Test if the currently open file contains a dataset at
@@ -175,7 +178,7 @@ public:
    * @return true if the object at @a path both exists and is a dataset, false
    * otherwise.
    */
-  bool datasetExists(const std::string &path) const;
+  bool datasetExists(const std::string& path) const;
 
   /**
    * @brief removeDataset Remove a dataset from the currently opened file.
@@ -186,7 +189,7 @@ public:
    * file will not decrease in size as datasets are removed. For details, see
    * http://www.hdfgroup.org/HDF5/doc/H5.user/Performance.html#Freespace.
    */
-  bool removeDataset(const std::string &path) const;
+  bool removeDataset(const std::string& path) const;
 
   /**
    * @brief datasetDimensions Find the dimensions of a dataset.
@@ -194,7 +197,7 @@ public:
    * @return A vector containing the dimensionality of the data, major dimension
    * first. If an error is encountered, an empty vector is returned.
    */
-  std::vector<int> datasetDimensions(const std::string &path) const;
+  std::vector<int> datasetDimensions(const std::string& path) const;
 
   /**
    * @brief writeDataset Write the data to the currently opened file at the
@@ -203,8 +206,7 @@ public:
    * @param data The data container to serialize to HDF5.
    * @return true if the data is successfully written, false otherwise.
    */
-  bool writeDataset(const std::string &path,
-                    const MatrixX &data) const;
+  bool writeDataset(const std::string& path, const MatrixX& data) const;
 
   /**
    * @brief writeDataset Write the data to the currently opened file at the
@@ -219,9 +221,8 @@ public:
    * the dimensionality parameters will write a flat array.
    * @return true if the data is successfully written, false otherwise.
    */
-  bool writeDataset(const std::string &path,
-                    const std::vector<double> &data,
-                    int ndims = 1, size_t *dims = nullptr) const;
+  bool writeDataset(const std::string& path, const std::vector<double>& data,
+                    int ndims = 1, size_t* dims = nullptr) const;
 
   /**
    * @brief writeDataset Write the data to the currently opened file at the
@@ -236,9 +237,8 @@ public:
    * the dimensionality parameters will write a flat array.
    * @return true if the data is successfully written, false otherwise.
    */
-  bool writeDataset(const std::string &path,
-                    const Core::Array<double> &data,
-                    int ndims = 1, size_t *dims = nullptr) const;
+  bool writeDataset(const std::string& path, const Core::Array<double>& data,
+                    int ndims = 1, size_t* dims = nullptr) const;
 
   /**
    * @brief readDataset Populate the data container @data with data at from the
@@ -249,7 +249,7 @@ public:
    * @return true if the data is successfully read, false otherwise. If the
    * read fails, the @a data object may be left in an unpredictable state.
    */
-  bool readDataset(const std::string &path, MatrixX &data) const;
+  bool readDataset(const std::string& path, MatrixX& data) const;
 
   /**
    * @brief readDataset Populate the data container @data with data at from the
@@ -261,8 +261,8 @@ public:
    * dimension first. If an error occurs, an empty vector is returned and *data
    * will be set to nullptr.
    */
-  std::vector<int> readDataset(const std::string &path,
-                               std::vector<double> &data) const;
+  std::vector<int> readDataset(const std::string& path,
+                               std::vector<double>& data) const;
 
   /**
    * @brief readDataset Populate the data container @data with data at from the
@@ -274,8 +274,8 @@ public:
    * dimension first. If an error occurs, an empty vector is returned and *data
    * will be set to nullptr.
    */
-  std::vector<int> readDataset(const std::string &path,
-                               Core::Array<double> &data) const;
+  std::vector<int> readDataset(const std::string& path,
+                               Core::Array<double>& data) const;
 
   /**
    * @brief datasets Traverse the currently opened file and return a list of all
@@ -303,8 +303,8 @@ private:
    * of multiplying all values in @a dims must equal the length of the @a data.
    * @return true if the data is successfully written, false otherwise.
    */
-  bool writeRawDataset(const std::string &path, const double data[],
-                       int ndims, size_t dims[]) const;
+  bool writeRawDataset(const std::string& path, const double data[], int ndims,
+                       size_t dims[]) const;
 
   /**
    * @brief readRawDataset Populate the data container @data with data from the
@@ -315,12 +315,12 @@ private:
    * @return A vector containing the dimensionality of the dataset, major
    * dimension first. If an error occurs, an empty vector is returned.
    */
-  std::vector<int> readRawDataset(const std::string &path,
-                                  ResizeContainer &container) const;
+  std::vector<int> readRawDataset(const std::string& path,
+                                  ResizeContainer& container) const;
 
   class Private;
   /** Internal storage, used to encapsulate HDF5 data. */
-  Private * const d;
+  Private* const d;
 };
 
 } // namespace Io

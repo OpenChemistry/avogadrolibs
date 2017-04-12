@@ -25,11 +25,9 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-MolecularProperties::MolecularProperties(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_action(new QAction(this)),
-  m_dialog(nullptr),
-  m_molecule(nullptr)
+MolecularProperties::MolecularProperties(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_action(new QAction(this)),
+    m_dialog(nullptr), m_molecule(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText("&Molecular Properties...");
@@ -45,17 +43,17 @@ QString MolecularProperties::description() const
   return tr("View general properties of a molecule.");
 }
 
-QList<QAction *> MolecularProperties::actions() const
+QList<QAction*> MolecularProperties::actions() const
 {
   return QList<QAction*>() << m_action;
 }
 
-QStringList MolecularProperties::menuPath(QAction *) const
+QStringList MolecularProperties::menuPath(QAction*) const
 {
   return QStringList() << tr("&View");
 }
 
-void MolecularProperties::setMolecule(QtGui::Molecule *mol)
+void MolecularProperties::setMolecule(QtGui::Molecule* mol)
 {
   if (mol == m_molecule)
     return;
@@ -69,7 +67,7 @@ void MolecularProperties::showDialog()
 {
   if (!m_dialog) {
     m_dialog = new MolecularPropertiesDialog(
-          m_molecule, qobject_cast<QWidget*>(this->parent()));
+      m_molecule, qobject_cast<QWidget*>(this->parent()));
   }
   m_dialog->show();
 }

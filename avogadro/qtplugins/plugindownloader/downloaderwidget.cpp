@@ -15,31 +15,32 @@
 ******************************************************************************/
 
 #include "downloaderwidget.h"
-#include "zipextracter.h"
 #include "ui_downloaderwidget.h"
+#include "zipextracter.h"
 
-#include <QtCore/QFile>
 #include <QtCore/QDir>
+#include <QtCore/QFile>
 #include <QtCore/QStandardPaths>
 
+#include <QtWidgets/QGraphicsRectItem>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTableWidgetItem>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QGraphicsRectItem>
 
-#include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkRequest>
 
 namespace Avogadro {
 namespace QtPlugins {
 
-DownloaderWidget::DownloaderWidget(QWidget *parent)
-    : QDialog(parent), m_ui(new Ui::DownloaderWidget)
+DownloaderWidget::DownloaderWidget(QWidget* parent)
+  : QDialog(parent), m_ui(new Ui::DownloaderWidget)
 {
   m_numRepos = 0;
-  m_filePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+  m_filePath =
+    QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
   m_NetworkAccessManager = new QNetworkAccessManager(this);
   m_ui->setupUi(this);
   connect(m_ui->downloadButton, SIGNAL(clicked(bool)), this,
@@ -67,25 +68,24 @@ DownloaderWidget::~DownloaderWidget()
   delete m_read;
 }
 
-//download master plugin.json from Avogadro.cc
+// download master plugin.json from Avogadro.cc
 void DownloaderWidget::getRepoData()
 {
   QString url = "https://avogadro.cc/plugins.json";
   QNetworkRequest request;
-  request.setRawHeader("Accept",
-                       "text/html,application/xhtml+xml,application/"
-                       "xml;q=0.9,image/webp,*/*;q=0.8");
+  request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/"
+                                 "xml;q=0.9,image/webp,*/*;q=0.8");
   request.setRawHeader("User-Agent",
                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                        "AppleWebKit/537.36 (KHTML, like Gecko) "
                        "Chrome/54.0.2840.71 Safari/537.36");
   request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
-  request.setUrl(url);  // Set the url
+  request.setUrl(url); // Set the url
   m_reply = m_NetworkAccessManager->get(request);
   connect(m_reply, SIGNAL(finished()), this, SLOT(updateRepoData()));
 }
 
-//Process the master plugin.json hosted on Avogadro.cc
+// Process the master plugin.json hosted on Avogadro.cc
 void DownloaderWidget::updateRepoData()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
@@ -101,24 +101,27 @@ void DownloaderWidget::updateRepoData()
     m_ui->repoTable->setRowCount(m_numRepos);
     for (int i = 0; i < m_numRepos; i++) {
       m_repoList[i].name = m_root[i].get("name", "Error").asCString();
-      m_repoList[i].description = m_root[i].get("description", "Error").asCString();
+      m_repoList[i].description =
+        m_root[i].get("description", "Error").asCString();
       m_repoList[i].releaseVersion =
-          m_root[i].get("release_version", "Error").asCString();
+        m_root[i].get("release_version", "Error").asCString();
       m_repoList[i].type = m_root[i].get("type", "other").asCString();
-      m_repoList[i].updatedAt = m_root[i].get("updated_at", "Error").asCString();
-      m_repoList[i].zipballUrl = m_root[i].get("zipball_url", "Error").asCString();
+      m_repoList[i].updatedAt =
+        m_root[i].get("updated_at", "Error").asCString();
+      m_repoList[i].zipballUrl =
+        m_root[i].get("zipball_url", "Error").asCString();
       m_repoList[i].hasRelease = m_root[i].get("has_release", false).asBool();
 
       // readme should be included or at least the repo url so we don't have to
       // do this
       QStringList urlParts = m_repoList[i].zipballUrl.split("/");
       urlParts.removeLast();
-      urlParts.removeLast();  // remove /zipball/(version/branch)
+      urlParts.removeLast(); // remove /zipball/(version/branch)
       urlParts.append("readme");
       QString readmeUrl = urlParts.join("/");
 
       m_repoList[i].readmeUrl = readmeUrl;
-      QTableWidgetItem *checkbox = new QTableWidgetItem();
+      QTableWidgetItem* checkbox = new QTableWidgetItem();
       checkbox->setCheckState(Qt::Unchecked);
       m_ui->repoTable->setItem(i, 0, checkbox);
       m_ui->repoTable->setItem(i, 1, new QTableWidgetItem(m_repoList[i].name));
@@ -126,7 +129,7 @@ void DownloaderWidget::updateRepoData()
                                new QTableWidgetItem(m_repoList[i].description));
       if (m_repoList[i].hasRelease)
         m_ui->repoTable->setItem(
-            i, 3, new QTableWidgetItem(m_repoList[i].releaseVersion));
+          i, 3, new QTableWidgetItem(m_repoList[i].releaseVersion));
       else
         m_ui->repoTable->setItem(i, 3,
                                  new QTableWidgetItem(m_repoList[i].updatedAt));
@@ -135,27 +138,26 @@ void DownloaderWidget::updateRepoData()
   m_reply->deleteLater();
 }
 
-//Grab README data from Github
+// Grab README data from Github
 void DownloaderWidget::downloadREADME(int row, int col)
 {
   m_ui->readmeBrowser->clear();
   QString url = m_repoList[row].readmeUrl;
   QNetworkRequest request;
-  request.setRawHeader("Accept",
-                       "text/html,application/xhtml+xml,application/"
-                       "xml;q=0.9,image/webp,*/*;q=0.8");
+  request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/"
+                                 "xml;q=0.9,image/webp,*/*;q=0.8");
   request.setRawHeader("User-Agent",
                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                        "AppleWebKit/537.36 (KHTML, like Gecko) "
                        "Chrome/54.0.2840.71 Safari/537.36");
   request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
-  request.setUrl(url);  // Set the url
+  request.setUrl(url); // Set the url
 
   m_reply = m_NetworkAccessManager->get(request);
   connect(m_reply, SIGNAL(finished()), this, SLOT(showREADME()));
 }
 
-//display README when the user clicks a row
+// display README when the user clicks a row
 void DownloaderWidget::showREADME()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
@@ -173,7 +175,7 @@ void DownloaderWidget::showREADME()
   }
 }
 
-//see which repositories the user checked
+// see which repositories the user checked
 void DownloaderWidget::getCheckedRepos()
 {
   m_ui->readmeBrowser->clear();
@@ -190,7 +192,7 @@ void DownloaderWidget::getCheckedRepos()
   downloadNext();
 }
 
-//Used to download one zip at a time so we know which plugin data we're getting
+// Used to download one zip at a time so we know which plugin data we're getting
 void DownloaderWidget::downloadNext()
 {
   if (!m_downloadList.isEmpty()) {
@@ -204,22 +206,22 @@ void DownloaderWidget::downloadNext()
                          "AppleWebKit/537.36 (KHTML, like Gecko) "
                          "Chrome/54.0.2840.71 Safari/537.36");
     request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
-    request.setUrl(url);  // Set the url
+    request.setUrl(url); // Set the url
 
     m_reply = m_NetworkAccessManager->get(request);
     connect(m_reply, SIGNAL(finished()), this, SLOT(handleRedirect()));
   }
 }
 
-//The download url for Github is always a redirect to the actual zip
+// The download url for Github is always a redirect to the actual zip
 void DownloaderWidget::handleRedirect()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
     QVariant statusCode =
-        m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+      m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     if (statusCode.toInt() == 302) {
       QVariant possibleRedirectUrl =
-          m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+        m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
 
       QUrl _urlRedirectedTo = possibleRedirectUrl.toUrl();
 
@@ -232,10 +234,9 @@ void DownloaderWidget::handleRedirect()
                            "AppleWebKit/537.36 (KHTML, like Gecko) "
                            "Chrome/54.0.2840.71 Safari/537.36");
       request.setRawHeader("Accept-Language", "en - US, en; q = 0.8");
-      request.setUrl(_urlRedirectedTo);  // Set the url
+      request.setUrl(_urlRedirectedTo); // Set the url
       m_reply = m_NetworkAccessManager->get(request);
       connect(m_reply, SIGNAL(finished()), this, SLOT(unzipPlugin()));
-
     }
   } else {
     m_reply->deleteLater();
@@ -244,7 +245,7 @@ void DownloaderWidget::handleRedirect()
   }
 }
 
-//Save and unzip the plugin zipball
+// Save and unzip the plugin zipball
 void DownloaderWidget::unzipPlugin()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
@@ -262,7 +263,8 @@ void DownloaderWidget::unzipPlugin()
 
     QDir().mkpath(extractdirectory);
 
-    m_ui->readmeBrowser->append("\nDownloading " + filename + " to " + m_filePath);
+    m_ui->readmeBrowser->append("\nDownloading " + filename + " to " +
+                                m_filePath);
 
     QFile out(absolutePath);
     out.open(QIODevice::WriteOnly);
@@ -274,7 +276,8 @@ void DownloaderWidget::unzipPlugin()
 
     ZipExtracter unzip;
 
-    m_ui->readmeBrowser->append("Extracting " + absolutePath + " to " + extractdirectory);
+    m_ui->readmeBrowser->append("Extracting " + absolutePath + " to " +
+                                extractdirectory);
     QList<QString> ret = unzip.extract(extractdir, absolutep);
 
     if (ret.empty()) {
@@ -290,5 +293,5 @@ void DownloaderWidget::unzipPlugin()
   }
 }
 
-}  // namespace QtPlugins
-}  // namespace Avogadro
+} // namespace QtPlugins
+} // namespace Avogadro

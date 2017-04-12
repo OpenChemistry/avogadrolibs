@@ -38,13 +38,14 @@ class AVOGADRORENDERING_EXPORT Shader
 {
 public:
   /** Available shader types. */
-  enum Type {
-    Vertex,    /**< Vertex shader */
-    Fragment,  /**< Fragment shader */
-    Unknown    /**< Unknown (default) */
+  enum Type
+  {
+    Vertex,   /**< Vertex shader */
+    Fragment, /**< Fragment shader */
+    Unknown   /**< Unknown (default) */
   };
 
-  explicit Shader(Type type = Unknown, const std::string &source = "");
+  explicit Shader(Type type = Unknown, const std::string& source = "");
   ~Shader();
 
   /** Set the shader type. */
@@ -54,7 +55,7 @@ public:
   Type type() const { return m_type; }
 
   /** Set the shader source to the supplied string. */
-  void setSource(const std::string &source);
+  void setSource(const std::string& source);
 
   /** Get the source for the shader. */
   std::string source() const { return m_source; }
@@ -77,9 +78,9 @@ public:
   void cleanup();
 
 protected:
-  Type  m_type;
+  Type m_type;
   Index m_handle;
-  bool  m_dirty;
+  bool m_dirty;
 
   std::string m_source;
   std::string m_error;

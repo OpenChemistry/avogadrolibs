@@ -52,7 +52,7 @@ TEST(XyzTest, readAtomicSymbols)
   EXPECT_EQ(molecule.atom(4).atomicNumber(), 1);
 
   EXPECT_EQ(molecule.atom(4).position3d().x(), -0.51336);
-  EXPECT_EQ(molecule.atom(4).position3d().y(),  0.88916);
+  EXPECT_EQ(molecule.atom(4).position3d().y(), 0.88916);
   EXPECT_EQ(molecule.atom(4).position3d().z(), -0.36300);
 }
 
@@ -73,7 +73,7 @@ TEST(XyzTest, readAtomicNumbers)
   EXPECT_EQ(molecule.atom(4).atomicNumber(), 1);
 
   EXPECT_EQ(molecule.atom(4).position3d().x(), -0.51336);
-  EXPECT_EQ(molecule.atom(4).position3d().y(),  0.88916);
+  EXPECT_EQ(molecule.atom(4).position3d().y(), 0.88916);
   EXPECT_EQ(molecule.atom(4).position3d().z(), -0.36300);
 }
 
@@ -145,7 +145,7 @@ TEST(XyzTest, readMulti)
   EXPECT_EQ(molecule.atom(4).atomicNumber(), 1);
 
   EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().x(), -0.51336);
-  EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().y(),  0.88916);
+  EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().y(), 0.88916);
   EXPECT_DOUBLE_EQ(molecule.atom(4).position3d().z(), -0.36300);
 
   // Now read in the second structure.

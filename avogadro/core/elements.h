@@ -57,7 +57,7 @@ public:
    * @note The input string is expected to be lowercase with the first letter
    * capitalized.
    */
-  static unsigned char atomicNumberFromName(const std::string &name);
+  static unsigned char atomicNumberFromName(const std::string& name);
 
   /**
    * Get the atomic number from the supplied symbol. If the symbol is not
@@ -66,7 +66,7 @@ public:
    * @note The input string is expected to be lowercase with the first letter
    * capitalized.
    */
-  static unsigned char atomicNumberFromSymbol(const std::string &symbol);
+  static unsigned char atomicNumberFromSymbol(const std::string& symbol);
 
   /**
    * Given a string, attempt to identify an element symbol, name, or atomic
@@ -76,13 +76,13 @@ public:
    * @return the atomic number that best matches the string, or InvalidElement
    * if no match can be made.
    */
-  static unsigned char guessAtomicNumber(const std::string &str);
+  static unsigned char guessAtomicNumber(const std::string& str);
 
   /** Get the name of the element with the supplied atomic number. */
-  static const char * name(unsigned char atomicNumber);
+  static const char* name(unsigned char atomicNumber);
 
   /** Get the symbol of the element with the supplied atomic number. */
-  static const char * symbol(unsigned char atomicNumber);
+  static const char* symbol(unsigned char atomicNumber);
 
   /** Get the mass of the element with the supplied atomic number. */
   static double mass(unsigned char atomicNumber);
@@ -100,7 +100,7 @@ public:
    * Get the default color of the element with the supplied atomic number.
    * This is a pointer to a static three component unsigned char color.
    */
-  static const unsigned char * color(unsigned char atomicNumber);
+  static const unsigned char* color(unsigned char atomicNumber);
 };
 
 } // end Core namespace

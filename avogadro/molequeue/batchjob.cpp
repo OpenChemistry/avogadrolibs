@@ -30,17 +30,15 @@ namespace MoleQueue {
 const BatchJob::BatchId BatchJob::InvalidBatchId = -1;
 const BatchJob::RequestId BatchJob::InvalidRequestId = -1;
 const BatchJob::ServerId BatchJob::InvalidServerId =
-    std::numeric_limits<BatchJob::ServerId>::max();
+  std::numeric_limits<BatchJob::ServerId>::max();
 
-BatchJob::BatchJob(QObject *par) :
-  QObject(par)
+BatchJob::BatchJob(QObject* par) : QObject(par)
 {
   setup();
 }
 
-BatchJob::BatchJob(const QString &scriptFilePath, QObject *par) :
-  QObject(par),
-  m_inputGenerator(scriptFilePath)
+BatchJob::BatchJob(const QString& scriptFilePath, QObject* par)
+  : QObject(par), m_inputGenerator(scriptFilePath)
 {
   setup();
 }
@@ -49,17 +47,16 @@ BatchJob::~BatchJob()
 {
 }
 
-BatchJob::BatchId BatchJob::submitNextJob(const Core::Molecule &mol)
+BatchJob::BatchId BatchJob::submitNextJob(const Core::Molecule& mol)
 {
   // Is everything configured?
-  if (!m_inputGenerator.isValid() ||
-      m_inputGeneratorOptions.empty() ||
+  if (!m_inputGenerator.isValid() || m_inputGeneratorOptions.empty() ||
       m_moleQueueOptions.empty()) {
     return InvalidBatchId;
   }
 
   // Verify that molequeue is running:
-  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
   if (!mqManager.connectIfNeeded())
     return InvalidBatchId;
 
@@ -83,8 +80,8 @@ BatchJob::BatchId BatchJob::submitNextJob(const Core::Molecule &mol)
   // Create the job object:
   ::MoleQueue::JobObject job;
   job.fromJson(m_moleQueueOptions);
-  job.setDescription(tr("Batch Job #%L1 (%2)")
-                     .arg(bId + 1).arg(job.description()));
+  job.setDescription(
+    tr("Batch Job #%L1 (%2)").arg(bId + 1).arg(job.description()));
 
   // Main input file:
   const QString mainFileName = m_inputGenerator.mainFileName();
@@ -93,7 +90,7 @@ BatchJob::BatchId BatchJob::submitNextJob(const Core::Molecule &mol)
   // Any additional input files:
   QStringList fileNames = m_inputGenerator.fileNames();
   fileNames.removeOne(mainFileName);
-  foreach (const QString &fn, fileNames)
+  foreach (const QString& fn, fileNames)
     job.appendAdditionalInputFile(fn, m_inputGenerator.fileContents(fn));
 
   // Submit the job
@@ -118,11 +115,11 @@ bool BatchJob::lookupJob(BatchId bId)
     return false;
 
   // Verify that molequeue is running:
-  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
   if (!mqManager.connectIfNeeded())
     return false;
 
-  ::MoleQueue::Client &client = mqManager.client();
+  ::MoleQueue::Client& client = mqManager.client();
   RequestId rId = client.lookupJob(sId);
   m_requests.insert(rId, Request(Request::LookupJob, bId));
   return true;
@@ -145,9 +142,8 @@ void BatchJob::handleSubmissionReply(int rId, unsigned int sId)
   }
 }
 
-void BatchJob::handleJobStateChange(unsigned int sId,
-                                    const QString &,
-                                    const QString &)
+void BatchJob::handleJobStateChange(unsigned int sId, const QString&,
+                                    const QString&)
 {
   BatchId bId = m_serverIds.value(static_cast<ServerId>(sId), InvalidBatchId);
   if (bId == InvalidBatchId)
@@ -156,7 +152,7 @@ void BatchJob::handleJobStateChange(unsigned int sId,
   lookupJob(bId);
 }
 
-void BatchJob::handleLookupJobReply(int rId, const QJsonObject &jobInfo)
+void BatchJob::handleLookupJobReply(int rId, const QJsonObject& jobInfo)
 {
   Request req = m_requests.value(rId);
   if (req.isValid()) {
@@ -165,7 +161,7 @@ void BatchJob::handleLookupJobReply(int rId, const QJsonObject &jobInfo)
       qWarning() << "BatchJob::handleSubmissionReply(): batchID out of range.";
       return;
     }
-    JobObject &job(m_jobObjects[req.batchId]);
+    JobObject& job(m_jobObjects[req.batchId]);
     job.fromJson(jobInfo);
 
     JobState oldState = m_states[req.batchId];
@@ -178,14 +174,12 @@ void BatchJob::handleLookupJobReply(int rId, const QJsonObject &jobInfo)
 }
 
 void BatchJob::handleErrorResponse(int requestId, int errorCode,
-                                   const QString &errorMessage,
-                                   const QJsonValue &errorData)
+                                   const QString& errorMessage,
+                                   const QJsonValue& errorData)
 {
   qDebug() << "Error rcv'd: {"
-           << "requestId:" << requestId
-           << "errorCode:" << errorCode
-           << "errorMessage:" << errorMessage
-           << "errorData:" << errorData
+           << "requestId:" << requestId << "errorCode:" << errorCode
+           << "errorMessage:" << errorMessage << "errorData:" << errorData
            << "}";
 
   Request req = m_requests.value(requestId);
@@ -199,19 +193,19 @@ void BatchJob::handleErrorResponse(int requestId, int errorCode,
     return;
 
   switch (req.type) {
-  case Request::SubmitJob:
-    // The job was rejected:
-    qDebug() << "Batch job" << req.batchId << "was rejected by MoleQueue.";
-    m_states[req.batchId] = Rejected;
-    m_jobObjects[req.batchId].fromJson(QJsonObject());
-    break;
-  case Request::LookupJob:
-    qDebug() << "Batch job" << req.batchId << "failed to update.";
-    emit jobUpdated(req.batchId, false);
-    break;
-  default:
-  case Request::InvalidType:
-    break;
+    case Request::SubmitJob:
+      // The job was rejected:
+      qDebug() << "Batch job" << req.batchId << "was rejected by MoleQueue.";
+      m_states[req.batchId] = Rejected;
+      m_jobObjects[req.batchId].fromJson(QJsonObject());
+      break;
+    case Request::LookupJob:
+      qDebug() << "Batch job" << req.batchId << "failed to update.";
+      emit jobUpdated(req.batchId, false);
+      break;
+    default:
+    case Request::InvalidType:
+      break;
   }
 }
 
@@ -228,16 +222,16 @@ void BatchJob::setup()
     metaTypesRegistered = true;
   }
 
-  MoleQueueManager &mqManager = MoleQueueManager::instance();
-  ::MoleQueue::Client &client = mqManager.client();
-  connect(&client, SIGNAL(submitJobResponse(int,uint)),
-          SLOT(handleSubmissionReply(int,uint)));
-  connect(&client, SIGNAL(lookupJobResponse(int,QJsonObject)),
-          SLOT(handleLookupJobReply(int,QJsonObject)));
-  connect(&client, SIGNAL(jobStateChanged(uint,QString,QString)),
-          SLOT(handleJobStateChange(uint,QString,QString)));
-  connect(&client, SIGNAL(errorReceived(int,int,QString,QJsonValue)),
-          SLOT(handleErrorResponse(int,int,QString,QJsonValue)));
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
+  ::MoleQueue::Client& client = mqManager.client();
+  connect(&client, SIGNAL(submitJobResponse(int, uint)),
+          SLOT(handleSubmissionReply(int, uint)));
+  connect(&client, SIGNAL(lookupJobResponse(int, QJsonObject)),
+          SLOT(handleLookupJobReply(int, QJsonObject)));
+  connect(&client, SIGNAL(jobStateChanged(uint, QString, QString)),
+          SLOT(handleJobStateChange(uint, QString, QString)));
+  connect(&client, SIGNAL(errorReceived(int, int, QString, QJsonValue)),
+          SLOT(handleErrorResponse(int, int, QString, QJsonValue)));
 }
 
 } // namespace MoleQueue

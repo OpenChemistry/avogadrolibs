@@ -26,37 +26,33 @@ using namespace Avogadro::Core;
 
 namespace {
 // use alpha, beta, gamma in degrees
-Molecule createCrystal(Real a, Real b, Real c,
-                       Real alpha, Real beta, Real gamma) {
+Molecule createCrystal(Real a, Real b, Real c, Real alpha, Real beta,
+                       Real gamma)
+{
   Molecule mol;
   mol.setUnitCell(new UnitCell);
-  mol.unitCell()->setCellParameters(a, b, c,
-                                    alpha * DEG_TO_RAD,
-                                    beta * DEG_TO_RAD,
-                                    gamma * DEG_TO_RAD);
+  mol.unitCell()->setCellParameters(a, b, c, alpha * DEG_TO_RAD,
+                                    beta * DEG_TO_RAD, gamma * DEG_TO_RAD);
   return mol;
 }
 
 // use alpha, beta, gamma in degrees
-bool checkParams(const UnitCell &cell,
-                 Real a, Real b, Real c,
-                 Real alpha, Real beta, Real gamma)
+bool checkParams(const UnitCell& cell, Real a, Real b, Real c, Real alpha,
+                 Real beta, Real gamma)
 {
   Real aRad = alpha * DEG_TO_RAD;
-  Real bRad = beta  * DEG_TO_RAD;
+  Real bRad = beta * DEG_TO_RAD;
   Real gRad = gamma * DEG_TO_RAD;
-  if (std::fabs(cell.a() - a) > 1e-3
-      || std::fabs(cell.b() - b) > 1e-3
-      || std::fabs(cell.c() - c) > 1e-3
-      || std::fabs(cell.alpha() - aRad) > 1e-3
-      || std::fabs(cell.beta() - bRad) > 1e-3
-      || std::fabs(cell.gamma() - gRad) > 1e-3) {
+  if (std::fabs(cell.a() - a) > 1e-3 || std::fabs(cell.b() - b) > 1e-3 ||
+      std::fabs(cell.c() - c) > 1e-3 || std::fabs(cell.alpha() - aRad) > 1e-3 ||
+      std::fabs(cell.beta() - bRad) > 1e-3 ||
+      std::fabs(cell.gamma() - gRad) > 1e-3) {
     std::cerr << "Actual cell: "
               << "a=" << cell.a() << " "
               << "b=" << cell.b() << " "
               << "c=" << cell.c() << " "
               << "alpha=" << cell.alpha() * RAD_TO_DEG << " "
-              << "beta="  << cell.beta()  * RAD_TO_DEG << " "
+              << "beta=" << cell.beta() * RAD_TO_DEG << " "
               << "gamma=" << cell.gamma() * RAD_TO_DEG << std::endl;
     return false;
   }
@@ -89,87 +85,74 @@ TEST(UnitCellTest, cellParameters)
 TEST(UnitCellTest, niggliReduce_G1973)
 {
   // Test from Gruber 1973
-  Molecule mol = createCrystal(static_cast<Real>(2.0),
-                               static_cast<Real>(11.661904),
-                               static_cast<Real>(8.7177979),
-                               static_cast<Real>(139.66731),
-                               static_cast<Real>(152.74610),
-                               static_cast<Real>(19.396626));
+  Molecule mol =
+    createCrystal(static_cast<Real>(2.0), static_cast<Real>(11.661904),
+                  static_cast<Real>(8.7177979), static_cast<Real>(139.66731),
+                  static_cast<Real>(152.74610), static_cast<Real>(19.396626));
   EXPECT_FALSE(CrystalTools::isNiggliReduced(mol));
   EXPECT_TRUE(CrystalTools::niggliReduce(mol));
   EXPECT_TRUE(CrystalTools::isNiggliReduced(mol));
-  EXPECT_TRUE(checkParams(*mol.unitCell(),
-                          static_cast<Real>(2.0),
-                          static_cast<Real>(4.0),
-                          static_cast<Real>(4.0),
-                          static_cast<Real>(60.0000),
-                          static_cast<Real>(79.1931),
-                          static_cast<Real>(75.5225)));
+  EXPECT_TRUE(
+    checkParams(*mol.unitCell(), static_cast<Real>(2.0), static_cast<Real>(4.0),
+                static_cast<Real>(4.0), static_cast<Real>(60.0000),
+                static_cast<Real>(79.1931), static_cast<Real>(75.5225)));
 }
 
 TEST(UnitCellTest, niggliReduce_GK1976)
 {
   // Test from Gruber-Krivy 1976
-  Molecule mol = createCrystal(static_cast<Real>(3.0),
-                               static_cast<Real>(5.1961524),
-                               static_cast<Real>(2.0),
-                               static_cast<Real>(103.91975),
-                               static_cast<Real>(109.47122),
-                               static_cast<Real>(134.88211));
+  Molecule mol =
+    createCrystal(static_cast<Real>(3.0), static_cast<Real>(5.1961524),
+                  static_cast<Real>(2.0), static_cast<Real>(103.91975),
+                  static_cast<Real>(109.47122), static_cast<Real>(134.88211));
   EXPECT_FALSE(CrystalTools::isNiggliReduced(mol));
   EXPECT_TRUE(CrystalTools::niggliReduce(mol));
   EXPECT_TRUE(CrystalTools::isNiggliReduced(mol));
-  EXPECT_TRUE(checkParams(*mol.unitCell(),
-                          static_cast<Real>(2.0),
-                          static_cast<Real>(3.0),
-                          static_cast<Real>(3.0),
-                          static_cast<Real>(60.0000),
-                          static_cast<Real>(75.5225),
-                          static_cast<Real>(70.5288)));
+  EXPECT_TRUE(
+    checkParams(*mol.unitCell(), static_cast<Real>(2.0), static_cast<Real>(3.0),
+                static_cast<Real>(3.0), static_cast<Real>(60.0000),
+                static_cast<Real>(75.5225), static_cast<Real>(70.5288)));
 }
 
 // For the rotate test, just make sure that the cell parameters are the same
 // before and after the rotation.
-#define RTSO_INIT \
-  Real a, b, c, alpha, beta, gamma; \
-  Matrix3 mat; \
+#define RTSO_INIT                                                              \
+  Real a, b, c, alpha, beta, gamma;                                            \
+  Matrix3 mat;                                                                 \
   Molecule mol
-#define RTSO_DO_TEST \
-  a = mol.unitCell()->a(); b = mol.unitCell()->b(); c = mol.unitCell()->c(); \
-  alpha = mol.unitCell()->alpha(); beta = mol.unitCell()->beta(); \
-  gamma = mol.unitCell()->gamma();\
-  EXPECT_TRUE(CrystalTools::rotateToStandardOrientation(mol)); \
-  EXPECT_FLOAT_EQ(static_cast<float>(a), \
-                  static_cast<float>(mol.unitCell()->a())); \
-  EXPECT_FLOAT_EQ(static_cast<float>(b), \
-                  static_cast<float>(mol.unitCell()->b())); \
-  EXPECT_FLOAT_EQ(static_cast<float>(c), \
-                  static_cast<float>(mol.unitCell()->c())); \
-  EXPECT_FLOAT_EQ(static_cast<float>(alpha), \
-                  static_cast<float>(mol.unitCell()->alpha())); \
-  EXPECT_FLOAT_EQ(static_cast<float>(beta), \
-                  static_cast<float>(mol.unitCell()->beta())); \
-  EXPECT_FLOAT_EQ(static_cast<float>(gamma), \
+#define RTSO_DO_TEST                                                           \
+  a = mol.unitCell()->a();                                                     \
+  b = mol.unitCell()->b();                                                     \
+  c = mol.unitCell()->c();                                                     \
+  alpha = mol.unitCell()->alpha();                                             \
+  beta = mol.unitCell()->beta();                                               \
+  gamma = mol.unitCell()->gamma();                                             \
+  EXPECT_TRUE(CrystalTools::rotateToStandardOrientation(mol));                 \
+  EXPECT_FLOAT_EQ(static_cast<float>(a),                                       \
+                  static_cast<float>(mol.unitCell()->a()));                    \
+  EXPECT_FLOAT_EQ(static_cast<float>(b),                                       \
+                  static_cast<float>(mol.unitCell()->b()));                    \
+  EXPECT_FLOAT_EQ(static_cast<float>(c),                                       \
+                  static_cast<float>(mol.unitCell()->c()));                    \
+  EXPECT_FLOAT_EQ(static_cast<float>(alpha),                                   \
+                  static_cast<float>(mol.unitCell()->alpha()));                \
+  EXPECT_FLOAT_EQ(static_cast<float>(beta),                                    \
+                  static_cast<float>(mol.unitCell()->beta()));                 \
+  EXPECT_FLOAT_EQ(static_cast<float>(gamma),                                   \
                   static_cast<float>(mol.unitCell()->gamma()))
-#define RTSO_TEST_PARAMS(a_, b_, c_, alpha_, beta_, gamma_) \
-  mol = createCrystal(static_cast<Real>(a_), \
-                      static_cast<Real>(b_), \
-                      static_cast<Real>(c_), \
-                      static_cast<Real>(alpha_),  \
-                      static_cast<Real>(beta_),   \
-                      static_cast<Real>(gamma_)); \
+#define RTSO_TEST_PARAMS(a_, b_, c_, alpha_, beta_, gamma_)                    \
+  mol = createCrystal(static_cast<Real>(a_), static_cast<Real>(b_),            \
+                      static_cast<Real>(c_), static_cast<Real>(alpha_),        \
+                      static_cast<Real>(beta_), static_cast<Real>(gamma_));    \
   RTSO_DO_TEST
-#define RTSO_TEST_MATRIX(v1x, v1y, v1z, v2x, v2y, v2z, v3x, v3y, v3z) \
-  mat.col(0) = Vector3(static_cast<Real>(v1x), \
-                       static_cast<Real>(v1y), \
-                       static_cast<Real>(v1z)); \
-  mat.col(1) = Vector3(static_cast<Real>(v2x), \
-                       static_cast<Real>(v2y), \
-                       static_cast<Real>(v2z)); \
-  mat.col(2) = Vector3(static_cast<Real>(v3x), \
-                       static_cast<Real>(v3y), \
-                       static_cast<Real>(v3z)); \
-  CrystalTools::setCellMatrix(mol, mat); \
+#define RTSO_TEST_MATRIX(v1x, v1y, v1z, v2x, v2y, v2z, v3x, v3y, v3z)          \
+  mat.col(0) = Vector3(static_cast<Real>(v1x), static_cast<Real>(v1y),         \
+                       static_cast<Real>(v1z));                                \
+  mat.col(1) = Vector3(static_cast<Real>(v2x), static_cast<Real>(v2y),         \
+                       static_cast<Real>(v2z));                                \
+  mat.col(2) = Vector3(static_cast<Real>(v3x), static_cast<Real>(v3y),         \
+                       static_cast<Real>(v3z));                                \
+  CrystalTools::setCellMatrix(mol, mat);                                       \
   RTSO_DO_TEST
 
 TEST(UnitCellTest, rotateToStandardOrientation)
@@ -179,22 +162,15 @@ TEST(UnitCellTest, rotateToStandardOrientation)
   RTSO_TEST_PARAMS(3, 3, 3, 70, 90, 80);
   RTSO_TEST_PARAMS(3, 3, 3, 120, 123, 100);
   RTSO_TEST_PARAMS(4, 3, 1, 75.44444, 68.33333, 123.15682);
-  RTSO_TEST_MATRIX( 1, -4,  3,
-                    0,  5, -8,
-                    0,  0, -3);
-  RTSO_TEST_MATRIX( 1,  3,  6,
-                   -4,  5, -1,
-                    3, -8, -3);
+  RTSO_TEST_MATRIX(1, -4, 3, 0, 5, -8, 0, 0, -3);
+  RTSO_TEST_MATRIX(1, 3, 6, -4, 5, -1, 3, -8, -3);
 }
 
 TEST(UnitCellTest, setVolume)
 {
-  Molecule mol = createCrystal(static_cast<Real>(3.0),
-                               static_cast<Real>(3.0),
-                               static_cast<Real>(3.0),
-                               static_cast<Real>(90.0),
-                               static_cast<Real>(120.0),
-                               static_cast<Real>(77.0));
+  Molecule mol = createCrystal(
+    static_cast<Real>(3.0), static_cast<Real>(3.0), static_cast<Real>(3.0),
+    static_cast<Real>(90.0), static_cast<Real>(120.0), static_cast<Real>(77.0));
   EXPECT_TRUE(CrystalTools::setVolume(mol, static_cast<Real>(1.0)));
   EXPECT_FLOAT_EQ(1.f, static_cast<float>(mol.unitCell()->volume()));
   EXPECT_FLOAT_EQ(90.f,
@@ -207,24 +183,19 @@ TEST(UnitCellTest, setVolume)
 
 TEST(UnitCellTest, fractionalCoordinates)
 {
-  Molecule mol = createCrystal(static_cast<Real>(3.0),
-                               static_cast<Real>(4.0),
-                               static_cast<Real>(5.0),
-                               static_cast<Real>(90.0),
-                               static_cast<Real>(120.0),
-                               static_cast<Real>(77.0));
-  mol.addAtom(1).setPosition3d(Vector3(static_cast<Real>(0),
-                                       static_cast<Real>(0),
-                                       static_cast<Real>(0)));
+  Molecule mol = createCrystal(
+    static_cast<Real>(3.0), static_cast<Real>(4.0), static_cast<Real>(5.0),
+    static_cast<Real>(90.0), static_cast<Real>(120.0), static_cast<Real>(77.0));
+  mol.addAtom(1).setPosition3d(
+    Vector3(static_cast<Real>(0), static_cast<Real>(0), static_cast<Real>(0)));
   mol.addAtom(1).setPosition3d(Vector3(static_cast<Real>(0.7),
                                        static_cast<Real>(2.23733),
                                        static_cast<Real>(2.14574)));
   mol.addAtom(1).setPosition3d(Vector3(static_cast<Real>(2.07490),
                                        static_cast<Real>(2.09303),
                                        static_cast<Real>(1.07287)));
-  mol.addAtom(1).setPosition3d(Vector3(static_cast<Real>(3),
-                                       static_cast<Real>(0),
-                                       static_cast<Real>(0)));
+  mol.addAtom(1).setPosition3d(
+    Vector3(static_cast<Real>(3), static_cast<Real>(0), static_cast<Real>(0)));
   mol.addAtom(1).setPosition3d(Vector3(static_cast<Real>(0.89980),
                                        static_cast<Real>(3.89748),
                                        static_cast<Real>(0)));
@@ -262,19 +233,16 @@ TEST(UnitCellTest, fractionalCoordinates)
     for (int j = 0; j < 3; ++j) {
       EXPECT_FLOAT_EQ(static_cast<float>(ccoords_ref[i][j]),
                       static_cast<float>(ccoords[i][j]))
-          << " (i=" << i << "j=" << j << ")";
+        << " (i=" << i << "j=" << j << ")";
     }
   }
 }
 
 TEST(UnitCellTest, wrapAtomsToUnitCell)
 {
-  Molecule mol = createCrystal(static_cast<Real>(3.0),
-                               static_cast<Real>(4.0),
-                               static_cast<Real>(5.0),
-                               static_cast<Real>(90.0),
-                               static_cast<Real>(120.0),
-                               static_cast<Real>(77.0));
+  Molecule mol = createCrystal(
+    static_cast<Real>(3.0), static_cast<Real>(4.0), static_cast<Real>(5.0),
+    static_cast<Real>(90.0), static_cast<Real>(120.0), static_cast<Real>(77.0));
   for (int i = 0; i < 10; ++i)
     mol.addAtom(1).setPosition3d(Vector3::Zero());
 
@@ -290,7 +258,8 @@ TEST(UnitCellTest, wrapAtomsToUnitCell)
   fcoords.clear();
   EXPECT_TRUE(CrystalTools::fractionalCoordinates(mol, fcoords));
   for (std::vector<Vector3>::const_iterator it = fcoords.begin(),
-       itEnd = fcoords.end(); it != itEnd; ++it) {
+                                            itEnd = fcoords.end();
+       it != itEnd; ++it) {
     EXPECT_GE(it->x(), static_cast<Real>(0.0));
     EXPECT_LE(it->x(), static_cast<Real>(1.0));
     EXPECT_GE(it->y(), static_cast<Real>(0.0));

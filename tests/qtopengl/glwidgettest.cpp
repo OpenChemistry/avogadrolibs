@@ -14,14 +14,14 @@
 
 ******************************************************************************/
 
+#include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/spheregeometry.h>
-#include <avogadro/qtopengl/glwidget.h>
 #include <utilities/vtktesting/imageregressiontest.h>
 
 #include <QtCore/QTimer>
-#include <QtWidgets/QApplication>
 #include <QtGui/QImage>
+#include <QtWidgets/QApplication>
 
 #include <QtOpenGL/QGLFormat>
 
@@ -34,7 +34,7 @@ using Avogadro::Rendering::SphereGeometry;
 using Avogadro::QtOpenGL::GLWidget;
 using Avogadro::VtkTesting::ImageRegressionTest;
 
-int glwidgettest(int argc, char *argv[])
+int glwidgettest(int argc, char* argv[])
 {
   // Set up the default format for our GL contexts.
   QGLFormat defaultFormat = QGLFormat::defaultFormat();
@@ -46,8 +46,8 @@ int glwidgettest(int argc, char *argv[])
   widget.setGeometry(10, 10, 250, 250);
   widget.show();
 
-  GeometryNode *geometry = new GeometryNode;
-  SphereGeometry *spheres = new SphereGeometry;
+  GeometryNode* geometry = new GeometryNode;
+  SphereGeometry* spheres = new SphereGeometry;
   geometry->addDrawable(spheres);
   spheres->addSphere(Vector3f(0, 0, 0), Vector3ub(255, 0, 0), 0.5);
   spheres->addSphere(Vector3f(2, 0, 0), Vector3ub(0, 255, 0), 1.5);

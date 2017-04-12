@@ -20,21 +20,27 @@ namespace Avogadro {
 
 namespace QtPlugins {
 
-ZipExtracter::ZipExtracter() {}
+ZipExtracter::ZipExtracter()
+{
+}
 
-ZipExtracter::~ZipExtracter() {}
+ZipExtracter::~ZipExtracter()
+{
+}
 
-int ZipExtracter::copyData(struct archive *ar, struct archive *aw)
+int ZipExtracter::copyData(struct archive* ar, struct archive* aw)
 {
   int r;
-  const void *buff;
+  const void* buff;
   size_t size;
   la_int64_t offset;
 
   for (;;) {
     r = archive_read_data_block(ar, &buff, &size, &offset);
-    if (r == ARCHIVE_EOF) return (ARCHIVE_OK);
-    if (r < ARCHIVE_OK) return (r);
+    if (r == ARCHIVE_EOF)
+      return (ARCHIVE_OK);
+    if (r < ARCHIVE_OK)
+      return (r);
     r = archive_write_data_block(aw, buff, size, offset);
     if (r < ARCHIVE_OK) {
       fprintf(stderr, "%s\n", archive_error_string(aw));
@@ -43,20 +49,20 @@ int ZipExtracter::copyData(struct archive *ar, struct archive *aw)
   }
 }
 
-char *ZipExtracter::convert(const std::string &str)
+char* ZipExtracter::convert(const std::string& str)
 {
-  char *result = new char[str.length() + 1];
+  char* result = new char[str.length() + 1];
   strcpy(result, str.c_str());
   return result;
 }
 
-//Extract method from libarchive docs, changed to return QList of errors
+// Extract method from libarchive docs, changed to return QList of errors
 QList<QString> ZipExtracter::extract(std::string extractdir,
                                      std::string absolutepath)
 {
-  struct archive *a;
-  struct archive *ext;
-  struct archive_entry *entry;
+  struct archive* a;
+  struct archive* ext;
+  struct archive_entry* entry;
   int flags;
   int r;
   QList<QString> toReturn;
@@ -86,8 +92,10 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
   for (;;) {
     r = archive_read_next_header(a, &entry);
 
-    if (r == ARCHIVE_EOF) break;
-    if (r < ARCHIVE_OK) fprintf(stderr, "%s\n", archive_error_string(a));
+    if (r == ARCHIVE_EOF)
+      break;
+    if (r < ARCHIVE_OK)
+      fprintf(stderr, "%s\n", archive_error_string(a));
     if (r < ARCHIVE_WARN) {
       toReturn.append("ERROR - r < ARCHIVE_WARN");
       return toReturn;
@@ -103,14 +111,16 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
       fprintf(stderr, "%s\n", archive_error_string(ext));
     else if (archive_entry_size(entry) > 0) {
       r = copyData(a, ext);
-      if (r < ARCHIVE_OK) fprintf(stderr, "%s\n", archive_error_string(ext));
+      if (r < ARCHIVE_OK)
+        fprintf(stderr, "%s\n", archive_error_string(ext));
       if (r < ARCHIVE_WARN) {
         toReturn.append("ERROR - r < ARCHIVE_WARN");
         return toReturn;
       }
     }
     r = archive_write_finish_entry(ext);
-    if (r < ARCHIVE_OK) fprintf(stderr, "%s\n", archive_error_string(ext));
+    if (r < ARCHIVE_OK)
+      fprintf(stderr, "%s\n", archive_error_string(ext));
     if (r < ARCHIVE_WARN) {
       toReturn.append("ERROR - r < ARCHIVE_WARN");
       return toReturn;

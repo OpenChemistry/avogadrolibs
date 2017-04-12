@@ -39,7 +39,7 @@ public:
     return ReadWrite | MultiMolecule | File | Stream | String;
   }
 
-  FileFormat * newInstance() const override { return new XyzFormat; }
+  FileFormat* newInstance() const override { return new XyzFormat; }
   std::string identifier() const override { return "Avogadro: XYZ"; }
   std::string name() const override { return "XYZ"; }
   std::string description() const override
@@ -55,8 +55,8 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &inStream, Core::Molecule &molecule) override;
-  bool write(std::ostream &outStream, const Core::Molecule &molecule) override;
+  bool read(std::istream& inStream, Core::Molecule& molecule) override;
+  bool write(std::ostream& outStream, const Core::Molecule& molecule) override;
 };
 
 } // end Io namespace

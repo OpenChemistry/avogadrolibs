@@ -41,7 +41,7 @@ class SlaterSet;
 class AVOGADROCORE_EXPORT SlaterSetTools
 {
 public:
-  explicit SlaterSetTools(Molecule *mol = 0);
+  explicit SlaterSetTools(Molecule* mol = 0);
   ~SlaterSetTools();
 
   /**
@@ -51,7 +51,7 @@ public:
    * @param molecularOrbitalNumber The molecular orbital number.
    * @return The value of the molecular orbital at the position specified.
    */
-  double calculateMolecularOrbital(const Vector3 &position,
+  double calculateMolecularOrbital(const Vector3& position,
                                    int molecularOrbitalNumber) const;
 
   /**
@@ -60,7 +60,7 @@ public:
    * @param position The position in space to calculate the value.
    * @return The value of the electron density at the position specified.
    */
-  double calculateElectronDensity(const Vector3 &position) const;
+  double calculateElectronDensity(const Vector3& position) const;
 
   /**
    * @brief Calculate the value of the electron spin density at the position
@@ -68,7 +68,7 @@ public:
    * @param position The position in space to calculate the value.
    * @return The value of the spin density at the position specified.
    */
-  double calculateSpinDensity(const Vector3 &position) const;
+  double calculateSpinDensity(const Vector3& position) const;
 
   /**
    * @brief Check that the basis set is valid and can be used.
@@ -77,8 +77,8 @@ public:
   bool isValid() const;
 
 private:
-  Molecule *m_molecule;
-  SlaterSet *m_basis;
+  Molecule* m_molecule;
+  SlaterSet* m_basis;
 
   bool isSmall(double value) const;
 
@@ -88,7 +88,7 @@ private:
    * molecular orbital or density matrix elements.
    * @param position The position in space to calculate the value.
    */
-  std::vector<double> calculateValues(const Vector3 &position) const;
+  std::vector<double> calculateValues(const Vector3& position) const;
 };
 
 } // End Core namespace

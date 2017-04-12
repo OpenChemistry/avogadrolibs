@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_QTGUI_PYTHONSCRIPT_H
 #define AVOGADRO_QTGUI_PYTHONSCRIPT_H
 
-#include <QtCore/QObject>
 #include "avogadroqtguiexport.h"
+#include <QtCore/QObject>
 
 #include <avogadro/core/avogadrocore.h>
 
@@ -44,9 +44,9 @@ public:
    * @param scriptFilePath_ Absolute path to python script.
    * @{
    */
-  explicit PythonScript(const QString &scriptFilePath_,
-                        QObject *parent_ = nullptr);
-  explicit PythonScript(QObject *parent_ = nullptr);
+  explicit PythonScript(const QString& scriptFilePath_,
+                        QObject* parent_ = nullptr);
+  explicit PythonScript(QObject* parent_ = nullptr);
   /**@}*/
 
   ~PythonScript() override;
@@ -65,7 +65,7 @@ public:
    * Set the path to the input generator script file. This will reset any
    * cached data held by this class.
    */
-  void setScriptFilePath(const QString &scriptFile);
+  void setScriptFilePath(const QString& scriptFile);
 
   /**
    * @return True if an error is set.
@@ -97,8 +97,8 @@ public:
    * optionally passing scriptStdin to the processes standard input. Returns
    * the standard output of the process when finished.
    */
-  QByteArray execute(const QStringList &args,
-                     const QByteArray &scriptStdin = QByteArray());
+  QByteArray execute(const QStringList& args,
+                     const QByteArray& scriptStdin = QByteArray());
 
 public slots:
   /**
@@ -113,7 +113,7 @@ protected:
   QStringList m_errors;
 
 private:
-  QString processErrorString(const QProcess &proc) const;
+  QString processErrorString(const QProcess& proc) const;
 };
 
 } // namespace QtGui

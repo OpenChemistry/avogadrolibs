@@ -118,18 +118,18 @@ TEST(HydrogenToolsTest, adjustHydrogens_adjustments)
     HydrogenTools::Adjustment adjustment;
     std::string expectedFormula;
     switch (i) {
-    case 0:
-      adjustment = HydrogenTools::Add;
-      expectedFormula = "C2H14";
-      break;
-    case 1:
-      adjustment = HydrogenTools::Remove;
-      expectedFormula = "C2H5";
-      break;
-    case 2:
-      adjustment = HydrogenTools::AddAndRemove;
-      expectedFormula = "C2H8";
-      break;
+      case 0:
+        adjustment = HydrogenTools::Add;
+        expectedFormula = "C2H14";
+        break;
+      case 1:
+        adjustment = HydrogenTools::Remove;
+        expectedFormula = "C2H5";
+        break;
+      case 2:
+        adjustment = HydrogenTools::AddAndRemove;
+        expectedFormula = "C2H8";
+        break;
     }
 
     Molecule m;

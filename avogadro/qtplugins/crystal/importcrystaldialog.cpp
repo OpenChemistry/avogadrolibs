@@ -34,9 +34,8 @@ using std::string;
 namespace Avogadro {
 namespace QtPlugins {
 
-ImportCrystalDialog::ImportCrystalDialog(QWidget *p) :
-  QDialog(p),
-  m_ui(new Ui::ImportCrystalDialog)
+ImportCrystalDialog::ImportCrystalDialog(QWidget* p)
+  : QDialog(p), m_ui(new Ui::ImportCrystalDialog)
 {
   m_ui->setupUi(this);
 }
@@ -46,7 +45,7 @@ ImportCrystalDialog::~ImportCrystalDialog()
   delete m_ui;
 }
 
-bool ImportCrystalDialog::importCrystalClipboard(Avogadro::Core::Molecule &mol)
+bool ImportCrystalDialog::importCrystalClipboard(Avogadro::Core::Molecule& mol)
 {
   QString text = QApplication::clipboard()->text();
   m_ui->edit_text->setText(text);
@@ -62,12 +61,12 @@ bool ImportCrystalDialog::importCrystalClipboard(Avogadro::Core::Molecule &mol)
   std::stringstream s(text.toStdString());
 
   if (ext.empty() || ext == "POSCAR") {
-   Avogadro::Io::PoscarFormat format;
-   if (format.read(s, mol))
-     return true;
-   // Print out the error messages if we failed
-   else
-     qDebug() << QString::fromStdString(format.error());
+    Avogadro::Io::PoscarFormat format;
+    if (format.read(s, mol))
+      return true;
+    // Print out the error messages if we failed
+    else
+      qDebug() << QString::fromStdString(format.error());
   }
   // Try using the extension
   else {
@@ -88,11 +87,9 @@ bool ImportCrystalDialog::importCrystalClipboard(Avogadro::Core::Molecule &mol)
 
 void ImportCrystalDialog::displayInvalidFormatMessage()
 {
-  QMessageBox::critical
-    (this,
-     tr("Cannot Parse Text"),
-     tr("The input is either not formatted using\n"
-        "VASP format or the obabel conversion failed.\n\n"));
+  QMessageBox::critical(this, tr("Cannot Parse Text"),
+                        tr("The input is either not formatted using\n"
+                           "VASP format or the obabel conversion failed.\n\n"));
   reject();
   close();
 }

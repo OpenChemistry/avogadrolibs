@@ -28,9 +28,9 @@
 
 #include <avogadro/rendering/primitive.h>
 
-#include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/qtgui/persistentatom.h>
 #include <avogadro/qtgui/persistentbond.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <avogadro/core/avogadrocore.h>
 
@@ -59,29 +59,30 @@ class BondCentricTool : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit BondCentricTool(QObject *parent_ = nullptr);
+  explicit BondCentricTool(QObject* parent_ = nullptr);
   ~BondCentricTool();
 
   QString name() const override;
   QString description() const override;
   unsigned char priority() const override { return 40; }
-  QAction * activateAction() const override { return m_activateAction; }
-  QWidget * toolWidget() const override;
+  QAction* activateAction() const override { return m_activateAction; }
+  QWidget* toolWidget() const override;
 
-  void setMolecule(QtGui::Molecule *) override;
-  void setEditMolecule(QtGui::RWMolecule *) override;
-  void setGLWidget(QtOpenGL::GLWidget *widget) override;
-  void setGLRenderer(Rendering::GLRenderer *ren) override;
+  void setMolecule(QtGui::Molecule*) override;
+  void setEditMolecule(QtGui::RWMolecule*) override;
+  void setGLWidget(QtOpenGL::GLWidget* widget) override;
+  void setGLRenderer(Rendering::GLRenderer* ren) override;
 
-  QUndoCommand * mousePressEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseDoubleClickEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseMoveEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) override;
+  QUndoCommand* mousePressEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseDoubleClickEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseMoveEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
 
-  void draw(Rendering::GroupNode &node) override;
+  void draw(Rendering::GroupNode& node) override;
 
 private:
-  enum MoveState {
+  enum MoveState
+  {
     IgnoreMove = 0,
     RotatePlane,
     RotateBondedAtom,
@@ -89,50 +90,55 @@ private:
     RotateNeighborAtom
   };
 
-  enum ResetBondBehavior { KeepBond = 0, ResetBond };
+  enum ResetBondBehavior
+  {
+    KeepBond = 0,
+    ResetBond
+  };
   void reset(ResetBondBehavior bond = ResetBond);
 
   void initializeBondVectors();
   void updateBondVector();
 
   // Mouse press event handlers:
-  QUndoCommand* initRotatePlane(QMouseEvent *e,
-                                const Rendering::Identifier &ident);
-  QUndoCommand* initRotateBondedAtom(QMouseEvent *e,
-                                     const QtGui::RWAtom &clickedAtom);
-  QUndoCommand* initAdjustBondLength(QMouseEvent *e,
-                                     const QtGui::RWAtom &clickedAtom);
-  QUndoCommand* initRotateNeighborAtom(QMouseEvent *e,
-                                       const QtGui::RWAtom &clickedAtom,
-                                       const QtGui::RWAtom &anchorAtom);
+  QUndoCommand* initRotatePlane(QMouseEvent* e,
+                                const Rendering::Identifier& ident);
+  QUndoCommand* initRotateBondedAtom(QMouseEvent* e,
+                                     const QtGui::RWAtom& clickedAtom);
+  QUndoCommand* initAdjustBondLength(QMouseEvent* e,
+                                     const QtGui::RWAtom& clickedAtom);
+  QUndoCommand* initRotateNeighborAtom(QMouseEvent* e,
+                                       const QtGui::RWAtom& clickedAtom,
+                                       const QtGui::RWAtom& anchorAtom);
 
   // Mouse move event handlers:
-  QUndoCommand* rotatePlane(QMouseEvent *e);
-  QUndoCommand* rotateBondedAtom(QMouseEvent *e);
-  QUndoCommand* adjustBondLength(QMouseEvent *e);
-  QUndoCommand* rotateNeighborAtom(QMouseEvent *e);
+  QUndoCommand* rotatePlane(QMouseEvent* e);
+  QUndoCommand* rotateBondedAtom(QMouseEvent* e);
+  QUndoCommand* adjustBondLength(QMouseEvent* e);
+  QUndoCommand* rotateNeighborAtom(QMouseEvent* e);
 
   // Drawing helpers:
-  void drawBondQuad(Rendering::GeometryNode &node,
-                    const QtGui::RWBond &bond) const;
-  void drawBondAngle(Rendering::GeometryNode &node,
-                     const QtGui::RWBond &selectedBond,
-                     const QtGui::RWBond &movingBond) const;
-  void drawBondLengthLabel(Rendering::GeometryNode &node,
-                           const QtGui::RWBond &bond);
-  void drawAtomBondAngles(Rendering::GeometryNode &node,
-                          const QtGui::RWAtom &atom,
-                          const QtGui::RWBond &anchorBond);
-  void drawAtomBondAngle(Rendering::GeometryNode &node,
-                         const QtGui::RWAtom &atom,
-                         const QtGui::RWBond &anchorBond,
-                         const QtGui::RWBond &otherBond,
-                         const Vector3ub &color);
+  void drawBondQuad(Rendering::GeometryNode& node,
+                    const QtGui::RWBond& bond) const;
+  void drawBondAngle(Rendering::GeometryNode& node,
+                     const QtGui::RWBond& selectedBond,
+                     const QtGui::RWBond& movingBond) const;
+  void drawBondLengthLabel(Rendering::GeometryNode& node,
+                           const QtGui::RWBond& bond);
+  void drawAtomBondAngles(Rendering::GeometryNode& node,
+                          const QtGui::RWAtom& atom,
+                          const QtGui::RWBond& anchorBond);
+  void drawAtomBondAngle(Rendering::GeometryNode& node,
+                         const QtGui::RWAtom& atom,
+                         const QtGui::RWBond& anchorBond,
+                         const QtGui::RWBond& otherBond,
+                         const Vector3ub& color);
 
   // Bond utilities
-  bool bondContainsAtom(const QtGui::RWBond &bond, const QtGui::RWAtom &atom) const;
-  QtGui::RWAtom otherBondedAtom(const QtGui::RWBond &bond,
-                             const QtGui::RWAtom &atom) const;
+  bool bondContainsAtom(const QtGui::RWBond& bond,
+                        const QtGui::RWAtom& atom) const;
+  QtGui::RWAtom otherBondedAtom(const QtGui::RWBond& bond,
+                                const QtGui::RWAtom& atom) const;
 
   // The 'fragment' is the SkeletonTree of the 1.x implementation. It is a list
   // of atoms created by buildFragment(bond, startAtom), which walks the bonds
@@ -141,16 +147,17 @@ private:
   // cycle is detected, only startAtom is added to m_fragment.
   void resetFragment() { m_fragment.clear(); }
   bool fragmentHasAtom(int uid) const;
-  void buildFragment(const QtGui::RWBond &bond, const QtGui::RWAtom &startAtom);
-  bool buildFragmentRecurse(const QtGui::RWBond &bond, const QtGui::RWAtom &startAtom,
-                            const QtGui::RWAtom &currentAtom);
+  void buildFragment(const QtGui::RWBond& bond, const QtGui::RWAtom& startAtom);
+  bool buildFragmentRecurse(const QtGui::RWBond& bond,
+                            const QtGui::RWAtom& startAtom,
+                            const QtGui::RWAtom& currentAtom);
   // Use transformFragment to transform the position of each atom in the
   // fragment by m_transform.
   void transformFragment() const;
 
-  QAction *m_activateAction;
-  QtGui::RWMolecule *m_molecule;
-  Rendering::GLRenderer *m_renderer;
+  QAction* m_activateAction;
+  QtGui::RWMolecule* m_molecule;
+  Rendering::GLRenderer* m_renderer;
   MoveState m_moveState;
   QPoint m_clickedPoint;
   QPoint m_lastDragPoint;

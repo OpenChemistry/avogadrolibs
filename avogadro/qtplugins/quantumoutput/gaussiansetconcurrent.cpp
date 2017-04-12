@@ -33,25 +33,25 @@ using Core::GaussianSet;
 using Core::GaussianSetTools;
 using Core::Cube;
 
-template<typename Derived>
+template <typename Derived>
 class BasisSetConcurrent
 {
-  void setMolecule(Molecule *mol)
+  void setMolecule(Molecule* mol)
   {
-    static_cast<Derived *>(this)->setMolecule(mol);
+    static_cast<Derived*>(this)->setMolecule(mol);
   }
 };
 
 struct GaussianShell
 {
-  GaussianSetTools *tools; // A pointer to the tools, can't write to member vars
-  Cube *tCube;             // The target cube, used to initialise temp cubes too
+  GaussianSetTools* tools; // A pointer to the tools, can't write to member vars
+  Cube* tCube;             // The target cube, used to initialise temp cubes too
   unsigned int pos;        // The index of the point to calculate the MO for
   unsigned int state;      // The MO number to calculate
 };
 
-GaussianSetConcurrent::GaussianSetConcurrent(QObject *p) : QObject(p),
-  m_gaussianShells(nullptr), m_set(nullptr), m_tools(nullptr)
+GaussianSetConcurrent::GaussianSetConcurrent(QObject* p)
+  : QObject(p), m_gaussianShells(nullptr), m_set(nullptr), m_tools(nullptr)
 {
 }
 
@@ -60,28 +60,28 @@ GaussianSetConcurrent::~GaussianSetConcurrent()
   delete m_gaussianShells;
 }
 
-void GaussianSetConcurrent::setMolecule(Core::Molecule *mol)
+void GaussianSetConcurrent::setMolecule(Core::Molecule* mol)
 {
   if (!mol)
     return;
-  m_set = dynamic_cast<GaussianSet *>(mol->basisSet());
+  m_set = dynamic_cast<GaussianSet*>(mol->basisSet());
   if (m_tools)
     delete m_tools;
   m_tools = new GaussianSetTools(mol);
 }
 
-bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube *cube,
+bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
                                                       unsigned int state)
 {
   return setUpCalculation(cube, state, GaussianSetConcurrent::processOrbital);
 }
 
-bool GaussianSetConcurrent::calculateElectronDensity(Core::Cube *cube)
+bool GaussianSetConcurrent::calculateElectronDensity(Core::Cube* cube)
 {
   return setUpCalculation(cube, 0, GaussianSetConcurrent::processDensity);
 }
 
-bool GaussianSetConcurrent::calculateSpinDensity(Core::Cube *cube)
+bool GaussianSetConcurrent::calculateSpinDensity(Core::Cube* cube)
 {
   return setUpCalculation(cube, 0, GaussianSetConcurrent::processSpinDensity);
 }
@@ -95,9 +95,9 @@ void GaussianSetConcurrent::calculationComplete()
   emit finished();
 }
 
-bool GaussianSetConcurrent::setUpCalculation(Core::Cube *cube,
+bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
                                              unsigned int state,
-                                             void (*func)(GaussianShell &))
+                                             void (*func)(GaussianShell&))
 {
   if (!m_set || !m_tools)
     return false;
@@ -106,7 +106,7 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube *cube,
 
   // Set up the points we want to calculate the density at.
   m_gaussianShells =
-      new QVector<GaussianShell>(static_cast<int>(cube->data()->size()));
+    new QVector<GaussianShell>(static_cast<int>(cube->data()->size()));
 
   for (int i = 0; i < m_gaussianShells->size(); ++i) {
     (*m_gaussianShells)[i].tools = m_tools;
@@ -129,27 +129,23 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube *cube,
   return true;
 }
 
-void GaussianSetConcurrent::processOrbital(GaussianShell &shell)
+void GaussianSetConcurrent::processOrbital(GaussianShell& shell)
 {
   Vector3 pos = shell.tCube->position(shell.pos);
-  shell.tCube->setValue(shell.pos,
-                        shell.tools->calculateMolecularOrbital(pos,
-                                                               shell.state));
+  shell.tCube->setValue(
+    shell.pos, shell.tools->calculateMolecularOrbital(pos, shell.state));
 }
 
-void GaussianSetConcurrent::processDensity(GaussianShell &shell)
+void GaussianSetConcurrent::processDensity(GaussianShell& shell)
 {
   Vector3 pos = shell.tCube->position(shell.pos);
-  shell.tCube->setValue(shell.pos,
-                        shell.tools->calculateElectronDensity(pos));
+  shell.tCube->setValue(shell.pos, shell.tools->calculateElectronDensity(pos));
 }
 
-void GaussianSetConcurrent::processSpinDensity(GaussianShell &shell)
+void GaussianSetConcurrent::processSpinDensity(GaussianShell& shell)
 {
   Vector3 pos = shell.tCube->position(shell.pos);
-  shell.tCube->setValue(shell.pos,
-                        shell.tools->calculateSpinDensity(pos));
+  shell.tCube->setValue(shell.pos, shell.tools->calculateSpinDensity(pos));
 }
-
 }
 }

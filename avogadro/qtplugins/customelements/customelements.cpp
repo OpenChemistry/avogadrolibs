@@ -26,10 +26,9 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro {
 namespace QtPlugins {
 
-CustomElements::CustomElements(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_molecule(nullptr),
-  m_reassignAction(new QAction(tr("Reassign &Custom Elements..."), this))
+CustomElements::CustomElements(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_reassignAction(new QAction(tr("Reassign &Custom Elements..."), this))
 {
   connect(m_reassignAction, SIGNAL(triggered()), SLOT(reassign()));
 
@@ -45,17 +44,17 @@ QString CustomElements::description() const
   return tr("Manipulate custom element types in the current molecule.");
 }
 
-QList<QAction *> CustomElements::actions() const
+QList<QAction*> CustomElements::actions() const
 {
-  return QList<QAction *>() << m_reassignAction;
+  return QList<QAction*>() << m_reassignAction;
 }
 
-QStringList CustomElements::menuPath(QAction *) const
+QStringList CustomElements::menuPath(QAction*) const
 {
   return QStringList() << tr("&Build");
 }
 
-void CustomElements::setMolecule(QtGui::Molecule *mol)
+void CustomElements::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule != mol) {
     if (m_molecule)
@@ -72,10 +71,9 @@ void CustomElements::setMolecule(QtGui::Molecule *mol)
 
 void CustomElements::moleculeChanged(unsigned int c)
 {
-  Molecule::MoleculeChanges changes =
-      static_cast<Molecule::MoleculeChanges>(c);
-  if (changes & Molecule::Atoms
-      && (changes & (Molecule::Added | Molecule::Modified))) {
+  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
+  if (changes & Molecule::Atoms &&
+      (changes & (Molecule::Added | Molecule::Modified))) {
     updateReassignAction();
   }
 }

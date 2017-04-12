@@ -24,10 +24,10 @@
 
 #include <QtCore/QMimeData>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QApplication>
 #include <QtGui/QClipboard>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QMessageBox>
 
 #include <string>
 #include <vector>
@@ -37,13 +37,12 @@ namespace QtPlugins {
 
 using namespace Avogadro::QtGui;
 
-CopyPaste::CopyPaste(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_pastedFormat(nullptr),
-  m_copyAction(new QAction(tr("Copy"), this)),
-  m_cutAction(new QAction(tr("Cut"), this)),
-  m_clearAction(new QAction(tr("Clear"), this)),
-  m_pasteAction(new QAction(tr("Paste"), this))
+CopyPaste::CopyPaste(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_pastedFormat(nullptr),
+    m_copyAction(new QAction(tr("Copy"), this)),
+    m_cutAction(new QAction(tr("Cut"), this)),
+    m_clearAction(new QAction(tr("Clear"), this)),
+    m_pasteAction(new QAction(tr("Paste"), this))
 {
   m_copyAction->setShortcut(QKeySequence::Copy);
   m_copyAction->setIcon(QIcon::fromTheme("edit-copy"));
@@ -67,19 +66,19 @@ CopyPaste::~CopyPaste()
   delete m_pastedFormat;
 }
 
-QList<QAction *> CopyPaste::actions() const
+QList<QAction*> CopyPaste::actions() const
 {
-  QList<QAction *> result;
-  return result << m_copyAction << m_cutAction
-                << m_pasteAction << m_clearAction;
+  QList<QAction*> result;
+  return result << m_copyAction << m_cutAction << m_pasteAction
+                << m_clearAction;
 }
 
-QStringList CopyPaste::menuPath(QAction *) const
+QStringList CopyPaste::menuPath(QAction*) const
 {
   return QStringList() << tr("&Edit");
 }
 
-void CopyPaste::setMolecule(QtGui::Molecule *mol)
+void CopyPaste::setMolecule(QtGui::Molecule* mol)
 {
   m_molecule = mol;
 }
@@ -94,19 +93,20 @@ bool CopyPaste::copy()
   Io::CjsonFormat cjson;
   if (!cjson.writeString(output, *m_molecule)) {
     QMessageBox::warning(
-          qobject_cast<QWidget*>(this->parent()), tr("Error Clipping Molecule"),
-          tr("Error generating clipboard data.") + "\n"
-          + tr("Output format: %1\n%2", "file format")
+      qobject_cast<QWidget*>(this->parent()), tr("Error Clipping Molecule"),
+      tr("Error generating clipboard data.") + "\n" +
+        tr("Output format: %1\n%2", "file format")
           .arg(QString::fromStdString(m_pastedFormat->name()))
-          .arg(QString::fromStdString(m_pastedFormat->description()))+ "\n\n"
-          + tr("Reader error:\n%1")
+          .arg(QString::fromStdString(m_pastedFormat->description())) +
+        "\n\n" +
+        tr("Reader error:\n%1")
           .arg(QString::fromStdString(m_pastedFormat->error())));
     return false;
   }
 
   QByteArray outputBA(output.c_str(), static_cast<int>(output.length()));
 
-  QMimeData *mimeData(new QMimeData);
+  QMimeData* mimeData(new QMimeData);
 
   std::vector<std::string> mimeTypes(cjson.mimeTypes());
   for (size_t i = 0; i < mimeTypes.size(); ++i)
@@ -123,15 +123,15 @@ void CopyPaste::cut()
     return;
 
   m_molecule->undoMolecule()->clearAtoms();
-  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds
-                          | QtGui::Molecule::Removed );
+  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |
+                          QtGui::Molecule::Removed);
 }
 
 void CopyPaste::clear()
 {
   m_molecule->undoMolecule()->clearAtoms();
-  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds
-                          | QtGui::Molecule::Removed );
+  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |
+                          QtGui::Molecule::Removed);
 }
 
 void CopyPaste::paste()
@@ -146,7 +146,7 @@ void CopyPaste::paste()
   if (!m_molecule)
     return; // nothing to do
 
-  const QMimeData *mimeData(QApplication::clipboard()->mimeData());
+  const QMimeData* mimeData(QApplication::clipboard()->mimeData());
 
   if (!mimeData) {
     QMessageBox::warning(qobject_cast<QWidget*>(this->parent()),
@@ -156,12 +156,12 @@ void CopyPaste::paste()
   }
 
   // Try to find a reader that can handle the available mime-types.
-  Io::FileFormatManager &mgr = Io::FileFormatManager::instance();
+  Io::FileFormatManager& mgr = Io::FileFormatManager::instance();
   QStringList mimeTypes(mimeData->formats());
   Io::FileFormat::Operations ops(Io::FileFormat::Read | Io::FileFormat::String);
-  foreach (const QString &mimeType, mimeTypes) {
-    if ((m_pastedFormat = mgr.newFormatFromMimeType(mimeType.toStdString(),
-                                                    ops))) {
+  foreach (const QString& mimeType, mimeTypes) {
+    if ((m_pastedFormat =
+           mgr.newFormatFromMimeType(mimeType.toStdString(), ops))) {
       m_pastedData = mimeData->data(mimeType);
       break;
     }
@@ -179,16 +179,17 @@ void CopyPaste::paste()
   // we have a format, so try to insert the new bits into m_molecule
   Avogadro::QtGui::Molecule mol(m_molecule->parent());
   bool success = m_pastedFormat->readString(
-        std::string(m_pastedData.constData(), m_pastedData.size()), mol);
+    std::string(m_pastedData.constData(), m_pastedData.size()), mol);
 
   if (!success) {
     QMessageBox::warning(
-          qobject_cast<QWidget*>(this->parent()), tr("Error Pasting Molecule"),
-          tr("Error reading clipboard data.") + "\n"
-          + tr("Detected format: %1\n%2", "file format description")
+      qobject_cast<QWidget*>(this->parent()), tr("Error Pasting Molecule"),
+      tr("Error reading clipboard data.") + "\n" +
+        tr("Detected format: %1\n%2", "file format description")
           .arg(QString::fromStdString(m_pastedFormat->name()))
-          .arg(QString::fromStdString(m_pastedFormat->description()))+ "\n\n"
-          + tr("Reader error:\n%1")
+          .arg(QString::fromStdString(m_pastedFormat->description())) +
+        "\n\n" +
+        tr("Reader error:\n%1")
           .arg(QString::fromStdString(m_pastedFormat->error())));
   }
 

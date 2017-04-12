@@ -42,14 +42,14 @@ public:
   /** Required type macro. */
   vtkTypeMacro(vtkAvogadroActor, vtkActor)
 
-  /** Print the state of the object. */
-  void PrintSelf(ostream& os, vtkIndent indent);
+    /** Print the state of the object. */
+    void PrintSelf(ostream& os, vtkIndent indent);
 
   /** Render the opaque geometry. */
-  int RenderOpaqueGeometry(vtkViewport *viewport);
+  int RenderOpaqueGeometry(vtkViewport* viewport);
 
   /** Render the translucent geometry. */
-  int RenderTranslucentPolygonalGeometry(vtkViewport *viewport);
+  int RenderTranslucentPolygonalGeometry(vtkViewport* viewport);
 
   /** Does the actor have transluscent geometry? */
   int HasTranslucentPolygonalGeometry();
@@ -58,19 +58,19 @@ public:
    * Get the bounds for this Actor as (Xmin,Xmax,Ymin,Ymax,Zmin,Zmax). (The
    * method GetBounds(double bounds[6]) is available from the superclass.)
    */
-  double *GetBounds();
+  double* GetBounds();
 
   /** Set the scene on the actor, the actor assumes ownership of the scene. */
-  void setScene(Avogadro::Rendering::Scene *scene);
+  void setScene(Avogadro::Rendering::Scene* scene);
 
   /** Get the scene being rendered by the actor. */
-  Avogadro::Rendering::Scene * GetScene() { return m_scene; }
+  Avogadro::Rendering::Scene* GetScene() { return m_scene; }
 
 protected:
   vtkAvogadroActor();
   ~vtkAvogadroActor();
 
-  Avogadro::Rendering::Scene *m_scene;
+  Avogadro::Rendering::Scene* m_scene;
   double m_bounds[6];
 
   bool m_initialized;

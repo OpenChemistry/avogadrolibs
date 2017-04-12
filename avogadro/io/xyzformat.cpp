@@ -24,8 +24,8 @@
 #include <iomanip>
 #include <istream>
 #include <ostream>
-#include <string>
 #include <sstream>
+#include <string>
 
 using std::string;
 using std::endl;
@@ -56,7 +56,7 @@ XyzFormat::~XyzFormat()
 {
 }
 
-bool XyzFormat::read(std::istream &inStream, Core::Molecule &mol)
+bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
   size_t numAtoms = 0;
   if (!(inStream >> numAtoms)) {
@@ -86,8 +86,7 @@ bool XyzFormat::read(std::istream &inStream, Core::Molecule &mol)
     else
       atomicNum = static_cast<unsigned char>(lexicalCast<short int>(tokens[0]));
 
-    Vector3 pos(lexicalCast<double>(tokens[1]),
-                lexicalCast<double>(tokens[2]),
+    Vector3 pos(lexicalCast<double>(tokens[1]), lexicalCast<double>(tokens[2]),
                 lexicalCast<double>(tokens[3]));
 
     Atom newAtom = mol.addAtom(atomicNum);
@@ -98,15 +97,16 @@ bool XyzFormat::read(std::istream &inStream, Core::Molecule &mol)
   if (mol.atomCount() != numAtoms) {
     std::ostringstream errorStream;
     errorStream << "Error parsing atom at index " << mol.atomCount()
-                << " (line " << 3 + mol.atomCount() << ").\n" << buffer;
+                << " (line " << 3 + mol.atomCount() << ").\n"
+                << buffer;
     appendError(errorStream.str());
     return false;
   }
 
   // Do we have an animation?
   size_t numAtoms2;
-  if (getline(inStream, buffer) && (numAtoms2 = lexicalCast<int>(buffer))
-      && numAtoms == numAtoms2) {
+  if (getline(inStream, buffer) && (numAtoms2 = lexicalCast<int>(buffer)) &&
+      numAtoms == numAtoms2) {
     getline(inStream, buffer); // Skip the blank
     mol.setCoordinate3d(mol.atomPositions3d(), 0);
     int coordSet = 1;
@@ -146,7 +146,7 @@ bool XyzFormat::read(std::istream &inStream, Core::Molecule &mol)
   return true;
 }
 
-bool XyzFormat::write(std::ostream &outStream, const Core::Molecule &mol)
+bool XyzFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 {
   size_t numAtoms = mol.atomCount();
 
@@ -164,16 +164,12 @@ bool XyzFormat::write(std::ostream &outStream, const Core::Molecule &mol)
     }
 
     outStream << std::setw(3) << std::left
-              << Elements::symbol(atom.atomicNumber()) << " "
-              << std::setw(10) << std::right << std::fixed
-              << std::setprecision(5)
-              << atom.position3d().x() << " "
-              << std::setw(10) << std::right << std::fixed
-              << std::setprecision(5)
-              << atom.position3d().y() << " "
-              << std::setw(10) << std::right << std::fixed
-              << std::setprecision(5)
-              << atom.position3d().z() << "\n";
+              << Elements::symbol(atom.atomicNumber()) << " " << std::setw(10)
+              << std::right << std::fixed << std::setprecision(5)
+              << atom.position3d().x() << " " << std::setw(10) << std::right
+              << std::fixed << std::setprecision(5) << atom.position3d().y()
+              << " " << std::setw(10) << std::right << std::fixed
+              << std::setprecision(5) << atom.position3d().z() << "\n";
   }
 
   return true;

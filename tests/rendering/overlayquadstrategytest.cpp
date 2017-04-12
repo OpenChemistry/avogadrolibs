@@ -16,8 +16,8 @@
 
 #include <gtest/gtest.h>
 
-#include <avogadro/rendering/overlayquadstrategy.h>
 #include <avogadro/rendering/camera.h>
+#include <avogadro/rendering/overlayquadstrategy.h>
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
@@ -57,19 +57,19 @@ TEST(OverlayQuadStrategyTest, exercise)
 
   ASSERT_EQ(4, quad.size());
 
-  EXPECT_FLOAT_EQ(40,  quad[0][0]);
+  EXPECT_FLOAT_EQ(40, quad[0][0]);
   EXPECT_FLOAT_EQ(301, quad[0][1]);
-  EXPECT_FLOAT_EQ(0,   quad[0][2]);
+  EXPECT_FLOAT_EQ(0, quad[0][2]);
 
-  EXPECT_FLOAT_EQ(90,  quad[1][0]);
+  EXPECT_FLOAT_EQ(90, quad[1][0]);
   EXPECT_FLOAT_EQ(301, quad[1][1]);
-  EXPECT_FLOAT_EQ(0,   quad[1][2]);
+  EXPECT_FLOAT_EQ(0, quad[1][2]);
 
-  EXPECT_FLOAT_EQ(40,  quad[2][0]);
+  EXPECT_FLOAT_EQ(40, quad[2][0]);
   EXPECT_FLOAT_EQ(240, quad[2][1]);
-  EXPECT_FLOAT_EQ(0,   quad[2][2]);
+  EXPECT_FLOAT_EQ(0, quad[2][2]);
 
-  EXPECT_FLOAT_EQ(90,  quad[3][0]);
+  EXPECT_FLOAT_EQ(90, quad[3][0]);
   EXPECT_FLOAT_EQ(240, quad[3][1]);
-  EXPECT_FLOAT_EQ(0,   quad[3][2]);
+  EXPECT_FLOAT_EQ(0, quad[3][2]);
 }

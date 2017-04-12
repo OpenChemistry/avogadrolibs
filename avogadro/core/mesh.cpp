@@ -31,13 +31,12 @@ Mesh::Mesh() : m_stable(true), m_other(0), m_cube(0), m_lock(new Mutex)
   m_colors.reserve(1);
 }
 
-Mesh::Mesh(const Mesh &other)
- : m_vertices(other.m_vertices), m_normals(other.m_normals),
-   m_colors(other.m_colors), m_name(other.m_name), m_stable(true),
-   m_isoValue(other.m_isoValue), m_other(other.m_other), m_cube(other.m_cube),
-   m_lock(new Mutex)
+Mesh::Mesh(const Mesh& other)
+  : m_vertices(other.m_vertices), m_normals(other.m_normals),
+    m_colors(other.m_colors), m_name(other.m_name), m_stable(true),
+    m_isoValue(other.m_isoValue), m_other(other.m_other), m_cube(other.m_cube),
+    m_lock(new Mutex)
 {
-
 }
 
 Mesh::~Mesh()
@@ -65,24 +64,24 @@ bool Mesh::stable()
   return m_stable;
 }
 
-const Core::Array<Vector3f> &Mesh::vertices() const
+const Core::Array<Vector3f>& Mesh::vertices() const
 {
   return m_vertices;
 }
 
-const Vector3f * Mesh::vertex(int n) const
+const Vector3f* Mesh::vertex(int n) const
 {
   return &(m_vertices[n * 3]);
 }
 
-bool Mesh::setVertices(const Core::Array<Vector3f> &values)
+bool Mesh::setVertices(const Core::Array<Vector3f>& values)
 {
   m_vertices.clear();
   m_vertices = values;
   return true;
 }
 
-bool Mesh::addVertices(const Core::Array<Vector3f> &values)
+bool Mesh::addVertices(const Core::Array<Vector3f>& values)
 {
   if (m_vertices.capacity() < m_vertices.size() + values.size())
     m_vertices.reserve(m_vertices.capacity() * 2);
@@ -90,30 +89,29 @@ bool Mesh::addVertices(const Core::Array<Vector3f> &values)
     for (unsigned int i = 0; i < values.size(); ++i)
       m_vertices.push_back(values.at(i));
     return true;
-  }
-  else {
+  } else {
     return false;
   }
 }
 
-const Core::Array<Vector3f> &Mesh::normals() const
+const Core::Array<Vector3f>& Mesh::normals() const
 {
   return m_normals;
 }
 
-const Vector3f * Mesh::normal(int n) const
+const Vector3f* Mesh::normal(int n) const
 {
   return &(m_normals[n * 3]);
 }
 
-bool Mesh::setNormals(const Core::Array<Vector3f> &values)
+bool Mesh::setNormals(const Core::Array<Vector3f>& values)
 {
   m_normals.clear();
   m_normals = values;
   return true;
 }
 
-bool Mesh::addNormals(const Core::Array<Vector3f> &values)
+bool Mesh::addNormals(const Core::Array<Vector3f>& values)
 {
   if (m_normals.capacity() < m_normals.size() + values.size())
     m_normals.reserve(m_normals.capacity() * 2);
@@ -121,34 +119,33 @@ bool Mesh::addNormals(const Core::Array<Vector3f> &values)
     for (unsigned int i = 0; i < values.size(); ++i)
       m_normals.push_back(values.at(i));
     return true;
-  }
-  else {
+  } else {
     return false;
   }
 }
 
-const Core::Array<Color3f> &Mesh::colors() const
+const Core::Array<Color3f>& Mesh::colors() const
 {
   return m_colors;
 }
 
-const Color3f * Mesh::color(int n) const
+const Color3f* Mesh::color(int n) const
 {
   // If there is only one color return that, otherwise colored by vertex.
   if (m_colors.size() == 1)
     return &(m_colors[0]);
   else
-    return &(m_colors[n*3]);
+    return &(m_colors[n * 3]);
 }
 
-bool Mesh::setColors(const Core::Array<Color3f> &values)
+bool Mesh::setColors(const Core::Array<Color3f>& values)
 {
   m_colors.clear();
   m_colors = values;
   return true;
 }
 
-bool Mesh::addColors(const Core::Array<Color3f> &values)
+bool Mesh::addColors(const Core::Array<Color3f>& values)
 {
   if (m_colors.capacity() < m_colors.size() + values.size())
     m_colors.reserve(m_colors.capacity() * 2);
@@ -156,8 +153,7 @@ bool Mesh::addColors(const Core::Array<Color3f> &values)
     for (unsigned int i = 0; i < values.size(); ++i)
       m_colors.push_back(values.at(i));
     return true;
-  }
-  else {
+  } else {
     return false;
   }
 }
@@ -169,8 +165,7 @@ bool Mesh::valid() const
       return true;
     else
       return false;
-  }
-  else {
+  } else {
     return false;
   }
 }

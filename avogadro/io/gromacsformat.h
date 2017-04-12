@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_IO_GROMACSFORMAT_H
 #define AVOGADRO_IO_GROMACSFORMAT_H
 
-#include "fileformat.h"
 #include "avogadroioexport.h"
+#include "fileformat.h"
 
 #include <avogadro/core/avogadrocore.h>
 
@@ -40,7 +40,7 @@ public:
     return Read | File | Stream | String;
   }
 
-  FileFormat * newInstance() const override { return new GromacsFormat; }
+  FileFormat* newInstance() const override { return new GromacsFormat; }
   std::string identifier() const override { return "Avogadro: GROMACS"; }
   std::string name() const override { return "GROMACS"; }
   std::string description() const override
@@ -56,8 +56,8 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) override;
-  bool write(std::ostream &out, const Core::Molecule &molecule) override;
+  bool read(std::istream& in, Core::Molecule& molecule) override;
+  bool write(std::ostream& out, const Core::Molecule& molecule) override;
 };
 
 } // namespace Io

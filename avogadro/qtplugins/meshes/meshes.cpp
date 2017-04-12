@@ -17,8 +17,8 @@
 #include "meshes.h"
 
 #include <avogadro/core/array.h>
-#include <avogadro/core/molecule.h>
 #include <avogadro/core/mesh.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/meshgeometry.h>
@@ -36,7 +36,7 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::MeshGeometry;
 
-Meshes::Meshes(QObject *p) : ScenePlugin(p), m_enabled(false)
+Meshes::Meshes(QObject* p) : ScenePlugin(p), m_enabled(false)
 {
 }
 
@@ -46,7 +46,8 @@ Meshes::~Meshes()
 
 // Generator for std::generate call below:
 namespace {
-struct Sequence {
+struct Sequence
+{
   Sequence() : i(0) {}
   unsigned int operator()() { return i++; }
   void reset() { i = 0; }
@@ -54,16 +55,16 @@ struct Sequence {
 };
 }
 
-void Meshes::process(const Molecule &mol, GroupNode &node)
+void Meshes::process(const Molecule& mol, GroupNode& node)
 {
-  GeometryNode *geometry = new GeometryNode;
+  GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
 
   unsigned char opacity = 100;
 
   if (mol.meshCount()) {
     qDebug() << "We have" << mol.meshCount() << "meshes...";
-    const Mesh *mesh = mol.mesh(0);
+    const Mesh* mesh = mol.mesh(0);
     qDebug() << mesh << "with" << mesh->numVertices() << "vertices";
 
     /// @todo Allow use of MeshGeometry without an index array when all vertices
@@ -73,7 +74,7 @@ void Meshes::process(const Molecule &mol, GroupNode &node)
     Core::Array<unsigned int> indices(mesh->numVertices());
     std::generate(indices.begin(), indices.end(), indexGenerator);
 
-    MeshGeometry *mesh1 = new MeshGeometry;
+    MeshGeometry* mesh1 = new MeshGeometry;
     geometry->addDrawable(mesh1);
     mesh1->setColor(Vector3ub(255, 0, 0));
     mesh1->setOpacity(opacity);
@@ -83,13 +84,12 @@ void Meshes::process(const Molecule &mol, GroupNode &node)
                                         : Rendering::TranslucentPass);
 
     if (mol.meshCount() >= 2) {
-      MeshGeometry *mesh2 = new MeshGeometry;
+      MeshGeometry* mesh2 = new MeshGeometry;
       geometry->addDrawable(mesh2);
       mesh = mol.mesh(1);
       if (mesh->numVertices() < indices.size()) {
         indices.resize(mesh->numVertices());
-      }
-      else if (mesh->numVertices() > indices.size()) {
+      } else if (mesh->numVertices() > indices.size()) {
         indexGenerator.reset();
         indices.resize(mesh->numVertices());
         std::generate(indices.begin(), indices.end(), indexGenerator);
@@ -113,6 +113,5 @@ void Meshes::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-
 }
 }

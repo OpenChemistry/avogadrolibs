@@ -19,11 +19,11 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
 #include <QtGui/QClipboard>
 #include <QtGui/QIcon>
 #include <QtGui/QKeySequence>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
 
 #include <string>
@@ -37,10 +37,10 @@ using Core::Array;
 
 typedef Avogadro::Core::Array<Avogadro::Core::Bond> NeighborListType;
 
-Bonding::Bonding(QObject *parent_) :
-  Avogadro::QtGui::ExtensionPlugin(parent_),
-  m_action(new QAction(tr("Bond Atoms"), this)),
-  m_clearAction(new QAction(tr("Remove Bonds"), this))
+Bonding::Bonding(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_),
+    m_action(new QAction(tr("Bond Atoms"), this)),
+    m_clearAction(new QAction(tr("Remove Bonds"), this))
 {
   m_action->setShortcut(QKeySequence("Ctrl+B"));
   connect(m_action, SIGNAL(triggered()), SLOT(bond2()));
@@ -51,18 +51,18 @@ Bonding::~Bonding()
 {
 }
 
-QList<QAction *> Bonding::actions() const
+QList<QAction*> Bonding::actions() const
 {
-  QList<QAction *> result;
+  QList<QAction*> result;
   return result << m_action << m_clearAction;
 }
 
-QStringList Bonding::menuPath(QAction *) const
+QStringList Bonding::menuPath(QAction*) const
 {
   return QStringList() << tr("&Build");
 }
 
-void Bonding::setMolecule(QtGui::Molecule *mol)
+void Bonding::setMolecule(QtGui::Molecule* mol)
 {
   m_molecule = mol;
 }
@@ -112,11 +112,10 @@ void Bonding::bond2()
       Vector3 jpos = m_molecule->atomPositions3d()[j];
       Vector3 diff = jpos - ipos;
 
-      if (std::fabs(diff[0]) > cutoff
-          || std::fabs(diff[1]) > cutoff
-          || std::fabs(diff[2]) > cutoff
-          || (m_molecule->atomicNumbers()[i] == 1
-              && m_molecule->atomicNumbers()[j] == 1)) {
+      if (std::fabs(diff[0]) > cutoff || std::fabs(diff[1]) > cutoff ||
+          std::fabs(diff[2]) > cutoff ||
+          (m_molecule->atomicNumbers()[i] == 1 &&
+           m_molecule->atomicNumbers()[j] == 1)) {
         continue;
       }
 
@@ -146,13 +145,14 @@ void Bonding::clearBonds()
       const NeighborListType bonds = m_molecule->bonds(i);
       for (NeighborListType::const_iterator it = bonds.begin();
            it != bonds.end(); ++it) {
-             bondIndices.push_back(it->index());
+        bondIndices.push_back(it->index());
       }
     } // end looping through atoms
 
     // now delete the bonds
     for (std::vector<size_t>::const_reverse_iterator it = bondIndices.rbegin(),
-         itEnd = bondIndices.rend(); it != itEnd; ++it) {
+                                                     itEnd = bondIndices.rend();
+         it != itEnd; ++it) {
       m_molecule->removeBond(*it);
     }
   } // end else(selected atoms)

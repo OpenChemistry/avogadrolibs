@@ -31,8 +31,8 @@
 #include <limits>
 
 namespace {
-#include "linestrip_vs.h"
 #include "linestrip_fs.h"
+#include "linestrip_vs.h"
 }
 
 using Avogadro::Core::Array;
@@ -47,12 +47,12 @@ namespace Avogadro {
 namespace Rendering {
 
 const size_t LineStripGeometry::InvalidIndex =
-    std::numeric_limits<size_t>::max();
+  std::numeric_limits<size_t>::max();
 
 class LineStripGeometry::Private
 {
 public:
-  Private() { }
+  Private() {}
 
   BufferObject vbo;
 
@@ -62,21 +62,14 @@ public:
 };
 
 LineStripGeometry::LineStripGeometry()
-  : m_color(255, 0, 0),
-    m_opacity(255),
-    m_dirty(false),
-    d(new Private)
+  : m_color(255, 0, 0), m_opacity(255), m_dirty(false), d(new Private)
 {
 }
 
-LineStripGeometry::LineStripGeometry(const LineStripGeometry &other)
-  : Drawable(other),
-    m_vertices(other.m_vertices),
-    m_lineStarts(other.m_lineStarts),
-    m_lineWidths(other.m_lineWidths),
-    m_color(other.m_color),
-    m_opacity(other.m_opacity),
-    m_dirty(true),
+LineStripGeometry::LineStripGeometry(const LineStripGeometry& other)
+  : Drawable(other), m_vertices(other.m_vertices),
+    m_lineStarts(other.m_lineStarts), m_lineWidths(other.m_lineWidths),
+    m_color(other.m_color), m_opacity(other.m_opacity), m_dirty(true),
     d(new Private)
 {
 }
@@ -86,7 +79,7 @@ LineStripGeometry::~LineStripGeometry()
   delete d;
 }
 
-void LineStripGeometry::accept(Visitor &visitor)
+void LineStripGeometry::accept(Visitor& visitor)
 {
   visitor.visit(*this);
 }
@@ -119,10 +112,10 @@ void LineStripGeometry::update()
   }
 }
 
-void LineStripGeometry::render(const Camera &camera)
+void LineStripGeometry::render(const Camera& camera)
 {
-  if (m_vertices.empty() || m_lineStarts.empty()
-      || m_lineWidths.size() != m_lineStarts.size())
+  if (m_vertices.empty() || m_lineStarts.empty() ||
+      m_lineWidths.size() != m_lineStarts.size())
     return;
 
   // Prepare the VBO and shader program if necessary.
@@ -137,25 +130,23 @@ void LineStripGeometry::render(const Camera &camera)
   if (!d->program.enableAttributeArray("vertex"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("vertex", PackedVertex::vertexOffset(),
-                                    sizeof(PackedVertex),
-                                    FloatType, 3, ShaderProgram::NoNormalize)) {
+                                    sizeof(PackedVertex), FloatType, 3,
+                                    ShaderProgram::NoNormalize)) {
     cout << d->program.error() << endl;
   }
   if (!d->program.enableAttributeArray("color"))
     cout << d->program.error() << endl;
   if (!d->program.useAttributeArray("color", PackedVertex::colorOffset(),
-                                    sizeof(PackedVertex),
-                                    UCharType, 4, ShaderProgram::Normalize)) {
+                                    sizeof(PackedVertex), UCharType, 4,
+                                    ShaderProgram::Normalize)) {
     cout << d->program.error() << endl;
   }
 
   // Set up our uniforms (model-view and projection matrices right now).
-  if (!d->program.setUniformValue("modelView",
-                                  camera.modelView().matrix())) {
+  if (!d->program.setUniformValue("modelView", camera.modelView().matrix())) {
     cout << d->program.error() << endl;
   }
-  if (!d->program.setUniformValue("projection",
-                                  camera.projection().matrix())) {
+  if (!d->program.setUniformValue("projection", camera.projection().matrix())) {
     cout << d->program.error() << endl;
   }
 
@@ -169,8 +160,7 @@ void LineStripGeometry::render(const Camera &camera)
     startIndex = *startIter;
     endIndex = *(startIter + 1);
     glLineWidth(*widthIter);
-    glDrawArrays(GL_LINE_STRIP,
-                 static_cast<GLint>(startIndex),
+    glDrawArrays(GL_LINE_STRIP, static_cast<GLint>(startIndex),
                  static_cast<GLsizei>(endIndex - startIndex));
     ++startIter;
     ++widthIter;
@@ -180,8 +170,7 @@ void LineStripGeometry::render(const Camera &camera)
   startIndex = *startIter;
   endIndex = static_cast<unsigned int>(m_vertices.size());
   glLineWidth(*widthIter);
-  glDrawArrays(GL_LINE_STRIP,
-               static_cast<GLint>(startIndex),
+  glDrawArrays(GL_LINE_STRIP, static_cast<GLint>(startIndex),
                static_cast<GLsizei>(endIndex - startIndex));
 
   d->vbo.release();
@@ -200,8 +189,8 @@ void LineStripGeometry::clear()
   m_dirty = true;
 }
 
-size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f> &vertices,
-                                       const Core::Array<Vector4ub> &rgba,
+size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f>& vertices,
+                                       const Core::Array<Vector4ub>& rgba,
                                        float lineWidth)
 {
   if (vertices.empty() || vertices.size() != rgba.size())
@@ -223,8 +212,8 @@ size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f> &vertices,
   return result;
 }
 
-size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f> &vertices,
-                                       const Core::Array<Vector3ub> &rgb,
+size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f>& vertices,
+                                       const Core::Array<Vector3ub>& rgb,
                                        float lineWidth)
 {
   if (vertices.empty() || vertices.size() != rgb.size())
@@ -249,7 +238,7 @@ size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f> &vertices,
   return result;
 }
 
-size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f> &vertices,
+size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f>& vertices,
                                        float lineWidth)
 {
   if (vertices.empty())

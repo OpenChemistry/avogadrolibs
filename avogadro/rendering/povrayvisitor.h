@@ -37,7 +37,7 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT POVRayVisitor : public Visitor
 {
 public:
-  POVRayVisitor(const Camera &camera);
+  POVRayVisitor(const Camera& camera);
   ~POVRayVisitor() override;
 
   void begin();
@@ -46,23 +46,23 @@ public:
   /**
    * The overloaded visit functions, the base versions of which do nothing.
    */
-  void visit(Node &) override { return; }
-  void visit(GroupNode &) override { return; }
-  void visit(GeometryNode &) override { return; }
-  void visit(Drawable &) override;
-  void visit(SphereGeometry &) override;
-  void visit(AmbientOcclusionSphereGeometry &) override;
-  void visit(CylinderGeometry &) override;
-  void visit(MeshGeometry &) override;
-  void visit(TextLabel2D &) override { return; }
-  void visit(TextLabel3D &) override { return; }
-  void visit(LineStripGeometry &geometry) override;
+  void visit(Node&) override { return; }
+  void visit(GroupNode&) override { return; }
+  void visit(GeometryNode&) override { return; }
+  void visit(Drawable&) override;
+  void visit(SphereGeometry&) override;
+  void visit(AmbientOcclusionSphereGeometry&) override;
+  void visit(CylinderGeometry&) override;
+  void visit(MeshGeometry&) override;
+  void visit(TextLabel2D&) override { return; }
+  void visit(TextLabel3D&) override { return; }
+  void visit(LineStripGeometry& geometry) override;
 
-  void setCamera(const Camera &c) { m_camera = c; }
+  void setCamera(const Camera& c) { m_camera = c; }
   Camera camera() const { return m_camera; }
 
-  void setBackgroundColor(const Vector3ub &c) { m_backgroundColor = c; }
-  void setAmbientColor(const Vector3ub &c) { m_ambientColor = c; }
+  void setBackgroundColor(const Vector3ub& c) { m_backgroundColor = c; }
+  void setAmbientColor(const Vector3ub& c) { m_ambientColor = c; }
   void setAspectRatio(float ratio) { m_aspectRatio = ratio; }
 
 private:

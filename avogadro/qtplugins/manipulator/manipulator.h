@@ -29,7 +29,8 @@ namespace Avogadro {
 namespace QtPlugins {
 
 /**
- * @class Manipulator manipulator.h <avogadro/qtplugins/manipulator/manipulator.h>
+ * @class Manipulator manipulator.h
+ * <avogadro/qtplugins/manipulator/manipulator.h>
  * @brief The Manipulator class manipulates a molecule's geometry.
  * @author David C. Lonie
  */
@@ -37,47 +38,44 @@ class Manipulator : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit Manipulator(QObject *parent_ = nullptr);
+  explicit Manipulator(QObject* parent_ = nullptr);
   ~Manipulator();
 
   QString name() const override { return tr("Manipulate tool"); }
   QString description() const override { return tr("Manipulate tool"); }
   unsigned char priority() const override { return 30; }
-  QAction * activateAction() const override { return m_activateAction; }
-  QWidget * toolWidget() const override;
+  QAction* activateAction() const override { return m_activateAction; }
+  QWidget* toolWidget() const override;
 
-  void setMolecule(QtGui::Molecule *mol) override
+  void setMolecule(QtGui::Molecule* mol) override
   {
     if (mol)
       m_molecule = mol->undoMolecule();
   }
 
-  void setEditMolecule(QtGui::RWMolecule *mol) override
-  {
-    m_molecule = mol;
-  }
+  void setEditMolecule(QtGui::RWMolecule* mol) override { m_molecule = mol; }
 
-  void setGLRenderer(Rendering::GLRenderer *renderer) override
+  void setGLRenderer(Rendering::GLRenderer* renderer) override
   {
     m_renderer = renderer;
   }
 
-  QUndoCommand * mousePressEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseReleaseEvent(QMouseEvent *e) override;
-  QUndoCommand * mouseMoveEvent(QMouseEvent *e) override;
+  QUndoCommand* mousePressEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseMoveEvent(QMouseEvent* e) override;
 
 private:
   /**
    * Update the currently pressed buttons, accounting for modifier keys.
    * \todo Account for modifier keys.
    */
-  void updatePressedButtons(QMouseEvent *, bool release);
+  void updatePressedButtons(QMouseEvent*, bool release);
 
   void resetObject() { m_object = Rendering::Identifier(); }
 
-  QAction *m_activateAction;
-  QtGui::RWMolecule *m_molecule;
-  Rendering::GLRenderer *m_renderer;
+  QAction* m_activateAction;
+  QtGui::RWMolecule* m_molecule;
+  Rendering::GLRenderer* m_renderer;
   Rendering::Identifier m_object;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;

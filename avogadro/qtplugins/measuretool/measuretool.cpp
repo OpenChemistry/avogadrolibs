@@ -36,9 +36,9 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-#include <QtWidgets/QAction>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
+#include <QtWidgets/QAction>
 
 #include <QDebug>
 
@@ -56,12 +56,9 @@ using Avogadro::Rendering::TextProperties;
 namespace Avogadro {
 namespace QtPlugins {
 
-MeasureTool::MeasureTool(QObject *parent_)
-  : QtGui::ToolPlugin(parent_),
-    m_activateAction(new QAction(this)),
-    m_molecule(nullptr),
-    m_rwMolecule(nullptr),
-    m_renderer(nullptr)
+MeasureTool::MeasureTool(QObject* parent_)
+  : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
+    m_molecule(nullptr), m_rwMolecule(nullptr), m_renderer(nullptr)
 {
   m_activateAction->setText(tr("Measure"));
   m_activateAction->setIcon(QIcon(":/icons/measuretool.png"));
@@ -71,12 +68,12 @@ MeasureTool::~MeasureTool()
 {
 }
 
-QWidget * MeasureTool::toolWidget() const
+QWidget* MeasureTool::toolWidget() const
 {
   return nullptr;
 }
 
-QUndoCommand * MeasureTool::mousePressEvent(QMouseEvent *e)
+QUndoCommand* MeasureTool::mousePressEvent(QMouseEvent* e)
 {
   if (e->button() != Qt::LeftButton || !m_renderer)
     return nullptr;
@@ -92,7 +89,7 @@ QUndoCommand * MeasureTool::mousePressEvent(QMouseEvent *e)
   return nullptr;
 }
 
-QUndoCommand * MeasureTool::mouseReleaseEvent(QMouseEvent *e)
+QUndoCommand* MeasureTool::mouseReleaseEvent(QMouseEvent* e)
 {
   // If the click is released on an atom, add it to the list
   if (e->button() != Qt::LeftButton || !m_renderer)
@@ -110,7 +107,7 @@ QUndoCommand * MeasureTool::mouseReleaseEvent(QMouseEvent *e)
   return nullptr;
 }
 
-QUndoCommand *MeasureTool::mouseDoubleClickEvent(QMouseEvent *e)
+QUndoCommand* MeasureTool::mouseDoubleClickEvent(QMouseEvent* e)
 {
   // Reset the atom list
   if (e->button() == Qt::LeftButton && !m_atoms.isEmpty()) {
@@ -121,16 +118,16 @@ QUndoCommand *MeasureTool::mouseDoubleClickEvent(QMouseEvent *e)
   return nullptr;
 }
 
-template<typename T>
-void MeasureTool::createLabels(T *mol, GeometryNode *geo,
-                               QVector<Vector3> &positions)
+template <typename T>
+void MeasureTool::createLabels(T* mol, GeometryNode* geo,
+                               QVector<Vector3>& positions)
 {
   TextProperties atomLabelProp;
   atomLabelProp.setFontFamily(TextProperties::SansSerif);
   atomLabelProp.setAlign(TextProperties::HCenter, TextProperties::VCenter);
 
   for (int i = 0; i < m_atoms.size(); ++i) {
-    Identifier &ident = m_atoms[i];
+    Identifier& ident = m_atoms[i];
     Q_ASSERT(ident.type == Rendering::AtomType);
     Q_ASSERT(ident.molecule != nullptr);
 
@@ -139,24 +136,25 @@ void MeasureTool::createLabels(T *mol, GeometryNode *geo,
     unsigned char atomicNumber(atom.atomicNumber());
     positions[i] = atom.position3d();
 
-    const unsigned char *color = Elements::color(atomicNumber);
+    const unsigned char* color = Elements::color(atomicNumber);
     atomLabelProp.setColorRgb(contrastingColor(Vector3ub(color)).data());
 
-    TextLabel3D *label = new TextLabel3D;
+    TextLabel3D* label = new TextLabel3D;
     label->setText(QString("#%1").arg(i + 1).toStdString());
     label->setTextProperties(atomLabelProp);
     label->setAnchor(positions[i].cast<float>());
-    label->setRadius(static_cast<float>(Elements::radiusCovalent(atomicNumber)));
+    label->setRadius(
+      static_cast<float>(Elements::radiusCovalent(atomicNumber)));
     geo->addDrawable(label);
   }
 }
 
-void MeasureTool::draw(Rendering::GroupNode &node)
+void MeasureTool::draw(Rendering::GroupNode& node)
 {
   if (m_atoms.size() == 0)
     return;
 
-  GeometryNode *geo = new GeometryNode;
+  GeometryNode* geo = new GeometryNode;
   node.addChild(geo);
 
   // Add labels, extract positions
@@ -175,17 +173,17 @@ void MeasureTool::draw(Rendering::GroupNode &node)
   Real v3Norm = -1.f;
 
   switch (m_atoms.size()) {
-  case 4:
-    v3 = positions[3] - positions[2];
-    v3Norm = v3.norm();
-  case 3:
-    v2 = positions[2] - positions[1];
-    v2Norm = v2.norm();
-  case 2:
-    v1 = positions[1] - positions[0];
-    v1Norm = v1.norm();
-  default:
-    break;
+    case 4:
+      v3 = positions[3] - positions[2];
+      v3Norm = v3.norm();
+    case 3:
+      v2 = positions[2] - positions[1];
+      v2Norm = v2.norm();
+    case 2:
+      v1 = positions[1] - positions[0];
+      v1Norm = v1.norm();
+    default:
+      break;
   }
 
   QString overlayText;
@@ -199,30 +197,34 @@ void MeasureTool::draw(Rendering::GroupNode &node)
   int labelWidth = -std::max(std::max(dihedralLabel.size(), angleLabel.size()),
                              distanceLabel.size());
   switch (m_atoms.size()) {
-  case 4:
-    overlayText += QString("%1 %L2\n")
-        .arg(tr("Dihedral:"), labelWidth)
-        .arg(dihedralAngle(v1, v2, v3), 10, 'f', 5);
-    angle23 = static_cast<float>(std::acos((-v2).dot(v3) / (v2Norm * v3Norm)))
-        * RAD_TO_DEG_F;
+    case 4:
+      overlayText += QString("%1 %L2\n")
+                       .arg(tr("Dihedral:"), labelWidth)
+                       .arg(dihedralAngle(v1, v2, v3), 10, 'f', 5);
+      angle23 =
+        static_cast<float>(std::acos((-v2).dot(v3) / (v2Norm * v3Norm))) *
+        RAD_TO_DEG_F;
     // fall through
-  case 3:
-    angle12 = static_cast<float>(std::acos((-v1).dot(v2) / (v1Norm * v2Norm)))
-        * RAD_TO_DEG_F;
-    overlayText += QString("%1 %L2 %L3\n")
-        .arg(tr("Angles:"), labelWidth)
-        .arg(angle12, 10, 'f', 5)
-        .arg(angle23 < 360.f ? QString::number(angle23, 'f', 5)
-                             : QString(), 10);
+    case 3:
+      angle12 =
+        static_cast<float>(std::acos((-v1).dot(v2) / (v1Norm * v2Norm))) *
+        RAD_TO_DEG_F;
+      overlayText +=
+        QString("%1 %L2 %L3\n")
+          .arg(tr("Angles:"), labelWidth)
+          .arg(angle12, 10, 'f', 5)
+          .arg(angle23 < 360.f ? QString::number(angle23, 'f', 5) : QString(),
+               10);
     // fall through
-  case 2:
-    overlayText += QString("%1 %L2 %L3 %L4")
-        .arg(tr("Distance:"), labelWidth)
-        .arg(v1Norm, 10, 'f', 5)
-        .arg(v2Norm >= 0.f ? QString::number(v2Norm, 'f', 5) : QString(), 10)
-        .arg(v3Norm >= 0.f ? QString::number(v3Norm, 'f', 5) : QString(), 10);
-  default:
-    break;
+    case 2:
+      overlayText +=
+        QString("%1 %L2 %L3 %L4")
+          .arg(tr("Distance:"), labelWidth)
+          .arg(v1Norm, 10, 'f', 5)
+          .arg(v2Norm >= 0.f ? QString::number(v2Norm, 'f', 5) : QString(), 10)
+          .arg(v3Norm >= 0.f ? QString::number(v3Norm, 'f', 5) : QString(), 10);
+    default:
+      break;
   }
 
   if (overlayText.isEmpty())
@@ -233,7 +235,7 @@ void MeasureTool::draw(Rendering::GroupNode &node)
   overlayTProp.setColorRgb(64, 255, 220);
   overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
 
-  TextLabel2D *label = new TextLabel2D;
+  TextLabel2D* label = new TextLabel2D;
   label->setText(overlayText.toStdString());
   label->setTextProperties(overlayTProp);
   label->setRenderPass(Rendering::Overlay2DPass);
@@ -242,7 +244,7 @@ void MeasureTool::draw(Rendering::GroupNode &node)
   geo->addDrawable(label);
 }
 
-inline Vector3ub MeasureTool::contrastingColor(const Vector3ub &rgb) const
+inline Vector3ub MeasureTool::contrastingColor(const Vector3ub& rgb) const
 {
   // If we're far 'enough' (+/-32) away from 128, just invert the component.
   // If we're close to 128, inverting the color will end up too close to the
@@ -264,8 +266,8 @@ inline Vector3ub MeasureTool::contrastingColor(const Vector3ub &rgb) const
   return result;
 }
 
-float MeasureTool::dihedralAngle(const Vector3 &b1, const Vector3 &b2,
-                                const Vector3 &b3) const
+float MeasureTool::dihedralAngle(const Vector3& b1, const Vector3& b2,
+                                 const Vector3& b3) const
 {
   // See http://math.stackexchange.com/questions/47059/
   // how-do-i-calculate-a-dihedral-angle-given-cartesian-coordinates
@@ -278,7 +280,7 @@ float MeasureTool::dihedralAngle(const Vector3 &b1, const Vector3 &b2,
   return static_cast<float>(std::atan2(y, x)) * RAD_TO_DEG_F;
 }
 
-bool MeasureTool::toggleAtom(const Rendering::Identifier &atom)
+bool MeasureTool::toggleAtom(const Rendering::Identifier& atom)
 {
   int ind = m_atoms.indexOf(atom);
   if (ind >= 0) {

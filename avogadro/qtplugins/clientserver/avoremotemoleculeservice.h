@@ -31,10 +31,9 @@ public:
   virtual ~AvoRemoteMoleculeService();
 
   void open(const OpenRequest* input, OpenResponse* output,
-      ::google::protobuf::Closure* done);
+            ::google::protobuf::Closure* done);
 
-  void fileFormats(FileFormats* formats,
-      ::google::protobuf::Closure* done);
+  void fileFormats(FileFormats* formats, ::google::protobuf::Closure* done);
 };
 
 #endif /* AVOREMOTEMOLECULESERVICE_H */

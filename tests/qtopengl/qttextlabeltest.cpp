@@ -28,8 +28,8 @@
 
 #include <QtOpenGL/QGLFormat>
 
-#include <QtWidgets/QApplication>
 #include <QtGui/QImage>
+#include <QtWidgets/QApplication>
 
 #include <QtCore/QTimer>
 
@@ -47,7 +47,7 @@ using Avogadro::Rendering::SphereGeometry;
 using Avogadro::QtOpenGL::GLWidget;
 using Avogadro::VtkTesting::ImageRegressionTest;
 
-int qttextlabeltest(int argc, char *argv[])
+int qttextlabeltest(int argc, char* argv[])
 {
   // Set up the default format for our GL contexts.
   QGLFormat defaultFormat = QGLFormat::defaultFormat();
@@ -61,11 +61,11 @@ int qttextlabeltest(int argc, char *argv[])
   widget.show();
 
   // Create scene
-  GeometryNode *geometry = new GeometryNode;
+  GeometryNode* geometry = new GeometryNode;
   widget.renderer().scene().rootNode().addChild(geometry);
 
   // Add a small sphere at the origin for reference:
-  SphereGeometry *spheres = new SphereGeometry;
+  SphereGeometry* spheres = new SphereGeometry;
   spheres->addSphere(Vector3f::Zero(), Vector3ub(128, 128, 128), 0.1f);
   geometry->addDrawable(spheres);
 
@@ -73,8 +73,8 @@ int qttextlabeltest(int argc, char *argv[])
   TextProperties tprop;
 
   // Test alignment:
-  TextLabel3D *l3 = nullptr;
-  TextLabel2D *l2 = nullptr;
+  TextLabel3D* l3 = nullptr;
+  TextLabel2D* l2 = nullptr;
 
   // 3D:
   tprop.setColorRgb(255, 0, 0);
