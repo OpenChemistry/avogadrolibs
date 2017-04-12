@@ -13,8 +13,8 @@
   limitations under the License.
 
 ******************************************************************************/
-#include "avogadro/io/fileformatmanager.h"
 #include "avogadro/core/molecule.h"
+#include "avogadro/io/fileformatmanager.h"
 
 #include <iostream>
 #include <sstream>
@@ -27,9 +27,10 @@ using std::cout;
 using std::string;
 using std::ostringstream;
 
-int main() {
+int main()
+{
 
-  FileFormatManager &mgr = FileFormatManager::instance();
+  FileFormatManager& mgr = FileFormatManager::instance();
   Molecule mol;
 
   ostringstream cjson;

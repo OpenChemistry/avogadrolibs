@@ -13,9 +13,9 @@
   limitations under the License.
 
 ******************************************************************************/
-#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/version.h>
+#include <avogadro/io/fileformatmanager.h>
 
 #include <iostream>
 #include <sstream>
@@ -31,7 +31,7 @@ using std::ostringstream;
 
 void printHelp();
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   // Process the command line arguments, see what has been requested.
   string inFormat;
@@ -43,37 +43,31 @@ int main(int argc, char *argv[])
     if (current == "--help" || current == "-h") {
       printHelp();
       return 0;
-    }
-    else if (current == "--version" || current == "-v") {
+    } else if (current == "--version" || current == "-v") {
       cout << "Version: " << Avogadro::version() << endl;
       return 0;
-    }
-    else if (current == "-i" && i + 1 < argc) {
+    } else if (current == "-i" && i + 1 < argc) {
       inFormat = argv[++i];
       cout << "input format " << inFormat << endl;
-    }
-    else if (current == "-o" && i + 1 < argc) {
+    } else if (current == "-o" && i + 1 < argc) {
       outFormat = argv[++i];
       cout << "output format " << outFormat << endl;
-    }
-    else if (inFile.empty()) {
+    } else if (inFile.empty()) {
       inFile = argv[i];
-    }
-    else if (outFile.empty()) {
+    } else if (outFile.empty()) {
       outFile = argv[i];
     }
   }
 
   // Now read/write the molecule, if possible. Otherwise output errors.
-  FileFormatManager &mgr = FileFormatManager::instance();
+  FileFormatManager& mgr = FileFormatManager::instance();
   Molecule mol;
   if (!inFile.empty()) {
     if (!mgr.readFile(mol, inFile, inFormat)) {
       cout << "Failed to read " << inFile << " (" << inFormat << ")" << endl;
       return 1;
     }
-  }
-  else if (!inFormat.empty()) {
+  } else if (!inFormat.empty()) {
     ostringstream inFileString;
     string line;
     while (getline(cin, line))
@@ -84,8 +78,7 @@ int main(int argc, char *argv[])
         return 1;
       }
     }
-  }
-  else {
+  } else {
     cout << "Error, no input file or stream supplied with format." << endl;
   }
 
@@ -94,8 +87,7 @@ int main(int argc, char *argv[])
       cout << "Failed to write " << outFile << " (" << outFormat << ")" << endl;
       return 1;
     }
-  }
-  else {
+  } else {
     if (outFormat.empty())
       outFormat = "cjson";
     string out;
@@ -108,6 +100,7 @@ int main(int argc, char *argv[])
 
 void printHelp()
 {
-  cout << "Usage: avobabel [-i <input-type>] <infilename> [-o <output-type>] <outfilename>\n"
+  cout << "Usage: avobabel [-i <input-type>] <infilename> [-o <output-type>] "
+          "<outfilename>\n"
        << endl;
 }
