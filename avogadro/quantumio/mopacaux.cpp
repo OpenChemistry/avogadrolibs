@@ -55,14 +55,14 @@ std::vector<std::string> MopacAux::mimeTypes() const
   return std::vector<std::string>();
 }
 
-bool MopacAux::read(std::istream &in, Core::Molecule &molecule)
+bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line, most sections are terminated by an empty
   // line, so they should be retained.
   while (!in.eof())
     processLine(in);
 
-  SlaterSet *basis = new SlaterSet;
+  SlaterSet* basis = new SlaterSet;
 
   for (unsigned int i = 0; i < m_atomPos.size(); ++i) {
     Atom a = molecule.addAtom(static_cast<unsigned char>(m_atomNums[i]));
@@ -76,7 +76,7 @@ bool MopacAux::read(std::istream &in, Core::Molecule &molecule)
   return true;
 }
 
-void MopacAux::processLine(std::istream &in)
+void MopacAux::processLine(std::istream& in)
 {
   // First truncate the line, remove trailing white space and check
   string line;
@@ -90,47 +90,39 @@ void MopacAux::processLine(std::istream &in)
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of atoms = " << tmp << endl;
     m_atomNums = readArrayElements(in, tmp);
-  }
-  else if (Core::contains(key, "AO_ATOMINDEX")) {
+  } else if (Core::contains(key, "AO_ATOMINDEX")) {
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of atomic orbitals = " << tmp << endl;
     m_atomIndex = readArrayI(in, tmp);
     for (size_t i = 0; i < m_atomIndex.size(); ++i)
       --m_atomIndex[i];
-  }
-  else if (Core::contains(key, "ATOM_SYMTYPE")) {
+  } else if (Core::contains(key, "ATOM_SYMTYPE")) {
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of atomic orbital types = " << tmp << endl;
     m_atomSym = readArraySym(in, tmp);
-  }
-  else if (Core::contains(key, "AO_ZETA")) {
+  } else if (Core::contains(key, "AO_ZETA")) {
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of zeta values = " << tmp << endl;
     m_zeta = readArrayD(in, tmp);
-  }
-  else if (Core::contains(key, "ATOM_PQN")) {
+  } else if (Core::contains(key, "ATOM_PQN")) {
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of PQN values =" << tmp << endl;
     m_pqn = readArrayI(in, tmp);
-  }
-  else if (Core::contains(key, "NUM_ELECTRONS")) {
+  } else if (Core::contains(key, "NUM_ELECTRONS")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
       m_electrons = Core::lexicalCast<int>(list[1]);
       cout << "Number of electrons = " << m_electrons << endl;
     }
-  }
-  else if (Core::contains(key, "ATOM_X_OPT:ANGSTROMS")) {
+  } else if (Core::contains(key, "ATOM_X_OPT:ANGSTROMS")) {
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of atomic coordinates = " << tmp << endl;
     m_atomPos = readArrayVec(in, tmp);
-  }
-  else if (Core::contains(key, "OVERLAP_MATRIX")) {
+  } else if (Core::contains(key, "OVERLAP_MATRIX")) {
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
     cout << "Size of lower half triangle of overlap matrix = " << tmp << endl;
     readOverlapMatrix(in, tmp);
-  }
-  else if (Core::contains(key, "EIGENVECTORS")) {
+  } else if (Core::contains(key, "EIGENVECTORS")) {
     // For large molecules the Eigenvectors counter overflows to [*****]
     // So just use the square of the m_atomIndex array
     //      QString tmp = key.mid(key.indexOf('[')+1, 6);
@@ -138,8 +130,7 @@ void MopacAux::processLine(std::istream &in)
          << m_atomIndex.size() * m_atomIndex.size() << endl;
     readEigenVectors(in,
                      static_cast<int>(m_atomIndex.size() * m_atomIndex.size()));
-  }
-  else if (Core::contains(key, "TOTAL_DENSITY_MATRIX")) {
+  } else if (Core::contains(key, "TOTAL_DENSITY_MATRIX")) {
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
     cout << "Size of lower half triangle of density matrix = " << tmp << endl;
     readDensityMatrix(in, tmp);
@@ -150,7 +141,7 @@ void MopacAux::load(SlaterSet* basis)
 {
   if (m_atomPos.size() == 0) {
     cout << "No atoms found in .aux file. Bailing out." << endl;
-    //basis->setIsValid(false);
+    // basis->setIsValid(false);
     return;
   }
   // Now load up our basis set
@@ -164,7 +155,7 @@ void MopacAux::load(SlaterSet* basis)
   basis->addDensityMatrix(m_density);
 }
 
-vector<int> MopacAux::readArrayElements(std::istream &in, unsigned int n)
+vector<int> MopacAux::readArrayElements(std::istream& in, unsigned int n)
 {
   vector<int> tmp;
   while (tmp.size() < n) {
@@ -173,13 +164,13 @@ vector<int> MopacAux::readArrayElements(std::istream &in, unsigned int n)
     vector<string> list = Core::split(line, ' ');
     for (size_t i = 0; i < list.size(); ++i) {
       tmp.push_back(
-            static_cast<int>(Core::Elements::atomicNumberFromSymbol(list[i])));
+        static_cast<int>(Core::Elements::atomicNumberFromSymbol(list[i])));
     }
   }
   return tmp;
 }
 
-vector<int> MopacAux::readArrayI(std::istream &in, unsigned int n)
+vector<int> MopacAux::readArrayI(std::istream& in, unsigned int n)
 {
   vector<int> tmp;
   while (tmp.size() < n) {
@@ -192,7 +183,7 @@ vector<int> MopacAux::readArrayI(std::istream &in, unsigned int n)
   return tmp;
 }
 
-vector<double> MopacAux::readArrayD(std::istream &in, unsigned int n)
+vector<double> MopacAux::readArrayD(std::istream& in, unsigned int n)
 {
   vector<double> tmp;
   while (tmp.size() < n) {
@@ -205,7 +196,7 @@ vector<double> MopacAux::readArrayD(std::istream &in, unsigned int n)
   return tmp;
 }
 
-vector<int> MopacAux::readArraySym(std::istream &in, unsigned int n)
+vector<int> MopacAux::readArraySym(std::istream& in, unsigned int n)
 {
   int type;
   vector<int> tmp;
@@ -240,10 +231,10 @@ vector<int> MopacAux::readArraySym(std::istream &in, unsigned int n)
   return tmp;
 }
 
-vector<Vector3> MopacAux::readArrayVec(std::istream &in, unsigned int n)
+vector<Vector3> MopacAux::readArrayVec(std::istream& in, unsigned int n)
 {
   vector<Vector3> tmp(n / 3);
-  double *ptr = tmp[0].data();
+  double* ptr = tmp[0].data();
   unsigned int cnt = 0;
   while (cnt < n) {
     string line;
@@ -255,7 +246,7 @@ vector<Vector3> MopacAux::readArrayVec(std::istream &in, unsigned int n)
   return tmp;
 }
 
-bool MopacAux::readOverlapMatrix(std::istream &in, unsigned int n)
+bool MopacAux::readOverlapMatrix(std::istream& in, unsigned int n)
 {
   m_overlap.resize(m_zeta.size(), m_zeta.size());
   unsigned int cnt = 0;
@@ -268,9 +259,10 @@ bool MopacAux::readOverlapMatrix(std::istream &in, unsigned int n)
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
     for (size_t k = 0; k < list.size(); ++k) {
-      //m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
+      // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
       m_overlap(i, j) = m_overlap(j, i) = Core::lexicalCast<double>(list[k]);
-      ++i; ++cnt;
+      ++i;
+      ++cnt;
       if (i == f) {
         // We need to move down to the next row and increment f - lower tri
         i = 0;
@@ -282,7 +274,7 @@ bool MopacAux::readOverlapMatrix(std::istream &in, unsigned int n)
   return true;
 }
 
-bool MopacAux::readEigenVectors(std::istream &in, unsigned int n)
+bool MopacAux::readEigenVectors(std::istream& in, unsigned int n)
 {
   m_eigenVectors.resize(m_zeta.size(), m_zeta.size());
   unsigned int cnt = 0;
@@ -293,7 +285,8 @@ bool MopacAux::readEigenVectors(std::istream &in, unsigned int n)
     vector<string> list = Core::split(line, ' ');
     for (size_t k = 0; k < list.size(); ++k) {
       m_eigenVectors(i, j) = Core::lexicalCast<double>(list[k]);
-      ++i; ++cnt;
+      ++i;
+      ++cnt;
       if (i == m_zeta.size()) {
         // We need to move down to the next row and increment f - lower tri
         i = 0;
@@ -304,7 +297,7 @@ bool MopacAux::readEigenVectors(std::istream &in, unsigned int n)
   return true;
 }
 
-bool MopacAux::readDensityMatrix(std::istream &in, unsigned int n)
+bool MopacAux::readDensityMatrix(std::istream& in, unsigned int n)
 {
   m_density.resize(m_zeta.size(), m_zeta.size());
   unsigned int cnt = 0;
@@ -317,9 +310,10 @@ bool MopacAux::readDensityMatrix(std::istream &in, unsigned int n)
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
     for (size_t k = 0; k < list.size(); ++k) {
-      //m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
+      // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
       m_density(i, j) = m_density(j, i) = Core::lexicalCast<double>(list[k]);
-      ++i; ++cnt;
+      ++i;
+      ++cnt;
       if (i == f) {
         // We need to move down to the next row and increment f - lower tri
         i = 0;
@@ -343,6 +337,5 @@ void MopacAux::outputAll()
     cout << m_MOcoeffs.at(i) << "\t";
   cout << endl;
 }
-
 }
 }

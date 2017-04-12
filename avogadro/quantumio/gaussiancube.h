@@ -36,7 +36,7 @@ public:
     return Read | File | Stream | String;
   }
 
-  FileFormat * newInstance() const override { return new GaussianCube; }
+  FileFormat* newInstance() const override { return new GaussianCube; }
   std::string identifier() const override { return "Avogadro: GaussianCube"; }
   std::string name() const override { return "Gaussian"; }
   std::string description() const override
@@ -52,8 +52,8 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) override;
-  bool write(std::ostream &out, const Core::Molecule &molecule) override;
+  bool read(std::istream& in, Core::Molecule& molecule) override;
+  bool write(std::ostream& out, const Core::Molecule& molecule) override;
 
 private:
   void outputAll();

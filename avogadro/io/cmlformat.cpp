@@ -17,13 +17,13 @@
 #include "cmlformat.h"
 
 #ifdef AVO_USE_HDF5
-# include "hdf5dataformat.h"
+#include "hdf5dataformat.h"
 #endif
 
 #include <avogadro/core/crystaltools.h>
-#include <avogadro/core/molecule.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/matrix.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
@@ -31,12 +31,12 @@
 
 #include <bitset>
 #include <cmath>
-#include <streambuf>
-#include <sstream>
 #include <map>
+#include <sstream>
+#include <streambuf>
 
 #ifndef M_PI
-# define M_PI 3.14159265358979323846
+#define M_PI 3.14159265358979323846
 #endif
 
 namespace Avogadro {
@@ -60,11 +60,8 @@ namespace {
 class CmlFormatPrivate
 {
 public:
-  CmlFormatPrivate(Molecule *mol, xml_document &document, std::string filename_)
-    : success(false),
-      molecule(mol),
-      moleculeNode(nullptr),
-      filename(filename_)
+  CmlFormatPrivate(Molecule* mol, xml_document& document, std::string filename_)
+    : success(false), molecule(mol), moleculeNode(nullptr), filename(filename_)
   {
     // Parse the CML document, and create molecules/elements as necessary.
     moleculeNode = document.child("molecule");
@@ -73,7 +70,7 @@ public:
       moleculeNode = cmlNode.child("molecule");
 
     if (moleculeNode) {
-      // Parse the various components we know about.
+// Parse the various components we know about.
 #ifdef AVO_USE_HDF5
       data();
 #endif
@@ -82,8 +79,7 @@ public:
         success = atoms();
       if (success)
         success = bonds();
-    }
-    else {
+    } else {
       error += "Error, no molecule node found.";
       success = false;
     }
@@ -115,7 +111,15 @@ public:
       float alpha(0);
       float beta(0);
       float gamma(0);
-      enum { CellA = 0, CellB, CellC, CellAlpha, CellBeta, CellGamma };
+      enum
+      {
+        CellA = 0,
+        CellB,
+        CellC,
+        CellAlpha,
+        CellBeta,
+        CellGamma
+      };
       std::bitset<6> parsedValues;
       for (pugi::xml_node scalar = node.child("scalar"); scalar;
            scalar = scalar.next_sibling("scalar")) {
@@ -126,24 +130,19 @@ public:
           if (titleStr == "a") {
             a = scalar.text().as_float();
             parsedValues.set(CellA);
-          }
-          else if (titleStr == "b") {
+          } else if (titleStr == "b") {
             b = scalar.text().as_float();
             parsedValues.set(CellB);
-          }
-          else if (titleStr == "c") {
+          } else if (titleStr == "c") {
             c = scalar.text().as_float();
             parsedValues.set(CellC);
-          }
-          else if (titleStr == "alpha") {
+          } else if (titleStr == "alpha") {
             alpha = scalar.text().as_float() * degToRad;
             parsedValues.set(CellAlpha);
-          }
-          else if (titleStr == "beta") {
+          } else if (titleStr == "beta") {
             beta = scalar.text().as_float() * degToRad;
             parsedValues.set(CellBeta);
-          }
-          else if (titleStr == "gamma") {
+          } else if (titleStr == "gamma") {
             gamma = scalar.text().as_float() * degToRad;
             parsedValues.set(CellGamma);
           }
@@ -153,7 +152,7 @@ public:
         error += "Incomplete unit cell description.";
         return false;
       }
-      UnitCell *cell = new UnitCell;
+      UnitCell* cell = new UnitCell;
       cell->setCellParameters(a, b, c, alpha, beta, gamma);
       molecule->setUnitCell(cell);
     }
@@ -175,8 +174,7 @@ public:
         unsigned char atomicNumber =
           Elements::atomicNumberFromSymbol(attribute.value());
         atom = molecule->addAtom(atomicNumber);
-      }
-      else {
+      } else {
         // There is no element data, this atom node is corrupt.
         error += "Warning, corrupt element node found.";
         return false;
@@ -199,19 +197,17 @@ public:
                            lexicalCast<double>(y3.value()),
                            lexicalCast<double>(z3.value()));
           atom.setPosition3d(position);
-        }
-        else {
+        } else {
           // Corrupt 3D position supplied for atom.
           return false;
         }
-      }
-      else if ((attribute = node.attribute("xFract"))) {
+      } else if ((attribute = node.attribute("xFract"))) {
         if (!molecule->unitCell()) {
           error += "No unit cell defined. "
                    "Cannot interpret fractional coordinates.";
           return false;
         }
-        xml_attribute &xF = attribute;
+        xml_attribute& xF = attribute;
         xml_attribute yF = node.attribute("yFract");
         xml_attribute zF = node.attribute("zFract");
         if (yF && zF) {
@@ -220,8 +216,7 @@ public:
                         static_cast<Real>(zF.as_float()));
           molecule->unitCell()->toCartesian(coord, coord);
           atom.setPosition3d(coord);
-        }
-        else {
+        } else {
           error += "Missing y or z fractional coordinate on atom.";
           return false;
         }
@@ -235,8 +230,7 @@ public:
           Vector2 position(lexicalCast<double>(attribute.value()),
                            lexicalCast<double>(y2.value()));
           atom.setPosition2d(position);
-        }
-        else {
+        } else {
           // Corrupt 2D position supplied for atom.
           return false;
         }
@@ -268,13 +262,12 @@ public:
         std::map<std::string, Index>::const_iterator begin, end;
         begin = atomIds.find(tokens[0]);
         end = atomIds.find(tokens[1]);
-        if (begin != atomIds.end() && end != atomIds.end()
-            && begin->second < molecule->atomCount()
-            && end->second < molecule->atomCount()) {
+        if (begin != atomIds.end() && end != atomIds.end() &&
+            begin->second < molecule->atomCount() &&
+            end->second < molecule->atomCount()) {
           bond = molecule->addBond(molecule->atom(begin->second),
                                    molecule->atom(end->second));
-        }
-        else { // Couldn't parse the bond begin and end.
+        } else { // Couldn't parse the bond begin and end.
           return false;
         }
       }
@@ -283,35 +276,34 @@ public:
       if (attribute && strlen(attribute.value()) == 1) {
         char o = attribute.value()[0];
         switch (o) {
-        case '1':
-        case 'S':
-        case 's':
-          bond.setOrder(1);
-          break;
-        case '2':
-        case 'D':
-        case 'd':
-          bond.setOrder(2);
-          break;
-        case '3':
-        case 'T':
-        case 't':
-          bond.setOrder(3);
-          break;
-        case '4':
-          bond.setOrder(4);
-          break;
-        case '5':
-          bond.setOrder(5);
-          break;
-        case '6':
-          bond.setOrder(6);
-          break;
-        default:
-          bond.setOrder(1);
+          case '1':
+          case 'S':
+          case 's':
+            bond.setOrder(1);
+            break;
+          case '2':
+          case 'D':
+          case 'd':
+            bond.setOrder(2);
+            break;
+          case '3':
+          case 'T':
+          case 't':
+            bond.setOrder(3);
+            break;
+          case '4':
+            bond.setOrder(4);
+            break;
+          case '5':
+            bond.setOrder(5);
+            break;
+          case '6':
+            bond.setOrder(6);
+            break;
+          default:
+            bond.setOrder(1);
         }
-      }
-      else {
+      } else {
         bond.setOrder(1);
       }
 
@@ -342,22 +334,22 @@ public:
       // Read data from HDF5?
       if (dataNodeName == "hdf5data") {
         if (!hdf5.isOpen()) {
-          error += "CmlFormatPrivate::data: Cannot read data member '"
-                   + dataName + "'. Cannot open file " + filename + ".h5.";
+          error += "CmlFormatPrivate::data: Cannot read data member '" +
+                   dataName + "'. Cannot open file " + filename + ".h5.";
           continue;
         }
 
         if (dataType != "xsd:double") {
-          error += "CmlFormatPrivate::data: Cannot read data member '"
-                   + dataName + "'. Data type is not 'double'.";
+          error += "CmlFormatPrivate::data: Cannot read data member '" +
+                   dataName + "'. Data type is not 'double'.";
           continue;
         }
 
         MatrixX matrix;
         if (!hdf5.readDataset(dataStream.str(), matrix)) {
-          error += "CmlFormatPrivate::data: Cannot read data member '"
-                   + dataName + "': Unable to read data set '"
-                   + dataStream.str() + "' from " + filename + ".h5";
+          error += "CmlFormatPrivate::data: Cannot read data member '" +
+                   dataName + "': Unable to read data set '" +
+                   dataStream.str() + "' from " + filename + ".h5";
           continue;
         }
 
@@ -370,35 +362,29 @@ public:
           bool tmp;
           dataStream >> tmp;
           variant.setValue(tmp);
-        }
-        else if (dataType == "xsd:int") {
+        } else if (dataType == "xsd:int") {
           int tmp;
           dataStream >> tmp;
           variant.setValue(tmp);
-        }
-        else if (dataType == "xsd:long") {
+        } else if (dataType == "xsd:long") {
           long tmp;
           dataStream >> tmp;
           variant.setValue(tmp);
-        }
-        else if (dataType == "xsd:float") {
+        } else if (dataType == "xsd:float") {
           float tmp;
           dataStream >> tmp;
           variant.setValue(tmp);
-        }
-        else if (dataType == "xsd:double") {
+        } else if (dataType == "xsd:double") {
           double tmp;
           dataStream >> tmp;
           variant.setValue(tmp);
-        }
-        else if (dataType == "xsd:string") {
+        } else if (dataType == "xsd:string") {
           string tmp;
           dataStream >> tmp;
           variant.setValue(tmp);
-        }
-        else {
-          error += "CmlFormatPrivate::data: handled scalar data type: "
-                   + dataType;
+        } else {
+          error +=
+            "CmlFormatPrivate::data: handled scalar data type: " + dataType;
           continue;
         }
       }
@@ -411,7 +397,7 @@ public:
 #endif
 
   bool success;
-  Molecule *molecule;
+  Molecule* molecule;
   xml_node moleculeNode;
   std::map<std::string, Index> atomIds;
   string filename;
@@ -427,7 +413,7 @@ CmlFormat::~CmlFormat()
 {
 }
 
-bool CmlFormat::read(std::istream &file, Core::Molecule &mol)
+bool CmlFormat::read(std::istream& file, Core::Molecule& mol)
 {
   xml_document document;
   pugi::xml_parse_result result = document.load(file);
@@ -443,7 +429,7 @@ bool CmlFormat::read(std::istream &file, Core::Molecule &mol)
   return parser.success;
 }
 
-bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
+bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
 {
   xml_document document;
 
@@ -456,11 +442,11 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
   // Standard XML namespaces for CML.
   moleculeNode.append_attribute("xmlns") = "http://www.xml-cml.org/schema";
   moleculeNode.append_attribute("xmlns:cml") =
-      "http://www.xml-cml.org/dict/cml";
+    "http://www.xml-cml.org/dict/cml";
   moleculeNode.append_attribute("xmlns:units") =
-      "http://www.xml-cml.org/units/units";
+    "http://www.xml-cml.org/units/units";
   moleculeNode.append_attribute("xmlns:xsd") =
-      "http://www.w3c.org/2001/XMLSchema";
+    "http://www.w3c.org/2001/XMLSchema";
   moleculeNode.append_attribute("xmlns:iupac") = "http://www.iupac.org";
 
   // Save the name if present into the file.
@@ -477,7 +463,7 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
   }
 
   // Cell specification
-  const UnitCell *cell = mol.unitCell();
+  const UnitCell* cell = mol.unitCell();
   if (cell) {
     xml_node crystalNode = moleculeNode.append_child("crystal");
 
@@ -485,28 +471,28 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
     xml_node crystalBNode = crystalNode.append_child("scalar");
     xml_node crystalCNode = crystalNode.append_child("scalar");
     xml_node crystalAlphaNode = crystalNode.append_child("scalar");
-    xml_node crystalBetaNode  = crystalNode.append_child("scalar");
+    xml_node crystalBetaNode = crystalNode.append_child("scalar");
     xml_node crystalGammaNode = crystalNode.append_child("scalar");
 
     crystalANode.append_attribute("title") = "a";
     crystalBNode.append_attribute("title") = "b";
     crystalCNode.append_attribute("title") = "c";
     crystalAlphaNode.append_attribute("title") = "alpha";
-    crystalBetaNode.append_attribute("title") =  "beta";
+    crystalBetaNode.append_attribute("title") = "beta";
     crystalGammaNode.append_attribute("title") = "gamma";
 
     crystalANode.append_attribute("units") = "units:angstrom";
     crystalBNode.append_attribute("units") = "units:angstrom";
     crystalCNode.append_attribute("units") = "units:angstrom";
     crystalAlphaNode.append_attribute("units") = "units:degree";
-    crystalBetaNode.append_attribute("units")  = "units:degree";
+    crystalBetaNode.append_attribute("units") = "units:degree";
     crystalGammaNode.append_attribute("units") = "units:degree";
 
     crystalANode.text() = static_cast<double>(cell->a());
     crystalBNode.text() = static_cast<double>(cell->b());
     crystalCNode.text() = static_cast<double>(cell->c());
     crystalAlphaNode.text() = static_cast<double>(cell->alpha() * RAD_TO_DEG);
-    crystalBetaNode.text()  = static_cast<double>(cell->beta()  * RAD_TO_DEG);
+    crystalBetaNode.text() = static_cast<double>(cell->beta() * RAD_TO_DEG);
     crystalGammaNode.text() = static_cast<double>(cell->gamma() * RAD_TO_DEG);
   }
 
@@ -514,18 +500,17 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
   for (Index i = 0; i < mol.atomCount(); ++i) {
     xml_node atomNode = atomArrayNode.append_child("atom");
     std::ostringstream index;
-    index << 'a' <<  i + 1;
+    index << 'a' << i + 1;
     atomNode.append_attribute("id") = index.str().c_str();
     Atom a = mol.atom(i);
     atomNode.append_attribute("elementType") =
-        Elements::symbol(a.atomicNumber());
+      Elements::symbol(a.atomicNumber());
     if (cell) {
       Vector3 fracPos = cell->toFractional(a.position3d());
       atomNode.append_attribute("xFract") = fracPos.x();
       atomNode.append_attribute("yFract") = fracPos.y();
       atomNode.append_attribute("zFract") = fracPos.z();
-    }
-    else {
+    } else {
       atomNode.append_attribute("x3") = a.position3d().x();
       atomNode.append_attribute("y3") = a.position3d().y();
       atomNode.append_attribute("z3") = a.position3d().z();
@@ -549,17 +534,18 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
   xml_node dataMapNode = moleculeNode.append_child("dataMap");
   VariantMap dataMap = mol.dataMap();
   for (VariantMap::const_iterator it = dataMap.constBegin(),
-       itEnd = dataMap.constEnd(); it != itEnd; ++it) {
-    const std::string &name_ = (*it).first;
+                                  itEnd = dataMap.constEnd();
+       it != itEnd; ++it) {
+    const std::string& name_ = (*it).first;
 
     // Skip names that are handled elsewhere:
     if (name_ == "inchi")
       continue;
 
-    const Variant &var = (*it).second;
+    const Variant& var = (*it).second;
     if (var.type() == Variant::Null) {
-      appendError("CmlFormat::writeFile: skipping null dataMap member '"
-                  + name_ + "'.");
+      appendError("CmlFormat::writeFile: skipping null dataMap member '" +
+                  name_ + "'.");
       continue;
     }
 
@@ -567,68 +553,69 @@ bool CmlFormat::write(std::ostream &out, const Core::Molecule &mol)
     dataNode.append_attribute("name") = name_.c_str();
 
     switch (var.type()) {
-    case Variant::Null:
-      // Already skipped above
-      break;
-    case Variant::Bool:
-      dataNode.set_name("scalar");
-      dataNode.append_attribute("dataType") = "xsd:boolean";
-      dataNode.text() = var.toBool();
-      break;
-    case Variant::Int:
-      dataNode.set_name("scalar");
-      dataNode.append_attribute("dataType") = "xsd:int";
-      dataNode.text() = var.toInt();
-      break;
-    case Variant::Long:
-      dataNode.set_name("scalar");
-      dataNode.append_attribute("dataType") = "xsd:long";
-      dataNode.text() = var.toString().c_str();
-      break;
-    case Variant::Float:
-      dataNode.set_name("scalar");
-      dataNode.append_attribute("dataType") = "xsd:float";
-      dataNode.text() = var.toFloat();
-      break;
-    case Variant::Double:
-      dataNode.set_name("scalar");
-      dataNode.append_attribute("dataType") = "xsd:double";
-      dataNode.text() = var.toDouble();
-      break;
-    case Variant::Pointer:
-      appendError("CmlFormat::writeFile: Skipping void* molecule data member '"
-                  + name_ + "'");
-      break;
-    case Variant::String:
-      dataNode.set_name("scalar");
-      dataNode.append_attribute("dataType") = "xsd:string";
-      dataNode.text() = var.toString().c_str();
-      break;
-    case Variant::Matrix: {
-      if(openFile) {
-        if (!hdf5.openFile(fileName() + ".h5", Hdf5DataFormat::ReadWriteAppend)) {
-          appendError("CmlFormat::writeFile: Cannot open file: "
-                      + fileName() + ".h5");
+      case Variant::Null:
+        // Already skipped above
+        break;
+      case Variant::Bool:
+        dataNode.set_name("scalar");
+        dataNode.append_attribute("dataType") = "xsd:boolean";
+        dataNode.text() = var.toBool();
+        break;
+      case Variant::Int:
+        dataNode.set_name("scalar");
+        dataNode.append_attribute("dataType") = "xsd:int";
+        dataNode.text() = var.toInt();
+        break;
+      case Variant::Long:
+        dataNode.set_name("scalar");
+        dataNode.append_attribute("dataType") = "xsd:long";
+        dataNode.text() = var.toString().c_str();
+        break;
+      case Variant::Float:
+        dataNode.set_name("scalar");
+        dataNode.append_attribute("dataType") = "xsd:float";
+        dataNode.text() = var.toFloat();
+        break;
+      case Variant::Double:
+        dataNode.set_name("scalar");
+        dataNode.append_attribute("dataType") = "xsd:double";
+        dataNode.text() = var.toDouble();
+        break;
+      case Variant::Pointer:
+        appendError(
+          "CmlFormat::writeFile: Skipping void* molecule data member '" +
+          name_ + "'");
+        break;
+      case Variant::String:
+        dataNode.set_name("scalar");
+        dataNode.append_attribute("dataType") = "xsd:string";
+        dataNode.text() = var.toString().c_str();
+        break;
+      case Variant::Matrix: {
+        if (openFile) {
+          if (!hdf5.openFile(fileName() + ".h5",
+                             Hdf5DataFormat::ReadWriteAppend)) {
+            appendError("CmlFormat::writeFile: Cannot open file: " +
+                        fileName() + ".h5");
+          }
+          openFile = false;
         }
-        openFile = false;
-      }
 
-      dataNode.set_name("hdf5data");
-      dataNode.append_attribute("dataType") = "xsd:double";
-      dataNode.append_attribute("ndims") = "2";
-      const MatrixX &matrix = var.toMatrixRef();
-      std::stringstream stream;
-      stream << matrix.rows() << " " << matrix.cols();
-      dataNode.append_attribute("dims") = stream.str().c_str();
-      std::string h5Path = std::string("molecule/dataMap/") + name_;
-      dataNode.text() = h5Path.c_str();
-      hdf5.writeDataset(h5Path, matrix);
-    }
-      break;
-    default:
-      appendError("CmlFormat::writeFile: Unrecognized type for member '"
-                  + name_ + "'.");
-      break;
+        dataNode.set_name("hdf5data");
+        dataNode.append_attribute("dataType") = "xsd:double";
+        dataNode.append_attribute("ndims") = "2";
+        const MatrixX& matrix = var.toMatrixRef();
+        std::stringstream stream;
+        stream << matrix.rows() << " " << matrix.cols();
+        dataNode.append_attribute("dims") = stream.str().c_str();
+        std::string h5Path = std::string("molecule/dataMap/") + name_;
+        dataNode.text() = h5Path.c_str();
+        hdf5.writeDataset(h5Path, matrix);
+      } break;
+      default:
+        appendError("CmlFormat::writeFile: Unrecognized type for member '" +
+                    name_ + "'.");
+        break;
     }
   }
 

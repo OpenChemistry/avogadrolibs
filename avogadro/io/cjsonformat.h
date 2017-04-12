@@ -19,8 +19,8 @@
 
 #include "fileformat.h"
 
-namespace Json{
-  class Value;
+namespace Json {
+class Value;
 }
 
 namespace Avogadro {
@@ -46,13 +46,13 @@ public:
     return ReadWrite | File | Stream | String;
   }
 
-  FileFormat * newInstance() const override { return new CjsonFormat; }
+  FileFormat* newInstance() const override { return new CjsonFormat; }
   std::string identifier() const override { return "Avogadro: CJSON"; }
   std::string name() const override { return "Chemical JSON"; }
   std::string description() const override
   {
     return "CJSON format is a lightweight intermediate format used to exchange "
-        "information between Avogadro and other data parsing applications";
+           "information between Avogadro and other data parsing applications";
   }
 
   std::string specificationUrl() const override
@@ -63,25 +63,25 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) override;
-  bool write(std::ostream &out, const Core::Molecule &molecule) override;
+  bool read(std::istream& in, Core::Molecule& molecule) override;
+  bool write(std::ostream& out, const Core::Molecule& molecule) override;
 
 private:
-  bool testEmpty(Json::Value &value,const std::string &key,
+  bool testEmpty(Json::Value& value, const std::string& key,
                  bool writeError = false);
-  bool testIsNotObject(Json::Value &value,const std::string &key,
+  bool testIsNotObject(Json::Value& value, const std::string& key,
                        bool writeError = false);
-  bool testIfArray(Json::Value &value,const std::string &key,
+  bool testIfArray(Json::Value& value, const std::string& key,
                    bool writeError = false);
-  bool readProperties(Json::Value &root, Core::Molecule &molecule,
-                      Core::GaussianSet *basis);
-  bool readAtoms(Json::Value &root, Core::Molecule &molecule,
-                 Core::GaussianSet *basis);
-  bool readOptimization(Json::Value &root, Core::Molecule &molecule);
-  bool readVibrations(Json::Value &root, Core::Molecule &molecule);
-  bool readBonds(Json::Value &root, Core::Molecule &molecule);
-  bool readTransitions(Json::Value &root, Core::Molecule &molecule);
-  bool readFragments(Json::Value &root, Core::Molecule &molecule);
+  bool readProperties(Json::Value& root, Core::Molecule& molecule,
+                      Core::GaussianSet* basis);
+  bool readAtoms(Json::Value& root, Core::Molecule& molecule,
+                 Core::GaussianSet* basis);
+  bool readOptimization(Json::Value& root, Core::Molecule& molecule);
+  bool readVibrations(Json::Value& root, Core::Molecule& molecule);
+  bool readBonds(Json::Value& root, Core::Molecule& molecule);
+  bool readTransitions(Json::Value& root, Core::Molecule& molecule);
+  bool readFragments(Json::Value& root, Core::Molecule& molecule);
 };
 
 } // end Io namespace

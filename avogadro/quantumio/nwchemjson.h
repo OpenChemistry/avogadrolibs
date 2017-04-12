@@ -40,7 +40,7 @@ public:
     return Read | File | Stream | String;
   }
 
-  FileFormat * newInstance() const override { return new NWChemJson; }
+  FileFormat* newInstance() const override { return new NWChemJson; }
   std::string identifier() const override { return "Avogadro: NWCHEMJSON"; }
   std::string name() const override { return "NWChem JSON"; }
   std::string description() const override
@@ -48,16 +48,13 @@ public:
     return "TODO: Describe the format.";
   }
 
-  std::string specificationUrl() const override
-  {
-    return "";
-  }
+  std::string specificationUrl() const override { return ""; }
 
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) override;
-  bool write(std::ostream &out, const Core::Molecule &molecule) override;
+  bool read(std::istream& in, Core::Molecule& molecule) override;
+  bool write(std::ostream& out, const Core::Molecule& molecule) override;
 };
 
 } // end QuantumIO namespace

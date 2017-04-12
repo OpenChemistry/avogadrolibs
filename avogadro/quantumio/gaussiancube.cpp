@@ -16,9 +16,9 @@
 
 #include "gaussiancube.h"
 
+#include <avogadro/core/cube.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
-#include <avogadro/core/cube.h>
 
 #include <iostream>
 
@@ -45,7 +45,7 @@ std::vector<std::string> GaussianCube::mimeTypes() const
   return std::vector<std::string>();
 }
 
-bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
+bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
 {
   // Variables we will need
   std::string line;
@@ -62,14 +62,15 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
   getline(in, line);
   molecule.setData("name", line);
 
-  // Read and skip field title (we may be able to use this to setCubeType in the future)
+  // Read and skip field title (we may be able to use this to setCubeType in the
+  // future)
   getline(in, line);
 
   // Next line contains nAtoms and m_min
   in >> nAtoms;
   for (unsigned int i = 0; i < 3; ++i)
     in >> min(i);
-  getline(in, line); //capture newline before continuing
+  getline(in, line); // capture newline before continuing
 
   // Next 3 lines contains spacing and dim
   for (unsigned int i = 0; i < 3; ++i) {
@@ -116,9 +117,9 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
     spacing[j] *= BOHR_TO_ANGSTROM;
   }
 
-  for (unsigned int i = 0; i < nCubes; ++i){
+  for (unsigned int i = 0; i < nCubes; ++i) {
     // Get a cube object from molecule
-    Core::Cube *cube = molecule.addCube();
+    Core::Cube* cube = molecule.addCube();
 
     cube->setLimits(min, dim, spacing);
     std::vector<double> values;
@@ -134,10 +135,10 @@ bool GaussianCube::read(std::istream &in, Core::Molecule &molecule)
   return true;
 }
 
-bool GaussianCube::write(std::ostream &out, const Core::Molecule &molecule)
+bool GaussianCube::write(std::ostream& out, const Core::Molecule& molecule)
 {
-    // Not implemented yet
-    return false;
+  // Not implemented yet
+  return false;
 }
 
 } // End QuantumIO namespace

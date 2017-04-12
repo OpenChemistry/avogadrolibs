@@ -38,7 +38,7 @@ public:
     return Read | File | Stream | String;
   }
 
-  FileFormat * newInstance() const override { return new GaussianFchk; }
+  FileFormat* newInstance() const override { return new GaussianFchk; }
   std::string identifier() const override { return "Avogadro: FCHK"; }
   std::string name() const override { return "Gaussian FCHK"; }
   std::string description() const override
@@ -54,8 +54,8 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream &in, Core::Molecule &molecule) override;
-  bool write(std::ostream &, const Core::Molecule &) override
+  bool read(std::istream& in, Core::Molecule& molecule) override;
+  bool write(std::ostream&, const Core::Molecule&) override
   {
     // Empty, as we do not write out Gaussian FCHK files.
     return false;
@@ -64,13 +64,13 @@ public:
   void outputAll();
 
 private:
-  void processLine(std::istream &in);
+  void processLine(std::istream& in);
   void load(Core::GaussianSet* basis);
-  std::vector<int> readArrayI(std::istream &in, unsigned int n);
-  std::vector<double> readArrayD(std::istream &in, unsigned int n,
+  std::vector<int> readArrayI(std::istream& in, unsigned int n);
+  std::vector<double> readArrayD(std::istream& in, unsigned int n,
                                  int width = 0);
-  bool readDensityMatrix(std::istream &in, unsigned int n, int width = 0);
-  bool readSpinDensityMatrix(std::istream &in, unsigned int n, int width = 0);
+  bool readDensityMatrix(std::istream& in, unsigned int n, int width = 0);
+  bool readSpinDensityMatrix(std::istream& in, unsigned int n, int width = 0);
 
   /**
    * Use either m_electrons, or m_electronsAlpha and m_electronsBeta.
@@ -98,7 +98,6 @@ private:
   MatrixX m_spinDensity; /// Spin density matrix
   Core::ScfType m_scftype;
 };
-
 }
 }
 

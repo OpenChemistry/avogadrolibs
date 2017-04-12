@@ -27,8 +27,7 @@ using std::ifstream;
 using std::locale;
 using std::ofstream;
 
-FileFormat::FileFormat()
-  : m_mode(None), m_in(nullptr), m_out(nullptr)
+FileFormat::FileFormat() : m_mode(None), m_in(nullptr), m_out(nullptr)
 {
 }
 
@@ -38,7 +37,7 @@ FileFormat::~FileFormat()
   delete m_out;
 }
 
-bool FileFormat::open(const std::string &fileName_, Operation mode_)
+bool FileFormat::open(const std::string& fileName_, Operation mode_)
 {
   close();
   m_fileName = fileName_;
@@ -47,25 +46,22 @@ bool FileFormat::open(const std::string &fileName_, Operation mode_)
     // Imbue the standard C locale.
     locale cLocale("C");
     if (m_mode & Read) {
-      ifstream *file = new ifstream(m_fileName.c_str(), std::ifstream::binary);
+      ifstream* file = new ifstream(m_fileName.c_str(), std::ifstream::binary);
       m_in = file;
       if (file->is_open()) {
         m_in->imbue(cLocale);
         return true;
-      }
-      else {
+      } else {
         appendError("Error opening file: " + fileName_);
         return false;
       }
-    }
-    else if (m_mode & Write) {
-      ofstream *file = new ofstream(m_fileName.c_str(), std::ofstream::binary);
+    } else if (m_mode & Write) {
+      ofstream* file = new ofstream(m_fileName.c_str(), std::ofstream::binary);
       m_out = file;
       if (file->is_open()) {
         m_out->imbue(cLocale);
         return true;
-      }
-      else {
+      } else {
         appendError("Error opening file: " + fileName_);
         return false;
       }
@@ -87,22 +83,22 @@ void FileFormat::close()
   m_mode = None;
 }
 
-bool FileFormat::readMolecule(Core::Molecule &molecule)
+bool FileFormat::readMolecule(Core::Molecule& molecule)
 {
   if (!m_in)
     return false;
   return read(*m_in, molecule);
 }
 
-bool FileFormat::writeMolecule(const Core::Molecule &molecule)
+bool FileFormat::writeMolecule(const Core::Molecule& molecule)
 {
   if (!m_out)
     return false;
   return write(*m_out, molecule);
 }
 
-bool FileFormat::readFile(const std::string &fileName_,
-                          Core::Molecule &molecule)
+bool FileFormat::readFile(const std::string& fileName_,
+                          Core::Molecule& molecule)
 {
   bool result = open(fileName_, Read);
   if (!result)
@@ -113,8 +109,8 @@ bool FileFormat::readFile(const std::string &fileName_,
   return result;
 }
 
-bool FileFormat::writeFile(const std::string &fileName_,
-                           const Core::Molecule &molecule)
+bool FileFormat::writeFile(const std::string& fileName_,
+                           const Core::Molecule& molecule)
 {
   bool result = open(fileName_, Write);
   if (!result)
@@ -125,7 +121,7 @@ bool FileFormat::writeFile(const std::string &fileName_,
   return result;
 }
 
-bool FileFormat::readString(const std::string &string, Core::Molecule &molecule)
+bool FileFormat::readString(const std::string& string, Core::Molecule& molecule)
 {
   std::istringstream stream(string, std::istringstream::in);
   // Imbue the standard C locale.
@@ -134,8 +130,8 @@ bool FileFormat::readString(const std::string &string, Core::Molecule &molecule)
   return read(stream, molecule);
 }
 
-bool FileFormat::writeString(std::string &string,
-                             const Core::Molecule &molecule)
+bool FileFormat::writeString(std::string& string,
+                             const Core::Molecule& molecule)
 {
   std::ostringstream stream(string, std::ostringstream::out);
   // Imbue the standard C locale.
@@ -152,7 +148,7 @@ void FileFormat::clear()
   m_error.clear();
 }
 
-void FileFormat::appendError(const std::string &errorString, bool newLine)
+void FileFormat::appendError(const std::string& errorString, bool newLine)
 {
   m_error += errorString;
   if (newLine)

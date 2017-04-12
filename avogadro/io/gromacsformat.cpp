@@ -62,7 +62,7 @@ std::vector<std::string> GromacsFormat::mimeTypes() const
   return std::vector<std::string>(1, std::string("chemical/x-gro"));
 }
 
-bool GromacsFormat::read(std::istream &in, Molecule &molecule)
+bool GromacsFormat::read(std::istream& in, Molecule& molecule)
 {
   string buffer;
   string value;
@@ -107,8 +107,8 @@ bool GromacsFormat::read(std::istream &in, Molecule &molecule)
     }
 
     if (buffer.size() < static_cast<size_t>(20 + 3 * decimalSep)) {
-      appendError("Error reading atom specification -- line too short: "
-                  + buffer);
+      appendError("Error reading atom specification -- line too short: " +
+                  buffer);
       return false;
     }
 
@@ -142,8 +142,9 @@ bool GromacsFormat::read(std::istream &in, Molecule &molecule)
       value = trimmed(buffer.substr(20 + i * decimalSep, decimalSep));
       pos[i] = lexicalCast<Real>(value, ok);
       if (!ok || value.empty()) {
-        appendError("Error reading atom specification -- invalid coordinate: '"
-                    + buffer + "' (bad coord: '" + value + "')");
+        appendError(
+          "Error reading atom specification -- invalid coordinate: '" + buffer +
+          "' (bad coord: '" + value + "')");
         return false;
       }
     }
@@ -154,7 +155,8 @@ bool GromacsFormat::read(std::istream &in, Molecule &molecule)
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
     for (AtomTypeMap::const_iterator it = atomTypes.begin(),
-         itEnd = atomTypes.end(); it != itEnd; ++it) {
+                                     itEnd = atomTypes.end();
+         it != itEnd; ++it) {
       elementMap.insert(std::make_pair(it->second, it->first));
     }
     molecule.setCustomElementMap(elementMap);
@@ -168,26 +170,26 @@ bool GromacsFormat::read(std::istream &in, Molecule &molecule)
   vector<string> tokens(split(buffer, ' ', true));
   if (tokens.size() > 0) {
     if (tokens.size() != 3 && tokens.size() != 9) {
-      appendError("Invalid box specification -- need either 3 or 9 values: '"
-                  + buffer + "'");
+      appendError("Invalid box specification -- need either 3 or 9 values: '" +
+                  buffer + "'");
       return false;
     }
 
     // Index arrays for parsing loop:
-    const int rows[] = {0, 1, 2, 1, 2, 0, 2, 0, 1};
-    const int cols[] = {0, 1, 2, 0, 0, 1, 1, 2, 2};
+    const int rows[] = { 0, 1, 2, 1, 2, 0, 2, 0, 1 };
+    const int cols[] = { 0, 1, 2, 0, 0, 1, 1, 2, 2 };
 
     Matrix3 cellMatrix = Matrix3::Zero();
     for (size_t i = 0; i < tokens.size(); ++i) {
       cellMatrix(rows[i], cols[i]) = lexicalCast<Real>(tokens[i], ok);
       if (!ok || tokens[i].empty()) {
-        appendError("Invalid box specification -- bad value: '"
-                    + tokens[i] + "'");
+        appendError("Invalid box specification -- bad value: '" + tokens[i] +
+                    "'");
         return false;
       }
     }
 
-    UnitCell *cell = new UnitCell;
+    UnitCell* cell = new UnitCell;
     cell->setCellMatrix(cellMatrix * static_cast<Real>(10)); // nm --> Angstrom
     molecule.setUnitCell(cell);
   }
@@ -195,7 +197,7 @@ bool GromacsFormat::read(std::istream &in, Molecule &molecule)
   return true;
 }
 
-bool GromacsFormat::write(std::ostream &, const Core::Molecule &)
+bool GromacsFormat::write(std::ostream&, const Core::Molecule&)
 {
   return false;
 }

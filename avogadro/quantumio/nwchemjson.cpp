@@ -58,7 +58,7 @@ NWChemJson::~NWChemJson()
 {
 }
 
-bool NWChemJson::read(std::istream &file, Molecule &molecule)
+bool NWChemJson::read(std::istream& file, Molecule& molecule)
 {
   Value root;
   Reader reader;
@@ -113,8 +113,8 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
       if (!calcMol.isNull() && calcMol.isObject())
         moleculeArray.append(calcMol);
       // There is currently one id for all, just get the last one we find.
-      if (!calcResults["molecularOrbitals"].isNull()
-          && calcResults["molecularOrbitals"].isObject())
+      if (!calcResults["molecularOrbitals"].isNull() &&
+          calcResults["molecularOrbitals"].isObject())
         molecularOrbitals = calcResults["molecularOrbitals"];
     }
   }
@@ -128,9 +128,8 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
       Value jsonAtom = atoms.get(i, 0);
       if (jsonAtom.isNull() || !jsonAtom.isObject())
         continue;
-      Atom a =
-          molecule.addAtom(static_cast<unsigned char>(jsonAtom["elementNumber"]
-                           .asInt()));
+      Atom a = molecule.addAtom(
+        static_cast<unsigned char>(jsonAtom["elementNumber"].asInt()));
       Value pos = jsonAtom["cartesianCoordinates"]["value"];
       Vector3 position(pos.get(Json::Value::ArrayIndex(0), 0.0).asDouble(),
                        pos.get(Json::Value::ArrayIndex(1), 0.0).asDouble(),
@@ -145,8 +144,8 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
   molecule.perceiveBondsSimple();
 
   // Add in the electronic structure information if available.
-  if (molecularOrbitals.isObject()
-      && molecularOrbitals["atomicOrbitalDescriptions"].isArray()) {
+  if (molecularOrbitals.isObject() &&
+      molecularOrbitals["atomicOrbitalDescriptions"].isArray()) {
     Value basisSet = basisSetArray.get(basisSetArray.size() - 1, 0);
     Value orbDesc = molecularOrbitals["atomicOrbitalDescriptions"];
 
@@ -165,7 +164,7 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
     }
 
     // Now create the structure, and expand out the orbitals.
-    GaussianSet *basis = new GaussianSet;
+    GaussianSet* basis = new GaussianSet;
     basis->setMolecule(&molecule);
     for (size_t i = 0; i < atomSymbol.size(); ++i) {
       string symbol = atomSymbol[i];
@@ -190,8 +189,8 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
         break;
 
       Value contraction = currentFunction["basisSetContraction"];
-      bool spherical = currentFunction["basisSetHarmonicType"].asString()
-          == "spherical";
+      bool spherical =
+        currentFunction["basisSetHarmonicType"].asString() == "spherical";
       for (size_t j = 0; j < contraction.size(); ++j) {
         Value contractionShell = contraction.get(j, Json::nullValue);
         string shellType;
@@ -239,9 +238,11 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
       if (currentMO.isMember("orbitalEnergy"))
         energyArray.push_back(currentMO["orbitalEnergy"]["value"].asDouble());
       if (currentMO.isMember("orbitalOccupancy"))
-        occArray.push_back(static_cast<unsigned char>(currentMO["orbitalOccupancy"].asInt()));
+        occArray.push_back(
+          static_cast<unsigned char>(currentMO["orbitalOccupancy"].asInt()));
       if (currentMO.isMember("orbitalNumber"))
-        numArray.push_back(static_cast<unsigned int>(currentMO["orbitalNumber"].asInt()));
+        numArray.push_back(
+          static_cast<unsigned int>(currentMO["orbitalNumber"].asInt()));
     }
     basis->setMolecularOrbitals(coeffArray);
     basis->setMolecularOrbitalEnergy(energyArray);
@@ -257,11 +258,12 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
     if (!normalModes.isNull() && normalModes.isArray()) {
       Array<double> frequencies;
       Array<double> intensities;
-      Array< Array<Vector3> > Lx;
+      Array<Array<Vector3>> Lx;
       for (size_t i = 0; i < normalModes.size(); ++i) {
         Value mode = normalModes.get(i, "");
         frequencies.push_back(mode["normalModeFrequency"]["value"].asDouble());
-        intensities.push_back(mode["normalModeInfraRedIntensity"]["value"].asDouble());
+        intensities.push_back(
+          mode["normalModeInfraRedIntensity"]["value"].asDouble());
         Value lx = mode["normalModeVector"]["value"];
         if (!lx.empty() && lx.isArray()) {
           Array<Vector3> modeLx;
@@ -280,7 +282,7 @@ bool NWChemJson::read(std::istream &file, Molecule &molecule)
   return true;
 }
 
-bool NWChemJson::write(std::ostream &file, const Molecule &molecule)
+bool NWChemJson::write(std::ostream& file, const Molecule& molecule)
 {
   return false;
 }
