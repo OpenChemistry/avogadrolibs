@@ -38,80 +38,82 @@ using Avogadro::Rendering::TextProperties;
 
 namespace {
 
-inline Qt::Alignment textPropertiesToAlignment(const TextProperties &prop)
+inline Qt::Alignment textPropertiesToAlignment(const TextProperties& prop)
 {
   Qt::Alignment result = 0;
 
   switch (prop.hAlign()) {
-  default:
-  case TextProperties::HLeft:
-    result |= Qt::AlignLeft;
-    break;
-  case TextProperties::HCenter:
-    result |= Qt::AlignHCenter;
-    break;
-  case TextProperties::HRight:
-    result |= Qt::AlignRight;
-    break;
+    default:
+    case TextProperties::HLeft:
+      result |= Qt::AlignLeft;
+      break;
+    case TextProperties::HCenter:
+      result |= Qt::AlignHCenter;
+      break;
+    case TextProperties::HRight:
+      result |= Qt::AlignRight;
+      break;
   }
 
   switch (prop.vAlign()) {
-  default:
-  case TextProperties::VTop:
-    result |= Qt::AlignTop;
-    break;
-  case TextProperties::VCenter:
-    result |= Qt::AlignVCenter;
-    break;
-  case TextProperties::VBottom:
-    result |= Qt::AlignBottom;
-    break;
+    default:
+    case TextProperties::VTop:
+      result |= Qt::AlignTop;
+      break;
+    case TextProperties::VCenter:
+      result |= Qt::AlignVCenter;
+      break;
+    case TextProperties::VBottom:
+      result |= Qt::AlignBottom;
+      break;
   }
 
   return result;
 }
 
-inline QFont textPropertiesToQFont(const TextProperties &prop)
+inline QFont textPropertiesToQFont(const TextProperties& prop)
 {
   QString family;
   switch (prop.fontFamily()) {
-  default:
-    qWarning() << "Unknown font family id: " << prop.fontFamily()
-               << "Defaulting to SansSerif.";
-  case TextProperties::SansSerif:
-    family = "sans";
-    break;
-  case TextProperties::Serif:
-    family = "serif";
-    break;
-  case TextProperties::Mono:
-    family = "mono";
-    break;
+    default:
+      qWarning() << "Unknown font family id: " << prop.fontFamily()
+                 << "Defaulting to SansSerif.";
+    case TextProperties::SansSerif:
+      family = "sans";
+      break;
+    case TextProperties::Serif:
+      family = "serif";
+      break;
+    case TextProperties::Mono:
+      family = "mono";
+      break;
   }
 
   TextProperties::FontStyles style = prop.fontStyles();
 
-  QFont result(family,
-               static_cast<int>(prop.pixelHeight() * qApp->devicePixelRatio()) / 2 + 1,
-               static_cast<bool>(style & TextProperties::Bold) ? QFont::Bold
-                                                               : QFont::Normal,
-               static_cast<bool>(style & TextProperties::Italic));
+  QFont result(
+    family,
+    static_cast<int>(prop.pixelHeight() * qApp->devicePixelRatio()) / 2 + 1,
+    static_cast<bool>(style & TextProperties::Bold) ? QFont::Bold
+                                                    : QFont::Normal,
+    static_cast<bool>(style & TextProperties::Italic));
   result.setUnderline(static_cast<bool>(style & TextProperties::Underline));
 
   // Scale the font size to match the specified pixel height:
   QFontMetricsF metrics(result);
   int iterLimiter = 0; // no more than 5 iterations below:
   do {
-    result.setPointSizeF(result.pointSizeF()
-                         * static_cast<qreal>(prop.pixelHeight() * qApp->devicePixelRatio())
-                         / metrics.height());
+    result.setPointSizeF(
+      result.pointSizeF() *
+      static_cast<qreal>(prop.pixelHeight() * qApp->devicePixelRatio()) /
+      metrics.height());
 
     metrics = QFontMetricsF(result);
-  }
-  while (std::fabs(metrics.height() -
-                   static_cast<qreal>(prop.pixelHeight() * qApp->devicePixelRatio()))
-         > static_cast<qreal>(0.5)
-         && iterLimiter++ < 5);
+  } while (
+    std::fabs(metrics.height() - static_cast<qreal>(prop.pixelHeight() *
+                                                    qApp->devicePixelRatio())) >
+      static_cast<qreal>(0.5) &&
+    iterLimiter++ < 5);
 
   return result;
 }
@@ -129,14 +131,14 @@ QtTextRenderStrategy::~QtTextRenderStrategy()
 {
 }
 
-Rendering::TextRenderStrategy *QtTextRenderStrategy::newInstance() const
+Rendering::TextRenderStrategy* QtTextRenderStrategy::newInstance() const
 {
   return new QtTextRenderStrategy;
 }
 
-void QtTextRenderStrategy::boundingBox(
-    const std::string &string, const Rendering::TextProperties &tprop,
-    int bbox[]) const
+void QtTextRenderStrategy::boundingBox(const std::string& string,
+                                       const Rendering::TextProperties& tprop,
+                                       int bbox[]) const
 {
   QRect rect;
   const QFont font(textPropertiesToQFont(tprop));
@@ -166,10 +168,10 @@ void QtTextRenderStrategy::boundingBox(
   bbox[3] = rect.bottom();
 }
 
-void QtTextRenderStrategy::render(const std::string &string,
-                                  const Rendering::TextProperties &tprop,
-                                  unsigned char *buffer,
-                                  const Vector2i &dims) const
+void QtTextRenderStrategy::render(const std::string& string,
+                                  const Rendering::TextProperties& tprop,
+                                  unsigned char* buffer,
+                                  const Vector2i& dims) const
 {
   // Convert inputs to Qt
   QString str = QString::fromStdString(string);
@@ -211,8 +213,8 @@ void QtTextRenderStrategy::render(const std::string &string,
   }
 
   // Draw the text
-  painter.setPen(QColor(tprop.red(), tprop.green(),
-                        tprop.blue(), tprop.alpha()));
+  painter.setPen(
+    QColor(tprop.red(), tprop.green(), tprop.blue(), tprop.alpha()));
   painter.drawText(textRect, flags, str);
   painter.end();
 
@@ -223,29 +225,29 @@ void QtTextRenderStrategy::render(const std::string &string,
 
 namespace {
 
-template <int ByteOrder> inline
-void argbToRgbaWorker(quint32 in, quint32 &out)
+template <int ByteOrder>
+inline void argbToRgbaWorker(quint32 in, quint32& out)
 {
   Q_UNUSED(in)
   Q_UNUSED(out)
   qWarning("QtTextRenderStrategy::argbToRgba: Invalid byte order.");
 }
 
-template < > inline
-void argbToRgbaWorker<QSysInfo::BigEndian>(quint32 in, quint32 &out)
+template <>
+inline void argbToRgbaWorker<QSysInfo::BigEndian>(quint32 in, quint32& out)
 {
   out = ((in >> 24) & 0xff) | (in << 8);
 }
 
-template < > inline
-void argbToRgbaWorker<QSysInfo::LittleEndian>(quint32 in, quint32 &out)
+template <>
+inline void argbToRgbaWorker<QSysInfo::LittleEndian>(quint32 in, quint32& out)
 {
   out = ((in << 16) & 0xff0000) | ((in >> 16) & 0xff) | (in & 0xff00ff00);
 }
 
 } // end anon namespace
 
-void QtTextRenderStrategy::argbToRgba(unsigned char *buffer, size_t pixels)
+void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
 {
   // Adapted from QGLWidget::convertToGLFormat to perform the conversion
   // in-place.
@@ -253,8 +255,8 @@ void QtTextRenderStrategy::argbToRgba(unsigned char *buffer, size_t pixels)
   // output: 0xRRGGBBAA (big endian)
   // output: 0xAABBGGRR (little endian)
 
-  quint32 *cur = reinterpret_cast<quint32*>(buffer);
-  quint32 *end = cur + pixels;
+  quint32* cur = reinterpret_cast<quint32*>(buffer);
+  quint32* end = cur + pixels;
 
   while (cur < end) {
     // Skip empty pixels

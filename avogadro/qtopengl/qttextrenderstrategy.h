@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_QTGUI_QTTEXTRENDERSTRATEGY_H
 #define AVOGADRO_QTGUI_QTTEXTRENDERSTRATEGY_H
 
-#include <avogadro/rendering/textrenderstrategy.h>
 #include "avogadroqtopenglexport.h"
+#include <avogadro/rendering/textrenderstrategy.h>
 
 #include <avogadro/core/avogadrocore.h>
 
@@ -31,7 +31,7 @@ namespace QtOpenGL {
  * @brief The QtTextRenderStrategy class uses the Qt toolkit to render text.
  */
 class AVOGADROQTOPENGL_EXPORT QtTextRenderStrategy
-    : public Rendering::TextRenderStrategy
+  : public Rendering::TextRenderStrategy
 {
 public:
   QtTextRenderStrategy();
@@ -39,12 +39,12 @@ public:
 
   TextRenderStrategy* newInstance() const override;
 
-  void boundingBox(const std::string &string,
-                   const Rendering::TextProperties &tprop,
+  void boundingBox(const std::string& string,
+                   const Rendering::TextProperties& tprop,
                    int bbox[4]) const override;
 
-  void render(const std::string &string, const Rendering::TextProperties &tprop,
-              unsigned char *buffer, const Vector2i &dims) const override;
+  void render(const std::string& string, const Rendering::TextProperties& tprop,
+              unsigned char* buffer, const Vector2i& dims) const override;
 
   /**
    * Keep the buffer as a QImage::Format_ARGB32_Premultiplied image. Useful
@@ -58,7 +58,7 @@ public:
   /** @} */
 
 private:
-  static void argbToRgba(unsigned char *buffer, size_t pixels);
+  static void argbToRgba(unsigned char* buffer, size_t pixels);
   bool m_preserveArgb;
 };
 
