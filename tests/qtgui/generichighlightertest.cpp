@@ -42,7 +42,7 @@ public:
     // Create a new document from all the selected text document.
     QTextCursor cursor(document());
     cursor.select(QTextCursor::Document);
-    QTextDocument *tempDocument(new QTextDocument);
+    QTextDocument* tempDocument(new QTextDocument);
     Q_ASSERT(tempDocument);
     QTextCursor tempCursor(tempDocument);
 
@@ -61,9 +61,9 @@ public:
     const int endOfDocument = tempDocument->characterCount() - 1;
     for (QTextBlock current = start; current.isValid() && current != end;
          current = current.next()) {
-      const QTextLayout *layout(current.layout());
+      const QTextLayout* layout(current.layout());
 
-      foreach (const QTextLayout::FormatRange &range,
+      foreach (const QTextLayout::FormatRange& range,
                layout->additionalFormats()) {
         const int startIdx = current.position() + range.start - selectionStart;
         const int endIdx = startIdx + range.length;
@@ -107,27 +107,27 @@ TEST(GenericHighlighterTest, exercise)
   GenericHighlighterHtml highlighter;
   QTextCharFormat format;
 
-  GenericHighlighter::Rule &regexpRule = highlighter.addRule();
-  regexpRule.addPattern(QRegExp("^.*regexp.*$",
-                                Qt::CaseSensitive, QRegExp::RegExp));
+  GenericHighlighter::Rule& regexpRule = highlighter.addRule();
+  regexpRule.addPattern(
+    QRegExp("^.*regexp.*$", Qt::CaseSensitive, QRegExp::RegExp));
   format.setForeground(Qt::blue);
   regexpRule.setFormat(format);
 
-  GenericHighlighter::Rule &regexpCapRule = highlighter.addRule();
-  regexpCapRule.addPattern(QRegExp("^.*(this)[^\n]*(that).*$",
-                                   Qt::CaseSensitive, QRegExp::RegExp));
+  GenericHighlighter::Rule& regexpCapRule = highlighter.addRule();
+  regexpCapRule.addPattern(
+    QRegExp("^.*(this)[^\n]*(that).*$", Qt::CaseSensitive, QRegExp::RegExp));
   format.setForeground(Qt::yellow);
   regexpCapRule.setFormat(format);
 
-  GenericHighlighter::Rule &wildcardRule = highlighter.addRule();
-  wildcardRule.addPattern(QRegExp("A w*red.",
-                                  Qt::CaseSensitive, QRegExp::Wildcard));
+  GenericHighlighter::Rule& wildcardRule = highlighter.addRule();
+  wildcardRule.addPattern(
+    QRegExp("A w*red.", Qt::CaseSensitive, QRegExp::Wildcard));
   format.setForeground(Qt::red);
   wildcardRule.setFormat(format);
 
-  GenericHighlighter::Rule &stringRule = highlighter.addRule();
-  stringRule.addPattern(QRegExp("This string will be green.",
-                                Qt::CaseSensitive, QRegExp::FixedString));
+  GenericHighlighter::Rule& stringRule = highlighter.addRule();
+  stringRule.addPattern(QRegExp("This string will be green.", Qt::CaseSensitive,
+                                QRegExp::FixedString));
   format.setForeground(Qt::green);
   stringRule.setFormat(format);
 
@@ -138,36 +138,36 @@ TEST(GenericHighlighterTest, exercise)
   highlighter.asHtml(html);
 
   QString refHtml(
-        "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
-        "\"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-        "<html><head><meta name=\"qrichtext\" content=\"1\" />"
-        "<style type=\"text/css\">\n"
-        "p, li { white-space: pre-wrap; }\n"
-        "</style></head><body>\n"
-        "<pre style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-        "margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-        "<!--StartFragment--><span style=\" color:#0000ff;\">"
-        "A regexp will turn this blue.</span></pre>\n"
-        "<pre style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-        "margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-        "<span style=\" color:#a0a0a4;\">"
-        "Only </span><span style=\" color:#ffff00;\">"
-        "this</span><span style=\" color:#a0a0a4;\"> "
-        "and </span><span style=\" color:#ffff00;\">"
-        "that</span><span style=\" color:#a0a0a4;\"> "
-        "will be yellow.</span></pre>\n"
-        "<pre style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-        "margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-        "<span style=\" color:#ff0000;\">"
-        "A wildcard expression will turn this red.</span></pre>\n"
-        "<pre style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-        "margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-        "<span style=\" color:#00ff00;\">"
-        "This string will be green.</span></pre>\n"
-        "<pre style=\"-qt-paragraph-type:empty; margin-top:0px; "
-        "margin-bottom:0px; margin-left:0px; margin-right:0px; "
-        "-qt-block-indent:0; text-indent:0px; color:#a0a0a4;\">"
-        "<br /><!--EndFragment--></pre></body></html>");
+    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
+    "\"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+    "<html><head><meta name=\"qrichtext\" content=\"1\" />"
+    "<style type=\"text/css\">\n"
+    "p, li { white-space: pre-wrap; }\n"
+    "</style></head><body>\n"
+    "<pre style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
+    "margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
+    "<!--StartFragment--><span style=\" color:#0000ff;\">"
+    "A regexp will turn this blue.</span></pre>\n"
+    "<pre style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
+    "margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
+    "<span style=\" color:#a0a0a4;\">"
+    "Only </span><span style=\" color:#ffff00;\">"
+    "this</span><span style=\" color:#a0a0a4;\"> "
+    "and </span><span style=\" color:#ffff00;\">"
+    "that</span><span style=\" color:#a0a0a4;\"> "
+    "will be yellow.</span></pre>\n"
+    "<pre style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
+    "margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
+    "<span style=\" color:#ff0000;\">"
+    "A wildcard expression will turn this red.</span></pre>\n"
+    "<pre style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
+    "margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
+    "<span style=\" color:#00ff00;\">"
+    "This string will be green.</span></pre>\n"
+    "<pre style=\"-qt-paragraph-type:empty; margin-top:0px; "
+    "margin-bottom:0px; margin-left:0px; margin-right:0px; "
+    "-qt-block-indent:0; text-indent:0px; color:#a0a0a4;\">"
+    "<br /><!--EndFragment--></pre></body></html>");
 
   EXPECT_STREQ(qPrintable(refHtml), qPrintable(html));
 }

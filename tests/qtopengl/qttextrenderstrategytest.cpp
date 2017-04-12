@@ -14,15 +14,15 @@
 
 ******************************************************************************/
 
-#include <avogadro/qtopengl/qttextrenderstrategy.h>
 #include "qtopengltests.h"
+#include <avogadro/qtopengl/qttextrenderstrategy.h>
 
 #include <avogadro/rendering/textproperties.h>
 
 #include <avogadro/core/vector.h>
 
-#include <QtWidgets/QApplication>
 #include <QtGui/QImage>
+#include <QtWidgets/QApplication>
 
 #include <QtCore/QDebug>
 
@@ -34,11 +34,11 @@ using Avogadro::Rendering::TextProperties;
 using Avogadro::Vector2i;
 
 // Need to start an app to load fonts
-#define START_QAPP \
-  int argc = 1; \
-  char argName[] = "FakeApp.exe"; \
-  char *argv[2] = {argName, nullptr}; \
-  QApplication app(argc, argv); \
+#define START_QAPP                                                             \
+  int argc = 1;                                                                \
+  char argName[] = "FakeApp.exe";                                              \
+  char* argv[2] = { argName, nullptr };                                        \
+  QApplication app(argc, argv);                                                \
   Q_UNUSED(app)
 
 namespace {
@@ -47,7 +47,7 @@ bool newInstance()
 {
   bool result = true;
   Strategy orig;
-  Interface *clone = orig.newInstance();
+  Interface* clone = orig.newInstance();
   if (dynamic_cast<Strategy*>(clone) == nullptr)
     result = false;
   delete clone;
@@ -69,13 +69,13 @@ bool boundingBox()
 
   int bbox[4];
   // Valid sizes:
-  int refbbox_1[4] = {-86, 85, -28, 27};
-  int refbbox_2[4] = {-69, 68, -27, 26};
+  int refbbox_1[4] = { -86, 85, -28, 27 };
+  int refbbox_2[4] = { -69, 68, -27, 26 };
   strategy.boundingBox(testString, tprop, bbox);
   if (!std::equal(bbox, bbox + 4, refbbox_1) &&
       !std::equal(bbox, bbox + 4, refbbox_2)) {
-    qCritical() << "boundingBox() failed: "
-                << bbox[0] << bbox[1] << bbox[2] << bbox[3];
+    qCritical() << "boundingBox() failed: " << bbox[0] << bbox[1] << bbox[2]
+                << bbox[3];
     result = false;
   }
 
@@ -89,11 +89,11 @@ bool compareComponents(unsigned char a, unsigned char b)
   return std::abs(a - b) <= 2;
 }
 
-float validateBaseline(unsigned char *buffer, size_t numPixels,
-                       const std::string &fileName)
+float validateBaseline(unsigned char* buffer, size_t numPixels,
+                       const std::string& fileName)
 {
   static const std::string baselineDir(
-        AVOGADRO_DATA "/baselines/avogadro/qtgui/qttextrenderstrategy/");
+    AVOGADRO_DATA "/baselines/avogadro/qtgui/qttextrenderstrategy/");
   QImage refImage;
   if (!refImage.load(QString::fromStdString(baselineDir + fileName)))
     qWarning() << "Error loading file" << QString::fromStdString(fileName);
@@ -102,9 +102,9 @@ float validateBaseline(unsigned char *buffer, size_t numPixels,
                     compareComponents);
 }
 
-bool testRenderedString(Strategy &strategy, const std::string &str,
-                        const TextProperties &tprop,
-                        const std::string &refFilename)
+bool testRenderedString(Strategy& strategy, const std::string& str,
+                        const TextProperties& tprop,
+                        const std::string& refFilename)
 {
   int bbox[4];
   strategy.boundingBox(str, tprop, bbox);
@@ -117,9 +117,9 @@ bool testRenderedString(Strategy &strategy, const std::string &str,
 }
 
 // Useful for making new baselines:
-void saveRenderedString(Strategy &strategy, const std::string &str,
-                        const TextProperties &tprop,
-                        const std::string &filename)
+void saveRenderedString(Strategy& strategy, const std::string& str,
+                        const TextProperties& tprop,
+                        const std::string& filename)
 {
   int bbox[4];
   strategy.boundingBox(str, tprop, bbox);
@@ -182,7 +182,7 @@ bool render()
 } // end anon namespace
 
 // Driver function:
-int qttextrenderstrategytest(int, char ** const)
+int qttextrenderstrategytest(int, char** const)
 {
   bool result = true;
   if (!newInstance())

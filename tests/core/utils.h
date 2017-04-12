@@ -16,13 +16,13 @@
 
 #include <gtest/gtest.h>
 
-#include <avogadro/core/molecule.h>
-#include <avogadro/core/vector.h>
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/mesh.h>
+#include <avogadro/core/molecule.h>
+#include <avogadro/core/vector.h>
 
-void assertEqual(const Avogadro::Core::Molecule &m1,
-                 const Avogadro::Core::Molecule &m2)
+void assertEqual(const Avogadro::Core::Molecule& m1,
+                 const Avogadro::Core::Molecule& m2)
 {
   EXPECT_EQ(m1.atomCount(), m2.atomCount());
   EXPECT_TRUE(m1.atomicNumbers() == m2.atomicNumbers());
@@ -34,8 +34,8 @@ void assertEqual(const Avogadro::Core::Molecule &m1,
 
   EXPECT_EQ(m1.meshCount(), m2.meshCount());
   for (size_t i = 0; i < m1.meshCount(); i++) {
-    const Avogadro::Core::Mesh *mesh1 = m1.mesh(i);
-    const Avogadro::Core::Mesh *mesh2 = m2.mesh(i);
+    const Avogadro::Core::Mesh* mesh1 = m1.mesh(i);
+    const Avogadro::Core::Mesh* mesh2 = m2.mesh(i);
 
     EXPECT_TRUE(mesh1->vertices() == mesh2->vertices());
     EXPECT_TRUE(mesh1->normals() == mesh2->vertices());

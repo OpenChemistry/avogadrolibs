@@ -64,17 +64,17 @@ TEST(AbsoluteQuadStrategyTest, exercise)
 
   EXPECT_FLOAT_EQ(-460.86874f, quad[0][0]);
   EXPECT_FLOAT_EQ(-326.70682f, quad[0][1]);
-  EXPECT_FLOAT_EQ(543.34692f,  quad[0][2]);
+  EXPECT_FLOAT_EQ(543.34692f, quad[0][2]);
 
   EXPECT_FLOAT_EQ(-537.40002f, quad[1][0]);
-  EXPECT_FLOAT_EQ(81.459717f,  quad[1][1]);
-  EXPECT_FLOAT_EQ(262.73242f,  quad[1][2]);
+  EXPECT_FLOAT_EQ(81.459717f, quad[1][1]);
+  EXPECT_FLOAT_EQ(262.73242f, quad[1][2]);
 
-  EXPECT_FLOAT_EQ(85.831268f,  quad[2][0]);
+  EXPECT_FLOAT_EQ(85.831268f, quad[2][0]);
   EXPECT_FLOAT_EQ(-406.06653f, quad[2][1]);
-  EXPECT_FLOAT_EQ(278.81454f,  quad[2][2]);
+  EXPECT_FLOAT_EQ(278.81454f, quad[2][2]);
 
-  EXPECT_FLOAT_EQ(9.2999878f,  quad[3][0]);
-  EXPECT_FLOAT_EQ(2.1000061f,  quad[3][1]);
+  EXPECT_FLOAT_EQ(9.2999878f, quad[3][0]);
+  EXPECT_FLOAT_EQ(2.1000061f, quad[3][1]);
   EXPECT_FLOAT_EQ(-1.7999573f, quad[3][2]);
 }

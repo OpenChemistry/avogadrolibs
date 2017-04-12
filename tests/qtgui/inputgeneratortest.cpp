@@ -18,8 +18,8 @@
 
 #include "qtguitests.h"
 
-#include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/molequeue/inputgenerator.h>
+#include <avogadro/qtgui/generichighlighter.h>
 
 #include <avogadro/core/molecule.h>
 
@@ -41,7 +41,7 @@ TEST(InputGeneratorTest, exercise)
   EXPECT_TRUE(gen.scriptFilePath() == scriptFilePath);
 
   EXPECT_TRUE(gen.displayName() == QLatin1String("Input Generator Test"))
-      << gen.errorList().join("\n").toStdString(); // catch syntax errors
+    << gen.errorList().join("\n").toStdString(); // catch syntax errors
 
   const QJsonObject genOptions(gen.options());
   EXPECT_TRUE(genOptions["userOptions"].isObject());
@@ -51,7 +51,7 @@ TEST(InputGeneratorTest, exercise)
   // Create a set of input options by setting defaults
   QJsonObject inputOptions;
   QJsonObject options;
-  foreach (const QString &optionName, userOptions.keys()) {
+  foreach (const QString& optionName, userOptions.keys()) {
     EXPECT_TRUE(userOptions[optionName].isObject());
     QJsonObject option(userOptions[optionName].toObject());
     QString optionType(option["type"].toString());
@@ -59,8 +59,7 @@ TEST(InputGeneratorTest, exercise)
       QJsonArray strings(option["values"].toArray());
       int index = static_cast<int>(options["default"].toDouble());
       options.insert(optionName, strings.at(index));
-    }
-    else {
+    } else {
       options.insert(optionName, option["default"]);
     }
   }
@@ -96,12 +95,12 @@ TEST(InputGeneratorTest, exercise)
 
   // Validate the coordinates
   QString coords(gen.fileContents("job.coords"));
-  EXPECT_TRUE(coords.contains(
-                "C      1.000000 0    1.000000 1    1.000000 1 Carbon"));
-  EXPECT_TRUE(coords.contains(
-                "H      2.000000 0    3.000000 1    4.000000 1 Hydrogen"));
-  EXPECT_TRUE(coords.contains(
-                "O     -2.000000 0    3.000000 1   -4.000000 1 Oxygen"));
+  EXPECT_TRUE(
+    coords.contains("C      1.000000 0    1.000000 1    1.000000 1 Carbon"));
+  EXPECT_TRUE(
+    coords.contains("H      2.000000 0    3.000000 1    4.000000 1 Hydrogen"));
+  EXPECT_TRUE(
+    coords.contains("O     -2.000000 0    3.000000 1   -4.000000 1 Oxygen"));
 
   // Validate the file returned by path
   QFile testFile(testFilePath);
@@ -116,7 +115,7 @@ TEST(InputGeneratorTest, exercise)
   EXPECT_EQ(5, gen.warningList().size());
 
   // Highlight styles:
-  GenericHighlighter *highlighter(gen.createFileHighlighter("job.opts"));
+  GenericHighlighter* highlighter(gen.createFileHighlighter("job.opts"));
   EXPECT_TRUE(highlighter != nullptr);
   delete highlighter;
   highlighter = gen.createFileHighlighter("debug_info");

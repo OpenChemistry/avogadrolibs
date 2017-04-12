@@ -123,7 +123,7 @@ TEST(VariantTest, toDouble)
 TEST(VariantTest, toPointer)
 {
   int value;
-  void *pointer = &value;
+  void* pointer = &value;
   Variant variant(pointer);
   EXPECT_EQ(variant.toPointer(), pointer);
 }
@@ -150,16 +150,16 @@ TEST(VariantTest, toMatrix)
   }
 
   Variant variant(matrix);
-  const MatrixX &varMatrix = variant.toMatrixRef();
+  const MatrixX& varMatrix = variant.toMatrixRef();
 
   ASSERT_EQ(matrix.rows(), varMatrix.rows())
-      << "Number of rows don't match after variant-matrix conversion!";
+    << "Number of rows don't match after variant-matrix conversion!";
   ASSERT_EQ(matrix.cols(), varMatrix.cols())
-      << "Number of columns don't match after variant-matrix conversion!";
+    << "Number of columns don't match after variant-matrix conversion!";
   for (int row = 0; row < matrix.rows(); ++row) {
     for (int col = 0; col < matrix.cols(); ++col) {
       EXPECT_EQ(matrix(row, col), varMatrix(row, col))
-          << "Value mismatch at " << row << ", " << col << "!";
+        << "Value mismatch at " << row << ", " << col << "!";
     }
   }
 }

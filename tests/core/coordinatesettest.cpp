@@ -16,8 +16,8 @@
 
 #include <gtest/gtest.h>
 
-#include <avogadro/core/vector.h>
 #include <avogadro/core/coordinateset.h>
+#include <avogadro/core/vector.h>
 
 using Avogadro::Core::ArraySet;
 using Avogadro::Core::CoordinateSet;
@@ -25,7 +25,7 @@ using Avogadro::Vector3;
 
 TEST(CoordinateSetTest, StoreType)
 {
-  ArraySet *array = new CoordinateSet<Vector3>;
+  ArraySet* array = new CoordinateSet<Vector3>;
 
   EXPECT_TRUE(array->isType(Vector3()));
 
@@ -64,8 +64,9 @@ TEST(CoordinateSetTest, StoreTypeRetrieve)
   data.resize(5);
   data[0] = Vector3(0.0, 1.0, 2.0);
 
-  ArraySet *array = &data;
-  CoordinateSet<Vector3> &ref = *reinterpret_cast< CoordinateSet<Vector3> *>(array);
+  ArraySet* array = &data;
+  CoordinateSet<Vector3>& ref =
+    *reinterpret_cast<CoordinateSet<Vector3>*>(array);
   EXPECT_EQ(ref[0].x(), 0.0);
   EXPECT_EQ(ref[0].y(), 1.0);
   EXPECT_EQ(ref[0].z(), 2.0);

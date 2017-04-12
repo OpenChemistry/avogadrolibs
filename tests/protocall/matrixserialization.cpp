@@ -26,16 +26,15 @@ TEST(MatrixSerializationTest, vector2)
   vec2[1] = 2;
 
   size_t size = Avogadro::ProtoCall::MatrixSerialization::sizeOf(vec2);
-  unsigned char *data = new unsigned char[size];
+  unsigned char* data = new unsigned char[size];
 
-  bool success = Avogadro::ProtoCall::MatrixSerialization::serialize(vec2,
-                                                                     data,
-                                                                     size);
+  bool success =
+    Avogadro::ProtoCall::MatrixSerialization::serialize(vec2, data, size);
   EXPECT_TRUE(success);
 
   Avogadro::Vector2 afterRoundTrip;
-  success = Avogadro::ProtoCall::MatrixSerialization::deserialize(
-                                                        afterRoundTrip, data);
+  success =
+    Avogadro::ProtoCall::MatrixSerialization::deserialize(afterRoundTrip, data);
 
   EXPECT_TRUE(success);
 
@@ -43,7 +42,6 @@ TEST(MatrixSerializationTest, vector2)
 
   for (int row = 0; row < 2; row++)
     EXPECT_EQ(vec2[row], afterRoundTrip[row]);
-
 }
 
 TEST(MatrixSerializationTest, vector3)
@@ -54,16 +52,16 @@ TEST(MatrixSerializationTest, vector3)
   vec3[2] = 3;
 
   size_t size = Avogadro::ProtoCall::MatrixSerialization::sizeOf(vec3);
-  unsigned char *data = new unsigned char[size];
+  unsigned char* data = new unsigned char[size];
 
-  bool success = Avogadro::ProtoCall::MatrixSerialization::serialize(vec3,
-                   data, size);
+  bool success =
+    Avogadro::ProtoCall::MatrixSerialization::serialize(vec3, data, size);
 
   EXPECT_TRUE(success);
 
   Avogadro::Vector3 afterRoundTrip;
-  success = Avogadro::ProtoCall::MatrixSerialization::deserialize(
-                                                        afterRoundTrip, data);
+  success =
+    Avogadro::ProtoCall::MatrixSerialization::deserialize(afterRoundTrip, data);
 
   EXPECT_TRUE(success);
 
@@ -71,7 +69,6 @@ TEST(MatrixSerializationTest, vector3)
 
   for (int row = 0; row < 3; row++)
     EXPECT_EQ(vec3[row], afterRoundTrip[row]);
-
 }
 
 TEST(MatrixSerializationTest, matrixX)
@@ -86,17 +83,16 @@ TEST(MatrixSerializationTest, matrixX)
 
   size_t size = Avogadro::ProtoCall::MatrixSerialization::sizeOf(matrix);
 
-  unsigned char *data = new unsigned char[size];
+  unsigned char* data = new unsigned char[size];
 
-  bool success
-    = Avogadro::ProtoCall::MatrixSerialization::serialize(matrix, data, size);
+  bool success =
+    Avogadro::ProtoCall::MatrixSerialization::serialize(matrix, data, size);
 
   EXPECT_TRUE(success);
 
   Avogadro::MatrixX afterRoundTrip(100, 100);
-  success
-    = Avogadro::ProtoCall::MatrixSerialization::deserialize(afterRoundTrip,
-                                                            data, size);
+  success = Avogadro::ProtoCall::MatrixSerialization::deserialize(
+    afterRoundTrip, data, size);
 
   EXPECT_TRUE(success);
 

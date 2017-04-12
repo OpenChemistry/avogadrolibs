@@ -42,7 +42,7 @@ TEST(SpaceGroupTest, getSpaceGroup)
   mat.col(1) = Vector3(0.00000, 4.59373, 0.00000); // B
   mat.col(2) = Vector3(0.00000, 0.00000, 4.59373); // C
 
-  UnitCell *uc = new UnitCell(mat);
+  UnitCell* uc = new UnitCell(mat);
 
   mol.setUnitCell(uc);
 
@@ -81,38 +81,38 @@ TEST(SpaceGroupTest, reduceToPrimitive)
   primMat.col(1) = Vector3(2.92081932, 4.21707249, 0.00000000); // B
   primMat.col(2) = Vector3(2.92081932, 1.52998182, 3.92973995); // C
 
-  UnitCell *primUC = new UnitCell(primMat);
+  UnitCell* primUC = new UnitCell(primMat);
   primMol.setUnitCell(primUC);
 
-  primMol.addAtom(8)
-    .setPosition3d(primUC->toCartesian(Vector3(0.94365, 0.55635, 0.25)));
-  primMol.addAtom(8)
-    .setPosition3d(primUC->toCartesian(Vector3(0.25000, 0.94365, 0.55635)));
-  primMol.addAtom(8)
-    .setPosition3d(primUC->toCartesian(Vector3(0.55635, 0.25000, 0.94365)));
-  primMol.addAtom(8)
-    .setPosition3d(primUC->toCartesian(Vector3(0.05635, 0.44365, 0.75000)));
-  primMol.addAtom(8)
-    .setPosition3d(primUC->toCartesian(Vector3(0.75000, 0.05635, 0.44365)));
-  primMol.addAtom(8)
-    .setPosition3d(primUC->toCartesian(Vector3(0.44365, 0.75000, 0.05635)));
-  primMol.addAtom(13)
-    .setPosition3d(primUC->toCartesian(Vector3(0.35217, 0.35217, 0.35217)));
-  primMol.addAtom(13)
-    .setPosition3d(primUC->toCartesian(Vector3(0.14783, 0.14783, 0.14783)));
-  primMol.addAtom(13)
-    .setPosition3d(primUC->toCartesian(Vector3(0.64783,0.64783,0.64783)));
-  primMol.addAtom(13)
-    .setPosition3d(primUC->toCartesian(Vector3(0.85217,0.85217,0.85217)));
+  primMol.addAtom(8).setPosition3d(
+    primUC->toCartesian(Vector3(0.94365, 0.55635, 0.25)));
+  primMol.addAtom(8).setPosition3d(
+    primUC->toCartesian(Vector3(0.25000, 0.94365, 0.55635)));
+  primMol.addAtom(8).setPosition3d(
+    primUC->toCartesian(Vector3(0.55635, 0.25000, 0.94365)));
+  primMol.addAtom(8).setPosition3d(
+    primUC->toCartesian(Vector3(0.05635, 0.44365, 0.75000)));
+  primMol.addAtom(8).setPosition3d(
+    primUC->toCartesian(Vector3(0.75000, 0.05635, 0.44365)));
+  primMol.addAtom(8).setPosition3d(
+    primUC->toCartesian(Vector3(0.44365, 0.75000, 0.05635)));
+  primMol.addAtom(13).setPosition3d(
+    primUC->toCartesian(Vector3(0.35217, 0.35217, 0.35217)));
+  primMol.addAtom(13).setPosition3d(
+    primUC->toCartesian(Vector3(0.14783, 0.14783, 0.14783)));
+  primMol.addAtom(13).setPosition3d(
+    primUC->toCartesian(Vector3(0.64783, 0.64783, 0.64783)));
+  primMol.addAtom(13).setPosition3d(
+    primUC->toCartesian(Vector3(0.85217, 0.85217, 0.85217)));
 
   // Now, let's build a conventional cell of corundum
   Molecule convMol;
   Matrix3 convMat;
-  convMat.col(0) = Vector3(4.76060000, 0.00000000, 0.00000000); // A
-  convMat.col(1) = Vector3(-2.3803000, 4.12280054, 0.00000000); // B
-  convMat.col(2) = Vector3(0.00000000, 0.00000000,12.99400000); // C
+  convMat.col(0) = Vector3(4.76060000, 0.00000000, 0.00000000);  // A
+  convMat.col(1) = Vector3(-2.3803000, 4.12280054, 0.00000000);  // B
+  convMat.col(2) = Vector3(0.00000000, 0.00000000, 12.99400000); // C
 
-  UnitCell *convUC = new UnitCell(convMat);
+  UnitCell* convUC = new UnitCell(convMat);
   convMol.setUnitCell(convUC);
 
   convMol.addAtom(8).setPosition3d(
@@ -198,38 +198,38 @@ TEST(SpaceGroupTest, conventionalizeCell)
   primMat.col(1) = Vector3(2.92081932, 4.21707249, 0.00000000); // B
   primMat.col(2) = Vector3(2.92081932, 1.52998182, 3.92973995); // C
 
-  UnitCell *primUC = new UnitCell(primMat);
+  UnitCell* primUC = new UnitCell(primMat);
   primMol.setUnitCell(primUC);
 
-  primMol.addAtom(8)
-    .setPosition3d(primUC->toCartesian(Vector3(0.94365, 0.55635, 0.25000)));
-  primMol.addAtom(8)
-    .setPosition3d(primUC->toCartesian(Vector3(0.25000, 0.94365, 0.55635)));
-  primMol.addAtom(8)
-    .setPosition3d(primUC->toCartesian(Vector3(0.55635, 0.25000, 0.94365)));
-  primMol.addAtom(8)
-    .setPosition3d(primUC->toCartesian(Vector3(0.05635, 0.44365, 0.75000)));
-  primMol.addAtom(8)
-    .setPosition3d(primUC->toCartesian(Vector3(0.75000, 0.05635, 0.44365)));
-  primMol.addAtom(8)
-    .setPosition3d(primUC->toCartesian(Vector3(0.44365, 0.75000, 0.05635)));
-  primMol.addAtom(13)
-    .setPosition3d(primUC->toCartesian(Vector3(0.35217, 0.35217, 0.35217)));
-  primMol.addAtom(13)
-    .setPosition3d(primUC->toCartesian(Vector3(0.14783, 0.14783, 0.14783)));
-  primMol.addAtom(13)
-    .setPosition3d(primUC->toCartesian(Vector3(0.64783, 0.64783, 0.64783)));
-  primMol.addAtom(13)
-    .setPosition3d(primUC->toCartesian(Vector3(0.85217, 0.85217, 0.85217)));
+  primMol.addAtom(8).setPosition3d(
+    primUC->toCartesian(Vector3(0.94365, 0.55635, 0.25000)));
+  primMol.addAtom(8).setPosition3d(
+    primUC->toCartesian(Vector3(0.25000, 0.94365, 0.55635)));
+  primMol.addAtom(8).setPosition3d(
+    primUC->toCartesian(Vector3(0.55635, 0.25000, 0.94365)));
+  primMol.addAtom(8).setPosition3d(
+    primUC->toCartesian(Vector3(0.05635, 0.44365, 0.75000)));
+  primMol.addAtom(8).setPosition3d(
+    primUC->toCartesian(Vector3(0.75000, 0.05635, 0.44365)));
+  primMol.addAtom(8).setPosition3d(
+    primUC->toCartesian(Vector3(0.44365, 0.75000, 0.05635)));
+  primMol.addAtom(13).setPosition3d(
+    primUC->toCartesian(Vector3(0.35217, 0.35217, 0.35217)));
+  primMol.addAtom(13).setPosition3d(
+    primUC->toCartesian(Vector3(0.14783, 0.14783, 0.14783)));
+  primMol.addAtom(13).setPosition3d(
+    primUC->toCartesian(Vector3(0.64783, 0.64783, 0.64783)));
+  primMol.addAtom(13).setPosition3d(
+    primUC->toCartesian(Vector3(0.85217, 0.85217, 0.85217)));
 
   // Now, let's build a conventional cell of corundum
   Molecule convMol;
   Matrix3 convMat;
-  convMat.col(0) = Vector3(4.76060000, 0.00000000, 0.00000000); // A
-  convMat.col(1) = Vector3(-2.3803000, 4.12280054, 0.00000000); // B
-  convMat.col(2) = Vector3(0.00000000, 0.00000000,12.99400000); // C
+  convMat.col(0) = Vector3(4.76060000, 0.00000000, 0.00000000);  // A
+  convMat.col(1) = Vector3(-2.3803000, 4.12280054, 0.00000000);  // B
+  convMat.col(2) = Vector3(0.00000000, 0.00000000, 12.99400000); // C
 
-  UnitCell *convUC = new UnitCell(convMat);
+  UnitCell* convUC = new UnitCell(convMat);
   convMol.setUnitCell(convUC);
 
   convMol.addAtom(8).setPosition3d(
@@ -308,7 +308,8 @@ TEST(SpaceGroupTest, fillUnitCell)
 {
   double cartTol = 1e-5;
 
-  // MgSiO3 - post-perovskite. Space group: Cmcm. Found in the mantle of the earth.
+  // MgSiO3 - post-perovskite. Space group: Cmcm. Found in the mantle of the
+  // earth.
   // http://crystallography.net/cod/9009217.html
   Molecule mol1;
   Matrix3 mat1;
@@ -316,17 +317,15 @@ TEST(SpaceGroupTest, fillUnitCell)
   mat1.col(1) = Vector3(0.000, 8.042, 0.000); // B
   mat1.col(2) = Vector3(0.000, 0.000, 6.093); // C
 
-  UnitCell *uc1 = new UnitCell(mat1);
+  UnitCell* uc1 = new UnitCell(mat1);
   mol1.setUnitCell(uc1);
 
-  mol1.addAtom(12).setPosition3d(uc1->toCartesian(Vector3(0.000, 0.253,
-                                                          0.250)));
-  mol1.addAtom(14).setPosition3d(uc1->toCartesian(Vector3(0.000, 0.000,
-                                                          0.000)));
-  mol1.addAtom(8 ).setPosition3d(uc1->toCartesian(Vector3(0.000, 0.923,
-                                                          0.250)));
-  mol1.addAtom(8 ).setPosition3d(uc1->toCartesian(Vector3(0.000, 0.631,
-                                                          0.436)));
+  mol1.addAtom(12).setPosition3d(
+    uc1->toCartesian(Vector3(0.000, 0.253, 0.250)));
+  mol1.addAtom(14).setPosition3d(
+    uc1->toCartesian(Vector3(0.000, 0.000, 0.000)));
+  mol1.addAtom(8).setPosition3d(uc1->toCartesian(Vector3(0.000, 0.923, 0.250)));
+  mol1.addAtom(8).setPosition3d(uc1->toCartesian(Vector3(0.000, 0.631, 0.436)));
 
   // Now, let's perform a fillUnitCell. hallNumber 298 is Cmcm
   // International: 63
@@ -339,28 +338,27 @@ TEST(SpaceGroupTest, fillUnitCell)
   // It should now have 20 atoms
   ASSERT_EQ(mol1.atomCount(), 20);
 
-
   // CaMg(CO3)2 - dolomite. Space group: hexagonal R -3. It is a brittle
   // mineral found in limestones and other common places.
   // http://crystallography.net/cod/1517795.html
   Molecule mol2;
   Matrix3 mat2;
 
-  mat2.col(0) = Vector3( 4.808, 0.00000,  0.000); // A
-  mat2.col(1) = Vector3(-2.404, 4.16385,  0.000); // B
-  mat2.col(2) = Vector3( 0.000, 0.00000, 16.022); // C
+  mat2.col(0) = Vector3(4.808, 0.00000, 0.000);  // A
+  mat2.col(1) = Vector3(-2.404, 4.16385, 0.000); // B
+  mat2.col(2) = Vector3(0.000, 0.00000, 16.022); // C
 
-  UnitCell *uc2 = new UnitCell(mat2);
+  UnitCell* uc2 = new UnitCell(mat2);
   mol2.setUnitCell(uc2);
 
-  mol2.addAtom(20).setPosition3d(uc2->toCartesian(Vector3(0.0000, 0.0000,
-                                                          0.0000)));
-  mol2.addAtom(12).setPosition3d(uc2->toCartesian(Vector3(0.0000, 0.0000,
-                                                          0.5000)));
-  mol2.addAtom(6 ).setPosition3d(uc2->toCartesian(Vector3(0.0000, 0.0000,
-                                                          0.24287)));
-  mol2.addAtom(8 ).setPosition3d(uc2->toCartesian(Vector3(0.24796, 0.9653,
-                                                          0.24402)));
+  mol2.addAtom(20).setPosition3d(
+    uc2->toCartesian(Vector3(0.0000, 0.0000, 0.0000)));
+  mol2.addAtom(12).setPosition3d(
+    uc2->toCartesian(Vector3(0.0000, 0.0000, 0.5000)));
+  mol2.addAtom(6).setPosition3d(
+    uc2->toCartesian(Vector3(0.0000, 0.0000, 0.24287)));
+  mol2.addAtom(8).setPosition3d(
+    uc2->toCartesian(Vector3(0.24796, 0.9653, 0.24402)));
 
   // Now, let's perform a fillUnitCell. hallNumber 436 is hexagonal R -3
   // International: 148
@@ -373,7 +371,6 @@ TEST(SpaceGroupTest, fillUnitCell)
   // It should now have 30 atoms
   ASSERT_EQ(mol2.atomCount(), 30);
 
-
   // CaSiO3 - wollastonite. Space group: P -1. It is found in limestones
   // and other common minerals. Used in ceramics, brakes, clutches,
   // metalmaking, paint filler, and plastics.
@@ -381,43 +378,43 @@ TEST(SpaceGroupTest, fillUnitCell)
   Molecule mol3;
   Matrix3 mat3;
 
-  mat3.col(0) = Vector3( 7.92580, 0.00000, 0.00000); // A
-  mat3.col(1) = Vector3(-1.69967, 7.12014, 0.00000); // B
-  mat3.col(2) = Vector3(-0.64243,-0.16033, 7.03420); // C
+  mat3.col(0) = Vector3(7.92580, 0.00000, 0.00000);   // A
+  mat3.col(1) = Vector3(-1.69967, 7.12014, 0.00000);  // B
+  mat3.col(2) = Vector3(-0.64243, -0.16033, 7.03420); // C
 
-  UnitCell *uc3 = new UnitCell(mat3);
+  UnitCell* uc3 = new UnitCell(mat3);
   mol3.setUnitCell(uc3);
 
-  mol3.addAtom(20).setPosition3d(uc3->toCartesian(Vector3(0.198310, 0.42266,
-                                                          0.76060)));
-  mol3.addAtom(20).setPosition3d(uc3->toCartesian(Vector3(0.202410, 0.92919,
-                                                          0.76401)));
-  mol3.addAtom(20).setPosition3d(uc3->toCartesian(Vector3(0.503330, 0.75040,
-                                                          0.52691)));
-  mol3.addAtom(14).setPosition3d(uc3->toCartesian(Vector3(0.185100, 0.38750,
-                                                          0.26840)));
-  mol3.addAtom(14).setPosition3d(uc3->toCartesian(Vector3(0.184900, 0.95420,
-                                                          0.26910)));
-  mol3.addAtom(14).setPosition3d(uc3->toCartesian(Vector3(0.397300, 0.72360,
-                                                          0.05610)));
-  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.303400, 0.46160,
-                                                          0.46280)));
-  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.301400, 0.93850,
-                                                          0.46410)));
-  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.570500, 0.76880,
-                                                          0.19880)));
-  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.983200, 0.37390,
-                                                          0.26550)));
-  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.981900, 0.86770,
-                                                          0.26480)));
-  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.401800, 0.72660,
-                                                          0.82960)));
-  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.218300, 0.17850,
-                                                          0.22540)));
-  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.271300, 0.87040,
-                                                          0.09380)));
-  mol3.addAtom(8 ).setPosition3d(uc3->toCartesian(Vector3(0.273500, 0.51260,
-                                                          0.09310)));
+  mol3.addAtom(20).setPosition3d(
+    uc3->toCartesian(Vector3(0.198310, 0.42266, 0.76060)));
+  mol3.addAtom(20).setPosition3d(
+    uc3->toCartesian(Vector3(0.202410, 0.92919, 0.76401)));
+  mol3.addAtom(20).setPosition3d(
+    uc3->toCartesian(Vector3(0.503330, 0.75040, 0.52691)));
+  mol3.addAtom(14).setPosition3d(
+    uc3->toCartesian(Vector3(0.185100, 0.38750, 0.26840)));
+  mol3.addAtom(14).setPosition3d(
+    uc3->toCartesian(Vector3(0.184900, 0.95420, 0.26910)));
+  mol3.addAtom(14).setPosition3d(
+    uc3->toCartesian(Vector3(0.397300, 0.72360, 0.05610)));
+  mol3.addAtom(8).setPosition3d(
+    uc3->toCartesian(Vector3(0.303400, 0.46160, 0.46280)));
+  mol3.addAtom(8).setPosition3d(
+    uc3->toCartesian(Vector3(0.301400, 0.93850, 0.46410)));
+  mol3.addAtom(8).setPosition3d(
+    uc3->toCartesian(Vector3(0.570500, 0.76880, 0.19880)));
+  mol3.addAtom(8).setPosition3d(
+    uc3->toCartesian(Vector3(0.983200, 0.37390, 0.26550)));
+  mol3.addAtom(8).setPosition3d(
+    uc3->toCartesian(Vector3(0.981900, 0.86770, 0.26480)));
+  mol3.addAtom(8).setPosition3d(
+    uc3->toCartesian(Vector3(0.401800, 0.72660, 0.82960)));
+  mol3.addAtom(8).setPosition3d(
+    uc3->toCartesian(Vector3(0.218300, 0.17850, 0.22540)));
+  mol3.addAtom(8).setPosition3d(
+    uc3->toCartesian(Vector3(0.271300, 0.87040, 0.09380)));
+  mol3.addAtom(8).setPosition3d(
+    uc3->toCartesian(Vector3(0.273500, 0.51260, 0.09310)));
 
   // Now, let's perform a fillUnitCell. hallNumber 2 is hexagonal P -1
   // International: 2
@@ -444,7 +441,7 @@ TEST(SpaceGroupTest, reduceToAsymmetricUnit)
   mat1.col(1) = Vector3(0.00000, 4.59373, 0.00000); // B
   mat1.col(2) = Vector3(0.00000, 0.00000, 4.59373); // C
 
-  UnitCell *uc1 = new UnitCell(mat1);
+  UnitCell* uc1 = new UnitCell(mat1);
 
   mol1.setUnitCell(uc1);
 
@@ -474,21 +471,21 @@ TEST(SpaceGroupTest, reduceToAsymmetricUnit)
   Molecule mol2;
   Matrix3 mat2;
 
-  mat2.col(0) = Vector3( 4.808, 0.00000,  0.000); // A
-  mat2.col(1) = Vector3(-2.404, 4.16385,  0.000); // B
-  mat2.col(2) = Vector3( 0.000, 0.00000, 16.022); // C
+  mat2.col(0) = Vector3(4.808, 0.00000, 0.000);  // A
+  mat2.col(1) = Vector3(-2.404, 4.16385, 0.000); // B
+  mat2.col(2) = Vector3(0.000, 0.00000, 16.022); // C
 
-  UnitCell *uc2 = new UnitCell(mat2);
+  UnitCell* uc2 = new UnitCell(mat2);
   mol2.setUnitCell(uc2);
 
-  mol2.addAtom(20).setPosition3d(uc2->toCartesian(Vector3(0.0000, 0.0000,
-                                                          0.0000)));
-  mol2.addAtom(12).setPosition3d(uc2->toCartesian(Vector3(0.0000, 0.0000,
-                                                          0.5000)));
-  mol2.addAtom(6 ).setPosition3d(uc2->toCartesian(Vector3(0.0000, 0.0000,
-                                                          0.24287)));
-  mol2.addAtom(8 ).setPosition3d(uc2->toCartesian(Vector3(0.24796, 0.9653,
-                                                          0.24402)));
+  mol2.addAtom(20).setPosition3d(
+    uc2->toCartesian(Vector3(0.0000, 0.0000, 0.0000)));
+  mol2.addAtom(12).setPosition3d(
+    uc2->toCartesian(Vector3(0.0000, 0.0000, 0.5000)));
+  mol2.addAtom(6).setPosition3d(
+    uc2->toCartesian(Vector3(0.0000, 0.0000, 0.24287)));
+  mol2.addAtom(8).setPosition3d(
+    uc2->toCartesian(Vector3(0.24796, 0.9653, 0.24402)));
 
   // Now, let's perform a fillUnitCell. hallNumber 436 is hexagonal R -3
   // International: 148

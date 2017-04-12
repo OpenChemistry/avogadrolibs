@@ -39,7 +39,7 @@ TEST(RingPerceiverTest, benzene)
   molecule.addBond(molecule.atom(5), molecule.atom(0), 2);
 
   RingPerceiver perceiver(&molecule);
-  std::vector<std::vector<size_t> > rings = perceiver.rings();
+  std::vector<std::vector<size_t>> rings = perceiver.rings();
   EXPECT_EQ(rings.size(), static_cast<size_t>(1));
   EXPECT_EQ(rings[0].size(), static_cast<size_t>(6));
 }
@@ -54,6 +54,6 @@ TEST(RingPerceiverTest, ethanol)
   molecule.addBond(molecule.atom(1), molecule.atom(2), 1);
 
   RingPerceiver perceiver(&molecule);
-  std::vector<std::vector<size_t> > rings = perceiver.rings();
+  std::vector<std::vector<size_t>> rings = perceiver.rings();
   EXPECT_EQ(rings.size(), static_cast<size_t>(0));
 }

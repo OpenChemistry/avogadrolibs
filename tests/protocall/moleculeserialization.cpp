@@ -14,13 +14,13 @@
 
  ******************************************************************************/
 
-#include <gtest/gtest.h>
 #include <avogadro/io/fileformatmanager.h>
-#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 #include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
+#include <gtest/gtest.h>
 
-#include "moleculeserializer.h"
 #include "moleculedeserializer.h"
+#include "moleculeserializer.h"
 #include "protocalltests.h"
 
 using Avogadro::Core::Molecule;
@@ -36,14 +36,17 @@ using google::protobuf::io::CodedInputStream;
 using google::protobuf::uint32;
 using google::protobuf::uint8;
 
-class MoleculeSerializationTest : public testing::Test {
+class MoleculeSerializationTest : public testing::Test
+{
 protected:
-  virtual void SetUp() {
-    FileFormatManager::instance().readFile(ethane,
-        AVOGADRO_DATA "/data/ethane.cml", "cml");
+  virtual void SetUp()
+  {
+    FileFormatManager::instance().readFile(
+      ethane, AVOGADRO_DATA "/data/ethane.cml", "cml");
   }
 
-  bool equal(const Avogadro::MatrixX &mat1, const Avogadro::MatrixX &mat2) {
+  bool equal(const Avogadro::MatrixX& mat1, const Avogadro::MatrixX& mat2)
+  {
     if (mat1.rows() != mat2.rows() || mat1.cols() != mat2.cols())
       return false;
     for (int row = 0; row < mat1.rows(); row++) {
@@ -65,7 +68,7 @@ TEST_F(MoleculeSerializationTest, roundTrip)
 
   size_t size = serializer.size();
 
-  uint8 *data = new uint8[size];
+  uint8* data = new uint8[size];
 
   bool success = serializer.serialize(data, size);
   EXPECT_TRUE(success);
@@ -96,10 +99,10 @@ TEST_F(MoleculeSerializationTest, roundTrip)
   for (size_t i = 0; i < expected3d.size(); i++)
     EXPECT_TRUE(this->equal(expected3d[i], actual3d[i]));
 
-  const std::vector<std::pair<size_t, size_t> > expectedBondPairs
-    = this->ethane.bondPairs();
-  const std::vector<std::pair<size_t, size_t> > actualBondPairs
-    = after.bondPairs();
+  const std::vector<std::pair<size_t, size_t>> expectedBondPairs =
+    this->ethane.bondPairs();
+  const std::vector<std::pair<size_t, size_t>> actualBondPairs =
+    after.bondPairs();
 
   EXPECT_EQ(expectedBondPairs.size(), actualBondPairs.size());
 
@@ -108,8 +111,8 @@ TEST_F(MoleculeSerializationTest, roundTrip)
     EXPECT_EQ(expectedBondPairs[i].second, actualBondPairs[i].second);
   }
 
-  const std::vector<unsigned char> expectedBondOrder
-    = this->ethane.bondOrders();
+  const std::vector<unsigned char> expectedBondOrder =
+    this->ethane.bondOrders();
   const std::vector<unsigned char> actualBondOrder = after.bondOrders();
 
   for (size_t i = 0; i < expectedBondOrder.size(); i++)
