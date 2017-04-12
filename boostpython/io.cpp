@@ -1,10 +1,10 @@
-#include <boost/python.hpp>
 #include <avogadro/core/molecule.h>
 #include <avogadro/io/fileformatmanager.h>
+#include <boost/python.hpp>
 
 #include <avogadro/quantumio/gamessus.h>
-#include <avogadro/quantumio/gaussianfchk.h>
 #include <avogadro/quantumio/gaussiancube.h>
+#include <avogadro/quantumio/gaussianfchk.h>
 #include <avogadro/quantumio/molden.h>
 #include <avogadro/quantumio/mopacaux.h>
 #include <avogadro/quantumio/nwchemjson.h>
@@ -17,7 +17,9 @@ using namespace Avogadro::Io;
 using namespace Avogadro::QuantumIO;
 
 /// No operation deleter.
-void noopDeleter(void*) {}
+void noopDeleter(void*)
+{
+}
 
 /// Helper function to get a shared_ptr that holds our singleton.
 boost::shared_ptr<FileFormatManager> pyGetFFMSingleton()
@@ -26,8 +28,8 @@ boost::shared_ptr<FileFormatManager> pyGetFFMSingleton()
                                               &noopDeleter);
 }
 
-std::string ffmWriteString(FileFormatManager &ffm, const Molecule &mol,
-                           const std::string &ext)
+std::string ffmWriteString(FileFormatManager& ffm, const Molecule& mol,
+                           const std::string& ext)
 {
   std::string fileStr;
   bool ok = ffm.writeString(mol, fileStr, ext);
@@ -49,19 +51,14 @@ void exportIo()
 
   /// This class uses a singleton pattern, make it accessible through Python.
   class_<FileFormatManager, boost::shared_ptr<FileFormatManager>,
-         boost::noncopyable> ("FileFormatManager", no_init)
+         boost::noncopyable>("FileFormatManager", no_init)
     .def("__init__", make_constructor(&pyGetFFMSingleton))
-    .def("readFile",
-         &FileFormatManager::readFile,
+    .def("readFile", &FileFormatManager::readFile,
          "Read in a molecule from the supplied file path")
-    .def("writeFile",
-         &FileFormatManager::writeFile,
+    .def("writeFile", &FileFormatManager::writeFile,
          "Write the molecule to the supplied file path")
-    .def("readString",
-         &FileFormatManager::readString,
+    .def("readString", &FileFormatManager::readString,
          "Read in a molecule from the supplied string")
-    .def("writeString",
-         &ffmWriteString,
-         "Write a molecule to the supplied string")
-  ;
+    .def("writeString", &ffmWriteString,
+         "Write a molecule to the supplied string");
 }
