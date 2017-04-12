@@ -32,21 +32,18 @@ using ::MoleQueue::JobObject;
 using ::MoleQueue::Client;
 
 const unsigned int MoleQueueWidget::InvalidMoleQueueId(
-    std::numeric_limits<unsigned int>::max());
+  std::numeric_limits<unsigned int>::max());
 
-MoleQueueWidget::MoleQueueWidget(QWidget *parent_) :
-  QWidget(parent_),
-  m_ui(new Ui::MoleQueueWidget),
-  m_jobState("Unknown"),
-  m_requestId(-1),
-  m_moleQueueId(InvalidMoleQueueId)
+MoleQueueWidget::MoleQueueWidget(QWidget* parent_)
+  : QWidget(parent_), m_ui(new Ui::MoleQueueWidget), m_jobState("Unknown"),
+    m_requestId(-1), m_moleQueueId(InvalidMoleQueueId)
 {
   m_ui->setupUi(this);
 
   connect(m_ui->refreshProgramsButton, SIGNAL(clicked()),
           SLOT(refreshPrograms()));
 
-  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
   m_ui->queueListView->setModel(&mqManager.queueListModel());
 
   if (mqManager.connectIfNeeded())
@@ -58,32 +55,31 @@ MoleQueueWidget::~MoleQueueWidget()
   delete m_ui;
 }
 
-JobObject &MoleQueueWidget::jobTemplate()
+JobObject& MoleQueueWidget::jobTemplate()
 {
   return m_jobTemplate;
 }
 
-const JobObject &MoleQueueWidget::jobTemplate() const
+const JobObject& MoleQueueWidget::jobTemplate() const
 {
   return m_jobTemplate;
 }
 
-void MoleQueueWidget::setJobTemplate(const JobObject &job)
+void MoleQueueWidget::setJobTemplate(const JobObject& job)
 {
   m_jobTemplate = job;
 
   m_ui->numberOfCores->setValue(job.value("numberOfCores", 1).toInt());
-  m_ui->cleanRemoteFiles->setChecked(job.value("cleanRemoteFiles",
-                                               false).toBool());
-  m_ui->hideFromGui->setChecked(job.value("hideFromGui",
-                                          false).toBool());
-  m_ui->popupOnStateChange->setChecked(job.value("popupOnStateChange",
-                                                 false).toBool());
+  m_ui->cleanRemoteFiles->setChecked(
+    job.value("cleanRemoteFiles", false).toBool());
+  m_ui->hideFromGui->setChecked(job.value("hideFromGui", false).toBool());
+  m_ui->popupOnStateChange->setChecked(
+    job.value("popupOnStateChange", false).toBool());
 }
 
 void MoleQueueWidget::refreshPrograms()
 {
-  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
   if (!mqManager.connectIfNeeded()) {
     QMessageBox::information(this, tr("Cannot connect to MoleQueue"),
                              tr("Cannot connect to MoleQueue server. Please "
@@ -100,7 +96,7 @@ int MoleQueueWidget::submitJobRequest()
   m_requestId = -1;
   m_moleQueueId = InvalidMoleQueueId;
 
-  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
   if (!mqManager.connectIfNeeded())
     return -1;
 
@@ -112,8 +108,7 @@ int MoleQueueWidget::submitJobRequest()
   if (m_requestId >= 0) {
     listenForJobSubmitReply();
     listenForJobStateChange();
-  }
-  else {
+  } else {
     m_submissionError = tr("Client failed to submit job to MoleQueue.");
     // Single shot ensures that this signal is emitted after control returns
     // to the event loop
@@ -122,9 +117,9 @@ int MoleQueueWidget::submitJobRequest()
   return m_requestId;
 }
 
-void MoleQueueWidget::showAndSelectProgram(const QString &programName)
+void MoleQueueWidget::showAndSelectProgram(const QString& programName)
 {
-  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
   setProperty("selectProgramName", programName);
 
   connect(&mqManager, SIGNAL(queueListUpdated()),
@@ -141,9 +136,8 @@ bool MoleQueueWidget::openOutput() const
 
 bool MoleQueueWidget::requestJobLookup()
 {
-  MoleQueueManager &mqManager = MoleQueueManager::instance();
-  if (m_moleQueueId != InvalidMoleQueueId &&
-      mqManager.connectIfNeeded()) {
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
+  if (m_moleQueueId != InvalidMoleQueueId && mqManager.connectIfNeeded()) {
     listenForLookupJobReply();
     int reqId = mqManager.client().lookupJob(m_moleQueueId);
     setProperty("lookupJobRequestId", reqId);
@@ -154,7 +148,7 @@ bool MoleQueueWidget::requestJobLookup()
 
 MoleQueue::JobObject MoleQueueWidget::configuredJob() const
 {
-  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
 
   // get queue/program
   QModelIndexList sel(m_ui->queueListView->selectionModel()->selectedIndexes());
@@ -168,8 +162,7 @@ MoleQueue::JobObject MoleQueueWidget::configuredJob() const
   QString queue;
   QString program;
   if (!mqManager.queueListModel().lookupProgram(sel.first(), queue, program)) {
-    QMessageBox::critical(parentWidget(),
-                          tr("Internal error."),
+    QMessageBox::critical(parentWidget(), tr("Internal error."),
                           tr("Unable to resolve program selection. This is "
                              "a bug."));
     return MoleQueue::JobObject();
@@ -199,28 +192,28 @@ bool MoleQueueWidget::batchMode() const
 
 void MoleQueueWidget::showAndSelectProgramHandler()
 {
-  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
   const QString program(property("selectProgramName").toString());
   setProperty("selectProgramName", QVariant());
-  disconnect(&mqManager, SIGNAL(queueListUpdated()),
-             this, SLOT(showAndSelectProgramHandler()));
+  disconnect(&mqManager, SIGNAL(queueListUpdated()), this,
+             SLOT(showAndSelectProgramHandler()));
 
   // Get all program nodes that match the name
   QModelIndexList list(mqManager.queueListModel().findProgramIndices(program));
 
   // Expand the corresponding queues
-  foreach (const QModelIndex &mi, list)
+  foreach (const QModelIndex& mi, list)
     m_ui->queueListView->expand(mi.parent());
 
   // Select the first entry
   if (!list.isEmpty()) {
     m_ui->queueListView->selectionModel()->select(
-          list.first(), QItemSelectionModel::ClearAndSelect);
+      list.first(), QItemSelectionModel::ClearAndSelect);
     m_ui->queueListView->scrollTo(list.first());
   }
 }
 
-void MoleQueueWidget::onLookupJobReply(int reqId, const QJsonObject &result)
+void MoleQueueWidget::onLookupJobReply(int reqId, const QJsonObject& result)
 {
   QVariant reqIdVariant(property("lookupJobRequestId"));
   bool ok;
@@ -245,7 +238,7 @@ void MoleQueueWidget::onSubmissionSuccess(int localId, unsigned int mqId)
 }
 
 void MoleQueueWidget::onSubmissionFailure(int localId, unsigned int,
-                                          const QString &error)
+                                          const QString& error)
 {
   if (localId != m_requestId)
     return;
@@ -255,9 +248,8 @@ void MoleQueueWidget::onSubmissionFailure(int localId, unsigned int,
   emit jobSubmitted(false);
 }
 
-void MoleQueueWidget::onJobStateChange(unsigned int mqId,
-                                       const QString &,
-                                       const QString &newState)
+void MoleQueueWidget::onJobStateChange(unsigned int mqId, const QString&,
+                                       const QString& newState)
 {
   if (mqId != m_moleQueueId)
     return;
@@ -267,9 +259,8 @@ void MoleQueueWidget::onJobStateChange(unsigned int mqId,
   if (m_jobState == QLatin1String("Finished")) {
     listenForJobStateChange(false);
     emit jobFinished(true);
-  }
-  else if (m_jobState == QLatin1String("Error")
-           || m_jobState == QLatin1String("Canceled")) {
+  } else if (m_jobState == QLatin1String("Error") ||
+             m_jobState == QLatin1String("Canceled")) {
     listenForJobStateChange(false);
     emit jobFinished(false);
   }
@@ -277,46 +268,43 @@ void MoleQueueWidget::onJobStateChange(unsigned int mqId,
 
 void MoleQueueWidget::listenForLookupJobReply(bool listen)
 {
-  Client &mqClient(MoleQueueManager::instance().client());
+  Client& mqClient(MoleQueueManager::instance().client());
   if (listen) {
-    connect(&mqClient, SIGNAL(lookupJobResponse(int,QJsonObject)),
-            this, SLOT(onLookupJobReply(int,QJsonObject)));
-  }
-  else {
-    disconnect(&mqClient, SIGNAL(lookupJobResponse(int,QJsonObject)),
-               this, SLOT(onLookupJobReply(int,QJsonObject)));
+    connect(&mqClient, SIGNAL(lookupJobResponse(int, QJsonObject)), this,
+            SLOT(onLookupJobReply(int, QJsonObject)));
+  } else {
+    disconnect(&mqClient, SIGNAL(lookupJobResponse(int, QJsonObject)), this,
+               SLOT(onLookupJobReply(int, QJsonObject)));
   }
 }
 
 void MoleQueueWidget::listenForJobSubmitReply(bool listen)
 {
-  MoleQueue::Client &mqClient(MoleQueueManager::instance().client());
+  MoleQueue::Client& mqClient(MoleQueueManager::instance().client());
 
   if (listen) {
-    connect(&mqClient, SIGNAL(submitJobResponse(int,uint)),
-            this, SLOT(onSubmissionSuccess(int,uint)));
-    connect(&mqClient, SIGNAL(errorReceived(int,uint,QString)),
-            this, SLOT(onSubmissionFailure(int,uint,QString)));
-  }
-  else {
-    disconnect(&mqClient, SIGNAL(submitJobResponse(int,uint)),
-               this, SLOT(onSubmissionSuccess(int,uint)));
-    disconnect(&mqClient, SIGNAL(errorReceived(int,uint,QString)),
-               this, SLOT(onSubmissionFailure(int,uint,QString)));
+    connect(&mqClient, SIGNAL(submitJobResponse(int, uint)), this,
+            SLOT(onSubmissionSuccess(int, uint)));
+    connect(&mqClient, SIGNAL(errorReceived(int, uint, QString)), this,
+            SLOT(onSubmissionFailure(int, uint, QString)));
+  } else {
+    disconnect(&mqClient, SIGNAL(submitJobResponse(int, uint)), this,
+               SLOT(onSubmissionSuccess(int, uint)));
+    disconnect(&mqClient, SIGNAL(errorReceived(int, uint, QString)), this,
+               SLOT(onSubmissionFailure(int, uint, QString)));
   }
 }
 
 void MoleQueueWidget::listenForJobStateChange(bool listen)
 {
-  MoleQueue::Client &mqClient(MoleQueueManager::instance().client());
+  MoleQueue::Client& mqClient(MoleQueueManager::instance().client());
 
   if (listen) {
-    connect(&mqClient, SIGNAL(jobStateChanged(uint,QString,QString)),
-            this, SLOT(onJobStateChange(uint,QString,QString)));
-  }
-  else {
-    disconnect(&mqClient, SIGNAL(jobStateChanged(uint,QString,QString)),
-               this, SLOT(onJobStateChange(uint,QString,QString)));
+    connect(&mqClient, SIGNAL(jobStateChanged(uint, QString, QString)), this,
+            SLOT(onJobStateChange(uint, QString, QString)));
+  } else {
+    disconnect(&mqClient, SIGNAL(jobStateChanged(uint, QString, QString)), this,
+               SLOT(onJobStateChange(uint, QString, QString)));
   }
 }
 

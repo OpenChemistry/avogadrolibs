@@ -17,9 +17,9 @@
 #ifndef AVOGADRO_MOLEQUEUE_INPUTGENERATORDIALOG_H
 #define AVOGADRO_MOLEQUEUE_INPUTGENERATORDIALOG_H
 
-#include <QtWidgets/QDialog>
 #include "avogadromolequeueexport.h"
 #include "inputgeneratorwidget.h"
+#include <QtWidgets/QDialog>
 #include <avogadro/core/avogadrocore.h>
 
 namespace Avogadro {
@@ -45,16 +45,16 @@ class AVOGADROMOLEQUEUE_EXPORT InputGeneratorDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit InputGeneratorDialog(QWidget *parent_ = 0);
-  explicit InputGeneratorDialog(const QString &scriptFileName,
-                                QWidget *parent_ = 0);
+  explicit InputGeneratorDialog(QWidget* parent_ = 0);
+  explicit InputGeneratorDialog(const QString& scriptFileName,
+                                QWidget* parent_ = 0);
   ~InputGeneratorDialog() override;
 
   /**
    * Use the input generator script pointed to by scriptFilePath.
    * @param scriptFilePath Absolute path to generator script.
    */
-  void setInputGeneratorScript(const QString &scriptFilePath);
+  void setInputGeneratorScript(const QString& scriptFilePath);
 
   /**
    * @return A reference to the internal InputGeneratorWidget.
@@ -89,16 +89,16 @@ public:
     batch->submitNextJob(mol);
 ~~~
    */
-  bool configureBatchJob(BatchJob &batch);
+  bool configureBatchJob(BatchJob& batch);
 
 public slots:
   /**
    * Set the molecule used in the simulation.
    */
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 private:
-  Ui::InputGeneratorDialog *ui;
+  Ui::InputGeneratorDialog* ui;
 };
 
 } // namespace MoleQueue

@@ -15,10 +15,10 @@
 ******************************************************************************/
 
 #include "inputgeneratorwidget.h"
-#include "ui_inputgeneratorwidget.h"
+#include "batchjob.h"
 #include "molequeuedialog.h"
 #include "molequeuemanager.h"
-#include "batchjob.h"
+#include "ui_inputgeneratorwidget.h"
 
 #include <avogadro/qtgui/filebrowsewidget.h>
 #include <avogadro/qtgui/generichighlighter.h>
@@ -27,17 +27,17 @@
 #include <molequeue/client/jobobject.h>
 
 #include <QtWidgets/QComboBox>
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QSpinBox>
-#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QTextEdit>
 
-#include <QtCore/QJsonDocument>
 #include <QtCore/QDebug>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
@@ -47,13 +47,9 @@ namespace MoleQueue {
 
 using ::MoleQueue::JobObject;
 
-InputGeneratorWidget::InputGeneratorWidget(QWidget *parent_) :
-  QWidget(parent_),
-  m_ui(new Ui::InputGeneratorWidget),
-  m_molecule(nullptr),
-  m_updatePending(false),
-  m_batchMode(false),
-  m_inputGenerator(QString())
+InputGeneratorWidget::InputGeneratorWidget(QWidget* parent_)
+  : QWidget(parent_), m_ui(new Ui::InputGeneratorWidget), m_molecule(nullptr),
+    m_updatePending(false), m_batchMode(false), m_inputGenerator(QString())
 {
   m_ui->setupUi(this);
   m_ui->warningTextButton->setIcon(QIcon::fromTheme("dialog-warning"));
@@ -66,7 +62,7 @@ InputGeneratorWidget::~InputGeneratorWidget()
   delete m_ui;
 }
 
-void InputGeneratorWidget::setInputGeneratorScript(const QString &scriptFile)
+void InputGeneratorWidget::setInputGeneratorScript(const QString& scriptFile)
 {
   m_inputGenerator.setScriptFilePath(scriptFile);
   m_ui->debugCheckBox->setChecked(m_inputGenerator.debug());
@@ -74,7 +70,7 @@ void InputGeneratorWidget::setInputGeneratorScript(const QString &scriptFile)
   resetWarningDisplay();
 }
 
-void InputGeneratorWidget::setMolecule(QtGui::Molecule *mol)
+void InputGeneratorWidget::setMolecule(QtGui::Molecule* mol)
 {
   if (mol == m_molecule)
     return;
@@ -93,7 +89,7 @@ void InputGeneratorWidget::setMolecule(QtGui::Molecule *mol)
   updatePreviewTextImmediately();
 }
 
-bool InputGeneratorWidget::configureBatchJob(BatchJob &batch) const
+bool InputGeneratorWidget::configureBatchJob(BatchJob& batch) const
 {
   if (!m_batchMode)
     return false;
@@ -126,7 +122,7 @@ void InputGeneratorWidget::setBatchMode(bool m)
 {
   if (m_batchMode != m) {
     m_batchMode = m;
-    foreach (QTextEdit *edit, m_textEdits)
+    foreach (QTextEdit* edit, m_textEdits)
       edit->setReadOnly(m_batchMode);
     m_ui->computeButton->setVisible(!m_batchMode);
     m_ui->generateButton->setVisible(!m_batchMode);
@@ -135,7 +131,7 @@ void InputGeneratorWidget::setBatchMode(bool m)
   }
 }
 
-void InputGeneratorWidget::showEvent(QShowEvent *e)
+void InputGeneratorWidget::showEvent(QShowEvent* e)
 {
   QWidget::showEvent(e);
 
@@ -170,16 +166,16 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
   // Have any buffers been modified?
   if (!m_dirtyTextEdits.isEmpty()) {
     QStringList buffers;
-    foreach (QTextEdit *edit, m_dirtyTextEdits)
+    foreach (QTextEdit* edit, m_dirtyTextEdits)
       buffers << m_textEdits.key(edit, tr("Unknown"));
     QString message = tr("The following file(s) have been modified:\n\n%1\n\n"
                          "Would you like to overwrite your changes to reflect "
-                         "the new geometry or job options?", "", buffers.size())
-        .arg(buffers.join("\n"));
-    int response =
-        QMessageBox::question(this, tr("Overwrite modified input files?"),
-                              message, QMessageBox::Yes | QMessageBox::No,
-                              QMessageBox::No);
+                         "the new geometry or job options?",
+                         "", buffers.size())
+                        .arg(buffers.join("\n"));
+    int response = QMessageBox::question(
+      this, tr("Overwrite modified input files?"), message,
+      QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (static_cast<QMessageBox::StandardButton>(response) !=
         QMessageBox::Yes) {
       // Prevent updates while restoring the option cache:
@@ -203,16 +199,15 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
   if (!m_inputGenerator.warningList().isEmpty()) {
     QString warningHtml;
     warningHtml += "<style>li{color:red;}h3{font-weight:bold;}</style>";
-    warningHtml += "<h3>" + tr("Problems occured during input generation:")
-        + "</h3>";
+    warningHtml +=
+      "<h3>" + tr("Problems occured during input generation:") + "</h3>";
     warningHtml += "<ul>";
-    foreach (const QString &warning, m_inputGenerator.warningList())
-      warningHtml += QString ("<li>%1</li>").arg(warning);
+    foreach (const QString& warning, m_inputGenerator.warningList())
+      warningHtml += QString("<li>%1</li>").arg(warning);
     warningHtml += "</ul>";
 
     setWarning(warningHtml);
-  }
-  else {
+  } else {
     resetWarningDisplay();
   }
 
@@ -228,9 +223,9 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
   // Ensure that the correct tabs are shown:
   QStringList fileNames = m_inputGenerator.fileNames();
   // Remove unneeded tabs
-  foreach (const QString &tabName, m_textEdits.keys()) {
+  foreach (const QString& tabName, m_textEdits.keys()) {
     if (!fileNames.contains(tabName)) {
-      QTextEdit *edit = m_textEdits.value(tabName);
+      QTextEdit* edit = m_textEdits.value(tabName);
       int index = m_ui->tabWidget->indexOf(edit);
       m_ui->tabWidget->removeTab(index);
       m_textEdits.remove(tabName);
@@ -239,10 +234,10 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
   }
 
   // Add new tabs
-  foreach (const QString &fileName, fileNames) {
+  foreach (const QString& fileName, fileNames) {
     if (m_textEdits.contains(fileName))
       continue;
-    QTextEdit *edit = new QTextEdit(this);
+    QTextEdit* edit = new QTextEdit(this);
     edit->setObjectName(fileName);
     edit->setFontFamily("monospace");
     connect(edit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
@@ -252,16 +247,16 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
 
   // Sort and update
   int index = 0;
-  foreach (const QString &fileName, fileNames) {
-    QTextEdit *edit = m_textEdits.value(fileName);
+  foreach (const QString& fileName, fileNames) {
+    QTextEdit* edit = m_textEdits.value(fileName);
     int tabIndex = m_ui->tabWidget->indexOf(edit);
     if (tabIndex != index) {
       m_ui->tabWidget->removeTab(tabIndex);
       m_ui->tabWidget->insertTab(index, edit, fileName);
     }
 
-    QtGui::GenericHighlighter *highlighter =
-            m_inputGenerator.createFileHighlighter(fileName);
+    QtGui::GenericHighlighter* highlighter =
+      m_inputGenerator.createFileHighlighter(fileName);
     if (highlighter) {
       highlighter->setParent(this);
       highlighter->setDocument(edit->document());
@@ -300,7 +295,7 @@ void InputGeneratorWidget::generateClicked()
 void InputGeneratorWidget::computeClicked()
 {
   // Verify that molequeue is running:
-  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
   if (!mqManager.connectIfNeeded()) {
     QMessageBox::information(this, tr("Cannot connect to MoleQueue"),
                              tr("Cannot connect to MoleQueue server. Please "
@@ -316,15 +311,17 @@ void InputGeneratorWidget::computeClicked()
     description = generateJobTitle();
 
   QString coresString;
-  int numCores = optionString("Processor Cores", coresString)
-      ? coresString.toInt() : 1;
+  int numCores =
+    optionString("Processor Cores", coresString) ? coresString.toInt() : 1;
 
   JobObject job;
   job.setProgram(m_inputGenerator.displayName());
   job.setDescription(description);
   job.setValue("numberOfCores", numCores);
-  for (QMap<QString, QTextEdit*>::const_iterator it = m_textEdits.constBegin(),
-       itEnd = m_textEdits.constEnd(); it != itEnd; ++it) {
+  for (QMap<QString, QTextEdit *>::const_iterator
+         it = m_textEdits.constBegin(),
+         itEnd = m_textEdits.constEnd();
+       it != itEnd; ++it) {
     QString fileName = it.key();
     if (fileName != mainFileName)
       job.appendAdditionalInputFile(fileName, it.value()->toPlainText());
@@ -332,41 +329,40 @@ void InputGeneratorWidget::computeClicked()
       job.setInputFile(fileName, it.value()->toPlainText());
   }
 
-  MoleQueueDialog::SubmitStatus result =
-      MoleQueueDialog::submitJob(this,
-                                 tr("Submit %1 Calculation")
-                                 .arg(m_inputGenerator.displayName()),
-                                 job, MoleQueueDialog::WaitForSubmissionResponse
-                                 | MoleQueueDialog::SelectProgramFromTemplate);
+  MoleQueueDialog::SubmitStatus result = MoleQueueDialog::submitJob(
+    this, tr("Submit %1 Calculation").arg(m_inputGenerator.displayName()), job,
+    MoleQueueDialog::WaitForSubmissionResponse |
+      MoleQueueDialog::SelectProgramFromTemplate);
 
   switch (result) {
-  default:
-  case MoleQueueDialog::SubmissionSuccessful:
-  case MoleQueueDialog::SubmissionFailed:
-  case MoleQueueDialog::SubmissionAttempted:
-  case MoleQueueDialog::SubmissionAborted:
-    // The dialog handles these cases adequately, we don't need to do anything.
-    break;
+    default:
+    case MoleQueueDialog::SubmissionSuccessful:
+    case MoleQueueDialog::SubmissionFailed:
+    case MoleQueueDialog::SubmissionAttempted:
+    case MoleQueueDialog::SubmissionAborted:
+      // The dialog handles these cases adequately, we don't need to do
+      // anything.
+      break;
 
-  case MoleQueueDialog::JobFailed:
-    // Inform the user:
-    QMessageBox::information(this, tr("Job Failed"),
-                             tr("The job did not complete successfully."),
-                             QMessageBox::Ok);
-    break;
+    case MoleQueueDialog::JobFailed:
+      // Inform the user:
+      QMessageBox::information(this, tr("Job Failed"),
+                               tr("The job did not complete successfully."),
+                               QMessageBox::Ok);
+      break;
 
-  case MoleQueueDialog::JobFinished:
-    // Let the world know that the job is ready to open. job has been
-    // overwritten with the final job details.
-    emit openJobOutput(job);
-    // Hide the parent if it's a dialog:
-    if (QDialog *dlg = qobject_cast<QDialog*>(parent()))
-      dlg->hide();
-    break;
+    case MoleQueueDialog::JobFinished:
+      // Let the world know that the job is ready to open. job has been
+      // overwritten with the final job details.
+      emit openJobOutput(job);
+      // Hide the parent if it's a dialog:
+      if (QDialog* dlg = qobject_cast<QDialog*>(parent()))
+        dlg->hide();
+      break;
   }
 }
 
-void InputGeneratorWidget::setWarning(const QString &warn)
+void InputGeneratorWidget::setWarning(const QString& warn)
 {
   qWarning() << tr("Script returns warnings:\n") << warn;
 
@@ -400,17 +396,17 @@ void InputGeneratorWidget::resetWarningDisplay()
   showWarningText();
 }
 
-void InputGeneratorWidget::showError(const QString &err)
+void InputGeneratorWidget::showError(const QString& err)
 {
   qWarning() << err;
 
-  QWidget *theParent = this->isVisible() ? this
-                                         : qobject_cast<QWidget*>(parent());
+  QWidget* theParent =
+    this->isVisible() ? this : qobject_cast<QWidget*>(parent());
   QDialog dlg(theParent);
-  QVBoxLayout *vbox = new QVBoxLayout();
-  QLabel *label = new QLabel(tr("An error has occurred:"));
+  QVBoxLayout* vbox = new QVBoxLayout();
+  QLabel* label = new QLabel(tr("An error has occurred:"));
   vbox->addWidget(label);
-  QTextBrowser *textBrowser = new QTextBrowser();
+  QTextBrowser* textBrowser = new QTextBrowser();
 
   // adjust the size of the text browser to ~80 char wide, ~20 lines high
   QSize theSize = textBrowser->sizeHint();
@@ -429,12 +425,11 @@ void InputGeneratorWidget::showError(const QString &err)
 
 void InputGeneratorWidget::textEditModified()
 {
-  if (QTextEdit *edit = qobject_cast<QTextEdit*>(sender())) {
+  if (QTextEdit* edit = qobject_cast<QTextEdit*>(sender())) {
     if (edit->document()->isModified()) {
       if (!m_dirtyTextEdits.contains(edit))
         m_dirtyTextEdits << edit;
-    }
-    else {
+    } else {
       m_dirtyTextEdits.removeOne(edit);
     }
   }
@@ -442,26 +437,26 @@ void InputGeneratorWidget::textEditModified()
 
 void InputGeneratorWidget::updateTitlePlaceholder()
 {
-  if (QLineEdit *titleEdit =
+  if (QLineEdit* titleEdit =
         qobject_cast<QLineEdit*>(m_widgets.value("Title", nullptr))) {
     titleEdit->setPlaceholderText(generateJobTitle());
   }
 }
 
-QString InputGeneratorWidget::settingsKey(const QString &identifier) const
+QString InputGeneratorWidget::settingsKey(const QString& identifier) const
 {
-  return QString("quantumInput/%1/%2").arg(m_inputGenerator.displayName(),
-                                           identifier);
+  return QString("quantumInput/%1/%2")
+    .arg(m_inputGenerator.displayName(), identifier);
 }
 
-void InputGeneratorWidget::saveSingleFile(const QString &fileName)
+void InputGeneratorWidget::saveSingleFile(const QString& fileName)
 {
   QSettings settings;
   QString filePath = settings.value(settingsKey("outputDirectory")).toString();
   if (filePath.isEmpty())
     filePath = QDir::homePath();
-  filePath = QFileDialog::getSaveFileName(
-        this, tr("Select output filename"), filePath + "/" + fileName);
+  filePath = QFileDialog::getSaveFileName(this, tr("Select output filename"),
+                                          filePath + "/" + fileName);
 
   // User cancel:
   if (filePath.isNull())
@@ -479,10 +474,10 @@ void InputGeneratorWidget::saveSingleFile(const QString &fileName)
     return;
   }
 
-  QTextEdit *edit = m_textEdits.value(fileName, nullptr);
+  QTextEdit* edit = m_textEdits.value(fileName, nullptr);
   if (!edit) {
     showError(tr("Internal error: could not find text widget for filename '%1'")
-              .arg(fileName));
+                .arg(fileName));
     return;
   }
 
@@ -497,8 +492,8 @@ void InputGeneratorWidget::saveSingleFile(const QString &fileName)
 
   if (!success) {
     QMessageBox::critical(
-          this, tr("Output Error"),
-          tr("Failed to write to file %1.").arg(file.fileName()));
+      this, tr("Output Error"),
+      tr("Failed to write to file %1.").arg(file.fileName()));
   }
 }
 
@@ -509,7 +504,7 @@ void InputGeneratorWidget::saveDirectory()
   if (directory.isEmpty())
     directory = QDir::homePath();
   directory = QFileDialog::getExistingDirectory(
-        this, tr("Select output directory"), directory);
+    this, tr("Select output directory"), directory);
 
   // User cancel:
   if (directory.isNull())
@@ -537,12 +532,12 @@ void InputGeneratorWidget::saveDirectory()
       break;
     }
 
-    foreach (const QString &fileName, fileNames) {
+    foreach (const QString& fileName, fileNames) {
       QFileInfo info(dir.absoluteFilePath(fileName));
 
       if (info.exists()) {
-        errors << tr("%1: File will be overwritten.")
-                  .arg(info.absoluteFilePath());
+        errors
+          << tr("%1: File will be overwritten.").arg(info.absoluteFilePath());
       }
 
       // Attempt to open the file for writing
@@ -558,25 +553,25 @@ void InputGeneratorWidget::saveDirectory()
   if (fatalError) {
     QString formattedError;
     switch (errors.size()) {
-    case 0:
-      formattedError =
+      case 0:
+        formattedError =
           tr("The input files cannot be written due to an unknown error.");
-      break;
-    case 1:
-      formattedError =
+        break;
+      case 1:
+        formattedError =
           tr("The input files cannot be written:\n\n%1").arg(errors.first());
-      break;
-    default: {
-      // If a fatal error occured, it will be last one in the list. Pop it off
-      // and tell the user that it was the reason we had to stop.
-      QString fatal = errors.last();
-      QStringList tmp(errors);
-      tmp.pop_back();
-      formattedError =
+        break;
+      default: {
+        // If a fatal error occured, it will be last one in the list. Pop it off
+        // and tell the user that it was the reason we had to stop.
+        QString fatal = errors.last();
+        QStringList tmp(errors);
+        tmp.pop_back();
+        formattedError =
           tr("The input files cannot be written:\n\n%1\n\nWarnings:\n\n%2")
-          .arg(fatal, tmp.join("\n"));
-      break;
-    }
+            .arg(fatal, tmp.join("\n"));
+        break;
+      }
     }
     showError(formattedError);
     return;
@@ -585,19 +580,18 @@ void InputGeneratorWidget::saveDirectory()
   // Non-fatal errors:
   if (!errors.isEmpty()) {
     QString formattedError = tr("Warning:\n\n%1\n\nWould you like to continue?")
-        .arg(errors.join("\n"));
+                               .arg(errors.join("\n"));
 
     QMessageBox::StandardButton reply =
-        QMessageBox::warning(this, tr("Write input files"), formattedError,
-                             QMessageBox::Yes | QMessageBox::No,
-                             QMessageBox::No);
+      QMessageBox::warning(this, tr("Write input files"), formattedError,
+                           QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
 
     if (reply != QMessageBox::Yes)
       return;
   }
 
-  foreach (const QString &fileName, fileNames) {
-    QTextEdit *edit = m_textEdits.value(fileName);
+  foreach (const QString& fileName, fileNames) {
+    QTextEdit* edit = m_textEdits.value(fileName);
     QFile file(dir.absoluteFilePath(fileName));
     bool success = false;
     if (file.open(QFile::WriteOnly | QFile::Text)) {
@@ -609,8 +603,8 @@ void InputGeneratorWidget::saveDirectory()
 
     if (!success) {
       QMessageBox::critical(
-            this, tr("Output Error"),
-            tr("Failed to write to file %1.").arg(file.fileName()));
+        this, tr("Output Error"),
+        tr("Failed to write to file %1.").arg(file.fileName()));
     }
   }
 }
@@ -618,7 +612,7 @@ void InputGeneratorWidget::saveDirectory()
 QJsonObject InputGeneratorWidget::promptForBatchJobOptions() const
 {
   // Verify that molequeue is running:
-  MoleQueueManager &mqManager = MoleQueueManager::instance();
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
   if (!mqManager.connectIfNeeded()) {
     QMessageBox::information(this->parentWidget(),
                              tr("Cannot connect to MoleQueue"),
@@ -628,8 +622,8 @@ QJsonObject InputGeneratorWidget::promptForBatchJobOptions() const
   }
 
   QString coresString;
-  int numCores = optionString("Processor Cores", coresString)
-      ? coresString.toInt() : 1;
+  int numCores =
+    optionString("Processor Cores", coresString) ? coresString.toInt() : 1;
 
   MoleQueue::JobObject job;
   job.setProgram(m_inputGenerator.displayName());
@@ -645,8 +639,8 @@ QJsonObject InputGeneratorWidget::promptForBatchJobOptions() const
 
 void InputGeneratorWidget::connectButtons()
 {
-  connect(m_ui->debugCheckBox, SIGNAL(toggled(bool)),
-          &m_inputGenerator, SLOT(setDebug(bool)));
+  connect(m_ui->debugCheckBox, SIGNAL(toggled(bool)), &m_inputGenerator,
+          SLOT(setDebug(bool)));
   connect(m_ui->debugCheckBox, SIGNAL(toggled(bool)),
           SLOT(updatePreviewText()));
   connect(m_ui->defaultsButton, SIGNAL(clicked()), SLOT(defaultsClicked()));
@@ -657,7 +651,7 @@ void InputGeneratorWidget::connectButtons()
           SLOT(toggleWarningText()));
 }
 
-QString InputGeneratorWidget::lookupOptionType(const QString &name) const
+QString InputGeneratorWidget::lookupOptionType(const QString& name) const
 {
   if (!m_options.contains("userOptions") ||
       !m_options["userOptions"].isObject()) {
@@ -679,8 +673,7 @@ QString InputGeneratorWidget::lookupOptionType(const QString &name) const
 
   QJsonObject obj = userOptions[name].toObject();
 
-  if (!obj.contains("type") ||
-      !obj.value("type").isString()) {
+  if (!obj.contains("type") || !obj.value("type").isString()) {
     qWarning() << tr("'type' is not a string for option '%1'.").arg(name);
     return QString();
   }
@@ -707,13 +700,13 @@ void InputGeneratorWidget::buildOptionGui()
   // Clear old widgets from the layout
   m_widgets.clear();
   delete m_ui->optionsWidget->layout();
-  QFormLayout *form = new QFormLayout;
+  QFormLayout* form = new QFormLayout;
   m_ui->optionsWidget->setLayout(form);
 
   if (!m_options.contains("userOptions") ||
       !m_options["userOptions"].isObject()) {
     showError(tr("'userOptions' missing, or not an object:\n%1")
-              .arg(QString(QJsonDocument(m_options).toJson())));
+                .arg(QString(QJsonDocument(m_options).toJson())));
     return;
   }
 
@@ -739,9 +732,9 @@ void InputGeneratorWidget::buildOptionGui()
   bool hasTheory = userOptions.contains("Theory");
   bool hasBasis = userOptions.contains("Basis");
   if (hasTheory && hasBasis) {
-    QWidget *theoryWidget = createOptionWidget(userOptions.take("Theory"));
-    QWidget *basisWidget = createOptionWidget(userOptions.take("Basis"));
-    QHBoxLayout *hbox = new QHBoxLayout;
+    QWidget* theoryWidget = createOptionWidget(userOptions.take("Theory"));
+    QWidget* basisWidget = createOptionWidget(userOptions.take("Basis"));
+    QHBoxLayout* hbox = new QHBoxLayout;
     if (theoryWidget) {
       theoryWidget->setObjectName("Theory");
       hbox->addWidget(theoryWidget);
@@ -755,8 +748,7 @@ void InputGeneratorWidget::buildOptionGui()
     hbox->addStretch();
 
     form->addRow(tr("Theory:"), hbox);
-  }
-  else {
+  } else {
     if (hasTheory)
       addOptionRow(tr("Theory"), userOptions.take("Theory"));
     if (hasBasis)
@@ -771,36 +763,37 @@ void InputGeneratorWidget::buildOptionGui()
 
   // Add remaining keys at bottom.
   for (QJsonObject::const_iterator it = userOptions.constBegin(),
-       itEnd = userOptions.constEnd(); it != itEnd; ++it) {
+                                   itEnd = userOptions.constEnd();
+       it != itEnd; ++it) {
     addOptionRow(it.key(), it.value());
   }
 
   // Make connections for standard options:
-  if (QComboBox *combo = qobject_cast<QComboBox*>(
+  if (QComboBox* combo = qobject_cast<QComboBox*>(
         m_widgets.value("Calculation Type", nullptr))) {
     connect(combo, SIGNAL(currentIndexChanged(int)),
             SLOT(updateTitlePlaceholder()));
   }
-  if (QComboBox *combo = qobject_cast<QComboBox*>(
-        m_widgets.value("Theory", nullptr))) {
+  if (QComboBox* combo =
+        qobject_cast<QComboBox*>(m_widgets.value("Theory", nullptr))) {
     connect(combo, SIGNAL(currentIndexChanged(int)),
             SLOT(updateTitlePlaceholder()));
   }
-  if (QComboBox *combo = qobject_cast<QComboBox*>(
-        m_widgets.value("Basis", nullptr))) {
+  if (QComboBox* combo =
+        qobject_cast<QComboBox*>(m_widgets.value("Basis", nullptr))) {
     connect(combo, SIGNAL(currentIndexChanged(int)),
             SLOT(updateTitlePlaceholder()));
   }
 }
 
-void InputGeneratorWidget::addOptionRow(const QString &label,
-                                        const QJsonValue &option)
+void InputGeneratorWidget::addOptionRow(const QString& label,
+                                        const QJsonValue& option)
 {
-  QWidget *widget = createOptionWidget(option);
+  QWidget* widget = createOptionWidget(option);
   if (!widget)
     return;
 
-  QFormLayout *form = qobject_cast<QFormLayout*>(m_ui->optionsWidget->layout());
+  QFormLayout* form = qobject_cast<QFormLayout*>(m_ui->optionsWidget->layout());
   if (!form) {
     qWarning() << "Cannot add option" << label
                << "to GUI -- layout is not a form.";
@@ -815,15 +808,14 @@ void InputGeneratorWidget::addOptionRow(const QString &label,
   m_widgets.insert(label, widget);
 }
 
-QWidget *InputGeneratorWidget::createOptionWidget(const QJsonValue &option)
+QWidget* InputGeneratorWidget::createOptionWidget(const QJsonValue& option)
 {
   if (!option.isObject())
     return nullptr;
 
   QJsonObject obj = option.toObject();
 
-  if (!obj.contains("type") ||
-      !obj.value("type").isString())
+  if (!obj.contains("type") || !obj.value("type").isString())
     return nullptr;
 
   QString type = obj["type"].toString();
@@ -845,7 +837,7 @@ QWidget *InputGeneratorWidget::createOptionWidget(const QJsonValue &option)
   return nullptr;
 }
 
-QWidget *InputGeneratorWidget::createStringListWidget(const QJsonObject &obj)
+QWidget* InputGeneratorWidget::createStringListWidget(const QJsonObject& obj)
 {
   if (!obj.contains("values") || !obj["values"].isArray()) {
     qDebug() << "QuantumInputDialog::createStringListWidget()"
@@ -855,10 +847,11 @@ QWidget *InputGeneratorWidget::createStringListWidget(const QJsonObject &obj)
 
   QJsonArray valueArray = obj["values"].toArray();
 
-  QComboBox *combo = new QComboBox(this);
+  QComboBox* combo = new QComboBox(this);
 
   for (QJsonArray::const_iterator vit = valueArray.constBegin(),
-       vitEnd = valueArray.constEnd(); vit != vitEnd; ++vit) {
+                                  vitEnd = valueArray.constEnd();
+       vit != vitEnd; ++vit) {
     if ((*vit).isString())
       combo->addItem((*vit).toString());
     else
@@ -869,77 +862,68 @@ QWidget *InputGeneratorWidget::createStringListWidget(const QJsonObject &obj)
   return combo;
 }
 
-QWidget *InputGeneratorWidget::createStringWidget(const QJsonObject &obj)
+QWidget* InputGeneratorWidget::createStringWidget(const QJsonObject& obj)
 {
   Q_UNUSED(obj);
-  QLineEdit *edit = new QLineEdit(this);
+  QLineEdit* edit = new QLineEdit(this);
   connect(edit, SIGNAL(textChanged(QString)), SLOT(updatePreviewText()));
   return edit;
 }
 
-QWidget *InputGeneratorWidget::createFilePathWidget(const QJsonObject &obj)
+QWidget* InputGeneratorWidget::createFilePathWidget(const QJsonObject& obj)
 {
   Q_UNUSED(obj);
-  QtGui::FileBrowseWidget *fileBrowse = new QtGui::FileBrowseWidget(this);
+  QtGui::FileBrowseWidget* fileBrowse = new QtGui::FileBrowseWidget(this);
   connect(fileBrowse, SIGNAL(fileNameChanged(QString)),
           SLOT(updatePreviewText()));
   return fileBrowse;
 }
 
-QWidget *InputGeneratorWidget::createIntegerWidget(const QJsonObject &obj)
+QWidget* InputGeneratorWidget::createIntegerWidget(const QJsonObject& obj)
 {
-  QSpinBox *spin = new QSpinBox(this);
-  if (obj.contains("minimum") &&
-      obj.value("minimum").isDouble()) {
+  QSpinBox* spin = new QSpinBox(this);
+  if (obj.contains("minimum") && obj.value("minimum").isDouble()) {
     spin->setMinimum(static_cast<int>(obj["minimum"].toDouble() + 0.5));
   }
-  if (obj.contains("maximum") &&
-      obj.value("maximum").isDouble()) {
+  if (obj.contains("maximum") && obj.value("maximum").isDouble()) {
     spin->setMaximum(static_cast<int>(obj["maximum"].toDouble() + 0.5));
   }
-  if (obj.contains("prefix") &&
-      obj.value("prefix").isString()) {
+  if (obj.contains("prefix") && obj.value("prefix").isString()) {
     spin->setPrefix(obj["prefix"].toString());
   }
-  if (obj.contains("suffix") &&
-      obj.value("suffix").isString()) {
+  if (obj.contains("suffix") && obj.value("suffix").isString()) {
     spin->setSuffix(obj["suffix"].toString());
   }
   connect(spin, SIGNAL(valueChanged(int)), SLOT(updatePreviewText()));
   return spin;
 }
 
-QWidget *InputGeneratorWidget::createFloatWidget(const QJsonObject &obj)
+QWidget* InputGeneratorWidget::createFloatWidget(const QJsonObject& obj)
 {
-  QDoubleSpinBox *spin = new QDoubleSpinBox(this);
-  if (obj.contains("minimum") &&
-      obj.value("minimum").isDouble()) {
+  QDoubleSpinBox* spin = new QDoubleSpinBox(this);
+  if (obj.contains("minimum") && obj.value("minimum").isDouble()) {
     spin->setMinimum(obj["minimum"].toDouble());
   }
-  if (obj.contains("maximum") &&
-      obj.value("maximum").isDouble()) {
+  if (obj.contains("maximum") && obj.value("maximum").isDouble()) {
     spin->setMaximum(obj["maximum"].toDouble());
   }
-  if (obj.contains("precision") &&
-      obj.value("precision").isDouble()) {
+  if (obj.contains("precision") && obj.value("precision").isDouble()) {
     spin->setDecimals(static_cast<int>(obj["precision"].toDouble()));
   }
-  if (obj.contains("prefix") &&
-      obj.value("prefix").isString()) {
+  if (obj.contains("prefix") && obj.value("prefix").isString()) {
     spin->setPrefix(obj["prefix"].toString());
   }
-  if (obj.contains("suffix") &&
-      obj.value("suffix").isString()) {
+  if (obj.contains("suffix") && obj.value("suffix").isString()) {
     spin->setSuffix(obj["suffix"].toString());
   }
   connect(spin, SIGNAL(valueChanged(double)), SLOT(updatePreviewText()));
   return spin;
 }
 
-QWidget *InputGeneratorWidget::createBooleanWidget(const QJsonObject &obj)
+QWidget* InputGeneratorWidget::createBooleanWidget(const QJsonObject& obj)
 {
   Q_UNUSED(obj);
-  QCheckBox *checkBox = new QCheckBox(this);
+  QCheckBox* checkBox = new QCheckBox(this);
   connect(checkBox, SIGNAL(toggled(bool)), SLOT(updatePreviewText()));
   return checkBox;
 }
@@ -949,20 +933,20 @@ void InputGeneratorWidget::setOptionDefaults()
   if (!m_options.contains("userOptions") ||
       !m_options["userOptions"].isObject()) {
     showError(tr("'userOptions' missing, or not an object:\n%1")
-              .arg(QString(QJsonDocument(m_options).toJson())));
+                .arg(QString(QJsonDocument(m_options).toJson())));
     return;
   }
 
   QJsonObject userOptions = m_options["userOptions"].toObject();
 
   for (QJsonObject::ConstIterator it = userOptions.constBegin(),
-       itEnd = userOptions.constEnd(); it != itEnd; ++it) {
+                                  itEnd = userOptions.constEnd();
+       it != itEnd; ++it) {
     QString label = it.key();
     QJsonValue val = it.value();
 
     if (!val.isObject()) {
-      qWarning() << tr("Error: value must be object for key '%1'.")
-                    .arg(label);
+      qWarning() << tr("Error: value must be object for key '%1'.").arg(label);
       continue;
     }
 
@@ -974,8 +958,8 @@ void InputGeneratorWidget::setOptionDefaults()
   }
 }
 
-void InputGeneratorWidget::setOption(const QString &name,
-                                     const QJsonValue &defaultValue)
+void InputGeneratorWidget::setOption(const QString& name,
+                                     const QJsonValue& defaultValue)
 {
   QString type = lookupOptionType(name);
 
@@ -990,26 +974,26 @@ void InputGeneratorWidget::setOption(const QString &name,
   else if (type == "boolean")
     return setBooleanOption(name, defaultValue);
 
-  qWarning() << tr("Unrecognized option type '%1' for option '%2'.")
-                .arg(type).arg(name);
+  qWarning()
+    << tr("Unrecognized option type '%1' for option '%2'.").arg(type).arg(name);
   return;
 }
 
-void InputGeneratorWidget::setStringListOption(const QString &name,
-                                               const QJsonValue &value)
+void InputGeneratorWidget::setStringListOption(const QString& name,
+                                               const QJsonValue& value)
 {
-  QComboBox *combo = qobject_cast<QComboBox*>(m_widgets.value(name, nullptr));
+  QComboBox* combo = qobject_cast<QComboBox*>(m_widgets.value(name, nullptr));
   if (!combo) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
-                  .arg(name);
+                    .arg(name);
     return;
   }
 
   if (!value.isDouble() && !value.isString()) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad default value:")
-                  .arg(name)
+                    .arg(name)
                << value;
     return;
   }
@@ -1023,7 +1007,7 @@ void InputGeneratorWidget::setStringListOption(const QString &name,
   if (index < 0) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Could not find valid combo entry index from value:")
-                  .arg(name)
+                    .arg(name)
                << value;
     return;
   }
@@ -1031,21 +1015,22 @@ void InputGeneratorWidget::setStringListOption(const QString &name,
   combo->setCurrentIndex(index);
 }
 
-void InputGeneratorWidget::setStringOption(const QString &name,
-                                           const QJsonValue &value)
+void InputGeneratorWidget::setStringOption(const QString& name,
+                                           const QJsonValue& value)
 {
-  QLineEdit *lineEdit = qobject_cast<QLineEdit*>(m_widgets.value(name, nullptr));
+  QLineEdit* lineEdit =
+    qobject_cast<QLineEdit*>(m_widgets.value(name, nullptr));
   if (!lineEdit) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
-                  .arg(name);
+                    .arg(name);
     return;
   }
 
   if (!value.isString()) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad default value:")
-                  .arg(name)
+                    .arg(name)
                << value;
     return;
   }
@@ -1053,22 +1038,22 @@ void InputGeneratorWidget::setStringOption(const QString &name,
   lineEdit->setText(value.toString());
 }
 
-void InputGeneratorWidget::setFilePathOption(const QString &name,
-                                             const QJsonValue &value)
+void InputGeneratorWidget::setFilePathOption(const QString& name,
+                                             const QJsonValue& value)
 {
-  QtGui::FileBrowseWidget *fileBrowse =
-      qobject_cast<QtGui::FileBrowseWidget*>(m_widgets.value(name, nullptr));
+  QtGui::FileBrowseWidget* fileBrowse =
+    qobject_cast<QtGui::FileBrowseWidget*>(m_widgets.value(name, nullptr));
   if (!fileBrowse) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
-                  .arg(name);
+                    .arg(name);
     return;
   }
 
   if (!value.isString()) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad default value:")
-                  .arg(name)
+                    .arg(name)
                << value;
     return;
   }
@@ -1076,21 +1061,21 @@ void InputGeneratorWidget::setFilePathOption(const QString &name,
   fileBrowse->setFileName(value.toString());
 }
 
-void InputGeneratorWidget::setIntegerOption(const QString &name,
-                                            const QJsonValue &value)
+void InputGeneratorWidget::setIntegerOption(const QString& name,
+                                            const QJsonValue& value)
 {
-  QSpinBox *spin = qobject_cast<QSpinBox*>(m_widgets.value(name, nullptr));
+  QSpinBox* spin = qobject_cast<QSpinBox*>(m_widgets.value(name, nullptr));
   if (!spin) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
-                  .arg(name);
+                    .arg(name);
     return;
   }
 
   if (!value.isDouble()) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad default value:")
-                  .arg(name)
+                    .arg(name)
                << value;
     return;
   }
@@ -1099,21 +1084,22 @@ void InputGeneratorWidget::setIntegerOption(const QString &name,
   spin->setValue(intVal);
 }
 
-void InputGeneratorWidget::setBooleanOption(const QString &name,
-                                            const QJsonValue &value)
+void InputGeneratorWidget::setBooleanOption(const QString& name,
+                                            const QJsonValue& value)
 {
-  QCheckBox *checkBox = qobject_cast<QCheckBox*>(m_widgets.value(name, nullptr));
+  QCheckBox* checkBox =
+    qobject_cast<QCheckBox*>(m_widgets.value(name, nullptr));
   if (!checkBox) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
-                  .arg(name);
+                    .arg(name);
     return;
   }
 
   if (!value.isBool()) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad default value:")
-                  .arg(name)
+                    .arg(name)
                << value;
     return;
   }
@@ -1121,31 +1107,27 @@ void InputGeneratorWidget::setBooleanOption(const QString &name,
   checkBox->setChecked(value.toBool());
 }
 
-bool InputGeneratorWidget::optionString(const QString &option,
-                                        QString &value) const
+bool InputGeneratorWidget::optionString(const QString& option,
+                                        QString& value) const
 {
-  QWidget *widget = m_widgets.value(option, nullptr);
+  QWidget* widget = m_widgets.value(option, nullptr);
   bool retval = false;
   value.clear();
 
-  if (QLineEdit *edit = qobject_cast<QLineEdit*>(widget)) {
+  if (QLineEdit* edit = qobject_cast<QLineEdit*>(widget)) {
     retval = true;
     value = edit->text();
-  }
-  else if (QComboBox *combo = qobject_cast<QComboBox*>(widget)) {
+  } else if (QComboBox* combo = qobject_cast<QComboBox*>(widget)) {
     retval = true;
     value = combo->currentText();
-  }
-  else if (QSpinBox *spinbox = qobject_cast<QSpinBox*>(widget)) {
+  } else if (QSpinBox* spinbox = qobject_cast<QSpinBox*>(widget)) {
     retval = true;
     value = QString::number(spinbox->value());
-  }
-  else if (QDoubleSpinBox *dspinbox = qobject_cast<QDoubleSpinBox*>(widget)) {
+  } else if (QDoubleSpinBox* dspinbox = qobject_cast<QDoubleSpinBox*>(widget)) {
     retval = true;
     value = QString::number(dspinbox->value());
-  }
-  else if (QtGui::FileBrowseWidget *fileBrowse
-           = qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
+  } else if (QtGui::FileBrowseWidget* fileBrowse =
+               qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
     retval = true;
     value = fileBrowse->fileName();
   }
@@ -1158,38 +1140,33 @@ QJsonObject InputGeneratorWidget::collectOptions() const
   QJsonObject ret;
 
   foreach (QString label, m_widgets.keys()) {
-    QWidget *widget = m_widgets.value(label, nullptr);
-    if (QComboBox *combo = qobject_cast<QComboBox*>(widget)) {
+    QWidget* widget = m_widgets.value(label, nullptr);
+    if (QComboBox* combo = qobject_cast<QComboBox*>(widget)) {
       ret.insert(label, combo->currentText());
-    }
-    else if (QLineEdit *lineEdit = qobject_cast<QLineEdit*>(widget)) {
+    } else if (QLineEdit* lineEdit = qobject_cast<QLineEdit*>(widget)) {
       QString value(lineEdit->text());
       if (value.isEmpty() && label == "Title")
         value = generateJobTitle();
       ret.insert(label, value);
-    }
-    else if (QSpinBox *spinBox = qobject_cast<QSpinBox*>(widget)) {
+    } else if (QSpinBox* spinBox = qobject_cast<QSpinBox*>(widget)) {
       ret.insert(label, spinBox->value());
-    }
-    else if (QCheckBox *checkBox = qobject_cast<QCheckBox*>(widget)) {
+    } else if (QCheckBox* checkBox = qobject_cast<QCheckBox*>(widget)) {
       ret.insert(label, checkBox->isChecked());
-    }
-    else if (QtGui::FileBrowseWidget *fileBrowse
-             = qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
+    } else if (QtGui::FileBrowseWidget* fileBrowse =
+                 qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
       ret.insert(label, fileBrowse->fileName());
-    }
-    else {
-      qWarning() << tr("Unhandled widget in collectOptions for option '%1'.")
-                    .arg(label);
+    } else {
+      qWarning()
+        << tr("Unhandled widget in collectOptions for option '%1'.").arg(label);
     }
   }
 
   return ret;
 }
 
-void InputGeneratorWidget::applyOptions(const QJsonObject &opts)
+void InputGeneratorWidget::applyOptions(const QJsonObject& opts)
 {
-  foreach (const QString &label, opts.keys())
+  foreach (const QString& label, opts.keys())
     setOption(label, opts[label]);
 }
 
@@ -1224,9 +1201,10 @@ QString InputGeneratorWidget::generateJobTitle() const
   QString formula(m_molecule ? QString::fromStdString(m_molecule->formula())
                              : tr("[no molecule]"));
 
-  return QString("%1%2%3").arg(formula)
-      .arg(haveCalculation ? " | " + calculation : QString())
-      .arg(haveTheory      ? " | " + theory      : QString());
+  return QString("%1%2%3")
+    .arg(formula)
+    .arg(haveCalculation ? " | " + calculation : QString())
+    .arg(haveTheory ? " | " + theory : QString());
 }
 
 } // namespace MoleQueue

@@ -24,18 +24,16 @@ namespace MoleQueue {
 
 using QtGui::Molecule;
 
-InputGeneratorDialog::InputGeneratorDialog(QWidget *parent_)
-  : QDialog(parent_),
-    ui(new Ui::InputGeneratorDialog)
+InputGeneratorDialog::InputGeneratorDialog(QWidget* parent_)
+  : QDialog(parent_), ui(new Ui::InputGeneratorDialog)
 {
   ui->setupUi(this);
   connect(ui->widget, SIGNAL(closeClicked()), SLOT(accept()));
 }
 
-InputGeneratorDialog::InputGeneratorDialog(const QString &scriptFileName,
-                                           QWidget *parent_)
-  : QDialog(parent_),
-    ui(new Ui::InputGeneratorDialog)
+InputGeneratorDialog::InputGeneratorDialog(const QString& scriptFileName,
+                                           QWidget* parent_)
+  : QDialog(parent_), ui(new Ui::InputGeneratorDialog)
 {
   ui->setupUi(this);
   connect(ui->widget, SIGNAL(closeClicked()), SLOT(accept()));
@@ -47,7 +45,7 @@ InputGeneratorDialog::~InputGeneratorDialog()
   delete ui;
 }
 
-void InputGeneratorDialog::setInputGeneratorScript(const QString &scriptFile)
+void InputGeneratorDialog::setInputGeneratorScript(const QString& scriptFile)
 {
   ui->widget->setInputGeneratorScript(scriptFile);
   QString displayName(ui->widget->inputGenerator().displayName());
@@ -57,17 +55,17 @@ void InputGeneratorDialog::setInputGeneratorScript(const QString &scriptFile)
     setWindowTitle(tr("%1 Input Generator").arg(displayName));
 }
 
-InputGeneratorWidget &InputGeneratorDialog::widget()
+InputGeneratorWidget& InputGeneratorDialog::widget()
 {
   return *ui->widget;
 }
 
-const InputGeneratorWidget &InputGeneratorDialog::widget() const
+const InputGeneratorWidget& InputGeneratorDialog::widget() const
 {
   return *ui->widget;
 }
 
-bool InputGeneratorDialog::configureBatchJob(BatchJob &batch)
+bool InputGeneratorDialog::configureBatchJob(BatchJob& batch)
 {
   ui->widget->setBatchMode(true);
   DialogCode reply = static_cast<DialogCode>(exec());
@@ -77,7 +75,7 @@ bool InputGeneratorDialog::configureBatchJob(BatchJob &batch)
   return ui->widget->configureBatchJob(batch);
 }
 
-void InputGeneratorDialog::setMolecule(Molecule *mol)
+void InputGeneratorDialog::setMolecule(Molecule* mol)
 {
   ui->widget->setMolecule(mol);
 }

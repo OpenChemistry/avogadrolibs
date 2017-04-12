@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEWIDGET_H
 #define AVOGADRO_MOLEQUEUE_MOLEQUEUEWIDGET_H
 
-#include <QtWidgets/QWidget>
 #include "avogadromolequeueexport.h"
+#include <QtWidgets/QWidget>
 
 #include <avogadro/core/avogadrocore.h>
 
@@ -32,7 +32,8 @@ class MoleQueueWidget;
 }
 
 /**
- * @class MoleQueueWidget molequeuewidget.h <avogadro/molequeue/molequeuewidget.h>
+ * @class MoleQueueWidget molequeuewidget.h
+ * <avogadro/molequeue/molequeuewidget.h>
  * @brief The MoleQueueWidget class provides a widget for configuring and
  * submitting a MoleQueue::JobObject.
  */
@@ -40,7 +41,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueWidget : public QWidget
 {
   Q_OBJECT
 public:
-  explicit MoleQueueWidget(QWidget *parent_ = 0);
+  explicit MoleQueueWidget(QWidget* parent_ = 0);
   ~MoleQueueWidget() override;
 
   /**
@@ -52,7 +53,8 @@ public:
   ::MoleQueue::JobObject& jobTemplate();
   const ::MoleQueue::JobObject& jobTemplate() const;
 public slots:
-  void setJobTemplate(const ::MoleQueue::JobObject &job);
+  void setJobTemplate(const ::MoleQueue::JobObject& job);
+
 public:
   /** @} */
 
@@ -61,7 +63,7 @@ public:
    * and select the first matching program node.
    * Matches are case insensitive.
    */
-  void showAndSelectProgram(const QString &programName);
+  void showAndSelectProgram(const QString& programName);
 
   /**
    * @return True if the last submission was successful. Only valid after
@@ -80,18 +82,15 @@ public:
    */
   bool jobCompleted() const
   {
-    return (m_jobState == QLatin1String("Finished")
-            || m_jobState == QLatin1String("Error")
-            || m_jobState == QLatin1String("Canceled"));
+    return (m_jobState == QLatin1String("Finished") ||
+            m_jobState == QLatin1String("Error") ||
+            m_jobState == QLatin1String("Canceled"));
   }
 
   /**
    * @return true if the job completed without error.
    */
-  bool jobSuccess() const
-  {
-    return m_jobState == QLatin1String("Finished");
-  }
+  bool jobSuccess() const { return m_jobState == QLatin1String("Finished"); }
 
   /**
    * @return The request id associated with the last call to submitJobRequest.
@@ -183,25 +182,25 @@ signals:
    * Emitted after a successful call to requestJobLookup().
    * @param job The result of the lookupJob() RPC query.
    */
-  void jobUpdated(const ::MoleQueue::JobObject &job);
+  void jobUpdated(const ::MoleQueue::JobObject& job);
 
 private slots:
   void showAndSelectProgramHandler();
 
-  void onLookupJobReply(int reqId, const QJsonObject &result);
+  void onLookupJobReply(int reqId, const QJsonObject& result);
 
   void onSubmissionSuccess(int localId, unsigned int moleQueueId);
-  void onSubmissionFailure(int localId, unsigned int, const QString &error);
+  void onSubmissionFailure(int localId, unsigned int, const QString& error);
 
-  void onJobStateChange(unsigned int mqId, const QString &oldState,
-                        const QString &newState);
+  void onJobStateChange(unsigned int mqId, const QString& oldState,
+                        const QString& newState);
 
 private:
   void listenForLookupJobReply(bool listen = true);
   void listenForJobSubmitReply(bool listen = true);
   void listenForJobStateChange(bool listen = true);
 
-  Ui::MoleQueueWidget *m_ui;
+  Ui::MoleQueueWidget* m_ui;
   ::MoleQueue::JobObject m_jobTemplate;
   QString m_jobState;
   QString m_submissionError;
