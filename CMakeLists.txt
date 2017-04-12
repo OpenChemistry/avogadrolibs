@@ -45,6 +45,7 @@ option(USE_OPENGL "Enable libraries that use OpenGL" ON)
 option(USE_HDF5 "Enable optional HDF5 features" OFF)
 option(USE_QT "Enable libraries that use Qt 5" ON)
 option(USE_VTK "Enable libraries that use VTK" OFF)
+option(USE_LIBARCHIVE "Enable optional Libarchive features" ON)
 option(USE_PROTOCALL "Enable libraries that use ProtoCall" OFF)
 option(USE_MOLEQUEUE "Enable the MoleQueue dependent functionality" ON)
 option(USE_BOOST_PYTHON "Use Boost Python to wrap some of our API" OFF)
@@ -94,6 +95,7 @@ install(FILES
   "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindGLEW.cmake"
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibArchive.cmake"
   DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
 install(EXPORT "AvogadroLibsTargets"
   DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")

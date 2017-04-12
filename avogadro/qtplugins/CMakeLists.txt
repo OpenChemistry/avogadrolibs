@@ -128,6 +128,10 @@ if(USE_MOLEQUEUE)
   add_subdirectory(scriptfileformats)
 endif()
 
+if(USE_LIBARCHIVE)
+  add_subdirectory(plugindownloader)
+endif()
+
 # The scene plugins
 add_subdirectory(ballandstick)
 add_subdirectory(licorice)
