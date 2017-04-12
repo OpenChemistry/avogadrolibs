@@ -27,7 +27,7 @@ Node::~Node()
 {
 }
 
-void Node::setParent(GroupNode *parent_)
+void Node::setParent(GroupNode* parent_)
 {
   m_parent = parent_;
 }

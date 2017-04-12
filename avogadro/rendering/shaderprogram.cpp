@@ -31,70 +31,72 @@ namespace {
 inline GLenum convertType(Type type)
 {
   switch (type) {
-  default:
-  case UCharType:
-    return GL_UNSIGNED_BYTE;
-  case CharType:
-    return GL_BYTE;
-  case ShortType:
-    return GL_SHORT;
-  case UShortType:
-    return GL_UNSIGNED_SHORT;
-  case IntType:
-    return GL_INT;
-  case UIntType:
-    return GL_UNSIGNED_INT;
-  case FloatType:
-    return GL_FLOAT;
-  case DoubleType:
-    return GL_DOUBLE;
+    default:
+    case UCharType:
+      return GL_UNSIGNED_BYTE;
+    case CharType:
+      return GL_BYTE;
+    case ShortType:
+      return GL_SHORT;
+    case UShortType:
+      return GL_UNSIGNED_SHORT;
+    case IntType:
+      return GL_INT;
+    case UIntType:
+      return GL_UNSIGNED_INT;
+    case FloatType:
+      return GL_FLOAT;
+    case DoubleType:
+      return GL_DOUBLE;
   }
 }
 
 inline GLenum lookupTextureUnit(GLint index)
 {
-#define MAKE_TEXTURE_UNIT_CASE(i) case i: return GL_TEXTURE##i;
+#define MAKE_TEXTURE_UNIT_CASE(i)                                              \
+  case i:                                                                      \
+    return GL_TEXTURE##i;
   switch (index) {
-  MAKE_TEXTURE_UNIT_CASE(0)
-  MAKE_TEXTURE_UNIT_CASE(1)
-  MAKE_TEXTURE_UNIT_CASE(2)
-  MAKE_TEXTURE_UNIT_CASE(3)
-  MAKE_TEXTURE_UNIT_CASE(4)
-  MAKE_TEXTURE_UNIT_CASE(5)
-  MAKE_TEXTURE_UNIT_CASE(6)
-  MAKE_TEXTURE_UNIT_CASE(7)
-  MAKE_TEXTURE_UNIT_CASE(8)
-  MAKE_TEXTURE_UNIT_CASE(9)
-  MAKE_TEXTURE_UNIT_CASE(10)
-  MAKE_TEXTURE_UNIT_CASE(11)
-  MAKE_TEXTURE_UNIT_CASE(12)
-  MAKE_TEXTURE_UNIT_CASE(13)
-  MAKE_TEXTURE_UNIT_CASE(14)
-  MAKE_TEXTURE_UNIT_CASE(15)
-  MAKE_TEXTURE_UNIT_CASE(16)
-  MAKE_TEXTURE_UNIT_CASE(17)
-  MAKE_TEXTURE_UNIT_CASE(18)
-  MAKE_TEXTURE_UNIT_CASE(19)
-  MAKE_TEXTURE_UNIT_CASE(20)
-  MAKE_TEXTURE_UNIT_CASE(21)
-  MAKE_TEXTURE_UNIT_CASE(22)
-  MAKE_TEXTURE_UNIT_CASE(23)
-  MAKE_TEXTURE_UNIT_CASE(24)
-  MAKE_TEXTURE_UNIT_CASE(25)
-  MAKE_TEXTURE_UNIT_CASE(26)
-  MAKE_TEXTURE_UNIT_CASE(27)
-  MAKE_TEXTURE_UNIT_CASE(28)
-  MAKE_TEXTURE_UNIT_CASE(29)
-  MAKE_TEXTURE_UNIT_CASE(30)
-  MAKE_TEXTURE_UNIT_CASE(31)
-  default:
-    return 0;
+    MAKE_TEXTURE_UNIT_CASE(0)
+    MAKE_TEXTURE_UNIT_CASE(1)
+    MAKE_TEXTURE_UNIT_CASE(2)
+    MAKE_TEXTURE_UNIT_CASE(3)
+    MAKE_TEXTURE_UNIT_CASE(4)
+    MAKE_TEXTURE_UNIT_CASE(5)
+    MAKE_TEXTURE_UNIT_CASE(6)
+    MAKE_TEXTURE_UNIT_CASE(7)
+    MAKE_TEXTURE_UNIT_CASE(8)
+    MAKE_TEXTURE_UNIT_CASE(9)
+    MAKE_TEXTURE_UNIT_CASE(10)
+    MAKE_TEXTURE_UNIT_CASE(11)
+    MAKE_TEXTURE_UNIT_CASE(12)
+    MAKE_TEXTURE_UNIT_CASE(13)
+    MAKE_TEXTURE_UNIT_CASE(14)
+    MAKE_TEXTURE_UNIT_CASE(15)
+    MAKE_TEXTURE_UNIT_CASE(16)
+    MAKE_TEXTURE_UNIT_CASE(17)
+    MAKE_TEXTURE_UNIT_CASE(18)
+    MAKE_TEXTURE_UNIT_CASE(19)
+    MAKE_TEXTURE_UNIT_CASE(20)
+    MAKE_TEXTURE_UNIT_CASE(21)
+    MAKE_TEXTURE_UNIT_CASE(22)
+    MAKE_TEXTURE_UNIT_CASE(23)
+    MAKE_TEXTURE_UNIT_CASE(24)
+    MAKE_TEXTURE_UNIT_CASE(25)
+    MAKE_TEXTURE_UNIT_CASE(26)
+    MAKE_TEXTURE_UNIT_CASE(27)
+    MAKE_TEXTURE_UNIT_CASE(28)
+    MAKE_TEXTURE_UNIT_CASE(29)
+    MAKE_TEXTURE_UNIT_CASE(30)
+    MAKE_TEXTURE_UNIT_CASE(31)
+    default:
+      return 0;
   }
 }
 } // end anon namespace
 
-ShaderProgram::ShaderProgram() : m_handle(0), m_vertexShader(0),
-  m_fragmentShader(0), m_linked(false)
+ShaderProgram::ShaderProgram()
+  : m_handle(0), m_vertexShader(0), m_fragmentShader(0), m_linked(false)
 {
   initializeTextureUnits();
 }
@@ -103,7 +105,7 @@ ShaderProgram::~ShaderProgram()
 {
 }
 
-bool ShaderProgram::attachShader(const Shader &shader)
+bool ShaderProgram::attachShader(const Shader& shader)
 {
   if (shader.handle() == 0) {
     m_error = "Shader object was not initialized, cannot attach it.";
@@ -130,15 +132,13 @@ bool ShaderProgram::attachShader(const Shader &shader)
                      static_cast<GLuint>(m_vertexShader));
     }
     m_vertexShader = shader.handle();
-  }
-  else if (shader.type() == Shader::Fragment) {
+  } else if (shader.type() == Shader::Fragment) {
     if (m_fragmentShader != 0) {
       glDetachShader(static_cast<GLuint>(m_handle),
                      static_cast<GLuint>(m_fragmentShader));
     }
     m_fragmentShader = shader.handle();
-  }
-  else {
+  } else {
     m_error = "Unknown shader type encountered - this should not happen.";
     return false;
   }
@@ -149,7 +149,7 @@ bool ShaderProgram::attachShader(const Shader &shader)
   return true;
 }
 
-bool ShaderProgram::detachShader(const Shader &shader)
+bool ShaderProgram::detachShader(const Shader& shader)
 {
   if (shader.handle() == 0) {
     m_error = "Shader object was not initialized, cannot attach it.";
@@ -164,32 +164,30 @@ bool ShaderProgram::detachShader(const Shader &shader)
   }
 
   switch (shader.type()) {
-  case Shader::Vertex:
-    if (m_vertexShader != shader.handle()) {
-      m_error = "The supplied shader was not attached to this program.";
+    case Shader::Vertex:
+      if (m_vertexShader != shader.handle()) {
+        m_error = "The supplied shader was not attached to this program.";
+        return false;
+      } else {
+        glDetachShader(static_cast<GLuint>(m_handle),
+                       static_cast<GLuint>(shader.handle()));
+        m_vertexShader = 0;
+        m_linked = false;
+        return true;
+      }
+    case Shader::Fragment:
+      if (m_fragmentShader != shader.handle()) {
+        m_error = "The supplied shader was not attached to this program.";
+        return false;
+      } else {
+        glDetachShader(static_cast<GLuint>(m_handle),
+                       static_cast<GLuint>(shader.handle()));
+        m_fragmentShader = 0;
+        m_linked = false;
+        return true;
+      }
+    default:
       return false;
-    }
-    else {
-      glDetachShader(static_cast<GLuint>(m_handle),
-                     static_cast<GLuint>(shader.handle()));
-      m_vertexShader = 0;
-      m_linked = false;
-      return true;
-    }
-  case Shader::Fragment:
-    if (m_fragmentShader != shader.handle()) {
-      m_error = "The supplied shader was not attached to this program.";
-      return false;
-    }
-    else {
-      glDetachShader(static_cast<GLuint>(m_handle),
-                     static_cast<GLuint>(shader.handle()));
-      m_fragmentShader = 0;
-      m_linked = false;
-      return true;
-    }
-  default:
-    return false;
   }
 }
 
@@ -210,8 +208,9 @@ bool ShaderProgram::link()
     GLint length(0);
     glGetShaderiv(static_cast<GLuint>(m_handle), GL_INFO_LOG_LENGTH, &length);
     if (length > 1) {
-      char *logMessage = new char[length];
-      glGetShaderInfoLog(static_cast<GLuint>(m_handle), length, nullptr, logMessage);
+      char* logMessage = new char[length];
+      glGetShaderInfoLog(static_cast<GLuint>(m_handle), length, nullptr,
+                         logMessage);
       m_error = logMessage;
       delete[] logMessage;
     }
@@ -237,7 +236,7 @@ void ShaderProgram::release()
   releaseAllTextureUnits();
 }
 
-bool ShaderProgram::enableAttributeArray(const std::string &name)
+bool ShaderProgram::enableAttributeArray(const std::string& name)
 {
   GLint location = static_cast<GLint>(findAttributeArray(name));
   if (location == -1) {
@@ -248,7 +247,7 @@ bool ShaderProgram::enableAttributeArray(const std::string &name)
   return true;
 }
 
-bool ShaderProgram::disableAttributeArray(const std::string &name)
+bool ShaderProgram::disableAttributeArray(const std::string& name)
 {
   GLint location = static_cast<GLint>(findAttributeArray(name));
   if (location == -1) {
@@ -259,9 +258,9 @@ bool ShaderProgram::disableAttributeArray(const std::string &name)
   return true;
 }
 
-#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
+#define BUFFER_OFFSET(i) ((char*)nullptr + (i))
 
-bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
+bool ShaderProgram::useAttributeArray(const std::string& name, int offset,
                                       size_t stride, Type elementType,
                                       int elementTupleSize,
                                       NormalizeOption normalize)
@@ -277,8 +276,8 @@ bool ShaderProgram::useAttributeArray(const std::string &name, int offset,
   return true;
 }
 
-bool ShaderProgram::setTextureSampler(const std::string &name,
-                                      const Texture2D &texture)
+bool ShaderProgram::setTextureSampler(const std::string& name,
+                                      const Texture2D& texture)
 {
   // Look up sampler location:
   GLint location = static_cast<GLint>(findUniform(name));
@@ -301,7 +300,7 @@ bool ShaderProgram::setTextureSampler(const std::string &name,
 
     if (available == end) {
       m_error = "Could not set sampler " + name + ". No remaining texture "
-          "units available.";
+                                                  "units available.";
       return false;
     }
 
@@ -309,15 +308,16 @@ bool ShaderProgram::setTextureSampler(const std::string &name,
 
     GLenum textureUnit = lookupTextureUnit(textureUnitId);
     if (textureUnit == 0) {
-      m_error = "Could not set sampler " + name
-          + ". Texture unit lookup failed.";
+      m_error =
+        "Could not set sampler " + name + ". Texture unit lookup failed.";
       return false;
     }
 
     glActiveTexture(textureUnit);
     if (!texture.bind()) {
       m_error = "Could not set sampler " + name + ": Error while binding "
-          "texture: '" + texture.error() + "'.";
+                                                  "texture: '" +
+                texture.error() + "'.";
       glActiveTexture(GL_TEXTURE0);
       return false;
     }
@@ -326,8 +326,7 @@ bool ShaderProgram::setTextureSampler(const std::string &name,
     // Mark texture unit as in-use.
     m_textureUnitBindings.insert(std::make_pair(&texture, textureUnitId));
     *available = true;
-  }
-  else {
+  } else {
     // Texture is already bound.
     textureUnitId = result->second;
   }
@@ -338,7 +337,7 @@ bool ShaderProgram::setTextureSampler(const std::string &name,
   return true;
 }
 
-bool ShaderProgram::setUniformValue(const std::string &name, int i)
+bool ShaderProgram::setUniformValue(const std::string& name, int i)
 {
   GLint location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
@@ -349,7 +348,7 @@ bool ShaderProgram::setUniformValue(const std::string &name, int i)
   return true;
 }
 
-bool ShaderProgram::setUniformValue(const std::string &name, float f)
+bool ShaderProgram::setUniformValue(const std::string& name, float f)
 {
   GLint location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
@@ -360,8 +359,8 @@ bool ShaderProgram::setUniformValue(const std::string &name, float f)
   return true;
 }
 
-bool ShaderProgram::setUniformValue(const std::string &name,
-                                    const Eigen::Matrix3f &matrix)
+bool ShaderProgram::setUniformValue(const std::string& name,
+                                    const Eigen::Matrix3f& matrix)
 {
   GLint location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
@@ -369,12 +368,12 @@ bool ShaderProgram::setUniformValue(const std::string &name,
     return false;
   }
   glUniformMatrix3fv(location, 1, GL_FALSE,
-                     static_cast<const GLfloat *>(matrix.data()));
+                     static_cast<const GLfloat*>(matrix.data()));
   return true;
 }
 
-bool ShaderProgram::setUniformValue(const std::string &name,
-                                    const Eigen::Matrix4f &matrix)
+bool ShaderProgram::setUniformValue(const std::string& name,
+                                    const Eigen::Matrix4f& matrix)
 {
   GLint location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
@@ -382,11 +381,11 @@ bool ShaderProgram::setUniformValue(const std::string &name,
     return false;
   }
   glUniformMatrix4fv(location, 1, GL_FALSE,
-                     static_cast<const GLfloat *>(matrix.data()));
+                     static_cast<const GLfloat*>(matrix.data()));
   return true;
 }
 
-bool ShaderProgram::setUniformValue(const std::string &name, const Vector3f &v)
+bool ShaderProgram::setUniformValue(const std::string& name, const Vector3f& v)
 {
   GLint location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
@@ -397,7 +396,7 @@ bool ShaderProgram::setUniformValue(const std::string &name, const Vector3f &v)
   return true;
 }
 
-bool ShaderProgram::setUniformValue(const std::string &name, const Vector2i &v)
+bool ShaderProgram::setUniformValue(const std::string& name, const Vector2i& v)
 {
   GLint location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
@@ -408,8 +407,7 @@ bool ShaderProgram::setUniformValue(const std::string &name, const Vector2i &v)
   return true;
 }
 
-bool ShaderProgram::setUniformValue(const std::string &name,
-                                    const Vector3ub &v)
+bool ShaderProgram::setUniformValue(const std::string& name, const Vector3ub& v)
 {
   GLint location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
@@ -422,8 +420,8 @@ bool ShaderProgram::setUniformValue(const std::string &name,
 }
 
 bool ShaderProgram::setAttributeArrayInternal(
-    const std::string &name, void *buffer, Avogadro::Type type, int tupleSize,
-    ShaderProgram::NormalizeOption normalize)
+  const std::string& name, void* buffer, Avogadro::Type type, int tupleSize,
+  ShaderProgram::NormalizeOption normalize)
 {
   if (type == Avogadro::UnknownType) {
     m_error = "Unrecognized data type for attribute " + name + ".";
@@ -434,7 +432,7 @@ bool ShaderProgram::setAttributeArrayInternal(
     m_error = "Could not set attribute " + name + ". No such attribute.";
     return false;
   }
-  const GLvoid *data = static_cast<const GLvoid *>(buffer);
+  const GLvoid* data = static_cast<const GLvoid*>(buffer);
   glVertexAttribPointer(location, tupleSize, convertType(type),
                         normalize == Normalize ? GL_TRUE : GL_FALSE, 0, data);
   return true;
@@ -462,14 +460,13 @@ void ShaderProgram::releaseAllTextureUnits()
   m_textureUnitBindings.clear();
 }
 
-inline int ShaderProgram::findAttributeArray(const std::string &name)
+inline int ShaderProgram::findAttributeArray(const std::string& name)
 {
   if (name.empty() || !m_linked)
     return -1;
-  const GLchar *namePtr = static_cast<const GLchar *>(name.c_str());
-  GLint location =
-      static_cast<int>(glGetAttribLocation(static_cast<GLuint>(m_handle),
-                                           namePtr));
+  const GLchar* namePtr = static_cast<const GLchar*>(name.c_str());
+  GLint location = static_cast<int>(
+    glGetAttribLocation(static_cast<GLuint>(m_handle), namePtr));
   if (location == -1) {
     m_error = "Specified attribute not found in current shader program: ";
     m_error += name;
@@ -478,14 +475,13 @@ inline int ShaderProgram::findAttributeArray(const std::string &name)
   return location;
 }
 
-inline int ShaderProgram::findUniform(const std::string &name)
+inline int ShaderProgram::findUniform(const std::string& name)
 {
   if (name.empty() || !m_linked)
     return -1;
-  const GLchar *namePtr = static_cast<const GLchar *>(name.c_str());
-  GLint location =
-      static_cast<int>(glGetUniformLocation(static_cast<GLuint>(m_handle),
-                                            namePtr));
+  const GLchar* namePtr = static_cast<const GLchar*>(name.c_str());
+  GLint location = static_cast<int>(
+    glGetUniformLocation(static_cast<GLuint>(m_handle), namePtr));
   if (location == -1)
     m_error = "Uniform " + name + " not found in current shader program.";
 

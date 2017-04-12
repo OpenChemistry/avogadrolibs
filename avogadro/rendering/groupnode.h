@@ -36,34 +36,35 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT GroupNode : public Node
 {
 public:
-  explicit GroupNode(GroupNode *parent = 0);
+  explicit GroupNode(GroupNode* parent = 0);
   ~GroupNode() override;
 
   /**
    * Accept a visit from our friendly visitor.
    */
-  void accept(Visitor &) override;
+  void accept(Visitor&) override;
 
   /**
    * @brief Add a child node, this node will have its parent set and will be
    * deleted by this node upon destruction.
    * @param node Node to be added.
    */
-  void addChild(Node *node);
+  void addChild(Node* node);
 
   /**
    * @brief Remove child node, this node will no longer be deleted.
    * @param node Node to be removed.
    * @return True if the node was removed, false if it was not found.
    */
-  bool removeChild(Node *node);
+  bool removeChild(Node* node);
 
   /**
    * @brief Get the child Node at the specified index.
    * @param index The index of the child.
-   * @return A pointer to the child node, or nullptr if the index is out of range.
+   * @return A pointer to the child node, or nullptr if the index is out of
+   * range.
    */
-  Node * child(size_t index);
+  Node* child(size_t index);
 
   /**
    * @return The number of child nodes contained by the GroupNode.
@@ -73,8 +74,8 @@ public:
   /**
    * @brief Get a reference to the child nodes list.
    */
-  std::vector<Node *>& children() { return m_children; }
-  const std::vector<Node *>& children() const { return m_children; }
+  std::vector<Node*>& children() { return m_children; }
+  const std::vector<Node*>& children() const { return m_children; }
 
   /**
    * @brief Remove all children.
@@ -82,8 +83,7 @@ public:
   void clear();
 
 protected:
-  std::vector<Node *> m_children;
-
+  std::vector<Node*> m_children;
 };
 
 } // End namespace Rendering

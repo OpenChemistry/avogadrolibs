@@ -26,7 +26,8 @@
 namespace Avogadro {
 namespace Rendering {
 
-enum Projection {
+enum Projection
+{
   Perspective,
   Orthographic
 };
@@ -48,23 +49,23 @@ public:
    * Translate the camera's model view matrix using the supplied translation
    * vector @p translate.
    */
-  void translate(const Vector3f &translate);
+  void translate(const Vector3f& translate);
 
   /**
    * Pretranslate the camera's model view matrix using the supplied translation
    * vector @p translate.
    */
-  void preTranslate(const Vector3f &translate);
+  void preTranslate(const Vector3f& translate);
 
   /**
    * Rotate the camera about the supplied @p axis by @p angle (degrees).
    */
-  void rotate(float angle, const Vector3f &axis);
+  void rotate(float angle, const Vector3f& axis);
 
   /**
    * Prerotate the camera about the supplied @p axis by @p angle (degrees).
    */
-  void preRotate(float angle, const Vector3f &axis);
+  void preRotate(float angle, const Vector3f& axis);
 
   /**
    * Modify the matrix, to give the effect of zooming in or out.
@@ -77,30 +78,29 @@ public:
    * @param center the position to look at.
    * @param up the vector pointing up.
    */
-  void lookAt(const Vector3f &eye, const Vector3f &center,
-              const Vector3f &up);
+  void lookAt(const Vector3f& eye, const Vector3f& center, const Vector3f& up);
 
   /**
    * Distance to supplied point @p point and the camera.
    */
-  float distance(const Vector3f &point) const;
+  float distance(const Vector3f& point) const;
 
   /**
    * Projects a point from the scene to the window.
    */
-  Vector3f project(const Vector3f &point) const;
+  Vector3f project(const Vector3f& point) const;
 
   /**
    * Unprojects a point from the window to the scene.
    */
-  Vector3f unProject(const Vector3f &point) const;
+  Vector3f unProject(const Vector3f& point) const;
 
   /**
    * Unprojects a point from the window to the scene, using the supplied
    * reference point (defaults to the origin if nothing is supplied).
    */
-  Vector3f unProject(const Vector2f &point,
-                     const Vector3f &reference = Vector3f::Zero()) const;
+  Vector3f unProject(const Vector2f& point,
+                     const Vector3f& reference = Vector3f::Zero()) const;
 
   /**
    * Calculate the perspective projection matrix.
@@ -109,8 +109,8 @@ public:
    * @param zNear is the distance from the viewer to the near clipping plane.
    * @param zFar is the distance from the viewer to the far clipping plane.
    */
-  void calculatePerspective(float fieldOfView, float aspectRatio,
-                            float zNear, float zFar);
+  void calculatePerspective(float fieldOfView, float aspectRatio, float zNear,
+                            float zFar);
 
   /**
    * Calculate the perspective projection matrix. Computes the aspect ratio
@@ -154,7 +154,8 @@ public:
   void setDevicePixelRatio(float scale);
 
   /**
-   * Get the scale of the viewport pixels. (Better to use native qApp()->devicePixelRatio() instead)
+   * Get the scale of the viewport pixels. (Better to use native
+   * qApp()->devicePixelRatio() instead)
    */
   float devicePixelRatio() const { return m_pixelScale; }
 
@@ -167,7 +168,7 @@ public:
   /**
    * Set the projection transform.
    */
-  void setProjection(const Eigen::Affine3f &transform);
+  void setProjection(const Eigen::Affine3f& transform);
 
   /**
    * Get a reference to the projection matrix.
@@ -177,7 +178,7 @@ public:
   /**
    * Set the model view transform.
    */
-  void setModelView(const Eigen::Affine3f &transform);
+  void setModelView(const Eigen::Affine3f& transform);
 
   /** Get a reference to the model view matrix. */
   const Eigen::Affine3f& modelView() const;
@@ -217,12 +218,12 @@ private:
   float m_orthographicScale;
 };
 
-inline const Eigen::Affine3f&  Camera::projection() const
+inline const Eigen::Affine3f& Camera::projection() const
 {
   return m_projection;
 }
 
-inline const Eigen::Affine3f&  Camera::modelView() const
+inline const Eigen::Affine3f& Camera::modelView() const
 {
   return m_modelView;
 }

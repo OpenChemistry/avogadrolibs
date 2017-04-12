@@ -25,9 +25,9 @@
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/vector.h>
 
+#include <map>    // For member variables.
 #include <string> // For member variables.
 #include <vector> // For member variables.
-#include <map>    // For member variables.
 
 namespace Avogadro {
 
@@ -48,16 +48,17 @@ namespace Rendering {
  */
 
 /// Pack the vertex data into a contiguous array.
-struct ColorTextureVertex {
+struct ColorTextureVertex
+{
   Vector3f vertex;           // 12 bytes
   Vector3ub color;           //  3 bytes
   unsigned char unusedAlign; //  1 byte
   Vector2f textureCoord;     //  8 bytes
   Vector2f textureCoord2;    //  8 bytes
 
-  ColorTextureVertex(const Vector3f &p, const Vector3ub &c, const Vector2f &t,
-      const Vector2f &t2 = Vector2f::Zero()) : vertex(p), color(c),
-      textureCoord(t), textureCoord2(t2)
+  ColorTextureVertex(const Vector3f& p, const Vector3ub& c, const Vector2f& t,
+                     const Vector2f& t2 = Vector2f::Zero())
+    : vertex(p), color(c), textureCoord(t), textureCoord2(t2)
   {
   }
 
@@ -66,7 +67,7 @@ struct ColorTextureVertex {
   static int textureCoordOffset()
   {
     return colorOffset() +
-        static_cast<int>(sizeof(Vector3ub) + sizeof(unsigned char));
+           static_cast<int>(sizeof(Vector3ub) + sizeof(unsigned char));
   }
   static int textureCoord2Offset()
   {
@@ -75,15 +76,18 @@ struct ColorTextureVertex {
 }; // 32 bytes total size - 16/32/64 are ideal for alignment.
 
 /// Pack the vertex data into a contiguous array.
-struct ColorNormalVertex {
+struct ColorNormalVertex
+{
   Vector3ub color;           //  3 bytes
   unsigned char unusedAlign; //  1 byte
   Vector3f normal;           // 12 bytes
   Vector3f vertex;           // 12 bytes
   unsigned char padding[4];  //  4 bytes
 
-  ColorNormalVertex(const Vector3ub &c, const Vector3f &n, const Vector3f &v)
-    : color(c), normal(n), vertex(v) {}
+  ColorNormalVertex(const Vector3ub& c, const Vector3f& n, const Vector3f& v)
+    : color(c), normal(n), vertex(v)
+  {
+  }
 
   static int colorOffset() { return 0; }
   static int normalOffset()
@@ -119,7 +123,7 @@ public:
   /**
    * Set the background color of the scene (default is black).
    */
-  void setBackgroundColor(const Vector4ub &color) { m_backgroundColor = color; }
+  void setBackgroundColor(const Vector4ub& color) { m_backgroundColor = color; }
 
   /**
    * Get the background color of the scene.
@@ -144,9 +148,9 @@ private:
   GroupNode m_rootNode;
   Vector4ub m_backgroundColor;
 
-  mutable bool     m_dirty;
+  mutable bool m_dirty;
   mutable Vector3f m_center;
-  mutable float    m_radius;
+  mutable float m_radius;
 };
 
 } // End Rendering namespace

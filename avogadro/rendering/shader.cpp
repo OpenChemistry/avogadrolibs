@@ -21,7 +21,7 @@
 namespace Avogadro {
 namespace Rendering {
 
-Shader::Shader(Type type_, const std::string &source_)
+Shader::Shader(Type type_, const std::string& source_)
   : m_type(type_), m_handle(0), m_dirty(true), m_source(source_)
 {
 }
@@ -36,7 +36,7 @@ void Shader::setType(Type type_)
   m_dirty = true;
 }
 
-void Shader::setSource(const std::string &source_)
+void Shader::setSource(const std::string& source_)
 {
   m_source = source_;
   m_dirty = true;
@@ -55,7 +55,7 @@ bool Shader::compile()
 
   GLenum type_ = m_type == Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
   GLuint handle_ = glCreateShader(type_);
-  const GLchar *source_ = static_cast<const GLchar *>(m_source.c_str());
+  const GLchar* source_ = static_cast<const GLchar*>(m_source.c_str());
   glShaderSource(handle_, 1, &source_, nullptr);
   glCompileShader(handle_);
   GLint isCompiled;
@@ -66,7 +66,7 @@ bool Shader::compile()
     GLint length(0);
     glGetShaderiv(handle_, GL_INFO_LOG_LENGTH, &length);
     if (length > 1) {
-      char *logMessage = new char[length];
+      char* logMessage = new char[length];
       glGetShaderInfoLog(handle_, length, nullptr, logMessage);
       m_error = logMessage;
       delete[] logMessage;

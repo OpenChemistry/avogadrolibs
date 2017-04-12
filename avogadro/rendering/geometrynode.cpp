@@ -33,18 +33,18 @@ GeometryNode::~GeometryNode()
   clearDrawables();
 }
 
-void GeometryNode::accept(Visitor &visitor)
+void GeometryNode::accept(Visitor& visitor)
 {
   visitor.visit(*this);
-  for (std::vector<Drawable *>::const_iterator it = m_drawables.begin();
+  for (std::vector<Drawable*>::const_iterator it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
     (*it)->accept(visitor);
   }
 }
 
-void GeometryNode::addDrawable(Drawable *object)
+void GeometryNode::addDrawable(Drawable* object)
 {
-  for (std::vector<Drawable *>::const_iterator it = m_drawables.begin();
+  for (std::vector<Drawable*>::const_iterator it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
     if (*it == object)
       return;
@@ -53,11 +53,11 @@ void GeometryNode::addDrawable(Drawable *object)
   m_drawables.push_back(object);
 }
 
-bool GeometryNode::removeDrawable(Drawable *object)
+bool GeometryNode::removeDrawable(Drawable* object)
 {
   if (!object)
     return false;
-  for (std::vector<Drawable *>::iterator it = m_drawables.begin();
+  for (std::vector<Drawable*>::iterator it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
     if (*it == object) {
       (*it)->setParent(nullptr);
@@ -68,7 +68,7 @@ bool GeometryNode::removeDrawable(Drawable *object)
   return false;
 }
 
-Drawable * GeometryNode::drawable(size_t index)
+Drawable* GeometryNode::drawable(size_t index)
 {
   if (index >= m_drawables.size())
     return nullptr;
@@ -79,28 +79,28 @@ Drawable * GeometryNode::drawable(size_t index)
 void GeometryNode::clearDrawables()
 {
   // Like all good parents, we destroy our children before we go...
-  for (std::vector<Drawable *>::const_iterator it = m_drawables.begin();
+  for (std::vector<Drawable*>::const_iterator it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
     delete (*it);
   }
   m_drawables.clear();
 }
 
-void GeometryNode::render(const Camera &camera)
+void GeometryNode::render(const Camera& camera)
 {
-  for (std::vector<Drawable *>::iterator it = m_drawables.begin();
+  for (std::vector<Drawable*>::iterator it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
     if ((*it)->isVisible())
       (*it)->render(camera);
   }
 }
 
-std::multimap<float, Identifier> GeometryNode::hits(const Vector3f &rayOrigin,
-                                                    const Vector3f &rayEnd,
-                                                    const Vector3f &rayDirection) const
+std::multimap<float, Identifier> GeometryNode::hits(
+  const Vector3f& rayOrigin, const Vector3f& rayEnd,
+  const Vector3f& rayDirection) const
 {
   std::multimap<float, Identifier> result;
-  for (std::vector<Drawable *>::const_iterator it = m_drawables.begin();
+  for (std::vector<Drawable*>::const_iterator it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
     std::multimap<float, Identifier> drawableHits;
     if ((*it)->isVisible())

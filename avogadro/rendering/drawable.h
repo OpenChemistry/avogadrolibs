@@ -46,23 +46,23 @@ class AVOGADRORENDERING_EXPORT Drawable
 {
 public:
   Drawable();
-  Drawable(const Drawable &other);
+  Drawable(const Drawable& other);
   virtual ~Drawable();
 
-  Drawable &operator=(Drawable);
-  friend void swap(Drawable &lhs, Drawable &rhs);
+  Drawable& operator=(Drawable);
+  friend void swap(Drawable& lhs, Drawable& rhs);
 
   /**
    * Accept a visit from our friendly visitor.
    */
-  virtual void accept(Visitor &);
+  virtual void accept(Visitor&);
 
   /**
    * @brief Get a pointer to the drawable object's parent.
    * @return Pointer to the parent node, nullptr if no parent.
    */
-  const GeometryNode * parent() const { return m_parent; }
-  GeometryNode * parent() { return m_parent; }
+  const GeometryNode* parent() const { return m_parent; }
+  GeometryNode* parent() { return m_parent; }
 
   /**
    * @brief Set the visibility of the drawable object.
@@ -89,7 +89,7 @@ public:
    * @brief Render the contents of the drawable.
    * @param camera The current Camera.
    */
-  virtual void render(const Camera &camera);
+  virtual void render(const Camera& camera);
 
   /**
    * Get the indentifier for the object, this stores the parent Molecule and
@@ -105,9 +105,9 @@ public:
    * @param rayDirection Normalized direction of the ray.
    * @return Sorted collection of primitives that were hit.
    */
-  virtual std::multimap<float, Identifier> hits(const Vector3f &rayOrigin,
-                                                const Vector3f &rayEnd,
-                                                const Vector3f &rayDirection) const;
+  virtual std::multimap<float, Identifier> hits(
+    const Vector3f& rayOrigin, const Vector3f& rayEnd,
+    const Vector3f& rayDirection) const;
 
   /**
    * Clear the contents of the node.
@@ -121,22 +121,22 @@ protected:
    * @brief Set the parent node for the node.
    * @param parent The parent, a value of nullptr denotes no parent node.
    */
-  void setParent(GeometryNode *parent);
+  void setParent(GeometryNode* parent);
 
-  GeometryNode * m_parent;
+  GeometryNode* m_parent;
   bool m_visible;
   RenderPass m_renderPass;
   Identifier m_identifier;
 };
 
-inline Drawable &Drawable::operator=(Drawable rhs)
+inline Drawable& Drawable::operator=(Drawable rhs)
 {
   using std::swap;
   swap(*this, rhs);
   return *this;
 }
 
-inline void swap(Drawable &lhs, Drawable &rhs)
+inline void swap(Drawable& lhs, Drawable& rhs)
 {
   using std::swap;
   swap(lhs.m_parent, rhs.m_parent);

@@ -23,12 +23,12 @@
  * in order to work around different layouts.
  */
 
-# include <GL/glew.h>
+#include <GL/glew.h>
 
 #ifdef __APPLE__
-# include <OpenGL/gl.h>
+#include <OpenGL/gl.h>
 #else
-# include <GL/gl.h>
+#include <GL/gl.h>
 #endif
 
 #endif // AVOGADRO_RENDERING_AVOGADROGL_H

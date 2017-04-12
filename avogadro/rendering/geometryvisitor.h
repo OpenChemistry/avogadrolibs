@@ -27,7 +27,8 @@ namespace Avogadro {
 namespace Rendering {
 
 /**
- * @class GeometryVisitor geometryvisitor.h <avogadro/rendering/geometryvisitor.h>
+ * @class GeometryVisitor geometryvisitor.h
+ * <avogadro/rendering/geometryvisitor.h>
  * @brief Visitor that determines the geometry of the scene.
  * @author Marcus D. Hanwell
  *
@@ -44,17 +45,17 @@ public:
   /**
    * The overloaded visit functions, the base versions of which do nothing.
    */
-  void visit(Node &) override { return; }
-  void visit(GroupNode &) override { return; }
-  void visit(GeometryNode &) override { return; }
-  void visit(Drawable &) override;
-  void visit(SphereGeometry &) override;
-  void visit(AmbientOcclusionSphereGeometry &) override;
-  void visit(CylinderGeometry &) override { return; }
-  void visit(MeshGeometry &) override { return; }
-  void visit(TextLabel2D &) override { return; }
-  void visit(TextLabel3D &) override { return; }
-  void visit(LineStripGeometry &) override;
+  void visit(Node&) override { return; }
+  void visit(GroupNode&) override { return; }
+  void visit(GeometryNode&) override { return; }
+  void visit(Drawable&) override;
+  void visit(SphereGeometry&) override;
+  void visit(AmbientOcclusionSphereGeometry&) override;
+  void visit(CylinderGeometry&) override { return; }
+  void visit(MeshGeometry&) override { return; }
+  void visit(TextLabel2D&) override { return; }
+  void visit(TextLabel3D&) override { return; }
+  void visit(LineStripGeometry&) override;
 
   /**
    * Clear the state of the visitor.

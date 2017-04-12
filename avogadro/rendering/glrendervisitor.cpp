@@ -16,22 +16,20 @@
 
 #include "glrendervisitor.h"
 
-#include "spheregeometry.h"
 #include "ambientocclusionspheregeometry.h"
 #include "cylindergeometry.h"
 #include "linestripgeometry.h"
 #include "meshgeometry.h"
+#include "spheregeometry.h"
 #include "textlabel2d.h"
 #include "textlabel3d.h"
 
 namespace Avogadro {
 namespace Rendering {
 
-GLRenderVisitor::GLRenderVisitor(const Camera &camera_,
-                                 const TextRenderStrategy *trs)
-  : m_camera(camera_),
-    m_textRenderStrategy(trs),
-    m_renderPass(NotRendering)
+GLRenderVisitor::GLRenderVisitor(const Camera& camera_,
+                                 const TextRenderStrategy* trs)
+  : m_camera(camera_), m_textRenderStrategy(trs), m_renderPass(NotRendering)
 {
 }
 
@@ -39,37 +37,37 @@ GLRenderVisitor::~GLRenderVisitor()
 {
 }
 
-void GLRenderVisitor::visit(Drawable &geometry)
+void GLRenderVisitor::visit(Drawable& geometry)
 {
   if (geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
-void GLRenderVisitor::visit(SphereGeometry &geometry)
+void GLRenderVisitor::visit(SphereGeometry& geometry)
 {
   if (geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
-void GLRenderVisitor::visit(AmbientOcclusionSphereGeometry &geometry)
+void GLRenderVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
 {
   if (geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
-void GLRenderVisitor::visit(CylinderGeometry &geometry)
+void GLRenderVisitor::visit(CylinderGeometry& geometry)
 {
   if (geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
-void GLRenderVisitor::visit(MeshGeometry &geometry)
+void GLRenderVisitor::visit(MeshGeometry& geometry)
 {
   if (geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
-void GLRenderVisitor::visit(TextLabel2D &geometry)
+void GLRenderVisitor::visit(TextLabel2D& geometry)
 {
   if (geometry.renderPass() == m_renderPass) {
     if (m_textRenderStrategy)
@@ -78,7 +76,7 @@ void GLRenderVisitor::visit(TextLabel2D &geometry)
   }
 }
 
-void GLRenderVisitor::visit(TextLabel3D &geometry)
+void GLRenderVisitor::visit(TextLabel3D& geometry)
 {
   if (geometry.renderPass() == m_renderPass) {
     if (m_textRenderStrategy)
@@ -87,7 +85,7 @@ void GLRenderVisitor::visit(TextLabel3D &geometry)
   }
 }
 
-void GLRenderVisitor::visit(LineStripGeometry &geometry)
+void GLRenderVisitor::visit(LineStripGeometry& geometry)
 {
   if (geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);

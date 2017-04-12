@@ -21,18 +21,14 @@
 namespace Avogadro {
 namespace Rendering {
 
-Drawable::Drawable() :
-  m_parent(nullptr),
-  m_visible(true),
-  m_renderPass(OpaquePass)
+Drawable::Drawable()
+  : m_parent(nullptr), m_visible(true), m_renderPass(OpaquePass)
 {
 }
 
-Drawable::Drawable(const Drawable &other)
-  : m_parent(other.m_parent),
-    m_visible(other.m_visible),
-    m_renderPass(other.m_renderPass),
-    m_identifier(other.m_identifier)
+Drawable::Drawable(const Drawable& other)
+  : m_parent(other.m_parent), m_visible(other.m_visible),
+    m_renderPass(other.m_renderPass), m_identifier(other.m_identifier)
 {
 }
 
@@ -40,18 +36,18 @@ Drawable::~Drawable()
 {
 }
 
-void Drawable::accept(Visitor &visitor)
+void Drawable::accept(Visitor& visitor)
 {
   visitor.visit(*this);
 }
 
-void Drawable::render(const Camera &)
+void Drawable::render(const Camera&)
 {
 }
 
-std::multimap<float, Identifier> Drawable::hits(const Vector3f &,
-                                                const Vector3f &,
-                                                const Vector3f &) const
+std::multimap<float, Identifier> Drawable::hits(const Vector3f&,
+                                                const Vector3f&,
+                                                const Vector3f&) const
 {
   return std::multimap<float, Identifier>();
 }
@@ -60,7 +56,7 @@ void Drawable::clear()
 {
 }
 
-void Drawable::setParent(GeometryNode *parent_)
+void Drawable::setParent(GeometryNode* parent_)
 {
   m_parent = parent_;
 }

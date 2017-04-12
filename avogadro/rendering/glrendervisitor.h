@@ -27,7 +27,8 @@ namespace Rendering {
 class TextRenderStrategy;
 
 /**
- * @class GLRenderVisitor glrendervisitor.h <avogadro/rendering/glrendervisitor.h>
+ * @class GLRenderVisitor glrendervisitor.h
+ * <avogadro/rendering/glrendervisitor.h>
  * @brief Visitor that takes care of rendering the scene.
  * @author Marcus D. Hanwell
  *
@@ -37,8 +38,8 @@ class TextRenderStrategy;
 class AVOGADRORENDERING_EXPORT GLRenderVisitor : public Visitor
 {
 public:
-  explicit GLRenderVisitor(const Camera &camera = Camera(),
-                           const TextRenderStrategy *trs = nullptr);
+  explicit GLRenderVisitor(const Camera& camera = Camera(),
+                           const TextRenderStrategy* trs = nullptr);
   ~GLRenderVisitor() override;
 
   /**
@@ -53,19 +54,19 @@ public:
   /**
    * The overloaded visit functions, the base versions of which do nothing.
    */
-  void visit(Node &) override { return; }
-  void visit(GroupNode &) override { return; }
-  void visit(GeometryNode &) override { return; }
-  void visit(Drawable &) override;
-  void visit(SphereGeometry &) override;
-  void visit(AmbientOcclusionSphereGeometry &) override;
-  void visit(CylinderGeometry &) override;
-  void visit(MeshGeometry &) override;
-  void visit(TextLabel2D &geometry) override;
-  void visit(TextLabel3D &geometry) override;
-  void visit(LineStripGeometry &geometry) override;
+  void visit(Node&) override { return; }
+  void visit(GroupNode&) override { return; }
+  void visit(GeometryNode&) override { return; }
+  void visit(Drawable&) override;
+  void visit(SphereGeometry&) override;
+  void visit(AmbientOcclusionSphereGeometry&) override;
+  void visit(CylinderGeometry&) override;
+  void visit(MeshGeometry&) override;
+  void visit(TextLabel2D& geometry) override;
+  void visit(TextLabel3D& geometry) override;
+  void visit(LineStripGeometry& geometry) override;
 
-  void setCamera(const Camera &camera_) { m_camera = camera_; }
+  void setCamera(const Camera& camera_) { m_camera = camera_; }
   Camera camera() const { return m_camera; }
 
   /**
@@ -73,11 +74,11 @@ public:
    * If nullptr, no text will be produced.
    * @{
    */
-  void setTextRenderStrategy(TextRenderStrategy *trs)
+  void setTextRenderStrategy(TextRenderStrategy* trs)
   {
     m_textRenderStrategy = trs;
   }
-  const TextRenderStrategy *textRenderStrategy() const
+  const TextRenderStrategy* textRenderStrategy() const
   {
     return m_textRenderStrategy;
   }
@@ -85,7 +86,7 @@ public:
 
 private:
   Camera m_camera;
-  const TextRenderStrategy *m_textRenderStrategy;
+  const TextRenderStrategy* m_textRenderStrategy;
   RenderPass m_renderPass;
 };
 

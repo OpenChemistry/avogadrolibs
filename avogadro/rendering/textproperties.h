@@ -32,16 +32,32 @@ class AVOGADRORENDERING_EXPORT TextProperties
 {
 public:
   /** Enum defining a minimal set of font families. */
-  enum FontFamily { SansSerif, Serif, Mono };
+  enum FontFamily
+  {
+    SansSerif,
+    Serif,
+    Mono
+  };
 
   /** Horizontal alignment options. */
-  enum HAlign { HLeft, HCenter, HRight };
+  enum HAlign
+  {
+    HLeft,
+    HCenter,
+    HRight
+  };
 
   /** Vertical alignment options. */
-  enum VAlign { VTop, VCenter, VBottom };
+  enum VAlign
+  {
+    VTop,
+    VCenter,
+    VBottom
+  };
 
   /** Flags for style options (bold, italic, ...) */
-  enum FontStyle {
+  enum FontStyle
+  {
     NoFontStyle = 0x0,
     Bold = 0x1,
     Italic = 0x2,
@@ -52,15 +68,17 @@ public:
   typedef int FontStyles;
 
   TextProperties();
-  TextProperties(const TextProperties &other);
+  TextProperties(const TextProperties& other);
   ~TextProperties();
 
-  TextProperties &operator=(TextProperties other);
-  void swap(TextProperties &other);
+  TextProperties& operator=(TextProperties other);
+  void swap(TextProperties& other);
 
-  bool operator==(const TextProperties &other) const;
-  bool operator!=(const TextProperties &other) const
-  { return !operator==(other); }
+  bool operator==(const TextProperties& other) const;
+  bool operator!=(const TextProperties& other) const
+  {
+    return !operator==(other);
+  }
 
   /**
    * The height of the text in pixels.
@@ -134,15 +152,15 @@ public:
    * Set the color of the text. Components are in the range [0, 255]
    * @{
    */
-  void setColorRgba(unsigned char r, unsigned char g,
-                    unsigned char b, unsigned char a);
+  void setColorRgba(unsigned char r, unsigned char g, unsigned char b,
+                    unsigned char a);
   void setColorRgba(const unsigned char rgba[4]);
-  void setColorRgba(const Vector4ub &rgba);
+  void setColorRgba(const Vector4ub& rgba);
   void colorRgba(unsigned char rgba[4]) const;
   Vector4ub colorRgba() const;
   void setColorRgb(unsigned char r, unsigned char g, unsigned char b);
   void setColorRgb(const unsigned char rgb[3]);
-  void setColorRgb(const Vector3ub &rgb);
+  void setColorRgb(const Vector3ub& rgb);
   void colorRgb(unsigned char rgb[3]) const;
   Vector3ub colorRgb() const;
   void setRed(unsigned char r) { m_rgba[0] = r; }
@@ -228,7 +246,7 @@ inline void TextProperties::setColorRgba(const unsigned char rgba[])
   m_rgba[3] = rgba[3];
 }
 
-inline void TextProperties::setColorRgba(const Vector4ub &rgba)
+inline void TextProperties::setColorRgba(const Vector4ub& rgba)
 {
   setColorRgba(rgba.data());
 }
@@ -261,7 +279,7 @@ inline void TextProperties::setColorRgb(const unsigned char rgb[])
   m_rgba[2] = rgb[2];
 }
 
-inline void TextProperties::setColorRgb(const Vector3ub &rgb)
+inline void TextProperties::setColorRgb(const Vector3ub& rgb)
 {
   setColorRgb(rgb.data());
 }
@@ -278,7 +296,10 @@ inline Vector3ub TextProperties::colorRgb() const
   return Vector3ub(m_rgba);
 }
 
-inline void swap(TextProperties &lhs, TextProperties &rhs) { lhs.swap(rhs); }
+inline void swap(TextProperties& lhs, TextProperties& rhs)
+{
+  lhs.swap(rhs);
+}
 
 } // namespace Rendering
 } // namespace Avogadro

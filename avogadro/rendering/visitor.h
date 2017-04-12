@@ -53,18 +53,17 @@ public:
   /**
    * The overloaded visit functions, the base versions of which do nothing.
    */
-  virtual void visit(Node &) { return; }
-  virtual void visit(GroupNode &) { return; }
-  virtual void visit(GeometryNode &) { return; }
-  virtual void visit(Drawable &) { return; }
-  virtual void visit(SphereGeometry &) { return; }
-  virtual void visit(AmbientOcclusionSphereGeometry &) { return; }
-  virtual void visit(CylinderGeometry &) { return; }
-  virtual void visit(MeshGeometry &) { return; }
-  virtual void visit(TextLabel2D &) { return; }
-  virtual void visit(TextLabel3D &) { return; }
-  virtual void visit(LineStripGeometry &) { return; }
-
+  virtual void visit(Node&) { return; }
+  virtual void visit(GroupNode&) { return; }
+  virtual void visit(GeometryNode&) { return; }
+  virtual void visit(Drawable&) { return; }
+  virtual void visit(SphereGeometry&) { return; }
+  virtual void visit(AmbientOcclusionSphereGeometry&) { return; }
+  virtual void visit(CylinderGeometry&) { return; }
+  virtual void visit(MeshGeometry&) { return; }
+  virtual void visit(TextLabel2D&) { return; }
+  virtual void visit(TextLabel3D&) { return; }
+  virtual void visit(LineStripGeometry&) { return; }
 };
 
 } // End namespace Rendering

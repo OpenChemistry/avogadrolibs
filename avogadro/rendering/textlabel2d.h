@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_RENDERING_TEXTLABEL2D_H
 #define AVOGADRO_RENDERING_TEXTLABEL2D_H
 
-#include "textlabelbase.h"
 #include "avogadrorenderingexport.h"
+#include "textlabelbase.h"
 
 namespace Avogadro {
 namespace Rendering {
@@ -34,14 +34,14 @@ public:
   TextLabel2D();
   ~TextLabel2D() override;
 
-  void accept(Visitor &) override;
+  void accept(Visitor&) override;
 
   /**
    * The anchor point in window coordinates, taking the origin at the upper-left
    * corner.
    * @{
    */
-  void setAnchor(const Vector2i &windowCoords);
+  void setAnchor(const Vector2i& windowCoords);
   Vector2i anchor() const;
   /** @} */
 };

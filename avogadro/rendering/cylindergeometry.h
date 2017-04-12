@@ -26,9 +26,8 @@ namespace Rendering {
 
 struct CylinderColor
 {
-  CylinderColor(const Vector3f &pos1, const Vector3f &pos2,
-                float r, const Vector3ub &c,
-                const Vector3ub &c2 = Vector3ub::Zero())
+  CylinderColor(const Vector3f& pos1, const Vector3f& pos2, float r,
+                const Vector3ub& c, const Vector3ub& c2 = Vector3ub::Zero())
     : end1(pos1), end2(pos2), radius(r), color(c), color2(c2)
   {
   }
@@ -41,7 +40,8 @@ struct CylinderColor
 };
 
 /**
- * @class CylinderGeometry cylindergeometry.h <avogadro/rendering/cylindergeometry.h>
+ * @class CylinderGeometry cylindergeometry.h
+ * <avogadro/rendering/cylindergeometry.h>
  * @brief The CylinderGeometry contains one or more cylinders.
  * @author Marcus D. Hanwell
  */
@@ -50,16 +50,16 @@ class AVOGADRORENDERING_EXPORT CylinderGeometry : public Drawable
 {
 public:
   CylinderGeometry();
-  CylinderGeometry(const CylinderGeometry &other);
+  CylinderGeometry(const CylinderGeometry& other);
   ~CylinderGeometry();
 
-  CylinderGeometry &operator=(CylinderGeometry);
-  friend void swap(CylinderGeometry &lhs, CylinderGeometry &rhs);
+  CylinderGeometry& operator=(CylinderGeometry);
+  friend void swap(CylinderGeometry& lhs, CylinderGeometry& rhs);
 
   /**
    * Accept a visit from our friendly visitor.
    */
-  void accept(Visitor &) override;
+  void accept(Visitor&) override;
 
   /**
    * @brief Update the VBOs, IBOs etc ready for rendering.
@@ -70,7 +70,7 @@ public:
    * @brief Render the cylinder geometry.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera &camera);
+  void render(const Camera& camera);
 
   /**
    * Return the primitives that are hit by the ray.
@@ -79,9 +79,9 @@ public:
    * @param rayDirection Normalized direction of the ray.
    * @return Sorted collection of primitives that were hit.
    */
-  std::multimap<float, Identifier> hits(const Vector3f &rayOrigin,
-                                        const Vector3f &rayEnd,
-                                        const Vector3f &rayDirection) const;
+  std::multimap<float, Identifier> hits(const Vector3f& rayOrigin,
+                                        const Vector3f& rayEnd,
+                                        const Vector3f& rayDirection) const;
 
   /**
    * @brief Add a cylinder to the geometry object.
@@ -91,8 +91,8 @@ public:
    * @param radius Radius of the cylinder.
    * @param color Color the cylinder will be rendered.
    */
-  void addCylinder(const Vector3f &pos1, const Vector3f &pos2,
-                   float radius, const Vector3ub &color);
+  void addCylinder(const Vector3f& pos1, const Vector3f& pos2, float radius,
+                   const Vector3ub& color);
 
   /**
    * @brief Add a cylinder to the geometry object.
@@ -103,8 +103,8 @@ public:
    * @param colorStart Color the start of the base of the cylinder.
    * @param colorEnd Color of the end of the cylinder.
    */
-  void addCylinder(const Vector3f &pos1, const Vector3f &pos2,
-                   float radius, const Vector3ub &color1, const Vector3ub &color2);
+  void addCylinder(const Vector3f& pos1, const Vector3f& pos2, float radius,
+                   const Vector3ub& color1, const Vector3ub& color2);
 
   /**
    * @brief Add a cylinder to the geometry object.
@@ -115,23 +115,22 @@ public:
    * @param color Color the cylinder will be rendered.
    * @param index The index of the cylinder being added.
    */
-  void addCylinder(const Vector3f &pos1, const Vector3f &pos2,
-                   float radius, const Vector3ub &color,
+  void addCylinder(const Vector3f& pos1, const Vector3f& pos2, float radius,
+                   const Vector3ub& color, size_t index);
+
+  /**
+   * @brief Add a cylinder to the geometry object.
+   * @param position Base of the cylinder.
+   * @param direction Direction vector for the cylinder.
+   * @param length Length of the cylinder.
+   * @param radius Radius of the cylinder.
+   * @param colorStart Color the start of the base of the cylinder.
+   * @param colorEnd Color of the end of the cylinder.
+   * @param index The index of the cylinder being added.
+   */
+  void addCylinder(const Vector3f& pos1, const Vector3f& pos2, float radius,
+                   const Vector3ub& color, const Vector3ub& color2,
                    size_t index);
-
-  /**
-   * @brief Add a cylinder to the geometry object.
-   * @param position Base of the cylinder.
-   * @param direction Direction vector for the cylinder.
-   * @param length Length of the cylinder.
-   * @param radius Radius of the cylinder.
-   * @param colorStart Color the start of the base of the cylinder.
-   * @param colorEnd Color of the end of the cylinder.
-   * @param index The index of the cylinder being added.
-   */
-  void addCylinder(const Vector3f &pos1, const Vector3f &pos2,
-                   float radius, const Vector3ub &color,
-                   const Vector3ub &color2, size_t index);
 
   /**
    * Get a reference to the cylinders.
@@ -157,17 +156,17 @@ private:
   bool m_dirty;
 
   class Private;
-  Private *d;
+  Private* d;
 };
 
-inline CylinderGeometry &CylinderGeometry::operator=(CylinderGeometry other)
+inline CylinderGeometry& CylinderGeometry::operator=(CylinderGeometry other)
 {
   using std::swap;
   swap(*this, other);
   return *this;
 }
 
-inline void swap(CylinderGeometry &lhs, CylinderGeometry &rhs)
+inline void swap(CylinderGeometry& lhs, CylinderGeometry& rhs)
 {
   using std::swap;
   swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));

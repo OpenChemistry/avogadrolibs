@@ -20,7 +20,7 @@
 namespace Avogadro {
 namespace Rendering {
 
-GroupNode::GroupNode(GroupNode *parent_)
+GroupNode::GroupNode(GroupNode* parent_)
 {
   if (parent_)
     parent_->addChild(this);
@@ -32,20 +32,20 @@ GroupNode::~GroupNode()
   clear();
 }
 
-void GroupNode::accept(Visitor &visitor)
+void GroupNode::accept(Visitor& visitor)
 {
   visitor.visit(*this);
-  for (std::vector<Node *>::iterator it = m_children.begin();
+  for (std::vector<Node*>::iterator it = m_children.begin();
        it != m_children.end(); ++it) {
     (*it)->accept(visitor);
   }
 }
 
-void GroupNode::addChild(Node *node)
+void GroupNode::addChild(Node* node)
 {
   if (!node || node == this)
     return;
-  for (std::vector<Node *>::const_iterator it = m_children.begin();
+  for (std::vector<Node*>::const_iterator it = m_children.begin();
        it != m_children.end(); ++it) {
     if (*it == node)
       return;
@@ -54,11 +54,11 @@ void GroupNode::addChild(Node *node)
   m_children.push_back(node);
 }
 
-bool GroupNode::removeChild(Node *node)
+bool GroupNode::removeChild(Node* node)
 {
   if (!node)
     return false;
-  for (std::vector<Node *>::iterator it = m_children.begin();
+  for (std::vector<Node*>::iterator it = m_children.begin();
        it != m_children.end(); ++it) {
     if (*it == node) {
       (*it)->setParent(nullptr);
@@ -69,7 +69,7 @@ bool GroupNode::removeChild(Node *node)
   return false;
 }
 
-Node * GroupNode::child(size_t index)
+Node* GroupNode::child(size_t index)
 {
   if (index >= m_children.size())
     return nullptr;
@@ -80,7 +80,7 @@ Node * GroupNode::child(size_t index)
 void GroupNode::clear()
 {
   // Like all good parents, we destroy our children before we go...
-  for (std::vector<Node *>::const_iterator it = m_children.begin();
+  for (std::vector<Node*>::const_iterator it = m_children.begin();
        it != m_children.end(); ++it) {
     delete (*it);
   }

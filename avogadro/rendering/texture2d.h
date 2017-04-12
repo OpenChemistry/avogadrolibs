@@ -37,7 +37,8 @@ public:
    * @brief The FilterOption enum defines options for interpolating
    * texels onto pixels.
    */
-  enum FilterOption {
+  enum FilterOption
+  {
     InvalidFilter = -1,
     /// Use the nearest texel for the pixel value.
     Nearest = 0,
@@ -50,7 +51,8 @@ public:
    * coordinates outside of the range [0, 1]. Note that these are specified
    * separately for each dimension of the texture.
    */
-  enum WrappingOption {
+  enum WrappingOption
+  {
     InvalidWrapping = -1,
     /// Use the texel at the nearest edge.
     ClampToEdge = 0,
@@ -66,7 +68,8 @@ public:
    * @brief The InternalFormat enum defines how the texture data will be stored
    * by the graphics library implementation.
    */
-  enum InternalFormat {
+  enum InternalFormat
+  {
     InvalidInternalFormat = -1,
     /// Each element is a single depth component.
     InternalDepth = 0,
@@ -86,7 +89,8 @@ public:
    * @brief The IncomingFormat enum defines the supported formats for incoming
    * texture data.
    */
-  enum IncomingFormat {
+  enum IncomingFormat
+  {
     InvalidIncomingFormat = -1,
     /// Each element is a single red component.
     IncomingR = 0,
@@ -155,7 +159,7 @@ public:
    *   as integral type ContainerT::size_type.
    */
   template <class ContainerT>
-  bool upload(const ContainerT &buffer, const Vector2i &dims,
+  bool upload(const ContainerT& buffer, const Vector2i& dims,
               IncomingFormat dataFormat, InternalFormat internalFormat);
 
   /** Bind the texture for rendering. */
@@ -166,7 +170,7 @@ public:
   std::string error() const { return m_error; }
 
 private:
-  bool uploadInternal(const void *buffer, const Vector2i &dims,
+  bool uploadInternal(const void* buffer, const Vector2i& dims,
                       IncomingFormat dataFormat, Avogadro::Type dataType,
                       InternalFormat internalFormat);
 
@@ -178,44 +182,44 @@ private:
   bool generateTextureHandle();
 
   class Private;
-  Private * const d;
+  Private* const d;
   bool m_dirty;
   mutable std::string m_error;
 };
 
-template <class ContainerT> inline
-bool Texture2D::upload(const ContainerT &buffer, const Vector2i &dims,
-                       IncomingFormat incomingFormat,
-                       InternalFormat internalFormat)
+template <class ContainerT>
+inline bool Texture2D::upload(const ContainerT& buffer, const Vector2i& dims,
+                              IncomingFormat incomingFormat,
+                              InternalFormat internalFormat)
 {
   if (buffer.size() == 0 || dims[0] == 0 || dims[1] == 0) {
     m_error = "Refusing to upload empty array.";
     return false;
   }
 
-  if (buffer.size()
-      < static_cast<typename ContainerT::size_type>(dims[0] * dims[1])) {
+  if (buffer.size() <
+      static_cast<typename ContainerT::size_type>(dims[0] * dims[1])) {
     m_error = "Buffer data is smaller than specified dimensions.";
     return false;
   }
 
   using Avogadro::Type; // Not to be confused with Avogadro::Rendering::Type...
   Type incomingType =
-      static_cast<Type>(TypeTraits<typename ContainerT::value_type>::EnumValue);
+    static_cast<Type>(TypeTraits<typename ContainerT::value_type>::EnumValue);
   switch (incomingType) {
-  case Avogadro::CharType:
-  case Avogadro::UCharType:
-  case Avogadro::ShortType:
-  case Avogadro::UShortType:
-  case Avogadro::IntType:
-  case Avogadro::UIntType:
-  case Avogadro::FloatType:
-    break;
-  default:
-    m_error = "Unsupported type for texture data: '";
-    m_error += TypeTraits<typename ContainerT::value_type>::name();
-    m_error += "'.";
-    return false;
+    case Avogadro::CharType:
+    case Avogadro::UCharType:
+    case Avogadro::ShortType:
+    case Avogadro::UShortType:
+    case Avogadro::IntType:
+    case Avogadro::UIntType:
+    case Avogadro::FloatType:
+      break;
+    default:
+      m_error = "Unsupported type for texture data: '";
+      m_error += TypeTraits<typename ContainerT::value_type>::name();
+      m_error += "'.";
+      return false;
   }
 
   return uploadInternal(&buffer[0], dims, incomingFormat, incomingType,

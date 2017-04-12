@@ -44,14 +44,14 @@ public:
   /**
    * Accept a visit from our friendly visitor.
    */
-  virtual void accept(Visitor &) { return; }
+  virtual void accept(Visitor&) { return; }
 
   /**
    * @brief Get a pointer to the node's parent.
    * @return Pointer to the parent node, nullptr if no parent.
    */
-  const GroupNode * parent() const { return m_parent; }
-  GroupNode * parent() { return m_parent; }
+  const GroupNode* parent() const { return m_parent; }
+  GroupNode* parent() { return m_parent; }
 
   /**
    * @brief Set the visibility of the node.
@@ -69,8 +69,10 @@ public:
    * @brief Attempt to dynamic_cast to specified node type.
    * @return Valid pointer to specified type, or null.
    */
-  template<typename T> T* cast();
-  template<typename T> const T* cast() const;
+  template <typename T>
+  T* cast();
+  template <typename T>
+  const T* cast() const;
 
 protected:
   friend class GroupNode;
@@ -79,18 +81,20 @@ protected:
    * @brief Set the parent node for the node.
    * @param parent The parent, a value of nullptr denotes no parent node.
    */
-  void setParent(GroupNode *parent);
+  void setParent(GroupNode* parent);
 
-  GroupNode * m_parent;
+  GroupNode* m_parent;
   bool m_visible;
 };
 
-template<typename T> T* Node::cast()
+template <typename T>
+T* Node::cast()
 {
   return dynamic_cast<T*>(this);
 }
 
-template<typename T> const T* Node::cast() const
+template <typename T>
+const T* Node::cast() const
 {
   return dynamic_cast<const T*>(this);
 }

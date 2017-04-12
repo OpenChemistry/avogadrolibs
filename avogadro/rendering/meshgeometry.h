@@ -33,14 +33,17 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT MeshGeometry : public Drawable
 {
 public:
-  struct PackedVertex {
-    Vector4ub color;           //  4 bytes
-    Vector3f normal;           // 12 bytes
-    Vector3f vertex;           // 12 bytes
-    unsigned char padding[4];  //  4 bytes
+  struct PackedVertex
+  {
+    Vector4ub color;          //  4 bytes
+    Vector3f normal;          // 12 bytes
+    Vector3f vertex;          // 12 bytes
+    unsigned char padding[4]; //  4 bytes
 
-    PackedVertex(const Vector4ub &c, const Vector3f &n, const Vector3f &v)
-      : color(c), normal(n), vertex(v) {}
+    PackedVertex(const Vector4ub& c, const Vector3f& n, const Vector3f& v)
+      : color(c), normal(n), vertex(v)
+    {
+    }
 
     static int colorOffset() { return 0; }
     static int normalOffset() { return static_cast<int>(sizeof(Vector4ub)); }
@@ -53,22 +56,22 @@ public:
   static const unsigned int InvalidIndex;
 
   MeshGeometry();
-  MeshGeometry(const MeshGeometry &other);
+  MeshGeometry(const MeshGeometry& other);
   ~MeshGeometry();
 
-  MeshGeometry & operator=(MeshGeometry);
-  friend void swap(MeshGeometry &lhs, MeshGeometry &rhs);
+  MeshGeometry& operator=(MeshGeometry);
+  friend void swap(MeshGeometry& lhs, MeshGeometry& rhs);
 
   /**
    * Accept a visit from our friendly visitor.
    */
-  void accept(Visitor &) override;
+  void accept(Visitor&) override;
 
   /**
    * @brief Render the mesh geometry.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera &camera);
+  void render(const Camera& camera);
 
   /**
    * Add vertices to the object. Note that this just adds vertices to the
@@ -83,14 +86,14 @@ public:
    * element arrays for the actual triangles.
    * @{
    */
-  unsigned int addVertices(const Core::Array<Vector3f> &vertices,
-                           const Core::Array<Vector3f> &normals,
-                           const Core::Array<Vector4ub> &colors);
-  unsigned int addVertices(const Core::Array<Vector3f> &vertices,
-                           const Core::Array<Vector3f> &normals,
-                           const Core::Array<Vector3ub> &colors);
-  unsigned int addVertices(const Core::Array<Vector3f> &vertices,
-                           const Core::Array<Vector3f> &normals);
+  unsigned int addVertices(const Core::Array<Vector3f>& vertices,
+                           const Core::Array<Vector3f>& normals,
+                           const Core::Array<Vector4ub>& colors);
+  unsigned int addVertices(const Core::Array<Vector3f>& vertices,
+                           const Core::Array<Vector3f>& normals,
+                           const Core::Array<Vector3ub>& colors);
+  unsigned int addVertices(const Core::Array<Vector3f>& vertices,
+                           const Core::Array<Vector3f>& normals);
   /** @} */
 
   /**
@@ -101,7 +104,7 @@ public:
    */
   void addTriangle(unsigned int index1, unsigned int index2,
                    unsigned int index3);
-  void addTriangles(const Core::Array<unsigned int> &indices);
+  void addTriangles(const Core::Array<unsigned int>& indices);
   /** @} */
 
   /**
@@ -129,7 +132,7 @@ public:
    * vertices when no explicit vertex color is specified.
    * @{
    */
-  void setColor(const Vector3ub &c) { m_color = c; }
+  void setColor(const Vector3ub& c) { m_color = c; }
   Vector3ub color() const { return m_color; }
   /** @} */
 
@@ -159,17 +162,17 @@ private:
   bool m_dirty;
 
   class Private;
-  Private *d;
+  Private* d;
 };
 
-inline MeshGeometry &MeshGeometry::operator=(MeshGeometry other)
+inline MeshGeometry& MeshGeometry::operator=(MeshGeometry other)
 {
   using std::swap;
   swap(*this, other);
   return *this;
 }
 
-inline void swap(MeshGeometry &lhs, MeshGeometry &rhs)
+inline void swap(MeshGeometry& lhs, MeshGeometry& rhs)
 {
   using std::swap;
   swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));

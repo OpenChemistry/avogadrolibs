@@ -19,12 +19,12 @@
 
 #include "avogadrorenderingexport.h"
 #include <avogadro/core/avogadrocore.h>
-#include <avogadro/core/vector.h>
 #include <avogadro/core/types.h>
+#include <avogadro/core/vector.h>
 
+#include <map>    // For member variables.
 #include <string> // For member variables.
 #include <vector> // For member variables.
-#include <map>    // For member variables.
 
 namespace Avogadro {
 namespace Rendering {
@@ -45,7 +45,8 @@ class AVOGADRORENDERING_EXPORT ShaderProgram
 {
 public:
   /** Options for attribute normalization. */
-  enum NormalizeOption {
+  enum NormalizeOption
+  {
     /// The values range across the limits of the numeric type.
     /// This option instructs the rendering engine to normalize them to
     /// the range [0.0, 1.0] for unsigned types, and [-1.0, 1.0] for signed
@@ -67,14 +68,14 @@ public:
    * attached to a shader prorgram.
    * @return true on success.
    */
-  bool attachShader(const Shader &shader);
+  bool attachShader(const Shader& shader);
 
   /** Detach the supplied shader from this program.
    * @note A maximum of one Vertex shader and one Fragment shader can be
    * attached to a shader prorgram.
    * @return true on success.
    */
-  bool detachShader(const Shader &shader);
+  bool detachShader(const Shader& shader);
 
   /** Attempt to link the shader program.
    * @return false on failure. Query error to get the reason.
@@ -96,12 +97,12 @@ public:
   /** Enable the named attribute array. Return false if the attribute array is
    * not contained in the linked shader program.
    */
-  bool enableAttributeArray(const std::string &name);
+  bool enableAttributeArray(const std::string& name);
 
   /** Disable the named attribute array. Return false if the attribute array is
    * not contained in the linked shader program.
    */
-  bool disableAttributeArray(const std::string &name);
+  bool disableAttributeArray(const std::string& name);
 
   /** Use the named attribute array with the bound BufferObject.
    * @param name of the attribute (as seen in the shader program).
@@ -117,7 +118,7 @@ public:
    * See NormalizeOption for more information.
    * @return false if the attribute array does not exist.
    */
-  bool useAttributeArray(const std::string &name, int offset, size_t stride,
+  bool useAttributeArray(const std::string& name, int offset, size_t stride,
                          Avogadro::Type elementType, int elementTupleSize,
                          NormalizeOption normalize);
 
@@ -139,31 +140,31 @@ public:
    * supported containers.
    */
   template <class ContainerT>
-  bool setAttributeArray(const std::string &name, const ContainerT &array,
+  bool setAttributeArray(const std::string& name, const ContainerT& array,
                          int tupleSize, NormalizeOption normalize);
 
   /** Set the sampler @a samplerName to use the specified texture. */
-  bool setTextureSampler(const std::string &samplerName,
-                         const Texture2D &texture);
+  bool setTextureSampler(const std::string& samplerName,
+                         const Texture2D& texture);
 
   /** Set the @p name uniform value to int @p i. */
-  bool setUniformValue(const std::string &name, int i);
+  bool setUniformValue(const std::string& name, int i);
 
   /** Set the @p name uniform value to float @p f. */
-  bool setUniformValue(const std::string &name, float f);
+  bool setUniformValue(const std::string& name, float f);
 
   /** Set the @p name uniform value to @p matrix. */
-  bool setUniformValue(const std::string &name, const Eigen::Matrix3f &matrix);
-  bool setUniformValue(const std::string &name, const Eigen::Matrix4f &matrix);
+  bool setUniformValue(const std::string& name, const Eigen::Matrix3f& matrix);
+  bool setUniformValue(const std::string& name, const Eigen::Matrix4f& matrix);
 
   /** Set the @p name uniform value to the supplied value. @{ */
-  bool setUniformValue(const std::string &name, const Vector3f &v);
-  bool setUniformValue(const std::string &name, const Vector2i &v);
-  bool setUniformValue(const std::string &name, const Vector3ub &v);
+  bool setUniformValue(const std::string& name, const Vector3f& v);
+  bool setUniformValue(const std::string& name, const Vector2i& v);
+  bool setUniformValue(const std::string& name, const Vector3ub& v);
   /** @} */
 
 protected:
-  bool setAttributeArrayInternal(const std::string &name, void *buffer,
+  bool setAttributeArrayInternal(const std::string& name, void* buffer,
                                  Avogadro::Type type, int tupleSize,
                                  NormalizeOption normalize);
   Index m_handle;
@@ -182,14 +183,15 @@ protected:
 private:
   void initializeTextureUnits();
   void releaseAllTextureUnits();
-  int findAttributeArray(const std::string &name);
-  int findUniform(const std::string &name);
+  int findAttributeArray(const std::string& name);
+  int findUniform(const std::string& name);
 };
 
 template <class ContainerT>
-inline bool ShaderProgram::setAttributeArray(
-    const std::string &name, const ContainerT &array, int tupleSize,
-    NormalizeOption normalize)
+inline bool ShaderProgram::setAttributeArray(const std::string& name,
+                                             const ContainerT& array,
+                                             int tupleSize,
+                                             NormalizeOption normalize)
 {
   if (array.empty()) {
     m_error = "Refusing to upload empty array for attribute " + name + ".";
