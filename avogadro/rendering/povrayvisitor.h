@@ -21,7 +21,6 @@
 
 #include "avogadrorendering.h"
 #include "camera.h"
-
 #include <string>
 
 namespace Avogadro {
@@ -42,7 +41,7 @@ public:
   ~POVRayVisitor() override;
 
   void begin();
-  void end();
+  std::string end();
 
   /**
    * The overloaded visit functions, the base versions of which do nothing.
@@ -71,7 +70,6 @@ private:
   Vector3ub m_backgroundColor;
   Vector3ub m_ambientColor;
   float m_aspectRatio;
-
   std::string m_sceneData;
 };
 

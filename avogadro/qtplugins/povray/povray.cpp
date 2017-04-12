@@ -27,6 +27,8 @@
 #include <QtGui/QIcon>
 #include <QtGui/QKeySequence>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
+#include <QtCore/QTextStream>
 
 #include <string>
 #include <vector>
@@ -37,7 +39,7 @@ namespace QtPlugins {
 POVRay::POVRay(QObject *p) :
   Avogadro::QtGui::ExtensionPlugin(p),
   m_molecule(nullptr), m_scene(nullptr), m_camera(nullptr),
-  m_action(new QAction(tr("Render with POV-Ray"), this))
+  m_action(new QAction(tr("POV-Ray Render"), this))
 {
   connect(m_action, SIGNAL(triggered()), SLOT(render()));
 }
@@ -49,12 +51,12 @@ POVRay::~POVRay()
 QList<QAction *> POVRay::actions() const
 {
   QList<QAction *> result;
-  return result;// << m_action;
+  return result << m_action;
 }
 
 QStringList POVRay::menuPath(QAction *) const
 {
-  return QStringList() << tr("&File");
+  return QStringList() << tr("&File") << tr("&Export");
 }
 
 void POVRay::setMolecule(QtGui::Molecule *mol)
@@ -77,10 +79,19 @@ void POVRay::render()
   if (!m_scene || !m_camera)
     return;
 
+  QString filename = QFileDialog::getSaveFileName(qobject_cast<QWidget*>(parent()), tr("Save File"),
+    QDir::homePath(), tr("POV-Ray (*.pov);;Text file (*.txt)"));
+  QFile file(filename);
+  if (!file.open(QIODevice::WriteOnly))
+    return;
+
+  QTextStream fileStream(&file);
   Rendering::POVRayVisitor visitor(*m_camera);
   visitor.begin();
   m_scene->rootNode().accept(visitor);
-  visitor.end();
+  fileStream << visitor.end().c_str();
+
+  file.close();
 }
 
 
