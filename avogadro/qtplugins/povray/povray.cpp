@@ -80,7 +80,7 @@ void POVRay::render()
     return;
 
   QString filename = QFileDialog::getSaveFileName(qobject_cast<QWidget*>(parent()), tr("Save File"),
-    QDir::homePath(), tr("Pov-Ray (*.pov);;Text file (*.txt)"));
+    QDir::homePath(), tr("POV-Ray (*.pov);;Text file (*.txt)"));
   QFile file(filename);
   if (!file.open(QIODevice::WriteOnly))
     return;
