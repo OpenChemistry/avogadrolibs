@@ -17,7 +17,4 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(LIBARCHIVE DEFAULT_MSG LIBARCHIVE_INCLUDE_DIR
                                   LIBARCHIVE_LIBRARY)
 
-message("LIBARCHIVE include dir = ${LIBARCHIVE_INCLUDE_DIR}")
-message("LIBARCHIVE lib = ${LIBARCHIVE_LIBRARY}")
-
 mark_as_advanced(LIBARCHIVE_INCLUDE_DIR LIBARCHIVE_LIBRARY)
