@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_PROTOCALL_MOLECULESERIALIZER_H
 #define AVOGADRO_PROTOCALL_MOLECULESERIALIZER_H
 
-#include "avogadroprotocallexport.h"
 #include "avogadro/core/molecule.h"
+#include "avogadroprotocallexport.h"
 
 #include <google/protobuf/io/coded_stream.h>
 #include <protocall/serialization/serializer.h>
@@ -39,7 +39,7 @@ public:
   /**
    * @param molecule The molecule being serialized
    */
-  MoleculeSerializer(const Avogadro::Core::Molecule *molecule);
+  MoleculeSerializer(const Avogadro::Core::Molecule* molecule);
 
   /**
    * Serialize the molecule to that buffer provided.
@@ -49,7 +49,7 @@ public:
    *
    * @return true if successful, false otherwise.
    */
-  bool serialize(void *data, size_t size);
+  bool serialize(void* data, size_t size);
 
   /**
    * @return The size of the serialized molecule when written to byte stream.
@@ -67,7 +67,7 @@ private:
    *
    * @return true if successful, false otherwise.
    */
-  bool serializeBondPairs(google::protobuf::io::CodedOutputStream *stream);
+  bool serializeBondPairs(google::protobuf::io::CodedOutputStream* stream);
 
   /**
    * @return The size of the bond orders will take in the byte stream.
@@ -79,30 +79,30 @@ private:
    *
    * @return true if successful, false otherwise.
    */
-  bool serializeBondOrders(google::protobuf::io::CodedOutputStream *stream);
+  bool serializeBondOrders(google::protobuf::io::CodedOutputStream* stream);
 
   /**
    * Serialize the atomic numbers to the stream.
    *
    * @return true if successful, false otherwise.
    */
-  bool serializeAtomicNumbers(google::protobuf::io::CodedOutputStream *stream);
+  bool serializeAtomicNumbers(google::protobuf::io::CodedOutputStream* stream);
 
   /**
    * Serialize the 2d positions to the stream.
    *
    * @return true if successful, false otherwise.
    */
-  bool serializePositons2d(google::protobuf::io::CodedOutputStream*stream);
+  bool serializePositons2d(google::protobuf::io::CodedOutputStream* stream);
 
   /**
    * Serialize the 3d positions to the stream.
    *
    * @return true if successful, false otherwise.
    */
-  bool serializePostions3d(google::protobuf::io::CodedOutputStream *stream);
+  bool serializePostions3d(google::protobuf::io::CodedOutputStream* stream);
 
-  const Avogadro::Core::Molecule *m_molecule;
+  const Avogadro::Core::Molecule* m_molecule;
 };
 
 } // namespace Core

@@ -33,29 +33,29 @@ using google::protobuf::io::CodedOutputStream;
 using google::protobuf::io::ArrayInputStream;
 using google::protobuf::io::ArrayOutputStream;
 
-size_t sizeOf(const Avogadro::Vector2 &vec2)
+size_t sizeOf(const Avogadro::Vector2& vec2)
 {
   AVO_UNUSED(vec2);
 
   return 2 * sizeof(uint64);
 }
 
-size_t sizeOf(const Avogadro::Vector3 &vec3)
+size_t sizeOf(const Avogadro::Vector3& vec3)
 {
   AVO_UNUSED(vec3);
 
   return 3 * sizeof(uint64);
 }
 
-size_t sizeOf(const Avogadro::MatrixX &matrix)
+size_t sizeOf(const Avogadro::MatrixX& matrix)
 {
   // TODO varint encode the size ? ...
-  return (2 * sizeof(uint32))
-      + (matrix.rows() * matrix.cols() * sizeof(uint64));
+  return (2 * sizeof(uint32)) +
+         (matrix.rows() * matrix.cols() * sizeof(uint64));
 }
 
-bool serializeInternal(const Avogadro::MatrixX &matrix,
-    google::protobuf::io::CodedOutputStream *stream)
+bool serializeInternal(const Avogadro::MatrixX& matrix,
+                       google::protobuf::io::CodedOutputStream* stream)
 {
   for (int row = 0; row < matrix.rows(); row++) {
     for (int col = 0; col < matrix.cols(); col++) {
@@ -70,8 +70,7 @@ bool serializeInternal(const Avogadro::MatrixX &matrix,
   return true;
 }
 
-bool serialize(const Avogadro::Vector2 &vec2,
-    void *data, size_t size)
+bool serialize(const Avogadro::Vector2& vec2, void* data, size_t size)
 {
   ArrayOutputStream aos(data, size);
   CodedOutputStream cos(&aos);
@@ -79,8 +78,7 @@ bool serialize(const Avogadro::Vector2 &vec2,
   return serialize(vec2, &cos);
 }
 
-bool serialize(const Avogadro::Vector3 &vec3,
-    void *data, size_t size)
+bool serialize(const Avogadro::Vector3& vec3, void* data, size_t size)
 {
   ArrayOutputStream aos(data, size);
   CodedOutputStream cos(&aos);
@@ -88,8 +86,7 @@ bool serialize(const Avogadro::Vector3 &vec3,
   return serialize(vec3, &cos);
 }
 
-bool serialize(const Avogadro::MatrixX &matrix,
-    void *data, size_t size)
+bool serialize(const Avogadro::MatrixX& matrix, void* data, size_t size)
 {
   ArrayOutputStream aos(data, size);
   CodedOutputStream cos(&aos);
@@ -97,20 +94,20 @@ bool serialize(const Avogadro::MatrixX &matrix,
   return serialize(matrix, &cos);
 }
 
-bool serialize(const Avogadro::Vector2 &vec2,
-    google::protobuf::io::CodedOutputStream *stream)
+bool serialize(const Avogadro::Vector2& vec2,
+               google::protobuf::io::CodedOutputStream* stream)
 {
   return serializeInternal(vec2, stream);
 }
 
-bool serialize(const Avogadro::Vector3 &vec3,
-    google::protobuf::io::CodedOutputStream *stream)
+bool serialize(const Avogadro::Vector3& vec3,
+               google::protobuf::io::CodedOutputStream* stream)
 {
   return serializeInternal(vec3, stream);
 }
 
-bool serialize(const Avogadro::MatrixX &matrix,
-    google::protobuf::io::CodedOutputStream *stream)
+bool serialize(const Avogadro::MatrixX& matrix,
+               google::protobuf::io::CodedOutputStream* stream)
 {
   stream->WriteLittleEndian32(matrix.rows());
   if (stream->HadError())
@@ -123,7 +120,7 @@ bool serialize(const Avogadro::MatrixX &matrix,
   return serializeInternal(matrix, stream);
 }
 
-bool deserialize(Avogadro::Vector2 &vec2, const void *data)
+bool deserialize(Avogadro::Vector2& vec2, const void* data)
 {
   size_t size = sizeOf(vec2);
   ArrayInputStream ais(data, size);
@@ -132,7 +129,7 @@ bool deserialize(Avogadro::Vector2 &vec2, const void *data)
   return deserialize(vec2, &cis);
 }
 
-bool deserialize(Avogadro::Vector3 &vec3, const void *data)
+bool deserialize(Avogadro::Vector3& vec3, const void* data)
 {
   size_t size = sizeOf(vec3);
   ArrayInputStream ais(data, size);
@@ -141,8 +138,7 @@ bool deserialize(Avogadro::Vector3 &vec3, const void *data)
   return deserialize(vec3, &cis);
 }
 
-bool deserialize(Avogadro::MatrixX &matrix,
-    const void *data, size_t size)
+bool deserialize(Avogadro::MatrixX& matrix, const void* data, size_t size)
 {
   ArrayInputStream ais(data, size);
   CodedInputStream cis(&ais);
@@ -150,8 +146,8 @@ bool deserialize(Avogadro::MatrixX &matrix,
   return deserialize(matrix, &cis);
 }
 
-bool deserialize(Avogadro::Vector2 &vec2,
-    google::protobuf::io::CodedInputStream *stream)
+bool deserialize(Avogadro::Vector2& vec2,
+                 google::protobuf::io::CodedInputStream* stream)
 {
   for (int row = 0; row < 2; row++) {
     uint64 tmp;
@@ -164,8 +160,8 @@ bool deserialize(Avogadro::Vector2 &vec2,
   return true;
 }
 
-bool deserialize(Avogadro::Vector3 &vec3,
-    google::protobuf::io::CodedInputStream *stream)
+bool deserialize(Avogadro::Vector3& vec3,
+                 google::protobuf::io::CodedInputStream* stream)
 {
   for (int row = 0; row < 3; row++) {
     uint64 tmp;
@@ -178,8 +174,8 @@ bool deserialize(Avogadro::Vector3 &vec3,
   return true;
 }
 
-bool deserialize(Avogadro::MatrixX &matrix,
-      google::protobuf::io::CodedInputStream *stream)
+bool deserialize(Avogadro::MatrixX& matrix,
+                 google::protobuf::io::CodedInputStream* stream)
 {
   uint32 rows;
   uint32 cols;
@@ -187,7 +183,6 @@ bool deserialize(Avogadro::MatrixX &matrix,
   if (!stream->ReadLittleEndian32(&rows)) {
     return false;
   }
-
 
   if (!stream->ReadLittleEndian32(&cols))
     return false;
@@ -210,4 +205,3 @@ bool deserialize(Avogadro::MatrixX &matrix,
 } // namespace MatrixSerialization
 } // namespace ProtoCall
 } // namespace Avogadro
-
