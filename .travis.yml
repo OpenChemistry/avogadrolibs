@@ -1,0 +1,19 @@
+sudo: false
+branches:
+  only: 
+    - master
+language: python
+python:
+    - "2.7"
+
+dist: precise
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.8
+    packages:
+    - clang-format-3.8
+script:
+  - cd $TRAVIS_BUILD_DIR
+  - ./scripts/travis/run_clang_format_diff.sh master $TRAVIS_COMMIT
