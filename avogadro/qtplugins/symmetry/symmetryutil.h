@@ -20,34 +20,39 @@
 #include <QtCore/QObject>
 
 namespace msym {
-  extern "C" {
-    #include <libmsym/msym.h>
-  }
+extern "C" {
+#include <libmsym/msym.h>
+}
 }
 
 #ifndef IDENTITY
-#define IDENTITY msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_IDENTITY
+#define IDENTITY                                                               \
+  msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_IDENTITY
 #endif
 #ifndef REFLECTION
-#define REFLECTION msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_REFLECTION
+#define REFLECTION                                                             \
+  msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_REFLECTION
 #endif
 #ifndef INVERSION
-#define INVERSION msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_INVERSION
+#define INVERSION                                                              \
+  msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_INVERSION
 #endif
 #ifndef PROPER_ROTATION
-#define PROPER_ROTATION msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_PROPER_ROTATION
+#define PROPER_ROTATION                                                        \
+  msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_PROPER_ROTATION
 #endif
 #ifndef IMPROPER_ROTATION
-#define IMPROPER_ROTATION msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_IMPROPER_ROTATION
+#define IMPROPER_ROTATION                                                      \
+  msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_IMPROPER_ROTATION
 #endif
 
 namespace Avogadro {
 namespace QtPlugins {
 
-  namespace SymmetryUtil {
-    QString pointGroupSymbol(char* point_group);
-    QString operationSymbol(const msym::msym_symmetry_operation_t *operation);
-  }
+namespace SymmetryUtil {
+QString pointGroupSymbol(char* point_group);
+QString operationSymbol(const msym::msym_symmetry_operation_t* operation);
+}
 }
 }
 #endif // AVOGADRO_QTPLUGINS_SYMMETRYUTIL_H

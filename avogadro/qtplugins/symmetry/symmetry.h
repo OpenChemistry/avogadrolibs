@@ -22,9 +22,9 @@
 #include "symmetrywidget.h"
 
 namespace msym {
-  extern "C" {
-    #include <libmsym/msym.h>
-  }
+extern "C" {
+#include <libmsym/msym.h>
+}
 }
 
 namespace Avogadro {
@@ -38,16 +38,16 @@ class Symmetry : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit Symmetry(QObject *parent_ = 0);
+  explicit Symmetry(QObject* parent_ = 0);
   ~Symmetry();
 
   QString name() const { return tr("Symmetry"); }
   QString description() const;
   QList<QAction*> actions() const;
-  QStringList menuPath(QAction *) const;
+  QStringList menuPath(QAction*) const;
 
 public slots:
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
   void moleculeChanged(unsigned int changes);
 
@@ -61,11 +61,11 @@ private slots:
   void symmetrizeMolecule();
 
 private:
-  QList<QAction *> m_actions;
-  QtGui::Molecule *m_molecule;
-  SymmetryWidget *m_symmetryWidget;
+  QList<QAction*> m_actions;
+  QtGui::Molecule* m_molecule;
+  SymmetryWidget* m_symmetryWidget;
 
-  QAction *m_viewSymmetryAction;
+  QAction* m_viewSymmetryAction;
 
   msym::msym_context ctx;
 };

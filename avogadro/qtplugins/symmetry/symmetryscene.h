@@ -32,14 +32,14 @@ class SymmetryScene : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit SymmetryScene(QObject *parent = 0);
+  explicit SymmetryScene(QObject* parent = 0);
   ~SymmetryScene() override;
 
-  void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) override;
+  void process(const Core::Molecule& molecule,
+               Rendering::GroupNode& node) override;
 
-  void processEditable(const QtGui::RWMolecule &molecule,
-               Rendering::GroupNode &node) override;
+  void processEditable(const QtGui::RWMolecule& molecule,
+                       Rendering::GroupNode& node) override;
 
   QString name() const { return tr("Symmetry Elements"); }
 

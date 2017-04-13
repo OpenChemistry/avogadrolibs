@@ -28,17 +28,15 @@
 #include <QStandardItemModel>
 #include <QStyledItemDelegate>
 
-
-
 #include "operationstablemodel.h"
 #include "symmetrywidget.h"
 
-//class QPlainTextEdit;
+// class QPlainTextEdit;
 
 namespace msym {
-  extern "C" {
-    #include <libmsym/msym.h>
-  }
+extern "C" {
+#include <libmsym/msym.h>
+}
 }
 
 namespace Avogadro {
@@ -62,11 +60,10 @@ class SymmetryWidget : public QWidget
   Q_OBJECT
 
 public:
-
-  explicit SymmetryWidget(QWidget *parent = 0);
+  explicit SymmetryWidget(QWidget* parent = 0);
   ~SymmetryWidget() override;
 
-  void setMolecule(QtGui::Molecule *molecule);
+  void setMolecule(QtGui::Molecule* molecule);
 
 signals:
   void detectSymmetry();
@@ -76,31 +73,32 @@ public slots:
   void moleculeChanged(unsigned int changes);
 
   void setPointGroupSymbol(QString pg);
-  void setSymmetryOperations(int sopsl, msym::msym_symmetry_operation_t *sops);
-  void setSubgroups(int sgl, msym::msym_subgroup_t *sg);
+  void setSymmetryOperations(int sopsl, msym::msym_symmetry_operation_t* sops);
+  void setSubgroups(int sgl, msym::msym_subgroup_t* sg);
   void setCenterOfMass(double cm[3]);
   void setRadius(double radius);
-  msym::msym_thresholds_t * getThresholds() const;
+  msym::msym_thresholds_t* getThresholds() const;
 
 private slots:
-  void operationsSelectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
-  void subgroupsSelectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
+  void operationsSelectionChanged(const QItemSelection& selected,
+                                  const QItemSelection& deselected);
+  void subgroupsSelectionChanged(const QItemSelection& selected,
+                                 const QItemSelection& deselected);
 
 private:
-  Ui::SymmetryWidget *m_ui;
-  OperationsTableModel *m_operationsTableModel;
-  QStandardItemModel *m_subgroupsTreeModel;
-  QtGui::Molecule *m_molecule;
+  Ui::SymmetryWidget* m_ui;
+  OperationsTableModel* m_operationsTableModel;
+  QStandardItemModel* m_subgroupsTreeModel;
+  QtGui::Molecule* m_molecule;
   QVector3D m_cm;
 
-  msym::msym_symmetry_operation_t *m_sops;
-  msym::msym_subgroup_t *m_sg;
+  msym::msym_symmetry_operation_t* m_sops;
+  msym::msym_subgroup_t* m_sg;
   int m_sopsl, m_sgl;
   double m_radius;
 
-  void addSubgroup(QStandardItem *, msym::msym_subgroup_t *);
+  void addSubgroup(QStandardItem*, msym::msym_subgroup_t*);
 };
-
 
 } // namespace QtPlugins
 } // namespace Avogadro

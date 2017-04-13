@@ -18,9 +18,9 @@
 #define AVOGADRO_QTPLUGINS_OPERATIONSTABLEMODEL_H
 
 namespace msym {
-  extern "C" {
-    #include <libmsym/msym.h>
-  }
+extern "C" {
+#include <libmsym/msym.h>
+}
 }
 
 #include <QAbstractTableModel>
@@ -32,35 +32,38 @@ namespace msym {
 namespace Avogadro {
 namespace QtPlugins {
 
-  class OperationsTableModel : public QAbstractTableModel
+class OperationsTableModel : public QAbstractTableModel
+{
+  Q_OBJECT
+
+public:
+  enum Column
   {
-    Q_OBJECT
-
-      public:
-
-    enum Column {
-      ColumnType = 0,
-      ColumnClass = 1,
-      ColumnVector = 2
-    };
-
-    explicit OperationsTableModel(QObject *parent = 0);
-    virtual ~OperationsTableModel();
-
-    int rowCount(const QModelIndex&) const {return m_operations_size;};
-    int columnCount(const QModelIndex&) const {return OPERATIONSTABLEMODEL_COLUMN_COUNT;};
-
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-
-    void setOperations(int operations_size, msym::msym_symmetry_operation_t *operations);
-    void clearOperations();
-
-  private:
-    msym::msym_symmetry_operation_t *m_operations;
-    int m_operations_size;
-
+    ColumnType = 0,
+    ColumnClass = 1,
+    ColumnVector = 2
   };
+
+  explicit OperationsTableModel(QObject* parent = 0);
+  virtual ~OperationsTableModel();
+
+  int rowCount(const QModelIndex&) const { return m_operations_size; };
+  int columnCount(const QModelIndex&) const
+  {
+    return OPERATIONSTABLEMODEL_COLUMN_COUNT;
+  };
+
+  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+  QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+
+  void setOperations(int operations_size,
+                     msym::msym_symmetry_operation_t* operations);
+  void clearOperations();
+
+private:
+  msym::msym_symmetry_operation_t* m_operations;
+  int m_operations_size;
+};
 }
 }
 #endif // AVOGADRO_QTPLUGINS_OPERATIONSTABLEMODEL_H
