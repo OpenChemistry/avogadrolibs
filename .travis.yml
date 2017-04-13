@@ -1,6 +1,6 @@
 sudo: false
 branches:
-  only: 
+  only:
     - master
 language: python
 python:
