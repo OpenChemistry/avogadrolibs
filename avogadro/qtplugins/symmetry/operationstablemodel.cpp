@@ -22,28 +22,32 @@ using namespace Avogadro::QtPlugins::SymmetryUtil;
 namespace Avogadro {
 namespace QtPlugins {
 
-  OperationsTableModel::OperationsTableModel(QObject *parent)
-    : QAbstractTableModel(parent)
-  {
-    m_operations = NULL;
-    m_operations_size = 0;
-  }
+OperationsTableModel::OperationsTableModel(QObject* parent)
+  : QAbstractTableModel(parent)
+{
+  m_operations = NULL;
+  m_operations_size = 0;
+}
 
-  OperationsTableModel::~OperationsTableModel()
-  {
-  }
+OperationsTableModel::~OperationsTableModel()
+{
+}
 
-  void OperationsTableModel::setOperations(int operations_size, msym::msym_symmetry_operation_t *operations){
-    beginResetModel();
-    m_operations_size = operations_size;
-    m_operations = operations;
-    endResetModel();
-  }
+void OperationsTableModel::setOperations(
+  int operations_size, msym::msym_symmetry_operation_t* operations)
+{
+  beginResetModel();
+  m_operations_size = operations_size;
+  m_operations = operations;
+  endResetModel();
+}
 
 /* Qt */
 
-  QVariant OperationsTableModel::headerData(int section, Qt::Orientation orientation, int role) const
-  {
+QVariant OperationsTableModel::headerData(int section,
+                                          Qt::Orientation orientation,
+                                          int role) const
+{
 
   if (role != Qt::DisplayRole)
     return QVariant();
@@ -52,37 +56,37 @@ namespace QtPlugins {
 
   if (orientation == Qt::Horizontal) {
     switch (Column(section)) {
-    case ColumnType :
-      return tr("Type");
-    case ColumnClass :
-      return tr("Class");
-    case ColumnVector :
-      return tr("Element");
-    default:
-      return QVariant();
+      case ColumnType:
+        return tr("Type");
+      case ColumnClass:
+        return tr("Class");
+      case ColumnVector:
+        return tr("Element");
+      default:
+        return QVariant();
     }
   } else {
     return QString::number(section + 1);
   }
 }
 
-  QVariant OperationsTableModel::data(const QModelIndex & index, int role) const
-  {
-    if (role != Qt::DisplayRole || !index.isValid())
-      return QVariant();
+QVariant OperationsTableModel::data(const QModelIndex& index, int role) const
+{
+  if (role != Qt::DisplayRole || !index.isValid())
+    return QVariant();
 
-    const msym::msym_symmetry_operation_t *operation = &m_operations[index.row()];
+  const msym::msym_symmetry_operation_t* operation = &m_operations[index.row()];
 
-    switch (Column(index.column())) {
-    case ColumnType :
+  switch (Column(index.column())) {
+    case ColumnType:
       return operationSymbol(operation);
-    case ColumnClass :
+    case ColumnClass:
       return operation->cla;
-    case ColumnVector :
+    case ColumnVector:
       return QString("NA");
-    default :
+    default:
       return QVariant();
-    }
   }
+}
 }
 }

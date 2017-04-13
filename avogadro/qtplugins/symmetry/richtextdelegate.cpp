@@ -19,34 +19,35 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-  QSize RichTextDelegate::sizeHint(const QStyleOptionViewItem &o, const QModelIndex &index) const
-  {
-    QStyleOptionViewItemV4 ov4 = o;
-    initStyleOption(&ov4, index);
-    QTextDocument doc;
-    doc.setHtml(ov4.text);
-    doc.setTextWidth(ov4.rect.width());
-    return QSize(doc.idealWidth(), doc.size().height());
-  }
+QSize RichTextDelegate::sizeHint(const QStyleOptionViewItem& o,
+                                 const QModelIndex& index) const
+{
+  QStyleOptionViewItemV4 ov4 = o;
+  initStyleOption(&ov4, index);
+  QTextDocument doc;
+  doc.setHtml(ov4.text);
+  doc.setTextWidth(ov4.rect.width());
+  return QSize(doc.idealWidth(), doc.size().height());
+}
 
-  void RichTextDelegate::paint(QPainter *p, const QStyleOptionViewItem &o, const QModelIndex &index) const {
-    QStyleOptionViewItemV4 ov4 = o;
-    initStyleOption(&ov4, index);
+void RichTextDelegate::paint(QPainter* p, const QStyleOptionViewItem& o,
+                             const QModelIndex& index) const
+{
+  QStyleOptionViewItemV4 ov4 = o;
+  initStyleOption(&ov4, index);
 
-    p->save();
+  p->save();
 
-    QTextDocument doc;
-    doc.setHtml(ov4.text);
+  QTextDocument doc;
+  doc.setHtml(ov4.text);
 
-    ov4.text = "";
-    ov4.widget->style()->drawControl(QStyle::CE_ItemViewItem, &ov4, p);
+  ov4.text = "";
+  ov4.widget->style()->drawControl(QStyle::CE_ItemViewItem, &ov4, p);
 
-    p->translate(ov4.rect.left(), ov4.rect.top());
-    QRect clip(0, 0, ov4.rect.width(), ov4.rect.height());
-    doc.drawContents(p, clip);
-    p->restore();
-
-  }
-
+  p->translate(ov4.rect.left(), ov4.rect.top());
+  QRect clip(0, 0, ov4.rect.width(), ov4.rect.height());
+  doc.drawContents(p, clip);
+  p->restore();
+}
 }
 }
