@@ -34,43 +34,43 @@ namespace Avogadro {
 namespace QtPlugins {
 
   msym_thresholds_t tight_thresholds = { // all defaults
-      .zero = 1.0e-3,
-      .geometry = 1.0e-3,
-      .angle = 1.0e-3,
-      .equivalence = 5.0e-4,
-      .permutation = 5.0e-3,
-      .eigfact = 1.0e-3,
-      .orthogonalization = 0.1
+      /*.zero =*/ 1.0e-3,
+      /*.geometry =*/ 1.0e-3,
+      /*.angle =*/ 1.0e-3,
+      /*.equivalence =*/ 5.0e-4,
+      /*.eigfact =*/ 1.0e-3,
+      /*.permutation =*/ 5.0e-3,
+      /*.orthogonalization =*/ 0.1
   };
 
   msym_thresholds_t medium_thresholds = {
-      .zero = 1.0e-2,
-      .geometry = 1.0e-2,
-      .angle = 1.0e-2,
-      .equivalence = 6.3e-3,
-      .permutation = 1.58e-2,
-      .eigfact = 1.0e-3,
-      .orthogonalization = 0.1
+      /*.zero =*/ 1.0e-2,
+      /*.geometry =*/ 1.0e-2,
+      /*.angle =*/ 1.0e-2,
+      /*.equivalence =*/ 6.3e-3,
+      /*.eigfact =*/ 1.0e-3,
+      /*.permutation =*/ 1.58e-2,
+      /*.orthogonalization =*/ 0.1
   };
 
   msym_thresholds_t loose_thresholds = {
-      .zero = 0.06,
-      .geometry = 0.06,
-      .angle = 0.06,
-      .equivalence = 0.025,
-      .permutation = 1.0e-1,
-      .eigfact = 1.0e-3,
-      .orthogonalization = 0.1
+      /*.zero =*/ 0.06,
+      /*.geometry =*/ 0.06,
+      /*.angle =*/ 0.06,
+      /*.equivalence =*/ 0.025,
+      /*.eigfact =*/ 1.0e-3,
+      /*.permutation =*/ 1.0e-1,
+      /*.orthogonalization =*/ 0.1
   };
 
   msym_thresholds_t sloppy_thresholds = {
-      .zero = 0.08,
-      .geometry = 0.1,
-      .angle = 0.1,
-      .equivalence = 0.06,
-      .permutation = 1.0e-1,
-      .eigfact = 1.0e-3,
-      .orthogonalization = 0.1
+      /*.zero =*/ 0.08,
+      /*.geometry =*/ 0.1,
+      /*.angle =*/ 0.1,
+      /*.equivalence =*/ 0.06,
+      /*.eigfact =*/ 1.0e-3,
+      /*.permutation =*/ 1.0e-1,
+      /*.orthogonalization =*/ 0.1
   };
 
 SymmetryWidget::SymmetryWidget(QWidget *parent_) :
@@ -204,20 +204,20 @@ void SymmetryWidget::subgroupsSelectionChanged(const QItemSelection & selected, 
 
   QItemSelection selection;
 
-  for(int i = 0;i < sg->order;i++){
-    int row = static_cast<int>(sg->sops[i] - m_sops);
+  for(int j = 0;j < sg->order;j++){
+    int row = static_cast<int>(sg->sops[j] - m_sops);
     QModelIndex left = m_operationsTableModel->index(row,0);
     QModelIndex right = m_operationsTableModel->index(row,m_operationsTableModel->columnCount(left)-1);
     if(!left.isValid() || !right.isValid())
-      qDebug() << "invalid index " << i;
+      qDebug() << "invalid index " << j;
     QItemSelection sel(left, right);
 
     selection.merge(sel, QItemSelectionModel::Select);
   }
 
   QModelIndexList	tmp = selection.indexes();
-  foreach(QModelIndex i, tmp){
-    qDebug() << "selecting " << i.row() << " " << i.column();
+  foreach(QModelIndex j, tmp){
+    qDebug() << "selecting " << j.row() << " " << j.column();
 
   }
 
