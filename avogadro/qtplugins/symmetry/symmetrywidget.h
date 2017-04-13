@@ -64,7 +64,7 @@ class SymmetryWidget : public QWidget
 public:
 
   explicit SymmetryWidget(QWidget *parent = 0);
-  ~SymmetryWidget() AVO_OVERRIDE;
+  ~SymmetryWidget() override;
 
   void setMolecule(QtGui::Molecule *molecule);
 

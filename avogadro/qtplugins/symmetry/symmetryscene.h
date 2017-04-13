@@ -33,13 +33,13 @@ class SymmetryScene : public QtGui::ScenePlugin
 
 public:
   explicit SymmetryScene(QObject *parent = 0);
-  ~SymmetryScene() AVO_OVERRIDE;
+  ~SymmetryScene() override;
 
   void process(const Core::Molecule &molecule,
-               Rendering::GroupNode &node) AVO_OVERRIDE;
+               Rendering::GroupNode &node) override;
 
   void processEditable(const QtGui::RWMolecule &molecule,
-               Rendering::GroupNode &node) AVO_OVERRIDE;
+               Rendering::GroupNode &node) override;
 
   QString name() const { return tr("Symmetry Elements"); }
 
