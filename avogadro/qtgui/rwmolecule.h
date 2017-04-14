@@ -84,6 +84,7 @@ public:
   ~RWMolecule() override;
 
   Molecule& molecule() { return m_molecule; }
+  const Molecule& molecule() const { return m_molecule; }
 
   /**
    * Add a new atom to the molecule.
