@@ -43,8 +43,7 @@ namespace QtPlugins {
 
 Symmetry::Symmetry(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(NULL),
-    m_symmetryWidget(nullptr),
-    m_viewSymmetryAction(new QAction(this))
+    m_symmetryWidget(nullptr), m_viewSymmetryAction(new QAction(this))
 {
 
   m_ctx = msymCreateContext();
@@ -260,7 +259,8 @@ void Symmetry::detectSymmetry()
     return;
   }
 
-  if (MSYM_SUCCESS != (ret = msymGetSymmetryOperations(m_ctx, &msopsl, &msops))) {
+  if (MSYM_SUCCESS !=
+      (ret = msymGetSymmetryOperations(m_ctx, &msopsl, &msops))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
     m_symmetryWidget->setSymmetryOperations(0, NULL);
