@@ -23,7 +23,7 @@
 #include <avogadro/rendering/glrenderer.h>
 
 #include <QtCore/QPointer>
-#include <QtOpenGL/QGLWidget>
+#include <QtWidgets/QOpenGLWidget>
 
 class QTimer;
 
@@ -52,7 +52,7 @@ namespace QtOpenGL {
  * tool also ignores the event, it will be passed to QGLWidget's handlers.
  */
 
-class AVOGADROQTOPENGL_EXPORT GLWidget : public QGLWidget
+class AVOGADROQTOPENGL_EXPORT GLWidget : public QOpenGLWidget
 {
   Q_OBJECT
 
