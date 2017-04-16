@@ -79,6 +79,7 @@ SymmetryWidget::SymmetryWidget(QWidget* parent_)
     m_subgroupsTreeModel(new QStandardItemModel(this)), m_sops(NULL),
     m_sg(NULL), m_sopsl(0), m_sgl(0), m_radius(0.0)
 {
+  setWindowFlags(Qt::Dialog);
   m_ui->setupUi(this);
   m_ui->operationsTable->setModel(m_operationsTableModel);
   m_ui->operationsTable->setItemDelegateForColumn(
