@@ -38,7 +38,7 @@ namespace QtOpenGL {
 
 /**
  * @class GLWidget glwidget.h <avogadro/qtopengl/glwidget.h>
- * @brief QGLWidget derived object for displaying 3D molecular geometry.
+ * @brief QOpenGLGLWidget derived object for displaying 3D molecular geometry.
  * @author Marcus D. Hanwell
  *
  * This class creates the GL context, and contains a renderer to render the
@@ -49,7 +49,7 @@ namespace QtOpenGL {
  * widget. Use setActiveTool() to indicate which tool is active. The active tool
  * will be given the opportunity to handle input events first. If the active
  * tool does not handle the event, the default tool will be used. If the default
- * tool also ignores the event, it will be passed to QGLWidget's handlers.
+ * tool also ignores the event, it will be passed to QOpenGLWidget's handlers.
  */
 
 class AVOGADROQTOPENGL_EXPORT GLWidget : public QOpenGLWidget
@@ -186,7 +186,7 @@ protected:
   /** Main entry point for all GL rendering. */
   void paintGL();
 
-  /** Reimplemented from QGLWidget @{ */
+  /** Reimplemented from QOpenGLWidget @{ */
   void mouseDoubleClickEvent(QMouseEvent*);
   void mousePressEvent(QMouseEvent*);
   void mouseMoveEvent(QMouseEvent*);

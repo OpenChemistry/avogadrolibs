@@ -21,8 +21,7 @@
 
 #include <QtCore/QProcess>
 #include <QtGui/QIcon>
-#include <QtOpenGL/QGLFramebufferObject>
-#include <QtOpenGL/QGLWidget>
+#include <QtGui/QOpenGLFramebufferObject>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFileDialog>
@@ -30,6 +29,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QOpenGLWidget>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QVBoxLayout>
@@ -131,7 +131,7 @@ QUndoCommand* PlayerTool::mouseDoubleClickEvent(QMouseEvent*)
 
 void PlayerTool::setActiveWidget(QWidget* widget)
 {
-  m_glWidget = qobject_cast<QGLWidget*>(widget);
+  m_glWidget = qobject_cast<QOpenGLWidget*>(widget);
 }
 
 void PlayerTool::back()
@@ -222,8 +222,8 @@ void PlayerTool::recordMovie()
     QImage exportImage;
     m_glWidget->raise();
     m_glWidget->repaint();
-    if (QGLFramebufferObject::hasOpenGLFramebufferObjects()) {
-      exportImage = m_glWidget->grabFrameBuffer(true);
+    if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
+      exportImage = m_glWidget->grabFramebuffer();
     } else {
       QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
       exportImage = pixmap.toImage();
