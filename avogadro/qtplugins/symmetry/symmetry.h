@@ -67,7 +67,9 @@ private:
 
   QAction* m_viewSymmetryAction;
 
-  msym::msym_context ctx;
+  msym::msym_context m_ctx;
+
+  bool m_dirty = true;
 };
 
 inline QString Symmetry::description() const
