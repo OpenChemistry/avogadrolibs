@@ -48,6 +48,13 @@ ostream& operator<<(ostream& os, const Vector3ub& color)
      << color[2] / 255.0f;
   return os;
 }
+
+ostream& operator<<(ostream& os, const Vector4ub& color)
+{
+  os << color[0] / 255.0f << " " << color[1] / 255.0f << " "
+     << color[2] / 255.0f << color[3] / 255.0f;
+  return os;
+}
 }
 
 VRMLVisitor::VRMLVisitor(const Camera& c)
@@ -185,6 +192,38 @@ void VRMLVisitor::visit(CylinderGeometry& geometry)
 
 void VRMLVisitor::visit(MeshGeometry& geometry)
 {
+  Core::Array<Rendering::MeshGeometry::PackedVertex> v = geometry.vertices();
+
+  // If there are no triangles then don't bother doing anything
+  if (v.size() == 0)
+    return;
+
+  ostringstream str, verts, iverts, colors;
+
+  // save the points, coordinates, and colors to separate strings
+  for (unsigned int i = 0; i < v.size(); ++i) {
+    if (i == v.size() - 1) {
+      verts << v[i].vertex;
+      colors << v[i].color;
+      break;
+    }
+    verts << v[i].vertex << ",\n";
+    colors << v[i].color << ", ";
+  }
+  // Now to write out the indices
+  for (unsigned int i = 0; i < v.size(); i += 3) {
+    iverts << i << ", " << i + 1 << ", " << i + 2 << ", -1,\n";
+  }
+
+  // Now to write out the full mesh - could be pretty big...
+  str << "Shape {\n"
+      << "\tgeometry IndexedFaceSet {\n"
+      << "\t\tcoord Coordinate {\n"
+      << "\t\t\tpoint [" << verts.str() << "\t\t\t]\n\t\t}\n"
+      << "\t\tcoordIndex[" << iverts.str() << "\t\t\t]\n"
+      << "color Color {\n color [" << colors.str() << "]\n}\n}\n}";
+
+  m_sceneData += str.str();
 }
 
 void VRMLVisitor::visit(LineStripGeometry& geometry)
