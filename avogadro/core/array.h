@@ -187,7 +187,7 @@ public:
     d->data.reserve(sz);
   }
 
-  void resize(const size_t& sz, ValueType t = ValueType())
+  void resize(const size_t& sz, const ValueType& t = ValueType())
   {
     detachWithCopy();
     d->data.resize(sz, t);
