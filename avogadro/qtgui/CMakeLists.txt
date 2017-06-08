@@ -13,6 +13,10 @@ else()
   add_definitions(-DAvogadroLibs_LIB_DIR=\"${INSTALL_LIBRARY_DIR}\")
 endif()
 
+if(USE_LIBSPG)
+  add_definitions(-DUSE_LIBSPG)
+endif()
+
 # Find python2 for input generator scripts:
 find_package(PythonInterp 2)
 if(PYTHON_EXECUTABLE)
