@@ -9,7 +9,8 @@ namespace py = pybind11;
 using namespace Avogadro;
 using namespace Avogadro::Core;
 
-void exportCore(py::module& m) {
+void exportCore(py::module& m)
+{
   using atomBase = AtomTemplate<Molecule>;
   py::class_<atomBase>(m, "atomBase");
   py::class_<Atom, atomBase>(m, "Atom")
@@ -29,8 +30,8 @@ void exportCore(py::module& m) {
     .def("atom2", &Bond::atom2, "The second atom");
 
   bool (Cube::*setLimits0)(const Molecule&, double, double) = &Cube::setLimits;
-  py::class_<Cube>(m, "Cube").def("setLimits", setLimits0,
-                               "Set the limits based on the molecule geometry");
+  py::class_<Cube>(m, "Cube").def(
+    "setLimits", setLimits0, "Set the limits based on the molecule geometry");
 
   Index (Molecule::*atomCount0)() const = &Molecule::atomCount;
   Index (Molecule::*atomCount1)(unsigned char) const = &Molecule::atomCount;
@@ -44,13 +45,13 @@ void exportCore(py::module& m) {
     .def("atomCount", atomCount0, "The number of atoms")
     .def("atomCount", atomCount1,
          "The number of atoms with the supplied atomic number")
-    .def("addBond", addBond1, "Add a new bond",
-         py::arg("a1"), py::arg("a2"), py::arg("order") = 1)
-    .def("addBond", addBond2, "Add a new bond",
-         py::arg("a1"), py::arg("a2"), py::arg("order") = 1)
+    .def("addBond", addBond1, "Add a new bond", py::arg("a1"), py::arg("a2"),
+         py::arg("order") = 1)
+    .def("addBond", addBond2, "Add a new bond", py::arg("a1"), py::arg("a2"),
+         py::arg("order") = 1)
     .def("bondCount", &Molecule::bondCount, "The number of bonds")
-    .def("addCube", &Molecule::addCube,
-         py::return_value_policy::reference, "Add a new cube")
+    .def("addCube", &Molecule::addCube, py::return_value_policy::reference,
+         "Add a new cube")
     .def("cubeCount", &Molecule::cubeCount, "The number of cubes")
     .def("hasCustomElements", &Molecule::hasCustomElements,
          "Returns true if the molecule contains any custom elements")

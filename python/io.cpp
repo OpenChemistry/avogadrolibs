@@ -23,8 +23,7 @@ namespace {
 class ffm
 {
 public:
-  ffm() : m_ffm(FileFormatManager::instance())
-  { }
+  ffm() : m_ffm(FileFormatManager::instance()) {}
 
   bool readFile(Core::Molecule& molecule, const std::string& fileName,
                 const std::string& fileExtension = std::string()) const
