@@ -120,6 +120,7 @@ if(USE_SPGLIB)
   add_subdirectory(spacegroup)
 endif()
 add_subdirectory(spectra)
+add_subdirectory(vrml)
 add_subdirectory(workflows)
 
 if(USE_MOLEQUEUE)

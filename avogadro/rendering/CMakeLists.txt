@@ -40,6 +40,7 @@ set(HEADERS
   transformnode.h
   visitor.h
   volumegeometry.h
+  vrmlvisitor.h
 )
 
 set(SOURCES
@@ -69,6 +70,7 @@ set(SOURCES
   transformnode.cpp
   visitor.cpp
   volumegeometry.cpp
+  vrmlvisitor.cpp
   ambientocclusionspheregeometry.cpp
 )
 
