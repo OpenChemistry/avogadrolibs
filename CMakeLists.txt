@@ -68,8 +68,8 @@ if(BUILD_DOCUMENTATION)
   add_subdirectory(docs)
 endif()
 
-if(USE_BOOST_PYTHON)
-  add_subdirectory(boostpython)
+if(USE_PYTHON)
+  add_subdirectory(python)
 endif()
 
 install(
