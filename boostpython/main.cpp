@@ -1,19 +1,21 @@
-#include <Python.h>
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 
-using namespace boost::python;
+namespace py = pybind11;
 
-void exportCore();
-void exportIo();
+void exportCore(py::module &m);
+void exportIo(py::module &m);
 
 const char* hello()
 {
   return "Ey up...";
 }
 
-BOOST_PYTHON_MODULE(avogadro2)
-{
-  exportCore();
-  exportIo();
-  def("hello", hello);
+
+PYBIND11_PLUGIN(avogadro2) {
+  py::module m("avogadro2", "Avogadro Python binding");
+
+  exportCore(m);
+  exportIo(m);
+
+  return m.ptr();
 }

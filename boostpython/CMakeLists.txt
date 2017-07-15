@@ -1,14 +1,8 @@
 find_package(PythonInterp 3 REQUIRED)
 find_package(PythonLibs 3 REQUIRED)
-
-# The Linux distros have not made this easy, there seem to be a number of
-# decorations used to select Python 3.x. We would prefer the latest Python 3
-# available, default to python3, but offer the option to supply your distros
-# special suffix if they use one, i.e. Ubuntu uses -py34 for Python 3.4...
-if (NOT DEFINED boost_python_suffix)
-  set(boost_python_suffix "3")
-endif()
-find_package(Boost COMPONENTS python${boost_python_suffix})
+set(PYBIND11_PYTHON_VERSION "3" CACHE STRING "")
+set(PYBIND11_CPP_STANDARD "-std=c++11" CACHE STRING "")
+find_package(pybind11 REQUIRED)
 
 find_package(Eigen3 REQUIRED)
 
@@ -17,7 +11,6 @@ include_directories(SYSTEM
   ${AvogadroLibs_BINARY_DIR}/avogadro/core
   ${AvogadroLibs_BINARY_DIR}/avogadro/io
   ${AvogadroLibs_BINARY_DIR}/avogadro/quantumio
-  ${Boost_INCLUDE_DIRS}
   ${PYTHON_INCLUDE_PATH}
   ${EIGEN3_INCLUDE_DIR}
   )
@@ -28,14 +21,15 @@ set(wrapper_SRCS
   io.cpp
   )
 
-add_library(avogadro-python MODULE ${wrapper_SRCS})
-set_target_properties(avogadro-python
+add_library(avogadropython MODULE ${wrapper_SRCS})
+set_target_properties(avogadropython
   PROPERTIES
     OUTPUT_NAME avogadro2
     PREFIX "")
-target_link_libraries(avogadro-python
-  AvogadroIO
-  AvogadroQuantumIO
-  ${PYTHON_LIBRARIES}
-  ${Boost_LIBRARIES}
+target_link_libraries(avogadropython
+  PRIVATE
+    AvogadroIO
+    AvogadroQuantumIO
+    pybind11::module
+    ${PYTHON_LIBRARIES}
   )
