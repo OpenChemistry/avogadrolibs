@@ -65,4 +65,4 @@ public:
 } // end Io namespace
 } // end Avogadro namespace
 
-#endif // AVOGADRO_IO_XMLFORMAT_H
+#endif // AVOGADRO_IO_MDLFORMAT_H
