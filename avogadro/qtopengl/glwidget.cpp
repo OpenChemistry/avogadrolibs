@@ -45,8 +45,6 @@ GLWidget::GLWidget(QWidget* p)
           SLOT(updateScene()));
   connect(&m_scenePlugins, SIGNAL(pluginConfigChanged()), SLOT(updateScene()));
   m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
-  // set the resolution of the screen for the camera
-  m_renderer.camera().setDevicePixelRatio(qApp->devicePixelRatio());
 }
 
 GLWidget::~GLWidget()
