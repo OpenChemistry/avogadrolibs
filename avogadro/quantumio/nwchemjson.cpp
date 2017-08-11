@@ -166,6 +166,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     // Now create the structure, and expand out the orbitals.
     GaussianSet* basis = new GaussianSet;
     basis->setMolecule(&molecule);
+    string basisSetName;
     for (size_t i = 0; i < atomSymbol.size(); ++i) {
       string symbol = atomSymbol[i];
       Value basisFunctions = basisSet["basisFunctions"];
@@ -187,6 +188,14 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
 
       if (currentFunction.isNull())
         break;
+
+      if (currentFunction.isMember("basisSetName")) {
+        if (basisSetName.empty()) {
+          basisSetName = currentFunction["basisSetName"].asString();
+        } else if (basisSetName != currentFunction["basisSetName"].asString()) {
+          basisSetName = "Custom";
+        }
+      }
 
       Value contraction = currentFunction["basisSetContraction"];
       bool spherical =
@@ -249,6 +258,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     basis->setMolecularOrbitalOccupancy(occArray);
     basis->setMolecularOrbitalNumber(numArray);
     basis->setElectronCount(numberOfElectrons);
+    basis->setName(basisSetName);
     molecule.setBasisSet(basis);
   }
 

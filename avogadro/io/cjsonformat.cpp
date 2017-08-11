@@ -189,6 +189,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
       }
       basis["scfType"] = type;
       basis["electronCount"] = gaussian->electronCount();
+      basis["name"] = gaussian->name();
       Value mo(Json::objectValue);
 
       std::vector<double> energies = gaussian->moEnergy();
