@@ -187,9 +187,13 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
         default:
           type = "unknown";
       }
-      basis["scfType"] = type;
-      basis["electronCount"] = gaussian->electronCount();
       basis["name"] = gaussian->name();
+
+      Value properties(Json::objectValue);
+      properties["functionalName"] = gaussian->functionalName();
+      properties["electronCount"] = gaussian->electronCount();
+      properties["scfType"] = type;
+
       Value mo(Json::objectValue);
 
       std::vector<double> energies = gaussian->moEnergy();
@@ -225,6 +229,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
       root["basisSet"] = basis;
       root["molecularOrbitals"] = mo;
+      root["properties"] = properties;
     }
   }
 

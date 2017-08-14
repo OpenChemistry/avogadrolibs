@@ -92,6 +92,8 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
   Value calculationVib;
   Value molecularOrbitals;
   int numberOfElectrons = 0;
+  string theory;
+  string xcFunctional;
   for (size_t i = 0; i < calculations.size(); ++i) {
     Value calcObj = calculations.get(i, "");
     if (calcObj.isObject()) {
@@ -102,6 +104,23 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
       Value calcSetup = calcObj["calculationSetup"];
       Value calcMol = calcSetup["molecule"];
       numberOfElectrons = calcSetup["numberOfElectrons"].asInt();
+      if (calcSetup.isMember("exchangeCorrelationFunctional")) {
+        Value functional = calcSetup["exchangeCorrelationFunctional"].get(
+          Value::ArrayIndex(0), "");
+        if (functional.isObject()) {
+          xcFunctional = functional["xcName"].asString();
+        }
+        if (xcFunctional == "B3LYP Method XC Potential") {
+          xcFunctional = "B3LYP";
+        }
+        cout << "functional found: " << xcFunctional << endl;
+      }
+      if (calcSetup.isMember("waveFunctionTheory")) {
+        theory = calcSetup["waveFunctionTheory"].asString();
+        if (theory == "Density Functional Theory") {
+          theory = "DFT";
+        }
+      }
       if (!calcMol.isNull() && calcMol.isObject())
         moleculeArray.append(calcMol);
       Value basisSet = calcSetup["basisSet"];
@@ -258,7 +277,9 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     basis->setMolecularOrbitalOccupancy(occArray);
     basis->setMolecularOrbitalNumber(numArray);
     basis->setElectronCount(numberOfElectrons);
+    basis->setFunctionalName(xcFunctional);
     basis->setName(basisSetName);
+    basis->setTheoryName(theory);
     molecule.setBasisSet(basis);
   }
 
