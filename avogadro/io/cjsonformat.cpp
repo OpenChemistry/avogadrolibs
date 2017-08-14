@@ -172,7 +172,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     const GaussianSet* gaussian =
       dynamic_cast<const GaussianSet*>(molecule.basisSet());
     if (gaussian) {
-      basis["basisType"] = "GTO";
+      basis["basisType"] = "gto";
       string type = "unknown";
       switch (gaussian->scfType()) {
         case Core::Rhf:
@@ -192,6 +192,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
       Value properties(Json::objectValue);
       properties["functionalName"] = gaussian->functionalName();
       properties["electronCount"] = gaussian->electronCount();
+      properties["theory"] = gaussian->theoryName();
       properties["scfType"] = type;
 
       Value mo(Json::objectValue);
