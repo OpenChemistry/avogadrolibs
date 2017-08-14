@@ -13,6 +13,7 @@ include_directories(SYSTEM
   ${AvogadroLibs_BINARY_DIR}/avogadro/quantumio
   ${PYTHON_INCLUDE_PATH}
   ${EIGEN3_INCLUDE_DIR}
+  ${pybind11_INCLUDE_DIRS}
   )
 
 set(wrapper_SRCS
