@@ -50,7 +50,7 @@ option(USE_LIBMSYM "Enable optional features using libmsym" ON)
 option(USE_LIBSPG "Enable optional features using libspg" ON)
 option(USE_PROTOCALL "Enable libraries that use ProtoCall" OFF)
 option(USE_MOLEQUEUE "Enable the MoleQueue dependent functionality" ON)
-option(USE_BOOST_PYTHON "Use Boost Python to wrap some of our API" OFF)
+option(USE_PYTHON "Use Python to wrap some of our API" OFF)
 
 add_subdirectory(utilities)
 add_subdirectory(thirdparty)
@@ -68,8 +68,8 @@ if(BUILD_DOCUMENTATION)
   add_subdirectory(docs)
 endif()
 
-if(USE_BOOST_PYTHON)
-  add_subdirectory(boostpython)
+if(USE_PYTHON)
+  add_subdirectory(python)
 endif()
 
 install(
