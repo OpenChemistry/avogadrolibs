@@ -1024,7 +1024,13 @@ bool CjsonFormat::readVibrations(Value& root, Molecule& molecule)
     */
 
     // Assumption: chose the vibir attribute over the vibraman attribute
-    value = vibrations["intensities"]["IR"];
+    if (vibrations.isMember("intensities") &&
+        vibrations["intensities"].isObject()) {
+      value =  vibrations["intensities"]["IR"];
+    } else {
+      value = Value();
+    }
+
     if (!value.empty() && value.isArray()) {
       Array<double> intensities;
 
