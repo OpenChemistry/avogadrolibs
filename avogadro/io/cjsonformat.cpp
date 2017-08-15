@@ -187,7 +187,9 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
         default:
           type = "unknown";
       }
-      basis["name"] = gaussian->name();
+      if (!gaussian->name().empty()) {
+        basis["name"] = gaussian->name();
+      }
 
       Value properties(Json::objectValue);
       properties["functionalName"] = gaussian->functionalName();
