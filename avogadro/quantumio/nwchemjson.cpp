@@ -113,7 +113,6 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
         if (xcFunctional == "B3LYP Method XC Potential") {
           xcFunctional = "b3lyp";
         }
-        cout << "functional found: " << xcFunctional << endl;
       }
       if (calcSetup.isMember("waveFunctionTheory")) {
         theory = calcSetup["waveFunctionTheory"].asString();
