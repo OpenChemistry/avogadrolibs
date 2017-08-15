@@ -20,6 +20,8 @@
 
 #include "avogadrocore.h"
 
+#include <string>
+
 namespace Avogadro {
 namespace Core {
 
@@ -90,6 +92,26 @@ public:
   const Molecule* molecule() const { return m_molecule; }
 
   /**
+   * Set the name of the basis set.
+   */
+  void setName(const std::string& name) { m_name = name; }
+
+  /**
+   * Get the name of the basis set.
+   */
+  std::string name() const { return m_name; }
+
+  /**
+   * Set the name of the basis set.
+   */
+  void setTheoryName(const std::string& name) { m_theoryName = name; }
+
+  /**
+   * Get the name of the basis set.
+   */
+  std::string theoryName() const { return m_theoryName; }
+
+  /**
    * @return The number of molecular orbitals in the BasisSet.
    */
   virtual unsigned int molecularOrbitalCount(ElectronType type = Paired) = 0;
@@ -137,6 +159,17 @@ protected:
    * necessarily the case.
    */
   Molecule* m_molecule;
+
+  /**
+   * The name of the basis set, this is usually a string identifier referencing
+   * a standard basis set when only one is used.
+   */
+  std::string m_name;
+
+  /**
+   * The name of the theory used for the calculation.
+   */
+  std::string m_theoryName;
 };
 
 inline void BasisSet::setElectronCount(unsigned int n, ElectronType type)
