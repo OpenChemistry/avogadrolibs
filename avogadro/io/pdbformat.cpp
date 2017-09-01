@@ -40,6 +40,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 
   string buffer;
 
+  int conectcount = 0;
+
   while (getline(in, buffer)) { // Read Each line one by one
 
     if (startsWith(buffer, "ENDMDL"))
@@ -96,6 +98,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           appendError("Failed to parse CONECT a" + buffer.substr(6, 5));
           return false;
       }
+      --a;
 
       int b1;
       b1 = lexicalCast<int>(buffer.substr(11, 5), ok);
@@ -103,21 +106,23 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           appendError("Failed to parse CONECT b1" + buffer.substr(11, 5));
           return false;
       }
-      mol.addBond(mol.atom(a), mol.atom(b1));
+      --b1;
+      mol.addBond(mol.atom(a), mol.atom(b1), 2);
 
-      if(!((buffer.substr(16, 5)).empty()))  // Further bonds may not be there
+      if(trimmed(buffer.substr(16, 5)) != "")  // Further bonds may not be there
       {
         int b2;
         b2 = lexicalCast<int>(buffer.substr(16, 5), ok);
         if (!ok) {
-          appendError("Failed to parse CONECT b2" + buffer.substr(16, 5));
+          appendError("Failed to parse CONECT b2" + buffer.substr(16, 5) + ".");
           return false;
         }
+        --b2;
 
-        mol.addBond(mol.atom(a), mol.atom(b2));
+        mol.addBond(mol.atom(a), mol.atom(b2), 2);
       }
 
-      if(!((buffer.substr(21, 5)).empty()))  // Further bonds may not be there
+      if(trimmed(buffer.substr(21, 5)) != "")  // Further bonds may not be there
       {
         int b3;
         b3 = lexicalCast<int>(buffer.substr(21, 5), ok);
@@ -125,11 +130,12 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           appendError("Failed to parse CONECT b3" + buffer.substr(21, 5));
           return false;
         }
+        --b3;
 
-        mol.addBond(mol.atom(a), mol.atom(b3));
+        mol.addBond(mol.atom(a), mol.atom(b3), 2);
       }
 
-      if(!((buffer.substr(26, 5)).empty()))  // Further bonds may not be there
+      if(trimmed(buffer.substr(26, 5)) != "")  // Further bonds may not be there
       {
         int b4;
         b4 = lexicalCast<int>(buffer.substr(21, 5), ok);
@@ -137,9 +143,11 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           appendError("Failed to parse CONECT b4" + buffer.substr(21, 5));
           return false;
         }
+        --b4;
 
-        mol.addBond(mol.atom(a), mol.atom(b4));
+        mol.addBond(mol.atom(a), mol.atom(b4), 2);
       }
+      conectcount++;
     }
   } // End while loop
   return true;
