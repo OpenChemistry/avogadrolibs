@@ -383,7 +383,7 @@ public:
   /**
    * Create a new bond in the molecule.
    * @param atom1 The first atom in the bond.
-   * @param atom2 The second order in the bond.
+   * @param atom2 The second atom in the bond.
    * @param order The bond order.
    * @return The new bond object. Will be invalid if @a atom1 or @a atom2 does
    * not exist.
