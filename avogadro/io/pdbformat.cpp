@@ -34,120 +34,143 @@ PdbFormat::~PdbFormat()
 
 bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 {
-  Matrix4f matrix = Matrix4f::Identity(); // Stores one BIOMT or SMTRY matrix
-  vector<Matrix4f> bioMatrices;           // Vector of BIOMT matrices
-  vector<Matrix4f> symMatrices;           // Vector of SMTRY matrices
-
   string buffer;
-
-  int conectcount = 0;
+  int atomCount = 0;
+  std::vector<int> terList;
 
   while (getline(in, buffer)) { // Read Each line one by one
 
     if (startsWith(buffer, "ENDMDL"))
-      break;
+    break;
 
     else if (startsWith(buffer, "ATOM") || startsWith(buffer, "HETATM")) {
-      // 2 spaces after "ATOM" in other codes, why?
+      Vector3 pos; // Coordinates
+      bool ok(false);
+      pos.x() = lexicalCast<Real>(buffer.substr(30, 8), ok);
+      if (!ok) {
+        appendError("Failed to parse x coordinate: " + buffer.substr(30, 8));
+        return false;
+      }
 
-      string name;
-      name = buffer.substr(12, 4);
-      name = trimmed(name);
+      pos.y() = lexicalCast<Real>(buffer.substr(38, 8), ok);
+      if (!ok) {
+        appendError("Failed to parse y coordinate: " + buffer.substr(38, 8));
+        return false;
+      }
 
-      //if (name == "CA" || name == "O")  // Assuming CA and O occur alternatingly
-      //{
-        Vector3 pos; // Coordinates
-        bool ok(false);
-        pos.x() = lexicalCast<Real>(buffer.substr(30, 8), ok);
-        if (!ok) {
-          appendError("Failed to parse x coordinate: " + buffer.substr(30, 8));
-          return false;
-        }
+      pos.z() = lexicalCast<Real>(buffer.substr(46, 8), ok);
+      if (!ok) {
+        appendError("Failed to parse z coordinate: " + buffer.substr(46, 8));
+        return false;
+      }
 
-        pos.y() = lexicalCast<Real>(buffer.substr(38, 8), ok);
-        if (!ok) {
-          appendError("Failed to parse y coordinate: " + buffer.substr(38, 8));
-          return false;
-        }
+      string element; // Element symbol, right justififed
+      element = buffer.substr(76, 2);
+      element = trimmed(element);
+      if(element == "SE")  //For Sulphur
+        element = 'S';
 
-        pos.z() = lexicalCast<Real>(buffer.substr(46, 8), ok);
-        if (!ok) {
-          appendError("Failed to parse z coordinate: " + buffer.substr(46, 8));
-          return false;
-        }
+      unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
+      if(atomicNum == 255)
+      appendError("Invalid element");
 
-        string element; // Element symbol, right justififed
-        element = buffer.substr(76, 2);
-        element = trimmed(element);
-        if(element == "SE")  //For Sulphur
-          element = "S";
+      Atom newAtom = mol.addAtom(atomicNum);
+      newAtom.setPosition3d(pos);
 
-        unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
-        //appendError(std::to_string(atomicNum));
-        Atom newAtom = mol.addAtom(atomicNum);
-        newAtom.setPosition3d(pos);
-        //newAtom.setAtomName(name); // May require casting of serial to Index type
-      //}
+      atomCount++;
     }
 
-    else if(startsWith(buffer, "CONECT")) {
-      int a;
+    else if(startsWith(buffer, "TER"))
+    { //  This is very important, each TER record also counts in the serial.
+      // Need to account for that when comparing with CONECT
       bool ok(false);
-      a = lexicalCast<int>(buffer.substr(6, 5), ok);
-      if (!ok) {
-          appendError("Failed to parse CONECT a" + buffer.substr(6, 5));
-          return false;
+      terList.push_back(lexicalCast<int>(buffer.substr(6, 5), ok));
+
+      if(!ok)
+      {
+        appendError ("Failed to parse TER serial");
+        return false;
+      }
+    }
+
+    else if(startsWith(buffer, "CONECT"))
+    {
+      bool ok(false);
+      int a = lexicalCast<int>(buffer.substr(6, 5), ok);
+      if (!ok)
+      {
+        appendError ("Failed to parse coordinate a " + buffer.substr(6, 5));
+        return false;
       }
       --a;
+      int terCount;
+      for (terCount = 0; terCount < terList.size() && a > terList[terCount]; ++terCount); // semicolon is intentional
+        a = a - terCount;
 
-      int b1;
-      b1 = lexicalCast<int>(buffer.substr(11, 5), ok);
-      if (!ok) {
-          appendError("Failed to parse CONECT b1" + buffer.substr(11, 5));
-          return false;
+      int b1 = lexicalCast<int>(buffer.substr(11, 5), ok);
+      if (!ok)
+      {
+        appendError ("Failed to parse coordinate b1 " + buffer.substr(11, 5));
+        return false;
       }
       --b1;
-      mol.addBond(mol.atom(a), mol.atom(b1), 2);
+      for (terCount = 0; terCount < terList.size() && b1 > terList[terCount]; ++terCount);  // semicolon is intentional
+      b1 = b1 - terCount;
 
-      if(trimmed(buffer.substr(16, 5)) != "")  // Further bonds may not be there
+      if(a < b1){
+        mol.Avogadro::Core::Molecule::addBond(a, b1, 1);
+      }
+
+      if(trimmed(buffer.substr(16, 5)) != "") // Futher bonds may be absent
       {
-        int b2;
-        b2 = lexicalCast<int>(buffer.substr(16, 5), ok);
-        if (!ok) {
-          appendError("Failed to parse CONECT b2" + buffer.substr(16, 5) + ".");
+        int b2 = lexicalCast<int>(buffer.substr(16, 5), ok);
+        if(!ok)
+        {
+          appendError ("Failed to parse coordinate b2" + buffer.substr(16, 5));
           return false;
         }
         --b2;
+        for (terCount = 0; terCount < terList.size() && b2 > terList[terCount]; ++terCount);  // semicolon is intentional
+        b2 = b2 - terCount;
 
-        mol.addBond(mol.atom(a), mol.atom(b2), 2);
+        if(a < b2){
+          mol.Avogadro::Core::Molecule::addBond(a, b2, 1);
+        }
       }
 
-      if(trimmed(buffer.substr(21, 5)) != "")  // Further bonds may not be there
+      if(trimmed(buffer.substr(21, 5)) != "") // Futher bonds may be absent
       {
-        int b3;
-        b3 = lexicalCast<int>(buffer.substr(21, 5), ok);
-        if (!ok) {
-          appendError("Failed to parse CONECT b3" + buffer.substr(21, 5));
+        int b3 = lexicalCast<int>(buffer.substr(21, 5), ok);
+        if(!ok)
+        {
+          appendError ("Failed to parse coordinate b3" + buffer.substr(21, 5));
           return false;
         }
         --b3;
+        for (terCount = 0; terCount < terList.size() && b3 > terList[terCount]; ++terCount);  // semicolon is intentional
+        b3 = b3 - terCount;
 
-        mol.addBond(mol.atom(a), mol.atom(b3), 2);
+        if(a < b3){
+          mol.Avogadro::Core::Molecule::addBond(a, b3, 1);
+        }
       }
 
-      if(trimmed(buffer.substr(26, 5)) != "")  // Further bonds may not be there
+      if(trimmed(buffer.substr(26, 5)) != "") // Futher bonds may be absent
       {
-        int b4;
-        b4 = lexicalCast<int>(buffer.substr(21, 5), ok);
-        if (!ok) {
-          appendError("Failed to parse CONECT b4" + buffer.substr(21, 5));
+        int b4 = lexicalCast<int>(buffer.substr(26, 5), ok);
+        if(!ok)
+        {
+          appendError ("Failed to parse coordinate b4" + buffer.substr(26, 5));
           return false;
         }
         --b4;
+        for (terCount = 0; terCount < terList.size() && b4 > terList[terCount]; ++terCount);  // semicolon is intentional
+        b4 = b4 - terCount;
 
-        mol.addBond(mol.atom(a), mol.atom(b4), 2);
+        if(a < b4){
+          mol.Avogadro::Core::Molecule::addBond(a, b4, 1);
+        }
       }
-      conectcount++;
     }
   } // End while loop
   return true;
