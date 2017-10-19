@@ -107,68 +107,27 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       for (terCount = 0; terCount < terList.size() && a > terList[terCount]; ++terCount); // semicolon is intentional
         a = a - terCount;
 
-      int b1 = lexicalCast<int>(buffer.substr(11, 5), ok);
-      if (!ok)
+      int bCoords[] = {11, 16, 21, 26};
+      for (int i = 0; i < 4; i++)
       {
-        appendError ("Failed to parse coordinate b1 " + buffer.substr(11, 5));
-        return false;
-      }
-      --b1;
-      for (terCount = 0; terCount < terList.size() && b1 > terList[terCount]; ++terCount);  // semicolon is intentional
-      b1 = b1 - terCount;
+        if (trimmed(buffer.substr(bCoords[i], 5)) == "")
+          break;
 
-      if(a < b1){
-        mol.Avogadro::Core::Molecule::addBond(a, b1, 1);
-      }
+        else{
+          bool ok(false);
+          int b = lexicalCast<int>(buffer.substr(bCoords[i], 5), ok) - 1;
+          if (!ok)
+          {
+            appendError ("Failed to parse coordinate b" + std::to_string(i) + " " + buffer.substr(bCoords[i], 5));
+            return false;
+          }
 
-      if(trimmed(buffer.substr(16, 5)) != "") // Futher bonds may be absent
-      {
-        int b2 = lexicalCast<int>(buffer.substr(16, 5), ok);
-        if(!ok)
-        {
-          appendError ("Failed to parse coordinate b2" + buffer.substr(16, 5));
-          return false;
-        }
-        --b2;
-        for (terCount = 0; terCount < terList.size() && b2 > terList[terCount]; ++terCount);  // semicolon is intentional
-        b2 = b2 - terCount;
+          for (terCount = 0; terCount < terList.size() && b > terList[terCount]; ++terCount);  // semicolon is intentional
+          b = b - terCount;
 
-        if(a < b2){
-          mol.Avogadro::Core::Molecule::addBond(a, b2, 1);
-        }
-      }
-
-      if(trimmed(buffer.substr(21, 5)) != "") // Futher bonds may be absent
-      {
-        int b3 = lexicalCast<int>(buffer.substr(21, 5), ok);
-        if(!ok)
-        {
-          appendError ("Failed to parse coordinate b3" + buffer.substr(21, 5));
-          return false;
-        }
-        --b3;
-        for (terCount = 0; terCount < terList.size() && b3 > terList[terCount]; ++terCount);  // semicolon is intentional
-        b3 = b3 - terCount;
-
-        if(a < b3){
-          mol.Avogadro::Core::Molecule::addBond(a, b3, 1);
-        }
-      }
-
-      if(trimmed(buffer.substr(26, 5)) != "") // Futher bonds may be absent
-      {
-        int b4 = lexicalCast<int>(buffer.substr(26, 5), ok);
-        if(!ok)
-        {
-          appendError ("Failed to parse coordinate b4" + buffer.substr(26, 5));
-          return false;
-        }
-        --b4;
-        for (terCount = 0; terCount < terList.size() && b4 > terList[terCount]; ++terCount);  // semicolon is intentional
-        b4 = b4 - terCount;
-
-        if(a < b4){
-          mol.Avogadro::Core::Molecule::addBond(a, b4, 1);
+          if(a < b){
+            mol.Avogadro::Core::Molecule::addBond(a, b, 1);
+          }
         }
       }
     }
