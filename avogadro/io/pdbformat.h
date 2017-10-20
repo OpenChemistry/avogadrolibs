@@ -36,7 +36,7 @@ public:
 
   Operations supportedOperations() const override
   {
-    return Read | File | Stream | String; //Unsure of what all should be there
+    return Read | File | Stream | String;
   }
 
   FileFormat* newInstance() const override { return new PdbFormat; }
@@ -44,7 +44,8 @@ public:
   std::string name() const override { return "PDB"; }
   std::string description() const override
   {
-    return "Generic format that contains atoms, bonds, positions."; //To be updated, copied from mdlformat.h
+    return "Format that contains atoms, bonds, positions and secondary"
+      "structures of proteins.";
   }
 
   std::string specificationUrl() const override
