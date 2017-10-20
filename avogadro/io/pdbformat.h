@@ -45,7 +45,7 @@ public:
   std::string description() const override
   {
     return "Format that contains atoms, bonds, positions and secondary"
-      "structures of proteins.";
+           "structures of proteins.";
   }
 
   std::string specificationUrl() const override
