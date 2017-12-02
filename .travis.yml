@@ -2,6 +2,10 @@ branches:
   only:
     - master
 
+language: cpp
+
+sudo: true
+
 matrix:
   include:
     - language: python
@@ -17,55 +21,24 @@ matrix:
           - llvm-toolchain-precise-3.8
           packages:
           - clang-format-3.8
-      script:
-        - cd $TRAVIS_BUILD_DIR
-        - ./scripts/travis/run_clang_format_diff.sh master $TRAVIS_COMMIT
 
-    - language: cpp
-      sudo: true
-      env: TASKS="ctest"
-      before_install:
-        - sudo add-apt-repository ppa:beineri/opt-qt542-trusty -y
-        - sudo apt-get update -qq
-      install:
-        - sudo apt-get install -qq qt54base
-        - source /opt/qt54/bin/qt54-env.sh
-        - sudo apt-get install libeigen3-dev libglew-dev libhdf5-dev libxml2-dev zlib1g-dev
+    - compiler: gcc
+      env: TASKS="ctest gcc-4.8"
 
-        # We have to use cmake > 3.3, which cannot be easily installed with
-        # apt-get...
-        - cd ..
-        - export CMAKE_NAME="cmake-3.10.0-Linux-x86_64"
-        - wget https://cmake.org/files/v3.10/${CMAKE_NAME}.tar.gz
-        - tar -xzf ${CMAKE_NAME}.tar.gz
-        - export CMAKE_EXE=${PWD}/${CMAKE_NAME}/bin/cmake
-        - cd avogadrolibs
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ubuntu-toolchain-r-test
+          packages: g++-6
+      env:
+        - TASKS="ctest gcc-6.3"
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
-      before_script:
-        # First, get the super module dir
-        - cd ..
-        - git clone https://github.com/openchemistry/openchemistry
-        - cd openchemistry
-        - git submodule init avogadroapp avogadrodata molequeue
-        - git submodule update
+    - compiler: clang
+      env: TASKS="ctest clang-3.9"
 
-        # Move the trial avogadrolibs into the open chemistry dir
-        - mv ../avogadrolibs .
+install:
+  - . ./scripts/travis/install.sh
 
-        - mkdir build
-        - cd build
-
-        # CMake flags
-        - export CMAKE_FLAGS="$CMAKE_FLAGS -DENABLE_TESTING=OFF"
-        - export CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_SYSTEM_EIGEN=ON"
-        - export CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_SYSTEM_GLEW=ON"
-        - export CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_SYSTEM_GTEST=OFF"
-        - export CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_SYSTEM_HDF5=ON"
-        - export CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_SYSTEM_LIBXML2=ON"
-        - export CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_SYSTEM_OPENBABEL=ON"
-        - export CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_SYSTEM_PCRE=OFF"
-        - export CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_SYSTEM_ZLIB=ON"
-
-      script:
-        - ${CMAKE_EXE} ${CMAKE_FLAGS} ..
-        - make -j2
+script:
+  - ./scripts/travis/build.sh
