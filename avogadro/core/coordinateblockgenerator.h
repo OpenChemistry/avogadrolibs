@@ -70,6 +70,8 @@ public:
    * - @c 0: A literal "0". Useful for optimization flags.
    * - @c 1: A literal "1". Useful for optimization flags.
    * - @c _: A space character. Useful for alignment.
+   * - @c D: coordinates block, atoms names, charge in format coresponding to
+   *         DALTON input files
    *
    * For example, the specification string
 ~~~

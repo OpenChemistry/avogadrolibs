@@ -23,9 +23,29 @@
 #include <avogadro/core/unitcell.h>
 
 #include <iomanip>
-
 namespace Avogadro {
 namespace Core {
+
+namespace {
+// Auxiliary struct used for DALTON inputfile conversion.
+struct atom_data
+{
+  std::string name, charge, X, Y, Z;
+};
+// Another auxiliary struct used for DALTON inputfile conversion.
+struct types_header
+{
+  int index;
+  std::string charge;
+  int number;
+};
+
+// Additional function for DALTON inputfile conversion.
+size_t countEndls(const std::string s);
+// Function used for string dividing
+atom_data* divide_text(std::string s, int ile);
+std::string DaltonFormat(std::string& s);
+}
 
 CoordinateBlockGenerator::CoordinateBlockGenerator()
   : m_molecule(nullptr), m_distanceUnit(Angstrom)
@@ -51,6 +71,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   bool needElementName(false);
   bool needPosition(false);
   bool needFractionalPosition(false);
+  bool daltonInputGenerator(false);
   for (it = begin; it != end; ++it) {
     switch (*it) {
       case 'S':
@@ -68,6 +89,9 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
       case 'b':
       case 'c':
         needFractionalPosition = true;
+        break;
+      case 'D':
+        daltonInputGenerator = true;
         break;
     }
   }
@@ -202,7 +226,143 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
     } // end spec char
   }   // end for atom
 
+  if (daltonInputGenerator) {
+    std::string test1 = m_stream.str();
+    test1 = DaltonFormat(test1);
+    return test1;
+  }
+
   return m_stream.str();
+}
+
+namespace {
+
+size_t countEndls(const std::string s)
+{
+  int ile = 0;
+  for (size_t i = 0; i < s.length(); ++i) {
+    if (s[i] == '\n')
+      ++ile;
+  }
+  return ile;
+}
+
+atom_data* divide_text(std::string s, int ile)
+{
+  atom_data* tab = new atom_data[ile];
+  size_t beg_i, end_i, it = 0;
+  size_t beg_i1, end_i1, it1 = 0;
+  const std::string ogr = "\n";
+  const std::string ogr1 = " ";
+  // Finds beggining of first word.
+  beg_i = s.find_first_not_of(ogr);
+  // Division of the word by the string "\n"
+  while (beg_i != std::string::npos) {
+  // If the beginning of the word is found.
+    end_i = s.find_first_of(ogr, beg_i);
+    // Find the end of the word.
+    if (end_i == std::string::npos)
+      end_i = s.length();
+
+    std::string temp = s.substr(beg_i, end_i - beg_i);
+    beg_i1 = temp.find_first_not_of(ogr1);
+    // Division of the word by the string " "
+    while (beg_i1 != std::string::npos) {
+      end_i1 = temp.find_first_of(ogr1, beg_i1);
+      if (end_i1 == std::string::npos)
+        end_i1 = temp.length();
+      std::string temp2 = temp.substr(beg_i1, end_i1 - beg_i1);
+      switch (it1 % 5) {
+        case 0:
+          tab[it].name = temp2;
+          break;
+        case 1:
+          tab[it].charge = temp2;
+          break;
+        case 2:
+          tab[it].X = temp2;
+          break;
+        case 3:
+          tab[it].Y = temp2;
+          break;
+        case 4:
+          tab[it].Z = temp2;
+          break;
+      } // switch
+      beg_i1 = temp.find_first_not_of(ogr1, end_i1);
+      ++it1;
+    } // while2
+    beg_i = s.find_first_not_of(ogr, end_i);
+    // Beginning of the next word.
+    ++it;
+  }
+  return tab;
+}
+
+std::string DaltonFormat(std::string& s)
+{
+  size_t ile = countEndls(s);
+  if (ile == 0)
+    return " ";
+  atom_data* tab = divide_text(s, ile);
+  int atom_types = 1;
+  std::string temp = tab[0].charge;
+  for (size_t i = 1; i < ile; ++i) {
+    if (temp != tab[i].charge) {
+      ++atom_types;
+      temp = tab[i].charge;
+    }
+  }
+  types_header* typesHeads = new types_header[atom_types];
+  typesHeads[0].index = 0;
+  typesHeads[0].charge = tab[0].charge;
+
+  temp = tab[0].charge;
+  size_t k = 1, i = 1, j = 1;
+  for (; i < ile; ++i) {
+    if (temp != tab[i].charge) {
+      typesHeads[k].charge = tab[i].charge;
+      typesHeads[k].index = i;
+      typesHeads[k - 1].number = j;
+      k++;
+      temp = tab[i].charge;
+      j = 0;
+    }
+    ++j;
+  }
+
+  typesHeads[k - 1].number = j;
+  std::stringstream stream;
+  stream.str("");
+  stream.clear();
+
+  enum
+  {
+    coordinateWidth = 11,
+    elementSymbolWidth = 3,
+  };
+  stream << "Atomtypes=" << atom_types << std::endl;
+  for (size_t l = 0, m = 0; m < ile; ++m) {
+    if (static_cast<int>(m) == typesHeads[l].index) {
+      stream << "Charge=" << typesHeads[l].charge
+               << " Atoms=" << typesHeads[l].number << '\n';
+      ++l;
+    }
+    stream << std::left << std::setw(elementSymbolWidth) << tab[m].name
+             << ' ';
+
+    stream << std::right << std::setw(coordinateWidth) << tab[m].X << ' ';
+
+    stream << std::right << std::setw(coordinateWidth) << tab[m].Y << ' ';
+
+    stream << std::right << std::setw(coordinateWidth) << tab[m].Z << '\n';
+  }
+  std::string res = stream.str();
+  delete[] tab;
+  delete[] typesHeads;
+  return res;
+}
+
 }
 
 } // namespace Core
