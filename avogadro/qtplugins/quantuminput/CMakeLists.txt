@@ -23,6 +23,7 @@ target_link_libraries(QuantumInput LINK_PRIVATE AvogadroIO AvogadroMoleQueue)
 # Bundled generator scripts
 set(input_generators
   inputGenerators/apbs.py
+  inputGenerators/dalton.py
   inputGenerators/gamessuk.py
   inputGenerators/gaussian.py
   inputGenerators/molpro.py
