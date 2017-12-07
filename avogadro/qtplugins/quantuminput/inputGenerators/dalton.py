@@ -54,13 +54,13 @@ def getOptions():
 
     userOptions['Theory'] = {}
     userOptions['Theory']['type'] = "stringList"
-    userOptions['Theory']['default'] = 0
+    userOptions['Theory']['default'] = 1
     userOptions['Theory']['values'] = \
         ['SCF', 'DFT', 'MP2', 'CCSD', 'CCS', 'CC2']
 
     userOptions['Basis'] = {}
     userOptions['Basis']['type'] = "stringList"
-    userOptions['Basis']['default'] = 2
+    userOptions['Basis']['default'] = 4
     userOptions['Basis']['values'] = \
         ['STO-3G', '3-21 G', '6-31 G(d)', '6-31 G(d,p)',
          'cc-pVDZ', 'cc-pVTZ', 'aug-cc-pVDZ', 'aug-cc-pVTZ']
@@ -115,7 +115,7 @@ def generateInputFile(cjson, opts):
 
     for z in range(len(atoms)):
         if len(atoms[z]) > 0:
-            coordfile += 'Charge=%3d.0 Atoms=%d\n' % (z, len(atoms[z]))
+            coordfile += 'Charge=%d.0 Atoms=%d\n' % (z, len(atoms[z]))
             for atom in atoms[z]:
                 coordfile += '%s%15.5f%15.5f%15.5f\n' % (
                     symbols[z], atom[0], atom[1], atom[2])
