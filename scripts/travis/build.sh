@@ -8,7 +8,7 @@ else
   cd ..
   git clone https://github.com/openchemistry/openchemistry
   cd openchemistry
-  git submodule init avogadroapp avogadrodata molequeue
+  git submodule init avogadroapp avogadrodata molequeue thirdparty/qttesting
   git submodule update
 
   # Move the trial avogadrolibs into the open chemistry dir
@@ -18,7 +18,7 @@ else
   cd build
 
   ${CMAKE_EXE} -DCMAKE_BUILD_TYPE=Debug \
-    -DENABLE_TESTING=OFF \
+    -DENABLE_TESTING=ON \
     -DUSE_SYSTEM_EIGEN=ON \
     -DUSE_SYSTEM_GLEW=ON \
     -DUSE_SYSTEM_GTEST=OFF \
@@ -29,4 +29,5 @@ else
     -DUSE_SYSTEM_ZLIB=ON \
     ..
   make -j2
+  ./avogadrolibs/bin/AvogadroTests
 fi
