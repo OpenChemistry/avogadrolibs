@@ -47,7 +47,7 @@ using Rendering::CylinderGeometry;
 
 using namespace std;
 
-Labels::Labels(QObject *p) : ScenePlugin(p), m_enabled(true),
+Labels::Labels(QObject *p) : ScenePlugin(p), m_enabled(false),
   m_group(nullptr), m_setupWidget(nullptr), m_multiBonds(true), m_showHydrogens(true)
 {
 }
@@ -61,49 +61,32 @@ Labels::~Labels()
 void Labels::process(const Molecule &molecule,
                            Rendering::GroupNode &node)
 {
-  // Add a sphere node to contain all of the spheres.
   m_group = &node;
   GeometryNode *geometry = new GeometryNode;
   node.addChild(geometry);
-  SphereGeometry *spheres = new SphereGeometry;
-  spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
-  spheres->identifier().type = Rendering::AtomType;
-  geometry->addDrawable(spheres);
 
-
-
-  const Core::Array<unsigned char>& atomicNums = molecule.atomicNumbers();
   std::unordered_map<unsigned char, Index> countMap;
-
-  for(Core::Array<unsigned char>::const_iterator it = atomicNums.begin(); it != atomicNums.end(); ++it)
-  {
-    if (countMap.find(*it) == countMap.end())
-    {
-      countMap[*it] = molecule.atomCount(*it);
-    }
-  }
 
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
     unsigned char atomicNumber = atom.atomicNumber();
+
+    std::unordered_map<unsigned char, Index>::const_iterator lookUp;
+    lookUp = countMap.find(atomicNumber);
+
+    if(lookUp == countMap.end())
+      countMap[atomicNumber] = 1;
+
+    else
+      countMap[atomicNumber] += 1;
+
     if (atomicNumber == 1 && !m_showHydrogens)
       continue;
-    const unsigned char *c = Elements::color(atomicNumber);
-    Vector3ub color(c[0], c[1], c[2]);
-    float radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
-    if (atom.selected()) {
-      color = Vector3ub(0, 0, 255);
-      radius *= 1.2;
-    }
-    spheres->addSphere(atom.position3d().cast<float>(), color,
-                       radius * 0.3f);
 
-    //To display label
     Rendering::TextLabel3D *atomLabel = new Rendering::TextLabel3D;
     
     atomLabel->setText(Elements::symbol(atomicNumber) +
                 QString::number(countMap[atomicNumber], 'f', 0).toStdString());
-    countMap[atomicNumber]--;
 
     atomLabel->setRenderPass(Rendering::Overlay3DPass);
     const Vector3f a1(atom.position3d().cast<float>());
@@ -117,111 +100,6 @@ void Labels::process(const Molecule &molecule,
     tprop.setFontFamily(Rendering::TextProperties::SansSerif);
     tprop.setColorRgb(255, 200, 64);
     atomLabel->setTextProperties(tprop);
-  }
-
-  float bondRadius = 0.1f;
-  CylinderGeometry *cylinders = new CylinderGeometry;
-  cylinders->identifier().molecule = &molecule;
-  cylinders->identifier().type = Rendering::BondType;
-  geometry->addDrawable(cylinders);
-  for (Index i = 0; i < molecule.bondCount(); ++i) {
-    Core::Bond bond = molecule.bond(i);
-    if (!m_showHydrogens
-        && (bond.atom1().atomicNumber() == 1 || bond.atom2().atomicNumber() == 1)) {
-      continue;
-    }
-    Vector3f pos1 = bond.atom1().position3d().cast<float>();
-    Vector3f pos2 = bond.atom2().position3d().cast<float>();
-    Vector3ub color1(Elements::color(bond.atom1().atomicNumber()));
-    Vector3ub color2(Elements::color(bond.atom2().atomicNumber()));
-    Vector3f bondVector = pos2 - pos1;
-    float bondLength = bondVector.norm();
-    bondVector /= bondLength;
-    switch (m_multiBonds ? bond.order() : 1) {
-    case 3: {
-      Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
-      cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius,
-                             color1, color2, i);
-      cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius,
-                             color1, color2, i);
-    }
-    default:
-    case 1:
-      cylinders->addCylinder(pos1, pos2, bondRadius, color1, color2, i);
-      break;
-    case 2: {
-      Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
-      cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius,
-                             color1, color2, i);
-      cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius,
-                             color1, color2, i);
-    }
-    }
-  }
-}
-
-void Labels::processEditable(const QtGui::RWMolecule &molecule,
-                                   Rendering::GroupNode &node)
-{
-  // Add a sphere node to contain all of the spheres.
-  m_group = &node;
-  GeometryNode *geometry = new GeometryNode;
-  node.addChild(geometry);
-  SphereGeometry *spheres = new SphereGeometry;
-  spheres->identifier().molecule = &molecule;
-  spheres->identifier().type = Rendering::AtomType;
-  geometry->addDrawable(spheres);
-
-  for (Index i = 0; i < molecule.atomCount(); ++i) {
-    QtGui::RWAtom atom = molecule.atom(i);
-    unsigned char atomicNumber = atom.atomicNumber();
-    if (atomicNumber == 1 && !m_showHydrogens)
-      continue;
-    const unsigned char *c = Elements::color(atomicNumber);
-    Vector3ub color(c[0], c[1], c[2]);
-    spheres->addSphere(atom.position3d().cast<float>(), color,
-                       static_cast<float>(Elements::radiusVDW(atomicNumber))
-                       * 0.3f);
-  }
-
-  float bondRadius = 0.1f;
-  CylinderGeometry *cylinders = new CylinderGeometry;
-  cylinders->identifier().molecule = &molecule;
-  cylinders->identifier().type = Rendering::BondType;
-  geometry->addDrawable(cylinders);
-  for (Index i = 0; i < molecule.bondCount(); ++i) {
-    QtGui::RWBond bond = molecule.bond(i);
-    if (!m_showHydrogens
-        && (bond.atom1().atomicNumber() == 1 || bond.atom2().atomicNumber() == 1)) {
-      continue;
-    }
-    Vector3f pos1 = bond.atom1().position3d().cast<float>();
-    Vector3f pos2 = bond.atom2().position3d().cast<float>();
-    Vector3ub color1(Elements::color(bond.atom1().atomicNumber()));
-    Vector3ub color2(Elements::color(bond.atom2().atomicNumber()));
-    Vector3f bondVector = pos2 - pos1;
-    float bondLength = bondVector.norm();
-    bondVector /= bondLength;
-    switch (m_multiBonds ? bond.order() : 1) {
-    case 3: {
-      Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
-      cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius,
-                             color1, color2, i);
-      cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius,
-                             color1, color2, i);
-    }
-    default:
-    case 1:
-      cylinders->addCylinder(pos1, pos2, bondRadius, color1, color2, i);
-      break;
-    case 2: {
-      Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
-      cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius,
-                             color1, color2, i);
-      cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius,
-                             color1, color2, i);
-    }
-    }
   }
 }
 
@@ -269,5 +147,5 @@ void Labels::showHydrogens(bool show)
   }
 }
 
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
