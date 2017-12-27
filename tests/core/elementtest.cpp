@@ -34,7 +34,7 @@ TEST(ElementTest, symbolDoubles)
 {
   EXPECT_EQ(Elements::atomicNumberFromSymbol("He"), 2);
   EXPECT_EQ(Elements::atomicNumberFromSymbol("Fe"), 26);
-  EXPECT_EQ(Elements::atomicNumberFromSymbol("Uuh"), 116);
+  EXPECT_EQ(Elements::atomicNumberFromSymbol("Lv"), 116);
   EXPECT_EQ(Elements::atomicNumberFromSymbol("Xe"), 54);
   EXPECT_EQ(Elements::atomicNumberFromSymbol("Xeee"), Avogadro::InvalidElement);
 }
@@ -48,20 +48,20 @@ TEST(ElementTest, names)
 
 TEST(ElementTest, masses)
 {
-  EXPECT_EQ(Elements::mass(1), 1.00794);
-  EXPECT_EQ(Elements::mass(6), 12.0107);
+  EXPECT_EQ(Elements::mass(1), 1.00784);
+  EXPECT_EQ(Elements::mass(6), 12.011);
 }
 
 TEST(ElementTest, radiusVDW)
 {
   EXPECT_EQ(Elements::radiusVDW(1), 1.2);
-  EXPECT_EQ(Elements::radiusVDW(6), 1.7);
+  EXPECT_EQ(Elements::radiusVDW(6), 1.77);
 }
 
 TEST(ElementTest, radiusCovalent)
 {
-  EXPECT_EQ(Elements::radiusCovalent(1), 0.37);
-  EXPECT_EQ(Elements::radiusCovalent(6), 0.77);
+  EXPECT_EQ(Elements::radiusCovalent(1), 0.32);
+  EXPECT_EQ(Elements::radiusCovalent(6), 0.75);
 }
 
 TEST(ElementTest, colors)
