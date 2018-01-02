@@ -76,7 +76,7 @@ install(
   FILES
     README.md
     CONTRIBUTING.md
-    COPYING
+    LICENSE
   DESTINATION "${INSTALL_DOC_DIR}/avogadrolibs")
 
 # After all add_subdirectory calls, so the list of plugins is complete:
