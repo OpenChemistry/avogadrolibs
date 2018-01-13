@@ -484,7 +484,7 @@ void InputGeneratorWidget::saveSingleFile(const QString& fileName)
   QFile file(filePath);
   bool success = false;
   if (file.open(QFile::WriteOnly | QFile::Text)) {
-    if (file.write(edit->toPlainText().toLatin1()) > 0) {
+    if (file.write(edit->toPlainText().toLocal8Bit()) > 0) {
       success = true;
     }
     file.close();
@@ -595,7 +595,7 @@ void InputGeneratorWidget::saveDirectory()
     QFile file(dir.absoluteFilePath(fileName));
     bool success = false;
     if (file.open(QFile::WriteOnly | QFile::Text)) {
-      if (file.write(edit->toPlainText().toLatin1()) > 0) {
+      if (file.write(edit->toPlainText().toLocal8Bit()) > 0) {
         success = true;
       }
       file.close();
