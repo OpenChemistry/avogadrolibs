@@ -677,7 +677,7 @@ void GamessInputDialog::generateClicked()
   QFile file(fileName);
   bool success = false;
   if (file.open(QFile::WriteOnly | QFile::Text)) {
-    if (file.write(ui.previewText->toPlainText().toLatin1()) > 0) {
+    if (file.write(ui.previewText->toPlainText().toLocal8Bit()) > 0) {
       success = true;
     }
     file.close();
