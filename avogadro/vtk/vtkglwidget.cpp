@@ -144,9 +144,8 @@ vtkVolume* cubeVolume(Core::Cube* cube)
   return volume;
 }
 
-vtkGLWidget::vtkGLWidget(QWidget* p, const QGLWidget* shareWidget,
-                         Qt::WindowFlags f)
-  : QVTKWidget2(p, shareWidget, f), m_activeTool(nullptr),
+vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
+  : QVTKOpenGLWidget(p, f), m_activeTool(nullptr),
     m_defaultTool(nullptr)
 {
   setFocusPolicy(Qt::ClickFocus);
@@ -225,7 +224,7 @@ void vtkGLWidget::updateScene()
     }
 
     m_renderer.resetGeometry();
-    updateGL();
+    update();
   }
   if (mol != m_molecule)
     delete mol;
@@ -239,7 +238,7 @@ void vtkGLWidget::clearScene()
 void vtkGLWidget::resetCamera()
 {
   m_renderer.resetCamera();
-  updateGL();
+  update();
 }
 
 void vtkGLWidget::resetGeometry()
