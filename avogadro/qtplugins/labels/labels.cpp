@@ -38,12 +38,17 @@
 namespace Avogadro {
 namespace QtPlugins {
 
+using Avogadro::QtGui::RWAtom;
+using Avogadro::QtGui::RWBond;
+using Avogadro::QtGui::RWMolecule;
 using Core::Elements;
 using Core::Molecule;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 using Rendering::CylinderGeometry;
+
+typedef Avogadro::Core::Array<Molecule::BondType> NeighborListType;
 
 using namespace std;
 
@@ -61,30 +66,35 @@ Labels::~Labels()
 void Labels::process(const Molecule &molecule,
                            Rendering::GroupNode &node)
 {
+  Index hydrogenCount = 1;
+
   m_group = &node;
   GeometryNode *geometry = new GeometryNode;
   node.addChild(geometry);
 
-  std::unordered_map<unsigned char, Index> countMap;
+  std::unordered_map<unsigned char, Index> countMap;  // Dictionary of atomic number and number of atoms
 
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
     unsigned char atomicNumber = atom.atomicNumber();
+    if(atomicNumber == 1)
+      continue; // Do not process Hydrogens separately
 
     std::unordered_map<unsigned char, Index>::const_iterator lookUp;
     lookUp = countMap.find(atomicNumber);
 
     if(lookUp == countMap.end())
-      countMap[atomicNumber] = 1;
+      countMap[atomicNumber] = 1; // For first occurrence of atom
 
     else
-      countMap[atomicNumber] += 1;
+      countMap[atomicNumber] += 1;  // For other occurrences of atom
 
-    if (atomicNumber == 1 && !m_showHydrogens)
+    if (!m_showHydrogens)
       continue;
 
     Rendering::TextLabel3D *atomLabel = new Rendering::TextLabel3D;
     
+    //  Label non Hydrogen atoms
     atomLabel->setText(Elements::symbol(atomicNumber) +
                 QString::number(countMap[atomicNumber], 'f', 0).toStdString());
 
@@ -98,8 +108,30 @@ void Labels::process(const Molecule &molecule,
     tprop.setAlign(Rendering::TextProperties::HCenter,
                  Rendering::TextProperties::VCenter);
     tprop.setFontFamily(Rendering::TextProperties::SansSerif);
-    tprop.setColorRgb(255, 200, 64);
+    tprop.setColorRgb(255, 255, 255);
     atomLabel->setTextProperties(tprop);
+
+    //  Label Hydrogen atoms
+    const NeighborListType bonds = (const_cast<Molecule &>(molecule)).bonds(atom);  // const_cast because bonds() accepts non const objects
+    for (NeighborListType::const_iterator it = bonds.begin(),
+                                          itEnd = bonds.end();
+         it != itEnd; ++it) {
+      const Core::Atom otherAtom = it->atom1().index() != atom.index() ? it->atom1() : it->atom2();
+      if (otherAtom.atomicNumber() == 1) {
+        Rendering::TextLabel3D *hAtomLabel = new Rendering::TextLabel3D;
+        hAtomLabel->setText("H" +
+                QString::number(hydrogenCount, 'f', 0).toStdString());
+
+    hAtomLabel->setRenderPass(Rendering::Overlay3DPass);
+    const Vector3f a1(otherAtom.position3d().cast<float>());
+    const Vector3f &textPos(a1);
+    hAtomLabel->setAnchor(textPos);
+    geometry->addDrawable(hAtomLabel);
+
+    hAtomLabel->setTextProperties(tprop);
+    hydrogenCount++;
+      }
+    }
   }
 }
 
