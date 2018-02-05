@@ -7,7 +7,7 @@
 #  SPGLIB_LIBRARY      - The Spglib library
 #
 find_path(SPGLIB_INCLUDE_DIR spglib/spglib.h)
-find_library(SPGLIB_LIBRARY NAMES spglib)
+find_library(SPGLIB_LIBRARY NAMES spglib symspg)
 
 set(SPGLIB_INCLUDE_DIRS "${SPGLIB_INCLUDE_DIR}")
 
