@@ -33,7 +33,6 @@
 #include <vtkPiecewiseFunction.h>
 #include <vtkRenderViewBase.h>
 #include <vtkRenderer.h>
-#include <vtkRenderer.h>
 #include <vtkSmartVolumeMapper.h>
 #include <vtkVolume.h>
 #include <vtkVolumeProperty.h>
@@ -145,8 +144,7 @@ vtkVolume* cubeVolume(Core::Cube* cube)
 }
 
 vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
-  : QVTKOpenGLWidget(p, f), m_activeTool(nullptr),
-    m_defaultTool(nullptr)
+  : QVTKOpenGLWidget(p, f), m_activeTool(nullptr), m_defaultTool(nullptr)
 {
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins,
