@@ -120,6 +120,10 @@ add_subdirectory(spectra)
 add_subdirectory(vrml)
 add_subdirectory(workflows)
 
+if(USE_VTK)
+  add_subdirectory(plotxrd)
+endif()
+
 if(USE_MOLEQUEUE)
   add_subdirectory(apbs)
   add_subdirectory(mongochem)
