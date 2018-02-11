@@ -23,7 +23,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
-#include <vtkSmartPointer.h>
+#include <vtkNew.h>
 #include <vtkTable.h>
 #include <vtkTextProperty.h>
 
@@ -40,13 +40,13 @@ void XrdVtkPlot::generatePlot(
   const char* yTitle = "Intensity";
 
   // Create a table and add two columns
-  vtkSmartPointer<vtkTable> table = vtkSmartPointer<vtkTable>::New();
+  vtkNew<vtkTable> table;
 
-  vtkSmartPointer<vtkFloatArray> arrX = vtkSmartPointer<vtkFloatArray>::New();
+  vtkNew<vtkFloatArray> arrX;
   arrX->SetName(xTitle);
   table->AddColumn(arrX);
 
-  vtkSmartPointer<vtkFloatArray> arrY = vtkSmartPointer<vtkFloatArray>::New();
+  vtkNew<vtkFloatArray> arrY;
   arrY->SetName(yTitle);
   table->AddColumn(arrY);
 
@@ -58,13 +58,13 @@ void XrdVtkPlot::generatePlot(
   }
 
   // Set up the view
-  vtkSmartPointer<vtkContextView> view = vtkSmartPointer<vtkContextView>::New();
+  vtkNew<vtkContextView> view;
   view->GetRenderer()->SetBackground(1.0, 1.0, 1.0);
   view->GetRenderWindow()->SetSize(600, 600);
   view->GetRenderWindow()->SetWindowName("Theoretical XRD Pattern");
 
   // Add the chart
-  vtkSmartPointer<vtkChartXY> chart = vtkSmartPointer<vtkChartXY>::New();
+  vtkNew<vtkChartXY> chart;
   view->GetScene()->AddItem(chart);
 
   vtkAxis* bottomAxis = chart->GetAxis(vtkAxis::BOTTOM);
