@@ -19,13 +19,15 @@
 #include <vtkContextScene.h>
 #include <vtkContextView.h>
 #include <vtkFloatArray.h>
+#include <vtkGenericOpenGLRenderWindow.h>
+#include <vtkNew.h>
 #include <vtkPlot.h>
-#include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
-#include <vtkNew.h>
 #include <vtkTable.h>
 #include <vtkTextProperty.h>
+
+#include <QVTKOpenGLWidget.h>
 
 #include "xrdvtkplot.h"
 
@@ -58,7 +60,13 @@ void XrdVtkPlot::generatePlot(
   }
 
   // Set up the view
+  vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
+  QVTKOpenGLWidget* widget = new QVTKOpenGLWidget();
+  widget->SetRenderWindow(renderWindow);
+  // Hackish, but at least it won't leak
+  widget->setAttribute(Qt::WA_DeleteOnClose);
   vtkNew<vtkContextView> view;
+  view->SetRenderWindow(renderWindow);
   view->GetRenderer()->SetBackground(1.0, 1.0, 1.0);
   view->GetRenderWindow()->SetSize(600, 600);
   view->GetRenderWindow()->SetWindowName("Theoretical XRD Pattern");
@@ -92,9 +100,8 @@ void XrdVtkPlot::generatePlot(
   line->SetColor(255, 0, 0, 255);
   line->SetWidth(2.0);
 
-  // Start interactor
-  view->GetInteractor()->Initialize();
-  view->GetInteractor()->Start();
+  // Start the widget, we probably want to improve this in future.
+  widget->show();
 }
 
 } // namespace QtPlugins
