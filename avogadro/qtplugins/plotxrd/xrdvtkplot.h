@@ -28,7 +28,7 @@ namespace QtPlugins {
  */
 class XrdVtkPlot
 {
- public:
+public:
   static void generatePlot(const std::vector<std::pair<double, double>>& data);
 };
 
