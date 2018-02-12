@@ -65,6 +65,7 @@ void XrdVtkPlot::generatePlot(
   widget->SetRenderWindow(renderWindow);
   // Hackish, but at least it won't leak
   widget->setAttribute(Qt::WA_DeleteOnClose);
+  widget->setFormat(QVTKOpenGLWidget::defaultFormat());
   vtkNew<vtkContextView> view;
   view->SetRenderWindow(renderWindow);
   view->GetRenderer()->SetBackground(1.0, 1.0, 1.0);
