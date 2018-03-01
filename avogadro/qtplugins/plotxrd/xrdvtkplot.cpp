@@ -19,13 +19,15 @@
 #include <vtkContextScene.h>
 #include <vtkContextView.h>
 #include <vtkFloatArray.h>
+#include <vtkGenericOpenGLRenderWindow.h>
+#include <vtkNew.h>
 #include <vtkPlot.h>
-#include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
-#include <vtkSmartPointer.h>
 #include <vtkTable.h>
 #include <vtkTextProperty.h>
+
+#include <QVTKOpenGLWidget.h>
 
 #include "xrdvtkplot.h"
 
@@ -40,13 +42,13 @@ void XrdVtkPlot::generatePlot(
   const char* yTitle = "Intensity";
 
   // Create a table and add two columns
-  vtkSmartPointer<vtkTable> table = vtkSmartPointer<vtkTable>::New();
+  vtkNew<vtkTable> table;
 
-  vtkSmartPointer<vtkFloatArray> arrX = vtkSmartPointer<vtkFloatArray>::New();
+  vtkNew<vtkFloatArray> arrX;
   arrX->SetName(xTitle);
   table->AddColumn(arrX);
 
-  vtkSmartPointer<vtkFloatArray> arrY = vtkSmartPointer<vtkFloatArray>::New();
+  vtkNew<vtkFloatArray> arrY;
   arrY->SetName(yTitle);
   table->AddColumn(arrY);
 
@@ -58,13 +60,20 @@ void XrdVtkPlot::generatePlot(
   }
 
   // Set up the view
-  vtkSmartPointer<vtkContextView> view = vtkSmartPointer<vtkContextView>::New();
+  vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
+  QVTKOpenGLWidget* widget = new QVTKOpenGLWidget();
+  widget->SetRenderWindow(renderWindow);
+  // Hackish, but at least it won't leak
+  widget->setAttribute(Qt::WA_DeleteOnClose);
+  widget->setFormat(QVTKOpenGLWidget::defaultFormat());
+  vtkNew<vtkContextView> view;
+  view->SetRenderWindow(renderWindow);
   view->GetRenderer()->SetBackground(1.0, 1.0, 1.0);
   view->GetRenderWindow()->SetSize(600, 600);
   view->GetRenderWindow()->SetWindowName("Theoretical XRD Pattern");
 
   // Add the chart
-  vtkSmartPointer<vtkChartXY> chart = vtkSmartPointer<vtkChartXY>::New();
+  vtkNew<vtkChartXY> chart;
   view->GetScene()->AddItem(chart);
 
   vtkAxis* bottomAxis = chart->GetAxis(vtkAxis::BOTTOM);
@@ -92,9 +101,8 @@ void XrdVtkPlot::generatePlot(
   line->SetColor(255, 0, 0, 255);
   line->SetWidth(2.0);
 
-  // Start interactor
-  view->GetInteractor()->Initialize();
-  view->GetInteractor()->Start();
+  // Start the widget, we probably want to improve this in future.
+  widget->show();
 }
 
 } // namespace QtPlugins
