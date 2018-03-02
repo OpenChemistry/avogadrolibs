@@ -38,6 +38,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
+#include <QtCore/QStandardPaths>
 #include <QtCore/QStringList>
 #include <QtCore/QtPlugin>
 
@@ -209,6 +210,12 @@ void QuantumInput::updateInputGeneratorScripts()
   dirs << QCoreApplication::applicationDirPath() + "/../" +
             QtGui::Utilities::libraryDirectory() +
             "/avogadro2/scripts/inputGenerators";
+  QStringList stdPaths =
+    QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation);
+  foreach (const QString& dirStr, stdPaths) {
+    QString path = dirStr + "/dev/inputGenerators";
+    dirs << path;
+  }
 
   foreach (const QString& dirStr, dirs) {
     qDebug() << "Checking for generator scripts in" << dirStr;
