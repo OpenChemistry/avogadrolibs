@@ -240,7 +240,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
         else if (shellType == "f" && spherical)
           type = GaussianSet::F7;
         else if (shellType == "f")
-          type == GaussianSet::F;
+          type = GaussianSet::F;
 
         if (type != GaussianSet::UU) {
           int b = basis->addBasis(i, type);
@@ -312,7 +312,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
   return true;
 }
 
-bool NWChemJson::write(std::ostream& file, const Molecule& molecule)
+bool NWChemJson::write(std::ostream&, const Molecule&)
 {
   return false;
 }
