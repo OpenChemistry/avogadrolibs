@@ -8,3 +8,5 @@ avogadro_plugin(POVRay
   "povray.cpp"
   ""
 )
+
+target_link_libraries(POVRay LINK_PRIVATE AvogadroRendering)

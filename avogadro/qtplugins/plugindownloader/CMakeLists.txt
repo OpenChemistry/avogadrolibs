@@ -20,4 +20,4 @@ avogadro_plugin(PluginDownloader
 )
 
 target_link_libraries(PluginDownloader LINK_PRIVATE ${Qt5Network_LIBRARIES}
-  ${LIBARCHIVE_LIBRARIES})
+  ${LIBARCHIVE_LIBRARIES} jsoncpp)

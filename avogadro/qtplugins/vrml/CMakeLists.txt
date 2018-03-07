@@ -8,3 +8,5 @@ avogadro_plugin(VRML
   "vrml.cpp"
   ""
 )
+
+target_link_libraries(VRML LINK_PRIVATE AvogadroRendering)
