@@ -23,4 +23,5 @@ avogadro_plugin(apbs
   "${apbs_uis}"
 )
 
-target_link_libraries(apbs LINK_PRIVATE AvogadroIO MoleQueueClient)
+target_link_libraries(apbs
+  LINK_PRIVATE AvogadroIO AvogadroMoleQueue MoleQueueClient)
