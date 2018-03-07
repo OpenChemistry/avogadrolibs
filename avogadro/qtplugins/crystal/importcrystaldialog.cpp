@@ -19,7 +19,6 @@
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/io/poscarformat.h>
-#include <avogadro/qtplugins/openbabel/obfileformat.h>
 
 #include <QDebug>
 
@@ -72,14 +71,7 @@ bool ImportCrystalDialog::importCrystalClipboard(Avogadro::Core::Molecule& mol)
   else {
     // We don't need to set any of the info, so just put in empty strings for
     // most arguments (except the extension)
-    vector<string> fileExtensions, mimeTypes;
-    fileExtensions.push_back(ext);
-    OBFileFormat ob("", "", "", "", fileExtensions, mimeTypes);
-    if (ob.read(s, mol))
-      return true;
-    // Print out the error messages from the read if we failed
-    else
-      qDebug() << QString::fromStdString(ob.error());
+    qDebug() << "Failed to recognize data.";
   }
   displayInvalidFormatMessage();
   return false;
