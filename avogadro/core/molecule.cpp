@@ -629,7 +629,7 @@ std::string Molecule::formula(const std::string& delimiter, int over) const
   iter = composition.find(6);
   if (iter != composition.end()) {
     result << "C";
-    if (iter->second > over)
+    if (iter->second > static_cast<size_t>(over))
       result << delimiter << iter->second;
     composition.erase(iter);
 
@@ -637,7 +637,7 @@ std::string Molecule::formula(const std::string& delimiter, int over) const
     iter = composition.find(1);
     if (iter != composition.end()) {
       result << delimiter << "H";
-      if (iter->second > over)
+      if (iter->second > static_cast<size_t>(over))
         result << delimiter << iter->second;
       composition.erase(iter);
     }
@@ -647,7 +647,7 @@ std::string Molecule::formula(const std::string& delimiter, int over) const
   iter = composition.begin();
   while (iter != composition.end()) {
     result << delimiter << Elements::symbol(iter->first);
-    if (iter->second > over)
+    if (iter->second > static_cast<size_t>(over))
       result << delimiter << iter->second;
     ++iter;
   }
