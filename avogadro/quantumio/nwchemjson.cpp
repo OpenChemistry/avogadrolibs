@@ -312,7 +312,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
   return true;
 }
 
-bool NWChemJson::write(std::ostream& file, const Molecule& molecule)
+bool NWChemJson::write(std::ostream&, const Molecule&)
 {
   return false;
 }
