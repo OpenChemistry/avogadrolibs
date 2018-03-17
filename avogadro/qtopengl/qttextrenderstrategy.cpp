@@ -91,27 +91,23 @@ inline QFont textPropertiesToQFont(const TextProperties& prop)
 
   TextProperties::FontStyles style = prop.fontStyles();
 
-  QFont result(
-    family,
-    static_cast<int>(prop.pixelHeight() * qApp->devicePixelRatio()) / 2 + 1,
-    static_cast<bool>(style & TextProperties::Bold) ? QFont::Bold
-                                                    : QFont::Normal,
-    static_cast<bool>(style & TextProperties::Italic));
+  QFont result(family, static_cast<int>(prop.pixelHeight()) / 2 + 1,
+               static_cast<bool>(style & TextProperties::Bold) ? QFont::Bold
+                                                               : QFont::Normal,
+               static_cast<bool>(style & TextProperties::Italic));
   result.setUnderline(static_cast<bool>(style & TextProperties::Underline));
 
   // Scale the font size to match the specified pixel height:
   QFontMetricsF metrics(result);
   int iterLimiter = 0; // no more than 5 iterations below:
   do {
-    result.setPointSizeF(
-      result.pointSizeF() *
-      static_cast<qreal>(prop.pixelHeight() * qApp->devicePixelRatio()) /
-      metrics.height());
+    result.setPointSizeF(result.pointSizeF() *
+                         static_cast<qreal>(prop.pixelHeight()) /
+                         metrics.height());
 
     metrics = QFontMetricsF(result);
   } while (
-    std::fabs(metrics.height() - static_cast<qreal>(prop.pixelHeight() *
-                                                    qApp->devicePixelRatio())) >
+    std::fabs(metrics.height() - static_cast<qreal>(prop.pixelHeight())) >
       static_cast<qreal>(0.5) &&
     iterLimiter++ < 5);
 

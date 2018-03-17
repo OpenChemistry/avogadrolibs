@@ -172,7 +172,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     const GaussianSet* gaussian =
       dynamic_cast<const GaussianSet*>(molecule.basisSet());
     if (gaussian) {
-      basis["basisType"] = "GTO";
+      basis["basisType"] = "gto";
       string type = "unknown";
       switch (gaussian->scfType()) {
         case Core::Rhf:
@@ -187,8 +187,16 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
         default:
           type = "unknown";
       }
-      basis["scfType"] = type;
-      basis["electronCount"] = gaussian->electronCount();
+      if (!gaussian->name().empty()) {
+        basis["name"] = gaussian->name();
+      }
+
+      Value properties(Json::objectValue);
+      properties["functionalName"] = gaussian->functionalName();
+      properties["electronCount"] = gaussian->electronCount();
+      properties["theory"] = gaussian->theoryName();
+      properties["scfType"] = type;
+
       Value mo(Json::objectValue);
 
       std::vector<double> energies = gaussian->moEnergy();
@@ -224,6 +232,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
       root["basisSet"] = basis;
       root["molecularOrbitals"] = mo;
+      root["properties"] = properties;
     }
   }
 
@@ -1017,7 +1026,13 @@ bool CjsonFormat::readVibrations(Value& root, Molecule& molecule)
     */
 
     // Assumption: chose the vibir attribute over the vibraman attribute
-    value = vibrations["intensities"]["IR"];
+    if (vibrations.isMember("intensities") &&
+        vibrations["intensities"].isObject()) {
+      value =  vibrations["intensities"]["IR"];
+    } else {
+      value = Value();
+    }
+
     if (!value.empty() && value.isArray()) {
       Array<double> intensities;
 

@@ -191,6 +191,16 @@ public:
   ScfType scfType() const { return m_scfType; }
 
   /**
+   * Set the functional name (if appplicable).
+   */
+  void setFunctionalName(const std::string& name) { m_functionalName = name; }
+
+  /**
+   * Get the functional name (empty if none used).
+   */
+  std::string functionalName() const { return m_functionalName; }
+
+  /**
    * Initialize the calculation, this must normally be done before anything.
    */
   void initCalculation();
@@ -321,6 +331,8 @@ private:
   bool m_init;           //! Has the calculation been initialised?
 
   ScfType m_scfType;
+
+  std::string m_functionalName;
 
   /**
    * @brief Generate the density matrix if we have the required information.

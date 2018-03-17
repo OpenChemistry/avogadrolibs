@@ -43,20 +43,16 @@ namespace QtPlugins {
 
 Symmetry::Symmetry(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(NULL),
-    m_symmetryWidget(new SymmetryWidget(qobject_cast<QWidget*>(parent_))),
-    m_viewSymmetryAction(new QAction(this))
+    m_symmetryWidget(nullptr), m_viewSymmetryAction(new QAction(this))
 {
 
-  ctx = msymCreateContext();
+  m_ctx = msymCreateContext();
 
   m_viewSymmetryAction->setText(tr("Symmetry Properties..."));
   connect(m_viewSymmetryAction, SIGNAL(triggered()), SLOT(viewSymmetry()));
   m_actions.push_back(m_viewSymmetryAction);
   m_viewSymmetryAction->setProperty("menu priority", -50);
 
-  connect(m_symmetryWidget, SIGNAL(detectSymmetry()), SLOT(detectSymmetry()));
-  connect(m_symmetryWidget, SIGNAL(symmetrizeMolecule()),
-          SLOT(symmetrizeMolecule()));
   /*
   connect(m_symmetryWidget, SIGNAL(clicked()), this, SLOT(detectSymmetry()));
   connect(m_ui->symmetrizeButton, SIGNAL(clicked()), this, SLOT(symmetrize()));
@@ -81,8 +77,8 @@ Symmetry::~Symmetry()
   qDeleteAll(m_actions);
   m_actions.clear();
 
-  if (ctx != NULL) {
-    msymReleaseContext(ctx);
+  if (m_ctx != NULL) {
+    msymReleaseContext(m_ctx);
   }
 }
 
@@ -112,7 +108,7 @@ void Symmetry::setMolecule(QtGui::Molecule* mol)
     connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
 
   updateActions();
-  detectSymmetry();
+  m_dirty = true;
 }
 
 void Symmetry::moleculeChanged(unsigned int c)
@@ -131,8 +127,9 @@ void Symmetry::moleculeChanged(unsigned int c)
   qDebug() << "moleculeChanged";
   if ((changes & Molecule::Atoms) &&
       (changes & Molecule::Modified || changes & Molecule::Added ||
-       changes & Molecule::Removed))
-    detectSymmetry();
+       changes & Molecule::Removed)) {
+    m_dirty = true;
+  }
 }
 
 void Symmetry::updateActions()
@@ -165,10 +162,16 @@ void Symmetry::updateActions()
 void Symmetry::viewSymmetry()
 {
   if (!m_symmetryWidget) {
-    // m_symmetryWidget = new SymmetryWidget(qobject_cast<QWidget*>(parent()));
-    // m_symmetryWidget->setMolecule(m_molecule);
+    m_symmetryWidget = new SymmetryWidget(qobject_cast<QWidget*>(parent()));
+    m_symmetryWidget->setMolecule(m_molecule);
+    connect(m_symmetryWidget, SIGNAL(detectSymmetry()), SLOT(detectSymmetry()));
+    connect(m_symmetryWidget, SIGNAL(symmetrizeMolecule()),
+            SLOT(symmetrizeMolecule()));
   }
 
+  if (m_dirty) {
+    detectSymmetry();
+  }
   m_symmetryWidget->show();
 }
 
@@ -212,19 +215,19 @@ void Symmetry::detectSymmetry()
   }
   elements = a;
 
-  if (ctx != NULL) {
-    msymReleaseContext(ctx);
-    ctx = msymCreateContext();
+  if (m_ctx != NULL) {
+    msymReleaseContext(m_ctx);
+    m_ctx = msymCreateContext();
   }
 
   // Set the thresholds
   // switch (m_dock->toleranceCombo->currentIndex()) {
   msym_thresholds_t* thresholds = m_symmetryWidget->getThresholds();
-  msymSetThresholds(ctx, thresholds);
+  msymSetThresholds(m_ctx, thresholds);
 
   // At any point, we'll set the text to NULL which will use C1 instead
 
-  if (MSYM_SUCCESS != (ret = msymSetElements(ctx, length, elements))) {
+  if (MSYM_SUCCESS != (ret = msymSetElements(m_ctx, length, elements))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
     m_symmetryWidget->setSymmetryOperations(0, NULL);
@@ -234,7 +237,7 @@ void Symmetry::detectSymmetry()
     return;
   }
 
-  if (MSYM_SUCCESS != (ret = msymFindSymmetry(ctx))) {
+  if (MSYM_SUCCESS != (ret = msymFindSymmetry(m_ctx))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
     m_symmetryWidget->setSymmetryOperations(0, NULL);
@@ -246,7 +249,7 @@ void Symmetry::detectSymmetry()
 
   /* Get the point group name */
   if (MSYM_SUCCESS !=
-      (ret = msymGetPointGroupName(ctx, sizeof(char[6]), point_group))) {
+      (ret = msymGetPointGroupName(m_ctx, sizeof(char[6]), point_group))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
     m_symmetryWidget->setSymmetryOperations(0, NULL);
@@ -256,7 +259,8 @@ void Symmetry::detectSymmetry()
     return;
   }
 
-  if (MSYM_SUCCESS != (ret = msymGetSymmetryOperations(ctx, &msopsl, &msops))) {
+  if (MSYM_SUCCESS !=
+      (ret = msymGetSymmetryOperations(m_ctx, &msopsl, &msops))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
     m_symmetryWidget->setSymmetryOperations(0, NULL);
@@ -266,7 +270,7 @@ void Symmetry::detectSymmetry()
     return;
   }
 
-  if (MSYM_SUCCESS != (ret = msymGetCenterOfMass(ctx, cm))) {
+  if (MSYM_SUCCESS != (ret = msymGetCenterOfMass(m_ctx, cm))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
     m_symmetryWidget->setSymmetryOperations(0, NULL);
@@ -276,7 +280,7 @@ void Symmetry::detectSymmetry()
     return;
   }
 
-  if (MSYM_SUCCESS != (ret = msymGetRadius(ctx, &radius))) {
+  if (MSYM_SUCCESS != (ret = msymGetRadius(m_ctx, &radius))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
     m_symmetryWidget->setSymmetryOperations(0, NULL);
@@ -287,7 +291,7 @@ void Symmetry::detectSymmetry()
   }
 
   if (point_group[1] != '0') {
-    if (MSYM_SUCCESS != (ret = msymGetSubgroups(ctx, &msgl, &msg))) {
+    if (MSYM_SUCCESS != (ret = msymGetSubgroups(m_ctx, &msgl, &msg))) {
       free(elements);
       m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
       m_symmetryWidget->setSymmetryOperations(0, NULL);
@@ -315,6 +319,7 @@ void Symmetry::detectSymmetry()
   qDebug() << "detected symmetry" << point_group;
 
   free(elements);
+  m_dirty = false;
 }
 
 void Symmetry::symmetrizeMolecule()
@@ -332,10 +337,10 @@ void Symmetry::symmetrizeMolecule()
   msym_error_t ret = MSYM_SUCCESS;
 
   // detectSymmetry();
-  if (MSYM_SUCCESS != (ret = msymSymmetrizeElements(ctx, &symerr)))
+  if (MSYM_SUCCESS != (ret = msymSymmetrizeElements(m_ctx, &symerr)))
     return;
 
-  if (MSYM_SUCCESS != (ret = msymGetElements(ctx, &mlength, &melements)))
+  if (MSYM_SUCCESS != (ret = msymGetElements(m_ctx, &mlength, &melements)))
     return;
 
   if (mlength != length)

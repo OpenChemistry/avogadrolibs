@@ -3,15 +3,16 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
-find_package(Spglib REQUIRED)
-include_directories(SYSTEM ${SPGLIB_INCLUDE_DIR})
+if(USE_LIBSPG)
+  find_package(Spglib REQUIRED)
+  include_directories(SYSTEM ${SPGLIB_INCLUDE_DIR})
+endif()
 
 # configure the version header
 configure_file("${PROJECT_SOURCE_DIR}/cmake/version.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/version.h")
 
 set(HEADERS
-  avospglib.h
   color3f.h
   array.h
   atom.h
@@ -49,7 +50,6 @@ set(HEADERS
 )
 
 set(SOURCES
-  avospglib.cpp
   coordinateblockgenerator.cpp
   crystaltools.cpp
   cube.cpp
@@ -71,6 +71,11 @@ set(SOURCES
   variantmap.cpp
   version.cpp
 )
+
+if(USE_LIBSPG)
+  list(APPEND HEADERS avospglib.h)
+  list(APPEND SOURCES avospglib.cpp)
+endif()
 
 avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroCore LINK_PRIVATE ${SPGLIB_LIBRARY})

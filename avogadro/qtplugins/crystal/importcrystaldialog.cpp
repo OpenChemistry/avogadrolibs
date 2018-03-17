@@ -18,8 +18,7 @@
 #include "ui_importcrystaldialog.h"
 
 #include <avogadro/core/molecule.h>
-#include <avogadro/io/poscarformat.h>
-#include <avogadro/qtplugins/openbabel/obfileformat.h>
+#include <avogadro/io/fileformatmanager.h>
 
 #include <QDebug>
 
@@ -54,42 +53,33 @@ bool ImportCrystalDialog::importCrystalClipboard(Avogadro::Core::Molecule& mol)
     return false;
 
   // Use POSCAR format by default. If the extension was set, use that instead
-  std::string ext = m_ui->edit_extension->text().toUpper().toStdString();
+  std::string ext = m_ui->edit_extension->text().toStdString();
+  if (ext.empty())
+    ext = "POSCAR";
 
   // Update the text
   text = m_ui->edit_text->toPlainText();
   std::stringstream s(text.toStdString());
 
-  if (ext.empty() || ext == "POSCAR") {
-    Avogadro::Io::PoscarFormat format;
-    if (format.read(s, mol))
-      return true;
-    // Print out the error messages if we failed
-    else
-      qDebug() << QString::fromStdString(format.error());
+  if (Io::FileFormatManager::instance().readString(mol, s.str(), ext))
+    return true;
+
+  // Print out the error messages from the read if we failed
+  if (!Io::FileFormatManager::instance().error().empty()) {
+    qDebug() << "FileFormatManager error message:"
+             << QString::fromStdString(
+                  Io::FileFormatManager::instance().error());
   }
-  // Try using the extension
-  else {
-    // We don't need to set any of the info, so just put in empty strings for
-    // most arguments (except the extension)
-    vector<string> fileExtensions, mimeTypes;
-    fileExtensions.push_back(ext);
-    OBFileFormat ob("", "", "", "", fileExtensions, mimeTypes);
-    if (ob.read(s, mol))
-      return true;
-    // Print out the error messages from the read if we failed
-    else
-      qDebug() << QString::fromStdString(ob.error());
-  }
+
   displayInvalidFormatMessage();
   return false;
 }
 
 void ImportCrystalDialog::displayInvalidFormatMessage()
 {
-  QMessageBox::critical(this, tr("Cannot Parse Text"),
-                        tr("The input is either not formatted using\n"
-                           "VASP format or the obabel conversion failed.\n\n"));
+  QMessageBox::critical(
+    this, tr("Cannot Parse Text"),
+    tr("Failed to read the data with the supplied format."));
   reject();
   close();
 }

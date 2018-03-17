@@ -1,19 +1,44 @@
-sudo: false
 branches:
   only:
     - master
-language: python
-python:
-    - "2.7"
 
-dist: precise
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - llvm-toolchain-precise-3.8
-    packages:
-    - clang-format-3.8
+language: cpp
+
+sudo: true
+
+matrix:
+  include:
+    - language: python
+      sudo: false
+      python: 2.7
+      env: TASKS="clang-format"
+
+      dist: precise
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-precise-3.8
+          packages:
+          - clang-format-3.8
+
+    - compiler: gcc
+      env: TASKS="ctest gcc-4.8"
+
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ubuntu-toolchain-r-test
+          packages: g++-6
+      env:
+        - TASKS="ctest gcc-6.3"
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+
+    - compiler: clang
+      env: TASKS="ctest clang-3.9"
+
+install:
+  - . ./scripts/travis/install.sh
+
 script:
-  - cd $TRAVIS_BUILD_DIR
-  - ./scripts/travis/run_clang_format_diff.sh master $TRAVIS_COMMIT
+  - ./scripts/travis/build.sh

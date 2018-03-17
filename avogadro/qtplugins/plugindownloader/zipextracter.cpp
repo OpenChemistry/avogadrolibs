@@ -16,6 +16,8 @@
 
 #include "zipextracter.h"
 
+#include <QString>
+
 namespace Avogadro {
 
 namespace QtPlugins {

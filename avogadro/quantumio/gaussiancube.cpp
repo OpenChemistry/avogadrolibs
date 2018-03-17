@@ -83,7 +83,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
 
   // Geometry block
   Vector3 pos;
-  for (unsigned int i = 0; i < abs(nAtoms); ++i) {
+  for (int i = 0; i < abs(nAtoms); ++i) {
     getline(in, line);
     line = Core::trimmed(line);
     list = Core::split(line, ' ');
@@ -135,7 +135,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
   return true;
 }
 
-bool GaussianCube::write(std::ostream& out, const Core::Molecule& molecule)
+bool GaussianCube::write(std::ostream&, const Core::Molecule&)
 {
   // Not implemented yet
   return false;

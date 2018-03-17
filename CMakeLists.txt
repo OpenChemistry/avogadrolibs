@@ -46,9 +46,11 @@ option(USE_HDF5 "Enable optional HDF5 features" OFF)
 option(USE_QT "Enable libraries that use Qt 5" ON)
 option(USE_VTK "Enable libraries that use VTK" OFF)
 option(USE_LIBARCHIVE "Enable optional Libarchive features" ON)
+option(USE_LIBMSYM "Enable optional features using libmsym" ON)
+option(USE_LIBSPG "Enable optional features using libspg" ON)
 option(USE_PROTOCALL "Enable libraries that use ProtoCall" OFF)
 option(USE_MOLEQUEUE "Enable the MoleQueue dependent functionality" ON)
-option(USE_BOOST_PYTHON "Use Boost Python to wrap some of our API" OFF)
+option(USE_PYTHON "Use Python to wrap some of our API" OFF)
 
 add_subdirectory(utilities)
 add_subdirectory(thirdparty)
@@ -66,15 +68,15 @@ if(BUILD_DOCUMENTATION)
   add_subdirectory(docs)
 endif()
 
-if(USE_BOOST_PYTHON)
-  add_subdirectory(boostpython)
+if(USE_PYTHON)
+  add_subdirectory(python)
 endif()
 
 install(
   FILES
     README.md
     CONTRIBUTING.md
-    COPYING
+    LICENSE
   DESTINATION "${INSTALL_DOC_DIR}/avogadrolibs")
 
 # After all add_subdirectory calls, so the list of plugins is complete:

@@ -26,7 +26,7 @@
 class QLabel;
 class QSpinBox;
 class QCheckBox;
-class QGLWidget;
+class QOpenGLWidget;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -75,7 +75,7 @@ private:
   mutable QLabel* m_info;
   mutable QSpinBox* m_animationFPS;
   mutable QCheckBox* m_dynamicBonding;
-  mutable QGLWidget* m_glWidget;
+  mutable QOpenGLWidget* m_glWidget;
 };
 
 inline void PlayerTool::setMolecule(QtGui::Molecule* mol)

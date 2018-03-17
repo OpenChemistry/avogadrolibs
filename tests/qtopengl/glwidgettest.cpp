@@ -66,7 +66,7 @@ int glwidgettest(int argc, char* argv[])
   app.exec();
 
   // Grab the frame buffer of the GLWidget and save it to a QImage.
-  QImage image = widget.grabFrameBuffer(false);
+  QImage image = widget.grabFramebuffer();
 
   // Set up the image regression test.
   ImageRegressionTest test(argc, argv);

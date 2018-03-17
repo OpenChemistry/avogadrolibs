@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-GITCONFIG="git config"
-
-# General aliases that could be global
-${GITCONFIG} alias.prepush 'log --graph --stat origin/master..'
-
-# Alias to push the current topic branch to Gerrit
-${GITCONFIG} alias.gerrit-push "!bash scripts/git-gerrit-push"

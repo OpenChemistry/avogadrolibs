@@ -324,13 +324,13 @@ void GAMESSUSOutput::load(GaussianSet* basis)
 void GAMESSUSOutput::reorderMOs()
 {
   unsigned int GTOcounter = 0;
-  for (unsigned int iMO = 0; iMO < m_nMOs; iMO++) {
+  for (int iMO = 0; iMO < m_nMOs; iMO++) {
     // loop over the basis set shells
     for (unsigned int i = 0; i < m_shellTypes.size(); i++) {
       // The angular momentum of the shell
       // determines the number of primitive GTOs.
       // GAMESS always prints the full cartesian set.
-      double xxx, yyy, zzz, xxy, xxz, yyx, yyz, zzx, zzy, xyz;
+      double yyy, zzz, xxy, xxz, yyx, yyz, zzx, zzy, xyz;
       unsigned int nPrimGTOs = 0;
       switch (m_shellTypes.at(i)) {
         case GaussianSet::S:

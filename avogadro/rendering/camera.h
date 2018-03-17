@@ -154,8 +154,7 @@ public:
   void setDevicePixelRatio(float scale);
 
   /**
-   * Get the scale of the viewport pixels. (Better to use native
-   * qApp()->devicePixelRatio() instead)
+   * Get the scale of the viewport pixels.
    */
   float devicePixelRatio() const { return m_pixelScale; }
 

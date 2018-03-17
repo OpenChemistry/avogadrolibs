@@ -21,7 +21,9 @@
 #include <algorithm>
 #include <cassert>
 
+#ifdef USE_SPGLIB
 #include <avogadro/core/avospglib.h>
+#endif
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/qtgui/hydrogentools.h>
 
@@ -1192,9 +1194,12 @@ bool RWMolecule::reduceCellToPrimitive(double cartTol)
   // Make a copy of the molecule to edit so we can store the old one
   // The unit cell, atom positions, and numbers of atoms may change
   Molecule newMolecule = m_molecule;
-
+#ifdef USE_SPGLIB
   if (!Core::AvoSpglib::reduceToPrimitive(newMolecule, cartTol))
     return false;
+#else
+  return false;
+#endif
 
   // Since most components of the molecule will be modified,
   // we will just modify the whole thing...
@@ -1216,8 +1221,12 @@ bool RWMolecule::conventionalizeCell(double cartTol)
   // The unit cell, atom positions, and numbers of atoms may all change
   Molecule newMolecule = m_molecule;
 
+#ifdef USE_SPGLIB
   if (!Core::AvoSpglib::conventionalizeCell(newMolecule, cartTol))
     return false;
+#else
+  return false;
+#endif
 
   Molecule::MoleculeChanges changes =
     Molecule::UnitCell | Molecule::Atoms | Molecule::Added;
@@ -1237,8 +1246,12 @@ bool RWMolecule::symmetrizeCell(double cartTol)
   // The unit cell, atom positions, and numbers of atoms may all change
   Molecule newMolecule = m_molecule;
 
+#ifdef USE_SPGLIB
   if (!Core::AvoSpglib::symmetrize(newMolecule, cartTol))
     return false;
+#else
+  return false;
+#endif
 
   Molecule::MoleculeChanges changes =
     Molecule::UnitCell | Molecule::Atoms | Molecule::Added;
