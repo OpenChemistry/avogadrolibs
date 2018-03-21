@@ -8,6 +8,11 @@ if(USE_LIBSPG)
   include_directories(SYSTEM ${SPGLIB_INCLUDE_DIR})
 endif()
 
+if(USE_LIBMSYM)
+  find_package(Libmsym REQUIRED)
+  include_directories(SYSTEM ${LIBMSYM_INCLUDE_DIR})
+endif()
+
 # configure the version header
 configure_file("${PROJECT_SOURCE_DIR}/cmake/version.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/version.h")
