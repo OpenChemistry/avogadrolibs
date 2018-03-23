@@ -25,6 +25,10 @@
 
 #include <json/json.h>
 
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
+
 namespace Avogadro {
 namespace Io {
 
@@ -89,8 +93,145 @@ bool CjsonFormat::testIfArray(Value& value, const std::string& key,
   return true;
 }
 
+bool setJsonKey(json& j, Molecule& m, const std::string& key)
+{
+  if (j.count(key) && j.find(key)->is_string()) {
+    std::cout << "Setting " << key << " -> " << j.value(key, "undefined") << std::endl;
+    m.setData(key, j.value(key, "undefined"));
+    return true;
+  }
+  std::cout << key << " not found." << std::endl;
+  return false;
+}
+
+bool isNumericArray(json& j)
+{
+  if (j.is_array() && j.size() > 0) {
+    for (unsigned int i = 0; i < j.size(); ++i) {
+      json v = j[i];
+      if (!v.is_number()) {
+        std::cout << "Not a number at " << i << " in " << j << std::endl;
+        return false;
+      }
+    }
+  return true;
+  }
+  return false;
+}
+
+bool isBooleanArray(json& j)
+{
+  if (j.is_array() && j.size() > 0) {
+    for (unsigned int i = 0; i < j.size(); ++i) {
+      json v = j[i];
+      if (!v.is_boolean()) {
+        std::cout << "Not a boolean at " << i << " in " << j << std::endl;
+        return false;
+      }
+    }
+  return true;
+  }
+  return false;
+}
+
 bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 {
+  json jsonRoot = json::parse(file, nullptr, false);
+  if (jsonRoot.is_discarded()) {
+    appendError("Error parsing JSON.");
+    return false;
+  }
+
+  if (!jsonRoot.is_object())  {
+    appendError("Error: Input is not a JSON object.");
+    return false;
+  }
+
+  auto jsonValue = jsonRoot.find("chemical json");
+  if (jsonValue == jsonRoot.end()) {
+    appendError("Error: no \"chemical json\" key found.");
+    return false;
+  }
+  if (*jsonValue != 0) {
+    appendError("Warning: chemical json version is not 0.");
+  }
+
+  // Read some basic key-value pairs (all strings).
+  setJsonKey(jsonRoot, molecule, "name");
+  setJsonKey(jsonRoot, molecule, "inchi");
+  setJsonKey(jsonRoot, molecule, "formula");
+
+  // Read in the atoms.
+  json atoms = jsonRoot["atoms"];
+  if (!atoms.is_object()) {
+    appendError("The 'atoms' key does not contain an object.");
+    return false;
+  }
+
+  json atomicNumbers = atoms["elements"]["number"];
+  // This represents our minimal spec for a molecule - atoms that have an
+  // atomic number.
+  if (isNumericArray(atomicNumbers) && atomicNumbers.size() > 0) {
+    for (unsigned int i = 0; i < atomicNumbers.size(); ++i)
+      molecule.addAtom(atomicNumbers[i]);
+  } else {
+    appendError("Malformed array for in atoms.elements.number");
+    return false;
+  }
+  Index atomCount = molecule.atomCount();
+
+  // 3d coordinates if available for our atoms
+  json atomicCoords = atoms["coords"]["3d"];
+  if (isNumericArray(atomicCoords) && atomicCoords.size() == 3 * atomCount) {
+    for (Index i = 0; i < atomCount; ++i) {
+      auto a = molecule.atom(i);
+      a.setPosition3d(Vector3(atomicCoords[3 * i],
+                              atomicCoords[3 * i + 1],
+                              atomicCoords[3 * i + 2]));
+    }
+  }
+
+  // Selection is optional, but if present should be loaded.
+  json selection = atoms["selected"];
+  if (isBooleanArray(selection) && selection.size() == atomCount)
+      for (Index i = 0; i < atomCount; ++i)
+        molecule.setAtomSelected(i, selection[i]);
+
+  json unitCell = jsonRoot["unit cell"];
+  if (!unitCell.is_object())
+    unitCell = jsonRoot["unitCell"];
+  if (unitCell.is_object() && unitCell["a"].is_number()
+      && unitCell["b"].is_number() && unitCell["c"].is_number()
+      && unitCell["alpha"].is_number() && unitCell["beta"].is_number()
+      && unitCell["gamma"].is_number()) {
+    Real a = static_cast<Real>(unitCell["a"]);
+    Real b = static_cast<Real>(unitCell["b"]);
+    Real c = static_cast<Real>(unitCell["c"]);
+    Real alpha = static_cast<Real>(unitCell["alpha"]) * DEG_TO_RAD;
+    Real beta = static_cast<Real>(unitCell["beta"]) * DEG_TO_RAD;
+    Real gamma = static_cast<Real>(unitCell["gamma"]) * DEG_TO_RAD;
+    Core::UnitCell* unitCellObject =
+      new Core::UnitCell(a, b, c, alpha, beta, gamma);
+    molecule.setUnitCell(unitCellObject);
+  }
+  json fractional = atoms["coords"]["3d fractional"];
+  if (!fractional.is_array())
+    fractional = atoms["coords"]["3dFractional"];
+  if (fractional.is_array() && fractional.size() == 3 * atomCount
+      && isNumericArray(fractional) && molecule.unitCell() ) {
+      Array<Vector3> fcoords;
+      fcoords.reserve(atomCount);
+      for (Index i = 0; i < atomCount; ++i) {
+        fcoords.push_back(
+          Vector3(static_cast<Real>(fractional[i * 3 + 0]),
+                  static_cast<Real>(fractional[i * 3 + 1]),
+                  static_cast<Real>(fractional[i * 3 + 2])));
+      }
+      CrystalTools::setFractionalCoordinates(molecule, fcoords);
+  }
+
+  return true;
+
   Value root;
   Reader reader;
   bool ok = reader.parse(file, root);

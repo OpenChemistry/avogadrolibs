@@ -16,7 +16,8 @@ endif()
 include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/pugixml"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp"
-  "${AvogadroLibs_SOURCE_DIR}/thirdparty/struct")
+  "${AvogadroLibs_SOURCE_DIR}/thirdparty/struct"
+  "${AvogadroLibs_SOURCE_DIR}/thirdparty")
 
 if(DEFINED AvogadroLibs_MEMORY_INCLUDE_DIRS)
   # The smart pointer classes just require headers.
