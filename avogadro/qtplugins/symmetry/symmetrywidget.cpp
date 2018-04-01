@@ -98,7 +98,7 @@ SymmetryWidget::SymmetryWidget(QWidget* parent_)
           SIGNAL(symmetrizeMolecule()));
 
   connect(
-    m_ui->subgroupsTree->selectionModel(),
+    m_ui->equivalenceTree->selectionModel(),
     SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
     SLOT(
       equivalenceSelectionChanged(const QItemSelection&, const QItemSelection&)));
@@ -288,15 +288,24 @@ void SymmetryWidget::equivalenceSelectionChanged(const QItemSelection& selected,
 
   unsigned int length = m_molecule->atomCount();
   for (Index i = 0; i < length; ++i) {
+    qDebug() << "checking atom" << i << " for " << a->n;
+    m_molecule->setAtomSelected(i, false);
     if (m_molecule->atomicNumbers()[i] != a->n)
       continue;
 
     Vector3 ipos = m_molecule->atomPositions3d()[i];
-    if (a->v[0] == ipos[0]
-        && a->v[1] == ipos[1]
-        && a->v[2] == ipos[2])
-      m_molecule->setAtomSelected(i, true);
+    qDebug() << a->v[0] << ipos[0] - m_cm[0];
+    qDebug() << a->v[1] << ipos[1] - m_cm[1];
+    qDebug() << a->v[2] << ipos[2] - m_cm[2];
+    if ( fabs(a->v[0] - (ipos[0] - m_cm[0])) < 0.05
+        && fabs(a->v[0] - (ipos[0] - m_cm[0])) < 0.05
+        && fabs(a->v[0] - (ipos[0] - m_cm[0])) < 0.05
+       ) {
+          m_molecule->setAtomSelected(i, true);
+          qDebug() << " got one!";
+        }
   }
+  m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
 void SymmetryWidget::setRadius(double radius)
