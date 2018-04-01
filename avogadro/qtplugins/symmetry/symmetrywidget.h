@@ -73,8 +73,9 @@ public slots:
   void moleculeChanged(unsigned int changes);
 
   void setPointGroupSymbol(QString pg);
-  void setSymmetryOperations(int sopsl, msym::msym_symmetry_operation_t* sops);
-  void setSubgroups(int sgl, msym::msym_subgroup_t* sg);
+  void setSymmetryOperations(int sopsl,
+                             const msym::msym_symmetry_operation_t* sops);
+  void setSubgroups(int sgl, const msym::msym_subgroup_t* sg);
   void setCenterOfMass(double cm[3]);
   void setRadius(double radius);
   msym::msym_thresholds_t* getThresholds() const;
@@ -92,8 +93,8 @@ private:
   QtGui::Molecule* m_molecule;
   QVector3D m_cm;
 
-  msym::msym_symmetry_operation_t* m_sops;
-  msym::msym_subgroup_t* m_sg;
+  const msym::msym_symmetry_operation_t* m_sops;
+  const msym::msym_subgroup_t* m_sg;
   int m_sopsl, m_sgl;
   double m_radius;
 
