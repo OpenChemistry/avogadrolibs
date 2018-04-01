@@ -41,6 +41,7 @@ include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR})
 
 option(ENABLE_TESTING "Enable testing and building the tests." OFF)
+option(ENABLE_TRANSLATIONS "Enable building translations with Qt5 Linguist" OFF)
 option(USE_OPENGL "Enable libraries that use OpenGL" ON)
 option(USE_HDF5 "Enable optional HDF5 features" OFF)
 option(USE_QT "Enable libraries that use Qt 5" ON)
@@ -70,6 +71,10 @@ endif()
 
 if(USE_PYTHON)
   add_subdirectory(python)
+endif()
+
+if(ENABLE_TRANSLATIONS)
+  find_package(Qt5LinguistTools)
 endif()
 
 install(
