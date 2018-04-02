@@ -1,4 +1,7 @@
-find_package(libmsym REQUIRED)
+find_package(libmsym NO_MODULE)
+if(NOT DEFINED LIBMSYM_INCLUDE_DIRS)
+  find_package(libmsym REQUIRED)
+endif()
 include_directories(${LIBMSYM_INCLUDE_DIRS})
 
 message("msym include dir " ${LIBMSYM_INCLUDE_DIRS})
