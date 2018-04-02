@@ -4,7 +4,7 @@
 #
 #  LIBMSYM_FOUND        - system has LIBMSYM
 #  LIBMSYM_INCLUDE_DIRS - the LIBMSYM include directories
-#  LIBMSYM_LIBRARY      - The LIBMSYM library
+#  LIBMSYM_LIBRARIES    - The LIBMSYM library
 #
 find_path(LIBMSYM_INCLUDE_DIR libmsym/msym.h)
 find_library(LIBMSYM_LIBRARY NAMES libmsym)
