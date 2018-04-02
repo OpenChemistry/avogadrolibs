@@ -197,8 +197,8 @@ void Symmetry::detectSymmetry()
   double cm[3], radius = 0.0, symerr = 0.0;
 
   /* Do not free these variables */
-  msym_symmetry_operation_t* msops = NULL;
-  msym_subgroup_t* msg = NULL;
+  const msym_symmetry_operation_t* msops = NULL;
+  const msym_subgroup_t* msg = NULL;
   int msgl = 0, msopsl = 0, mlength = 0;
 
   // initialize the c-style array of atom names and coordinates

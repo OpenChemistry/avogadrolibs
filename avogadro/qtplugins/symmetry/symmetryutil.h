@@ -50,7 +50,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 namespace SymmetryUtil {
-QString pointGroupSymbol(char* point_group);
+QString pointGroupSymbol(const char* point_group);
 QString operationSymbol(const msym::msym_symmetry_operation_t* operation);
 }
 }

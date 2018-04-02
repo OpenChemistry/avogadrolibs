@@ -220,7 +220,7 @@ void SymmetryWidget::subgroupsSelectionChanged(const QItemSelection& selected,
   qDebug() << "index " << sgi;
   if (sgi < 0 || sgi >= m_sgl)
     return;
-  msym::msym_subgroup_t* sg = &m_sg[sgi];
+  const msym::msym_subgroup_t* sg = &m_sg[sgi];
   // m_ui->operationsTable->selectionModel()->clear();
 
   QItemSelectionModel* selectionModel = m_ui->operationsTable->selectionModel();
@@ -264,7 +264,7 @@ void SymmetryWidget::setPointGroupSymbol(QString pg)
 }
 
 void SymmetryWidget::setSymmetryOperations(
-  int sopsl, msym::msym_symmetry_operation_t* sops)
+  int sopsl, const msym::msym_symmetry_operation_t* sops)
 {
   m_sops = sops;
   m_sopsl = sopsl;
@@ -281,7 +281,7 @@ void SymmetryWidget::setSymmetryOperations(
 
 #include <stdio.h>
 
-void SymmetryWidget::setSubgroups(int sgl, msym::msym_subgroup_t* sg)
+void SymmetryWidget::setSubgroups(int sgl, const msym::msym_subgroup_t* sg)
 {
   m_sg = sg;
   m_sgl = sgl;

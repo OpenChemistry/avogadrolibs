@@ -35,15 +35,3 @@ avogadro_plugin(SymmetryScene
 target_link_libraries(Symmetry LINK_PRIVATE ${LIBMSYM_LIBRARIES})
 target_link_libraries(SymmetryScene LINK_PRIVATE AvogadroRendering)
 
-
-#[[
-add_subdirectory(libmsym)
-
-
-need this in libmsym
-install(TARGETS libmsym
-    EXPORT "AvogadroLibsTargets"
-    RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
-    LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/plugins"
-    ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}/avogadro2/staticplugins")
-]]
