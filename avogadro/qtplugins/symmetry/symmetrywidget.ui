@@ -50,7 +50,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QTableView" name="esTable">
+        <widget class="QTreeView" name="equivalenceTree">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -63,11 +63,8 @@
          <property name="selectionBehavior">
           <enum>QAbstractItemView::SelectRows</enum>
          </property>
-         <attribute name="horizontalHeaderStretchLastSection">
-          <bool>true</bool>
-         </attribute>
-         <attribute name="verticalHeaderCascadingSectionResizes">
-          <bool>true</bool>
+         <attribute name="headerVisible">
+          <bool>false</bool>
          </attribute>
         </widget>
        </item>
@@ -75,6 +72,9 @@
         <layout class="QHBoxLayout" name="horizontalLayoutMolecule">
          <item>
           <widget class="QCheckBox" name="lockSymmetryCheckBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Lock Symmetry</string>
            </property>
@@ -160,6 +160,9 @@
          <property name="selectionBehavior">
           <enum>QAbstractItemView::SelectRows</enum>
          </property>
+         <attribute name="headerVisible">
+          <bool>false</bool>
+         </attribute>
         </widget>
        </item>
        <item>
