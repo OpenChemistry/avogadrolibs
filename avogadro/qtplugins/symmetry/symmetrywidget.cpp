@@ -74,11 +74,18 @@ msym_thresholds_t sloppy_thresholds = {
 };
 
 SymmetryWidget::SymmetryWidget(QWidget* parent_)
-  : QWidget(parent_), m_ui(new Ui::SymmetryWidget), m_molecule(NULL),
-    m_equivalenceTreeModel(new QStandardItemModel(this)),
-    m_operationsTableModel(new OperationsTableModel(this)),
-    m_subgroupsTreeModel(new QStandardItemModel(this)),
-    m_es(NULL), m_sops(NULL), m_sg(NULL), m_sopsl(0), m_sgl(0), m_radius(0.0)
+  : QWidget(parent_)
+  , m_ui(new Ui::SymmetryWidget)
+  , m_molecule(NULL)
+  , m_equivalenceTreeModel(new QStandardItemModel(this))
+  , m_operationsTableModel(new OperationsTableModel(this))
+  , m_subgroupsTreeModel(new QStandardItemModel(this))
+  , m_es(NULL)
+  , m_sops(NULL)
+  , m_sg(NULL)
+  , m_sopsl(0)
+  , m_sgl(0)
+  , m_radius(0.0)
 {
   setWindowFlags(Qt::Dialog);
   m_ui->setupUi(this);
@@ -92,16 +99,17 @@ SymmetryWidget::SymmetryWidget(QWidget* parent_)
   m_ui->subgroupsTree->setModel(m_subgroupsTreeModel);
   m_ui->subgroupsTree->setItemDelegateForColumn(0, new RichTextDelegate(this));
 
-  connect(m_ui->detectSymmetryButton, SIGNAL(clicked()),
-          SIGNAL(detectSymmetry()));
-  connect(m_ui->symmetrizeMoleculeButton, SIGNAL(clicked()),
+  connect(
+    m_ui->detectSymmetryButton, SIGNAL(clicked()), SIGNAL(detectSymmetry()));
+  connect(m_ui->symmetrizeMoleculeButton,
+          SIGNAL(clicked()),
           SIGNAL(symmetrizeMolecule()));
 
   connect(
     m_ui->equivalenceTree->selectionModel(),
     SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-    SLOT(
-      equivalenceSelectionChanged(const QItemSelection&, const QItemSelection&)));
+    SLOT(equivalenceSelectionChanged(const QItemSelection&,
+                                     const QItemSelection&)));
 
   connect(
     m_ui->operationsTable->selectionModel(),
@@ -142,7 +150,8 @@ void SymmetryWidget::moleculeChanged(unsigned int changes)
 }
 
 void SymmetryWidget::operationsSelectionChanged(
-  const QItemSelection& selected, const QItemSelection& deselected)
+  const QItemSelection& selected,
+  const QItemSelection& deselected)
 {
 
   if (!m_molecule)
@@ -259,8 +268,9 @@ void SymmetryWidget::subgroupsSelectionChanged(const QItemSelection& selected,
   selectionModel->select(selection, QItemSelectionModel::ClearAndSelect);
 }
 
-void SymmetryWidget::equivalenceSelectionChanged(const QItemSelection& selected,
-                                               const QItemSelection& deselected)
+void SymmetryWidget::equivalenceSelectionChanged(
+  const QItemSelection& selected,
+  const QItemSelection& deselected)
 {
   QModelIndex i =
     m_ui->equivalenceTree->selectionModel()->selectedIndexes().first();
@@ -281,8 +291,8 @@ void SymmetryWidget::equivalenceSelectionChanged(const QItemSelection& selected,
   if (!m_molecule)
     return;
 
-  const msym_equivalence_set_t *smes = &m_es[group];
-  const msym_element_t *a = smes->elements[atomInGroup];
+  const msym_equivalence_set_t* smes = &m_es[group];
+  const msym_element_t* a = smes->elements[atomInGroup];
   if (a == NULL)
     return;
 
@@ -297,13 +307,12 @@ void SymmetryWidget::equivalenceSelectionChanged(const QItemSelection& selected,
     qDebug() << a->v[0] << ipos[0] - m_cm[0];
     qDebug() << a->v[1] << ipos[1] - m_cm[1];
     qDebug() << a->v[2] << ipos[2] - m_cm[2];
-    if ( fabs(a->v[0] - (ipos[0] - m_cm[0])) < 0.05
-        && fabs(a->v[0] - (ipos[0] - m_cm[0])) < 0.05
-        && fabs(a->v[0] - (ipos[0] - m_cm[0])) < 0.05
-       ) {
-          m_molecule->setAtomSelected(i, true);
-          qDebug() << " got one!";
-        }
+    if (fabs(a->v[0] - (ipos[0] - m_cm[0])) < 0.05 &&
+        fabs(a->v[0] - (ipos[0] - m_cm[0])) < 0.05 &&
+        fabs(a->v[0] - (ipos[0] - m_cm[0])) < 0.05) {
+      m_molecule->setAtomSelected(i, true);
+      qDebug() << " got one!";
+    }
   }
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
@@ -324,7 +333,8 @@ void SymmetryWidget::setPointGroupSymbol(QString pg)
 }
 
 void SymmetryWidget::setSymmetryOperations(
-  int sopsl, const msym::msym_symmetry_operation_t* sops)
+  int sopsl,
+  const msym::msym_symmetry_operation_t* sops)
 {
   m_sops = sops;
   m_sopsl = sopsl;
@@ -340,7 +350,7 @@ void SymmetryWidget::setSymmetryOperations(
 }
 
 void SymmetryWidget::setEquivalenceSets(int esl,
-  const msym::msym_equivalence_set_t* es)
+                                        const msym::msym_equivalence_set_t* es)
 {
   m_esl = esl;
   m_es = es;
@@ -351,11 +361,11 @@ void SymmetryWidget::setEquivalenceSets(int esl,
     parent->setText(label);
     parent->setData(i, Qt::UserRole);
     m_equivalenceTreeModel->appendRow(parent);
-    const msym_equivalence_set_t *smes = &es[i];
+    const msym_equivalence_set_t* smes = &es[i];
     for (int j = 0; j < smes->length; j++) {
       QStandardItem* const child = new QStandardItem;
-      label = tr("%1 %2").arg(smes->elements[j]->name)
-                 .arg(QString::number(j + 1));
+      label =
+        tr("%1 %2").arg(smes->elements[j]->name).arg(QString::number(j + 1));
       child->setText(label);
       child->setData(j, Qt::UserRole);
       parent->appendRow(child);

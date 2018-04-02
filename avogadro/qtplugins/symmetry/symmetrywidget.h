@@ -34,7 +34,8 @@
 // class QPlainTextEdit;
 
 namespace msym {
-extern "C" {
+extern "C"
+{
 #include <libmsym/msym.h>
 }
 }
@@ -73,19 +74,17 @@ public slots:
   void moleculeChanged(unsigned int changes);
 
   void setPointGroupSymbol(QString pg);
-  void setEquivalenceSets(int mesl,
-                          const msym::msym_equivalence_set_t* es);
+  void setEquivalenceSets(int mesl, const msym::msym_equivalence_set_t* es);
   void setSymmetryOperations(int sopsl,
                              const msym::msym_symmetry_operation_t* sops);
-  void setSubgroups(int sgl,
-                    const msym::msym_subgroup_t* sg);
+  void setSubgroups(int sgl, const msym::msym_subgroup_t* sg);
   void setCenterOfMass(double cm[3]);
   void setRadius(double radius);
   msym::msym_thresholds_t* getThresholds() const;
 
 private slots:
   void equivalenceSelectionChanged(const QItemSelection& selected,
-                                  const QItemSelection& deselected);
+                                   const QItemSelection& deselected);
   void operationsSelectionChanged(const QItemSelection& selected,
                                   const QItemSelection& deselected);
   void subgroupsSelectionChanged(const QItemSelection& selected,

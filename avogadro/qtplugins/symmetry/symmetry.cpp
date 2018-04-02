@@ -42,8 +42,10 @@ namespace Avogadro {
 namespace QtPlugins {
 
 Symmetry::Symmetry(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(NULL),
-    m_symmetryWidget(nullptr), m_viewSymmetryAction(new QAction(this))
+  : Avogadro::QtGui::ExtensionPlugin(parent_)
+  , m_molecule(NULL)
+  , m_symmetryWidget(nullptr)
+  , m_viewSymmetryAction(new QAction(this))
 {
 
   m_ctx = msymCreateContext();
@@ -165,7 +167,8 @@ void Symmetry::viewSymmetry()
     m_symmetryWidget = new SymmetryWidget(qobject_cast<QWidget*>(parent()));
     m_symmetryWidget->setMolecule(m_molecule);
     connect(m_symmetryWidget, SIGNAL(detectSymmetry()), SLOT(detectSymmetry()));
-    connect(m_symmetryWidget, SIGNAL(symmetrizeMolecule()),
+    connect(m_symmetryWidget,
+            SIGNAL(symmetrizeMolecule()),
             SLOT(symmetrizeMolecule()));
   }
 
@@ -199,7 +202,7 @@ void Symmetry::detectSymmetry()
   /* Do not free these variables */
   const msym_symmetry_operation_t* msops = NULL;
   const msym_subgroup_t* msg = NULL;
-  const msym_equivalence_set_t *mes = NULL;
+  const msym_equivalence_set_t* mes = NULL;
   int mesl = 0, msgl = 0, msopsl = 0, mlength = 0;
 
   // initialize the c-style array of atom names and coordinates
@@ -275,8 +278,7 @@ void Symmetry::detectSymmetry()
     return;
   }
 
-  if (MSYM_SUCCESS !=
-      (ret = msymGetEquivalenceSets(m_ctx, &mesl, &mes)) ) {
+  if (MSYM_SUCCESS != (ret = msymGetEquivalenceSets(m_ctx, &mesl, &mes))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
     m_symmetryWidget->setEquivalenceSets(0, NULL);
