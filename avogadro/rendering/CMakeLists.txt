@@ -97,7 +97,6 @@ foreach(file ${shader_files})
   set(src  ${CMAKE_CURRENT_SOURCE_DIR}/${file})
   set(resh ${CMAKE_CURRENT_BINARY_DIR}/${file_we}.h)
   list(APPEND shader_h_files ${resh})
-  message("Adding ${file} to encoder... ${src} ${resh} ${file_we}")
   add_custom_command(
     OUTPUT ${resh}
     DEPENDS ${src} encodefile
