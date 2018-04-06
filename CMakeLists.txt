@@ -98,7 +98,7 @@ install(FILES
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindGLEW.cmake"
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibArchive.cmake"
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibmsym.cmake"
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findlibmsym.cmake"
   DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
 install(EXPORT "AvogadroLibsTargets"
   DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
