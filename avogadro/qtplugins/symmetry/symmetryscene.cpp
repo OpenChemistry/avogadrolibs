@@ -44,7 +44,6 @@ using Rendering::CylinderGeometry;
 SymmetryScene::SymmetryScene(QObject* p)
   : QtGui::ScenePlugin(p), m_enabled(true)
 {
-  qDebug() << "SymmetryScene constructor";
 }
 
 SymmetryScene::~SymmetryScene()
@@ -54,8 +53,6 @@ SymmetryScene::~SymmetryScene()
 void SymmetryScene::process(const Core::Molecule& coreMolecule,
                             Rendering::GroupNode& node)
 {
-  qDebug() << "SymmetryScene::process";
-
   const QtGui::Molecule* molecule =
     dynamic_cast<const QtGui::Molecule*>(&coreMolecule);
   if (!molecule)
@@ -70,7 +67,6 @@ void SymmetryScene::process(const Core::Molecule& coreMolecule,
     molecule->property("SymmetryImproperRotationVariantList");
   QVariant reflection = molecule->property("SymmetryReflectionVariantList");
   if (!origo.isValid() || !radius.isValid()) {
-    qDebug() << "Missing origo or radius";
     return;
   }
 
@@ -93,7 +89,6 @@ void SymmetryScene::process(const Core::Molecule& coreMolecule,
 
   if (inversion.isValid()) {
     Vector3ub color(0, 0, 255);
-    qDebug() << "Have inversion";
     QVector3D qvec = inversion.value<QVector3D>();
     Vector3f fvec = Vector3f(qvec.x(), qvec.y(), qvec.z());
     spheres->addSphere(fvec, color, 0.3f);
@@ -102,7 +97,6 @@ void SymmetryScene::process(const Core::Molecule& coreMolecule,
   if (properRotation.isValid()) {
     Vector3ub color(255, 0, 0);
     QVariantList properRotationVariantList = properRotation.toList();
-    qDebug() << "Have proper rotation " << properRotationVariantList.size();
     foreach (QVariant qv, properRotationVariantList) {
       QVector3D qvec = qv.value<QVector3D>();
       Vector3f fvec = Vector3f(qvec.x(), qvec.y(), qvec.z());
@@ -113,14 +107,11 @@ void SymmetryScene::process(const Core::Molecule& coreMolecule,
 
   if (improperRotation.isValid()) {
     QVariantList improperRotationVariantList = improperRotation.toList();
-
-    qDebug() << "Have improper rotation " << improperRotationVariantList.size();
   }
 
   if (reflection.isValid()) {
     Vector3ub color(255, 255, 0);
     QVariantList reflectionVariantList = reflection.toList();
-    qDebug() << "Have reflection " << reflectionVariantList.size();
 
     foreach (QVariant qv, reflectionVariantList) {
       QVector3D qvec = qv.value<QVector3D>();
@@ -129,8 +120,6 @@ void SymmetryScene::process(const Core::Molecule& coreMolecule,
                              fradius, color);
     }
   }
-
-  qDebug() << "SymmetryScene::process do stuff " << qorigo;
 }
 
 void SymmetryScene::processEditable(const QtGui::RWMolecule& molecule,
