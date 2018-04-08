@@ -63,9 +63,7 @@ void Meshes::process(const Molecule& mol, GroupNode& node)
   unsigned char opacity = 100;
 
   if (mol.meshCount()) {
-    qDebug() << "We have" << mol.meshCount() << "meshes...";
     const Mesh* mesh = mol.mesh(0);
-    qDebug() << mesh << "with" << mesh->numVertices() << "vertices";
 
     /// @todo Allow use of MeshGeometry without an index array when all vertices
     /// form explicit triangles.
