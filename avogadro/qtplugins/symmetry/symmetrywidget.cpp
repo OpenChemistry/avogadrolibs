@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2015 Marcus Johansson <mcodev31@gmail.com>
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "symmetrywidget.h"
@@ -291,28 +280,21 @@ void SymmetryWidget::equivalenceSelectionChanged(
     return;
 
   const msym_equivalence_set_t* smes = &m_es[group];
+  if (smes == nullptr)
+    return;
   const msym_element_t* a = smes->elements[atomInGroup];
   if (a == nullptr)
     return;
 
   unsigned int length = m_molecule->atomCount();
+  // unselect all the atoms
   for (Index i = 0; i < length; ++i) {
-    // qDebug() << "checking atom" << i << " for " << a->n;
     m_molecule->setAtomSelected(i, false);
-    if (m_molecule->atomicNumbers()[i] != a->n)
-      continue;
-
-    Vector3 ipos = m_molecule->atomPositions3d()[i];
-    //qDebug() << a->v[0] << ipos[0] - m_cm[0];
-    //qDebug() << a->v[1] << ipos[1] - m_cm[1];
-    //qDebug() << a->v[2] << ipos[2] - m_cm[2];
-    if (fabs(a->v[0] - (ipos[0] - m_cm[0])) < 0.05 &&
-        fabs(a->v[0] - (ipos[0] - m_cm[0])) < 0.05 &&
-        fabs(a->v[0] - (ipos[0] - m_cm[0])) < 0.05) {
-      m_molecule->setAtomSelected(i, true);
-      // qDebug() << " got one!";
-    }
   }
+  // this is yucky, but libmsym uses <void*> for id
+  Index selectedAtom = reinterpret_cast<Index>(a->id);
+  m_molecule->setAtomSelected(selectedAtom, true);
+
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
