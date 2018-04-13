@@ -1,22 +1,22 @@
-# Translations for the Avogadro molecular builder.
-# Copyright (C) 2006-2018 The Avogadro Project
-# This file is distributed under the same license as the Avogadro package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Thai translation for avogadro
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
+# This file is distributed under the same license as the avogadro package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Avogadro 1.90.0\n"
+"Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-04-13 12:05-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2016-06-10 06:42+0000\n"
+"Last-Translator: Rockworld <sumoisrock@gmail.com>\n"
+"Language-Team: Thai <th@li.org>\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
+"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -1136,7 +1136,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321 :345
+#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321:345
 msgid "Adjust Hydrogens"
 msgstr ""
 
@@ -1258,7 +1258,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:177
 #. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
-#: qtplugins/apbs/apbs.cpp:43 :141
+#: qtplugins/apbs/apbs.cpp:43:141
 msgid "Run APBS"
 msgstr ""
 
@@ -1308,7 +1308,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
-#: qtplugins/apbs/apbs.h:42 :87
+#: qtplugins/apbs/apbs.h:42:87
 msgid "APBS"
 msgstr ""
 
@@ -1369,7 +1369,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:190
-#: qtplugins/clientserver/connectionsettingsdialog.cpp:75 :147
+#: qtplugins/clientserver/connectionsettingsdialog.cpp:75:147
 msgid "Success"
 msgstr ""
 
@@ -1594,7 +1594,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607 :615
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607:615
 msgid "Custom"
 msgstr ""
 
@@ -1603,8 +1603,11 @@ msgid "XYZ format (symbols)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:609
+#, fuzzy
 msgid "XYZ format (names)"
 msgstr ""
+",Launchpad Contributions:,Rockworld, ,Launchpad Contributions:,Rockworld, ,"
+"Launchpad Contributions:,Rockworld"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:610
 msgid "XYZ format (atomic numbers)"
@@ -1636,25 +1639,25 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:42 :225
+#: qtplugins/copypaste/copypaste.cpp:42:225
 msgid "Copy"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:43 :222
+#: qtplugins/copypaste/copypaste.cpp:43:222
 msgid "Cut"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:44 :234
+#: qtplugins/copypaste/copypaste.cpp:44:234
 msgid "Clear"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
-#: qtplugins/copypaste/copypaste.cpp:45 :228
+#: qtplugins/copypaste/copypaste.cpp:45:228
 msgid "Paste"
 msgstr ""
 
@@ -2039,7 +2042,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
-#: qtplugins/importpqr/importpqr.h:45 :393
+#: qtplugins/importpqr/importpqr.h:45:393
 msgid "Import From PQR"
 msgstr ""
 
@@ -2087,7 +2090,7 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133 :426
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:426
 msgid "Insert Molecule..."
 msgstr ""
 
@@ -2525,7 +2528,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.h:46 :570
+#: qtplugins/plugindownloader/plugindownloader.h:46:570
 msgid "Plugin Downloader"
 msgstr ""
 
@@ -2693,7 +2696,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:183
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:35 :678
+#: qtplugins/select/select.h:35:678
 msgid "Select"
 msgstr ""
 
@@ -2712,7 +2715,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:81 :663
+#: qtplugins/spacegroup/spacegroup.cpp:81:663
 msgid "Symmetrize"
 msgstr ""
 
@@ -2832,7 +2835,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:44 :648
+#: qtplugins/symmetry/symmetry.h:44:648
 msgid "Symmetry"
 msgstr ""
 
@@ -3932,7 +3935,15 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
+",Launchpad Contributions:,Rockworld, ,Launchpad Contributions:,Rockworld, ,"
+"Launchpad Contributions:,Rockworld"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr ",,sumoisrock@gmail.com,,,sumoisrock@gmail.com,,,sumoisrock@gmail.com"
+
+#~ msgid "Custom Color:"
+#~ msgstr "กำหนดสีเอง:"
+
+#~ msgid "Custom Color"
+#~ msgstr "กำหนดสีเอง"

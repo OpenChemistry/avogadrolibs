@@ -1,22 +1,22 @@
-# Translations for the Avogadro molecular builder.
-# Copyright (C) 2006-2018 The Avogadro Project
-# This file is distributed under the same license as the Avogadro package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Hindi translation for avogadro
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the avogadro package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Avogadro 1.90.0\n"
+"Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-04-13 12:05-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2016-06-10 06:33+0000\n"
+"Last-Translator: Rahul Krishna <rahul.krishna11@gmail.com>\n"
+"Language-Team: Hindi <hi@li.org>\n"
+"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
+"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -521,219 +521,219 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:32
 msgid "Hydrogen"
-msgstr ""
+msgstr "हाइड्रोजन"
 
 #: qtgui/elementtranslator.cpp:35
 msgid "Helium"
-msgstr ""
+msgstr "हीलियम"
 
 #: qtgui/elementtranslator.cpp:38
 msgid "Lithium"
-msgstr ""
+msgstr "लीथियम"
 
 #: qtgui/elementtranslator.cpp:41
 msgid "Beryllium"
-msgstr ""
+msgstr "बेरीलियम"
 
 #: qtgui/elementtranslator.cpp:44
 msgid "Boron"
-msgstr ""
+msgstr "बोरॉन"
 
 #: qtgui/elementtranslator.cpp:47
 msgid "Carbon"
-msgstr ""
+msgstr "कार्बन"
 
 #: qtgui/elementtranslator.cpp:50
 msgid "Nitrogen"
-msgstr ""
+msgstr "नाइट्रोजन"
 
 #: qtgui/elementtranslator.cpp:53
 msgid "Oxygen"
-msgstr ""
+msgstr "आक्सीजन"
 
 #: qtgui/elementtranslator.cpp:56
 msgid "Fluorine"
-msgstr ""
+msgstr "फ्लोरीन"
 
 #: qtgui/elementtranslator.cpp:59
 msgid "Neon"
-msgstr ""
+msgstr "नियॉन"
 
 #: qtgui/elementtranslator.cpp:62
 msgid "Sodium"
-msgstr ""
+msgstr "सोडियम"
 
 #: qtgui/elementtranslator.cpp:65
 msgid "Magnesium"
-msgstr ""
+msgstr "मैग्नीशियम"
 
 #: qtgui/elementtranslator.cpp:68
 msgid "Aluminum"
-msgstr ""
+msgstr "एल्यूमिनियम"
 
 #: qtgui/elementtranslator.cpp:71
 msgid "Silicon"
-msgstr ""
+msgstr "सिलिकॉन"
 
 #: qtgui/elementtranslator.cpp:74
 msgid "Phosphorus"
-msgstr ""
+msgstr "फॉस्फोरस"
 
 #: qtgui/elementtranslator.cpp:77
 msgid "Sulfur"
-msgstr ""
+msgstr "सल्फर"
 
 #: qtgui/elementtranslator.cpp:80
 msgid "Chlorine"
-msgstr ""
+msgstr "क्लोरीन"
 
 #: qtgui/elementtranslator.cpp:83
 msgid "Argon"
-msgstr ""
+msgstr "ऑर्गन"
 
 #: qtgui/elementtranslator.cpp:86
 msgid "Potassium"
-msgstr ""
+msgstr "पोटेशियम"
 
 #: qtgui/elementtranslator.cpp:89
 msgid "Calcium"
-msgstr ""
+msgstr "केल्शियम"
 
 #: qtgui/elementtranslator.cpp:92
 msgid "Scandium"
-msgstr ""
+msgstr "स्कैन्डियम"
 
 #: qtgui/elementtranslator.cpp:95
 msgid "Titanium"
-msgstr ""
+msgstr "टाइटेनियम"
 
 #: qtgui/elementtranslator.cpp:98
 msgid "Vanadium"
-msgstr ""
+msgstr "वनेडियम"
 
 #: qtgui/elementtranslator.cpp:101
 msgid "Chromium"
-msgstr ""
+msgstr "क्रोमियम"
 
 #: qtgui/elementtranslator.cpp:104
 msgid "Manganese"
-msgstr ""
+msgstr "मैंगनीज़"
 
 #: qtgui/elementtranslator.cpp:107
 msgid "Iron"
-msgstr ""
+msgstr "लोहा"
 
 #: qtgui/elementtranslator.cpp:110
 msgid "Cobalt"
-msgstr ""
+msgstr "कोबॉल्ट"
 
 #: qtgui/elementtranslator.cpp:113
 msgid "Nickel"
-msgstr ""
+msgstr "निकल"
 
 #: qtgui/elementtranslator.cpp:116
 msgid "Copper"
-msgstr ""
+msgstr "तांबा"
 
 #: qtgui/elementtranslator.cpp:119
 msgid "Zinc"
-msgstr ""
+msgstr "ज़िंक"
 
 #: qtgui/elementtranslator.cpp:122
 msgid "Gallium"
-msgstr ""
+msgstr "गैलियम"
 
 #: qtgui/elementtranslator.cpp:125
 msgid "Germanium"
-msgstr ""
+msgstr "जर्मेनियम"
 
 #: qtgui/elementtranslator.cpp:128
 msgid "Arsenic"
-msgstr ""
+msgstr "ऑर्सेनिक"
 
 #: qtgui/elementtranslator.cpp:131
 msgid "Selenium"
-msgstr ""
+msgstr "सेलेनियम"
 
 #: qtgui/elementtranslator.cpp:134
 msgid "Bromine"
-msgstr ""
+msgstr "ब्रोमीन"
 
 #: qtgui/elementtranslator.cpp:137
 msgid "Krypton"
-msgstr ""
+msgstr "क्रिप्टॉन"
 
 #: qtgui/elementtranslator.cpp:140
 msgid "Rubidium"
-msgstr ""
+msgstr "रूबीडियम"
 
 #: qtgui/elementtranslator.cpp:143
 msgid "Strontium"
-msgstr ""
+msgstr "स्ट्रांशियम"
 
 #: qtgui/elementtranslator.cpp:146
 msgid "Yttrium"
-msgstr ""
+msgstr "विट्रियम"
 
 #: qtgui/elementtranslator.cpp:149
 msgid "Zirconium"
-msgstr ""
+msgstr "ज़िरकोनियम"
 
 #: qtgui/elementtranslator.cpp:152
 msgid "Niobium"
-msgstr ""
+msgstr "नियोबियम"
 
 #: qtgui/elementtranslator.cpp:155
 msgid "Molybdenum"
-msgstr ""
+msgstr "मॉलीब्डेनम"
 
 #: qtgui/elementtranslator.cpp:158
 msgid "Technetium"
-msgstr ""
+msgstr "टेक्नेशियम"
 
 #: qtgui/elementtranslator.cpp:161
 msgid "Ruthenium"
-msgstr ""
+msgstr "रुदेनियम"
 
 #: qtgui/elementtranslator.cpp:164
 msgid "Rhodium"
-msgstr ""
+msgstr "रोडियम"
 
 #: qtgui/elementtranslator.cpp:167
 msgid "Palladium"
-msgstr ""
+msgstr "पलेडियम"
 
 #: qtgui/elementtranslator.cpp:170
 msgid "Silver"
-msgstr ""
+msgstr "चाँदी"
 
 #: qtgui/elementtranslator.cpp:173
 msgid "Cadmium"
-msgstr ""
+msgstr "केडमियम"
 
 #: qtgui/elementtranslator.cpp:176
 msgid "Indium"
-msgstr ""
+msgstr "इंडियम"
 
 #: qtgui/elementtranslator.cpp:179
 msgid "Tin"
-msgstr ""
+msgstr "टिन"
 
 #: qtgui/elementtranslator.cpp:182
 msgid "Antimony"
-msgstr ""
+msgstr "एंटिमनी"
 
 #: qtgui/elementtranslator.cpp:185
 msgid "Tellurium"
-msgstr ""
+msgstr "टेलूरियम"
 
 #: qtgui/elementtranslator.cpp:188
 msgid "Iodine"
-msgstr ""
+msgstr "आयोडीन"
 
 #: qtgui/elementtranslator.cpp:191
 msgid "Xenon"
-msgstr ""
+msgstr "ज़ेनॉन"
 
 #: qtgui/elementtranslator.cpp:194
 msgid "Cesium"
@@ -741,235 +741,236 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:197
 msgid "Barium"
-msgstr ""
+msgstr "बेरियम"
 
 #: qtgui/elementtranslator.cpp:200
 msgid "Lanthanum"
-msgstr ""
+msgstr "लैंथेनम"
 
 #: qtgui/elementtranslator.cpp:203
 msgid "Cerium"
-msgstr ""
+msgstr "सीरियम"
 
 #: qtgui/elementtranslator.cpp:206
 msgid "Praseodymium"
-msgstr ""
+msgstr "प्रसोडमियम"
 
 #: qtgui/elementtranslator.cpp:209
 msgid "Neodymium"
-msgstr ""
+msgstr "नियोडमियम"
 
 #: qtgui/elementtranslator.cpp:212
 msgid "Promethium"
-msgstr ""
+msgstr "प्रोमेथियम"
 
 #: qtgui/elementtranslator.cpp:215
 msgid "Samarium"
-msgstr ""
+msgstr "समरियम"
 
 #: qtgui/elementtranslator.cpp:218
 msgid "Europium"
-msgstr ""
+msgstr "यूरोपियम"
 
 #: qtgui/elementtranslator.cpp:221
 msgid "Gadolinium"
-msgstr ""
+msgstr "गैडोलिनियम"
 
 #: qtgui/elementtranslator.cpp:224
 msgid "Terbium"
-msgstr ""
+msgstr "टर्बियम"
 
 #: qtgui/elementtranslator.cpp:227
 msgid "Dysprosium"
-msgstr ""
+msgstr "डायस्प्रोसियम"
 
 #: qtgui/elementtranslator.cpp:230
 msgid "Holmium"
-msgstr ""
+msgstr "होलमियम"
 
 #: qtgui/elementtranslator.cpp:233
 msgid "Erbium"
-msgstr ""
+msgstr "एरबियम"
 
 #: qtgui/elementtranslator.cpp:236
 msgid "Thulium"
-msgstr ""
+msgstr "थूलियम"
 
 #: qtgui/elementtranslator.cpp:239
 msgid "Ytterbium"
-msgstr ""
+msgstr "येटरबियम"
 
 #: qtgui/elementtranslator.cpp:242
 msgid "Lutetium"
-msgstr ""
+msgstr "ल्यूटेशियम"
 
 #: qtgui/elementtranslator.cpp:245
 msgid "Hafnium"
-msgstr ""
+msgstr "हाफनियम"
 
 #: qtgui/elementtranslator.cpp:248
 msgid "Tantalum"
-msgstr ""
+msgstr "टैंटेलम"
 
 #: qtgui/elementtranslator.cpp:251
 msgid "Tungsten"
-msgstr ""
+msgstr "टंग्सटन"
 
 #: qtgui/elementtranslator.cpp:254
 msgid "Rhenium"
-msgstr ""
+msgstr "रेनियम"
 
 #: qtgui/elementtranslator.cpp:257
 msgid "Osmium"
-msgstr ""
+msgstr "ऑस्मियम"
 
 #: qtgui/elementtranslator.cpp:260
 msgid "Iridium"
-msgstr ""
+msgstr "इरिडियम"
 
 #: qtgui/elementtranslator.cpp:263
 msgid "Platinum"
-msgstr ""
+msgstr "प्लेटिनम"
 
 #: qtgui/elementtranslator.cpp:266
 msgid "Gold"
-msgstr ""
+msgstr "सोना"
 
 #: qtgui/elementtranslator.cpp:269
 msgid "Mercury"
-msgstr ""
+msgstr "मर्क्यूरी"
 
 #: qtgui/elementtranslator.cpp:272
 msgid "Thallium"
-msgstr ""
+msgstr "थालियम"
 
 #: qtgui/elementtranslator.cpp:275
 msgid "Lead"
-msgstr ""
+msgstr "सीसा लीड 3 - कैलिओप"
 
 #: qtgui/elementtranslator.cpp:278
 msgid "Bismuth"
-msgstr ""
+msgstr "बिस्मथ"
 
 #: qtgui/elementtranslator.cpp:281
 msgid "Polonium"
-msgstr ""
+msgstr "पोलोनियम"
 
 #: qtgui/elementtranslator.cpp:284
 msgid "Astatine"
-msgstr ""
+msgstr "अस्टाटाइन"
 
 #: qtgui/elementtranslator.cpp:287
 msgid "Radon"
-msgstr ""
+msgstr "राडोन"
 
 #: qtgui/elementtranslator.cpp:290
 msgid "Francium"
-msgstr ""
+msgstr "फ्रांसियम"
 
 #: qtgui/elementtranslator.cpp:293
 msgid "Radium"
-msgstr ""
+msgstr "रेडियम"
 
 #: qtgui/elementtranslator.cpp:296
 msgid "Actinium"
-msgstr ""
+msgstr "एक्टीनियम"
 
 #: qtgui/elementtranslator.cpp:299
 msgid "Thorium"
-msgstr ""
+msgstr "थोरियम"
 
 #: qtgui/elementtranslator.cpp:302
 msgid "Protactinium"
-msgstr ""
+msgstr "प्रोटेक्टीनियम"
 
 #: qtgui/elementtranslator.cpp:305
 msgid "Uranium"
-msgstr ""
+msgstr "यूरेनियम"
 
 #: qtgui/elementtranslator.cpp:308
 msgid "Neptunium"
-msgstr ""
+msgstr "नेप्च्यूनियम"
 
 #: qtgui/elementtranslator.cpp:311
 msgid "Plutonium"
-msgstr ""
+msgstr "प्लूटोनियम"
 
 #: qtgui/elementtranslator.cpp:314
 msgid "Americium"
-msgstr ""
+msgstr "अमेरिसियम"
 
 #: qtgui/elementtranslator.cpp:317
 msgid "Curium"
-msgstr ""
+msgstr "क्यूरियम"
 
 #: qtgui/elementtranslator.cpp:320
 msgid "Berkelium"
-msgstr ""
+msgstr "बर्केलियम"
 
 #: qtgui/elementtranslator.cpp:323
 msgid "Californium"
-msgstr ""
+msgstr "केलिफोर्नियम"
 
 #: qtgui/elementtranslator.cpp:326
 msgid "Einsteinium"
-msgstr ""
+msgstr "आइंस्टीनियम"
 
 #: qtgui/elementtranslator.cpp:329
 msgid "Fermium"
-msgstr ""
+msgstr "फर्मियम"
 
 #: qtgui/elementtranslator.cpp:332
 msgid "Mendelevium"
-msgstr ""
+msgstr "मेंडेलेवियम"
 
 #: qtgui/elementtranslator.cpp:335
 msgid "Nobelium"
-msgstr ""
+msgstr "नोबेलियम"
 
 #: qtgui/elementtranslator.cpp:338
 msgid "Lawrencium"
-msgstr ""
+msgstr "लारेंसियम"
 
 #: qtgui/elementtranslator.cpp:341
 msgid "Rutherfordium"
-msgstr ""
+msgstr "रदरफोर्डियम"
 
 #: qtgui/elementtranslator.cpp:344
 msgid "Dubnium"
-msgstr ""
+msgstr "डब्नियम"
 
 #: qtgui/elementtranslator.cpp:347
 msgid "Seaborgium"
-msgstr ""
+msgstr "सीबोर्जियम"
 
 #: qtgui/elementtranslator.cpp:350
 msgid "Bohrium"
-msgstr ""
+msgstr "बोरियम"
 
 #: qtgui/elementtranslator.cpp:353
 msgid "Hassium"
-msgstr ""
+msgstr "हासियम"
 
 #: qtgui/elementtranslator.cpp:356
 msgid "Meitnerium"
-msgstr ""
+msgstr "मेटनेरियम"
 
 #: qtgui/elementtranslator.cpp:359
 msgid "Darmstadtium"
-msgstr ""
+msgstr "डार्मस्टेडियम"
 
 #: qtgui/elementtranslator.cpp:362
 msgid "Roentgenium"
-msgstr ""
+msgstr "रोंटजेनियम"
 
 #: qtgui/elementtranslator.cpp:365
 msgid "Copernicium"
 msgstr ""
 
 #: qtgui/elementtranslator.cpp:368
+#, fuzzy
 msgid "Nihonium"
-msgstr ""
+msgstr "ज़िरकोनियम"
 
 #: qtgui/elementtranslator.cpp:371
 msgid "Flerovium"
@@ -1136,7 +1137,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321 :345
+#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321:345
 msgid "Adjust Hydrogens"
 msgstr ""
 
@@ -1258,7 +1259,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:177
 #. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
-#: qtplugins/apbs/apbs.cpp:43 :141
+#: qtplugins/apbs/apbs.cpp:43:141
 msgid "Run APBS"
 msgstr ""
 
@@ -1308,7 +1309,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
-#: qtplugins/apbs/apbs.h:42 :87
+#: qtplugins/apbs/apbs.h:42:87
 msgid "APBS"
 msgstr ""
 
@@ -1369,7 +1370,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:190
-#: qtplugins/clientserver/connectionsettingsdialog.cpp:75 :147
+#: qtplugins/clientserver/connectionsettingsdialog.cpp:75:147
 msgid "Success"
 msgstr ""
 
@@ -1385,8 +1386,9 @@ msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:104
+#, fuzzy
 msgid "Show hydrogens?"
-msgstr ""
+msgstr "हाइड्रोजन"
 
 #: qtplugins/ballandstick/ballandstick.h:43
 msgid "Ball and Stick"
@@ -1594,7 +1596,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607 :615
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607:615
 msgid "Custom"
 msgstr ""
 
@@ -1603,8 +1605,19 @@ msgid "XYZ format (symbols)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:609
+#, fuzzy
 msgid "XYZ format (names)"
 msgstr ""
+",Launchpad Contributions:,Geoff Hutchison, ,Launchpad Contributions:,Geoff "
+"Hutchison,dlonie, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,"
+"dlonie, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,dlonie, ,"
+"Launchpad Contributions:,Avogadro Team,Geoff Hutchison,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Geoff Hutchison,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Geoff Hutchison,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Geoff Hutchison,Rahul Krishna,dlonie, ,"
+"Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Rahul Krishna,"
+"dlonie, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Rahul "
+"Krishna,dlonie"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:610
 msgid "XYZ format (atomic numbers)"
@@ -1636,25 +1649,25 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:42 :225
+#: qtplugins/copypaste/copypaste.cpp:42:225
 msgid "Copy"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:43 :222
+#: qtplugins/copypaste/copypaste.cpp:43:222
 msgid "Cut"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:44 :234
+#: qtplugins/copypaste/copypaste.cpp:44:234
 msgid "Clear"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
-#: qtplugins/copypaste/copypaste.cpp:45 :228
+#: qtplugins/copypaste/copypaste.cpp:45:228
 msgid "Paste"
 msgstr ""
 
@@ -1804,8 +1817,9 @@ msgid "Manipulate custom element types in the current molecule."
 msgstr ""
 
 #: qtplugins/customelements/customelements.h:35
+#, fuzzy
 msgid "Custom Elements"
-msgstr ""
+msgstr "तत्व द्वारा रंग"
 
 #: qtplugins/editor/editor.cpp:84 qtplugins/editor/editor.cpp:118
 msgid "Draw"
@@ -1825,8 +1839,9 @@ msgstr ""
 
 #: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:194
 #: qtplugins/measuretool/measuretool.cpp:222
+#, fuzzy
 msgid "Distance:"
-msgstr ""
+msgstr "दूरी के अनुसार रंग"
 
 #: qtplugins/editor/editor.cpp:235
 #, qt-format
@@ -2001,8 +2016,9 @@ msgid "Submit GAMESS Calculation"
 msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:33
+#, fuzzy
 msgid "&Adjust Hydrogens"
-msgstr ""
+msgstr "हाइड्रोजन"
 
 #: qtplugins/hydrogens/hydrogens.cpp:38
 msgid "Add Hydrogens"
@@ -2021,8 +2037,9 @@ msgid "Add/remove hydrogens from the current molecule."
 msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:67
+#, fuzzy
 msgid "&Hydrogens"
-msgstr ""
+msgstr "हाइड्रोजन"
 
 #: qtplugins/hydrogens/hydrogens.h:35
 msgid "Hydrogens"
@@ -2039,7 +2056,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
-#: qtplugins/importpqr/importpqr.h:45 :393
+#: qtplugins/importpqr/importpqr.h:45:393
 msgid "Import From PQR"
 msgstr ""
 
@@ -2087,7 +2104,7 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133 :426
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:426
 msgid "Insert Molecule..."
 msgstr ""
 
@@ -2222,8 +2239,9 @@ msgid "Perceive bonds"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:71
+#, fuzzy
 msgid "Add hydrogens"
-msgstr ""
+msgstr "हाइड्रोजन"
 
 #: qtplugins/openbabel/openbabel.cpp:77
 msgid "Add hydrogens for pH..."
@@ -2457,8 +2475,9 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:108
 #: qtplugins/playertool/playertool.cpp:161
+#, fuzzy
 msgid "Stopped"
-msgstr ""
+msgstr "तांबा"
 
 #: qtplugins/playertool/playertool.cpp:180
 #, qt-format
@@ -2525,7 +2544,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.h:46 :570
+#: qtplugins/plugindownloader/plugindownloader.h:46:570
 msgid "Plugin Downloader"
 msgstr ""
 
@@ -2693,7 +2712,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:183
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:35 :678
+#: qtplugins/select/select.h:35:678
 msgid "Select"
 msgstr ""
 
@@ -2712,7 +2731,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:81 :663
+#: qtplugins/spacegroup/spacegroup.cpp:81:663
 msgid "Symmetrize"
 msgstr ""
 
@@ -2832,7 +2851,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:44 :648
+#: qtplugins/symmetry/symmetry.h:44:648
 msgid "Symmetry"
 msgstr ""
 
@@ -2841,8 +2860,9 @@ msgid "Provide symmetry functionality."
 msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:44
+#, fuzzy
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "तत्व द्वारा रंग"
 
 #: qtplugins/symmetry/symmetryscene.h:46
 msgid "Render symmetry elements."
@@ -2914,8 +2934,9 @@ msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
+#, fuzzy
 msgid "Calculation Settings"
-msgstr ""
+msgstr "पाइथन  सेटिंग्स"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
@@ -3932,7 +3953,80 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
+",Launchpad Contributions:,Geoff Hutchison, ,Launchpad Contributions:,Geoff "
+"Hutchison,dlonie, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,"
+"dlonie, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,dlonie, ,"
+"Launchpad Contributions:,Avogadro Team,Geoff Hutchison,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Geoff Hutchison,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Geoff Hutchison,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Geoff Hutchison,Rahul Krishna,dlonie, ,"
+"Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Rahul Krishna,"
+"dlonie, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Rahul "
+"Krishna,dlonie"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
+",,,,,,loniedavid@gmail.com,,,avogadro-devel@lists.sourceforge.net,,"
+"loniedavid@gmail.com,,,avogadro-devel@lists.sourceforge.net,,"
+"loniedavid@gmail.com,,,avogadro-devel@lists.sourceforge.net,,"
+"loniedavid@gmail.com,,,avogadro-devel@lists.sourceforge.net,,"
+"loniedavid@gmail.com,,,avogadro-devel@lists.sourceforge.net,,"
+"loniedavid@gmail.com,,,avogadro-devel@lists.sourceforge.net,,rahul."
+"krishna11@gmail.com,loniedavid@gmail.com,,,avogadro-devel@lists.sourceforge."
+"net,,rahul.krishna11@gmail.com,loniedavid@gmail.com,,,avogadro-devel@lists."
+"sourceforge.net,,rahul.krishna11@gmail.com,loniedavid@gmail.com"
+
+#~ msgid "Color by Index"
+#~ msgstr "सूचकांक से रंग"
+
+#~ msgid "Color by Index (red, orange, yellow, green, blue, violet)."
+#~ msgstr "सूचकांक से रंग (लाल, नारंगी, पीला, हरा, नीला, बैंगनी)"
+
+#~ msgid "Color by Partial Charge"
+#~ msgstr "आंशिक चार्ज द्वारा रंग"
+
+#~ msgid "Color by atomic partial charge (blue = positive, red = negative."
+#~ msgstr "परमाणु आंशिक चार्ज द्वारा रंग (नीला = सकारात्मक लाल= नकारात्मक)"
+
+#~ msgid "Custom Color:"
+#~ msgstr "मनपसंद रंग:"
+
+#~ msgid "Custom Color"
+#~ msgstr "मनपसंद रंग"
+
+#~ msgid "Set custom colors for objects"
+#~ msgstr "वस्तुओं के लिए मनपसंद रंग निर्धारित करें"
+
+#~ msgid "Color by distance from the first atom."
+#~ msgstr "पहली परमाणु से दूरी के अनुसार रंग."
+
+#~ msgid "Color by Element (carbon = grey, oxygen = red, ...)."
+#~ msgstr "तत्व द्वारा रंग (कार्बन = भूरे रंग के, ऑक्सीजन = लाल, ...)."
+
+#~ msgid "Color by Residue"
+#~ msgstr "अवशेष द्वारा रंग"
+
+#~ msgid "SMARTS Pattern:"
+#~ msgstr "SMARTS प्रतिमान"
+
+#~ msgid "Highlight Color:"
+#~ msgstr "उभारने का रंग:"
+
+#~ msgid "Color by SMARTS Pattern"
+#~ msgstr "SMARTS पैटर्न द्वारा रंग"
+
+#~ msgid "Highlight particular features which match a SMARTS pattern."
+#~ msgstr "उभारें विशेष सुविधाओं को, जो किसी स्मर्ट्स पत्तेर्ण की तरह के हों"
+
+#~ msgid "Ununtrium"
+#~ msgstr "उनुन्ट्रियम"
+
+#~ msgid "Ununpentium"
+#~ msgstr "उनुनपेंटियम"
+
+#~ msgid "Display visual cues"
+#~ msgstr "दृश्य cues प्रदर्शित करें"
+
+#~ msgid "Z Matrix Editor"
+#~ msgstr "जेड मैट्रिक्स संपादक"

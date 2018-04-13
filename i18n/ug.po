@@ -1,22 +1,22 @@
-# Translations for the Avogadro molecular builder.
-# Copyright (C) 2006-2018 The Avogadro Project
-# This file is distributed under the same license as the Avogadro package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Uyghur translation for avogadro
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the avogadro package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Avogadro 1.90.0\n"
+"Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-04-13 12:05-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2016-06-10 06:40+0000\n"
+"Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
+"Language-Team: Uyghur <ug@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
+"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -153,11 +153,11 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:129 qtgui/containerwidget.cpp:45
 msgid "Close"
-msgstr ""
+msgstr "يېپىش"
 
 #: molequeue/inputgeneratorwidget.cpp:170 qtgui/elementtranslator.cpp:387
 msgid "Unknown"
-msgstr ""
+msgstr "نامەلۇم"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #, qt-format, qt-plural-format
@@ -225,12 +225,14 @@ msgid "Script returns warnings:\n"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:384
+#, fuzzy
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "ئاگاھلاندۇرۇش"
 
 #: molequeue/inputgeneratorwidget.cpp:390
+#, fuzzy
 msgid "Show &Warnings"
-msgstr ""
+msgstr "ئاگاھلاندۇرۇش"
 
 #: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:96
 msgid "An error has occurred:"
@@ -253,8 +255,9 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:495
 #: molequeue/inputgeneratorwidget.cpp:606
 #: qtplugins/gamessinput/gamessinputdialog.cpp:687
+#, fuzzy
 msgid "Output Error"
-msgstr ""
+msgstr "چىقار:"
 
 #: molequeue/inputgeneratorwidget.cpp:496
 #: molequeue/inputgeneratorwidget.cpp:607
@@ -359,19 +362,21 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:717 qtgui/interfacewidget.cpp:177
 msgid "Title"
-msgstr ""
+msgstr "ماۋزۇ"
 
 #: molequeue/inputgeneratorwidget.cpp:721 qtgui/interfacewidget.cpp:181
+#, fuzzy
 msgid "Filename Base"
-msgstr ""
+msgstr ":ھۆججەت ئاتى"
 
 #: molequeue/inputgeneratorwidget.cpp:725 qtgui/interfacewidget.cpp:185
 msgid "Processor Cores"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:729 qtgui/interfacewidget.cpp:189
+#, fuzzy
 msgid "Calculation Type"
-msgstr ""
+msgstr "ھېسابلا"
 
 #: molequeue/inputgeneratorwidget.cpp:750 qtgui/interfacewidget.cpp:210
 msgid "Theory:"
@@ -383,7 +388,7 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:755 qtgui/interfacewidget.cpp:215
 msgid "Basis"
-msgstr ""
+msgstr "ئاساسىي"
 
 #: molequeue/inputgeneratorwidget.cpp:760 qtgui/interfacewidget.cpp:220
 msgid "Charge"
@@ -446,8 +451,9 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:1202 qtgui/interfacewidget.cpp:699
 #: qtplugins/gamessinput/gamessinputdialog.cpp:407
+#, fuzzy
 msgid "[no molecule]"
-msgstr ""
+msgstr "مولېكۇلا"
 
 #: molequeue/molequeuedialog.cpp:73
 msgid "Submitting job to MoleQueue..."
@@ -549,7 +555,7 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:53
 msgid "Oxygen"
-msgstr ""
+msgstr "ئوكسېگىن"
 
 #: qtgui/elementtranslator.cpp:56
 msgid "Fluorine"
@@ -557,7 +563,7 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:59
 msgid "Neon"
-msgstr ""
+msgstr "نېئون"
 
 #: qtgui/elementtranslator.cpp:62
 msgid "Sodium"
@@ -613,7 +619,7 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:101
 msgid "Chromium"
-msgstr ""
+msgstr "خىروم"
 
 #: qtgui/elementtranslator.cpp:104
 msgid "Manganese"
@@ -625,7 +631,7 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:110
 msgid "Cobalt"
-msgstr ""
+msgstr "كوبالت"
 
 #: qtgui/elementtranslator.cpp:113
 msgid "Nickel"
@@ -701,11 +707,11 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:167
 msgid "Palladium"
-msgstr ""
+msgstr "پاللادىي"
 
 #: qtgui/elementtranslator.cpp:170
 msgid "Silver"
-msgstr ""
+msgstr "كۈمۈشرەڭ"
 
 #: qtgui/elementtranslator.cpp:173
 msgid "Cadmium"
@@ -813,7 +819,7 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:251
 msgid "Tungsten"
-msgstr ""
+msgstr "تۇڭىستېن"
 
 #: qtgui/elementtranslator.cpp:254
 msgid "Rhenium"
@@ -829,15 +835,15 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:263
 msgid "Platinum"
-msgstr ""
+msgstr "پلاتىنا"
 
 #: qtgui/elementtranslator.cpp:266
 msgid "Gold"
-msgstr ""
+msgstr "ئالتۇن"
 
 #: qtgui/elementtranslator.cpp:269
 msgid "Mercury"
-msgstr ""
+msgstr "مېركۇرىي"
 
 #: qtgui/elementtranslator.cpp:272
 msgid "Thallium"
@@ -992,16 +998,19 @@ msgid "Oganesson"
 msgstr ""
 
 #: qtgui/filebrowsewidget.cpp:36
+#, fuzzy
 msgid "Browse"
-msgstr ""
+msgstr "كۆز يۈگۈرت…"
 
 #: qtgui/filebrowsewidget.cpp:111
+#, fuzzy
 msgid "Select file:"
-msgstr ""
+msgstr "تاللانما"
 
 #: qtgui/filebrowsewidget.cpp:114
+#, fuzzy
 msgid "Select executable:"
-msgstr ""
+msgstr "تاللانغاننى ئۆچۈرۈش"
 
 #: qtgui/fileformatdialog.cpp:66
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1047,8 +1056,9 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:257
+#, fuzzy
 msgid "All files (*);;"
-msgstr ""
+msgstr "بارلىق ھۆججەتلەر"
 
 #: qtgui/fileformatdialog.cpp:261
 #, qt-format
@@ -1056,8 +1066,9 @@ msgid "All supported formats (%1);;"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
+#, fuzzy
 msgid "Untitled"
-msgstr ""
+msgstr "ماۋزۇسىز"
 
 #: qtgui/multiviewwidget.cpp:199
 msgid "Create a new view"
@@ -1098,28 +1109,32 @@ msgid "Script failed to start."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:142
+#, fuzzy
 msgid "Script crashed."
-msgstr ""
+msgstr "قوليازمىلار(&S)"
 
 #: qtgui/pythonscript.cpp:145
 msgid "Script timed out."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:148
+#, fuzzy
 msgid "Read error."
-msgstr ""
+msgstr "OpenGL خاتالىقى"
 
 #: qtgui/pythonscript.cpp:151
 msgid "Write error."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:155
+#, fuzzy
 msgid "Unknown error."
-msgstr ""
+msgstr "نامەلۇم"
 
 #: qtgui/rwmolecule.cpp:48
+#, fuzzy
 msgid "Modify Molecule"
-msgstr ""
+msgstr "مولېكۇلا"
 
 #: qtgui/rwmolecule.cpp:154 qtgui/rwmolecule.cpp:163
 msgid "Add Atom"
@@ -1136,13 +1151,14 @@ msgstr ""
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321 :345
+#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321:345
 msgid "Adjust Hydrogens"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:356
+#, fuzzy
 msgid "Change Elements"
-msgstr ""
+msgstr "ئېلېمېنت"
 
 #: qtgui/rwmolecule.cpp:390
 msgid "Change Element"
@@ -1245,12 +1261,13 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
 #: qtplugins/povray/povray.cpp:58 qtplugins/vrml/vrml.cpp:58
 msgid "&File"
-msgstr ""
+msgstr "ھۆججەت(&F)"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/vrml/vrml.cpp:58
+#, fuzzy
 msgid "&Export"
-msgstr ""
+msgstr "چىقار"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1258,7 +1275,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:177
 #. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
-#: qtplugins/apbs/apbs.cpp:43 :141
+#: qtplugins/apbs/apbs.cpp:43:141
 msgid "Run APBS"
 msgstr ""
 
@@ -1273,8 +1290,9 @@ msgstr ""
 #: qtplugins/mongochem/mongochem.cpp:63 qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
+#, fuzzy
 msgid "&Extensions"
-msgstr ""
+msgstr "كېڭەيتمىلەر"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -1285,8 +1303,9 @@ msgid "OpenDX File (*.dx)"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:127
+#, fuzzy
 msgid "IO Error"
-msgstr ""
+msgstr "خاتالىق"
 
 #: qtplugins/apbs/apbs.cpp:128
 #, qt-format
@@ -1294,8 +1313,9 @@ msgid "Error reading structure file (%1)."
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:148 qtplugins/apbs/apbs.cpp:155
+#, fuzzy
 msgid "OpenDX Error"
-msgstr ""
+msgstr "OpenGL خاتالىقى"
 
 #: qtplugins/apbs/apbs.cpp:149
 #, qt-format
@@ -1308,7 +1328,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
-#: qtplugins/apbs/apbs.h:42 :87
+#: qtplugins/apbs/apbs.h:42:87
 msgid "APBS"
 msgstr ""
 
@@ -1347,7 +1367,7 @@ msgstr ""
 #: qtplugins/quantuminput/quantuminput.cpp:112
 #: qtplugins/workflows/workflow.cpp:106
 msgid "Error"
-msgstr ""
+msgstr "خاتالىق"
 
 #: qtplugins/apbs/apbsdialog.cpp:144
 #, qt-format
@@ -1369,9 +1389,10 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:190
-#: qtplugins/clientserver/connectionsettingsdialog.cpp:75 :147
+#: qtplugins/clientserver/connectionsettingsdialog.cpp:75:147
+#, fuzzy
 msgid "Success"
-msgstr ""
+msgstr "مۇۋەپپەقىيەتلىك!"
 
 #: qtplugins/apbs/apbsdialog.cpp:191
 #, qt-format
@@ -1423,7 +1444,7 @@ msgstr ""
 #: qtplugins/hydrogens/hydrogens.cpp:67
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
-msgstr ""
+msgstr "ياساش(&B)"
 
 #: qtplugins/bonding/bonding.h:36
 msgid "Bonding"
@@ -1490,8 +1511,9 @@ msgid "Connection to %2:%3 succeeded!"
 msgstr ""
 
 #: qtplugins/clientserver/filedialogmodel.cpp:666
+#, fuzzy
 msgid "Filename"
-msgstr ""
+msgstr ":ھۆججەت ئاتى"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:29
 msgid "Atomic &Coordinate Editor..."
@@ -1520,20 +1542,23 @@ msgid "Too few entries on line."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:381
+#, fuzzy
 msgid "Invalid element name."
-msgstr ""
+msgstr "ئېلېمېنت ئاتى"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:383
+#, fuzzy
 msgid "Element name."
-msgstr ""
+msgstr "ئېلېمېنت ئاتى"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
 msgid "Invalid element symbol."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
+#, fuzzy
 msgid "Element symbol."
-msgstr ""
+msgstr "ئېلېمېنت ئاتى"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
 msgid "Invalid atomic number."
@@ -1594,7 +1619,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607 :615
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607:615
 msgid "Custom"
 msgstr ""
 
@@ -1603,8 +1628,12 @@ msgid "XYZ format (symbols)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:609
+#, fuzzy
 msgid "XYZ format (names)"
 msgstr ""
+",Launchpad Contributions:, ,Launchpad Contributions:,Avogadro Team,Gheyret T."
+"Kenji,Sahran, ,Launchpad Contributions:,Avogadro Team,Gheyret T.Kenji,"
+"Sahran, ,Launchpad Contributions:,Avogadro Team,Gheyret T.Kenji,Sahran"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:610
 msgid "XYZ format (atomic numbers)"
@@ -1636,25 +1665,26 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:42 :225
+#: qtplugins/copypaste/copypaste.cpp:42:225
 msgid "Copy"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:43 :222
+#: qtplugins/copypaste/copypaste.cpp:43:222
+#, fuzzy
 msgid "Cut"
-msgstr ""
+msgstr "ئىختىيارى:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:44 :234
+#: qtplugins/copypaste/copypaste.cpp:44:234
 msgid "Clear"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
-#: qtplugins/copypaste/copypaste.cpp:45 :228
+#: qtplugins/copypaste/copypaste.cpp:45:228
 msgid "Paste"
 msgstr ""
 
@@ -1804,12 +1834,13 @@ msgid "Manipulate custom element types in the current molecule."
 msgstr ""
 
 #: qtplugins/customelements/customelements.h:35
+#, fuzzy
 msgid "Custom Elements"
-msgstr ""
+msgstr "ئېلېمېنت"
 
 #: qtplugins/editor/editor.cpp:84 qtplugins/editor/editor.cpp:118
 msgid "Draw"
-msgstr ""
+msgstr "سىز"
 
 #: qtplugins/editor/editor.cpp:112
 msgid "Draw Atom"
@@ -1825,13 +1856,14 @@ msgstr ""
 
 #: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:194
 #: qtplugins/measuretool/measuretool.cpp:222
+#, fuzzy
 msgid "Distance:"
-msgstr ""
+msgstr "ئارىلىق"
 
 #: qtplugins/editor/editor.cpp:235
-#, qt-format
+#, fuzzy, qt-format
 msgid "Distance: %L1 Å"
-msgstr ""
+msgstr "ئارىلىق"
 
 #: qtplugins/editor/editor.h:44 qtplugins/editor/editor.h:45
 msgid "Editor tool"
@@ -1839,7 +1871,7 @@ msgstr ""
 
 #: qtplugins/editor/editortoolwidget.cpp:138
 msgid "Other..."
-msgstr ""
+msgstr "باشقا…"
 
 #: qtplugins/editor/editortoolwidget.cpp:217
 msgid "Automatic"
@@ -1847,20 +1879,21 @@ msgstr ""
 
 #: qtplugins/editor/editortoolwidget.cpp:218
 msgid "Single"
-msgstr ""
+msgstr "يەككە"
 
 #: qtplugins/editor/editortoolwidget.cpp:219
 msgid "Double"
-msgstr ""
+msgstr "قوش"
 
 #: qtplugins/editor/editortoolwidget.cpp:220
 msgid "Triple"
-msgstr ""
+msgstr "ئۈچ ھەسسە"
 
 #: qtplugins/forcefields/workflow.cpp:73 qtplugins/forcefields/workflow.cpp:81
 #: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
+#, fuzzy
 msgid "Scripts"
-msgstr ""
+msgstr "قوليازمىلار(&S)"
 
 #: qtplugins/forcefields/workflow.cpp:107
 #: qtplugins/gamessinput/gamessinput.cpp:99
@@ -1923,8 +1956,9 @@ msgid "Generate input for GAMESS."
 msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:237
+#, fuzzy
 msgid "Single Point"
-msgstr ""
+msgstr "يەككە"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:240
 msgid "Equilibrium Geometry"
@@ -1948,7 +1982,7 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:333
 msgid "Water"
-msgstr ""
+msgstr "سۇ"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:348
 msgid "Singlet"
@@ -1972,7 +2006,7 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:375
 msgid "Neutral"
-msgstr ""
+msgstr "بىتەرەپ"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:378
 msgid "Anion"
@@ -2034,12 +2068,13 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
+#, fuzzy
 msgid "&Import"
-msgstr ""
+msgstr "ئىمپورت قىل"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
-#: qtplugins/importpqr/importpqr.h:45 :393
+#: qtplugins/importpqr/importpqr.h:45:393
 msgid "Import From PQR"
 msgstr ""
 
@@ -2073,12 +2108,13 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Insert"
-msgstr ""
+msgstr "قىستۇر(&I)"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:98
 #: qtplugins/lineformatinput/lineformatinput.cpp:122
+#, fuzzy
 msgid "No descriptors found!"
-msgstr ""
+msgstr "چۈشەندۈرۈشى يوق"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:99
 msgid "No line format readers found!"
@@ -2087,9 +2123,10 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133 :426
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:426
+#, fuzzy
 msgid "Insert Molecule..."
-msgstr ""
+msgstr "مولېكۇلا"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:123
 msgid "Unable to load requested format reader."
@@ -2127,11 +2164,12 @@ msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:193
 msgid "Angle:"
-msgstr ""
+msgstr "بۇلۇڭ:"
 
 #: qtplugins/measuretool/measuretool.cpp:214
+#, fuzzy
 msgid "Angles:"
-msgstr ""
+msgstr "بۇلۇڭ:"
 
 #: qtplugins/measuretool/measuretool.h:48
 #: qtplugins/measuretool/measuretool.h:49
@@ -2154,7 +2192,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
 #: qtplugins/resetview/resetview.cpp:48 qtplugins/symmetry/symmetry.cpp:92
 msgid "&View"
-msgstr ""
+msgstr "كۆرۈنۈش(&V)"
 
 #: qtplugins/molecularproperties/molecularproperties.h:42
 #: qtplugins/mongochem/mongochem.h:40
@@ -2163,11 +2201,12 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:45
 msgid "Navigate"
-msgstr ""
+msgstr "يول باشلا"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
+#, fuzzy
 msgid "Navigate tool"
-msgstr ""
+msgstr "يول باشلا"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
@@ -2389,8 +2428,9 @@ msgid "Add hydrogens for pH"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:620
+#, fuzzy
 msgid "pH:"
-msgstr ""
+msgstr "pH"
 
 #: qtplugins/openbabel/openbabel.cpp:660
 msgid "Cannot remove hydrogens with Open Babel."
@@ -2436,11 +2476,12 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:72
 msgid "Stop"
-msgstr ""
+msgstr "توختا"
 
 #: qtplugins/playertool/playertool.cpp:82
+#, fuzzy
 msgid "Frame rate:"
-msgstr ""
+msgstr "پارامېتىرلار:"
 
 #: qtplugins/playertool/playertool.cpp:88
 msgctxt "frames per second"
@@ -2457,8 +2498,9 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:108
 #: qtplugins/playertool/playertool.cpp:161
+#, fuzzy
 msgid "Stopped"
-msgstr ""
+msgstr "توختا"
 
 #: qtplugins/playertool/playertool.cpp:180
 #, qt-format
@@ -2512,8 +2554,9 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:230 qtplugins/plotxrd/plotxrd.cpp:242
 #: qtplugins/plotxrd/plotxrd.cpp:253 qtplugins/plotxrd/plotxrd.cpp:260
+#, fuzzy
 msgid "Error: "
-msgstr ""
+msgstr "خاتالىق"
 
 #: qtplugins/plotxrd/plotxrd.h:46
 msgid "PlotXrd"
@@ -2525,7 +2568,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.h:46 :570
+#: qtplugins/plugindownloader/plugindownloader.h:46:570
 msgid "Plugin Downloader"
 msgstr ""
 
@@ -2534,12 +2577,14 @@ msgid "Downloader plugins from Github repositories."
 msgstr ""
 
 #: qtplugins/povray/povray.cpp:41
+#, fuzzy
 msgid "POV-Ray Render"
-msgstr ""
+msgstr "POV-Ray"
 
 #: qtplugins/povray/povray.cpp:82 qtplugins/vrml/vrml.cpp:82
+#, fuzzy
 msgid "Save File"
-msgstr ""
+msgstr "ساقلا"
 
 #: qtplugins/povray/povray.cpp:83
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -2656,8 +2701,9 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.h:40
+#, fuzzy
 msgid "ResetView"
-msgstr ""
+msgstr "ئەسلىگە قايتۇر"
 
 #: qtplugins/resetview/resetview.h:44
 msgid "Adjust the camera and view"
@@ -2672,39 +2718,45 @@ msgid "Load file reader/writers from external scripts."
 msgstr ""
 
 #: qtplugins/select/select.cpp:34
+#, fuzzy
 msgid "Select All"
-msgstr ""
+msgstr "ھەممىنى ئۆچۈر…"
 
 #: qtplugins/select/select.cpp:39
+#, fuzzy
 msgid "Select None"
-msgstr ""
+msgstr "تاللانما"
 
 #: qtplugins/select/select.cpp:48
+#, fuzzy
 msgid "Invert Selection"
-msgstr ""
+msgstr "ئەكسىچە تاللا(&I)"
 
 #: qtplugins/select/select.cpp:59
+#, fuzzy
 msgid "Change selections"
-msgstr ""
+msgstr "ئەكسىچە تاللا(&I)"
 
 #: qtplugins/select/select.cpp:69
 msgid "&Select"
-msgstr ""
+msgstr "تاللا(&S)"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:183
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:35 :678
+#: qtplugins/select/select.h:35:678
+#, fuzzy
 msgid "Select"
-msgstr ""
+msgstr "تاللا(&S)"
 
 #: qtplugins/selectiontool/selectiontool.cpp:55
 msgid "Selection"
-msgstr ""
+msgstr "تاللانما"
 
 #: qtplugins/selectiontool/selectiontool.h:45
 #: qtplugins/selectiontool/selectiontool.h:46
+#, fuzzy
 msgid "Selection tool"
-msgstr ""
+msgstr "تاللانما"
 
 #: qtplugins/spacegroup/spacegroup.cpp:63
 msgid "Perceive Space Group"
@@ -2712,7 +2764,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:81 :663
+#: qtplugins/spacegroup/spacegroup.cpp:81:663
 msgid "Symmetrize"
 msgstr ""
 
@@ -2816,7 +2868,7 @@ msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:60
 msgid "Type"
-msgstr ""
+msgstr "تىپى"
 
 #: qtplugins/symmetry/operationstablemodel.cpp:62
 msgid "Class"
@@ -2824,7 +2876,7 @@ msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:64
 msgid "Element"
-msgstr ""
+msgstr "ئېلېمېنت"
 
 #: qtplugins/symmetry/symmetry.cpp:51
 msgid "Symmetry Properties..."
@@ -2832,7 +2884,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:44 :648
+#: qtplugins/symmetry/symmetry.h:44:648
 msgid "Symmetry"
 msgstr ""
 
@@ -2869,8 +2921,9 @@ msgid "Simple display of VdW spheres with ambient occlusion."
 msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:41
+#, fuzzy
 msgid "VRML Render"
-msgstr ""
+msgstr "رەڭلە"
 
 #: qtplugins/vrml/vrml.cpp:83
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -2910,12 +2963,13 @@ msgstr ""
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::EditorToolWidget)
 msgid "Form"
-msgstr ""
+msgstr "كۆزنەك"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
+#, fuzzy
 msgid "Calculation Settings"
-msgstr ""
+msgstr "ھېسابلا"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
@@ -3010,8 +3064,9 @@ msgstr ""
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
+#, fuzzy
 msgid "Rename Elements"
-msgstr ""
+msgstr "ئېلېمېنت"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
@@ -3058,7 +3113,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, openPqrFileButton)
 msgid "..."
-msgstr ""
+msgstr "…"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3123,7 +3178,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Success!"
-msgstr ""
+msgstr "مۇۋەپپەقىيەتلىك!"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:27
 #. i18n: ectx: property (text), widget (QCheckBox, loadStructureCheckBox)
@@ -3132,8 +3187,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:37
 #. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
+#, fuzzy
 msgid "Load Cube File"
-msgstr ""
+msgstr "ھۆججەت يۈكلە…"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConnectionSettingsDialog)
@@ -3142,8 +3198,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label7)
+#, fuzzy
 msgid "&Hostname:"
-msgstr ""
+msgstr "ھۆججەت ئاتى(&F):"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:64
 #. i18n: ectx: property (text), widget (QLabel, label8)
@@ -3162,28 +3219,32 @@ msgstr ""
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:66
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateBack)
+#, fuzzy
 msgid "Navigate Back"
-msgstr ""
+msgstr "يول باشلا"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateForward)
+#, fuzzy
 msgid "Navigate Forward"
-msgstr ""
+msgstr "يول باشلا"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:92
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateUp)
+#, fuzzy
 msgid "Navigate Up"
-msgstr ""
+msgstr "يول باشلا"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "File name:"
-msgstr ""
+msgstr ":ھۆججەت ئاتى"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:153
 #. i18n: ectx: property (text), widget (QPushButton, OK)
 msgid "OK"
-msgstr ""
+msgstr "جەزملە"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3193,7 +3254,7 @@ msgstr ""
 #. i18n: file: qtplugins/clientserver/filedialog.ui:174
 #. i18n: ectx: property (text), widget (QPushButton, Cancel)
 msgid "Cancel"
-msgstr ""
+msgstr "ئەمەلدىن قالدۇرۇش"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
@@ -3202,13 +3263,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Preset:"
-msgstr ""
+msgstr "ئەسلىگە قايتۇر"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Distance Unit:"
-msgstr ""
+msgstr "ئارىلىق"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:46
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
@@ -3225,7 +3288,7 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:31
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Format:"
-msgstr ""
+msgstr "فورمات:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:71
 #. i18n: ectx: property (toolTip), widget (QLineEdit, spec)
@@ -3264,7 +3327,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:145
 #. i18n: ectx: property (text), widget (QPushButton, apply)
 msgid "Apply"
-msgstr ""
+msgstr "قوللان"
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
@@ -3278,8 +3341,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
+#, fuzzy
 msgid "Supercell Parameters"
-msgstr ""
+msgstr "پارامېتىرلار:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:22
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
@@ -3309,7 +3373,7 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "A:"
-msgstr ""
+msgstr "A:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:40
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, a)
@@ -3358,7 +3422,7 @@ msgstr ""
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:48
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_peakWidth)
 msgid "°"
-msgstr ""
+msgstr "°"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:231
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -3420,7 +3484,7 @@ msgstr ""
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:23
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Element:"
-msgstr ""
+msgstr "ئېلېمېنت:"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -3435,12 +3499,12 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:34
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
 msgid "&Basic Setup"
-msgstr ""
+msgstr "ئاساسىي تەڭشەك(&B)"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "In:"
-msgstr ""
+msgstr "دىكى:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -3450,12 +3514,12 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:86
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
-msgstr ""
+msgstr "بىللە:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:99
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Title:"
-msgstr ""
+msgstr "ماۋزۇ:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:176
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -3469,8 +3533,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:235
 #. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
 msgid "Filename Base:"
-msgstr ""
+msgstr ":ھۆججەت ئاتى"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:245
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -3485,12 +3550,13 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:265
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Defaults"
-msgstr ""
+msgstr "كۆڭۈلدىكى قىممەتلەر"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
+#, fuzzy
 msgid "Save File..."
-msgstr ""
+msgstr "ھۆججەت يۈكلە…"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
@@ -3500,7 +3566,7 @@ msgstr ""
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "name"
-msgstr ""
+msgstr "ئاتى"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
@@ -3529,8 +3595,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
 msgid "Formula:"
-msgstr ""
+msgstr "فورمات:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
@@ -3544,8 +3611,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "Descriptor:"
-msgstr ""
+msgstr "چۈشەندۈرۈشى يوق"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -3561,7 +3629,7 @@ msgstr ""
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:74
 #. i18n: ectx: property (text), widget (QLabel, bondCountLabel)
 msgid "TODO"
-msgstr ""
+msgstr "TODO"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -3610,8 +3678,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+#, fuzzy
 msgid "Conjugate Gradient"
-msgstr ""
+msgstr "گۈل نۇسخىسى"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
@@ -3679,8 +3748,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
+#, fuzzy
 msgid " units"
-msgstr ""
+msgstr "بىرلىك:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
 #. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
@@ -3715,8 +3785,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Number of points:"
-msgstr ""
+msgstr "قەدەم سانى"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -3749,8 +3820,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
+#, fuzzy
 msgid "Download Selected"
-msgstr ""
+msgstr "تاللانغاننى ئۆچۈرۈش"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:19
 #. i18n: ectx: property (text), widget (QLabel, atomRadiusLabel)
@@ -3775,17 +3847,18 @@ msgstr ""
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 msgid "Opacity:"
-msgstr ""
+msgstr "غۇۋالىقى:"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
+#, fuzzy
 msgid "Surface Dialog"
-msgstr ""
+msgstr "سىرتقى يۈز"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:41
 #. i18n: ectx: attribute (title), widget (QWidget, surfaceTab)
 msgid "Surfaces"
-msgstr ""
+msgstr "سىرتقى يۈز"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:54
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
@@ -3832,17 +3905,18 @@ msgstr ""
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:201
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Resolution:"
-msgstr ""
+msgstr "ئېنىقلىق دەرىجىسى:"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:211
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Surface:"
-msgstr ""
+msgstr "سىرتقى يۈز"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:228
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
 msgid "Calculate"
-msgstr ""
+msgstr "ھېسابلا"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
@@ -3856,13 +3930,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
+#, fuzzy
 msgid "Start Animation"
-msgstr ""
+msgstr "جانلاندۇرۇم"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
+#, fuzzy
 msgid "Stop Animation"
-msgstr ""
+msgstr "جانلاندۇرۇم"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
@@ -3872,7 +3948,7 @@ msgstr ""
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:42
 #. i18n: ectx: attribute (title), widget (QWidget, esTab)
 msgid "Molecule"
-msgstr ""
+msgstr "مولېكۇلا"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, esLabel)
@@ -3886,8 +3962,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:109
 #. i18n: ectx: attribute (title), widget (QWidget, operationsTab)
+#, fuzzy
 msgid "Operations"
-msgstr ""
+msgstr "تاللانما"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:115
 #. i18n: ectx: property (text), widget (QLabel, operationsLabel)
@@ -3932,7 +4009,405 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
+",Launchpad Contributions:, ,Launchpad Contributions:,Avogadro Team,Gheyret T."
+"Kenji,Sahran, ,Launchpad Contributions:,Avogadro Team,Gheyret T.Kenji,"
+"Sahran, ,Launchpad Contributions:,Avogadro Team,Gheyret T.Kenji,Sahran"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
+",,,,avogadro-devel@lists.sourceforge.net,,,,,avogadro-devel@lists."
+"sourceforge.net,,,,,avogadro-devel@lists.sourceforge.net,,"
+
+#~ msgid "Custom Color:"
+#~ msgstr "ئۆزلەشتۈرۈلگەن رەڭ"
+
+#~ msgid "Axes"
+#~ msgstr "ئوق"
+
+#~ msgid "Cartoon"
+#~ msgstr "كارتون"
+
+#~ msgid "Force"
+#~ msgstr "مەجبۇرىي"
+
+#~ msgid "Label"
+#~ msgstr "ئەن"
+
+#~ msgid "Polygon"
+#~ msgstr "كۆپ تەرەپلىك"
+
+#~ msgid "Ribbon"
+#~ msgstr "تاسما"
+
+#~ msgid "Ring"
+#~ msgstr "ھالقا"
+
+#~ msgid "Stick"
+#~ msgstr "مۇقىم"
+
+#~ msgid "%1/%2"
+#~ msgstr "%1/%2"
+
+#~ msgid "&Properties"
+#~ msgstr "خاسلىق(&P)"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "Show Preview"
+#~ msgstr "ئالدىن كۆزىتىشنى كۆرسەت"
+
+#~ msgid "Properties"
+#~ msgstr "خاسلىق"
+
+#~ msgid "Angle"
+#~ msgstr "بۇلۇڭ"
+
+#~ msgid "Delete"
+#~ msgstr "ئۆچۈر"
+
+#~ msgid "Group Name"
+#~ msgstr "گۇرۇپپا ئاتى"
+
+#~ msgid " ("
+#~ msgstr " ("
+
+#~ msgid ")"
+#~ msgstr ")"
+
+#~ msgid "X Axis"
+#~ msgstr "X ئوقى"
+
+#~ msgid "Y Axis"
+#~ msgstr "Y ئوقى"
+
+#~ msgid "&Appearance"
+#~ msgstr "كۆرۈنۈشى(&A)"
+
+#~ msgctxt "Infrared spectra option"
+#~ msgid "Infrared"
+#~ msgstr "ئىنفرا قىزىل نۇر"
+
+#~ msgid "No data"
+#~ msgstr "سانلىق ئاساس يوق"
+
+#~ msgid "Dark"
+#~ msgstr "قارا"
+
+#~ msgid "Light"
+#~ msgstr "ئاق"
+
+#~ msgid "New Scheme"
+#~ msgstr "يېڭى لايىھە"
+
+#~ msgid "Data Format"
+#~ msgstr "سانلىق-مەلۇمات پىچىمى"
+
+#~ msgctxt "noun, not verb"
+#~ msgid "Format:"
+#~ msgstr "فورمات:"
+
+#~ msgctxt "A cube type of nothing - empty cube"
+#~ msgid "Nothing"
+#~ msgstr "يوق"
+
+#~ msgid "N/A"
+#~ msgstr "ئۇچۇر يوق"
+
+#~ msgid "Tools"
+#~ msgstr "قوراللار"
+
+#~ msgid "Align:"
+#~ msgstr "توغرىلاش:"
+
+#~ msgid "Everything"
+#~ msgstr "ھەممىسى"
+
+#~ msgid "Align"
+#~ msgstr "توغرىلا"
+
+#~ msgid "Algorithm:"
+#~ msgstr "ئالگورىزىم:"
+
+#~ msgid "Start"
+#~ msgstr "باشلا"
+
+#~ msgid "Symbol"
+#~ msgstr "بەلگە"
+
+#~ msgid "Shape"
+#~ msgstr "شەكىل"
+
+#~ msgid "Helix"
+#~ msgstr "بۇرما"
+
+#~ msgid "a"
+#~ msgstr "a"
+
+#~ msgid "b"
+#~ msgstr "b"
+
+#~ msgid "c"
+#~ msgstr "c"
+
+#~ msgid "Sheet"
+#~ msgstr "ۋاراق"
+
+#~ msgid "Loop"
+#~ msgstr "دەۋرىي"
+
+#~ msgid "Colors"
+#~ msgstr "رەڭلەر"
+
+#~ msgid "Width:"
+#~ msgstr "كەڭلىك:"
+
+#~ msgid "A"
+#~ msgstr "A"
+
+#~ msgid "None"
+#~ msgstr "يوق"
+
+#~ msgid "Unique ID"
+#~ msgstr "بىردىنبىر كىملىك"
+
+#~ msgid "Lines"
+#~ msgstr "سىزىقلار"
+
+#~ msgid "Radius:"
+#~ msgstr "رادىئۇس:"
+
+#~ msgid "Fill"
+#~ msgstr "تولدۇر"
+
+#~ msgid "Points"
+#~ msgstr "نۇقتا"
+
+#~ msgid "Style:"
+#~ msgstr "ئۇسلۇب:"
+
+#~ msgid "Colors:"
+#~ msgstr "رەڭلەر:"
+
+#~ msgid "Positive"
+#~ msgstr "مۇسبەت"
+
+#~ msgid "Negative"
+#~ msgstr "مەنپىي"
+
+#~ msgctxt "Continually re-run the animation in a loop"
+#~ msgid "Loop"
+#~ msgstr "دەۋرىي"
+
+#~ msgid "fps"
+#~ msgstr "fps"
+
+#~ msgid "Method"
+#~ msgstr "چارە"
+
+#~ msgid "Energy"
+#~ msgstr "قۇۋۋىتى"
+
+#~ msgid "Add"
+#~ msgstr "قوش"
+
+#~ msgid "Load"
+#~ msgstr "يۈك"
+
+#~ msgid "All"
+#~ msgstr "ھەممىسى"
+
+#~ msgid "Algorithm"
+#~ msgstr "ئالگورىزىم"
+
+#~ msgid "C"
+#~ msgstr "C"
+
+#~ msgid "G"
+#~ msgstr "G"
+
+#~ msgid "T"
+#~ msgstr "T"
+
+#~ msgid "B"
+#~ msgstr "B"
+
+#~ msgid "Other"
+#~ msgstr "باشقا"
+
+#~ msgid "L"
+#~ msgstr "L"
+
+#~ msgid "D"
+#~ msgstr "D"
+
+#~ msgid "E"
+#~ msgstr "E"
+
+#~ msgid "F"
+#~ msgstr "F"
+
+#~ msgid "Advanced"
+#~ msgstr "ئالىي"
+
+#~ msgid "Control"
+#~ msgstr "تىزگىن"
+
+#~ msgid "Data"
+#~ msgstr "سانلىق-مەلۇمات"
+
+#~ msgid "Nothing"
+#~ msgstr "يوق"
+
+#~ msgid "Grid"
+#~ msgstr "سېتكا"
+
+#~ msgid "Select..."
+#~ msgstr "تاللا…"
+
+#~ msgid "Command:"
+#~ msgstr "بۇيرۇق:"
+
+#~ msgid "Path:"
+#~ msgstr "يول:"
+
+#~ msgid "System"
+#~ msgstr "سىستېما"
+
+#~ msgid "Misc"
+#~ msgstr "ئارىلاش"
+
+#~ msgid "Read"
+#~ msgstr "ئوقۇ"
+
+#~ msgid "MIDI"
+#~ msgstr "MIDI"
+
+#~ msgid "Default"
+#~ msgstr "كۆڭۈلدىكى"
+
+#~ msgid "IRC"
+#~ msgstr "IRC"
+
+#~ msgid "CC:"
+#~ msgstr "CC:"
+
+#~ msgid "Check"
+#~ msgstr "تەكشۈر"
+
+#~ msgid "Debug"
+#~ msgstr "سازلا"
+
+#~ msgid "C1"
+#~ msgstr "C1"
+
+#~ msgid "DnD"
+#~ msgstr "DnD(سۆرەپ-تاشلاش)"
+
+#~ msgid "O"
+#~ msgstr "O"
+
+#~ msgid "Minutes"
+#~ msgstr "مىنۇت"
+
+#~ msgid "Hours"
+#~ msgstr "سائەت"
+
+#~ msgid "Days"
+#~ msgstr "كۈن"
+
+#~ msgid "Weeks"
+#~ msgstr "ھەپتە"
+
+#~ msgid "Years"
+#~ msgstr "يىل"
+
+#~ msgid "Memory:"
+#~ msgstr "Memory:"
+
+#~ msgctxt "\"Loop\" load balancing - set static node assignments"
+#~ msgid "Loop"
+#~ msgstr "دەۋرىي"
+
+#~ msgid "Skip"
+#~ msgstr "ئۆتكۈزۈۋەت"
+
+#~ msgid "Method:"
+#~ msgstr "ئۇسۇل:"
+
+#~ msgid "Numeric"
+#~ msgstr "سان"
+
+#~ msgid "Maximum:"
+#~ msgstr "ئەڭ چوڭ:"
+
+#~ msgid "Minimum:"
+#~ msgstr "ئەڭ كىچىك:"
+
+#~ msgid "Standard"
+#~ msgstr "ئۆلچەملىك"
+
+#~ msgid "&Close"
+#~ msgstr "ياپ(&C)"
+
+#~ msgid "Set Color..."
+#~ msgstr "رەڭ بەلگىلە…"
+
+#~ msgid "Font:"
+#~ msgstr "خەت نۇسخا:"
+
+#~ msgid "Show"
+#~ msgstr "كۆرسەت"
+
+#~ msgid "&Import..."
+#~ msgstr "ئىمپورت قىل(&I)…"
+
+#~ msgid "Background:"
+#~ msgstr "تەگلىك:"
+
+#~ msgid "Foreground:"
+#~ msgstr "ئالدى كۆرۈنۈش:"
+
+#~ msgid "New..."
+#~ msgstr "يېڭى…"
+
+#~ msgid "Rename..."
+#~ msgstr "ئات ئۆزگەرت…"
+
+#~ msgid "&Export..."
+#~ msgstr "ئېكسپورت قىل(&E)…"
+
+#~ msgid "&Width:"
+#~ msgstr "كەڭلىك(&W):"
+
+#~ msgid "cm"
+#~ msgstr "سانتىمېتىر"
+
+#~ msgid "mm"
+#~ msgstr "mm"
+
+#~ msgid "in"
+#~ msgstr "دىيۇيم"
+
+#~ msgid "px"
+#~ msgstr "px"
+
+#~ msgctxt "low resolution"
+#~ msgid "Low"
+#~ msgstr "تۆۋەن"
+
+#~ msgctxt "medium resolution"
+#~ msgid "Medium"
+#~ msgstr "ئوتتۇراھال"
+
+#~ msgctxt "high resolution"
+#~ msgid "High"
+#~ msgstr "يۇقىرى"
+
+#~ msgctxt "very high resolution"
+#~ msgid "Very High"
+#~ msgstr "ناھايىتى يۇقىرى"
+
+#~ msgid "Advanced..."
+#~ msgstr "ئالىي…"

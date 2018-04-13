@@ -1,22 +1,22 @@
-# Translations for the Avogadro molecular builder.
-# Copyright (C) 2006-2018 The Avogadro Project
-# This file is distributed under the same license as the Avogadro package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Korean translation for avogadro
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the avogadro package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Avogadro 1.90.0\n"
+"Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-04-13 12:05-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2016-06-10 07:03+0000\n"
+"Last-Translator: Kim Hanjo <lordmiss@lordmiss.com>\n"
+"Language-Team: Korean <ko@li.org>\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
+"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -133,13 +133,14 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:53
+#, fuzzy
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "생성기 입력..."
 
 #: molequeue/inputgeneratordialog.cpp:55
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1 Input Generator"
-msgstr ""
+msgstr "생성기 입력..."
 
 #: molequeue/inputgeneratorwidget.cpp:129
 msgid "Continue"
@@ -153,11 +154,11 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:129 qtgui/containerwidget.cpp:45
 msgid "Close"
-msgstr ""
+msgstr "닫기"
 
 #: molequeue/inputgeneratorwidget.cpp:170 qtgui/elementtranslator.cpp:387
 msgid "Unknown"
-msgstr ""
+msgstr "알려지지 않음"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #, qt-format, qt-plural-format
@@ -206,9 +207,9 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:333
-#, qt-format
+#, fuzzy, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "계산 중단"
 
 #: molequeue/inputgeneratorwidget.cpp:349
 #: qtplugins/gamessinput/gamessinputdialog.cpp:734
@@ -225,20 +226,23 @@ msgid "Script returns warnings:\n"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:384
+#, fuzzy
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "경고"
 
 #: molequeue/inputgeneratorwidget.cpp:390
+#, fuzzy
 msgid "Show &Warnings"
-msgstr ""
+msgstr "경고"
 
 #: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:96
 msgid "An error has occurred:"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:458
+#, fuzzy
 msgid "Select output filename"
-msgstr ""
+msgstr "용매 선택"
 
 #: molequeue/inputgeneratorwidget.cpp:473
 #, qt-format
@@ -253,15 +257,16 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:495
 #: molequeue/inputgeneratorwidget.cpp:606
 #: qtplugins/gamessinput/gamessinputdialog.cpp:687
+#, fuzzy
 msgid "Output Error"
-msgstr ""
+msgstr "출력:"
 
 #: molequeue/inputgeneratorwidget.cpp:496
 #: molequeue/inputgeneratorwidget.cpp:607
 #: qtplugins/gamessinput/gamessinputdialog.cpp:688
-#, qt-format
+#, fuzzy, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "파일에 기록할 수 없습니다."
 
 #: molequeue/inputgeneratorwidget.cpp:507
 msgid "Select output directory"
@@ -278,14 +283,14 @@ msgid "%1: Directory cannot be read!"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:540
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "비디오 파일이 작성되지 않았습니다."
 
 #: molequeue/inputgeneratorwidget.cpp:545
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "비디오 파일이 작성되지 않았습니다."
 
 #: molequeue/inputgeneratorwidget.cpp:558
 msgid "The input files cannot be written due to an unknown error."
@@ -359,27 +364,30 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:717 qtgui/interfacewidget.cpp:177
 msgid "Title"
-msgstr ""
+msgstr "제목"
 
 #: molequeue/inputgeneratorwidget.cpp:721 qtgui/interfacewidget.cpp:181
+#, fuzzy
 msgid "Filename Base"
-msgstr ""
+msgstr "파일 이름:"
 
 #: molequeue/inputgeneratorwidget.cpp:725 qtgui/interfacewidget.cpp:185
 msgid "Processor Cores"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:729 qtgui/interfacewidget.cpp:189
+#, fuzzy
 msgid "Calculation Type"
-msgstr ""
+msgstr "계산:"
 
 #: molequeue/inputgeneratorwidget.cpp:750 qtgui/interfacewidget.cpp:210
 msgid "Theory:"
-msgstr ""
+msgstr "이론:"
 
 #: molequeue/inputgeneratorwidget.cpp:753 qtgui/interfacewidget.cpp:213
+#, fuzzy
 msgid "Theory"
-msgstr ""
+msgstr "이론:"
 
 #: molequeue/inputgeneratorwidget.cpp:755 qtgui/interfacewidget.cpp:215
 msgid "Basis"
@@ -446,8 +454,9 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:1202 qtgui/interfacewidget.cpp:699
 #: qtplugins/gamessinput/gamessinputdialog.cpp:407
+#, fuzzy
 msgid "[no molecule]"
-msgstr ""
+msgstr "설정된 분자 없음"
 
 #: molequeue/molequeuedialog.cpp:73
 msgid "Submitting job to MoleQueue..."
@@ -467,8 +476,9 @@ msgid "Waiting for job %1 '%2' to finish..."
 msgstr ""
 
 #: molequeue/molequeuedialog.cpp:102
+#, fuzzy
 msgid "Stop waiting"
-msgstr ""
+msgstr "애니메이션 중지(&A)"
 
 #: molequeue/molequeuedialog.cpp:121
 msgid "Fetching completed job information..."
@@ -492,8 +502,9 @@ msgid "The job has been rejected by MoleQueue: %1"
 msgstr ""
 
 #: molequeue/molequeuedialog.cpp:211 molequeue/molequeuewidget.cpp:156
+#, fuzzy
 msgid "No program selected."
-msgstr ""
+msgstr "선택된 원자가 없음"
 
 #: molequeue/molequeuedialog.cpp:212 molequeue/molequeuewidget.cpp:157
 msgid "Please select the target program from the \"Queue and Program\" list."
@@ -521,455 +532,456 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:32
 msgid "Hydrogen"
-msgstr ""
+msgstr "수소"
 
 #: qtgui/elementtranslator.cpp:35
 msgid "Helium"
-msgstr ""
+msgstr "헬륨"
 
 #: qtgui/elementtranslator.cpp:38
 msgid "Lithium"
-msgstr ""
+msgstr "리튬"
 
 #: qtgui/elementtranslator.cpp:41
 msgid "Beryllium"
-msgstr ""
+msgstr "베릴륨"
 
 #: qtgui/elementtranslator.cpp:44
 msgid "Boron"
-msgstr ""
+msgstr "붕소"
 
 #: qtgui/elementtranslator.cpp:47
 msgid "Carbon"
-msgstr ""
+msgstr "탄소"
 
 #: qtgui/elementtranslator.cpp:50
 msgid "Nitrogen"
-msgstr ""
+msgstr "질소"
 
 #: qtgui/elementtranslator.cpp:53
 msgid "Oxygen"
-msgstr ""
+msgstr "산소"
 
 #: qtgui/elementtranslator.cpp:56
 msgid "Fluorine"
-msgstr ""
+msgstr "불소(플루오르)"
 
 #: qtgui/elementtranslator.cpp:59
 msgid "Neon"
-msgstr ""
+msgstr "네온"
 
 #: qtgui/elementtranslator.cpp:62
 msgid "Sodium"
-msgstr ""
+msgstr "나트륨"
 
 #: qtgui/elementtranslator.cpp:65
 msgid "Magnesium"
-msgstr ""
+msgstr "마그네슘"
 
 #: qtgui/elementtranslator.cpp:68
 msgid "Aluminum"
-msgstr ""
+msgstr "알루미늄"
 
 #: qtgui/elementtranslator.cpp:71
 msgid "Silicon"
-msgstr ""
+msgstr "규소"
 
 #: qtgui/elementtranslator.cpp:74
 msgid "Phosphorus"
-msgstr ""
+msgstr "인"
 
 #: qtgui/elementtranslator.cpp:77
 msgid "Sulfur"
-msgstr ""
+msgstr "황"
 
 #: qtgui/elementtranslator.cpp:80
 msgid "Chlorine"
-msgstr ""
+msgstr "염소"
 
 #: qtgui/elementtranslator.cpp:83
 msgid "Argon"
-msgstr ""
+msgstr "아르곤"
 
 #: qtgui/elementtranslator.cpp:86
 msgid "Potassium"
-msgstr ""
+msgstr "칼륨"
 
 #: qtgui/elementtranslator.cpp:89
 msgid "Calcium"
-msgstr ""
+msgstr "칼슘"
 
 #: qtgui/elementtranslator.cpp:92
 msgid "Scandium"
-msgstr ""
+msgstr "스칸듐"
 
 #: qtgui/elementtranslator.cpp:95
 msgid "Titanium"
-msgstr ""
+msgstr "티타늄"
 
 #: qtgui/elementtranslator.cpp:98
 msgid "Vanadium"
-msgstr ""
+msgstr "바나듐"
 
 #: qtgui/elementtranslator.cpp:101
 msgid "Chromium"
-msgstr ""
+msgstr "크롬"
 
 #: qtgui/elementtranslator.cpp:104
 msgid "Manganese"
-msgstr ""
+msgstr "망간"
 
 #: qtgui/elementtranslator.cpp:107
 msgid "Iron"
-msgstr ""
+msgstr "철"
 
 #: qtgui/elementtranslator.cpp:110
 msgid "Cobalt"
-msgstr ""
+msgstr "코발트"
 
 #: qtgui/elementtranslator.cpp:113
 msgid "Nickel"
-msgstr ""
+msgstr "니켈"
 
 #: qtgui/elementtranslator.cpp:116
 msgid "Copper"
-msgstr ""
+msgstr "구리"
 
 #: qtgui/elementtranslator.cpp:119
 msgid "Zinc"
-msgstr ""
+msgstr "아연"
 
 #: qtgui/elementtranslator.cpp:122
 msgid "Gallium"
-msgstr ""
+msgstr "갈륨"
 
 #: qtgui/elementtranslator.cpp:125
 msgid "Germanium"
-msgstr ""
+msgstr "게르마늄"
 
 #: qtgui/elementtranslator.cpp:128
 msgid "Arsenic"
-msgstr ""
+msgstr "비소"
 
 #: qtgui/elementtranslator.cpp:131
 msgid "Selenium"
-msgstr ""
+msgstr "셀레늄"
 
 #: qtgui/elementtranslator.cpp:134
 msgid "Bromine"
-msgstr ""
+msgstr "브롬"
 
 #: qtgui/elementtranslator.cpp:137
 msgid "Krypton"
-msgstr ""
+msgstr "크립톤"
 
 #: qtgui/elementtranslator.cpp:140
 msgid "Rubidium"
-msgstr ""
+msgstr "루비듐"
 
 #: qtgui/elementtranslator.cpp:143
 msgid "Strontium"
-msgstr ""
+msgstr "스트론튬"
 
 #: qtgui/elementtranslator.cpp:146
 msgid "Yttrium"
-msgstr ""
+msgstr "이트륨"
 
 #: qtgui/elementtranslator.cpp:149
 msgid "Zirconium"
-msgstr ""
+msgstr "지르코늄"
 
 #: qtgui/elementtranslator.cpp:152
 msgid "Niobium"
-msgstr ""
+msgstr "니오브"
 
 #: qtgui/elementtranslator.cpp:155
 msgid "Molybdenum"
-msgstr ""
+msgstr "몰리브덴"
 
 #: qtgui/elementtranslator.cpp:158
 msgid "Technetium"
-msgstr ""
+msgstr "테크네튬"
 
 #: qtgui/elementtranslator.cpp:161
 msgid "Ruthenium"
-msgstr ""
+msgstr "루테늄"
 
 #: qtgui/elementtranslator.cpp:164
 msgid "Rhodium"
-msgstr ""
+msgstr "로듐"
 
 #: qtgui/elementtranslator.cpp:167
 msgid "Palladium"
-msgstr ""
+msgstr "팔라듐"
 
 #: qtgui/elementtranslator.cpp:170
 msgid "Silver"
-msgstr ""
+msgstr "은"
 
 #: qtgui/elementtranslator.cpp:173
 msgid "Cadmium"
-msgstr ""
+msgstr "카드뮴"
 
 #: qtgui/elementtranslator.cpp:176
 msgid "Indium"
-msgstr ""
+msgstr "인듐"
 
 #: qtgui/elementtranslator.cpp:179
 msgid "Tin"
-msgstr ""
+msgstr "주석"
 
 #: qtgui/elementtranslator.cpp:182
 msgid "Antimony"
-msgstr ""
+msgstr "안티몬"
 
 #: qtgui/elementtranslator.cpp:185
 msgid "Tellurium"
-msgstr ""
+msgstr "텔루르"
 
 #: qtgui/elementtranslator.cpp:188
 msgid "Iodine"
-msgstr ""
+msgstr "요오드"
 
 #: qtgui/elementtranslator.cpp:191
 msgid "Xenon"
-msgstr ""
+msgstr "크세논"
 
 #: qtgui/elementtranslator.cpp:194
 msgid "Cesium"
-msgstr ""
+msgstr "세슘"
 
 #: qtgui/elementtranslator.cpp:197
 msgid "Barium"
-msgstr ""
+msgstr "바륨"
 
 #: qtgui/elementtranslator.cpp:200
 msgid "Lanthanum"
-msgstr ""
+msgstr "란탄"
 
 #: qtgui/elementtranslator.cpp:203
 msgid "Cerium"
-msgstr ""
+msgstr "세륨"
 
 #: qtgui/elementtranslator.cpp:206
 msgid "Praseodymium"
-msgstr ""
+msgstr "프라세오디뮴"
 
 #: qtgui/elementtranslator.cpp:209
 msgid "Neodymium"
-msgstr ""
+msgstr "네오디뮴"
 
 #: qtgui/elementtranslator.cpp:212
 msgid "Promethium"
-msgstr ""
+msgstr "프로메튬"
 
 #: qtgui/elementtranslator.cpp:215
 msgid "Samarium"
-msgstr ""
+msgstr "사마륨"
 
 #: qtgui/elementtranslator.cpp:218
 msgid "Europium"
-msgstr ""
+msgstr "유로퓸"
 
 #: qtgui/elementtranslator.cpp:221
 msgid "Gadolinium"
-msgstr ""
+msgstr "가돌리늄"
 
 #: qtgui/elementtranslator.cpp:224
 msgid "Terbium"
-msgstr ""
+msgstr "테르븀"
 
 #: qtgui/elementtranslator.cpp:227
 msgid "Dysprosium"
-msgstr ""
+msgstr "디스프로슘"
 
 #: qtgui/elementtranslator.cpp:230
 msgid "Holmium"
-msgstr ""
+msgstr "홀뮴"
 
 #: qtgui/elementtranslator.cpp:233
 msgid "Erbium"
-msgstr ""
+msgstr "에르븀"
 
 #: qtgui/elementtranslator.cpp:236
 msgid "Thulium"
-msgstr ""
+msgstr "툴륨"
 
 #: qtgui/elementtranslator.cpp:239
 msgid "Ytterbium"
-msgstr ""
+msgstr "이테르븀"
 
 #: qtgui/elementtranslator.cpp:242
 msgid "Lutetium"
-msgstr ""
+msgstr "루테튬"
 
 #: qtgui/elementtranslator.cpp:245
 msgid "Hafnium"
-msgstr ""
+msgstr "하프늄"
 
 #: qtgui/elementtranslator.cpp:248
 msgid "Tantalum"
-msgstr ""
+msgstr "탄탈"
 
 #: qtgui/elementtranslator.cpp:251
 msgid "Tungsten"
-msgstr ""
+msgstr "텅스텐"
 
 #: qtgui/elementtranslator.cpp:254
 msgid "Rhenium"
-msgstr ""
+msgstr "레늄"
 
 #: qtgui/elementtranslator.cpp:257
 msgid "Osmium"
-msgstr ""
+msgstr "오스뮴"
 
 #: qtgui/elementtranslator.cpp:260
 msgid "Iridium"
-msgstr ""
+msgstr "이리듐"
 
 #: qtgui/elementtranslator.cpp:263
 msgid "Platinum"
-msgstr ""
+msgstr "백금"
 
 #: qtgui/elementtranslator.cpp:266
 msgid "Gold"
-msgstr ""
+msgstr "금"
 
 #: qtgui/elementtranslator.cpp:269
 msgid "Mercury"
-msgstr ""
+msgstr "수은"
 
 #: qtgui/elementtranslator.cpp:272
 msgid "Thallium"
-msgstr ""
+msgstr "탈륨"
 
 #: qtgui/elementtranslator.cpp:275
 msgid "Lead"
-msgstr ""
+msgstr "납"
 
 #: qtgui/elementtranslator.cpp:278
 msgid "Bismuth"
-msgstr ""
+msgstr "비스무트"
 
 #: qtgui/elementtranslator.cpp:281
 msgid "Polonium"
-msgstr ""
+msgstr "폴로늄"
 
 #: qtgui/elementtranslator.cpp:284
 msgid "Astatine"
-msgstr ""
+msgstr "아스타틴"
 
 #: qtgui/elementtranslator.cpp:287
 msgid "Radon"
-msgstr ""
+msgstr "라돈"
 
 #: qtgui/elementtranslator.cpp:290
 msgid "Francium"
-msgstr ""
+msgstr "프란슘"
 
 #: qtgui/elementtranslator.cpp:293
 msgid "Radium"
-msgstr ""
+msgstr "라듐"
 
 #: qtgui/elementtranslator.cpp:296
 msgid "Actinium"
-msgstr ""
+msgstr "악티늄"
 
 #: qtgui/elementtranslator.cpp:299
 msgid "Thorium"
-msgstr ""
+msgstr "토륨"
 
 #: qtgui/elementtranslator.cpp:302
 msgid "Protactinium"
-msgstr ""
+msgstr "프로탁티늄"
 
 #: qtgui/elementtranslator.cpp:305
 msgid "Uranium"
-msgstr ""
+msgstr "우라늄"
 
 #: qtgui/elementtranslator.cpp:308
 msgid "Neptunium"
-msgstr ""
+msgstr "넵투늄"
 
 #: qtgui/elementtranslator.cpp:311
 msgid "Plutonium"
-msgstr ""
+msgstr "플루토늄"
 
 #: qtgui/elementtranslator.cpp:314
 msgid "Americium"
-msgstr ""
+msgstr "아메리슘"
 
 #: qtgui/elementtranslator.cpp:317
 msgid "Curium"
-msgstr ""
+msgstr "퀴륨"
 
 #: qtgui/elementtranslator.cpp:320
 msgid "Berkelium"
-msgstr ""
+msgstr "버클륨"
 
 #: qtgui/elementtranslator.cpp:323
 msgid "Californium"
-msgstr ""
+msgstr "칼리포르늄"
 
 #: qtgui/elementtranslator.cpp:326
 msgid "Einsteinium"
-msgstr ""
+msgstr "아인슈타이늄"
 
 #: qtgui/elementtranslator.cpp:329
 msgid "Fermium"
-msgstr ""
+msgstr "페르뮴"
 
 #: qtgui/elementtranslator.cpp:332
 msgid "Mendelevium"
-msgstr ""
+msgstr "멘델레예븀"
 
 #: qtgui/elementtranslator.cpp:335
 msgid "Nobelium"
-msgstr ""
+msgstr "노벨륨"
 
 #: qtgui/elementtranslator.cpp:338
 msgid "Lawrencium"
-msgstr ""
+msgstr "로렌슘"
 
 #: qtgui/elementtranslator.cpp:341
 msgid "Rutherfordium"
-msgstr ""
+msgstr "러더퍼듐"
 
 #: qtgui/elementtranslator.cpp:344
 msgid "Dubnium"
-msgstr ""
+msgstr "더브늄"
 
 #: qtgui/elementtranslator.cpp:347
 msgid "Seaborgium"
-msgstr ""
+msgstr "시보귬"
 
 #: qtgui/elementtranslator.cpp:350
 msgid "Bohrium"
-msgstr ""
+msgstr "보륨"
 
 #: qtgui/elementtranslator.cpp:353
 msgid "Hassium"
-msgstr ""
+msgstr "하슘"
 
 #: qtgui/elementtranslator.cpp:356
 msgid "Meitnerium"
-msgstr ""
+msgstr "마이트너륨"
 
 #: qtgui/elementtranslator.cpp:359
 msgid "Darmstadtium"
-msgstr ""
+msgstr "다름슈타튬"
 
 #: qtgui/elementtranslator.cpp:362
 msgid "Roentgenium"
-msgstr ""
+msgstr "뢴트게늄"
 
 #: qtgui/elementtranslator.cpp:365
 msgid "Copernicium"
-msgstr ""
+msgstr "코페르니슘"
 
 #: qtgui/elementtranslator.cpp:368
+#, fuzzy
 msgid "Nihonium"
-msgstr ""
+msgstr "지르코늄"
 
 #: qtgui/elementtranslator.cpp:371
 msgid "Flerovium"
@@ -992,16 +1004,19 @@ msgid "Oganesson"
 msgstr ""
 
 #: qtgui/filebrowsewidget.cpp:36
+#, fuzzy
 msgid "Browse"
-msgstr ""
+msgstr "탐색..."
 
 #: qtgui/filebrowsewidget.cpp:111
+#, fuzzy
 msgid "Select file:"
-msgstr ""
+msgstr "용매 선택"
 
 #: qtgui/filebrowsewidget.cpp:114
+#, fuzzy
 msgid "Select executable:"
-msgstr ""
+msgstr "선택 항목 삭제"
 
 #: qtgui/fileformatdialog.cpp:66
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1047,8 +1062,9 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:257
+#, fuzzy
 msgid "All files (*);;"
-msgstr ""
+msgstr "모든 파일"
 
 #: qtgui/fileformatdialog.cpp:261
 #, qt-format
@@ -1056,8 +1072,9 @@ msgid "All supported formats (%1);;"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
+#, fuzzy
 msgid "Untitled"
-msgstr ""
+msgstr "제목없음"
 
 #: qtgui/multiviewwidget.cpp:199
 msgid "Create a new view"
@@ -1065,7 +1082,7 @@ msgstr ""
 
 #: qtgui/periodictableview.cpp:44
 msgid "Periodic Table"
-msgstr ""
+msgstr "주기율표"
 
 #: qtgui/pythonscript.cpp:85
 #, qt-format
@@ -1094,107 +1111,123 @@ msgid ""
 msgstr ""
 
 #: qtgui/pythonscript.cpp:139
+#, fuzzy
 msgid "Script failed to start."
-msgstr ""
+msgstr "G03을 시작하는데 실패했습니다"
 
 #: qtgui/pythonscript.cpp:142
+#, fuzzy
 msgid "Script crashed."
-msgstr ""
+msgstr "스크립트(&S)"
 
 #: qtgui/pythonscript.cpp:145
 msgid "Script timed out."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:148
+#, fuzzy
 msgid "Read error."
-msgstr ""
+msgstr "OpenGL 오류"
 
 #: qtgui/pythonscript.cpp:151
 msgid "Write error."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:155
+#, fuzzy
 msgid "Unknown error."
-msgstr ""
+msgstr "알려지지 않음"
 
 #: qtgui/rwmolecule.cpp:48
+#, fuzzy
 msgid "Modify Molecule"
-msgstr ""
+msgstr "분자"
 
 #: qtgui/rwmolecule.cpp:154 qtgui/rwmolecule.cpp:163
 msgid "Add Atom"
-msgstr ""
+msgstr "원자 추가"
 
 #: qtgui/rwmolecule.cpp:276 qtgui/rwmolecule.cpp:291
 #: qtplugins/editor/editor.cpp:131
 msgid "Remove Atom"
-msgstr ""
+msgstr "원자 제거하기"
 
 #: qtgui/rwmolecule.cpp:301
+#, fuzzy
 msgid "Clear Atoms"
-msgstr ""
+msgstr "원자 시작"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321 :345
+#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321:345
 msgid "Adjust Hydrogens"
-msgstr ""
+msgstr "수소 추가"
 
 #: qtgui/rwmolecule.cpp:356
+#, fuzzy
 msgid "Change Elements"
-msgstr ""
+msgstr "원소 바꾸기"
 
 #: qtgui/rwmolecule.cpp:390
 msgid "Change Element"
-msgstr ""
+msgstr "원소 바꾸기"
 
 #: qtgui/rwmolecule.cpp:567
 msgid "Change Atom Hybridization"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:600
+#, fuzzy
 msgid "Change Atom Formal Charge"
-msgstr ""
+msgstr "형식전하"
 
 #: qtgui/rwmolecule.cpp:663
 msgid "Add Bond"
-msgstr ""
+msgstr "결합 추가"
 
 #: qtgui/rwmolecule.cpp:751
+#, fuzzy
 msgid "Removed Bond"
-msgstr ""
+msgstr "원자 제거하기"
 
 #: qtgui/rwmolecule.cpp:758
+#, fuzzy
 msgid "Clear Bonds"
-msgstr ""
+msgstr "결합 제거"
 
 #: qtgui/rwmolecule.cpp:793
+#, fuzzy
 msgid "Set Bond Orders"
-msgstr ""
+msgstr "결합 차수"
 
 #: qtgui/rwmolecule.cpp:838
 msgid "Change Bond Order"
-msgstr ""
+msgstr "결합 차수 변경"
 
 #: qtgui/rwmolecule.cpp:882
+#, fuzzy
 msgid "Update Bonds"
-msgstr ""
+msgstr "결합 제거"
 
 #: qtgui/rwmolecule.cpp:922
+#, fuzzy
 msgid "Update Bond"
-msgstr ""
+msgstr "결합 제거"
 
 #: qtgui/rwmolecule.cpp:962
+#, fuzzy
 msgid "Add Unit Cell"
-msgstr ""
+msgstr "단위 세포 채우기"
 
 #: qtgui/rwmolecule.cpp:995
+#, fuzzy
 msgid "Remove Unit Cell"
-msgstr ""
+msgstr "단위 세포 채우기"
 
 #: qtgui/rwmolecule.cpp:1077
+#, fuzzy
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "단위 세포 채우기"
 
 #: qtgui/rwmolecule.cpp:1094
 msgid "Wrap Atoms to Cell"
@@ -1231,7 +1264,7 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:1277 qtplugins/spacegroup/spacegroup.cpp:86
 msgid "Fill Unit Cell"
-msgstr ""
+msgstr "단위 세포 채우기"
 
 #: qtgui/rwmolecule.cpp:1297
 msgid "Reduce Cell to Asymmetric Unit"
@@ -1245,12 +1278,13 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
 #: qtplugins/povray/povray.cpp:58 qtplugins/vrml/vrml.cpp:58
 msgid "&File"
-msgstr ""
+msgstr "&파일"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/vrml/vrml.cpp:58
+#, fuzzy
 msgid "&Export"
-msgstr ""
+msgstr "내보내기"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1258,23 +1292,25 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:177
 #. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
-#: qtplugins/apbs/apbs.cpp:43 :141
+#: qtplugins/apbs/apbs.cpp:43:141
 msgid "Run APBS"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:48 qtplugins/apbs/apbs.cpp:73
 #: qtplugins/gamessinput/gamessinput.cpp:82
 #: qtplugins/quantuminput/quantuminput.cpp:96
+#, fuzzy
 msgid "Open Output File"
-msgstr ""
+msgstr "WFN 파일 열기"
 
 #: qtplugins/apbs/apbs.cpp:61 qtplugins/clientserver/clientserver.cpp:83
 #: qtplugins/forcefields/workflow.cpp:73 qtplugins/forcefields/workflow.cpp:81
 #: qtplugins/mongochem/mongochem.cpp:63 qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
+#, fuzzy
 msgid "&Extensions"
-msgstr ""
+msgstr "확장 기능"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -1285,22 +1321,24 @@ msgid "OpenDX File (*.dx)"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:127
+#, fuzzy
 msgid "IO Error"
-msgstr ""
+msgstr "오류"
 
 #: qtplugins/apbs/apbs.cpp:128
-#, qt-format
+#, fuzzy, qt-format
 msgid "Error reading structure file (%1)."
-msgstr ""
+msgstr "궤도 파일 %1을 읽는데 문제가 있습니다"
 
 #: qtplugins/apbs/apbs.cpp:148 qtplugins/apbs/apbs.cpp:155
+#, fuzzy
 msgid "OpenDX Error"
-msgstr ""
+msgstr "OpenGL 오류"
 
 #: qtplugins/apbs/apbs.cpp:149
-#, qt-format
+#, fuzzy, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "궤도 파일 %1을 읽는데 문제가 있습니다"
 
 #: qtplugins/apbs/apbs.cpp:156
 msgid "Error reading OpenDX file: No cube found"
@@ -1308,7 +1346,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
-#: qtplugins/apbs/apbs.h:42 :87
+#: qtplugins/apbs/apbs.h:42:87
 msgid "APBS"
 msgstr ""
 
@@ -1317,16 +1355,18 @@ msgid "Interact with APBS utilities."
 msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:91
+#, fuzzy
 msgid "Open PDB File"
-msgstr ""
+msgstr "WFN 파일 열기"
 
 #: qtplugins/apbs/apbsdialog.cpp:92
 msgid "PDB Files (*.pdb)"
 msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:102
+#, fuzzy
 msgid "Open PQR File"
-msgstr ""
+msgstr "WFN 파일 열기"
 
 #: qtplugins/apbs/apbsdialog.cpp:103
 msgid "PQR Files (*.pqr)"
@@ -1347,7 +1387,7 @@ msgstr ""
 #: qtplugins/quantuminput/quantuminput.cpp:112
 #: qtplugins/workflows/workflow.cpp:106
 msgid "Error"
-msgstr ""
+msgstr "오류"
 
 #: qtplugins/apbs/apbsdialog.cpp:144
 #, qt-format
@@ -1369,14 +1409,15 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:190
-#: qtplugins/clientserver/connectionsettingsdialog.cpp:75 :147
+#: qtplugins/clientserver/connectionsettingsdialog.cpp:75:147
+#, fuzzy
 msgid "Success"
-msgstr ""
+msgstr "성공!"
 
 #: qtplugins/apbs/apbsdialog.cpp:191
-#, qt-format
+#, fuzzy, qt-format
 msgid "Input file written to '%1'"
-msgstr ""
+msgstr "%1 로 이미지가 성공적으로 쓰여졌습니다"
 
 #: qtplugins/ballandstick/ballandstick.cpp:203
 #: qtplugins/wireframe/wireframe.cpp:100
@@ -1385,16 +1426,18 @@ msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:104
+#, fuzzy
 msgid "Show hydrogens?"
-msgstr ""
+msgstr "수소"
 
 #: qtplugins/ballandstick/ballandstick.h:43
 msgid "Ball and Stick"
-msgstr ""
+msgstr "공과 막대 모형"
 
 #: qtplugins/ballandstick/ballandstick.h:47
+#, fuzzy
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr ""
+msgstr "원자 및 결합 이름 표시"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:312
 msgid "Bond-centric manipulation"
@@ -1410,12 +1453,14 @@ msgid ""
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:42
+#, fuzzy
 msgid "Bond Atoms"
-msgstr ""
+msgstr "원자 끝내기"
 
 #: qtplugins/bonding/bonding.cpp:43
+#, fuzzy
 msgid "Remove Bonds"
-msgstr ""
+msgstr "수소 제거"
 
 #: qtplugins/bonding/bonding.cpp:62
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:45
@@ -1423,11 +1468,12 @@ msgstr ""
 #: qtplugins/hydrogens/hydrogens.cpp:67
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
-msgstr ""
+msgstr "빌드(&B)"
 
 #: qtplugins/bonding/bonding.h:36
+#, fuzzy
 msgid "Bonding"
-msgstr ""
+msgstr "결합"
 
 #: qtplugins/bonding/bonding.h:40
 msgid "Perform bonding operations."
@@ -1490,8 +1536,9 @@ msgid "Connection to %2:%3 succeeded!"
 msgstr ""
 
 #: qtplugins/clientserver/filedialogmodel.cpp:666
+#, fuzzy
 msgid "Filename"
-msgstr ""
+msgstr "파일 이름:"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:29
 msgid "Atomic &Coordinate Editor..."
@@ -1520,28 +1567,34 @@ msgid "Too few entries on line."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:381
+#, fuzzy
 msgid "Invalid element name."
-msgstr ""
+msgstr "잘못된 파일명"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:383
+#, fuzzy
 msgid "Element name."
-msgstr ""
+msgstr "원소 이름"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
+#, fuzzy
 msgid "Invalid element symbol."
-msgstr ""
+msgstr "원소 기호"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
+#, fuzzy
 msgid "Element symbol."
-msgstr ""
+msgstr "원소 기호"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
+#, fuzzy
 msgid "Invalid atomic number."
-msgstr ""
+msgstr "잘못된 파일명"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
+#, fuzzy
 msgid "Atomic number."
-msgstr ""
+msgstr "원자 번호"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:418
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
@@ -1549,8 +1602,9 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
+#, fuzzy
 msgid "Invalid coordinate."
-msgstr ""
+msgstr "잘못된 파일명"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 msgid "X coordinate."
@@ -1594,7 +1648,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607 :615
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607:615
 msgid "Custom"
 msgstr ""
 
@@ -1603,8 +1657,22 @@ msgid "XYZ format (symbols)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:609
+#, fuzzy
 msgid "XYZ format (names)"
 msgstr ""
+",Launchpad Contributions:,Geoff Hutchison, ,Launchpad Contributions:,"
+"Avogadro Team, ,Launchpad Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon "
+"Lee, ,Launchpad Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee, ,"
+"Launchpad Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:610
 msgid "XYZ format (atomic numbers)"
@@ -1623,12 +1691,14 @@ msgid "Lattice coordinates (atomic numbers)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
+#, fuzzy
 msgid "GAMESS format (symbols)"
-msgstr ""
+msgstr "GAMESS EFP 정보"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:616
+#, fuzzy
 msgid "GAMESS format (names)"
-msgstr ""
+msgstr "GAMESS EFP 정보"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:617
 msgid "Turbomole format"
@@ -1636,25 +1706,26 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:42 :225
+#: qtplugins/copypaste/copypaste.cpp:42:225
 msgid "Copy"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:43 :222
+#: qtplugins/copypaste/copypaste.cpp:43:222
+#, fuzzy
 msgid "Cut"
-msgstr ""
+msgstr "사용자 정의:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:44 :234
+#: qtplugins/copypaste/copypaste.cpp:44:234
 msgid "Clear"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
-#: qtplugins/copypaste/copypaste.cpp:45 :228
+#: qtplugins/copypaste/copypaste.cpp:45:228
 msgid "Paste"
 msgstr ""
 
@@ -1718,12 +1789,14 @@ msgid "Import Crystal from Clipboard"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:61
+#, fuzzy
 msgid "Toggle Unit Cell"
-msgstr ""
+msgstr "단위 세포 채우기"
 
 #: qtplugins/crystal/crystal.cpp:66
+#, fuzzy
 msgid "Edit Unit Cell..."
-msgstr ""
+msgstr "단위 세포 채우기"
 
 #: qtplugins/crystal/crystal.cpp:71
 msgid "&Wrap Atoms to Unit Cell"
@@ -1779,8 +1852,9 @@ msgid "Crystal Lattice"
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.h:41
+#, fuzzy
 msgid "Render the unit cell boundaries."
-msgstr ""
+msgstr "원자 및 결합 이름 표시"
 
 #: qtplugins/crystal/importcrystaldialog.cpp:81
 msgid "Cannot Parse Text"
@@ -1804,34 +1878,38 @@ msgid "Manipulate custom element types in the current molecule."
 msgstr ""
 
 #: qtplugins/customelements/customelements.h:35
+#, fuzzy
 msgid "Custom Elements"
-msgstr ""
+msgstr "색상요소를 기반으로 채색"
 
 #: qtplugins/editor/editor.cpp:84 qtplugins/editor/editor.cpp:118
 msgid "Draw"
-msgstr ""
+msgstr "그리기"
 
 #: qtplugins/editor/editor.cpp:112
 msgid "Draw Atom"
-msgstr ""
+msgstr "원자 그리기"
 
 #: qtplugins/editor/editor.cpp:122
+#, fuzzy
 msgid "Change Bond Type"
-msgstr ""
+msgstr "결합 차수 변경"
 
 #: qtplugins/editor/editor.cpp:135
+#, fuzzy
 msgid "Remove Bond"
-msgstr ""
+msgstr "원자 제거하기"
 
 #: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:194
 #: qtplugins/measuretool/measuretool.cpp:222
+#, fuzzy
 msgid "Distance:"
-msgstr ""
+msgstr "거리"
 
 #: qtplugins/editor/editor.cpp:235
-#, qt-format
+#, fuzzy, qt-format
 msgid "Distance: %L1 Å"
-msgstr ""
+msgstr "거리 (1->2): %L1 %2"
 
 #: qtplugins/editor/editor.h:44 qtplugins/editor/editor.h:45
 msgid "Editor tool"
@@ -1839,38 +1917,40 @@ msgstr ""
 
 #: qtplugins/editor/editortoolwidget.cpp:138
 msgid "Other..."
-msgstr ""
+msgstr "기타..."
 
 #: qtplugins/editor/editortoolwidget.cpp:217
+#, fuzzy
 msgid "Automatic"
-msgstr ""
+msgstr "자동최적화"
 
 #: qtplugins/editor/editortoolwidget.cpp:218
 msgid "Single"
-msgstr ""
+msgstr "단일"
 
 #: qtplugins/editor/editortoolwidget.cpp:219
 msgid "Double"
-msgstr ""
+msgstr "이중"
 
 #: qtplugins/editor/editortoolwidget.cpp:220
 msgid "Triple"
-msgstr ""
+msgstr "삼중"
 
 #: qtplugins/forcefields/workflow.cpp:73 qtplugins/forcefields/workflow.cpp:81
 #: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
+#, fuzzy
 msgid "Scripts"
-msgstr ""
+msgstr "스크립트(&S)"
 
 #: qtplugins/forcefields/workflow.cpp:107
 #: qtplugins/gamessinput/gamessinput.cpp:99
 #: qtplugins/quantuminput/quantuminput.cpp:113
 #: qtplugins/workflows/workflow.cpp:107
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Error reading output file '%1':\n"
 "%2"
-msgstr ""
+msgstr "궤도 파일 %1을 읽는데 문제가 있습니다"
 
 #: qtplugins/forcefields/workflow.cpp:204
 #: qtplugins/quantuminput/quantuminput.cpp:179
@@ -1900,7 +1980,7 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinput.cpp:44
 msgid "&GAMESS"
-msgstr ""
+msgstr "&GAMESS"
 
 #: qtplugins/gamessinput/gamessinput.cpp:62
 #: qtplugins/quantuminput/quantuminput.cpp:72
@@ -1911,20 +1991,23 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinput.cpp:62
 #: qtplugins/quantuminput/quantuminput.cpp:72
+#, fuzzy
 msgid "Input Generators"
-msgstr ""
+msgstr "생성기 입력..."
 
 #: qtplugins/gamessinput/gamessinput.h:46
+#, fuzzy
 msgid "GAMESS input"
-msgstr ""
+msgstr "GAMESS 입력"
 
 #: qtplugins/gamessinput/gamessinput.h:48
 msgid "Generate input for GAMESS."
 msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:237
+#, fuzzy
 msgid "Single Point"
-msgstr ""
+msgstr "단일체"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:240
 msgid "Equilibrium Geometry"
@@ -1936,7 +2019,7 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:246
 msgid "Frequencies"
-msgstr ""
+msgstr "진동수"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:315
 msgid "Core Potential"
@@ -1944,23 +2027,23 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:330
 msgid "Gas"
-msgstr ""
+msgstr "기체"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:333
 msgid "Water"
-msgstr ""
+msgstr "물"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:348
 msgid "Singlet"
-msgstr ""
+msgstr "단일체"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:351
 msgid "Doublet"
-msgstr ""
+msgstr "이중체"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:354
 msgid "Triplet"
-msgstr ""
+msgstr "삼중체"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:369
 msgid "Dication"
@@ -1968,15 +2051,15 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:372
 msgid "Cation"
-msgstr ""
+msgstr "양이온"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:375
 msgid "Neutral"
-msgstr ""
+msgstr "중성"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:378
 msgid "Anion"
-msgstr ""
+msgstr "음이온"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:381
 msgid "Dianion"
@@ -1993,40 +2076,46 @@ msgid "Overwrite modified input file?"
 msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:668
+#, fuzzy
 msgid "Save GAMESS input file"
-msgstr ""
+msgstr "GAMESS 입력"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:718
+#, fuzzy
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "계산 중단"
 
 #: qtplugins/hydrogens/hydrogens.cpp:33
+#, fuzzy
 msgid "&Adjust Hydrogens"
-msgstr ""
+msgstr "수소 추가"
 
 #: qtplugins/hydrogens/hydrogens.cpp:38
 msgid "Add Hydrogens"
-msgstr ""
+msgstr "수소 추가"
 
 #: qtplugins/hydrogens/hydrogens.cpp:42
+#, fuzzy
 msgid "Remove E&xtra Hydrogens"
-msgstr ""
+msgstr "수소 제거"
 
 #: qtplugins/hydrogens/hydrogens.cpp:46
+#, fuzzy
 msgid "&Remove All Hydrogens"
-msgstr ""
+msgstr "수소 제거"
 
 #: qtplugins/hydrogens/hydrogens.cpp:57
 msgid "Add/remove hydrogens from the current molecule."
 msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:67
+#, fuzzy
 msgid "&Hydrogens"
-msgstr ""
+msgstr "수소"
 
 #: qtplugins/hydrogens/hydrogens.h:35
 msgid "Hydrogens"
-msgstr ""
+msgstr "수소"
 
 #: qtplugins/importpqr/importpqr.cpp:38
 msgid "&Import From PQR"
@@ -2034,12 +2123,13 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
+#, fuzzy
 msgid "&Import"
-msgstr ""
+msgstr "불러오기"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
-#: qtplugins/importpqr/importpqr.h:45 :393
+#: qtplugins/importpqr/importpqr.h:45:393
 msgid "Import From PQR"
 msgstr ""
 
@@ -2052,12 +2142,13 @@ msgid "Licorice"
 msgstr ""
 
 #: qtplugins/licorice/licorice.h:42
+#, fuzzy
 msgid "Render atoms as licorice."
-msgstr ""
+msgstr "원자 및 결합 이름 표시"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:43
 msgid "SMILES..."
-msgstr ""
+msgstr "SMILES..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:48
 msgid "InChI..."
@@ -2068,17 +2159,19 @@ msgid "InChI"
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:56
+#, fuzzy
 msgid "SMILES"
-msgstr ""
+msgstr "SMILES..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Insert"
-msgstr ""
+msgstr "삽입(&I)"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:98
 #: qtplugins/lineformatinput/lineformatinput.cpp:122
+#, fuzzy
 msgid "No descriptors found!"
-msgstr ""
+msgstr "설명 없음"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:99
 msgid "No line format readers found!"
@@ -2087,17 +2180,19 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133 :426
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:426
+#, fuzzy
 msgid "Insert Molecule..."
-msgstr ""
+msgstr "분자"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:123
 msgid "Unable to load requested format reader."
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:134
+#, fuzzy
 msgid "Generating 3D molecule..."
-msgstr ""
+msgstr "산출..."
 
 #: qtplugins/lineformatinput/lineformatinput.h:42
 msgid "LineFormatInput"
@@ -2109,42 +2204,46 @@ msgstr ""
 
 #: qtplugins/manipulator/manipulator.cpp:52
 msgid "Manipulate"
-msgstr ""
+msgstr "조작"
 
 #: qtplugins/manipulator/manipulator.h:44
 #: qtplugins/manipulator/manipulator.h:45
+#, fuzzy
 msgid "Manipulate tool"
-msgstr ""
+msgstr "조작"
 
 #: qtplugins/measuretool/measuretool.cpp:63
 msgid "Measure"
-msgstr ""
+msgstr "측정"
 
 #: qtplugins/measuretool/measuretool.cpp:192
 #: qtplugins/measuretool/measuretool.cpp:202
 msgid "Dihedral:"
-msgstr ""
+msgstr "이면각:"
 
 #: qtplugins/measuretool/measuretool.cpp:193
 msgid "Angle:"
-msgstr ""
+msgstr "각:"
 
 #: qtplugins/measuretool/measuretool.cpp:214
+#, fuzzy
 msgid "Angles:"
-msgstr ""
+msgstr "각:"
 
 #: qtplugins/measuretool/measuretool.h:48
 #: qtplugins/measuretool/measuretool.h:49
+#, fuzzy
 msgid "Measure tool"
-msgstr ""
+msgstr "측정"
 
 #: qtplugins/meshes/meshes.h:40
 msgid "Meshes"
 msgstr ""
 
 #: qtplugins/meshes/meshes.h:42
+#, fuzzy
 msgid "Render triangle meshes."
-msgstr ""
+msgstr "등곡선 망상 분자 표시"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/mongochem/mongochem.cpp:45
@@ -2154,28 +2253,29 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
 #: qtplugins/resetview/resetview.cpp:48 qtplugins/symmetry/symmetry.cpp:92
 msgid "&View"
-msgstr ""
+msgstr "보기(&V)"
 
 #: qtplugins/molecularproperties/molecularproperties.h:42
 #: qtplugins/mongochem/mongochem.h:40
 msgid "Molecular Properties"
-msgstr ""
+msgstr "분자 속성"
 
 #: qtplugins/navigator/navigator.cpp:45
 msgid "Navigate"
-msgstr ""
+msgstr "탐색"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
+#, fuzzy
 msgid "Navigate tool"
-msgstr ""
+msgstr "탐색"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
-msgstr ""
+msgstr "화학명"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
 msgid "Chemical structure to download."
-msgstr ""
+msgstr "다운로드 할 화학구조"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:102
 #, qt-format
@@ -2185,20 +2285,21 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:113
 #: qtplugins/networkdatabases/networkdatabases.cpp:124
 msgid "Network Download Failed"
-msgstr ""
+msgstr "네트워크 다운로드에 실패함"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:114
 msgid "Network timeout or other error."
-msgstr ""
+msgstr "네트워크 시간초과 또는 다른 오류발생."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:125
 #, qt-format
 msgid "Specified molecule could not be found: %1"
-msgstr ""
+msgstr "지정된 분자를 찾을 수 없습니다: %1"
 
 #: qtplugins/networkdatabases/networkdatabases.h:47
+#, fuzzy
 msgid "Network Databases"
-msgstr ""
+msgstr "네트워크 다운로드에 실패함"
 
 #: qtplugins/networkdatabases/networkdatabases.h:51
 msgid "Interact with online databases, query structures etc."
@@ -2210,28 +2311,33 @@ msgid "Autodetect (%1)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:52
+#, fuzzy
 msgid "Optimize geometry"
-msgstr ""
+msgstr "&구조 최적화"
 
 #: qtplugins/openbabel/openbabel.cpp:59
+#, fuzzy
 msgid "Configure geometry optimization..."
-msgstr ""
+msgstr "구조 최적화"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive bonds"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:71
+#, fuzzy
 msgid "Add hydrogens"
-msgstr ""
+msgstr "수소 추가"
 
 #: qtplugins/openbabel/openbabel.cpp:77
+#, fuzzy
 msgid "Add hydrogens for pH..."
-msgstr ""
+msgstr "pH를 위해 수소 추가..."
 
 #: qtplugins/openbabel/openbabel.cpp:83
+#, fuzzy
 msgid "Remove hydrogens"
-msgstr ""
+msgstr "수소 제거"
 
 #: qtplugins/openbabel/openbabel.cpp:93
 #, qt-format
@@ -2247,8 +2353,9 @@ msgid "The obabel file formats are not ready to be added."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:196
+#, fuzzy
 msgid "Loading molecule from CML..."
-msgstr ""
+msgstr "파일 '%1'으로 부터 분자를 읽는 중 실패하였습니다."
 
 #: qtplugins/openbabel/openbabel.cpp:202
 msgid ""
@@ -2257,9 +2364,9 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:211
-#, qt-format
+#, fuzzy, qt-format
 msgid "An error occurred while running OpenBabel (%1)."
-msgstr ""
+msgstr "%1 파일을 기록하는 도중에 문제가 발생했습니다"
 
 #: qtplugins/openbabel/openbabel.cpp:221
 msgid "Error parsing openbabel output."
@@ -2281,12 +2388,14 @@ msgid "Cannot optimize geometry with OpenBabel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:383
+#, fuzzy
 msgid "Optimizing Geometry (OpenBabel)"
-msgstr ""
+msgstr "&구조 최적화"
 
 #: qtplugins/openbabel/openbabel.cpp:384
+#, fuzzy
 msgid "Generating MDL..."
-msgstr ""
+msgstr "산출..."
 
 #: qtplugins/openbabel/openbabel.cpp:401
 msgid ""
@@ -2317,15 +2426,16 @@ msgid "Error interpreting obabel MDL output."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:463 qtplugins/openbabel/openbabel.cpp:542
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
-msgstr ""
+msgstr "궤도 파일 %1의 원자 수가 현재의 분자 수와 일치하지 않습니다."
 
 #: qtplugins/openbabel/openbabel.cpp:473
+#, fuzzy
 msgid "Optimize Geometry"
-msgstr ""
+msgstr "&구조 최적화"
 
 #: qtplugins/openbabel/openbabel.cpp:482
 msgid "Cannot open file with OpenBabel."
@@ -2365,8 +2475,9 @@ msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:579 qtplugins/openbabel/openbabel.cpp:626
+#, fuzzy
 msgid "Adding Hydrogens (OpenBabel)"
-msgstr ""
+msgstr "수소 추가"
 
 #: qtplugins/openbabel/openbabel.cpp:580 qtplugins/openbabel/openbabel.cpp:627
 #: qtplugins/openbabel/openbabel.cpp:666
@@ -2385,20 +2496,23 @@ msgid "Running %1..."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:620
+#, fuzzy
 msgid "Add hydrogens for pH"
-msgstr ""
+msgstr "pH를 위해 수소 추가"
 
 #: qtplugins/openbabel/openbabel.cpp:620
+#, fuzzy
 msgid "pH:"
-msgstr ""
+msgstr "pH"
 
 #: qtplugins/openbabel/openbabel.cpp:660
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:665
+#, fuzzy
 msgid "Removing Hydrogens (OpenBabel)"
-msgstr ""
+msgstr "수소 제거"
 
 #: qtplugins/openbabel/openbabel.cpp:694
 msgid "Reading obabel output..."
@@ -2436,11 +2550,12 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:72
 msgid "Stop"
-msgstr ""
+msgstr "중지"
 
 #: qtplugins/playertool/playertool.cpp:82
+#, fuzzy
 msgid "Frame rate:"
-msgstr ""
+msgstr "매개 변수:"
 
 #: qtplugins/playertool/playertool.cpp:88
 msgctxt "frames per second"
@@ -2448,17 +2563,20 @@ msgid " FPS"
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:94
+#, fuzzy
 msgid "Dynamic bonding?"
-msgstr ""
+msgstr "동역학 결합"
 
 #: qtplugins/playertool/playertool.cpp:102
+#, fuzzy
 msgid "Record Movie..."
-msgstr ""
+msgstr "제거..."
 
 #: qtplugins/playertool/playertool.cpp:108
 #: qtplugins/playertool/playertool.cpp:161
+#, fuzzy
 msgid "Stopped"
-msgstr ""
+msgstr "중지"
 
 #: qtplugins/playertool/playertool.cpp:180
 #, qt-format
@@ -2471,12 +2589,12 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:233
 msgid "Avogadro"
-msgstr ""
+msgstr "Avogadro"
 
 #: qtplugins/playertool/playertool.cpp:234
-#, qt-format
+#, fuzzy, qt-format
 msgid "Cannot save file %1."
-msgstr ""
+msgstr "%1 파일을 읽을 수 없습니다."
 
 #: qtplugins/playertool/playertool.h:44
 msgid "Player tool"
@@ -2512,8 +2630,9 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:230 qtplugins/plotxrd/plotxrd.cpp:242
 #: qtplugins/plotxrd/plotxrd.cpp:253 qtplugins/plotxrd/plotxrd.cpp:260
+#, fuzzy
 msgid "Error: "
-msgstr ""
+msgstr "오류"
 
 #: qtplugins/plotxrd/plotxrd.h:46
 msgid "PlotXrd"
@@ -2525,7 +2644,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.h:46 :570
+#: qtplugins/plugindownloader/plugindownloader.h:46:570
 msgid "Plugin Downloader"
 msgstr ""
 
@@ -2534,12 +2653,14 @@ msgid "Downloader plugins from Github repositories."
 msgstr ""
 
 #: qtplugins/povray/povray.cpp:41
+#, fuzzy
 msgid "POV-Ray Render"
-msgstr ""
+msgstr "POV-Ray"
 
 #: qtplugins/povray/povray.cpp:82 qtplugins/vrml/vrml.cpp:82
+#, fuzzy
 msgid "Save File"
-msgstr ""
+msgstr "비디오 파일로 저장하기"
 
 #: qtplugins/povray/povray.cpp:83
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -2550,8 +2671,9 @@ msgid "POVRay"
 msgstr ""
 
 #: qtplugins/povray/povray.h:40
+#, fuzzy
 msgid "Render the scene using POV-Ray."
-msgstr ""
+msgstr "POV-Ray를 사용하여 표현"
 
 #: qtplugins/qtaim/qtaimengine.h:39 qtplugins/qtaim/qtaimextension.cpp:90
 #: qtplugins/qtaim/qtaimextension.h:35
@@ -2576,11 +2698,11 @@ msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:90
 msgid "E&xtensions"
-msgstr ""
+msgstr "확장기능"
 
 #: qtplugins/qtaim/qtaimextension.cpp:122
 msgid "Open WFN File"
-msgstr ""
+msgstr "WFN 파일 열기"
 
 #: qtplugins/qtaim/qtaimextension.cpp:123
 msgid "WFN files (*.wfn);;All files (*.*)"
@@ -2601,21 +2723,24 @@ msgid "Quantum input"
 msgstr ""
 
 #: qtplugins/quantuminput/quantuminput.h:60
+#, fuzzy
 msgid "Generate input for quantum codes."
-msgstr ""
+msgstr "양자 화학 패키지를 위해 입력 파일을 생성"
 
 #: qtplugins/quantumoutput/quantumoutput.cpp:60
+#, fuzzy
 msgid "Calculate electronic surfaces..."
-msgstr ""
+msgstr "전자 밀도 계산하기"
 
 #: qtplugins/quantumoutput/quantumoutput.cpp:155
+#, fuzzy
 msgid "Calculating electron density"
-msgstr ""
+msgstr "전자 밀도 계산하기"
 
 #: qtplugins/quantumoutput/quantumoutput.cpp:162
-#, qt-format
+#, fuzzy, qt-format
 msgid "Calculating molecular orbital %L1"
-msgstr ""
+msgstr "분자 오비탈과 다른 표면 계산"
 
 #: qtplugins/quantumoutput/quantumoutput.h:57
 msgid "Quantum output"
@@ -2656,55 +2781,63 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.h:40
+#, fuzzy
 msgid "ResetView"
-msgstr ""
+msgstr "초기화"
 
 #: qtplugins/resetview/resetview.h:44
 msgid "Adjust the camera and view"
 msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:39
+#, fuzzy
 msgid "Script File Formats"
-msgstr ""
+msgstr "입력 파일 생성기"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:43
 msgid "Load file reader/writers from external scripts."
 msgstr ""
 
 #: qtplugins/select/select.cpp:34
+#, fuzzy
 msgid "Select All"
-msgstr ""
+msgstr "모두 지우기"
 
 #: qtplugins/select/select.cpp:39
+#, fuzzy
 msgid "Select None"
-msgstr ""
+msgstr "선택"
 
 #: qtplugins/select/select.cpp:48
+#, fuzzy
 msgid "Invert Selection"
-msgstr ""
+msgstr "거꾸로 선택(&I)"
 
 #: qtplugins/select/select.cpp:59
+#, fuzzy
 msgid "Change selections"
-msgstr ""
+msgstr "선택"
 
 #: qtplugins/select/select.cpp:69
 msgid "&Select"
-msgstr ""
+msgstr "선택(&S)"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:183
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:35 :678
+#: qtplugins/select/select.h:35:678
+#, fuzzy
 msgid "Select"
-msgstr ""
+msgstr "선택(&S)"
 
 #: qtplugins/selectiontool/selectiontool.cpp:55
 msgid "Selection"
-msgstr ""
+msgstr "선택"
 
 #: qtplugins/selectiontool/selectiontool.h:45
 #: qtplugins/selectiontool/selectiontool.h:46
+#, fuzzy
 msgid "Selection tool"
-msgstr ""
+msgstr "선택"
 
 #: qtplugins/spacegroup/spacegroup.cpp:63
 msgid "Perceive Space Group"
@@ -2712,7 +2845,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:81 :663
+#: qtplugins/spacegroup/spacegroup.cpp:81:663
 msgid "Symmetrize"
 msgstr ""
 
@@ -2771,8 +2904,9 @@ msgid ""
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:326
+#, fuzzy
 msgid "Avogadro2"
-msgstr ""
+msgstr "Avogadro"
 
 #: qtplugins/spacegroup/spacegroup.cpp:327
 msgid "Select tolerance in Å:"
@@ -2803,12 +2937,14 @@ msgid "Space group features for crystals."
 msgstr ""
 
 #: qtplugins/spectra/spectra.cpp:40
+#, fuzzy
 msgid "Vibrational modes..."
-msgstr ""
+msgstr "진동"
 
 #: qtplugins/spectra/spectra.h:43
+#, fuzzy
 msgid "Spectra and Vibrations"
-msgstr ""
+msgstr "스펙트럼 시각화"
 
 #: qtplugins/spectra/spectra.h:47
 msgid "Display spectra and vibrational modes."
@@ -2816,7 +2952,7 @@ msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:60
 msgid "Type"
-msgstr ""
+msgstr "형식"
 
 #: qtplugins/symmetry/operationstablemodel.cpp:62
 msgid "Class"
@@ -2824,7 +2960,7 @@ msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:64
 msgid "Element"
-msgstr ""
+msgstr "원소"
 
 #: qtplugins/symmetry/symmetry.cpp:51
 msgid "Symmetry Properties..."
@@ -2832,7 +2968,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:44 :648
+#: qtplugins/symmetry/symmetry.h:44:648
 msgid "Symmetry"
 msgstr ""
 
@@ -2841,12 +2977,14 @@ msgid "Provide symmetry functionality."
 msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:44
+#, fuzzy
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "원소에 의한 선택..."
 
 #: qtplugins/symmetry/symmetryscene.h:46
+#, fuzzy
 msgid "Render symmetry elements."
-msgstr ""
+msgstr "쌍극자 모멘트 분자 표시"
 
 #: qtplugins/symmetry/symmetryutil.cpp:32
 msgid "∞"
@@ -2854,23 +2992,25 @@ msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:40
 msgid "Van der Waals"
-msgstr ""
+msgstr "반 데르 발스"
 
 #: qtplugins/vanderwaals/vanderwaals.h:42
 msgid "Simple display of VdW spheres."
 msgstr ""
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:41
+#, fuzzy
 msgid "Van der Waals (AO)"
-msgstr ""
+msgstr "반 데르 발스"
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:45
 msgid "Simple display of VdW spheres with ambient occlusion."
 msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:41
+#, fuzzy
 msgid "VRML Render"
-msgstr ""
+msgstr "렌더링"
 
 #: qtplugins/vrml/vrml.cpp:83
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -2881,16 +3021,18 @@ msgid "VRML"
 msgstr ""
 
 #: qtplugins/vrml/vrml.h:40
+#, fuzzy
 msgid "Render the scene using VRML."
-msgstr ""
+msgstr "POV-Ray를 사용하여 표현"
 
 #: qtplugins/wireframe/wireframe.h:39
 msgid "Wireframe"
-msgstr ""
+msgstr "와이어프레임"
 
 #: qtplugins/wireframe/wireframe.h:43
+#, fuzzy
 msgid "Render the molecule as a wireframe."
-msgstr ""
+msgstr "막대 모형으로 분자를 표시하기"
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -2910,12 +3052,13 @@ msgstr ""
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::EditorToolWidget)
 msgid "Form"
-msgstr ""
+msgstr "형식"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
+#, fuzzy
 msgid "Calculation Settings"
-msgstr ""
+msgstr "선택 설정"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
@@ -2936,8 +3079,9 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#, fuzzy
 msgid "Submit Calculation..."
-msgstr ""
+msgstr "계산 중단"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:120
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -2946,8 +3090,9 @@ msgstr ""
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
 msgid "Queue and Program:"
-msgstr ""
+msgstr "셰이더 프로그램:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:50
 #. i18n: ectx: property (text), widget (QToolButton, refreshProgramsButton)
@@ -3010,8 +3155,9 @@ msgstr ""
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
+#, fuzzy
 msgid "Rename Elements"
-msgstr ""
+msgstr "원소 바꾸기"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
@@ -3025,8 +3171,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
+#, fuzzy
 msgid "Ctrl+C"
-msgstr ""
+msgstr "Ctrl+Alt+O"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
 #. i18n: ectx: property (text), widget (QPushButton, exitButton)
@@ -3035,13 +3182,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:47
 #. i18n: ectx: property (shortcut), widget (QPushButton, exitButton)
+#, fuzzy
 msgid "Ctrl+E"
-msgstr ""
+msgstr "Ctrl+Alt+O"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#, fuzzy
 msgid "Structure Input File"
-msgstr ""
+msgstr "구조:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:28
 #. i18n: ectx: property (text), widget (QRadioButton, generateFromPdbButton)
@@ -3063,7 +3212,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force Field:"
-msgstr ""
+msgstr "역장:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:75
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
@@ -3117,33 +3266,38 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:170
 #. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
+#, fuzzy
 msgid "Save Input File"
-msgstr ""
+msgstr "비디오 파일로 저장하기"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Success!"
-msgstr ""
+msgstr "성공!"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:27
 #. i18n: ectx: property (text), widget (QCheckBox, loadStructureCheckBox)
+#, fuzzy
 msgid "Load Structure File"
-msgstr ""
+msgstr "구조:"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:37
 #. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
+#, fuzzy
 msgid "Load Cube File"
-msgstr ""
+msgstr "파일 불러오기..."
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConnectionSettingsDialog)
+#, fuzzy
 msgid "Server settings"
-msgstr ""
+msgstr "측정 설정"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label7)
+#, fuzzy
 msgid "&Hostname:"
-msgstr ""
+msgstr "파일명(&F):"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:64
 #. i18n: ectx: property (text), widget (QLabel, label8)
@@ -3162,28 +3316,32 @@ msgstr ""
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:66
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateBack)
+#, fuzzy
 msgid "Navigate Back"
-msgstr ""
+msgstr "탐색"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateForward)
+#, fuzzy
 msgid "Navigate Forward"
-msgstr ""
+msgstr "탐색"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:92
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateUp)
+#, fuzzy
 msgid "Navigate Up"
-msgstr ""
+msgstr "탐색"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "File name:"
-msgstr ""
+msgstr "파일 이름:"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:153
 #. i18n: ectx: property (text), widget (QPushButton, OK)
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3193,22 +3351,25 @@ msgstr ""
 #. i18n: file: qtplugins/clientserver/filedialog.ui:174
 #. i18n: ectx: property (text), widget (QPushButton, Cancel)
 msgid "Cancel"
-msgstr ""
+msgstr "취소"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
+#, fuzzy
 msgid "Coordinate Editor"
-msgstr ""
+msgstr "Cartesian 편집기..."
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Preset:"
-msgstr ""
+msgstr "초기화"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Distance Unit:"
-msgstr ""
+msgstr "거리"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:46
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
@@ -3225,7 +3386,7 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:31
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Format:"
-msgstr ""
+msgstr "형식:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:71
 #. i18n: ectx: property (toolTip), widget (QLineEdit, spec)
@@ -3264,7 +3425,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:145
 #. i18n: ectx: property (text), widget (QPushButton, apply)
 msgid "Apply"
-msgstr ""
+msgstr "적용"
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
@@ -3278,8 +3439,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
+#, fuzzy
 msgid "Supercell Parameters"
-msgstr ""
+msgstr "매개 변수:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:22
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
@@ -3289,27 +3451,28 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
 msgid "A repeat:"
-msgstr ""
+msgstr "A 반복:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
 msgid "B repeat:"
-msgstr ""
+msgstr "B 반복:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C repeat:"
-msgstr ""
+msgstr "C 반복:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
+#, fuzzy
 msgid "Unit Cell Editor"
-msgstr ""
+msgstr "단위 세포 채우기"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "A:"
-msgstr ""
+msgstr "A:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:40
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, a)
@@ -3325,12 +3488,12 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:62
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "B:"
-msgstr ""
+msgstr "B:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:94
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "C:"
-msgstr ""
+msgstr "C:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -3358,7 +3521,7 @@ msgstr ""
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:48
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_peakWidth)
 msgid "°"
-msgstr ""
+msgstr "°"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:231
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -3420,22 +3583,22 @@ msgstr ""
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:23
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Element:"
-msgstr ""
+msgstr "원소:"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Bond Order:"
-msgstr ""
+msgstr "결합 차수:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
 msgid "GAMESS Input"
-msgstr ""
+msgstr "GAMESS 입력"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:34
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
 msgid "&Basic Setup"
-msgstr ""
+msgstr "기본 설정(&B)"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -3455,7 +3618,7 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:99
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Title:"
-msgstr ""
+msgstr "제목:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:176
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -3469,8 +3632,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:235
 #. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
 msgid "Filename Base:"
-msgstr ""
+msgstr "파일 이름:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:245
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -3480,17 +3644,18 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:258
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
 msgid "Reset All"
-msgstr ""
+msgstr "모두 초기화"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:265
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Defaults"
-msgstr ""
+msgstr "기본값"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
+#, fuzzy
 msgid "Save File..."
-msgstr ""
+msgstr "파일 불러오기..."
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
@@ -3500,7 +3665,7 @@ msgstr ""
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "name"
-msgstr ""
+msgstr "이름"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
@@ -3529,8 +3694,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
 msgid "Formula:"
-msgstr ""
+msgstr "형식:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
@@ -3544,13 +3710,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "Descriptor:"
-msgstr ""
+msgstr "설명 없음"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
 msgid "Molecular Mass (g/mol):"
-msgstr ""
+msgstr "분자량 (g/mol):"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, molMassLabel)
@@ -3566,37 +3734,41 @@ msgstr ""
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Chemical Formula:"
-msgstr ""
+msgstr "화학 공식:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:53
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Number of Atoms:"
-msgstr ""
+msgstr "원자의 수:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Number of Bonds:"
-msgstr ""
+msgstr "결합의 수:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
+#, fuzzy
 msgid "Geometry Optimization Parameters"
-msgstr ""
+msgstr "구조 최적화"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#, fuzzy
 msgid "Optimization Method"
-msgstr ""
+msgstr "최적화"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Force field:"
-msgstr ""
+msgstr "역장:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Optimization algorithm:"
-msgstr ""
+msgstr "최적화"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -3625,8 +3797,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
+#, fuzzy
 msgid "Autodetect"
-msgstr ""
+msgstr "자동 회전"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
@@ -3635,8 +3808,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
 msgid "Van der Waals cutoff distance:"
-msgstr ""
+msgstr "반 데르 발스, 등곡면 = %L1"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -3645,8 +3819,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:140
 #. i18n: ectx: property (text), widget (QLabel, label_8)
+#, fuzzy
 msgid "electrostatic cutoff distance:"
-msgstr ""
+msgstr "정전기 전위"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:147
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
@@ -3664,13 +3839,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#, fuzzy
 msgid "Convergence Criteria"
-msgstr ""
+msgstr "융합"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "\"Energy\" convergence:"
-msgstr ""
+msgstr "융합"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -3679,8 +3856,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
+#, fuzzy
 msgid " units"
-msgstr ""
+msgstr "단위:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
 #. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
@@ -3715,8 +3893,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Number of points:"
-msgstr ""
+msgstr "결합의 수:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -3725,8 +3904,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Wavelength:"
-msgstr ""
+msgstr "파장 (nm)"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_wavelength)
@@ -3749,8 +3929,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
+#, fuzzy
 msgid "Download Selected"
-msgstr ""
+msgstr "선택 항목 삭제"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:19
 #. i18n: ectx: property (text), widget (QLabel, atomRadiusLabel)
@@ -3775,17 +3956,18 @@ msgstr ""
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 msgid "Opacity:"
-msgstr ""
+msgstr "투명도:"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
+#, fuzzy
 msgid "Surface Dialog"
-msgstr ""
+msgstr "표면"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:41
 #. i18n: ectx: attribute (title), widget (QWidget, surfaceTab)
 msgid "Surfaces"
-msgstr ""
+msgstr "표면"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:54
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
@@ -3826,28 +4008,31 @@ msgstr ""
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:191
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "Isosurface Val.:"
-msgstr ""
+msgstr "등곡면 절단 값"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:201
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Resolution:"
-msgstr ""
+msgstr "해상도:"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:211
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Surface:"
-msgstr ""
+msgstr "표면"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:228
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
 msgid "Calculate"
-msgstr ""
+msgstr "계산"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
+#, fuzzy
 msgid "Vibrational Modes"
-msgstr ""
+msgstr "진동"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3856,13 +4041,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
+#, fuzzy
 msgid "Start Animation"
-msgstr ""
+msgstr "애니메이션 시작(&A)"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
+#, fuzzy
 msgid "Stop Animation"
-msgstr ""
+msgstr "애니메이션 중지(&A)"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
@@ -3872,7 +4059,7 @@ msgstr ""
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:42
 #. i18n: ectx: attribute (title), widget (QWidget, esTab)
 msgid "Molecule"
-msgstr ""
+msgstr "분자"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, esLabel)
@@ -3886,8 +4073,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:109
 #. i18n: ectx: attribute (title), widget (QWidget, operationsTab)
+#, fuzzy
 msgid "Operations"
-msgstr ""
+msgstr "설정"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:115
 #. i18n: ectx: property (text), widget (QLabel, operationsLabel)
@@ -3932,7 +4120,1926 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
+",Launchpad Contributions:,Geoff Hutchison, ,Launchpad Contributions:,"
+"Avogadro Team, ,Launchpad Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon "
+"Lee, ,Launchpad Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee, ,"
+"Launchpad Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie, ,Launchpad "
+"Contributions:,Avogadro Team,Kim Hanjo,Sang-hyeon Lee,dlonie"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
+",,,,,avogadro-devel@lists.sourceforge.net,,,avogadro-devel@lists.sourceforge."
+"net,lordmiss@lordmiss.com,,,,avogadro-devel@lists.sourceforge.net,"
+"lordmiss@lordmiss.com,,,,avogadro-devel@lists.sourceforge.net,"
+"lordmiss@lordmiss.com,,,,avogadro-devel@lists.sourceforge.net,"
+"lordmiss@lordmiss.com,,loniedavid@gmail.com,,,avogadro-devel@lists."
+"sourceforge.net,lordmiss@lordmiss.com,,loniedavid@gmail.com,,,avogadro-"
+"devel@lists.sourceforge.net,lordmiss@lordmiss.com,,loniedavid@gmail.com,,,"
+"avogadro-devel@lists.sourceforge.net,lordmiss@lordmiss.com,,loniedavid@gmail."
+"com,,,avogadro-devel@lists.sourceforge.net,lordmiss@lordmiss.com,,"
+"loniedavid@gmail.com,,,avogadro-devel@lists.sourceforge.net,"
+"lordmiss@lordmiss.com,,loniedavid@gmail.com,,,avogadro-devel@lists."
+"sourceforge.net,lordmiss@lordmiss.com,,loniedavid@gmail.com,,,avogadro-"
+"devel@lists.sourceforge.net,lordmiss@lordmiss.com,,loniedavid@gmail.com,,,"
+"avogadro-devel@lists.sourceforge.net,lordmiss@lordmiss.com,,loniedavid@gmail."
+"com"
+
+#~ msgid "Color by Index"
+#~ msgstr "색인에 따라 채색"
+
+#~ msgid "Color by Index (red, orange, yellow, green, blue, violet)."
+#~ msgstr "색인에 따라 채색 (빨강, 오렌지색, 노랑, 녹색, 파랑, 보라색)"
+
+#~ msgid "Color by Partial Charge"
+#~ msgstr "부분 전하를 기반으로 채색"
+
+#~ msgid "Color by atomic partial charge (blue = positive, red = negative."
+#~ msgstr "부분 전하를 기반으로 채색 (파랑 = 양수, 빨강 = 음수)"
+
+#~ msgid "Custom Color:"
+#~ msgstr "사용자 지정 색:"
+
+#~ msgid "Custom Color"
+#~ msgstr "사용자 정의 색상"
+
+#~ msgid "Set custom colors for objects"
+#~ msgstr "개체에 대한 사용자 색상 정의"
+
+#~ msgid "Color by Distance"
+#~ msgstr "거리에 따라 채색"
+
+#~ msgid "Color by distance from the first atom."
+#~ msgstr "첫번째 원자에서부터 거리로 채색"
+
+#~ msgid "Color by Element (carbon = grey, oxygen = red, ...)."
+#~ msgstr "색상요소를 기반으로 채색 (탄소 = 회색, 산소 = 빨강, ...)."
+
+#~ msgid "Color by Residue"
+#~ msgstr "잔여부분 채색"
+
+#~ msgid "Color by Residue (amino acid type, hydrophobicity, ..."
+#~ msgstr "잔여부분 채색 (아미노산 타입, 광견병, ..."
+
+#~ msgid "Ununtrium"
+#~ msgstr "운운트리움"
+
+#~ msgid "Ununpentium"
+#~ msgstr "운운펜튬"
+
+#~ msgid "Ununseptium"
+#~ msgstr "운운셉튬"
+
+#~ msgid "Ununoctium"
+#~ msgstr "운운옥튬"
+
+#~ msgid "Engines"
+#~ msgstr "엔진"
+
+#~ msgid "Axes"
+#~ msgstr "축"
+
+#~ msgid "Renders the x, y, and z axes at the origin"
+#~ msgstr "x, y, z축을 기원으로 표현"
+
+#~ msgid "Renders primitives using Balls (atoms) and Sticks (bonds)"
+#~ msgstr "공 (원자)과 막대 (결합)을 기본 요소로 표시"
+
+#~ msgid "Cartoon"
+#~ msgstr "밑그림"
+
+#~ msgid "Renders protein secondary structure"
+#~ msgstr "단백질 이차 구조 표현"
+
+#~ msgid "Dipole"
+#~ msgstr "쌍극자"
+
+#~ msgid "Force"
+#~ msgstr "힘"
+
+#~ msgid "Renders force displacements on atoms"
+#~ msgstr "원자의 힘 변위 표시"
+
+#~ msgid "Hydrogen Bond"
+#~ msgstr "수소결합"
+
+#~ msgid "Renders hydrogen bonds"
+#~ msgstr "수소결합 표시"
+
+#~ msgid "Select Atom Labels Color"
+#~ msgstr "원자 레이블 색상 선택"
+
+#~ msgid "Select Bond Labels Color"
+#~ msgstr "결합 레이블 색상 선택"
+
+#~ msgid "Select Atom Labels Font"
+#~ msgstr "원자 레이블 글꼴 선택"
+
+#~ msgid "Select Bond Labels Font"
+#~ msgstr "결합 레이블 글꼴 선택"
+
+#~ msgid "Label"
+#~ msgstr "라벨"
+
+#~ msgid "Polygon"
+#~ msgstr "다각형"
+
+#~ msgid "Renders atoms as tetrahedra, octahedra, and other polygons"
+#~ msgstr "원자를 정사면체, 정팔면체, 기타 다각형으로 표시"
+
+#~ msgid "Ribbon"
+#~ msgstr "리본형"
+
+#~ msgid "Renders protein backbones as ribbons"
+#~ msgstr "단백질 골격을 리본형으로 표시"
+
+#~ msgid "Ring"
+#~ msgstr "고리형"
+
+#~ msgid "Renders rings with colored planes"
+#~ msgstr "채색된 평면과 함께 고리형으로 표시"
+
+#~ msgid "Simple Wireframe"
+#~ msgstr "단순한 와이어 프레임"
+
+#~ msgid "Renders bonds as wires (lines), ideal for large molecules"
+#~ msgstr "거대분자에 최적화된 선으로 결합 나타내기"
+
+#~ msgid "Van der Waals Spheres"
+#~ msgstr "반 데르 발스 구형"
+
+#~ msgid "Renders atoms as Van der Waals spheres"
+#~ msgstr "원자를 발 데르 발스 구형으로 표시하기"
+
+#~ msgid "Stick"
+#~ msgstr "막대기"
+
+#~ msgctxt "Electron density isosurface with a cutoff of %1"
+#~ msgid "Electron density, isosurface = %L1"
+#~ msgstr "전자 밀도, 등곡면 = %L1"
+
+#~ msgctxt "%1 is mesh name, %2 is the isosurface cutoff"
+#~ msgid "%1, isosurface = %L2"
+#~ msgstr "%1, 등곡면 = %L2"
+
+#~ msgid "Renders bonds as wires (lines), ideal for very large (bio)molecules"
+#~ msgstr "초거대분자에 최적화된 선형으로 결합 나타내기"
+
+#~ msgid "%1/%2"
+#~ msgstr "%1/%2"
+
+#~ msgid "video files (*.avi)"
+#~ msgstr "비디오 파일 (*.avi)"
+
+#~ msgid "Adding .avi extension"
+#~ msgstr ".avi 확장기능 추가"
+
+#~ msgid "Animation..."
+#~ msgstr "애니메이션..."
+
+#~ msgid "Cannot read file format of file %1."
+#~ msgstr "%1 파일 포맷을 읽을 수 없습니다."
+
+#~ msgid "Read trajectory file %1 failed."
+#~ msgstr "%1 궤도 파일을 읽는 데에 실패했습니다."
+
+#~ msgid "Must specify a valid .avi file name"
+#~ msgstr "유효한 .avi 파일 이름을 지정해야 합니다"
+
+#~ msgid "GL widget was not correctly initialized in order to save video"
+#~ msgstr "GL 위젯이 비디오를 저장하기 위해 올바르게 초기화되지 않았습니다"
+
+#~ msgid "Invalid video filename.  Must include full directory path"
+#~ msgstr "잘못된 비디오 파일이름. 전체 디렉토리 경로를 포함해야 합니다"
+
+#~ msgid ""
+#~ "Invalid video filename.  Must include full directory path and name, "
+#~ "ending with .avi"
+#~ msgstr ""
+#~ "잘못된 비디오 파일이름. 전체 디렉토리 경로와 파일이름을 포함하고, avi 확장"
+#~ "자로 끝나야 합니다."
+
+#~ msgid "Animation"
+#~ msgstr "애니메이션"
+
+#~ msgid "Animate trajectories, reactions, and vibrations."
+#~ msgstr "궤도, 반응, 진동 애니메이션으로 표시"
+
+#~ msgid "Number of atoms: %1"
+#~ msgstr "원자의 수 : %1"
+
+#~ msgid "Number of rotatable bonds: %1"
+#~ msgstr "회전할 수 있는 결합의 수: %1"
+
+#~ msgid "Add constraint"
+#~ msgstr "구속을 추가"
+
+#~ msgid "Your molecule must contain at least one atom to add a constraint"
+#~ msgstr ""
+#~ "분자에 구속을 추가하기 위해서는 최소한 하나의 원자를 포함하고 있어야 합니"
+#~ "다"
+
+#~ msgid ""
+#~ "Your molecule must contain at least two atoms to add a bond constraint"
+#~ msgstr ""
+#~ "분자에 결합 구속을 추가하기 위해서는 최소한 두 개의 원자를 포함하고 있어"
+#~ "야 합니다"
+
+#~ msgid ""
+#~ "Your molecule must contain at least three atoms to add an angle constraint"
+#~ msgstr ""
+#~ "분자에 각 구속을 추가하기 위해서는 최소한 세 개의 원자를 포함하고 있어야 "
+#~ "합니다"
+
+#~ msgid ""
+#~ "Your molecule must contain at least four atoms to add a torsion constraint"
+#~ msgstr ""
+#~ "분자에 비틀림 구속를 추가하기 위해서는 최소한 네 개의 원자를 포함하고 있어"
+#~ "야 합니다"
+
+#~ msgid "&Settings"
+#~ msgstr "설정(&S)"
+
+#~ msgid "&Length Unit"
+#~ msgstr "길이 단위(&L)"
+
+#~ msgid "&Angle Unit"
+#~ msgstr "각도 단위(&A)"
+
+#~ msgid "Hide &Property Display"
+#~ msgstr "속성 창 숨기기(&P)"
+
+#~ msgid "Show &Property Display"
+#~ msgstr "속성 창 보이기(&P)"
+
+#~ msgid "&Radian"
+#~ msgstr "라디안(&R)"
+
+#~ msgid "Trajectory..."
+#~ msgstr "궤도..."
+
+#~ msgid "Open chemical file format"
+#~ msgstr "화학 파일 포맷 열기"
+
+#~ msgid "Chemical files (*.xyz)"
+#~ msgstr "화학 파일 (*.xyz)"
+
+#~ msgid "Open parameter file"
+#~ msgstr "매개 변수 파일 열기"
+
+#~ msgid "Chemical files (*.parm7)"
+#~ msgstr "화학 파일 (*.parm7)"
+
+#~ msgid "Import Trajectory"
+#~ msgstr "궤도 가져오기"
+
+#~ msgid "Import trajectory files"
+#~ msgstr "궤도 파일 불러오기"
+
+#~ msgid "Setup Force Field..."
+#~ msgstr "힘 영역 설정하기"
+
+#~ msgid "Calculate Energy"
+#~ msgstr "에너지 계산"
+
+#~ msgid "Conformer Search..."
+#~ msgstr "이형태체 검색..."
+
+#~ msgid "Constraints..."
+#~ msgstr "구속..."
+
+#~ msgid "Ignore Selection"
+#~ msgstr "선택 무시"
+
+#~ msgid "Fix Selected Atoms"
+#~ msgstr "선택한 원자를 고정"
+
+#~ msgid "&Molecular Mechanics"
+#~ msgstr "&분자 역학"
+
+#~ msgid "Energy = %L1 %2"
+#~ msgstr "에너지 = %L1 %2"
+
+#~ msgid "Geometric Optimization"
+#~ msgstr "구조 최적화"
+
+#~ msgid "Forcefield Optimization"
+#~ msgstr "힘 영역 최적화"
+
+#~ msgid "ForceField"
+#~ msgstr "힘 영역"
+
+#~ msgid ""
+#~ "Optimize molecules and generate conformers using molecular mechanics "
+#~ "force fields"
+#~ msgstr "분자역학 힘 영역을 이용하여 분자를 최적화하고 이형태체를 형성"
+
+#~ msgid "&Vector Graphics..."
+#~ msgstr "벡터 그래픽(&V)"
+
+#~ msgid "PDF"
+#~ msgstr "PDF"
+
+#~ msgid "Common vector image formats"
+#~ msgstr "일반적인 벡터 이미지 포맷"
+
+#~ msgid "SVG"
+#~ msgstr "SVG"
+
+#~ msgid "EPS"
+#~ msgstr "EPS"
+
+#~ msgid "Vector graphics export"
+#~ msgstr "벡터 그래픽 내보내기"
+
+#~ msgid "Change H to Methyl"
+#~ msgstr "수소를 메틸로 변경하기"
+
+#~ msgid "H to Methyl"
+#~ msgstr "수소를 메틸로"
+
+#~ msgid "H2Methyl"
+#~ msgstr "H2Methyl"
+
+#~ msgid "Transform hydrogens to methyl groups"
+#~ msgstr "수소를 메틸기로 변경하기"
+
+#~ msgid "Add or remove hydrogens"
+#~ msgstr "수소를 추가하거나 제거"
+
+#~ msgid "DNA/RNA..."
+#~ msgstr "DNA/RNA..."
+
+#~ msgid "Insert DNA"
+#~ msgstr "DNA 삽입"
+
+#~ msgid "Uracil"
+#~ msgstr "우라실"
+
+#~ msgid "Thymine"
+#~ msgstr "티민"
+
+#~ msgid "Insert DNA/RNA"
+#~ msgstr "DNA/RNA 입력"
+
+#~ msgid "Cannot read molecular file %1."
+#~ msgstr "분자 파일 %1을 읽을 수 없습니다."
+
+#~ msgid "Fragment..."
+#~ msgstr "조각..."
+
+#~ msgid "Insert SMILES"
+#~ msgstr "SMILES 삽입"
+
+#~ msgid "Insert SMILES fragment:"
+#~ msgstr "SMILES 조각 삽입:"
+
+#~ msgid "Insert Fragment"
+#~ msgstr "조각 삽입"
+
+#~ msgid "Insert molecular fragments for building larger molecules"
+#~ msgstr "더 큰 분자를 만들기 위해 분자 조각 삽입"
+
+#~ msgid "Peptide..."
+#~ msgstr "펩티드..."
+
+#~ msgid "Insert Peptide"
+#~ msgstr "펩티드 삽입"
+
+#~ msgid "Insert oligopeptide sequences"
+#~ msgstr "올리고펩티트 배열 삽입"
+
+#~ msgid "Molecule Properties..."
+#~ msgstr "분자 속성..."
+
+#~ msgid "&Properties"
+#~ msgstr "속성(&P)"
+
+#~ msgid "Estimated Dipole Moment (D):"
+#~ msgstr "쌍극자 모멘트 추정 (D):"
+
+#~ msgid "Display standard molecular properties."
+#~ msgstr "일반적인 분자 속성을 보여주기"
+
+#~ msgid "Fetch from PDB..."
+#~ msgstr "PDB로 부터 가져오기..."
+
+#~ msgid "Fetch from URL..."
+#~ msgstr "URL로 부터 가져오기..."
+
+#~ msgid "PDB Entry"
+#~ msgstr "PDB 입력"
+
+#~ msgid "PDB entry to download."
+#~ msgstr "다운로드 할 PDB 항목"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "URL of molecule to download."
+#~ msgstr "다운로드할 분자 URL"
+
+#~ msgid "Specified molecule could not be loaded: %1"
+#~ msgstr "지정된 분자를 불러올 수 없습니다: %1"
+
+#~ msgid "Network Fetch"
+#~ msgstr "네트워크에서 가져오기"
+
+#~ msgid "Fetch molecule files over the network."
+#~ msgstr "분자 파일을 네트워크로 가져옴"
+
+#~ msgid "All Files"
+#~ msgstr "모든 파일"
+
+#~ msgid "Show Preview"
+#~ msgstr "미리보기"
+
+#~ msgid "Hide Preview"
+#~ msgstr "미리보기 숨기기"
+
+#~ msgid "Save POV-Ray rendered image"
+#~ msgstr "렌더링된 POV-Ray 이미지 저장"
+
+#~ msgid "Image files (*.png *.pbm)"
+#~ msgstr "이미지 파일 (*.png *.pbm)"
+
+#~ msgid "POV-Ray..."
+#~ msgstr "POV-Ray..."
+
+#~ msgid "No filename supplied."
+#~ msgstr "파일 이름 없음"
+
+#~ msgid "No valid filename was supplied."
+#~ msgstr "유효한 파일 이름을 입력하지 않았습니다."
+
+#~ msgid "Does not compute."
+#~ msgstr "계산할 수 없습니다."
+
+#~ msgid ""
+#~ "You requested no direct rendering using POV-Ray and not to keep the POV-"
+#~ "Ray file. This will result in no output being saved. Are you sure that is "
+#~ "what you want?"
+#~ msgstr ""
+#~ "POV-Ray를 사용해서 렌더링하지 않고, POV-Ray 파일을 저장하지도 않도록 요청"
+#~ "했습니다. 이렇게 하면 아무 결과도 저장되지 않습니다. 정말로 이렇게 할까요?"
+
+#~ msgid ""
+#~ "Cannot write to file %1. Do you have permissions to write to that "
+#~ "location?"
+#~ msgstr ""
+#~ "파일 %1에 기록할 수 없습니다. 그 장소에 기록할 수 있는 승인을 가지고 있습"
+#~ "니까?"
+
+#~ msgid "POV-Ray failed to start."
+#~ msgstr "POV-Ray를 시작하는데 실패했습니다."
+
+#~ msgid ""
+#~ "POV-Ray failed to start. May be the path to the executable is not set "
+#~ "correctly."
+#~ msgstr ""
+#~ "POV-Ray를 시작하지 못했습니다. 아마도 실행 파일 위치가 잘못 설정되어 있을 "
+#~ "것입니다."
+
+#~ msgid ""
+#~ "Create POV-Ray files and render them using the command line POV-Ray "
+#~ "program."
+#~ msgstr "POV-Ray 파일을 만들고 POV-Ray 명령행 프로그램을 사용하여 렌더링함"
+
+#~ msgid "Atom Properties..."
+#~ msgstr "원자 정보..."
+
+#~ msgid "Bond Properties..."
+#~ msgstr "결합 정보..."
+
+#~ msgid "Angle Properties..."
+#~ msgstr "결합각 정보..."
+
+#~ msgid "Torsion Properties..."
+#~ msgstr "비틀림 정보..."
+
+#~ msgid "Conformer Properties..."
+#~ msgstr "이형태체 정보..."
+
+#~ msgid "Atom Properties"
+#~ msgstr "원자 정보"
+
+#~ msgid "Bond Properties"
+#~ msgstr "결합 정보"
+
+#~ msgid "Angle Properties"
+#~ msgstr "결합각 정보"
+
+#~ msgid "Torsion Properties"
+#~ msgstr "비틀림 정보"
+
+#~ msgid "Conformer Properties"
+#~ msgstr "이형태체 정보"
+
+#~ msgid "Properties"
+#~ msgstr "속성"
+
+#~ msgid ""
+#~ "Windows for displaying atom, bond, angle and torsion properties. It also "
+#~ "includes a cartesian coordinate editor."
+#~ msgstr ""
+#~ "원자, 결합, 각도, 비틀림 속성을 보여주는 창. Cartesian coordinate 편집기"
+#~ "도 포함하고 있음."
+
+#~ msgid "Valence"
+#~ msgstr "원자가"
+
+#~ msgid "Partial Charge"
+#~ msgstr "부분 전하"
+
+#~ msgid "Rotatable"
+#~ msgstr "회전가능한"
+
+#~ msgctxt "in Angstrom"
+#~ msgid "Length %1"
+#~ msgstr "%1 길이"
+
+#~ msgid "Vertex"
+#~ msgstr "꼭지점"
+
+#~ msgctxt "Degree symbol"
+#~ msgid "Angle %1"
+#~ msgstr "각 %1"
+
+#~ msgid "Angle"
+#~ msgstr "각도"
+
+#~ msgid "Atom %1"
+#~ msgstr "원자 %1"
+
+#~ msgctxt "Degree symbol"
+#~ msgid "Torsion %1"
+#~ msgstr "비틀림 %1"
+
+#~ msgid "Python Terminal"
+#~ msgstr "파이썬 터미널"
+
+#~ msgid "pythonTerminalDock"
+#~ msgstr "파이썬 터미널 도크"
+
+#~ msgid "Interactive python scripting terminal"
+#~ msgstr "쌍방향 파이썬 스크립트 터미널"
+
+#~ msgctxt ""
+#~ "Selection to be used as an Effective Fragment Potential in calculations"
+#~ msgid "EFP Selection..."
+#~ msgstr "EFP 선택..."
+
+#~ msgctxt "Selection to be used for Quantum Mechanical calculations"
+#~ msgid "QM Selection..."
+#~ msgstr "QM 선택..."
+
+#~ msgid "Delete"
+#~ msgstr "지우기"
+
+#~ msgid "You must make a selection!"
+#~ msgstr "선택을 하여야 합니다"
+
+#~ msgid "SMILES Conversion Unavailable"
+#~ msgstr "SMILES 변환이 불가능함"
+
+#~ msgid "SMILES Format Conversion Not Available!"
+#~ msgstr "SMILES 포맷 변환이 불가능합니다!"
+
+#~ msgid "Group Name"
+#~ msgstr "그룹 이름"
+
+#~ msgid " ("
+#~ msgstr " ("
+
+#~ msgid "qm"
+#~ msgstr "qm"
+
+#~ msgid "efp"
+#~ msgstr "efp"
+
+#~ msgid ")"
+#~ msgstr ")"
+
+#~ msgid "GAMESS"
+#~ msgstr "GAMESS"
+
+#~ msgid "Create input files for the GAMESS quantum chemistry package"
+#~ msgstr "GAMESS 양자 화학 패키지를 위해 입력 파일을 형성"
+
+#~ msgid "Advanced Settings Changed"
+#~ msgstr "고급 설정이 변경됨"
+
+#~ msgid ""
+#~ "Advanced settings have changed.\n"
+#~ "Discard?"
+#~ msgstr ""
+#~ "고급 설정이 변경되었습니다.\n"
+#~ "저장하지 않으시겠습니까?"
+
+#~ msgid "Advanced Settings Reset"
+#~ msgstr "고급 설정이 초기화됨"
+
+#~ msgid ""
+#~ "Are you sure you wish to reset advanced settings?\n"
+#~ "All changes will be lost!"
+#~ msgstr ""
+#~ "고급 설정을 초기화 하시겠습니까?\n"
+#~ "모든 변경사항을 잃게됩니다!"
+
+#~ msgid "Basic Settings Reset"
+#~ msgstr "기본 설정 초기화"
+
+#~ msgid ""
+#~ "Are you sure you wish to reset basic settings?\n"
+#~ "All changes will be lost!"
+#~ msgstr ""
+#~ "기본 설정 내용을 초기화 하시겠습니까?\n"
+#~ "모든 변경사항을 잃게됩니다!"
+
+#~ msgid "Gaussian Input Deck Generator Warning"
+#~ msgstr "가우스 입력 데크 생성기 경고"
+
+#~ msgid ""
+#~ "Would you like to update the preview text, losing all changes made in the "
+#~ "Gaussian input deck preview pane?"
+#~ msgstr ""
+#~ "가우스 입력 데크 미리보기 창에서 만들어진 모든 변경사항을 잃고, 이전의 텍"
+#~ "스트를 업데이트 하시겠습니까?"
+
+#~ msgid "Gaussian Running."
+#~ msgstr "가우스 실행중"
+
+#~ msgid ""
+#~ "Gaussian is already running. Wait until the previous calculation is "
+#~ "finished."
+#~ msgstr ""
+#~ "가우스가 이미 실행중입니다. 이전의 계산이 끝날 때까지 기다려 주십시오"
+
+#~ msgid "Gaussian Not Installed."
+#~ msgstr "가우스가 설치되지 않았습니다."
+
+#~ msgid "The G03 executable, cannot be found."
+#~ msgstr "실행가능한 G03이 발견되지 않았습니다"
+
+#~ msgid "G03 did not start. Perhaps it is not installed correctly."
+#~ msgstr "G03이 시작하지 않았습니다. 아마도 완전히 설치되지 않은 것 같습니다."
+
+#~ msgid "Running Gaussian calculation..."
+#~ msgstr "가우스 계산 실행중..."
+
+#~ msgid "G03 Crashed."
+#~ msgstr "G03 충돌"
+
+#~ msgid ""
+#~ "Gaussian did not run correctly. Perhaps it is not installed correctly."
+#~ msgstr ""
+#~ "가우스가 정확하게 동작하지 않습니다. 아마도 완전히 설치되지 않은 것으로 보"
+#~ "입니다."
+
+#~ msgid "&Gaussian..."
+#~ msgstr "&Gaussian..."
+
+#~ msgid "&MOLPRO..."
+#~ msgstr "&MOLPRO..."
+
+#~ msgid "M&OPAC..."
+#~ msgstr "M&OPAC..."
+
+#~ msgid "&NWChem..."
+#~ msgstr "&NWChem..."
+
+#~ msgid "&Q-Chem..."
+#~ msgstr "&Q-Chem..."
+
+#~ msgid "MOPAC Input Warning"
+#~ msgstr "MOPAC 입력 경고"
+
+#~ msgid ""
+#~ "Would you like to update the preview text, losing all changes made in the "
+#~ "MOPAC input deck preview pane?"
+#~ msgstr ""
+#~ "MOPAC 입력 데크 미리보기에서 만들어진 모든 변경사항을 잃고, 이전의 텍스트"
+#~ "를 업데이트 하시겠습니까?"
+
+#~ msgid "MOPAC Running."
+#~ msgstr "MOPAC 실행중."
+
+#~ msgid ""
+#~ "MOPAC is already running. Wait until the previous calculation is finished."
+#~ msgstr ""
+#~ "MOPAC이 이미 실행중입니다. 이전의 계산이 끝날 때까지 기다려주십시오."
+
+#~ msgid "MOPAC Not Installed."
+#~ msgstr "MOPAC이 설치되지 않았습니다."
+
+#~ msgid "The MOPAC executable, cannot be found."
+#~ msgstr "실행할 수 있는 MOPAC을 찾지 못했습니다"
+
+#~ msgid "MOPAC failed to start."
+#~ msgstr "MOPAC을 시작하는데 실패했습니다"
+
+#~ msgid "MOPAC did not start. Perhaps it is not installed correctly."
+#~ msgstr ""
+#~ "MOPAC이 시작되지 않았습니다. 아마도 올바르게 설치되지 않은 것 같습니다."
+
+#~ msgid "Running MOPAC calculation..."
+#~ msgstr "MOPAC 계산 실행중..."
+
+#~ msgid "MOPAC Crashed."
+#~ msgstr "MOPAC 충돌"
+
+#~ msgid "MOPAC did not run correctly. Perhaps it is not installed correctly."
+#~ msgstr ""
+#~ "MOPAC이 올바르게 실행되지 않았습니다. 아마도 올바르게 설치되지 않은 것 같"
+#~ "습니다."
+
+#~ msgid "Q-Chem Input Deck Generator Warning"
+#~ msgstr "Q-Chem 입력 데크 생성기 경고"
+
+#~ msgid ""
+#~ "Would you like to update the preview text, losing all changes made in the "
+#~ "Q-Chem input deck preview pane?"
+#~ msgstr ""
+#~ "Q-Chem 입력 데크 미리보기에서 만들어진 모든 변경사항을 잃고, 이전의 텍스트"
+#~ "를 업데이트 하시겠습니까?"
+
+#~ msgid "Select SMARTS..."
+#~ msgstr "SMARTS 선택..."
+
+#~ msgid "Select by Residue..."
+#~ msgstr "잔류물에 의한 선택..."
+
+#~ msgid "SMARTS Selection"
+#~ msgstr "SMARTS 선택"
+
+#~ msgid "SMARTS pattern to select"
+#~ msgstr "선택할 SMARTS 패턴"
+
+#~ msgid "Select by residue"
+#~ msgstr "잔류물에 의한 선택"
+
+#~ msgid "Residue name"
+#~ msgstr "잔류물 이름"
+
+#~ msgid "There is no current selection."
+#~ msgstr "최근에 선택한 것이 없습니다."
+
+#~ msgid "Name cannot be empty."
+#~ msgstr "이름이 비워져서는 안됩니다."
+
+#~ msgid "There is already a selection with this name."
+#~ msgstr "이미 이 이름을 선택한 경우가 있습니다."
+
+#~ msgid "Select atoms, bonds, residues..."
+#~ msgstr "원자, 결합, 잔류물 선택"
+
+#~ msgid "Open a vertex shader source file"
+#~ msgstr "vertex shader 소스 파일 열기"
+
+#~ msgid "Open a fragment shader source file"
+#~ msgstr "fragment shader 소스 파일 열기"
+
+#~ msgid "Open a shader parameters file"
+#~ msgstr "shader 파라미터 파일 열기"
+
+#~ msgid "Load and use OpenGL 2.0 GLSL shaders"
+#~ msgstr "OpenGL 2.0 GLSL shader를 열고 사용하기"
+
+#~ msgid "Energy (eV)"
+#~ msgstr "에너지 (eV)"
+
+#~ msgid "Transmittance (%)"
+#~ msgstr "투과율 (%)"
+
+#~ msgid "Absorbance (%)"
+#~ msgstr "흡광도 (%)"
+
+#~ msgid "No intensities"
+#~ msgstr "Intensity 값 없음"
+
+#~ msgid ""
+#~ "The vibration data in the molecule you have loaded does not have any "
+#~ "intensity data. Intensities have been set to an arbitrary value for "
+#~ "visualization."
+#~ msgstr ""
+#~ "지금 연 분자의 vibration 데이터에는 intensity 값이 없습니다. Intensity는 "
+#~ "시각화를 위해 임의의 값이 주어집니다."
+
+#~ msgid "Intensity"
+#~ msgstr "강도"
+
+#~ msgid "X Axis"
+#~ msgstr "X 축"
+
+#~ msgid "Y Axis"
+#~ msgstr "Y 축"
+
+#~ msgid "&Appearance"
+#~ msgstr "모양(&A)"
+
+#~ msgid "E&xport Image"
+#~ msgstr "이미지 내보내기(&E)"
+
+#~ msgctxt "Infrared spectra option"
+#~ msgid "Infrared"
+#~ msgstr "적외선"
+
+#~ msgid "&Infrared Spectra Settings"
+#~ msgstr "적외선 스펙트럼 설정"
+
+#~ msgctxt "NMR spectra option"
+#~ msgid "NMR"
+#~ msgstr "NMR"
+
+#~ msgid "&NMR Spectra Settings"
+#~ msgstr "NMR 스펙트럼 설정"
+
+#~ msgctxt "Ultra-Violet spectrum"
+#~ msgid "UV"
+#~ msgstr "자외선"
+
+#~ msgid "&UV Settings"
+#~ msgstr "자외선 설정(&U)"
+
+#~ msgid "No data"
+#~ msgstr "데이터 없음"
+
+#~ msgid "Dark"
+#~ msgstr "어둡게"
+
+#~ msgid "Light"
+#~ msgstr "밝게"
+
+#~ msgid "Publication"
+#~ msgstr "출판"
+
+#~ msgid "New Scheme"
+#~ msgstr "새 도표"
+
+#~ msgid "Confirm Scheme Removal"
+#~ msgstr "도표 제거 확인"
+
+#~ msgid "Really remove current scheme?"
+#~ msgstr "최근의 도표를 제거하시겠습니까?"
+
+#~ msgid "Change Scheme Name"
+#~ msgstr "도표 이름 변경"
+
+#~ msgid "Enter new name for current scheme:"
+#~ msgstr "최근의 도표에 대한 새로운 이름 입력:"
+
+#~ msgid "Select Background Color"
+#~ msgstr "배경색상 선택"
+
+#~ msgid "Export Calculated Spectrum"
+#~ msgstr "계산된 스펙트럼 내보내기"
+
+#~ msgid "Tab Separated Values (*.tsv)"
+#~ msgstr "탭으로 분리된 값 (*.tsv)"
+
+#~ msgid "Tab Separated Values"
+#~ msgstr "탭으로 분리된 값"
+
+#~ msgid "Comma Separated Values"
+#~ msgstr "쉼표로 분리된 값"
+
+#~ msgid "JCAMP-DX"
+#~ msgstr "JCAMP-DX"
+
+#~ msgid "Import Spectra"
+#~ msgstr "스펙트럼 가져오기"
+
+#~ msgid "Spectra Import"
+#~ msgstr "스펙트럼 가져오기"
+
+#~ msgid "Unknown extension: %1"
+#~ msgstr "알려지지 않은 확장자: %1"
+
+#~ msgctxt "Do not remove 'IR' or '(*.out)' -- needed for parsing later"
+#~ msgid "PWscf IR data (*.out)"
+#~ msgstr "PWscf IR 데이터 (*.out)"
+
+#~ msgctxt "Do not remove 'IR' or '(control)' -- needed for parsing later"
+#~ msgid "Turbomole IR data (control)"
+#~ msgstr "Turbomole IR 데이터 (control)"
+
+#~ msgid "Data Format"
+#~ msgstr "데이터 형식"
+
+#~ msgctxt "noun, not verb"
+#~ msgid "Format:"
+#~ msgstr "형식:"
+
+#~ msgid "Load Spectral Data"
+#~ msgstr "스펙트럼 데이터 불러오기"
+
+#~ msgid "Portable Network Graphics"
+#~ msgstr "PNG"
+
+#~ msgid "jpeg"
+#~ msgstr "jpeg"
+
+#~ msgid "Tagged Image File Format"
+#~ msgstr "선택된 이미지 파일 형식"
+
+#~ msgid "Windows Bitmap"
+#~ msgstr "Windows 비트맵"
+
+#~ msgid "Portable Pixmap"
+#~ msgstr "휴대용 픽스맵(PPM)"
+
+#~ msgid "X11 Bitmap"
+#~ msgstr "X11 비트맵"
+
+#~ msgid "X11 Pixmap"
+#~ msgstr "X11 픽스맵"
+
+#~ msgid "Save Spectra Image"
+#~ msgstr "스펙트럼 이미지 저장"
+
+#~ msgid "Spectra"
+#~ msgstr "스펙트럼"
+
+#~ msgid "Visualize spectral data from quantum chemistry calculations"
+#~ msgstr "양자화학 계산 결과로부터 스펙트럼을 보여줌"
+
+#~ msgid "Vibrational Analysis"
+#~ msgstr "진동 계산"
+
+#~ msgid "Vibration"
+#~ msgstr "진동"
+
+#~ msgid "Pause"
+#~ msgstr "일시정지"
+
+#~ msgid ""
+#~ "This document is currently an isolated molecule. You need to create a "
+#~ "unit cell."
+#~ msgstr "이 문서는 현재 분리된 분자입니다. 유닛 셀을 만들어야 합니다."
+
+#~ msgid "Orbitals"
+#~ msgstr "오비탈"
+
+#~ msgid "Orbital"
+#~ msgstr "오비탈"
+
+#~ msgctxt "A cube type of nothing - empty cube"
+#~ msgid "Nothing"
+#~ msgstr "없음"
+
+#~ msgctxt "Van der Waals surface type"
+#~ msgid "Van der Waals"
+#~ msgstr "반 데르 발스"
+
+#~ msgctxt "Electron density surface type"
+#~ msgid "Electron Density"
+#~ msgstr "전자 밀도"
+
+#~ msgctxt "Molecular orbital surface type"
+#~ msgid "Molecular Orbital"
+#~ msgstr "분자 오비탈"
+
+#~ msgctxt "Undefined cube type"
+#~ msgid "Error - undefined type"
+#~ msgstr "오류 - 정의되지 않은 타입"
+
+#~ msgid "Create Surfaces..."
+#~ msgstr "표면 형성..."
+
+#~ msgid "Electron Density"
+#~ msgstr "전자 밀도"
+
+#~ msgid "Insert Nanotube"
+#~ msgstr "나노튜브 삽입"
+
+#~ msgid "GL widget has no molecule"
+#~ msgstr "GL 위젯은 분자를 가지고 있지 않음"
+
+#~ msgid "Building video "
+#~ msgstr "비디오 만들기 "
+
+#~ msgid "Could not run mencoder."
+#~ msgstr "멘코더를 실행할 수 없음"
+
+#~ msgid "Connect"
+#~ msgstr "연결"
+
+#~ msgid "Disconnect"
+#~ msgstr "연결 해제"
+
+#~ msgid "Debug Information"
+#~ msgstr "디버그 정보"
+
+#~ msgid "FPS: %L1"
+#~ msgstr "FPS: %L1"
+
+#~ msgid "View Size: %L1 x %L2"
+#~ msgstr "보기 크기: %L1 x %L2"
+
+#~ msgid "Atoms: %L1"
+#~ msgstr "원자: %L1"
+
+#~ msgid "Bonds: %L1"
+#~ msgstr "결합: %L1"
+
+#~ msgid "Could not open file '%1' for writing."
+#~ msgstr "쓰기 위한 '%1' 파일을 불러올 수 없습니다."
+
+#~ msgid "Could not open file '%1' for reading."
+#~ msgstr "읽기 위한 파일 '%1'을 열 수 없습니다"
+
+#~ msgid "File %1 cannot be opened for reading."
+#~ msgstr "읽기 위한 %1 파일을 열 수 없습니다."
+
+#~ msgid "File %1 can not be opened for writing."
+#~ msgstr "파일 %1을 쓰기 위해 열 수 없습니다"
+
+#~ msgid "Saving molecular file failed - could not rename new file."
+#~ msgstr "분자 파일 저장 실패 - 새 파일의 이름을 변경할 수 없음"
+
+#~ msgid "Saving molecular file failed - could not remove old file."
+#~ msgstr "분자 파일 저장 실패 - 이전 파일을 지울 수 없음"
+
+#~ msgid "Writing a molecule to file '%1' failed. OpenBabel function failed."
+#~ msgstr "파일 '%1'에 분자 기록 실패. OpenBabel 기능 실패."
+
+#~ msgid "Molecule %1"
+#~ msgstr "분자 %1"
+
+#~ msgctxt "Default license for all Avogadro plugins"
+#~ msgid "GPL2+"
+#~ msgstr "GPL2+"
+
+#~ msgid "Unknown Python Engine"
+#~ msgstr "알수없는 Python 엔진"
+
+#~ msgid "N/A"
+#~ msgstr "N/A"
+
+#~ msgid "PythonEngine: checking "
+#~ msgstr "Python엔진: 확인중 "
+
+#~ msgid "  - no module"
+#~ msgstr "  - 모듈이 없음"
+
+#~ msgid "Unknown Python Extension"
+#~ msgstr "알수없는 Python 확장기능"
+
+#~ msgid "PythonExtension: checking "
+#~ msgstr "Python확장기능: 확인중 "
+
+#~ msgid "Unknown Python Tool"
+#~ msgstr "알수없는 Python 도구"
+
+#~ msgid "PythonTool: checking "
+#~ msgstr "Python도구: 확인중 "
+
+#~ msgid "Conformer %1"
+#~ msgstr "이형태체 %1"
+
+#~ msgid "Tools"
+#~ msgstr "도구"
+
+#~ msgid "Axis:"
+#~ msgstr "축:"
+
+#~ msgid "Align:"
+#~ msgstr "정렬:"
+
+#~ msgid "Everything"
+#~ msgstr "전체"
+
+#~ msgid "Align"
+#~ msgstr "정렬"
+
+#~ msgid "Align molecules to a Cartesian axis"
+#~ msgstr "Cartesian 축에 맞추어 분자 정렬"
+
+#~ msgid "Align Settings"
+#~ msgstr "정렬 설정"
+
+#~ msgid "AutoOpt: Could not setup force field...."
+#~ msgstr "자동설정: 힘영역을 설정할 수 없습니다...."
+
+#~ msgid "AutoOpt: E = %1 %2 (dE = %3)"
+#~ msgstr "자동설정: E = %1 %2 (dE = %3)"
+
+#~ msgid "Algorithm:"
+#~ msgstr "알고리즘:"
+
+#~ msgid "Molecular Dynamics (300K)"
+#~ msgstr "분자동역학 (300K)"
+
+#~ msgid "Molecular Dynamics (600K)"
+#~ msgstr "분자동역학 (600K)"
+
+#~ msgid "Molecular Dynamics (900K)"
+#~ msgstr "분자동역학 (900K)"
+
+#~ msgid "Start"
+#~ msgstr "시작"
+
+#~ msgid "Fixed atoms are movable"
+#~ msgstr "고정된 원자를 움직일 수 있습니다"
+
+#~ msgid "Ignored atoms are movable"
+#~ msgstr "무시된 원자를 움직일 수 있습니다"
+
+#~ msgid "AutoOpt Molecule"
+#~ msgstr "분자 자동설정"
+
+#~ msgid "Automatic optimization of molecular geometry"
+#~ msgstr "분자구조 자동최적화"
+
+#~ msgid "AutoOptimization Settings"
+#~ msgstr "자동최적화 설정"
+
+#~ msgid "Auto Rotation Tool"
+#~ msgstr "자동 회전 도구"
+
+#~ msgid "x rotation:"
+#~ msgstr "x 회전:"
+
+#~ msgid "x rotation"
+#~ msgstr "x 회전"
+
+#~ msgid "y rotation:"
+#~ msgstr "y 회전:"
+
+#~ msgid "y rotation"
+#~ msgstr "y 회전"
+
+#~ msgid "z rotation:"
+#~ msgstr "z 회전:"
+
+#~ msgid "z rotation"
+#~ msgstr "z 회전"
+
+#~ msgid "Automatic rotation of molecules"
+#~ msgstr "분자 자동 회전"
+
+#~ msgid "AutoRotate Settings"
+#~ msgstr "자동 회전 설정"
+
+#~ msgctxt "%L1 is the length of the bond"
+#~ msgid "Bond Length: %L1"
+#~ msgstr "결합 길이: %L1"
+
+#~ msgid " Show Angles"
+#~ msgstr " 각 보여주기"
+
+#~ msgctxt "%L1 is distance, %2 is Angstrom symbol"
+#~ msgid "Distance (2->3): %L1 %2"
+#~ msgstr "거리 (2->3): %L1 %2"
+
+#~ msgid "Angle: %L1 °"
+#~ msgstr "각: %L1 °"
+
+#~ msgctxt "%L1 is distance, %2 is Angstrom symbol"
+#~ msgid "Distance (3->4): %L1 %2"
+#~ msgstr "거리 (3->4): %L1 %2"
+
+#~ msgid "Dihedral Angle: %1 °"
+#~ msgstr "이면각: %1 °"
+
+#~ msgctxt "*1 is a number. You most likely do not need to translate this"
+#~ msgid "*1"
+#~ msgstr "*1"
+
+#~ msgctxt "*2 is a number. You most likely do not need to translate this"
+#~ msgid "*2"
+#~ msgstr "*2"
+
+#~ msgctxt "*3 is a number. You most likely do not need to translate this"
+#~ msgid "*3"
+#~ msgstr "*3"
+
+#~ msgctxt "*4 is a number. You most likely do not need to translate this"
+#~ msgid "*4"
+#~ msgstr "*4"
+
+#~ msgid "Distance(s):"
+#~ msgstr "거리:"
+
+#~ msgid "Measure bond lengths, angles, and dihedrals"
+#~ msgstr "결합 길이, 각, 이면각 측정"
+
+#~ msgid "Delete Atom"
+#~ msgstr "원자 삭제"
+
+#~ msgid "Draw Bond"
+#~ msgstr "결합 그리기"
+
+#~ msgid "Draw and edit atoms and bonds"
+#~ msgstr "원자와 결합 그리기 및 편집"
+
+#~ msgid "Draw Settings"
+#~ msgstr "그리기 설정"
+
+#~ msgid "Translate, rotate, and adjust atoms and fragments"
+#~ msgstr "원자와 조각을 해석, 회전 및 조작"
+
+#~ msgid "Manipulate Settings"
+#~ msgstr "조작 설정"
+
+#~ msgid "Navigate Settings"
+#~ msgstr "내비게이션 설정"
+
+#~ msgid "Selection Mode:"
+#~ msgstr "선택 모드:"
+
+#~ msgid "Atom/Bond"
+#~ msgstr "원자/결합"
+
+#~ msgid "Residue"
+#~ msgstr "잔류물"
+
+#~ msgid "Select atoms, residues, and molecules"
+#~ msgstr "원자, 잔류물, 분자 선택"
+
+#~ msgid "Symbol"
+#~ msgstr "기호"
+
+#~ msgid "Bond Length"
+#~ msgstr "결합 길이"
+
+#~ msgid "Bond Angle"
+#~ msgstr "결합각"
+
+#~ msgid "Dihedral Angle"
+#~ msgstr "이면각"
+
+#~ msgid "Create/edit a z-matrix"
+#~ msgstr "z-matrix 만들기/편집"
+
+#~ msgid "Z-Matrix Settings"
+#~ msgstr "Z-Matrix 설정"
+
+#~ msgid "Residue Color Settings"
+#~ msgstr "잔류물 색상 설정"
+
+#~ msgid "Color residues by:"
+#~ msgstr "잔류물 채색:"
+
+#~ msgid "Amino Colors"
+#~ msgstr "아미노 색상"
+
+#~ msgid "Hydrophobicity"
+#~ msgstr "소수성"
+
+#~ msgid "Atom Radius:"
+#~ msgstr "원자 반지름:"
+
+#~ msgid "Bond Radius:"
+#~ msgstr "결합 반지름:"
+
+#~ msgid "Shape"
+#~ msgstr "모양"
+
+#~ msgid "Helix"
+#~ msgstr "나선"
+
+#~ msgid "a"
+#~ msgstr "a"
+
+#~ msgid "b"
+#~ msgstr "b"
+
+#~ msgid "c"
+#~ msgstr "c"
+
+#~ msgid "Sheet"
+#~ msgstr "시트"
+
+#~ msgid "Loop"
+#~ msgstr "반복"
+
+#~ msgid "Colors"
+#~ msgstr "색상"
+
+#~ msgid "Dipole:"
+#~ msgstr "쌍극자:"
+
+#~ msgid "Dipole Moment"
+#~ msgstr "쌍극자 모멘트"
+
+#~ msgid "Width:"
+#~ msgstr "폭:"
+
+#~ msgid "A"
+#~ msgstr "A"
+
+#~ msgid "Cut-off angle:"
+#~ msgstr "각 잘라내기:"
+
+#~ msgid "None"
+#~ msgstr "없음"
+
+#~ msgid "Symbol & Atom number"
+#~ msgstr "기호 & 원자 번호"
+
+#~ msgid "Unique ID"
+#~ msgstr "고유 ID"
+
+#~ msgid "Custom data"
+#~ msgstr "사용자 설정 값"
+
+#~ msgid "Bond length"
+#~ msgstr "결합 길이"
+
+#~ msgid "Bond number"
+#~ msgstr "결합 번호"
+
+#~ msgid "Bond order"
+#~ msgstr "결합 차수"
+
+#~ msgid "Rendering:"
+#~ msgstr "렌더링:"
+
+#~ msgid "Radius:"
+#~ msgstr "반지름:"
+
+#~ msgid "Include Nitrogens"
+#~ msgstr "질소 포함"
+
+#~ msgid "Orbital:"
+#~ msgstr "오비탈:"
+
+#~ msgid "Render:"
+#~ msgstr "표현:"
+
+#~ msgid "Fill"
+#~ msgstr "채우기"
+
+#~ msgid "Points"
+#~ msgstr "점"
+
+#~ msgid "Draw Box:"
+#~ msgstr "그리기 상자:"
+
+#~ msgid "Style:"
+#~ msgstr "모양:"
+
+#~ msgid "Selected Colors"
+#~ msgstr "선택된 색상"
+
+#~ msgid "Mapped Colors"
+#~ msgstr "매핑된 색상"
+
+#~ msgid "Colors:"
+#~ msgstr "색상:"
+
+#~ msgid "Positive"
+#~ msgstr "양수"
+
+#~ msgid "Negative"
+#~ msgstr "음수"
+
+#~ msgid "Show Atoms"
+#~ msgstr "원자 보여주기"
+
+#~ msgid "Animate Trajectory"
+#~ msgstr "궤도 애니메이션 시작"
+
+#~ msgid "0/0"
+#~ msgstr "0/0"
+
+#~ msgctxt "Continually re-run the animation in a loop"
+#~ msgid "Loop"
+#~ msgstr "반복"
+
+#~ msgid "fps"
+#~ msgstr "초당 프레임 수"
+
+#~ msgid "Save as .avi..."
+#~ msgstr "avi 형식으로 저장하기"
+
+#~ msgid "Number of atoms:"
+#~ msgstr "원자의 수:"
+
+#~ msgid "Number of rotatable bonds:"
+#~ msgstr "회전가능한 결합의 수:"
+
+#~ msgid "Energy"
+#~ msgstr "에너지"
+
+#~ msgid "Constraints"
+#~ msgstr "제약조건"
+
+#~ msgid "Add Constraints"
+#~ msgstr "제약조건 추가"
+
+#~ msgid "Ignore Atom"
+#~ msgstr "무시된 원자"
+
+#~ msgid "Fix Atom"
+#~ msgstr "원자 고정"
+
+#~ msgid "Fix Atom X"
+#~ msgstr "원자 X 고정"
+
+#~ msgid "Fix Atom Y"
+#~ msgstr "원자 Y 고정"
+
+#~ msgid "Fix Atom Z"
+#~ msgstr "원자 Z 고정"
+
+#~ msgid "Torsion angle"
+#~ msgstr "비틀림 각도"
+
+#~ msgid "Add"
+#~ msgstr "추가"
+
+#~ msgid "Save"
+#~ msgstr "저장"
+
+#~ msgid "Load"
+#~ msgstr "불러오기"
+
+#~ msgid "File Import..."
+#~ msgstr "파일 불어오기..."
+
+#~ msgid "Setup Force Field"
+#~ msgstr "힘 영역 설정"
+
+#~ msgid "Force Field"
+#~ msgstr "힘 영역"
+
+#~ msgid "Algorithm"
+#~ msgstr "알고리즘"
+
+#~ msgid "10e-"
+#~ msgstr "10e-"
+
+#~ msgid "C"
+#~ msgstr "C"
+
+#~ msgid "G"
+#~ msgstr "G"
+
+#~ msgid "B"
+#~ msgstr "B"
+
+#~ msgid "Other"
+#~ msgstr "기타"
+
+#~ msgid "Insert Fragment..."
+#~ msgstr "파편 삽입..."
+
+#~ msgid "Peptide Builder"
+#~ msgstr "펩티드 빌더"
+
+#~ msgid "Alanine"
+#~ msgstr "알라닌"
+
+#~ msgid "Ala"
+#~ msgstr "알라닌(Ala)"
+
+#~ msgid "Arginine"
+#~ msgstr "아르기닌"
+
+#~ msgid "Arg"
+#~ msgstr "아르기닌(Arg)"
+
+#~ msgid "Asparagine"
+#~ msgstr "아스파라긴"
+
+#~ msgid "Asn"
+#~ msgstr "아스파라긴(Asn)"
+
+#~ msgid "Aspartic acid"
+#~ msgstr "아스파르트 산"
+
+#~ msgid "Asp"
+#~ msgstr "아스파르트 산(Asp)"
+
+#~ msgid "Cysteine"
+#~ msgstr "시스테인"
+
+#~ msgid "Cys"
+#~ msgstr "시스테인(Cys)"
+
+#~ msgid "Glutamic acid"
+#~ msgstr "글루탐산"
+
+#~ msgid "Glu"
+#~ msgstr "글루탐산(Glu)"
+
+#~ msgid "Glutamine"
+#~ msgstr "글루타민"
+
+#~ msgid "Gln"
+#~ msgstr "글루타민(Gln)"
+
+#~ msgid "Glycine"
+#~ msgstr "글리신"
+
+#~ msgid "Gly"
+#~ msgstr "글리신(Gly)"
+
+#~ msgid "Histidine"
+#~ msgstr "히스티딘"
+
+#~ msgid "His"
+#~ msgstr "히스티딘(His)"
+
+#~ msgid "Isoleucine"
+#~ msgstr "이소류신"
+
+#~ msgid "Ile"
+#~ msgstr "이소류신(Ile)"
+
+#~ msgid "Valine"
+#~ msgstr "발린"
+
+#~ msgid "Val"
+#~ msgstr "발린(Val)"
+
+#~ msgid "Tyrosine"
+#~ msgstr "티로신"
+
+#~ msgid "Tyr"
+#~ msgstr "티로신(Tyr)"
+
+#~ msgid "Tryptophan"
+#~ msgstr "트립토판"
+
+#~ msgid "Trp"
+#~ msgstr "트립토판(Trp)"
+
+#~ msgid "Threonine"
+#~ msgstr "트레오닌"
+
+#~ msgid "Thr"
+#~ msgstr "트레오닌(Thr)"
+
+#~ msgid "Serine"
+#~ msgstr "세린"
+
+#~ msgid "Ser"
+#~ msgstr "세린(Ser)"
+
+#~ msgid "Proline"
+#~ msgstr "프롤린"
+
+#~ msgid "Pro"
+#~ msgstr "프롤린(Pro)"
+
+#~ msgid "Phenylalanine"
+#~ msgstr "페닐알라닌"
+
+#~ msgid "Phe"
+#~ msgstr "페닐알라닌(Phe)"
+
+#~ msgid "Methionine"
+#~ msgstr "메티오닌"
+
+#~ msgid "Met"
+#~ msgstr "메티오닌(Met)"
+
+#~ msgid "Lysine"
+#~ msgstr "리신"
+
+#~ msgid "Lys"
+#~ msgstr "리신(Lys)"
+
+#~ msgid "Leucine"
+#~ msgstr "류신"
+
+#~ msgid "Leu"
+#~ msgstr "류신(Leu)"
+
+#~ msgid "Amino Acids:"
+#~ msgstr "아미노산:"
+
+#~ msgid "Stereochemistry:"
+#~ msgstr "입체화학:"
+
+#~ msgid "L"
+#~ msgstr "L"
+
+#~ msgid "D"
+#~ msgstr "D"
+
+#~ msgid "NH₂"
+#~ msgstr "NH₂"
+
+#~ msgid "NH₃⁺"
+#~ msgstr "NH₃⁺"
+
+#~ msgid "CO₂H"
+#~ msgstr "CO₂H"
+
+#~ msgid "CO₂⁻"
+#~ msgstr "CO₂⁻"
+
+#~ msgid "Chain Number:"
+#~ msgstr "연쇄 번호:"
+
+#~ msgid "The chain number for the new peptide"
+#~ msgstr "새 펩티드에 대한 연쇄번호"
+
+#~ msgid "E"
+#~ msgstr "E"
+
+#~ msgid "F"
+#~ msgstr "F"
+
+#~ msgid "Molecule Properties"
+#~ msgstr "분자 정보"
+
+#~ msgid "Number of Residues:"
+#~ msgstr "잔류물의 수:"
+
+#~ msgid "Energy (kJ/mol):"
+#~ msgstr "에너지 (kJ/mol):"
+
+#~ msgid "Dipole Moment (D):"
+#~ msgstr "쌍극자 모멘트 (D):"
+
+#~ msgid "RHF"
+#~ msgstr "RHF"
+
+#~ msgid "Advanced"
+#~ msgstr "고급"
+
+#~ msgid "Data"
+#~ msgstr "자료"
+
+#~ msgid "Nothing"
+#~ msgstr "없음"
+
+#~ msgid "Grid"
+#~ msgstr "격자"
+
+#~ msgid "POV-Ray Export"
+#~ msgstr "POV-Ray 내보내기"
+
+#~ msgid "Select..."
+#~ msgstr "선택..."
+
+#~ msgid "povray"
+#~ msgstr "povray"
+
+#~ msgid "Use full scene antialiasing"
+#~ msgstr "전체 화면 안티앨리어싱 사용"
+
+#~ msgid "Antialias"
+#~ msgstr "안티앨리어싱"
+
+#~ msgid "Set the background color to be transparent"
+#~ msgstr "배경화면 색상 투명하게 설정하기"
+
+#~ msgid "Alpha transparency"
+#~ msgstr "알파 투명"
+
+#~ msgid "Command:"
+#~ msgstr "명령:"
+
+#~ msgid "Compute..."
+#~ msgstr "계산..."
+
+#~ msgid "AM1"
+#~ msgstr "AM1"
+
+#~ msgid "PM3"
+#~ msgstr "PM3"
+
+#~ msgid "&Advanced Setup"
+#~ msgstr "고급 설정(&A)"
+
+#~ msgid "System"
+#~ msgstr "시스템"
+
+#~ msgid "Read"
+#~ msgstr "읽기"
+
+#~ msgid "MIDI"
+#~ msgstr "MIDI"
+
+#~ msgid "Default"
+#~ msgstr "기본값"
+
+#~ msgid "IRC"
+#~ msgstr "IRC"
+
+#~ msgid "Debug"
+#~ msgstr "디버그"
+
+#~ msgid "CI"
+#~ msgstr "CI"
+
+#~ msgid "Cn"
+#~ msgstr "Cn"
+
+#~ msgid "Minutes"
+#~ msgstr "분"
+
+#~ msgid "Hours"
+#~ msgstr "시간"
+
+#~ msgid "Days"
+#~ msgstr "일"
+
+#~ msgid "Weeks"
+#~ msgstr "주"
+
+#~ msgid "Years"
+#~ msgstr "년"
+
+#~ msgid "MegaBytes"
+#~ msgstr "메가바이트"
+
+#~ msgid "GigaBytes"
+#~ msgstr "기가바이트"
+
+#~ msgid "Memory:"
+#~ msgstr "메모리:"
+
+#~ msgctxt "\"Loop\" load balancing - set static node assignments"
+#~ msgid "Loop"
+#~ msgstr "반복"
+
+#~ msgctxt "\"Next Value\" load balancing - dynamically assign nodes work"
+#~ msgid "Next Value"
+#~ msgstr "다음 값"
+
+#~ msgid "Skip"
+#~ msgstr "건너뛰기"
+
+#~ msgid "Rotate Alpha and Beta Orbitals"
+#~ msgstr "알파와 베타 오비탈 회전"
+
+#~ msgid "Grid-Free"
+#~ msgstr "격자 없애기"
+
+#~ msgid "Maximum:"
+#~ msgstr "최대:"
+
+#~ msgid "Minimum:"
+#~ msgstr "최소:"
+
+#~ msgid "Quadratic Approximation"
+#~ msgstr "2차 근사치"
+
+#~ msgid "Standard"
+#~ msgstr "표준"
+
+#~ msgid "MOLPRO Input"
+#~ msgstr "MOLPRO 입력"
+
+#~ msgid "NWChem Input"
+#~ msgstr "NWChem 입력"
+
+#~ msgid "Q-Chem Input"
+#~ msgstr "Q-Chem 입력"
+
+#~ msgid "Display Type:"
+#~ msgstr "표시 형식:"
+
+#~ msgid "&Load data..."
+#~ msgstr "데이터 읽기(&L)..."
+
+#~ msgid "&Close"
+#~ msgstr "닫기(&C)"
+
+#~ msgid "Calculated Spectra:"
+#~ msgstr "계산된 스펙트럼:"
+
+#~ msgid "Imported Spectra:"
+#~ msgstr "가져온 스펙트럼:"
+
+#~ msgid "Font:"
+#~ msgstr "글꼴:"
+
+#~ msgid "Change Font..."
+#~ msgstr "글꼴 변경..."
+
+#~ msgid "Show"
+#~ msgstr "보기"
+
+#~ msgid "&Import..."
+#~ msgstr "가져오기(&I)..."
+
+#~ msgid "Background:"
+#~ msgstr "배경:"
+
+#~ msgid "Foreground:"
+#~ msgstr "배경색:"
+
+#~ msgid "New..."
+#~ msgstr "새로 만들기..."
+
+#~ msgid "Rename..."
+#~ msgstr "이름 바꾸기..."
+
+#~ msgid "&Schemes:"
+#~ msgstr "도표(&S):"
+
+#~ msgid "&Export..."
+#~ msgstr "내보내기(&E)..."
+
+#~ msgid "&DPI:"
+#~ msgstr "DPI(&D):"
+
+#~ msgid "&Width:"
+#~ msgstr "너비(&W):"
+
+#~ msgid "&Height"
+#~ msgstr "높이(&H)"
+
+#~ msgid "cm"
+#~ msgstr "cm"
+
+#~ msgid "mm"
+#~ msgstr "mm"
+
+#~ msgid "in"
+#~ msgstr "in"
+
+#~ msgid "px"
+#~ msgstr "픽셀"
+
+#~ msgid "&Save Image..."
+#~ msgstr "이미지 저장(&S)..."
+
+#~ msgid "&Y Axis Units:"
+#~ msgstr "Y 축 단위:"
+
+#~ msgid "Nucleus:"
+#~ msgstr "원자핵:"
+
+#~ msgid "&Reference:"
+#~ msgstr "참조(&R):"
+
+#~ msgid "ppm"
+#~ msgstr "ppm"
+
+#~ msgid "Molecular Vibrations"
+#~ msgstr "분자 진동"
+
+#~ msgid "higher frequency vibrations will show faster movement"
+#~ msgstr "고주파 진동은 빠른 운동을 보여줄 것입니다"
+
+#~ msgid "Animation speed set by frequency"
+#~ msgstr "진동수에 의한 애니메이션 속도 설정"
+
+#~ msgid "Display force &vectors"
+#~ msgstr "힘, 벡터 표시"
+
+#~ msgid "Generate Cell"
+#~ msgstr "세포 생성"
+
+#~ msgid "Create Surfaces"
+#~ msgstr "표면 생성"
+
+#~ msgid "Surface Type:"
+#~ msgstr "표면 형식:"
+
+#~ msgid "Color By:"
+#~ msgstr "채색:"
+
+#~ msgctxt "low resolution"
+#~ msgid "Low"
+#~ msgstr "낮음"
+
+#~ msgctxt "medium resolution"
+#~ msgid "Medium"
+#~ msgstr "중간"
+
+#~ msgctxt "high resolution"
+#~ msgid "High"
+#~ msgstr "높음"
+
+#~ msgctxt "very high resolution"
+#~ msgid "Very High"
+#~ msgstr "매우 높음"
+
+#~ msgctxt ""
+#~ "Add the new surface to this particular display type (i.e., orbital or "
+#~ "surface)"
+#~ msgid "In Display Type:"
+#~ msgstr "표시 형식:"
+
+#~ msgid "New Display"
+#~ msgstr "새로운 창"
+
+#~ msgid "Advanced..."
+#~ msgstr "고급..."
+
+#~ msgid "Python Settings"
+#~ msgstr "파이썬 설정"
+
+#~ msgid "Z Matrix Editor"
+#~ msgstr "Z 행렬 편집기"
+
+#~ msgid "Import Selected Atoms"
+#~ msgstr "선택된 원자 내보내기"

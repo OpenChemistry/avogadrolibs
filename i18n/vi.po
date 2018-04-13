@@ -1,22 +1,22 @@
-# Translations for the Avogadro molecular builder.
-# Copyright (C) 2006-2018 The Avogadro Project
-# This file is distributed under the same license as the Avogadro package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Vietnamese translation for avogadro
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the avogadro package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Avogadro 1.90.0\n"
+"Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-04-13 12:05-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2016-06-10 06:38+0000\n"
+"Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
+"Language-Team: Vietnamese <vi@li.org>\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
+"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -133,17 +133,18 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:53
+#, fuzzy
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Phát sinh đầu vào..."
 
 #: molequeue/inputgeneratordialog.cpp:55
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1 Input Generator"
-msgstr ""
+msgstr "Phát sinh đầu vào..."
 
 #: molequeue/inputgeneratorwidget.cpp:129
 msgid "Continue"
-msgstr ""
+msgstr "Tiếp tục"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:127
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
@@ -153,11 +154,11 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:129 qtgui/containerwidget.cpp:45
 msgid "Close"
-msgstr ""
+msgstr "Đóng"
 
 #: molequeue/inputgeneratorwidget.cpp:170 qtgui/elementtranslator.cpp:387
 msgid "Unknown"
-msgstr ""
+msgstr "Không rõ"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #, qt-format, qt-plural-format
@@ -206,9 +207,9 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:333
-#, qt-format
+#, fuzzy, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Hủy bỏ tính toán"
 
 #: molequeue/inputgeneratorwidget.cpp:349
 #: qtplugins/gamessinput/gamessinputdialog.cpp:734
@@ -225,20 +226,23 @@ msgid "Script returns warnings:\n"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:384
+#, fuzzy
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "Cảnh báo"
 
 #: molequeue/inputgeneratorwidget.cpp:390
+#, fuzzy
 msgid "Show &Warnings"
-msgstr ""
+msgstr "Cảnh báo"
 
 #: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:96
 msgid "An error has occurred:"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:458
+#, fuzzy
 msgid "Select output filename"
-msgstr ""
+msgstr "Chọn dung môi"
 
 #: molequeue/inputgeneratorwidget.cpp:473
 #, qt-format
@@ -253,15 +257,16 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:495
 #: molequeue/inputgeneratorwidget.cpp:606
 #: qtplugins/gamessinput/gamessinputdialog.cpp:687
+#, fuzzy
 msgid "Output Error"
-msgstr ""
+msgstr "Đầu ra:"
 
 #: molequeue/inputgeneratorwidget.cpp:496
 #: molequeue/inputgeneratorwidget.cpp:607
 #: qtplugins/gamessinput/gamessinputdialog.cpp:688
-#, qt-format
+#, fuzzy, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Không thể ghi ra file."
 
 #: molequeue/inputgeneratorwidget.cpp:507
 msgid "Select output directory"
@@ -278,14 +283,14 @@ msgid "%1: Directory cannot be read!"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:540
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "Không ghi được file video."
 
 #: molequeue/inputgeneratorwidget.cpp:545
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "Không ghi được file video."
 
 #: molequeue/inputgeneratorwidget.cpp:558
 msgid "The input files cannot be written due to an unknown error."
@@ -359,31 +364,35 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:717 qtgui/interfacewidget.cpp:177
 msgid "Title"
-msgstr ""
+msgstr "Tựa đề"
 
 #: molequeue/inputgeneratorwidget.cpp:721 qtgui/interfacewidget.cpp:181
+#, fuzzy
 msgid "Filename Base"
-msgstr ""
+msgstr "Tên file:"
 
 #: molequeue/inputgeneratorwidget.cpp:725 qtgui/interfacewidget.cpp:185
+#, fuzzy
 msgid "Processor Cores"
-msgstr ""
+msgstr "Bộ xử lý:"
 
 #: molequeue/inputgeneratorwidget.cpp:729 qtgui/interfacewidget.cpp:189
+#, fuzzy
 msgid "Calculation Type"
-msgstr ""
+msgstr "Tính:"
 
 #: molequeue/inputgeneratorwidget.cpp:750 qtgui/interfacewidget.cpp:210
 msgid "Theory:"
-msgstr ""
+msgstr "Lý thuyết:"
 
 #: molequeue/inputgeneratorwidget.cpp:753 qtgui/interfacewidget.cpp:213
+#, fuzzy
 msgid "Theory"
-msgstr ""
+msgstr "Lý thuyết:"
 
 #: molequeue/inputgeneratorwidget.cpp:755 qtgui/interfacewidget.cpp:215
 msgid "Basis"
-msgstr ""
+msgstr "Cơ sở"
 
 #: molequeue/inputgeneratorwidget.cpp:760 qtgui/interfacewidget.cpp:220
 msgid "Charge"
@@ -446,8 +455,9 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:1202 qtgui/interfacewidget.cpp:699
 #: qtplugins/gamessinput/gamessinputdialog.cpp:407
+#, fuzzy
 msgid "[no molecule]"
-msgstr ""
+msgstr "Không có phân tử nào được đặt"
 
 #: molequeue/molequeuedialog.cpp:73
 msgid "Submitting job to MoleQueue..."
@@ -467,8 +477,9 @@ msgid "Waiting for job %1 '%2' to finish..."
 msgstr ""
 
 #: molequeue/molequeuedialog.cpp:102
+#, fuzzy
 msgid "Stop waiting"
-msgstr ""
+msgstr "Dừng &hình động"
 
 #: molequeue/molequeuedialog.cpp:121
 msgid "Fetching completed job information..."
@@ -492,8 +503,9 @@ msgid "The job has been rejected by MoleQueue: %1"
 msgstr ""
 
 #: molequeue/molequeuedialog.cpp:211 molequeue/molequeuewidget.cpp:156
+#, fuzzy
 msgid "No program selected."
-msgstr ""
+msgstr "Không có nguyên tử nào được chọn"
 
 #: molequeue/molequeuedialog.cpp:212 molequeue/molequeuewidget.cpp:157
 msgid "Please select the target program from the \"Queue and Program\" list."
@@ -521,455 +533,456 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:32
 msgid "Hydrogen"
-msgstr ""
+msgstr "Hi-đrô"
 
 #: qtgui/elementtranslator.cpp:35
 msgid "Helium"
-msgstr ""
+msgstr "Hê-li"
 
 #: qtgui/elementtranslator.cpp:38
 msgid "Lithium"
-msgstr ""
+msgstr "Li-ti"
 
 #: qtgui/elementtranslator.cpp:41
 msgid "Beryllium"
-msgstr ""
+msgstr "Be-ri"
 
 #: qtgui/elementtranslator.cpp:44
 msgid "Boron"
-msgstr ""
+msgstr "Bo"
 
 #: qtgui/elementtranslator.cpp:47
 msgid "Carbon"
-msgstr ""
+msgstr "Các-bon"
 
 #: qtgui/elementtranslator.cpp:50
 msgid "Nitrogen"
-msgstr ""
+msgstr "Ni-tơ"
 
 #: qtgui/elementtranslator.cpp:53
 msgid "Oxygen"
-msgstr ""
+msgstr "Ô-xi"
 
 #: qtgui/elementtranslator.cpp:56
 msgid "Fluorine"
-msgstr ""
+msgstr "Flo"
 
 #: qtgui/elementtranslator.cpp:59
 msgid "Neon"
-msgstr ""
+msgstr "Nê-ông"
 
 #: qtgui/elementtranslator.cpp:62
 msgid "Sodium"
-msgstr ""
+msgstr "Na-tri"
 
 #: qtgui/elementtranslator.cpp:65
 msgid "Magnesium"
-msgstr ""
+msgstr "Ma-giê"
 
 #: qtgui/elementtranslator.cpp:68
 msgid "Aluminum"
-msgstr ""
+msgstr "Nhôm"
 
 #: qtgui/elementtranslator.cpp:71
 msgid "Silicon"
-msgstr ""
+msgstr "Si-lic"
 
 #: qtgui/elementtranslator.cpp:74
 msgid "Phosphorus"
-msgstr ""
+msgstr "Phốt-pho"
 
 #: qtgui/elementtranslator.cpp:77
 msgid "Sulfur"
-msgstr ""
+msgstr "Lưu huỳnh"
 
 #: qtgui/elementtranslator.cpp:80
 msgid "Chlorine"
-msgstr ""
+msgstr "Clo"
 
 #: qtgui/elementtranslator.cpp:83
 msgid "Argon"
-msgstr ""
+msgstr "A-gôn"
 
 #: qtgui/elementtranslator.cpp:86
 msgid "Potassium"
-msgstr ""
+msgstr "Ka-li"
 
 #: qtgui/elementtranslator.cpp:89
 msgid "Calcium"
-msgstr ""
+msgstr "Can-xi"
 
 #: qtgui/elementtranslator.cpp:92
 msgid "Scandium"
-msgstr ""
+msgstr "Scan-đi"
 
 #: qtgui/elementtranslator.cpp:95
 msgid "Titanium"
-msgstr ""
+msgstr "Ti-tan"
 
 #: qtgui/elementtranslator.cpp:98
 msgid "Vanadium"
-msgstr ""
+msgstr "Va-na-đi"
 
 #: qtgui/elementtranslator.cpp:101
 msgid "Chromium"
-msgstr ""
+msgstr "Crôm"
 
 #: qtgui/elementtranslator.cpp:104
 msgid "Manganese"
-msgstr ""
+msgstr "Măng-gan"
 
 #: qtgui/elementtranslator.cpp:107
 msgid "Iron"
-msgstr ""
+msgstr "Sắt"
 
 #: qtgui/elementtranslator.cpp:110
 msgid "Cobalt"
-msgstr ""
+msgstr "Cô-ban"
 
 #: qtgui/elementtranslator.cpp:113
 msgid "Nickel"
-msgstr ""
+msgstr "Ni-ken"
 
 #: qtgui/elementtranslator.cpp:116
 msgid "Copper"
-msgstr ""
+msgstr "Đồng"
 
 #: qtgui/elementtranslator.cpp:119
 msgid "Zinc"
-msgstr ""
+msgstr "Kẽm"
 
 #: qtgui/elementtranslator.cpp:122
 msgid "Gallium"
-msgstr ""
+msgstr "Ga-li"
 
 #: qtgui/elementtranslator.cpp:125
 msgid "Germanium"
-msgstr ""
+msgstr "Giéc-ma-ni"
 
 #: qtgui/elementtranslator.cpp:128
 msgid "Arsenic"
-msgstr ""
+msgstr "A-sen"
 
 #: qtgui/elementtranslator.cpp:131
 msgid "Selenium"
-msgstr ""
+msgstr "Se-len"
 
 #: qtgui/elementtranslator.cpp:134
 msgid "Bromine"
-msgstr ""
+msgstr "Brôm"
 
 #: qtgui/elementtranslator.cpp:137
 msgid "Krypton"
-msgstr ""
+msgstr "Crip-tôn"
 
 #: qtgui/elementtranslator.cpp:140
 msgid "Rubidium"
-msgstr ""
+msgstr "Ru-bi-đi"
 
 #: qtgui/elementtranslator.cpp:143
 msgid "Strontium"
-msgstr ""
+msgstr "Strông-ti"
 
 #: qtgui/elementtranslator.cpp:146
 msgid "Yttrium"
-msgstr ""
+msgstr "Y-tri"
 
 #: qtgui/elementtranslator.cpp:149
 msgid "Zirconium"
-msgstr ""
+msgstr "Zi-cô-ni"
 
 #: qtgui/elementtranslator.cpp:152
 msgid "Niobium"
-msgstr ""
+msgstr "Niô-bi"
 
 #: qtgui/elementtranslator.cpp:155
 msgid "Molybdenum"
-msgstr ""
+msgstr "Mô-lip-đen"
 
 #: qtgui/elementtranslator.cpp:158
 msgid "Technetium"
-msgstr ""
+msgstr "Tếch-ne-xi"
 
 #: qtgui/elementtranslator.cpp:161
 msgid "Ruthenium"
-msgstr ""
+msgstr "Ru-te-ni"
 
 #: qtgui/elementtranslator.cpp:164
 msgid "Rhodium"
-msgstr ""
+msgstr "Rô-đi"
 
 #: qtgui/elementtranslator.cpp:167
 msgid "Palladium"
-msgstr ""
+msgstr "Pa-la-đi"
 
 #: qtgui/elementtranslator.cpp:170
 msgid "Silver"
-msgstr ""
+msgstr "Bạc"
 
 #: qtgui/elementtranslator.cpp:173
 msgid "Cadmium"
-msgstr ""
+msgstr "Ca-đi-mi"
 
 #: qtgui/elementtranslator.cpp:176
 msgid "Indium"
-msgstr ""
+msgstr "In-đi"
 
 #: qtgui/elementtranslator.cpp:179
 msgid "Tin"
-msgstr ""
+msgstr "Thiếc"
 
 #: qtgui/elementtranslator.cpp:182
 msgid "Antimony"
-msgstr ""
+msgstr "An-ti-moan"
 
 #: qtgui/elementtranslator.cpp:185
 msgid "Tellurium"
-msgstr ""
+msgstr "Te-lua"
 
 #: qtgui/elementtranslator.cpp:188
 msgid "Iodine"
-msgstr ""
+msgstr "I-ốt"
 
 #: qtgui/elementtranslator.cpp:191
 msgid "Xenon"
-msgstr ""
+msgstr "Xe-nôn"
 
 #: qtgui/elementtranslator.cpp:194
 msgid "Cesium"
-msgstr ""
+msgstr "Xê-di"
 
 #: qtgui/elementtranslator.cpp:197
 msgid "Barium"
-msgstr ""
+msgstr "Ba-ri"
 
 #: qtgui/elementtranslator.cpp:200
 msgid "Lanthanum"
-msgstr ""
+msgstr "Lan-tan"
 
 #: qtgui/elementtranslator.cpp:203
 msgid "Cerium"
-msgstr ""
+msgstr "Xê-ri"
 
 #: qtgui/elementtranslator.cpp:206
 msgid "Praseodymium"
-msgstr ""
+msgstr "Pra-seo-đi"
 
 #: qtgui/elementtranslator.cpp:209
 msgid "Neodymium"
-msgstr ""
+msgstr "Nê-ô-đi"
 
 #: qtgui/elementtranslator.cpp:212
 msgid "Promethium"
-msgstr ""
+msgstr "Prô-mê-ti"
 
 #: qtgui/elementtranslator.cpp:215
 msgid "Samarium"
-msgstr ""
+msgstr "Sa-ma-ri"
 
 #: qtgui/elementtranslator.cpp:218
 msgid "Europium"
-msgstr ""
+msgstr "Êu-rô-pi"
 
 #: qtgui/elementtranslator.cpp:221
 msgid "Gadolinium"
-msgstr ""
+msgstr "Ga-đô-lin"
 
 #: qtgui/elementtranslator.cpp:224
 msgid "Terbium"
-msgstr ""
+msgstr "Téc-bi"
 
 #: qtgui/elementtranslator.cpp:227
 msgid "Dysprosium"
-msgstr ""
+msgstr "Đi-prô-xi"
 
 #: qtgui/elementtranslator.cpp:230
 msgid "Holmium"
-msgstr ""
+msgstr "Hô-mi"
 
 #: qtgui/elementtranslator.cpp:233
 msgid "Erbium"
-msgstr ""
+msgstr "Éc-bi"
 
 #: qtgui/elementtranslator.cpp:236
 msgid "Thulium"
-msgstr ""
+msgstr "Thu-li"
 
 #: qtgui/elementtranslator.cpp:239
 msgid "Ytterbium"
-msgstr ""
+msgstr "Y-téc-bi"
 
 #: qtgui/elementtranslator.cpp:242
 msgid "Lutetium"
-msgstr ""
+msgstr "Lu-te-ti"
 
 #: qtgui/elementtranslator.cpp:245
 msgid "Hafnium"
-msgstr ""
+msgstr "Haf-ni"
 
 #: qtgui/elementtranslator.cpp:248
 msgid "Tantalum"
-msgstr ""
+msgstr "Tan-tan"
 
 #: qtgui/elementtranslator.cpp:251
 msgid "Tungsten"
-msgstr ""
+msgstr "Von-fram"
 
 #: qtgui/elementtranslator.cpp:254
 msgid "Rhenium"
-msgstr ""
+msgstr "Rê-ni"
 
 #: qtgui/elementtranslator.cpp:257
 msgid "Osmium"
-msgstr ""
+msgstr "Ô-si-mi"
 
 #: qtgui/elementtranslator.cpp:260
 msgid "Iridium"
-msgstr ""
+msgstr "I-ri-đi"
 
 #: qtgui/elementtranslator.cpp:263
 msgid "Platinum"
-msgstr ""
+msgstr "Bạch kim"
 
 #: qtgui/elementtranslator.cpp:266
 msgid "Gold"
-msgstr ""
+msgstr "Vàng"
 
 #: qtgui/elementtranslator.cpp:269
 msgid "Mercury"
-msgstr ""
+msgstr "Thủy ngân"
 
 #: qtgui/elementtranslator.cpp:272
 msgid "Thallium"
-msgstr ""
+msgstr "Ta-li"
 
 #: qtgui/elementtranslator.cpp:275
 msgid "Lead"
-msgstr ""
+msgstr "Chì"
 
 #: qtgui/elementtranslator.cpp:278
 msgid "Bismuth"
-msgstr ""
+msgstr "Bít-mút"
 
 #: qtgui/elementtranslator.cpp:281
 msgid "Polonium"
-msgstr ""
+msgstr "Pô-lô-ni"
 
 #: qtgui/elementtranslator.cpp:284
 msgid "Astatine"
-msgstr ""
+msgstr "As-ta-tin"
 
 #: qtgui/elementtranslator.cpp:287
 msgid "Radon"
-msgstr ""
+msgstr "Ra-đôn"
 
 #: qtgui/elementtranslator.cpp:290
 msgid "Francium"
-msgstr ""
+msgstr "Fran-xi"
 
 #: qtgui/elementtranslator.cpp:293
 msgid "Radium"
-msgstr ""
+msgstr "Ra-đi"
 
 #: qtgui/elementtranslator.cpp:296
 msgid "Actinium"
-msgstr ""
+msgstr "Ác-ti-ni"
 
 #: qtgui/elementtranslator.cpp:299
 msgid "Thorium"
-msgstr ""
+msgstr "Tho-ri"
 
 #: qtgui/elementtranslator.cpp:302
 msgid "Protactinium"
-msgstr ""
+msgstr "Prô-tác-ti-ni"
 
 #: qtgui/elementtranslator.cpp:305
 msgid "Uranium"
-msgstr ""
+msgstr "U-ra-ni"
 
 #: qtgui/elementtranslator.cpp:308
 msgid "Neptunium"
-msgstr ""
+msgstr "Nép-tu-ni"
 
 #: qtgui/elementtranslator.cpp:311
 msgid "Plutonium"
-msgstr ""
+msgstr "Plu-tô-ni"
 
 #: qtgui/elementtranslator.cpp:314
 msgid "Americium"
-msgstr ""
+msgstr "A-me-ri-xi"
 
 #: qtgui/elementtranslator.cpp:317
 msgid "Curium"
-msgstr ""
+msgstr "Quy-ri"
 
 #: qtgui/elementtranslator.cpp:320
 msgid "Berkelium"
-msgstr ""
+msgstr "Béc-kơ-li"
 
 #: qtgui/elementtranslator.cpp:323
 msgid "Californium"
-msgstr ""
+msgstr "Ca-li-fo-ni"
 
 #: qtgui/elementtranslator.cpp:326
 msgid "Einsteinium"
-msgstr ""
+msgstr "Anh-xtanh-ni"
 
 #: qtgui/elementtranslator.cpp:329
 msgid "Fermium"
-msgstr ""
+msgstr "Féc-mi"
 
 #: qtgui/elementtranslator.cpp:332
 msgid "Mendelevium"
-msgstr ""
+msgstr "Men-đe-le-vi"
 
 #: qtgui/elementtranslator.cpp:335
 msgid "Nobelium"
-msgstr ""
+msgstr "Nô-be-li"
 
 #: qtgui/elementtranslator.cpp:338
 msgid "Lawrencium"
-msgstr ""
+msgstr "Lo-ren-xi"
 
 #: qtgui/elementtranslator.cpp:341
 msgid "Rutherfordium"
-msgstr ""
+msgstr "Rơ-zơ-pho-đi"
 
 #: qtgui/elementtranslator.cpp:344
 msgid "Dubnium"
-msgstr ""
+msgstr "Đúp-ni"
 
 #: qtgui/elementtranslator.cpp:347
 msgid "Seaborgium"
-msgstr ""
+msgstr "Seaborgi"
 
 #: qtgui/elementtranslator.cpp:350
 msgid "Bohrium"
-msgstr ""
+msgstr "Bohri"
 
 #: qtgui/elementtranslator.cpp:353
 msgid "Hassium"
-msgstr ""
+msgstr "Hassi"
 
 #: qtgui/elementtranslator.cpp:356
 msgid "Meitnerium"
-msgstr ""
+msgstr "Meitneri"
 
 #: qtgui/elementtranslator.cpp:359
 msgid "Darmstadtium"
-msgstr ""
+msgstr "Darmstadti"
 
 #: qtgui/elementtranslator.cpp:362
 msgid "Roentgenium"
-msgstr ""
+msgstr "Rơng-ghe-ni"
 
 #: qtgui/elementtranslator.cpp:365
 msgid "Copernicium"
-msgstr ""
+msgstr "Cô-péc-ni-xi"
 
 #: qtgui/elementtranslator.cpp:368
+#, fuzzy
 msgid "Nihonium"
-msgstr ""
+msgstr "Zi-cô-ni"
 
 #: qtgui/elementtranslator.cpp:371
 msgid "Flerovium"
@@ -992,16 +1005,19 @@ msgid "Oganesson"
 msgstr ""
 
 #: qtgui/filebrowsewidget.cpp:36
+#, fuzzy
 msgid "Browse"
-msgstr ""
+msgstr "Duyệt tìm..."
 
 #: qtgui/filebrowsewidget.cpp:111
+#, fuzzy
 msgid "Select file:"
-msgstr ""
+msgstr "Chọn dung môi"
 
 #: qtgui/filebrowsewidget.cpp:114
+#, fuzzy
 msgid "Select executable:"
-msgstr ""
+msgstr "Xóa đối tượng được chọn"
 
 #: qtgui/fileformatdialog.cpp:66
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1012,9 +1028,10 @@ msgid "Unable to find a suitable file writer for the selected format."
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:155
+#, fuzzy
 msgctxt "File handlers"
 msgid "handlers"
-msgstr ""
+msgstr "McLean/Chandler"
 
 #: qtgui/fileformatdialog.cpp:156
 msgctxt "e.g. file handlers that can 'handle' this file."
@@ -1047,8 +1064,9 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:257
+#, fuzzy
 msgid "All files (*);;"
-msgstr ""
+msgstr "Tất cả các file"
 
 #: qtgui/fileformatdialog.cpp:261
 #, qt-format
@@ -1056,8 +1074,9 @@ msgid "All supported formats (%1);;"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
+#, fuzzy
 msgid "Untitled"
-msgstr ""
+msgstr "không tên"
 
 #: qtgui/multiviewwidget.cpp:199
 msgid "Create a new view"
@@ -1065,7 +1084,7 @@ msgstr ""
 
 #: qtgui/periodictableview.cpp:44
 msgid "Periodic Table"
-msgstr ""
+msgstr "Bảng tuần hoàn"
 
 #: qtgui/pythonscript.cpp:85
 #, qt-format
@@ -1094,59 +1113,66 @@ msgid ""
 msgstr ""
 
 #: qtgui/pythonscript.cpp:139
+#, fuzzy
 msgid "Script failed to start."
-msgstr ""
+msgstr "Không thể khởi động G03"
 
 #: qtgui/pythonscript.cpp:142
+#, fuzzy
 msgid "Script crashed."
-msgstr ""
+msgstr "&Đoạn mã lệnh"
 
 #: qtgui/pythonscript.cpp:145
 msgid "Script timed out."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:148
+#, fuzzy
 msgid "Read error."
-msgstr ""
+msgstr "Lỗi OpenGL"
 
 #: qtgui/pythonscript.cpp:151
 msgid "Write error."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:155
+#, fuzzy
 msgid "Unknown error."
-msgstr ""
+msgstr "Không rõ"
 
 #: qtgui/rwmolecule.cpp:48
+#, fuzzy
 msgid "Modify Molecule"
-msgstr ""
+msgstr "Phân tử"
 
 #: qtgui/rwmolecule.cpp:154 qtgui/rwmolecule.cpp:163
 msgid "Add Atom"
-msgstr ""
+msgstr "Thêm nguyên tử"
 
 #: qtgui/rwmolecule.cpp:276 qtgui/rwmolecule.cpp:291
 #: qtplugins/editor/editor.cpp:131
 msgid "Remove Atom"
-msgstr ""
+msgstr "Bỏ nguyên tử"
 
 #: qtgui/rwmolecule.cpp:301
+#, fuzzy
 msgid "Clear Atoms"
-msgstr ""
+msgstr "Xoá hết"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321 :345
+#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321:345
 msgid "Adjust Hydrogens"
-msgstr ""
+msgstr "Chỉnh nguyên tử hi-đrô"
 
 #: qtgui/rwmolecule.cpp:356
+#, fuzzy
 msgid "Change Elements"
-msgstr ""
+msgstr "Thay đổi nguyên tố"
 
 #: qtgui/rwmolecule.cpp:390
 msgid "Change Element"
-msgstr ""
+msgstr "Thay đổi nguyên tố"
 
 #: qtgui/rwmolecule.cpp:567
 msgid "Change Atom Hybridization"
@@ -1158,31 +1184,36 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:663
 msgid "Add Bond"
-msgstr ""
+msgstr "Thêm liên kết"
 
 #: qtgui/rwmolecule.cpp:751
+#, fuzzy
 msgid "Removed Bond"
-msgstr ""
+msgstr "Bỏ nguyên tử"
 
 #: qtgui/rwmolecule.cpp:758
+#, fuzzy
 msgid "Clear Bonds"
-msgstr ""
+msgstr "Xóa liên kết"
 
 #: qtgui/rwmolecule.cpp:793
+#, fuzzy
 msgid "Set Bond Orders"
-msgstr ""
+msgstr "Thứ tự liên kết"
 
 #: qtgui/rwmolecule.cpp:838
 msgid "Change Bond Order"
-msgstr ""
+msgstr "Thay đổi thứ tự liên kết"
 
 #: qtgui/rwmolecule.cpp:882
+#, fuzzy
 msgid "Update Bonds"
-msgstr ""
+msgstr " Bắt các điểm nút liên kết"
 
 #: qtgui/rwmolecule.cpp:922
+#, fuzzy
 msgid "Update Bond"
-msgstr ""
+msgstr "Xóa liên kết"
 
 #: qtgui/rwmolecule.cpp:962
 msgid "Add Unit Cell"
@@ -1245,12 +1276,13 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
 #: qtplugins/povray/povray.cpp:58 qtplugins/vrml/vrml.cpp:58
 msgid "&File"
-msgstr ""
+msgstr "&File"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/vrml/vrml.cpp:58
+#, fuzzy
 msgid "&Export"
-msgstr ""
+msgstr "Xuất"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1258,23 +1290,25 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:177
 #. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
-#: qtplugins/apbs/apbs.cpp:43 :141
+#: qtplugins/apbs/apbs.cpp:43:141
 msgid "Run APBS"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:48 qtplugins/apbs/apbs.cpp:73
 #: qtplugins/gamessinput/gamessinput.cpp:82
 #: qtplugins/quantuminput/quantuminput.cpp:96
+#, fuzzy
 msgid "Open Output File"
-msgstr ""
+msgstr "Mở file tham số"
 
 #: qtplugins/apbs/apbs.cpp:61 qtplugins/clientserver/clientserver.cpp:83
 #: qtplugins/forcefields/workflow.cpp:73 qtplugins/forcefields/workflow.cpp:81
 #: qtplugins/mongochem/mongochem.cpp:63 qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
+#, fuzzy
 msgid "&Extensions"
-msgstr ""
+msgstr "Phần mở rộng"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -1285,22 +1319,24 @@ msgid "OpenDX File (*.dx)"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:127
+#, fuzzy
 msgid "IO Error"
-msgstr ""
+msgstr "Lỗi"
 
 #: qtplugins/apbs/apbs.cpp:128
-#, qt-format
+#, fuzzy, qt-format
 msgid "Error reading structure file (%1)."
-msgstr ""
+msgstr "Có trục trặc khi đọc file quỹ đạo %1"
 
 #: qtplugins/apbs/apbs.cpp:148 qtplugins/apbs/apbs.cpp:155
+#, fuzzy
 msgid "OpenDX Error"
-msgstr ""
+msgstr "Lỗi OpenGL"
 
 #: qtplugins/apbs/apbs.cpp:149
-#, qt-format
+#, fuzzy, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "Có trục trặc khi đọc file quỹ đạo %1"
 
 #: qtplugins/apbs/apbs.cpp:156
 msgid "Error reading OpenDX file: No cube found"
@@ -1308,7 +1344,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
-#: qtplugins/apbs/apbs.h:42 :87
+#: qtplugins/apbs/apbs.h:42:87
 msgid "APBS"
 msgstr ""
 
@@ -1347,7 +1383,7 @@ msgstr ""
 #: qtplugins/quantuminput/quantuminput.cpp:112
 #: qtplugins/workflows/workflow.cpp:106
 msgid "Error"
-msgstr ""
+msgstr "Lỗi"
 
 #: qtplugins/apbs/apbsdialog.cpp:144
 #, qt-format
@@ -1359,8 +1395,9 @@ msgid "Please specify PDB file"
 msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:186
+#, fuzzy
 msgid "Save APBS Input File"
-msgstr ""
+msgstr "Lưu bảng nhập đầu vào"
 
 #: qtplugins/apbs/apbsdialog.cpp:186
 msgid "ABPS Input (*.in)"
@@ -1369,40 +1406,46 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:190
-#: qtplugins/clientserver/connectionsettingsdialog.cpp:75 :147
+#: qtplugins/clientserver/connectionsettingsdialog.cpp:75:147
+#, fuzzy
 msgid "Success"
-msgstr ""
+msgstr "Thành công!"
 
 #: qtplugins/apbs/apbsdialog.cpp:191
-#, qt-format
+#, fuzzy, qt-format
 msgid "Input file written to '%1'"
-msgstr ""
+msgstr "Việc ghi ảnh vào %1 đã thành công"
 
 #: qtplugins/ballandstick/ballandstick.cpp:203
 #: qtplugins/wireframe/wireframe.cpp:100
+#, fuzzy
 msgid "Show multiple bonds?"
-msgstr ""
+msgstr "Thể hiện các liên kết bội"
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:104
+#, fuzzy
 msgid "Show hydrogens?"
-msgstr ""
+msgstr "hi-đrô"
 
 #: qtplugins/ballandstick/ballandstick.h:43
 msgid "Ball and Stick"
-msgstr ""
+msgstr "Thanh và cầu"
 
 #: qtplugins/ballandstick/ballandstick.h:47
+#, fuzzy
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr ""
+msgstr "Hiện các nhãn nguyên tử và liên kết"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:312
+#, fuzzy
 msgid "Bond-centric manipulation"
-msgstr ""
+msgstr "Thao tác với liên kết"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:188
+#, fuzzy
 msgid "Bond centric manipulation tool."
-msgstr ""
+msgstr "Thao tác với liên kết"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:193
 msgid ""
@@ -1410,12 +1453,14 @@ msgid ""
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:42
+#, fuzzy
 msgid "Bond Atoms"
-msgstr ""
+msgstr "Kết thúc nguyên tử"
 
 #: qtplugins/bonding/bonding.cpp:43
+#, fuzzy
 msgid "Remove Bonds"
-msgstr ""
+msgstr "Bỏ hi-đrô"
 
 #: qtplugins/bonding/bonding.cpp:62
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:45
@@ -1423,11 +1468,12 @@ msgstr ""
 #: qtplugins/hydrogens/hydrogens.cpp:67
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
-msgstr ""
+msgstr "&Dựng"
 
 #: qtplugins/bonding/bonding.h:36
+#, fuzzy
 msgid "Bonding"
-msgstr ""
+msgstr "Liên kết"
 
 #: qtplugins/bonding/bonding.h:40
 msgid "Perform bonding operations."
@@ -1490,24 +1536,28 @@ msgid "Connection to %2:%3 succeeded!"
 msgstr ""
 
 #: qtplugins/clientserver/filedialogmodel.cpp:666
+#, fuzzy
 msgid "Filename"
-msgstr ""
+msgstr "Tên file:"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:29
+#, fuzzy
 msgid "Atomic &Coordinate Editor..."
-msgstr ""
+msgstr "Trình biên tập toạ độ Đề-các"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:39
+#, fuzzy
 msgid "Coordinate editor"
-msgstr ""
+msgstr "Trình biên tập toạ độ Đề-các"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:43
 msgid "Text editing of atomic coordinates."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:237
+#, fuzzy
 msgid "Overwrite changes?"
-msgstr ""
+msgstr "Quay lại trước khi sửa đổi"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:238
 msgid ""
@@ -1520,28 +1570,34 @@ msgid "Too few entries on line."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:381
+#, fuzzy
 msgid "Invalid element name."
-msgstr ""
+msgstr "Tên file không hợp lệ"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:383
+#, fuzzy
 msgid "Element name."
-msgstr ""
+msgstr "Tên nguyên tố"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
+#, fuzzy
 msgid "Invalid element symbol."
-msgstr ""
+msgstr "Ký hiệu nguyên tố"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
+#, fuzzy
 msgid "Element symbol."
-msgstr ""
+msgstr "Ký hiệu nguyên tố"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
+#, fuzzy
 msgid "Invalid atomic number."
-msgstr ""
+msgstr "Tên file không hợp lệ"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
+#, fuzzy
 msgid "Atomic number."
-msgstr ""
+msgstr "Số hiệu nguyên tử"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:418
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
@@ -1549,32 +1605,39 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
+#, fuzzy
 msgid "Invalid coordinate."
-msgstr ""
+msgstr "Tên file không hợp lệ"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
+#, fuzzy
 msgid "X coordinate."
-msgstr ""
+msgstr "Toạ độ Đề-các"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:431
+#, fuzzy
 msgid "Y coordinate."
-msgstr ""
+msgstr "Toạ độ Đề-các"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:442
+#, fuzzy
 msgid "Z coordinate."
-msgstr ""
+msgstr "Toạ độ Đề-các"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:453
+#, fuzzy
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "Toạ độ Đề-các"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:464
+#, fuzzy
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "Toạ độ Đề-các"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:475
+#, fuzzy
 msgid "'c' coordinate."
-msgstr ""
+msgstr "Toạ độ Đề-các"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:559
 msgid "Error applying geometry"
@@ -1594,7 +1657,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607 :615
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607:615
 msgid "Custom"
 msgstr ""
 
@@ -1603,32 +1666,43 @@ msgid "XYZ format (symbols)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:609
+#, fuzzy
 msgid "XYZ format (names)"
 msgstr ""
+",Launchpad Contributions:,Nguyen Quang Chien, ,Launchpad Contributions:,"
+"Avogadro Team,Nguyen Quang Chien, ,Launchpad Contributions:,Avogadro Team,"
+"Nguyen Quang Chien, ,Launchpad Contributions:,Avogadro Team,Nguyen Quang "
+"Chien, ,Launchpad Contributions:,Avogadro Team,Nguyen Quang Chien, ,"
+"Launchpad Contributions:,Avogadro Team,Nguyen Quang Chien"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:610
+#, fuzzy
 msgid "XYZ format (atomic numbers)"
-msgstr ""
+msgstr "XYZ kèm theo số"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:611
+#, fuzzy
 msgid "Lattice coordinates (symbols)"
-msgstr ""
+msgstr "Toạ độ Đề-các"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612
+#, fuzzy
 msgid "Lattice coordinates (names)"
-msgstr ""
+msgstr "Toạ độ Đề-các"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:613
 msgid "Lattice coordinates (atomic numbers)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
+#, fuzzy
 msgid "GAMESS format (symbols)"
-msgstr ""
+msgstr "Thông tin GAMESS EFP"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:616
+#, fuzzy
 msgid "GAMESS format (names)"
-msgstr ""
+msgstr "Thông tin GAMESS EFP"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:617
 msgid "Turbomole format"
@@ -1636,25 +1710,28 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:42 :225
+#: qtplugins/copypaste/copypaste.cpp:42:225
+#, fuzzy
 msgid "Copy"
-msgstr ""
+msgstr "Chép tất cả"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:43 :222
+#: qtplugins/copypaste/copypaste.cpp:43:222
+#, fuzzy
 msgid "Cut"
-msgstr ""
+msgstr "Tự chọn:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:44 :234
+#: qtplugins/copypaste/copypaste.cpp:44:234
+#, fuzzy
 msgid "Clear"
-msgstr ""
+msgstr "Xoá hết"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
-#: qtplugins/copypaste/copypaste.cpp:45 :228
+#: qtplugins/copypaste/copypaste.cpp:45:228
 msgid "Paste"
 msgstr ""
 
@@ -1779,8 +1856,9 @@ msgid "Crystal Lattice"
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.h:41
+#, fuzzy
 msgid "Render the unit cell boundaries."
-msgstr ""
+msgstr "Hiện các nhãn nguyên tử và liên kết"
 
 #: qtplugins/crystal/importcrystaldialog.cpp:81
 msgid "Cannot Parse Text"
@@ -1804,34 +1882,38 @@ msgid "Manipulate custom element types in the current molecule."
 msgstr ""
 
 #: qtplugins/customelements/customelements.h:35
+#, fuzzy
 msgid "Custom Elements"
-msgstr ""
+msgstr "Trục tự chọn"
 
 #: qtplugins/editor/editor.cpp:84 qtplugins/editor/editor.cpp:118
 msgid "Draw"
-msgstr ""
+msgstr "Vẽ"
 
 #: qtplugins/editor/editor.cpp:112
 msgid "Draw Atom"
-msgstr ""
+msgstr "Vẽ nguyên tử"
 
 #: qtplugins/editor/editor.cpp:122
+#, fuzzy
 msgid "Change Bond Type"
-msgstr ""
+msgstr "Thay đổi thứ tự liên kết"
 
 #: qtplugins/editor/editor.cpp:135
+#, fuzzy
 msgid "Remove Bond"
-msgstr ""
+msgstr "Bỏ nguyên tử"
 
 #: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:194
 #: qtplugins/measuretool/measuretool.cpp:222
+#, fuzzy
 msgid "Distance:"
-msgstr ""
+msgstr "Khoảng cách"
 
 #: qtplugins/editor/editor.cpp:235
-#, qt-format
+#, fuzzy, qt-format
 msgid "Distance: %L1 Å"
-msgstr ""
+msgstr "Khoảng cách (1->2): %L1 %2"
 
 #: qtplugins/editor/editor.h:44 qtplugins/editor/editor.h:45
 msgid "Editor tool"
@@ -1839,38 +1921,40 @@ msgstr ""
 
 #: qtplugins/editor/editortoolwidget.cpp:138
 msgid "Other..."
-msgstr ""
+msgstr "Khác..."
 
 #: qtplugins/editor/editortoolwidget.cpp:217
+#, fuzzy
 msgid "Automatic"
-msgstr ""
+msgstr "Tối ưu hoá tự động"
 
 #: qtplugins/editor/editortoolwidget.cpp:218
 msgid "Single"
-msgstr ""
+msgstr "Đơn"
 
 #: qtplugins/editor/editortoolwidget.cpp:219
 msgid "Double"
-msgstr ""
+msgstr "Đôi"
 
 #: qtplugins/editor/editortoolwidget.cpp:220
 msgid "Triple"
-msgstr ""
+msgstr "Ba"
 
 #: qtplugins/forcefields/workflow.cpp:73 qtplugins/forcefields/workflow.cpp:81
 #: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
+#, fuzzy
 msgid "Scripts"
-msgstr ""
+msgstr "&Đoạn mã lệnh"
 
 #: qtplugins/forcefields/workflow.cpp:107
 #: qtplugins/gamessinput/gamessinput.cpp:99
 #: qtplugins/quantuminput/quantuminput.cpp:113
 #: qtplugins/workflows/workflow.cpp:107
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Error reading output file '%1':\n"
 "%2"
-msgstr ""
+msgstr "Có trục trặc khi đọc file quỹ đạo %1"
 
 #: qtplugins/forcefields/workflow.cpp:204
 #: qtplugins/quantuminput/quantuminput.cpp:179
@@ -1900,7 +1984,7 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinput.cpp:44
 msgid "&GAMESS"
-msgstr ""
+msgstr "&GAMESS"
 
 #: qtplugins/gamessinput/gamessinput.cpp:62
 #: qtplugins/quantuminput/quantuminput.cpp:72
@@ -1911,20 +1995,23 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinput.cpp:62
 #: qtplugins/quantuminput/quantuminput.cpp:72
+#, fuzzy
 msgid "Input Generators"
-msgstr ""
+msgstr "Phát sinh đầu vào..."
 
 #: qtplugins/gamessinput/gamessinput.h:46
+#, fuzzy
 msgid "GAMESS input"
-msgstr ""
+msgstr "Đầu vào GAMESS"
 
 #: qtplugins/gamessinput/gamessinput.h:48
 msgid "Generate input for GAMESS."
 msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:237
+#, fuzzy
 msgid "Single Point"
-msgstr ""
+msgstr "Năng lượng điểm đơn"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:240
 msgid "Equilibrium Geometry"
@@ -1993,40 +2080,46 @@ msgid "Overwrite modified input file?"
 msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:668
+#, fuzzy
 msgid "Save GAMESS input file"
-msgstr ""
+msgstr "Bảng nhập đầu vào GAMESS"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:718
+#, fuzzy
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "Hủy bỏ tính toán"
 
 #: qtplugins/hydrogens/hydrogens.cpp:33
+#, fuzzy
 msgid "&Adjust Hydrogens"
-msgstr ""
+msgstr "Chỉnh nguyên tử hi-đrô"
 
 #: qtplugins/hydrogens/hydrogens.cpp:38
 msgid "Add Hydrogens"
-msgstr ""
+msgstr "Thêm hi-đrô"
 
 #: qtplugins/hydrogens/hydrogens.cpp:42
+#, fuzzy
 msgid "Remove E&xtra Hydrogens"
-msgstr ""
+msgstr "Bỏ hi-đrô"
 
 #: qtplugins/hydrogens/hydrogens.cpp:46
+#, fuzzy
 msgid "&Remove All Hydrogens"
-msgstr ""
+msgstr "Bỏ hi-đrô"
 
 #: qtplugins/hydrogens/hydrogens.cpp:57
 msgid "Add/remove hydrogens from the current molecule."
 msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:67
+#, fuzzy
 msgid "&Hydrogens"
-msgstr ""
+msgstr "hi-đrô"
 
 #: qtplugins/hydrogens/hydrogens.h:35
 msgid "Hydrogens"
-msgstr ""
+msgstr "hi-đrô"
 
 #: qtplugins/importpqr/importpqr.cpp:38
 msgid "&Import From PQR"
@@ -2034,12 +2127,13 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
+#, fuzzy
 msgid "&Import"
-msgstr ""
+msgstr "Nhập"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
-#: qtplugins/importpqr/importpqr.h:45 :393
+#: qtplugins/importpqr/importpqr.h:45:393
 msgid "Import From PQR"
 msgstr ""
 
@@ -2052,12 +2146,13 @@ msgid "Licorice"
 msgstr ""
 
 #: qtplugins/licorice/licorice.h:42
+#, fuzzy
 msgid "Render atoms as licorice."
-msgstr ""
+msgstr "Hiện các nhãn nguyên tử và liên kết"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:43
 msgid "SMILES..."
-msgstr ""
+msgstr "SMILES..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:48
 msgid "InChI..."
@@ -2068,17 +2163,19 @@ msgid "InChI"
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:56
+#, fuzzy
 msgid "SMILES"
-msgstr ""
+msgstr "SMILES..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Insert"
-msgstr ""
+msgstr "&Chèn"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:98
 #: qtplugins/lineformatinput/lineformatinput.cpp:122
+#, fuzzy
 msgid "No descriptors found!"
-msgstr ""
+msgstr "Không có mô tả"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:99
 msgid "No line format readers found!"
@@ -2087,17 +2184,19 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133 :426
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:426
+#, fuzzy
 msgid "Insert Molecule..."
-msgstr ""
+msgstr "Phân tử"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:123
 msgid "Unable to load requested format reader."
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:134
+#, fuzzy
 msgid "Generating 3D molecule..."
-msgstr ""
+msgstr "Phát sinh..."
 
 #: qtplugins/lineformatinput/lineformatinput.h:42
 msgid "LineFormatInput"
@@ -2109,42 +2208,46 @@ msgstr ""
 
 #: qtplugins/manipulator/manipulator.cpp:52
 msgid "Manipulate"
-msgstr ""
+msgstr "Thao tác"
 
 #: qtplugins/manipulator/manipulator.h:44
 #: qtplugins/manipulator/manipulator.h:45
+#, fuzzy
 msgid "Manipulate tool"
-msgstr ""
+msgstr "Thao tác với nguyên tử"
 
 #: qtplugins/measuretool/measuretool.cpp:63
 msgid "Measure"
-msgstr ""
+msgstr "Đo"
 
 #: qtplugins/measuretool/measuretool.cpp:192
 #: qtplugins/measuretool/measuretool.cpp:202
 msgid "Dihedral:"
-msgstr ""
+msgstr "Góc nhị diện:"
 
 #: qtplugins/measuretool/measuretool.cpp:193
 msgid "Angle:"
-msgstr ""
+msgstr "Angle:"
 
 #: qtplugins/measuretool/measuretool.cpp:214
+#, fuzzy
 msgid "Angles:"
-msgstr ""
+msgstr "Angle:"
 
 #: qtplugins/measuretool/measuretool.h:48
 #: qtplugins/measuretool/measuretool.h:49
+#, fuzzy
 msgid "Measure tool"
-msgstr ""
+msgstr "Đo"
 
 #: qtplugins/meshes/meshes.h:40
 msgid "Meshes"
 msgstr ""
 
 #: qtplugins/meshes/meshes.h:42
+#, fuzzy
 msgid "Render triangle meshes."
-msgstr ""
+msgstr "Vẽ lưới mặt mức phân tử"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/mongochem/mongochem.cpp:45
@@ -2154,28 +2257,29 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
 #: qtplugins/resetview/resetview.cpp:48 qtplugins/symmetry/symmetry.cpp:92
 msgid "&View"
-msgstr ""
+msgstr "&Xem"
 
 #: qtplugins/molecularproperties/molecularproperties.h:42
 #: qtplugins/mongochem/mongochem.h:40
 msgid "Molecular Properties"
-msgstr ""
+msgstr "Thuộc tính phân tử"
 
 #: qtplugins/navigator/navigator.cpp:45
 msgid "Navigate"
-msgstr ""
+msgstr "Di chuyển"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
+#, fuzzy
 msgid "Navigate tool"
-msgstr ""
+msgstr "Di chuyển"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
-msgstr ""
+msgstr "Tên hoá học"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
 msgid "Chemical structure to download."
-msgstr ""
+msgstr "Cấu trúc hoá học để tải xuống."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:102
 #, qt-format
@@ -2185,20 +2289,21 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:113
 #: qtplugins/networkdatabases/networkdatabases.cpp:124
 msgid "Network Download Failed"
-msgstr ""
+msgstr "Việc tải xuống từ mạng không thành công"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:114
 msgid "Network timeout or other error."
-msgstr ""
+msgstr "Hết hạn giờ nhập mạng hoặc một lỗi khác."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:125
 #, qt-format
 msgid "Specified molecule could not be found: %1"
-msgstr ""
+msgstr "Không tìm được phân tử đã cho: %1"
 
 #: qtplugins/networkdatabases/networkdatabases.h:47
+#, fuzzy
 msgid "Network Databases"
-msgstr ""
+msgstr "Việc tải xuống từ mạng không thành công"
 
 #: qtplugins/networkdatabases/networkdatabases.h:51
 msgid "Interact with online databases, query structures etc."
@@ -2210,28 +2315,33 @@ msgid "Autodetect (%1)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:52
+#, fuzzy
 msgid "Optimize geometry"
-msgstr ""
+msgstr "&Tối ưu hình học"
 
 #: qtplugins/openbabel/openbabel.cpp:59
+#, fuzzy
 msgid "Configure geometry optimization..."
-msgstr ""
+msgstr "Tối ưu hoá hình học"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive bonds"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:71
+#, fuzzy
 msgid "Add hydrogens"
-msgstr ""
+msgstr "Thêm hi-đrô"
 
 #: qtplugins/openbabel/openbabel.cpp:77
+#, fuzzy
 msgid "Add hydrogens for pH..."
-msgstr ""
+msgstr "Thêm hi-đrô cho pH..."
 
 #: qtplugins/openbabel/openbabel.cpp:83
+#, fuzzy
 msgid "Remove hydrogens"
-msgstr ""
+msgstr "Bỏ hi-đrô"
 
 #: qtplugins/openbabel/openbabel.cpp:93
 #, qt-format
@@ -2247,8 +2357,9 @@ msgid "The obabel file formats are not ready to be added."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:196
+#, fuzzy
 msgid "Loading molecule from CML..."
-msgstr ""
+msgstr "Không đọc được thông tin về một phân tử trong file '%1'."
 
 #: qtplugins/openbabel/openbabel.cpp:202
 msgid ""
@@ -2257,9 +2368,9 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:211
-#, qt-format
+#, fuzzy, qt-format
 msgid "An error occurred while running OpenBabel (%1)."
-msgstr ""
+msgstr "Có lỗi trong khi ghi file %1"
 
 #: qtplugins/openbabel/openbabel.cpp:221
 msgid "Error parsing openbabel output."
@@ -2281,12 +2392,14 @@ msgid "Cannot optimize geometry with OpenBabel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:383
+#, fuzzy
 msgid "Optimizing Geometry (OpenBabel)"
-msgstr ""
+msgstr "&Tối ưu hình học"
 
 #: qtplugins/openbabel/openbabel.cpp:384
+#, fuzzy
 msgid "Generating MDL..."
-msgstr ""
+msgstr "Phát sinh..."
 
 #: qtplugins/openbabel/openbabel.cpp:401
 msgid ""
@@ -2317,15 +2430,18 @@ msgid "Error interpreting obabel MDL output."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:463 qtplugins/openbabel/openbabel.cpp:542
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
+"Trong file quỹ đạo %1 không có sự thống nhất về số phân tử trong nguyên tử "
+"hiện tại"
 
 #: qtplugins/openbabel/openbabel.cpp:473
+#, fuzzy
 msgid "Optimize Geometry"
-msgstr ""
+msgstr "&Tối ưu hình học"
 
 #: qtplugins/openbabel/openbabel.cpp:482
 msgid "Cannot open file with OpenBabel."
@@ -2365,8 +2481,9 @@ msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:579 qtplugins/openbabel/openbabel.cpp:626
+#, fuzzy
 msgid "Adding Hydrogens (OpenBabel)"
-msgstr ""
+msgstr "Thêm hi-đrô"
 
 #: qtplugins/openbabel/openbabel.cpp:580 qtplugins/openbabel/openbabel.cpp:627
 #: qtplugins/openbabel/openbabel.cpp:666
@@ -2380,25 +2497,28 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:599 qtplugins/openbabel/openbabel.cpp:646
 #: qtplugins/openbabel/openbabel.cpp:685
-#, qt-format
+#, fuzzy, qt-format
 msgid "Running %1..."
-msgstr ""
+msgstr "Dunning"
 
 #: qtplugins/openbabel/openbabel.cpp:620
+#, fuzzy
 msgid "Add hydrogens for pH"
-msgstr ""
+msgstr "Thêm hi-đrô cho pH"
 
 #: qtplugins/openbabel/openbabel.cpp:620
+#, fuzzy
 msgid "pH:"
-msgstr ""
+msgstr "pH"
 
 #: qtplugins/openbabel/openbabel.cpp:660
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:665
+#, fuzzy
 msgid "Removing Hydrogens (OpenBabel)"
-msgstr ""
+msgstr "Bỏ hi-đrô"
 
 #: qtplugins/openbabel/openbabel.cpp:694
 msgid "Reading obabel output..."
@@ -2436,11 +2556,12 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:72
 msgid "Stop"
-msgstr ""
+msgstr "Dừng"
 
 #: qtplugins/playertool/playertool.cpp:82
+#, fuzzy
 msgid "Frame rate:"
-msgstr ""
+msgstr "Thông số:"
 
 #: qtplugins/playertool/playertool.cpp:88
 msgctxt "frames per second"
@@ -2448,17 +2569,20 @@ msgid " FPS"
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:94
+#, fuzzy
 msgid "Dynamic bonding?"
-msgstr ""
+msgstr "Liên kết động"
 
 #: qtplugins/playertool/playertool.cpp:102
+#, fuzzy
 msgid "Record Movie..."
-msgstr ""
+msgstr "Xóa bỏ..."
 
 #: qtplugins/playertool/playertool.cpp:108
 #: qtplugins/playertool/playertool.cpp:161
+#, fuzzy
 msgid "Stopped"
-msgstr ""
+msgstr "Dừng"
 
 #: qtplugins/playertool/playertool.cpp:180
 #, qt-format
@@ -2471,12 +2595,12 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:233
 msgid "Avogadro"
-msgstr ""
+msgstr "Avogadro"
 
 #: qtplugins/playertool/playertool.cpp:234
-#, qt-format
+#, fuzzy, qt-format
 msgid "Cannot save file %1."
-msgstr ""
+msgstr "Không thể đọc file %1."
 
 #: qtplugins/playertool/playertool.h:44
 msgid "Player tool"
@@ -2512,8 +2636,9 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:230 qtplugins/plotxrd/plotxrd.cpp:242
 #: qtplugins/plotxrd/plotxrd.cpp:253 qtplugins/plotxrd/plotxrd.cpp:260
+#, fuzzy
 msgid "Error: "
-msgstr ""
+msgstr "Lỗi"
 
 #: qtplugins/plotxrd/plotxrd.h:46
 msgid "PlotXrd"
@@ -2525,7 +2650,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.h:46 :570
+#: qtplugins/plugindownloader/plugindownloader.h:46:570
 msgid "Plugin Downloader"
 msgstr ""
 
@@ -2534,12 +2659,14 @@ msgid "Downloader plugins from Github repositories."
 msgstr ""
 
 #: qtplugins/povray/povray.cpp:41
+#, fuzzy
 msgid "POV-Ray Render"
-msgstr ""
+msgstr "POV-Ray"
 
 #: qtplugins/povray/povray.cpp:82 qtplugins/vrml/vrml.cpp:82
+#, fuzzy
 msgid "Save File"
-msgstr ""
+msgstr "Lưu file video"
 
 #: qtplugins/povray/povray.cpp:83
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -2550,8 +2677,9 @@ msgid "POVRay"
 msgstr ""
 
 #: qtplugins/povray/povray.h:40
+#, fuzzy
 msgid "Render the scene using POV-Ray."
-msgstr ""
+msgstr "Lên hình bằng POV-Ray"
 
 #: qtplugins/qtaim/qtaimengine.h:39 qtplugins/qtaim/qtaimextension.cpp:90
 #: qtplugins/qtaim/qtaimextension.h:35
@@ -2576,7 +2704,7 @@ msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:90
 msgid "E&xtensions"
-msgstr ""
+msgstr "&Phần mở rộng"
 
 #: qtplugins/qtaim/qtaimextension.cpp:122
 msgid "Open WFN File"
@@ -2601,21 +2729,24 @@ msgid "Quantum input"
 msgstr ""
 
 #: qtplugins/quantuminput/quantuminput.h:60
+#, fuzzy
 msgid "Generate input for quantum codes."
-msgstr ""
+msgstr "Tạo ra file đầu vào cho các gói chương trình hóa lượng tử"
 
 #: qtplugins/quantumoutput/quantumoutput.cpp:60
+#, fuzzy
 msgid "Calculate electronic surfaces..."
-msgstr ""
+msgstr "Tính mật độ electron"
 
 #: qtplugins/quantumoutput/quantumoutput.cpp:155
+#, fuzzy
 msgid "Calculating electron density"
-msgstr ""
+msgstr "Tính mật độ electron"
 
 #: qtplugins/quantumoutput/quantumoutput.cpp:162
-#, qt-format
+#, fuzzy, qt-format
 msgid "Calculating molecular orbital %L1"
-msgstr ""
+msgstr "Tính và hiển thị các orbital phân tử"
 
 #: qtplugins/quantumoutput/quantumoutput.h:57
 msgid "Quantum output"
@@ -2626,20 +2757,22 @@ msgid "Read output from quantum codes."
 msgstr ""
 
 #: qtplugins/quantumoutput/surfacedialog.cpp:83
-#, qt-format
+#, fuzzy, qt-format
 msgctxt "Molecular orbital"
 msgid "MO %L1"
-msgstr ""
+msgstr "Orbital phân tử %L1"
 
 #: qtplugins/quantumoutput/surfacedialog.cpp:85
+#, fuzzy
 msgctxt "Highest occupied molecular orbital"
 msgid "(HOMO)"
-msgstr ""
+msgstr "(HOMO)"
 
 #: qtplugins/quantumoutput/surfacedialog.cpp:87
+#, fuzzy
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
-msgstr ""
+msgstr "(LUMO)"
 
 #: qtplugins/quantumoutput/surfacedialog.cpp:105
 #, qt-format
@@ -2656,55 +2789,63 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.h:40
+#, fuzzy
 msgid "ResetView"
-msgstr ""
+msgstr "Thiết lập lại"
 
 #: qtplugins/resetview/resetview.h:44
 msgid "Adjust the camera and view"
 msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:39
+#, fuzzy
 msgid "Script File Formats"
-msgstr ""
+msgstr "Phát sinh file đầu vào"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:43
 msgid "Load file reader/writers from external scripts."
 msgstr ""
 
 #: qtplugins/select/select.cpp:34
+#, fuzzy
 msgid "Select All"
-msgstr ""
+msgstr "Xoá tất cả"
 
 #: qtplugins/select/select.cpp:39
+#, fuzzy
 msgid "Select None"
-msgstr ""
+msgstr "Lựa chọn"
 
 #: qtplugins/select/select.cpp:48
+#, fuzzy
 msgid "Invert Selection"
-msgstr ""
+msgstr "Chọn đảo &lại"
 
 #: qtplugins/select/select.cpp:59
+#, fuzzy
 msgid "Change selections"
-msgstr ""
+msgstr "Các lựa chọn"
 
 #: qtplugins/select/select.cpp:69
 msgid "&Select"
-msgstr ""
+msgstr "&Chọn"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:183
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:35 :678
+#: qtplugins/select/select.h:35:678
+#, fuzzy
 msgid "Select"
-msgstr ""
+msgstr "&Chọn"
 
 #: qtplugins/selectiontool/selectiontool.cpp:55
 msgid "Selection"
-msgstr ""
+msgstr "Lựa chọn"
 
 #: qtplugins/selectiontool/selectiontool.h:45
 #: qtplugins/selectiontool/selectiontool.h:46
+#, fuzzy
 msgid "Selection tool"
-msgstr ""
+msgstr "Lựa chọn"
 
 #: qtplugins/spacegroup/spacegroup.cpp:63
 msgid "Perceive Space Group"
@@ -2712,7 +2853,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:81 :663
+#: qtplugins/spacegroup/spacegroup.cpp:81:663
 msgid "Symmetrize"
 msgstr ""
 
@@ -2771,8 +2912,9 @@ msgid ""
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:326
+#, fuzzy
 msgid "Avogadro2"
-msgstr ""
+msgstr "Avogadro"
 
 #: qtplugins/spacegroup/spacegroup.cpp:327
 msgid "Select tolerance in Å:"
@@ -2803,12 +2945,14 @@ msgid "Space group features for crystals."
 msgstr ""
 
 #: qtplugins/spectra/spectra.cpp:40
+#, fuzzy
 msgid "Vibrational modes..."
-msgstr ""
+msgstr "Rung động"
 
 #: qtplugins/spectra/spectra.h:43
+#, fuzzy
 msgid "Spectra and Vibrations"
-msgstr ""
+msgstr "Hiển thị phổ"
 
 #: qtplugins/spectra/spectra.h:47
 msgid "Display spectra and vibrational modes."
@@ -2816,7 +2960,7 @@ msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:60
 msgid "Type"
-msgstr ""
+msgstr "Kiểu"
 
 #: qtplugins/symmetry/operationstablemodel.cpp:62
 msgid "Class"
@@ -2824,7 +2968,7 @@ msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:64
 msgid "Element"
-msgstr ""
+msgstr "Nguyên tố"
 
 #: qtplugins/symmetry/symmetry.cpp:51
 msgid "Symmetry Properties..."
@@ -2832,7 +2976,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:44 :648
+#: qtplugins/symmetry/symmetry.h:44:648
 msgid "Symmetry"
 msgstr ""
 
@@ -2841,12 +2985,14 @@ msgid "Provide symmetry functionality."
 msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:44
+#, fuzzy
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "Chọn theo nguyên tố..."
 
 #: qtplugins/symmetry/symmetryscene.h:46
+#, fuzzy
 msgid "Render symmetry elements."
-msgstr ""
+msgstr "Vẽ các mô-men lưỡng cực phân tử"
 
 #: qtplugins/symmetry/symmetryutil.cpp:32
 msgid "∞"
@@ -2854,23 +3000,25 @@ msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:40
 msgid "Van der Waals"
-msgstr ""
+msgstr "Van der Waals"
 
 #: qtplugins/vanderwaals/vanderwaals.h:42
 msgid "Simple display of VdW spheres."
 msgstr ""
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:41
+#, fuzzy
 msgid "Van der Waals (AO)"
-msgstr ""
+msgstr "Van der Waals"
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:45
 msgid "Simple display of VdW spheres with ambient occlusion."
 msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:41
+#, fuzzy
 msgid "VRML Render"
-msgstr ""
+msgstr "Lên hình"
 
 #: qtplugins/vrml/vrml.cpp:83
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -2881,16 +3029,18 @@ msgid "VRML"
 msgstr ""
 
 #: qtplugins/vrml/vrml.h:40
+#, fuzzy
 msgid "Render the scene using VRML."
-msgstr ""
+msgstr "Lên hình bằng POV-Ray"
 
 #: qtplugins/wireframe/wireframe.h:39
 msgid "Wireframe"
-msgstr ""
+msgstr "Khung dây"
 
 #: qtplugins/wireframe/wireframe.h:43
+#, fuzzy
 msgid "Render the molecule as a wireframe."
-msgstr ""
+msgstr "Vẽ phân tử dưới dạng hình thanh"
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -2910,12 +3060,13 @@ msgstr ""
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::EditorToolWidget)
 msgid "Form"
-msgstr ""
+msgstr "Biểu mẫu"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
+#, fuzzy
 msgid "Calculation Settings"
-msgstr ""
+msgstr "Cài đặt về lựa chọn"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
@@ -2936,8 +3087,9 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#, fuzzy
 msgid "Submit Calculation..."
-msgstr ""
+msgstr "Hủy bỏ tính toán"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:120
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -2963,8 +3115,9 @@ msgstr ""
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
 msgid "Processor cores:"
-msgstr ""
+msgstr "Bộ xử lý:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:125
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
@@ -3010,8 +3163,9 @@ msgstr ""
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
+#, fuzzy
 msgid "Rename Elements"
-msgstr ""
+msgstr "Thay đổi nguyên tố"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
@@ -3025,8 +3179,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
+#, fuzzy
 msgid "Ctrl+C"
-msgstr ""
+msgstr "Ctrl+Alt+O"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
 #. i18n: ectx: property (text), widget (QPushButton, exitButton)
@@ -3035,13 +3190,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:47
 #. i18n: ectx: property (shortcut), widget (QPushButton, exitButton)
+#, fuzzy
 msgid "Ctrl+E"
-msgstr ""
+msgstr "Ctrl+Alt+O"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#, fuzzy
 msgid "Structure Input File"
-msgstr ""
+msgstr "File đầu vào Dalton"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:28
 #. i18n: ectx: property (text), widget (QRadioButton, generateFromPdbButton)
@@ -3058,12 +3215,12 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, openPqrFileButton)
 msgid "..."
-msgstr ""
+msgstr "…"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force Field:"
-msgstr ""
+msgstr "Trường lực:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:75
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
@@ -3112,18 +3269,20 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:156
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#, fuzzy
 msgid "APBS Input File"
-msgstr ""
+msgstr "File đầu vào Dalton"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:170
 #. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
+#, fuzzy
 msgid "Save Input File"
-msgstr ""
+msgstr "Lưu bảng nhập đầu vào"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Success!"
-msgstr ""
+msgstr "Thành công!"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:27
 #. i18n: ectx: property (text), widget (QCheckBox, loadStructureCheckBox)
@@ -3132,18 +3291,21 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:37
 #. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
+#, fuzzy
 msgid "Load Cube File"
-msgstr ""
+msgstr "Tải file..."
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConnectionSettingsDialog)
+#, fuzzy
 msgid "Server settings"
-msgstr ""
+msgstr "Cài đặt các yếu tố đo đạc"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label7)
+#, fuzzy
 msgid "&Hostname:"
-msgstr ""
+msgstr "Tên &file:"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:64
 #. i18n: ectx: property (text), widget (QLabel, label8)
@@ -3162,28 +3324,32 @@ msgstr ""
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:66
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateBack)
+#, fuzzy
 msgid "Navigate Back"
-msgstr ""
+msgstr "Di chuyển"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateForward)
+#, fuzzy
 msgid "Navigate Forward"
-msgstr ""
+msgstr "Di chuyển"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:92
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateUp)
+#, fuzzy
 msgid "Navigate Up"
-msgstr ""
+msgstr "Di chuyển"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "File name:"
-msgstr ""
+msgstr "Tên file:"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:153
 #. i18n: ectx: property (text), widget (QPushButton, OK)
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3193,39 +3359,43 @@ msgstr ""
 #. i18n: file: qtplugins/clientserver/filedialog.ui:174
 #. i18n: ectx: property (text), widget (QPushButton, Cancel)
 msgid "Cancel"
-msgstr ""
+msgstr "Hủy bỏ"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
+#, fuzzy
 msgid "Coordinate Editor"
-msgstr ""
+msgstr "Trình biên tập toạ độ Đề-các"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Preset:"
-msgstr ""
+msgstr "Thiết lập lại"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Distance Unit:"
-msgstr ""
+msgstr "Khoảng cách"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:46
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
+#, fuzzy
 msgid "Angstrom"
-msgstr ""
+msgstr "Angstrom"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
 msgid "Bohr"
-msgstr ""
+msgstr "Bo"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:31
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Format:"
-msgstr ""
+msgstr "Dạng thức:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:71
 #. i18n: ectx: property (toolTip), widget (QLineEdit, spec)
@@ -3258,13 +3428,14 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:131
 #. i18n: ectx: property (text), widget (QPushButton, revert)
+#, fuzzy
 msgid "Revert"
-msgstr ""
+msgstr "Quay lại trước khi sửa đổi"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:145
 #. i18n: ectx: property (text), widget (QPushButton, apply)
 msgid "Apply"
-msgstr ""
+msgstr "Áp dụng"
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
@@ -3278,8 +3449,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
+#, fuzzy
 msgid "Supercell Parameters"
-msgstr ""
+msgstr "Thông số:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:22
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
@@ -3294,12 +3466,12 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
 msgid "B repeat:"
-msgstr ""
+msgstr "Lặp lại B:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C repeat:"
-msgstr ""
+msgstr "Lặp lại C:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
@@ -3309,7 +3481,7 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "A:"
-msgstr ""
+msgstr "A:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:40
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, a)
@@ -3325,12 +3497,12 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:62
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "B:"
-msgstr ""
+msgstr "B:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:94
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "C:"
-msgstr ""
+msgstr "C:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -3358,24 +3530,27 @@ msgstr ""
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:48
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_peakWidth)
 msgid "°"
-msgstr ""
+msgstr "°"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:231
 #. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
 msgid "Cell Matrix:"
-msgstr ""
+msgstr "Ma trận Z MOPAC"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:248
 #. i18n: ectx: property (text), widget (QLabel, label_8)
+#, fuzzy
 msgid "Fractional Matrix:"
-msgstr ""
+msgstr "Phân số"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:278
 #. i18n: ectx: property (text), widget (QCheckBox, transformAtoms)
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:114
 #. i18n: ectx: property (text), widget (QCheckBox, transformAtoms)
+#, fuzzy
 msgid "&Transform Atoms"
-msgstr ""
+msgstr "Phương pháp biến đổi"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:300
 #. i18n: ectx: property (text), widget (QPushButton, apply)
@@ -3404,8 +3579,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "&Scaling Factor:"
-msgstr ""
+msgstr "Hệ số tỉ lệ tần số:"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -3420,17 +3596,17 @@ msgstr ""
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:23
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Element:"
-msgstr ""
+msgstr "Nguyên tố"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Bond Order:"
-msgstr ""
+msgstr "Thứ tự liên kết:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
 msgid "GAMESS Input"
-msgstr ""
+msgstr "Đầu vào GAMESS"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:34
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -3440,7 +3616,7 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "In:"
-msgstr ""
+msgstr "Trong:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -3450,27 +3626,28 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:86
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
-msgstr ""
+msgstr "Với:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:99
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Title:"
-msgstr ""
+msgstr "Tựa đề:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:176
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Charge:"
-msgstr ""
+msgstr "Điện tích:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:209
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Calculate:"
-msgstr ""
+msgstr "Tính toán:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:235
 #. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
 msgid "Filename Base:"
-msgstr ""
+msgstr "Tên file:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:245
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -3480,17 +3657,18 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:258
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
 msgid "Reset All"
-msgstr ""
+msgstr "Thiết lập lại tất cả"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:265
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Defaults"
-msgstr ""
+msgstr "Mặc định"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
+#, fuzzy
 msgid "Save File..."
-msgstr ""
+msgstr "Tải file..."
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
@@ -3500,7 +3678,7 @@ msgstr ""
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "name"
-msgstr ""
+msgstr "tên"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
@@ -3529,8 +3707,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
 msgid "Formula:"
-msgstr ""
+msgstr "Dạng thức:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
@@ -3544,13 +3723,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "Descriptor:"
-msgstr ""
+msgstr "Không có mô tả"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
 msgid "Molecular Mass (g/mol):"
-msgstr ""
+msgstr "Khối lượng phân tử (g/mol):"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, molMassLabel)
@@ -3561,42 +3742,46 @@ msgstr ""
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:74
 #. i18n: ectx: property (text), widget (QLabel, bondCountLabel)
 msgid "TODO"
-msgstr ""
+msgstr "CẦN LÀM"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Chemical Formula:"
-msgstr ""
+msgstr "Công thức hoá học:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:53
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Number of Atoms:"
-msgstr ""
+msgstr "Số nguyên tử:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Number of Bonds:"
-msgstr ""
+msgstr "Số liên kết:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
+#, fuzzy
 msgid "Geometry Optimization Parameters"
-msgstr ""
+msgstr "Tối ưu hoá hình học"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#, fuzzy
 msgid "Optimization Method"
-msgstr ""
+msgstr "Phương pháp tối ưu:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Force field:"
-msgstr ""
+msgstr "Trường lực:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Optimization algorithm:"
-msgstr ""
+msgstr "Phương pháp tối ưu:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -3606,12 +3791,13 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "Steepest Descent"
-msgstr ""
+msgstr "Dốc xuống nhất"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+#, fuzzy
 msgid "Conjugate Gradient"
-msgstr ""
+msgstr "Gra-đien liên hợp"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
@@ -3625,8 +3811,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
+#, fuzzy
 msgid "Autodetect"
-msgstr ""
+msgstr "Xoay tự động"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
@@ -3635,8 +3822,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
 msgid "Van der Waals cutoff distance:"
-msgstr ""
+msgstr "Mặt mức Van der Waals = %L1"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -3645,8 +3833,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:140
 #. i18n: ectx: property (text), widget (QLabel, label_8)
+#, fuzzy
 msgid "electrostatic cutoff distance:"
-msgstr ""
+msgstr "Thế tĩnh điện"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:147
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
@@ -3659,28 +3848,33 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
 #. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
+#, fuzzy
 msgid " steps"
-msgstr ""
+msgstr "bước"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#, fuzzy
 msgid "Convergence Criteria"
-msgstr ""
+msgstr "Tiêu chí hội tụ gradient:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "\"Energy\" convergence:"
-msgstr ""
+msgstr "Hội tụ"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
 msgid "Step limit:"
-msgstr ""
+msgstr "Giới hạn thời gian:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
+#, fuzzy
 msgid " units"
-msgstr ""
+msgstr "Đơn vị:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
 #. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
@@ -3715,8 +3909,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Number of points:"
-msgstr ""
+msgstr "Số liên kết:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -3725,8 +3920,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Wavelength:"
-msgstr ""
+msgstr "Bước sóng (nm)"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_wavelength)
@@ -3749,8 +3945,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
+#, fuzzy
 msgid "Download Selected"
-msgstr ""
+msgstr "Xóa đối tượng được chọn"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:19
 #. i18n: ectx: property (text), widget (QLabel, atomRadiusLabel)
@@ -3765,7 +3962,7 @@ msgstr ""
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:130
 #. i18n: ectx: property (text), item, widget (QComboBox, combo_radius)
 msgid "Covalent"
-msgstr ""
+msgstr "cộng hóa trị"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:135
 #. i18n: ectx: property (text), item, widget (QComboBox, combo_radius)
@@ -3775,17 +3972,18 @@ msgstr ""
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 msgid "Opacity:"
-msgstr ""
+msgstr "Độ đục:"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
+#, fuzzy
 msgid "Surface Dialog"
-msgstr ""
+msgstr "Mặt"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:41
 #. i18n: ectx: attribute (title), widget (QWidget, surfaceTab)
 msgid "Surfaces"
-msgstr ""
+msgstr "Mặt"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:54
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
@@ -3826,18 +4024,20 @@ msgstr ""
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:191
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "Isosurface Val.:"
-msgstr ""
+msgstr "Giá trị cắt bỏ cho mặt mức"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:201
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Resolution:"
-msgstr ""
+msgstr "Độ phân giải:"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:211
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Surface:"
-msgstr ""
+msgstr "Mặt"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:228
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
@@ -3846,8 +4046,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
+#, fuzzy
 msgid "Vibrational Modes"
-msgstr ""
+msgstr "Rung động"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3856,13 +4057,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
+#, fuzzy
 msgid "Start Animation"
-msgstr ""
+msgstr "Bắt đầu &hình động"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
+#, fuzzy
 msgid "Stop Animation"
-msgstr ""
+msgstr "Dừng &hình động"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
@@ -3872,7 +4075,7 @@ msgstr ""
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:42
 #. i18n: ectx: attribute (title), widget (QWidget, esTab)
 msgid "Molecule"
-msgstr ""
+msgstr "Phân tử"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, esLabel)
@@ -3886,8 +4089,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:109
 #. i18n: ectx: attribute (title), widget (QWidget, operationsTab)
+#, fuzzy
 msgid "Operations"
-msgstr ""
+msgstr "Tuỳ chọn"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:115
 #. i18n: ectx: property (text), widget (QLabel, operationsLabel)
@@ -3932,7 +4136,2784 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
+",Launchpad Contributions:,Nguyen Quang Chien, ,Launchpad Contributions:,"
+"Avogadro Team,Nguyen Quang Chien, ,Launchpad Contributions:,Avogadro Team,"
+"Nguyen Quang Chien, ,Launchpad Contributions:,Avogadro Team,Nguyen Quang "
+"Chien, ,Launchpad Contributions:,Avogadro Team,Nguyen Quang Chien, ,"
+"Launchpad Contributions:,Avogadro Team,Nguyen Quang Chien"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
+",,,,,avogadro-devel@lists.sourceforge.net,,,,avogadro-devel@lists."
+"sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,avogadro-"
+"devel@lists.sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,"
+
+#~ msgid "Color by Index"
+#~ msgstr "Chọn màu theo chỉ số"
+
+#~ msgid "Color by Index (red, orange, yellow, green, blue, violet)."
+#~ msgstr "Chọn màu theo chỉ số (đỏ, cam, vàng, lục, lam, tím)."
+
+#~ msgid "Color by Partial Charge"
+#~ msgstr "Chọn màu theo điện tích từng phần"
+
+#~ msgid "Color by atomic partial charge (blue = positive, red = negative."
+#~ msgstr ""
+#~ "Chọn màu theo điện tích từng phần nguyên tử (lam = điện dương, đỏ = điện "
+#~ "âm."
+
+#~ msgid "Custom Color:"
+#~ msgstr "Màu tự chọn:"
+
+#~ msgid "Custom Color"
+#~ msgstr "Màu tự chọn"
+
+#~ msgid "Set custom colors for objects"
+#~ msgstr "Đặt màu tự chọn cho các vật"
+
+#~ msgid "Color by Distance"
+#~ msgstr "Chọn màu theo khoảng cách"
+
+#~ msgid "Color by distance from the first atom."
+#~ msgstr "Chọn màu theo khoảng cách từ nguyên tử thứ nhất."
+
+#~ msgid "Color by Element"
+#~ msgstr "Chọn màu theo nguyên tố"
+
+#~ msgid "Color by Element (carbon = grey, oxygen = red, ...)."
+#~ msgstr "Chọn màu theo nguyên tố (các-bon = xám, ô-xi = đỏ, ...)."
+
+#~ msgid "SMARTS Pattern:"
+#~ msgstr "Mẫu SMARTS:"
+
+#~ msgid "Highlight Color:"
+#~ msgstr "Màu để đánh dấu:"
+
+#~ msgid "Color by SMARTS Pattern"
+#~ msgstr "Tô màu theo mẫu SMARTS"
+
+#~ msgid "Ununtrium"
+#~ msgstr "Ununtri"
+
+#~ msgid "Ununpentium"
+#~ msgstr "Ununpenti"
+
+#~ msgid "Ununseptium"
+#~ msgstr "Ununsepti"
+
+#~ msgid "Ununoctium"
+#~ msgstr "Ununocti"
+
+#~ msgid "Engines"
+#~ msgstr "Động cơ"
+
+#~ msgid "Axes"
+#~ msgstr "Trục"
+
+#~ msgid "Renders the x, y, and z axes at the origin"
+#~ msgstr "Vẽ các trục x, y, z từ gốc toạ dộ"
+
+#~ msgid "Renders primitives using Balls (atoms) and Sticks (bonds)"
+#~ msgstr ""
+#~ "Biểu diễn các thành phần cơ bản bằng hình cầu (nguyên tử) và thanh nối "
+#~ "(liên kết)"
+
+#~ msgid "Cartoon"
+#~ msgstr "Tranh vui"
+
+#~ msgid "Renders protein secondary structure"
+#~ msgstr "Vẽ cấu trúc thứ cấp của prô-tê-in"
+
+#~ msgid "Dipole"
+#~ msgstr "Lưỡng cực"
+
+#~ msgid "Force"
+#~ msgstr "Lực"
+
+#~ msgid "Renders force displacements on atoms"
+#~ msgstr "Vẽ các chuyển vị lực đối với nguyên tử"
+
+#~ msgid "Hydrogen Bond"
+#~ msgstr "Liên kết hi-đrô"
+
+#~ msgid "Renders hydrogen bonds"
+#~ msgstr "Vẽ các liên kết hi-đrô"
+
+#~ msgid "Select Atom Labels Color"
+#~ msgstr "Chọn màu cho nhãn nguyên tử"
+
+#~ msgid "Select Bond Labels Color"
+#~ msgstr "Chọn màu cho nhãn liên kết"
+
+#~ msgid "Select Atom Labels Font"
+#~ msgstr "Chọn phông chữ cho nhãn nguyên tử"
+
+#~ msgid "Select Bond Labels Font"
+#~ msgstr "Chọn phông chữ cho nhãn liên kết"
+
+#~ msgid "Label"
+#~ msgstr "Nhãn"
+
+#~ msgid "Polygon"
+#~ msgstr "Đa giác"
+
+#~ msgid "Renders atoms as tetrahedra, octahedra, and other polygons"
+#~ msgstr "Vẽ nguyên tử dưới dạng tứ giác, bát giác và các đa giác khác"
+
+#~ msgid "Ribbon"
+#~ msgstr "Ruy băng"
+
+#~ msgid "Renders protein backbones as ribbons"
+#~ msgstr "Vẽ trục prô-tê-in dưới dạng ruy-băng"
+
+#~ msgid "Ring"
+#~ msgstr "Vòng"
+
+#~ msgid "Renders rings with colored planes"
+#~ msgstr "Vẽ vòng với các mặt phẳng màu"
+
+#~ msgid "Simple Wireframe"
+#~ msgstr "Khung dây đơn giản"
+
+#~ msgid "Renders bonds as wires (lines), ideal for large molecules"
+#~ msgstr "Vẽ liên kết như các dây (đường), phù hợp với các nguyên tử lớn"
+
+#~ msgid "Van der Waals Spheres"
+#~ msgstr "Hình cầu Van der Waals"
+
+#~ msgid "Renders atoms as Van der Waals spheres"
+#~ msgstr "Hiển thị nguyên tử như hình cầu Van der Waals"
+
+#~ msgid "Stick"
+#~ msgstr "Thanh"
+
+#~ msgctxt "Electron density isosurface with a cutoff of %1"
+#~ msgid "Electron density, isosurface = %L1"
+#~ msgstr "Mặt mức mật độ electron = %L1"
+
+#~ msgctxt "%1 is mesh name, %2 is the isosurface cutoff"
+#~ msgid "%1, isosurface = %L2"
+#~ msgstr "Mặt mức %1 = %L2"
+
+#~ msgid "Renders bonds as wires (lines), ideal for very large (bio)molecules"
+#~ msgstr ""
+#~ "Vẽ liên kết như các sợi dây (đường thẳng), phù hợp với các (sinh) phân tử "
+#~ "lớn"
+
+#~ msgid "%1/%2"
+#~ msgstr "%1/%2"
+
+#~ msgid "video files (*.avi)"
+#~ msgstr "file video (*.avi)"
+
+#~ msgid "Adding .avi extension"
+#~ msgstr "Thêm phần mở rộng .avi"
+
+#~ msgid "Animation..."
+#~ msgstr "Hình động..."
+
+#~ msgid "Cannot read file format of file %1."
+#~ msgstr "Không thể đọc định dạng file %1."
+
+#~ msgid "Read trajectory file %1 failed."
+#~ msgstr "Việc đọc file quỹ đạo %1 không thành công."
+
+#~ msgid "Must specify a valid .avi file name"
+#~ msgstr "Phải chỉ định tên một file .avi hợp lệ"
+
+#~ msgid "GL widget was not correctly initialized in order to save video"
+#~ msgstr "Khiển tố GL không được cài đặt đúng để lưu video"
+
+#~ msgid "Invalid video filename.  Must include full directory path"
+#~ msgstr "Tên file video không hợp lệ. Phải kèm theo đầy đủ đường dẫn"
+
+#~ msgid ""
+#~ "Invalid video filename.  Must include full directory path and name, "
+#~ "ending with .avi"
+#~ msgstr ""
+#~ "Tên file video không hợp lệ. Phải kèm theo đầy đủ đường dẫn và tên file, "
+#~ "kết thúc bởi .avi"
+
+#~ msgid "Animation"
+#~ msgstr "Hình động"
+
+#~ msgid "Animate trajectories, reactions, and vibrations."
+#~ msgstr "Làm chuyển động các quỹ đạo, phản ứng và rung động."
+
+#~ msgid "Cartesian Editor"
+#~ msgstr "Trình biên tập Đề-các"
+
+#~ msgid ""
+#~ "No unit cell defined for molecule -- cannot use fractional coordinates."
+#~ msgstr ""
+#~ "Chưa có ô đơn vị nào được chỉ định cho phân tử -- không thể sử dụng toạ "
+#~ "độ phân số."
+
+#~ msgid "Cartesian Editor..."
+#~ msgstr "Trình biên tập Đề-các..."
+
+#~ msgid "Cartesian editor"
+#~ msgstr "Trình biên tập Đề-các"
+
+#~ msgid "Number of atoms: %1"
+#~ msgstr "Số nguyên tử: %1"
+
+#~ msgid "Number of rotatable bonds: %1"
+#~ msgstr "Số liên kết xoay được: %1"
+
+#~ msgid "Add constraint"
+#~ msgstr "Thêm ràng buộc"
+
+#~ msgid "Your molecule must contain at least one atom to add a constraint"
+#~ msgstr ""
+#~ "Phân tử của bạn phải có ít nhất một nguyên tử để thêm được ràng buộc"
+
+#~ msgid ""
+#~ "Your molecule must contain at least two atoms to add a bond constraint"
+#~ msgstr ""
+#~ "Phân tử của bạn phải có ít nhất hai nguyên tử để thêm được ràng buộc liên "
+#~ "kết"
+
+#~ msgid ""
+#~ "Your molecule must contain at least three atoms to add an angle constraint"
+#~ msgstr ""
+#~ "Phân tử của bạn phải có ít nhất ba nguyên tử để thêm được ràng buộc về góc"
+
+#~ msgid ""
+#~ "Your molecule must contain at least four atoms to add a torsion constraint"
+#~ msgstr ""
+#~ "Phân tử của bạn phải có ít nhất bốn nguyên tử để thêm được ràng buộc về "
+#~ "độ xoắn"
+
+#~ msgid "Trajectory..."
+#~ msgstr "Quỹ đạo..."
+
+#~ msgid "Open chemical file format"
+#~ msgstr "Mở định dạng file hoá học"
+
+#~ msgid "Chemical files (*.xyz)"
+#~ msgstr "Các files hoá học (*.xyz)"
+
+#~ msgid "Chemical files (*.parm7)"
+#~ msgstr "Các files hoá học (*.parm7)"
+
+#~ msgid "Import Trajectory"
+#~ msgstr "Nhập quỹ đạo"
+
+#~ msgid "Import trajectory files"
+#~ msgstr "Nhập các file quỹ đạo"
+
+#~ msgid "Setup Force Field..."
+#~ msgstr "Thiết lập trường lực..."
+
+#~ msgid "Calculate Energy"
+#~ msgstr "Tính năng lượng"
+
+#~ msgid "Conformer Search..."
+#~ msgstr "Tìm đồng phân..."
+
+#~ msgid "Constraints..."
+#~ msgstr "Ràng buộc..."
+
+#~ msgid "Ignore Selection"
+#~ msgstr "Bỏ qua lựa chọn"
+
+#~ msgid "Fix Selected Atoms"
+#~ msgstr "Cố định các nguyên tử được chọn"
+
+#~ msgid "&Molecular Mechanics"
+#~ msgstr "Cơ học &phân tử"
+
+#~ msgid ""
+#~ "Cannot set up the currently selected force field for this molecule. "
+#~ "Switching to UFF."
+#~ msgstr ""
+#~ "Không thể thiết lập trường lực đang được chọn cho phân tử này. Chuyển "
+#~ "sang UFF."
+
+#~ msgid "Energy = %L1 %2"
+#~ msgstr "Năng lượng = %L1 %2"
+
+#~ msgid "Geometric Optimization"
+#~ msgstr "Tối ưu hình học"
+
+#~ msgid "Forcefield Optimization"
+#~ msgstr "Tối ưu trường lực"
+
+#~ msgid "Systematic Rotor Search"
+#~ msgstr "Tìm rotor một cách tự động"
+
+#~ msgid "Random Rotor Search"
+#~ msgstr "Tìm rotor theo cách ngẫu nhiên"
+
+#~ msgid "Weighted Rotor Search"
+#~ msgstr "Tìm rotor theo trọng số"
+
+#~ msgid "ForceField"
+#~ msgstr "Trường lực"
+
+#~ msgid ""
+#~ "Optimize molecules and generate conformers using molecular mechanics "
+#~ "force fields"
+#~ msgstr ""
+#~ "Tối ưu hoá phân tử và phát sinh các đồng phân bằng cách dùng trường lực "
+#~ "cơ phân tử"
+
+#~ msgid "Change H to Methyl"
+#~ msgstr "Thay H bằng mê-tyl"
+
+#~ msgid "H to Methyl"
+#~ msgstr "H bằng mê-tyl"
+
+#~ msgid "H2Methyl"
+#~ msgstr "H-Metyl"
+
+#~ msgid "Transform hydrogens to methyl groups"
+#~ msgstr "Chuyển hi-đrô thành các nhóm mê-tyl"
+
+#~ msgid "Add or remove hydrogens"
+#~ msgstr "Thêm hoặc bỏ hi-đrô"
+
+#~ msgid "Fragment..."
+#~ msgstr "Đoạn..."
+
+#~ msgid "Insert SMILES"
+#~ msgstr "Chèn SMILES"
+
+#~ msgid "Insert SMILES fragment:"
+#~ msgstr "Chèn các đoạn SMILES:"
+
+#~ msgid "Insert Fragment"
+#~ msgstr "Chèn đoạn"
+
+#~ msgid "Insert molecular fragments for building larger molecules"
+#~ msgstr "Chèn các đoạn phân tử để tạo thành phân tử lớn"
+
+#~ msgid "Peptide..."
+#~ msgstr "Pep-tit..."
+
+#~ msgid "Insert Peptide"
+#~ msgstr "Chèn pep-tit"
+
+#~ msgid "Insert oligopeptide sequences"
+#~ msgstr "Chèn các chuỗi ô-li-gô-pep-tit"
+
+#~ msgid "Molecule Properties..."
+#~ msgstr "Thuộc tính phân tử..."
+
+#~ msgid "&Properties"
+#~ msgstr "&Thuộc tính"
+
+#~ msgid "Estimated Dipole Moment (D):"
+#~ msgstr "Giá trị uớc tính của mô-men lưỡng cực (D):"
+
+#~ msgid "Display standard molecular properties."
+#~ msgstr "Hiện các thuộc tính chuẩn của phân tử."
+
+#~ msgid "Fetch from PDB..."
+#~ msgstr "Lấy từ PDB..."
+
+#~ msgid "Fetch by chemical name..."
+#~ msgstr "Lấy theo tên hoá học..."
+
+#~ msgid "Fetch from URL..."
+#~ msgstr "Lấy từ URL..."
+
+#~ msgid "PDB Entry"
+#~ msgstr "Mục PDB"
+
+#~ msgid "PDB entry to download."
+#~ msgstr "Mục PDB để tải xuống."
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "URL of molecule to download."
+#~ msgstr "URL của phân tử cần tải xuống."
+
+#~ msgid "Specified molecule could not be loaded: %1"
+#~ msgstr "Không tải được phân tử đã cho: %1"
+
+#~ msgid "Fetch molecule files over the network."
+#~ msgstr "Lấy file phân tử qua mạng."
+
+#~ msgid "Show Preview"
+#~ msgstr "Hiện khung xem thử"
+
+#~ msgid "Hide Preview"
+#~ msgstr "Ẩn khung xem thử"
+
+#~ msgid "Save POV-Ray rendered image"
+#~ msgstr "Lưu hình đã được hiển thị dưới dạng POV-Ray"
+
+#~ msgid "Image files (*.png *.pbm)"
+#~ msgstr "Các file ảnh (*.png *.pbm)"
+
+#~ msgid "POV-Ray..."
+#~ msgstr "POV-Ray..."
+
+#~ msgid "No filename supplied."
+#~ msgstr "Chưa có tên file nào được nhập vào."
+
+#~ msgid "No valid filename was supplied."
+#~ msgstr "Chưa có tên file hợp lệ nào được nhập vào."
+
+#~ msgid "Does not compute."
+#~ msgstr "Không tính toán."
+
+#~ msgid ""
+#~ "You requested no direct rendering using POV-Ray and not to keep the POV-"
+#~ "Ray file. This will result in no output being saved. Are you sure that is "
+#~ "what you want?"
+#~ msgstr ""
+#~ "Bạn yêu cầu trực tiếp vẽ POV-Ray nhưng không giữ lại file POV-Ray. Điều "
+#~ "này đồng nghĩa với việc kết quả sẽ không được lưu lại. Bạn chắc rằng muốn "
+#~ "như vậy chứ?"
+
+#~ msgid ""
+#~ "Cannot write to file %1. Do you have permissions to write to that "
+#~ "location?"
+#~ msgstr "Không thể ghi vào file %1. Bạn có quyền ghi vào file này không?"
+
+#~ msgid "POV-Ray failed to start."
+#~ msgstr "POV-Ray khởi động không thành công."
+
+#~ msgid ""
+#~ "POV-Ray failed to start. May be the path to the executable is not set "
+#~ "correctly."
+#~ msgstr ""
+#~ "POV-Ray khởi động không thành công. Có thể đường dẫn đến file chương "
+#~ "trình chạy chưa được đặt đúng."
+
+#~ msgid ""
+#~ "Create POV-Ray files and render them using the command line POV-Ray "
+#~ "program."
+#~ msgstr ""
+#~ "Tạo các file POV-Ray và vẽ chúng bằng chương trình POV-Ray từ dòng lệnh."
+
+#~ msgid "Atom Properties..."
+#~ msgstr "Thuộc tính của nguyên tử..."
+
+#~ msgid "Bond Properties..."
+#~ msgstr "Thuộc tính của liên kết..."
+
+#~ msgid "Angle Properties..."
+#~ msgstr "Thuộc tính góc..."
+
+#~ msgid "Torsion Properties..."
+#~ msgstr "Thuộc tính xoắn..."
+
+#~ msgid "Conformer Properties..."
+#~ msgstr "Thuộc tính đồng phân..."
+
+#~ msgid "Atom Properties"
+#~ msgstr "Thuộc tính của nguyên tử"
+
+#~ msgid "Bond Properties"
+#~ msgstr "Thuộc tính của liên kết"
+
+#~ msgid "Angle Properties"
+#~ msgstr "Thuộc tính góc"
+
+#~ msgid "Torsion Properties"
+#~ msgstr "Thuộc tính xoắn"
+
+#~ msgid "Conformer Properties"
+#~ msgstr "Thuộc tính đồng phân"
+
+#~ msgid "Properties"
+#~ msgstr "Thuộc tính"
+
+#~ msgid ""
+#~ "Windows for displaying atom, bond, angle and torsion properties. It also "
+#~ "includes a cartesian coordinate editor."
+#~ msgstr ""
+#~ "Cửa sổ hiện các thuộc tính nguyên tử, liên kết, góc và xoắn. Nó cũng bao "
+#~ "gồm một trình soạn thảo tọa độ Đề-các"
+
+#~ msgid "Valence"
+#~ msgstr "Hóa trị"
+
+#~ msgid "Partial Charge"
+#~ msgstr "Điện tích riêng phần"
+
+#~ msgid "Atom"
+#~ msgstr "Nguyên tử"
+
+#~ msgid "Start Atom"
+#~ msgstr "Bắt đầu nguyên tử"
+
+#~ msgid "Rotatable"
+#~ msgstr "Xoay được"
+
+#~ msgctxt "in Angstrom"
+#~ msgid "Length %1"
+#~ msgstr "Chiều dài %1"
+
+#~ msgid "Vertex"
+#~ msgstr "Đỉnh"
+
+#~ msgctxt "Degree symbol"
+#~ msgid "Angle %1"
+#~ msgstr "Angle %1"
+
+#~ msgid "Angle"
+#~ msgstr "Góc"
+
+#~ msgid "Atom %1"
+#~ msgstr "Nguyên tử %1"
+
+#~ msgctxt "Degree symbol"
+#~ msgid "Torsion %1"
+#~ msgstr "Xoắn %1"
+
+#~ msgid "Torsion"
+#~ msgstr "Xoắn"
+
+#~ msgid "Conformer"
+#~ msgstr "Đồng phân"
+
+#~ msgid "Yes"
+#~ msgstr "Có"
+
+#~ msgid "No"
+#~ msgstr "Không"
+
+#~ msgid "Python Terminal"
+#~ msgstr "Cửa sổ lệnh Python"
+
+#~ msgid "pythonTerminalDock"
+#~ msgstr "pythonTerminalDock"
+
+#~ msgid "Interactive python scripting terminal"
+#~ msgstr "Cửa sổ lệnh tương tác Python"
+
+#~ msgctxt ""
+#~ "Selection to be used as an Effective Fragment Potential in calculations"
+#~ msgid "EFP Selection..."
+#~ msgstr "Chọn EFP..."
+
+#~ msgctxt "Selection to be used for Quantum Mechanical calculations"
+#~ msgid "QM Selection..."
+#~ msgstr "Chọn QM..."
+
+#~ msgid "Delete"
+#~ msgstr "Xoá"
+
+#~ msgid "You must make a selection!"
+#~ msgstr "Bạn phải lựa chọn!"
+
+#~ msgid "SMILES Conversion Unavailable"
+#~ msgstr "Không có chuyển đổi SMILES"
+
+#~ msgid "SMILES Format Conversion Not Available!"
+#~ msgstr "Không có chuyển đổi định dạng SMILES!"
+
+#~ msgid "Group Name"
+#~ msgstr "Tên nhóm"
+
+#~ msgid " ("
+#~ msgstr " ("
+
+#~ msgid "qm"
+#~ msgstr "qm"
+
+#~ msgid "efp"
+#~ msgstr "efp"
+
+#~ msgid ")"
+#~ msgstr ")"
+
+#~ msgid "GAMESS"
+#~ msgstr "GAMESS"
+
+#~ msgid "Create input files for the GAMESS quantum chemistry package"
+#~ msgstr "Tạo file đầu vào cho gói phần mềm hóa lượng tử GAMESS"
+
+#~ msgid "Advanced Settings Changed"
+#~ msgstr "Đã thay đổi các yếu tố cài đặt nâng cao"
+
+#~ msgid ""
+#~ "Advanced settings have changed.\n"
+#~ "Discard?"
+#~ msgstr ""
+#~ "Các yếu tố cài đặt nâng cao bị thay đổi.\n"
+#~ "Hủy bỏ thay đổi này?"
+
+#~ msgid "Advanced Settings Reset"
+#~ msgstr "Đã đặt mặc định cho các cài đặt nâng cao"
+
+#~ msgid ""
+#~ "Are you sure you wish to reset advanced settings?\n"
+#~ "All changes will be lost!"
+#~ msgstr ""
+#~ "Bạn có chắc rằng muốn đưa các cài đặt nâng cao trở về mặc định?\n"
+#~ "Mọi thay đổi sẽ mất đi!"
+
+#~ msgid "Basic Settings Reset"
+#~ msgstr "Đã đặt mặc định cho các cài đặt cơ bản"
+
+#~ msgid ""
+#~ "Are you sure you wish to reset basic settings?\n"
+#~ "All changes will be lost!"
+#~ msgstr ""
+#~ "Bạn có chắc rằng muốn đưa các cài đặt cơ bản trở về mặc định?\n"
+#~ "Mọi thay đổi sẽ mất đi!"
+
+#~ msgid "Gaussian Input Deck"
+#~ msgstr "Bảng nhập đầu vào Gauss"
+
+#~ msgid "The G03 executable, cannot be found."
+#~ msgstr "Không tìm thấy file chạy G03."
+
+#~ msgid "G03 did not start. Perhaps it is not installed correctly."
+#~ msgstr "Không thể khởi động G03. Có lẽ nó đã không được cài đặt thành công."
+
+#~ msgid "Running Gaussian calculation..."
+#~ msgstr "Đang chạy tính toán Gauss..."
+
+#~ msgid "G03 Crashed."
+#~ msgstr "G03 bị lỗi và dừng chạy."
+
+#~ msgid ""
+#~ "Gaussian did not run correctly. Perhaps it is not installed correctly."
+#~ msgstr "G03 bị lỗi và dừng chạy. Có lẽ nó đã không được cài đặt thành công."
+
+#~ msgid "&Dalton..."
+#~ msgstr "&Dalton..."
+
+#~ msgid "&Gaussian..."
+#~ msgstr "&Gauss..."
+
+#~ msgid "&MOLPRO..."
+#~ msgstr "&MOLPRO..."
+
+#~ msgid "M&OPAC..."
+#~ msgstr "M&OPAC..."
+
+#~ msgid "&NWChem..."
+#~ msgstr "&NWChem..."
+
+#~ msgid "&Q-Chem..."
+#~ msgstr "&Q-Chem..."
+
+#~ msgid "Molpro Input Deck"
+#~ msgstr "Bảng nhập số liệu Molpro"
+
+#~ msgid "MOPAC Input Warning"
+#~ msgstr "Cảnh báo về dữ liệu đầu vào MOPAC"
+
+#~ msgid "MOPAC Input Deck"
+#~ msgstr "Bảng nhập số liệu MOPAC"
+
+#~ msgid "MOPAC Running."
+#~ msgstr "Đang chạy MOPAC"
+
+#~ msgid ""
+#~ "MOPAC is already running. Wait until the previous calculation is finished."
+#~ msgstr ""
+#~ "MOPAC đang chạy. Hãy đợi đến khi phép tính trước đó được hoàn thành."
+
+#~ msgid "MOPAC Not Installed."
+#~ msgstr "MOPAC chưa được cài đặt"
+
+#~ msgid "The MOPAC executable, cannot be found."
+#~ msgstr "Không tìm được file chương trình chạy MOPAC"
+
+#~ msgid "MOPAC failed to start."
+#~ msgstr "Không khởi động được MOPAC."
+
+#~ msgid "MOPAC did not start. Perhaps it is not installed correctly."
+#~ msgstr "Không khởi động được MOPAC. Có lẽ nó đã không được cài đặt đúng."
+
+#~ msgid "Running MOPAC calculation..."
+#~ msgstr "MOPAC đang tính toán..."
+
+#~ msgid "MOPAC Crashed."
+#~ msgstr "MOPAC bị lỗi và dừng chạy."
+
+#~ msgid "MOPAC did not run correctly. Perhaps it is not installed correctly."
+#~ msgstr ""
+#~ "MOPAC không hoạt động bình thường. Có lẽ nó đã không được cài đặt đúng"
+
+#~ msgid "NWChem Input Deck"
+#~ msgstr "Bảng nhập số liệu NWChem"
+
+#~ msgid "QChem Input Deck"
+#~ msgstr "Bảng nhập số liệu QChem"
+
+#~ msgid "Select SMARTS..."
+#~ msgstr "Chọn SMARTS..."
+
+#~ msgid "Add Named Selection..."
+#~ msgstr "Thêm vào lựa chọn đã đặt tên..."
+
+#~ msgid "SMARTS Selection"
+#~ msgstr "Chọn SMARTS"
+
+#~ msgid "SMARTS pattern to select"
+#~ msgstr "Mẫu SMARTS dùng để chọn"
+
+#~ msgid "There is no current selection."
+#~ msgstr "Không có lựa chọn hiện thời nào."
+
+#~ msgid "Add Named Selection"
+#~ msgstr "Thêm vào lựa chọn đã được đặt tên"
+
+#~ msgid "Name cannot be empty."
+#~ msgstr "Phải có tên"
+
+#~ msgid "There is already a selection with this name."
+#~ msgstr "Đã có một lựa chọn với tên này."
+
+#~ msgid "Open a vertex shader source file"
+#~ msgstr "Mở một file nguồn tô đỉnh"
+
+#~ msgid "Vertex shader files (*.vert)"
+#~ msgstr "File tô đỉnh (*.vert)"
+
+#~ msgid "Intensity (arb. units)"
+#~ msgstr "Cường độ (đ.vị bất kì)"
+
+#~ msgid "Energy (eV)"
+#~ msgstr "Năng lượng (eV)"
+
+#~ msgid "Density of States (states/cell)"
+#~ msgstr "Mật độ trạng thái (số trạng thái/ô)"
+
+#~ msgid "Density of States (states/atom)"
+#~ msgstr "Mật độ trạng thái (số trạng thái/nguyên tử)"
+
+#~ msgid "Density of States (states/valence electron)"
+#~ msgstr "Mật độ trạng thái (số trạng thái/e hóa trị)"
+
+#~ msgid "Transmittance (%)"
+#~ msgstr "Độ dẫn (%)"
+
+#~ msgid "Absorbance (%)"
+#~ msgstr "Độ hấp thụ (%)"
+
+#~ msgid "No intensities"
+#~ msgstr "Không có cường độ"
+
+#~ msgid ""
+#~ "The vibration data in the molecule you have loaded does not have any "
+#~ "intensity data. Intensities have been set to an arbitrary value for "
+#~ "visualization."
+#~ msgstr ""
+#~ "Số liệu rung động trong nguyên tử bạn vừa tải lên không bao gồm bất kì số "
+#~ "liệu cường độ nào. Để phục vụ việc hiển thị, các cường độ được đặt giá "
+#~ "trị bất kì."
+
+#~ msgid "Wavenumber (cm<sup>-1</sup>)"
+#~ msgstr "Số sóng (cm<sup>-1</sup>)"
+
+#~ msgid "Activity"
+#~ msgstr "Hoạt độ"
+
+#~ msgid "Intensity"
+#~ msgstr "Cường độ"
+
+#~ msgid "X Axis"
+#~ msgstr "Trục X"
+
+#~ msgid "Y Axis"
+#~ msgstr "Trục Y"
+
+#~ msgid "&Appearance"
+#~ msgstr "&Bề ngoài"
+
+#~ msgid "E&xport Image"
+#~ msgstr "&Xuất ảnh"
+
+#~ msgctxt "Infrared spectra option"
+#~ msgid "Infrared"
+#~ msgstr "Hồng ngoại"
+
+#~ msgid "&Infrared Spectra Settings"
+#~ msgstr "Đặt thuộc tính phổ &hồng ngoại"
+
+#~ msgctxt "NMR spectra option"
+#~ msgid "NMR"
+#~ msgstr "NMR"
+
+#~ msgid "&NMR Spectra Settings"
+#~ msgstr "Đặt thuộc tính &NMR"
+
+#~ msgctxt "Density of States"
+#~ msgid "DOS"
+#~ msgstr "DOS"
+
+#~ msgid "&Density Of States Settings"
+#~ msgstr "Đặt &mật độ trạng thái (DOS)"
+
+#~ msgctxt "Ultra-Violet spectrum"
+#~ msgid "UV"
+#~ msgstr "UV"
+
+#~ msgid "&UV Settings"
+#~ msgstr "Cài đặt &UV"
+
+#~ msgctxt "Circular Dichromism spectrum"
+#~ msgid "CD"
+#~ msgstr "CD"
+
+#~ msgid "&CD Settings"
+#~ msgstr "Cài đặt &CD"
+
+#~ msgctxt "Raman spectrum"
+#~ msgid "Raman"
+#~ msgstr "Raman"
+
+#~ msgid "&Raman Settings"
+#~ msgstr "Cài đặt &Raman"
+
+#~ msgid "No data"
+#~ msgstr "Không có số liệu"
+
+#~ msgid "Dark"
+#~ msgstr "Đậm"
+
+#~ msgid "Light"
+#~ msgstr "Nhạt"
+
+#~ msgid "Publication"
+#~ msgstr "Xuất bản"
+
+#~ msgid "Handdrawn"
+#~ msgstr "Được vẽ bằng tay"
+
+#~ msgid "New Scheme"
+#~ msgstr "Sơ đồ mới"
+
+#~ msgid "Confirm Scheme Removal"
+#~ msgstr "Khẳng định việc xóa bỏ sơ đồ"
+
+#~ msgid "Really remove current scheme?"
+#~ msgstr "Chắc chắn xóa bỏ sơ đồ hiện hành?"
+
+#~ msgid "Change Scheme Name"
+#~ msgstr "Đổi tên sơ đồ"
+
+#~ msgid "Enter new name for current scheme:"
+#~ msgstr "Đặt tên mới cho sơ đồ hiện hành:"
+
+#~ msgid "Select Background Color"
+#~ msgstr "Chọn màu nền"
+
+#~ msgid "Select Foreground Color"
+#~ msgstr "Chọn màu vật thể"
+
+#~ msgid "Select Calculated Spectra Color"
+#~ msgstr "Chọn màu phổ tính toán"
+
+#~ msgid "Select Imported Spectra Color"
+#~ msgstr "Chọn màu phổ được nhập"
+
+#~ msgid "Export Calculated Spectrum"
+#~ msgstr "Xuất phổ được tính toán"
+
+#~ msgid "Tab Separated Values (*.tsv)"
+#~ msgstr "Dạng giá trị ngăn cách bởi dấu Tab (*.tsv)"
+
+#~ msgid "Tab Separated Values"
+#~ msgstr "Dạng giá trị ngăn cách bởi dấu Tab"
+
+#~ msgid "Comma Separated Values"
+#~ msgstr "Dạng giá trị ngăn cách bởi dấu phảy"
+
+#~ msgid "JCAMP-DX"
+#~ msgstr "JCAMP-DX"
+
+#~ msgid "Import Spectra"
+#~ msgstr "Nhập phổ"
+
+#~ msgid "Spectra Import"
+#~ msgstr "Nhập phổ"
+
+#~ msgid "Unknown extension: %1"
+#~ msgstr "Không rõ phần mở rộng: %1"
+
+#~ msgctxt "Do not remove 'IR' or '(*.out)' -- needed for parsing later"
+#~ msgid "PWscf IR data (*.out)"
+#~ msgstr "Số liệu PWscf IR (*.out)"
+
+#~ msgid "Data Format"
+#~ msgstr "Định dạng dữ liệu"
+
+#~ msgctxt "noun, not verb"
+#~ msgid "Format:"
+#~ msgstr "Dạng thức:"
+
+#~ msgid "Load Spectral Data"
+#~ msgstr "Tải số liệu phổ"
+
+#~ msgid "Portable Network Graphics"
+#~ msgstr "Portable Network Graphics (PNG)"
+
+#~ msgid "jpeg"
+#~ msgstr "jpeg"
+
+#~ msgid "Tagged Image File Format"
+#~ msgstr "Dạng thức tập tin ảnh có thẻ (TIFF)"
+
+#~ msgid "Windows Bitmap"
+#~ msgstr "Windows Bitmap (BMP)"
+
+#~ msgid "Portable Pixmap"
+#~ msgstr "Portable Pixmap"
+
+#~ msgid "X11 Bitmap"
+#~ msgstr "X11 Bitmap"
+
+#~ msgid "X11 Pixmap"
+#~ msgstr "X11 Pixmap"
+
+#~ msgid "Save Spectra Image"
+#~ msgstr "Lưu ảnh phổ"
+
+#~ msgid "&Advanced <<"
+#~ msgstr "&Thêm <<"
+
+#~ msgid "&Advanced >>"
+#~ msgstr "&Thêm >>"
+
+#~ msgid "&Spectra..."
+#~ msgstr "&Phổ..."
+
+#~ msgid "Spectra"
+#~ msgstr "Phổ"
+
+#~ msgid "Visualize spectral data from quantum chemistry calculations"
+#~ msgstr "Hiển thị số liệu phổ từ kết quả tính toán hóa lượng tử"
+
+#~ msgid "<HTML>&epsilon; (cm<sup>2</sup>/mmol)</HTML>"
+#~ msgstr "<HTML>&epsilon; (cm<sup>2</sup>/mmol)</HTML>"
+
+#~ msgid "Vibrational Analysis"
+#~ msgstr "Tính toán rung động"
+
+#~ msgid "No vibrational displacements exist."
+#~ msgstr "Không tồn tại chuyển vị rung."
+
+#~ msgid "Vibration"
+#~ msgstr "Rung động"
+
+#~ msgid "Visualize vibrational modes from quantum chemistry calculations"
+#~ msgstr "Hiển thị các mode rung động từ kết quả tính toán hóa lượng tử"
+
+#~ msgid "Sorting %1 vibrations by frequency..."
+#~ msgstr "Sắp xếp các rung động %1 theo tần số..."
+
+#~ msgid "Pause"
+#~ msgstr "Tạm ngừng"
+
+#~ msgid "Molecular Orbitals..."
+#~ msgstr "Orbital phân tử..."
+
+#~ msgid "Orbitals"
+#~ msgstr "Các orbital"
+
+#~ msgctxt "Highest Occupied MO"
+#~ msgid "HOMO"
+#~ msgstr "HOMO (o. phân tử cao nhất bị chiếm)"
+
+#~ msgctxt "Lowest Unoccupied MO"
+#~ msgid "LUMO"
+#~ msgstr "LUMO (o. phân tử thấp nhất bị chiếm)"
+
+#~ msgid "Orbital"
+#~ msgstr "Orbital"
+
+#~ msgid "Status"
+#~ msgstr "Trạng thái"
+
+#~ msgctxt "A cube type of nothing - empty cube"
+#~ msgid "Nothing"
+#~ msgstr "Không có gì"
+
+#~ msgctxt "Van der Waals surface type"
+#~ msgid "Van der Waals"
+#~ msgstr "Van der Waals"
+
+#~ msgctxt "Electrostatic potential surface type"
+#~ msgid "Electrostatic Potential"
+#~ msgstr "Thế tĩnh điện"
+
+#~ msgctxt "Electron density surface type"
+#~ msgid "Electron Density"
+#~ msgstr "Mật độ electron"
+
+#~ msgctxt "Molecular orbital surface type"
+#~ msgid "Molecular Orbital"
+#~ msgstr "Orbital phân tử"
+
+#~ msgctxt "Undefined cube type"
+#~ msgid "Error - undefined type"
+#~ msgstr "Lỗi - kiểu không xác định"
+
+#~ msgid "Create Surfaces..."
+#~ msgstr "Tạo bề mặt..."
+
+#~ msgid "Calculating VdW Cube"
+#~ msgstr "Tính mặt cầu VdW"
+
+#~ msgctxt "Molecular Orbital"
+#~ msgid "Calculating MO %L1"
+#~ msgstr "Tính MO %L1"
+
+#~ msgid "VdW"
+#~ msgstr "VdW"
+
+#~ msgid "Electron Density"
+#~ msgstr "Mật độ electron"
+
+#~ msgid "Calculate molecular orbitals and other surfaces"
+#~ msgstr "Tính mật độ orbital phân tử và các mặt khác"
+
+#~ msgid "GL widget was not correctly initialized in order to make a video"
+#~ msgstr ""
+#~ "Khiển tố GL không được cài đặt đúng để có thể tạo ra đoạn phim video"
+
+#~ msgid "Building video "
+#~ msgstr "Đang tạo video "
+
+#~ msgid "Could not run povray."
+#~ msgstr "Không chạy được povray."
+
+#~ msgid "Set Aspect Ratio"
+#~ msgstr "Đặt tỉ lệ các trục"
+
+#~ msgid ""
+#~ "The current Avogadro scene is %1x%2 pixels large, and therefore has "
+#~ "aspect ratio %3.\n"
+#~ "You may keep this value, for example if you intend to use POV-Ray\n"
+#~ "to produce an image of %4x1000 pixels, or you may enter any other "
+#~ "positive value,\n"
+#~ "for example 1 if you intend to use POV-Ray to produce a square image, "
+#~ "like 1000x1000 pixels."
+#~ msgstr ""
+#~ "Khung hình Avogadro hiện thời có kích thước %1x%2 điểm ảnh, tức là có tỉ "
+#~ "lệ kích thước %3.\n"
+#~ "Bạn có thể giữ giá trị này, chẳng hạn nếu muốn dùng POV-Ray\n"
+#~ "để tạo ra một hình %4x1000 điểm ảnh, hoặc có thể nhập vào một số dương "
+#~ "khác, chẳng hạn\n"
+#~ "số 1 nếu bạn muốn dùng POV-Ray để tạo ra một ảnh hình vuông 1000x1000 "
+#~ "điểm ảnh."
+
+#~ msgid "Connect"
+#~ msgstr "Kết nối"
+
+#~ msgid "Disconnect"
+#~ msgstr "Ngắt kết nối"
+
+#~ msgid "&WiiTrack"
+#~ msgstr "&WiiTrack"
+
+#~ msgid "Wii Tracking"
+#~ msgstr "Dò Wii"
+
+#~ msgid "Track motion using Wii remotes"
+#~ msgstr "Dò theo chuyển động bằng điều khiển từ xa của Wii"
+
+#~ msgid "Debug Information"
+#~ msgstr "Thông tin gỡ lỗi"
+
+#~ msgid "FPS: %L1"
+#~ msgstr "FPS: %L1"
+
+#~ msgid "View Size: %L1 x %L2"
+#~ msgstr "Kích thước khung nhìn: %L1 x %L2"
+
+#~ msgid "Atoms: %L1"
+#~ msgstr "Nguyên tử: %L1"
+
+#~ msgid "Bonds: %L1"
+#~ msgstr "Liên kết: %L1"
+
+#~ msgid "OBMol: index %1 out of reach."
+#~ msgstr "OBMol: không gọi được đến chỉ số %1."
+
+#~ msgid "File type '%1' is not supported for reading."
+#~ msgstr "Kiểu file '%1' không được hỗ trợ cho việc đọc số liệu."
+
+#~ msgid "File type for file '%1' is not supported for reading."
+#~ msgstr "Kiểu của file '%1' không được hỗ trợ cho việc đọc số liệu."
+
+#~ msgid "Reading molecule with index %1 from file '%2' failed."
+#~ msgstr "Không đọc được phân tử có chỉ số %1 từ file '%2'."
+
+#~ msgid "replaceMolecule: index %1 out of reach."
+#~ msgstr "replaceMolecule: không gọi được đến chỉ số %1."
+
+#~ msgid "File type '%1' is not supported for writing."
+#~ msgstr "Kiểu file '%1' không được hỗ trợ việc ghi dữ liệu."
+
+#~ msgid "File type for file '%1' is not supported for writing."
+#~ msgstr "Kiểu file của '%1' không được hỗ trợ việc ghi dữ liệu."
+
+#~ msgid "Could not open file '%1' for writing."
+#~ msgstr "Không thể mở file '%1' để ghi dữ liệu."
+
+#~ msgid "Could not open file '%1' for reading."
+#~ msgstr "Không thể mở file '%1' để đọc dữ liệu."
+
+#~ msgid "Replacing molecule with index %1 in file '%2' failed."
+#~ msgstr "Không thay thế được phân tử với chỉ số %1 trong file '%2'."
+
+#~ msgid "File %1 cannot be opened for reading."
+#~ msgstr "Không thể mở file %1 để đọc dữ liệu."
+
+#~ msgid "File %1 can not be opened for writing."
+#~ msgstr "Không thể mở file %1 để ghi dữ liệu."
+
+#~ msgid "Saving molecular file failed - could not rename original file."
+#~ msgstr "Không lưu được file phân tử - không thể đổi tên file gốc."
+
+#~ msgid "Saving molecular file failed - could not rename new file."
+#~ msgstr "Không lưu được file phân tử - không thể đổi tên file mới."
+
+#~ msgid "Saving molecular file failed - could not remove old file."
+#~ msgstr "Không lưu được file phân tử - không thể xoá file cũ."
+
+#~ msgid "Writing a molecule to file '%1' failed. OpenBabel function failed."
+#~ msgstr ""
+#~ "Không ghi được thông tin về một phân tử vào file '%1'. Hàm OpenBabel "
+#~ "không hoạt động."
+
+#~ msgid "File %1 cannot be opened for writing."
+#~ msgstr "Không thể mở file %1 để ghi."
+
+#~ msgid "Writing conformers to file '%1' failed."
+#~ msgstr "Không ghi được số liệu các đồng đẳng vào file '%1'."
+
+#~ msgid "Molecule %1"
+#~ msgstr "Phân tử %1"
+
+#~ msgctxt "Default license for all Avogadro plugins"
+#~ msgid "GPL2+"
+#~ msgstr "GPL2+"
+
+#~ msgid "Unknown Python Engine"
+#~ msgstr "Không rõ loại máy Python"
+
+#~ msgid "N/A"
+#~ msgstr "Không"
+
+#~ msgid "PythonEngine: checking "
+#~ msgstr "PythonEngine: đang kiểm tra "
+
+#~ msgid "  - script has no 'Engine' class defined"
+#~ msgstr "  - script không có lớp 'Engine' nào được định nghĩa"
+
+#~ msgid "  - no module"
+#~ msgstr "  - không có module"
+
+#~ msgid "Unknown Python Extension"
+#~ msgstr "Không rõ phần mở rộng Python"
+
+#~ msgid "PythonExtension: checking "
+#~ msgstr "PythonExtension: đang kiểm tra "
+
+#~ msgid "  - script has no 'Extension' class defined"
+#~ msgstr ""
+#~ "  - mã lệnh không có lớp 'Extension' [Phần mở rộng] nào được định nghĩa"
+
+#~ msgid "Unknown Python Tool"
+#~ msgstr "Không rõ công cụ Python"
+
+#~ msgid "PythonTool: checking "
+#~ msgstr "PythonTool: đang kiểm tra "
+
+#~ msgid "  - script has no 'Tool' class defined"
+#~ msgstr "  - mã lệnh không có lớp 'Tool' [công cụ] nào được định nghĩa"
+
+#~ msgid "Conformer %1"
+#~ msgstr "Đồng phân %1"
+
+#~ msgid "Tools"
+#~ msgstr "Công cụ"
+
+#~ msgid "Axis:"
+#~ msgstr "Trục:"
+
+#~ msgid "Align:"
+#~ msgstr "Dóng:"
+
+#~ msgid "Everything"
+#~ msgstr "Mọi thứ"
+
+#~ msgid "Align"
+#~ msgstr "Dóng hàng"
+
+#~ msgid "Align molecules to a Cartesian axis"
+#~ msgstr "Dóng hàng các phân tử theo một trục Đề-các"
+
+#~ msgid "Align Settings"
+#~ msgstr "Cài đặt về dóng hàng"
+
+#~ msgid "AutoOpt: E = %1 %2 (dE = %3)"
+#~ msgstr "Tự động tối ưu: E = %1 %2 (dE = %3)"
+
+#~ msgid "Num Constraints: %1"
+#~ msgstr "Ràng buộc số: %1"
+
+#~ msgid "Steps per Update:"
+#~ msgstr "Số bước trong mỗi lượt cập nhật:"
+
+#~ msgid "Algorithm:"
+#~ msgstr "Thuật toán:"
+
+#~ msgid "Molecular Dynamics (300K)"
+#~ msgstr "Động lực học phân tử (300K)"
+
+#~ msgid "Molecular Dynamics (600K)"
+#~ msgstr "Động lực học phân tử (600K)"
+
+#~ msgid "Molecular Dynamics (900K)"
+#~ msgstr "Động lực học phân tử (900K)"
+
+#~ msgid "Start"
+#~ msgstr "Bắt đầu"
+
+#~ msgid "Ignored atoms are movable"
+#~ msgstr "Các nguyên tử được bỏ qua đều di chuyển được"
+
+#~ msgid "Automatic optimization of molecular geometry"
+#~ msgstr "Tối ưu hoá tự động cho dạng hình học phân tử"
+
+#~ msgid "AutoOptimization Settings"
+#~ msgstr "Cài đặt cho tối ưu hoá tự động"
+
+#~ msgid "Auto Rotation Tool"
+#~ msgstr "Công cụ xoay tự động"
+
+#~ msgid "x rotation:"
+#~ msgstr "xoay quanh trục x:"
+
+#~ msgid "x rotation"
+#~ msgstr "xoay quanh trục x"
+
+#~ msgid "y rotation:"
+#~ msgstr "xoay quanh trục y:"
+
+#~ msgid "y rotation"
+#~ msgstr "xoay quanh trục y"
+
+#~ msgid "z rotation:"
+#~ msgstr "xoay quanh trục z:"
+
+#~ msgid "z rotation"
+#~ msgstr "xoay quanh trục z"
+
+#~ msgid "Automatic rotation of molecules"
+#~ msgstr "Xoay tự động các phân tử"
+
+#~ msgid "AutoRotate Settings"
+#~ msgstr "Cài đặt cho xoay tự động"
+
+#~ msgctxt "%L1 is the length of the bond"
+#~ msgid "Bond Length: %L1"
+#~ msgstr "Chiều dài liên kết: %L1"
+
+#~ msgid " Show Angles"
+#~ msgstr " Hiện các góc"
+
+#~ msgid "Snap-to Threshold: "
+#~ msgstr "Ngưỡng bắt điểm: "
+
+#~ msgid "Bond Centric Manipulate"
+#~ msgstr "Thao tác với liên kết"
+
+#~ msgid "Manipulation of bond lengths, angles, and torsions"
+#~ msgstr "Thao tác chiều dài, góc, độ xoắn của liên kết"
+
+#~ msgid "Bond Centric Manipulate Settings"
+#~ msgstr "Các cài đặt liên quan đến thao tác với liên kết"
+
+#~ msgctxt "%L1 is distance, %2 is Angstrom symbol"
+#~ msgid "Distance (2->3): %L1 %2"
+#~ msgstr "Khoảng cách (2->3): %L1 %2"
+
+#~ msgid "Angle: %L1 °"
+#~ msgstr "Góc: %L1 °"
+
+#~ msgctxt "%L1 is distance, %2 is Angstrom symbol"
+#~ msgid "Distance (3->4): %L1 %2"
+#~ msgstr "Khoảng cách (3->4): %L1 %2"
+
+#~ msgid "Dihedral Angle: %1 °"
+#~ msgstr "Góc nhị diện: %1 °"
+
+#~ msgctxt "*1 is a number. You most likely do not need to translate this"
+#~ msgid "*1"
+#~ msgstr "*1"
+
+#~ msgctxt "*2 is a number. You most likely do not need to translate this"
+#~ msgid "*2"
+#~ msgstr "*2"
+
+#~ msgctxt "*3 is a number. You most likely do not need to translate this"
+#~ msgid "*3"
+#~ msgstr "*3"
+
+#~ msgctxt "*4 is a number. You most likely do not need to translate this"
+#~ msgid "*4"
+#~ msgstr "*4"
+
+#~ msgid "Distance(s):"
+#~ msgstr "Khoảng cách:"
+
+#~ msgid "Measure bond lengths, angles, and dihedrals"
+#~ msgstr "Đo chiều dài, góc, và góc nhị diện của liên kết"
+
+#~ msgid "Delete Atom"
+#~ msgstr "Xóa nguyên tử"
+
+#~ msgid "Draw Bond"
+#~ msgstr "Vẽ liên kết"
+
+#~ msgid "Draw and edit atoms and bonds"
+#~ msgstr "Vẽ và chỉnh sủa nguyên tử và liên kết"
+
+#~ msgid "Draw Settings"
+#~ msgstr "Cài đặt cho thao tác vẽ"
+
+#~ msgid "Translate, rotate, and adjust atoms and fragments"
+#~ msgstr "Dịch chuyển, quay, chỉnh các nguyên tử và các đoạn"
+
+#~ msgid "Manipulate Settings"
+#~ msgstr "Cài đặt cho việc thao tác"
+
+#~ msgid "Translate, rotate, and zoom around the current view"
+#~ msgstr "Dịch chuyển, xoay và thu phóng quanh khung nhìn hiện thời"
+
+#~ msgid "Navigate Settings"
+#~ msgstr "Cài đặt cho việc di chuyển"
+
+#~ msgid "Selection Mode:"
+#~ msgstr "Chế độ lựa chọn:"
+
+#~ msgid "Atom/Bond"
+#~ msgstr "Nguyên tử/Liên kết"
+
+#~ msgid "Residue"
+#~ msgstr "Dư chất"
+
+#~ msgid "Change color of the atom"
+#~ msgstr "Đổi màu nguyên tử"
+
+#~ msgid "Change label of the atom"
+#~ msgstr "Đổi nhãn của nguyên tử"
+
+#~ msgid "New Label:"
+#~ msgstr "Nhãn mới:"
+
+#~ msgid "Change label of the bond"
+#~ msgstr "Đổi nhãn của liên kết"
+
+#~ msgid "Change radius of the atom"
+#~ msgstr "Thay đổi bán kính nguyên tử"
+
+#~ msgctxt "in Angstrom"
+#~ msgid "New Radius, %1:"
+#~ msgstr "Bán kính mới, %1:"
+
+#~ msgid "Select atoms, residues, and molecules"
+#~ msgstr "Chọn các nguyên tử, dư chất, và phân tử"
+
+#~ msgid "Symbol"
+#~ msgstr "Ký hiệu"
+
+#~ msgid "Bond Length"
+#~ msgstr "Độ dài liên kết"
+
+#~ msgid "Bond Angle"
+#~ msgstr "Góc liên kết"
+
+#~ msgid "Dihedral Angle"
+#~ msgstr "Góc nhị diện"
+
+#~ msgid "Z Matrix Editor..."
+#~ msgstr "Công cụ biên tập ma trận Z..."
+
+#~ msgid "Z-Matrix"
+#~ msgstr "Ma trận Z"
+
+#~ msgid "Create/edit a z-matrix"
+#~ msgstr "Tạo ra/sửa một ma trận Z"
+
+#~ msgid "Z-Matrix Settings"
+#~ msgstr "Cài đặt cho ma trận Z"
+
+#~ msgid "Amino Colors"
+#~ msgstr "Màu cho amino"
+
+#~ msgid "Hydrophobicity"
+#~ msgstr "Tính kị nước"
+
+#~ msgid "Axes:"
+#~ msgstr "Trục:"
+
+#~ msgid "Cartesian Axes"
+#~ msgstr "Trục Đề-các"
+
+#~ msgid "Orthogonal Axes"
+#~ msgstr "Trục vuông góc"
+
+#~ msgid "Axis 1:"
+#~ msgstr "Trục 1:"
+
+#~ msgid "Axis 2:"
+#~ msgstr "Trục 2:"
+
+#~ msgid "Axis 3:"
+#~ msgstr "Trục 3:"
+
+#~ msgid "X"
+#~ msgstr "X"
+
+#~ msgid "Origin:"
+#~ msgstr "Gốc:"
+
+#~ msgid "Y"
+#~ msgstr "Y"
+
+#~ msgid "Z"
+#~ msgstr "Z"
+
+#~ msgid "Norm"
+#~ msgstr "Chuẩn"
+
+#~ msgid "Preserve vector norms"
+#~ msgstr "Giữ nguyên chuẩn véc-tơ"
+
+#~ msgid "Atom Radius:"
+#~ msgstr "Bán kính nguyên tử:"
+
+#~ msgid "Bond Radius:"
+#~ msgstr "Bán kính liên kết:"
+
+#~ msgid "Shape"
+#~ msgstr "Hình"
+
+#~ msgid "Helix"
+#~ msgstr "Chuỗi xoắn"
+
+#~ msgid "a"
+#~ msgstr "a"
+
+#~ msgid "b"
+#~ msgstr "b"
+
+#~ msgid "c"
+#~ msgstr "c"
+
+#~ msgid "Sheet"
+#~ msgstr "Trang"
+
+#~ msgid "Loop"
+#~ msgstr "Vòng"
+
+#~ msgid "Colors"
+#~ msgstr "Màu"
+
+#~ msgid "Dipole:"
+#~ msgstr "Lưỡng cực:"
+
+#~ msgid "Dipole Moment"
+#~ msgstr "Mô-men lưỡng cực"
+
+#~ msgid "Custom Vector"
+#~ msgstr "Véc-tơ tự chọn"
+
+#~ msgid "Width:"
+#~ msgstr "Bề rộng:"
+
+#~ msgid "Cut-off radius:"
+#~ msgstr "Bán kính cắt bỏ:"
+
+#~ msgid "A"
+#~ msgstr "A"
+
+#~ msgid "Cut-off angle:"
+#~ msgstr "Góc cắt bỏ:"
+
+#~ msgid "Rendering Engine:"
+#~ msgstr "Bộ phận lên hình:"
+
+#~ msgid "TextRenderer"
+#~ msgstr "Phần mềm hiện chữ"
+
+#~ msgid "QPainter"
+#~ msgstr "QPainter"
+
+#~ msgid "Atom Labels"
+#~ msgstr "Nhãn của nguyên tử"
+
+#~ msgid "Text:"
+#~ msgstr "Đoạn chữ :"
+
+#~ msgid "Color:"
+#~ msgstr "Màu:"
+
+#~ msgid "None"
+#~ msgstr "Không"
+
+#~ msgid "Symbol & Number in Group"
+#~ msgstr "Ký hiệu & số trong nhóm"
+
+#~ msgid "Symbol & Atom number"
+#~ msgstr "Ký hiệu & số nguyên tử"
+
+#~ msgid "Partial charge"
+#~ msgstr "Điện tích từng phần"
+
+#~ msgid "Unique ID"
+#~ msgstr "ID duy nhất"
+
+#~ msgid "Custom data"
+#~ msgstr "Dữ liệu do người dùng cấp"
+
+#~ msgid "Change Font"
+#~ msgstr "Thay đổi phông chữ"
+
+#~ msgid "x : "
+#~ msgstr "x : "
+
+#~ msgid "y : "
+#~ msgstr "y : "
+
+#~ msgid "z : "
+#~ msgstr "z : "
+
+#~ msgid "Label Shift:"
+#~ msgstr "Dịch chuyển nhãn:"
+
+#~ msgid "Bond Labels"
+#~ msgstr "Nhãn của liên kết"
+
+#~ msgid "Bond length"
+#~ msgstr "Độ dài liên kết"
+
+#~ msgid "Bond number"
+#~ msgstr "Số liên kết"
+
+#~ msgid "Bond order"
+#~ msgstr "Bậc liên kết"
+
+#~ msgid "Rendering:"
+#~ msgstr "Lên hình:"
+
+#~ msgid "Backbone"
+#~ msgstr "Trục chính"
+
+#~ msgid "Lines"
+#~ msgstr "Đường thẳng"
+
+#~ msgid "Radius:"
+#~ msgstr "Bán kính:"
+
+#~ msgid "Include Nitrogens"
+#~ msgstr "Chứa nitơ"
+
+#~ msgid "VdW Opacity:"
+#~ msgstr "Độ đục VdW:"
+
+#~ msgid "Orbital:"
+#~ msgstr "Orbital:"
+
+#~ msgid "Render:"
+#~ msgstr "Lên hình:"
+
+#~ msgid "Fill"
+#~ msgstr "Tô đầy"
+
+#~ msgid "Points"
+#~ msgstr "Điểm"
+
+#~ msgid "Draw Box:"
+#~ msgstr "Vẽ khung:"
+
+#~ msgid "Style:"
+#~ msgstr "Kiểu:"
+
+#~ msgid "Selected Colors"
+#~ msgstr "Các màu được chọn"
+
+#~ msgid "Colors:"
+#~ msgstr "Màu sắc:"
+
+#~ msgid "Positive"
+#~ msgstr "Dương"
+
+#~ msgid "Negative"
+#~ msgstr "Âm"
+
+#~ msgid "Show Atoms"
+#~ msgstr "Hiện các nguyên tử"
+
+#~ msgid "Animate Trajectory"
+#~ msgstr "Qũy đạo chuyển động"
+
+#~ msgid "0/0"
+#~ msgstr "0/0"
+
+#~ msgctxt "Continually re-run the animation in a loop"
+#~ msgid "Loop"
+#~ msgstr "Vòng"
+
+#~ msgid "fps"
+#~ msgstr "khung hình/giây"
+
+#~ msgid "Save as .avi..."
+#~ msgstr "Lưu dưới dạng .avi..."
+
+#~ msgid "Bohrs"
+#~ msgstr "Bo"
+
+#~ msgid "XYZ"
+#~ msgstr "XYZ"
+
+#~ msgid "XYZ, coords only"
+#~ msgstr "XYZ, chỉ có toạ độ"
+
+#~ msgid "GAMESS Input #2"
+#~ msgstr "Đầu vào GAMESS #2"
+
+#~ msgid "Priroda Input"
+#~ msgstr "Đầu vào Priroda"
+
+#~ msgid "Apply Changes"
+#~ msgstr "Áp dụng các thay đổi"
+
+#~ msgid "Cut All"
+#~ msgstr "Cắt toàn bộ"
+
+#~ msgid "Paste to the End"
+#~ msgstr "Dán vào cuối"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Monospace'; font-size:9pt; "
+#~ "font-weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Paste or edit atomic "
+#~ "coordinates here. You may paste almost any fragment of text, containing "
+#~ "coordinates</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Monospace'; font-size:9pt; "
+#~ "font-weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Dán hoặc tự biên soạn "
+#~ "các toạ độ nguyên tử ở đây. Bạn hầu như có thể dán mọi đoạn chữ, bao gồm "
+#~ "các toạ độ</p></body></html>"
+
+#~ msgid "(None)"
+#~ msgstr "(Không)"
+
+#~ msgid "Sort by  "
+#~ msgstr "Sắp xếp theo  "
+
+#~ msgid "Conformer Search"
+#~ msgstr "Tìm đồng phân"
+
+#~ msgid "Method"
+#~ msgstr "Phương pháp"
+
+#~ msgid "Number of atoms:"
+#~ msgstr "Số nguyên tử:"
+
+#~ msgid "Number of rotatable bonds:"
+#~ msgstr "Số liên kết xoay được:"
+
+#~ msgid "Number of conformers"
+#~ msgstr "Số đồng phân"
+
+#~ msgid "Energy"
+#~ msgstr "Năng lượng"
+
+#~ msgid "Constraints"
+#~ msgstr "Ràng buộc"
+
+#~ msgid "Add Constraints"
+#~ msgstr "Thêm ràng buộc"
+
+#~ msgid "Ignore Atom"
+#~ msgstr "Bỏ qua nguyên tử"
+
+#~ msgid "Fix Atom"
+#~ msgstr "Cố định nguyên tử"
+
+#~ msgid "Fix Atom X"
+#~ msgstr "Cố định toạ độ X của nguyên tử"
+
+#~ msgid "Fix Atom Y"
+#~ msgstr "Cố định toạ độ Y của nguyên tử"
+
+#~ msgid "Fix Atom Z"
+#~ msgstr "Cố định toạ độ Z của nguyên tử"
+
+#~ msgid "Torsion angle"
+#~ msgstr "Góc xoắn"
+
+#~ msgid "Constraint Value"
+#~ msgstr "Giá trị ràng buộc"
+
+#~ msgid "Atom Indices"
+#~ msgstr "Các chỉ số nguyên tử"
+
+#~ msgid "Add"
+#~ msgstr "Thêm"
+
+#~ msgid "Save"
+#~ msgstr "Lưu"
+
+#~ msgid "Load"
+#~ msgstr "Tải"
+
+#~ msgid "Cartesian"
+#~ msgstr "Đề-các"
+
+#~ msgid "All"
+#~ msgstr "Tất cả"
+
+#~ msgid "File Import..."
+#~ msgstr "Nhập file..."
+
+#~ msgid "Setup Force Field"
+#~ msgstr "Thiết lập trường lực"
+
+#~ msgid "Force Field"
+#~ msgstr "Trường lực"
+
+#~ msgid "Ghemical"
+#~ msgstr "Ghemical"
+
+#~ msgid "Number of steps"
+#~ msgstr "Số bước"
+
+#~ msgid "Algorithm"
+#~ msgstr "Thuật toán"
+
+#~ msgid "10e-"
+#~ msgstr "10e-"
+
+#~ msgid "C"
+#~ msgstr "G"
+
+#~ msgid "T"
+#~ msgstr "T"
+
+#~ msgid "B"
+#~ msgstr "D"
+
+#~ msgid "Other"
+#~ msgstr "Loại khác"
+
+#~ msgid "Insert Fragment..."
+#~ msgstr "Thêm đoạn..."
+
+#~ msgid "Peptide Builder"
+#~ msgstr "Xây dựng chuỗi pep-tit"
+
+#~ msgid "Alanine"
+#~ msgstr "Ala-nin"
+
+#~ msgid "Ala"
+#~ msgstr "Ala"
+
+#~ msgid "Arginine"
+#~ msgstr "Arginine"
+
+#~ msgid "Arg"
+#~ msgstr "Arg"
+
+#~ msgid "Asparagine"
+#~ msgstr "Asparagine"
+
+#~ msgid "Asn"
+#~ msgstr "Asn"
+
+#~ msgid "Aspartic acid"
+#~ msgstr "A-xit aspartic"
+
+#~ msgid "Asp"
+#~ msgstr "Asp"
+
+#~ msgid "Cysteine"
+#~ msgstr "Xys-tê-in"
+
+#~ msgid "Cys"
+#~ msgstr "Cys"
+
+#~ msgid "Glutamic acid"
+#~ msgstr "A-xit glutamic"
+
+#~ msgid "Glu"
+#~ msgstr "Glu"
+
+#~ msgid "Glutamine"
+#~ msgstr "Glutamin"
+
+#~ msgid "Gln"
+#~ msgstr "Gln"
+
+#~ msgid "Glycine"
+#~ msgstr "Gly-xin"
+
+#~ msgid "Gly"
+#~ msgstr "Gly"
+
+#~ msgid "Histidine"
+#~ msgstr "Histidin"
+
+#~ msgid "His"
+#~ msgstr "His"
+
+#~ msgid "Isoleucine"
+#~ msgstr "Isoleucine"
+
+#~ msgid "Ile"
+#~ msgstr "Ile"
+
+#~ msgid "Valine"
+#~ msgstr "Va-lin"
+
+#~ msgid "Val"
+#~ msgstr "Val"
+
+#~ msgid "Tyrosine"
+#~ msgstr "Ty-rô-xin"
+
+#~ msgid "Tyr"
+#~ msgstr "Tyr"
+
+#~ msgid "Tryptophan"
+#~ msgstr "Tryptophan"
+
+#~ msgid "Trp"
+#~ msgstr "Trp"
+
+#~ msgid "Threonine"
+#~ msgstr "Threonine"
+
+#~ msgid "Thr"
+#~ msgstr "Thr"
+
+#~ msgid "Serine"
+#~ msgstr "Xê-rin"
+
+#~ msgid "Ser"
+#~ msgstr "Ser"
+
+#~ msgid "Proline"
+#~ msgstr "Prô-lin"
+
+#~ msgid "Pro"
+#~ msgstr "Pro"
+
+#~ msgid "Phenylalanine"
+#~ msgstr "Phenyl-alanin"
+
+#~ msgid "Phe"
+#~ msgstr "Phe"
+
+#~ msgid "Methionine"
+#~ msgstr "Methionine"
+
+#~ msgid "Met"
+#~ msgstr "Met"
+
+#~ msgid "Lysine"
+#~ msgstr "Ly-xin"
+
+#~ msgid "Lys"
+#~ msgstr "Lys"
+
+#~ msgid "Leucine"
+#~ msgstr "Leucine"
+
+#~ msgid "Leu"
+#~ msgstr "Leu"
+
+#~ msgid "Amino Acids:"
+#~ msgstr "A-xit a-min:"
+
+#~ msgid "L"
+#~ msgstr "T"
+
+#~ msgid "D"
+#~ msgstr "X"
+
+#~ msgid "N Terminus:"
+#~ msgstr "Đầu N:"
+
+#~ msgid "C Terminus:"
+#~ msgstr "Đầu C:"
+
+#~ msgid "NH₂"
+#~ msgstr "NH₂"
+
+#~ msgid "NH₃⁺"
+#~ msgstr "NH₃⁺"
+
+#~ msgid "CO₂H"
+#~ msgstr "CO₂H"
+
+#~ msgid "CO₂⁻"
+#~ msgstr "CO₂⁻"
+
+#~ msgid "Straight Chain"
+#~ msgstr "Chuỗi thẳng"
+
+#~ msgid "Alpha Helix"
+#~ msgstr "Xoắn an-pha"
+
+#~ msgid "3-10 Helix"
+#~ msgstr "Xoắn 3-10"
+
+#~ msgid "Pi Helix"
+#~ msgstr "Xoắn Pi"
+
+#~ msgid "Phi:"
+#~ msgstr "Phi:"
+
+#~ msgid "Psi:"
+#~ msgstr "Psi:"
+
+#~ msgid "E"
+#~ msgstr "Đ"
+
+#~ msgid "F"
+#~ msgstr "T"
+
+#~ msgid "Molecule Properties"
+#~ msgstr "Thuộc tính của phân tử"
+
+#~ msgid "Energy (kJ/mol):"
+#~ msgstr "Năng lượng (kJ/mol):"
+
+#~ msgid "Dipole Moment (D):"
+#~ msgstr "Mô-men lưỡng cực (D):"
+
+#~ msgid "DFT"
+#~ msgstr "DFT"
+
+#~ msgid "MP2"
+#~ msgstr "MP2"
+
+#~ msgid "CCSD"
+#~ msgstr "CCSD"
+
+#~ msgid "Advanced"
+#~ msgstr "Nâng cao"
+
+#~ msgid "Control"
+#~ msgstr "Điều khiển"
+
+#~ msgid "SCF"
+#~ msgstr "SCF"
+
+#~ msgid "Data"
+#~ msgstr "Dữ liệu"
+
+#~ msgid "Nothing"
+#~ msgstr "Không có gì"
+
+#~ msgid "Grid"
+#~ msgstr "Lưới"
+
+#~ msgid "POV-Ray Export"
+#~ msgstr "Xuất dưới dạng POV-Ray"
+
+#~ msgid "Select..."
+#~ msgstr "Chọn..."
+
+#~ msgid "povray"
+#~ msgstr "povray"
+
+#~ msgid "Use full scene antialiasing"
+#~ msgstr "Làm trơn hình toàn cảnh"
+
+#~ msgid "Antialias"
+#~ msgstr "Làm trơn"
+
+#~ msgid "Set the background color to be transparent"
+#~ msgstr "Đặt nền trong suốt"
+
+#~ msgid "Alpha transparency"
+#~ msgstr "Độ trong alpha"
+
+#~ msgid "Command:"
+#~ msgstr "Câu lệnh:"
+
+#~ msgid "Render the molecule directly using command line POV-Ray"
+#~ msgstr "Lên hình phân tử bằng cách trực tiếp dùng lệnh POV-Ray"
+
+#~ msgid "Path:"
+#~ msgstr "Đường dẫn:"
+
+#~ msgid "Compute..."
+#~ msgstr "Tính..."
+
+#~ msgid "Basics"
+#~ msgstr "Cơ bản"
+
+#~ msgid "KS-DFT"
+#~ msgstr "KS-DFT"
+
+#~ msgid "Basis Set:"
+#~ msgstr "Tập hợp cơ sở:"
+
+#~ msgid "cc-pVDZ"
+#~ msgstr "cc-pVDZ"
+
+#~ msgid "cc-pVTZ"
+#~ msgstr "cc-pVTZ"
+
+#~ msgid "cc-pVQZ"
+#~ msgstr "cc-pVQZ"
+
+#~ msgid "STO-2G"
+#~ msgstr "STO-2G"
+
+#~ msgid "STO-6G"
+#~ msgstr "STO-6G"
+
+#~ msgid "4-31G"
+#~ msgstr "4-31G"
+
+#~ msgid "6-31G"
+#~ msgstr "6-31G"
+
+#~ msgid "6-311G"
+#~ msgstr "6-311G"
+
+#~ msgid "EDF1"
+#~ msgstr "EDF1"
+
+#~ msgid "&Advanced Setup"
+#~ msgstr "Cài đặt &nâng cao"
+
+#~ msgid "Hessian"
+#~ msgstr "Hesse"
+
+#~ msgid "System"
+#~ msgstr "Hệ thống"
+
+#~ msgid "Misc"
+#~ msgstr "Các thứ khác"
+
+#~ msgid "Read"
+#~ msgstr "Đọc"
+
+#~ msgid "SBKJC"
+#~ msgstr "SBKJC"
+
+#~ msgid "Hay-Wadt"
+#~ msgstr "Hay-Wadt"
+
+#~ msgid "MIDI"
+#~ msgstr "MIDI"
+
+#~ msgid "STO-4G"
+#~ msgstr "STO-4G"
+
+#~ msgid "STO-5G"
+#~ msgstr "STO-5G"
+
+#~ msgid "6-21G"
+#~ msgstr "6-21G"
+
+#~ msgid "5-31G"
+#~ msgstr "5-31G"
+
+#~ msgid "Double Zeta Valence"
+#~ msgstr "Hoá trị zeta kép"
+
+#~ msgid "Dunning/Hay DZ"
+#~ msgstr "DZ Dunning/Hay"
+
+#~ msgid "SBKJA Valence"
+#~ msgstr "Hoá trị SBKJA"
+
+#~ msgid "Hay/Wadt Valence"
+#~ msgstr "Hoá trị Hay/Wadt"
+
+#~ msgid "MNDO"
+#~ msgstr "MNDO"
+
+#~ msgid "ECP Type:"
+#~ msgstr "Kiểu ECP:"
+
+#~ msgid "Default"
+#~ msgstr "Mặc định"
+
+#~ msgid "Huzinaga"
+#~ msgstr "Huzinaga"
+
+#~ msgid "Hondo7"
+#~ msgstr "Hondo7"
+
+#~ msgid "Polar:"
+#~ msgstr "Cực:"
+
+#~ msgid "Max SCF Iterations:"
+#~ msgstr "Số lần lặp SCF cực đại:"
+
+#~ msgid "Gradient"
+#~ msgstr "Gradient"
+
+#~ msgid "Optimization"
+#~ msgstr "Tối ưu hoá"
+
+#~ msgid "Saddle Point"
+#~ msgstr "Điểm yên ngựa"
+
+#~ msgid "IRC"
+#~ msgstr "IRC"
+
+#~ msgid "Gradient Extremal"
+#~ msgstr "Cực trị gradient"
+
+#~ msgid "DRC"
+#~ msgstr "DRC"
+
+#~ msgid "Energy Surface"
+#~ msgstr "Mặt năng lượng"
+
+#~ msgid "Morokuma"
+#~ msgstr "Morokuma"
+
+#~ msgid "Spin Orbit"
+#~ msgstr "Quỹ đạo spin"
+
+#~ msgid "Finite Electric Field"
+#~ msgstr "Trường điện tích hữu hạn"
+
+#~ msgid "TDHF"
+#~ msgstr "TDHF"
+
+#~ msgid "Global Optimization"
+#~ msgstr "Tối ưu hoá toàn cục"
+
+#~ msgid "VSCF"
+#~ msgstr "VSCF"
+
+#~ msgid "FMO Optimization"
+#~ msgstr "Tối ưu hoá FMO"
+
+#~ msgid "Raman Intensities"
+#~ msgstr "Các cường độ Raman"
+
+#~ msgid "NMR"
+#~ msgstr "NMR"
+
+#~ msgid "Make EFP"
+#~ msgstr "Tạo EFP"
+
+#~ msgid "UHF"
+#~ msgstr "UHF"
+
+#~ msgid "ROHF"
+#~ msgstr "ROHF"
+
+#~ msgid "GVB"
+#~ msgstr "GVB"
+
+#~ msgid "MCSCF"
+#~ msgstr "MCSCF"
+
+#~ msgid "None (CI)"
+#~ msgstr "Không (CI)"
+
+#~ msgid "Foster-Boys"
+#~ msgstr "Foster-Boys"
+
+#~ msgid "Edmistron-Ruedenberg"
+#~ msgstr "Edmistron-Ruedenberg"
+
+#~ msgid "Pipek-Mezey"
+#~ msgstr "Pipek-Mezey"
+
+#~ msgid "SCF Type:"
+#~ msgstr "Kiểu SCF:"
+
+#~ msgid "Localization Method:"
+#~ msgstr "Phương pháp địa phương hoá:"
+
+#~ msgid "Exec Type:"
+#~ msgstr "Kiểu thực thi:"
+
+#~ msgid "CI:"
+#~ msgstr "CI:"
+
+#~ msgid "GUGA"
+#~ msgstr "GUGA"
+
+#~ msgid "CC:"
+#~ msgstr "CC:"
+
+#~ msgid "LCCD: Linearized CC"
+#~ msgstr "LCCD: CC tuyến tính hoá"
+
+#~ msgid "R-CC"
+#~ msgstr "R-CC"
+
+#~ msgid "CR-CC"
+#~ msgstr "CR-CC"
+
+#~ msgid "EOM-CCSD"
+#~ msgstr "EOM-CCSD"
+
+#~ msgid "CR-EOM"
+#~ msgstr "CR-EOM"
+
+#~ msgid "Normal Run"
+#~ msgstr "Chạy bình thường"
+
+#~ msgid "Check"
+#~ msgstr "Kiểm tra"
+
+#~ msgid "Debug"
+#~ msgstr "Gỡ lỗi"
+
+#~ msgid "Molecule Charge:"
+#~ msgstr "Điện tích phân tử:"
+
+#~ msgid "Run Type:"
+#~ msgstr "Kiểu chạy:"
+
+#~ msgid "Use MP2"
+#~ msgstr "Dùng MP2"
+
+#~ msgid "Use DFT"
+#~ msgstr "Dùng DFT"
+
+#~ msgid "# of Z-Matrix Variables"
+#~ msgstr "# của biến ma trận Z"
+
+#~ msgid "Ǻngstrom"
+#~ msgstr "Ǻngstrom"
+
+#~ msgid "Coordinate Type:"
+#~ msgstr "Kiểu toạ độ:"
+
+#~ msgid "C1"
+#~ msgstr "C1"
+
+#~ msgid "CS"
+#~ msgstr "CS"
+
+#~ msgid "CI"
+#~ msgstr "CI"
+
+#~ msgid "CnH"
+#~ msgstr "CnH"
+
+#~ msgid "CnV"
+#~ msgstr "CnV"
+
+#~ msgid "Cn"
+#~ msgstr "Cn"
+
+#~ msgid "S2n"
+#~ msgstr "S2n"
+
+#~ msgid "DnD"
+#~ msgstr "DnD"
+
+#~ msgid "DnH"
+#~ msgstr "DnH"
+
+#~ msgid "Dn"
+#~ msgstr "Dn"
+
+#~ msgid "TD"
+#~ msgstr "TD"
+
+#~ msgid "TH"
+#~ msgstr "TH"
+
+#~ msgid "OH"
+#~ msgstr "OH"
+
+#~ msgid "O"
+#~ msgstr "O"
+
+#~ msgid "Unique cartesian Coords."
+#~ msgstr "Toạ độ Đề-các duy nhất"
+
+#~ msgid "Use Symmetry During Calculation"
+#~ msgstr "Dùng tính đối xứng trong quá trình tính toán"
+
+#~ msgid "Point Group:"
+#~ msgstr "Nhóm điểm:"
+
+#~ msgid "Minutes"
+#~ msgstr "Phút"
+
+#~ msgid "Hours"
+#~ msgstr "Giờ"
+
+#~ msgid "Days"
+#~ msgstr "Ngày"
+
+#~ msgid "Weeks"
+#~ msgstr "Tuần"
+
+#~ msgid "Years"
+#~ msgstr "Năm"
+
+#~ msgid "Millenia"
+#~ msgstr "Thiên niên kỉ"
+
+#~ msgid "MegaWords"
+#~ msgstr "MegaWord"
+
+#~ msgid "MegaBytes"
+#~ msgstr "MegaByte"
+
+#~ msgid "GigaWords"
+#~ msgstr "GigaWord"
+
+#~ msgid "GigaBytes"
+#~ msgstr "GigaByte"
+
+#~ msgid "Produce \"core\" file upon abort"
+#~ msgstr "Tạo file \"lõi\" khi huỷ bỏ công việc"
+
+#~ msgid "EVVRSP"
+#~ msgstr "EVVRSP"
+
+#~ msgid "GIVEIS"
+#~ msgstr "GIVEIS"
+
+#~ msgid "JACOBI"
+#~ msgstr "JACOBI"
+
+#~ msgid "MemDDI:"
+#~ msgstr "MemDDI:"
+
+#~ msgid "Memory:"
+#~ msgstr "Bộ nhớ :"
+
+#~ msgid "Diagonalization Method:"
+#~ msgstr "Phương pháp chéo hoá:"
+
+#~ msgid "Parallel Load Balance Type"
+#~ msgstr "Kiểu cân bằng tải song song"
+
+#~ msgctxt "\"Loop\" load balancing - set static node assignments"
+#~ msgid "Loop"
+#~ msgstr "Vòng"
+
+#~ msgctxt "\"Next Value\" load balancing - dynamically assign nodes work"
+#~ msgid "Next Value"
+#~ msgstr "Giá trị kết tiếp"
+
+#~ msgid "Use External Data Representation for Messages"
+#~ msgstr "Dùng cách thể hiện dữ liệu ngoài cho các thông báo"
+
+#~ msgid "Initial Guess:"
+#~ msgstr "Lần đoán đầu tiên"
+
+#~ msgid "Hückel"
+#~ msgstr "Hückel"
+
+#~ msgid "HCore"
+#~ msgstr "HCore"
+
+#~ msgid "MO Read ($VEC)"
+#~ msgstr "Đọc MO ($VEC)"
+
+#~ msgid "MO Saved (DICTNRY)"
+#~ msgstr "Đã lưu MO (DICTNRY)"
+
+#~ msgid "Skip"
+#~ msgstr "Bỏ qua"
+
+#~ msgid "Rotate Alpha and Beta Orbitals"
+#~ msgstr "Xoay các orbital Alpha và Beta"
+
+#~ msgid "Print the Initial Guess"
+#~ msgstr "In giá trị đoán ban đầu"
+
+#~ msgid "GAMESS Interface to Other Codes"
+#~ msgstr "Giao diện GAMESS với các mã khác"
+
+#~ msgid "MolPlt"
+#~ msgstr "MolPlt"
+
+#~ msgid "PltOrb"
+#~ msgstr "PltOrb"
+
+#~ msgid "AIMPAC"
+#~ msgstr "AIMPAC"
+
+#~ msgid "RPAC"
+#~ msgstr "RPAC"
+
+#~ msgid "Hondo 8.2"
+#~ msgstr "Hondo 8.2"
+
+#~ msgid "MELDF"
+#~ msgstr "MELDF"
+
+#~ msgid "GAMESS (UK Version)"
+#~ msgstr "GAMESS (Phiên bản nước Anh)"
+
+#~ msgid "Gaussian 9x"
+#~ msgstr "Gaussian 9x"
+
+#~ msgid "Solvate with Water"
+#~ msgstr "Hoà trong dung môi nước"
+
+#~ msgid "Generate UHF Natural Orbitals"
+#~ msgstr "Phát sinh các orbital tự nhiên UHF"
+
+#~ msgid "Direct SCF"
+#~ msgstr "SCF trực tiếp"
+
+#~ msgid "VWN: Vosko-Wilk-Nusair (VWN5) correlation"
+#~ msgstr "VWN: tương quan Vosko-Wilk-Nusair (VWN5)"
+
+#~ msgid "LYP: Lee-Yang-Parr correlation"
+#~ msgstr "LYP: tương quan Lee-Yang-Parr"
+
+#~ msgid "SLYP: SLATER + Lee-Yang-Parr (LYP) correlation"
+#~ msgstr "SLYP: tương quan SLATER + Lee-Yang-Parr (LYP)"
+
+#~ msgid "SOP: SLATER + OP correlation"
+#~ msgstr "SOP: tương quan SLATER + OP"
+
+#~ msgid "Grid-Free"
+#~ msgstr "Không cần lưới"
+
+#~ msgid "Method:"
+#~ msgstr "Phương pháp:"
+
+#~ msgid "AO Integral Storage"
+#~ msgstr "Lưu trữ tích hợp AO"
+
+#~ msgid "Duplicated on Each Node"
+#~ msgstr "Lặp lại trên mỗi nút"
+
+#~ msgid "Compute MP2 Properties"
+#~ msgstr "Tính toán các thuộc tính MP2"
+
+#~ msgid "Segmented Transformation"
+#~ msgstr "Biến đổi phân đoạn"
+
+#~ msgid "Analytic"
+#~ msgstr "Giải tích"
+
+#~ msgid "Numeric"
+#~ msgstr "Dạng số"
+
+#~ msgid "Double Differenced Hessian"
+#~ msgstr "Hesse sai phân kép"
+
+#~ msgid "Print Internal Force Constants"
+#~ msgstr "In các hằng số nội lực"
+
+#~ msgid "Displacement Size:"
+#~ msgstr "Kích thước chuyển vị:"
+
+#~ msgid "bohrs"
+#~ msgstr "bo"
+
+#~ msgid "Initial Hessian"
+#~ msgstr "Hesse ban đầu"
+
+#~ msgid "Read (from $HESS)"
+#~ msgstr "Đọc (từ $HESS)"
+
+#~ msgid "Update Step Size"
+#~ msgstr "Cập nhật độ dài bước"
+
+#~ msgid "Print Orbs at Each Iteration"
+#~ msgstr "In các orbital tại mỗi lần lặp"
+
+#~ msgid "Jump Size:"
+#~ msgstr "Bước nhảy:"
+
+#~ msgid "Stationary Point"
+#~ msgstr "Điểm dừng"
+
+#~ msgid "Step Size"
+#~ msgstr "Độ dài bước"
+
+#~ msgid "Maximum:"
+#~ msgstr "Cực đại:"
+
+#~ msgid "Minimum:"
+#~ msgstr "Cực tiểu:"
+
+#~ msgid "Initial:"
+#~ msgstr "Ban đầu:"
+
+#~ msgid "Newton-Raphson"
+#~ msgstr "Newton-Raphson"
+
+#~ msgid "Rational Function Optimization"
+#~ msgstr "Tối ưu hàm số phân thức"
+
+#~ msgid "Quadratic Approximation"
+#~ msgstr "Xấp xỉ bậc hai"
+
+#~ msgid "Schlegel (quasi-NR)"
+#~ msgstr "Schlegel (giả-NR)"
+
+#~ msgid "Constrained Optimization"
+#~ msgstr "Tối ưu hoá có ràng buộc"
+
+#~ msgid "Recalculate Hessian Every:"
+#~ msgstr "Tính lại Hesse mỗi:"
+
+#~ msgid "Maximum Steps:"
+#~ msgstr "Số bước tối đa:"
+
+#~ msgid "Basis:"
+#~ msgstr "Cơ sở:"
+
+#~ msgid "Z-matrix"
+#~ msgstr "ma trận Z"
+
+#~ msgid "Gaussian Input"
+#~ msgstr "Đầu vào Gauss"
+
+#~ msgid "LANL2DZ"
+#~ msgstr "LANL2DZ"
+
+#~ msgid "Standard"
+#~ msgstr "Tiêu chuẩn"
+
+#~ msgid "Checkpoint:"
+#~ msgstr "Điểm kiểm tra:"
+
+#~ msgid "Z-matrix (compact)"
+#~ msgstr "ma trận Z (thu gọn)"
+
+#~ msgid "PM6"
+#~ msgstr "PM6"
+
+#~ msgid "RM1"
+#~ msgstr "RM1"
+
+#~ msgid "NWChem Input"
+#~ msgstr "Đầu vào NWChem"
+
+#~ msgid "B3LYP5"
+#~ msgstr "B3LYP5"
+
+#~ msgid "M06-2X"
+#~ msgstr "M06-2X"
+
+#~ msgid "LACVP"
+#~ msgstr "LACVP"
+
+#~ msgid "Display Type:"
+#~ msgstr "Kiểu hiển thị:"
+
+#~ msgid ""
+#~ "Controls:\n"
+#~ "Double left click: Restore default axis limits\n"
+#~ "Right click + drag: Move plot\n"
+#~ "Middle click + drag: Zoom to region\n"
+#~ "Scroll wheel: Zoom to cursor"
+#~ msgstr ""
+#~ "Thao tác:\n"
+#~ "Nháy đúp chuột trái: Hồi phục các giới hạn trục mặc định\n"
+#~ "Nháy chuột phải + di: Dịch chuyển bản vẽ\n"
+#~ "Nháy chuột giữa + di: Phóng to vào vùng được chọn\n"
+#~ "Lăn bánh xe chuột: Thu phóng ở vị trí con trỏ"
+
+#~ msgid "&Load data..."
+#~ msgstr "&Tải dữ liệu..."
+
+#~ msgid "&Close"
+#~ msgstr "Đón&g"
+
+#~ msgid "Calculated Spectra:"
+#~ msgstr "Tính toán phổ:"
+
+#~ msgid "Set Color..."
+#~ msgstr "Đặt màu..."
+
+#~ msgid "Imported Spectra:"
+#~ msgstr "Phổ được nhập:"
+
+#~ msgid "Font:"
+#~ msgstr "Phông chữ:"
+
+#~ msgid "Change Font..."
+#~ msgstr "Đổi phông chữ..."
+
+#~ msgid "Show"
+#~ msgstr "Hiển thị"
+
+#~ msgid "Imports a tsv of experimental spectra to overlay on the plot."
+#~ msgstr ""
+#~ "Nhập phổ thực nghiệm dưới dạng số liệu phân cách bởi dấu Tab, sau đó "
+#~ "trình bày lên bản vẽ."
+
+#~ msgid "&Import..."
+#~ msgstr "&Nhập..."
+
+#~ msgid "Background:"
+#~ msgstr "Nền:"
+
+#~ msgid "Foreground:"
+#~ msgstr "Đối tượng trên nền:"
+
+#~ msgid "New..."
+#~ msgstr "Tạo mới..."
+
+#~ msgid "Rename..."
+#~ msgstr "Đổi tên..."
+
+#~ msgid "&Schemes:"
+#~ msgstr "&Sơ đồ:"
+
+#~ msgid "&Export..."
+#~ msgstr "&Xuất..."
+
+#~ msgid "&DPI:"
+#~ msgstr "&DPI:"
+
+#~ msgid "&Width:"
+#~ msgstr "Bề &rộng:"
+
+#~ msgid "&Height"
+#~ msgstr "Chiều &cao"
+
+#~ msgid "cm"
+#~ msgstr "cm"
+
+#~ msgid "mm"
+#~ msgstr "mm"
+
+#~ msgid "in"
+#~ msgstr "inch"
+
+#~ msgid "px"
+#~ msgstr "px"
+
+#~ msgid "&Save Image..."
+#~ msgstr "&Lưu hình ảnh..."
+
+#~ msgid ""
+#~ "Use an optimized value for the font size instead of the scheme-specified "
+#~ "value (screen to image point sizes don't translate well!)"
+#~ msgstr ""
+#~ "Dùng một giá trị tối ưu cho cỡ phông chữ thay vì giá trị được chỉ định "
+#~ "theo sơ đồ (việc chuyển từ màn hình sang cỡ phông sẽ không đẹp!)"
+
+#~ msgid "Auto-adjust F&ont Size"
+#~ msgstr "Tự động điều chỉnh cỡ &phông chữ"
+
+#~ msgid "&Gaussian Width:"
+#~ msgstr "Bề rộng &Gauss:"
+
+#~ msgid "&Label peaks"
+#~ msgstr "Đặt &nhãn cho các đỉnh"
+
+#~ msgid "&Y Axis Units:"
+#~ msgstr "Đơn vị trục &Y:"
+
+#~ msgid "tab_NMR"
+#~ msgstr "tab_NMR"
+
+#~ msgid "Nucleus:"
+#~ msgstr "Hạt nhân:"
+
+#~ msgid "&Reference:"
+#~ msgstr "&Tham khảo:"
+
+#~ msgid "Gaussian &Width:"
+#~ msgstr "&Bề rộng Gauss:"
+
+#~ msgid "Reset &Plot Axes"
+#~ msgstr "Đặt lại các &trục để vẽ"
+
+#~ msgid "Label Peaks:"
+#~ msgstr "Đặt nhãn cho các đỉnh:"
+
+#~ msgid "ppm"
+#~ msgstr "ppm"
+
+#~ msgid "Molecular Vibrations"
+#~ msgstr "Rung động của phân tử"
+
+#~ msgid "higher frequency vibrations will show faster movement"
+#~ msgstr "các rung động với tần số cao sẽ cho thấy chuyển động nhanh hơn"
+
+#~ msgid "Animation speed set by frequency"
+#~ msgstr "Tốc độ hoạt hình đặt theo tần số"
+
+#~ msgid "Display force &vectors"
+#~ msgstr "Hiển thị &véc-tơ lực"
+
+#~ msgid "Create Surfaces"
+#~ msgstr "Tạo các mặt"
+
+#~ msgid "Surface Type:"
+#~ msgstr "Kiểu mặt:"
+
+#~ msgid "Color By:"
+#~ msgstr "Tô màu theo:"
+
+#~ msgctxt "low resolution"
+#~ msgid "Low"
+#~ msgstr "Thấp"
+
+#~ msgctxt "medium resolution"
+#~ msgid "Medium"
+#~ msgstr "Trung bình"
+
+#~ msgctxt "high resolution"
+#~ msgid "High"
+#~ msgstr "Cao"
+
+#~ msgctxt "very high resolution"
+#~ msgid "Very High"
+#~ msgstr "Rất cao"
+
+#~ msgid "Iso Value:"
+#~ msgstr "Giá trị mức:"
+
+#~ msgctxt ""
+#~ "Add the new surface to this particular display type (i.e., orbital or "
+#~ "surface)"
+#~ msgid "In Display Type:"
+#~ msgstr "Trong kiểu hiển thị:"
+
+#~ msgid "New Display"
+#~ msgstr "Cửa sổ hiển thị mới"
+
+#~ msgid "Advanced..."
+#~ msgstr "Thêm..."
+
+#~ msgid "Display visual cues"
+#~ msgstr "Hiện các hỗ trợ xem hình"
+
+#~ msgid "Python Settings"
+#~ msgstr "Đặt chế độ cho Python"
+
+#~ msgid "Z Matrix Editor"
+#~ msgstr "Soạn thảo ma trận Z"
+
+#~ msgid "Import Selected Atoms"
+#~ msgstr "Nhập các nguyên tử được chọn"

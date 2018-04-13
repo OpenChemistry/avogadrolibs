@@ -1,22 +1,22 @@
-# Translations for the Avogadro molecular builder.
-# Copyright (C) 2006-2018 The Avogadro Project
-# This file is distributed under the same license as the Avogadro package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Swedish translation for avogadro
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the avogadro package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Avogadro 1.90.0\n"
+"Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-04-13 12:05-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2016-06-10 06:44+0000\n"
+"Last-Translator: Dostojevskji <darkangel_nr1@hotmail.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
+"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -157,7 +157,7 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:170 qtgui/elementtranslator.cpp:387
 msgid "Unknown"
-msgstr ""
+msgstr "Okänd"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #, qt-format, qt-plural-format
@@ -229,8 +229,9 @@ msgid "Hide &Warnings"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:390
+#, fuzzy
 msgid "Show &Warnings"
-msgstr ""
+msgstr " Visa vinklar"
 
 #: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:96
 msgid "An error has occurred:"
@@ -521,459 +522,460 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:32
 msgid "Hydrogen"
-msgstr ""
+msgstr "Väte"
 
 #: qtgui/elementtranslator.cpp:35
 msgid "Helium"
-msgstr ""
+msgstr "Helium"
 
 #: qtgui/elementtranslator.cpp:38
 msgid "Lithium"
-msgstr ""
+msgstr "Litium"
 
 #: qtgui/elementtranslator.cpp:41
 msgid "Beryllium"
-msgstr ""
+msgstr "Beryllium"
 
 #: qtgui/elementtranslator.cpp:44
 msgid "Boron"
-msgstr ""
+msgstr "Bor"
 
 #: qtgui/elementtranslator.cpp:47
 msgid "Carbon"
-msgstr ""
+msgstr "Kol"
 
 #: qtgui/elementtranslator.cpp:50
 msgid "Nitrogen"
-msgstr ""
+msgstr "Kväve"
 
 #: qtgui/elementtranslator.cpp:53
 msgid "Oxygen"
-msgstr ""
+msgstr "Syre"
 
 #: qtgui/elementtranslator.cpp:56
 msgid "Fluorine"
-msgstr ""
+msgstr "Fluor"
 
 #: qtgui/elementtranslator.cpp:59
 msgid "Neon"
-msgstr ""
+msgstr "Neon"
 
 #: qtgui/elementtranslator.cpp:62
 msgid "Sodium"
-msgstr ""
+msgstr "Natrium"
 
 #: qtgui/elementtranslator.cpp:65
 msgid "Magnesium"
-msgstr ""
+msgstr "Magnesium"
 
 #: qtgui/elementtranslator.cpp:68
 msgid "Aluminum"
-msgstr ""
+msgstr "Aluminium"
 
 #: qtgui/elementtranslator.cpp:71
 msgid "Silicon"
-msgstr ""
+msgstr "Kisel"
 
 #: qtgui/elementtranslator.cpp:74
 msgid "Phosphorus"
-msgstr ""
+msgstr "Fosfor"
 
 #: qtgui/elementtranslator.cpp:77
 msgid "Sulfur"
-msgstr ""
+msgstr "Svavel"
 
 #: qtgui/elementtranslator.cpp:80
 msgid "Chlorine"
-msgstr ""
+msgstr "Klor"
 
 #: qtgui/elementtranslator.cpp:83
 msgid "Argon"
-msgstr ""
+msgstr "Argon"
 
 #: qtgui/elementtranslator.cpp:86
 msgid "Potassium"
-msgstr ""
+msgstr "Kalium"
 
 #: qtgui/elementtranslator.cpp:89
 msgid "Calcium"
-msgstr ""
+msgstr "Kalcium"
 
 #: qtgui/elementtranslator.cpp:92
 msgid "Scandium"
-msgstr ""
+msgstr "Skandium"
 
 #: qtgui/elementtranslator.cpp:95
 msgid "Titanium"
-msgstr ""
+msgstr "Titan"
 
 #: qtgui/elementtranslator.cpp:98
 msgid "Vanadium"
-msgstr ""
+msgstr "Vanadin"
 
 #: qtgui/elementtranslator.cpp:101
 msgid "Chromium"
-msgstr ""
+msgstr "Krom"
 
 #: qtgui/elementtranslator.cpp:104
 msgid "Manganese"
-msgstr ""
+msgstr "Mangan"
 
 #: qtgui/elementtranslator.cpp:107
 msgid "Iron"
-msgstr ""
+msgstr "Järn"
 
 #: qtgui/elementtranslator.cpp:110
 msgid "Cobalt"
-msgstr ""
+msgstr "Kobolt"
 
 #: qtgui/elementtranslator.cpp:113
 msgid "Nickel"
-msgstr ""
+msgstr "Nickel"
 
 #: qtgui/elementtranslator.cpp:116
 msgid "Copper"
-msgstr ""
+msgstr "Koppar"
 
 #: qtgui/elementtranslator.cpp:119
 msgid "Zinc"
-msgstr ""
+msgstr "Zink"
 
 #: qtgui/elementtranslator.cpp:122
 msgid "Gallium"
-msgstr ""
+msgstr "Gallium"
 
 #: qtgui/elementtranslator.cpp:125
 msgid "Germanium"
-msgstr ""
+msgstr "Germanium"
 
 #: qtgui/elementtranslator.cpp:128
 msgid "Arsenic"
-msgstr ""
+msgstr "Arsenik"
 
 #: qtgui/elementtranslator.cpp:131
 msgid "Selenium"
-msgstr ""
+msgstr "Selen"
 
 #: qtgui/elementtranslator.cpp:134
 msgid "Bromine"
-msgstr ""
+msgstr "Brom"
 
 #: qtgui/elementtranslator.cpp:137
 msgid "Krypton"
-msgstr ""
+msgstr "Krypton"
 
 #: qtgui/elementtranslator.cpp:140
 msgid "Rubidium"
-msgstr ""
+msgstr "Rubidium"
 
 #: qtgui/elementtranslator.cpp:143
 msgid "Strontium"
-msgstr ""
+msgstr "Strontium"
 
 #: qtgui/elementtranslator.cpp:146
 msgid "Yttrium"
-msgstr ""
+msgstr "Yttrium"
 
 #: qtgui/elementtranslator.cpp:149
 msgid "Zirconium"
-msgstr ""
+msgstr "Zirkonium"
 
 #: qtgui/elementtranslator.cpp:152
 msgid "Niobium"
-msgstr ""
+msgstr "Niob"
 
 #: qtgui/elementtranslator.cpp:155
 msgid "Molybdenum"
-msgstr ""
+msgstr "Molybden"
 
 #: qtgui/elementtranslator.cpp:158
 msgid "Technetium"
-msgstr ""
+msgstr "Teknetium"
 
 #: qtgui/elementtranslator.cpp:161
 msgid "Ruthenium"
-msgstr ""
+msgstr "Rutenium"
 
 #: qtgui/elementtranslator.cpp:164
 msgid "Rhodium"
-msgstr ""
+msgstr "Rodium"
 
 #: qtgui/elementtranslator.cpp:167
 msgid "Palladium"
-msgstr ""
+msgstr "Palladium"
 
 #: qtgui/elementtranslator.cpp:170
 msgid "Silver"
-msgstr ""
+msgstr "Silver"
 
 #: qtgui/elementtranslator.cpp:173
 msgid "Cadmium"
-msgstr ""
+msgstr "Kadmium"
 
 #: qtgui/elementtranslator.cpp:176
 msgid "Indium"
-msgstr ""
+msgstr "Indium"
 
 #: qtgui/elementtranslator.cpp:179
 msgid "Tin"
-msgstr ""
+msgstr "Tenn"
 
 #: qtgui/elementtranslator.cpp:182
 msgid "Antimony"
-msgstr ""
+msgstr "Antimon"
 
 #: qtgui/elementtranslator.cpp:185
 msgid "Tellurium"
-msgstr ""
+msgstr "Tellur"
 
 #: qtgui/elementtranslator.cpp:188
 msgid "Iodine"
-msgstr ""
+msgstr "Jod"
 
 #: qtgui/elementtranslator.cpp:191
 msgid "Xenon"
-msgstr ""
+msgstr "Xenon"
 
 #: qtgui/elementtranslator.cpp:194
 msgid "Cesium"
-msgstr ""
+msgstr "Cesium"
 
 #: qtgui/elementtranslator.cpp:197
 msgid "Barium"
-msgstr ""
+msgstr "Barium"
 
 #: qtgui/elementtranslator.cpp:200
 msgid "Lanthanum"
-msgstr ""
+msgstr "Lantan"
 
 #: qtgui/elementtranslator.cpp:203
 msgid "Cerium"
-msgstr ""
+msgstr "Cerium"
 
 #: qtgui/elementtranslator.cpp:206
 msgid "Praseodymium"
-msgstr ""
+msgstr "Praseodym"
 
 #: qtgui/elementtranslator.cpp:209
 msgid "Neodymium"
-msgstr ""
+msgstr "Neodym"
 
 #: qtgui/elementtranslator.cpp:212
 msgid "Promethium"
-msgstr ""
+msgstr "Prometium"
 
 #: qtgui/elementtranslator.cpp:215
 msgid "Samarium"
-msgstr ""
+msgstr "Samarium"
 
 #: qtgui/elementtranslator.cpp:218
 msgid "Europium"
-msgstr ""
+msgstr "Europium"
 
 #: qtgui/elementtranslator.cpp:221
 msgid "Gadolinium"
-msgstr ""
+msgstr "Gadolinium"
 
 #: qtgui/elementtranslator.cpp:224
 msgid "Terbium"
-msgstr ""
+msgstr "Terbium"
 
 #: qtgui/elementtranslator.cpp:227
 msgid "Dysprosium"
-msgstr ""
+msgstr "Dysprosium"
 
 #: qtgui/elementtranslator.cpp:230
 msgid "Holmium"
-msgstr ""
+msgstr "Holmium"
 
 #: qtgui/elementtranslator.cpp:233
 msgid "Erbium"
-msgstr ""
+msgstr "Erbium"
 
 #: qtgui/elementtranslator.cpp:236
 msgid "Thulium"
-msgstr ""
+msgstr "Tulium"
 
 #: qtgui/elementtranslator.cpp:239
 msgid "Ytterbium"
-msgstr ""
+msgstr "Ytterbium"
 
 #: qtgui/elementtranslator.cpp:242
 msgid "Lutetium"
-msgstr ""
+msgstr "Lutetium"
 
 #: qtgui/elementtranslator.cpp:245
 msgid "Hafnium"
-msgstr ""
+msgstr "Hafnium"
 
 #: qtgui/elementtranslator.cpp:248
 msgid "Tantalum"
-msgstr ""
+msgstr "Tantal"
 
 #: qtgui/elementtranslator.cpp:251
 msgid "Tungsten"
-msgstr ""
+msgstr "Volfram"
 
 #: qtgui/elementtranslator.cpp:254
 msgid "Rhenium"
-msgstr ""
+msgstr "Rhenium"
 
 #: qtgui/elementtranslator.cpp:257
 msgid "Osmium"
-msgstr ""
+msgstr "Osmium"
 
 #: qtgui/elementtranslator.cpp:260
 msgid "Iridium"
-msgstr ""
+msgstr "Iridium"
 
 #: qtgui/elementtranslator.cpp:263
 msgid "Platinum"
-msgstr ""
+msgstr "platina"
 
 #: qtgui/elementtranslator.cpp:266
 msgid "Gold"
-msgstr ""
+msgstr "Guld"
 
 #: qtgui/elementtranslator.cpp:269
 msgid "Mercury"
-msgstr ""
+msgstr "Kvicksilver"
 
 #: qtgui/elementtranslator.cpp:272
 msgid "Thallium"
-msgstr ""
+msgstr "Tallium"
 
 #: qtgui/elementtranslator.cpp:275
 msgid "Lead"
-msgstr ""
+msgstr "Bly"
 
 #: qtgui/elementtranslator.cpp:278
 msgid "Bismuth"
-msgstr ""
+msgstr "Vismut"
 
 #: qtgui/elementtranslator.cpp:281
 msgid "Polonium"
-msgstr ""
+msgstr "Polonium"
 
 #: qtgui/elementtranslator.cpp:284
 msgid "Astatine"
-msgstr ""
+msgstr "Astat"
 
 #: qtgui/elementtranslator.cpp:287
 msgid "Radon"
-msgstr ""
+msgstr "Radon"
 
 #: qtgui/elementtranslator.cpp:290
 msgid "Francium"
-msgstr ""
+msgstr "Francium"
 
 #: qtgui/elementtranslator.cpp:293
 msgid "Radium"
-msgstr ""
+msgstr "Radium"
 
 #: qtgui/elementtranslator.cpp:296
 msgid "Actinium"
-msgstr ""
+msgstr "Aktinium"
 
 #: qtgui/elementtranslator.cpp:299
 msgid "Thorium"
-msgstr ""
+msgstr "Torium"
 
 #: qtgui/elementtranslator.cpp:302
 msgid "Protactinium"
-msgstr ""
+msgstr "Protaktinium"
 
 #: qtgui/elementtranslator.cpp:305
 msgid "Uranium"
-msgstr ""
+msgstr "Uran"
 
 #: qtgui/elementtranslator.cpp:308
 msgid "Neptunium"
-msgstr ""
+msgstr "Neptunium"
 
 #: qtgui/elementtranslator.cpp:311
 msgid "Plutonium"
-msgstr ""
+msgstr "Plutonium"
 
 #: qtgui/elementtranslator.cpp:314
 msgid "Americium"
-msgstr ""
+msgstr "Americium"
 
 #: qtgui/elementtranslator.cpp:317
 msgid "Curium"
-msgstr ""
+msgstr "Curium"
 
 #: qtgui/elementtranslator.cpp:320
 msgid "Berkelium"
-msgstr ""
+msgstr "Berkelium"
 
 #: qtgui/elementtranslator.cpp:323
 msgid "Californium"
-msgstr ""
+msgstr "Californium"
 
 #: qtgui/elementtranslator.cpp:326
 msgid "Einsteinium"
-msgstr ""
+msgstr "Einsteinium"
 
 #: qtgui/elementtranslator.cpp:329
 msgid "Fermium"
-msgstr ""
+msgstr "Fermium"
 
 #: qtgui/elementtranslator.cpp:332
 msgid "Mendelevium"
-msgstr ""
+msgstr "Mendelevium"
 
 #: qtgui/elementtranslator.cpp:335
 msgid "Nobelium"
-msgstr ""
+msgstr "Nobelium"
 
 #: qtgui/elementtranslator.cpp:338
 msgid "Lawrencium"
-msgstr ""
+msgstr "Lawrencium"
 
 #: qtgui/elementtranslator.cpp:341
 msgid "Rutherfordium"
-msgstr ""
+msgstr "Rutherfordium"
 
 #: qtgui/elementtranslator.cpp:344
 msgid "Dubnium"
-msgstr ""
+msgstr "Dubnium"
 
 #: qtgui/elementtranslator.cpp:347
 msgid "Seaborgium"
-msgstr ""
+msgstr "Seaborgium"
 
 #: qtgui/elementtranslator.cpp:350
 msgid "Bohrium"
-msgstr ""
+msgstr "Bohrium"
 
 #: qtgui/elementtranslator.cpp:353
 msgid "Hassium"
-msgstr ""
+msgstr "Hassium"
 
 #: qtgui/elementtranslator.cpp:356
 msgid "Meitnerium"
-msgstr ""
+msgstr "Meitnerium"
 
 #: qtgui/elementtranslator.cpp:359
 msgid "Darmstadtium"
-msgstr ""
+msgstr "Darmstadtium"
 
 #: qtgui/elementtranslator.cpp:362
 msgid "Roentgenium"
-msgstr ""
+msgstr "Röntgenium"
 
 #: qtgui/elementtranslator.cpp:365
 msgid "Copernicium"
-msgstr ""
+msgstr "Copernicium"
 
 #: qtgui/elementtranslator.cpp:368
+#, fuzzy
 msgid "Nihonium"
-msgstr ""
+msgstr "Zirkonium"
 
 #: qtgui/elementtranslator.cpp:371
 msgid "Flerovium"
-msgstr ""
+msgstr "Flerovium"
 
 #: qtgui/elementtranslator.cpp:374
 msgid "Moscovium"
@@ -981,7 +983,7 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:377
 msgid "Livermorium"
-msgstr ""
+msgstr "Livermorium"
 
 #: qtgui/elementtranslator.cpp:380
 msgid "Tennessine"
@@ -1114,8 +1116,9 @@ msgid "Write error."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:155
+#, fuzzy
 msgid "Unknown error."
-msgstr ""
+msgstr "Okänd"
 
 #: qtgui/rwmolecule.cpp:48
 msgid "Modify Molecule"
@@ -1131,18 +1134,20 @@ msgid "Remove Atom"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:301
+#, fuzzy
 msgid "Clear Atoms"
-msgstr ""
+msgstr "Rita atom"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321 :345
+#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321:345
 msgid "Adjust Hydrogens"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:356
+#, fuzzy
 msgid "Change Elements"
-msgstr ""
+msgstr "Gundämne:"
 
 #: qtgui/rwmolecule.cpp:390
 msgid "Change Element"
@@ -1161,28 +1166,33 @@ msgid "Add Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:751
+#, fuzzy
 msgid "Removed Bond"
-msgstr ""
+msgstr "Dölj väte"
 
 #: qtgui/rwmolecule.cpp:758
+#, fuzzy
 msgid "Clear Bonds"
-msgstr ""
+msgstr "Rita bindning"
 
 #: qtgui/rwmolecule.cpp:793
+#, fuzzy
 msgid "Set Bond Orders"
-msgstr ""
+msgstr "Bindningsordning:"
 
 #: qtgui/rwmolecule.cpp:838
 msgid "Change Bond Order"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:882
+#, fuzzy
 msgid "Update Bonds"
-msgstr ""
+msgstr " Låsande bindningar"
 
 #: qtgui/rwmolecule.cpp:922
+#, fuzzy
 msgid "Update Bond"
-msgstr ""
+msgstr "Rita bindning"
 
 #: qtgui/rwmolecule.cpp:962
 msgid "Add Unit Cell"
@@ -1245,12 +1255,13 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
 #: qtplugins/povray/povray.cpp:58 qtplugins/vrml/vrml.cpp:58
 msgid "&File"
-msgstr ""
+msgstr "&Arkiv"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/vrml/vrml.cpp:58
+#, fuzzy
 msgid "&Export"
-msgstr ""
+msgstr "Exportera"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1258,7 +1269,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:177
 #. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
-#: qtplugins/apbs/apbs.cpp:43 :141
+#: qtplugins/apbs/apbs.cpp:43:141
 msgid "Run APBS"
 msgstr ""
 
@@ -1308,7 +1319,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
-#: qtplugins/apbs/apbs.h:42 :87
+#: qtplugins/apbs/apbs.h:42:87
 msgid "APBS"
 msgstr ""
 
@@ -1369,7 +1380,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:190
-#: qtplugins/clientserver/connectionsettingsdialog.cpp:75 :147
+#: qtplugins/clientserver/connectionsettingsdialog.cpp:75:147
 msgid "Success"
 msgstr ""
 
@@ -1385,16 +1396,18 @@ msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:104
+#, fuzzy
 msgid "Show hydrogens?"
-msgstr ""
+msgstr "Väte"
 
 #: qtplugins/ballandstick/ballandstick.h:43
 msgid "Ball and Stick"
 msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.h:47
+#, fuzzy
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr ""
+msgstr "Renderar atom- och bindningsetiketter"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:312
 msgid "Bond-centric manipulation"
@@ -1414,8 +1427,9 @@ msgid "Bond Atoms"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:43
+#, fuzzy
 msgid "Remove Bonds"
-msgstr ""
+msgstr "Dölj väte"
 
 #: qtplugins/bonding/bonding.cpp:62
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:45
@@ -1490,8 +1504,9 @@ msgid "Connection to %2:%3 succeeded!"
 msgstr ""
 
 #: qtplugins/clientserver/filedialogmodel.cpp:666
+#, fuzzy
 msgid "Filename"
-msgstr ""
+msgstr "&Arkiv"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:29
 msgid "Atomic &Coordinate Editor..."
@@ -1524,16 +1539,18 @@ msgid "Invalid element name."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:383
+#, fuzzy
 msgid "Element name."
-msgstr ""
+msgstr "Gundämne:"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
 msgid "Invalid element symbol."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
+#, fuzzy
 msgid "Element symbol."
-msgstr ""
+msgstr "Gundämne:"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
 msgid "Invalid atomic number."
@@ -1594,7 +1611,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607 :615
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607:615
 msgid "Custom"
 msgstr ""
 
@@ -1603,8 +1620,20 @@ msgid "XYZ format (symbols)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:609
+#, fuzzy
 msgid "XYZ format (names)"
 msgstr ""
+",Launchpad Contributions:,Dostojevskji, ,Launchpad Contributions:,"
+"Dostojevskji, ,Launchpad Contributions:,Dostojevskji, ,Launchpad "
+"Contributions:,Dostojevskji, ,Launchpad Contributions:,Dostojevskji, ,"
+"Launchpad Contributions:,Dostojevskji, ,Launchpad Contributions:,"
+"Dostojevskji, ,Launchpad Contributions:,Dostojevskji, ,Launchpad "
+"Contributions:,Dostojevskji, ,Launchpad Contributions:,Dostojevskji, ,"
+"Launchpad Contributions:,Alexander Andjelkovic,Arve Eriksson,Daniel Nylander,"
+"Dostojevskji,Peter Sahlin, ,Launchpad Contributions:,Alexander Andjelkovic,"
+"Arve Eriksson,Daniel Nylander,Dostojevskji,Peter Sahlin, ,Launchpad "
+"Contributions:,Alexander Andjelkovic,Arve Eriksson,Daniel Nylander,"
+"Dostojevskji,Peter Sahlin"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:610
 msgid "XYZ format (atomic numbers)"
@@ -1636,25 +1665,25 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:42 :225
+#: qtplugins/copypaste/copypaste.cpp:42:225
 msgid "Copy"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:43 :222
+#: qtplugins/copypaste/copypaste.cpp:43:222
 msgid "Cut"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:44 :234
+#: qtplugins/copypaste/copypaste.cpp:44:234
 msgid "Clear"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
-#: qtplugins/copypaste/copypaste.cpp:45 :228
+#: qtplugins/copypaste/copypaste.cpp:45:228
 msgid "Paste"
 msgstr ""
 
@@ -1779,8 +1808,9 @@ msgid "Crystal Lattice"
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.h:41
+#, fuzzy
 msgid "Render the unit cell boundaries."
-msgstr ""
+msgstr "Renderar atom- och bindningsetiketter"
 
 #: qtplugins/crystal/importcrystaldialog.cpp:81
 msgid "Cannot Parse Text"
@@ -1804,34 +1834,37 @@ msgid "Manipulate custom element types in the current molecule."
 msgstr ""
 
 #: qtplugins/customelements/customelements.h:35
+#, fuzzy
 msgid "Custom Elements"
-msgstr ""
+msgstr "Färg efter grundämne"
 
 #: qtplugins/editor/editor.cpp:84 qtplugins/editor/editor.cpp:118
 msgid "Draw"
-msgstr ""
+msgstr "Rita"
 
 #: qtplugins/editor/editor.cpp:112
 msgid "Draw Atom"
-msgstr ""
+msgstr "Rita atom"
 
 #: qtplugins/editor/editor.cpp:122
 msgid "Change Bond Type"
 msgstr ""
 
 #: qtplugins/editor/editor.cpp:135
+#, fuzzy
 msgid "Remove Bond"
-msgstr ""
+msgstr "Dölj väte"
 
 #: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:194
 #: qtplugins/measuretool/measuretool.cpp:222
+#, fuzzy
 msgid "Distance:"
-msgstr ""
+msgstr "Avstånd:"
 
 #: qtplugins/editor/editor.cpp:235
-#, qt-format
+#, fuzzy, qt-format
 msgid "Distance: %L1 Å"
-msgstr ""
+msgstr "Avstånd:"
 
 #: qtplugins/editor/editor.h:44 qtplugins/editor/editor.h:45
 msgid "Editor tool"
@@ -1842,20 +1875,21 @@ msgid "Other..."
 msgstr ""
 
 #: qtplugins/editor/editortoolwidget.cpp:217
+#, fuzzy
 msgid "Automatic"
-msgstr ""
+msgstr "Auto Optimering"
 
 #: qtplugins/editor/editortoolwidget.cpp:218
 msgid "Single"
-msgstr ""
+msgstr "Enkel"
 
 #: qtplugins/editor/editortoolwidget.cpp:219
 msgid "Double"
-msgstr ""
+msgstr "Dubbel"
 
 #: qtplugins/editor/editortoolwidget.cpp:220
 msgid "Triple"
-msgstr ""
+msgstr "Trippel"
 
 #: qtplugins/forcefields/workflow.cpp:73 qtplugins/forcefields/workflow.cpp:81
 #: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
@@ -1923,8 +1957,9 @@ msgid "Generate input for GAMESS."
 msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:237
+#, fuzzy
 msgid "Single Point"
-msgstr ""
+msgstr "Enkel"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:240
 msgid "Equilibrium Geometry"
@@ -2001,32 +2036,36 @@ msgid "Submit GAMESS Calculation"
 msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:33
+#, fuzzy
 msgid "&Adjust Hydrogens"
-msgstr ""
+msgstr "Visa väte"
 
 #: qtplugins/hydrogens/hydrogens.cpp:38
 msgid "Add Hydrogens"
-msgstr ""
+msgstr "Visa väte"
 
 #: qtplugins/hydrogens/hydrogens.cpp:42
+#, fuzzy
 msgid "Remove E&xtra Hydrogens"
-msgstr ""
+msgstr "Dölj väte"
 
 #: qtplugins/hydrogens/hydrogens.cpp:46
+#, fuzzy
 msgid "&Remove All Hydrogens"
-msgstr ""
+msgstr "Dölj väte"
 
 #: qtplugins/hydrogens/hydrogens.cpp:57
 msgid "Add/remove hydrogens from the current molecule."
 msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:67
+#, fuzzy
 msgid "&Hydrogens"
-msgstr ""
+msgstr "Väte"
 
 #: qtplugins/hydrogens/hydrogens.h:35
 msgid "Hydrogens"
-msgstr ""
+msgstr "Väte"
 
 #: qtplugins/importpqr/importpqr.cpp:38
 msgid "&Import From PQR"
@@ -2034,12 +2073,13 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
+#, fuzzy
 msgid "&Import"
-msgstr ""
+msgstr "Importera"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
-#: qtplugins/importpqr/importpqr.h:45 :393
+#: qtplugins/importpqr/importpqr.h:45:393
 msgid "Import From PQR"
 msgstr ""
 
@@ -2052,12 +2092,13 @@ msgid "Licorice"
 msgstr ""
 
 #: qtplugins/licorice/licorice.h:42
+#, fuzzy
 msgid "Render atoms as licorice."
-msgstr ""
+msgstr "Renderar atom- och bindningsetiketter"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:43
 msgid "SMILES..."
-msgstr ""
+msgstr "SMILES..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:48
 msgid "InChI..."
@@ -2068,12 +2109,13 @@ msgid "InChI"
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:56
+#, fuzzy
 msgid "SMILES"
-msgstr ""
+msgstr "SMILES..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Insert"
-msgstr ""
+msgstr "&Infoga"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:98
 #: qtplugins/lineformatinput/lineformatinput.cpp:122
@@ -2087,7 +2129,7 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133 :426
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:426
 msgid "Insert Molecule..."
 msgstr ""
 
@@ -2118,7 +2160,7 @@ msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:63
 msgid "Measure"
-msgstr ""
+msgstr "Mät"
 
 #: qtplugins/measuretool/measuretool.cpp:192
 #: qtplugins/measuretool/measuretool.cpp:202
@@ -2130,13 +2172,15 @@ msgid "Angle:"
 msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:214
+#, fuzzy
 msgid "Angles:"
-msgstr ""
+msgstr " Visa vinklar"
 
 #: qtplugins/measuretool/measuretool.h:48
 #: qtplugins/measuretool/measuretool.h:49
+#, fuzzy
 msgid "Measure tool"
-msgstr ""
+msgstr "Mät"
 
 #: qtplugins/meshes/meshes.h:40
 msgid "Meshes"
@@ -2154,7 +2198,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
 #: qtplugins/resetview/resetview.cpp:48 qtplugins/symmetry/symmetry.cpp:92
 msgid "&View"
-msgstr ""
+msgstr "&Vy"
 
 #: qtplugins/molecularproperties/molecularproperties.h:42
 #: qtplugins/mongochem/mongochem.h:40
@@ -2210,8 +2254,9 @@ msgid "Autodetect (%1)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:52
+#, fuzzy
 msgid "Optimize geometry"
-msgstr ""
+msgstr "&Optimera geometri"
 
 #: qtplugins/openbabel/openbabel.cpp:59
 msgid "Configure geometry optimization..."
@@ -2222,16 +2267,19 @@ msgid "Perceive bonds"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:71
+#, fuzzy
 msgid "Add hydrogens"
-msgstr ""
+msgstr "Visa väte"
 
 #: qtplugins/openbabel/openbabel.cpp:77
+#, fuzzy
 msgid "Add hydrogens for pH..."
-msgstr ""
+msgstr "Visa väte för pH..."
 
 #: qtplugins/openbabel/openbabel.cpp:83
+#, fuzzy
 msgid "Remove hydrogens"
-msgstr ""
+msgstr "Dölj väte"
 
 #: qtplugins/openbabel/openbabel.cpp:93
 #, qt-format
@@ -2281,8 +2329,9 @@ msgid "Cannot optimize geometry with OpenBabel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:383
+#, fuzzy
 msgid "Optimizing Geometry (OpenBabel)"
-msgstr ""
+msgstr "&Optimera geometri"
 
 #: qtplugins/openbabel/openbabel.cpp:384
 msgid "Generating MDL..."
@@ -2324,8 +2373,9 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:473
+#, fuzzy
 msgid "Optimize Geometry"
-msgstr ""
+msgstr "&Optimera geometri"
 
 #: qtplugins/openbabel/openbabel.cpp:482
 msgid "Cannot open file with OpenBabel."
@@ -2365,8 +2415,9 @@ msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:579 qtplugins/openbabel/openbabel.cpp:626
+#, fuzzy
 msgid "Adding Hydrogens (OpenBabel)"
-msgstr ""
+msgstr "Visa väte"
 
 #: qtplugins/openbabel/openbabel.cpp:580 qtplugins/openbabel/openbabel.cpp:627
 #: qtplugins/openbabel/openbabel.cpp:666
@@ -2385,20 +2436,23 @@ msgid "Running %1..."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:620
+#, fuzzy
 msgid "Add hydrogens for pH"
-msgstr ""
+msgstr "Visa väte för pH"
 
 #: qtplugins/openbabel/openbabel.cpp:620
+#, fuzzy
 msgid "pH:"
-msgstr ""
+msgstr "pH"
 
 #: qtplugins/openbabel/openbabel.cpp:660
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:665
+#, fuzzy
 msgid "Removing Hydrogens (OpenBabel)"
-msgstr ""
+msgstr "Dölj väte"
 
 #: qtplugins/openbabel/openbabel.cpp:694
 msgid "Reading obabel output..."
@@ -2457,8 +2511,9 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:108
 #: qtplugins/playertool/playertool.cpp:161
+#, fuzzy
 msgid "Stopped"
-msgstr ""
+msgstr "Koppar"
 
 #: qtplugins/playertool/playertool.cpp:180
 #, qt-format
@@ -2466,8 +2521,9 @@ msgid "Frame %0 of %1"
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:197
+#, fuzzy
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Exportera vektorgrafik"
 
 #: qtplugins/playertool/playertool.cpp:233
 msgid "Avogadro"
@@ -2525,7 +2581,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.h:46 :570
+#: qtplugins/plugindownloader/plugindownloader.h:46:570
 msgid "Plugin Downloader"
 msgstr ""
 
@@ -2680,8 +2736,9 @@ msgid "Select None"
 msgstr ""
 
 #: qtplugins/select/select.cpp:48
+#, fuzzy
 msgid "Invert Selection"
-msgstr ""
+msgstr "Infoga peptid"
 
 #: qtplugins/select/select.cpp:59
 msgid "Change selections"
@@ -2693,7 +2750,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:183
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:35 :678
+#: qtplugins/select/select.h:35:678
 msgid "Select"
 msgstr ""
 
@@ -2712,7 +2769,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:81 :663
+#: qtplugins/spacegroup/spacegroup.cpp:81:663
 msgid "Symmetrize"
 msgstr ""
 
@@ -2832,7 +2889,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:44 :648
+#: qtplugins/symmetry/symmetry.h:44:648
 msgid "Symmetry"
 msgstr ""
 
@@ -2841,12 +2898,14 @@ msgid "Provide symmetry functionality."
 msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:44
+#, fuzzy
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "Färg efter grundämne"
 
 #: qtplugins/symmetry/symmetryscene.h:46
+#, fuzzy
 msgid "Render symmetry elements."
-msgstr ""
+msgstr "Renderar molekylära dipolmoment"
 
 #: qtplugins/symmetry/symmetryutil.cpp:32
 msgid "∞"
@@ -2861,8 +2920,9 @@ msgid "Simple display of VdW spheres."
 msgstr ""
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:41
+#, fuzzy
 msgid "Van der Waals (AO)"
-msgstr ""
+msgstr "Van der Waals-sfärer"
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:45
 msgid "Simple display of VdW spheres with ambient occlusion."
@@ -3010,8 +3070,9 @@ msgstr ""
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
+#, fuzzy
 msgid "Rename Elements"
-msgstr ""
+msgstr "Gundämne:"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
@@ -3063,7 +3124,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force Field:"
-msgstr ""
+msgstr "Kraftfält:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:75
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
@@ -3137,8 +3198,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConnectionSettingsDialog)
+#, fuzzy
 msgid "Server settings"
-msgstr ""
+msgstr "In&ställningar"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label7)
@@ -3207,8 +3269,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Distance Unit:"
-msgstr ""
+msgstr "Avstånd:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:46
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
@@ -3420,12 +3483,12 @@ msgstr ""
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:23
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Element:"
-msgstr ""
+msgstr "Gundämne:"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Bond Order:"
-msgstr ""
+msgstr "Bindningsordning:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
@@ -3549,8 +3612,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
 msgid "Molecular Mass (g/mol):"
-msgstr ""
+msgstr "Molekyldynamik (300 K)"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, molMassLabel)
@@ -3585,18 +3649,21 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#, fuzzy
 msgid "Optimization Method"
-msgstr ""
+msgstr "Auto Optimering"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Force field:"
-msgstr ""
+msgstr "Kraftfält:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Optimization algorithm:"
-msgstr ""
+msgstr "Auto Optimering"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -3625,8 +3692,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
+#, fuzzy
 msgid "Autodetect"
-msgstr ""
+msgstr "Auto Rotera"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
@@ -3715,8 +3783,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Number of points:"
-msgstr ""
+msgstr "Antalet atomer: %1"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -3856,13 +3925,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
+#, fuzzy
 msgid "Start Animation"
-msgstr ""
+msgstr "Animering..."
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
+#, fuzzy
 msgid "Stop Animation"
-msgstr ""
+msgstr "Animering..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
@@ -3886,8 +3957,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:109
 #. i18n: ectx: attribute (title), widget (QWidget, operationsTab)
+#, fuzzy
 msgid "Operations"
-msgstr ""
+msgstr "x rotation"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:115
 #. i18n: ectx: property (text), widget (QLabel, operationsLabel)
@@ -3932,7 +4004,262 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
+",Launchpad Contributions:,Dostojevskji, ,Launchpad Contributions:,"
+"Dostojevskji, ,Launchpad Contributions:,Dostojevskji, ,Launchpad "
+"Contributions:,Dostojevskji, ,Launchpad Contributions:,Dostojevskji, ,"
+"Launchpad Contributions:,Dostojevskji, ,Launchpad Contributions:,"
+"Dostojevskji, ,Launchpad Contributions:,Dostojevskji, ,Launchpad "
+"Contributions:,Dostojevskji, ,Launchpad Contributions:,Dostojevskji, ,"
+"Launchpad Contributions:,Alexander Andjelkovic,Arve Eriksson,Daniel Nylander,"
+"Dostojevskji,Peter Sahlin, ,Launchpad Contributions:,Alexander Andjelkovic,"
+"Arve Eriksson,Daniel Nylander,Dostojevskji,Peter Sahlin, ,Launchpad "
+"Contributions:,Alexander Andjelkovic,Arve Eriksson,Daniel Nylander,"
+"Dostojevskji,Peter Sahlin"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
+",,darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,"
+"darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,"
+"darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,"
+"darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,"
+"darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,,,yeager@ubuntu.com,"
+"darkangel_nr1@hotmail.com,,,,,,yeager@ubuntu.com,darkangel_nr1@hotmail."
+"com,,,,,,yeager@ubuntu.com,darkangel_nr1@hotmail.com,"
+
+#~ msgid "Color by Index"
+#~ msgstr "Färg efter index"
+
+#~ msgid "Color by Index (red, orange, yellow, green, blue, violet)."
+#~ msgstr "Färg efter index (röd, orange, gul, grön, blå, violett)."
+
+#~ msgid "Color by Partial Charge"
+#~ msgstr "Färg efter partiell laddning"
+
+#~ msgid "Color by atomic partial charge (blue = positive, red = negative."
+#~ msgstr "Färg efter atomär partiell laddning (blå = positiv, röd = negativ."
+
+#~ msgid "Custom Color:"
+#~ msgstr "Anpassa färg:"
+
+#~ msgid "Custom Color"
+#~ msgstr "Anpassa färg"
+
+#~ msgid "Set custom colors for objects"
+#~ msgstr "Anpassa färg för objekt"
+
+#~ msgid "Color by Distance"
+#~ msgstr "Färg efter avstånd"
+
+#~ msgid "Color by distance from the first atom."
+#~ msgstr "Färg efter avstånd från första atomen."
+
+#~ msgid "Color by Element (carbon = grey, oxygen = red, ...)."
+#~ msgstr "Färg efter grundämne (kol = grå, syre = röd, ...)."
+
+#~ msgid "Color by Residue"
+#~ msgstr "Färg efter rest"
+
+#~ msgid "Color by Residue (amino acid type, hydrophobicity, ..."
+#~ msgstr "Färg efter rest (aminosyrasort, hydrofobicitet, ..."
+
+#~ msgid "SMARTS Pattern:"
+#~ msgstr "SMARTS-mönster:"
+
+#~ msgid "Highlight Color:"
+#~ msgstr "Markeringsfärg:"
+
+#~ msgid "Color by SMARTS Pattern"
+#~ msgstr "Färg efter SMARTS-mönster"
+
+#~ msgid "Highlight particular features which match a SMARTS pattern."
+#~ msgstr "Markera speciella funktioner som matchar ett SMARTS-mönster."
+
+#~ msgid "Ununtrium"
+#~ msgstr "Ununtrium"
+
+#~ msgid "Ununpentium"
+#~ msgstr "Ununpentium"
+
+#~ msgid "Ununseptium"
+#~ msgstr "Ununseptium"
+
+#~ msgid "Ununoctium"
+#~ msgstr "Ununoctium"
+
+#~ msgid "Axes"
+#~ msgstr "Axlar"
+
+#~ msgid "Cartoon"
+#~ msgstr "Avbild"
+
+#~ msgid "Renders protein secondary structure"
+#~ msgstr "Renderar proteinets sekundära struktur"
+
+#~ msgid "Dipole"
+#~ msgstr "två polig"
+
+#~ msgid "Force"
+#~ msgstr "Kraft"
+
+#~ msgid "Hydrogen Bond"
+#~ msgstr "Vätebindning"
+
+#~ msgid "Renders hydrogen bonds"
+#~ msgstr "Renderar vätebindningar"
+
+#~ msgid "Label"
+#~ msgstr "Etikett"
+
+#~ msgid "Polygon"
+#~ msgstr "Polygon"
+
+#~ msgid "Renders atoms as tetrahedra, octahedra, and other polygons"
+#~ msgstr "Renderar atomer som tetraedrar, oktaedrar, och andra polygoner"
+
+#~ msgid "Renders atoms as Van der Waals spheres"
+#~ msgstr "Rednerar atomer som van der Waals-sfärer"
+
+#~ msgid "%1/%2"
+#~ msgstr "%1/%2"
+
+#~ msgid "Number of rotatable bonds: %1"
+#~ msgstr "Antalet vridbara bindningar: %1"
+
+#~ msgid "Add constraint"
+#~ msgstr "Lägg till restriktion"
+
+#~ msgid "Your molecule must contain at least one atom to add a constraint"
+#~ msgstr ""
+#~ "Din molekyl ska innehålla minst en atom för att kunna lägga till en "
+#~ "restriktion"
+
+#~ msgid ""
+#~ "Your molecule must contain at least two atoms to add a bond constraint"
+#~ msgstr ""
+#~ "Din molekyl ska innehålla minst två atomer för att kunna lägga till en "
+#~ "restriktion för bindningen"
+
+#~ msgid ""
+#~ "Your molecule must contain at least three atoms to add an angle constraint"
+#~ msgstr ""
+#~ "Din molekyl ska innehålla minst tre atomer för att kunna lägga till en "
+#~ "restriktion för vinkeln"
+
+#~ msgid "&Length Unit"
+#~ msgstr "&Längdenhet"
+
+#~ msgid "&Angle Unit"
+#~ msgstr "&Vinkelenhet"
+
+#~ msgid "PDF"
+#~ msgstr "PDF"
+
+#~ msgid "SVG"
+#~ msgstr "SVG"
+
+#~ msgid "EPS"
+#~ msgstr "EPS"
+
+#~ msgid "Vector graphics export"
+#~ msgstr "Vektorgrafikexport"
+
+#~ msgid "Change H to Methyl"
+#~ msgstr "Ändra H till metyl"
+
+#~ msgid "H to Methyl"
+#~ msgstr "H till metyl"
+
+#~ msgid "Add or remove hydrogens"
+#~ msgstr "Visa eller dölj väte"
+
+#~ msgid "Insert SMILES"
+#~ msgstr "Infoga SMILES"
+
+#~ msgid "Insert SMILES fragment:"
+#~ msgstr "Infoga SMILES-fragment:"
+
+#~ msgid "Insert Fragment"
+#~ msgstr "Infoga fragment"
+
+#~ msgid "Insert molecular fragments for building larger molecules"
+#~ msgstr "Infoga molekylfragment för att bygga större molekyler"
+
+#~ msgid "Peptide..."
+#~ msgstr "Peptid..."
+
+#~ msgid "Insert oligopeptide sequences"
+#~ msgstr "Infoga oligopeptidsekvenser"
+
+#~ msgid "Molecule Properties..."
+#~ msgstr "Molekylegenskaper..."
+
+#~ msgctxt "Unknown molecule name"
+#~ msgid "unknown"
+#~ msgstr "okänd"
+
+#~ msgid "Estimated Dipole Moment (D):"
+#~ msgstr "Uppskattat dipolmoment (D):"
+
+#~ msgid "Axis:"
+#~ msgstr "Axel:"
+
+#~ msgid "Align:"
+#~ msgstr "Räta upp"
+
+#~ msgid "Everything"
+#~ msgstr "Allting"
+
+#~ msgid "Align"
+#~ msgstr "Rada upp"
+
+#~ msgid "AutoOpt: Could not setup force field...."
+#~ msgstr "Automatisk optimering: Kunde inte ställa in kraftfält..."
+
+#~ msgid "AutoOpt: E = %1 %2 (dE = %3)"
+#~ msgstr "AutoOpt: E = %1 %2 (dE = %3)"
+
+#~ msgid "Steps per Update:"
+#~ msgstr "Steg per uppdatering:"
+
+#~ msgid "Algorithm:"
+#~ msgstr "Algoritm:"
+
+#~ msgid "Molecular Dynamics (600K)"
+#~ msgstr "Molekyldynamik (600 K)"
+
+#~ msgid "Molecular Dynamics (900K)"
+#~ msgstr "Molekyldynamik (900 K)"
+
+#~ msgid "Fixed atoms are movable"
+#~ msgstr "Fasta atomer är flyttbara"
+
+#~ msgid "Ignored atoms are movable"
+#~ msgstr "Ignorerade atomer är flyttbara"
+
+#~ msgid "Auto Rotation Tool"
+#~ msgstr "Automatiskt rotationsverktyg"
+
+#~ msgid "x rotation:"
+#~ msgstr "x rotation:"
+
+#~ msgid "y rotation:"
+#~ msgstr "Y-rotation:"
+
+#~ msgid "y rotation"
+#~ msgstr "y rotation"
+
+#~ msgid "z rotation:"
+#~ msgstr "z rotation:"
+
+#~ msgid "z rotation"
+#~ msgstr "z rotation"
+
+#~ msgid "Snap-to Threshold: "
+#~ msgstr "Lås till tröskel: "
+
+#~ msgid "0/0"
+#~ msgstr "0/0"
+
+#~ msgid "fps"
+#~ msgstr "fps"

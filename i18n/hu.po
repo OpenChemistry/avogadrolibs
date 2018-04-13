@@ -1,22 +1,22 @@
-# Translations for the Avogadro molecular builder.
-# Copyright (C) 2006-2018 The Avogadro Project
-# This file is distributed under the same license as the Avogadro package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Hungarian translation for avogadro
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the avogadro package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Avogadro 1.90.0\n"
+"Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-04-13 12:05-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2016-06-10 06:35+0000\n"
+"Last-Translator: Geoff Hutchison <Unknown>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
+"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -133,13 +133,14 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:53
+#, fuzzy
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Bemenet-generátor..."
 
 #: molequeue/inputgeneratordialog.cpp:55
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1 Input Generator"
-msgstr ""
+msgstr "Bemenet-generátor..."
 
 #: molequeue/inputgeneratorwidget.cpp:129
 msgid "Continue"
@@ -153,11 +154,11 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:129 qtgui/containerwidget.cpp:45
 msgid "Close"
-msgstr ""
+msgstr "Bezárás"
 
 #: molequeue/inputgeneratorwidget.cpp:170 qtgui/elementtranslator.cpp:387
 msgid "Unknown"
-msgstr ""
+msgstr "Ismeretlen"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #, qt-format, qt-plural-format
@@ -206,9 +207,9 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:333
-#, qt-format
+#, fuzzy, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Számítás megszakítása"
 
 #: molequeue/inputgeneratorwidget.cpp:349
 #: qtplugins/gamessinput/gamessinputdialog.cpp:734
@@ -225,20 +226,23 @@ msgid "Script returns warnings:\n"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:384
+#, fuzzy
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "Figyelmeztetés"
 
 #: molequeue/inputgeneratorwidget.cpp:390
+#, fuzzy
 msgid "Show &Warnings"
-msgstr ""
+msgstr "Figyelmeztetés"
 
 #: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:96
 msgid "An error has occurred:"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:458
+#, fuzzy
 msgid "Select output filename"
-msgstr ""
+msgstr "Oldószer választás"
 
 #: molequeue/inputgeneratorwidget.cpp:473
 #, qt-format
@@ -253,15 +257,16 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:495
 #: molequeue/inputgeneratorwidget.cpp:606
 #: qtplugins/gamessinput/gamessinputdialog.cpp:687
+#, fuzzy
 msgid "Output Error"
-msgstr ""
+msgstr "Kimenet:"
 
 #: molequeue/inputgeneratorwidget.cpp:496
 #: molequeue/inputgeneratorwidget.cpp:607
 #: qtplugins/gamessinput/gamessinputdialog.cpp:688
-#, qt-format
+#, fuzzy, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Nem tud írni fájlba."
 
 #: molequeue/inputgeneratorwidget.cpp:507
 msgid "Select output directory"
@@ -278,14 +283,14 @@ msgid "%1: Directory cannot be read!"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:540
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "Videofájlt nem sikerült menteni."
 
 #: molequeue/inputgeneratorwidget.cpp:545
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "Videofájlt nem sikerült menteni."
 
 #: molequeue/inputgeneratorwidget.cpp:558
 msgid "The input files cannot be written due to an unknown error."
@@ -359,31 +364,35 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:717 qtgui/interfacewidget.cpp:177
 msgid "Title"
-msgstr ""
+msgstr "Cím"
 
 #: molequeue/inputgeneratorwidget.cpp:721 qtgui/interfacewidget.cpp:181
+#, fuzzy
 msgid "Filename Base"
-msgstr ""
+msgstr "Fájl neve:"
 
 #: molequeue/inputgeneratorwidget.cpp:725 qtgui/interfacewidget.cpp:185
+#, fuzzy
 msgid "Processor Cores"
-msgstr ""
+msgstr "Processzorok:"
 
 #: molequeue/inputgeneratorwidget.cpp:729 qtgui/interfacewidget.cpp:189
+#, fuzzy
 msgid "Calculation Type"
-msgstr ""
+msgstr "Számítás:"
 
 #: molequeue/inputgeneratorwidget.cpp:750 qtgui/interfacewidget.cpp:210
 msgid "Theory:"
-msgstr ""
+msgstr "Elmélet:"
 
 #: molequeue/inputgeneratorwidget.cpp:753 qtgui/interfacewidget.cpp:213
+#, fuzzy
 msgid "Theory"
-msgstr ""
+msgstr "Elmélet:"
 
 #: molequeue/inputgeneratorwidget.cpp:755 qtgui/interfacewidget.cpp:215
 msgid "Basis"
-msgstr ""
+msgstr "Bázis"
 
 #: molequeue/inputgeneratorwidget.cpp:760 qtgui/interfacewidget.cpp:220
 msgid "Charge"
@@ -446,8 +455,9 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:1202 qtgui/interfacewidget.cpp:699
 #: qtplugins/gamessinput/gamessinputdialog.cpp:407
+#, fuzzy
 msgid "[no molecule]"
-msgstr ""
+msgstr "Nincs megadva molekula"
 
 #: molequeue/molequeuedialog.cpp:73
 msgid "Submitting job to MoleQueue..."
@@ -467,8 +477,9 @@ msgid "Waiting for job %1 '%2' to finish..."
 msgstr ""
 
 #: molequeue/molequeuedialog.cpp:102
+#, fuzzy
 msgid "Stop waiting"
-msgstr ""
+msgstr "&Animáció leállítása"
 
 #: molequeue/molequeuedialog.cpp:121
 msgid "Fetching completed job information..."
@@ -492,8 +503,9 @@ msgid "The job has been rejected by MoleQueue: %1"
 msgstr ""
 
 #: molequeue/molequeuedialog.cpp:211 molequeue/molequeuewidget.cpp:156
+#, fuzzy
 msgid "No program selected."
-msgstr ""
+msgstr "Nincs kiválaszva atom"
 
 #: molequeue/molequeuedialog.cpp:212 molequeue/molequeuewidget.cpp:157
 msgid "Please select the target program from the \"Queue and Program\" list."
@@ -521,455 +533,456 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:32
 msgid "Hydrogen"
-msgstr ""
+msgstr "Hidrogén"
 
 #: qtgui/elementtranslator.cpp:35
 msgid "Helium"
-msgstr ""
+msgstr "Hélium"
 
 #: qtgui/elementtranslator.cpp:38
 msgid "Lithium"
-msgstr ""
+msgstr "Lítium"
 
 #: qtgui/elementtranslator.cpp:41
 msgid "Beryllium"
-msgstr ""
+msgstr "Berillium"
 
 #: qtgui/elementtranslator.cpp:44
 msgid "Boron"
-msgstr ""
+msgstr "Bór"
 
 #: qtgui/elementtranslator.cpp:47
 msgid "Carbon"
-msgstr ""
+msgstr "Szén"
 
 #: qtgui/elementtranslator.cpp:50
 msgid "Nitrogen"
-msgstr ""
+msgstr "Nitrogén"
 
 #: qtgui/elementtranslator.cpp:53
 msgid "Oxygen"
-msgstr ""
+msgstr "Oxigén"
 
 #: qtgui/elementtranslator.cpp:56
 msgid "Fluorine"
-msgstr ""
+msgstr "Fluor"
 
 #: qtgui/elementtranslator.cpp:59
 msgid "Neon"
-msgstr ""
+msgstr "Neon"
 
 #: qtgui/elementtranslator.cpp:62
 msgid "Sodium"
-msgstr ""
+msgstr "Nátrium"
 
 #: qtgui/elementtranslator.cpp:65
 msgid "Magnesium"
-msgstr ""
+msgstr "Magnézium"
 
 #: qtgui/elementtranslator.cpp:68
 msgid "Aluminum"
-msgstr ""
+msgstr "Alumínium"
 
 #: qtgui/elementtranslator.cpp:71
 msgid "Silicon"
-msgstr ""
+msgstr "Szilícium"
 
 #: qtgui/elementtranslator.cpp:74
 msgid "Phosphorus"
-msgstr ""
+msgstr "Foszfor"
 
 #: qtgui/elementtranslator.cpp:77
 msgid "Sulfur"
-msgstr ""
+msgstr "Kén"
 
 #: qtgui/elementtranslator.cpp:80
 msgid "Chlorine"
-msgstr ""
+msgstr "Klór"
 
 #: qtgui/elementtranslator.cpp:83
 msgid "Argon"
-msgstr ""
+msgstr "Argon"
 
 #: qtgui/elementtranslator.cpp:86
 msgid "Potassium"
-msgstr ""
+msgstr "Kálium"
 
 #: qtgui/elementtranslator.cpp:89
 msgid "Calcium"
-msgstr ""
+msgstr "Kalcium"
 
 #: qtgui/elementtranslator.cpp:92
 msgid "Scandium"
-msgstr ""
+msgstr "Szkandium"
 
 #: qtgui/elementtranslator.cpp:95
 msgid "Titanium"
-msgstr ""
+msgstr "Titán"
 
 #: qtgui/elementtranslator.cpp:98
 msgid "Vanadium"
-msgstr ""
+msgstr "Vanádium"
 
 #: qtgui/elementtranslator.cpp:101
 msgid "Chromium"
-msgstr ""
+msgstr "Króm"
 
 #: qtgui/elementtranslator.cpp:104
 msgid "Manganese"
-msgstr ""
+msgstr "Mangán"
 
 #: qtgui/elementtranslator.cpp:107
 msgid "Iron"
-msgstr ""
+msgstr "Vas"
 
 #: qtgui/elementtranslator.cpp:110
 msgid "Cobalt"
-msgstr ""
+msgstr "Kobalt"
 
 #: qtgui/elementtranslator.cpp:113
 msgid "Nickel"
-msgstr ""
+msgstr "Nikkel"
 
 #: qtgui/elementtranslator.cpp:116
 msgid "Copper"
-msgstr ""
+msgstr "Réz"
 
 #: qtgui/elementtranslator.cpp:119
 msgid "Zinc"
-msgstr ""
+msgstr "Cink"
 
 #: qtgui/elementtranslator.cpp:122
 msgid "Gallium"
-msgstr ""
+msgstr "Gallium"
 
 #: qtgui/elementtranslator.cpp:125
 msgid "Germanium"
-msgstr ""
+msgstr "Germánium"
 
 #: qtgui/elementtranslator.cpp:128
 msgid "Arsenic"
-msgstr ""
+msgstr "Arzén"
 
 #: qtgui/elementtranslator.cpp:131
 msgid "Selenium"
-msgstr ""
+msgstr "Szelén"
 
 #: qtgui/elementtranslator.cpp:134
 msgid "Bromine"
-msgstr ""
+msgstr "Bróm"
 
 #: qtgui/elementtranslator.cpp:137
 msgid "Krypton"
-msgstr ""
+msgstr "Kripton"
 
 #: qtgui/elementtranslator.cpp:140
 msgid "Rubidium"
-msgstr ""
+msgstr "Rubídium"
 
 #: qtgui/elementtranslator.cpp:143
 msgid "Strontium"
-msgstr ""
+msgstr "Stroncium"
 
 #: qtgui/elementtranslator.cpp:146
 msgid "Yttrium"
-msgstr ""
+msgstr "Ittrium"
 
 #: qtgui/elementtranslator.cpp:149
 msgid "Zirconium"
-msgstr ""
+msgstr "Cirkónium"
 
 #: qtgui/elementtranslator.cpp:152
 msgid "Niobium"
-msgstr ""
+msgstr "Nióbium"
 
 #: qtgui/elementtranslator.cpp:155
 msgid "Molybdenum"
-msgstr ""
+msgstr "Molibdén"
 
 #: qtgui/elementtranslator.cpp:158
 msgid "Technetium"
-msgstr ""
+msgstr "Technécium"
 
 #: qtgui/elementtranslator.cpp:161
 msgid "Ruthenium"
-msgstr ""
+msgstr "Ruténium"
 
 #: qtgui/elementtranslator.cpp:164
 msgid "Rhodium"
-msgstr ""
+msgstr "Ródium"
 
 #: qtgui/elementtranslator.cpp:167
 msgid "Palladium"
-msgstr ""
+msgstr "Palládium"
 
 #: qtgui/elementtranslator.cpp:170
 msgid "Silver"
-msgstr ""
+msgstr "Ezüst"
 
 #: qtgui/elementtranslator.cpp:173
 msgid "Cadmium"
-msgstr ""
+msgstr "Kadmium"
 
 #: qtgui/elementtranslator.cpp:176
 msgid "Indium"
-msgstr ""
+msgstr "Indium"
 
 #: qtgui/elementtranslator.cpp:179
 msgid "Tin"
-msgstr ""
+msgstr "Ón"
 
 #: qtgui/elementtranslator.cpp:182
 msgid "Antimony"
-msgstr ""
+msgstr "Antimón"
 
 #: qtgui/elementtranslator.cpp:185
 msgid "Tellurium"
-msgstr ""
+msgstr "Tellúr"
 
 #: qtgui/elementtranslator.cpp:188
 msgid "Iodine"
-msgstr ""
+msgstr "Jód"
 
 #: qtgui/elementtranslator.cpp:191
 msgid "Xenon"
-msgstr ""
+msgstr "Xenon"
 
 #: qtgui/elementtranslator.cpp:194
 msgid "Cesium"
-msgstr ""
+msgstr "Cézium"
 
 #: qtgui/elementtranslator.cpp:197
 msgid "Barium"
-msgstr ""
+msgstr "Bárium"
 
 #: qtgui/elementtranslator.cpp:200
 msgid "Lanthanum"
-msgstr ""
+msgstr "Lantán"
 
 #: qtgui/elementtranslator.cpp:203
 msgid "Cerium"
-msgstr ""
+msgstr "Cérium"
 
 #: qtgui/elementtranslator.cpp:206
 msgid "Praseodymium"
-msgstr ""
+msgstr "Prazeodímium"
 
 #: qtgui/elementtranslator.cpp:209
 msgid "Neodymium"
-msgstr ""
+msgstr "Neodímium"
 
 #: qtgui/elementtranslator.cpp:212
 msgid "Promethium"
-msgstr ""
+msgstr "Promécium"
 
 #: qtgui/elementtranslator.cpp:215
 msgid "Samarium"
-msgstr ""
+msgstr "Szamárium"
 
 #: qtgui/elementtranslator.cpp:218
 msgid "Europium"
-msgstr ""
+msgstr "Európium"
 
 #: qtgui/elementtranslator.cpp:221
 msgid "Gadolinium"
-msgstr ""
+msgstr "Gadolínium"
 
 #: qtgui/elementtranslator.cpp:224
 msgid "Terbium"
-msgstr ""
+msgstr "Terbium"
 
 #: qtgui/elementtranslator.cpp:227
 msgid "Dysprosium"
-msgstr ""
+msgstr "Diszprózium"
 
 #: qtgui/elementtranslator.cpp:230
 msgid "Holmium"
-msgstr ""
+msgstr "Holmium"
 
 #: qtgui/elementtranslator.cpp:233
 msgid "Erbium"
-msgstr ""
+msgstr "Erbium"
 
 #: qtgui/elementtranslator.cpp:236
 msgid "Thulium"
-msgstr ""
+msgstr "Túlium"
 
 #: qtgui/elementtranslator.cpp:239
 msgid "Ytterbium"
-msgstr ""
+msgstr "Itterbium"
 
 #: qtgui/elementtranslator.cpp:242
 msgid "Lutetium"
-msgstr ""
+msgstr "Lutécium"
 
 #: qtgui/elementtranslator.cpp:245
 msgid "Hafnium"
-msgstr ""
+msgstr "Hafnium"
 
 #: qtgui/elementtranslator.cpp:248
 msgid "Tantalum"
-msgstr ""
+msgstr "Tantál"
 
 #: qtgui/elementtranslator.cpp:251
 msgid "Tungsten"
-msgstr ""
+msgstr "Volfrám"
 
 #: qtgui/elementtranslator.cpp:254
 msgid "Rhenium"
-msgstr ""
+msgstr "Rénium"
 
 #: qtgui/elementtranslator.cpp:257
 msgid "Osmium"
-msgstr ""
+msgstr "Ozmium"
 
 #: qtgui/elementtranslator.cpp:260
 msgid "Iridium"
-msgstr ""
+msgstr "Irídium"
 
 #: qtgui/elementtranslator.cpp:263
 msgid "Platinum"
-msgstr ""
+msgstr "Platina"
 
 #: qtgui/elementtranslator.cpp:266
 msgid "Gold"
-msgstr ""
+msgstr "Arany"
 
 #: qtgui/elementtranslator.cpp:269
 msgid "Mercury"
-msgstr ""
+msgstr "Higany"
 
 #: qtgui/elementtranslator.cpp:272
 msgid "Thallium"
-msgstr ""
+msgstr "Tallium"
 
 #: qtgui/elementtranslator.cpp:275
 msgid "Lead"
-msgstr ""
+msgstr "Ólom"
 
 #: qtgui/elementtranslator.cpp:278
 msgid "Bismuth"
-msgstr ""
+msgstr "Bizmut"
 
 #: qtgui/elementtranslator.cpp:281
 msgid "Polonium"
-msgstr ""
+msgstr "Polónium"
 
 #: qtgui/elementtranslator.cpp:284
 msgid "Astatine"
-msgstr ""
+msgstr "Asztácium"
 
 #: qtgui/elementtranslator.cpp:287
 msgid "Radon"
-msgstr ""
+msgstr "Radon"
 
 #: qtgui/elementtranslator.cpp:290
 msgid "Francium"
-msgstr ""
+msgstr "Francium"
 
 #: qtgui/elementtranslator.cpp:293
 msgid "Radium"
-msgstr ""
+msgstr "Rádium"
 
 #: qtgui/elementtranslator.cpp:296
 msgid "Actinium"
-msgstr ""
+msgstr "Aktínium"
 
 #: qtgui/elementtranslator.cpp:299
 msgid "Thorium"
-msgstr ""
+msgstr "Tórium"
 
 #: qtgui/elementtranslator.cpp:302
 msgid "Protactinium"
-msgstr ""
+msgstr "Protaktínium"
 
 #: qtgui/elementtranslator.cpp:305
 msgid "Uranium"
-msgstr ""
+msgstr "Urán"
 
 #: qtgui/elementtranslator.cpp:308
 msgid "Neptunium"
-msgstr ""
+msgstr "Neptúnium"
 
 #: qtgui/elementtranslator.cpp:311
 msgid "Plutonium"
-msgstr ""
+msgstr "Plutónium"
 
 #: qtgui/elementtranslator.cpp:314
 msgid "Americium"
-msgstr ""
+msgstr "Amerícium"
 
 #: qtgui/elementtranslator.cpp:317
 msgid "Curium"
-msgstr ""
+msgstr "Kűrium"
 
 #: qtgui/elementtranslator.cpp:320
 msgid "Berkelium"
-msgstr ""
+msgstr "Berkélium"
 
 #: qtgui/elementtranslator.cpp:323
 msgid "Californium"
-msgstr ""
+msgstr "Kalifornium"
 
 #: qtgui/elementtranslator.cpp:326
 msgid "Einsteinium"
-msgstr ""
+msgstr "Einsteinium"
 
 #: qtgui/elementtranslator.cpp:329
 msgid "Fermium"
-msgstr ""
+msgstr "Fermium"
 
 #: qtgui/elementtranslator.cpp:332
 msgid "Mendelevium"
-msgstr ""
+msgstr "Mendelévium"
 
 #: qtgui/elementtranslator.cpp:335
 msgid "Nobelium"
-msgstr ""
+msgstr "Nobélium"
 
 #: qtgui/elementtranslator.cpp:338
 msgid "Lawrencium"
-msgstr ""
+msgstr "Laurencium"
 
 #: qtgui/elementtranslator.cpp:341
 msgid "Rutherfordium"
-msgstr ""
+msgstr "Rutherfordium"
 
 #: qtgui/elementtranslator.cpp:344
 msgid "Dubnium"
-msgstr ""
+msgstr "Dubnium"
 
 #: qtgui/elementtranslator.cpp:347
 msgid "Seaborgium"
-msgstr ""
+msgstr "Seaborgium"
 
 #: qtgui/elementtranslator.cpp:350
 msgid "Bohrium"
-msgstr ""
+msgstr "Borium"
 
 #: qtgui/elementtranslator.cpp:353
 msgid "Hassium"
-msgstr ""
+msgstr "Hasszium"
 
 #: qtgui/elementtranslator.cpp:356
 msgid "Meitnerium"
-msgstr ""
+msgstr "Meitnerium"
 
 #: qtgui/elementtranslator.cpp:359
 msgid "Darmstadtium"
-msgstr ""
+msgstr "Darmstadtium"
 
 #: qtgui/elementtranslator.cpp:362
 msgid "Roentgenium"
-msgstr ""
+msgstr "Röntgenium"
 
 #: qtgui/elementtranslator.cpp:365
 msgid "Copernicium"
 msgstr ""
 
 #: qtgui/elementtranslator.cpp:368
+#, fuzzy
 msgid "Nihonium"
-msgstr ""
+msgstr "Cirkónium"
 
 #: qtgui/elementtranslator.cpp:371
 msgid "Flerovium"
@@ -992,16 +1005,19 @@ msgid "Oganesson"
 msgstr ""
 
 #: qtgui/filebrowsewidget.cpp:36
+#, fuzzy
 msgid "Browse"
-msgstr ""
+msgstr "Böngészés..."
 
 #: qtgui/filebrowsewidget.cpp:111
+#, fuzzy
 msgid "Select file:"
-msgstr ""
+msgstr "Oldószer választás"
 
 #: qtgui/filebrowsewidget.cpp:114
+#, fuzzy
 msgid "Select executable:"
-msgstr ""
+msgstr "Kijelöltek törlése"
 
 #: qtgui/fileformatdialog.cpp:66
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1012,9 +1028,10 @@ msgid "Unable to find a suitable file writer for the selected format."
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:155
+#, fuzzy
 msgctxt "File handlers"
 msgid "handlers"
-msgstr ""
+msgstr "McLean/Chandler"
 
 #: qtgui/fileformatdialog.cpp:156
 msgctxt "e.g. file handlers that can 'handle' this file."
@@ -1047,8 +1064,9 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:257
+#, fuzzy
 msgid "All files (*);;"
-msgstr ""
+msgstr "Minden fájl"
 
 #: qtgui/fileformatdialog.cpp:261
 #, qt-format
@@ -1056,8 +1074,9 @@ msgid "All supported formats (%1);;"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
+#, fuzzy
 msgid "Untitled"
-msgstr ""
+msgstr "névtelen"
 
 #: qtgui/multiviewwidget.cpp:199
 msgid "Create a new view"
@@ -1065,7 +1084,7 @@ msgstr ""
 
 #: qtgui/periodictableview.cpp:44
 msgid "Periodic Table"
-msgstr ""
+msgstr "Periódusos rendszer"
 
 #: qtgui/pythonscript.cpp:85
 #, qt-format
@@ -1094,107 +1113,123 @@ msgid ""
 msgstr ""
 
 #: qtgui/pythonscript.cpp:139
+#, fuzzy
 msgid "Script failed to start."
-msgstr ""
+msgstr "G03 elindítása sikertelen."
 
 #: qtgui/pythonscript.cpp:142
+#, fuzzy
 msgid "Script crashed."
-msgstr ""
+msgstr "&Szkriptek"
 
 #: qtgui/pythonscript.cpp:145
 msgid "Script timed out."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:148
+#, fuzzy
 msgid "Read error."
-msgstr ""
+msgstr "OpenGL hiba"
 
 #: qtgui/pythonscript.cpp:151
 msgid "Write error."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:155
+#, fuzzy
 msgid "Unknown error."
-msgstr ""
+msgstr "Ismeretlen"
 
 #: qtgui/rwmolecule.cpp:48
+#, fuzzy
 msgid "Modify Molecule"
-msgstr ""
+msgstr "Molekula"
 
 #: qtgui/rwmolecule.cpp:154 qtgui/rwmolecule.cpp:163
 msgid "Add Atom"
-msgstr ""
+msgstr "Atom hozzáadása"
 
 #: qtgui/rwmolecule.cpp:276 qtgui/rwmolecule.cpp:291
 #: qtplugins/editor/editor.cpp:131
 msgid "Remove Atom"
-msgstr ""
+msgstr "Atom eltávolítása"
 
 #: qtgui/rwmolecule.cpp:301
+#, fuzzy
 msgid "Clear Atoms"
-msgstr ""
+msgstr "Első atom"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321 :345
+#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321:345
 msgid "Adjust Hydrogens"
-msgstr ""
+msgstr "Hidrogénatomok beállítása"
 
 #: qtgui/rwmolecule.cpp:356
+#, fuzzy
 msgid "Change Elements"
-msgstr ""
+msgstr "Elem cseréje"
 
 #: qtgui/rwmolecule.cpp:390
 msgid "Change Element"
-msgstr ""
+msgstr "Elem cseréje"
 
 #: qtgui/rwmolecule.cpp:567
 msgid "Change Atom Hybridization"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:600
+#, fuzzy
 msgid "Change Atom Formal Charge"
-msgstr ""
+msgstr "Formális töltés"
 
 #: qtgui/rwmolecule.cpp:663
 msgid "Add Bond"
-msgstr ""
+msgstr "Kötés hozzáadása"
 
 #: qtgui/rwmolecule.cpp:751
+#, fuzzy
 msgid "Removed Bond"
-msgstr ""
+msgstr "Atom eltávolítása"
 
 #: qtgui/rwmolecule.cpp:758
+#, fuzzy
 msgid "Clear Bonds"
-msgstr ""
+msgstr "Kötés törlése"
 
 #: qtgui/rwmolecule.cpp:793
+#, fuzzy
 msgid "Set Bond Orders"
-msgstr ""
+msgstr "Kötésrend"
 
 #: qtgui/rwmolecule.cpp:838
 msgid "Change Bond Order"
-msgstr ""
+msgstr "Kötésrend megváltoztatása"
 
 #: qtgui/rwmolecule.cpp:882
+#, fuzzy
 msgid "Update Bonds"
-msgstr ""
+msgstr "Kötés törlése"
 
 #: qtgui/rwmolecule.cpp:922
+#, fuzzy
 msgid "Update Bond"
-msgstr ""
+msgstr "Kötés törlése"
 
 #: qtgui/rwmolecule.cpp:962
+#, fuzzy
 msgid "Add Unit Cell"
-msgstr ""
+msgstr "Egységcella kitöltése"
 
 #: qtgui/rwmolecule.cpp:995
+#, fuzzy
 msgid "Remove Unit Cell"
-msgstr ""
+msgstr "Egységcella kitöltése"
 
 #: qtgui/rwmolecule.cpp:1077
+#, fuzzy
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "Egységcella kitöltése"
 
 #: qtgui/rwmolecule.cpp:1094
 msgid "Wrap Atoms to Cell"
@@ -1205,8 +1240,9 @@ msgid "Scale Cell Volume"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:1137
+#, fuzzy
 msgid "Build Super Cell"
-msgstr ""
+msgstr "Szupercella"
 
 #: qtgui/rwmolecule.cpp:1161
 msgid "Niggli Reduction"
@@ -1226,12 +1262,13 @@ msgid "Conventionalize Cell"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:1258 qtplugins/spacegroup/spacegroup.cpp:258
+#, fuzzy
 msgid "Symmetrize Cell"
-msgstr ""
+msgstr "Szupercella"
 
 #: qtgui/rwmolecule.cpp:1277 qtplugins/spacegroup/spacegroup.cpp:86
 msgid "Fill Unit Cell"
-msgstr ""
+msgstr "Egységcella kitöltése"
 
 #: qtgui/rwmolecule.cpp:1297
 msgid "Reduce Cell to Asymmetric Unit"
@@ -1245,12 +1282,13 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
 #: qtplugins/povray/povray.cpp:58 qtplugins/vrml/vrml.cpp:58
 msgid "&File"
-msgstr ""
+msgstr "&Fájl"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/vrml/vrml.cpp:58
+#, fuzzy
 msgid "&Export"
-msgstr ""
+msgstr "Exportálás"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1258,23 +1296,25 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:177
 #. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
-#: qtplugins/apbs/apbs.cpp:43 :141
+#: qtplugins/apbs/apbs.cpp:43:141
 msgid "Run APBS"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:48 qtplugins/apbs/apbs.cpp:73
 #: qtplugins/gamessinput/gamessinput.cpp:82
 #: qtplugins/quantuminput/quantuminput.cpp:96
+#, fuzzy
 msgid "Open Output File"
-msgstr ""
+msgstr "Paraméter fájl megnyitása"
 
 #: qtplugins/apbs/apbs.cpp:61 qtplugins/clientserver/clientserver.cpp:83
 #: qtplugins/forcefields/workflow.cpp:73 qtplugins/forcefields/workflow.cpp:81
 #: qtplugins/mongochem/mongochem.cpp:63 qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
+#, fuzzy
 msgid "&Extensions"
-msgstr ""
+msgstr "Kiterjesztések"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -1285,22 +1325,24 @@ msgid "OpenDX File (*.dx)"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:127
+#, fuzzy
 msgid "IO Error"
-msgstr ""
+msgstr "Hiba"
 
 #: qtplugins/apbs/apbs.cpp:128
-#, qt-format
+#, fuzzy, qt-format
 msgid "Error reading structure file (%1)."
-msgstr ""
+msgstr "Probléma a traj fájl olvasás közben: %1"
 
 #: qtplugins/apbs/apbs.cpp:148 qtplugins/apbs/apbs.cpp:155
+#, fuzzy
 msgid "OpenDX Error"
-msgstr ""
+msgstr "OpenGL hiba"
 
 #: qtplugins/apbs/apbs.cpp:149
-#, qt-format
+#, fuzzy, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "Probléma a traj fájl olvasás közben: %1"
 
 #: qtplugins/apbs/apbs.cpp:156
 msgid "Error reading OpenDX file: No cube found"
@@ -1308,7 +1350,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
-#: qtplugins/apbs/apbs.h:42 :87
+#: qtplugins/apbs/apbs.h:42:87
 msgid "APBS"
 msgstr ""
 
@@ -1347,7 +1389,7 @@ msgstr ""
 #: qtplugins/quantuminput/quantuminput.cpp:112
 #: qtplugins/workflows/workflow.cpp:106
 msgid "Error"
-msgstr ""
+msgstr "Hiba"
 
 #: qtplugins/apbs/apbsdialog.cpp:144
 #, qt-format
@@ -1369,32 +1411,36 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:190
-#: qtplugins/clientserver/connectionsettingsdialog.cpp:75 :147
+#: qtplugins/clientserver/connectionsettingsdialog.cpp:75:147
+#, fuzzy
 msgid "Success"
-msgstr ""
+msgstr "Sikerült!"
 
 #: qtplugins/apbs/apbsdialog.cpp:191
-#, qt-format
+#, fuzzy, qt-format
 msgid "Input file written to '%1'"
-msgstr ""
+msgstr "Képet sikerült elmenteni %1 néven."
 
 #: qtplugins/ballandstick/ballandstick.cpp:203
 #: qtplugins/wireframe/wireframe.cpp:100
+#, fuzzy
 msgid "Show multiple bonds?"
-msgstr ""
+msgstr "Többszörös kötések megjelenítése"
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:104
+#, fuzzy
 msgid "Show hydrogens?"
-msgstr ""
+msgstr "Hidrogénatomok"
 
 #: qtplugins/ballandstick/ballandstick.h:43
 msgid "Ball and Stick"
-msgstr ""
+msgstr "Golyók és pálcikák"
 
 #: qtplugins/ballandstick/ballandstick.h:47
+#, fuzzy
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr ""
+msgstr "Atom és kötés nevek rajzolása"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:312
 msgid "Bond-centric manipulation"
@@ -1410,12 +1456,14 @@ msgid ""
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:42
+#, fuzzy
 msgid "Bond Atoms"
-msgstr ""
+msgstr "Utolsó atom"
 
 #: qtplugins/bonding/bonding.cpp:43
+#, fuzzy
 msgid "Remove Bonds"
-msgstr ""
+msgstr "Hidrogének eltávolítása"
 
 #: qtplugins/bonding/bonding.cpp:62
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:45
@@ -1423,11 +1471,12 @@ msgstr ""
 #: qtplugins/hydrogens/hydrogens.cpp:67
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
-msgstr ""
+msgstr "&Felépítés"
 
 #: qtplugins/bonding/bonding.h:36
+#, fuzzy
 msgid "Bonding"
-msgstr ""
+msgstr "Kötés"
 
 #: qtplugins/bonding/bonding.h:40
 msgid "Perform bonding operations."
@@ -1490,16 +1539,18 @@ msgid "Connection to %2:%3 succeeded!"
 msgstr ""
 
 #: qtplugins/clientserver/filedialogmodel.cpp:666
+#, fuzzy
 msgid "Filename"
-msgstr ""
+msgstr "Fájl neve:"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:29
 msgid "Atomic &Coordinate Editor..."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:39
+#, fuzzy
 msgid "Coordinate editor"
-msgstr ""
+msgstr "Koordinátatípus:"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:43
 msgid "Text editing of atomic coordinates."
@@ -1520,28 +1571,34 @@ msgid "Too few entries on line."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:381
+#, fuzzy
 msgid "Invalid element name."
-msgstr ""
+msgstr "Érvénytelen fájlnév"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:383
+#, fuzzy
 msgid "Element name."
-msgstr ""
+msgstr "Elem neve"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
+#, fuzzy
 msgid "Invalid element symbol."
-msgstr ""
+msgstr "Elem szimbóluma"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
+#, fuzzy
 msgid "Element symbol."
-msgstr ""
+msgstr "Elem szimbóluma"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
+#, fuzzy
 msgid "Invalid atomic number."
-msgstr ""
+msgstr "Érvénytelen fájlnév"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
+#, fuzzy
 msgid "Atomic number."
-msgstr ""
+msgstr "Atom száma"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:418
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
@@ -1549,32 +1606,39 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
+#, fuzzy
 msgid "Invalid coordinate."
-msgstr ""
+msgstr "Érvénytelen fájlnév"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
+#, fuzzy
 msgid "X coordinate."
-msgstr ""
+msgstr "Descartes-koordináták"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:431
+#, fuzzy
 msgid "Y coordinate."
-msgstr ""
+msgstr "Descartes-koordináták"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:442
+#, fuzzy
 msgid "Z coordinate."
-msgstr ""
+msgstr "Descartes-koordináták"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:453
+#, fuzzy
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "Descartes-koordináták"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:464
+#, fuzzy
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "Descartes-koordináták"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:475
+#, fuzzy
 msgid "'c' coordinate."
-msgstr ""
+msgstr "Descartes-koordináták"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:559
 msgid "Error applying geometry"
@@ -1594,7 +1658,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607 :615
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607:615
 msgid "Custom"
 msgstr ""
 
@@ -1603,32 +1667,50 @@ msgid "XYZ format (symbols)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:609
+#, fuzzy
 msgid "XYZ format (names)"
 msgstr ""
+",Launchpad Contributions:,Balázs Attila,Csörföly Dániel,Krasznecz Zoltán, ,"
+"Launchpad Contributions:,Avogadro Team,Balázs Attila,Csörföly Dániel,"
+"Krasznecz Zoltán, ,Launchpad Contributions:,Avogadro Team,Balázs Attila,"
+"Csörföly Dániel,Krasznecz Zoltán, ,Launchpad Contributions:,Avogadro Team,"
+"Balázs Attila,Csörföly Dániel,Krasznecz Zoltán, ,Launchpad Contributions:,"
+"Avogadro Team,Balázs Attila,Csörföly Dániel,Krasznecz Zoltán, ,Launchpad "
+"Contributions:,Avogadro Team,Balázs Attila,Csörföly Dániel,Krasznecz "
+"Zoltán, ,Launchpad Contributions:,Avogadro Team,Balázs Attila,Csörföly "
+"Dániel,Krasznecz Zoltán, ,Launchpad Contributions:,Avogadro Team,Balázs "
+"Attila,Csörföly Dániel,Zoltán Krasznecz, ,Launchpad Contributions:,Avogadro "
+"Team,Balázs Attila,Csörföly Dániel,Geoff Hutchison,Zoltán Krasznecz, ,"
+"Launchpad Contributions:,Avogadro Team,Balázs Attila,Csörföly Dániel,Geoff "
+"Hutchison,Zoltán Krasznecz"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:610
 msgid "XYZ format (atomic numbers)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:611
+#, fuzzy
 msgid "Lattice coordinates (symbols)"
-msgstr ""
+msgstr "Descartes-koordináták"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612
+#, fuzzy
 msgid "Lattice coordinates (names)"
-msgstr ""
+msgstr "Descartes-koordináták"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:613
 msgid "Lattice coordinates (atomic numbers)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
+#, fuzzy
 msgid "GAMESS format (symbols)"
-msgstr ""
+msgstr "GAMESS EFP információ"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:616
+#, fuzzy
 msgid "GAMESS format (names)"
-msgstr ""
+msgstr "GAMESS EFP információ"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:617
 msgid "Turbomole format"
@@ -1636,25 +1718,26 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:42 :225
+#: qtplugins/copypaste/copypaste.cpp:42:225
 msgid "Copy"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:43 :222
+#: qtplugins/copypaste/copypaste.cpp:43:222
+#, fuzzy
 msgid "Cut"
-msgstr ""
+msgstr "Egyéni"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:44 :234
+#: qtplugins/copypaste/copypaste.cpp:44:234
 msgid "Clear"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
-#: qtplugins/copypaste/copypaste.cpp:45 :228
+#: qtplugins/copypaste/copypaste.cpp:45:228
 msgid "Paste"
 msgstr ""
 
@@ -1718,12 +1801,14 @@ msgid "Import Crystal from Clipboard"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:61
+#, fuzzy
 msgid "Toggle Unit Cell"
-msgstr ""
+msgstr "Egységcella kitöltése"
 
 #: qtplugins/crystal/crystal.cpp:66
+#, fuzzy
 msgid "Edit Unit Cell..."
-msgstr ""
+msgstr "Egységcella kitöltése"
 
 #: qtplugins/crystal/crystal.cpp:71
 msgid "&Wrap Atoms to Unit Cell"
@@ -1738,8 +1823,9 @@ msgid "Scale Cell &Volume"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:88
+#, fuzzy
 msgid "Build &Supercell"
-msgstr ""
+msgstr "Szupercella"
 
 #: qtplugins/crystal/crystal.cpp:93
 msgid "Reduce Cell (&Niggli)"
@@ -1779,8 +1865,9 @@ msgid "Crystal Lattice"
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.h:41
+#, fuzzy
 msgid "Render the unit cell boundaries."
-msgstr ""
+msgstr "Atom és kötés nevek rajzolása"
 
 #: qtplugins/crystal/importcrystaldialog.cpp:81
 msgid "Cannot Parse Text"
@@ -1804,34 +1891,38 @@ msgid "Manipulate custom element types in the current molecule."
 msgstr ""
 
 #: qtplugins/customelements/customelements.h:35
+#, fuzzy
 msgid "Custom Elements"
-msgstr ""
+msgstr "Szín elemek szerint"
 
 #: qtplugins/editor/editor.cpp:84 qtplugins/editor/editor.cpp:118
 msgid "Draw"
-msgstr ""
+msgstr "Rajzolás"
 
 #: qtplugins/editor/editor.cpp:112
 msgid "Draw Atom"
-msgstr ""
+msgstr "Atom rajzolása"
 
 #: qtplugins/editor/editor.cpp:122
+#, fuzzy
 msgid "Change Bond Type"
-msgstr ""
+msgstr "Kötésrend megváltoztatása"
 
 #: qtplugins/editor/editor.cpp:135
+#, fuzzy
 msgid "Remove Bond"
-msgstr ""
+msgstr "Atom eltávolítása"
 
 #: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:194
 #: qtplugins/measuretool/measuretool.cpp:222
+#, fuzzy
 msgid "Distance:"
-msgstr ""
+msgstr "Távolság"
 
 #: qtplugins/editor/editor.cpp:235
-#, qt-format
+#, fuzzy, qt-format
 msgid "Distance: %L1 Å"
-msgstr ""
+msgstr "Távolság (3->4): %L1 %2"
 
 #: qtplugins/editor/editor.h:44 qtplugins/editor/editor.h:45
 msgid "Editor tool"
@@ -1839,38 +1930,40 @@ msgstr ""
 
 #: qtplugins/editor/editortoolwidget.cpp:138
 msgid "Other..."
-msgstr ""
+msgstr "Egyéb..."
 
 #: qtplugins/editor/editortoolwidget.cpp:217
+#, fuzzy
 msgid "Automatic"
-msgstr ""
+msgstr "AutoOptimalizálás"
 
 #: qtplugins/editor/editortoolwidget.cpp:218
 msgid "Single"
-msgstr ""
+msgstr "Egyszeres"
 
 #: qtplugins/editor/editortoolwidget.cpp:219
 msgid "Double"
-msgstr ""
+msgstr "Kettős"
 
 #: qtplugins/editor/editortoolwidget.cpp:220
 msgid "Triple"
-msgstr ""
+msgstr "Hármas"
 
 #: qtplugins/forcefields/workflow.cpp:73 qtplugins/forcefields/workflow.cpp:81
 #: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
+#, fuzzy
 msgid "Scripts"
-msgstr ""
+msgstr "&Szkriptek"
 
 #: qtplugins/forcefields/workflow.cpp:107
 #: qtplugins/gamessinput/gamessinput.cpp:99
 #: qtplugins/quantuminput/quantuminput.cpp:113
 #: qtplugins/workflows/workflow.cpp:107
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Error reading output file '%1':\n"
 "%2"
-msgstr ""
+msgstr "Probléma a traj fájl olvasás közben: %1"
 
 #: qtplugins/forcefields/workflow.cpp:204
 #: qtplugins/quantuminput/quantuminput.cpp:179
@@ -1900,7 +1993,7 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinput.cpp:44
 msgid "&GAMESS"
-msgstr ""
+msgstr "&GAMESS"
 
 #: qtplugins/gamessinput/gamessinput.cpp:62
 #: qtplugins/quantuminput/quantuminput.cpp:72
@@ -1911,76 +2004,79 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinput.cpp:62
 #: qtplugins/quantuminput/quantuminput.cpp:72
+#, fuzzy
 msgid "Input Generators"
-msgstr ""
+msgstr "Bemenet-generátor..."
 
 #: qtplugins/gamessinput/gamessinput.h:46
+#, fuzzy
 msgid "GAMESS input"
-msgstr ""
+msgstr "GAMESS bevitel"
 
 #: qtplugins/gamessinput/gamessinput.h:48
 msgid "Generate input for GAMESS."
 msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:237
+#, fuzzy
 msgid "Single Point"
-msgstr ""
+msgstr "Egyetlen pont energiája"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:240
 msgid "Equilibrium Geometry"
-msgstr ""
+msgstr "Egyensúlyi geometria"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:243
 msgid "Transition State"
-msgstr ""
+msgstr "Átmeneti állapot"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:246
 msgid "Frequencies"
-msgstr ""
+msgstr "Frekvenciák"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:315
 msgid "Core Potential"
-msgstr ""
+msgstr "Mag potenciál"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:330
 msgid "Gas"
-msgstr ""
+msgstr "Gáz"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:333
 msgid "Water"
-msgstr ""
+msgstr "Víz"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:348
 msgid "Singlet"
-msgstr ""
+msgstr "Szinglett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:351
 msgid "Doublet"
-msgstr ""
+msgstr "Dublett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:354
 msgid "Triplet"
-msgstr ""
+msgstr "Triplett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:369
 msgid "Dication"
-msgstr ""
+msgstr "Dikation"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:372
 msgid "Cation"
-msgstr ""
+msgstr "Kation"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:375
 msgid "Neutral"
-msgstr ""
+msgstr "Semleges"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:378
 msgid "Anion"
-msgstr ""
+msgstr "Anion"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:381
 msgid "Dianion"
-msgstr ""
+msgstr "Dianion"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:430
 msgid ""
@@ -1993,40 +2089,46 @@ msgid "Overwrite modified input file?"
 msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:668
+#, fuzzy
 msgid "Save GAMESS input file"
-msgstr ""
+msgstr "GAMESS bevitel"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:718
+#, fuzzy
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "Számítás megszakítása"
 
 #: qtplugins/hydrogens/hydrogens.cpp:33
+#, fuzzy
 msgid "&Adjust Hydrogens"
-msgstr ""
+msgstr "Hidrogénatomok beállítása"
 
 #: qtplugins/hydrogens/hydrogens.cpp:38
 msgid "Add Hydrogens"
-msgstr ""
+msgstr "Hidrogének hozzáadása"
 
 #: qtplugins/hydrogens/hydrogens.cpp:42
+#, fuzzy
 msgid "Remove E&xtra Hydrogens"
-msgstr ""
+msgstr "Hidrogének eltávolítása"
 
 #: qtplugins/hydrogens/hydrogens.cpp:46
+#, fuzzy
 msgid "&Remove All Hydrogens"
-msgstr ""
+msgstr "Hidrogének eltávolítása"
 
 #: qtplugins/hydrogens/hydrogens.cpp:57
 msgid "Add/remove hydrogens from the current molecule."
 msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:67
+#, fuzzy
 msgid "&Hydrogens"
-msgstr ""
+msgstr "Hidrogénatomok"
 
 #: qtplugins/hydrogens/hydrogens.h:35
 msgid "Hydrogens"
-msgstr ""
+msgstr "Hidrogénatomok"
 
 #: qtplugins/importpqr/importpqr.cpp:38
 msgid "&Import From PQR"
@@ -2034,12 +2136,13 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
+#, fuzzy
 msgid "&Import"
-msgstr ""
+msgstr "Importálás"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
-#: qtplugins/importpqr/importpqr.h:45 :393
+#: qtplugins/importpqr/importpqr.h:45:393
 msgid "Import From PQR"
 msgstr ""
 
@@ -2052,12 +2155,13 @@ msgid "Licorice"
 msgstr ""
 
 #: qtplugins/licorice/licorice.h:42
+#, fuzzy
 msgid "Render atoms as licorice."
-msgstr ""
+msgstr "Atom és kötés nevek rajzolása"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:43
 msgid "SMILES..."
-msgstr ""
+msgstr "SMILES..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:48
 msgid "InChI..."
@@ -2068,17 +2172,19 @@ msgid "InChI"
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:56
+#, fuzzy
 msgid "SMILES"
-msgstr ""
+msgstr "SMILES..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Insert"
-msgstr ""
+msgstr "&Beszúrás"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:98
 #: qtplugins/lineformatinput/lineformatinput.cpp:122
+#, fuzzy
 msgid "No descriptors found!"
-msgstr ""
+msgstr "Nincs leírás"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:99
 msgid "No line format readers found!"
@@ -2087,17 +2193,19 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133 :426
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:426
+#, fuzzy
 msgid "Insert Molecule..."
-msgstr ""
+msgstr "Molekula"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:123
 msgid "Unable to load requested format reader."
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:134
+#, fuzzy
 msgid "Generating 3D molecule..."
-msgstr ""
+msgstr "Létrehoz..."
 
 #: qtplugins/lineformatinput/lineformatinput.h:42
 msgid "LineFormatInput"
@@ -2118,33 +2226,36 @@ msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:63
 msgid "Measure"
-msgstr ""
+msgstr "Mérés"
 
 #: qtplugins/measuretool/measuretool.cpp:192
 #: qtplugins/measuretool/measuretool.cpp:202
 msgid "Dihedral:"
-msgstr ""
+msgstr "Diéderes:"
 
 #: qtplugins/measuretool/measuretool.cpp:193
 msgid "Angle:"
-msgstr ""
+msgstr "Szög:"
 
 #: qtplugins/measuretool/measuretool.cpp:214
+#, fuzzy
 msgid "Angles:"
-msgstr ""
+msgstr "Szög:"
 
 #: qtplugins/measuretool/measuretool.h:48
 #: qtplugins/measuretool/measuretool.h:49
+#, fuzzy
 msgid "Measure tool"
-msgstr ""
+msgstr "Mérés"
 
 #: qtplugins/meshes/meshes.h:40
 msgid "Meshes"
 msgstr ""
 
 #: qtplugins/meshes/meshes.h:42
+#, fuzzy
 msgid "Render triangle meshes."
-msgstr ""
+msgstr "Molekuláris izofelület-vázak megjelenítése"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/mongochem/mongochem.cpp:45
@@ -2154,28 +2265,29 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
 #: qtplugins/resetview/resetview.cpp:48 qtplugins/symmetry/symmetry.cpp:92
 msgid "&View"
-msgstr ""
+msgstr "Né&zet"
 
 #: qtplugins/molecularproperties/molecularproperties.h:42
 #: qtplugins/mongochem/mongochem.h:40
 msgid "Molecular Properties"
-msgstr ""
+msgstr "Molekula tulajdonságai"
 
 #: qtplugins/navigator/navigator.cpp:45
 msgid "Navigate"
 msgstr ""
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
+#, fuzzy
 msgid "Navigate tool"
-msgstr ""
+msgstr "Navigálás beállításai"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
-msgstr ""
+msgstr "Kémiai név"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
 msgid "Chemical structure to download."
-msgstr ""
+msgstr "Letöltendő kémiai szerkezet."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:102
 #, qt-format
@@ -2185,20 +2297,21 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:113
 #: qtplugins/networkdatabases/networkdatabases.cpp:124
 msgid "Network Download Failed"
-msgstr ""
+msgstr "Hálózati letöltés megszakadt."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:114
 msgid "Network timeout or other error."
-msgstr ""
+msgstr "Hálózati időtúllépés vagy más probléma."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:125
 #, qt-format
 msgid "Specified molecule could not be found: %1"
-msgstr ""
+msgstr "A megadott molekulát nem találtam: %1"
 
 #: qtplugins/networkdatabases/networkdatabases.h:47
+#, fuzzy
 msgid "Network Databases"
-msgstr ""
+msgstr "Hálózati letöltés megszakadt."
 
 #: qtplugins/networkdatabases/networkdatabases.h:51
 msgid "Interact with online databases, query structures etc."
@@ -2210,28 +2323,34 @@ msgid "Autodetect (%1)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:52
+#, fuzzy
 msgid "Optimize geometry"
-msgstr ""
+msgstr "&geometria optimalizáció"
 
 #: qtplugins/openbabel/openbabel.cpp:59
+#, fuzzy
 msgid "Configure geometry optimization..."
-msgstr ""
+msgstr "Geometria optimalizálása"
 
 #: qtplugins/openbabel/openbabel.cpp:65
+#, fuzzy
 msgid "Perceive bonds"
-msgstr ""
+msgstr "Kötések érzékelése?"
 
 #: qtplugins/openbabel/openbabel.cpp:71
+#, fuzzy
 msgid "Add hydrogens"
-msgstr ""
+msgstr "Hidrogének hozzáadása"
 
 #: qtplugins/openbabel/openbabel.cpp:77
+#, fuzzy
 msgid "Add hydrogens for pH..."
-msgstr ""
+msgstr "Hidrogének hozzáadása pH szerint..."
 
 #: qtplugins/openbabel/openbabel.cpp:83
+#, fuzzy
 msgid "Remove hydrogens"
-msgstr ""
+msgstr "Hidrogének eltávolítása"
 
 #: qtplugins/openbabel/openbabel.cpp:93
 #, qt-format
@@ -2247,8 +2366,9 @@ msgid "The obabel file formats are not ready to be added."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:196
+#, fuzzy
 msgid "Loading molecule from CML..."
-msgstr ""
+msgstr "Molekula beolvasása '%1' fájlból sikertelen."
 
 #: qtplugins/openbabel/openbabel.cpp:202
 msgid ""
@@ -2257,9 +2377,9 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:211
-#, qt-format
+#, fuzzy, qt-format
 msgid "An error occurred while running OpenBabel (%1)."
-msgstr ""
+msgstr "Probléma merült fel %1 írása közben."
 
 #: qtplugins/openbabel/openbabel.cpp:221
 msgid "Error parsing openbabel output."
@@ -2281,12 +2401,14 @@ msgid "Cannot optimize geometry with OpenBabel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:383
+#, fuzzy
 msgid "Optimizing Geometry (OpenBabel)"
-msgstr ""
+msgstr "&geometria optimalizáció"
 
 #: qtplugins/openbabel/openbabel.cpp:384
+#, fuzzy
 msgid "Generating MDL..."
-msgstr ""
+msgstr "Létrehoz..."
 
 #: qtplugins/openbabel/openbabel.cpp:401
 msgid ""
@@ -2317,15 +2439,17 @@ msgid "Error interpreting obabel MDL output."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:463 qtplugins/openbabel/openbabel.cpp:542
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
+"Trajektória fájlban %1 nem egyezik  az atomok száma a jelenlegi molekuláéval."
 
 #: qtplugins/openbabel/openbabel.cpp:473
+#, fuzzy
 msgid "Optimize Geometry"
-msgstr ""
+msgstr "&geometria optimalizáció"
 
 #: qtplugins/openbabel/openbabel.cpp:482
 msgid "Cannot open file with OpenBabel."
@@ -2365,8 +2489,9 @@ msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:579 qtplugins/openbabel/openbabel.cpp:626
+#, fuzzy
 msgid "Adding Hydrogens (OpenBabel)"
-msgstr ""
+msgstr "Hidrogének hozzáadása"
 
 #: qtplugins/openbabel/openbabel.cpp:580 qtplugins/openbabel/openbabel.cpp:627
 #: qtplugins/openbabel/openbabel.cpp:666
@@ -2380,25 +2505,28 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:599 qtplugins/openbabel/openbabel.cpp:646
 #: qtplugins/openbabel/openbabel.cpp:685
-#, qt-format
+#, fuzzy, qt-format
 msgid "Running %1..."
-msgstr ""
+msgstr "Dunning"
 
 #: qtplugins/openbabel/openbabel.cpp:620
+#, fuzzy
 msgid "Add hydrogens for pH"
-msgstr ""
+msgstr "Hidrogének hozzáadása pH szerint"
 
 #: qtplugins/openbabel/openbabel.cpp:620
+#, fuzzy
 msgid "pH:"
-msgstr ""
+msgstr "pH"
 
 #: qtplugins/openbabel/openbabel.cpp:660
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:665
+#, fuzzy
 msgid "Removing Hydrogens (OpenBabel)"
-msgstr ""
+msgstr "Hidrogének eltávolítása"
 
 #: qtplugins/openbabel/openbabel.cpp:694
 msgid "Reading obabel output..."
@@ -2436,11 +2564,12 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:72
 msgid "Stop"
-msgstr ""
+msgstr "Leállítás"
 
 #: qtplugins/playertool/playertool.cpp:82
+#, fuzzy
 msgid "Frame rate:"
-msgstr ""
+msgstr "Paraméterek:"
 
 #: qtplugins/playertool/playertool.cpp:88
 msgctxt "frames per second"
@@ -2448,17 +2577,20 @@ msgid " FPS"
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:94
+#, fuzzy
 msgid "Dynamic bonding?"
-msgstr ""
+msgstr "Dinamikus kötések"
 
 #: qtplugins/playertool/playertool.cpp:102
+#, fuzzy
 msgid "Record Movie..."
-msgstr ""
+msgstr "Eltávolítás..."
 
 #: qtplugins/playertool/playertool.cpp:108
 #: qtplugins/playertool/playertool.cpp:161
+#, fuzzy
 msgid "Stopped"
-msgstr ""
+msgstr "Leállítás"
 
 #: qtplugins/playertool/playertool.cpp:180
 #, qt-format
@@ -2471,12 +2603,12 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:233
 msgid "Avogadro"
-msgstr ""
+msgstr "Avogadro"
 
 #: qtplugins/playertool/playertool.cpp:234
-#, qt-format
+#, fuzzy, qt-format
 msgid "Cannot save file %1."
-msgstr ""
+msgstr "Nem olvasható a fájl: %1"
 
 #: qtplugins/playertool/playertool.h:44
 msgid "Player tool"
@@ -2512,8 +2644,9 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:230 qtplugins/plotxrd/plotxrd.cpp:242
 #: qtplugins/plotxrd/plotxrd.cpp:253 qtplugins/plotxrd/plotxrd.cpp:260
+#, fuzzy
 msgid "Error: "
-msgstr ""
+msgstr "Hiba"
 
 #: qtplugins/plotxrd/plotxrd.h:46
 msgid "PlotXrd"
@@ -2525,7 +2658,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.h:46 :570
+#: qtplugins/plugindownloader/plugindownloader.h:46:570
 msgid "Plugin Downloader"
 msgstr ""
 
@@ -2534,12 +2667,14 @@ msgid "Downloader plugins from Github repositories."
 msgstr ""
 
 #: qtplugins/povray/povray.cpp:41
+#, fuzzy
 msgid "POV-Ray Render"
-msgstr ""
+msgstr "POV-Ray"
 
 #: qtplugins/povray/povray.cpp:82 qtplugins/vrml/vrml.cpp:82
+#, fuzzy
 msgid "Save File"
-msgstr ""
+msgstr "Video fájl mentése"
 
 #: qtplugins/povray/povray.cpp:83
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -2550,8 +2685,9 @@ msgid "POVRay"
 msgstr ""
 
 #: qtplugins/povray/povray.h:40
+#, fuzzy
 msgid "Render the scene using POV-Ray."
-msgstr ""
+msgstr "Megjelenítés  POV-Ray használatával"
 
 #: qtplugins/qtaim/qtaimengine.h:39 qtplugins/qtaim/qtaimextension.cpp:90
 #: qtplugins/qtaim/qtaimextension.h:35
@@ -2576,7 +2712,7 @@ msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:90
 msgid "E&xtensions"
-msgstr ""
+msgstr "K&iterjesztések"
 
 #: qtplugins/qtaim/qtaimextension.cpp:122
 msgid "Open WFN File"
@@ -2601,21 +2737,24 @@ msgid "Quantum input"
 msgstr ""
 
 #: qtplugins/quantuminput/quantuminput.h:60
+#, fuzzy
 msgid "Generate input for quantum codes."
-msgstr ""
+msgstr "Beviteli fájlok létrehozása kvantumkémiai csomagok számára"
 
 #: qtplugins/quantumoutput/quantumoutput.cpp:60
+#, fuzzy
 msgid "Calculate electronic surfaces..."
-msgstr ""
+msgstr "Elektronsűrűség számítása"
 
 #: qtplugins/quantumoutput/quantumoutput.cpp:155
+#, fuzzy
 msgid "Calculating electron density"
-msgstr ""
+msgstr "Elektronsűrűség számítása"
 
 #: qtplugins/quantumoutput/quantumoutput.cpp:162
-#, qt-format
+#, fuzzy, qt-format
 msgid "Calculating molecular orbital %L1"
-msgstr ""
+msgstr "Moleklulapályák és más felszínek számítása"
 
 #: qtplugins/quantumoutput/quantumoutput.h:57
 msgid "Quantum output"
@@ -2626,20 +2765,22 @@ msgid "Read output from quantum codes."
 msgstr ""
 
 #: qtplugins/quantumoutput/surfacedialog.cpp:83
-#, qt-format
+#, fuzzy, qt-format
 msgctxt "Molecular orbital"
 msgid "MO %L1"
-msgstr ""
+msgstr "MO %L1"
 
 #: qtplugins/quantumoutput/surfacedialog.cpp:85
+#, fuzzy
 msgctxt "Highest occupied molecular orbital"
 msgid "(HOMO)"
-msgstr ""
+msgstr "(HOMO)"
 
 #: qtplugins/quantumoutput/surfacedialog.cpp:87
+#, fuzzy
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
-msgstr ""
+msgstr "(LUMO)"
 
 #: qtplugins/quantumoutput/surfacedialog.cpp:105
 #, qt-format
@@ -2656,55 +2797,63 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.h:40
+#, fuzzy
 msgid "ResetView"
-msgstr ""
+msgstr "Visszaállítás"
 
 #: qtplugins/resetview/resetview.h:44
 msgid "Adjust the camera and view"
 msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:39
+#, fuzzy
 msgid "Script File Formats"
-msgstr ""
+msgstr "Kimeneti fájl generátor"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:43
 msgid "Load file reader/writers from external scripts."
 msgstr ""
 
 #: qtplugins/select/select.cpp:34
+#, fuzzy
 msgid "Select All"
-msgstr ""
+msgstr "Minden törlése"
 
 #: qtplugins/select/select.cpp:39
+#, fuzzy
 msgid "Select None"
-msgstr ""
+msgstr "Kijelölés"
 
 #: qtplugins/select/select.cpp:48
+#, fuzzy
 msgid "Invert Selection"
-msgstr ""
+msgstr "&Kijelölés megfordítása"
 
 #: qtplugins/select/select.cpp:59
+#, fuzzy
 msgid "Change selections"
-msgstr ""
+msgstr "Kijelölések"
 
 #: qtplugins/select/select.cpp:69
 msgid "&Select"
-msgstr ""
+msgstr "&Kijelölés"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:183
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:35 :678
+#: qtplugins/select/select.h:35:678
+#, fuzzy
 msgid "Select"
-msgstr ""
+msgstr "&Kijelölés"
 
 #: qtplugins/selectiontool/selectiontool.cpp:55
 msgid "Selection"
-msgstr ""
+msgstr "Kijelölés"
 
 #: qtplugins/selectiontool/selectiontool.h:45
 #: qtplugins/selectiontool/selectiontool.h:46
+#, fuzzy
 msgid "Selection tool"
-msgstr ""
+msgstr "Kijelölés"
 
 #: qtplugins/spacegroup/spacegroup.cpp:63
 msgid "Perceive Space Group"
@@ -2712,7 +2861,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:81 :663
+#: qtplugins/spacegroup/spacegroup.cpp:81:663
 msgid "Symmetrize"
 msgstr ""
 
@@ -2771,8 +2920,9 @@ msgid ""
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:326
+#, fuzzy
 msgid "Avogadro2"
-msgstr ""
+msgstr "Avogadro"
 
 #: qtplugins/spacegroup/spacegroup.cpp:327
 msgid "Select tolerance in Å:"
@@ -2803,12 +2953,14 @@ msgid "Space group features for crystals."
 msgstr ""
 
 #: qtplugins/spectra/spectra.cpp:40
+#, fuzzy
 msgid "Vibrational modes..."
-msgstr ""
+msgstr "Rezgési analízis"
 
 #: qtplugins/spectra/spectra.h:43
+#, fuzzy
 msgid "Spectra and Vibrations"
-msgstr ""
+msgstr "Spektrum vizualizáció"
 
 #: qtplugins/spectra/spectra.h:47
 msgid "Display spectra and vibrational modes."
@@ -2816,7 +2968,7 @@ msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:60
 msgid "Type"
-msgstr ""
+msgstr "Típus"
 
 #: qtplugins/symmetry/operationstablemodel.cpp:62
 msgid "Class"
@@ -2824,7 +2976,7 @@ msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:64
 msgid "Element"
-msgstr ""
+msgstr "Elem"
 
 #: qtplugins/symmetry/symmetry.cpp:51
 msgid "Symmetry Properties..."
@@ -2832,7 +2984,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:44 :648
+#: qtplugins/symmetry/symmetry.h:44:648
 msgid "Symmetry"
 msgstr ""
 
@@ -2841,12 +2993,14 @@ msgid "Provide symmetry functionality."
 msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:44
+#, fuzzy
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "Kijelölés elem szerent..."
 
 #: qtplugins/symmetry/symmetryscene.h:46
+#, fuzzy
 msgid "Render symmetry elements."
-msgstr ""
+msgstr "Molekula dipólusmomentumainak megjelenítése."
 
 #: qtplugins/symmetry/symmetryutil.cpp:32
 msgid "∞"
@@ -2854,23 +3008,25 @@ msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:40
 msgid "Van der Waals"
-msgstr ""
+msgstr "van der Waals"
 
 #: qtplugins/vanderwaals/vanderwaals.h:42
 msgid "Simple display of VdW spheres."
 msgstr ""
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:41
+#, fuzzy
 msgid "Van der Waals (AO)"
-msgstr ""
+msgstr "van der Waals"
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:45
 msgid "Simple display of VdW spheres with ambient occlusion."
 msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:41
+#, fuzzy
 msgid "VRML Render"
-msgstr ""
+msgstr "Megjelenítés"
 
 #: qtplugins/vrml/vrml.cpp:83
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -2881,16 +3037,18 @@ msgid "VRML"
 msgstr ""
 
 #: qtplugins/vrml/vrml.h:40
+#, fuzzy
 msgid "Render the scene using VRML."
-msgstr ""
+msgstr "Megjelenítés  POV-Ray használatával"
 
 #: qtplugins/wireframe/wireframe.h:39
 msgid "Wireframe"
-msgstr ""
+msgstr "Drótváz"
 
 #: qtplugins/wireframe/wireframe.h:43
+#, fuzzy
 msgid "Render the molecule as a wireframe."
-msgstr ""
+msgstr "Molekulák és pálcák rajzolása"
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -2914,8 +3072,9 @@ msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
+#, fuzzy
 msgid "Calculation Settings"
-msgstr ""
+msgstr "Kijelölés beállításai"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
@@ -2936,8 +3095,9 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#, fuzzy
 msgid "Submit Calculation..."
-msgstr ""
+msgstr "Számítás megszakítása"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:120
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -2946,8 +3106,9 @@ msgstr ""
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
 msgid "Queue and Program:"
-msgstr ""
+msgstr "Árnyékoló program:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:50
 #. i18n: ectx: property (text), widget (QToolButton, refreshProgramsButton)
@@ -2963,8 +3124,9 @@ msgstr ""
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
 msgid "Processor cores:"
-msgstr ""
+msgstr "Processzorok:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:125
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
@@ -3010,8 +3172,9 @@ msgstr ""
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
+#, fuzzy
 msgid "Rename Elements"
-msgstr ""
+msgstr "Elem cseréje"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
@@ -3025,8 +3188,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
+#, fuzzy
 msgid "Ctrl+C"
-msgstr ""
+msgstr "Ctrl+Alt+O"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
 #. i18n: ectx: property (text), widget (QPushButton, exitButton)
@@ -3035,13 +3199,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:47
 #. i18n: ectx: property (shortcut), widget (QPushButton, exitButton)
+#, fuzzy
 msgid "Ctrl+E"
-msgstr ""
+msgstr "Ctrl+Alt+O"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#, fuzzy
 msgid "Structure Input File"
-msgstr ""
+msgstr "Szerkezet:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:28
 #. i18n: ectx: property (text), widget (QRadioButton, generateFromPdbButton)
@@ -3050,20 +3216,21 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, pdbFileLabel)
+#, fuzzy
 msgid "PDB File:"
-msgstr ""
+msgstr "Par fájl:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:50
 #. i18n: ectx: property (text), widget (QPushButton, openPdbFileButton)
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, openPqrFileButton)
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force Field:"
-msgstr ""
+msgstr "Erőtér:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:75
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
@@ -3107,8 +3274,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, pqrFileLabel)
+#, fuzzy
 msgid "PQR File:"
-msgstr ""
+msgstr "Par fájl:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:156
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
@@ -3117,33 +3285,38 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:170
 #. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
+#, fuzzy
 msgid "Save Input File"
-msgstr ""
+msgstr "Video fájl mentése"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Success!"
-msgstr ""
+msgstr "Sikerült!"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:27
 #. i18n: ectx: property (text), widget (QCheckBox, loadStructureCheckBox)
+#, fuzzy
 msgid "Load Structure File"
-msgstr ""
+msgstr "Szerkezet:"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:37
 #. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
+#, fuzzy
 msgid "Load Cube File"
-msgstr ""
+msgstr "Fájl betöltése..."
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConnectionSettingsDialog)
+#, fuzzy
 msgid "Server settings"
-msgstr ""
+msgstr "Mérési beállítások"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label7)
+#, fuzzy
 msgid "&Hostname:"
-msgstr ""
+msgstr "&Fájlnév:"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:64
 #. i18n: ectx: property (text), widget (QLabel, label8)
@@ -3162,8 +3335,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:66
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateBack)
+#, fuzzy
 msgid "Navigate Back"
-msgstr ""
+msgstr "Navigálás beállításai"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateForward)
@@ -3172,18 +3346,20 @@ msgstr ""
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:92
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateUp)
+#, fuzzy
 msgid "Navigate Up"
-msgstr ""
+msgstr "Navigálás beállításai"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "File name:"
-msgstr ""
+msgstr "Fájl neve:"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:153
 #. i18n: ectx: property (text), widget (QPushButton, OK)
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3193,39 +3369,43 @@ msgstr ""
 #. i18n: file: qtplugins/clientserver/filedialog.ui:174
 #. i18n: ectx: property (text), widget (QPushButton, Cancel)
 msgid "Cancel"
-msgstr ""
+msgstr "Mégsem"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
+#, fuzzy
 msgid "Coordinate Editor"
-msgstr ""
+msgstr "Koordinátatípus:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Preset:"
-msgstr ""
+msgstr "Visszaállítás"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Distance Unit:"
-msgstr ""
+msgstr "Távolság"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:46
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
+#, fuzzy
 msgid "Angstrom"
-msgstr ""
+msgstr "Ǻngstrom"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
 msgid "Bohr"
-msgstr ""
+msgstr "Bohr"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:31
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Format:"
-msgstr ""
+msgstr "Formátum:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:71
 #. i18n: ectx: property (toolTip), widget (QLineEdit, spec)
@@ -3264,7 +3444,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:145
 #. i18n: ectx: property (text), widget (QPushButton, apply)
 msgid "Apply"
-msgstr ""
+msgstr "Alkalmaz"
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
@@ -3278,38 +3458,40 @@ msgstr ""
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
+#, fuzzy
 msgid "Supercell Parameters"
-msgstr ""
+msgstr "Szupercella paraméterei"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:22
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Super Cell Options"
-msgstr ""
+msgstr "Szupercella beállításai"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
 msgid "A repeat:"
-msgstr ""
+msgstr "A ismétlése:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
 msgid "B repeat:"
-msgstr ""
+msgstr "B ismétlése:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C repeat:"
-msgstr ""
+msgstr "C ismétlése:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
+#, fuzzy
 msgid "Unit Cell Editor"
-msgstr ""
+msgstr "Egységcella kitöltése"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "A:"
-msgstr ""
+msgstr "A:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:40
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, a)
@@ -3325,12 +3507,12 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:62
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "B:"
-msgstr ""
+msgstr "B:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:94
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "C:"
-msgstr ""
+msgstr "C:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -3358,12 +3540,13 @@ msgstr ""
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:48
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_peakWidth)
 msgid "°"
-msgstr ""
+msgstr "°"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:231
 #. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
 msgid "Cell Matrix:"
-msgstr ""
+msgstr "MOPAC Z-mátrix"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:248
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -3420,47 +3603,47 @@ msgstr ""
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:23
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Element:"
-msgstr ""
+msgstr "Elem"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Bond Order:"
-msgstr ""
+msgstr "Kötésrend:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
 msgid "GAMESS Input"
-msgstr ""
+msgstr "GAMESS bevitel"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:34
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
 msgid "&Basic Setup"
-msgstr ""
+msgstr "&Alap beállítások"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "In:"
-msgstr ""
+msgstr "Ebben:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Multiplicity:"
-msgstr ""
+msgstr "Multiplicitás:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:86
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
-msgstr ""
+msgstr "Ezzel:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:99
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Title:"
-msgstr ""
+msgstr "Cím:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:176
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Charge:"
-msgstr ""
+msgstr "Töltés:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:209
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3469,8 +3652,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:235
 #. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
 msgid "Filename Base:"
-msgstr ""
+msgstr "Fájl neve:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:245
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -3480,17 +3664,18 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:258
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
 msgid "Reset All"
-msgstr ""
+msgstr "Mindent visszaállít"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:265
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Defaults"
-msgstr ""
+msgstr "Alapértelmezések"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
+#, fuzzy
 msgid "Save File..."
-msgstr ""
+msgstr "Fájl betöltése..."
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
@@ -3500,7 +3685,7 @@ msgstr ""
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "name"
-msgstr ""
+msgstr "név"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
@@ -3529,8 +3714,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
 msgid "Formula:"
-msgstr ""
+msgstr "Formátum:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
@@ -3544,13 +3730,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "Descriptor:"
-msgstr ""
+msgstr "Nincs leírás"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
 msgid "Molecular Mass (g/mol):"
-msgstr ""
+msgstr "Molekulasúly  (g/mol):"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, molMassLabel)
@@ -3561,42 +3749,46 @@ msgstr ""
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:74
 #. i18n: ectx: property (text), widget (QLabel, bondCountLabel)
 msgid "TODO"
-msgstr ""
+msgstr "Tennivalók"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Chemical Formula:"
-msgstr ""
+msgstr "Kémiai képlet:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:53
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Number of Atoms:"
-msgstr ""
+msgstr "Atomok száma:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Number of Bonds:"
-msgstr ""
+msgstr "Kötések száma:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
+#, fuzzy
 msgid "Geometry Optimization Parameters"
-msgstr ""
+msgstr "Geometria optimalizálása"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#, fuzzy
 msgid "Optimization Method"
-msgstr ""
+msgstr "Optimalizálási módszer"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Force field:"
-msgstr ""
+msgstr "Erőtér:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Optimization algorithm:"
-msgstr ""
+msgstr "Optimalizálási módszer"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -3606,12 +3798,13 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "Steepest Descent"
-msgstr ""
+msgstr "Legmeredekebb ereszkedés"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+#, fuzzy
 msgid "Conjugate Gradient"
-msgstr ""
+msgstr "Konjugált grádiensek"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
@@ -3625,8 +3818,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
+#, fuzzy
 msgid "Autodetect"
-msgstr ""
+msgstr "AutoForgatás"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
@@ -3635,8 +3829,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
 msgid "Van der Waals cutoff distance:"
-msgstr ""
+msgstr "van der Waals, izofelület = %L1"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -3645,8 +3840,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:140
 #. i18n: ectx: property (text), widget (QLabel, label_8)
+#, fuzzy
 msgid "electrostatic cutoff distance:"
-msgstr ""
+msgstr "Elektrosztatikus potenciál"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:147
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
@@ -3659,28 +3855,33 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
 #. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
+#, fuzzy
 msgid " steps"
-msgstr ""
+msgstr "lépések"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#, fuzzy
 msgid "Convergence Criteria"
-msgstr ""
+msgstr "Konvergencia"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "\"Energy\" convergence:"
-msgstr ""
+msgstr "Konvergencia"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
 msgid "Step limit:"
-msgstr ""
+msgstr "Időkorlát:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
+#, fuzzy
 msgid " units"
-msgstr ""
+msgstr "Mértékegységek:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
 #. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
@@ -3715,8 +3916,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Number of points:"
-msgstr ""
+msgstr "Kötések száma:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -3749,8 +3951,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
+#, fuzzy
 msgid "Download Selected"
-msgstr ""
+msgstr "Kijelöltek törlése"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:19
 #. i18n: ectx: property (text), widget (QLabel, atomRadiusLabel)
@@ -3775,17 +3978,18 @@ msgstr ""
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 msgid "Opacity:"
-msgstr ""
+msgstr "Átlátszóság"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
+#, fuzzy
 msgid "Surface Dialog"
-msgstr ""
+msgstr "Felületek"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:41
 #. i18n: ectx: attribute (title), widget (QWidget, surfaceTab)
 msgid "Surfaces"
-msgstr ""
+msgstr "Felületek"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:54
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
@@ -3826,28 +4030,31 @@ msgstr ""
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:191
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "Isosurface Val.:"
-msgstr ""
+msgstr "Izofelület levágási érték"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:201
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Resolution:"
-msgstr ""
+msgstr "Felbontás:"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:211
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Surface:"
-msgstr ""
+msgstr "Felületek"
 
 #. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:228
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
 msgid "Calculate"
-msgstr ""
+msgstr "Számítás"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
+#, fuzzy
 msgid "Vibrational Modes"
-msgstr ""
+msgstr "Rezgési analízis"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3856,13 +4063,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
+#, fuzzy
 msgid "Start Animation"
-msgstr ""
+msgstr "&Animáció indítása"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
+#, fuzzy
 msgid "Stop Animation"
-msgstr ""
+msgstr "&Animáció leállítása"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
@@ -3872,7 +4081,7 @@ msgstr ""
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:42
 #. i18n: ectx: attribute (title), widget (QWidget, esTab)
 msgid "Molecule"
-msgstr ""
+msgstr "Molekula"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, esLabel)
@@ -3886,8 +4095,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:109
 #. i18n: ectx: attribute (title), widget (QWidget, operationsTab)
+#, fuzzy
 msgid "Operations"
-msgstr ""
+msgstr "Beállítások"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:115
 #. i18n: ectx: property (text), widget (QLabel, operationsLabel)
@@ -3932,7 +4142,2653 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
+",Launchpad Contributions:,Balázs Attila,Csörföly Dániel,Krasznecz Zoltán, ,"
+"Launchpad Contributions:,Avogadro Team,Balázs Attila,Csörföly Dániel,"
+"Krasznecz Zoltán, ,Launchpad Contributions:,Avogadro Team,Balázs Attila,"
+"Csörföly Dániel,Krasznecz Zoltán, ,Launchpad Contributions:,Avogadro Team,"
+"Balázs Attila,Csörföly Dániel,Krasznecz Zoltán, ,Launchpad Contributions:,"
+"Avogadro Team,Balázs Attila,Csörföly Dániel,Krasznecz Zoltán, ,Launchpad "
+"Contributions:,Avogadro Team,Balázs Attila,Csörföly Dániel,Krasznecz "
+"Zoltán, ,Launchpad Contributions:,Avogadro Team,Balázs Attila,Csörföly "
+"Dániel,Krasznecz Zoltán, ,Launchpad Contributions:,Avogadro Team,Balázs "
+"Attila,Csörföly Dániel,Zoltán Krasznecz, ,Launchpad Contributions:,Avogadro "
+"Team,Balázs Attila,Csörföly Dániel,Geoff Hutchison,Zoltán Krasznecz, ,"
+"Launchpad Contributions:,Avogadro Team,Balázs Attila,Csörföly Dániel,Geoff "
+"Hutchison,Zoltán Krasznecz"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
+",,battila9@freemail.hu,csorfolydaniel@gmail.com,krasznecz.zoltan@gmail.com,,,"
+"avogadro-devel@lists.sourceforge.net,battila9@freemail.hu,"
+"csorfolydaniel@gmail.com,zoltan.krasznecz@gmail.com,,,avogadro-devel@lists."
+"sourceforge.net,battila9@freemail.hu,szelmalomharc@gmail.com,zoltan."
+"krasznecz@gmail.com,,,avogadro-devel@lists.sourceforge.net,battila9@freemail."
+"hu,szelmalomharc@gmail.com,zoltan.krasznecz@gmail.com,,,avogadro-devel@lists."
+"sourceforge.net,battila9@freemail.hu,szelmalomharc@gmail.com,zoltan."
+"krasznecz@gmail.com,,,avogadro-devel@lists.sourceforge.net,battila9@freemail."
+"hu,szelmalomharc@gmail.com,zoltan.krasznecz@gmail.com,,,avogadro-devel@lists."
+"sourceforge.net,battila9@freemail.hu,szelmalomharc@gmail.com,zoltan."
+"krasznecz@gmail.com,,,avogadro-devel@lists.sourceforge.net,,,zoltan."
+"krasznecz@gmail.com,,,avogadro-devel@lists.sourceforge.net,,,,zoltan."
+"krasznecz@gmail.com,,,avogadro-devel@lists.sourceforge.net,,,,zoltan."
+"krasznecz@gmail.com"
+
+#~ msgid "Color by Index"
+#~ msgstr "Szín index szerint"
+
+#~ msgid "Color by Index (red, orange, yellow, green, blue, violet)."
+#~ msgstr ""
+#~ "Szín index szerint (piros, narancssárga, citromsárga, zöld, kék, lila)"
+
+#~ msgid "Color by Partial Charge"
+#~ msgstr "Szín parciális töltés szerint"
+
+#~ msgid "Color by atomic partial charge (blue = positive, red = negative."
+#~ msgstr ""
+#~ "Szín atomi paricális töltés szerint (kék = pozitív, piros = negatív)"
+
+#~ msgid "Custom Color:"
+#~ msgstr "Egyedi szín:"
+
+#~ msgid "Custom Color"
+#~ msgstr "Egyedi szín"
+
+#~ msgid "Set custom colors for objects"
+#~ msgstr "Saját színek beállítása objektumokra"
+
+#~ msgid "Color by Distance"
+#~ msgstr "Szín távolság szerint"
+
+#~ msgid "Color by distance from the first atom."
+#~ msgstr "Szín távolság szerint az első atomtól"
+
+#~ msgid "Color by Element (carbon = grey, oxygen = red, ...)."
+#~ msgstr "Színek elemek szerint (szén = zöld, oxigén = piros, ...)."
+
+#~ msgid "Color by Residue"
+#~ msgstr "Szín molekularész szerint"
+
+#~ msgid "Color by Residue (amino acid type, hydrophobicity, ..."
+#~ msgstr "Szín molekularész szerint (aminosav-típus, hidrofobicitás, ..."
+
+#~ msgid "Ununtrium"
+#~ msgstr "Ununtrium"
+
+#~ msgid "Ununpentium"
+#~ msgstr "Ununpentium"
+
+#~ msgid "Ununseptium"
+#~ msgstr "Ununseptium"
+
+#~ msgid "Ununoctium"
+#~ msgstr "Ununoctium"
+
+#~ msgid "Engines"
+#~ msgstr "Név"
+
+#~ msgid "Axes"
+#~ msgstr "Tengelyek"
+
+#~ msgid "Renders the x, y, and z axes at the origin"
+#~ msgstr "x,y, és z tengelyek renderelése a kiinduláshoz"
+
+#~ msgid "Renders primitives using Balls (atoms) and Sticks (bonds)"
+#~ msgstr "Primitívek renderelése gömböt (atom) és pálcát (kötés) használva"
+
+#~ msgid "Cartoon"
+#~ msgstr "Rajzfilm"
+
+#~ msgid "Renders protein secondary structure"
+#~ msgstr "Protein másodlagos struktúra renderelés"
+
+#~ msgid "Dipole"
+#~ msgstr "Dipól"
+
+#~ msgid "Force"
+#~ msgstr "Erő"
+
+#~ msgid "Renders force displacements on atoms"
+#~ msgstr "Megjeleníti az erőeltolódásokat az atomokon."
+
+#~ msgid "Hydrogen Bond"
+#~ msgstr "Hidrogén kötés"
+
+#~ msgid "Renders hydrogen bonds"
+#~ msgstr "Hidrogén kötések rajzolása"
+
+#~ msgid "Label"
+#~ msgstr "Felirat"
+
+#~ msgid "Polygon"
+#~ msgstr "Sokszög"
+
+#~ msgid "Renders atoms as tetrahedra, octahedra, and other polygons"
+#~ msgstr "Atom tetrahedron, oktahedron és más poligonok rajzolása"
+
+#~ msgid "Ribbon"
+#~ msgstr "Szalag"
+
+#~ msgid "Renders protein backbones as ribbons"
+#~ msgstr "A fehérjevázat szalagként jelenítse meg."
+
+#~ msgid "Ring"
+#~ msgstr "Gyűrű"
+
+#~ msgid "Renders rings with colored planes"
+#~ msgstr "A gyűrűket színes síkoknak mutatja"
+
+#~ msgid "Simple Wireframe"
+#~ msgstr "Egyszerű drótváz"
+
+#~ msgid "Renders bonds as wires (lines), ideal for large molecules"
+#~ msgstr ""
+#~ "a kötéseket drótként (vonalként) mutatja, ideális nagy molekulák esetén"
+
+#~ msgid "Van der Waals Spheres"
+#~ msgstr "Van der Waals szférák"
+
+#~ msgid "Renders atoms as Van der Waals spheres"
+#~ msgstr "Atomok Van der Waals szférájának rajzolása"
+
+#~ msgid "Stick"
+#~ msgstr "Pálca"
+
+#~ msgctxt "Electron density isosurface with a cutoff of %1"
+#~ msgid "Electron density, isosurface = %L1"
+#~ msgstr "Elektron sűrűség, isosurface=%L1"
+
+#~ msgctxt "%1 is mesh name, %2 is the isosurface cutoff"
+#~ msgid "%1, isosurface = %L2"
+#~ msgstr "%1, isosurface = %L2"
+
+#~ msgid "Renders bonds as wires (lines), ideal for very large (bio)molecules"
+#~ msgstr ""
+#~ "A kötéseket pálcikáknak mutatja, ez ideális nagyon nagy (bio)molekulák "
+#~ "esetén"
+
+#~ msgid "%1/%2"
+#~ msgstr "%1/%2"
+
+#~ msgid "video files (*.avi)"
+#~ msgstr "video fájlok (*.avi)"
+
+#~ msgid "Adding .avi extension"
+#~ msgstr ".avi fájl kiterjesztés hozzáadása"
+
+#~ msgid "Animation..."
+#~ msgstr "Animáció"
+
+#~ msgid "Cannot read file format of file %1."
+#~ msgstr "Nem olvasható a fájlformátum a %1 fájlban"
+
+#~ msgid "Read trajectory file %1 failed."
+#~ msgstr "%1 trajektória fájl beolvasása nem sikerült"
+
+#~ msgid "Must specify a valid .avi file name"
+#~ msgstr "Határozza meg az .avi fájl pontos nevét"
+
+#~ msgid "GL widget was not correctly initialized in order to save video"
+#~ msgstr ""
+#~ "GL widget nincs megfelelően inicializálva ezért a video mentése nem "
+#~ "lehetséges."
+
+#~ msgid "Invalid video filename.  Must include full directory path"
+#~ msgstr ""
+#~ "Érvénytelen video fájl név. Tartalmaznia kell az teljes elérési utat."
+
+#~ msgid ""
+#~ "Invalid video filename.  Must include full directory path and name, "
+#~ "ending with .avi"
+#~ msgstr ""
+#~ "Érvénytelen video fájl név. Tartalmaznia kell az teljes elérési utat, "
+#~ "valamint a fájlnévnek .avi-ra kell végződnie."
+
+#~ msgid "Animation"
+#~ msgstr "Animáció"
+
+#~ msgid "Animate trajectories, reactions, and vibrations."
+#~ msgstr "Animált trajektóriák, reakciók és vibrációk."
+
+#~ msgid "Cartesian Editor..."
+#~ msgstr "Descartes-i szerkesztő"
+
+#~ msgid "Number of atoms: %1"
+#~ msgstr "Atomok száma: %1"
+
+#~ msgid "Number of rotatable bonds: %1"
+#~ msgstr "Az elforduló kötések száma: %1"
+
+#~ msgid "Add constraint"
+#~ msgstr "Megszorítások hozzáadása"
+
+#~ msgid "Your molecule must contain at least one atom to add a constraint"
+#~ msgstr ""
+#~ "A molekulának muszáj tartalmaznia legalább egy atomot hogy "
+#~ "megszorításokat hozzá lehessen adni."
+
+#~ msgid ""
+#~ "Your molecule must contain at least two atoms to add a bond constraint"
+#~ msgstr ""
+#~ "A molekulának muszáj tartalmaznia legalább két hogy kötés megszorításokat "
+#~ "hozzá lehessen adni."
+
+#~ msgid ""
+#~ "Your molecule must contain at least three atoms to add an angle constraint"
+#~ msgstr ""
+#~ "A molekulának muszáj tartalmaznia legalább három atomot hogy szög "
+#~ "megszorításokat hozzá lehessen adni."
+
+#~ msgid ""
+#~ "Your molecule must contain at least four atoms to add a torsion constraint"
+#~ msgstr ""
+#~ "A molekulának legalább négy atomot kell tartalmaznia hogy térszög "
+#~ "megszorítást lehessen hozzáadni."
+
+#~ msgid "Trajectory..."
+#~ msgstr "Trajektória..."
+
+#~ msgid "Open chemical file format"
+#~ msgstr "Kémiai fájl formátum megnyitása"
+
+#~ msgid "Chemical files (*.xyz)"
+#~ msgstr "Kémiai fájlok (*.xyz)"
+
+#~ msgid "Chemical files (*.parm7)"
+#~ msgstr "Kémiai fájlok (*.parm7)"
+
+#~ msgid "Import Trajectory"
+#~ msgstr "Trajektória importálása"
+
+#~ msgid "Import trajectory files"
+#~ msgstr "Trajektória fájl importálása"
+
+#~ msgid "Setup Force Field..."
+#~ msgstr "Erőtér beállítása..."
+
+#~ msgid "Calculate Energy"
+#~ msgstr "Energia kalkuláció"
+
+#~ msgid "Conformer Search..."
+#~ msgstr "Konformerek keresése..."
+
+#~ msgid "Constraints..."
+#~ msgstr "Megszorítások..."
+
+#~ msgid "Ignore Selection"
+#~ msgstr "Kijelölés megszűntetése"
+
+#~ msgid "Fix Selected Atoms"
+#~ msgstr "Fix kiválasztott atomok"
+
+#~ msgid "&Molecular Mechanics"
+#~ msgstr "&molekula mechanika"
+
+#~ msgid "Energy = %L1 %2"
+#~ msgstr "Energia = %L1 %2"
+
+#~ msgid "Geometric Optimization"
+#~ msgstr "Geometria Optimalizálás"
+
+#~ msgid "Forcefield Optimization"
+#~ msgstr "Erőtér optimalizálás"
+
+#~ msgid "Systematic Rotor Search"
+#~ msgstr "Szisztematikus forgópont-keresés"
+
+#~ msgid "Random Rotor Search"
+#~ msgstr "Véletlenszerű forgópont-keresés"
+
+#~ msgid "Weighted Rotor Search"
+#~ msgstr "Súlyozott forgópont-keresés"
+
+#~ msgid "ForceField"
+#~ msgstr "erőtér"
+
+#~ msgid ""
+#~ "Optimize molecules and generate conformers using molecular mechanics "
+#~ "force fields"
+#~ msgstr ""
+#~ "Molekulageometria optimalizálása és konformerek létrehozása a molekuláris "
+#~ "mechanikai erőterek használatával."
+
+#~ msgid "Change H to Methyl"
+#~ msgstr "H cseréje Metil csoportra"
+
+#~ msgid "H to Methyl"
+#~ msgstr "H metilcsoportra"
+
+#~ msgid "H2Methyl"
+#~ msgstr "H2Metil"
+
+#~ msgid "Transform hydrogens to methyl groups"
+#~ msgstr "Hidrogéneket metil csoportokra transzformál"
+
+#~ msgid "Add or remove hydrogens"
+#~ msgstr "Hidrogének hozzáadása vagy eltávolítása"
+
+#~ msgid "Fragment..."
+#~ msgstr "Töredék..."
+
+#~ msgid "Insert SMILES"
+#~ msgstr "SMILES beillesztése"
+
+#~ msgid "Insert SMILES fragment:"
+#~ msgstr "SMILES-töredék beillesztése"
+
+#~ msgid "Insert Fragment"
+#~ msgstr "Molekulatöredék beillesztése"
+
+#~ msgid "Insert molecular fragments for building larger molecules"
+#~ msgstr "Molekulatöredék beillesztése nagyobb molekulák létrehozásához."
+
+#~ msgid "Peptide..."
+#~ msgstr "Peptid..."
+
+#~ msgid "Insert Peptide"
+#~ msgstr "Peptid beillesztése"
+
+#~ msgid "Insert oligopeptide sequences"
+#~ msgstr "Oligopeptid-szekvencia  beillesztése"
+
+#~ msgid "Molecule Properties..."
+#~ msgstr "Molekula tulajdonságai..."
+
+#~ msgid "&Properties"
+#~ msgstr "&Tulajdonságok"
+
+#~ msgid "Estimated Dipole Moment (D):"
+#~ msgstr "Becsült dipólusmomentum (D):"
+
+#~ msgid "Display standard molecular properties."
+#~ msgstr "Standard molekulatulajdonságok megjelenítése"
+
+#~ msgid "Fetch from PDB..."
+#~ msgstr "Betöltés PDB-ből..."
+
+#~ msgid "Fetch from URL..."
+#~ msgstr "Betöltés URL-ről..."
+
+#~ msgid "PDB Entry"
+#~ msgstr "PDB bejegyzés"
+
+#~ msgid "PDB entry to download."
+#~ msgstr "Letöltendő PDB bejegyzés"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "URL of molecule to download."
+#~ msgstr "Letöltendő molekula URL-je."
+
+#~ msgid "Specified molecule could not be loaded: %1"
+#~ msgstr "A megadott molekulát nem lehet betölteni: %1"
+
+#~ msgid "Network Fetch"
+#~ msgstr "Hálózati letöltés"
+
+#~ msgid "Fetch molecule files over the network."
+#~ msgstr "Molekulafájlok letöltése a hálózatról."
+
+#~ msgid "Show Preview"
+#~ msgstr "Előnézet megjelenítése"
+
+#~ msgid "Hide Preview"
+#~ msgstr "A gyorsnézet elrejtése"
+
+#~ msgid "Save POV-Ray rendered image"
+#~ msgstr "POV-Ray által létrehozott kép tárolása"
+
+#~ msgid "Image files (*.png *.pbm)"
+#~ msgstr "Képfájlok (*.png *.pbm)"
+
+#~ msgid "POV-Ray..."
+#~ msgstr "POV-Ray..."
+
+#~ msgid "No filename supplied."
+#~ msgstr "Nincs megadva fájlnév."
+
+#~ msgid "No valid filename was supplied."
+#~ msgstr "Nincs megadva érvényes fájlnév."
+
+#~ msgid "Does not compute."
+#~ msgstr "Számítás nem fut."
+
+#~ msgid ""
+#~ "Cannot write to file %1. Do you have permissions to write to that "
+#~ "location?"
+#~ msgstr "Nem tud írni %1 fájlba. Van írási engedélyed erre a helyre?"
+
+#~ msgid "POV-Ray failed to start."
+#~ msgstr "POV-Ray nem indult el."
+
+#~ msgid ""
+#~ "POV-Ray failed to start. May be the path to the executable is not set "
+#~ "correctly."
+#~ msgstr ""
+#~ "A POV-Ray nem indult el. Lehetséges hogy nem lett megfelelően megadva az "
+#~ "útvonal a futtatható fájlhoz."
+
+#~ msgid ""
+#~ "Create POV-Ray files and render them using the command line POV-Ray "
+#~ "program."
+#~ msgstr ""
+#~ "POV-Ray fájlok létrehozása és megjelenítése a parancssori POV-Ray "
+#~ "programmal"
+
+#~ msgid "Atom Properties..."
+#~ msgstr "Atom tulajdonságai..."
+
+#~ msgid "Bond Properties..."
+#~ msgstr "Kötés tulajdonságai..."
+
+#~ msgid "Angle Properties..."
+#~ msgstr "Szög tulajdonságai..."
+
+#~ msgid "Torsion Properties..."
+#~ msgstr "Torzió tulajdonságai..."
+
+#~ msgid "Conformer Properties..."
+#~ msgstr "Konformer tulajdonságai..."
+
+#~ msgid "Atom Properties"
+#~ msgstr "Atom tulajdonságai"
+
+#~ msgid "Bond Properties"
+#~ msgstr "Kötés tulajdonságai"
+
+#~ msgid "Angle Properties"
+#~ msgstr "Szög tulajdonságai"
+
+#~ msgid "Torsion Properties"
+#~ msgstr "Torzió tulajdonságai"
+
+#~ msgid "Conformer Properties"
+#~ msgstr "Konformer tulajdonságai"
+
+#~ msgid "Properties"
+#~ msgstr "Tulajdonságok"
+
+#~ msgid ""
+#~ "Windows for displaying atom, bond, angle and torsion properties. It also "
+#~ "includes a cartesian coordinate editor."
+#~ msgstr ""
+#~ "Atom, kötés, szög és torziós tulajdonságokat mutató ablak. Tartalmaz "
+#~ "Descartes-i koorinátaszerkesztőt is."
+
+#~ msgid "Valence"
+#~ msgstr "Vegyérték"
+
+#~ msgid "Partial Charge"
+#~ msgstr "Részleges töltés"
+
+#~ msgid "Atom"
+#~ msgstr "Atom"
+
+#~ msgid "Rotatable"
+#~ msgstr "Forgatható"
+
+#~ msgctxt "in Angstrom"
+#~ msgid "Length %1"
+#~ msgstr "Hossz %1"
+
+#~ msgid "Vertex"
+#~ msgstr "Csúcs"
+
+#~ msgctxt "Degree symbol"
+#~ msgid "Angle %1"
+#~ msgstr "Szög %1"
+
+#~ msgid "Angle"
+#~ msgstr "Szög"
+
+#~ msgid "Atom %1"
+#~ msgstr "Atom %1"
+
+#~ msgctxt "Degree symbol"
+#~ msgid "Torsion %1"
+#~ msgstr "Torzió %1"
+
+#~ msgid "Conformer"
+#~ msgstr "Konformer"
+
+#~ msgid "Yes"
+#~ msgstr "Igen"
+
+#~ msgid "No"
+#~ msgstr "Nem"
+
+#~ msgid "Python Terminal"
+#~ msgstr "Python terminál"
+
+#~ msgid "pythonTerminalDock"
+#~ msgstr "Python terminál ablak"
+
+#~ msgid "Interactive python scripting terminal"
+#~ msgstr "Interaktív Python parancsnyelvi terminál"
+
+#~ msgid "QM Matches"
+#~ msgstr "QM-egyezések"
+
+#~ msgctxt ""
+#~ "Selection to be used as an Effective Fragment Potential in calculations"
+#~ msgid "EFP Selection..."
+#~ msgstr "EFP kiválasztás..."
+
+#~ msgctxt "Selection to be used for Quantum Mechanical calculations"
+#~ msgid "QM Selection..."
+#~ msgstr "QM választás..."
+
+#~ msgid "Delete"
+#~ msgstr "Törlés"
+
+#~ msgid "You must make a selection!"
+#~ msgstr "Csinálnod kell egy kiválasztást!"
+
+#~ msgid "SMILES Conversion Unavailable"
+#~ msgstr "SMILES konverzió nem elérhető"
+
+#~ msgid "SMILES Format Conversion Not Available!"
+#~ msgstr "SMILES formátum konverzió nem választható!"
+
+#~ msgid "Group Name"
+#~ msgstr "Csoport név"
+
+#~ msgid " ("
+#~ msgstr " ("
+
+#~ msgid "qm"
+#~ msgstr "qm"
+
+#~ msgid "efp"
+#~ msgstr "efp"
+
+#~ msgid ")"
+#~ msgstr ")"
+
+#~ msgid "GAMESS"
+#~ msgstr "GAMESS"
+
+#~ msgid "Create input files for the GAMESS quantum chemistry package"
+#~ msgstr "Kimeneti fájl generálása GAMESS kvantum kémiai csomaghoz"
+
+#~ msgid "Advanced Settings Changed"
+#~ msgstr "A speciális beállítások megváltoztak"
+
+#~ msgid ""
+#~ "Advanced settings have changed.\n"
+#~ "Discard?"
+#~ msgstr ""
+#~ "A speciális beállítások megváltoztak.\n"
+#~ "Biztos ne mentsük?"
+
+#~ msgid "Advanced Settings Reset"
+#~ msgstr "Speciális beállítások visszaállítása"
+
+#~ msgid ""
+#~ "Are you sure you wish to reset advanced settings?\n"
+#~ "All changes will be lost!"
+#~ msgstr ""
+#~ "Biztos, hogy visszaállítod a speciális beállításokat?\n"
+#~ "Minden változtatás el fog veszni!"
+
+#~ msgid "Basic Settings Reset"
+#~ msgstr "Alapbeállítások visszaállítása az eredeti értékre."
+
+#~ msgid ""
+#~ "Are you sure you wish to reset basic settings?\n"
+#~ "All changes will be lost!"
+#~ msgstr ""
+#~ "Biztos vagy benne hogy visszaállítod az alapértelmezett beállításokra az "
+#~ "alapbeállításokat?\n"
+#~ "Minden beállításod elveszik."
+
+#~ msgid "Gaussian Running."
+#~ msgstr "Gaussian fut."
+
+#~ msgid ""
+#~ "Gaussian is already running. Wait until the previous calculation is "
+#~ "finished."
+#~ msgstr "Gaussian fut. Várjon amíg az előző kalkuláció befejeződik."
+
+#~ msgid "Gaussian Not Installed."
+#~ msgstr "Gaussian nincs installálva."
+
+#~ msgid "The G03 executable, cannot be found."
+#~ msgstr "A G03 futtatható nem található."
+
+#~ msgid "G03 did not start. Perhaps it is not installed correctly."
+#~ msgstr "G03 nem indult el, talán nincs installálva megfelelően."
+
+#~ msgid "Running Gaussian calculation..."
+#~ msgstr "Gaussian kalkuláci fut."
+
+#~ msgid "G03 Crashed."
+#~ msgstr "A G03 összeomlott."
+
+#~ msgid ""
+#~ "Gaussian did not run correctly. Perhaps it is not installed correctly."
+#~ msgstr "Gaussian nem fut megfelelően,  talán nincs installálva megfelelően."
+
+#~ msgid "&Gaussian..."
+#~ msgstr "&Gaussian"
+
+#~ msgid "&MOLPRO..."
+#~ msgstr "&MOLPRO..."
+
+#~ msgid "M&OPAC..."
+#~ msgstr "&MOPAC..."
+
+#~ msgid "&NWChem..."
+#~ msgstr "Copy text   \t &NWChem..."
+
+#~ msgid "&Q-Chem..."
+#~ msgstr "&Q-Chem..."
+
+#~ msgid "MOPAC Input Warning"
+#~ msgstr "MOPAC-bevitel figyelmeztetés"
+
+#~ msgid "MOPAC Running."
+#~ msgstr "A MOPAC fut"
+
+#~ msgid ""
+#~ "MOPAC is already running. Wait until the previous calculation is finished."
+#~ msgstr "A MOPAC már fut. Várd meg amíg az előző számítás befejeződik."
+
+#~ msgid "MOPAC Not Installed."
+#~ msgstr "A MOPAC nincs telepítve."
+
+#~ msgid "The MOPAC executable, cannot be found."
+#~ msgstr "A MOPAC futtatható fájlt nem találom."
+
+#~ msgid "MOPAC failed to start."
+#~ msgstr "A MOPAC indítása nem sikerült."
+
+#~ msgid "MOPAC did not start. Perhaps it is not installed correctly."
+#~ msgstr "A MOPAC nem indult el. Lehet hogy nincs megfelelően telepítve."
+
+#~ msgid "Running MOPAC calculation..."
+#~ msgstr "MOPAC-számítás indítása..."
+
+#~ msgid "MOPAC Crashed."
+#~ msgstr "A MOPAC összeomlott."
+
+#~ msgid "MOPAC did not run correctly. Perhaps it is not installed correctly."
+#~ msgstr "A MOPAC nem fut megfelelő módon. Lehet hogy nincs jól telepítve."
+
+#~ msgid "NWChem Input Deck Generator Warning"
+#~ msgstr "NWChem beviteli panel generátor figyelmeztetés"
+
+#~ msgid "Q-Chem Input Deck Generator Warning"
+#~ msgstr "Q-Chem beviteli panel generátor figyelmeztetés"
+
+#~ msgid "Select SMARTS..."
+#~ msgstr "SMARTS kijelölés..."
+
+#~ msgid "Select by Residue..."
+#~ msgstr "Kijelölés molekularész szerint..."
+
+#~ msgid "Add Named Selection..."
+#~ msgstr "Megnevezett kijelölés hozzáadása..."
+
+#~ msgid "SMARTS Selection"
+#~ msgstr "SMARTS kijelölés"
+
+#~ msgid "SMARTS pattern to select"
+#~ msgstr "Kijelölendő SMARTS-minta"
+
+#~ msgid "Select by residue"
+#~ msgstr "Kijelölés molekularész szerint"
+
+#~ msgid "Residue name"
+#~ msgstr "Molekularész neve"
+
+#~ msgid "There is no current selection."
+#~ msgstr "Jelenleg nincs kijelölés."
+
+#~ msgid "Add Named Selection"
+#~ msgstr "Megnevezett kijelölés hozzáadása"
+
+#~ msgid "Name cannot be empty."
+#~ msgstr "A név nem lehet üres."
+
+#~ msgid "There is already a selection with this name."
+#~ msgstr "Van már kijelölés ezzel a névvel."
+
+#~ msgid "Select atoms, bonds, residues..."
+#~ msgstr "Atomok, kötések, molekularészek kijelölése..."
+
+#~ msgid "GLSL Shaders..."
+#~ msgstr "GLSL árnyékolók..."
+
+#~ msgid "Open a vertex shader source file"
+#~ msgstr "Csúcs árnyékoló forrásfájl megnyitása"
+
+#~ msgid "Vertex shader files (*.vert)"
+#~ msgstr "Csúcs árnyékoló fájlok (*.vert)"
+
+#~ msgid "Open a fragment shader source file"
+#~ msgstr "Molekularész árnyékoló forrásfájl megnyitása"
+
+#~ msgid "Fragment shader files (*.frag)"
+#~ msgstr "Molekularész árnyékoló fájlok (*.frag)"
+
+#~ msgid "Open a shader parameters file"
+#~ msgstr "Árnyékoló paraméterfájl megnyitása"
+
+#~ msgid "Shader parameters files (*.params)"
+#~ msgstr "Árnyékoló paraméterfájlok (*.params)"
+
+#~ msgid "GLSL Shaders"
+#~ msgstr "GLSL árnyékolók"
+
+#~ msgid "Load and use OpenGL 2.0 GLSL shaders"
+#~ msgstr "OpenGL 2.0 GLSL árnyékolók betöltése és használata"
+
+#~ msgid "Transmittance (%)"
+#~ msgstr "Transzmittancia (%)"
+
+#~ msgid "Absorbance (%)"
+#~ msgstr "Abszorbancia (%)"
+
+#~ msgid "No intensities"
+#~ msgstr "Nincs intenzitás"
+
+#~ msgid ""
+#~ "The vibration data in the molecule you have loaded does not have any "
+#~ "intensity data. Intensities have been set to an arbitrary value for "
+#~ "visualization."
+#~ msgstr ""
+#~ "A feltöltött molekula rezgési adatai nem tartalmaznak intenzitás "
+#~ "értékeket. Az intenzitásokat tetszőleges értékekre állítottam a "
+#~ "vizualizáció miatt."
+
+#~ msgid "Wavenumber (cm<sup>-1</sup>)"
+#~ msgstr "Hullámszám (cm<sup>-1</sup>)"
+
+#~ msgid "Shift (ppm)"
+#~ msgstr "Eltolódás (ppm)"
+
+#~ msgid "X Axis"
+#~ msgstr "X tengely"
+
+#~ msgid "Y Axis"
+#~ msgstr "Y tengely"
+
+#~ msgid "&Appearance"
+#~ msgstr "Meg&jelenés"
+
+#~ msgid "E&xport Image"
+#~ msgstr "Kép e&xportálása"
+
+#~ msgctxt "Infrared spectra option"
+#~ msgid "Infrared"
+#~ msgstr "Infravörös"
+
+#~ msgid "&Infrared Spectra Settings"
+#~ msgstr "&Infravörös spektumok beállítása"
+
+#~ msgctxt "NMR spectra option"
+#~ msgid "NMR"
+#~ msgstr "NMR"
+
+#~ msgid "&NMR Spectra Settings"
+#~ msgstr "&NMR spektumok beállítása"
+
+#~ msgid "No data"
+#~ msgstr "Nincs adat"
+
+#~ msgid "Dark"
+#~ msgstr "Sötét"
+
+#~ msgid "Light"
+#~ msgstr "Világos"
+
+#~ msgid "Publication"
+#~ msgstr "Publikálás"
+
+#~ msgid "Handdrawn"
+#~ msgstr "Kézzel rajzolt"
+
+#~ msgid "New Scheme"
+#~ msgstr "Új séma"
+
+#~ msgid "Confirm Scheme Removal"
+#~ msgstr "Séma eltávolításának megerősítése"
+
+#~ msgid "Really remove current scheme?"
+#~ msgstr "Tényleg eltávolítod a jelenlegi sémát?"
+
+#~ msgid "Change Scheme Name"
+#~ msgstr "Séma nevének megváltoztatása"
+
+#~ msgid "Enter new name for current scheme:"
+#~ msgstr "Adj meg egy új nevet a jelenlegi sémának."
+
+#~ msgid "Export Calculated Spectrum"
+#~ msgstr "Számított spektrum exportálása"
+
+#~ msgid "Tab Separated Values (*.tsv)"
+#~ msgstr "Tabulátorral elválasztott értékek (*.tsv)"
+
+#~ msgid "Tab Separated Values"
+#~ msgstr "Tabulátorral elválasztott értékek"
+
+#~ msgid "Comma Separated Values"
+#~ msgstr "Vesszővel elválasztott értékek (CSV)"
+
+#~ msgid "JCAMP-DX"
+#~ msgstr "JCAMP-DX"
+
+#~ msgid "Import Spectra"
+#~ msgstr "Spektrum importálása"
+
+#~ msgid "Spectra Import"
+#~ msgstr "Spektrum importálása"
+
+#~ msgid "Unknown extension: %1"
+#~ msgstr "Ismeretlen kiterjesztés: %1"
+
+#~ msgctxt "Do not remove 'IR' or '(*.out)' -- needed for parsing later"
+#~ msgid "PWscf IR data (*.out)"
+#~ msgstr "PWscf IR adatok (*.out)"
+
+#~ msgctxt "Do not remove 'IR' or '(control)' -- needed for parsing later"
+#~ msgid "Turbomole IR data (control)"
+#~ msgstr "Turbomole IR adatok (control)"
+
+#~ msgid "Data Format"
+#~ msgstr "Adatformátum"
+
+#~ msgctxt "noun, not verb"
+#~ msgid "Format:"
+#~ msgstr "Formátum:"
+
+#~ msgid "Load Spectral Data"
+#~ msgstr "Spektrumadatok betöltése"
+
+#~ msgid "Portable Network Graphics"
+#~ msgstr "Portable Network Graphics (PNG)"
+
+#~ msgid "jpeg"
+#~ msgstr "jpeg"
+
+#~ msgid "Tagged Image File Format"
+#~ msgstr "TIFF (Tagged Image File Format)"
+
+#~ msgid "Windows Bitmap"
+#~ msgstr "Windows bittérkép"
+
+#~ msgid "Portable Pixmap"
+#~ msgstr "hordozható pixeltérkép"
+
+#~ msgid "X11 Bitmap"
+#~ msgstr "X11 bittérkép"
+
+#~ msgid "X11 Pixmap"
+#~ msgstr "X11 pixeltérkép"
+
+#~ msgid "Save Spectra Image"
+#~ msgstr "Spektrumkép mentése"
+
+#~ msgid "&Advanced <<"
+#~ msgstr "&Haladó <<"
+
+#~ msgid "&Spectra..."
+#~ msgstr "&Spektrumok..."
+
+#~ msgid "Spectra"
+#~ msgstr "Spektrumok"
+
+#~ msgid "Visualize spectral data from quantum chemistry calculations"
+#~ msgstr "Kvantumkémiai számításokból származó spektrumadatok megjelenítése"
+
+#~ msgid "No vibrational displacements exist."
+#~ msgstr "Nincs vibrációs eltolódás"
+
+#~ msgid "Vibration"
+#~ msgstr "Vibráció"
+
+#~ msgid "Visualize vibrational modes from quantum chemistry calculations"
+#~ msgstr "Vibrációs módok vizualizációja kvantumkémiai számításokból"
+
+#~ msgid "Sorting %1 vibrations by frequency..."
+#~ msgstr "%1 rezgések rendezése frekvencia szerint..."
+
+#~ msgid "Super Cell Builder..."
+#~ msgstr "Szupercella építő..."
+
+#~ msgid ""
+#~ "This document is currently an isolated molecule. You need to create a "
+#~ "unit cell."
+#~ msgstr ""
+#~ "A dokumentum jelenleg egy izolált molekulát tartalmaz. Létre kell hozni "
+#~ "egy egységcellát."
+
+#~ msgid "Build and display crystallographic super cells"
+#~ msgstr "Krisztallográfiai szupercella építése és megjelenítése"
+
+#~ msgctxt "A cube type of nothing - empty cube"
+#~ msgid "Nothing"
+#~ msgstr "Semmi"
+
+#~ msgctxt "Van der Waals surface type"
+#~ msgid "Van der Waals"
+#~ msgstr "van der Waals"
+
+#~ msgctxt "Electrostatic potential surface type"
+#~ msgid "Electrostatic Potential"
+#~ msgstr "Elektrosztatikus potenciál"
+
+#~ msgctxt "Electron density surface type"
+#~ msgid "Electron Density"
+#~ msgstr "Elektronsűrűség"
+
+#~ msgctxt "Molecular orbital surface type"
+#~ msgid "Molecular Orbital"
+#~ msgstr "Molekulapálya"
+
+#~ msgctxt "Undefined cube type"
+#~ msgid "Error - undefined type"
+#~ msgstr "Hiba - nem definiált típus"
+
+#~ msgid "Create Surfaces..."
+#~ msgstr "Felszín létrehozása..."
+
+#~ msgid "Calculating VdW Cube"
+#~ msgstr "VdW kocka számítása folyamatban"
+
+#~ msgctxt "Molecular Orbital"
+#~ msgid "Calculating MO %L1"
+#~ msgstr "MO %L1 számítása folyamatban"
+
+#~ msgid "VdW"
+#~ msgstr "VdW"
+
+#~ msgid "Electron Density"
+#~ msgstr "Elektronsűrűség"
+
+#~ msgid "GL widget was not correctly initialized in order to make a video"
+#~ msgstr "A GL widget nem megfelelően indult a video készítéséhez"
+
+#~ msgid "GL widget has no molecule"
+#~ msgstr "A GL widgetben nincs molekula"
+
+#~ msgid "Building video "
+#~ msgstr "Video létrehozása "
+
+#~ msgid "Could not run povray."
+#~ msgstr "Nem sikerült futtatni a povray-t."
+
+#~ msgid "Could not run mencoder."
+#~ msgstr "Nem sikerült futtatni a mencoder-t."
+
+#~ msgid "Set Aspect Ratio"
+#~ msgstr "Oldalarányok beállítása"
+
+#~ msgid "Debug Information"
+#~ msgstr "Hibakeresési információk"
+
+#~ msgid "FPS: %L1"
+#~ msgstr "FPS: %L1"
+
+#~ msgid "View Size: %L1 x %L2"
+#~ msgstr "Méret megjelenítése: %L1 x %L2"
+
+#~ msgid "Atoms: %L1"
+#~ msgstr "Atomok: %L1"
+
+#~ msgid "Bonds: %L1"
+#~ msgstr "Kötések: %L1"
+
+#~ msgid "OBMol: index %1 out of reach."
+#~ msgstr "OBMol: %1 index nem elérhető."
+
+#~ msgid "File type '%1' is not supported for reading."
+#~ msgstr "'%1' fájltípus olvasása nem támogatott."
+
+#~ msgid "File type for file '%1' is not supported for reading."
+#~ msgstr "'%1' fájltípus olvasása nem támogatott."
+
+#~ msgid "Reading molecule with index %1 from file '%2' failed."
+#~ msgstr "%1 indexű molekula beolvasása '%2' fájlból nem sikerült."
+
+#~ msgid "replaceMolecule: index %1 out of reach."
+#~ msgstr "Molekula csere: %1 index nem elérhető"
+
+#~ msgid "File type '%1' is not supported for writing."
+#~ msgstr "'%1' fájltípus írása nem támogatott."
+
+#~ msgid "File type for file '%1' is not supported for writing."
+#~ msgstr "'%1' fájl típusának írása nem támogatott."
+
+#~ msgid "Could not open file '%1' for writing."
+#~ msgstr "Nem sikerült megnyitni '%1' fájlt íráshoz."
+
+#~ msgid "Could not open file '%1' for reading."
+#~ msgstr "Nem sikerült megnyitni '%1' fájlt olvasáshoz."
+
+#~ msgid "Replacing molecule with index %1 in file '%2' failed."
+#~ msgstr "%1 indexű molekula cseréje '%2' fájlban nem sikerült."
+
+#~ msgid "File %1 cannot be opened for reading."
+#~ msgstr "%1 fájlt nem sikerült olvasásra megnyitni"
+
+#~ msgid "File %1 can not be opened for writing."
+#~ msgstr "Nem lehet megnyitni %1 fájlt íráshoz."
+
+#~ msgid "Saving molecular file failed - could not rename original file."
+#~ msgstr ""
+#~ "Molekulafájl mentése sikertelen - nem lehet átnevezni az eredeti fájlt."
+
+#~ msgid "Saving molecular file failed - could not rename new file."
+#~ msgstr "Molekulafájl mentése sikertelen - nem lehet átnevezni az új fájlt."
+
+#~ msgid "Saving molecular file failed - could not remove old file."
+#~ msgstr ""
+#~ "Molekulafájl mentése sikertelen - nem lehet törölni az eredeti fájlt."
+
+#~ msgid "Writing a molecule to file '%1' failed. OpenBabel function failed."
+#~ msgstr ""
+#~ "Molekula írása '%1' fájlba nem sikerült. OpenBabel függvény nem működik"
+
+#~ msgid "File %1 cannot be opened for writing."
+#~ msgstr "Nem sikerült megnyitni %1 fájlt olvasáshoz."
+
+#~ msgid "Writing conformers to file '%1' failed."
+#~ msgstr "Nem sikerült a konformereket '%1' fájlba menteni."
+
+#~ msgid "Molecule %1"
+#~ msgstr "Molekula %1"
+
+#~ msgctxt "Default license for all Avogadro plugins"
+#~ msgid "GPL2+"
+#~ msgstr "GPL2+"
+
+#~ msgid "Unknown Python Engine"
+#~ msgstr "Ismeretlen Python motor"
+
+#~ msgid "N/A"
+#~ msgstr "N/A"
+
+#~ msgid "PythonEngine: checking "
+#~ msgstr "Python motor: ellenőrzés "
+
+#~ msgid "  - script has no 'Engine' class defined"
+#~ msgstr "  - parancsfájlban nincs meghatásűrozva 'Engine' osztály"
+
+#~ msgid "  - no module"
+#~ msgstr "  - nincs modul"
+
+#~ msgid "Unknown Python Extension"
+#~ msgstr "Ismeretlen Python bővítmény"
+
+#~ msgid "PythonExtension: checking "
+#~ msgstr "Python bővítmény ellenőrzése "
+
+#~ msgid "  - script has no 'Extension' class defined"
+#~ msgstr "  - parancsfájlban nincs definiálva 'bővítmény' osztály"
+
+#~ msgid "Unknown Python Tool"
+#~ msgstr "Ismeretlne Python eszköz"
+
+#~ msgid "PythonTool: checking "
+#~ msgstr "Python eszköz: ellenőrzés "
+
+#~ msgid "  - script has no 'Tool' class defined"
+#~ msgstr "  - parancsfájlban nincs definiálva 'eszköz' osztály"
+
+#~ msgid "Conformer %1"
+#~ msgstr "Konformer %1"
+
+#~ msgid "Tools"
+#~ msgstr "Eszközök"
+
+#~ msgid "Axis:"
+#~ msgstr "Tengely:"
+
+#~ msgid "Align:"
+#~ msgstr "Igazítás:"
+
+#~ msgid "Everything"
+#~ msgstr "Minden"
+
+#~ msgid "Align"
+#~ msgstr "Rendezés"
+
+#~ msgid "Align molecules to a Cartesian axis"
+#~ msgstr "Molekulák rendezése Descates-tengelyre"
+
+#~ msgid "Align Settings"
+#~ msgstr "Rendezés beállításai"
+
+#~ msgid "AutoOpt: Could not setup force field...."
+#~ msgstr "AutoOpt: Nem sikerült beállítani erőteret..."
+
+#~ msgid "AutoOpt: E = %1 %2 (dE = %3)"
+#~ msgstr "AutoOpt: E = %1 %2 (dE = %3)"
+
+#~ msgid "Steps per Update:"
+#~ msgstr "Frissítésenkénti lépések:"
+
+#~ msgid "Algorithm:"
+#~ msgstr "Algoritmus:"
+
+#~ msgid "Molecular Dynamics (300K)"
+#~ msgstr "Mulekuladinamika (300K)"
+
+#~ msgid "Molecular Dynamics (600K)"
+#~ msgstr "Mulekuladinamika (600K)"
+
+#~ msgid "Molecular Dynamics (900K)"
+#~ msgstr "Mulekuladinamika (900K)"
+
+#~ msgid "Start"
+#~ msgstr "Indítás"
+
+#~ msgid "Fixed atoms are movable"
+#~ msgstr "Fix atomok mozgathatók"
+
+#~ msgid "Ignored atoms are movable"
+#~ msgstr "Kihagyott atomok mozgathatók"
+
+#~ msgid "AutoOpt Molecule"
+#~ msgstr "AutoOpt molekula"
+
+#~ msgid "Automatic optimization of molecular geometry"
+#~ msgstr "Molekulageometria Automatikus optimalizálása"
+
+#~ msgid "AutoOptimization Settings"
+#~ msgstr "AutoOptimalizálás beállításai"
+
+#~ msgid "Auto Rotation Tool"
+#~ msgstr "Automatikus forgatás eszköz"
+
+#~ msgid "x rotation:"
+#~ msgstr "x forgatás:"
+
+#~ msgid "x rotation"
+#~ msgstr "x forgatás"
+
+#~ msgid "y rotation:"
+#~ msgstr "y forgatás:"
+
+#~ msgid "y rotation"
+#~ msgstr "y forgatás"
+
+#~ msgid "z rotation:"
+#~ msgstr "z forgatás:"
+
+#~ msgid "z rotation"
+#~ msgstr "z forgatás"
+
+#~ msgid "Automatic rotation of molecules"
+#~ msgstr "Molekulák automatikus forgatása"
+
+#~ msgid "AutoRotate Settings"
+#~ msgstr "AutoForgatás beállításai"
+
+#~ msgctxt "%L1 is the length of the bond"
+#~ msgid "Bond Length: %L1"
+#~ msgstr "Kötéshossz: %L1"
+
+#~ msgid " Show Angles"
+#~ msgstr " Szögek megjelenítése"
+
+#~ msgid "Angle: %L1 °"
+#~ msgstr "Szög: %L1 °"
+
+#~ msgid "Dihedral Angle: %1 °"
+#~ msgstr "Diéderes szög: %1 °"
+
+#~ msgctxt "*1 is a number. You most likely do not need to translate this"
+#~ msgid "*1"
+#~ msgstr "*1"
+
+#~ msgctxt "*2 is a number. You most likely do not need to translate this"
+#~ msgid "*2"
+#~ msgstr "*2"
+
+#~ msgctxt "*3 is a number. You most likely do not need to translate this"
+#~ msgid "*3"
+#~ msgstr "*3"
+
+#~ msgctxt "*4 is a number. You most likely do not need to translate this"
+#~ msgid "*4"
+#~ msgstr "*4"
+
+#~ msgid "Distance(s):"
+#~ msgstr "Távolság:"
+
+#~ msgid "Measure bond lengths, angles, and dihedrals"
+#~ msgstr "Kötéshosszak, szögek, és diéderek mérése"
+
+#~ msgid "Delete Atom"
+#~ msgstr "Atom törlése"
+
+#~ msgid "Draw Bond"
+#~ msgstr "Kötés rajzolása"
+
+#~ msgid "Draw and edit atoms and bonds"
+#~ msgstr "Atomok és kötések rajzolása és szerkesztése"
+
+#~ msgid "Draw Settings"
+#~ msgstr "Rajzolás beállításai"
+
+#~ msgid "Selection Mode:"
+#~ msgstr "Kijelölés módja"
+
+#~ msgid "Atom/Bond"
+#~ msgstr "Atom/Kötés"
+
+#~ msgid "Residue"
+#~ msgstr "Molekularész"
+
+#~ msgid "Select atoms, residues, and molecules"
+#~ msgstr "Atomol, molekularészek és molekulák kijelölése"
+
+#~ msgid "Symbol"
+#~ msgstr "Szimbólum"
+
+#~ msgid "Bond Length"
+#~ msgstr "Kötéshossz"
+
+#~ msgid "Bond Angle"
+#~ msgstr "Kötési szög"
+
+#~ msgid "Dihedral Angle"
+#~ msgstr "Diéderes szög"
+
+#~ msgid "Z Matrix Editor..."
+#~ msgstr "Z-mátrix szerkesztő..."
+
+#~ msgid "Z-Matrix"
+#~ msgstr "Z-mátrix"
+
+#~ msgid "Create/edit a z-matrix"
+#~ msgstr "Z-mátrix létrehozása/szerkesztése"
+
+#~ msgid "Z-Matrix Settings"
+#~ msgstr "Z-mátrix beállításai"
+
+#~ msgid "Residue Color Settings"
+#~ msgstr "Molekularész színbeállításai"
+
+#~ msgid "Color residues by:"
+#~ msgstr "Molekularészek színezése:"
+
+#~ msgid "Amino Colors"
+#~ msgstr "Amino színek"
+
+#~ msgid "Hydrophobicity"
+#~ msgstr "Hidrofobicitás"
+
+#~ msgid "Atom Radius:"
+#~ msgstr "Atomsugár:"
+
+#~ msgid "Bond Radius:"
+#~ msgstr "Kötés sugara:"
+
+#~ msgid "Shape"
+#~ msgstr "Alak"
+
+#~ msgid "Helix"
+#~ msgstr "Hélix"
+
+#~ msgid "a"
+#~ msgstr "a"
+
+#~ msgid "c"
+#~ msgstr "c"
+
+#~ msgid "Sheet"
+#~ msgstr "Redő"
+
+#~ msgid "Loop"
+#~ msgstr "Hurok"
+
+#~ msgid "Colors"
+#~ msgstr "Színek"
+
+#~ msgid "Dipole:"
+#~ msgstr "Dipólus"
+
+#~ msgid "Dipole Moment"
+#~ msgstr "Dipólusmomentum"
+
+#~ msgid "Width:"
+#~ msgstr "Szélesség"
+
+#~ msgid "Cut-off radius:"
+#~ msgstr "Levágási sugár"
+
+#~ msgid "A"
+#~ msgstr "A"
+
+#~ msgid "Cut-off angle:"
+#~ msgstr "Levágási szög:"
+
+#~ msgid "None"
+#~ msgstr "Nincs"
+
+#~ msgid "Symbol & Atom number"
+#~ msgstr "Szimbólum és atomszám"
+
+#~ msgid "Formal charge"
+#~ msgstr "Formális töltés"
+
+#~ msgid "Partial charge"
+#~ msgstr "Parciális töltés"
+
+#~ msgid "Residue number"
+#~ msgstr "Molekularész szám"
+
+#~ msgid "Unique ID"
+#~ msgstr "Egyedi azonosító"
+
+#~ msgid "Custom data"
+#~ msgstr "Egyéni adatok"
+
+#~ msgid "Bond length"
+#~ msgstr "Kötéshossz"
+
+#~ msgid "Bond number"
+#~ msgstr "Kötésszám"
+
+#~ msgid "Bond order"
+#~ msgstr "Kötésrend:"
+
+#~ msgid "Rendering:"
+#~ msgstr "Megjelenítés:"
+
+#~ msgid "Backbone"
+#~ msgstr "Szerkezeti váz"
+
+#~ msgid "Lines"
+#~ msgstr "Vonalak"
+
+#~ msgid "Radius:"
+#~ msgstr "Sugár:"
+
+#~ msgid "Include Nitrogens"
+#~ msgstr "Nitrogének használata"
+
+#~ msgid "VdW Opacity:"
+#~ msgstr "VdW opacitás:"
+
+#~ msgid "Orbital:"
+#~ msgstr "Pálya:"
+
+#~ msgid "Render:"
+#~ msgstr "Képalkotás:"
+
+#~ msgid "Fill"
+#~ msgstr "Kitöltés"
+
+#~ msgid "Points"
+#~ msgstr "Pontok"
+
+#~ msgid "Draw Box:"
+#~ msgstr "Rajzoló doboz"
+
+#~ msgid "Style:"
+#~ msgstr "Stílus:"
+
+#~ msgid "Selected Colors"
+#~ msgstr "Kiválasztott színek"
+
+#~ msgid "Mapped Colors"
+#~ msgstr "Térképezett színek"
+
+#~ msgid "Colors:"
+#~ msgstr "Színek"
+
+#~ msgid "Positive"
+#~ msgstr "Pozitív"
+
+#~ msgid "Negative"
+#~ msgstr "Negatív"
+
+#~ msgid "Show Atoms"
+#~ msgstr "Atomok megjelenítése"
+
+#~ msgid "Animate Trajectory"
+#~ msgstr "Röppálya animálása"
+
+#~ msgid "0/0"
+#~ msgstr "0/0"
+
+#~ msgctxt "Continually re-run the animation in a loop"
+#~ msgid "Loop"
+#~ msgstr "Ciklus"
+
+#~ msgid "fps"
+#~ msgstr "fps"
+
+#~ msgid "Save as .avi..."
+#~ msgstr "Mentési formátum: .avi..."
+
+#~ msgid "Paste to the End"
+#~ msgstr "Beillesztés a végére"
+
+#~ msgid "Conformer Search"
+#~ msgstr "Konformer keresés"
+
+#~ msgid "Method"
+#~ msgstr "Módszer"
+
+#~ msgid "Number of atoms:"
+#~ msgstr "Atomok száma:"
+
+#~ msgid "Number of rotatable bonds:"
+#~ msgstr "Forgó kötések száma"
+
+#~ msgid "Number of conformers"
+#~ msgstr "Konformerek száma"
+
+#~ msgid "Systematic rotor search"
+#~ msgstr "Rendszeres rotor keresés"
+
+#~ msgid "Random rotor search"
+#~ msgstr "Véletlen rotor keresés"
+
+#~ msgid "Weighted rotor search"
+#~ msgstr "Súlyozott rotor keresés"
+
+#~ msgid "Energy"
+#~ msgstr "Energia"
+
+#~ msgid "Constraints"
+#~ msgstr "Megszorítások"
+
+#~ msgid "Add Constraints"
+#~ msgstr "Megszorítások hozzáadása"
+
+#~ msgid "Ignore Atom"
+#~ msgstr "Atom elrejtése"
+
+#~ msgid "Fix Atom"
+#~ msgstr "Fix Atom"
+
+#~ msgid "Fix Atom X"
+#~ msgstr "Fix Atom X"
+
+#~ msgid "Fix Atom Y"
+#~ msgstr "Fix Atom Y"
+
+#~ msgid "Fix Atom Z"
+#~ msgstr "Fix Atom Z"
+
+#~ msgid "Torsion angle"
+#~ msgstr "Torziós szög"
+
+#~ msgid "Constraint Value"
+#~ msgstr "Megszorítási érték"
+
+#~ msgid "Atom Indices"
+#~ msgstr "Atom indexek"
+
+#~ msgid "Add"
+#~ msgstr "Hozzáadás"
+
+#~ msgid "Save"
+#~ msgstr "Mentés"
+
+#~ msgid "Load"
+#~ msgstr "Betöltés"
+
+#~ msgid "Cartesian"
+#~ msgstr "Descartes-féle"
+
+#~ msgid "All"
+#~ msgstr "Mind"
+
+#~ msgid "File Import..."
+#~ msgstr "Fájl importálása..."
+
+#~ msgid "Attempt to perceive bonds?"
+#~ msgstr "Próbáljak kötést érzékelni?"
+
+#~ msgid "Setup Force Field"
+#~ msgstr "Erőtér beállítása"
+
+#~ msgid "Force Field"
+#~ msgstr "Erőtér"
+
+#~ msgid "Ghemical"
+#~ msgstr "Ghemical"
+
+#~ msgid "Number of steps"
+#~ msgstr "Lépések száma"
+
+#~ msgid "Algorithm"
+#~ msgstr "Algoritmus"
+
+#~ msgid "10e-"
+#~ msgstr "10e-"
+
+#~ msgid "C"
+#~ msgstr "C"
+
+#~ msgid "G"
+#~ msgstr "G"
+
+#~ msgid "T"
+#~ msgstr "T"
+
+#~ msgid "B"
+#~ msgstr "B"
+
+#~ msgid "Other"
+#~ msgstr "Egyéb"
+
+#~ msgid "Peptide Builder"
+#~ msgstr "Peptid építő"
+
+#~ msgid "Alanine"
+#~ msgstr "Alanin"
+
+#~ msgid "Ala"
+#~ msgstr "Ala"
+
+#~ msgid "Arginine"
+#~ msgstr "Arginin"
+
+#~ msgid "Arg"
+#~ msgstr "Arg"
+
+#~ msgid "Asparagine"
+#~ msgstr "Aszparagin"
+
+#~ msgid "Asn"
+#~ msgstr "Asn"
+
+#~ msgid "Aspartic acid"
+#~ msgstr "Aszparaginsav"
+
+#~ msgid "Asp"
+#~ msgstr "Asp"
+
+#~ msgid "Cysteine"
+#~ msgstr "Cisztein"
+
+#~ msgid "Cys"
+#~ msgstr "Cys"
+
+#~ msgid "Glutamic acid"
+#~ msgstr "Glutaminsav"
+
+#~ msgid "Glu"
+#~ msgstr "Glu"
+
+#~ msgid "Glutamine"
+#~ msgstr "Glutamin"
+
+#~ msgid "Gln"
+#~ msgstr "Gln"
+
+#~ msgid "Glycine"
+#~ msgstr "Glicin"
+
+#~ msgid "Gly"
+#~ msgstr "Gly"
+
+#~ msgid "Histidine"
+#~ msgstr "Hisztidin"
+
+#~ msgid "His"
+#~ msgstr "His"
+
+#~ msgid "Isoleucine"
+#~ msgstr "Izoleucin"
+
+#~ msgid "Ile"
+#~ msgstr "Ile"
+
+#~ msgid "Valine"
+#~ msgstr "Valin"
+
+#~ msgid "Val"
+#~ msgstr "Val"
+
+#~ msgid "Tyrosine"
+#~ msgstr "Tirozin"
+
+#~ msgid "Tyr"
+#~ msgstr "Tyr"
+
+#~ msgid "Tryptophan"
+#~ msgstr "Triptofán"
+
+#~ msgid "Trp"
+#~ msgstr "Trp"
+
+#~ msgid "Threonine"
+#~ msgstr "Treonin"
+
+#~ msgid "Thr"
+#~ msgstr "Thr"
+
+#~ msgid "Serine"
+#~ msgstr "Szerin"
+
+#~ msgid "Ser"
+#~ msgstr "Ser"
+
+#~ msgid "Proline"
+#~ msgstr "Prolin"
+
+#~ msgid "Pro"
+#~ msgstr "Pro"
+
+#~ msgid "Phenylalanine"
+#~ msgstr "Fenilalanin"
+
+#~ msgid "Phe"
+#~ msgstr "Phe"
+
+#~ msgid "Methionine"
+#~ msgstr "Metionin"
+
+#~ msgid "Met"
+#~ msgstr "Met"
+
+#~ msgid "Lysine"
+#~ msgstr "Lizin"
+
+#~ msgid "Lys"
+#~ msgstr "Lys"
+
+#~ msgid "Leucine"
+#~ msgstr "Leucin"
+
+#~ msgid "Leu"
+#~ msgstr "Leu"
+
+#~ msgid "Amino Acids:"
+#~ msgstr "Aminosavak:"
+
+#~ msgid "Stereochemistry:"
+#~ msgstr "Sztereokémia:"
+
+#~ msgid "NH₂"
+#~ msgstr "NH₂"
+
+#~ msgid "NH₃⁺"
+#~ msgstr "NH₃⁺"
+
+#~ msgid "CO₂H"
+#~ msgstr "CO₂H"
+
+#~ msgid "CO₂⁻"
+#~ msgstr "CO₂⁻"
+
+#~ msgid "Straight Chain"
+#~ msgstr "Egyenes lánc"
+
+#~ msgid "Alpha Helix"
+#~ msgstr "Alfa hélix"
+
+#~ msgid "Beta Sheet"
+#~ msgstr "Béta redő"
+
+#~ msgid "Phi:"
+#~ msgstr "Phi:"
+
+#~ msgid "Psi:"
+#~ msgstr "Psi:"
+
+#~ msgid "Chain Number:"
+#~ msgstr "Láncszám:"
+
+#~ msgid "The chain number for the new peptide"
+#~ msgstr "Az új peptid lánc-száma"
+
+#~ msgid "E"
+#~ msgstr "E"
+
+#~ msgid "F"
+#~ msgstr "F"
+
+#~ msgid "Molecule Properties"
+#~ msgstr "Molekula tulajdonságai"
+
+#~ msgid "Number of Residues:"
+#~ msgstr "Molekularészek száma:"
+
+#~ msgid "Energy (kJ/mol):"
+#~ msgstr "Energia (kJ/mol)"
+
+#~ msgid "Dipole Moment (D):"
+#~ msgstr "Dipólusmomentum (D):"
+
+#~ msgid "RHF"
+#~ msgstr "RHF"
+
+#~ msgid "DFT"
+#~ msgstr "DFT"
+
+#~ msgid "MP2"
+#~ msgstr "MP2"
+
+#~ msgid "CCSD"
+#~ msgstr "CCSD"
+
+#~ msgid "Advanced"
+#~ msgstr "Haladó"
+
+#~ msgid "Control"
+#~ msgstr "Kontroll"
+
+#~ msgid "SCF"
+#~ msgstr "SCF"
+
+#~ msgid "Data"
+#~ msgstr "Adatok"
+
+#~ msgid "Nothing"
+#~ msgstr "Semmi"
+
+#~ msgid "Grid"
+#~ msgstr "Rács"
+
+#~ msgid "POV-Ray Export"
+#~ msgstr "POV-Ray Exportálás"
+
+#~ msgid "Select..."
+#~ msgstr "Kijelölés…"
+
+#~ msgid "povray"
+#~ msgstr "povray"
+
+#~ msgid "Antialias"
+#~ msgstr "Antialias"
+
+#~ msgid "Set the background color to be transparent"
+#~ msgstr "Háttérszín áttetszőre állítása"
+
+#~ msgid "Alpha transparency"
+#~ msgstr "Alpha-áttetszőség"
+
+#~ msgid "Command:"
+#~ msgstr "Parancs:"
+
+#~ msgid "Render the molecule directly using command line POV-Ray"
+#~ msgstr ""
+#~ "Molekula megjelenítése közvetlenül a parancssori POV-Ray használatával"
+
+#~ msgid "Keep the POV-Ray source after rendering has completed"
+#~ msgstr "POV-Ray forrás megtartása megjelenítés befejezése után"
+
+#~ msgid "Keep POV-Ray source after rendering"
+#~ msgstr "POV-Ray forrás megtartása megjelenítés után"
+
+#~ msgid "Path:"
+#~ msgstr "Útvonal:"
+
+#~ msgid "Compute..."
+#~ msgstr "Számítás..."
+
+#~ msgid "HF"
+#~ msgstr "HF"
+
+#~ msgid "cc-pVDZ"
+#~ msgstr "cc-pVDZ"
+
+#~ msgid "cc-pVTZ"
+#~ msgstr "cc-pVTZ"
+
+#~ msgid "STO-2G"
+#~ msgstr "STO-2G"
+
+#~ msgid "STO-3G"
+#~ msgstr "STO-3G"
+
+#~ msgid "STO-6G"
+#~ msgstr "STO-6G"
+
+#~ msgid "3-21G"
+#~ msgstr "3-21G"
+
+#~ msgid "4-31G"
+#~ msgstr "4-31G"
+
+#~ msgid "6-31G"
+#~ msgstr "6-31G"
+
+#~ msgid "6-311G"
+#~ msgstr "6-311G"
+
+#~ msgid "B3LYP"
+#~ msgstr "B3LYP"
+
+#~ msgid "EDF1"
+#~ msgstr "EDF1"
+
+#~ msgid "EFP Matches"
+#~ msgstr "EFP egyezések"
+
+#~ msgid "Group Label:"
+#~ msgstr "Csoport cimkéje"
+
+#~ msgid "AM1"
+#~ msgstr "AM1"
+
+#~ msgid "PM3"
+#~ msgstr "PM3"
+
+#~ msgid "CCSD(T)"
+#~ msgstr "CCSD(T)"
+
+#~ msgid "MINI"
+#~ msgstr "MINI"
+
+#~ msgid "6-31G(d)"
+#~ msgstr "6-31G(d)"
+
+#~ msgid "6-31G(d,p)"
+#~ msgstr "6-31G(d,p)"
+
+#~ msgid "6-31+G(d,p)"
+#~ msgstr "6-31+G(d,p)"
+
+#~ msgid "6-31+G(2d,p)"
+#~ msgstr "6-31+G(2d,p)"
+
+#~ msgid "6-311++G(2d,p)"
+#~ msgstr "6-311++G(2d,p)"
+
+#~ msgid "&Advanced Setup"
+#~ msgstr "&Haladó beállítások"
+
+#~ msgid "Hessian"
+#~ msgstr "Hess-i"
+
+#~ msgid "Stat Point"
+#~ msgstr "Stat pont"
+
+#~ msgid "System"
+#~ msgstr "Rendszer"
+
+#~ msgid "MO Guess"
+#~ msgstr "MO becslés"
+
+#~ msgid "Misc"
+#~ msgstr "Egyéb"
+
+#~ msgid "#D Heavy Atom Polarization Functions:"
+#~ msgstr "#D nehézatom polarizációs függvény:"
+
+#~ msgid "Read"
+#~ msgstr "Olvasás"
+
+#~ msgid "SBKJC"
+#~ msgstr "SBKJC"
+
+#~ msgid "Hay-Wadt"
+#~ msgstr "Hay-Wadt"
+
+#~ msgid "MIDI"
+#~ msgstr "MIDI"
+
+#~ msgid "STO-4G"
+#~ msgstr "STO-4G"
+
+#~ msgid "STO-5G"
+#~ msgstr "STO-5G"
+
+#~ msgid "6-21G"
+#~ msgstr "6-21G"
+
+#~ msgid "5-31G"
+#~ msgstr "5-31G"
+
+#~ msgid "Double Zeta Valence"
+#~ msgstr "Dupla zéta vegyérték"
+
+#~ msgid "Dunning/Hay DZ"
+#~ msgstr "Dunning/Hay DZ"
+
+#~ msgid "Triple Zeta Valence"
+#~ msgstr "Tripla zéta vegyérték"
+
+#~ msgid "SBKJA Valence"
+#~ msgstr "SBKJA vegyérték"
+
+#~ msgid "Hay/Wadt Valence"
+#~ msgstr "Hay/Wadt vegyérték"
+
+#~ msgid "MNDO"
+#~ msgstr "MNDO"
+
+#~ msgid "ECP Type:"
+#~ msgstr "ECP típus:"
+
+#~ msgid "Default"
+#~ msgstr "Alapbeállítás"
+
+#~ msgid "Pople"
+#~ msgstr "Pople"
+
+#~ msgid "Pople N311"
+#~ msgstr "Pople N311"
+
+#~ msgid "Huzinaga"
+#~ msgstr "Huzinaga"
+
+#~ msgid "Hondo7"
+#~ msgstr "Hondo7"
+
+#~ msgid "#F Heavy Atom Polarization Functions:"
+#~ msgstr "#F nehézatom polarizációs függvény"
+
+#~ msgid "#light Atom Polarization Functions:"
+#~ msgstr "#könnyű atom polarizációs függvény"
+
+#~ msgid "Polar:"
+#~ msgstr "Poláris:"
+
+#~ msgid "Max SCF Iterations:"
+#~ msgstr "maximális  SCF iterációk:"
+
+#~ msgid "Gradient"
+#~ msgstr "Grádiens"
+
+#~ msgid "Optimization"
+#~ msgstr "Optimalizálás"
+
+#~ msgid "Trudge"
+#~ msgstr "Trudge"
+
+#~ msgid "Saddle Point"
+#~ msgstr "Nyeregpont"
+
+#~ msgid "IRC"
+#~ msgstr "IRC"
+
+#~ msgid "DRC"
+#~ msgstr "DRC"
+
+#~ msgid "Energy Surface"
+#~ msgstr "Energiafelület"
+
+#~ msgid "Morokuma"
+#~ msgstr "Morokuma"
+
+#~ msgid "Spin Orbit"
+#~ msgstr "Spin orbitál"
+
+#~ msgid "Finite Electric Field"
+#~ msgstr "Véges elektromos mező"
+
+#~ msgid "TDHF"
+#~ msgstr "TDHF"
+
+#~ msgid "Global Optimization"
+#~ msgstr "Globális optimalizálás"
+
+#~ msgid "VSCF"
+#~ msgstr "VSCF"
+
+#~ msgid "FMO Optimization"
+#~ msgstr "FMO optimalizálás"
+
+#~ msgid "Raman Intensities"
+#~ msgstr "Raman intenzitás"
+
+#~ msgid "NMR"
+#~ msgstr "NMR"
+
+#~ msgid "Make EFP"
+#~ msgstr "EFP készítés"
+
+#~ msgid "UHF"
+#~ msgstr "UHF"
+
+#~ msgid "ROHF"
+#~ msgstr "ROHF"
+
+#~ msgid "GVB"
+#~ msgstr "GVB"
+
+#~ msgid "MCSCF"
+#~ msgstr "MCSCF"
+
+#~ msgid "None (CI)"
+#~ msgstr "Nincs (CI)"
+
+#~ msgid "Foster-Boys"
+#~ msgstr "Foster-Boys"
+
+#~ msgid "Edmistron-Ruedenberg"
+#~ msgstr "Edmistron-Ruedenberg"
+
+#~ msgid "Pipek-Mezey"
+#~ msgstr "Pipek-Mezey"
+
+#~ msgid "SCF Type:"
+#~ msgstr "SCF típus:"
+
+#~ msgid "Localization Method:"
+#~ msgstr "Lokalizációs módszer"
+
+#~ msgid "Exec Type:"
+#~ msgstr "Exec típus:"
+
+#~ msgid "CI:"
+#~ msgstr "CI:"
+
+#~ msgid "GUGA"
+#~ msgstr "GUGA"
+
+#~ msgid "Ames Lab. Determinant"
+#~ msgstr "Ames Lab. determináns"
+
+#~ msgid "CI Singles"
+#~ msgstr "CI egyszeres"
+
+#~ msgid "Full Second Order CI"
+#~ msgstr "Teljes másodrendű CI"
+
+#~ msgid "General CI"
+#~ msgstr "Általános CI"
+
+#~ msgid "CC:"
+#~ msgstr "CC:"
+
+#~ msgid "LCCD: Linearized CC"
+#~ msgstr "LCCD: Linearizált CC"
+
+#~ msgid "CCD: CC with Doubles"
+#~ msgstr "CCD: CC duplákkal"
+
+#~ msgid "CCSD: CC with Singles and Doubles"
+#~ msgstr "CCSD: CC szimplákkal és duplákkal"
+
+#~ msgid "R-CC"
+#~ msgstr "R-CC"
+
+#~ msgid "CR-CC"
+#~ msgstr "CR-CC"
+
+#~ msgid "EOM-CCSD"
+#~ msgstr "EOM-CCSD"
+
+#~ msgid "CR-EOM"
+#~ msgstr "CR-EOM"
+
+#~ msgid "Normal Run"
+#~ msgstr "Normális futtatás"
+
+#~ msgid "Check"
+#~ msgstr "Ellenőrzés"
+
+#~ msgid "Debug"
+#~ msgstr "Hibakeresés"
+
+#~ msgid "Molecule Charge:"
+#~ msgstr "Molekulatöltés:"
+
+#~ msgid "Run Type:"
+#~ msgstr "Futtatás típusa"
+
+#~ msgid "Use MP2"
+#~ msgstr "MP2 használata"
+
+#~ msgid "Use DFT"
+#~ msgstr "DFT használata"
+
+#~ msgid "# of Z-Matrix Variables"
+#~ msgstr "Z-Matrix változók száma"
+
+#~ msgid "Order of Principal Axis:"
+#~ msgstr "Főtengely rendje"
+
+#~ msgid "C1"
+#~ msgstr "C1"
+
+#~ msgid "CS"
+#~ msgstr "CS"
+
+#~ msgid "CI"
+#~ msgstr "CI"
+
+#~ msgid "CnH"
+#~ msgstr "CnH"
+
+#~ msgid "CnV"
+#~ msgstr "CnV"
+
+#~ msgid "Cn"
+#~ msgstr "Cn"
+
+#~ msgid "S2n"
+#~ msgstr "S2n"
+
+#~ msgid "DnD"
+#~ msgstr "DnD"
+
+#~ msgid "DnH"
+#~ msgstr "DnH"
+
+#~ msgid "Dn"
+#~ msgstr "Dn"
+
+#~ msgid "TD"
+#~ msgstr "TD"
+
+#~ msgid "TH"
+#~ msgstr "TH"
+
+#~ msgid "OH"
+#~ msgstr "OH"
+
+#~ msgid "O"
+#~ msgstr "O"
+
+#~ msgid "Unique cartesian Coords."
+#~ msgstr "Egyedi Descartes-koordináták"
+
+#~ msgid "Hilderbrant internals"
+#~ msgstr "Hilderbrant internálok"
+
+#~ msgid "Use Symmetry During Calculation"
+#~ msgstr "Szimmetria használata számítás során"
+
+#~ msgid "Point Group:"
+#~ msgstr "Pont csoport"
+
+#~ msgid "Minutes"
+#~ msgstr "Perc"
+
+#~ msgid "Hours"
+#~ msgstr "Óra"
+
+#~ msgid "Days"
+#~ msgstr "Nap"
+
+#~ msgid "Weeks"
+#~ msgstr "Hét"
+
+#~ msgid "Years"
+#~ msgstr "Év"
+
+#~ msgid "Millenia"
+#~ msgstr "Évezred"
+
+#~ msgid "MegaWords"
+#~ msgstr "MegaWord"
+
+#~ msgid "MegaBytes"
+#~ msgstr "MegaBájt"
+
+#~ msgid "GigaWords"
+#~ msgstr "GigaWord"
+
+#~ msgid "GigaBytes"
+#~ msgstr "GigaBájt"
+
+#~ msgid "Force Parallel Methods"
+#~ msgstr "Párhuzamos módszerek használata"
+
+#~ msgid "Produce \"core\" file upon abort"
+#~ msgstr "\"core\" fájl létrehozása megszakításkor"
+
+#~ msgid "EVVRSP"
+#~ msgstr "EVVRSP"
+
+#~ msgid "GIVEIS"
+#~ msgstr "GIVEIS"
+
+#~ msgid "JACOBI"
+#~ msgstr "JACOBI"
+
+#~ msgid "MemDDI:"
+#~ msgstr "MemDDI:"
+
+#~ msgid "Memory:"
+#~ msgstr "Memória:"
+
+#~ msgid "Diagonalization Method:"
+#~ msgstr "Hibakereső módszer"
+
+#~ msgid "Parallel Load Balance Type"
+#~ msgstr "Párhuzamos töltési egyensúly típus"
+
+#~ msgctxt "\"Loop\" load balancing - set static node assignments"
+#~ msgid "Loop"
+#~ msgstr "Ciklus"
+
+#~ msgctxt "\"Next Value\" load balancing - dynamically assign nodes work"
+#~ msgid "Next Value"
+#~ msgstr "Következő érték"
+
+#~ msgid "Use External Data Representation for Messages"
+#~ msgstr "Külső adatmegjelenítés használata üzenetekhez"
+
+#~ msgid "Initial Guess:"
+#~ msgstr "Kezdeti becslés:"
+
+#~ msgid "Hückel"
+#~ msgstr "Hückel"
+
+#~ msgid "HCore"
+#~ msgstr "HCore"
+
+#~ msgid "MO Read ($VEC)"
+#~ msgstr "MO beolvasva ($VEC)"
+
+#~ msgid "MO Saved (DICTNRY)"
+#~ msgstr "MO elmentve (DICTNRY)"
+
+#~ msgid "Skip"
+#~ msgstr "Kihagyás"
+
+#~ msgid "Rotate Alpha and Beta Orbitals"
+#~ msgstr "Alfa és béta pályák forgatása"
+
+#~ msgid "Print the Initial Guess"
+#~ msgstr "Kezdeti becslés kiírása"
+
+#~ msgid "MolPlt"
+#~ msgstr "MolPlt"
+
+#~ msgid "PltOrb"
+#~ msgstr "PltOrb"
+
+#~ msgid "AIMPAC"
+#~ msgstr "AIMPAC"
+
+#~ msgid "RPAC"
+#~ msgstr "RPAC"
+
+#~ msgid "Hondo 8.2"
+#~ msgstr "Hondo 8.2"
+
+#~ msgid "MELDF"
+#~ msgstr "MELDF"
+
+#~ msgid "GAMESS (UK Version)"
+#~ msgstr "GAMESS (UK verzió)"
+
+#~ msgid "Gaussian 9x"
+#~ msgstr "Gauss-i 9x"
+
+#~ msgid "Direct SCF"
+#~ msgstr "Direkt SCF"
+
+#~ msgid "Slater exchange"
+#~ msgstr "Slater csere"
+
+#~ msgid "Becke 1988 exchange"
+#~ msgstr "Becke 1988 csere"
+
+#~ msgid "VWN: Vosko-Wilk-Nusair (VWN5) correlation"
+#~ msgstr "VWN: Vosko-Wilk-Nusair (VWN5) korreláció"
+
+#~ msgid "LYP: Lee-Yang-Parr correlation"
+#~ msgstr "LYP: Lee-Yang-Parr korreláció"
+
+#~ msgid "SVWN: Slater exchange + VWN correlation"
+#~ msgstr "SVWN: Slater csere + VWN korreláció"
+
+#~ msgid "BVWN: BECKE exchange + VWN5 correlation"
+#~ msgstr "BVWN: BECKE csere + VWN5 korreláció"
+
+#~ msgid "BLYP: BECKE exchange + LYP correlation"
+#~ msgstr "BLYP: BECKE csere + LYP korreláció"
+
+#~ msgid "Gill 1996 exchange"
+#~ msgstr "Gill 1996 csere"
+
+#~ msgid "Perdew-Burke-Ernzerhof (PBE) exchange"
+#~ msgstr "Perdew-Burke-Ernzerhof (PBE) csere"
+
+#~ msgid "OP: One-parameter Progressive correlation"
+#~ msgstr "OP: egy-paraméteres progresszív korreláció"
+
+#~ msgid "SLYP: SLATER + Lee-Yang-Parr (LYP) correlation"
+#~ msgstr "SLYP: SLATER + Lee-Yang-Parr (LYP) korreláció"
+
+#~ msgid "SOP: SLATER + OP correlation"
+#~ msgstr "SOP: SLATER + OP korreláció"
+
+#~ msgid "BOP: BECKE exchange + OP correlation"
+#~ msgstr "BOP: BECKE csere + OP korreláció"
+
+#~ msgid "BVWN: GILL exchange + VWN5 correlation"
+#~ msgstr "BVWN: GILL csere + VWN5 korreláció"
+
+#~ msgid "GLYP: GILL exchange + LYP correlation"
+#~ msgstr "GLYP: GILL csere + LYP korreláció"
+
+#~ msgid "PBEVWN: PBE exchange + VWN6 correlation"
+#~ msgstr "PBEVWN: PBE csere + VWN6 korreláció"
+
+#~ msgid "PBELYP: PBE exchange +LYP correlation"
+#~ msgstr "PBELYP: PBE csere +LYP korreláció"
+
+#~ msgid "PBEOP: PBE exchange + OP correlation"
+#~ msgstr "PBEOP: PBE csere + OP korreláció"
+
+#~ msgid "BHHLYP: HF and BECKE exchange + LYP correlation"
+#~ msgstr "BHHLYP: HF és BECKE csere + LYP korreláció"
+
+#~ msgid "Method:"
+#~ msgstr "Módszer:"
+
+#~ msgid "words"
+#~ msgstr "szavak"
+
+#~ msgid "Compute MP2 Properties"
+#~ msgstr "MP2 tulajdonságok számítása"
+
+#~ msgid "Use Localized Orbitals"
+#~ msgstr "lokalizált orbitálok használata"
+
+#~ msgid "# of Core Electrons:"
+#~ msgstr "magelektronok száma"
+
+#~ msgid "Segmented Transformation"
+#~ msgstr "szegmentált átalakítás"
+
+#~ msgid "Analytic"
+#~ msgstr "Analitikus"
+
+#~ msgid "Numeric"
+#~ msgstr "Numerikus"
+
+#~ msgid "Print Internal Force Constants"
+#~ msgstr "Belső erőkonstansok megjelenítése"
+
+#~ msgid "Displacement Size:"
+#~ msgstr "Eltolódás mérete"
+
+#~ msgid "Read (from $HESS)"
+#~ msgstr "Olvas ($HESS - ből)"
+
+#~ msgid "Update Step Size"
+#~ msgstr "Lépésméret frissítése"
+
+#~ msgid "Jump Size:"
+#~ msgstr "Ugrás nagysága"
+
+#~ msgid "Stationary Point"
+#~ msgstr "Álló pont"
+
+#~ msgid "Step Size"
+#~ msgstr "Lépés mérete"
+
+#~ msgid "Maximum:"
+#~ msgstr "Maximum:"
+
+#~ msgid "Minimum:"
+#~ msgstr "Minimum:"
+
+#~ msgid "Initial:"
+#~ msgstr "Kezdeti:"
+
+#~ msgid "Newton-Raphson"
+#~ msgstr "Newton-Raphson"
+
+#~ msgid "Rational Function Optimization"
+#~ msgstr "Racionális függvény optimalizálás"
+
+#~ msgid "Quadratic Approximation"
+#~ msgstr "Kvadratikus megközelítés"
+
+#~ msgid "Schlegel (quasi-NR)"
+#~ msgstr "Schlegel (kvázi-NR)"
+
+#~ msgid "Constrained Optimization"
+#~ msgstr "Szűkített optimalizálás"
+
+#~ msgid "Follow Mode:"
+#~ msgstr "Követési mód:"
+
+#~ msgid "Maximum Steps:"
+#~ msgstr "Maximális lépés:"
+
+#~ msgid "Basis:"
+#~ msgstr "Bázis:"
+
+#~ msgid "Z-matrix"
+#~ msgstr "Z-mátrix"
+
+#~ msgid "LANL2DZ"
+#~ msgstr "LANL2DZ"
+
+#~ msgid "Standard"
+#~ msgstr "Szabványos"
+
+#~ msgid "Molden"
+#~ msgstr "Molden"
+
+#~ msgid "Molekel"
+#~ msgstr "Molekel"
+
+#~ msgid "Checkpoint:"
+#~ msgstr "Ellenőrzőpont:"
+
+#~ msgid "MOLPRO Input"
+#~ msgstr "MOLPRO bevitel"
+
+#~ msgid "6-31+G(d)"
+#~ msgstr "6-31+G(d)"
+
+#~ msgid "6-311G(d)"
+#~ msgstr "6-311G(d)"
+
+#~ msgid "AUG-cc-pVDZ"
+#~ msgstr "AUG-cc-pVDZ"
+
+#~ msgid "AUG-cc-pVTZ"
+#~ msgstr "AUG-cc-pVTZ"
+
+#~ msgid "MOPAC Input"
+#~ msgstr "MOPAC bevitel"
+
+#~ msgid "Quartet"
+#~ msgstr "Kvartett"
+
+#~ msgid "Quintet"
+#~ msgstr "Kvintett"
+
+#~ msgid "MNDO-d"
+#~ msgstr "MNDO-d"
+
+#~ msgid "PM6"
+#~ msgstr "PM6"
+
+#~ msgid "RM1"
+#~ msgstr "RM1"
+
+#~ msgid "NWChem Input"
+#~ msgstr "NWChem bevitel"
+
+#~ msgid "Q-Chem Input"
+#~ msgstr "Q-Chem bevitel"
+
+#~ msgid "B3LYP5"
+#~ msgstr "B3LYP5"
+
+#~ msgid "M06-2X"
+#~ msgstr "M06-2X"
+
+#~ msgid "LACVP"
+#~ msgstr "LACVP"
+
+#~ msgid "Load Shaders"
+#~ msgstr "Árnyékolók betöltése"
+
+#~ msgid "Shader Name:"
+#~ msgstr "Árnyékoló neve:"
+
+#~ msgid "Vertex Shader:"
+#~ msgstr "Csúcs árnyékoló:"
+
+#~ msgid "Display Type:"
+#~ msgstr "Meglenítés típusa:"
+
+#~ msgid "&Load data..."
+#~ msgstr "&Adatok betöltése..."
+
+#~ msgid "&Close"
+#~ msgstr "&Bezárás"
+
+#~ msgid "Calculated Spectra:"
+#~ msgstr "Számított spektrum:"
+
+#~ msgid "Set Color..."
+#~ msgstr "Színbeállítás..."
+
+#~ msgid "Imported Spectra:"
+#~ msgstr "Importált spektrum:"
+
+#~ msgid "Font:"
+#~ msgstr "Betűtípus:"
+
+#~ msgid "Change Font..."
+#~ msgstr "A betűtípus megváltoztatása..."
+
+#~ msgid "Show"
+#~ msgstr "Megjelenítés"
+
+#~ msgid "&Import..."
+#~ msgstr "&Importálás..."
+
+#~ msgid "Background:"
+#~ msgstr "Háttér:"
+
+#~ msgid "Foreground:"
+#~ msgstr "Előtér:"
+
+#~ msgid "New..."
+#~ msgstr "Új..."
+
+#~ msgid "Rename..."
+#~ msgstr "Átnevezés..."
+
+#~ msgid "&Schemes:"
+#~ msgstr "&Sémák:"
+
+#~ msgid "&Export..."
+#~ msgstr "&Exportálás…"
+
+#~ msgid "&DPI:"
+#~ msgstr "&DPI:"
+
+#~ msgid "&Width:"
+#~ msgstr "&Szélesség:"
+
+#~ msgid "&Height"
+#~ msgstr "&Magasság"
+
+#~ msgid "cm"
+#~ msgstr "cm"
+
+#~ msgid "mm"
+#~ msgstr "mm"
+
+#~ msgid "in"
+#~ msgstr "in"
+
+#~ msgid "px"
+#~ msgstr "px"
+
+#~ msgid "&Save Image..."
+#~ msgstr "Kép &mentése..."
+
+#~ msgid "Auto-adjust F&ont Size"
+#~ msgstr "&Betűméret automatikus beállítása"
+
+#~ msgid "&Gaussian Width:"
+#~ msgstr "Gauss-&szélesség:"
+
+#~ msgid "&Label peaks"
+#~ msgstr "&Csúcsok cimkézése"
+
+#~ msgid "&Y Axis Units:"
+#~ msgstr "&Y tengely egysége:"
+
+#~ msgid "tab_NMR"
+#~ msgstr "tab_NMR"
+
+#~ msgid "Nucleus:"
+#~ msgstr "Mag:"
+
+#~ msgid "&Reference:"
+#~ msgstr "&Referencia:"
+
+#~ msgid "Gaussian &Width:"
+#~ msgstr "Gauss-&szélesség:"
+
+#~ msgid "Label Peaks:"
+#~ msgstr "Csúcsok cimkézése:"
+
+#~ msgid "ppm"
+#~ msgstr "ppm"
+
+#~ msgid "Molecular Vibrations"
+#~ msgstr "Molekularezgés:"
+
+#~ msgid "higher frequency vibrations will show faster movement"
+#~ msgstr "magasabb frekvenciájó rezgések esetéb gyorsabb mozgást mutat"
+
+#~ msgid "Animation speed set by frequency"
+#~ msgstr "Animáció sebességét a frekvencia állítja be"
+
+#~ msgid "Display force &vectors"
+#~ msgstr "Erő és vektorok megjelenítése"
+
+#~ msgid "Generate Cell"
+#~ msgstr "Cella létrehozása"
+
+#~ msgid "Create Surfaces"
+#~ msgstr "Felszínek létrehozása"
+
+#~ msgid "Surface Type:"
+#~ msgstr "Felszín típusa:"
+
+#~ msgid "Color By:"
+#~ msgstr "Eszerint színez:"
+
+#~ msgctxt "low resolution"
+#~ msgid "Low"
+#~ msgstr "Alacsony"
+
+#~ msgctxt "medium resolution"
+#~ msgid "Medium"
+#~ msgstr "Közepes"
+
+#~ msgctxt "high resolution"
+#~ msgid "High"
+#~ msgstr "Magas"
+
+#~ msgctxt "very high resolution"
+#~ msgid "Very High"
+#~ msgstr "Nagyon magas"
+
+#~ msgid "Iso Value:"
+#~ msgstr "Iso érték:"
+
+#~ msgctxt ""
+#~ "Add the new surface to this particular display type (i.e., orbital or "
+#~ "surface)"
+#~ msgid "In Display Type:"
+#~ msgstr "Ebben a megjelenítés típusban:"
+
+#~ msgid "New Display"
+#~ msgstr "Új megjelenítés"
+
+#~ msgid "Advanced..."
+#~ msgstr "Haladó..."
+
+#~ msgid "Python Settings"
+#~ msgstr "Python beállítások"
+
+#~ msgid "Z Matrix Editor"
+#~ msgstr "Z mátrix szerkesztő"
+
+#~ msgid "Import Selected Atoms"
+#~ msgstr "Kijelölt atomok importálása"
