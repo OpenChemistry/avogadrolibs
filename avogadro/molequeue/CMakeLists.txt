@@ -41,6 +41,5 @@ qt5_wrap_ui(UI_SOURCES ${UIS})
 list(APPEND SOURCES ${UI_SOURCES})
 
 avogadro_add_library(AvogadroMoleQueue ${HEADERS} ${SOURCES})
-qt5_use_modules(AvogadroMoleQueue Widgets Network)
 set_target_properties(AvogadroMoleQueue PROPERTIES AUTOMOC TRUE)
-target_link_libraries(AvogadroMoleQueue AvogadroQtGui MoleQueueClient)
+target_link_libraries(AvogadroMoleQueue AvogadroQtGui MoleQueueClient Qt5::Widgets Qt5::Network)

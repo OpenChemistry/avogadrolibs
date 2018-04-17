@@ -99,5 +99,4 @@ qt5_add_resources(RC_SOURCES ${RCS})
 list(APPEND SOURCES ${RC_SOURCES})
 
 avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES})
-qt5_use_modules(AvogadroQtGui Widgets)
-target_link_libraries(AvogadroQtGui AvogadroIO)
+target_link_libraries(AvogadroQtGui AvogadroIO Qt5::Widgets)
