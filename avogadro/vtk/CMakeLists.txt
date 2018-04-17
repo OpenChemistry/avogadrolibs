@@ -30,8 +30,7 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroVtk ${HEADERS} ${SOURCES})
-qt5_use_modules(AvogadroVtk Widgets)
 set_target_properties(AvogadroVtk PROPERTIES AUTOMOC TRUE)
 target_link_libraries(AvogadroVtk AvogadroRendering AvogadroQtGui
   vtkRenderingOpenGL2 vtkGUISupportQt vtkRenderingVolumeOpenGL2
-  vtkRenderingFreeType vtkInteractionStyle)
+  vtkRenderingFreeType vtkInteractionStyle Qt5::Widgets)
