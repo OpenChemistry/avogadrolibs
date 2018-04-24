@@ -6,7 +6,7 @@ include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/qtgui"
 find_package(OpenGL REQUIRED)
 include_directories(SYSTEM ${OPENGL_INCLUDE_DIR})
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Widgets OpenGL REQUIRED)
 include_directories(SYSTEM ${Qt5Widgets_INCLUDE_DIRS})
 add_definitions(${Qt5Widgets_DEFINITIONS})
 
@@ -48,7 +48,8 @@ target_link_libraries(AvogadroQtOpenGLTests
   AvogadroQtOpenGL
   vtkImagingCore
   vtkIOImage
-  vtkRenderingQt)
+  vtkRenderingQt
+  Qt5::OpenGL)
 
 foreach(test ${tests})
   string(TOLOWER ${test} testname)
