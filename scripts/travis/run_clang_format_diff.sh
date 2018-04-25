@@ -1,5 +1,5 @@
 #!/bin/bash
-DIFF=`git diff -U0 $1...$2 -- '*.h' '*.cpp' | clang-format-diff-3.8 -p1`
+DIFF=`git diff -U0 $1...$2 -- '*.h' '*.cpp' | clang-format-diff-6.0 -p1`
 if [ -z "$DIFF" ]; then
   exit 0
 else
