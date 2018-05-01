@@ -26,10 +26,10 @@
 
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/vtk/vtkplot.h>
 
 #include "plotxrd.h"
 #include "xrdoptionsdialog.h"
-#include "xrdvtkplot.h"
 
 using Avogadro::QtGui::Molecule;
 
@@ -133,7 +133,25 @@ void PlotXrd::displayDialog()
   }
 
   // Now generate a plot with the data
-  XrdVtkPlot::generatePlot(results);
+  std::vector<double> xData;
+  std::vector<double> yData;
+  for (const auto& item : results) {
+    xData.push_back(item.first);
+    yData.push_back(item.second);
+  }
+  std::vector<std::vector<double>> data{ xData, yData };
+
+  std::vector<std::string> lineLabels{ "XrdData" };
+
+  std::array<double, 4> color = { 255, 0, 0, 255 };
+  std::vector<std::array<double, 4>> lineColors{ color };
+
+  const char* xTitle = "2 Theta";
+  const char* yTitle = "Intensity";
+  const char* windowName = "Theoretical XRD Pattern";
+
+  VTK::VtkPlot::generatePlot(data, lineLabels, lineColors, xTitle, yTitle,
+                             windowName);
 }
 
 bool PlotXrd::generateXrdPattern(const QtGui::Molecule& mol, XrdData& results,
