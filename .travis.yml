@@ -13,14 +13,14 @@ matrix:
       python: 2.7
       env: TASKS="clang-format"
 
-      dist: precise
+      dist: trusty
       addons:
         apt:
           sources:
           - ubuntu-toolchain-r-test
-          - llvm-toolchain-precise-3.8
+          - llvm-toolchain-trusty-6.0
           packages:
-          - clang-format-3.8
+          - clang-format-6.0
 
     - compiler: gcc
       env: TASKS="ctest gcc-4.8"

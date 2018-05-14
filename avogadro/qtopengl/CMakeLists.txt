@@ -16,5 +16,4 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})
-qt5_use_modules(AvogadroQtOpenGL Widgets)
-target_link_libraries(AvogadroQtOpenGL AvogadroRendering AvogadroQtGui)
+target_link_libraries(AvogadroQtOpenGL AvogadroRendering AvogadroQtGui Qt5::Widgets)

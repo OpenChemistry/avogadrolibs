@@ -57,11 +57,11 @@ public:
   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
   void setOperations(int operations_size,
-                     msym::msym_symmetry_operation_t* operations);
+                     const msym::msym_symmetry_operation_t* operations);
   void clearOperations();
 
 private:
-  msym::msym_symmetry_operation_t* m_operations;
+  const msym::msym_symmetry_operation_t* m_operations;
   int m_operations_size;
 };
 }

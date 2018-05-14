@@ -20,7 +20,7 @@ include(DetermineVersion)
 
 # Set up our version.
 set(AvogadroLibs_VERSION_MAJOR   "1")
-set(AvogadroLibs_VERSION_MINOR   "90")
+set(AvogadroLibs_VERSION_MINOR   "91")
 set(AvogadroLibs_VERSION_PATCH   "0")
 set(AvogadroLibs_VERSION
   "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
@@ -41,6 +41,7 @@ include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR})
 
 option(ENABLE_TESTING "Enable testing and building the tests." OFF)
+option(ENABLE_TRANSLATIONS "Enable building translations with Qt5 Linguist" OFF)
 option(USE_OPENGL "Enable libraries that use OpenGL" ON)
 option(USE_HDF5 "Enable optional HDF5 features" OFF)
 option(USE_QT "Enable libraries that use Qt 5" ON)
@@ -72,6 +73,10 @@ if(USE_PYTHON)
   add_subdirectory(python)
 endif()
 
+if(ENABLE_TRANSLATIONS)
+  find_package(Qt5LinguistTools)
+endif()
+
 install(
   FILES
     README.md
@@ -98,6 +103,7 @@ install(FILES
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindGLEW.cmake"
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibArchive.cmake"
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findlibmsym.cmake"
   DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
 install(EXPORT "AvogadroLibsTargets"
   DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")

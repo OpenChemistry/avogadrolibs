@@ -150,7 +150,7 @@ const Io::FileFormat* FileFormatDialog::findFileFormat(
 
   if ((formatFlags & FileFormat::Read && formatFlags & FileFormat::Write) ||
       ((formatFlags & FileFormat::Read) == 0 &&
-       (formatFlags & FileFormat::Read) == 0)) {
+       (formatFlags & FileFormat::Write) == 0)) {
     // Both or neither read/write
     noun = tr("handlers", "File handlers");
     verb = tr("handle", "e.g. file handlers that can 'handle' this file.");

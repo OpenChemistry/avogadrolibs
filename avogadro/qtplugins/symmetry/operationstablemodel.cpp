@@ -34,7 +34,7 @@ OperationsTableModel::~OperationsTableModel()
 }
 
 void OperationsTableModel::setOperations(
-  int operations_size, msym::msym_symmetry_operation_t* operations)
+  int operations_size, const msym::msym_symmetry_operation_t* operations)
 {
   beginResetModel();
   m_operations_size = operations_size;
