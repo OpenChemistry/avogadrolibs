@@ -54,7 +54,7 @@ using namespace std;
 
 Labels::Labels(QObject* p)
   : ScenePlugin(p), m_enabled(false), m_group(nullptr), m_setupWidget(nullptr),
-    m_multiBonds(true), m_showHydrogens(true)
+    m_showHydrogens(true)
 {
 }
 
@@ -66,39 +66,20 @@ Labels::~Labels()
 
 void Labels::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
-  Index hydrogenCount = 1;
-
   m_group = &node;
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
-
-  std::unordered_map<unsigned char, Index>
-    countMap; // Dictionary of atomic number and number of atoms
 
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
     unsigned char atomicNumber = atom.atomicNumber();
     if (atomicNumber == 1)
-      continue; // Do not process Hydrogens separately
-
-    std::unordered_map<unsigned char, Index>::const_iterator lookUp;
-    lookUp = countMap.find(atomicNumber);
-
-    if (lookUp == countMap.end())
-      countMap[atomicNumber] = 1; // For first occurrence of atom
-
-    else
-      countMap[atomicNumber] += 1; // For other occurrences of atom
-
-    if (!m_showHydrogens)
-      continue;
+      continue; // Skip H atoms in molecule
 
     Rendering::TextLabel3D* atomLabel = new Rendering::TextLabel3D;
 
-    //  Label non Hydrogen atoms
-    atomLabel->setText(
-      Elements::symbol(atomicNumber) +
-      QString::number(countMap[atomicNumber], 'f', 0).toStdString());
+    // Label non Hydrogen atoms
+    atomLabel->setText(Elements::symbol(atomicNumber));
 
     atomLabel->setRenderPass(Rendering::Overlay3DPass);
     const Vector3f a1(atom.position3d().cast<float>());
@@ -113,10 +94,13 @@ void Labels::process(const Molecule& molecule, Rendering::GroupNode& node)
     tprop.setColorRgb(255, 255, 255);
     atomLabel->setTextProperties(tprop);
 
-    //  Label Hydrogen atoms
+    if (!m_showHydrogens)
+      continue;
+
+    // Label Hydrogen atoms
+    // const_cast because bonds() accepts non const objects
     const NeighborListType bonds =
-      (const_cast<Molecule&>(molecule))
-        .bonds(atom); // const_cast because bonds() accepts non const objects
+      (const_cast<Molecule&>(molecule)).bonds(atom);
     for (NeighborListType::const_iterator it = bonds.begin(),
                                           itEnd = bonds.end();
          it != itEnd; ++it) {
@@ -124,8 +108,7 @@ void Labels::process(const Molecule& molecule, Rendering::GroupNode& node)
         it->atom1().index() != atom.index() ? it->atom1() : it->atom2();
       if (otherAtom.atomicNumber() == 1) {
         Rendering::TextLabel3D* hAtomLabel = new Rendering::TextLabel3D;
-        hAtomLabel->setText(
-          "H" + QString::number(hydrogenCount, 'f', 0).toStdString());
+        hAtomLabel->setText("H");
 
         hAtomLabel->setRenderPass(Rendering::Overlay3DPass);
         const Vector3f a1(otherAtom.position3d().cast<float>());
@@ -134,7 +117,6 @@ void Labels::process(const Molecule& molecule, Rendering::GroupNode& node)
         geometry->addDrawable(hAtomLabel);
 
         hAtomLabel->setTextProperties(tprop);
-        hydrogenCount++;
       }
     }
   }
@@ -155,25 +137,13 @@ QWidget* Labels::setupWidget()
   if (!m_setupWidget) {
     m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
     QVBoxLayout* v = new QVBoxLayout;
-    QCheckBox* check = new QCheckBox(tr("Show multiple bonds?"));
-    check->setChecked(m_multiBonds);
-    connect(check, SIGNAL(clicked(bool)), SLOT(multiBonds(bool)));
-    v->addWidget(check);
-    check = new QCheckBox(tr("Show hydrogens?"));
+    QCheckBox* check = new QCheckBox(tr("Show hydrogen labels?"));
     check->setChecked(m_showHydrogens);
     connect(check, SIGNAL(toggled(bool)), SLOT(showHydrogens(bool)));
     v->addWidget(check);
     m_setupWidget->setLayout(v);
   }
   return m_setupWidget;
-}
-
-void Labels::multiBonds(bool show)
-{
-  if (show != m_multiBonds) {
-    m_multiBonds = show;
-    emit drawablesChanged();
-  }
 }
 
 void Labels::showHydrogens(bool show)

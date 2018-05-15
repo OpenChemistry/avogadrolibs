@@ -23,8 +23,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 /**
- * @brief Render a molecule in the ball and stick style and display labels
- * @author David C. Lonie
+ * @brief Display label for each atom (Element symbol as of now)
  */
 class Labels : public QtGui::ScenePlugin
 {
@@ -36,9 +35,6 @@ public:
 
   void process(const Core::Molecule& molecule,
                Rendering::GroupNode& node) override;
-
-  // void processEditable(const QtGui::RWMolecule &molecule,
-  //                   Rendering::GroupNode &node) override;
 
   QString name() const override { return tr("Labels"); }
 
@@ -54,7 +50,6 @@ public:
   QWidget* setupWidget() override;
 
 private slots:
-  void multiBonds(bool show);
   void showHydrogens(bool show);
 
 private:
@@ -63,7 +58,6 @@ private:
   Rendering::GroupNode* m_group;
 
   QWidget* m_setupWidget;
-  bool m_multiBonds;
   bool m_showHydrogens;
 };
 
