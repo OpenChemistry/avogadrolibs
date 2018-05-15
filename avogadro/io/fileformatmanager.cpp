@@ -21,10 +21,10 @@
 #include "cjsonformat.h"
 #include "cmlformat.h"
 #include "gromacsformat.h"
+#include "lammpsformat.h"
 #include "mdlformat.h"
 #include "poscarformat.h"
 #include "xyzformat.h"
-#include "lammpsformat.h"
 
 #include <algorithm>
 #include <memory>

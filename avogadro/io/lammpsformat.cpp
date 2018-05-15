@@ -60,13 +60,16 @@ LammpsFormat::~LammpsFormat()
 
 bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
-  size_t numAtoms = 0, timestep = 0, x_idx = -1, y_idx = -1, z_idx = -1, type_idx = -1, id_idx = -1;
-  double x_min = 0, x_max = 0, y_min = 0, y_max = 0, z_min = 0, z_max = 0, tilt_xy = 0, tilt_xz = 0, tilt_yz = 0, scale_x = 0., scale_y = 0., scale_z = 0.;
+  size_t numAtoms = 0, timestep = 0, x_idx = -1, y_idx = -1, z_idx = -1,
+         type_idx = -1, id_idx = -1;
+  double x_min = 0, x_max = 0, y_min = 0, y_max = 0, z_min = 0, z_max = 0,
+         tilt_xy = 0, tilt_xz = 0, tilt_yz = 0, scale_x = 0., scale_y = 0.,
+         scale_z = 0.;
 
   string buffer;
   getline(inStream, buffer); // Finish the first line
   buffer = trimmed(buffer);
-  if(buffer != "ITEM: TIMESTEP") {
+  if (buffer != "ITEM: TIMESTEP") {
     appendError("No timestep item found.");
     return false;
   }
@@ -76,7 +79,7 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   getline(inStream, buffer);
   buffer = trimmed(buffer);
-  if(buffer != "ITEM: NUMBER OF ATOMS") {
+  if (buffer != "ITEM: NUMBER OF ATOMS") {
     appendError("No number of atoms item found.");
     return false;
   }
@@ -84,10 +87,9 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
   if (!buffer.empty())
     numAtoms = lexicalCast<size_t>(buffer);
 
-
   // If unit cell is triclinic, tilt factors are needed to define the supercell
   getline(inStream, buffer);
-  if(buffer.find("ITEM: BOX BOUNDS xy xz yz") == 0) {
+  if (buffer.find("ITEM: BOX BOUNDS xy xz yz") == 0) {
     // Read x_min, x_max, tiltfactor_xy
     getline(inStream, buffer);
     vector<string> box_bounds_x(split(buffer, ' '));
@@ -107,14 +109,16 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
     z_max = lexicalCast<double>(box_bounds_z.at(1));
     tilt_yz = lexicalCast<double>(box_bounds_z.at(2));
 
-    x_min -= std::min(std::min(std::min(tilt_xy, tilt_xz), tilt_xy+tilt_xz), (double)0);
-    x_max -= std::max(std::max(std::max(tilt_xy, tilt_xz), tilt_xy+tilt_xz), (double)0);
+    x_min -= std::min(std::min(std::min(tilt_xy, tilt_xz), tilt_xy + tilt_xz),
+                      (double)0);
+    x_max -= std::max(std::max(std::max(tilt_xy, tilt_xz), tilt_xy + tilt_xz),
+                      (double)0);
     y_min -= std::min(tilt_yz, (double)0);
     y_max -= std::max(tilt_yz, (double)0);
   }
 
   // Else if unit cell is orthogonal, tilt factors are zero
-  else if(buffer.find("ITEM: BOX BOUNDS") == 0) {
+  else if (buffer.find("ITEM: BOX BOUNDS") == 0) {
     // Read x_min, x_max
     getline(inStream, buffer);
     vector<string> box_bounds_x(split(buffer, ' '));
@@ -138,34 +142,28 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
   // scale_x = 0. if coordinates are cartesian and 1 if fractional (scaled)
   getline(inStream, buffer);
   vector<string> labels(split(buffer, ' '));
-  for(size_t i=0; i<labels.size(); i++) {
-    if(labels[i] == "x" || labels[i] == "xu") {
+  for (size_t i = 0; i < labels.size(); i++) {
+    if (labels[i] == "x" || labels[i] == "xu") {
       x_idx = i;
       scale_x = 0.;
-    }
-    else if(labels[i] == "xs" || labels[i] == "xsu") {
+    } else if (labels[i] == "xs" || labels[i] == "xsu") {
       x_idx = i;
       scale_x = 1.;
-    }
-    else if(labels[i] == "y" || labels[i] == "yu") {
+    } else if (labels[i] == "y" || labels[i] == "yu") {
       y_idx = i;
       scale_y = 0.;
-    }
-    else if(labels[i] == "ys" || labels[i] == "ysu") {
+    } else if (labels[i] == "ys" || labels[i] == "ysu") {
       y_idx = i;
       scale_y = 1.;
-    }
-    else if(labels[i] == "z" || labels[i] == "zu") {
+    } else if (labels[i] == "z" || labels[i] == "zu") {
       z_idx = i;
       scale_z = 0.;
-    }
-    else if(labels[i] == "zs" || labels[i] == "zsu") {
+    } else if (labels[i] == "zs" || labels[i] == "zsu") {
       z_idx = i;
       scale_z = 1.;
-    }
-    else if(labels[i] == "type")
+    } else if (labels[i] == "type")
       type_idx = i;
-    else if(labels[i] == "id")
+    else if (labels[i] == "id")
       id_idx = i;
   }
 
@@ -180,12 +178,21 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     unsigned char atomicNum(0);
-    atomicNum = static_cast<unsigned char>(lexicalCast<short int>(tokens[type_idx-2]));
+    atomicNum =
+      static_cast<unsigned char>(lexicalCast<short int>(tokens[type_idx - 2]));
 
-    // If parsed coordinates are fractional, the corresponding unscaling is done. Else the positions are assigned as parsed.
-    Vector3 pos((1-scale_x)*lexicalCast<double>(tokens[x_idx-2]) + scale_x*(x_min + (x_max - x_min)*lexicalCast<double>(tokens[x_idx-2])), 
-                (1-scale_y)*lexicalCast<double>(tokens[y_idx-2]) + scale_y*(y_min + (y_max - y_min)*lexicalCast<double>(tokens[y_idx-2])),
-                (1-scale_z)*lexicalCast<double>(tokens[z_idx-2]) + scale_z*(z_min + (z_max - z_min)*lexicalCast<double>(tokens[z_idx-2])));
+    // If parsed coordinates are fractional, the corresponding unscaling is
+    // done. Else the positions are assigned as parsed.
+    Vector3 pos(
+      (1 - scale_x) * lexicalCast<double>(tokens[x_idx - 2]) +
+        scale_x *
+          (x_min + (x_max - x_min) * lexicalCast<double>(tokens[x_idx - 2])),
+      (1 - scale_y) * lexicalCast<double>(tokens[y_idx - 2]) +
+        scale_y *
+          (y_min + (y_max - y_min) * lexicalCast<double>(tokens[y_idx - 2])),
+      (1 - scale_z) * lexicalCast<double>(tokens[z_idx - 2]) +
+        scale_z *
+          (z_min + (z_max - z_min) * lexicalCast<double>(tokens[z_idx - 2])));
 
     Atom newAtom = mol.addAtom(atomicNum);
     newAtom.setPosition3d(pos);
@@ -202,15 +209,30 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
   mol.setCoordinate3d(mol.atomPositions3d(), 0);
   mol.setUnitCell(new UnitCell(Vector3(x_max - x_min, 0, 0),
-            Vector3(tilt_xy, y_max - y_min, 0),
-            Vector3(tilt_xz, tilt_yz, z_max - z_min)));
+                               Vector3(tilt_xy, y_max - y_min, 0),
+                               Vector3(tilt_xz, tilt_yz, z_max - z_min)));
 
   // Do we have an animation?
   size_t numAtoms2;
   int coordSet = 1;
   while (getline(inStream, buffer) && trimmed(buffer) == "ITEM: TIMESTEP") {
-    x_idx = -1; y_idx = -1; z_idx = -1; type_idx = -1; id_idx = -1;
-    x_min = 0; x_max = 0; y_min = 0; y_max = 0; z_min = 0; z_max = 0; tilt_xy = 0; tilt_xz = 0; tilt_yz = 0; scale_x = 0.; scale_y = 0.; scale_z = 0.;
+    x_idx = -1;
+    y_idx = -1;
+    z_idx = -1;
+    type_idx = -1;
+    id_idx = -1;
+    x_min = 0;
+    x_max = 0;
+    y_min = 0;
+    y_max = 0;
+    z_min = 0;
+    z_max = 0;
+    tilt_xy = 0;
+    tilt_xz = 0;
+    tilt_yz = 0;
+    scale_x = 0.;
+    scale_y = 0.;
+    scale_z = 0.;
 
     getline(inStream, buffer);
     if (!buffer.empty())
@@ -218,7 +240,7 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     getline(inStream, buffer);
     buffer = trimmed(buffer);
-    if(buffer != "ITEM: NUMBER OF ATOMS") {
+    if (buffer != "ITEM: NUMBER OF ATOMS") {
       appendError("No number of atoms item found.");
       return false;
     }
@@ -226,13 +248,14 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
     if (!buffer.empty())
       numAtoms2 = lexicalCast<size_t>(buffer);
 
-    if(numAtoms2 != numAtoms) {
+    if (numAtoms2 != numAtoms) {
       appendError("Number of atoms isn't constant in the trajectory.");
     }
 
-    // If unit cell is triclinic, tilt factors are needed to define the supercell
+    // If unit cell is triclinic, tilt factors are needed to define the
+    // supercell
     getline(inStream, buffer);
-    if(buffer.find("ITEM: BOX BOUNDS xy xz yz") == 0) {
+    if (buffer.find("ITEM: BOX BOUNDS xy xz yz") == 0) {
       // Read x_min, x_max, tiltfactor_xy
       getline(inStream, buffer);
       vector<string> box_bounds_x(split(buffer, ' '));
@@ -252,14 +275,16 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
       z_max = lexicalCast<double>(box_bounds_z.at(1));
       tilt_yz = lexicalCast<double>(box_bounds_z.at(2));
 
-      x_min -= std::min(std::min(std::min(tilt_xy, tilt_xz), tilt_xy+tilt_xz), (double)0);
-      x_max -= std::max(std::max(std::max(tilt_xy, tilt_xz), tilt_xy+tilt_xz), (double)0);
+      x_min -= std::min(std::min(std::min(tilt_xy, tilt_xz), tilt_xy + tilt_xz),
+                        (double)0);
+      x_max -= std::max(std::max(std::max(tilt_xy, tilt_xz), tilt_xy + tilt_xz),
+                        (double)0);
       y_min -= std::min(tilt_yz, (double)0);
       y_max -= std::max(tilt_yz, (double)0);
     }
 
     // Else if unit cell is orthogonal, tilt factors are zero
-    else if(buffer.find("ITEM: BOX BOUNDS") == 0) {
+    else if (buffer.find("ITEM: BOX BOUNDS") == 0) {
       // Read x_min, x_max
       getline(inStream, buffer);
       vector<string> box_bounds_x(split(buffer, ' '));
@@ -283,37 +308,31 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
     // scale_x = 0. if coordinates are cartesian and 1 if fractional (scaled)
     getline(inStream, buffer);
     labels = vector<string>(split(buffer, ' '));
-    for(size_t i=0; i<labels.size(); i++) {
-      if(labels[i] == "x" || labels[i] == "xu") {
+    for (size_t i = 0; i < labels.size(); i++) {
+      if (labels[i] == "x" || labels[i] == "xu") {
         x_idx = i;
         scale_x = 0.;
-      }
-      else if(labels[i] == "xs" || labels[i] == "xsu") {
+      } else if (labels[i] == "xs" || labels[i] == "xsu") {
         x_idx = i;
         scale_x = 1.;
-      }
-      else if(labels[i] == "y" || labels[i] == "yu") {
+      } else if (labels[i] == "y" || labels[i] == "yu") {
         y_idx = i;
         scale_y = 0.;
-      }
-      else if(labels[i] == "ys" || labels[i] == "ysu") {
+      } else if (labels[i] == "ys" || labels[i] == "ysu") {
         y_idx = i;
         scale_y = 1.;
-      }
-      else if(labels[i] == "z" || labels[i] == "zu") {
+      } else if (labels[i] == "z" || labels[i] == "zu") {
         z_idx = i;
         scale_z = 0.;
-      }
-      else if(labels[i] == "zs" || labels[i] == "zsu") {
+      } else if (labels[i] == "zs" || labels[i] == "zsu") {
         z_idx = i;
         scale_z = 1.;
-      }
-      else if(labels[i] == "type")
+      } else if (labels[i] == "type")
         type_idx = i;
-      else if(labels[i] == "id")
+      else if (labels[i] == "id")
         id_idx = i;
     }
-    
+
     Array<Vector3> positions;
     positions.reserve(numAtoms);
 
@@ -324,17 +343,25 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
         appendError("Not enough tokens in this line: " + buffer);
         return false;
       }
-      // If parsed coordinates are fractional, the corresponding unscaling is done. Else the positions are assigned as parsed.
-      Vector3 pos((1-scale_x)*lexicalCast<double>(tokens[x_idx-2]) + scale_x*(x_min + (x_max - x_min)*lexicalCast<double>(tokens[x_idx-2])), 
-                  (1-scale_y)*lexicalCast<double>(tokens[y_idx-2]) + scale_y*(y_min + (y_max - y_min)*lexicalCast<double>(tokens[y_idx-2])),
-                  (1-scale_z)*lexicalCast<double>(tokens[z_idx-2]) + scale_z*(z_min + (z_max - z_min)*lexicalCast<double>(tokens[z_idx-2])));
+      // If parsed coordinates are fractional, the corresponding unscaling is
+      // done. Else the positions are assigned as parsed.
+      Vector3 pos(
+        (1 - scale_x) * lexicalCast<double>(tokens[x_idx - 2]) +
+          scale_x *
+            (x_min + (x_max - x_min) * lexicalCast<double>(tokens[x_idx - 2])),
+        (1 - scale_y) * lexicalCast<double>(tokens[y_idx - 2]) +
+          scale_y *
+            (y_min + (y_max - y_min) * lexicalCast<double>(tokens[y_idx - 2])),
+        (1 - scale_z) * lexicalCast<double>(tokens[z_idx - 2]) +
+          scale_z *
+            (z_min + (z_max - z_min) * lexicalCast<double>(tokens[z_idx - 2])));
       positions.push_back(pos);
     }
 
     mol.setCoordinate3d(positions, coordSet++);
     mol.setUnitCell(new UnitCell(Vector3(x_max - x_min, 0, 0),
-              Vector3(tilt_xy, y_max - y_min, 0),
-              Vector3(tilt_xz, tilt_yz, z_max - z_min)));
+                                 Vector3(tilt_xy, y_max - y_min, 0),
+                                 Vector3(tilt_xz, tilt_yz, z_max - z_min)));
 
     positions.clear();
   }
