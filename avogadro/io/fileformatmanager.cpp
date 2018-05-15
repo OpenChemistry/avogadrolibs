@@ -24,6 +24,7 @@
 #include "mdlformat.h"
 #include "poscarformat.h"
 #include "xyzformat.h"
+#include "lammpsformat.h"
 
 #include <algorithm>
 #include <memory>
@@ -290,6 +291,7 @@ FileFormatManager::FileFormatManager()
   addFormat(new MdlFormat);
   addFormat(new PoscarFormat);
   addFormat(new XyzFormat);
+  addFormat(new LammpsFormat);
 }
 
 FileFormatManager::~FileFormatManager()
