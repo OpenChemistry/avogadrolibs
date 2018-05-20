@@ -29,10 +29,12 @@
 #include <string>
 
 using std::string;
+using std::to_string;
 using std::endl;
 using std::getline;
 using std::string;
 using std::vector;
+using std::map;
 
 namespace Avogadro {
 namespace Io {
@@ -136,6 +138,10 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
     z_max = lexicalCast<double>(box_bounds_z.at(1));
   }
 
+  typedef map<string, unsigned char> AtomTypeMap;
+  AtomTypeMap atomTypes;
+  unsigned char customElementCounter = CustomElementMin;
+
   // x,y,z stand for the coordinate axes
   // s stands for scaled coordinates
   // u stands for unwrapped coordinates
@@ -194,8 +200,29 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
         scale_z *
           (z_min + (z_max - z_min) * lexicalCast<double>(tokens[z_idx - 2])));
 
-    Atom newAtom = mol.addAtom(atomicNum);
+    AtomTypeMap::const_iterator it = atomTypes.find(to_string(atomicNum));
+    if (it == atomTypes.end()) {
+      atomTypes.insert(
+        std::make_pair(to_string(atomicNum), customElementCounter++));
+      it = atomTypes.find(to_string(atomicNum));
+      if (customElementCounter > CustomElementMax) {
+        appendError("Custom element type limit exceeded.");
+        return false;
+      }
+    }
+    Atom newAtom = mol.addAtom(it->second);
     newAtom.setPosition3d(pos);
+  }
+
+  // Set the custom element map if needed:
+  if (!atomTypes.empty()) {
+    Molecule::CustomElementMap elementMap;
+    for (AtomTypeMap::const_iterator it = atomTypes.begin(),
+                                     itEnd = atomTypes.end();
+         it != itEnd; ++it) {
+      elementMap.insert(std::make_pair(it->second, it->first));
+    }
+    mol.setCustomElementMap(elementMap);
   }
 
   // Check that all atoms were handled.
