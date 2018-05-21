@@ -393,9 +393,6 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
     positions.clear();
   }
 
-  // This format has no connectivity information, so perceive basics at least.
-  mol.perceiveBondsSimple();
-
   return true;
 }
 
