@@ -28,13 +28,12 @@
 #include <sstream>
 #include <string>
 
-using std::string;
-using std::to_string;
 using std::endl;
 using std::getline;
-using std::string;
-using std::vector;
 using std::map;
+using std::string;
+using std::to_string;
+using std::vector;
 
 namespace Avogadro {
 namespace Io {
@@ -42,23 +41,19 @@ namespace Io {
 using Core::Array;
 using Core::Atom;
 using Core::Elements;
-using Core::Molecule;
-using Core::UnitCell;
 using Core::lexicalCast;
+using Core::Molecule;
 using Core::split;
 using Core::trimmed;
+using Core::UnitCell;
 
 #ifndef _WIN32
 using std::isalpha;
 #endif
 
-LammpsFormat::LammpsFormat()
-{
-}
+LammpsFormat::LammpsFormat() {}
 
-LammpsFormat::~LammpsFormat()
-{
-}
+LammpsFormat::~LammpsFormat() {}
 
 bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -189,16 +184,15 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     // If parsed coordinates are fractional, the corresponding unscaling is
     // done. Else the positions are assigned as parsed.
-    Vector3 pos(
-      (1 - scale_x) * lexicalCast<double>(tokens[x_idx - 2]) +
-        scale_x *
-          (x_min + (x_max - x_min) * lexicalCast<double>(tokens[x_idx - 2])),
-      (1 - scale_y) * lexicalCast<double>(tokens[y_idx - 2]) +
-        scale_y *
-          (y_min + (y_max - y_min) * lexicalCast<double>(tokens[y_idx - 2])),
-      (1 - scale_z) * lexicalCast<double>(tokens[z_idx - 2]) +
-        scale_z *
-          (z_min + (z_max - z_min) * lexicalCast<double>(tokens[z_idx - 2])));
+    Vector3 pos((1 - scale_x) * lexicalCast<double>(tokens[x_idx - 2]) +
+                  scale_x * (x_min + (x_max - x_min) *
+                                       lexicalCast<double>(tokens[x_idx - 2])),
+                (1 - scale_y) * lexicalCast<double>(tokens[y_idx - 2]) +
+                  scale_y * (y_min + (y_max - y_min) *
+                                       lexicalCast<double>(tokens[y_idx - 2])),
+                (1 - scale_z) * lexicalCast<double>(tokens[z_idx - 2]) +
+                  scale_z * (z_min + (z_max - z_min) *
+                                       lexicalCast<double>(tokens[z_idx - 2])));
 
     AtomTypeMap::const_iterator it = atomTypes.find(to_string(atomicNum));
     if (it == atomTypes.end()) {
