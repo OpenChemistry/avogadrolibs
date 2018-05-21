@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2013 Kitware, Inc.
+  Copyright 2018 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
