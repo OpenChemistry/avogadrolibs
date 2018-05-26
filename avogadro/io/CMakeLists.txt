@@ -31,6 +31,7 @@ set(HEADERS
   mdlformat.h
   poscarformat.h
   xyzformat.h
+  trrformat.h
 )
 
 set(SOURCES
@@ -42,6 +43,7 @@ set(SOURCES
   mdlformat.cpp
   poscarformat.cpp
   xyzformat.cpp
+  trrformat.cpp
 )
 
 if(USE_HDF5)
