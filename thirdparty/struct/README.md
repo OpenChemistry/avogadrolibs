@@ -1,4 +1,4 @@
-#Preface
+# Preface
 
 `struct` has been used in Avogadro for unpacking
 binary-file trajectories, particularly of the .trr and .dcd formats. 
@@ -7,7 +7,7 @@ Original source: https://github.com/svperbeast/struct
 
 SHA-1 used: f200d57d52292c13391dc164e9acce9a9fce8419
 
-#Introduction
+# Introduction
 
 `struct` is a binary data formatting library inspired by
 'The Practice of Programming (Brian W. Kernighan, Rob Pike)' and
@@ -79,7 +79,7 @@ struct_unpack(buf1, "i", &rval);
 struct_unpack(buf2, fmt, rstr);
 ```
 
-#Install
+# Install
 
     cd build
     cmake ..
@@ -99,11 +99,11 @@ valgrind memory check:
 
     ctest -T memcheck
 
-#References
+# References
 
 [The Practice of Programming (9.1 Formatting Data)](http://www.amazon.com/Practice-Programming-Addison-Wesley-Professional-Computing/dp/020161586X/ref=sr_1_1?ie=UTF8&qid=1359350725&sr=8-1&keywords=practice+of+programming "The Practice of Programming")
 
 [Python struct](http://docs.python.org/2/library/struct.html#module-struct "Python struct module")
 
-#License
+# License
 Code released under [the MIT license](https://github.com/svperbeast/struct/blob/master/LICENSE).
