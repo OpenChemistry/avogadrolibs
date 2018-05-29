@@ -382,8 +382,6 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
     mol.setUnitCell(new UnitCell(Vector3(x_max - x_min, 0, 0),
                                  Vector3(tilt_xy, y_max - y_min, 0),
                                  Vector3(tilt_xz, tilt_yz, z_max - z_min)));
-
-    positions.clear();
   }
 
   return true;
