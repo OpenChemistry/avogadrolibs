@@ -179,8 +179,7 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     unsigned char atomicNum(0);
-    atomicNum =
-      static_cast<unsigned char>(lexicalCast<short int>(tokens[type_idx - 2]));
+    atomicNum = lexicalCast<short int>(tokens[type_idx - 2]);
 
     // If parsed coordinates are fractional, the corresponding unscaling is
     // done. Else the positions are assigned as parsed.
