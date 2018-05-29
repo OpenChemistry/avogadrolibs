@@ -328,7 +328,7 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
     // scale_x = 0. if coordinates are cartesian and 1 if fractional (scaled)
     getline(inStream, buffer);
     labels = vector<string>(split(buffer, ' '));
-    for (size_t i = 0; i < labels.size(); i++) {
+    for (size_t i = 0; i < labels.size(); ++i) {
       if (labels[i] == "x" || labels[i] == "xu") {
         x_idx = i;
         scale_x = 0.;
