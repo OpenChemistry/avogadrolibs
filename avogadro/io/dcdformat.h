@@ -47,10 +47,7 @@ public:
     return "CHARMM/NAMD/LAMMPS DCD Trajectory format.";
   }
 
-  std::string specificationUrl() const override
-  {
-    return "";
-  }
+  std::string specificationUrl() const override { return ""; }
 
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
