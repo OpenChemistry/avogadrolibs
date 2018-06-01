@@ -25,6 +25,7 @@ endif()
 set(HEADERS
   cjsonformat.h
   cmlformat.h
+  dcdformat.h
   fileformat.h
   fileformatmanager.h
   gromacsformat.h
@@ -36,6 +37,7 @@ set(HEADERS
 set(SOURCES
   cjsonformat.cpp
   cmlformat.cpp
+  dcdformat.cpp
   fileformat.cpp
   fileformatmanager.cpp
   gromacsformat.cpp

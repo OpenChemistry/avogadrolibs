@@ -20,6 +20,7 @@
 
 #include "cjsonformat.h"
 #include "cmlformat.h"
+#include "dcdformat.h"
 #include "gromacsformat.h"
 #include "mdlformat.h"
 #include "poscarformat.h"
@@ -290,6 +291,7 @@ FileFormatManager::FileFormatManager()
   addFormat(new MdlFormat);
   addFormat(new PoscarFormat);
   addFormat(new XyzFormat);
+  addFormat(new DcdFormat);
 }
 
 FileFormatManager::~FileFormatManager()
