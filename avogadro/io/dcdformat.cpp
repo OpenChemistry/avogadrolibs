@@ -54,6 +54,7 @@ using Core::UnitCell;
 using std::isalpha;
 #endif
 
+#define DCD_EOF -1
 #define DCD_MAGIC 84
 #define DCD_IS_CHARMM 0x01
 #define DCD_HAS_4DIMS 0x02
@@ -338,7 +339,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Do we have an animation?
   int coordSet = 1;
-  while (inStream.tellg() != file_len) {
+  while ((inStream.tellg() != file_len) && (inStream.tellg() != DCD_EOF)) {
     // Reading the atom coordinates
     Array<Vector3> positions;
     positions.reserve(NATOMS);
