@@ -228,14 +228,23 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     if (leading_num == 48) {
       double unitcell[6];
-      for (int aa = 0; aa < 6; aa++) {
+      for (int aa = 0; aa < 6; ++aa) {
         snprintf(fmt, sizeof(fmt), "%c%dd", endian, 1);
         inStream.read(buff, struct_calcsize(fmt));
         struct_unpack(buff, fmt, &unitcell[aa]);
       }
-      mol.setUnitCell(new UnitCell(unitcell[0], unitcell[1], unitcell[2],
-                                   acos(unitcell[3]), acos(unitcell[4]),
-                                   acos(unitcell[5])));
+      if (unitcell[1] >= -1.0 && unitcell[1] <= 1.0 && unitcell[3] >= -1.0 &&
+          unitcell[3] <= 1.0 && unitcell[4] >= -1.0 && unitcell[4] <= 1.0) {
+        // CHARMM and certain NAMD files have the cosines instead of angles
+        // This formulation improves rounding behavior for orthogonal cells
+        // so that the angles end up at precisely 90 degrees, unlike acos()
+        unitcell[4] = M_PI_2 - asin(unitcell[4]); /* cosBC */
+        unitcell[3] = M_PI_2 - asin(unitcell[3]); /* cosAC */
+        unitcell[1] = M_PI_2 - asin(unitcell[1]); /* cosAB */
+      }
+
+      mol.setUnitCell(new UnitCell(unitcell[0], unitcell[2], unitcell[5],
+                                   unitcell[4], unitcell[3], unitcell[1]));
     } else {
       inStream.read(buff, leading_num);
     }
