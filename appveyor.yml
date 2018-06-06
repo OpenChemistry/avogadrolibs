@@ -1,5 +1,5 @@
 version: 1.0.{build}
-image: Visual Studio 2015
+image: Visual Studio 2017
 configuration:
 - Release
 clone_folder: C:/openchemistry/avogadrolibs
@@ -8,7 +8,7 @@ init:
 environment:
   PATH: '%PATH%;%QTDIR%\bin'
   matrix:
-  - CMAKE_GENERATOR: '"Visual Studio 14 2015 Win64"'
+  - CMAKE_GENERATOR: '"Visual Studio 15 2017 Win64"'
     QTDIR: C:\Qt\5.6\msvc2015_64
     platform: x64
 build_script:
