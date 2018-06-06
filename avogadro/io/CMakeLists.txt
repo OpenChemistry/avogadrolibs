@@ -52,7 +52,9 @@ endif()
 
 avogadro_add_library(AvogadroIO ${HEADERS} ${SOURCES})
 
-target_link_libraries(AvogadroIO LINK_PUBLIC AvogadroCore LINK_PRIVATE jsoncpp LINK_PRIVATE struct)
+target_link_libraries(AvogadroIO
+  LINK_PUBLIC AvogadroCore
+  LINK_PRIVATE jsoncpp struct)
 if(USE_HDF5)
   target_link_libraries(AvogadroIO LINK_PRIVATE ${HDF5_LIBRARIES})
 endif()
