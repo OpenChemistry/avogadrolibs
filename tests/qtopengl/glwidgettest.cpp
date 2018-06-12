@@ -23,7 +23,8 @@
 #include <QtGui/QImage>
 #include <QtWidgets/QApplication>
 
-#include <QtOpenGL/QGLFormat>
+#include <QtGui/QOpenGLContext>
+#include <QtGui/QSurfaceFormat>
 
 #include <iostream>
 
@@ -37,9 +38,9 @@ using Avogadro::VtkTesting::ImageRegressionTest;
 int glwidgettest(int argc, char* argv[])
 {
   // Set up the default format for our GL contexts.
-  QGLFormat defaultFormat = QGLFormat::defaultFormat();
-  defaultFormat.setSampleBuffers(true);
-  QGLFormat::setDefaultFormat(defaultFormat);
+  QSurfaceFormat defaultFormat = QSurfaceFormat::defaultFormat();
+  defaultFormat.setSamples(4);
+  QSurfaceFormat::setDefaultFormat(defaultFormat);
 
   QApplication app(argc, argv);
   GLWidget widget;

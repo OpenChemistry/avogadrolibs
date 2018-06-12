@@ -15,7 +15,8 @@ endif()
 # compilers that support that notion.
 include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/pugixml"
-  "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp")
+  "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp"
+  "${AvogadroLibs_SOURCE_DIR}/thirdparty/struct")
 
 if(DEFINED AvogadroLibs_MEMORY_INCLUDE_DIRS)
   # The smart pointer classes just require headers.
@@ -32,6 +33,7 @@ set(HEADERS
   poscarformat.h
   xyzformat.h
   trrformat.h
+  lammpsformat.h
 )
 
 set(SOURCES
@@ -44,6 +46,7 @@ set(SOURCES
   poscarformat.cpp
   xyzformat.cpp
   trrformat.cpp
+  lammpsformat.cpp
 )
 
 if(USE_HDF5)
@@ -53,7 +56,9 @@ endif()
 
 avogadro_add_library(AvogadroIO ${HEADERS} ${SOURCES})
 
-target_link_libraries(AvogadroIO LINK_PUBLIC AvogadroCore LINK_PRIVATE jsoncpp)
+target_link_libraries(AvogadroIO
+  LINK_PUBLIC AvogadroCore
+  LINK_PRIVATE jsoncpp struct)
 if(USE_HDF5)
   target_link_libraries(AvogadroIO LINK_PRIVATE ${HDF5_LIBRARIES})
 endif()
