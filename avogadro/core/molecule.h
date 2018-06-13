@@ -474,9 +474,9 @@ public:
   void clearCubes();
 
   /**
-* @brief Get the cubes vector set (if present) for the molecule.
-* @return The cube vector for the molecule
-*/
+   * @brief Get the cubes vector set (if present) for the molecule.
+   * @return The cube vector for the molecule
+   */
   std::vector<Cube*> cubes() { return m_cubes; }
   const std::vector<Cube*> cubes() const { return m_cubes; }
 
@@ -530,7 +530,7 @@ public:
 
   int coordinate3dCount();
   bool setCoordinate3d(int coord);
-  int coordinate3d() const;
+  Array<Vector3> coordinate3d(int index) const;
   bool setCoordinate3d(const Array<Vector3>& coords, int index);
 
 protected:
@@ -569,15 +569,23 @@ protected:
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
 {
 public:
-  Atom() : AtomTemplate<Molecule>() {}
-  Atom(Molecule* m, Index i) : AtomTemplate<Molecule>(m, i) {}
+  Atom()
+    : AtomTemplate<Molecule>()
+  {}
+  Atom(Molecule* m, Index i)
+    : AtomTemplate<Molecule>(m, i)
+  {}
 };
 
 class AVOGADROCORE_EXPORT Bond : public BondTemplate<Molecule>
 {
 public:
-  Bond() : BondTemplate<Molecule>() {}
-  Bond(Molecule* m, Index i) : BondTemplate<Molecule>(m, i) {}
+  Bond()
+    : BondTemplate<Molecule>()
+  {}
+  Bond(Molecule* m, Index i)
+    : BondTemplate<Molecule>(m, i)
+  {}
 };
 
 inline unsigned char Molecule::atomicNumber(Index atomId) const
