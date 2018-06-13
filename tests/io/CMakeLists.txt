@@ -3,6 +3,7 @@ set(tests
   Cjson
   Cml
   FileFormatManager
+  Lammps
   Mdl
   Poscar
   Xyz
