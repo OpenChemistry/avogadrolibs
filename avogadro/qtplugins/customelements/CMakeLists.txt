@@ -3,5 +3,5 @@ avogadro_plugin(CustomElements
   ExtensionPlugin
   customelements.h
   CustomElements
-  "customelements.cpp"
+  "customelements.cpp;backgroundfileformat.cpp"
 )
