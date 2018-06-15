@@ -13,8 +13,8 @@
   limitations under the License.
 
 ******************************************************************************/
-#ifndef AVOGADRO_QTPLUGINS_QUANTUMOUTPUT_H
-#define AVOGADRO_QTPLUGINS_QUANTUMOUTPUT_H
+#ifndef AVOGADRO_QTPLUGINS_SURFACES_H
+#define AVOGADRO_QTPLUGINS_SURFACES_H
 
 #include <avogadro/qtgui/extensionplugin.h>
 
@@ -36,7 +36,7 @@ class Mesh;
 namespace QtPlugins {
 
 /**
- * @brief The QuantumOutput plugin registers quantum file formats, adds several
+ * @brief The Surfaces plugin registers quantum file formats, adds several
  * menu entries to calculate properties if a valid quantum data output file was
  * loaded.
  * @author Marcus D. Hanwell
@@ -46,20 +46,17 @@ class GaussianSetConcurrent;
 class SlaterSetConcurrent;
 class SurfaceDialog;
 
-class QuantumOutput : public QtGui::ExtensionPlugin
+class Surfaces : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 
 public:
-  explicit QuantumOutput(QObject* parent = 0);
-  ~QuantumOutput() override;
+  explicit Surfaces(QObject* parent = 0);
+  ~Surfaces();
 
-  QString name() const override { return tr("Quantum output"); }
+  QString name() const { return tr("Surfaces"); }
 
-  QString description() const override
-  {
-    return tr("Read output from quantum codes.");
-  }
+  QString description() const { return tr("Read and render surfaces."); }
 
   QList<QAction*> actions() const override;
 

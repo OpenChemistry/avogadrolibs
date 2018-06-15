@@ -13,7 +13,7 @@
   limitations under the License.
 
 ******************************************************************************/
-#include "quantumoutput.h"
+#include "surfaces.h"
 #include "surfacedialog.h"
 
 #include "gaussiansetconcurrent.h"
@@ -49,7 +49,7 @@ namespace QtPlugins {
 using Core::GaussianSet;
 using Core::Cube;
 
-QuantumOutput::QuantumOutput(QObject* p)
+Surfaces::Surfaces(QObject* p)
   : ExtensionPlugin(p), m_progressDialog(nullptr), m_molecule(nullptr),
     m_basis(nullptr), m_concurrent(nullptr), m_concurrent2(nullptr),
     m_cube(nullptr), m_mesh1(nullptr), m_mesh2(nullptr),
@@ -57,7 +57,7 @@ QuantumOutput::QuantumOutput(QObject* p)
 {
   QAction* action = new QAction(this);
   action->setEnabled(false);
-  action->setText(tr("Calculate electronic surfaces..."));
+  action->setText(tr("Create surfaces..."));
   connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
   m_actions.push_back(action);
 
@@ -71,12 +71,12 @@ QuantumOutput::QuantumOutput(QObject* p)
   Io::FileFormatManager::registerFormat(new QuantumIO::NWChemLog);
 }
 
-QuantumOutput::~QuantumOutput()
+Surfaces::~Surfaces()
 {
   delete m_cube;
 }
 
-void QuantumOutput::setMolecule(QtGui::Molecule* mol)
+void Surfaces::setMolecule(QtGui::Molecule* mol)
 {
   if (mol->basisSet()) {
     m_basis = mol->basisSet();
@@ -89,19 +89,19 @@ void QuantumOutput::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
 }
 
-QList<QAction*> QuantumOutput::actions() const
+QList<QAction*> Surfaces::actions() const
 {
   return m_actions;
 }
 
-QStringList QuantumOutput::menuPath(QAction*) const
+QStringList Surfaces::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Quantum");
+  path << tr("&Extensions");
   return path;
 }
 
-void QuantumOutput::surfacesActivated()
+void Surfaces::surfacesActivated()
 {
   if (!m_basis && !(m_cubes.size() > 0))
     return;
@@ -123,7 +123,7 @@ void QuantumOutput::surfacesActivated()
   m_dialog->show();
 }
 
-void QuantumOutput::calculateSurface(int index, float isosurfaceValue,
+void Surfaces::calculateSurface(int index, float isosurfaceValue,
                                      float resolutionStepSize)
 {
   if (m_basis) {
@@ -198,7 +198,7 @@ void QuantumOutput::calculateSurface(int index, float isosurfaceValue,
   }
 }
 
-void QuantumOutput::displayCube()
+void Surfaces::displayCube()
 {
   if (!m_cube)
     return;
@@ -222,7 +222,7 @@ void QuantumOutput::displayCube()
   m_meshGenerator2->start();
 }
 
-void QuantumOutput::meshFinished()
+void Surfaces::meshFinished()
 {
   m_dialog->reenableCalculateButton();
   m_molecule->emitChanged(QtGui::Molecule::Added);
