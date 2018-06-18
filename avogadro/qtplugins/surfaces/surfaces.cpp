@@ -56,7 +56,6 @@ Surfaces::Surfaces(QObject* p)
     m_meshGenerator1(nullptr), m_meshGenerator2(nullptr), m_dialog(nullptr)
 {
   QAction* action = new QAction(this);
-  action->setEnabled(false);
   action->setText(tr("Create surfaces..."));
   connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
   m_actions.push_back(action);
@@ -80,10 +79,8 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
 {
   if (mol->basisSet()) {
     m_basis = mol->basisSet();
-    m_actions[0]->setEnabled(true);
   } else if (mol->cubes().size() != 0) {
     m_cubes = mol->cubes();
-    m_actions[0]->setEnabled(true);
   }
 
   m_molecule = mol;
