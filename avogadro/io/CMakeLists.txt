@@ -30,7 +30,7 @@ set(HEADERS
   fileformatmanager.h
   gromacsformat.h
   mdlformat.h
-  poscarformat.h
+  vaspformat.h
   xyzformat.h
   lammpsformat.h
 )
@@ -42,7 +42,7 @@ set(SOURCES
   fileformatmanager.cpp
   gromacsformat.cpp
   mdlformat.cpp
-  poscarformat.cpp
+  vaspformat.cpp
   xyzformat.cpp
   lammpsformat.cpp
 )
