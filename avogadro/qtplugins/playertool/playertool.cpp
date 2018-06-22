@@ -44,17 +44,19 @@ namespace QtPlugins {
 using QtGui::Molecule;
 
 PlayerTool::PlayerTool(QObject* parent_)
-  : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_renderer(nullptr), m_currentFrame(0),
-    m_toolWidget(nullptr), m_info(nullptr)
+  : QtGui::ToolPlugin(parent_)
+  , m_activateAction(new QAction(this))
+  , m_molecule(nullptr)
+  , m_renderer(nullptr)
+  , m_currentFrame(0)
+  , m_toolWidget(nullptr)
+  , m_info(nullptr)
 {
   m_activateAction->setText(tr("Player"));
   m_activateAction->setIcon(QIcon(":/icons/player.png"));
 }
 
-PlayerTool::~PlayerTool()
-{
-}
+PlayerTool::~PlayerTool() {}
 
 QWidget* PlayerTool::toolWidget() const
 {
@@ -191,7 +193,6 @@ void PlayerTool::recordMovie()
   QString baseFileName;
   if (m_molecule)
     baseFileName = m_molecule->data("fileName").toString().c_str();
-  QFileInfo info(baseFileName);
 
   QString baseName = QFileDialog::getSaveFileName(
     qobject_cast<QWidget*>(parent()), tr("Export Bitmap Graphics"), "",
@@ -199,8 +200,10 @@ void PlayerTool::recordMovie()
 
   if (baseName.isEmpty())
     return;
-  if (!QFileInfo(baseName).suffix().isEmpty())
-    baseName = QFileInfo(baseName).baseName();
+
+  QFileInfo fileInfo(baseName);
+  if (!fileInfo.suffix().isEmpty())
+    baseName = fileInfo.canonicalPath() + "/" + fileInfo.baseName();
 
   bool bonding = m_dynamicBonding->isChecked();
   int numberLength = static_cast<int>(
