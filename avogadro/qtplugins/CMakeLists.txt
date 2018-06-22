@@ -5,6 +5,8 @@ find_package(Qt5 COMPONENTS Widgets Network Concurrent REQUIRED)
 include_directories(SYSTEM ${Qt5Widgets_INCLUDE_DIRS})
 add_definitions(${Qt5Widgets_DEFINITIONS})
 
+include_directories("${AvogadroLibs_SOURCE_DIR}/thirdparty/gif-h")
+
 # Modify the output directory for the build tree.
 set(original_library_output_dir "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
