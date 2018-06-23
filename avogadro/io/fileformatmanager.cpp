@@ -22,6 +22,7 @@
 #include "cmlformat.h"
 #include "dcdformat.h"
 #include "gromacsformat.h"
+#include "lammpsformat.h"
 #include "mdlformat.h"
 #include "poscarformat.h"
 #include "xyzformat.h"
@@ -292,6 +293,7 @@ FileFormatManager::FileFormatManager()
   addFormat(new PoscarFormat);
   addFormat(new XyzFormat);
   addFormat(new DcdFormat);
+  addFormat(new LammpsFormat);
 }
 
 FileFormatManager::~FileFormatManager()
