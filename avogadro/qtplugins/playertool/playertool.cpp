@@ -17,6 +17,8 @@
 #include "playertool.h"
 #include "gif.h"
 
+#include "gwavi.h"
+
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 
@@ -201,7 +203,7 @@ void PlayerTool::recordMovie()
   QString selfFilter = tr("Movie (*.mp4)");
   QString baseName = QFileDialog::getSaveFileName(
     qobject_cast<QWidget*>(parent()), tr("Export Bitmap Graphics"), "",
-    tr("Movie (*.mp4);;GIF (*.gif)"), &selfFilter);
+    tr("Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"), &selfFilter);
 
   if (baseName.isEmpty())
     return;
@@ -214,35 +216,28 @@ void PlayerTool::recordMovie()
     ceil(log10(static_cast<float>(m_molecule->coordinate3dCount()) + 1)));
   m_glWidget->resize(EXPORT_WIDTH, EXPORT_HEIGHT);
 
-  GifWriter writer;
-  if (selfFilter == tr("GIF (*.gif)"))
+  if (selfFilter == tr("GIF (*.gif)")) {
+    GifWriter writer;
     GifBegin(&writer, (baseName + ".gif").toLatin1().data(), EXPORT_WIDTH,
-             EXPORT_HEIGHT, 100);
+             EXPORT_HEIGHT, 100 / m_animationFPS->value());
+    for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      m_molecule->setCoordinate3d(i);
+      if (bonding) {
+        m_molecule->clearBonds();
+        m_molecule->perceiveBondsSimple();
+      }
+      m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
 
-  for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
-    m_molecule->setCoordinate3d(i);
-    if (bonding) {
-      m_molecule->clearBonds();
-      m_molecule->perceiveBondsSimple();
-    }
-    m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
-    QString fileName = QString::number(i);
-    while (fileName.length() < numberLength)
-      fileName.prepend('0');
-    fileName.prepend(baseName);
-    fileName.append(".png");
+      QImage exportImage;
+      m_glWidget->raise();
+      m_glWidget->repaint();
+      if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
+        exportImage = m_glWidget->grabFramebuffer();
+      } else {
+        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        exportImage = pixmap.toImage();
+      }
 
-    QImage exportImage;
-    m_glWidget->raise();
-    m_glWidget->repaint();
-    if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
-      exportImage = m_glWidget->grabFramebuffer();
-    } else {
-      QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
-      exportImage = pixmap.toImage();
-    }
-
-    if (selfFilter == tr("GIF (*.gif)")) {
       int frameWidth = exportImage.width();
       int frameHeight = exportImage.height();
       int numbPixels = frameWidth * frameHeight;
@@ -259,32 +254,86 @@ void PlayerTool::recordMovie()
           imageIndex += 4;
         }
       }
+      GifWriteFrame(&writer, imageData, EXPORT_WIDTH, EXPORT_HEIGHT,
+                    100 / m_animationFPS->value());
+    }
+    GifEnd(&writer);
+  } else if (selfFilter == tr("Movie (*.avi)")) {
+    gwavi_t* gwavi;
+    gwavi = gwavi_open((baseName + ".avi").toLatin1().data(), EXPORT_WIDTH,
+                       EXPORT_HEIGHT, "MJPG", m_animationFPS->value(), NULL);
+    for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      m_molecule->setCoordinate3d(i);
+      if (bonding) {
+        m_molecule->clearBonds();
+        m_molecule->perceiveBondsSimple();
+      }
+      m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
 
-      GifWriteFrame(&writer, imageData, EXPORT_WIDTH, EXPORT_HEIGHT, 10);
-    } else if (selfFilter == tr("Movie (*.mp4)")) {
+      QImage exportImage;
+      m_glWidget->raise();
+      m_glWidget->repaint();
+      if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
+        exportImage = m_glWidget->grabFramebuffer();
+      } else {
+        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        exportImage = pixmap.toImage();
+      }
+      QByteArray ba;
+      QBuffer buffer(&ba);
+      buffer.open(QIODevice::WriteOnly);
+      exportImage.save(&buffer, "JPG");
+
+      if (gwavi_add_frame(
+            gwavi, reinterpret_cast<const unsigned char*>(buffer.data().data()),
+            buffer.size()) == -1) {
+        QMessageBox::warning(qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+                             tr("Error: cannot add frame to video."));
+      }
+    }
+    gwavi_close(gwavi);
+  } else if (selfFilter == tr("Movie (*.mp4)")) {
+    for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      m_molecule->setCoordinate3d(i);
+      if (bonding) {
+        m_molecule->clearBonds();
+        m_molecule->perceiveBondsSimple();
+      }
+      m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+      QString fileName = QString::number(i);
+      while (fileName.length() < numberLength)
+        fileName.prepend('0');
+      fileName.prepend(baseName);
+      fileName.append(".png");
+
+      QImage exportImage;
+      m_glWidget->raise();
+      m_glWidget->repaint();
+      if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
+        exportImage = m_glWidget->grabFramebuffer();
+      } else {
+        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        exportImage = pixmap.toImage();
+      }
+
       if (!exportImage.save(fileName)) {
         QMessageBox::warning(qobject_cast<QWidget*>(parent()), tr("Avogadro"),
                              tr("Cannot save file %1.").arg(fileName));
         return;
       }
+      QProcess proc;
+      QStringList args;
+      args << "-y"
+           << "-r" << QString::number(m_animationFPS->value()) << "-i"
+           << baseName + "%0" + QString::number(numberLength) + "d.png"
+           << "-c:v"
+           << "libx264"
+           << "-r"
+           << "30"
+           << "-pix_fmt"
+           << "yuv420p" << baseName + ".mp4";
+      proc.execute("avconv", args);
     }
-  }
-
-  if (selfFilter == tr("GIF (*.gif)")) {
-    GifEnd(&writer);
-  } else if (selfFilter == tr("Movie (*.mp4)")) {
-    QProcess proc;
-    QStringList args;
-    args << "-y"
-         << "-r" << QString::number(m_animationFPS->value()) << "-i"
-         << baseName + "%0" + QString::number(numberLength) + "d.png"
-         << "-c:v"
-         << "libx264"
-         << "-r"
-         << "30"
-         << "-pix_fmt"
-         << "yuv420p" << baseName + ".mp4";
-    proc.execute("avconv", args);
   }
 }
 

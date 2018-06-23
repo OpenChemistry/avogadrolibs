@@ -1,3 +1,5 @@
+include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/libgwavi")
+
 avogadro_plugin(PlayerTool
   "Player tool"
   ToolPlugin
@@ -7,3 +9,5 @@ avogadro_plugin(PlayerTool
   ""
   playertool.qrc
 )
+
+target_link_libraries(PlayerTool LINK_PRIVATE libgwavi)
