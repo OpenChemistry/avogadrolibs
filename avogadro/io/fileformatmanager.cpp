@@ -291,8 +291,8 @@ FileFormatManager::FileFormatManager()
   addFormat(new GromacsFormat);
   addFormat(new MdlFormat);
   addFormat(new PoscarFormat);
-  addFormat(new XyzFormat);
   addFormat(new TrrFormat);
+  addFormat(new XyzFormat);
   addFormat(new LammpsFormat);
 }
 

@@ -43,7 +43,6 @@ namespace Io {
 using Core::Array;
 using Core::Atom;
 using Core::Elements;
-using Core::lexicalCast;
 using Core::Molecule;
 using Core::split;
 using Core::trimmed;
@@ -277,8 +276,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Do we have an animation?
   // EOF check
   int coordSet = 1;
-  int currPos = inStream.tellg();
-  while (currPos != fileLen) {
+  while (static_cast<int>(inStream.tellg()) != fileLen) {
     // Binary header must start with 1993
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
     inStream.read(buff, struct_calcsize(fmt));
