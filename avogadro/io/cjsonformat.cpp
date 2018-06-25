@@ -197,6 +197,23 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       for (Index i = 0; i < atomCount; ++i)
         molecule.setAtomSelected(i, selection[i]);
 
+  // Bonds are optional, but if present should be loaded.
+  json bonds = jsonRoot["bonds"];
+  if (bonds.is_object() && isNumericArray(bonds["connections"]["index"])) {
+    json connections = bonds["connections"]["index"];
+    for (unsigned int i = 0; i < connections.size() / 2; ++i) {
+      molecule.addBond(static_cast<Index>(connections[2 * i]),
+                       static_cast<Index>(connections[2 * i + 1]), 1);
+    }
+    json order = bonds["order"];
+    if (isNumericArray(order)) {
+      for (unsigned int i = 0; i < molecule.bondCount() && i < order.size();
+           ++i) {
+        molecule.bond(i).setOrder(static_cast<int>(order[i]));
+      }
+    }
+  }
+
   json unitCell = jsonRoot["unit cell"];
   if (!unitCell.is_object())
     unitCell = jsonRoot["unitCell"];
