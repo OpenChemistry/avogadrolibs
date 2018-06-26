@@ -533,6 +533,12 @@ public:
   Array<Vector3> coordinate3d(int index) const;
   bool setCoordinate3d(const Array<Vector3>& coords, int index);
 
+  /**
+   * Timestep property is used when molecular dynamics trajectories are read
+   */
+  bool setTimeStep(double timestep, int index);
+  double timeStep(int index, bool& status);
+
 protected:
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
   mutable bool m_graphDirty; // Should the graph be rebuilt before returning it?
@@ -542,6 +548,7 @@ protected:
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
   Array<Array<Vector3>> m_coordinates3d; // Used for conformers/trajectories.
+  Array<double> m_timesteps;
   Array<AtomHybridization> m_hybridizations;
   Array<signed char> m_formalCharges;
 

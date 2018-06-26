@@ -44,6 +44,7 @@ Molecule::Molecule(const Molecule& other)
   , m_positions2d(other.m_positions2d)
   , m_positions3d(other.m_positions3d)
   , m_coordinates3d(other.m_coordinates3d)
+  , m_timesteps(other.m_timesteps)
   , m_hybridizations(other.m_hybridizations)
   , m_formalCharges(other.m_formalCharges)
   , m_vibrationFrequencies(other.m_vibrationFrequencies)
@@ -79,6 +80,7 @@ Molecule::Molecule(Molecule&& other) noexcept
   , m_positions2d(std::move(other.m_positions2d))
   , m_positions3d(std::move(other.m_positions3d))
   , m_coordinates3d(std::move(other.m_coordinates3d))
+  , m_timesteps(std::move(other.m_timesteps))
   , m_hybridizations(std::move(other.m_hybridizations))
   , m_formalCharges(std::move(other.m_formalCharges))
   , m_vibrationFrequencies(std::move(other.m_vibrationFrequencies))
@@ -108,6 +110,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
     m_coordinates3d = other.m_coordinates3d;
+    m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
     m_formalCharges = other.m_formalCharges;
     m_vibrationFrequencies = other.m_vibrationFrequencies;
@@ -153,6 +156,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_positions2d = std::move(other.m_positions2d);
     m_positions3d = std::move(other.m_positions3d);
     m_coordinates3d = std::move(other.m_coordinates3d);
+    m_timesteps = std::move(other.m_timesteps);
     m_hybridizations = std::move(other.m_hybridizations);
     m_formalCharges = std::move(other.m_formalCharges);
     m_vibrationFrequencies = std::move(other.m_vibrationFrequencies);
@@ -776,6 +780,24 @@ bool Molecule::setCoordinate3d(const Array<Vector3>& coords, int index)
   if (static_cast<int>(m_coordinates3d.size()) <= index)
     m_coordinates3d.resize(index + 1);
   m_coordinates3d[index] = coords;
+  return true;
+}
+
+double Molecule::timeStep(int index, bool& status)
+{
+  if (static_cast<int>(m_timesteps.size()) <= index) {
+    status = false;
+    return 0.0;
+  }
+  status = true;
+  return m_timesteps[index];
+}
+
+bool Molecule::setTimeStep(double timestep, int index)
+{
+  if (static_cast<int>(m_timesteps.size()) <= index)
+    m_timesteps.resize(index + 1);
+  m_timesteps[index] = timestep;
   return true;
 }
 
