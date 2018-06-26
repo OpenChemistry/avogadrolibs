@@ -247,6 +247,67 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       CrystalTools::setFractionalCoordinates(molecule, fcoords);
   }
 
+  // Basis set is optional, if present read it in.
+  json basisSet = jsonRoot["basisSet"];
+  if (basisSet.is_object()) {
+    GaussianSet* basis = new GaussianSet;
+    basis->setMolecule(&molecule);
+    // Gather the relevant pieces together so that they can be read in.
+    json shellTypes = basisSet["shellTypes"];
+    json primitivesPerShell = basisSet["primitivesPerShell"];
+    json shellToAtomMap = basisSet["shellToAtomMap"];
+    json exponents = basisSet["exponents"];
+    json coefficients = basisSet["coefficients"];
+
+    int nGTO = 0;
+    for (unsigned int i = 0; i < shellTypes.size(); ++i) {
+      GaussianSet::orbital type;
+      switch (static_cast<int>(shellTypes[i])) {
+        case 0:
+          type = GaussianSet::S;
+          break;
+        case 1:
+          type = GaussianSet::P;
+          break;
+        case 2:
+          type = GaussianSet::D;
+          break;
+        case -2:
+          type = GaussianSet::D5;
+          break;
+        default:
+          // If we encounter GTOs we do not understand, the basis is likely
+          // invalid
+          type = GaussianSet::UU;
+      }
+      if (type != GaussianSet::UU) {
+        int b = basis->addBasis(static_cast<int>(shellToAtomMap[i]), type);
+        for (int j = 0; j < static_cast<int>(primitivesPerShell[i]); ++j) {
+          basis->addGto(b, coefficients[nGTO], exponents[nGTO]);
+          ++nGTO;
+        }
+      }
+    }
+
+    json orbitals = jsonRoot["orbitals"];
+    if (orbitals.is_object() && basis->isValid()) {
+      basis->setElectronCount(orbitals["electronCount"]);
+      json moCoefficients = orbitals["alpha"];
+      json moCoefficientsA = orbitals["alpha"];
+      json moCoefficientsB = orbitals["beta"];
+      if (isNumericArray(moCoefficients)) {
+        std::vector<double> coeffs;
+        for (unsigned int i = 0; i < moCoefficients.size(); ++i)
+          coeffs.push_back(static_cast<double>(moCoefficients[i]));
+        basis->setMolecularOrbitals(coeffs);
+      } else {
+        std::cout << "No orbital cofficients found!" << std::endl;
+      }
+    }
+
+    molecule.setBasisSet(basis);
+  }
+
   return true;
 
   Value root;
