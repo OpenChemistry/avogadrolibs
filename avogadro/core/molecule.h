@@ -474,9 +474,9 @@ public:
   void clearCubes();
 
   /**
-* @brief Get the cubes vector set (if present) for the molecule.
-* @return The cube vector for the molecule
-*/
+   * @brief Get the cubes vector set (if present) for the molecule.
+   * @return The cube vector for the molecule
+   */
   std::vector<Cube*> cubes() { return m_cubes; }
   const std::vector<Cube*> cubes() const { return m_cubes; }
 
@@ -533,6 +533,12 @@ public:
   int coordinate3d() const;
   bool setCoordinate3d(const Array<Vector3>& coords, int index);
 
+  /**
+   * Timestep property is used when molecular dynamics trajectories are read
+   */
+  bool setTimeStep(double timestep, int index);
+  double timeStep(int index, bool& status);
+
 protected:
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
   mutable bool m_graphDirty; // Should the graph be rebuilt before returning it?
@@ -542,6 +548,7 @@ protected:
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
   Array<Array<Vector3>> m_coordinates3d; // Used for conformers/trajectories.
+  Array<double> m_timesteps;
   Array<AtomHybridization> m_hybridizations;
   Array<signed char> m_formalCharges;
 
@@ -569,15 +576,23 @@ protected:
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
 {
 public:
-  Atom() : AtomTemplate<Molecule>() {}
-  Atom(Molecule* m, Index i) : AtomTemplate<Molecule>(m, i) {}
+  Atom()
+    : AtomTemplate<Molecule>()
+  {}
+  Atom(Molecule* m, Index i)
+    : AtomTemplate<Molecule>(m, i)
+  {}
 };
 
 class AVOGADROCORE_EXPORT Bond : public BondTemplate<Molecule>
 {
 public:
-  Bond() : BondTemplate<Molecule>() {}
-  Bond(Molecule* m, Index i) : BondTemplate<Molecule>(m, i) {}
+  Bond()
+    : BondTemplate<Molecule>()
+  {}
+  Bond(Molecule* m, Index i)
+    : BondTemplate<Molecule>(m, i)
+  {}
 };
 
 inline unsigned char Molecule::atomicNumber(Index atomId) const
