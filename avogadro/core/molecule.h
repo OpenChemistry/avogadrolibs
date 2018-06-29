@@ -530,7 +530,7 @@ public:
 
   int coordinate3dCount();
   bool setCoordinate3d(int coord);
-  int coordinate3d() const;
+  Array<Vector3> coordinate3d(int index) const;
   bool setCoordinate3d(const Array<Vector3>& coords, int index);
 
   /**

@@ -770,10 +770,9 @@ bool Molecule::setCoordinate3d(int coord)
   return false;
 }
 
-int Molecule::coordinate3d() const
+Array<Vector3> Molecule::coordinate3d(int index) const
 {
-  /// FIXME: Needs adding in...
-  return 0;
+  return m_coordinates3d[index];
 }
 
 bool Molecule::setCoordinate3d(const Array<Vector3>& coords, int index)
