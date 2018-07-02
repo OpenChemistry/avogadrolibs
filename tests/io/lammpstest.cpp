@@ -49,6 +49,7 @@ TEST(LammpsTest, read)
 
   // First, let's check the unit cell
   UnitCell* uc = molecule.unitCell();
+  bool status = true;
 
   EXPECT_EQ(uc->aVector(),
             Vector3(2.7155000000000001e+01, 0.00000000, 0.00000000));
@@ -62,6 +63,9 @@ TEST(LammpsTest, read)
   EXPECT_EQ(molecule.atomCount(), 1000);
   EXPECT_EQ(molecule.coordinate3dCount(), 11);
 
+  // First frame
+  EXPECT_EQ(molecule.timeStep(0, status), 0);
+
   // Check a couple of positions to make sure they were read correctly
   EXPECT_EQ(molecule.atom(1).position3d().x(), 1.35775);
   EXPECT_EQ(molecule.atom(1).position3d().y(), 1.35775);
@@ -69,4 +73,45 @@ TEST(LammpsTest, read)
   EXPECT_EQ(molecule.atom(4).position3d().x(), 10.862);
   EXPECT_EQ(molecule.atom(4).position3d().y(), 0);
   EXPECT_EQ(molecule.atom(4).position3d().z(), 0);
+
+  // Switching to second frame
+  EXPECT_TRUE(molecule.setCoordinate3d(1));
+  EXPECT_EQ(molecule.timeStep(1, status), 10);
+
+  // Check a couple of positions to make sure they were read correctly
+  EXPECT_EQ(molecule.atom(1).position3d().x(), 1.34317);
+  EXPECT_EQ(molecule.atom(1).position3d().y(), 1.30464);
+  EXPECT_EQ(molecule.atom(1).position3d().z(), 1.42722);
+  EXPECT_EQ(molecule.atom(4).position3d().x(), 10.7867);
+  EXPECT_EQ(molecule.atom(4).position3d().y(), -0.0484348);
+  EXPECT_EQ(molecule.atom(4).position3d().z(), -0.0809766);
+
+  // Switching to last frame
+  EXPECT_TRUE(molecule.setCoordinate3d(10));
+  EXPECT_EQ(molecule.timeStep(10, status), 100);
+
+  // Check a couple of positions to make sure they were read correctly
+  EXPECT_EQ(molecule.atom(1).position3d().x(), 1.37614);
+  EXPECT_EQ(molecule.atom(1).position3d().y(), 1.34302);
+  EXPECT_EQ(molecule.atom(1).position3d().z(), 1.39375);
+  EXPECT_EQ(molecule.atom(4).position3d().x(), 10.6846);
+  EXPECT_EQ(molecule.atom(4).position3d().y(), -0.0479311);
+  EXPECT_EQ(molecule.atom(4).position3d().z(), -0.0770097);
+}
+
+TEST(LammpsTest, modes)
+{
+  // This tests some of the mode setting/checking code
+  LammpsFormat format;
+  format.open(AVOGADRO_DATA "/data/silicon_bulk.dump", FileFormat::Read);
+  EXPECT_TRUE(format.isMode(FileFormat::Read));
+  EXPECT_TRUE(format.mode() & FileFormat::Read);
+  EXPECT_FALSE(format.isMode(FileFormat::Write));
+
+  // Try some combinations now.
+  format.open(AVOGADRO_DATA "/data/silicon_bulk.dump",
+              FileFormat::Read | FileFormat::MultiMolecule);
+  EXPECT_TRUE(format.isMode(FileFormat::Read));
+  EXPECT_TRUE(format.isMode(FileFormat::Read | FileFormat::MultiMolecule));
+  EXPECT_TRUE(format.isMode(FileFormat::MultiMolecule));
 }
