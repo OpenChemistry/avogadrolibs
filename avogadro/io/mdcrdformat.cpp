@@ -22,8 +22,6 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
-#include <QtWidgets/QInputDialog>
-
 #include <iomanip>
 #include <istream>
 #include <ostream>
@@ -68,83 +66,22 @@ bool MdcrdFormat::read(std::istream& inStream, Core::Molecule& mol)
   int fileLen = inStream.tellg();
   inStream.seekg(0, inStream.beg);
 
-  bool ok;
-  int natoms = QInputDialog::getInt(NULL, "Prompt", "Number of atoms:", 1, 1,
-                                    INT_MAX, 1, &ok);
-  if (!ok) {
-    appendError("Number of atoms not inputted.");
-    return false;
-  }
-
-  QStringList items;
-  items << "Yes"
-        << "No";
-
-  QString item = QInputDialog::getItem(
-    NULL, "Prompt", "Does trajectory contain box coordinates?", items, 0, false,
-    &ok);
-
-  if (!ok) {
-    appendError("Box coordinate boolean not inputted.");
-    return false;
-  }
-
   typedef map<string, unsigned char> AtomTypeMap;
   AtomTypeMap atomTypes;
   unsigned char customElementCounter = CustomElementMin;
-  int coordSet = 0;
 
   Array<Vector3> positions;
-  positions.reserve(natoms);
 
   getline(inStream, title);
   mol.setData("name", title);
 
   while ((static_cast<int>(inStream.tellg()) != fileLen) &&
          (static_cast<int>(inStream.tellg()) != MDCRD_EOF)) {
-    for (int i = 0; i < natoms; ++i) {
-      inStream >> x >> y >> z;
-      if (coordSet == 0) {
-        Vector3 pos(x, y, z);
-
-        AtomTypeMap::const_iterator it;
-        atomTypes.insert(std::make_pair(to_string(i), customElementCounter++));
-        it = atomTypes.find(to_string(i));
-        // if (customElementCounter > CustomElementMax) {
-        //   appendError("Custom element type limit exceeded.");
-        //   return false;
-        // }
-        Atom newAtom = mol.addAtom(it->second);
-        newAtom.setPosition3d(pos);
-      } else {
-        Vector3 pos(x, y, z);
-        positions.push_back(pos);
-      }
-    }
-
-    if (coordSet == 0) {
-      // Set the custom element map if needed
-      if (!atomTypes.empty()) {
-        Molecule::CustomElementMap elementMap;
-        for (AtomTypeMap::const_iterator it = atomTypes.begin(),
-                                         itEnd = atomTypes.end();
-             it != itEnd; ++it) {
-          elementMap.insert(std::make_pair(it->second, "Atom " + it->first));
-        }
-        mol.setCustomElementMap(elementMap);
-      }
-      mol.setCoordinate3d(mol.atomPositions3d(), coordSet++);
-    } else {
-      mol.setCoordinate3d(positions, coordSet++);
-      positions.clear();
-    }
-
-    if (item.toStdString() == "Yes") {
-      inStream >> x >> y >> z;
-      mol.setUnitCell(
-        new UnitCell(Vector3(x, 0, 0), Vector3(0, y, 0), Vector3(0, 0, z)));
-    }
+    inStream >> x >> y >> z;
+    Vector3 pos(x, y, z);
+    positions.push_back(pos);
   }
+  mol.setCoordinate3d(positions, 0);
   return true;
 }
 
