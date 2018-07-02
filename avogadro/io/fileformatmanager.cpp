@@ -24,6 +24,7 @@
 #include "lammpsformat.h"
 #include "mdlformat.h"
 #include "poscarformat.h"
+#include "trrformat.h"
 #include "xyzformat.h"
 
 #include <algorithm>
@@ -159,7 +160,7 @@ bool FileFormatManager::addFormat(FileFormat* format)
 namespace {
 // Lookup each key from "keys" in "map", and remove "val" from the Map's
 // data value (which is a vector of ValueType)
-template <typename Map, typename VectorOfKeys, typename ValueType>
+template<typename Map, typename VectorOfKeys, typename ValueType>
 void removeFromMap(Map& map, const VectorOfKeys& keys, const ValueType& val)
 {
   typedef typename VectorOfKeys::const_iterator KeysIter;
@@ -249,8 +250,8 @@ std::vector<const FileFormat*> FileFormatManager::fileFormats(
 {
   std::vector<const FileFormat*> result;
 
-  for (std::vector<FileFormat *>::const_iterator it = m_formats.begin(),
-                                                 itEnd = m_formats.end();
+  for (std::vector<FileFormat*>::const_iterator it = m_formats.begin(),
+                                                itEnd = m_formats.end();
        it != itEnd; ++it) {
     if (filter == FileFormat::None ||
         (filter & (*it)->supportedOperations()) == filter) {
@@ -290,6 +291,7 @@ FileFormatManager::FileFormatManager()
   addFormat(new GromacsFormat);
   addFormat(new MdlFormat);
   addFormat(new PoscarFormat);
+  addFormat(new TrrFormat);
   addFormat(new XyzFormat);
   addFormat(new LammpsFormat);
 }
