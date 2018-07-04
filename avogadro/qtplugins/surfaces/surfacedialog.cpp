@@ -35,6 +35,8 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
   m_ui->surfaceCombo->addItem(tr("Solvent Accessible"), Surfaces::Type::SolventAccessible);
   m_ui->surfaceCombo->addItem(tr("Solvent Excluded"), Surfaces::Type::SolventExcluded);
 
+  connect(m_ui->surfaceCombo, SIGNAL(currentIndexChanged(int)),
+          SLOT(surfaceComboChanged(int)));
   connect(m_ui->resolutionCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(resolutionComboChanged(int)));
   connect(m_ui->calculateButton, SIGNAL(clicked()), SLOT(calculateClicked()));
@@ -43,6 +45,17 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
 SurfaceDialog::~SurfaceDialog()
 {
   delete m_ui;
+}
+
+void SurfaceDialog::surfaceComboChanged(int n)
+{
+  int type = m_ui->surfaceCombo->itemData(n).toInt();
+  if (type == Surfaces::Type::MolecularOrbital
+    || type ==  Surfaces::Type::FromFile) {
+    m_ui->orbitalCombo->setEnabled(true);
+  } else {
+    m_ui->orbitalCombo->setEnabled(false);
+  }
 }
 
 void SurfaceDialog::resolutionComboChanged(int n)
@@ -87,7 +100,7 @@ void SurfaceDialog::setupBasis(int numElectrons, int numMOs)
   return;
 
   m_ui->orbitalCombo->setVisible(true);
-  m_ui->orbitalCombo->setEnabled(true);
+  m_ui->orbitalCombo->setEnabled(false);
 
   m_ui->surfaceCombo->addItem(tr("Molecular Orbital"), Surfaces::Type::MolecularOrbital);
   m_ui->surfaceCombo->addItem(tr("Electron Density"), Surfaces::Type::ElectronDensity);
