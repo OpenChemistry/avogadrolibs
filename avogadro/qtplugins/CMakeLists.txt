@@ -127,7 +127,6 @@ endif()
 
 if(USE_MOLEQUEUE)
   add_subdirectory(apbs)
-  add_subdirectory(mongochem)
   add_subdirectory(gamessinput)
   add_subdirectory(quantuminput)
   add_subdirectory(scriptfileformats)
