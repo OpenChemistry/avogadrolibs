@@ -285,6 +285,7 @@ void Surfaces::meshFinished()
 {
   m_dialog->reenableCalculateButton();
   m_molecule->emitChanged(QtGui::Molecule::Added);
+  // TODO: enable the mesh display type
 }
 
 } // namespace QtPlugins
