@@ -3,6 +3,7 @@
   This source file is part of the Avogadro project.
 
   Copyright 2012-2013 Kitware, Inc.
+  Copyright 2018 Geoffrey Hutchison
 
   This source code is released under the New BSD License, (the "License").
 
@@ -27,6 +28,7 @@ namespace Avogadro {
 namespace QtGui {
 class MeshGenerator;
 }
+
 namespace Core {
 class BasisSet;
 class Cube;
@@ -37,8 +39,7 @@ namespace QtPlugins {
 
 /**
  * @brief The Surfaces plugin registers quantum file formats, adds several
- * menu entries to calculate properties if a valid quantum data output file was
- * loaded.
+ * menu entries to calculate surfaces, including QM ones
  * @author Marcus D. Hanwell
  */
 
@@ -54,8 +55,19 @@ public:
   explicit Surfaces(QObject* parent = 0);
   ~Surfaces();
 
-  QString name() const { return tr("Surfaces"); }
+  enum Type {
+    VanDerWaals,
+    SolventAccessible,
+    SolventExcluded,
+    ElectrostaticPotential,
+    ElectronDensity,
+    MolecularOrbital,
+    SpinDensity,
+    FromFile,
+    Unknown
+  };
 
+  QString name() const { return tr("Surfaces"); }
   QString description() const { return tr("Read and render surfaces."); }
 
   QList<QAction*> actions() const override;
@@ -66,9 +78,12 @@ public:
 
 private slots:
   void surfacesActivated();
-  void calculateSurface(int index, float isosurfaceValue,
-                        float resolutionStepSize);
-  void displayCube();
+  void calculateSurface();
+  void calculateEDT();
+  void calculateQM();
+  void calculateCube();
+
+  void displayMesh();
   void meshFinished();
 
 private:
@@ -78,8 +93,8 @@ private:
   QtGui::Molecule* m_molecule;
   Core::BasisSet* m_basis;
 
-  GaussianSetConcurrent* m_concurrent;
-  SlaterSetConcurrent* m_concurrent2;
+  GaussianSetConcurrent* m_gaussianConcurrent;
+  SlaterSetConcurrent* m_slaterConcurrent;
 
   Core::Cube* m_cube;
   std::vector<Core::Cube*> m_cubes;
@@ -92,6 +107,7 @@ private:
 
   SurfaceDialog* m_dialog;
 };
+
 }
 }
 

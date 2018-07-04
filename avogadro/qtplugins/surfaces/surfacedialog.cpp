@@ -26,6 +26,15 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
 {
   m_ui->setupUi(this);
 
+  m_ui->orbitalCombo->setVisible(false);
+  m_ui->spinCombo->setVisible(false);
+  m_ui->chargeCombo->setVisible(false);
+
+  // set the data for the default items
+  m_ui->surfaceCombo->addItem(tr("Van der Waals"), Surfaces::Type::VanDerWaals);
+  m_ui->surfaceCombo->addItem(tr("Solvent Accessible"), Surfaces::Type::SolventAccessible);
+  m_ui->surfaceCombo->addItem(tr("Solvent Excluded"), Surfaces::Type::SolventExcluded);
+
   connect(m_ui->resolutionCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(resolutionComboChanged(int)));
   connect(m_ui->calculateButton, SIGNAL(clicked()), SLOT(calculateClicked()));
@@ -38,6 +47,7 @@ SurfaceDialog::~SurfaceDialog()
 
 void SurfaceDialog::resolutionComboChanged(int n)
 {
+  // resolutions are in Angstrom
   switch (n) {
     case 0: // Very low resolution
       m_ui->resolutionDoubleSpinBox->setValue(0.5);
@@ -72,53 +82,78 @@ void SurfaceDialog::resolutionComboChanged(int n)
 
 void SurfaceDialog::setupBasis(int numElectrons, int numMOs)
 {
+  // only if we have electrons
   if (numMOs < 1)
-    return;
+  return;
 
-  m_ui->surfaceCombo->setEnabled(true);
-  m_ui->surfaceCombo->clear();
-  QString text("Electron Density");
-  m_ui->surfaceCombo->addItem(text);
+  m_ui->orbitalCombo->setVisible(true);
+  m_ui->orbitalCombo->setEnabled(true);
+
+  m_ui->surfaceCombo->addItem(tr("Molecular Orbital"), Surfaces::Type::MolecularOrbital);
+  m_ui->surfaceCombo->addItem(tr("Electron Density"), Surfaces::Type::ElectronDensity);
+  // TODO: this class doesn't know about alpha / beta spin right now
+  /*
+  if (numElectrons % 2 != 0) {
+    m_ui->surfaceCombo->addItem(tr("Spin Density"), Surfaces::Type::SpinDensity);
+    m_ui->spinCombo->setVisible(true);
+    m_ui->spinCombo->setEnabled(true);
+  }
+  */
+
+  // TODO: get this from the basis information
+  QString text;
   for (int i = 1; i <= numMOs; ++i) {
     text = tr("MO %L1", "Molecular orbital").arg(i);
     if (i == numElectrons / 2)
       text += ' ' + tr("(HOMO)", "Highest occupied molecular orbital");
     if (i == numElectrons / 2 + 1)
       text += ' ' + tr("(LUMO)", "Lowest unoccupied molecular orbital");
-    m_ui->surfaceCombo->addItem(text);
+    m_ui->orbitalCombo->addItem(text);
   }
-  m_ui->surfaceCombo->setCurrentIndex(numElectrons / 2);
 
-  m_ui->resolutionCombo->setEnabled(true);
-  m_ui->isosurfaceLineEdit->setEnabled(true);
-  m_ui->calculateButton->setEnabled(true);
+  m_ui->orbitalCombo->setCurrentIndex(numElectrons / 2);
 }
 
-void SurfaceDialog::setupCube(int numCubes)
+void SurfaceDialog::setupCubes(QStringList cubeNames)
 {
-  if (numCubes < 1)
+  if (cubeNames.size() < 1)
     return;
 
-  m_ui->surfaceCombo->setEnabled(true);
-  m_ui->surfaceCombo->clear();
-  for (int i = 1; i <= numCubes; ++i) {
-    QString text(tr("Cube %L1", "Cube File").arg(i));
-    m_ui->surfaceCombo->addItem(text);
-  }
-  m_ui->surfaceCombo->setCurrentIndex(0);
+  m_ui->orbitalCombo->setVisible(true);
+  m_ui->orbitalCombo->setEnabled(true);
 
-  m_ui->isosurfaceLineEdit->setEnabled(true);
-  m_ui->calculateButton->setEnabled(true);
+  m_ui->surfaceCombo->addItem(tr("From File"), Surfaces::Type::FromFile);
+
+  for (int i = 0; i < cubeNames.size(); ++i) {
+    m_ui->orbitalCombo->addItem(cubeNames[i]);
+  }
+  m_ui->orbitalCombo->setCurrentIndex(0);
+}
+
+Surfaces::Type SurfaceDialog::surfaceType()
+{
+  return static_cast<Surfaces::Type>(m_ui->surfaceCombo->currentData().toInt());
+}
+
+int SurfaceDialog::surfaceIndex()
+{
+  return m_ui->orbitalCombo->currentIndex();
+}
+
+float SurfaceDialog::isosurfaceValue()
+{
+  return static_cast<float>(m_ui->isosurfaceDoubleSpinBox->value());
+}
+
+float SurfaceDialog::resolution()
+{
+  return static_cast<float>(m_ui->resolutionDoubleSpinBox->value());
 }
 
 void SurfaceDialog::calculateClicked()
 {
-  float resolutionStepSize(
-    static_cast<float>(m_ui->resolutionDoubleSpinBox->value()));
-  float isosurfaceValue(m_ui->isosurfaceLineEdit->text().toFloat());
   m_ui->calculateButton->setEnabled(false);
-  emit calculateClickedSignal(m_ui->surfaceCombo->currentIndex(),
-                              isosurfaceValue, resolutionStepSize);
+  emit calculateClickedSignal();
 }
 
 void SurfaceDialog::reenableCalculateButton()

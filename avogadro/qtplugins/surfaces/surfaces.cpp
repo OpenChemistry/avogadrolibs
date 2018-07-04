@@ -3,6 +3,7 @@
   This source file is part of the Avogadro project.
 
   Copyright 2012-2013 Kitware, Inc.
+  Copyright 2018 Geoffrey Hutchison
 
   This source code is released under the New BSD License, (the "License").
 
@@ -51,16 +52,16 @@ using Core::Cube;
 
 Surfaces::Surfaces(QObject* p)
   : ExtensionPlugin(p), m_progressDialog(nullptr), m_molecule(nullptr),
-    m_basis(nullptr), m_concurrent(nullptr), m_concurrent2(nullptr),
+    m_basis(nullptr), m_gaussianConcurrent(nullptr), m_slaterConcurrent(nullptr),
     m_cube(nullptr), m_mesh1(nullptr), m_mesh2(nullptr),
     m_meshGenerator1(nullptr), m_meshGenerator2(nullptr), m_dialog(nullptr)
 {
   QAction* action = new QAction(this);
-  action->setText(tr("Create surfaces..."));
+  action->setText(tr("Create Surfaces..."));
   connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
   m_actions.push_back(action);
 
-  // Register our quantum file format.
+  // Register quantum file formats
   Io::FileFormatManager::registerFormat(new QuantumIO::GAMESSUSOutput);
   Io::FileFormatManager::registerFormat(new QuantumIO::GaussianFchk);
   Io::FileFormatManager::registerFormat(new QuantumIO::GaussianCube);
@@ -100,102 +101,160 @@ QStringList Surfaces::menuPath(QAction*) const
 
 void Surfaces::surfacesActivated()
 {
-  if (!m_basis && !(m_cubes.size() > 0))
-    return;
-
   if (!m_dialog) {
     m_dialog = new SurfaceDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(calculateClickedSignal(int, float, float)),
-            SLOT(calculateSurface(int, float, float)));
+    connect(m_dialog, SIGNAL(calculateClickedSignal()), SLOT(calculateSurface()));
   }
 
   if (m_basis) {
-    m_cubes.resize(m_basis->molecularOrbitalCount() + 1);
+    // we have quantum data, set up the dialog accordingly
     m_dialog->setupBasis(m_basis->electronCount(),
                          m_basis->molecularOrbitalCount());
-  } else if (m_cubes.size() > 0) {
-    m_dialog->setupCube(m_cubes.size());
+  }
+  if (m_cubes.size() > 0) {
+    QStringList cubeNames;
+    for (unsigned int i = 0; i < m_cubes.size(); ++i) {
+      cubeNames << m_cubes[i]->name().c_str();
+    }
+
+    m_dialog->setupCubes(cubeNames);
   }
 
   m_dialog->show();
 }
 
-void Surfaces::calculateSurface(int index, float isosurfaceValue,
-                                     float resolutionStepSize)
+void Surfaces::calculateSurface()
 {
-  if (m_basis) {
-    if (!m_progressDialog) {
-      m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
-      m_progressDialog->setCancelButtonText(nullptr);
-      m_progressDialog->setWindowModality(Qt::NonModal);
-    }
+  if (!m_dialog)
+    return;
 
-    if (!m_cube)
-      m_cube = m_molecule->addCube();
+  Type type = m_dialog->surfaceType();
+  if (!m_cube)
+    m_cube = m_molecule->addCube();
+    // TODO we should add a name, type, etc.
 
-    if (!m_concurrent)
-      m_concurrent = new GaussianSetConcurrent(this);
-    if (!m_concurrent2)
-      m_concurrent2 = new SlaterSetConcurrent(this);
-    m_concurrent->setMolecule(m_molecule);
-    m_concurrent2->setMolecule(m_molecule);
+  switch(type) {
+    case VanDerWaals:
+    case SolventAccessible:
+    case SolventExcluded:
+    calculateEDT();
+    // pass a molecule and return a Cube for m_cube
+    //   displayMesh();
+    break;
 
-    m_isoValue = isosurfaceValue;
-    m_cube->setLimits(*m_molecule, resolutionStepSize, 5.0);
-    QString progressText;
-    if (index == 0) {
-      if (dynamic_cast<GaussianSet*>(m_basis)) {
-        m_concurrent->calculateElectronDensity(m_cube);
-      } else {
-        m_concurrent2->calculateElectronDensity(m_cube);
-      }
-      progressText = tr("Calculating electron density");
-    } else {
-      if (dynamic_cast<GaussianSet*>(m_basis)) {
-        m_concurrent->calculateMolecularOrbital(m_cube, index - 1);
-      } else {
-        m_concurrent2->calculateMolecularOrbital(m_cube, index - 1);
-      }
-      progressText = tr("Calculating molecular orbital %L1").arg(index - 1);
-    }
-    // Set up the progress dialog.
-    if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_progressDialog->setWindowTitle(progressText);
-      m_progressDialog->setRange(m_concurrent->watcher().progressMinimum(),
-                                 m_concurrent->watcher().progressMaximum());
-      m_progressDialog->setValue(m_concurrent->watcher().progressValue());
-      m_progressDialog->show();
+    case ElectronDensity:
+    case MolecularOrbital:
+    case ElectrostaticPotential:
+    case SpinDensity:
+    calculateQM();
+    break;
 
-      connect(&m_concurrent->watcher(), SIGNAL(progressValueChanged(int)),
-              m_progressDialog, SLOT(setValue(int)));
-      connect(&m_concurrent->watcher(), SIGNAL(progressRangeChanged(int, int)),
-              m_progressDialog, SLOT(setRange(int, int)));
-      connect(&m_concurrent->watcher(), SIGNAL(finished()),
-              SLOT(displayCube()));
-    } else {
-      m_progressDialog->setWindowTitle(progressText);
-      m_progressDialog->setRange(m_concurrent2->watcher().progressMinimum(),
-                                 m_concurrent2->watcher().progressMaximum());
-      m_progressDialog->setValue(m_concurrent2->watcher().progressValue());
-      m_progressDialog->show();
-
-      connect(&m_concurrent2->watcher(), SIGNAL(progressValueChanged(int)),
-              m_progressDialog, SLOT(setValue(int)));
-      connect(&m_concurrent2->watcher(), SIGNAL(progressRangeChanged(int, int)),
-              m_progressDialog, SLOT(setRange(int, int)));
-      connect(&m_concurrent2->watcher(), SIGNAL(finished()),
-              SLOT(displayCube()));
-    }
-  }
-
-  else if (m_cubes.size() > 0) {
-    m_cube = m_cubes[index];
-    m_isoValue = isosurfaceValue;
-    displayCube();
+    case FromFile:
+    default:
+    calculateCube();
+    break;
   }
 }
 
-void Surfaces::displayCube()
+void Surfaces::calculateEDT()
+{
+  // pass the molecule to the EDT, plus the surface type
+  // get back a Cube object in m_cube
+}
+
+void Surfaces::calculateQM()
+{
+  if (!m_basis || !m_dialog)
+    return; // nothing to do
+
+  // set up QtConcurrent calculators for Gaussian or Slater basis sets
+  if (dynamic_cast<GaussianSet*>(m_basis)) {
+    if (!m_gaussianConcurrent)
+      m_gaussianConcurrent = new GaussianSetConcurrent(this);
+    m_gaussianConcurrent->setMolecule(m_molecule);
+  } else {
+    if (!m_slaterConcurrent)
+      m_slaterConcurrent = new SlaterSetConcurrent(this);
+    m_slaterConcurrent->setMolecule(m_molecule);
+  }
+
+  // TODO: Check to see if this cube or surface has already been computed
+  if (!m_progressDialog) {
+    m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
+    m_progressDialog->setCancelButtonText(nullptr);
+    m_progressDialog->setWindowModality(Qt::NonModal);
+  }
+
+  if (!m_cube)
+    m_cube = m_molecule->addCube();
+
+  Type type = m_dialog->surfaceType();
+  int index = m_dialog->surfaceIndex();
+  m_isoValue = m_dialog->isosurfaceValue();
+  m_cube->setLimits(*m_molecule, m_dialog->resolution(), 5.0);
+
+  QString progressText;
+  if (type == ElectronDensity) {
+    progressText = tr("Calculating electron density");
+    if (dynamic_cast<GaussianSet*>(m_basis)) {
+      m_gaussianConcurrent->calculateElectronDensity(m_cube);
+    } else {
+      m_slaterConcurrent->calculateElectronDensity(m_cube);
+    }
+  }
+
+  else if (type == MolecularOrbital) {
+    progressText = tr("Calculating molecular orbital %L1").arg(index);
+    if (dynamic_cast<GaussianSet*>(m_basis)) {
+        m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index);
+    } else {
+      m_slaterConcurrent->calculateMolecularOrbital(m_cube, index);
+    }
+  }
+
+  // Set up the progress dialog.
+  if (dynamic_cast<GaussianSet*>(m_basis)) {
+    m_progressDialog->setWindowTitle(progressText);
+    m_progressDialog->setRange(m_gaussianConcurrent->watcher().progressMinimum(),
+    m_gaussianConcurrent->watcher().progressMaximum());
+    m_progressDialog->setValue(m_gaussianConcurrent->watcher().progressValue());
+    m_progressDialog->show();
+
+    connect(&m_gaussianConcurrent->watcher(), SIGNAL(progressValueChanged(int)),
+    m_progressDialog, SLOT(setValue(int)));
+    connect(&m_gaussianConcurrent->watcher(), SIGNAL(progressRangeChanged(int, int)),
+    m_progressDialog, SLOT(setRange(int, int)));
+    connect(&m_gaussianConcurrent->watcher(), SIGNAL(finished()),
+    SLOT(displayMesh()));
+  } else {
+    // slaters
+      m_progressDialog->setWindowTitle(progressText);
+      m_progressDialog->setRange(m_slaterConcurrent->watcher().progressMinimum(),
+                                 m_slaterConcurrent->watcher().progressMaximum());
+      m_progressDialog->setValue(m_slaterConcurrent->watcher().progressValue());
+      m_progressDialog->show();
+
+      connect(&m_slaterConcurrent->watcher(), SIGNAL(progressValueChanged(int)),
+              m_progressDialog, SLOT(setValue(int)));
+      connect(&m_slaterConcurrent->watcher(), SIGNAL(progressRangeChanged(int, int)),
+              m_progressDialog, SLOT(setRange(int, int)));
+      connect(&m_slaterConcurrent->watcher(), SIGNAL(finished()),
+              SLOT(displayMesh()));
+    }
+}
+
+void Surfaces::calculateCube()
+{
+  if (!m_dialog || m_cubes.size() == 0)
+    return;
+
+  // check bounds
+  m_cube = m_cubes[m_dialog->surfaceIndex()];
+  m_isoValue = m_dialog->isosurfaceValue();
+  displayMesh();
+}
+
+void Surfaces::displayMesh()
 {
   if (!m_cube)
     return;
@@ -209,6 +268,9 @@ void Surfaces::displayCube()
   m_meshGenerator1->initialize(m_cube, m_mesh1, m_isoValue);
   m_meshGenerator1->start();
 
+  // TODO - only do this if we're generating an orbital
+  //    and we need two meshes
+  //   How do we know? - likely ask the cube if it's an MO?
   if (!m_mesh2)
     m_mesh2 = m_molecule->addMesh();
   if (!m_meshGenerator2) {
@@ -224,5 +286,6 @@ void Surfaces::meshFinished()
   m_dialog->reenableCalculateButton();
   m_molecule->emitChanged(QtGui::Molecule::Added);
 }
-}
-}
+
+} // namespace QtPlugins
+} // namespace Avogadro
