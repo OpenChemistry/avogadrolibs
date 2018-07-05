@@ -121,6 +121,7 @@ add_subdirectory(vrml)
 add_subdirectory(workflows)
 
 if(USE_VTK)
+  add_subdirectory(plotpdf)
   add_subdirectory(plotrmsd)
   add_subdirectory(plotxrd)
 endif()
