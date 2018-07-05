@@ -38,7 +38,10 @@ public:
     Vector3f vertex; // 12 bytes
     Vector4ub color; //  4 bytes
 
-    PackedVertex(const Vector3f& v, const Vector4ub& c) : vertex(v), color(c) {}
+    PackedVertex(const Vector3f& v, const Vector4ub& c)
+      : vertex(v)
+      , color(c)
+    {}
     static int vertexOffset() { return 0; }
     static int colorOffset() { return static_cast<int>(sizeof(Vector3f)); }
   };

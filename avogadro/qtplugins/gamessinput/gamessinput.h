@@ -45,7 +45,10 @@ public:
 
   QString name() const override { return tr("GAMESS input"); }
 
-  QString description() const override { return tr("Generate input for GAMESS."); }
+  QString description() const override
+  {
+    return tr("Generate input for GAMESS.");
+  }
 
   QList<QAction*> actions() const override;
 

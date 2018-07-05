@@ -39,7 +39,10 @@ public:
 
   QString name() const override { return tr("Van der Waals"); }
 
-  QString description() const override { return tr("Simple display of VdW spheres."); }
+  QString description() const override
+  {
+    return tr("Simple display of VdW spheres.");
+  }
 
   bool isEnabled() const override;
 

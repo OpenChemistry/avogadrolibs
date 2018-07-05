@@ -43,7 +43,10 @@ public:
 
   QString name() const override { return tr("Symmetry Elements"); }
 
-  QString description() const override { return tr("Render symmetry elements."); }
+  QString description() const override
+  {
+    return tr("Render symmetry elements.");
+  }
 
   bool isEnabled() const override;
 

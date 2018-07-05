@@ -52,7 +52,10 @@ public:
 
   QString name() const override { return tr("Workflow scripts"); }
 
-  QString description() const override { return tr("Run external workflow commands"); }
+  QString description() const override
+  {
+    return tr("Run external workflow commands");
+  }
 
   QList<QAction*> actions() const override;
 

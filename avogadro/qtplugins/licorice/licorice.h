@@ -39,7 +39,10 @@ public:
 
   QString name() const override { return tr("Licorice"); }
 
-  QString description() const override { return tr("Render atoms as licorice."); }
+  QString description() const override
+  {
+    return tr("Render atoms as licorice.");
+  }
 
   bool isEnabled() const override;
 

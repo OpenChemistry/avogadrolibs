@@ -22,7 +22,8 @@
 #include "symmetrywidget.h"
 
 namespace msym {
-extern "C" {
+extern "C"
+{
 #include <libmsym/msym.h>
 }
 }

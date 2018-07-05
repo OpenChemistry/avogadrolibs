@@ -56,7 +56,10 @@ public:
 
   QString name() const override { return tr("Quantum output"); }
 
-  QString description() const override { return tr("Read output from quantum codes."); }
+  QString description() const override
+  {
+    return tr("Read output from quantum codes.");
+  }
 
   QList<QAction*> actions() const override;
 

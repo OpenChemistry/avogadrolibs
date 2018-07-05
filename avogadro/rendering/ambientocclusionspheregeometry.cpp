@@ -552,8 +552,12 @@ class AmbientOcclusionBaker
 {
 public:
   AmbientOcclusionBaker(AmbientOcclusionRenderer* renderer, GLint textureSize_)
-    : m_renderer(renderer), m_textureSize(textureSize_), m_depthTexture(0),
-      m_depthFBO(0), m_aoTexture(0), m_aoFBO(0)
+    : m_renderer(renderer)
+    , m_textureSize(textureSize_)
+    , m_depthTexture(0)
+    , m_depthFBO(0)
+    , m_aoTexture(0)
+    , m_aoFBO(0)
   {
     initialize();
   }
@@ -879,8 +883,11 @@ public:
   SphereAmbientOcclusionRenderer(BufferObject& vbo, BufferObject& ibo,
                                  int numSpheres, int numVertices,
                                  int numIndices)
-    : m_vbo(vbo), m_ibo(ibo), m_numSpheres(numSpheres),
-      m_numVertices(numVertices), m_numIndices(numIndices)
+    : m_vbo(vbo)
+    , m_ibo(ibo)
+    , m_numSpheres(numSpheres)
+    , m_numVertices(numVertices)
+    , m_numIndices(numIndices)
   {
     initialize();
   }
@@ -1075,7 +1082,9 @@ private:
 class AmbientOcclusionSphereGeometry::Private
 {
 public:
-  Private() : aoTextureSize(1024) {}
+  Private()
+    : aoTextureSize(1024)
+  {}
 
   BufferObject vbo;
   BufferObject ibo;
@@ -1093,16 +1102,18 @@ public:
 };
 
 AmbientOcclusionSphereGeometry::AmbientOcclusionSphereGeometry()
-  : m_dirty(false), d(new Private)
-{
-}
+  : m_dirty(false)
+  , d(new Private)
+{}
 
 AmbientOcclusionSphereGeometry::AmbientOcclusionSphereGeometry(
   const AmbientOcclusionSphereGeometry& other)
-  : Drawable(other), m_spheres(other.m_spheres), m_indices(other.m_indices),
-    m_dirty(true), d(new Private)
-{
-}
+  : Drawable(other)
+  , m_spheres(other.m_spheres)
+  , m_indices(other.m_indices)
+  , m_dirty(true)
+  , d(new Private)
+{}
 
 AmbientOcclusionSphereGeometry::~AmbientOcclusionSphereGeometry()
 {

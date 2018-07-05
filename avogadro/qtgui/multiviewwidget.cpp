@@ -32,7 +32,10 @@ class ActiveWidgetFilter : public QObject
   Q_OBJECT
 
 public:
-  ActiveWidgetFilter(MultiViewWidget* p = 0) : QObject(p), m_widget(p) {}
+  ActiveWidgetFilter(MultiViewWidget* p = 0)
+    : QObject(p)
+    , m_widget(p)
+  {}
 
 signals:
   void activeWidget(QWidget* widget);
@@ -54,14 +57,13 @@ protected:
 };
 
 MultiViewWidget::MultiViewWidget(QWidget* p, Qt::WindowFlags f)
-  : QWidget(p, f), m_factory(nullptr), m_activeWidget(nullptr),
-    m_activeFilter(new ActiveWidgetFilter(this))
-{
-}
+  : QWidget(p, f)
+  , m_factory(nullptr)
+  , m_activeWidget(nullptr)
+  , m_activeFilter(new ActiveWidgetFilter(this))
+{}
 
-MultiViewWidget::~MultiViewWidget()
-{
-}
+MultiViewWidget::~MultiViewWidget() {}
 
 void MultiViewWidget::addWidget(QWidget* widget)
 {

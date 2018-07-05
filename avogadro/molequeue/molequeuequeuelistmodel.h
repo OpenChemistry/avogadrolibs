@@ -95,7 +95,8 @@ public:
   // QAbstractItemModel virtuals
   QVariant data(const QModelIndex& idx, int role) const override;
   Qt::ItemFlags flags(const QModelIndex& idx = QModelIndex()) const override;
-  QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+  QVariant headerData(int section, Qt::Orientation orientation,
+                      int role) const override;
   QModelIndex index(int row, int column,
                     const QModelIndex& parent_ = QModelIndex()) const override;
   QModelIndex parent(const QModelIndex& child) const override;

@@ -76,9 +76,9 @@ public:
    * @param rayDirection Normalized direction of the ray.
    * @return Sorted collection of primitives that were hit.
    */
-  std::multimap<float, Identifier> hits(const Vector3f& rayOrigin,
-                                        const Vector3f& rayEnd,
-                                        const Vector3f& rayDirection) const override;
+  std::multimap<float, Identifier> hits(
+    const Vector3f& rayOrigin, const Vector3f& rayEnd,
+    const Vector3f& rayDirection) const override;
 
   /**
    * Add a sphere to the geometry object.
