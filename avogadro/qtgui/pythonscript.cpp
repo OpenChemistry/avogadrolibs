@@ -26,21 +26,21 @@ namespace Avogadro {
 namespace QtGui {
 
 PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
-  : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
-    m_scriptFilePath(scriptFilePath_)
+  : QObject(parent_)
+  , m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty())
+  , m_scriptFilePath(scriptFilePath_)
 {
   setDefaultPythonInterpretor();
 }
 
 PythonScript::PythonScript(QObject* parent_)
-  : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty())
+  : QObject(parent_)
+  , m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty())
 {
   setDefaultPythonInterpretor();
 }
 
-PythonScript::~PythonScript()
-{
-}
+PythonScript::~PythonScript() {}
 
 void PythonScript::setScriptFilePath(const QString& scriptFile)
 {
@@ -51,7 +51,8 @@ void PythonScript::setDefaultPythonInterpretor()
 {
   m_pythonInterpreter = qgetenv("AVO_PYTHON_INTERPRETER");
   if (m_pythonInterpreter.isEmpty()) {
-    m_pythonInterpreter = QSettings().value(QStringLiteral("interpreters/python")).toString();
+    m_pythonInterpreter =
+      QSettings().value(QStringLiteral("interpreters/python")).toString();
   }
   if (m_pythonInterpreter.isEmpty())
     m_pythonInterpreter = pythonInterpreterPath;
@@ -74,8 +75,8 @@ QByteArray PythonScript::execute(const QStringList& args,
   // Start script
   realArgs.prepend(m_scriptFilePath);
   if (m_debug) {
-    qDebug() << "Executing" << m_pythonInterpreter << realArgs.join(QStringLiteral(" ")) << "<"
-             << scriptStdin;
+    qDebug() << "Executing" << m_pythonInterpreter
+             << realArgs.join(QStringLiteral(" ")) << "<" << scriptStdin;
   }
   proc.start(m_pythonInterpreter, realArgs);
 
@@ -84,7 +85,8 @@ QByteArray PythonScript::execute(const QStringList& args,
     if (!proc.waitForStarted(5000)) {
       m_errors << tr("Error running script '%1 %2': Timed out waiting for "
                      "start (%3).")
-                    .arg(m_pythonInterpreter, realArgs.join(QStringLiteral(" ")),
+                    .arg(m_pythonInterpreter,
+                         realArgs.join(QStringLiteral(" ")),
                          processErrorString(proc));
       return QByteArray();
     }
