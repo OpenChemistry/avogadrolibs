@@ -67,7 +67,7 @@ private:
   float dihedralAngle(const Vector3& b1, const Vector3& b2,
                       const Vector3& b3) const;
   bool toggleAtom(const Rendering::Identifier& atom);
-  template <typename T>
+  template<typename T>
   void createLabels(T* mol, Rendering::GeometryNode* geo,
                     QVector<Vector3>& positions);
 

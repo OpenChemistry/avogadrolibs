@@ -29,8 +29,10 @@ class RichTextDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  RichTextDelegate(QObject* parent = 0) : QStyledItemDelegate(parent){};
-  QSize sizeHint(const QStyleOptionViewItem& o, const QModelIndex& index) const override;
+  RichTextDelegate(QObject* parent = 0)
+    : QStyledItemDelegate(parent){};
+  QSize sizeHint(const QStyleOptionViewItem& o,
+                 const QModelIndex& index) const override;
   void paint(QPainter* p, const QStyleOptionViewItem& o,
              const QModelIndex& index) const override;
 };

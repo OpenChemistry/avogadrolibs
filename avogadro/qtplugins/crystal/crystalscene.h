@@ -38,7 +38,10 @@ public:
 
   QString name() const override { return tr("Crystal Lattice"); }
 
-  QString description() const override { return tr("Render the unit cell boundaries."); }
+  QString description() const override
+  {
+    return tr("Render the unit cell boundaries.");
+  }
 
   bool isEnabled() const override;
 

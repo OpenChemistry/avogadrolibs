@@ -29,7 +29,11 @@ class Molecule;
 
 struct MoleculeSystem
 {
-  MoleculeSystem() : m_molecule(nullptr), m_dirty(false), m_active(false) {}
+  MoleculeSystem()
+    : m_molecule(nullptr)
+    , m_dirty(false)
+    , m_active(false)
+  {}
 
   Molecule* m_molecule;
   Eigen::Affine3f m_modelView;
@@ -56,7 +60,8 @@ public:
 
   Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-  bool setData(const QModelIndex& index, const QVariant& value, int role) override;
+  bool setData(const QModelIndex& index, const QVariant& value,
+               int role) override;
   QVariant data(const QModelIndex& index, int role) const override;
 
   QModelIndex index(int row, int column,

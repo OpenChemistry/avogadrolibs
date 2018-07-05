@@ -17,10 +17,10 @@
 #include <QtCore/QSortFilterProxyModel>
 
 /**
-* PQRWidget is a class extending QDialog to provide the ui for
-* importing/downloading
-* molecules from PQR.
-*/
+ * PQRWidget is a class extending QDialog to provide the ui for
+ * importing/downloading
+ * molecules from PQR.
+ */
 
 namespace Ui {
 class PQRWidget;
@@ -49,24 +49,24 @@ public:
 private slots:
 
   /**
-  * @brief Called when the search button is clicked to send a query to PQR
-  */
+   * @brief Called when the search button is clicked to send a query to PQR
+   */
   void searchAction();
 
   /**
-  * @brief Called when a table result is double clicked to display preview
-  * information
-  * about the result before downloading.
-  * @param row The row of the result selected.
-  * @param col The column of the result selected.
-  */
+   * @brief Called when a table result is double clicked to display preview
+   * information
+   * about the result before downloading.
+   * @param row The row of the result selected.
+   * @param col The column of the result selected.
+   */
   void molSelected(int, int);
 
   /**
-  * @brief Called when the download button is clicked to send a request to
-  * download
-  * molecule information from PQR.
-  */
+   * @brief Called when the download button is clicked to send a request to
+   * download
+   * molecule information from PQR.
+   */
   void downloadMol();
 
 private:

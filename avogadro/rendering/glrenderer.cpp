@@ -35,8 +35,10 @@ namespace Avogadro {
 namespace Rendering {
 
 GLRenderer::GLRenderer()
-  : m_valid(false), m_textRenderStrategy(nullptr), m_center(Vector3f::Zero()),
-    m_radius(20.0)
+  : m_valid(false)
+  , m_textRenderStrategy(nullptr)
+  , m_center(Vector3f::Zero())
+  , m_radius(20.0)
 {
   m_overlayCamera.setIdentity();
 }
