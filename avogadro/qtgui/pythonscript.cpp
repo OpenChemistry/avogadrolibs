@@ -51,7 +51,7 @@ void PythonScript::setDefaultPythonInterpretor()
 {
   m_pythonInterpreter = qgetenv("AVO_PYTHON_INTERPRETER");
   if (m_pythonInterpreter.isEmpty()) {
-    m_pythonInterpreter = QSettings().value("interpreters/python").toString();
+    m_pythonInterpreter = QSettings().value(QStringLiteral("interpreters/python")).toString();
   }
   if (m_pythonInterpreter.isEmpty())
     m_pythonInterpreter = pythonInterpreterPath;
@@ -69,12 +69,12 @@ QByteArray PythonScript::execute(const QStringList& args,
   // Add debugging flag if needed.
   QStringList realArgs(args);
   if (m_debug)
-    realArgs.prepend("--debug");
+    realArgs.prepend(QStringLiteral("--debug"));
 
   // Start script
   realArgs.prepend(m_scriptFilePath);
   if (m_debug) {
-    qDebug() << "Executing" << m_pythonInterpreter << realArgs.join(" ") << "<"
+    qDebug() << "Executing" << m_pythonInterpreter << realArgs.join(QStringLiteral(" ")) << "<"
              << scriptStdin;
   }
   proc.start(m_pythonInterpreter, realArgs);
@@ -84,7 +84,7 @@ QByteArray PythonScript::execute(const QStringList& args,
     if (!proc.waitForStarted(5000)) {
       m_errors << tr("Error running script '%1 %2': Timed out waiting for "
                      "start (%3).")
-                    .arg(m_pythonInterpreter, realArgs.join(" "),
+                    .arg(m_pythonInterpreter, realArgs.join(QStringLiteral(" ")),
                          processErrorString(proc));
       return QByteArray();
     }
@@ -94,7 +94,7 @@ QByteArray PythonScript::execute(const QStringList& args,
       m_errors << tr("Error running script '%1 %2': failed to write to stdin "
                      "(len=%3, wrote %4 bytes, QProcess error: %5).")
                     .arg(m_pythonInterpreter)
-                    .arg(realArgs.join(" "))
+                    .arg(realArgs.join(QStringLiteral(" ")))
                     .arg(scriptStdin.size())
                     .arg(len)
                     .arg(processErrorString(proc));
@@ -106,7 +106,7 @@ QByteArray PythonScript::execute(const QStringList& args,
   if (!proc.waitForFinished(5000)) {
     m_errors << tr("Error running script '%1 %2': Timed out waiting for "
                    "finish (%3).")
-                  .arg(m_pythonInterpreter, realArgs.join(" "),
+                  .arg(m_pythonInterpreter, realArgs.join(QStringLiteral(" ")),
                        processErrorString(proc));
     return QByteArray();
   }
@@ -115,7 +115,7 @@ QByteArray PythonScript::execute(const QStringList& args,
     m_errors << tr("Error running script '%1 %2': Abnormal exit status %3 "
                    "(%4: %5)\n\nOutput:\n%6")
                   .arg(m_pythonInterpreter)
-                  .arg(realArgs.join(" "))
+                  .arg(realArgs.join(QStringLiteral(" ")))
                   .arg(proc.exitCode())
                   .arg(processErrorString(proc))
                   .arg(proc.errorString())

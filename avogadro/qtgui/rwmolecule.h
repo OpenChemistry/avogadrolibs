@@ -221,7 +221,7 @@ public:
    * @return True on success, false otherwise.
    */
   bool setAtomPositions3d(const Core::Array<Vector3>& pos,
-                          const QString& undoText = "Change Atom Positions");
+                          const QString& undoText = QStringLiteral("Change Atom Positions"));
 
   /**
    * Set the 3D position of a single atom.
@@ -231,7 +231,7 @@ public:
    * @return True on success, false otherwise.
    */
   bool setAtomPosition3d(Index atomId, const Vector3& pos,
-                         const QString& undoText = "Change Atom Position");
+                         const QString& undoText = QStringLiteral("Change Atom Position"));
 
   /**
    * Set whether the specified atom is selected or not.
@@ -463,7 +463,7 @@ public:
    */
   void modifyMolecule(const Molecule& newMolecule,
                       Molecule::MoleculeChanges changes,
-                      const QString& undoText = "Modify Molecule");
+                      const QString& undoText = QStringLiteral("Modify Molecule"));
 
   /**
    * Generic edit that adds @a newMolecule to the current molecule.
@@ -473,7 +473,7 @@ public:
    * @param undoText The text description for the undo command.
    */
   void appendMolecule(const Molecule& addMolecule,
-                      const QString& undoText = "Append Molecule");
+                      const QString& undoText = QStringLiteral("Append Molecule"));
 
   /**
    * Edit the unit cell by replacing the current cell matrix with a new cell
@@ -565,7 +565,7 @@ public:
    * on).
    * @param undoName The name of the undo command
    */
-  void beginMergeMode(const QString& undoName = "Draw");
+  void beginMergeMode(const QString& undoName = QStringLiteral("Draw"));
 
   /**
    * Call this function when you wish merge mode to end. This will turn off
