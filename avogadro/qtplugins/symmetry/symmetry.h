@@ -39,15 +39,15 @@ class Symmetry : public Avogadro::QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit Symmetry(QObject* parent_ = 0);
-  ~Symmetry();
+  ~Symmetry() override;
 
-  QString name() const { return tr("Symmetry"); }
-  QString description() const;
-  QList<QAction*> actions() const;
-  QStringList menuPath(QAction*) const;
+  QString name() const override { return tr("Symmetry"); }
+  QString description() const override;
+  QList<QAction*> actions() const override;
+  QStringList menuPath(QAction*) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
   void moleculeChanged(unsigned int changes);
 

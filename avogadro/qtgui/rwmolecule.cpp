@@ -411,7 +411,7 @@ public:
 
   void undo() override { positions3d() = m_oldPositions3d; }
 
-  bool mergeWith(const QUndoCommand* other)
+  bool mergeWith(const QUndoCommand* other) override
   {
     const SetPositions3dCommand* o =
       dynamic_cast<const SetPositions3dCommand*>(other);
@@ -466,7 +466,7 @@ public:
       positions3d()[m_atomIds[i]] = m_oldPosition3ds[i];
   }
 
-  bool mergeWith(const QUndoCommand* o)
+  bool mergeWith(const QUndoCommand* o) override
   {
     const SetPosition3dCommand* other =
       dynamic_cast<const SetPosition3dCommand*>(o);
@@ -814,7 +814,7 @@ public:
 
   void undo() override { bondOrders()[m_bondId] = m_oldBondOrder; }
 
-  bool mergeWith(const QUndoCommand* other)
+  bool mergeWith(const QUndoCommand* other) override
   {
     const SetBondOrderCommand* o =
       dynamic_cast<const SetBondOrderCommand*>(other);

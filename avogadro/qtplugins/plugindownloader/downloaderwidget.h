@@ -42,7 +42,7 @@ class DownloaderWidget : public QDialog
 
 public:
   DownloaderWidget(QWidget* parent = 0);
-  ~DownloaderWidget();
+  ~DownloaderWidget() override;
 
 public slots:
   void showREADME();

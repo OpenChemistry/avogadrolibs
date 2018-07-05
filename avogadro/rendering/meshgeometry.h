@@ -57,7 +57,7 @@ public:
 
   MeshGeometry();
   MeshGeometry(const MeshGeometry& other);
-  ~MeshGeometry();
+  ~MeshGeometry() override;
 
   MeshGeometry& operator=(MeshGeometry);
   friend void swap(MeshGeometry& lhs, MeshGeometry& rhs);
@@ -71,7 +71,7 @@ public:
    * @brief Render the mesh geometry.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera& camera);
+  void render(const Camera& camera) override;
 
   /**
    * Add vertices to the object. Note that this just adds vertices to the
@@ -110,7 +110,7 @@ public:
   /**
    * Clear the contents of the node.
    */
-  void clear();
+  void clear() override;
 
   /**
    * Get the number of vertices.

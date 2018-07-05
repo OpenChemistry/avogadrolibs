@@ -51,7 +51,7 @@ public:
   /**
    * Destructor for ApbsDialog.
    */
-  ~ApbsDialog();
+  ~ApbsDialog() override;
 
   void setMolecule(QtGui::Molecule* molecule);
 

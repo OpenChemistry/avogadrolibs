@@ -37,15 +37,15 @@ class MolecularProperties : public Avogadro::QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit MolecularProperties(QObject* parent_ = 0);
-  ~MolecularProperties();
+  ~MolecularProperties() override;
 
-  QString name() const { return tr("Molecular Properties"); }
-  QString description() const;
-  QList<QAction*> actions() const;
-  QStringList menuPath(QAction*) const;
+  QString name() const override { return tr("Molecular Properties"); }
+  QString description() const override;
+  QList<QAction*> actions() const override;
+  QStringList menuPath(QAction*) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
 private slots:
   void showDialog();

@@ -95,7 +95,7 @@ public:
 private:
   // Hide the constructor, destructor, copy and assignment operator.
   PluginManager(QObject* parent = 0);
-  ~PluginManager();
+  ~PluginManager() override;
   PluginManager(const PluginManager&);            // Not implemented.
   PluginManager& operator=(const PluginManager&); // Not implemented.
 

@@ -129,18 +129,18 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
     class ResetTextLabelVisitor : public Visitor
     {
     public:
-      void visit(Node&) { return; }
-      void visit(GroupNode&) { return; }
-      void visit(GeometryNode&) { return; }
-      void visit(Drawable&) { return; }
-      void visit(SphereGeometry&) { return; }
-      void visit(AmbientOcclusionSphereGeometry&) { return; }
-      void visit(CylinderGeometry&) { return; }
-      void visit(MeshGeometry&) { return; }
+      void visit(Node&) override { return; }
+      void visit(GroupNode&) override { return; }
+      void visit(GeometryNode&) override { return; }
+      void visit(Drawable&) override { return; }
+      void visit(SphereGeometry&) override { return; }
+      void visit(AmbientOcclusionSphereGeometry&) override { return; }
+      void visit(CylinderGeometry&) override { return; }
+      void visit(MeshGeometry&) override { return; }
       void visit(Texture2D&) { return; }
-      void visit(TextLabel2D& l) { l.resetTexture(); }
-      void visit(TextLabel3D& l) { l.resetTexture(); }
-      void visit(LineStripGeometry&) { return; }
+      void visit(TextLabel2D& l) override { l.resetTexture(); }
+      void visit(TextLabel3D& l) override { l.resetTexture(); }
+      void visit(LineStripGeometry&) override { return; }
     } labelResetter;
 
     m_scene.rootNode().accept(labelResetter);

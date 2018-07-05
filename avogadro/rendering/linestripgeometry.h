@@ -47,7 +47,7 @@ public:
 
   LineStripGeometry();
   LineStripGeometry(const LineStripGeometry& other);
-  ~LineStripGeometry();
+  ~LineStripGeometry() override;
 
   LineStripGeometry& operator=(LineStripGeometry);
   friend void swap(LineStripGeometry& lhs, LineStripGeometry& rhs);
@@ -61,12 +61,12 @@ public:
    * @brief Render the line strips.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera& camera);
+  void render(const Camera& camera) override;
 
   /**
    * Clear the contents of the node.
    */
-  void clear();
+  void clear() override;
 
   /**
    * Add a complete line strip to the object.

@@ -56,7 +56,7 @@ public:
   typedef PersistentBond<Molecule> PersistentBondType;
 
   Molecule(QObject* parent_ = 0);
-  ~Molecule();
+  ~Molecule() override;
   /** copy constructor */
   Molecule(const Molecule& other);
 
