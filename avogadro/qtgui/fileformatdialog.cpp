@@ -26,20 +26,18 @@
 
 #include <vector>
 
-using std::vector;
-using Avogadro::Io::FileFormatManager;
 using Avogadro::Io::FileFormat;
+using Avogadro::Io::FileFormatManager;
+using std::vector;
 
 namespace Avogadro {
 namespace QtGui {
 
-FileFormatDialog::FileFormatDialog(QWidget* parentW) : QFileDialog(parentW)
-{
-}
+FileFormatDialog::FileFormatDialog(QWidget* parentW)
+  : QFileDialog(parentW)
+{}
 
-FileFormatDialog::~FileFormatDialog()
-{
-}
+FileFormatDialog::~FileFormatDialog() {}
 
 FileFormatDialog::FormatFilePair FileFormatDialog::fileToRead(
   QWidget* parent, const QString& caption, const QString& dir,
@@ -63,8 +61,9 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToRead(
     // If none found, give user the option to retry.
     if (!format) {
       QMessageBox::StandardButton reply = QMessageBox::question(
-        parent, caption, tr("Unable to find a suitable file reader for "
-                            "the selected file."),
+        parent, caption,
+        tr("Unable to find a suitable file reader for "
+           "the selected file."),
         QMessageBox::Abort | QMessageBox::Retry, QMessageBox::Retry);
       switch (reply) {
         default:
@@ -105,8 +104,9 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
     // If none found, give user the option to retry.
     if (!format) {
       QMessageBox::StandardButton reply = QMessageBox::question(
-        parentWidget, caption, tr("Unable to find a suitable file writer for "
-                                  "the selected format."),
+        parentWidget, caption,
+        tr("Unable to find a suitable file writer for "
+           "the selected format."),
         QMessageBox::Abort | QMessageBox::Retry, QMessageBox::Retry);
       switch (reply) {
         default:
@@ -212,8 +212,8 @@ QString FileFormatDialog::generateFilterString(
   QString filterString;
   // Create a map that groups the file extensions by name:
   QMap<QString, QString> formatMap;
-  for (std::vector<const Io::FileFormat *>::const_iterator it = ffs.begin(),
-                                                           itEnd = ffs.end();
+  for (std::vector<const Io::FileFormat*>::const_iterator it = ffs.begin(),
+                                                          itEnd = ffs.end();
        it != itEnd; ++it) {
     QString name(QString::fromStdString((*it)->name()));
     std::vector<std::string> exts = (*it)->fileExtensions();
@@ -250,15 +250,16 @@ QString FileFormatDialog::generateFilterString(
     }
     if (options & AllFormats)
       allExtensions << extensions;
-    filterString += QStringLiteral("%1 (%2);;").arg(desc, extensions.join(QStringLiteral(" ")));
+    filterString += QStringLiteral("%1 (%2);;")
+                      .arg(desc, extensions.join(QStringLiteral(" ")));
   }
 
   if (options & AllFiles)
     filterString.prepend(tr("All files (*);;"));
 
   if (options & AllFormats) {
-    filterString.prepend(
-      tr("All supported formats (%1);;").arg(allExtensions.join(QStringLiteral(" "))));
+    filterString.prepend(tr("All supported formats (%1);;")
+                           .arg(allExtensions.join(QStringLiteral(" "))));
   }
 
   return filterString;
@@ -276,8 +277,8 @@ const Io::FileFormat* FileFormatDialog::selectFileFormat(
 
   // If more than one format found, prompt user to select one.
   QStringList idents;
-  for (std::vector<const Io::FileFormat *>::const_iterator it = ffs.begin(),
-                                                           itEnd = ffs.end();
+  for (std::vector<const Io::FileFormat*>::const_iterator it = ffs.begin(),
+                                                          itEnd = ffs.end();
        it != itEnd; ++it) {
     idents << QString::fromStdString((*it)->identifier());
   }
