@@ -166,7 +166,7 @@ QString FileBrowseWidget::searchSystemPathForFile(const QString& exec)
 {
   QString result;
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-  if (!env.contains("PATH"))
+  if (!env.contains(QStringLiteral("PATH")))
     return result;
 
   static QRegExp pathSplitter = QRegExp(
@@ -177,7 +177,7 @@ QString FileBrowseWidget::searchSystemPathForFile(const QString& exec)
 #endif // WIN32
     );
   QStringList paths =
-    env.value("PATH").split(pathSplitter, QString::SkipEmptyParts);
+    env.value(QStringLiteral("PATH")).split(pathSplitter, QString::SkipEmptyParts);
 
   foreach (const QString& path, paths) {
     QFileInfo info(path + "/" + exec);

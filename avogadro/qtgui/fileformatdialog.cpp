@@ -154,17 +154,17 @@ const Io::FileFormat* FileFormatDialog::findFileFormat(
     // Both or neither read/write
     noun = tr("handlers", "File handlers");
     verb = tr("handle", "e.g. file handlers that can 'handle' this file.");
-    key = "fileToWrite"; // Just use the write settings
+    key = QLatin1String("fileToWrite"); // Just use the write settings
   } else if (formatFlags & FileFormat::Read) {
     // Read
     noun = tr("readers", "File readers");
     verb = tr("read", "e.g. file readers that can 'read' this file.");
-    key = "fileToRead";
+    key = QLatin1String("fileToRead");
   } else if (formatFlags & FileFormat::Write) {
     // Write
     noun = tr("writers", "File writers");
     verb = tr("write", "e.g. file writers that can 'write' this file.");
-    key = "fileToWrite";
+    key = QLatin1String("fileToWrite");
   }
 
   return selectFileFormat(parentWidget, matches, caption,
@@ -232,10 +232,10 @@ QString FileFormatDialog::generateFilterString(
   // will be used as-is in the filter string, while others will be prepended
   // with "*.".
   QStringList nonExtensions;
-  nonExtensions << "POSCAR"  // VASP input geometry
-                << "CONTCAR" // VASP output geometry
-                << "HISTORY" // DL-POLY history file
-                << "CONFIG"  // DL-POLY config file
+  nonExtensions << QStringLiteral("POSCAR")  // VASP input geometry
+                << QStringLiteral("CONTCAR") // VASP output geometry
+                << QStringLiteral("HISTORY") // DL-POLY history file
+                << QStringLiteral("CONFIG")  // DL-POLY config file
     ;
 
   // This holds all known extensions:
@@ -250,7 +250,7 @@ QString FileFormatDialog::generateFilterString(
     }
     if (options & AllFormats)
       allExtensions << extensions;
-    filterString += QString("%1 (%2);;").arg(desc, extensions.join(" "));
+    filterString += QStringLiteral("%1 (%2);;").arg(desc, extensions.join(QStringLiteral(" ")));
   }
 
   if (options & AllFiles)
@@ -258,7 +258,7 @@ QString FileFormatDialog::generateFilterString(
 
   if (options & AllFormats) {
     filterString.prepend(
-      tr("All supported formats (%1);;").arg(allExtensions.join(" ")));
+      tr("All supported formats (%1);;").arg(allExtensions.join(QStringLiteral(" "))));
   }
 
   return filterString;
