@@ -51,7 +51,6 @@ PlayerTool::PlayerTool(QObject* parent_)
   , m_renderer(nullptr)
   , m_currentFrame(0)
   , m_toolWidget(nullptr)
-  , m_info(nullptr)
   , m_frameIdx(nullptr)
   , m_slider(nullptr)
 {
