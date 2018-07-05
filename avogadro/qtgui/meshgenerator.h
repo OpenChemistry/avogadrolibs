@@ -73,7 +73,7 @@ public:
   /**
    * Destructor.
    */
-  ~MeshGenerator();
+  ~MeshGenerator() override;
 
   /**
    * Initialization function, set up the MeshGenerator ready to find an
@@ -89,7 +89,7 @@ public:
    * Use this function to begin Mesh generation. Uses an asynchronous thread,
    * and so avoids locking the user interface while the isosurface is found.
    */
-  void run();
+  void run() override;
 
   /**
    * @return The Cube being used by the class.

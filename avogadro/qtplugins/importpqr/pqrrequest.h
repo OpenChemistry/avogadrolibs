@@ -47,7 +47,7 @@ public:
   /**
   * @brief Free the ui pointers
   */
-  ~PQRRequest();
+  ~PQRRequest() override;
 
   /**
   * @brief Sends a network request to search for molecules from PQR;

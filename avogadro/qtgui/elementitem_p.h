@@ -42,24 +42,24 @@ public:
    * is then used by PeriodicTable to figure out which element was clicked on.
    */
   ElementItem(int elementNumber = 0);
-  ~ElementItem();
+  ~ElementItem() override;
 
   /**
    * @return the bounding rectangle of the element item.
    */
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
 
   /**
    * @return the painter path which is also a rectangle in this case.
    */
-  QPainterPath shape() const;
+  QPainterPath shape() const override;
 
   /**
    * This is where most of the action takes place. The element box is drawn
    * along with its symbol.
    */
   void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
-             QWidget* widget);
+             QWidget* widget) override;
 
 private:
   /** Indicates if element is well-formed (e.g., has non-empty symbol). */

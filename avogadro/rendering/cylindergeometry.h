@@ -51,7 +51,7 @@ class AVOGADRORENDERING_EXPORT CylinderGeometry : public Drawable
 public:
   CylinderGeometry();
   CylinderGeometry(const CylinderGeometry& other);
-  ~CylinderGeometry();
+  ~CylinderGeometry() override;
 
   CylinderGeometry& operator=(CylinderGeometry);
   friend void swap(CylinderGeometry& lhs, CylinderGeometry& rhs);
@@ -70,7 +70,7 @@ public:
    * @brief Render the cylinder geometry.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera& camera);
+  void render(const Camera& camera) override;
 
   /**
    * Return the primitives that are hit by the ray.
@@ -81,7 +81,7 @@ public:
    */
   std::multimap<float, Identifier> hits(const Vector3f& rayOrigin,
                                         const Vector3f& rayEnd,
-                                        const Vector3f& rayDirection) const;
+                                        const Vector3f& rayDirection) const override;
 
   /**
    * @brief Add a cylinder to the geometry object.
@@ -141,7 +141,7 @@ public:
   /**
    * Clear the contents of the node.
    */
-  void clear();
+  void clear() override;
 
   /**
    * Get the number of cylinders in the node object.

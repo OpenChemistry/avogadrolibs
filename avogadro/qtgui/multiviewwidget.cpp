@@ -38,7 +38,7 @@ signals:
   void activeWidget(QWidget* widget);
 
 protected:
-  bool eventFilter(QObject* obj, QEvent* e)
+  bool eventFilter(QObject* obj, QEvent* e) override
   {
     Q_ASSERT(m_widget);
     if (e->type() == QEvent::MouseButtonPress) {

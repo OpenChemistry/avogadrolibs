@@ -36,7 +36,7 @@ class VolumeScalingDialog : public QDialog
 
 public:
   explicit VolumeScalingDialog(QWidget* parent = 0);
-  ~VolumeScalingDialog();
+  ~VolumeScalingDialog() override;
 
   void setCurrentVolume(double vol);
   double newVolume() const;

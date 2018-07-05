@@ -42,27 +42,27 @@ class OpenBabel : public QtGui::ExtensionPlugin
 
 public:
   explicit OpenBabel(QObject* parent = 0);
-  ~OpenBabel();
+  ~OpenBabel() override;
 
-  QString name() const { return tr("OpenBabel"); }
+  QString name() const override { return tr("OpenBabel"); }
 
-  QString description() const
+  QString description() const override
   {
     return tr("Interact with OpenBabel utilities.");
   }
 
-  QList<QAction*> actions() const;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction*) const;
+  QStringList menuPath(QAction*) const override;
 
-  QList<Io::FileFormat*> fileFormats() const;
+  QList<Io::FileFormat*> fileFormats() const override;
 
   QString openBabelInfo() const;
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
-  bool readMolecule(QtGui::Molecule& mol);
+  bool readMolecule(QtGui::Molecule& mol) override;
 
 private slots:
   void refreshReadFormats();

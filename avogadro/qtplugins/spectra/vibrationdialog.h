@@ -40,7 +40,7 @@ class VibrationDialog : public QDialog
 
 public:
   VibrationDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
-  ~VibrationDialog();
+  ~VibrationDialog() override;
 
   void setMolecule(QtGui::Molecule* molecule);
   int currentMode() const;

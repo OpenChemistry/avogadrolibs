@@ -44,7 +44,7 @@ public slots:
   void markValid(QTextCursor& cur, const QString& tooltip);
 
 protected:
-  bool event(QEvent* e);
+  bool event(QEvent* e) override;
 
 private:
   void showToolTip(QHelpEvent* e) const;

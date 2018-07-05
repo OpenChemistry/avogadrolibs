@@ -43,7 +43,7 @@ class MeasureTool : public QtGui::ToolPlugin
   Q_OBJECT
 public:
   explicit MeasureTool(QObject* parent_ = nullptr);
-  ~MeasureTool();
+  ~MeasureTool() override;
 
   QString name() const override { return tr("Measure tool"); }
   QString description() const override { return tr("Measure tool"); }

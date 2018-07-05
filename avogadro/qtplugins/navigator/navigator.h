@@ -37,7 +37,7 @@ class Navigator : public QtGui::ToolPlugin
   Q_OBJECT
 public:
   explicit Navigator(QObject* parent_ = nullptr);
-  ~Navigator();
+  ~Navigator() override;
 
   QString name() const override { return tr("Navigate tool"); }
   QString description() const override { return tr("Navigate tool"); }

@@ -120,7 +120,7 @@ class Quad : public MeshGeometry
 {
 public:
   Quad() {}
-  ~Quad() {}
+  ~Quad() override {}
 
   /**
    * @brief setQuad Set the four corners of the quad.
@@ -161,7 +161,7 @@ class ArcSector : public MeshGeometry
 {
 public:
   ArcSector() {}
-  ~ArcSector() {}
+  ~ArcSector() override {}
 
   /**
    * Define the sector.
@@ -227,7 +227,7 @@ class QuadOutline : public LineStripGeometry
 {
 public:
   QuadOutline() {}
-  ~QuadOutline() {}
+  ~QuadOutline() override {}
 
   /**
    * @brief setQuad Set the four corners of the quad.
@@ -257,7 +257,7 @@ class ArcStrip : public LineStripGeometry
 {
 public:
   ArcStrip() {}
-  ~ArcStrip() {}
+  ~ArcStrip() override {}
 
   /**
    * Define the arc.

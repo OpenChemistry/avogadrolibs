@@ -34,7 +34,7 @@ class AVOGADRORENDERING_EXPORT TransformNode : public GroupNode
 {
 public:
   explicit TransformNode(GroupNode* parent = 0);
-  ~TransformNode();
+  ~TransformNode() override;
 };
 
 } // End namespace Rendering

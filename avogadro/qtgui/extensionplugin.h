@@ -53,7 +53,7 @@ class AVOGADROQTGUI_EXPORT ExtensionPlugin : public QObject
 
 public:
   explicit ExtensionPlugin(QObject* parent = 0);
-  ~ExtensionPlugin();
+  ~ExtensionPlugin() override;
 
   /**
    * The name of the extension plugin, will be displayed in the user interface.
@@ -154,7 +154,7 @@ class AVOGADROQTGUI_EXPORT ExtensionPluginFactory
   : public QtPlugins::PluginFactory<ExtensionPlugin>
 {
 public:
-  virtual ~ExtensionPluginFactory();
+  ~ExtensionPluginFactory() override;
 };
 
 } // End QtGui namespace

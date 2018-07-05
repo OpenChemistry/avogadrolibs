@@ -886,7 +886,7 @@ public:
   }
 
   void renderDepth(const Eigen::Matrix4f& modelView,
-                   const Eigen::Matrix4f& projection)
+                   const Eigen::Matrix4f& projection) override
   {
     // bind buffer objects
     m_vbo.bind();
@@ -936,7 +936,7 @@ public:
 
   void renderAO(const Eigen::Matrix4f& modelView,
                 const Eigen::Matrix4f& projection, GLint textureSize,
-                float numDirections)
+                float numDirections) override
   {
     // bind buffer objects
     m_vbo.bind();

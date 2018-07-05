@@ -30,15 +30,15 @@ class CustomElements : public QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit CustomElements(QObject* parent_ = 0);
-  ~CustomElements();
+  ~CustomElements() override;
 
-  QString name() const { return tr("Custom Elements"); }
-  QString description() const;
-  QList<QAction*> actions() const;
-  QStringList menuPath(QAction*) const;
+  QString name() const override { return tr("Custom Elements"); }
+  QString description() const override;
+  QList<QAction*> actions() const override;
+  QStringList menuPath(QAction*) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
 private slots:
   void moleculeChanged(unsigned int changes);
