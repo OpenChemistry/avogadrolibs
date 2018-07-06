@@ -51,20 +51,20 @@ class QuantumInput : public QtGui::ExtensionPlugin
 
 public:
   explicit QuantumInput(QObject* parent = 0);
-  ~QuantumInput();
+  ~QuantumInput() override;
 
-  QString name() const { return tr("Quantum input"); }
+  QString name() const override { return tr("Quantum input"); }
 
-  QString description() const
+  QString description() const override
   {
     return tr("Generate input for quantum codes.");
   }
 
-  QList<QAction*> actions() const;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction*) const;
+  QStringList menuPath(QAction*) const override;
 
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
 public slots:
   /**
@@ -77,7 +77,7 @@ public slots:
    */
   void openJobOutput(const ::MoleQueue::JobObject& job);
 
-  bool readMolecule(QtGui::Molecule& mol);
+  bool readMolecule(QtGui::Molecule& mol) override;
 
 private slots:
   void menuActivated();

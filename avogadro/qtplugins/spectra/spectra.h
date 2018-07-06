@@ -38,20 +38,20 @@ class Spectra : public QtGui::ExtensionPlugin
 
 public:
   explicit Spectra(QObject* parent = 0);
-  ~Spectra();
+  ~Spectra() override;
 
-  QString name() const { return tr("Spectra and Vibrations"); }
+  QString name() const override { return tr("Spectra and Vibrations"); }
 
-  QString description() const
+  QString description() const override
   {
     return tr("Display spectra and vibrational modes.");
   }
 
-  QList<QAction*> actions() const;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction*) const;
+  QStringList menuPath(QAction*) const override;
 
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
 public slots:
   void setMode(int mode);

@@ -41,17 +41,20 @@ class GamessInput : public QtGui::ExtensionPlugin
 
 public:
   explicit GamessInput(QObject* parent = 0);
-  ~GamessInput();
+  ~GamessInput() override;
 
-  QString name() const { return tr("GAMESS input"); }
+  QString name() const override { return tr("GAMESS input"); }
 
-  QString description() const { return tr("Generate input for GAMESS."); }
+  QString description() const override
+  {
+    return tr("Generate input for GAMESS.");
+  }
 
-  QList<QAction*> actions() const;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction*) const;
+  QStringList menuPath(QAction*) const override;
 
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
 public slots:
   /**
@@ -59,7 +62,7 @@ public slots:
    */
   void openJobOutput(const MoleQueue::JobObject& job);
 
-  bool readMolecule(QtGui::Molecule& mol);
+  bool readMolecule(QtGui::Molecule& mol) override;
 
 private slots:
   void menuActivated();

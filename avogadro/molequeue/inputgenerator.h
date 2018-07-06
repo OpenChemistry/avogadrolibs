@@ -466,7 +466,7 @@ public:
   explicit InputGenerator(const QString& scriptFilePath_,
                           QObject* parent_ = nullptr);
   explicit InputGenerator(QObject* parent_ = nullptr);
-  ~InputGenerator();
+  ~InputGenerator() override;
 
   /**
    * @return True if debugging is enabled.

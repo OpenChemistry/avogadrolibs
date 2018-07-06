@@ -48,17 +48,20 @@ class Workflow : public QtGui::ExtensionPlugin
 
 public:
   explicit Workflow(QObject* parent = 0);
-  ~Workflow();
+  ~Workflow() override;
 
-  QString name() const { return tr("Workflow scripts"); }
+  QString name() const override { return tr("Workflow scripts"); }
 
-  QString description() const { return tr("Run external workflow commands"); }
+  QString description() const override
+  {
+    return tr("Run external workflow commands");
+  }
 
-  QList<QAction*> actions() const;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction*) const;
+  QStringList menuPath(QAction*) const override;
 
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
 public slots:
   /**
@@ -68,7 +71,7 @@ public slots:
 
   void run();
 
-  bool readMolecule(QtGui::Molecule& mol);
+  bool readMolecule(QtGui::Molecule& mol) override;
 
 private slots:
   void menuActivated();

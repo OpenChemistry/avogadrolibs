@@ -41,7 +41,7 @@ class PlayerTool : public QtGui::ToolPlugin
   Q_OBJECT
 public:
   explicit PlayerTool(QObject* p = nullptr);
-  ~PlayerTool();
+  ~PlayerTool() override;
 
   QString name() const override { return tr("Player tool"); }
   QString description() const override { return tr("Play back trajectories"); }

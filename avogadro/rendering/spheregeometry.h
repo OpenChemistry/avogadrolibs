@@ -28,9 +28,10 @@ namespace Rendering {
 struct SphereColor
 {
   SphereColor(Vector3f centre, float r, Vector3ub c)
-    : center(centre), radius(r), color(c)
-  {
-  }
+    : center(centre)
+    , radius(r)
+    , color(c)
+  {}
   Vector3f center;
   float radius;
   Vector3ub color;
@@ -53,7 +54,7 @@ class AVOGADRORENDERING_EXPORT SphereGeometry : public Drawable
 public:
   SphereGeometry();
   SphereGeometry(const SphereGeometry& other);
-  ~SphereGeometry();
+  ~SphereGeometry() override;
 
   SphereGeometry& operator=(SphereGeometry);
   friend void swap(SphereGeometry& lhs, SphereGeometry& rhs);
@@ -72,7 +73,7 @@ public:
    * @brief Render the sphere geometry.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera& camera);
+  void render(const Camera& camera) override;
 
   /**
    * Return the primitives that are hit by the ray.
@@ -81,9 +82,9 @@ public:
    * @param rayDirection Normalized direction of the ray.
    * @return Sorted collection of primitives that were hit.
    */
-  std::multimap<float, Identifier> hits(const Vector3f& rayOrigin,
-                                        const Vector3f& rayEnd,
-                                        const Vector3f& rayDirection) const;
+  std::multimap<float, Identifier> hits(
+    const Vector3f& rayOrigin, const Vector3f& rayEnd,
+    const Vector3f& rayDirection) const override;
 
   /**
    * Add a sphere to the geometry object.
@@ -100,7 +101,7 @@ public:
   /**
    * Clear the contents of the node.
    */
-  void clear();
+  void clear() override;
 
   /**
    * Get the number of spheres in the node object.

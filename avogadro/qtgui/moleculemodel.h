@@ -29,7 +29,11 @@ class Molecule;
 
 struct MoleculeSystem
 {
-  MoleculeSystem() : m_molecule(nullptr), m_dirty(false), m_active(false) {}
+  MoleculeSystem()
+    : m_molecule(nullptr)
+    , m_dirty(false)
+    , m_active(false)
+  {}
 
   Molecule* m_molecule;
   Eigen::Affine3f m_modelView;
@@ -50,17 +54,18 @@ class AVOGADROQTGUI_EXPORT MoleculeModel : public QAbstractItemModel
 public:
   explicit MoleculeModel(QObject* p = 0);
 
-  QModelIndex parent(const QModelIndex& child) const;
-  int rowCount(const QModelIndex& parent) const;
-  int columnCount(const QModelIndex& parent) const;
+  QModelIndex parent(const QModelIndex& child) const override;
+  int rowCount(const QModelIndex& parent) const override;
+  int columnCount(const QModelIndex& parent) const override;
 
-  Qt::ItemFlags flags(const QModelIndex& index) const;
+  Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-  bool setData(const QModelIndex& index, const QVariant& value, int role);
-  QVariant data(const QModelIndex& index, int role) const;
+  bool setData(const QModelIndex& index, const QVariant& value,
+               int role) override;
+  QVariant data(const QModelIndex& index, int role) const override;
 
   QModelIndex index(int row, int column,
-                    const QModelIndex& parent = QModelIndex()) const;
+                    const QModelIndex& parent = QModelIndex()) const override;
 
   void clear();
 

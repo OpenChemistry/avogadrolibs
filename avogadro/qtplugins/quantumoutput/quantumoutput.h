@@ -52,17 +52,20 @@ class QuantumOutput : public QtGui::ExtensionPlugin
 
 public:
   explicit QuantumOutput(QObject* parent = 0);
-  ~QuantumOutput();
+  ~QuantumOutput() override;
 
-  QString name() const { return tr("Quantum output"); }
+  QString name() const override { return tr("Quantum output"); }
 
-  QString description() const { return tr("Read output from quantum codes."); }
+  QString description() const override
+  {
+    return tr("Read output from quantum codes.");
+  }
 
-  QList<QAction*> actions() const;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction*) const;
+  QStringList menuPath(QAction*) const override;
 
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
 private slots:
   void surfacesActivated();
