@@ -83,12 +83,12 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   char endian = '>', buff[BUFSIZ], fmt[BUFSIZ], raw[84];
   char* remarks;
   double DELTA;
-  int magic, charmm, NSET, ISTART, NSAVC, NAMNF, NTITLE, len_remarks, NATOMS,
-    block_size;
+  int magic, charmm, NSET, ISTART, NSAVC, NAMNF, NTITLE, lenRemarks, NATOMS,
+    blockSize;
 
   // Determining size of file
   inStream.seekg(0, inStream.end);
-  int file_len = inStream.tellg();
+  int fileLen = inStream.tellg();
   inStream.seekg(0, inStream.beg);
 
   // Reading magic number
@@ -145,23 +145,23 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
   inStream.read(buff, struct_calcsize(fmt));
-  struct_unpack(buff, fmt, &block_size);
+  struct_unpack(buff, fmt, &blockSize);
 
-  if (((block_size - 4) % 80) == 0) {
+  if (((blockSize - 4) % 80) == 0) {
     // Read NTITLE, the number of 80 character title strings
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
     inStream.read(buff, struct_calcsize(fmt));
     struct_unpack(buff, fmt, &NTITLE);
-    len_remarks = NTITLE * 80;
-    remarks = (char*)malloc(len_remarks);
-    snprintf(fmt, sizeof(fmt), "%c%ds", endian, len_remarks);
+    lenRemarks = NTITLE * 80;
+    remarks = (char*)malloc(lenRemarks);
+    snprintf(fmt, sizeof(fmt), "%c%ds", endian, lenRemarks);
     inStream.read(buff, struct_calcsize(fmt));
     struct_unpack(buff, fmt, remarks);
 
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
     inStream.read(buff, struct_calcsize(fmt));
-    int end_size;
-    struct_unpack(buff, fmt, &end_size);
+    int endSize;
+    struct_unpack(buff, fmt, &endSize);
   } else {
     appendError("Block size must be 4 plus a multiple of 80.");
     return false;
@@ -169,9 +169,9 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
   inStream.read(buff, struct_calcsize(fmt));
-  int four_input;
-  struct_unpack(buff, fmt, &four_input);
-  if (four_input != 4) {
+  int fourInput;
+  struct_unpack(buff, fmt, &fourInput);
+  if (fourInput != 4) {
     // Error
   }
 
@@ -181,9 +181,9 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
   inStream.read(buff, struct_calcsize(fmt));
-  struct_unpack(buff, fmt, &four_input);
-  if (four_input != 4) {
-    appendError("Expected token 4. Read token " + to_string(four_input));
+  struct_unpack(buff, fmt, &fourInput);
+  if (fourInput != 4) {
+    appendError("Expected token 4. Read token " + to_string(fourInput));
     return false;
   }
 
@@ -197,10 +197,10 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     /* Read in index array size */
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
     inStream.read(buff, struct_calcsize(fmt));
-    int arr_size;
-    struct_unpack(buff, fmt, &arr_size);
+    int arrSize;
+    struct_unpack(buff, fmt, &arrSize);
 
-    if (arr_size != (NATOMS - NAMNF) * 4) {
+    if (arrSize != (NATOMS - NAMNF) * 4) {
       appendError("DCD file contains bad format.");
       return false;
     }
@@ -211,9 +211,9 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
     inStream.read(buff, struct_calcsize(fmt));
-    struct_unpack(buff, fmt, &arr_size);
+    struct_unpack(buff, fmt, &arrSize);
 
-    if (arr_size != (NATOMS - NAMNF) * 4) {
+    if (arrSize != (NATOMS - NAMNF) * 4) {
       appendError("DCD file contains bad format.");
       return false;
     }
@@ -224,10 +224,10 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   if ((charmm & DCD_IS_CHARMM) && (charmm & DCD_HAS_EXTRA_BLOCK)) {
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
     inStream.read(buff, struct_calcsize(fmt));
-    int leading_num;
-    struct_unpack(buff, fmt, &leading_num);
+    int leadingNum;
+    struct_unpack(buff, fmt, &leadingNum);
 
-    if (leading_num == 48) {
+    if (leadingNum == 48) {
       double unitcell[6];
       for (int aa = 0; aa < 6; ++aa) {
         snprintf(fmt, sizeof(fmt), "%c%dd", endian, 1);
@@ -247,7 +247,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
       mol.setUnitCell(new UnitCell(unitcell[0], unitcell[2], unitcell[5],
                                    unitcell[4], unitcell[3], unitcell[1]));
     } else {
-      inStream.read(buff, leading_num);
+      inStream.read(buff, leadingNum);
     }
     inStream.read(buff, sizeof(int));
   }
@@ -312,14 +312,16 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     newAtom.setPosition3d(pos);
   }
 
+  mol.setTimeStep(0, 0);
+
   // Skipping fourth dimension block
   if ((charmm & DCD_IS_CHARMM) && (charmm & DCD_HAS_EXTRA_BLOCK)) {
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
     inStream.read(buff, struct_calcsize(fmt));
-    int size_to_read;
-    struct_unpack(buff, fmt, &size_to_read);
+    int sizeToRead;
+    struct_unpack(buff, fmt, &sizeToRead);
 
-    inStream.read(buff, size_to_read);
+    inStream.read(buff, sizeToRead);
 
     inStream.read(buff, sizeof(int));
   }
@@ -339,7 +341,8 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Do we have an animation?
   int coordSet = 1;
-  while ((inStream.tellg() != file_len) && (inStream.tellg() != DCD_EOF)) {
+  while ((static_cast<int>(inStream.tellg()) != fileLen) &&
+         (static_cast<int>(inStream.tellg()) != DCD_EOF)) {
     // Reading the atom coordinates
     Array<Vector3> positions;
     positions.reserve(NATOMS);
@@ -386,14 +389,16 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
       positions.push_back(pos);
     }
 
+    mol.setTimeStep(DELTA * coordSet, coordSet);
+
     // Skipping fourth dimension block
     if ((charmm & DCD_IS_CHARMM) && (charmm & DCD_HAS_EXTRA_BLOCK)) {
       snprintf(fmt, sizeof(fmt), "%c1i", endian);
       inStream.read(buff, struct_calcsize(fmt));
-      int size_to_read;
-      struct_unpack(buff, fmt, &size_to_read);
+      int sizeToRead;
+      struct_unpack(buff, fmt, &sizeToRead);
 
-      inStream.read(buff, size_to_read);
+      inStream.read(buff, sizeToRead);
 
       inStream.read(buff, sizeof(int));
     }
