@@ -49,7 +49,7 @@ class AVOGADROQTGUI_EXPORT ScenePlugin : public QObject
 
 public:
   explicit ScenePlugin(QObject* parent = 0);
-  ~ScenePlugin();
+  ~ScenePlugin() override;
 
   /**
    * Process the supplied atom, and add the necessary primitives to the scene.
@@ -95,7 +95,7 @@ class AVOGADROQTGUI_EXPORT ScenePluginFactory
   : public Avogadro::QtPlugins::PluginFactory<ScenePlugin>
 {
 public:
-  virtual ~ScenePluginFactory() {}
+  ~ScenePluginFactory() override {}
 };
 
 } // End QtGui namespace

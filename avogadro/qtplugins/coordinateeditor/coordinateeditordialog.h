@@ -39,7 +39,7 @@ class CoordinateEditorDialog : public QDialog
   Q_OBJECT
 public:
   explicit CoordinateEditorDialog(QWidget* parent_ = 0);
-  ~CoordinateEditorDialog();
+  ~CoordinateEditorDialog() override;
 
   void setMolecule(QtGui::Molecule* mol);
 

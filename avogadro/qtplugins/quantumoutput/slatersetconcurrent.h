@@ -46,7 +46,7 @@ class SlaterSetConcurrent : public QObject
 
 public:
   explicit SlaterSetConcurrent(QObject* p = 0);
-  ~SlaterSetConcurrent();
+  ~SlaterSetConcurrent() override;
 
   void setMolecule(Core::Molecule* mol);
 

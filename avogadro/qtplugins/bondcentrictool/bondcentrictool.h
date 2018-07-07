@@ -60,7 +60,7 @@ class BondCentricTool : public QtGui::ToolPlugin
   Q_OBJECT
 public:
   explicit BondCentricTool(QObject* parent_ = nullptr);
-  ~BondCentricTool();
+  ~BondCentricTool() override;
 
   QString name() const override;
   QString description() const override;

@@ -41,9 +41,10 @@ public:
     unsigned char padding[4]; //  4 bytes
 
     PackedVertex(const Vector4ub& c, const Vector3f& n, const Vector3f& v)
-      : color(c), normal(n), vertex(v)
-    {
-    }
+      : color(c)
+      , normal(n)
+      , vertex(v)
+    {}
 
     static int colorOffset() { return 0; }
     static int normalOffset() { return static_cast<int>(sizeof(Vector4ub)); }
@@ -57,7 +58,7 @@ public:
 
   MeshGeometry();
   MeshGeometry(const MeshGeometry& other);
-  ~MeshGeometry();
+  ~MeshGeometry() override;
 
   MeshGeometry& operator=(MeshGeometry);
   friend void swap(MeshGeometry& lhs, MeshGeometry& rhs);
@@ -71,7 +72,7 @@ public:
    * @brief Render the mesh geometry.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera& camera);
+  void render(const Camera& camera) override;
 
   /**
    * Add vertices to the object. Note that this just adds vertices to the
@@ -110,7 +111,7 @@ public:
   /**
    * Clear the contents of the node.
    */
-  void clear();
+  void clear() override;
 
   /**
    * Get the number of vertices.

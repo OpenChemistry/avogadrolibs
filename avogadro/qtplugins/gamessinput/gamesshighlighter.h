@@ -36,7 +36,7 @@ public:
   GamessHighlighter(QTextDocument* parent_ = 0);
 
 protected:
-  void highlightBlock(const QString& text);
+  void highlightBlock(const QString& text) override;
 
 private:
   struct HighlightingRule

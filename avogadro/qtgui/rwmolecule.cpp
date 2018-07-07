@@ -45,7 +45,10 @@ using Core::UnitCell;
 class RWMolecule::UndoCommand : public QUndoCommand
 {
 public:
-  UndoCommand(RWMolecule& m) : QUndoCommand(tr("Modify Molecule")), m_mol(m) {}
+  UndoCommand(RWMolecule& m)
+    : QUndoCommand(tr("Modify Molecule"))
+    , m_mol(m)
+  {}
 
 protected:
   Array<Index>& atomUniqueIds() { return m_mol.m_molecule.atomUniqueIds(); }
@@ -85,26 +88,28 @@ enum MergeIds
 // To add a new class, add a new entry to the MergeIds enum above and use that
 // symbolic value as the template parameter. Implement the mergeWith() method
 // to update the "after" state. See SetPositions3dCommand for an example.
-template <int Id>
+template<int Id>
 class MergeUndoCommand : public RWMolecule::UndoCommand
 {
   bool m_canMerge;
 
 public:
-  MergeUndoCommand(RWMolecule& m) : UndoCommand(m), m_canMerge(false) {}
+  MergeUndoCommand(RWMolecule& m)
+    : UndoCommand(m)
+    , m_canMerge(false)
+  {}
   void setCanMerge(bool merge) { m_canMerge = merge; }
   bool canMerge() const { return m_canMerge; }
   int id() const override { return m_canMerge ? Id : -1; }
 };
 } // end anon namespace
 
-RWMolecule::RWMolecule(Molecule& mol, QObject* p) : QObject(p), m_molecule(mol)
-{
-}
+RWMolecule::RWMolecule(Molecule& mol, QObject* p)
+  : QObject(p)
+  , m_molecule(mol)
+{}
 
-RWMolecule::~RWMolecule()
-{
-}
+RWMolecule::~RWMolecule() {}
 
 namespace {
 class AddAtomCommand : public RWMolecule::UndoCommand
@@ -117,10 +122,12 @@ class AddAtomCommand : public RWMolecule::UndoCommand
 public:
   AddAtomCommand(RWMolecule& m, unsigned char aN, bool usingPositions,
                  Index atomId, Index uid)
-    : UndoCommand(m), m_atomicNumber(aN), m_usingPositions(usingPositions),
-      m_atomId(atomId), m_uniqueId(uid)
-  {
-  }
+    : UndoCommand(m)
+    , m_atomicNumber(aN)
+    , m_usingPositions(usingPositions)
+    , m_atomId(atomId)
+    , m_uniqueId(uid)
+  {}
 
   void redo() override
   {
@@ -183,10 +190,12 @@ class RemoveAtomCommand : public RWMolecule::UndoCommand
 public:
   RemoveAtomCommand(RWMolecule& m, Index atomId, Index uid, unsigned char aN,
                     const Vector3& pos)
-    : UndoCommand(m), m_atomId(atomId), m_atomUid(uid), m_atomicNumber(aN),
-      m_position3d(pos)
-  {
-  }
+    : UndoCommand(m)
+    , m_atomId(atomId)
+    , m_atomUid(uid)
+    , m_atomicNumber(aN)
+    , m_position3d(pos)
+  {}
 
   void redo() override
   {
@@ -335,10 +344,10 @@ public:
   SetAtomicNumbersCommand(RWMolecule& m,
                           const Core::Array<unsigned char>& oldAtomicNumbers,
                           const Core::Array<unsigned char>& newAtomicNumbers)
-    : UndoCommand(m), m_oldAtomicNumbers(oldAtomicNumbers),
-      m_newAtomicNumbers(newAtomicNumbers)
-  {
-  }
+    : UndoCommand(m)
+    , m_oldAtomicNumbers(oldAtomicNumbers)
+    , m_newAtomicNumbers(newAtomicNumbers)
+  {}
 
   void redo() override { atomicNumbers() = m_newAtomicNumbers; }
 
@@ -369,10 +378,11 @@ public:
   SetAtomicNumberCommand(RWMolecule& m, Index atomId,
                          unsigned char oldAtomicNumber,
                          unsigned char newAtomicNumber)
-    : UndoCommand(m), m_atomId(atomId), m_oldAtomicNumber(oldAtomicNumber),
-      m_newAtomicNumber(newAtomicNumber)
-  {
-  }
+    : UndoCommand(m)
+    , m_atomId(atomId)
+    , m_oldAtomicNumber(oldAtomicNumber)
+    , m_newAtomicNumber(newAtomicNumber)
+  {}
 
   void redo() override { atomicNumbers()[m_atomId] = m_newAtomicNumber; }
 
@@ -402,16 +412,16 @@ public:
   SetPositions3dCommand(RWMolecule& m,
                         const Core::Array<Vector3>& oldPositions3d,
                         const Core::Array<Vector3>& newPositions3d)
-    : MergeUndoCommand<SetPositions3dMergeId>(m),
-      m_oldPositions3d(oldPositions3d), m_newPositions3d(newPositions3d)
-  {
-  }
+    : MergeUndoCommand<SetPositions3dMergeId>(m)
+    , m_oldPositions3d(oldPositions3d)
+    , m_newPositions3d(newPositions3d)
+  {}
 
   void redo() override { positions3d() = m_newPositions3d; }
 
   void undo() override { positions3d() = m_oldPositions3d; }
 
-  bool mergeWith(const QUndoCommand* other)
+  bool mergeWith(const QUndoCommand* other) override
   {
     const SetPositions3dCommand* o =
       dynamic_cast<const SetPositions3dCommand*>(other);
@@ -449,10 +459,11 @@ public:
   SetPosition3dCommand(RWMolecule& m, Index atomId,
                        const Vector3& oldPosition3d,
                        const Vector3& newPosition3d)
-    : MergeUndoCommand<SetPosition3dMergeId>(m), m_atomIds(1, atomId),
-      m_oldPosition3ds(1, oldPosition3d), m_newPosition3ds(1, newPosition3d)
-  {
-  }
+    : MergeUndoCommand<SetPosition3dMergeId>(m)
+    , m_atomIds(1, atomId)
+    , m_oldPosition3ds(1, oldPosition3d)
+    , m_newPosition3ds(1, newPosition3d)
+  {}
 
   void redo() override
   {
@@ -466,7 +477,7 @@ public:
       positions3d()[m_atomIds[i]] = m_oldPosition3ds[i];
   }
 
-  bool mergeWith(const QUndoCommand* o)
+  bool mergeWith(const QUndoCommand* o) override
   {
     const SetPosition3dCommand* other =
       dynamic_cast<const SetPosition3dCommand*>(o);
@@ -546,10 +557,11 @@ public:
   SetAtomHybridizationCommand(RWMolecule& m, Index atomId,
                               Core::AtomHybridization oldHybridization,
                               Core::AtomHybridization newHybridization)
-    : UndoCommand(m), m_atomId(atomId), m_oldHybridization(oldHybridization),
-      m_newHybridization(newHybridization)
-  {
-  }
+    : UndoCommand(m)
+    , m_atomId(atomId)
+    , m_oldHybridization(oldHybridization)
+    , m_newHybridization(newHybridization)
+  {}
 
   void redo() override { hybridizations()[m_atomId] = m_newHybridization; }
 
@@ -579,10 +591,11 @@ class SetAtomFormalChargeCommand : public RWMolecule::UndoCommand
 public:
   SetAtomFormalChargeCommand(RWMolecule& m, Index atomId, signed char oldCharge,
                              signed char newCharge)
-    : UndoCommand(m), m_atomId(atomId), m_oldCharge(oldCharge),
-      m_newCharge(newCharge)
-  {
-  }
+    : UndoCommand(m)
+    , m_atomId(atomId)
+    , m_oldCharge(oldCharge)
+    , m_newCharge(newCharge)
+  {}
 
   void redo() override { formalCharges()[m_atomId] = m_newCharge; }
 
@@ -614,10 +627,12 @@ public:
   AddBondCommand(RWMolecule& m, unsigned char order,
                  const std::pair<Index, Index>& bondPair, Index bondId,
                  Index uid)
-    : UndoCommand(m), m_bondOrder(order), m_bondPair(bondPair),
-      m_bondId(bondId), m_uniqueId(uid)
-  {
-  }
+    : UndoCommand(m)
+    , m_bondOrder(order)
+    , m_bondPair(bondPair)
+    , m_bondId(bondId)
+    , m_uniqueId(uid)
+  {}
 
   void redo() override
   {
@@ -686,10 +701,12 @@ public:
   RemoveBondCommand(RWMolecule& m, Index bondId, Index bondUid,
                     const std::pair<Index, Index>& bondPair,
                     unsigned char bondOrder)
-    : UndoCommand(m), m_bondId(bondId), m_bondUid(bondUid),
-      m_bondPair(bondPair), m_bondOrder(bondOrder)
-  {
-  }
+    : UndoCommand(m)
+    , m_bondId(bondId)
+    , m_bondUid(bondUid)
+    , m_bondPair(bondPair)
+    , m_bondOrder(bondOrder)
+  {}
 
   void redo() override
   {
@@ -772,10 +789,10 @@ class SetBondOrdersCommand : public RWMolecule::UndoCommand
 public:
   SetBondOrdersCommand(RWMolecule& m, const Array<unsigned char>& oldBondOrders,
                        const Array<unsigned char>& newBondOrders)
-    : UndoCommand(m), m_oldBondOrders(oldBondOrders),
-      m_newBondOrders(newBondOrders)
-  {
-  }
+    : UndoCommand(m)
+    , m_oldBondOrders(oldBondOrders)
+    , m_newBondOrders(newBondOrders)
+  {}
 
   void redo() override { bondOrders() = m_newBondOrders; }
 
@@ -805,16 +822,17 @@ class SetBondOrderCommand : public MergeUndoCommand<SetBondOrderMergeId>
 public:
   SetBondOrderCommand(RWMolecule& m, Index bondId, unsigned char oldBondOrder,
                       unsigned char newBondOrder)
-    : MergeUndoCommand<SetBondOrderMergeId>(m), m_bondId(bondId),
-      m_oldBondOrder(oldBondOrder), m_newBondOrder(newBondOrder)
-  {
-  }
+    : MergeUndoCommand<SetBondOrderMergeId>(m)
+    , m_bondId(bondId)
+    , m_oldBondOrder(oldBondOrder)
+    , m_newBondOrder(newBondOrder)
+  {}
 
   void redo() override { bondOrders()[m_bondId] = m_newBondOrder; }
 
   void undo() override { bondOrders()[m_bondId] = m_oldBondOrder; }
 
-  bool mergeWith(const QUndoCommand* other)
+  bool mergeWith(const QUndoCommand* other) override
   {
     const SetBondOrderCommand* o =
       dynamic_cast<const SetBondOrderCommand*>(other);
@@ -852,9 +870,10 @@ public:
   SetBondPairsCommand(RWMolecule& m,
                       const Array<std::pair<Index, Index>>& oldBondPairs,
                       const Array<std::pair<Index, Index>>& newBondPairs)
-    : UndoCommand(m), m_oldBondPairs(oldBondPairs), m_newBondPairs(newBondPairs)
-  {
-  }
+    : UndoCommand(m)
+    , m_oldBondPairs(oldBondPairs)
+    , m_newBondPairs(newBondPairs)
+  {}
 
   void redo() override { bondPairs() = m_newBondPairs; }
 
@@ -895,10 +914,11 @@ public:
   SetBondPairCommand(RWMolecule& m, Index bondId,
                      const std::pair<Index, Index>& oldBondPair,
                      const std::pair<Index, Index>& newBondPair)
-    : UndoCommand(m), m_bondId(bondId), m_oldBondPair(oldBondPair),
-      m_newBondPair(newBondPair)
-  {
-  }
+    : UndoCommand(m)
+    , m_bondId(bondId)
+    , m_oldBondPair(oldBondPair)
+    , m_newBondPair(newBondPair)
+  {}
 
   void redo() override { bondPairs()[m_bondId] = m_newBondPair; }
 
@@ -931,9 +951,9 @@ class AddUnitCellCommand : public RWMolecule::UndoCommand
 
 public:
   AddUnitCellCommand(RWMolecule& m, const UnitCell& newUnitCell)
-    : UndoCommand(m), m_newUnitCell(newUnitCell)
-  {
-  }
+    : UndoCommand(m)
+    , m_newUnitCell(newUnitCell)
+  {}
 
   void redo() override
   {
@@ -971,9 +991,9 @@ class RemoveUnitCellCommand : public RWMolecule::UndoCommand
 
 public:
   RemoveUnitCellCommand(RWMolecule& m, const UnitCell& oldUnitCell)
-    : UndoCommand(m), m_oldUnitCell(oldUnitCell)
-  {
-  }
+    : UndoCommand(m)
+    , m_oldUnitCell(oldUnitCell)
+  {}
 
   void redo() override { m_mol.molecule().setUnitCell(nullptr); }
 
@@ -1008,9 +1028,10 @@ class ModifyMoleculeCommand : public RWMolecule::UndoCommand
 public:
   ModifyMoleculeCommand(RWMolecule& m, const Molecule& oldMolecule,
                         const Molecule& newMolecule)
-    : UndoCommand(m), m_oldMolecule(oldMolecule), m_newMolecule(newMolecule)
-  {
-  }
+    : UndoCommand(m)
+    , m_oldMolecule(oldMolecule)
+    , m_newMolecule(newMolecule)
+  {}
 
   void redo() override { m_mol.molecule() = m_newMolecule; }
 

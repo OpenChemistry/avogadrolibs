@@ -32,18 +32,18 @@ class Meshes : public QtGui::ScenePlugin
 
 public:
   explicit Meshes(QObject* parent = 0);
-  ~Meshes();
+  ~Meshes() override;
 
   void process(const Core::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const { return tr("Meshes"); }
+  QString name() const override { return tr("Meshes"); }
 
-  QString description() const { return tr("Render triangle meshes."); }
+  QString description() const override { return tr("Render triangle meshes."); }
 
-  bool isEnabled() const;
+  bool isEnabled() const override;
 
-  void setEnabled(bool enable);
+  void setEnabled(bool enable) override;
 
 private:
   bool m_enabled;

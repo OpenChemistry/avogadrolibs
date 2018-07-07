@@ -121,12 +121,12 @@ add_subdirectory(vrml)
 add_subdirectory(workflows)
 
 if(USE_VTK)
+  add_subdirectory(plotrmsd)
   add_subdirectory(plotxrd)
 endif()
 
 if(USE_MOLEQUEUE)
   add_subdirectory(apbs)
-  add_subdirectory(mongochem)
   add_subdirectory(gamessinput)
   add_subdirectory(quantuminput)
   add_subdirectory(scriptfileformats)

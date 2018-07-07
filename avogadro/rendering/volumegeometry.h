@@ -35,7 +35,7 @@ class AVOGADRORENDERING_EXPORT VolumeGeometry : public Drawable
 {
 public:
   VolumeGeometry();
-  ~VolumeGeometry();
+  ~VolumeGeometry() override;
 };
 
 } // End namespace Rendering

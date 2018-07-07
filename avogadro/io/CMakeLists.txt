@@ -33,6 +33,7 @@ set(HEADERS
   mdlformat.h
   poscarformat.h
   xyzformat.h
+  trrformat.h
   lammpsformat.h
 )
 
@@ -46,6 +47,7 @@ set(SOURCES
   mdlformat.cpp
   poscarformat.cpp
   xyzformat.cpp
+  trrformat.cpp
   lammpsformat.cpp
 )
 

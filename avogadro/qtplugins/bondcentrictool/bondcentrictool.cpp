@@ -56,11 +56,11 @@ namespace Avogadro {
 namespace QtPlugins {
 
 using Core::Array;
+using Core::Elements;
+using QtGui::Molecule;
 using QtGui::RWAtom;
 using QtGui::RWBond;
 using QtGui::RWMolecule;
-using QtGui::Molecule;
-using Core::Elements;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::Identifier;
@@ -120,7 +120,7 @@ class Quad : public MeshGeometry
 {
 public:
   Quad() {}
-  ~Quad() {}
+  ~Quad() override {}
 
   /**
    * @brief setQuad Set the four corners of the quad.
@@ -161,7 +161,7 @@ class ArcSector : public MeshGeometry
 {
 public:
   ArcSector() {}
-  ~ArcSector() {}
+  ~ArcSector() override {}
 
   /**
    * Define the sector.
@@ -227,7 +227,7 @@ class QuadOutline : public LineStripGeometry
 {
 public:
   QuadOutline() {}
-  ~QuadOutline() {}
+  ~QuadOutline() override {}
 
   /**
    * @brief setQuad Set the four corners of the quad.
@@ -257,7 +257,7 @@ class ArcStrip : public LineStripGeometry
 {
 public:
   ArcStrip() {}
-  ~ArcStrip() {}
+  ~ArcStrip() override {}
 
   /**
    * Define the arc.
@@ -305,17 +305,19 @@ void ArcStrip::setArc(const Vector3f& origin, const Vector3f& start,
 } // end anon namespace
 
 BondCentricTool::BondCentricTool(QObject* parent_)
-  : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_renderer(nullptr), m_moveState(IgnoreMove),
-    m_planeSnapIncr(10.f), m_snapPlaneToBonds(true)
+  : QtGui::ToolPlugin(parent_)
+  , m_activateAction(new QAction(this))
+  , m_molecule(nullptr)
+  , m_renderer(nullptr)
+  , m_moveState(IgnoreMove)
+  , m_planeSnapIncr(10.f)
+  , m_snapPlaneToBonds(true)
 {
   m_activateAction->setText(tr("Bond-centric manipulation"));
   m_activateAction->setIcon(QIcon(":/icons/bondcentrictool.png"));
 }
 
-BondCentricTool::~BondCentricTool()
-{
-}
+BondCentricTool::~BondCentricTool() {}
 
 QWidget* BondCentricTool::toolWidget() const
 {
@@ -338,9 +340,7 @@ void BondCentricTool::setEditMolecule(QtGui::RWMolecule* mol)
   }
 }
 
-void BondCentricTool::setGLWidget(QtOpenGL::GLWidget*)
-{
-}
+void BondCentricTool::setGLWidget(QtOpenGL::GLWidget*) {}
 
 void BondCentricTool::setGLRenderer(Rendering::GLRenderer* ren)
 {
