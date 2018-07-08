@@ -21,7 +21,6 @@
 
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
-#include <avogadro/io/fileformatmanager.h>
 
 #include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/molecule.h>
@@ -36,25 +35,23 @@
 namespace Avogadro {
 namespace QtGui {
 
-using QtGui::PythonScript;
 using QtGui::GenericHighlighter;
+using QtGui::PythonScript;
 
 InterfaceScript::InterfaceScript(const QString& scriptFilePath_,
                                  QObject* parent_)
-  : QObject(parent_), m_interpreter(new PythonScript(scriptFilePath_, this)),
-    m_moleculeExtension("cjson")
-{
-}
+  : QObject(parent_)
+  , m_interpreter(new PythonScript(scriptFilePath_, this))
+  , m_moleculeExtension(QStringLiteral("cjson"))
+{}
 
 InterfaceScript::InterfaceScript(QObject* parent_)
-  : QObject(parent_), m_interpreter(new PythonScript(this)),
-    m_moleculeExtension("cjson")
-{
-}
+  : QObject(parent_)
+  , m_interpreter(new PythonScript(this))
+  , m_moleculeExtension(QStringLiteral("cjson"))
+{}
 
-InterfaceScript::~InterfaceScript()
-{
-}
+InterfaceScript::~InterfaceScript() {}
 
 bool InterfaceScript::debug() const
 {
@@ -69,8 +66,8 @@ QJsonObject InterfaceScript::options() const
     m_highlightStyles.clear();
 
     // Retrieve/set options
-    QByteArray json =
-      m_interpreter->execute(QStringList() << "--print-options");
+    QByteArray json = m_interpreter->execute(
+      QStringList() << QStringLiteral("--print-options"));
 
     if (m_interpreter->hasErrors()) {
       m_errors << m_interpreter->errorList();
@@ -91,15 +88,17 @@ QJsonObject InterfaceScript::options() const
     m_options = doc.object();
 
     // Check if the generator needs to read a molecule.
-    m_moleculeExtension = "cjson";
-    if (m_options.contains("inputMoleculeFormat") &&
-        m_options["inputMoleculeFormat"].isString()) {
-      m_moleculeExtension = m_options["inputMoleculeFormat"].toString();
+    m_moleculeExtension = QLatin1String("cjson");
+    if (m_options.contains(QStringLiteral("inputMoleculeFormat")) &&
+        m_options[QStringLiteral("inputMoleculeFormat")].isString()) {
+      m_moleculeExtension =
+        m_options[QStringLiteral("inputMoleculeFormat")].toString();
     }
 
-    if (m_options.contains("highlightStyles") &&
-        m_options.value("highlightStyles").isArray()) {
-      if (!parseHighlightStyles(m_options.value("highlightStyles").toArray())) {
+    if (m_options.contains(QStringLiteral("highlightStyles")) &&
+        m_options.value(QStringLiteral("highlightStyles")).isArray()) {
+      if (!parseHighlightStyles(
+            m_options.value(QStringLiteral("highlightStyles")).toArray())) {
         qDebug() << "Failed to parse highlighting styles.";
       }
     }
@@ -112,8 +111,8 @@ QString InterfaceScript::displayName() const
 {
   m_errors.clear();
   if (m_displayName.isEmpty()) {
-    m_displayName =
-      QString(m_interpreter->execute(QStringList() << "--display-name"));
+    m_displayName = QString(m_interpreter->execute(
+      QStringList() << QStringLiteral("--display-name")));
     m_errors << m_interpreter->errorList();
     m_displayName = m_displayName.trimmed();
   }
@@ -125,8 +124,8 @@ QString InterfaceScript::menuPath() const
 {
   m_errors.clear();
   if (m_menuPath.isEmpty()) {
-    m_menuPath =
-      QString(m_interpreter->execute(QStringList() << "--menu-path"));
+    m_menuPath = QString(
+      m_interpreter->execute(QStringList() << QStringLiteral("--menu-path")));
     m_errors << m_interpreter->errorList();
     m_menuPath = m_menuPath.trimmed();
   }
@@ -149,7 +148,7 @@ void InterfaceScript::reset()
 {
   m_interpreter->setDefaultPythonInterpretor();
   m_interpreter->setScriptFilePath(QString());
-  m_moleculeExtension = "Unknown";
+  m_moleculeExtension = QLatin1String("Unknown");
   m_displayName = QString();
   m_options = QJsonObject();
   m_warnings.clear();
@@ -177,8 +176,9 @@ bool InterfaceScript::runWorkflow(const QJsonObject& options_,
   if (!insertMolecule(allOptions, *mol))
     return false;
 
-  QByteArray json(m_interpreter->execute(QStringList() << "--run-workflow",
-                                         QJsonDocument(allOptions).toJson()));
+  QByteArray json(
+    m_interpreter->execute(QStringList() << QStringLiteral("--run-workflow"),
+                           QJsonDocument(allOptions).toJson()));
 
   if (m_interpreter->hasErrors()) {
     m_errors << m_interpreter->errorList();
@@ -195,8 +195,8 @@ bool InterfaceScript::runWorkflow(const QJsonObject& options_,
     QJsonObject obj = doc.object();
 
     // Check for any warnings:
-    if (obj.contains("warnings")) {
-      if (obj["warnings"].isArray()) {
+    if (obj.contains(QStringLiteral("warnings"))) {
+      if (obj[QStringLiteral("warnings")].isArray()) {
         foreach (const QJsonValue& warning, obj["warnings"].toArray()) {
           if (warning.isString())
             m_warnings << warning.toString();
@@ -213,7 +213,7 @@ bool InterfaceScript::runWorkflow(const QJsonObject& options_,
     QScopedPointer<Io::FileFormat> format(
       formats.newFormatFromFileExtension("cjson"));
     // convert the "cjson" field to a string
-    QJsonObject cjsonObj = obj["cjson"].toObject();
+    QJsonObject cjsonObj = obj[QStringLiteral("cjson")].toObject();
     QJsonDocument doc(cjsonObj);
     QString strCJSON(doc.toJson(QJsonDocument::Compact));
     if (!strCJSON.isEmpty()) {
@@ -221,7 +221,7 @@ bool InterfaceScript::runWorkflow(const QJsonObject& options_,
       QtGui::Molecule newMol(guiMol->parent());
       result = format->readString(strCJSON.toStdString(), newMol);
 
-      if (obj["append"].toBool()) { // just append some new bits
+      if (obj[QStringLiteral("append")].toBool()) { // just append some new bits
         guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
       } else { // replace the whole molecule
         Molecule::MoleculeChanges changes =
@@ -250,8 +250,9 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
   if (!insertMolecule(allOptions, mol))
     return false;
 
-  QByteArray json(m_interpreter->execute(QStringList() << "--generate-input",
-                                         QJsonDocument(allOptions).toJson()));
+  QByteArray json(
+    m_interpreter->execute(QStringList() << QStringLiteral("--generate-input"),
+                           QJsonDocument(allOptions).toJson()));
 
   if (m_interpreter->hasErrors()) {
     m_errors << m_interpreter->errorList();
@@ -268,8 +269,8 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
     QJsonObject obj = doc.object();
 
     // Check for any warnings:
-    if (obj.contains("warnings")) {
-      if (obj["warnings"].isArray()) {
+    if (obj.contains(QStringLiteral("warnings"))) {
+      if (obj[QStringLiteral("warnings")].isArray()) {
         foreach (const QJsonValue& warning, obj["warnings"].toArray()) {
           if (warning.isString())
             m_warnings << warning.toString();
@@ -282,18 +283,18 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
     }
 
     // Extract input file text:
-    if (obj.contains("files")) {
-      if (obj["files"].isArray()) {
+    if (obj.contains(QStringLiteral("files"))) {
+      if (obj[QStringLiteral("files")].isArray()) {
         foreach (const QJsonValue& file, obj["files"].toArray()) {
           if (file.isObject()) {
             QJsonObject fileObj = file.toObject();
-            if (fileObj["filename"].isString()) {
-              QString fileName = fileObj["filename"].toString();
+            if (fileObj[QStringLiteral("filename")].isString()) {
+              QString fileName = fileObj[QStringLiteral("filename")].toString();
               QString contents;
-              if (fileObj["contents"].isString()) {
-                contents = fileObj["contents"].toString();
-              } else if (fileObj["filePath"].isString()) {
-                QFile refFile(fileObj["filePath"].toString());
+              if (fileObj[QStringLiteral("contents")].isString()) {
+                contents = fileObj[QStringLiteral("contents")].toString();
+              } else if (fileObj[QStringLiteral("filePath")].isString()) {
+                QFile refFile(fileObj[QStringLiteral("filePath")].toString());
                 if (refFile.exists() && refFile.open(QFile::ReadOnly)) {
                   contents = QString(refFile.readAll());
                 } else {
@@ -311,10 +312,11 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
               }
               replaceKeywords(contents, mol);
               m_filenames << fileName;
-              m_files.insert(fileObj["filename"].toString(), contents);
+              m_files.insert(fileObj[QStringLiteral("filename")].toString(),
+                             contents);
 
               // Concatenate the requested styles for this input file.
-              if (fileObj["highlightStyles"].isArray()) {
+              if (fileObj[QStringLiteral("highlightStyles")].isArray()) {
                 GenericHighlighter* highlighter(new GenericHighlighter(this));
                 foreach (const QJsonValue& styleVal,
                          fileObj["highlightStyles"].toArray()) {
@@ -355,9 +357,9 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
     } // end if obj contains "files"
 
     // Extract main input filename:
-    if (obj.contains("mainFile")) {
-      if (obj["mainFile"].isString()) {
-        QString mainFile = obj["mainFile"].toString();
+    if (obj.contains(QStringLiteral("mainFile"))) {
+      if (obj[QStringLiteral("mainFile")].isString()) {
+        QString mainFile = obj[QStringLiteral("mainFile")].toString();
         if (m_filenames.contains(mainFile)) {
           m_mainFileName = mainFile;
         } else {
@@ -439,10 +441,10 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
                                      const Core::Molecule& mol) const
 {
   // Update the cached options if the format is not set
-  if (m_moleculeExtension == "Unknown")
+  if (m_moleculeExtension == QLatin1String("Unknown"))
     options();
 
-  if (m_moleculeExtension == "None")
+  if (m_moleculeExtension == QLatin1String("None"))
     return true;
 
   Io::FileFormatManager& formats = Io::FileFormatManager::instance();
@@ -463,7 +465,7 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
     return false;
   }
 
-  if (m_moleculeExtension != "cjson") {
+  if (m_moleculeExtension != QLatin1String("cjson")) {
     json.insert(m_moleculeExtension, QJsonValue(QString::fromStdString(str)));
   } else {
     // If cjson was requested, embed the actual JSON, rather than the string.
@@ -507,8 +509,8 @@ void InterfaceScript::replaceKeywords(QString& str,
                                       const Core::Molecule& mol) const
 {
   // Simple keywords:
-  str.replace("$$atomCount$$", QString::number(mol.atomCount()));
-  str.replace("$$bondCount$$", QString::number(mol.bondCount()));
+  str.replace(QLatin1String("$$atomCount$$"), QString::number(mol.atomCount()));
+  str.replace(QLatin1String("$$bondCount$$"), QString::number(mol.bondCount()));
 
   // Find each coordinate block keyword in the file, then generate and replace
   // it with the appropriate values.
@@ -536,17 +538,17 @@ bool InterfaceScript::parseHighlightStyles(const QJsonArray& json) const
     }
     QJsonObject styleObj(styleVal.toObject());
 
-    if (!styleObj.contains("style")) {
+    if (!styleObj.contains(QStringLiteral("style"))) {
       qDebug() << "Style object missing 'style' member.";
       result = false;
       continue;
     }
-    if (!styleObj.value("style").isString()) {
+    if (!styleObj.value(QStringLiteral("style")).isString()) {
       qDebug() << "Style object contains non-string 'style' member.";
       result = false;
       continue;
     }
-    QString styleName(styleObj.value("style").toString());
+    QString styleName(styleObj.value(QStringLiteral("style")).toString());
 
     if (m_highlightStyles.contains(styleName)) {
       qDebug() << "Duplicate highlight style: " << styleName;
@@ -554,18 +556,18 @@ bool InterfaceScript::parseHighlightStyles(const QJsonArray& json) const
       continue;
     }
 
-    if (!styleObj.contains("rules")) {
+    if (!styleObj.contains(QStringLiteral("rules"))) {
       qDebug() << "Style object" << styleName << "missing 'rules' member.";
       result = false;
       continue;
     }
-    if (!styleObj.value("rules").isArray()) {
+    if (!styleObj.value(QStringLiteral("rules")).isArray()) {
       qDebug() << "Style object" << styleName
                << "contains non-array 'rules' member.";
       result = false;
       continue;
     }
-    QJsonArray rulesArray(styleObj.value("rules").toArray());
+    QJsonArray rulesArray(styleObj.value(QStringLiteral("rules")).toArray());
 
     GenericHighlighter* highlighter(
       new GenericHighlighter(const_cast<InterfaceScript*>(this)));
@@ -594,33 +596,34 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
     }
     QJsonObject ruleObj(ruleVal.toObject());
 
-    if (!ruleObj.contains("patterns")) {
+    if (!ruleObj.contains(QStringLiteral("patterns"))) {
       qDebug() << "Rule missing 'patterns' array:" << endl
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
-    if (!ruleObj.value("patterns").isArray()) {
+    if (!ruleObj.value(QStringLiteral("patterns")).isArray()) {
       qDebug() << "Rule 'patterns' member is not an array:" << endl
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
-    QJsonArray patternsArray(ruleObj.value("patterns").toArray());
+    QJsonArray patternsArray(
+      ruleObj.value(QStringLiteral("patterns")).toArray());
 
-    if (!ruleObj.contains("format")) {
+    if (!ruleObj.contains(QStringLiteral("format"))) {
       qDebug() << "Rule missing 'format' object:" << endl
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
-    if (!ruleObj.value("format").isObject()) {
+    if (!ruleObj.value(QStringLiteral("format")).isObject()) {
       qDebug() << "Rule 'format' member is not an object:" << endl
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
-    QJsonObject formatObj(ruleObj.value("format").toObject());
+    QJsonObject formatObj(ruleObj.value(QStringLiteral("format")).toObject());
 
     GenericHighlighter::Rule& rule = highligher.addRule();
 
@@ -651,30 +654,30 @@ bool InterfaceScript::parseFormat(const QJsonObject& json,
                                   QTextCharFormat& format) const
 {
   // Check for presets first:
-  if (json.contains("preset")) {
-    if (!json["preset"].isString()) {
+  if (json.contains(QStringLiteral("preset"))) {
+    if (!json[QStringLiteral("preset")].isString()) {
       qDebug() << "Preset is not a string.";
       return false;
     }
 
-    QString preset(json["preset"].toString());
+    QString preset(json[QStringLiteral("preset")].toString());
     /// @todo Store presets in a singleton that can be configured in the GUI,
     /// rather than hardcoding them.
-    if (preset == "title") {
-      format.setFontFamily("serif");
+    if (preset == QLatin1String("title")) {
+      format.setFontFamily(QStringLiteral("serif"));
       format.setForeground(Qt::darkGreen);
       format.setFontWeight(QFont::Bold);
-    } else if (preset == "keyword") {
-      format.setFontFamily("mono");
+    } else if (preset == QLatin1String("keyword")) {
+      format.setFontFamily(QStringLiteral("mono"));
       format.setForeground(Qt::darkBlue);
-    } else if (preset == "property") {
-      format.setFontFamily("mono");
+    } else if (preset == QLatin1String("property")) {
+      format.setFontFamily(QStringLiteral("mono"));
       format.setForeground(Qt::darkRed);
-    } else if (preset == "literal") {
-      format.setFontFamily("mono");
+    } else if (preset == QLatin1String("literal")) {
+      format.setFontFamily(QStringLiteral("mono"));
       format.setForeground(Qt::darkMagenta);
-    } else if (preset == "comment") {
-      format.setFontFamily("serif");
+    } else if (preset == QLatin1String("comment")) {
+      format.setFontFamily(QStringLiteral("serif"));
       format.setForeground(Qt::darkGreen);
       format.setFontItalic(true);
     } else {
@@ -713,24 +716,30 @@ bool InterfaceScript::parseFormat(const QJsonObject& json,
     }
   } colorParser;
 
-  if (json.contains("foreground") && json.value("foreground").isArray()) {
-    QJsonArray foregroundArray(json.value("foreground").toArray());
+  if (json.contains(QStringLiteral("foreground")) &&
+      json.value(QStringLiteral("foreground")).isArray()) {
+    QJsonArray foregroundArray(
+      json.value(QStringLiteral("foreground")).toArray());
     bool ok;
     format.setForeground(colorParser(foregroundArray, &ok));
     if (!ok)
       return false;
   }
 
-  if (json.contains("background") && json.value("background").isArray()) {
-    QJsonArray backgroundArray(json.value("background").toArray());
+  if (json.contains(QStringLiteral("background")) &&
+      json.value(QStringLiteral("background")).isArray()) {
+    QJsonArray backgroundArray(
+      json.value(QStringLiteral("background")).toArray());
     bool ok;
     format.setBackground(colorParser(backgroundArray, &ok));
     if (!ok)
       return false;
   }
 
-  if (json.contains("attributes") && json.value("attributes").isArray()) {
-    QJsonArray attributesArray(json.value("attributes").toArray());
+  if (json.contains(QStringLiteral("attributes")) &&
+      json.value(QStringLiteral("attributes")).isArray()) {
+    QJsonArray attributesArray(
+      json.value(QStringLiteral("attributes")).toArray());
     format.setFontWeight(attributesArray.contains(QLatin1String("bold"))
                            ? QFont::Bold
                            : QFont::Normal);
@@ -739,8 +748,9 @@ bool InterfaceScript::parseFormat(const QJsonObject& json,
       attributesArray.contains(QLatin1String("underline")));
   }
 
-  if (json.contains("family") && json.value("family").isString()) {
-    format.setFontFamily(json.value("family").toString());
+  if (json.contains(QStringLiteral("family")) &&
+      json.value(QStringLiteral("family")).isString()) {
+    format.setFontFamily(json.value(QStringLiteral("family")).toString());
   }
 
   return true;
@@ -754,25 +764,27 @@ bool InterfaceScript::parsePattern(const QJsonValue& json,
 
   QJsonObject patternObj(json.toObject());
 
-  if (patternObj.contains("regexp") && patternObj.value("regexp").isString()) {
+  if (patternObj.contains(QStringLiteral("regexp")) &&
+      patternObj.value(QStringLiteral("regexp")).isString()) {
     pattern.setPatternSyntax(QRegExp::RegExp2);
-    pattern.setPattern(patternObj.value("regexp").toString());
-  } else if (patternObj.contains("wildcard") &&
-             patternObj.value("wildcard").isString()) {
+    pattern.setPattern(patternObj.value(QStringLiteral("regexp")).toString());
+  } else if (patternObj.contains(QStringLiteral("wildcard")) &&
+             patternObj.value(QStringLiteral("wildcard")).isString()) {
     pattern.setPatternSyntax(QRegExp::WildcardUnix);
-    pattern.setPattern(patternObj.value("wildcard").toString());
-  } else if (patternObj.contains("string") &&
-             patternObj.value("string").isString()) {
+    pattern.setPattern(patternObj.value(QStringLiteral("wildcard")).toString());
+  } else if (patternObj.contains(QStringLiteral("string")) &&
+             patternObj.value(QStringLiteral("string")).isString()) {
     pattern.setPatternSyntax(QRegExp::FixedString);
-    pattern.setPattern(patternObj.value("string").toString());
+    pattern.setPattern(patternObj.value(QStringLiteral("string")).toString());
   } else {
     return false;
   }
 
-  if (patternObj.contains("caseSensitive")) {
-    pattern.setCaseSensitivity(patternObj.value("caseSensitive").toBool(true)
-                                 ? Qt::CaseSensitive
-                                 : Qt::CaseInsensitive);
+  if (patternObj.contains(QStringLiteral("caseSensitive"))) {
+    pattern.setCaseSensitivity(
+      patternObj.value(QStringLiteral("caseSensitive")).toBool(true)
+        ? Qt::CaseSensitive
+        : Qt::CaseInsensitive);
   }
 
   return true;

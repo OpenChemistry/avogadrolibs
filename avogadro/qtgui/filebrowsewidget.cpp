@@ -31,9 +31,13 @@ namespace Avogadro {
 namespace QtGui {
 
 FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
-  : QWidget(theParent), m_mode(), // use the setter to initialize filters.
-    m_valid(false), m_fileSystemModel(new QFileSystemModel(this)),
-    m_button(new QPushButton(tr("Browse"))), m_edit(new QLineEdit)
+  : QWidget(theParent)
+  , m_mode()
+  , // use the setter to initialize filters.
+  m_valid(false)
+  , m_fileSystemModel(new QFileSystemModel(this))
+  , m_button(new QPushButton(tr("Browse")))
+  , m_edit(new QLineEdit)
 {
   QHBoxLayout* hbox = new QHBoxLayout;
   hbox->addWidget(m_edit);
@@ -59,9 +63,7 @@ FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
   setMode(ExistingFile);
 }
 
-FileBrowseWidget::~FileBrowseWidget()
-{
-}
+FileBrowseWidget::~FileBrowseWidget() {}
 
 QString FileBrowseWidget::fileName() const
 {
@@ -166,7 +168,7 @@ QString FileBrowseWidget::searchSystemPathForFile(const QString& exec)
 {
   QString result;
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-  if (!env.contains("PATH"))
+  if (!env.contains(QStringLiteral("PATH")))
     return result;
 
   static QRegExp pathSplitter = QRegExp(
@@ -175,9 +177,9 @@ QString FileBrowseWidget::searchSystemPathForFile(const QString& exec)
 #else  // WIN32
     ":"
 #endif // WIN32
-    );
-  QStringList paths =
-    env.value("PATH").split(pathSplitter, QString::SkipEmptyParts);
+  );
+  QStringList paths = env.value(QStringLiteral("PATH"))
+                        .split(pathSplitter, QString::SkipEmptyParts);
 
   foreach (const QString& path, paths) {
     QFileInfo info(path + "/" + exec);
