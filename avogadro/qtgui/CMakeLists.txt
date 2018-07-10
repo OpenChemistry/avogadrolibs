@@ -53,6 +53,7 @@ set(HEADERS
   rwmolecule.h
   sceneplugin.h
   scenepluginmodel.h
+  scriptloader.h
   toolplugin.h
   utilities.h
   viewfactory.h
@@ -81,6 +82,7 @@ set(SOURCES
   rwmolecule.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
+  scriptloader.cpp
   toolplugin.cpp
   utilities.cpp
   viewfactory.cpp

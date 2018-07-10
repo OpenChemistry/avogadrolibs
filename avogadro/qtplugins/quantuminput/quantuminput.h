@@ -19,7 +19,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-#include <QtCore/QMultiMap>
+#include <QtCore/QMap>
 #include <QtCore/QStringList>
 
 class QAction;
@@ -92,10 +92,10 @@ private:
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
   // keyed on script file path
-  QMultiMap<QString, MoleQueue::InputGeneratorDialog*> m_dialogs;
+  QMap<QString, MoleQueue::InputGeneratorDialog*> m_dialogs;
 
   // maps program name --> script file path
-  QMultiMap<QString, QString> m_inputGeneratorScripts;
+  QMap<QString, QString> m_inputGeneratorScripts;
 
   const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;

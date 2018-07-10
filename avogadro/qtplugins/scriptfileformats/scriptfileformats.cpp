@@ -25,19 +25,19 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#include <QtCore/QStandardPaths>
 #include <QtCore/QTimer>
 
 namespace Avogadro {
 namespace QtPlugins {
 
-ScriptFileFormats::ScriptFileFormats(QObject* p) : ExtensionPlugin(p)
+ScriptFileFormats::ScriptFileFormats(QObject* p)
+  : ExtensionPlugin(p)
 {
   refreshFileFormats();
 }
 
-ScriptFileFormats::~ScriptFileFormats()
-{
-}
+ScriptFileFormats::~ScriptFileFormats() {}
 
 QList<QAction*> ScriptFileFormats::actions() const
 {
@@ -49,9 +49,7 @@ QStringList ScriptFileFormats::menuPath(QAction*) const
   return QStringList();
 }
 
-void ScriptFileFormats::setMolecule(QtGui::Molecule*)
-{
-}
+void ScriptFileFormats::setMolecule(QtGui::Molecule*) {}
 
 void ScriptFileFormats::refreshFileFormats()
 {
@@ -60,8 +58,19 @@ void ScriptFileFormats::refreshFileFormats()
   m_formats.clear();
 
   // List of directories to check.
-  /// @todo Custom script locations
+  /// @todo port to use scriptloader.cpp methods
   QStringList dirs;
+
+  // add the default paths
+  QStringList stdPaths =
+    QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation);
+  foreach (const QString& dirStr, stdPaths) {
+    QString path = dirStr + "/formatScripts";
+    QDir dir(path);
+    if (dir.exists() && dir.isReadable())
+      dirs << path;
+  }
+
   dirs << QCoreApplication::applicationDirPath() + "/../" +
             QtGui::Utilities::libraryDirectory() +
             "/avogadro2/scripts/formatScripts";
@@ -87,8 +96,8 @@ void ScriptFileFormats::refreshFileFormats()
 
 void ScriptFileFormats::unregisterFileFormats()
 {
-  for (QList<Io::FileFormat *>::const_iterator it = m_formats.constBegin(),
-                                               itEnd = m_formats.constEnd();
+  for (QList<Io::FileFormat*>::const_iterator it = m_formats.constBegin(),
+                                              itEnd = m_formats.constEnd();
        it != itEnd; ++it) {
     Io::FileFormatManager::unregisterFormat((*it)->identifier());
   }
@@ -96,8 +105,8 @@ void ScriptFileFormats::unregisterFileFormats()
 
 void ScriptFileFormats::registerFileFormats()
 {
-  for (QList<Io::FileFormat *>::const_iterator it = m_formats.constBegin(),
-                                               itEnd = m_formats.constEnd();
+  for (QList<Io::FileFormat*>::const_iterator it = m_formats.constBegin(),
+                                              itEnd = m_formats.constEnd();
        it != itEnd; ++it) {
     if (!Io::FileFormatManager::registerFormat((*it)->newInstance())) {
       qDebug() << "Could not register format" << (*it)->identifier().c_str()
