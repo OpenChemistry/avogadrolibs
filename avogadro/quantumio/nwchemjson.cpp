@@ -92,6 +92,8 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
   Value calculationVib;
   Value molecularOrbitals;
   int numberOfElectrons = 0;
+  string theory;
+  string xcFunctional;
   for (size_t i = 0; i < calculations.size(); ++i) {
     Value calcObj = calculations.get(i, "");
     if (calcObj.isObject()) {
@@ -102,6 +104,22 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
       Value calcSetup = calcObj["calculationSetup"];
       Value calcMol = calcSetup["molecule"];
       numberOfElectrons = calcSetup["numberOfElectrons"].asInt();
+      if (calcSetup.isMember("exchangeCorrelationFunctional")) {
+        Value functional = calcSetup["exchangeCorrelationFunctional"].get(
+          Value::ArrayIndex(0), "");
+        if (functional.isObject()) {
+          xcFunctional = functional["xcName"].asString();
+        }
+        if (xcFunctional == "B3LYP Method XC Potential") {
+          xcFunctional = "b3lyp";
+        }
+      }
+      if (calcSetup.isMember("waveFunctionTheory")) {
+        theory = calcSetup["waveFunctionTheory"].asString();
+        if (theory == "Density Functional Theory") {
+          theory = "dft";
+        }
+      }
       if (!calcMol.isNull() && calcMol.isObject())
         moleculeArray.append(calcMol);
       Value basisSet = calcSetup["basisSet"];
@@ -166,6 +184,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     // Now create the structure, and expand out the orbitals.
     GaussianSet* basis = new GaussianSet;
     basis->setMolecule(&molecule);
+    string basisSetName;
     for (size_t i = 0; i < atomSymbol.size(); ++i) {
       string symbol = atomSymbol[i];
       Value basisFunctions = basisSet["basisFunctions"];
@@ -187,6 +206,14 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
 
       if (currentFunction.isNull())
         break;
+
+      if (currentFunction.isMember("basisSetName")) {
+        if (basisSetName.empty()) {
+          basisSetName = currentFunction["basisSetName"].asString();
+        } else if (basisSetName != currentFunction["basisSetName"].asString()) {
+          basisSetName = "Custom";
+        }
+      }
 
       Value contraction = currentFunction["basisSetContraction"];
       bool spherical =
@@ -213,7 +240,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
         else if (shellType == "f" && spherical)
           type = GaussianSet::F7;
         else if (shellType == "f")
-          type == GaussianSet::F;
+          type = GaussianSet::F;
 
         if (type != GaussianSet::UU) {
           int b = basis->addBasis(i, type);
@@ -249,6 +276,9 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     basis->setMolecularOrbitalOccupancy(occArray);
     basis->setMolecularOrbitalNumber(numArray);
     basis->setElectronCount(numberOfElectrons);
+    basis->setFunctionalName(xcFunctional);
+    basis->setName(basisSetName);
+    basis->setTheoryName(theory);
     molecule.setBasisSet(basis);
   }
 
@@ -282,7 +312,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
   return true;
 }
 
-bool NWChemJson::write(std::ostream& file, const Molecule& molecule)
+bool NWChemJson::write(std::ostream&, const Molecule&)
 {
   return false;
 }

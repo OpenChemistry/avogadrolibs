@@ -26,7 +26,8 @@
 
 #include <avogadro/core/vector.h>
 
-#include <QtOpenGL/QGLFormat>
+#include <QtGui/QOpenGLContext>
+#include <QtGui/QSurfaceFormat>
 
 #include <QtGui/QImage>
 #include <QtWidgets/QApplication>
@@ -50,9 +51,9 @@ using Avogadro::VtkTesting::ImageRegressionTest;
 int qttextlabeltest(int argc, char* argv[])
 {
   // Set up the default format for our GL contexts.
-  QGLFormat defaultFormat = QGLFormat::defaultFormat();
-  defaultFormat.setSampleBuffers(true);
-  QGLFormat::setDefaultFormat(defaultFormat);
+  QSurfaceFormat defaultFormat = QSurfaceFormat::defaultFormat();
+  defaultFormat.setSamples(4);
+  QSurfaceFormat::setDefaultFormat(defaultFormat);
 
   // Create and show widget
   QApplication app(argc, argv);
@@ -194,7 +195,7 @@ int qttextlabeltest(int argc, char* argv[])
   app.exec();
 
   // Grab the frame buffer of the GLWidget and save it to a QImage.
-  QImage image = widget.grabFrameBuffer(false);
+  QImage image = widget.grabFramebuffer();
 
   // Set up the image regression test.
   ImageRegressionTest test(argc, argv);

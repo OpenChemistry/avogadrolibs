@@ -1,0 +1,8124 @@
+# Traditional Chinese translation for avogadro
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the avogadro package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: avogadro\n"
+"Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2018-04-13 12:05-0400\n"
+"PO-Revision-Date: 2016-06-10 06:36+0000\n"
+"Last-Translator: iychiang <iychiang1809@gmail.com>\n"
+"Language-Team: Traditional Chinese <zh_TW@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
+"X-Generator: Launchpad (build 18609)\n"
+
+#: molequeue/batchjob.cpp:84
+#, qt-format
+msgid "Batch Job #%L1 (%2)"
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:81 qtgui/interfacescript.cpp:85
+#, qt-format
+msgid ""
+"script --print-options output must be an JSON object at top level. "
+"Received:\n"
+"%1"
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:187 qtgui/interfacescript.cpp:204
+#: qtgui/interfacescript.cpp:277
+msgid "Non-string warning returned."
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:190 qtgui/interfacescript.cpp:207
+#: qtgui/interfacescript.cpp:280
+msgid "'warnings' member is not an array."
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:210 qtgui/interfacescript.cpp:300
+#, qt-format
+msgid "Reference file '%1' does not exist."
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:212 qtgui/interfacescript.cpp:302
+#, qt-format
+msgid "Error populating file %1: %2"
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:216 qtgui/interfacescript.cpp:306
+#, qt-format
+msgid ""
+"File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:338
+#, qt-format
+msgid ""
+"Malformed file entry: filename/contents missing or not strings:\n"
+"%1"
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:254 qtgui/interfacescript.cpp:344
+#, qt-format
+msgid "Malformed file entry at index %1: Not an object."
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:260 qtgui/interfacescript.cpp:350
+msgid "'files' member not an array."
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:354
+msgid "'files' member missing."
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:365
+msgid "'mainFile' member does not refer to an entry in 'files'."
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:280 qtgui/interfacescript.cpp:370
+msgid "'mainFile' member must be a string."
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:291 qtgui/interfacescript.cpp:381
+msgid "Response must be a JSON object at top-level."
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:295 qtgui/interfacescript.cpp:385
+#, qt-format
+msgid ""
+"Script output:\n"
+"%1"
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:338 qtgui/interfacescript.cpp:429
+#, qt-format
+msgid ""
+"Parse error at offset %L1: '%2'\n"
+"Raw JSON:\n"
+"\n"
+"%3"
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:362 qtgui/interfacescript.cpp:453
+#, qt-format
+msgid ""
+"Error writing molecule representation to string: Unrecognized file format: %1"
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:461
+#, qt-format
+msgid "Error writing molecule representation to string: %1"
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:382 qtgui/interfacescript.cpp:473
+#, qt-format
+msgid ""
+"Error generating cjson object: Parse error at offset %1: %2\n"
+"Raw JSON:\n"
+"\n"
+"%3"
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:391 qtgui/interfacescript.cpp:482
+#, qt-format
+msgid ""
+"Error generator cjson object: Parsed JSON is not an object:\n"
+"%1"
+msgstr ""
+
+#: molequeue/inputgeneratordialog.cpp:53
+#, fuzzy
+msgid "Input Generator (error)"
+msgstr "匯入產生器..."
+
+#: molequeue/inputgeneratordialog.cpp:55
+#, fuzzy, qt-format
+msgid "%1 Input Generator"
+msgstr "匯入產生器..."
+
+#: molequeue/inputgeneratorwidget.cpp:129
+msgid "Continue"
+msgstr "繼續"
+
+#. i18n: file: molequeue/inputgeneratorwidget.ui:127
+#. i18n: ectx: property (text), widget (QPushButton, closeButton)
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:184
+#. i18n: ectx: property (text), widget (QPushButton, closeButton)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:302
+#. i18n: ectx: property (text), widget (QPushButton, closeButton)
+#: molequeue/inputgeneratorwidget.cpp:129 qtgui/containerwidget.cpp:45
+msgid "Close"
+msgstr "關閉"
+
+#: molequeue/inputgeneratorwidget.cpp:170 qtgui/elementtranslator.cpp:387
+msgid "Unknown"
+msgstr "未知"
+
+#: molequeue/inputgeneratorwidget.cpp:171
+#, qt-format, qt-plural-format
+msgctxt ""
+msgid ""
+"The following file(s) have been modified:\n"
+"\n"
+"%1\n"
+"\n"
+"Would you like to overwrite your changes to reflect the new geometry or job "
+"options?"
+msgid_plural ""
+"The following file(s) have been modified:\n"
+"\n"
+"%1\n"
+"\n"
+"Would you like to overwrite your changes to reflect the new geometry or job "
+"options?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: molequeue/inputgeneratorwidget.cpp:177
+msgid "Overwrite modified input files?"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:203
+msgid "Problems occured during input generation:"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:292
+msgid "No input files to save!"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:300
+#: molequeue/inputgeneratorwidget.cpp:618 molequeue/molequeuewidget.cpp:84
+#: qtplugins/gamessinput/gamessinputdialog.cpp:697
+msgid "Cannot connect to MoleQueue"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:301
+#: molequeue/inputgeneratorwidget.cpp:619 molequeue/molequeuewidget.cpp:85
+#: qtplugins/gamessinput/gamessinputdialog.cpp:698
+msgid ""
+"Cannot connect to MoleQueue server. Please ensure that it is running and try "
+"again."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:333
+#, fuzzy, qt-format
+msgid "Submit %1 Calculation"
+msgstr "停止計算"
+
+#: molequeue/inputgeneratorwidget.cpp:349
+#: qtplugins/gamessinput/gamessinputdialog.cpp:734
+msgid "Job Failed"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:350
+#: qtplugins/gamessinput/gamessinputdialog.cpp:735
+msgid "The job did not complete successfully."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:80
+msgid "Script returns warnings:\n"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:384
+#, fuzzy
+msgid "Hide &Warnings"
+msgstr "警告"
+
+#: molequeue/inputgeneratorwidget.cpp:390
+#, fuzzy
+msgid "Show &Warnings"
+msgstr "警告"
+
+#: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:96
+msgid "An error has occurred:"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:458
+#, fuzzy
+msgid "Select output filename"
+msgstr "選擇溶劑"
+
+#: molequeue/inputgeneratorwidget.cpp:473
+#, qt-format
+msgid "%1: File exists and is not writable."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:479
+#, qt-format
+msgid "Internal error: could not find text widget for filename '%1'"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:495
+#: molequeue/inputgeneratorwidget.cpp:606
+#: qtplugins/gamessinput/gamessinputdialog.cpp:687
+#, fuzzy
+msgid "Output Error"
+msgstr "輸出:"
+
+#: molequeue/inputgeneratorwidget.cpp:496
+#: molequeue/inputgeneratorwidget.cpp:607
+#: qtplugins/gamessinput/gamessinputdialog.cpp:688
+#, fuzzy, qt-format
+msgid "Failed to write to file %1."
+msgstr "無法寫到檔案."
+
+#: molequeue/inputgeneratorwidget.cpp:507
+msgid "Select output directory"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:524
+#, qt-format
+msgid "%1: Directory does not exist!"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:530
+#, qt-format
+msgid "%1: Directory cannot be read!"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:540
+#, fuzzy, qt-format
+msgid "%1: File will be overwritten."
+msgstr "沒有寫入影片檔"
+
+#: molequeue/inputgeneratorwidget.cpp:545
+#, fuzzy, qt-format
+msgid "%1: File is not writable."
+msgstr "沒有寫入影片檔"
+
+#: molequeue/inputgeneratorwidget.cpp:558
+msgid "The input files cannot be written due to an unknown error."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:562
+#, qt-format
+msgid ""
+"The input files cannot be written:\n"
+"\n"
+"%1"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:571
+#, qt-format
+msgid ""
+"The input files cannot be written:\n"
+"\n"
+"%1\n"
+"\n"
+"Warnings:\n"
+"\n"
+"%2"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:582
+#, qt-format
+msgid ""
+"Warning:\n"
+"\n"
+"%1\n"
+"\n"
+"Would you like to continue?"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:586
+msgid "Write input files"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:633
+#, fuzzy
+msgid "Configure Job"
+msgstr "設定"
+
+#: molequeue/inputgeneratorwidget.cpp:658 qtgui/interfacewidget.cpp:125
+msgid "'userOptions' missing, or not an object."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:665 qtgui/interfacewidget.cpp:132
+#, qt-format
+msgid "Option '%1' not found in userOptions."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:670 qtgui/interfacewidget.cpp:137
+#, qt-format
+msgid "Option '%1' does not refer to an object."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:677 qtgui/interfacewidget.cpp:144
+#, qt-format
+msgid "'type' is not a string for option '%1'."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:708
+#: molequeue/inputgeneratorwidget.cpp:935 qtgui/interfacewidget.cpp:168
+#: qtgui/interfacewidget.cpp:413
+#, qt-format
+msgid ""
+"'userOptions' missing, or not an object:\n"
+"%1"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:717 qtgui/interfacewidget.cpp:177
+msgid "Title"
+msgstr "標題"
+
+#: molequeue/inputgeneratorwidget.cpp:721 qtgui/interfacewidget.cpp:181
+#, fuzzy
+msgid "Filename Base"
+msgstr "檔名:"
+
+#: molequeue/inputgeneratorwidget.cpp:725 qtgui/interfacewidget.cpp:185
+#, fuzzy
+msgid "Processor Cores"
+msgstr "處理器:"
+
+#: molequeue/inputgeneratorwidget.cpp:729 qtgui/interfacewidget.cpp:189
+#, fuzzy
+msgid "Calculation Type"
+msgstr "計算:"
+
+#: molequeue/inputgeneratorwidget.cpp:750 qtgui/interfacewidget.cpp:210
+msgid "Theory:"
+msgstr "理論:"
+
+#: molequeue/inputgeneratorwidget.cpp:753 qtgui/interfacewidget.cpp:213
+#, fuzzy
+msgid "Theory"
+msgstr "理論:"
+
+#: molequeue/inputgeneratorwidget.cpp:755 qtgui/interfacewidget.cpp:215
+msgid "Basis"
+msgstr "Basis"
+
+#: molequeue/inputgeneratorwidget.cpp:760 qtgui/interfacewidget.cpp:220
+msgid "Charge"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:762 qtgui/interfacewidget.cpp:222
+msgid "Multiplicity"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:949 qtgui/interfacewidget.cpp:427
+#, qt-format
+msgid "Error: value must be object for key '%1'."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:957 qtgui/interfacewidget.cpp:435
+#, qt-format
+msgid "Default value missing for option '%1'."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:978 qtgui/interfacewidget.cpp:458
+#, qt-format
+msgid "Unrecognized option type '%1' for option '%2'."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:987
+#: molequeue/inputgeneratorwidget.cpp:1024
+#: molequeue/inputgeneratorwidget.cpp:1047
+#: molequeue/inputgeneratorwidget.cpp:1069
+#: molequeue/inputgeneratorwidget.cpp:1093 qtgui/interfacewidget.cpp:467
+#: qtgui/interfacewidget.cpp:504 qtgui/interfacewidget.cpp:527
+#: qtgui/interfacewidget.cpp:549 qtgui/interfacewidget.cpp:573
+#: qtgui/interfacewidget.cpp:596
+#, qt-format
+msgid "Error setting default for option '%1'. Bad widget type."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:994
+#: molequeue/inputgeneratorwidget.cpp:1031
+#: molequeue/inputgeneratorwidget.cpp:1054
+#: molequeue/inputgeneratorwidget.cpp:1076
+#: molequeue/inputgeneratorwidget.cpp:1100 qtgui/interfacewidget.cpp:474
+#: qtgui/interfacewidget.cpp:511 qtgui/interfacewidget.cpp:534
+#: qtgui/interfacewidget.cpp:556 qtgui/interfacewidget.cpp:580
+#: qtgui/interfacewidget.cpp:603
+#, qt-format
+msgid "Error setting default for option '%1'. Bad default value:"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:1008 qtgui/interfacewidget.cpp:488
+#, qt-format
+msgid ""
+"Error setting default for option '%1'. Could not find valid combo entry "
+"index from value:"
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:1160 qtgui/interfacewidget.cpp:665
+#, qt-format
+msgid "Unhandled widget in collectOptions for option '%1'."
+msgstr ""
+
+#: molequeue/inputgeneratorwidget.cpp:1202 qtgui/interfacewidget.cpp:699
+#: qtplugins/gamessinput/gamessinputdialog.cpp:407
+#, fuzzy
+msgid "[no molecule]"
+msgstr "沒有設定分子"
+
+#: molequeue/molequeuedialog.cpp:73
+msgid "Submitting job to MoleQueue..."
+msgstr ""
+
+#: molequeue/molequeuedialog.cpp:82
+msgid "Job Submission Timeout"
+msgstr ""
+
+#: molequeue/molequeuedialog.cpp:83
+msgid "Avogadro timed out waiting for a reply from MoleQueue."
+msgstr ""
+
+#: molequeue/molequeuedialog.cpp:99
+#, qt-format
+msgid "Waiting for job %1 '%2' to finish..."
+msgstr ""
+
+#: molequeue/molequeuedialog.cpp:102
+#, fuzzy
+msgid "Stop waiting"
+msgstr "停止動畫"
+
+#: molequeue/molequeuedialog.cpp:121
+msgid "Fetching completed job information..."
+msgstr ""
+
+#: molequeue/molequeuedialog.cpp:133
+msgid "Job Retrieval Timeout"
+msgstr ""
+
+#: molequeue/molequeuedialog.cpp:134
+msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
+msgstr ""
+
+#: molequeue/molequeuedialog.cpp:143
+msgid "Error Submitting Job"
+msgstr ""
+
+#: molequeue/molequeuedialog.cpp:144
+#, qt-format
+msgid "The job has been rejected by MoleQueue: %1"
+msgstr ""
+
+#: molequeue/molequeuedialog.cpp:211 molequeue/molequeuewidget.cpp:156
+#, fuzzy
+msgid "No program selected."
+msgstr "沒有選擇原子:"
+
+#: molequeue/molequeuedialog.cpp:212 molequeue/molequeuewidget.cpp:157
+msgid "Please select the target program from the \"Queue and Program\" list."
+msgstr ""
+
+#: molequeue/molequeuewidget.cpp:112
+msgid "Client failed to submit job to MoleQueue."
+msgstr ""
+
+#: molequeue/molequeuewidget.cpp:165
+msgid "Internal error."
+msgstr ""
+
+#: molequeue/molequeuewidget.cpp:166
+msgid "Unable to resolve program selection. This is a bug."
+msgstr ""
+
+#: qtgui/containerwidget.cpp:39
+msgid "Split Horizontal"
+msgstr ""
+
+#: qtgui/containerwidget.cpp:42
+msgid "Split Vertical"
+msgstr ""
+
+#: qtgui/elementtranslator.cpp:32
+msgid "Hydrogen"
+msgstr "Hydrogen (氫)"
+
+#: qtgui/elementtranslator.cpp:35
+msgid "Helium"
+msgstr "Helium (氦)"
+
+#: qtgui/elementtranslator.cpp:38
+msgid "Lithium"
+msgstr "Lithium (鋰)"
+
+#: qtgui/elementtranslator.cpp:41
+msgid "Beryllium"
+msgstr "Beryllium (鈹)"
+
+#: qtgui/elementtranslator.cpp:44
+msgid "Boron"
+msgstr "Boron (硼)"
+
+#: qtgui/elementtranslator.cpp:47
+msgid "Carbon"
+msgstr "Carbon (碳)"
+
+#: qtgui/elementtranslator.cpp:50
+msgid "Nitrogen"
+msgstr "Nitrogen (氮)"
+
+#: qtgui/elementtranslator.cpp:53
+msgid "Oxygen"
+msgstr "Oxygen (氧)"
+
+#: qtgui/elementtranslator.cpp:56
+msgid "Fluorine"
+msgstr "Fluorine (氟)"
+
+#: qtgui/elementtranslator.cpp:59
+msgid "Neon"
+msgstr "Neon (氖)"
+
+#: qtgui/elementtranslator.cpp:62
+msgid "Sodium"
+msgstr "Sodium (鈉)"
+
+#: qtgui/elementtranslator.cpp:65
+msgid "Magnesium"
+msgstr "Magnesium (鎂)"
+
+#: qtgui/elementtranslator.cpp:68
+msgid "Aluminum"
+msgstr "Aluminum (鋁)"
+
+#: qtgui/elementtranslator.cpp:71
+msgid "Silicon"
+msgstr "Silicon (矽)"
+
+#: qtgui/elementtranslator.cpp:74
+msgid "Phosphorus"
+msgstr "Phosphorus (磷)"
+
+#: qtgui/elementtranslator.cpp:77
+msgid "Sulfur"
+msgstr "Sulfur (硫)"
+
+#: qtgui/elementtranslator.cpp:80
+msgid "Chlorine"
+msgstr "Chlorine (氯)"
+
+#: qtgui/elementtranslator.cpp:83
+msgid "Argon"
+msgstr "Argon (氬)"
+
+#: qtgui/elementtranslator.cpp:86
+msgid "Potassium"
+msgstr "Potassium (鉀)"
+
+#: qtgui/elementtranslator.cpp:89
+msgid "Calcium"
+msgstr "Calcium (鈣)"
+
+#: qtgui/elementtranslator.cpp:92
+msgid "Scandium"
+msgstr "Scandium (鈧)"
+
+#: qtgui/elementtranslator.cpp:95
+msgid "Titanium"
+msgstr "Titanium (鈦)"
+
+#: qtgui/elementtranslator.cpp:98
+msgid "Vanadium"
+msgstr "Vanadium (釩)"
+
+#: qtgui/elementtranslator.cpp:101
+msgid "Chromium"
+msgstr "Chromium (鉻)"
+
+#: qtgui/elementtranslator.cpp:104
+msgid "Manganese"
+msgstr "Manganese (錳)"
+
+#: qtgui/elementtranslator.cpp:107
+msgid "Iron"
+msgstr "Iron (鐵)"
+
+#: qtgui/elementtranslator.cpp:110
+msgid "Cobalt"
+msgstr "Cobalt (鈷)"
+
+#: qtgui/elementtranslator.cpp:113
+msgid "Nickel"
+msgstr "Nickel (鎳)"
+
+#: qtgui/elementtranslator.cpp:116
+msgid "Copper"
+msgstr "Copper (銅)"
+
+#: qtgui/elementtranslator.cpp:119
+msgid "Zinc"
+msgstr "Zinc (鋅)"
+
+#: qtgui/elementtranslator.cpp:122
+msgid "Gallium"
+msgstr "Gallium (鎵)"
+
+#: qtgui/elementtranslator.cpp:125
+msgid "Germanium"
+msgstr "Germanium (鍺)"
+
+#: qtgui/elementtranslator.cpp:128
+msgid "Arsenic"
+msgstr "Arsenic (砷)"
+
+#: qtgui/elementtranslator.cpp:131
+msgid "Selenium"
+msgstr "Selenium (硒)"
+
+#: qtgui/elementtranslator.cpp:134
+msgid "Bromine"
+msgstr "Bromine (溴)"
+
+#: qtgui/elementtranslator.cpp:137
+msgid "Krypton"
+msgstr "Krypton (氪)"
+
+#: qtgui/elementtranslator.cpp:140
+msgid "Rubidium"
+msgstr "Rubidium (銣)"
+
+#: qtgui/elementtranslator.cpp:143
+msgid "Strontium"
+msgstr "Strontium (鍶)"
+
+#: qtgui/elementtranslator.cpp:146
+msgid "Yttrium"
+msgstr "Yttrium (釔)"
+
+#: qtgui/elementtranslator.cpp:149
+msgid "Zirconium"
+msgstr "Zirconium (鋯)"
+
+#: qtgui/elementtranslator.cpp:152
+msgid "Niobium"
+msgstr "Niobium (鈮)"
+
+#: qtgui/elementtranslator.cpp:155
+msgid "Molybdenum"
+msgstr "Molybdenum (鉬)"
+
+#: qtgui/elementtranslator.cpp:158
+msgid "Technetium"
+msgstr "Technetium (鎝)"
+
+#: qtgui/elementtranslator.cpp:161
+msgid "Ruthenium"
+msgstr "Ruthenium (釕)"
+
+#: qtgui/elementtranslator.cpp:164
+msgid "Rhodium"
+msgstr "Rhodium (銠)"
+
+#: qtgui/elementtranslator.cpp:167
+msgid "Palladium"
+msgstr "Palladium (鈀)"
+
+#: qtgui/elementtranslator.cpp:170
+msgid "Silver"
+msgstr "Silver (銀)"
+
+#: qtgui/elementtranslator.cpp:173
+msgid "Cadmium"
+msgstr "Cadmium (鎘)"
+
+#: qtgui/elementtranslator.cpp:176
+msgid "Indium"
+msgstr "Indium (銦)"
+
+#: qtgui/elementtranslator.cpp:179
+msgid "Tin"
+msgstr "Tin (錫)"
+
+#: qtgui/elementtranslator.cpp:182
+msgid "Antimony"
+msgstr "(銻)"
+
+#: qtgui/elementtranslator.cpp:185
+msgid "Tellurium"
+msgstr "Tellurium (碲)"
+
+#: qtgui/elementtranslator.cpp:188
+msgid "Iodine"
+msgstr "Iodine (碘)"
+
+#: qtgui/elementtranslator.cpp:191
+msgid "Xenon"
+msgstr "Xenon (氙)"
+
+#: qtgui/elementtranslator.cpp:194
+msgid "Cesium"
+msgstr "Cesium 銫"
+
+#: qtgui/elementtranslator.cpp:197
+msgid "Barium"
+msgstr "Barium (鋇)"
+
+#: qtgui/elementtranslator.cpp:200
+msgid "Lanthanum"
+msgstr "Lantanum (鑭)"
+
+#: qtgui/elementtranslator.cpp:203
+msgid "Cerium"
+msgstr "Cerium (鈰)"
+
+#: qtgui/elementtranslator.cpp:206
+msgid "Praseodymium"
+msgstr "Praseodymium (鐠)"
+
+#: qtgui/elementtranslator.cpp:209
+msgid "Neodymium"
+msgstr "Neodymium (釹)"
+
+#: qtgui/elementtranslator.cpp:212
+msgid "Promethium"
+msgstr "Promethium (鉕)"
+
+#: qtgui/elementtranslator.cpp:215
+msgid "Samarium"
+msgstr "Samarium (釤)"
+
+#: qtgui/elementtranslator.cpp:218
+msgid "Europium"
+msgstr "Europium (銪)"
+
+#: qtgui/elementtranslator.cpp:221
+msgid "Gadolinium"
+msgstr "Gadolinium (釓)"
+
+#: qtgui/elementtranslator.cpp:224
+msgid "Terbium"
+msgstr "Terbium (鋱)"
+
+#: qtgui/elementtranslator.cpp:227
+msgid "Dysprosium"
+msgstr "Dysprosium (鏑)"
+
+#: qtgui/elementtranslator.cpp:230
+msgid "Holmium"
+msgstr "Holmium (鈥)"
+
+#: qtgui/elementtranslator.cpp:233
+msgid "Erbium"
+msgstr "Erbium (鉺)"
+
+#: qtgui/elementtranslator.cpp:236
+msgid "Thulium"
+msgstr "Thulium (銩)"
+
+#: qtgui/elementtranslator.cpp:239
+msgid "Ytterbium"
+msgstr "Ytterbium (鐿)"
+
+#: qtgui/elementtranslator.cpp:242
+msgid "Lutetium"
+msgstr "Lutetium (鎦)"
+
+#: qtgui/elementtranslator.cpp:245
+msgid "Hafnium"
+msgstr "Hafnium (鉿)"
+
+#: qtgui/elementtranslator.cpp:248
+msgid "Tantalum"
+msgstr "Tantalum (鉭)"
+
+#: qtgui/elementtranslator.cpp:251
+msgid "Tungsten"
+msgstr "Tungsten (鎢)"
+
+#: qtgui/elementtranslator.cpp:254
+msgid "Rhenium"
+msgstr "Rhenium (錸)"
+
+#: qtgui/elementtranslator.cpp:257
+msgid "Osmium"
+msgstr "Osmium (鋨)"
+
+#: qtgui/elementtranslator.cpp:260
+msgid "Iridium"
+msgstr "Iridium (銥)"
+
+#: qtgui/elementtranslator.cpp:263
+msgid "Platinum"
+msgstr "Platinum (鉑)"
+
+#: qtgui/elementtranslator.cpp:266
+msgid "Gold"
+msgstr "Gold (金)"
+
+#: qtgui/elementtranslator.cpp:269
+msgid "Mercury"
+msgstr "Mercury (汞)"
+
+#: qtgui/elementtranslator.cpp:272
+msgid "Thallium"
+msgstr "Thallium (鉈)"
+
+#: qtgui/elementtranslator.cpp:275
+msgid "Lead"
+msgstr "Lead (鉛)"
+
+#: qtgui/elementtranslator.cpp:278
+msgid "Bismuth"
+msgstr "Bismuth (鉍)"
+
+#: qtgui/elementtranslator.cpp:281
+msgid "Polonium"
+msgstr "Polonium (釙)"
+
+#: qtgui/elementtranslator.cpp:284
+msgid "Astatine"
+msgstr "Astatine (砈)"
+
+#: qtgui/elementtranslator.cpp:287
+msgid "Radon"
+msgstr "Radon (氡)"
+
+#: qtgui/elementtranslator.cpp:290
+msgid "Francium"
+msgstr "Francium (鍅)"
+
+#: qtgui/elementtranslator.cpp:293
+msgid "Radium"
+msgstr "Radium (鐳)"
+
+#: qtgui/elementtranslator.cpp:296
+msgid "Actinium"
+msgstr "Actinium (錒)"
+
+#: qtgui/elementtranslator.cpp:299
+msgid "Thorium"
+msgstr "Thorium (釷)"
+
+#: qtgui/elementtranslator.cpp:302
+msgid "Protactinium"
+msgstr "Protactinium (鏷)"
+
+#: qtgui/elementtranslator.cpp:305
+msgid "Uranium"
+msgstr "Uranium (鈾)"
+
+#: qtgui/elementtranslator.cpp:308
+msgid "Neptunium"
+msgstr "Neptunium (錼)"
+
+#: qtgui/elementtranslator.cpp:311
+msgid "Plutonium"
+msgstr "Plutonium (鈽)"
+
+#: qtgui/elementtranslator.cpp:314
+msgid "Americium"
+msgstr "Americium (鋂)"
+
+#: qtgui/elementtranslator.cpp:317
+msgid "Curium"
+msgstr "Curium (鋦)"
+
+#: qtgui/elementtranslator.cpp:320
+msgid "Berkelium"
+msgstr "Berkelium (鉳)"
+
+#: qtgui/elementtranslator.cpp:323
+msgid "Californium"
+msgstr "Californium (鉲)"
+
+#: qtgui/elementtranslator.cpp:326
+msgid "Einsteinium"
+msgstr "Eisteinium (鑀)"
+
+#: qtgui/elementtranslator.cpp:329
+msgid "Fermium"
+msgstr "Fermium (鐨)"
+
+#: qtgui/elementtranslator.cpp:332
+msgid "Mendelevium"
+msgstr "Mendelevium (鍆)"
+
+#: qtgui/elementtranslator.cpp:335
+msgid "Nobelium"
+msgstr "Nobelium (鍩)"
+
+#: qtgui/elementtranslator.cpp:338
+msgid "Lawrencium"
+msgstr "Lawrencium (鐒)"
+
+#: qtgui/elementtranslator.cpp:341
+msgid "Rutherfordium"
+msgstr "Rutherfordium (鑪)"
+
+#: qtgui/elementtranslator.cpp:344
+msgid "Dubnium"
+msgstr "Dubnium (𨧀)"
+
+#: qtgui/elementtranslator.cpp:347
+msgid "Seaborgium"
+msgstr "Seaborgium (金希)"
+
+#: qtgui/elementtranslator.cpp:350
+msgid "Bohrium"
+msgstr "bohrium (𨨏)"
+
+#: qtgui/elementtranslator.cpp:353
+msgid "Hassium"
+msgstr "Hassium (𨭆)"
+
+#: qtgui/elementtranslator.cpp:356
+msgid "Meitnerium"
+msgstr "Meitnerium (䥑)"
+
+#: qtgui/elementtranslator.cpp:359
+msgid "Darmstadtium"
+msgstr "Darmstadtium (鐽)"
+
+#: qtgui/elementtranslator.cpp:362
+msgid "Roentgenium"
+msgstr "Roentgenium (錀)"
+
+#: qtgui/elementtranslator.cpp:365
+msgid "Copernicium"
+msgstr "Copernicium 鎶"
+
+#: qtgui/elementtranslator.cpp:368
+#, fuzzy
+msgid "Nihonium"
+msgstr "Zirconium (鋯)"
+
+#: qtgui/elementtranslator.cpp:371
+msgid "Flerovium"
+msgstr ""
+
+#: qtgui/elementtranslator.cpp:374
+msgid "Moscovium"
+msgstr ""
+
+#: qtgui/elementtranslator.cpp:377
+msgid "Livermorium"
+msgstr ""
+
+#: qtgui/elementtranslator.cpp:380
+msgid "Tennessine"
+msgstr ""
+
+#: qtgui/elementtranslator.cpp:383
+msgid "Oganesson"
+msgstr ""
+
+#: qtgui/filebrowsewidget.cpp:36
+#, fuzzy
+msgid "Browse"
+msgstr "瀏覽..."
+
+#: qtgui/filebrowsewidget.cpp:111
+#, fuzzy
+msgid "Select file:"
+msgstr "選擇溶劑"
+
+#: qtgui/filebrowsewidget.cpp:114
+#, fuzzy
+msgid "Select executable:"
+msgstr "刪除所選取項目"
+
+#: qtgui/fileformatdialog.cpp:66
+msgid "Unable to find a suitable file reader for the selected file."
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:108
+msgid "Unable to find a suitable file writer for the selected format."
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:155
+#, fuzzy
+msgctxt "File handlers"
+msgid "handlers"
+msgstr "McLean/Chandler"
+
+#: qtgui/fileformatdialog.cpp:156
+msgctxt "e.g. file handlers that can 'handle' this file."
+msgid "handle"
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:160
+msgctxt "File readers"
+msgid "readers"
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:161
+msgctxt "e.g. file readers that can 'read' this file."
+msgid "read"
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:165
+msgctxt "File writers"
+msgid "writers"
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:166
+msgctxt "e.g. file writers that can 'write' this file."
+msgid "write"
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:171
+#, qt-format
+msgid "Multiple %1 found that can %2 this format. Which should be used?"
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:257
+#, fuzzy
+msgid "All files (*);;"
+msgstr "所有檔案"
+
+#: qtgui/fileformatdialog.cpp:261
+#, qt-format
+msgid "All supported formats (%1);;"
+msgstr ""
+
+#: qtgui/moleculemodel.cpp:105
+#, fuzzy
+msgid "Untitled"
+msgstr "未命名"
+
+#: qtgui/multiviewwidget.cpp:199
+msgid "Create a new view"
+msgstr ""
+
+#: qtgui/periodictableview.cpp:44
+msgid "Periodic Table"
+msgstr "週期表"
+
+#: qtgui/pythonscript.cpp:85
+#, qt-format
+msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
+msgstr ""
+
+#: qtgui/pythonscript.cpp:94
+#, qt-format
+msgid ""
+"Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
+"bytes, QProcess error: %5)."
+msgstr ""
+
+#: qtgui/pythonscript.cpp:107
+#, qt-format
+msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
+msgstr ""
+
+#: qtgui/pythonscript.cpp:115
+#, qt-format
+msgid ""
+"Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
+"\n"
+"Output:\n"
+"%6"
+msgstr ""
+
+#: qtgui/pythonscript.cpp:139
+#, fuzzy
+msgid "Script failed to start."
+msgstr "無法啟動 G03"
+
+#: qtgui/pythonscript.cpp:142
+#, fuzzy
+msgid "Script crashed."
+msgstr "程式語法"
+
+#: qtgui/pythonscript.cpp:145
+msgid "Script timed out."
+msgstr ""
+
+#: qtgui/pythonscript.cpp:148
+#, fuzzy
+msgid "Read error."
+msgstr "OpenGL 錯誤"
+
+#: qtgui/pythonscript.cpp:151
+msgid "Write error."
+msgstr ""
+
+#: qtgui/pythonscript.cpp:155
+#, fuzzy
+msgid "Unknown error."
+msgstr "未知"
+
+#: qtgui/rwmolecule.cpp:48
+#, fuzzy
+msgid "Modify Molecule"
+msgstr "分子"
+
+#: qtgui/rwmolecule.cpp:154 qtgui/rwmolecule.cpp:163
+msgid "Add Atom"
+msgstr "新增原子"
+
+#: qtgui/rwmolecule.cpp:276 qtgui/rwmolecule.cpp:291
+#: qtplugins/editor/editor.cpp:131
+msgid "Remove Atom"
+msgstr "移除原子"
+
+#: qtgui/rwmolecule.cpp:301
+#, fuzzy
+msgid "Clear Atoms"
+msgstr "全部清除"
+
+#. i18n: file: qtplugins/editor/editortoolwidget.ui:43
+#. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
+#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321:345
+msgid "Adjust Hydrogens"
+msgstr "自動加上氫原子"
+
+#: qtgui/rwmolecule.cpp:356
+#, fuzzy
+msgid "Change Elements"
+msgstr "變更元素"
+
+#: qtgui/rwmolecule.cpp:390
+msgid "Change Element"
+msgstr "變更元素"
+
+#: qtgui/rwmolecule.cpp:567
+msgid "Change Atom Hybridization"
+msgstr ""
+
+#: qtgui/rwmolecule.cpp:600
+#, fuzzy
+msgid "Change Atom Formal Charge"
+msgstr "形式電荷"
+
+#: qtgui/rwmolecule.cpp:663
+msgid "Add Bond"
+msgstr "新增鍵"
+
+#: qtgui/rwmolecule.cpp:751
+#, fuzzy
+msgid "Removed Bond"
+msgstr "移除原子"
+
+#: qtgui/rwmolecule.cpp:758
+#, fuzzy
+msgid "Clear Bonds"
+msgstr "刪除鍵"
+
+#: qtgui/rwmolecule.cpp:793
+#, fuzzy
+msgid "Set Bond Orders"
+msgstr "鍵的級數"
+
+#: qtgui/rwmolecule.cpp:838
+msgid "Change Bond Order"
+msgstr "改變鍵級"
+
+#: qtgui/rwmolecule.cpp:882
+#, fuzzy
+msgid "Update Bonds"
+msgstr " 貼近鍵"
+
+#: qtgui/rwmolecule.cpp:922
+#, fuzzy
+msgid "Update Bond"
+msgstr "刪除鍵"
+
+#: qtgui/rwmolecule.cpp:962
+#, fuzzy
+msgid "Add Unit Cell"
+msgstr "加入單位晶格 (&U)"
+
+#: qtgui/rwmolecule.cpp:995
+#, fuzzy
+msgid "Remove Unit Cell"
+msgstr "移除單位晶格 (&U)"
+
+#: qtgui/rwmolecule.cpp:1077
+#, fuzzy
+msgid "Edit Unit Cell"
+msgstr "填入單位晶胞"
+
+#: qtgui/rwmolecule.cpp:1094
+msgid "Wrap Atoms to Cell"
+msgstr ""
+
+#: qtgui/rwmolecule.cpp:1117
+msgid "Scale Cell Volume"
+msgstr ""
+
+#: qtgui/rwmolecule.cpp:1137
+#, fuzzy
+msgid "Build Super Cell"
+msgstr "超級晶格"
+
+#: qtgui/rwmolecule.cpp:1161
+msgid "Niggli Reduction"
+msgstr ""
+
+#: qtgui/rwmolecule.cpp:1183
+msgid "Rotate to Standard Orientation"
+msgstr ""
+
+#: qtgui/rwmolecule.cpp:1208 qtplugins/spacegroup/spacegroup.cpp:69
+msgid "Reduce to Primitive"
+msgstr ""
+
+#: qtgui/rwmolecule.cpp:1233 qtplugins/spacegroup/spacegroup.cpp:75
+#: qtplugins/spacegroup/spacegroup.cpp:233
+msgid "Conventionalize Cell"
+msgstr ""
+
+#: qtgui/rwmolecule.cpp:1258 qtplugins/spacegroup/spacegroup.cpp:258
+#, fuzzy
+msgid "Symmetrize Cell"
+msgstr "超級晶格"
+
+#: qtgui/rwmolecule.cpp:1277 qtplugins/spacegroup/spacegroup.cpp:86
+msgid "Fill Unit Cell"
+msgstr "填入單位晶胞"
+
+#: qtgui/rwmolecule.cpp:1297
+msgid "Reduce Cell to Asymmetric Unit"
+msgstr ""
+
+#: qtplugins/3dmol/3dmol.cpp:43
+msgid "ThreeDMol HTML Block."
+msgstr ""
+
+#: qtplugins/3dmol/3dmol.cpp:53 qtplugins/importpqr/importpqr.cpp:59
+#: qtplugins/networkdatabases/networkdatabases.cpp:53
+#: qtplugins/povray/povray.cpp:58 qtplugins/vrml/vrml.cpp:58
+msgid "&File"
+msgstr "檔案"
+
+#: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
+#: qtplugins/vrml/vrml.cpp:58
+#, fuzzy
+msgid "&Export"
+msgstr "匯出"
+
+#: qtplugins/3dmol/3dmol.h:42
+#, fuzzy
+msgid "ThreeDMol"
+msgstr "臨界值"
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:177
+#. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
+#: qtplugins/apbs/apbs.cpp:43:141
+msgid "Run APBS"
+msgstr ""
+
+#: qtplugins/apbs/apbs.cpp:48 qtplugins/apbs/apbs.cpp:73
+#: qtplugins/gamessinput/gamessinput.cpp:82
+#: qtplugins/quantuminput/quantuminput.cpp:96
+#, fuzzy
+msgid "Open Output File"
+msgstr "開啟 WFN 檔"
+
+#: qtplugins/apbs/apbs.cpp:61 qtplugins/clientserver/clientserver.cpp:83
+#: qtplugins/forcefields/workflow.cpp:73 qtplugins/forcefields/workflow.cpp:81
+#: qtplugins/mongochem/mongochem.cpp:63 qtplugins/openbabel/openbabel.cpp:113
+#: qtplugins/plugindownloader/plugindownloader.cpp:52
+#: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
+#, fuzzy
+msgid "&Extensions"
+msgstr "延伸功能"
+
+#: qtplugins/apbs/apbs.cpp:61
+msgid "&APBS"
+msgstr ""
+
+#: qtplugins/apbs/apbs.cpp:74
+msgid "OpenDX File (*.dx)"
+msgstr ""
+
+#: qtplugins/apbs/apbs.cpp:127
+#, fuzzy
+msgid "IO Error"
+msgstr "錯誤"
+
+#: qtplugins/apbs/apbs.cpp:128
+#, fuzzy, qt-format
+msgid "Error reading structure file (%1)."
+msgstr "無法讀取軌跡檔 %1"
+
+#: qtplugins/apbs/apbs.cpp:148 qtplugins/apbs/apbs.cpp:155
+#, fuzzy
+msgid "OpenDX Error"
+msgstr "OpenGL 錯誤"
+
+#: qtplugins/apbs/apbs.cpp:149
+#, fuzzy, qt-format
+msgid "Error reading OpenDX file: %1"
+msgstr "無法讀取軌跡檔 %1"
+
+#: qtplugins/apbs/apbs.cpp:156
+msgid "Error reading OpenDX file: No cube found"
+msgstr ""
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
+#: qtplugins/apbs/apbs.h:42:87
+msgid "APBS"
+msgstr ""
+
+#: qtplugins/apbs/apbs.h:45
+msgid "Interact with APBS utilities."
+msgstr ""
+
+#: qtplugins/apbs/apbsdialog.cpp:91
+#, fuzzy
+msgid "Open PDB File"
+msgstr "開啟 WFN 檔"
+
+#: qtplugins/apbs/apbsdialog.cpp:92
+msgid "PDB Files (*.pdb)"
+msgstr ""
+
+#: qtplugins/apbs/apbsdialog.cpp:102
+#, fuzzy
+msgid "Open PQR File"
+msgstr "開啟 WFN 檔"
+
+#: qtplugins/apbs/apbsdialog.cpp:103
+msgid "PQR Files (*.pqr)"
+msgstr ""
+
+#: qtplugins/apbs/apbsdialog.cpp:143 qtplugins/apbs/apbsdialog.cpp:153
+#: qtplugins/forcefields/workflow.cpp:106
+#: qtplugins/gamessinput/gamessinput.cpp:98
+#: qtplugins/openbabel/openbabel.cpp:201 qtplugins/openbabel/openbabel.cpp:210
+#: qtplugins/openbabel/openbabel.cpp:220 qtplugins/openbabel/openbabel.cpp:313
+#: qtplugins/openbabel/openbabel.cpp:339 qtplugins/openbabel/openbabel.cpp:348
+#: qtplugins/openbabel/openbabel.cpp:400 qtplugins/openbabel/openbabel.cpp:449
+#: qtplugins/openbabel/openbabel.cpp:462 qtplugins/openbabel/openbabel.cpp:487
+#: qtplugins/openbabel/openbabel.cpp:501 qtplugins/openbabel/openbabel.cpp:529
+#: qtplugins/openbabel/openbabel.cpp:541 qtplugins/openbabel/openbabel.cpp:586
+#: qtplugins/openbabel/openbabel.cpp:633 qtplugins/openbabel/openbabel.cpp:672
+#: qtplugins/openbabel/openbabel.cpp:702
+#: qtplugins/quantuminput/quantuminput.cpp:112
+#: qtplugins/workflows/workflow.cpp:106
+msgid "Error"
+msgstr "錯誤"
+
+#: qtplugins/apbs/apbsdialog.cpp:144
+#, qt-format
+msgid "Error running APBS: %1"
+msgstr ""
+
+#: qtplugins/apbs/apbsdialog.cpp:153
+msgid "Please specify PDB file"
+msgstr ""
+
+#: qtplugins/apbs/apbsdialog.cpp:186
+#, fuzzy
+msgid "Save APBS Input File"
+msgstr "儲存輸入面板"
+
+#: qtplugins/apbs/apbsdialog.cpp:186
+msgid "ABPS Input (*.in)"
+msgstr ""
+
+#. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
+#: qtplugins/apbs/apbsdialog.cpp:190
+#: qtplugins/clientserver/connectionsettingsdialog.cpp:75:147
+#, fuzzy
+msgid "Success"
+msgstr "成功了!"
+
+#: qtplugins/apbs/apbsdialog.cpp:191
+#, fuzzy, qt-format
+msgid "Input file written to '%1'"
+msgstr "圖形成功地寫入 %1"
+
+#: qtplugins/ballandstick/ballandstick.cpp:203
+#: qtplugins/wireframe/wireframe.cpp:100
+#, fuzzy
+msgid "Show multiple bonds?"
+msgstr "顯示多個鍵"
+
+#: qtplugins/ballandstick/ballandstick.cpp:207
+#: qtplugins/wireframe/wireframe.cpp:104
+#, fuzzy
+msgid "Show hydrogens?"
+msgstr "氫"
+
+#: qtplugins/ballandstick/ballandstick.h:43
+msgid "Ball and Stick"
+msgstr "球與棒 (原子與鍵)"
+
+#: qtplugins/ballandstick/ballandstick.h:47
+#, fuzzy
+msgid "Render atoms as spheres and bonds as cylinders."
+msgstr "呈現原子及鍵的標示"
+
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:312
+#, fuzzy
+msgid "Bond-centric manipulation"
+msgstr "鍵中心調整"
+
+#: qtplugins/bondcentrictool/bondcentrictool.h:188
+#, fuzzy
+msgid "Bond centric manipulation tool."
+msgstr "鍵中心調整"
+
+#: qtplugins/bondcentrictool/bondcentrictool.h:193
+msgid ""
+"Tool used to edit molecular geometry by changing bond lengths and angles."
+msgstr ""
+
+#: qtplugins/bonding/bonding.cpp:42
+#, fuzzy
+msgid "Bond Atoms"
+msgstr "終止原子"
+
+#: qtplugins/bonding/bonding.cpp:43
+#, fuzzy
+msgid "Remove Bonds"
+msgstr "移除氫"
+
+#: qtplugins/bonding/bonding.cpp:62
+#: qtplugins/coordinateeditor/coordinateeditor.cpp:45
+#: qtplugins/customelements/customelements.cpp:54
+#: qtplugins/hydrogens/hydrogens.cpp:67
+#: qtplugins/lineformatinput/lineformatinput.cpp:71
+msgid "&Build"
+msgstr "建立"
+
+#: qtplugins/bonding/bonding.h:36
+#, fuzzy
+msgid "Bonding"
+msgstr "鍵"
+
+#: qtplugins/bonding/bonding.h:40
+msgid "Perform bonding operations."
+msgstr ""
+
+#: qtplugins/clientserver/clientserver.cpp:73
+msgid "Client server operations."
+msgstr ""
+
+#: qtplugins/clientserver/clientserver.cpp:83
+msgid "S&erver"
+msgstr ""
+
+#: qtplugins/clientserver/clientserver.cpp:159
+msgid "Connection failed"
+msgstr ""
+
+#: qtplugins/clientserver/clientserver.cpp:160
+#: qtplugins/clientserver/connectionsettingsdialog.cpp:68
+#, qt-format
+msgid "The connection to %2:%3 failed: connection refused."
+msgstr ""
+
+#: qtplugins/clientserver/clientserver.cpp:218
+#: qtplugins/clientserver/clientserver.cpp:229
+msgid "Remote service error"
+msgstr ""
+
+#: qtplugins/clientserver/clientserver.cpp:230
+#, qt-format
+msgid "Connection failed with: %1"
+msgstr ""
+
+#: qtplugins/clientserver/clientserver.cpp:252
+#, qt-format
+msgid "clientServer/%1:%2/lastOpenDir"
+msgstr ""
+
+#: qtplugins/clientserver/clientserver.cpp:264
+#, qt-format
+msgid "%1 ("
+msgstr ""
+
+#: qtplugins/clientserver/clientserver.cpp:266
+#, qt-format
+msgid "*.%1"
+msgstr ""
+
+#: qtplugins/clientserver/clientserver.h:56
+msgid "Client server"
+msgstr ""
+
+#: qtplugins/clientserver/connectionsettingsdialog.cpp:67
+msgid "Connection refused"
+msgstr ""
+
+#: qtplugins/clientserver/connectionsettingsdialog.cpp:76
+#, qt-format
+msgid "Connection to %2:%3 succeeded!"
+msgstr ""
+
+#: qtplugins/clientserver/filedialogmodel.cpp:666
+#, fuzzy
+msgid "Filename"
+msgstr "檔名:"
+
+#: qtplugins/coordinateeditor/coordinateeditor.cpp:29
+#, fuzzy
+msgid "Atomic &Coordinate Editor..."
+msgstr "直角坐標編輯器"
+
+#: qtplugins/coordinateeditor/coordinateeditor.h:39
+#, fuzzy
+msgid "Coordinate editor"
+msgstr "直角坐標編輯器"
+
+#: qtplugins/coordinateeditor/coordinateeditor.h:43
+msgid "Text editing of atomic coordinates."
+msgstr ""
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:237
+#, fuzzy
+msgid "Overwrite changes?"
+msgstr "恢復改變"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:238
+msgid ""
+"The text document has been modified. Would you like to discard your changes "
+"and revert to the current molecule?"
+msgstr ""
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:365
+msgid "Too few entries on line."
+msgstr ""
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:381
+#, fuzzy
+msgid "Invalid element name."
+msgstr "無效的檔名"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:383
+#, fuzzy
+msgid "Element name."
+msgstr "元素名稱"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
+#, fuzzy
+msgid "Invalid element symbol."
+msgstr "元素符號"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
+#, fuzzy
+msgid "Element symbol."
+msgstr "元素符號"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
+#, fuzzy
+msgid "Invalid atomic number."
+msgstr "無效的檔名"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
+#, fuzzy
+msgid "Atomic number."
+msgstr "原子數"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:418
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
+#, fuzzy
+msgid "Invalid coordinate."
+msgstr "無效的檔名"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
+#, fuzzy
+msgid "X coordinate."
+msgstr "笛卡兒坐標/直角坐標"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:431
+#, fuzzy
+msgid "Y coordinate."
+msgstr "笛卡兒坐標/直角坐標"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:442
+#, fuzzy
+msgid "Z coordinate."
+msgstr "笛卡兒坐標/直角坐標"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:453
+#, fuzzy
+msgid "'a' lattice coordinate."
+msgstr "笛卡兒坐標/直角坐標"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:464
+#, fuzzy
+msgid "'b' lattice coordinate."
+msgstr "笛卡兒坐標/直角坐標"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:475
+#, fuzzy
+msgid "'c' coordinate."
+msgstr "笛卡兒坐標/直角坐標"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:559
+msgid "Error applying geometry"
+msgstr ""
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:560
+msgid ""
+"Could not parse geometry specification. Fix the highlighted errors and try "
+"again.\n"
+"\n"
+"(Hint: Hold the mouse over red text for a description of the error.)"
+msgstr ""
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:594
+msgid "Edit Atomic Coordinates"
+msgstr ""
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:86
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607:615
+msgid "Custom"
+msgstr "自訂"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:608
+msgid "XYZ format (symbols)"
+msgstr ""
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:609
+#, fuzzy
+msgid "XYZ format (names)"
+msgstr ""
+",Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
+"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
+"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
+"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
+"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
+"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
+"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:610
+#, fuzzy
+msgid "XYZ format (atomic numbers)"
+msgstr "XYZ 及數字"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:611
+#, fuzzy
+msgid "Lattice coordinates (symbols)"
+msgstr "笛卡兒坐標/直角坐標"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612
+#, fuzzy
+msgid "Lattice coordinates (names)"
+msgstr "笛卡兒坐標/直角坐標"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:613
+msgid "Lattice coordinates (atomic numbers)"
+msgstr ""
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
+#, fuzzy
+msgid "GAMESS format (symbols)"
+msgstr "GAMESS EFP 訊息"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:616
+#, fuzzy
+msgid "GAMESS format (names)"
+msgstr "GAMESS EFP 訊息"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:617
+#, fuzzy
+msgid "Turbomole format"
+msgstr "Turbomole 輸入"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
+#. i18n: ectx: property (text), widget (QToolButton, copy)
+#: qtplugins/copypaste/copypaste.cpp:42:225
+#, fuzzy
+msgid "Copy"
+msgstr "全部複製"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
+#. i18n: ectx: property (text), widget (QToolButton, cut)
+#: qtplugins/copypaste/copypaste.cpp:43:222
+#, fuzzy
+msgid "Cut"
+msgstr "自訂"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
+#. i18n: ectx: property (text), widget (QPushButton, clear)
+#: qtplugins/copypaste/copypaste.cpp:44:234
+#, fuzzy
+msgid "Clear"
+msgstr "全部清除"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
+#. i18n: ectx: property (text), widget (QToolButton, paste)
+#: qtplugins/copypaste/copypaste.cpp:45:228
+msgid "Paste"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:78
+msgid "&Edit"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:96
+msgid "Error Clipping Molecule"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:97
+msgid "Error generating clipboard data."
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:98
+#, fuzzy, qt-format
+msgctxt "file format"
+msgid ""
+"Output format: %1\n"
+"%2"
+msgstr "無法設定格式: %1"
+
+#: qtplugins/copypaste/copypaste.cpp:102 qtplugins/copypaste/copypaste.cpp:192
+#, qt-format
+msgid ""
+"Reader error:\n"
+"%1"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:153 qtplugins/copypaste/copypaste.cpp:186
+msgid "Error Pasting Molecule"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:154
+msgid "Cannot paste molecule: Clipboard empty!"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:187
+msgid "Error reading clipboard data."
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:188
+#, fuzzy, qt-format
+msgctxt "file format description"
+msgid ""
+"Detected format: %1\n"
+"%2"
+msgstr "無法設定格式: %1"
+
+#: qtplugins/copypaste/copypaste.h:42
+msgid "Copy and paste"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.h:46
+msgid "Interact with the clipboard."
+msgstr ""
+
+#: qtplugins/crystal/crystal.cpp:54 qtplugins/crystal/crystal.cpp:182
+msgid "Import Crystal from Clipboard"
+msgstr ""
+
+#: qtplugins/crystal/crystal.cpp:61
+#, fuzzy
+msgid "Toggle Unit Cell"
+msgstr "填入單位晶胞"
+
+#: qtplugins/crystal/crystal.cpp:66
+#, fuzzy
+msgid "Edit Unit Cell..."
+msgstr "填入單位晶胞"
+
+#: qtplugins/crystal/crystal.cpp:71
+msgid "&Wrap Atoms to Unit Cell"
+msgstr ""
+
+#: qtplugins/crystal/crystal.cpp:77
+msgid "Rotate to Standard &Orientation"
+msgstr ""
+
+#: qtplugins/crystal/crystal.cpp:83
+msgid "Scale Cell &Volume"
+msgstr ""
+
+#: qtplugins/crystal/crystal.cpp:88
+#, fuzzy
+msgid "Build &Supercell"
+msgstr "超級晶格"
+
+#: qtplugins/crystal/crystal.cpp:93
+msgid "Reduce Cell (&Niggli)"
+msgstr ""
+
+#: qtplugins/crystal/crystal.cpp:117 qtplugins/plotxrd/plotxrd.cpp:63
+#: qtplugins/spacegroup/spacegroup.cpp:118
+#, fuzzy
+msgid "&Crystal"
+msgstr "貼上結晶"
+
+#: qtplugins/crystal/crystal.cpp:163
+msgid "Remove &Unit Cell"
+msgstr "移除單位晶格 (&U)"
+
+#: qtplugins/crystal/crystal.cpp:170
+msgid "Add &Unit Cell"
+msgstr "加入單位晶格 (&U)"
+
+#: qtplugins/crystal/crystal.cpp:207
+msgid "Niggli Reduce Crystal"
+msgstr ""
+
+#: qtplugins/crystal/crystal.cpp:208
+msgid "The unit cell is already reduced."
+msgstr ""
+
+#: qtplugins/crystal/crystal.h:36
+#, fuzzy
+msgid "Crystal"
+msgstr "貼上結晶"
+
+#: qtplugins/crystal/crystal.h:75
+msgid "Tools for crystal-specific editing/analysis."
+msgstr ""
+
+#: qtplugins/crystal/crystalscene.h:39
+msgid "Crystal Lattice"
+msgstr ""
+
+#: qtplugins/crystal/crystalscene.h:41
+#, fuzzy
+msgid "Render the unit cell boundaries."
+msgstr "呈現原子及鍵的標示"
+
+#: qtplugins/crystal/importcrystaldialog.cpp:81
+msgid "Cannot Parse Text"
+msgstr ""
+
+#: qtplugins/crystal/importcrystaldialog.cpp:82
+msgid "Failed to read the data with the supplied format."
+msgstr ""
+
+#: qtplugins/crystal/unitcelldialog.cpp:262
+#: qtplugins/crystal/unitcelldialog.cpp:275
+msgid "No unit cell present."
+msgstr ""
+
+#: qtplugins/customelements/customelements.cpp:31
+msgid "Reassign &Custom Elements..."
+msgstr ""
+
+#: qtplugins/customelements/customelements.cpp:44
+msgid "Manipulate custom element types in the current molecule."
+msgstr ""
+
+#: qtplugins/customelements/customelements.h:35
+#, fuzzy
+msgid "Custom Elements"
+msgstr "自訂軸"
+
+#: qtplugins/editor/editor.cpp:84 qtplugins/editor/editor.cpp:118
+msgid "Draw"
+msgstr "繪圖"
+
+#: qtplugins/editor/editor.cpp:112
+msgid "Draw Atom"
+msgstr "繪製原子"
+
+#: qtplugins/editor/editor.cpp:122
+#, fuzzy
+msgid "Change Bond Type"
+msgstr "改變鍵級"
+
+#: qtplugins/editor/editor.cpp:135
+#, fuzzy
+msgid "Remove Bond"
+msgstr "移除原子"
+
+#: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:194
+#: qtplugins/measuretool/measuretool.cpp:222
+#, fuzzy
+msgid "Distance:"
+msgstr "距離"
+
+#: qtplugins/editor/editor.cpp:235
+#, fuzzy, qt-format
+msgid "Distance: %L1 Å"
+msgstr "距離 (1->2): %L1 %2"
+
+#: qtplugins/editor/editor.h:44 qtplugins/editor/editor.h:45
+msgid "Editor tool"
+msgstr ""
+
+#: qtplugins/editor/editortoolwidget.cpp:138
+msgid "Other..."
+msgstr "其他..."
+
+#: qtplugins/editor/editortoolwidget.cpp:217
+#, fuzzy
+msgid "Automatic"
+msgstr "自動構型最適化"
+
+#: qtplugins/editor/editortoolwidget.cpp:218
+msgid "Single"
+msgstr "單鍵"
+
+#: qtplugins/editor/editortoolwidget.cpp:219
+msgid "Double"
+msgstr "雙鍵"
+
+#: qtplugins/editor/editortoolwidget.cpp:220
+msgid "Triple"
+msgstr "三鍵"
+
+#: qtplugins/forcefields/workflow.cpp:73 qtplugins/forcefields/workflow.cpp:81
+#: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
+#, fuzzy
+msgid "Scripts"
+msgstr "程式語法"
+
+#: qtplugins/forcefields/workflow.cpp:107
+#: qtplugins/gamessinput/gamessinput.cpp:99
+#: qtplugins/quantuminput/quantuminput.cpp:113
+#: qtplugins/workflows/workflow.cpp:107
+#, fuzzy, qt-format
+msgid ""
+"Error reading output file '%1':\n"
+"%2"
+msgstr "無法讀取軌跡檔 %1"
+
+#: qtplugins/forcefields/workflow.cpp:204
+#: qtplugins/quantuminput/quantuminput.cpp:179
+#: qtplugins/workflows/workflow.cpp:204
+msgid "Set path to Python interpreter:"
+msgstr ""
+
+#: qtplugins/forcefields/workflow.cpp:206 qtplugins/workflows/workflow.cpp:206
+msgid ""
+"Select the python interpreter to run external scripts.\n"
+"Avogadro must be restarted for any changes to take effect."
+msgstr ""
+
+#: qtplugins/forcefields/workflow.cpp:270
+#: qtplugins/quantuminput/quantuminput.cpp:239
+#: qtplugins/workflows/workflow.cpp:270
+msgid "Set Python Path..."
+msgstr ""
+
+#: qtplugins/forcefields/workflow.h:53 qtplugins/workflows/workflow.h:53
+msgid "Workflow scripts"
+msgstr ""
+
+#: qtplugins/forcefields/workflow.h:55 qtplugins/workflows/workflow.h:55
+msgid "Run external workflow commands"
+msgstr ""
+
+#: qtplugins/gamessinput/gamessinput.cpp:44
+msgid "&GAMESS"
+msgstr "GAMESS (原子分子之電子結構系統)"
+
+#: qtplugins/gamessinput/gamessinput.cpp:62
+#: qtplugins/quantuminput/quantuminput.cpp:72
+#: qtplugins/quantumoutput/quantumoutput.cpp:100
+#: qtplugins/spectra/spectra.cpp:57
+msgid "&Quantum"
+msgstr ""
+
+#: qtplugins/gamessinput/gamessinput.cpp:62
+#: qtplugins/quantuminput/quantuminput.cpp:72
+#, fuzzy
+msgid "Input Generators"
+msgstr "匯入產生器..."
+
+#: qtplugins/gamessinput/gamessinput.h:46
+#, fuzzy
+msgid "GAMESS input"
+msgstr "GAMESS (原子分子之電子結構系統) 輸入"
+
+#: qtplugins/gamessinput/gamessinput.h:48
+msgid "Generate input for GAMESS."
+msgstr ""
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:237
+#, fuzzy
+msgid "Single Point"
+msgstr "單點能量"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:240
+msgid "Equilibrium Geometry"
+msgstr "Equilibrium Geometry"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:243
+msgid "Transition State"
+msgstr "過渡狀態"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:246
+msgid "Frequencies"
+msgstr "頻率"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:315
+msgid "Core Potential"
+msgstr "Core Potential"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:330
+msgid "Gas"
+msgstr "氣體"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:333
+msgid "Water"
+msgstr "水"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:348
+msgid "Singlet"
+msgstr "Singlet"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:351
+msgid "Doublet"
+msgstr "Doublet"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:354
+msgid "Triplet"
+msgstr "Triplet"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:369
+msgid "Dication"
+msgstr "Dication"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:372
+msgid "Cation"
+msgstr "陽離子"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:375
+msgid "Neutral"
+msgstr "中性"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:378
+msgid "Anion"
+msgstr "陰離子"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:381
+msgid "Dianion"
+msgstr "Dianion"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:430
+msgid ""
+"The input file has been modified. Would you like to overwrite your changes "
+"to reflect the new geometry or job options?"
+msgstr ""
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:434
+msgid "Overwrite modified input file?"
+msgstr ""
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:668
+#, fuzzy
+msgid "Save GAMESS input file"
+msgstr "GAMESS 輸入面板"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:718
+#, fuzzy
+msgid "Submit GAMESS Calculation"
+msgstr "停止計算"
+
+#: qtplugins/hydrogens/hydrogens.cpp:33
+#, fuzzy
+msgid "&Adjust Hydrogens"
+msgstr "自動加上氫原子"
+
+#: qtplugins/hydrogens/hydrogens.cpp:38
+msgid "Add Hydrogens"
+msgstr "加上氫"
+
+#: qtplugins/hydrogens/hydrogens.cpp:42
+#, fuzzy
+msgid "Remove E&xtra Hydrogens"
+msgstr "移除氫"
+
+#: qtplugins/hydrogens/hydrogens.cpp:46
+#, fuzzy
+msgid "&Remove All Hydrogens"
+msgstr "移除氫"
+
+#: qtplugins/hydrogens/hydrogens.cpp:57
+msgid "Add/remove hydrogens from the current molecule."
+msgstr ""
+
+#: qtplugins/hydrogens/hydrogens.cpp:67
+#, fuzzy
+msgid "&Hydrogens"
+msgstr "氫"
+
+#: qtplugins/hydrogens/hydrogens.h:35
+msgid "Hydrogens"
+msgstr "氫"
+
+#: qtplugins/importpqr/importpqr.cpp:38
+msgid "&Import From PQR"
+msgstr ""
+
+#: qtplugins/importpqr/importpqr.cpp:59
+#: qtplugins/networkdatabases/networkdatabases.cpp:53
+#, fuzzy
+msgid "&Import"
+msgstr "匯入"
+
+#. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
+#: qtplugins/importpqr/importpqr.h:45:393
+msgid "Import From PQR"
+msgstr ""
+
+#: qtplugins/importpqr/importpqr.h:49
+msgid "Download a molecule from PQR."
+msgstr ""
+
+#: qtplugins/licorice/licorice.h:40
+msgid "Licorice"
+msgstr ""
+
+#: qtplugins/licorice/licorice.h:42
+#, fuzzy
+msgid "Render atoms as licorice."
+msgstr "呈現原子及鍵的標示"
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:43
+msgid "SMILES..."
+msgstr "SMILES 文字化學式..."
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:48
+msgid "InChI..."
+msgstr ""
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:55
+msgid "InChI"
+msgstr ""
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:56
+#, fuzzy
+msgid "SMILES"
+msgstr "SMILES 文字化學式..."
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:71
+msgid "&Insert"
+msgstr "插入"
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:98
+#: qtplugins/lineformatinput/lineformatinput.cpp:122
+#, fuzzy
+msgid "No descriptors found!"
+msgstr "沒有描述"
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:99
+msgid "No line format readers found!"
+msgstr ""
+
+#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
+#: qtplugins/lineformatinput/lineformatinput.cpp:118
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:426
+#, fuzzy
+msgid "Insert Molecule..."
+msgstr "分子"
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:123
+msgid "Unable to load requested format reader."
+msgstr ""
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:134
+#, fuzzy
+msgid "Generating 3D molecule..."
+msgstr "產生..."
+
+#: qtplugins/lineformatinput/lineformatinput.h:42
+msgid "LineFormatInput"
+msgstr ""
+
+#: qtplugins/lineformatinput/lineformatinput.h:65
+msgid "Load single-line molecule descriptors through an input dialog."
+msgstr ""
+
+#: qtplugins/manipulator/manipulator.cpp:52
+msgid "Manipulate"
+msgstr "調整"
+
+#: qtplugins/manipulator/manipulator.h:44
+#: qtplugins/manipulator/manipulator.h:45
+#, fuzzy
+msgid "Manipulate tool"
+msgstr "調整原子"
+
+#: qtplugins/measuretool/measuretool.cpp:63
+msgid "Measure"
+msgstr "測量"
+
+#: qtplugins/measuretool/measuretool.cpp:192
+#: qtplugins/measuretool/measuretool.cpp:202
+msgid "Dihedral:"
+msgstr "二面體"
+
+#: qtplugins/measuretool/measuretool.cpp:193
+msgid "Angle:"
+msgstr "角度："
+
+#: qtplugins/measuretool/measuretool.cpp:214
+#, fuzzy
+msgid "Angles:"
+msgstr "角度："
+
+#: qtplugins/measuretool/measuretool.h:48
+#: qtplugins/measuretool/measuretool.h:49
+#, fuzzy
+msgid "Measure tool"
+msgstr "測量"
+
+#: qtplugins/meshes/meshes.h:40
+msgid "Meshes"
+msgstr ""
+
+#: qtplugins/meshes/meshes.h:42
+#, fuzzy
+msgid "Render triangle meshes."
+msgstr "呈現分子網狀等值面"
+
+#: qtplugins/molecularproperties/molecularproperties.cpp:43
+#: qtplugins/mongochem/mongochem.cpp:45
+msgid "View general properties of a molecule."
+msgstr ""
+
+#: qtplugins/molecularproperties/molecularproperties.cpp:53
+#: qtplugins/resetview/resetview.cpp:48 qtplugins/symmetry/symmetry.cpp:92
+msgid "&View"
+msgstr "檢視"
+
+#: qtplugins/molecularproperties/molecularproperties.h:42
+#: qtplugins/mongochem/mongochem.h:40
+msgid "Molecular Properties"
+msgstr "分子性質"
+
+#: qtplugins/navigator/navigator.cpp:45
+msgid "Navigate"
+msgstr "導覽"
+
+#: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
+#, fuzzy
+msgid "Navigate tool"
+msgstr "導覽"
+
+#: qtplugins/networkdatabases/networkdatabases.cpp:87
+msgid "Chemical Name"
+msgstr "化合物名稱"
+
+#: qtplugins/networkdatabases/networkdatabases.cpp:88
+msgid "Chemical structure to download."
+msgstr "下載化學結構."
+
+#: qtplugins/networkdatabases/networkdatabases.cpp:102
+#, qt-format
+msgid "Querying for %1"
+msgstr ""
+
+#: qtplugins/networkdatabases/networkdatabases.cpp:113
+#: qtplugins/networkdatabases/networkdatabases.cpp:124
+msgid "Network Download Failed"
+msgstr "網路下載失敗"
+
+#: qtplugins/networkdatabases/networkdatabases.cpp:114
+msgid "Network timeout or other error."
+msgstr "連線逾時或是其他錯誤"
+
+#: qtplugins/networkdatabases/networkdatabases.cpp:125
+#, qt-format
+msgid "Specified molecule could not be found: %1"
+msgstr "找不到指定的分子: %1"
+
+#: qtplugins/networkdatabases/networkdatabases.h:47
+#, fuzzy
+msgid "Network Databases"
+msgstr "網路下載失敗"
+
+#: qtplugins/networkdatabases/networkdatabases.h:51
+msgid "Interact with online databases, query structures etc."
+msgstr ""
+
+#: qtplugins/openbabel/obforcefielddialog.cpp:331
+#, qt-format
+msgid "Autodetect (%1)"
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:52
+#, fuzzy
+msgid "Optimize geometry"
+msgstr "最佳化幾何結構"
+
+#: qtplugins/openbabel/openbabel.cpp:59
+#, fuzzy
+msgid "Configure geometry optimization..."
+msgstr "幾何構形最適化"
+
+#: qtplugins/openbabel/openbabel.cpp:65
+#, fuzzy
+msgid "Perceive bonds"
+msgstr "理解鍵嗎?"
+
+#: qtplugins/openbabel/openbabel.cpp:71
+#, fuzzy
+msgid "Add hydrogens"
+msgstr "加上氫"
+
+#: qtplugins/openbabel/openbabel.cpp:77
+#, fuzzy
+msgid "Add hydrogens for pH..."
+msgstr "配合 pH 加上氫"
+
+#: qtplugins/openbabel/openbabel.cpp:83
+#, fuzzy
+msgid "Remove hydrogens"
+msgstr "移除氫"
+
+#: qtplugins/openbabel/openbabel.cpp:93
+#, qt-format
+msgid "%1 not found! Disabling Open Babel plugin actions."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:113
+msgid "&Open Babel"
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:120
+msgid "The obabel file formats are not ready to be added."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:196
+#, fuzzy
+msgid "Loading molecule from CML..."
+msgstr "從檔案 '%1' 讀取分子失敗"
+
+#: qtplugins/openbabel/openbabel.cpp:202
+msgid ""
+"An internal error occurred: OpenBabel::readMolecule called, but no obabel "
+"output is available to parse!"
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:211
+#, fuzzy, qt-format
+msgid "An error occurred while running OpenBabel (%1)."
+msgstr "寫入檔案 %1 出錯"
+
+#: qtplugins/openbabel/openbabel.cpp:221
+msgid "Error parsing openbabel output."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:314 qtplugins/openbabel/openbabel.cpp:349
+#, qt-format
+msgid ""
+"An error occurred while retrieving the list of supported forcefields. (using "
+"'%1')."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:340
+msgid "Molecule invalid. Cannot optimize geometry."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:358
+msgid "Cannot optimize geometry with OpenBabel."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:383
+#, fuzzy
+msgid "Optimizing Geometry (OpenBabel)"
+msgstr "最佳化幾何結構"
+
+#: qtplugins/openbabel/openbabel.cpp:384
+#, fuzzy
+msgid "Generating MDL..."
+msgstr "產生..."
+
+#: qtplugins/openbabel/openbabel.cpp:401
+msgid ""
+"An internal error occurred while generating an MDL representation of the "
+"current molecule."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:407
+#, qt-format
+msgctxt "arg is an executable file."
+msgid "Starting %1..."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:420 qtplugins/openbabel/openbabel.cpp:428
+#, qt-format
+msgid ""
+"Step %1 of %2\n"
+"Current energy: %3\n"
+"dE: %4"
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:442
+msgid "Updating molecule..."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:450 qtplugins/openbabel/openbabel.cpp:703
+msgid "Error interpreting obabel MDL output."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:463 qtplugins/openbabel/openbabel.cpp:542
+#, fuzzy, qt-format
+msgid ""
+"Number of atoms in obabel output (%1) does not match the number of atoms in "
+"the original molecule (%2)."
+msgstr "軌跡檔 %1 的原子數目與現在的分子不符合"
+
+#: qtplugins/openbabel/openbabel.cpp:473
+#, fuzzy
+msgid "Optimize Geometry"
+msgstr "最佳化幾何結構"
+
+#: qtplugins/openbabel/openbabel.cpp:482
+msgid "Cannot open file with OpenBabel."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:488
+msgid "Invalid molecule: Cannot perceive bonds."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:494
+msgid "Perceiving Bonds (OpenBabel)"
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:495
+msgid "Generating XYZ representation..."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:502
+msgid "Error generating XYZ string."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:514
+#, qt-format
+msgid "Converting XYZ to CML with %1..."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:522
+msgid "Updating molecule from CML..."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:530
+msgid "Error interpreting obabel CML output."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:574 qtplugins/openbabel/openbabel.cpp:613
+msgid "Cannot add hydrogens with Open Babel."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:579 qtplugins/openbabel/openbabel.cpp:626
+#, fuzzy
+msgid "Adding Hydrogens (OpenBabel)"
+msgstr "加上氫"
+
+#: qtplugins/openbabel/openbabel.cpp:580 qtplugins/openbabel/openbabel.cpp:627
+#: qtplugins/openbabel/openbabel.cpp:666
+msgid "Generating obabel input..."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:587 qtplugins/openbabel/openbabel.cpp:634
+#: qtplugins/openbabel/openbabel.cpp:673
+msgid "Error generating MDL string."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:599 qtplugins/openbabel/openbabel.cpp:646
+#: qtplugins/openbabel/openbabel.cpp:685
+#, fuzzy, qt-format
+msgid "Running %1..."
+msgstr "Dunning"
+
+#: qtplugins/openbabel/openbabel.cpp:620
+#, fuzzy
+msgid "Add hydrogens for pH"
+msgstr "依照 pH 加上氫"
+
+#: qtplugins/openbabel/openbabel.cpp:620
+#, fuzzy
+msgid "pH:"
+msgstr "pH"
+
+#: qtplugins/openbabel/openbabel.cpp:660
+msgid "Cannot remove hydrogens with Open Babel."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:665
+#, fuzzy
+msgid "Removing Hydrogens (OpenBabel)"
+msgstr "移除氫"
+
+#: qtplugins/openbabel/openbabel.cpp:694
+msgid "Reading obabel output..."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:757
+msgid ""
+"Already running OpenBabel. Wait for the other operation to complete and try "
+"again."
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.h:47
+msgid "OpenBabel"
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.h:51
+msgid "Interact with OpenBabel utilities."
+msgstr ""
+
+#: qtplugins/overlayaxes/overlayaxes.h:41
+msgid "Reference Axes Overlay"
+msgstr ""
+
+#: qtplugins/overlayaxes/overlayaxes.h:45
+msgid "Render reference axes in the corner of the display."
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:51
+msgid "Player"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:69
+msgid "Play"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:72
+msgid "Stop"
+msgstr "停止"
+
+#: qtplugins/playertool/playertool.cpp:82
+#, fuzzy
+msgid "Frame rate:"
+msgstr "參數:"
+
+#: qtplugins/playertool/playertool.cpp:88
+msgctxt "frames per second"
+msgid " FPS"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:94
+#, fuzzy
+msgid "Dynamic bonding?"
+msgstr "Dynamic Bonds (動態的鍵)"
+
+#: qtplugins/playertool/playertool.cpp:102
+#, fuzzy
+msgid "Record Movie..."
+msgstr "移除..."
+
+#: qtplugins/playertool/playertool.cpp:108
+#: qtplugins/playertool/playertool.cpp:161
+#, fuzzy
+msgid "Stopped"
+msgstr "停止"
+
+#: qtplugins/playertool/playertool.cpp:180
+#, qt-format
+msgid "Frame %0 of %1"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:197
+#, fuzzy
+msgid "Export Bitmap Graphics"
+msgstr "匯出向量圖形"
+
+#: qtplugins/playertool/playertool.cpp:233
+msgid "Avogadro"
+msgstr "Avogadro 亞佛加厥"
+
+#: qtplugins/playertool/playertool.cpp:234
+#, fuzzy, qt-format
+msgid "Cannot save file %1."
+msgstr "無法讀取檔案 %1。"
+
+#: qtplugins/playertool/playertool.h:44
+msgid "Player tool"
+msgstr ""
+
+#: qtplugins/playertool/playertool.h:45
+msgid "Play back trajectories"
+msgstr ""
+
+#: qtplugins/plotxrd/plotxrd.cpp:45
+msgid "Plot Theoretical XRD Pattern..."
+msgstr ""
+
+#: qtplugins/plotxrd/plotxrd.cpp:130
+msgid "Failed to generate XRD pattern"
+msgstr ""
+
+#: qtplugins/plotxrd/plotxrd.cpp:131
+msgid "Error message: "
+msgstr ""
+
+#: qtplugins/plotxrd/plotxrd.cpp:147
+msgid "Failed to convert molecule to CIF format."
+msgstr ""
+
+#: qtplugins/plotxrd/plotxrd.cpp:182
+msgid "Data read from genXrdPattern appears to be corrupt!"
+msgstr ""
+
+#: qtplugins/plotxrd/plotxrd.cpp:220
+msgid "Error: could not find genXrdPattern executable!"
+msgstr ""
+
+#: qtplugins/plotxrd/plotxrd.cpp:230 qtplugins/plotxrd/plotxrd.cpp:242
+#: qtplugins/plotxrd/plotxrd.cpp:253 qtplugins/plotxrd/plotxrd.cpp:260
+#, fuzzy
+msgid "Error: "
+msgstr "錯誤"
+
+#: qtplugins/plotxrd/plotxrd.h:46
+msgid "PlotXrd"
+msgstr ""
+
+#: qtplugins/plotxrd/plotxrd.h:93
+msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
+msgstr ""
+
+#. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
+#: qtplugins/plugindownloader/plugindownloader.h:46:570
+msgid "Plugin Downloader"
+msgstr ""
+
+#: qtplugins/plugindownloader/plugindownloader.h:50
+msgid "Downloader plugins from Github repositories."
+msgstr ""
+
+#: qtplugins/povray/povray.cpp:41
+#, fuzzy
+msgid "POV-Ray Render"
+msgstr "POV-Ray"
+
+#: qtplugins/povray/povray.cpp:82 qtplugins/vrml/vrml.cpp:82
+#, fuzzy
+msgid "Save File"
+msgstr "儲存影片檔"
+
+#: qtplugins/povray/povray.cpp:83
+msgid "POV-Ray (*.pov);;Text file (*.txt)"
+msgstr ""
+
+#: qtplugins/povray/povray.h:36
+msgid "POVRay"
+msgstr ""
+
+#: qtplugins/povray/povray.h:40
+#, fuzzy
+msgid "Render the scene using POV-Ray."
+msgstr "使用 POV-Ray 呈現"
+
+#: qtplugins/qtaim/qtaimengine.h:39 qtplugins/qtaim/qtaimextension.cpp:90
+#: qtplugins/qtaim/qtaimextension.h:35
+msgid "QTAIM"
+msgstr "QTAIM"
+
+#: qtplugins/qtaim/qtaimengine.h:43
+msgid "Renders primitives using QTAIM properties"
+msgstr ""
+
+#: qtplugins/qtaim/qtaimextension.cpp:59
+msgid "Molecular Graph..."
+msgstr ""
+
+#: qtplugins/qtaim/qtaimextension.cpp:66
+msgid "Molecular Graph with Lone Pairs..."
+msgstr ""
+
+#: qtplugins/qtaim/qtaimextension.cpp:73
+msgid "Atomic Charge..."
+msgstr ""
+
+#: qtplugins/qtaim/qtaimextension.cpp:90
+msgid "E&xtensions"
+msgstr "延伸功能"
+
+#: qtplugins/qtaim/qtaimextension.cpp:122
+msgid "Open WFN File"
+msgstr "開啟 WFN 檔"
+
+#: qtplugins/qtaim/qtaimextension.cpp:123
+msgid "WFN files (*.wfn);;All files (*.*)"
+msgstr "WFN 檔 (*.wfn);;所有檔案 (*.*)"
+
+#: qtplugins/qtaim/qtaimextension.h:36
+msgid "QTAIM extension"
+msgstr "QTAIM 延伸"
+
+#: qtplugins/quantuminput/quantuminput.cpp:180
+msgid ""
+"Select the python interpreter used to run input generator scripts.\n"
+"Avogadro must be restarted for any changes to take effect."
+msgstr ""
+
+#: qtplugins/quantuminput/quantuminput.h:56
+msgid "Quantum input"
+msgstr ""
+
+#: qtplugins/quantuminput/quantuminput.h:60
+#, fuzzy
+msgid "Generate input for quantum codes."
+msgstr "為量子化學套件產生輸入檔案"
+
+#: qtplugins/quantumoutput/quantumoutput.cpp:60
+#, fuzzy
+msgid "Calculate electronic surfaces..."
+msgstr "計算電子密度"
+
+#: qtplugins/quantumoutput/quantumoutput.cpp:155
+#, fuzzy
+msgid "Calculating electron density"
+msgstr "計算電子密度"
+
+#: qtplugins/quantumoutput/quantumoutput.cpp:162
+#, fuzzy, qt-format
+msgid "Calculating molecular orbital %L1"
+msgstr "計算及顯示分子軌域"
+
+#: qtplugins/quantumoutput/quantumoutput.h:57
+msgid "Quantum output"
+msgstr ""
+
+#: qtplugins/quantumoutput/quantumoutput.h:59
+msgid "Read output from quantum codes."
+msgstr ""
+
+#: qtplugins/quantumoutput/surfacedialog.cpp:83
+#, fuzzy, qt-format
+msgctxt "Molecular orbital"
+msgid "MO %L1"
+msgstr "MO %L1"
+
+#: qtplugins/quantumoutput/surfacedialog.cpp:85
+#, fuzzy
+msgctxt "Highest occupied molecular orbital"
+msgid "(HOMO)"
+msgstr "(HOMO, 最高被佔有軌域)"
+
+#: qtplugins/quantumoutput/surfacedialog.cpp:87
+#, fuzzy
+msgctxt "Lowest unoccupied molecular orbital"
+msgid "(LUMO)"
+msgstr "(LUMO, 最低未被佔有軌域)"
+
+#: qtplugins/quantumoutput/surfacedialog.cpp:105
+#, qt-format
+msgctxt "Cube File"
+msgid "Cube %L1"
+msgstr ""
+
+#: qtplugins/resetview/resetview.cpp:29
+msgid "Center"
+msgstr ""
+
+#: qtplugins/resetview/resetview.cpp:30
+msgid "Align View to Axes"
+msgstr ""
+
+#: qtplugins/resetview/resetview.h:40
+#, fuzzy
+msgid "ResetView"
+msgstr "重設"
+
+#: qtplugins/resetview/resetview.h:44
+msgid "Adjust the camera and view"
+msgstr ""
+
+#: qtplugins/scriptfileformats/scriptfileformats.h:39
+#, fuzzy
+msgid "Script File Formats"
+msgstr "輸入檔案產生器"
+
+#: qtplugins/scriptfileformats/scriptfileformats.h:43
+msgid "Load file reader/writers from external scripts."
+msgstr ""
+
+#: qtplugins/select/select.cpp:34
+#, fuzzy
+msgid "Select All"
+msgstr "全部刪除"
+
+#: qtplugins/select/select.cpp:39
+#, fuzzy
+msgid "Select None"
+msgstr "選擇"
+
+#: qtplugins/select/select.cpp:48
+#, fuzzy
+msgid "Invert Selection"
+msgstr "反向選擇"
+
+#: qtplugins/select/select.cpp:59
+#, fuzzy
+msgid "Change selections"
+msgstr " 價電子"
+
+#: qtplugins/select/select.cpp:69
+msgid "&Select"
+msgstr "選取"
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:183
+#. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
+#: qtplugins/select/select.h:35:678
+#, fuzzy
+msgid "Select"
+msgstr "選取"
+
+#: qtplugins/selectiontool/selectiontool.cpp:55
+msgid "Selection"
+msgstr "選擇"
+
+#: qtplugins/selectiontool/selectiontool.h:45
+#: qtplugins/selectiontool/selectiontool.h:46
+#, fuzzy
+msgid "Selection tool"
+msgstr "選擇"
+
+#: qtplugins/spacegroup/spacegroup.cpp:63
+msgid "Perceive Space Group"
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
+#. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
+#: qtplugins/spacegroup/spacegroup.cpp:81:663
+msgid "Symmetrize"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:91
+#: qtplugins/spacegroup/spacegroup.cpp:305
+msgid "Reduce to Asymmetric Unit"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:97
+msgid "Set Tolerance"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:118
+msgid "Space Group"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:192
+msgid "Failure"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:193
+msgid ""
+"Space group perception failed.\n"
+"Would you like to try again with a different tolerance?"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:208
+msgid "Primitive Reduction"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:209
+#: qtplugins/spacegroup/spacegroup.cpp:234
+#: qtplugins/spacegroup/spacegroup.cpp:259
+#, qt-format
+msgid ""
+"The tolerance is currently set to: %1.\n"
+"Proceed with this tolerance?"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:222
+msgid ""
+"Primitive reduction failed.\n"
+"Please check your crystal and try again with a different tolerance."
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:247
+msgid ""
+"Conventionalize cell failed.\n"
+"Please check your crystal and try again with a different tolerance."
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:271
+msgid ""
+"Symmetrization failed.\n"
+"Please check your crystal and try again with a different tolerance."
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:326
+#, fuzzy
+msgid "Avogadro2"
+msgstr "Avogadro 亞佛加厥"
+
+#: qtplugins/spacegroup/spacegroup.cpp:327
+msgid "Select tolerance in Å:"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:343
+msgid "International"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:343
+msgid "Hall"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:343
+msgid "Hermann-Mauguin"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:356
+msgid "Select Space Group"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.h:35
+msgid "SpaceGroup"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.h:76
+msgid "Space group features for crystals."
+msgstr ""
+
+#: qtplugins/spectra/spectra.cpp:40
+#, fuzzy
+msgid "Vibrational modes..."
+msgstr "Vibrations 振動"
+
+#: qtplugins/spectra/spectra.h:43
+#, fuzzy
+msgid "Spectra and Vibrations"
+msgstr "呈現光譜"
+
+#: qtplugins/spectra/spectra.h:47
+#, fuzzy
+msgid "Display spectra and vibrational modes."
+msgstr "顯示 &fractional 坐標"
+
+#: qtplugins/symmetry/operationstablemodel.cpp:60
+msgid "Type"
+msgstr "種類"
+
+#: qtplugins/symmetry/operationstablemodel.cpp:62
+msgid "Class"
+msgstr ""
+
+#: qtplugins/symmetry/operationstablemodel.cpp:64
+msgid "Element"
+msgstr "元素"
+
+#: qtplugins/symmetry/symmetry.cpp:51
+msgid "Symmetry Properties..."
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
+#: qtplugins/symmetry/symmetry.h:44:648
+msgid "Symmetry"
+msgstr ""
+
+#: qtplugins/symmetry/symmetry.h:77
+msgid "Provide symmetry functionality."
+msgstr ""
+
+#: qtplugins/symmetry/symmetryscene.h:44
+#, fuzzy
+msgid "Symmetry Elements"
+msgstr "依照元素來選擇"
+
+#: qtplugins/symmetry/symmetryscene.h:46
+#, fuzzy
+msgid "Render symmetry elements."
+msgstr "呈現分子的偶極矩"
+
+#: qtplugins/symmetry/symmetryutil.cpp:32
+msgid "∞"
+msgstr ""
+
+#: qtplugins/vanderwaals/vanderwaals.h:40
+msgid "Van der Waals"
+msgstr "凡得瓦"
+
+#: qtplugins/vanderwaals/vanderwaals.h:42
+msgid "Simple display of VdW spheres."
+msgstr ""
+
+#: qtplugins/vanderwaalsao/vanderwaalsao.h:41
+#, fuzzy
+msgid "Van der Waals (AO)"
+msgstr "凡得瓦"
+
+#: qtplugins/vanderwaalsao/vanderwaalsao.h:45
+msgid "Simple display of VdW spheres with ambient occlusion."
+msgstr ""
+
+#: qtplugins/vrml/vrml.cpp:41
+#, fuzzy
+msgid "VRML Render"
+msgstr "呈現"
+
+#: qtplugins/vrml/vrml.cpp:83
+msgid "VRML (*.wrl);;Text file (*.txt)"
+msgstr ""
+
+#: qtplugins/vrml/vrml.h:36
+msgid "VRML"
+msgstr ""
+
+#: qtplugins/vrml/vrml.h:40
+#, fuzzy
+msgid "Render the scene using VRML."
+msgstr "使用 POV-Ray 呈現"
+
+#: qtplugins/wireframe/wireframe.h:39
+msgid "Wireframe"
+msgstr "網架"
+
+#: qtplugins/wireframe/wireframe.h:43
+#, fuzzy
+msgid "Render the molecule as a wireframe."
+msgstr "以棒狀呈現分子"
+
+#. i18n: file: molequeue/inputgeneratordialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
+#. i18n: file: molequeue/molequeuedialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::MoleQueueDialog)
+#. i18n: file: qtplugins/clientserver/filedialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, FileDialog)
+#. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::MolecularPropertiesDialog)
+msgid "Dialog"
+msgstr "對話框"
+
+#. i18n: file: molequeue/inputgeneratorwidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::MoleQueue::InputGeneratorWidget)
+#. i18n: file: molequeue/molequeuewidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::MoleQueue::MoleQueueWidget)
+#. i18n: file: qtplugins/editor/editortoolwidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::EditorToolWidget)
+msgid "Form"
+msgstr "Form (表格/形成)"
+
+#. i18n: file: molequeue/inputgeneratorwidget.ui:26
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
+#, fuzzy
+msgid "Calculation Settings"
+msgstr "選取功能設定"
+
+#. i18n: file: molequeue/inputgeneratorwidget.ui:69
+#. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
+msgid "Placeholder text..."
+msgstr ""
+
+#. i18n: file: molequeue/inputgeneratorwidget.ui:83
+#. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
+msgid "Reset to Default Values"
+msgstr ""
+
+#. i18n: file: molequeue/inputgeneratorwidget.ui:90
+#. i18n: ectx: property (text), widget (QCheckBox, debugCheckBox)
+msgid "Debug script..."
+msgstr ""
+
+#. i18n: file: molequeue/inputgeneratorwidget.ui:113
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#, fuzzy
+msgid "Submit Calculation..."
+msgstr "停止計算"
+
+#. i18n: file: molequeue/inputgeneratorwidget.ui:120
+#. i18n: ectx: property (text), widget (QPushButton, generateButton)
+msgid "Write files to disk..."
+msgstr ""
+
+#. i18n: file: molequeue/molequeuewidget.ui:30
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
+msgid "Queue and Program:"
+msgstr "Shader 程式:"
+
+#. i18n: file: molequeue/molequeuewidget.ui:50
+#. i18n: ectx: property (text), widget (QToolButton, refreshProgramsButton)
+msgid "Refresh"
+msgstr ""
+
+#. i18n: file: molequeue/molequeuewidget.ui:85
+#. i18n: ectx: property (toolTip), widget (QLabel, label_7)
+msgid ""
+"<html><head/><body><p>Number of processor cores to reserve for this job.</"
+"p></body></html>"
+msgstr ""
+
+#. i18n: file: molequeue/molequeuewidget.ui:88
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
+msgid "Processor cores:"
+msgstr "處理器:"
+
+#. i18n: file: molequeue/molequeuewidget.ui:125
+#. i18n: ectx: property (toolTip), widget (QLabel, label)
+msgid ""
+"<html><head/><body><p>Delete remote working files upon job completion. "
+"Results will still be copied to the local MoleQueue job cache first.</p></"
+"body></html>"
+msgstr ""
+
+#. i18n: file: molequeue/molequeuewidget.ui:128
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Delete remote files when finished:"
+msgstr ""
+
+#. i18n: file: molequeue/molequeuewidget.ui:145
+#. i18n: ectx: property (toolTip), widget (QLabel, label_2)
+msgid ""
+"<html><head/><body><p>Check to prevent this job from showing up in the "
+"MoleQueue GUI by default.</p></body></html>"
+msgstr ""
+
+#. i18n: file: molequeue/molequeuewidget.ui:148
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Hide job in MoleQueue:"
+msgstr ""
+
+#. i18n: file: molequeue/molequeuewidget.ui:158
+#. i18n: ectx: property (toolTip), widget (QLabel, label_3)
+msgid ""
+"<html><head/><body><p>Show a system popup notification when the job's status "
+"changes.</p></body></html>"
+msgstr ""
+
+#. i18n: file: molequeue/molequeuewidget.ui:161
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Show progress notifications:"
+msgstr ""
+
+#. i18n: file: molequeue/molequeuewidget.ui:192
+#. i18n: ectx: property (text), widget (QLabel, openOutputLabel)
+msgid "Open output when finished:"
+msgstr ""
+
+#. i18n: file: qtgui/customelementdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
+#, fuzzy
+msgid "Rename Elements"
+msgstr "變更元素"
+
+#. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
+msgid "3DMol HTML Snippet"
+msgstr ""
+
+#. i18n: file: qtplugins/3dmol/3dmoldialog.ui:34
+#. i18n: ectx: property (text), widget (QPushButton, copyButton)
+msgid "&Copy to Clipboard"
+msgstr ""
+
+#. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
+#. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
+#, fuzzy
+msgid "Ctrl+C"
+msgstr "Ctrl+Alt+O"
+
+#. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
+#. i18n: ectx: property (text), widget (QPushButton, exitButton)
+msgid "&Exit"
+msgstr ""
+
+#. i18n: file: qtplugins/3dmol/3dmoldialog.ui:47
+#. i18n: ectx: property (shortcut), widget (QPushButton, exitButton)
+#, fuzzy
+msgid "Ctrl+E"
+msgstr "Ctrl+Alt+O"
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:20
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#, fuzzy
+msgid "Structure Input File"
+msgstr "Dalton 輸入檔"
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:28
+#. i18n: ectx: property (text), widget (QRadioButton, generateFromPdbButton)
+msgid "Generate Input From PDB"
+msgstr ""
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:40
+#. i18n: ectx: property (text), widget (QLabel, pdbFileLabel)
+#, fuzzy
+msgid "PDB File:"
+msgstr "par file (標準檔案):"
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:50
+#. i18n: ectx: property (text), widget (QPushButton, openPdbFileButton)
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:142
+#. i18n: ectx: property (text), widget (QPushButton, openPqrFileButton)
+msgid "..."
+msgstr "..."
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:67
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Force Field:"
+msgstr "力場"
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:75
+#. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
+msgid "AMBER"
+msgstr ""
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:80
+#. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
+msgid "CHARMM"
+msgstr ""
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:85
+#. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
+msgid "PARSE"
+msgstr ""
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:90
+#. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
+msgid "TYL06"
+msgstr ""
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:95
+#. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
+msgid "PEOEPB"
+msgstr ""
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:100
+#. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
+msgid "SWANSON"
+msgstr ""
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:114
+#. i18n: ectx: property (text), widget (QPushButton, runPdb2PqrButton)
+msgid "Run PDB2PQR"
+msgstr ""
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:123
+#. i18n: ectx: property (text), widget (QRadioButton, loadFromPqrButton)
+msgid "Load Existing PQR File"
+msgstr ""
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:132
+#. i18n: ectx: property (text), widget (QLabel, pqrFileLabel)
+#, fuzzy
+msgid "PQR File:"
+msgstr "par file (標準檔案):"
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:156
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#, fuzzy
+msgid "APBS Input File"
+msgstr "Dalton 輸入檔"
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:170
+#. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
+#, fuzzy
+msgid "Save Input File"
+msgstr "儲存輸入面板"
+
+#. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Success!"
+msgstr "成功了!"
+
+#. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:27
+#. i18n: ectx: property (text), widget (QCheckBox, loadStructureCheckBox)
+#, fuzzy
+msgid "Load Structure File"
+msgstr "結構"
+
+#. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:37
+#. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
+#, fuzzy
+msgid "Load Cube File"
+msgstr "載入檔案..."
+
+#. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConnectionSettingsDialog)
+#, fuzzy
+msgid "Server settings"
+msgstr "測量功能設定"
+
+#. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:51
+#. i18n: ectx: property (text), widget (QLabel, label7)
+#, fuzzy
+msgid "&Hostname:"
+msgstr "檔名:"
+
+#. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:64
+#. i18n: ectx: property (text), widget (QLabel, label8)
+msgid "Port"
+msgstr ""
+
+#. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:86
+#. i18n: ectx: property (text), widget (QPushButton, pushTestConnection)
+msgid "Test C&onnection..."
+msgstr ""
+
+#. i18n: file: qtplugins/clientserver/filedialog.ui:46
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Look in:"
+msgstr ""
+
+#. i18n: file: qtplugins/clientserver/filedialog.ui:66
+#. i18n: ectx: property (toolTip), widget (QToolButton, NavigateBack)
+#, fuzzy
+msgid "Navigate Back"
+msgstr "導覽"
+
+#. i18n: file: qtplugins/clientserver/filedialog.ui:79
+#. i18n: ectx: property (toolTip), widget (QToolButton, NavigateForward)
+#, fuzzy
+msgid "Navigate Forward"
+msgstr "導覽"
+
+#. i18n: file: qtplugins/clientserver/filedialog.ui:92
+#. i18n: ectx: property (toolTip), widget (QToolButton, NavigateUp)
+#, fuzzy
+msgid "Navigate Up"
+msgstr "導覽"
+
+#. i18n: file: qtplugins/clientserver/filedialog.ui:143
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
+msgid "File name:"
+msgstr "檔名:"
+
+#. i18n: file: qtplugins/clientserver/filedialog.ui:153
+#. i18n: ectx: property (text), widget (QPushButton, OK)
+msgid "OK"
+msgstr "確定"
+
+#. i18n: file: qtplugins/clientserver/filedialog.ui:160
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Files of type:"
+msgstr ""
+
+#. i18n: file: qtplugins/clientserver/filedialog.ui:174
+#. i18n: ectx: property (text), widget (QPushButton, Cancel)
+msgid "Cancel"
+msgstr "取消"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
+#, fuzzy
+msgid "Coordinate Editor"
+msgstr "直角坐標編輯器"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:25
+#. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
+msgid "Preset:"
+msgstr "重設"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:35
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
+msgid "Distance Unit:"
+msgstr "距離"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:46
+#. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
+#, fuzzy
+msgid "Angstrom"
+msgstr "埃"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:51
+#. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
+msgid "Bohr"
+msgstr "Bohr"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:59
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:31
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Format:"
+msgstr "格式:"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:71
+#. i18n: ectx: property (toolTip), widget (QLineEdit, spec)
+msgid ""
+"<html><head/><body><p>Specification of format. Each character indicates a "
+"value to write per atom:</p><p><span style=\" font-weight:600;\">#</span> - "
+"Atom index (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;\">Z</"
+"span> - Atomic number (e.g. \"6\" for carbon)<br/><span style=\" font-"
+"weight:600;\">G</span> - GAMESS-style atomic number (e.g. \"6.0\" for "
+"carbon)<br/><span style=\" font-weight:600;\">N</span> - Element name (e.g. "
+"\"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - Element symbol "
+"(e.g. \"C\" for carbon)<br/><span style=\" font-weight:600;\">x</span> - X "
+"position coordinate<br/><span style=\" font-weight:600;\">y</span> - Y "
+"position coordinate<br/><span style=\" font-weight:600;\">z</span> - Z "
+"position coordinate<br/><span style=\" font-weight:600;\">a</span> - 'a' "
+"lattice coordinate (crystals only)<br/><span style=\" font-weight:600;\">b</"
+"span> - 'b' lattice coordinate (crystals only)<br/><span style=\" font-"
+"weight:600;\">c</span> - 'c' lattice coordinate (crystals only)<br/><span "
+"style=\" font-weight:600;\">_</span> - A literal space (\" \"), useful for "
+"alignment<br/><span style=\" font-weight:600;\">0</span> - A literal 0 "
+"(\"0\"), useful for optimization flags<br/><span style=\" font-weight:600;"
+"\">1</span> - A literal 1 (\"1\"), useful for optimization flags<br/></p></"
+"body></html>"
+msgstr ""
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
+#. i18n: ectx: property (text), widget (QToolButton, help)
+msgid "Help..."
+msgstr ""
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:131
+#. i18n: ectx: property (text), widget (QPushButton, revert)
+#, fuzzy
+msgid "Revert"
+msgstr "恢復改變"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:145
+#. i18n: ectx: property (text), widget (QPushButton, apply)
+msgid "Apply"
+msgstr "套用"
+
+#. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
+msgid "Import Crystal"
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/importcrystaldialog.ui:20
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/supercelldialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
+#, fuzzy
+msgid "Supercell Parameters"
+msgstr "超級晶格參數"
+
+#. i18n: file: qtplugins/crystal/supercelldialog.ui:22
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+msgid "Super Cell Options"
+msgstr "超級晶格選項"
+
+#. i18n: file: qtplugins/crystal/supercelldialog.ui:28
+#. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
+msgid "A repeat:"
+msgstr "A 重複:"
+
+#. i18n: file: qtplugins/crystal/supercelldialog.ui:42
+#. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
+msgid "B repeat:"
+msgstr "B 重複:"
+
+#. i18n: file: qtplugins/crystal/supercelldialog.ui:56
+#. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
+msgid "C repeat:"
+msgstr "C 重複:"
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
+#, fuzzy
+msgid "Unit Cell Editor"
+msgstr "隱藏編輯者(&E)"
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "A:"
+msgstr "A:"
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:40
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, a)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:72
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, b)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:104
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, c)
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:100
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
+msgid " Å"
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:62
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "B:"
+msgstr "B:"
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:94
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+msgid "C:"
+msgstr "C:"
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:133
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "α:"
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:143
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+msgid "β:"
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:153
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+msgid "γ:"
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:163
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, alpha)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:182
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, gamma)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:201
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, beta)
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:26
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_max2Theta)
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:48
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_peakWidth)
+msgid "°"
+msgstr "°"
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:231
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
+msgid "Cell Matrix:"
+msgstr "MOPAC Z-Matrix"
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:248
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#, fuzzy
+msgid "Fractional Matrix:"
+msgstr "分數 (fractional)"
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:278
+#. i18n: ectx: property (text), widget (QCheckBox, transformAtoms)
+#. i18n: file: qtplugins/crystal/volumescalingdialog.ui:114
+#. i18n: ectx: property (text), widget (QCheckBox, transformAtoms)
+#, fuzzy
+msgid "&Transform Atoms"
+msgstr "Transformation Method"
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:300
+#. i18n: ectx: property (text), widget (QPushButton, apply)
+msgid "&Apply"
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:307
+#. i18n: ectx: property (text), widget (QPushButton, revert)
+msgid "&Revert"
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:314
+#. i18n: ectx: property (text), widget (QPushButton, pushButton)
+msgid "&Hide"
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/volumescalingdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::VolumeScalingDialog)
+msgid "Scale Unit Cell Volume"
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/volumescalingdialog.ui:25
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "New &Volume:"
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/volumescalingdialog.ui:38
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
+msgid "&Scaling Factor:"
+msgstr "縮放因子"
+
+#. i18n: file: qtplugins/crystal/volumescalingdialog.ui:51
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Current Volume:"
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/volumescalingdialog.ui:58
+#. i18n: ectx: property (text), widget (QLabel, currentVolume)
+msgid "TextLabel"
+msgstr "文字標籤"
+
+#. i18n: file: qtplugins/editor/editortoolwidget.ui:23
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Element:"
+msgstr "元素："
+
+#. i18n: file: qtplugins/editor/editortoolwidget.ui:33
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Bond Order:"
+msgstr "鍵的級數:"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
+msgid "GAMESS Input"
+msgstr "GAMESS (原子分子之電子結構系統) 輸入"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:34
+#. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
+msgid "&Basic Setup"
+msgstr "建立"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:60
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "In:"
+msgstr "In:"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:73
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+msgid "Multiplicity:"
+msgstr "多重性"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:86
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "With:"
+msgstr "With:"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:99
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+msgid "Title:"
+msgstr "標題:"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:176
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+msgid "Charge:"
+msgstr "電荷:"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:209
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Calculate:"
+msgstr "計算:"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:235
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
+msgid "Filename Base:"
+msgstr "檔名:"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:245
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
+msgid "job"
+msgstr ""
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:258
+#. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
+msgid "Reset All"
+msgstr "恢復預設值"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:265
+#. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
+msgid "Defaults"
+msgstr "預設值"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
+#. i18n: ectx: property (text), widget (QPushButton, generateButton)
+#, fuzzy
+msgid "Save File..."
+msgstr "載入檔案..."
+
+#. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
+#. i18n: ectx: property (text), widget (QPushButton, searchButton)
+msgid "Search"
+msgstr ""
+
+#. i18n: file: qtplugins/importpqr/pqrwidget.ui:51
+#. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
+msgid "name"
+msgstr "名稱"
+
+#. i18n: file: qtplugins/importpqr/pqrwidget.ui:56
+#. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
+msgid "tag"
+msgstr ""
+
+#. i18n: file: qtplugins/importpqr/pqrwidget.ui:61
+#. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
+msgid "synonym"
+msgstr ""
+
+#. i18n: file: qtplugins/importpqr/pqrwidget.ui:66
+#. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
+msgid "formula"
+msgstr ""
+
+#. i18n: file: qtplugins/importpqr/pqrwidget.ui:71
+#. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
+msgid "inchi"
+msgstr ""
+
+#. i18n: file: qtplugins/importpqr/pqrwidget.ui:85
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Search By: "
+msgstr ""
+
+#. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
+msgid "Formula:"
+msgstr "格式:"
+
+#. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
+#. i18n: ectx: property (text), widget (QPushButton, downloadButton)
+msgid "Download"
+msgstr ""
+
+#. i18n: file: qtplugins/importpqr/pqrwidget.ui:139
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+msgid "Name:"
+msgstr ""
+
+#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
+msgid "Descriptor:"
+msgstr "沒有描述"
+
+#. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:25
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
+msgid "Molecular Mass (g/mol):"
+msgstr "分子量 (g/mol):"
+
+#. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:32
+#. i18n: ectx: property (text), widget (QLabel, molMassLabel)
+#. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:46
+#. i18n: ectx: property (text), widget (QLabel, formulaLabel)
+#. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:60
+#. i18n: ectx: property (text), widget (QLabel, atomCountLabel)
+#. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:74
+#. i18n: ectx: property (text), widget (QLabel, bondCountLabel)
+msgid "TODO"
+msgstr "TODO"
+
+#. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:39
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Chemical Formula:"
+msgstr "化學式:"
+
+#. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:53
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+msgid "Number of Atoms:"
+msgstr "原子的數目:"
+
+#. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:67
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+msgid "Number of Bonds:"
+msgstr "鍵的數目:"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
+#, fuzzy
+msgid "Geometry Optimization Parameters"
+msgstr "幾何構形最適化"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#, fuzzy
+msgid "Optimization Method"
+msgstr "最適化方法"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
+#. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
+msgid "Force field:"
+msgstr "力場"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
+msgid "Optimization algorithm:"
+msgstr "最適化方法"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+msgid "Line search technique:"
+msgstr ""
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
+#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+msgid "Steepest Descent"
+msgstr "Steepest Descent (最陡下降)"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
+#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+#, fuzzy
+msgid "Conjugate Gradient"
+msgstr "共軛梯度"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
+#. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
+msgid "Simple"
+msgstr ""
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:86
+#. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
+msgid "Newton's Method"
+msgstr ""
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
+#. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
+#, fuzzy
+msgid "Autodetect"
+msgstr "自動旋轉 (可以設定的旋轉軸, 選轉方向及速度)"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
+#. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
+msgid "Limit Non-Bonded Interactions"
+msgstr ""
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
+msgid "Van der Waals cutoff distance:"
+msgstr "凡得瓦, 等值面 =%L1"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:133
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+msgid "Pair update frequency:"
+msgstr ""
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:140
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#, fuzzy
+msgid "electrostatic cutoff distance:"
+msgstr "靜電位能"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:147
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:166
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, eleCutoff)
+msgid "Å"
+msgstr ""
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:185
+#. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
+#. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
+#, fuzzy
+msgid " steps"
+msgstr "steps"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#, fuzzy
+msgid "Convergence Criteria"
+msgstr "梯度收斂的標準"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
+msgid "\"Energy\" convergence:"
+msgstr "收斂"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
+msgid "Step limit:"
+msgstr "時間限制:"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
+#. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
+#, fuzzy
+msgid " units"
+msgstr "單位："
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
+#. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
+msgid "10^"
+msgstr ""
+
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
+msgid "Theoretical XRD Pattern Options"
+msgstr ""
+
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:17
+#. i18n: ectx: property (toolTip), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
+msgid ""
+"<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
+"p></body></html>"
+msgstr ""
+
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
+#. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
+msgid ""
+"<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
+"162.00°</p></body></html>"
+msgstr ""
+
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
+#. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
+msgid ""
+"<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
+"p><p>Default: 0.52958°</p></body></html>"
+msgstr ""
+
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
+msgid "Number of points:"
+msgstr "鍵的數目:"
+
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:77
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Peak width:"
+msgstr ""
+
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:87
+#. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
+msgid "Wavelength:"
+msgstr "波長 (nm)"
+
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:97
+#. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_wavelength)
+msgid ""
+"<html><head/><body><p>The wavelength of the x-ray in Angstroms. </"
+"p><p>Default: 1.50560 Å</p></body></html>"
+msgstr ""
+
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:122
+#. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numDataPoints)
+msgid ""
+"<html><head/><body><p>The number of 2theta points to generate.</"
+"p><p>Default: 1000</p></body></html>"
+msgstr ""
+
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+msgid "Max 2*theta:"
+msgstr ""
+
+#. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
+#. i18n: ectx: property (text), widget (QPushButton, downloadButton)
+#, fuzzy
+msgid "Download Selected"
+msgstr "刪除所選取項目"
+
+#. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:19
+#. i18n: ectx: property (text), widget (QLabel, atomRadiusLabel)
+msgid "Critical Point Radius:"
+msgstr "臨界點半徑:"
+
+#. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:48
+#. i18n: ectx: property (text), widget (QLabel, bondRadiusLabel)
+msgid "Bond Path Radius:"
+msgstr "鍵路徑之半徑:"
+
+#. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:130
+#. i18n: ectx: property (text), item, widget (QComboBox, combo_radius)
+msgid "Covalent"
+msgstr "共價"
+
+#. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:135
+#. i18n: ectx: property (text), item, widget (QComboBox, combo_radius)
+msgid "Constant Size"
+msgstr "固定大小"
+
+#. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
+#. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
+msgid "Opacity:"
+msgstr "不透明度:"
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:23
+#. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
+#, fuzzy
+msgid "Surface Dialog"
+msgstr "表面/曲面"
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:41
+#. i18n: ectx: attribute (title), widget (QWidget, surfaceTab)
+msgid "Surfaces"
+msgstr "表面/曲面"
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:54
+#. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:71
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Medium"
+msgstr "中等"
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:61
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+#, fuzzy
+msgid "Very Low"
+msgstr "非常低"
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:66
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Low"
+msgstr "低"
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:76
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "High"
+msgstr "高"
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:81
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Very High"
+msgstr "很高"
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:97
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
+msgid " Ang."
+msgstr ""
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:166
+#. i18n: ectx: property (text), widget (QLineEdit, isosurfaceLineEdit)
+msgid "0.03"
+msgstr ""
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:191
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
+msgid "Isosurface Val.:"
+msgstr "等曲面值"
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:201
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Resolution:"
+msgstr "解析度:"
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:211
+#. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
+msgid "Surface:"
+msgstr "表面/曲面"
+
+#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:228
+#. i18n: ectx: property (text), widget (QPushButton, calculateButton)
+msgid "Calculate"
+msgstr "計算"
+
+#. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
+#, fuzzy
+msgid "Vibrational Modes"
+msgstr "Vibrations 振動"
+
+#. i18n: file: qtplugins/spectra/vibrationdialog.ui:56
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Amplitude:"
+msgstr "振幅："
+
+#. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+#, fuzzy
+msgid "Start Animation"
+msgstr "啟動動畫"
+
+#. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
+#. i18n: ectx: property (text), widget (QPushButton, stopButton)
+#, fuzzy
+msgid "Stop Animation"
+msgstr "停止動畫"
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
+#. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
+msgid "C<sub>1"
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:42
+#. i18n: ectx: attribute (title), widget (QWidget, esTab)
+msgid "Molecule"
+msgstr "分子"
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:48
+#. i18n: ectx: property (text), widget (QLabel, esLabel)
+msgid "Symmetrically equivalent atoms:"
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:79
+#. i18n: ectx: property (text), widget (QCheckBox, lockSymmetryCheckBox)
+msgid "Lock Symmetry"
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:109
+#. i18n: ectx: attribute (title), widget (QWidget, operationsTab)
+#, fuzzy
+msgid "Operations"
+msgstr "選項"
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:115
+#. i18n: ectx: property (text), widget (QLabel, operationsLabel)
+msgid "Symmetry elements:"
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:145
+#. i18n: ectx: attribute (title), widget (QWidget, subgroupsTab)
+msgid "Subgroups"
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:151
+#. i18n: ectx: property (text), widget (QLabel, subgroupsLabel)
+msgid "Subgroups:"
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:211
+#. i18n: ectx: property (text), widget (QLabel, toleranceLabel)
+msgid "Tolerance:"
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:222
+#. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
+msgid "Tight"
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:227
+#. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
+msgid "Normal"
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:232
+#. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
+msgid "Loose"
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:240
+#. i18n: ectx: property (text), widget (QPushButton, detectSymmetryButton)
+msgid "Detect Symmetry"
+msgstr ""
+
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr ""
+",Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
+"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
+"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
+"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
+"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
+"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
+"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang"
+
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+",,iychiang1809@gmail.com,,,iychiang1809@gmail.com,,,iychiang1809@gmail.com,,,"
+"iychiang1809@gmail.com,,,iychiang1809@gmail.com,,,iychiang1809@gmail.com,,,"
+"iychiang1809@gmail.com,,,iychiang1809@gmail.com,,,iychiang1809@gmail.com,,,"
+"iychiang1809@gmail.com,,,iychiang1809@gmail.com,,,iychiang1809@gmail.com,,,"
+"iychiang1809@gmail.com,,,iychiang1809@gmail.com"
+
+#~ msgid "Color by Index"
+#~ msgstr "依照 index 上顏色"
+
+#~ msgid "Color by Index (red, orange, yellow, green, blue, violet)."
+#~ msgstr "依照 index 上顏色 (紅, 橘, 黃, 綠, 藍, 紫)"
+
+#~ msgid "Color by Partial Charge"
+#~ msgstr "依照部分電荷上顏色"
+
+#~ msgid "Color by atomic partial charge (blue = positive, red = negative."
+#~ msgstr "以不同顏色顯示原子的電荷分佈 (藍色表示正電, 紅色表示負電)"
+
+#~ msgid "Custom Color:"
+#~ msgstr "自訂顏色："
+
+#~ msgid "Custom Color"
+#~ msgstr "自訂顏色"
+
+#~ msgid "Set custom colors for objects"
+#~ msgstr "為物件設定顏色"
+
+#~ msgid "Color by Distance"
+#~ msgstr "以不同顏色表示距離"
+
+#~ msgid "Color by distance from the first atom."
+#~ msgstr "以不同顏色表示與第一個原子的距離"
+
+#~ msgid "Color by Element"
+#~ msgstr "依元素標示顏色"
+
+#~ msgid "Color by Element (carbon = grey, oxygen = red, ...)."
+#~ msgstr "依元素標示顏色 (碳=灰色, 氧=紅色, ...)"
+
+#~ msgid "Color by Residue"
+#~ msgstr "依照殘基上顏色"
+
+#~ msgid "Color by Residue (amino acid type, hydrophobicity, ..."
+#~ msgstr "依照殘基上顏色 (胺基酸種類, 疏水性等)"
+
+#~ msgid "SMARTS Pattern:"
+#~ msgstr "SMARTS 樣式:"
+
+#~ msgid "Highlight Color:"
+#~ msgstr "重要標示之顏色："
+
+#~ msgid "Color by SMARTS Pattern"
+#~ msgstr "依照 SMARTS 樣式呈色"
+
+#~ msgid "Highlight particular features which match a SMARTS pattern."
+#~ msgstr "標示出符合 SMARTS 樣式之特色"
+
+#~ msgid "Ununtrium"
+#~ msgstr "Ununtrium"
+
+#~ msgid "Ununpentium"
+#~ msgstr "Ununpentium"
+
+#~ msgid "Ununseptium"
+#~ msgstr "Ununseptium"
+
+#~ msgid "Ununoctium"
+#~ msgstr "Ununoctium"
+
+#~ msgid "Engines"
+#~ msgstr "引擎"
+
+#~ msgid "Axes"
+#~ msgstr "軸"
+
+#~ msgid "Renders the x, y, and z axes at the origin"
+#~ msgstr "在開始就呈現 x, y, z 軸"
+
+#~ msgid "Renders primitives using Balls (atoms) and Sticks (bonds)"
+#~ msgstr "使用球 (原子) 及棒 (鍵) 呈現 primitives"
+
+#~ msgid "Cartoon"
+#~ msgstr "卡通"
+
+#~ msgid "Renders protein secondary structure"
+#~ msgstr "呈現蛋白質的二級結構"
+
+#~ msgid "Dipole"
+#~ msgstr "雙極"
+
+#~ msgid "Force"
+#~ msgstr "力"
+
+#~ msgid "Renders force displacements on atoms"
+#~ msgstr "呈現原子上的 force displacements"
+
+#~ msgid "Hydrogen Bond"
+#~ msgstr "氫鍵"
+
+#~ msgid "Renders hydrogen bonds"
+#~ msgstr "繪出氫的結合鍵"
+
+#~ msgid "Select Atom Labels Color"
+#~ msgstr "選擇原子標示之顏色"
+
+#~ msgid "Select Bond Labels Color"
+#~ msgstr "選擇鍵標示之顏色"
+
+#~ msgid "Select Atom Labels Font"
+#~ msgstr "選擇原子標示之字型"
+
+#~ msgid "Select Bond Labels Font"
+#~ msgstr "選擇鍵標示之字型"
+
+#~ msgid "Label"
+#~ msgstr "標記"
+
+#~ msgid "Polygon"
+#~ msgstr "多邊形"
+
+#~ msgid "Renders atoms as tetrahedra, octahedra, and other polygons"
+#~ msgstr "以四面體八面體或其他呈現原子團的形狀"
+
+#~ msgid "Ribbon"
+#~ msgstr "帶狀"
+
+#~ msgid "Renders protein backbones as ribbons"
+#~ msgstr "以彩帶呈現蛋白質的骨架"
+
+#~ msgid "Ring"
+#~ msgstr "環"
+
+#~ msgid "Renders rings with colored planes"
+#~ msgstr "以彩色平面呈現環狀結構"
+
+#~ msgid "Simple Wireframe"
+#~ msgstr "簡單的框線"
+
+#~ msgid "Renders bonds as wires (lines), ideal for large molecules"
+#~ msgstr "以細線呈現化學鍵, 可用來表達大分子"
+
+#~ msgid "Van der Waals Spheres"
+#~ msgstr "凡得瓦球形"
+
+#~ msgid "Renders atoms as Van der Waals spheres"
+#~ msgstr "將原子繪成凡得瓦球形"
+
+#~ msgid "Stick"
+#~ msgstr "棒狀"
+
+#~ msgctxt "Electron density isosurface with a cutoff of %1"
+#~ msgid "Electron density, isosurface = %L1"
+#~ msgstr "電子密度, 等值面 = %L1"
+
+#~ msgctxt "%1 is mesh name, %2 is the isosurface cutoff"
+#~ msgid "%1, isosurface = %L2"
+#~ msgstr "%1, 等值面 = %L2"
+
+#~ msgid "Renders bonds as wires (lines), ideal for very large (bio)molecules"
+#~ msgstr "以細線呈現化學鍵, 可用來表達大分子或生物大分子"
+
+#~ msgid "Trajectory files"
+#~ msgstr "軌跡檔"
+
+#~ msgid "DL-POLY HISTORY files"
+#~ msgstr "DL-POLY HISTORY 檔"
+
+#~ msgid "Open Trajectory File"
+#~ msgstr "開啟軌跡檔"
+
+#~ msgid "%1/%2"
+#~ msgstr "%1/%2"
+
+#~ msgid "video files (*.avi)"
+#~ msgstr "影片檔 (*.avi)"
+
+#~ msgid "Adding .avi extension"
+#~ msgstr "加上附檔名 .avi"
+
+#~ msgid "Animation..."
+#~ msgstr "動畫"
+
+#~ msgid "Cannot read file format of file %1."
+#~ msgstr "無法讀取檔案 %1 的格式。"
+
+#~ msgid "Read trajectory file %1 failed."
+#~ msgstr "無法讀取軌跡檔 %1"
+
+#~ msgid "Must specify a valid .avi file name"
+#~ msgstr "必須要給定有效的 .avi 檔名"
+
+#~ msgid "GL widget was not correctly initialized in order to save video"
+#~ msgstr "無法正確啟動 GL widget 所以無法儲存影片"
+
+#~ msgid "Invalid video filename.  Must include full directory path"
+#~ msgstr "無效的影片檔名. 必須包含完整的路徑"
+
+#~ msgid ""
+#~ "Invalid video filename.  Must include full directory path and name, "
+#~ "ending with .avi"
+#~ msgstr "無效的影片檔名. 必須包含完整的子目錄名稱與檔名, 結尾是 .avi"
+
+#~ msgid "Could not determine format from filename: %1"
+#~ msgstr "無法從檔名 %1 決定檔案的格式"
+
+#~ msgid "Animation"
+#~ msgstr "動畫"
+
+#~ msgid "Animate trajectories, reactions, and vibrations."
+#~ msgstr "使軌跡, 反應與振動變成動畫"
+
+#~ msgid "Cartesian Editor"
+#~ msgstr "直角坐標編輯器"
+
+#~ msgid ""
+#~ "No unit cell defined for molecule -- cannot use fractional coordinates."
+#~ msgstr "尚未為分子定義單位晶格--無法使用比列坐標 (fractional coordinates)"
+
+#~ msgid "Cartesian Editor..."
+#~ msgstr "直角坐標 (笛卡兒坐標) 編輯"
+
+#~ msgid "Cartesian editor"
+#~ msgstr "直角坐標編輯器"
+
+#~ msgid "Number of atoms: %1"
+#~ msgstr "原子的數目: %1"
+
+#~ msgid "Number of rotatable bonds: %1"
+#~ msgstr "可旋轉的鍵的數目: %1"
+
+#~ msgid "Add constraint"
+#~ msgstr "加入限制條件"
+
+#~ msgid "Your molecule must contain at least one atom to add a constraint"
+#~ msgstr "您的分子至少要有一個原子才能加入一限制條件"
+
+#~ msgid ""
+#~ "Your molecule must contain at least two atoms to add a bond constraint"
+#~ msgstr "您的分子至少要有兩個原子才能加入一化學鍵結的限制條件"
+
+#~ msgid ""
+#~ "Your molecule must contain at least three atoms to add an angle constraint"
+#~ msgstr "您的分子至少要三個原子才能加入鍵角的限制條件"
+
+#~ msgid ""
+#~ "Your molecule must contain at least four atoms to add a torsion constraint"
+#~ msgstr "您的分子至少要有四個原子才能加扭曲的限制條件"
+
+#~ msgid "&Settings"
+#~ msgstr "設定(&S)"
+
+#~ msgid "&Length Unit"
+#~ msgstr "長度單位(&L)"
+
+#~ msgid "&Angle Unit"
+#~ msgstr "角度單位(&A)"
+
+#~ msgid "&Coordinate Display"
+#~ msgstr "顯示坐標"
+
+#~ msgid "Show &Editors"
+#~ msgstr "顯示編輯者(&E)"
+
+#~ msgctxt "Unit cell lattice"
+#~ msgid "Lattice Type: %1"
+#~ msgstr "晶格種類: %1"
+
+#~ msgid "Unit cell volume: %L1%2"
+#~ msgstr "單位晶格體積: %L1%2"
+
+#~ msgid "Undefined"
+#~ msgstr "未定義"
+
+#~ msgctxt "Lattice type"
+#~ msgid "Triclinic"
+#~ msgstr "三斜晶系"
+
+#~ msgctxt "Lattice type"
+#~ msgid "Monoclinic"
+#~ msgstr "單斜晶系"
+
+#~ msgctxt "Lattice type"
+#~ msgid "Orthorhombic"
+#~ msgstr "斜方晶系"
+
+#~ msgctxt "Lattice type"
+#~ msgid "Tetragonal"
+#~ msgstr "四方晶系"
+
+#~ msgctxt "Lattice type"
+#~ msgid "Rhombohedral"
+#~ msgstr "菱形晶系"
+
+#~ msgctxt "Lattice type"
+#~ msgid "Hexagonal"
+#~ msgstr "六方晶系"
+
+#~ msgctxt "Lattice type"
+#~ msgid "Cubic"
+#~ msgstr "立方晶格"
+
+#~ msgid "&Nanometer"
+#~ msgstr "奈米 (&N)"
+
+#~ msgid "&Picometer"
+#~ msgstr "皮米 (picometer)(&P)"
+
+#~ msgid "&Degree"
+#~ msgstr "角度 (&D)"
+
+#~ msgid "&Radian"
+#~ msgstr "弧度 (&R)"
+
+#~ msgid "Display &cartesian coordinates"
+#~ msgstr "顯示直角坐標系 (&c)"
+
+#~ msgid "Trajectory..."
+#~ msgstr "軌跡..."
+
+#~ msgid "Open chemical file format"
+#~ msgstr "開起化學檔案格式"
+
+#~ msgid "Chemical files (*.xyz)"
+#~ msgstr "化學檔案 (*.xyz)"
+
+#~ msgid "Open parameter file"
+#~ msgstr "開啟參數檔案"
+
+#~ msgid "Chemical files (*.parm7)"
+#~ msgstr "化學檔案 (*.parm7)"
+
+#~ msgid "Import Trajectory"
+#~ msgstr "匯入軌跡"
+
+#~ msgid "Import trajectory files"
+#~ msgstr "匯入軌跡檔"
+
+#~ msgid "Setup Force Field..."
+#~ msgstr "設定力場..."
+
+#~ msgid "Calculate Energy"
+#~ msgstr "計算能量"
+
+#~ msgid "Conformer Search..."
+#~ msgstr "尋找構形異構物"
+
+#~ msgid "Constraints..."
+#~ msgstr "限制條件..."
+
+#~ msgid "Ignore Selection"
+#~ msgstr "忽略選項"
+
+#~ msgid "Fix Selected Atoms"
+#~ msgstr "固定所選的原子"
+
+#~ msgid "&Molecular Mechanics"
+#~ msgstr "分子力學"
+
+#~ msgid ""
+#~ "Cannot set up the currently selected force field for this molecule. "
+#~ "Switching to UFF."
+#~ msgstr "無法在這分子上設定所選的力場. 切換到 UFF."
+
+#~ msgid "Energy = %L1 %2"
+#~ msgstr "能量 = %L1 %2"
+
+#~ msgid "Geometric Optimization"
+#~ msgstr "幾何最佳化"
+
+#~ msgid "Forcefield Optimization"
+#~ msgstr "力埸最佳化"
+
+#~ msgid "Systematic Rotor Search"
+#~ msgstr "Systematic Rotor Search"
+
+#~ msgid "Random Rotor Search"
+#~ msgstr "Random Rotor Search"
+
+#~ msgid "Weighted Rotor Search"
+#~ msgstr "Weighted Rotor Search"
+
+#~ msgid "ForceField"
+#~ msgstr "力場"
+
+#~ msgid ""
+#~ "Optimize molecules and generate conformers using molecular mechanics "
+#~ "force fields"
+#~ msgstr ""
+#~ "使用分子力學力場 (molecular mechanics force fields) 以最適化分子及產生構形"
+#~ "異構物"
+
+#~ msgid "&Vector Graphics..."
+#~ msgstr "向量圖形..."
+
+#~ msgid "PDF"
+#~ msgstr "PDF"
+
+#~ msgid "Common vector image formats"
+#~ msgstr "一般向量圖形格式"
+
+#~ msgid "SVG"
+#~ msgstr "SVG"
+
+#~ msgid "EPS"
+#~ msgstr "EPS"
+
+#~ msgid "Vector graphics export"
+#~ msgstr "向量圖形匯出"
+
+#~ msgid "Change H to Methyl"
+#~ msgstr "把氫原子換成甲基"
+
+#~ msgid "H to Methyl"
+#~ msgstr "氫到甲基"
+
+#~ msgid "H2Methyl"
+#~ msgstr "H2Methyl"
+
+#~ msgid "Transform hydrogens to methyl groups"
+#~ msgstr "把氫原子轉成甲基"
+
+#~ msgid "Add or remove hydrogens"
+#~ msgstr "加入或移除氫"
+
+#~ msgid "Fragment..."
+#~ msgstr "片斷..."
+
+#~ msgid "Insert SMILES"
+#~ msgstr "插入 SMILES 文字化學式"
+
+#~ msgid "Insert SMILES fragment:"
+#~ msgstr "插入 SMILES 文字化學式片斷"
+
+#~ msgid "Insert Fragment"
+#~ msgstr "插入片斷"
+
+#~ msgid "Insert molecular fragments for building larger molecules"
+#~ msgstr "插入片斷以建立更大的分子"
+
+#~ msgid "Peptide..."
+#~ msgstr "胜肽..."
+
+#~ msgid "Insert Peptide"
+#~ msgstr "插入胜肽"
+
+#~ msgid "Insert oligopeptide sequences"
+#~ msgstr "插入短胜肽序列"
+
+#~ msgid "Invert Chirality"
+#~ msgstr "反轉掌性"
+
+#~ msgid "InvertChiral"
+#~ msgstr "反轉掌性"
+
+#~ msgid "Invert chiral centers"
+#~ msgstr "反轉掌性中心"
+
+#~ msgid "Molecule Properties..."
+#~ msgstr "分子性質..."
+
+#~ msgid "&Properties"
+#~ msgstr "性質"
+
+#~ msgctxt "Unknown molecule name"
+#~ msgid "unknown"
+#~ msgstr "未知"
+
+#~ msgid "Estimated Dipole Moment (D):"
+#~ msgstr "估計的偶極矩 (D):"
+
+#~ msgctxt "asking server for molecule name"
+#~ msgid "(pending)"
+#~ msgstr "(未決)"
+
+#~ msgid "Display standard molecular properties."
+#~ msgstr "顯示標準分子性質"
+
+#~ msgid "Fetch from PDB..."
+#~ msgstr "取自 PDB (蛋白質資料庫)..."
+
+#~ msgid "Fetch by chemical name..."
+#~ msgstr "依化學名提取..."
+
+#~ msgid "Fetch from URL..."
+#~ msgstr "取自 URL..."
+
+#~ msgid "PDB Entry"
+#~ msgstr "PDB 項目"
+
+#~ msgid "PDB entry to download."
+#~ msgstr "可供下載 PDB 的項目"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "URL of molecule to download."
+#~ msgstr "可供下載分子的 URL"
+
+#~ msgid "Specified molecule could not be loaded: %1"
+#~ msgstr "無法載入指定的分子: %1"
+
+#~ msgid "Network Fetch"
+#~ msgstr "從網路讀取"
+
+#~ msgid "Fetch molecule files over the network."
+#~ msgstr "從網路讀取分子檔"
+
+#~ msgid "All Files"
+#~ msgstr "所以的檔案"
+
+#~ msgid "Show Preview"
+#~ msgstr "顯示預覽"
+
+#~ msgid "Hide Preview"
+#~ msgstr "取消預覽"
+
+#~ msgid "Intensities"
+#~ msgstr "強度"
+
+#~ msgid "Save POV-Ray rendered image"
+#~ msgstr "儲存 POV-Ray 呈現影像"
+
+#~ msgid "Image files (*.png *.pbm)"
+#~ msgstr "圖片檔案 (*.png *.pbm)"
+
+#~ msgid "POV-Ray..."
+#~ msgstr "POV-Ray..."
+
+#~ msgid "No filename supplied."
+#~ msgstr "未提供檔名."
+
+#~ msgid "No valid filename was supplied."
+#~ msgstr "未提供有效檔名檔名."
+
+#~ msgid "Does not compute."
+#~ msgstr "無法計算"
+
+#~ msgid ""
+#~ "You requested no direct rendering using POV-Ray and not to keep the POV-"
+#~ "Ray file. This will result in no output being saved. Are you sure that is "
+#~ "what you want?"
+#~ msgstr ""
+#~ "您要求非直接 POV-Ray 呈現及無要保存 POV-Ray 檔案. 這將導致無法儲存輸出的檔"
+#~ "案. 您確定要這樣做嗎?"
+
+#~ msgid ""
+#~ "Cannot write to file %1. Do you have permissions to write to that "
+#~ "location?"
+#~ msgstr "無法寫入檔案 %1. 您有寫入該處的權限嗎?"
+
+#~ msgid "POV-Ray failed to start."
+#~ msgstr "無法啟動 POV-Ray."
+
+#~ msgid ""
+#~ "POV-Ray failed to start. May be the path to the executable is not set "
+#~ "correctly."
+#~ msgstr "無法啟動 POV-Ray. 可能是沒有正確設定可執行檔的路徑."
+
+#~ msgid ""
+#~ "Create POV-Ray files and render them using the command line POV-Ray "
+#~ "program."
+#~ msgstr "產生及使用 POV-Ray 指令模式來呈現 POV-Ray 檔案"
+
+#~ msgid "Atom Properties..."
+#~ msgstr "原子的特性"
+
+#~ msgid "Bond Properties..."
+#~ msgstr "鍵的特性"
+
+#~ msgid "Angle Properties..."
+#~ msgstr "鍵角性質..."
+
+#~ msgid "Torsion Properties..."
+#~ msgstr "扭轉的特性..."
+
+#~ msgid "Conformer Properties..."
+#~ msgstr "構形異構物的性質..."
+
+#~ msgid "Atom Properties"
+#~ msgstr "原子的性質"
+
+#~ msgid "Bond Properties"
+#~ msgstr "鍵的性質"
+
+#~ msgid "Angle Properties"
+#~ msgstr "鍵角的性質"
+
+#~ msgid "Torsion Properties"
+#~ msgstr "扭力的性質"
+
+#~ msgid "Conformer Properties"
+#~ msgstr "異構物性質"
+
+#~ msgid "Properties"
+#~ msgstr "性質"
+
+#~ msgid ""
+#~ "Windows for displaying atom, bond, angle and torsion properties. It also "
+#~ "includes a cartesian coordinate editor."
+#~ msgstr ""
+#~ "這些視窗可以用來顯示原子, 鍵, 鍵角,及扭力性質等. 也包含直角座標編輯器."
+
+#~ msgid "Valence"
+#~ msgstr "價"
+
+#~ msgid "Partial Charge"
+#~ msgstr "部份電荷"
+
+#~ msgid "Atom"
+#~ msgstr "原子"
+
+#~ msgid "Start Atom"
+#~ msgstr "起始原子"
+
+#~ msgid "Rotatable"
+#~ msgstr "可旋轉"
+
+#~ msgctxt "in Angstrom"
+#~ msgid "Length %1"
+#~ msgstr "長度 %1"
+
+#~ msgid "Vertex"
+#~ msgstr "頂點"
+
+#~ msgctxt "Degree symbol"
+#~ msgid "Angle %1"
+#~ msgstr "角度 %1"
+
+#~ msgid "Angle"
+#~ msgstr "角度"
+
+#~ msgid "Atom %1"
+#~ msgstr "原子 %1"
+
+#~ msgctxt "Degree symbol"
+#~ msgid "Torsion %1"
+#~ msgstr "扭力 %1"
+
+#~ msgid "Torsion"
+#~ msgstr "扭轉"
+
+#~ msgid "Conformer"
+#~ msgstr "構形異構物"
+
+#~ msgid "Yes"
+#~ msgstr "Yes"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "Python Terminal"
+#~ msgstr "Python 終端機"
+
+#~ msgid "pythonTerminalDock"
+#~ msgstr "python 程式的小視窗"
+
+#~ msgid "Interactive python scripting terminal"
+#~ msgstr "互動式 python 指令終端機"
+
+#~ msgid "Dalton Input File Generator Warning"
+#~ msgstr "道耳頓輸入檔產生器之警告"
+
+#~ msgid ""
+#~ "Would you like to update the preview text, losing all changes made in the "
+#~ "Dalton input file preview pane?"
+#~ msgstr "您要更新預覽文字嗎？將會失去在道耳頓輸入檔預覽處所做的改變。"
+
+#~ msgid "QM Matches"
+#~ msgstr "QM 配對"
+
+#~ msgctxt ""
+#~ "Selection to be used as an Effective Fragment Potential in calculations"
+#~ msgid "EFP Selection..."
+#~ msgstr "EFP 選項..."
+
+#~ msgctxt "Selection to be used for Quantum Mechanical calculations"
+#~ msgid "QM Selection..."
+#~ msgstr "QM 選項..."
+
+#~ msgid "Delete"
+#~ msgstr "刪除"
+
+#~ msgid "You must make a selection!"
+#~ msgstr "您必須先選取"
+
+#~ msgid "SMILES Conversion Unavailable"
+#~ msgstr "無法轉換成 SMILES 化學式"
+
+#~ msgid "SMILES Format Conversion Not Available!"
+#~ msgstr "無法使用轉換 SMILES 化學式"
+
+#~ msgid "Group Name"
+#~ msgstr "群組名稱"
+
+#~ msgid " ("
+#~ msgstr " ("
+
+#~ msgid "qm"
+#~ msgstr "qm"
+
+#~ msgid "efp"
+#~ msgstr "efp"
+
+#~ msgid ")"
+#~ msgstr ")"
+
+#~ msgid "GAMESS"
+#~ msgstr "GAMESS (原子分子之電子結構系統)"
+
+#~ msgid "Create input files for the GAMESS quantum chemistry package"
+#~ msgstr "產生匯入檔給 GAMESS 量子化學套件"
+
+#~ msgid "Advanced Settings Changed"
+#~ msgstr "進階設定已變更"
+
+#~ msgid ""
+#~ "Advanced settings have changed.\n"
+#~ "Discard?"
+#~ msgstr ""
+#~ "進階設定已變更\n"
+#~ "要忽略嗎?"
+
+#~ msgid "Advanced Settings Reset"
+#~ msgstr "重設進階設定"
+
+#~ msgid ""
+#~ "Are you sure you wish to reset advanced settings?\n"
+#~ "All changes will be lost!"
+#~ msgstr ""
+#~ "您確定要重設進階設定嗎?\n"
+#~ "將失去原先的變更!"
+
+#~ msgid "Basic Settings Reset"
+#~ msgstr "重設基本設定"
+
+#~ msgid ""
+#~ "Are you sure you wish to reset basic settings?\n"
+#~ "All changes will be lost!"
+#~ msgstr ""
+#~ "您確定要重新設定所有的基本設定?\n"
+#~ "將會失去原先的變更!"
+
+#~ msgid "GAMESS-UK Input Deck Generator Warning"
+#~ msgstr "GAMESS-UK 輸入面板產生器警告"
+
+#~ msgid "GAMESS-UK Input Deck"
+#~ msgstr "GAMESS-UK 輸入面板"
+
+#~ msgid "Gaussian Input Deck Generator Warning"
+#~ msgstr "Gaussian 輸入平台產生器警告"
+
+#~ msgid ""
+#~ "Would you like to update the preview text, losing all changes made in the "
+#~ "Gaussian input deck preview pane?"
+#~ msgstr ""
+#~ "您希望更新預覽的文字嗎? 將會失去所有在 Gaussian 輸入工作區預覽框中的變更"
+
+#~ msgid "Gaussian Input Deck"
+#~ msgstr "Gaussian 輸入平台"
+
+#~ msgid "Gaussian Running."
+#~ msgstr "Gaussian 執行中."
+
+#~ msgid ""
+#~ "Gaussian is already running. Wait until the previous calculation is "
+#~ "finished."
+#~ msgstr "Gaussian 正在執行中. 請耐心等候到前一個運算結束."
+
+#~ msgid "Gaussian Not Installed."
+#~ msgstr "尚未安裝 Gaussian."
+
+#~ msgid "The G03 executable, cannot be found."
+#~ msgstr "找不到可執行檔的 G03."
+
+#~ msgid "G03 did not start. Perhaps it is not installed correctly."
+#~ msgstr "無法啟動 G03. 可能是安裝不正確."
+
+#~ msgid "Running Gaussian calculation..."
+#~ msgstr "Running Gaussian calculation..."
+
+#~ msgid "G03 Crashed."
+#~ msgstr "G03 當機."
+
+#~ msgid ""
+#~ "Gaussian did not run correctly. Perhaps it is not installed correctly."
+#~ msgstr "無法順利執行 Gaussian. 可能是安裝不正確."
+
+#~ msgid "&Dalton..."
+#~ msgstr "道耳頓..."
+
+#~ msgid "&GAMESS-UK..."
+#~ msgstr "&GAMESS-UK..."
+
+#~ msgid "&Gaussian..."
+#~ msgstr "高斯(&G)..."
+
+#~ msgid "&MOLPRO..."
+#~ msgstr "&MOLPRO..."
+
+#~ msgid "M&OPAC..."
+#~ msgstr "M&OPAC..."
+
+#~ msgid "&NWChem..."
+#~ msgstr "&NWChem..."
+
+#~ msgid "&Q-Chem..."
+#~ msgstr "&Q-Chem..."
+
+#~ msgid "Molpro Input Deck Generator Warning"
+#~ msgstr "Moloro 輸入面板產生器警告"
+
+#~ msgid ""
+#~ "Would you like to update the preview text, losing all changes made in the "
+#~ "Molpro input deck preview pane?"
+#~ msgstr "您想要更新預覽文字嗎, 將會失去在 Molpro 輸入面板預覽方格所作的變更?"
+
+#~ msgid "Molpro Input Deck"
+#~ msgstr "Molpro 輸入面板"
+
+#~ msgid "MOPAC Input Warning"
+#~ msgstr "MOPAC 輸入警告"
+
+#~ msgid ""
+#~ "Would you like to update the preview text, losing all changes made in the "
+#~ "MOPAC input deck preview pane?"
+#~ msgstr "您要更新預覽的文字嗎? 將會失去所有在 MOPAC 工具列 作的變更."
+
+#~ msgid "MOPAC Input Deck"
+#~ msgstr "MOPAC 輸入面板"
+
+#~ msgid "MOPAC Running."
+#~ msgstr "MOPAC 執行中."
+
+#~ msgid ""
+#~ "MOPAC is already running. Wait until the previous calculation is finished."
+#~ msgstr "MOPAC 執行中. 請耐心等候到完成前一個計算."
+
+#~ msgid "MOPAC Not Installed."
+#~ msgstr "尚未安裝 MOPAC."
+
+#~ msgid "The MOPAC executable, cannot be found."
+#~ msgstr "找不到可執行的 MOPAC."
+
+#~ msgid "MOPAC failed to start."
+#~ msgstr "無法啟動 MOPAC"
+
+#~ msgid "MOPAC did not start. Perhaps it is not installed correctly."
+#~ msgstr "無法啟動 MOPAC, 可能是安裝不正確"
+
+#~ msgid "Running MOPAC calculation..."
+#~ msgstr "執行 MOPAC 計算..."
+
+#~ msgid "MOPAC Crashed."
+#~ msgstr "MOPAC 當機"
+
+#~ msgid "MOPAC did not run correctly. Perhaps it is not installed correctly."
+#~ msgstr "無法正確執行 MOPAC, 可能是安裝不正確."
+
+#~ msgid "NWChem Input Deck Generator Warning"
+#~ msgstr "NWChem 輸入工作區產生器警告"
+
+#~ msgid ""
+#~ "Would you like to update the preview text, losing all changes made in the "
+#~ "NWChem input deck preview pane?"
+#~ msgstr ""
+#~ "您希望更新預覽的文字嗎? 將會失去所有在 NWChem 輸入工作區預覽框中的變更"
+
+#~ msgid "NWChem Input Deck"
+#~ msgstr "NWChem 輸入面板"
+
+#~ msgid "Q-Chem Input Deck Generator Warning"
+#~ msgstr "Q-Chem 輸入產生器警告"
+
+#~ msgid ""
+#~ "Would you like to update the preview text, losing all changes made in the "
+#~ "Q-Chem input deck preview pane?"
+#~ msgstr "您要更新預覽的文字嗎? 將會失去所有在 Q-Chem 工具列所作的變更."
+
+#~ msgid "QChem Input Deck"
+#~ msgstr "QChem 輸入面板"
+
+#~ msgid "Select SMARTS..."
+#~ msgstr "選擇 SMARTS 化學式..."
+
+#~ msgid "Select by Residue..."
+#~ msgstr "依照殘基來選擇"
+
+#~ msgid "Add Named Selection..."
+#~ msgstr "新增命名的選項"
+
+#~ msgid "SMARTS Selection"
+#~ msgstr "SMARTS 化學式選項"
+
+#~ msgid "SMARTS pattern to select"
+#~ msgstr "請輸入需要的 SMARTS 樣式"
+
+#~ msgid "Select by residue"
+#~ msgstr "依照殘基來選擇"
+
+#~ msgid "Residue name"
+#~ msgstr "殘基名稱"
+
+#~ msgid "There is no current selection."
+#~ msgstr "目前沒有選項"
+
+#~ msgid "Add Named Selection"
+#~ msgstr "新增命名的選項"
+
+#~ msgid "Name cannot be empty."
+#~ msgstr "名稱不能留空白"
+
+#~ msgid "There is already a selection with this name."
+#~ msgstr "已存在一個同名的選項"
+
+#~ msgid "Selections"
+#~ msgstr "選項"
+
+#~ msgid "Select atoms, bonds, residues..."
+#~ msgstr "選取原子, 鍵,殘基..."
+
+#~ msgid "GLSL Shaders..."
+#~ msgstr "GLSL Shaders (GLSL 幕後工程師)..."
+
+#~ msgid "Open a vertex shader source file"
+#~ msgstr "開啟 vertex shader 來源檔"
+
+#~ msgid "Vertex shader files (*.vert)"
+#~ msgstr "Vertex shader 檔案 (*.vert)"
+
+#~ msgid "Open a fragment shader source file"
+#~ msgstr "開啟 fragment shader 來源檔"
+
+#~ msgid "Fragment shader files (*.frag)"
+#~ msgstr "Fragment shader 檔案 (*.frag)"
+
+#~ msgid "Open a shader parameters file"
+#~ msgstr "Open a shader parameters 檔案"
+
+#~ msgid "Shader parameters files (*.params)"
+#~ msgstr "Shader 參數檔案 (*.params)"
+
+#~ msgid "GLSL Shaders"
+#~ msgstr "GLSL Shaders"
+
+#~ msgid "Load and use OpenGL 2.0 GLSL shaders"
+#~ msgstr "載入及使用 OpenGL 2.0 GLSL shaders"
+
+#~ msgid "Intensity (arb. units)"
+#~ msgstr "強度 (arb. 單位)"
+
+#~ msgid "Energy (eV)"
+#~ msgstr "能量 (eV)"
+
+#~ msgid "Density of States (states/cell)"
+#~ msgstr "態密度 (態/晶格)"
+
+#~ msgid "Density of States (states/atom)"
+#~ msgstr "態密度 (態/原子)"
+
+#~ msgid "Density of States (states/valence electron)"
+#~ msgstr "態密度 (態/價電子)"
+
+#~ msgid "Transmittance (%)"
+#~ msgstr "透光度 (%)"
+
+#~ msgid "Absorbance (%)"
+#~ msgstr "吸光度 (%)"
+
+#~ msgid "No intensities"
+#~ msgstr "沒有強度"
+
+#~ msgid ""
+#~ "The vibration data in the molecule you have loaded does not have any "
+#~ "intensity data. Intensities have been set to an arbitrary value for "
+#~ "visualization."
+#~ msgstr ""
+#~ "您所載入的分子振動資料沒有任何強度的訊息. 為呈現圖形, 強度將設為任意的值."
+
+#~ msgid "Wavenumber (cm<sup>-1</sup>)"
+#~ msgstr "波數 (cm<sup>-1</sup>)"
+
+#~ msgid "Shift (ppm)"
+#~ msgstr "化學位移 (ppm)"
+
+#~ msgid "Activity"
+#~ msgstr "活性"
+
+#~ msgid "Intensity"
+#~ msgstr "強度"
+
+#~ msgid "X Axis"
+#~ msgstr "X 軸"
+
+#~ msgid "Y Axis"
+#~ msgstr "Y 軸"
+
+#~ msgid "&Appearance"
+#~ msgstr "外觀"
+
+#~ msgid "E&xport Image"
+#~ msgstr "匯出圖形"
+
+#~ msgctxt "Infrared spectra option"
+#~ msgid "Infrared"
+#~ msgstr "紅外線"
+
+#~ msgid "&Infrared Spectra Settings"
+#~ msgstr "紅外線光譜設定"
+
+#~ msgctxt "NMR spectra option"
+#~ msgid "NMR"
+#~ msgstr "NMR (核磁共振)"
+
+#~ msgid "&NMR Spectra Settings"
+#~ msgstr "NMR (核磁共振) 光譜設定"
+
+#~ msgctxt "Density of States"
+#~ msgid "DOS"
+#~ msgstr "DOS"
+
+#~ msgid "&Density Of States Settings"
+#~ msgstr "態密度設定"
+
+#~ msgctxt "Ultra-Violet spectrum"
+#~ msgid "UV"
+#~ msgstr "UV"
+
+#~ msgid "&UV Settings"
+#~ msgstr "&UV 設定"
+
+#~ msgctxt "Circular Dichromism spectrum"
+#~ msgid "CD"
+#~ msgstr "CD"
+
+#~ msgid "&CD Settings"
+#~ msgstr "&CD 設定"
+
+#~ msgctxt "Raman spectrum"
+#~ msgid "Raman"
+#~ msgstr "拉曼"
+
+#~ msgid "&Raman Settings"
+#~ msgstr "拉曼設定"
+
+#~ msgid "No data"
+#~ msgstr "沒有資料"
+
+#~ msgid "Dark"
+#~ msgstr "暗"
+
+#~ msgid "Light"
+#~ msgstr "亮"
+
+#~ msgid "Publication"
+#~ msgstr "出版"
+
+#~ msgid "Handdrawn"
+#~ msgstr "手繪"
+
+#~ msgid "New Scheme"
+#~ msgstr "新方案"
+
+#~ msgid "Confirm Scheme Removal"
+#~ msgstr "確認方案移除"
+
+#~ msgid "Really remove current scheme?"
+#~ msgstr "真的要移除目前的方案?"
+
+#~ msgid "Change Scheme Name"
+#~ msgstr "改變方案名稱"
+
+#~ msgid "Enter new name for current scheme:"
+#~ msgstr "為目前的方案輸入新名稱"
+
+#~ msgid "Select Background Color"
+#~ msgstr "選擇背景顏色"
+
+#~ msgid "Select Foreground Color"
+#~ msgstr "選擇前景顏色"
+
+#~ msgid "Select Calculated Spectra Color"
+#~ msgstr "選擇計算的光譜之顏色"
+
+#~ msgid "Select Imported Spectra Color"
+#~ msgstr "選擇匯入的光譜之顏色"
+
+#~ msgid "Export Calculated Spectrum"
+#~ msgstr "匯出計算出來的光譜"
+
+#~ msgid "Tab Separated Values (*.tsv)"
+#~ msgstr "標上分開的數值 (*.tsv)"
+
+#~ msgid "Tab Separated Values"
+#~ msgstr "標上分開的數值"
+
+#~ msgid "Comma Separated Values"
+#~ msgstr "逗號分開的數值"
+
+#~ msgid "JCAMP-DX"
+#~ msgstr "JCAMP-DX"
+
+#~ msgid "Import Spectra"
+#~ msgstr "匯入光譜"
+
+#~ msgid "Spectra Import"
+#~ msgstr "光譜匯入"
+
+#~ msgid "Unknown extension: %1"
+#~ msgstr "未知的附檔名: %1"
+
+#~ msgctxt "Do not remove 'IR' or '(*.out)' -- needed for parsing later"
+#~ msgid "PWscf IR data (*.out)"
+#~ msgstr "PWscf 紅外線資料 (*.out)"
+
+#~ msgctxt "Do not remove 'IR' or '(control)' -- needed for parsing later"
+#~ msgid "Turbomole IR data (control)"
+#~ msgstr "Turbomole 紅外線資料 (控制)"
+
+#~ msgctxt "Do not remove 'UV' or '(spectrum)' -- needed for parsing later"
+#~ msgid "Turbomole UV data (spectrum)"
+#~ msgstr "Turbomole UV 數據 (光譜)"
+
+#~ msgctxt "Do not remove 'CD' or '(cdspectrum)' -- needed for parsing later"
+#~ msgid "Turbomole CD data (cdspectrum)"
+#~ msgstr "Turbomole CD 數據 (cdspectrum)"
+
+#~ msgid "Data Format"
+#~ msgstr "資料格式"
+
+#~ msgctxt "noun, not verb"
+#~ msgid "Format:"
+#~ msgstr "格式:"
+
+#~ msgid "Load Spectral Data"
+#~ msgstr "載入光譜資料"
+
+#~ msgid "Turbomole CD file is improperly formatted  : %1"
+#~ msgstr "Turbomole CD 檔不是適當的檔案格式: %1"
+
+#~ msgid "Portable Network Graphics"
+#~ msgstr "Portable Network Graphics (PNG 檔)"
+
+#~ msgid "jpeg"
+#~ msgstr "jpeg (jpeg 檔)"
+
+#~ msgid "Tagged Image File Format"
+#~ msgstr "Tagged Image File Format (TIFF 檔)"
+
+#~ msgid "Windows Bitmap"
+#~ msgstr "Windows Bitmap (位元影像圖形)"
+
+#~ msgid "Portable Pixmap"
+#~ msgstr "Portable Pixmap (可攜像素圖格式;PPM格式)"
+
+#~ msgid "X11 Bitmap"
+#~ msgstr "X11 Bitmap (X11 位元影像圖格式)"
+
+#~ msgid "X11 Pixmap"
+#~ msgstr "X11 Pixmap (X11 像素圖格式)"
+
+#~ msgid "Save Spectra Image"
+#~ msgstr "儲存光譜圖形"
+
+#~ msgid "&Advanced <<"
+#~ msgstr "進階 <<"
+
+#~ msgid "&Advanced >>"
+#~ msgstr "進階 >>"
+
+#~ msgid "&Spectra..."
+#~ msgstr "光譜..."
+
+#~ msgid "Spectra"
+#~ msgstr "光譜"
+
+#~ msgid "Visualize spectral data from quantum chemistry calculations"
+#~ msgstr "從量子化學計算顯示光譜的資料"
+
+#~ msgid "<HTML>&epsilon; (cm<sup>2</sup>/mmol)</HTML>"
+#~ msgstr "<HTML>&epsilon; (cm<sup>2</sup>/mmol)</HTML>"
+
+#~ msgid "Vibrational Analysis"
+#~ msgstr "振動分析"
+
+#~ msgid "No vibrational displacements exist."
+#~ msgstr "振動置換 (vibrational displacements) 不存在"
+
+#~ msgid "Vibration"
+#~ msgstr "振動"
+
+#~ msgid "Visualize vibrational modes from quantum chemistry calculations"
+#~ msgstr "依照量子化學計算的結果呈現振動的模式"
+
+#~ msgid "Sorting %1 vibrations by frequency..."
+#~ msgstr "依照頻率將 %1 的振動加以分類排序..."
+
+#~ msgid "Pause"
+#~ msgstr "暫停"
+
+#~ msgid "Super Cell Builder..."
+#~ msgstr "超級晶格產生器..."
+
+#~ msgid ""
+#~ "This document is currently an isolated molecule. You need to create a "
+#~ "unit cell."
+#~ msgstr "此文件有個單獨的分子. 您需要新增一個單位晶格."
+
+#~ msgid "Build and display crystallographic super cells"
+#~ msgstr "建立及呈現結晶學上的超級晶格"
+
+#~ msgid "Molecular Orbitals..."
+#~ msgstr "分子軌域..."
+
+#~ msgid "Orbitals"
+#~ msgstr "軌域"
+
+#~ msgctxt "Highest Occupied MO"
+#~ msgid "HOMO"
+#~ msgstr "HOMO"
+
+#~ msgctxt "Lowest Unoccupied MO"
+#~ msgid "LUMO"
+#~ msgstr "LUMO"
+
+#~ msgid "Orbital"
+#~ msgstr "軌域"
+
+#~ msgid "Status"
+#~ msgstr "狀態"
+
+#~ msgctxt "A cube type of nothing - empty cube"
+#~ msgid "Nothing"
+#~ msgstr "無"
+
+#~ msgctxt "Van der Waals surface type"
+#~ msgid "Van der Waals"
+#~ msgstr "凡得瓦"
+
+#~ msgctxt "Electrostatic potential surface type"
+#~ msgid "Electrostatic Potential"
+#~ msgstr "靜電位能"
+
+#~ msgctxt "Electron density surface type"
+#~ msgid "Electron Density"
+#~ msgstr "電子密度"
+
+#~ msgctxt "Molecular orbital surface type"
+#~ msgid "Molecular Orbital"
+#~ msgstr "分子軌域"
+
+#~ msgctxt "Undefined cube type"
+#~ msgid "Error - undefined type"
+#~ msgstr "錯誤-未定義之種類"
+
+#~ msgid "Create Surfaces..."
+#~ msgstr "產生外觀..."
+
+#~ msgid "Calculating VdW Cube"
+#~ msgstr "計算 VdW 立方"
+
+#~ msgctxt "Molecular Orbital"
+#~ msgid "Calculating MO %L1"
+#~ msgstr "計算 MO %L1"
+
+#~ msgid "VdW"
+#~ msgstr "VdW"
+
+#~ msgid "Electron Density"
+#~ msgstr "電子密度"
+
+#~ msgid "Calculate molecular orbitals and other surfaces"
+#~ msgstr "計算分子的軌域及其他表面"
+
+#~ msgid "GL widget was not correctly initialized in order to make a video"
+#~ msgstr "GL widget 沒有被正確的啟動以至無法產生影片"
+
+#~ msgid "GL widget has no molecule"
+#~ msgstr "GL widget 沒有分子"
+
+#~ msgid "Building video "
+#~ msgstr "產生影片中 "
+
+#~ msgid "Could not run povray."
+#~ msgstr "無法執行 povray"
+
+#~ msgid "Could not run mencoder."
+#~ msgstr "無法執行 memcoder"
+
+#~ msgid "Set Aspect Ratio"
+#~ msgstr "Set Aspect Ratio"
+
+#~ msgid ""
+#~ "The current Avogadro scene is %1x%2 pixels large, and therefore has "
+#~ "aspect ratio %3.\n"
+#~ "You may keep this value, for example if you intend to use POV-Ray\n"
+#~ "to produce an image of %4x1000 pixels, or you may enter any other "
+#~ "positive value,\n"
+#~ "for example 1 if you intend to use POV-Ray to produce a square image, "
+#~ "like 1000x1000 pixels."
+#~ msgstr ""
+#~ "目前 Avogadro 的工作視窗是 %1x%2 畫素, 而畫面比例是 %3.\n"
+#~ "您可以保留這設定, 例如, 如果您想要使用 POV-Ray\n"
+#~ "以產生 %4x1000 畫素的影像, 或者您可以自行設定畫面的大小,\n"
+#~ "例如範本 1 , 您可以設定成正方形的影像, 大小是 1000x1000 畫素."
+
+#~ msgid "Connect"
+#~ msgstr "連接"
+
+#~ msgid "Disconnect"
+#~ msgstr "斷線"
+
+#~ msgid "&WiiTrack"
+#~ msgstr "WiiTrack"
+
+#~ msgid "Wii Tracking"
+#~ msgstr "Wii 追蹤"
+
+#~ msgid "Track motion using Wii remotes"
+#~ msgstr "使用 Wii 遙控器作追蹤"
+
+#~ msgid ""
+#~ "Invalid OpenGL context.\n"
+#~ "Either something is completely broken in your OpenGL setup (can you run "
+#~ "any OpenGL application?), or you found a bug."
+#~ msgstr "無效的 OpenGL 上下文"
+
+#~ msgid "Debug Information"
+#~ msgstr "除錯訊息"
+
+#~ msgid "FPS: %L1"
+#~ msgstr "FPS: %L1"
+
+#~ msgid "View Size: %L1 x %L2"
+#~ msgstr "可視大小: %L1 x %L2"
+
+#~ msgid "Atoms: %L1"
+#~ msgstr "原子: %L1"
+
+#~ msgid "Bonds: %L1"
+#~ msgstr "鍵: %L1"
+
+#~ msgid "OBMol: index %1 out of reach."
+#~ msgstr "OBMol: index %1 超出範圍."
+
+#~ msgid "File type '%1' is not supported for reading."
+#~ msgstr "無法讀取 '%1' 這種不支援的檔案格式"
+
+#~ msgid "File type for file '%1' is not supported for reading."
+#~ msgstr "無法讀取 '%1' 這種不支援的檔案"
+
+#~ msgid "Reading molecule with index %1 from file '%2' failed."
+#~ msgstr "從檔案 '%2'使用 index %1 讀取分子失敗."
+
+#~ msgid "replaceMolecule: index %1 out of reach."
+#~ msgstr "取代分子: index %1 超出範圍."
+
+#~ msgid "File type '%1' is not supported for writing."
+#~ msgstr "不支援檔案 '%1'寫入功能"
+
+#~ msgid "File type for file '%1' is not supported for writing."
+#~ msgstr "不支援寫數 '%1' 這種檔案格式"
+
+#~ msgid "Could not open file '%1' for writing."
+#~ msgstr "無法開啟檔案 '%1' 以進行寫入"
+
+#~ msgid "Could not open file '%1' for reading."
+#~ msgstr "無法開啟檔案 '%1' 以讀取"
+
+#~ msgid "Replacing molecule with index %1 in file '%2' failed."
+#~ msgstr "在檔案 '%2' 使用 index %1 置換分子失敗."
+
+#~ msgid "File %1 cannot be opened for reading."
+#~ msgstr "無法開啟檔案 '%1' 以讀取"
+
+#~ msgid "File %1 can not be opened for writing."
+#~ msgstr "無法開啟檔案 '%1' 以進行寫入"
+
+#~ msgid "Saving molecular file failed - could not rename original file."
+#~ msgstr "儲存分子檔失敗--無法寫入原始檔."
+
+#~ msgid "Saving molecular file failed - could not rename new file."
+#~ msgstr "儲存分子檔失敗--無法重新命名新檔."
+
+#~ msgid "Saving molecular file failed - could not remove old file."
+#~ msgstr "儲存分子檔失敗--無法移除舊檔."
+
+#~ msgid "Writing a molecule to file '%1' failed. OpenBabel function failed."
+#~ msgstr "寫入分子檔 '%1' 失敗. OpenBabel 功能失效"
+
+#~ msgid "File %1 cannot be opened for writing."
+#~ msgstr "無法開啟檔案 %1 以寫入."
+
+#~ msgid "Writing conformers to file '%1' failed."
+#~ msgstr "寫入構形異構物到檔案 '%1' 失敗."
+
+#~ msgid "Molecule %1"
+#~ msgstr "分子 %1"
+
+#~ msgctxt "Default license for all Avogadro plugins"
+#~ msgid "GPL2+"
+#~ msgstr "GPL2+"
+
+#~ msgid "Unknown Python Engine"
+#~ msgstr "未知到 Python 引擎"
+
+#~ msgid "N/A"
+#~ msgstr "無法使用"
+
+#~ msgid "PythonEngine: checking "
+#~ msgstr "PythonEngine: 檢查中 "
+
+#~ msgid "  - script has no 'Engine' class defined"
+#~ msgstr "  - 沒有為腳本 (script) 定義  '引擎' class"
+
+#~ msgid "  - no module"
+#~ msgstr "  沒有模組"
+
+#~ msgid "Unknown Python Extension"
+#~ msgstr "未知的 Python 延伸"
+
+#~ msgid "PythonExtension: checking "
+#~ msgstr "PythonExtension: 檢查中 "
+
+#~ msgid "  - script has no 'Extension' class defined"
+#~ msgstr "  - 沒有為腳本 (script) 定義 '延伸' class"
+
+#~ msgid "Unknown Python Tool"
+#~ msgstr "未知的 Python 工具"
+
+#~ msgid "PythonTool: checking "
+#~ msgstr "PythonTool: 檢查中 "
+
+#~ msgid "  - script has no 'Tool' class defined"
+#~ msgstr "  - 沒有為腳本 (script) 定義 '工具' class"
+
+#~ msgid "Conformer %1"
+#~ msgstr "構形異構物 %1"
+
+#~ msgid "Tools"
+#~ msgstr "工具"
+
+#~ msgid "Axis:"
+#~ msgstr "軸："
+
+#~ msgid "Align:"
+#~ msgstr "排列："
+
+#~ msgid "Everything"
+#~ msgstr "任何東西"
+
+#~ msgid "Align"
+#~ msgstr "排列"
+
+#~ msgid "Align molecules to a Cartesian axis"
+#~ msgstr "將分子排到直角座標的軸"
+
+#~ msgid "Align Settings"
+#~ msgstr "排列設定"
+
+#~ msgid "AutoOpt: Could not setup force field...."
+#~ msgstr "自動最佳化: 無法設定力場... (請檢查所繪製的分子是否正確)"
+
+#~ msgid "AutoOpt: E = %1 %2 (dE = %3)"
+#~ msgstr "AutoOpt: E = %1 %2 (dE = %3)"
+
+#~ msgid "Num Constraints: %1"
+#~ msgstr "Num Constraints: %1"
+
+#~ msgid "Steps per Update:"
+#~ msgstr "每次更新步數："
+
+#~ msgid "Algorithm:"
+#~ msgstr "演算法："
+
+#~ msgid "Molecular Dynamics (300K)"
+#~ msgstr "分子動力學 (300 K)"
+
+#~ msgid "Molecular Dynamics (600K)"
+#~ msgstr "分子動力學 (600 K)"
+
+#~ msgid "Molecular Dynamics (900K)"
+#~ msgstr "分子動力學 (900 K)"
+
+#~ msgid "Start"
+#~ msgstr "開始"
+
+#~ msgid "Fixed atoms are movable"
+#~ msgstr "固定原子可移動"
+
+#~ msgid "Ignored atoms are movable"
+#~ msgstr "被忽略的原子可移動"
+
+#~ msgid "AutoOpt Molecule"
+#~ msgstr "自動最佳化分子"
+
+#~ msgid "Automatic optimization of molecular geometry"
+#~ msgstr "自動最適化分子的幾何構形"
+
+#~ msgid "AutoOptimization Settings"
+#~ msgstr "自動最適化設定"
+
+#~ msgid "Auto Rotation Tool"
+#~ msgstr "自動旋轉工具"
+
+#~ msgid "x rotation:"
+#~ msgstr "繞 X 軸旋轉："
+
+#~ msgid "x rotation"
+#~ msgstr "繞 X 軸旋轉"
+
+#~ msgid "y rotation:"
+#~ msgstr "繞 Y 軸旋轉："
+
+#~ msgid "y rotation"
+#~ msgstr "繞 Y 軸旋轉："
+
+#~ msgid "z rotation:"
+#~ msgstr "繞 Z 軸旋轉："
+
+#~ msgid "z rotation"
+#~ msgstr "繞 Z 軸旋轉"
+
+#~ msgid "Automatic rotation of molecules"
+#~ msgstr "自動旋轉分子"
+
+#~ msgid "AutoRotate Settings"
+#~ msgstr "自動旋轉設定"
+
+#~ msgctxt "%L1 is the length of the bond"
+#~ msgid "Bond Length: %L1"
+#~ msgstr "鍵長: %L1"
+
+#~ msgid " Show Angles"
+#~ msgstr " 顯示角度"
+
+#~ msgid "Snap-to Threshold: "
+#~ msgstr "貼近下限： "
+
+#~ msgid "Bond Centric Manipulate"
+#~ msgstr "鍵中心調整"
+
+#~ msgid "Manipulation of bond lengths, angles, and torsions"
+#~ msgstr "調整鍵長, 鍵角及扭力"
+
+#~ msgid "Bond Centric Manipulate Settings"
+#~ msgstr "鍵中心調整設定"
+
+#~ msgctxt "%L1 is distance, %2 is Angstrom symbol"
+#~ msgid "Distance (2->3): %L1 %2"
+#~ msgstr "距離 (2->3): %L1 %2"
+
+#~ msgid "Angle: %L1 °"
+#~ msgstr "角度: %L1 °"
+
+#~ msgctxt "%L1 is distance, %2 is Angstrom symbol"
+#~ msgid "Distance (3->4): %L1 %2"
+#~ msgstr "距離 (3->4): %L1 %2"
+
+#~ msgid "Dihedral Angle: %1 °"
+#~ msgstr "二平面角度: %1 °"
+
+#~ msgctxt "*1 is a number. You most likely do not need to translate this"
+#~ msgid "*1"
+#~ msgstr "*1"
+
+#~ msgctxt "*2 is a number. You most likely do not need to translate this"
+#~ msgid "*2"
+#~ msgstr "*2"
+
+#~ msgctxt "*3 is a number. You most likely do not need to translate this"
+#~ msgid "*3"
+#~ msgstr "*3"
+
+#~ msgctxt "*4 is a number. You most likely do not need to translate this"
+#~ msgid "*4"
+#~ msgstr "*4"
+
+#~ msgid "Distance(s):"
+#~ msgstr "距離："
+
+#~ msgid "Measure bond lengths, angles, and dihedrals"
+#~ msgstr "測量鍵長, 角度及二平面"
+
+#~ msgid "Delete Atom"
+#~ msgstr "刪除原子"
+
+#~ msgid "Draw Bond"
+#~ msgstr "繪製鍵"
+
+#~ msgid "Draw and edit atoms and bonds"
+#~ msgstr "繪製及編輯原子與鍵"
+
+#~ msgid "Draw Settings"
+#~ msgstr "繪製功能設定"
+
+#~ msgid "Translate, rotate, and adjust atoms and fragments"
+#~ msgstr "轉化, 旋轉, 和調整原子及片斷"
+
+#~ msgid "Manipulate Settings"
+#~ msgstr "調整功能設定"
+
+#~ msgid "Translate, rotate, and zoom around the current view"
+#~ msgstr "轉化, 旋轉及縮放目前的視景"
+
+#~ msgid "Navigate Settings"
+#~ msgstr "導引功能設定"
+
+#~ msgid "Selection Mode:"
+#~ msgstr "選擇模式："
+
+#~ msgid "Atom/Bond"
+#~ msgstr "原子/鍵"
+
+#~ msgid "Residue"
+#~ msgstr "殘基"
+
+#~ msgid "Change color of the atom"
+#~ msgstr "改變該原子的顏色"
+
+#~ msgid "Change label of the atom"
+#~ msgstr "改變該原子的標籤"
+
+#~ msgid "New Label:"
+#~ msgstr "新的標籤:"
+
+#~ msgid "Change label of the bond"
+#~ msgstr "改變該鍵的標籤"
+
+#~ msgid "Change radius of the atom"
+#~ msgstr "改變該原子的半徑"
+
+#~ msgctxt "in Angstrom"
+#~ msgid "New Radius, %1:"
+#~ msgstr "新的半徑, %1:"
+
+#~ msgid "Select atoms, residues, and molecules"
+#~ msgstr "選取原子, 殘基與分子"
+
+#~ msgid "Symbol"
+#~ msgstr "符號"
+
+#~ msgid "Bond Length"
+#~ msgstr "鍵長"
+
+#~ msgid "Bond Angle"
+#~ msgstr "鍵角"
+
+#~ msgid "Dihedral Angle"
+#~ msgstr "二平面角"
+
+#~ msgid "Z Matrix Editor..."
+#~ msgstr "Z Matrix 編輯器..."
+
+#~ msgid "Z-Matrix"
+#~ msgstr "Z-Matrix"
+
+#~ msgid "Create/edit a z-matrix"
+#~ msgstr "新增/編輯 z-matrix"
+
+#~ msgid "Z-Matrix Settings"
+#~ msgstr "Z-Matrix 設定"
+
+#~ msgid "Residue Color Settings"
+#~ msgstr "殘基顏色設定"
+
+#~ msgid "Color residues by:"
+#~ msgstr "殘基上色依照:"
+
+#~ msgid "Amino Colors"
+#~ msgstr "胺基顏色"
+
+#~ msgid "Shapely Colors"
+#~ msgstr "定形的顏色"
+
+#~ msgid "Hydrophobicity"
+#~ msgstr "疏水性"
+
+#~ msgid "Axes:"
+#~ msgstr "軸："
+
+#~ msgid "Cartesian Axes"
+#~ msgstr "直角坐標軸"
+
+#~ msgid "Orthogonal Axes"
+#~ msgstr "正交軸"
+
+#~ msgid "Axis 1:"
+#~ msgstr "軸 1："
+
+#~ msgid "Axis 2:"
+#~ msgstr "軸 2："
+
+#~ msgid "Axis 3:"
+#~ msgstr "軸 3："
+
+#~ msgid "X"
+#~ msgstr "X"
+
+#~ msgid "Origin:"
+#~ msgstr "原點："
+
+#~ msgid "Y"
+#~ msgstr "Y"
+
+#~ msgid "Z"
+#~ msgstr "Z"
+
+#~ msgid "Norm"
+#~ msgstr "Norm"
+
+#~ msgid "Preserve vector norms"
+#~ msgstr "保留向量範數"
+
+#~ msgid "Atom Radius:"
+#~ msgstr "原子半徑："
+
+#~ msgid "Bond Radius:"
+#~ msgstr "鍵的半徑："
+
+#~ msgid "Shape"
+#~ msgstr "形狀"
+
+#~ msgid "Helix"
+#~ msgstr "螺旋"
+
+#~ msgid "a"
+#~ msgstr "a"
+
+#~ msgid "b"
+#~ msgstr "b"
+
+#~ msgid "c"
+#~ msgstr "c"
+
+#~ msgid "Sheet"
+#~ msgstr "平板"
+
+#~ msgid "Loop"
+#~ msgstr "圈"
+
+#~ msgid "Colors"
+#~ msgstr "顏色"
+
+#~ msgid "Dipole:"
+#~ msgstr "偶極:"
+
+#~ msgid "Dipole Moment"
+#~ msgstr "偶極距"
+
+#~ msgid "Custom Vector"
+#~ msgstr "自訂向量"
+
+#~ msgid "Custom:"
+#~ msgstr "自訂:"
+
+#~ msgid "Width:"
+#~ msgstr "寬度："
+
+#~ msgid "Cut-off radius:"
+#~ msgstr "截止半徑"
+
+#~ msgid "A"
+#~ msgstr "A"
+
+#~ msgid "Cut-off angle:"
+#~ msgstr "截斷角度："
+
+#~ msgid "Rendering Engine:"
+#~ msgstr "描述之引擎:"
+
+#~ msgid "TextRenderer"
+#~ msgstr "文字描述器"
+
+#~ msgid "QPainter"
+#~ msgstr "QPainter"
+
+#~ msgid "Atom Labels"
+#~ msgstr "原子標示"
+
+#~ msgid "Text:"
+#~ msgstr "文字："
+
+#~ msgid "Color:"
+#~ msgstr "顏色:"
+
+#~ msgid "None"
+#~ msgstr "無"
+
+#~ msgid "Symbol & Number in Group"
+#~ msgstr "在一群原子中，符號與編號"
+
+#~ msgid "Symbol & Atom number"
+#~ msgstr "原子符號與原子序"
+
+#~ msgid "Formal charge"
+#~ msgstr "形式電荷"
+
+#~ msgid "Partial charge"
+#~ msgstr "部份電荷"
+
+#~ msgid "Residue number"
+#~ msgstr "殘基編號"
+
+#~ msgid "Unique ID"
+#~ msgstr "單一的 ID"
+
+#~ msgid "Custom data"
+#~ msgstr "客製資料"
+
+#~ msgid "Change Font"
+#~ msgstr "改變字型"
+
+#~ msgid "x : "
+#~ msgstr "x : "
+
+#~ msgid "y : "
+#~ msgstr "y : "
+
+#~ msgid "z : "
+#~ msgstr "z : "
+
+#~ msgid "Label Shift:"
+#~ msgstr "Label Shift:"
+
+#~ msgid "Bond Labels"
+#~ msgstr "鍵的標示"
+
+#~ msgid "Bond length"
+#~ msgstr "鍵的長度"
+
+#~ msgid "Bond number"
+#~ msgstr "鍵的編號"
+
+#~ msgid "Bond order"
+#~ msgstr "鍵的級數"
+
+#~ msgid "Rendering:"
+#~ msgstr "繪製："
+
+#~ msgid "Backbone"
+#~ msgstr "骨幹"
+
+#~ msgid "Lines"
+#~ msgstr "線"
+
+#~ msgid "Radius:"
+#~ msgstr "半徑:"
+
+#~ msgid "Include Nitrogens"
+#~ msgstr "包含氮"
+
+#~ msgid "VdW Opacity:"
+#~ msgstr "VdW 不透明度："
+
+#~ msgid "Orbital:"
+#~ msgstr "軌域："
+
+#~ msgid "Render:"
+#~ msgstr "呈現:"
+
+#~ msgid "Fill"
+#~ msgstr "填入"
+
+#~ msgid "Points"
+#~ msgstr "點"
+
+#~ msgid "Draw Box:"
+#~ msgstr "繪製盒："
+
+#~ msgid "Style:"
+#~ msgstr "樣式:"
+
+#~ msgid "Selected Colors"
+#~ msgstr "所選取的顏色"
+
+#~ msgid "Mapped Colors"
+#~ msgstr "繪製地圖的顏色"
+
+#~ msgid "Colors:"
+#~ msgstr "顏色:"
+
+#~ msgid "Positive"
+#~ msgstr "正"
+
+#~ msgid "Negative"
+#~ msgstr "負"
+
+#~ msgid "Show Atoms"
+#~ msgstr "Show Atoms"
+
+#~ msgid "Animate Trajectory"
+#~ msgstr "動畫軌跡"
+
+#~ msgid "0/0"
+#~ msgstr "0/0"
+
+#~ msgctxt "Continually re-run the animation in a loop"
+#~ msgid "Loop"
+#~ msgstr "迴圈 (重複播放動畫)"
+
+#~ msgid "fps"
+#~ msgstr "fps"
+
+#~ msgid "Save as .avi..."
+#~ msgstr "存成 .avi..."
+
+#~ msgid "Bohrs"
+#~ msgstr "波爾"
+
+#~ msgid "XYZ"
+#~ msgstr "XYZ"
+
+#~ msgid "XYZ, coords only"
+#~ msgstr "XYZ, 只有坐標"
+
+#~ msgid "GAMESS Input #2"
+#~ msgstr "GAMESS 輸入 #2"
+
+#~ msgid "Priroda Input"
+#~ msgstr "Priroda 輸入"
+
+#~ msgid "Apply Changes"
+#~ msgstr "套用變更"
+
+#~ msgid "Cut All"
+#~ msgstr "剪下所有"
+
+#~ msgid "Paste to the End"
+#~ msgstr "貼到末端"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Monospace'; font-size:9pt; "
+#~ "font-weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Paste or edit atomic "
+#~ "coordinates here. You may paste almost any fragment of text, containing "
+#~ "coordinates</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Monospace'; font-size:9pt; "
+#~ "font-weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">在此貼上或是編輯原子的坐"
+#~ "標. 您可以貼上文字的任何片段, 含有坐標 </p></body></html>"
+
+#~ msgid "(None)"
+#~ msgstr "（無）"
+
+#~ msgid "Sort by  "
+#~ msgstr "分類是根據  "
+
+#~ msgid "Conformer Search"
+#~ msgstr "找尋構形異構物"
+
+#~ msgid "Method"
+#~ msgstr "方法"
+
+#~ msgid "Number of atoms:"
+#~ msgstr "原子的數目:"
+
+#~ msgid "Number of rotatable bonds:"
+#~ msgstr "可旋轉鍵的數目"
+
+#~ msgid "Number of conformers"
+#~ msgstr "構形異構物的數目"
+
+#~ msgid "Systematic rotor search"
+#~ msgstr "Systematic rotor search"
+
+#~ msgid "Random rotor search"
+#~ msgstr "Random rotor search"
+
+#~ msgid "Weighted rotor search"
+#~ msgstr "Weighted rotor search"
+
+#~ msgid "Energy"
+#~ msgstr "能量"
+
+#~ msgid "Constraints"
+#~ msgstr "約束"
+
+#~ msgid "Add Constraints"
+#~ msgstr "加入限制條件"
+
+#~ msgid "Ignore Atom"
+#~ msgstr "忽略原子"
+
+#~ msgid "Fix Atom"
+#~ msgstr "固定原子"
+
+#~ msgid "Fix Atom X"
+#~ msgstr "固定原子 X"
+
+#~ msgid "Fix Atom Y"
+#~ msgstr "固定原子 Y"
+
+#~ msgid "Fix Atom Z"
+#~ msgstr "固定原子 Z"
+
+#~ msgid "Torsion angle"
+#~ msgstr "扭轉角度"
+
+#~ msgid "Constraint Value"
+#~ msgstr "約束值"
+
+#~ msgid "Atom Indices"
+#~ msgstr "原子指數"
+
+#~ msgid "Add"
+#~ msgstr "新增"
+
+#~ msgid "Save"
+#~ msgstr "儲存"
+
+#~ msgid "Load"
+#~ msgstr "載入"
+
+#~ msgid "Cartesian"
+#~ msgstr "笛卡耳 (直角座標)"
+
+#~ msgid "All"
+#~ msgstr "全部"
+
+#~ msgid "File Import..."
+#~ msgstr "匯入檔案..."
+
+#~ msgid "Attempt to perceive bonds?"
+#~ msgstr "嘗試著去理解鍵嗎?"
+
+#~ msgid "Setup Force Field"
+#~ msgstr "建立力場"
+
+#~ msgid "Force Field"
+#~ msgstr "力場"
+
+#~ msgid "Ghemical"
+#~ msgstr "Ghemical"
+
+#~ msgid "Number of steps"
+#~ msgstr "步驟數"
+
+#~ msgid "Algorithm"
+#~ msgstr "演算法"
+
+#~ msgid "10e-"
+#~ msgstr "10e-"
+
+#~ msgid "C"
+#~ msgstr "C"
+
+#~ msgid "G"
+#~ msgstr "G"
+
+#~ msgid "T"
+#~ msgstr "T"
+
+#~ msgid "B"
+#~ msgstr "B"
+
+#~ msgid "Other"
+#~ msgstr "其他"
+
+#~ msgid "Insert Fragment..."
+#~ msgstr "插入片段..."
+
+#~ msgid "Peptide Builder"
+#~ msgstr "胜肽產生器"
+
+#~ msgid "Alanine"
+#~ msgstr "Alanine 丙胺酸"
+
+#~ msgid "Ala"
+#~ msgstr "Ala 丙胺酸"
+
+#~ msgid "Arginine"
+#~ msgstr "Arginine 精胺酸"
+
+#~ msgid "Arg"
+#~ msgstr "Arg 精胺酸"
+
+#~ msgid "Asparagine"
+#~ msgstr "Asparagine 天門冬醯胺"
+
+#~ msgid "Asn"
+#~ msgstr "Asn 天門冬醯胺"
+
+#~ msgid "Aspartic acid"
+#~ msgstr "Aspartic acid 天門冬酸"
+
+#~ msgid "Asp"
+#~ msgstr "Asp 天門冬酸"
+
+#~ msgid "Cysteine"
+#~ msgstr "Cysteine 半胱胺酸"
+
+#~ msgid "Cys"
+#~ msgstr "Cys 半胱胺酸"
+
+#~ msgid "Glutamic acid"
+#~ msgstr "Glutamic acid 麩胺酸"
+
+#~ msgid "Glu"
+#~ msgstr "Glu 麩胺酸"
+
+#~ msgid "Glutamine"
+#~ msgstr "Glutamine 麩醯胺"
+
+#~ msgid "Gln"
+#~ msgstr "Gln 麩醯胺"
+
+#~ msgid "Glycine"
+#~ msgstr "Glycine 甘胺酸"
+
+#~ msgid "Gly"
+#~ msgstr "Gly 甘胺酸"
+
+#~ msgid "Histidine"
+#~ msgstr "Histidine 組胺酸"
+
+#~ msgid "His"
+#~ msgstr "His 組胺酸"
+
+#~ msgid "Isoleucine"
+#~ msgstr "Isoleucine 異白胺酸"
+
+#~ msgid "Ile"
+#~ msgstr "Ile 異白胺酸"
+
+#~ msgid "Valine"
+#~ msgstr "Valine 纈胺酸"
+
+#~ msgid "Val"
+#~ msgstr "Val 纈胺酸"
+
+#~ msgid "Tyrosine"
+#~ msgstr "Tyrosine 酪胺酸"
+
+#~ msgid "Tyr"
+#~ msgstr "Tyr 酪胺酸"
+
+#~ msgid "Tryptophan"
+#~ msgstr "Tryptophan 色胺酸"
+
+#~ msgid "Trp"
+#~ msgstr "Trp 色胺酸"
+
+#~ msgid "Threonine"
+#~ msgstr "Threonine 蘇胺酸"
+
+#~ msgid "Thr"
+#~ msgstr "Thr 蘇胺酸"
+
+#~ msgid "Serine"
+#~ msgstr "Serine 絲胺酸"
+
+#~ msgid "Ser"
+#~ msgstr "Ser 絲胺酸"
+
+#~ msgid "Proline"
+#~ msgstr "Proline 脯胺酸"
+
+#~ msgid "Pro"
+#~ msgstr "Pro 脯胺酸"
+
+#~ msgid "Phenylalanine"
+#~ msgstr "Phenylalanine 苯丙胺酸"
+
+#~ msgid "Phe"
+#~ msgstr "Phe 苯丙胺酸"
+
+#~ msgid "Methionine"
+#~ msgstr "Methionine 甲硫胺酸"
+
+#~ msgid "Met"
+#~ msgstr "Met 甲硫胺酸"
+
+#~ msgid "Lysine"
+#~ msgstr "Lysine 離胺酸"
+
+#~ msgid "Lys"
+#~ msgstr "Lys 離胺酸"
+
+#~ msgid "Leucine"
+#~ msgstr "Leucine 白胺酸"
+
+#~ msgid "Leu"
+#~ msgstr "Leu 白胺酸"
+
+#~ msgid "Amino Acids:"
+#~ msgstr "胺基酸"
+
+#~ msgid "Sequence (N to C):"
+#~ msgstr "序列 (由 N 到 C):"
+
+#~ msgid "Stereochemistry:"
+#~ msgstr "立體化學"
+
+#~ msgid "L"
+#~ msgstr "L"
+
+#~ msgid "D"
+#~ msgstr "D"
+
+#~ msgid "N Terminus:"
+#~ msgstr "N 端:"
+
+#~ msgid "C Terminus:"
+#~ msgstr "C 端:"
+
+#~ msgid "NH₂"
+#~ msgstr "NH₂"
+
+#~ msgid "NH₃⁺"
+#~ msgstr "NH₃⁺"
+
+#~ msgid "CO₂H"
+#~ msgstr "CO₂H"
+
+#~ msgid "CO₂⁻"
+#~ msgstr "CO₂⁻"
+
+#~ msgid "Straight Chain"
+#~ msgstr "直鍊"
+
+#~ msgid "Alpha Helix"
+#~ msgstr "Alpha Helix (alpha 螺旋)"
+
+#~ msgid "Beta Sheet"
+#~ msgstr "Beta Sheet (beta 平版)"
+
+#~ msgid "3-10 Helix"
+#~ msgstr "3-10 螺旋"
+
+#~ msgid "Pi Helix"
+#~ msgstr "Pi 螺旋"
+
+#~ msgid "Phi:"
+#~ msgstr "Phi:"
+
+#~ msgid "Psi:"
+#~ msgstr "Psi:"
+
+#~ msgid "Chain Number:"
+#~ msgstr "鍊的數目:"
+
+#~ msgid "The chain number for the new peptide"
+#~ msgstr "新胜肽的鍊數"
+
+#~ msgid "E"
+#~ msgstr "E"
+
+#~ msgid "F"
+#~ msgstr "F"
+
+#~ msgid "Molecule Properties"
+#~ msgstr "分子性質"
+
+#~ msgid "Number of Residues:"
+#~ msgstr "殘基的數目:"
+
+#~ msgid "Energy (kJ/mol):"
+#~ msgstr "能量 (kJ/mol):"
+
+#~ msgid "Dipole Moment (D):"
+#~ msgstr "偶極距 (D):"
+
+#~ msgid "IUPAC Molecule Name:"
+#~ msgstr "IUPAC 分子名稱:"
+
+#~ msgid "RHF"
+#~ msgstr "RHF"
+
+#~ msgid "DFT"
+#~ msgstr "DFT"
+
+#~ msgid "MP2"
+#~ msgstr "MP2"
+
+#~ msgid "CCSD"
+#~ msgstr "CCSD"
+
+#~ msgid "Advanced"
+#~ msgstr "進階"
+
+#~ msgid "Control"
+#~ msgstr "控制"
+
+#~ msgid "SCF"
+#~ msgstr "SCF"
+
+#~ msgid "Data"
+#~ msgstr "資料"
+
+#~ msgid "Nothing"
+#~ msgstr "無"
+
+#~ msgid "Grid"
+#~ msgstr "Grid"
+
+#~ msgid "POV-Ray Export"
+#~ msgstr "POV-Ray 匯出"
+
+#~ msgid "Select..."
+#~ msgstr "選取..."
+
+#~ msgid "povray"
+#~ msgstr "povray"
+
+#~ msgid "Use full scene antialiasing"
+#~ msgstr "使用全景抗鋸齒化"
+
+#~ msgid "Antialias"
+#~ msgstr "平滑化/反鋸齒"
+
+#~ msgid "Set the background color to be transparent"
+#~ msgstr "將背景顏色設為透明"
+
+#~ msgid "Alpha transparency"
+#~ msgstr "Alpha 透明"
+
+#~ msgid "Command:"
+#~ msgstr "指令:"
+
+#~ msgid "Render the molecule directly using command line POV-Ray"
+#~ msgstr "直接使用 POV-Ray 命令列呈現此分子"
+
+#~ msgid "Keep the POV-Ray source after rendering has completed"
+#~ msgstr "在完成呈現後, 保持 POV-Ray 的來源"
+
+#~ msgid "Keep POV-Ray source after rendering"
+#~ msgstr "呈現後, 保持 POV-Ray 的來源"
+
+#~ msgid "Path:"
+#~ msgstr "路徑\""
+
+#~ msgid "0.0"
+#~ msgstr "0.0"
+
+#~ msgid "Use Form"
+#~ msgstr "捨用表格"
+
+#~ msgid "Compute..."
+#~ msgstr "計算..."
+
+#~ msgid "Dalton Input"
+#~ msgstr "Dalton 輸入"
+
+#~ msgid "Basics"
+#~ msgstr "基本"
+
+#~ msgid ""
+#~ "Adds what you type in the title line of the input file for your own\n"
+#~ "informative purposes."
+#~ msgstr "為了您資訊上的目的，將加入您在輸入檔案的標題行所鍵入的文字."
+
+#~ msgid "HF"
+#~ msgstr "HF"
+
+#~ msgid "KS-DFT"
+#~ msgstr "KS-DFT"
+
+#~ msgid "Basis Set:"
+#~ msgstr "Basis Set:"
+
+#~ msgid "cc-pVDZ"
+#~ msgstr "cc-pVDZ"
+
+#~ msgid "cc-pVTZ"
+#~ msgstr "cc-pVTZ"
+
+#~ msgid "cc-pVQZ"
+#~ msgstr "cc-pVQZ"
+
+#~ msgid "cc-pV5Z"
+#~ msgstr "cc-pV5Z"
+
+#~ msgid "cc-pV6Z"
+#~ msgstr "cc-pV6Z"
+
+#~ msgid "STO-nG"
+#~ msgstr "STO-nG"
+
+#~ msgid "Pople-style"
+#~ msgstr "Pople-style"
+
+#~ msgid "Jensen's polarization consistent"
+#~ msgstr "Jensen's polarization consistent"
+
+#~ msgid "Dunning's correlation consistent"
+#~ msgstr "Dunning's correlation consistent"
+
+#~ msgid "aug-cc-pVDZ"
+#~ msgstr "aug-cc-pVDZ"
+
+#~ msgid "aug-cc-pVTZ"
+#~ msgstr "aug-cc-pVTZ"
+
+#~ msgid "aug-cc-pVQZ"
+#~ msgstr "aug-cc-pVQZ"
+
+#~ msgid "aug-cc-pV5Z"
+#~ msgstr "aug-cc-pV5Z"
+
+#~ msgid "aug-cc-pV6Z"
+#~ msgstr "aug-cc-pV6Z"
+
+#~ msgid "cc-pCVDZ"
+#~ msgstr "cc-pCVDZ"
+
+#~ msgid "cc-pCVTZ"
+#~ msgstr "cc-pCVTZ"
+
+#~ msgid "cc-pCVQZ"
+#~ msgstr "cc-pCVQZ"
+
+#~ msgid "cc-pCV5Z"
+#~ msgstr "cc-pCV5Z"
+
+#~ msgid "cc-pwCVDZ"
+#~ msgstr "cc-pwCVDZ"
+
+#~ msgid "cc-pwCVTZ"
+#~ msgstr "cc-pwCVTZ"
+
+#~ msgid "cc-pwCVQZ"
+#~ msgstr "cc-pwCVQZ"
+
+#~ msgid "cc-pwCV5Z"
+#~ msgstr "cc-pwCV5Z"
+
+#~ msgid "Core correlating functions"
+#~ msgstr "Core correlating functions"
+
+#~ msgid "Diffuse functions"
+#~ msgstr "擴散函數"
+
+#~ msgid "STO-2G"
+#~ msgstr "STO-2G"
+
+#~ msgid "STO-3G"
+#~ msgstr "STO-3G"
+
+#~ msgid "STO-6G"
+#~ msgstr "STO-6G"
+
+#~ msgid "3-21G"
+#~ msgstr "3-21G"
+
+#~ msgid "4-31G"
+#~ msgstr "4-31G"
+
+#~ msgid "6-31G"
+#~ msgstr "6-31G"
+
+#~ msgid "6-311G"
+#~ msgstr "6-311G"
+
+#~ msgid "Polarization functions"
+#~ msgstr "極化函數"
+
+#~ msgid "3-21++G"
+#~ msgstr "3-21++G"
+
+#~ msgid "6-31+G"
+#~ msgstr "6-31+G"
+
+#~ msgid "6-31++G"
+#~ msgstr "6-31++G"
+
+#~ msgid "3-21G*"
+#~ msgstr "3-21G*"
+
+#~ msgid "6-31G*"
+#~ msgstr "6-31G*"
+
+#~ msgid "6-31G**"
+#~ msgstr "6-31G**"
+
+#~ msgid "6-31G(3df,3pd)"
+#~ msgstr "6-31G(3df,3pd)"
+
+#~ msgid "6-311G*"
+#~ msgstr "6-311G*"
+
+#~ msgid "6-311G**"
+#~ msgstr "6-311G**"
+
+#~ msgid "6-311G(2df,2pd)"
+#~ msgstr "6-311G(2df,2pd)"
+
+#~ msgid "3-21++G*"
+#~ msgstr "3-21++G*"
+
+#~ msgid "6-31+G*"
+#~ msgstr "6-31+G*"
+
+#~ msgid "6-31++G*"
+#~ msgstr "6-31++G*"
+
+#~ msgid "6-31++G**"
+#~ msgstr "6-31++G**"
+
+#~ msgid "6-311+G*"
+#~ msgstr "6-311+G*"
+
+#~ msgid "6-311++G**"
+#~ msgstr "6-311++G**"
+
+#~ msgid "6-311++G(2d,2p)"
+#~ msgstr "6-311++G(2d,2p)"
+
+#~ msgid "6-311++G(3df,3pd)"
+#~ msgstr "6-311++G(3df,3pd)"
+
+#~ msgid "pc-0"
+#~ msgstr "pc-0"
+
+#~ msgid "pc-1"
+#~ msgstr "pc-1"
+
+#~ msgid "pc-2"
+#~ msgstr "pc-2"
+
+#~ msgid "pc-3"
+#~ msgstr "pc-3"
+
+#~ msgid "pc-4"
+#~ msgstr "pc-4"
+
+#~ msgid "apc-0"
+#~ msgstr "apc-0"
+
+#~ msgid "apc-1"
+#~ msgstr "apc-1"
+
+#~ msgid "apc-2"
+#~ msgstr "apc-2"
+
+#~ msgid "apc-3"
+#~ msgstr "apc-3"
+
+#~ msgid "apc-4"
+#~ msgstr "apc-4"
+
+#~ msgid "aug-cc-pCVDZ"
+#~ msgstr "aug-cc-pCVDZ"
+
+#~ msgid "aug-cc-pCVTZ"
+#~ msgstr "aug-cc-pCVTZ"
+
+#~ msgid "aug-cc-pCVQZ"
+#~ msgstr "aug-cc-pCVQZ"
+
+#~ msgid "aug-cc-pCV5Z"
+#~ msgstr "aug-cc-pCV5Z"
+
+#~ msgid "Direct"
+#~ msgstr "Direct"
+
+#~ msgid ""
+#~ "Run in parallel where possible. This is only possible for SCF\n"
+#~ "wavefunctions and DFT calculations. Dalton only supports MPI\n"
+#~ "in the current release and must be compiled and installed\n"
+#~ "correctly. The number of nodes are set by using the \"-N #\" option when "
+#~ "executing the \"dalton\" script."
+#~ msgstr ""
+#~ "請盡可能同時執行. 這只可能對 SCF\n"
+#~ "波函數以及 DFT 的計算. Dalton 只支援目前版本的 MPI\n"
+#~ ", 而且務必正確的編譯及安裝.\n"
+#~ "當執行 \"dalton\" 腳本時, 節點的數目將被設 \"-N#\" 選項."
+
+#~ msgid "Parallel"
+#~ msgstr "平行"
+
+#~ msgid "d-"
+#~ msgstr "d-"
+
+#~ msgid "t-"
+#~ msgstr "t-"
+
+#~ msgid "q-"
+#~ msgstr "q-"
+
+#~ msgid "Functional:"
+#~ msgstr "Functional:"
+
+#~ msgid "B2PLYP"
+#~ msgstr "B2PLYP"
+
+#~ msgid "B3LYP"
+#~ msgstr "B3LYP"
+
+#~ msgid "B3LYPg"
+#~ msgstr "B3LYPg"
+
+#~ msgid "B3P86"
+#~ msgstr "B3P86"
+
+#~ msgid "B3P86g"
+#~ msgstr "B3P86g"
+
+#~ msgid "B3PW91"
+#~ msgstr "B3PW91"
+
+#~ msgid "B1LYP"
+#~ msgstr "B1LYP"
+
+#~ msgid "B1PW91"
+#~ msgstr "B1PW91"
+
+#~ msgid "BHandH"
+#~ msgstr "BHandH"
+
+#~ msgid "BHandHLYP"
+#~ msgstr "BHandHLYP"
+
+#~ msgid "B86VWN"
+#~ msgstr "B86VWN"
+
+#~ msgid "B86LYP"
+#~ msgstr "B86LYP"
+
+#~ msgid "B86P86"
+#~ msgstr "B86P86"
+
+#~ msgid "B86PW91"
+#~ msgstr "B86PW91"
+
+#~ msgid "BVWN"
+#~ msgstr "BVWN"
+
+#~ msgid "BLYP"
+#~ msgstr "BLYP"
+
+#~ msgid "BP86"
+#~ msgstr "BP86"
+
+#~ msgid "BPW91"
+#~ msgstr "BPW91"
+
+#~ msgid "BW"
+#~ msgstr "BW"
+
+#~ msgid "BFW"
+#~ msgstr "BFW"
+
+#~ msgid "CAMB3LYP"
+#~ msgstr "CAMB3LYP"
+
+#~ msgid "DBLYP"
+#~ msgstr "DBLYP"
+
+#~ msgid "DBP86"
+#~ msgstr "DBP86"
+
+#~ msgid "DBPW91"
+#~ msgstr "DBPW91"
+
+#~ msgid "EDF1"
+#~ msgstr "EDF1"
+
+#~ msgid "EDF2"
+#~ msgstr "EDF2"
+
+#~ msgid "G96VWN"
+#~ msgstr "G96VWN"
+
+#~ msgid "G96LYP"
+#~ msgstr "G96LYP"
+
+#~ msgid "G96P86"
+#~ msgstr "G96P86"
+
+#~ msgid "G96PW91"
+#~ msgstr "G96PW91"
+
+#~ msgid "G961LYP"
+#~ msgstr "G961LYP"
+
+#~ msgid "KMLYP"
+#~ msgstr "KMLYP"
+
+#~ msgid "KT1"
+#~ msgstr "KT1"
+
+#~ msgid "KT2"
+#~ msgstr "KT2"
+
+#~ msgid "KT3"
+#~ msgstr "KT3"
+
+#~ msgid "LDA"
+#~ msgstr "LDA"
+
+#~ msgid "LG1LYP"
+#~ msgstr "LG1LYP"
+
+#~ msgid "OVWN"
+#~ msgstr "OVWN"
+
+#~ msgid "OLYP"
+#~ msgstr "OLYP"
+
+#~ msgid "OP86"
+#~ msgstr "OP86"
+
+#~ msgid "OPW91"
+#~ msgstr "OPW91"
+
+#~ msgid "mPWVWN"
+#~ msgstr "mPWVWN"
+
+#~ msgid "mPWLYP"
+#~ msgstr "mPWLYP"
+
+#~ msgid "mPWP86"
+#~ msgstr "mPWP86"
+
+#~ msgid "mPWPW91"
+#~ msgstr "mPWPW91"
+
+#~ msgid "mPW91"
+#~ msgstr "mPW91"
+
+#~ msgid "mPW1PW91"
+#~ msgstr "mPW1PW91"
+
+#~ msgid "mPW3PW91"
+#~ msgstr "mPW3PW91"
+
+#~ msgid "mPW1K"
+#~ msgstr "mPW1K"
+
+#~ msgid "mPW1N"
+#~ msgstr "mPW1N"
+
+#~ msgid "mPW1S"
+#~ msgstr "mPW1S"
+
+#~ msgid "PBE0"
+#~ msgstr "PBE0"
+
+#~ msgid "PBE0PBE"
+#~ msgstr "PBE0PBE"
+
+#~ msgid "PBE1PBE"
+#~ msgstr "PBE1PBE"
+
+#~ msgid "PBE"
+#~ msgstr "PBE"
+
+#~ msgid "PBEPBE"
+#~ msgstr "PBEPBE"
+
+#~ msgid "RPBE"
+#~ msgstr "RPBE"
+
+#~ msgid "revPBE"
+#~ msgstr "revPBE"
+
+#~ msgid "mPBE"
+#~ msgstr "mPBE"
+
+#~ msgid "PW91"
+#~ msgstr "PW91"
+
+#~ msgid "PW91VWN"
+#~ msgstr "PW91VWN"
+
+#~ msgid "PW91LYP"
+#~ msgstr "PW91LYP"
+
+#~ msgid "PW91P86"
+#~ msgstr "PW91P86"
+
+#~ msgid "PW91PW91"
+#~ msgstr "PW91PW91"
+
+#~ msgid "SVWN3"
+#~ msgstr "SVWN3"
+
+#~ msgid "SVWN5"
+#~ msgstr "SVWN5"
+
+#~ msgid "XLYP"
+#~ msgstr "XLYP"
+
+#~ msgid "X3LYP"
+#~ msgstr "X3LYP"
+
+#~ msgid "Density:"
+#~ msgstr "密度："
+
+#~ msgid "1.0D-"
+#~ msgstr "1.0D-"
+
+#~ msgid "Charge Integration:"
+#~ msgstr "Charge Integration:"
+
+#~ msgid "Grid Specification"
+#~ msgstr "Grid 規格"
+
+#~ msgid "Partitioning Scheme:"
+#~ msgstr "分割圖:"
+
+#~ msgid "Becke"
+#~ msgstr "Becke"
+
+#~ msgid "Becke (original)"
+#~ msgstr "Becke (原始的)"
+
+#~ msgid "SSF"
+#~ msgstr "SSF"
+
+#~ msgid "Grid Quality:"
+#~ msgstr "Grid 品質"
+
+#~ msgid "coarse"
+#~ msgstr "粗糙的"
+
+#~ msgid "normal"
+#~ msgstr "一般"
+
+#~ msgid "fine"
+#~ msgstr "精細"
+
+#~ msgid "ultrafine"
+#~ msgstr "極精細"
+
+#~ msgid "Radial Scheme:"
+#~ msgstr "放射狀圖:"
+
+#~ msgid "LMG"
+#~ msgstr "LMG"
+
+#~ msgid "GC2"
+#~ msgstr "GC2"
+
+#~ msgid "Show all functionals"
+#~ msgstr "顯示所有的作用"
+
+#~ msgid "Property:"
+#~ msgstr "性質"
+
+#~ msgid "Polarizability"
+#~ msgstr "極化性"
+
+#~ msgid "Excitation Energy"
+#~ msgstr "激發能"
+
+#~ msgid "Frequency Dependent"
+#~ msgstr "頻率相依性"
+
+#~ msgid "No. excitations:"
+#~ msgstr "激發數:"
+
+#~ msgid "EFP Matches"
+#~ msgstr "EFP Matches"
+
+#~ msgid "Group Label:"
+#~ msgstr "Group Label:"
+
+#~ msgid "AM1"
+#~ msgstr "AM1"
+
+#~ msgid "PM3"
+#~ msgstr "PM3"
+
+#~ msgid "CCSD(T)"
+#~ msgstr "CCSD(T)"
+
+#~ msgid "MINI"
+#~ msgstr "MINI"
+
+#~ msgid "6-31G(d)"
+#~ msgstr "6-31G(d)"
+
+#~ msgid "6-31G(d,p)"
+#~ msgstr "6-31G(d,p)"
+
+#~ msgid "6-31+G(d,p)"
+#~ msgstr "6-31+G(d,p)"
+
+#~ msgid "6-31+G(2d,p)"
+#~ msgstr "6-31+G(2d,p)"
+
+#~ msgid "6-311++G(2d,p)"
+#~ msgstr "6-311++G(2d,p)"
+
+#~ msgid "&Advanced Setup"
+#~ msgstr "進階設定"
+
+#~ msgid "Hessian"
+#~ msgstr "Hessian"
+
+#~ msgid "Stat Point"
+#~ msgstr "Stat Point"
+
+#~ msgid "System"
+#~ msgstr "系統"
+
+#~ msgid "MO Guess"
+#~ msgstr "MO Guess"
+
+#~ msgid "Misc"
+#~ msgstr "其他"
+
+#~ msgid "#D Heavy Atom Polarization Functions:"
+#~ msgstr "#D 重原子極化函數:"
+
+#~ msgid "Read"
+#~ msgstr "讀取"
+
+#~ msgid "SBKJC"
+#~ msgstr "SBKJC"
+
+#~ msgid "Hay-Wadt"
+#~ msgstr "Hay-Wadt"
+
+#~ msgid "Diffuse S-Shell on Heavy Atoms"
+#~ msgstr "Diffuse S-Shell on Heavy Atoms"
+
+#~ msgid "Diffuse L-Shell on Heavy Atoms"
+#~ msgstr "Diffuse L-Shell on Heavy Atoms"
+
+#~ msgid "MIDI"
+#~ msgstr "MIDI"
+
+#~ msgid "STO-4G"
+#~ msgstr "STO-4G"
+
+#~ msgid "STO-5G"
+#~ msgstr "STO-5G"
+
+#~ msgid "6-21G"
+#~ msgstr "6-21G"
+
+#~ msgid "5-31G"
+#~ msgstr "5-31G"
+
+#~ msgid "Double Zeta Valence"
+#~ msgstr "Double Zeta Valence"
+
+#~ msgid "Dunning/Hay DZ"
+#~ msgstr "Dunning/Hay DZ"
+
+#~ msgid "Triple Zeta Valence"
+#~ msgstr "Triple Zeta Valence"
+
+#~ msgid "SBKJA Valence"
+#~ msgstr "SBKJA Valence"
+
+#~ msgid "Hay/Wadt Valence"
+#~ msgstr "Hay/Wadt Valence"
+
+#~ msgid "MNDO"
+#~ msgstr "MNDO"
+
+#~ msgid "ECP Type:"
+#~ msgstr "ECP 種類:"
+
+#~ msgid "Default"
+#~ msgstr "預設"
+
+#~ msgid "Pople"
+#~ msgstr "Pople"
+
+#~ msgid "Pople N311"
+#~ msgstr "Pople N311"
+
+#~ msgid "Huzinaga"
+#~ msgstr "Huzinaga"
+
+#~ msgid "Hondo7"
+#~ msgstr "Hondo7"
+
+#~ msgid "#F Heavy Atom Polarization Functions:"
+#~ msgstr "#F Heavy Atom Polarization Functions:"
+
+#~ msgid "#light Atom Polarization Functions:"
+#~ msgstr "#light Atom Polarization Functions:"
+
+#~ msgid "Polar:"
+#~ msgstr "Polar:"
+
+#~ msgid "Max SCF Iterations:"
+#~ msgstr "Max SCF Iterations:"
+
+#~ msgid "Gradient"
+#~ msgstr "Gradient"
+
+#~ msgid "Optimization"
+#~ msgstr "最適化"
+
+#~ msgid "Trudge"
+#~ msgstr "Trudge"
+
+#~ msgid "Saddle Point"
+#~ msgstr "鞍點"
+
+#~ msgid "IRC"
+#~ msgstr "IRC"
+
+#~ msgid "Gradient Extremal"
+#~ msgstr "Gradient Extremal"
+
+#~ msgid "DRC"
+#~ msgstr "DRC"
+
+#~ msgid "Energy Surface"
+#~ msgstr "能量表面"
+
+#~ msgid "Morokuma"
+#~ msgstr "Morokuma"
+
+#~ msgid "Radiative Transition mom."
+#~ msgstr "放射過度 mom"
+
+#~ msgid "Spin Orbit"
+#~ msgstr "自旋軌道"
+
+#~ msgid "Finite Electric Field"
+#~ msgstr "有限電場"
+
+#~ msgid "TDHF"
+#~ msgstr "TDHF"
+
+#~ msgid "Global Optimization"
+#~ msgstr "全局最佳化"
+
+#~ msgid "VSCF"
+#~ msgstr "VSCF"
+
+#~ msgid "FMO Optimization"
+#~ msgstr "FMO 最佳化"
+
+#~ msgid "Raman Intensities"
+#~ msgstr "拉曼強度"
+
+#~ msgid "NMR"
+#~ msgstr "NMR"
+
+#~ msgid "Make EFP"
+#~ msgstr "產生 EFP"
+
+#~ msgid "UHF"
+#~ msgstr "UHF"
+
+#~ msgid "ROHF"
+#~ msgstr "ROHF"
+
+#~ msgid "GVB"
+#~ msgstr "GVB"
+
+#~ msgid "MCSCF"
+#~ msgstr "MCSCF"
+
+#~ msgid "None (CI)"
+#~ msgstr "None (CI)"
+
+#~ msgid "Foster-Boys"
+#~ msgstr "Foster-Boys"
+
+#~ msgid "Edmistron-Ruedenberg"
+#~ msgstr "Edmistron-Ruedenberg"
+
+#~ msgid "Pipek-Mezey"
+#~ msgstr "Pipek-Mezey"
+
+#~ msgid "SCF Type:"
+#~ msgstr "SCF 種類:"
+
+#~ msgid "Localization Method:"
+#~ msgstr "Localization Method:"
+
+#~ msgid "Exec Type:"
+#~ msgstr "Exec 種類:"
+
+#~ msgid "CI:"
+#~ msgstr "CI:"
+
+#~ msgid "GUGA"
+#~ msgstr "GUGA"
+
+#~ msgid "Ames Lab. Determinant"
+#~ msgstr "Ames Lab. Determinant"
+
+#~ msgid "Occupation Restricted Multiple Active Space"
+#~ msgstr "Occupation Restricted Multiple Active Space"
+
+#~ msgid "CI Singles"
+#~ msgstr "CI Singles"
+
+#~ msgid "Full Second Order CI"
+#~ msgstr "Full Second Order CI"
+
+#~ msgid "General CI"
+#~ msgstr "General CI"
+
+#~ msgid "CC:"
+#~ msgstr "CC:"
+
+#~ msgid "LCCD: Linearized CC"
+#~ msgstr "LCCD: 線性化的 CC"
+
+#~ msgid "CCD: CC with Doubles"
+#~ msgstr "CCD: CC with Doubles"
+
+#~ msgid "CCSD: CC with Singles and Doubles"
+#~ msgstr "CCSD: CC with Singles and Doubles"
+
+#~ msgid "R-CC"
+#~ msgstr "R-CC"
+
+#~ msgid "CR-CC"
+#~ msgstr "CR-CC"
+
+#~ msgid "EOM-CCSD"
+#~ msgstr "EOM-CCSD"
+
+#~ msgid "CR-EOM"
+#~ msgstr "CR-EOM"
+
+#~ msgid "Normal Run"
+#~ msgstr "Normal Run"
+
+#~ msgid "Check"
+#~ msgstr "Check"
+
+#~ msgid "Debug"
+#~ msgstr "除錯"
+
+#~ msgid "Molecule Charge:"
+#~ msgstr "分子電荷:"
+
+#~ msgid "Run Type:"
+#~ msgstr "Run 種類:"
+
+#~ msgid "Use MP2"
+#~ msgstr "Use MP2"
+
+#~ msgid "Use DFT"
+#~ msgstr "Use DFT"
+
+#~ msgid "# of Z-Matrix Variables"
+#~ msgstr "# of Z-Matrix Variables"
+
+#~ msgid "Ǻngstrom"
+#~ msgstr "Ǻngstrom"
+
+#~ msgid "Order of Principal Axis:"
+#~ msgstr "Order of Principal Axis:"
+
+#~ msgid "Coordinate Type:"
+#~ msgstr "坐標軸種類:"
+
+#~ msgid "C1"
+#~ msgstr "C1"
+
+#~ msgid "CS"
+#~ msgstr "CS"
+
+#~ msgid "CI"
+#~ msgstr "CI"
+
+#~ msgid "CnH"
+#~ msgstr "CnH"
+
+#~ msgid "CnV"
+#~ msgstr "CnV"
+
+#~ msgid "Cn"
+#~ msgstr "Cn"
+
+#~ msgid "S2n"
+#~ msgstr "S2n"
+
+#~ msgid "DnD"
+#~ msgstr "DnD"
+
+#~ msgid "DnH"
+#~ msgstr "DnH"
+
+#~ msgid "Dn"
+#~ msgstr "Dn"
+
+#~ msgid "TD"
+#~ msgstr "TD"
+
+#~ msgid "TH"
+#~ msgstr "TH"
+
+#~ msgid "OH"
+#~ msgstr "OH"
+
+#~ msgid "O"
+#~ msgstr "O"
+
+#~ msgid "Unique cartesian Coords."
+#~ msgstr "Unique cartesian Coords."
+
+#~ msgid "Hilderbrant internals"
+#~ msgstr "Hilderbrant internals"
+
+#~ msgid "Use Symmetry During Calculation"
+#~ msgstr "Use Symmetry During Calculation"
+
+#~ msgid "Point Group:"
+#~ msgstr "Point Group:"
+
+#~ msgid "Minutes"
+#~ msgstr "分鐘"
+
+#~ msgid "Hours"
+#~ msgstr "小時"
+
+#~ msgid "Days"
+#~ msgstr "天"
+
+#~ msgid "Weeks"
+#~ msgstr "週"
+
+#~ msgid "Years"
+#~ msgstr "年"
+
+#~ msgid "Millenia"
+#~ msgstr "千年"
+
+#~ msgid "MegaWords"
+#~ msgstr "MegaWords"
+
+#~ msgid "MegaBytes"
+#~ msgstr "MegaBytes"
+
+#~ msgid "GigaWords"
+#~ msgstr "GigaWords"
+
+#~ msgid "GigaBytes"
+#~ msgstr "GigaBytes"
+
+#~ msgid "Force Parallel Methods"
+#~ msgstr "Force Parallel Methods"
+
+#~ msgid "Produce \"core\" file upon abort"
+#~ msgstr "Produce \"core\" file upon abort"
+
+#~ msgid "EVVRSP"
+#~ msgstr "EVVRSP"
+
+#~ msgid "GIVEIS"
+#~ msgstr "GIVEIS"
+
+#~ msgid "JACOBI"
+#~ msgstr "JACOBI"
+
+#~ msgid "MemDDI:"
+#~ msgstr "MemDDI:"
+
+#~ msgid "Memory:"
+#~ msgstr "記憶體："
+
+#~ msgid "Diagonalization Method:"
+#~ msgstr "Diagonalization Method:"
+
+#~ msgid "Parallel Load Balance Type"
+#~ msgstr "Parallel Load Balance Type"
+
+#~ msgctxt "\"Loop\" load balancing - set static node assignments"
+#~ msgid "Loop"
+#~ msgstr "迴圈"
+
+#~ msgctxt "\"Next Value\" load balancing - dynamically assign nodes work"
+#~ msgid "Next Value"
+#~ msgstr "下一個值"
+
+#~ msgid "Use External Data Representation for Messages"
+#~ msgstr "Use External Data Representation for Messages"
+
+#~ msgid "Initial Guess:"
+#~ msgstr "Initial Guess:"
+
+#~ msgid "Hückel"
+#~ msgstr "Hückel"
+
+#~ msgid "HCore"
+#~ msgstr "HCore"
+
+#~ msgid "MO Read ($VEC)"
+#~ msgstr "MO Read ($VEC)"
+
+#~ msgid "MO Saved (DICTNRY)"
+#~ msgstr "MO 已存檔 (DICTNRY)"
+
+#~ msgid "Skip"
+#~ msgstr "略過"
+
+#~ msgid "Rotate Alpha and Beta Orbitals"
+#~ msgstr "選轉 Alpha 及 Beta 軌域"
+
+#~ msgid "Print the Initial Guess"
+#~ msgstr "Print the Initial Guess"
+
+#~ msgid "GAMESS Interface to Other Codes"
+#~ msgstr "GAMESS Interface to Other Codes"
+
+#~ msgid "MolPlt"
+#~ msgstr "MolPlt"
+
+#~ msgid "PltOrb"
+#~ msgstr "PltOrb"
+
+#~ msgid "AIMPAC"
+#~ msgstr "AIMPAC"
+
+#~ msgid "RPAC"
+#~ msgstr "RPAC"
+
+#~ msgid "Force a Check Run Type"
+#~ msgstr "Force a Check Run Type"
+
+#~ msgid "Hondo 8.2"
+#~ msgstr "Hondo 8.2"
+
+#~ msgid "MELDF"
+#~ msgstr "MELDF"
+
+#~ msgid "GAMESS (UK Version)"
+#~ msgstr "GAMESS (英國版本)"
+
+#~ msgid "Gaussian 9x"
+#~ msgstr "Gaussian 9x"
+
+#~ msgid "Solvate with Water"
+#~ msgstr "與進行溶媒合作用"
+
+#~ msgid "Generate UHF Natural Orbitals"
+#~ msgstr "產生 UHF 自然軌域"
+
+#~ msgid "Direct SCF"
+#~ msgstr "Direct SCF"
+
+#~ msgid "Compute Only Changed in Fock Matrix"
+#~ msgstr "Compute Only Changed in Fock Matrix"
+
+#~ msgid "Slater exchange"
+#~ msgstr "Slater exchange"
+
+#~ msgid "Becke 1988 exchange"
+#~ msgstr "Becke 1988 exchange"
+
+#~ msgid "VWN: Vosko-Wilk-Nusair (VWN5) correlation"
+#~ msgstr "VWN: Vosko-Wilk-Nusair (VWN5) correlation"
+
+#~ msgid "LYP: Lee-Yang-Parr correlation"
+#~ msgstr "LYP: Lee-Yang-Parr correlation"
+
+#~ msgid "SVWN: Slater exchange + VWN correlation"
+#~ msgstr "SVWN: Slater 交換 + VWN 相關性"
+
+#~ msgid "BVWN: BECKE exchange + VWN5 correlation"
+#~ msgstr "BVWN: BECKE exchange + VWN5 correlation"
+
+#~ msgid "BLYP: BECKE exchange + LYP correlation"
+#~ msgstr "BLYP: BECKE exchange + LYP correlation"
+
+#~ msgid "Gill 1996 exchange"
+#~ msgstr "Gill 1996 exchange"
+
+#~ msgid "Perdew-Burke-Ernzerhof (PBE) exchange"
+#~ msgstr "Perdew-Burke-Ernzerhof (PBE) exchange"
+
+#~ msgid "OP: One-parameter Progressive correlation"
+#~ msgstr "OP: One-parameter Progressive correlation"
+
+#~ msgid "SLYP: SLATER + Lee-Yang-Parr (LYP) correlation"
+#~ msgstr "SLYP: SLATER + Lee-Yang-Parr (LYP) correlation"
+
+#~ msgid "SOP: SLATER + OP correlation"
+#~ msgstr "SOP: SLATER + OP correlation"
+
+#~ msgid "BOP: BECKE exchange + OP correlation"
+#~ msgstr "BOP: BECKE exchange + OP correlation"
+
+#~ msgid "BVWN: GILL exchange + VWN5 correlation"
+#~ msgstr "BVWN: GILL exchange + VWN5 correlation"
+
+#~ msgid "GLYP: GILL exchange + LYP correlation"
+#~ msgstr "GLYP: GILL exchange + LYP correlation"
+
+#~ msgid "PBEVWN: PBE exchange + VWN6 correlation"
+#~ msgstr "PBEVWN: PBE exchange + VWN6 correlation"
+
+#~ msgid "PBELYP: PBE exchange +LYP correlation"
+#~ msgstr "PBELYP: PBE exchange +LYP correlation"
+
+#~ msgid "PBEOP: PBE exchange + OP correlation"
+#~ msgstr "PBEOP: PBE exchange + OP correlation"
+
+#~ msgid "BHHLYP: HF and BECKE exchange + LYP correlation"
+#~ msgstr "BHHLYP: HF and BECKE exchange + LYP correlation"
+
+#~ msgid "Grid-Free"
+#~ msgstr "Grid-Free"
+
+#~ msgid "DFT Functional:"
+#~ msgstr "DFT Functional:"
+
+#~ msgid "Method:"
+#~ msgstr "方式:"
+
+#~ msgid "AO Integral Storage"
+#~ msgstr "AO Integral Storage"
+
+#~ msgid "Duplicated on Each Node"
+#~ msgstr "Duplicated on Each Node"
+
+#~ msgid "Distributed Across All Nodes"
+#~ msgstr "Distributed Across All Nodes"
+
+#~ msgid "words"
+#~ msgstr "words"
+
+#~ msgid "Compute MP2 Properties"
+#~ msgstr "計算 MP2 的特性"
+
+#~ msgid "Integral Retention Cutoff:"
+#~ msgstr "Integral Retention Cutoff:"
+
+#~ msgid "Use Localized Orbitals"
+#~ msgstr "使用定域軌域"
+
+#~ msgid "# of Core Electrons:"
+#~ msgstr "內層電子數:"
+
+#~ msgid "Two Phase Bin Sort"
+#~ msgstr "Two Phase Bin Sort"
+
+#~ msgid "Segmented Transformation"
+#~ msgstr "Segmented Transformation"
+
+#~ msgid "Analytic"
+#~ msgstr "分析"
+
+#~ msgid "Numeric"
+#~ msgstr "數字"
+
+#~ msgid "Double Differenced Hessian"
+#~ msgstr "Double Differenced Hessian"
+
+#~ msgid "Print Internal Force Constants"
+#~ msgstr "Print Internal Force Constants"
+
+#~ msgid "Displacement Size:"
+#~ msgstr "置換大小"
+
+#~ msgid "Purify Hessian"
+#~ msgstr "Purify Hessian"
+
+#~ msgid "Frequency Scale Factor:"
+#~ msgstr "Frequency Scale Factor:"
+
+#~ msgid "bohrs"
+#~ msgstr "bohrs"
+
+#~ msgid "Initial Hessian"
+#~ msgstr "Initial Hessian"
+
+#~ msgid "Guess (+ define)"
+#~ msgstr "Guess (+ define)"
+
+#~ msgid "Read (from $HESS)"
+#~ msgstr "Read (from $HESS)"
+
+#~ msgid "Update Step Size"
+#~ msgstr "Update Step Size"
+
+#~ msgid "Print Orbs at Each Iteration"
+#~ msgstr "Print Orbs at Each Iteration"
+
+#~ msgid "Jump Size:"
+#~ msgstr "Jump Size:"
+
+#~ msgid "Stationary Point"
+#~ msgstr "Stationary Point"
+
+#~ msgid "Step Size"
+#~ msgstr "Step Size"
+
+#~ msgid "Maximum:"
+#~ msgstr "最大值："
+
+#~ msgid "Minimum:"
+#~ msgstr "最小值："
+
+#~ msgid "Initial:"
+#~ msgstr "Initial:"
+
+#~ msgid "Newton-Raphson"
+#~ msgstr "Newton-Raphson"
+
+#~ msgid "Rational Function Optimization"
+#~ msgstr "Rational Function Optimization"
+
+#~ msgid "Quadratic Approximation"
+#~ msgstr "二次逼近"
+
+#~ msgid "Schlegel (quasi-NR)"
+#~ msgstr "Schlegel (quasi-NR)"
+
+#~ msgid "Constrained Optimization"
+#~ msgstr "Constrained Optimization"
+
+#~ msgid "Recalculate Hessian Every:"
+#~ msgstr "Recalculate Hessian Every:"
+
+#~ msgid "Follow Mode:"
+#~ msgstr "Follow Mode:"
+
+#~ msgid "Maximum Steps:"
+#~ msgstr "Maximum Steps:"
+
+#~ msgid "GAMESS-UK Input"
+#~ msgstr "GAMESS-UK 輸入"
+
+#~ msgid "GAMESS-UK input generated by Avogadro"
+#~ msgstr "由 Avogadro 產生 GAMESS-UK 輸入"
+
+#~ msgid "Transition State Search"
+#~ msgstr "過渡狀態搜尋"
+
+#~ msgid "Basis:"
+#~ msgstr "基礎:"
+
+#~ msgid "SVWN"
+#~ msgstr "SVWN"
+
+#~ msgid "B97"
+#~ msgstr "B97"
+
+#~ msgid "HCTH"
+#~ msgstr "HCTH"
+
+#~ msgid "FT97"
+#~ msgstr "FT97"
+
+#~ msgid "Z-matrix"
+#~ msgstr "Z-matrix"
+
+#~ msgid "Gaussian Input"
+#~ msgstr "輸入 Gaussian"
+
+#~ msgid "LANL2DZ"
+#~ msgstr "LANL2DZ"
+
+#~ msgid "Standard"
+#~ msgstr "標準"
+
+#~ msgid "Molden"
+#~ msgstr "Molden"
+
+#~ msgid "Molekel"
+#~ msgstr "Molekel"
+
+#~ msgid "Checkpoint:"
+#~ msgstr "檢查點:"
+
+#~ msgid "Z-matrix (compact)"
+#~ msgstr "Z-matrix (簡潔的)"
+
+#~ msgid "MOLPRO Input"
+#~ msgstr "MOLPRO 輸入"
+
+#~ msgid "6-31+G(d)"
+#~ msgstr "6-31+G(d)"
+
+#~ msgid "6-311G(d)"
+#~ msgstr "6-311G(d)"
+
+#~ msgid "AUG-cc-pVDZ"
+#~ msgstr "AUG-cc-pVDZ"
+
+#~ msgid "AUG-cc-pVTZ"
+#~ msgstr "AUG-cc-pVTZ"
+
+#~ msgid "Molpro Version:"
+#~ msgstr "Molpro 版本:"
+
+#~ msgid "< 2009.1"
+#~ msgstr "< 2009.1"
+
+#~ msgid "2009.1"
+#~ msgstr "2009.1"
+
+#~ msgid "MOPAC Input"
+#~ msgstr "MOPAC 輸入"
+
+#~ msgid "Quartet"
+#~ msgstr "Quartet 四重"
+
+#~ msgid "Quintet"
+#~ msgstr "Quintet 五重"
+
+#~ msgid "MNDO-d"
+#~ msgstr "MNDO-d"
+
+#~ msgid "PM6"
+#~ msgstr "PM6"
+
+#~ msgid "RM1"
+#~ msgstr "RM1"
+
+#~ msgid "NWChem Input"
+#~ msgstr "NWChem 輸入"
+
+#~ msgid "Q-Chem Input"
+#~ msgstr "Q-Chem 輸入"
+
+#~ msgid "B3LYP5"
+#~ msgstr "B3LYP5"
+
+#~ msgid "M06-2X"
+#~ msgstr "M06-2X"
+
+#~ msgid "LACVP"
+#~ msgstr "LACVP"
+
+#~ msgid "Load Shaders"
+#~ msgstr "載入 Shaders (幕後工程師)"
+
+#~ msgid "Shader Name:"
+#~ msgstr "Shader 名稱:"
+
+#~ msgid "Vertex Shader:"
+#~ msgstr "Vertex Shader (頂點著色器):"
+
+#~ msgid "Fragment Shader:"
+#~ msgstr "片段 Shader:"
+
+#~ msgid "Assign Shader"
+#~ msgstr "指定 Shader"
+
+#~ msgid "Display Type:"
+#~ msgstr "展示種類:"
+
+#~ msgid ""
+#~ "Controls:\n"
+#~ "Double left click: Restore default axis limits\n"
+#~ "Right click + drag: Move plot\n"
+#~ "Middle click + drag: Zoom to region\n"
+#~ "Scroll wheel: Zoom to cursor"
+#~ msgstr ""
+#~ "控制:\n"
+#~ "滑鼠左鍵雙擊: 回覆預設的軸限制\n"
+#~ "右鍵 + 拖曳: 移動圖形\n"
+#~ "中鍵 + 拖曳: 縮放到區域\n"
+#~ "滾輪: 縮放到游標"
+
+#~ msgid "&Load data..."
+#~ msgstr "載入資料"
+
+#~ msgid "&Close"
+#~ msgstr "關閉"
+
+#~ msgid "Calculated Spectra:"
+#~ msgstr "計算的光譜:"
+
+#~ msgid "Set Color..."
+#~ msgstr "設定顏色..."
+
+#~ msgid "Imported Spectra:"
+#~ msgstr "匯入的光譜:"
+
+#~ msgid "Font:"
+#~ msgstr "字形:"
+
+#~ msgid "Change Font..."
+#~ msgstr "改變字形:"
+
+#~ msgid "Show"
+#~ msgstr "顯示"
+
+#~ msgid "Imports a tsv of experimental spectra to overlay on the plot."
+#~ msgstr "匯入實驗性光譜的 tsv 以覆蓋圖形"
+
+#~ msgid "&Import..."
+#~ msgstr "匯入"
+
+#~ msgid "Background:"
+#~ msgstr "背景:"
+
+#~ msgid "Foreground:"
+#~ msgstr "前景:"
+
+#~ msgid "New..."
+#~ msgstr "新增..."
+
+#~ msgid "Rename..."
+#~ msgstr "重新命名..."
+
+#~ msgid "&Schemes:"
+#~ msgstr "方案:"
+
+#~ msgid "&Export..."
+#~ msgstr "匯出:"
+
+#~ msgid "&DPI:"
+#~ msgstr "DPI:"
+
+#~ msgid "&Width:"
+#~ msgstr "寬度:"
+
+#~ msgid "&Height"
+#~ msgstr "高"
+
+#~ msgid "cm"
+#~ msgstr "cm"
+
+#~ msgid "mm"
+#~ msgstr "mm"
+
+#~ msgid "in"
+#~ msgstr "in"
+
+#~ msgid "px"
+#~ msgstr "px"
+
+#~ msgid "&Save Image..."
+#~ msgstr "儲存圖片..."
+
+#~ msgid ""
+#~ "Use an optimized value for the font size instead of the scheme-specified "
+#~ "value (screen to image point sizes don't translate well!)"
+#~ msgstr "將字形大小最適化, 以取代特定值"
+
+#~ msgid "Auto-adjust F&ont Size"
+#~ msgstr "自動調整字型大小"
+
+#~ msgid "x"
+#~ msgstr "x"
+
+#~ msgid "y"
+#~ msgstr "y"
+
+#~ msgid "Export Data"
+#~ msgstr "匯出資料"
+
+#~ msgid "Spectra Tab"
+#~ msgstr "光譜標記"
+
+#~ msgid "&Gaussian Width:"
+#~ msgstr "Gaussian 寬度:"
+
+#~ msgid "&Label peaks"
+#~ msgstr "標示 peaks (訊號峰)"
+
+#~ msgid "Rotatory Strength type:"
+#~ msgstr "Rotatory Strength 種類:"
+
+#~ msgid "Energy units:"
+#~ msgstr "能量單位:"
+
+#~ msgid "Density units"
+#~ msgstr "密度單位"
+
+#~ msgid "Fermi Energy: "
+#~ msgstr "費米能: "
+
+#~ msgid "States / Cell"
+#~ msgstr "狀態 / 晶格"
+
+#~ msgid "States / Atom"
+#~ msgstr "狀態 / 原子"
+
+#~ msgid "States / Valence electron"
+#~ msgstr "狀態 / 價電子"
+
+#~ msgid "eV"
+#~ msgstr "eV"
+
+#~ msgid "Fermi energy at zero"
+#~ msgstr "費米能為零"
+
+#~ msgid "Scale integrated DOS"
+#~ msgstr "Scale integrated DOS"
+
+#~ msgid "Show integrated DOS"
+#~ msgstr "顯示 integrated DOS"
+
+#~ msgid "tab_IR_Raman"
+#~ msgstr "tab_IR_Raman"
+
+#~ msgid "&Y Axis Units:"
+#~ msgstr "Y 軸單位:"
+
+#~ msgid "Scaling Type:"
+#~ msgstr "縮放種類:"
+
+#~ msgid "Linear"
+#~ msgstr "線性"
+
+#~ msgid "Relative"
+#~ msgstr "相對"
+
+#~ msgid "Temperature:"
+#~ msgstr "溫度："
+
+#~ msgid " K"
+#~ msgstr " K"
+
+#~ msgid "Laser Wavenumber:"
+#~ msgstr "雷射波數:"
+
+#~ msgid " cm⁻¹"
+#~ msgstr " cm⁻¹"
+
+#~ msgid "Threshold:"
+#~ msgstr "臨界值："
+
+#~ msgid "tab_NMR"
+#~ msgstr "tab_NMR"
+
+#~ msgid "Nucleus:"
+#~ msgstr "核:"
+
+#~ msgid "&Reference:"
+#~ msgstr "參考:"
+
+#~ msgid "Gaussian &Width:"
+#~ msgstr "Gaussian 寬度:"
+
+#~ msgid "Reset &Plot Axes"
+#~ msgstr "重設圖形的軸"
+
+#~ msgid "Label Peaks:"
+#~ msgstr "標示 peaks:"
+
+#~ msgid "ppm"
+#~ msgstr "ppm"
+
+#~ msgid "Molecular Vibrations"
+#~ msgstr "分子振動"
+
+#~ msgid "Filter: "
+#~ msgstr "過濾器: "
+
+#~ msgid "km/mol"
+#~ msgstr "km/mol"
+
+#~ msgid "ν (cm⁻¹)"
+#~ msgstr "ν (cm⁻¹)"
+
+#~ msgid "I (km/mol)"
+#~ msgstr "I (km/mol)"
+
+#~ msgid "Activity (A^4/amu)"
+#~ msgstr "活性 (A^4/amu)"
+
+#~ msgid "&Show Spectra..."
+#~ msgstr "顯示光譜..."
+
+#~ msgid "higher frequency vibrations will show faster movement"
+#~ msgstr "較高的頻率將呈現較快的活動"
+
+#~ msgid "Animation speed set by frequency"
+#~ msgstr "依頻率設定動畫速度"
+
+#~ msgid "Display force &vectors"
+#~ msgstr "顯示力與向量"
+
+#~ msgid "&Normalize displacements"
+#~ msgstr "位移標準化"
+
+#~ msgid "Generate Cell"
+#~ msgstr "產生晶格"
+
+#~ msgid "&Recalculate All"
+#~ msgstr "全部重新計算"
+
+#~ msgid "Default &Quality:"
+#~ msgstr "預設品質："
+
+#~ msgid "Show occupied orbitals first"
+#~ msgstr "優先顯示已填入的軌域"
+
+#~ msgid "Quality: "
+#~ msgstr "品質: "
+
+#~ msgid "Create Surfaces"
+#~ msgstr "產生外觀"
+
+#~ msgid "Surface Type:"
+#~ msgstr "Surface 種類:"
+
+#~ msgid "Color By:"
+#~ msgstr "上色是依照:"
+
+#~ msgctxt "low resolution"
+#~ msgid "Low"
+#~ msgstr "低"
+
+#~ msgctxt "medium resolution"
+#~ msgid "Medium"
+#~ msgstr "中"
+
+#~ msgctxt "high resolution"
+#~ msgid "High"
+#~ msgstr "高"
+
+#~ msgctxt "very high resolution"
+#~ msgid "Very High"
+#~ msgstr "極高"
+
+#~ msgid "Isosurface cutoff value"
+#~ msgstr "Isosurface cutoff value (等曲面截斷值)"
+
+#~ msgid "Iso Value:"
+#~ msgstr "Iso 值:"
+
+#~ msgctxt ""
+#~ "Add the new surface to this particular display type (i.e., orbital or "
+#~ "surface)"
+#~ msgid "In Display Type:"
+#~ msgstr "顯示的種類"
+
+#~ msgid "New Display"
+#~ msgstr "新的顯示"
+
+#~ msgid "Advanced..."
+#~ msgstr "進階..."
+
+#~ msgid "Display visual cues"
+#~ msgstr "顯示視覺提示"
+
+#~ msgid "Python Settings"
+#~ msgstr "Python 設定"
+
+#~ msgid "Z Matrix Editor"
+#~ msgstr "Z Matrix 編輯器"
+
+#~ msgid "Import Selected Atoms"
+#~ msgstr "匯入所選的原子"

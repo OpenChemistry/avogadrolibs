@@ -18,7 +18,8 @@
 #define AVOGADRO_QTPLUGINS_OPERATIONSTABLEMODEL_H
 
 namespace msym {
-extern "C" {
+extern "C"
+{
 #include <libmsym/msym.h>
 }
 }
@@ -45,23 +46,25 @@ public:
   };
 
   explicit OperationsTableModel(QObject* parent = 0);
-  virtual ~OperationsTableModel();
+  ~OperationsTableModel() override;
 
-  int rowCount(const QModelIndex&) const { return m_operations_size; };
-  int columnCount(const QModelIndex&) const
+  int rowCount(const QModelIndex&) const override { return m_operations_size; };
+  int columnCount(const QModelIndex&) const override
   {
     return OPERATIONSTABLEMODEL_COLUMN_COUNT;
   };
 
-  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+  QVariant data(const QModelIndex& index,
+                int role = Qt::DisplayRole) const override;
+  QVariant headerData(int section, Qt::Orientation orientation,
+                      int role) const override;
 
   void setOperations(int operations_size,
-                     msym::msym_symmetry_operation_t* operations);
+                     const msym::msym_symmetry_operation_t* operations);
   void clearOperations();
 
 private:
-  msym::msym_symmetry_operation_t* m_operations;
+  const msym::msym_symmetry_operation_t* m_operations;
   int m_operations_size;
 };
 }

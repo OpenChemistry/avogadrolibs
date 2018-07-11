@@ -56,8 +56,8 @@ public:
   void setMoleculeData(QByteArray& molData, QString name);
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
-  bool readMolecule(QtGui::Molecule& mol);
+  void setMolecule(QtGui::Molecule* mol) override;
+  bool readMolecule(QtGui::Molecule& mol) override;
 
 private slots:
   void menuActivated();

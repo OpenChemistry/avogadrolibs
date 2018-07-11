@@ -58,7 +58,7 @@ protected:
   /**
    * Handles the mouse press events to change the active element.
    */
-  void mousePressEvent(QGraphicsSceneMouseEvent* event);
+  void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
 private:
   ElementDetail* m_detail;

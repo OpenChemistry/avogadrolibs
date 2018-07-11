@@ -3,7 +3,7 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
-find_package(Qt5 COMPONENTS OpenGL REQUIRED)
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 set(HEADERS
   glwidget.h
@@ -16,5 +16,4 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})
-qt5_use_modules(AvogadroQtOpenGL OpenGL)
-target_link_libraries(AvogadroQtOpenGL AvogadroRendering AvogadroQtGui)
+target_link_libraries(AvogadroQtOpenGL AvogadroRendering AvogadroQtGui Qt5::Widgets)

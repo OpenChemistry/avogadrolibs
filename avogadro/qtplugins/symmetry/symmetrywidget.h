@@ -34,7 +34,8 @@
 // class QPlainTextEdit;
 
 namespace msym {
-extern "C" {
+extern "C"
+{
 #include <libmsym/msym.h>
 }
 }
@@ -73,13 +74,17 @@ public slots:
   void moleculeChanged(unsigned int changes);
 
   void setPointGroupSymbol(QString pg);
-  void setSymmetryOperations(int sopsl, msym::msym_symmetry_operation_t* sops);
-  void setSubgroups(int sgl, msym::msym_subgroup_t* sg);
+  void setEquivalenceSets(int mesl, const msym::msym_equivalence_set_t* es);
+  void setSymmetryOperations(int sopsl,
+                             const msym::msym_symmetry_operation_t* sops);
+  void setSubgroups(int sgl, const msym::msym_subgroup_t* sg);
   void setCenterOfMass(double cm[3]);
   void setRadius(double radius);
   msym::msym_thresholds_t* getThresholds() const;
 
 private slots:
+  void equivalenceSelectionChanged(const QItemSelection& selected,
+                                   const QItemSelection& deselected);
   void operationsSelectionChanged(const QItemSelection& selected,
                                   const QItemSelection& deselected);
   void subgroupsSelectionChanged(const QItemSelection& selected,
@@ -87,14 +92,16 @@ private slots:
 
 private:
   Ui::SymmetryWidget* m_ui;
+  QStandardItemModel* m_equivalenceTreeModel;
   OperationsTableModel* m_operationsTableModel;
   QStandardItemModel* m_subgroupsTreeModel;
   QtGui::Molecule* m_molecule;
   QVector3D m_cm;
 
-  msym::msym_symmetry_operation_t* m_sops;
-  msym::msym_subgroup_t* m_sg;
-  int m_sopsl, m_sgl;
+  const msym::msym_equivalence_set_t* m_es;
+  const msym::msym_symmetry_operation_t* m_sops;
+  const msym::msym_subgroup_t* m_sg;
+  int m_esl, m_sopsl, m_sgl;
   double m_radius;
 
   void addSubgroup(QStandardItem*, msym::msym_subgroup_t*);

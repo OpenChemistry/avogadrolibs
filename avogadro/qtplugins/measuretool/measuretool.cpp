@@ -198,9 +198,10 @@ void MeasureTool::draw(Rendering::GroupNode& node)
                              distanceLabel.size());
   switch (m_atoms.size()) {
     case 4:
-      overlayText += QString("%1 %L2\n")
-                       .arg(tr("Dihedral:"), labelWidth)
-                       .arg(dihedralAngle(v1, v2, v3), 10, 'f', 5);
+      overlayText +=
+        QString("%1 %L2\n")
+          .arg(tr("Dihedral:"), labelWidth)
+          .arg(tr("%L1°").arg(dihedralAngle(v1, v2, v3), 10, 'f', 5), 10);
       angle23 =
         static_cast<float>(std::acos((-v2).dot(v3) / (v2Norm * v3Norm))) *
         RAD_TO_DEG_F;
@@ -212,17 +213,20 @@ void MeasureTool::draw(Rendering::GroupNode& node)
       overlayText +=
         QString("%1 %L2 %L3\n")
           .arg(tr("Angles:"), labelWidth)
-          .arg(angle12, 10, 'f', 5)
-          .arg(angle23 < 360.f ? QString::number(angle23, 'f', 5) : QString(),
+          .arg(tr("%L1°").arg(angle12, 10, 'f', 5), 10)
+          .arg(angle23 < 360.f ? tr("%L1°").arg(angle23, 10, 'f', 5)
+                               : QString(),
                10);
     // fall through
     case 2:
       overlayText +=
         QString("%1 %L2 %L3 %L4")
           .arg(tr("Distance:"), labelWidth)
-          .arg(v1Norm, 10, 'f', 5)
-          .arg(v2Norm >= 0.f ? QString::number(v2Norm, 'f', 5) : QString(), 10)
-          .arg(v3Norm >= 0.f ? QString::number(v3Norm, 'f', 5) : QString(), 10);
+          .arg(tr("%L1 Å").arg(v1Norm, 10, 'f', 5), 10)
+          .arg(v2Norm >= 0.f ? tr("%L1 Å").arg(v2Norm, 10, 'f', 5) : QString(),
+               10)
+          .arg(v3Norm >= 0.f ? tr("%L1 Å").arg(v3Norm, 10, 'f', 5) : QString(),
+               10);
     default:
       break;
   }

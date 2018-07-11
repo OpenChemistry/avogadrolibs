@@ -35,8 +35,8 @@
 namespace Avogadro {
 namespace QtOpenGL {
 
-GLWidget::GLWidget(QWidget* parent_)
-  : QGLWidget(parent_), m_activeTool(nullptr), m_defaultTool(nullptr),
+GLWidget::GLWidget(QWidget* p)
+  : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr),
     m_renderTimer(nullptr)
 {
   setFocusPolicy(Qt::ClickFocus);
@@ -45,8 +45,6 @@ GLWidget::GLWidget(QWidget* parent_)
           SLOT(updateScene()));
   connect(&m_scenePlugins, SIGNAL(pluginConfigChanged()), SLOT(updateScene()));
   m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
-  // set the resolution of the screen for the camera
-  m_renderer.camera().setDevicePixelRatio(qApp->devicePixelRatio());
 }
 
 GLWidget::~GLWidget()
@@ -103,7 +101,7 @@ void GLWidget::updateScene()
     }
 
     m_renderer.resetGeometry();
-    updateGL();
+    update();
   }
   if (mol != m_molecule)
     delete mol;
@@ -117,7 +115,7 @@ void GLWidget::clearScene()
 void GLWidget::resetCamera()
 {
   m_renderer.resetCamera();
-  updateGL();
+  update();
 }
 
 void GLWidget::resetGeometry()
@@ -224,7 +222,7 @@ void GLWidget::updateTimeout()
     m_renderTimer->deleteLater();
     m_renderTimer = nullptr;
   }
-  updateGL();
+  update();
 }
 
 void GLWidget::initializeGL()
@@ -255,7 +253,7 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent* e)
     m_defaultTool->mouseDoubleClickEvent(e);
 
   if (!e->isAccepted())
-    QGLWidget::mouseDoubleClickEvent(e);
+    QOpenGLWidget::mouseDoubleClickEvent(e);
 }
 
 void GLWidget::mousePressEvent(QMouseEvent* e)
@@ -269,7 +267,7 @@ void GLWidget::mousePressEvent(QMouseEvent* e)
     m_defaultTool->mousePressEvent(e);
 
   if (!e->isAccepted())
-    QGLWidget::mousePressEvent(e);
+    QOpenGLWidget::mousePressEvent(e);
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* e)
@@ -283,7 +281,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* e)
     m_defaultTool->mouseMoveEvent(e);
 
   if (!e->isAccepted())
-    QGLWidget::mouseMoveEvent(e);
+    QOpenGLWidget::mouseMoveEvent(e);
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent* e)
@@ -297,7 +295,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* e)
     m_defaultTool->mouseReleaseEvent(e);
 
   if (!e->isAccepted())
-    QGLWidget::mouseReleaseEvent(e);
+    QOpenGLWidget::mouseReleaseEvent(e);
 }
 
 void GLWidget::wheelEvent(QWheelEvent* e)
@@ -311,7 +309,7 @@ void GLWidget::wheelEvent(QWheelEvent* e)
     m_defaultTool->wheelEvent(e);
 
   if (!e->isAccepted())
-    QGLWidget::wheelEvent(e);
+    QOpenGLWidget::wheelEvent(e);
 }
 
 void GLWidget::keyPressEvent(QKeyEvent* e)
@@ -325,7 +323,7 @@ void GLWidget::keyPressEvent(QKeyEvent* e)
     m_defaultTool->keyPressEvent(e);
 
   if (!e->isAccepted())
-    QGLWidget::keyPressEvent(e);
+    QOpenGLWidget::keyPressEvent(e);
 }
 
 void GLWidget::keyReleaseEvent(QKeyEvent* e)
@@ -339,7 +337,7 @@ void GLWidget::keyReleaseEvent(QKeyEvent* e)
     m_defaultTool->keyReleaseEvent(e);
 
   if (!e->isAccepted())
-    QGLWidget::keyReleaseEvent(e);
+    QOpenGLWidget::keyReleaseEvent(e);
 }
 
 } // End QtOpenGL namespace

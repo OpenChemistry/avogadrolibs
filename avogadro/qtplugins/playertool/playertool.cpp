@@ -21,8 +21,7 @@
 
 #include <QtCore/QProcess>
 #include <QtGui/QIcon>
-#include <QtOpenGL/QGLFramebufferObject>
-#include <QtOpenGL/QGLWidget>
+#include <QtGui/QOpenGLFramebufferObject>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFileDialog>
@@ -30,7 +29,9 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QOpenGLWidget>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QVBoxLayout>
 
@@ -44,17 +45,20 @@ namespace QtPlugins {
 using QtGui::Molecule;
 
 PlayerTool::PlayerTool(QObject* parent_)
-  : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_renderer(nullptr), m_currentFrame(0),
-    m_toolWidget(nullptr), m_info(nullptr)
+  : QtGui::ToolPlugin(parent_)
+  , m_activateAction(new QAction(this))
+  , m_molecule(nullptr)
+  , m_renderer(nullptr)
+  , m_currentFrame(0)
+  , m_toolWidget(nullptr)
+  , m_frameIdx(nullptr)
+  , m_slider(nullptr)
 {
   m_activateAction->setText(tr("Player"));
   m_activateAction->setIcon(QIcon(":/icons/player.png"));
 }
 
-PlayerTool::~PlayerTool()
-{
-}
+PlayerTool::~PlayerTool() {}
 
 QWidget* PlayerTool::toolWidget() const
 {
@@ -63,18 +67,19 @@ QWidget* PlayerTool::toolWidget() const
     QVBoxLayout* layout = new QVBoxLayout;
     QHBoxLayout* controls = new QHBoxLayout;
     controls->addStretch(1);
-    QPushButton* button = new QPushButton("<");
-    connect(button, SIGNAL(clicked()), SLOT(back()));
-    controls->addWidget(button);
-    button = new QPushButton(tr("Play"));
-    connect(button, SIGNAL(clicked()), SLOT(play()));
-    controls->addWidget(button);
-    button = new QPushButton(tr("Stop"));
-    connect(button, SIGNAL(clicked()), SLOT(stop()));
-    controls->addWidget(button);
-    button = new QPushButton(">");
-    connect(button, SIGNAL(clicked()), SLOT(forward()));
-    controls->addWidget(button);
+    QPushButton* leftButton = new QPushButton("<");
+    connect(leftButton, SIGNAL(clicked()), SLOT(back()));
+    controls->addWidget(leftButton);
+    playButton = new QPushButton(tr("Play"));
+    connect(playButton, SIGNAL(clicked()), SLOT(play()));
+    controls->addWidget(playButton);
+    stopButton = new QPushButton(tr("Stop"));
+    connect(stopButton, SIGNAL(clicked()), SLOT(stop()));
+    controls->addWidget(stopButton);
+    stopButton->setEnabled(false);
+    QPushButton* rightButton = new QPushButton(">");
+    connect(rightButton, SIGNAL(clicked()), SLOT(forward()));
+    controls->addWidget(rightButton);
     controls->addStretch(1);
     layout->addLayout(controls);
 
@@ -89,6 +94,42 @@ QWidget* PlayerTool::toolWidget() const
     frames->addWidget(m_animationFPS);
     layout->addLayout(frames);
 
+    QHBoxLayout* sliderLayout = new QHBoxLayout;
+    m_slider = new QSlider(Qt::Horizontal);
+    m_slider->setMinimum(0);
+    m_slider->setTickInterval(1);
+    connect(m_slider, SIGNAL(valueChanged(int)),
+            SLOT(sliderPositionChanged(int)));
+    sliderLayout->addWidget(m_slider);
+    layout->addLayout(sliderLayout);
+    if (m_molecule->coordinate3dCount() > 1)
+      m_slider->setMaximum(m_molecule->coordinate3dCount() - 1);
+
+    QHBoxLayout* frameLayout = new QHBoxLayout;
+
+    // QHBoxLayout* leftColumn = new QHBoxLayout;
+    // QLabel* label2 = new QLabel(tr("Timestep:"));
+    // leftColumn->addWidget(label2);
+    // frameLayout->addLayout(leftColumn);
+
+    QHBoxLayout* rightColumn = new QHBoxLayout;
+    rightColumn->addStretch(1);
+    QLabel* label3 = new QLabel(tr("Frame:"));
+    rightColumn->addWidget(label3);
+    m_frameIdx = new QSpinBox;
+    m_frameIdx->setValue(1);
+    m_frameIdx->setMinimum(1);
+    if (m_molecule->coordinate3dCount() > 1) {
+      m_frameIdx->setMaximum(m_molecule->coordinate3dCount());
+      m_frameIdx->setSuffix(tr(" of %0").arg(m_molecule->coordinate3dCount()));
+    }
+    connect(m_frameIdx, SIGNAL(valueChanged(int)),
+            SLOT(spinnerPositionChanged(int)));
+    rightColumn->addWidget(m_frameIdx);
+    frameLayout->addLayout(rightColumn);
+
+    layout->addLayout(frameLayout);
+
     QHBoxLayout* bonding = new QHBoxLayout;
     bonding->addStretch(1);
     m_dynamicBonding = new QCheckBox(tr("Dynamic bonding?"));
@@ -99,14 +140,12 @@ QWidget* PlayerTool::toolWidget() const
 
     QHBoxLayout* recordLayout = new QHBoxLayout;
     recordLayout->addStretch(1);
-    button = new QPushButton(tr("Record Movie..."));
-    connect(button, SIGNAL(clicked()), SLOT(recordMovie()));
-    recordLayout->addWidget(button);
+    QPushButton* recordButton = new QPushButton(tr("Record Movie..."));
+    connect(recordButton, SIGNAL(clicked()), SLOT(recordMovie()));
+    recordLayout->addWidget(recordButton);
     recordLayout->addStretch(1);
     layout->addLayout(recordLayout);
 
-    m_info = new QLabel(tr("Stopped"));
-    layout->addWidget(m_info);
     m_toolWidget->setLayout(layout);
   }
   connect(&m_timer, SIGNAL(timeout()), SLOT(animate()));
@@ -131,7 +170,7 @@ QUndoCommand* PlayerTool::mouseDoubleClickEvent(QMouseEvent*)
 
 void PlayerTool::setActiveWidget(QWidget* widget)
 {
-  m_glWidget = qobject_cast<QGLWidget*>(widget);
+  m_glWidget = qobject_cast<QOpenGLWidget*>(widget);
 }
 
 void PlayerTool::back()
@@ -146,6 +185,8 @@ void PlayerTool::forward()
 
 void PlayerTool::play()
 {
+  playButton->setEnabled(false);
+  stopButton->setEnabled(true);
   double fps = static_cast<double>(m_animationFPS->value());
   if (fps < 0.00001)
     fps = 5;
@@ -157,8 +198,9 @@ void PlayerTool::play()
 
 void PlayerTool::stop()
 {
+  playButton->setEnabled(true);
+  stopButton->setEnabled(false);
   m_timer.stop();
-  m_info->setText(tr("Stopped"));
 }
 
 void PlayerTool::animate(int advance)
@@ -177,9 +219,8 @@ void PlayerTool::animate(int advance)
       m_molecule->perceiveBondsSimple();
     }
     m_molecule->emitChanged(Molecule::Atoms | Molecule::Added);
-    m_info->setText(tr("Frame %0 of %1")
-                      .arg(m_currentFrame + 1)
-                      .arg(m_molecule->coordinate3dCount()));
+    m_slider->setValue(m_currentFrame);
+    m_frameIdx->setValue(m_currentFrame + 1);
   }
 }
 
@@ -222,8 +263,8 @@ void PlayerTool::recordMovie()
     QImage exportImage;
     m_glWidget->raise();
     m_glWidget->repaint();
-    if (QGLFramebufferObject::hasOpenGLFramebufferObjects()) {
-      exportImage = m_glWidget->grabFrameBuffer(true);
+    if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
+      exportImage = m_glWidget->grabFramebuffer();
     } else {
       QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
       exportImage = pixmap.toImage();
@@ -256,6 +297,26 @@ void PlayerTool::recordMovie()
             QString::number(m_molecule->coordinate3dCount() - 1) + "]"
        << baseName + ".gif";
   proc.execute("convert", args);
+}
+
+void PlayerTool::sliderPositionChanged(int k)
+{
+  animate(k - m_currentFrame);
+}
+
+void PlayerTool::spinnerPositionChanged(int k)
+{
+  animate(k - m_currentFrame - 1);
+}
+
+void PlayerTool::setSliderLimit()
+{
+  if (m_molecule->coordinate3dCount() > 1 && m_slider)
+    m_slider->setMaximum(m_molecule->coordinate3dCount() - 1);
+  if (m_molecule->coordinate3dCount() > 1 && m_frameIdx) {
+    m_frameIdx->setMaximum(m_molecule->coordinate3dCount());
+    m_frameIdx->setSuffix(tr(" of %0").arg(m_molecule->coordinate3dCount()));
+  }
 }
 
 } // namespace QtPlugins

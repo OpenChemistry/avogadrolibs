@@ -9,12 +9,13 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
   add_definitions(-DGLEW_STATIC)
 endif()
 
-find_package(Qt5 COMPONENTS OpenGL REQUIRED)
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 find_package(VTK
   COMPONENTS
-    vtkRenderingOpenGL vtkGUISupportQtOpenGL vtkDomainsChemistry
-    vtkRenderingVolumeOpenGL vtkViewsCore vtkRenderingFreeType
+    vtkRenderingOpenGL2 vtkGUISupportQt vtkDomainsChemistry
+    vtkRenderingVolumeOpenGL2 vtkViewsCore vtkRenderingFreeType
+    vtkChartsCore vtkViewsContext2D vtkRenderingContextOpenGL2
   REQUIRED)
 include_directories(SYSTEM ${VTK_INCLUDE_DIRS})
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ${VTK_DEFINITIONS})
@@ -22,16 +23,18 @@ set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ${VTK_DEFINITIONS})
 set(HEADERS
   vtkAvogadroActor.h
   vtkglwidget.h
+  vtkplot.h
 )
 
 set(SOURCES
   vtkAvogadroActor.cxx
   vtkglwidget.cpp
+  vtkplot.cpp
 )
 
 avogadro_add_library(AvogadroVtk ${HEADERS} ${SOURCES})
-qt5_use_modules(AvogadroVtk OpenGL)
 set_target_properties(AvogadroVtk PROPERTIES AUTOMOC TRUE)
 target_link_libraries(AvogadroVtk AvogadroRendering AvogadroQtGui
-  vtkRenderingOpenGL vtkGUISupportQtOpenGL vtkRenderingVolumeOpenGL
-  vtkRenderingFreeType)
+  vtkRenderingOpenGL2 vtkGUISupportQt vtkRenderingVolumeOpenGL2
+  vtkRenderingFreeType vtkInteractionStyle vtkChartsCore vtkViewsContext2D
+  vtkRenderingContextOpenGL2 Qt5::Widgets)

@@ -3,5 +3,7 @@
 BasedOnStyle: Mozilla
 AlwaysBreakAfterReturnType: None
 AlwaysBreakAfterDefinitionReturnType: None
+BinPackArguments: true
+BinPackParameters: true
 BreakConstructorInitializersBeforeComma: false
 ...

@@ -42,8 +42,10 @@ namespace Avogadro {
 namespace QtPlugins {
 
 Symmetry::Symmetry(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(NULL),
-    m_symmetryWidget(nullptr), m_viewSymmetryAction(new QAction(this))
+  : Avogadro::QtGui::ExtensionPlugin(parent_)
+  , m_molecule(NULL)
+  , m_symmetryWidget(nullptr)
+  , m_viewSymmetryAction(new QAction(this))
 {
 
   m_ctx = msymCreateContext();
@@ -165,7 +167,8 @@ void Symmetry::viewSymmetry()
     m_symmetryWidget = new SymmetryWidget(qobject_cast<QWidget*>(parent()));
     m_symmetryWidget->setMolecule(m_molecule);
     connect(m_symmetryWidget, SIGNAL(detectSymmetry()), SLOT(detectSymmetry()));
-    connect(m_symmetryWidget, SIGNAL(symmetrizeMolecule()),
+    connect(m_symmetryWidget,
+            SIGNAL(symmetrizeMolecule()),
             SLOT(symmetrizeMolecule()));
   }
 
@@ -197,9 +200,10 @@ void Symmetry::detectSymmetry()
   double cm[3], radius = 0.0, symerr = 0.0;
 
   /* Do not free these variables */
-  msym_symmetry_operation_t* msops = NULL;
-  msym_subgroup_t* msg = NULL;
-  int msgl = 0, msopsl = 0, mlength = 0;
+  const msym_symmetry_operation_t* msops = NULL;
+  const msym_subgroup_t* msg = NULL;
+  const msym_equivalence_set_t* mes = NULL;
+  int mesl = 0, msgl = 0, msopsl = 0, mlength = 0;
 
   // initialize the c-style array of atom names and coordinates
   msym_element_t* a;
@@ -230,6 +234,7 @@ void Symmetry::detectSymmetry()
   if (MSYM_SUCCESS != (ret = msymSetElements(m_ctx, length, elements))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
+    m_symmetryWidget->setEquivalenceSets(0, NULL);
     m_symmetryWidget->setSymmetryOperations(0, NULL);
     m_symmetryWidget->setSubgroups(0, NULL);
     qDebug() << "Error:" << msymErrorString(ret) << " "
@@ -240,6 +245,7 @@ void Symmetry::detectSymmetry()
   if (MSYM_SUCCESS != (ret = msymFindSymmetry(m_ctx))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
+    m_symmetryWidget->setEquivalenceSets(0, NULL);
     m_symmetryWidget->setSymmetryOperations(0, NULL);
     m_symmetryWidget->setSubgroups(0, NULL);
     qDebug() << "Error:" << msymErrorString(ret) << " "
@@ -252,6 +258,7 @@ void Symmetry::detectSymmetry()
       (ret = msymGetPointGroupName(m_ctx, sizeof(char[6]), point_group))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
+    m_symmetryWidget->setEquivalenceSets(0, NULL);
     m_symmetryWidget->setSymmetryOperations(0, NULL);
     m_symmetryWidget->setSubgroups(0, NULL);
     qDebug() << "Error:" << msymErrorString(ret) << " "
@@ -263,6 +270,18 @@ void Symmetry::detectSymmetry()
       (ret = msymGetSymmetryOperations(m_ctx, &msopsl, &msops))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
+    m_symmetryWidget->setEquivalenceSets(0, NULL);
+    m_symmetryWidget->setSymmetryOperations(0, NULL);
+    m_symmetryWidget->setSubgroups(0, NULL);
+    qDebug() << "Error:" << msymErrorString(ret) << " "
+             << msymGetErrorDetails();
+    return;
+  }
+
+  if (MSYM_SUCCESS != (ret = msymGetEquivalenceSets(m_ctx, &mesl, &mes))) {
+    free(elements);
+    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
+    m_symmetryWidget->setEquivalenceSets(0, NULL);
     m_symmetryWidget->setSymmetryOperations(0, NULL);
     m_symmetryWidget->setSubgroups(0, NULL);
     qDebug() << "Error:" << msymErrorString(ret) << " "
@@ -273,6 +292,7 @@ void Symmetry::detectSymmetry()
   if (MSYM_SUCCESS != (ret = msymGetCenterOfMass(m_ctx, cm))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
+    m_symmetryWidget->setEquivalenceSets(0, NULL);
     m_symmetryWidget->setSymmetryOperations(0, NULL);
     m_symmetryWidget->setSubgroups(0, NULL);
     qDebug() << "Error:" << msymErrorString(ret) << " "
@@ -283,6 +303,7 @@ void Symmetry::detectSymmetry()
   if (MSYM_SUCCESS != (ret = msymGetRadius(m_ctx, &radius))) {
     free(elements);
     m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
+    m_symmetryWidget->setEquivalenceSets(0, NULL);
     m_symmetryWidget->setSymmetryOperations(0, NULL);
     m_symmetryWidget->setSubgroups(0, NULL);
     qDebug() << "Error:" << msymErrorString(ret) << " "
@@ -294,6 +315,7 @@ void Symmetry::detectSymmetry()
     if (MSYM_SUCCESS != (ret = msymGetSubgroups(m_ctx, &msgl, &msg))) {
       free(elements);
       m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
+      m_symmetryWidget->setEquivalenceSets(0, NULL);
       m_symmetryWidget->setSymmetryOperations(0, NULL);
       m_symmetryWidget->setSubgroups(0, NULL);
       qDebug() << "Error:" << msymErrorString(ret) << " "
@@ -310,6 +332,7 @@ void Symmetry::detectSymmetry()
   // for(int i = 0; i < msgl;i++) printf("\t [%d] %s\n",i+1,msg[i].name);
 
   m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(point_group));
+  m_symmetryWidget->setEquivalenceSets(mesl, mes);
   m_symmetryWidget->setSymmetryOperations(msopsl, msops);
   m_symmetryWidget->setSubgroups(msgl, msg);
   m_symmetryWidget->setCenterOfMass(cm);
