@@ -4,6 +4,7 @@
 
   Copyright 2009 Marcus D. Hanwell
   Copyright 2012-2013 Kitware, Inc.
+  Copyright 2018 Geoffrey Hutchison
 
   This source code is released under the New BSD License, (the "License").
 
@@ -22,7 +23,8 @@ namespace Avogadro {
 namespace QtPlugins {
 
 SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
-  : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog)
+  : QDialog(parent_, f)
+  , m_ui(new Ui::SurfaceDialog)
 {
   m_ui->setupUi(this);
 
@@ -32,8 +34,10 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
 
   // set the data for the default items
   m_ui->surfaceCombo->addItem(tr("Van der Waals"), Surfaces::Type::VanDerWaals);
-  m_ui->surfaceCombo->addItem(tr("Solvent Accessible"), Surfaces::Type::SolventAccessible);
-  m_ui->surfaceCombo->addItem(tr("Solvent Excluded"), Surfaces::Type::SolventExcluded);
+  m_ui->surfaceCombo->addItem(tr("Solvent Accessible"),
+                              Surfaces::Type::SolventAccessible);
+  m_ui->surfaceCombo->addItem(tr("Solvent Excluded"),
+                              Surfaces::Type::SolventExcluded);
 
   connect(m_ui->surfaceCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(surfaceComboChanged(int)));
@@ -50,8 +54,8 @@ SurfaceDialog::~SurfaceDialog()
 void SurfaceDialog::surfaceComboChanged(int n)
 {
   int type = m_ui->surfaceCombo->itemData(n).toInt();
-  if (type == Surfaces::Type::MolecularOrbital
-    || type ==  Surfaces::Type::FromFile) {
+  if (type == Surfaces::Type::MolecularOrbital ||
+      type == Surfaces::Type::FromFile) {
     m_ui->orbitalCombo->setEnabled(true);
   } else {
     m_ui->orbitalCombo->setEnabled(false);
@@ -97,18 +101,20 @@ void SurfaceDialog::setupBasis(int numElectrons, int numMOs)
 {
   // only if we have electrons
   if (numMOs < 1)
-  return;
+    return;
 
   m_ui->orbitalCombo->setVisible(true);
   m_ui->orbitalCombo->setEnabled(false);
 
-  m_ui->surfaceCombo->addItem(tr("Molecular Orbital"), Surfaces::Type::MolecularOrbital);
-  m_ui->surfaceCombo->addItem(tr("Electron Density"), Surfaces::Type::ElectronDensity);
+  m_ui->surfaceCombo->addItem(tr("Molecular Orbital"),
+                              Surfaces::Type::MolecularOrbital);
+  m_ui->surfaceCombo->addItem(tr("Electron Density"),
+                              Surfaces::Type::ElectronDensity);
   // TODO: this class doesn't know about alpha / beta spin right now
   /*
   if (numElectrons % 2 != 0) {
-    m_ui->surfaceCombo->addItem(tr("Spin Density"), Surfaces::Type::SpinDensity);
-    m_ui->spinCombo->setVisible(true);
+    m_ui->surfaceCombo->addItem(tr("Spin Density"),
+  Surfaces::Type::SpinDensity); m_ui->spinCombo->setVisible(true);
     m_ui->spinCombo->setEnabled(true);
   }
   */

@@ -47,14 +47,22 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-using Core::GaussianSet;
 using Core::Cube;
+using Core::GaussianSet;
 
 Surfaces::Surfaces(QObject* p)
-  : ExtensionPlugin(p), m_progressDialog(nullptr), m_molecule(nullptr),
-    m_basis(nullptr), m_gaussianConcurrent(nullptr), m_slaterConcurrent(nullptr),
-    m_cube(nullptr), m_mesh1(nullptr), m_mesh2(nullptr),
-    m_meshGenerator1(nullptr), m_meshGenerator2(nullptr), m_dialog(nullptr)
+  : ExtensionPlugin(p)
+  , m_progressDialog(nullptr)
+  , m_molecule(nullptr)
+  , m_basis(nullptr)
+  , m_gaussianConcurrent(nullptr)
+  , m_slaterConcurrent(nullptr)
+  , m_cube(nullptr)
+  , m_mesh1(nullptr)
+  , m_mesh2(nullptr)
+  , m_meshGenerator1(nullptr)
+  , m_meshGenerator2(nullptr)
+  , m_dialog(nullptr)
 {
   QAction* action = new QAction(this);
   action->setText(tr("Create Surfaces..."));
@@ -103,7 +111,8 @@ void Surfaces::surfacesActivated()
 {
   if (!m_dialog) {
     m_dialog = new SurfaceDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(calculateClickedSignal()), SLOT(calculateSurface()));
+    connect(m_dialog, SIGNAL(calculateClickedSignal()),
+            SLOT(calculateSurface()));
   }
 
   if (m_basis) {
@@ -131,28 +140,28 @@ void Surfaces::calculateSurface()
   Type type = m_dialog->surfaceType();
   if (!m_cube)
     m_cube = m_molecule->addCube();
-    // TODO we should add a name, type, etc.
+  // TODO we should add a name, type, etc.
 
-  switch(type) {
+  switch (type) {
     case VanDerWaals:
     case SolventAccessible:
     case SolventExcluded:
-    calculateEDT();
-    // pass a molecule and return a Cube for m_cube
-    //   displayMesh();
-    break;
+      calculateEDT();
+      // pass a molecule and return a Cube for m_cube
+      //   displayMesh();
+      break;
 
     case ElectronDensity:
     case MolecularOrbital:
     case ElectrostaticPotential:
     case SpinDensity:
-    calculateQM();
-    break;
+      calculateQM();
+      break;
 
     case FromFile:
     default:
-    calculateCube();
-    break;
+      calculateCube();
+      break;
   }
 }
 
@@ -206,7 +215,7 @@ void Surfaces::calculateQM()
   else if (type == MolecularOrbital) {
     progressText = tr("Calculating molecular orbital %L1").arg(index);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
-        m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index);
+      m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index);
     } else {
       m_slaterConcurrent->calculateMolecularOrbital(m_cube, index);
     }
@@ -215,32 +224,35 @@ void Surfaces::calculateQM()
   // Set up the progress dialog.
   if (dynamic_cast<GaussianSet*>(m_basis)) {
     m_progressDialog->setWindowTitle(progressText);
-    m_progressDialog->setRange(m_gaussianConcurrent->watcher().progressMinimum(),
-    m_gaussianConcurrent->watcher().progressMaximum());
+    m_progressDialog->setRange(
+      m_gaussianConcurrent->watcher().progressMinimum(),
+      m_gaussianConcurrent->watcher().progressMaximum());
     m_progressDialog->setValue(m_gaussianConcurrent->watcher().progressValue());
     m_progressDialog->show();
 
     connect(&m_gaussianConcurrent->watcher(), SIGNAL(progressValueChanged(int)),
-    m_progressDialog, SLOT(setValue(int)));
-    connect(&m_gaussianConcurrent->watcher(), SIGNAL(progressRangeChanged(int, int)),
-    m_progressDialog, SLOT(setRange(int, int)));
+            m_progressDialog, SLOT(setValue(int)));
+    connect(&m_gaussianConcurrent->watcher(),
+            SIGNAL(progressRangeChanged(int, int)), m_progressDialog,
+            SLOT(setRange(int, int)));
     connect(&m_gaussianConcurrent->watcher(), SIGNAL(finished()),
-    SLOT(displayMesh()));
+            SLOT(displayMesh()));
   } else {
     // slaters
-      m_progressDialog->setWindowTitle(progressText);
-      m_progressDialog->setRange(m_slaterConcurrent->watcher().progressMinimum(),
-                                 m_slaterConcurrent->watcher().progressMaximum());
-      m_progressDialog->setValue(m_slaterConcurrent->watcher().progressValue());
-      m_progressDialog->show();
+    m_progressDialog->setWindowTitle(progressText);
+    m_progressDialog->setRange(m_slaterConcurrent->watcher().progressMinimum(),
+                               m_slaterConcurrent->watcher().progressMaximum());
+    m_progressDialog->setValue(m_slaterConcurrent->watcher().progressValue());
+    m_progressDialog->show();
 
-      connect(&m_slaterConcurrent->watcher(), SIGNAL(progressValueChanged(int)),
-              m_progressDialog, SLOT(setValue(int)));
-      connect(&m_slaterConcurrent->watcher(), SIGNAL(progressRangeChanged(int, int)),
-              m_progressDialog, SLOT(setRange(int, int)));
-      connect(&m_slaterConcurrent->watcher(), SIGNAL(finished()),
-              SLOT(displayMesh()));
-    }
+    connect(&m_slaterConcurrent->watcher(), SIGNAL(progressValueChanged(int)),
+            m_progressDialog, SLOT(setValue(int)));
+    connect(&m_slaterConcurrent->watcher(),
+            SIGNAL(progressRangeChanged(int, int)), m_progressDialog,
+            SLOT(setRange(int, int)));
+    connect(&m_slaterConcurrent->watcher(), SIGNAL(finished()),
+            SLOT(displayMesh()));
+  }
 }
 
 void Surfaces::calculateCube()

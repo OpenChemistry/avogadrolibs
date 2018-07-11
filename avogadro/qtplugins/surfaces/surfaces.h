@@ -55,7 +55,8 @@ public:
   explicit Surfaces(QObject* parent = 0);
   ~Surfaces();
 
-  enum Type {
+  enum Type
+  {
     VanDerWaals,
     SolventAccessible,
     SolventExcluded,
@@ -107,7 +108,6 @@ private:
 
   SurfaceDialog* m_dialog;
 };
-
 }
 }
 
