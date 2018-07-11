@@ -246,11 +246,6 @@
            <string>None</string>
           </property>
          </item>
-         <item>
-          <property name="text">
-           <string>Electrostatic Potential</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item>
