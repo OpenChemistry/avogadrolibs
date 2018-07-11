@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_QTPLUGINS_SURFACEDIALOG_H
 #define AVOGADRO_QTPLUGINS_SURFACEDIALOG_H
 
-#include <QtWidgets/QDialog>
 #include <QtCore/QStringList>
+#include <QtWidgets/QDialog>
 
 #include "surfaces.h"
 // for the enum
