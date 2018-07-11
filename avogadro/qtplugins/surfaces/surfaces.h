@@ -3,6 +3,7 @@
   This source file is part of the Avogadro project.
 
   Copyright 2012-2013 Kitware, Inc.
+  Copyright 2018 Geoffrey Hutchison
 
   This source code is released under the New BSD License, (the "License").
 
@@ -13,8 +14,8 @@
   limitations under the License.
 
 ******************************************************************************/
-#ifndef AVOGADRO_QTPLUGINS_QUANTUMOUTPUT_H
-#define AVOGADRO_QTPLUGINS_QUANTUMOUTPUT_H
+#ifndef AVOGADRO_QTPLUGINS_SURFACES_H
+#define AVOGADRO_QTPLUGINS_SURFACES_H
 
 #include <avogadro/qtgui/extensionplugin.h>
 
@@ -27,6 +28,7 @@ namespace Avogadro {
 namespace QtGui {
 class MeshGenerator;
 }
+
 namespace Core {
 class BasisSet;
 class Cube;
@@ -36,9 +38,8 @@ class Mesh;
 namespace QtPlugins {
 
 /**
- * @brief The QuantumOutput plugin registers quantum file formats, adds several
- * menu entries to calculate properties if a valid quantum data output file was
- * loaded.
+ * @brief The Surfaces plugin registers quantum file formats, adds several
+ * menu entries to calculate surfaces, including QM ones
  * @author Marcus D. Hanwell
  */
 
@@ -46,20 +47,29 @@ class GaussianSetConcurrent;
 class SlaterSetConcurrent;
 class SurfaceDialog;
 
-class QuantumOutput : public QtGui::ExtensionPlugin
+class Surfaces : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 
 public:
-  explicit QuantumOutput(QObject* parent = 0);
-  ~QuantumOutput() override;
+  explicit Surfaces(QObject* parent = 0);
+  ~Surfaces();
 
-  QString name() const override { return tr("Quantum output"); }
-
-  QString description() const override
+  enum Type
   {
-    return tr("Read output from quantum codes.");
-  }
+    VanDerWaals,
+    SolventAccessible,
+    SolventExcluded,
+    ElectrostaticPotential,
+    ElectronDensity,
+    MolecularOrbital,
+    SpinDensity,
+    FromFile,
+    Unknown
+  };
+
+  QString name() const { return tr("Surfaces"); }
+  QString description() const { return tr("Read and render surfaces."); }
 
   QList<QAction*> actions() const override;
 
@@ -69,9 +79,12 @@ public:
 
 private slots:
   void surfacesActivated();
-  void calculateSurface(int index, float isosurfaceValue,
-                        float resolutionStepSize);
-  void displayCube();
+  void calculateSurface();
+  void calculateEDT();
+  void calculateQM();
+  void calculateCube();
+
+  void displayMesh();
   void meshFinished();
 
 private:
@@ -81,8 +94,8 @@ private:
   QtGui::Molecule* m_molecule;
   Core::BasisSet* m_basis;
 
-  GaussianSetConcurrent* m_concurrent;
-  SlaterSetConcurrent* m_concurrent2;
+  GaussianSetConcurrent* m_gaussianConcurrent;
+  SlaterSetConcurrent* m_slaterConcurrent;
 
   Core::Cube* m_cube;
   std::vector<Core::Cube*> m_cubes;

@@ -17,7 +17,11 @@
 #ifndef AVOGADRO_QTPLUGINS_SURFACEDIALOG_H
 #define AVOGADRO_QTPLUGINS_SURFACEDIALOG_H
 
+#include <QtCore/QStringList>
 #include <QtWidgets/QDialog>
+
+#include "surfaces.h"
+// for the enum
 
 namespace Ui {
 class SurfaceDialog;
@@ -40,18 +44,23 @@ public:
   ~SurfaceDialog() override;
 
   void setupBasis(int numElectrons, int numMOs);
-  void setupCube(int numCubes);
+  void setupCubes(QStringList cubeNames);
   void reenableCalculateButton();
+
+  Surfaces::Type surfaceType();
+  int surfaceIndex();
+  float isosurfaceValue();
+  float resolution();
 
 public slots:
 
 protected slots:
+  void surfaceComboChanged(int n);
   void resolutionComboChanged(int n);
   void calculateClicked();
 
 signals:
-  void calculateClickedSignal(int index, float isosurfaceValue,
-                              float resolutionStepSize);
+  void calculateClickedSignal();
 
 private:
   Ui::SurfaceDialog* m_ui;
