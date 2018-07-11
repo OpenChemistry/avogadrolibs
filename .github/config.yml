@@ -5,6 +5,7 @@
 # Comment to be posted to on first time issues
 newIssueWelcomeComment: >
   Thanks for opening your first issue here! Please try to include example files and screenshots if possible.
+  If you're looking for support, please post on our forum: https://discuss.avogadro.cc/
 
 # Configuration for new-pr-welcome - https://github.com/behaviorbot/new-pr-welcome
 
@@ -16,4 +17,4 @@ newPRWelcomeComment: >
 
 # Comment to be posted to on pull requests merged by a first time user
 firstPRMergeComment: >
-  Congrats on merging your first pull request! 🎉 Thanks for making Avogadro better!
+  Congrats on merging your first pull request! 🎉 Thanks for making Avogadro better for everyone!
