@@ -34,6 +34,7 @@ set(HEADERS
   molecule.h
   mutex.h
   nameatomtyper.h
+  residue.h
   ringperceiver.h
   slaterset.h
   slatersettools.h
@@ -62,6 +63,7 @@ set(SOURCES
   molecule.cpp
   mutex.cpp
   nameatomtyper.cpp
+  residue.cpp
   ringperceiver.cpp
   slaterset.cpp
   slatersettools.cpp
