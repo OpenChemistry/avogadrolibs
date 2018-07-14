@@ -19,6 +19,7 @@
 #include "fileformatscript.h"
 
 #include <avogadro/io/fileformatmanager.h>
+#include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QCoreApplication>
@@ -57,38 +58,14 @@ void ScriptFileFormats::refreshFileFormats()
   qDeleteAll(m_formats);
   m_formats.clear();
 
-  // List of directories to check.
-  /// @todo port to use scriptloader.cpp methods
-  QStringList dirs;
-
-  // add the default paths
-  QStringList stdPaths =
-    QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation);
-  foreach (const QString& dirStr, stdPaths) {
-    QString path = dirStr + "/formatScripts";
-    QDir dir(path);
-    if (dir.exists() && dir.isReadable())
-      dirs << path;
-  }
-
-  dirs << QCoreApplication::applicationDirPath() + "/../" +
-            QtGui::Utilities::libraryDirectory() +
-            "/avogadro2/scripts/formatScripts";
-
-  foreach (const QString& dirStr, dirs) {
-    qDebug() << "Checking for file format scripts in" << dirStr;
-    QDir dir(dirStr);
-    if (dir.exists() && dir.isReadable()) {
-      foreach (const QFileInfo& file,
-               dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot)) {
-        QString filePath = file.absoluteFilePath();
-        FileFormatScript* format = new FileFormatScript(filePath);
-        if (format->isValid())
-          m_formats.push_back(format);
-        else
-          delete format;
-      }
-    }
+  QMap<QString, QString> scriptPaths =
+    QtGui::ScriptLoader::scriptList("formatScripts");
+  foreach (const QString& filePath, scriptPaths) {
+    FileFormatScript* format = new FileFormatScript(filePath);
+    if (format->isValid())
+      m_formats.push_back(format);
+    else
+      delete format;
   }
 
   registerFileFormats();
