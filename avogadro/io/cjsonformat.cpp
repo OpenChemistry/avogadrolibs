@@ -52,13 +52,9 @@ using Core::Variant;
 using Core::split;
 using Core::lexicalCast;
 
-CjsonFormat::CjsonFormat()
-{
-}
+CjsonFormat::CjsonFormat() = default;
 
-CjsonFormat::~CjsonFormat()
-{
-}
+CjsonFormat::~CjsonFormat() = default;
 
 bool CjsonFormat::testEmpty(Value& value, const std::string& key,
                             bool writeError)
