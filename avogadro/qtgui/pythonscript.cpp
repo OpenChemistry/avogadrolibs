@@ -19,6 +19,7 @@
 #include "avogadropython.h"
 
 #include <QtCore/QDebug>
+#include <QtCore/QLocale>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
 
@@ -70,6 +71,10 @@ QByteArray PythonScript::execute(const QStringList& args,
   QStringList realArgs(args);
   if (m_debug)
     realArgs.prepend("--debug");
+
+  // Add the global language / locale to *all* calls
+  realArgs.append("--lang");
+  realArgs.append(QLocale::system().name());
 
   // Start script
   realArgs.prepend(m_scriptFilePath);

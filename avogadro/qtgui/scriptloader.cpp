@@ -134,6 +134,9 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
   foreach (const QString& filePath, fileList) {
     QString displayName;
     if (queryProgramName(filePath, displayName)) {
+      if (displayName.isEmpty())
+        continue; // don't add empty menu items
+
       // Might be another script with the same name
       if (scriptList.contains(displayName)) {
         // check the last-modified-time of the existing case
