@@ -18,9 +18,6 @@
 #include "molecule.h"
 #include "residuedata.h"
 
-#include <algorithm>
-#include <cassert>
-
 namespace Avogadro {
 namespace Core {
 
@@ -49,42 +46,13 @@ Residue::Residue(const Residue& other)
 
 Residue& Residue::operator=(Residue other)
 {
-  using std::swap;
-  swap(*this, other);
+  m_residueName = other.m_residueName;
+  m_residueId = other.m_residueId;
+  m_atomNameMap = other.m_atomNameMap;
   return *this;
 }
 
 Residue::~Residue() {}
-
-std::string Residue::residueName()
-{
-  return m_residueName;
-}
-
-void Residue::setResidueName(std::string& name)
-{
-  m_residueName = name;
-}
-
-Index Residue::residueId()
-{
-  return m_residueId;
-}
-
-void Residue::setResidueId(Index& number)
-{
-  m_residueId = number;
-}
-
-char Residue::chainId()
-{
-  return m_chainId;
-}
-
-void Residue::setChainId(char& id)
-{
-  m_chainId = id;
-}
 
 void Residue::addResidueAtom(std::string& name, Atom& atom)
 {
