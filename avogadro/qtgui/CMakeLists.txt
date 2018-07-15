@@ -13,8 +13,8 @@ else()
   add_definitions(-DAvogadroLibs_LIB_DIR=\"${INSTALL_LIBRARY_DIR}\")
 endif()
 
-if(USE_LIBSPG)
-  add_definitions(-DUSE_LIBSPG)
+if(USE_SPGLIB)
+  add_definitions(-DUSE_SPGLIB)
 endif()
 
 # Find python2 for input generator scripts:
