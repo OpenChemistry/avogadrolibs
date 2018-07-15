@@ -43,10 +43,10 @@ using Core::CrystalTools;
 using Core::Cube;
 using Core::Elements;
 using Core::GaussianSet;
-using Core::Molecule;
-using Core::Variant;
-using Core::split;
 using Core::lexicalCast;
+using Core::Molecule;
+using Core::split;
+using Core::Variant;
 
 CjsonFormat::CjsonFormat() = default;
 
@@ -55,7 +55,6 @@ CjsonFormat::~CjsonFormat() = default;
 bool setJsonKey(json& j, Molecule& m, const std::string& key)
 {
   if (j.count(key) && j.find(key)->is_string()) {
-    std::cout << "Setting " << key << " -> " << j.value(key, "undefined") << std::endl;
     m.setData(key, j.value(key, "undefined"));
     return true;
   }
@@ -69,11 +68,10 @@ bool isNumericArray(json& j)
     for (unsigned int i = 0; i < j.size(); ++i) {
       json v = j[i];
       if (!v.is_number()) {
-        std::cout << "Not a number at " << i << " in " << j << std::endl;
         return false;
       }
     }
-  return true;
+    return true;
   }
   return false;
 }
@@ -84,11 +82,10 @@ bool isBooleanArray(json& j)
     for (unsigned int i = 0; i < j.size(); ++i) {
       json v = j[i];
       if (!v.is_boolean()) {
-        std::cout << "Not a boolean at " << i << " in " << j << std::endl;
         return false;
       }
     }
-  return true;
+    return true;
   }
   return false;
 }
@@ -101,7 +98,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     return false;
   }
 
-  if (!jsonRoot.is_object())  {
+  if (!jsonRoot.is_object()) {
     appendError("Error: Input is not a JSON object.");
     return false;
   }
@@ -144,8 +141,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
   if (isNumericArray(atomicCoords) && atomicCoords.size() == 3 * atomCount) {
     for (Index i = 0; i < atomCount; ++i) {
       auto a = molecule.atom(i);
-      a.setPosition3d(Vector3(atomicCoords[3 * i],
-                              atomicCoords[3 * i + 1],
+      a.setPosition3d(Vector3(atomicCoords[3 * i], atomicCoords[3 * i + 1],
                               atomicCoords[3 * i + 2]));
     }
   }
@@ -179,10 +175,10 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
   json unitCell = jsonRoot["unit cell"];
   if (!unitCell.is_object())
     unitCell = jsonRoot["unitCell"];
-  if (unitCell.is_object() && unitCell["a"].is_number()
-      && unitCell["b"].is_number() && unitCell["c"].is_number()
-      && unitCell["alpha"].is_number() && unitCell["beta"].is_number()
-      && unitCell["gamma"].is_number()) {
+  if (unitCell.is_object() && unitCell["a"].is_number() &&
+      unitCell["b"].is_number() && unitCell["c"].is_number() &&
+      unitCell["alpha"].is_number() && unitCell["beta"].is_number() &&
+      unitCell["gamma"].is_number()) {
     Real a = static_cast<Real>(unitCell["a"]);
     Real b = static_cast<Real>(unitCell["b"]);
     Real c = static_cast<Real>(unitCell["c"]);
@@ -196,17 +192,16 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
   json fractional = atoms["coords"]["3d fractional"];
   if (!fractional.is_array())
     fractional = atoms["coords"]["3dFractional"];
-  if (fractional.is_array() && fractional.size() == 3 * atomCount
-      && isNumericArray(fractional) && molecule.unitCell() ) {
-      Array<Vector3> fcoords;
-      fcoords.reserve(atomCount);
-      for (Index i = 0; i < atomCount; ++i) {
-        fcoords.push_back(
-          Vector3(static_cast<Real>(fractional[i * 3 + 0]),
-                  static_cast<Real>(fractional[i * 3 + 1]),
-                  static_cast<Real>(fractional[i * 3 + 2])));
-      }
-      CrystalTools::setFractionalCoordinates(molecule, fcoords);
+  if (fractional.is_array() && fractional.size() == 3 * atomCount &&
+      isNumericArray(fractional) && molecule.unitCell()) {
+    Array<Vector3> fcoords;
+    fcoords.reserve(atomCount);
+    for (Index i = 0; i < atomCount; ++i) {
+      fcoords.push_back(Vector3(static_cast<Real>(fractional[i * 3 + 0]),
+                                static_cast<Real>(fractional[i * 3 + 1]),
+                                static_cast<Real>(fractional[i * 3 + 2])));
+    }
+    CrystalTools::setFractionalCoordinates(molecule, fcoords);
   }
 
   // Basis set is optional, if present read it in.
@@ -296,7 +291,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
         if (isNumericArray(arr)) {
           Array<Vector3> mode;
           mode.resize(arr.size() / 3);
-          double *ptr = &mode[0][0];
+          double* ptr = &mode[0][0];
           for (unsigned int j = 0; j < arr.size(); ++j) {
             *(ptr++) = static_cast<double>(arr[j]);
           }
