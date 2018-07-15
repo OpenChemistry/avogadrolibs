@@ -190,8 +190,11 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
   // Selection is optional, but if present should be loaded.
   json selection = atoms["selected"];
   if (isBooleanArray(selection) && selection.size() == atomCount)
-      for (Index i = 0; i < atomCount; ++i)
-        molecule.setAtomSelected(i, selection[i]);
+    for (Index i = 0; i < atomCount; ++i)
+      molecule.setAtomSelected(i, selection[i]);
+  else if (isNumericArray(selection) && selection.size() == atomCount)
+    for (Index i = 0; i < atomCount; ++i)
+      molecule.setAtomSelected(i, selection[i] != 0);
 
   // Bonds are optional, but if present should be loaded.
   json bonds = jsonRoot["bonds"];
@@ -302,6 +305,44 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     }
 
     molecule.setBasisSet(basis);
+  }
+
+  // See if there is any vibration data, load it if so.
+  json vibrations = jsonRoot["vibrations"];
+  if (vibrations.is_object()) {
+    json frequencies = vibrations["frequencies"];
+    if (isNumericArray(frequencies)) {
+      Array<double> freqs;
+      for (unsigned int i = 0; i < frequencies.size(); ++i) {
+        freqs.push_back(static_cast<double>(frequencies[i]));
+      }
+      molecule.setVibrationFrequencies(freqs);
+    }
+    json intensities = vibrations["intensities"];
+    if (isNumericArray(intensities)) {
+      Array<double> intens;
+      for (unsigned int i = 0; i < intensities.size(); ++i) {
+        intens.push_back(static_cast<double>(intensities[i]));
+      }
+      molecule.setVibrationIntensities(intens);
+    }
+    json displacements = vibrations["eigenVectors"];
+    if (displacements.is_array()) {
+      Array<Array<Vector3>> disps;
+      for (unsigned int i = 0; i < displacements.size(); ++i) {
+        json arr = displacements[i];
+        if (isNumericArray(arr)) {
+          Array<Vector3> mode;
+          mode.resize(arr.size() / 3);
+          double *ptr = &mode[0][0];
+          for (unsigned int j = 0; j < arr.size(); ++j) {
+            *(ptr++) = static_cast<double>(arr[j]);
+          }
+          disps.push_back(mode);
+        }
+      }
+      molecule.setVibrationLx(disps);
+    }
   }
 
   return true;
