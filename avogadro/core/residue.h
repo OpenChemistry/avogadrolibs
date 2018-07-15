@@ -55,19 +55,22 @@ public:
 
   virtual ~Residue();
 
-  std::string residueName();
-  void setResidueName(std::string& name);
+  inline std::string residueName() { return m_residueName; }
 
-  Index residueId();
-  void setResidueId(Index& number);
+  inline void setResidueName(std::string& name) { m_residueName = name; }
 
-  char chainId();
-  void setChainId(char& id);
+  inline Index residueId() { return m_residueId; }
+
+  inline void setResidueId(Index& number) { m_residueId = number; }
+
+  inline char chainId() { return m_chainId; }
+
+  inline void setChainId(char& id) { m_chainId = id; }
 
   /** Adds an atom to the residue class */
   void addResidueAtom(std::string& name, Atom& atom);
 
-  /** Returns a vector of atoms in the */
+  /** Returns a vector containing the atoms added to the residue */
   std::vector<Atom> residueAtoms();
 
   /** Sets bonds to atoms in the residue based on data from residuedata header
