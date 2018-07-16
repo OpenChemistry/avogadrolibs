@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 if [[ $TASKS == "clang-format" ]]; then
   cd $TRAVIS_BUILD_DIR
