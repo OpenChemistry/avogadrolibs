@@ -3,7 +3,7 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
-if(USE_LIBSPG)
+if(USE_SPGLIB)
   find_package(Spglib REQUIRED)
   include_directories(SYSTEM ${SPGLIB_INCLUDE_DIR})
 endif()
@@ -72,7 +72,7 @@ set(SOURCES
   version.cpp
 )
 
-if(USE_LIBSPG)
+if(USE_SPGLIB)
   list(APPEND HEADERS avospglib.h)
   list(APPEND SOURCES avospglib.cpp)
 endif()
