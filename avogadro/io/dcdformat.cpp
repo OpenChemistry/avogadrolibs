@@ -80,11 +80,24 @@ DcdFormat::~DcdFormat() {}
 
 bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
-  char endian = '>', buff[BUFSIZ], fmt[BUFSIZ], raw[84];
+  /** Endian type, Buffer and Format char containers for unpacking and storing
+   * data using struct library */
+  char endian = '>';
+  char buff[BUFSIZ];
+  char fmt[BUFSIZ];
+
+  /** Variables to store various components from the binary data unpacked using
+   * the struct library */
+  char raw[84];
   char* remarks;
   double DELTA;
-  int magic, charmm, NSET, ISTART, NSAVC, NAMNF, NTITLE, lenRemarks, NATOMS,
-    blockSize;
+  int magic;
+  int charmm;
+  int NAMNF;
+  int NTITLE;
+  int lenRemarks;
+  int NATOMS;
+  int blockSize;
 
   // Determining size of file
   inStream.seekg(0, inStream.end);
@@ -114,29 +127,29 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // Determining whether the trajectory file is from CHARMM or not
-  if (*((int*)(raw + 80)) != 0) {
+  if (*(reinterpret_cast<int*>(raw + 80)) != 0) {
     charmm = DCD_IS_CHARMM;
-    if (*((int*)(raw + 44)) != 0)
+    if (*(reinterpret_cast<int*>(raw + 44)) != 0)
       charmm |= DCD_HAS_EXTRA_BLOCK;
 
-    if (*((int*)(raw + 48)) == 1)
+    if (*(reinterpret_cast<int*>(raw + 48)) == 1)
       charmm |= DCD_HAS_4DIMS;
   } else {
     charmm = 0;
   }
 
   // number of fixed atoms
-  NAMNF = *((int*)(raw + 36));
+  NAMNF = *(reinterpret_cast<int*>(raw + 36));
 
   // DELTA (timestep) is stored as a double with X-PLOR but as a float with
   // CHARMM
-  if ((charmm)&DCD_IS_CHARMM) {
+  if (charmm & DCD_IS_CHARMM) {
     float ftmp;
-    ftmp = *((float*)(raw + 40));
+    ftmp = *(reinterpret_cast<float*>(raw + 40));
 
-    DELTA = (double)ftmp;
+    DELTA = static_cast<double>(ftmp);
   } else {
-    (DELTA) = *((double*)(raw + 40));
+    (DELTA) = *(reinterpret_cast<double*>(raw + 40));
   }
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
@@ -153,7 +166,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     inStream.read(buff, struct_calcsize(fmt));
     struct_unpack(buff, fmt, &NTITLE);
     lenRemarks = NTITLE * 80;
-    remarks = (char*)malloc(lenRemarks);
+    remarks = reinterpret_cast<char*>(malloc(lenRemarks));
     snprintf(fmt, sizeof(fmt), "%c%ds", endian, lenRemarks);
     inStream.read(buff, struct_calcsize(fmt));
     struct_unpack(buff, fmt, remarks);
@@ -188,7 +201,8 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   if (NAMNF != 0) {
-    int** FREEINDEXES = (int**)calloc((NATOMS - NAMNF), sizeof(int));
+    int** FREEINDEXES =
+      reinterpret_cast<int**>(calloc((NATOMS - NAMNF), sizeof(int)));
     if (*FREEINDEXES == NULL) {
       appendError("MALLOC failed.");
       return false;
@@ -254,7 +268,10 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Reading the atom coordinates
   int formatint[6];
-  float cx[NATOMS], cy[NATOMS], cz[NATOMS];
+  Array<float> cx, cy, cz;
+  cx.reserve(NATOMS);
+  cy.reserve(NATOMS);
+  cz.reserve(NATOMS);
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
   inStream.read(buff, struct_calcsize(fmt));
