@@ -22,30 +22,25 @@ target_link_libraries(QuantumInput LINK_PRIVATE AvogadroIO AvogadroMoleQueue)
 
 set(_prefix "${AvogadroLibs_SOURCE_DIR}/../avogadrogenerators")
 # Look in parallel directory for the avogadrogenerators repository.
-if(EXISTS "${_prefix}/.avogadrogenerators")
+if(EXISTS "${_prefix}/generators.cmake")
   # Bundled generator scripts,
-  set(input_generators
-    ${_prefix}/apbs.py
-    ${_prefix}/dalton.py
-    ${_prefix}/gamessuk.py
-    ${_prefix}/gaussian.py
-    ${_prefix}/molpro.py
-    ${_prefix}/mopac.py
-    ${_prefix}/nwchem.py
-    ${_prefix}/orca.py
-    ${_prefix}/qchem.py
-    ${_prefix}/terachem.py
-  )
+  include("${_prefix}/generators.cmake")
+  message("We have ${input_generators}")
+  unset(_generators)
+  foreach(gen ${input_generators})
+    list(APPEND _generators "${_prefix}/${gen}")
+  endforeach()
+  message("We have ${_generators}")
 
   option(INSTALL_TEST_INPUT_GENERATOR
     "Install a dummy input generator that is used to test generator scripts."
     OFF)
 
   if(INSTALL_TEST_INPUT_GENERATOR)
-    list(APPEND input_generators ${_prefix}/inputgeneratortest.py)
+    list(APPEND _generators "${_prefix}/${test_generator}")
   endif()
 
-  install(PROGRAMS ${input_generators}
+  install(PROGRAMS ${_generators}
     DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/inputGenerators/")
 else()
   message("Avogadro Generators not found at ${_prefix}!")
