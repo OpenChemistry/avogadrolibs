@@ -209,12 +209,19 @@ public:
    * Accessors for the various properties of the GaussianSet.
    */
   std::vector<int>& symmetry() { return m_symmetry; }
+  std::vector<int> symmetry() const { return m_symmetry; }
   std::vector<unsigned int>& atomIndices() { return m_atomIndices; }
+  std::vector<unsigned int> atomIndices() const { return m_atomIndices; }
   std::vector<unsigned int>& moIndices() { return m_moIndices; }
+  std::vector<unsigned int> moIndices() const { return m_moIndices; }
   std::vector<unsigned int>& gtoIndices() { return m_gtoIndices; }
+  std::vector<unsigned int> gtoIndices() const { return m_gtoIndices; }
   std::vector<unsigned int>& cIndices() { return m_cIndices; }
+  std::vector<unsigned int> cIndices() const { return m_cIndices; }
   std::vector<double>& gtoA() { return m_gtoA; }
+  std::vector<double> gtoA() const { return m_gtoA; }
   std::vector<double>& gtoC() { return m_gtoC; }
+  std::vector<double> gtoC() const { return m_gtoC; }
   std::vector<double>& gtoCN()
   {
     initCalculation();
