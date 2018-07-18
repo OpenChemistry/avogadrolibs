@@ -117,8 +117,15 @@ void Surfaces::surfacesActivated()
 
   if (m_basis) {
     // we have quantum data, set up the dialog accordingly
+    auto gaussian = dynamic_cast<Core::GaussianSet*>(m_basis);
+    bool beta = false;
+    if (gaussian) {
+      auto b = gaussian->moMatrix(GaussianSet::Beta);
+      if (b.rows() > 0 && b.cols() > 0)
+        beta = true;
+    }
     m_dialog->setupBasis(m_basis->electronCount(),
-                         m_basis->molecularOrbitalCount());
+                         m_basis->molecularOrbitalCount(), beta);
   }
   if (m_cubes.size() > 0) {
     QStringList cubeNames;
@@ -215,7 +222,8 @@ void Surfaces::calculateQM()
   else if (type == MolecularOrbital) {
     progressText = tr("Calculating molecular orbital %L1").arg(index);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index);
+      m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index,
+                                                      m_dialog->beta());
     } else {
       m_slaterConcurrent->calculateMolecularOrbital(m_cube, index);
     }
