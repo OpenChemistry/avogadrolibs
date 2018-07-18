@@ -257,6 +257,17 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
         for (unsigned int i = 0; i < moCoefficients.size(); ++i)
           coeffs.push_back(static_cast<double>(moCoefficients[i]));
         basis->setMolecularOrbitals(coeffs);
+      } else if (isNumericArray(moCoefficientsA) &&
+                 isNumericArray(moCoefficientsB) &&
+                 moCoefficientsA.size() == moCoefficientsB.size()) {
+        std::vector<double> coeffsA;
+        std::vector<double> coeffsB;
+        for (unsigned int i = 0; i < moCoefficientsA.size(); ++i) {
+          coeffsA.push_back(static_cast<double>(moCoefficientsA[i]));
+          coeffsB.push_back(static_cast<double>(moCoefficientsB[i]));
+        }
+        basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha);
+        basis->setMolecularOrbitals(coeffsB, BasisSet::Beta);
       } else {
         std::cout << "No orbital cofficients found!" << std::endl;
       }
@@ -387,13 +398,23 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     // Now get the MO matrix, potentially other things. Need to get a handle on
     // when we have just one (paired), or two (alpha and beta) to write.
     auto moMatrix = gaussian->moMatrix();
+    auto betaMatrix = gaussian->moMatrix(BasisSet::Beta);
     json moCoefficients;
-    for (int j = 0; j < moMatrix.cols(); ++j) {
-      for (int i = 0; i < moMatrix.rows(); ++i) {
+    for (int j = 0; j < moMatrix.cols(); ++j)
+      for (int i = 0; i < moMatrix.rows(); ++i)
         moCoefficients.push_back(moMatrix(i, j));
-      }
+
+    if (betaMatrix.cols() > 0 && betaMatrix.rows() > 0) {
+      json moBeta;
+      for (int j = 0; j < moMatrix.cols(); ++j)
+        for (int i = 0; i < moMatrix.rows(); ++i)
+          moBeta.push_back(moMatrix(i, j));
+
+      root["orbitals"]["alpha"] = moCoefficients;
+      root["orbitals"]["beta"] = moCoefficients;
+    } else {
+      root["orbitals"]["moCoefficients"] = moCoefficients;
     }
-    root["orbitals"]["moCoefficients"] = moCoefficients;
     root["orbitals"]["electronCount"] = gaussian->electronCount();
   }
 
