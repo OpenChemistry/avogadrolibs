@@ -249,7 +249,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     json orbitals = jsonRoot["orbitals"];
     if (orbitals.is_object() && basis->isValid()) {
       basis->setElectronCount(orbitals["electronCount"]);
-      json moCoefficients = orbitals["alpha"];
+      json moCoefficients = orbitals["moCoefficients"];
       json moCoefficientsA = orbitals["alpha"];
       json moCoefficientsB = orbitals["beta"];
       if (isNumericArray(moCoefficients)) {
