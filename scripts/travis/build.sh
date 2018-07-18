@@ -31,4 +31,5 @@ else
     ..
   make -j2
   ./avogadrolibs/bin/AvogadroTests
+  ./avogadrolibs/bin/AvogadroIOTests
 fi
