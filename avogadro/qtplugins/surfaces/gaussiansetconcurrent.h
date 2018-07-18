@@ -50,7 +50,8 @@ public:
 
   void setMolecule(Core::Molecule* mol);
 
-  bool calculateMolecularOrbital(Core::Cube* cube, unsigned int state);
+  bool calculateMolecularOrbital(Core::Cube* cube, unsigned int state,
+                                 bool beta = false);
   bool calculateElectronDensity(Core::Cube* cube);
   bool calculateSpinDensity(Core::Cube* cube);
 

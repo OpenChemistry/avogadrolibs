@@ -43,13 +43,24 @@ public:
   SurfaceDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
   ~SurfaceDialog() override;
 
-  void setupBasis(int numElectrons, int numMOs);
+  void setupBasis(int numElectrons, int numMOs, bool beta);
   void setupCubes(QStringList cubeNames);
   void reenableCalculateButton();
 
   Surfaces::Type surfaceType();
+
+  /**
+   * This holds the value of the molecular orbital at present.
+   */
   int surfaceIndex();
+
+  /**
+   * Only relevant for electronic structure, was the beta orbital selected?
+   */
+  bool beta();
+
   float isosurfaceValue();
+
   float resolution();
 
 public slots:
