@@ -11,7 +11,7 @@
 
 namespace Avogadro {
 namespace QtGui {
-class RWMolecule;
+class Molecule;
 }
 
 class LennardJones : public EnergyCalculator
@@ -22,23 +22,21 @@ public:
   explicit LennardJones(QObject* parent_ = 0);
   ~LennardJones();
 
-  virtual Real calculateEnergy() override;
-  virtual Real calculateEnergy(
-    const Core::Array<Vector3>& positions) override;
+  virtual Real calculateEnergy(const Core::Array<Vector3>& positions) override;
 
-  virtual void calculateGradients() override;
-  virtual void calculateGradients(
-    Core::Array<Vector3>& positions,
+/*
+  virtual void calculateGradients(Core::Array<Vector3>& positions,
     Core::Array<Vector3>& gradients) override;
+*/
 
 public slots:
   /**
    * Called when the current molecule changes.
    */
-  virtual void setMolecule(QtGui::RWMolecule* mol) override;
+  virtual void setMolecule(QtGui::Molecule* mol) override;
 
 protected:
-  QtGui::RWMolecule* m_molecule;
+  QtGui::Molecule* m_molecule;
   Eigen::MatrixXd m_radii;
   bool m_vdw;
   Real m_depth;

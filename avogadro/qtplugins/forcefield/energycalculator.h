@@ -14,7 +14,7 @@
 
 namespace Avogadro {
 namespace QtGui {
-class RWMolecule;
+class Molecule;
 }
 
 class EnergyCalculator
@@ -26,7 +26,7 @@ public slots:
   /**
    * Called when the current molecule changes.
    */
-  virtual void setMolecule(QtGui::RWMolecule* mol) = 0;
+  virtual void setMolecule(QtGui::Molecule* mol) = 0;
 
 public:
   EnergyCalculator(QObject* parent_ = 0)
@@ -34,34 +34,21 @@ public:
   ~EnergyCalculator() {}
 
   /**
-   * @return energy in kJ/mol for the current Molecule
-   */
-  virtual Real calculateEnergy() = 0;
-  /**
    * @return energy in kJ/mol for the current Molecule and supplied positions
    */
   virtual Real calculateEnergy(const Core::Array<Vector3>& positions) = 0;
 
-  virtual Real value(const TVector& x) override
-  {
-//    m_positions.data() = x.data();
-    return calculateEnergy(m_positions);
-  }
+  virtual Real value(const TVector& x) override;
 
   /**
-   * @return gradients for the current molecule
-   */
-  virtual Core::Array<Vector3> calculateGradients() = 0;
-  /**
-   * @return gradients for the current molecule at the supplied positions
-   */
-  virtual Core::Array<Vector3> calculateGradients(
-    Core::Array<Vector3>& positions) = 0;
+   * gradients for the current molecule at the supplied positions
+  virtual void calculateGradients(Core::Array<Vector3>& positions,
+                                  Core::Array<Vector3>& gradients);
+                                  */
 
   virtual bool setConfiguration(Core::VariantMap& config) { return true; }
 
-  virtual Core::VariantMap& configuration() { }
-
+protected:
   Core::Array<Vector3> m_positions;
   Core::Array<Vector3> m_gradients;
 };

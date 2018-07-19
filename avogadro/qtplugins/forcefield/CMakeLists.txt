@@ -3,6 +3,7 @@ include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/io/")
 
 # Extension
 set(forcefield_srcs
+  energycalculator.cpp
   forcefield.cpp
   lennardjones.cpp
 )
@@ -24,5 +25,5 @@ set(forcefields
   scripts/mmff.py
 )
 
-install(PROGRAMS ${forcefields}
-DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/forcefields/")
+#install(PROGRAMS ${forcefields}
+#DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/forcefields/")
