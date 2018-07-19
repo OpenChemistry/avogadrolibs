@@ -250,22 +250,21 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     if (orbitals.is_object() && basis->isValid()) {
       basis->setElectronCount(orbitals["electronCount"]);
       json moCoefficients = orbitals["moCoefficients"];
-      json moCoefficientsA = orbitals["alpha"];
-      json moCoefficientsB = orbitals["beta"];
+      json moCoefficientsA = orbitals["alphaCoefficients"];
+      json moCoefficientsB = orbitals["betaCoefficients"];
       if (isNumericArray(moCoefficients)) {
         std::vector<double> coeffs;
         for (unsigned int i = 0; i < moCoefficients.size(); ++i)
           coeffs.push_back(static_cast<double>(moCoefficients[i]));
         basis->setMolecularOrbitals(coeffs);
       } else if (isNumericArray(moCoefficientsA) &&
-                 isNumericArray(moCoefficientsB) &&
-                 moCoefficientsA.size() == moCoefficientsB.size()) {
+                 isNumericArray(moCoefficientsB)) {
         std::vector<double> coeffsA;
-        std::vector<double> coeffsB;
-        for (unsigned int i = 0; i < moCoefficientsA.size(); ++i) {
+        for (unsigned int i = 0; i < moCoefficientsA.size(); ++i)
           coeffsA.push_back(static_cast<double>(moCoefficientsA[i]));
+        std::vector<double> coeffsB;
+        for (unsigned int i = 0; i < moCoefficientsB.size(); ++i)
           coeffsB.push_back(static_cast<double>(moCoefficientsB[i]));
-        }
         basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha);
         basis->setMolecularOrbitals(coeffsB, BasisSet::Beta);
       } else {
@@ -410,8 +409,8 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
         for (int i = 0; i < moMatrix.rows(); ++i)
           moBeta.push_back(moMatrix(i, j));
 
-      root["orbitals"]["alpha"] = moCoefficients;
-      root["orbitals"]["beta"] = moCoefficients;
+      root["orbitals"]["alphaCoefficients"] = moCoefficients;
+      root["orbitals"]["betaCoefficients"] = moBeta;
     } else {
       root["orbitals"]["moCoefficients"] = moCoefficients;
     }
