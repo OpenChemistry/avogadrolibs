@@ -19,6 +19,7 @@
 
 #include "gaussiansetconcurrent.h"
 #include "slatersetconcurrent.h"
+#include "edtsurface.h"
 
 #include <avogadro/core/variant.h>
 
@@ -174,8 +175,8 @@ void Surfaces::calculateSurface()
 
 void Surfaces::calculateEDT()
 {
-  // pass the molecule to the EDT, plus the surface type
-  // get back a Cube object in m_cube
+  EDTSurface edt;
+  m_cube = edt.EDTCube(*m_molecule, 0);
 }
 
 void Surfaces::calculateQM()

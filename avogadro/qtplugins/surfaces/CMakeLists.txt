@@ -1,4 +1,5 @@
 set(surfaces_srcs
+  edtsurface.cpp
   gaussiansetconcurrent.cpp
   slatersetconcurrent.cpp
   surfacedialog.cpp
