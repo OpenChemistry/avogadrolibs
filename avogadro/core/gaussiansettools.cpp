@@ -59,7 +59,7 @@ double GaussianSetTools::calculateMolecularOrbital(const Vector3& position,
 
   vector<double> values(calculateValues(position));
 
-  const MatrixX& matrix = m_basis->moMatrix();
+  const MatrixX& matrix = m_basis->moMatrix(m_type);
   int matrixSize(static_cast<int>(matrix.rows()));
 
   // Now calculate the value of the density at this point in space
