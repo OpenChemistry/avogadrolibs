@@ -19,6 +19,7 @@
 
 #include "gaussiansetconcurrent.h"
 #include "slatersetconcurrent.h"
+#include "edtsurface.h"
 
 // Header only, but duplicte symbols if included globally...
 namespace {
@@ -190,8 +191,8 @@ void Surfaces::calculateSurface()
 
 void Surfaces::calculateEDT()
 {
-  // pass the molecule to the EDT, plus the surface type
-  // get back a Cube object in m_cube
+  EDTSurface edt;
+  m_cube = edt.EDTCube(*m_molecule, 0);
 }
 
 void Surfaces::calculateQM()
