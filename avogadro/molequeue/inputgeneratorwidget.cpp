@@ -48,8 +48,12 @@ namespace MoleQueue {
 using ::MoleQueue::JobObject;
 
 InputGeneratorWidget::InputGeneratorWidget(QWidget* parent_)
-  : QWidget(parent_), m_ui(new Ui::InputGeneratorWidget), m_molecule(nullptr),
-    m_updatePending(false), m_batchMode(false), m_inputGenerator(QString())
+  : QWidget(parent_)
+  , m_ui(new Ui::InputGeneratorWidget)
+  , m_molecule(nullptr)
+  , m_updatePending(false)
+  , m_batchMode(false)
+  , m_inputGenerator(QString())
 {
   m_ui->setupUi(this);
   m_ui->warningTextButton->setIcon(QIcon::fromTheme("dialog-warning"));
@@ -318,9 +322,8 @@ void InputGeneratorWidget::computeClicked()
   job.setProgram(m_inputGenerator.displayName());
   job.setDescription(description);
   job.setValue("numberOfCores", numCores);
-  for (QMap<QString, QTextEdit *>::const_iterator
-         it = m_textEdits.constBegin(),
-         itEnd = m_textEdits.constEnd();
+  for (QMap<QString, QTextEdit*>::const_iterator it = m_textEdits.constBegin(),
+                                                 itEnd = m_textEdits.constEnd();
        it != itEnd; ++it) {
     QString fileName = it.key();
     if (fileName != mainFileName)
@@ -755,6 +758,136 @@ void InputGeneratorWidget::buildOptionGui()
       addOptionRow(tr("Basis"), userOptions.take("Basis"));
   }
 
+  // Units/basis next. Combine into one row if both present.
+  bool hasUnits = userOptions.contains("Units");
+  bool hasDimensions = userOptions.contains("Dimensions");
+  if (hasUnits && hasDimensions) {
+    QWidget* theoryWidget = createOptionWidget(userOptions.take("Units"));
+    QWidget* basisWidget = createOptionWidget(userOptions.take("Dimensions"));
+    QHBoxLayout* hbox = new QHBoxLayout;
+    if (theoryWidget) {
+      theoryWidget->setObjectName("Units");
+      hbox->addWidget(theoryWidget);
+      m_widgets.insert("Units", theoryWidget);
+    }
+    if (basisWidget) {
+      basisWidget->setObjectName("Dimensions");
+      hbox->addWidget(basisWidget);
+      m_widgets.insert("Dimensions", basisWidget);
+    }
+    hbox->addStretch();
+
+    form->addRow(tr("Units:"), hbox);
+  } else {
+    if (hasUnits)
+      addOptionRow(tr("Units"), userOptions.take("Units"));
+    if (hasDimensions)
+      addOptionRow(tr("Dimensions"), userOptions.take("Dimensions"));
+  }
+
+  // Ensemble block
+  bool hasEnsemble = userOptions.contains("Ensemble");
+  bool hasTemperature = userOptions.contains("Temperature");
+  if (hasEnsemble && hasTemperature) {
+    QWidget* ensembleWidget = createOptionWidget(userOptions.take("Ensemble"));
+    QWidget* temperatureWidget =
+      createOptionWidget(userOptions.take("Temperature"));
+    QHBoxLayout* hbox = new QHBoxLayout;
+    if (ensembleWidget) {
+      ensembleWidget->setObjectName("Ensemble");
+      hbox->addWidget(ensembleWidget);
+      m_widgets.insert("Ensemble", ensembleWidget);
+    }
+    if (temperatureWidget) {
+      temperatureWidget->setObjectName("Temperature");
+      hbox->addWidget(temperatureWidget);
+      m_widgets.insert("Temperature", temperatureWidget);
+    }
+    hbox->addStretch();
+
+    form->addRow(tr("Ensemble Details:"), hbox);
+  }
+
+  // Boundary indices
+  bool hasXBoundaryType = userOptions.contains("XBoundaryType");
+  bool hasYBoundaryType = userOptions.contains("YBoundaryType");
+  bool hasZBoundaryType = userOptions.contains("ZBoundaryType");
+  bool hasXReplicate = userOptions.contains("XReplicate");
+  bool hasYReplicate = userOptions.contains("YReplicate");
+  bool hasZReplicate = userOptions.contains("ZReplicate");
+  if (hasXBoundaryType && hasYBoundaryType && hasZBoundaryType &&
+      hasXReplicate && hasYReplicate && hasZReplicate) {
+    QWidget* XBoundaryWidget =
+      createOptionWidget(userOptions.take("XBoundaryType"));
+    QWidget* YBoundaryWidget =
+      createOptionWidget(userOptions.take("YBoundaryType"));
+    QWidget* ZBoundaryWidget =
+      createOptionWidget(userOptions.take("ZBoundaryType"));
+    QWidget* XReplicateWidget =
+      createOptionWidget(userOptions.take("XReplicate"));
+    QWidget* YReplicateWidget =
+      createOptionWidget(userOptions.take("YReplicate"));
+    QWidget* ZReplicateWidget =
+      createOptionWidget(userOptions.take("ZReplicate"));
+    QHBoxLayout* hbox = new QHBoxLayout;
+    if (XBoundaryWidget) {
+      XBoundaryWidget->setObjectName("XBoundaryType");
+      hbox->addWidget(XBoundaryWidget);
+      m_widgets.insert("XBoundaryType", XBoundaryWidget);
+    }
+    if (YBoundaryWidget) {
+      YBoundaryWidget->setObjectName("YBoundaryType");
+      hbox->addWidget(YBoundaryWidget);
+      m_widgets.insert("YBoundaryType", YBoundaryWidget);
+    }
+    if (ZBoundaryWidget) {
+      ZBoundaryWidget->setObjectName("ZBoundaryType");
+      hbox->addWidget(ZBoundaryWidget);
+      m_widgets.insert("ZBoundaryType", ZBoundaryWidget);
+    }
+    if (XReplicateWidget) {
+      XReplicateWidget->setObjectName("XReplicate");
+      hbox->addWidget(XReplicateWidget);
+      m_widgets.insert("XReplicate", XReplicateWidget);
+    }
+    if (YReplicateWidget) {
+      YReplicateWidget->setObjectName("YReplicate");
+      hbox->addWidget(YReplicateWidget);
+      m_widgets.insert("YReplicate", YReplicateWidget);
+    }
+    if (ZReplicateWidget) {
+      ZReplicateWidget->setObjectName("ZReplicate");
+      hbox->addWidget(ZReplicateWidget);
+      m_widgets.insert("ZReplicate", ZReplicateWidget);
+    }
+    hbox->addStretch();
+
+    form->addRow(tr("Boundary and Periodicity:"), hbox);
+  }
+
+  // Timestep block
+  bool hasTimeStep = userOptions.contains("Time Step");
+  bool hasTotalSteps = userOptions.contains("Total Steps");
+  if (hasTimeStep && hasTotalSteps) {
+    QWidget* timeStepWidget = createOptionWidget(userOptions.take("Time Step"));
+    QWidget* totalStepWidget =
+      createOptionWidget(userOptions.take("Total Steps"));
+    QHBoxLayout* hbox = new QHBoxLayout;
+    if (timeStepWidget) {
+      timeStepWidget->setObjectName("Time Step");
+      hbox->addWidget(timeStepWidget);
+      m_widgets.insert("Time Step", timeStepWidget);
+    }
+    if (totalStepWidget) {
+      totalStepWidget->setObjectName("Total Steps");
+      hbox->addWidget(totalStepWidget);
+      m_widgets.insert("Total Steps", totalStepWidget);
+    }
+    hbox->addStretch();
+
+    form->addRow(tr("Timestep length and count:"), hbox);
+  }
+
   // Other special cases:
   if (userOptions.contains("Charge"))
     addOptionRow(tr("Charge"), userOptions.take("Charge"));
@@ -971,6 +1104,8 @@ void InputGeneratorWidget::setOption(const QString& name,
     return setFilePathOption(name, defaultValue);
   else if (type == "integer")
     return setIntegerOption(name, defaultValue);
+  else if (type == "float")
+    return setFloatOption(name, defaultValue);
   else if (type == "boolean")
     return setBooleanOption(name, defaultValue);
 
@@ -1084,6 +1219,30 @@ void InputGeneratorWidget::setIntegerOption(const QString& name,
   spin->setValue(intVal);
 }
 
+void InputGeneratorWidget::setFloatOption(const QString& name,
+                                          const QJsonValue& value)
+{
+  QDoubleSpinBox* spin =
+    qobject_cast<QDoubleSpinBox*>(m_widgets.value(name, nullptr));
+  if (!spin) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad widget type.")
+                    .arg(name);
+    return;
+  }
+
+  if (!value.isDouble()) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad default value:")
+                    .arg(name)
+               << value;
+    return;
+  }
+
+  float intVal = static_cast<float>(value.toDouble() + 0.5);
+  spin->setValue(intVal);
+}
+
 void InputGeneratorWidget::setBooleanOption(const QString& name,
                                             const QJsonValue& value)
 {
@@ -1150,6 +1309,9 @@ QJsonObject InputGeneratorWidget::collectOptions() const
       ret.insert(label, value);
     } else if (QSpinBox* spinBox = qobject_cast<QSpinBox*>(widget)) {
       ret.insert(label, spinBox->value());
+    } else if (QDoubleSpinBox* doubleSpinBox =
+                 qobject_cast<QDoubleSpinBox*>(widget)) {
+      ret.insert(label, doubleSpinBox->value());
     } else if (QCheckBox* checkBox = qobject_cast<QCheckBox*>(widget)) {
       ret.insert(label, checkBox->isChecked());
     } else if (QtGui::FileBrowseWidget* fileBrowse =

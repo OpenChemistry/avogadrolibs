@@ -22,15 +22,15 @@ namespace MoleQueue {
 MoleQueueManager* MoleQueueManager::m_instance = nullptr;
 
 MoleQueueManager::MoleQueueManager(QObject* parent_)
-  : QObject(parent_), m_client(this), m_queueModel(this)
+  : QObject(parent_)
+  , m_client(this)
+  , m_queueModel(this)
 {
   connect(&m_client, SIGNAL(queueListReceived(QJsonObject)),
           SLOT(updateQueueModel(QJsonObject)));
 }
 
-MoleQueueManager::~MoleQueueManager()
-{
-}
+MoleQueueManager::~MoleQueueManager() {}
 
 MoleQueueManager& MoleQueueManager::instance()
 {

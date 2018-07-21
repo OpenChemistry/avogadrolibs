@@ -32,20 +32,20 @@ const BatchJob::RequestId BatchJob::InvalidRequestId = -1;
 const BatchJob::ServerId BatchJob::InvalidServerId =
   std::numeric_limits<BatchJob::ServerId>::max();
 
-BatchJob::BatchJob(QObject* par) : QObject(par)
+BatchJob::BatchJob(QObject* par)
+  : QObject(par)
 {
   setup();
 }
 
 BatchJob::BatchJob(const QString& scriptFilePath, QObject* par)
-  : QObject(par), m_inputGenerator(scriptFilePath)
+  : QObject(par)
+  , m_inputGenerator(scriptFilePath)
 {
   setup();
 }
 
-BatchJob::~BatchJob()
-{
-}
+BatchJob::~BatchJob() {}
 
 BatchJob::BatchId BatchJob::submitNextJob(const Core::Molecule& mol)
 {

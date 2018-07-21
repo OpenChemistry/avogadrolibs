@@ -25,7 +25,8 @@ namespace MoleQueue {
 using QtGui::Molecule;
 
 InputGeneratorDialog::InputGeneratorDialog(QWidget* parent_)
-  : QDialog(parent_), ui(new Ui::InputGeneratorDialog)
+  : QDialog(parent_)
+  , ui(new Ui::InputGeneratorDialog)
 {
   ui->setupUi(this);
   connect(ui->widget, SIGNAL(closeClicked()), SLOT(accept()));
@@ -33,7 +34,8 @@ InputGeneratorDialog::InputGeneratorDialog(QWidget* parent_)
 
 InputGeneratorDialog::InputGeneratorDialog(const QString& scriptFileName,
                                            QWidget* parent_)
-  : QDialog(parent_), ui(new Ui::InputGeneratorDialog)
+  : QDialog(parent_)
+  , ui(new Ui::InputGeneratorDialog)
 {
   ui->setupUi(this);
   connect(ui->widget, SIGNAL(closeClicked()), SLOT(accept()));

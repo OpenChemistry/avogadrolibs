@@ -35,13 +35,11 @@ static const quint32 MaxInternalId(std::numeric_limits<quint32>::max() - 2);
 }
 
 MoleQueueQueueListModel::MoleQueueQueueListModel(QObject* parent_)
-  : QAbstractItemModel(parent_), m_uidCounter(0)
-{
-}
+  : QAbstractItemModel(parent_)
+  , m_uidCounter(0)
+{}
 
-MoleQueueQueueListModel::~MoleQueueQueueListModel()
-{
-}
+MoleQueueQueueListModel::~MoleQueueQueueListModel() {}
 
 void MoleQueueQueueListModel::setQueueList(QList<QString> queueList,
                                            QList<QStringList> programList)
@@ -303,8 +301,8 @@ void MoleQueueQueueListModel::insertProgram(int queueRow, int progRow,
 {
   beginInsertRows(createIndex(queueRow, 0, QueueInternalId), progRow, progRow);
   m_programList[queueRow].insert(progRow, progName);
-  m_uidLookup.insert(nextUid(), QStringList() << m_queueList[queueRow]
-                                              << progName);
+  m_uidLookup.insert(nextUid(), QStringList()
+                                  << m_queueList[queueRow] << progName);
   endInsertRows();
 }
 

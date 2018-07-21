@@ -33,24 +33,22 @@
 namespace Avogadro {
 namespace MoleQueue {
 
-using QtGui::PythonScript;
 using QtGui::GenericHighlighter;
+using QtGui::PythonScript;
 
 InputGenerator::InputGenerator(const QString& scriptFilePath_, QObject* parent_)
-  : QObject(parent_), m_interpreter(new PythonScript(scriptFilePath_, this)),
-    m_moleculeExtension("Unknown")
-{
-}
+  : QObject(parent_)
+  , m_interpreter(new PythonScript(scriptFilePath_, this))
+  , m_moleculeExtension("Unknown")
+{}
 
 InputGenerator::InputGenerator(QObject* parent_)
-  : QObject(parent_), m_interpreter(new PythonScript(this)),
-    m_moleculeExtension("Unknown")
-{
-}
+  : QObject(parent_)
+  , m_interpreter(new PythonScript(this))
+  , m_moleculeExtension("Unknown")
+{}
 
-InputGenerator::~InputGenerator()
-{
-}
+InputGenerator::~InputGenerator() {}
 
 bool InputGenerator::debug() const
 {
@@ -263,6 +261,20 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
       result = false;
       m_errors << tr("'files' member missing.");
     } // end if obj contains "files"
+
+    // Check whether the generator script has a data file. If yes, use the
+    // appropriate filewriter class to write the data output
+    std::string molOutput;
+    if (obj.contains("dataFile")) {
+      QString molFileName = obj["dataFile"].toString();
+      QStringList tmp = molFileName.split('.');
+      bool writeSDF = Io::FileFormatManager::instance().writeString(
+        mol, molOutput, tmp[1].toStdString());
+      if (writeSDF) {
+        m_filenames << molFileName;
+        m_files.insert(molFileName, QString::fromStdString(molOutput));
+      }
+    }
 
     // Extract main input filename:
     if (obj.contains("mainFile")) {
