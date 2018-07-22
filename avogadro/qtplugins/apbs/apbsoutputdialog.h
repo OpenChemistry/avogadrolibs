@@ -46,7 +46,7 @@ public:
   /**
    * Destructor for ApbsOutputDialog.
    */
-  ~ApbsOutputDialog();
+  ~ApbsOutputDialog() override;
 
   /**
    * Returns true if the user checked the 'Load Structure' check box.

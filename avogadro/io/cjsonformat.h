@@ -19,10 +19,6 @@
 
 #include "fileformat.h"
 
-namespace Json {
-class Value;
-}
-
 namespace Avogadro {
 namespace Core {
 class GaussianSet;
@@ -32,7 +28,6 @@ namespace Io {
 /**
  * @class CjsonFormat cjsonformat.h <avogadro/io/cjsonformat.h>
  * @brief Implementation of the Chemical JSON format.
- * @author Marcus D. Hanwell
  */
 
 class AVOGADROIO_EXPORT CjsonFormat : public FileFormat
@@ -65,23 +60,6 @@ public:
 
   bool read(std::istream& in, Core::Molecule& molecule) override;
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
-
-private:
-  bool testEmpty(Json::Value& value, const std::string& key,
-                 bool writeError = false);
-  bool testIsNotObject(Json::Value& value, const std::string& key,
-                       bool writeError = false);
-  bool testIfArray(Json::Value& value, const std::string& key,
-                   bool writeError = false);
-  bool readProperties(Json::Value& root, Core::Molecule& molecule,
-                      Core::GaussianSet* basis);
-  bool readAtoms(Json::Value& root, Core::Molecule& molecule,
-                 Core::GaussianSet* basis);
-  bool readOptimization(Json::Value& root, Core::Molecule& molecule);
-  bool readVibrations(Json::Value& root, Core::Molecule& molecule);
-  bool readBonds(Json::Value& root, Core::Molecule& molecule);
-  bool readTransitions(Json::Value& root, Core::Molecule& molecule);
-  bool readFragments(Json::Value& root, Core::Molecule& molecule);
 };
 
 } // end Io namespace

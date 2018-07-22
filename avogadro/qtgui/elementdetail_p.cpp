@@ -32,9 +32,10 @@ namespace QtGui {
 using Core::Elements;
 
 ElementDetail::ElementDetail(int elementNumber)
-  : m_width(100), m_height(70), m_element(elementNumber)
-{
-}
+  : m_width(100)
+  , m_height(70)
+  , m_element(elementNumber)
+{}
 
 QRectF ElementDetail::boundingRect() const
 {
@@ -52,7 +53,7 @@ void ElementDetail::paint(QPainter* painter, const QStyleOptionGraphicsItem*,
                           QWidget*)
 {
   // Set up a font object and get its height
-  QFont font("sans-serif");
+  QFont font(QStringLiteral("sans-serif"));
   font.setPixelSize(12);
   painter->setFont(font);
   QFontMetrics fm(font);
@@ -60,7 +61,7 @@ void ElementDetail::paint(QPainter* painter, const QStyleOptionGraphicsItem*,
 
   QString symbol = Elements::symbol(static_cast<unsigned char>(m_element));
   QString name(ElementTranslator::name(m_element));
-  QString mass = QString("%L1").arg(
+  QString mass = QStringLiteral("%L1").arg(
     Elements::mass(static_cast<unsigned char>(m_element)), 0, 'f', 3);
 
   const unsigned char* colorTmp =

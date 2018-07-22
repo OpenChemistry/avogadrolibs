@@ -13,8 +13,8 @@ else()
   add_definitions(-DAvogadroLibs_LIB_DIR=\"${INSTALL_LIBRARY_DIR}\")
 endif()
 
-if(USE_LIBSPG)
-  add_definitions(-DUSE_LIBSPG)
+if(USE_SPGLIB)
+  add_definitions(-DUSE_SPGLIB)
 endif()
 
 # Find python2 for input generator scripts:
@@ -53,6 +53,7 @@ set(HEADERS
   rwmolecule.h
   sceneplugin.h
   scenepluginmodel.h
+  scriptloader.h
   toolplugin.h
   utilities.h
   viewfactory.h
@@ -81,6 +82,7 @@ set(SOURCES
   rwmolecule.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
+  scriptloader.cpp
   toolplugin.cpp
   utilities.cpp
   viewfactory.cpp

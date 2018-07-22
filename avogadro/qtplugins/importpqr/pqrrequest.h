@@ -35,68 +35,68 @@ class PQRRequest : public QObject
 
 public:
   /**
-  * @brief Constuctor to initialize the NetworkAcessManager and set pointers to
-  * the widget's ui elements.
-  * @param tw Pointer to ui's table widget
-  * @param gv Pointer to ui's graphics view for SVG preview
-  * @param nd Pointer to the name display
-  * @param fd Pointer to the formula display
-  */
+   * @brief Constuctor to initialize the NetworkAcessManager and set pointers to
+   * the widget's ui elements.
+   * @param tw Pointer to ui's table widget
+   * @param gv Pointer to ui's graphics view for SVG preview
+   * @param nd Pointer to the name display
+   * @param fd Pointer to the formula display
+   */
   PQRRequest(QTableWidget*, QLabel*, QLineEdit*, QLabel*, PQRWidget*);
 
   /**
-  * @brief Free the ui pointers
-  */
-  ~PQRRequest();
+   * @brief Free the ui pointers
+   */
+  ~PQRRequest() override;
 
   /**
-  * @brief Sends a network request to search for molecules from PQR;
-  * @param url The url to query
-  */
+   * @brief Sends a network request to search for molecules from PQR;
+   * @param url The url to query
+   */
   void sendRequest(QString);
 
   /**
-  * @brief Sends a network request to download a file from PQR
-  * @param url The url to send the request to
-  * @param mol2 The mol2 representation of the molecule to download
-  */
+   * @brief Sends a network request to download a file from PQR
+   * @param url The url to send the request to
+   * @param mol2 The mol2 representation of the molecule to download
+   */
   void sendRequest(QString, QString);
 
   /**
-  * @brief Sends a network request to download a png form PQR
-  * @param url The url to send the request to
-  */
+   * @brief Sends a network request to download a png form PQR
+   * @param url The url to send the request to
+   */
   void sendPNGRequest(QString url);
 
   /**
-  * @brief Called when a molecule is selected to display information about the
-  * molecule and start grabbing the SVG preview.
-  * @param num The row number of the table result selected
-  * @returns The mol2 of the result for the widget to reference
-  */
+   * @brief Called when a molecule is selected to display information about the
+   * molecule and start grabbing the SVG preview.
+   * @param num The row number of the table result selected
+   * @returns The mol2 of the result for the widget to reference
+   */
   QString molSelected(int);
 
 private slots:
   /**
-  * @brief Parses the JSON response from querying PQR
-  */
+   * @brief Parses the JSON response from querying PQR
+   */
   void parseJson();
 
   /**
-  * @brief Creates a file after requesting a file from PQR
-  */
+   * @brief Creates a file after requesting a file from PQR
+   */
   void getFile();
 
   /**
-  * @brief Loads PNG data after sending a request
-  */
+   * @brief Loads PNG data after sending a request
+   */
   void SetPNG();
 
 private:
   /**
-  * @brief The result struct holds all data received in each result from
-  * querying PQR
-  */
+   * @brief The result struct holds all data received in each result from
+   * querying PQR
+   */
   struct result
   {
     QString inchikey;
@@ -132,15 +132,16 @@ private:
   QString currentMolName;
 
   /**
-  * @brief Takes a formula string and returns a QString with subscript tags
-  * @param formula The formula string
-  */
+   * @brief Takes a formula string and returns a QString with subscript tags
+   * @param formula The formula string
+   */
   QString parseSubscripts(QString);
 
   /**
-  * @brief Takes a formula string and returns the molecular mass of the molecule
-  * @param formula The formula string
-  */
+   * @brief Takes a formula string and returns the molecular mass of the
+   * molecule
+   * @param formula The formula string
+   */
   float getMolMass(QString);
 };
 }

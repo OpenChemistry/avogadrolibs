@@ -54,7 +54,7 @@ public:
    * script specified by scriptFilePath.
    */
   explicit InterfaceWidget(const QString& scriptFilePath, QWidget* parent_ = 0);
-  ~InterfaceWidget();
+  ~InterfaceWidget() override;
 
   /**
    * Use the script pointed to by scriptFilePath.

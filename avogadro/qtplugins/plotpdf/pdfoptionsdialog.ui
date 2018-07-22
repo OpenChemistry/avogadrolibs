@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Avogadro::QtPlugins::PdfOptionsDialog</class>
+ <widget class="QDialog" name="Avogadro::QtPlugins::PdfOptionsDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>324</width>
+    <height>145</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PDF Plot Options</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Maximum Radius:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+      <widget class="QDoubleSpinBox" name="spin_maxRadius">
+       <property name="suffix">
+        <string> Å</string>
+       </property>
+       <property name="decimals">
+        <number>5</number>
+       </property>
+       <property name="minimum">
+        <double>0.00001</double>
+       </property>
+       <property name="maximum">
+        <double>100.00000</double>
+       </property>
+       <property name="value">
+        <double>10.00000</double>
+       </property>
+      </widget>
+   </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label2">
+      <property name="text">
+       <string>Step (dr):</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+      <widget class="QDoubleSpinBox" name="spin_step">
+       <property name="suffix">
+        <string> Å</string>
+       </property>
+       <property name="decimals">
+        <number>5</number>
+       </property>
+       <property name="minimum">
+        <double>0.00001</double>
+       </property>
+       <property name="maximum">
+        <double>100.00000</double>
+       </property>
+       <property name="value">
+        <double>10.00000</double>
+       </property>
+      </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>   
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>spin_maxRadius</tabstop>
+  <tabstop>spin_step</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Avogadro::QtPlugins::PdfOptionsDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>226</x>
+     <y>204</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>161</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Avogadro::QtPlugins::PdfOptionsDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>226</x>
+     <y>204</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>161</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

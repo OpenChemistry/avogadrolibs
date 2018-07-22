@@ -38,7 +38,9 @@ class RWMolecule;
  * @brief A QObject derived molecule object with signals/slots.
  */
 
-class AVOGADROQTGUI_EXPORT Molecule : public QObject, public Core::Molecule
+class AVOGADROQTGUI_EXPORT Molecule
+  : public QObject
+  , public Core::Molecule
 {
   Q_OBJECT
 
@@ -56,7 +58,7 @@ public:
   typedef PersistentBond<Molecule> PersistentBondType;
 
   Molecule(QObject* parent_ = 0);
-  ~Molecule();
+  ~Molecule() override;
   /** copy constructor */
   Molecule(const Molecule& other);
 

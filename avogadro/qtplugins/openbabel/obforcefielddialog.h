@@ -40,7 +40,7 @@ public:
    */
   explicit OBForceFieldDialog(const QStringList& forceFields,
                               QWidget* parent_ = 0);
-  ~OBForceFieldDialog();
+  ~OBForceFieldDialog() override;
 
   /**
    * Construct a new dialog using the forcefields in @a forceFields and

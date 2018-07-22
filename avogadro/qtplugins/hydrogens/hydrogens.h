@@ -30,15 +30,15 @@ class Hydrogens : public Avogadro::QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit Hydrogens(QObject* parent_ = 0);
-  ~Hydrogens();
+  ~Hydrogens() override;
 
-  QString name() const { return tr("Hydrogens"); }
-  QString description() const;
-  QList<QAction*> actions() const;
-  QStringList menuPath(QAction*) const;
+  QString name() const override { return tr("Hydrogens"); }
+  QString description() const override;
+  QList<QAction*> actions() const override;
+  QStringList menuPath(QAction*) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
 private slots:
   void adjustHydrogens();
