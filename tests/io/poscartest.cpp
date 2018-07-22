@@ -24,7 +24,7 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
-#include <avogadro/io/poscarformat.h>
+#include <avogadro/io/vaspformat.h>
 
 #include <fstream>
 #include <sstream>
