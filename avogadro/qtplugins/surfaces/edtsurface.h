@@ -19,6 +19,8 @@ class Atom;
 
 namespace QtPlugins {
 
+  class dataClass;
+
   typedef struct volumePixel
   {
   	int atomId;
@@ -34,15 +36,15 @@ class EDTSurface
 public:
   EDTSurface();
 
-  void initPara(Core::Molecule *mol, bool atomType, bool bType);
+  void initPara(bool atomType, bool bType);
 
-  void fillVoxels(bool atomType, Core::Molecule *mol);
+  void fillVoxels(bool atomType);
   // Operates on the cube
-  void fillAtom(int indx, Core::Molecule *mol);
+  void fillAtom(int indx);
   // Operates on the cube
-  void fillAtomWaals(int indx, Core::Molecule *mol);
+  void fillAtomWaals(int indx);
   // Operates on the cube
-  void fillVoxelsWaals(bool atomType, Core::Molecule *mol);
+  void fillVoxelsWaals(bool atomType);
   // Operates on the cube
   void fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
                     int* outNum, int* elimi);
@@ -51,7 +53,7 @@ public:
 
   void buildBoundary();
   // Operates on the cube
-  void boundBox(bool atomType, Core::Molecule *mol);
+  void boundBox(bool atomType);
 
   void boundingAtom(bool bType);
 
@@ -64,7 +66,11 @@ public:
   int detail(unsigned char atomicNumber);
   // Takes an atomic number and returns an index for rasRad
 
+  void setMolecule(Core::Molecule *mol);
+
   virtual ~EDTSurface();
+
+  Molecule* m_mol;
 
   Vector3 pTran;
   int boxLength;
@@ -83,7 +89,30 @@ public:
   int totalSurfaceVox;
   int totalInnerVox;
   Vector3i *inArray, *outArray;
+
+private:
+  dataClass *data;
 }; // End class EDTSurface
+
+struct dataStruct{
+  Vector3 pTran;
+  int boxLength;
+  double probeRadius;
+  double fixSf;
+  double scaleFactor;
+  Vector3 pMin, pMax;
+  int pHeight, pWidth, pLength;
+  int widXz[13];
+  int* deptY[13];
+  double cutRadius;
+  int positIn, positOut, eliminate;
+  int certificate;
+  int totalSurfaceVox;
+  int totalInnerVox;
+  Vector3i *inArray, *outArray;
+
+};//End class dataClass
+
 } // End namespace QtPlugins
 } // End namespace Avogadro
 
