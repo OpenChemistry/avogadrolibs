@@ -19,7 +19,7 @@ class Atom;
 
 namespace QtPlugins {
 
-  class dataClass;
+  struct dataStruct;
 
   typedef struct volumePixel
   {
@@ -34,43 +34,19 @@ namespace QtPlugins {
 class EDTSurface
 {
 public:
-  EDTSurface();
+  EDTSurfaces();
 
-  void initPara(bool atomType, bool bType);
+  void VanDerWaalsSurface();
 
-  void fillVoxels(bool atomType);
-  // Operates on the cube
-  void fillAtom(int indx);
-  // Operates on the cube
-  void fillAtomWaals(int indx);
-  // Operates on the cube
-  void fillVoxelsWaals(bool atomType);
-  // Operates on the cube
-  void fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
-                    int* outNum, int* elimi);
-  // Operates on the cube
-  void fastDistanceMap();
+  void SolventAccessibleSurface();
 
-  void buildBoundary();
-  // Operates on the cube
-  void boundBox(bool atomType);
+  void SolventExcludedSurface();
 
-  void boundingAtom(bool bType);
-
-  Core::Cube *EDTCube(Core::Molecule *mol, int surfaceType);
-  // Takes a molecule and a surface type and returns a cube
-
-  Vector3i vectorFromArray(int* array);
-  // Takes an array of integers and returns a vector3i
-
-  int detail(unsigned char atomicNumber);
-  // Takes an atomic number and returns an index for rasRad
+  Core::Cube *EDTCube();
 
   void setMolecule(Core::Molecule *mol);
 
-  void setProbeRadius(double probeRadius);
-
-  virtual ~EDTSurface();
+  virtual ~EDTSurfaces();
 
   Molecule* m_mol;
 
@@ -97,7 +73,38 @@ public:
 */
 
 private:
-  dataClass *data;
+
+  dataStruct *data;
+
+  void initPara(bool atomType, bool bType);
+
+  void fillVoxels(bool atomType);
+  // Operates on the cube
+  void fillAtom(int indx);
+  // Operates on the cube
+  void fillAtomWaals(int indx);
+  // Operates on the cube
+  void fillVoxelsWaals(bool atomType);
+  // Operates on the cube
+  void fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
+                    int* outNum, int* elimi);
+  // Operates on the cube
+  void fastDistanceMap();
+
+  void buildBoundary();
+  // Operates on the cube
+  void boundBox(bool atomType);
+
+  void boundingAtom(bool bType);
+
+  Vector3i vectorFromArray(int* array);
+  // Takes an array of integers and returns a vector3i
+
+  int detail(unsigned char atomicNumber);
+  // Takes an atomic number and returns an index for rasRad
+
+
+
 }; // End class EDTSurface
 
 struct dataStruct{
@@ -116,7 +123,6 @@ struct dataStruct{
   int totalSurfaceVox;
   int totalInnerVox;
   Vector3i *inArray, *outArray;
-
 };//End class dataClass
 
 } // End namespace QtPlugins

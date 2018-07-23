@@ -50,7 +50,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 // Constructor
-EDTSurface::EDTSurface()
+EDTSurfaces::EDTSurfaces()
 {
   int i;
 
@@ -85,7 +85,7 @@ EDTSurface::EDTSurface()
 }
 
 // Destructor
-EDTSurface::~EDTSurface()
+EDTSurfaces::~EDTSurfaces()
 {
   int i, j;
 
@@ -113,69 +113,12 @@ EDTSurface::~EDTSurface()
 
 // Takes a molecule and a surface type and returns a cube
 
-Cube* EDTSurface::EDTCube(Molecule *mol, int Surfaces::Type surfType)
+Core::Cube* EDTSurfaces::EDTCube()
 {
-  int i, j, k;
-
-  int surfaceType;
-
-  if(surfType == VanDerWaals){
-    surfaceType = VWS;
-  }
-  else if(surfType == SolventExcluded){
-    surfaceType = SES;
-  }
-  else if(surfType == SolventAccessible){
-    surfaceType = SAS;
-  }
-  else{
-    return NULL;
-    //This isn't the right class for that surfaceType
-  }
-
-  int numberOfAtoms = (int)m_mol->atomCount();
-  // Get number of atoms from molecule
-
-  this->setMolecule(mol);
-  //Set molecule
-
-  this->initPara(atomTypes[surfaceType], bTypes[surfaceType]);
-  // Initialize everything
-
-  if (surfaceType == SAS || surfaceType == SES) {
-    this->fastDistanceMap();
-  }
-  // EDT
-
-  this->fillVoxels(atomTypes[surfaceType]);
-
-  this->buildBoundary();
-
-  if (surfaceType == SES) {
-    this->fillVoxelsWaals(atomTypes[surfaceType]);
-    this->boundingAtom(false);
-  }
-
-  Cube* aCube;
-  aCube = new Cube();
-  // Initialize cube
-
-  for (i = 0; i < data->pLength; i++) {
-    for (j = 0; j < data->pWidth; j++) {
-      for (k = 0; k < data->pHeight; k++) {
-        aCube->setValue(i, j, k, volumePixels[i][j][k].distance);
-      }
-      delete[] volumePixels[i][j];
-    }
-    delete[] volumePixels[i];
-  }
-  delete[] volumePixels;
-  // Copy VolumePixels array into Cube and delete volumePixels
-
-  return aCube;
+  return m_Cube;
 }
 
-void EDTSurface::fastDistanceMap()
+void EDTSurfaces::fastDistanceMap()
 {
   int i, j, k;
   Vector3i ijk;
@@ -525,7 +468,7 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
   *elimi = data->eliminate;
 }
 
-void EDTSurface::fillAtom(int indx)
+void EDTSurfaces::fillAtom(int indx)
 {
   int cx, cy, cz;
   Vector3i cxyz;
@@ -617,7 +560,7 @@ void EDTSurface::fillAtom(int indx)
   }   // i
 }
 // sas use inOut
-void EDTSurface::fillVoxels(bool atomType)
+void EDTSurfaces::fillVoxels(bool atomType)
 {
 
   int i, j, k;
@@ -643,7 +586,7 @@ void EDTSurface::fillVoxels(bool atomType)
   }
 }
 // use isDone
-void EDTSurface::fillVoxelsWaals(bool atomType)
+void EDTSurfaces::fillVoxelsWaals(bool atomType)
 {
   int i, j, k;
 
@@ -658,7 +601,7 @@ void EDTSurface::fillVoxelsWaals(bool atomType)
   }
 }
 
-void EDTSurface::fillAtomWaals(int indx)
+void EDTSurfaces::fillAtomWaals(int indx)
 {
   int cx, cy, cz;
   Vector3i cxyz;
@@ -737,7 +680,7 @@ void EDTSurface::fillAtomWaals(int indx)
   }   // i
 }
 
-void EDTSurface::buildBoundary()
+void EDTSurfaces::buildBoundary()
 {
   int i, j, k;
   int ii;
@@ -784,7 +727,7 @@ void EDTSurface::buildBoundary()
   }
 }
 
-void EDTSurface::boundBox(bool atomType)
+void EDTSurfaces::boundBox(bool atomType)
 {
   /**
    *Finds the bound box of the sequence of atoms
@@ -824,7 +767,7 @@ void EDTSurface::boundBox(bool atomType)
   }
 }
 
-void EDTSurface::initPara(bool atomType, bool bType)
+void EDTSurfaces::initPara(bool atomType, bool bType)
 {
   int i, j;
   int data->fixSf = 4;
@@ -901,7 +844,7 @@ void EDTSurface::initPara(bool atomType, bool bType)
   data->cutRadius = data->probeRadius * data->scaleFactor;
 }
 
-void EDTSurface::boundingAtom(bool bType)
+void EDTSurfaces::boundingAtom(bool bType)
 {
   int i, j, k;
   double tRadius[13];
@@ -941,7 +884,7 @@ void EDTSurface::boundingAtom(bool bType)
   }
 }
 
-Vector3i EDTSurface::vectorFromArray(int* array)
+Vector3i EDTSurfaces::vectorFromArray(int* array)
 {
   Vector3i vec;
   vec(0) = array[0];
@@ -950,7 +893,7 @@ Vector3i EDTSurface::vectorFromArray(int* array)
   return vec;
 }
 
-int EDTSurface::detail(unsigned char atomicNumber)
+int EDTSurfaces::detail(unsigned char atomicNumber)
 {
   // Takes an atomic number and returns the index for rasRad
   switch (atomicNumber) {
@@ -978,15 +921,113 @@ int EDTSurface::detail(unsigned char atomicNumber)
   }
 }
 
-int EDTSurface::setMolecule(Molecule *mol){
+int EDTSurfaces::setMolecule(Molecule *mol){
   m_mol = mol;
   return;
 }
 
-void setProbeRadius(double probeRadius){
-  data->m_probeRadius = probeRadius;
-}
+bool EDTSurfaces::VanDerWaalsSurface(){
 
+  int i, j, k;
+
+  this->setMolecule(mol);
+  //Set molecule
+
+  this->initPara(atomTypes[VWS], bTypes[VWS]);
+  // Initialize everything
+
+  this->fillVoxels(atomTypes[VWS]);
+
+  this->buildBoundary();
+
+  m_Cube = new Cube();
+  // Initialize cube
+
+  for (i = 0; i < data->pLength; i++) {
+    for (j = 0; j < data->pWidth; j++) {
+      for (k = 0; k < data->pHeight; k++) {
+        m_Cube->setValue(i, j, k, volumePixels[i][j][k].distance);
+      }
+      delete[] volumePixels[i][j];
+    }
+    delete[] volumePixels[i];
+  }
+  delete[] volumePixels;
+  // Copy VolumePixels array into Cube and delete volumePixels
+  return true;
+}//end VanDerWaalsSurface
+
+bool EDTSurfaces::SolventAccessibleSurface(){
+
+  int i, j, k;
+
+  this->setMolecule(mol);
+  //Set molecule
+
+  this->initPara(atomTypes[SAS], bTypes[SAS]);
+  // Initialize everything
+
+  this->fastDistanceMap();
+
+  // EDT
+
+  this->fillVoxels(atomTypes[SAS]);
+
+  this->buildBoundary();
+
+  m_Cube = new Cube();
+  // Initialize cube
+
+  for (i = 0; i < data->pLength; i++) {
+    for (j = 0; j < data->pWidth; j++) {
+      for (k = 0; k < data->pHeight; k++) {
+        m_Cube->setValue(i, j, k, volumePixels[i][j][k].distance);
+      }
+      delete[] volumePixels[i][j];
+    }
+    delete[] volumePixels[i];
+  }
+  delete[] volumePixels;
+  // Copy VolumePixels array into Cube and delete volumePixels
+  return true;
+}//end SolventAccessibleSurface
+
+bool EDTSurfaces::SolventExcludedSurface(){
+
+  int i, j, k;
+
+  this->setMolecule(mol);
+  //Set molecule
+
+  this->initPara(atomTypes[SES], bTypes[SES]);
+  // Initialize everything
+
+  this->fastDistanceMap();
+  // EDT
+
+  this->fillVoxels(atomTypes[SES]);
+
+  this->buildBoundary();
+
+  this->fillVoxelsWaals(atomTypes[SES]);
+  this->boundingAtom(false);
+
+  m_Cube = new Cube();
+  // Initialize cube
+
+  for (i = 0; i < data->pLength; i++) {
+    for (j = 0; j < data->pWidth; j++) {
+      for (k = 0; k < data->pHeight; k++) {
+        m_Cube->setValue(i, j, k, volumePixels[i][j][k].distance);
+      }
+      delete[] volumePixels[i][j];
+    }
+    delete[] volumePixels[i];
+  }
+  delete[] volumePixels;
+  // Copy VolumePixels
+  return true;
+}//end SolventExcludedSurface
 
 } // End namespace Core
 
