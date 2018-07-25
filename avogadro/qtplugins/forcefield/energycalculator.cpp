@@ -20,7 +20,7 @@ void EnergyCalculator::cleanGradients(Eigen::VectorXd& grad)
 {
   unsigned int size = grad.rows();
   for (unsigned int i = 0; i < size; ++i) {
-    if (!isfinite(grad[i])) {
+    if (!std::isfinite(grad[i])) {
       grad[i] = 0.0;
     }
 

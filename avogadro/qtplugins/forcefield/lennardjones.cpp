@@ -108,9 +108,9 @@ void LennardJones::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
       if (r < 0.1)
         r = 0.1; // ensure we don't divide by zero
 
-      Real rad = pow(m_radii(i,j), m_exponent);
-      Real term1 = -2 * (m_exponent)*rad*rad*pow(r, -2 * m_exponent - 1);
-      Real term2 = 2 * (m_exponent)*rad*pow(r, -1*m_exponent - 1);
+      Real rad = pow(m_radii(i, j), m_exponent);
+      Real term1 = -2 * (m_exponent)*rad * rad * pow(r, -2 * m_exponent - 1);
+      Real term2 = 2 * (m_exponent)*rad * pow(r, -1 * m_exponent - 1);
       Real dE = m_depth * (term1 + term2);
 
       force = (dE / r) * force;

@@ -28,7 +28,6 @@ class Forcefield : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-
   enum Minimizer
   {
     SteepestDescent = 0,
@@ -77,7 +76,6 @@ private:
   const Io::FileFormat* m_outputFormat;
   QString m_tempFileName;
 };
-
 }
 }
 

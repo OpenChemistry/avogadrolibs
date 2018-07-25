@@ -22,6 +22,12 @@ public:
   explicit LennardJones(QObject* parent_ = 0);
   ~LennardJones();
 
+  virtual QString name() const override
+  { return tr("Lennard-Jones"); }
+
+  virtual QString description() const override
+  { return tr("Universal Lennard-Jones potential"); }
+
   virtual Real value(const Eigen::VectorXd& x) override;
   virtual void gradient(const Eigen::VectorXd& x,
                         Eigen::VectorXd& grad) override;

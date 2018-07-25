@@ -22,28 +22,42 @@ class EnergyCalculator
   , public cppoptlib::Problem<Real>
 {
   Q_OBJECT
-public slots:
-  /**
-   * Called when the current molecule changes.
-   */
-  virtual void setMolecule(QtGui::Molecule* mol) = 0;
-
 public:
   EnergyCalculator(QObject* parent_ = 0)
     : QObject(parent_){};
   ~EnergyCalculator() {}
 
   /**
+   * @return A short translatable name for this method (e.g., MMFF94, UFF, etc.)
+   */
+  virtual QString name() const = 0;
+
+  /**
+   * @return a description of the method
+   */
+  virtual QString description() const = 0;
+
+  /**
    * Called to set the configuration (e.g., from a GUI options dialog)
    */
   virtual bool setConfiguration(Core::VariantMap& config) { return true; }
 
-  virtual void gradient(const TVector &x, TVector &grad) override;
+  /**
+   * Calculate the gradients for this method, defaulting to numerical
+   * finite-difference methods
+   */
+  virtual void gradient(const TVector& x, TVector& grad) override;
 
   /**
    * Called to 'clean' gradients @param grad (e.g., for constraints)
    */
-  void cleanGradients(TVector &grad);
+  void cleanGradients(TVector& grad);
+
+public slots:
+  /**
+   * Called when the current molecule changes.
+   */
+  virtual void setMolecule(QtGui::Molecule* mol) = 0;
 };
 
 } // namespace Avogadro
