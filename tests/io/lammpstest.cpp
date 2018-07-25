@@ -34,11 +34,11 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::UnitCell;
 using Avogadro::Io::FileFormat;
-using Avogadro::Io::LammpsFormat;
+using Avogadro::Io::LammpsTrajectoryFormat;
 
 TEST(LammpsTest, read)
 {
-  LammpsFormat multi;
+  LammpsTrajectoryFormat multi;
   multi.open(AVOGADRO_DATA "/data/silicon_bulk.dump",
              FileFormat::Read | FileFormat::MultiMolecule);
   Molecule molecule, molecule2;
@@ -102,7 +102,7 @@ TEST(LammpsTest, read)
 TEST(LammpsTest, modes)
 {
   // This tests some of the mode setting/checking code
-  LammpsFormat format;
+  LammpsTrajectoryFormat format;
   format.open(AVOGADRO_DATA "/data/silicon_bulk.dump", FileFormat::Read);
   EXPECT_TRUE(format.isMode(FileFormat::Read));
   EXPECT_TRUE(format.mode() & FileFormat::Read);
