@@ -21,6 +21,7 @@
 #include "cube.h"
 #include "elements.h"
 #include "mesh.h"
+#include "residue.h"
 #include "unitcell.h"
 
 #include <algorithm>
@@ -57,6 +58,7 @@ Molecule::Molecule(const Molecule& other)
   , m_cubes(std::vector<Cube*>())
   , m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr)
   , m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr)
+  , m_residues(other.m_residues)
 {
   // Copy over any meshes
   for (Index i = 0; i < other.meshCount(); ++i) {
@@ -91,6 +93,7 @@ Molecule::Molecule(Molecule&& other) noexcept
   , m_selectedAtoms(std::move(other.m_selectedAtoms))
   , m_meshes(std::move(other.m_meshes))
   , m_cubes(std::move(other.m_cubes))
+  , m_residues(std::move(other.m_residues))
 {
   m_basisSet = other.m_basisSet;
   other.m_basisSet = nullptr;
@@ -119,6 +122,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_bondPairs = other.m_bondPairs;
     m_bondOrders = other.m_bondOrders;
     m_selectedAtoms = other.m_selectedAtoms;
+    m_residues = other.m_residues;
 
     clearMeshes();
 
@@ -165,6 +169,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_bondPairs = std::move(other.m_bondPairs);
     m_bondOrders = std::move(other.m_bondOrders);
     m_selectedAtoms = std::move(other.m_selectedAtoms);
+    m_residues = std::move(other.m_residues);
 
     clearMeshes();
     m_meshes = std::move(other.m_meshes);
@@ -756,6 +761,13 @@ void Molecule::perceiveBondsSimple()
   }
 }
 
+void Molecule::perceiveBondsFromResidueData()
+{
+  for (Index i = 0; i < m_residues.size(); ++i) {
+    m_residues[i].resolveResidueBonds(*this);
+  }
+}
+
 int Molecule::coordinate3dCount()
 {
   return static_cast<int>(m_coordinates3d.size());
@@ -812,6 +824,23 @@ void Molecule::updateGraph() const
   for (IterType it = m_bondPairs.begin(); it != m_bondPairs.end(); ++it) {
     m_graph.addEdge(it->first, it->second);
   }
+}
+
+Residue& Molecule::addResidue(std::string& name, Index& number, char& id)
+{
+  Residue newResidue(name, number, id);
+  m_residues.push_back(newResidue);
+  return m_residues[m_residues.size() - 1];
+}
+
+void Molecule::addResidue(Residue& residue)
+{
+  m_residues.push_back(residue);
+}
+
+Residue Molecule::residue(int index)
+{
+  return m_residues[index];
 }
 
 } // end Core namespace
