@@ -121,6 +121,29 @@ int main(int argc, char* argv[])
 
     } else {
       if (params[0] == "RES") {
+        currResidue = params[1];
+        atoms.clear();
+        singleBonds.clear();
+        doubleBonds.clear();
+      } else if (params[0] == "ATOM") {
+        if (params[1][0] >= '0' && params[1][0] <= '9')
+          std::rotate(params[1].begin(), params[1].begin() + 1,
+                      params[1].end());
+        atoms.push_back(params[1]);
+      } else if (params[0] == "BOND") {
+        if (params[1][0] >= '0' && params[1][0] <= '9')
+          std::rotate(params[1].begin(), params[1].begin() + 1,
+                      params[1].end());
+        if (params[2][0] >= '0' && params[2][0] <= '9')
+          std::rotate(params[2].begin(), params[2].begin() + 1,
+                      params[2].end());
+
+        if (params[3] == "1") {
+          singleBonds.push_back(make_pair(params[1], params[2]));
+        } else if (params[3] == "2") {
+          doubleBonds.push_back(make_pair(params[1], params[2]));
+        }
+      } else if (params[0] == "END") {
         if (currResidue != "") {
           output << "ResidueData " << currResidue << "Data(\"" << currResidue
                  << "\",\n"
@@ -149,29 +172,6 @@ int main(int argc, char* argv[])
           }
           output << "});\n\n";
           residueClassNames.push_back(currResidue);
-        }
-
-        currResidue = params[1];
-        atoms.clear();
-        singleBonds.clear();
-        doubleBonds.clear();
-      } else if (params[0] == "ATOM") {
-        if (params[1][0] >= '0' && params[1][0] <= '9')
-          std::rotate(params[1].begin(), params[1].begin() + 1,
-                      params[1].end());
-        atoms.push_back(params[1]);
-      } else if (params[0] == "BOND") {
-        if (params[1][0] >= '0' && params[1][0] <= '9')
-          std::rotate(params[1].begin(), params[1].begin() + 1,
-                      params[1].end());
-        if (params[2][0] >= '0' && params[2][0] <= '9')
-          std::rotate(params[2].begin(), params[2].begin() + 1,
-                      params[2].end());
-
-        if (params[3] == "1") {
-          singleBonds.push_back(make_pair(params[1], params[2]));
-        } else if (params[3] == "2") {
-          doubleBonds.push_back(make_pair(params[1], params[2]));
         }
       }
     }
