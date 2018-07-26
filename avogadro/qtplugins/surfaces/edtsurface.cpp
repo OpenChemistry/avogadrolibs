@@ -113,12 +113,28 @@ EDTSurface::~EDTSurface()
 
 // Takes a molecule and a surface type and returns a cube
 
-Cube* EDTSurface::EDTCube(Molecule *mol, int surfaceType)
+Cube* EDTSurface::EDTCube(Molecule *mol, int Surfaces::Type surfType)
 {
+  int i, j, k;
+
+  int surfaceType;
+
+  if(surfType == VanDerWaals){
+    surfaceType = VWS;
+  }
+  else if(surfType == SolventExcluded){
+    surfaceType = SES;
+  }
+  else if(surfType == SolventAccessible){
+    surfaceType = SAS;
+  }
+  else{
+    return NULL;
+    //This isn't the right class for that surfaceType
+  }
+
   int numberOfAtoms = (int)m_mol->atomCount();
   // Get number of atoms from molecule
-
-  int i, j, k;
 
   this->setMolecule(mol);
   //Set molecule
@@ -966,6 +982,11 @@ int EDTSurface::setMolecule(Molecule *mol){
   m_mol = mol;
   return;
 }
+
+void setProbeRadius(double probeRadius){
+  data->m_probeRadius = probeRadius;
+}
+
 
 } // End namespace Core
 

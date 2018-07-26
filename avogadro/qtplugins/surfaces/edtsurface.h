@@ -68,11 +68,17 @@ public:
 
   void setMolecule(Core::Molecule *mol);
 
+  void setProbeRadius(double probeRadius);
+
   virtual ~EDTSurface();
 
   Molecule* m_mol;
 
-  Vector3 pTran;
+  volumePixel*** volumePixels;
+
+  Cube* m_cube;
+
+  /*Vector3 pTran;
   int boxLength;
   double probeRadius;
   double fixSf;
@@ -82,13 +88,13 @@ public:
   int widXz[13];
   int* deptY[13];
   double cutRadius;
-  volumePixel*** volumePixels;
 
   int positIn, positOut, eliminate;
   int certificate;
   int totalSurfaceVox;
   int totalInnerVox;
   Vector3i *inArray, *outArray;
+*/
 
 private:
   dataClass *data;
