@@ -2,6 +2,7 @@
 
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/residue.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
@@ -11,32 +12,31 @@
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
-using Avogadro::Core::Molecule;
 using Avogadro::Core::lexicalCast;
+using Avogadro::Core::Molecule;
+using Avogadro::Core::Residue;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
 
-using std::string;
-using std::istringstream;
 using std::getline;
+using std::istringstream;
+using std::string;
 using std::vector;
 
 namespace Avogadro {
 namespace Io {
 
-PdbFormat::PdbFormat()
-{
-}
+PdbFormat::PdbFormat() {}
 
-PdbFormat::~PdbFormat()
-{
-}
+PdbFormat::~PdbFormat() {}
 
 bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 {
   string buffer;
-  int atomCount = 0;
   std::vector<int> terList;
+  Residue* r;
+  size_t currentResidueId = 0;
+  bool ok(false);
 
   while (getline(in, buffer)) { // Read Each line one by one
 
@@ -44,8 +44,40 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       break;
 
     else if (startsWith(buffer, "ATOM") || startsWith(buffer, "HETATM")) {
+      // First we initialize the residue instance
+      size_t residueId = lexicalCast<size_t>(buffer.substr(22, 4), ok);
+      if (!ok) {
+        appendError("Failed to parse residue sequence number: " +
+                    buffer.substr(22, 4));
+        return false;
+      }
+
+      if (residueId != currentResidueId) {
+        currentResidueId = residueId;
+
+        string residueName = lexicalCast<string>(buffer.substr(17, 3), ok);
+        if (!ok) {
+          appendError("Failed to parse residue name: " + buffer.substr(17, 3));
+          return false;
+        }
+
+        char chainId = lexicalCast<char>(buffer.substr(21, 1), ok);
+        if (!ok) {
+          appendError("Failed to parse chain identifier: " +
+                      buffer.substr(21, 1));
+          return false;
+        }
+
+        r = &mol.addResidue(residueName, currentResidueId, chainId);
+      }
+
+      string atomName = lexicalCast<string>(buffer.substr(12, 4), ok);
+      if (!ok) {
+        appendError("Failed to parse atom name: " + buffer.substr(12, 4));
+        return false;
+      }
+
       Vector3 pos; // Coordinates
-      bool ok(false);
       pos.x() = lexicalCast<Real>(buffer.substr(30, 8), ok);
       if (!ok) {
         appendError("Failed to parse x coordinate: " + buffer.substr(30, 8));
@@ -76,14 +108,14 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 
       Atom newAtom = mol.addAtom(atomicNum);
       newAtom.setPosition3d(pos);
-
-      atomCount++;
+      if (r) {
+        r->addResidueAtom(atomName, newAtom);
+      }
     }
 
     else if (startsWith(buffer, "TER")) { //  This is very important, each TER
                                           //  record also counts in the serial.
       // Need to account for that when comparing with CONECT
-      bool ok(false);
       terList.push_back(lexicalCast<int>(buffer.substr(6, 5), ok));
 
       if (!ok) {
@@ -93,14 +125,13 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     else if (startsWith(buffer, "CONECT")) {
-      bool ok(false);
       int a = lexicalCast<int>(buffer.substr(6, 5), ok);
       if (!ok) {
         appendError("Failed to parse coordinate a " + buffer.substr(6, 5));
         return false;
       }
       --a;
-      int terCount;
+      size_t terCount;
       for (terCount = 0; terCount < terList.size() && a > terList[terCount];
            ++terCount)
         ; // semicolon is intentional
@@ -112,7 +143,6 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           break;
 
         else {
-          bool ok(false);
           int b = lexicalCast<int>(buffer.substr(bCoords[i], 5), ok) - 1;
           if (!ok) {
             appendError("Failed to parse coordinate b" + std::to_string(i) +
@@ -132,7 +162,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       }
     }
   } // End while loop
-  mol.perceiveBondsSimple();
+  mol.perceiveBondsFromResidueData();
+  // mol.perceiveBondsSimple();
   return true;
 } // End read
 
@@ -150,5 +181,5 @@ std::vector<std::string> PdbFormat::mimeTypes() const
   return mime;
 }
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro
