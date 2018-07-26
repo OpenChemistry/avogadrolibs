@@ -58,7 +58,6 @@ bool setJsonKey(json& j, Molecule& m, const std::string& key)
     m.setData(key, j.value(key, "undefined"));
     return true;
   }
-  std::cout << key << " not found." << std::endl;
   return false;
 }
 
@@ -143,6 +142,22 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       auto a = molecule.atom(i);
       a.setPosition3d(Vector3(atomicCoords[3 * i], atomicCoords[3 * i + 1],
                               atomicCoords[3 * i + 2]));
+    }
+  }
+
+  // Check for coordinate sets, and read them in if found, e.g. trajectories.
+  json coordSets = atoms["coordSets"];
+  if (coordSets.is_array() && coordSets.size()) {
+    for (unsigned int i = 0; i < coordSets.size(); ++i) {
+      Array<Vector3> setArray;
+      json set = coordSets[i];
+      if (isNumericArray(set)) {
+        for (unsigned int j = 0; j < set.size() / 3; ++j) {
+          setArray.push_back(Vector3(set[3 * j], set[3 * j + 1],
+                                     set[3 * j + 2]));
+        }
+        molecule.setCoordinate3d(setArray, i);
+      }
     }
   }
 
