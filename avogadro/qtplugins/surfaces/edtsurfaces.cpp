@@ -774,17 +774,6 @@ void EDTSurfaces::initPara(bool atomType, bool bType)
   double fMargin = 2.5;
   int data->pLength, data->pWidth;
 
-  if (volumePixels != NULL) {
-    for (i = 0; i < data->pLength; i++) {
-      for (j = 0; j < data->pWidth; j++) {
-        free(volumePixels[i][j]);
-      }
-      free(volumePixels[i]);
-    }
-
-    free(volumePixels);
-    volumePixels = NULL;
-  }
   boundBox(atomType, mol);
   if (bType == false) {
     data->pMin(X) -= fMargin;
