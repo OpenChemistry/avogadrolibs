@@ -750,6 +750,29 @@ ResidueData HEDData("HED",
                     // Double Bonds
                     { { "C1", "O1" }, { "C6", "O6" } });
 
+ResidueData HEMData(
+  "HEM",
+  // Atoms
+  { "FE",  "NA",  "NB",  "NC",  "ND",  "CHA", "C1A", "C4D", "CHB", "C4A", "C1B",
+    "CHC", "C4B", "C1C", "CHD", "C4C", "C1D", "C2A", "C3A", "CAA", "CMA", "CBA",
+    "CGA", "O1A", "O2A", "C2B", "C3B", "CMB", "CAB", "CBB", "C2C", "C3C", "CMC",
+    "CAC", "CBC", "C2D", "C3D", "CMD", "CAD", "CBD", "CGD", "O1D", "O2D" },
+  // Single Bonds
+  { { "FE", "NA" },   { "FE", "NB" },   { "FE", "NC" },   { "FE", "ND" },
+    { "CHA", "C1A" }, { "CHA", "C4D" }, { "CHB", "C4A" }, { "CHB", "C1B" },
+    { "CHC", "C4B" }, { "CHC", "C1C" }, { "CHD", "C4C" }, { "CHD", "C1D" },
+    { "NA", "C1A" },  { "NA", "C4A" },  { "C1A", "C2A" }, { "C2A", "C3A" },
+    { "C2A", "CAA" }, { "C3A", "C4A" }, { "C3A", "CMA" }, { "CAA", "CBA" },
+    { "CBA", "CGA" }, { "CGA", "O2A" }, { "NB", "C1B" },  { "NB", "C4B" },
+    { "C1B", "C2B" }, { "C2B", "C3B" }, { "C2B", "CMB" }, { "C3B", "C4B" },
+    { "C3B", "CAB" }, { "CAB", "CBB" }, { "NC", "C1C" },  { "NC", "C4C" },
+    { "C1C", "C2C" }, { "C2C", "C3C" }, { "C2C", "CMC" }, { "C3C", "C4C" },
+    { "C3C", "CAC" }, { "CAC", "CBC" }, { "ND", "C1D" },  { "ND", "C4D" },
+    { "C1D", "C2D" }, { "C2D", "C3D" }, { "C2D", "CMD" }, { "C3D", "C4D" },
+    { "C3D", "CAD" }, { "CAD", "CBD" }, { "CBD", "CGD" }, { "CGD", "O2D" } },
+  // Double Bonds
+  { { "CGA", "O1A" }, { "CGD", "O1D" } });
+
 std::map<std::string, ResidueData> residueDict = {
   { "ALA", ALAData }, { "ARG", ARGData }, { "ARZ", ARZData },
   { "ASN", ASNData }, { "ASP", ASPData }, { "ASH", ASHData },
@@ -763,9 +786,10 @@ std::map<std::string, ResidueData> residueDict = {
   { "SER", SERData }, { "THR", THRData }, { "TRP", TRPData },
   { "TYR", TYRData }, { "VAL", VALData }, { "TIP", TIPData },
   { "HOH", HOHData }, { "WAT", WATData }, { "INH", INHData },
-  { "UMP", UMPData }, { "HED", HEDData }
+  { "UMP", UMPData }, { "HED", HEDData }, { "HEM", HEMData }
 };
-}
-}
+
+} // namespace Core
+} // namespace Avogadro
 
 #endif
