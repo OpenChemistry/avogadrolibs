@@ -29,6 +29,10 @@ build_script:
 
     cd openchemistry-build
 
-    cmake -G %CMAKE_GENERATOR% ../openchemistry
+    cmake -DENABLE_TESTING:BOOL=ON -G %CMAKE_GENERATOR% ../openchemistry
 
     cmake --build . --target avogadrolibs --config Release -- /verbosity:detailed
+
+    cd avogadrolibs
+
+    ctest --output-on-failure
