@@ -23,7 +23,6 @@
 #include <string>
 
 #include "array.h"
-#include "atom.h"
 #include "bond.h"
 #include "graph.h"
 #include "variantmap.h"
@@ -34,6 +33,7 @@ namespace Core {
 class BasisSet;
 class Cube;
 class Mesh;
+class Residue;
 class UnitCell;
 
 /** Concrete atom/bond proxy classes for Core::Molecule. @{ */
@@ -528,6 +528,11 @@ public:
    */
   void perceiveBondsSimple();
 
+  /**
+   * Perceives bonds in the molecule based on preset residue data.
+   */
+  void perceiveBondsFromResidueData();
+
   int coordinate3dCount();
   bool setCoordinate3d(int coord);
   Array<Vector3> coordinate3d(int index) const;
@@ -538,6 +543,10 @@ public:
    */
   bool setTimeStep(double timestep, int index);
   double timeStep(int index, bool& status);
+
+  Residue& addResidue(std::string& name, Index& number, char& id);
+  void addResidue(Residue& residue);
+  Residue residue(int index);
 
 protected:
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
@@ -568,6 +577,7 @@ protected:
 
   BasisSet* m_basisSet;
   UnitCell* m_unitCell;
+  Array<Residue> m_residues;
 
   /** Update the graph to correspond to the current molecule. */
   void updateGraph() const;

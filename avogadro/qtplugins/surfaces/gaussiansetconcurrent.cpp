@@ -28,10 +28,11 @@
 namespace Avogadro {
 namespace QtPlugins {
 
-using Core::Molecule;
+using Core::BasisSet;
+using Core::Cube;
 using Core::GaussianSet;
 using Core::GaussianSetTools;
-using Core::Cube;
+using Core::Molecule;
 
 template <typename Derived>
 class BasisSetConcurrent
@@ -71,8 +72,15 @@ void GaussianSetConcurrent::setMolecule(Core::Molecule* mol)
 }
 
 bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
-                                                      unsigned int state)
+                                                      unsigned int state,
+                                                      bool beta)
 {
+  // We can do some initial set up of the tools here to set electron type.
+  if (!beta)
+    m_tools->setElectronType(BasisSet::Alpha);
+  else
+    m_tools->setElectronType(BasisSet::Beta);
+
   return setUpCalculation(cube, state, GaussianSetConcurrent::processOrbital);
 }
 

@@ -16,7 +16,8 @@ endif()
 include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/pugixml"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp"
-  "${AvogadroLibs_SOURCE_DIR}/thirdparty/struct")
+  "${AvogadroLibs_SOURCE_DIR}/thirdparty/struct"
+  "${AvogadroLibs_SOURCE_DIR}/thirdparty")
 
 if(DEFINED AvogadroLibs_MEMORY_INCLUDE_DIRS)
   # The smart pointer classes just require headers.
@@ -26,6 +27,7 @@ endif()
 set(HEADERS
   cjsonformat.h
   cmlformat.h
+  dcdformat.h
   fileformat.h
   fileformatmanager.h
   gromacsformat.h
@@ -40,6 +42,7 @@ set(HEADERS
 set(SOURCES
   cjsonformat.cpp
   cmlformat.cpp
+  dcdformat.cpp
   fileformat.cpp
   fileformatmanager.cpp
   gromacsformat.cpp

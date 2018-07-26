@@ -99,7 +99,7 @@ void SurfaceDialog::resolutionComboChanged(int n)
   }
 }
 
-void SurfaceDialog::setupBasis(int numElectrons, int numMOs)
+void SurfaceDialog::setupBasis(int numElectrons, int numMOs, bool beta)
 {
   // only if we have electrons
   if (numMOs < 1)
@@ -112,6 +112,11 @@ void SurfaceDialog::setupBasis(int numElectrons, int numMOs)
                               Surfaces::Type::MolecularOrbital);
   m_ui->surfaceCombo->addItem(tr("Electron Density"),
                               Surfaces::Type::ElectronDensity);
+
+  if (beta) {
+    m_ui->spinCombo->setVisible(true);
+    m_ui->spinCombo->setEnabled(true);
+  }
   // TODO: this class doesn't know about alpha / beta spin right now
   /*
   if (numElectrons % 2 != 0) {
@@ -159,6 +164,11 @@ Surfaces::Type SurfaceDialog::surfaceType()
 int SurfaceDialog::surfaceIndex()
 {
   return m_ui->orbitalCombo->currentIndex();
+}
+
+bool SurfaceDialog::beta()
+{
+  return m_ui->spinCombo->currentIndex() == 1;
 }
 
 float SurfaceDialog::isosurfaceValue()

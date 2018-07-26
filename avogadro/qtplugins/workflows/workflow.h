@@ -19,7 +19,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-#include <QtCore/QMultiMap>
+#include <QtCore/QMap>
 #include <QtCore/QStringList>
 
 class QAction;
@@ -81,17 +81,16 @@ private:
   void updateScripts();
   void updateActions();
   void addAction(const QString& label, const QString& scriptFilePath);
-  bool queryProgramName(const QString& scriptFilePath, QString& displayName);
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
   // keyed on script file path
-  QMultiMap<QString, QtGui::InterfaceWidget*> m_dialogs;
+  QMap<QString, QtGui::InterfaceWidget*> m_dialogs;
   QDialog* m_currentDialog;
   QtGui::InterfaceWidget* m_currentInterface;
 
   // maps program name --> script file path
-  QMultiMap<QString, QString> m_workflowScripts;
+  QMap<QString, QString> m_workflowScripts;
 
   const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 if [[ $TASKS == "clang-format" ]]; then
   cd $TRAVIS_BUILD_DIR
@@ -30,4 +31,5 @@ else
     ..
   make -j2
   ./avogadrolibs/bin/AvogadroTests
+  ./avogadrolibs/bin/AvogadroIOTests
 fi

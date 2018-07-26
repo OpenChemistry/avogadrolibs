@@ -29,12 +29,12 @@ def getMetaData():
     metaData['outputFormat'] = 'cjson'
     metaData['operations'] = ['read']
     metaData['identifier'] = 'CJSON writer'
-    metaData['name'] = 'CJSON Format'
+    metaData['name'] = 'CJSON'
     metaData['description'] = "The cclib script provided by the cclib repository is used to " +\
                               "write the CJSON format using the input file provided " +\
                               "to Avogadro2."
     metaData['fileExtensions'] = ['out', 'log', 'adfout', 'g09']
-    metaData['mimeTypes'] = ['To be filled']
+    metaData['mimeTypes'] = ['']
     return metaData
 
 
@@ -50,14 +50,18 @@ def read():
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser('Testing file format script.')
+    parser = argparse.ArgumentParser('Read files using cclib')
     parser.add_argument('--metadata', action='store_true')
     parser.add_argument('--read', action='store_true')
     parser.add_argument('--write', action='store_true')
+    parser.add_argument('--display-name', action='store_true')
+    parser.add_argument('--lang', nargs='?', default='en')
     args = vars(parser.parse_args())
 
     if args['metadata']:
         print(json.dumps(getMetaData()))
+    elif args['display_name']:
+        print(getMetaData()['name'])
     elif args['read']:
         print(read())
     elif args['write']:
