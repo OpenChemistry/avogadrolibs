@@ -65,7 +65,7 @@ public:
   }
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro
 
 #endif // AVOGADRO_IO_PDBFORMAT_H
