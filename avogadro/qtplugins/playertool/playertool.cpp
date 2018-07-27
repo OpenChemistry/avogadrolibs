@@ -232,7 +232,6 @@ void PlayerTool::recordMovie()
   QString baseFileName;
   if (m_molecule)
     baseFileName = m_molecule->data("fileName").toString().c_str();
-  QFileInfo info(baseFileName);
 
   QString baseName = QFileDialog::getSaveFileName(
     qobject_cast<QWidget*>(parent()), tr("Export Bitmap Graphics"), "",
@@ -240,8 +239,10 @@ void PlayerTool::recordMovie()
 
   if (baseName.isEmpty())
     return;
-  if (!QFileInfo(baseName).suffix().isEmpty())
-    baseName = QFileInfo(baseName).baseName();
+
+  QFileInfo fileInfo(baseName);
+  if (!fileInfo.suffix().isEmpty())
+    baseName = fileInfo.canonicalPath() + "/" + fileInfo.baseName();
 
   bool bonding = m_dynamicBonding->isChecked();
   int numberLength = static_cast<int>(

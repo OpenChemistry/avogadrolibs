@@ -58,7 +58,7 @@ class AVOGADROQTOPENGL_EXPORT GLWidget : public QOpenGLWidget
 
 public:
   explicit GLWidget(QWidget* parent = 0);
-  ~GLWidget();
+  ~GLWidget() override;
 
   /** Set the molecule the widget will render. */
   void setMolecule(QtGui::Molecule* molecule);
@@ -178,22 +178,22 @@ protected slots:
 
 protected:
   /** This is where the GL context is initialized. */
-  void initializeGL();
+  void initializeGL() override;
 
   /** Take care of resizing the context. */
-  void resizeGL(int width, int height);
+  void resizeGL(int width, int height) override;
 
   /** Main entry point for all GL rendering. */
-  void paintGL();
+  void paintGL() override;
 
   /** Reimplemented from QOpenGLWidget @{ */
-  void mouseDoubleClickEvent(QMouseEvent*);
-  void mousePressEvent(QMouseEvent*);
-  void mouseMoveEvent(QMouseEvent*);
-  void mouseReleaseEvent(QMouseEvent*);
-  void wheelEvent(QWheelEvent*);
-  void keyPressEvent(QKeyEvent*);
-  void keyReleaseEvent(QKeyEvent*);
+  void mouseDoubleClickEvent(QMouseEvent*) override;
+  void mousePressEvent(QMouseEvent*) override;
+  void mouseMoveEvent(QMouseEvent*) override;
+  void mouseReleaseEvent(QMouseEvent*) override;
+  void wheelEvent(QWheelEvent*) override;
+  void keyPressEvent(QKeyEvent*) override;
+  void keyReleaseEvent(QKeyEvent*) override;
   /** @} */
 
 private:

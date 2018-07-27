@@ -23,6 +23,7 @@
 #include <avogadro/qtgui/filebrowsewidget.h>
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <molequeue/client/jobobject.h>
@@ -50,7 +51,9 @@ using MoleQueue::InputGeneratorDialog;
 using ::MoleQueue::JobObject;
 
 QuantumInput::QuantumInput(QObject* parent_)
-  : ExtensionPlugin(parent_), m_molecule(nullptr), m_outputFormat(nullptr)
+  : ExtensionPlugin(parent_)
+  , m_molecule(nullptr)
+  , m_outputFormat(nullptr)
 {
   refreshGenerators();
 }
@@ -202,34 +205,7 @@ void QuantumInput::configurePython()
 
 void QuantumInput::updateInputGeneratorScripts()
 {
-  m_inputGeneratorScripts.clear();
-
-  // List of directories to check.
-  /// @todo Custom script locations
-  QStringList dirs;
-  dirs << QCoreApplication::applicationDirPath() + "/../" +
-            QtGui::Utilities::libraryDirectory() +
-            "/avogadro2/scripts/inputGenerators";
-  QStringList stdPaths =
-    QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation);
-  foreach (const QString& dirStr, stdPaths) {
-    QString path = dirStr + "/dev/inputGenerators";
-    dirs << path;
-  }
-
-  foreach (const QString& dirStr, dirs) {
-    qDebug() << "Checking for generator scripts in" << dirStr;
-    QDir dir(dirStr);
-    if (dir.exists() && dir.isReadable()) {
-      foreach (const QFileInfo& file,
-               dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot)) {
-        QString filePath = file.absoluteFilePath();
-        QString displayName;
-        if (queryProgramName(filePath, displayName))
-          m_inputGeneratorScripts.insert(displayName, filePath);
-      }
-    }
-  }
+  m_inputGeneratorScripts = QtGui::ScriptLoader::scriptList("inputGenerators");
 }
 
 void QuantumInput::updateActions()

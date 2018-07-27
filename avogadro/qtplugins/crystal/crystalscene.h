@@ -31,18 +31,21 @@ class CrystalScene : public QtGui::ScenePlugin
 
 public:
   explicit CrystalScene(QObject* parent = 0);
-  ~CrystalScene();
+  ~CrystalScene() override;
 
   void process(const Core::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const { return tr("Crystal Lattice"); }
+  QString name() const override { return tr("Crystal Lattice"); }
 
-  QString description() const { return tr("Render the unit cell boundaries."); }
+  QString description() const override
+  {
+    return tr("Render the unit cell boundaries.");
+  }
 
-  bool isEnabled() const;
+  bool isEnabled() const override;
 
-  void setEnabled(bool enable);
+  void setEnabled(bool enable) override;
 
 private:
   bool m_enabled;

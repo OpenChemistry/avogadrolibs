@@ -35,19 +35,19 @@ public:
                const std::vector<std::string> fileExtensions_,
                const std::vector<std::string> mimeTypes_,
                bool fileOnly_ = false);
-  ~OBFileFormat();
+  ~OBFileFormat() override;
 
   Operations supportedOperations() const override
   {
     return m_rwFlags | File | (m_fileOnly ? None : Stream | String);
   }
 
-  bool read(std::istream& in, Core::Molecule& molecule);
-  bool write(std::ostream& out, const Core::Molecule& molecule);
+  bool read(std::istream& in, Core::Molecule& molecule) override;
+  bool write(std::ostream& out, const Core::Molecule& molecule) override;
 
-  void clear();
+  void clear() override;
 
-  FileFormat* newInstance() const;
+  FileFormat* newInstance() const override;
 
   std::string description() const override { return m_description; }
   std::string identifier() const override { return m_identifier; }

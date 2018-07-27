@@ -30,7 +30,7 @@ class OverlayAxes : public QtGui::ScenePlugin
   Q_OBJECT
 public:
   explicit OverlayAxes(QObject* parent = 0);
-  ~OverlayAxes();
+  ~OverlayAxes() override;
 
   void process(const Core::Molecule& molecule,
                Rendering::GroupNode& node) override;
@@ -38,16 +38,16 @@ public:
   void processEditable(const QtGui::RWMolecule& molecule,
                        Rendering::GroupNode& node) override;
 
-  QString name() const { return tr("Reference Axes Overlay"); }
+  QString name() const override { return tr("Reference Axes Overlay"); }
 
-  QString description() const
+  QString description() const override
   {
     return tr("Render reference axes in the corner of the display.");
   }
 
-  bool isEnabled() const;
+  bool isEnabled() const override;
 
-  void setEnabled(bool enable);
+  void setEnabled(bool enable) override;
 
 private:
   bool m_enabled;

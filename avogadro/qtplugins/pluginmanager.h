@@ -74,7 +74,7 @@ public:
    * pluginManager->pluginFactories<Avogadro::QtGui::ScenePluginFactory>();
    * @endcode
    */
-  template <typename T>
+  template<typename T>
   QList<T*> pluginFactories() const;
 
   /**
@@ -89,13 +89,13 @@ public:
    * @param name The identifier of the plugin factory.
    * @return The plugin factory if the plugin was found, nullptr otherwise.
    */
-  template <typename T>
+  template<typename T>
   T* pluginFactory(const QString& id) const;
 
 private:
   // Hide the constructor, destructor, copy and assignment operator.
   PluginManager(QObject* parent = 0);
-  ~PluginManager();
+  ~PluginManager() override;
   PluginManager(const PluginManager&);            // Not implemented.
   PluginManager& operator=(const PluginManager&); // Not implemented.
 
@@ -108,7 +108,7 @@ private:
   QList<QObject*> m_plugins;
 };
 
-template <typename T>
+template<typename T>
 QList<T*> PluginManager::pluginFactories() const
 {
   QList<T*> factories;
@@ -120,7 +120,7 @@ QList<T*> PluginManager::pluginFactories() const
   return factories;
 }
 
-template <typename T>
+template<typename T>
 T* PluginManager::pluginFactory(const QString& id) const
 {
   T* factory;

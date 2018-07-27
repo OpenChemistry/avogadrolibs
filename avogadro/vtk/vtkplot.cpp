@@ -32,6 +32,8 @@
 
 #include <QVTKOpenGLWidget.h>
 
+#include <QtGui/QSurfaceFormat>
+
 #include "vtkplot.h"
 
 using std::array;

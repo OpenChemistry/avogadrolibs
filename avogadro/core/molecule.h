@@ -23,7 +23,6 @@
 #include <string>
 
 #include "array.h"
-#include "atom.h"
 #include "bond.h"
 #include "graph.h"
 #include "variantmap.h"
@@ -34,6 +33,7 @@ namespace Core {
 class BasisSet;
 class Cube;
 class Mesh;
+class Residue;
 class UnitCell;
 
 /** Concrete atom/bond proxy classes for Core::Molecule. @{ */
@@ -528,6 +528,11 @@ public:
    */
   void perceiveBondsSimple();
 
+  /**
+   * Perceives bonds in the molecule based on preset residue data.
+   */
+  void perceiveBondsFromResidueData();
+
   int coordinate3dCount();
   bool setCoordinate3d(int coord);
   Array<Vector3> coordinate3d(int index) const;
@@ -568,6 +573,10 @@ public:
    */
   bool setForceVector(Index atomId, const Vector3& force);
 
+  Residue& addResidue(std::string& name, Index& number, char& id);
+  void addResidue(Residue& residue);
+  Residue residue(int index);
+
 protected:
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
   mutable bool m_graphDirty; // Should the graph be rebuilt before returning it?
@@ -598,6 +607,7 @@ protected:
 
   BasisSet* m_basisSet;
   UnitCell* m_unitCell;
+  Array<Residue> m_residues;
 
   /** Update the graph to correspond to the current molecule. */
   void updateGraph() const;
@@ -606,23 +616,15 @@ protected:
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
 {
 public:
-  Atom()
-    : AtomTemplate<Molecule>()
-  {}
-  Atom(Molecule* m, Index i)
-    : AtomTemplate<Molecule>(m, i)
-  {}
+  Atom() : AtomTemplate<Molecule>() {}
+  Atom(Molecule* m, Index i) : AtomTemplate<Molecule>(m, i) {}
 };
 
 class AVOGADROCORE_EXPORT Bond : public BondTemplate<Molecule>
 {
 public:
-  Bond()
-    : BondTemplate<Molecule>()
-  {}
-  Bond(Molecule* m, Index i)
-    : BondTemplate<Molecule>(m, i)
-  {}
+  Bond() : BondTemplate<Molecule>() {}
+  Bond(Molecule* m, Index i) : BondTemplate<Molecule>(m, i) {}
 };
 
 inline unsigned char Molecule::atomicNumber(Index atomId) const
@@ -850,7 +852,7 @@ inline bool Molecule::setForceVector(Index atomId, const Vector3& force)
   return false;
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_MOLECULE_H

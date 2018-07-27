@@ -83,6 +83,7 @@ if __name__ == "__main__":
     parser.add_argument('--run-workflow', action='store_true')
     parser.add_argument('--display-name', action='store_true')
     parser.add_argument('--menu-path', action='store_true')
+    parser.add_argument('--lang', nargs='?', default='en')
     args = vars(parser.parse_args())
 
     debug = args['debug']

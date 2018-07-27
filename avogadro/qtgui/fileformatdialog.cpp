@@ -26,20 +26,18 @@
 
 #include <vector>
 
-using std::vector;
-using Avogadro::Io::FileFormatManager;
 using Avogadro::Io::FileFormat;
+using Avogadro::Io::FileFormatManager;
+using std::vector;
 
 namespace Avogadro {
 namespace QtGui {
 
-FileFormatDialog::FileFormatDialog(QWidget* parentW) : QFileDialog(parentW)
-{
-}
+FileFormatDialog::FileFormatDialog(QWidget* parentW)
+  : QFileDialog(parentW)
+{}
 
-FileFormatDialog::~FileFormatDialog()
-{
-}
+FileFormatDialog::~FileFormatDialog() {}
 
 FileFormatDialog::FormatFilePair FileFormatDialog::fileToRead(
   QWidget* parent, const QString& caption, const QString& dir,
@@ -63,8 +61,9 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToRead(
     // If none found, give user the option to retry.
     if (!format) {
       QMessageBox::StandardButton reply = QMessageBox::question(
-        parent, caption, tr("Unable to find a suitable file reader for "
-                            "the selected file."),
+        parent, caption,
+        tr("Unable to find a suitable file reader for "
+           "the selected file."),
         QMessageBox::Abort | QMessageBox::Retry, QMessageBox::Retry);
       switch (reply) {
         default:
@@ -105,8 +104,9 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
     // If none found, give user the option to retry.
     if (!format) {
       QMessageBox::StandardButton reply = QMessageBox::question(
-        parentWidget, caption, tr("Unable to find a suitable file writer for "
-                                  "the selected format."),
+        parentWidget, caption,
+        tr("Unable to find a suitable file writer for "
+           "the selected format."),
         QMessageBox::Abort | QMessageBox::Retry, QMessageBox::Retry);
       switch (reply) {
         default:
@@ -154,17 +154,17 @@ const Io::FileFormat* FileFormatDialog::findFileFormat(
     // Both or neither read/write
     noun = tr("handlers", "File handlers");
     verb = tr("handle", "e.g. file handlers that can 'handle' this file.");
-    key = "fileToWrite"; // Just use the write settings
+    key = QLatin1String("fileToWrite"); // Just use the write settings
   } else if (formatFlags & FileFormat::Read) {
     // Read
     noun = tr("readers", "File readers");
     verb = tr("read", "e.g. file readers that can 'read' this file.");
-    key = "fileToRead";
+    key = QLatin1String("fileToRead");
   } else if (formatFlags & FileFormat::Write) {
     // Write
     noun = tr("writers", "File writers");
     verb = tr("write", "e.g. file writers that can 'write' this file.");
-    key = "fileToWrite";
+    key = QLatin1String("fileToWrite");
   }
 
   return selectFileFormat(parentWidget, matches, caption,
@@ -212,8 +212,8 @@ QString FileFormatDialog::generateFilterString(
   QString filterString;
   // Create a map that groups the file extensions by name:
   QMap<QString, QString> formatMap;
-  for (std::vector<const Io::FileFormat *>::const_iterator it = ffs.begin(),
-                                                           itEnd = ffs.end();
+  for (std::vector<const Io::FileFormat*>::const_iterator it = ffs.begin(),
+                                                          itEnd = ffs.end();
        it != itEnd; ++it) {
     QString name(QString::fromStdString((*it)->name()));
     std::vector<std::string> exts = (*it)->fileExtensions();
@@ -232,10 +232,10 @@ QString FileFormatDialog::generateFilterString(
   // will be used as-is in the filter string, while others will be prepended
   // with "*.".
   QStringList nonExtensions;
-  nonExtensions << "POSCAR"  // VASP input geometry
-                << "CONTCAR" // VASP output geometry
-                << "HISTORY" // DL-POLY history file
-                << "CONFIG"  // DL-POLY config file
+  nonExtensions << QStringLiteral("POSCAR")  // VASP input geometry
+                << QStringLiteral("CONTCAR") // VASP output geometry
+                << QStringLiteral("HISTORY") // DL-POLY history file
+                << QStringLiteral("CONFIG")  // DL-POLY config file
     ;
 
   // This holds all known extensions:
@@ -250,15 +250,16 @@ QString FileFormatDialog::generateFilterString(
     }
     if (options & AllFormats)
       allExtensions << extensions;
-    filterString += QString("%1 (%2);;").arg(desc, extensions.join(" "));
+    filterString += QStringLiteral("%1 (%2);;")
+                      .arg(desc, extensions.join(QStringLiteral(" ")));
   }
 
   if (options & AllFiles)
     filterString.prepend(tr("All files (*);;"));
 
   if (options & AllFormats) {
-    filterString.prepend(
-      tr("All supported formats (%1);;").arg(allExtensions.join(" ")));
+    filterString.prepend(tr("All supported formats (%1);;")
+                           .arg(allExtensions.join(QStringLiteral(" "))));
   }
 
   return filterString;
@@ -276,8 +277,8 @@ const Io::FileFormat* FileFormatDialog::selectFileFormat(
 
   // If more than one format found, prompt user to select one.
   QStringList idents;
-  for (std::vector<const Io::FileFormat *>::const_iterator it = ffs.begin(),
-                                                           itEnd = ffs.end();
+  for (std::vector<const Io::FileFormat*>::const_iterator it = ffs.begin(),
+                                                          itEnd = ffs.end();
        it != itEnd; ++it) {
     idents << QString::fromStdString((*it)->identifier());
   }

@@ -55,7 +55,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueQueueListModel
 {
   Q_OBJECT
 public:
-  ~MoleQueueQueueListModel();
+  ~MoleQueueQueueListModel() override;
 
   /**
    * @return A list of the available queues.
@@ -93,14 +93,15 @@ public:
                      QString& programName) const;
 
   // QAbstractItemModel virtuals
-  QVariant data(const QModelIndex& idx, int role) const;
-  Qt::ItemFlags flags(const QModelIndex& idx = QModelIndex()) const;
-  QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+  QVariant data(const QModelIndex& idx, int role) const override;
+  Qt::ItemFlags flags(const QModelIndex& idx = QModelIndex()) const override;
+  QVariant headerData(int section, Qt::Orientation orientation,
+                      int role) const override;
   QModelIndex index(int row, int column,
-                    const QModelIndex& parent_ = QModelIndex()) const;
-  QModelIndex parent(const QModelIndex& child) const;
-  int rowCount(const QModelIndex& parent_ = QModelIndex()) const;
-  int columnCount(const QModelIndex& parent_ = QModelIndex()) const;
+                    const QModelIndex& parent_ = QModelIndex()) const override;
+  QModelIndex parent(const QModelIndex& child) const override;
+  int rowCount(const QModelIndex& parent_ = QModelIndex()) const override;
+  int columnCount(const QModelIndex& parent_ = QModelIndex()) const override;
 
 protected:
   friend class MoleQueueManager;

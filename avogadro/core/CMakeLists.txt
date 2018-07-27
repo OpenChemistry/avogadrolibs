@@ -3,7 +3,7 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
-if(USE_LIBSPG)
+if(USE_SPGLIB)
   find_package(Spglib REQUIRED)
   include_directories(SYSTEM ${SPGLIB_INCLUDE_DIR})
 endif()
@@ -34,6 +34,7 @@ set(HEADERS
   molecule.h
   mutex.h
   nameatomtyper.h
+  residue.h
   ringperceiver.h
   slaterset.h
   slatersettools.h
@@ -62,6 +63,7 @@ set(SOURCES
   molecule.cpp
   mutex.cpp
   nameatomtyper.cpp
+  residue.cpp
   ringperceiver.cpp
   slaterset.cpp
   slatersettools.cpp
@@ -72,7 +74,7 @@ set(SOURCES
   version.cpp
 )
 
-if(USE_LIBSPG)
+if(USE_SPGLIB)
   list(APPEND HEADERS avospglib.h)
   list(APPEND SOURCES avospglib.cpp)
 endif()

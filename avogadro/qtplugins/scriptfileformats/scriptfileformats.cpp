@@ -19,25 +19,26 @@
 #include "fileformatscript.h"
 
 #include <avogadro/io/fileformatmanager.h>
+#include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#include <QtCore/QStandardPaths>
 #include <QtCore/QTimer>
 
 namespace Avogadro {
 namespace QtPlugins {
 
-ScriptFileFormats::ScriptFileFormats(QObject* p) : ExtensionPlugin(p)
+ScriptFileFormats::ScriptFileFormats(QObject* p)
+  : ExtensionPlugin(p)
 {
   refreshFileFormats();
 }
 
-ScriptFileFormats::~ScriptFileFormats()
-{
-}
+ScriptFileFormats::~ScriptFileFormats() {}
 
 QList<QAction*> ScriptFileFormats::actions() const
 {
@@ -49,9 +50,7 @@ QStringList ScriptFileFormats::menuPath(QAction*) const
   return QStringList();
 }
 
-void ScriptFileFormats::setMolecule(QtGui::Molecule*)
-{
-}
+void ScriptFileFormats::setMolecule(QtGui::Molecule*) {}
 
 void ScriptFileFormats::refreshFileFormats()
 {
@@ -59,27 +58,14 @@ void ScriptFileFormats::refreshFileFormats()
   qDeleteAll(m_formats);
   m_formats.clear();
 
-  // List of directories to check.
-  /// @todo Custom script locations
-  QStringList dirs;
-  dirs << QCoreApplication::applicationDirPath() + "/../" +
-            QtGui::Utilities::libraryDirectory() +
-            "/avogadro2/scripts/formatScripts";
-
-  foreach (const QString& dirStr, dirs) {
-    qDebug() << "Checking for file format scripts in" << dirStr;
-    QDir dir(dirStr);
-    if (dir.exists() && dir.isReadable()) {
-      foreach (const QFileInfo& file,
-               dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot)) {
-        QString filePath = file.absoluteFilePath();
-        FileFormatScript* format = new FileFormatScript(filePath);
-        if (format->isValid())
-          m_formats.push_back(format);
-        else
-          delete format;
-      }
-    }
+  QMap<QString, QString> scriptPaths =
+    QtGui::ScriptLoader::scriptList("formatScripts");
+  foreach (const QString& filePath, scriptPaths) {
+    FileFormatScript* format = new FileFormatScript(filePath);
+    if (format->isValid())
+      m_formats.push_back(format);
+    else
+      delete format;
   }
 
   registerFileFormats();
@@ -87,8 +73,8 @@ void ScriptFileFormats::refreshFileFormats()
 
 void ScriptFileFormats::unregisterFileFormats()
 {
-  for (QList<Io::FileFormat *>::const_iterator it = m_formats.constBegin(),
-                                               itEnd = m_formats.constEnd();
+  for (QList<Io::FileFormat*>::const_iterator it = m_formats.constBegin(),
+                                              itEnd = m_formats.constEnd();
        it != itEnd; ++it) {
     Io::FileFormatManager::unregisterFormat((*it)->identifier());
   }
@@ -96,8 +82,8 @@ void ScriptFileFormats::unregisterFileFormats()
 
 void ScriptFileFormats::registerFileFormats()
 {
-  for (QList<Io::FileFormat *>::const_iterator it = m_formats.constBegin(),
-                                               itEnd = m_formats.constEnd();
+  for (QList<Io::FileFormat*>::const_iterator it = m_formats.constBegin(),
+                                              itEnd = m_formats.constEnd();
        it != itEnd; ++it) {
     if (!Io::FileFormatManager::registerFormat((*it)->newInstance())) {
       qDebug() << "Could not register format" << (*it)->identifier().c_str()

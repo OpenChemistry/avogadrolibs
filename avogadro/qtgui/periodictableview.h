@@ -46,7 +46,7 @@ public:
    * of PeriodicTableScene.
    */
   explicit PeriodicTableView(QWidget* parent_ = 0);
-  ~PeriodicTableView();
+  ~PeriodicTableView() override;
 
   /**
    * @return The currently selected element.
@@ -80,17 +80,17 @@ protected:
   /**
    * Double click event - select an element and hide the PeriodicTableView.
    */
-  void mouseDoubleClickEvent(QMouseEvent* event);
+  void mouseDoubleClickEvent(QMouseEvent* event) override;
 
   /**
    * Handles the keyboard events to change the active element.
    */
-  void keyPressEvent(QKeyEvent* event_);
+  void keyPressEvent(QKeyEvent* event_) override;
 
   /**
    * Handle resize events.
    */
-  void resizeEvent(QResizeEvent* event);
+  void resizeEvent(QResizeEvent* event) override;
 
 private:
   /**
