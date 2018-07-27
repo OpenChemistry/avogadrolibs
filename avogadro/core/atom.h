@@ -46,7 +46,7 @@ enum AtomHybridization
  * To use the appropriate atom implementation for a specific molecule
  * implementation, use the [MoleculeClass]::AtomType typedef.
  */
-template <class Molecule_T>
+template<class Molecule_T>
 class AtomTemplate
 {
 public:
@@ -163,103 +163,111 @@ public:
   bool selected() const;
   /** @} */
 
+  /**
+   * The force on this atom.
+   * {@
+   */
+  void setForceVector(const Vector3& force);
+  Vector3 forceVector() const;
+  /** @} */
+
 private:
   MoleculeType* m_molecule;
   Index m_index;
 };
 
-template <class Molecule_T>
+template<class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate()
-  : m_molecule(nullptr), m_index(MaxIndex)
-{
-}
+  : m_molecule(nullptr)
+  , m_index(MaxIndex)
+{}
 
-template <class Molecule_T>
+template<class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate(MoleculeType* m, Index i)
-  : m_molecule(m), m_index(i)
-{
-}
+  : m_molecule(m)
+  , m_index(i)
+{}
 
-template <class Molecule_T>
+template<class Molecule_T>
 bool AtomTemplate<Molecule_T>::operator==(
   const AtomTemplate<MoleculeType>& other) const
 {
   return m_molecule == other.m_molecule && m_index == other.m_index;
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 bool AtomTemplate<Molecule_T>::operator!=(
   const AtomTemplate<MoleculeType>& other) const
 {
   return m_molecule != other.m_molecule || m_index != other.m_index;
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 AtomTemplate<Molecule_T>& AtomTemplate<Molecule_T>::operator++()
 {
   ++m_index;
   return *this;
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 AtomTemplate<Molecule_T> AtomTemplate<Molecule_T>::operator++(int)
 {
   AtomTemplate<MoleculeType> result(m_molecule, m_index++);
   return result;
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 AtomTemplate<Molecule_T>& AtomTemplate<Molecule_T>::operator--()
 {
   --m_index;
   return *this;
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 AtomTemplate<Molecule_T> AtomTemplate<Molecule_T>::operator--(int)
 {
   AtomTemplate<MoleculeType> result(m_molecule, m_index--);
   return result;
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 bool AtomTemplate<Molecule_T>::isValid() const
 {
   return m_molecule && m_index < m_molecule->atomCount();
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 typename AtomTemplate<Molecule_T>::MoleculeType*
 AtomTemplate<Molecule_T>::molecule() const
 {
   return m_molecule;
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 Index AtomTemplate<Molecule_T>::index() const
 {
   return m_index;
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 void AtomTemplate<Molecule_T>::setAtomicNumber(unsigned char num)
 {
   m_molecule->setAtomicNumber(m_index, num);
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 unsigned char AtomTemplate<Molecule_T>::atomicNumber() const
 {
   return m_molecule->atomicNumber(m_index);
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 void AtomTemplate<Molecule_T>::setPosition2d(const Vector2& pos)
 {
   m_molecule->setAtomPosition2d(m_index, pos);
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 Vector2 AtomTemplate<Molecule_T>::position2d() const
 {
   return m_molecule->atomPositions2d().size() > 0
@@ -267,13 +275,13 @@ Vector2 AtomTemplate<Molecule_T>::position2d() const
            : Vector2::Zero();
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 void AtomTemplate<Molecule_T>::setPosition3d(const Vector3& pos)
 {
   m_molecule->setAtomPosition3d(m_index, pos);
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 Vector3 AtomTemplate<Molecule_T>::position3d() const
 {
   return m_molecule->atomPositions3d().size() > 0
@@ -281,40 +289,54 @@ Vector3 AtomTemplate<Molecule_T>::position3d() const
            : Vector3::Zero();
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 void AtomTemplate<Molecule_T>::setHybridization(AtomHybridization hyb)
 {
   m_molecule->setHybridization(m_index, hyb);
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 AtomHybridization AtomTemplate<Molecule_T>::hybridization() const
 {
   return m_molecule->hybridization(m_index);
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 void AtomTemplate<Molecule_T>::setFormalCharge(signed char charge)
 {
   m_molecule->setFormalCharge(m_index, charge);
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 signed char AtomTemplate<Molecule_T>::formalCharge() const
 {
   return m_molecule->formalCharge(m_index);
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 void AtomTemplate<Molecule_T>::setSelected(bool selected)
 {
   m_molecule->setAtomSelected(m_index, selected);
 }
 
-template <class Molecule_T>
+template<class Molecule_T>
 bool AtomTemplate<Molecule_T>::selected() const
 {
   return m_molecule->atomSelected(m_index);
+}
+
+template<class Molecule_T>
+void AtomTemplate<Molecule_T>::setForceVector(const Vector3& force)
+{
+  m_molecule->setForceVector(m_index, force);
+}
+
+template<class Molecule_T>
+Vector3 AtomTemplate<Molecule_T>::forceVector() const
+{
+  return m_molecule->forceVectors().size() > 0
+           ? m_molecule->forceVectors()[m_index]
+           : Vector3::Zero();
 }
 
 } // end Core namespace

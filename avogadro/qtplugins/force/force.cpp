@@ -57,7 +57,7 @@ void Force::process(const Molecule& molecule, Rendering::GroupNode& node)
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom1 = molecule.atom(i);
     Vector3f pos1 = atom1.position3d().cast<float>();
-    Vector3f forceVector(2.0, 2.0, 2.0);
+    Vector3f forceVector = atom1.forceVector().cast<float>();
     arrows->addSingleArrow(pos1, pos1 + forceVector);
   }
 }

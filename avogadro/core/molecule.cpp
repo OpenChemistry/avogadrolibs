@@ -814,5 +814,15 @@ void Molecule::updateGraph() const
   }
 }
 
+Array<Vector3>& Molecule::forceVectors()
+{
+  return m_forceVectors;
+}
+
+const Array<Vector3>& Molecule::forceVectors() const
+{
+  return m_forceVectors;
+}
+
 } // end Core namespace
 } // end Avogadro namespace
