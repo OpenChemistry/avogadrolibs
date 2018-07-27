@@ -39,10 +39,7 @@ using Rendering::ArrowGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 
-Force::Force(QObject* p)
-  : ScenePlugin(p)
-  , m_enabled(false)
-{}
+Force::Force(QObject* p) : ScenePlugin(p), m_enabled(false) {}
 
 Force::~Force() {}
 
@@ -71,5 +68,5 @@ void Force::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
