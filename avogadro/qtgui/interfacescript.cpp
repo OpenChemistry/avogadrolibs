@@ -31,12 +31,12 @@ using QtGui::PythonScript;
 InterfaceScript::InterfaceScript(const QString& scriptFilePath_,
                                  QObject* parent_)
   : QObject(parent_), m_interpreter(new PythonScript(scriptFilePath_, this)),
-    m_moleculeExtension(QStringLiteral("cjson"))
+    m_moleculeExtension(QStringLiteral("Unknown"))
 {}
 
 InterfaceScript::InterfaceScript(QObject* parent_)
   : QObject(parent_), m_interpreter(new PythonScript(this)),
-    m_moleculeExtension(QStringLiteral("cjson"))
+    m_moleculeExtension(QStringLiteral("Unknown"))
 {}
 
 InterfaceScript::~InterfaceScript() {}
@@ -75,14 +75,6 @@ QJsonObject InterfaceScript::options() const
 
     m_options = doc.object();
 
-    // Check if the generator needs to read a molecule.
-    m_moleculeExtension = QLatin1String("cjson");
-    if (m_options.contains(QStringLiteral("inputMoleculeFormat")) &&
-        m_options[QStringLiteral("inputMoleculeFormat")].isString()) {
-      m_moleculeExtension =
-        m_options[QStringLiteral("inputMoleculeFormat")].toString();
-    }
-
     if (m_options.contains(QStringLiteral("highlightStyles")) &&
         m_options.value(QStringLiteral("highlightStyles")).isArray()) {
       if (!parseHighlightStyles(
@@ -90,6 +82,14 @@ QJsonObject InterfaceScript::options() const
         qDebug() << "Failed to parse highlighting styles.";
       }
     }
+  }
+
+  // Check if the generator needs to read a molecule.
+  m_moleculeExtension = QLatin1String("cjson");
+  if (m_options.contains(QStringLiteral("inputMoleculeFormat")) &&
+      m_options[QStringLiteral("inputMoleculeFormat")].isString()) {
+    m_moleculeExtension =
+      m_options[QStringLiteral("inputMoleculeFormat")].toString();
   }
 
   return m_options;
@@ -175,7 +175,6 @@ bool InterfaceScript::runWorkflow(const QJsonObject& options_,
 
   QJsonDocument doc;
   if (!parseJson(json, doc)) {
-    qDebug() << " can't parse ";
     return false;
   }
 
@@ -236,7 +235,6 @@ bool InterfaceScript::runWorkflow(const QJsonObject& options_,
     }
 
     if (obj["append"].toBool()) { // just append some new bits
-      qDebug() << " appending " << newMol.atomCount();
       guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
     } else { // replace the whole molecule
       Molecule::MoleculeChanges changes = (Molecule::Atoms | Molecule::Bonds |
