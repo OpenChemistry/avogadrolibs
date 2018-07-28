@@ -88,6 +88,9 @@ public:
    */
   void applyOptions(const QJsonObject& opts);
 
+  bool isEmpty() const
+  { return m_empty; }
+
 private slots:
   /**
    * Triggered when the user resets the default values.
@@ -179,6 +182,7 @@ private:
   QJsonObject m_optionCache; // For reverting changes
   QList<QTextEdit*> m_dirtyTextEdits;
 
+  bool m_empty;
   QMap<QString, QWidget*> m_widgets;
   QMap<QString, QTextEdit*> m_textEdits;
 
