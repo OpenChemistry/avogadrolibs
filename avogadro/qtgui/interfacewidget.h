@@ -88,8 +88,7 @@ public:
    */
   void applyOptions(const QJsonObject& opts);
 
-  bool isEmpty() const
-  { return m_empty; }
+  bool isEmpty() const { return m_empty; }
 
 private slots:
   /**
