@@ -31,34 +31,24 @@ namespace Avogadro {
 namespace Core {
 
 Molecule::Molecule()
-  : m_graphDirty(false)
-  , m_basisSet(nullptr)
-  , m_unitCell(nullptr)
+  : m_graphDirty(false), m_basisSet(nullptr), m_unitCell(nullptr)
 {}
 
 Molecule::Molecule(const Molecule& other)
-  : m_graph(other.m_graph)
-  , m_graphDirty(true)
-  , m_data(other.m_data)
-  , m_customElementMap(other.m_customElementMap)
-  , m_atomicNumbers(other.atomicNumbers())
-  , m_positions2d(other.m_positions2d)
-  , m_positions3d(other.m_positions3d)
-  , m_coordinates3d(other.m_coordinates3d)
-  , m_timesteps(other.m_timesteps)
-  , m_hybridizations(other.m_hybridizations)
-  , m_formalCharges(other.m_formalCharges)
-  , m_vibrationFrequencies(other.m_vibrationFrequencies)
-  , m_vibrationIntensities(other.m_vibrationIntensities)
-  , m_vibrationLx(other.m_vibrationLx)
-  , m_bondPairs(other.m_bondPairs)
-  , m_bondOrders(other.m_bondOrders)
-  , m_selectedAtoms(other.m_selectedAtoms)
-  , m_meshes(std::vector<Mesh*>())
-  , m_cubes(std::vector<Cube*>())
-  , m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr)
-  , m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr)
-  , m_residues(other.m_residues)
+  : m_graph(other.m_graph), m_graphDirty(true), m_data(other.m_data),
+    m_customElementMap(other.m_customElementMap),
+    m_atomicNumbers(other.atomicNumbers()), m_positions2d(other.m_positions2d),
+    m_positions3d(other.m_positions3d), m_coordinates3d(other.m_coordinates3d),
+    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
+    m_formalCharges(other.m_formalCharges),
+    m_vibrationFrequencies(other.m_vibrationFrequencies),
+    m_vibrationIntensities(other.m_vibrationIntensities),
+    m_vibrationLx(other.m_vibrationLx), m_bondPairs(other.m_bondPairs),
+    m_bondOrders(other.m_bondOrders), m_selectedAtoms(other.m_selectedAtoms),
+    m_meshes(std::vector<Mesh*>()), m_cubes(std::vector<Cube*>()),
+    m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
+    m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
+    m_residues(other.m_residues)
 {
   // Copy over any meshes
   for (Index i = 0; i < other.meshCount(); ++i) {
@@ -74,26 +64,25 @@ Molecule::Molecule(const Molecule& other)
 }
 
 Molecule::Molecule(Molecule&& other) noexcept
-  : m_graph(std::move(other.m_graph))
-  , m_graphDirty(std::move(other.m_graphDirty))
-  , m_data(std::move(other.m_data))
-  , m_customElementMap(std::move(other.m_customElementMap))
-  , m_atomicNumbers(std::move(other.atomicNumbers()))
-  , m_positions2d(std::move(other.m_positions2d))
-  , m_positions3d(std::move(other.m_positions3d))
-  , m_coordinates3d(std::move(other.m_coordinates3d))
-  , m_timesteps(std::move(other.m_timesteps))
-  , m_hybridizations(std::move(other.m_hybridizations))
-  , m_formalCharges(std::move(other.m_formalCharges))
-  , m_vibrationFrequencies(std::move(other.m_vibrationFrequencies))
-  , m_vibrationIntensities(std::move(other.m_vibrationIntensities))
-  , m_vibrationLx(std::move(other.m_vibrationLx))
-  , m_bondPairs(std::move(other.m_bondPairs))
-  , m_bondOrders(std::move(other.m_bondOrders))
-  , m_selectedAtoms(std::move(other.m_selectedAtoms))
-  , m_meshes(std::move(other.m_meshes))
-  , m_cubes(std::move(other.m_cubes))
-  , m_residues(std::move(other.m_residues))
+  : m_graph(std::move(other.m_graph)),
+    m_graphDirty(std::move(other.m_graphDirty)),
+    m_data(std::move(other.m_data)),
+    m_customElementMap(std::move(other.m_customElementMap)),
+    m_atomicNumbers(std::move(other.atomicNumbers())),
+    m_positions2d(std::move(other.m_positions2d)),
+    m_positions3d(std::move(other.m_positions3d)),
+    m_coordinates3d(std::move(other.m_coordinates3d)),
+    m_timesteps(std::move(other.m_timesteps)),
+    m_hybridizations(std::move(other.m_hybridizations)),
+    m_formalCharges(std::move(other.m_formalCharges)),
+    m_vibrationFrequencies(std::move(other.m_vibrationFrequencies)),
+    m_vibrationIntensities(std::move(other.m_vibrationIntensities)),
+    m_vibrationLx(std::move(other.m_vibrationLx)),
+    m_bondPairs(std::move(other.m_bondPairs)),
+    m_bondOrders(std::move(other.m_bondOrders)),
+    m_selectedAtoms(std::move(other.m_selectedAtoms)),
+    m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
+    m_residues(std::move(other.m_residues))
 {
   m_basisSet = other.m_basisSet;
   other.m_basisSet = nullptr;
@@ -434,13 +423,30 @@ std::pair<Index, Index> makeBondPair(const Index& a, const Index& b)
 {
   return a < b ? std::make_pair(a, b) : std::make_pair(b, a);
 }
-}
+} // namespace
 
 Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
                                      unsigned char order)
 {
   assert(atom1 < atomCount());
   assert(atom2 < atomCount());
+
+  // check if the bond exists - if not, create it
+  std::pair<Index, Index> pair = makeBondPair(atom1, atom2);
+
+  Array<std::pair<Index, Index>>::iterator iter =
+    std::find(m_bondPairs.begin(), m_bondPairs.end(), pair);
+
+  if (iter != m_bondPairs.end()) {
+    // found an existing bond between these atoms
+    Index index = static_cast<Index>(std::distance(m_bondPairs.begin(), iter));
+    if (m_bondOrders[index] != order) {
+      // change the order
+      m_bondOrders[index] = order;
+      m_graphDirty = true;
+    }
+    return BondType(const_cast<Molecule*>(this), index);
+  }
 
   m_graphDirty = true;
   m_bondPairs.push_back(makeBondPair(atom1, atom2));
@@ -455,11 +461,7 @@ Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
   assert(a.isValid() && a.molecule() == this);
   assert(b.isValid() && b.molecule() == this);
 
-  m_graphDirty = true;
-  m_bondPairs.push_back(makeBondPair(a.index(), b.index()));
-  m_bondOrders.push_back(order);
-
-  return BondType(this, static_cast<Index>(m_bondPairs.size() - 1));
+  return addBond(a.index(), b.index(), order);
 }
 
 bool Molecule::removeBond(Index index)
@@ -510,17 +512,7 @@ Molecule::BondType Molecule::bond(const AtomType& a, const AtomType& b) const
   assert(a.isValid() && a.molecule() == this);
   assert(b.isValid() && b.molecule() == this);
 
-  std::pair<Index, Index> pair = makeBondPair(a.index(), b.index());
-
-  Array<std::pair<Index, Index>>::const_iterator iter =
-    std::find(m_bondPairs.begin(), m_bondPairs.end(), pair);
-
-  if (iter == m_bondPairs.end())
-    return BondType();
-
-  Index index = static_cast<Index>(std::distance(m_bondPairs.begin(), iter));
-
-  return BondType(const_cast<Molecule*>(this), index);
+  return bond(a.index(), b.index());
 }
 
 Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
@@ -545,12 +537,8 @@ Array<Molecule::BondType> Molecule::bonds(const AtomType& a)
 {
   if (!a.isValid())
     return Array<BondType>();
-  Array<BondType> atomBonds;
-  Index atomIndex = a.index();
-  for (Index i = 0; i < m_bondPairs.size(); ++i)
-    if (m_bondPairs[i].first == atomIndex || m_bondPairs[i].second == atomIndex)
-      atomBonds.push_back(BondType(this, i));
-  return atomBonds;
+
+  return bonds(a.index());
 }
 
 Array<Molecule::BondType> Molecule::bonds(Index a)
@@ -722,14 +710,11 @@ void Molecule::setVibrationLx(const Array<Array<Vector3>>& lx)
 }
 
 // bond perception code ported from VTK's vtkSimpleBondPerceiver class
-void Molecule::perceiveBondsSimple()
+void Molecule::perceiveBondsSimple(const double tolerance, const double min)
 {
   // check for coordinates
   if (m_positions3d.size() != atomCount())
     return;
-
-  // the tolerance used in the comparisons
-  double tolerance = 0.45;
 
   // cache atomic radii
   std::vector<double> radii(atomCount());
@@ -755,7 +740,7 @@ void Molecule::perceiveBondsSimple()
       // check radius and add bond if needed
       double cutoffSq = cutoff * cutoff;
       double diffsq = diff.squaredNorm();
-      if (diffsq < cutoffSq && diffsq > 0.1)
+      if (diffsq < cutoffSq && diffsq > min * min)
         addBond(atom(i), atom(j), 1);
     }
   }
@@ -843,5 +828,5 @@ Residue Molecule::residue(int index)
   return m_residues[index];
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro

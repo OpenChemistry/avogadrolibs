@@ -525,8 +525,12 @@ public:
 
   /**
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
+   *  atoms are considered bonded if within the sum of radii
+   *  plus a small @param tolerance.
+   * @param minDistance = atoms closer than the square of this are ignored
    */
-  void perceiveBondsSimple();
+  void perceiveBondsSimple(const double tolerance = 0.45,
+                           const double minDistance = 0.32);
 
   /**
    * Perceives bonds in the molecule based on preset residue data.
@@ -586,23 +590,15 @@ protected:
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
 {
 public:
-  Atom()
-    : AtomTemplate<Molecule>()
-  {}
-  Atom(Molecule* m, Index i)
-    : AtomTemplate<Molecule>(m, i)
-  {}
+  Atom() : AtomTemplate<Molecule>() {}
+  Atom(Molecule* m, Index i) : AtomTemplate<Molecule>(m, i) {}
 };
 
 class AVOGADROCORE_EXPORT Bond : public BondTemplate<Molecule>
 {
 public:
-  Bond()
-    : BondTemplate<Molecule>()
-  {}
-  Bond(Molecule* m, Index i)
-    : BondTemplate<Molecule>(m, i)
-  {}
+  Bond() : BondTemplate<Molecule>() {}
+  Bond(Molecule* m, Index i) : BondTemplate<Molecule>(m, i) {}
 };
 
 inline unsigned char Molecule::atomicNumber(Index atomId) const
@@ -805,7 +801,7 @@ inline bool Molecule::setBondOrder(Index bondId, unsigned char order)
   return false;
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_MOLECULE_H

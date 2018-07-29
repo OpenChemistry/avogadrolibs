@@ -6,5 +6,5 @@ avogadro_plugin(Bonding
   bonding.h
   Bonding
   "bonding.cpp"
-  ""
+  "bondingdialog.ui"
 )
