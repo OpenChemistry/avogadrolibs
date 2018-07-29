@@ -30,6 +30,6 @@ else
     -DUSE_SYSTEM_ZLIB=ON \
     ..
   make -j2
-  ./avogadrolibs/bin/AvogadroTests
-  ./avogadrolibs/bin/AvogadroIOTests
+  cd avogadrolibs
+  xvfb-run ctest --output-on-failure
 fi
