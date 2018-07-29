@@ -20,15 +20,20 @@
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
 
+#include <avogadro/io/fileformat.h>
+#include <avogadro/io/fileformatmanager.h>
+
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QTextEdit>
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QHash>
+#include <QtCore/QPointer>
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
 
@@ -36,52 +41,28 @@ namespace Avogadro {
 namespace QtPlugins {
 
 LammpsInputDialog::LammpsInputDialog(QWidget* parent, Qt::WindowFlags flag)
-  : QDialog(parent, flag)
-  , m_molecule(nullptr)
-  ,
+  : QDialog(parent, flag), m_molecule(nullptr),
 
-  m_unitType(real)
-  , m_title("Title")
-  , m_savePath("")
-  , m_dimensionType(d3)
-  , m_xBoundaryType(p)
-  , m_yBoundaryType(p)
-  , m_zBoundaryType(p)
-  ,
+    m_unitType(real), m_title("Title"), m_savePath(""), m_dimensionType(d3),
+    m_xBoundaryType(p), m_yBoundaryType(p), m_zBoundaryType(p),
 
-  m_atomStyle(full)
-  ,
+    m_atomStyle(full),
 
-  m_waterPotential(NONE)
-  ,
+    m_waterPotential(NONE),
 
-  m_ensemble(NVT)
-  , m_temperature(298.15)
-  , m_nhChain(1)
-  ,
+    m_ensemble(NVT), m_temperature(298.15), m_nhChain(1),
 
-  m_timeStep(2.0)
-  , m_runSteps(50)
-  , m_xReplicate(1)
-  , m_yReplicate(1)
-  , m_zReplicate(1)
-  ,
+    m_timeStep(2.0), m_runSteps(50), m_xReplicate(1), m_yReplicate(1),
+    m_zReplicate(1),
 
-  m_dumpStep(1)
-  ,
+    m_dumpStep(1),
 
-  m_velocityDist(gaussian)
-  , m_velocityTemp(298.15)
-  , m_zeroMOM(true)
-  , m_zeroL(true)
-  , m_thermoStyle(one)
-  , m_thermoInterval(50)
-  ,
+    m_velocityDist(gaussian), m_velocityTemp(298.15), m_zeroMOM(true),
+    m_zeroL(true), m_thermoStyle(one), m_thermoInterval(50),
 
-  m_output()
-  , m_dirty(false)
-  , m_warned(false)
-  , readData(false)
+    m_output(), m_dirty(false), m_warned(false), readData(false),
+
+    m_jobEdit(nullptr), m_moleculeEdit(nullptr)
 {
   ui.setupUi(this);
   // Connect the GUI elements to the correct slots
@@ -133,12 +114,9 @@ LammpsInputDialog::LammpsInputDialog(QWidget* parent, Qt::WindowFlags flag)
   connect(ui.thermoSpin, SIGNAL(valueChanged(int)), this,
           SLOT(setThermoInterval(int)));
 
-  connect(ui.previewText, SIGNAL(cursorPositionChanged()), this,
-          SLOT(previewEdited()));
   connect(ui.generateButton, SIGNAL(clicked()), this, SLOT(generateClicked()));
   connect(ui.resetButton, SIGNAL(clicked()), this, SLOT(resetClicked()));
 
-  connect(ui.moreButton, SIGNAL(clicked()), this, SLOT(moreClicked()));
   connect(ui.enableFormButton, SIGNAL(clicked()), this,
           SLOT(enableFormClicked()));
 
@@ -147,6 +125,7 @@ LammpsInputDialog::LammpsInputDialog(QWidget* parent, Qt::WindowFlags flag)
 
   // Generate an initial preview of the input deck
   updatePreviewText();
+  addMoleculeDataTab();
 }
 
 LammpsInputDialog::~LammpsInputDialog()
@@ -158,41 +137,82 @@ LammpsInputDialog::~LammpsInputDialog()
 void LammpsInputDialog::showEvent(QShowEvent*)
 {
   updatePreviewText();
+  addMoleculeDataTab();
 }
 
 void LammpsInputDialog::updatePreviewText()
 {
   if (!isVisible())
     return;
+
+  int jobTabPosition = 0;
+
+  // Store the currently displayed tab
+  int currIndex = ui.tabWidget->currentIndex();
+
   // Generate the input deck and display it
-  if (m_dirty && !m_warned) {
-    m_warned = true;
-    QMessageBox msgBox;
+  if (m_dirty) {
+    QString message =
+      tr("Would you like to update the preview text, losing all "
+         "changes made in the Lammps input deck preview pane?");
+    int response = QMessageBox::question(
+      this, tr("Overwrite modified input files?"), message,
+      QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
 
-    msgBox.setWindowTitle(tr("Lammps Input Deck Generator Warning"));
-    msgBox.setText(tr("Would you like to update the preview text, losing all "
-                      "changes made in the Lammps input deck preview pane?"));
-    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-
-    switch (msgBox.exec()) {
-      case QMessageBox::Yes:
-        // yes was clicked
-        deckDirty(false);
-        ui.previewText->setText(generateInputDeck());
-        ui.previewText->document()->setModified(false);
-        m_warned = false;
-        break;
-      case QMessageBox::No:
-        // no was clicked
-        m_warned = false;
-        break;
-      default:
-        // should never be reached
-        break;
+    if (static_cast<QMessageBox::StandardButton>(response) == QMessageBox::No) {
+      return;
     }
-  } else if (!m_dirty) {
-    ui.previewText->setText(generateInputDeck());
-    ui.previewText->document()->setModified(false);
+  }
+
+  ui.tabWidget->removeTab(jobTabPosition);
+
+  m_jobFileName =
+    (ui.baseNameEdit->text().isEmpty() ? ui.baseNameEdit->placeholderText()
+                                       : ui.baseNameEdit->text()) +
+    ".lmp";
+  m_jobEdit = new QTextEdit(this);
+  m_jobEdit->setObjectName(m_jobFileName);
+  m_jobEdit->setFontFamily("monospace");
+  connect(m_jobEdit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
+  m_jobEdit->setText(generateInputDeck());
+  ui.tabWidget->insertTab(jobTabPosition, m_jobEdit, m_jobFileName);
+  deckDirty(false);
+
+  // Restore current tab
+  ui.tabWidget->setCurrentIndex(currIndex);
+}
+
+void LammpsInputDialog::addMoleculeDataTab()
+{
+  int molTabPosition = 1;
+  if (m_molecule) {
+    ui.tabWidget->removeTab(molTabPosition);
+    std::string molOutput, extension = "lmpdat";
+    m_moleculeFileName =
+      (ui.baseNameEdit->text().isEmpty() ? ui.baseNameEdit->placeholderText()
+                                         : ui.baseNameEdit->text()) +
+      "." + QString::fromStdString(extension);
+    bool writeSDF = Io::FileFormatManager::instance().writeString(
+      *m_molecule, molOutput, extension);
+    if (writeSDF) {
+      m_moleculeEdit = new QTextEdit(this);
+      m_moleculeEdit->setObjectName(m_moleculeFileName);
+      m_moleculeEdit->setFontFamily("monospace");
+      m_moleculeEdit->setText(QString::fromStdString(molOutput));
+      ui.tabWidget->insertTab(molTabPosition, m_moleculeEdit,
+                              m_moleculeFileName);
+    }
+  }
+}
+
+void LammpsInputDialog::textEditModified()
+{
+  if (QTextEdit* edit = qobject_cast<QTextEdit*>(sender())) {
+    if (edit->document()->isModified()) {
+      deckDirty(true);
+    } else {
+      deckDirty(false);
+    }
   }
 }
 
@@ -220,68 +240,152 @@ void LammpsInputDialog::resetClicked()
   ui.thermoStyleCombo->setCurrentIndex(0);
   ui.thermoSpin->setValue(50);
 
-  ui.previewText->setText(generateInputDeck());
-  ui.previewText->document()->setModified(false);
+  updatePreviewText();
+  addMoleculeDataTab();
 }
 
 void LammpsInputDialog::generateClicked()
 {
   QSettings settings;
-  QString fileName =
-    (ui.baseNameEdit->text().isEmpty() ? ui.baseNameEdit->placeholderText()
-                                       : ui.baseNameEdit->text()) +
-    ".lmp";
-  QString targetFile =
+  QString directory =
     settings.value("lammpsInput/outputDirectory", QDir::homePath()).toString();
-  targetFile =
-    QDir(QFileInfo(targetFile).absoluteDir()).absoluteFilePath(fileName);
-
-  fileName = QFileDialog::getSaveFileName(this, tr("Save LAMMPS input file"),
-                                          targetFile);
+  if (directory.isEmpty())
+    directory = QDir::homePath();
+  directory = QFileDialog::getExistingDirectory(
+    this, tr("Select output directory"), directory);
 
   // User cancel:
-  if (fileName.isNull())
+  if (directory.isNull())
     return;
 
-  settings.setValue("lammpsInput/outputDirectory", fileName);
+  settings.setValue("lammpsInput/outputDirectory", directory);
+  QDir dir(directory);
 
-  QFile file(fileName);
-  bool success = false;
-  if (file.open(QFile::WriteOnly | QFile::Text)) {
-    if (file.write(ui.previewText->toPlainText().toLocal8Bit()) > 0) {
-      success = true;
+  // Check for problems:
+  QStringList errors;
+  bool fatalError = false;
+
+  do { // Do/while to break on fatal errors
+    if (!dir.exists()) {
+      errors << tr("%1: Directory does not exist!").arg(dir.absolutePath());
+      fatalError = true;
+      break;
     }
-    file.close();
+
+    if (!dir.isReadable()) {
+      errors << tr("%1: Directory cannot be read!").arg(dir.absolutePath());
+      fatalError = true;
+      break;
+    }
+
+    QFileInfo jobFileInfo(dir.absoluteFilePath(m_jobFileName));
+
+    if (jobFileInfo.exists()) {
+      errors << tr("%1: File will be overwritten.")
+                  .arg(jobFileInfo.absoluteFilePath());
+    }
+
+    // Attempt to open the file for writing
+    if (!QFile(jobFileInfo.absoluteFilePath()).open(QFile::WriteOnly)) {
+      errors
+        << tr("%1: File is not writable.").arg(jobFileInfo.absoluteFilePath());
+      fatalError = true;
+      break;
+    }
+
+    QFileInfo molFileInfo(dir.absoluteFilePath(m_moleculeFileName));
+
+    if (molFileInfo.exists()) {
+      errors << tr("%1: File will be overwritten.")
+                  .arg(molFileInfo.absoluteFilePath());
+    }
+
+    // Attempt to open the file for writing
+    if (!QFile(molFileInfo.absoluteFilePath()).open(QFile::WriteOnly)) {
+      errors
+        << tr("%1: File is not writable.").arg(molFileInfo.absoluteFilePath());
+      fatalError = true;
+      break;
+    }
+  } while (false); // only run once
+
+  // Handle fatal errors:
+  if (fatalError) {
+    QString formattedError;
+    switch (errors.size()) {
+      case 0:
+        formattedError =
+          tr("The input files cannot be written due to an unknown error.");
+        break;
+      case 1:
+        formattedError =
+          tr("The input files cannot be written:\n\n%1").arg(errors.first());
+        break;
+      default: {
+        // If a fatal error occured, it will be last one in the list. Pop it off
+        // and tell the user that it was the reason we had to stop.
+        QString fatal = errors.last();
+        QStringList tmp(errors);
+        tmp.pop_back();
+        formattedError =
+          tr("The input files cannot be written:\n\n%1\n\nWarnings:\n\n%2")
+            .arg(fatal, tmp.join("\n"));
+        break;
+      }
+    }
+    QMessageBox::critical(this, tr("Output Error"), formattedError);
+    return;
   }
 
-  if (!success) {
-    QMessageBox::critical(this, tr("Output Error"),
-                          tr("Failed to write to file %1.").arg(fileName));
-  }
-}
+  // Non-fatal errors:
+  if (!errors.isEmpty()) {
+    QString formattedError = tr("Warning:\n\n%1\n\nWould you like to continue?")
+                               .arg(errors.join("\n"));
 
-void LammpsInputDialog::moreClicked()
-{
-  // If the more button is clicked hide/show the preview text
-  if (ui.previewText->isVisible()) {
-    ui.previewText->hide();
-    ui.moreButton->setText(tr("Show Preview"));
-  } else {
-    ui.previewText->show();
-    ui.moreButton->setText(tr("Hide Preview"));
+    QMessageBox::StandardButton reply =
+      QMessageBox::warning(this, tr("Write input files"), formattedError,
+                           QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+
+    if (reply != QMessageBox::Yes)
+      return;
+  }
+
+  bool success = false;
+
+  if (m_jobEdit && m_moleculeEdit) {
+    QFile jobFile(dir.absoluteFilePath(m_jobFileName));
+    if (jobFile.open(QFile::WriteOnly | QFile::Text)) {
+      if (jobFile.write(m_jobEdit->toPlainText().toLocal8Bit()) > 0) {
+        success = true;
+      }
+      jobFile.close();
+    }
+
+    if (!success) {
+      QMessageBox::critical(
+        this, tr("Output Error"),
+        tr("Failed to write to file %1.").arg(jobFile.fileName()));
+    }
+
+    QFile molFile(dir.absoluteFilePath(m_moleculeFileName));
+    if (molFile.open(QFile::WriteOnly | QFile::Text)) {
+      if (molFile.write(m_moleculeEdit->toPlainText().toLocal8Bit()) > 0) {
+        success = true;
+      }
+      molFile.close();
+    }
+
+    if (!success) {
+      QMessageBox::critical(
+        this, tr("Output Error"),
+        tr("Failed to write to file %1.").arg(molFile.fileName()));
+    }
   }
 }
 
 void LammpsInputDialog::enableFormClicked()
 {
   updatePreviewText();
-}
-
-void LammpsInputDialog::previewEdited()
-{
-  // Determine if the preview text has changed from the form generated
-  if (ui.previewText->document()->isModified())
-    deckDirty(true);
 }
 
 void LammpsInputDialog::setTitle()
@@ -512,7 +616,7 @@ QString LammpsInputDialog::generateInputDeck()
   QString buffer;
   QTextStream mol(&buffer);
 
-  mol << "#LAMMPS Input file generated by Avogadro\n";
+  mol << "# LAMMPS Input file generated by Avogadro\n";
   mol << "# " << m_title << "\n\n";
 
   mol << "# Intialization\n";
@@ -706,7 +810,7 @@ QString LammpsInputDialog::getWaterPotential(waterPotential t)
       int Hydrogen;
       int Oxygen;
       determineAtomTypesSPC(Hydrogen, Oxygen);
-      water << "#The SPC water potential\n"
+      water << "# The SPC water potential\n"
             << "pair_style      lj/cut/coul/cut 9.8 9.8\n"
             << "pair_coeff      " << Oxygen << " " << Oxygen
             << " 0.15535 3.5533\n"
@@ -728,7 +832,7 @@ QString LammpsInputDialog::getWaterPotential(waterPotential t)
       int Hydrogen;
       int Oxygen;
       determineAtomTypesSPC(Hydrogen, Oxygen);
-      water << "#The SPC/E water potential\n"
+      water << "# The SPC/E water potential\n"
             << "pair_style      lj/cut/coul/long 9.8 9.8\n"
             << "kspace_style    pppm 1.0e-4\n"
             << "pair_coeff      " << Oxygen << " " << Oxygen
