@@ -751,7 +751,7 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
       // check radius and add bond if needed
       double cutoffSq = cutoff * cutoff;
       double diffsq = diff.squaredNorm();
-      if (diffsq < cutoffSq && diffsq > min)
+      if (diffsq < cutoffSq && diffsq > min*min)
         addBond(atom(i), atom(j), 1);
     }
   }
