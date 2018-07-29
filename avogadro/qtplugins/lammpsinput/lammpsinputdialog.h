@@ -23,6 +23,7 @@
 #include <QtCore/QSettings>
 
 class QJsonObject;
+class QTextEdit;
 
 namespace Avogadro {
 namespace QtGui {
@@ -150,6 +151,11 @@ private:
   bool m_warned;
   bool readData;
 
+  QTextEdit* m_jobEdit;
+  QTextEdit* m_moleculeEdit;
+  QString m_moleculeFileName;
+  QString m_jobFileName;
+
   // Generate an input deck as a string
   QString generateInputDeck();
   QString getUnitType(unitType t);
@@ -173,6 +179,7 @@ private:
   // Enable/disable form elements
   void deckDirty(bool);
   void determineAtomTypesSPC(int& hyd, int& oxy);
+  void addMoleculeDataTab();
 
   // system typing
   QHash<QString, int> AtomType;
@@ -184,11 +191,10 @@ public Q_SLOTS:
 
 private Q_SLOTS:
   //! Button Slots
+  void textEditModified();
   void resetClicked();
   void generateClicked();
   void enableFormClicked();
-  void moreClicked();
-  void previewEdited();
 
   void setTitle();
   void setReadData();
