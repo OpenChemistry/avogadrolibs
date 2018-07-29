@@ -44,7 +44,7 @@ Bonding::Bonding(QObject* parent_)
 {
   QSettings settings;
   m_tolerance = settings.value("bonding/tolerance", 0.45).toDouble();
-  m_minDistance = settings.value("bonding/minDistance", 0.1).toDouble();
+  m_minDistance = settings.value("bonding/minDistance", 0.32).toDouble();
 
   m_action->setShortcut(QKeySequence("Ctrl+B"));
   connect(m_action, SIGNAL(triggered()), SLOT(bond()));
@@ -122,6 +122,7 @@ void Bonding::bond()
   }
 
   bool emptySelection = m_molecule->isSelectionEmpty();
+  double minSq = m_minDistance * m_minDistance;
 
   // Main bond perception loop based on a simple distance metric.
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
@@ -147,7 +148,7 @@ void Bonding::bond()
       // check radius and add bond if needed
       double cutoffSq = cutoff * cutoff;
       double diffsq = diff.squaredNorm();
-      if (diffsq < cutoffSq && diffsq > m_minDistance)
+      if (diffsq < cutoffSq && diffsq > minSq)
         m_molecule->addBond(m_molecule->atom(i), m_molecule->atom(j), 1);
     }
   }

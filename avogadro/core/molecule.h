@@ -527,10 +527,10 @@ public:
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
    *  atoms are considered bonded if within the sum of radii
    *  plus a small @param tolerance.
-   * @param minDistance = atoms closer than this distance are not bonded
+   * @param minDistance = atoms closer than the square of this are ignored
    */
   void perceiveBondsSimple(const double tolerance = 0.45,
-                           const double minDistance = 0.1);
+                           const double minDistance = 0.32);
 
   /**
    * Perceives bonds in the molecule based on preset residue data.
