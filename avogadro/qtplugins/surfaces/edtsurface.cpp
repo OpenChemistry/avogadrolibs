@@ -82,6 +82,8 @@ EDTSurface::EDTSurface()
   }
   data->cutRadius = 0;
   volumePixels = NULL;
+  m_cube = NULL;
+  m_mol = NULL;
 }
 
 // Destructor
@@ -159,22 +161,13 @@ Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
     this->boundingAtom(false);
   }
 
-  m_Cube = new Cube();
+  m_cube = new Cube();
   // Initialize cube
 
-  for (i = 0; i < data->pLength; i++) {
-    for (j = 0; j < data->pWidth; j++) {
-      for (k = 0; k < data->pHeight; k++) {
-        m_Cube->setValue(i, j, k, volumePixels[i][j][k].distance);
-      }
-      delete[] volumePixels[i][j];
-    }
-    delete[] volumePixels[i];
-  }
-  delete[] volumePixels;
-  // Copy VolumePixels array into Cube and delete volumePixels
+  this->copyCube();
+  // Copy contents from volumePixels into Cube object
 
-  return m_Cube;
+  return m_cube;
 }
 
 void EDTSurface::fastDistanceMap()
@@ -836,7 +829,7 @@ void EDTSurface::initPara(bool atomType, bool bType)
   }
   int data->pLength, data->pWidth;
 
-  boundBox(atomType, mol);
+  boundBox(atomType);
   if (bType == false) {
     data->pMin(X) -= fMargin;
     data->pMin(Y) -= fMargin;
@@ -971,6 +964,21 @@ int EDTSurface::detail(unsigned char atomicNumber)
       return 10;
   }
 }
+
+void copyCube(){
+  int i, j, k;
+  for (i = 0; i < data->pLength; i++) {
+    for (j = 0; j < data->pWidth; j++) {
+      for (k = 0; k < data->pHeight; k++) {
+        m_cube->setValue(i, j, k, volumePixels[i][j][k].distance);
+      }
+      delete[] volumePixels[i][j];
+    }
+    delete[] volumePixels[i];
+  }
+  delete[] volumePixels;
+}//end copyCube
+
 
 int EDTSurface::setMolecule(Molecule *mol){
   m_mol = mol;
