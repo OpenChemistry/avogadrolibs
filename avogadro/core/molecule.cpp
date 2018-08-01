@@ -431,6 +431,23 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
   assert(atom1 < atomCount());
   assert(atom2 < atomCount());
 
+  // check if the bond exists - if not, create it
+  std::pair<Index, Index> pair = makeBondPair(atom1, atom2);
+
+  Array<std::pair<Index, Index>>::iterator iter =
+    std::find(m_bondPairs.begin(), m_bondPairs.end(), pair);
+
+  if (iter != m_bondPairs.end()) {
+    // found an existing bond between these atoms
+    Index index = static_cast<Index>(std::distance(m_bondPairs.begin(), iter));
+    if (m_bondOrders[index] != order) {
+      // change the order
+      m_bondOrders[index] = order;
+      m_graphDirty = true;
+    }
+    return BondType(const_cast<Molecule*>(this), index);
+  }
+
   m_graphDirty = true;
   m_bondPairs.push_back(makeBondPair(atom1, atom2));
   m_bondOrders.push_back(order);
@@ -444,11 +461,7 @@ Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
   assert(a.isValid() && a.molecule() == this);
   assert(b.isValid() && b.molecule() == this);
 
-  m_graphDirty = true;
-  m_bondPairs.push_back(makeBondPair(a.index(), b.index()));
-  m_bondOrders.push_back(order);
-
-  return BondType(this, static_cast<Index>(m_bondPairs.size() - 1));
+  return addBond(a.index(), b.index(), order);
 }
 
 bool Molecule::removeBond(Index index)
@@ -499,17 +512,7 @@ Molecule::BondType Molecule::bond(const AtomType& a, const AtomType& b) const
   assert(a.isValid() && a.molecule() == this);
   assert(b.isValid() && b.molecule() == this);
 
-  std::pair<Index, Index> pair = makeBondPair(a.index(), b.index());
-
-  Array<std::pair<Index, Index>>::const_iterator iter =
-    std::find(m_bondPairs.begin(), m_bondPairs.end(), pair);
-
-  if (iter == m_bondPairs.end())
-    return BondType();
-
-  Index index = static_cast<Index>(std::distance(m_bondPairs.begin(), iter));
-
-  return BondType(const_cast<Molecule*>(this), index);
+  return bond(a.index(), b.index());
 }
 
 Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
@@ -534,12 +537,8 @@ Array<Molecule::BondType> Molecule::bonds(const AtomType& a)
 {
   if (!a.isValid())
     return Array<BondType>();
-  Array<BondType> atomBonds;
-  Index atomIndex = a.index();
-  for (Index i = 0; i < m_bondPairs.size(); ++i)
-    if (m_bondPairs[i].first == atomIndex || m_bondPairs[i].second == atomIndex)
-      atomBonds.push_back(BondType(this, i));
-  return atomBonds;
+
+  return bonds(a.index());
 }
 
 Array<Molecule::BondType> Molecule::bonds(Index a)
@@ -711,14 +710,11 @@ void Molecule::setVibrationLx(const Array<Array<Vector3>>& lx)
 }
 
 // bond perception code ported from VTK's vtkSimpleBondPerceiver class
-void Molecule::perceiveBondsSimple()
+void Molecule::perceiveBondsSimple(const double tolerance, const double min)
 {
   // check for coordinates
   if (m_positions3d.size() != atomCount())
     return;
-
-  // the tolerance used in the comparisons
-  double tolerance = 0.45;
 
   // cache atomic radii
   std::vector<double> radii(atomCount());
@@ -744,7 +740,7 @@ void Molecule::perceiveBondsSimple()
       // check radius and add bond if needed
       double cutoffSq = cutoff * cutoff;
       double diffsq = diff.squaredNorm();
-      if (diffsq < cutoffSq && diffsq > 0.1)
+      if (diffsq < cutoffSq && diffsq > min * min)
         addBond(atom(i), atom(j), 1);
     }
   }
