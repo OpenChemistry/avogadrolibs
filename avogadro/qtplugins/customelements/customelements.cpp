@@ -33,17 +33,14 @@ namespace Avogadro {
 namespace QtPlugins {
 
 CustomElements::CustomElements(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_)
-  , m_molecule(nullptr)
-  , m_reassignUsingTool(nullptr)
-  , m_reassignFromFile(nullptr)
-  , m_fileReadThread(nullptr)
-  , m_threadedReader(nullptr)
-  , m_fileReadMolecule(nullptr)
-  , m_progressDialog(nullptr)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_reassignUsingTool(nullptr), m_reassignFromFile(nullptr),
+    m_fileReadThread(nullptr), m_threadedReader(nullptr),
+    m_fileReadMolecule(nullptr), m_progressDialog(nullptr)
 {
-  m_reassignUsingTool = new QAction(tr("Using &Mapping tool..."), this);
-  m_reassignFromFile = new QAction(tr("From &File..."), this);
+  m_reassignUsingTool = new QAction(tr("Reassign &Custom Elements..."), this);
+  m_reassignFromFile =
+    new QAction(tr("&Import Coordinate/Topology File..."), this);
   connect(m_reassignUsingTool, SIGNAL(triggered()), SLOT(reassign()));
   connect(m_reassignFromFile, SIGNAL(triggered()), SLOT(importMapFile()));
 
@@ -64,7 +61,7 @@ QList<QAction*> CustomElements::actions() const
 
 QStringList CustomElements::menuPath(QAction*) const
 {
-  return QStringList() << tr("&Build") << tr("Assign &Custom Elements...");
+  return QStringList() << tr("&Build");
 }
 
 void CustomElements::setMolecule(QtGui::Molecule* mol)
@@ -130,8 +127,8 @@ bool CustomElements::openFile(const QString& fileName, Io::FileFormat* reader)
   m_progressDialog->setWindowTitle(tr("Reading File"));
   m_progressDialog->setLabelText(
     tr("Opening file '%1'\nwith '%2'").arg(fileName).arg(ident));
-  /// @todo Add API to abort file ops
   m_progressDialog->setCancelButton(nullptr);
+  connect(m_progressDialog, SIGNAL(canceled()), m_fileReadThread, SLOT(quit()));
   connect(m_fileReadThread, SIGNAL(started()), m_threadedReader, SLOT(read()));
   connect(m_threadedReader, SIGNAL(finished()), m_fileReadThread, SLOT(quit()));
   connect(m_threadedReader, SIGNAL(finished()),
@@ -182,9 +179,14 @@ void CustomElements::setMapFromMolecule(QtGui::Molecule* mol)
         .arg(m_molecule->atomCount())
         .arg(mol->atomCount()));
   } else {
-    size_t n = m_molecule->atomCount();
-    for (size_t i = 0; i < n; ++i) {
+    size_t n = m_molecule->atomCount(), i;
+    for (i = 0; i < n; ++i) {
       m_molecule->atom(i).setAtomicNumber(mol->atom(i).atomicNumber());
+    }
+    n = m_molecule->bondCount();
+    for (i = 0; i < n; ++i) {
+      m_molecule->addBond(mol->bond(i).atom1(), mol->bond(i).atom2(),
+                          mol->bond(i).order());
     }
     m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
   }
@@ -214,8 +216,9 @@ void CustomElements::importMapFile()
 
 void CustomElements::updateReassignAction()
 {
-  m_reassignUsingTool->setEnabled(m_molecule);
-  m_reassignFromFile->setEnabled(m_molecule);
+  m_reassignUsingTool->setEnabled(m_molecule &&
+                                  m_molecule->hasCustomElements());
+  m_reassignFromFile->setEnabled(m_molecule && m_molecule->atomCount());
 }
 
 } // namespace QtPlugins
