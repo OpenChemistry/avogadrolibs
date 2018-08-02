@@ -31,7 +31,8 @@ namespace Avogadro {
 namespace QtPlugins {
 
 PluginManager::PluginManager(QObject* p)
-  : QObject(p), m_staticPluginsLoaded(false)
+  : QObject(p)
+  , m_staticPluginsLoaded(false)
 {
   QString libDir(QtGui::Utilities::libraryDirectory());
   // http://doc.qt.digia.com/qt/deployment-plugins.html#debugging-plugins
@@ -80,9 +81,7 @@ PluginManager::PluginManager(QObject* p)
   initAvogadroPluginResources();
 }
 
-PluginManager::~PluginManager()
-{
-}
+PluginManager::~PluginManager() {}
 
 PluginManager* PluginManager::instance()
 {

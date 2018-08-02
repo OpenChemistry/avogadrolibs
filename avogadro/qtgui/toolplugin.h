@@ -53,7 +53,7 @@ class AVOGADROQTGUI_EXPORT ToolPlugin : public QObject
 
 public:
   explicit ToolPlugin(QObject* parent = 0);
-  ~ToolPlugin();
+  ~ToolPlugin() override;
 
   /**
    * The name of the tool, will be displayed in the user interface.

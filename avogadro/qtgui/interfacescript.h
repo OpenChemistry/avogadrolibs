@@ -465,7 +465,7 @@ public:
   explicit InterfaceScript(const QString& scriptFilePath_,
                            QObject* parent_ = nullptr);
   explicit InterfaceScript(QObject* parent_ = nullptr);
-  ~InterfaceScript();
+  ~InterfaceScript() override;
 
   /**
    * @return True if debugging is enabled.

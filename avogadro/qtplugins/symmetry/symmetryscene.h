@@ -41,13 +41,16 @@ public:
   void processEditable(const QtGui::RWMolecule& molecule,
                        Rendering::GroupNode& node) override;
 
-  QString name() const { return tr("Symmetry Elements"); }
+  QString name() const override { return tr("Symmetry Elements"); }
 
-  QString description() const { return tr("Render symmetry elements."); }
+  QString description() const override
+  {
+    return tr("Render symmetry elements.");
+  }
 
-  bool isEnabled() const;
+  bool isEnabled() const override;
 
-  void setEnabled(bool enable);
+  void setEnabled(bool enable) override;
 
 private:
   bool m_enabled;

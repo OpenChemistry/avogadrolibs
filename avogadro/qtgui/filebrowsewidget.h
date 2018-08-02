@@ -40,7 +40,7 @@ public:
   };
 
   explicit FileBrowseWidget(QWidget* theParent = 0);
-  ~FileBrowseWidget();
+  ~FileBrowseWidget() override;
 
   QString fileName() const;
 

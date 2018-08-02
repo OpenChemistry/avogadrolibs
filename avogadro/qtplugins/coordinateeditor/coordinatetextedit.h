@@ -44,7 +44,7 @@ public slots:
   void markValid(QTextCursor& cur, const QString& tooltip);
 
 protected:
-  bool event(QEvent* e);
+  bool event(QEvent* e) override;
 
 private:
   void showToolTip(QHelpEvent* e) const;
@@ -54,7 +54,11 @@ private:
     int start;
     int end;
     QString tooltip;
-    Mark(int s, int e, const QString& t) : start(s), end(e), tooltip(t) {}
+    Mark(int s, int e, const QString& t)
+      : start(s)
+      , end(e)
+      , tooltip(t)
+    {}
     bool contains(int i) const { return i >= start && i <= end; }
   };
   QList<Mark> m_marks;

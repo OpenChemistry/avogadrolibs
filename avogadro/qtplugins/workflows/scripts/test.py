@@ -162,6 +162,7 @@ if __name__ == "__main__":
     parser.add_argument('--print-options', action='store_true')
     parser.add_argument('--generate-input', action='store_true')
     parser.add_argument('--display-name', action='store_true')
+    parser.add_argument('--lang', nargs='?', default='en')
     args = vars(parser.parse_args())
 
     debug = args['debug']

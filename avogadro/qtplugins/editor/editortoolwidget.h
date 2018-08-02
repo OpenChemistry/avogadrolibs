@@ -36,7 +36,7 @@ class EditorToolWidget : public QWidget
 
 public:
   explicit EditorToolWidget(QWidget* parent_ = 0);
-  ~EditorToolWidget();
+  ~EditorToolWidget() override;
 
   void setAtomicNumber(unsigned char atomicNum);
   unsigned char atomicNumber() const;

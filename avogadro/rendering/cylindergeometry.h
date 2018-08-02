@@ -28,9 +28,12 @@ struct CylinderColor
 {
   CylinderColor(const Vector3f& pos1, const Vector3f& pos2, float r,
                 const Vector3ub& c, const Vector3ub& c2 = Vector3ub::Zero())
-    : end1(pos1), end2(pos2), radius(r), color(c), color2(c2)
-  {
-  }
+    : end1(pos1)
+    , end2(pos2)
+    , radius(r)
+    , color(c)
+    , color2(c2)
+  {}
 
   Vector3f end1;
   Vector3f end2;
@@ -51,7 +54,7 @@ class AVOGADRORENDERING_EXPORT CylinderGeometry : public Drawable
 public:
   CylinderGeometry();
   CylinderGeometry(const CylinderGeometry& other);
-  ~CylinderGeometry();
+  ~CylinderGeometry() override;
 
   CylinderGeometry& operator=(CylinderGeometry);
   friend void swap(CylinderGeometry& lhs, CylinderGeometry& rhs);
@@ -70,7 +73,7 @@ public:
    * @brief Render the cylinder geometry.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera& camera);
+  void render(const Camera& camera) override;
 
   /**
    * Return the primitives that are hit by the ray.
@@ -79,9 +82,9 @@ public:
    * @param rayDirection Normalized direction of the ray.
    * @return Sorted collection of primitives that were hit.
    */
-  std::multimap<float, Identifier> hits(const Vector3f& rayOrigin,
-                                        const Vector3f& rayEnd,
-                                        const Vector3f& rayDirection) const;
+  std::multimap<float, Identifier> hits(
+    const Vector3f& rayOrigin, const Vector3f& rayEnd,
+    const Vector3f& rayDirection) const override;
 
   /**
    * @brief Add a cylinder to the geometry object.
@@ -141,7 +144,7 @@ public:
   /**
    * Clear the contents of the node.
    */
-  void clear();
+  void clear() override;
 
   /**
    * Get the number of cylinders in the node object.

@@ -1,17 +1,7 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
 
-  Copyright 2013 Kitware, Inc.
-
   This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_BONDING_H
@@ -19,6 +9,12 @@
 
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/extensionplugin.h>
+
+#include <QtWidgets/QDialog>
+
+namespace Ui {
+class BondingDialog;
+}
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -49,14 +45,22 @@ public slots:
 
 private slots:
   void bond();
-  void bond2();
   void clearBonds();
+  void configure();
+  void setValues();
 
 private:
   QtGui::Molecule* m_molecule;
 
+  double m_tolerance;
+  double m_minDistance;
+
   QAction* m_action;
   QAction* m_clearAction;
+  QAction* m_configAction;
+
+  QDialog* m_dialog;
+  Ui::BondingDialog* m_ui;
 };
 
 } // namespace QtPlugins

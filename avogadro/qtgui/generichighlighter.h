@@ -99,7 +99,7 @@ public:
   }
 
 protected:
-  void highlightBlock(const QString& text);
+  void highlightBlock(const QString& text) override;
 
 private:
   QList<Rule> m_rules;
