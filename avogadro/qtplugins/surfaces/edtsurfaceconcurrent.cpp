@@ -11,6 +11,11 @@
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elementdata.h>
 #include <avogadro/core/molecule.h>
+#include <QtConcurrentMap>
+#include <QFuture>
+#include <QFutureWatcher>
+#include <QReadWriteLock>
+#include <QDebug>
 
 #define VWS 0
 #define MS 1
@@ -166,6 +171,27 @@ Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
 
   this->copyCube();
   // Copy contents from volumePixels into Cube object
+/*
+for (int i = 0; i < data->pLength; ++i) {
+      m_subCubeVector[i].volumePixelsRow = volumePixels[i];
+      m_subCubeVector[i].cube = m_cube;
+      m_subCubeVector[i].pWidth = data->pWidth;
+      m_subCubeVector[i].pHeight = data->pHeight;
+      m_subCubeVector[i].pos = i;
+    }
+
+    // Lock the cube until we are done.
+    cube->lock()->lockForWrite();
+
+    // Watch for the future
+    connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
+
+    // The main part of the mapped reduced function...
+    m_future = QtConcurrent::map(m_subCubeVector, edtSurface::copyCubeConcurrent);
+    // Connect our watcher to our future
+    m_watcher.setFuture(m_future);
+*/
+  //
 
   return m_cube;
 }
@@ -637,8 +663,40 @@ void EDTSurface::fillVoxels(bool atomType)
       }
     }
   }
+  /*for (int i = 0; i < data->pLength; ++i) {
+        m_subCubeVector[i].volumePixelsRow = volumePixels[i];
+        m_subCubeVector[i].cube = m_cube;
+        m_subCubeVector[i].pWidth = data->pWidth;
+        m_subCubeVector[i].pHeight = data->pHeight;
+        m_subCubeVector[i].pos = i;
+      }
+
+      // Lock the cube until we are done.
+      cube->lock()->lockForWrite();
+
+      // Watch for the future
+      connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
+
+      // The main part of the mapped reduced function...
+      m_future = QtConcurrent::map(m_subCubeVector, edtSurface::copyCubeConcurrent);
+      // Connect our watcher to our future
+      m_watcher.setFuture(m_future);
+  */
   //This can be done concurrently if we write a function for it
 }
+
+void fillVoxelsConcurrent(subCube* someVolumePixels){
+  for (j = 0; j < someVolumePixels->pWidth; j++) {
+    for (k = 0; k < someVolumePixels->pHeight; k++) {
+      if (someVolumePixels->volumePixelsRow[j][k].inOut) {
+        someVolumePixels->volumePixelsRow[j][k].isDone = true;
+      }
+    }
+  }
+
+}
+
+
 // use isDone
 void EDTSurface::fillVoxelsWaals(bool atomType)
 {
@@ -967,7 +1025,7 @@ int EDTSurface::detail(unsigned char atomicNumber)
   }
 }
 
-void copyCube(){
+void EDTSurface::copyCube(){
   int i, j, k;
   for (i = 0; i < data->pLength; i++) {
     for (j = 0; j < data->pWidth; j++) {
@@ -980,6 +1038,18 @@ void copyCube(){
   }
   delete[] volumePixels;
 }//end copyCube
+
+void EDTSurface::copyCubeConcurrent(subCube *someVolumePixels){
+  int i, j, k;
+  i = someVolumePixels->index;
+  for(j = 0; j < someVolumePixels->pWidth; j++){
+    for(k = 0; k < someVolumePixels->pHeight; k++){
+      someVolumePixels->cube->setValue(i, j, k, someVolumePixels->volumePixelsRow[j][k]);
+    }
+  }
+}
+
+//We'll have to move the deleting of volumePixels somewhere else, probably
 
 
 int EDTSurface::setMolecule(Molecule *mol){

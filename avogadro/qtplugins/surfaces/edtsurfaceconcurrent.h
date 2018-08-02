@@ -1,60 +1,80 @@
 /******************************************************************************
+
   This source file is part of the Avogadro project.
 
+  Copyright 2013 Kitware, Inc.
+
   This source code is released under the New BSD License, (the "License").
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_EDTSURFACE_H
-#define AVOGADRO_QTPLUGINS_EDTSURFACE_H
+#ifndef EDTSURFACECONCURRENT_H
+#define EDTSURFACECONCURRENT_H
 
-#include <avogadro/core/avogadrocore.h>
-#include <avogadro/core/vector.h>
+#include <QtCore/QFuture>
+#include <QtCore/QFutureWatcher>
+#include <QtCore/QObject>
+
+typedef struct volumePixel
+{
+  int atomId;
+  float distance;
+  bool inOut;
+  bool isBound;
+  bool isDone;
+}volumePixel;
+
+typedef struct dataStruct{
+  Vector3 pTran;
+  int boxLength;
+  double probeRadius;
+  double fixSf;
+  double scaleFactor;
+  Vector3 pMin, pMax;
+  int pHeight, pWidth, pLength;
+  int widXz[13];
+  int* deptY[13];
+  double cutRadius;
+  int positIn, positOut, eliminate;
+  int certificate;
+  int totalSurfaceVox;
+  int totalInnerVox;
+  Vector3i *inArray, *outArray
+}dataStruct;//End struct dataStruct
+
+typedef struct atomStruct{
+  Core::Atom *atom;
+  volumePixel*** volumePixels;
+  int index;
+  bool atomType;
+}atomStruct;
+
+typedef struct subCube{
+  Core::Cube *cube;
+  volumePixel** volumePixelsRow;
+  int pWidth;
+  int pHeight;
+  int index;
+}subCube;
 
 namespace Avogadro {
+
 namespace Core {
 class Cube;
 class Molecule;
 class Atom;
+class EDTSurface;
 }
 
 namespace QtPlugins {
 
-  typedef struct volumePixel
-  {
-  	int atomId;
-  	float distance;
-  	bool inOut;
-  	bool isBound;
-  	bool isDone;
-  }volumePixel;
-
-  typedef struct dataStruct{
-    Vector3 pTran;
-    int boxLength;
-    double probeRadius;
-    double fixSf;
-    double scaleFactor;
-    Vector3 pMin, pMax;
-    int pHeight, pWidth, pLength;
-    int widXz[13];
-    int* deptY[13];
-    double cutRadius;
-    int positIn, positOut, eliminate;
-    int certificate;
-    int totalSurfaceVox;
-    int totalInnerVox;
-    Vector3i *inArray, *outArray
-  }dataStruct;//End struct dataStruct
-
-//to make this work concurrently, we'll also have to define a subcube struct
-//for operations that happen over a cube
-//this should involve a pointer pointer
-
-//we'll also need a struct for operations that happen over a Molecule
-//which should mostly just require an atom and a little bit of metadata
-
-class EDTSurface
-{
+class EDTSurfaceConcurrent{
 public:
   //Constructor
   EDTSurface();
@@ -99,23 +119,32 @@ public:
   /*@brief Copies cube from volumePixel array into Cube object
   */
 
+  QFutureWatcher<void> & watcher() { return m_watcher; }
+
+  private Q_SLOTS:
+      /**
+       * Slot to set the cube data once Qt Concurrent is done
+       */
+     void calculationComplete();
+
 private:
 
   void initPara(bool atomType, bool bType, int surfaceType);
   //This can be done concurrently, but maybe doesn't need to be
   void fillVoxels(bool atomType);
   //This can (and should be done concurrently)
-  //Basically we need to bust it up into two functions
-  //One that iterates through the atoms and calls fillAtom
-  //And one that iterates through the cube and adjusts booleans accordingly
+  void fillVoxelsConcurrent(subCube* someVolumePixels);
+  //part 1 will take an atomStruct
+  //part 2 will take a subCube
+
   void fillAtom(int indx);
   //This cannot be done concurrently, but there's nor eason for it to be
   void fillAtomWaals(int indx);
   //This cannot be done concurrently, but there's no reason for it to be
   void fillVoxelsWaals(bool atomType);
   //This can and should be done concurrently
-  //This shouldn't need to be busted up into functions
-  //Because we don't do the iterating through the cube part
+  void fillVoxelsWaalsConcurrent(bool atomType);
+
   void fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
                     int* outNum, int* elimi);
   //This cannot be done concurrently, we run into issues breaking up the cube
@@ -140,6 +169,7 @@ private:
 
   void copyCube();
 
+  void copyCubeConcurrent(subCube *someVolumePixels);
 
   Molecule* m_mol;
 
@@ -148,9 +178,20 @@ private:
   volumePixel*** volumePixels;
 
   dataStruct *data;
-}; // End class EDTSurface
 
-} // End namespace QtPlugins
-} // End namespace Avogadro
+  Q_SIGNALS:
 
-#endif
+    QFuture<void> m_future;
+    QFutureWatcher<void> m_watcher;
+    Cube *m_cube; // Cube to put the results into
+    QVector<atomStruct> m_atomVector;
+    QVector<subCube> m_subCubeVector;
+
+  //so the concurrent versions of things that run on a cube should rewritten to run on a subCube
+  //and the concurrent versions of things that run on a molecule should be rewritten to run on an atomStruct
+
+};
+}
+}
+
+#endif // EDTSURFACECONCURRENT_H
