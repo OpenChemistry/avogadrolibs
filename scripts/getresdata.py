@@ -1,9 +1,26 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+
 import requests
 import pybel
 import openbabel as ob
 import os
+import sys
+
+# TODO: process Open Babel resdata.txt
+#   if we can find certain non-standard residues
+mdLigands = [
+"ASH", # Neutral ASP
+"CYX", # SS-bonded CYS
+"CYM", # Negative CYS
+"GLH", # Neutral GLU
+"HIP", # Positive HIS
+"HID", # Neutral HIS, proton HD1 present
+"HIE", # Neutral HIS, proton HE2 present
+"LYN", # Neutral LYS
+"TYM", # Negative TYR
+]
 
 # the location of the LigandExpo list by count
 ligandURL = "http://ligand-expo.rcsb.org/dictionaries/cc-counts.tdd"
@@ -142,22 +159,26 @@ for ligand in ligands:
     print('ResidueData %sData("%s",' % (ligand, ligand))
     print('// Atoms')
     print('{')
-    for atom in atom_map.values():
-        print('"%s", ' % atom)
+    for atom in atom_map.values()[:-1]:
+        print('"%s", ' % (atom), end='')
+    print('"%s"' % atom_map.values()[-1])
     print('},')
 
     print('// Single Bonds')
     print('{')
-    for bond in single_bonds:
-        print('{ "%s", "%s" },' % bond)
+    for bond in single_bonds[:-1]:
+        print('{ "%s", "%s" },' % bond, end='')
+    print('{ "%s", "%s" }' % single_bonds[-1])
     print('},')
 
     print('// Double Bonds')
     print('{')
     if len(double_bonds):
-        for bond in double_bonds:
-            print('{ "%s", "%s" },' % bond)
-    print('},')
+        for bond in double_bonds[:-1]:
+            print('{ "%s", "%s" },' % bond, end='')
+        print('{ "%s", "%s" }' % double_bonds[-1])
+
+    print('}')
 
     print(');')
 
