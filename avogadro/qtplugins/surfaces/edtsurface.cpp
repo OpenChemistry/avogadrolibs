@@ -626,6 +626,7 @@ void EDTSurface::fillVoxels(bool atomType)
       fillAtom(i, mol);
     //			totalNumber++;
   }
+  // This can also be done concurrently if we write a function for it
   //	printf("%d\n",totalNumber);
   for (i = 0; i < data->pLength; i++) {
     for (j = 0; j < data->pWidth; j++) {
@@ -636,6 +637,7 @@ void EDTSurface::fillVoxels(bool atomType)
       }
     }
   }
+  //This can be done concurrently if we write a function for it
 }
 // use isDone
 void EDTSurface::fillVoxelsWaals(bool atomType)

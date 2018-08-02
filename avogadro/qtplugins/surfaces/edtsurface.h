@@ -46,6 +46,12 @@ namespace QtPlugins {
     Vector3i *inArray, *outArray
   }dataStruct;//End struct dataStruct
 
+//to make this work concurrently, we'll also have to define a subcube struct
+//for operations that happen over a cube
+//this should involve a pointer pointer
+
+//we'll also need a struct for operations that happen over a Molecule
+//which should mostly just require an atom and a little bit of metadata
 
 class EDTSurface
 {
@@ -93,20 +99,23 @@ public:
   /*@brief Copies cube from volumePixel array into Cube object
   */
 
-  void copyCube();
-
 private:
 
   void initPara(bool atomType, bool bType, int surfaceType);
   //This can be done concurrently, but maybe doesn't need to be
   void fillVoxels(bool atomType);
   //This can (and should be done concurrently)
+  //Basically we need to bust it up into two functions
+  //One that iterates through the atoms and calls fillAtom
+  //And one that iterates through the cube and adjusts booleans accordingly
   void fillAtom(int indx);
   //This cannot be done concurrently, but there's nor eason for it to be
   void fillAtomWaals(int indx);
   //This cannot be done concurrently, but there's no reason for it to be
   void fillVoxelsWaals(bool atomType);
   //This can and should be done concurrently
+  //This shouldn't need to be busted up into functions
+  //Because we don't do the iterating through the cube part
   void fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
                     int* outNum, int* elimi);
   //This cannot be done concurrently, we run into issues breaking up the cube
@@ -128,6 +137,9 @@ private:
 
   int detail(unsigned char atomicNumber);
     // Takes an atomic number and returns an index for rasRad
+
+  void copyCube();
+
 
   Molecule* m_mol;
 
