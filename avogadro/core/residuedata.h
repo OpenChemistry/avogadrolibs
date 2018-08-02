@@ -1380,9 +1380,8 @@ std::map<std::string, ResidueData> residueDict = {
   { "SEP", SEPData }, { "GAL", GALData }, { "PGE", PGEData },
   { "ASH", ASHData }, { "CYX", CYXData }, { "HIP", HIPData },
   { "HID", HIDData }, { "HIE", HIEData },
-}
-
 };
+
 } // namespace Core
 } // namespace Avogadro
 

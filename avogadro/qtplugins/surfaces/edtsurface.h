@@ -17,7 +17,7 @@ namespace Core {
 class Cube;
 class Molecule;
 class Atom;
-}
+} // namespace Core
 
 namespace QtGui {
 class Molecule;
