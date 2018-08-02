@@ -33,6 +33,7 @@ set(HEADERS
   gromacsformat.h
   mdlformat.h
   vaspformat.h
+  pdbformat.h
   xyzformat.h
   trrformat.h
   lammpsformat.h
@@ -47,6 +48,7 @@ set(SOURCES
   gromacsformat.cpp
   mdlformat.cpp
   vaspformat.cpp
+  pdbformat.cpp
   xyzformat.cpp
   trrformat.cpp
   lammpsformat.cpp

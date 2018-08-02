@@ -23,7 +23,6 @@
 #include <string>
 
 #include "array.h"
-#include "atom.h"
 #include "bond.h"
 #include "graph.h"
 #include "variantmap.h"
@@ -34,6 +33,7 @@ namespace Core {
 class BasisSet;
 class Cube;
 class Mesh;
+class Residue;
 class UnitCell;
 
 /** Concrete atom/bond proxy classes for Core::Molecule. @{ */
@@ -383,7 +383,7 @@ public:
   /**
    * Create a new bond in the molecule.
    * @param atom1 The first atom in the bond.
-   * @param atom2 The second order in the bond.
+   * @param atom2 The second atom in the bond.
    * @param order The bond order.
    * @return The new bond object. Will be invalid if @a atom1 or @a atom2 does
    * not exist.
@@ -525,8 +525,17 @@ public:
 
   /**
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
+   *  atoms are considered bonded if within the sum of radii
+   *  plus a small @param tolerance.
+   * @param minDistance = atoms closer than the square of this are ignored
    */
-  void perceiveBondsSimple();
+  void perceiveBondsSimple(const double tolerance = 0.45,
+                           const double minDistance = 0.32);
+
+  /**
+   * Perceives bonds in the molecule based on preset residue data.
+   */
+  void perceiveBondsFromResidueData();
 
   int coordinate3dCount();
   bool setCoordinate3d(int coord);
@@ -538,6 +547,10 @@ public:
    */
   bool setTimeStep(double timestep, int index);
   double timeStep(int index, bool& status);
+
+  Residue& addResidue(std::string& name, Index& number, char& id);
+  void addResidue(Residue& residue);
+  Residue residue(int index);
 
 protected:
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
@@ -568,6 +581,7 @@ protected:
 
   BasisSet* m_basisSet;
   UnitCell* m_unitCell;
+  Array<Residue> m_residues;
 
   /** Update the graph to correspond to the current molecule. */
   void updateGraph() const;
@@ -576,23 +590,15 @@ protected:
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
 {
 public:
-  Atom()
-    : AtomTemplate<Molecule>()
-  {}
-  Atom(Molecule* m, Index i)
-    : AtomTemplate<Molecule>(m, i)
-  {}
+  Atom() : AtomTemplate<Molecule>() {}
+  Atom(Molecule* m, Index i) : AtomTemplate<Molecule>(m, i) {}
 };
 
 class AVOGADROCORE_EXPORT Bond : public BondTemplate<Molecule>
 {
 public:
-  Bond()
-    : BondTemplate<Molecule>()
-  {}
-  Bond(Molecule* m, Index i)
-    : BondTemplate<Molecule>(m, i)
-  {}
+  Bond() : BondTemplate<Molecule>() {}
+  Bond(Molecule* m, Index i) : BondTemplate<Molecule>(m, i) {}
 };
 
 inline unsigned char Molecule::atomicNumber(Index atomId) const
@@ -795,7 +801,7 @@ inline bool Molecule::setBondOrder(Index bondId, unsigned char order)
   return false;
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_MOLECULE_H
