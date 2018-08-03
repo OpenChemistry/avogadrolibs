@@ -162,8 +162,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       }
     }
   } // End while loop
-  mol.perceiveBondsFromResidueData();
   mol.perceiveBondsSimple();
+  mol.perceiveBondsFromResidueData();
   return true;
 } // End read
 
