@@ -398,7 +398,7 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
           boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
 
-        m_cube->setValue(tnv(X), tnv(Y), tnv(Z), dxyz.norm());
+        m_cube->setValue(tnv, dxyz.norm());
         isDone[tnv(X)][tnv(Y)][tnv(Z)] = true;
         isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
 
@@ -414,7 +414,7 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
         if (squre < m_cube->value(tnv)) {
           boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
             boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-            m_cube->setValue(tnv(X), tnv(Y), tnv(Z), dxyz.norm());
+            m_cube->setValue(tnv, dxyz.norm());
           if (!isBound[tnv(X)][tnv(Y)][tnv(Z)]) {
             isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
             data->outArray[data->positOut] = tnv;
@@ -443,7 +443,7 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
         boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
           boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-        m_cube->setValue(tnv(X), tnv(Y), tnv(Z), dxyz.norm());
+        m_cube->setValue(tnv, dxyz.norm());
         isDone[tnv(X)][tnv(Y)][tnv(Z)] = true;
         isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
         data->outArray[data->positOut] = tnv;
@@ -458,7 +458,7 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
         if (squre < m_cube->value(tnv)) {
           boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
             boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-          m_cube->setValue(tnv(X), tnv(Y), tnv(Z), float(squre));
+          m_cube->setValue(tnv, float(squre));
           if (!isBound[tnv(X)][tnv(Y)][tnv(Z)]) {
             isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
             data->outArray[data->positOut] = tnv;
@@ -487,7 +487,7 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
         boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
           boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-        m_cube->setValue(tnv(X), tnv(Y), tnv(Z), dxyz.(norm));
+        m_cube->setValue(tnv, dxyz.(norm));
         isDone[tnv(X)][tnv(Y)][tnv(Z)] = true;
         isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
         data->outArray[data->positOut] = tnv;
@@ -503,7 +503,7 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
         if (squre < m_cube->value(tnv)) {
           boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
             boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-            m_cube->setValue(tnv(X), tnv(Y), tnv(Z), dxyz.norm());
+            m_cube->setValue(tnv, dxyz.norm());
           if (!isBound[tnv(X)][tnv(Y)][tnv(Z)]) {
             isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
             data->outArray[data->positOut] = tnv;
