@@ -30,9 +30,8 @@
 #include <vtkTable.h>
 #include <vtkTextProperty.h>
 
+#include <QSurfaceFormat>
 #include <QVTKOpenGLWidget.h>
-
-#include <QtGui/QSurfaceFormat>
 
 #include "vtkplot.h"
 
