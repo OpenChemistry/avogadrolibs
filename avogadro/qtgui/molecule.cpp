@@ -185,7 +185,10 @@ Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
                                      unsigned char order)
 {
   m_bondUniqueIds.push_back(bondCount());
-  BondType bond_ = Core::Molecule::addBond(a, b, order);
+  assert(a.isValid() && a.molecule() == this);
+  assert(b.isValid() && b.molecule() == this);
+
+  BondType bond_ = Core::Molecule::addBond(a.index(), b.index(), order);
   return bond_;
 }
 
