@@ -81,7 +81,6 @@ EDTSurface::EDTSurface()
     data->deptY[i] = NULL;
   }
   data->cutRadius = 0;
-  volumePixels = NULL;
   m_cube = NULL;
   m_mol = NULL;
 }
@@ -91,17 +90,6 @@ EDTSurface::~EDTSurface()
 {
   int i, j;
 
-  for (i = 0; i < data->pLength; i++) {
-    for (j = 0; j < data->pWidth; j++) {
-      free(volumePixels[i][j]);
-      volumePixels[i][j] = NULL;
-    }
-    free(volumePixels[i]);
-    volumePixels[i] = NULL;
-  }
-  free(volumePixels);
-  volumePixels = NULL;
-
   for (i = 0; i < 13; i++) {
     free(data->deptY[i]);
     data->deptY[i] = NULL;
@@ -110,6 +98,24 @@ EDTSurface::~EDTSurface()
   //	data->deptY = NULL;
 
   free(data->widXz);
+
+  for (i = 0; i < data->pLength; i++) {
+    for (j = 0; j < data->pWidth; j++) {
+      delete[] isBound[i][j];
+      delete[] inOut[i][j];
+      delete[] isDone[i][j];
+      delete[] atomIds[i][j];
+    }
+    delete[] isBound[i];
+    delete[] inOut[i];
+    delete[] isDone[i];
+    delete[] atomIds[i];
+  }
+
+  delete[] isBound;
+  delete[] inOut;
+  delete[] isDone;
+  delete[] atomIds;
   //	data->widXz = NULL;
 }
 
@@ -121,7 +127,7 @@ Core::Cube* EDTSurface::EDTCube(Core::Molecule *mol, Surfaces::Type surfType, do
 }
 
 
-Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
+Core::Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
 {
   int i, j, k;
 
@@ -150,7 +156,7 @@ Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
   if (surfaceType == SAS || surfaceType == SES) {
     this->fastDistanceMap();
   }
-  // EDT
+  // EDT (if applicable)
 
   this->fillVoxels(atomTypes[surfaceType]);
 
@@ -160,12 +166,6 @@ Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
     this->fillVoxelsWaals(atomTypes[surfaceType]);
     this->boundingAtom(false);
   }
-
-  m_cube = new Cube();
-  // Initialize cube
-
-  this->copyCube();
-  // Copy contents from volumePixels into Cube object
 
   return m_cube;
 }
@@ -185,16 +185,16 @@ void EDTSurface::fastDistanceMap()
     for (j = 0; j < data->pWidth; j++) {
       boundPoint[i][j] = new Vector3i[data->pHeight];
       for (k = 0; k < data->pHeight; k++) {
-        volumePixels[i][j][k].isDone = false;
-        if (volumePixels[i][j][k].inOut) {
-          if (volumePixels[i][j][k].isBound) {
+        isDone[i][j][k] = false;
+        if (inOut[i][j][k]) {
+          if (isBound[i][j][k]) {
             data->totalSurfaceVox++;
             ijk(I) = i;
             ijk(J) = j;
             ijk(K) = k;
             boundPoint[i][j][k] = ijk;
-            volumePixels[i][j][k].distance = 0;
-            volumePixels[i][j][k].isDone = true;
+            m_cube->setValue(i, j, k, 0);
+            isDone[i][j][k] = true;
           } else {
             data->totalInnerVox++;
           }
@@ -219,13 +219,13 @@ void EDTSurface::fastDistanceMap()
   for (i = 0; i < data->pLength; i++) {
     for (j = 0; j < data->pWidth; j++) {
       for (k = 0; k < data->pHeight; k++) {
-        if (volumePixels[i][j][k].isBound) {
+        if (isBound[i][j][k]) {
           ijk(I) = i;
           ijk(J) = j;
           ijk(K) = k;
           data->inArray[data->positIn] = ijk;
           data->positIn++;
-          volumePixels[i][j][k].isBound = false; // as flag of data->outArray
+          isBound[i][j][k] = false; // as flag of data->outArray
         }
       }
     }
@@ -252,10 +252,9 @@ void EDTSurface::fastDistanceMap()
             */
     data->positIn = 0;
     for (i = 0; i < data->positOut; i++) {
-      volumePixels[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)].isBound =
+      isBound[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)] =
         false;
-      if (volumePixels[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)]
-            .distance <= 1.02 * data->cutRadius) {
+      if (m_cube->value(outArray[i]) <= 1.02 * data->cutRadius) {
         data->inArray[data->positIn] = data->outArray[i];
         data->positIn++;
       }
@@ -280,7 +279,7 @@ void EDTSurface::fastDistanceMap()
   //			for(i=0;i<data->positOut;i++)
   //			{
   //
-  volumePixels[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)].isBound=false;
+  isBound[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)]=false;
   //			  data->inArray[i](X)=data->outArray[i](X);
   //			  data->inArray[i](Y)=data->outArray[i](Y);
   //			  data->inArray[i](Z)=data->outArray[i](Z);
@@ -301,7 +300,7 @@ void EDTSurface::fastDistanceMap()
   data->positIn=0;
   for(i=0;i<data->positOut;i++)
   {
-          volumePixels[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)].isBound=false;
+          isBound[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)]=false;
           if(volumePixels[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)].distance<=1.0*data->cutRadius)
           {
                   data->inArray[data->positIn](X)=data->outArray[i](X);
@@ -331,21 +330,20 @@ void EDTSurface::fastDistanceMap()
   for (i = 0; i < data->pLength; i++) {
     for (j = 0; j < data->pWidth; j++) {
       for (k = 0; k < data->pHeight; k++) {
-        volumePixels[i][j][k].isBound = false;
+        isBound[i][j][k] = false;
         // ses solid
-        if (volumePixels[i][j][k].inOut) {
-          if (!volumePixels[i][j][k].isDone ||
-              (volumePixels[i][j][k].isDone &&
-               volumePixels[i][j][k].distance >=
+        if (inOut[i][j][k]) {
+          if (!isDone[i][j][k] ||
+              (isDone[i][j][k] &&
+               m_cube->value(i, j, k) >=
                  data->cutRadius - 0.50 / (0.1 + cutsf)) // 0.33  0.75/data->scaleFactor
           ) {
-            volumePixels[i][j][k].isBound = true;
+            isBound[i][j][k] = true;
             // new add
-            if (volumePixels[i][j][k].isDone)
-              volumePixels[i][j][k].atomId =
-                volumePixels[boundPoint[i][j][k](X)][boundPoint[i][j][k](Y)]
-                            [boundPoint[i][j][k](Z)]
-                              .atomId;
+            if (isDone[i][j][k])
+              atomIds[i][j][k] =
+                atomIds[boundPoint[i][j][k](X)][boundPoint[i][j][k](Y)]
+                            [boundPoint[i][j][k](Z)];
           }
         }
       }
@@ -394,15 +392,15 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
 
       if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth && tnv(Y) > -1 &&
           tnv(Z) < data->pHeight && tnv(Z) > -1 &&
-          volumePixels[tnv(X)][tnv(Y)][tnv(Z)].inOut &&
-          !volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isDone) {
+          inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
+          !isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
         boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
           boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
 
-        volumePixels[tnv(X)][tnv(Y)][tnv(Z)].distance = dxyz.norm();
-        volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isDone = true;
-        volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isBound = true;
+        m_cube->setValue(tnv(X), tnv(Y), tnv(Z), dxyz.norm());
+        isDone[tnv(X)][tnv(Y)][tnv(Z)] = true;
+        isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
 
         data->outArray[data->positOut] = tnv;
 
@@ -410,15 +408,15 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
         data->eliminate++;
       } else if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth &&
                  tnv(Y) > -1 && tnv(Z) < data->pHeight && tnv(Z) > -1 &&
-                 volumePixels[tnv(X)][tnv(Y)][tnv(Z)].inOut &&
-                 volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isDone) {
+                 inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
+                 isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-        if (squre < volumePixels[tnv(X)][tnv(Y)][tnv(Z)].distance) {
+        if (squre < m_cube->value(tnv)) {
           boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
             boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-          volumePixels[tnv(X)][tnv(Y)][tnv(Z)].distance = dxyz.norm();
-          if (!volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isBound) {
-            volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isBound = true;
+            m_cube->setValue(tnv(X), tnv(Y), tnv(Z), dxyz.norm());
+          if (!isBound[tnv(X)][tnv(Y)][tnv(Z)]) {
+            isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
             data->outArray[data->positOut] = tnv;
             data->positOut++;
           }
@@ -440,29 +438,29 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
       ;
       if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth && tnv(Y) > -1 &&
           tnv(Z) < data->pHeight && tnv(Z) > -1 &&
-          volumePixels[tnv(X)][tnv(Y)][tnv(Z)].inOut &&
-          !volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isDone) {
+          inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
+          !isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
         boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
           boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-        volumePixels[tnv(X)][tnv(Y)][tnv(Z)].distance = dxyz.norm();
-        volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isDone = true;
-        volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isBound = true;
+        m_cube->setValue(tnv(X), tnv(Y), tnv(Z), dxyz.norm());
+        isDone[tnv(X)][tnv(Y)][tnv(Z)] = true;
+        isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
         data->outArray[data->positOut] = tnv;
         data->positOut++;
         data->eliminate++;
       } else if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth &&
                  tnv(Y) > -1 && tnv(Z) < data->pHeight && tnv(Z) > -1 &&
-                 volumePixels[tnv(X)][tnv(Y)][tnv(Z)].inOut &&
-                 volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isDone) {
+                 inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
+                 isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
         squre = dxyz.norm();
-        if (squre < volumePixels[tnv(X)][tnv(Y)][tnv(Z)].distance) {
+        if (squre < m_cube->value(tnv)) {
           boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
             boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-          volumePixels[tnv(X)][tnv(Y)][tnv(Z)].distance = float(squre);
-          if (!volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isBound) {
-            volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isBound = true;
+          m_cube->setValue(tnv(X), tnv(Y), tnv(Z), float(squre));
+          if (!isBound[tnv(X)][tnv(Y)][tnv(Z)]) {
+            isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
             data->outArray[data->positOut] = tnv;
             data->positOut++;
           }
@@ -484,30 +482,30 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
       ;
       if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth && tnv(Y) > -1 &&
           tnv(Z) < data->pHeight && tnv(Z) > -1 &&
-          volumePixels[tnv(X)][tnv(Y)][tnv(Z)].inOut &&
-          !volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isDone) {
+          inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
+          !isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
         boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
           boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-        volumePixels[tnv(X)][tnv(Y)][tnv(Z)].distance = dxyz.norm();
-        volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isDone = true;
-        volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isBound = true;
+        m_cube->setValue(tnv(X), tnv(Y), tnv(Z), dxyz.(norm));
+        isDone[tnv(X)][tnv(Y)][tnv(Z)] = true;
+        isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
         data->outArray[data->positOut] = tnv;
         data->positOut++;
         data->eliminate++;
       } else if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth &&
                  tnv(Y) > -1 && tnv(Z) < data->pHeight && tnv(Z) > -1 &&
-                 volumePixels[tnv(X)][tnv(Y)][tnv(Z)].inOut &&
-                 volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isDone) {
+                 inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
+                 isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
 
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
 
-        if (squre < volumePixels[tnv(X)][tnv(Y)][tnv(Z)].distance) {
+        if (squre < m_cube->value(tnv)) {
           boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
             boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-          volumePixels[tnv(X)][tnv(Y)][tnv(Z)].distance = dxyz.norm();
-          if (!volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isBound) {
-            volumePixels[tnv(X)][tnv(Y)][tnv(Z)].isBound = true;
+            m_cube->setValue(tnv(X), tnv(Y), tnv(Z), dxyz.norm());
+          if (!isBound[tnv(X)][tnv(Y)][tnv(Z)]) {
+            isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
             data->outArray[data->positOut] = tnv;
             data->positOut++;
           }
@@ -574,15 +572,15 @@ void EDTSurface::fillAtom(int indx)
                   }
 
                   else {
-                    if (volumePixels[sijk(I)][sijk(J)][sijk(K)].inOut ==
+                    if (inOut[sijk(I)][sijk(J)][sijk(K)] ==
                         false) {
-                      volumePixels[sijk(I)][sijk(J)][sijk(K)].inOut = true;
-                      volumePixels[sijk(I)][sijk(J)][sijk(K)].atomId = indx;
+                      inOut[sijk(I)][sijk(J)][sijk(K)] = true;
+                      atomIds[sijk(I)][sijk(J)][sijk(K)] = indx;
                     }
                     // no atomic info to each Vector3i change above line
                     //*
-                    else if (volumePixels[sijk(I)][sijk(J)][sijk(K)].inOut) {
-                      tIndex = volumePixels[sijk(I)][sijk(J)][sijk(K)].atomId;
+                    else if (inOut[sijk(I)][sijk(J)][sijk(K)]) {
+                      tIndex = atomIds[sijk(I)][sijk(J)][sijk(K)];
 
                       cp = (positions[tIndex] + data->pTran) * data->scaleFactor;
                       // Translating and scaling
@@ -596,7 +594,7 @@ void EDTSurface::fillAtom(int indx)
                       // Rounding to the nearest integer
 
                       if (mijk.squaredNorm() < oxyz.squaredNorm())
-                        volumePixels[sijk(I)][sijk(J)][sijk(K)].atomId = indx;
+                        atomIds[sijk(I)][sijk(J)][sijk(K)] = indx;
                     }
                     //	*/
                   } // k
@@ -631,8 +629,8 @@ void EDTSurface::fillVoxels(bool atomType)
   for (i = 0; i < data->pLength; i++) {
     for (j = 0; j < data->pWidth; j++) {
       for (k = 0; k < data->pHeight; k++) {
-        if (volumePixels[i][j][k].inOut) {
-          volumePixels[i][j][k].isDone = true;
+        if (inOut[i][j][k]) {
+          isDone[i][j][k] = true;
         }
       }
     }
@@ -704,20 +702,20 @@ void EDTSurface::fillAtomWaals(int indx)
                   }
 
                   else {
-                    if (volumePixels[sijk(I)][sijk(J)][sijk(K)].isDone ==
+                    if (isDone[sijk(I)][sijk(J)][sijk(K)] ==
                         false) {
-                      volumePixels[sijk(I)][sijk(J)][sijk(K)].isDone = true;
-                      volumePixels[sijk(I)][sijk(J)][sijk(K)].atomId = indx;
+                      isDone[sijk(I)][sijk(J)][sijk(K)] = true;
+                      atomIds[sijk(I)][sijk(J)][sijk(K)] = indx;
                     }
                     // with atomic info change above line
                     //*
-                    else if (volumePixels[sijk(I)][sijk(J)][sijk(K)].isDone) {
-                      tIndex = volumePixels[sijk(I)][sijk(J)][sijk(K)].atomId;
+                    else if (isDone[sijk(I)][sijk(J)][sijk(K)]) {
+                      tIndex = atomIds[sijk(I)][sijk(J)][sijk(K)];
                       cp = (positions[tIndex] + data->pTran) * data->scaleFactor;
                       // Translating and scaling
                       oxyz = cxyz - sijk;
                       if (mijk.squaredNorm() < oxyz.squaredNorm())
-                        volumePixels[sijk(I)][sijk(J)][sijk(K)].atomId = indx;
+                        atomIds[sijk(I)][sijk(J)][sijk(K)] = indx;
                     }
                     //	 */
                   } // else
@@ -745,7 +743,7 @@ void EDTSurface::buildBoundary()
   for (i = 0; i < data->pLength; i++) {
     for (j = 0; j < data->pHeight; j++) {
       for (k = 0; k < data->pWidth; k++) {
-        if (volumePixels[i][k][j].inOut) {
+        if (inOut[i][k][j]) {
           // 6 neighbors
           //					if(( k-1>-1 && !volumePixels[i][k-1][j].inOut)
           //|| ( k+1<data->pWidth &&!volumePixels[i][k+1][j].inOut)
@@ -753,7 +751,7 @@ void EDTSurface::buildBoundary()
           //|| ( j+1<data->pHeight &&!volumePixels[i][k][j+1].inOut)
           //					|| ( i-1>-1 && !volumePixels[i-1][k][j].inOut)
           //|| ( i+1<data->pLength &&!volumePixels[i+1][k][j].inOut))
-          //						volumePixels[i][k][j].isBound=true;
+          //						isBound[i][k][j]=true;
           //	/*
           // 26 neighbors
           flagBound = false;
@@ -765,11 +763,11 @@ void EDTSurface::buildBoundary()
                 k + vectorFromArray(nb[ii])(Y) < data->pWidth &&
                 j + vectorFromArray(nb[ii])(Z) > -1 &&
                 j + vectorFromArray(nb[ii])(Z) < data->pHeight &&
-                !volumePixels[i + vectorFromArray(nb[ii])(X)]
+                !isBound[i + vectorFromArray(nb[ii])(X)]
                              [k + vectorFromArray(nb[ii])(Y)]
                              [j + vectorFromArray(nb[ii])(Z)]
-                               .inOut) {
-              volumePixels[i][k][j].isBound = true;
+                               ) {
+              isBound[i][k][j] = true;
               flagBound = true;
             } else
               ii++;
@@ -826,7 +824,7 @@ void EDTSurface::initPara(bool atomType, bool bType)
   int i, j;
   int data->fixSf = 4;
   double fMargin = 2.5;
-  if(surfaceType == VWS){
+  if(probeRadius == 0){//probe radius was not set after constructor set it to 0
     probeRadius = 1.4;
   }
   int data->pLength, data->pWidth;
@@ -888,6 +886,26 @@ void EDTSurface::initPara(bool atomType, bool bType)
 
   boundingAtom(bType);
   data->cutRadius = data->probeRadius * data->scaleFactor;
+
+  m_cube = new Cube();
+
+  inOut = new bool**[data->pLength];
+  isDone = new bool**[data->pLength];
+  isBound = new bool**[data->pLength];
+  atomIds = new int**[data->pLength];
+
+  for(i = 0; i < pLength; i++){
+    inOut[i] = new bool*[data->pWidth];
+    isDone[i] = new bool*[data->pWidth];
+    isBound[i] = new bool*[data->pWidth];
+    atomIds[i] = new int*[data->pWidth];
+    for(j = 0; j < pWidth; j++){
+      inOut[i][j] = new bool[data->pHeight];
+      isDone[i][j] = new bool[data->pHeight];
+      isBound[i][j] = new bool[data->pHeight];
+      atomIds[i][j] = new int[data->pHeight];
+    }
+  }
 }
 
 void EDTSurface::boundingAtom(bool bType)
@@ -966,21 +984,6 @@ int EDTSurface::detail(unsigned char atomicNumber)
       return 10;
   }
 }
-
-void copyCube(){
-  int i, j, k;
-  for (i = 0; i < data->pLength; i++) {
-    for (j = 0; j < data->pWidth; j++) {
-      for (k = 0; k < data->pHeight; k++) {
-        m_cube->setValue(i, j, k, volumePixels[i][j][k].distance);
-      }
-      delete[] volumePixels[i][j];
-    }
-    delete[] volumePixels[i];
-  }
-  delete[] volumePixels;
-}//end copyCube
-
 
 int EDTSurface::setMolecule(Molecule *mol){
   m_mol = mol;
