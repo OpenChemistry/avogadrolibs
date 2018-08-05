@@ -290,5 +290,10 @@ bool Cube::setValue(int i, int j, int k, double value_)
   }
 }
 
+bool Cube::setValue(const Vector3i& pos, double value){
+  return setValue(pos(0), pos(1), pos(2), value);
+}
+
+
 } // End Core namespace
 } // End Avogadro namespace
