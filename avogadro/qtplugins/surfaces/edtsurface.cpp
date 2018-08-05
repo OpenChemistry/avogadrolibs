@@ -54,6 +54,7 @@ EDTSurface::EDTSurface()
 {
   int i;
 
+  data = (dataStruct*)malloc(sizeof(dataStruct));
   //	data->pTran(0.0,0.0,0.0);
   data->pTran(X) = 0.0;
   data->pTran(Y) = 0.0;
@@ -116,6 +117,8 @@ EDTSurface::~EDTSurface()
   delete[] inOut;
   delete[] isDone;
   delete[] atomIds;
+
+  free(data);
   //	data->widXz = NULL;
 }
 
@@ -123,23 +126,22 @@ EDTSurface::~EDTSurface()
 
 Core::Cube* EDTSurface::EDTCube(Core::Molecule *mol, Surfaces::Type surfType, double probeRadius){
   this->setProbeRadius(probeRadius);
-  this->EDTCube(mol, surfType);
+  return this->EDTCube(mol, surfType);
 }
 
 
 Core::Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
 {
-  int i, j, k;
 
   int surfaceType;
 
-  if(surfType == VanDerWaals){
+  if(surfType == Surfaces::VanDerWaals){
     surfaceType = VWS;
   }
-  else if(surfType == SolventExcluded){
+  else if(surfType == Surfaces::SolventExcluded){
     surfaceType = SES;
   }
-  else if(surfType == SolventAccessible){
+  else if(surfType == Surfaces::SolventAccessible){
     surfaceType = SAS;
   }
   else{
@@ -150,7 +152,7 @@ Core::Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
   this->setMolecule(mol);
   //Set molecule
 
-  this->initPara(atomTypes[surfaceType], bTypes[surfaceType], int surfaceType);
+  this->initPara(atomTypes[surfaceType], bTypes[surfaceType]);
   // Initialize everything
 
   if (surfaceType == SAS || surfaceType == SES) {
@@ -254,7 +256,7 @@ void EDTSurface::fastDistanceMap()
     for (i = 0; i < data->positOut; i++) {
       isBound[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)] =
         false;
-      if (m_cube->value(outArray[i]) <= 1.02 * data->cutRadius) {
+      if (m_cube->value(data->outArray[i]) <= 1.02 * data->cutRadius) {
         data->inArray[data->positIn] = data->outArray[i];
         data->positIn++;
       }
@@ -275,7 +277,7 @@ void EDTSurface::fastDistanceMap()
 
                   fastOneShell( &data->positIn, &allocOut, boundPoint,
   &data->positOut,&data->eliminate);//data->inArray, data->outArray, data->certificate-=data->eliminate;
-  //	/*
+  //	
   //			for(i=0;i<data->positOut;i++)
   //			{
   //
@@ -362,12 +364,10 @@ void EDTSurface::fastDistanceMap()
 void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
                               int* outNum, int* elimi)
 {
-  int i, number, data->positOut;
-  int tx, ty, tz;
+  int i, number;
   Vector3i dxyz;
   Vector3i txyz;
-  int dx, dy, dz;
-  int data->eliminate = 0;
+  data->eliminate = 0;
   float squre;
   data->positOut = 0;
   number = *inNum;
@@ -487,7 +487,7 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
         boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
           boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-        m_cube->setValue(tnv, dxyz.(norm));
+        m_cube->setValue(tnv, dxyz.norm());
         isDone[tnv(X)][tnv(Y)][tnv(Z)] = true;
         isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
         data->outArray[data->positOut] = tnv;
@@ -545,7 +545,6 @@ void EDTSurface::fillAtom(int indx)
   int ii, jj, kk;
   int mi, mj, mk;
   Vector3i mijk;
-  int si, sj, sk;
   Vector3i sijk;
   int tIndex;
   int nIndex = 0;
@@ -621,7 +620,7 @@ void EDTSurface::fillVoxels(bool atomType)
     Index index = i;
     Atom current = m_mol->atom(index);
     if (!atomType || current.atomicNumber() != 1)
-      fillAtom(i, mol);
+      fillAtom(i);
     //			totalNumber++;
   }
   // This can also be done concurrently if we write a function for it
@@ -640,7 +639,7 @@ void EDTSurface::fillVoxels(bool atomType)
 // use isDone
 void EDTSurface::fillVoxelsWaals(bool atomType)
 {
-  int i, j, k;
+  int i;
 
   int numberOfAtoms = m_mol->atomCount();
 
@@ -648,7 +647,7 @@ void EDTSurface::fillVoxelsWaals(bool atomType)
     Index index = i;
     Atom current = m_mol->atom(index);
     if (!atomType || current.atomicNumber() != 1) {
-      fillAtomWaals(i, mol);
+      fillAtomWaals(i);
     }
   }
 }
@@ -657,11 +656,9 @@ void EDTSurface::fillAtomWaals(int indx)
 {
   int cx, cy, cz;
   Vector3i cxyz;
-  int ox, oy, oz;
   Vector3i oxyz;
   Vector3 cp;
 
-  int numberOfAtoms = m_mol->atomCount();
   Array<Vector3> positions = m_mol->atomPositions3d();
   Atom current = m_mol->atom(indx);
 
@@ -822,12 +819,11 @@ void EDTSurface::boundBox(bool atomType)
 void EDTSurface::initPara(bool atomType, bool bType)
 {
   int i, j;
-  int data->fixSf = 4;
+  data->fixSf = 4;
   double fMargin = 2.5;
-  if(probeRadius == 0){//probe radius was not set after constructor set it to 0
-    probeRadius = 1.4;
+  if(data->probeRadius == 0){//probe radius was not set after constructor set it to 0
+    data->probeRadius = 1.4;
   }
-  int data->pLength, data->pWidth;
 
   boundBox(atomType);
   if (bType == false) {
@@ -894,12 +890,12 @@ void EDTSurface::initPara(bool atomType, bool bType)
   isBound = new bool**[data->pLength];
   atomIds = new int**[data->pLength];
 
-  for(i = 0; i < pLength; i++){
+  for(i = 0; i < data->pLength; i++){
     inOut[i] = new bool*[data->pWidth];
     isDone[i] = new bool*[data->pWidth];
     isBound[i] = new bool*[data->pWidth];
     atomIds[i] = new int*[data->pWidth];
-    for(j = 0; j < pWidth; j++){
+    for(j = 0; j < data->pWidth; j++){
       inOut[i][j] = new bool[data->pHeight];
       isDone[i][j] = new bool[data->pHeight];
       isBound[i][j] = new bool[data->pHeight];
@@ -985,13 +981,13 @@ int EDTSurface::detail(unsigned char atomicNumber)
   }
 }
 
-int EDTSurface::setMolecule(Molecule *mol){
+void EDTSurface::setMolecule(Molecule *mol){
   m_mol = mol;
   return;
 }
 
-void setProbeRadius(double probeRadius){
-  data->m_probeRadius = probeRadius;
+void EDTSurface::setProbeRadius(double probeRadius){
+  data->probeRadius = probeRadius;
 }
 
 
