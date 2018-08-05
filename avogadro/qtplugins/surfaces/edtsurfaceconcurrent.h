@@ -21,15 +21,6 @@
 #include <QtCore/QFutureWatcher>
 #include <QtCore/QObject>
 
-typedef struct volumePixel
-{
-  int atomId;
-  float distance;
-  bool inOut;
-  bool isBound;
-  bool isDone;
-}volumePixel;
-
 typedef struct dataStruct{
   Vector3 pTran;
   int boxLength;
@@ -57,7 +48,10 @@ typedef struct atomStruct{
 
 typedef struct subCube{
   Core::Cube *cube;
-  volumePixel** volumePixelsRow;
+  bool** isDone;
+  bool** isBound;
+  bool** inOut;
+  int** atomIds;
   int pWidth;
   int pHeight;
   int index;
@@ -166,10 +160,6 @@ private:
 
   int detail(unsigned char atomicNumber);
     // Takes an atomic number and returns an index for rasRad
-
-  void copyCube();
-
-  void copyCubeConcurrent(subCube *someVolumePixels);
 
   Molecule* m_mol;
 
