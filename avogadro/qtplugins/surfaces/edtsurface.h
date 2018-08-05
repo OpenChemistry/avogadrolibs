@@ -19,15 +19,6 @@ class Atom;
 
 namespace QtPlugins {
 
-  typedef struct volumePixel
-  {
-  	int atomId;
-  	float distance;
-  	bool inOut;
-  	bool isBound;
-  	bool isDone;
-  }volumePixel;
-
   typedef struct dataStruct{
     Vector3 pTran;
     int boxLength;
@@ -46,12 +37,6 @@ namespace QtPlugins {
     Vector3i *inArray, *outArray
   }dataStruct;//End struct dataStruct
 
-//to make this work concurrently, we'll also have to define a subcube struct
-//for operations that happen over a cube
-//this should involve a pointer pointer
-
-//we'll also need a struct for operations that happen over a Molecule
-//which should mostly just require an atom and a little bit of metadata
 
 class EDTSurface
 {
@@ -138,14 +123,17 @@ private:
   int detail(unsigned char atomicNumber);
     // Takes an atomic number and returns an index for rasRad
 
-  void copyCube();
-
-
   Molecule* m_mol;
 
   Cube* m_cube;
 
   volumePixel*** volumePixels;
+
+  //These bool arrays should probably be converted into BitVectors
+  bool*** isDone;
+  bool*** isBound;
+  bool*** inOut;
+  int*** atomIds;
 
   dataStruct *data;
 }; // End class EDTSurface
