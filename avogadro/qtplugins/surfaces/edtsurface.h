@@ -34,7 +34,7 @@ namespace QtPlugins {
     int certificate;
     int totalSurfaceVox;
     int totalInnerVox;
-    Vector3i *inArray, *outArray
+    Vector3i *inArray, *outArray;
   }dataStruct;//End struct dataStruct
 
 
@@ -132,9 +132,9 @@ private:
 
   int detail(unsigned char atomicNumber);
 
-  Molecule* m_mol;
+  Core::Molecule* m_mol;
 
-  Cube* m_cube;
+  Core::Cube* m_cube;
 
   //These bool arrays should probably be converted into BitVectors
   bool*** isDone;
