@@ -9,6 +9,8 @@
 
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/vector.h>
+#include "surfaces.h"
+//for the enum
 
 namespace Avogadro {
 namespace Core {
