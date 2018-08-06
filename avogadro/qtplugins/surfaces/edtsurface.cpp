@@ -126,13 +126,12 @@ EDTSurface::~EDTSurface()
 
 Core::Cube* EDTSurface::EDTCube(Core::Molecule *mol, Surfaces::Type surfType, double probeRadius){
   this->setProbeRadius(probeRadius);
-  this->EDTCube(mol, surfType);
+  return this->EDTCube(mol, surfType);
 }
 
 
 Core::Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
 {
-  int i, j, k;
 
   int surfaceType;
 
@@ -257,7 +256,7 @@ void EDTSurface::fastDistanceMap()
     for (i = 0; i < data->positOut; i++) {
       isBound[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)] =
         false;
-      if (m_cube->value(outArray[i]) <= 1.02 * data->cutRadius) {
+      if (m_cube->value(data->outArray[i]) <= 1.02 * data->cutRadius) {
         data->inArray[data->positIn] = data->outArray[i];
         data->positIn++;
       }
@@ -820,12 +819,11 @@ void EDTSurface::boundBox(bool atomType)
 void EDTSurface::initPara(bool atomType, bool bType)
 {
   int i, j;
-  int data->fixSf = 4;
+  data->fixSf = 4;
   double fMargin = 2.5;
-  if(probeRadius == 0){//probe radius was not set after constructor set it to 0
-    probeRadius = 1.4;
+  if(data->probeRadius == 0){//probe radius was not set after constructor set it to 0
+    data->probeRadius = 1.4;
   }
-  int data->pLength, data->pWidth;
 
   boundBox(atomType);
   if (bType == false) {
@@ -892,12 +890,12 @@ void EDTSurface::initPara(bool atomType, bool bType)
   isBound = new bool**[data->pLength];
   atomIds = new int**[data->pLength];
 
-  for(i = 0; i < pLength; i++){
+  for(i = 0; i < data->pLength; i++){
     inOut[i] = new bool*[data->pWidth];
     isDone[i] = new bool*[data->pWidth];
     isBound[i] = new bool*[data->pWidth];
     atomIds[i] = new int*[data->pWidth];
-    for(j = 0; j < pWidth; j++){
+    for(j = 0; j < data->pWidth; j++){
       inOut[i][j] = new bool[data->pHeight];
       isDone[i][j] = new bool[data->pHeight];
       isBound[i][j] = new bool[data->pHeight];
@@ -989,7 +987,7 @@ void EDTSurface::setMolecule(Molecule *mol){
 }
 
 void setProbeRadius(double probeRadius){
-  data->m_probeRadius = probeRadius;
+  data->probeRadius = probeRadius;
 }
 
 
