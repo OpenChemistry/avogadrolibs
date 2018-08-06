@@ -136,13 +136,13 @@ Core::Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
   int surfaceType;
 
   if(surfType == VanDerWaals){
-    surfaceType = VWS;
+    surfaceType = Surfaces::VWS;
   }
   else if(surfType == SolventExcluded){
-    surfaceType = SES;
+    surfaceType = Surfaces::SES;
   }
   else if(surfType == SolventAccessible){
-    surfaceType = SAS;
+    surfaceType = Surfaces::SAS;
   }
   else{
     return NULL;
@@ -986,7 +986,7 @@ void EDTSurface::setMolecule(Molecule *mol){
   return;
 }
 
-void setProbeRadius(double probeRadius){
+void EDTSurface::setProbeRadius(double probeRadius){
   data->probeRadius = probeRadius;
 }
 
