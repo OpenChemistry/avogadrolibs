@@ -36,11 +36,20 @@ public:
   // data[0] is the x data, and data[i] for i != 0 is the y data for line
   // i - 1. 'lineLabels' and 'lineColors' should be equal to the number of
   // lines (data.size() - 1) and ordered in the same way as they are in 'data'.
-  static void generatePlot(const std::vector<std::vector<double>>& data,
-                           const std::vector<std::string>& lineLabels,
-                           const std::vector<std::array<double, 4>>& lineColors,
-                           const char* xTitle, const char* yTitle,
-                           const char* windowName);
+  //
+  // customTickPositions can be optionally set to specify the values for which
+  // there should be tick markers on the x axis.
+  // customTickLabels can be set in conjunction with customTickPositions to
+  // specify the labels that should be used at the custom tick markers on the
+  // x axis.
+  static void generatePlot(
+    const std::vector<std::vector<double>>& data,
+    const std::vector<std::string>& lineLabels,
+    const std::vector<std::array<double, 4>>& lineColors, const char* xTitle,
+    const char* yTitle, const char* windowName,
+    const std::vector<double>& customTickPositions = std::vector<double>(),
+    const std::vector<std::string>& customTickLabels =
+      std::vector<std::string>());
 };
 
 } // namespace VTK

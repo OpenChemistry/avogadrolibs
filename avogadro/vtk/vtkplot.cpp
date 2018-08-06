@@ -21,12 +21,14 @@
 #include <vtkChartXY.h>
 #include <vtkContextScene.h>
 #include <vtkContextView.h>
+#include <vtkDoubleArray.h>
 #include <vtkFloatArray.h>
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkNew.h>
 #include <vtkPlot.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
+#include <vtkStringArray.h>
 #include <vtkTable.h>
 #include <vtkTextProperty.h>
 
@@ -46,7 +48,9 @@ void VtkPlot::generatePlot(const vector<vector<double>>& data,
                            const vector<string>& lineLabels,
                            const vector<array<double, 4>>& lineColors,
                            const char* xTitle, const char* yTitle,
-                           const char* windowName)
+                           const char* windowName,
+                           const vector<double>& customTickPositions,
+                           const vector<string>& customTickLabels)
 {
   if (data.size() < 2) {
     std::cerr << "Error in " << __FUNCTION__
@@ -106,6 +110,35 @@ void VtkPlot::generatePlot(const vector<vector<double>>& data,
   // Set the axis titles
   bottomAxis->SetTitle(xTitle);
   leftAxis->SetTitle(yTitle);
+
+  // If we have custom tick positions, set them
+  if (!customTickPositions.empty()) {
+    vtkNew<vtkDoubleArray> doubleArray;
+    doubleArray->SetName("Custom Tick Positions");
+    for (const auto& pos: customTickPositions)
+      doubleArray->InsertNextValue(pos);
+
+    // If customTickLabels is also set, make sure it is equal in size
+    // to the custom tick positions, and add them as well.
+    if (!customTickLabels.empty()) {
+      if (customTickPositions.size() != customTickLabels.size()) {
+        std::cerr << "Error in " << __FUNCTION__ << ": custom tick labels "
+                  << "must be equal in size to custom tick positions!\n";
+        return;
+      }
+
+      vtkNew<vtkStringArray> stringArray;
+      stringArray->SetName("Custom Tick Labels");
+
+      for (const auto& label: customTickLabels)
+        stringArray->InsertNextValue(label);
+
+      bottomAxis->SetCustomTickPositions(doubleArray, stringArray);
+    }
+    else {
+      bottomAxis->SetCustomTickPositions(doubleArray, nullptr);
+    }
+  }
 
   // Increase the title font sizes
   bottomAxis->GetTitleProperties()->SetFontSize(20);
