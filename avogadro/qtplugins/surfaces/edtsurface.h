@@ -90,7 +90,7 @@ private:
   *@param surfaceType
   */
 
-  void initPara(bool atomType, bool bType, int surfaceType);
+  void initPara(bool atomType, bool bType);
 
   /*
   *@brief For each atom in the molecule, fills the appropriate voxels
