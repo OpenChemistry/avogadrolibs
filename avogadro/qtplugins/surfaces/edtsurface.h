@@ -18,6 +18,8 @@ class Cube;
 class Molecule;
 class Atom;
 }
+namespace QtGui{
+ class Molecule;
 
 namespace QtPlugins {
 
@@ -56,7 +58,7 @@ public:
   *@returns a pointer to the cube
   */
 
-  Core::Cube *EDTCube(Core::Molecule *mol, Surfaces::Type surfType);
+  Core::Cube *EDTCube(QtGui::Molecule *mol, Surfaces::Type surfType);
 
   //The copying over from array to Cube can and should be done in parallel
 
@@ -68,14 +70,14 @@ public:
   *@returns a pointer to the cube
   */
 
-  Core::Cube *EDTCube(Core::Molecule *mol, Surfaces::Type surfType, double probeRadius);
+  Core::Cube *EDTCube(QtGui::Molecule *mol, Surfaces::Type surfType, double probeRadius);
   // Takes a molecule, a surface type and a probeRadius and
 
   /*@brief Sets a pointer to the desired molecule
   *@param mol a pointer to the molecule to be set
   */
 
-  void setMolecule(Core::Molecule *mol);
+  void setMolecule(QtGui::Molecule *mol);
 
   /*@brief Sets the probe radius to a desired value (default is 1.4 - water)
   *@param probeRadius The molecular radius of the solvent
@@ -134,7 +136,7 @@ private:
 
   int detail(unsigned char atomicNumber);
 
-  Core::Molecule* m_mol;
+  QtGui::Molecule* m_mol;
 
   Core::Cube* m_cube;
 
