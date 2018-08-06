@@ -81,53 +81,60 @@ public:
 
   void setProbeRadius(double probeRadius);
 
-  /*@brief Copies cube from volumePixel array into Cube object
-  */
-
 private:
 
+  /*
+  *@brief Initializes the data members of the class
+  *@param atomType
+  *@param bType
+  *@param surfaceType
+  */
+
   void initPara(bool atomType, bool bType, int surfaceType);
-  //This can be done concurrently, but maybe doesn't need to be
+
+  /*
+  *@brief For each atom in the molecule, fills the appropriate voxels
+  *@param atomType
+  */
+
   void fillVoxels(bool atomType);
-  //This can (and should be done concurrently)
-  //Basically we need to bust it up into two functions
-  //One that iterates through the atoms and calls fillAtom
-  //And one that iterates through the cube and adjusts booleans accordingly
+
   void fillAtom(int indx);
-  //This cannot be done concurrently, but there's nor eason for it to be
+
   void fillAtomWaals(int indx);
-  //This cannot be done concurrently, but there's no reason for it to be
+
   void fillVoxelsWaals(bool atomType);
-  //This can and should be done concurrently
-  //This shouldn't need to be busted up into functions
-  //Because we don't do the iterating through the cube part
+
   void fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
                     int* outNum, int* elimi);
-  //This cannot be done concurrently, we run into issues breaking up the cube
+
   void fastDistanceMap();
-  //This can be done concurrently except for the call to fastOneShell
+
   void buildBoundary();
-  //This cannot be done concurrently (boundary issues),
-  //But that's fine because it only happens once
-  void boundBox(bool atomType);
-  //This can be done concurrently, but maybe doesn't need to be
+
+  void boundBox(bool atomType)
 
   void boundingAtom(bool bType);
-  //This can be done concurrently but maybe doesn't need to be
 
-  //So mostly, we need a way to make fillVoxels and fillVoxelsWaals run concurrently
+  /*
+  *@brief Takes an array of integers and returns a Vector3i
+  *@param array Array of integers
+  *@returns A Vector3i
+  */
 
   Vector3i vectorFromArray(int* array);
-    // Takes an array of integers and returns a vector3i
+
+  /*
+  *@brief Takes an atomic number and returns an index for rasRad
+  *@param atomicNumber The atomic number of the atom in question
+  *@returns An integer index for an array of atomic radii
+  */
 
   int detail(unsigned char atomicNumber);
-    // Takes an atomic number and returns an index for rasRad
 
   Molecule* m_mol;
 
   Cube* m_cube;
-
-  volumePixel*** volumePixels;
 
   //These bool arrays should probably be converted into BitVectors
   bool*** isDone;

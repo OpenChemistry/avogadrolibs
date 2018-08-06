@@ -54,6 +54,7 @@ EDTSurface::EDTSurface()
 {
   int i;
 
+  data = (dataStruct*)malloc(sizeof(dataStruct));
   //	data->pTran(0.0,0.0,0.0);
   data->pTran(X) = 0.0;
   data->pTran(Y) = 0.0;
@@ -116,6 +117,8 @@ EDTSurface::~EDTSurface()
   delete[] inOut;
   delete[] isDone;
   delete[] atomIds;
+
+  free(data);
   //	data->widXz = NULL;
 }
 
