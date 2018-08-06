@@ -125,13 +125,13 @@ EDTSurface::~EDTSurface()
 
 // Takes a molecule and a surface type and returns a cube
 
-Core::Cube* EDTSurface::EDTCube(Core::Molecule *mol, Surfaces::Type surfType, double probeRadius){
+Core::Cube* EDTSurface::EDTCube(QtGui::Molecule *mol, Surfaces::Type surfType, double probeRadius){
   this->setProbeRadius(probeRadius);
   return this->EDTCube(mol, surfType);
 }
 
 
-Core::Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
+Core::Cube* EDTSurface::EDTCube(QtGui::Molecule *mol, Surfaces::Type surfType)
 {
 
   int surfaceType;
@@ -982,7 +982,7 @@ int EDTSurface::detail(unsigned char atomicNumber)
   }
 }
 
-void EDTSurface::setMolecule(Molecule *mol){
+void EDTSurface::setMolecule(QtGui::Molecule *mol){
   m_mol = mol;
   return;
 }
