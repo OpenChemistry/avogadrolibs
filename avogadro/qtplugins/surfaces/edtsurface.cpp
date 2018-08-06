@@ -135,14 +135,14 @@ Core::Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
 
   int surfaceType;
 
-  if(surfType == VanDerWaals){
-    surfaceType = Surfaces::VWS;
+  if(surfType == Surfaces::VanDerWaals){
+    surfaceType = VWS;
   }
-  else if(surfType == SolventExcluded){
-    surfaceType = Surfaces::SES;
+  else if(surfType == Surfaces::SolventExcluded){
+    surfaceType = SES;
   }
-  else if(surfType == SolventAccessible){
-    surfaceType = Surfaces::SAS;
+  else if(surfType == Surfaces::SolventAccessible){
+    surfaceType = SAS;
   }
   else{
     return NULL;
