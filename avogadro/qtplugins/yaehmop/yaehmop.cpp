@@ -293,6 +293,25 @@ void Yaehmop::calculateBandStructure()
   for (int i = 1; i < numKPoints; ++i)
     xVals.push_back(kpointDistance(kpoints[i - 1], kpoints[i]) + xVals.back());
 
+  // Calculate the special k point distances
+  std::vector<double> specialKPointVals{ 0.0 };
+  for (int i = 1; i < numSpecialKPoints; ++i) {
+    specialKPointVals.push_back(
+      kpointDistance(specialKPoints[i - 1].coords, specialKPoints[i].coords) +
+      specialKPointVals.back());
+  }
+
+  // This is to make sure vtk shows the symbols on the far left and right
+  specialKPointVals.front() += 0.0001;
+  specialKPointVals.back() -= 0.0001;
+
+  // Make a vector of labels for the special k points
+  std::vector<std::string> specialKPointLabels;
+  for (int i = 0; i < numSpecialKPoints; ++i) {
+    std::string label = specialKPoints[i].label.toStdString();
+    specialKPointLabels.push_back(label);
+  }
+
   // Now generate a plot with the data
   std::vector<std::vector<double>> data;
   data.push_back(xVals);
@@ -307,12 +326,13 @@ void Yaehmop::calculateBandStructure()
     lineColors.push_back(color);
   }
 
-  const char* xTitle = "Special K-Points Go Here";
+  const char* xTitle = "";
   const char* yTitle = "Energy (eV)";
   const char* windowName = "YAeHMOP Band Structure";
 
   VTK::VtkPlot::generatePlot(data, lineLabels, lineColors, xTitle, yTitle,
-                             windowName);
+                             windowName, specialKPointVals,
+                             specialKPointLabels);
 }
 
 QString Yaehmop::createGeometryAndLatticeInput() const

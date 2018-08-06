@@ -86,8 +86,10 @@ bool YaehmopOut::readBandData(const QString& data,
 
     kp.label = lines[ind].split(" ")[0];
     // If the label is "GM", use "Γ" instead
-    if (kp.label.toLower() == "gm")
-      kp.label = QString::fromUtf8("Γ");
+    // FIXME: our vtk can't currently display a unicode gamma like this. When
+    // we add a font that can, we can uncomment this.
+//    if (kp.label.toLower() == "gm")
+//      kp.label = QString::fromUtf8("Γ");
     kp.coords = Vector3(lines[ind].split(" ")[1].toDouble(),
                         lines[ind].split(" ")[2].toDouble(),
                         lines[ind].split(" ")[3].toDouble());
