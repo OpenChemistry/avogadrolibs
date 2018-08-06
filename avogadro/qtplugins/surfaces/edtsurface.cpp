@@ -11,6 +11,7 @@
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elementdata.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/molecule.h>
 
 #define VWS 0
 #define MS 1
