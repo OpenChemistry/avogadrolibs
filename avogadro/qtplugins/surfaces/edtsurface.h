@@ -20,6 +20,7 @@ class Atom;
 }
 namespace QtGui{
  class Molecule;
+}
 
 namespace QtPlugins {
 
