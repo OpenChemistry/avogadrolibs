@@ -112,7 +112,7 @@ private:
 
   void buildBoundary();
 
-  void boundBox(bool atomType)
+  void boundBox(bool atomType);
 
   void boundingAtom(bool bType);
 
