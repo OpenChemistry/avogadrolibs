@@ -8,14 +8,14 @@
 
 #include <Eigen/Dense>
 
-#include <avogadro/core/cube.h>
-#include <avogadro/core/elementdata.h>
-#include <avogadro/core/molecule.h>
-#include <QtConcurrentMap>
+#include <QDebug>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QReadWriteLock>
-#include <QDebug>
+#include <QtConcurrentMap>
+#include <avogadro/core/cube.h>
+#include <avogadro/core/elementdata.h>
+#include <avogadro/core/molecule.h>
 
 #define VWS 0
 #define MS 1
@@ -128,34 +128,32 @@ EDTSurface::~EDTSurface()
 
 // Takes a molecule and a surface type and returns a cube
 
-Core::Cube* EDTSurface::EDTCube(Core::Molecule *mol, Surfaces::Type surfType, double probeRadius){
+Core::Cube* EDTSurface::EDTCube(Core::Molecule* mol, Surfaces::Type surfType,
+                                double probeRadius)
+{
   this->setProbeRadius(probeRadius);
   this->EDTCube(mol, surfType);
 }
 
-
-Cube* EDTSurface::EDTCube(Molecule *mol, Surfaces::Type surfType)
+Cube* EDTSurface::EDTCube(Molecule* mol, Surfaces::Type surfType)
 {
   int i, j, k;
 
   int surfaceType;
 
-  if(surfType == Surfaces::VanDerWaals){
+  if (surfType == Surfaces::VanDerWaals) {
     surfaceType = VWS;
-  }
-  else if(surfType == Surfaces::SolventExcluded){
+  } else if (surfType == Surfaces::SolventExcluded) {
     surfaceType = SES;
-  }
-  else if(surfType == Surfaces::SolventAccessible){
+  } else if (surfType == Surfaces::SolventAccessible) {
     surfaceType = SAS;
-  }
-  else{
+  } else {
     return NULL;
-    //This isn't the right class for that surfaceType
+    // This isn't the right class for that surfaceType
   }
 
   this->setMolecule(mol);
-  //Set molecule
+  // Set molecule
 
   this->initPara(atomTypes[surfaceType], bTypes[surfaceType], int surfaceType);
   // Initialize everything
@@ -242,7 +240,8 @@ void EDTSurface::fastDistanceMap()
   //{
   // type == 0 when we're not doing depth
   do {
-    fastOneShell(&data->positIn, &allocOut, boundPoint, &data->positOut, &data->eliminate);
+    fastOneShell(&data->positIn, &allocOut, boundPoint, &data->positOut,
+                 &data->eliminate);
     //	printf("%d %d %d %d
     //%d\n",data->positIn,allocOut,data->positOut,data->totalSurfaceVox,data->totalInnerVox);
     data->certificate -= data->eliminate;
@@ -258,8 +257,8 @@ void EDTSurface::fastDistanceMap()
             */
     data->positIn = 0;
     for (i = 0; i < data->positOut; i++) {
-      isBound[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)] =
-        false;
+      isBound[data->outArray[i](X)][data->outArray[i](Y)]
+             [data->outArray[i](Z)] = false;
       if (m_cube->value(outArray[i]) <= 1.02 * data->cutRadius) {
         data->inArray[data->positIn] = data->outArray[i];
         data->positIn++;
@@ -268,7 +267,8 @@ void EDTSurface::fastDistanceMap()
         allocIn *= 2;
         if (allocIn > data->totalInnerVox)
           allocIn = data->totalInnerVox;
-        data->inArray = (Vector3i*)realloc(data->inArray, allocIn * sizeof(Vector3i));
+        data->inArray =
+          (Vector3i*)realloc(data->inArray, allocIn * sizeof(Vector3i));
       }
     }
   } while (data->positIn != 0);
@@ -280,7 +280,8 @@ void EDTSurface::fastDistanceMap()
           do {
 
                   fastOneShell( &data->positIn, &allocOut, boundPoint,
-  &data->positOut,&data->eliminate);//data->inArray, data->outArray, data->certificate-=data->eliminate;
+  &data->positOut,&data->eliminate);//data->inArray, data->outArray,
+  data->certificate-=data->eliminate;
   //	/*
   //			for(i=0;i<data->positOut;i++)
   //			{
@@ -342,14 +343,15 @@ void EDTSurface::fastDistanceMap()
           if (!isDone[i][j][k] ||
               (isDone[i][j][k] &&
                m_cube->value(i, j, k) >=
-                 data->cutRadius - 0.50 / (0.1 + cutsf)) // 0.33  0.75/data->scaleFactor
+                 data->cutRadius -
+                   0.50 / (0.1 + cutsf)) // 0.33  0.75/data->scaleFactor
           ) {
             isBound[i][j][k] = true;
             // new add
             if (isDone[i][j][k])
               atomIds[i][j][k] =
                 atomIds[boundPoint[i][j][k](X)][boundPoint[i][j][k](Y)]
-                            [boundPoint[i][j][k](Z)];
+                       [boundPoint[i][j][k](Z)];
           }
         }
       }
@@ -388,7 +390,8 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
       (*allocOut) = int(1.2 * (*allocOut));
       if (*allocOut > data->totalInnerVox)
         *allocOut = data->totalInnerVox;
-      data->outArray = (Vector3i*)realloc(data->outArray, (*allocOut) * sizeof(Vector3i));
+      data->outArray =
+        (Vector3i*)realloc(data->outArray, (*allocOut) * sizeof(Vector3i));
     }
     txyz = data->inArray[i];
 
@@ -396,10 +399,9 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
 
       tnv = txyz + vectorFromArray(nb[j]);
 
-      if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth && tnv(Y) > -1 &&
-          tnv(Z) < data->pHeight && tnv(Z) > -1 &&
-          inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
-          !isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
+      if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth &&
+          tnv(Y) > -1 && tnv(Z) < data->pHeight && tnv(Z) > -1 &&
+          inOut[tnv(X)][tnv(Y)][tnv(Z)] && !isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
         boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
           boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
@@ -412,15 +414,16 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
 
         data->positOut++;
         data->eliminate++;
-      } else if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth &&
-                 tnv(Y) > -1 && tnv(Z) < data->pHeight && tnv(Z) > -1 &&
+      } else if (tnv(X) < data->pLength && tnv(X) > -1 &&
+                 tnv(Y) < data->pWidth && tnv(Y) > -1 &&
+                 tnv(Z) < data->pHeight && tnv(Z) > -1 &&
                  inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
                  isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
         if (squre < m_cube->value(tnv)) {
           boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
             boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-            m_cube->setValue(tnv, dxyz.norm());
+          m_cube->setValue(tnv, dxyz.norm());
           if (!isBound[tnv(X)][tnv(Y)][tnv(Z)]) {
             isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
             data->outArray[data->positOut] = tnv;
@@ -436,16 +439,16 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
       (*allocOut) = int(1.2 * (*allocOut));
       if (*allocOut > data->totalInnerVox)
         *allocOut = data->totalInnerVox;
-      data->outArray = (Vector3i*)realloc(data->outArray, (*allocOut) * sizeof(Vector3i));
+      data->outArray =
+        (Vector3i*)realloc(data->outArray, (*allocOut) * sizeof(Vector3i));
     }
     txyz = data->inArray[i];
     for (j = 6; j < 18; j++) {
       tnv = txyz + vectorFromArray(nb[j]);
       ;
-      if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth && tnv(Y) > -1 &&
-          tnv(Z) < data->pHeight && tnv(Z) > -1 &&
-          inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
-          !isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
+      if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth &&
+          tnv(Y) > -1 && tnv(Z) < data->pHeight && tnv(Z) > -1 &&
+          inOut[tnv(X)][tnv(Y)][tnv(Z)] && !isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
         boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
           boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
@@ -455,8 +458,9 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
         data->outArray[data->positOut] = tnv;
         data->positOut++;
         data->eliminate++;
-      } else if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth &&
-                 tnv(Y) > -1 && tnv(Z) < data->pHeight && tnv(Z) > -1 &&
+      } else if (tnv(X) < data->pLength && tnv(X) > -1 &&
+                 tnv(Y) < data->pWidth && tnv(Y) > -1 &&
+                 tnv(Z) < data->pHeight && tnv(Z) > -1 &&
                  inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
                  isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
@@ -479,17 +483,17 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
       (*allocOut) = int(1.2 * (*allocOut));
       if (*allocOut > data->totalInnerVox)
         *allocOut = data->totalInnerVox;
-      data->outArray = (Vector3i*)realloc(data->outArray, (*allocOut) * sizeof(Vector3i));
+      data->outArray =
+        (Vector3i*)realloc(data->outArray, (*allocOut) * sizeof(Vector3i));
     }
     txyz = data->inArray[i];
 
     for (j = 18; j < 26; j++) {
       tnv = txyz + vectorFromArray(nb[j]);
       ;
-      if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth && tnv(Y) > -1 &&
-          tnv(Z) < data->pHeight && tnv(Z) > -1 &&
-          inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
-          !isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
+      if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth &&
+          tnv(Y) > -1 && tnv(Z) < data->pHeight && tnv(Z) > -1 &&
+          inOut[tnv(X)][tnv(Y)][tnv(Z)] && !isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
         boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
           boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
         dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
@@ -499,8 +503,9 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
         data->outArray[data->positOut] = tnv;
         data->positOut++;
         data->eliminate++;
-      } else if (tnv(X) < data->pLength && tnv(X) > -1 && tnv(Y) < data->pWidth &&
-                 tnv(Y) > -1 && tnv(Z) < data->pHeight && tnv(Z) > -1 &&
+      } else if (tnv(X) < data->pLength && tnv(X) > -1 &&
+                 tnv(Y) < data->pWidth && tnv(Y) > -1 &&
+                 tnv(Z) < data->pHeight && tnv(Z) > -1 &&
                  inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
                  isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
 
@@ -509,7 +514,7 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
         if (squre < m_cube->value(tnv)) {
           boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
             boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
-            m_cube->setValue(tnv, dxyz.norm());
+          m_cube->setValue(tnv, dxyz.norm());
           if (!isBound[tnv(X)][tnv(Y)][tnv(Z)]) {
             isBound[tnv(X)][tnv(Y)][tnv(Z)] = true;
             data->outArray[data->positOut] = tnv;
@@ -578,8 +583,7 @@ void EDTSurface::fillAtom(int indx)
                   }
 
                   else {
-                    if (inOut[sijk(I)][sijk(J)][sijk(K)] ==
-                        false) {
+                    if (inOut[sijk(I)][sijk(J)][sijk(K)] == false) {
                       inOut[sijk(I)][sijk(J)][sijk(K)] = true;
                       atomIds[sijk(I)][sijk(J)][sijk(K)] = indx;
                     }
@@ -588,7 +592,8 @@ void EDTSurface::fillAtom(int indx)
                     else if (inOut[sijk(I)][sijk(J)][sijk(K)]) {
                       tIndex = atomIds[sijk(I)][sijk(J)][sijk(K)];
 
-                      cp = (positions[tIndex] + data->pTran) * data->scaleFactor;
+                      cp =
+                        (positions[tIndex] + data->pTran) * data->scaleFactor;
                       // Translating and scaling
 
                       ox = int(cp(X) + 0.5) - sijk(I);
@@ -653,17 +658,20 @@ void EDTSurface::fillVoxels(bool atomType)
       cube->lock()->lockForWrite();
 
       // Watch for the future
-      connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
+      connect(&m_watcher, SIGNAL(finished()), this,
+     SLOT(calculationComplete()));
 
       // The main part of the mapped reduced function...
-      m_future = QtConcurrent::map(m_subCubeVector, edtSurface::copyCubeConcurrent);
+      m_future = QtConcurrent::map(m_subCubeVector,
+     edtSurface::copyCubeConcurrent);
       // Connect our watcher to our future
       m_watcher.setFuture(m_future);
   */
-  //This can be done concurrently if we write a function for it
+  // This can be done concurrently if we write a function for it
 }
 
-void fillVoxelsConcurrent(subCube* someVolumePixels){
+void fillVoxelsConcurrent(subCube* someVolumePixels)
+{
   for (j = 0; j < someVolumePixels->pWidth; j++) {
     for (k = 0; k < someVolumePixels->pHeight; k++) {
       if (someVolumePixels->volumePixelsRow[j][k].inOut) {
@@ -671,9 +679,7 @@ void fillVoxelsConcurrent(subCube* someVolumePixels){
       }
     }
   }
-
 }
-
 
 // use isDone
 void EDTSurface::fillVoxelsWaals(bool atomType)
@@ -740,8 +746,7 @@ void EDTSurface::fillAtomWaals(int indx)
                   }
 
                   else {
-                    if (isDone[sijk(I)][sijk(J)][sijk(K)] ==
-                        false) {
+                    if (isDone[sijk(I)][sijk(J)][sijk(K)] == false) {
                       isDone[sijk(I)][sijk(J)][sijk(K)] = true;
                       atomIds[sijk(I)][sijk(J)][sijk(K)] = indx;
                     }
@@ -749,7 +754,8 @@ void EDTSurface::fillAtomWaals(int indx)
                     //*
                     else if (isDone[sijk(I)][sijk(J)][sijk(K)]) {
                       tIndex = atomIds[sijk(I)][sijk(J)][sijk(K)];
-                      cp = (positions[tIndex] + data->pTran) * data->scaleFactor;
+                      cp =
+                        (positions[tIndex] + data->pTran) * data->scaleFactor;
                       // Translating and scaling
                       oxyz = cxyz - sijk;
                       if (mijk.squaredNorm() < oxyz.squaredNorm())
@@ -783,11 +789,14 @@ void EDTSurface::buildBoundary()
       for (k = 0; k < data->pWidth; k++) {
         if (inOut[i][k][j]) {
           // 6 neighbors
-          //					if(( k-1>-1 && !volumePixels[i][k-1][j].inOut)
+          //					if(( k-1>-1 &&
+          //!volumePixels[i][k-1][j].inOut)
           //|| ( k+1<data->pWidth &&!volumePixels[i][k+1][j].inOut)
-          //					|| ( j-1>-1 && !volumePixels[i][k][j-1].inOut)
+          //					|| ( j-1>-1 &&
+          //!volumePixels[i][k][j-1].inOut)
           //|| ( j+1<data->pHeight &&!volumePixels[i][k][j+1].inOut)
-          //					|| ( i-1>-1 && !volumePixels[i-1][k][j].inOut)
+          //					|| ( i-1>-1 &&
+          //!volumePixels[i-1][k][j].inOut)
           //|| ( i+1<data->pLength &&!volumePixels[i+1][k][j].inOut))
           //						isBound[i][k][j]=true;
           //	/*
@@ -802,9 +811,8 @@ void EDTSurface::buildBoundary()
                 j + vectorFromArray(nb[ii])(Z) > -1 &&
                 j + vectorFromArray(nb[ii])(Z) < data->pHeight &&
                 !isBound[i + vectorFromArray(nb[ii])(X)]
-                             [k + vectorFromArray(nb[ii])(Y)]
-                             [j + vectorFromArray(nb[ii])(Z)]
-                               ) {
+                        [k + vectorFromArray(nb[ii])(Y)]
+                        [j + vectorFromArray(nb[ii])(Z)]) {
               isBound[i][k][j] = true;
               flagBound = true;
             } else
@@ -862,7 +870,8 @@ void EDTSurface::initPara(bool atomType, bool bType)
   int i, j;
   int data->fixSf = 4;
   double fMargin = 2.5;
-  if(probeRadius == 0){//probe radius was not set after constructor set it to 0
+  if (probeRadius ==
+      0) { // probe radius was not set after constructor set it to 0
     probeRadius = 1.4;
   }
   int data->pLength, data->pWidth;
@@ -886,8 +895,8 @@ void EDTSurface::initPara(bool atomType, bool bType)
 
   data->pTran = -data->pMin;
 
-  // data->pTran is the vector to get us to our minimum x, minimum y, and minimum z
-  // points
+  // data->pTran is the vector to get us to our minimum x, minimum y, and
+  // minimum z points
 
   data->scaleFactor = data->pMax(X) - data->pMin(X);
   if ((data->pMax(Y) - data->pMin(Y)) > data->scaleFactor)
@@ -899,7 +908,7 @@ void EDTSurface::initPara(bool atomType, bool bType)
 
   data->scaleFactor = (data->boxLength - 1.0) / double(data->scaleFactor);
   ///////////////////////////add this automatically first fix sf then fix
-  ///data->boxLength
+  /// data->boxLength
   //	/*
   data->boxLength = int(data->boxLength * data->fixSf / data->scaleFactor);
   data->scaleFactor = data->fixSf;
@@ -911,9 +920,12 @@ void EDTSurface::initPara(bool atomType, bool bType)
   }
   //	*/
 
-  data->pLength = int(ceil(data->scaleFactor * (data->pMax(X) - data->pMin(X))) + 1);
-  data->pWidth = int(ceil(data->scaleFactor * (data->pMax(Y) - data->pMin(Y))) + 1);
-  data->pHeight = int(ceil(data->scaleFactor * (data->pMax(Z) - data->pMin(Z))) + 1);
+  data->pLength =
+    int(ceil(data->scaleFactor * (data->pMax(X) - data->pMin(X))) + 1);
+  data->pWidth =
+    int(ceil(data->scaleFactor * (data->pMax(Y) - data->pMin(Y))) + 1);
+  data->pHeight =
+    int(ceil(data->scaleFactor * (data->pMax(Z) - data->pMin(Z))) + 1);
 
   if (data->pLength > data->boxLength)
     data->pLength = data->boxLength;
@@ -932,12 +944,12 @@ void EDTSurface::initPara(bool atomType, bool bType)
   isBound = new bool**[data->pLength];
   atomIds = new int**[data->pLength];
 
-  for(i = 0; i < pLength; i++){
+  for (i = 0; i < pLength; i++) {
     inOut[i] = new bool*[data->pWidth];
     isDone[i] = new bool*[data->pWidth];
     isBound[i] = new bool*[data->pWidth];
     atomIds[i] = new int*[data->pWidth];
-    for(j = 0; j < pWidth; j++){
+    for (j = 0; j < pWidth; j++) {
       inOut[i][j] = new bool[data->pHeight];
       isDone[i][j] = new bool[data->pHeight];
       isBound[i][j] = new bool[data->pHeight];
@@ -1023,12 +1035,14 @@ int EDTSurface::detail(unsigned char atomicNumber)
   }
 }
 
-int EDTSurface::setMolecule(Molecule *mol){
+int EDTSurface::setMolecule(Molecule* mol)
+{
   m_mol = mol;
   return;
 }
 
-void EDTSurface::setProbeRadius(double probeRadius){
+void EDTSurface::setProbeRadius(double probeRadius)
+{
   data->m_probeRadius = probeRadius;
 }
 
