@@ -17,9 +17,9 @@
 #include "surfaces.h"
 #include "surfacedialog.h"
 
+#include "edtsurface.h"
 #include "gaussiansetconcurrent.h"
 #include "slatersetconcurrent.h"
-#include "edtsurface.h"
 
 // Header only, but duplicte symbols if included globally...
 namespace {
@@ -172,7 +172,8 @@ void Surfaces::calculateSurface()
     case SolventExcluded:
       calculateEDT();
       // pass a molecule and return a Cube for m_cube
-      //   displayMesh();
+      m_isoValue = 0.0;
+      displayMesh();
       break;
 
     case ElectronDensity:
@@ -192,7 +193,8 @@ void Surfaces::calculateSurface()
 void Surfaces::calculateEDT()
 {
   EDTSurface edt;
-  m_cube = edt.EDTCube(*m_molecule, 0);
+  Cube* t_cube = new Cube();
+  m_cube = edt.EDTCube(m_molecule, t_cube, SolventAccessible, 1.4);
 }
 
 void Surfaces::calculateQM()
@@ -372,6 +374,9 @@ void Surfaces::meshFinished()
       m_molecule->emitChanged(QtGui::Molecule::Added);
     }
   }
+
+  qDebug() << " mesh1 has " << m_mesh1->numVertices();
+  qDebug() << " mesh2 has " << m_mesh2->numVertices();
   // TODO: enable the mesh display type
 }
 
