@@ -176,7 +176,7 @@ void Surfaces::calculateSurface()
 void Surfaces::calculateEDT()
 {
   EDTSurface edt;
-  m_cube = edt.EDTCube(*m_molecule, 0);
+  m_cube = edt.EDTCube(*m_molecule, VanDerWaals);
 }
 
 void Surfaces::calculateQM()
