@@ -78,6 +78,9 @@ EDTSurface::EDTSurface()
   data->pWidth = 0;
   data->pLength = 0;
 
+  data->widXz = new int[13];
+  data->deptY = new int*[13];
+  
   for (i = 0; i < 13; i++) {
     data->widXz[i] = 0;
     data->deptY[i] = NULL;
@@ -93,13 +96,12 @@ EDTSurface::~EDTSurface()
   int i, j;
 
   for (i = 0; i < 13; i++) {
-    free(data->deptY[i]);
-    data->deptY[i] = NULL;
+    delete[] data->deptY[i];
   }
-  free(data->deptY);
+  delete[] data->deptY;
   //	data->deptY = NULL;
 
-  free(data->widXz);
+  delete[] data->widXz;
 
   for (i = 0; i < data->pLength; i++) {
     for (j = 0; j < data->pWidth; j++) {
@@ -913,7 +915,7 @@ void EDTSurface::boundingAtom(bool bType)
   int indx;
   for (i = 0; i < 13; i++) {
     if (data->deptY[i] != NULL)
-      free(data->deptY[i]);
+      delete[] data->deptY[i];
   }
 
   for (i = 0; i < 13; i++) {
