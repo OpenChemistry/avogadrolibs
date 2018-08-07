@@ -33,8 +33,8 @@ typedef struct dataStruct
   double scaleFactor;
   Vector3 pMin, pMax;
   int pHeight, pWidth, pLength;
-  int widXz[13];
-  int* deptY[13];
+  int* widXz;
+  int** deptY;
   double cutRadius;
   int positIn, positOut, eliminate;
   int certificate;
