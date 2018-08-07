@@ -17,9 +17,9 @@
 #include "surfaces.h"
 #include "surfacedialog.h"
 
+#include "edtsurface.h"
 #include "gaussiansetconcurrent.h"
 #include "slatersetconcurrent.h"
-#include "edtsurface.h"
 
 #include <avogadro/core/variant.h>
 
