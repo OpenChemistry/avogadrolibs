@@ -9,6 +9,7 @@
 #include <istream>
 #include <string>
 
+using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
@@ -37,11 +38,20 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   Residue* r;
   size_t currentResidueId = 0;
   bool ok(false);
+  int coordSet = 0;
+  Array<Vector3> positions;
 
   while (getline(in, buffer)) { // Read Each line one by one
 
-    if (startsWith(buffer, "ENDMDL"))
-      break;
+    if (startsWith(buffer, "ENDMDL")) {
+      if (coordSet == 0) {
+        mol.setCoordinate3d(mol.atomPositions3d(), coordSet++);
+        positions.reserve(mol.atomCount());
+      } else {
+        mol.setCoordinate3d(positions, coordSet++);
+        positions.clear();
+      }
+    }
 
     else if (startsWith(buffer, "ATOM") || startsWith(buffer, "HETATM")) {
       // First we initialize the residue instance
@@ -106,10 +116,14 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       if (atomicNum == 255)
         appendError("Invalid element");
 
-      Atom newAtom = mol.addAtom(atomicNum);
-      newAtom.setPosition3d(pos);
-      if (r) {
-        r->addResidueAtom(atomName, newAtom);
+      if (coordSet == 0) {
+        Atom newAtom = mol.addAtom(atomicNum);
+        newAtom.setPosition3d(pos);
+        if (r) {
+          r->addResidueAtom(atomName, newAtom);
+        }
+      } else {
+        positions.push_back(pos);
       }
     }
 
