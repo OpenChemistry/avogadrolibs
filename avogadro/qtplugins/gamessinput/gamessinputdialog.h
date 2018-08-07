@@ -45,7 +45,7 @@ class GamessInputDialog : public QDialog
 
 public:
   explicit GamessInputDialog(QWidget* parent_ = 0, Qt::WindowFlags f = 0);
-  ~GamessInputDialog();
+  ~GamessInputDialog() override;
 
   void setMolecule(QtGui::Molecule* mol);
 
@@ -56,7 +56,7 @@ signals:
   void openJobOutput(const MoleQueue::JobObject& job);
 
 protected:
-  void showEvent(QShowEvent* e);
+  void showEvent(QShowEvent* e) override;
 
 private slots:
   void updatePreviewText();

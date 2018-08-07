@@ -40,7 +40,7 @@ class AVOGADRORENDERING_EXPORT TextLabelBase : public Drawable
 public:
   TextLabelBase();
   TextLabelBase(const TextLabelBase& other);
-  ~TextLabelBase();
+  ~TextLabelBase() override;
 
   TextLabelBase& operator=(TextLabelBase other);
   friend void swap(TextLabelBase& lhs, TextLabelBase& rhs);

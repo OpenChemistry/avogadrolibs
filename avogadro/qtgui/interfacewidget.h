@@ -54,7 +54,7 @@ public:
    * script specified by scriptFilePath.
    */
   explicit InterfaceWidget(const QString& scriptFilePath, QWidget* parent_ = 0);
-  ~InterfaceWidget();
+  ~InterfaceWidget() override;
 
   /**
    * Use the script pointed to by scriptFilePath.
@@ -87,6 +87,8 @@ public:
    * values.
    */
   void applyOptions(const QJsonObject& opts);
+
+  bool isEmpty() const { return m_empty; }
 
 private slots:
   /**
@@ -179,6 +181,7 @@ private:
   QJsonObject m_optionCache; // For reverting changes
   QList<QTextEdit*> m_dirtyTextEdits;
 
+  bool m_empty;
   QMap<QString, QWidget*> m_widgets;
   QMap<QString, QTextEdit*> m_textEdits;
 

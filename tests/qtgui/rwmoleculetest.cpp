@@ -371,6 +371,9 @@ TEST(RWMoleculeTest, setAtomPositions3d)
   mol.addAtom(3);
   mol.addAtom(4);
   mol.addAtom(5);
+
+  // These will all be (0, 0, 0)
+  auto oldPositions = mol.atomPositions3d();
   mol.undoStack().clear();
 
   Array<Vector3> pos;
@@ -390,7 +393,8 @@ TEST(RWMoleculeTest, setAtomPositions3d)
   EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
                          mol.atomPositions3d().end(), pos.begin()));
   mol.undoStack().undo();
-  EXPECT_TRUE(mol.atomPositions3d().empty());
+  EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
+                         mol.atomPositions3d().end(), oldPositions.begin()));
   mol.undoStack().redo();
   EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
                          mol.atomPositions3d().end(), pos.begin()));
@@ -412,7 +416,8 @@ TEST(RWMoleculeTest, setAtomPositions3d)
                          mol.atomPositions3d().end(), pos.begin()));
   EXPECT_EQ(1, mol.undoStack().count());
   mol.undoStack().undo();
-  EXPECT_TRUE(mol.atomPositions3d().empty());
+  EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
+                         mol.atomPositions3d().end(), oldPositions.begin()));
   mol.undoStack().redo();
   EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
                          mol.atomPositions3d().end(), pos.begin()));
@@ -429,7 +434,8 @@ TEST(RWMoleculeTest, setAtomPosition3d)
   mol.addAtom(5);
   mol.undoStack().clear();
 
-  EXPECT_TRUE(mol.atomPositions3d().empty());
+  // The positions will not be empty here because they are added when
+  // atoms are added.
   mol.setAtomPosition3d(0, Vector3(Real(1), Real(2), Real(3)));
   EXPECT_EQ(mol.atomicNumbers().size(), mol.atomPositions3d().size());
   EXPECT_EQ(Real(1), mol.atomPosition3d(0).x());

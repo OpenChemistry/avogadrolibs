@@ -22,6 +22,7 @@
 #include <avogadro/qtgui/interfacescript.h>
 #include <avogadro/qtgui/interfacewidget.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <QtWidgets/QAction>
@@ -79,8 +80,8 @@ QStringList Workflow::menuPath(QAction* action) const
   path = gen.menuPath().split('|');
   if (gen.hasErrors()) {
     path << tr("&Extensions") << tr("Scripts");
-    qWarning() << "Workflow::queryProgramName: Unable to retrieve program "
-                  "name for"
+    qWarning() << "Workflow: Unable to retrieve menu "
+                  "name for: "
                << scriptFileName << "." << gen.errorList().join("\n\n");
     return path;
   }
@@ -129,6 +130,14 @@ void Workflow::menuActivated()
 
   QString scriptFileName = theSender->data().toString();
   QWidget* theParent = qobject_cast<QWidget*>(parent());
+
+  if (m_currentDialog) {
+    delete m_currentDialog->layout();
+    if (m_currentInterface)
+      m_currentInterface->hide();
+  }
+
+  // check if there are any options before this song-and-dance
   InterfaceWidget* widget = m_dialogs.value(scriptFileName, nullptr);
 
   if (!widget) {
@@ -136,19 +145,20 @@ void Workflow::menuActivated()
     m_dialogs.insert(scriptFileName, widget);
   }
   widget->setMolecule(m_molecule);
-
-  if (!m_currentDialog) {
-    m_currentDialog = new QDialog(theParent);
-  } else {
-    delete m_currentDialog->layout();
+  m_currentInterface = widget; // remember this when we get the run() signal
+  if (widget->isEmpty()) {
+    run(); // no options, do it immediately
+    return;
   }
+
+  m_currentDialog = new QDialog(theParent);
   QString title;
-  queryProgramName(scriptFileName, title);
+  QtGui::ScriptLoader::queryProgramName(scriptFileName, title);
   m_currentDialog->setWindowTitle(title);
 
   QVBoxLayout* vbox = new QVBoxLayout();
+  widget->show();
   vbox->addWidget(widget);
-  m_currentInterface = widget; // remember this when we get the run() signal
   QDialogButtonBox* buttonBox =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
@@ -171,6 +181,9 @@ void Workflow::run()
     InterfaceScript gen(scriptFilePath);
     gen.runWorkflow(options, m_molecule);
     // collect errors
+    if (gen.hasErrors()) {
+      qWarning() << gen.errorList();
+    }
   }
 }
 
@@ -227,49 +240,16 @@ void Workflow::configurePython()
 
 void Workflow::updateScripts()
 {
-  m_workflowScripts.clear();
-
-  // List of directories to check.
-  /// @todo Custom script locations
-  QStringList dirs;
-
-  // add the default paths
-  QStringList stdPaths =
-    QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation);
-  foreach (const QString& dirStr, stdPaths) {
-    QString path = dirStr + "/scripts/workflows";
-    QDir dir(path);
-    qDebug() << "Checking for generator scripts in" << path;
-    if (dir.exists() && dir.isReadable())
-      dirs << path;
-  }
-
-  dirs << QCoreApplication::applicationDirPath() + "/../" +
-            QtGui::Utilities::libraryDirectory() +
-            "/avogadro2/scripts/workflows";
-
-  foreach (const QString& dirStr, dirs) {
-    qDebug() << "Checking for generator scripts in" << dirStr;
-    QDir dir(dirStr);
-    if (dir.exists() && dir.isReadable()) {
-      foreach (const QFileInfo& file,
-               dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot)) {
-        QString filePath = file.absoluteFilePath();
-        QString displayName;
-        if (queryProgramName(filePath, displayName))
-          m_workflowScripts.insert(displayName, filePath);
-      }
-    }
-  }
+  m_workflowScripts = QtGui::ScriptLoader::scriptList("workflows");
 }
 
 void Workflow::updateActions()
 {
   m_actions.clear();
 
-  QAction* action = new QAction(tr("Set Python Path..."), this);
-  connect(action, SIGNAL(triggered()), SLOT(configurePython()));
-  m_actions << action;
+  //  QAction* action = new QAction(tr("Set Python Path..."), this);
+  //  connect(action, SIGNAL(triggered()), SLOT(configurePython()));
+  //  m_actions << action;
 
   foreach (const QString& programName, m_workflowScripts.uniqueKeys()) {
     QStringList scripts = m_workflowScripts.values(programName);
@@ -294,19 +274,5 @@ void Workflow::addAction(const QString& label, const QString& scriptFilePath)
   m_actions << action;
 }
 
-bool Workflow::queryProgramName(const QString& scriptFilePath,
-                                QString& displayName)
-{
-  InterfaceScript gen(scriptFilePath);
-  displayName = gen.displayName();
-  if (gen.hasErrors()) {
-    displayName.clear();
-    qWarning() << "Workflow::queryProgramName: Unable to retrieve program "
-                  "name for"
-               << scriptFilePath << ";" << gen.errorList().join("\n\n");
-    return false;
-  }
-  return true;
-}
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

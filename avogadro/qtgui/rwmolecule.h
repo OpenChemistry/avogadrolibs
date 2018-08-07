@@ -220,8 +220,9 @@ public:
    * @param undoText The undo text to be displayed for undo commands.
    * @return True on success, false otherwise.
    */
-  bool setAtomPositions3d(const Core::Array<Vector3>& pos,
-                          const QString& undoText = "Change Atom Positions");
+  bool setAtomPositions3d(
+    const Core::Array<Vector3>& pos,
+    const QString& undoText = QStringLiteral("Change Atom Positions"));
 
   /**
    * Set the 3D position of a single atom.
@@ -230,8 +231,9 @@ public:
    * @param undoText The undo text to be displayed for undo commands.
    * @return True on success, false otherwise.
    */
-  bool setAtomPosition3d(Index atomId, const Vector3& pos,
-                         const QString& undoText = "Change Atom Position");
+  bool setAtomPosition3d(
+    Index atomId, const Vector3& pos,
+    const QString& undoText = QStringLiteral("Change Atom Position"));
 
   /**
    * Set whether the specified atom is selected or not.
@@ -461,9 +463,9 @@ public:
    * @param changes The changes to be emitted.
    * @param undoText The text description for the undo command.
    */
-  void modifyMolecule(const Molecule& newMolecule,
-                      Molecule::MoleculeChanges changes,
-                      const QString& undoText = "Modify Molecule");
+  void modifyMolecule(
+    const Molecule& newMolecule, Molecule::MoleculeChanges changes,
+    const QString& undoText = QStringLiteral("Modify Molecule"));
 
   /**
    * Generic edit that adds @a newMolecule to the current molecule.
@@ -472,8 +474,9 @@ public:
    * @param addMolecule The new molecule to be set.
    * @param undoText The text description for the undo command.
    */
-  void appendMolecule(const Molecule& addMolecule,
-                      const QString& undoText = "Append Molecule");
+  void appendMolecule(
+    const Molecule& addMolecule,
+    const QString& undoText = QStringLiteral("Append Molecule"));
 
   /**
    * Edit the unit cell by replacing the current cell matrix with a new cell
@@ -565,7 +568,7 @@ public:
    * on).
    * @param undoName The name of the undo command
    */
-  void beginMergeMode(const QString& undoName = "Draw");
+  void beginMergeMode(const QString& undoName = QStringLiteral("Draw"));
 
   /**
    * Call this function when you wish merge mode to end. This will turn off
@@ -641,15 +644,23 @@ protected:
 class AVOGADROQTGUI_EXPORT RWAtom : public Core::AtomTemplate<RWMolecule>
 {
 public:
-  RWAtom() : Core::AtomTemplate<RWMolecule>() {}
-  RWAtom(RWMolecule* m, Index i) : Core::AtomTemplate<RWMolecule>(m, i) {}
+  RWAtom()
+    : Core::AtomTemplate<RWMolecule>()
+  {}
+  RWAtom(RWMolecule* m, Index i)
+    : Core::AtomTemplate<RWMolecule>(m, i)
+  {}
 };
 
 class AVOGADROQTGUI_EXPORT RWBond : public Core::BondTemplate<RWMolecule>
 {
 public:
-  RWBond() : Core::BondTemplate<RWMolecule>() {}
-  RWBond(RWMolecule* m, Index i) : Core::BondTemplate<RWMolecule>(m, i) {}
+  RWBond()
+    : Core::BondTemplate<RWMolecule>()
+  {}
+  RWBond(RWMolecule* m, Index i)
+    : Core::BondTemplate<RWMolecule>(m, i)
+  {}
 };
 
 inline RWMolecule::AtomType RWMolecule::atom(Index atomId) const

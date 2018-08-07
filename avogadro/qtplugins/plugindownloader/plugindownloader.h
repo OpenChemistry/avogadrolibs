@@ -55,8 +55,8 @@ public:
   QStringList menuPath(QAction*) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
-  bool readMolecule(QtGui::Molecule& mol);
+  void setMolecule(QtGui::Molecule* mol) override;
+  bool readMolecule(QtGui::Molecule& mol) override;
 
 private slots:
   void showDialog();

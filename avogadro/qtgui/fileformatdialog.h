@@ -114,7 +114,7 @@ private:
    * complex use cases arise.
    */
   explicit FileFormatDialog(QWidget* parent = nullptr);
-  ~FileFormatDialog();
+  ~FileFormatDialog() override;
 
   /**
    * @return A filter string for use with a QFileDialog, containing entries

@@ -43,7 +43,7 @@ class SupercellDialog : public QDialog
   Q_OBJECT
 public:
   SupercellDialog(QWidget* p = 0);
-  ~SupercellDialog();
+  ~SupercellDialog() override;
 
   bool buildSupercell(Avogadro::QtGui::Molecule& mol);
 

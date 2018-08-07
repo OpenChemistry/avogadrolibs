@@ -44,7 +44,7 @@ class AVOGADRORENDERING_EXPORT GeometryNode : public Node
 {
 public:
   GeometryNode();
-  ~GeometryNode();
+  ~GeometryNode() override;
 
   /**
    * Accept a visit from our friendly visitor.

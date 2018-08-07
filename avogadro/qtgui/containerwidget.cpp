@@ -25,8 +25,10 @@ namespace Avogadro {
 namespace QtGui {
 
 ContainerWidget::ContainerWidget(QWidget* p, Qt::WindowFlags f)
-  : QWidget(p, f), m_viewWidget(nullptr), m_label(new QLabel("   ", this)),
-    m_active(false)
+  : QWidget(p, f)
+  , m_viewWidget(nullptr)
+  , m_label(new QLabel(QStringLiteral("   "), this))
+  , m_active(false)
 {
   QHBoxLayout* h = new QHBoxLayout;
   h->setContentsMargins(0, 0, 0, 0);
@@ -49,9 +51,7 @@ ContainerWidget::ContainerWidget(QWidget* p, Qt::WindowFlags f)
   setLayout(v);
 }
 
-ContainerWidget::~ContainerWidget()
-{
-}
+ContainerWidget::~ContainerWidget() {}
 
 void ContainerWidget::setViewWidget(QWidget* widget)
 {

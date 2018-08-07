@@ -164,7 +164,7 @@ public:
   /** @} */
 
 public slots:
-  void done(int r);
+  void done(int r) override;
 
 private:
   typedef QPair<QObject*, const char*> MetaMethod;

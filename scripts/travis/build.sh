@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 if [[ $TASKS == "clang-format" ]]; then
   cd $TRAVIS_BUILD_DIR
@@ -29,5 +30,6 @@ else
     -DUSE_SYSTEM_ZLIB=ON \
     ..
   make -j2
-  ./avogadrolibs/bin/AvogadroTests
+  cd avogadrolibs
+  xvfb-run ctest --output-on-failure
 fi

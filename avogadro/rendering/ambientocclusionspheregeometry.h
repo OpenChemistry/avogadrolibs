@@ -47,7 +47,7 @@ class AVOGADRORENDERING_EXPORT AmbientOcclusionSphereGeometry : public Drawable
 public:
   AmbientOcclusionSphereGeometry();
   AmbientOcclusionSphereGeometry(const AmbientOcclusionSphereGeometry& other);
-  ~AmbientOcclusionSphereGeometry();
+  ~AmbientOcclusionSphereGeometry() override;
 
   AmbientOcclusionSphereGeometry& operator=(AmbientOcclusionSphereGeometry);
   friend void swap(AmbientOcclusionSphereGeometry& lhs,
@@ -67,7 +67,7 @@ public:
    * @brief Render the sphere geometry.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera& camera);
+  void render(const Camera& camera) override;
 
   /**
    * Return the primitives that are hit by the ray.
@@ -76,9 +76,9 @@ public:
    * @param rayDirection Normalized direction of the ray.
    * @return Sorted collection of primitives that were hit.
    */
-  std::multimap<float, Identifier> hits(const Vector3f& rayOrigin,
-                                        const Vector3f& rayEnd,
-                                        const Vector3f& rayDirection) const;
+  std::multimap<float, Identifier> hits(
+    const Vector3f& rayOrigin, const Vector3f& rayEnd,
+    const Vector3f& rayDirection) const override;
 
   /**
    * Add a sphere to the geometry object.
@@ -95,7 +95,7 @@ public:
   /**
    * Clear the contents of the node.
    */
-  void clear();
+  void clear() override;
 
   /**
    * Get the number of spheres in the node object.

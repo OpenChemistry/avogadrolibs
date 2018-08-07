@@ -71,8 +71,10 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
     return false;
   }
   getline(inStream, buffer);
-  if (!buffer.empty())
+  if (!buffer.empty()) {
     timestep = lexicalCast<size_t>(buffer);
+    mol.setTimeStep(timestep, 0);
+  }
 
   getline(inStream, buffer);
   buffer = trimmed(buffer);
@@ -255,8 +257,10 @@ bool LammpsFormat::read(std::istream& inStream, Core::Molecule& mol)
     scale_z = 0.;
 
     getline(inStream, buffer);
-    if (!buffer.empty())
+    if (!buffer.empty()) {
       timestep = lexicalCast<size_t>(buffer);
+      mol.setTimeStep(timestep, coordSet);
+    }
 
     getline(inStream, buffer);
     buffer = trimmed(buffer);

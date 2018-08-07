@@ -32,18 +32,21 @@ class Licorice : public QtGui::ScenePlugin
 
 public:
   explicit Licorice(QObject* parent = 0);
-  ~Licorice();
+  ~Licorice() override;
 
   void process(const Core::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const { return tr("Licorice"); }
+  QString name() const override { return tr("Licorice"); }
 
-  QString description() const { return tr("Render atoms as licorice."); }
+  QString description() const override
+  {
+    return tr("Render atoms as licorice.");
+  }
 
-  bool isEnabled() const;
+  bool isEnabled() const override;
 
-  void setEnabled(bool enable);
+  void setEnabled(bool enable) override;
 
 private:
   bool m_enabled;

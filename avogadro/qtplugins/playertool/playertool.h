@@ -27,6 +27,8 @@ class QLabel;
 class QSpinBox;
 class QCheckBox;
 class QOpenGLWidget;
+class QPushButton;
+class QSlider;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -39,7 +41,7 @@ class PlayerTool : public QtGui::ToolPlugin
   Q_OBJECT
 public:
   explicit PlayerTool(QObject* p = nullptr);
-  ~PlayerTool();
+  ~PlayerTool() override;
 
   QString name() const override { return tr("Player tool"); }
   QString description() const override { return tr("Play back trajectories"); }
@@ -64,6 +66,9 @@ protected slots:
   void animate(int advance = 1);
 
   void recordMovie();
+  void sliderPositionChanged(int k);
+  void spinnerPositionChanged(int k);
+  void setSliderLimit();
 
 private:
   QAction* m_activateAction;
@@ -72,10 +77,13 @@ private:
   int m_currentFrame;
   mutable QWidget* m_toolWidget;
   QTimer m_timer;
-  mutable QLabel* m_info;
   mutable QSpinBox* m_animationFPS;
+  mutable QSpinBox* m_frameIdx;
   mutable QCheckBox* m_dynamicBonding;
   mutable QOpenGLWidget* m_glWidget;
+  mutable QSlider* m_slider;
+  mutable QPushButton* playButton;
+  mutable QPushButton* stopButton;
 };
 
 inline void PlayerTool::setMolecule(QtGui::Molecule* mol)
@@ -83,6 +91,7 @@ inline void PlayerTool::setMolecule(QtGui::Molecule* mol)
   if (m_molecule != mol) {
     m_molecule = mol;
     m_currentFrame = 0;
+    setSliderLimit();
   }
 }
 

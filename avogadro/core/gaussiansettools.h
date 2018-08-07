@@ -21,6 +21,7 @@
 
 #include "avogadrocore.h"
 
+#include "basisset.h"
 #include "vector.h"
 
 #include <vector>
@@ -46,6 +47,12 @@ public:
   ~GaussianSetTools();
 
   /**
+   * @brief Set the electron type, must be called once MOs are available
+   * @param type The electron type - Alpha, Beta, or Paired (default).
+   */
+  void setElectronType(BasisSet::ElectronType type) { m_type = type; }
+
+  /**
    * @brief Populate the cube with values for the molecular orbital.
    * @param cube The cube to be populated with values.
    * @param molecularOrbitalNumber The molecular orbital number.
@@ -58,6 +65,7 @@ public:
    * position specified.
    * @param position The position in space to calculate the value.
    * @param molecularOrbitalNumber The molecular orbital number.
+   * @param beta Whether to calculate beta electron or alpha/paired (default).
    * @return The value of the molecular orbital at the position specified.
    */
   double calculateMolecularOrbital(const Vector3& position,
@@ -88,6 +96,7 @@ public:
 private:
   Molecule* m_molecule;
   GaussianSet* m_basis;
+  BasisSet::ElectronType m_type = BasisSet::Paired;
 
   bool isSmall(double value) const;
 
