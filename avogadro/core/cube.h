@@ -201,7 +201,6 @@ public:
    * @param pos Vector representation of the position
    */
 
-
   bool setValue(const Vector3i& pos, double value);
 
   /**
