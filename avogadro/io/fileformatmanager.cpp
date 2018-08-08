@@ -23,6 +23,7 @@
 #include "dcdformat.h"
 #include "gromacsformat.h"
 #include "lammpsformat.h"
+#include "mdcrdformat.h"
 #include "mdlformat.h"
 #include "pdbformat.h"
 #include "poscarformat.h"
@@ -291,6 +292,7 @@ FileFormatManager::FileFormatManager()
   addFormat(new CmlFormat);
   addFormat(new CjsonFormat);
   addFormat(new GromacsFormat);
+  addFormat(new MdcrdFormat);
   addFormat(new MdlFormat);
   addFormat(new PdbFormat);
   addFormat(new PoscarFormat);

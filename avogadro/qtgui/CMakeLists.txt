@@ -34,6 +34,7 @@ configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
 set(HEADERS
   containerwidget.h
   customelementdialog.h
+  moleculeinfodialog.h
   elementtranslator.h
   extensionplugin.h
   filebrowsewidget.h
@@ -62,6 +63,7 @@ set(HEADERS
 set(SOURCES
   containerwidget.cpp
   customelementdialog.cpp
+  moleculeinfodialog.cpp
   elementdetail_p.cpp
   elementitem_p.cpp
   elementtranslator.cpp
@@ -90,6 +92,7 @@ set(SOURCES
 
 set(UIS
   customelementdialog.ui
+  moleculeinfodialog.ui
 )
 qt5_wrap_ui(UI_SOURCES ${UIS})
 list(APPEND SOURCES ${UI_SOURCES})
