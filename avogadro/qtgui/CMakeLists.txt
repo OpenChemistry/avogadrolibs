@@ -44,6 +44,7 @@ set(HEADERS
   interfacewidget.h
   meshgenerator.h
   molecule.h
+  moleculeinfodialog.h
   moleculemodel.h
   multiviewwidget.h
   periodictableview.h
@@ -74,6 +75,7 @@ set(SOURCES
   interfacewidget.cpp
   meshgenerator.cpp
   molecule.cpp
+  moleculeinfodialog.cpp
   moleculemodel.cpp
   multiviewwidget.cpp
   periodictablescene_p.cpp
@@ -90,6 +92,7 @@ set(SOURCES
 
 set(UIS
   customelementdialog.ui
+  moleculeinfodialog.ui
 )
 qt5_wrap_ui(UI_SOURCES ${UIS})
 list(APPEND SOURCES ${UI_SOURCES})
