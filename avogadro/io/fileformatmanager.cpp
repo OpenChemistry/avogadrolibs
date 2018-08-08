@@ -297,7 +297,8 @@ FileFormatManager::FileFormatManager()
   addFormat(new TrrFormat);
   addFormat(new XyzFormat);
   addFormat(new DcdFormat);
-  addFormat(new LammpsFormat);
+  addFormat(new LammpsTrajectoryFormat);
+  addFormat(new LammpsDataFormat);
 }
 
 FileFormatManager::~FileFormatManager()
