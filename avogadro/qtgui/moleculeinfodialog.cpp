@@ -25,9 +25,9 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <QtWidgets/QMessageBox>
+
 #include <iomanip>
-#include <istream>
-#include <ostream>
 #include <sstream>
 #include <string>
 
@@ -74,20 +74,20 @@ bool MoleculeInfoDialog::hasBoxCoordinates() const
   return m_ui->boxCheck->isChecked();
 }
 
-void MoleculeInfoDialog::resolve(QWidget* p, Molecule& mol, QString fname)
+bool MoleculeInfoDialog::resolve(QWidget* p, Molecule& mol, QString fname)
 {
   if (fname.toStdString() == "mdcrd") {
     MoleculeInfoDialog dlg(p);
     int reply = dlg.exec();
     if (reply != QDialog::Accepted)
-      return;
+      return false;
 
     typedef map<string, unsigned char> AtomTypeMap;
     AtomTypeMap atomTypes;
     unsigned char customElementCounter = CustomElementMin;
     int coordSet = 0;
 
-    int natoms = dlg.atomCount();
+    size_t natoms = dlg.atomCount();
 
     Array<Vector3> positions;
     positions.reserve(natoms);
@@ -95,56 +95,68 @@ void MoleculeInfoDialog::resolve(QWidget* p, Molecule& mol, QString fname)
     mol.setCoordinate3d(0);
     Array<Vector3> molData = mol.atomPositions3d();
 
-    int j = 0;
+    size_t j = 0, i = 0;
 
     while (j < molData.size()) {
-      for (int i = 0; i < natoms; ++i, ++j) {
-        if (coordSet == 0) {
-          Vector3 pos(molData[j][0], molData[j][1], molData[j][2]);
-
-          AtomTypeMap::const_iterator it;
-          atomTypes.insert(
-            std::make_pair(to_string(i), customElementCounter++));
-          it = atomTypes.find(to_string(i));
-          // if (customElementCounter > CustomElementMax) {
-          //   appendError("Custom element type limit exceeded.");
-          //   return false;
-          // }
-          Atom newAtom = mol.addAtom(it->second);
-          newAtom.setPosition3d(pos);
-        } else {
-          Vector3 pos(molData[j][0], molData[j][1], molData[j][2]);
-          positions.push_back(pos);
-        }
-      }
-
       if (coordSet == 0) {
-        // Set the custom element map if needed
-        if (!atomTypes.empty()) {
-          Molecule::CustomElementMap elementMap;
-          for (AtomTypeMap::const_iterator it = atomTypes.begin(),
-                                           itEnd = atomTypes.end();
-               it != itEnd; ++it) {
-            elementMap.insert(std::make_pair(it->second, "Atom " + it->first));
-          }
-          mol.setCustomElementMap(elementMap);
-        }
-        mol.setCoordinate3d(mol.atomPositions3d(), coordSet++);
+        Vector3 pos(molData[j][0], molData[j][1], molData[j][2]);
+
+        AtomTypeMap::const_iterator it;
+        atomTypes.insert(std::make_pair(to_string(i), customElementCounter++));
+        it = atomTypes.find(to_string(i));
+        Atom newAtom = mol.addAtom(it->second);
+        newAtom.setPosition3d(pos);
       } else {
-        mol.setCoordinate3d(positions, coordSet++);
-        positions.clear();
+        Vector3 pos(molData[j][0], molData[j][1], molData[j][2]);
+        positions.push_back(pos);
       }
 
-      if (dlg.hasBoxCoordinates()) {
-        mol.setUnitCell(new UnitCell(Vector3(molData[j][0], 0, 0),
-                                     Vector3(0, molData[j][1], 0),
-                                     Vector3(0, 0, molData[j][2])));
-        ++j;
+      ++i;
+      ++j;
+
+      if (i == natoms) {
+        i = 0;
+        if (coordSet == 0) {
+          // Set the custom element map if needed
+          if (!atomTypes.empty()) {
+            Molecule::CustomElementMap elementMap;
+            for (AtomTypeMap::const_iterator it = atomTypes.begin(),
+                                             itEnd = atomTypes.end();
+                 it != itEnd; ++it) {
+              elementMap.insert(
+                std::make_pair(it->second, "Atom " + it->first));
+            }
+            mol.setCustomElementMap(elementMap);
+          }
+          mol.setCoordinate3d(mol.atomPositions3d(), coordSet++);
+        } else {
+          mol.setCoordinate3d(positions, coordSet++);
+          positions.clear();
+        }
+
+        if (dlg.hasBoxCoordinates()) {
+          mol.setUnitCell(new UnitCell(Vector3(molData[j][0], 0, 0),
+                                       Vector3(0, molData[j][1], 0),
+                                       Vector3(0, 0, molData[j][2])));
+          ++j;
+        }
       }
     }
 
-    mol.emitChanged(Molecule::Atoms | Molecule::Modified);
+    // We need to check whether the end of the coordinates coincides with
+    // completion of a timestep frame. If i != 0, it implies an incomplete
+    // timestep frame and there is discrepancy with the parameters inputted in
+    // the dialog.
+    if (i == 0) {
+      return true;
+    } else {
+      QMessageBox::warning(p, tr("Cannot import trajectory"),
+                           tr("Error parsing trajectory input. Please check "
+                              "the inputs specified."));
+      return false;
+    }
   }
+  return false;
 }
 
 } // namespace QtPlugins

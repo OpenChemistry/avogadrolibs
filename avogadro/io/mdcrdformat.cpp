@@ -23,6 +23,7 @@
 #include <avogadro/core/vector.h>
 
 #include <iomanip>
+#include <iostream>
 #include <istream>
 #include <ostream>
 #include <sstream>
@@ -62,25 +63,19 @@ bool MdcrdFormat::read(std::istream& inStream, Core::Molecule& mol)
   string title;
   float x, y, z;
 
-  inStream.seekg(0, inStream.end);
-  int fileLen = inStream.tellg();
-  inStream.seekg(0, inStream.beg);
-
   typedef map<string, unsigned char> AtomTypeMap;
   AtomTypeMap atomTypes;
-  unsigned char customElementCounter = CustomElementMin;
 
   Array<Vector3> positions;
 
   getline(inStream, title);
   mol.setData("name", title);
 
-  while ((static_cast<int>(inStream.tellg()) != fileLen) &&
-         (static_cast<int>(inStream.tellg()) != MDCRD_EOF)) {
-    inStream >> x >> y >> z;
+  while (inStream >> x >> y >> z) {
     Vector3 pos(x, y, z);
     positions.push_back(pos);
   }
+
   mol.setCoordinate3d(positions, 0);
   return true;
 }

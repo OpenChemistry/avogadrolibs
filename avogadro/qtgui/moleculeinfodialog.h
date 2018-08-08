@@ -44,7 +44,7 @@ public:
   int atomCount() const;
   bool hasBoxCoordinates() const;
 
-  static void resolve(QWidget* p, Molecule& mol, QString fname);
+  static bool resolve(QWidget* p, Molecule& mol, QString fname);
 
 private:
   Ui::MoleculeInfoDialog* m_ui;
