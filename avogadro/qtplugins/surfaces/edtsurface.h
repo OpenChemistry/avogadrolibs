@@ -62,7 +62,7 @@ public:
    */
 
   Core::Cube* EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-     Surfaces::Type surfType);
+                      Surfaces::Type surfType);
 
   // The copying over from array to Cube can and should be done in parallel
 
@@ -145,19 +145,20 @@ private:
   int detail(unsigned char atomicNumber);
 
   /*
-  *@brief Takes a vector and tells whether or not it's within the bounds of the box
-  */
+   *@brief Takes a vector and tells whether or not it's within the bounds of the
+   *box
+   */
   bool inBounds(Vector3i vec);
 
-  //Can I inline these?
+  // Can I inline these?
 
-  bool EDTSurface::isBound(Vector3i vec);
+  bool isBound(Vector3i vec);
 
-  bool EDTSurface::isDone(Vector3i vec);
+  bool isDone(Vector3i vec);
 
-  bool EDTSurface::inOut(Vector3i vec);
+  bool inOut(Vector3i vec);
 
-  int EDTSurface::atomId(Vector3i vec);
+  int atomId(Vector3i vec);
 
   Vector3i EDTSurface::round(Vector3 vec);
 
@@ -166,9 +167,10 @@ private:
   Core::Cube* m_cube;
 
   // These bool arrays should probably be converted into BitVectors
-  bool*** isDone;
-  bool*** isBound;//boolean array that tells us if voxel i, j, k, is on surface
-  bool*** inOut; //boolean array that tells us if vocel i, j, k is in solid
+  bool*** _isDone;
+  bool***
+    _isBound;     // boolean array that tells us if voxel i, j, k, is on surface
+  bool*** _inOut; // boolean array that tells us if vocel i, j, k is in solid
   int*** atomIds;
 
   dataStruct* data;
