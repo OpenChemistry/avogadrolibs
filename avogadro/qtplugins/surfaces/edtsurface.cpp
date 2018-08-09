@@ -118,9 +118,9 @@ namespace Avogadro {
       delete[] atomIds[i];
     }
 
-    delete[] isBound;
-    delete[] inOut;
-    delete[] isDone;
+    delete[] _isBound;
+    delete[] _inOut;
+    delete[] _isDone;
     delete[] atomIds;
 
     free(data);
@@ -137,7 +137,7 @@ namespace Avogadro {
   }
 
   Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol,
-                                  Core::Cube* Surfaces::Type surfType)
+                                  Core::Cube*, Surfaces::Type surfType)
   {
 
     qDebug() << " starting " << mol->atomCount();
