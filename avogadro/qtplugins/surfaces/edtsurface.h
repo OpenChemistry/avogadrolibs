@@ -160,7 +160,7 @@ private:
 
   int atomId(Vector3i vec);
 
-  Vector3i EDTSurface::round(Vector3 vec);
+  Vector3i round(Vector3 vec);
 
   QtGui::Molecule* m_mol;
 

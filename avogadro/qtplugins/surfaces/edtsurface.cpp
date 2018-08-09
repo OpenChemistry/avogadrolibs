@@ -188,12 +188,6 @@ namespace Avogadro {
     //  }
     // EDT (if applicable)
 
-    /*  if (surfaceType == SES) {
-        this->fillVoxelsWaals(atomTypes[surfaceType]);
-        this->boundingAtom();
-      }
-    */
-
     qDebug() << "minval: " << m_cube->minValue()
              << " maxval: " << m_cube->maxValue();
 
@@ -272,15 +266,6 @@ namespace Avogadro {
       //%d\n",data->positIn,allocOut,data->positOut,data->totalSurfaceVox,data->totalInnerVox);
       data->certificate -= data->eliminate;
 
-      /*		for(i=0;i<data->positOut;i++)
-                              {
-                                data->inArray[i](X)=data->outArray[i](X);
-                                data->inArray[i](Y)=data->outArray[i](Y);
-                                data->inArray[i](Z)=data->outArray[i](Z);
-                              }
-                              data->positIn=data->positOut;
-                      //new code only less dist
-              */
       data->positIn = 0;
       for (i = 0; i < data->positOut; i++) {
         _isBound[data->outArray[i](X)][data->outArray[i](Y)]
@@ -299,56 +284,6 @@ namespace Avogadro {
       }
     } while (data->positIn != 0);
 
-    //}
-    /*else if(type==1)//do all
-    {
-            Vector3i *tpoint;
-            do {
-
-                    fastOneShell( &data->positIn, &allocOut, boundPoint,
-    &data->positOut,&data->eliminate);//data->inArray, data->outArray,
-    data->certificate-=data->eliminate;
-    //
-    //			for(i=0;i<data->positOut;i++)
-    //			{
-    //
-    _isBound[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)]=false;
-    //			  data->inArray[i](X)=data->outArray[i](X);
-    //			  data->inArray[i](Y)=data->outArray[i](Y);
-    //			  data->inArray[i](Z)=data->outArray[i](Z);
-    //			}
-                            tpoint=data->inArray;
-                            data->inArray=data->outArray;
-                            data->outArray=tpoint;
-                            data->positIn=data->positOut;
-                            int alloctmp;
-                            alloctmp=allocIn;
-                            allocIn=allocOut;
-                            allocOut=alloctmp;
-                            for(i=0;i<data->positIn;i++)
-                                    volumePixels[data->inArray[i](X)][data->inArray[i](Y)][data->inArray[i](Z)].isBound=false;
-    //			*/
-    // new code only less dist
-    /*
-    data->positIn=0;
-    for(i=0;i<data->positOut;i++)
-    {
-            _isBound[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)]=false;
-            if(volumePixels[data->outArray[i](X)][data->outArray[i](Y)][data->outArray[i](Z)].distance<=1.0*data->cutRadius)
-            {
-                    data->inArray[data->positIn](X)=data->outArray[i](X);
-                    data->inArray[data->positIn](Y)=data->outArray[i](Y);
-                    data->inArray[data->positIn](Z)=data->outArray[i](Z);
-                    data->positIn++;
-            }
-    }
-    */
-
-    //	}
-    //	while(data->positIn!=0);
-    //	while(data->positOut!=0);
-    //}
-    // while(data->positOut!=0);
     if (data->certificate != 0) {
       //	printf("wrong number\n");
     }
@@ -479,9 +414,7 @@ namespace Avogadro {
           data->outArray[data->positOut] = tnv;
           data->positOut++;
           data->eliminate++;
-        } else if (tnv(X) < data->pLength && tnv(X) > -1 &&
-                   tnv(Y) < data->pWidth && tnv(Y) > -1 &&
-                   tnv(Z) < data->pHeight && tnv(Z) > -1 &&
+        } else if (inBounds(tnv) &&
                    _inOut[tnv(X)][tnv(Y)][tnv(Z)] &&
                    _isDone[tnv(X)][tnv(Y)][tnv(Z)]) {
           dxyz = tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
@@ -552,8 +485,7 @@ namespace Avogadro {
   void EDTSurface::fillAtom(int indx)
   {
     Vector3i oxyz;
-    Vector3
-      cp; // vector containing coordinates of atom at position indx in m_mol
+    Vector3 cp; // vector containing coordinates of atom at position indx in m_mol
     Vector3i cxyz; // cp rounded to the nearest integers
 
     Array<Vector3> positions = m_mol->atomPositions3d();
@@ -827,7 +759,7 @@ namespace Avogadro {
 
   void EDTSurface::initPara(bool atomType, bool bType)
   {
-    int i, j;
+    int i, j, k;
     data->fixSf = 4;
     double fMargin = 2.5;
     if (data->probeRadius ==
@@ -897,9 +829,9 @@ namespace Avogadro {
     boundingAtom(bType);
     data->cutRadius = data->probeRadius * data->scaleFactor;
 
-    inOut = new bool**[data->pLength];
-    isDone = new bool**[data->pLength];
-    isBound = new bool**[data->pLength];
+    _inOut = new bool**[data->pLength];
+    _isDone = new bool**[data->pLength];
+    _isBound = new bool**[data->pLength];
     atomIds = new int**[data->pLength];
 
     for (i = 0; i < data->pLength; i++) {
