@@ -76,8 +76,8 @@ public:
    *@returns a pointer to the cube
    */
 
-  Core::Cube* EDTCube(QtGui::Molecule* mol, Surfaces::Type surfType,
-                      double probeRadius);
+  Core::Cube* EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
+                      Surfaces::Type surfType, double probeRadius);
   // Takes a molecule, a surface type and a probeRadius and
 
   /*@brief Sets a pointer to the desired molecule
