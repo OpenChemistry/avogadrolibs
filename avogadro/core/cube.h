@@ -198,8 +198,16 @@ public:
 
   /**
    * Sets the value at the specified index in the cube.
+   * @param pos Vector representation of the position
+   */
+
+  bool setValue(const Vector3i& pos, double value);
+
+  /**
+   * Sets the value at the specified index in the cube.
    * @param i 1-dimenional index of the point to set in the cube.
    */
+
   bool setValue(unsigned int i, double value);
 
   /**
