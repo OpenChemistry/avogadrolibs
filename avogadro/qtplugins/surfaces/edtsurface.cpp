@@ -136,7 +136,7 @@ Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
   return this->EDTCube(mol, cube, surfType);
 }
 
-Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube*,
+Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
                                 Surfaces::Type surfType)
 {
 
