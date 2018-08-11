@@ -194,7 +194,7 @@ void Surfaces::calculateEDT()
 {
   EDTSurface edt;
   Cube* t_cube = new Cube();
-  m_cube = edt.EDTCube(m_molecule, t_cube, SolventAccessible, 1.4);
+  m_cube = edt.EDTCube(m_molecule, t_cube, VanDerWaals, 1.4);
 }
 
 void Surfaces::calculateQM()
