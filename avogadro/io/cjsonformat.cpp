@@ -285,6 +285,32 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       } else {
         std::cout << "No orbital cofficients found!" << std::endl;
       }
+      // Check for orbital coefficient sets, these are paired with coordinates
+      // when they exist, but have constant basis set, atom types, etc.
+      if (orbitals["sets"].is_array()) {
+        json orbSets = orbitals["sets"];
+        for (unsigned int idx = 0; idx < orbSets.size(); ++idx) {
+          moCoefficients = orbSets[idx]["moCoefficients"];
+          moCoefficientsA = orbSets[idx]["alphaCoefficients"];
+          moCoefficientsB = orbSets[idx]["betaCoefficients"];
+          if (isNumericArray(moCoefficients)) {
+            std::vector<double> coeffs;
+            for (unsigned int i = 0; i < moCoefficients.size(); ++i)
+              coeffs.push_back(static_cast<double>(moCoefficients[i]));
+            basis->setMolecularOrbitals(coeffs, BasisSet::Paired, idx);
+          } else if (isNumericArray(moCoefficientsA) &&
+                     isNumericArray(moCoefficientsB)) {
+            std::vector<double> coeffsA;
+            for (unsigned int i = 0; i < moCoefficientsA.size(); ++i)
+              coeffsA.push_back(static_cast<double>(moCoefficientsA[i]));
+            std::vector<double> coeffsB;
+            for (unsigned int i = 0; i < moCoefficientsB.size(); ++i)
+              coeffsB.push_back(static_cast<double>(moCoefficientsB[i]));
+            basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha, idx);
+            basis->setMolecularOrbitals(coeffsB, BasisSet::Beta, idx);
+          }
+        }
+      }
     }
     molecule.setBasisSet(basis);
   }
