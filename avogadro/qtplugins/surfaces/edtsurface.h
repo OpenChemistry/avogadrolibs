@@ -113,6 +113,8 @@ private:
 
   void fillAtom(int indx);
 
+  void seansFillAtom(int indx);
+
   void fillAtomWaals(int indx);
 
   void fillVoxelsWaals(bool atomType);
