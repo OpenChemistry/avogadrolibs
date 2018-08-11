@@ -36,7 +36,7 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::MeshGeometry;
 
-Meshes::Meshes(QObject* p) : ScenePlugin(p), m_enabled(false)
+Meshes::Meshes(QObject* p) : ScenePlugin(p), m_enabled(true)
 {
 }
 
