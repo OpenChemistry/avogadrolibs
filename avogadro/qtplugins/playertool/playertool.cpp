@@ -295,6 +295,7 @@ void PlayerTool::recordMovie()
       }
       GifWriteFrame(&writer, imageData, EXPORT_WIDTH, EXPORT_HEIGHT,
                     100 / m_animationFPS->value());
+      delete[] imageData;
     }
     GifEnd(&writer);
   } else if (selfFilter == tr("Movie (*.avi)")) {
