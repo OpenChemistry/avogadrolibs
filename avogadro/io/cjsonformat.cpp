@@ -146,7 +146,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
   }
 
   // Check for coordinate sets, and read them in if found, e.g. trajectories.
-  json coordSets = atoms["coordSets"];
+  json coordSets = atoms["coords"]["3dSets"];
   if (coordSets.is_array() && coordSets.size()) {
     for (unsigned int i = 0; i < coordSets.size(); ++i) {
       Array<Vector3> setArray;
@@ -159,6 +159,8 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
         molecule.setCoordinate3d(setArray, i);
       }
     }
+    // Make sure the first step is active once we are done loading the sets.
+    molecule.setCoordinate3d(0);
   }
 
   // Selection is optional, but if present should be loaded.
@@ -287,7 +289,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       }
       // Check for orbital coefficient sets, these are paired with coordinates
       // when they exist, but have constant basis set, atom types, etc.
-      if (orbitals["sets"].is_array()) {
+      if (orbitals["sets"].is_array() && orbitals["sets"].size()) {
         json orbSets = orbitals["sets"];
         for (unsigned int idx = 0; idx < orbSets.size(); ++idx) {
           moCoefficients = orbSets[idx]["moCoefficients"];
@@ -310,6 +312,8 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
             basis->setMolecularOrbitals(coeffsB, BasisSet::Beta, idx);
           }
         }
+        // Set the first step as active.
+        basis->setActiveSetStep(0);
       }
     }
     molecule.setBasisSet(basis);
