@@ -54,6 +54,8 @@ struct GaussianShell
 GaussianSetConcurrent::GaussianSetConcurrent(QObject* p)
   : QObject(p), m_gaussianShells(nullptr), m_set(nullptr), m_tools(nullptr)
 {
+  // Watch for the future
+  connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
 }
 
 GaussianSetConcurrent::~GaussianSetConcurrent()
@@ -96,7 +98,6 @@ bool GaussianSetConcurrent::calculateSpinDensity(Core::Cube* cube)
 
 void GaussianSetConcurrent::calculationComplete()
 {
-  disconnect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
   (*m_gaussianShells)[0].tCube->lock()->unlock();
   delete m_gaussianShells;
   m_gaussianShells = 0;
@@ -125,9 +126,6 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
 
   // Lock the cube until we are done.
   cube->lock()->lock();
-
-  // Watch for the future
-  connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
 
   // The main part of the mapped reduced function...
   m_future = QtConcurrent::map(*m_gaussianShells, func);
