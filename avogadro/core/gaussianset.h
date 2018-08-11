@@ -123,6 +123,27 @@ public:
                             ElectronType type = Paired);
 
   /**
+   * Set the molecular orbital (MO) coefficients for a given index. Note
+   * that this must be used with coordinate sets to work correctly.
+   * @param MOs Vector containing the MO coefficients for the GaussianSet.
+   * @param type The type of the MOs (Paired, Alpha, Beta).
+   * @param index The index of the MO in the sequence.
+   */
+  void setMolecularOrbitals(const std::vector<double>& MOs,
+                            ElectronType type, Index index);
+
+  /**
+   * Get the number of elements in the set.
+   */
+  int setCount() { return static_cast<int>(m_moMatrixSet[0].size()); }
+
+  /**
+   * Set the active element in the set, this expects a corresponding
+   * coordinate set element, and will change the active MO matrix.
+   */
+  bool setActiveSetStep(int index);
+
+  /**
    * @brief Set the molecular orbtial energies, expected in Hartrees.
    * @param energies The vector containing energies for the MOs of type
    * @param type The type of the electrons being set.
@@ -313,6 +334,13 @@ private:
    * open shell calculations.
    */
   MatrixX m_moMatrix[2]; //! MO coefficient matrix
+
+  /**
+   * @brief If there are a sequence of related MOs, they are stored here, and
+   * set as the active MOs upon demand. Alpha will store Paired or the Alpha,
+   * Beta will store Beta coefficients for the appropriate calculation types.
+   */
+  std::vector<MatrixX> m_moMatrixSet[2];
 
   /**
    * @brief This block stores energies for the molecular orbitals (same
