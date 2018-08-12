@@ -2,6 +2,7 @@ include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/libgwavi"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/gif-h")
 
 set(surfaces_srcs
+  bitvector.cpp
   edtsurface.cpp
   gaussiansetconcurrent.cpp
   slatersetconcurrent.cpp
