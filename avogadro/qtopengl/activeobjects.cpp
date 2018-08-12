@@ -29,5 +29,5 @@ void ActiveObjects::setActiveGLWidget(GLWidget* glWidget)
   m_glWidget = glWidget;
 }
 
-} // End QtOpenGL namespace
-} // End Avogadro namespace
+} // namespace QtOpenGL
+} // namespace Avogadro

@@ -52,7 +52,7 @@ private:
   QPointer<GLWidget> m_glWidget = nullptr;
 };
 
-} // End QtOpenGL namespace
-} // End Avogadro namespace
+} // namespace QtOpenGL
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTOPENGL_ACTIVEOBJECTS_H

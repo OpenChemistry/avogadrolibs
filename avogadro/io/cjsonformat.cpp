@@ -153,8 +153,8 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       json set = coordSets[i];
       if (isNumericArray(set)) {
         for (unsigned int j = 0; j < set.size() / 3; ++j) {
-          setArray.push_back(Vector3(set[3 * j], set[3 * j + 1],
-                                     set[3 * j + 2]));
+          setArray.push_back(
+            Vector3(set[3 * j], set[3 * j + 1], set[3 * j + 2]));
         }
         molecule.setCoordinate3d(setArray, i);
       }

@@ -23,8 +23,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
-  : QDialog(parent_, f)
-  , m_ui(new Ui::SurfaceDialog)
+  : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog)
 {
   m_ui->setupUi(this);
 
@@ -48,8 +47,7 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
           SLOT(surfaceComboChanged(int)));
   connect(m_ui->resolutionCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(resolutionComboChanged(int)));
-  connect(m_ui->stepValue, SIGNAL(valueChanged(int)),
-          SIGNAL(stepChanged(int)));
+  connect(m_ui->stepValue, SIGNAL(valueChanged(int)), SIGNAL(stepChanged(int)));
   connect(m_ui->calculateButton, SIGNAL(clicked()), SLOT(calculateClicked()));
   connect(m_ui->recordButton, SIGNAL(clicked()), SLOT(record()));
 }

@@ -21,7 +21,7 @@
 #include "slatersetconcurrent.h"
 
 // Header only, but duplicte symbols if included globally...
-namespace{
+namespace {
 #include <gif.h>
 }
 
@@ -49,8 +49,8 @@ namespace{
 #include <avogadro/quantumio/nwchemlog.h>
 
 #include <QtCore/QBuffer>
-#include <QtCore/QDebug>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 #include <QtCore/QProcess>
 #include <QtGui/QOpenGLFramebufferObject>
 #include <QtWidgets/QAction>
@@ -127,8 +127,7 @@ void Surfaces::surfacesActivated()
     m_dialog = new SurfaceDialog(qobject_cast<QWidget*>(parent()));
     connect(m_dialog, SIGNAL(calculateClickedSignal()),
             SLOT(calculateSurface()));
-    connect(m_dialog, SIGNAL(recordClicked()),
-            SLOT(recordMovie()));
+    connect(m_dialog, SIGNAL(recordClicked()), SLOT(recordMovie()));
     connect(m_dialog, SIGNAL(stepChanged(int)), SLOT(stepChanged(int)));
   }
 
@@ -270,8 +269,9 @@ void Surfaces::calculateQM()
     m_progressDialog->show();
 
     if (connectSlots) {
-      connect(&m_gaussianConcurrent->watcher(), SIGNAL(progressValueChanged(int)),
-              m_progressDialog, SLOT(setValue(int)));
+      connect(&m_gaussianConcurrent->watcher(),
+              SIGNAL(progressValueChanged(int)), m_progressDialog,
+              SLOT(setValue(int)));
       connect(&m_gaussianConcurrent->watcher(),
               SIGNAL(progressRangeChanged(int, int)), m_progressDialog,
               SLOT(setRange(int, int)));
@@ -406,12 +406,12 @@ void Surfaces::recordMovie()
   if (selectedFilter == tr("GIF (*.gif)")) {
     d->gwaviWriter = nullptr;
     d->gifWriter = new GifWriter;
-    GifBegin(d->gifWriter, (baseName + ".gif").toLatin1().data(), 800,
-             600, 100 / 4);
+    GifBegin(d->gifWriter, (baseName + ".gif").toLatin1().data(), 800, 600,
+             100 / 4);
   } else if (selectedFilter == tr("Movie AVI (*.avi)")) {
     d->gifWriter = nullptr;
-    d->gwaviWriter = gwavi_open((baseName + ".avi").toLatin1().data(), 800,
-                       600, "MJPG", 4, NULL);
+    d->gwaviWriter = gwavi_open((baseName + ".avi").toLatin1().data(), 800, 600,
+                                "MJPG", 4, NULL);
   } else {
     d->gwaviWriter = nullptr;
     d->gifWriter = nullptr;
@@ -456,7 +456,7 @@ void Surfaces::movieFrame()
     for (int j = 0; j < exportImage.height(); ++j) {
       for (int k = 0; k < exportImage.width(); ++k) {
         QColor color = exportImage.pixel(k, j);
-        imageData[imageIndex]     = static_cast<uint8_t>(color.red());
+        imageData[imageIndex] = static_cast<uint8_t>(color.red());
         imageData[imageIndex + 1] = static_cast<uint8_t>(color.green());
         imageData[imageIndex + 2] = static_cast<uint8_t>(color.blue());
         imageData[imageIndex + 3] = static_cast<uint8_t>(color.alpha());
@@ -475,7 +475,7 @@ void Surfaces::movieFrame()
           reinterpret_cast<const unsigned char*>(buffer.data().data()),
           buffer.size()) == -1) {
       QMessageBox::warning(qobject_cast<QWidget*>(parent()), tr("Avogadro"),
-                             tr("Error: cannot add frame to video."));
+                           tr("Error: cannot add frame to video."));
     }
   } else {
     QString fileName = QString::number(m_currentFrame);
@@ -527,7 +527,8 @@ void Surfaces::movieFrame()
     args << "-dispose"
          << "Background"
          << "-delay" << QString::number(100 / 10)
-         << m_baseFileName + "%0" + QString::number(m_numberLength) + "d.png[0-" +
+         << m_baseFileName + "%0" + QString::number(m_numberLength) + "d.png[0-"
+    +
               QString::number(m_molecule->coordinate3dCount() - 1) + "]"
          << m_baseFileName + ".gif";
     proc.execute("convert", args);

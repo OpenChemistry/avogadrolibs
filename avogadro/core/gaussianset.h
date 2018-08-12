@@ -129,8 +129,8 @@ public:
    * @param type The type of the MOs (Paired, Alpha, Beta).
    * @param index The index of the MO in the sequence.
    */
-  void setMolecularOrbitals(const std::vector<double>& MOs,
-                            ElectronType type, Index index);
+  void setMolecularOrbitals(const std::vector<double>& MOs, ElectronType type,
+                            Index index);
 
   /**
    * Get the number of elements in the set.

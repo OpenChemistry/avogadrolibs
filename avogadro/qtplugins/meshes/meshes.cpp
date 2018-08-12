@@ -36,13 +36,9 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::MeshGeometry;
 
-Meshes::Meshes(QObject* p) : ScenePlugin(p), m_enabled(true)
-{
-}
+Meshes::Meshes(QObject* p) : ScenePlugin(p), m_enabled(true) {}
 
-Meshes::~Meshes()
-{
-}
+Meshes::~Meshes() {}
 
 // Generator for std::generate call below:
 namespace {
