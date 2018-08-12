@@ -1,4 +1,5 @@
 set(surfaces_srcs
+  bitvector.cpp
   edtsurface.cpp
   gaussiansetconcurrent.cpp
   slatersetconcurrent.cpp
