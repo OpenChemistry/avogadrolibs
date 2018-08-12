@@ -32,8 +32,8 @@ set(HEADERS
   fileformatmanager.h
   gromacsformat.h
   mdlformat.h
+  vaspformat.h
   pdbformat.h
-  poscarformat.h
   xyzformat.h
   trrformat.h
   lammpsformat.h
@@ -47,8 +47,8 @@ set(SOURCES
   fileformatmanager.cpp
   gromacsformat.cpp
   mdlformat.cpp
+  vaspformat.cpp
   pdbformat.cpp
-  poscarformat.cpp
   xyzformat.cpp
   trrformat.cpp
   lammpsformat.cpp
