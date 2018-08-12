@@ -43,6 +43,8 @@ struct SlaterShell
 SlaterSetConcurrent::SlaterSetConcurrent(QObject* p)
   : QObject(p), m_shells(nullptr), m_set(nullptr), m_tools(nullptr)
 {
+  // Watch for the future
+  connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
 }
 
 SlaterSetConcurrent::~SlaterSetConcurrent()
@@ -78,7 +80,6 @@ bool SlaterSetConcurrent::calculateSpinDensity(Core::Cube* cube)
 
 void SlaterSetConcurrent::calculationComplete()
 {
-  disconnect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
   (*m_shells)[0].tCube->lock()->unlock();
   delete m_shells;
   m_shells = 0;
@@ -105,9 +106,6 @@ bool SlaterSetConcurrent::setUpCalculation(Core::Cube* cube, unsigned int state,
 
   // Lock the cube until we are done.
   cube->lock()->lock();
-
-  // Watch for the future
-  connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
 
   // The main part of the mapped reduced function...
   m_future = QtConcurrent::map(*m_shells, func);
