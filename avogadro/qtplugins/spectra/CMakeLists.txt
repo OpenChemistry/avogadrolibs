@@ -1,5 +1,3 @@
-include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp")
-
 set(plugin_srcs
   vibrationdialog.cpp
   vibrationmodel.cpp

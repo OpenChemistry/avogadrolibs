@@ -26,8 +26,6 @@
 #include <QtWidgets/QFileDialog>
 #include <avogadro/qtgui/molecule.h>
 
-#include <jsoncpp.cpp>
-
 namespace Avogadro {
 namespace QtPlugins {
 
