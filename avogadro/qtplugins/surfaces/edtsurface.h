@@ -8,7 +8,7 @@
 #define AVOGADRO_QTPLUGINS_EDTSURFACE_H
 
 #include "surfaces.h"
-//#include "bitvector.h"
+#include "bitvector.h"
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/vector.h>
 // for the enum
@@ -161,12 +161,6 @@ private:
 
   // Can I inline these?
 
-  bool isBound(Vector3i vec);
-
-  bool isDone(Vector3i vec);
-
-  bool inOut(Vector3i vec);
-
   int atomId(Vector3i vec);
 
   Vector3i round(Vector3 vec);
@@ -178,10 +172,10 @@ private:
   Core::Cube* m_cube;
 
   // These bool arrays should probably be converted into BitVectors
-  bool*** _isDone;
-  bool***
-    _isBound;     // boolean array that tells us if voxel i, j, k, is on surface
-  bool*** _inOut; // boolean array that tells us if vocel i, j, k is in solid
+  BitVector* inSolid;
+  BitVector* onSurface;
+  BitVector* processed;
+  
   int*** atomIds;
 
   dataStruct* data;
