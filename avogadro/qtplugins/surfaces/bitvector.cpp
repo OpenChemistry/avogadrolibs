@@ -16,6 +16,9 @@ namespace QtPlugins{
     m_width = width;
     m_height = height;
     byteArray = new unsigned char[length * width * height / 8 + 1];
+    for(int i = 0; i < length * width * height / 8 + 1; i++){
+      byteArray[i] = byteArray[i] & 0;
+    }
   }
 
   BitVector::~BitVector(){
@@ -31,9 +34,8 @@ namespace QtPlugins{
   bool BitVector::value(int x, int y, int z){
     int byteIndex = findIndex(x, y, z) / 8;
     int bitIndex = findIndex(x, y, z) % 8;
-    unsigned char bitMask = pow(2, bitIndex);
-    unsigned char a = byteArray[byteIndex] & bitMask;
-    unsigned char b = a >> bitIndex;
+    unsigned char a = byteArray[byteIndex] >> bitIndex;
+    unsigned char b = a & 1;
     if(b == 1){
       return true;
     }
