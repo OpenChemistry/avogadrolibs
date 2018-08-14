@@ -3,6 +3,7 @@ include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/libgwavi"
 
 set(surfaces_srcs
   bitvector.cpp
+  boolcube.cpp
   edtsurface.cpp
   gaussiansetconcurrent.cpp
   slatersetconcurrent.cpp
