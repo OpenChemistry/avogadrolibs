@@ -25,35 +25,34 @@
 #include "vtkAvogadroActor.h"
 #include <QVTKInteractor.h>
 #include <vtkColorTransferFunction.h>
+#include <vtkFlyingEdges3D.h>
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkImageData.h>
 #include <vtkImageShiftScale.h>
 #include <vtkInteractorStyleTrackballCamera.h>
 #include <vtkLookupTable.h>
+#include <vtkMolecule.h>
+#include <vtkMoleculeMapper.h>
 #include <vtkPiecewiseFunction.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkProperty.h>
 #include <vtkRenderViewBase.h>
 #include <vtkRenderer.h>
 #include <vtkSmartVolumeMapper.h>
 #include <vtkVolume.h>
 #include <vtkVolumeProperty.h>
 
-#include <vtkPolyDataMapper.h>
-#include <vtkSphereSource.h>
-
-#include <QDebug>
+#include <QtGui/QSurfaceFormat>
 
 namespace Avogadro {
 namespace VTK {
 
-vtkVolume* cubeVolume(Core::Cube* cube)
+using QtGui::Molecule;
+
+// The caller assumes ownership of the vtkImageData returned.
+vtkImageData* createCubeImageData(Core::Cube* cube)
 {
-  qDebug() << "Cube dimensions: " << cube->dimensions().x()
-           << cube->dimensions().y() << cube->dimensions().z();
-
-  qDebug() << "min/max:" << cube->minValue() << cube->maxValue();
-  qDebug() << cube->data()->size();
-
-  vtkNew<vtkImageData> data;
+  auto data = vtkImageData::New();
   // data->SetNumberOfScalarComponents(1, nullptr);
   Eigen::Vector3i dim = cube->dimensions();
   data->SetExtent(0, dim.x() - 1, 0, dim.y() - 1, 0, dim.z() - 1);
@@ -66,81 +65,61 @@ vtkVolume* cubeVolume(Core::Cube* cube)
   double* dataPtr = static_cast<double*>(data->GetScalarPointer());
   std::vector<double>* cubePtr = cube->data();
 
-  for (int i = 0; i < dim.x(); ++i)
-    for (int j = 0; j < dim.y(); ++j)
+  for (int i = 0; i < dim.x(); ++i) {
+    for (int j = 0; j < dim.y(); ++j) {
       for (int k = 0; k < dim.z(); ++k) {
         dataPtr[(k * dim.y() + j) * dim.x() + i] =
           (*cubePtr)[(i * dim.y() + j) * dim.z() + k];
       }
-
-  double range[2];
-  range[0] = data->GetScalarRange()[0];
-  range[1] = data->GetScalarRange()[1];
-  // a->GetRange(range);
-  qDebug() << "ImageData range: " << range[0] << range[1];
-
-  vtkNew<vtkImageShiftScale> t;
-  t->SetInputData(data.GetPointer());
-  t->SetShift(-range[0]);
-  double magnitude = range[1] - range[0];
-  if (magnitude == 0.0) {
-    magnitude = 1.0;
+    }
   }
-  t->SetScale(255.0 / magnitude);
-  t->SetOutputScalarTypeToDouble();
 
-  qDebug() << "magnitude: " << magnitude;
+  return data;
+}
 
-  t->Update();
+void vtkGLWidget::cubeVolume(Core::Cube* cube)
+{
+  m_imageData = createCubeImageData(cube);
+  // Call delete to decrement the reference count now it is in a smart pointer.
+  m_imageData->Delete();
 
   vtkNew<vtkSmartVolumeMapper> volumeMapper;
   vtkNew<vtkVolumeProperty> volumeProperty;
-  vtkVolume* volume = vtkVolume::New();
 
   volumeMapper->SetBlendModeToComposite();
-  // volumeMapper->SetBlendModeToComposite(); // composite first
-  volumeMapper->SetInputConnection(t->GetOutputPort());
+  volumeMapper->SetInputData(m_imageData);
+  //volumeMapper->SetInputConnection(t->GetOutputPort());
 
   volumeProperty->ShadeOff();
   volumeProperty->SetInterpolationTypeToLinear();
 
-  vtkNew<vtkPiecewiseFunction> compositeOpacity;
-  vtkNew<vtkColorTransferFunction> color;
-  // if (cube->cubeType() == Core::Cube::MO) {
-  compositeOpacity->AddPoint(0.00, 0.6);
-  compositeOpacity->AddPoint(63.75, 0.7);
-  compositeOpacity->AddPoint(127.50, 0.0);
-  compositeOpacity->AddPoint(192.25, 0.7);
-  compositeOpacity->AddPoint(255.00, 0.6);
+  auto compositeOpacity = m_opacityFunction.Get();
+  auto color = m_lut.Get();
+  if (color->GetSize() == 0) {
+    // Initialize the color and opacity function.
+    double range[2];
+    m_imageData->GetScalarRange(range);
+    if (range[0] < 0.0) {
+      // Likely a molecular orbital, let's make something symmetric.
+      auto magnitude = std::max(std::fabs(range[0]), std::fabs(range[1]));
+      color->AddRGBPoint(-magnitude, 1.0, 0.0, 0.0);
+      color->AddRGBPoint(-0.01 * magnitude, 1.0, 0.0, 0.0);
+      color->AddRGBPoint( 0.01 * magnitude, 0.0, 0.0, 1.0);
+      color->AddRGBPoint( magnitude, 0.0, 0.0, 1.0);
 
-  color->AddRGBPoint(0.00, 1.0, 0.0, 0.0);
-  color->AddRGBPoint(63.75, 0.8, 0.0, 0.0);
-  color->AddRGBPoint(127.50, 0.0, 0.1, 0.0);
-  color->AddRGBPoint(192.25, 0.0, 0.0, 0.8);
-  color->AddRGBPoint(255.00, 0.0, 0.0, 1.0);
-  //}
-  //  else {
-  //    compositeOpacity->AddPoint( 0.00, 0.00);
-  //    compositeOpacity->AddPoint( 1.75, 0.30);
-  //    compositeOpacity->AddPoint( 2.50, 0.50);
-  //    compositeOpacity->AddPoint(192.25, 0.85);
-  //    compositeOpacity->AddPoint(255.00, 0.90);
+      compositeOpacity->AddPoint(-magnitude, 1.0);
+      compositeOpacity->AddPoint(-0.2 * magnitude, 0.8);
+      compositeOpacity->AddPoint(0, 0.0);
+      compositeOpacity->AddPoint( 0.2 * magnitude, 0.8);
+      compositeOpacity->AddPoint( magnitude, 1.0);
+    }
+  }
 
-  //    color->AddRGBPoint(  0.00, 0.0, 0.0, 1.0);
-  //    color->AddRGBPoint( 63.75, 0.0, 0.0, 0.8);
-  //    color->AddRGBPoint(127.50, 0.0, 0.0, 0.5);
-  //    color->AddRGBPoint(191.25, 0.0, 0.0, 0.2);
-  //    color->AddRGBPoint(255.00, 0.0, 0.0, 0.0);
-  //  }
+  volumeProperty->SetScalarOpacity(compositeOpacity); // composite first.
+  volumeProperty->SetColor(color);
 
-  volumeProperty->SetScalarOpacity(
-    compositeOpacity.GetPointer()); // composite first.
-  volumeProperty->SetColor(color.GetPointer());
-
-  volume->SetMapper(volumeMapper.GetPointer());
-  volume->SetProperty(volumeProperty.GetPointer());
-
-  return volume;
+  m_volume->SetMapper(volumeMapper);
+  m_volume->SetProperty(volumeProperty);
 }
 
 vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
@@ -152,16 +131,32 @@ vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
           SLOT(updateScene()));
 
   // Set up our renderer, window, scene, etc.
-  GetRenderWindow()->AddRenderer(m_vtkRenderer.Get());
+  vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
+  SetRenderWindow(renderWindow);
+  GetRenderWindow()->AddRenderer(m_vtkRenderer);
+  setFormat(QVTKOpenGLWidget::defaultFormat());
   vtkNew<vtkInteractorStyleTrackballCamera> interactor;
-  GetInteractor()->SetInteractorStyle(interactor.Get());
+  GetInteractor()->SetInteractorStyle(interactor);
   GetInteractor()->Initialize();
+  m_vtkRenderer->SetBackground(1.0, 1.0, 1.0);
 
-  m_actor->setScene(&this->renderer().scene());
-  m_vtkRenderer->AddActor(m_actor.Get());
+  
+  //m_actor->setScene(&this->renderer().scene());
+  m_moleculeMapper->UseBallAndStickSettings();
+  m_actor->SetMapper(m_moleculeMapper);
+  m_actor->GetProperty()->SetAmbient(0.0);
+  m_actor->GetProperty()->SetDiffuse(1.0);
+  m_actor->GetProperty()->SetSpecular(0.0);
+  m_actor->GetProperty()->SetSpecularPower(40);
+  m_vtkRenderer->AddActor(m_actor);
+  m_vtkRenderer->AddViewProp(m_volume);
 
-  // GetRenderWindow()->SetSwapBuffers(0);
-  // setAutoBufferSwap(true);
+  // Set up the flying edges contour pipeline.
+  m_contourMapper->SetInputConnection(m_flyingEdges->GetOutputPort());
+  m_contourActor->GetProperty()->SetOpacity(0.5);
+  m_contourActor->SetMapper(m_contourMapper);
+  m_vtkRenderer->AddActor(m_contourActor);
+  m_contourActor->SetVisibility(0);
 }
 
 vtkGLWidget::~vtkGLWidget()
@@ -177,9 +172,43 @@ void vtkGLWidget::setMolecule(QtGui::Molecule* mol)
   foreach (QtGui::ToolPlugin* tool, m_tools)
     tool->setMolecule(m_molecule);
   connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateScene()));
+  connect(m_molecule, SIGNAL(changed(unsigned int)),
+          SLOT(moleculeChanged(unsigned int)));
+  
+  updateCube();
+  // Reset the camera, re-render.
+  m_vtkRenderer->ResetCamera();
+  GetRenderWindow()->Render();
+}
+
+void vtkGLWidget::updateCube()
+{
+  auto mol = m_molecule;
   if (mol->cubeCount() > 0) {
-    vtkVolume* vol = cubeVolume(mol->cube(0));
-    m_vtkRenderer->AddViewProp(vol);
+    // Convert the cube to a vtkImageData for volume rendering/contouring.
+    cubeVolume(mol->cube(0));
+
+    // Set up a connection for the contour filter too.
+    m_flyingEdges->SetInputData(m_imageData);
+    m_flyingEdges->GenerateValues(2, -0.05, 0.05);
+    m_flyingEdges->ComputeNormalsOn();
+    m_flyingEdges->ComputeScalarsOn();
+    m_flyingEdges->SetArrayComponent(0);
+    m_contourMapper->SetLookupTable(m_lut);
+    m_contourMapper->SetScalarRange(m_imageData->GetScalarRange());
+    emit imageDataUpdated();
+  }
+}
+
+void vtkGLWidget::moleculeChanged(unsigned int c)
+{
+  Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
+
+  // I think we need to look at adding cubes to changes, flaky right now.
+  auto changes = static_cast<Molecule::MoleculeChanges>(c);
+  if (changes & Molecule::Added || changes & Molecule::Removed) {
+    updateCube();
+    GetRenderWindow()->Render();
   }
 }
 
@@ -193,8 +222,64 @@ const QtGui::Molecule* vtkGLWidget::molecule() const
   return m_molecule;
 }
 
+vtkColorTransferFunction* vtkGLWidget::lut() const
+{
+  return m_lut;
+}
+
+vtkPiecewiseFunction* vtkGLWidget::opacityFunction() const
+{
+  return m_opacityFunction;
+}
+
+vtkImageData* vtkGLWidget::imageData() const
+{
+  return m_imageData;
+}
+
+void vtkGLWidget::renderVolume(bool enable)
+{
+  m_volume->SetVisibility(enable ? 1 : 0);
+}
+
+void vtkGLWidget::renderIsosurface(bool enable)
+{
+  m_contourActor->SetVisibility(enable ? 1 : 0);
+}
+
+void vtkGLWidget::setIsoValue(double value)
+{
+  m_flyingEdges->SetNumberOfContours(2);
+  m_flyingEdges->SetValue(0, -value);
+  m_flyingEdges->SetValue(1,  value);
+}
+
+void vtkGLWidget::setOpacity(double value)
+{
+  m_contourActor->GetProperty()->SetOpacity(value);
+}
+
 void vtkGLWidget::updateScene()
 {
+  if (m_molecule) {
+    if (m_vtkMolecule)
+      m_vtkMolecule->Delete();
+    m_vtkMolecule = vtkMolecule::New();
+    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+      auto a = m_molecule->atom(i);
+      m_vtkMolecule->AppendAtom(a.atomicNumber(),
+                                a.position3d().x(),
+                                a.position3d().y(),
+                                a.position3d().z());
+    }
+    for (Index i = 0; i < m_molecule->bondCount(); ++i) {
+      auto b = m_molecule->bond(i);
+      m_vtkMolecule->AppendBond(b.atom1().index(), b.atom2().index(),
+                                b.order());
+    }
+    m_moleculeMapper->SetInputData(m_vtkMolecule);
+    return;
+  }
   // Build up the scene with the scene plugins, creating the appropriate nodes.
   QtGui::Molecule* mol = m_molecule;
   if (!mol)

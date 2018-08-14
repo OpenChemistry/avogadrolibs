@@ -20,7 +20,7 @@
 #include "gaussiansetconcurrent.h"
 #include "slatersetconcurrent.h"
 
-// Header only, but duplicte symbols if included globally...
+// Header only, but duplicate symbols if included globally...
 namespace {
 #include <gif.h>
 }
@@ -242,6 +242,7 @@ void Surfaces::calculateQM()
   QString progressText;
   if (type == ElectronDensity) {
     progressText = tr("Calculating electron density");
+    m_cube->setName("Electron Denisty");
     if (dynamic_cast<GaussianSet*>(m_basis)) {
       m_gaussianConcurrent->calculateElectronDensity(m_cube);
     } else {
@@ -251,6 +252,7 @@ void Surfaces::calculateQM()
 
   else if (type == MolecularOrbital) {
     progressText = tr("Calculating molecular orbital %L1").arg(index);
+    m_cube->setName("Molecular Orbital " + std::to_string(index + 1));
     if (dynamic_cast<GaussianSet*>(m_basis)) {
       m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index,
                                                       m_dialog->beta());
@@ -334,7 +336,7 @@ void Surfaces::displayMesh()
     m_meshGenerator1 = new QtGui::MeshGenerator;
     connect(m_meshGenerator1, SIGNAL(finished()), SLOT(meshFinished()));
   }
-  m_meshGenerator1->initialize(m_cube, m_mesh1, m_isoValue);
+  m_meshGenerator1->initialize(m_cube, m_mesh1, -m_isoValue);
 
   // TODO - only do this if we're generating an orbital
   //    and we need two meshes
@@ -345,7 +347,7 @@ void Surfaces::displayMesh()
     m_meshGenerator2 = new QtGui::MeshGenerator;
     connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
   }
-  m_meshGenerator2->initialize(m_cube, m_mesh2, -m_isoValue, true);
+  m_meshGenerator2->initialize(m_cube, m_mesh2, m_isoValue, true);
 
   // Start the mesh generation - this needs an improved mutex with a read lock
   // to function as expected. Write locks are exclusive, read locks can have

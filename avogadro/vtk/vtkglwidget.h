@@ -28,14 +28,21 @@
 
 #include <QtCore/QPointer>
 
-class vtkAvogadroActor;
-class vtkLookupTable;
-// class vtkRenderViewBase;
+class vtkActor;
+class vtkColorTransferFunction;
+class vtkFlyingEdges3D;
+class vtkMolecule;
+class vtkMoleculeMapper;
+class vtkPiecewiseFunction;
+class vtkPolyDataMapper;
 class vtkRenderer;
 class vtkVolume;
+class vtkImageData;
 
 namespace Avogadro {
-
+namespace Core {
+class Cube;
+}
 namespace QtGui {
 class Molecule;
 class ToolPlugin;
@@ -74,6 +81,57 @@ public:
   const QtGui::ScenePluginModel& sceneModel() const { return m_scenePlugins; }
   /** @}*/
 
+  /**
+   * Get the color loop up table for the volume renderer.
+   */
+  vtkColorTransferFunction* lut() const;
+
+  /**
+   * Get the opacity function for the volume renderer.
+   */
+  vtkPiecewiseFunction* opacityFunction() const;
+
+  /**
+   * Get the vtkImageData that is being rendered.
+   */
+  vtkImageData* imageData() const;
+
+  /**
+   * Set the cube to render.
+   */
+  void setCube(Core::Cube* cube);
+
+  /**
+   * Get the cube being rendered, this is the input for the imageData.
+   */
+  Core::Cube* cube();
+
+  /**
+   * Display the volume rendering.
+   */
+  void renderVolume(bool enable);
+
+  /**
+   * Display an isosurface.
+   */
+  void renderIsosurface(bool enable);
+
+  /**
+   * Set the isovalue for the isosurface.
+   */
+  void setIsoValue(double value);
+
+  /**
+   * Set the isovalue for the isosurface.
+   */
+  void setOpacity(double value);
+
+signals:
+  /**
+   * Emitted if the image data is updated so that histograms etc can update.
+   */
+   void imageDataUpdated();
+
 public slots:
   /**
    * Update the scene plugins for the widget, this will generate geometry in
@@ -92,6 +150,14 @@ public slots:
   /** Reset the geometry when the molecule etc changes. */
   void resetGeometry();
 
+  /** Volume render the supplied cube. */
+  void cubeVolume(Core::Cube* cube);
+
+private slots:
+  void moleculeChanged(unsigned int c);
+
+  void updateCube();
+
 private:
   QPointer<QtGui::Molecule> m_molecule;
   QList<QtGui::ToolPlugin*> m_tools;
@@ -100,11 +166,24 @@ private:
   Rendering::GLRenderer m_renderer;
   QtGui::ScenePluginModel m_scenePlugins;
 
-  vtkNew<vtkAvogadroActor> m_actor;
   // vtkNew<vtkRenderViewBase> m_context;
   vtkNew<vtkRenderer> m_vtkRenderer;
-  vtkNew<vtkLookupTable> m_lut;
-  vtkSmartPointer<vtkVolume> m_volume;
+
+  // The volume rendering pieces.
+  vtkNew<vtkColorTransferFunction> m_lut;
+  vtkNew<vtkPiecewiseFunction> m_opacityFunction;
+  vtkSmartPointer<vtkImageData> m_imageData;
+  vtkNew<vtkVolume> m_volume;
+
+  // The contour pieces.
+  vtkNew<vtkActor> m_contourActor;
+  vtkNew<vtkPolyDataMapper> m_contourMapper;
+  vtkNew<vtkFlyingEdges3D> m_flyingEdges;
+
+  // The molecule actor, data structure, mapper.
+  vtkNew<vtkActor> m_actor;
+  vtkSmartPointer<vtkMolecule> m_vtkMolecule;
+  vtkNew<vtkMoleculeMapper> m_moleculeMapper;
 };
 }
 }
