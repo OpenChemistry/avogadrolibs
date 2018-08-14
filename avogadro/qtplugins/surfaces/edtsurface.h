@@ -9,6 +9,8 @@
 
 #include "surfaces.h"
 #include "bitvector.h"
+#include "boolcube.h"
+#include <vector>
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/vector.h>
 // for the enum
@@ -118,13 +120,7 @@ private:
 
   void fillAtom(int indx);
 
-  void seansFillAtom(int indx);
-
-  void fillAtomWaals(int indx);
-
-  void fillVoxelsWaals(bool atomType);
-
-  void seansFillVoxelsWaals();
+  void fillVoxelsWaals();
 
   void fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
                     int* outNum, int* elimi);
@@ -135,7 +131,7 @@ private:
 
   void boundBox(bool atomType);
 
-  void boundingAtom(bool bType);
+  void computeSphere(unsigned char atomicNumber);
 
   /*
    *@brief Takes an array of integers and returns a Vector3i
@@ -144,14 +140,6 @@ private:
    */
 
   Vector3i vectorFromArray(int* array);
-
-  /*
-   *@brief Takes an atomic number and returns an index for rasRad
-   *@param atomicNumber The atomic number of the atom in question
-   *@returns An integer index for an array of atomic radii
-   */
-
-  int detail(unsigned char atomicNumber);
 
   /*
    *@brief Takes a vector and tells whether or not it's within the bounds of the
@@ -175,8 +163,17 @@ private:
   BitVector* inSolid;
   BitVector* onSurface;
   BitVector* processed;
-  
+
   int*** atomIds;
+
+  //We can do things as BoolCube, too
+//  BoolCube* inSolid;
+//  BoolCube* onSurface;
+//  BoolCube* processed;
+
+  Vector3i** spheres;//An array of pointers to arrays of vectors to points each sphere
+  int* numbersOfVectors;//The number of vectors in each sphere
+  bool* computed;
 
   dataStruct* data;
 }; // End class EDTSurface

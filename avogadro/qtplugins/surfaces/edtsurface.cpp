@@ -39,14 +39,6 @@ static bool bTypes[4] = { false, true, true, true };
 
 static bool atomTypes[4] = { false, false, true, false };
 
-// static double rasrad[
-// ]={1.872,1.872,1.507,1.4,1.848,1.1,1.88,1.872,1.507,1.948,1.5,
-// 1.4, 1.1};//lsms
-static double rasRad[] = { 1.90, 1.88, 1.63, 1.48, 1.78, 1.2, 1.87,
-                           1.96, 1.63, 0.74, 1.8,  1.48, 1.2 }; // liang
-//                         ca   c    n    o    s    h   p   cb    ne   fe  other
-//                         ox  hx
-
 using namespace Avogadro::Core;
 
 namespace Avogadro {
@@ -55,7 +47,6 @@ namespace QtPlugins {
 // Constructor
 EDTSurface::EDTSurface()
 {
-  int i;
 
   data = (dataStruct*)malloc(sizeof(dataStruct));
   //	data->pTran(0.0,0.0,0.0);
@@ -80,13 +71,6 @@ EDTSurface::EDTSurface()
   data->pWidth = 0;
   data->pLength = 0;
 
-  data->widXz = new int[13];
-  data->deptY = new int*[13];
-
-  for (i = 0; i < 13; i++) {
-    data->widXz[i] = 0;
-    data->deptY[i] = NULL;
-  }
   data->cutRadius = 0;
   m_cube = NULL;
   m_mol = NULL;
@@ -96,14 +80,6 @@ EDTSurface::EDTSurface()
 EDTSurface::~EDTSurface()
 {
   int i, j;
-
-  for (i = 0; i < 13; i++) {
-    delete[] data->deptY[i];
-  }
-  delete[] data->deptY;
-  //	data->deptY = NULL;
-
-  delete[] data->widXz;
 
   for (i = 0; i < data->pLength; i++) {
     for (j = 0; j < data->pWidth; j++) {
@@ -179,16 +155,10 @@ Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
   this->fastDistanceMap();
 
   if (surfaceType == SES) {
-//    this->boundingAtom(false);
-    qDebug() << " done with boundingAtom: ";
-//    this->fillVoxelsWaals(atomTypes[surfaceType]);
-    qDebug() << " done with fillVoxelsWaals ";
-    //this->seansFillVoxelsWaals();
-    //this->buildBoundary();
-    //this->fastDistanceMap();
+    this->fillVoxelsWaals();
+    this->buildBoundary();
+    this->fastDistanceMap();
   }
-  //  }
-  // EDT (if applicable)
 
   qDebug() << " done with fast distance map"
            << "minval: " << m_cube->minValue()
@@ -395,13 +365,16 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
         processed->setValue(tnv, true);
         onSurface->setValue(tnv, true);
 
+        qDebug() << "positOut" << data->positOut << "tnv" << tnv[0] << tnv[1] << tnv[2];
+
         data->outArray[data->positOut] = tnv;
+        //this is a problem now when it wasn't before??
 
         data->positOut++;
         data->eliminate++;
       } else if (inBounds(tnv) && inSolid->value(tnv) && processed->value(tnv))
       {
-        dxyz =promote(tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)]);
+        dxyz = promote(tnv - boundPoint[txyz(X)][txyz(Y)][txyz(Z)]);
         if (dxyz.norm() < m_cube->value(tnv)) {
           boundPoint[tnv(X)][tnv(Y)][tnv(Z)] =
             boundPoint[txyz(X)][txyz(Y)][txyz(Z)];
@@ -501,95 +474,6 @@ void EDTSurface::fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
   *elimi = data->eliminate;
 }
 
-void EDTSurface::fillAtom(int indx)
-{
-
-  Vector3 cp; // vector containing coordinates of atom at position indx in m_mol
-  Vector3i cxyz; // cp rounded to the nearest integers
-  Vector3i oxyz;
-
-  Array<Vector3> positions = m_mol->atomPositions3d();
-
-  cp = (positions[indx] + data->pTran) * data->scaleFactor;
-
-  cxyz = round(cp);
-
-  Index index = indx;
-  Atom current = m_mol->atom(index);
-  int at = detail(current.atomicNumber());
-
-  int i, j, k;
-  int ii, jj, kk;
-  int mi, mj, mk;
-
-  Vector3i mijk;
-  Vector3i sijk;
-
-  int tIndex;
-  int nIndex = 0;
-  for (i = 0; i < data->widXz[at]; i++) {
-    for (j = 0; j < data->widXz[at]; j++) {
-      if (data->deptY[at][nIndex] != -1) {
-        for (ii = -1; ii < 2; ii += 2) {
-          for (jj = -1; jj < 2; jj += 2) {
-            for (kk = -1; kk < 2; kk += 2) {
-              mi = ii * i;
-              mk = kk * j;
-              for (k = 0; k <= data->deptY[at][nIndex]; k++) {
-                mj = k * jj;
-                mijk(I) = mi;
-                mijk(J) = mj;
-                mijk(K) = mk;
-                sijk = cxyz + mijk;
-
-                if (!inBounds(sijk)) {
-                  continue;
-                }
-
-                // So either we're not producing the right vectors here
-                // Or inBounds is wrongly excluding them(less likely)
-                // boundingAtom seems to be doing its job
-                // Which would mean the issue's somewhere in that god-awful loop
-
-                else {
-                  if (!inSolid->value(sijk)) {
-                    inSolid->setValue(sijk, true);
-                    processed->setValue(sijk, true);
-                    atomIds[sijk(I)][sijk(J)][sijk(K)] = indx;
-                  }
-                  // If voxel isn't occupied, designate it as occupied
-                  // And make a note of which atom occupies it
-                  //*
-
-                  else if (inSolid->value(sijk)) {
-                    tIndex = atomIds[sijk(I)][sijk(J)][sijk(K)];
-                    cp = (positions[tIndex] + data->pTran) * data->scaleFactor;
-
-                    oxyz = round(cp) - sijk;
-
-                    // mijk.squaredNorm is the distance to the new atom
-                    // oxyz.squaredNorm is the distance to the old atom
-                    // if the new atom is closer than the old atom
-                    // then designate atomId as the new atom
-                    if (mijk.squaredNorm() < oxyz.squaredNorm())
-                      atomIds[sijk(I)][sijk(J)][sijk(K)] = indx;
-                    //
-                  }
-                  // This should be an arcane way of saying
-                  // That if a given ijk is within the atomic radius of an
-                  // atom Then We assign that atom's id to atomids[ijk]
-                  //	*/
-                } // k
-              }   // else
-            }     // kk
-          }       // jj
-        }         // ii
-
-      } // if
-      nIndex++;
-    } // j
-  }   // i
-}
 // sas use inOut
 void EDTSurface::fillVoxels(bool atomType)
 {
@@ -602,94 +486,13 @@ void EDTSurface::fillVoxels(bool atomType)
     Index index = i;
     Atom current = m_mol->atom(index);
     if (!atomType || current.atomicNumber() != 1) {
-      seansFillAtom(index);
+      fillAtom(index);
     }
     //			totalNumber++;
   }
 
 }
 // use isDone
-void EDTSurface::fillVoxelsWaals(bool atomType)
-{
-  int i;
-
-  int numberOfAtoms = m_mol->atomCount();
-
-  for (i = 0; i < numberOfAtoms; i++) {
-    Index index = i;
-    Atom current = m_mol->atom(index);
-    if (!atomType || current.atomicNumber() != 1) {
-      fillAtomWaals(i);
-    }
-  }
-}
-
-void EDTSurface::fillAtomWaals(int indx)
-{
-  //  int cx, cy, cz;
-  Vector3 cp;    // vector containing coordinates for atom at indx in m_mol
-  Vector3i cxyz; // cp rounded to the nearest int values
-  Vector3i oxyz;
-
-  Array<Vector3> positions = m_mol->atomPositions3d();
-  Atom current = m_mol->atom(indx);
-
-  cp = (positions[indx] + data->pTran) * data->scaleFactor;
-  // Translating and scaling
-
-  cxyz = round(cp);
-
-  int at = detail(current.atomicNumber());
-  int i, j, k;
-  int ii, jj, kk;
-  Vector3i mijk;
-  Vector3i sijk;
-  int tIndex;
-  int nIndex = 0;
-
-  for (i = 0; i < data->widXz[at]; i++) {
-    for (j = 0; j < data->widXz[at]; j++) {
-      if (data->deptY[at][nIndex] != -1) {
-        for (ii = -1; ii < 2; ii += 2) {
-          for (jj = -1; jj < 2; jj += 2) {
-            for (kk = -1; kk < 2; kk += 2) {
-              mijk(I) = ii * i;
-              mijk(K) = kk * j;
-              for (k = 0; k <= data->deptY[at][nIndex]; k++) {
-                mijk(J) = jj * k;
-                sijk = cxyz + mijk;
-                if (sijk(I) < 0 || sijk(J) < 0 || sijk(K) < 0) {
-                  continue;
-                }
-
-                else {
-                  if (!processed->value(sijk)) {
-                    processed->setValue(sijk, true);
-                    atomIds[sijk(I)][sijk(J)][sijk(K)] = indx;
-                  }
-                  // with atomic info change above line
-                  //*
-                  else if (processed->value(sijk)) {
-                    tIndex = atomIds[sijk(I)][sijk(J)][sijk(K)];
-                    cp = (positions[tIndex] + data->pTran) * data->scaleFactor;
-                    // Translating and scaling
-                    oxyz = cxyz - sijk;
-                    if (mijk.squaredNorm() < oxyz.squaredNorm())
-                      atomIds[sijk(I)][sijk(J)][sijk(K)] = indx;
-                  }
-                  //	 */
-                } // else
-              }   // k
-            }     // kk
-          }       // jj
-        }         // ii
-
-      } // if
-      nIndex++;
-    } // j
-  }   // i
-}
-
 void EDTSurface::buildBoundary()
 {
   int i, j, k;
@@ -847,6 +650,20 @@ void EDTSurface::initPara(bool atomType, bool bType)
   onSurface = new BitVector(data->pLength, data->pWidth, data->pHeight);
   processed = new BitVector(data->pLength, data->pWidth, data->pHeight);
 
+//  inSolid = new BoolCube(data->pLength, data->pWidth, data->pHeight);
+//  onSurface = new BoolCube(data->pLength, data->pWidth, data->pHeight);
+//  processed = new BoolCube(data->pLength, data->pWidth, data->pHeight);
+
+  computed = new bool[128];
+  spheres = new Vector3i*[128];
+  numbersOfVectors = new int[128];
+
+  for(int i = 0; i < 128; i++){
+    computed[i] = false;
+    spheres[i] = NULL;
+    numbersOfVectors[i] = -1;
+  }
+
   atomIds = new int**[data->pLength];
 
   for (i = 0; i < data->pLength; i++) {
@@ -861,50 +678,6 @@ void EDTSurface::initPara(bool atomType, bool bType)
   }
 }
 
-void EDTSurface::boundingAtom(bool bType)
-{
-
-  // This function populates widXz and deptY with values (radii) based on atomic
-  // numbers It is functioning correctly
-
-  int i, j, k;
-  double tRadius[13];
-  double tXz, tDepth, sRadius;
-  int indx;
-  for (i = 0; i < 13; i++) {
-    if (data->deptY[i] != NULL)
-      delete[] data->deptY[i];
-  }
-
-  for (i = 0; i < 13; i++) {
-    if (bType == false)
-      tRadius[i] = rasRad[i] * data->scaleFactor + 0.5;
-    else
-      tRadius[i] = (rasRad[i] + data->probeRadius) * data->scaleFactor + 0.5;
-
-    // Multiply by data->scaleFactor
-    // Maybe add data->probeRadius first
-
-    sRadius = tRadius[i] * tRadius[i];
-    // Square that
-    data->widXz[i] = int(tRadius[i]) + 1;
-    data->deptY[i] = new int[data->widXz[i] * data->widXz[i]];
-    indx = 0;
-    for (j = 0; j < data->widXz[i]; j++) {
-      for (k = 0; k < data->widXz[i]; k++) {
-        tXz = j * j + k * k;
-        if (tXz > sRadius) {
-          data->deptY[i][indx] = -1;
-        } else {
-          tDepth = sqrt(sRadius - tXz);
-          data->deptY[i][indx] = int(tDepth + 0.0);
-        }
-        indx++;
-      }
-    }
-  }
-}
-
 Vector3i EDTSurface::vectorFromArray(int* array)
 {
   Vector3i vec;
@@ -912,34 +685,6 @@ Vector3i EDTSurface::vectorFromArray(int* array)
   vec(1) = array[1];
   vec(2) = array[2];
   return vec;
-}
-
-int EDTSurface::detail(unsigned char atomicNumber)
-{
-  // Takes an atomic number and returns the index for rasRad
-  switch (atomicNumber) {
-    // Hydrogen
-    case 1:
-      return 5;
-    // Carbon
-    case 6:
-      return 1;
-    // Nitrogen
-    case 7:
-      return 2;
-    // Oxygen
-    case 8:
-      return 3;
-    // Phosphorous
-    case 15:
-      return 6;
-    // Sulfur
-    case 16:
-      return 4;
-    // Other
-    default:
-      return 10;
-  }
 }
 
 void EDTSurface::setCube(Core::Cube* cube)
@@ -1003,7 +748,7 @@ Vector3 EDTSurface::getPTran(){
   return data->pTran;
 }
 
-void EDTSurface::seansFillAtom(int indx){
+void EDTSurface::fillAtom(int indx){
 
   int otherIndex; // used in the event of overlapping radii
 
@@ -1011,51 +756,55 @@ void EDTSurface::seansFillAtom(int indx){
   Vector3i cxyz; // cp rounded to the nearest int values
   Vector3i oxyz; // vector from origin to point in question
   Vector3 dxyz; // vector from cxyz to oxyz
-  Vector3i txyz; // vector used to determine which atom is closer
+  Vector3i txyz; // vector from center of sphere to a point in solid
   Vector3 axyz; // additional vector used to determine which atom is closer
 
-  Array<Vector3> positions = m_mol->atomPositions3d();
+  //Obtain the current atom
   Atom current = m_mol->atom(indx);
 
+  //Obtain its position, translate, and scale
+  Array<Vector3> positions = m_mol->atomPositions3d();
   cp = (positions[indx] + data->pTran) * data->scaleFactor;
-  // Translating and scaling
-
   cxyz = round(cp);
-  int atomicNumber = detail(current.atomicNumber());
-  double scaledRad = (element_VDW[atomicNumber] + data->probeRadius) * data->scaleFactor + 0.5;
-  int scaledRadius = (int)scaledRad;
 
-  for(int i = cxyz(X) - scaledRadius; i < cxyz(X) + scaledRadius; i++){
-    for(int j = cxyz(Y) - scaledRadius; j < cxyz(Y) + scaledRadius; j++){
-      for(int k = cxyz(Z) - scaledRadius; k < cxyz(Z) + scaledRadius; k++){
-        oxyz(X) = i;
-        oxyz(Y) = j;
-        oxyz(Z) = k;
-        if(inBounds(oxyz)){
-          dxyz = promote(cxyz - oxyz);
-          if(dxyz.norm() <= scaledRadius){
-            if(!inSolid->value(i, j, k)){
-              inSolid->setValue(i, j, k, true);
-              processed->setValue(i, j, k, true);
-              atomIds[i][j][k] = indx;
-            }//if _inOut
-            else{
-              otherIndex = atomIds[i][j][k];
-              txyz = round(positions[otherIndex]);
-              axyz = promote(cxyz - txyz);
-              if(axyz.squaredNorm() > dxyz.squaredNorm()){
-                atomIds[i][j][k] = indx;
-              }//if axyz.squaredNorm
-            }//else
-          }//if dxyz.norm
-        }//if inBounds (which it really should be or the bounds are bad)
-      }//k
-    }//j
-  }//i
+  //Obtain its atomic number
+  int atomicNumber = current.atomicNumber();
+
+  //If we haven't already computed the sphere for that element, do that
+  if(!computed[atomicNumber]){
+    computeSphere(atomicNumber);
+  }
+
+  //Iterate through the vectors that lead to points in the sphere
+  //
+  for(int i = 0; i < numbersOfVectors[atomicNumber]; i++){
+    txyz = spheres[atomicNumber][i];
+    oxyz = cxyz + txyz;
+
+  //If inBounds, and not already designated as in inSolid
+  //Set inSolid, processed and atomId
+    if(inBounds(oxyz)){
+      if(!inSolid->value(oxyz)){
+        inSolid->setValue(oxyz, true);
+        processed->setValue(oxyz, true);
+        atomIds[oxyz(X)][oxyz(Y)][oxyz(Z)] = indx;
+      }//if _
+      //If in bounds, but already designated as in solid
+      //Check which atom is closer and set atomId to that
+      else{
+        otherIndex = atomId(oxyz);
+        txyz = round(positions[otherIndex]);
+        axyz = promote(oxyz - txyz);
+        if(axyz.squaredNorm() > txyz.squaredNorm()){
+          atomIds[oxyz(X)][oxyz(Y)][oxyz(Z)] = indx;
+        }//if axyz.squaredNorm
+      }//else
+    }//if inBounds
+  }
   return;
 }
 
-void EDTSurface::seansFillVoxelsWaals(){
+void EDTSurface::fillVoxelsWaals(){
   //When we call this function, we're building a solvent excluded surface
   //We've already built the solvent accessible solid
   //And done an EDT on all points within it
@@ -1070,6 +819,63 @@ void EDTSurface::seansFillVoxelsWaals(){
       }
     }
   }
+}
+
+void EDTSurface::computeSphere(unsigned char atomicNumber){
+  Vector3i dxyz;
+
+  double scaledRad = (element_VDW[atomicNumber] + data->probeRadius) * data->scaleFactor + 0.5;
+  int scaledRadius = (int)scaledRad;
+  int dPlusOne = 2 * scaledRadius + 1;
+
+  spheres[atomicNumber] = new Vector3i[dPlusOne * dPlusOne * dPlusOne];
+  //This is a significant overallocation, but it's okay, we'll fix it
+  //(This is the number of points with integer coords in the cube we're going to construct)
+  //(It is a theoretical upper bound for points with integer coords in the sphere)
+  //(There's definitely fewer than this, but it's difficult to say how many)
+
+  int count = 0;
+
+  //We construct the cube containing the sphere
+  //And check every point within it to see if it's within the radius
+  //If it is, we add to our list a vector to that point
+
+  for(int i = -scaledRadius; i <= scaledRadius; i++){
+    for(int j = -scaledRadius; j <= scaledRadius; j++){
+      for(int k = -scaledRadius; k <= scaledRadius; k++){
+        dxyz(X) = i;
+        dxyz(Y) = j;
+        dxyz(Z) = k;
+        if(dxyz.norm()<= scaledRadius){
+          spheres[atomicNumber][count] = dxyz;
+          count++;
+        }
+      }
+    }
+  }
+
+  //Create a new array of a more appropriate size
+  Vector3i* tempOne;
+  tempOne = new Vector3i[count];
+
+  //Copy values from spheres[atomicNumber] into it
+  for(int i = 0; i < count; i++){
+    tempOne[i] = spheres[atomicNumber][i];
+  }
+
+  //Free the old memory
+  free(spheres[atomicNumber]);
+
+  //Point the pointer to the new array
+  spheres[atomicNumber] = tempOne;
+
+  //Set numbersOfVectors
+  numbersOfVectors[atomicNumber] = count;
+
+  //And computed
+  computed[atomicNumber] = true;
+
+  return;
 }
 
 } // End namespace Core
