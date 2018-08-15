@@ -49,13 +49,13 @@ public:
    *transform on the molecule provided
    *@param mol A pointer to a the molecule from which the cube is to be
    *generated
-   *@param surfType an enum class representing the type of surface (VdW, SES,
+   *@param surfaceType an enum class representing the type of surface (VdW, SES,
    *SAS)
    *@returns a pointer to the cube
    */
 
   Core::Cube* EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                      Surfaces::Type surfType);
+                      Surfaces::Type surfaceType);
 
   // The copying over from array to Cube can and should be done in parallel
 
@@ -63,14 +63,14 @@ public:
    *transform on the molecule provided
    *@param mol A pointer to a the molecule from which the cube is to be
    *generated
-   *@param surfType an enum class representing the type of surface (VdW, SES,
+   *@param surfaceType an enum class representing the type of surface (VdW, SES,
    *SAS)
    *@param probeRadius a double representing the molecular radius of the solvent
    *@returns a pointer to the cube
    */
 
   Core::Cube* EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                      Surfaces::Type surfType, double probeRadius);
+                      Surfaces::Type surfaceType, double probeRadius);
   // Takes a molecule, a surface type and a probeRadius and
 
   /*@brief Sets a pointer to the desired molecule
@@ -94,18 +94,17 @@ public:
 private:
   /*
    *@brief Initializes the data members of the class
-   *@param atomType
    *@param surfaceType
    */
 
-  void initPara(bool atomType);
+  void initPara();
 
   /*
    *@brief For each atom in the molecule, fills the appropriate voxels
    *@param atomType
    */
 
-  void fillVoxels(bool atomType);
+  void fillVoxels();
 
   void fillAtom(int indx);
 
@@ -115,7 +114,7 @@ private:
 
   void buildBoundary();
 
-  void boundBox(bool atomType);
+  void boundBox();
 
   void computeSphere(unsigned char atomicNumber);
 

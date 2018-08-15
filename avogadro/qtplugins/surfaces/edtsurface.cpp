@@ -60,10 +60,10 @@ EDTSurface::~EDTSurface()
 // Takes a molecule and a surface type and returns a cube
 
 Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                                Surfaces::Type surfType, double probeRadius)
+                                Surfaces::Type surfaceType, double probeRadius)
 {
   this->setProbeRadius(probeRadius);
-  return this->EDTCube(mol, cube, surfType);
+  return this->EDTCube(mol, cube, surfaceType);
 }
 
 Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
@@ -71,7 +71,7 @@ Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
 {
 
   qDebug() << " starting " << mol->atomCount();
-  qDebug() << " type: " << surfType;
+  qDebug() << " type: " << surfaceType;
 
   if(surfaceType == Surfaces::VanDerWaals){
     setProbeRadius(0.0);
