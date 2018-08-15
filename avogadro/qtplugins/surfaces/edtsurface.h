@@ -33,7 +33,7 @@ typedef struct dataStruct
   Vector3 pMin, pMax, pTran;
   double probeRadius, cutRadius;
   double scaleFactor, fixSf;
-  bool ignoreHydrogens;//if we want tis feature, write a way of setting it
+  bool ignoreHydrogens;//if we want this feature, write a way of setting it
 } dataStruct; // End struct dataStruct
 
 class EDTSurface
@@ -92,6 +92,7 @@ public:
   Vector3 getPTran();
 
 private:
+
   /*
    *@brief Initializes the data members of the class
    *@param surfaceType
@@ -100,21 +101,49 @@ private:
   void initPara();
 
   /*
-   *@brief For each atom in the molecule, fills the appropriate voxels
-   *@param atomType
+   *@brief Builds the solvent accessible solid by iterating over atoms in the molecule
+   *and filling in the voxels for each.  Note that the VWS is the SAS with
+   *probe radius equal to 0
    */
 
   void fillVoxels();
 
+  /*@brief fills in the voxels in the sphere representing the atom
+  *
+  */
+
   void fillAtom(int indx);
+
+  /*
+  *@brief shrinks the solvent accessible solid by the probe radius to obtain
+  *the solvent excluded solid
+  */
 
   void fillVoxelsWaals();
 
+  /*
+  *@brief fills in the cube with values representing distances from each point
+  *to the nearest point on the surface
+  */
+
   void fastDistanceMap();
+
+  /*
+  *@brief Determines which points in the solid are on the surface
+  */
 
   void buildBoundary();
 
+  /*
+  *@brief Finds the bound box for the molecule, the smallest cube that can contain it
+  */
+
   void boundBox();
+
+  /*
+  *@brief precomputes the sphere representing an atom of an element
+  *points in the atom are represented as vectors stored in the array spheres
+  */
 
   void computeSphere(unsigned char atomicNumber);
 
@@ -124,9 +153,15 @@ private:
    */
   bool inBounds(Vector3i vec);
 
-  // Can I inline these?
+  /*
+  *@brief Takes a floating point vector and returns an integer vector
+  */
 
   Vector3i round(Vector3 vec);
+
+  /*
+  *@brief Promotes each element of an integer vector to a double
+  */
 
   Vector3 promote(Vector3i vec);
 
@@ -134,15 +169,14 @@ private:
 
   Core::Cube* m_cube;
 
-  // These bool arrays should probably be converted into BoolCubes
-  BoolCube* inSolid;
-  BoolCube* onSurface;
+  BoolCube* inSolid;//bool cube representing whether each point is in the solid
+  BoolCube* onSurface;//bool cube representing whether each point is on the surface
 
   //We can do things as BitVectors, too
 //  BitVector* inSolid;
 //  BitVector* onSurface;
 
-  Vector3i* neighbors;
+  Vector3i* neighbors;//array of vectors representing the points adjacent to a point
 
   Vector3i** spheres;//An array of pointers to arrays of vectors representing all the points each sphere
   int* numbersOfVectors;//The number of vectors in each sphere
@@ -150,8 +184,8 @@ private:
 
   dataStruct* data;
 
-  int numberOfSurfaceVoxels;
-  Vector3i* surfaceVoxels;
+  int numberOfSurfaceVoxels;//the number of voxels on the surface
+  Vector3i* surfaceVoxels;//array where we store all the voxels that are on our surface
 
   int numberOfInnerVoxels;//this is a debugging value
   int numberOfInBoundsVoxels;//this is a debugging value
