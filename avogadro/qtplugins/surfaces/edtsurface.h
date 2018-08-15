@@ -7,12 +7,12 @@
 #ifndef AVOGADRO_QTPLUGINS_EDTSURFACE_H
 #define AVOGADRO_QTPLUGINS_EDTSURFACE_H
 
-#include "surfaces.h"
 #include "bitvector.h"
 #include "boolcube.h"
-#include <vector>
+#include "surfaces.h"
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/vector.h>
+#include <vector>
 // for the enum
 
 namespace Avogadro {
@@ -33,8 +33,8 @@ typedef struct dataStruct
   Vector3 pMin, pMax, pTran;
   double probeRadius;
   double scaleFactor;
-  bool ignoreHydrogens;//if we want this feature, write a way of setting it
-} dataStruct; // End struct dataStruct
+  bool ignoreHydrogens; // if we want this feature, write a way of setting it
+} dataStruct;           // End struct dataStruct
 
 class EDTSurface
 {
@@ -92,7 +92,6 @@ public:
   Vector3 getPTran();
 
 private:
-
   /*
    *@brief Initializes the data members of the class
    *@param surfaceType
@@ -101,53 +100,54 @@ private:
   void initPara();
 
   /*
-   *@brief Builds the solvent accessible solid by iterating over atoms in the molecule
-   *and filling in the voxels for each.  Note that the VWS is the SAS with
-   *probe radius equal to 0
+   *@brief Builds the solvent accessible solid by iterating over atoms in the
+   *molecule and filling in the voxels for each.  Note that the VWS is the SAS
+   *with probe radius equal to 0
    */
 
   void fillVoxels();
 
-  //try initializing the array here
+  // try initializing the array here
 
   /*@brief fills in the voxels in the sphere representing the atom
-  *
-  */
+   *
+   */
 
   void fillAtom(int indx);
 
-  //try initializing the array here
+  // try initializing the array here
 
   /*
-  *@brief shrinks the solvent accessible solid by the probe radius to obtain
-  *the solvent excluded solid
-  */
+   *@brief shrinks the solvent accessible solid by the probe radius to obtain
+   *the solvent excluded solid
+   */
 
   void fillVoxelsWaals();
 
   /*
-  *@brief fills in the cube with values representing distances from each point
-  *to the nearest point on the surface
-  */
+   *@brief fills in the cube with values representing distances from each point
+   *to the nearest point on the surface
+   */
 
   void fastDistanceMap();
 
   /*
-  *@brief Determines which points in the solid are on the surface
-  */
+   *@brief Determines which points in the solid are on the surface
+   */
 
   void buildBoundary();
 
   /*
-  *@brief Finds the bound box for the molecule, the smallest cube that can contain it
-  */
+   *@brief Finds the bound box for the molecule, the smallest cube that can
+   *contain it
+   */
 
   void boundBox();
 
   /*
-  *@brief precomputes the sphere representing an atom of an element
-  *points in the atom are represented as vectors stored in the array spheres
-  */
+   *@brief precomputes the sphere representing an atom of an element
+   *points in the atom are represented as vectors stored in the array spheres
+   */
 
   void computeSphere(unsigned char atomicNumber);
 
@@ -158,14 +158,14 @@ private:
   bool inBounds(Vector3i vec);
 
   /*
-  *@brief Takes a floating point vector and returns an integer vector
-  */
+   *@brief Takes a floating point vector and returns an integer vector
+   */
 
   Vector3i round(Vector3 vec);
 
   /*
-  *@brief Promotes each element of an integer vector to a double
-  */
+   *@brief Promotes each element of an integer vector to a double
+   */
 
   Vector3 promote(Vector3i vec);
 
@@ -175,26 +175,32 @@ private:
 
   bool*** testArray;
 
-  BoolCube* inSolid;//bool cube representing whether each point is in the solid
-  BoolCube* onSurface;//bool cube representing whether each point is on the surface
+  BoolCube* inSolid; // bool cube representing whether each point is in the
+                     // solid
+  BoolCube*
+    onSurface; // bool cube representing whether each point is on the surface
 
-  //We can do things as BitVectors, too
-//  BitVector* inSolid;
-//  BitVector* onSurface;
+  // We can do things as BitVectors, too
+  //  BitVector* inSolid;
+  //  BitVector* onSurface;
 
-  Vector3i* neighbors;//array of vectors representing the points adjacent to a point
+  Vector3i*
+    neighbors; // array of vectors representing the points adjacent to a point
 
-  Vector3i** spheres;//An array of pointers to arrays of vectors representing all the points each sphere
-  int* numbersOfVectors;//The number of vectors in each sphere
-  bool* computed;//An array of bools that tells us if we've already computed the sphere for this element
+  Vector3i** spheres; // An array of pointers to arrays of vectors representing
+                      // all the points each sphere
+  int* numbersOfVectors; // The number of vectors in each sphere
+  bool* computed; // An array of bools that tells us if we've already computed
+                  // the sphere for this element
 
   dataStruct* data;
 
-  int numberOfSurfaceVoxels;//the number of voxels on the surface
-  Vector3i* surfaceVoxels;//array where we store all the voxels that are on our surface
+  int numberOfSurfaceVoxels; // the number of voxels on the surface
+  Vector3i* surfaceVoxels;   // array where we store all the voxels that are on
+                           // our surface
 
-  int numberOfInnerVoxels;//this is a debugging value
-}; // End class EDTSurface
+  int numberOfInnerVoxels; // this is a debugging value
+};                         // End class EDTSurface
 
 } // End namespace QtPlugins
 } // End namespace Avogadro

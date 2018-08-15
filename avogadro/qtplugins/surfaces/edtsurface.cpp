@@ -41,7 +41,6 @@ EDTSurface::EDTSurface()
 
   inSolid = NULL;
   onSurface = NULL;
-
 }
 
 // Destructor
@@ -63,7 +62,7 @@ Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
                                 Surfaces::Type surfaceType)
 {
 
-  if(surfaceType == Surfaces::VanDerWaals){
+  if (surfaceType == Surfaces::VanDerWaals) {
     setProbeRadius(0.0);
   }
 
@@ -123,9 +122,10 @@ void EDTSurface::buildBoundary()
         if (inSolid->value(i, j, k)) {
           flagBound = false;
           ii = 0;
-          //If our voxel is in the solid,
-          //Check all neighboring voxels
-          //If any of them aren't in the solid, then this point is on the surface
+          // If our voxel is in the solid,
+          // Check all neighboring voxels
+          // If any of them aren't in the solid, then this point is on the
+          // surface
           while (!flagBound && ii < 26) {
             if (inBounds(ijk + neighbors[ii]) &&
                 !inSolid->value(ijk + neighbors[ii])) {
@@ -177,17 +177,17 @@ void EDTSurface::boundBox()
 
 void EDTSurface::initPara()
 {
-  //Populate the array of neighbors
+  // Populate the array of neighbors
 
   int neighborNumber = 0;
   Vector3i ijk;
 
   neighbors = new Vector3i[26];
 
-  for(int i = -1; i < 2; i++){
-    for(int j = -1; j <2; j++){
-      for(int k = -1; k < 2; k++){
-        if(i != 0 || j != 0 || k != 0){
+  for (int i = -1; i < 2; i++) {
+    for (int j = -1; j < 2; j++) {
+      for (int k = -1; k < 2; k++) {
+        if (i != 0 || j != 0 || k != 0) {
           ijk << i, j, k;
           neighbors[neighborNumber] = ijk;
           neighborNumber++;
@@ -196,23 +196,22 @@ void EDTSurface::initPara()
     }
   }
 
-
   double fixSf = 4;
   double fMargin = 2.5;
 
   Vector3 fMargins(fMargin, fMargin, fMargin);
   Vector3 probeRadii(data->probeRadius, data->probeRadius, data->probeRadius);
 
-  //calculate the boundBox (get the pMin and pMax)
+  // calculate the boundBox (get the pMin and pMax)
   boundBox();
 
-  //inflate the pMin and pMax by a margin plus the probeRadius (0 if VWS)
+  // inflate the pMin and pMax by a margin plus the probeRadius (0 if VWS)
   data->pMin -= (probeRadii + fMargins);
   data->pMax += (probeRadii + fMargins);
 
   data->pTran = -data->pMin;
 
-  //set scaleFactor equal to the largest range between a max and min
+  // set scaleFactor equal to the largest range between a max and min
   data->scaleFactor = data->pMax(X) - data->pMin(X);
   if ((data->pMax(Y) - data->pMin(Y)) > data->scaleFactor)
     data->scaleFactor = data->pMax(Y) - data->pMin(Y);
@@ -221,11 +220,11 @@ void EDTSurface::initPara()
 
   // data->scaleFactor is the maximum distance between our mins and maxes
 
-  //set scaleFactor equal to boxLength (which defaults to 128)
-  //over scaleFactor
+  // set scaleFactor equal to boxLength (which defaults to 128)
+  // over scaleFactor
   data->scaleFactor = (data->boxLength - 1.0) / double(data->scaleFactor);
 
-  //multiply boxLength by fixSf (4) and then divide by scalefactor
+  // multiply boxLength by fixSf (4) and then divide by scalefactor
   data->boxLength = int(data->boxLength * fixSf / data->scaleFactor);
   data->scaleFactor = fixSf;
   double threshBox = 300;
@@ -250,7 +249,6 @@ void EDTSurface::initPara()
   if (data->pHeight > data->boxLength)
     data->pHeight = data->boxLength;
 
-
   Vector3 zeroVector(0.0, 0.0, 0.0);
   Vector3i pDimensions(data->pLength, data->pWidth, data->pHeight);
   double spacing = 0.;
@@ -259,14 +257,14 @@ void EDTSurface::initPara()
   inSolid = new BoolCube(data->pLength, data->pWidth, data->pHeight);
   onSurface = new BoolCube(data->pLength, data->pWidth, data->pHeight);
 
-//  inSolid = new BoolCube(data->pLength, data->pWidth, data->pHeight);
-//  onSurface = new BoolCube(data->pLength, data->pWidth, data->pHeight);
+  //  inSolid = new BoolCube(data->pLength, data->pWidth, data->pHeight);
+  //  onSurface = new BoolCube(data->pLength, data->pWidth, data->pHeight);
 
   computed = new bool[128];
   spheres = new Vector3i*[128];
   numbersOfVectors = new int[128];
 
-  for(int i = 0; i < 128; i++){
+  for (int i = 0; i < 128; i++) {
     computed[i] = false;
     spheres[i] = NULL;
     numbersOfVectors[i] = -1;
@@ -313,7 +311,8 @@ Vector3i EDTSurface::round(Vector3 vec)
   return intVec;
 }
 
-Vector3 EDTSurface::promote(Vector3i vec){
+Vector3 EDTSurface::promote(Vector3i vec)
+{
   Vector3 floatVec;
   floatVec(0) = (double)vec(0);
   floatVec(1) = (double)vec(1);
@@ -321,74 +320,80 @@ Vector3 EDTSurface::promote(Vector3i vec){
   return floatVec;
 }
 
-double EDTSurface::getScaleFactor(){
-  if(m_cube == NULL){
+double EDTSurface::getScaleFactor()
+{
+  if (m_cube == NULL) {
     return 0;
-  }
-  else{
+  } else {
     return data->scaleFactor;
   }
 }
 
-Vector3 EDTSurface::getPTran(){
-  if(m_cube == NULL){
+Vector3 EDTSurface::getPTran()
+{
+  if (m_cube == NULL) {
     data->pTran *= 0.0;
   }
   return data->pTran;
 }
 
-void EDTSurface::fillAtom(int indx){
+void EDTSurface::fillAtom(int indx)
+{
 
   Vector3 cp;    // vector containing coordinates for atom at indx in m_mol
   Vector3i cxyz; // cp rounded to the nearest int values
   Vector3i txyz; // vector from center of sphere to a point in solid
   Vector3i oxyz; // vector from origin to point in question
-  Vector3 dxyz; // vector from cxyz to oxyz
+  Vector3 dxyz;  // vector from cxyz to oxyz
 
-  //Obtain the current atom
+  // Obtain the current atom
   Atom current = m_mol->atom(indx);
 
-  //Obtain its position, translate, and scale
+  // Obtain its position, translate, and scale
   Array<Vector3> positions = m_mol->atomPositions3d();
   cp = (positions[indx] + data->pTran) * data->scaleFactor;
   cxyz = round(cp);
 
-  //Obtain its atomic number
+  // Obtain its atomic number
   int atomicNumber = current.atomicNumber();
 
-  //If we haven't already computed the sphere for that element, do that
-  if(!computed[atomicNumber]){
+  // If we haven't already computed the sphere for that element, do that
+  if (!computed[atomicNumber]) {
     computeSphere(atomicNumber);
   }
 
-  //Iterate through the vectors that lead to points in the sphere
+  // Iterate through the vectors that lead to points in the sphere
   //
-  for(int i = 0; i < numbersOfVectors[atomicNumber]; i++){
+  for (int i = 0; i < numbersOfVectors[atomicNumber]; i++) {
     txyz = spheres[atomicNumber][i];
     oxyz = cxyz + txyz;
 
-  //If inBounds, and not already designated as in inSolid
-  //Set inSolid
-    if(inBounds(oxyz)){
-      if(!inSolid->value(oxyz)){//this test is the only thing that could be responsible
+    // If inBounds, and not already designated as in inSolid
+    // Set inSolid
+    if (inBounds(oxyz)) {
+      if (!inSolid->value(
+            oxyz)) { // this test is the only thing that could be responsible
         inSolid->setValue(oxyz, true);
         numberOfInnerVoxels++;
-      }//if inSolid
-    }//if inBounds
+      } // if inSolid
+    }   // if inBounds
   }
   return;
 }
 
-void EDTSurface::fillVoxelsWaals(){
-  //When we call this function, we're building a solvent excluded surface
-  //We've already built the solvent accessible solid
-  //And done an EDT on all points within it
-  //Now we just need to remove all points whose distance from the SAS is <= probeRadius
+void EDTSurface::fillVoxelsWaals()
+{
+  // When we call this function, we're building a solvent excluded surface
+  // We've already built the solvent accessible solid
+  // And done an EDT on all points within it
+  // Now we just need to remove all points whose distance from the SAS is <=
+  // probeRadius
 
-  for(int i = 0; i < data->pLength; i++){
-    for(int j = 0; j < data->pWidth; j++){
-      for(int k = 0; k < data->pHeight; k++){
-        if(inSolid->value(i, j, k) && m_cube->value(i, j, k) <= data->probeRadius * data->scaleFactor){
+  for (int i = 0; i < data->pLength; i++) {
+    for (int j = 0; j < data->pWidth; j++) {
+      for (int k = 0; k < data->pHeight; k++) {
+        if (inSolid->value(i, j, k) &&
+            m_cube->value(i, j, k) <= data->probeRadius * data->scaleFactor) {
           inSolid->setValue(i, j, k, false);
           m_cube->setValue(i, j, k, -1);
         }
@@ -397,23 +402,24 @@ void EDTSurface::fillVoxelsWaals(){
   }
 }
 
-void EDTSurface::fastDistanceMap(){
+void EDTSurface::fastDistanceMap()
+{
   qDebug() << "fastDistanceMap is executing";
   Vector3i ijk;
-  Vector3i txyz; //Vector pulled from array of boundary points
-  Vector3 dxyz; //Vector from ijk to dxyz
+  Vector3i txyz; // Vector pulled from array of boundary points
+  Vector3 dxyz;  // Vector from ijk to dxyz
   double distance = 0;
 
-  //First we set surfacePoints' distance equal to zero
-  //And move all the surfacePoints into a 1D array
+  // First we set surfacePoints' distance equal to zero
+  // And move all the surfacePoints into a 1D array
 
   surfaceVoxels = new Vector3i[numberOfSurfaceVoxels];
   int surfaceVoxelCount = 0;
 
-  for(int i = 0; i < data->pLength; i++){
-    for(int j = 0; j < data->pWidth; j++){
-      for(int k = 0; k < data->pHeight; k++){
-        if(onSurface->value(i, j, k)){
+  for (int i = 0; i < data->pLength; i++) {
+    for (int j = 0; j < data->pWidth; j++) {
+      for (int k = 0; k < data->pHeight; k++) {
+        if (onSurface->value(i, j, k)) {
           ijk << i, j, k;
           surfaceVoxels[surfaceVoxelCount] = ijk;
           m_cube->setValue(i, j, k, 0);
@@ -425,59 +431,62 @@ void EDTSurface::fastDistanceMap(){
 
   qDebug() << " surfaceVoxelCount = " << surfaceVoxelCount;
 
-  //Then for each point, if it's in the solid and not on the surface
-  //We check the distance to each point on the surface and save the min in the cube
+  // Then for each point, if it's in the solid and not on the surface
+  // We check the distance to each point on the surface and save the min in the
+  // cube
 
-  for(int i = 0; i < data->pLength; i++){
-    for(int j = 0; j < data->pWidth; j++){
-      for(int k = 0; k < data->pHeight; k++){
+  for (int i = 0; i < data->pLength; i++) {
+    for (int j = 0; j < data->pWidth; j++) {
+      for (int k = 0; k < data->pHeight; k++) {
         distance = 0;
-        if(inSolid->value(i, j, k) && !onSurface->value(i, j, k)){
+        if (inSolid->value(i, j, k) && !onSurface->value(i, j, k)) {
           ijk << i, j, k;
-          for(int l = 0; l < numberOfSurfaceVoxels; l++){
+          for (int l = 0; l < numberOfSurfaceVoxels; l++) {
             txyz = surfaceVoxels[l];
             dxyz = promote(txyz - ijk);
-            if(distance == 0 || dxyz.norm() < distance){
+            if (distance == 0 || dxyz.norm() < distance) {
               distance = dxyz.norm();
-            }//end if distance
-          }//end for l
+            } // end if distance
+          }   // end for l
           m_cube->setValue(i, j, k, distance);
-        }//end if in solid
-      }//end for k
-    }//end for j
-  }//end for i
+        } // end if in solid
+      }   // end for k
+    }     // end for j
+  }       // end for i
 
   qDebug() << "max value" << m_cube->maxValue();
-
 }
 
-void EDTSurface::computeSphere(unsigned char atomicNumber){
+void EDTSurface::computeSphere(unsigned char atomicNumber)
+{
   Vector3 dxyz;
   Vector3i ijk;
 
-  double scaledRad = (element_VDW[atomicNumber] + data->probeRadius) * data->scaleFactor + 0.5;
+  double scaledRad =
+    (element_VDW[atomicNumber] + data->probeRadius) * data->scaleFactor + 0.5;
   int scaledRadius = (int)scaledRad;
 
   int dPlusOne = 2 * scaledRadius + 1;
 
   spheres[atomicNumber] = new Vector3i[dPlusOne * dPlusOne * dPlusOne];
-  //This is a significant overallocation, but it's okay, we'll fix it
-  //(This is the number of points with integer coords in the cube we're going to construct)
-  //(It is a theoretical upper bound for points with integer coords in the sphere)
-  //(There's definitely fewer than this, but it's difficult to say how many)
+  // This is a significant overallocation, but it's okay, we'll fix it
+  //(This is the number of points with integer coords in the cube we're going to
+  //construct) (It is a theoretical upper bound for points with integer coords
+  //in the sphere) (There's definitely fewer than this, but it's difficult to
+  //say how many)
 
   int count = 0;
 
-  //We construct the cube containing the sphere
-  //And check every point within it to see if it's within the radius
-  //If it is, we add to our list a vector to that point
+  // We construct the cube containing the sphere
+  // And check every point within it to see if it's within the radius
+  // If it is, we add to our list a vector to that point
 
-  for(int i = -scaledRadius; i <= scaledRadius; i++){
-    for(int j = -scaledRadius; j <= scaledRadius; j++){
-      for(int k = -scaledRadius; k <= scaledRadius; k++){
+  for (int i = -scaledRadius; i <= scaledRadius; i++) {
+    for (int j = -scaledRadius; j <= scaledRadius; j++) {
+      for (int k = -scaledRadius; k <= scaledRadius; k++) {
         ijk << i, j, k;
         dxyz = promote(ijk);
-        if(dxyz.norm()<= scaledRadius){
+        if (dxyz.norm() <= scaledRadius) {
           spheres[atomicNumber][count] = ijk;
           count++;
         }
@@ -485,25 +494,25 @@ void EDTSurface::computeSphere(unsigned char atomicNumber){
     }
   }
 
-  //Create a new array of a more appropriate size
+  // Create a new array of a more appropriate size
   Vector3i* tempOne;
   tempOne = new Vector3i[count];
 
-  //Copy values from spheres[atomicNumber] into it
-  for(int i = 0; i < count; i++){
+  // Copy values from spheres[atomicNumber] into it
+  for (int i = 0; i < count; i++) {
     tempOne[i] = spheres[atomicNumber][i];
   }
 
-  //Free the old memory
+  // Free the old memory
   free(spheres[atomicNumber]);
 
-  //Point the pointer to the new array
+  // Point the pointer to the new array
   spheres[atomicNumber] = tempOne;
 
-  //Set numbersOfVectors
+  // Set numbersOfVectors
   numbersOfVectors[atomicNumber] = count;
 
-  //And computed
+  // And computed
   computed[atomicNumber] = true;
 
   return;
