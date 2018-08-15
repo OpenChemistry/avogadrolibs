@@ -7,10 +7,9 @@
 #ifndef AVOGADRO_QTPLUGINS_EDTSURFACE_H
 #define AVOGADRO_QTPLUGINS_EDTSURFACE_H
 
-#include "surfaces.h"
 #include "bitvector.h"
 #include "boolcube.h"
-#include <vector>
+#include "surfaces.h"
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/vector.h>
 // for the enum
@@ -29,15 +28,12 @@ namespace QtPlugins {
 
 typedef struct dataStruct
 {
-  Vector3 pTran;
-  int boxLength;
+  int pHeight, pWidth, pLength, boxLength;
+  Vector3 pMin, pMax, pTran;
   double probeRadius;
-  double fixSf;
   double scaleFactor;
-  Vector3 pMin, pMax;
-  int pHeight, pWidth, pLength;
-  double cutRadius;
-} dataStruct; // End struct dataStruct
+  bool ignoreHydrogens; // if we want this feature, write a way of setting it
+} dataStruct;           // End struct dataStruct
 
 class EDTSurface
 {
@@ -52,13 +48,13 @@ public:
    *transform on the molecule provided
    *@param mol A pointer to a the molecule from which the cube is to be
    *generated
-   *@param surfType an enum class representing the type of surface (VdW, SES,
+   *@param surfaceType an enum class representing the type of surface (VdW, SES,
    *SAS)
    *@returns a pointer to the cube
    */
 
   Core::Cube* EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                      Surfaces::Type surfType);
+                      Surfaces::Type surfaceType);
 
   // The copying over from array to Cube can and should be done in parallel
 
@@ -66,14 +62,14 @@ public:
    *transform on the molecule provided
    *@param mol A pointer to a the molecule from which the cube is to be
    *generated
-   *@param surfType an enum class representing the type of surface (VdW, SES,
+   *@param surfaceType an enum class representing the type of surface (VdW, SES,
    *SAS)
    *@param probeRadius a double representing the molecular radius of the solvent
    *@returns a pointer to the cube
    */
 
   Core::Cube* EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                      Surfaces::Type surfType, double probeRadius);
+                      Surfaces::Type surfaceType, double probeRadius);
   // Takes a molecule, a surface type and a probeRadius and
 
   /*@brief Sets a pointer to the desired molecule
@@ -97,39 +93,64 @@ public:
 private:
   /*
    *@brief Initializes the data members of the class
-   *@param atomType
-   *@param bType
    *@param surfaceType
    */
 
-  void initPara(bool atomType, bool bType);
+  void initPara();
 
   /*
-   *@brief For each atom in the molecule, fills the appropriate voxels
-   *@param atomType
+   *@brief Builds the solvent accessible solid by iterating over atoms in the
+   *molecule and filling in the voxels for each.  Note that the VWS is the SAS
+   *with probe radius equal to 0
    */
 
-  void fillVoxels(bool atomType);
+  void buildSolventAccessibleSolid();
+
+  // try initializing the array here
+
+  /*@brief fills in the voxels in the sphere representing the atom
+   *
+   */
 
   void fillAtom(int indx);
 
-  void fillVoxelsWaals();
+  // try initializing the array here
+
+  /*
+   *@brief shrinks the solvent accessible solid by the probe radius to obtain
+   *the solvent excluded solid
+   */
+
+  void buildSolventExcludedSolid();
+
+  void fillAtomWaals(int indx);
+
+  /*
+   *@brief fills in the cube with values representing distances from each point
+   *to the nearest point on the surface
+   */
 
   void fastDistanceMap();
 
-  void buildBoundary();
-
-  void boundBox(bool atomType);
-
-  void computeSphere(unsigned char atomicNumber);
-
   /*
-   *@brief Takes an array of integers and returns a Vector3i
-   *@param array Array of integers
-   *@returns A Vector3i
+   *@brief Determines which points in the solid are on the surface
    */
 
-  Vector3i vectorFromArray(int* array);
+  void buildSurface();
+
+  /*
+   *@brief Finds the bound box for the molecule, the smallest cube that can
+   *contain it
+   */
+
+  void boundBox();
+
+  /*
+   *@brief precomputes the sphere representing an atom of an element
+   *points in the atom are represented as vectors stored in the array spheres
+   */
+
+  void computeSphere(unsigned char atomicNumber);
 
   /*
    *@brief Takes a vector and tells whether or not it's within the bounds of the
@@ -137,9 +158,15 @@ private:
    */
   bool inBounds(Vector3i vec);
 
-  // Can I inline these?
+  /*
+   *@brief Takes a floating point vector and returns an integer vector
+   */
 
   Vector3i round(Vector3 vec);
+
+  /*
+   *@brief Promotes each element of an integer vector to a double
+   */
 
   Vector3 promote(Vector3i vec);
 
@@ -147,27 +174,34 @@ private:
 
   Core::Cube* m_cube;
 
-  // These bool arrays should probably be converted into BoolCubes
-  BoolCube* inSolid;
-  BoolCube* onSurface;
+  bool*** testArray;
 
-  //We can do things as BitVectors, too
-//  BitVector* inSolid;
-//  BitVector* onSurface;
+  BoolCube* inSolid; // bool cube representing whether each point is in the
+                     // solid
+  BoolCube*
+    onSurface; // bool cube representing whether each point is on the surface
 
-  Vector3i** spheres;//An array of pointers to arrays of vectors to points each sphere
-  int* numbersOfVectors;//The number of vectors in each sphere
-  bool* computed;
+  // We can do things as BitVectors, too
+  //  BitVector* inSolid;
+  //  BitVector* onSurface;
+
+  Vector3i*
+    neighbors; // array of vectors representing the points adjacent to a point
+
+  Vector3i** spheres; // An array of pointers to arrays of vectors representing
+                      // all the points each sphere
+  int* numbersOfVectors; // The number of vectors in each sphere
+  bool* computed; // An array of bools that tells us if we've already computed
+                  // the sphere for this element
 
   dataStruct* data;
 
-  int numberOfSurfaceVoxels;
-  Vector3i* surfaceVoxels;
+  int numberOfSurfaceVoxels; // the number of voxels on the surface
+  Vector3i* surfaceVoxels;   // array where we store all the voxels that are on
+                           // our surface
 
-  int numberOfInnerVoxels;
-  int numberOfInBoundsVoxels;
-  int alreadyInSolid;
-}; // End class EDTSurface
+  int numberOfInnerVoxels; // this is a debugging value
+};                         // End class EDTSurface
 
 } // End namespace QtPlugins
 } // End namespace Avogadro
