@@ -29,8 +29,8 @@ namespace QtPlugins{
   }
 
   BoolCube::~BoolCube(){
-    for(int i = 0; i < length; i++){
-      for(int j = 0; j < width; j++){
+    for(int i = 0; i < m_length; i++){
+      for(int j = 0; j < m_width; j++){
         delete[] bools[i][j];
       }
       delete[] bools[i];
@@ -45,18 +45,20 @@ namespace QtPlugins{
 
   //returns value at x, y, z
   bool BoolCube::value(int x, int y, int z){
-    return bools[i][j][k];
+    return bools[x][y][z];
 
   }
 
   //sets value at location equal to value
   void BoolCube::setValue(Vector3i location, bool value){
     setValue(location[0], location[1], location[2], value);
+    return;
   }
 
   //sets value at x, y, z equal to value
   void BoolCube::setValue(int x, int y, int z, bool value){
-    bools[i][j][k] = value;
+    bools[x][y][z] = value;
+    return;
   }
 
 }//namespace QtPlugins
