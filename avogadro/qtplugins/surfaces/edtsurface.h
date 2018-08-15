@@ -29,14 +29,11 @@ namespace QtPlugins {
 
 typedef struct dataStruct
 {
-  Vector3 pTran;
-  int boxLength;
-  double probeRadius;
-  double fixSf;
-  double scaleFactor;
-  Vector3 pMin, pMax;
-  int pHeight, pWidth, pLength;
-  double cutRadius;
+  int pHeight, pWidth, pLength, boxLength;
+  Vector3 pMin, pMax, pTran;
+  double probeRadius, cutRadius;
+  double scaleFactor, fixSf;
+  bool ignoreHydrogens;//if we want tis feature, write a way of setting it
 } dataStruct; // End struct dataStruct
 
 class EDTSurface
@@ -98,11 +95,10 @@ private:
   /*
    *@brief Initializes the data members of the class
    *@param atomType
-   *@param bType
    *@param surfaceType
    */
 
-  void initPara(bool atomType, bool bType);
+  void initPara(bool atomType);
 
   /*
    *@brief For each atom in the molecule, fills the appropriate voxels
@@ -122,14 +118,6 @@ private:
   void boundBox(bool atomType);
 
   void computeSphere(unsigned char atomicNumber);
-
-  /*
-   *@brief Takes an array of integers and returns a Vector3i
-   *@param array Array of integers
-   *@returns A Vector3i
-   */
-
-  Vector3i vectorFromArray(int* array);
 
   /*
    *@brief Takes a vector and tells whether or not it's within the bounds of the
@@ -155,18 +143,20 @@ private:
 //  BitVector* inSolid;
 //  BitVector* onSurface;
 
-  Vector3i** spheres;//An array of pointers to arrays of vectors to points each sphere
+  Vector3i* neighbors;
+
+  Vector3i** spheres;//An array of pointers to arrays of vectors representing all the points each sphere
   int* numbersOfVectors;//The number of vectors in each sphere
-  bool* computed;
+  bool* computed;//An array of bools that tells us if we've already computed the sphere for this element
 
   dataStruct* data;
 
   int numberOfSurfaceVoxels;
   Vector3i* surfaceVoxels;
 
-  int numberOfInnerVoxels;
-  int numberOfInBoundsVoxels;
-  int alreadyInSolid;
+  int numberOfInnerVoxels;//this is a debugging value
+  int numberOfInBoundsVoxels;//this is a debugging value
+  int alreadyInSolid;//this is a debugging value
 }; // End class EDTSurface
 
 } // End namespace QtPlugins

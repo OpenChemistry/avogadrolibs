@@ -15,11 +15,6 @@
 
 #include <QDebug>
 
-#define VWS 0
-#define MS 1
-#define SAS 2
-#define SES 3
-
 #define X 0
 #define Y 1
 #define Z 2
@@ -27,17 +22,6 @@
 #define I 0
 #define J 1
 #define K 2
-
-static int neighbors[26][3] = {
-  1, 0,  0,  -1, 0,  0, 0, 1,  0,  0,  -1, 0, 0,  0,  1,  0,  0,  -1, 1, 1,
-  0, 1,  -1, 0,  -1, 1, 0, -1, -1, 0,  1,  0, 1,  1,  0,  -1, -1, 0,  1, -1,
-  0, -1, 0,  1,  1,  0, 1, -1, 0,  -1, 1,  0, -1, -1, 1,  1,  1,  1,  1, -1,
-  1, -1, 1,  -1, 1,  1, 1, -1, -1, -1, -1, 1, -1, 1,  -1, -1, -1, -1
-};
-
-static bool bTypes[4] = { false, true, true, true };
-
-static bool atomTypes[4] = { false, false, true, false };
 
 using namespace Avogadro::Core;
 
@@ -50,9 +34,6 @@ EDTSurface::EDTSurface()
 
   data = (dataStruct*)malloc(sizeof(dataStruct));
   //	data->pTran(0.0,0.0,0.0);
-  data->pTran(X) = 0.0;
-  data->pTran(Y) = 0.0;
-  data->pTran(Z) = 0.0;
 
   data->boxLength = 128;
   data->probeRadius = 1.4;
@@ -61,13 +42,6 @@ EDTSurface::EDTSurface()
 
   numberOfInnerVoxels = 0;
   //  data->pMin(0.0,0.0,0.0);
-  data->pMin(X) = 0.0;
-  data->pMin(Y) = 0.0;
-  data->pMin(Z) = 0.0;
-  //	data->pMax(0.0,0.0,0.0);
-  data->pMax(X) = 0.0;
-  data->pMax(Y) = 0.0;
-  data->pMax(Z) = 0.0;
 
   data->pHeight = 0;
   data->pWidth = 0;
@@ -93,26 +67,13 @@ Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
 }
 
 Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                                Surfaces::Type surfType)
+                                Surfaces::Type surfaceType)
 {
 
   qDebug() << " starting " << mol->atomCount();
   qDebug() << " type: " << surfType;
 
-  int surfaceType;
-
-  if (surfType == Surfaces::VanDerWaals) {
-    surfaceType = VWS;
-  } else if (surfType == Surfaces::SolventExcluded) {
-    surfaceType = SES;
-  } else if (surfType == Surfaces::SolventAccessible) {
-    surfaceType = SAS;
-  } else {
-    return NULL;
-    // This isn't the right class for that surfaceType
-  }
-
-  if(surfaceType == VWS){
+  if(surfaceType == Surfaces::VanDerWaals){
     setProbeRadius(0.0);
   }
 
@@ -122,7 +83,7 @@ Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
   this->setMolecule(mol);
   // Set molecule
 
-  this->initPara(atomTypes[surfaceType], bTypes[surfaceType]);
+  this->initPara();
   // Initialize everything
 
   qDebug() << " done with initialization ";
@@ -131,7 +92,7 @@ Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
   qDebug() << " pLength " << data->pLength << " pWidth " << data->pWidth
            << " pHeight " << data->pHeight;
 
-  this->fillVoxels(atomTypes[surfaceType]);
+  this->fillVoxels();
   // Generate the molecular solid
 
   qDebug() << " done with voxels ";
@@ -142,7 +103,7 @@ Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
 
   this->fastDistanceMap();
 
-  if (surfaceType == SES) {
+  if (surfaceType == Surfaces::SolventExcluded) {
     this->fillVoxelsWaals();
     this->buildBoundary();
     this->fastDistanceMap();
@@ -151,7 +112,7 @@ Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
   return m_cube;
 }
 
-void EDTSurface::fillVoxels(bool atomType)
+void EDTSurface::fillVoxels()
 {
 
   int i;
@@ -161,7 +122,7 @@ void EDTSurface::fillVoxels(bool atomType)
   for (i = 0; i < numberOfAtoms; i++) {
     Index index = i;
     Atom current = m_mol->atom(index);
-    if (!atomType || current.atomicNumber() != 1) {
+    if (!data->ignoreHydrogens || current.atomicNumber() != 1) {
       fillAtom(index);
     }
     //			totalNumber++;
@@ -193,8 +154,8 @@ void EDTSurface::buildBoundary()
           //Check all neighboring voxels
           //If any of them aren't in the solid, then this point is on the surface
           while (!flagBound && ii < 26) {
-            if (inBounds(ijk + vectorFromArray(neighbors[ii])) &&
-                !inSolid->value(ijk + vectorFromArray(neighbors[ii]))) {
+            if (inBounds(ijk + neighbors[ii]) &&
+                !inSolid->value(ijk + neighbors[ii])) {
               onSurface->setValue(ijk, true);
               numberOfSurfaceVoxels++;
               flagBound = true;
@@ -207,7 +168,7 @@ void EDTSurface::buildBoundary()
   }
 }
 
-void EDTSurface::boundBox(bool atomType)
+void EDTSurface::boundBox()
 {
   /**
    *Finds the bound box of the sequence of atoms
@@ -230,7 +191,7 @@ void EDTSurface::boundBox(bool atomType)
 
   for (i = 0; i < numberOfAtoms; i++) {
     Atom current = m_mol->atom(i);
-    if (!atomType || current.atomicNumber() != 1) {
+    if (!data->ignoreHydrogens || current.atomicNumber() != 1) {
       if (positions[i](X) < data->pMin(X))
         data->pMin(X) = positions[i](X);
       if (positions[i](Y) < data->pMin(Y))
@@ -247,8 +208,28 @@ void EDTSurface::boundBox(bool atomType)
   }
 }
 
-void EDTSurface::initPara(bool atomType, bool bType)
+void EDTSurface::initPara()
 {
+  //Populate the array of neighbors
+
+  int neighborNumber = 0;
+  Vector3i ijk;
+  neighbors = new Vector3i[26];
+
+  for(int i = -1; i < 2; i++){
+    for(int j = -1; j <2; j++){
+      for(int k = -1; k < 2; k++){
+        if(i != 0 || j != 0 || k != 0){
+          ijk(I) = i;
+          ijk(J) = j;
+          ijk(K) = k;
+          neighbors[neighborNumber] = ijk;
+          neighborNumber++;
+        }
+      }
+    }
+  }
+
   numberOfInBoundsVoxels = 0;
   alreadyInSolid = 0;
   int i, j, k;
@@ -258,20 +239,12 @@ void EDTSurface::initPara(bool atomType, bool bType)
   Vector3 fMargins(fMargin, fMargin, fMargin);
   Vector3 probeRadii(data->probeRadius, data->probeRadius, data->probeRadius);
 
-  boundBox(atomType);
+  boundBox();
 
-  if (bType == false) {
-    data->pMin -= fMargins;
-    data->pMax += fMargins;
-  } else {
-    data->pMin -= (probeRadii + fMargins);
-    data->pMax += (probeRadii + fMargins);
-  }
+  data->pMin -= (probeRadii + fMargins);
+  data->pMax += (probeRadii + fMargins);
 
   data->pTran = -data->pMin;
-
-  // data->pTran is the vector to get us to our minimum x, minimum y, and
-  // minimum z points
 
   data->scaleFactor = data->pMax(X) - data->pMin(X);
   if ((data->pMax(Y) - data->pMin(Y)) > data->scaleFactor)
@@ -311,7 +284,6 @@ void EDTSurface::initPara(bool atomType, bool bType)
   if (data->pHeight > data->boxLength)
     data->pHeight = data->boxLength;
 
-//  boundingAtom(bType);
 
   Vector3 zeroVector(0.0, 0.0, 0.0);
   Vector3i pDimensions(data->pLength, data->pWidth, data->pHeight);
@@ -343,15 +315,6 @@ void EDTSurface::initPara(bool atomType, bool bType)
       }
     }
   }
-}
-
-Vector3i EDTSurface::vectorFromArray(int* array)
-{
-  Vector3i vec;
-  vec(0) = array[0];
-  vec(1) = array[1];
-  vec(2) = array[2];
-  return vec;
 }
 
 void EDTSurface::setCube(Core::Cube* cube)
