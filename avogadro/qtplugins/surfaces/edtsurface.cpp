@@ -19,10 +19,6 @@
 #define Y 1
 #define Z 2
 
-#define I 0
-#define J 1
-#define K 2
-
 using namespace Avogadro::Core;
 
 namespace Avogadro {
@@ -33,21 +29,19 @@ EDTSurface::EDTSurface()
 {
 
   data = (dataStruct*)malloc(sizeof(dataStruct));
-  //	data->pTran(0.0,0.0,0.0);
 
   data->boxLength = 128;
   data->probeRadius = 1.4;
   data->scaleFactor = 0;
 
   numberOfInnerVoxels = 0;
-  //  data->pMin(0.0,0.0,0.0);
-
-  data->pHeight = 0;
-  data->pWidth = 0;
-  data->pLength = 0;
 
   m_cube = NULL;
   m_mol = NULL;
+
+  inSolid = NULL;
+  onSurface = NULL;
+
 }
 
 // Destructor
@@ -187,6 +181,7 @@ void EDTSurface::initPara()
 
   int neighborNumber = 0;
   Vector3i ijk;
+
   neighbors = new Vector3i[26];
 
   for(int i = -1; i < 2; i++){
@@ -200,6 +195,7 @@ void EDTSurface::initPara()
       }
     }
   }
+
 
   double fixSf = 4;
   double fMargin = 2.5;
@@ -441,7 +437,6 @@ void EDTSurface::fastDistanceMap(){
           for(int l = 0; l < numberOfSurfaceVoxels; l++){
             txyz = surfaceVoxels[l];
             dxyz = promote(txyz - ijk);
-
             if(distance == 0 || dxyz.norm() < distance){
               distance = dxyz.norm();
             }//end if distance
@@ -483,7 +478,7 @@ void EDTSurface::computeSphere(unsigned char atomicNumber){
         ijk << i, j, k;
         dxyz = promote(ijk);
         if(dxyz.norm()<= scaledRadius){
-          spheres[atomicNumber][count] = round(dxyz);
+          spheres[atomicNumber][count] = ijk;
           count++;
         }
       }
