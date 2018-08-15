@@ -31,8 +31,8 @@ typedef struct dataStruct
 {
   int pHeight, pWidth, pLength, boxLength;
   Vector3 pMin, pMax, pTran;
-  double probeRadius, cutRadius;
-  double scaleFactor, fixSf;
+  double probeRadius;
+  double scaleFactor;
   bool ignoreHydrogens;//if we want this feature, write a way of setting it
 } dataStruct; // End struct dataStruct
 
@@ -108,11 +108,15 @@ private:
 
   void fillVoxels();
 
+  //try initializing the array here
+
   /*@brief fills in the voxels in the sphere representing the atom
   *
   */
 
   void fillAtom(int indx);
+
+  //try initializing the array here
 
   /*
   *@brief shrinks the solvent accessible solid by the probe radius to obtain
@@ -169,6 +173,8 @@ private:
 
   Core::Cube* m_cube;
 
+  bool*** testArray;
+
   BoolCube* inSolid;//bool cube representing whether each point is in the solid
   BoolCube* onSurface;//bool cube representing whether each point is on the surface
 
@@ -188,8 +194,6 @@ private:
   Vector3i* surfaceVoxels;//array where we store all the voxels that are on our surface
 
   int numberOfInnerVoxels;//this is a debugging value
-  int numberOfInBoundsVoxels;//this is a debugging value
-  int alreadyInSolid;//this is a debugging value
 }; // End class EDTSurface
 
 } // End namespace QtPlugins
