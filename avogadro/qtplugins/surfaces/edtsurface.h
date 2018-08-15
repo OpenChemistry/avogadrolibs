@@ -36,14 +36,7 @@ typedef struct dataStruct
   double scaleFactor;
   Vector3 pMin, pMax;
   int pHeight, pWidth, pLength;
-  int* widXz;
-  int** deptY;
   double cutRadius;
-  int positIn, positOut, eliminate;
-  int certificate;
-  int totalSurfaceVox;
-  int totalInnerVox;
-  Vector3i *inArray, *outArray;
 } dataStruct; // End struct dataStruct
 
 class EDTSurface
@@ -122,9 +115,6 @@ private:
 
   void fillVoxelsWaals();
 
-  void fastOneShell(int* inNum, int* allocOut, Vector3i*** boundPoint,
-                    int* outNum, int* elimi);
-
   void fastDistanceMap();
 
   void buildBoundary();
@@ -149,8 +139,6 @@ private:
 
   // Can I inline these?
 
-  int atomId(Vector3i vec);
-
   Vector3i round(Vector3 vec);
 
   Vector3 promote(Vector3i vec);
@@ -159,23 +147,26 @@ private:
 
   Core::Cube* m_cube;
 
-  // These bool arrays should probably be converted into BitVectors
-  BitVector* inSolid;
-  BitVector* onSurface;
-  BitVector* processed;
+  // These bool arrays should probably be converted into BoolCubes
+  BoolCube* inSolid;
+  BoolCube* onSurface;
 
-  int*** atomIds;
-
-  //We can do things as BoolCube, too
-//  BoolCube* inSolid;
-//  BoolCube* onSurface;
-//  BoolCube* processed;
+  //We can do things as BitVectors, too
+//  BitVector* inSolid;
+//  BitVector* onSurface;
 
   Vector3i** spheres;//An array of pointers to arrays of vectors to points each sphere
   int* numbersOfVectors;//The number of vectors in each sphere
   bool* computed;
 
   dataStruct* data;
+
+  int numberOfSurfaceVoxels;
+  Vector3i* surfaceVoxels;
+
+  int numberOfInnerVoxels;
+  int numberOfInBoundsVoxels;
+  int alreadyInSolid;
 }; // End class EDTSurface
 
 } // End namespace QtPlugins
