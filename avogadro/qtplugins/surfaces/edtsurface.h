@@ -12,7 +12,6 @@
 #include "surfaces.h"
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/vector.h>
-#include <vector>
 // for the enum
 
 namespace Avogadro {
@@ -105,7 +104,7 @@ private:
    *with probe radius equal to 0
    */
 
-  void fillVoxels();
+  void buildSolventAccessibleSolid();
 
   // try initializing the array here
 
@@ -122,7 +121,9 @@ private:
    *the solvent excluded solid
    */
 
-  void fillVoxelsWaals();
+  void buildSolventExcludedSolid();
+
+  void fillAtomWaals(int indx);
 
   /*
    *@brief fills in the cube with values representing distances from each point
@@ -135,7 +136,7 @@ private:
    *@brief Determines which points in the solid are on the surface
    */
 
-  void buildBoundary();
+  void buildSurface();
 
   /*
    *@brief Finds the bound box for the molecule, the smallest cube that can

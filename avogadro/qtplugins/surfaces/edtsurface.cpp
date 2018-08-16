@@ -74,23 +74,23 @@ Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
   this->initPara();
   // Initialize everything
 
-  this->fillVoxels();
+  this->buildSolventAccessibleSolid();
   // Generate the molecular solid
 
-  this->buildBoundary();
+  this->buildSurface();
 
   this->fastDistanceMap();
 
   if (surfaceType == Surfaces::SolventExcluded) {
-    this->fillVoxelsWaals();
-    this->buildBoundary();
+    this->buildSolventExcludedSolid();
+    this->buildSurface();
     this->fastDistanceMap();
   }
 
   return m_cube;
 }
 
-void EDTSurface::fillVoxels()
+void EDTSurface::buildSolventAccessibleSolid()
 {
 
   int numberOfAtoms = m_mol->atomCount();
@@ -107,7 +107,7 @@ void EDTSurface::fillVoxels()
   qDebug() << "number of inner voxels " << numberOfInnerVoxels;
 }
 // use isDone
-void EDTSurface::buildBoundary()
+void EDTSurface::buildSurface()
 {
   int i, j, k;
   Vector3i ijk;
@@ -381,7 +381,7 @@ void EDTSurface::fillAtom(int indx)
   return;
 }
 
-void EDTSurface::fillVoxelsWaals()
+void EDTSurface::buildSolventExcludedSolid()
 {
   // When we call this function, we're building a solvent excluded surface
   // We've already built the solvent accessible solid
@@ -389,16 +389,15 @@ void EDTSurface::fillVoxelsWaals()
   // Now we just need to remove all points whose distance from the SAS is <=
   // probeRadius
 
-  for (int i = 0; i < data->pLength; i++) {
-    for (int j = 0; j < data->pWidth; j++) {
-      for (int k = 0; k < data->pHeight; k++) {
-        if (inSolid->value(i, j, k) &&
-            m_cube->value(i, j, k) <= data->probeRadius * data->scaleFactor) {
-          inSolid->setValue(i, j, k, false);
-          m_cube->setValue(i, j, k, -1);
-        }
-      }
+  int numberOfAtoms = m_mol->atomCount();
+
+  for (int i = 0; i < numberOfAtoms; i++) {
+    Index index = i;
+    Atom current = m_mol->atom(index);
+    if (!data->ignoreHydrogens || current.atomicNumber() != 1) {
+      fillAtomWaals(index);
     }
+    //			totalNumber++;
   }
 }
 
@@ -517,6 +516,46 @@ void EDTSurface::computeSphere(unsigned char atomicNumber)
 
   return;
 }
+
+  //This should be faster than iterating over the whole cube
+  //Unless the intersections of atoms get to be larger than the complement of the solid
+
+  void EDTSurface::fillAtomWaals(int index){
+    Vector3 cp;    // vector containing coordinates for atom at indx in m_mol
+    Vector3i cxyz; // cp rounded to the nearest int values
+    Vector3i txyz; // vector from center of sphere to a point in solid
+    Vector3i oxyz; // vector from origin to point in question
+    Vector3 dxyz;  // vector from cxyz to oxyz
+
+    // Obtain the current atom
+    Atom current = m_mol->atom(indx);
+
+    // Obtain its position, translate, and scale
+    Array<Vector3> positions = m_mol->atomPositions3d();
+    cp = (positions[indx] + data->pTran) * data->scaleFactor;
+    cxyz = round(cp);
+
+    // Obtain its atomic number
+    int atomicNumber = current.atomicNumber();
+
+    // Iterate through the vectors that lead to points in the sphere
+    //
+    for (int i = 0; i < numbersOfVectors[atomicNumber]; i++) {
+      txyz = spheres[atomicNumber][i];
+      oxyz = cxyz + txyz;
+
+      // If inBounds, and not already designated as in inSolid
+      // Set inSolid
+      if (inBounds(oxyz)) {
+        if (inSolid->value(oxyz) && m_cube->value(oxyz) <= data->probeRadius * data->scaleFactor) {
+          inSolid->setValue(oxyz, false);
+          numberOfInnerVoxels--;
+        } // if inSolid
+      }   // if inBounds
+    }
+
+    return;
+  }
 
 } // End namespace Core
 
