@@ -40,21 +40,32 @@ typedef struct dataStruct
 } dataStruct;           // End struct dataStruct
 
 typedef struct subCube{
-  int height, width, length;
-  Core::Molecule* mol;
   Core::Cube* cube;
   BoolCube* isInSolid;
   BoolCube* isOnSurface;
-  Vector3i** vdwSpheres;
   dataStruct* data;
-  int* numsOfVectors;
   int numOfSurfaceVoxels;
+  int* surfaceVoxelCount;
   Vector3i* surfaceVoxels;
   int index;
 } subCube;
 
-class EDTSurface
+typedef struct atomStruct{
+  Core::Molecule* mol;
+  Core::Cube* cube;
+  BoolCube* isInSolid;
+  Vector3i* vdwSphere;
+  int numberOfVectors;
+  int atomicNumber;
+  Vector3 position;
+  dataStruct* data;
+  int index;
+} atomStruct;
+
+class EDTSurfaceConcurrent : public QObject
 {
+
+  Q_OBJECT
 public:
   // Constructor
   EDTSurfaceConcurrent();
@@ -140,7 +151,7 @@ private:
    *
    */
 
-  void fillAtom(subCube &edt);
+  static void fillAtom(atomStruct &edt);
 
   // try initializing the array here
 
@@ -152,7 +163,7 @@ private:
   void buildSolventExcludedSolid();
     //We can do this concurrently by atoms
 
-  void fillAtomWaals(subCube &edt);
+  static void fillAtomWaals(atomStruct &edt);
     //Modify this to take a subCube
 
   /*
@@ -160,15 +171,17 @@ private:
    *to the nearest point on the surface
    */
 
-  void fastDistanceMap(subCube &edt);
+  void fastDistanceMap();
   //This can be concurrent over the cube
   /*
    *@brief Determines which points in the solid are on the surface
    */
 
+   static void fastDistanceMapConcurrent(subCube& edt);
+
   void buildSurface();
 
-  void buildSurfaceConcurrent(subCube &edt);
+  static void buildSurfaceConcurrent(subCube &edt);
 
   //This can't be concurrent
 
@@ -192,17 +205,19 @@ private:
    */
   bool inBounds(Vector3i vec);
 
+  static bool inBounds(Vector3i vec, dataStruct* data);
+
   /*
    *@brief Takes a floating point vector and returns an integer vector
    */
 
-  Vector3i round(Vector3 vec);
+  static Vector3i round(Vector3 vec);
 
   /*
    *@brief Promotes each element of an integer vector to a double
    */
 
-  Vector3 promote(Vector3i vec);
+  static Vector3 promote(Vector3i vec);
 
   QtGui::Molecule* m_mol;
 
@@ -234,11 +249,11 @@ private:
   Vector3i* surfaceVoxels;   // array where we store all the voxels that are on
                            // our surface
 
-  int numberOfInnerVoxels; // this is a debugging value
 
   QFuture<void> m_future;
   QFutureWatcher<void> m_watcher;
-  QVector<subCube> m_edtVector;
+  QVector<subCube> m_subCubes;
+  QVector<atomStruct> m_atomStructs;
 };                         // End class EDTSurface
 
 } // End namespace QtPlugins
