@@ -38,9 +38,6 @@ EDTSurface::EDTSurface()
 
   m_cube = NULL;
   m_mol = NULL;
-
-  inSolid = NULL;
-  onSurface = NULL;
 }
 
 // Destructor
@@ -79,12 +76,12 @@ Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
 
   this->buildSurface();
 
-  this->fastDistanceMap();
+//  this->fastDistanceMap();
 
   if (surfaceType == Surfaces::SolventExcluded) {
+    this->fastDistanceMap();
     this->buildSolventExcludedSolid();
     this->buildSurface();
-    this->fastDistanceMap();
   }
 
   return m_cube;
@@ -111,6 +108,7 @@ void EDTSurface::buildSurface()
 {
   int i, j, k;
   Vector3i ijk;
+  Vector3i txyz;
   int ii;
   bool flagBound;
   numberOfSurfaceVoxels = 0;
@@ -119,7 +117,7 @@ void EDTSurface::buildSurface()
     for (j = 0; j < data->pWidth; j++) {
       for (k = 0; k < data->pHeight; k++) {
         ijk << i, j, k;
-        if (inSolid->value(i, j, k)) {
+        if (m_cube->value(i, j, k) == 2){//in solid
           flagBound = false;
           ii = 0;
           // If our voxel is in the solid,
@@ -127,9 +125,9 @@ void EDTSurface::buildSurface()
           // If any of them aren't in the solid, then this point is on the
           // surface
           while (!flagBound && ii < 26) {
-            if (inBounds(ijk + neighbors[ii]) &&
-                !inSolid->value(ijk + neighbors[ii])) {
-              onSurface->setValue(ijk, true);
+            txyz = ijk + neighbors[ii];
+            if (inBounds(txyz) && (m_cube->value(txyz) == 1)){//outside of solid
+              m_cube->setValue(ijk, 0);//on surface
               numberOfSurfaceVoxels++;
               flagBound = true;
             } else
@@ -249,16 +247,8 @@ void EDTSurface::initPara()
   if (data->pHeight > data->boxLength)
     data->pHeight = data->boxLength;
 
-  Vector3 zeroVector(0.0, 0.0, 0.0);
   Vector3i pDimensions(data->pLength, data->pWidth, data->pHeight);
-  double spacing = 0.;
-  m_cube->setLimits(zeroVector, pDimensions, spacing);
-
-  inSolid = new BoolCube(data->pLength, data->pWidth, data->pHeight);
-  onSurface = new BoolCube(data->pLength, data->pWidth, data->pHeight);
-
-  //  inSolid = new BoolCube(data->pLength, data->pWidth, data->pHeight);
-  //  onSurface = new BoolCube(data->pLength, data->pWidth, data->pHeight);
+  m_cube->setLimits(data->pMax, data->pMin, pDimensions);
 
   computed = new bool[128];
   spheres = new Vector3i*[128];
@@ -273,7 +263,7 @@ void EDTSurface::initPara()
   for (int i = 0; i < data->pLength; i++) {
     for (int j = 0; j < data->pWidth; j++) {
       for (int k = 0; k < data->pHeight; k++) {
-        m_cube->setValue(i, j, k, -1);
+        m_cube->setValue(i, j, k, 1);
       }
     }
   }
@@ -282,6 +272,7 @@ void EDTSurface::initPara()
 void EDTSurface::setCube(Core::Cube* cube)
 {
   m_cube = cube;
+//  m_cube->setCubeType(Core::Cube::EDT);
   return;
 }
 
@@ -368,14 +359,11 @@ void EDTSurface::fillAtom(int indx)
     txyz = spheres[atomicNumber][i];
     oxyz = cxyz + txyz;
 
-    // If inBounds, and not already designated as in inSolid
-    // Set inSolid
     if (inBounds(oxyz)) {
-      if (!inSolid->value(
-            oxyz)) { // this test is the only thing that could be responsible
-        inSolid->setValue(oxyz, true);
+      if(m_cube->value(oxyz) == 1){//not in solid yet
+        m_cube->setValue(oxyz, 2);//in solid now
         numberOfInnerVoxels++;
-      } // if inSolid
+      }
     }   // if inBounds
   }
   return;
@@ -409,36 +397,28 @@ void EDTSurface::fastDistanceMap()
   Vector3 dxyz;  // Vector from ijk to dxyz
   double distance = 0;
 
-  // First we set surfacePoints' distance equal to zero
-  // And move all the surfacePoints into a 1D array
-
   surfaceVoxels = new Vector3i[numberOfSurfaceVoxels];
   int surfaceVoxelCount = 0;
 
   for (int i = 0; i < data->pLength; i++) {
     for (int j = 0; j < data->pWidth; j++) {
       for (int k = 0; k < data->pHeight; k++) {
-        if (onSurface->value(i, j, k)) {
+        if (m_cube->value(i, j, k) == 0){ //on surface
           ijk << i, j, k;
           surfaceVoxels[surfaceVoxelCount] = ijk;
-          m_cube->setValue(i, j, k, 0);
           surfaceVoxelCount++;
         }
       }
     }
   }
 
-  qDebug() << " surfaceVoxelCount = " << surfaceVoxelCount;
-
-  // Then for each point, if it's in the solid and not on the surface
-  // We check the distance to each point on the surface and save the min in the
-  // cube
+  qDebug() << " first loop finished ";
 
   for (int i = 0; i < data->pLength; i++) {
     for (int j = 0; j < data->pWidth; j++) {
       for (int k = 0; k < data->pHeight; k++) {
         distance = 0;
-        if (inSolid->value(i, j, k) && !onSurface->value(i, j, k)) {
+        if (m_cube->value(i, j, k) == 2){
           ijk << i, j, k;
           for (int l = 0; l < numberOfSurfaceVoxels; l++) {
             txyz = surfaceVoxels[l];
@@ -452,8 +432,7 @@ void EDTSurface::fastDistanceMap()
       }   // end for k
     }     // end for j
   }       // end for i
-
-  qDebug() << "max value" << m_cube->maxValue();
+  qDebug() << "second loop finished ";
 }
 
 void EDTSurface::computeSphere(unsigned char atomicNumber)
@@ -528,32 +507,27 @@ void EDTSurface::computeSphere(unsigned char atomicNumber)
     Vector3 dxyz;  // vector from cxyz to oxyz
 
     // Obtain the current atom
-    Atom current = m_mol->atom(indx);
+    Atom current = m_mol->atom(index);
 
     // Obtain its position, translate, and scale
     Array<Vector3> positions = m_mol->atomPositions3d();
-    cp = (positions[indx] + data->pTran) * data->scaleFactor;
+    cp = (positions[index] + data->pTran) * data->scaleFactor;
     cxyz = round(cp);
 
     // Obtain its atomic number
     int atomicNumber = current.atomicNumber();
 
-    // Iterate through the vectors that lead to points in the sphere
-    //
     for (int i = 0; i < numbersOfVectors[atomicNumber]; i++) {
       txyz = spheres[atomicNumber][i];
       oxyz = cxyz + txyz;
 
-      // If inBounds, and not already designated as in inSolid
-      // Set inSolid
       if (inBounds(oxyz)) {
-        if (inSolid->value(oxyz) && m_cube->value(oxyz) <= data->probeRadius * data->scaleFactor) {
-          inSolid->setValue(oxyz, false);
+        if (m_cube->value(oxyz) <= data->probeRadius) {//this runs right after fastDistanceMap
+          m_cube->setValue(oxyz, 1);//outside of solid
           numberOfInnerVoxels--;
-        } // if inSolid
-      }   // if inBounds
+        }
+      }
     }
-
     return;
   }
 

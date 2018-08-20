@@ -91,12 +91,26 @@ public:
   Vector3 getPTran();
 
 private:
+
   /*
    *@brief Initializes the data members of the class
-   *@param surfaceType
    */
 
   void initPara();
+
+  /*
+  *@brief Finds the bound box, the minimum and maximum, x, y, and z coordinates
+  *of the molecule
+  */
+
+  void boundBox();
+
+  /*
+   *@brief precomputes the sphere representing an atom of an element
+   *points in the atom are represented as vectors stored in the array spheres
+   */
+
+  void computeSphere(unsigned char atomicNumber);
 
   /*
    *@brief Builds the solvent accessible solid by iterating over atoms in the
@@ -105,8 +119,6 @@ private:
    */
 
   void buildSolventAccessibleSolid();
-
-  // try initializing the array here
 
   /*@brief fills in the voxels in the sphere representing the atom
    *
@@ -123,7 +135,18 @@ private:
 
   void buildSolventExcludedSolid();
 
+  /*
+  *@brief Iterates through the cube surrounding an atom to shrink the solid
+  *in order to build the solvent excluded solid
+  */
+
   void fillAtomWaals(int indx);
+
+  /*
+  *@brief Iterates through the solid to find which points are in the surface
+  */
+
+  void buildSurface();
 
   /*
    *@brief fills in the cube with values representing distances from each point
@@ -133,29 +156,10 @@ private:
   void fastDistanceMap();
 
   /*
-   *@brief Determines which points in the solid are on the surface
-   */
-
-  void buildSurface();
-
-  /*
-   *@brief Finds the bound box for the molecule, the smallest cube that can
-   *contain it
-   */
-
-  void boundBox();
-
-  /*
-   *@brief precomputes the sphere representing an atom of an element
-   *points in the atom are represented as vectors stored in the array spheres
-   */
-
-  void computeSphere(unsigned char atomicNumber);
-
-  /*
    *@brief Takes a vector and tells whether or not it's within the bounds of the
    *box
    */
+
   bool inBounds(Vector3i vec);
 
   /*
@@ -174,16 +178,7 @@ private:
 
   Core::Cube* m_cube;
 
-  bool*** testArray;
-
-  BoolCube* inSolid; // bool cube representing whether each point is in the
-                     // solid
-  BoolCube*
-    onSurface; // bool cube representing whether each point is on the surface
-
-  // We can do things as BitVectors, too
-  //  BitVector* inSolid;
-  //  BitVector* onSurface;
+  dataStruct* data;
 
   Vector3i*
     neighbors; // array of vectors representing the points adjacent to a point
@@ -193,8 +188,6 @@ private:
   int* numbersOfVectors; // The number of vectors in each sphere
   bool* computed; // An array of bools that tells us if we've already computed
                   // the sphere for this element
-
-  dataStruct* data;
 
   int numberOfSurfaceVoxels; // the number of voxels on the surface
   Vector3i* surfaceVoxels;   // array where we store all the voxels that are on
