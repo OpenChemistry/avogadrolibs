@@ -10,11 +10,11 @@
 #include "bitvector.h"
 #include "boolcube.h"
 #include "surfaces.h"
-#include <avogadro/core/avogadrocore.h>
-#include <avogadro/core/vector.h>
 #include <QtCore/QFuture>
 #include <QtCore/QFutureWatcher>
 #include <QtCore/QObject>
+#include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/vector.h>
 
 // for the enum
 
@@ -39,7 +39,8 @@ typedef struct dataStruct
   bool ignoreHydrogens; // if we want this feature, write a way of setting it
 } dataStruct;           // End struct dataStruct
 
-typedef struct subCube{
+typedef struct subCube
+{
   Core::Cube* cube;
   BoolCube* isInSolid;
   BoolCube* isOnSurface;
@@ -50,7 +51,8 @@ typedef struct subCube{
   int index;
 } subCube;
 
-typedef struct atomStruct{
+typedef struct atomStruct
+{
   Core::Molecule* mol;
   Core::Cube* cube;
   BoolCube* isInSolid;
@@ -119,15 +121,15 @@ public:
 
   Vector3 getPTran();
 
-  QFutureWatcher<void> & watcher() { return m_watcher; }
+  QFutureWatcher<void>& watcher() { return m_watcher; }
 
-  private Q_SLOTS:
-    /**
-     * Slot to set the cube data once Qt Concurrent is done
-     */
-     void calculationComplete();
+private Q_SLOTS:
+  /**
+   * Slot to set the cube data once Qt Concurrent is done
+   */
+  void calculationComplete();
 
-  Q_SIGNALS:
+Q_SIGNALS:
 
 private:
   /*
@@ -151,7 +153,7 @@ private:
    *
    */
 
-  static void fillAtom(atomStruct &edt);
+  static void fillAtom(atomStruct& edt);
 
   // try initializing the array here
 
@@ -161,10 +163,10 @@ private:
    */
 
   void buildSolventExcludedSolid();
-    //We can do this concurrently by atoms
+  // We can do this concurrently by atoms
 
-  static void fillAtomWaals(atomStruct &edt);
-    //Modify this to take a subCube
+  static void fillAtomWaals(atomStruct& edt);
+  // Modify this to take a subCube
 
   /*
    *@brief fills in the cube with values representing distances from each point
@@ -172,18 +174,18 @@ private:
    */
 
   void fastDistanceMap();
-  //This can be concurrent over the cube
+  // This can be concurrent over the cube
   /*
    *@brief Determines which points in the solid are on the surface
    */
 
-   static void fastDistanceMapConcurrent(subCube& edt);
+  static void fastDistanceMapConcurrent(subCube& edt);
 
   void buildSurface();
 
-  static void buildSurfaceConcurrent(subCube &edt);
+  static void buildSurfaceConcurrent(subCube& edt);
 
-  //This can't be concurrent
+  // This can't be concurrent
 
   /*
    *@brief Finds the bound box for the molecule, the smallest cube that can
@@ -247,14 +249,13 @@ private:
 
   int numberOfSurfaceVoxels; // the number of voxels on the surface
   Vector3i* surfaceVoxels;   // array where we store all the voxels that are on
-                           // our surface
-
+                             // our surface
 
   QFuture<void> m_future;
   QFutureWatcher<void> m_watcher;
   QVector<subCube> m_subCubes;
   QVector<atomStruct> m_atomStructs;
-};                         // End class EDTSurface
+}; // End class EDTSurface
 
 } // End namespace QtPlugins
 } // End namespace Avogadro
