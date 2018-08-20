@@ -8,11 +8,11 @@
 
 #include <Eigen/Dense>
 
-#include <QtConcurrentMap>
+#include <QDebug>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QReadWriteLock>
-#include <QDebug>
+#include <QtConcurrentMap>
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elementdata.h>
 #include <avogadro/core/molecule.h>
@@ -52,15 +52,18 @@ EDTSurfaceConcurrent::~EDTSurfaceConcurrent()
 
 // Takes a molecule and a surface type and returns a cube
 
-Core::Cube* EDTSurfaceConcurrent::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                                Surfaces::Type surfaceType, double probeRadius)
+Core::Cube* EDTSurfaceConcurrent::EDTCube(QtGui::Molecule* mol,
+                                          Core::Cube* cube,
+                                          Surfaces::Type surfaceType,
+                                          double probeRadius)
 {
   this->setProbeRadius(probeRadius);
   return this->EDTCube(mol, cube, surfaceType);
 }
 
-Core::Cube* EDTSurfaceConcurrent::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                                Surfaces::Type surfaceType)
+Core::Cube* EDTSurfaceConcurrent::EDTCube(QtGui::Molecule* mol,
+                                          Core::Cube* cube,
+                                          Surfaces::Type surfaceType)
 {
 
   if (surfaceType == Surfaces::VanDerWaals) {
@@ -75,7 +78,7 @@ Core::Cube* EDTSurfaceConcurrent::EDTCube(QtGui::Molecule* mol, Core::Cube* cube
   this->initPara();
   // Initialize everything
 
-  for(unsigned int i = 0; i < m_mol->atomCount(); i++){
+  for (unsigned int i = 0; i < m_mol->atomCount(); i++) {
     Atom current = m_mol->atom(i);
     int atomicNumber = (int)current.atomicNumber();
     if (!computed[atomicNumber]) {
@@ -105,7 +108,7 @@ void EDTSurfaceConcurrent::buildSolventAccessibleSolid()
 
   m_atomStructs.resize(m_mol->atomCount());
 
-  for(int i = 0; i < m_atomStructs.size(); i++){
+  for (int i = 0; i < m_atomStructs.size(); i++) {
     Atom current = m_mol->atom(i);
     int atomicNumber = (int)current.atomicNumber();
 
@@ -118,14 +121,13 @@ void EDTSurfaceConcurrent::buildSolventAccessibleSolid()
     m_atomStructs[i].position = positions[i];
   }
 
-//  m_cube->lock()->lockForWrite();
+  //  m_cube->lock()->lockForWrite();
   // Watch for the future
   connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
   // The main part of the mapped reduced function...
   m_future = QtConcurrent::map(m_atomStructs, EDTSurfaceConcurrent::fillAtom);
   // Connect our watcher to our future
   m_watcher.setFuture(m_future);
-
 }
 // use isDone
 void EDTSurfaceConcurrent::buildSurface()
@@ -165,7 +167,7 @@ void EDTSurfaceConcurrent::buildSurface()
 
   m_subCubes.resize(data->pLength);
 
-  for(int i = 0; i < m_subCubes.size(); i++){
+  for (int i = 0; i < m_subCubes.size(); i++) {
     m_subCubes[i].data = data;
     m_subCubes[i].cube = m_cube;
     m_subCubes[i].isOnSurface = inSolid;
@@ -174,13 +176,14 @@ void EDTSurfaceConcurrent::buildSurface()
     m_subCubes[i].surfaceVoxelCount = &surfaceVoxelCount;
     m_subCubes[i].numOfSurfaceVoxels = numberOfSurfaceVoxels;
 
-  }  //here we'll call buildSurfaceConcurrent
+  } // here we'll call buildSurfaceConcurrent
 
-//  m_cube->lock()->lockForWrite();
+  //  m_cube->lock()->lockForWrite();
   // Watch for the future
   connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
   // The main part of the mapped reduced function...
-  m_future = QtConcurrent::map(m_subCubes, EDTSurfaceConcurrent::buildSurfaceConcurrent);
+  m_future =
+    QtConcurrent::map(m_subCubes, EDTSurfaceConcurrent::buildSurfaceConcurrent);
   // Connect our watcher to our future
   m_watcher.setFuture(m_future);
 }
@@ -345,12 +348,13 @@ bool EDTSurfaceConcurrent::inBounds(Vector3i vec)
   return (vec(X) > -1 && vec(Y) > -1 && vec(Z) > -1 && vec(X) < data->pLength &&
           vec(Y) < data->pWidth && vec(Z) < data->pHeight);
 }
-bool inBounds(Vector3i vec, dataStruct* data){
+bool inBounds(Vector3i vec, dataStruct* data)
+{
   return (vec(X) > -1 && vec(Y) > -1 && vec(Z) > -1 && vec(X) < data->pLength &&
           vec(Y) < data->pWidth && vec(Z) < data->pHeight);
-}//this is kind of hacky, but I want it to work in both static and non-static contexts
-//And I don't want to have to pass data in the non-static cases
-
+} // this is kind of hacky, but I want it to work in both static and non-static
+  // contexts
+// And I don't want to have to pass data in the non-static cases
 
 Vector3i EDTSurfaceConcurrent::round(Vector3 vec)
 {
@@ -387,7 +391,7 @@ Vector3 EDTSurfaceConcurrent::getPTran()
   return data->pTran;
 }
 
-void EDTSurfaceConcurrent::fillAtom(atomStruct &edt)
+void EDTSurfaceConcurrent::fillAtom(atomStruct& edt)
 {
 
   Vector3 cp;    // vector containing coordinates for atom at indx in m_mol
@@ -427,7 +431,7 @@ void EDTSurfaceConcurrent::buildSolventExcludedSolid()
 
   m_atomStructs.resize(m_mol->atomCount());
 
-  for(int i = 0; i < m_atomStructs.size(); i++){
+  for (int i = 0; i < m_atomStructs.size(); i++) {
     Atom current = m_mol->atom(i);
     int atomicNumber = (int)current.atomicNumber();
 
@@ -440,21 +444,21 @@ void EDTSurfaceConcurrent::buildSolventExcludedSolid()
     m_atomStructs[i].position = positions[i];
   }
 
-//  m_cube->lock()->lockForWrite();//do we want to do this?
+  //  m_cube->lock()->lockForWrite();//do we want to do this?
   // Watch for the future
   connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
   // The main part of the mapped reduced function...
-  m_future = QtConcurrent::map(m_atomStructs, EDTSurfaceConcurrent::fillAtomWaals);
+  m_future =
+    QtConcurrent::map(m_atomStructs, EDTSurfaceConcurrent::fillAtomWaals);
   // Connect our watcher to our future
   m_watcher.setFuture(m_future);
-
 }
 
 void EDTSurfaceConcurrent::fastDistanceMap()
 {
   m_subCubes.resize(data->pLength);
 
-  for(int i = 0; i < m_subCubes.size(); i++){
+  for (int i = 0; i < m_subCubes.size(); i++) {
     m_subCubes[i].data = data;
     m_subCubes[i].cube = m_cube;
     m_subCubes[i].isInSolid = inSolid;
@@ -463,13 +467,14 @@ void EDTSurfaceConcurrent::fastDistanceMap()
     m_subCubes[i].index = i;
   }
 
-//  m_cube->lock()->lockForWrite();
+  //  m_cube->lock()->lockForWrite();
 
   // Watch for the future
   connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
 
   // The main part of the mapped reduced function...
-  m_future = QtConcurrent::map(m_subCubes, EDTSurfaceConcurrent::fastDistanceMapConcurrent);
+  m_future = QtConcurrent::map(m_subCubes,
+                               EDTSurfaceConcurrent::fastDistanceMapConcurrent);
   // Connect our watcher to our future
   m_watcher.setFuture(m_future);
 }
@@ -488,9 +493,9 @@ void EDTSurfaceConcurrent::computeSphere(unsigned char atomicNumber)
   spheres[atomicNumber] = new Vector3i[dPlusOne * dPlusOne * dPlusOne];
   // This is a significant overallocation, but it's okay, we'll fix it
   //(This is the number of points with integer coords in the cube we're going to
-  //construct) (It is a theoretical upper bound for points with integer coords
-  //in the sphere) (There's definitely fewer than this, but it's difficult to
-  //say how many)
+  // construct) (It is a theoretical upper bound for points with integer coords
+  // in the sphere) (There's definitely fewer than this, but it's difficult to
+  // say how many)
 
   int count = 0;
 
@@ -535,7 +540,8 @@ void EDTSurfaceConcurrent::computeSphere(unsigned char atomicNumber)
   return;
 }
 
-void EDTSurfaceConcurrent::fillAtomWaals(atomStruct &edt){
+void EDTSurfaceConcurrent::fillAtomWaals(atomStruct& edt)
+{
   Vector3 cp;    // vector containing coordinates for atom at indx in m_mol
   Vector3i cxyz; // cp rounded to the nearest int values
   Vector3i txyz; // vector from center of sphere to a point in solid
@@ -554,7 +560,9 @@ void EDTSurfaceConcurrent::fillAtomWaals(atomStruct &edt){
     // If inBounds, and not already designated as in inSolid
     // Set inSolid
     if (inBounds(oxyz, edt.data)) {
-      if (edt.isInSolid->value(oxyz) && edt.cube->value(oxyz) <= edt.data->probeRadius * edt.data->scaleFactor) {
+      if (edt.isInSolid->value(oxyz) &&
+          edt.cube->value(oxyz) <=
+            edt.data->probeRadius * edt.data->scaleFactor) {
         edt.isInSolid->setValue(oxyz, false);
       } // if inSolid
     }   // if inBounds
@@ -562,7 +570,8 @@ void EDTSurfaceConcurrent::fillAtomWaals(atomStruct &edt){
   return;
 }
 
-void EDTSurfaceConcurrent::buildSurfaceConcurrent(subCube &edt){
+void EDTSurfaceConcurrent::buildSurfaceConcurrent(subCube& edt)
+{
   Vector3i ijk;
   int i = edt.index;
   for (int j = 0; j < edt.data->pWidth; j++) {
@@ -580,11 +589,12 @@ void EDTSurfaceConcurrent::buildSurfaceConcurrent(subCube &edt){
 void EDTSurfaceConcurrent::calculationComplete()
 {
   disconnect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
-//  m_cube->lock()->unlock();
-//  m_cube->update();
+  //  m_cube->lock()->unlock();
+  //  m_cube->update();
 }
 
-void EDTSurfaceConcurrent::fastDistanceMapConcurrent(subCube& edt){
+void EDTSurfaceConcurrent::fastDistanceMapConcurrent(subCube& edt)
+{
   Vector3i ijk;
   Vector3i txyz; // Vector pulled from array of boundary points
   Vector3 dxyz;  // Vector from ijk to dxyz
@@ -599,22 +609,22 @@ void EDTSurfaceConcurrent::fastDistanceMapConcurrent(subCube& edt){
   // We check the distance to each point on the surface and save the min in the
   // cube
 
-    for (int j = 0; j < edt.data->pWidth; j++) {
-      for (int k = 0; k < edt.data->pHeight; k++) {
-        distance = 0;
-        if (edt.isInSolid->value(i, j, k) && !edt.isOnSurface->value(i, j, k)) {
-          ijk << i, j, k;
-          for (int l = 0; l < edt.numOfSurfaceVoxels; l++) {
-            txyz = edt.surfaceVoxels[l];
-            dxyz = promote(txyz - ijk);
-            if (distance == 0 || dxyz.norm() < distance) {
-              distance = dxyz.norm();
-            } // end if distance
-          }   // end for l
-          edt.cube->setValue(i, j, k, distance);
-        } // end if in solid
-      }   // end for k
-    }     // end for j
+  for (int j = 0; j < edt.data->pWidth; j++) {
+    for (int k = 0; k < edt.data->pHeight; k++) {
+      distance = 0;
+      if (edt.isInSolid->value(i, j, k) && !edt.isOnSurface->value(i, j, k)) {
+        ijk << i, j, k;
+        for (int l = 0; l < edt.numOfSurfaceVoxels; l++) {
+          txyz = edt.surfaceVoxels[l];
+          dxyz = promote(txyz - ijk);
+          if (distance == 0 || dxyz.norm() < distance) {
+            distance = dxyz.norm();
+          } // end if distance
+        }   // end for l
+        edt.cube->setValue(i, j, k, distance);
+      } // end if in solid
+    }   // end for k
+  }     // end for j
 }
 
 } // End namespace Core
