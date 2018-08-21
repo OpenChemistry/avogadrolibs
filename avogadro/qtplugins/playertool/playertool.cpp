@@ -248,7 +248,7 @@ void PlayerTool::recordMovie()
 
   QFileInfo fileInfo(baseName);
   if (!fileInfo.suffix().isEmpty())
-    baseName = fileInfo.canonicalPath() + "/" + fileInfo.baseName();
+    baseName = fileInfo.absolutePath() + "/" + fileInfo.baseName();
 
   bool bonding = m_dynamicBonding->isChecked();
   int numberLength = static_cast<int>(

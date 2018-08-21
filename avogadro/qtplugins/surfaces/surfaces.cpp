@@ -392,7 +392,7 @@ void Surfaces::recordMovie()
 
   QFileInfo fileInfo(baseName);
   if (!fileInfo.suffix().isEmpty())
-    baseName = fileInfo.canonicalPath() + "/" + fileInfo.baseName();
+    baseName = fileInfo.absolutePath() + "/" + fileInfo.baseName();
 
   m_baseFileName = baseName;
   m_numberLength = static_cast<int>(
