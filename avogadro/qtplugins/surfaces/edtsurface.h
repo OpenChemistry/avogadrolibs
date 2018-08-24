@@ -86,12 +86,7 @@ public:
 
   void setCube(Core::Cube* cube);
 
-  double getScaleFactor();
-
-  Vector3 getPTran();
-
 private:
-
   /*
    *@brief Initializes the data members of the class
    */
@@ -99,9 +94,9 @@ private:
   void initPara();
 
   /*
-  *@brief Finds the bound box, the minimum and maximum, x, y, and z coordinates
-  *of the molecule
-  */
+   *@brief Finds the bound box, the minimum and maximum, x, y, and z coordinates
+   *of the molecule
+   */
 
   void boundBox();
 
@@ -136,15 +131,15 @@ private:
   void buildSolventExcludedSolid();
 
   /*
-  *@brief Iterates through the cube surrounding an atom to shrink the solid
-  *in order to build the solvent excluded solid
-  */
+   *@brief Iterates through the cube surrounding an atom to shrink the solid
+   *in order to build the solvent excluded solid
+   */
 
   void fillAtomWaals(int indx);
 
   /*
-  *@brief Iterates through the solid to find which points are in the surface
-  */
+   *@brief Iterates through the solid to find which points are in the surface
+   */
 
   void buildSurface();
 
@@ -191,7 +186,7 @@ private:
 
   int numberOfSurfaceVoxels; // the number of voxels on the surface
   Vector3i* surfaceVoxels;   // array where we store all the voxels that are on
-                           // our surface
+                             // our surface
 
   int numberOfInnerVoxels; // this is a debugging value
 };                         // End class EDTSurface
