@@ -261,7 +261,7 @@ void PlayerTool::recordMovie()
     QMessageBox::warning(this, "GIF FPS support warning",
                          QString("The GIF file format does not support frame rates over 100 FPS."));
     GifBegin(&writer, (baseName + ".gif").toLatin1().data(), EXPORT_WIDTH,
-             EXPORT_HEIGHT, 100 / std::min(m_animationFPS->value(), 100) );
+             EXPORT_HEIGHT, 100 / std::min(m_animationFPS->value(), 100));
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
       m_molecule->setCoordinate3d(i);
       if (bonding) {
@@ -297,7 +297,7 @@ void PlayerTool::recordMovie()
         }
       }
       GifWriteFrame(&writer, imageData, EXPORT_WIDTH, EXPORT_HEIGHT,
-                    100 / std::min(m_animationFPS->value(), 100) );
+                    100 / std::min(m_animationFPS->value(), 100));
       delete[] imageData;
     }
     GifEnd(&writer);
