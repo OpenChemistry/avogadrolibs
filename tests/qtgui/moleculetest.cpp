@@ -443,9 +443,9 @@ TEST_F(MoleculeTest, mass)
   Atom a = mol.addAtom(8);
   mol.addAtom(1);
   mol.addAtom(1);
-  EXPECT_DOUBLE_EQ(mol.mass(), 18.01528);
+  EXPECT_DOUBLE_EQ(mol.mass(), 18.01508);
   a.setAtomicNumber(9);
-  EXPECT_DOUBLE_EQ(mol.mass(), 21.01428);
+  EXPECT_DOUBLE_EQ(mol.mass(), 21.01408);
 }
 
 TEST_F(MoleculeTest, persistentBond)

@@ -5,7 +5,7 @@ set(tests
   FileFormatManager
   Lammps
   Mdl
-  Poscar
+  Vasp
   Xyz
   )
 

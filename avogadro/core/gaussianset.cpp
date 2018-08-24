@@ -116,6 +116,47 @@ void GaussianSet::setMolecularOrbitals(const vector<double>& MOs,
       m_moMatrix[index].coeffRef(i, j) = MOs[i + j * m_numMOs];
 }
 
+void GaussianSet::setMolecularOrbitals(const vector<double>& MOs,
+                                       ElectronType type, Index idx)
+{
+  if (!m_numMOs)
+    return;
+
+  size_t index = 0;
+  if (type == Beta)
+    index = 1;
+
+  unsigned int columns = static_cast<unsigned int>(MOs.size()) / m_numMOs;
+
+  MatrixX moMatrix;
+  moMatrix.resize(m_numMOs, columns);
+
+  for (unsigned int j = 0; j < columns; ++j)
+    for (unsigned int i = 0; i < m_numMOs; ++i)
+      moMatrix.coeffRef(i, j) = MOs[i + j * m_numMOs];
+
+  if (idx <= m_moMatrixSet[index].size())
+    m_moMatrixSet[index].resize(idx + 1);
+
+  m_moMatrixSet[index][idx] = moMatrix;
+}
+
+bool GaussianSet::setActiveSetStep(int index)
+{
+  if (index >= static_cast<int>(m_moMatrixSet[0].size()) ||
+      index >= static_cast<int>(m_moMatrixSet[1].size())) {
+    return false;
+  }
+
+  if (index >= m_molecule->coordinate3dCount())
+    return false;
+
+  m_moMatrix[0] = m_moMatrixSet[0][index];
+  m_moMatrix[1] = m_moMatrixSet[1][index];
+  m_molecule->setCoordinate3d(index);
+  return true;
+}
+
 void GaussianSet::setMolecularOrbitalEnergy(const vector<double>& energies,
                                             ElectronType type)
 {

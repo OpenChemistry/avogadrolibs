@@ -19,6 +19,7 @@
 #include "viewfactory.h"
 
 #include <QtCore/QEvent>
+#include <QtCore/QVariant>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSplitter>
@@ -131,7 +132,7 @@ void MultiViewWidget::createView()
     ContainerWidget* container =
       qobject_cast<ContainerWidget*>(optionsWidget->parentWidget());
     if (container) {
-      QWidget* widget = m_factory->createView(button->text());
+      auto widget = m_factory->createView(button->property("name").toString());
       if (widget) {
         widget->installEventFilter(m_activeFilter);
         container->layout()->removeWidget(optionsWidget);
@@ -198,6 +199,7 @@ ContainerWidget* MultiViewWidget::createContainer(QWidget* widget)
     v->addStretch();
     foreach (const QString& name, m_factory->views()) {
       QPushButton* button = new QPushButton(name);
+      button->setProperty("name", name);
       button->setToolTip(tr("Create a new view"));
       connect(button, SIGNAL(clicked()), SLOT(createView()));
       QHBoxLayout* h = new QHBoxLayout;

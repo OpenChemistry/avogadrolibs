@@ -19,47 +19,50 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtGui/QClipboard>
-#include <QtGui/QIcon>
-#include <QtGui/QKeySequence>
+#include <QtCore/QSettings>
 #include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QDialog>
 
-#include <string>
 #include <vector>
+
+#include "ui_bondingdialog.h"
 
 namespace Avogadro {
 namespace QtPlugins {
 
-using Core::Elements;
 using Core::Array;
+using Core::Elements;
 
 typedef Avogadro::Core::Array<Avogadro::Core::Bond> NeighborListType;
 
 Bonding::Bonding(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_),
     m_action(new QAction(tr("Bond Atoms"), this)),
-    m_clearAction(new QAction(tr("Remove Bonds"), this))
+    m_clearAction(new QAction(tr("Remove Bonds"), this)),
+    m_configAction(new QAction(tr("Configure Bonding…"), this)),
+    m_dialog(nullptr), m_ui(nullptr)
 {
+  QSettings settings;
+  m_tolerance = settings.value("bonding/tolerance", 0.45).toDouble();
+  m_minDistance = settings.value("bonding/minDistance", 0.32).toDouble();
+
   m_action->setShortcut(QKeySequence("Ctrl+B"));
-  connect(m_action, SIGNAL(triggered()), SLOT(bond2()));
+  connect(m_action, SIGNAL(triggered()), SLOT(bond()));
   connect(m_clearAction, SIGNAL(triggered()), SLOT(clearBonds()));
+  connect(m_configAction, SIGNAL(triggered()), SLOT(configure()));
 }
 
-Bonding::~Bonding()
-{
-}
+Bonding::~Bonding() {}
 
 QList<QAction*> Bonding::actions() const
 {
   QList<QAction*> result;
-  return result << m_action << m_clearAction;
+  return result << m_action << m_clearAction << m_configAction;
 }
 
 QStringList Bonding::menuPath(QAction*) const
 {
-  return QStringList() << tr("&Build");
+  return QStringList() << tr("&Build") << tr("Bond");
 }
 
 void Bonding::setMolecule(QtGui::Molecule* mol)
@@ -67,26 +70,48 @@ void Bonding::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
 }
 
-void Bonding::bond()
+void Bonding::configure()
 {
-  if (!m_molecule)
-    return;
+  if (!m_ui) {
+    m_dialog = new QDialog(qobject_cast<QWidget*>(parent()));
+    m_ui = new Ui::BondingDialog;
+    m_ui->setupUi(m_dialog);
 
-  m_molecule->perceiveBondsSimple();
-  m_molecule->emitChanged(QtGui::Molecule::Bonds);
+    m_ui->toleranceSpinBox->setValue(m_tolerance);
+    m_ui->minimumSpinBox->setValue(m_minDistance);
+
+    connect(m_ui->buttonBox, SIGNAL(accepted()), this, SLOT(setValues()));
+    connect(m_ui->buttonBox, SIGNAL(rejected()), m_dialog, SLOT(close()));
+  }
+
+  m_dialog->show();
+  m_dialog->activateWindow();
 }
 
-void Bonding::bond2()
+void Bonding::setValues()
 {
+  if (m_dialog == nullptr || m_ui == nullptr)
+    return;
+  m_dialog->close();
+
+  m_tolerance = m_ui->toleranceSpinBox->value();
+  m_minDistance = m_ui->minimumSpinBox->value();
+
+  QSettings settings;
+  settings.setValue("bonding/tolerance", m_tolerance);
+  settings.setValue("bonding/minDistance", m_minDistance);
+}
+
+void Bonding::bond()
+{
+  // Yes, this is largely reproduced from Core::Molecule::perceiveBondsSimple
+  //  .. but that class doesn't know about selections
   if (!m_molecule)
     return;
 
   // Check for 3D coordinates, can't do bond perception without this.
   if (m_molecule->atomPositions3d().size() != m_molecule->atomCount())
     return;
-
-  // The tolerance used in position comparisons.
-  double tolerance = 0.45;
 
   // cache atomic radii
   std::vector<double> radii(m_molecule->atomCount());
@@ -97,6 +122,7 @@ void Bonding::bond2()
   }
 
   bool emptySelection = m_molecule->isSelectionEmpty();
+  double minSq = m_minDistance * m_minDistance;
 
   // Main bond perception loop based on a simple distance metric.
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
@@ -108,7 +134,7 @@ void Bonding::bond2()
       if (!emptySelection && !m_molecule->atomSelected(j))
         continue;
 
-      double cutoff = radii[i] + radii[j] + tolerance;
+      double cutoff = radii[i] + radii[j] + m_tolerance;
       Vector3 jpos = m_molecule->atomPositions3d()[j];
       Vector3 diff = jpos - ipos;
 
@@ -122,7 +148,7 @@ void Bonding::bond2()
       // check radius and add bond if needed
       double cutoffSq = cutoff * cutoff;
       double diffsq = diff.squaredNorm();
-      if (diffsq < cutoffSq && diffsq > 0.1)
+      if (diffsq < cutoffSq && diffsq > minSq)
         m_molecule->addBond(m_molecule->atom(i), m_molecule->atom(j), 1);
     }
   }
