@@ -380,6 +380,20 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     unitCell["beta"] = molecule.unitCell()->beta() * RAD_TO_DEG;
     unitCell["gamma"] = molecule.unitCell()->gamma() * RAD_TO_DEG;
     root["unit cell"] = unitCell;
+
+    json vectors;
+    vectors.push_back(molecule.unitCell()->aVector().x());
+    vectors.push_back(molecule.unitCell()->aVector().y());
+    vectors.push_back(molecule.unitCell()->aVector().z());
+    
+    vectors.push_back(molecule.unitCell()->bVector().x());
+    vectors.push_back(molecule.unitCell()->bVector().y());
+    vectors.push_back(molecule.unitCell()->bVector().z());
+
+    vectors.push_back(molecule.unitCell()->cVector().x());
+    vectors.push_back(molecule.unitCell()->cVector().y());
+    vectors.push_back(molecule.unitCell()->cVector().z());
+    root["cell vectors"] = vectors;
   }
 
   // Create a basis set/MO matrix we can round trip.
@@ -505,6 +519,19 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
     // 3d positions:
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
+      // everything gets real-space Cartesians
+      json coords3d;
+      for (vector<Vector3>::const_iterator
+        it = molecule.atomPositions3d().begin(),
+        itEnd = molecule.atomPositions3d().end();
+        it != itEnd; ++it) {
+          coords3d.push_back(it->x());
+          coords3d.push_back(it->y());
+          coords3d.push_back(it->z());
+        }
+      root["atoms"]["coords"]["3d"] = coords3d;
+
+      // if the unit cell exists, also write fractional coords
       if (molecule.unitCell()) {
         json coordsFractional;
         Array<Vector3> fcoords;
@@ -518,17 +545,6 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
           coordsFractional.push_back(it->z());
         }
         root["atoms"]["coords"]["3d fractional"] = coordsFractional;
-      } else {
-        json coords3d;
-        for (vector<Vector3>::const_iterator
-               it = molecule.atomPositions3d().begin(),
-               itEnd = molecule.atomPositions3d().end();
-             it != itEnd; ++it) {
-          coords3d.push_back(it->x());
-          coords3d.push_back(it->y());
-          coords3d.push_back(it->z());
-        }
-        root["atoms"]["coords"]["3d"] = coords3d;
       }
     }
 
