@@ -25,6 +25,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include <iomanip>
 #include <iostream>
 
 using json = nlohmann::json;
