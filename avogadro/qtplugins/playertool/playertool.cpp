@@ -93,7 +93,7 @@ QWidget* PlayerTool::toolWidget() const
     m_animationFPS = new QSpinBox;
     m_animationFPS->setValue(5);
     m_animationFPS->setMinimum(0);
-    m_animationFPS->setMaximum(100);
+    m_animationFPS->setMaximum(1000);
     m_animationFPS->setSuffix(tr(" FPS", "frames per second"));
     frames->addWidget(m_animationFPS);
     layout->addLayout(frames);
@@ -257,8 +257,11 @@ void PlayerTool::recordMovie()
 
   if (selfFilter == tr("GIF (*.gif)")) {
     GifWriter writer;
+    //GIF only supports up to 100 FPS, this minimizes breakage when FPS>100
+    QMessageBox::warning(this, "GIF FPS support warning",
+                         QString("The GIF file format does not support frame rates over 100 FPS."));
     GifBegin(&writer, (baseName + ".gif").toLatin1().data(), EXPORT_WIDTH,
-             EXPORT_HEIGHT, 100 / m_animationFPS->value());
+             EXPORT_HEIGHT, 100 / std::min(m_animationFPS->value(), 100) );
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
       m_molecule->setCoordinate3d(i);
       if (bonding) {
@@ -294,7 +297,7 @@ void PlayerTool::recordMovie()
         }
       }
       GifWriteFrame(&writer, imageData, EXPORT_WIDTH, EXPORT_HEIGHT,
-                    100 / m_animationFPS->value());
+                    100 / std::min(m_animationFPS->value(), 100) );
       delete[] imageData;
     }
     GifEnd(&writer);
