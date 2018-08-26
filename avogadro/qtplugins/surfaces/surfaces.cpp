@@ -176,9 +176,11 @@ void Surfaces::calculateSurface()
 
 void Surfaces::calculateEDT()
 {
-  EDTSurface edt;
+  EDTSurface* edt = new EDTSurface();
+  Type type = m_dialog->surfaceType();
+  double resolution = m_dialog->resolution();
   Cube* t_cube = new Cube();
-  m_cube = edt.EDTCube(m_molecule, t_cube, VanDerWaals, 1.4);
+  m_cube = edt->EDTCube(m_molecule, t_cube, type, 1.4, resolution);
 }
 
 void Surfaces::calculateQM()
