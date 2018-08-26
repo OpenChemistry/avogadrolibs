@@ -58,7 +58,6 @@ bool setJsonKey(json& j, Molecule& m, const std::string& key)
     m.setData(key, j.value(key, "undefined"));
     return true;
   }
-  std::cout << key << " not found." << std::endl;
   return false;
 }
 
@@ -144,6 +143,24 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       a.setPosition3d(Vector3(atomicCoords[3 * i], atomicCoords[3 * i + 1],
                               atomicCoords[3 * i + 2]));
     }
+  }
+
+  // Check for coordinate sets, and read them in if found, e.g. trajectories.
+  json coordSets = atoms["coords"]["3dSets"];
+  if (coordSets.is_array() && coordSets.size()) {
+    for (unsigned int i = 0; i < coordSets.size(); ++i) {
+      Array<Vector3> setArray;
+      json set = coordSets[i];
+      if (isNumericArray(set)) {
+        for (unsigned int j = 0; j < set.size() / 3; ++j) {
+          setArray.push_back(
+            Vector3(set[3 * j], set[3 * j + 1], set[3 * j + 2]));
+        }
+        molecule.setCoordinate3d(setArray, i);
+      }
+    }
+    // Make sure the first step is active once we are done loading the sets.
+    molecule.setCoordinate3d(0);
   }
 
   // Selection is optional, but if present should be loaded.
@@ -269,6 +286,34 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
         basis->setMolecularOrbitals(coeffsB, BasisSet::Beta);
       } else {
         std::cout << "No orbital cofficients found!" << std::endl;
+      }
+      // Check for orbital coefficient sets, these are paired with coordinates
+      // when they exist, but have constant basis set, atom types, etc.
+      if (orbitals["sets"].is_array() && orbitals["sets"].size()) {
+        json orbSets = orbitals["sets"];
+        for (unsigned int idx = 0; idx < orbSets.size(); ++idx) {
+          moCoefficients = orbSets[idx]["moCoefficients"];
+          moCoefficientsA = orbSets[idx]["alphaCoefficients"];
+          moCoefficientsB = orbSets[idx]["betaCoefficients"];
+          if (isNumericArray(moCoefficients)) {
+            std::vector<double> coeffs;
+            for (unsigned int i = 0; i < moCoefficients.size(); ++i)
+              coeffs.push_back(static_cast<double>(moCoefficients[i]));
+            basis->setMolecularOrbitals(coeffs, BasisSet::Paired, idx);
+          } else if (isNumericArray(moCoefficientsA) &&
+                     isNumericArray(moCoefficientsB)) {
+            std::vector<double> coeffsA;
+            for (unsigned int i = 0; i < moCoefficientsA.size(); ++i)
+              coeffsA.push_back(static_cast<double>(moCoefficientsA[i]));
+            std::vector<double> coeffsB;
+            for (unsigned int i = 0; i < moCoefficientsB.size(); ++i)
+              coeffsB.push_back(static_cast<double>(moCoefficientsB[i]));
+            basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha, idx);
+            basis->setMolecularOrbitals(coeffsB, BasisSet::Beta, idx);
+          }
+        }
+        // Set the first step as active.
+        basis->setActiveSetStep(0);
       }
     }
     molecule.setBasisSet(basis);

@@ -45,7 +45,9 @@ public:
 
   void setupBasis(int numElectrons, int numMOs, bool beta);
   void setupCubes(QStringList cubeNames);
+  void setupSteps(int stepCount);
   void reenableCalculateButton();
+  void enableRecord();
 
   Surfaces::Type surfaceType();
 
@@ -63,15 +65,21 @@ public:
 
   float resolution();
 
+  int step();
+  void setStep(int step);
+
 public slots:
 
 protected slots:
   void surfaceComboChanged(int n);
   void resolutionComboChanged(int n);
   void calculateClicked();
+  void record();
 
 signals:
+  void stepChanged(int n);
   void calculateClickedSignal();
+  void recordClicked();
 
 private:
   Ui::SurfaceDialog* m_ui;

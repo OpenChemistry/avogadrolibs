@@ -23,14 +23,16 @@ namespace Avogadro {
 namespace QtPlugins {
 
 SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
-  : QDialog(parent_, f)
-  , m_ui(new Ui::SurfaceDialog)
+  : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog)
 {
   m_ui->setupUi(this);
+
+  setupSteps(1);
 
   m_ui->orbitalCombo->setVisible(false);
   m_ui->spinCombo->setVisible(false);
   m_ui->chargeCombo->setVisible(false);
+  m_ui->recordButton->setVisible(false);
 
   // set the data for the default items
   m_ui->surfaceCombo->addItem(tr("Van der Waals"), Surfaces::Type::VanDerWaals);
@@ -43,7 +45,9 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
           SLOT(surfaceComboChanged(int)));
   connect(m_ui->resolutionCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(resolutionComboChanged(int)));
+  connect(m_ui->stepValue, SIGNAL(valueChanged(int)), SIGNAL(stepChanged(int)));
   connect(m_ui->calculateButton, SIGNAL(clicked()), SLOT(calculateClicked()));
+  connect(m_ui->recordButton, SIGNAL(clicked()), SLOT(record()));
 }
 
 SurfaceDialog::~SurfaceDialog()
@@ -154,6 +158,35 @@ void SurfaceDialog::setupCubes(QStringList cubeNames)
   m_ui->orbitalCombo->setCurrentIndex(0);
 }
 
+void SurfaceDialog::setupSteps(int stepCount)
+{
+  if (stepCount < 2) {
+    m_ui->stepValue->setEnabled(false);
+    m_ui->recordButton->setEnabled(false);
+    m_ui->recordButton->setVisible(false);
+    m_ui->vcrBack->setEnabled(false);
+    m_ui->vcrBack->setVisible(false);
+    m_ui->vcrPlay->setEnabled(false);
+    m_ui->vcrPlay->setVisible(false);
+    m_ui->vcrForward->setEnabled(false);
+    m_ui->vcrForward->setVisible(false);
+  } else {
+    m_ui->stepValue->setEnabled(true);
+    m_ui->stepValue->setRange(1, stepCount);
+    m_ui->stepValue->setSuffix(tr(" of %0").arg(stepCount));
+    m_ui->recordButton->setEnabled(true);
+    m_ui->recordButton->setVisible(true);
+    /* Disable for now, this would be nice in future.
+    m_ui->vcrBack->setEnabled(true);
+    m_ui->vcrBack->setVisible(true);
+    m_ui->vcrPlay->setEnabled(true);
+    m_ui->vcrPlay->setVisible(true);
+    m_ui->vcrForward->setEnabled(true);
+    m_ui->vcrForward->setVisible(true);
+    */
+  }
+}
+
 Surfaces::Type SurfaceDialog::surfaceType()
 {
   return static_cast<Surfaces::Type>(m_ui->surfaceCombo->currentData().toInt());
@@ -179,6 +212,16 @@ float SurfaceDialog::resolution()
   return static_cast<float>(m_ui->resolutionDoubleSpinBox->value());
 }
 
+int SurfaceDialog::step()
+{
+  return m_ui->stepValue->value();
+}
+
+void SurfaceDialog::setStep(int step)
+{
+  m_ui->stepValue->setValue(step);
+}
+
 void SurfaceDialog::calculateClicked()
 {
   m_ui->calculateButton->setEnabled(false);
@@ -188,6 +231,19 @@ void SurfaceDialog::calculateClicked()
 void SurfaceDialog::reenableCalculateButton()
 {
   m_ui->calculateButton->setEnabled(true);
+}
+
+void SurfaceDialog::record()
+{
+  m_ui->calculateButton->setEnabled(false);
+  m_ui->recordButton->setEnabled(false);
+  emit recordClicked();
+}
+
+void SurfaceDialog::enableRecord()
+{
+  m_ui->calculateButton->setEnabled(true);
+  m_ui->recordButton->setEnabled(true);
 }
 
 } // End namespace QtPlugins

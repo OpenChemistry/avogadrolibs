@@ -1,4 +1,4 @@
-include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp")
+include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty")
 
 # Extension
 set(importpqr_srcs
@@ -17,4 +17,4 @@ avogadro_plugin(ImportPQR
   ""
 )
 
-target_link_libraries(ImportPQR LINK_PRIVATE ${Qt5Network_LIBRARIES} jsoncpp)
+target_link_libraries(ImportPQR LINK_PRIVATE ${Qt5Network_LIBRARIES})

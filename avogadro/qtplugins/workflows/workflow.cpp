@@ -47,11 +47,8 @@ using Avogadro::QtGui::InterfaceScript;
 using Avogadro::QtGui::InterfaceWidget;
 
 Workflow::Workflow(QObject* parent_)
-  : ExtensionPlugin(parent_)
-  , m_molecule(nullptr)
-  , m_currentDialog(nullptr)
-  , m_currentInterface(nullptr)
-  , m_outputFormat(nullptr)
+  : ExtensionPlugin(parent_), m_molecule(nullptr), m_currentDialog(nullptr),
+    m_currentInterface(nullptr), m_outputFormat(nullptr)
 {
   refreshScripts();
 }
@@ -133,6 +130,14 @@ void Workflow::menuActivated()
 
   QString scriptFileName = theSender->data().toString();
   QWidget* theParent = qobject_cast<QWidget*>(parent());
+
+  if (m_currentDialog) {
+    delete m_currentDialog->layout();
+    if (m_currentInterface)
+      m_currentInterface->hide();
+  }
+
+  // check if there are any options before this song-and-dance
   InterfaceWidget* widget = m_dialogs.value(scriptFileName, nullptr);
 
   if (!widget) {
@@ -140,19 +145,20 @@ void Workflow::menuActivated()
     m_dialogs.insert(scriptFileName, widget);
   }
   widget->setMolecule(m_molecule);
-
-  if (!m_currentDialog) {
-    m_currentDialog = new QDialog(theParent);
-  } else {
-    delete m_currentDialog->layout();
+  m_currentInterface = widget; // remember this when we get the run() signal
+  if (widget->isEmpty()) {
+    run(); // no options, do it immediately
+    return;
   }
+
+  m_currentDialog = new QDialog(theParent);
   QString title;
   QtGui::ScriptLoader::queryProgramName(scriptFileName, title);
   m_currentDialog->setWindowTitle(title);
 
   QVBoxLayout* vbox = new QVBoxLayout();
+  widget->show();
   vbox->addWidget(widget);
-  m_currentInterface = widget; // remember this when we get the run() signal
   QDialogButtonBox* buttonBox =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
@@ -175,6 +181,9 @@ void Workflow::run()
     InterfaceScript gen(scriptFilePath);
     gen.runWorkflow(options, m_molecule);
     // collect errors
+    if (gen.hasErrors()) {
+      qWarning() << gen.errorList();
+    }
   }
 }
 
@@ -238,9 +247,9 @@ void Workflow::updateActions()
 {
   m_actions.clear();
 
-  QAction* action = new QAction(tr("Set Python Path..."), this);
-  connect(action, SIGNAL(triggered()), SLOT(configurePython()));
-  m_actions << action;
+  //  QAction* action = new QAction(tr("Set Python Path..."), this);
+  //  connect(action, SIGNAL(triggered()), SLOT(configurePython()));
+  //  m_actions << action;
 
   foreach (const QString& programName, m_workflowScripts.uniqueKeys()) {
     QStringList scripts = m_workflowScripts.values(programName);
@@ -264,5 +273,6 @@ void Workflow::addAction(const QString& label, const QString& scriptFilePath)
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;
 }
-}
-}
+
+} // namespace QtPlugins
+} // namespace Avogadro

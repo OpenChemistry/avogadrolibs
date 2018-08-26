@@ -1,17 +1,7 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
 
-  Copyright 2013 Kitware, Inc.
-
   This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
 ******************************************************************************/
 
 #include "interfacescript.h"
@@ -40,15 +30,13 @@ using QtGui::PythonScript;
 
 InterfaceScript::InterfaceScript(const QString& scriptFilePath_,
                                  QObject* parent_)
-  : QObject(parent_)
-  , m_interpreter(new PythonScript(scriptFilePath_, this))
-  , m_moleculeExtension(QStringLiteral("cjson"))
+  : QObject(parent_), m_interpreter(new PythonScript(scriptFilePath_, this)),
+    m_moleculeExtension(QStringLiteral("Unknown"))
 {}
 
 InterfaceScript::InterfaceScript(QObject* parent_)
-  : QObject(parent_)
-  , m_interpreter(new PythonScript(this))
-  , m_moleculeExtension(QStringLiteral("cjson"))
+  : QObject(parent_), m_interpreter(new PythonScript(this)),
+    m_moleculeExtension(QStringLiteral("Unknown"))
 {}
 
 InterfaceScript::~InterfaceScript() {}
@@ -87,14 +75,6 @@ QJsonObject InterfaceScript::options() const
 
     m_options = doc.object();
 
-    // Check if the generator needs to read a molecule.
-    m_moleculeExtension = QLatin1String("cjson");
-    if (m_options.contains(QStringLiteral("inputMoleculeFormat")) &&
-        m_options[QStringLiteral("inputMoleculeFormat")].isString()) {
-      m_moleculeExtension =
-        m_options[QStringLiteral("inputMoleculeFormat")].toString();
-    }
-
     if (m_options.contains(QStringLiteral("highlightStyles")) &&
         m_options.value(QStringLiteral("highlightStyles")).isArray()) {
       if (!parseHighlightStyles(
@@ -102,6 +82,14 @@ QJsonObject InterfaceScript::options() const
         qDebug() << "Failed to parse highlighting styles.";
       }
     }
+  }
+
+  // Check if the generator needs to read a molecule.
+  m_moleculeExtension = QLatin1String("cjson");
+  if (m_options.contains(QStringLiteral("inputMoleculeFormat")) &&
+      m_options[QStringLiteral("inputMoleculeFormat")].isString()) {
+    m_moleculeExtension =
+      m_options[QStringLiteral("inputMoleculeFormat")].toString();
   }
 
   return m_options;
@@ -186,8 +174,9 @@ bool InterfaceScript::runWorkflow(const QJsonObject& options_,
   }
 
   QJsonDocument doc;
-  if (!parseJson(json, doc))
+  if (!parseJson(json, doc)) {
     return false;
+  }
 
   // Update cache
   bool result = true;
@@ -208,27 +197,49 @@ bool InterfaceScript::runWorkflow(const QJsonObject& options_,
       }
     }
 
-    // TODO: add smart updates
+    m_moleculeExtension = "cjson";
+    if (obj.contains("moleculeFormat") && obj["moleculeFormat"].isString()) {
+      m_moleculeExtension = obj["moleculeFormat"].toString();
+    }
+
     Io::FileFormatManager& formats = Io::FileFormatManager::instance();
     QScopedPointer<Io::FileFormat> format(
-      formats.newFormatFromFileExtension("cjson"));
-    // convert the "cjson" field to a string
-    QJsonObject cjsonObj = obj[QStringLiteral("cjson")].toObject();
-    QJsonDocument doc(cjsonObj);
-    QString strCJSON(doc.toJson(QJsonDocument::Compact));
-    if (!strCJSON.isEmpty()) {
-      QtGui::Molecule* guiMol = static_cast<QtGui::Molecule*>(mol);
-      QtGui::Molecule newMol(guiMol->parent());
-      result = format->readString(strCJSON.toStdString(), newMol);
+      formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
 
-      if (obj[QStringLiteral("append")].toBool()) { // just append some new bits
-        guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
-      } else { // replace the whole molecule
-        Molecule::MoleculeChanges changes =
-          (Molecule::Atoms | Molecule::Bonds | Molecule::Added |
-           Molecule::Removed);
-        guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
+    if (format.isNull()) {
+      m_errors << tr("Error reading molecule representation: "
+                     "Unrecognized file format: %1")
+                    .arg(m_moleculeExtension);
+      return false;
+    }
+
+    QtGui::Molecule* guiMol = static_cast<QtGui::Molecule*>(mol);
+    QtGui::Molecule newMol(guiMol->parent());
+    if (m_moleculeExtension == "cjson") {
+      // convert the "cjson" field to a string
+      QJsonObject cjsonObj = obj["cjson"].toObject();
+      QJsonDocument doc(cjsonObj);
+      QString strCJSON(doc.toJson(QJsonDocument::Compact));
+      if (!strCJSON.isEmpty()) {
+        result = format->readString(strCJSON.toStdString(), newMol);
       }
+    } else if (obj.contains(m_moleculeExtension) &&
+               obj[m_moleculeExtension].isString()) {
+      QString strFile = obj[m_moleculeExtension].toString();
+      result = format->readString(strFile.toStdString(), newMol);
+    }
+
+    // check if the script wants us to perceive bonds first
+    if (obj["bond"].toBool()) {
+      newMol.perceiveBondsSimple();
+    }
+
+    if (obj["append"].toBool()) { // just append some new bits
+      guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
+    } else { // replace the whole molecule
+      Molecule::MoleculeChanges changes = (Molecule::Atoms | Molecule::Bonds |
+                                           Molecule::Added | Molecule::Removed);
+      guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
     }
   }
   return result;

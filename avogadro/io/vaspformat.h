@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_IO_POSCARFORMAT_H
-#define AVOGADRO_IO_POSCARFORMAT_H
+#ifndef AVOGADRO_IO_VASPFORMAT_H
+#define AVOGADRO_IO_VASPFORMAT_H
 
 #include "fileformat.h"
 
@@ -59,7 +59,39 @@ public:
   bool write(std::ostream& outStream, const Core::Molecule& mol) override;
 };
 
+class AVOGADROIO_EXPORT OutcarFormat : public FileFormat
+{
+public:
+  OutcarFormat();
+  ~OutcarFormat() override;
+
+  Operations supportedOperations() const override
+  {
+    return Read | File | Stream | String;
+  }
+
+  FileFormat* newInstance() const override { return new OutcarFormat; }
+  std::string identifier() const override { return "Avogadro: OUTCAR"; }
+  std::string name() const override { return "OUTCAR"; }
+  std::string description() const override
+  {
+    return "Format used by VASP that contains trajectory output of a DFT/MD "
+           "calculation.";
+  }
+
+  std::string specificationUrl() const override
+  {
+    return "https://cms.mpi.univie.ac.at/wiki/index.php/OUTCAR";
+  }
+
+  std::vector<std::string> fileExtensions() const override;
+  std::vector<std::string> mimeTypes() const override;
+
+  bool read(std::istream& inStream, Core::Molecule& mol);
+  bool write(std::ostream& outStream, const Core::Molecule& mol);
+};
+
 } // end Io namespace
 } // end Avogadro namespace
 
-#endif // AVOGADRO_IO_POSCARFORMAT_H
+#endif // AVOGADRO_IO_VASPFORMAT_H

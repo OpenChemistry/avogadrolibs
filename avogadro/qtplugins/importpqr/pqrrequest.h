@@ -19,8 +19,6 @@
 
 #include <cctype>
 
-#include <json/json.h>
-
 /**
  * @brief The PQRRequest class sends and receives network requests to PQR and
  * updates ui elements from the widget.
@@ -104,16 +102,18 @@ private:
     QString mol2url;
     QString formula;
     float mass;
+
+    // Default constructor
+    result()
+      : inchikey("Error"), name("Error"), mol2url("Error"), formula("Error"),
+        mass(-1.0)
+    {}
   };
   /** An array to hold all results from a query */
-  result* results;
+  std::vector<result> results;
 
   /** Holds a reply from a network request */
   QNetworkReply* reply;
-  /** Jsoncpp reader to read JSON results */
-  Json::Reader* read;
-  /** Holds a node of JSON results */
-  Json::Value root;
   /** Used to send/receive network request */
   QNetworkAccessManager* oNetworkAccessManager;
   /** Used to parse JSON results */
@@ -144,6 +144,6 @@ private:
    */
   float getMolMass(QString);
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 #endif // PQRRequest_H
