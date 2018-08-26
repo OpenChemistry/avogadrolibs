@@ -7,8 +7,6 @@
 #ifndef AVOGADRO_QTPLUGINS_EDTSURFACE_H
 #define AVOGADRO_QTPLUGINS_EDTSURFACE_H
 
-#include "bitvector.h"
-#include "boolcube.h"
 #include "surfaces.h"
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/vector.h>
@@ -20,6 +18,7 @@ class Cube;
 class Molecule;
 class Atom;
 }
+
 namespace QtGui {
 class Molecule;
 }
@@ -28,12 +27,11 @@ namespace QtPlugins {
 
 typedef struct dataStruct
 {
-  int pHeight, pWidth, pLength, boxLength;
+  int pHeight, pWidth, pLength;
   Vector3 pMin, pMax, pTran;
   double probeRadius;
-  double scaleFactor;
-  bool ignoreHydrogens; // if we want this feature, write a way of setting it
-} dataStruct;           // End struct dataStruct
+  double scaleFactor, resolution;
+} dataStruct; // End struct dataStruct
 
 class EDTSurface
 {
@@ -54,7 +52,7 @@ public:
    */
 
   Core::Cube* EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                      Surfaces::Type surfaceType);
+                      Surfaces::Type surfaceType, double resolution);
 
   // The copying over from array to Cube can and should be done in parallel
 
@@ -69,7 +67,8 @@ public:
    */
 
   Core::Cube* EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                      Surfaces::Type surfaceType, double probeRadius);
+                      Surfaces::Type surfaceType, double probeRadius,
+                      double resolution);
   // Takes a molecule, a surface type and a probeRadius and
 
   /*@brief Sets a pointer to the desired molecule

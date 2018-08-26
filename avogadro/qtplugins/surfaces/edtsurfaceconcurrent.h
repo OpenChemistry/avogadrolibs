@@ -7,8 +7,6 @@
 #ifndef AVOGADRO_QTPLUGINS_EDTSURFACECONCURRENT_H
 #define AVOGADRO_QTPLUGINS_EDTSURFACECONCURRENT_H
 
-#include "bitvector.h"
-#include "boolcube.h"
 #include "surfaces.h"
 #include <QtCore/QFuture>
 #include <QtCore/QFutureWatcher>
@@ -32,18 +30,15 @@ namespace QtPlugins {
 
 typedef struct dataStruct
 {
-  int pHeight, pWidth, pLength, boxLength;
+  int pHeight, pWidth, pLength;
   Vector3 pMin, pMax, pTran;
   double probeRadius;
-  double scaleFactor;
-  bool ignoreHydrogens; // if we want this feature, write a way of setting it
-} dataStruct;           // End struct dataStruct
+  double scaleFactor, resolution;
+} dataStruct; // End struct dataStruct
 
 typedef struct subCube
 {
   Core::Cube* cube;
-  BoolCube* isInSolid;
-  BoolCube* isOnSurface;
   dataStruct* data;
   int numOfSurfaceVoxels;
   int* surfaceVoxelCount;
@@ -55,7 +50,6 @@ typedef struct atomStruct
 {
   Core::Molecule* mol;
   Core::Cube* cube;
-  BoolCube* isInSolid;
   Vector3i* vdwSphere;
   int numberOfVectors;
   int atomicNumber;
@@ -85,7 +79,7 @@ public:
    */
 
   Core::Cube* EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                      Surfaces::Type surfaceType);
+                      Surfaces::Type surfaceType, double resolution);
 
   // The copying over from array to Cube can and should be done in parallel
 
@@ -100,7 +94,8 @@ public:
    */
 
   Core::Cube* EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                      Surfaces::Type surfaceType, double probeRadius);
+                      Surfaces::Type surfaceType, double probeRadius,
+                      double resolution);
   // Takes a molecule, a surface type and a probeRadius and
 
   /*@brief Sets a pointer to the desired molecule
@@ -116,10 +111,6 @@ public:
   void setProbeRadius(double probeRadius);
 
   void setCube(Core::Cube* cube);
-
-  double getScaleFactor();
-
-  Vector3 getPTran();
 
   QFutureWatcher<void>& watcher() { return m_watcher; }
 
@@ -224,17 +215,6 @@ private:
   QtGui::Molecule* m_mol;
 
   Core::Cube* m_cube;
-
-  bool*** testArray;
-
-  BoolCube* inSolid; // bool cube representing whether each point is in the
-                     // solid
-  BoolCube*
-    onSurface; // bool cube representing whether each point is on the surface
-
-  // We can do things as BitVectors, too
-  //  BitVector* inSolid;
-  //  BitVector* onSurface;
 
   Vector3i*
     neighbors; // array of vectors representing the points adjacent to a point

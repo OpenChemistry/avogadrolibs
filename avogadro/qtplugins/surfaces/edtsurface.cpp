@@ -30,7 +30,6 @@ EDTSurface::EDTSurface()
 
   data = (dataStruct*)malloc(sizeof(dataStruct));
 
-  data->boxLength = 128;
   data->probeRadius = 1.4;
   data->scaleFactor = 0;
 
@@ -49,15 +48,18 @@ EDTSurface::~EDTSurface()
 // Takes a molecule and a surface type and returns a cube
 
 Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                                Surfaces::Type surfaceType, double probeRadius)
+                                Surfaces::Type surfaceType, double probeRadius,
+                                double resolution)
 {
   this->setProbeRadius(probeRadius);
-  return this->EDTCube(mol, cube, surfaceType);
+  return this->EDTCube(mol, cube, surfaceType, resolution);
 }
 
 Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
-                                Surfaces::Type surfaceType)
+                                Surfaces::Type surfaceType, double resolution)
 {
+
+  data->resolution = resolution;
 
   if (surfaceType == Surfaces::VanDerWaals) {
     setProbeRadius(0.0);
@@ -89,19 +91,11 @@ Core::Cube* EDTSurface::EDTCube(QtGui::Molecule* mol, Core::Cube* cube,
 
 void EDTSurface::buildSolventAccessibleSolid()
 {
-
   int numberOfAtoms = m_mol->atomCount();
 
   for (int i = 0; i < numberOfAtoms; i++) {
-    Index index = i;
-    Atom current = m_mol->atom(index);
-    if (!data->ignoreHydrogens || current.atomicNumber() != 1) {
-      fillAtom(index);
-    }
-    //			totalNumber++;
+    fillAtom(i);
   }
-
-  qDebug() << "number of inner voxels " << numberOfInnerVoxels;
 }
 // use isDone
 void EDTSurface::buildSurface()
@@ -156,21 +150,18 @@ void EDTSurface::boundBox()
   data->pMax << -100000, -100000, -100000;
 
   for (int i = 0; i < numberOfAtoms; i++) {
-    Atom current = m_mol->atom(i);
-    if (!data->ignoreHydrogens || current.atomicNumber() != 1) {
-      if (positions[i](X) < data->pMin(X))
-        data->pMin(X) = positions[i](X);
-      if (positions[i](Y) < data->pMin(Y))
-        data->pMin(Y) = positions[i](Y);
-      if (positions[i](Z) < data->pMin(Z))
-        data->pMin(Z) = positions[i](Z);
-      if (positions[i](X) > data->pMax(X))
-        data->pMax(X) = positions[i](X);
-      if (positions[i](Y) > data->pMax(Y))
-        data->pMax(Y) = positions[i](Y);
-      if (positions[i](Z) > data->pMax(Z))
-        data->pMax(Z) = positions[i](Z);
-    }
+    if (positions[i](X) < data->pMin(X))
+      data->pMin(X) = positions[i](X);
+    if (positions[i](Y) < data->pMin(Y))
+      data->pMin(Y) = positions[i](Y);
+    if (positions[i](Z) < data->pMin(Z))
+      data->pMin(Z) = positions[i](Z);
+    if (positions[i](X) > data->pMax(X))
+      data->pMax(X) = positions[i](X);
+    if (positions[i](Y) > data->pMax(Y))
+      data->pMax(Y) = positions[i](Y);
+    if (positions[i](Z) > data->pMax(Z))
+      data->pMax(Z) = positions[i](Z);
   }
 }
 
@@ -195,7 +186,6 @@ void EDTSurface::initPara()
     }
   }
 
-  double fixSf = 4;
   double fMargin = 2.5;
 
   Vector3 fMargins(fMargin, fMargin, fMargin);
@@ -205,56 +195,19 @@ void EDTSurface::initPara()
   boundBox();
 
   // inflate the pMin and pMax by a margin plus the probeRadius (0 if VWS)
+
   data->pMin -= (probeRadii + fMargins);
   data->pMax += (probeRadii + fMargins);
 
   data->pTran = -data->pMin;
 
-  // set scaleFactor equal to the largest range between a max and min
-  data->scaleFactor = data->pMax(X) - data->pMin(X);
-  if ((data->pMax(Y) - data->pMin(Y)) > data->scaleFactor)
-    data->scaleFactor = data->pMax(Y) - data->pMin(Y);
-  if ((data->pMax(Z) - data->pMin(Z)) > data->scaleFactor)
-    data->scaleFactor = data->pMax(Z) - data->pMin(Z);
+  data->pLength = (int)(data->pMax[0] - data->pMin[0]) / data->resolution + 1;
+  data->pWidth = (int)(data->pMax[1] - data->pMin[1]) / data->resolution + 1;
+  data->pHeight = (int)(data->pMax[2] - data->pMin[2]) / data->resolution + 1;
+  data->scaleFactor = 1 / data->resolution;
 
-  // data->scaleFactor is the maximum distance between our mins and maxes
-
-  // set scaleFactor equal to boxLength (which defaults to 128)
-  // over scaleFactor
-  data->scaleFactor = (data->boxLength - 1.0) / double(data->scaleFactor);
-
-  // multiply boxLength by fixSf (4) and then divide by scalefactor
-  data->boxLength = int(data->boxLength * fixSf / data->scaleFactor);
-  data->scaleFactor = fixSf;
-  double threshBox = 300;
-  if (data->boxLength > threshBox) {
-    double sfThresh = threshBox / double(data->boxLength);
-    data->boxLength = int(threshBox);
-    data->scaleFactor = data->scaleFactor * sfThresh;
-  }
-  //	*/
-
-  data->pLength =
-    int(ceil(data->scaleFactor * (data->pMax(X) - data->pMin(X))) + 1);
-  data->pWidth =
-    int(ceil(data->scaleFactor * (data->pMax(Y) - data->pMin(Y))) + 1);
-  data->pHeight =
-    int(ceil(data->scaleFactor * (data->pMax(Z) - data->pMin(Z))) + 1);
-
-  if (data->pLength > data->boxLength)
-    data->pLength = data->boxLength;
-  if (data->pWidth > data->boxLength)
-    data->pWidth = data->boxLength;
-  if (data->pHeight > data->boxLength)
-    data->pHeight = data->boxLength;
-
-  // Hoping this improves the resolution of our surfaces
-  /*
-    data->pLength *= 2;
-    data->pWidth *= 2;
-    data->pHeight *= 2;
-    data->scaleFactor *=2;
-  */
+  // if it needs to be a proper cube,
+  // then set each dimension to the max of the 3 dimensions
 
   Vector3i pDimensions(data->pLength, data->pWidth, data->pHeight);
   m_cube->setLimits(data->pMin, data->pMax, pDimensions);
@@ -372,18 +325,12 @@ void EDTSurface::buildSolventExcludedSolid()
   int numberOfAtoms = m_mol->atomCount();
 
   for (int i = 0; i < numberOfAtoms; i++) {
-    Index index = i;
-    Atom current = m_mol->atom(index);
-    if (!data->ignoreHydrogens || current.atomicNumber() != 1) {
-      fillAtomWaals(index);
-    }
-    //			totalNumber++;
+    fillAtomWaals(i);
   }
 }
 
 void EDTSurface::fastDistanceMap()
 {
-  qDebug() << "fastDistanceMap is executing";
   Vector3i ijk;
   Vector3i txyz; // Vector pulled from array of boundary points
   Vector3 dxyz;  // Vector from ijk to dxyz
@@ -404,8 +351,6 @@ void EDTSurface::fastDistanceMap()
     }
   }
 
-  qDebug() << " first loop finished ";
-
   for (int i = 0; i < data->pLength; i++) {
     for (int j = 0; j < data->pWidth; j++) {
       for (int k = 0; k < data->pHeight; k++) {
@@ -424,7 +369,6 @@ void EDTSurface::fastDistanceMap()
       }   // end for k
     }     // end for j
   }       // end for i
-  qDebug() << "second loop finished ";
 }
 
 void EDTSurface::computeSphere(unsigned char atomicNumber)
@@ -517,7 +461,8 @@ void EDTSurface::fillAtomWaals(int index)
 
     if (inBounds(oxyz)) {
       if (m_cube->value(oxyz) <=
-          data->probeRadius) {     // this runs right after fastDistanceMap
+          data->probeRadius *
+            data->scaleFactor) {   // this runs right after fastDistanceMap
         m_cube->setValue(oxyz, 1); // outside of solid
         numberOfInnerVoxels--;
       }
