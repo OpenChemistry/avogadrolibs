@@ -24,6 +24,7 @@
 #include "gromacsformat.h"
 #include "lammpsformat.h"
 #include "mdlformat.h"
+#include "mmtfformat.h"
 #include "pdbformat.h"
 #include "trrformat.h"
 #include "vaspformat.h"
@@ -300,6 +301,7 @@ FileFormatManager::FileFormatManager()
   addFormat(new DcdFormat);
   addFormat(new LammpsTrajectoryFormat);
   addFormat(new LammpsDataFormat);
+  addFormat(new MMTFFormat);
 }
 
 FileFormatManager::~FileFormatManager()

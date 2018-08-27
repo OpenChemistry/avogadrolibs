@@ -550,7 +550,7 @@ public:
 
   Residue& addResidue(std::string& name, Index& number, char& id);
   void addResidue(Residue& residue);
-  Residue residue(int index);
+  Residue& residue(int index);
 
 protected:
   mutable Graph m_graph;     // A transformation of the molecule to a graph.

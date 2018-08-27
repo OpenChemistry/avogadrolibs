@@ -7,6 +7,7 @@ set(tests
   Mdl
   Vasp
   Xyz
+  MMTF
   )
 
 if(USE_HDF5)

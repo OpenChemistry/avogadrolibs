@@ -823,7 +823,7 @@ void Molecule::addResidue(Residue& residue)
   m_residues.push_back(residue);
 }
 
-Residue Molecule::residue(int index)
+Residue& Molecule::residue(int index)
 {
   return m_residues[index];
 }
