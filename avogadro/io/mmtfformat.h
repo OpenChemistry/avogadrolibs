@@ -43,11 +43,14 @@ public:
 
   FileFormat* newInstance() const override { return new MMTFFormat; }
   std::string identifier() const override { return "Avogadro: MMTF"; }
-  std::string name() const override { return "MacroMolecular Transmission Format"; }
+  std::string name() const override
+  {
+    return "MacroMolecular Transmission Format";
+  }
   std::string description() const override
   {
-    return "MMTF is a format used to express MacroMolecular data in a compressed "
-           "binary format.";
+    return "MMTF is a format used to express MacroMolecular data in a "
+           "compressed binary format.";
   }
 
   std::string specificationUrl() const override
@@ -62,7 +65,7 @@ public:
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro
 
 #endif // AVOGADRO_IO_MMTFFORMAT_H
