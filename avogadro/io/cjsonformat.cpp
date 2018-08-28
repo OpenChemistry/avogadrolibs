@@ -365,7 +365,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 {
   json opts;
   if (!options().empty())
-    opts = json::parse(options());
+    opts = json::parse(options(), nullptr, false);
   else
     opts = json::object();
 
