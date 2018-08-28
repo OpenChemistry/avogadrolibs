@@ -139,6 +139,28 @@ TEST(FileFormatManagerTest, writeStringCjson)
   EXPECT_EQ(cmlMol.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
 
+TEST(FileFormatManagerTest, writeStringCjsonOptions)
+{
+  Molecule molecule;
+  std::string options = "{ \"properties\": false }";
+  FileFormatManager::instance().readFile(molecule, std::string(AVOGADRO_DATA) +
+                                                     "/data/ethane.cjson");
+  std::string cjson;
+  FileFormatManager::instance().writeString(molecule, cjson, "cjson", options);
+
+  std::cout << cjson << std::endl;
+
+  // See if they still have data in them now they have gone back and forth...
+  Molecule cjsonMol;
+  FileFormatManager::instance().readString(cjsonMol, cjson, "cjson");
+
+  // If the option was respected these should now be empty.
+  EXPECT_EQ(cjsonMol.data("name").type(), Variant::Null);
+  EXPECT_EQ(cjsonMol.data("name").toString(), "");
+  EXPECT_EQ(cjsonMol.data("inchi").type(), Variant::Null);
+  EXPECT_EQ(cjsonMol.data("inchi").toString(), "");
+}
+
 class Format : public FileFormat
 {
 private:
