@@ -58,35 +58,43 @@ public:
 
   /**
    * Load @p molecule with the @p fileName contents supplied, inferring the
-   * @p fileExtension if it is empty.
+   * @p fileExtension if it is empty. The @p options can be used to modify
+   * the behavior of the file format.
    * @return True on success, false on failure.
    */
   bool readFile(Core::Molecule& molecule, const std::string& fileName,
-                const std::string& fileExtension = std::string()) const;
+                const std::string& fileExtension = std::string(),
+                const std::string& options = std::string()) const;
 
   /**
    * Write @p molecule to the @p fileName supplied, inferring the
-   * @p fileExtension if it is empty.
+   * @p fileExtension if it is empty. The @p options can be used to modify
+   * the behavior of the file format.
    * @return True on success, false on failure.
    */
   bool writeFile(const Core::Molecule& molecule, const std::string& fileName,
-                 const std::string& fileExtension = std::string()) const;
+                 const std::string& fileExtension = std::string(),
+                 const std::string& options = std::string()) const;
 
   /**
    * Load @p molecule with the contents of @p string, using the supplied
-   * @p fileExtension to determine the format.
+   * @p fileExtension to determine the format. The @p options can be used to
+   * modify the behavior of the file format.
    * @return True on success, false on failure.
    */
   bool readString(Core::Molecule& molecule, const std::string& string,
-                  const std::string& fileExtension) const;
+                  const std::string& fileExtension,
+                  const std::string& options = std::string()) const;
 
   /**
    * Write @p molecule to the @p string, using the supplied @p fileExtension
-   * to determine the format.
+   * to determine the format. The @p options can be used to modify the behavior
+   * of the file format.
    * @return True on success, false on failure.
    */
   bool writeString(const Core::Molecule& molecule, std::string& string,
-                   const std::string& fileExtension) const;
+                   const std::string& fileExtension,
+                   const std::string& options = std::string()) const;
 
   /**
    * @brief Register a new file format with the format manager.

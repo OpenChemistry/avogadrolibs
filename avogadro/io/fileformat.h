@@ -179,6 +179,18 @@ public:
   std::string fileName() const { return m_fileName; }
 
   /**
+   * @brief Set options for the file reader.
+   * @param options The options, each reader chooses how to use/interpret them.
+   */
+  void setOptions(const std::string& options) { m_options = options; }
+
+  /**
+   * @brief Get the file format options, can be used to change file IO.
+   * @return The options set for the reader (defaults to empty).
+   */
+  std::string options() const { return m_options; }
+
+  /**
    * Clear the format and reset all state.
    */
   virtual void clear();
@@ -236,6 +248,7 @@ protected:
 private:
   std::string m_error;
   std::string m_fileName;
+  std::string m_options;
 
   // Streams for reading/writing data, especially streaming data in/out.
   Operation m_mode;

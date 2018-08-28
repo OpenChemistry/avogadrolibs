@@ -45,7 +45,8 @@ FileFormatManager& FileFormatManager::instance()
 
 bool FileFormatManager::readFile(Core::Molecule& molecule,
                                  const std::string& fileName,
-                                 const std::string& fileExtension) const
+                                 const std::string& fileExtension,
+                                 const std::string& options) const
 {
   FileFormat* format(nullptr);
   if (fileExtension.empty()) {
@@ -62,12 +63,14 @@ bool FileFormatManager::readFile(Core::Molecule& molecule,
     return false;
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
+  formatInstance->setOptions(options);
   return formatInstance->readFile(fileName, molecule);
 }
 
 bool FileFormatManager::writeFile(const Core::Molecule& molecule,
                                   const std::string& fileName,
-                                  const std::string& fileExtension) const
+                                  const std::string& fileExtension,
+                                  const std::string& options) const
 {
   FileFormat* format(nullptr);
   if (fileExtension.empty()) {
@@ -84,12 +87,14 @@ bool FileFormatManager::writeFile(const Core::Molecule& molecule,
     return false;
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
+  formatInstance->setOptions(options);
   return formatInstance->writeFile(fileName, molecule);
 }
 
 bool FileFormatManager::readString(Core::Molecule& molecule,
                                    const std::string& string,
-                                   const std::string& fileExtension) const
+                                   const std::string& fileExtension,
+                                   const std::string& options) const
 {
   FileFormat* format(filteredFormatFromFormatMap(
     fileExtension, FileFormat::Read | FileFormat::String, m_fileExtensions));
@@ -97,12 +102,14 @@ bool FileFormatManager::readString(Core::Molecule& molecule,
     return false;
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
+  formatInstance->setOptions(options);
   return formatInstance->readString(string, molecule);
 }
 
 bool FileFormatManager::writeString(const Core::Molecule& molecule,
                                     std::string& string,
-                                    const std::string& fileExtension) const
+                                    const std::string& fileExtension,
+                                    const std::string& options) const
 {
   FileFormat* format(filteredFormatFromFormatMap(
     fileExtension, FileFormat::Write | FileFormat::String, m_fileExtensions));
@@ -110,6 +117,7 @@ bool FileFormatManager::writeString(const Core::Molecule& molecule,
     return false;
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
+  formatInstance->setOptions(options);
   return formatInstance->writeString(string, molecule);
 }
 
