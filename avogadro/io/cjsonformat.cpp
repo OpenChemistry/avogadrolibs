@@ -363,14 +363,22 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 
 bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 {
+  json opts;
+  if (!options().empty())
+    opts = json::parse(options(), nullptr, false);
+  else
+    opts = json::object();
+
   json root;
 
   root["chemical json"] = 0;
 
-  if (molecule.data("name").type() == Variant::String)
-    root["name"] = molecule.data("name").toString().c_str();
-  if (molecule.data("inchi").type() == Variant::String)
-    root["inchi"] = molecule.data("inchi").toString().c_str();
+  if (opts.value("properties", true)) {
+    if (molecule.data("name").type() == Variant::String)
+      root["name"] = molecule.data("name").toString().c_str();
+    if (molecule.data("inchi").type() == Variant::String)
+      root["inchi"] = molecule.data("inchi").toString().c_str();
+  }
 
   if (molecule.unitCell()) {
     json unitCell;
