@@ -26,27 +26,31 @@ public:
   ffm() : m_ffm(FileFormatManager::instance()) {}
 
   bool readFile(Core::Molecule& molecule, const std::string& fileName,
-                const std::string& fileExtension = std::string()) const
+                const std::string& fileExtension = std::string(),
+                const std::string& options = std::string()) const
   {
-    return m_ffm.readFile(molecule, fileName, fileExtension);
+    return m_ffm.readFile(molecule, fileName, fileExtension, options);
   }
 
   bool writeFile(const Core::Molecule& molecule, const std::string& fileName,
-                 const std::string& fileExtension = std::string()) const
+                 const std::string& fileExtension = std::string(),
+                 const std::string& options = std::string()) const
   {
-    return m_ffm.writeFile(molecule, fileName, fileExtension);
+    return m_ffm.writeFile(molecule, fileName, fileExtension, options);
   }
 
   bool readString(Core::Molecule& molecule, const std::string& string,
-                  const std::string& fileExtension) const
+                  const std::string& fileExtension,
+                  const std::string& options = std::string()) const
   {
-    return m_ffm.readString(molecule, string, fileExtension);
+    return m_ffm.readString(molecule, string, fileExtension, options);
   }
 
-  std::string writeString(const Molecule& mol, const std::string& ext)
+  std::string writeString(const Molecule& mol, const std::string& ext,
+                          const std::string& options = std::string())
   {
     std::string fileStr;
-    bool ok = m_ffm.writeString(mol, fileStr, ext);
+    bool ok = m_ffm.writeString(mol, fileStr, ext, options);
     if (!ok)
       fileStr = "Error: " + FileFormatManager::instance().error();
     return fileStr;
