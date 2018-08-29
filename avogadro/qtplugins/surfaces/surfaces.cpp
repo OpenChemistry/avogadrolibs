@@ -17,6 +17,7 @@
 #include "surfaces.h"
 #include "surfacedialog.h"
 
+#include "edtsurface.h"
 #include "gaussiansetconcurrent.h"
 #include "slatersetconcurrent.h"
 
@@ -171,7 +172,8 @@ void Surfaces::calculateSurface()
     case SolventExcluded:
       calculateEDT();
       // pass a molecule and return a Cube for m_cube
-      //   displayMesh();
+      m_isoValue = 0.0;
+      displayMesh();
       break;
 
     case ElectronDensity:
@@ -190,8 +192,11 @@ void Surfaces::calculateSurface()
 
 void Surfaces::calculateEDT()
 {
-  // pass the molecule to the EDT, plus the surface type
-  // get back a Cube object in m_cube
+  EDTSurface* edt = new EDTSurface();
+  Type type = m_dialog->surfaceType();
+  double resolution = m_dialog->resolution();
+  Cube* t_cube = new Cube();
+  m_cube = edt->EDTCube(m_molecule, t_cube, type, 1.4, resolution);
 }
 
 void Surfaces::calculateQM()
