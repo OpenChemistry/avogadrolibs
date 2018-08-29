@@ -59,7 +59,7 @@ public:
 private:
   FileFormatManager& m_ffm;
 };
-}
+} // namespace
 
 void exportIo(py::module& m)
 {
@@ -76,11 +76,18 @@ void exportIo(py::module& m)
   py::class_<ffm>(m, "FileFormatManager")
     .def(py::init<>())
     .def("readFile", &ffm::readFile,
-         "Read in a molecule from the supplied file path")
+         "Read in a molecule from the supplied file path", py::arg("molecule"),
+         py::arg("fileName"), py::arg("fileExtension") = std::string(),
+         py::arg("options") = std::string())
     .def("writeFile", &ffm::writeFile,
-         "Write the molecule to the supplied file path")
+         "Write the molecule to the supplied file path", py::arg("molecule"),
+         py::arg("fileName"), py::arg("fileExtension") = std::string(),
+         py::arg("options") = std::string())
     .def("readString", &ffm::readString,
-         "Read in a molecule from the supplied string")
+         "Read in a molecule from the supplied string", py::arg("molecule"),
+         py::arg("string"), py::arg("fileExtension"),
+         py::arg("options") = std::string())
     .def("writeString", &ffm::writeString,
-         "Write a molecule to the supplied string");
+         "Write a molecule to the supplied string", py::arg("mol"),
+         py::arg("ext"), py::arg("options") = std::string());
 }
