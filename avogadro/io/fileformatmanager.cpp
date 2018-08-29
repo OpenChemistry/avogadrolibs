@@ -24,11 +24,14 @@
 #include "gromacsformat.h"
 #include "lammpsformat.h"
 #include "mdlformat.h"
-#include "mmtfformat.h"
 #include "pdbformat.h"
 #include "trrformat.h"
 #include "vaspformat.h"
 #include "xyzformat.h"
+
+#ifdef AVO_USE_MMTF
+#include "mmtfformat.h"
+#endif
 
 #include <algorithm>
 #include <memory>
@@ -301,7 +304,9 @@ FileFormatManager::FileFormatManager()
   addFormat(new DcdFormat);
   addFormat(new LammpsTrajectoryFormat);
   addFormat(new LammpsDataFormat);
+#ifdef AVO_USE_MMTF
   addFormat(new MMTFFormat);
+#endif
 }
 
 FileFormatManager::~FileFormatManager()
