@@ -52,8 +52,8 @@ void VanDerWaals::process(const Core::Molecule& molecule,
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
     unsigned char atomicNumber = atom.atomicNumber();
-    const unsigned char* c = Elements::color(atomicNumber);
-    Vector3ub color(c[0], c[1], c[2]);
+
+    Vector3ub color = atom.color();
     spheres->addSphere(atom.position3d().cast<float>(), color,
                        static_cast<float>(Elements::radiusVDW(atomicNumber)));
   }

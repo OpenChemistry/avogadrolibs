@@ -285,6 +285,24 @@ public:
   bool setFormalCharge(Index atomId, signed char charge);
 
   /**
+   * Get the color for the requested atom.
+   * @param atomId The index of the atom.
+   * @return The color of the atom indexed at @a atomId, or
+   * (0, 0, 0) if @a atomId is invalid. If no color is set for the
+   * given atomId, the default color for the atomic number of
+   * the atomId is returned.
+   */
+  Vector3ub color(Index atomId) const;
+
+  /**
+   * Set the color of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param color The new color.
+   * @return True on success, false otherwise.
+   */
+  bool setColor(Index atomId, Vector3ub color);
+
+  /**
    * Create a new bond in the molecule.
    * @param atom1 The first atom in the bond.
    * @param atom2 The second order in the bond.
@@ -729,6 +747,11 @@ inline Core::AtomHybridization RWMolecule::hybridization(Index atomId) const
 inline signed char RWMolecule::formalCharge(Index atomId) const
 {
   return m_molecule.formalCharge(atomId);
+}
+
+inline Vector3ub RWMolecule::color(Index atomId) const
+{
+  return m_molecule.color(atomId);
 }
 
 inline RWMolecule::BondType RWMolecule::addBond(const AtomType& atom1,

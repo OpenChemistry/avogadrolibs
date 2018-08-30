@@ -55,7 +55,7 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
   geometry->addDrawable(spheres);
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
-    Vector3ub color(Elements::color(atom.atomicNumber()));
+    Vector3ub color = atom.color();
     spheres->addSphere(atom.position3d().cast<float>(), color, radius);
   }
 
@@ -67,8 +67,8 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
     Core::Bond bond = molecule.bond(i);
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
-    Vector3ub color1(Elements::color(bond.atom1().atomicNumber()));
-    Vector3ub color2(Elements::color(bond.atom2().atomicNumber()));
+    Vector3ub color1 = bond.atom1().color();
+    Vector3ub color2 = bond.atom2().color();
     Vector3f bondVector = pos2 - pos1;
     float bondLength = bondVector.norm();
     bondVector /= bondLength;
