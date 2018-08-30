@@ -24,6 +24,7 @@
 
 #include "array.h"
 #include "bond.h"
+#include "elements.h"
 #include "graph.h"
 #include "variantmap.h"
 #include "vector.h"
@@ -181,6 +182,37 @@ public:
    * @return True on success, false otherwise.
    */
   bool setFormalCharge(Index atomId, signed char charge);
+
+  /** Returns a vector of colors for the atoms in the moleucle. */
+  Array<Vector3ub>& colors();
+
+  /** \overload */
+  const Array<Vector3ub>& colors() const;
+
+  /**
+   * Get the color for the requested atom.
+   * @param atomId The index of the atom.
+   * @return The color of the atom indexed at @a atomId, or
+   * (0,0,0) if @a atomId is invalid. If no color is set for the
+   * given atomId, the default color for the atomic number of
+   * the atomId is returned.
+   */
+  Vector3ub color(Index atomId) const;
+
+  /**
+   * Replace the current array of colors.
+   * @param colors The new color array. Must be of length atomCount().
+   * @return True on success, false otherwise.
+   */
+  bool setColors(const Core::Array<Vector3ub>& colors);
+
+  /**
+   * Set the color of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param color The new color.
+   * @return True on success, false otherwise.
+   */
+  bool setColor(Index atomId, Vector3ub color);
 
   /** Returns a vector of 2d atom positions for the atoms in the molecule. */
   const Array<Vector2>& atomPositions2d() const;
@@ -594,6 +626,7 @@ protected:
   Array<AtomHybridization> m_hybridizations;
   Array<signed char> m_formalCharges;
   Array<Vector3> m_forceVectors;
+  Array<Vector3ub> m_colors;
 
   // Vibration data if available.
   Array<double> m_vibrationFrequencies;
@@ -705,6 +738,40 @@ inline bool Molecule::setFormalCharge(Index atomId, signed char charge)
     if (atomId >= m_formalCharges.size())
       m_formalCharges.resize(atomCount(), 0);
     m_formalCharges[atomId] = charge;
+    return true;
+  }
+  return false;
+}
+
+inline Vector3ub Molecule::color(Index atomId) const
+{
+  if (atomId >= atomCount())
+    return Vector3ub(0, 0, 0);
+
+  if (atomId < m_colors.size())
+    return m_colors[atomId];
+
+  return Vector3ub(Elements::color(atomicNumber(atomId)));
+}
+
+inline bool Molecule::setColors(const Core::Array<Vector3ub>& colors)
+{
+  if (colors.size() == atomCount()) {
+    m_colors = colors;
+    return true;
+  }
+  return false;
+}
+
+inline bool Molecule::setColor(Index atomId, Vector3ub color)
+{
+  if (atomId < atomCount()) {
+    if (atomId >= m_colors.size()) {
+      for (Index i = m_colors.size(); i < atomCount(); ++i) {
+        m_colors.push_back(Vector3ub(Elements::color(atomicNumber(i))));
+      }
+    }
+    m_colors[atomId] = color;
     return true;
   }
   return false;
