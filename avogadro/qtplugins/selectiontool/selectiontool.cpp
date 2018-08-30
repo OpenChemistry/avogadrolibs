@@ -20,6 +20,8 @@
 
 #include "selectiontool.h"
 
+#include "selectiontoolwidget.h"
+
 #include <avogadro/qtopengl/glwidget.h>
 
 #include <avogadro/rendering/geometrynode.h>
@@ -50,10 +52,15 @@ namespace QtPlugins {
 
 SelectionTool::SelectionTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_renderer(nullptr), m_drawSelectionBox(false)
+    m_molecule(nullptr), m_renderer(nullptr),
+    m_toolWidget(new SelectionToolWidget(qobject_cast<QWidget*>(parent_))),
+    m_drawSelectionBox(false)
 {
   m_activateAction->setText(tr("Selection"));
   m_activateAction->setIcon(QIcon(":/icons/selectiontool.png"));
+
+  connect(m_toolWidget, SIGNAL(colorApplied(Vector3ub)), this,
+          SLOT(applyColor(Vector3ub)));
 }
 
 SelectionTool::~SelectionTool()
@@ -62,7 +69,7 @@ SelectionTool::~SelectionTool()
 
 QWidget* SelectionTool::toolWidget() const
 {
-  return nullptr;
+  return m_toolWidget;
 }
 
 QUndoCommand* SelectionTool::mousePressEvent(QMouseEvent* e)
@@ -189,6 +196,14 @@ void SelectionTool::draw(Rendering::GroupNode& node)
   geo->addDrawable(mesh);
 }
 
+void SelectionTool::applyColor(Vector3ub color)
+{
+  for (Rendering::Identifier& atom : m_atoms) {
+    m_molecule->atom(atom.index).setColor(color);
+  }
+  m_molecule->emitChanged(Molecule::Atoms);
+}
+
 bool SelectionTool::addAtom(const Rendering::Identifier& atom)
 {
   int idx = m_atoms.indexOf(atom);
@@ -198,7 +213,9 @@ bool SelectionTool::addAtom(const Rendering::Identifier& atom)
     return true;
   } else {
     m_atoms.push_back(atom);
-    m_molecule->atom(atom.index).setSelected(true);
+    Atom selectedAtom = m_molecule->atom(atom.index);
+    selectedAtom.setSelected(true);
+    m_toolWidget->setColor(selectedAtom.color());
     return true;
   }
   m_molecule->emitChanged(Molecule::Atoms);

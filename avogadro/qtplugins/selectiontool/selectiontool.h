@@ -31,6 +31,7 @@
 
 namespace Avogadro {
 namespace QtPlugins {
+class SelectionToolWidget;
 
 /**
  * @brief SelectionTool selects atoms and bonds from the screen.
@@ -59,12 +60,16 @@ public:
 
   void draw(Rendering::GroupNode& node) override;
 
+private slots:
+  void applyColor(Vector3ub color);
+
 private:
   bool addAtom(const Rendering::Identifier& atom);
 
   QAction* m_activateAction;
   QtGui::Molecule* m_molecule;
   Rendering::GLRenderer* m_renderer;
+  SelectionToolWidget* m_toolWidget;
   QVector<Rendering::Identifier> m_atoms;
   bool m_drawSelectionBox;
   Vector2 m_start;
