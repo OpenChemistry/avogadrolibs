@@ -3,6 +3,10 @@
 
 #include <avogadro/core/elements.h>
 
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
+
 namespace Avogadro {
 namespace QtPlugins {
 /**
@@ -28,8 +32,6 @@ PQRRequest::PQRRequest(QTableWidget* tw, QLabel* gv, QLineEdit* nd, QLabel* fd,
 */
 PQRRequest::~PQRRequest()
 {
-  delete results;
-  delete read;
   delete oNetworkAccessManager;
 }
 
@@ -75,7 +77,7 @@ void PQRRequest::sendPNGRequest(QString url)
 */
 QString PQRRequest::molSelected(int num)
 {
-  if (results == nullptr)
+  if (results.empty() || num > results.size())
     return QString("N/A");
 
   QString mol2 = results[num].mol2url;
@@ -94,30 +96,36 @@ QString PQRRequest::molSelected(int num)
 void PQRRequest::parseJson()
 {
   if (reply->error() == QNetworkReply::NoError) {
-    read = new Json::Reader();
     // Reading the data from the response
     QByteArray bytes = reply->readAll();
-    QString jsonString(bytes);
 
     // parse the json
-    read->parse(jsonString.toStdString().c_str(), root);
+    json root = json::parse(bytes.data());
 
     int resultSize = root.size();
 
+    results.clear();
     if (resultSize == 0) {
       table->setRowCount(1);
       table->setItem(0, 0, new QTableWidgetItem("No Results!"));
       table->setCellWidget(0, 1, new QLabel());
       table->setItem(0, 2, new QTableWidgetItem("N/A"));
-      results = nullptr;
     } else {
-      results = new result[root.size()];
       table->setRowCount(resultSize);
       for (int i = 0; i < resultSize; i++) {
-        results[i].formula = root[i].get("formula", "Error").asCString();
-        results[i].inchikey = root[i].get("inchikey", "Error").asCString();
-        results[i].mol2url = root[i].get("mol2url", "Error").asCString();
-        results[i].name = root[i].get("name", "Error").asCString();
+        results.push_back(result());
+
+        // Loop through the keys
+        for (auto it = root[i].cbegin(); it != root[i].cend(); ++it) {
+          if (it.key() == "formula" && it.value().is_string())
+            results[i].formula = it.value().get<std::string>().c_str();
+          else if (it.key() == "inchikey" && it.value().is_string())
+            results[i].inchikey = it.value().get<std::string>().c_str();
+          else if (it.key() == "mol2url" && it.value().is_string())
+            results[i].mol2url = it.value().get<std::string>().c_str();
+          else if (it.key() == "name" && it.value().is_string())
+            results[i].name = it.value().get<std::string>().c_str();
+        }
         results[i].mass = getMolMass(results[i].formula);
 
         table->setItem(i, 0, new QTableWidgetItem(results[i].name));
@@ -239,5 +247,5 @@ float PQRRequest::getMolMass(QString formula)
   }
   return totalMass;
 }
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

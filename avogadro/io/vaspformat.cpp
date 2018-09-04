@@ -14,7 +14,7 @@
 
 ******************************************************************************/
 
-#include "poscarformat.h"
+#include "vaspformat.h"
 
 #include <avogadro/core/elements.h> // for atomicNumberFromSymbol()
 #include <avogadro/core/matrix.h>   // for matrix3
@@ -31,25 +31,22 @@ namespace Avogadro {
 namespace Io {
 
 using std::getline;
+using std::map;
 using std::string;
 using std::vector;
 
 using Core::Array;
 using Core::Atom;
 using Core::Elements;
-using Core::Molecule;
-using Core::UnitCell;
 using Core::lexicalCast;
+using Core::Molecule;
 using Core::split;
 using Core::trimmed;
+using Core::UnitCell;
 
-PoscarFormat::PoscarFormat()
-{
-}
+PoscarFormat::PoscarFormat() {}
 
-PoscarFormat::~PoscarFormat()
-{
-}
+PoscarFormat::~PoscarFormat() {}
 
 bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -332,6 +329,150 @@ std::vector<std::string> PoscarFormat::fileExtensions() const
 }
 
 std::vector<std::string> PoscarFormat::mimeTypes() const
+{
+  std::vector<std::string> mime;
+  mime.push_back("N/A");
+  return mime;
+}
+
+OutcarFormat::OutcarFormat() {}
+
+OutcarFormat::~OutcarFormat() {}
+
+bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
+{
+  std::string buffer, dashedStr, positionStr, latticeStr;
+  positionStr = " POSITION";
+  latticeStr = "  Lattice vectors:";
+  dashedStr = " -----------";
+  std::vector<std::string> stringSplit;
+  int coordSet = 0, natoms = 0;
+  Array<Vector3> positions;
+  Vector3 ax1, ax2, ax3;
+  bool ax1Set = false, ax2Set = false, ax3Set = false;
+
+  typedef map<string, unsigned char> AtomTypeMap;
+  AtomTypeMap atomTypes;
+  unsigned char customElementCounter = CustomElementMin;
+
+  while (getline(inStream, buffer)) {
+    // Checks whether the buffer object contains the lattice vectors keyword
+    if (strncmp(buffer.c_str(), latticeStr.c_str(), latticeStr.size()) == 0) {
+      // Checks whether lattice vectors have been already set. Reason being that
+      // only the first occurrence denotes the true lattice vectors, and the
+      // ones following these are vectors of the primitive cell.
+      if (!(ax1Set && ax2Set && ax3Set)) {
+        getline(inStream, buffer);
+        for (int i = 0; i < 3; ++i) {
+          getline(inStream, buffer);
+          stringSplit = split(buffer, ' ');
+          if (stringSplit[0] == "A1") {
+            ax1 = Vector3(lexicalCast<double>(stringSplit.at(3).substr(
+                            0, stringSplit.at(3).size() - 1)),
+                          lexicalCast<double>(stringSplit.at(4).substr(
+                            0, stringSplit.at(4).size() - 1)),
+                          lexicalCast<double>(stringSplit.at(5).substr(
+                            0, stringSplit.at(5).size() - 1)));
+            ax1Set = true;
+          } else if (stringSplit[0] == "A2") {
+            ax2 = Vector3(lexicalCast<double>(stringSplit.at(3).substr(
+                            0, stringSplit.at(3).size() - 1)),
+                          lexicalCast<double>(stringSplit.at(4).substr(
+                            0, stringSplit.at(4).size() - 1)),
+                          lexicalCast<double>(stringSplit.at(5).substr(
+                            0, stringSplit.at(5).size() - 1)));
+            ax2Set = true;
+          } else if (stringSplit[0] == "A3") {
+            ax3 = Vector3(lexicalCast<double>(stringSplit.at(3).substr(
+                            0, stringSplit.at(3).size() - 1)),
+                          lexicalCast<double>(stringSplit.at(4).substr(
+                            0, stringSplit.at(4).size() - 1)),
+                          lexicalCast<double>(stringSplit.at(5).substr(
+                            0, stringSplit.at(5).size() - 1)));
+            ax3Set = true;
+          }
+        }
+        // Checks whether all the three axis vectors have been read
+        if (ax1Set && ax2Set && ax3Set) {
+          mol.setUnitCell(new UnitCell(ax1, ax2, ax3));
+        }
+      }
+    }
+
+    // Checks whether the buffer object contains the POSITION keyword
+    else if (strncmp(buffer.c_str(), positionStr.c_str(), positionStr.size()) ==
+             0) {
+      getline(inStream, buffer);
+      // Double checks whether the succeeding line is a sequence of dashes
+      if (strncmp(buffer.c_str(), dashedStr.c_str(), dashedStr.size()) == 0) {
+        // natoms is not known, so the loop proceeds till the bottom dashed line
+        // is encountered
+        while (true) {
+          getline(inStream, buffer);
+          // Condition for encountering dashed line
+          if (strncmp(buffer.c_str(), dashedStr.c_str(), dashedStr.size()) ==
+              0) {
+            if (coordSet == 0) {
+              mol.setCoordinate3d(mol.atomPositions3d(), coordSet++);
+              positions.reserve(natoms);
+            } else {
+              mol.setCoordinate3d(positions, coordSet++);
+              positions.clear();
+            }
+            break;
+          }
+          // Parsing the coordinates
+          stringSplit = split(buffer, ' ');
+          Vector3 tmpAtom(lexicalCast<double>(stringSplit.at(0)),
+                          lexicalCast<double>(stringSplit.at(1)),
+                          lexicalCast<double>(stringSplit.at(2)));
+          if (coordSet == 0) {
+            AtomTypeMap::const_iterator it;
+            atomTypes.insert(
+              std::make_pair(std::to_string(natoms), customElementCounter++));
+            it = atomTypes.find(std::to_string(natoms));
+            // if (customElementCounter > CustomElementMax) {
+            //   appendError("Custom element type limit exceeded.");
+            //   return false;
+            // }
+            Atom newAtom = mol.addAtom(it->second);
+            newAtom.setPosition3d(tmpAtom);
+            natoms++;
+          } else {
+            positions.push_back(tmpAtom);
+          }
+        }
+      }
+    }
+  }
+
+  // Set the custom element map if needed:
+  if (!atomTypes.empty()) {
+    Molecule::CustomElementMap elementMap;
+    for (AtomTypeMap::const_iterator it = atomTypes.begin(),
+                                     itEnd = atomTypes.end();
+         it != itEnd; ++it) {
+      elementMap.insert(std::make_pair(it->second, "Atom " + it->first));
+    }
+    mol.setCustomElementMap(elementMap);
+  }
+
+  return true;
+}
+
+bool OutcarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
+{
+  return false;
+}
+
+std::vector<std::string> OutcarFormat::fileExtensions() const
+{
+  std::vector<std::string> ext;
+  ext.push_back("OUTCAR");
+  return ext;
+}
+
+std::vector<std::string> OutcarFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
   mime.push_back("N/A");

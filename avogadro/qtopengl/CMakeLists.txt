@@ -6,11 +6,13 @@ include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 set(HEADERS
+  activeobjects.h
   glwidget.h
   qttextrenderstrategy.h
 )
 
 set(SOURCES
+  activeobjects.cpp
   glwidget.cpp
   qttextrenderstrategy.cpp
 )

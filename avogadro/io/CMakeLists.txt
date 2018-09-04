@@ -1,5 +1,11 @@
 find_package(Eigen3 REQUIRED)
 
+if(USE_MMTF)
+  find_package(MMTF REQUIRED)
+  include_directories(SYSTEM "${MMTF_INCLUDE_DIRS}")
+  add_definitions(-DAVO_USE_MMTF)
+endif()
+
 if(USE_HDF5)
   find_package(HDF5 REQUIRED COMPONENTS C)
   # HDF5 is built in two ways (CMake or its default build system). If we are
@@ -15,7 +21,6 @@ endif()
 # compilers that support that notion.
 include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/pugixml"
-  "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/struct"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty")
 
@@ -32,7 +37,8 @@ set(HEADERS
   fileformatmanager.h
   gromacsformat.h
   mdlformat.h
-  poscarformat.h
+  vaspformat.h
+  pdbformat.h
   xyzformat.h
   trrformat.h
   lammpsformat.h
@@ -46,7 +52,8 @@ set(SOURCES
   fileformatmanager.cpp
   gromacsformat.cpp
   mdlformat.cpp
-  poscarformat.cpp
+  vaspformat.cpp
+  pdbformat.cpp
   xyzformat.cpp
   trrformat.cpp
   lammpsformat.cpp
@@ -57,11 +64,19 @@ if(USE_HDF5)
   list(APPEND SOURCES hdf5dataformat.cpp)
 endif()
 
+if(USE_MMTF)
+  list(APPEND HEADERS mmtfformat.h)
+  list(APPEND SOURCES mmtfformat.cpp)
+endif()
+
 avogadro_add_library(AvogadroIO ${HEADERS} ${SOURCES})
 
 target_link_libraries(AvogadroIO
   LINK_PUBLIC AvogadroCore
-  LINK_PRIVATE jsoncpp struct)
+  LINK_PRIVATE struct)
 if(USE_HDF5)
   target_link_libraries(AvogadroIO LINK_PRIVATE ${HDF5_LIBRARIES})
+endif()
+if(WIN32)
+  target_link_libraries(AvogadroIO LINK_PRIVATE ws2_32)
 endif()

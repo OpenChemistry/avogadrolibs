@@ -24,21 +24,22 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
-#include <avogadro/io/poscarformat.h>
+#include <avogadro/io/vaspformat.h>
 
 #include <fstream>
 #include <sstream>
 #include <string>
 
+using Avogadro::Matrix3;
+using Avogadro::Vector3;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::UnitCell;
 using Avogadro::Io::FileFormat;
+using Avogadro::Io::OutcarFormat;
 using Avogadro::Io::PoscarFormat;
-using Avogadro::Matrix3;
-using Avogadro::Vector3;
 
-TEST(PoscarTest, read)
+TEST(VaspTest, readPoscar)
 {
   PoscarFormat poscar;
   Molecule molecule;
@@ -76,7 +77,7 @@ TEST(PoscarTest, read)
   EXPECT_DOUBLE_EQ(pos5.z(), 0.5);
 }
 
-TEST(PoscarTest, write)
+TEST(VaspTest, writePoscar)
 {
   PoscarFormat poscar;
   Molecule molecule;
@@ -121,7 +122,7 @@ TEST(PoscarTest, write)
   EXPECT_TRUE(checkedSomething);
 }
 
-TEST(PoscarTest, modes)
+TEST(VaspTest, PoscarModes)
 {
   // This tests some of the mode setting/checking code, not explicitly Poscar
   // but
@@ -131,4 +132,75 @@ TEST(PoscarTest, modes)
   EXPECT_TRUE(format.isMode(FileFormat::Read));
   EXPECT_TRUE(format.mode() & FileFormat::Read);
   EXPECT_FALSE(format.isMode(FileFormat::Write));
+}
+
+TEST(VaspTest, readOutcar)
+{
+  OutcarFormat multi;
+  multi.open(AVOGADRO_DATA "/data/ti_bulk.OUTCAR",
+             FileFormat::Read | FileFormat::MultiMolecule);
+  Molecule molecule;
+
+  // Read in the structure.
+  EXPECT_TRUE(multi.readMolecule(molecule));
+  ASSERT_EQ(multi.error(), "");
+
+  // First, let's check the unit cell
+  UnitCell* uc = molecule.unitCell();
+
+  EXPECT_EQ(uc->aVector(), Vector3(5.8783178329, 0.0000000000, 0.0000000000));
+  EXPECT_EQ(uc->bVector(), Vector3(-2.9391589165, 5.0907725749, 0.0000000000));
+  EXPECT_EQ(uc->cVector(), Vector3(0.0000000000, 0.0000000000, 9.2823419571));
+
+  // Check that the number of atoms per step and number of steps in the
+  // trajectory were read correctly
+  EXPECT_EQ(molecule.atomCount(), 16);
+  EXPECT_EQ(molecule.coordinate3dCount(), 10);
+
+  // Check a couple of positions to make sure they were read correctly
+  EXPECT_EQ(molecule.atom(1).position3d().x(), -0.00000);
+  EXPECT_EQ(molecule.atom(1).position3d().y(), 1.69693);
+  EXPECT_EQ(molecule.atom(1).position3d().z(), 5.80146);
+  EXPECT_EQ(molecule.atom(4).position3d().x(), 2.93916);
+  EXPECT_EQ(molecule.atom(4).position3d().y(), 1.69693);
+  EXPECT_EQ(molecule.atom(4).position3d().z(), 1.16029);
+
+  // Switching to second frame
+  EXPECT_TRUE(molecule.setCoordinate3d(1));
+
+  // Check a couple of positions to make sure they were read correctly
+  EXPECT_EQ(molecule.atom(1).position3d().x(), -0.00091);
+  EXPECT_EQ(molecule.atom(1).position3d().y(), 1.70362);
+  EXPECT_EQ(molecule.atom(1).position3d().z(), 5.80402);
+  EXPECT_EQ(molecule.atom(4).position3d().x(), 2.93439);
+  EXPECT_EQ(molecule.atom(4).position3d().y(), 1.69969);
+  EXPECT_EQ(molecule.atom(4).position3d().z(), 1.16202);
+
+  // Switching to last frame
+  EXPECT_TRUE(molecule.setCoordinate3d(9));
+
+  // Check a couple of positions to make sure they were read correctly
+  EXPECT_EQ(molecule.atom(1).position3d().x(), -0.00813);
+  EXPECT_EQ(molecule.atom(1).position3d().y(), 1.75426);
+  EXPECT_EQ(molecule.atom(1).position3d().z(), 5.82452);
+  EXPECT_EQ(molecule.atom(4).position3d().x(), 2.89744);
+  EXPECT_EQ(molecule.atom(4).position3d().y(), 1.72157);
+  EXPECT_EQ(molecule.atom(4).position3d().z(), 1.17499);
+}
+
+TEST(VaspTest, OutcarModes)
+{
+  // This tests some of the mode setting/checking code
+  OutcarFormat format;
+  format.open(AVOGADRO_DATA "/data/ti_bulk.OUTCAR", FileFormat::Read);
+  EXPECT_TRUE(format.isMode(FileFormat::Read));
+  EXPECT_TRUE(format.mode() & FileFormat::Read);
+  EXPECT_FALSE(format.isMode(FileFormat::Write));
+
+  // Try some combinations now.
+  format.open(AVOGADRO_DATA "/data/ti_bulk.OUTCAR",
+              FileFormat::Read | FileFormat::MultiMolecule);
+  EXPECT_TRUE(format.isMode(FileFormat::Read));
+  EXPECT_TRUE(format.isMode(FileFormat::Read | FileFormat::MultiMolecule));
+  EXPECT_TRUE(format.isMode(FileFormat::MultiMolecule));
 }
