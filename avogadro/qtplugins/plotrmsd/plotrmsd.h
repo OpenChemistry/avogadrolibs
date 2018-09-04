@@ -25,6 +25,10 @@
 class QByteArray;
 class QStringList;
 
+namespace VTK {
+class VtkPlot;
+}
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -66,6 +70,7 @@ private:
   QtGui::Molecule* m_molecule;
 
   std::unique_ptr<QAction> m_displayDialogAction;
+  std::unique_ptr<VTK::VtkPlot> m_plot;
 };
 
 inline QString PlotRmsd::description() const
