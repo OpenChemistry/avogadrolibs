@@ -14,7 +14,7 @@
    <string>Yaehmop Band</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="12" column="1" colspan="3">
+   <item row="11" column="1" colspan="3">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -24,20 +24,7 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="1">
-    <widget class="QCheckBox" name="cb_plotFermi">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Fermi level should be known before checking this box. You can discover the Fermi level by performing a density of states calculation and displaying the data (it will be at the top of the data). In addition, if a density of states calculation is performed, the Fermi level here will automatically be set to what was detected during the density of states calculation.&lt;/p&gt;&lt;p&gt;If this box is checked, be sure the correct Fermi level is set in the spinbox on the right.&lt;/p&gt;&lt;p&gt;Default: off&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::RightToLeft</enum>
-     </property>
-     <property name="text">
-      <string>Plot Fermi?</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
+   <item row="6" column="1">
     <widget class="QDoubleSpinBox" name="spin_minY">
      <property name="enabled">
       <bool>false</bool>
@@ -59,7 +46,20 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="1">
+   <item row="8" column="1">
+    <widget class="QCheckBox" name="cb_plotFermi">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Fermi level should be known before checking this box. You can discover the Fermi level by performing a density of states calculation and displaying the data (it will be at the top of the data). In addition, if a density of states calculation is performed, the Fermi level here will automatically be set to what was detected during the density of states calculation.&lt;/p&gt;&lt;p&gt;If this box is checked, be sure the correct Fermi level is set in the spinbox on the right.&lt;/p&gt;&lt;p&gt;Default: off&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string>Plot Fermi?</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
     <widget class="QCheckBox" name="cb_zeroFermi">
      <property name="enabled">
       <bool>false</bool>
@@ -89,7 +89,7 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="2" colspan="2">
+   <item row="6" column="2" colspan="2">
     <widget class="QDoubleSpinBox" name="spin_maxY">
      <property name="enabled">
       <bool>false</bool>
@@ -111,7 +111,7 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="2" colspan="2">
+   <item row="8" column="2" colspan="2">
     <widget class="QDoubleSpinBox" name="spin_fermi">
      <property name="enabled">
       <bool>false</bool>
@@ -173,16 +173,6 @@ p, li { white-space: pre-wrap; }
     </widget>
    </item>
    <item row="4" column="2" colspan="2">
-    <widget class="QCheckBox" name="cb_displayBandData">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If this box is checked, all of the band data will be displayed in an edit box. The user may copy and paste it for use elsewhere. The data is in this format:&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;# Special k points&lt;/p&gt;&lt;p&gt;# &amp;lt;symbol&amp;gt; &amp;lt;x&amp;gt; &amp;lt;y&amp;gt; &amp;lt;z&amp;gt; &amp;lt;k space value (x)&amp;gt;&lt;/p&gt;&lt;p&gt;# L 0.5 0.5 0.5 &lt;/p&gt;&lt;p&gt;# etc.&lt;/p&gt;&lt;p&gt;# &amp;lt;k space distance (x)&amp;gt; &amp;lt;band 1 energies&amp;gt; &amp;lt;band 2 energies&amp;gt; &amp;lt;etc.&amp;gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Default: off&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>Display Band Data</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="2" colspan="2">
     <widget class="QCheckBox" name="cb_limitY">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Limit the y-range in the plot?&lt;/p&gt;&lt;p&gt;Default: off&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -192,7 +182,7 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="11" column="2">
+   <item row="10" column="2">
     <widget class="QLabel" name="label_3">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of periodic dimensions.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;If this is set to 1, the material will be periodic only along the A vector of the crystal.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;If this is set to 2, the material will be periodic along both the A and B vectors of the crystal.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;If this is set to 3, the material will be periodic along the A, B, and C vectors of the crystal.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -208,7 +198,7 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="11" column="3">
+   <item row="10" column="3">
     <widget class="QSpinBox" name="spin_numDim">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of periodic dimensions.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;If this is set to 1, the material will be periodic only along the A vector of the crystal.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;If this is set to 2, the material will be periodic along both the A and B vectors of the crystal.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;If this is set to 3, the material will be periodic along the A, B, and C vectors of the crystal.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -237,7 +227,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>spin_numKPoints</tabstop>
   <tabstop>edit_specialKPoints</tabstop>
   <tabstop>cb_displayYaehmopInput</tabstop>
-  <tabstop>cb_displayBandData</tabstop>
   <tabstop>cb_limitY</tabstop>
   <tabstop>spin_minY</tabstop>
   <tabstop>spin_maxY</tabstop>

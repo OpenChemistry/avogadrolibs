@@ -131,8 +131,6 @@ void Yaehmop::readSettings()
     settings.value("yaehmop/bandOptions/numBandKPoints", 40).toUInt();
   m_yaehmopSettings.displayYaehmopInput =
     settings.value("yaehmop/general/displayYaehmopInput", false).toBool();
-  m_yaehmopSettings.displayData =
-    settings.value("yaehmop/general/displayData", false).toBool();
   m_yaehmopSettings.limitY =
     settings.value("yaehmop/general/limitY", false).toBool();
   m_yaehmopSettings.minY =
@@ -156,8 +154,6 @@ void Yaehmop::writeSettings()
                     m_yaehmopSettings.numBandKPoints);
   settings.setValue("yaehmop/general/displayYaehmopInput",
                     m_yaehmopSettings.displayYaehmopInput);
-  settings.setValue("yaehmop/general/displayData",
-                    m_yaehmopSettings.displayData);
   settings.setValue("yaehmop/general/limitY", m_yaehmopSettings.limitY);
   settings.setValue("yaehmop/general/minY", m_yaehmopSettings.minY);
   settings.setValue("yaehmop/general/maxY", m_yaehmopSettings.maxY);
