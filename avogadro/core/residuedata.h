@@ -12,14 +12,13 @@ class ResidueData
 {
 private:
   std::string m_residueName;
-  std::vector<std::pair<std::string, int>> m_residueAtomNames;
+  std::map<std::string, int> m_residueAtomNames;
   std::vector<std::pair<std::string, std::string>> m_residueSingleBonds;
   std::vector<std::pair<std::string, std::string>> m_residueDoubleBonds;
 
 public:
   ResidueData() {}
-  ResidueData(std::string name,
-              std::vector<std::pair<std::string, int>> atomNames,
+  ResidueData(std::string name, std::map<std::string, int> atomNames,
               std::vector<std::pair<std::string, std::string>> singleBonds,
               std::vector<std::pair<std::string, std::string>> doubleBonds)
   {
