@@ -73,13 +73,13 @@ class ResidueData
 {
 private:
   std::string m_residueName;
-  std::vector<std::string> m_residueAtomNames;
+  std::vector<std::pair<std::string, int>> m_residueAtomNames;
   std::vector<std::pair<std::string, std::string>> m_residueSingleBonds;
   std::vector<std::pair<std::string, std::string>> m_residueDoubleBonds;
 
 public:
   ResidueData() {}
-  ResidueData(std::string name, std::vector<std::string> atomNames,
+  ResidueData(std::string name, std::vector<std::pair<std::string, int>> atomNames,
               std::vector<std::pair<std::string, std::string>> singleBonds,
               std::vector<std::pair<std::string, std::string>> doubleBonds)
   {
@@ -102,6 +102,10 @@ public:
     using std::swap;
     swap(*this, other);
     return *this;
+  }
+
+  std::map<std::string, int> residueAtoms() {
+    return m_residueAtomNames;
   }
 
   std::vector<std::pair<std::string, std::string>> residueSingleBonds()
@@ -142,7 +146,7 @@ for ligand in ligands:
         atom = mol_pdb.atoms[i].OBAtom
         res = atom.GetResidue()
         # build up a map between atom index and atom ID
-        atom_map[idx] = res.GetAtomID(atom).strip().rstrip()
+        atom_map[idx] = res.GetAtomID(atom).strip().rstrip(), atom.GetAtomicNum()
 
     # go through bonds
     single_bonds = []
@@ -151,17 +155,17 @@ for ligand in ligands:
         begin = bond.GetBeginAtomIdx()
         end = bond.GetEndAtomIdx()
         if bond.GetBO() == 2:
-            double_bonds.append((atom_map[begin], atom_map[end]))
+            double_bonds.append((atom_map[begin][0], atom_map[end][0]))
         elif bond.GetBO() == 1:
-            single_bonds.append((atom_map[begin], atom_map[end]))
+            single_bonds.append((atom_map[begin][0], atom_map[end][0]))
 
     # print out the residue data
     print('ResidueData %sData("%s",' % (ligand, ligand))
     print('// Atoms')
     print('{')
     for atom in atom_map.values()[:-1]:
-        print('"%s", ' % (atom), end='')
-    print('"%s"' % atom_map.values()[-1])
+        print('{ "%s", %d },' % (atom[0], atom[1]), end='')
+    print('{"%s", %d }' % (atom[0], atom[1]))
     print('},')
 
     print('// Single Bonds')
