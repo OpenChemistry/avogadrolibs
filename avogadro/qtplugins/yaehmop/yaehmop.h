@@ -63,6 +63,9 @@ private:
   void readSettings();
   void writeSettings();
 
+  // This pops up a dialog box with the yaehmop input inside
+  void showYaehmopInput(const QString& input);
+
   // Get the distance between two k points
   double kpointDistance(const Avogadro::Vector3& a, const Avogadro::Vector3& b);
 

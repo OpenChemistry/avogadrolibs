@@ -24,6 +24,8 @@
 #include <QProcess>
 #include <QSettings>
 #include <QString>
+#include <QTextEdit>
+#include <QVBoxLayout>
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/elements.h>
@@ -338,6 +340,10 @@ void Yaehmop::calculateBandStructure()
   VTK::VtkPlot::generatePlot(data, lineLabels, lineColors, xTitle, yTitle,
                              windowName, specialKPointVals,
                              specialKPointLabels);
+
+  // Show the yaehmop input if we are to do so
+  if (m_yaehmopSettings.displayYaehmopInput)
+    showYaehmopInput(input);
 }
 
 QString Yaehmop::createGeometryAndLatticeInput() const
@@ -524,6 +530,25 @@ bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
 
   // We did it!
   return true;
+}
+
+void Yaehmop::showYaehmopInput(const QString& input)
+{
+  QDialog* dialog = new QDialog;
+
+  // Make sure this gets deleted upon closing
+  dialog->setAttribute(Qt::WA_DeleteOnClose);
+
+  QVBoxLayout* layout = new QVBoxLayout(dialog);
+  dialog->setLayout(layout);
+  dialog->setWindowTitle(tr("Yaehmop Input"));
+  QTextEdit* edit = new QTextEdit(dialog);
+  layout->addWidget(edit);
+  dialog->resize(500, 500);
+
+  edit->setText(input);
+
+  dialog->show();
 }
 
 } // namespace QtPlugins
