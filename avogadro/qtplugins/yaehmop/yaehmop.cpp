@@ -33,6 +33,7 @@
 #include <avogadro/vtk/vtkplot.h>
 
 #include "banddialog.h"
+#include "specialkpoints.h"
 #include "yaehmopout.h"
 
 #include "yaehmop.h"
@@ -177,6 +178,13 @@ void Yaehmop::displayBandDialog()
     return;
   }
 
+  // Generate the special k points before displaying the dialog
+  m_yaehmopSettings.specialKPoints =
+    SpecialKPoints::getSpecialKPoints(*m_molecule);
+
+  if (m_yaehmopSettings.specialKPoints.isEmpty())
+    m_yaehmopSettings.specialKPoints = YAEHMOP_DEFAULT_SPECIAL_KPOINTS;
+
   // Do nothing if the user cancels
   if (m_bandDialog->exec() != QDialog::Accepted)
     return;
@@ -239,6 +247,7 @@ void Yaehmop::calculateBandStructure()
 
   // This is the number of kpoints connecting each special k point
   input += (QString::number(m_yaehmopSettings.numBandKPoints) + "\n");
+
   // Num special k points
   int numSK = m_yaehmopSettings.specialKPoints
                 .split(QRegExp("[\r\n]"), QString::SkipEmptyParts)

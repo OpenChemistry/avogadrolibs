@@ -22,10 +22,12 @@
 namespace Avogadro {
 namespace QtPlugins {
 
+static const char* YAEHMOP_DEFAULT_SPECIAL_KPOINTS = "GM 0 0 0";
+
 struct YaehmopSettings
 {
   YaehmopSettings()
-    : numBandKPoints(40), specialKPoints("GM 0 0 0"),
+    : numBandKPoints(40), specialKPoints(YAEHMOP_DEFAULT_SPECIAL_KPOINTS),
       displayYaehmopInput(false), limitY(false), minY(0.0), maxY(0.0),
       plotFermi(false), fermi(0.0), zeroFermi(false), numDim(3){};
 

@@ -1,6 +1,7 @@
 
 set(yaehmop_srcs
   banddialog.cpp
+  specialkpoints.cpp
   yaehmop.cpp
   yaehmopout.cpp
 )
