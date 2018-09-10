@@ -31,7 +31,7 @@ extern "C" {
 namespace Avogadro {
 namespace Core {
 
-unsigned short AvoSpglib::getHallNumber(const Molecule& mol, double cartTol)
+unsigned short AvoSpglib::getHallNumber(Molecule& mol, double cartTol)
 {
   if (!mol.unitCell())
     return 0;
@@ -80,6 +80,7 @@ unsigned short AvoSpglib::getHallNumber(const Molecule& mol, double cartTol)
   delete[] positions;
   delete[] types;
 
+  mol.setHallNumber(hallNumber);
   return hallNumber;
 }
 
@@ -175,6 +176,9 @@ bool AvoSpglib::standardizeCell(Molecule& mol, double cartTol, bool toPrimitive,
 
   // Set the new molecule
   mol = newMol;
+
+  // Set the space group in the molecule
+  getHallNumber(mol, cartTol);
   return true;
 }
 

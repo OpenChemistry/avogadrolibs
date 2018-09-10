@@ -38,16 +38,20 @@ public:
    * Use spglib to find the Hall number for a crystal. If the unit cell does not
    * exist or if the algorithm fails, 0 will be returned.
    *
+   * If the algorithm succeeds, the hall number will be set in the molecule.
+   *
    * @param cartTol The cartesian tolerance for spglib.
    * @return The Hall number for the crystal.
    */
-  static unsigned short getHallNumber(const Molecule& mol,
+  static unsigned short getHallNumber(Molecule& mol,
                                       double cartTol = 1e-5);
 
   /**
    * Use spglib to reduce the crystal to a primitive cell. Unless the molecule
    * is missing its unit cell, it will be edited by spglib. Positions are
    * not idealized.
+   *
+   * If the algorithm succeeds, the hall number will be set in the molecule.
    *
    * @param mol The molecule to be reduced to its primitive cell.
    * @param cartTol The cartesian tolerance for spglib.
@@ -61,6 +65,8 @@ public:
    * molecule is missing its unit cell, it will be edited by spglib. Positions
    * are idealized.
    *
+   * If the algorithm succeeds, the hall number will be set in the molecule.
+   *
    * @param mol The molecule to be conventionalized.
    * @param cartTol The cartesian tolerance for spglib.
    * @return False if the molecule has no unit cell or if the
@@ -72,6 +78,8 @@ public:
    * Use spglib to symmetrize the crystal. Unless the molecule is missing
    * its unit cell, it will be edited by spglib. It will be reduced
    * to its primitive form, and positions will be idealized.
+   *
+   * If the algorithm succeeds, the hall number will be set in the molecule.
    *
    * @param mol The molecule to be conventionalized.
    * @param cartTol The cartesian tolerance for spglib.
