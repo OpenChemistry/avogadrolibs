@@ -44,28 +44,39 @@ using std::vector;
 namespace Avogadro {
 namespace VTK {
 
-void VtkPlot::generatePlot(const vector<vector<double>>& data,
-                           const vector<string>& lineLabels,
-                           const vector<array<double, 4>>& lineColors,
-                           const char* xTitle, const char* yTitle,
-                           const char* windowName,
-                           const vector<double>& customTickPositions,
-                           const vector<string>& customTickLabels)
+VtkPlot::VtkPlot() : m_widget(new QVTKOpenGLWidget)
+{
+  m_widget->SetRenderWindow(m_renderWindow);
+
+  // Set up the view
+  m_widget->setFormat(QVTKOpenGLWidget::defaultFormat());
+  m_view->SetRenderWindow(m_renderWindow);
+  m_view->GetRenderer()->SetBackground(1.0, 1.0, 1.0);
+  m_view->GetRenderWindow()->SetSize(600, 600);
+
+  // Add the chart
+  m_view->GetScene()->AddItem(m_chart);
+
+  vtkAxis* bottomAxis = m_chart->GetAxis(vtkAxis::BOTTOM);
+  vtkAxis* leftAxis = m_chart->GetAxis(vtkAxis::LEFT);
+
+  // Increase the title font sizes
+  bottomAxis->GetTitleProperties()->SetFontSize(20);
+  leftAxis->GetTitleProperties()->SetFontSize(20);
+
+  // Increase the tick font sizes
+  bottomAxis->GetLabelProperties()->SetFontSize(20);
+  leftAxis->GetLabelProperties()->SetFontSize(20);
+}
+
+VtkPlot::~VtkPlot() = default;
+
+void VtkPlot::setData(const vector<vector<double>>& data)
 {
   if (data.size() < 2) {
     std::cerr << "Error in " << __FUNCTION__
               << ": data must be of size 2 or greater!\n";
     return;
-  }
-
-  // Create a table and add the data as columns
-  vtkNew<vtkTable> table;
-
-  for (size_t i = 0; i < data.size(); ++i) {
-    vtkNew<vtkFloatArray> array;
-    // Unique column names are necessary to prevent vtk from crashing.
-    array->SetName(("Column " + std::to_string(i)).c_str());
-    table->AddColumn(array);
   }
 
   // All of the rows must be equal in size currently. Otherwise, we get
@@ -79,99 +90,67 @@ void VtkPlot::generatePlot(const vector<vector<double>>& data,
     }
   }
 
+  // Erase the current table
+  while (m_table->GetNumberOfRows() > 0)
+    m_table->RemoveRow(0);
+
+  for (size_t i = 0; i < data.size(); ++i) {
+    vtkNew<vtkFloatArray> array;
+    // Unique column names are necessary to prevent vtk from crashing.
+    array->SetName(("Column " + std::to_string(i)).c_str());
+    m_table->AddColumn(array);
+  }
+
   // Put the data in the table
-  table->SetNumberOfRows(numRows);
+  m_table->SetNumberOfRows(numRows);
   for (size_t i = 0; i < data.size(); ++i) {
     for (size_t j = 0; j < data[i].size(); ++j) {
-      table->SetValue(j, i, data[i][j]);
+      m_table->SetValue(j, i, data[i][j]);
     }
   }
+}
 
-  // Set up the view
-  vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
-  QVTKOpenGLWidget* widget = new QVTKOpenGLWidget();
-  widget->SetRenderWindow(renderWindow);
-  // Hackish, but at least it won't leak
-  widget->setAttribute(Qt::WA_DeleteOnClose);
-  widget->setFormat(QVTKOpenGLWidget::defaultFormat());
-  vtkNew<vtkContextView> view;
-  view->SetRenderWindow(renderWindow);
-  view->GetRenderer()->SetBackground(1.0, 1.0, 1.0);
-  view->GetRenderWindow()->SetSize(600, 600);
-  view->GetRenderWindow()->SetWindowName(windowName);
+void VtkPlot::setWindowName(const char* windowName)
+{
+  m_view->GetRenderWindow()->SetWindowName(windowName);
+}
 
-  // Add the chart
-  vtkNew<vtkChartXY> chart;
-  view->GetScene()->AddItem(chart);
-
-  vtkAxis* bottomAxis = chart->GetAxis(vtkAxis::BOTTOM);
-  vtkAxis* leftAxis = chart->GetAxis(vtkAxis::LEFT);
-
-  // Set the axis titles
+void VtkPlot::setXTitle(const char* xTitle)
+{
+  vtkAxis* bottomAxis = m_chart->GetAxis(vtkAxis::BOTTOM);
   bottomAxis->SetTitle(xTitle);
+}
+
+void VtkPlot::setYTitle(const char* yTitle)
+{
+  vtkAxis* leftAxis = m_chart->GetAxis(vtkAxis::LEFT);
   leftAxis->SetTitle(yTitle);
+}
 
-  // If we have custom tick positions, set them
-  if (!customTickPositions.empty()) {
-    vtkNew<vtkDoubleArray> doubleArray;
-    doubleArray->SetName("Custom Tick Positions");
-    for (const auto& pos: customTickPositions)
-      doubleArray->InsertNextValue(pos);
-
-    // If customTickLabels is also set, make sure it is equal in size
-    // to the custom tick positions, and add them as well.
-    if (!customTickLabels.empty()) {
-      if (customTickPositions.size() != customTickLabels.size()) {
-        std::cerr << "Error in " << __FUNCTION__ << ": custom tick labels "
-                  << "must be equal in size to custom tick positions!\n";
-        return;
-      }
-
-      vtkNew<vtkStringArray> stringArray;
-      stringArray->SetName("Custom Tick Labels");
-
-      for (const auto& label: customTickLabels)
-        stringArray->InsertNextValue(label);
-
-      bottomAxis->SetCustomTickPositions(doubleArray, stringArray);
-    }
-    else {
-      bottomAxis->SetCustomTickPositions(doubleArray, nullptr);
-    }
-  }
-
-  // Increase the title font sizes
-  bottomAxis->GetTitleProperties()->SetFontSize(20);
-  leftAxis->GetTitleProperties()->SetFontSize(20);
-
-  // Increase the tick font sizes
-  bottomAxis->GetLabelProperties()->SetFontSize(20);
-  leftAxis->GetLabelProperties()->SetFontSize(20);
-
-  // Adjust the range on the x axis
-  bottomAxis->SetBehavior(vtkAxis::FIXED);
-  bottomAxis->SetRange(data[0].front(), data[0].back());
+void VtkPlot::show()
+{
+  // First, clear all previous plots
+  m_chart->ClearPlots();
 
   // Add the lines to the chart
-  for (size_t i = 1; i < data.size(); ++i) {
-    vtkPlot* line = chart->AddPlot(vtkChart::LINE);
-    line->SetInputData(table, 0, i);
+  for (size_t i = 1; i < m_table->GetNumberOfColumns(); ++i) {
+    vtkPlot* line = m_chart->AddPlot(vtkChart::LINE);
+    line->SetInputData(m_table, 0, i);
 
     // If we have a label for this line, set it
-    if (i <= lineLabels.size())
-      line->SetLabel(lineLabels[i - 1]);
+    if (i <= m_lineLabels.size())
+      line->SetLabel(m_lineLabels[i - 1]);
 
     // If we have a color for this line, set it (rgba)
-    if (i <= lineColors.size()) {
-      line->SetColor(lineColors[i - 1][0], lineColors[i - 1][1],
-                     lineColors[i - 1][2], lineColors[i - 1][3]);
+    if (i <= m_lineColors.size()) {
+      line->SetColor(m_lineColors[i - 1][0], m_lineColors[i - 1][1],
+                     m_lineColors[i - 1][2], m_lineColors[i - 1][3]);
     }
 
     line->SetWidth(2.0);
   }
 
-  // Start the widget, we probably want to improve this in future.
-  widget->show();
+  m_widget->show();
 }
 
 } // namespace VTK
