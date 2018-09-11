@@ -345,6 +345,12 @@ void Yaehmop::calculateBandStructure()
   m_bandPlot->setLineLabels(lineLabels);
   m_bandPlot->setLineColors(lineColors);
   m_bandPlot->setXCustomTickLabels(specialKPointVals, specialKPointLabels);
+
+  if (m_yaehmopSettings.limitY) {
+    m_bandPlot->setAxisLimits(VTK::VtkPlot::Axis::yAxis, m_yaehmopSettings.minY,
+                              m_yaehmopSettings.maxY);
+  }
+
   m_bandPlot->show();
 
   // Show the yaehmop input if we are to do so

@@ -57,8 +57,8 @@ void BandDialog::accept()
   m_yaehmopSettings.displayYaehmopInput =
     m_ui->cb_displayYaehmopInput->isChecked();
   m_yaehmopSettings.limitY = m_ui->cb_limitY->isChecked();
-  m_yaehmopSettings.maxY = m_ui->spin_minY->value();
-  m_yaehmopSettings.minY = m_ui->spin_maxY->value();
+  m_yaehmopSettings.minY = m_ui->spin_minY->value();
+  m_yaehmopSettings.maxY = m_ui->spin_maxY->value();
   m_yaehmopSettings.plotFermi = m_ui->cb_plotFermi->isChecked();
   m_yaehmopSettings.fermi = m_ui->spin_fermi->value();
   m_yaehmopSettings.zeroFermi = m_ui->cb_zeroFermi->isChecked();
