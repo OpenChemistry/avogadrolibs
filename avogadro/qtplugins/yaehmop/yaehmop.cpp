@@ -337,9 +337,15 @@ void Yaehmop::calculateBandStructure()
   const char* yTitle = "Energy (eV)";
   const char* windowName = "YAeHMOP Band Structure";
 
-  VTK::VtkPlot::generatePlot(data, lineLabels, lineColors, xTitle, yTitle,
-                             windowName, specialKPointVals,
-                             specialKPointLabels);
+  m_bandPlot.reset(new VTK::VtkPlot());
+  m_bandPlot->setData(data);
+  m_bandPlot->setWindowName(windowName);
+  m_bandPlot->setXTitle(xTitle);
+  m_bandPlot->setYTitle(yTitle);
+  m_bandPlot->setLineLabels(lineLabels);
+  m_bandPlot->setLineColors(lineColors);
+  m_bandPlot->setXCustomTickLabels(specialKPointVals, specialKPointLabels);
+  m_bandPlot->show();
 
   // Show the yaehmop input if we are to do so
   if (m_yaehmopSettings.displayYaehmopInput)

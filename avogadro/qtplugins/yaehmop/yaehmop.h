@@ -29,6 +29,10 @@
 class QByteArray;
 class QStringList;
 
+namespace VTK {
+class VtkPlot;
+}
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -87,6 +91,7 @@ private:
 
   std::unique_ptr<BandDialog> m_bandDialog;
   std::unique_ptr<QAction> m_displayBandDialogAction;
+  std::unique_ptr<VTK::VtkPlot> m_bandPlot;
 };
 
 inline QString Yaehmop::description() const
