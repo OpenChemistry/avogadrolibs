@@ -63,6 +63,10 @@ public:
   }
   void show();
 
+  // customTickPositions must be equal in size to customTickLabels
+  void setXCustomTickLabels(const std::vector<double>& customTickPositions,
+                            const std::vector<std::string>& customTickLabels);
+
 private:
   std::unique_ptr<QVTKOpenGLWidget> m_widget;
   vtkNew<vtkTable> m_table;
