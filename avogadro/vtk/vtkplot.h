@@ -45,6 +45,24 @@ public:
   explicit VtkPlot();
   ~VtkPlot();
 
+  // Enum for the different axes
+  enum class Axis
+  {
+    xAxis,
+    yAxis
+  };
+
+  // Enum for the different line styles
+  enum class LineStyle
+  {
+    noLine,
+    solidLine,
+    dashLine,
+    dotLine,
+    dashDotLine,
+    dashDotDotLine
+  };
+
   // data[0] is the x data, and data[i] for i != 0 is the y data for the
   // line i != 0.
   void setData(const std::vector<std::vector<double>>& data);
@@ -62,14 +80,12 @@ public:
   {
     m_lineColors = colors;
   }
-  void show();
-
-  // Enum for the different axes
-  enum class Axis
+  void setLineStyles(const std::vector<LineStyle>& styles)
   {
-    xAxis,
-    yAxis
-  };
+    m_lineStyles = styles;
+  }
+
+  void show();
 
   // customTickPositions must be equal in size to customTickLabels
   void setCustomTickLabels(Axis axis,
@@ -90,6 +106,7 @@ private:
   vtkNew<vtkChartXY> m_chart;
   std::vector<std::string> m_lineLabels;
   std::vector<std::array<double, 4>> m_lineColors;
+  std::vector<LineStyle> m_lineStyles;
 };
 
 } // namespace VTK

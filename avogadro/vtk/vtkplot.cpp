@@ -25,6 +25,7 @@
 #include <vtkFloatArray.h>
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkNew.h>
+#include <vtkPen.h>
 #include <vtkPlot.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
@@ -158,6 +159,28 @@ void VtkPlot::setCustomTickLabels(Axis _axis,
   axis->SetCustomTickPositions(doubleArray, stringArray);
 }
 
+static int convertLineStyleEnum(VTK::VtkPlot::LineStyle style)
+{
+  using LineStyle = VTK::VtkPlot::LineStyle;
+
+  if (style == LineStyle::noLine)
+    return vtkPen::NO_PEN;
+  else if (style == LineStyle::solidLine)
+    return vtkPen::SOLID_LINE;
+  else if (style == LineStyle::dashLine)
+    return vtkPen::DASH_LINE;
+  else if (style == LineStyle::dotLine)
+    return vtkPen::DOT_LINE;
+  else if (style == LineStyle::dashDotLine)
+    return vtkPen::DASH_DOT_LINE;
+  else if (style == LineStyle::dashDotDotLine)
+    return vtkPen::DASH_DOT_DOT_LINE;
+
+  std::cerr << "Error in " << __FUNCTION__ << ": unknown line style.\n";
+  std::cerr << "Defaulting to solid line.\n";
+  return vtkPen::SOLID_LINE;
+}
+
 void VtkPlot::show()
 {
   // First, clear all previous plots
@@ -177,6 +200,10 @@ void VtkPlot::show()
       line->SetColor(m_lineColors[i - 1][0], m_lineColors[i - 1][1],
                      m_lineColors[i - 1][2], m_lineColors[i - 1][3]);
     }
+
+    // If we have a line style for this line, set it
+    if (i <= m_lineStyles.size() && line->GetPen())
+      line->GetPen()->SetLineType(convertLineStyleEnum(m_lineStyles[i - 1]));
 
     line->SetWidth(2.0);
   }
