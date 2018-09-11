@@ -323,36 +323,71 @@ void Yaehmop::calculateBandStructure()
   std::vector<std::vector<double>> data;
   data.push_back(xVals);
 
-  // We might label bands in the future
-  // std::vector<std::string> lineLabels{ "BandData" };
+  using VtkPlot = VTK::VtkPlot;
+
+  // Make some labels
   std::vector<std::string> lineLabels;
+
+  // Set the color
   std::array<double, 4> color = { 255, 0, 0, 255 };
   std::vector<std::array<double, 4>> lineColors;
+
+  // Set the line styles. Most should be solid
+  VtkPlot::LineStyle style = VtkPlot::LineStyle::solidLine;
+  std::vector<VtkPlot::LineStyle> lineStyles;
+
+  size_t curBandNum = 1;
   for (const auto& band : bands) {
     data.push_back(band.toStdVector());
+    lineLabels.push_back("Band " + std::to_string(curBandNum));
     lineColors.push_back(color);
+    lineStyles.push_back(style);
+    ++curBandNum;
+  }
+
+  // Should we plot the fermi level?
+  if (m_yaehmopSettings.plotFermi) {
+    // Adjust all the energies if we are to zero the fermi level
+    double fermi = m_yaehmopSettings.fermi;
+    if (m_yaehmopSettings.zeroFermi) {
+      // Skip the first vector because that is the x values
+      for (size_t i = 1; i < data.size(); ++i) {
+        for (auto& datum : data[i])
+          datum -= fermi;
+      }
+      // Fermi is now zero
+      fermi = 0.0;
+    }
+
+    // Create a horizontal, black, dashed line for the fermi level
+    lineLabels.push_back("Fermi Level");
+    lineColors.push_back({ 0, 0, 0, 255 });
+    lineStyles.push_back(VtkPlot::LineStyle::dashLine);
+
+    std::vector<double> fermiVals(xVals.size(), fermi);
+    data.push_back(std::move(fermiVals));
   }
 
   const char* xTitle = "";
   const char* yTitle = "Energy (eV)";
   const char* windowName = "YAeHMOP Band Structure";
 
-  m_bandPlot.reset(new VTK::VtkPlot());
+  m_bandPlot.reset(new VtkPlot);
   m_bandPlot->setData(data);
   m_bandPlot->setWindowName(windowName);
   m_bandPlot->setXTitle(xTitle);
   m_bandPlot->setYTitle(yTitle);
   m_bandPlot->setLineLabels(lineLabels);
   m_bandPlot->setLineColors(lineColors);
-  m_bandPlot->setCustomTickLabels(VTK::VtkPlot::Axis::xAxis, specialKPointVals,
+  m_bandPlot->setLineStyles(lineStyles);
+  m_bandPlot->setCustomTickLabels(VtkPlot::Axis::xAxis, specialKPointVals,
                                   specialKPointLabels);
 
   // It makes more sense to stop the x axis exactly at its limits
-  m_bandPlot->setAxisLimits(VTK::VtkPlot::Axis::xAxis, xVals.front(),
-                            xVals.back());
+  m_bandPlot->setAxisLimits(VtkPlot::Axis::xAxis, xVals.front(), xVals.back());
 
   if (m_yaehmopSettings.limitY) {
-    m_bandPlot->setAxisLimits(VTK::VtkPlot::Axis::yAxis, m_yaehmopSettings.minY,
+    m_bandPlot->setAxisLimits(VtkPlot::Axis::yAxis, m_yaehmopSettings.minY,
                               m_yaehmopSettings.maxY);
   }
 
