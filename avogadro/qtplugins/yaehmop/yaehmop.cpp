@@ -344,7 +344,8 @@ void Yaehmop::calculateBandStructure()
   m_bandPlot->setYTitle(yTitle);
   m_bandPlot->setLineLabels(lineLabels);
   m_bandPlot->setLineColors(lineColors);
-  m_bandPlot->setXCustomTickLabels(specialKPointVals, specialKPointLabels);
+  m_bandPlot->setCustomTickLabels(VTK::VtkPlot::Axis::xAxis, specialKPointVals,
+                                  specialKPointLabels);
 
   // It makes more sense to stop the x axis exactly at its limits
   m_bandPlot->setAxisLimits(VTK::VtkPlot::Axis::xAxis, xVals.front(),

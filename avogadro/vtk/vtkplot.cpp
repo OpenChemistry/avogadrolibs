@@ -127,9 +127,16 @@ void VtkPlot::setYTitle(const char* yTitle)
   leftAxis->SetTitle(yTitle);
 }
 
-void VtkPlot::setXCustomTickLabels(const vector<double>& customTickPositions,
-                                   const vector<string>& customTickLabels)
+void VtkPlot::setCustomTickLabels(Axis _axis,
+                                  const vector<double>& customTickPositions,
+                                  const vector<string>& customTickLabels)
 {
+  vtkAxis* axis = getAxis(_axis);
+  if (!axis) {
+    std::cerr << "Error in " << __FUNCTION__ << ": invalid axis\n";
+    return;
+  }
+
   // These must be equal in size
   if (customTickPositions.size() != customTickLabels.size()) {
     std::cerr << "Error in " << __FUNCTION__ << ": custom tick labels "
@@ -148,8 +155,7 @@ void VtkPlot::setXCustomTickLabels(const vector<double>& customTickPositions,
   for (const auto& label : customTickLabels)
     stringArray->InsertNextValue(label);
 
-  vtkAxis* bottomAxis = m_chart->GetAxis(vtkAxis::BOTTOM);
-  bottomAxis->SetCustomTickPositions(doubleArray, stringArray);
+  axis->SetCustomTickPositions(doubleArray, stringArray);
 }
 
 void VtkPlot::show()

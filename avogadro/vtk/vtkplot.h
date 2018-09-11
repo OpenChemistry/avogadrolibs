@@ -72,8 +72,9 @@ public:
   };
 
   // customTickPositions must be equal in size to customTickLabels
-  void setXCustomTickLabels(const std::vector<double>& customTickPositions,
-                            const std::vector<std::string>& customTickLabels);
+  void setCustomTickLabels(Axis axis,
+                           const std::vector<double>& customTickPositions,
+                           const std::vector<std::string>& customTickLabels);
 
   // Set the limits for a particular axis
   void setAxisLimits(Axis axis, double min, double max);
