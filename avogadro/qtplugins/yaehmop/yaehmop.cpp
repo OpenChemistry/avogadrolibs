@@ -461,7 +461,7 @@ QString Yaehmop::createGeometryAndLatticeInput() const
 }
 
 // Uncomment this for executeYaehmop debugging
-#define AVOGADRO_YAEHMOP_EXECUTE_DEBUG
+//#define AVOGADRO_YAEHMOP_EXECUTE_DEBUG
 
 bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
                              QString& err)
