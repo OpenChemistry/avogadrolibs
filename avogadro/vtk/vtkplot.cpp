@@ -132,20 +132,20 @@ void VtkPlot::setXCustomTickLabels(const vector<double>& customTickPositions,
 {
   // These must be equal in size
   if (customTickPositions.size() != customTickLabels.size()) {
-    std::cerr << "Error in " <<  __FUNCTION__ << ": custom tick labels "
+    std::cerr << "Error in " << __FUNCTION__ << ": custom tick labels "
               << "must be equal in size to custom tick positions!\n";
     return;
   }
 
   vtkNew<vtkDoubleArray> doubleArray;
   doubleArray->SetName("Custom Tick Positions");
-  for (const auto& pos: customTickPositions)
+  for (const auto& pos : customTickPositions)
     doubleArray->InsertNextValue(pos);
 
   vtkNew<vtkStringArray> stringArray;
   stringArray->SetName("Custom Tick Labels");
 
-  for (const auto& label: customTickLabels)
+  for (const auto& label : customTickLabels)
     stringArray->InsertNextValue(label);
 
   vtkAxis* bottomAxis = m_chart->GetAxis(vtkAxis::BOTTOM);
@@ -176,6 +176,31 @@ void VtkPlot::show()
   }
 
   m_widget->show();
+}
+
+void VtkPlot::setAxisLimits(Axis _axis, double min, double max)
+{
+  vtkAxis* axis = getAxis(_axis);
+  if (!axis) {
+    std::cerr << "Error in " << __FUNCTION__ << ": invalid axis\n";
+    return;
+  }
+
+  axis->SetMinimumLimit(min);
+  axis->SetMaximumLimit(max);
+}
+
+vtkAxis* VtkPlot::getAxis(Axis axis)
+{
+  if (axis == Axis::xAxis) {
+    return m_chart->GetAxis(vtkAxis::BOTTOM);
+  } else if (axis == Axis::yAxis) {
+    return m_chart->GetAxis(vtkAxis::LEFT);
+  }
+
+  // If we get here, there is an error...
+  std::cerr << "Error in " << __FUNCTION__ << ": unknown axis\n";
+  return nullptr;
 }
 
 } // namespace VTK

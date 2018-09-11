@@ -27,6 +27,7 @@
 #include <vector>
 
 class QVTKOpenGLWidget;
+class vtkAxis;
 class vtkChartXY;
 class vtkContextView;
 class vtkGenericOpenGLRenderWindow;
@@ -63,11 +64,24 @@ public:
   }
   void show();
 
+  // Enum for the different axes
+  enum class Axis
+  {
+    xAxis,
+    yAxis
+  };
+
   // customTickPositions must be equal in size to customTickLabels
   void setXCustomTickLabels(const std::vector<double>& customTickPositions,
                             const std::vector<std::string>& customTickLabels);
 
+  // Set the limits for a particular axis
+  void setAxisLimits(Axis axis, double min, double max);
+
 private:
+  // Get a pointer to a particular axis. Returns nullptr if invalid.
+  vtkAxis* getAxis(Axis axis);
+
   std::unique_ptr<QVTKOpenGLWidget> m_widget;
   vtkNew<vtkTable> m_table;
   vtkNew<vtkGenericOpenGLRenderWindow> m_renderWindow;
