@@ -17,8 +17,8 @@
 #ifndef CP2KINPUTDIALOG_H
 #define CP2KINPUTDIALOG_H
 
-#include <QDialog>
 #include <QButtonGroup>
+#include <QDialog>
 #include <QModelIndex>
 
 #include "ui_cp2kinputdialog.h"
@@ -37,26 +37,26 @@ class Molecule;
 }
 
 namespace QtPlugins {
-//class GamessHighlighter;
+// class GamessHighlighter;
 
 class Cp2kInputDialog : public QDialog
 {
   Q_OBJECT
 
 public:
-  explicit Cp2kInputDialog(QWidget *parent_ = 0, Qt::WindowFlags f = 0 );
+  explicit Cp2kInputDialog(QWidget* parent_ = 0, Qt::WindowFlags f = 0);
   ~Cp2kInputDialog();
 
-  void setMolecule(QtGui::Molecule *mol);
+  void setMolecule(QtGui::Molecule* mol);
 
 signals:
-   /**
-    * Emitted when the user requests that a job's output be loaded in Avogadro.
-    */
-  void openJobOutput(const MoleQueue::JobObject &job);
+  /**
+   * Emitted when the user requests that a job's output be loaded in Avogadro.
+   */
+  void openJobOutput(const MoleQueue::JobObject& job);
 
 protected:
-  void showEvent(QShowEvent *e);
+  void showEvent(QShowEvent* e);
 
 private slots:
   void updatePreviewText();
@@ -90,17 +90,16 @@ private:
   void buildSCFGuessOptions();
   void buildOTMinimizerOptions();
 
-
   void setBasicDefaults();
 
   QString generateJobTitle() const;
 
   Ui::Cp2kInputDialog ui;
-  QtGui::Molecule *m_molecule;
-  //GamessHighlighter *m_highlighter;
+  QtGui::Molecule* m_molecule;
+  // GamessHighlighter *m_highlighter;
 
   bool m_updatePending;
-  QMap<QComboBox *, int> m_optionCache;
+  QMap<QComboBox*, int> m_optionCache;
 };
 
 } // end namespace QtPlugins
