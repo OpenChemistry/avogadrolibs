@@ -153,11 +153,12 @@ double element_covalent[] = {
 unsigned char element_color[][3] = {
   // See, for example http://jmol.sourceforge.net/jscolors/index.en.html
   // Changes - H is not completely white to add contrast on light backgrounds
+  //         - C is slightly darker (i.e. 50% gray - consistent with Avo1)
   //         - F is bluer to add contrast with Cl (e.g. CFC compounds)
   // # Du             # H                 # He
   { 17, 127, 178 },  { 240, 240, 240 }, { 217, 255, 255 }, { 204, 128, 255 },
   // # Be, B, C, N
-  { 194, 255, 0 },   { 255, 181, 181 }, { 144, 144, 144 }, { 48, 80, 255 },
+  { 194, 255, 0 },   { 255, 181, 181 }, { 127, 127, 127 }, { 48, 80, 255 },
   // # O, F, Ne, Na
   { 255, 13, 13 },   { 178, 255, 255 }, { 178, 227, 245 }, { 171, 91, 242 },
   // # Mg
