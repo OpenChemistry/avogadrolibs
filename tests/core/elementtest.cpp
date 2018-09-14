@@ -66,15 +66,29 @@ TEST(ElementTest, radiusCovalent)
 
 TEST(ElementTest, colors)
 {
-  EXPECT_EQ(Elements::color(1)[0], 255);
-  EXPECT_EQ(Elements::color(1)[1], 255);
-  EXPECT_EQ(Elements::color(1)[2], 255);
+  // hydrogen
+  EXPECT_EQ(Elements::color(1)[0], 240);
+  EXPECT_EQ(Elements::color(1)[1], 240);
+  EXPECT_EQ(Elements::color(1)[2], 240);
+
+  // boron
   EXPECT_EQ(Elements::color(5)[0], 255);
   EXPECT_EQ(Elements::color(5)[1], 181);
   EXPECT_EQ(Elements::color(5)[2], 181);
+
+  // carbon
   EXPECT_EQ(Elements::color(6)[0], 127);
   EXPECT_EQ(Elements::color(6)[1], 127);
   EXPECT_EQ(Elements::color(6)[2], 127);
+
+  EXPECT_EQ(Elements::color(7)[0], 48);
+  EXPECT_EQ(Elements::color(7)[1], 80);
+  EXPECT_EQ(Elements::color(7)[2], 255);
+
+  // Oxygen
+  EXPECT_EQ(Elements::color(8)[0], 255);
+  EXPECT_EQ(Elements::color(8)[1], 13);
+  EXPECT_EQ(Elements::color(8)[2], 13);
 }
 
 TEST(ElementTest, dummyElement)
