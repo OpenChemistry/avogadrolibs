@@ -805,15 +805,18 @@ void Cp2kInputDialog::updatePreviewText()
     Vector3f b = cell->bVector().cast<float>();
     Vector3f c = cell->cVector().cast<float>();
 
-    file += QStringLiteral("    A%1%2%3\n").arg(a.x(), 16, 'f', 7)
-    .arg(a.y(), 16, 'f', 7)
-    .arg(a.z(), 16, 'f', 7);
-    file += QStringLiteral("    B%1%2%3\n").arg(b.x(), 16, 'f', 7)
-    .arg(b.y(), 16, 'f', 7)
-    .arg(b.z(), 16, 'f', 7);
-    file += QStringLiteral("    C%1%2%3\n").arg(c.x(), 16, 'f', 7)
-    .arg(c.y(), 16, 'f', 7)
-    .arg(c.z(), 16, 'f', 7);
+    file += QStringLiteral("    A%1%2%3\n")
+              .arg(a.x(), 16, 'f', 7)
+              .arg(a.y(), 16, 'f', 7)
+              .arg(a.z(), 16, 'f', 7);
+    file += QStringLiteral("    B%1%2%3\n")
+              .arg(b.x(), 16, 'f', 7)
+              .arg(b.y(), 16, 'f', 7)
+              .arg(b.z(), 16, 'f', 7);
+    file += QStringLiteral("    C%1%2%3\n")
+              .arg(c.x(), 16, 'f', 7)
+              .arg(c.y(), 16, 'f', 7)
+              .arg(c.z(), 16, 'f', 7);
 
   } else {
     // @todo - this should look at the dimensions of the Molecule
@@ -822,7 +825,6 @@ void Cp2kInputDialog::updatePreviewText()
     file += "    C     0.000000000    0.000000000    10.00000000\n";
   }
   file += "    &END CELL \n";
-
 
   if (m_molecule) {
     for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
