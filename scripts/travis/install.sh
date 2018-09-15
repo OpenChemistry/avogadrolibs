@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $TASKS != "clang-format" ]]; then
+if [[ $TASKS != "clang-format" && $TRAVIS_OS_NAME == "linux" ]]; then
   eval "${MATRIX_EVAL}"
   sudo add-apt-repository ppa:beineri/opt-qt542-trusty -y
   sudo apt-get update -qq

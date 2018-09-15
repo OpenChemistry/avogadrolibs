@@ -31,5 +31,7 @@ else
     ..
   make -j2
   cd avogadrolibs
-  xvfb-run ctest --output-on-failure
+  if [[ $TRAVIS_OS_NAME == "linux" ]]; then
+    xvfb-run ctest --output-on-failure
+  fi
 fi
