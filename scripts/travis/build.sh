@@ -18,7 +18,8 @@ else
   mkdir build
   cd build
 
-  ${CMAKE_EXE} -DCMAKE_BUILD_TYPE=Debug \
+  if [[ $TRAVIS_OS_NAME == "linux" ]]; then
+  ${CMAKE_EXE} -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DENABLE_TESTING=ON \
     -DUSE_SYSTEM_EIGEN=ON \
     -DUSE_SYSTEM_GLEW=ON \
@@ -29,7 +30,17 @@ else
     -DUSE_SYSTEM_PCRE=OFF \
     -DUSE_SYSTEM_ZLIB=ON \
     ..
-  make -j2
+  else
+    # osx
+    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DENABLE_TESTING=ON \
+    -DUSE_SYSTEM_EIGEN=ON \
+    -DUSE_SYSTEM_GLEW=ON \
+    -DUSE_SYSTEM_LIBXML2=ON \
+    -DUSE_SYSTEM_ZLIB=ON \
+    ..
+  fi
+  make -j$(nproc)
   cd avogadrolibs
   if [[ $TRAVIS_OS_NAME == "linux" ]]; then
     xvfb-run ctest --output-on-failure
