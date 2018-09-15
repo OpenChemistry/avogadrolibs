@@ -32,6 +32,7 @@ else
     ..
   else
     # osx
+    export CMAKE_PREFIX_PATH=/usr/local/Cellar/qt/5.11.1/lib/cmake
     cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DENABLE_TESTING=ON \
     -DUSE_SYSTEM_EIGEN=ON \
