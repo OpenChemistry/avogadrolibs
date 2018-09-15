@@ -18,5 +18,5 @@ if [[ $TASKS != "clang-format" && $TRAVIS_OS_NAME == "linux" ]]; then
   export CMAKE_EXE=${PWD}/${CMAKE_NAME}/bin/cmake
   cd avogadrolibs
 elif [[ $TASKS != "clang-format" && $TRAVIS_OS_NAME == "osx" ]]; then
-  brew install qt eigen glew
+  brew install qt eigen glew open-babel
 fi
