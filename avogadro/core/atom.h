@@ -163,6 +163,14 @@ public:
   bool selected() const;
   /** @} */
 
+  /**
+   * The force on this atom.
+   * {@
+   */
+  void setForceVector(const Vector3& force);
+  Vector3 forceVector() const;
+  /** @} */
+
 private:
   MoleculeType* m_molecule;
   Index m_index;
@@ -171,14 +179,12 @@ private:
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate()
   : m_molecule(nullptr), m_index(MaxIndex)
-{
-}
+{}
 
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate(MoleculeType* m, Index i)
   : m_molecule(m), m_index(i)
-{
-}
+{}
 
 template <class Molecule_T>
 bool AtomTemplate<Molecule_T>::operator==(
@@ -317,7 +323,21 @@ bool AtomTemplate<Molecule_T>::selected() const
   return m_molecule->atomSelected(m_index);
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setForceVector(const Vector3& force)
+{
+  m_molecule->setForceVector(m_index, force);
+}
+
+template <class Molecule_T>
+Vector3 AtomTemplate<Molecule_T>::forceVector() const
+{
+  return m_molecule->forceVectors().size() > 0
+           ? m_molecule->forceVectors()[m_index]
+           : Vector3::Zero();
+}
+
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_ATOM_H
