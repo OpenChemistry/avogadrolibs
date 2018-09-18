@@ -51,6 +51,7 @@ matrix:
       env: TASKS="ctest clang-3.9"
 
     - os: osx
+      env: TASKS="Mac clang"
 
 install:
   - . ./scripts/travis/install.sh
