@@ -17,8 +17,16 @@ function(avogadro_add_library name)
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
   # Now install everything.
   string(REGEX REPLACE "^avogadro" "" module ${lowerName})
-  install(FILES ${HEADERS}
-    DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/${module}")
+
+  if (NOT BUILD_BINARY_WHEEL)
+    install(FILES ${HEADERS}
+      DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/${module}")
+  else()
+    set(INSTALL_RUNTIME_DIR avogadro)
+    set(INSTALL_LIBRARY_DIR avogadro)
+    set(INSTALL_ARCHIVE_DIR avogadro)
+  endif()
+
   install(TARGETS ${name}
     EXPORT "AvogadroLibsTargets"
     RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
@@ -33,7 +41,9 @@ add_subdirectory(io)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/io)
 add_subdirectory(quantumio)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/quantumio)
-add_subdirectory(command)
+if (NOT BUILD_BINARY_WHEEL)
+  add_subdirectory(command)
+endif()
 if(USE_OPENGL)
   add_subdirectory(rendering)
   include_directories(${CMAKE_CURRENT_BINARY_DIR}/rendering)
