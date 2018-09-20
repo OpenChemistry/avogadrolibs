@@ -61,8 +61,10 @@ private:
 };
 } // namespace
 
-void exportIo(py::module& m)
+PYBIND11_MODULE(io, m)
 {
+  m.doc() = "AvogadroIo Python binding";
+
   /// Add the quantum IO formats, we should probably move them over soon, but
   /// get things working for now...
   Io::FileFormatManager::registerFormat(new GaussianFchk);

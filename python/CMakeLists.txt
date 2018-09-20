@@ -22,15 +22,38 @@ set(wrapper_SRCS
   io.cpp
   )
 
-add_library(avogadropython MODULE ${wrapper_SRCS})
-set_target_properties(avogadropython
+
+set(_python_module_install_dir "avogadro")
+if (NOT BUILD_BINARY_WHEEL)
+  set(_python_module_install_dir "${INSTALL_LIBRARY_DIR}/avogadro")
+endif()
+
+set(CMAKE_MODULE_LINKER_FLAGS "")
+# Core
+pybind11_add_module(avogadrocorepython core.cpp)
+set_target_properties(avogadrocorepython
   PROPERTIES
-    OUTPUT_NAME avogadro2
-    PREFIX "")
-target_link_libraries(avogadropython
+    OUTPUT_NAME core)
+target_link_libraries(avogadrocorepython
+  PRIVATE
+    AvogadroCore
+    pybind11::module
+)
+install(TARGETS avogadrocorepython LIBRARY COMPONENT python DESTINATION "${_python_module_install_dir}")
+set_target_properties(avogadrocorepython PROPERTIES
+                      INSTALL_RPATH "$ORIGIN")
+
+# IO
+pybind11_add_module(avogadroiopython io.cpp)
+set_target_properties(avogadroiopython
+  PROPERTIES
+    OUTPUT_NAME io)
+target_link_libraries(avogadroiopython
   PRIVATE
     AvogadroIO
     AvogadroQuantumIO
     pybind11::module
-    ${PYTHON_LIBRARIES}
-  )
+)
+install(TARGETS avogadroiopython LIBRARY COMPONENT python DESTINATION "${_python_module_install_dir}")
+set_target_properties(avogadroiopython PROPERTIES
+                      INSTALL_RPATH "$ORIGIN")
