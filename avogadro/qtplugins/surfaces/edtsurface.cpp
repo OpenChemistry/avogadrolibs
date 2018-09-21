@@ -471,6 +471,6 @@ void EDTSurface::fillAtomWaals(int index)
   return;
 }
 
-} // End namespace Core
+} // namespace QtPlugins
 
 } // End namespace Avogadro

@@ -24,14 +24,9 @@ namespace Avogadro {
 namespace Core {
 
 Cube::Cube()
-  : m_data(0)
-  , m_min(0.0, 0.0, 0.0)
-  , m_max(0.0, 0.0, 0.0)
-  , m_spacing(0.0, 0.0, 0.0)
-  , m_points(0, 0, 0)
-  , m_minValue(0.0)
-  , m_maxValue(0.0)
-  , m_lock(new Mutex)
+  : m_data(0), m_min(0.0, 0.0, 0.0), m_max(0.0, 0.0, 0.0),
+    m_spacing(0.0, 0.0, 0.0), m_points(0, 0, 0), m_minValue(0.0),
+    m_maxValue(0.0), m_lock(new Mutex)
 {}
 
 Cube::~Cube()
@@ -299,5 +294,5 @@ bool Cube::setValue(const Vector3i& pos, double value)
   return setValue(pos(0), pos(1), pos(2), value);
 }
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Core
+} // namespace Avogadro

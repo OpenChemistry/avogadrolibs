@@ -59,7 +59,8 @@ Core::Cube* EDTSurfaceConcurrent::EDTCube(QtGui::Molecule* mol,
 
 Core::Cube* EDTSurfaceConcurrent::EDTCube(QtGui::Molecule* mol,
                                           Core::Cube* cube,
-                                          Surfaces::Type surfaceType, double resolution)
+                                          Surfaces::Type surfaceType,
+                                          double resolution)
 {
 
   data->resolution = resolution;
@@ -138,7 +139,7 @@ void EDTSurfaceConcurrent::buildSurface()
     for (int j = 0; j < data->pWidth; j++) {
       for (int k = 0; k < data->pHeight; k++) {
         ijk << i, j, k;
-        if(m_cube->value(i, j, k) == 2){
+        if (m_cube->value(i, j, k) == 2) {
           flagBound = false;
           ii = 0;
           // If our voxel is in the solid,
@@ -494,7 +495,7 @@ void EDTSurfaceConcurrent::fillAtomWaals(atomStruct& edt)
     // Set inSolid
     if (inBounds(oxyz, edt.data)) {
       if (edt.cube->value(oxyz) <=
-            edt.data->probeRadius * edt.data->scaleFactor) {
+          edt.data->probeRadius * edt.data->scaleFactor) {
         edt.cube->setValue(oxyz, 1);
       } // if inSolid
     }   // if inBounds
@@ -558,6 +559,6 @@ void EDTSurfaceConcurrent::fastDistanceMapConcurrent(subCube& edt)
   }     // end for j
 }
 
-} // End namespace Core
+} // namespace QtPlugins
 
 } // End namespace Avogadro
