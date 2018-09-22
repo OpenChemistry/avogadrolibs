@@ -19,8 +19,10 @@
 #include <avogadro/core/avogadrocore.h>
 
 #include <avogadro/core/atom.h>
+#include <avogadro/core/elements.h>
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/residue.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
@@ -33,24 +35,22 @@ namespace Avogadro {
 namespace Io {
 
 using Core::Atom;
-using Core::Molecule;
-using Core::UnitCell;
+using Core::Elements;
 using Core::lexicalCast;
-using Core::trimmed;
+using Core::Molecule;
+using Core::Residue;
 using Core::split;
+using Core::trimmed;
+using Core::UnitCell;
 
-using std::string;
 using std::getline;
 using std::map;
+using std::string;
 using std::vector;
 
-GromacsFormat::GromacsFormat()
-{
-}
+GromacsFormat::GromacsFormat() {}
 
-GromacsFormat::~GromacsFormat()
-{
-}
+GromacsFormat::~GromacsFormat() {}
 
 std::vector<std::string> GromacsFormat::fileExtensions() const
 {
@@ -66,6 +66,8 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
 {
   string buffer;
   string value;
+  Residue* r;
+  size_t currentResidueId = 0;
 
   // Title
   getline(in, buffer);
@@ -124,18 +126,51 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
     // Offset: 52 format: %8.4f value: y velocity (nm/ps, a.k.a. km/s)
     // Offset: 60 format: %8.4f value: z velocity (nm/ps, a.k.a. km/s)
 
-    // Atom name:
-    value = trimmed(buffer.substr(10, 5));
-    AtomTypeMap::const_iterator it = atomTypes.find(value);
-    if (it == atomTypes.end()) {
-      atomTypes.insert(std::make_pair(value, customElementCounter++));
-      it = atomTypes.find(value);
-      if (customElementCounter > CustomElementMax) {
-        appendError("Custom element type limit exceeded.");
+    size_t residueId = lexicalCast<size_t>(buffer.substr(0, 5), ok);
+    if (!ok) {
+      appendError("Failed to parse residue sequence number: " +
+                  buffer.substr(0, 5));
+      return false;
+    }
+
+    if (residueId != currentResidueId) {
+      currentResidueId = residueId;
+
+      string residueName = lexicalCast<string>(buffer.substr(5, 5), ok);
+      if (!ok) {
+        appendError("Failed to parse residue name: " + buffer.substr(5, 5));
         return false;
       }
+
+      // gro files do not have a chain ID. So we use a makeshift dummy ID
+      char dummyChainId = '0';
+      r = &molecule.addResidue(residueName, currentResidueId, dummyChainId);
     }
-    Atom atom = molecule.addAtom(it->second);
+
+    // Atom name:
+    value = trimmed(buffer.substr(10, 5));
+    Atom atom;
+    int atomicNum = r->getAtomicNumber(value);
+    if (atomicNum) {
+      atom = molecule.addAtom(atomicNum);
+    } else {
+      unsigned char atomicNumFromSymbol =
+        Elements::atomicNumberFromSymbol(value);
+      if (atomicNumFromSymbol != 255) {
+        atom = molecule.addAtom(atomicNumFromSymbol);
+      } else {
+        AtomTypeMap::const_iterator it = atomTypes.find(value);
+        if (it == atomTypes.end()) {
+          atomTypes.insert(std::make_pair(value, customElementCounter++));
+          it = atomTypes.find(value);
+          if (customElementCounter > CustomElementMax) {
+            appendError("Custom element type limit exceeded.");
+            return false;
+          }
+        }
+        atom = molecule.addAtom(it->second);
+      }
+    }
 
     // Coords
     for (int i = 0; i < 3; ++i) {
@@ -149,6 +184,9 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
       }
     }
     atom.setPosition3d(pos * static_cast<Real>(10.0)); // nm --> Angstrom
+    if (r) {
+      r->addResidueAtom(value, atom);
+    }
   }
 
   // Set the custom element map if needed:
