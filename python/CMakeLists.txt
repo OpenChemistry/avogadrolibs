@@ -40,9 +40,8 @@ target_link_libraries(avogadrocorepython
     AvogadroCore
     pybind11::module
 )
+
 install(TARGETS avogadrocorepython LIBRARY COMPONENT python DESTINATION "${_python_module_install_dir}")
-set_target_properties(avogadrocorepython PROPERTIES
-                      INSTALL_RPATH "$ORIGIN")
 
 # IO
 pybind11_add_module(avogadroiopython io.cpp)
@@ -56,5 +55,15 @@ target_link_libraries(avogadroiopython
     pybind11::module
 )
 install(TARGETS avogadroiopython LIBRARY COMPONENT python DESTINATION "${_python_module_install_dir}")
-set_target_properties(avogadroiopython PROPERTIES
-                      INSTALL_RPATH "$ORIGIN")
+
+# Set the RPATH so the dependent libraries can be found in the wheel.
+if (LINUX)
+  set(_rpath_value "$ORIGIN")
+elseif(APPLE)
+  set(_rpath_value "@loader_path")
+endif()
+
+if (NOT WIN32)
+  set_target_properties(avogadrocorepython avogadroiopython PROPERTIES
+                        INSTALL_RPATH ${_rpath_value})
+endif()
