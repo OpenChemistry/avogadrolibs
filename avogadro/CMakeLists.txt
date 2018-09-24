@@ -18,7 +18,8 @@ function(avogadro_add_library name)
   # Now install everything.
   string(REGEX REPLACE "^avogadro" "" module ${lowerName})
 
-  if (NOT BUILD_BINARY_WHEEL)
+  # SKBUILD is set for binary wheel
+  if (NOT SKBUILD)
     install(FILES ${HEADERS}
       DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/${module}")
   else()
@@ -41,7 +42,8 @@ add_subdirectory(io)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/io)
 add_subdirectory(quantumio)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/quantumio)
-if (NOT BUILD_BINARY_WHEEL)
+# SKBUILD is set for binary wheel
+if (NOT SKBUILD)
   add_subdirectory(command)
 endif()
 if(USE_OPENGL)

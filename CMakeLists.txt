@@ -53,7 +53,6 @@ option(USE_MMTF "Enable optional features using mmtf" ON)
 option(USE_PROTOCALL "Enable libraries that use ProtoCall" OFF)
 option(USE_MOLEQUEUE "Enable the MoleQueue dependent functionality" ON)
 option(USE_PYTHON "Use Python to wrap some of our API" OFF)
-option(BUILD_BINARY_WHEEL "Build and install components for binary wheel" OFF)
 
 add_subdirectory(utilities)
 add_subdirectory(thirdparty)
@@ -79,7 +78,8 @@ if(ENABLE_TRANSLATIONS)
   find_package(Qt5LinguistTools)
 endif()
 
-if (NOT BUILD_BINARY_WHEEL)
+# SKBUILD is set for binary wheel
+if (NOT SKBUILD)
   install(
     FILES
       README.md
@@ -101,7 +101,8 @@ configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfig.cmake.in"
 configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfigVersion.cmake.in"
   "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake" @ONLY)
 
-if (NOT BUILD_BINARY_WHEEL)
+# SKBUILD is set for binary wheel
+if (NOT SKBUILD)
   install(FILES
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake"
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"

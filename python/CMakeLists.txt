@@ -24,7 +24,8 @@ set(wrapper_SRCS
 
 
 set(_python_module_install_dir "avogadro")
-if (NOT BUILD_BINARY_WHEEL)
+# SKBUILD is set for binary wheel
+if (NOT SKBUILD)
   set(_python_module_install_dir "${INSTALL_LIBRARY_DIR}/avogadro")
 endif()
 
