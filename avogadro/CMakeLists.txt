@@ -23,6 +23,8 @@ function(avogadro_add_library name)
     install(FILES ${HEADERS}
       DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/${module}")
   else()
+    # For MACOSX
+    set_target_properties(${name} PROPERTIES INSTALL_NAME_DIR "@rpath")
     set(INSTALL_RUNTIME_DIR avogadro)
     set(INSTALL_LIBRARY_DIR avogadro)
     set(INSTALL_ARCHIVE_DIR avogadro)
