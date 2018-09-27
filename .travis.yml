@@ -67,11 +67,13 @@ script: true
 before_deploy:
   - ./scripts/travis/macpython-build-wheels.sh 3.5 3.6 3.7
 
-    - os: osx
-      env: TASKS="Mac clang"
+# Currently we have todo the pypi upload in a script, as Travis's support is
+# broken  :-(
+deploy:
+  provider: script
+  script: ./scripts/travis/upload_pypi.sh
+  skip_cleanup: true
+  on:
+    branch: wheels
+    condition: $DEPLOY=TRUE
 
-install:
-  - . ./scripts/travis/install.sh
-
-script:
-  - ./scripts/travis/build.sh
