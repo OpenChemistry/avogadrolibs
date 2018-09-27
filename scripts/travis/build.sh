@@ -2,7 +2,7 @@
 set -e
 
 # Don't build on tag
-if [ -n "$TRAVIS_TAG" ]; then exit 0; fi
+if [ ! -z "$TRAVIS_TAG" ]; then exit 0; fi
 
 if [[ $TASKS == "clang-format" ]]; then
   cd $TRAVIS_BUILD_DIR
