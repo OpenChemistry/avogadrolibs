@@ -15,8 +15,8 @@
 ******************************************************************************/
 
 #include "customelements.h"
-#include "backgroundfileformat.h"
 
+#include <avogadro/qtgui/backgroundfileformat.h>
 #include <avogadro/qtgui/customelementdialog.h>
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
@@ -27,6 +27,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
+using Avogadro::QtGui::BackgroundFileFormat;
 using Avogadro::QtGui::Molecule;
 
 namespace Avogadro {

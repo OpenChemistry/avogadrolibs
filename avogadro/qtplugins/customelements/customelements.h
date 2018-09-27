@@ -24,7 +24,9 @@ class QThread;
 
 namespace Avogadro {
 
+namespace QtGui {
 class BackgroundFileFormat;
+}
 
 namespace QtPlugins {
 
@@ -57,7 +59,7 @@ private:
   QAction* m_reassignUsingTool;
   QAction* m_reassignFromFile;
   QThread* m_fileReadThread;
-  BackgroundFileFormat* m_threadedReader;
+  QtGui::BackgroundFileFormat* m_threadedReader;
   QtGui::Molecule* m_fileReadMolecule;
   QProgressDialog* m_progressDialog;
 
