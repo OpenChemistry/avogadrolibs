@@ -18,49 +18,45 @@
       secure: S5cwk5CAZ1pxBBIiBqQhR0zYIkvuktHcjVZ+jocTL08=
 
   build_script:
-  - ps: >-
-      if ($env:appveyor_repo_tag -eq 'False')
-      {
-        cd ..
+    - ps: >-
+        if ($env:appveyor_repo_tag -eq 'false')
+        {
+          cd ..
 
-        git init .
+          git init .
 
-        git remote add origin git://github.com/OpenChemistry/openchemistry.git
-    
-        git pull origin master
-    
-        git -c submodule.avogadrolibs.update=none submodule update --init
-    
-        cd ../
-    
-        mkdir openchemistry-build
-    
-        cd openchemistry-build
-    
-        choco install ninja
-    
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
-    
-        cmake -G $env:CMAKE_GENERATOR ../openchemistry
-    
-        cmake --build . --target avogadrolibs --config Release
-      }
+          git remote add origin git://github.com/OpenChemistry/openchemistry.git
+
+          git pull origin master
+
+          git -c submodule.avogadrolibs.update=none submodule update --init
+
+          cd ../
+
+          mkdir openchemistry-build
+
+          cd openchemistry-build
+
+          choco install ninja
+
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
+
+          cmake -G $env:CMAKE_GENERATOR ../openchemistry
+
+          cmake --build . --target avogadrolibs --config Release -- /verbosity:detailed
+        }
 
   install:
     - ps: >-
-        if ($env:appveyor_repo_tag -eq 'True')
+        if ($env:appveyor_repo_tag -eq 'true')
         {
           cd c:\openchemistry\avogadrolibs
           .\scripts\appveyor\build-wheels.ps1
         }
 
-  build: off
-
-  test: off
-
   deploy_script:
     - ps: >-
-        if ($env:appveyor_repo_tag -eq 'True')
+        if ($env:appveyor_repo_tag -eq 'true')
         {
           cd c:\openchemistry\avogadrolibs
           .\scripts\appveyor\upload-pypi.ps1
