@@ -1,7 +1,7 @@
 from skbuild import setup
 
 setup(
-    name="avogadrolibs",
+    name="avogadro",
     version="0.0.8",
     description="",
     author='Kitware',
