@@ -2,7 +2,8 @@ from skbuild import setup
 
 setup(
     name="avogadro",
-    version="0.0.8",
+    use_scm_version=True,
+    setup_requires=['setuptools_scm'],
     description="",
     author='Kitware',
     license="BSD",
