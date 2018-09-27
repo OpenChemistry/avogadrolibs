@@ -2,7 +2,7 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2016 Kitware, Inc.
+  Copyright 2012 Kitware, Inc.
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,52 +14,58 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_IO_POSCARFORMAT_H
-#define AVOGADRO_IO_POSCARFORMAT_H
+#ifndef AVOGADRO_IO_MMTFFORMAT_H
+#define AVOGADRO_IO_MMTFFORMAT_H
 
 #include "fileformat.h"
 
 namespace Avogadro {
+namespace Core {
+class GaussianSet;
+}
 namespace Io {
 
 /**
- * @class PoscarFormat poscarformat.h <avogadro/io/poscarformat.h>
- * @brief Implementation of the generic POSCAR format.
- * @author Patrick S. Avery
+ * @class MMTFFormat mmtf.h <avogadro/io/mmtf.h>
+ * @brief Implementation of the MMTF format.
  */
 
-class AVOGADROIO_EXPORT PoscarFormat : public FileFormat
+class AVOGADROIO_EXPORT MMTFFormat : public FileFormat
 {
 public:
-  PoscarFormat();
-  ~PoscarFormat() override;
+  MMTFFormat();
+  ~MMTFFormat() override;
 
   Operations supportedOperations() const override
   {
-    return ReadWrite | File | Stream | String;
+    return Read | File | Stream | String;
   }
 
-  FileFormat* newInstance() const override { return new PoscarFormat; }
-  std::string identifier() const override { return "Avogadro: POSCAR"; }
-  std::string name() const override { return "POSCAR"; }
+  FileFormat* newInstance() const override { return new MMTFFormat; }
+  std::string identifier() const override { return "Avogadro: MMTF"; }
+  std::string name() const override
+  {
+    return "MacroMolecular Transmission Format";
+  }
   std::string description() const override
   {
-    return "Format used by VASP that contains crystal cell and atom info.";
+    return "MMTF is a format used to express MacroMolecular data in a "
+           "compressed binary format.";
   }
 
   std::string specificationUrl() const override
   {
-    return "http://cms.mpi.univie.ac.at/vasp/guide/node59.html";
+    return "http://mmtf.rcsb.org/";
   }
 
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream& inStream, Core::Molecule& mol) override;
-  bool write(std::ostream& outStream, const Core::Molecule& mol) override;
+  bool read(std::istream& in, Core::Molecule& molecule) override;
+  bool write(std::ostream& out, const Core::Molecule& molecule) override;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro
 
-#endif // AVOGADRO_IO_POSCARFORMAT_H
+#endif // AVOGADRO_IO_MMTFFORMAT_H

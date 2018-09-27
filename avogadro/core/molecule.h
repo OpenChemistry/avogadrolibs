@@ -548,9 +548,38 @@ public:
   bool setTimeStep(double timestep, int index);
   double timeStep(int index, bool& status);
 
+  /** Returns a vector of forces for the atoms in the molecule. */
+  const Array<Vector3>& forceVectors() const;
+
+  /** \overload */
+  Array<Vector3>& forceVectors();
+
+  /**
+   * Get the force of a single atom.
+   * @param atomId The index of the atom.
+   * @return The force vector of the atom, or Vector3::Zero() if no force
+   * information has been set.
+   */
+  Vector3 forceVector(Index atomId) const;
+
+  /**
+   * Replace the current array of force vectors.
+   * @param pos The new coordinate array. Must be of length atomCount().
+   * @return True on success, false otherwise.
+   */
+  bool setForceVectors(const Core::Array<Vector3>& forces);
+
+  /**
+   * Set the 3D position of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param pos The new position of the atom.
+   * @return True on success, false otherwise.
+   */
+  bool setForceVector(Index atomId, const Vector3& force);
+
   Residue& addResidue(std::string& name, Index& number, char& id);
   void addResidue(Residue& residue);
-  Residue residue(int index);
+  Residue& residue(int index);
 
 protected:
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
@@ -564,6 +593,7 @@ protected:
   Array<double> m_timesteps;
   Array<AtomHybridization> m_hybridizations;
   Array<signed char> m_formalCharges;
+  Array<Vector3> m_forceVectors;
 
   // Vibration data if available.
   Array<double> m_vibrationFrequencies;
@@ -796,6 +826,31 @@ inline bool Molecule::setBondOrder(Index bondId, unsigned char order)
 {
   if (bondId < bondCount()) {
     m_bondOrders[bondId] = order;
+    return true;
+  }
+  return false;
+}
+
+inline Vector3 Molecule::forceVector(Index atomId) const
+{
+  return atomId < m_forceVectors.size() ? m_forceVectors[atomId] : Vector3();
+}
+
+inline bool Molecule::setForceVectors(const Core::Array<Vector3>& forces)
+{
+  if (forces.size() == atomCount() || forces.size() == 0) {
+    m_forceVectors = forces;
+    return true;
+  }
+  return false;
+}
+
+inline bool Molecule::setForceVector(Index atomId, const Vector3& force)
+{
+  if (atomId < atomCount()) {
+    if (atomId >= m_forceVectors.size())
+      m_forceVectors.resize(atomCount(), Vector3::Zero());
+    m_forceVectors[atomId] = force;
     return true;
   }
   return false;

@@ -1,4 +1,4 @@
-include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/jsoncpp")
+include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty")
 
 find_package(LibArchive REQUIRED)
 include_directories(SYSTEM ${LIBARCHIVE_INCLUDE_DIRS})
@@ -20,4 +20,4 @@ avogadro_plugin(PluginDownloader
 )
 
 target_link_libraries(PluginDownloader LINK_PRIVATE ${Qt5Network_LIBRARIES}
-  ${LIBARCHIVE_LIBRARIES} jsoncpp)
+  ${LIBARCHIVE_LIBRARIES})

@@ -25,6 +25,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include <iomanip>
 #include <iostream>
 
 using json = nlohmann::json;
@@ -58,7 +59,6 @@ bool setJsonKey(json& j, Molecule& m, const std::string& key)
     m.setData(key, j.value(key, "undefined"));
     return true;
   }
-  std::cout << key << " not found." << std::endl;
   return false;
 }
 
@@ -146,6 +146,24 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     }
   }
 
+  // Check for coordinate sets, and read them in if found, e.g. trajectories.
+  json coordSets = atoms["coords"]["3dSets"];
+  if (coordSets.is_array() && coordSets.size()) {
+    for (unsigned int i = 0; i < coordSets.size(); ++i) {
+      Array<Vector3> setArray;
+      json set = coordSets[i];
+      if (isNumericArray(set)) {
+        for (unsigned int j = 0; j < set.size() / 3; ++j) {
+          setArray.push_back(
+            Vector3(set[3 * j], set[3 * j + 1], set[3 * j + 2]));
+        }
+        molecule.setCoordinate3d(setArray, i);
+      }
+    }
+    // Make sure the first step is active once we are done loading the sets.
+    molecule.setCoordinate3d(0);
+  }
+
   // Selection is optional, but if present should be loaded.
   json selection = atoms["selected"];
   if (isBooleanArray(selection) && selection.size() == atomCount)
@@ -175,20 +193,33 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
   json unitCell = jsonRoot["unit cell"];
   if (!unitCell.is_object())
     unitCell = jsonRoot["unitCell"];
-  if (unitCell.is_object() && unitCell["a"].is_number() &&
-      unitCell["b"].is_number() && unitCell["c"].is_number() &&
-      unitCell["alpha"].is_number() && unitCell["beta"].is_number() &&
-      unitCell["gamma"].is_number()) {
-    Real a = static_cast<Real>(unitCell["a"]);
-    Real b = static_cast<Real>(unitCell["b"]);
-    Real c = static_cast<Real>(unitCell["c"]);
-    Real alpha = static_cast<Real>(unitCell["alpha"]) * DEG_TO_RAD;
-    Real beta = static_cast<Real>(unitCell["beta"]) * DEG_TO_RAD;
-    Real gamma = static_cast<Real>(unitCell["gamma"]) * DEG_TO_RAD;
-    Core::UnitCell* unitCellObject =
-      new Core::UnitCell(a, b, c, alpha, beta, gamma);
-    molecule.setUnitCell(unitCellObject);
+
+  if (unitCell.is_object()) {
+    Core::UnitCell* unitCellObject = nullptr;
+
+    // read in cell vectors in preference to a, b, c parameters
+    json cellVectors = unitCell["cellVectors"];
+    if (cellVectors.is_array() && cellVectors.size() == 9 &&
+        isNumericArray(cellVectors)) {
+      Vector3 aVector(cellVectors[0], cellVectors[1], cellVectors[2]);
+      Vector3 bVector(cellVectors[3], cellVectors[4], cellVectors[5]);
+      Vector3 cVector(cellVectors[6], cellVectors[7], cellVectors[8]);
+      unitCellObject = new Core::UnitCell(aVector, bVector, cVector);
+    } else if (unitCell["a"].is_number() && unitCell["b"].is_number() &&
+               unitCell["c"].is_number() && unitCell["alpha"].is_number() &&
+               unitCell["beta"].is_number() && unitCell["gamma"].is_number()) {
+      Real a = static_cast<Real>(unitCell["a"]);
+      Real b = static_cast<Real>(unitCell["b"]);
+      Real c = static_cast<Real>(unitCell["c"]);
+      Real alpha = static_cast<Real>(unitCell["alpha"]) * DEG_TO_RAD;
+      Real beta = static_cast<Real>(unitCell["beta"]) * DEG_TO_RAD;
+      Real gamma = static_cast<Real>(unitCell["gamma"]) * DEG_TO_RAD;
+      unitCellObject = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+    }
+    if (unitCellObject != nullptr)
+      molecule.setUnitCell(unitCellObject);
   }
+
   json fractional = atoms["coords"]["3d fractional"];
   if (!fractional.is_array())
     fractional = atoms["coords"]["3dFractional"];
@@ -270,6 +301,34 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       } else {
         std::cout << "No orbital cofficients found!" << std::endl;
       }
+      // Check for orbital coefficient sets, these are paired with coordinates
+      // when they exist, but have constant basis set, atom types, etc.
+      if (orbitals["sets"].is_array() && orbitals["sets"].size()) {
+        json orbSets = orbitals["sets"];
+        for (unsigned int idx = 0; idx < orbSets.size(); ++idx) {
+          moCoefficients = orbSets[idx]["moCoefficients"];
+          moCoefficientsA = orbSets[idx]["alphaCoefficients"];
+          moCoefficientsB = orbSets[idx]["betaCoefficients"];
+          if (isNumericArray(moCoefficients)) {
+            std::vector<double> coeffs;
+            for (unsigned int i = 0; i < moCoefficients.size(); ++i)
+              coeffs.push_back(static_cast<double>(moCoefficients[i]));
+            basis->setMolecularOrbitals(coeffs, BasisSet::Paired, idx);
+          } else if (isNumericArray(moCoefficientsA) &&
+                     isNumericArray(moCoefficientsB)) {
+            std::vector<double> coeffsA;
+            for (unsigned int i = 0; i < moCoefficientsA.size(); ++i)
+              coeffsA.push_back(static_cast<double>(moCoefficientsA[i]));
+            std::vector<double> coeffsB;
+            for (unsigned int i = 0; i < moCoefficientsB.size(); ++i)
+              coeffsB.push_back(static_cast<double>(moCoefficientsB[i]));
+            basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha, idx);
+            basis->setMolecularOrbitals(coeffsB, BasisSet::Beta, idx);
+          }
+        }
+        // Set the first step as active.
+        basis->setActiveSetStep(0);
+      }
     }
     molecule.setBasisSet(basis);
   }
@@ -317,14 +376,22 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 
 bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 {
+  json opts;
+  if (!options().empty())
+    opts = json::parse(options(), nullptr, false);
+  else
+    opts = json::object();
+
   json root;
 
   root["chemical json"] = 0;
 
-  if (molecule.data("name").type() == Variant::String)
-    root["name"] = molecule.data("name").toString().c_str();
-  if (molecule.data("inchi").type() == Variant::String)
-    root["inchi"] = molecule.data("inchi").toString().c_str();
+  if (opts.value("properties", true)) {
+    if (molecule.data("name").type() == Variant::String)
+      root["name"] = molecule.data("name").toString().c_str();
+    if (molecule.data("inchi").type() == Variant::String)
+      root["inchi"] = molecule.data("inchi").toString().c_str();
+  }
 
   if (molecule.unitCell()) {
     json unitCell;
@@ -334,6 +401,21 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     unitCell["alpha"] = molecule.unitCell()->alpha() * RAD_TO_DEG;
     unitCell["beta"] = molecule.unitCell()->beta() * RAD_TO_DEG;
     unitCell["gamma"] = molecule.unitCell()->gamma() * RAD_TO_DEG;
+
+    json vectors;
+    vectors.push_back(molecule.unitCell()->aVector().x());
+    vectors.push_back(molecule.unitCell()->aVector().y());
+    vectors.push_back(molecule.unitCell()->aVector().z());
+
+    vectors.push_back(molecule.unitCell()->bVector().x());
+    vectors.push_back(molecule.unitCell()->bVector().y());
+    vectors.push_back(molecule.unitCell()->bVector().z());
+
+    vectors.push_back(molecule.unitCell()->cVector().x());
+    vectors.push_back(molecule.unitCell()->cVector().y());
+    vectors.push_back(molecule.unitCell()->cVector().z());
+    unitCell["cellVectors"] = vectors;
+
     root["unit cell"] = unitCell;
   }
 
@@ -460,6 +542,19 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
     // 3d positions:
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
+      // everything gets real-space Cartesians
+      json coords3d;
+      for (vector<Vector3>::const_iterator
+             it = molecule.atomPositions3d().begin(),
+             itEnd = molecule.atomPositions3d().end();
+           it != itEnd; ++it) {
+        coords3d.push_back(it->x());
+        coords3d.push_back(it->y());
+        coords3d.push_back(it->z());
+      }
+      root["atoms"]["coords"]["3d"] = coords3d;
+
+      // if the unit cell exists, also write fractional coords
       if (molecule.unitCell()) {
         json coordsFractional;
         Array<Vector3> fcoords;
@@ -473,17 +568,6 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
           coordsFractional.push_back(it->z());
         }
         root["atoms"]["coords"]["3d fractional"] = coordsFractional;
-      } else {
-        json coords3d;
-        for (vector<Vector3>::const_iterator
-               it = molecule.atomPositions3d().begin(),
-               itEnd = molecule.atomPositions3d().end();
-             it != itEnd; ++it) {
-          coords3d.push_back(it->x());
-          coords3d.push_back(it->y());
-          coords3d.push_back(it->z());
-        }
-        root["atoms"]["coords"]["3d"] = coords3d;
       }
     }
 
@@ -564,5 +648,5 @@ vector<std::string> CjsonFormat::mimeTypes() const
   return mime;
 }
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro

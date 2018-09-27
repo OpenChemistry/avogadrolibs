@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $TASKS != "clang-format" ]]; then
+if [[ $TASKS != "clang-format" && $TRAVIS_OS_NAME == "linux" ]]; then
   eval "${MATRIX_EVAL}"
   sudo add-apt-repository ppa:beineri/opt-qt542-trusty -y
   sudo apt-get update -qq
@@ -17,4 +17,6 @@ if [[ $TASKS != "clang-format" ]]; then
   tar -xzf ${CMAKE_NAME}.tar.gz
   export CMAKE_EXE=${PWD}/${CMAKE_NAME}/bin/cmake
   cd avogadrolibs
+elif [[ $TASKS != "clang-format" && $TRAVIS_OS_NAME == "osx" ]]; then
+  brew install qt eigen glew open-babel
 fi

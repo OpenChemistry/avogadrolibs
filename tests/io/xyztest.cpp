@@ -58,6 +58,31 @@ TEST(XyzTest, readAtomicSymbols)
   EXPECT_EQ(molecule.atom(4).position3d().z(), -0.36300);
 }
 
+// Turn off the option to perceive bonds
+TEST(XyzTest, readAtomicSymbolsNoBonds)
+{
+  XyzFormat xyz;
+  xyz.setOptions("{ \"perceiveBonds\": false }");
+  Molecule molecule;
+  EXPECT_TRUE(xyz.readFile(AVOGADRO_DATA "/data/methane.xyz", molecule));
+  ASSERT_EQ(xyz.error(), std::string());
+
+  EXPECT_EQ(molecule.atomCount(), 5);
+
+  // We turned off bond perception, so there should be zero bonds
+  EXPECT_EQ(molecule.bondCount(), 0);
+
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 6);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 1);
+  EXPECT_EQ(molecule.atom(2).atomicNumber(), 1);
+  EXPECT_EQ(molecule.atom(3).atomicNumber(), 1);
+  EXPECT_EQ(molecule.atom(4).atomicNumber(), 1);
+
+  EXPECT_EQ(molecule.atom(4).position3d().x(), -0.51336);
+  EXPECT_EQ(molecule.atom(4).position3d().y(), 0.88916);
+  EXPECT_EQ(molecule.atom(4).position3d().z(), -0.36300);
+}
+
 // methane-num.xyz uses atomic numbers to identify atoms
 TEST(XyzTest, readAtomicNumbers)
 {

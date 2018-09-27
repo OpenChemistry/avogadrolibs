@@ -32,13 +32,14 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 
+using json = nlohmann::json;
+
 namespace Avogadro {
 namespace QtPlugins {
 
 DownloaderWidget::DownloaderWidget(QWidget* parent)
   : QDialog(parent), m_ui(new Ui::DownloaderWidget)
 {
-  m_numRepos = 0;
   m_filePath =
     QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
   m_NetworkAccessManager = new QNetworkAccessManager(this);
@@ -64,8 +65,6 @@ DownloaderWidget::DownloaderWidget(QWidget* parent)
 DownloaderWidget::~DownloaderWidget()
 {
   delete m_ui;
-  delete m_repoList;
-  delete m_read;
 }
 
 // download master plugin.json from Avogadro.cc
@@ -89,28 +88,36 @@ void DownloaderWidget::getRepoData()
 void DownloaderWidget::updateRepoData()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
-    m_read = new Json::Reader();
     // Reading the data from the response
     QByteArray bytes = m_reply->readAll();
-    QString jsonString(bytes);
 
     // parse the json
-    m_read->parse(jsonString.toStdString().c_str(), m_root);
-    m_numRepos = m_root.size();
-    m_repoList = new repo[m_numRepos];
-    m_ui->repoTable->setRowCount(m_numRepos);
-    for (int i = 0; i < m_numRepos; i++) {
-      m_repoList[i].name = m_root[i].get("name", "Error").asCString();
-      m_repoList[i].description =
-        m_root[i].get("description", "Error").asCString();
-      m_repoList[i].releaseVersion =
-        m_root[i].get("release_version", "Error").asCString();
-      m_repoList[i].type = m_root[i].get("type", "other").asCString();
-      m_repoList[i].updatedAt =
-        m_root[i].get("updated_at", "Error").asCString();
-      m_repoList[i].zipballUrl =
-        m_root[i].get("zipball_url", "Error").asCString();
-      m_repoList[i].hasRelease = m_root[i].get("has_release", false).asBool();
+    m_root = json::parse(bytes.data());
+    int numRepos = m_root.size();
+    m_ui->repoTable->setRowCount(numRepos);
+    m_repoList.clear();
+    for (int i = 0; i < numRepos; i++) {
+      m_repoList.push_back(repo());
+
+      const auto& currentRoot = m_root[i];
+
+      // Loop through the keys
+      for (auto it = currentRoot.cbegin(); it != currentRoot.cend(); ++it) {
+        if (it.key() == "name" && it.value().is_string())
+          m_repoList[i].name = it.value().get<std::string>().c_str();
+        else if (it.key() == "description" && it.value().is_string())
+          m_repoList[i].description = it.value().get<std::string>().c_str();
+        else if (it.key() == "release_version" && it.value().is_string())
+          m_repoList[i].releaseVersion = it.value().get<std::string>().c_str();
+        else if (it.key() == "type" && it.value().is_string())
+          m_repoList[i].type = it.value().get<std::string>().c_str();
+        else if (it.key() == "updated_at" && it.value().is_string())
+          m_repoList[i].updatedAt = it.value().get<std::string>().c_str();
+        else if (it.key() == "zipball_url" && it.value().is_string())
+          m_repoList[i].zipballUrl = it.value().get<std::string>().c_str();
+        else if (it.key() == "has_release" && it.value().is_boolean())
+          m_repoList[i].hasRelease = it.value().get<bool>();
+      }
 
       // readme should be included or at least the repo url so we don't have to
       // do this
@@ -161,16 +168,17 @@ void DownloaderWidget::downloadREADME(int row, int col)
 void DownloaderWidget::showREADME()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
-    m_read = new Json::Reader();
     // Reading the data from the response
     QByteArray bytes = m_reply->readAll();
-    QString jsonString(bytes);
 
     // parse the json
-    m_read->parse(jsonString.toStdString().c_str(), m_root);
+    m_root = json::parse(bytes.data());
 
-    int resultSize = m_root.size();
-    QByteArray content = m_root.get("content", "ERROR").asCString();
+    QByteArray content("ERROR");
+    if (m_root.find("content") != m_root.end() &&
+        m_root["content"].is_string()) {
+      content = m_root["content"].get<std::string>().c_str();
+    }
     m_ui->readmeBrowser->append(QByteArray::fromBase64(content).data());
   }
 }
@@ -180,7 +188,7 @@ void DownloaderWidget::getCheckedRepos()
 {
   m_ui->readmeBrowser->clear();
   m_downloadList.clear();
-  for (int i = 0; i < m_numRepos; i++) {
+  for (size_t i = 0; i < m_repoList.size(); i++) {
     if (m_ui->repoTable->item(i, 0)->checkState() == Qt::Checked) {
       downloadEntry newEntry;
       newEntry.url = m_repoList[i].zipballUrl;

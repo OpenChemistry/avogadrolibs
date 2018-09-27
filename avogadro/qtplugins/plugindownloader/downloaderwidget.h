@@ -23,7 +23,7 @@
 
 #include <QtWidgets/QDialog>
 
-#include <json/json.h>
+#include <nlohmann/json.hpp>
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -63,6 +63,13 @@ private:
     QString zipballUrl;
     QString readmeUrl;
     bool hasRelease;
+
+    // Default constructor
+    repo()
+      : name("Error"), description("Error"), releaseVersion("Error"),
+        type("other"), updatedAt("Error"), zipballUrl("Error"),
+        readmeUrl("Error"), hasRelease(false)
+    {}
   };
 
   struct downloadEntry
@@ -77,22 +84,19 @@ private:
   void downloadNext();
   bool checkSHA1(QByteArray);
 
-  struct repo* m_repoList;
+  std::vector<repo> m_repoList;
   Ui::DownloaderWidget* m_ui;
   QNetworkAccessManager* m_NetworkAccessManager;
   QNetworkReply* m_reply;
-  /** Jsoncpp reader to read JSON results */
-  Json::Reader* m_read;
   /** Holds a node of JSON results */
-  Json::Value m_root;
+  nlohmann::json m_root;
   /** Used to parse JSON results */
   QVariantMap m_jsonResult;
 
   QString m_filePath;
 
   QList<downloadEntry> m_downloadList;
-  int m_numRepos;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 #endif // AVOGADRO_DOWNLOADERWIDGET_H

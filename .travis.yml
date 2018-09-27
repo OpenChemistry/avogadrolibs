@@ -7,12 +7,16 @@ language: cpp
 sudo: true
 
 matrix:
+  allow_failures:
+    - os: osx
+
   include:
     - language: python
       sudo: false
       python: 2.7
       env: TASKS="clang-format"
 
+      os: linux
       dist: trusty
       addons:
         apt:
@@ -23,6 +27,7 @@ matrix:
           - clang-format-6.0
 
     - compiler: gcc
+      os: linux
       addons:
         apt:
           sources: ubuntu-toolchain-r-test
@@ -32,6 +37,7 @@ matrix:
         - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
 
     - compiler: gcc
+      os: linux
       addons:
         apt:
           sources: ubuntu-toolchain-r-test
@@ -41,7 +47,11 @@ matrix:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
     - compiler: clang
+      os: linux
       env: TASKS="ctest clang-3.9"
+
+    - os: osx
+      env: TASKS="Mac clang"
 
 install:
   - . ./scripts/travis/install.sh

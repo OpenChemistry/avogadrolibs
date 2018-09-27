@@ -607,6 +607,19 @@ public:
   class UndoCommand;
   friend class UndoCommand;
 
+  /** Returns a vector of forces for the atoms in the molecule. */
+  const Core::Array<Vector3>& forceVectors() const;
+
+  /**
+   * Replace the current array of force vectors.
+   * @param pos The new force vector array. Must be of length atomCount().
+   * @param undoText The undo text to be displayed for undo commands.
+   * @return True on success, false otherwise.
+   */
+  bool setForceVector(
+    Index atomId, const Vector3& pos,
+    const QString& undoText = QStringLiteral("Change Force Vectors"));
+
 public slots:
   /**
    * @brief Force the molecule to emit the changed() signal.
@@ -644,23 +657,15 @@ protected:
 class AVOGADROQTGUI_EXPORT RWAtom : public Core::AtomTemplate<RWMolecule>
 {
 public:
-  RWAtom()
-    : Core::AtomTemplate<RWMolecule>()
-  {}
-  RWAtom(RWMolecule* m, Index i)
-    : Core::AtomTemplate<RWMolecule>(m, i)
-  {}
+  RWAtom() : Core::AtomTemplate<RWMolecule>() {}
+  RWAtom(RWMolecule* m, Index i) : Core::AtomTemplate<RWMolecule>(m, i) {}
 };
 
 class AVOGADROQTGUI_EXPORT RWBond : public Core::BondTemplate<RWMolecule>
 {
 public:
-  RWBond()
-    : Core::BondTemplate<RWMolecule>()
-  {}
-  RWBond(RWMolecule* m, Index i)
-    : Core::BondTemplate<RWMolecule>(m, i)
-  {}
+  RWBond() : Core::BondTemplate<RWMolecule>() {}
+  RWBond(RWMolecule* m, Index i) : Core::BondTemplate<RWMolecule>(m, i) {}
 };
 
 inline RWMolecule::AtomType RWMolecule::atom(Index atomId) const
@@ -856,6 +861,11 @@ inline QUndoStack& RWMolecule::undoStack()
 inline const QUndoStack& RWMolecule::undoStack() const
 {
   return m_undoStack;
+}
+
+inline const Core::Array<Vector3>& RWMolecule::forceVectors() const
+{
+  return m_molecule.forceVectors();
 }
 
 } // namespace QtGui

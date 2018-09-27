@@ -21,11 +21,15 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <nlohmann/json.hpp>
+
 #include <iomanip>
 #include <istream>
 #include <ostream>
 #include <sstream>
 #include <string>
+
+using json = nlohmann::json;
 
 using std::string;
 using std::endl;
@@ -58,6 +62,12 @@ XyzFormat::~XyzFormat()
 
 bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
+  json opts;
+  if (!options().empty())
+    opts = json::parse(options(), nullptr, false);
+  else
+    opts = json::object();
+
   size_t numAtoms = 0;
   if (!(inStream >> numAtoms)) {
     appendError("Error parsing number of atoms.");
@@ -141,7 +151,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // This format has no connectivity information, so perceive basics at least.
-  mol.perceiveBondsSimple();
+  if (opts.value("perceiveBonds", true))
+    mol.perceiveBondsSimple();
 
   return true;
 }

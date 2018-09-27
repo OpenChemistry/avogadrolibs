@@ -25,9 +25,13 @@
 #include "lammpsformat.h"
 #include "mdlformat.h"
 #include "pdbformat.h"
-#include "poscarformat.h"
 #include "trrformat.h"
+#include "vaspformat.h"
 #include "xyzformat.h"
+
+#ifdef AVO_USE_MMTF
+#include "mmtfformat.h"
+#endif
 
 #include <algorithm>
 #include <memory>
@@ -45,7 +49,8 @@ FileFormatManager& FileFormatManager::instance()
 
 bool FileFormatManager::readFile(Core::Molecule& molecule,
                                  const std::string& fileName,
-                                 const std::string& fileExtension) const
+                                 const std::string& fileExtension,
+                                 const std::string& options) const
 {
   FileFormat* format(nullptr);
   if (fileExtension.empty()) {
@@ -62,12 +67,14 @@ bool FileFormatManager::readFile(Core::Molecule& molecule,
     return false;
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
+  formatInstance->setOptions(options);
   return formatInstance->readFile(fileName, molecule);
 }
 
 bool FileFormatManager::writeFile(const Core::Molecule& molecule,
                                   const std::string& fileName,
-                                  const std::string& fileExtension) const
+                                  const std::string& fileExtension,
+                                  const std::string& options) const
 {
   FileFormat* format(nullptr);
   if (fileExtension.empty()) {
@@ -84,12 +91,14 @@ bool FileFormatManager::writeFile(const Core::Molecule& molecule,
     return false;
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
+  formatInstance->setOptions(options);
   return formatInstance->writeFile(fileName, molecule);
 }
 
 bool FileFormatManager::readString(Core::Molecule& molecule,
                                    const std::string& string,
-                                   const std::string& fileExtension) const
+                                   const std::string& fileExtension,
+                                   const std::string& options) const
 {
   FileFormat* format(filteredFormatFromFormatMap(
     fileExtension, FileFormat::Read | FileFormat::String, m_fileExtensions));
@@ -97,12 +106,14 @@ bool FileFormatManager::readString(Core::Molecule& molecule,
     return false;
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
+  formatInstance->setOptions(options);
   return formatInstance->readString(string, molecule);
 }
 
 bool FileFormatManager::writeString(const Core::Molecule& molecule,
                                     std::string& string,
-                                    const std::string& fileExtension) const
+                                    const std::string& fileExtension,
+                                    const std::string& options) const
 {
   FileFormat* format(filteredFormatFromFormatMap(
     fileExtension, FileFormat::Write | FileFormat::String, m_fileExtensions));
@@ -110,6 +121,7 @@ bool FileFormatManager::writeString(const Core::Molecule& molecule,
     return false;
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
+  formatInstance->setOptions(options);
   return formatInstance->writeString(string, molecule);
 }
 
@@ -292,12 +304,17 @@ FileFormatManager::FileFormatManager()
   addFormat(new CjsonFormat);
   addFormat(new GromacsFormat);
   addFormat(new MdlFormat);
+  addFormat(new OutcarFormat);
   addFormat(new PdbFormat);
   addFormat(new PoscarFormat);
   addFormat(new TrrFormat);
   addFormat(new XyzFormat);
   addFormat(new DcdFormat);
-  addFormat(new LammpsFormat);
+  addFormat(new LammpsTrajectoryFormat);
+  addFormat(new LammpsDataFormat);
+#ifdef AVO_USE_MMTF
+  addFormat(new MMTFFormat);
+#endif
 }
 
 FileFormatManager::~FileFormatManager()

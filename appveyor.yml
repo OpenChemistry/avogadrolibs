@@ -8,7 +8,7 @@ init:
 environment:
   PATH: '%PATH%;%QTDIR%\bin'
   matrix:
-  - CMAKE_GENERATOR: '"Visual Studio 15 2017 Win64"'
+  - CMAKE_GENERATOR: '"Ninja"'
     QTDIR: C:\Qt\5.6\msvc2015_64
     platform: x64
 build_script:
@@ -29,6 +29,10 @@ build_script:
 
     cd openchemistry-build
 
+    choco install ninja
+
+    call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
+
     cmake -G %CMAKE_GENERATOR% ../openchemistry
 
-    cmake --build . --target avogadrolibs --config Release -- /verbosity:detailed
+    cmake --build . --target avogadrolibs --config Release

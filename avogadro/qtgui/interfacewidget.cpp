@@ -1,17 +1,7 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
 
-  Copyright 2013 Kitware, Inc.
-
   This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
 ******************************************************************************/
 
 #include "interfacewidget.h"
@@ -43,9 +33,7 @@ namespace QtGui {
 
 InterfaceWidget::InterfaceWidget(const QString& scriptFilePath,
                                  QWidget* parent_)
-  : QWidget(parent_)
-  , m_molecule(nullptr)
-  , m_interfaceScript(QString())
+  : QWidget(parent_), m_molecule(nullptr), m_interfaceScript(QString())
 {
   this->setInterfaceScript(scriptFilePath);
 }
@@ -158,21 +146,23 @@ void InterfaceWidget::updateOptions()
 
 void InterfaceWidget::buildOptionGui()
 {
-  // Clear old widgets from the layout
   m_widgets.clear();
   delete layout(); // kill my layout
-  QFormLayout* form = new QFormLayout;
-  setLayout(form);
+  m_empty = true;
 
   if (!m_options.contains(QStringLiteral("userOptions")) ||
       !m_options[QStringLiteral("userOptions")].isObject()) {
-    showError(tr("'userOptions' missing, or not an object:\n%1")
-                .arg(QString(QJsonDocument(m_options).toJson())));
     return;
   }
 
+  // Clear old widgets from the layout
+  QFormLayout* form = new QFormLayout;
+  setLayout(form);
+
   QJsonObject userOptions =
     m_options.value(QStringLiteral("userOptions")).toObject();
+
+  m_empty = false;
 
   // Title first
   if (userOptions.contains(QStringLiteral("Title")))
@@ -254,7 +244,7 @@ void InterfaceWidget::buildOptionGui()
   }
 }
 
-void InterfaceWidget::addOptionRow(const QString& label,
+void InterfaceWidget::addOptionRow(const QString& name,
                                    const QJsonValue& option)
 {
   QWidget* widget = createOptionWidget(option);
@@ -263,17 +253,25 @@ void InterfaceWidget::addOptionRow(const QString& label,
 
   QFormLayout* form = qobject_cast<QFormLayout*>(this->layout());
   if (!form) {
-    qWarning() << "Cannot add option" << label
+    qWarning() << "Cannot add option" << name
                << "to GUI -- layout is not a form.";
     widget->deleteLater();
     return;
   }
 
   // For lookups during unit testing:
-  widget->setObjectName(label);
+  widget->setObjectName(name);
+  QString label(name);
+
+  QJsonObject obj = option.toObject();
+
+  if (obj.contains(QStringLiteral("label")) &&
+      obj.value(QStringLiteral("label")).isString()) {
+    label = obj[QStringLiteral("label")].toString();
+  }
 
   form->addRow(label + ":", widget);
-  m_widgets.insert(label, widget);
+  m_widgets.insert(name, widget);
 }
 
 QWidget* InterfaceWidget::createOptionWidget(const QJsonValue& option)
@@ -310,7 +308,7 @@ QWidget* InterfaceWidget::createStringListWidget(const QJsonObject& obj)
 {
   if (!obj.contains(QStringLiteral("values")) ||
       !obj[QStringLiteral("values")].isArray()) {
-    qDebug() << "QuantumInputDialog::createStringListWidget()"
+    qDebug() << "InterfaceWidget::createStringListWidget()"
                 "values missing, or not array!";
     return nullptr;
   }
@@ -438,8 +436,8 @@ void InterfaceWidget::setOptionDefaults()
 {
   if (!m_options.contains(QStringLiteral("userOptions")) ||
       !m_options[QStringLiteral("userOptions")].isObject()) {
-    showError(tr("'userOptions' missing, or not an object:\n%1")
-                .arg(QString(QJsonDocument(m_options).toJson())));
+    //    showError(tr("'userOptions' missing, or not an object:\n%1")
+    //                .arg(QString(QJsonDocument(m_options).toJson())));
     return;
   }
 

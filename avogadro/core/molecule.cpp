@@ -811,6 +811,16 @@ void Molecule::updateGraph() const
   }
 }
 
+Array<Vector3>& Molecule::forceVectors()
+{
+  return m_forceVectors;
+}
+
+const Array<Vector3>& Molecule::forceVectors() const
+{
+  return m_forceVectors;
+}
+
 Residue& Molecule::addResidue(std::string& name, Index& number, char& id)
 {
   Residue newResidue(name, number, id);
@@ -823,7 +833,7 @@ void Molecule::addResidue(Residue& residue)
   m_residues.push_back(residue);
 }
 
-Residue Molecule::residue(int index)
+Residue& Molecule::residue(int index)
 {
   return m_residues[index];
 }
