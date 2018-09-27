@@ -1,6 +1,6 @@
 branches:
   only:
-    - master
+    - wheels
 
 language: cpp
 
@@ -25,7 +25,7 @@ matrix:
           - llvm-toolchain-trusty-6.0
           packages:
           - clang-format-6.0
-
+      if: branch = master
     - compiler: gcc
       os: linux
       addons:
@@ -35,7 +35,7 @@ matrix:
       env:
         - TASKS="ctest gcc-4.9"
         - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
-
+      if: branch = master
     - compiler: gcc
       os: linux
       addons:
@@ -45,10 +45,27 @@ matrix:
       env:
         - TASKS="ctest gcc-6.3"
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
-
+      if: branch = master
     - compiler: clang
       os: linux
       env: TASKS="ctest clang-3.9"
+      if: branch = master
+    - os: osx
+      env: TASKS="Mac clang"
+      if: branch = master
+
+    - os: osx
+      env: DEPLOY=TRUE
+
+
+install: true
+#  - . ./scripts/travis/install.sh
+
+script: true
+#  - ./scripts/travis/build.sh
+
+before_deploy:
+  - ./scripts/travis/macpython-build-wheels.sh 3.5 3.6 3.7
 
     - os: osx
       env: TASKS="Mac clang"
