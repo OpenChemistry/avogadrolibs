@@ -36,3 +36,29 @@ build_script:
     cmake -G %CMAKE_GENERATOR% ../openchemistry
 
     cmake --build . --target avogadrolibs --config Release
+
+-
+  branches:
+    only:
+      - wheels
+  version: "0.0.1.{build}"
+  environment:
+    TWINE_USERNAME:
+      secure: SzeZ03l7jd21TtgkMyds7g==
+    TWINE_PASSWORD:
+      secure: S5cwk5CAZ1pxBBIiBqQhR0zYIkvuktHcjVZ+jocTL08=
+  install:
+    - pip install twine
+    - cd c:\projects\avogadrolibs
+    - ps: .\scripts\appveyor\build-wheels.ps1
+
+  build: off
+
+  test: off
+
+  artifacts:
+    # pushing entire folder as a zip archive
+    - path: dist\*
+
+  deploy_script:
+    - twine upload --repository-url  https://test.pypi.org/legacy/ dist/*
