@@ -1,0 +1,26 @@
+version: 2
+jobs:
+  package:
+    working_directory: ~/
+    machine: true
+    steps:
+      - checkout:
+          path: ~/avogadrolibs
+      - run:
+          name: Build Python packages
+          no_output_timeout: 1.0h
+          command: |
+            ./avogadrolibs/scripts/circleci/dockcross-manylinux-build-wheels.sh cp34 cp35 cp36 cp37
+      - store_artifacts:
+          path: dist
+          destination: dist
+      - run:
+         name: Upload to PyPi
+         command: |
+           ./avogadrolibs/scripts/circleci/upload_pypi.sh
+
+workflows:
+    version: 2
+    package:
+      jobs:
+        - package
