@@ -12,6 +12,11 @@
     - CMAKE_GENERATOR: '"Visual Studio 15 2017 Win64"'
       QTDIR: C:\Qt\5.6\msvc2015_64
       platform: x64
+    TWINE_USERNAME:
+      secure: SzeZ03l7jd21TtgkMyds7g==
+    TWINE_PASSWORD:
+      secure: S5cwk5CAZ1pxBBIiBqQhR0zYIkvuktHcjVZ+jocTL08=
+
   build_script:
   - ps: >-
       if ($env:appveyor_repo_tag -eq 'False')
@@ -40,18 +45,12 @@
     
         cmake --build . --target avogadrolibs --config Release
       }
--
-  version: "1.0.{build}"
-  environment:
-    TWINE_USERNAME:
-      secure: SzeZ03l7jd21TtgkMyds7g==
-    TWINE_PASSWORD:
-      secure: S5cwk5CAZ1pxBBIiBqQhR0zYIkvuktHcjVZ+jocTL08=
+
   install:
     - ps: >-
         if ($env:appveyor_repo_tag -eq 'True')
         {
-          cd c:\projects\avogadrolibs
+          cd c:\openchemistry\avogadrolibs
           .\scripts\appveyor\build-wheels.ps1
         }
 
@@ -63,6 +62,6 @@
     - ps: >-
         if ($env:appveyor_repo_tag -eq 'True')
         {
-          cd c:\projects\avogadrolibs
+          cd c:\openchemistry\avogadrolibs
           .\scripts\appveyor\upload-pypi.ps1
         }
