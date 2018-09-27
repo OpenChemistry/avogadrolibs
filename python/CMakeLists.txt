@@ -67,3 +67,5 @@ if (NOT WIN32)
   set_target_properties(avogadrocorepython avogadroiopython PROPERTIES
                         INSTALL_RPATH ${_rpath_value})
 endif()
+
+install(FILES avogadro/__init__.py  COMPONENT python DESTINATION "${_python_module_install_dir}")
