@@ -1,64 +1,68 @@
-version: 1.0.{build}
-image: Visual Studio 2017
-configuration:
-- Release
-clone_folder: C:/openchemistry/avogadrolibs
-init:
-- cmd:
-environment:
-  PATH: '%PATH%;%QTDIR%\bin'
-  matrix:
-  - CMAKE_GENERATOR: '"Ninja"'
-    QTDIR: C:\Qt\5.6\msvc2015_64
-    platform: x64
-build_script:
-- cmd: >-
-    cd ..
-
-    git init .
-
-    git remote add origin git://github.com/OpenChemistry/openchemistry.git
-
-    git pull origin master
-
-    git -c submodule.avogadrolibs.update=none submodule update --init
-
-    cd ../
-
-    mkdir openchemistry-build
-
-    cd openchemistry-build
-
-    choco install ninja
-
-    call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
-
-    cmake -G %CMAKE_GENERATOR% ../openchemistry
-
-    cmake --build . --target avogadrolibs --config Release
-
 -
-  branches:
-    only:
-      - wheels
-  version: "0.0.1.{build}"
+  version: 1.0.{build}
+  image: Visual Studio 2017
+  configuration:
+  - Release
+  clone_folder: C:/openchemistry/avogadrolibs
+  init:
+  - cmd:
+  environment:
+    PATH: '%PATH%;%QTDIR%\bin'
+    matrix:
+    - CMAKE_GENERATOR: '"Visual Studio 15 2017 Win64"'
+      QTDIR: C:\Qt\5.6\msvc2015_64
+      platform: x64
+  build_script:
+  - ps: >-
+      if ($env:appveyor_repo_tag -eq 'False')
+      {
+        cd ..
+
+        git init .
+
+        git remote add origin git://github.com/OpenChemistry/openchemistry.git
+    
+        git pull origin master
+    
+        git -c submodule.avogadrolibs.update=none submodule update --init
+    
+        cd ../
+    
+        mkdir openchemistry-build
+    
+        cd openchemistry-build
+    
+        choco install ninja
+    
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
+    
+        cmake -G $env:CMAKE_GENERATOR ../openchemistry
+    
+        cmake --build . --target avogadrolibs --config Release
+      }
+-
+  version: "1.0.{build}"
   environment:
     TWINE_USERNAME:
       secure: SzeZ03l7jd21TtgkMyds7g==
     TWINE_PASSWORD:
       secure: S5cwk5CAZ1pxBBIiBqQhR0zYIkvuktHcjVZ+jocTL08=
   install:
-    - pip install twine
-    - cd c:\projects\avogadrolibs
-    - ps: .\scripts\appveyor\build-wheels.ps1
+    - ps: >-
+        if ($env:appveyor_repo_tag -eq 'True')
+        {
+          cd c:\projects\avogadrolibs
+          .\scripts\appveyor\build-wheels.ps1
+        }
 
   build: off
 
   test: off
 
-  artifacts:
-    # pushing entire folder as a zip archive
-    - path: dist\*
-
   deploy_script:
-    - twine upload --repository-url  https://test.pypi.org/legacy/ dist/*
+    - ps: >-
+        if ($env:appveyor_repo_tag -eq 'True')
+        {
+          cd c:\projects\avogadrolibs
+          .\scripts\appveyor\upload-pypi.ps1
+        }
