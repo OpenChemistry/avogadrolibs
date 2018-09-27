@@ -2,13 +2,10 @@ from skbuild import setup
 
 setup(
     name="avogadrolibs",
-    version="0.0.1",
+    version="0.0.8",
     description="",
     author='Kitware',
     license="BSD",
-    #package_dirs={
-    #    'avogadro': 'python/avogadro'
-    #},
     packages=['avogadro'],
     cmake_args=[
         '-DUSE_SPGLIB:BOOL=FALSE',
