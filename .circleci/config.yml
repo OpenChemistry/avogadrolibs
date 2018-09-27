@@ -21,6 +21,11 @@ jobs:
 
 workflows:
     version: 2
-    package:
+    package_wheel:
       jobs:
-        - package
+        - package:
+            filters:
+              tags:
+                only: /.*/
+            branches:
+              ignore: /.*/
