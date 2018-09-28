@@ -69,3 +69,11 @@ if (NOT WIN32)
 endif()
 
 install(FILES avogadro/__init__.py  COMPONENT python DESTINATION "${_python_module_install_dir}")
+
+# Set the output directory so the python modules can be used from the build
+# tree.
+set_target_properties(avogadrocorepython avogadroiopython
+  PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/avogadro"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/avogadro"
+)
