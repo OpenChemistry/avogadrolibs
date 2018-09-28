@@ -4,7 +4,7 @@ setup(
     name="avogadro",
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
-    description="",
+    description="Avogadro provides analysis and data processing useful in computational chemistry, molecular modeling, bioinformatics, materials science, and related areas.",
     author='Kitware',
     license="BSD",
     packages=['avogadro'],
