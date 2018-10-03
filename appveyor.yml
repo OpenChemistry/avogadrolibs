@@ -13,9 +13,9 @@
       QTDIR: C:\Qt\5.6\msvc2015_64
       platform: x64
     TWINE_USERNAME:
-      secure: SzeZ03l7jd21TtgkMyds7g==
+      secure: /dyl+sf2T84bLnO0uaEFSA==
     TWINE_PASSWORD:
-      secure: S5cwk5CAZ1pxBBIiBqQhR0zYIkvuktHcjVZ+jocTL08=
+      secure: S4lgG583FNPPUGhPBEwNkfeC5YHUFE/K9x3xujHO75I=
 
   build_script:
     - ps: >-
