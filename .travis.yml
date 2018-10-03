@@ -64,7 +64,7 @@ matrix:
       if: tag IS present
 
 install:
-  - ./scripts/travis/install.sh
+  - . ./scripts/travis/install.sh
 
 script:
   - ./scripts/travis/build.sh
