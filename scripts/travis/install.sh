@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Don't build on tag
-echo "|$TRAVIS_TAG|"
 if [ ! -z "$TRAVIS_TAG" ]; then exit 0; fi
 
 if [[ $TASKS != "clang-format" && $TRAVIS_OS_NAME == "linux" ]]; then
