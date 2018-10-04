@@ -23,10 +23,11 @@ features and goals of the Avogadro project:
 ![Kitware, Inc.][KitwareLogo]
 
 Avogadro 2 is being developed as part of the [Open Chemistry][OpenChemistry]
-project at [Kitware][Kitware], along with companion tools and libraries to
-support the work. The Avogadro 1.x series currently has more features, and can
-be found [here][Avogadro1]. We will be porting more features to the Avogadro 2
-code base, and making regular releases to get feedback from the community.
+project by an open communit, and has been developed at [Kitware][Kitware] as an
+open source community project. The Avogadro 1.x series currently has more
+features, and can be found [here][Avogadro1]. We will be porting more features
+to the Avogadro 2 code base, and making regular releases to get feedback from
+the community. We are actively working to make Avogadro 2 mainline in 2018.
 
 Installing
 ----------
