@@ -1,3 +1,5 @@
+echo Building avogadrolibs
+
 cd ..
 
 git init .

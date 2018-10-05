@@ -18,11 +18,8 @@
       secure: S4lgG583FNPPUGhPBEwNkfeC5YHUFE/K9x3xujHO75I=
 
   build_script:
-    - ps: >-
-        if ($env:appveyor_repo_tag -eq 'false')
-        {
-          & scripts\appveyor\build.bat
-        }
+    - cmd: >-
+        if %appveyor_repo_tag% equ false scripts\appveyor\build.bat
 
   install:
     - ps: >-
