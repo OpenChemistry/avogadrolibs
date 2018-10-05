@@ -9,8 +9,10 @@ namespace py = pybind11;
 using namespace Avogadro;
 using namespace Avogadro::Core;
 
-void exportCore(py::module& m)
+PYBIND11_MODULE(core, m)
 {
+  m.doc() = "AvogadroCore Python binding";
+
   using atomBase = AtomTemplate<Molecule>;
   py::class_<atomBase>(m, "atomBase");
   py::class_<Atom, atomBase>(m, "Atom")

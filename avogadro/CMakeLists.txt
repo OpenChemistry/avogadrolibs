@@ -17,8 +17,19 @@ function(avogadro_add_library name)
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
   # Now install everything.
   string(REGEX REPLACE "^avogadro" "" module ${lowerName})
-  install(FILES ${HEADERS}
-    DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/${module}")
+
+  # SKBUILD is set for binary wheel
+  if (NOT SKBUILD)
+    install(FILES ${HEADERS}
+      DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/${module}")
+  else()
+    # For MACOSX
+    set_target_properties(${name} PROPERTIES INSTALL_NAME_DIR "@rpath")
+    set(INSTALL_RUNTIME_DIR avogadro)
+    set(INSTALL_LIBRARY_DIR avogadro)
+    set(INSTALL_ARCHIVE_DIR avogadro)
+  endif()
+
   install(TARGETS ${name}
     EXPORT "AvogadroLibsTargets"
     RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
@@ -33,7 +44,10 @@ add_subdirectory(io)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/io)
 add_subdirectory(quantumio)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/quantumio)
-add_subdirectory(command)
+# SKBUILD is set for binary wheel
+if (NOT SKBUILD)
+  add_subdirectory(command)
+endif()
 if(USE_OPENGL)
   add_subdirectory(rendering)
   include_directories(${CMAKE_CURRENT_BINARY_DIR}/rendering)
