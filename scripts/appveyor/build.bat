@@ -6,7 +6,7 @@ git remote add origin git://github.com/OpenChemistry/openchemistry.git
 
 git pull origin master
 
-git -c submodule.avogadrolibs.update=none submodule update --init --depth 1
+git -c submodule.avogadrolibs.update=none submodule update --init --depth 100
 
 cd ../
 
