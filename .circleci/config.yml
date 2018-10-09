@@ -14,6 +14,18 @@ jobs:
       - store_artifacts:
           path: dist
           destination: dist
+      - persist_to_workspace:
+          root: .
+          paths:
+            - avogadrolibs
+            - dist
+  upload:
+    docker:
+      - image: circleci/python:3.6
+    working_directory: ~/
+    steps:
+      - attach_workspace:
+          at: .
       - run:
          name: Upload to PyPi
          command: |
@@ -24,6 +36,12 @@ workflows:
     package_wheel:
       jobs:
         - package:
+            filters:
+              tags:
+                only: /.*/
+        - upload:
+            requires:
+              - package
             filters:
               tags:
                 only: /.*/
