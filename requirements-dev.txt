@@ -1,2 +1,3 @@
 scikit-build>=0.5.1
 setuptools_scm>=v3.1.0
+wheel==0.31.1

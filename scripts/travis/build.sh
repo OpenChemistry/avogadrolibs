@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 # Don't build on tag
 if [ ! -z "$TRAVIS_TAG" ]; then exit 0; fi
@@ -10,6 +9,7 @@ if [[ $TASKS == "clang-format" ]]; then
 else
   # First, get the super module dir
   cd ..
+  export ROOT=`pwd`
   git clone https://github.com/openchemistry/openchemistry
   cd openchemistry
   git submodule init avogadroapp avogadrodata molequeue thirdparty/qttesting
@@ -22,6 +22,8 @@ else
   cd build
 
   if [[ $TRAVIS_OS_NAME == "linux" ]]; then
+  source /opt/qt54/bin/qt54-env.sh
+  CMAKE_EXE="${ROOT}/cmake/bin/cmake"
   ${CMAKE_EXE} -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DENABLE_TESTING=ON \
     -DUSE_SYSTEM_EIGEN=ON \
