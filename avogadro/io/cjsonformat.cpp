@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "cjsonformat.h"
+
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
