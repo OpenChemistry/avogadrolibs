@@ -272,6 +272,27 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     json orbitals = jsonRoot["orbitals"];
     if (orbitals.is_object() && basis->isValid()) {
       basis->setElectronCount(orbitals["electronCount"]);
+      json occupations = orbitals["occupations"];
+      if (isNumericArray(occupations)) {
+        std::vector<unsigned char> occs;
+        for (unsigned int i = 0; i < occupations.size(); ++i)
+          occs.push_back(static_cast<unsigned char>(occupations[i]));
+        basis->setMolecularOrbitalOccupancy(occupations);
+      }
+      json energies = orbitals["energies"];
+      if (isNumericArray(energies)) {
+        std::vector<double> energyArray;
+        for (unsigned int i = 0; i < energies.size(); ++i)
+          energyArray.push_back(static_cast<double>(energies[i]));
+        basis->setMolecularOrbitalEnergy(energyArray);
+      }
+      json numbers = orbitals["numbers"];
+      if (isNumericArray(numbers)) {
+        std::vector<unsigned int> numArray;
+        for (unsigned int i = 0; i < numbers.size(); ++i)
+          numArray.push_back(static_cast<unsigned int>(numbers[i]));
+        basis->setMolecularOrbitalNumber(numArray);
+      }
       json moCoefficients = orbitals["moCoefficients"];
       json moCoefficientsA = orbitals["alphaCoefficients"];
       json moCoefficientsB = orbitals["betaCoefficients"];
@@ -492,6 +513,32 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     } else {
       root["orbitals"]["moCoefficients"] = moCoefficients;
     }
+
+    // Some energy, occupation, and number data potentially.
+    auto energies = gaussian->moEnergy();
+    if (energies.size() > 0) {
+      json energyData;
+      for (auto it = energies.begin(), itEnd = energies.end(); it != itEnd;
+           ++it) {
+        energyData.push_back(*it);
+      }
+      root["orbitals"]["energies"] = energyData;
+    }
+    auto occ = gaussian->moOccupancy();
+    if (occ.size() > 0) {
+      json occData;
+      for (auto it = occ.begin(), itEnd = occ.end(); it != itEnd; ++it)
+        occData.push_back(static_cast<int>(*it));
+      root["orbitals"]["occupations"] = occData;
+    }
+    auto num = gaussian->moNumber();
+    if (num.size() > 0) {
+      json numData;
+      for (auto it = num.begin(), itEnd = num.end(); it != itEnd; ++it)
+        numData.push_back(*it);
+      root["orbitals"]["numbers"] = numData;
+    }
+
     root["orbitals"]["electronCount"] = gaussian->electronCount();
   }
 
