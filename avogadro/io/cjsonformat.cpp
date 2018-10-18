@@ -442,31 +442,35 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     basis["shellTypes"] = shellTypes;
 
     // This bit is slightly tricky, map from our index to primitives per shell.
-    auto gtoIndices = gaussian->gtoIndices();
-    auto gtoA = gaussian->gtoA();
-    json primitivesPerShell;
-    for (size_t i = 0; i < gtoIndices.size() - 1; ++i)
-      primitivesPerShell.push_back(gtoIndices[i + 1] - gtoIndices[i]);
-    primitivesPerShell.push_back(gtoA.size() - gtoIndices.back());
-    basis["primitivesPerShell"] = primitivesPerShell;
+    if (gaussian->gtoIndices().size() && gaussian->atomIndices().size()) {
+      auto gtoIndices = gaussian->gtoIndices();
+      auto gtoA = gaussian->gtoA();
+      json primitivesPerShell;
+      for (size_t i = 0; i < gtoIndices.size() - 1; ++i)
+        primitivesPerShell.push_back(gtoIndices[i + 1] - gtoIndices[i]);
+      primitivesPerShell.push_back(gtoA.size() - gtoIndices.back());
+      basis["primitivesPerShell"] = primitivesPerShell;
 
-    auto atomIndices = gaussian->atomIndices();
-    json shellToAtomMap;
-    for (size_t i = 0; i < atomIndices.size(); ++i)
-      shellToAtomMap.push_back(atomIndices[i]);
-    basis["shellToAtomMap"] = shellToAtomMap;
+      auto atomIndices = gaussian->atomIndices();
+      json shellToAtomMap;
+      std::cout << "atomIndices " << atomIndices.size() << std::endl;
+      for (size_t i = 0; i < atomIndices.size(); ++i)
+        shellToAtomMap.push_back(atomIndices[i]);
+      basis["shellToAtomMap"] = shellToAtomMap;
 
-    auto gtoC = gaussian->gtoC();
-    json exponents;
-    json coefficients;
-    for (size_t i = 0; i < gtoA.size(); ++i) {
-      exponents.push_back(gtoA[i]);
-      coefficients.push_back(gtoC[i]);
+      auto gtoC = gaussian->gtoC();
+      json exponents;
+      json coefficients;
+      for (size_t i = 0; i < gtoA.size(); ++i) {
+        exponents.push_back(gtoA[i]);
+        coefficients.push_back(gtoC[i]);
+      }
+      basis["exponents"] = exponents;
+      basis["coefficients"] = coefficients;
+
+      // Write out the basis set if a valid one exists.
+      root["basisSet"] = basis;
     }
-    basis["exponents"] = exponents;
-    basis["coefficients"] = coefficients;
-
-    root["basisSet"] = basis;
 
     // Now get the MO matrix, potentially other things. Need to get a handle on
     // when we have just one (paired), or two (alpha and beta) to write.
