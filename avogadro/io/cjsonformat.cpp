@@ -93,13 +93,15 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     return false;
   }
 
-  auto jsonValue = jsonRoot.find("chemical json");
+  auto jsonValue = jsonRoot.find("chemicalJson");
+  if (jsonValue == jsonRoot.end())
+    jsonValue = jsonRoot.find("chemical json");
   if (jsonValue == jsonRoot.end()) {
     appendError("Error: no \"chemical json\" key found.");
     return false;
   }
-  if (*jsonValue != 0) {
-    appendError("Warning: chemical json version is not 0.");
+  if (*jsonValue != 0 && *jsonValue != 1) {
+    appendError("Warning: chemical json version is not 0 or 1.");
   }
 
   // Read some basic key-value pairs (all strings).
@@ -180,9 +182,9 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     }
   }
 
-  json unitCell = jsonRoot["unit cell"];
+  json unitCell = jsonRoot["unitCell"];
   if (!unitCell.is_object())
-    unitCell = jsonRoot["unitCell"];
+    unitCell = jsonRoot["unit cell"];
 
   if (unitCell.is_object()) {
     Core::UnitCell* unitCellObject = nullptr;
@@ -210,9 +212,9 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       molecule.setUnitCell(unitCellObject);
   }
 
-  json fractional = atoms["coords"]["3d fractional"];
+  json fractional = atoms["coords"]["3dFractional"];
   if (!fractional.is_array())
-    fractional = atoms["coords"]["3dFractional"];
+    fractional = atoms["coords"]["3d fractional"];
   if (fractional.is_array() && fractional.size() == 3 * atomCount &&
       isNumericArray(fractional) && molecule.unitCell()) {
     Array<Vector3> fcoords;
@@ -374,7 +376,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
   json root;
 
-  root["chemical json"] = 0;
+  root["chemicalJson"] = 1;
 
   if (opts.value("properties", true)) {
     if (molecule.data("name").type() == Variant::String)
@@ -406,7 +408,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     vectors.push_back(molecule.unitCell()->cVector().z());
     unitCell["cellVectors"] = vectors;
 
-    root["unit cell"] = unitCell;
+    root["unitCell"] = unitCell;
   }
 
   // Create a basis set/MO matrix we can round trip.
@@ -557,7 +559,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
           coordsFractional.push_back(it->y());
           coordsFractional.push_back(it->z());
         }
-        root["atoms"]["coords"]["3d fractional"] = coordsFractional;
+        root["atoms"]["coords"]["3dFractional"] = coordsFractional;
       }
     }
 
