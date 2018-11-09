@@ -122,11 +122,11 @@ MoleQueueDialog::SubmitStatus MoleQueueDialog::submitJob(
         progress.setCancelButton(nullptr);
 
         // Job completed -- overwrite job template with updated job details.
-        connect(&dlg.widget(), SIGNAL(jobUpdated(MoleQueue::JobObject)),
-                &dlg.widget(), SLOT(setJobTemplate(MoleQueue::JobObject)));
+        connect(&dlg.widget(), SIGNAL(jobUpdated(const ::MoleQueue::JobObject&)),
+                &dlg.widget(), SLOT(setJobTemplate(const ::MoleQueue::JobObject&)));
         QList<MetaMethod> lookupSignal;
         lookupSignal << MetaMethod(&dlg.widget(),
-                                   SIGNAL(jobUpdated(MoleQueue::JobObject)));
+                                   SIGNAL(jobUpdated(const ::MoleQueue::JobObject&)));
         dlg.widget().requestJobLookup();
         if (!dlg.waitForSignal(lookupSignal)) {
           progress.hide();
