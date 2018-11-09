@@ -237,9 +237,10 @@ void MoleQueueWidget::onSubmissionSuccess(int localId, unsigned int mqId)
   emit jobSubmitted(true);
 }
 
-void MoleQueueWidget::onSubmissionFailure(int localId, unsigned int,
-                                          const QString& error)
+void MoleQueueWidget::onSubmissionFailure(int localId, int,
+                                          QString error, QJsonValue errorData)
 {
+  Q_UNUSED(errorData);
   if (localId != m_requestId)
     return;
 
@@ -285,13 +286,13 @@ void MoleQueueWidget::listenForJobSubmitReply(bool listen)
   if (listen) {
     connect(&mqClient, SIGNAL(submitJobResponse(int, uint)), this,
             SLOT(onSubmissionSuccess(int, uint)));
-    connect(&mqClient, SIGNAL(errorReceived(int, uint, QString)), this,
-            SLOT(onSubmissionFailure(int, uint, QString)));
+    connect(&mqClient, SIGNAL(errorReceived(int, int, QString, QJsonValue)), this,
+            SLOT(onSubmissionFailure(int, int, QString, QJsonValue)));
   } else {
     disconnect(&mqClient, SIGNAL(submitJobResponse(int, uint)), this,
                SLOT(onSubmissionSuccess(int, uint)));
-    disconnect(&mqClient, SIGNAL(errorReceived(int, uint, QString)), this,
-               SLOT(onSubmissionFailure(int, uint, QString)));
+    disconnect(&mqClient, SIGNAL(errorReceived(int, int, QString, QJsonValue)), this,
+               SLOT(onSubmissionFailure(int, int, QString, QJsonValue)));
   }
 }
 
