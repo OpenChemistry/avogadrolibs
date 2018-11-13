@@ -77,19 +77,19 @@ PYBIND11_MODULE(io, m)
   /// This class uses a singleton pattern, make it accessible through Python.
   py::class_<ffm>(m, "FileFormatManager")
     .def(py::init<>())
-    .def("readFile", &ffm::readFile,
+    .def("read_file", &ffm::readFile,
          "Read in a molecule from the supplied file path", py::arg("molecule"),
-         py::arg("fileName"), py::arg("fileExtension") = std::string(),
+         py::arg("file_name"), py::arg("file_extension") = std::string(),
          py::arg("options") = std::string())
-    .def("writeFile", &ffm::writeFile,
+    .def("write_file", &ffm::writeFile,
          "Write the molecule to the supplied file path", py::arg("molecule"),
-         py::arg("fileName"), py::arg("fileExtension") = std::string(),
+         py::arg("file_name"), py::arg("file_extension") = std::string(),
          py::arg("options") = std::string())
-    .def("readString", &ffm::readString,
+    .def("read_string", &ffm::readString,
          "Read in a molecule from the supplied string", py::arg("molecule"),
-         py::arg("string"), py::arg("fileExtension"),
+         py::arg("string"), py::arg("file_extension"),
          py::arg("options") = std::string())
-    .def("writeString", &ffm::writeString,
+    .def("write_string", &ffm::writeString,
          "Write a molecule to the supplied string", py::arg("mol"),
-         py::arg("ext"), py::arg("options") = std::string());
+         py::arg("file_extension"), py::arg("options") = std::string());
 }
