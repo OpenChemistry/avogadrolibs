@@ -17,9 +17,9 @@ PYBIND11_MODULE(core, m)
   py::class_<atomBase>(m, "atomBase");
   py::class_<Atom, atomBase>(m, "Atom")
     .def_property_readonly("index", &Atom::index, "Index in the molecule")
-    .def_property("atomicNumber", &Atom::atomicNumber, &Atom::setAtomicNumber,
+    .def_property("atomic_number", &Atom::atomicNumber, &Atom::setAtomicNumber,
                   "The atomic number")
-    .def("isValid", &Atom::isValid, "Check if the object is valid");
+    .def("is_valid", &Atom::isValid, "Check if the object is valid");
 
   using bondBase = BondTemplate<Molecule>;
   py::class_<bondBase>(m, "bondBase");
@@ -27,13 +27,13 @@ PYBIND11_MODULE(core, m)
     .def_property_readonly("index", &Bond::index, "Index in the molecule")
     .def_property("order", &Bond::order, &Bond::setOrder,
                   "The order of the bond (single = 1, double = 2, etc")
-    .def("isValid", &Bond::isValid, "Check if the object is valid")
+    .def("is_valid", &Bond::isValid, "Check if the object is valid")
     .def("atom1", &Bond::atom1, "The first atom")
     .def("atom2", &Bond::atom2, "The second atom");
 
   bool (Cube::*setLimits0)(const Molecule&, double, double) = &Cube::setLimits;
   py::class_<Cube>(m, "Cube").def(
-    "setLimits", setLimits0, "Set the limits based on the molecule geometry");
+    "set_limits", setLimits0, "Set the limits based on the molecule geometry");
 
   Index (Molecule::*atomCount0)() const = &Molecule::atomCount;
   Index (Molecule::*atomCount1)(unsigned char) const = &Molecule::atomCount;
@@ -43,19 +43,19 @@ PYBIND11_MODULE(core, m)
 
   py::class_<Molecule>(m, "Molecule")
     .def(py::init<>())
-    .def("addAtom", &Molecule::addAtom, "Add an atom")
-    .def("atomCount", atomCount0, "The number of atoms")
-    .def("atomCount", atomCount1,
+    .def("add_atom", &Molecule::addAtom, "Add an atom")
+    .def("atom_count", atomCount0, "The number of atoms")
+    .def("atom_count", atomCount1,
          "The number of atoms with the supplied atomic number")
-    .def("addBond", addBond1, "Add a new bond", py::arg("a1"), py::arg("a2"),
+    .def("add_bond", addBond1, "Add a new bond", py::arg("a1"), py::arg("a2"),
          py::arg("order") = 1)
-    .def("addBond", addBond2, "Add a new bond", py::arg("a1"), py::arg("a2"),
+    .def("add_bond", addBond2, "Add a new bond", py::arg("a1"), py::arg("a2"),
          py::arg("order") = 1)
-    .def("bondCount", &Molecule::bondCount, "The number of bonds")
-    .def("addCube", &Molecule::addCube, py::return_value_policy::reference,
+    .def("bond_count", &Molecule::bondCount, "The number of bonds")
+    .def("add_cube", &Molecule::addCube, py::return_value_policy::reference,
          "Add a new cube")
-    .def("cubeCount", &Molecule::cubeCount, "The number of cubes")
-    .def("hasCustomElements", &Molecule::hasCustomElements,
+    .def("cube_count", &Molecule::cubeCount, "The number of cubes")
+    .def("has_custom_elements", &Molecule::hasCustomElements,
          "Returns true if the molecule contains any custom elements")
     .def("formula", &Molecule::formula, "The chemical formula of the molecule",
          py::arg("delimiter") = "", py::arg("show_counts_over") = 1)
@@ -65,6 +65,6 @@ PYBIND11_MODULE(core, m)
     &GaussianSetTools::calculateMolecularOrbital;
   py::class_<GaussianSetTools>(m, "GaussianSetTools")
     .def(py::init<Molecule*>())
-    .def("calculateMolecularOrbital", calculateMolecularOrbital0,
+    .def("calculate_molecular_orbital", calculateMolecularOrbital0,
          "Calculate the molecular orbital and set values in the cube");
 }
