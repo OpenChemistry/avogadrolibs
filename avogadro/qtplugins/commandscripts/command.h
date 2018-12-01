@@ -2,20 +2,12 @@
 
   This source file is part of the Avogadro project.
 
-  Copyright 2016 Kitware, Inc.
-
   This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_WORKFLOW_H
-#define AVOGADRO_QTPLUGINS_WORKFLOW_H
+#ifndef AVOGADRO_QTPLUGINS_COMMAND_H
+#define AVOGADRO_QTPLUGINS_COMMAND_H
 
 #include <avogadro/qtgui/extensionplugin.h>
 
@@ -38,23 +30,23 @@ class InterfaceWidget;
 namespace QtPlugins {
 
 /**
- * @brief The Workflow class implements the extension interface for
- * external (script) workflows
+ * @brief The Command class implements the extension interface for
+ * external (script) Commands
  * @author Geoffrey R. Hutchison
  */
-class Workflow : public QtGui::ExtensionPlugin
+class Command : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 
 public:
-  explicit Workflow(QObject* parent = 0);
-  ~Workflow() override;
+  explicit Command(QObject* parent = 0);
+  ~Command() override;
 
-  QString name() const override { return tr("Workflow scripts"); }
+  QString name() const override { return tr("Command scripts"); }
 
   QString description() const override
   {
-    return tr("Run external workflow commands");
+    return tr("Run external script commands");
   }
 
   QList<QAction*> actions() const override;
@@ -65,7 +57,7 @@ public:
 
 public slots:
   /**
-   * Scan for new scripts in the workflow directories.
+   * Scan for new scripts in the command directories.
    */
   void refreshScripts();
 
@@ -90,7 +82,7 @@ private:
   QtGui::InterfaceWidget* m_currentInterface;
 
   // maps program name --> script file path
-  QMap<QString, QString> m_workflowScripts;
+  QMap<QString, QString> m_commandScripts;
 
   const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;
@@ -98,4 +90,4 @@ private:
 }
 }
 
-#endif // AVOGADRO_QTPLUGINS_WORKFLOW_H
+#endif // AVOGADRO_QTPLUGINS_COMMAND_H

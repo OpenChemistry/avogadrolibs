@@ -148,8 +148,8 @@ void InterfaceScript::reset()
   m_highlightStyles.clear();
 }
 
-bool InterfaceScript::runWorkflow(const QJsonObject& options_,
-                                  Core::Molecule* mol)
+bool InterfaceScript::runCommand(const QJsonObject& options_,
+                                 Core::Molecule* mol)
 {
   m_errors.clear();
   m_warnings.clear();
@@ -165,7 +165,7 @@ bool InterfaceScript::runWorkflow(const QJsonObject& options_,
     return false;
 
   QByteArray json(
-    m_interpreter->execute(QStringList() << QStringLiteral("--run-workflow"),
+    m_interpreter->execute(QStringList() << QStringLiteral("--run-command"),
                            QJsonDocument(allOptions).toJson()));
 
   if (m_interpreter->hasErrors()) {

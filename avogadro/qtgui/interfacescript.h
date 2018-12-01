@@ -534,7 +534,7 @@ public:
    * to check for success, and errorString() or errorList() to get a
    * user-friendly description of the error.
    */
-  bool runWorkflow(const QJsonObject& options_, Core::Molecule* mol);
+  bool runCommand(const QJsonObject& options_, Core::Molecule* mol);
 
   /**
    * Request input files from the script using the supplied options object and
