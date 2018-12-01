@@ -1,20 +1,10 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
 
-  Copyright 2016 Kitware, Inc.
-
   This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
 ******************************************************************************/
 
-#include "workflow.h"
+#include "command.h"
 
 #include <avogadro/qtgui/avogadropython.h>
 #include <avogadro/qtgui/filebrowsewidget.h>
@@ -46,25 +36,25 @@ namespace QtPlugins {
 using Avogadro::QtGui::InterfaceScript;
 using Avogadro::QtGui::InterfaceWidget;
 
-Workflow::Workflow(QObject* parent_)
+Command::Command(QObject* parent_)
   : ExtensionPlugin(parent_), m_molecule(nullptr), m_currentDialog(nullptr),
     m_currentInterface(nullptr), m_outputFormat(nullptr)
 {
   refreshScripts();
 }
 
-Workflow::~Workflow()
+Command::~Command()
 {
   qDeleteAll(m_dialogs.values());
   m_dialogs.clear();
 }
 
-QList<QAction*> Workflow::actions() const
+QList<QAction*> Command::actions() const
 {
   return m_actions;
 }
 
-QStringList Workflow::menuPath(QAction* action) const
+QStringList Command::menuPath(QAction* action) const
 {
   QString scriptFileName = action->data().toString();
   QStringList path;
@@ -80,7 +70,7 @@ QStringList Workflow::menuPath(QAction* action) const
   path = gen.menuPath().split('|');
   if (gen.hasErrors()) {
     path << tr("&Extensions") << tr("Scripts");
-    qWarning() << "Workflow: Unable to retrieve menu "
+    qWarning() << "Command: Unable to retrieve menu "
                   "name for: "
                << scriptFileName << "." << gen.errorList().join("\n\n");
     return path;
@@ -88,7 +78,7 @@ QStringList Workflow::menuPath(QAction* action) const
   return path;
 }
 
-void Workflow::setMolecule(QtGui::Molecule* mol)
+void Command::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule == mol)
     return;
@@ -99,7 +89,7 @@ void Workflow::setMolecule(QtGui::Molecule* mol)
     dlg->setMolecule(mol);
 }
 
-bool Workflow::readMolecule(QtGui::Molecule& mol)
+bool Command::readMolecule(QtGui::Molecule& mol)
 {
   Io::FileFormat* reader = m_outputFormat->newInstance();
   bool success = reader->readFile(m_outputFileName.toStdString(), mol);
@@ -116,13 +106,13 @@ bool Workflow::readMolecule(QtGui::Molecule& mol)
   return success;
 }
 
-void Workflow::refreshScripts()
+void Command::refreshScripts()
 {
   updateScripts();
   updateActions();
 }
 
-void Workflow::menuActivated()
+void Command::menuActivated()
 {
   QAction* theSender = qobject_cast<QAction*>(sender());
   if (!theSender)
@@ -169,7 +159,7 @@ void Workflow::menuActivated()
   m_currentDialog->exec();
 }
 
-void Workflow::run()
+void Command::run()
 {
   if (m_currentDialog)
     m_currentDialog->accept();
@@ -179,7 +169,7 @@ void Workflow::run()
     QString scriptFilePath =
       m_currentInterface->interfaceScript().scriptFilePath();
     InterfaceScript gen(scriptFilePath);
-    gen.runWorkflow(options, m_molecule);
+    gen.runCommand(options, m_molecule);
     // collect errors
     if (gen.hasErrors()) {
       qWarning() << gen.errorList();
@@ -187,7 +177,7 @@ void Workflow::run()
   }
 }
 
-void Workflow::configurePython()
+void Command::configurePython()
 {
   // Create objects
   QSettings settings;
@@ -238,12 +228,12 @@ void Workflow::configurePython()
   settings.setValue("interpreters/python", browser->fileName());
 }
 
-void Workflow::updateScripts()
+void Command::updateScripts()
 {
-  m_workflowScripts = QtGui::ScriptLoader::scriptList("workflows");
+  m_commandScripts = QtGui::ScriptLoader::scriptList("commands");
 }
 
-void Workflow::updateActions()
+void Command::updateActions()
 {
   m_actions.clear();
 
@@ -251,8 +241,8 @@ void Workflow::updateActions()
   //  connect(action, SIGNAL(triggered()), SLOT(configurePython()));
   //  m_actions << action;
 
-  foreach (const QString& programName, m_workflowScripts.uniqueKeys()) {
-    QStringList scripts = m_workflowScripts.values(programName);
+  foreach (const QString& programName, m_commandScripts.uniqueKeys()) {
+    QStringList scripts = m_commandScripts.values(programName);
     // Include the full path if there are multiple generators with the same
     // name.
     if (scripts.size() == 1) {
@@ -265,7 +255,7 @@ void Workflow::updateActions()
   }
 }
 
-void Workflow::addAction(const QString& label, const QString& scriptFilePath)
+void Command::addAction(const QString& label, const QString& scriptFilePath)
 {
   QAction* action = new QAction(label, this);
   action->setData(scriptFilePath);

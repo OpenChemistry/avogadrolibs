@@ -1,19 +1,6 @@
 """
-/******************************************************************************
-
-  This source file is part of the Avogadro project.
-
-  Copyright 2016 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
-******************************************************************************/
+ This source file is part of the Avogadro project.
+ This source code is released under the New BSD License, (the "License").
 """
 
 import argparse
@@ -64,7 +51,7 @@ def scale(opts, mol):
     return mol
 
 
-def runWorkflow():
+def runCommand():
     # Read options from stdin
     stdinStr = sys.stdin.read()
 
@@ -80,7 +67,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser('Scale molecular coordinates.')
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--print-options', action='store_true')
-    parser.add_argument('--run-workflow', action='store_true')
+    parser.add_argument('--run-command', action='store_true')
     parser.add_argument('--display-name', action='store_true')
     parser.add_argument('--menu-path', action='store_true')
     parser.add_argument('--lang', nargs='?', default='en')
@@ -94,5 +81,5 @@ if __name__ == "__main__":
         print("&Extensions")
     if args['print_options']:
         print(json.dumps(getOptions()))
-    elif args['run_workflow']:
-        print(json.dumps(runWorkflow()))
+    elif args['run_command']:
+        print(json.dumps(runCommand()))
