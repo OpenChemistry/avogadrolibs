@@ -149,7 +149,7 @@ void InterfaceScript::reset()
 }
 
 bool InterfaceScript::runCommand(const QJsonObject& options_,
-                                  Core::Molecule* mol)
+                                 Core::Molecule* mol)
 {
   m_errors.clear();
   m_warnings.clear();
