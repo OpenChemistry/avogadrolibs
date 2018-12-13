@@ -144,7 +144,7 @@ public:
   bool setActiveSetStep(int index);
 
   /**
-   * @brief Set the molecular orbtial energies, expected in Hartrees.
+   * @brief Set the molecular orbital energies, expected in Hartrees.
    * @param energies The vector containing energies for the MOs of type
    * @param type The type of the electrons being set.
    */
@@ -212,7 +212,7 @@ public:
   ScfType scfType() const { return m_scfType; }
 
   /**
-   * Set the functional name (if appplicable).
+   * Set the functional name (if applicable).
    */
   void setFunctionalName(const std::string& name) { m_functionalName = name; }
 

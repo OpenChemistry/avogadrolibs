@@ -5249,7 +5249,7 @@ namespace pugi
 		// remember encoding
 		res.encoding = buffer_encoding;
 
-		// grab onto buffer if it's our buffer, user is responsible for deallocating contens himself
+		// grab onto buffer if it's our buffer, user is responsible for deallocating contents himself
 		if (own || buffer != contents) _buffer = buffer;
 
 		return res;

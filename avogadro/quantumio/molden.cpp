@@ -94,7 +94,7 @@ void MoldenFile::processLine(std::istream& in)
   vector<string> list = Core::split(line, ' ');
 
   // Big switch statement checking for various things we are interested in. The
-  // Molden file format uses sectiosn, each starts with a header line of the
+  // Molden file format uses sections, each starts with a header line of the
   // form [Atoms], and the beginning of a new section denotes the end of the
   // last.
   if (Core::contains(line, "[Atoms]")) {

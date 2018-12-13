@@ -443,7 +443,7 @@ void ShaderProgram::initializeTextureUnits()
   GLint numTextureUnits;
   glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &numTextureUnits);
 
-  // We'll impose a a hard limit of 32 texture units for symbolic lookups.
+  // We'll impose a hard limit of 32 texture units for symbolic lookups.
   // This seems to be about the maximum available on current hardware.
   // If increasing this limit, modify the lookupTextureUnit method
   // appropriately.

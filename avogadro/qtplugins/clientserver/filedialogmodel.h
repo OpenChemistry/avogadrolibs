@@ -68,7 +68,7 @@ public:
   /// Sets the path that the file dialog will display
   void setCurrentPath(const QString&);
 
-  /// Returns the path the the file dialog will display
+  /// Returns the path to the file dialog will display
   QString getCurrentPath();
 
   /// Return true if the file at the index is hidden

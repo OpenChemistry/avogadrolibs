@@ -31,7 +31,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 /**
- * @brief Downlaods Github repos and extracts their contents into a Avogadro
+ * @brief Downloads Github repos and extracts their contents into a Avogadro
  * folder for plugins, molecule data, etc..
  */
 

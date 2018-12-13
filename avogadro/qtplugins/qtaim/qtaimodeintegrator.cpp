@@ -364,7 +364,7 @@ void QTAIMODEIntegrator::r8_fehl(qint64 neqn, qreal y[], qreal t, qreal h_,
 //
 //  Discussion:
 //
-//    This version of the routine uses qreal real arithemtic.
+//    This version of the routine uses qreal real arithmetic.
 //
 //    This routine integrates a system of NEQN first order ordinary differential
 //    equations of the form
@@ -612,7 +612,7 @@ qint64 QTAIMODEIntegrator::r8_rkf45(qint64 neqn, qreal y[], qreal yp[],
 //
 //    (When the input magnitude of FLAG is 1, this indicates to the program
 //    that it is necessary to do some initialization work.  An input magnitude
-//    of 2 lets the program know that that initialization can be skipped,
+//    of 2 lets the program know that initialization can be skipped,
 //    and that useful information was computed earlier.)
 //
 //    The routine returns with all the information needed to continue

@@ -747,7 +747,7 @@ void GamessukOut::load(GaussianSet* basis)
 {
   /*
       We will only have read in a basis set for atoms of each type
-      Loop throught the list of all the atoms & add the basis functions for each
+      Loop through the list of all the atoms & add the basis functions for each
      individual atom
 
     */

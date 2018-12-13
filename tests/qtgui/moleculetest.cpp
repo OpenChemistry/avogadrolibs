@@ -320,7 +320,7 @@ TEST_F(MoleculeTest, persistentAtom)
   molecule.addBond(a1, a4, 1);
 
   // Check we can get the invalid atom, and also resolve the unique IDs to the
-  // correct atom objects from their peristent atom containers.
+  // correct atom objects from their persistent atom containers.
   Atom test = pa1.atom();
   EXPECT_TRUE(a1 == test);
   test = pa2.atom();

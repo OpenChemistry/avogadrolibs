@@ -106,7 +106,7 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
     e->accept();
   }
 
-// Disable this code until rectange selection is ready.
+// Disable this code until rectangle selection is ready.
 #if 0
   emit drawablesChanged();
   e->accept();
@@ -128,7 +128,7 @@ QUndoCommand* SelectionTool::mouseDoubleClickEvent(QMouseEvent* e)
 
 QUndoCommand* SelectionTool::mouseMoveEvent(QMouseEvent*)
 {
-// Disable this code until rectange selection is ready.
+// Disable this code until rectangle selection is ready.
 #if 0
   m_drawSelectionBox = true;
   m_end = Vector2(e->pos().x(), e->pos().y());
