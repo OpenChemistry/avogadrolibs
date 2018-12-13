@@ -110,7 +110,7 @@ public:
    * Get the error(s), if any, encountered when setting up the GLWidget.
    * @return A free form string containing errors encountered.
    */
-  QString error() const { return m_renderer.error().c_str(); }
+  QString error() const { return QString::fromStdString(m_renderer.error()); }
 
 signals:
   void rendererInvalid();
