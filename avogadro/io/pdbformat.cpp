@@ -106,7 +106,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         return false;
       }
 
-      string element; // Element symbol, right justififed
+      string element; // Element symbol, right justified
       element = buffer.substr(76, 2);
       element = trimmed(element);
       if (element == "SE") // For Sulphur

@@ -124,7 +124,7 @@ public:
    */
   bool setAtomicNumber(Index atomId, unsigned char atomicNumber);
 
-  /** Returns a vector of hybridizations for the atoms in the moleucle. */
+  /** Returns a vector of hybridizations for the atoms in the molecule. */
   Array<AtomHybridization>& hybridizations();
 
   /** \overload */
@@ -153,7 +153,7 @@ public:
    */
   bool setHybridization(Index atomId, AtomHybridization hybridization);
 
-  /** Returns a vector of formal charges for the atoms in the moleucle. */
+  /** Returns a vector of formal charges for the atoms in the molecule. */
   Array<signed char>& formalCharges();
 
   /** \overload */

@@ -89,7 +89,7 @@ public:
     // blockFormat.setBackground(Qt::black);
     tempCursor.setBlockFormat(blockFormat);
 
-    // Finally retreive the syntax higlighted and formatted html.
+    // Finally retrieve the syntax highlighted and formatted html.
     html = tempCursor.selection().toHtml();
     delete tempDocument;
   }

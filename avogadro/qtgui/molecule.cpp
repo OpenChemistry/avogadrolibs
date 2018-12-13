@@ -52,7 +52,7 @@ Molecule::Molecule(const Core::Molecule& other)
 
 Molecule& Molecule::operator=(const Molecule& other)
 {
-  // Call the base classes assigment operator
+  // Call the base classes assignment operator
   Core::Molecule::operator=(other);
 
   // Copy over the unique ids
@@ -64,7 +64,7 @@ Molecule& Molecule::operator=(const Molecule& other)
 
 Molecule& Molecule::operator=(const Core::Molecule& other)
 {
-  // Call the base classes assigment operator
+  // Call the base classes assignment operator
   Core::Molecule::operator=(other);
 
   // Reset the unique ids.

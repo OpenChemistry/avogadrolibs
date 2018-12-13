@@ -92,7 +92,7 @@ public:
   virtual void render(const Camera& camera);
 
   /**
-   * Get the indentifier for the object, this stores the parent Molecule and
+   * Get the identifier for the object, this stores the parent Molecule and
    * the type represented by the geometry.
    */
   Identifier& identifier() { return m_identifier; }
