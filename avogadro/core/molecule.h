@@ -148,7 +148,7 @@ public:
   /**
    * Set the hybridization of a single atom.
    * @param atomId The index of the atom to modify.
-   * @param charge The new hybridization.
+   * @param hybridization The new hybridization.
    * @return True on success, false otherwise.
    */
   bool setHybridization(Index atomId, AtomHybridization hybridization);
@@ -526,7 +526,8 @@ public:
   /**
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
    *  atoms are considered bonded if within the sum of radii
-   *  plus a small @param tolerance.
+   *  plus a small @p tolerance.
+   * @param tolerance The calculation tolerance.
    * @param minDistance = atoms closer than the square of this are ignored
    */
   void perceiveBondsSimple(const double tolerance = 0.45,
@@ -564,7 +565,7 @@ public:
 
   /**
    * Replace the current array of force vectors.
-   * @param pos The new coordinate array. Must be of length atomCount().
+   * @param forces The new coordinate array. Must be of length atomCount().
    * @return True on success, false otherwise.
    */
   bool setForceVectors(const Core::Array<Vector3>& forces);
@@ -572,7 +573,7 @@ public:
   /**
    * Set the 3D position of a single atom.
    * @param atomId The index of the atom to modify.
-   * @param pos The new position of the atom.
+   * @param force The new position of the atom.
    * @return True on success, false otherwise.
    */
   bool setForceVector(Index atomId, const Vector3& force);

@@ -55,7 +55,7 @@ public:
 
 public slots:
   /**
-   * @param element The currently selected element.
+   * @param element_ The currently selected element.
    */
   void setElement(int element_);
 

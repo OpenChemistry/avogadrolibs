@@ -23,7 +23,7 @@ namespace Avogadro {
 namespace Io {
 
 /**
- * @class PoscarFormat poscarformat.h <avogadro/io/poscarformat.h>
+ * @class PoscarFormat vaspformat.h <avogadro/io/vaspformat.h>
  * @brief Implementation of the generic POSCAR format.
  * @author Patrick S. Avery
  */
