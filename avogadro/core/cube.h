@@ -43,7 +43,8 @@ public:
   ~Cube();
 
   /**
-   * \enum Different Cube types relating to the data
+   * \enum Type
+   * Different Cube types relating to the data
    */
   enum Type
   {

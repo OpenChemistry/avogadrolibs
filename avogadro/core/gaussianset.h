@@ -191,7 +191,7 @@ public:
 
   /**
    * Debug routine, outputs all of the data in the GaussianSet.
-   * @param The electrons to output the information for.
+   * @param type The electrons to output the information for.
    */
   void outputAll(ElectronType type = Paired);
 

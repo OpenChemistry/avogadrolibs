@@ -88,9 +88,8 @@ public:
 
   /**
    * @brief Add a cylinder to the geometry object.
-   * @param position Base of the cylinder.
-   * @param direction Direction vector for the cylinder.
-   * @param length Length of the cylinder.
+   * @param pos1 Base of the cylinder axis.
+   * @param pos2 Top of the cylinder axis.
    * @param radius Radius of the cylinder.
    * @param color Color the cylinder will be rendered.
    */
@@ -99,21 +98,19 @@ public:
 
   /**
    * @brief Add a cylinder to the geometry object.
-   * @param position Base of the cylinder.
-   * @param direction Direction vector for the cylinder.
-   * @param length Length of the cylinder.
+   * @param pos1 Base of the cylinder axis.
+   * @param pos2 Top of the cylinder axis.
    * @param radius Radius of the cylinder.
-   * @param colorStart Color the start of the base of the cylinder.
-   * @param colorEnd Color of the end of the cylinder.
+   * @param color1 Color the start of the base of the cylinder.
+   * @param color2 Color of the end of the cylinder.
    */
   void addCylinder(const Vector3f& pos1, const Vector3f& pos2, float radius,
                    const Vector3ub& color1, const Vector3ub& color2);
 
   /**
    * @brief Add a cylinder to the geometry object.
-   * @param position Base of the cylinder.
-   * @param direction Direction vector for the cylinder.
-   * @param length Length of the cylinder.
+   * @param pos1 Base of the cylinder axis.
+   * @param pos2 Top of the cylinder axis.
    * @param radius Radius of the cylinder.
    * @param color Color the cylinder will be rendered.
    * @param index The index of the cylinder being added.
@@ -123,12 +120,11 @@ public:
 
   /**
    * @brief Add a cylinder to the geometry object.
-   * @param position Base of the cylinder.
-   * @param direction Direction vector for the cylinder.
-   * @param length Length of the cylinder.
+   * @param pos1 Base of the cylinder axis.
+   * @param pos2 Top of the cylinder axis.
    * @param radius Radius of the cylinder.
-   * @param colorStart Color the start of the base of the cylinder.
-   * @param colorEnd Color of the end of the cylinder.
+   * @param color Color the start of the base of the cylinder.
+   * @param color2 Color of the end of the cylinder.
    * @param index The index of the cylinder being added.
    */
   void addCylinder(const Vector3f& pos1, const Vector3f& pos2, float radius,

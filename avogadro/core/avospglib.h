@@ -38,6 +38,7 @@ public:
    * Use spglib to find the Hall number for a crystal. If the unit cell does not
    * exist or if the algorithm fails, 0 will be returned.
    *
+   * @param mol The molecule to be handled.
    * @param cartTol The cartesian tolerance for spglib.
    * @return The Hall number for the crystal.
    */

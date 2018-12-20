@@ -26,7 +26,7 @@ class GaussianSet;
 namespace Io {
 
 /**
- * @class MMTFFormat mmtf.h <avogadro/io/mmtf.h>
+ * @class MMTFFormat mmtfformat.h <avogadro/io/mmtfformat.h>
  * @brief Implementation of the MMTF format.
  */
 

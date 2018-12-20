@@ -65,7 +65,6 @@ public:
    * position specified.
    * @param position The position in space to calculate the value.
    * @param molecularOrbitalNumber The molecular orbital number.
-   * @param beta Whether to calculate beta electron or alpha/paired (default).
    * @return The value of the molecular orbital at the position specified.
    */
   double calculateMolecularOrbital(const Vector3& position,

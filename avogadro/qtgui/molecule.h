@@ -71,7 +71,10 @@ public:
   /** Assignment operator to copy data from base instance */
   Molecule& operator=(const Core::Molecule& other);
 
-  /** \enum Enumeration of change types that can be given. */
+  /**
+   * \enum MoleculeChange
+   *Enumeration of change types that can be given.
+   */
   enum MoleculeChange
   {
     /** Useful for initializing MoleculeChange variables. */

@@ -66,7 +66,6 @@ public:
    * Add a single arrow object.
    * @param pos1 The start coordinate of the arrow.
    * @param pos2 The end coordinate of the arrow.
-   * @param lineWidth The width of the line strip.
    * @{
    */
   void addSingleArrow(const Vector3f& pos1, const Vector3f& pos2);
