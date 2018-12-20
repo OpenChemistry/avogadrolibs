@@ -70,6 +70,15 @@ double GaussianSetTools::calculateMolecularOrbital(const Vector3& position,
   return result;
 }
 
+bool GaussianSetTools::calculateElectronDensity(Cube& cube) const
+{
+  for (size_t i = 0; i < cube.data()->size(); ++i) {
+    Vector3 pos = cube.position(i);
+    cube.setValue(i, calculateElectronDensity(pos));
+  }
+  return true;
+}
+
 double GaussianSetTools::calculateElectronDensity(const Vector3& position) const
 {
   const MatrixX& matrix = m_basis->densityMatrix();
@@ -91,6 +100,15 @@ double GaussianSetTools::calculateElectronDensity(const Vector3& position) const
   }
 
   return rho;
+}
+
+bool GaussianSetTools::calculateSpinDensity(Cube& cube) const
+{
+  for (size_t i = 0; i < cube.data()->size(); ++i) {
+    Vector3 pos = cube.position(i);
+    cube.setValue(i, calculateSpinDensity(pos));
+  }
+  return true;
 }
 
 double GaussianSetTools::calculateSpinDensity(const Vector3& position) const

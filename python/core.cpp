@@ -63,8 +63,16 @@ PYBIND11_MODULE(core, m)
 
   bool (GaussianSetTools::*calculateMolecularOrbital0)(Cube&, int) const =
     &GaussianSetTools::calculateMolecularOrbital;
+  bool (GaussianSetTools::*calculateElectronDensity0)(Cube&) const =
+    &GaussianSetTools::calculateElectronDensity;
+  bool (GaussianSetTools::*calculateSpinDensity0)(Cube&) const =
+    &GaussianSetTools::calculateSpinDensity;
   py::class_<GaussianSetTools>(m, "GaussianSetTools")
     .def(py::init<Molecule*>())
     .def("calculate_molecular_orbital", calculateMolecularOrbital0,
-         "Calculate the molecular orbital and set values in the cube");
+         "Calculate the molecular orbital and set values in the cube")
+    .def("calculate_electron_density", calculateElectronDensity0,
+         "Calculate the electron density and set values in the cube")
+    .def("calculate_spin_density", calculateSpinDensity0,
+         "Calculate the spin density and set values in the cube");
 }
