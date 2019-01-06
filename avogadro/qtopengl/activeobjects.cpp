@@ -37,6 +37,7 @@ QtGui::Molecule* ActiveObjects::activeMolecule() const
 void ActiveObjects::setActiveGLWidget(GLWidget* glWidget)
 {
   if (m_glWidget != glWidget) {
+    m_widget = nullptr;
     m_glWidget = glWidget;
     emit activeGLWidgetChanged(m_glWidget);
     setActiveWidget(glWidget);
@@ -46,6 +47,7 @@ void ActiveObjects::setActiveGLWidget(GLWidget* glWidget)
 void ActiveObjects::setActiveWidget(QWidget* widget)
 {
   if (m_widget != widget) {
+    m_glWidget = nullptr;
     m_widget = widget;
     emit activeWidgetChanged(widget);
   }
