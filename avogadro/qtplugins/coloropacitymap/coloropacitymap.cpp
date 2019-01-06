@@ -109,6 +109,9 @@ void ColorOpacityMap::setMolecule(QtGui::Molecule* mol)
 void ColorOpacityMap::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
+  // Don't attempt to update anything if there is no dialog to update!
+  if (!m_comDialog)
+    return;
 
   // I think we need to look at adding cubes to changes, flaky right now.
   auto changes = static_cast<Molecule::MoleculeChanges>(c);
