@@ -76,6 +76,9 @@
      </item>
      <item row="3" column="1">
       <widget class="QDoubleSpinBox" name="isoValue">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="decimals">
         <number>3</number>
        </property>
@@ -96,6 +99,9 @@
      </item>
      <item row="4" column="1">
       <widget class="QDoubleSpinBox" name="opacity">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="maximum">
         <double>1.000000000000000</double>
        </property>
@@ -120,5 +126,38 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>enableIsosurface</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>isoValue</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>472</x>
+     <y>465</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>472</x>
+     <y>493</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>enableIsosurface</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>opacity</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>472</x>
+     <y>465</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>472</x>
+     <y>525</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
