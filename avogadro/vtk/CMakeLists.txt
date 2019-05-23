@@ -37,4 +37,4 @@ set_target_properties(AvogadroVtk PROPERTIES AUTOMOC TRUE)
 target_link_libraries(AvogadroVtk AvogadroRendering AvogadroQtGui
   vtkRenderingOpenGL2 vtkGUISupportQt vtkRenderingVolumeOpenGL2
   vtkRenderingFreeType vtkInteractionStyle vtkChartsCore vtkViewsContext2D
-  vtkRenderingContextOpenGL2 Qt5::Widgets)
+  vtkRenderingContextOpenGL2 vtkDomainsChemistryOpenGL2 Qt5::Widgets)

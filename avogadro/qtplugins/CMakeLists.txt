@@ -125,6 +125,7 @@ if(USE_VTK)
   add_subdirectory(plotpdf)
   add_subdirectory(plotrmsd)
   add_subdirectory(plotxrd)
+  add_subdirectory(coloropacitymap)
 endif()
 
 if(USE_MOLEQUEUE)
