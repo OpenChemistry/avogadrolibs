@@ -198,8 +198,10 @@ void SelectionTool::draw(Rendering::GroupNode& node)
 
 void SelectionTool::applyColor(Vector3ub color)
 {
-  for (Rendering::Identifier& atom : m_atoms) {
-    m_molecule->atom(atom.index).setColor(color);
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    auto a = m_molecule->atom(i);
+    if (a.selected())
+      a.setColor(color);
   }
   m_molecule->emitChanged(Molecule::Atoms);
 }
