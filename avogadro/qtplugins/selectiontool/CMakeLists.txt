@@ -1,6 +1,11 @@
-set(tool_srcs selectiontool.cpp)
+set(tool_srcs
+  selectiontool.cpp
+  selectiontoolwidget.cpp
+)
 
-set(tool_uis)
+set(tool_uis
+  selectiontoolwidget.ui
+)
 
 set(tool_rcs selectiontool.qrc)
 

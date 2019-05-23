@@ -40,7 +40,7 @@ Molecule::Molecule(const Molecule& other)
     m_atomicNumbers(other.atomicNumbers()), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d), m_coordinates3d(other.m_coordinates3d),
     m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
-    m_formalCharges(other.m_formalCharges),
+    m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIntensities(other.m_vibrationIntensities),
     m_vibrationLx(other.m_vibrationLx), m_bondPairs(other.m_bondPairs),
@@ -75,6 +75,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_timesteps(std::move(other.m_timesteps)),
     m_hybridizations(std::move(other.m_hybridizations)),
     m_formalCharges(std::move(other.m_formalCharges)),
+    m_colors(std::move(other.m_colors)),
     m_vibrationFrequencies(std::move(other.m_vibrationFrequencies)),
     m_vibrationIntensities(std::move(other.m_vibrationIntensities)),
     m_vibrationLx(std::move(other.m_vibrationLx)),
@@ -105,6 +106,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
     m_formalCharges = other.m_formalCharges;
+    m_colors = other.m_colors,
     m_vibrationFrequencies = other.m_vibrationFrequencies;
     m_vibrationIntensities = other.m_vibrationIntensities;
     m_vibrationLx = other.m_vibrationLx;
@@ -152,6 +154,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_timesteps = std::move(other.m_timesteps);
     m_hybridizations = std::move(other.m_hybridizations);
     m_formalCharges = std::move(other.m_formalCharges);
+    m_colors = std::move(other.m_colors);
     m_vibrationFrequencies = std::move(other.m_vibrationFrequencies);
     m_vibrationIntensities = std::move(other.m_vibrationIntensities);
     m_vibrationLx = std::move(other.m_vibrationLx);
@@ -244,6 +247,16 @@ Array<signed char>& Molecule::formalCharges()
 const Array<signed char>& Molecule::formalCharges() const
 {
   return m_formalCharges;
+}
+
+Array<Vector3ub>& Molecule::colors()
+{
+  return m_colors;
+}
+
+const Array<Vector3ub>& Molecule::colors() const
+{
+  return m_colors;
 }
 
 Array<Vector2>& Molecule::atomPositions2d()
@@ -354,6 +367,8 @@ bool Molecule::removeAtom(Index index)
       m_hybridizations[index] = m_hybridizations.back();
     if (m_formalCharges.size() == m_atomicNumbers.size())
       m_formalCharges[index] = m_formalCharges.back();
+    if (m_colors.size() == m_atomicNumbers.size())
+      m_colors[index] = m_colors.back();
 
     // Find any bonds to the moved atom and update their index.
     atomBonds = bonds(atom(newSize));
@@ -377,6 +392,8 @@ bool Molecule::removeAtom(Index index)
     m_hybridizations.pop_back();
   if (m_formalCharges.size() == m_atomicNumbers.size())
     m_formalCharges.pop_back();
+  if (m_colors.size() == m_atomicNumbers.size())
+    m_colors.pop_back();
   m_atomicNumbers.pop_back();
 
   return true;

@@ -156,6 +156,14 @@ public:
   /** @} */
 
   /**
+   * The color of this atom
+   * @{
+   */
+  void setColor(Vector3ub color);
+  Vector3ub color() const;
+  /** @} */
+
+  /**
    * Is the atom selected.
    * {@
    */
@@ -309,6 +317,18 @@ template <class Molecule_T>
 signed char AtomTemplate<Molecule_T>::formalCharge() const
 {
   return m_molecule->formalCharge(m_index);
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setColor(Vector3ub color)
+{
+  m_molecule->setColor(m_index, std::move(color));
+}
+
+template <class Molecule_T>
+Vector3ub AtomTemplate<Molecule_T>::color() const
+{
+  return m_molecule->color(m_index);
 }
 
 template <class Molecule_T>

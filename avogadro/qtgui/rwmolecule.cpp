@@ -63,6 +63,7 @@ protected:
   {
     return m_mol.m_molecule.formalCharges();
   }
+  Array<Vector3ub>& colors() { return m_mol.m_molecule.colors(); }
   Array<std::pair<Index, Index>>& bondPairs()
   {
     return m_mol.m_molecule.bondPairs();
@@ -589,6 +590,38 @@ bool RWMolecule::setFormalCharge(Index atomId, signed char charge)
   SetAtomFormalChargeCommand* comm = new SetAtomFormalChargeCommand(
     *this, atomId, m_molecule.formalCharge(atomId), charge);
   comm->setText(tr("Change Atom Formal Charge"));
+  m_undoStack.push(comm);
+  return true;
+}
+
+namespace {
+class SetAtomColorCommand : public RWMolecule::UndoCommand
+{
+  Index m_atomId;
+  Vector3ub m_oldColor;
+  Vector3ub m_newColor;
+
+public:
+  SetAtomColorCommand(RWMolecule& m, Index atomId, Vector3ub oldColor,
+                      Vector3ub newColor)
+    : UndoCommand(m), m_atomId(atomId), m_oldColor(oldColor),
+      m_newColor(newColor)
+  {}
+
+  void redo() override { colors()[m_atomId] = m_newColor; }
+
+  void undo() override { colors()[m_atomId] = m_oldColor; }
+};
+} // end namespace
+
+bool RWMolecule::setColor(Index atomId, Vector3ub color)
+{
+  if (atomId >= atomCount())
+    return false;
+
+  SetAtomColorCommand* comm =
+    new SetAtomColorCommand(*this, atomId, m_molecule.color(atomId), color);
+  comm->setText(tr("Change Atom Color"));
   m_undoStack.push(comm);
   return true;
 }
