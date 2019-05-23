@@ -13,18 +13,18 @@
 #include <QString>
 
 #include <avogadro/core/crystaltools.h>
-#include <avogadro/core/unitcell.h>
 #include <avogadro/core/cube.h>
+#include <avogadro/core/unitcell.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
-#include <avogadro/vtk/vtkplot.h>
 #include <avogadro/vtk/vtkglwidget.h>
+#include <avogadro/vtk/vtkplot.h>
 
 #include <vtkColorTransferFunction.h>
 #include <vtkPiecewiseFunction.h>
-#include <vtkTable.h>
 #include <vtkRenderWindow.h>
+#include <vtkTable.h>
 
 using Avogadro::QtGui::Molecule;
 using Avogadro::QtOpenGL::ActiveObjects;
@@ -65,9 +65,8 @@ vtkImageData* cubeImageData(Core::Cube* cube)
 }
 
 ColorOpacityMap::ColorOpacityMap(QObject* p)
-  : Avogadro::QtGui::ExtensionPlugin(p)
-  , m_actions(QList<QAction*>())
-  , m_displayDialogAction(new QAction(this))
+  : Avogadro::QtGui::ExtensionPlugin(p), m_actions(QList<QAction*>()),
+    m_displayDialogAction(new QAction(this))
 {
   m_displayDialogAction->setText(tr("Edit Color Opacity Map..."));
   connect(m_displayDialogAction.data(), &QAction::triggered, this,
@@ -167,7 +166,7 @@ void ColorOpacityMap::displayDialog()
     m_comDialog = new ComDialog(p);
     m_comDialog->setMolecule(m_molecule);
     m_histogramWidget = m_comDialog->histogramWidget();
-    //m_c->resize(800, 600);
+    // m_c->resize(800, 600);
     connect(m_histogramWidget, SIGNAL(colorMapUpdated()), SLOT(render()));
     connect(m_histogramWidget, SIGNAL(opacityChanged()), SLOT(render()));
     connect(m_comDialog, SIGNAL(renderNeeded()), SLOT(render()));

@@ -10,13 +10,10 @@
 
 vtkStandardNewMacro(vtkCustomPiecewiseControlPointsItem)
 
-vtkCustomPiecewiseControlPointsItem::vtkCustomPiecewiseControlPointsItem()
-{
-}
+  vtkCustomPiecewiseControlPointsItem::vtkCustomPiecewiseControlPointsItem()
+{}
 
-vtkCustomPiecewiseControlPointsItem::~vtkCustomPiecewiseControlPointsItem()
-{
-}
+vtkCustomPiecewiseControlPointsItem::~vtkCustomPiecewiseControlPointsItem() {}
 
 bool vtkCustomPiecewiseControlPointsItem::MouseButtonPressEvent(
   const vtkContextMouseEvent& mouse)

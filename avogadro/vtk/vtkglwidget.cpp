@@ -88,7 +88,7 @@ void vtkGLWidget::cubeVolume(Core::Cube* cube)
 
   volumeMapper->SetBlendModeToComposite();
   volumeMapper->SetInputData(m_imageData);
-  //volumeMapper->SetInputConnection(t->GetOutputPort());
+  // volumeMapper->SetInputConnection(t->GetOutputPort());
 
   volumeProperty->ShadeOff();
   volumeProperty->SetInterpolationTypeToLinear();
@@ -104,14 +104,14 @@ void vtkGLWidget::cubeVolume(Core::Cube* cube)
       auto magnitude = std::max(std::fabs(range[0]), std::fabs(range[1]));
       color->AddRGBPoint(-magnitude, 1.0, 0.0, 0.0);
       color->AddRGBPoint(-0.01 * magnitude, 1.0, 0.0, 0.0);
-      color->AddRGBPoint( 0.01 * magnitude, 0.0, 0.0, 1.0);
-      color->AddRGBPoint( magnitude, 0.0, 0.0, 1.0);
+      color->AddRGBPoint(0.01 * magnitude, 0.0, 0.0, 1.0);
+      color->AddRGBPoint(magnitude, 0.0, 0.0, 1.0);
 
       compositeOpacity->AddPoint(-magnitude, 1.0);
       compositeOpacity->AddPoint(-0.2 * magnitude, 0.8);
       compositeOpacity->AddPoint(0, 0.0);
-      compositeOpacity->AddPoint( 0.2 * magnitude, 0.8);
-      compositeOpacity->AddPoint( magnitude, 1.0);
+      compositeOpacity->AddPoint(0.2 * magnitude, 0.8);
+      compositeOpacity->AddPoint(magnitude, 1.0);
     }
   }
 
@@ -140,8 +140,7 @@ vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
   GetInteractor()->Initialize();
   m_vtkRenderer->SetBackground(1.0, 1.0, 1.0);
 
-  
-  //m_actor->setScene(&this->renderer().scene());
+  // m_actor->setScene(&this->renderer().scene());
   m_moleculeMapper->UseBallAndStickSettings();
   m_actor->SetMapper(m_moleculeMapper);
   m_actor->GetProperty()->SetAmbient(0.0);
@@ -159,9 +158,7 @@ vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
   m_contourActor->SetVisibility(0);
 }
 
-vtkGLWidget::~vtkGLWidget()
-{
-}
+vtkGLWidget::~vtkGLWidget() {}
 
 void vtkGLWidget::setMolecule(QtGui::Molecule* mol)
 {
@@ -174,7 +171,7 @@ void vtkGLWidget::setMolecule(QtGui::Molecule* mol)
   connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateScene()));
   connect(m_molecule, SIGNAL(changed(unsigned int)),
           SLOT(moleculeChanged(unsigned int)));
-  
+
   updateCube();
   // Reset the camera, re-render.
   m_vtkRenderer->ResetCamera();
@@ -251,7 +248,7 @@ void vtkGLWidget::setIsoValue(double value)
 {
   m_flyingEdges->SetNumberOfContours(2);
   m_flyingEdges->SetValue(0, -value);
-  m_flyingEdges->SetValue(1,  value);
+  m_flyingEdges->SetValue(1, value);
 }
 
 void vtkGLWidget::setOpacity(double value)
@@ -267,10 +264,8 @@ void vtkGLWidget::updateScene()
     m_vtkMolecule = vtkMolecule::New();
     for (Index i = 0; i < m_molecule->atomCount(); ++i) {
       auto a = m_molecule->atom(i);
-      m_vtkMolecule->AppendAtom(a.atomicNumber(),
-                                a.position3d().x(),
-                                a.position3d().y(),
-                                a.position3d().z());
+      m_vtkMolecule->AppendAtom(a.atomicNumber(), a.position3d().x(),
+                                a.position3d().y(), a.position3d().z());
     }
     for (Index i = 0; i < m_molecule->bondCount(); ++i) {
       auto b = m_molecule->bond(i);
@@ -328,5 +323,5 @@ void vtkGLWidget::resetGeometry()
 {
   m_renderer.resetGeometry();
 }
-}
-}
+} // namespace VTK
+} // namespace Avogadro

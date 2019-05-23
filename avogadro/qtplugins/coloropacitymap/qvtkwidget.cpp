@@ -24,7 +24,5 @@ QVTKGLWidget::QVTKGLWidget(QWidget* parent, Qt::WindowFlags f)
 
 QVTKGLWidget::~QVTKGLWidget() = default;
 
-void QVTKGLWidget::setEnableHiDPI(bool)
-{
-}
+void QVTKGLWidget::setEnableHiDPI(bool) {}
 } // namespace Avogadro

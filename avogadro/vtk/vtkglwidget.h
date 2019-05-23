@@ -46,7 +46,7 @@ class Cube;
 namespace QtGui {
 class Molecule;
 class ToolPlugin;
-}
+} // namespace QtGui
 
 namespace VTK {
 
@@ -130,7 +130,7 @@ signals:
   /**
    * Emitted if the image data is updated so that histograms etc can update.
    */
-   void imageDataUpdated();
+  void imageDataUpdated();
 
 public slots:
   /**
@@ -185,7 +185,7 @@ private:
   vtkSmartPointer<vtkMolecule> m_vtkMolecule;
   vtkNew<vtkMoleculeMapper> m_moleculeMapper;
 };
-}
-}
+} // namespace VTK
+} // namespace Avogadro
 
 #endif // AVOGADRO_VTKGLWIDGET_H

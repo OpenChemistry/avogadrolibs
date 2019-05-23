@@ -5,12 +5,12 @@
 #define AVOGADRO_COMPUTE_HISTOGRAM_H
 
 #include <vtkDoubleArray.h>
-#include <vtkImageData.h>
-#include <vtkMath.h>
-#include <vtkTable.h>
-#include <vtkPointData.h>
 #include <vtkFloatArray.h>
+#include <vtkImageData.h>
 #include <vtkIntArray.h>
+#include <vtkMath.h>
+#include <vtkPointData.h>
+#include <vtkTable.h>
 
 #include <cmath>
 
@@ -180,5 +180,5 @@ void PopulateHistogram(vtkImageData* input, vtkTable* output)
   output->AddColumn(populations);
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro
 #endif // AVOGADRO_COMPUTE_HISTOGRAM_H

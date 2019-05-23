@@ -47,7 +47,7 @@ void ComDialog::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
   // Figure out which cubes are available.
   m_ui->cubesComboBox->clear();
-  for(Index i = 0; i < mol->cubeCount(); ++i) {
+  for (Index i = 0; i < mol->cubeCount(); ++i) {
     m_ui->cubesComboBox->addItem(QString(mol->cube(i)->name().c_str()));
   }
 }
@@ -92,5 +92,5 @@ void ComDialog::setOpacity(double value)
   }
 }
 
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

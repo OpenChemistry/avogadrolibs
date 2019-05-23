@@ -44,9 +44,9 @@ public:
 
 vtkStandardNewMacro(vtkHistogramMarker)
 
-vtkStandardNewMacro(vtkChartHistogram)
+  vtkStandardNewMacro(vtkChartHistogram)
 
-vtkChartHistogram::vtkChartHistogram()
+    vtkChartHistogram::vtkChartHistogram()
 {
   this->SetBarWidthFraction(1.0);
   this->SetRenderEmpty(true);
@@ -97,9 +97,7 @@ vtkChartHistogram::vtkChartHistogram()
   this->SetPlotCorner(this->OpacityControlPointsItem.Get(), 1);
 }
 
-vtkChartHistogram::~vtkChartHistogram()
-{
-}
+vtkChartHistogram::~vtkChartHistogram() {}
 
 bool vtkChartHistogram::MouseDoubleClickEvent(const vtkContextMouseEvent& m)
 {

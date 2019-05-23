@@ -42,7 +42,7 @@ public:
   /** Get the active GLWidget. **/
   GLWidget* activeGLWidget() const;
 
-  /** 
+  /**
    * Get the active widget (more general, could be GLWidget, vtkGLWidget, etc).
    */
   QWidget* activeWidget() const;

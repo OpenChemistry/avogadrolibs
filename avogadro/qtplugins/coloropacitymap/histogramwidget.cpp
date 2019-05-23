@@ -50,9 +50,8 @@ HistogramWidget::HistogramWidget(QWidget* parent)
   m_eventLink->Connect(m_histogramColorOpacityEditor,
                        vtkCommand::CursorChangedEvent, this,
                        SLOT(histogramClicked(vtkObject*)));
-  m_eventLink->Connect(m_histogramColorOpacityEditor,
-                       vtkCommand::EndEvent, this,
-                       SLOT(onScalarOpacityFunctionChanged()));
+  m_eventLink->Connect(m_histogramColorOpacityEditor, vtkCommand::EndEvent,
+                       this, SLOT(onScalarOpacityFunctionChanged()));
   m_eventLink->Connect(m_histogramColorOpacityEditor,
                        vtkControlPointsItem::CurrentPointEditEvent, this,
                        SLOT(onCurrentPointEditEvent()));
@@ -69,7 +68,7 @@ void HistogramWidget::setLUT(vtkColorTransferFunction* lut)
   if (m_LUT != lut) {
     m_LUT = lut;
     m_histogramColorOpacityEditor->SetColorTransferFunction(lut);
-    
+
     emit colorMapUpdated();
   }
 }
@@ -77,14 +76,13 @@ void HistogramWidget::setLUT(vtkColorTransferFunction* lut)
 void HistogramWidget::setOpacityFunction(vtkPiecewiseFunction* opacity)
 {
   if (m_opacityFunction) {
-    m_eventLink->Disconnect(m_opacityFunction,
-                            vtkCommand::ModifiedEvent, this,
+    m_eventLink->Disconnect(m_opacityFunction, vtkCommand::ModifiedEvent, this,
                             SLOT(onScalarOpacityFunctionChanged()));
   }
   m_opacityFunction = opacity;
   m_histogramColorOpacityEditor->SetOpacityFunction(opacity);
-  m_eventLink->Connect(m_opacityFunction, vtkCommand::ModifiedEvent,
-                       this, SLOT(onScalarOpacityFunctionChanged()));
+  m_eventLink->Connect(m_opacityFunction, vtkCommand::ModifiedEvent, this,
+                       SLOT(onScalarOpacityFunctionChanged()));
 }
 
 vtkColorTransferFunction* HistogramWidget::LUT()
@@ -136,22 +134,18 @@ void HistogramWidget::onCurrentPointEditEvent()
   }
 }
 
-void HistogramWidget::histogramClicked(vtkObject*)
-{
-}
+void HistogramWidget::histogramClicked(vtkObject*) {}
 
-void HistogramWidget::updateUI()
-{
-}
+void HistogramWidget::updateUI() {}
 
 void HistogramWidget::renderViews()
 {
-  
-//  pqView* view =
-//    tomviz::convert<pqView*>(ActiveObjects::instance().activeView());
-//  if (view) {
-//    view->render();
-//  }
+
+  //  pqView* view =
+  //    tomviz::convert<pqView*>(ActiveObjects::instance().activeView());
+  //  if (view) {
+  //    view->render();
+  //  }
 }
 
 void HistogramWidget::showEvent(QShowEvent* event)

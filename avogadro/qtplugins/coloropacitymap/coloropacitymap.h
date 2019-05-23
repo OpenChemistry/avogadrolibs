@@ -13,7 +13,8 @@ class HistogramWidget;
 namespace QtPlugins {
 class ComDialog;
 /**
- * @brief An interactive color opacity map editor with a value population histogram.
+ * @brief An interactive color opacity map editor with a value population
+ * histogram.
  */
 class ColorOpacityMap : public Avogadro::QtGui::ExtensionPlugin
 {
