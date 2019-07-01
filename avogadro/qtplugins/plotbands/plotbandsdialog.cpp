@@ -19,7 +19,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkVectorText.h>
 #include <vtkPen.h>
-#include </home/carlos/Qt-Projects/Avogadro2OShared/build-openchemistry-Desktop-Default/prefix/include/vtk-6.3/vtkContextView.h>
+#include <vtkContextView.h>
 //#include <vtkContextView.h>
 #include <vtkWindowToImageFilter.h>
 #include <vtkPNGWriter.h>
