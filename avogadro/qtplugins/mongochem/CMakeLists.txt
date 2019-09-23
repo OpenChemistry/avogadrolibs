@@ -1,8 +1,14 @@
-include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty")
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # Extension
 set(srcs
   mongochem.cpp
+  mongochemwidget.cpp
+  girderrequest.cpp
+)
+
+set(uis
+  mongochemwidget.ui
 )
 
 avogadro_plugin(MongoChem
@@ -11,8 +17,7 @@ avogadro_plugin(MongoChem
   mongochem.h
   MongoChem
   "${srcs}"
-  ""#  mongochem.ui
-  ""
+  "${uis}"
 )
 
 target_link_libraries(MongoChem LINK_PRIVATE ${Qt5Network_LIBRARIES})

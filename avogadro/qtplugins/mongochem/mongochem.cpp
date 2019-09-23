@@ -15,6 +15,7 @@
 ******************************************************************************/
 
 #include "mongochem.h"
+#include "mongochemwidget.h"
 
 #include <avogadro/io/fileformat.h>
 #include <avogadro/qtgui/molecule.h>
@@ -22,6 +23,7 @@
 #include <QAction>
 #include <QDebug>
 #include <QDialog>
+#include <QVBoxLayout>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -29,7 +31,7 @@ namespace QtPlugins {
 MongoChem::MongoChem(QObject* parent)
   : ExtensionPlugin(parent), m_action(new QAction(this))
 {
-  m_action->setText(tr("&Mongo Chem Interface"));
+  m_action->setText(tr("&MongoChem"));
   m_actions.push_back(m_action.get());
   connect(m_action.get(), &QAction::triggered, this, &MongoChem::menuActivated);
 }
@@ -48,13 +50,21 @@ void MongoChem::setMolecule(QtGui::Molecule* mol)
 
 bool MongoChem::readMolecule(QtGui::Molecule& mol)
 {
+  Q_UNUSED(mol)
+
   return false;
 }
 
 void MongoChem::menuActivated()
 {
-  if (!m_dialog)
+
+  if (!m_dialog) {
     m_dialog.reset(new QDialog(qobject_cast<QWidget*>(this)));
+    auto* layout = new QVBoxLayout;
+    layout->addWidget(new MongoChemWidget);
+    m_dialog->setLayout(layout);
+    m_dialog->setWindowTitle("MongoChem");
+  }
 
   m_dialog->show();
 }
