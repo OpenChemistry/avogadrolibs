@@ -32,8 +32,9 @@ MongoChem::MongoChem(QObject* parent)
   : ExtensionPlugin(parent), m_action(new QAction(this))
 {
   m_action->setText(tr("&MongoChem"));
-  m_actions.push_back(m_action.get());
-  connect(m_action.get(), &QAction::triggered, this, &MongoChem::menuActivated);
+  m_actions.push_back(m_action.data());
+  connect(m_action.data(), &QAction::triggered, this,
+          &MongoChem::menuActivated);
 }
 
 MongoChem::~MongoChem() = default;

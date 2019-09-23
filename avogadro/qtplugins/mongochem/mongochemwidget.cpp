@@ -33,7 +33,7 @@ class MongoChemWidget::Impl : public QObject
 
 public:
   Ui::MongoChemWidget m_ui;
-  std::unique_ptr<QNetworkAccessManager> m_networkManager;
+  QScopedPointer<QNetworkAccessManager> m_networkManager;
   std::unique_ptr<GirderRequest> m_request;
 
   Impl(QObject* parent = nullptr)
@@ -54,7 +54,7 @@ public:
     QString url = "http://localhost:8080/api/v1";
     QString token = "";
     m_request.reset(
-      new GetMoleculesRequest(m_networkManager.get(), url, token));
+      new GetMoleculesRequest(m_networkManager.data(), url, token));
     m_request->send();
     connect(m_request.get(), &GetMoleculesRequest::result, this,
             &Impl::finishSearch);

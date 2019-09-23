@@ -17,9 +17,9 @@
 #ifndef AVOGADRO_QTPLUGINS_MONGOCHEM_H
 #define AVOGADRO_QTPLUGINS_MONGOCHEM_H
 
-#include <memory>
-
 #include <avogadro/qtgui/extensionplugin.h>
+
+#include <QScopedPointer>
 
 class QAction;
 class QDialog;
@@ -59,8 +59,8 @@ private:
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
 
-  std::unique_ptr<QAction> m_action;
-  std::unique_ptr<QDialog> m_dialog;
+  QScopedPointer<QAction> m_action;
+  QScopedPointer<QDialog> m_dialog;
 };
 } // namespace QtPlugins
 } // namespace Avogadro
