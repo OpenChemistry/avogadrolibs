@@ -24,8 +24,6 @@
 #include <QNetworkRequest>
 #include <QUrlQuery>
 
-#include <memory>
-
 namespace Avogadro {
 
 namespace QtPlugins {
@@ -41,21 +39,12 @@ GirderRequest::GirderRequest(QNetworkAccessManager* networkManager,
     m_options(options), m_networkManager(networkManager)
 {}
 
-// We will use this for our unique_ptrs
-struct QObjectLaterDeleter
-{
-  void operator()(QObject* obj) { obj->deleteLater(); }
-};
-template <typename T>
-using unique_ptr_delete_later = std::unique_ptr<T, QObjectLaterDeleter>;
-
 void GirderRequest::finished()
 {
-  unique_ptr_delete_later<QNetworkReply> reply(
-    qobject_cast<QNetworkReply*>(this->sender()));
+  auto* reply = qobject_cast<QNetworkReply*>(this->sender());
   QByteArray bytes = reply->readAll();
   if (reply->error()) {
-    emit error(handleGirderError(reply.get(), bytes), reply.get());
+    emit error(handleGirderError(reply, bytes), reply);
   } else {
     QJsonDocument jsonResponse = QJsonDocument::fromJson(bytes.constData());
     emit result(jsonResponse.toVariant().toMap());
@@ -81,6 +70,8 @@ void GetMoleculesRequest::send()
   auto reply = m_networkManager->get(request);
   connect(reply, &QNetworkReply::finished, this,
           &GetMoleculesRequest::finished);
+  connect(reply, &QNetworkReply::finished, reply,
+          &QNetworkReply::deleteLater);
 }
 
 static QString handleGirderError(QNetworkReply* reply, const QByteArray& bytes)
