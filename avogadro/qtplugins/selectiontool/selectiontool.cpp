@@ -90,7 +90,7 @@ QUndoCommand* SelectionTool::mousePressEvent(QMouseEvent* e)
 
   // Remove the global accept to prevent the rectangle selection area from being
   // rendered as the selection code is not yet in place for the scene.
-  // e->accept();
+  e->accept();
 
   return nullptr;
 }
@@ -100,6 +100,14 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
   // If the click is released on an atom, add it to the list
   if (e->button() != Qt::LeftButton || !m_renderer)
     return nullptr;
+    
+  if (m_drawSelectionBox) {
+    m_end = Vector2(e->pos().x(), e->pos().y());
+    auto hits = m_renderer->hits(m_start.x(), m_start.y(),
+                                 m_end.x(), m_end.y());
+    for (auto it = hits.begin(); it != hits.end(); ++it)
+      addAtom(it->second);
+  }
 
   m_drawSelectionBox = false;
   m_start = Vector2(e->pos().x(), e->pos().y());
@@ -113,11 +121,9 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
     e->accept();
   }
 
-// Disable this code until rectangle selection is ready.
-#if 0
+  // Disable this code until rectangle selection is ready.
   emit drawablesChanged();
   e->accept();
-#endif
 
   return nullptr;
 }
@@ -133,16 +139,14 @@ QUndoCommand* SelectionTool::mouseDoubleClickEvent(QMouseEvent* e)
   return nullptr;
 }
 
-QUndoCommand* SelectionTool::mouseMoveEvent(QMouseEvent*)
+QUndoCommand* SelectionTool::mouseMoveEvent(QMouseEvent* e)
 {
-// Disable this code until rectangle selection is ready.
-#if 0
+  // Disable this code until rectangle selection is ready.
   m_drawSelectionBox = true;
   m_end = Vector2(e->pos().x(), e->pos().y());
   emit drawablesChanged();
 
   e->accept();
-#endif
   return nullptr;
 }
 

@@ -73,6 +73,8 @@ public:
    */
   Identifier hit(int x, int y) const;
 
+  std::multimap<float, Identifier> hits(int x1, int y1, int x2, int y2) const;
+
   /** Check whether the GL context is valid and supports required features.
    * \sa error() to get more information if the context is not valid.
    */

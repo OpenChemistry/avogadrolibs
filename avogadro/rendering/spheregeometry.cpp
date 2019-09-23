@@ -244,6 +244,35 @@ std::multimap<float, Identifier> SphereGeometry::hits(
   return result;
 }
 
+std::multimap<float, Identifier> SphereGeometry::hits(Vector3f point[8],
+                                                      Vector3f frustrum[4]) const
+{
+  std::multimap<float, Identifier> result;
+
+  // Check for intersection.
+  for (size_t i = 0; i < m_spheres.size(); ++i) {
+    const SphereColor& sphere = m_spheres[i];
+
+    int in = 0;
+    for (in = 0; in < 4; ++in) {
+      float d = (sphere.center - point[2 * in]).dot(frustrum[in]);
+      if (d > 0.0f) {
+        // Outside of our frustrum, break.
+        break;
+      }
+    }
+    if (in == 4) {
+      // The center is within the four planes that make our frustrum - hit.
+      Identifier id;
+      id.molecule = m_identifier.molecule;
+      id.type = m_identifier.type;
+      id.index = i;
+      result.insert(std::pair<float, Identifier>(0.0f, id));
+    }
+  }
+  return result;
+}
+
 void SphereGeometry::addSphere(const Vector3f& position, const Vector3ub& color,
                                float radius)
 {
