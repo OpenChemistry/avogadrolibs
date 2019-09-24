@@ -17,9 +17,15 @@
 #ifndef AVOGADRO_QTPLUGINS_MONGOCHEMWIDGET_H
 #define AVOGADRO_QTPLUGINS_MONGOCHEMWIDGET_H
 
-#include <memory>
-
+#include <QScopedPointer>
 #include <QWidget>
+
+namespace Ui {
+class MongoChemWidget;
+}
+
+class QNetworkAccessManager;
+class QNetworkReply;
 
 namespace Avogadro {
 
@@ -33,9 +39,16 @@ public:
   explicit MongoChemWidget(QWidget* parent = nullptr);
   ~MongoChemWidget() override;
 
+private slots:
+  void search();
+  void finishSearch(const QVariantMap& results);
+  void error(const QString& message, QNetworkReply* reply);
+
 private:
-  class Impl;
-  std::unique_ptr<Impl> m_impl;
+  void setupConnections();
+
+  QScopedPointer<Ui::MongoChemWidget> m_ui;
+  QScopedPointer<QNetworkAccessManager> m_networkManager;
 };
 
 } // namespace QtPlugins
