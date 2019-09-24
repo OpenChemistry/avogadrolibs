@@ -21,7 +21,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QTableWidget" name="table_molecules">
+    <widget class="QTableWidget" name="tableMolecules">
      <attribute name="horizontalHeaderDefaultSectionSize">
       <number>150</number>
      </attribute>
@@ -46,7 +46,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QPushButton" name="push_search">
+    <widget class="QPushButton" name="pushSearch">
      <property name="text">
       <string>Search</string>
      </property>

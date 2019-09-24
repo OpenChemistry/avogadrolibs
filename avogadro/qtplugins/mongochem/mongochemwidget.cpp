@@ -39,7 +39,7 @@ MongoChemWidget::~MongoChemWidget() = default;
 
 void MongoChemWidget::setupConnections()
 {
-  connect(m_ui->push_search, &QPushButton::clicked, this,
+  connect(m_ui->pushSearch, &QPushButton::clicked, this,
           &MongoChemWidget::search);
 }
 
@@ -61,7 +61,7 @@ void MongoChemWidget::search()
 void MongoChemWidget::finishSearch(const QVariantMap& results)
 {
   // Clear the table
-  m_ui->table_molecules->clearContents();
+  m_ui->tableMolecules->clearContents();
   auto resultList = results.value("results").toList();
   int matches = resultList.size();
   if (matches == 0) {
@@ -69,7 +69,7 @@ void MongoChemWidget::finishSearch(const QVariantMap& results)
     return;
   }
 
-  m_ui->table_molecules->setRowCount(matches);
+  m_ui->tableMolecules->setRowCount(matches);
   for (int i = 0; i < matches; ++i) {
     QString formula = resultList[i]
                         .toMap()
@@ -80,9 +80,9 @@ void MongoChemWidget::finishSearch(const QVariantMap& results)
     QString smiles = resultList[i].toMap().value("smiles").toString();
     QString inchikey = resultList[i].toMap().value("inchikey").toString();
 
-    m_ui->table_molecules->setItem(i, 0, new QTableWidgetItem(formula));
-    m_ui->table_molecules->setItem(i, 1, new QTableWidgetItem(smiles));
-    m_ui->table_molecules->setItem(i, 2, new QTableWidgetItem(inchikey));
+    m_ui->tableMolecules->setItem(i, 0, new QTableWidgetItem(formula));
+    m_ui->tableMolecules->setItem(i, 1, new QTableWidgetItem(smiles));
+    m_ui->tableMolecules->setItem(i, 2, new QTableWidgetItem(inchikey));
   }
 }
 
