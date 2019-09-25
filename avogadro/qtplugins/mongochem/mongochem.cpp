@@ -58,7 +58,6 @@ bool MongoChem::readMolecule(QtGui::Molecule& mol)
 
 void MongoChem::menuActivated()
 {
-
   if (!m_dialog) {
     m_dialog.reset(new QDialog(qobject_cast<QWidget*>(this)));
     auto* layout = new QVBoxLayout;

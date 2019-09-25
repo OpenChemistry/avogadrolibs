@@ -17,8 +17,9 @@
 #ifndef AVOGADRO_QTPLUGINS_GIRDERREQUEST_H
 #define AVOGADRO_QTPLUGINS_GIRDERREQUEST_H
 
+#include <QList>
+#include <QPair>
 #include <QString>
-#include <QVariantMap>
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -33,12 +34,15 @@ class GirderRequest : public QObject
 
 public:
   GirderRequest(QNetworkAccessManager* networkManager, const QString& girderUrl,
-                const QString& girderToken,
-                const QVariantMap& options = QVariantMap(),
-                QObject* parent = nullptr);
-  virtual ~GirderRequest() = default;
+                const QString& girderToken = "", QObject* parent = nullptr);
 
-  void virtual send() = 0;
+  // Calls the GET HTTP method on the girder url
+  void get();
+
+  void setUrlQueries(const QList<QPair<QString, QString>>& queries)
+  {
+    m_urlQueries = queries;
+  }
 
 signals:
   // Emitted when there is an error
@@ -47,28 +51,13 @@ signals:
   void result(const QVariantMap& results);
 
 protected slots:
-  void finished();
+  void onFinished();
 
 protected:
   QString m_girderUrl;
   QString m_girderToken;
-  QVariantMap m_options;
   QNetworkAccessManager* m_networkManager;
-};
-
-class GetMoleculesRequest : public GirderRequest
-{
-  Q_OBJECT
-
-public:
-  GetMoleculesRequest(QNetworkAccessManager* networkManager,
-                      const QString& girderUrl, const QString& girderToken,
-                      const QVariantMap& options = QVariantMap(),
-                      QObject* parent = nullptr)
-    : GirderRequest(networkManager, girderUrl, girderToken, options, parent)
-  {}
-
-  void send();
+  QList<QPair<QString, QString>> m_urlQueries;
 };
 
 } // namespace QtPlugins

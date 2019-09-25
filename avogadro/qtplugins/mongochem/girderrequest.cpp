@@ -33,13 +33,36 @@ static QString handleGirderError(QNetworkReply* reply, const QByteArray& bytes);
 
 GirderRequest::GirderRequest(QNetworkAccessManager* networkManager,
                              const QString& girderUrl,
-                             const QString& girderToken,
-                             const QVariantMap& options, QObject* parent)
+                             const QString& girderToken, QObject* parent)
   : QObject(parent), m_girderUrl(girderUrl), m_girderToken(girderToken),
-    m_options(options), m_networkManager(networkManager)
+    m_networkManager(networkManager)
 {}
 
-void GirderRequest::finished()
+void GirderRequest::get()
+{
+  QUrl url(m_girderUrl);
+
+  if (!m_urlQueries.isEmpty()) {
+    // For Qt>=5.13, we can initialize QUrlQuery with m_urlQueries
+    QUrlQuery query;
+    query.setQueryItems(m_urlQueries);
+    url.setQuery(query);
+  }
+
+  QNetworkRequest request(url);
+
+  // Only set the girder token if there is one
+  if (!m_girderToken.isEmpty())
+    request.setRawHeader(QByteArray("Girder-Token"), m_girderToken.toUtf8());
+
+  auto reply = m_networkManager->get(request);
+  connect(reply, &QNetworkReply::finished, this, &GirderRequest::onFinished);
+
+  // Delete it after all the connected slots have been called
+  connect(reply, &QNetworkReply::finished, reply, &QNetworkReply::deleteLater);
+}
+
+void GirderRequest::onFinished()
 {
   auto* reply = qobject_cast<QNetworkReply*>(this->sender());
   QByteArray bytes = reply->readAll();
@@ -49,29 +72,6 @@ void GirderRequest::finished()
     QJsonDocument jsonResponse = QJsonDocument::fromJson(bytes.constData());
     emit result(jsonResponse.toVariant().toMap());
   }
-}
-
-void GetMoleculesRequest::send()
-{
-  QString limit = m_options.value("limit", QVariant("25")).toString();
-
-  QUrlQuery urlQuery;
-  urlQuery.addQueryItem("limit", limit);
-
-  QUrl url(QString("%1/molecules").arg(m_girderUrl));
-  url.setQuery(urlQuery); // reconstructs the query string from the QUrlQuery
-
-  QNetworkRequest request(url);
-
-  // Only set the girder token if there is one
-  if (!m_girderToken.isEmpty())
-    request.setRawHeader(QByteArray("Girder-Token"), m_girderToken.toUtf8());
-
-  auto reply = m_networkManager->get(request);
-  connect(reply, &QNetworkReply::finished, this,
-          &GetMoleculesRequest::finished);
-  connect(reply, &QNetworkReply::finished, reply,
-          &QNetworkReply::deleteLater);
 }
 
 static QString handleGirderError(QNetworkReply* reply, const QByteArray& bytes)

@@ -46,16 +46,22 @@ void MongoChemWidget::setupConnections()
 void MongoChemWidget::search()
 {
   QString url = "http://localhost:8080/api/v1";
+  QString route = "/molecules";
+  url += route;
   QString token = "";
-  auto* request = new GetMoleculesRequest(m_networkManager.data(), url, token);
-  request->send();
-  connect(request, &GetMoleculesRequest::result, this,
+
+  QList<QPair<QString, QString>> urlQueries = { { "limit", "25" } };
+
+  auto* request = new GirderRequest(m_networkManager.data(), url, token);
+  request->setUrlQueries(urlQueries);
+  request->get();
+
+  connect(request, &GirderRequest::result, this,
           &MongoChemWidget::finishSearch);
-  connect(request, &GetMoleculesRequest::error, this, &MongoChemWidget::error);
-  connect(request, &GetMoleculesRequest::result, request,
-          &GetMoleculesRequest::deleteLater);
-  connect(request, &GetMoleculesRequest::error, request,
-          &GetMoleculesRequest::deleteLater);
+  connect(request, &GirderRequest::error, this, &MongoChemWidget::error);
+  connect(request, &GirderRequest::result, request,
+          &GirderRequest::deleteLater);
+  connect(request, &GirderRequest::error, request, &GirderRequest::deleteLater);
 }
 
 void MongoChemWidget::finishSearch(const QVariantMap& results)
