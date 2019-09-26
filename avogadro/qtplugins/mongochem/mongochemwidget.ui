@@ -20,7 +20,21 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+   <item row="1" column="0">
+    <widget class="QPushButton" name="pushSearch">
+     <property name="text">
+      <string>Search</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="pushConfig">
+     <property name="text">
+      <string>Config</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
     <widget class="QTableWidget" name="tableMolecules">
      <attribute name="horizontalHeaderDefaultSectionSize">
       <number>150</number>
@@ -43,13 +57,6 @@
        <string>InChIKey</string>
       </property>
      </column>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QPushButton" name="pushSearch">
-     <property name="text">
-      <string>Search</string>
-     </property>
     </widget>
    </item>
   </layout>

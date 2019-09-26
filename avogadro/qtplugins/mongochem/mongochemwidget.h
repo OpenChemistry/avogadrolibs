@@ -31,6 +31,8 @@ namespace Avogadro {
 
 namespace QtPlugins {
 
+class ConfigDialog;
+
 class MongoChemWidget : public QWidget
 {
   Q_OBJECT
@@ -40,15 +42,22 @@ public:
   ~MongoChemWidget() override;
 
 private slots:
+  void showConfig();
   void search();
   void finishSearch(const QVariantMap& results);
   void error(const QString& message, QNetworkReply* reply);
 
 private:
   void setupConnections();
+  void authenticate();
+
+  QString m_girderUrl = "http://localhost:8080/api/v1";
+  QString m_apiKey;
+  QString m_girderToken;
 
   QScopedPointer<Ui::MongoChemWidget> m_ui;
   QScopedPointer<QNetworkAccessManager> m_networkManager;
+  QScopedPointer<ConfigDialog> m_configDialog;
 };
 
 } // namespace QtPlugins

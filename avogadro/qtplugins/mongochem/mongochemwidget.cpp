@@ -17,6 +17,7 @@
 #include "mongochemwidget.h"
 #include "ui_mongochemwidget.h"
 
+#include "configdialog.h"
 #include "girderrequest.h"
 
 #include <QNetworkAccessManager>
@@ -41,18 +42,39 @@ void MongoChemWidget::setupConnections()
 {
   connect(m_ui->pushSearch, &QPushButton::clicked, this,
           &MongoChemWidget::search);
+  connect(m_ui->pushConfig, &QPushButton::clicked, this,
+          &MongoChemWidget::showConfig);
+}
+
+void MongoChemWidget::authenticate()
+{
+  // Will get girder token from api key in the future...
+}
+
+void MongoChemWidget::showConfig()
+{
+  if (!m_configDialog)
+    m_configDialog.reset(new ConfigDialog(this));
+
+  // Make sure the GUI variables are up-to-date
+  m_configDialog->setGirderUrl(m_girderUrl);
+  m_configDialog->setApiKey(m_apiKey);
+
+  if (m_configDialog->exec()) {
+    m_girderUrl = m_configDialog->girderUrl();
+    m_apiKey = m_configDialog->apiKey();
+    authenticate();
+  }
 }
 
 void MongoChemWidget::search()
 {
-  QString url = "http://localhost:8080/api/v1";
-  QString route = "/molecules";
-  url += route;
-  QString token = "";
+  QString url = m_girderUrl + "/molecules";
 
   QList<QPair<QString, QString>> urlQueries = { { "limit", "25" } };
 
-  auto* request = new GirderRequest(m_networkManager.data(), url, token);
+  auto* request =
+    new GirderRequest(m_networkManager.data(), url, m_girderToken);
   request->setUrlQueries(urlQueries);
   request->get();
 

@@ -5,10 +5,12 @@ set(srcs
   mongochem.cpp
   mongochemwidget.cpp
   girderrequest.cpp
+  configdialog.cpp
 )
 
 set(uis
   mongochemwidget.ui
+  configdialog.ui
 )
 
 avogadro_plugin(MongoChem
