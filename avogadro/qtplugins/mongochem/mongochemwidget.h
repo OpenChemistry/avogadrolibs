@@ -43,6 +43,7 @@ public:
 
 private slots:
   void showConfig();
+  void finishAuthentication(const QVariantMap& results);
   void search();
   void finishSearch(const QVariantMap& results);
   void error(const QString& message, QNetworkReply* reply);

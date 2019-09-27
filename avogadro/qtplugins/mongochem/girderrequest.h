@@ -18,6 +18,7 @@
 #define AVOGADRO_QTPLUGINS_GIRDERREQUEST_H
 
 #include <QList>
+#include <QNetworkRequest>
 #include <QPair>
 #include <QString>
 
@@ -36,12 +37,18 @@ public:
   GirderRequest(QNetworkAccessManager* networkManager, const QString& girderUrl,
                 const QString& girderToken = "", QObject* parent = nullptr);
 
-  // Calls the GET HTTP method on the girder url
+  // Calls the respective HTTP method on the girder url
   void get();
+  void post(const QByteArray& data);
 
   void setUrlQueries(const QList<QPair<QString, QString>>& queries)
   {
     m_urlQueries = queries;
+  }
+
+  void setHeader(QNetworkRequest::KnownHeaders header, const QVariant& value)
+  {
+    m_headers[header] = value;
   }
 
 signals:
@@ -58,6 +65,7 @@ protected:
   QString m_girderToken;
   QNetworkAccessManager* m_networkManager;
   QList<QPair<QString, QString>> m_urlQueries;
+  QMap<QNetworkRequest::KnownHeaders, QVariant> m_headers;
 };
 
 } // namespace QtPlugins

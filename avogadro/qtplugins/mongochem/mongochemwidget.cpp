@@ -20,6 +20,7 @@
 #include "configdialog.h"
 #include "girderrequest.h"
 
+#include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QTableWidgetItem>
@@ -48,7 +49,35 @@ void MongoChemWidget::setupConnections()
 
 void MongoChemWidget::authenticate()
 {
-  // Will get girder token from api key in the future...
+  QString url = m_girderUrl + "/api_key/token";
+
+  static const QString& tokenDuration = "90";
+  QByteArray postData;
+  postData.append(("key=" + m_apiKey + "&").toUtf8());
+  postData.append(("duration=" + tokenDuration).toUtf8());
+
+  auto* request =
+    new GirderRequest(m_networkManager.data(), url, m_girderToken);
+  request->setHeader(QNetworkRequest::ContentTypeHeader,
+                     "application/x-www-form-urlencoded");
+  request->post(postData);
+
+  connect(request, &GirderRequest::result, this,
+          &MongoChemWidget::finishAuthentication);
+  connect(request, &GirderRequest::error, this, &MongoChemWidget::error);
+  connect(request, &GirderRequest::result, request,
+          &GirderRequest::deleteLater);
+  connect(request, &GirderRequest::error, request, &GirderRequest::deleteLater);
+}
+
+void MongoChemWidget::finishAuthentication(const QVariantMap& results)
+{
+
+  m_girderToken = results.value("authToken").toMap().value("token").toString();
+  if (!m_girderToken.isEmpty())
+    QMessageBox::information(this, "MongoChem", "Authentication Successful!");
+  else
+    QMessageBox::critical(this, "MongoChem", "Authentication failed!");
 }
 
 void MongoChemWidget::showConfig()
@@ -63,7 +92,8 @@ void MongoChemWidget::showConfig()
   if (m_configDialog->exec()) {
     m_girderUrl = m_configDialog->girderUrl();
     m_apiKey = m_configDialog->apiKey();
-    authenticate();
+    if (!m_apiKey.isEmpty())
+      authenticate();
   }
 }
 
@@ -118,6 +148,7 @@ void MongoChemWidget::error(const QString& message, QNetworkReply* reply)
 {
   Q_UNUSED(reply)
   qDebug() << "An error occurred. Message was: " << message;
+  QMessageBox::critical(this, "MongoChem", message);
 }
 
 } // namespace QtPlugins
