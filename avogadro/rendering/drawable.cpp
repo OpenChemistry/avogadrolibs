@@ -21,6 +21,8 @@
 namespace Avogadro {
 namespace Rendering {
 
+using Core::Array;
+
 Drawable::Drawable()
   : m_parent(nullptr), m_visible(true), m_renderPass(OpaquePass)
 {
@@ -52,9 +54,9 @@ std::multimap<float, Identifier> Drawable::hits(const Vector3f&,
   return std::multimap<float, Identifier>();
 }
 
-std::multimap<float, Identifier> Drawable::hits(const Frustrum& f) const
+Array<Identifier> Drawable::areaHits(const Frustrum&) const
 {
-  return std::multimap<float, Identifier>();
+  return Array<Identifier>();
 }
 
 void Drawable::clear()

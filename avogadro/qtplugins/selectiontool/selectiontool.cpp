@@ -114,7 +114,7 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
     // Toggle the selection if the Ctrl modifier is pressed.
     if (e->modifiers() & Qt::ControlModifier) {
       for (auto it = hits.begin(); it != hits.end(); ++it) {
-        toggleAtom(it->second);
+        toggleAtom(*it);
       }
     } else {
       // If the shift modifier is not pressed clear the previous selection.
@@ -122,7 +122,7 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
         clearAtoms();
       }
       for (auto it = hits.begin(); it != hits.end(); ++it) {
-        addAtom(it->second);
+        addAtom(*it);
       }
     }
   } else {

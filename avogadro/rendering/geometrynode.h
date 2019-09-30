@@ -20,6 +20,8 @@
 #include "node.h"
 
 #include "primitive.h"
+
+#include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
 #include <map>
@@ -102,7 +104,7 @@ public:
   /**
    * Return the primitives within the supplied frustrum.
    */
-  std::multimap<float, Identifier> hits(const Frustrum& frustrum) const;
+  Core::Array<Identifier> areaHits(const Frustrum& frustrum) const;
 
 protected:
   std::vector<Drawable*> m_drawables;

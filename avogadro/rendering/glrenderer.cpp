@@ -34,6 +34,8 @@
 namespace Avogadro {
 namespace Rendering {
 
+using Core::Array;
+
 GLRenderer::GLRenderer()
   : m_valid(false)
   , m_textRenderStrategy(nullptr)
@@ -220,24 +222,24 @@ std::multimap<float, Identifier> GLRenderer::hits(int x, int y) const
   return hits(&m_scene.rootNode(), origin, end, direction);
 }
 
-std::multimap<float, Identifier> GLRenderer::hits(const GroupNode* group,
-                                                  const Frustrum& f) const
+Array<Identifier> GLRenderer::hits(const GroupNode* group,
+                                   const Frustrum& f) const
 {
-  std::multimap<float, Identifier> result;
+  Array<Identifier> result;
 
   for (auto it = group->children().begin(); it != group->children().end(); ++it) {
-    std::multimap<float, Identifier> loopHits;
+    Array<Identifier> loopHits;
     const Node* itNode = *it;
     const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
       loopHits = hits(childGroup, f);
-      result.insert(loopHits.begin(), loopHits.end());
+      result.insert(result.end(), loopHits.begin(), loopHits.end());
       continue;
     }
     const auto childGeometry = (*it)->cast<GeometryNode>();
     if (childGeometry) {
-      loopHits = childGeometry->hits(f);
-      result.insert(loopHits.begin(), loopHits.end());
+      loopHits = childGeometry->areaHits(f);
+      result.insert(result.end(), loopHits.begin(), loopHits.end());
       continue;
     }
   }
@@ -245,8 +247,7 @@ std::multimap<float, Identifier> GLRenderer::hits(const GroupNode* group,
   return result;
 }
 
-std::multimap<float, Identifier> GLRenderer::hits(int x1, int y1,
-                                                  int x2, int y2) const
+Array<Identifier> GLRenderer::hits(int x1, int y1, int x2, int y2) const
 {
   // Figure out where the corners of our rectangle are.
   Frustrum f;
@@ -272,10 +273,6 @@ std::multimap<float, Identifier> GLRenderer::hits(int x1, int y1,
   f.planes[1] = (f.points[2] - f.points[3]).cross(f.points[4] - f.points[5]);
   f.planes[2] = (f.points[4] - f.points[5]).cross(f.points[6] - f.points[7]);
   f.planes[3] = (f.points[6] - f.points[7]).cross(f.points[0] - f.points[1]);
-  /*f.planes[0].normalize();
-  f.planes[1].normalize();
-  f.planes[2].normalize();
-  f.planes[3].normalize(); */
 
   return hits(&m_scene.rootNode(), f);
 }

@@ -22,6 +22,7 @@
 #include "avogadrorendering.h"
 #include "primitive.h"
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
 #include <map>
@@ -111,9 +112,11 @@ public:
     const Vector3f& rayDirection) const;
 
   /**
-   * Return the primitives within the supplied frustrum.
+   * Return the primitives within the supplied area.
+   * @param f The frustrum defining the area highlighted.
+   * @return Collection of primitives in the area.
    */
-  virtual std::multimap<float, Identifier> hits(const Frustrum& f) const;
+  virtual Core::Array<Identifier> areaHits(const Frustrum& f) const;
 
   /**
    * Clear the contents of the node.

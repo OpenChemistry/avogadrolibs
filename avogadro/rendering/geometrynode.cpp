@@ -24,6 +24,8 @@
 namespace Avogadro {
 namespace Rendering {
 
+using Core::Array;
+
 GeometryNode::GeometryNode()
 {
 }
@@ -111,14 +113,14 @@ std::multimap<float, Identifier> GeometryNode::hits(
   return result;
 }
 
-std::multimap<float, Identifier> GeometryNode::hits(const Frustrum& f) const
+Array<Identifier> GeometryNode::areaHits(const Frustrum& f) const
 {
-  std::multimap<float, Identifier> result;
+  Array<Identifier> result;
   for (auto it = m_drawables.begin(); it != m_drawables.end(); ++it) {
-    std::multimap<float, Identifier> drawableHits;
+    Array<Identifier> drawableHits;
     if ((*it)->isVisible())
-      drawableHits = (*it)->hits(f);
-    result.insert(drawableHits.begin(), drawableHits.end());
+      drawableHits = (*it)->areaHits(f);
+    result.insert(result.end(), drawableHits.begin(), drawableHits.end());
   }
 
   return result;

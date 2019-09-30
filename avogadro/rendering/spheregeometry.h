@@ -89,7 +89,7 @@ public:
   /**
    * Return the primitives within the supplied frustrum.
    */
-  std::multimap<float, Identifier> hits(const Frustrum& f) const override;
+  Core::Array<Identifier> areaHits(const Frustrum& f) const override;
 
   /**
    * Add a sphere to the geometry object.

@@ -41,6 +41,8 @@ using std::endl;
 namespace Avogadro {
 namespace Rendering {
 
+using Core::Array;
+
 class SphereGeometry::Private
 {
 public:
@@ -244,19 +246,17 @@ std::multimap<float, Identifier> SphereGeometry::hits(
   return result;
 }
 
-std::multimap<float, Identifier> SphereGeometry::hits(const Frustrum& f) const
+Array<Identifier> SphereGeometry::areaHits(const Frustrum& f) const
 {
-  std::multimap<float, Identifier> result;
-  cout << "SphereGeometry::hits called" << endl;
+  Array<Identifier> result;
   // Check for intersection.
   for (size_t i = 0; i < m_spheres.size(); ++i) {
     const SphereColor& sphere = m_spheres[i];
 
-    cout << "sphere " << i << " being tested." << endl;
     int in = 0;
     for (in = 0; in < 4; ++in) {
-      float d = (sphere.center - f.points[2 * in]).dot(f.planes[in]);
-      if (d > 0.0f) {
+      float dist = (sphere.center - f.points[2 * in]).dot(f.planes[in]);
+      if (dist > 0.0f) {
         // Outside of our frustrum, break.
         break;
       }
@@ -267,8 +267,7 @@ std::multimap<float, Identifier> SphereGeometry::hits(const Frustrum& f) const
       id.molecule = m_identifier.molecule;
       id.type = m_identifier.type;
       id.index = i;
-      cout << "Adding sphere " << i << endl;
-      result.insert(std::pair<float, Identifier>(0.0f, id));
+      result.push_back(id);
     }
   }
   return result;
