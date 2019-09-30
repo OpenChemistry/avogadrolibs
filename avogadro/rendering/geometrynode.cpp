@@ -111,14 +111,13 @@ std::multimap<float, Identifier> GeometryNode::hits(
   return result;
 }
 
-std::multimap<float, Identifier> GeometryNode::hits(Vector3f point[8],
-                                                    Vector3f frustrum[4]) const
+std::multimap<float, Identifier> GeometryNode::hits(const Frustrum& f) const
 {
   std::multimap<float, Identifier> result;
   for (auto it = m_drawables.begin(); it != m_drawables.end(); ++it) {
     std::multimap<float, Identifier> drawableHits;
     if ((*it)->isVisible())
-      drawableHits = (*it)->hits(point, frustrum);
+      drawableHits = (*it)->hits(f);
     result.insert(drawableHits.begin(), drawableHits.end());
   }
 

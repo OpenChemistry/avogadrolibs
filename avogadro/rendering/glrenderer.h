@@ -73,6 +73,7 @@ public:
    */
   Identifier hit(int x, int y) const;
 
+  /** Return the primitives in the rectangular area provided. */
   std::multimap<float, Identifier> hits(int x1, int y1, int x2, int y2) const;
 
   /** Check whether the GL context is valid and supports required features.
@@ -125,6 +126,9 @@ private:
                                         const Vector3f& rayOrigin,
                                         const Vector3f& rayEnd,
                                         const Vector3f& rayDirection) const;
+
+  std::multimap<float, Identifier> hits(const GroupNode* group,
+                                        const Frustrum& frustrum) const;
 
   bool m_valid;
   std::string m_error;

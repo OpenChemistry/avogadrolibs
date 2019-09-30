@@ -220,9 +220,8 @@ std::multimap<float, Identifier> GLRenderer::hits(int x, int y) const
   return hits(&m_scene.rootNode(), origin, end, direction);
 }
 
-std::multimap<float, Identifier> myhits(const GroupNode* group,
-                                        Vector3f point[8],
-                                        Vector3f frustrum[4])
+std::multimap<float, Identifier> GLRenderer::hits(const GroupNode* group,
+                                                  const Frustrum& f) const
 {
   std::multimap<float, Identifier> result;
 
@@ -231,13 +230,13 @@ std::multimap<float, Identifier> myhits(const GroupNode* group,
     const Node* itNode = *it;
     const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
-      loopHits = myhits(childGroup, point, frustrum);
+      loopHits = hits(childGroup, f);
       result.insert(loopHits.begin(), loopHits.end());
       continue;
     }
     const auto childGeometry = (*it)->cast<GeometryNode>();
     if (childGeometry) {
-      loopHits = childGeometry->hits(point, frustrum);
+      loopHits = childGeometry->hits(f);
       result.insert(loopHits.begin(), loopHits.end());
       continue;
     }
@@ -250,32 +249,35 @@ std::multimap<float, Identifier> GLRenderer::hits(int x1, int y1,
                                                   int x2, int y2) const
 {
   // Figure out where the corners of our rectangle are.
-  Vector3f point[8];
-  point[0] = m_camera.unProject(Vector3f(static_cast<float>(x1),
-                                static_cast<float>(y1), 0.f));
-  point[1] = m_camera.unProject(Vector3f(static_cast<float>(x1),
-                                static_cast<float>(y1), 1.f));
-  point[2] = m_camera.unProject(Vector3f(static_cast<float>(x1),
-                                static_cast<float>(y2), 0.f));
-  point[3] = m_camera.unProject(Vector3f(static_cast<float>(x1),
-                                static_cast<float>(y2), 1.f));
-  point[4] = m_camera.unProject(Vector3f(static_cast<float>(x2),
-                                static_cast<float>(y2), 0.f));
-  point[5] = m_camera.unProject(Vector3f(static_cast<float>(x2),
-                                static_cast<float>(y2), 1.f));
-  point[6] = m_camera.unProject(Vector3f(static_cast<float>(x2),
-                                static_cast<float>(y1), 0.f));
-  point[7] = m_camera.unProject(Vector3f(static_cast<float>(x2),
-                                static_cast<float>(y1), 1.f));
+  Frustrum f;
+  f.points[0] = m_camera.unProject(Vector3f(static_cast<float>(x1),
+                                   static_cast<float>(y1), 0.f));
+  f.points[1] = m_camera.unProject(Vector3f(static_cast<float>(x1),
+                                   static_cast<float>(y1), 1.f));
+  f.points[2] = m_camera.unProject(Vector3f(static_cast<float>(x1),
+                                   static_cast<float>(y2), 0.f));
+  f.points[3] = m_camera.unProject(Vector3f(static_cast<float>(x1),
+                                   static_cast<float>(y2), 1.f));
+  f.points[4] = m_camera.unProject(Vector3f(static_cast<float>(x2),
+                                   static_cast<float>(y2), 0.f));
+  f.points[5] = m_camera.unProject(Vector3f(static_cast<float>(x2),
+                                   static_cast<float>(y2), 1.f));
+  f.points[6] = m_camera.unProject(Vector3f(static_cast<float>(x2),
+                                   static_cast<float>(y1), 0.f));
+  f.points[7] = m_camera.unProject(Vector3f(static_cast<float>(x2),
+                                   static_cast<float>(y1), 1.f));
 
   // Define a frustrum for testing if things are within it.
-  Vector3f frustrum[4];
-  frustrum[0] = (point[0] - point[1]).cross(point[2] - point[3]).normalized();
-  frustrum[1] = (point[2] - point[3]).cross(point[4] - point[5]).normalized();
-  frustrum[2] = (point[4] - point[5]).cross(point[6] - point[7]).normalized();
-  frustrum[3] = (point[6] - point[7]).cross(point[0] - point[1]).normalized();
+  f.planes[0] = (f.points[0] - f.points[1]).cross(f.points[2] - f.points[3]);
+  f.planes[1] = (f.points[2] - f.points[3]).cross(f.points[4] - f.points[5]);
+  f.planes[2] = (f.points[4] - f.points[5]).cross(f.points[6] - f.points[7]);
+  f.planes[3] = (f.points[6] - f.points[7]).cross(f.points[0] - f.points[1]);
+  /*f.planes[0].normalize();
+  f.planes[1].normalize();
+  f.planes[2].normalize();
+  f.planes[3].normalize(); */
 
-  return myhits(&m_scene.rootNode(), point, frustrum);
+  return hits(&m_scene.rootNode(), f);
 }
 
 } // End Rendering namespace

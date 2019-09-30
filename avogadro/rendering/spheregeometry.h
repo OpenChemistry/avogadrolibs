@@ -86,8 +86,10 @@ public:
     const Vector3f& rayOrigin, const Vector3f& rayEnd,
     const Vector3f& rayDirection) const override;
 
-  std::multimap<float, Identifier> hits(Vector3f point[8],
-                                        Vector3f frustrum[4]) const override;
+  /**
+   * Return the primitives within the supplied frustrum.
+   */
+  std::multimap<float, Identifier> hits(const Frustrum& f) const override;
 
   /**
    * Add a sphere to the geometry object.

@@ -52,8 +52,7 @@ std::multimap<float, Identifier> Drawable::hits(const Vector3f&,
   return std::multimap<float, Identifier>();
 }
 
-std::multimap<float, Identifier> Drawable::hits(Vector3f point[8],
-                                                Vector3f frustrum[4]) const
+std::multimap<float, Identifier> Drawable::hits(const Frustrum& f) const
 {
   return std::multimap<float, Identifier>();
 }

@@ -21,6 +21,7 @@
 
 #include "avogadrorendering.h"
 #include "primitive.h"
+
 #include <avogadro/core/vector.h>
 
 #include <map>
@@ -109,8 +110,10 @@ public:
     const Vector3f& rayOrigin, const Vector3f& rayEnd,
     const Vector3f& rayDirection) const;
 
-  virtual std::multimap<float, Identifier> hits(Vector3f point[8],
-                                                Vector3f frustrum[4]) const;
+  /**
+   * Return the primitives within the supplied frustrum.
+   */
+  virtual std::multimap<float, Identifier> hits(const Frustrum& f) const;
 
   /**
    * Clear the contents of the node.

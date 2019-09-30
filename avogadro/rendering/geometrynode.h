@@ -99,8 +99,10 @@ public:
                                         const Vector3f& rayEnd,
                                         const Vector3f& rayDirection) const;
 
-  std::multimap<float, Identifier> hits(Vector3f point[8],
-                                        Vector3f frustrum[4]) const;
+  /**
+   * Return the primitives within the supplied frustrum.
+   */
+  std::multimap<float, Identifier> hits(const Frustrum& frustrum) const;
 
 protected:
   std::vector<Drawable*> m_drawables;
