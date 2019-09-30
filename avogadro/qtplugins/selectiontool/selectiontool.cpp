@@ -41,11 +41,11 @@
 
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
+using Avogadro::QtGui::Molecule;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::MeshGeometry;
-using Avogadro::QtGui::Molecule;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -63,9 +63,7 @@ SelectionTool::SelectionTool(QObject* parent_)
           SLOT(applyColor(Vector3ub)));
 }
 
-SelectionTool::~SelectionTool()
-{
-}
+SelectionTool::~SelectionTool() {}
 
 QWidget* SelectionTool::toolWidget() const
 {
@@ -100,16 +98,16 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
   // If the click is released on an atom, add it to the list
   if (e->button() != Qt::LeftButton || !m_renderer)
     return nullptr;
-  
+
   // Assess whether the selection box is big enough to use, or a mis-click.
   bool bigEnough = false;
   m_end = Vector2(e->pos().x(), e->pos().y());
   if (fabs(m_start.x() - m_end.x()) > 2 && fabs(m_start.y() - m_end.y()) > 2)
     bigEnough = true;
-    
+
   if (m_drawSelectionBox && bigEnough) {
-    auto hits = m_renderer->hits(m_start.x(), m_start.y(),
-                                 m_end.x(), m_end.y());
+    auto hits =
+      m_renderer->hits(m_start.x(), m_start.y(), m_end.x(), m_end.y());
 
     // Toggle the selection if the Ctrl modifier is pressed.
     if (e->modifiers() & Qt::ControlModifier) {

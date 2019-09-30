@@ -37,10 +37,8 @@ namespace Rendering {
 using Core::Array;
 
 GLRenderer::GLRenderer()
-  : m_valid(false)
-  , m_textRenderStrategy(nullptr)
-  , m_center(Vector3f::Zero())
-  , m_radius(20.0)
+  : m_valid(false), m_textRenderStrategy(nullptr), m_center(Vector3f::Zero()),
+    m_radius(20.0)
 {
   m_overlayCamera.setIdentity();
 }
@@ -227,7 +225,8 @@ Array<Identifier> GLRenderer::hits(const GroupNode* group,
 {
   Array<Identifier> result;
 
-  for (auto it = group->children().begin(); it != group->children().end(); ++it) {
+  for (auto it = group->children().begin(); it != group->children().end();
+       ++it) {
     Array<Identifier> loopHits;
     const Node* itNode = *it;
     const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
@@ -251,22 +250,22 @@ Array<Identifier> GLRenderer::hits(int x1, int y1, int x2, int y2) const
 {
   // Figure out where the corners of our rectangle are.
   Frustrum f;
-  f.points[0] = m_camera.unProject(Vector3f(static_cast<float>(x1),
-                                   static_cast<float>(y1), 0.f));
-  f.points[1] = m_camera.unProject(Vector3f(static_cast<float>(x1),
-                                   static_cast<float>(y1), 1.f));
-  f.points[2] = m_camera.unProject(Vector3f(static_cast<float>(x1),
-                                   static_cast<float>(y2), 0.f));
-  f.points[3] = m_camera.unProject(Vector3f(static_cast<float>(x1),
-                                   static_cast<float>(y2), 1.f));
-  f.points[4] = m_camera.unProject(Vector3f(static_cast<float>(x2),
-                                   static_cast<float>(y2), 0.f));
-  f.points[5] = m_camera.unProject(Vector3f(static_cast<float>(x2),
-                                   static_cast<float>(y2), 1.f));
-  f.points[6] = m_camera.unProject(Vector3f(static_cast<float>(x2),
-                                   static_cast<float>(y1), 0.f));
-  f.points[7] = m_camera.unProject(Vector3f(static_cast<float>(x2),
-                                   static_cast<float>(y1), 1.f));
+  f.points[0] = m_camera.unProject(
+    Vector3f(static_cast<float>(x1), static_cast<float>(y1), 0.f));
+  f.points[1] = m_camera.unProject(
+    Vector3f(static_cast<float>(x1), static_cast<float>(y1), 1.f));
+  f.points[2] = m_camera.unProject(
+    Vector3f(static_cast<float>(x1), static_cast<float>(y2), 0.f));
+  f.points[3] = m_camera.unProject(
+    Vector3f(static_cast<float>(x1), static_cast<float>(y2), 1.f));
+  f.points[4] = m_camera.unProject(
+    Vector3f(static_cast<float>(x2), static_cast<float>(y2), 0.f));
+  f.points[5] = m_camera.unProject(
+    Vector3f(static_cast<float>(x2), static_cast<float>(y2), 1.f));
+  f.points[6] = m_camera.unProject(
+    Vector3f(static_cast<float>(x2), static_cast<float>(y1), 0.f));
+  f.points[7] = m_camera.unProject(
+    Vector3f(static_cast<float>(x2), static_cast<float>(y1), 1.f));
 
   // Define a frustrum for testing if things are within it.
   f.planes[0] = (f.points[0] - f.points[1]).cross(f.points[2] - f.points[3]);
@@ -277,5 +276,5 @@ Array<Identifier> GLRenderer::hits(int x1, int y1, int x2, int y2) const
   return hits(&m_scene.rootNode(), f);
 }
 
-} // End Rendering namespace
-} // End Avogadro namespace
+} // namespace Rendering
+} // namespace Avogadro
