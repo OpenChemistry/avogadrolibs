@@ -194,6 +194,9 @@ void SphereGeometry::render(const Camera& camera)
   if (!d->program.setUniformValue("projection", camera.projection().matrix())) {
     cout << d->program.error() << endl;
   }
+  if (!d->program.setUniformValue("opacity", m_opacity)) {
+    cout << d->program.error() << endl;
+  }
 
   // Render the loaded spheres using the shader and bound VBO.
   glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),

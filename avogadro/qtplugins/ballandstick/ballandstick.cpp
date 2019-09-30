@@ -60,9 +60,12 @@ void BallAndStick::process(const Molecule& molecule, Rendering::GroupNode& node)
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
   SphereGeometry* spheres = new SphereGeometry;
+  auto selectedSpheres = new SphereGeometry;
+  selectedSpheres->setOpacity(0.42);
   spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
+  geometry->addDrawable(selectedSpheres);
 
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
@@ -71,11 +74,13 @@ void BallAndStick::process(const Molecule& molecule, Rendering::GroupNode& node)
       continue;
     Vector3ub color = atom.color();
     float radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
+    spheres->addSphere(atom.position3d().cast<float>(), color, radius * 0.3f);
     if (atom.selected()) {
       color = Vector3ub(0, 0, 255);
       radius *= 1.2;
+      selectedSpheres->addSphere(atom.position3d().cast<float>(), color,
+                                 radius * 0.3f);
     }
-    spheres->addSphere(atom.position3d().cast<float>(), color, radius * 0.3f);
   }
 
   float bondRadius = 0.1f;
