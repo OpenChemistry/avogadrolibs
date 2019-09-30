@@ -41,11 +41,11 @@
 
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
+using Avogadro::QtGui::Molecule;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::MeshGeometry;
-using Avogadro::QtGui::Molecule;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -63,9 +63,7 @@ SelectionTool::SelectionTool(QObject* parent_)
           SLOT(applyColor(Vector3ub)));
 }
 
-SelectionTool::~SelectionTool()
-{
-}
+SelectionTool::~SelectionTool() {}
 
 QWidget* SelectionTool::toolWidget() const
 {
@@ -90,7 +88,7 @@ QUndoCommand* SelectionTool::mousePressEvent(QMouseEvent* e)
 
   // Remove the global accept to prevent the rectangle selection area from being
   // rendered as the selection code is not yet in place for the scene.
-  // e->accept();
+  e->accept();
 
   return nullptr;
 }
@@ -101,23 +99,47 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
   if (e->button() != Qt::LeftButton || !m_renderer)
     return nullptr;
 
-  m_drawSelectionBox = false;
-  m_start = Vector2(e->pos().x(), e->pos().y());
-  m_end = m_start;
-  Identifier hit = m_renderer->hit(e->pos().x(), e->pos().y());
+  // Assess whether the selection box is big enough to use, or a mis-click.
+  bool bigEnough = false;
+  m_end = Vector2(e->pos().x(), e->pos().y());
+  if (fabs(m_start.x() - m_end.x()) > 2 && fabs(m_start.y() - m_end.y()) > 2)
+    bigEnough = true;
 
-  // Now add the atom on release.
-  if (hit.type == Rendering::AtomType) {
-    if (addAtom(hit))
-      emit drawablesChanged();
-    e->accept();
+  if (m_drawSelectionBox && bigEnough) {
+    auto hits =
+      m_renderer->hits(m_start.x(), m_start.y(), m_end.x(), m_end.y());
+
+    // Toggle the selection if the Ctrl modifier is pressed.
+    if (e->modifiers() & Qt::ControlModifier) {
+      for (auto it = hits.begin(); it != hits.end(); ++it) {
+        toggleAtom(*it);
+      }
+    } else {
+      // If the shift modifier is not pressed clear the previous selection.
+      if (!(e->modifiers() & Qt::ShiftModifier)) {
+        clearAtoms();
+      }
+      for (auto it = hits.begin(); it != hits.end(); ++it) {
+        addAtom(*it);
+      }
+    }
+  } else {
+    // Single click
+    m_start = Vector2(e->pos().x(), e->pos().y());
+    m_end = m_start;
+    Identifier hit = m_renderer->hit(e->pos().x(), e->pos().y());
+
+    // Now add the atom on release.
+    if (hit.type == Rendering::AtomType) {
+      toggleAtom(hit);
+    }
   }
 
-// Disable this code until rectangle selection is ready.
-#if 0
+  m_drawSelectionBox = false;
+
+  // Disable this code until rectangle selection is ready.
   emit drawablesChanged();
   e->accept();
-#endif
 
   return nullptr;
 }
@@ -125,28 +147,26 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
 QUndoCommand* SelectionTool::mouseDoubleClickEvent(QMouseEvent* e)
 {
   // Reset the atom list
-  if (e->button() == Qt::LeftButton && !m_atoms.isEmpty()) {
-    m_atoms.clear();
+  if (e->button() == Qt::LeftButton) {
+    clearAtoms();
     emit drawablesChanged();
     e->accept();
   }
   return nullptr;
 }
 
-QUndoCommand* SelectionTool::mouseMoveEvent(QMouseEvent*)
+QUndoCommand* SelectionTool::mouseMoveEvent(QMouseEvent* e)
 {
-// Disable this code until rectangle selection is ready.
-#if 0
+  // Disable this code until rectangle selection is ready.
   m_drawSelectionBox = true;
   m_end = Vector2(e->pos().x(), e->pos().y());
   emit drawablesChanged();
 
   e->accept();
-#endif
   return nullptr;
 }
 
-QUndoCommand* SelectionTool::keyPressEvent(QKeyEvent* e)
+QUndoCommand* SelectionTool::keyPressEvent(QKeyEvent*)
 {
   return nullptr;
 }
@@ -206,21 +226,29 @@ void SelectionTool::applyColor(Vector3ub color)
   m_molecule->emitChanged(Molecule::Atoms);
 }
 
+void SelectionTool::clearAtoms()
+{
+  for (Index i = 0; i < m_molecule->atomCount(); ++i)
+    m_molecule->atom(i).setSelected(false);
+}
+
 bool SelectionTool::addAtom(const Rendering::Identifier& atom)
 {
-  int idx = m_atoms.indexOf(atom);
-  if (idx >= 0) {
-    m_atoms.removeAt(idx);
-    m_molecule->atom(atom.index).setSelected(false);
-    return true;
-  } else {
-    m_atoms.push_back(atom);
-    Atom selectedAtom = m_molecule->atom(atom.index);
-    selectedAtom.setSelected(true);
-    m_toolWidget->setColor(selectedAtom.color());
-    return true;
-  }
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->atom(atom.index).setSelected(true);
+  return true;
+}
+
+bool SelectionTool::removeAtom(const Rendering::Identifier& atom)
+{
+  m_molecule->atom(atom.index).setSelected(false);
+  return true;
+}
+
+bool SelectionTool::toggleAtom(const Rendering::Identifier& atom)
+{
+  Atom a = m_molecule->atom(atom.index);
+  a.setSelected(!a.selected());
+  return true;
 }
 
 } // namespace QtPlugins

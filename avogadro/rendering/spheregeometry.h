@@ -87,6 +87,21 @@ public:
     const Vector3f& rayDirection) const override;
 
   /**
+   * Return the primitives within the supplied frustrum.
+   */
+  Core::Array<Identifier> areaHits(const Frustrum& f) const override;
+
+  /**
+   * Set the opacity of the spheres in this group.
+   */
+  void setOpacity(float o)
+  {
+    m_opacity = o;
+    if (o < 1.0f)
+      setRenderPass(TranslucentPass);
+  }
+
+  /**
    * Add a sphere to the geometry object.
    */
   void addSphere(const Vector3f& position, const Vector3ub& color,
@@ -113,6 +128,8 @@ private:
   Core::Array<size_t> m_indices;
 
   bool m_dirty;
+
+  float m_opacity = 1.0f;
 
   class Private;
   Private* d;
