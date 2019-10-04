@@ -19,6 +19,7 @@
 
 #include "configdialog.h"
 #include "girderrequest.h"
+#include "listmoleculesmodel.h"
 
 #include <QMessageBox>
 #include <QNetworkAccessManager>
@@ -31,9 +32,11 @@ namespace QtPlugins {
 
 MongoChemWidget::MongoChemWidget(QWidget* parent)
   : QWidget(parent), m_ui(new Ui::MongoChemWidget),
-    m_networkManager(new QNetworkAccessManager(this))
+    m_networkManager(new QNetworkAccessManager(this)),
+    m_listMoleculesModel(new ListMoleculesModel(this))
 {
   m_ui->setupUi(this);
+  m_ui->tableMolecules->setModel(m_listMoleculesModel.data());
   setupConnections();
 }
 
@@ -119,7 +122,7 @@ void MongoChemWidget::search()
 void MongoChemWidget::finishSearch(const QVariantMap& results)
 {
   // Clear the table
-  m_ui->tableMolecules->clearContents();
+  m_listMoleculesModel->clear();
   auto resultList = results.value("results").toList();
   int matches = resultList.size();
   if (matches == 0) {
@@ -127,20 +130,8 @@ void MongoChemWidget::finishSearch(const QVariantMap& results)
     return;
   }
 
-  m_ui->tableMolecules->setRowCount(matches);
   for (int i = 0; i < matches; ++i) {
-    QString formula = resultList[i]
-                        .toMap()
-                        .value("properties")
-                        .toMap()
-                        .value("formula")
-                        .toString();
-    QString smiles = resultList[i].toMap().value("smiles").toString();
-    QString inchikey = resultList[i].toMap().value("inchikey").toString();
-
-    m_ui->tableMolecules->setItem(i, 0, new QTableWidgetItem(formula));
-    m_ui->tableMolecules->setItem(i, 1, new QTableWidgetItem(smiles));
-    m_ui->tableMolecules->setItem(i, 2, new QTableWidgetItem(inchikey));
+    m_listMoleculesModel->addMolecule(resultList[i].toMap());
   }
 }
 

@@ -6,6 +6,7 @@ set(srcs
   mongochemwidget.cpp
   girderrequest.cpp
   configdialog.cpp
+  listmoleculesmodel.cpp
 )
 
 set(uis

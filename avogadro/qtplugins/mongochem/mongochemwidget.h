@@ -32,6 +32,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 class ConfigDialog;
+class ListMoleculesModel;
 
 class MongoChemWidget : public QWidget
 {
@@ -59,6 +60,7 @@ private:
   QScopedPointer<Ui::MongoChemWidget> m_ui;
   QScopedPointer<QNetworkAccessManager> m_networkManager;
   QScopedPointer<ConfigDialog> m_configDialog;
+  QScopedPointer<ListMoleculesModel> m_listMoleculesModel;
 };
 
 } // namespace QtPlugins
