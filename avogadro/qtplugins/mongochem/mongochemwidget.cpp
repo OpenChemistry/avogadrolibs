@@ -130,7 +130,9 @@ void MongoChemWidget::finishSearch(const QVariantMap& results)
   auto resultList = results.value("results").toList();
   int matches = resultList.size();
   if (matches == 0) {
-    qDebug() << "No results found!";
+    QString message = "No results found!";
+    qDebug() << message;
+    QMessageBox::critical(this, "MongoChem", message);
     return;
   }
 
@@ -154,7 +156,9 @@ void MongoChemWidget::downloadSelectedMolecule()
 {
   int row = selectedRow();
   if (row < 0) {
-    qDebug() << "No molecule selected!";
+    QString message = "No molecule selected!";
+    qDebug() << message;
+    QMessageBox::critical(this, "MongoChem", message);
     return;
   }
 
