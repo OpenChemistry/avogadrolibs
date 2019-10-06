@@ -95,6 +95,17 @@ QString ListMoleculesModel::moleculeId(int row)
   return m_molecules[row]["_id"].toString();
 }
 
+QString ListMoleculesModel::moleculeName(int row)
+{
+  auto name = m_molecules[row]["name"].toString();
+
+  // If there is no name, use the formula instead
+  if (name.isEmpty())
+    name = m_molecules[row]["properties"].toMap()["formula"].toString();
+
+  return name;
+}
+
 void ListMoleculesModel::addMolecule(const QVariantMap& mol)
 {
   beginInsertRows(QModelIndex(), m_molecules.size(), m_molecules.size());

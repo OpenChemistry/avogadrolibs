@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_LISTMOLECULESMODEL
-#define AVOGADRO_QTPLUGINS_LISTMOLECULESMODEL
+#ifndef AVOGADRO_QTPLUGINS_LISTMOLECULESMODEL_H
+#define AVOGADRO_QTPLUGINS_LISTMOLECULESMODEL_H
 
 #include <QAbstractTableModel>
 #include <QList>
@@ -39,6 +39,7 @@ public:
                       int role) const override;
 
   QString moleculeId(int row);
+  QString moleculeName(int row);
   void addMolecule(const QVariantMap& molecule);
   void deleteMolecule(const QModelIndex& index);
   void clear();
