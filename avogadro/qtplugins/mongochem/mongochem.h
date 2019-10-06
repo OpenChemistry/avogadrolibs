@@ -19,6 +19,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QByteArray>
 #include <QScopedPointer>
 
 class QAction;
@@ -47,8 +48,14 @@ public:
 
   QStringList menuPath(QAction*) const override;
 
+  // This will also emit moleculeReady(1)
+  void setMoleculeData(const QByteArray& data);
+  void setMoleculeName(const QString& name) { m_moleculeName = name; }
+
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
+
+  // This will also clear m_moleculeData and m_moleculeName
   bool readMolecule(QtGui::Molecule& mol) override;
 
 private slots:
@@ -61,6 +68,10 @@ private:
 
   QScopedPointer<QAction> m_action;
   QScopedPointer<QDialog> m_dialog;
+
+  // The data to be read by readMolecule()
+  QByteArray m_moleculeData;
+  QString m_moleculeName;
 };
 } // namespace QtPlugins
 } // namespace Avogadro

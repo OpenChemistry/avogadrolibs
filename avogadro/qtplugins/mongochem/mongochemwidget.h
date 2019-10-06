@@ -33,13 +33,14 @@ namespace QtPlugins {
 
 class ConfigDialog;
 class ListMoleculesModel;
+class MongoChem;
 
 class MongoChemWidget : public QWidget
 {
   Q_OBJECT
 
 public:
-  explicit MongoChemWidget(QWidget* parent = nullptr);
+  explicit MongoChemWidget(MongoChem* plugin, QWidget* parent = nullptr);
   ~MongoChemWidget() override;
 
 private slots:
@@ -47,11 +48,16 @@ private slots:
   void finishAuthentication(const QVariantMap& results);
   void search();
   void finishSearch(const QVariantMap& results);
+  void downloadSelectedMolecule();
+  void finishDownloadMolecule(const QVariantMap& results);
   void error(const QString& message, QNetworkReply* reply);
 
 private:
   void setupConnections();
   void authenticate();
+  int selectedRow();
+
+  MongoChem* m_plugin;
 
   QString m_girderUrl = "http://localhost:8080/api/v1";
   QString m_apiKey;

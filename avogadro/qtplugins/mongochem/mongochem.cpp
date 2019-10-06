@@ -18,6 +18,7 @@
 #include "mongochemwidget.h"
 
 #include <avogadro/io/fileformat.h>
+#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QAction>
@@ -51,9 +52,16 @@ void MongoChem::setMolecule(QtGui::Molecule* mol)
 
 bool MongoChem::readMolecule(QtGui::Molecule& mol)
 {
-  Q_UNUSED(mol)
+  bool ok = Io::FileFormatManager::instance().readString(
+    mol, m_moleculeData.data(), "cjson");
 
-  return false;
+  if (ok) // worked, so set the filename
+    mol.setData("name", m_moleculeName.toStdString());
+
+  m_moleculeData.clear();
+  m_moleculeName.clear();
+
+  return ok;
 }
 
 void MongoChem::menuActivated()
@@ -61,12 +69,18 @@ void MongoChem::menuActivated()
   if (!m_dialog) {
     m_dialog.reset(new QDialog(qobject_cast<QWidget*>(this)));
     auto* layout = new QVBoxLayout;
-    layout->addWidget(new MongoChemWidget);
+    layout->addWidget(new MongoChemWidget(this));
     m_dialog->setLayout(layout);
     m_dialog->setWindowTitle("MongoChem");
   }
 
   m_dialog->show();
+}
+
+void MongoChem::setMoleculeData(const QByteArray& data)
+{
+  m_moleculeData = data;
+  emit moleculeReady(1);
 }
 
 } // namespace QtPlugins

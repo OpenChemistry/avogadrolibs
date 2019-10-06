@@ -20,7 +20,9 @@
 #include "configdialog.h"
 #include "girderrequest.h"
 #include "listmoleculesmodel.h"
+#include "mongochem.h"
 
+#include <QJsonDocument>
 #include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -30,8 +32,8 @@ namespace Avogadro {
 
 namespace QtPlugins {
 
-MongoChemWidget::MongoChemWidget(QWidget* parent)
-  : QWidget(parent), m_ui(new Ui::MongoChemWidget),
+MongoChemWidget::MongoChemWidget(MongoChem* plugin, QWidget* parent)
+  : QWidget(parent), m_plugin(plugin), m_ui(new Ui::MongoChemWidget),
     m_networkManager(new QNetworkAccessManager(this)),
     m_listMoleculesModel(new ListMoleculesModel(this))
 {
@@ -48,6 +50,8 @@ void MongoChemWidget::setupConnections()
           &MongoChemWidget::search);
   connect(m_ui->pushConfig, &QPushButton::clicked, this,
           &MongoChemWidget::showConfig);
+  connect(m_ui->pushDownload, &QPushButton::clicked, this,
+          &MongoChemWidget::downloadSelectedMolecule);
 }
 
 void MongoChemWidget::authenticate()
@@ -133,6 +137,57 @@ void MongoChemWidget::finishSearch(const QVariantMap& results)
   for (int i = 0; i < matches; ++i) {
     m_listMoleculesModel->addMolecule(resultList[i].toMap());
   }
+}
+
+int MongoChemWidget::selectedRow()
+{
+  auto rows = m_ui->tableMolecules->selectionModel()->selectedRows();
+  if (rows.isEmpty()) {
+    qDebug() << "No row selected!";
+    return -1;
+  }
+
+  return rows[0].row();
+}
+
+void MongoChemWidget::downloadSelectedMolecule()
+{
+  int row = selectedRow();
+  if (row < 0) {
+    qDebug() << "No molecule selected!";
+    return;
+  }
+
+  auto moleculeId = m_listMoleculesModel->moleculeId(row);
+  auto moleculeName = m_listMoleculesModel->moleculeName(row);
+
+  // It would be better if we set the name after downloading the
+  // molecule succeeded, but that is currently not easy...
+  m_plugin->setMoleculeName(moleculeName);
+
+  QString url = (m_girderUrl + "/molecules/%1/cjson").arg(moleculeId);
+
+  auto* request =
+    new GirderRequest(m_networkManager.data(), url, m_girderToken);
+  request->get();
+
+  connect(request, &GirderRequest::result, this,
+          &MongoChemWidget::finishDownloadMolecule);
+  connect(request, &GirderRequest::error, this, &MongoChemWidget::error);
+  connect(request, &GirderRequest::result, request,
+          &GirderRequest::deleteLater);
+  connect(request, &GirderRequest::error, request, &GirderRequest::deleteLater);
+}
+
+void MongoChemWidget::finishDownloadMolecule(const QVariantMap& results)
+{
+  auto cjsonDoc = QJsonDocument::fromVariant(results);
+  if (cjsonDoc.isEmpty()) {
+    qDebug() << "No cjson found in the results!";
+    return;
+  }
+
+  m_plugin->setMoleculeData(cjsonDoc.toJson());
 }
 
 void MongoChemWidget::error(const QString& message, QNetworkReply* reply)
