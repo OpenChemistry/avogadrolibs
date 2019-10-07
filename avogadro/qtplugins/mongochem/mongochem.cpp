@@ -55,13 +55,24 @@ bool MongoChem::readMolecule(QtGui::Molecule& mol)
   bool ok = Io::FileFormatManager::instance().readString(
     mol, m_moleculeData.data(), "cjson");
 
-  if (ok) // worked, so set the filename
+  if (ok)
     mol.setData("name", m_moleculeName.toStdString());
 
   m_moleculeData.clear();
   m_moleculeName.clear();
 
   return ok;
+}
+
+QString MongoChem::currentMoleculeCjson() const
+{
+  std::string ret;
+
+  if (!m_molecule)
+    return "";
+
+  Io::FileFormatManager::instance().writeString(*m_molecule, ret, "cjson");
+  return ret.c_str();
 }
 
 void MongoChem::menuActivated()

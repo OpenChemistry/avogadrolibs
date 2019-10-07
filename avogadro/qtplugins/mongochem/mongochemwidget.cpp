@@ -23,6 +23,7 @@
 #include "mongochem.h"
 
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -52,6 +53,8 @@ void MongoChemWidget::setupConnections()
           &MongoChemWidget::showConfig);
   connect(m_ui->pushDownload, &QPushButton::clicked, this,
           &MongoChemWidget::downloadSelectedMolecule);
+  connect(m_ui->pushUpload, &QPushButton::clicked, this,
+          &MongoChemWidget::uploadMolecule);
 }
 
 void MongoChemWidget::authenticate()
@@ -192,6 +195,50 @@ void MongoChemWidget::finishDownloadMolecule(const QVariantMap& results)
   }
 
   m_plugin->setMoleculeData(cjsonDoc.toJson());
+}
+
+void MongoChemWidget::uploadMolecule()
+{
+  if (m_girderToken.isEmpty()) {
+    QString message = "Login required to upload";
+    qDebug() << message;
+    QMessageBox::critical(this, "MongoChem", message);
+    return;
+  }
+
+  QString cjson = m_plugin->currentMoleculeCjson();
+
+  // If there is no molecule, the cjson will look like this:
+  // {\n  \"chemicalJson\": 1\n}
+  if (!cjson.contains("atoms")) {
+    QString message = "No molecule found!";
+    qDebug() << message;
+    QMessageBox::critical(this, "MongoChem", message);
+    return;
+  }
+  QJsonObject object({ { "cjson", cjson } });
+  QByteArray postData = QJsonDocument(object).toJson();
+
+  QString url = m_girderUrl + "/molecules";
+
+  auto* request =
+    new GirderRequest(m_networkManager.data(), url, m_girderToken);
+  request->setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+  request->post(postData);
+
+  connect(request, &GirderRequest::result, this,
+          &MongoChemWidget::finishUploadMolecule);
+  connect(request, &GirderRequest::error, this, &MongoChemWidget::error);
+  connect(request, &GirderRequest::result, request,
+          &GirderRequest::deleteLater);
+  connect(request, &GirderRequest::error, request, &GirderRequest::deleteLater);
+}
+
+void MongoChemWidget::finishUploadMolecule(const QVariantMap& results)
+{
+  QString message = "Upload succeeded!";
+  qDebug() << message;
+  QMessageBox::information(this, "MongoChem", message);
 }
 
 void MongoChemWidget::error(const QString& message, QNetworkReply* reply)

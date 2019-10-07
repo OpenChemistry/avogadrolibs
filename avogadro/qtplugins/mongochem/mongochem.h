@@ -52,6 +52,9 @@ public:
   void setMoleculeData(const QByteArray& data);
   void setMoleculeName(const QString& name) { m_moleculeName = name; }
 
+  // Returns the cjson of the current molecule as a QString
+  QString currentMoleculeCjson() const;
+
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 

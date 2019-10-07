@@ -50,6 +50,8 @@ private slots:
   void finishSearch(const QVariantMap& results);
   void downloadSelectedMolecule();
   void finishDownloadMolecule(const QVariantMap& results);
+  void uploadMolecule();
+  void finishUploadMolecule(const QVariantMap& results);
   void error(const QString& message, QNetworkReply* reply);
 
 private:
