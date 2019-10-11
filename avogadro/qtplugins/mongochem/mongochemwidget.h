@@ -45,14 +45,14 @@ public:
 
 private slots:
   void showConfig();
-  void finishAuthentication(const QVariantMap& results);
+  void finishAuthentication(const QVariant& results);
   void search();
-  void finishSearch(const QVariantMap& results);
+  void finishSearch(const QVariant& results);
   void downloadSelectedMolecule();
-  void finishDownloadMolecule(const QVariantMap& results);
+  void finishDownloadMolecule(const QVariant& results);
   void uploadMolecule();
-  void finishUploadMolecule(const QVariantMap& results);
-  void error(const QString& message, QNetworkReply* reply);
+  void finishUploadMolecule(const QVariant& results);
+  void error(const QString& message, QNetworkReply* reply = nullptr);
 
 private:
   void setupConnections();

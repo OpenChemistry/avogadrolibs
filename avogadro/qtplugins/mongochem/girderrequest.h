@@ -55,7 +55,7 @@ signals:
   // Emitted when there is an error
   void error(const QString& msg, QNetworkReply* networkReply = nullptr);
   // Emitted when there are results
-  void result(const QVariantMap& results);
+  void result(const QVariant& results);
 
 protected slots:
   void onFinished();

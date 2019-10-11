@@ -80,10 +80,10 @@ void MongoChemWidget::authenticate()
   connect(request, &GirderRequest::error, request, &GirderRequest::deleteLater);
 }
 
-void MongoChemWidget::finishAuthentication(const QVariantMap& results)
+void MongoChemWidget::finishAuthentication(const QVariant& results)
 {
 
-  m_girderToken = results.value("authToken").toMap().value("token").toString();
+  m_girderToken = results.toMap()["authToken"].toMap()["token"].toString();
   if (!m_girderToken.isEmpty())
     QMessageBox::information(this, "MongoChem", "Authentication Successful!");
   else
@@ -126,11 +126,11 @@ void MongoChemWidget::search()
   connect(request, &GirderRequest::error, request, &GirderRequest::deleteLater);
 }
 
-void MongoChemWidget::finishSearch(const QVariantMap& results)
+void MongoChemWidget::finishSearch(const QVariant& results)
 {
   // Clear the table
   m_listMoleculesModel->clear();
-  auto resultList = results.value("results").toList();
+  auto resultList = results.toMap()["results"].toList();
   int matches = resultList.size();
   if (matches == 0) {
     QString message = "No results found!";
@@ -186,7 +186,7 @@ void MongoChemWidget::downloadSelectedMolecule()
   connect(request, &GirderRequest::error, request, &GirderRequest::deleteLater);
 }
 
-void MongoChemWidget::finishDownloadMolecule(const QVariantMap& results)
+void MongoChemWidget::finishDownloadMolecule(const QVariant& results)
 {
   auto cjsonDoc = QJsonDocument::fromVariant(results);
   if (cjsonDoc.isEmpty()) {
@@ -234,8 +234,10 @@ void MongoChemWidget::uploadMolecule()
   connect(request, &GirderRequest::error, request, &GirderRequest::deleteLater);
 }
 
-void MongoChemWidget::finishUploadMolecule(const QVariantMap& results)
+void MongoChemWidget::finishUploadMolecule(const QVariant& results)
 {
+  Q_UNUSED(results)
+
   QString message = "Upload succeeded!";
   qDebug() << message;
   QMessageBox::information(this, "MongoChem", message);

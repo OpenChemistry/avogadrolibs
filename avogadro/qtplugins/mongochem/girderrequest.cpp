@@ -100,7 +100,7 @@ void GirderRequest::onFinished()
     emit error(handleGirderError(reply, bytes), reply);
   } else {
     QJsonDocument jsonResponse = QJsonDocument::fromJson(bytes.constData());
-    emit result(jsonResponse.toVariant().toMap());
+    emit result(jsonResponse.toVariant());
   }
 }
 
