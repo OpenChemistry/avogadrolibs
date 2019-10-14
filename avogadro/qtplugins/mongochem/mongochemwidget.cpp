@@ -22,6 +22,7 @@
 #include "listmoleculesmodel.h"
 #include "mongochem.h"
 #include "calculationsubmitter.h"
+#include "calculationwatcher.h"
 #include "submitcalculationdialog.h"
 
 #include <QJsonDocument>
@@ -301,6 +302,31 @@ void MongoChemWidget::finishSubmitCalculation(const QVariantMap& results)
   QString message = "Calculation submitted!";
   qDebug() << message;
   QMessageBox::information(this, "MongoChem", message);
+
+  QString pendingCalculationId = results["pendingCalculationId"].toString();
+
+  auto watcher = new CalculationWatcher(m_networkManager, m_girderUrl,
+                                        m_girderToken, pendingCalculationId,
+                                        this);
+
+  watcher->start();
+
+  connect(watcher, &CalculationWatcher::finished,
+          this, &MongoChemWidget::finishWatchCalculation);
+  connect(watcher, &CalculationWatcher::error, this, &MongoChemWidget::error);
+  connect(watcher, &CalculationWatcher::finished,
+          watcher, &CalculationWatcher::deleteLater);
+  connect(watcher, &CalculationWatcher::error,
+          watcher, &CalculationWatcher::deleteLater);
+}
+
+void MongoChemWidget::finishWatchCalculation(const QByteArray& cjson)
+{
+  QString msg = "Calculation complete. Download the results?";
+  if (QMessageBox::question(this, "MongoChem", msg)) {
+    m_plugin->setMoleculeName("calculation");
+    m_plugin->setMoleculeData(cjson);
+  }
 }
 
 void MongoChemWidget::error(const QString& message, QNetworkReply* reply)

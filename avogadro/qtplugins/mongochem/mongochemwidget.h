@@ -56,6 +56,7 @@ private slots:
   void finishUploadMolecule(const QVariant& results);
   void submitCalculation();
   void finishSubmitCalculation(const QVariantMap& results);
+  void finishWatchCalculation(const QByteArray& cjson);
   void error(const QString& message, QNetworkReply* reply = nullptr);
 
 private:

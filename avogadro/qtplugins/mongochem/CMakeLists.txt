@@ -8,6 +8,7 @@ set(srcs
   configdialog.cpp
   listmoleculesmodel.cpp
   calculationsubmitter.cpp
+  calculationwatcher.cpp
   submitcalculationdialog.cpp
 )
 
