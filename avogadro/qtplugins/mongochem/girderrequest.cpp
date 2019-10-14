@@ -38,6 +38,33 @@ GirderRequest::GirderRequest(QNetworkAccessManager* networkManager,
     m_networkManager(networkManager)
 {}
 
+void GirderRequest::get()
+{
+  QUrl url(m_girderUrl);
+
+  if (!m_urlQueries.isEmpty()) {
+    // For Qt>=5.13, we can initialize QUrlQuery with m_urlQueries
+    QUrlQuery query;
+    query.setQueryItems(m_urlQueries);
+    url.setQuery(query);
+  }
+
+  QNetworkRequest request(url);
+
+  // Only set the girder token if there is one
+  if (!m_girderToken.isEmpty())
+    request.setRawHeader(QByteArray("Girder-Token"), m_girderToken.toUtf8());
+
+  for (auto key : m_headers.keys())
+    request.setHeader(key, m_headers[key]);
+
+  auto reply = m_networkManager->get(request);
+  connect(reply, &QNetworkReply::finished, this, &GirderRequest::onFinished);
+
+  // Delete it after all the connected slots have been called
+  connect(reply, &QNetworkReply::finished, reply, &QNetworkReply::deleteLater);
+}
+
 void GirderRequest::post(const QByteArray& data)
 {
   QUrl url(m_girderUrl);
@@ -65,7 +92,7 @@ void GirderRequest::post(const QByteArray& data)
   connect(reply, &QNetworkReply::finished, reply, &QNetworkReply::deleteLater);
 }
 
-void GirderRequest::get()
+void GirderRequest::put(const QByteArray& data)
 {
   QUrl url(m_girderUrl);
 
@@ -78,14 +105,14 @@ void GirderRequest::get()
 
   QNetworkRequest request(url);
 
-  // Only set the girder token if there is one
   if (!m_girderToken.isEmpty())
     request.setRawHeader(QByteArray("Girder-Token"), m_girderToken.toUtf8());
 
   for (auto key : m_headers.keys())
     request.setHeader(key, m_headers[key]);
 
-  auto reply = m_networkManager->get(request);
+  auto reply = m_networkManager->put(request, data);
+
   connect(reply, &QNetworkReply::finished, this, &GirderRequest::onFinished);
 
   // Delete it after all the connected slots have been called

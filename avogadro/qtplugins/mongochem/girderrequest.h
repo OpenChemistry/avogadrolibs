@@ -40,6 +40,7 @@ public:
   // Calls the respective HTTP method on the girder url
   void get();
   void post(const QByteArray& data);
+  void put(const QByteArray& data);
 
   void setUrlQueries(const QList<QPair<QString, QString>>& queries)
   {
