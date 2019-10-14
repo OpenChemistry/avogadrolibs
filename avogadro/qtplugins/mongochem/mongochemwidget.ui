@@ -20,21 +20,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="3">
-    <widget class="QPushButton" name="pushConfig">
-     <property name="text">
-      <string>Config</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QPushButton" name="pushDownload">
-     <property name="text">
-      <string>Download</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="4">
+   <item row="0" column="0" colspan="5">
     <widget class="QTableView" name="tableMolecules">
      <property name="selectionMode">
       <enum>QAbstractItemView::SingleSelection</enum>
@@ -53,10 +39,17 @@
      </attribute>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QPushButton" name="pushSearch">
+   <item row="1" column="4">
+    <widget class="QPushButton" name="pushConfig">
      <property name="text">
-      <string>Search</string>
+      <string>Config</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="pushDownload">
+     <property name="text">
+      <string>Download</string>
      </property>
     </widget>
    </item>
@@ -64,6 +57,20 @@
     <widget class="QPushButton" name="pushUpload">
      <property name="text">
       <string>Upload</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="pushSearch">
+     <property name="text">
+      <string>Search</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QPushButton" name="pushSubmitCalculation">
+     <property name="text">
+      <string>Submit Calculation...</string>
      </property>
     </widget>
    </item>

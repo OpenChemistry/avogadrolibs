@@ -18,6 +18,7 @@
 #define AVOGADRO_QTPLUGINS_MONGOCHEMWIDGET_H
 
 #include <QScopedPointer>
+#include <QSharedPointer>
 #include <QWidget>
 
 namespace Ui {
@@ -34,6 +35,7 @@ namespace QtPlugins {
 class ConfigDialog;
 class ListMoleculesModel;
 class MongoChem;
+class SubmitCalculationDialog;
 
 class MongoChemWidget : public QWidget
 {
@@ -52,6 +54,8 @@ private slots:
   void finishDownloadMolecule(const QVariant& results);
   void uploadMolecule();
   void finishUploadMolecule(const QVariant& results);
+  void submitCalculation();
+  void finishSubmitCalculation(const QVariantMap& results);
   void error(const QString& message, QNetworkReply* reply = nullptr);
 
 private:
@@ -66,9 +70,10 @@ private:
   QString m_girderToken;
 
   QScopedPointer<Ui::MongoChemWidget> m_ui;
-  QScopedPointer<QNetworkAccessManager> m_networkManager;
+  QSharedPointer<QNetworkAccessManager> m_networkManager;
   QScopedPointer<ConfigDialog> m_configDialog;
   QScopedPointer<ListMoleculesModel> m_listMoleculesModel;
+  QScopedPointer<SubmitCalculationDialog> m_submitCalculationDialog;
 };
 
 } // namespace QtPlugins

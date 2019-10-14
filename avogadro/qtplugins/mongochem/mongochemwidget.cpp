@@ -21,6 +21,8 @@
 #include "girderrequest.h"
 #include "listmoleculesmodel.h"
 #include "mongochem.h"
+#include "calculationsubmitter.h"
+#include "submitcalculationdialog.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -55,6 +57,8 @@ void MongoChemWidget::setupConnections()
           &MongoChemWidget::downloadSelectedMolecule);
   connect(m_ui->pushUpload, &QPushButton::clicked, this,
           &MongoChemWidget::uploadMolecule);
+  connect(m_ui->pushSubmitCalculation, &QPushButton::clicked, this,
+          &MongoChemWidget::submitCalculation);
 }
 
 void MongoChemWidget::authenticate()
@@ -238,7 +242,63 @@ void MongoChemWidget::finishUploadMolecule(const QVariant& results)
 {
   Q_UNUSED(results)
 
-  QString message = "Upload succeeded!";
+  QString message = "Upload successful!";
+  qDebug() << message;
+  QMessageBox::information(this, "MongoChem", message);
+}
+
+void MongoChemWidget::submitCalculation()
+{
+  if (m_girderToken.isEmpty()) {
+    QString message = "Login required to submit calculation";
+    qDebug() << message;
+    QMessageBox::critical(this, "MongoChem", message);
+    return;
+  }
+
+  QString cjson = m_plugin->currentMoleculeCjson();
+
+  // If there is no molecule, the cjson will look like this:
+  // {\n  \"chemicalJson\": 1\n}
+  if (!cjson.contains("atoms")) {
+    QString message = "No molecule found!";
+    qDebug() << message;
+    QMessageBox::critical(this, "MongoChem", message);
+    return;
+  }
+
+  if (!m_submitCalculationDialog)
+    m_submitCalculationDialog.reset(new SubmitCalculationDialog);
+
+  if (!m_submitCalculationDialog->exec())
+    return;
+
+  QString container = m_submitCalculationDialog->containerName();
+  QString image = m_submitCalculationDialog->imageName();
+  QVariantMap inputParameters = m_submitCalculationDialog->inputParameters();
+
+  auto calcSubmitter = new CalculationSubmitter(m_networkManager, m_girderUrl,
+                                                m_girderToken, this);
+
+  calcSubmitter->setMoleculeCjson(cjson);
+  calcSubmitter->setContainerName(container);
+  calcSubmitter->setImageName(image);
+  calcSubmitter->setInputParameters(inputParameters);
+  calcSubmitter->start();
+
+  connect(calcSubmitter, &CalculationSubmitter::finished,
+          this, &MongoChemWidget::finishSubmitCalculation);
+  connect(calcSubmitter, &CalculationSubmitter::error,
+          this, &MongoChemWidget::error);
+  connect(calcSubmitter, &CalculationSubmitter::finished,
+          calcSubmitter, &CalculationSubmitter::deleteLater);
+  connect(calcSubmitter, &CalculationSubmitter::error,
+          calcSubmitter, &CalculationSubmitter::deleteLater);
+}
+
+void MongoChemWidget::finishSubmitCalculation(const QVariantMap& results)
+{
+  QString message = "Calculation submitted!";
   qDebug() << message;
   QMessageBox::information(this, "MongoChem", message);
 }

@@ -7,11 +7,14 @@ set(srcs
   girderrequest.cpp
   configdialog.cpp
   listmoleculesmodel.cpp
+  calculationsubmitter.cpp
+  submitcalculationdialog.cpp
 )
 
 set(uis
   mongochemwidget.ui
   configdialog.ui
+  submitcalculationdialog.ui
 )
 
 avogadro_plugin(MongoChem
