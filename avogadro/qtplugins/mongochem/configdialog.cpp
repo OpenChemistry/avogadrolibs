@@ -40,7 +40,12 @@ void ConfigDialog::setApiKey(const QString& apiKey)
 
 QString ConfigDialog::girderUrl() const
 {
-  return m_ui->girderUrl->text();
+  QString url = m_ui->girderUrl->text();
+  if (!url.endsWith("/api/v1")) {
+    // Append this automatically...
+    url += "/api/v1";
+  }
+  return url;
 }
 
 QString ConfigDialog::apiKey() const
