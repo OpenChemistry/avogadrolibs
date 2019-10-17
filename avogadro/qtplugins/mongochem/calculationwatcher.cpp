@@ -23,6 +23,8 @@
 #include <QNetworkReply>
 #include <QTimer>
 
+#include <QDebug>
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -55,6 +57,8 @@ void CalculationWatcher::checkCalculation()
     new GirderRequest(m_networkManager.data(), url, m_girderToken);
   request->get();
 
+  qDebug() << "Checking calculation status...";
+
   connect(request, &GirderRequest::result, this,
           &CalculationWatcher::finishCheckCalculation);
   connect(request, &GirderRequest::error, this,
@@ -79,10 +83,13 @@ void CalculationWatcher::finishCheckCalculation(const QVariant& results)
   // We assume the calculation is done when the cjson is present
   QVariantMap cjson = results.toMap()["cjson"].toMap();
   if (cjson.isEmpty()) {
+    qDebug() << "Calculation still running. Trying again in 5 seconds...";
     // No results yet. Try again in 5 seconds.
     QTimer::singleShot(5000, this, &CalculationWatcher::checkCalculation);
     return;
   }
+
+  qDebug() << "Calculation is complete!";
 
   QByteArray cjsonData =
     QJsonDocument::fromVariant(cjson).toJson(QJsonDocument::Compact);
