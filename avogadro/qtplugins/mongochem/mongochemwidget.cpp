@@ -30,6 +30,7 @@
 #include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QSettings>
 #include <QTableWidgetItem>
 
 namespace Avogadro {
@@ -43,6 +44,7 @@ MongoChemWidget::MongoChemWidget(MongoChem* plugin, QWidget* parent)
 {
   m_ui->setupUi(this);
   m_ui->tableMolecules->setModel(m_listMoleculesModel.data());
+  readSettings();
   setupConnections();
 }
 
@@ -60,6 +62,24 @@ void MongoChemWidget::setupConnections()
           &MongoChemWidget::uploadMolecule);
   connect(m_ui->pushSubmitCalculation, &QPushButton::clicked, this,
           &MongoChemWidget::submitCalculation);
+}
+
+void MongoChemWidget::readSettings()
+{
+  QSettings settings;
+  settings.beginGroup("mongochem");
+  m_girderUrl = settings.value("girderUrl", m_girderUrl).toString();
+  m_apiKey = settings.value("apiKey", m_apiKey).toString();
+  settings.endGroup();
+}
+
+void MongoChemWidget::writeSettings()
+{
+  QSettings settings;
+  settings.beginGroup("mongochem");
+  settings.setValue("girderUrl", m_girderUrl);
+  settings.setValue("apiKey", m_apiKey);
+  settings.endGroup();
 }
 
 void MongoChemWidget::authenticate()
@@ -109,6 +129,8 @@ void MongoChemWidget::showConfig()
     m_apiKey = m_configDialog->apiKey();
     if (!m_apiKey.isEmpty())
       authenticate();
+
+    writeSettings();
   }
 }
 

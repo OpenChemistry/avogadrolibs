@@ -59,6 +59,9 @@ private slots:
   void finishWatchCalculation(const QByteArray& cjson);
   void error(const QString& message, QNetworkReply* reply = nullptr);
 
+  void readSettings();
+  void writeSettings();
+
 private:
   void setupConnections();
   void authenticate();
