@@ -17,12 +17,12 @@
 #include "mongochemwidget.h"
 #include "ui_mongochemwidget.h"
 
+#include "calculationsubmitter.h"
+#include "calculationwatcher.h"
 #include "configdialog.h"
 #include "girderrequest.h"
 #include "listmoleculesmodel.h"
 #include "mongochem.h"
-#include "calculationsubmitter.h"
-#include "calculationwatcher.h"
 #include "submitcalculationdialog.h"
 
 #include <QJsonDocument>
@@ -309,14 +309,14 @@ void MongoChemWidget::submitCalculation()
   calcSubmitter->setInputParameters(inputParameters);
   calcSubmitter->start();
 
-  connect(calcSubmitter, &CalculationSubmitter::finished,
-          this, &MongoChemWidget::finishSubmitCalculation);
-  connect(calcSubmitter, &CalculationSubmitter::error,
-          this, &MongoChemWidget::error);
-  connect(calcSubmitter, &CalculationSubmitter::finished,
-          calcSubmitter, &CalculationSubmitter::deleteLater);
-  connect(calcSubmitter, &CalculationSubmitter::error,
-          calcSubmitter, &CalculationSubmitter::deleteLater);
+  connect(calcSubmitter, &CalculationSubmitter::finished, this,
+          &MongoChemWidget::finishSubmitCalculation);
+  connect(calcSubmitter, &CalculationSubmitter::error, this,
+          &MongoChemWidget::error);
+  connect(calcSubmitter, &CalculationSubmitter::finished, calcSubmitter,
+          &CalculationSubmitter::deleteLater);
+  connect(calcSubmitter, &CalculationSubmitter::error, calcSubmitter,
+          &CalculationSubmitter::deleteLater);
 }
 
 void MongoChemWidget::finishSubmitCalculation(const QVariantMap& results)
@@ -327,19 +327,18 @@ void MongoChemWidget::finishSubmitCalculation(const QVariantMap& results)
 
   QString pendingCalculationId = results["pendingCalculationId"].toString();
 
-  auto watcher = new CalculationWatcher(m_networkManager, m_girderUrl,
-                                        m_girderToken, pendingCalculationId,
-                                        this);
+  auto watcher = new CalculationWatcher(
+    m_networkManager, m_girderUrl, m_girderToken, pendingCalculationId, this);
 
   watcher->start();
 
-  connect(watcher, &CalculationWatcher::finished,
-          this, &MongoChemWidget::finishWatchCalculation);
+  connect(watcher, &CalculationWatcher::finished, this,
+          &MongoChemWidget::finishWatchCalculation);
   connect(watcher, &CalculationWatcher::error, this, &MongoChemWidget::error);
-  connect(watcher, &CalculationWatcher::finished,
-          watcher, &CalculationWatcher::deleteLater);
-  connect(watcher, &CalculationWatcher::error,
-          watcher, &CalculationWatcher::deleteLater);
+  connect(watcher, &CalculationWatcher::finished, watcher,
+          &CalculationWatcher::deleteLater);
+  connect(watcher, &CalculationWatcher::error, watcher,
+          &CalculationWatcher::deleteLater);
 }
 
 void MongoChemWidget::finishWatchCalculation(const QByteArray& cjson)
