@@ -52,6 +52,8 @@ class AVOGADRORENDERING_EXPORT Camera
 {
 public:
   Camera();
+  Camera(const Camera& o);
+  Camera& operator=(const Camera& o);
   ~Camera();
 
   /**
@@ -222,7 +224,7 @@ private:
   float m_pixelScale;
   Projection m_projectionType;
   float m_orthographicScale;
-  std::shared_ptr<EigenData> m_data;
+  std::unique_ptr<EigenData> m_data;
 };
 
 inline const Eigen::Affine3f& Camera::projection() const

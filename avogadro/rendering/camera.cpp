@@ -31,6 +31,26 @@ Camera::Camera()
   m_data->modelView.setIdentity();
 }
 
+Camera::Camera(const Camera& o)
+  : m_width(o.m_width), m_height(o.m_height), m_pixelScale(o.m_pixelScale),
+    m_projectionType(o.m_projectionType),
+    m_orthographicScale(o.m_orthographicScale), m_data(new EigenData(*o.m_data))
+{}
+
+Camera& Camera::operator=(const Camera& o)
+{
+  if (this != &o) {
+    m_width = o.m_width;
+    m_height = o.m_height;
+    m_pixelScale = o.m_pixelScale;
+    m_projectionType = o.m_projectionType;
+    m_orthographicScale = o.m_orthographicScale;
+    m_data = std::move(std::unique_ptr<EigenData>(new EigenData(*o.m_data)));
+  }
+
+  return *this;
+}
+
 Camera::~Camera() {}
 
 void Camera::translate(const Vector3f& translate_)
