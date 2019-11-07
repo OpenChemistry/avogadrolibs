@@ -90,6 +90,40 @@ void CalculationSubmitter::finishUploadMolecule(const QVariant& results)
     return;
   }
 
+  // Now, upload the particular geometry that we will use
+  uploadGeometry();
+}
+
+void CalculationSubmitter::uploadGeometry()
+{
+  QByteArray postData = m_moleculeCjson.toLatin1();
+
+  QString url =(m_girderUrl + "/molecules/%1/geometries").arg(m_moleculeId);
+
+  QList<QPair<QString, QString>> urlQueries = {
+    { "provenanceType", "Uploaded from Avogadro2" }
+  };
+
+  auto* request =
+    new GirderRequest(m_networkManager.data(), url, m_girderToken);
+  request->setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+  request->setUrlQueries(urlQueries);
+  request->post(postData);
+
+  connect(request, &GirderRequest::result, this,
+          &CalculationSubmitter::finishUploadGeometry);
+  connect(request, &GirderRequest::error, this, &CalculationSubmitter::error);
+  deleteRequestWhenFinished(request);
+}
+
+void CalculationSubmitter::finishUploadGeometry(const QVariant& results)
+{
+  m_geometryId = results.toMap()["_id"].toString();
+  if (m_geometryId.isEmpty()) {
+    emit error("Failed to upload geometry!");
+    return;
+  }
+
   // Now, make sure the calculation has not already been done before.
   fetchCalculation();
 }
@@ -105,6 +139,7 @@ void CalculationSubmitter::fetchCalculation()
 
   QList<QPair<QString, QString>> urlQueries = {
     { "moleculeId", m_moleculeId },
+    { "geometryId", m_geometryId },
     { "inputParameters", inputParams },
     { "imageName", QString("%1:%2").arg(repository).arg(tag) }
   };
@@ -272,6 +307,7 @@ void CalculationSubmitter::createPendingCalculation()
 
   QJsonObject json;
   json["moleculeId"] = m_moleculeId;
+  json["geometryId"] = m_geometryId;
   json["public"] = true;
   json["cjson"] = QJsonValue();
 
