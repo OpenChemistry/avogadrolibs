@@ -54,6 +54,8 @@ private slots:
   void finishDownloadMolecule(const QVariant& results);
   void uploadMolecule();
   void finishUploadMolecule(const QVariant& results);
+  void uploadGeometry(const QString& moleculeId);
+  void finishUploadGeometry(const QVariant& results);
   void submitCalculation();
   void finishSubmitCalculation(const QVariantMap& results);
   void finishWatchCalculation(const QByteArray& cjson);

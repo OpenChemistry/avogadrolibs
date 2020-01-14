@@ -56,6 +56,9 @@ private slots:
   void uploadMolecule();
   void finishUploadMolecule(const QVariant& results);
 
+  void uploadGeometry();
+  void finishUploadGeometry(const QVariant& results);
+
   void fetchCalculation();
   void finishFetchCalculation(const QVariant& results);
 
@@ -94,6 +97,7 @@ private:
 
   // These will be set during the process
   QString m_moleculeId;
+  QString m_geometryId;
   QString m_pendingCalculationId;
   QString m_clusterId;
   QString m_queueId;

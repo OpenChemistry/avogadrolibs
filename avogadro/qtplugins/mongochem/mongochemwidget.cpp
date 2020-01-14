@@ -263,7 +263,51 @@ void MongoChemWidget::uploadMolecule()
 
 void MongoChemWidget::finishUploadMolecule(const QVariant& results)
 {
-  Q_UNUSED(results)
+  auto moleculeId = results.toMap()["_id"].toString();
+  if (moleculeId.isEmpty()) {
+    QString message = "Failed to upload molecule";
+    qDebug() << message;
+    QMessageBox::critical(this, "MongoChem", message);
+    return;
+  }
+
+  // Now, upload the particular geometry
+  uploadGeometry(moleculeId);
+}
+
+void MongoChemWidget::uploadGeometry(const QString& moleculeId)
+{
+  QByteArray postData = m_plugin->currentMoleculeCjson().toLatin1();
+
+  QString url =(m_girderUrl + "/molecules/%1/geometries").arg(moleculeId);
+
+  QList<QPair<QString, QString>> urlQueries = {
+    { "provenanceType", "Uploaded by Avogadro2 User" }
+  };
+
+  auto* request =
+    new GirderRequest(m_networkManager.data(), url, m_girderToken);
+  request->setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+  request->setUrlQueries(urlQueries);
+  request->post(postData);
+
+  connect(request, &GirderRequest::result, this,
+          &MongoChemWidget::finishUploadGeometry);
+  connect(request, &GirderRequest::error, this, &MongoChemWidget::error);
+  connect(request, &GirderRequest::result, request,
+          &GirderRequest::deleteLater);
+  connect(request, &GirderRequest::error, request, &GirderRequest::deleteLater);
+}
+
+void MongoChemWidget::finishUploadGeometry(const QVariant& results)
+{
+  auto geometryId = results.toMap()["_id"].toString();
+  if (geometryId.isEmpty()) {
+    QString message = "Failed to upload geometry";
+    qDebug() << message;
+    QMessageBox::critical(this, "MongoChem", message);
+    return;
+  }
 
   QString message = "Upload successful!";
   qDebug() << message;
