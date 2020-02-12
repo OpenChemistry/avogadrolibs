@@ -458,6 +458,14 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
   if (m_moleculeExtension == QLatin1String("None"))
     return true;
 
+  // insert the selected atoms
+  QJsonArray selectedList;
+  for (Index i = 0; i < mol.atomCount(); ++i) {
+    if (mol.atomSelected(i))
+      selectedList.append( (qint64)i );
+  }
+  json.insert("selectedatoms", selectedList);
+
   Io::FileFormatManager& formats = Io::FileFormatManager::instance();
   QScopedPointer<Io::FileFormat> format(
     formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
