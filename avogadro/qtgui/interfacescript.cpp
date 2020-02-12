@@ -462,7 +462,7 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
   QJsonArray selectedList;
   for (Index i = 0; i < mol.atomCount(); ++i) {
     if (mol.atomSelected(i))
-      selectedList.append((qint64)i);
+      selectedList.append(static_cast<qint64>(i));
   }
   json.insert("selectedatoms", selectedList);
 
