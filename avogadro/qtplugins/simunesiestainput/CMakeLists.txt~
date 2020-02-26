@@ -1,0 +1,21 @@
+find_package(MoleQueue)
+include_directories(${MoleQueue_INCLUDE_DIRS})
+
+# Extension
+set(simunesiestainput_srcs
+  simunesiestainputdialog.cpp
+  simunehanthighlighter.cpp
+  #inputdialog.cpp
+  simunesiestainput.cpp
+)
+
+avogadro_plugin(SimuneSiestaInput
+  "GAUSSIAN input file generation"
+  ExtensionPlugin
+  simunesiestainput.h
+  SimuneSiestaInput
+  "${simunesiestainput_srcs}"
+  simunesiestainputdialog.ui
+)
+
+target_link_libraries(SimuneSiestaInput LINK_PRIVATE AvogadroMoleQueue)

@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/Icons">
+        <file>fileopen.png</file>
+        <file>filesave.png</file>
+        <file>print.png</file>
+        <file>transm1.png</file>
+        <file>dos1.png</file>
+        <file>pdos1.png</file>
+        <file>help.png</file>
+        <file>simune40percent.png</file>
+    </qresource>
+</RCC>
