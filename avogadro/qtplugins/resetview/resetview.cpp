@@ -58,43 +58,58 @@ void ResetView::setCamera(Rendering::Camera *camera)
   m_camera = camera;
 }
 
+bool ResetView::defaultChecks()
+{
+    if (m_molecule == nullptr || m_camera == nullptr)
+      return true;
+
+    // Check for 3D coordinates - it's useless to consider the camera otherwise
+    if (m_molecule->atomPositions3d().size() != m_molecule->atomCount())
+      return true;
+
+    // no need to animate when there are no atoms
+    if(m_molecule->atomCount() == 0)  {
+      m_camera->translate( Eigen::Vector3f( 0.0, 0.0, -20.0 ) );
+      return true;
+    }
+    return false;
+}
+
+void ResetView::animationCamera(Eigen::Affine3f& goal)
+{
+    m_camera->setModelView(goal);
+}
+
 void ResetView::centerView()
 {
-  if (!m_molecule || m_camera)
-    return;
+  if (defaultChecks()) return;
 
-  // Check for 3D coordinates - it's useless to consider the camera otherwise
-  if (m_molecule->atomPositions3d().size() != m_molecule->atomCount())
-    return;
-
-  // no need to animate when there are no atoms
-  if(m_molecule->atomCount() == 0)  {
-    m_camera->translate( Eigen::Vector3d( 0.0, 0.0, -20.0 ) );
-    return;
-  }
-
-  Matrix3d linearGoal;
-  linearGoal.row(2) = d->glWidget->normalVector();
+  Eigen::Matrix3f linearGoal;
+  linearGoal.row(2) = Eigen::Vector3f( 0.0, 0.0, 1.0 );
   linearGoal.row(0) = linearGoal.row(2).unitOrthogonal();
   linearGoal.row(1) = linearGoal.row(2).cross(linearGoal.row(0));
-
   // calculate the translation matrix
-  Transform3d goal(linearGoal);
+  Eigen::Affine3f goal(linearGoal);
+  goal.pretranslate(- 3.0 * (40 + CAMERA_NEAR_DISTANCE) * Eigen::Vector3f::UnitZ());
 
-  goal.pretranslate(- 3.0 * (d->glWidget->radius() + CAMERA_NEAR_DISTANCE) * Vector3d::UnitZ());
+  animationCamera(goal);
 
-  m_camera->setModelView(goal);
   return;
 }
 
 void ResetView::alignToAxes()
 {
-  if (!m_molecule || m_camera)
-    return;
+      if (defaultChecks()) return;
 
-  // Check for 3D coordinates - it's useless to consider the camera otherwise
-  if (m_molecule->atomPositions3d().size() != m_molecule->atomCount())
-    return;
+      Eigen::Matrix3f linearGoal;
+      linearGoal.row(2) = Eigen::Vector3f( 0.0, 0.0, 1.0 );
+      linearGoal.row(0) = linearGoal.row(2).unitOrthogonal();
+      linearGoal.row(1) = linearGoal.row(2).cross(linearGoal.row(0));
+      // calculate the translation matrix
+      Eigen::Affine3f goal(linearGoal);
+      goal.pretranslate(- 3.0 * (20 + CAMERA_NEAR_DISTANCE) * Eigen::Vector3f::UnitZ());
+
+      animationCamera(goal);
 }
 
 } // namespace QtPlugins

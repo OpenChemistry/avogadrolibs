@@ -17,7 +17,10 @@
 #ifndef AVOGADRO_QTPLUGINS_RESETVIEW_H
 #define AVOGADRO_QTPLUGINS_RESETVIEW_H
 
+#define CAMERA_NEAR_DISTANCE 300 //Experimental number
+
 #include <avogadro/qtgui/extensionplugin.h>
+#include <Eigen/Geometry>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -29,13 +32,13 @@ public:
     explicit ResetView(QObject* parent_ = 0);
     ~ResetView() override;
 
-    QString name() const override { return tr("Reset view") }
+    QString name() const override { return tr("Reset view"); }
     QString description() const override { return tr("Manipulate the view camera.");}
     QList<QAction*> actions() const override;
     QStringList menuPath(QAction*) const override;
 public slots:
-    void setMolecule(QtGui::Molecule *mol) override;
-    void setCamera(Rendering::Camera *camera) override;
+    void setMolecule(QtGui::Molecule* mol) override;
+    void setCamera(Rendering::Camera* camera) override;
 
 private slots:
     void centerView();
@@ -46,6 +49,9 @@ private:
     Rendering::Camera* m_camera;
     QAction* m_centerAction;
     QAction* m_viewToAxesAction;
+
+    bool defaultChecks();
+    void animationCamera(Eigen::Affine3f& goal);
 
 };
 
