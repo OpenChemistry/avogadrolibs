@@ -16,10 +16,14 @@
 
 #include "resetview.h"
 
+
 #include <avogadro/rendering/camera.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtWidgets/QAction>
+
+#define CAMERA_NEAR_DISTANCE 15 //Experimental number
+
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -69,28 +73,74 @@ bool ResetView::defaultChecks()
 
     // no need to animate when there are no atoms
     if(m_molecule->atomCount() == 0)  {
-      m_camera->translate( Eigen::Vector3f( 0.0, 0.0, -20.0 ) );
+      animationCamera(NULL);
       return true;
     }
     return false;
 }
 
-void ResetView::animationCamera(Eigen::Affine3f& goal)
+void ResetView::animationCamera(Eigen::Affine3f *goal)
 {
-    m_camera->setModelView(goal);
+    if (goal == nullptr) {
+        Eigen::Matrix3f linearGoal = Eigen::Matrix3f::Identity();
+        goal = new Eigen::Affine3f(linearGoal);
+        goal->pretranslate(- 1.0f * CAMERA_NEAR_DISTANCE * Eigen::Vector3f::UnitZ());
+    }
+
+    m_camera->setModelView(*goal);
+}
+
+inline void getOBB(const Core::Array<Vector3> & mols, Vector3& centroid, Vector3& min, Vector3& mid, Vector3& max)
+{
+    centroid = Vector3::Zero();
+
+    for (unsigned int i = 0; i < mols.size(); ++i) {
+        centroid += mols[i];
+    }
+    centroid /= mols.size();
+    Matrix3 covariance = Matrix3::Zero();
+
+    for (unsigned int i = 0; i < mols.size(); ++i) {
+        Vector3 adjusted = mols[i] - centroid;
+        covariance += adjusted * adjusted.transpose();
+    }
+
+    Eigen::EigenSolver<Matrix3> solver = Eigen::EigenSolver<Matrix3>(covariance, true);
+    Eigen::Matrix3cd vectors = solver.eigenvectors();
+
+    if (vectors.col(0).norm() < vectors.col(1).norm() && vectors.col(0).norm() < vectors.col(2).norm()){
+        min = vectors.col(0).real();
+        max = (vectors.col(1).norm() > vectors.col(2).norm())? vectors.col(1).real() : vectors.col(2).real();
+        mid = (vectors.col(1).norm() > vectors.col(2).norm())? vectors.col(2).real() : vectors.col(1).real();
+    }
+    else if (vectors.col(1).norm() < vectors.col(2).norm()){
+        min = vectors.col(1).real();
+        max = (vectors.col(0).norm() > vectors.col(2).norm())? vectors.col(0).real() : vectors.col(2).real();
+        mid = (vectors.col(0).norm() > vectors.col(2).norm())? vectors.col(2).real() : vectors.col(0).real();
+    }
+    else {
+        min = vectors.col(2).real();
+        max = (vectors.col(0).norm() > vectors.col(1).norm())? vectors.col(0).real() : vectors.col(1).real();
+        mid = (vectors.col(0).norm() > vectors.col(1).norm())? vectors.col(1).real() : vectors.col(0).real();
+    }
 }
 
 void ResetView::centerView()
 {
   if (defaultChecks()) return;
 
+  const Core::Array<Vector3> mols = m_molecule->atomPositions3d();
+  Vector3 centroid, min, mid, max;
+  getOBB(mols, centroid, min, mid, max );
+
   Eigen::Matrix3f linearGoal;
-  linearGoal.row(2) = Eigen::Vector3f( 0.0, 0.0, 1.0 );
-  linearGoal.row(0) = linearGoal.row(2).unitOrthogonal();
-  linearGoal.row(1) = linearGoal.row(2).cross(linearGoal.row(0));
+
+  linearGoal.row(0) = (max.normalized()).cast<float>();
+  linearGoal.row(1) = (mid.normalized()).cast<float>();
+  linearGoal.row(2) = (min.normalized()).cast<float>();
   // calculate the translation matrix
-  Eigen::Affine3f goal(linearGoal);
-  goal.pretranslate(- 3.0 * (40 + CAMERA_NEAR_DISTANCE) * Eigen::Vector3f::UnitZ());
+  Eigen::Affine3f* goal = new Eigen::Affine3f(linearGoal);
+  goal->pretranslate(- 1.0f * CAMERA_NEAR_DISTANCE * Eigen::Vector3f::UnitZ());
 
   animationCamera(goal);
 
@@ -100,16 +150,7 @@ void ResetView::centerView()
 void ResetView::alignToAxes()
 {
       if (defaultChecks()) return;
-
-      Eigen::Matrix3f linearGoal;
-      linearGoal.row(2) = Eigen::Vector3f( 0.0, 0.0, 1.0 );
-      linearGoal.row(0) = linearGoal.row(2).unitOrthogonal();
-      linearGoal.row(1) = linearGoal.row(2).cross(linearGoal.row(0));
-      // calculate the translation matrix
-      Eigen::Affine3f goal(linearGoal);
-      goal.pretranslate(- 3.0 * (20 + CAMERA_NEAR_DISTANCE) * Eigen::Vector3f::UnitZ());
-
-      animationCamera(goal);
+      animationCamera(NULL);
 }
 
 } // namespace QtPlugins

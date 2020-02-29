@@ -17,8 +17,6 @@
 #ifndef AVOGADRO_QTPLUGINS_RESETVIEW_H
 #define AVOGADRO_QTPLUGINS_RESETVIEW_H
 
-#define CAMERA_NEAR_DISTANCE 300 //Experimental number
-
 #include <avogadro/qtgui/extensionplugin.h>
 #include <Eigen/Geometry>
 
@@ -51,7 +49,7 @@ private:
     QAction* m_viewToAxesAction;
 
     bool defaultChecks();
-    void animationCamera(Eigen::Affine3f& goal);
+    void animationCamera(Eigen::Affine3f *goal);
 
 };
 
