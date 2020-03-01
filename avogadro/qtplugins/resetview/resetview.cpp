@@ -16,11 +16,12 @@
 
 #include "resetview.h"
 
-
+#include <unsupported/Eigen/MatrixFunctions>
 #include <avogadro/rendering/camera.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtWidgets/QAction>
+#include <QTimer>
 
 #define CAMERA_NEAR_DISTANCE 13.35 //Experimental number
 
@@ -79,6 +80,7 @@ bool ResetView::defaultChecks()
   return false;
 }
 
+
 void ResetView::animationCamera(Eigen::Affine3f* goal, bool animate)
 {
   if (goal == nullptr) {
@@ -88,11 +90,39 @@ void ResetView::animationCamera(Eigen::Affine3f* goal, bool animate)
   }
 
   if(animate) {
+    Vector3f posGoal = goal->translation();
+    Matrix3f rot_aux;
+    Matrix3f scale_aux;
+    goal->computeRotationScaling(&rot_aux, &scale_aux);
+    Eigen::Quaternionf rotGoal = Eigen::Quaternionf(rot_aux);
+    Vector3f scaGoal = scale_aux.diagonal();
 
+    Eigen::Affine3f start = m_camera->modelView();
+
+    Vector3f posStart = start.translation();
+    start.computeRotationScaling(&rot_aux, &scale_aux);
+    Eigen::Quaternionf rotStart = Eigen::Quaternionf(rot_aux);
+    Vector3f scaStart = scale_aux.diagonal();
+
+    Eigen::Affine3f interpolation;
+    for(float alpha = 0.1f; alpha <= 1.0f; alpha += 0.1f) {
+      interpolation.fromPositionOrientationScale(
+        ((1.0f-alpha)*posStart) + (alpha*posGoal),
+        rotStart.slerp(alpha, rotGoal),
+        ((1.0f-alpha)*scaStart) + (alpha*scaGoal));
+
+      QTimer::singleShot(alpha*1000, this, [this, interpolation] (){
+        m_camera->setModelView(interpolation);
+      });
+
+    }
+    interpolation.fromPositionOrientationScale(posGoal, rotGoal, scaGoal);
+    QTimer::singleShot(1000, this, [this, interpolation] (){
+      m_camera->setModelView(interpolation);
+    });
   }
   else {
     m_camera->setModelView(*goal);
-
   }
 }
 
