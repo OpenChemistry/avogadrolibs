@@ -27,29 +27,30 @@ class ResetView : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-    explicit ResetView(QObject* parent_ = 0);
-    ~ResetView() override;
+  explicit ResetView(QObject* parent_ = 0);
+  ~ResetView() override;
 
-    QString name() const override { return tr("Reset view"); }
-    QString description() const override { return tr("Manipulate the view camera.");}
-    QList<QAction*> actions() const override;
-    QStringList menuPath(QAction*) const override;
+  QString name() const override { return tr("Reset view"); }
+  QString description() const override
+    { return tr("Manipulate the view camera."); }
+  QList<QAction*> actions() const override;
+  QStringList menuPath(QAction*) const override;
 public slots:
-    void setMolecule(QtGui::Molecule* mol) override;
-    void setCamera(Rendering::Camera* camera) override;
+  void setMolecule(QtGui::Molecule* mol) override;
+  void setCamera(Rendering::Camera* camera) override;
 
 private slots:
-    void centerView();
-    void alignToAxes();
+  void centerView();
+  void alignToAxes();
 
 private:
-    QtGui::Molecule* m_molecule;
-    Rendering::Camera* m_camera;
-    QAction* m_centerAction;
-    QAction* m_viewToAxesAction;
+  QtGui::Molecule *m_molecule;
+  Rendering::Camera *m_camera;
+  QAction *m_centerAction;
+  QAction *m_viewToAxesAction;
 
-    bool defaultChecks();
-    void animationCamera(Eigen::Affine3f *goal);
+  bool defaultChecks();
+  void animationCamera(Eigen::Affine3f* goal, bool animate = true);
 
 };
 
