@@ -126,6 +126,8 @@ void ResetView::animationCamera(Eigen::Affine3f* goal, bool animate)
   }
 }
 
+// Calculate the oriented bounding box to get the most significand
+// axis base and the centroid
 inline void getOBB(const Core::Array<Vector3>& mols, Vector3& centroid,
   Vector3& min, Vector3& mid, Vector3& max)
 {

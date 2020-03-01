@@ -23,6 +23,10 @@
 namespace Avogadro {
 namespace QtPlugins {
 
+/**
+ * @brief The ResetView class is an extension to center the camera in the best
+ * fit panel or the default camera position
+ */
 class ResetView : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
@@ -35,6 +39,7 @@ public:
     { return tr("Manipulate the view camera."); }
   QList<QAction*> actions() const override;
   QStringList menuPath(QAction*) const override;
+
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
   void setCamera(Rendering::Camera* camera) override;
