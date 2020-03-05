@@ -16,15 +16,35 @@ void EnergyCalculator::gradient(const TVector& x, TVector& grad)
   cleanGradients(grad);
 }
 
-void EnergyCalculator::cleanGradients(Eigen::VectorXd& grad)
+void EnergyCalculator::cleanGradients(TVector& grad)
 {
   unsigned int size = grad.rows();
+  // check for overflows -- in case of divide by zero, etc.
   for (unsigned int i = 0; i < size; ++i) {
     if (!std::isfinite(grad[i])) {
       grad[i] = 0.0;
     }
+  }
 
-    //@todo handle constraints (e.g., frozen atoms)
+  // freeze any masked atoms or coordinates
+  grad = grad.cwiseProduct(m_mask);
+}
+
+void EnergyCalculator::freezeAtom(Index atomId)
+{
+  if (atomId * 3 <= m_mask.rows() - 3) {
+    m_mask[atomId*3] = 0.0;
+    m_mask[atomId*3+1] = 0.0;
+    m_mask[atomId*3+2] = 0.0;
+  }
+}
+
+void EnergyCalculator::unfreezeAtom(Index atomId)
+{
+  if (atomId * 3 <= m_mask.rows() - 3) {
+    m_mask[atomId*3] = 1.0;
+    m_mask[atomId*3+1] = 1.0;
+    m_mask[atomId*3+2] = 1.0;
   }
 }
 

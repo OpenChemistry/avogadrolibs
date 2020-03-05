@@ -61,6 +61,7 @@ public slots:
 private slots:
   void energy();
   void optimize();
+  void freezeSelected();
 
 private:
   QList<QAction*> m_actions;

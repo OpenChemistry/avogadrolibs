@@ -45,6 +45,7 @@ Molecule::Molecule(const Molecule& other)
     m_vibrationIntensities(other.m_vibrationIntensities),
     m_vibrationLx(other.m_vibrationLx), m_bondPairs(other.m_bondPairs),
     m_bondOrders(other.m_bondOrders), m_selectedAtoms(other.m_selectedAtoms),
+    m_frozenAtoms(other.m_frozenAtoms),
     m_meshes(std::vector<Mesh*>()), m_cubes(std::vector<Cube*>()),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
@@ -82,6 +83,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_bondPairs(std::move(other.m_bondPairs)),
     m_bondOrders(std::move(other.m_bondOrders)),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
+    m_frozenAtoms(std::move(other.m_frozenAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
     m_residues(std::move(other.m_residues))
 {
@@ -113,6 +115,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_bondPairs = other.m_bondPairs;
     m_bondOrders = other.m_bondOrders;
     m_selectedAtoms = other.m_selectedAtoms;
+    m_frozenAtoms = other.m_frozenAtoms;
     m_residues = other.m_residues;
 
     clearMeshes();
@@ -161,6 +164,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_bondPairs = std::move(other.m_bondPairs);
     m_bondOrders = std::move(other.m_bondOrders);
     m_selectedAtoms = std::move(other.m_selectedAtoms);
+    m_frozenAtoms = std::move(other.m_frozenAtoms);
     m_residues = std::move(other.m_residues);
 
     clearMeshes();

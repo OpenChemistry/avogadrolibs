@@ -520,13 +520,22 @@ bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3& pos,
 
 void RWMolecule::setAtomSelected(Index atomId, bool selected)
 {
-  // FIXME: Add in an implementation (and use it from the selection tool).
   m_molecule.setAtomSelected(atomId, selected);
 }
 
 bool RWMolecule::atomSelected(Index atomId) const
 {
   return m_molecule.atomSelected(atomId);
+}
+
+void RWMolecule::setAtomFrozen(Index atomId, bool frozen)
+{
+  m_molecule.setAtomFrozen(atomId, frozen);
+}
+
+bool RWMolecule::atomFrozen(Index atomId) const
+{
+  return m_molecule.atomFrozen(atomId);
 }
 
 namespace {

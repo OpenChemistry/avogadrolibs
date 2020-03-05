@@ -10,7 +10,7 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-#include "cppoptlib/problem.h"
+#include <cppoptlib/problem.h>
 
 namespace Avogadro {
 namespace QtGui {
@@ -25,7 +25,7 @@ class EnergyCalculator
 public:
   EnergyCalculator(QObject* parent_ = 0)
     : QObject(parent_){};
-  ~EnergyCalculator() {}
+  ~EnergyCalculator() { }
 
   /**
    * @return A short translatable name for this method (e.g., MMFF94, UFF, etc.)
@@ -53,11 +53,17 @@ public:
    */
   void cleanGradients(TVector& grad);
 
+  void freezeAtom(Index atomId);
+  void unfreezeAtom(Index atomId);
+
 public slots:
   /**
    * Called when the current molecule changes.
    */
   virtual void setMolecule(QtGui::Molecule* mol) = 0;
+
+protected:
+  TVector   m_mask; // optimize or frozen atom mask
 };
 
 } // namespace Avogadro

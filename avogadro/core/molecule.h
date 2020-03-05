@@ -285,6 +285,16 @@ public:
   /** Returns whether the selection is empty or not */
   bool isSelectionEmpty() const;
 
+  /**
+   * Set whether the specified atom is frozen for geometry changes.
+   */
+  void setAtomFrozen(Index atomId, bool frozen);
+
+  /**
+   * Query whether the supplied atom index has been frozen.
+   */
+  bool atomFrozen(Index atomId) const;
+
   /** Returns a vector of pairs of atom indices of the bonds in the molecule. */
   Array<std::pair<Index, Index>>& bondPairs();
 
@@ -640,6 +650,8 @@ protected:
   // Array declaring whether atoms are selected or not.
   std::vector<bool> m_selectedAtoms;
 
+  std::vector<bool> m_frozenAtoms;
+
   std::vector<Mesh*> m_meshes;
   std::vector<Cube*> m_cubes;
 
@@ -849,6 +861,20 @@ inline bool Molecule::isSelectionEmpty() const
       return false;
   }
   return true;
+}
+
+inline void Molecule::setAtomFrozen(Index atomId, bool frozen)
+{
+  if (atomId < atomCount()) {
+    if (atomId >= m_frozenAtoms.size())
+      m_frozenAtoms.resize(atomCount(), false);
+    m_frozenAtoms[atomId] = frozen;
+  }
+}
+
+inline bool Molecule::atomFrozen(Index atomId) const
+{
+  return atomId < m_frozenAtoms.size() ? m_frozenAtoms[atomId] : false;
 }
 
 inline std::pair<Index, Index> Molecule::bondPair(Index bondId) const
