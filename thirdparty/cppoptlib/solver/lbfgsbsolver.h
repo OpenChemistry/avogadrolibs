@@ -42,6 +42,17 @@ class LbfgsbSolver : public ISolver<TProblem, 1> {
     });
     return idx;
   }
+
+  void clampToBound(const TProblem &problem, TVector &x) {
+    for (int r = 0; r < x.rows(); ++r)
+    {
+      if(x(r) < problem.lowerBound()(r))
+        x(r) = problem.lowerBound()(r);
+      else if (x(r) > problem.upperBound()(r))
+        x(r) = problem.upperBound()(r);
+    }
+  }
+
   /**
    * @brief Algorithm CP: Computation of the generalized Cauchy point
    * @details PAGE 8
@@ -83,7 +94,7 @@ class LbfgsbSolver : public ISolver<TProblem, 1> {
     Scalar f_prime = -d.dot(d);                         // (n operations)
     // f'' :=   \theta*d^Scalar*d-d^Scalar*W*M*W^Scalar*d = -\theta*f' - p^Scalar*M*p
     Scalar f_doubleprime = (Scalar)(-1.0 * theta) * f_prime - p.dot(M * p); // (O(m^2) operations)
-    f_doubleprime = std::max(std::numeric_limits<Scalar>::epsilon(), f_doubleprime);
+    f_doubleprime = std::max<Scalar>(std::numeric_limits<Scalar>::epsilon(), f_doubleprime);
     Scalar f_dp_orig = f_doubleprime;
     // \delta t_min :=  -f'/f''
     Scalar dt_min = -f_prime / f_doubleprime;
@@ -119,7 +130,7 @@ class LbfgsbSolver : public ISolver<TProblem, 1> {
       f_doubleprime += (Scalar) - 1.0 * theta * g(b) * g(b)
                        - (Scalar) 2.0 * (g(b) * (wbt.dot(M * p)))
                        - (Scalar) g(b) * g(b) * wbt.transpose() * (M * wbt);
-      f_doubleprime = std::max(std::numeric_limits<Scalar>::epsilon() * f_dp_orig, f_doubleprime);
+      f_doubleprime = std::max<Scalar>(std::numeric_limits<Scalar>::epsilon() * f_dp_orig, f_doubleprime);
       p += g(b) * wbt.transpose();
       d(b) = 0;
       dt_min = -f_prime / f_doubleprime;
@@ -131,7 +142,7 @@ class LbfgsbSolver : public ISolver<TProblem, 1> {
         dt = t - t_old;
       }
     }
-    dt_min = std::max(dt_min, (Scalar)0.0);
+    dt_min = std::max<Scalar>(dt_min, (Scalar)0.0);
     t_old += dt_min;
     #pragma omp parallel for
     for (int ii = i; ii < x_cauchy.rows(); ii++) {
@@ -152,9 +163,9 @@ class LbfgsbSolver : public ISolver<TProblem, 1> {
     assert(du.rows() == n);
     for (unsigned int i = 0; i < n; i++) {
       if (du(i) > 0) {
-        alphastar = std::min(alphastar, (problem.upperBound()(FreeVariables[i]) - x_cp(FreeVariables[i])) / du(i));
+        alphastar = std::min<Scalar>(alphastar, (problem.upperBound()(FreeVariables[i]) - x_cp(FreeVariables[i])) / du(i));
       } else {
-        alphastar = std::min(alphastar, (problem.lowerBound()(FreeVariables[i]) - x_cp(FreeVariables[i])) / du(i));
+        alphastar = std::min<Scalar>(alphastar, (problem.lowerBound()(FreeVariables[i]) - x_cp(FreeVariables[i])) / du(i));
       }
     }
     return alphastar;
@@ -243,6 +254,8 @@ class LbfgsbSolver : public ISolver<TProblem, 1> {
       const Scalar rate = MoreThuente<TProblem, 1>::linesearch(x,  SubspaceMin-x ,  problem, alpha_init);
       // update current guess and function information
       x = x - rate*(x-SubspaceMin);
+      // if current solution is out of bound, we clip it
+      clampToBound(problem, x);
       f = problem.value(x);
       problem.gradient(x, g);
       // prepare for next iteration
