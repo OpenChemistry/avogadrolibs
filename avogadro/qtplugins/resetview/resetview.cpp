@@ -22,7 +22,6 @@
 
 #include <QtWidgets/QAction>
 #include <QTimer>
-#include <iostream>
 
 #define CAMERA_NEAR_DISTANCE 13.35f //Experimental number
 
@@ -84,13 +83,13 @@ bool ResetView::defaultChecks()
 inline float getZDistance(const Eigen::Affine3f& projection, float x, Rendering::Projection perspective)
 {
   if(perspective == Rendering::Projection::Perspective) {
-    float fov = 2.0*std::atan( 1.0/projection(1,1) );
+    float fov = 2.0f*std::atan( 1.0f/projection(1,1) );
     //float aspect = projection(1,1) / projection(0,0);
     // tan (fov/2) = (x/2) / z -> z =  (x/2) / tan (fov/2)
     return std::max(CAMERA_NEAR_DISTANCE, (x/2.0f) / std::tan(fov/2.0f));
   }
   else {
-    return CAMERA_NEAR_DISTANCE;
+    return 3.0f*CAMERA_NEAR_DISTANCE;
   }
 }
 inline void getBB(const Core::Array<Vector3>& mols, Vector3& min, Vector3& max)
@@ -111,27 +110,32 @@ inline void getBB(const Core::Array<Vector3>& mols, Vector3& min, Vector3& max)
 
 void ResetView::animationCameraDefault(bool animate)
 {
-  Vector3f up = Vector3f::UnitZ();
-  Vector3f center = Vector3f::Zero();
-
   const Core::Array<Vector3> mols = m_molecule->atomPositions3d();
   Vector3 min, max;
 
   getBB(mols,min, max);
 
-  Vector3f mid = (max.cast<float>() + mid.cast<float>())/2.0f;
+  Eigen::Matrix3f linearGoal;
+  linearGoal.row(0) = Vector3f::UnitX();
+  linearGoal.row(1) = Vector3f::UnitY();
+  linearGoal.row(2) = Vector3f::UnitZ();
+  // calculate the translation matrix
+  Eigen::Affine3f *goal = new Eigen::Affine3f(linearGoal);
 
+  Vector3f mid = (max.cast<float>() + min.cast<float>())/2.0f;
   float d = getZDistance(m_camera->projection(),
-                         max.x() - min.x(), m_camera->projectionType());
-  Vector3f eye = (-1.0f * d * Vector3f::UnitZ()) + mid;
-  animationCamera(eye, center, up, animate);
+                       max.x() - min.x(), m_camera->projectionType());
+
+  Vector3f eye = -mid + (Vector3f::UnitZ() * -1.0f * d);
+  goal->translate(eye);
+  animationCamera(goal, animate);
 }
 
-void ResetView::animationCamera(Vector3f eye, Vector3f center, Vector3f up, bool animate)
+void ResetView::animationCamera(Eigen::Affine3f* goal, bool animate)
 {
   if(animate) {}
   else {
-    m_camera->lookAt(eye, center, up);
+    m_camera->setModelView(*goal);
   }
 }
 
@@ -183,13 +187,17 @@ void ResetView::centerView()
   Vector3 centroid, min, mid, max;
   getOBB(mols, centroid, min, mid, max);
 
-  Vector3f up = (min.normalized()).cast<float>(); //z
-
+  Eigen::Matrix3f linearGoal;
+  linearGoal.row(0) = (max.normalized()).cast<float>();
+  linearGoal.row(1) = (mid.normalized()).cast<float>();
+  linearGoal.row(2) = (min.normalized()).cast<float>();
+  // calculate the translation matrix
+  Eigen::Affine3f *goal = new Eigen::Affine3f(linearGoal);
   float d = getZDistance(m_camera->projection(),
-                         max.norm(), m_camera->projectionType());
-  Vector3f eye = (centroid.cast<float>()) + (up.transpose() * -1.0f * d);
-
-  animationCamera(eye, centroid, up);
+                       max.norm(), m_camera->projectionType());
+  Vector3f eye = (-centroid.cast<float>()) + (linearGoal.row(2).transpose() * -1.0f * d);
+  goal->translate(eye);
+  animationCamera(goal);
 }
 
 void ResetView::alignToAxes()

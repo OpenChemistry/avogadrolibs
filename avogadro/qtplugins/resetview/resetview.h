@@ -56,7 +56,7 @@ private:
 
   bool defaultChecks();
   //animate is false by default until find GlWidget->repaint()
-  void animationCamera(Eigen::Vector3f eye, Eigen::Vector3f center, Eigen::Vector3f up, bool animate = false);
+  void animationCamera(Eigen::Affine3f* goal, bool animate = false);
   void animationCameraDefault(bool animate = false);
 
 };
