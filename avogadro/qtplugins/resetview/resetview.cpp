@@ -22,8 +22,9 @@
 
 #include <QtWidgets/QAction>
 #include <QTimer>
+#include <iostream>
 
-#define CAMERA_NEAR_DISTANCE 13.35 //Experimental number
+#define CAMERA_NEAR_DISTANCE 13.35f //Experimental number
 
 
 namespace Avogadro {
@@ -74,55 +75,63 @@ bool ResetView::defaultChecks()
 
   // no need to animate when there are no atoms
   if(m_molecule->atomCount() == 0)  {
-    animationCamera(NULL, false);
+    animationCameraDefault(false);
     return true;
   }
   return false;
 }
 
-
-void ResetView::animationCamera(Eigen::Affine3f* goal, bool animate)
+inline float getZDistance(const Eigen::Affine3f& projection, float x, Rendering::Projection perspective)
 {
-  if (goal == nullptr) {
-    Eigen::Matrix3f linearGoal = Eigen::Matrix3f::Identity();
-    goal = new Eigen::Affine3f(linearGoal);
-    goal->pretranslate(-1.0f * CAMERA_NEAR_DISTANCE * Eigen::Vector3f::UnitZ());
-  }
-
-  if(animate) {
-    Vector3f posGoal = goal->translation();
-    Matrix3f rot_aux;
-    Matrix3f scale_aux;
-    goal->computeRotationScaling(&rot_aux, &scale_aux);
-    Eigen::Quaternionf rotGoal = Eigen::Quaternionf(rot_aux);
-    Vector3f scaGoal = scale_aux.diagonal();
-
-    Eigen::Affine3f start = m_camera->modelView();
-
-    Vector3f posStart = start.translation();
-    start.computeRotationScaling(&rot_aux, &scale_aux);
-    Eigen::Quaternionf rotStart = Eigen::Quaternionf(rot_aux);
-    Vector3f scaStart = scale_aux.diagonal();
-
-    Eigen::Affine3f interpolation;
-    for(float alpha = 0.1f; alpha <= 1.0f; alpha += 0.1f) {
-      interpolation.fromPositionOrientationScale(
-        ((1.0f-alpha)*posStart) + (alpha*posGoal),
-        rotStart.slerp(alpha, rotGoal),
-        ((1.0f-alpha)*scaStart) + (alpha*scaGoal));
-
-      QTimer::singleShot(alpha*1000, this, [this, interpolation] (){
-        m_camera->setModelView(interpolation);
-      });
-
-    }
-    interpolation.fromPositionOrientationScale(posGoal, rotGoal, scaGoal);
-    QTimer::singleShot(1000, this, [this, interpolation] (){
-      m_camera->setModelView(interpolation);
-    });
+  if(perspective == Rendering::Projection::Perspective) {
+    float fov = 2.0*std::atan( 1.0/projection(1,1) );
+    //float aspect = projection(1,1) / projection(0,0);
+    // tan (fov/2) = (x/2) / z -> z =  (x/2) / tan (fov/2)
+    return std::max(CAMERA_NEAR_DISTANCE, (x/2.0f) / std::tan(fov/2.0f));
   }
   else {
-    m_camera->setModelView(*goal);
+    return CAMERA_NEAR_DISTANCE;
+  }
+}
+inline void getBB(const Core::Array<Vector3>& mols, Vector3& min, Vector3& max)
+{
+  min = mols[0];
+  max = mols[0];
+  for (unsigned int i = 1; i < mols.size(); ++i) {
+    min.x() = std::min(mols[i].x(), min.x());
+    max.x() = std::max(mols[i].x(), max.x());
+
+    min.y() = std::min(mols[i].y(), min.y());
+    max.y() = std::max(mols[i].y(), max.y());
+
+    min.z() = std::min(mols[i].z(), min.z());
+    max.z() = std::max(mols[i].z(), max.z());
+  }
+}
+
+void ResetView::animationCameraDefault(bool animate)
+{
+  Vector3f up = Vector3f::UnitZ();
+  Vector3f center = Vector3f::Zero();
+
+  const Core::Array<Vector3> mols = m_molecule->atomPositions3d();
+  Vector3 min, max;
+
+  getBB(mols,min, max);
+
+  Vector3f mid = (max.cast<float>() + mid.cast<float>())/2.0f;
+
+  float d = getZDistance(m_camera->projection(),
+                         max.x() - min.x(), m_camera->projectionType());
+  Vector3f eye = (-1.0f * d * Vector3f::UnitZ()) + mid;
+  animationCamera(eye, center, up, animate);
+}
+
+void ResetView::animationCamera(Vector3f eye, Vector3f center, Vector3f up, bool animate)
+{
+  if(animate) {}
+  else {
+    m_camera->lookAt(eye, center, up);
   }
 }
 
@@ -147,28 +156,23 @@ inline void getOBB(const Core::Array<Vector3>& mols, Vector3& centroid,
   Eigen::EigenSolver<Matrix3> solver = Eigen::EigenSolver<Matrix3>(covariance);
   Eigen::Matrix3cd vectors = solver.eigenvectors();
 
-  if ((vectors.col(0).norm() < vectors.col(1).norm())
-      && (vectors.col(0).norm() < vectors.col(2).norm())) {
-    min = vectors.col(0).real();
-    max = (vectors.col(1).norm() > vectors.col(2).norm())? vectors.col(1).real()
-      : vectors.col(2).real();
-    mid = (vectors.col(1).norm() > vectors.col(2).norm())? vectors.col(2).real()
-      : vectors.col(1).real();
+  std::vector<Vector3> l {vectors.col(0).real(), vectors.col(1).real(), vectors.col(2).real()};
+  for(int i = 0; i < 2; ++i) {
+    int indexJ = 0;
+    if(i == 0) max = l[indexJ];
+    else mid = l[indexJ];
+
+    for (int j = indexJ+1; j < 3; ++j){
+      if(l[j].norm() > max.norm()) {
+        indexJ = j;
+        if(i == 0) max = l[indexJ];
+        else mid = l[indexJ];
+      }
+    }
+    std::vector<Vector3>::iterator itr = l.begin() + indexJ;
+    l.erase(itr);
   }
-  else if (vectors.col(1).norm() < vectors.col(2).norm()){
-    min = vectors.col(1).real();
-    max = (vectors.col(0).norm() > vectors.col(2).norm())? vectors.col(0).real()
-      : vectors.col(2).real();
-    mid = (vectors.col(0).norm() > vectors.col(2).norm())? vectors.col(2).real()
-      : vectors.col(0).real();
-  }
-  else {
-    min = vectors.col(2).real();
-    max = (vectors.col(0).norm() > vectors.col(1).norm())? vectors.col(0).real()
-      : vectors.col(1).real();
-    mid = (vectors.col(0).norm() > vectors.col(1).norm())? vectors.col(1).real()
-      : vectors.col(0).real();
-  }
+  min = l[0];
 }
 
 void ResetView::centerView()
@@ -177,26 +181,21 @@ void ResetView::centerView()
 
   const Core::Array<Vector3> mols = m_molecule->atomPositions3d();
   Vector3 centroid, min, mid, max;
-  getOBB(mols, centroid, min, mid, max );
+  getOBB(mols, centroid, min, mid, max);
 
-  Eigen::Matrix3f linearGoal;
+  Vector3f up = (min.normalized()).cast<float>(); //z
 
-  linearGoal.row(0) = (max.normalized()).cast<float>();
-  linearGoal.row(1) = (mid.normalized()).cast<float>();
-  linearGoal.row(2) = (min.normalized()).cast<float>();
-  // calculate the translation matrix
-  Eigen::Affine3f *goal = new Eigen::Affine3f(linearGoal);
-  goal->pretranslate(-1.0f * CAMERA_NEAR_DISTANCE * Eigen::Vector3f::UnitZ());
+  float d = getZDistance(m_camera->projection(),
+                         max.norm(), m_camera->projectionType());
+  Vector3f eye = (centroid.cast<float>()) + (up.transpose() * -1.0f * d);
 
-  animationCamera(goal);
-
-  return;
+  animationCamera(eye, centroid, up);
 }
 
 void ResetView::alignToAxes()
 {
   if (defaultChecks()) return;
-  animationCamera(NULL);
+  animationCameraDefault();
 }
 
 } // namespace QtPlugins

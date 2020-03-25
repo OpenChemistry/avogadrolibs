@@ -55,7 +55,9 @@ private:
   QAction *m_viewToAxesAction;
 
   bool defaultChecks();
-  void animationCamera(Eigen::Affine3f* goal, bool animate = true);
+  //animate is false by default until find GlWidget->repaint()
+  void animationCamera(Eigen::Vector3f eye, Eigen::Vector3f center, Eigen::Vector3f up, bool animate = false);
+  void animationCameraDefault(bool animate = false);
 
 };
 
