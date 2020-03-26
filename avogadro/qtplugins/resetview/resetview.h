@@ -17,8 +17,8 @@
 #ifndef AVOGADRO_QTPLUGINS_RESETVIEW_H
 #define AVOGADRO_QTPLUGINS_RESETVIEW_H
 
-#include <avogadro/qtgui/extensionplugin.h>
 #include <Eigen/Geometry>
+#include <avogadro/qtgui/extensionplugin.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -36,29 +36,35 @@ public:
 
   QString name() const override { return tr("Reset view"); }
   QString description() const override
-    { return tr("Manipulate the view camera."); }
+  {
+    return tr("Manipulate the view camera.");
+  }
   QList<QAction*> actions() const override;
   QStringList menuPath(QAction*) const override;
 
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
   void setCamera(Rendering::Camera* camera) override;
+  void setActiveWidget(QWidget* widget) override;
+
+signals:
+  void updateRequested();
 
 private slots:
   void centerView();
   void alignToAxes();
 
 private:
-  QtGui::Molecule *m_molecule;
-  Rendering::Camera *m_camera;
-  QAction *m_centerAction;
-  QAction *m_viewToAxesAction;
+  QtGui::Molecule* m_molecule;
+  Rendering::Camera* m_camera;
+  QAction* m_centerAction;
+  QAction* m_viewToAxesAction;
+  QWidget* m_glWidget;
 
   bool defaultChecks();
-  //animate is false by default until find GlWidget->repaint()
+  // animate is false by default until find GlWidget->repaint()
   void animationCamera(Eigen::Affine3f* goal, bool animate = false);
   void animationCameraDefault(bool animate = false);
-
 };
 
 } // namespace QtPlugins
