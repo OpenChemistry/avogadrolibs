@@ -62,9 +62,8 @@ private:
   QWidget* m_glWidget;
 
   bool defaultChecks();
-  // animate is false by default until find GlWidget->repaint()
-  void animationCamera(Eigen::Affine3f* goal, bool animate = false);
-  void animationCameraDefault(bool animate = false);
+  void animationCamera(const Eigen::Affine3f& goal, bool animate = true);
+  void animationCameraDefault(bool animate = true);
 };
 
 } // namespace QtPlugins

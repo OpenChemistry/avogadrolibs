@@ -20,8 +20,6 @@
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/camera.h>
 
-#include <unsupported/Eigen/MatrixFunctions>
-
 #include <QTimer>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QOpenGLWidget>
@@ -65,8 +63,10 @@ void ResetView::setCamera(Rendering::Camera* camera)
 
 void ResetView::setActiveWidget(QWidget* widget)
 {
-  m_glWidget = widget;
-  connect(this, SIGNAL(updateRequested()), m_glWidget, SLOT(requestUpdate()));
+  if (widget != nullptr) {
+    m_glWidget = widget;
+    connect(this, SIGNAL(updateRequested()), m_glWidget, SLOT(requestUpdate()));
+  }
 }
 
 bool ResetView::defaultChecks()
@@ -100,48 +100,78 @@ inline float getZDistance(const Eigen::Affine3f& projection, float x,
 }
 inline void getBB(const Core::Array<Vector3>& mols, Vector3& min, Vector3& max)
 {
-  min = mols[0];
-  max = mols[0];
-  for (unsigned int i = 1; i < mols.size(); ++i) {
-    min.x() = std::min(mols[i].x(), min.x());
-    max.x() = std::max(mols[i].x(), max.x());
+  if (mols.size() > 0) {
+    min = mols[0];
+    max = mols[0];
+    for (unsigned int i = 1; i < mols.size(); ++i) {
+      min.x() = std::min(mols[i].x(), min.x());
+      max.x() = std::max(mols[i].x(), max.x());
 
-    min.y() = std::min(mols[i].y(), min.y());
-    max.y() = std::max(mols[i].y(), max.y());
+      min.y() = std::min(mols[i].y(), min.y());
+      max.y() = std::max(mols[i].y(), max.y());
 
-    min.z() = std::min(mols[i].z(), min.z());
-    max.z() = std::max(mols[i].z(), max.z());
+      min.z() = std::min(mols[i].z(), min.z());
+      max.z() = std::max(mols[i].z(), max.z());
+    }
+  } else {
+    min = max = Vector3(0, 0, 0);
   }
-}
+} // namespace QtPlugins
 
 void ResetView::animationCameraDefault(bool animate)
 {
-  const Core::Array<Vector3> mols = m_molecule->atomPositions3d();
-  Vector3 min, max;
-
-  getBB(mols, min, max);
-
   Eigen::Matrix3f linearGoal;
   linearGoal.row(0) = Vector3f::UnitX();
   linearGoal.row(1) = Vector3f::UnitY();
   linearGoal.row(2) = Vector3f::UnitZ();
   // calculate the translation matrix
-  Eigen::Affine3f* goal = new Eigen::Affine3f(linearGoal);
+  Eigen::Affine3f goal = Eigen::Affine3f(linearGoal);
 
+  const Core::Array<Vector3> mols = m_molecule->atomPositions3d();
+  Vector3 min, max;
+  getBB(mols, min, max);
   Vector3f mid = (max.cast<float>() + min.cast<float>()) / 2.0f;
   float d = getZDistance(m_camera->projection(), max.x() - min.x(),
                          m_camera->projectionType());
 
   Vector3f eye = -mid + (Vector3f::UnitZ() * -1.0f * d);
-  goal->translate(eye);
+  goal.translate(eye);
   animationCamera(goal, animate);
 }
 
-void ResetView::animationCamera(Eigen::Affine3f* goal, bool animate)
+void ResetView::animationCamera(const Eigen::Affine3f& goal, bool animate)
 {
   if (animate) {
+    Matrix3f rot_aux = goal.rotation();
+    Vector3f posGoal = goal.translation();
+    Eigen::Quaternionf rotGoal = Eigen::Quaternionf(rot_aux);
+
+    Eigen::Affine3f start = m_camera->modelView();
+
+    rot_aux = start.rotation();
+    Vector3f posStart = start.translation();
+    Eigen::Quaternionf rotStart = Eigen::Quaternionf(rot_aux);
+
+    for (int alpha = 0; alpha <= 10; ++alpha) {
+      Eigen::Affine3f interpolation;
+      float aux = alpha / 10.0f;
+      interpolation.fromPositionOrientationScale(
+        ((1.0f - aux) * posStart) + (aux * posGoal),
+        rotStart.slerp(aux, rotGoal), Vector3f(1.0f, 1.0f, 1.0f));
+
+      QTimer::singleShot(aux * 1000 / 3, this, [this, interpolation]() {
+        m_camera->setModelView(interpolation);
+        emit updateRequested();
+      });
+    }
+
+    QTimer::singleShot(1000 / 3 + 1, this, [this, goal]() {
+      m_camera->setModelView(goal);
+      emit updateRequested();
+    });
+
   } else {
-    m_camera->setModelView(*goal);
+    m_camera->setModelView(goal);
     emit updateRequested();
   }
 }
@@ -169,26 +199,9 @@ inline void getOBB(const Core::Array<Vector3>& mols, Vector3& centroid,
 
   std::vector<Vector3> l{ vectors.col(0).real(), vectors.col(1).real(),
                           vectors.col(2).real() };
-  for (int i = 0; i < 2; ++i) {
-    int indexJ = 0;
-    if (i == 0)
-      max = l[indexJ];
-    else
-      mid = l[indexJ];
-
-    for (int j = indexJ + 1; j < 3; ++j) {
-      if (l[j].norm() > max.norm()) {
-        indexJ = j;
-        if (i == 0)
-          max = l[indexJ];
-        else
-          mid = l[indexJ];
-      }
-    }
-    std::vector<Vector3>::iterator itr = l.begin() + indexJ;
-    l.erase(itr);
-  }
-  min = l[0];
+  max = l[0];
+  mid = l[1];
+  min = l[2];
 }
 
 void ResetView::centerView()
@@ -201,16 +214,19 @@ void ResetView::centerView()
   getOBB(mols, centroid, min, mid, max);
 
   Eigen::Matrix3f linearGoal;
-  linearGoal.row(0) = (max.normalized()).cast<float>();
-  linearGoal.row(1) = (mid.normalized()).cast<float>();
-  linearGoal.row(2) = (min.normalized()).cast<float>();
+  linearGoal.row(0) = (max.normalized()).cast<float>(); // x
+  linearGoal.row(1) = (mid.normalized()).cast<float>(); // y
+  linearGoal.row(2) = (min.normalized()).cast<float>(); // z
   // calculate the translation matrix
-  Eigen::Affine3f* goal = new Eigen::Affine3f(linearGoal);
-  float d = getZDistance(m_camera->projection(), max.norm(),
+  Eigen::Affine3f goal = Eigen::Affine3f(linearGoal);
+
+  // eigen return the eigenvectors normalized, but we need a non-normalized
+  getBB(mols, min, max);
+  float d = getZDistance(m_camera->projection(), max.x() - min.x(),
                          m_camera->projectionType());
   Vector3f eye =
     (-centroid.cast<float>()) + (linearGoal.row(2).transpose() * -1.0f * d);
-  goal->translate(eye);
+  goal.translate(eye);
   animationCamera(goal);
 }
 
