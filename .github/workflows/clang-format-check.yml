@@ -6,5 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Run clang-format style check for C programs.
-      uses: jidicula/clang-format-action@master
+    - name: clang-format style check for C++ / C code.
+      uses: DoozyX/clang-format-lint-action@master
+      with:
+        source: 'avogadro'
+        extensions: 'h,cpp'
