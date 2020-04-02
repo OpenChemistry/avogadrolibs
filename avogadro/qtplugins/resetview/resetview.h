@@ -61,6 +61,9 @@ private:
   QAction* m_viewToAxesAction;
   QWidget* m_glWidget;
 
+  static const float DELTA_TIME;
+  static const int TOTAL_FRAMES;
+
   bool defaultChecks();
   void animationCamera(const Eigen::Affine3f& goal, bool animate = true);
   void animationCameraDefault(bool animate = true);

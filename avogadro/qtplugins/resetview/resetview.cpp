@@ -29,6 +29,9 @@
 namespace Avogadro {
 namespace QtPlugins {
 
+const float ResetView::DELTA_TIME = 100.0f / 3.0f; // 33.3 ms ~ 30 fps
+const int ResetView::TOTAL_FRAMES = 25;            // ~1 sec
+
 ResetView::ResetView(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_),
     m_centerAction(new QAction(tr("Center"), this)),
@@ -152,20 +155,22 @@ void ResetView::animationCamera(const Eigen::Affine3f& goal, bool animate)
     Vector3f posStart = start.translation();
     Eigen::Quaternionf rotStart = Eigen::Quaternionf(rot_aux);
 
-    for (int alpha = 0; alpha <= 10; ++alpha) {
+    for (int frame = 0; frame < ResetView::TOTAL_FRAMES; ++frame) {
       Eigen::Affine3f interpolation;
-      float aux = alpha / 10.0f;
+      float alpha = frame / float(ResetView::TOTAL_FRAMES);
       interpolation.fromPositionOrientationScale(
-        ((1.0f - aux) * posStart) + (aux * posGoal),
-        rotStart.slerp(aux, rotGoal), Vector3f(1.0f, 1.0f, 1.0f));
+        ((1.0f - alpha) * posStart) + (alpha * posGoal),
+        rotStart.slerp(alpha, rotGoal), Vector3f(1.0f, 1.0f, 1.0f));
 
-      QTimer::singleShot(aux * 1000 / 3, this, [this, interpolation]() {
+      float time = frame * ResetView::DELTA_TIME;
+      QTimer::singleShot(time, this, [this, interpolation]() {
         m_camera->setModelView(interpolation);
         emit updateRequested();
       });
     }
 
-    QTimer::singleShot(1000 / 3 + 1, this, [this, goal]() {
+    float time = ResetView::TOTAL_FRAMES * ResetView::DELTA_TIME;
+    QTimer::singleShot(time, this, [this, goal]() {
       m_camera->setModelView(goal);
       emit updateRequested();
     });
