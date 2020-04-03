@@ -50,7 +50,7 @@ public:
   bool readFile(const QString& fileName);
 
   /**
-   * @return String describing the last error that occured.
+   * @return String describing the last error that occurred.
    */
   QString errorString() const;
 
