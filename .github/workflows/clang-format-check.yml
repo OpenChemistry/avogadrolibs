@@ -9,6 +9,4 @@ jobs:
     - name: clang-format style check for C++ / C code.
       uses: ghutchis/clang-format-diff-action@master
       with:
-        source: 'avogadro'
-        extensions: 'h,cpp'
         clangFormatVersion: 6
