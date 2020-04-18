@@ -113,7 +113,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
         }
       }
       if (calcSetup.count("waveFunctionTheory")) {
-        theory = calcSetup["waveFunctionTheory"];
+        theory = calcSetup["waveFunctionTheory"].get<std::string>();
         if (theory == "Density Functional Theory") {
           theory = "dft";
         }
@@ -198,9 +198,9 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
 
         string elementType;
         if (currentFunction.count("elementLabel"))
-          elementType = currentFunction["elementLabel"];
+          elementType = currentFunction["elementLabel"].get<std::string>();
         else if (currentFunction.count("elementType"))
-          elementType = currentFunction["elementType"];
+          elementType = currentFunction["elementType"].get<std::string>();
 
         if (elementType == symbol)
           break;
@@ -213,7 +213,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
 
       if (currentFunction.count("basisSetName")) {
         if (basisSetName.empty()) {
-          basisSetName = currentFunction["basisSetName"];
+          basisSetName = currentFunction["basisSetName"].get<std::string>();
         } else if (basisSetName != currentFunction["basisSetName"]) {
           basisSetName = "Custom";
         }
@@ -226,9 +226,9 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
         json contractionShell = contraction[j];
         string shellType;
         if (contractionShell.count("basisSetShell"))
-          shellType = contractionShell["basisSetShell"];
+          shellType = contractionShell["basisSetShell"].get<std::string>();
         else if (contractionShell.count("basisSetShellType"))
-          shellType = contractionShell["basisSetShellType"];
+          shellType = contractionShell["basisSetShellType"].get<std::string>();
         json exponent = contractionShell.value("basisSetExponent", json());
         json coefficient =
           contractionShell.value("basisSetCoefficient", json());
