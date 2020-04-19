@@ -25,7 +25,7 @@
 #include <molequeue/client/jobobject.h>
 
 #include <QtCore/QDebug>
-
+#include <QtWidgets/QAction>
 #include <QtWidgets/QMessageBox>
 
 namespace Avogadro {
