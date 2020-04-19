@@ -1,34 +1,38 @@
-version: 1.0.{build}
-image: Visual Studio 2017
-configuration:
-- Release
-clone_folder: C:/openchemistry/avogadrolibs
-init:
-- cmd:
-environment:
-  PATH: '%PATH%;%QTDIR%\bin'
-  matrix:
-  - CMAKE_GENERATOR: '"Visual Studio 15 2017 Win64"'
-    QTDIR: C:\Qt\5.6\msvc2015_64
-    platform: x64
-build_script:
-- cmd: >-
-    cd ..
+-
+  version: 1.0.{build}
+  image: Visual Studio 2017
+  configuration:
+  - Release
+  clone_folder: C:/openchemistry/avogadrolibs
+  init:
+  - cmd:
+  environment:
+    PATH: '%PATH%;%QTDIR%\bin'
+    matrix:
+    - CMAKE_GENERATOR: '"Ninja"'
+      QTDIR: C:\Qt\5.6\msvc2015_64
+      platform: x64
+    TWINE_USERNAME:
+      secure: /dyl+sf2T84bLnO0uaEFSA==
+    TWINE_PASSWORD:
+      secure: S4lgG583FNPPUGhPBEwNkfeC5YHUFE/K9x3xujHO75I=
 
-    git init .
+  build_script:
+    - cmd: >-
+        if %appveyor_repo_tag% equ false scripts\appveyor\build.bat
 
-    git remote add origin git://github.com/OpenChemistry/openchemistry.git
+  install:
+    - ps: >-
+        if ($env:appveyor_repo_tag -eq 'true')
+        {
+          cd c:\openchemistry\avogadrolibs
+          .\scripts\appveyor\build-wheels.ps1
+        }
 
-    git pull origin master
-
-    git -c submodule.avogadrolibs.update=none submodule update --init
-
-    cd ../
-
-    mkdir openchemistry-build
-
-    cd openchemistry-build
-
-    cmake -G %CMAKE_GENERATOR% ../openchemistry
-
-    cmake --build . --target avogadrolibs --config Release -- /verbosity:detailed
+  deploy_script:
+    - ps: >-
+        if ($env:appveyor_repo_tag -eq 'true')
+        {
+          cd c:\openchemistry\avogadrolibs
+          .\scripts\appveyor\upload-pypi.ps1
+        }

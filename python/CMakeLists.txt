@@ -22,15 +22,58 @@ set(wrapper_SRCS
   io.cpp
   )
 
-add_library(avogadropython MODULE ${wrapper_SRCS})
-set_target_properties(avogadropython
+
+set(_python_module_install_dir "avogadro")
+# SKBUILD is set for binary wheel
+if (NOT SKBUILD)
+  set(_python_module_install_dir "${INSTALL_LIBRARY_DIR}/avogadro")
+endif()
+
+set(CMAKE_MODULE_LINKER_FLAGS "")
+# Core
+pybind11_add_module(avogadrocorepython core.cpp)
+set_target_properties(avogadrocorepython
   PROPERTIES
-    OUTPUT_NAME avogadro2
-    PREFIX "")
-target_link_libraries(avogadropython
+    OUTPUT_NAME core)
+target_link_libraries(avogadrocorepython
+  PRIVATE
+    AvogadroCore
+    pybind11::module
+)
+
+install(TARGETS avogadrocorepython LIBRARY COMPONENT python DESTINATION "${_python_module_install_dir}")
+
+# IO
+pybind11_add_module(avogadroiopython io.cpp)
+set_target_properties(avogadroiopython
+  PROPERTIES
+    OUTPUT_NAME io)
+target_link_libraries(avogadroiopython
   PRIVATE
     AvogadroIO
     AvogadroQuantumIO
     pybind11::module
-    ${PYTHON_LIBRARIES}
-  )
+)
+install(TARGETS avogadroiopython LIBRARY COMPONENT python DESTINATION "${_python_module_install_dir}")
+
+# Set the RPATH so the dependent libraries can be found in the wheel.
+if(APPLE)
+  set(_rpath_value "@loader_path")
+elseif(UNIX)
+  set(_rpath_value "$ORIGIN")
+endif()
+
+if (NOT WIN32)
+  set_target_properties(avogadrocorepython avogadroiopython PROPERTIES
+                        INSTALL_RPATH ${_rpath_value})
+endif()
+
+install(FILES avogadro/__init__.py  COMPONENT python DESTINATION "${_python_module_install_dir}")
+
+# Set the output directory so the python modules can be used from the build
+# tree.
+set_target_properties(avogadrocorepython avogadroiopython
+  PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/avogadro"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/avogadro"
+)

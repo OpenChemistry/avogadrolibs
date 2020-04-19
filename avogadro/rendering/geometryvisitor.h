@@ -63,7 +63,7 @@ public:
   void clear();
 
   /**
-   * Get the positiion of the center of the scene.
+   * Get the position of the center of the scene.
    */
   Vector3f center();
 

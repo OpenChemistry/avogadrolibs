@@ -22,6 +22,7 @@
 #include <avogadro/core/vector.h> // For vector types.
 
 #include <Eigen/Geometry> // For member variables.
+#include <memory>
 
 namespace Avogadro {
 namespace Rendering {
@@ -30,6 +31,14 @@ enum Projection
 {
   Perspective,
   Orthographic
+};
+
+// Separate Eigen datastructures to ensure sufficient memory alignment.
+struct EigenData
+{
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+  Eigen::Affine3f projection;
+  Eigen::Affine3f modelView;
 };
 
 /**
@@ -43,6 +52,8 @@ class AVOGADRORENDERING_EXPORT Camera
 {
 public:
   Camera();
+  Camera(const Camera& o);
+  Camera& operator=(const Camera& o);
   ~Camera();
 
   /**
@@ -162,7 +173,7 @@ public:
    * Set the model view matrix to the identity. This resets the model view
    * matrix.
    */
-  void setIdentity() { m_modelView.setIdentity(); }
+  void setIdentity() { m_data->modelView.setIdentity(); }
 
   /**
    * Set the projection transform.
@@ -208,26 +219,25 @@ public:
   float orthographicScale() const { return m_orthographicScale; }
 
 private:
-  Eigen::Affine3f m_projection;
-  Eigen::Affine3f m_modelView;
   int m_width;
   int m_height;
   float m_pixelScale;
   Projection m_projectionType;
   float m_orthographicScale;
+  std::unique_ptr<EigenData> m_data;
 };
 
 inline const Eigen::Affine3f& Camera::projection() const
 {
-  return m_projection;
+  return m_data->projection;
 }
 
 inline const Eigen::Affine3f& Camera::modelView() const
 {
-  return m_modelView;
+  return m_data->modelView;
 }
 
-} // End Rendering namespace
-} // End Avogadro namespace
+} // namespace Rendering
+} // namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_CAMERA_H

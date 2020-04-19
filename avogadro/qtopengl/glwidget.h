@@ -117,7 +117,7 @@ signals:
 
 public slots:
   /**
-   * Update the scene plugins for the widget, this will generate geeometry in
+   * Update the scene plugins for the widget, this will generate geometry in
    * the scene etc.
    */
   void updateScene();

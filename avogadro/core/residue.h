@@ -77,6 +77,8 @@ public:
    */
   void resolveResidueBonds(Molecule& mol);
 
+  int getAtomicNumber(std::string name);
+
 protected:
   std::string m_residueName;
   Index m_residueId;
@@ -84,7 +86,7 @@ protected:
   AtomNameMap m_atomNameMap;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_RESIDUE_H

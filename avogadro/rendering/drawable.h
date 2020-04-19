@@ -21,6 +21,8 @@
 
 #include "avogadrorendering.h"
 #include "primitive.h"
+
+#include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
 #include <map>
@@ -92,7 +94,7 @@ public:
   virtual void render(const Camera& camera);
 
   /**
-   * Get the indentifier for the object, this stores the parent Molecule and
+   * Get the identifier for the object, this stores the parent Molecule and
    * the type represented by the geometry.
    */
   Identifier& identifier() { return m_identifier; }
@@ -108,6 +110,13 @@ public:
   virtual std::multimap<float, Identifier> hits(
     const Vector3f& rayOrigin, const Vector3f& rayEnd,
     const Vector3f& rayDirection) const;
+
+  /**
+   * Return the primitives within the supplied area.
+   * @param f The frustrum defining the area highlighted.
+   * @return Collection of primitives in the area.
+   */
+  virtual Core::Array<Identifier> areaHits(const Frustrum& f) const;
 
   /**
    * Clear the contents of the node.

@@ -238,7 +238,7 @@ inline void TextProperties::setColorRgba(unsigned char r, unsigned char g,
   m_rgba[3] = a;
 }
 
-inline void TextProperties::setColorRgba(const unsigned char rgba[])
+inline void TextProperties::setColorRgba(const unsigned char rgba[4])
 {
   m_rgba[0] = rgba[0];
   m_rgba[1] = rgba[1];
@@ -251,7 +251,7 @@ inline void TextProperties::setColorRgba(const Vector4ub& rgba)
   setColorRgba(rgba.data());
 }
 
-inline void TextProperties::colorRgba(unsigned char rgba[]) const
+inline void TextProperties::colorRgba(unsigned char rgba[4]) const
 {
   rgba[0] = m_rgba[0];
   rgba[1] = m_rgba[1];
@@ -272,7 +272,7 @@ inline void TextProperties::setColorRgb(unsigned char r, unsigned char g,
   m_rgba[2] = b;
 }
 
-inline void TextProperties::setColorRgb(const unsigned char rgb[])
+inline void TextProperties::setColorRgb(const unsigned char rgb[3])
 {
   m_rgba[0] = rgb[0];
   m_rgba[1] = rgb[1];
@@ -284,7 +284,7 @@ inline void TextProperties::setColorRgb(const Vector3ub& rgb)
   setColorRgb(rgb.data());
 }
 
-inline void TextProperties::colorRgb(unsigned char rgb[]) const
+inline void TextProperties::colorRgb(unsigned char rgb[3]) const
 {
   rgb[0] = m_rgba[0];
   rgb[1] = m_rgba[1];

@@ -11,6 +11,7 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
 endif()
 
 set(HEADERS
+  arrowgeometry.h
   avogadrogl.h
   avogadrorendering.h
   bufferobject.h
@@ -44,6 +45,7 @@ set(HEADERS
 )
 
 set(SOURCES
+  arrowgeometry.cpp
   bufferobject.cpp
   camera.cpp
   cylindergeometry.cpp
@@ -75,6 +77,7 @@ set(SOURCES
 )
 
 set(shader_files
+  "arrow_vs.glsl"
   "cylinders_fs.glsl"
   "cylinders_vs.glsl"
   "linestrip_fs.glsl"

@@ -12,13 +12,13 @@ class ResidueData
 {
 private:
   std::string m_residueName;
-  std::vector<std::string> m_residueAtomNames;
+  std::map<std::string, int> m_residueAtomNames;
   std::vector<std::pair<std::string, std::string>> m_residueSingleBonds;
   std::vector<std::pair<std::string, std::string>> m_residueDoubleBonds;
 
 public:
   ResidueData() {}
-  ResidueData(std::string name, std::vector<std::string> atomNames,
+  ResidueData(std::string name, std::map<std::string, int> atomNames,
               std::vector<std::pair<std::string, std::string>> singleBonds,
               std::vector<std::pair<std::string, std::string>> doubleBonds)
   {
@@ -43,6 +43,8 @@ public:
     return *this;
   }
 
+  std::map<std::string, int> residueAtoms() { return m_residueAtomNames; }
+
   std::vector<std::pair<std::string, std::string>> residueSingleBonds()
   {
     return m_residueSingleBonds;
@@ -56,8 +58,19 @@ public:
 
 ResidueData ALAData("ALA",
                     // Atoms
-                    { "N", "CA", "C", "O", "CB", "OXT", "H", "H2", "HA", "HB1",
-                      "HB2", "HB3", "HXT" },
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "CB", 6 },
+                      { "OXT", 8 },
+                      { "H", 1 },
+                      { "H2", 1 },
+                      { "HA", 1 },
+                      { "HB1", 1 },
+                      { "HB2", 1 },
+                      { "HB3", 1 },
+                      { "HB3", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -74,8 +87,20 @@ ResidueData ALAData("ALA",
                     { { "C", "O" } });
 ResidueData CYSData("CYS",
                     // Atoms
-                    { "N", "CA", "C", "O", "CB", "SG", "OXT", "H", "H2", "HA",
-                      "HB2", "HB3", "HG", "HXT" },
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "CB", 6 },
+                      { "SG", 16 },
+                      { "OXT", 8 },
+                      { "H", 1 },
+                      { "H2", 1 },
+                      { "HA", 1 },
+                      { "HB2", 1 },
+                      { "HB3", 1 },
+                      { "HG", 1 },
+                      { "HG", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -93,8 +118,22 @@ ResidueData CYSData("CYS",
                     { { "C", "O" } });
 ResidueData ASPData("ASP",
                     // Atoms
-                    { "N", "CA", "C", "O", "CB", "CG", "OD1", "OD2", "OXT", "H",
-                      "H2", "HA", "HB2", "HB3", "HD2", "HXT" },
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "CB", 6 },
+                      { "CG", 6 },
+                      { "OD1", 8 },
+                      { "OD2", 8 },
+                      { "OXT", 8 },
+                      { "H", 1 },
+                      { "H2", 1 },
+                      { "HA", 1 },
+                      { "HB2", 1 },
+                      { "HB3", 1 },
+                      { "HD2", 1 },
+                      { "HD2", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -113,9 +152,25 @@ ResidueData ASPData("ASP",
                     { { "C", "O" }, { "CG", "OD1" } });
 ResidueData GLUData("GLU",
                     // Atoms
-                    { "N", "CA", "C", "O", "CB", "CG", "CD", "OE1", "OE2",
-                      "OXT", "H", "H2", "HA", "HB2", "HB3", "HG2", "HG3", "HE2",
-                      "HXT" },
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "CB", 6 },
+                      { "CG", 6 },
+                      { "CD", 6 },
+                      { "OE1", 8 },
+                      { "OE2", 8 },
+                      { "OXT", 8 },
+                      { "H", 1 },
+                      { "H2", 1 },
+                      { "HA", 1 },
+                      { "HB2", 1 },
+                      { "HB3", 1 },
+                      { "HG2", 1 },
+                      { "HG3", 1 },
+                      { "HE2", 1 },
+                      { "HE2", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -138,9 +193,11 @@ ResidueData GLUData("GLU",
 ResidueData PHEData(
   "PHE",
   // Atoms
-  { "N",   "CA",  "C",   "O",   "CB",  "CG", "CD1", "CD2",
-    "CE1", "CE2", "CZ",  "OXT", "H",   "H2", "HA",  "HB2",
-    "HB3", "HD1", "HD2", "HE1", "HE2", "HZ", "HXT" },
+  { { "N", 7 },   { "CA", 6 },  { "C", 6 },   { "O", 8 },   { "CB", 6 },
+    { "CG", 6 },  { "CD1", 6 }, { "CD2", 6 }, { "CE1", 6 }, { "CE2", 6 },
+    { "CZ", 6 },  { "OXT", 8 }, { "H", 1 },   { "H2", 1 },  { "HA", 1 },
+    { "HB2", 1 }, { "HB3", 1 }, { "HD1", 1 }, { "HD2", 1 }, { "HE1", 1 },
+    { "HE2", 1 }, { "HZ", 1 },  { "HZ", 1 } },
   // Single Bonds
   { { "N", "CA" },
     { "N", "H" },
@@ -165,8 +222,16 @@ ResidueData PHEData(
   { { "C", "O" }, { "CG", "CD1" }, { "CD2", "CE2" }, { "CE1", "CZ" } });
 ResidueData GLYData("GLY",
                     // Atoms
-                    { "N", "CA", "C", "O", "OXT", "H", "H2", "HA2", "HA3",
-                      "HXT" },
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "OXT", 8 },
+                      { "H", 1 },
+                      { "H2", 1 },
+                      { "HA2", 1 },
+                      { "HA3", 1 },
+                      { "HA3", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -180,9 +245,12 @@ ResidueData GLYData("GLY",
                     { { "C", "O" } });
 ResidueData HISData("HIS",
                     // Atoms
-                    { "N",   "CA",  "C",   "O",   "CB",  "CG",  "ND1",
-                      "CD2", "CE1", "NE2", "OXT", "H",   "H2",  "HA",
-                      "HB2", "HB3", "HD1", "HD2", "HE1", "HE2", "HXT" },
+                    { { "N", 7 },   { "CA", 6 },  { "C", 6 },   { "O", 8 },
+                      { "CB", 6 },  { "CG", 6 },  { "ND1", 7 }, { "CD2", 6 },
+                      { "CE1", 6 }, { "NE2", 7 }, { "OXT", 8 }, { "H", 1 },
+                      { "H2", 1 },  { "HA", 1 },  { "HB2", 1 }, { "HB3", 1 },
+                      { "HD1", 1 }, { "HD2", 1 }, { "HE1", 1 }, { "HE2", 1 },
+                      { "HE2", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -207,9 +275,11 @@ ResidueData HISData("HIS",
 ResidueData ILEData(
   "ILE",
   // Atoms
-  { "N",    "CA",   "C",    "O",    "CB",   "CG1",  "CG2",  "CD1",
-    "OXT",  "H",    "H2",   "HA",   "HB",   "HG12", "HG13", "HG21",
-    "HG22", "HG23", "HD11", "HD12", "HD13", "HXT" },
+  { { "N", 7 },    { "CA", 6 },   { "C", 6 },    { "O", 8 },    { "CB", 6 },
+    { "CG1", 6 },  { "CG2", 6 },  { "CD1", 6 },  { "OXT", 8 },  { "H", 1 },
+    { "H2", 1 },   { "HA", 1 },   { "HB", 1 },   { "HG12", 1 }, { "HG13", 1 },
+    { "HG21", 1 }, { "HG22", 1 }, { "HG23", 1 }, { "HD11", 1 }, { "HD12", 1 },
+    { "HD13", 1 }, { "HD13", 1 } },
   // Single Bonds
   { { "N", "CA" },     { "N", "H" },      { "N", "H2" },     { "CA", "C" },
     { "CA", "CB" },    { "CA", "HA" },    { "C", "OXT" },    { "CB", "CG1" },
@@ -221,9 +291,11 @@ ResidueData ILEData(
 ResidueData LYSData(
   "LYS",
   // Atoms
-  { "N",   "CA",  "C",   "O",   "CB",  "CG",  "CD",  "CE",  "NZ",
-    "OXT", "H",   "H2",  "HA",  "HB2", "HB3", "HG2", "HG3", "HD2",
-    "HD3", "HE2", "HE3", "HZ1", "HZ2", "HZ3", "HXT" },
+  { { "N", 7 },   { "CA", 6 },  { "C", 6 },   { "O", 8 },   { "CB", 6 },
+    { "CG", 6 },  { "CD", 6 },  { "CE", 6 },  { "NZ", 7 },  { "OXT", 8 },
+    { "H", 1 },   { "H2", 1 },  { "HA", 1 },  { "HB2", 1 }, { "HB3", 1 },
+    { "HG2", 1 }, { "HG3", 1 }, { "HD2", 1 }, { "HD3", 1 }, { "HE2", 1 },
+    { "HE3", 1 }, { "HZ1", 1 }, { "HZ2", 1 }, { "HZ3", 1 }, { "HZ3", 1 } },
   // Single Bonds
   { { "N", "CA" },   { "N", "H" },    { "N", "H2" },   { "CA", "C" },
     { "CA", "CB" },  { "CA", "HA" },  { "C", "OXT" },  { "CB", "CG" },
@@ -236,9 +308,11 @@ ResidueData LYSData(
 ResidueData LEUData(
   "LEU",
   // Atoms
-  { "N",    "CA",   "C",    "O",    "CB",   "CG",  "CD1", "CD2",
-    "OXT",  "H",    "H2",   "HA",   "HB2",  "HB3", "HG",  "HD11",
-    "HD12", "HD13", "HD21", "HD22", "HD23", "HXT" },
+  { { "N", 7 },    { "CA", 6 },   { "C", 6 },    { "O", 8 },    { "CB", 6 },
+    { "CG", 6 },   { "CD1", 6 },  { "CD2", 6 },  { "OXT", 8 },  { "H", 1 },
+    { "H2", 1 },   { "HA", 1 },   { "HB2", 1 },  { "HB3", 1 },  { "HG", 1 },
+    { "HD11", 1 }, { "HD12", 1 }, { "HD13", 1 }, { "HD21", 1 }, { "HD22", 1 },
+    { "HD23", 1 }, { "HD23", 1 } },
   // Single Bonds
   { { "N", "CA" },     { "N", "H" },      { "N", "H2" },     { "CA", "C" },
     { "CA", "CB" },    { "CA", "HA" },    { "C", "OXT" },    { "CB", "CG" },
@@ -249,9 +323,11 @@ ResidueData LEUData(
   { { "C", "O" } });
 ResidueData METData("MET",
                     // Atoms
-                    { "N",   "CA",  "C",   "O",   "CB",  "CG",  "SD",
-                      "CE",  "OXT", "H",   "H2",  "HA",  "HB2", "HB3",
-                      "HG2", "HG3", "HE1", "HE2", "HE3", "HXT" },
+                    { { "N", 7 },   { "CA", 6 },  { "C", 6 },   { "O", 8 },
+                      { "CB", 6 },  { "CG", 6 },  { "SD", 16 }, { "CE", 6 },
+                      { "OXT", 8 }, { "H", 1 },   { "H2", 1 },  { "HA", 1 },
+                      { "HB2", 1 }, { "HB3", 1 }, { "HG2", 1 }, { "HG3", 1 },
+                      { "HE1", 1 }, { "HE2", 1 }, { "HE3", 1 }, { "HE3", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -275,8 +351,23 @@ ResidueData METData("MET",
                     { { "C", "O" } });
 ResidueData ASNData("ASN",
                     // Atoms
-                    { "N", "CA", "C", "O", "CB", "CG", "OD1", "ND2", "OXT", "H",
-                      "H2", "HA", "HB2", "HB3", "HD21", "HD22", "HXT" },
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "CB", 6 },
+                      { "CG", 6 },
+                      { "OD1", 8 },
+                      { "ND2", 7 },
+                      { "OXT", 8 },
+                      { "H", 1 },
+                      { "H2", 1 },
+                      { "HA", 1 },
+                      { "HB2", 1 },
+                      { "HB3", 1 },
+                      { "HD21", 1 },
+                      { "HD22", 1 },
+                      { "HD22", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -296,8 +387,23 @@ ResidueData ASNData("ASN",
                     { { "C", "O" }, { "CG", "OD1" } });
 ResidueData PROData("PRO",
                     // Atoms
-                    { "N", "CA", "C", "O", "CB", "CG", "CD", "OXT", "H", "HA",
-                      "HB2", "HB3", "HG2", "HG3", "HD2", "HD3", "HXT" },
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "CB", 6 },
+                      { "CG", 6 },
+                      { "CD", 6 },
+                      { "OXT", 8 },
+                      { "H", 1 },
+                      { "HA", 1 },
+                      { "HB2", 1 },
+                      { "HB3", 1 },
+                      { "HG2", 1 },
+                      { "HG3", 1 },
+                      { "HD2", 1 },
+                      { "HD3", 1 },
+                      { "HD3", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "CD" },
@@ -317,37 +423,42 @@ ResidueData PROData("PRO",
                       { "OXT", "HXT" } },
                     // Double Bonds
                     { { "C", "O" } });
-ResidueData GLNData("GLN",
-                    // Atoms
-                    { "N",   "CA",  "C",   "O",    "CB",   "CG", "CD",
-                      "OE1", "NE2", "OXT", "H",    "H2",   "HA", "HB2",
-                      "HB3", "HG2", "HG3", "HE21", "HE22", "HXT" },
-                    // Single Bonds
-                    { { "N", "CA" },
-                      { "N", "H" },
-                      { "N", "H2" },
-                      { "CA", "C" },
-                      { "CA", "CB" },
-                      { "CA", "HA" },
-                      { "C", "OXT" },
-                      { "CB", "CG" },
-                      { "CB", "HB2" },
-                      { "CB", "HB3" },
-                      { "CG", "CD" },
-                      { "CG", "HG2" },
-                      { "CG", "HG3" },
-                      { "CD", "NE2" },
-                      { "NE2", "HE21" },
-                      { "NE2", "HE22" },
-                      { "OXT", "HXT" } },
-                    // Double Bonds
-                    { { "C", "O" }, { "CD", "OE1" } });
+ResidueData GLNData(
+  "GLN",
+  // Atoms
+  { { "N", 7 },   { "CA", 6 },  { "C", 6 },    { "O", 8 },    { "CB", 6 },
+    { "CG", 6 },  { "CD", 6 },  { "OE1", 8 },  { "NE2", 7 },  { "OXT", 8 },
+    { "H", 1 },   { "H2", 1 },  { "HA", 1 },   { "HB2", 1 },  { "HB3", 1 },
+    { "HG2", 1 }, { "HG3", 1 }, { "HE21", 1 }, { "HE22", 1 }, { "HE22", 1 } },
+  // Single Bonds
+  { { "N", "CA" },
+    { "N", "H" },
+    { "N", "H2" },
+    { "CA", "C" },
+    { "CA", "CB" },
+    { "CA", "HA" },
+    { "C", "OXT" },
+    { "CB", "CG" },
+    { "CB", "HB2" },
+    { "CB", "HB3" },
+    { "CG", "CD" },
+    { "CG", "HG2" },
+    { "CG", "HG3" },
+    { "CD", "NE2" },
+    { "NE2", "HE21" },
+    { "NE2", "HE22" },
+    { "OXT", "HXT" } },
+  // Double Bonds
+  { { "C", "O" }, { "CD", "OE1" } });
 ResidueData ARGData(
   "ARG",
   // Atoms
-  { "N",   "CA",  "C",   "O",  "CB",   "CG",   "CD",   "NE",   "CZ",
-    "NH1", "NH2", "OXT", "H",  "H2",   "HA",   "HB2",  "HB3",  "HG2",
-    "HG3", "HD2", "HD3", "HE", "HH11", "HH12", "HH21", "HH22", "HXT" },
+  { { "N", 7 },    { "CA", 6 },  { "C", 6 },    { "O", 8 },    { "CB", 6 },
+    { "CG", 6 },   { "CD", 6 },  { "NE", 7 },   { "CZ", 6 },   { "NH1", 7 },
+    { "NH2", 7 },  { "OXT", 8 }, { "H", 1 },    { "H2", 1 },   { "HA", 1 },
+    { "HB2", 1 },  { "HB3", 1 }, { "HG2", 1 },  { "HG3", 1 },  { "HD2", 1 },
+    { "HD3", 1 },  { "HE", 1 },  { "HH11", 1 }, { "HH12", 1 }, { "HH21", 1 },
+    { "HH22", 1 }, { "HH22", 1 } },
   // Single Bonds
   { { "N", "CA" },     { "N", "H" },      { "N", "H2" },     { "CA", "C" },
     { "CA", "CB" },    { "CA", "HA" },    { "C", "OXT" },    { "CB", "CG" },
@@ -359,8 +470,20 @@ ResidueData ARGData(
   { { "C", "O" }, { "CZ", "NH2" } });
 ResidueData SERData("SER",
                     // Atoms
-                    { "N", "CA", "C", "O", "CB", "OG", "OXT", "H", "H2", "HA",
-                      "HB2", "HB3", "HG", "HXT" },
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "CB", 6 },
+                      { "OG", 8 },
+                      { "OXT", 8 },
+                      { "H", 1 },
+                      { "H2", 1 },
+                      { "HA", 1 },
+                      { "HB2", 1 },
+                      { "HB3", 1 },
+                      { "HG", 1 },
+                      { "HG", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -378,8 +501,23 @@ ResidueData SERData("SER",
                     { { "C", "O" } });
 ResidueData THRData("THR",
                     // Atoms
-                    { "N", "CA", "C", "O", "CB", "OG1", "CG2", "OXT", "H", "H2",
-                      "HA", "HB", "HG1", "HG21", "HG22", "HG23", "HXT" },
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "CB", 6 },
+                      { "OG1", 8 },
+                      { "CG2", 6 },
+                      { "OXT", 8 },
+                      { "H", 1 },
+                      { "H2", 1 },
+                      { "HA", 1 },
+                      { "HB", 1 },
+                      { "HG1", 1 },
+                      { "HG21", 1 },
+                      { "HG22", 1 },
+                      { "HG23", 1 },
+                      { "HG23", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -400,9 +538,25 @@ ResidueData THRData("THR",
                     { { "C", "O" } });
 ResidueData VALData("VAL",
                     // Atoms
-                    { "N", "CA", "C", "O", "CB", "CG1", "CG2", "OXT", "H", "H2",
-                      "HA", "HB", "HG11", "HG12", "HG13", "HG21", "HG22",
-                      "HG23", "HXT" },
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "CB", 6 },
+                      { "CG1", 6 },
+                      { "CG2", 6 },
+                      { "OXT", 8 },
+                      { "H", 1 },
+                      { "H2", 1 },
+                      { "HA", 1 },
+                      { "HB", 1 },
+                      { "HG11", 1 },
+                      { "HG12", 1 },
+                      { "HG13", 1 },
+                      { "HG21", 1 },
+                      { "HG22", 1 },
+                      { "HG23", 1 },
+                      { "HG23", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -426,9 +580,12 @@ ResidueData VALData("VAL",
 ResidueData TRPData(
   "TRP",
   // Atoms
-  { "N",   "CA",  "C",   "O",   "CB",  "CG",  "CD1", "CD2", "NE1",
-    "CE2", "CE3", "CZ2", "CZ3", "CH2", "OXT", "H",   "H2",  "HA",
-    "HB2", "HB3", "HD1", "HE1", "HE3", "HZ2", "HZ3", "HH2", "HXT" },
+  { { "N", 7 },   { "CA", 6 },  { "C", 6 },   { "O", 8 },   { "CB", 6 },
+    { "CG", 6 },  { "CD1", 6 }, { "CD2", 6 }, { "NE1", 7 }, { "CE2", 6 },
+    { "CE3", 6 }, { "CZ2", 6 }, { "CZ3", 6 }, { "CH2", 6 }, { "OXT", 8 },
+    { "H", 1 },   { "H2", 1 },  { "HA", 1 },  { "HB2", 1 }, { "HB3", 1 },
+    { "HD1", 1 }, { "HE1", 1 }, { "HE3", 1 }, { "HZ2", 1 }, { "HZ3", 1 },
+    { "HH2", 1 }, { "HH2", 1 } },
   // Single Bonds
   { { "N", "CA" },    { "N", "H" },     { "N", "H2" },    { "CA", "C" },
     { "CA", "CB" },   { "CA", "HA" },   { "C", "OXT" },   { "CB", "CG" },
@@ -445,9 +602,11 @@ ResidueData TRPData(
 ResidueData TYRData(
   "TYR",
   // Atoms
-  { "N",   "CA",  "C",   "O",   "CB",  "CG",  "CD1", "CD2",
-    "CE1", "CE2", "CZ",  "OH",  "OXT", "H",   "H2",  "HA",
-    "HB2", "HB3", "HD1", "HD2", "HE1", "HE2", "HH",  "HXT" },
+  { { "N", 7 },   { "CA", 6 },  { "C", 6 },   { "O", 8 },   { "CB", 6 },
+    { "CG", 6 },  { "CD1", 6 }, { "CD2", 6 }, { "CE1", 6 }, { "CE2", 6 },
+    { "CZ", 6 },  { "OH", 8 },  { "OXT", 8 }, { "H", 1 },   { "H2", 1 },
+    { "HA", 1 },  { "HB2", 1 }, { "HB3", 1 }, { "HD1", 1 }, { "HD2", 1 },
+    { "HE1", 1 }, { "HE2", 1 }, { "HH", 1 },  { "HH", 1 } },
   // Single Bonds
   { { "N", "CA" },    { "N", "H" },     { "N", "H2" },    { "CA", "C" },
     { "CA", "CB" },   { "CA", "HA" },   { "C", "OXT" },   { "CB", "CG" },
@@ -459,10 +618,14 @@ ResidueData TYRData(
 ResidueData DAData(
   "DA",
   // Atoms
-  { "OP3", "P",    "OP1", "OP2",  "O5'",  "C5'",  "C4'", "O4'",  "C3'",
-    "O3'", "C2'",  "C1'", "N9",   "C8",   "N7",   "C5",  "C6",   "N6",
-    "N1",  "C2",   "N3",  "C4",   "HOP3", "HOP2", "H5'", "H5''", "H4'",
-    "H3'", "HO3'", "H2'", "H2''", "H1'",  "H8",   "H61", "H62",  "H2" },
+  { { "OP3", 8 },  { "P", 15 },  { "OP1", 8 },  { "OP2", 8 },  { "O5'", 8 },
+    { "C5'", 6 },  { "C4'", 6 }, { "O4'", 8 },  { "C3'", 6 },  { "O3'", 8 },
+    { "C2'", 6 },  { "C1'", 6 }, { "N9", 7 },   { "C8", 6 },   { "N7", 7 },
+    { "C5", 6 },   { "C6", 6 },  { "N6", 7 },   { "N1", 7 },   { "C2", 6 },
+    { "N3", 7 },   { "C4", 6 },  { "HOP3", 1 }, { "HOP2", 1 }, { "H5'", 1 },
+    { "H5''", 1 }, { "H4'", 1 }, { "H3'", 1 },  { "HO3'", 1 }, { "H2'", 1 },
+    { "H2''", 1 }, { "H1'", 1 }, { "H8", 1 },   { "H61", 1 },  { "H62", 1 },
+    { "H62", 1 } },
   // Single Bonds
   { { "OP3", "P" },    { "OP3", "HOP3" }, { "P", "OP2" },   { "P", "O5'" },
     { "OP2", "HOP2" }, { "O5'", "C5'" },  { "C5'", "C4'" }, { "C5'", "H5'" },
@@ -482,10 +645,13 @@ ResidueData DAData(
 ResidueData DCData(
   "DC",
   // Atoms
-  { "OP3", "P",    "OP1",  "OP2",  "O5'", "C5'",  "C4'", "O4'", "C3'",
-    "O3'", "C2'",  "C1'",  "N1",   "C2",  "O2",   "N3",  "C4",  "N4",
-    "C5",  "C6",   "HOP3", "HOP2", "H5'", "H5''", "H4'", "H3'", "HO3'",
-    "H2'", "H2''", "H1'",  "H41",  "H42", "H5",   "H6" },
+  { { "OP3", 8 },  { "P", 15 },   { "OP1", 8 }, { "OP2", 8 },  { "O5'", 8 },
+    { "C5'", 6 },  { "C4'", 6 },  { "O4'", 8 }, { "C3'", 6 },  { "O3'", 8 },
+    { "C2'", 6 },  { "C1'", 6 },  { "N1", 7 },  { "C2", 6 },   { "O2", 8 },
+    { "N3", 7 },   { "C4", 6 },   { "N4", 7 },  { "C5", 6 },   { "C6", 6 },
+    { "HOP3", 1 }, { "HOP2", 1 }, { "H5'", 1 }, { "H5''", 1 }, { "H4'", 1 },
+    { "H3'", 1 },  { "HO3'", 1 }, { "H2'", 1 }, { "H2''", 1 }, { "H1'", 1 },
+    { "H41", 1 },  { "H42", 1 },  { "H5", 1 },  { "H5", 1 } },
   // Single Bonds
   { { "OP3", "P" },    { "OP3", "HOP3" }, { "P", "OP2" },   { "P", "O5'" },
     { "OP2", "HOP2" }, { "O5'", "C5'" },  { "C5'", "C4'" }, { "C5'", "H5'" },
@@ -500,10 +666,14 @@ ResidueData DCData(
 ResidueData DGData(
   "DG",
   // Atoms
-  { "OP3", "P",    "OP1", "OP2",  "O5'",  "C5'", "C4'",  "O4'", "C3'", "O3'",
-    "C2'", "C1'",  "N9",  "C8",   "N7",   "C5",  "C6",   "O6",  "N1",  "C2",
-    "N2",  "N3",   "C4",  "HOP3", "HOP2", "H5'", "H5''", "H4'", "H3'", "HO3'",
-    "H2'", "H2''", "H1'", "H8",   "H1",   "H21", "H22" },
+  { { "OP3", 8 }, { "P", 15 },   { "OP1", 8 }, { "OP2", 8 },  { "O5'", 8 },
+    { "C5'", 6 }, { "C4'", 6 },  { "O4'", 8 }, { "C3'", 6 },  { "O3'", 8 },
+    { "C2'", 6 }, { "C1'", 6 },  { "N9", 7 },  { "C8", 6 },   { "N7", 7 },
+    { "C5", 6 },  { "C6", 6 },   { "O6", 8 },  { "N1", 7 },   { "C2", 6 },
+    { "N2", 7 },  { "N3", 7 },   { "C4", 6 },  { "HOP3", 1 }, { "HOP2", 1 },
+    { "H5'", 1 }, { "H5''", 1 }, { "H4'", 1 }, { "H3'", 1 },  { "HO3'", 1 },
+    { "H2'", 1 }, { "H2''", 1 }, { "H1'", 1 }, { "H8", 1 },   { "H1", 1 },
+    { "H21", 1 }, { "H21", 1 } },
   // Single Bonds
   { { "OP3", "P" },    { "OP3", "HOP3" }, { "P", "OP2" },   { "P", "O5'" },
     { "OP2", "HOP2" }, { "O5'", "C5'" },  { "C5'", "C4'" }, { "C5'", "H5'" },
@@ -523,10 +693,14 @@ ResidueData DGData(
 ResidueData DTData(
   "DT",
   // Atoms
-  { "OP3",  "P",   "OP1",  "OP2",  "O5'",  "C5'", "C4'",  "O4'", "C3'",
-    "O3'",  "C2'", "C1'",  "N1",   "C2",   "O2",  "N3",   "C4",  "O4",
-    "C5",   "C7",  "C6",   "HOP3", "HOP2", "H5'", "H5''", "H4'", "H3'",
-    "HO3'", "H2'", "H2''", "H1'",  "H3",   "H71", "H72",  "H73", "H6" },
+  { { "OP3", 8 }, { "P", 15 },   { "OP1", 8 },  { "OP2", 8 }, { "O5'", 8 },
+    { "C5'", 6 }, { "C4'", 6 },  { "O4'", 8 },  { "C3'", 6 }, { "O3'", 8 },
+    { "C2'", 6 }, { "C1'", 6 },  { "N1", 7 },   { "C2", 6 },  { "O2", 8 },
+    { "N3", 7 },  { "C4", 6 },   { "O4", 8 },   { "C5", 6 },  { "C7", 6 },
+    { "C6", 6 },  { "HOP3", 1 }, { "HOP2", 1 }, { "H5'", 1 }, { "H5''", 1 },
+    { "H4'", 1 }, { "H3'", 1 },  { "HO3'", 1 }, { "H2'", 1 }, { "H2''", 1 },
+    { "H1'", 1 }, { "H3", 1 },   { "H71", 1 },  { "H72", 1 }, { "H73", 1 },
+    { "H73", 1 } },
   // Single Bonds
   { { "OP3", "P" },    { "OP3", "HOP3" }, { "P", "OP2" },   { "P", "O5'" },
     { "OP2", "HOP2" }, { "O5'", "C5'" },  { "C5'", "C4'" }, { "C5'", "H5'" },
@@ -542,10 +716,13 @@ ResidueData DTData(
 ResidueData DIData(
   "DI",
   // Atoms
-  { "OP3", "P",    "OP1", "OP2",  "O5'",  "C5'",  "C4'", "O4'",  "C3'",
-    "O3'", "C2'",  "C1'", "N9",   "C8",   "N7",   "C5",  "C6",   "O6",
-    "N1",  "C2",   "N3",  "C4",   "HOP3", "HOP2", "H5'", "H5''", "H4'",
-    "H3'", "HO3'", "H2'", "H2''", "H1'",  "H8",   "H1",  "H2" },
+  { { "OP3", 8 },  { "P", 15 },  { "OP1", 8 },  { "OP2", 8 },  { "O5'", 8 },
+    { "C5'", 6 },  { "C4'", 6 }, { "O4'", 8 },  { "C3'", 6 },  { "O3'", 8 },
+    { "C2'", 6 },  { "C1'", 6 }, { "N9", 7 },   { "C8", 6 },   { "N7", 7 },
+    { "C5", 6 },   { "C6", 6 },  { "O6", 8 },   { "N1", 7 },   { "C2", 6 },
+    { "N3", 7 },   { "C4", 6 },  { "HOP3", 1 }, { "HOP2", 1 }, { "H5'", 1 },
+    { "H5''", 1 }, { "H4'", 1 }, { "H3'", 1 },  { "HO3'", 1 }, { "H2'", 1 },
+    { "H2''", 1 }, { "H1'", 1 }, { "H8", 1 },   { "H1", 1 },   { "H1", 1 } },
   // Single Bonds
   { { "OP3", "P" },    { "OP3", "HOP3" }, { "P", "OP2" },   { "P", "O5'" },
     { "OP2", "HOP2" }, { "O5'", "C5'" },  { "C5'", "C4'" }, { "C5'", "H5'" },
@@ -564,10 +741,14 @@ ResidueData DIData(
 ResidueData AData(
   "A",
   // Atoms
-  { "OP3", "P",    "OP1", "OP2",  "O5'",  "C5'", "C4'",  "O4'", "C3'", "O3'",
-    "C2'", "O2'",  "C1'", "N9",   "C8",   "N7",  "C5",   "C6",  "N6",  "N1",
-    "C2",  "N3",   "C4",  "HOP3", "HOP2", "H5'", "H5''", "H4'", "H3'", "HO3'",
-    "H2'", "HO2'", "H1'", "H8",   "H61",  "H62", "H2" },
+  { { "OP3", 8 }, { "P", 15 },   { "OP1", 8 }, { "OP2", 8 },  { "O5'", 8 },
+    { "C5'", 6 }, { "C4'", 6 },  { "O4'", 8 }, { "C3'", 6 },  { "O3'", 8 },
+    { "C2'", 6 }, { "O2'", 8 },  { "C1'", 6 }, { "N9", 7 },   { "C8", 6 },
+    { "N7", 7 },  { "C5", 6 },   { "C6", 6 },  { "N6", 7 },   { "N1", 7 },
+    { "C2", 6 },  { "N3", 7 },   { "C4", 6 },  { "HOP3", 1 }, { "HOP2", 1 },
+    { "H5'", 1 }, { "H5''", 1 }, { "H4'", 1 }, { "H3'", 1 },  { "HO3'", 1 },
+    { "H2'", 1 }, { "HO2'", 1 }, { "H1'", 1 }, { "H8", 1 },   { "H61", 1 },
+    { "H62", 1 }, { "H62", 1 } },
   // Single Bonds
   { { "OP3", "P" },    { "OP3", "HOP3" }, { "P", "OP2" },   { "P", "O5'" },
     { "OP2", "HOP2" }, { "O5'", "C5'" },  { "C5'", "C4'" }, { "C5'", "H5'" },
@@ -587,10 +768,13 @@ ResidueData AData(
 ResidueData CData(
   "C",
   // Atoms
-  { "OP3",  "P",   "OP1",  "OP2",  "O5'",  "C5'", "C4'",  "O4'", "C3'",
-    "O3'",  "C2'", "O2'",  "C1'",  "N1",   "C2",  "O2",   "N3",  "C4",
-    "N4",   "C5",  "C6",   "HOP3", "HOP2", "H5'", "H5''", "H4'", "H3'",
-    "HO3'", "H2'", "HO2'", "H1'",  "H41",  "H42", "H5",   "H6" },
+  { { "OP3", 8 }, { "P", 15 },   { "OP1", 8 },  { "OP2", 8 }, { "O5'", 8 },
+    { "C5'", 6 }, { "C4'", 6 },  { "O4'", 8 },  { "C3'", 6 }, { "O3'", 8 },
+    { "C2'", 6 }, { "O2'", 8 },  { "C1'", 6 },  { "N1", 7 },  { "C2", 6 },
+    { "O2", 8 },  { "N3", 7 },   { "C4", 6 },   { "N4", 7 },  { "C5", 6 },
+    { "C6", 6 },  { "HOP3", 1 }, { "HOP2", 1 }, { "H5'", 1 }, { "H5''", 1 },
+    { "H4'", 1 }, { "H3'", 1 },  { "HO3'", 1 }, { "H2'", 1 }, { "HO2'", 1 },
+    { "H1'", 1 }, { "H41", 1 },  { "H42", 1 },  { "H5", 1 },  { "H5", 1 } },
   // Single Bonds
   { { "OP3", "P" },    { "OP3", "HOP3" }, { "P", "OP2" },   { "P", "O5'" },
     { "OP2", "HOP2" }, { "O5'", "C5'" },  { "C5'", "C4'" }, { "C5'", "H5'" },
@@ -605,10 +789,14 @@ ResidueData CData(
 ResidueData GData(
   "G",
   // Atoms
-  { "OP3",  "P",   "OP1",  "OP2", "O5'",  "C5'",  "C4'", "O4'",  "C3'", "O3'",
-    "C2'",  "O2'", "C1'",  "N9",  "C8",   "N7",   "C5",  "C6",   "O6",  "N1",
-    "C2",   "N2",  "N3",   "C4",  "HOP3", "HOP2", "H5'", "H5''", "H4'", "H3'",
-    "HO3'", "H2'", "HO2'", "H1'", "H8",   "H1",   "H21", "H22" },
+  { { "OP3", 8 },  { "P", 15 },  { "OP1", 8 },  { "OP2", 8 }, { "O5'", 8 },
+    { "C5'", 6 },  { "C4'", 6 }, { "O4'", 8 },  { "C3'", 6 }, { "O3'", 8 },
+    { "C2'", 6 },  { "O2'", 8 }, { "C1'", 6 },  { "N9", 7 },  { "C8", 6 },
+    { "N7", 7 },   { "C5", 6 },  { "C6", 6 },   { "O6", 8 },  { "N1", 7 },
+    { "C2", 6 },   { "N2", 7 },  { "N3", 7 },   { "C4", 6 },  { "HOP3", 1 },
+    { "HOP2", 1 }, { "H5'", 1 }, { "H5''", 1 }, { "H4'", 1 }, { "H3'", 1 },
+    { "HO3'", 1 }, { "H2'", 1 }, { "HO2'", 1 }, { "H1'", 1 }, { "H8", 1 },
+    { "H1", 1 },   { "H21", 1 }, { "H21", 1 } },
   // Single Bonds
   { { "OP3", "P" },    { "OP3", "HOP3" }, { "P", "OP2" },   { "P", "O5'" },
     { "OP2", "HOP2" }, { "O5'", "C5'" },  { "C5'", "C4'" }, { "C5'", "H5'" },
@@ -628,10 +816,13 @@ ResidueData GData(
 ResidueData UData(
   "U",
   // Atoms
-  { "OP3",  "P",   "OP1",  "OP2",  "O5'",  "C5'", "C4'",  "O4'", "C3'",
-    "O3'",  "C2'", "O2'",  "C1'",  "N1",   "C2",  "O2",   "N3",  "C4",
-    "O4",   "C5",  "C6",   "HOP3", "HOP2", "H5'", "H5''", "H4'", "H3'",
-    "HO3'", "H2'", "HO2'", "H1'",  "H3",   "H5",  "H6" },
+  { { "OP3", 8 }, { "P", 15 },   { "OP1", 8 },  { "OP2", 8 }, { "O5'", 8 },
+    { "C5'", 6 }, { "C4'", 6 },  { "O4'", 8 },  { "C3'", 6 }, { "O3'", 8 },
+    { "C2'", 6 }, { "O2'", 8 },  { "C1'", 6 },  { "N1", 7 },  { "C2", 6 },
+    { "O2", 8 },  { "N3", 7 },   { "C4", 6 },   { "O4", 8 },  { "C5", 6 },
+    { "C6", 6 },  { "HOP3", 1 }, { "HOP2", 1 }, { "H5'", 1 }, { "H5''", 1 },
+    { "H4'", 1 }, { "H3'", 1 },  { "HO3'", 1 }, { "H2'", 1 }, { "HO2'", 1 },
+    { "H1'", 1 }, { "H3", 1 },   { "H5", 1 },   { "H5", 1 } },
   // Single Bonds
   { { "OP3", "P" },    { "OP3", "HOP3" }, { "P", "OP2" },   { "P", "O5'" },
     { "OP2", "HOP2" }, { "O5'", "C5'" },  { "C5'", "C4'" }, { "C5'", "H5'" },
@@ -646,10 +837,14 @@ ResidueData UData(
 ResidueData IData(
   "I",
   // Atoms
-  { "OP3", "P",   "OP1",  "OP2", "O5'",  "C5'",  "C4'",  "O4'", "C3'",
-    "O3'", "C2'", "O2'",  "C1'", "N9",   "C8",   "N7",   "C5",  "C6",
-    "O6",  "N1",  "C2",   "N3",  "C4",   "HOP3", "HOP2", "H5'", "H5''",
-    "H4'", "H3'", "HO3'", "H2'", "HO2'", "H1'",  "H8",   "H1",  "H2" },
+  { { "OP3", 8 }, { "P", 15 },   { "OP1", 8 }, { "OP2", 8 },  { "O5'", 8 },
+    { "C5'", 6 }, { "C4'", 6 },  { "O4'", 8 }, { "C3'", 6 },  { "O3'", 8 },
+    { "C2'", 6 }, { "O2'", 8 },  { "C1'", 6 }, { "N9", 7 },   { "C8", 6 },
+    { "N7", 7 },  { "C5", 6 },   { "C6", 6 },  { "O6", 8 },   { "N1", 7 },
+    { "C2", 6 },  { "N3", 7 },   { "C4", 6 },  { "HOP3", 1 }, { "HOP2", 1 },
+    { "H5'", 1 }, { "H5''", 1 }, { "H4'", 1 }, { "H3'", 1 },  { "HO3'", 1 },
+    { "H2'", 1 }, { "HO2'", 1 }, { "H1'", 1 }, { "H8", 1 },   { "H1", 1 },
+    { "H1", 1 } },
   // Single Bonds
   { { "OP3", "P" },    { "OP3", "HOP3" }, { "P", "OP2" },   { "P", "O5'" },
     { "OP2", "HOP2" }, { "O5'", "C5'" },  { "C5'", "C4'" }, { "C5'", "H5'" },
@@ -669,15 +864,21 @@ ResidueData IData(
 ResidueData HEMData(
   "HEM",
   // Atoms
-  { "CHA",  "CHB",  "CHC",  "CHD",  "C1A",  "C2A",  "C3A",  "C4A",  "CMA",
-    "CAA",  "CBA",  "CGA",  "O1A",  "O2A",  "C1B",  "C2B",  "C3B",  "C4B",
-    "CMB",  "CAB",  "CBB",  "C1C",  "C2C",  "C3C",  "C4C",  "CMC",  "CAC",
-    "CBC",  "C1D",  "C2D",  "C3D",  "C4D",  "CMD",  "CAD",  "CBD",  "CGD",
-    "O1D",  "O2D",  "NA",   "NB",   "NC",   "ND",   "FE",   "HHB",  "HHC",
-    "HHD",  "HMA",  "HMAA", "HMAB", "HAA",  "HAAA", "HBA",  "HBAA", "HMB",
-    "HMBA", "HMBB", "HAB",  "HBB",  "HBBA", "HMC",  "HMCA", "HMCB", "HAC",
-    "HBC",  "HBCA", "HMD",  "HMDA", "HMDB", "HAD",  "HADA", "HBD",  "HBDA",
-    "H2A",  "H2D",  "HHA" },
+  { { "CHA", 6 },  { "CHB", 6 },  { "CHC", 6 },  { "CHD", 6 },  { "C1A", 6 },
+    { "C2A", 6 },  { "C3A", 6 },  { "C4A", 6 },  { "CMA", 6 },  { "CAA", 6 },
+    { "CBA", 6 },  { "CGA", 6 },  { "O1A", 8 },  { "O2A", 8 },  { "C1B", 6 },
+    { "C2B", 6 },  { "C3B", 6 },  { "C4B", 6 },  { "CMB", 6 },  { "CAB", 6 },
+    { "CBB", 6 },  { "C1C", 6 },  { "C2C", 6 },  { "C3C", 6 },  { "C4C", 6 },
+    { "CMC", 6 },  { "CAC", 6 },  { "CBC", 6 },  { "C1D", 6 },  { "C2D", 6 },
+    { "C3D", 6 },  { "C4D", 6 },  { "CMD", 6 },  { "CAD", 6 },  { "CBD", 6 },
+    { "CGD", 6 },  { "O1D", 8 },  { "O2D", 8 },  { "NA", 7 },   { "NB", 7 },
+    { "NC", 7 },   { "ND", 7 },   { "FE", 26 },  { "HHB", 1 },  { "HHC", 1 },
+    { "HHD", 1 },  { "HMA", 1 },  { "HMAA", 1 }, { "HMAB", 1 }, { "HAA", 1 },
+    { "HAAA", 1 }, { "HBA", 1 },  { "HBAA", 1 }, { "HMB", 1 },  { "HMBA", 1 },
+    { "HMBB", 1 }, { "HAB", 1 },  { "HBB", 1 },  { "HBBA", 1 }, { "HMC", 1 },
+    { "HMCA", 1 }, { "HMCB", 1 }, { "HAC", 1 },  { "HBC", 1 },  { "HBCA", 1 },
+    { "HMD", 1 },  { "HMDA", 1 }, { "HMDB", 1 }, { "HAD", 1 },  { "HADA", 1 },
+    { "HBD", 1 },  { "HBDA", 1 }, { "H2A", 1 },  { "H2D", 1 },  { "H2D", 1 } },
   // Single Bonds
   { { "CHA", "C1A" },  { "CHA", "HHA" },  { "CHB", "C4A" },  { "CHB", "HHB" },
     { "CHC", "C4B" },  { "CHC", "HHC" },  { "CHD", "C1D" },  { "CHD", "HHD" },
@@ -714,22 +915,35 @@ ResidueData HEMData(
     { "CGD", "O1D" } });
 ResidueData HOHData("HOH",
                     // Atoms
-                    { "O", "H1", "H2" },
+                    { { "O", 8 }, { "H1", 1 }, { "H1", 1 } },
                     // Single Bonds
                     { { "O", "H1" }, { "O", "H2" } },
                     // Double Bonds
                     {});
-ResidueData SO4Data("SO4",
-                    // Atoms
-                    { "S", "O1", "O2", "O3", "O4" },
-                    // Single Bonds
-                    { { "S", "O3" }, { "S", "O4" } },
-                    // Double Bonds
-                    { { "S", "O1" }, { "S", "O2" } });
+ResidueData SO4Data(
+  "SO4",
+  // Atoms
+  { { "S", 16 }, { "O1", 8 }, { "O2", 8 }, { "O3", 8 }, { "O3", 8 } },
+  // Single Bonds
+  { { "S", "O3" }, { "S", "O4" } },
+  // Double Bonds
+  { { "S", "O1" }, { "S", "O2" } });
 ResidueData GOLData("GOL",
                     // Atoms
-                    { "C1", "O1", "C2", "O2", "C3", "O3", "H11", "H12", "HO1",
-                      "H2", "HO2", "H31", "H32", "HO3" },
+                    { { "C1", 6 },
+                      { "O1", 8 },
+                      { "C2", 6 },
+                      { "O2", 8 },
+                      { "C3", 6 },
+                      { "O3", 8 },
+                      { "H11", 1 },
+                      { "H12", 1 },
+                      { "HO1", 1 },
+                      { "H2", 1 },
+                      { "HO2", 1 },
+                      { "H31", 1 },
+                      { "H32", 1 },
+                      { "H32", 1 } },
                     // Single Bonds
                     { { "C1", "O1" },
                       { "C1", "C2" },
@@ -748,9 +962,11 @@ ResidueData GOLData("GOL",
                     {});
 ResidueData MSEData("MSE",
                     // Atoms
-                    { "N",   "CA",  "C",   "O",   "OXT", "CB",  "CG",
-                      "SE",  "CE",  "H",   "HN2", "HA",  "HXT", "HB2",
-                      "HB3", "HG2", "HG3", "HE1", "HE2", "HE3" },
+                    { { "N", 7 },   { "CA", 6 },  { "C", 6 },   { "O", 8 },
+                      { "OXT", 8 }, { "CB", 6 },  { "CG", 6 },  { "SE", 34 },
+                      { "CE", 6 },  { "H", 1 },   { "HN2", 1 }, { "HA", 1 },
+                      { "HXT", 1 }, { "HB2", 1 }, { "HB3", 1 }, { "HG2", 1 },
+                      { "HG3", 1 }, { "HE1", 1 }, { "HE2", 1 }, { "HE2", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -774,8 +990,16 @@ ResidueData MSEData("MSE",
                     { { "C", "O" } });
 ResidueData EDOData("EDO",
                     // Atoms
-                    { "C1", "O1", "C2", "O2", "H11", "H12", "HO1", "H21", "H22",
-                      "HO2" },
+                    { { "C1", 6 },
+                      { "O1", 8 },
+                      { "C2", 6 },
+                      { "O2", 8 },
+                      { "H11", 1 },
+                      { "H12", 1 },
+                      { "HO1", 1 },
+                      { "H21", 1 },
+                      { "H22", 1 },
+                      { "H22", 1 } },
                     // Single Bonds
                     { { "C1", "O1" },
                       { "C1", "C2" },
@@ -791,9 +1015,12 @@ ResidueData EDOData("EDO",
 ResidueData NAGData(
   "NAG",
   // Atoms
-  { "C1",  "C2",  "C3",  "C4",  "C5",  "C6",  "C7",  "C8",  "N2",  "O1",
-    "O3",  "O4",  "O5",  "O6",  "O7",  "H1",  "H2",  "H3",  "H4",  "H5",
-    "H61", "H62", "H81", "H82", "H83", "HN2", "HO1", "HO3", "HO4", "HO6" },
+  { { "C1", 6 },  { "C2", 6 },  { "C3", 6 },  { "C4", 6 },  { "C5", 6 },
+    { "C6", 6 },  { "C7", 6 },  { "C8", 6 },  { "N2", 7 },  { "O1", 8 },
+    { "O3", 8 },  { "O4", 8 },  { "O5", 8 },  { "O6", 8 },  { "O7", 8 },
+    { "H1", 1 },  { "H2", 1 },  { "H3", 1 },  { "H4", 1 },  { "H5", 1 },
+    { "H61", 1 }, { "H62", 1 }, { "H81", 1 }, { "H82", 1 }, { "H83", 1 },
+    { "HN2", 1 }, { "HO1", 1 }, { "HO3", 1 }, { "HO4", 1 }, { "HO4", 1 } },
   // Single Bonds
   { { "C1", "C2" },  { "C1", "O1" },  { "C1", "O5" },  { "C1", "H1" },
     { "C2", "C3" },  { "C2", "N2" },  { "C2", "H2" },  { "C3", "C4" },
@@ -805,16 +1032,23 @@ ResidueData NAGData(
     { "O6", "HO6" } },
   // Double Bonds
   { { "C7", "O7" } });
-ResidueData PO4Data("PO4",
-                    // Atoms
-                    { "P", "O1", "O2", "O3", "O4" },
-                    // Single Bonds
-                    { { "P", "O2" }, { "P", "O3" }, { "P", "O4" } },
-                    // Double Bonds
-                    { { "P", "O1" } });
+ResidueData PO4Data(
+  "PO4",
+  // Atoms
+  { { "P", 15 }, { "O1", 8 }, { "O2", 8 }, { "O3", 8 }, { "O3", 8 } },
+  // Single Bonds
+  { { "P", "O2" }, { "P", "O3" }, { "P", "O4" } },
+  // Double Bonds
+  { { "P", "O1" } });
 ResidueData ACTData("ACT",
                     // Atoms
-                    { "C", "O", "OXT", "CH3", "H1", "H2", "H3" },
+                    { { "C", 6 },
+                      { "O", 8 },
+                      { "OXT", 8 },
+                      { "CH3", 6 },
+                      { "H1", 1 },
+                      { "H2", 1 },
+                      { "H2", 1 } },
                     // Single Bonds
                     { { "C", "OXT" },
                       { "C", "CH3" },
@@ -825,8 +1059,23 @@ ResidueData ACTData("ACT",
                     { { "C", "O" } });
 ResidueData PEGData("PEG",
                     // Atoms
-                    { "C1", "O1", "C2", "O2", "C3", "C4", "O4", "H11", "H12",
-                      "HO1", "H21", "H22", "H31", "H32", "H41", "H42", "HO4" },
+                    { { "C1", 6 },
+                      { "O1", 8 },
+                      { "C2", 6 },
+                      { "O2", 8 },
+                      { "C3", 6 },
+                      { "C4", 6 },
+                      { "O4", 8 },
+                      { "H11", 1 },
+                      { "H12", 1 },
+                      { "HO1", 1 },
+                      { "H21", 1 },
+                      { "H22", 1 },
+                      { "H31", 1 },
+                      { "H32", 1 },
+                      { "H41", 1 },
+                      { "H42", 1 },
+                      { "H42", 1 } },
                     // Single Bonds
                     { { "C1", "O1" },
                       { "C1", "C2" },
@@ -846,51 +1095,61 @@ ResidueData PEGData("PEG",
                       { "O4", "HO4" } },
                     // Double Bonds
                     {});
-ResidueData MANData("MAN",
-                    // Atoms
-                    { "C1", "C2",  "C3",  "C4",  "C5",  "C6",  "O1",  "O2",
-                      "O3", "O4",  "O5",  "O6",  "H1",  "H2",  "H3",  "H4",
-                      "H5", "H61", "H62", "HO1", "HO2", "HO3", "HO4", "HO6" },
-                    // Single Bonds
-                    { { "C1", "C2" },  { "C1", "O1" },  { "C1", "O5" },
-                      { "C1", "H1" },  { "C2", "C3" },  { "C2", "O2" },
-                      { "C2", "H2" },  { "C3", "C4" },  { "C3", "O3" },
-                      { "C3", "H3" },  { "C4", "C5" },  { "C4", "O4" },
-                      { "C4", "H4" },  { "C5", "C6" },  { "C5", "O5" },
-                      { "C5", "H5" },  { "C6", "O6" },  { "C6", "H61" },
-                      { "C6", "H62" }, { "O1", "HO1" }, { "O2", "HO2" },
-                      { "O3", "HO3" }, { "O4", "HO4" }, { "O6", "HO6" } },
-                    // Double Bonds
-                    {});
-ResidueData BMAData("BMA",
-                    // Atoms
-                    { "C1", "C2",  "C3",  "C4",  "C5",  "C6",  "O1",  "O2",
-                      "O3", "O4",  "O5",  "O6",  "H1",  "H2",  "H3",  "H4",
-                      "H5", "H61", "H62", "HO1", "HO2", "HO3", "HO4", "HO6" },
-                    // Single Bonds
-                    { { "C1", "C2" },  { "C1", "O1" },  { "C1", "O5" },
-                      { "C1", "H1" },  { "C2", "C3" },  { "C2", "O2" },
-                      { "C2", "H2" },  { "C3", "C4" },  { "C3", "O3" },
-                      { "C3", "H3" },  { "C4", "C5" },  { "C4", "O4" },
-                      { "C4", "H4" },  { "C5", "C6" },  { "C5", "O5" },
-                      { "C5", "H5" },  { "C6", "O6" },  { "C6", "H61" },
-                      { "C6", "H62" }, { "O1", "HO1" }, { "O2", "HO2" },
-                      { "O3", "HO3" }, { "O4", "HO4" }, { "O6", "HO6" } },
-                    // Double Bonds
-                    {});
+ResidueData MANData(
+  "MAN",
+  // Atoms
+  { { "C1", 6 },  { "C2", 6 },  { "C3", 6 },  { "C4", 6 },  { "C5", 6 },
+    { "C6", 6 },  { "O1", 8 },  { "O2", 8 },  { "O3", 8 },  { "O4", 8 },
+    { "O5", 8 },  { "O6", 8 },  { "H1", 1 },  { "H2", 1 },  { "H3", 1 },
+    { "H4", 1 },  { "H5", 1 },  { "H61", 1 }, { "H62", 1 }, { "HO1", 1 },
+    { "HO2", 1 }, { "HO3", 1 }, { "HO4", 1 }, { "HO4", 1 } },
+  // Single Bonds
+  { { "C1", "C2" },  { "C1", "O1" },  { "C1", "O5" },  { "C1", "H1" },
+    { "C2", "C3" },  { "C2", "O2" },  { "C2", "H2" },  { "C3", "C4" },
+    { "C3", "O3" },  { "C3", "H3" },  { "C4", "C5" },  { "C4", "O4" },
+    { "C4", "H4" },  { "C5", "C6" },  { "C5", "O5" },  { "C5", "H5" },
+    { "C6", "O6" },  { "C6", "H61" }, { "C6", "H62" }, { "O1", "HO1" },
+    { "O2", "HO2" }, { "O3", "HO3" }, { "O4", "HO4" }, { "O6", "HO6" } },
+  // Double Bonds
+  {});
+ResidueData BMAData(
+  "BMA",
+  // Atoms
+  { { "C1", 6 },  { "C2", 6 },  { "C3", 6 },  { "C4", 6 },  { "C5", 6 },
+    { "C6", 6 },  { "O1", 8 },  { "O2", 8 },  { "O3", 8 },  { "O4", 8 },
+    { "O5", 8 },  { "O6", 8 },  { "H1", 1 },  { "H2", 1 },  { "H3", 1 },
+    { "H4", 1 },  { "H5", 1 },  { "H61", 1 }, { "H62", 1 }, { "HO1", 1 },
+    { "HO2", 1 }, { "HO3", 1 }, { "HO4", 1 }, { "HO4", 1 } },
+  // Single Bonds
+  { { "C1", "C2" },  { "C1", "O1" },  { "C1", "O5" },  { "C1", "H1" },
+    { "C2", "C3" },  { "C2", "O2" },  { "C2", "H2" },  { "C3", "C4" },
+    { "C3", "O3" },  { "C3", "H3" },  { "C4", "C5" },  { "C4", "O4" },
+    { "C4", "H4" },  { "C5", "C6" },  { "C5", "O5" },  { "C5", "H5" },
+    { "C6", "O6" },  { "C6", "H61" }, { "C6", "H62" }, { "O1", "HO1" },
+    { "O2", "HO2" }, { "O3", "HO3" }, { "O4", "HO4" }, { "O6", "HO6" } },
+  // Double Bonds
+  {});
 ResidueData FADData(
   "FAD",
   // Atoms
-  { "PA",   "O1A",  "O2A",  "O5B",  "C5B",  "C4B",  "O4B",  "C3B",  "O3B",
-    "C2B",  "O2B",  "C1B",  "N9A",  "C8A",  "N7A",  "C5A",  "C6A",  "N6A",
-    "N1A",  "C2A",  "N3A",  "C4A",  "N1",   "C2",   "O2",   "N3",   "C4",
-    "O4",   "C4X",  "N5",   "C5X",  "C6",   "C7",   "C7M",  "C8",   "C8M",
-    "C9",   "C9A",  "N10",  "C10",  "C1'",  "C2'",  "O2'",  "C3'",  "O3'",
-    "C4'",  "O4'",  "C5'",  "O5'",  "P",    "O1P",  "O2P",  "O3P",  "HOA2",
-    "H51A", "H52A", "H4B",  "H3B",  "HO3A", "H2B",  "HO2A", "H1B",  "H8A",
-    "H61A", "H62A", "H2A",  "HN3",  "H6",   "HM71", "HM72", "HM73", "HM81",
-    "HM82", "HM83", "H9",   "H1'1", "H1'2", "H2'",  "HO2'", "H3'",  "HO3'",
-    "H4'",  "HO4'", "H5'1", "H5'2", "HOP2" },
+  { { "PA", 15 },  { "O1A", 8 },  { "O2A", 8 },  { "O5B", 8 },  { "C5B", 6 },
+    { "C4B", 6 },  { "O4B", 8 },  { "C3B", 6 },  { "O3B", 8 },  { "C2B", 6 },
+    { "O2B", 8 },  { "C1B", 6 },  { "N9A", 7 },  { "C8A", 6 },  { "N7A", 7 },
+    { "C5A", 6 },  { "C6A", 6 },  { "N6A", 7 },  { "N1A", 7 },  { "C2A", 6 },
+    { "N3A", 7 },  { "C4A", 6 },  { "N1", 7 },   { "C2", 6 },   { "O2", 8 },
+    { "N3", 7 },   { "C4", 6 },   { "O4", 8 },   { "C4X", 6 },  { "N5", 7 },
+    { "C5X", 6 },  { "C6", 6 },   { "C7", 6 },   { "C7M", 6 },  { "C8", 6 },
+    { "C8M", 6 },  { "C9", 6 },   { "C9A", 6 },  { "N10", 7 },  { "C10", 6 },
+    { "C1'", 6 },  { "C2'", 6 },  { "O2'", 8 },  { "C3'", 6 },  { "O3'", 8 },
+    { "C4'", 6 },  { "O4'", 8 },  { "C5'", 6 },  { "O5'", 8 },  { "P", 15 },
+    { "O1P", 8 },  { "O2P", 8 },  { "O3P", 8 },  { "HOA2", 1 }, { "H51A", 1 },
+    { "H52A", 1 }, { "H4B", 1 },  { "H3B", 1 },  { "HO3A", 1 }, { "H2B", 1 },
+    { "HO2A", 1 }, { "H1B", 1 },  { "H8A", 1 },  { "H61A", 1 }, { "H62A", 1 },
+    { "H2A", 1 },  { "HN3", 1 },  { "H6", 1 },   { "HM71", 1 }, { "HM72", 1 },
+    { "HM73", 1 }, { "HM81", 1 }, { "HM82", 1 }, { "HM83", 1 }, { "H9", 1 },
+    { "H1'1", 1 }, { "H1'2", 1 }, { "H2'", 1 },  { "HO2'", 1 }, { "H3'", 1 },
+    { "HO3'", 1 }, { "H4'", 1 },  { "HO4'", 1 }, { "H5'1", 1 }, { "H5'2", 1 },
+    { "H5'2", 1 } },
   // Single Bonds
   { { "PA", "O2A" },   { "PA", "O5B" },   { "PA", "O3P" },   { "O2A", "HOA2" },
     { "O5B", "C5B" },  { "C5B", "C4B" },  { "C5B", "H51A" }, { "C5B", "H52A" },
@@ -929,11 +1188,15 @@ ResidueData FADData(
 ResidueData ADPData(
   "ADP",
   // Atoms
-  { "PB",   "O1B",  "O2B",  "O3B",  "PA",   "O1A", "O2A", "O3A",  "O5'",
-    "C5'",  "C4'",  "O4'",  "C3'",  "O3'",  "C2'", "O2'", "C1'",  "N9",
-    "C8",   "N7",   "C5",   "C6",   "N6",   "N1",  "C2",  "N3",   "C4",
-    "HOB2", "HOB3", "HOA2", "H5'1", "H5'2", "H4'", "H3'", "HO3'", "H2'",
-    "HO2'", "H1'",  "H8",   "HN61", "HN62", "H2" },
+  { { "PB", 15 },  { "O1B", 8 },  { "O2B", 8 },  { "O3B", 8 },  { "PA", 15 },
+    { "O1A", 8 },  { "O2A", 8 },  { "O3A", 8 },  { "O5'", 8 },  { "C5'", 6 },
+    { "C4'", 6 },  { "O4'", 8 },  { "C3'", 6 },  { "O3'", 8 },  { "C2'", 6 },
+    { "O2'", 8 },  { "C1'", 6 },  { "N9", 7 },   { "C8", 6 },   { "N7", 7 },
+    { "C5", 6 },   { "C6", 6 },   { "N6", 7 },   { "N1", 7 },   { "C2", 6 },
+    { "N3", 7 },   { "C4", 6 },   { "HOB2", 1 }, { "HOB3", 1 }, { "HOA2", 1 },
+    { "H5'1", 1 }, { "H5'2", 1 }, { "H4'", 1 },  { "H3'", 1 },  { "HO3'", 1 },
+    { "H2'", 1 },  { "HO2'", 1 }, { "H1'", 1 },  { "H8", 1 },   { "HN61", 1 },
+    { "HN62", 1 }, { "HN62", 1 } },
   // Single Bonds
   { { "PB", "O2B" },   { "PB", "O3B" },  { "PB", "O3A" },  { "O2B", "HOB2" },
     { "O3B", "HOB3" }, { "PA", "O2A" },  { "PA", "O3A" },  { "PA", "O5'" },
@@ -954,8 +1217,16 @@ ResidueData ADPData(
     { "C2", "N3" } });
 ResidueData DMSData("DMS",
                     // Atoms
-                    { "S", "O", "C1", "C2", "H11", "H12", "H13", "H21", "H22",
-                      "H23" },
+                    { { "S", 16 },
+                      { "O", 8 },
+                      { "C1", 6 },
+                      { "C2", 6 },
+                      { "H11", 1 },
+                      { "H12", 1 },
+                      { "H13", 1 },
+                      { "H21", 1 },
+                      { "H22", 1 },
+                      { "H22", 1 } },
                     // Single Bonds
                     { { "S", "C1" },
                       { "S", "C2" },
@@ -969,7 +1240,13 @@ ResidueData DMSData("DMS",
                     { { "S", "O" } });
 ResidueData ACEData("ACE",
                     // Atoms
-                    { "C", "O", "CH3", "H", "H1", "H2", "H3" },
+                    { { "C", 6 },
+                      { "O", 8 },
+                      { "CH3", 6 },
+                      { "H", 1 },
+                      { "H1", 1 },
+                      { "H2", 1 },
+                      { "H2", 1 } },
                     // Single Bonds
                     { { "C", "CH3" },
                       { "C", "H" },
@@ -980,9 +1257,12 @@ ResidueData ACEData("ACE",
                     { { "C", "O" } });
 ResidueData MPDData("MPD",
                     // Atoms
-                    { "C1",  "C2",  "O2",  "CM",  "C3",  "C4",  "O4",  "C5",
-                      "H11", "H12", "H13", "HO2", "HM1", "HM2", "HM3", "H31",
-                      "H32", "H4",  "HO4", "H51", "H52", "H53" },
+                    { { "C1", 6 },  { "C2", 6 },  { "O2", 8 },  { "CM", 6 },
+                      { "C3", 6 },  { "C4", 6 },  { "O4", 8 },  { "C5", 6 },
+                      { "H11", 1 }, { "H12", 1 }, { "H13", 1 }, { "HO2", 1 },
+                      { "HM1", 1 }, { "HM2", 1 }, { "HM3", 1 }, { "H31", 1 },
+                      { "H32", 1 }, { "H4", 1 },  { "HO4", 1 }, { "H51", 1 },
+                      { "H52", 1 }, { "H52", 1 } },
                     // Single Bonds
                     { { "C1", "C2" },  { "C1", "H11" }, { "C1", "H12" },
                       { "C1", "H13" }, { "C2", "O2" },  { "C2", "CM" },
@@ -996,9 +1276,11 @@ ResidueData MPDData("MPD",
 ResidueData MESData(
   "MES",
   // Atoms
-  { "O1",  "C2",  "C3",  "N4",  "C5",  "C6",  "C7",  "C8",  "S",
-    "O1S", "O2S", "O3S", "H21", "H22", "H31", "H32", "HN4", "H51",
-    "H52", "H61", "H62", "H71", "H72", "H81", "H82" },
+  { { "O1", 8 },  { "C2", 6 },  { "C3", 6 },  { "N4", 7 },  { "C5", 6 },
+    { "C6", 6 },  { "C7", 6 },  { "C8", 6 },  { "S", 16 },  { "O1S", 8 },
+    { "O2S", 8 }, { "O3S", 8 }, { "H21", 1 }, { "H22", 1 }, { "H31", 1 },
+    { "H32", 1 }, { "HN4", 1 }, { "H51", 1 }, { "H52", 1 }, { "H61", 1 },
+    { "H62", 1 }, { "H71", 1 }, { "H72", 1 }, { "H81", 1 }, { "H81", 1 } },
   // Single Bonds
   { { "O1", "C2" },  { "O1", "C6" },  { "C2", "C3" },  { "C2", "H21" },
     { "C2", "H22" }, { "C3", "N4" },  { "C3", "H31" }, { "C3", "H32" },
@@ -1011,14 +1293,21 @@ ResidueData MESData(
 ResidueData NADData(
   "NAD",
   // Atoms
-  { "PA",   "O1A",  "O2A", "O5B",  "C5B",  "C4B", "O4B",  "C3B",  "O3B",
-    "C2B",  "O2B",  "C1B", "N9A",  "C8A",  "N7A", "C5A",  "C6A",  "N6A",
-    "N1A",  "C2A",  "N3A", "C4A",  "O3",   "PN",  "O1N",  "O2N",  "O5D",
-    "C5D",  "C4D",  "O4D", "C3D",  "O3D",  "C2D", "O2D",  "C1D",  "N1N",
-    "C2N",  "C3N",  "C7N", "O7N",  "N7N",  "C4N", "C5N",  "C6N",  "HOA2",
-    "H51A", "H52A", "H4B", "H3B",  "HO3A", "H2B", "HO2A", "H1B",  "H8A",
-    "H61A", "H62A", "H2A", "H51N", "H52N", "H4D", "H3D",  "HO3N", "H2D",
-    "HO2N", "H1D",  "H2N", "H71N", "H72N", "H4N", "H5N",  "H6N" },
+  { { "PA", 15 },  { "O1A", 8 },  { "O2A", 8 },  { "O5B", 8 },  { "C5B", 6 },
+    { "C4B", 6 },  { "O4B", 8 },  { "C3B", 6 },  { "O3B", 8 },  { "C2B", 6 },
+    { "O2B", 8 },  { "C1B", 6 },  { "N9A", 7 },  { "C8A", 6 },  { "N7A", 7 },
+    { "C5A", 6 },  { "C6A", 6 },  { "N6A", 7 },  { "N1A", 7 },  { "C2A", 6 },
+    { "N3A", 7 },  { "C4A", 6 },  { "O3", 8 },   { "PN", 15 },  { "O1N", 8 },
+    { "O2N", 8 },  { "O5D", 8 },  { "C5D", 6 },  { "C4D", 6 },  { "O4D", 8 },
+    { "C3D", 6 },  { "O3D", 8 },  { "C2D", 6 },  { "O2D", 8 },  { "C1D", 6 },
+    { "N1N", 7 },  { "C2N", 6 },  { "C3N", 6 },  { "C7N", 6 },  { "O7N", 8 },
+    { "N7N", 7 },  { "C4N", 6 },  { "C5N", 6 },  { "C6N", 6 },  { "HOA2", 1 },
+    { "H51A", 1 }, { "H52A", 1 }, { "H4B", 1 },  { "H3B", 1 },  { "HO3A", 1 },
+    { "H2B", 1 },  { "HO2A", 1 }, { "H1B", 1 },  { "H8A", 1 },  { "H61A", 1 },
+    { "H62A", 1 }, { "H2A", 1 },  { "H51N", 1 }, { "H52N", 1 }, { "H4D", 1 },
+    { "H3D", 1 },  { "HO3N", 1 }, { "H2D", 1 },  { "HO2N", 1 }, { "H1D", 1 },
+    { "H2N", 1 },  { "H71N", 1 }, { "H72N", 1 }, { "H4N", 1 },  { "H5N", 1 },
+    { "H5N", 1 } },
   // Single Bonds
   { { "PA", "O2A" },   { "PA", "O5B" },   { "PA", "O3" },    { "O2A", "HOA2" },
     { "O5B", "C5B" },  { "C5B", "C4B" },  { "C5B", "H51A" }, { "C5B", "H52A" },
@@ -1051,15 +1340,22 @@ ResidueData NADData(
 ResidueData NAPData(
   "NAP",
   // Atoms
-  { "PA",  "O1A",  "O2A",  "O5B",  "C5B",  "C4B",  "O4B",  "C3B",  "O3B",
-    "C2B", "O2B",  "C1B",  "N9A",  "C8A",  "N7A",  "C5A",  "C6A",  "N6A",
-    "N1A", "C2A",  "N3A",  "C4A",  "O3",   "PN",   "O1N",  "O2N",  "O5D",
-    "C5D", "C4D",  "O4D",  "C3D",  "O3D",  "C2D",  "O2D",  "C1D",  "N1N",
-    "C2N", "C3N",  "C7N",  "O7N",  "N7N",  "C4N",  "C5N",  "C6N",  "P2B",
-    "O1X", "O2X",  "O3X",  "HOA2", "H51A", "H52A", "H4B",  "H3B",  "HO3A",
-    "H2B", "H1B",  "H8A",  "H61A", "H62A", "H2A",  "H51N", "H52N", "H4D",
-    "H3D", "HO3N", "H2D",  "HO2N", "H1D",  "H2N",  "H71N", "H72N", "H4N",
-    "H5N", "H6N",  "HOP2", "HOP3" },
+  { { "PA", 15 },  { "O1A", 8 },  { "O2A", 8 },  { "O5B", 8 },  { "C5B", 6 },
+    { "C4B", 6 },  { "O4B", 8 },  { "C3B", 6 },  { "O3B", 8 },  { "C2B", 6 },
+    { "O2B", 8 },  { "C1B", 6 },  { "N9A", 7 },  { "C8A", 6 },  { "N7A", 7 },
+    { "C5A", 6 },  { "C6A", 6 },  { "N6A", 7 },  { "N1A", 7 },  { "C2A", 6 },
+    { "N3A", 7 },  { "C4A", 6 },  { "O3", 8 },   { "PN", 15 },  { "O1N", 8 },
+    { "O2N", 8 },  { "O5D", 8 },  { "C5D", 6 },  { "C4D", 6 },  { "O4D", 8 },
+    { "C3D", 6 },  { "O3D", 8 },  { "C2D", 6 },  { "O2D", 8 },  { "C1D", 6 },
+    { "N1N", 7 },  { "C2N", 6 },  { "C3N", 6 },  { "C7N", 6 },  { "O7N", 8 },
+    { "N7N", 7 },  { "C4N", 6 },  { "C5N", 6 },  { "C6N", 6 },  { "P2B", 15 },
+    { "O1X", 8 },  { "O2X", 8 },  { "O3X", 8 },  { "HOA2", 1 }, { "H51A", 1 },
+    { "H52A", 1 }, { "H4B", 1 },  { "H3B", 1 },  { "HO3A", 1 }, { "H2B", 1 },
+    { "H1B", 1 },  { "H8A", 1 },  { "H61A", 1 }, { "H62A", 1 }, { "H2A", 1 },
+    { "H51N", 1 }, { "H52N", 1 }, { "H4D", 1 },  { "H3D", 1 },  { "HO3N", 1 },
+    { "H2D", 1 },  { "HO2N", 1 }, { "H1D", 1 },  { "H2N", 1 },  { "H71N", 1 },
+    { "H72N", 1 }, { "H4N", 1 },  { "H5N", 1 },  { "H6N", 1 },  { "HOP2", 1 },
+    { "HOP2", 1 } },
   // Single Bonds
   { { "PA", "O2A" },   { "PA", "O5B" },   { "PA", "O3" },    { "O2A", "HOA2" },
     { "O5B", "C5B" },  { "C5B", "C4B" },  { "C5B", "H51A" }, { "C5B", "H52A" },
@@ -1093,9 +1389,11 @@ ResidueData NAPData(
     { "P2B", "O1X" } });
 ResidueData TRSData("TRS",
                     // Atoms
-                    { "C",   "C1",  "C2",  "C3",  "N",   "O1",  "O2",
-                      "O3",  "H11", "H12", "H21", "H22", "H31", "H32",
-                      "HN1", "HN2", "HN3", "HO1", "HO2", "HO3" },
+                    { { "C", 6 },   { "C1", 6 },  { "C2", 6 },  { "C3", 6 },
+                      { "N", 7 },   { "O1", 8 },  { "O2", 8 },  { "O3", 8 },
+                      { "H11", 1 }, { "H12", 1 }, { "H21", 1 }, { "H22", 1 },
+                      { "H31", 1 }, { "H32", 1 }, { "HN1", 1 }, { "HN2", 1 },
+                      { "HN3", 1 }, { "HO1", 1 }, { "HO2", 1 }, { "HO2", 1 } },
                     // Single Bonds
                     { { "C", "C1" },
                       { "C", "C2" },
@@ -1121,11 +1419,16 @@ ResidueData TRSData("TRS",
 ResidueData ATPData(
   "ATP",
   // Atoms
-  { "PG",  "O1G",  "O2G",  "O3G",  "PB",   "O1B",  "O2B",  "O3B", "PA",  "O1A",
-    "O2A", "O3A",  "O5'",  "C5'",  "C4'",  "O4'",  "C3'",  "O3'", "C2'", "O2'",
-    "C1'", "N9",   "C8",   "N7",   "C5",   "C6",   "N6",   "N1",  "C2",  "N3",
-    "C4",  "HOG2", "HOG3", "HOB2", "HOA2", "H5'1", "H5'2", "H4'", "H3'", "HO3'",
-    "H2'", "HO2'", "H1'",  "H8",   "HN61", "HN62", "H2" },
+  { { "PG", 15 },  { "O1G", 8 },  { "O2G", 8 },  { "O3G", 8 },  { "PB", 15 },
+    { "O1B", 8 },  { "O2B", 8 },  { "O3B", 8 },  { "PA", 15 },  { "O1A", 8 },
+    { "O2A", 8 },  { "O3A", 8 },  { "O5'", 8 },  { "C5'", 6 },  { "C4'", 6 },
+    { "O4'", 8 },  { "C3'", 6 },  { "O3'", 8 },  { "C2'", 6 },  { "O2'", 8 },
+    { "C1'", 6 },  { "N9", 7 },   { "C8", 6 },   { "N7", 7 },   { "C5", 6 },
+    { "C6", 6 },   { "N6", 7 },   { "N1", 7 },   { "C2", 6 },   { "N3", 7 },
+    { "C4", 6 },   { "HOG2", 1 }, { "HOG3", 1 }, { "HOB2", 1 }, { "HOA2", 1 },
+    { "H5'1", 1 }, { "H5'2", 1 }, { "H4'", 1 },  { "H3'", 1 },  { "HO3'", 1 },
+    { "H2'", 1 },  { "HO2'", 1 }, { "H1'", 1 },  { "H8", 1 },   { "HN61", 1 },
+    { "HN62", 1 }, { "HN62", 1 } },
   // Single Bonds
   { { "PG", "O2G" },   { "PG", "O3G" },  { "PG", "O3B" },  { "O2G", "HOG2" },
     { "O3G", "HOG3" }, { "PB", "O2B" },  { "PB", "O3B" },  { "PB", "O3A" },
@@ -1148,7 +1451,7 @@ ResidueData ATPData(
     { "C2", "N3" } });
 ResidueData NH2Data("NH2",
                     // Atoms
-                    { "N", "HN1", "HN2" },
+                    { { "N", 7 }, { "HN1", 1 }, { "HN1", 1 } },
                     // Single Bonds
                     { { "N", "HN1" }, { "N", "HN2" } },
                     // Double Bonds
@@ -1156,9 +1459,13 @@ ResidueData NH2Data("NH2",
 ResidueData PG4Data(
   "PG4",
   // Atoms
-  { "O1",  "C1",  "C2",  "O2",  "C3",  "C4",  "O3",  "C5",  "C6",  "O4",  "C7",
-    "C8",  "O5",  "HO1", "H11", "H12", "H21", "H22", "H31", "H32", "H41", "H42",
-    "H51", "H52", "H61", "H62", "H71", "H72", "H81", "H82", "HO5" },
+  { { "O1", 8 },  { "C1", 6 },  { "C2", 6 },  { "O2", 8 },  { "C3", 6 },
+    { "C4", 6 },  { "O3", 8 },  { "C5", 6 },  { "C6", 6 },  { "O4", 8 },
+    { "C7", 6 },  { "C8", 6 },  { "O5", 8 },  { "HO1", 1 }, { "H11", 1 },
+    { "H12", 1 }, { "H21", 1 }, { "H22", 1 }, { "H31", 1 }, { "H32", 1 },
+    { "H41", 1 }, { "H42", 1 }, { "H51", 1 }, { "H52", 1 }, { "H61", 1 },
+    { "H62", 1 }, { "H71", 1 }, { "H72", 1 }, { "H81", 1 }, { "H82", 1 },
+    { "H82", 1 } },
   // Single Bonds
   { { "O1", "C1" },  { "O1", "HO1" }, { "C1", "C2" },  { "C1", "H11" },
     { "C1", "H12" }, { "C2", "O2" },  { "C2", "H21" }, { "C2", "H22" },
@@ -1170,21 +1477,26 @@ ResidueData PG4Data(
     { "C8", "H82" }, { "O5", "HO5" } },
   // Double Bonds
   {});
-ResidueData FMTData("FMT",
-                    // Atoms
-                    { "C", "O1", "O2", "H", "HO2" },
-                    // Single Bonds
-                    { { "C", "O2" }, { "C", "H" }, { "O2", "HO2" } },
-                    // Double Bonds
-                    { { "C", "O1" } });
+ResidueData FMTData(
+  "FMT",
+  // Atoms
+  { { "C", 6 }, { "O1", 8 }, { "O2", 8 }, { "H", 1 }, { "H", 1 } },
+  // Single Bonds
+  { { "C", "O2" }, { "C", "H" }, { "O2", "HO2" } },
+  // Double Bonds
+  { { "C", "O1" } });
 ResidueData GDPData(
   "GDP",
   // Atoms
-  { "PB",  "O1B",  "O2B",  "O3B",  "O3A", "PA",   "O1A", "O2A", "O5'",
-    "C5'", "C4'",  "O4'",  "C3'",  "O3'", "C2'",  "O2'", "C1'", "N9",
-    "C8",  "N7",   "C5",   "C6",   "O6",  "N1",   "C2",  "N2",  "N3",
-    "C4",  "HOB2", "HOB3", "HOA2", "H5'", "H5''", "H4'", "H3'", "HO3'",
-    "H2'", "HO2'", "H1'",  "H8",   "HN1", "HN21", "HN22" },
+  { { "PB", 15 },  { "O1B", 8 },  { "O2B", 8 },  { "O3B", 8 },  { "O3A", 8 },
+    { "PA", 15 },  { "O1A", 8 },  { "O2A", 8 },  { "O5'", 8 },  { "C5'", 6 },
+    { "C4'", 6 },  { "O4'", 8 },  { "C3'", 6 },  { "O3'", 8 },  { "C2'", 6 },
+    { "O2'", 8 },  { "C1'", 6 },  { "N9", 7 },   { "C8", 6 },   { "N7", 7 },
+    { "C5", 6 },   { "C6", 6 },   { "O6", 8 },   { "N1", 7 },   { "C2", 6 },
+    { "N2", 7 },   { "N3", 7 },   { "C4", 6 },   { "HOB2", 1 }, { "HOB3", 1 },
+    { "HOA2", 1 }, { "H5'", 1 },  { "H5''", 1 }, { "H4'", 1 },  { "H3'", 1 },
+    { "HO3'", 1 }, { "H2'", 1 },  { "HO2'", 1 }, { "H1'", 1 },  { "H8", 1 },
+    { "HN1", 1 },  { "HN21", 1 }, { "HN21", 1 } },
   // Single Bonds
   { { "PB", "O2B" },   { "PB", "O3B" },  { "PB", "O3A" },  { "O2B", "HOB2" },
     { "O3B", "HOB3" }, { "O3A", "PA" },  { "PA", "O2A" },  { "PA", "O5'" },
@@ -1203,27 +1515,44 @@ ResidueData GDPData(
     { "C5", "C4" },
     { "C6", "O6" },
     { "C2", "N3" } });
-ResidueData FUCData("FUC",
-                    // Atoms
-                    { "C1",  "C2",  "C3",  "C4",  "C5",  "C6",  "O1", "O2",
-                      "O3",  "O4",  "O5",  "H1",  "H2",  "H3",  "H4", "H5",
-                      "H61", "H62", "H63", "HO1", "HO2", "HO3", "HO4" },
-                    // Single Bonds
-                    { { "C1", "C2" },  { "C1", "O1" },  { "C1", "O5" },
-                      { "C1", "H1" },  { "C2", "C3" },  { "C2", "O2" },
-                      { "C2", "H2" },  { "C3", "C4" },  { "C3", "O3" },
-                      { "C3", "H3" },  { "C4", "C5" },  { "C4", "O4" },
-                      { "C4", "H4" },  { "C5", "C6" },  { "C5", "O5" },
-                      { "C5", "H5" },  { "C6", "H61" }, { "C6", "H62" },
-                      { "C6", "H63" }, { "O1", "HO1" }, { "O2", "HO2" },
-                      { "O3", "HO3" }, { "O4", "HO4" } },
-                    // Double Bonds
-                    {});
+ResidueData FUCData(
+  "FUC",
+  // Atoms
+  { { "C1", 6 },  { "C2", 6 },  { "C3", 6 },  { "C4", 6 },  { "C5", 6 },
+    { "C6", 6 },  { "O1", 8 },  { "O2", 8 },  { "O3", 8 },  { "O4", 8 },
+    { "O5", 8 },  { "H1", 1 },  { "H2", 1 },  { "H3", 1 },  { "H4", 1 },
+    { "H5", 1 },  { "H61", 1 }, { "H62", 1 }, { "H63", 1 }, { "HO1", 1 },
+    { "HO2", 1 }, { "HO3", 1 }, { "HO3", 1 } },
+  // Single Bonds
+  { { "C1", "C2" },  { "C1", "O1" },  { "C1", "O5" },  { "C1", "H1" },
+    { "C2", "C3" },  { "C2", "O2" },  { "C2", "H2" },  { "C3", "C4" },
+    { "C3", "O3" },  { "C3", "H3" },  { "C4", "C5" },  { "C4", "O4" },
+    { "C4", "H4" },  { "C5", "C6" },  { "C5", "O5" },  { "C5", "H5" },
+    { "C6", "H61" }, { "C6", "H62" }, { "C6", "H63" }, { "O1", "HO1" },
+    { "O2", "HO2" }, { "O3", "HO3" }, { "O4", "HO4" } },
+  // Double Bonds
+  {});
 ResidueData SEPData("SEP",
                     // Atoms
-                    { "N", "CA", "CB", "OG", "C", "O", "OXT", "P", "O1P", "O2P",
-                      "O3P", "H", "H2", "HA", "HB2", "HB3", "HXT", "HOP2",
-                      "HOP3" },
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "CB", 6 },
+                      { "OG", 8 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "OXT", 8 },
+                      { "P", 15 },
+                      { "O1P", 8 },
+                      { "O2P", 8 },
+                      { "O3P", 8 },
+                      { "H", 1 },
+                      { "H2", 1 },
+                      { "HA", 1 },
+                      { "HB2", 1 },
+                      { "HB3", 1 },
+                      { "HXT", 1 },
+                      { "HOP2", 1 },
+                      { "HOP2", 1 } },
                     // Single Bonds
                     { { "N", "CA" },
                       { "N", "H" },
@@ -1243,120 +1572,40 @@ ResidueData SEPData("SEP",
                       { "O3P", "HOP3" } },
                     // Double Bonds
                     { { "C", "O" }, { "P", "O1P" } });
-ResidueData GALData("GAL",
-                    // Atoms
-                    { "C1", "C2",  "C3",  "C4",  "C5",  "C6",  "O1",  "O2",
-                      "O3", "O4",  "O5",  "O6",  "H1",  "H2",  "H3",  "H4",
-                      "H5", "H61", "H62", "HO1", "HO2", "HO3", "HO4", "HO6" },
-                    // Single Bonds
-                    { { "C1", "C2" },  { "C1", "O1" },  { "C1", "O5" },
-                      { "C1", "H1" },  { "C2", "C3" },  { "C2", "O2" },
-                      { "C2", "H2" },  { "C3", "C4" },  { "C3", "O3" },
-                      { "C3", "H3" },  { "C4", "C5" },  { "C4", "O4" },
-                      { "C4", "H4" },  { "C5", "C6" },  { "C5", "O5" },
-                      { "C5", "H5" },  { "C6", "O6" },  { "C6", "H61" },
-                      { "C6", "H62" }, { "O1", "HO1" }, { "O2", "HO2" },
-                      { "O3", "HO3" }, { "O4", "HO4" }, { "O6", "HO6" } },
-                    // Double Bonds
-                    {});
-ResidueData PGEData("PGE",
-                    // Atoms
-                    { "C1",  "O1", "C2",  "O2",  "C3",  "C4",  "O4",  "C6",
-                      "C5",  "O3", "H1",  "H12", "HO1", "H2",  "H22", "H3",
-                      "H32", "H4", "H42", "HO4", "H6",  "H62", "H5",  "H52" },
-                    // Single Bonds
-                    { { "C1", "O1" },  { "C1", "C2" },  { "C1", "H1" },
-                      { "C1", "H12" }, { "O1", "HO1" }, { "C2", "O2" },
-                      { "C2", "H2" },  { "C2", "H22" }, { "O2", "C3" },
-                      { "C3", "C4" },  { "C3", "H3" },  { "C3", "H32" },
-                      { "C4", "O3" },  { "C4", "H4" },  { "C4", "H42" },
-                      { "O4", "C6" },  { "O4", "HO4" }, { "C6", "C5" },
-                      { "C6", "H6" },  { "C6", "H62" }, { "C5", "O3" },
-                      { "C5", "H5" },  { "C5", "H52" } },
-                    // Double Bonds
-                    {});
-
-ResidueData ASHData("ASH",
-                    // Atoms
-                    { "CA", "N", "CB", "C", "O", "CG", "OD2", "OD1" },
-                    // Single Bonds
-                    { { "CA", "N" },
-                      { "CA", "CB" },
-                      { "CA", "C" },
-                      { "CB", "CG" },
-                      { "CG", "OD2" },
-                      { "N", "H" },
-                      { "N", "HN" },
-                      { "OD2", "HD2" } },
-                    // Double Bonds
-                    { { "C", "O" }, { "CG", "OD1" } });
-
-ResidueData CYXData("CYX",
-                    // Atoms
-                    { "CA", "N", "CB", "C", "O", "SG" },
-                    // Single Bonds
-                    { { "CA", "N" },
-                      { "CA", "CB" },
-                      { "CA", "C" },
-                      { "CB", "SG" },
-                      { "N", "H" } },
-                    // Double Bonds
-                    { { "C", "O" } });
-
-ResidueData HIPData("HIP",
-                    // Atoms
-                    { "CA", "N", "CB", "C", "O", "CG", "ND1", "CD2", "NE2",
-                      "CE1" },
-                    // Single Bonds
-                    { { "CA", "N" },
-                      { "CA", "CB" },
-                      { "CA", "C" },
-                      { "CB", "CG" },
-                      { "CG", "ND1" },
-                      { "CD2", "NE2" },
-                      { "NE2", "CE1" },
-                      { "CE1", "ND1" },
-                      { "N", "H" },
-                      { "ND1", "HD1" },
-                      { "NE2", "HE2" } },
-                    // Double Bonds
-                    { { "C", "O" }, { "CG", "CD2" } });
-
-ResidueData HIDData("HID",
-                    // Atoms
-                    { "CA", "N", "CB", "C", "O", "CG", "ND1", "CD2", "NE2",
-                      "CE1" },
-                    // Single Bonds
-                    { { "CA", "N" },
-                      { "CA", "CB" },
-                      { "CA", "C" },
-                      { "CB", "CG" },
-                      { "CG", "ND1" },
-                      { "CD2", "NE2" },
-                      { "CE1", "ND1" },
-                      { "N", "H" },
-                      { "ND1", "HD1" } },
-                    // Double Bonds
-                    { { "C", "O" }, { "CG", "CD2" }, { "NE2", "CE1" } });
-
-ResidueData HIEData("HIE",
-                    // Atoms
-                    { "CA", "N", "CB", "C", "O", "CG", "ND1", "CD2", "NE2",
-                      "CE1" },
-                    // Single Bonds
-                    { { "CA", "N" },
-                      { "CA", "CB" },
-                      { "CA", "C" },
-                      { "CB", "CG" },
-                      { "CG", "ND1" },
-                      { "CD2", "NE2" },
-                      { "NE2", "CE1" },
-                      { "CE1", "ND1" },
-                      { "N", "H" },
-                      { "NE2", "HE2" } },
-                    // Double Bonds
-                    { { "C", "O" }, { "CG", "CD2" } });
-
+ResidueData PGEData(
+  "PGE",
+  // Atoms
+  { { "C1", 6 }, { "O1", 8 },  { "C2", 6 },  { "O2", 8 },  { "C3", 6 },
+    { "C4", 6 }, { "O4", 8 },  { "C6", 6 },  { "C5", 6 },  { "O3", 8 },
+    { "H1", 1 }, { "H12", 1 }, { "HO1", 1 }, { "H2", 1 },  { "H22", 1 },
+    { "H3", 1 }, { "H32", 1 }, { "H4", 1 },  { "H42", 1 }, { "HO4", 1 },
+    { "H6", 1 }, { "H62", 1 }, { "H5", 1 },  { "H5", 1 } },
+  // Single Bonds
+  { { "C1", "O1" },  { "C1", "C2" }, { "C1", "H1" },  { "C1", "H12" },
+    { "O1", "HO1" }, { "C2", "O2" }, { "C2", "H2" },  { "C2", "H22" },
+    { "O2", "C3" },  { "C3", "C4" }, { "C3", "H3" },  { "C3", "H32" },
+    { "C4", "O3" },  { "C4", "H4" }, { "C4", "H42" }, { "O4", "C6" },
+    { "O4", "HO4" }, { "C6", "C5" }, { "C6", "H6" },  { "C6", "H62" },
+    { "C5", "O3" },  { "C5", "H5" }, { "C5", "H52" } },
+  // Double Bonds
+  {});
+ResidueData GALData(
+  "GAL",
+  // Atoms
+  { { "C1", 6 },  { "C2", 6 },  { "C3", 6 },  { "C4", 6 },  { "C5", 6 },
+    { "C6", 6 },  { "O1", 8 },  { "O2", 8 },  { "O3", 8 },  { "O4", 8 },
+    { "O5", 8 },  { "O6", 8 },  { "H1", 1 },  { "H2", 1 },  { "H3", 1 },
+    { "H4", 1 },  { "H5", 1 },  { "H61", 1 }, { "H62", 1 }, { "HO1", 1 },
+    { "HO2", 1 }, { "HO3", 1 }, { "HO4", 1 }, { "HO4", 1 } },
+  // Single Bonds
+  { { "C1", "C2" },  { "C1", "O1" },  { "C1", "O5" },  { "C1", "H1" },
+    { "C2", "C3" },  { "C2", "O2" },  { "C2", "H2" },  { "C3", "C4" },
+    { "C3", "O3" },  { "C3", "H3" },  { "C4", "C5" },  { "C4", "O4" },
+    { "C4", "H4" },  { "C5", "C6" },  { "C5", "O5" },  { "C5", "H5" },
+    { "C6", "O6" },  { "C6", "H61" }, { "C6", "H62" }, { "O1", "HO1" },
+    { "O2", "HO2" }, { "O3", "HO3" }, { "O4", "HO4" }, { "O6", "HO6" } },
+  // Double Bonds
+  {});
 std::map<std::string, ResidueData> residueDict = {
   { "ALA", ALAData }, { "CYS", CYSData }, { "ASP", ASPData },
   { "GLU", GLUData }, { "PHE", PHEData }, { "GLY", GLYData },
@@ -1377,11 +1626,9 @@ std::map<std::string, ResidueData> residueDict = {
   { "NAD", NADData }, { "NAP", NAPData }, { "TRS", TRSData },
   { "ATP", ATPData }, { "NH2", NH2Data }, { "PG4", PG4Data },
   { "FMT", FMTData }, { "GDP", GDPData }, { "FUC", FUCData },
-  { "SEP", SEPData }, { "GAL", GALData }, { "PGE", PGEData },
-  { "ASH", ASHData }, { "CYX", CYXData }, { "HIP", HIPData },
-  { "HID", HIDData }, { "HIE", HIEData },
-};
+  { "SEP", SEPData }, { "PGE", PGEData }, { "GAL", GALData },
 
+};
 } // namespace Core
 } // namespace Avogadro
 

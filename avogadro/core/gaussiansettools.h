@@ -65,11 +65,17 @@ public:
    * position specified.
    * @param position The position in space to calculate the value.
    * @param molecularOrbitalNumber The molecular orbital number.
-   * @param beta Whether to calculate beta electron or alpha/paired (default).
    * @return The value of the molecular orbital at the position specified.
    */
   double calculateMolecularOrbital(const Vector3& position,
                                    int molecularOrbitalNumber) const;
+
+  /**
+   * @brief Populate the cube with values for the electron density.
+   * @param cube The cube to be populated with values.
+   * @return True on success, false on failure.
+   */
+  bool calculateElectronDensity(Cube& cube) const;
 
   /**
    * @brief Calculate the value of the electron density at the position
@@ -78,6 +84,13 @@ public:
    * @return The value of the electron density at the position specified.
    */
   double calculateElectronDensity(const Vector3& position) const;
+
+  /**
+   * @brief Populate the cube with values for the spin density.
+   * @param cube The cube to be populated with values.
+   * @return True on success, false on failure.
+   */
+  bool calculateSpinDensity(Cube& cube) const;
 
   /**
    * @brief Calculate the value of the electron spin density at the position

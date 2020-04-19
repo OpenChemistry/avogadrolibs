@@ -37,6 +37,13 @@ typedef Eigen::Matrix<unsigned char, 2, 1> Vector2ub;
 typedef Eigen::Matrix<unsigned char, 3, 1> Vector3ub;
 typedef Eigen::Matrix<unsigned char, 4, 1> Vector4ub;
 
+/** A simple struct composed of Vector3f to represent a frustrum. */
+struct Frustrum
+{
+  Vector3f points[8];
+  Vector3f planes[4];
+};
+
 } // end Avogadro namespace
 
 #endif // AVOGADRO_CORE_VECTOR_H

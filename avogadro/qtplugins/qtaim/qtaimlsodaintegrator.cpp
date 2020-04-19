@@ -528,7 +528,7 @@ Error Condition :
 
   A division by zero will occur if the input factor contains
   a zero on the diagonal.  Technically this indicates
-  singularity but it is often caused by improper argments or
+  singularity but it is often caused by improper arguments or
   improper setting of the pointers of a.  It will not occur
   if the subroutines are called correctly and if dgeco has
   set rcond > 0 or dgefa has set info = 0.
@@ -2650,7 +2650,7 @@ orderflag = 0  : no change in h or nq,
     rhdn = 1. / (1.3 * pow(ddn, exdn) + 0.0000013);
   }
   /*
-   If meth = 1, limit rh accordinfg to the stability region also.
+   If meth = 1, limit rh according to the stability region also.
 */
   if (meth == 1) {
     *pdh = max(fabs(h) * pdlast, 0.000001);

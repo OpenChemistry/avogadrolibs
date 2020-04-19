@@ -10,7 +10,7 @@ using json = nlohmann::json;
 namespace Avogadro {
 namespace QtPlugins {
 /**
-* @brief Constuctor to initialize the NetworkAcessManager and set pointers to
+* @brief Constructor to initialize the NetworkAcessManager and set pointers to
 * the widget's ui elements.
 */
 PQRRequest::PQRRequest(QTableWidget* tw, QLabel* gv, QLineEdit* nd, QLabel* fd,
@@ -49,8 +49,6 @@ void PQRRequest::sendRequest(QString url)
 * @brief Sends a network request to download a file from PQR
 * @param url The url to send the request to
 * @param mol2 The mol2 representation of the molecule to download
-* @param downlaodFolder The path of the download folder
-* @param ext The file extension to download
 */
 void PQRRequest::sendRequest(QString url, QString mol2)
 {

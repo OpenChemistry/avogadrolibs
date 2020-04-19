@@ -116,7 +116,7 @@ public:
 
   /**
    * Add Eigen Vectors to the SlaterSet.
-   * @param MOs Matrix of the eigen vectors for the SlaterSet.
+   * @param e Matrix of the eigen vectors for the SlaterSet.
    */
   bool addEigenVectors(const Eigen::MatrixXd& e);
 

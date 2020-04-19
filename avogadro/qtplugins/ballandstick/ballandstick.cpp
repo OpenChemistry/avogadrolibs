@@ -60,23 +60,27 @@ void BallAndStick::process(const Molecule& molecule, Rendering::GroupNode& node)
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
   SphereGeometry* spheres = new SphereGeometry;
+  auto selectedSpheres = new SphereGeometry;
+  selectedSpheres->setOpacity(0.42);
   spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
+  geometry->addDrawable(selectedSpheres);
 
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
     unsigned char atomicNumber = atom.atomicNumber();
     if (atomicNumber == 1 && !m_showHydrogens)
       continue;
-    const unsigned char* c = Elements::color(atomicNumber);
-    Vector3ub color(c[0], c[1], c[2]);
+    Vector3ub color = atom.color();
     float radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
+    spheres->addSphere(atom.position3d().cast<float>(), color, radius * 0.3f);
     if (atom.selected()) {
       color = Vector3ub(0, 0, 255);
       radius *= 1.2;
+      selectedSpheres->addSphere(atom.position3d().cast<float>(), color,
+                                 radius * 0.3f);
     }
-    spheres->addSphere(atom.position3d().cast<float>(), color, radius * 0.3f);
   }
 
   float bondRadius = 0.1f;
@@ -92,8 +96,8 @@ void BallAndStick::process(const Molecule& molecule, Rendering::GroupNode& node)
     }
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
-    Vector3ub color1(Elements::color(bond.atom1().atomicNumber()));
-    Vector3ub color2(Elements::color(bond.atom2().atomicNumber()));
+    Vector3ub color1 = bond.atom1().color();
+    Vector3ub color2 = bond.atom2().color();
     Vector3f bondVector = pos2 - pos1;
     float bondLength = bondVector.norm();
     bondVector /= bondLength;
@@ -137,8 +141,8 @@ void BallAndStick::processEditable(const QtGui::RWMolecule& molecule,
     unsigned char atomicNumber = atom.atomicNumber();
     if (atomicNumber == 1 && !m_showHydrogens)
       continue;
-    const unsigned char* c = Elements::color(atomicNumber);
-    Vector3ub color(c[0], c[1], c[2]);
+
+    Vector3ub color = atom.color();
     spheres->addSphere(atom.position3d().cast<float>(), color,
                        static_cast<float>(Elements::radiusVDW(atomicNumber)) *
                          0.3f);
@@ -157,8 +161,8 @@ void BallAndStick::processEditable(const QtGui::RWMolecule& molecule,
     }
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
-    Vector3ub color1(Elements::color(bond.atom1().atomicNumber()));
-    Vector3ub color2(Elements::color(bond.atom2().atomicNumber()));
+    Vector3ub color1 = bond.atom1().color();
+    Vector3ub color2 = bond.atom2().color();
     Vector3f bondVector = pos2 - pos1;
     float bondLength = bondVector.norm();
     bondVector /= bondLength;

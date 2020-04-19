@@ -154,7 +154,7 @@ public:
     FileFormat::Operations filter = FileFormat::None) const;
 
   /**
-   * New instance of the format for the specified file @p extention. Ownership
+   * New instance of the format for the specified file @p extension. Ownership
    * is passed to the caller.
    * @param extension The file extension (in lower case).
    * @param filter Bitwise combination of FileFormat::Operation values that

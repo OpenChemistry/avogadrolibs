@@ -23,25 +23,19 @@ namespace Core {
 
 Residue::Residue() {}
 
-Residue::Residue(std::string& name)
-  : m_residueName(name)
-{}
+Residue::Residue(std::string& name) : m_residueName(name) {}
 
 Residue::Residue(std::string& name, Index& number)
-  : m_residueName(name)
-  , m_residueId(number)
+  : m_residueName(name), m_residueId(number)
 {}
 
 Residue::Residue(std::string& name, Index& number, char& id)
-  : m_residueName(name)
-  , m_residueId(number)
-  , m_chainId(id)
+  : m_residueName(name), m_residueId(number), m_chainId(id)
 {}
 
 Residue::Residue(const Residue& other)
-  : m_residueName(other.m_residueName)
-  , m_residueId(other.m_residueId)
-  , m_atomNameMap(other.m_atomNameMap)
+  : m_residueName(other.m_residueName), m_residueId(other.m_residueId),
+    m_atomNameMap(other.m_atomNameMap)
 {}
 
 Residue& Residue::operator=(Residue other)
@@ -93,5 +87,17 @@ void Residue::resolveResidueBonds(Molecule& mol)
   }
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+int Residue::getAtomicNumber(std::string name)
+{
+  std::map<std::string, int> resAtoms;
+  if (residueDict.find(m_residueName) != residueDict.end()) {
+    resAtoms = residueDict[m_residueName].residueAtoms();
+    if (resAtoms.find(name) != resAtoms.end())
+      return resAtoms[name];
+  }
+
+  return 0;
+}
+
+} // namespace Core
+} // namespace Avogadro

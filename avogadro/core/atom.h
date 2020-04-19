@@ -156,11 +156,27 @@ public:
   /** @} */
 
   /**
+   * The color of this atom
+   * @{
+   */
+  void setColor(Vector3ub color);
+  Vector3ub color() const;
+  /** @} */
+
+  /**
    * Is the atom selected.
    * {@
    */
   void setSelected(bool selected);
   bool selected() const;
+  /** @} */
+
+  /**
+   * The force on this atom.
+   * {@
+   */
+  void setForceVector(const Vector3& force);
+  Vector3 forceVector() const;
   /** @} */
 
 private:
@@ -171,14 +187,12 @@ private:
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate()
   : m_molecule(nullptr), m_index(MaxIndex)
-{
-}
+{}
 
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate(MoleculeType* m, Index i)
   : m_molecule(m), m_index(i)
-{
-}
+{}
 
 template <class Molecule_T>
 bool AtomTemplate<Molecule_T>::operator==(
@@ -306,6 +320,18 @@ signed char AtomTemplate<Molecule_T>::formalCharge() const
 }
 
 template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setColor(Vector3ub color)
+{
+  m_molecule->setColor(m_index, std::move(color));
+}
+
+template <class Molecule_T>
+Vector3ub AtomTemplate<Molecule_T>::color() const
+{
+  return m_molecule->color(m_index);
+}
+
+template <class Molecule_T>
 void AtomTemplate<Molecule_T>::setSelected(bool selected)
 {
   m_molecule->setAtomSelected(m_index, selected);
@@ -317,7 +343,21 @@ bool AtomTemplate<Molecule_T>::selected() const
   return m_molecule->atomSelected(m_index);
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setForceVector(const Vector3& force)
+{
+  m_molecule->setForceVector(m_index, force);
+}
+
+template <class Molecule_T>
+Vector3 AtomTemplate<Molecule_T>::forceVector() const
+{
+  return m_molecule->forceVectors().size() > 0
+           ? m_molecule->forceVectors()[m_index]
+           : Vector3::Zero();
+}
+
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_ATOM_H

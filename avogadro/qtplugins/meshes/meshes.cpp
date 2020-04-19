@@ -56,7 +56,7 @@ void Meshes::process(const Molecule& mol, GroupNode& node)
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  unsigned char opacity = 100;
+  unsigned char opacity = 150;
 
   if (mol.meshCount()) {
     const Mesh* mesh = mol.mesh(0);

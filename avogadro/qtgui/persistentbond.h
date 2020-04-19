@@ -65,7 +65,7 @@ public:
   void set(const BondType& b);
 
   /**
-   * @brief Reset the the object to an invalid state.
+   * @brief Reset the object to an invalid state.
    */
   void reset();
 

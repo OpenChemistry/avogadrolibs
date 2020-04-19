@@ -1017,7 +1017,7 @@ static int ruleadapt_integrate(rule* r, unsigned int fdim, integrand_v f,
       error over the bound.
 
       [Note: Bull and Freeman claim that the Gladwell
-      approach is intrinsically inefficent because it
+      approach is intrinsically inefficient because it
       "requires sorting", and propose an alternative
       algorithm that "only" requires three passes over the
       entire set of regions.  Apparently, they didn't

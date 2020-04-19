@@ -20,7 +20,7 @@ include(DetermineVersion)
 
 # Set up our version.
 set(AvogadroLibs_VERSION_MAJOR   "1")
-set(AvogadroLibs_VERSION_MINOR   "91")
+set(AvogadroLibs_VERSION_MINOR   "93")
 set(AvogadroLibs_VERSION_PATCH   "0")
 set(AvogadroLibs_VERSION
   "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
@@ -78,12 +78,15 @@ if(ENABLE_TRANSLATIONS)
   find_package(Qt5LinguistTools)
 endif()
 
-install(
-  FILES
-    README.md
-    CONTRIBUTING.md
-    LICENSE
-  DESTINATION "${INSTALL_DOC_DIR}/avogadrolibs")
+# SKBUILD is set for binary wheel
+if (NOT SKBUILD)
+  install(
+    FILES
+      README.md
+      CONTRIBUTING.md
+      LICENSE
+    DESTINATION "${INSTALL_DOC_DIR}/avogadrolibs")
+endif()
 
 # After all add_subdirectory calls, so the list of plugins is complete:
 get_property(AvogadroLibs_PLUGINS GLOBAL PROPERTY AvogadroLibs_PLUGINS)
@@ -98,13 +101,16 @@ configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfig.cmake.in"
 configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfigVersion.cmake.in"
   "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake" @ONLY)
 
-install(FILES
-  "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake"
-  "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindGLEW.cmake"
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibArchive.cmake"
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findlibmsym.cmake"
-  DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
-install(EXPORT "AvogadroLibsTargets"
-  DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
+# SKBUILD is set for binary wheel
+if (NOT SKBUILD)
+  install(FILES
+    "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake"
+    "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindGLEW.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibArchive.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findlibmsym.cmake"
+    DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
+  install(EXPORT "AvogadroLibsTargets"
+    DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
+endif()

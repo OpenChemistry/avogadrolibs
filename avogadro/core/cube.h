@@ -43,7 +43,8 @@ public:
   ~Cube();
 
   /**
-   * \enum Different Cube types relating to the data
+   * \enum Type
+   * Different Cube types relating to the data
    */
   enum Type
   {
@@ -189,16 +190,16 @@ public:
 
   /**
    * Sets the value at the specified point in the cube.
-   * @param i x compenent of the position.
-   * @param j y compenent of the position.
-   * @param k z compenent of the position.
+   * @param i x component of the position.
+   * @param j y component of the position.
+   * @param k z component of the position.
    * @param value Value at the specified position.
    */
   bool setValue(int i, int j, int k, double value);
 
   /**
    * Sets the value at the specified index in the cube.
-   * @param i 1-dimenional index of the point to set in the cube.
+   * @param i 1-dimensional index of the point to set in the cube.
    */
   bool setValue(unsigned int i, double value);
 
