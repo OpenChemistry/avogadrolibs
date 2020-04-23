@@ -17,6 +17,8 @@
 #include <iostream>
 #include <string>
 
+#include <bits/stdc++.h>
+
 #include <vtkAxis.h>
 #include <vtkChartXY.h>
 #include <vtkContextScene.h>
