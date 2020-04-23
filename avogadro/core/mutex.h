@@ -19,8 +19,6 @@
 
 #include "avogadrocore.h"
 
-#include <vector>
-
 namespace Avogadro {
 namespace Core {
 
