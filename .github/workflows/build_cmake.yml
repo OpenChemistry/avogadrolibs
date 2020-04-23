@@ -1,4 +1,8 @@
 name: CMake Build Matrix
+# Many thanks to Cristian Adam for examples
+# e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
+# https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
+
 
 on: [push, pull_request]
 
@@ -6,6 +10,7 @@ env:
   BUILD_TYPE: Release
   QT_VERSION: 5.12.8
   MACOSX_DEPLOYMENT_TARGET: 10.12
+  CCACHE_VERSION: 3.7.7
 
 jobs:
   build:
@@ -19,19 +24,22 @@ jobs:
             name: "Ubuntu Latest GCC", artifact: "Linux.tar.gz",
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
+            cmake_flags: "-G Ninja",
             cpack: "",
           }
         - {
-            name: "macOS Latest Clang", artifact: "macOS.tar.gz",
+            name: "macOS Latest Clang", artifact: "macOS.dmg",
             os: macos-latest,
             cc: "clang", cxx: "clang++",
-            cpack_flags: "",
+            cmake_flags: "-G Ninja",
+            cpack_flags: "-G DragNDrop",
           }
         - {
-            name: "Windows Latest MSVC",
+            name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
-            cpack_flags: "-G TGZ",
+            cmake_flags: "",
+            cpack_flags: "-G NSIS",
           }
 
     steps:
@@ -65,6 +73,7 @@ jobs:
       with:
         path: avogadrolibs
 
+    # this never seems to hit..
     - name: Cache Qt
       id: cache-qt
       uses: actions/cache@v1
@@ -77,6 +86,29 @@ jobs:
       with:
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
         version: ${{ env.QT_VERSION }}
+
+    - name: Download ccache
+      id: ccache
+      shell: cmake -P {0}
+      run: |
+        set(ccache_url "https://github.com/cristianadam/ccache/releases/download/v$ENV{CCACHE_VERSION}/${{ runner.os }}.tar.xz")
+        file(DOWNLOAD "${ccache_url}" ./ccache.tar.xz SHOW_PROGRESS)
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./ccache.tar.xz)
+
+    - name: Prepare ccache timestamp
+      id: ccache_cache_timestamp
+      shell: cmake -P {0}
+      run: |
+        string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
+        message("::set-output name=timestamp::${current_date}")
+
+    - name: Restore cache files
+      uses: actions/cache@v1
+      with:
+        path: .ccache
+        key: ${{ matrix.config.name }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
+        restore-keys: |
+          ${{ matrix.config.name }}-ccache-
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
@@ -105,5 +137,5 @@ jobs:
       if: matrix.config.artifact != 0
       uses: actions/upload-artifact@v2-preview
       with:
-        path: ${{ runner.workspace }}/build/avogadroapp/*.tar.gz
+        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
