@@ -1,0 +1,109 @@
+name: CMake Build Matrix
+
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Release
+  QT_VERSION: 5.12.8
+  MACOSX_DEPLOYMENT_TARGET: 10.12
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Ubuntu Latest GCC", artifact: "Linux.tar.gz",
+            os: ubuntu-latest,
+            cc: "gcc", cxx: "g++",
+            cpack: "",
+          }
+        - {
+            name: "macOS Latest Clang", artifact: "macOS.tar.gz",
+            os: macos-latest,
+            cc: "clang", cxx: "clang++",
+            cpack_flags: "",
+          }
+        - {
+            name: "Windows Latest MSVC",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            cpack_flags: "-G TGZ",
+          }
+
+    steps:
+
+    - name: Install Dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default
+    - name: Install Dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        echo "::set-env name=MACOSX_DEPLOYMENT_TARGET::${{ env.MACOSX_DEPLOYMENT_TARGET }}"
+        brew install ninja boost qt eigen glew open-babel
+    - name: Install Dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: choco install ninja
+
+    - name: Checkout openchemistry
+      uses: actions/checkout@v2
+      with:
+        repository: openchemistry/openchemistry
+        submodules: recursive
+
+    - name: Checkout avogadroapp
+      uses: actions/checkout@v2
+      with:
+        repository: openchemistry/avogadroapp
+        path: avogadroapp
+
+    - name: Checkout avogadrolibs
+      uses: actions/checkout@v2
+      with:
+        path: avogadrolibs
+
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v1
+      with:
+        path: ../Qt
+        key: ${{ runner.os }}-QtCache
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        cached: ${{ steps.cache-qt.outputs.cache-hit }}
+        version: ${{ env.QT_VERSION }}
+
+    - name: Configure MSVC Command Prompt
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+
+    - name: Configure
+      run: |
+        mkdir "${{ runner.workspace }}/build"
+        cd "${{ runner.workspace }}/build"
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
+      shell: bash
+
+    - name: Build
+      run: CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}}
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Pack
+      if: matrix.config.artifact != 0
+      run: cpack ${{ matrix.config.cpack_flags }}
+      working-directory: ${{ runner.workspace }}/build/avogadroapp
+
+    - name: Upload
+      if: matrix.config.artifact != 0
+      uses: actions/upload-artifact@v2-preview
+      with:
+        path: ${{ runner.workspace }}/build/avogadroapp/*.tar.gz
+        name: ${{ matrix.config.artifact }}

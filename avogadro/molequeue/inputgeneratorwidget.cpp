@@ -200,7 +200,7 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
     QString warningHtml;
     warningHtml += "<style>li{color:red;}h3{font-weight:bold;}</style>";
     warningHtml +=
-      "<h3>" + tr("Problems occured during input generation:") + "</h3>";
+      "<h3>" + tr("Problems occurred during input generation:") + "</h3>";
     warningHtml += "<ul>";
     foreach (const QString& warning, m_inputGenerator.warningList())
       warningHtml += QString("<li>%1</li>").arg(warning);
@@ -562,7 +562,7 @@ void InputGeneratorWidget::saveDirectory()
           tr("The input files cannot be written:\n\n%1").arg(errors.first());
         break;
       default: {
-        // If a fatal error occured, it will be last one in the list. Pop it off
+        // If a fatal error occurred, it will be last one in the list. Pop it off
         // and tell the user that it was the reason we had to stop.
         QString fatal = errors.last();
         QStringList tmp(errors);

@@ -2405,7 +2405,7 @@ void QTAIMLSODAIntegrator::correction(int neq, double* y, int* corflag,
    If miter != 0 and the Jacobian is out of date, prja is called for
    the next try.   Otherwise the yh array is retracted to its values
    before prediction, and h is reduced, if possible.  If h cannot be
-   reduced or mxncf failures have occured, exit with corflag = 2.
+   reduced or mxncf failures have occurred, exit with corflag = 2.
 */
     (*m)++;
     if (*m == maxcor || (*m >= 2 && *del > 2. * *delp)) {

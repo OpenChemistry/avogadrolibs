@@ -82,7 +82,7 @@ enum MergeIds
   SetBondOrderMergeId
 };
 
-// Base class for undo commands that can be merged together, overridding the
+// Base class for undo commands that can be merged together, overriding the
 // "after" state of an old command with that of the new command.
 // Intended for use with RWMolecule's interactive mode.
 // To add a new class, add a new entry to the MergeIds enum above and use that
