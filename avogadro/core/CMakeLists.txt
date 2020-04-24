@@ -81,5 +81,14 @@ if(USE_SPGLIB)
   list(APPEND SOURCES avospglib.cpp)
 endif()
 
+# The std::shared_mutex class needs pthreads on Linux.
+if(UNIX AND NOT APPLE)
+  find_package(Threads)
+  set(EXTRA_LINK_LIB ${CMAKE_THREAD_LIBS_INIT})
+else()
+  set(EXTRA_LINK_LIB "")
+endif()
+
 avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroCore LINK_PRIVATE ${SPGLIB_LIBRARY})
+target_link_libraries(AvogadroCore
+  LINK_PRIVATE ${SPGLIB_LIBRARY} ${EXTRA_LINK_LIB})
