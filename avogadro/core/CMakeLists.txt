@@ -36,6 +36,7 @@ set(HEADERS
   nameatomtyper.h
   residue.h
   ringperceiver.h
+  sharedmutex.h
   slaterset.h
   slatersettools.h
   spacegroups.h
@@ -65,6 +66,7 @@ set(SOURCES
   nameatomtyper.cpp
   residue.cpp
   ringperceiver.cpp
+  sharedmutex.cpp
   slaterset.cpp
   slatersettools.cpp
   spacegroups.cpp
