@@ -8,5 +8,3 @@ jobs:
     - uses: actions/checkout@v2
     - name: clang-format style check for C++ / C code.
       uses: ghutchis/clang-format-diff-action@master
-      with:
-        clangFormatVersion: 6
