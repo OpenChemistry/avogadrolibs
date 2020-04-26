@@ -1,0 +1,59 @@
+name: clang-format Check
+on: [push, pull_request]
+
+jobs:
+  formatting-check:
+    name: Formatting Check
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Install clang-format'
+      run: sudo apt-get -qq install clang-format-6.0
+
+    - uses: actions/checkout@v2
+
+    - name: Get branch name
+      run: |
+        echo "::set-env name=GITHUB_BRANCH=${GITHUB_REF##*/}"
+
+    - name: 'Run clang-format-diff'
+      run: |
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/openchemistry/avogadrolibs
+        git fetch origin master:master
+
+        echo `which clang-format-diff-6.0`
+        export MASTER_SHA=`cat .git/refs/heads/master`
+        echo MASTER_SHA=${MASTER_SHA}
+
+        git diff `cat .git/refs/heads/master` --name-only
+        DIFF=`git diff -U0 ${MASTER_SHA} -- '*.h' '*.cpp' | clang-format-diff-6.0 -p1`
+        if [ -z "$DIFF" ]; then
+          printf "clang-format-diff reports no problems"
+          exit 0
+        else
+          git diff -U0 ${MASTER_SHA} -- '*.h' '*.cpp' | clang-format-diff-6.0 -p1 >${{ runner.workspace }}/clang-format.diff
+          exit 1
+        fi
+
+    - name: Upload patch
+      if: failure()
+      uses: actions/upload-artifact@v1
+      with:
+        path: ${{ runner.workspace }}/clang-format.diff
+        name: clang-format.diff
+
+    - name: Comment on diff
+      if: failure()
+      run: |
+        export NAME=`curl "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" | jq '.artifacts[].name'`
+        export DL=`curl "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" | jq '.artifacts[].archive_download_url'`
+        export URL="https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts"
+        echo URL=${URL}
+        echo NAME=${NAME}
+        echo DL=${DL}
+        curl "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts"
+
+        jq -nc "{\"body\": \"ERROR: clang-format-diff detected formatting issues. See the artifact for a patch or run clang-format on your branch.\"}" | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments"
