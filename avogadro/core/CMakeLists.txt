@@ -36,7 +36,6 @@ set(HEADERS
   nameatomtyper.h
   residue.h
   ringperceiver.h
-  sharedmutex.h
   slaterset.h
   slatersettools.h
   spacegroups.h
@@ -66,7 +65,6 @@ set(SOURCES
   nameatomtyper.cpp
   residue.cpp
   ringperceiver.cpp
-  sharedmutex.cpp
   slaterset.cpp
   slatersettools.cpp
   spacegroups.cpp
@@ -76,13 +74,19 @@ set(SOURCES
   version.cpp
 )
 
+# We currently build core without shared_mutex for Python wheels.
+if(NOT PYTHON_WHEEL_BUILD)
+  list(APPEND HEADERS sharedmutex.h)
+  list(APPEND SOURCES sharedmutex.cpp)
+endif()
+
 if(USE_SPGLIB)
   list(APPEND HEADERS avospglib.h)
   list(APPEND SOURCES avospglib.cpp)
 endif()
 
 # The std::shared_mutex class needs pthreads on Linux.
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND NOT PYTHON_WHEEL_BUILD)
   find_package(Threads)
   set(EXTRA_LINK_LIB ${CMAKE_THREAD_LIBS_INIT})
 else()
