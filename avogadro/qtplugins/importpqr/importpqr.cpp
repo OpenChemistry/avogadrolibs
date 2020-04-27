@@ -24,8 +24,8 @@
 
 #include <QtCore/QDebug>
 
-#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QAction>
+#include <QtWidgets/QMessageBox>
 
 namespace Avogadro {
 namespace QtPlugins {
