@@ -74,10 +74,25 @@ set(SOURCES
   version.cpp
 )
 
+# We currently build core without shared_mutex for Python wheels.
+if(NOT PYTHON_WHEEL_BUILD)
+  list(APPEND HEADERS sharedmutex.h)
+  list(APPEND SOURCES sharedmutex.cpp)
+endif()
+
 if(USE_SPGLIB)
   list(APPEND HEADERS avospglib.h)
   list(APPEND SOURCES avospglib.cpp)
 endif()
 
+# The std::shared_mutex class needs pthreads on Linux.
+if(UNIX AND NOT APPLE AND NOT PYTHON_WHEEL_BUILD)
+  find_package(Threads)
+  set(EXTRA_LINK_LIB ${CMAKE_THREAD_LIBS_INIT})
+else()
+  set(EXTRA_LINK_LIB "")
+endif()
+
 avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroCore LINK_PRIVATE ${SPGLIB_LIBRARY})
+target_link_libraries(AvogadroCore
+  LINK_PRIVATE ${SPGLIB_LIBRARY} ${EXTRA_LINK_LIB})

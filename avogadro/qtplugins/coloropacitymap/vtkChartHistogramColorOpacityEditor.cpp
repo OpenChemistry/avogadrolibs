@@ -3,6 +3,8 @@
 
 #include "vtkChartHistogramColorOpacityEditor.h"
 
+#include <bits/stdc++.h>
+
 #include <vtkAxis.h>
 #include <vtkChart.h>
 #include <vtkColorTransferControlPointsItem.h>

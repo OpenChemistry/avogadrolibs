@@ -4,6 +4,8 @@
 #ifndef tomvizvtkChartHistogram_h
 #define tomvizvtkChartHistogram_h
 
+#include <bits/stdc++.h>
+
 #include <vtkChartXY.h>
 
 #include <vtkNew.h>

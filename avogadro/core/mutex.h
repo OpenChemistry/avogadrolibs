@@ -19,19 +19,17 @@
 
 #include "avogadrocore.h"
 
-#include <vector>
-
 namespace Avogadro {
 namespace Core {
 
 /**
  * @class Mutex mutex.h <avogadro/core/mutex.h>
- * @brief The Mutex class provides a simple wrapper for the C++11 or Boost mutex
+ * @brief The Mutex class provides a simple wrapper for the C++11 mutex
  * class
  * @author Marcus D. Hanwell
  *
- * A very simple, and thin wrapper around the C++11 (or Boost fallback) mutex
- * class, allowing for lock, tryLock and unlock.
+ * A very simple, and thin wrapper around the C++11 mutex class, allowing for
+ * lock, tryLock and unlock.
  */
 
 class AVOGADROCORE_EXPORT Mutex

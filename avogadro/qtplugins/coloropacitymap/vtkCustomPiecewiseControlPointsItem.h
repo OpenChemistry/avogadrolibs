@@ -4,6 +4,8 @@
 #ifndef tomvizvtkCustomPiecewiseControlPointsItem_h
 #define tomvizvtkCustomPiecewiseControlPointsItem_h
 
+#include <bits/stdc++.h>
+
 #include <vtkPiecewiseControlPointsItem.h>
 
 class vtkContextMouseEvent;
