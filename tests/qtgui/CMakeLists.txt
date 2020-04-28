@@ -9,11 +9,8 @@ find_package(Qt5 COMPONENTS Widgets Network Test REQUIRED)
 find_package(MoleQueue REQUIRED NO_MODULE)
 include_directories(${MoleQueue_INCLUDE_DIRS})
 
-# Find python 2.x interpreter for input generator
-find_package(PythonInterp 2)
-if(PYTHON_EXECUTABLE)
-  set(PYTHON2_EXECUTABLE "${PYTHON_EXECUTABLE}")
-endif()
+# Find python interpreter for input generator
+find_package(PythonInterp 3)
 
 # Setup config file with data location
 if(AVOGADRO_DATA_ROOT)
@@ -31,7 +28,7 @@ set(tests
   RWMolecule
   )
 
-if(PYTHON2_EXECUTABLE AND AVOGADRO_DATA)
+if(PYTHON_EXECUTABLE AND AVOGADRO_DATA)
   list(APPEND tests
     FileBrowseWidget
 # FIXME: These two tests are broken
