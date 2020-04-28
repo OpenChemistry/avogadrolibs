@@ -17,21 +17,23 @@ jobs:
 
     - name: 'Run clang-format-diff'
       run: |
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/openchemistry/avogadrolibs
-        git fetch origin master:master
+        if [ ${GITHUB_BRANCH} != "master" ]; then
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/openchemistry/avogadrolibs
+          git fetch origin master:master
 
-        echo `which clang-format-diff-6.0`
-        export MASTER_SHA=`cat .git/refs/heads/master`
-        echo MASTER_SHA=${MASTER_SHA}
+          echo `which clang-format-diff-6.0`
+          export MASTER_SHA=`cat .git/refs/heads/master`
+          echo MASTER_SHA=${MASTER_SHA}
 
-        git diff `cat .git/refs/heads/master` --name-only
-        DIFF=`git diff -U0 ${MASTER_SHA} -- '*.h' '*.cpp' | clang-format-diff-6.0 -p1`
-        if [ -z "$DIFF" ]; then
-          printf "clang-format-diff reports no problems"
-          exit 0
-        else
-          git diff -U0 ${MASTER_SHA} -- '*.h' '*.cpp' | clang-format-diff-6.0 -p1 >${{ runner.workspace }}/clang-format.diff
-          exit 1
+          git diff `cat .git/refs/heads/master` --name-only
+          DIFF=`git diff -U0 ${MASTER_SHA} -- '*.h' '*.cpp' | clang-format-diff-6.0 -p1`
+          if [ -z "$DIFF" ]; then
+            printf "clang-format-diff reports no problems"
+            exit 0
+          else
+            git diff -U0 ${MASTER_SHA} -- '*.h' '*.cpp' | clang-format-diff-6.0 -p1 >${{ runner.workspace }}/clang-format.diff
+            exit 1
+          fi
         fi
 
     - name: Upload patch
