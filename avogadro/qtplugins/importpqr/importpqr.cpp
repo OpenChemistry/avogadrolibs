@@ -23,8 +23,8 @@
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtCore/QDebug>
-#include <QtWidgets/QAction>
 
+#include <QtWidgets/QAction>
 #include <QtWidgets/QMessageBox>
 
 namespace Avogadro {
@@ -93,5 +93,5 @@ void ImportPQR::setMoleculeData(QByteArray& molData, QString name)
   m_dialog->hide();
   emit moleculeReady(1);
 }
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
