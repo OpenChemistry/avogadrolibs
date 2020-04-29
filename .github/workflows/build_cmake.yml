@@ -11,7 +11,7 @@ env:
   QT_VERSION: 5.12.8
   MACOSX_DEPLOYMENT_TARGET: 10.12
   CCACHE_VERSION: 3.7.7
-  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON 
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON
 
 jobs:
   build:
@@ -22,21 +22,21 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu Latest GCC", artifact: "Linux.tar.gz",
+            name: "Ubuntu Latest GCC", artifact: "Avogadro2.AppImage",
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
             cpack: "",
           }
         - {
-            name: "macOS Latest Clang", artifact: "macOS.dmg",
+            name: "macOS Latest Clang", artifact: "Avogadro2-macOS.dmg",
             os: macos-latest,
             cc: "clang", cxx: "clang++",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
             cpack_flags: "-G DragNDrop",
           }
         - {
-            name: "Windows Latest MSVC", artifact: "Win64.exe",
+            name: "Windows Latest MSVC", artifact: "Avogadro2-Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
             cmake_flags: "",
@@ -125,6 +125,17 @@ jobs:
     - name: Pack
       if: matrix.config.artifact != 0
       run: cpack ${{ matrix.config.cpack_flags }}
+      working-directory: ${{ runner.workspace }}/build/avogadroapp
+
+    - name: AppImage
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        make DESTDIR=appdir -j$(nproc) install ;
+        wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+        chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+        ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage -extra-plugins=iconengines
+        ls *.AppImage
       working-directory: ${{ runner.workspace }}/build/avogadroapp
 
     - name: Upload
