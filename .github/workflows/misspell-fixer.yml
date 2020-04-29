@@ -11,6 +11,3 @@ jobs:
       uses: sobolevn/misspell-fixer-action@master
       with:
         options: '-rsvn avogadro/'
-    - uses: peter-evans/create-pull-request@v2.4.4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
