@@ -1,0 +1,1052 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OpenMMInputDialog</class>
+ <widget class="QDialog" name="OpenMMInputDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1074</width>
+    <height>697</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>OpenMM Script Builder</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetNoConstraint</enum>
+   </property>
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_jobScript">
+       <property name="text">
+        <string>Job script:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="jobScriptEdit">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>script</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_1">
+       <property name="text">
+        <string>Input Coords:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLineEdit" name="inputCoordEdit">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>input.pdb</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Input Topology:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QLineEdit" name="inputTopEdit">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>input.prmtop</string>
+       </property>
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_forceField">
+       <property name="text">
+        <string>Forcefield:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="forceFieldCombo">
+       <item>
+        <property name="text">
+         <string>AMBER96</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>AMBER99sb</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>AMBER99sb-ildn</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>AMBER99sb-nmr</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>AMBER03</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>AMBER10</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_waterModel">
+       <property name="text">
+        <string>Water Model:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QComboBox" name="waterModelCombo">
+       <item>
+        <property name="text">
+         <string>SPC/E</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>TIP3P</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>TIP4P-Ew</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>TIP5P</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Implicit Solvent (OBC)</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_platform">
+       <property name="text">
+        <string>Platform:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="platformCombo">
+       <item>
+        <property name="text">
+         <string>Reference</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>OpenCL</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>CPU</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>CUDA</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_precision">
+       <property name="text">
+        <string>Precision:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QComboBox" name="precisionCombo">
+       <item>
+        <property name="text">
+         <string>single</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>mixed</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>double</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QLabel" name="label_deviceIndex">
+       <property name="text">
+        <string>Device Index:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="5">
+      <widget class="QSpinBox" name="deviceIndexSpin">
+       <property name="maximum">
+        <number>10000</number>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="6">
+      <widget class="QLabel" name="label_openCLIndex">
+       <property name="text">
+        <string>OpenCL Platform Index:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="7">
+      <widget class="QSpinBox" name="openCLIndexSpin">
+       <property name="maximum">
+        <number>10000</number>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" colspan="8">
+      <widget class="Line" name="line_2">
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_nonbondedMethod">
+       <property name="text">
+        <string>Nonbonded method:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QComboBox" name="nonBondedMethodCombo">
+       <item>
+        <property name="text">
+         <string>NoCutoff</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>CutoffNonPeriodic</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>CutoffPeriodic</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ewald</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>PME</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QLabel" name="label_ewaldTolerance">
+       <property name="text">
+        <string>Ewald Tolerance:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QDoubleSpinBox" name="ewaldToleranceSpin">
+        <property name="decimals">
+         <number>5</number>
+        </property>
+       <property name="singleStep">
+        <double>0.000010000000000</double>
+       </property>
+       <property name="value">
+        <double>0.000500000000000</double>
+       </property>
+       <property name="minimum">
+        <double>0.000010000000000</double>
+       </property>
+       <property name="maximum">
+        <double>10000.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="4">
+      <widget class="QLabel" name="label_constraints">
+       <property name="text">
+        <string>Constraints:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="5">
+      <widget class="QComboBox" name="constraintsCombo">
+       <item>
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>HBonds</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>AllBonds</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>HAngles</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="4" column="6">
+      <widget class="QLabel" name="label_constraintTolerance">
+       <property name="text">
+        <string>Constraint Tolerance:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="7">
+      <widget class="QDoubleSpinBox" name="constraintToleranceSpin">
+        <property name="decimals">
+         <number>5</number>
+        </property>
+       <property name="singleStep">
+        <double>0.000010000000000</double>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="minimum">
+        <double>0.000010000000000</double>
+       </property>
+       <property name="maximum">
+        <double>10000.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_rigidWater">
+       <property name="text">
+        <string>Rigid water?</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QComboBox" name="rigidWaterCombo">
+       <item>
+        <property name="text">
+         <string>True</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>False</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="QLabel" name="label_nonBondedCutoff">
+       <property name="text">
+        <string>Nonbonded cutoff:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="3">
+      <widget class="QDoubleSpinBox" name="nonBondedCutoffSpin">
+        <property name="decimals">
+         <number>4</number>
+        </property>
+       <property name="singleStep">
+        <double>0.000100000000000</double>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="minimum">
+        <double>0.000100000000000</double>
+       </property>
+       <property name="maximum">
+        <double>10000.000000000000000</double>
+       </property>
+       <property name="suffix">
+        <string> nm</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="4">
+      <widget class="QLabel" name="label_randomInitVel">
+       <property name="text">
+        <string>Random initial velocity:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="5">
+      <widget class="QComboBox" name="initVelCombo">
+       <item>
+        <property name="text">
+         <string>True</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>False</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="5" column="6">
+      <widget class="QLabel" name="label_generationTemp">
+       <property name="text">
+        <string>Generation Temp:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="7">
+      <widget class="QDoubleSpinBox" name="generationTemperatureSpin">
+       <property name="decimals">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <double>20000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>298.149999999999977</double>
+       </property>
+       <property name="suffix">
+        <string> K</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0" colspan="8">
+      <widget class="Line" name="line_3">
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_integrator">
+       <property name="text">
+        <string>Integrator:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QComboBox" name="integratorCombo">
+       <item>
+        <property name="text">
+         <string>Langevin</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Verlet</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Brownian</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VariableLangevin</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VariableVerlet</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_timestep">
+       <property name="toolTip">
+        <string>Time step for the simulation in units according to &quot;Units&quot; specification.</string>
+       </property>
+       <property name="text">
+        <string>Timestep:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QDoubleSpinBox" name="stepSpin">
+       <property name="toolTip">
+        <string>Time step for the simulation in units according to &quot;Units&quot; specification.</string>
+       </property>
+       <property name="singleStep">
+        <double>0.500000000000000</double>
+       </property>
+       <property name="value">
+        <double>2.000000000000000</double>
+       </property>
+       <property name="suffix">
+        <string> fs</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="2">
+      <widget class="QLabel" name="label_errorTol">
+       <property name="text">
+        <string>Error tolerance:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="3">
+      <widget class="QDoubleSpinBox" name="errorTolSpin">
+        <property name="decimals">
+         <number>4</number>
+        </property>
+       <property name="singleStep">
+        <double>0.000100000000000</double>
+       </property>
+       <property name="value">
+        <double>0.000100000000000</double>
+       </property>
+       <property name="minimum">
+        <double>0.000100000000000</double>
+       </property>
+       <property name="maximum">
+        <double>10000.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="4">
+      <widget class="QLabel" name="label_collisionRate">
+       <property name="text">
+        <string>Collision rate:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="5">
+      <widget class="QDoubleSpinBox" name="collisionRateSpin">
+       <property name="decimals">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <double>20000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>1.50000000000</double>
+       </property>
+       <property name="suffix">
+        <string>/ps</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="6">
+      <widget class="QLabel" name="label_temperature">
+       <property name="text">
+        <string>Temperature:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="7">
+      <widget class="QDoubleSpinBox" name="temperatureSpin">
+       <property name="decimals">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <double>20000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>298.149999999999977</double>
+       </property>
+       <property name="suffix">
+        <string> K</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_barostat">
+       <property name="text">
+        <string>Barostat:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QComboBox" name="barostatCombo">
+       <item>
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Monte Carlo</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="9" column="2">
+      <widget class="QLabel" name="label_pressure">
+       <property name="text">
+        <string>Pressure:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="3">
+      <widget class="QDoubleSpinBox" name="pressureSpin">
+       <property name="decimals">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <double>20000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>1.0000000</double>
+       </property>
+       <property name="suffix">
+        <string> atm</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="4">
+      <widget class="QLabel" name="label_barostatInterval">
+       <property name="text">
+        <string>Barostat Interval</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="5">
+      <widget class="QSpinBox" name="barostatIntervalSpin">
+       <property name="maximum">
+        <number>10000</number>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>25</number>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0" colspan="8">
+      <widget class="Line" name="line_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_reporters">
+       <property name="text">
+        <string>Reporters:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1">
+      <widget class="QCheckBox" name="stateDataCheck">
+       <property name="text">
+        <string>StateData</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="2">
+      <widget class="QCheckBox" name="dcdCheck">
+       <property name="text">
+        <string>DCD</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="3">
+      <widget class="QCheckBox" name="pdbCheck">
+       <property name="text">
+        <string>PDB</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="4">
+      <widget class="QLabel" name="label_reportInterval">
+       <property name="text">
+        <string>Report Interval:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="5">
+      <widget class="QSpinBox" name="reportIntervalSpin">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>9999999</number>
+       </property>
+       <property name="value">
+        <number>1000</number>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="6">
+      <widget class="QLabel" name="label_equilibriationSteps">
+       <property name="text">
+        <string>Equilibriation Steps:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="7">
+      <widget class="QSpinBox" name="equilibriationStepsSpin">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>9999999</number>
+       </property>
+       <property name="value">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0">
+      <widget class="QLabel" name="label_productionSteps">
+       <property name="text">
+        <string>Production Steps:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="1">
+      <widget class="QSpinBox" name="productionStepsSpin">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>9999999</number>
+       </property>
+       <property name="value">
+        <number>1000</number>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="2">
+      <widget class="QLabel" name="label_minimize">
+       <property name="text">
+        <string>Minimize?</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="3">
+      <widget class="QComboBox" name="minimizeCombo">
+       <item>
+        <property name="text">
+         <string>True</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>False</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="12" column="4">
+      <widget class="QLabel" name="label_minimizeSteps">
+       <property name="text">
+        <string>Max. Minimize Steps:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="5">
+      <widget class="QSpinBox" name="minimizeStepsSpin">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>9999999</number>
+       </property>
+       <property name="value">
+        <number>1000</number>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="0">
+      <widget class="QLabel" name="label_stateDataOptions">
+       <property name="text">
+        <string>StateData options:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="1">
+      <widget class="QCheckBox" name="stepIndexCheck">
+       <property name="text">
+        <string>Step Index</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="2">
+      <widget class="QCheckBox" name="timeCheck">
+       <property name="text">
+        <string>Time</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="3">
+      <widget class="QCheckBox" name="speedCheck">
+       <property name="text">
+        <string>Speed</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="4">
+      <widget class="QCheckBox" name="progressCheck">
+       <property name="text">
+        <string>Progress</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="5">
+      <widget class="QCheckBox" name="potentialEnergyCheck">
+       <property name="text">
+        <string>Potential Energy</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="6">
+      <widget class="QCheckBox" name="kineticEnergyCheck">
+       <property name="text">
+        <string>Kinetic Energy</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="7">
+      <widget class="QCheckBox" name="totalEnergyCheck">
+       <property name="text">
+        <string>Total Energy</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="1">
+      <widget class="QCheckBox" name="temperatureCheck">
+       <property name="text">
+        <string>Temperature</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="2">
+      <widget class="QCheckBox" name="volumeCheck">
+       <property name="text">
+        <string>Volume</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="3">
+      <widget class="QCheckBox" name="densityCheck">
+       <property name="text">
+        <string>Density</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_10">
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetFixedSize</enum>
+     </property>
+     <item>
+      <widget class="QPushButton" name="resetButton">
+       <property name="text">
+        <string>Reset</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="enableFormButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Use Form</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>48</width>
+         <height>26</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="generateButton">
+       <property name="text">
+        <string>Generate...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="closeButton">
+       <property name="text">
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>generateButton</tabstop>
+  <tabstop>closeButton</tabstop>
+  <tabstop>resetButton</tabstop>
+  <tabstop>enableFormButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>closeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>OpenMMInputDialog</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>451</x>
+     <y>411</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>258</x>
+     <y>243</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
