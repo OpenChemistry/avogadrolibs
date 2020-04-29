@@ -11,6 +11,7 @@ env:
   QT_VERSION: 5.12.8
   MACOSX_DEPLOYMENT_TARGET: 10.12
   CCACHE_VERSION: 3.7.7
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON 
 
 jobs:
   build:
@@ -96,7 +97,7 @@ jobs:
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
       shell: bash
 
     - name: Build
