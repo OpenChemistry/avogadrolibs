@@ -23,4 +23,7 @@ avogadro_plugin(ColorOpacityMap
   "${_uis}"
 )
 
-target_link_libraries(ColorOpacityMap LINK_PRIVATE AvogadroVtk)
+target_link_libraries(ColorOpacityMap
+  LINK_PRIVATE
+    AvogadroQtOpenGL
+    AvogadroVtk)

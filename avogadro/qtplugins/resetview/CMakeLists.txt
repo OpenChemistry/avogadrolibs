@@ -8,3 +8,5 @@ avogadro_plugin(ResetView
   "resetview.cpp"
   ""
 )
+
+target_link_libraries(ResetView LINK_PRIVATE AvogadroRendering)
