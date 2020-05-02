@@ -22,7 +22,14 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu Latest GCC", artifact: "Avogadro2.AppImage",
+            name: "Ubuntu AppImage", artifact: "Avogadro2.AppImage",
+            os: ubuntu-16.04,
+            cc: "gcc", cxx: "g++",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
+            cpack: "",
+          }
+        - {
+            name: "Ubuntu Latest GCC", artifact: "Avogadro2-linux.tar.gz",
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
@@ -128,7 +135,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/build/avogadroapp
 
     - name: AppImage
-      if: runner.os == 'Linux'
+      if: matrix.config.os == 'ubuntu-16.04'
       shell: bash
       run: |
         DESTDIR=./appdir cmake --build . --target install
@@ -136,6 +143,7 @@ jobs:
         chmod a+x linuxdeployqt-continuous-x86_64.AppImage
         ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage -extra-plugins=iconengines
         ls *.AppImage
+        ls *.tar.gz
       working-directory: ${{ runner.workspace }}/build/avogadroapp
 
     - name: Upload
