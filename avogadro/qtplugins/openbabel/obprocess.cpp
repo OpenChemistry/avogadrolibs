@@ -308,6 +308,7 @@ bool OBProcess::optimizeGeometry(const QByteArray& mol,
   realOptions << "-imol"
               << "-omol"
               << "--minimize"
+              << "--noh" # new in OB 3.0.1
               << "--log" << options;
 
   // We'll need to read the log (printed to stderr) to update progress
