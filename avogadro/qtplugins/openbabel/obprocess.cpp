@@ -305,8 +305,8 @@ bool OBProcess::optimizeGeometry(const QByteArray& mol,
   }
 
   QStringList realOptions;
-  realOptions << "-imol"
-              << "-omol"
+  realOptions << "-icml"
+              << "-ocml"
               << "--minimize"
               << "--noh" // new in OB 3.0.1
               << "--log" << options;
