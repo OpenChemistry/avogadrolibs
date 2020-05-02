@@ -49,38 +49,38 @@ OpenBabel::OpenBabel(QObject* p)
 {
   QAction* action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Optimize geometry"));
+  action->setText(tr("Optimize Geometry"));
   action->setShortcut(QKeySequence("Ctrl+Alt+O"));
   connect(action, SIGNAL(triggered()), SLOT(onOptimizeGeometry()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Configure geometry optimization..."));
+  action->setText(tr("Configure Force Field..."));
   connect(action, SIGNAL(triggered()), SLOT(onConfigureGeometryOptimization()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Perceive bonds"));
+  action->setText(tr("Perceive Bonds"));
   connect(action, SIGNAL(triggered()), SLOT(onPerceiveBonds()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Add hydrogens"));
+  action->setText(tr("Add Hydrogens"));
   connect(action, SIGNAL(triggered()), SLOT(onAddHydrogens()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Add hydrogens for pH..."));
+  action->setText(tr("Add Hydrogens for pH..."));
   connect(action, SIGNAL(triggered()), SLOT(onAddHydrogensPh()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Remove hydrogens"));
+  action->setText(tr("Remove Hydrogens"));
   connect(action, SIGNAL(triggered()), SLOT(onRemoveHydrogens()));
   m_actions.push_back(action);
 
