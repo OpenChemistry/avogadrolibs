@@ -25,7 +25,7 @@ jobs:
             name: "Ubuntu AppImage", artifact: "Avogadro2.AppImage",
             os: ubuntu-16.04,
             cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
+            cmake_flags: "-G Ninja -DPYTHON_WHEEL_BUILD=ON ",
             cpack: "",
           }
         - {
