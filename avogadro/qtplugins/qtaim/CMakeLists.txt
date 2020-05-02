@@ -18,6 +18,10 @@ avogadro_plugin(QTAIMExtension
   "${qtaimextension_SRCS}"
 )
 
+target_link_libraries(QTAIMExtension
+  LINK_PRIVATE
+    Qt5::Concurrent)
+
 # The settings widget is not built -- its settings weren't actually used by the
 # engine in Avogadro 1. The sources are kept for later if we decide to use it.
 avogadro_plugin(QTAIMScenePlugin
@@ -29,4 +33,5 @@ avogadro_plugin(QTAIMScenePlugin
 )
 
 target_link_libraries(QTAIMScenePlugin
-  LINK_PRIVATE AvogadroRendering ${Qt5Concurrent_LIBRARIES})
+  LINK_PRIVATE
+    AvogadroRendering)
