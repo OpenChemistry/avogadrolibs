@@ -129,7 +129,6 @@ QVector3D QTAIMODEIntegrator::integrate(QVector3D x0y0z0)
       break;
     default:
       qDebug() << "Catastrophic: No ODE parameters for this property.";
-      exit(1);
       break;
   }
 
@@ -257,7 +256,6 @@ void QTAIMODEIntegrator::r8_f(qreal t, qreal y[], qreal yp[])
       break;
     default:
       qDebug() << "Catastrophic: No ODE parameters for this property.";
-      exit(1);
       break;
   }
 
@@ -459,9 +457,8 @@ void QTAIMODEIntegrator::r8_fehl(qint64 neqn, qreal y[], qreal t, qreal h_,
   ch = h_ / 4104.0;
 
   for (i = 0; i < neqn; i++) {
-    f5[i] = y[i] +
-            ch * ((8341.0 * yp[i] - 845.0 * f3[i]) +
-                  (29440.0 * f2[i] - 32832.0 * f1[i]));
+    f5[i] = y[i] + ch * ((8341.0 * yp[i] - 845.0 * f3[i]) +
+                         (29440.0 * f2[i] - 32832.0 * f1[i]));
   }
 
   QTAIMODEIntegrator::r8_f(t + h_, f5, f4);
@@ -469,9 +466,8 @@ void QTAIMODEIntegrator::r8_fehl(qint64 neqn, qreal y[], qreal t, qreal h_,
   ch = h_ / 20520.0;
 
   for (i = 0; i < neqn; i++) {
-    f1[i] = y[i] +
-            ch * ((-6080.0 * yp[i] + (9295.0 * f3[i] - 5643.0 * f4[i])) +
-                  (41040.0 * f1[i] - 28352.0 * f2[i]));
+    f1[i] = y[i] + ch * ((-6080.0 * yp[i] + (9295.0 * f3[i] - 5643.0 * f4[i])) +
+                         (41040.0 * f1[i] - 28352.0 * f2[i]));
   }
 
   QTAIMODEIntegrator::r8_f(t + h_ / 2.0, f1, f5);
@@ -796,10 +792,10 @@ qint64 QTAIMODEIntegrator::r8_rkf45(qint64 neqn, qreal y[], qreal yp[],
       } else if (kflag == 4) {
         nfe = 0;
       } else if (kflag == 5 && abserr == 0.0) {
-        exit(1);
+        // error
       } else if (kflag == 6 && (*relerr) <= relerr_save &&
                  abserr <= abserr_save) {
-        exit(1);
+        // error
       }
     }
     //
@@ -828,7 +824,7 @@ qint64 QTAIMODEIntegrator::r8_rkf45(qint64 neqn, qreal y[], qreal yp[],
       //  the instructions pertaining to FLAG = 5, 6, 7 or 8.
       //
       else {
-        exit(1);
+        // error
       }
     }
   }
