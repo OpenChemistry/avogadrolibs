@@ -14,15 +14,15 @@ namespace QtGui {
 using std::swap;
 
 Molecule::Molecule(QObject* parent_)
-  : QObject(parent_),
-    m_undoMolecule(new RWMolecule(*this, this)), Core::Molecule()
+  : QObject(parent_), Core::Molecule(),
+    m_undoMolecule(new RWMolecule(*this, this)), constraints()
 {
   m_undoMolecule->setInteractive(true);
 }
 
 Molecule::Molecule(const Molecule& other)
   : QObject(), Core::Molecule(other),
-    m_undoMolecule(new RWMolecule(*this, this))
+    m_undoMolecule(new RWMolecule(*this, this)), constraints()
 {
   m_undoMolecule->setInteractive(true);
   // Now assign the unique ids
@@ -34,7 +34,7 @@ Molecule::Molecule(const Molecule& other)
 }
 
 Molecule::Molecule(const Core::Molecule& other)
-  : QObject(), Core::Molecule(other)
+  : QObject(), Core::Molecule(other), constraints()
 {
   // Now assign the unique ids
   for (Index i = 0; i < atomCount(); i++)
@@ -205,8 +205,8 @@ void Molecule::swapAtom(Index a, Index b)
   Core::Molecule::swapAtom(a, b);
 }
 
-Molecule::BondType Molecule::addBond(Index a, Index b,
-                                     unsigned char order, Index uniqueId)
+Molecule::BondType Molecule::addBond(Index a, Index b, unsigned char order,
+                                     Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_bondUniqueIds.size()) ||
       m_bondUniqueIds[uniqueId] != MaxIndex) {
