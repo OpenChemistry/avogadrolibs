@@ -165,6 +165,9 @@ if(BUILD_GPL_PLUGINS)
   add_subdirectory(qtaim)
 endif()
 
+#kantundpeterpan
+add_subdirectory(constraints)
+
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${original_library_output_dir}")
 
 # Add all of the static plugins to the initialization file.
