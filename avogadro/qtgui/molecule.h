@@ -18,6 +18,11 @@
 #include <list>
 
 namespace Avogadro {
+
+namespace QtPlugins {
+    class ConstraintsModel;
+}
+
 namespace QtGui {
 
 class Mesh;
@@ -33,6 +38,9 @@ class AVOGADROQTGUI_EXPORT Molecule : public QObject, public Core::Molecule
   Q_OBJECT
 
 public:
+
+  QtPlugins::ConstraintsModel* constraints;
+
   /** Typedef for Atom class. */
   typedef Core::Molecule::AtomType AtomType;
 
