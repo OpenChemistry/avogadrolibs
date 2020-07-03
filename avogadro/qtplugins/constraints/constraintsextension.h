@@ -39,6 +39,8 @@ namespace Avogadro {
       QList<QAction*> m_actions;
       QtGui::Molecule* m_molecule = nullptr;
       ConstraintsDialog* dialog = nullptr;
+
+      friend class ConstraintsDialog;
     };
   }
 }

@@ -13,7 +13,12 @@
 
 namespace Avogadro {
   namespace QtPlugins {
-    ConstraintsDialog::ConstraintsDialog(QWidget* parent_, Qt::WindowFlags f) : QDialog(parent_,f), ui(new Ui::ConstraintsDialog)//, m_constraints(new QtPlugins::ConstraintsModel)
+    ConstraintsDialog::ConstraintsDialog(ConstraintsExtension* plugin,
+                                         QWidget* parent_,
+                                         Qt::WindowFlags f)
+      : QDialog(parent_,f)
+      , m_plugin(plugin)
+      , ui(new Ui::ConstraintsDialog)
     {
       ui->setupUi(this);
       connect( ui->ConstraintsOK, SIGNAL( clicked() ), this, SLOT( acceptConstraints() ));
@@ -27,8 +32,8 @@ namespace Avogadro {
     }
     void ConstraintsDialog::setModel(ConstraintsModel *model)
     {
-      m_constraints = model; // new QtPlugins::ConstraintsModel();
-      ui->ConstraintsTableView->setModel(m_constraints);
+      //  m_constraints = model; // this should be plugin->m_molecule->constraints;
+      ui->ConstraintsTableView->setModel(m_plugin->m_molecule->constraints);
     }
     void ConstraintsDialog::acceptConstraints()
     {
@@ -36,7 +41,7 @@ namespace Avogadro {
     }
     void ConstraintsDialog::deleteConstraint()
     {
-      m_constraints->deleteConstraint(ui->ConstraintsTableView->currentIndex().row());
+      m_plugin->m_molecule->constraints->deleteConstraint(ui->ConstraintsTableView->currentIndex().row());
     }
     void ConstraintsDialog::addConstraint()
     {
@@ -47,16 +52,16 @@ namespace Avogadro {
       int AtomIdC = ui->editC->value();
       int AtomIdD = ui->editD->value();
 
-      m_constraints->addConstraint(type,
-                                   AtomIdA,
-                                   AtomIdB,
-                                   AtomIdC,
-                                   AtomIdD,
-                                   value);
+      m_plugin->m_molecule->constraints->addConstraint(type,
+                                                       AtomIdA,
+                                                       AtomIdB,
+                                                       AtomIdC,
+                                                       AtomIdD,
+                                                       value);
     }
     void ConstraintsDialog::deleteAllConstraints()
     {
-      m_constraints->clear();
+      m_plugin->m_molecule->constraints->clear();
       this->update();
     }
   }

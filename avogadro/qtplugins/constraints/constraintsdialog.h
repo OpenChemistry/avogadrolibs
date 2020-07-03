@@ -1,5 +1,6 @@
 #ifndef AVOGADRO_QTPLUGINS_CONSTRAINTSDIALOG_H
 #define AVOGADRO_QTPLUGINS_CONSTRAINTSDIALOG_H
+#include "constraintsextension.h"
 #include "constraintsmodel.h"
 #include <QDialog>
 #include <QButtonGroup>
@@ -14,15 +15,17 @@ namespace Avogadro {
     namespace Ui {
       class ConstraintsDialog;
     }
+    //    class ConstraintsExtension;
     class ConstraintsDialog : public QDialog
     {
       Q_OBJECT
 
     public:
-      explicit ConstraintsDialog(QWidget* parent_=0, Qt::WindowFlags f = 0);
+      explicit ConstraintsDialog(ConstraintsExtension* plugin ,
+                                 QWidget* parent_=0,
+                                 Qt::WindowFlags f = 0);
       ~ConstraintsDialog() override;
       void setModel(ConstraintsModel *model);
-      //void setMolecule(Molecule* m_molecule);
       
     public slots:
       void acceptConstraints();
@@ -32,9 +35,11 @@ namespace Avogadro {
       /*
       void comboTypeChanged(int);
       */
+
     private:
       Ui::ConstraintsDialog* ui;
-      ConstraintsModel *m_constraints;
+      ConstraintsExtension* m_plugin;
+      //      ConstraintsModel *m_constraints;
       //Molecule* m_molecule;
     };
   }
