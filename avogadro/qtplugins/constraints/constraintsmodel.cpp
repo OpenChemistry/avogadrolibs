@@ -39,7 +39,7 @@ namespace Avogadro
     
     int ConstraintsModel::rowCount(const QModelIndex &) const
     {
-      return m_constraints.size();
+      return ConstraintsList.size();
     }
 
     int ConstraintsModel::columnCount(const QModelIndex &) const
@@ -52,43 +52,43 @@ namespace Avogadro
       if (!index.isValid())
         return QVariant();
 
-      if (index.row() >= m_constraints.size())
+      if (index.row() >= ConstraintsList.size())
         return QVariant();
 
       if (role == Qt::DisplayRole)
         switch (index.column()) {
         case 0:
-          if (m_constraints[index.row()].GetConstraintType() == 0)
+          if (ConstraintsList[index.row()].GetConstraintType() == 0)
             return QString("Ignore Atom");
-          else if (m_constraints[index.row()].GetConstraintType() == 1)
+          else if (ConstraintsList[index.row()].GetConstraintType() == 1)
             return QString("Fix Atom");
-          else if (m_constraints[index.row()].GetConstraintType() == 2)
+          else if (ConstraintsList[index.row()].GetConstraintType() == 2)
             return QString("Fix Atom X");
-          else if (m_constraints[index.row()].GetConstraintType() == 3)
+          else if (ConstraintsList[index.row()].GetConstraintType() == 3)
             return QString("Fix Atom Y");
-          else if (m_constraints[index.row()].GetConstraintType() == 4)
+          else if (ConstraintsList[index.row()].GetConstraintType() == 4)
             return QString("Fix Atom Z");
-          else if (m_constraints[index.row()].GetConstraintType() == 5)
+          else if (ConstraintsList[index.row()].GetConstraintType() == 5)
             return QString("Distance");
-          else if (m_constraints[index.row()].GetConstraintType() == 6)
+          else if (ConstraintsList[index.row()].GetConstraintType() == 6)
             return QString("Angle");
-          else if (m_constraints[index.row()].GetConstraintType() == 7)
+          else if (ConstraintsList[index.row()].GetConstraintType() == 7)
             return QString("Torsion angle");
           break;
         case 1:
-          return m_constraints[index.row()].GetConstraintValue();
+          return ConstraintsList[index.row()].GetConstraintValue();
           break;
         case 2:
-          return m_constraints[index.row()].GetConstraintAtomA();
+          return ConstraintsList[index.row()].GetConstraintAtomA();
           break;
         case 3:
-          return m_constraints[index.row()].GetConstraintAtomB();
+          return ConstraintsList[index.row()].GetConstraintAtomB();
           break;
         case 4:
-          return m_constraints[index.row()].GetConstraintAtomC();
+          return ConstraintsList[index.row()].GetConstraintAtomC();
           break;
         case 5:
-          return m_constraints[index.row()].GetConstraintAtomD();
+          return ConstraintsList[index.row()].GetConstraintAtomD();
           break;
         }
 
@@ -128,73 +128,17 @@ namespace Avogadro
 
     void ConstraintsModel::addConstraint(int type, int a, int b, int c, int d, double value)
     {
-      beginInsertRows(QModelIndex(), m_constraints.size(), m_constraints.size());
-      m_constraints << Constraint(type, a, b, c, d, value);
+      beginInsertRows(QModelIndex(), ConstraintsList.size(), ConstraintsList.size());
+      ConstraintsList << Constraint(type, a, b, c, d, value);
       endInsertRows();
     }
-    /*
-      void ConstraintsModel::addIgnore(int index)
-      {
-      beginInsertRows(QModelIndex(), m_constraints.Size(), m_constraints.Size()); 
-      m_constraints.AddIgnore(index);
-      endInsertRows();
-      }
-  
-      void ConstraintsModel::addAtomConstraint(int index)
-      {
-      beginInsertRows(QModelIndex(), m_constraints.Size(), m_constraints.Size()); 
-      m_constraints.AddAtomConstraint(index);
-      endInsertRows();
-      }
-  
-      void ConstraintsModel::addAtomXConstraint(int index)
-      {
-      beginInsertRows(QModelIndex(), m_constraints.Size(), m_constraints.Size()); 
-      m_constraints.AddAtomXConstraint(index);
-      endInsertRows();
-      }
-  
-      void ConstraintsModel::addAtomYConstraint(int index)
-      {
-      beginInsertRows(QModelIndex(), m_constraints.Size(), m_constraints.Size()); 
-      m_constraints.AddAtomYConstraint(index);
-      endInsertRows();
-      }
-  
-      void ConstraintsModel::addAtomZConstraint(int index)
-      {
-      beginInsertRows(QModelIndex(), m_constraints.Size(), m_constraints.Size()); 
-      m_constraints.AddAtomZConstraint(index);
-      endInsertRows();
-      }
-  
-      void ConstraintsModel::addDistanceConstraint(int a, int b, double length)
-      {
-      beginInsertRows(QModelIndex(), m_constraints.Size(), m_constraints.Size()); 
-      m_constraints.AddDistanceConstraint(a, b, length);
-      endInsertRows();
-      }
-  
-      void ConstraintsModel::addAngleConstraint(int a, int b, int c, double angle)
-      {
-      beginInsertRows(QModelIndex(), m_constraints.Size(), m_constraints.Size()); 
-      m_constraints.AddAngleConstraint(a, b, c, angle);
-      endInsertRows();
-      }
-  
-      void ConstraintsModel::addTorsionConstraint(int a, int b, int c, int d, double torsion)
-      {
-      beginInsertRows(QModelIndex(), m_constraints.Size(), m_constraints.Size()); 
-      m_constraints.AddTorsionConstraint(a, b, c, d, torsion);
-      endInsertRows();
-      }
-    */
+ 
     void ConstraintsModel::clear()
     {
       qDebug() << "ConstraintsModel::clear()" << endl;
-      if (m_constraints.size()) {
-        beginRemoveRows(QModelIndex(), 0, m_constraints.size() - 1); 
-        m_constraints.clear();
+      if (ConstraintsList.size()) {
+        beginRemoveRows(QModelIndex(), 0, ConstraintsList.size() - 1); 
+        ConstraintsList.clear();
         endRemoveRows();
       }
     }
@@ -202,9 +146,9 @@ namespace Avogadro
     void ConstraintsModel::deleteConstraint(int index)
     { 
       qDebug() << "ConstraintsModel::deleteConstraint(" << index << ")" << endl;
-      if (m_constraints.size() && (index >= 0)) {
+      if (ConstraintsList.size() && (index >= 0)) {
         beginRemoveRows(QModelIndex(), index, index); 
-        m_constraints.removeAt(index);
+        ConstraintsList.removeAt(index);
         endRemoveRows();
       }
     }
@@ -215,14 +159,14 @@ namespace Avogadro
     qDebug() << "ConstraintsModel::primitiveRemoved(...)" << endl;
     if (primitive->type() == Primitive::AtomType) {
     int index = static_cast<Atom*>(primitive)->index() + 1;
-    for (int i = 0; i < m_constraints.Size(); ++i) {
-    if ( (m_constraints.GetConstraintAtomA(i) == index) || 
-    (m_constraints.GetConstraintAtomB(i) == index) || 
-    (m_constraints.GetConstraintAtomC(i) == index) || 
-    (m_constraints.GetConstraintAtomD(i) == index) ) {
+    for (int i = 0; i < ConstraintsList.Size(); ++i) {
+    if ( (ConstraintsList.GetConstraintAtomA(i) == index) || 
+    (ConstraintsList.GetConstraintAtomB(i) == index) || 
+    (ConstraintsList.GetConstraintAtomC(i) == index) || 
+    (ConstraintsList.GetConstraintAtomD(i) == index) ) {
 
     beginRemoveRows(QModelIndex(), i, i);
-    m_constraints.DeleteConstraint(i);
+    ConstraintsList.DeleteConstraint(i);
     endRemoveRows();
     i--; // this index will be replaced with a new, we want to check this aswell
     }

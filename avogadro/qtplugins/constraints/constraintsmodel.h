@@ -64,7 +64,7 @@ namespace Avogadro {
       void addAngleConstraint(int a, int b, int c, double angle);
       void addTorsionConstraint(int a, int b, int c, int d, double torsion);
       */
-      QList<Constraint> m_constraints;
+      QList<Constraint> ConstraintsList;
 
     }; //ConstraintsModel
   } // QtPlugins
