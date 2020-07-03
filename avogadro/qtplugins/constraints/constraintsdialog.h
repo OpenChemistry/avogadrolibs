@@ -15,7 +15,6 @@ namespace Avogadro {
     namespace Ui {
       class ConstraintsDialog;
     }
-    //    class ConstraintsExtension;
     class ConstraintsDialog : public QDialog
     {
       Q_OBJECT
@@ -25,22 +24,17 @@ namespace Avogadro {
                                  QWidget* parent_=0,
                                  Qt::WindowFlags f = 0);
       ~ConstraintsDialog() override;
-      void setModel(ConstraintsModel *model);
+      void setModel();
       
     public slots:
       void acceptConstraints();
       void addConstraint();
       void deleteConstraint();
       void deleteAllConstraints();
-      /*
-      void comboTypeChanged(int);
-      */
 
     private:
       Ui::ConstraintsDialog* ui;
       ConstraintsExtension* m_plugin;
-      //      ConstraintsModel *m_constraints;
-      //Molecule* m_molecule;
     };
   }
 }
