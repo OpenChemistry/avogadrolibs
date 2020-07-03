@@ -48,7 +48,7 @@ namespace Avogadro {
         m_molecule = mol;
       if (!m_molecule->constraints)
         m_molecule->constraints = new ConstraintsModel();
-      dialog->setModel(m_molecule->constraints);
+      dialog->setModel();
     }
 
     bool ConstraintsExtension::readMolecule(QtGui::Molecule& mol){
