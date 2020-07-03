@@ -12,6 +12,7 @@ namespace Avogadro {
       ConstraintValue = value;
     }
     Constraint::~Constraint(){}
+
     void Constraint::SetConstraintType(int type)
     {
       ConstraintType = type;
@@ -43,6 +44,36 @@ namespace Avogadro {
     int Constraint::GetConstraintAtomD() const
     {
       return AtomIdD;
+    }
+    QJsonObject Constraint::toJson()
+    {
+      QJsonObject ConstraintJ;
+      ConstraintJ["type"] = GetConstraintType();
+      ConstraintJ["value"] = GetConstraintValue();
+
+      QJsonArray ConstraintAtoms;
+
+      switch (GetConstraintType())
+        {
+        case 0 ... 4:
+          ConstraintAtoms << GetConstraintAtomA();
+          break;
+        case 5:
+          ConstraintAtoms << GetConstraintAtomA() << GetConstraintAtomB();
+          break;
+        case 6:
+          ConstraintAtoms << GetConstraintAtomA() << GetConstraintAtomB()
+                          << GetConstraintAtomC();
+          break;
+        case 7:
+          ConstraintAtoms << GetConstraintAtomA() << GetConstraintAtomB()
+                          << GetConstraintAtomC() << GetConstraintAtomD();
+          break;
+        }
+
+      ConstraintJ.insert("atoms", ConstraintAtoms);
+
+      return ConstraintJ;
     }
   }
 }
