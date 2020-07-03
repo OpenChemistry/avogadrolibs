@@ -26,6 +26,8 @@
 #include <QtCore/QList>
 #include <QtCore/QString>
 #include <QtCore/QAbstractTableModel>
+#include <QJsonObject>
+#include <QJsonDocument>
 #include "constraint.h"
 #ifndef BUFF_SIZE
 #define BUFF_SIZE 256
@@ -54,6 +56,10 @@ namespace Avogadro {
       void addConstraint(int type, int a, int b, int c, int d, double value);
       void deleteConstraint(int index);
 
+      QJsonObject toJson();
+
+      
+
       /*
       void addIgnore(int index);
       void addAtomConstraint(int index);
@@ -64,6 +70,7 @@ namespace Avogadro {
       void addAngleConstraint(int a, int b, int c, double angle);
       void addTorsionConstraint(int a, int b, int c, int d, double torsion);
       */
+
       QList<Constraint> ConstraintsList;
 
     }; //ConstraintsModel

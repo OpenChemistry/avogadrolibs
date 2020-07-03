@@ -29,6 +29,7 @@
 */
 #include <QtCore/QMutexLocker>
 #include <QtCore/QDebug>
+#include <QString>
 
 using namespace std;
 //using namespace OpenBabel;
@@ -151,6 +152,27 @@ namespace Avogadro
         ConstraintsList.removeAt(index);
         endRemoveRows();
       }
+    }
+
+    QJsonObject ConstraintsModel::toJson()
+    {
+      QJsonObject ConstraintsMJ;
+      ConstraintsMJ["total"] = ConstraintsList.size();
+      if(ConstraintsList.size())
+        {
+        for(int i = 0; i < ConstraintsList.size(); i++)
+          {
+            ConstraintsMJ.insert(QString::number(i), ConstraintsList[i].toJson());
+          }
+        }
+      
+
+      QJsonDocument json_doc(ConstraintsMJ);
+      QString json_string = json_doc.toJson();
+
+      qDebug() << json_string << endl;
+
+      return ConstraintsMJ;
     }
     /*
     // remove all constraints in which the atom occurs
