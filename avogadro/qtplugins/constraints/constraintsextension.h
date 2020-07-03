@@ -1,6 +1,7 @@
 #ifndef AVOGADRO_QTPLUGINS_CONSTRAINTS_H
 #define AVOGADRO_QTPLUGINS_CONSTRAINTS_H
 
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/extensionplugin.h>
 #include <QtCore/QMap>
 
