@@ -20,13 +20,6 @@
  ***********************************************************************/
 
 #include "constraintsmodel.h"
-
-/*
-#include <avogadro/primitive.h>
-#include <avogadro/atom.h>
-#include <avogadro/color.h>
-#include <avogadro/glwidget.h>
-*/
 #include <QtCore/QMutexLocker>
 #include <QtCore/QDebug>
 #include <QString>
@@ -158,6 +151,7 @@ namespace Avogadro
     {
       QJsonObject ConstraintsMJ;
       ConstraintsMJ["total"] = ConstraintsList.size();
+
       if(ConstraintsList.size())
         {
         for(int i = 0; i < ConstraintsList.size(); i++)
@@ -166,35 +160,14 @@ namespace Avogadro
           }
         }
       
-
+      /*
       QJsonDocument json_doc(ConstraintsMJ);
       QString json_string = json_doc.toJson();
 
       qDebug() << json_string << endl;
-
+      */
       return ConstraintsMJ;
     }
-    /*
-    // remove all constraints in which the atom occurs
-    void ConstraintsModel::primitiveRemoved(Primitive *primitive)
-    {
-    qDebug() << "ConstraintsModel::primitiveRemoved(...)" << endl;
-    if (primitive->type() == Primitive::AtomType) {
-    int index = static_cast<Atom*>(primitive)->index() + 1;
-    for (int i = 0; i < ConstraintsList.Size(); ++i) {
-    if ( (ConstraintsList.GetConstraintAtomA(i) == index) || 
-    (ConstraintsList.GetConstraintAtomB(i) == index) || 
-    (ConstraintsList.GetConstraintAtomC(i) == index) || 
-    (ConstraintsList.GetConstraintAtomD(i) == index) ) {
-
-    beginRemoveRows(QModelIndex(), i, i);
-    ConstraintsList.DeleteConstraint(i);
-    endRemoveRows();
-    i--; // this index will be replaced with a new, we want to check this aswell
-    }
-    }
-    }
-    }*/
   }
 } // end namespace Avogadro
 
