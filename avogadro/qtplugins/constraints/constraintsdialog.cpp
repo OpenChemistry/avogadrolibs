@@ -30,9 +30,8 @@ namespace Avogadro {
     {
       delete ui;
     }
-    void ConstraintsDialog::setModel(ConstraintsModel *model)
+    void ConstraintsDialog::setModel()
     {
-      //  m_constraints = model; // this should be plugin->m_molecule->constraints;
       ui->ConstraintsTableView->setModel(m_plugin->m_molecule->constraints);
     }
     void ConstraintsDialog::acceptConstraints()
