@@ -46,11 +46,15 @@ namespace Avogadro {
     void ConstraintsExtension::setMolecule(QtGui::Molecule* mol)
     {
       if (mol != m_molecule)
-        m_molecule = mol;
+        {
+          m_molecule = mol;
+          dialog->setModel();
+          dialog->connectHighlight(0);
+        }
       if (!m_molecule->constraints)
-        m_molecule->constraints = new ConstraintsModel(m_molecule);
-      dialog->setModel();
-
+        {
+          m_molecule->constraints = new ConstraintsModel(m_molecule);
+        }
     }
 
     bool ConstraintsExtension::readMolecule(QtGui::Molecule& mol){

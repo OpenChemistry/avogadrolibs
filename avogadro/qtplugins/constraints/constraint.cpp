@@ -14,6 +14,7 @@ namespace Avogadro {
       c_model = model;
       ConstraintType = type;
 
+      //adjusting for 0 indexing
       a = a-1;
       b = b-1;
       c = c-1;
@@ -29,29 +30,29 @@ namespace Avogadro {
           break;
 
         case 5:
-          // AtomUniqueIdA =
+          //AtomA
           Atoms << c_model->c_molecule->atomUniqueId(a);
-          //AtomUniqueIdB =
+          //AtomB
           Atoms << c_model->c_molecule->atomUniqueId(b);
           break;
 
         case 6:
-          //AtomUniqueIdA =
+          //AtomA
           Atoms << c_model->c_molecule->atomUniqueId(a);
-          //AtomUniqueIdB =
+          //AtomB
           Atoms << c_model->c_molecule->atomUniqueId(b);
-          //AtomUniqueIdC =
+          //AtomC
           Atoms << c_model->c_molecule->atomUniqueId(c);
           break;
 
         case 7:
-          //AtomUniqueIdA =
+          //AtomA
           Atoms << c_model->c_molecule->atomUniqueId(a);
-          //AtomUniqueIdB =
+          //AtomB
           Atoms << c_model->c_molecule->atomUniqueId(b);
-          //AtomUniqueIdC =
+          //AtomC
           Atoms << c_model->c_molecule->atomUniqueId(c);
-          //AtomUniqueIdD =
+          //AtomD
           Atoms << c_model->c_molecule->atomUniqueId(d);
         }
 
@@ -83,7 +84,7 @@ namespace Avogadro {
 
     const Index Constraint::GetConstraintAtomA() const
     {
-      if (Atoms.size() >= 1)
+      if (Atoms.size() >= 1) //returned for all constraint types
         {
           return c_model->c_molecule->atomByUniqueId(Atoms[0]).index()+1;
         }
@@ -95,7 +96,7 @@ namespace Avogadro {
 
     const Index Constraint::GetConstraintAtomB() const
     {
-      if (Atoms.size() >= 2)
+      if (Atoms.size() >= 2) //distance, angle and torsion constraints
         {
           return c_model->c_molecule->atomByUniqueId(Atoms[1]).index()+1;
         }
@@ -107,7 +108,7 @@ namespace Avogadro {
 
     const Index Constraint::GetConstraintAtomC() const
     {
-      if (Atoms.size() >= 3)
+      if (Atoms.size() >= 3) //angle and torsion constraints
         {
           return c_model->c_molecule->atomByUniqueId(Atoms[2]).index()+1;
         }
@@ -119,7 +120,7 @@ namespace Avogadro {
 
     const Index Constraint::GetConstraintAtomD() const
     {
-      if (Atoms.size() >= 4)
+      if (Atoms.size() >= 4) //torsion constraints only
         {
           return c_model->c_molecule->atomByUniqueId(Atoms[3]).index()+1;
         }
@@ -164,4 +165,4 @@ namespace Avogadro {
       return ConstraintJ;
     }
   } //namespace QtPlugins
-}  //namespace Avogadroe
+}  //namespace Avogadro

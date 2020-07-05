@@ -1,122 +1,123 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>Avogadro::QtPlugins::ConstraintsDialog</class>
- <widget class="QDialog" name="Avogadro::QtPlugins::ConstraintsDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="Avogadro::QtPlugins::ConstraintsDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
+    <width>798</width>
     <height>357</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Constraints</string>
   </property>
-  <layout class="QVBoxLayout" >
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QTableView" name="ConstraintsTableView" >
-     <property name="selectionBehavior" >
+    <widget class="QTableView" name="ConstraintsTableView">
+     <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
       <string>Add Constraints</string>
      </property>
-     <layout class="QHBoxLayout" >
+     <layout class="QHBoxLayout">
       <item>
-       <layout class="QHBoxLayout" >
+       <layout class="QHBoxLayout">
         <item>
-         <widget class="QLabel" name="label" >
-          <property name="maximumSize" >
+         <widget class="QLabel" name="label">
+          <property name="maximumSize">
            <size>
             <width>40</width>
             <height>16777215</height>
            </size>
           </property>
-          <property name="text" >
+          <property name="text">
            <string>Type</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboType" >
+         <widget class="QComboBox" name="comboType">
           <item>
-           <property name="text" >
+           <property name="text">
             <string>Ignore Atom</string>
            </property>
           </item>
           <item>
-           <property name="text" >
+           <property name="text">
             <string>Fix Atom</string>
            </property>
           </item>
           <item>
-           <property name="text" >
+           <property name="text">
             <string>Fix Atom X</string>
            </property>
           </item>
           <item>
-           <property name="text" >
+           <property name="text">
             <string>Fix Atom Y</string>
            </property>
           </item>
           <item>
-           <property name="text" >
+           <property name="text">
             <string>Fix Atom Z</string>
            </property>
           </item>
           <item>
-           <property name="text" >
+           <property name="text">
             <string>Distance</string>
            </property>
           </item>
           <item>
-           <property name="text" >
+           <property name="text">
             <string>Angle</string>
            </property>
           </item>
           <item>
-           <property name="text" >
+           <property name="text">
             <string>Torsion angle</string>
            </property>
           </item>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_2" >
-          <property name="text" >
+         <widget class="QLabel" name="label_2">
+          <property name="text">
            <string>Constraint Value</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="editValue" />
+         <widget class="QDoubleSpinBox" name="editValue"/>
         </item>
         <item>
-         <widget class="QLabel" name="label_3" >
-          <property name="text" >
+         <widget class="QLabel" name="label_3">
+          <property name="text">
            <string>Atom Indices</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="editA" />
+         <widget class="QSpinBox" name="editA"/>
         </item>
         <item>
-         <widget class="QSpinBox" name="editB" />
+         <widget class="QSpinBox" name="editB"/>
         </item>
         <item>
-         <widget class="QSpinBox" name="editC" />
+         <widget class="QSpinBox" name="editC"/>
         </item>
         <item>
-         <widget class="QSpinBox" name="editD" />
+         <widget class="QSpinBox" name="editD"/>
         </item>
         <item>
-         <widget class="QPushButton" name="ConstraintsAdd" >
-          <property name="text" >
+         <widget class="QPushButton" name="ConstraintsAdd">
+          <property name="text">
            <string>Add</string>
           </property>
          </widget>
@@ -127,39 +128,39 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
       <string>Options</string>
      </property>
-     <layout class="QHBoxLayout" >
+     <layout class="QHBoxLayout">
       <item>
-       <layout class="QHBoxLayout" >
+       <layout class="QHBoxLayout">
         <item>
-         <widget class="QPushButton" name="ConstraintsSave" >
-          <property name="enabled" >
+         <widget class="QPushButton" name="ConstraintsSave">
+          <property name="enabled">
            <bool>false</bool>
           </property>
-          <property name="text" >
+          <property name="text">
            <string>Save</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="ConstraintsLoad" >
-          <property name="enabled" >
+         <widget class="QPushButton" name="ConstraintsLoad">
+          <property name="enabled">
            <bool>false</bool>
           </property>
-          <property name="text" >
+          <property name="text">
            <string>Load</string>
           </property>
          </widget>
         </item>
         <item>
          <spacer>
-          <property name="orientation" >
+          <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0">
            <size>
             <width>40</width>
             <height>20</height>
@@ -168,47 +169,41 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="ConstraintsDelete" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+         <widget class="QCheckBox" name="checkHighlight">
+          <property name="text">
+           <string>Highlight selected Constraint</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="ConstraintsDelete">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="minimumSize" >
+          <property name="minimumSize">
            <size>
             <width>100</width>
             <height>0</height>
            </size>
           </property>
-          <property name="text" >
+          <property name="text">
            <string>Delete Selected</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="ConstraintsDeleteAll" >
-          <property name="text" >
+         <widget class="QPushButton" name="ConstraintsDeleteAll">
+          <property name="text">
            <string>Delete All</string>
           </property>
          </widget>
         </item>
         <item>
-         <spacer>
-          <property name="orientation" >
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" >
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="ConstraintsOK" >
-          <property name="text" >
+         <widget class="QPushButton" name="ConstraintsOK">
+          <property name="text">
            <string>OK</string>
           </property>
          </widget>
