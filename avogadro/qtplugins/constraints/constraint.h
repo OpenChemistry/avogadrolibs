@@ -1,7 +1,17 @@
 #include <QtCore>
 #include <QJsonObject>
+#include <QList>
+//#include <avogadro/core/atom.h>
+#include <avogadro/qtgui/molecule.h>
+#include "constraintsmodel.h"
+
+#ifndef CONSTRAINT_H
+#define CONSTRAINT_H
 
 namespace Avogadro {
+  namespace Core{
+    class Atom;
+  }
   namespace QtPlugins {
     class Constraint
     {
@@ -39,7 +49,8 @@ namespace Avogadro {
                           int AtomIdB,
                           int AtomIdC,
                           int AtomIdD,
-                          double ConstraintValue);
+                          double ConstraintValue,
+                          ConstraintsModel* model);
       ~Constraint();
 
       void SetConstraintType(int ConstraintType);
@@ -48,19 +59,40 @@ namespace Avogadro {
 
       int  GetConstraintType() const;
       double GetConstraintValue() const;
+      /*
       int GetConstraintAtomA() const;
       int GetConstraintAtomB() const;
       int GetConstraintAtomC() const;
       int GetConstraintAtomD() const;
+      */
+
+      const Core::Atom* GetConstraintAtomA() const;
+      const Core::Atom* GetConstraintAtomB() const;
+      const Core::Atom* GetConstraintAtomC() const;
+      const Core::Atom* GetConstraintAtomD() const;
 
       QJsonObject toJson();
 
       int ConstraintType;
+      /*
       int AtomIdA;
       int AtomIdB;
       int AtomIdC;
       int AtomIdD;
+      */
+
+      /*
+      Core::Atom* AtomA = nullptr;
+      Core::Atom* AtomB = nullptr;
+      Core::Atom* AtomC = nullptr;
+      Core::Atom* AtomD = nullptr;
+      */
+
+      QList<Core::Atom> Atoms;
       double ConstraintValue;
+
+      ConstraintsModel* c_model = nullptr;
     };    
   }
 }
+#endif

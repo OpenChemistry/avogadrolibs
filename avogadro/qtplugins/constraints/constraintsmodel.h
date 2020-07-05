@@ -7,7 +7,10 @@
 #include <QtCore/QAbstractTableModel>
 #include <QJsonObject>
 #include <QJsonDocument>
+
+#include <avogadro/qtgui/molecule.h>
 #include "constraint.h"
+
 #ifndef BUFF_SIZE
 #define BUFF_SIZE 256
 #endif
@@ -23,7 +26,10 @@ namespace Avogadro {
       void primitiveRemoved(Primitive *primitive);
       */
     public:
-      ConstraintsModel() : QAbstractTableModel() {}
+      ConstraintsModel(QtGui::Molecule* molecule)
+        : QAbstractTableModel()
+        , c_molecule(molecule)
+      {}
 
       int rowCount(const QModelIndex &parent = QModelIndex()) const;
       int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -38,6 +44,8 @@ namespace Avogadro {
       QJsonObject toJson();
 
       QList<Constraint> ConstraintsList;
+      // reference to associated molecule
+      QtGui::Molecule* c_molecule = nullptr;
 
     }; //ConstraintsModel
   } // QtPlugins
