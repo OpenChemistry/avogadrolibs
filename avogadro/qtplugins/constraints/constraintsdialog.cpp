@@ -5,13 +5,16 @@
 #include <QDebug>
 #include <QTextStream>
 
-#include <QFileDialog>
-#include <QFile>
-#include <QString>
-#include <QMessageBox>
-#include <string>
+//#include <QFileDialog>
+//#include <QFile>
+//#include <QString>
+//#include <QMessageBox>
+//#include <string>
 
 namespace Avogadro {
+  //  namespace QtGui{
+  //              class Molecule;
+  //  }
   namespace QtPlugins {
     ConstraintsDialog::ConstraintsDialog(ConstraintsExtension* plugin,
                                          QWidget* parent_,
@@ -26,22 +29,30 @@ namespace Avogadro {
       connect( ui->ConstraintsDelete, SIGNAL( clicked() ), this, SLOT( deleteConstraint() ));
       connect( ui->ConstraintsDeleteAll, SIGNAL( clicked() ), this, SLOT( deleteAllConstraints() ));
     }
+
     ConstraintsDialog::~ConstraintsDialog()
     {
       delete ui;
     }
+
     void ConstraintsDialog::setModel()
     {
       ui->ConstraintsTableView->setModel(m_plugin->m_molecule->constraints);
     }
+
     void ConstraintsDialog::acceptConstraints()
     {
       hide();
     }
+
     void ConstraintsDialog::deleteConstraint()
     {
-      m_plugin->m_molecule->constraints->deleteConstraint(ui->ConstraintsTableView->currentIndex().row());
+      m_plugin->
+        m_molecule->
+        constraints->
+        deleteConstraint(ui->ConstraintsTableView->currentIndex().row());
     }
+
     void ConstraintsDialog::addConstraint()
     {
       int type = ui->comboType->currentIndex();
@@ -58,10 +69,12 @@ namespace Avogadro {
                                                        AtomIdD,
                                                        value);
     }
+
     void ConstraintsDialog::deleteAllConstraints()
     {
       m_plugin->m_molecule->constraints->clear();
       this->update();
     }
+
   }
 }

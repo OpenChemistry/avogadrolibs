@@ -21,17 +21,17 @@ namespace Avogadro {
         6: Angle
         7: Torsion angle
 
-        This constraint representation has to be translated when passing it to whatever
-        Optimizing/MD/QM code.
-
         A more sophisticated way would probably be to store pointers to the respective
         atoms of the molecule and extend the Atom class by something like :
 
         void Atom::setConstrained()
         bool Atom::isConstrained()
 
-        This would enable easy updating of the constraints upon changing the Molecule.
+        Connecting the appropriate signals  would enable easy updating of the constraints
+        upon changing the Molecule.
 
+        This constraint representation has to be translated when passing it to whatever
+        Optimizing/MD/QM code.
 
        */
       explicit Constraint(int ConstraintType,
