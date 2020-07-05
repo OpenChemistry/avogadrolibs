@@ -14,38 +14,45 @@ namespace Avogadro {
       c_model = model;
       ConstraintType = type;
 
+      a = a-1;
+      b = b-1;
+      c = c-1;
+      d = d-1;
+
+      // store unique AtomIds
+
       switch (ConstraintType)
         {
         case 0 ... 4:
-          //          AtomA = &(c_model->c_molecule->atom(a));
-          Atoms << c_model->c_molecule->atom(a);
+          // AtomA
+          Atoms << c_model->c_molecule->atomUniqueId(a);
           break;
 
         case 5:
-          // AtomA =
-          Atoms << c_model->c_molecule->atom(a);
-          //AtomB =
-          Atoms << c_model->c_molecule->atom(b);
+          // AtomUniqueIdA =
+          Atoms << c_model->c_molecule->atomUniqueId(a);
+          //AtomUniqueIdB =
+          Atoms << c_model->c_molecule->atomUniqueId(b);
           break;
 
         case 6:
-          //AtomA =
-          Atoms << c_model->c_molecule->atom(a);
-          //AtomB =
-          Atoms << c_model->c_molecule->atom(b);
-          //AtomC =
-          Atoms << c_model->c_molecule->atom(c);
+          //AtomUniqueIdA =
+          Atoms << c_model->c_molecule->atomUniqueId(a);
+          //AtomUniqueIdB =
+          Atoms << c_model->c_molecule->atomUniqueId(b);
+          //AtomUniqueIdC =
+          Atoms << c_model->c_molecule->atomUniqueId(c);
           break;
 
         case 7:
-          //AtomA =
-          Atoms << c_model->c_molecule->atom(a);
-          //AtomB =
-          Atoms << c_model->c_molecule->atom(b);
-          //AtomC =
-          Atoms << c_model->c_molecule->atom(c);
-          //AtomD =
-          Atoms << c_model->c_molecule->atom(d);
+          //AtomUniqueIdA =
+          Atoms << c_model->c_molecule->atomUniqueId(a);
+          //AtomUniqueIdB =
+          Atoms << c_model->c_molecule->atomUniqueId(b);
+          //AtomUniqueIdC =
+          Atoms << c_model->c_molecule->atomUniqueId(c);
+          //AtomUniqueIdD =
+          Atoms << c_model->c_molecule->atomUniqueId(d);
         }
 
       ConstraintValue = value;
@@ -74,53 +81,51 @@ namespace Avogadro {
       return ConstraintValue;
     }
 
-    const Core::Atom* Constraint::GetConstraintAtomA() const
+    const Index Constraint::GetConstraintAtomA() const
     {
       if (Atoms.size() >= 1)
         {
-          const Core::Atom* a;
-          a = &Atoms[0];
-          return  a;
+          return c_model->c_molecule->atomByUniqueId(Atoms[0]).index()+1;
         }
       else
         {
-          return nullptr;
+          return 0;
         }
     }
 
-    const Core::Atom* Constraint::GetConstraintAtomB() const
+    const Index Constraint::GetConstraintAtomB() const
     {
       if (Atoms.size() >= 2)
         {
-          return &Atoms[1];
+          return c_model->c_molecule->atomByUniqueId(Atoms[1]).index()+1;
         }
       else
         {
-          return nullptr;
+          return 0;
         }
     }
 
-    const Core::Atom* Constraint::GetConstraintAtomC() const
+    const Index Constraint::GetConstraintAtomC() const
     {
       if (Atoms.size() >= 3)
         {
-          return &Atoms[2];
+          return c_model->c_molecule->atomByUniqueId(Atoms[2]).index()+1;
         }
       else
         {
-          return nullptr;
+          return 0;
         }
     }
 
-    const Core::Atom* Constraint::GetConstraintAtomD() const
+    const Index Constraint::GetConstraintAtomD() const
     {
       if (Atoms.size() >= 4)
         {
-          return &Atoms[3];
+          return c_model->c_molecule->atomByUniqueId(Atoms[3]).index()+1;
         }
       else
         {
-          return nullptr;
+          return 0;
         }
     }
 
@@ -135,22 +140,22 @@ namespace Avogadro {
       switch (GetConstraintType())
         {
         case 0 ... 4:
-          ConstraintAtoms << static_cast<int>(GetConstraintAtomA()->index());
+          ConstraintAtoms << static_cast<int>(GetConstraintAtomA());
           break;
         case 5:
-          ConstraintAtoms << static_cast<int>(GetConstraintAtomA()->index())
-                          << static_cast<int>(GetConstraintAtomB()->index());
+          ConstraintAtoms << static_cast<int>(GetConstraintAtomA())
+                          << static_cast<int>(GetConstraintAtomB());
           break;
         case 6:
-          ConstraintAtoms << static_cast<int>(GetConstraintAtomA()->index())
-                          << static_cast<int>(GetConstraintAtomB()->index())
-                          << static_cast<int>(GetConstraintAtomC()->index());
+          ConstraintAtoms << static_cast<int>(GetConstraintAtomA())
+                          << static_cast<int>(GetConstraintAtomB())
+                          << static_cast<int>(GetConstraintAtomC());
           break;
         case 7:
-          ConstraintAtoms << static_cast<int>(GetConstraintAtomA()->index())
-                          << static_cast<int>(GetConstraintAtomB()->index())
-                          << static_cast<int>(GetConstraintAtomC()->index())
-                          << static_cast<int>(GetConstraintAtomD()->index());
+          ConstraintAtoms << static_cast<int>(GetConstraintAtomA())
+                          << static_cast<int>(GetConstraintAtomB())
+                          << static_cast<int>(GetConstraintAtomC())
+                          << static_cast<int>(GetConstraintAtomD());
           break;
         }
 

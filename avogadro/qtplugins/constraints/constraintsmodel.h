@@ -43,11 +43,15 @@ namespace Avogadro {
 
       QJsonObject toJson();
 
+
       QList<Constraint> ConstraintsList;
       // reference to associated molecule
       QtGui::Molecule* c_molecule = nullptr;
 
-    }; //ConstraintsModel
+    public slots:
+      void emitDataChanged();
+
+}; //ConstraintsModel
   } // QtPlugins
 } // end namespace Avogadro
 

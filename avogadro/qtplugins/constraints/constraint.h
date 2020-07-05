@@ -66,10 +66,10 @@ namespace Avogadro {
       int GetConstraintAtomD() const;
       */
 
-      const Core::Atom* GetConstraintAtomA() const;
-      const Core::Atom* GetConstraintAtomB() const;
-      const Core::Atom* GetConstraintAtomC() const;
-      const Core::Atom* GetConstraintAtomD() const;
+      const Index GetConstraintAtomA() const;
+      const Index GetConstraintAtomB() const;
+      const Index GetConstraintAtomC() const;
+      const Index GetConstraintAtomD() const;
 
       QJsonObject toJson();
 
@@ -88,7 +88,7 @@ namespace Avogadro {
       Core::Atom* AtomD = nullptr;
       */
 
-      QList<Core::Atom> Atoms;
+      QList<Index> Atoms;
       double ConstraintValue;
 
       ConstraintsModel* c_model = nullptr;

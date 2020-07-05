@@ -30,6 +30,11 @@ using namespace std;
 namespace Avogadro
 {
   namespace QtPlugins{
+
+    void ConstraintsModel::emitDataChanged()
+    {
+      emit dataChanged(QModelIndex(), QModelIndex());
+    }
     
     int ConstraintsModel::rowCount(const QModelIndex &) const
     {
@@ -76,7 +81,7 @@ namespace Avogadro
           if (ConstraintsList[index.row()].GetConstraintAtomA())
             {
               QVariant v;
-              v.setValue(ConstraintsList[index.row()].GetConstraintAtomA()->index());
+              v.setValue(static_cast<int>(ConstraintsList[index.row()].GetConstraintAtomA()));
               return v;
             }
           else
@@ -88,7 +93,7 @@ namespace Avogadro
           if (ConstraintsList[index.row()].GetConstraintAtomB())
             {
               QVariant v;
-              v.setValue(ConstraintsList[index.row()].GetConstraintAtomB()->index());
+              v.setValue(static_cast<int>(ConstraintsList[index.row()].GetConstraintAtomB()));
               return v;
             }
           else
@@ -100,7 +105,7 @@ namespace Avogadro
           if (ConstraintsList[index.row()].GetConstraintAtomC())
             {
               QVariant v;
-              v.setValue(ConstraintsList[index.row()].GetConstraintAtomC()->index());
+              v.setValue(static_cast<int>(ConstraintsList[index.row()].GetConstraintAtomC()));
               return v;
             }
           else
@@ -112,7 +117,7 @@ namespace Avogadro
           if (ConstraintsList[index.row()].GetConstraintAtomD())
             {
               QVariant v;
-              v.setValue(ConstraintsList[index.row()].GetConstraintAtomD()->index());
+              v.setValue(static_cast<int>(ConstraintsList[index.row()].GetConstraintAtomD()));
               return v;
             }
           else
