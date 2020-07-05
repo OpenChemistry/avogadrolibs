@@ -24,8 +24,8 @@
 #include <QtCore/QDebug>
 #include <QString>
 
+
 using namespace std;
-//using namespace OpenBabel;
 
 namespace Avogadro
 {
@@ -73,16 +73,52 @@ namespace Avogadro
           return ConstraintsList[index.row()].GetConstraintValue();
           break;
         case 2:
-          return ConstraintsList[index.row()].GetConstraintAtomA();
+          if (ConstraintsList[index.row()].GetConstraintAtomA())
+            {
+              QVariant v;
+              v.setValue(ConstraintsList[index.row()].GetConstraintAtomA()->index());
+              return v;
+            }
+          else
+            {
+              return "NA";
+            }
           break;
         case 3:
-          return ConstraintsList[index.row()].GetConstraintAtomB();
+          if (ConstraintsList[index.row()].GetConstraintAtomB())
+            {
+              QVariant v;
+              v.setValue(ConstraintsList[index.row()].GetConstraintAtomB()->index());
+              return v;
+            }
+          else
+            {
+              return "NA";
+            }
           break;
         case 4:
-          return ConstraintsList[index.row()].GetConstraintAtomC();
+          if (ConstraintsList[index.row()].GetConstraintAtomC())
+            {
+              QVariant v;
+              v.setValue(ConstraintsList[index.row()].GetConstraintAtomC()->index());
+              return v;
+            }
+          else
+            {
+              return "NA";
+                }
           break;
         case 5:
-          return ConstraintsList[index.row()].GetConstraintAtomD();
+          if (ConstraintsList[index.row()].GetConstraintAtomD())
+            {
+              QVariant v;
+              v.setValue(ConstraintsList[index.row()].GetConstraintAtomD()->index());
+              return v;
+            }
+          else
+            {
+              return "NA";
+                }
           break;
         }
 
@@ -123,7 +159,7 @@ namespace Avogadro
     void ConstraintsModel::addConstraint(int type, int a, int b, int c, int d, double value)
     {
       beginInsertRows(QModelIndex(), ConstraintsList.size(), ConstraintsList.size());
-      ConstraintsList << Constraint(type, a, b, c, d, value);
+      ConstraintsList << Constraint(type, a, b, c, d, value, this);
       endInsertRows();
     }
  
