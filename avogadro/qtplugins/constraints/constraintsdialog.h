@@ -30,10 +30,13 @@ namespace Avogadro {
       void addConstraint();
       void deleteConstraint();
       void deleteAllConstraints();
+      void highlightSelected();
+      void connectHighlight(int state);
 
     private:
       Ui::ConstraintsDialog* ui;
       ConstraintsExtension* m_plugin;
+      
     };
   }
 }

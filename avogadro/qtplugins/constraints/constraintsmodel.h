@@ -11,9 +11,6 @@
 #include <avogadro/qtgui/molecule.h>
 #include "constraint.h"
 
-#ifndef BUFF_SIZE
-#define BUFF_SIZE 256
-#endif
 
 namespace Avogadro {
   namespace QtPlugins {
@@ -45,13 +42,14 @@ namespace Avogadro {
 
 
       QList<Constraint> ConstraintsList;
-      // reference to associated molecule
+
+      // pointer to the associated molecule
       QtGui::Molecule* c_molecule = nullptr;
 
     public slots:
       void emitDataChanged();
 
-}; //ConstraintsModel
+    }; //ConstraintsModel
   } // QtPlugins
 } // end namespace Avogadro
 
