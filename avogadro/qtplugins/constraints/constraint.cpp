@@ -3,14 +3,53 @@
 namespace Avogadro {
   namespace QtPlugins {
 
-    Constraint::Constraint(int type, int a, int b, int c, int d, double value)
+    Constraint::Constraint(int type,
+                           int a,
+                           int b,
+                           int c,
+                           int d,
+                           double value,
+                           ConstraintsModel* model)
     {
+      c_model = model;
       ConstraintType = type;
-      AtomIdA = a;
-      AtomIdB = b;
-      AtomIdC = c;
-      AtomIdD = d;
+
+      switch (ConstraintType)
+        {
+        case 0 ... 4:
+          //          AtomA = &(c_model->c_molecule->atom(a));
+          Atoms << c_model->c_molecule->atom(a);
+          break;
+
+        case 5:
+          // AtomA =
+          Atoms << c_model->c_molecule->atom(a);
+          //AtomB =
+          Atoms << c_model->c_molecule->atom(b);
+          break;
+
+        case 6:
+          //AtomA =
+          Atoms << c_model->c_molecule->atom(a);
+          //AtomB =
+          Atoms << c_model->c_molecule->atom(b);
+          //AtomC =
+          Atoms << c_model->c_molecule->atom(c);
+          break;
+
+        case 7:
+          //AtomA =
+          Atoms << c_model->c_molecule->atom(a);
+          //AtomB =
+          Atoms << c_model->c_molecule->atom(b);
+          //AtomC =
+          Atoms << c_model->c_molecule->atom(c);
+          //AtomD =
+          Atoms << c_model->c_molecule->atom(d);
+        }
+
       ConstraintValue = value;
+
     }
 
     Constraint::~Constraint(){}
@@ -35,24 +74,54 @@ namespace Avogadro {
       return ConstraintValue;
     }
 
-    int Constraint::GetConstraintAtomA() const
+    const Core::Atom* Constraint::GetConstraintAtomA() const
     {
-      return AtomIdA;
+      if (Atoms.size() >= 1)
+        {
+          const Core::Atom* a;
+          a = &Atoms[0];
+          return  a;
+        }
+      else
+        {
+          return nullptr;
+        }
     }
 
-    int Constraint::GetConstraintAtomB() const
+    const Core::Atom* Constraint::GetConstraintAtomB() const
     {
-      return AtomIdB;
+      if (Atoms.size() >= 2)
+        {
+          return &Atoms[1];
+        }
+      else
+        {
+          return nullptr;
+        }
     }
 
-    int Constraint::GetConstraintAtomC() const
+    const Core::Atom* Constraint::GetConstraintAtomC() const
     {
-      return AtomIdC;
+      if (Atoms.size() >= 3)
+        {
+          return &Atoms[2];
+        }
+      else
+        {
+          return nullptr;
+        }
     }
 
-    int Constraint::GetConstraintAtomD() const
+    const Core::Atom* Constraint::GetConstraintAtomD() const
     {
-      return AtomIdD;
+      if (Atoms.size() >= 4)
+        {
+          return &Atoms[3];
+        }
+      else
+        {
+          return nullptr;
+        }
     }
 
     QJsonObject Constraint::toJson()
@@ -66,18 +135,22 @@ namespace Avogadro {
       switch (GetConstraintType())
         {
         case 0 ... 4:
-          ConstraintAtoms << GetConstraintAtomA();
+          ConstraintAtoms << static_cast<int>(GetConstraintAtomA()->index());
           break;
         case 5:
-          ConstraintAtoms << GetConstraintAtomA() << GetConstraintAtomB();
+          ConstraintAtoms << static_cast<int>(GetConstraintAtomA()->index())
+                          << static_cast<int>(GetConstraintAtomB()->index());
           break;
         case 6:
-          ConstraintAtoms << GetConstraintAtomA() << GetConstraintAtomB()
-                          << GetConstraintAtomC();
+          ConstraintAtoms << static_cast<int>(GetConstraintAtomA()->index())
+                          << static_cast<int>(GetConstraintAtomB()->index())
+                          << static_cast<int>(GetConstraintAtomC()->index());
           break;
         case 7:
-          ConstraintAtoms << GetConstraintAtomA() << GetConstraintAtomB()
-                          << GetConstraintAtomC() << GetConstraintAtomD();
+          ConstraintAtoms << static_cast<int>(GetConstraintAtomA()->index())
+                          << static_cast<int>(GetConstraintAtomB()->index())
+                          << static_cast<int>(GetConstraintAtomC()->index())
+                          << static_cast<int>(GetConstraintAtomD()->index());
           break;
         }
 
