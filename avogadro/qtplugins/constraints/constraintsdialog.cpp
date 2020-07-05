@@ -28,6 +28,7 @@ namespace Avogadro {
       connect( ui->ConstraintsAdd, SIGNAL( clicked() ), this, SLOT( addConstraint() ));
       connect( ui->ConstraintsDelete, SIGNAL( clicked() ), this, SLOT( deleteConstraint() ));
       connect( ui->ConstraintsDeleteAll, SIGNAL( clicked() ), this, SLOT( deleteAllConstraints() ));
+
     }
 
     ConstraintsDialog::~ConstraintsDialog()
@@ -38,6 +39,8 @@ namespace Avogadro {
     void ConstraintsDialog::setModel()
     {
       ui->ConstraintsTableView->setModel(m_plugin->m_molecule->constraints);
+      connect( m_plugin->m_molecule, SIGNAL( changed(unsigned int)),
+               m_plugin->m_molecule->constraints, SLOT (emitDataChanged()));
     }
 
     void ConstraintsDialog::acceptConstraints()
