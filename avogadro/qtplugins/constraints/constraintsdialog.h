@@ -7,7 +7,6 @@
 #include <QModelIndex>
 #include <QTableView>
 #include <QString>
-#include <avogadro/qtgui/molecule.h>
 #include <string>
 
 namespace Avogadro {

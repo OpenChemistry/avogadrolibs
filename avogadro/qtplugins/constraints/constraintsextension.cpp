@@ -3,12 +3,13 @@
 #include "constraintsmodel.h"
 
 #include <QAction>
-#include <QtWidgets/QMessageBox>
-#include <QTextStream>
-#include <QString>
+
+//#include <QTextStream>
+//#include <QString>
 
 #include <string>
 #include <iostream>
+
 namespace Avogadro {
   namespace QtPlugins {
     ConstraintsExtension::ConstraintsExtension(QObject* p) : ExtensionPlugin(p)
