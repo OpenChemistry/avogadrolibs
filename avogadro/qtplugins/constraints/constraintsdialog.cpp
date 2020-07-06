@@ -61,31 +61,31 @@ namespace Avogadro {
             {
               m_plugin->m_molecule->atom(i).setSelected(false);
             }
-          // get currently selected constraint
-          QModelIndex idx = ui->ConstraintsTableView->selectionModel()->currentIndex();
-          // extract constraint from ConstraintModel
-          QtPlugins::Constraint* c = &m_plugin->m_molecule->constraints->ConstraintsList[idx.row()];
-          // iterate over involved uniqueAtomIDs
-          for (int i = 0; i < c->Atoms.size(); i++)
+          if (m_plugin->m_molecule->constraints->ConstraintsList.size()>0)
             {
-              // get atom by uniqueID and set selected
-              m_plugin->m_molecule->atomByUniqueId(c->Atoms[i]).setSelected(true);
-              qDebug() << "Set selected";
+              // get currently selected constraint
+              QModelIndex idx = ui->ConstraintsTableView->selectionModel()->currentIndex();
+              // extract selected constraint from ConstraintModel
+              QtPlugins::Constraint* c = &m_plugin->m_molecule->constraints->ConstraintsList[idx.row()];
+              // iterate over involved uniqueAtomIDs
+              for (int i = 0; i < c->Atoms.size(); i++)
+                {
+                  // get atom by uniqueID and set selected
+                  m_plugin->m_molecule->atomByUniqueId(c->Atoms[i]).setSelected(true);
+                  qDebug() << "Set selected";
+                }
+              //emit molecule changes
+              m_plugin->m_molecule->emitChanged(Molecule::Atoms);
             }
-          m_plugin->m_molecule->emitChanged(Molecule::Atoms);
         }
     }
 
     void ConstraintsDialog::setModel()
     {
       ui->ConstraintsTableView->setModel(m_plugin->m_molecule->constraints);
+      connectHighlight(ui->checkHighlight->checkState());
       connect( m_plugin->m_molecule, SIGNAL( changed(unsigned int)),
                m_plugin->m_molecule->constraints, SLOT (emitDataChanged()));
-      /*
-      connect( ui->ConstraintsTableView, SIGNAL( selectionChanged(const QItemSelection &selected,
-                                                                  const QItemSelection &deselected)),
-               this, SLOT(highlightSelected()));
-      */
     }
 
     void ConstraintsDialog::acceptConstraints()
@@ -123,7 +123,7 @@ namespace Avogadro {
     void ConstraintsDialog::deleteAllConstraints()
     {
       m_plugin->m_molecule->constraints->clear();
-      this->update();
+      // this->update();
     }
 
   }
