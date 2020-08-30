@@ -13,7 +13,6 @@
   limitations under the License.
 
 ******************************************************************************/
-
 #include "cmlformat.h"
 
 #ifdef AVO_USE_HDF5
@@ -32,6 +31,7 @@
 #include <bitset>
 #include <cmath>
 #include <map>
+#include <clocale>
 #include <sstream>
 #include <streambuf>
 
@@ -431,8 +431,9 @@ bool CmlFormat::read(std::istream& file, Core::Molecule& mol)
 
 bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
 {
+  char* old_locale = std::setlocale(LC_NUMERIC, NULL);
+  std::setlocale(LC_NUMERIC, "C");
   xml_document document;
-
   // Add a custom declaration node.
   xml_node declaration = document.prepend_child(pugi::node_declaration);
   declaration.append_attribute("version") = "1.0";
@@ -623,7 +624,7 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
 #endif
 
   document.save(out, "  ");
-
+  std::setlocale(LC_NUMERIC, old_locale);
   return true;
 }
 
