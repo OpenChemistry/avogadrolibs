@@ -2,21 +2,23 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-#
+# Allan Nordhøy <epost@anotheragency.no>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-04-13 12:05-0400\n"
-"PO-Revision-Date: 2016-06-10 07:01+0000\n"
-"Last-Translator: Simen Heggestøyl <simenheg@gmail.com>\n"
-"Language-Team: Norwegian Bokmal <nb@li.org>\n"
+"PO-Revision-Date: 2020-09-12 19:10+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
+"avogadro/avogadrolibs/nb_NO/>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.3-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -2256,9 +2258,8 @@ msgid "Navigate"
 msgstr "Naviger"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Naviger"
+msgstr "Navigasjonsverktøy"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
@@ -2565,8 +2566,9 @@ msgid "Frame %0 of %1"
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:197
+#, fuzzy
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Eksporter bitmap-grafikk"
 
 #: qtplugins/playertool/playertool.cpp:233
 msgid "Avogadro"
