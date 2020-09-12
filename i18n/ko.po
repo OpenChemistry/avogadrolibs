@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-04-13 12:05-0400\n"
+"POT-Creation-Date: 2020-09-12 15:22-0400\n"
 "PO-Revision-Date: 2016-06-10 07:03+0000\n"
 "Last-Translator: Kim Hanjo <lordmiss@lordmiss.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "Batch Job #%L1 (%2)"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:81 qtgui/interfacescript.cpp:85
+#: molequeue/inputgenerator.cpp:81 qtgui/interfacescript.cpp:70
 #, qt-format
 msgid ""
 "script --print-options output must be an JSON object at top level. "
@@ -31,72 +31,72 @@ msgid ""
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:187 qtgui/interfacescript.cpp:204
-#: qtgui/interfacescript.cpp:277
+#: molequeue/inputgenerator.cpp:187 qtgui/interfacescript.cpp:193
+#: qtgui/interfacescript.cpp:289
 msgid "Non-string warning returned."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:190 qtgui/interfacescript.cpp:207
-#: qtgui/interfacescript.cpp:280
+#: molequeue/inputgenerator.cpp:190 qtgui/interfacescript.cpp:196
+#: qtgui/interfacescript.cpp:292
 msgid "'warnings' member is not an array."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:210 qtgui/interfacescript.cpp:300
+#: molequeue/inputgenerator.cpp:210 qtgui/interfacescript.cpp:312
 #, qt-format
 msgid "Reference file '%1' does not exist."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:212 qtgui/interfacescript.cpp:302
+#: molequeue/inputgenerator.cpp:212 qtgui/interfacescript.cpp:314
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:216 qtgui/interfacescript.cpp:306
+#: molequeue/inputgenerator.cpp:216 qtgui/interfacescript.cpp:318
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:338
+#: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:351
 #, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:254 qtgui/interfacescript.cpp:344
+#: molequeue/inputgenerator.cpp:254 qtgui/interfacescript.cpp:357
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:260 qtgui/interfacescript.cpp:350
+#: molequeue/inputgenerator.cpp:260 qtgui/interfacescript.cpp:363
 msgid "'files' member not an array."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:354
+#: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:367
 msgid "'files' member missing."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:365
+#: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:378
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:280 qtgui/interfacescript.cpp:370
+#: molequeue/inputgenerator.cpp:280 qtgui/interfacescript.cpp:383
 msgid "'mainFile' member must be a string."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:291 qtgui/interfacescript.cpp:381
+#: molequeue/inputgenerator.cpp:291 qtgui/interfacescript.cpp:394
 msgid "Response must be a JSON object at top-level."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:295 qtgui/interfacescript.cpp:385
+#: molequeue/inputgenerator.cpp:295 qtgui/interfacescript.cpp:398
 #, qt-format
 msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:338 qtgui/interfacescript.cpp:429
+#: molequeue/inputgenerator.cpp:338 qtgui/interfacescript.cpp:442
 #, qt-format
 msgid ""
 "Parse error at offset %L1: '%2'\n"
@@ -105,18 +105,18 @@ msgid ""
 "%3"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:362 qtgui/interfacescript.cpp:453
+#: molequeue/inputgenerator.cpp:362 qtgui/interfacescript.cpp:474
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:461
+#: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:482
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:382 qtgui/interfacescript.cpp:473
+#: molequeue/inputgenerator.cpp:382 qtgui/interfacescript.cpp:494
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -125,7 +125,7 @@ msgid ""
 "%3"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:391 qtgui/interfacescript.cpp:482
+#: molequeue/inputgenerator.cpp:391 qtgui/interfacescript.cpp:503
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -150,9 +150,15 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:184
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:66
+#. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:302
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#: molequeue/inputgeneratorwidget.cpp:129 qtgui/containerwidget.cpp:45
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:955
+#. i18n: ectx: property (text), widget (QPushButton, closeButton)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
+#. i18n: ectx: property (text), widget (QPushButton, closeButton)
+#: molequeue/inputgeneratorwidget.cpp:129 qtgui/containerwidget.cpp:47
 msgid "Close"
 msgstr "닫기"
 
@@ -181,11 +187,13 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: molequeue/inputgeneratorwidget.cpp:177
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:159
+#: qtplugins/openmminput/openmminputdialog.cpp:216
 msgid "Overwrite modified input files?"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:203
-msgid "Problems occured during input generation:"
+msgid "Problems occurred during input generation:"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:292
@@ -194,12 +202,14 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:300
 #: molequeue/inputgeneratorwidget.cpp:618 molequeue/molequeuewidget.cpp:84
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:988
 #: qtplugins/gamessinput/gamessinputdialog.cpp:697
 msgid "Cannot connect to MoleQueue"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:301
 #: molequeue/inputgeneratorwidget.cpp:619 molequeue/molequeuewidget.cpp:85
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:989
 #: qtplugins/gamessinput/gamessinputdialog.cpp:698
 msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
@@ -212,16 +222,18 @@ msgid "Submit %1 Calculation"
 msgstr "계산 중단"
 
 #: molequeue/inputgeneratorwidget.cpp:349
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:1025
 #: qtplugins/gamessinput/gamessinputdialog.cpp:734
 msgid "Job Failed"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:350
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:1026
 #: qtplugins/gamessinput/gamessinputdialog.cpp:735
 msgid "The job did not complete successfully."
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:80
+#: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:68
 msgid "Script returns warnings:\n"
 msgstr ""
 
@@ -235,7 +247,7 @@ msgstr "경고"
 msgid "Show &Warnings"
 msgstr "경고"
 
-#: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:96
+#: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:84
 msgid "An error has occurred:"
 msgstr ""
 
@@ -256,47 +268,77 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:495
 #: molequeue/inputgeneratorwidget.cpp:606
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:978
 #: qtplugins/gamessinput/gamessinputdialog.cpp:687
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:336
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:366
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:380
+#: qtplugins/openmminput/openmminputdialog.cpp:434
+#: qtplugins/openmminput/openmminputdialog.cpp:464
+#: qtplugins/openmminput/openmminputdialog.cpp:478
 #, fuzzy
 msgid "Output Error"
 msgstr "출력:"
 
 #: molequeue/inputgeneratorwidget.cpp:496
 #: molequeue/inputgeneratorwidget.cpp:607
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:979
 #: qtplugins/gamessinput/gamessinputdialog.cpp:688
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:367
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:381
+#: qtplugins/openmminput/openmminputdialog.cpp:465
+#: qtplugins/openmminput/openmminputdialog.cpp:479
 #, fuzzy, qt-format
 msgid "Failed to write to file %1."
 msgstr "파일에 기록할 수 없습니다."
 
 #: molequeue/inputgeneratorwidget.cpp:507
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:255
+#: qtplugins/openmminput/openmminputdialog.cpp:353
 msgid "Select output directory"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:524
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:270
+#: qtplugins/openmminput/openmminputdialog.cpp:368
 #, qt-format
 msgid "%1: Directory does not exist!"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:530
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:276
+#: qtplugins/openmminput/openmminputdialog.cpp:374
 #, qt-format
 msgid "%1: Directory cannot be read!"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:540
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:284
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:299
+#: qtplugins/openmminput/openmminputdialog.cpp:382
+#: qtplugins/openmminput/openmminputdialog.cpp:397
 #, fuzzy, qt-format
 msgid "%1: File will be overwritten."
 msgstr "비디오 파일이 작성되지 않았습니다."
 
 #: molequeue/inputgeneratorwidget.cpp:545
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:291
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
+#: qtplugins/openmminput/openmminputdialog.cpp:389
+#: qtplugins/openmminput/openmminputdialog.cpp:404
 #, fuzzy, qt-format
 msgid "%1: File is not writable."
 msgstr "비디오 파일이 작성되지 않았습니다."
 
 #: molequeue/inputgeneratorwidget.cpp:558
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:318
+#: qtplugins/openmminput/openmminputdialog.cpp:416
 msgid "The input files cannot be written due to an unknown error."
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:562
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:322
+#: qtplugins/openmminput/openmminputdialog.cpp:420
 #, qt-format
 msgid ""
 "The input files cannot be written:\n"
@@ -305,6 +347,8 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:571
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:331
+#: qtplugins/openmminput/openmminputdialog.cpp:429
 #, qt-format
 msgid ""
 "The input files cannot be written:\n"
@@ -317,6 +361,8 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:582
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:342
+#: qtplugins/openmminput/openmminputdialog.cpp:440
 #, qt-format
 msgid ""
 "Warning:\n"
@@ -327,6 +373,8 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:586
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:346
+#: qtplugins/openmminput/openmminputdialog.cpp:444
 msgid "Write input files"
 msgstr ""
 
@@ -334,84 +382,85 @@ msgstr ""
 msgid "Configure Job"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:658 qtgui/interfacewidget.cpp:125
+#: molequeue/inputgeneratorwidget.cpp:658 qtgui/interfacewidget.cpp:113
 msgid "'userOptions' missing, or not an object."
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:665 qtgui/interfacewidget.cpp:132
+#: molequeue/inputgeneratorwidget.cpp:665 qtgui/interfacewidget.cpp:120
 #, qt-format
 msgid "Option '%1' not found in userOptions."
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:670 qtgui/interfacewidget.cpp:137
+#: molequeue/inputgeneratorwidget.cpp:670 qtgui/interfacewidget.cpp:125
 #, qt-format
 msgid "Option '%1' does not refer to an object."
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:677 qtgui/interfacewidget.cpp:144
+#: molequeue/inputgeneratorwidget.cpp:677 qtgui/interfacewidget.cpp:133
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:708
-#: molequeue/inputgeneratorwidget.cpp:935 qtgui/interfacewidget.cpp:168
-#: qtgui/interfacewidget.cpp:413
+#: molequeue/inputgeneratorwidget.cpp:935
 #, qt-format
 msgid ""
 "'userOptions' missing, or not an object:\n"
 "%1"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:717 qtgui/interfacewidget.cpp:177
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
+#. i18n: ectx: property (text), widget (QLineEdit, titleLine)
+#: molequeue/inputgeneratorwidget.cpp:717 qtgui/interfacewidget.cpp:169
 msgid "Title"
 msgstr "제목"
 
-#: molequeue/inputgeneratorwidget.cpp:721 qtgui/interfacewidget.cpp:181
+#: molequeue/inputgeneratorwidget.cpp:721 qtgui/interfacewidget.cpp:173
 #, fuzzy
 msgid "Filename Base"
 msgstr "파일 이름:"
 
-#: molequeue/inputgeneratorwidget.cpp:725 qtgui/interfacewidget.cpp:185
+#: molequeue/inputgeneratorwidget.cpp:725 qtgui/interfacewidget.cpp:178
 msgid "Processor Cores"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:729 qtgui/interfacewidget.cpp:189
+#: molequeue/inputgeneratorwidget.cpp:729 qtgui/interfacewidget.cpp:183
 #, fuzzy
 msgid "Calculation Type"
 msgstr "계산:"
 
-#: molequeue/inputgeneratorwidget.cpp:750 qtgui/interfacewidget.cpp:210
+#: molequeue/inputgeneratorwidget.cpp:750 qtgui/interfacewidget.cpp:207
 msgid "Theory:"
 msgstr "이론:"
 
-#: molequeue/inputgeneratorwidget.cpp:753 qtgui/interfacewidget.cpp:213
+#: molequeue/inputgeneratorwidget.cpp:753 qtgui/interfacewidget.cpp:210
 #, fuzzy
 msgid "Theory"
 msgstr "이론:"
 
-#: molequeue/inputgeneratorwidget.cpp:755 qtgui/interfacewidget.cpp:215
+#: molequeue/inputgeneratorwidget.cpp:755 qtgui/interfacewidget.cpp:212
 msgid "Basis"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:760 qtgui/interfacewidget.cpp:220
+#: molequeue/inputgeneratorwidget.cpp:760 qtgui/interfacewidget.cpp:217
 msgid "Charge"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:762 qtgui/interfacewidget.cpp:222
+#: molequeue/inputgeneratorwidget.cpp:762 qtgui/interfacewidget.cpp:219
 msgid "Multiplicity"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:949 qtgui/interfacewidget.cpp:427
+#: molequeue/inputgeneratorwidget.cpp:949 qtgui/interfacewidget.cpp:453
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:957 qtgui/interfacewidget.cpp:435
+#: molequeue/inputgeneratorwidget.cpp:957 qtgui/interfacewidget.cpp:461
 #, qt-format
 msgid "Default value missing for option '%1'."
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:978 qtgui/interfacewidget.cpp:458
+#: molequeue/inputgeneratorwidget.cpp:978 qtgui/interfacewidget.cpp:484
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr ""
@@ -420,10 +469,10 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:1024
 #: molequeue/inputgeneratorwidget.cpp:1047
 #: molequeue/inputgeneratorwidget.cpp:1069
-#: molequeue/inputgeneratorwidget.cpp:1093 qtgui/interfacewidget.cpp:467
-#: qtgui/interfacewidget.cpp:504 qtgui/interfacewidget.cpp:527
-#: qtgui/interfacewidget.cpp:549 qtgui/interfacewidget.cpp:573
-#: qtgui/interfacewidget.cpp:596
+#: molequeue/inputgeneratorwidget.cpp:1093 qtgui/interfacewidget.cpp:493
+#: qtgui/interfacewidget.cpp:530 qtgui/interfacewidget.cpp:553
+#: qtgui/interfacewidget.cpp:575 qtgui/interfacewidget.cpp:599
+#: qtgui/interfacewidget.cpp:622
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
@@ -432,27 +481,28 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:1031
 #: molequeue/inputgeneratorwidget.cpp:1054
 #: molequeue/inputgeneratorwidget.cpp:1076
-#: molequeue/inputgeneratorwidget.cpp:1100 qtgui/interfacewidget.cpp:474
-#: qtgui/interfacewidget.cpp:511 qtgui/interfacewidget.cpp:534
-#: qtgui/interfacewidget.cpp:556 qtgui/interfacewidget.cpp:580
-#: qtgui/interfacewidget.cpp:603
+#: molequeue/inputgeneratorwidget.cpp:1100 qtgui/interfacewidget.cpp:500
+#: qtgui/interfacewidget.cpp:537 qtgui/interfacewidget.cpp:560
+#: qtgui/interfacewidget.cpp:582 qtgui/interfacewidget.cpp:606
+#: qtgui/interfacewidget.cpp:629
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:1008 qtgui/interfacewidget.cpp:488
+#: molequeue/inputgeneratorwidget.cpp:1008 qtgui/interfacewidget.cpp:514
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:1160 qtgui/interfacewidget.cpp:665
+#: molequeue/inputgeneratorwidget.cpp:1160 qtgui/interfacewidget.cpp:691
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:1202 qtgui/interfacewidget.cpp:699
+#: molequeue/inputgeneratorwidget.cpp:1202 qtgui/interfacewidget.cpp:726
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:467
 #: qtplugins/gamessinput/gamessinputdialog.cpp:407
 #, fuzzy
 msgid "[no molecule]"
@@ -522,11 +572,23 @@ msgstr ""
 msgid "Unable to resolve program selection. This is a bug."
 msgstr ""
 
-#: qtgui/containerwidget.cpp:39
+#: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
+msgid "No molecule set in BackgroundFileFormat!"
+msgstr ""
+
+#: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
+msgid "No Io::FileFormat set in BackgroundFileFormat!"
+msgstr ""
+
+#: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
+msgid "No file name set in BackgroundFileFormat!"
+msgstr ""
+
+#: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
 msgstr ""
 
-#: qtgui/containerwidget.cpp:42
+#: qtgui/containerwidget.cpp:44
 msgid "Split Vertical"
 msgstr ""
 
@@ -1003,22 +1065,22 @@ msgstr ""
 msgid "Oganesson"
 msgstr ""
 
-#: qtgui/filebrowsewidget.cpp:36
+#: qtgui/filebrowsewidget.cpp:39
 #, fuzzy
 msgid "Browse"
 msgstr "탐색..."
 
-#: qtgui/filebrowsewidget.cpp:111
+#: qtgui/filebrowsewidget.cpp:113
 #, fuzzy
 msgid "Select file:"
 msgstr "용매 선택"
 
-#: qtgui/filebrowsewidget.cpp:114
+#: qtgui/filebrowsewidget.cpp:116
 #, fuzzy
 msgid "Select executable:"
 msgstr "선택 항목 삭제"
 
-#: qtgui/fileformatdialog.cpp:66
+#: qtgui/fileformatdialog.cpp:65
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
 
@@ -1061,7 +1123,7 @@ msgstr ""
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:257
+#: qtgui/fileformatdialog.cpp:258
 #, fuzzy
 msgid "All files (*);;"
 msgstr "모든 파일"
@@ -1071,12 +1133,17 @@ msgstr "모든 파일"
 msgid "All supported formats (%1);;"
 msgstr ""
 
+#: qtgui/interfacescript.cpp:210
+#, qt-format
+msgid "Error reading molecule representation: Unrecognized file format: %1"
+msgstr ""
+
 #: qtgui/moleculemodel.cpp:105
 #, fuzzy
 msgid "Untitled"
 msgstr "제목없음"
 
-#: qtgui/multiviewwidget.cpp:199
+#: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
 msgstr ""
 
@@ -1084,24 +1151,24 @@ msgstr ""
 msgid "Periodic Table"
 msgstr "주기율표"
 
-#: qtgui/pythonscript.cpp:85
+#: qtgui/pythonscript.cpp:91
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:94
+#: qtgui/pythonscript.cpp:101
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:107
+#: qtgui/pythonscript.cpp:114
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:115
+#: qtgui/pythonscript.cpp:122
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1110,30 +1177,30 @@ msgid ""
 "%6"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:139
+#: qtgui/pythonscript.cpp:146
 #, fuzzy
 msgid "Script failed to start."
 msgstr "G03을 시작하는데 실패했습니다"
 
-#: qtgui/pythonscript.cpp:142
+#: qtgui/pythonscript.cpp:149
 #, fuzzy
 msgid "Script crashed."
 msgstr "스크립트(&S)"
 
-#: qtgui/pythonscript.cpp:145
+#: qtgui/pythonscript.cpp:152
 msgid "Script timed out."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:148
+#: qtgui/pythonscript.cpp:155
 #, fuzzy
 msgid "Read error."
 msgstr "OpenGL 오류"
 
-#: qtgui/pythonscript.cpp:151
+#: qtgui/pythonscript.cpp:158
 msgid "Write error."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:155
+#: qtgui/pythonscript.cpp:162
 #, fuzzy
 msgid "Unknown error."
 msgstr "알려지지 않음"
@@ -1143,130 +1210,135 @@ msgstr "알려지지 않음"
 msgid "Modify Molecule"
 msgstr "분자"
 
-#: qtgui/rwmolecule.cpp:154 qtgui/rwmolecule.cpp:163
+#: qtgui/rwmolecule.cpp:153 qtgui/rwmolecule.cpp:162
 msgid "Add Atom"
 msgstr "원자 추가"
 
-#: qtgui/rwmolecule.cpp:276 qtgui/rwmolecule.cpp:291
+#: qtgui/rwmolecule.cpp:274 qtgui/rwmolecule.cpp:289
 #: qtplugins/editor/editor.cpp:131
 msgid "Remove Atom"
 msgstr "원자 제거하기"
 
-#: qtgui/rwmolecule.cpp:301
+#: qtgui/rwmolecule.cpp:299
 #, fuzzy
 msgid "Clear Atoms"
 msgstr "원자 시작"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:313 qtgui/rwmolecule.cpp:321:345
+#: qtgui/rwmolecule.cpp:311 qtgui/rwmolecule.cpp:319:465
 msgid "Adjust Hydrogens"
 msgstr "수소 추가"
 
-#: qtgui/rwmolecule.cpp:356
+#: qtgui/rwmolecule.cpp:353
 #, fuzzy
 msgid "Change Elements"
 msgstr "원소 바꾸기"
 
-#: qtgui/rwmolecule.cpp:390
+#: qtgui/rwmolecule.cpp:386
 msgid "Change Element"
 msgstr "원소 바꾸기"
 
-#: qtgui/rwmolecule.cpp:567
+#: qtgui/rwmolecule.cpp:560
 msgid "Change Atom Hybridization"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:600
+#: qtgui/rwmolecule.cpp:592
 #, fuzzy
 msgid "Change Atom Formal Charge"
 msgstr "형식전하"
 
-#: qtgui/rwmolecule.cpp:663
+#: qtgui/rwmolecule.cpp:624
+#, fuzzy
+msgid "Change Atom Color"
+msgstr "형식전하"
+
+#: qtgui/rwmolecule.cpp:686
 msgid "Add Bond"
 msgstr "결합 추가"
 
-#: qtgui/rwmolecule.cpp:751
+#: qtgui/rwmolecule.cpp:773
 #, fuzzy
 msgid "Removed Bond"
 msgstr "원자 제거하기"
 
-#: qtgui/rwmolecule.cpp:758
+#: qtgui/rwmolecule.cpp:780
 #, fuzzy
 msgid "Clear Bonds"
 msgstr "결합 제거"
 
-#: qtgui/rwmolecule.cpp:793
+#: qtgui/rwmolecule.cpp:814
 #, fuzzy
 msgid "Set Bond Orders"
 msgstr "결합 차수"
 
-#: qtgui/rwmolecule.cpp:838
+#: qtgui/rwmolecule.cpp:858
 msgid "Change Bond Order"
 msgstr "결합 차수 변경"
 
-#: qtgui/rwmolecule.cpp:882
+#: qtgui/rwmolecule.cpp:901
 #, fuzzy
 msgid "Update Bonds"
 msgstr "결합 제거"
 
-#: qtgui/rwmolecule.cpp:922
+#: qtgui/rwmolecule.cpp:940
 #, fuzzy
 msgid "Update Bond"
 msgstr "결합 제거"
 
-#: qtgui/rwmolecule.cpp:962
+#: qtgui/rwmolecule.cpp:979
 #, fuzzy
 msgid "Add Unit Cell"
 msgstr "단위 세포 채우기"
 
-#: qtgui/rwmolecule.cpp:995
+#: qtgui/rwmolecule.cpp:1011
 #, fuzzy
 msgid "Remove Unit Cell"
 msgstr "단위 세포 채우기"
 
-#: qtgui/rwmolecule.cpp:1077
+#: qtgui/rwmolecule.cpp:1092
 #, fuzzy
 msgid "Edit Unit Cell"
 msgstr "단위 세포 채우기"
 
-#: qtgui/rwmolecule.cpp:1094
+#: qtgui/rwmolecule.cpp:1109
 msgid "Wrap Atoms to Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:1117
+#: qtgui/rwmolecule.cpp:1132
 msgid "Scale Cell Volume"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:1137
+#: qtgui/rwmolecule.cpp:1152
 msgid "Build Super Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:1161
+#: qtgui/rwmolecule.cpp:1176
 msgid "Niggli Reduction"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:1183
+#: qtgui/rwmolecule.cpp:1198
 msgid "Rotate to Standard Orientation"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:1208 qtplugins/spacegroup/spacegroup.cpp:69
+#: qtgui/rwmolecule.cpp:1223 qtplugins/spacegroup/spacegroup.cpp:69
 msgid "Reduce to Primitive"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:1233 qtplugins/spacegroup/spacegroup.cpp:75
+#: qtgui/rwmolecule.cpp:1248 qtplugins/spacegroup/spacegroup.cpp:75
 #: qtplugins/spacegroup/spacegroup.cpp:233
 msgid "Conventionalize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:1258 qtplugins/spacegroup/spacegroup.cpp:258
+#: qtgui/rwmolecule.cpp:1273 qtplugins/spacegroup/spacegroup.cpp:258
 msgid "Symmetrize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:1277 qtplugins/spacegroup/spacegroup.cpp:86
+#: qtgui/rwmolecule.cpp:1292 qtplugins/spacegroup/spacegroup.cpp:86
 msgid "Fill Unit Cell"
 msgstr "단위 세포 채우기"
 
-#: qtgui/rwmolecule.cpp:1297
+#: qtgui/rwmolecule.cpp:1312
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr ""
 
@@ -1275,6 +1347,7 @@ msgid "ThreeDMol HTML Block."
 msgstr ""
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/importpqr/importpqr.cpp:59
+#: qtplugins/insertfragment/insertfragmentextension.cpp:95
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
 #: qtplugins/povray/povray.cpp:58 qtplugins/vrml/vrml.cpp:58
 msgid "&File"
@@ -1297,17 +1370,22 @@ msgid "Run APBS"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:48 qtplugins/apbs/apbs.cpp:73
-#: qtplugins/gamessinput/gamessinput.cpp:82
-#: qtplugins/quantuminput/quantuminput.cpp:96
+#: qtplugins/cp2kinput/cp2kinput.cpp:80
+#: qtplugins/gamessinput/gamessinput.cpp:83
+#: qtplugins/quantuminput/quantuminput.cpp:99
 #, fuzzy
 msgid "Open Output File"
 msgstr "WFN 파일 열기"
 
 #: qtplugins/apbs/apbs.cpp:61 qtplugins/clientserver/clientserver.cpp:83
-#: qtplugins/forcefields/workflow.cpp:73 qtplugins/forcefields/workflow.cpp:81
-#: qtplugins/mongochem/mongochem.cpp:63 qtplugins/openbabel/openbabel.cpp:113
+#: qtplugins/coloropacitymap/coloropacitymap.cpp:89
+#: qtplugins/commandscripts/command.cpp:64
+#: qtplugins/commandscripts/command.cpp:72
+#: qtplugins/lammpsinput/lammpsinput.cpp:59
+#: qtplugins/mongochem/mongochem.cpp:45 qtplugins/openbabel/openbabel.cpp:111
+#: qtplugins/openmminput/openmminput.cpp:57
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
-#: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
+#: qtplugins/surfaces/surfaces.cpp:120
 #, fuzzy
 msgid "&Extensions"
 msgstr "확장 기능"
@@ -1373,19 +1451,20 @@ msgid "PQR Files (*.pqr)"
 msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:143 qtplugins/apbs/apbsdialog.cpp:153
-#: qtplugins/forcefields/workflow.cpp:106
-#: qtplugins/gamessinput/gamessinput.cpp:98
-#: qtplugins/openbabel/openbabel.cpp:201 qtplugins/openbabel/openbabel.cpp:210
-#: qtplugins/openbabel/openbabel.cpp:220 qtplugins/openbabel/openbabel.cpp:313
-#: qtplugins/openbabel/openbabel.cpp:339 qtplugins/openbabel/openbabel.cpp:348
-#: qtplugins/openbabel/openbabel.cpp:400 qtplugins/openbabel/openbabel.cpp:449
-#: qtplugins/openbabel/openbabel.cpp:462 qtplugins/openbabel/openbabel.cpp:487
-#: qtplugins/openbabel/openbabel.cpp:501 qtplugins/openbabel/openbabel.cpp:529
-#: qtplugins/openbabel/openbabel.cpp:541 qtplugins/openbabel/openbabel.cpp:586
-#: qtplugins/openbabel/openbabel.cpp:633 qtplugins/openbabel/openbabel.cpp:672
+#: qtplugins/commandscripts/command.cpp:97 qtplugins/cp2kinput/cp2kinput.cpp:96
+#: qtplugins/gamessinput/gamessinput.cpp:99
+#: qtplugins/lammpsinput/lammpsinput.cpp:75
+#: qtplugins/openbabel/openbabel.cpp:199 qtplugins/openbabel/openbabel.cpp:208
+#: qtplugins/openbabel/openbabel.cpp:218 qtplugins/openbabel/openbabel.cpp:311
+#: qtplugins/openbabel/openbabel.cpp:337 qtplugins/openbabel/openbabel.cpp:346
+#: qtplugins/openbabel/openbabel.cpp:398 qtplugins/openbabel/openbabel.cpp:447
+#: qtplugins/openbabel/openbabel.cpp:460 qtplugins/openbabel/openbabel.cpp:485
+#: qtplugins/openbabel/openbabel.cpp:499 qtplugins/openbabel/openbabel.cpp:527
+#: qtplugins/openbabel/openbabel.cpp:539 qtplugins/openbabel/openbabel.cpp:584
+#: qtplugins/openbabel/openbabel.cpp:632 qtplugins/openbabel/openbabel.cpp:672
 #: qtplugins/openbabel/openbabel.cpp:702
-#: qtplugins/quantuminput/quantuminput.cpp:112
-#: qtplugins/workflows/workflow.cpp:106
+#: qtplugins/openmminput/openmminput.cpp:73
+#: qtplugins/quantuminput/quantuminput.cpp:115
 msgid "Error"
 msgstr "오류"
 
@@ -1419,12 +1498,12 @@ msgstr "성공!"
 msgid "Input file written to '%1'"
 msgstr "%1 로 이미지가 성공적으로 쓰여졌습니다"
 
-#: qtplugins/ballandstick/ballandstick.cpp:203
+#: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 msgid "Show multiple bonds?"
 msgstr ""
 
-#: qtplugins/ballandstick/ballandstick.cpp:207
+#: qtplugins/ballandstick/ballandstick.cpp:211
 #: qtplugins/wireframe/wireframe.cpp:104
 #, fuzzy
 msgid "Show hydrogens?"
@@ -1439,7 +1518,7 @@ msgstr "공과 막대 모형"
 msgid "Render atoms as spheres and bonds as cylinders."
 msgstr "원자 및 결합 이름 표시"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:312
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:316
 msgid "Bond-centric manipulation"
 msgstr ""
 
@@ -1452,30 +1531,41 @@ msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
 
-#: qtplugins/bonding/bonding.cpp:42
+#: qtplugins/bonding/bonding.cpp:40
 #, fuzzy
 msgid "Bond Atoms"
 msgstr "원자 끝내기"
 
-#: qtplugins/bonding/bonding.cpp:43
+#: qtplugins/bonding/bonding.cpp:41
 #, fuzzy
 msgid "Remove Bonds"
 msgstr "수소 제거"
 
-#: qtplugins/bonding/bonding.cpp:62
+#: qtplugins/bonding/bonding.cpp:42
+msgid "Configure Bonding…"
+msgstr ""
+
+#: qtplugins/bonding/bonding.cpp:65
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:45
 #: qtplugins/customelements/customelements.cpp:54
 #: qtplugins/hydrogens/hydrogens.cpp:67
+#: qtplugins/insertfragment/insertfragment.cpp:62
+#: qtplugins/insertfragment/insertfragmentextension.cpp:97
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
 msgstr "빌드(&B)"
 
-#: qtplugins/bonding/bonding.h:36
+#: qtplugins/bonding/bonding.cpp:65
+#, fuzzy
+msgid "Bond"
+msgstr "결합"
+
+#: qtplugins/bonding/bonding.h:32
 #, fuzzy
 msgid "Bonding"
 msgstr "결합"
 
-#: qtplugins/bonding/bonding.h:40
+#: qtplugins/bonding/bonding.h:36
 msgid "Perform bonding operations."
 msgstr ""
 
@@ -1539,6 +1629,56 @@ msgstr ""
 #, fuzzy
 msgid "Filename"
 msgstr "파일 이름:"
+
+#: qtplugins/coloropacitymap/coloropacitymap.cpp:71
+msgid "Edit Color Opacity Map..."
+msgstr ""
+
+#: qtplugins/coloropacitymap/coloropacitymap.h:26
+#, fuzzy
+msgid "ColorOpacityMap"
+msgstr "투명도:"
+
+#: qtplugins/coloropacitymap/coloropacitymap.h:58
+msgid "Edit color opacity maps, primarily for volume rendering."
+msgstr ""
+
+#: qtplugins/commandscripts/command.cpp:64
+#: qtplugins/commandscripts/command.cpp:72
+#, fuzzy
+msgid "Scripts"
+msgstr "스크립트(&S)"
+
+#: qtplugins/commandscripts/command.cpp:98 qtplugins/cp2kinput/cp2kinput.cpp:97
+#: qtplugins/gamessinput/gamessinput.cpp:100
+#: qtplugins/lammpsinput/lammpsinput.cpp:76
+#: qtplugins/openmminput/openmminput.cpp:74
+#: qtplugins/quantuminput/quantuminput.cpp:116
+#, fuzzy, qt-format
+msgid ""
+"Error reading output file '%1':\n"
+"%2"
+msgstr "궤도 파일 %1을 읽는데 문제가 있습니다"
+
+#: qtplugins/commandscripts/command.cpp:207
+#: qtplugins/quantuminput/quantuminput.cpp:182
+msgid "Set path to Python interpreter:"
+msgstr ""
+
+#: qtplugins/commandscripts/command.cpp:209
+msgid ""
+"Select the python interpreter to run external scripts.\n"
+"Avogadro must be restarted for any changes to take effect."
+msgstr ""
+
+#: qtplugins/commandscripts/command.h:45
+#, fuzzy
+msgid "Command scripts"
+msgstr "명령:"
+
+#: qtplugins/commandscripts/command.h:49
+msgid "Run external script commands"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:29
 msgid "Atomic &Coordinate Editor..."
@@ -1646,9 +1786,9 @@ msgstr ""
 msgid "Edit Atomic Coordinates"
 msgstr ""
 
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:86
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:185
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607:615
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607:1570
 msgid "Custom"
 msgstr ""
 
@@ -1706,26 +1846,26 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:42:225
+#: qtplugins/copypaste/copypaste.cpp:42:258
 msgid "Copy"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:43:222
+#: qtplugins/copypaste/copypaste.cpp:43:255
 #, fuzzy
 msgid "Cut"
 msgstr "사용자 정의:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:44:234
+#: qtplugins/copypaste/copypaste.cpp:44:267
 msgid "Clear"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
-#: qtplugins/copypaste/copypaste.cpp:45:228
+#: qtplugins/copypaste/copypaste.cpp:45:261
 msgid "Paste"
 msgstr ""
 
@@ -1784,6 +1924,158 @@ msgstr ""
 msgid "Interact with the clipboard."
 msgstr ""
 
+#: qtplugins/cp2kinput/cp2kinput.cpp:44
+msgid "&CP2K"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinput.cpp:60
+#: qtplugins/gamessinput/gamessinput.cpp:63
+#: qtplugins/quantuminput/quantuminput.cpp:75 qtplugins/spectra/spectra.cpp:55
+msgid "&Quantum"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinput.cpp:60
+#: qtplugins/gamessinput/gamessinput.cpp:63
+#: qtplugins/quantuminput/quantuminput.cpp:75
+#, fuzzy
+msgid "Input Generators"
+msgstr "생성기 입력..."
+
+#: qtplugins/cp2kinput/cp2kinput.h:46
+msgid "CP2K input"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinput.h:48
+#, fuzzy
+msgid "Generate input for CP2K."
+msgstr "양자 화학 패키지를 위해 입력 파일을 생성"
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:272
+msgid "Energy"
+msgstr "에너지"
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:275
+msgid "Energy and Forces"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:278
+#: qtplugins/lammpsinput/lammpsinput.cpp:59
+#: qtplugins/openmminput/openmminput.cpp:57
+#, fuzzy
+msgid "Molecular Dynamics"
+msgstr "분자동역학 (300K)"
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:281
+#, fuzzy
+msgid "Geometry Optimization"
+msgstr "구조 최적화"
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:350
+msgid "Electronic structure methods (DFT)"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:353
+#, fuzzy
+msgid "Molecular Mechanics"
+msgstr "&분자 역학"
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:356
+msgid "Hybrid quantum classical (Not yet supported)"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:371
+msgid "EWALD"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
+#. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:374
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:409:665
+msgid "NONE"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
+#. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:377:1243
+#, fuzzy
+msgid "PME"
+msgstr "PM3"
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:380
+msgid "SPME"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
+msgid "ATOMIC"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:397
+msgid "CORE"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:400
+msgid "DENSITIES"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:403
+msgid "HISTORY_RESTART"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:406
+#, fuzzy
+msgid "MOPAC"
+msgstr "M&OPAC..."
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:412
+msgid "RANDOM"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:415
+msgid "RESTART"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:418
+msgid "SPARSE"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:432
+msgid "BROYDEN"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:435
+msgid "Conjugate Gradients"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:438
+msgid "DIIS"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:441
+msgid "Steepest descent"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:545
+#: qtplugins/gamessinput/gamessinputdialog.cpp:430
+msgid ""
+"The input file has been modified. Would you like to overwrite your changes "
+"to reflect the new geometry or job options?"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:549
+#: qtplugins/gamessinput/gamessinputdialog.cpp:434
+msgid "Overwrite modified input file?"
+msgstr ""
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:960
+#, fuzzy
+msgid "Save CP2K input file"
+msgstr "GAMESS 입력"
+
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:1009
+#, fuzzy
+msgid "Submit CP2K Calculation"
+msgstr "계산 중단"
+
 #: qtplugins/crystal/crystal.cpp:54 qtplugins/crystal/crystal.cpp:182
 msgid "Import Crystal from Clipboard"
 msgstr ""
@@ -1818,7 +2110,8 @@ msgstr ""
 msgid "Reduce Cell (&Niggli)"
 msgstr ""
 
-#: qtplugins/crystal/crystal.cpp:117 qtplugins/plotxrd/plotxrd.cpp:63
+#: qtplugins/crystal/crystal.cpp:117 qtplugins/plotpdf/plotpdf.cpp:66
+#: qtplugins/plotrmsd/plotrmsd.cpp:61 qtplugins/plotxrd/plotxrd.cpp:63
 #: qtplugins/spacegroup/spacegroup.cpp:118
 msgid "&Crystal"
 msgstr ""
@@ -1851,7 +2144,7 @@ msgstr ""
 msgid "Crystal Lattice"
 msgstr ""
 
-#: qtplugins/crystal/crystalscene.h:41
+#: qtplugins/crystal/crystalscene.h:43
 #, fuzzy
 msgid "Render the unit cell boundaries."
 msgstr "원자 및 결합 이름 표시"
@@ -1901,7 +2194,7 @@ msgid "Remove Bond"
 msgstr "원자 제거하기"
 
 #: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:194
-#: qtplugins/measuretool/measuretool.cpp:222
+#: qtplugins/measuretool/measuretool.cpp:224
 #, fuzzy
 msgid "Distance:"
 msgstr "거리"
@@ -1936,71 +2229,30 @@ msgstr "이중"
 msgid "Triple"
 msgstr "삼중"
 
-#: qtplugins/forcefields/workflow.cpp:73 qtplugins/forcefields/workflow.cpp:81
-#: qtplugins/workflows/workflow.cpp:73 qtplugins/workflows/workflow.cpp:81
-#, fuzzy
-msgid "Scripts"
-msgstr "스크립트(&S)"
+#: qtplugins/force/force.h:39
+msgid "Force"
+msgstr "힘"
 
-#: qtplugins/forcefields/workflow.cpp:107
-#: qtplugins/gamessinput/gamessinput.cpp:99
-#: qtplugins/quantuminput/quantuminput.cpp:113
-#: qtplugins/workflows/workflow.cpp:107
-#, fuzzy, qt-format
-msgid ""
-"Error reading output file '%1':\n"
-"%2"
-msgstr "궤도 파일 %1을 읽는데 문제가 있습니다"
-
-#: qtplugins/forcefields/workflow.cpp:204
-#: qtplugins/quantuminput/quantuminput.cpp:179
-#: qtplugins/workflows/workflow.cpp:204
-msgid "Set path to Python interpreter:"
+#: qtplugins/force/force.h:44
+msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
 
-#: qtplugins/forcefields/workflow.cpp:206 qtplugins/workflows/workflow.cpp:206
-msgid ""
-"Select the python interpreter to run external scripts.\n"
-"Avogadro must be restarted for any changes to take effect."
+#: qtplugins/forcefield/forcefielddialog.cpp:331
+#: qtplugins/openbabel/obforcefielddialog.cpp:331
+#, qt-format
+msgid "Autodetect (%1)"
 msgstr ""
 
-#: qtplugins/forcefields/workflow.cpp:270
-#: qtplugins/quantuminput/quantuminput.cpp:239
-#: qtplugins/workflows/workflow.cpp:270
-msgid "Set Python Path..."
-msgstr ""
-
-#: qtplugins/forcefields/workflow.h:53 qtplugins/workflows/workflow.h:53
-msgid "Workflow scripts"
-msgstr ""
-
-#: qtplugins/forcefields/workflow.h:55 qtplugins/workflows/workflow.h:55
-msgid "Run external workflow commands"
-msgstr ""
-
-#: qtplugins/gamessinput/gamessinput.cpp:44
+#: qtplugins/gamessinput/gamessinput.cpp:45
 msgid "&GAMESS"
 msgstr "&GAMESS"
-
-#: qtplugins/gamessinput/gamessinput.cpp:62
-#: qtplugins/quantuminput/quantuminput.cpp:72
-#: qtplugins/quantumoutput/quantumoutput.cpp:100
-#: qtplugins/spectra/spectra.cpp:57
-msgid "&Quantum"
-msgstr ""
-
-#: qtplugins/gamessinput/gamessinput.cpp:62
-#: qtplugins/quantuminput/quantuminput.cpp:72
-#, fuzzy
-msgid "Input Generators"
-msgstr "생성기 입력..."
 
 #: qtplugins/gamessinput/gamessinput.h:46
 #, fuzzy
 msgid "GAMESS input"
 msgstr "GAMESS 입력"
 
-#: qtplugins/gamessinput/gamessinput.h:48
+#: qtplugins/gamessinput/gamessinput.h:50
 msgid "Generate input for GAMESS."
 msgstr ""
 
@@ -2065,16 +2317,6 @@ msgstr "음이온"
 msgid "Dianion"
 msgstr ""
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:430
-msgid ""
-"The input file has been modified. Would you like to overwrite your changes "
-"to reflect the new geometry or job options?"
-msgstr ""
-
-#: qtplugins/gamessinput/gamessinputdialog.cpp:434
-msgid "Overwrite modified input file?"
-msgstr ""
-
 #: qtplugins/gamessinput/gamessinputdialog.cpp:668
 #, fuzzy
 msgid "Save GAMESS input file"
@@ -2090,7 +2332,7 @@ msgstr "계산 중단"
 msgid "&Adjust Hydrogens"
 msgstr "수소 추가"
 
-#: qtplugins/hydrogens/hydrogens.cpp:38
+#: qtplugins/hydrogens/hydrogens.cpp:38 qtplugins/openbabel/openbabel.cpp:71
 msgid "Add Hydrogens"
 msgstr "수소 추가"
 
@@ -2129,7 +2371,7 @@ msgstr "불러오기"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
-#: qtplugins/importpqr/importpqr.h:45:393
+#: qtplugins/importpqr/importpqr.h:45:552
 msgid "Import From PQR"
 msgstr ""
 
@@ -2137,18 +2379,97 @@ msgstr ""
 msgid "Download a molecule from PQR."
 msgstr ""
 
+#: qtplugins/insertfragment/insertfragment.cpp:44
+#: qtplugins/insertfragment/insertfragmentextension.cpp:64
+msgid "Fragment..."
+msgstr "조각..."
+
+#: qtplugins/insertfragment/insertfragment.cpp:62
+#: qtplugins/insertfragment/insertfragmentextension.cpp:97
+#: qtplugins/lineformatinput/lineformatinput.cpp:71
+msgid "&Insert"
+msgstr "삽입(&I)"
+
+#: qtplugins/insertfragment/insertfragment.h:46
+#, fuzzy
+msgid "InsertFragment"
+msgstr "조각 삽입"
+
+#: qtplugins/insertfragment/insertfragment.h:69
+#, fuzzy
+msgid "Insert molecular fragments for building larger molecules."
+msgstr "더 큰 분자를 만들기 위해 분자 조각 삽입"
+
+#: qtplugins/insertfragment/insertfragmentextension.cpp:59
+msgid "Crystal..."
+msgstr ""
+
+#: qtplugins/insertfragment/insertfragmentextension.cpp:69
+#: qtplugins/lineformatinput/lineformatinput.cpp:43
+msgid "SMILES..."
+msgstr "SMILES..."
+
+#: qtplugins/insertfragment/insertfragmentextension.cpp:95
+#, fuzzy
+msgid "Import"
+msgstr "불러오기"
+
+#: qtplugins/insertfragment/insertfragmentextension.cpp:121
+#: qtplugins/insertfragment/insertfragmentextension.cpp:166
+msgid "Insert SMILES"
+msgstr "SMILES 삽입"
+
+#: qtplugins/insertfragment/insertfragmentextension.cpp:122
+msgid "Insert SMILES fragment:"
+msgstr "SMILES 조각 삽입:"
+
+#: qtplugins/insertfragment/insertfragmentextension.cpp:171
+#: qtplugins/insertfragment/insertfragmentextension.cpp:310
+#: qtplugins/insertfragment/insertfragmentextension.h:36
+msgid "Insert Fragment"
+msgstr "조각 삽입"
+
+#: qtplugins/insertfragment/insertfragmentextension.cpp:179
+#, fuzzy
+msgid "Insert Crystal"
+msgstr "조각 삽입"
+
+#: qtplugins/insertfragment/insertfragmentextension.h:37
+msgid "Insert molecular fragments for building larger molecules"
+msgstr "더 큰 분자를 만들기 위해 분자 조각 삽입"
+
+#: qtplugins/lammpsinput/lammpsinput.cpp:41
+#, fuzzy
+msgid "&LAMMPS Input"
+msgstr "GAMESS 입력"
+
+#: qtplugins/lammpsinput/lammpsinput.h:42
+#, fuzzy
+msgid "LAMMPS input"
+msgstr "GAMESS 입력"
+
+#: qtplugins/lammpsinput/lammpsinput.h:46
+#, fuzzy
+msgid "Generate input for LAMMPS."
+msgstr "양자 화학 패키지를 위해 입력 파일을 생성"
+
+#: qtplugins/lammpsinput/lammpsinputdialog.cpp:156
+#, fuzzy
+msgid ""
+"Would you like to update the preview text, losing all changes made in the "
+"Lammps input deck preview pane?"
+msgstr ""
+"가우스 입력 데크 미리보기 창에서 만들어진 모든 변경사항을 잃고, 이전의 텍스트"
+"를 업데이트 하시겠습니까?"
+
 #: qtplugins/licorice/licorice.h:40
 msgid "Licorice"
 msgstr ""
 
-#: qtplugins/licorice/licorice.h:42
+#: qtplugins/licorice/licorice.h:44
 #, fuzzy
 msgid "Render atoms as licorice."
 msgstr "원자 및 결합 이름 표시"
-
-#: qtplugins/lineformatinput/lineformatinput.cpp:43
-msgid "SMILES..."
-msgstr "SMILES..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:48
 msgid "InChI..."
@@ -2159,13 +2480,10 @@ msgid "InChI"
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:56
+#: qtplugins/mongochem/listmoleculesmodel.cpp:83
 #, fuzzy
 msgid "SMILES"
 msgstr "SMILES..."
-
-#: qtplugins/lineformatinput/lineformatinput.cpp:71
-msgid "&Insert"
-msgstr "삽입(&I)"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:98
 #: qtplugins/lineformatinput/lineformatinput.cpp:122
@@ -2180,7 +2498,7 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133:426
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:967
 #, fuzzy
 msgid "Insert Molecule..."
 msgstr "분자"
@@ -2217,7 +2535,7 @@ msgid "Measure"
 msgstr "측정"
 
 #: qtplugins/measuretool/measuretool.cpp:192
-#: qtplugins/measuretool/measuretool.cpp:202
+#: qtplugins/measuretool/measuretool.cpp:203
 msgid "Dihedral:"
 msgstr "이면각:"
 
@@ -2225,10 +2543,24 @@ msgstr "이면각:"
 msgid "Angle:"
 msgstr "각:"
 
-#: qtplugins/measuretool/measuretool.cpp:214
+#: qtplugins/measuretool/measuretool.cpp:204
+#: qtplugins/measuretool/measuretool.cpp:216
+#: qtplugins/measuretool/measuretool.cpp:217
+#, qt-format
+msgid "%L1°"
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:215
 #, fuzzy
 msgid "Angles:"
 msgstr "각:"
+
+#: qtplugins/measuretool/measuretool.cpp:225
+#: qtplugins/measuretool/measuretool.cpp:226
+#: qtplugins/measuretool/measuretool.cpp:228
+#, qt-format
+msgid "%L1 Å"
+msgstr ""
 
 #: qtplugins/measuretool/measuretool.h:48
 #: qtplugins/measuretool/measuretool.h:49
@@ -2246,19 +2578,38 @@ msgid "Render triangle meshes."
 msgstr "등곡선 망상 분자 표시"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
-#: qtplugins/mongochem/mongochem.cpp:45
 msgid "View general properties of a molecule."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
-#: qtplugins/resetview/resetview.cpp:48 qtplugins/symmetry/symmetry.cpp:92
+#: qtplugins/resetview/resetview.cpp:54 qtplugins/symmetry/symmetry.cpp:94
 msgid "&View"
 msgstr "보기(&V)"
 
 #: qtplugins/molecularproperties/molecularproperties.h:42
-#: qtplugins/mongochem/mongochem.h:40
 msgid "Molecular Properties"
 msgstr "분자 속성"
+
+#: qtplugins/mongochem/listmoleculesmodel.cpp:80
+#, fuzzy
+msgid "Formula"
+msgstr "형식:"
+
+#: qtplugins/mongochem/listmoleculesmodel.cpp:86
+msgid "InChIKey"
+msgstr ""
+
+#: qtplugins/mongochem/mongochem.cpp:35
+msgid "&MongoChem"
+msgstr ""
+
+#: qtplugins/mongochem/mongochem.h:40
+msgid "Mongo Chem Server"
+msgstr ""
+
+#: qtplugins/mongochem/mongochem.h:44
+msgid "Interface with Mongo Chem Server."
+msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:45
 msgid "Navigate"
@@ -2305,38 +2656,29 @@ msgstr "네트워크 다운로드에 실패함"
 msgid "Interact with online databases, query structures etc."
 msgstr ""
 
-#: qtplugins/openbabel/obforcefielddialog.cpp:331
-#, qt-format
-msgid "Autodetect (%1)"
-msgstr ""
-
-#: qtplugins/openbabel/openbabel.cpp:52
+#: qtplugins/openbabel/openbabel.cpp:52 qtplugins/openbabel/openbabel.cpp:471
 #, fuzzy
-msgid "Optimize geometry"
+msgid "Optimize Geometry"
 msgstr "&구조 최적화"
 
 #: qtplugins/openbabel/openbabel.cpp:59
 #, fuzzy
-msgid "Configure geometry optimization..."
-msgstr "구조 최적화"
+msgid "Configure Force Field..."
+msgstr "힘 영역 설정하기"
 
 #: qtplugins/openbabel/openbabel.cpp:65
-msgid "Perceive bonds"
-msgstr ""
-
-#: qtplugins/openbabel/openbabel.cpp:71
 #, fuzzy
-msgid "Add hydrogens"
-msgstr "수소 추가"
+msgid "Perceive Bonds"
+msgstr "수소 제거"
 
 #: qtplugins/openbabel/openbabel.cpp:77
 #, fuzzy
-msgid "Add hydrogens for pH..."
+msgid "Add Hydrogens for pH..."
 msgstr "pH를 위해 수소 추가..."
 
 #: qtplugins/openbabel/openbabel.cpp:83
 #, fuzzy
-msgid "Remove hydrogens"
+msgid "Remove Hydrogens"
 msgstr "수소 제거"
 
 #: qtplugins/openbabel/openbabel.cpp:93
@@ -2344,72 +2686,73 @@ msgstr "수소 제거"
 msgid "%1 not found! Disabling Open Babel plugin actions."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:113
+#: qtplugins/openbabel/openbabel.cpp:111
 msgid "&Open Babel"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:120
-msgid "The obabel file formats are not ready to be added."
+#: qtplugins/openbabel/openbabel.cpp:118
+msgid "The Open Babel file formats are not ready to be added."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:196
+#: qtplugins/openbabel/openbabel.cpp:194
 #, fuzzy
 msgid "Loading molecule from CML..."
 msgstr "파일 '%1'으로 부터 분자를 읽는 중 실패하였습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:202
+#: qtplugins/openbabel/openbabel.cpp:200
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:211
+#: qtplugins/openbabel/openbabel.cpp:209
 #, fuzzy, qt-format
-msgid "An error occurred while running OpenBabel (%1)."
+msgid "An error occurred while running Open Babel (%1)."
 msgstr "%1 파일을 기록하는 도중에 문제가 발생했습니다"
 
-#: qtplugins/openbabel/openbabel.cpp:221
+#: qtplugins/openbabel/openbabel.cpp:219
 msgid "Error parsing openbabel output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:314 qtplugins/openbabel/openbabel.cpp:349
+#: qtplugins/openbabel/openbabel.cpp:312 qtplugins/openbabel/openbabel.cpp:347
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:340
+#: qtplugins/openbabel/openbabel.cpp:338
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:358
-msgid "Cannot optimize geometry with OpenBabel."
-msgstr ""
-
-#: qtplugins/openbabel/openbabel.cpp:383
+#: qtplugins/openbabel/openbabel.cpp:356
 #, fuzzy
-msgid "Optimizing Geometry (OpenBabel)"
+msgid "Cannot optimize geometry with Open Babel."
 msgstr "&구조 최적화"
 
-#: qtplugins/openbabel/openbabel.cpp:384
+#: qtplugins/openbabel/openbabel.cpp:381
+#, fuzzy
+msgid "Optimizing Geometry (Open Babel)"
+msgstr "&구조 최적화"
+
+#: qtplugins/openbabel/openbabel.cpp:382
 #, fuzzy
 msgid "Generating MDL..."
 msgstr "산출..."
 
-#: qtplugins/openbabel/openbabel.cpp:401
+#: qtplugins/openbabel/openbabel.cpp:399
 msgid ""
-"An internal error occurred while generating an MDL representation of the "
+"An internal error occurred while generating an CML representation of the "
 "current molecule."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:407
+#: qtplugins/openbabel/openbabel.cpp:405
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:420 qtplugins/openbabel/openbabel.cpp:428
+#: qtplugins/openbabel/openbabel.cpp:418 qtplugins/openbabel/openbabel.cpp:426
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -2417,93 +2760,93 @@ msgid ""
 "dE: %4"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:442
+#: qtplugins/openbabel/openbabel.cpp:440
 msgid "Updating molecule..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:450 qtplugins/openbabel/openbabel.cpp:703
-msgid "Error interpreting obabel MDL output."
+#: qtplugins/openbabel/openbabel.cpp:448 qtplugins/openbabel/openbabel.cpp:703
+msgid "Error interpreting Open Babel output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:463 qtplugins/openbabel/openbabel.cpp:542
+#: qtplugins/openbabel/openbabel.cpp:461 qtplugins/openbabel/openbabel.cpp:540
 #, fuzzy, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr "궤도 파일 %1의 원자 수가 현재의 분자 수와 일치하지 않습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:473
-#, fuzzy
-msgid "Optimize Geometry"
-msgstr "&구조 최적화"
-
-#: qtplugins/openbabel/openbabel.cpp:482
-msgid "Cannot open file with OpenBabel."
+#: qtplugins/openbabel/openbabel.cpp:480
+msgid "Cannot open file with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:488
+#: qtplugins/openbabel/openbabel.cpp:486
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:494
-msgid "Perceiving Bonds (OpenBabel)"
-msgstr ""
+#: qtplugins/openbabel/openbabel.cpp:492
+#, fuzzy
+msgid "Perceiving Bonds (Open Babel)"
+msgstr "수소 제거"
 
-#: qtplugins/openbabel/openbabel.cpp:495
+#: qtplugins/openbabel/openbabel.cpp:493
 msgid "Generating XYZ representation..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:502
+#: qtplugins/openbabel/openbabel.cpp:500
 msgid "Error generating XYZ string."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:514
+#: qtplugins/openbabel/openbabel.cpp:512
 #, qt-format
 msgid "Converting XYZ to CML with %1..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:522
+#: qtplugins/openbabel/openbabel.cpp:520
 msgid "Updating molecule from CML..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:530
+#: qtplugins/openbabel/openbabel.cpp:528
 msgid "Error interpreting obabel CML output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:574 qtplugins/openbabel/openbabel.cpp:613
+#: qtplugins/openbabel/openbabel.cpp:572 qtplugins/openbabel/openbabel.cpp:612
 msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:579 qtplugins/openbabel/openbabel.cpp:626
+#: qtplugins/openbabel/openbabel.cpp:577 qtplugins/openbabel/openbabel.cpp:625
 #, fuzzy
-msgid "Adding Hydrogens (OpenBabel)"
+msgid "Adding Hydrogens (Open Babel)"
 msgstr "수소 추가"
 
-#: qtplugins/openbabel/openbabel.cpp:580 qtplugins/openbabel/openbabel.cpp:627
-#: qtplugins/openbabel/openbabel.cpp:666
-msgid "Generating obabel input..."
-msgstr ""
+#: qtplugins/openbabel/openbabel.cpp:578
+#, fuzzy
+msgid "Generating Open Babel input..."
+msgstr "산출..."
 
-#: qtplugins/openbabel/openbabel.cpp:587 qtplugins/openbabel/openbabel.cpp:634
-#: qtplugins/openbabel/openbabel.cpp:673
-msgid "Error generating MDL string."
-msgstr ""
+#: qtplugins/openbabel/openbabel.cpp:585 qtplugins/openbabel/openbabel.cpp:633
+#, fuzzy
+msgid "Error generating Open Babel input."
+msgstr "궤도 파일 %1을 읽는데 문제가 있습니다"
 
-#: qtplugins/openbabel/openbabel.cpp:599 qtplugins/openbabel/openbabel.cpp:646
+#: qtplugins/openbabel/openbabel.cpp:598 qtplugins/openbabel/openbabel.cpp:646
 #: qtplugins/openbabel/openbabel.cpp:685
 #, qt-format
 msgid "Running %1..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:620
+#: qtplugins/openbabel/openbabel.cpp:619
 #, fuzzy
 msgid "Add hydrogens for pH"
 msgstr "pH를 위해 수소 추가"
 
-#: qtplugins/openbabel/openbabel.cpp:620
+#: qtplugins/openbabel/openbabel.cpp:619
 #, fuzzy
 msgid "pH:"
 msgstr "pH"
+
+#: qtplugins/openbabel/openbabel.cpp:626 qtplugins/openbabel/openbabel.cpp:666
+msgid "Generating obabel input..."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:660
 msgid "Cannot remove hydrogens with Open Babel."
@@ -2511,8 +2854,13 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:665
 #, fuzzy
-msgid "Removing Hydrogens (OpenBabel)"
+msgid "Removing Hydrogens (Open Babel)"
 msgstr "수소 제거"
+
+#: qtplugins/openbabel/openbabel.cpp:673
+#, fuzzy
+msgid "Error generating CML data."
+msgstr "산출..."
 
 #: qtplugins/openbabel/openbabel.cpp:694
 msgid "Reading obabel output..."
@@ -2520,7 +2868,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:757
 msgid ""
-"Already running OpenBabel. Wait for the other operation to complete and try "
+"Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
 
@@ -2532,6 +2880,82 @@ msgstr ""
 msgid "Interact with OpenBabel utilities."
 msgstr ""
 
+#: qtplugins/openmminput/openmminput.cpp:41
+msgid "&OpenMM Script Builder"
+msgstr ""
+
+#: qtplugins/openmminput/openmminput.h:42
+msgid "OpenMM input"
+msgstr ""
+
+#: qtplugins/openmminput/openmminput.h:46
+#, fuzzy
+msgid "Generate input for OpenMM."
+msgstr "양자 화학 패키지를 위해 입력 파일을 생성"
+
+#: qtplugins/openmminput/openmminputdialog.cpp:213
+#, fuzzy
+msgid ""
+"Would you like to update the preview text, losing all changes made in the "
+"OpenMM input deck preview pane?"
+msgstr ""
+"MOPAC 입력 데크 미리보기에서 만들어진 모든 변경사항을 잃고, 이전의 텍스트를 "
+"업데이트 하시겠습니까?"
+
+#: qtplugins/openmminput/openmminputdialog.cpp:505
+#: qtplugins/openmminput/openmminputdialog.cpp:508
+#: qtplugins/openmminput/openmminputdialog.cpp:534
+#: qtplugins/openmminput/openmminputdialog.cpp:945
+#: qtplugins/openmminput/openmminputdialog.cpp:1063
+msgid "inpcrd"
+msgstr ""
+
+#: qtplugins/openmminput/openmminputdialog.cpp:505
+#: qtplugins/openmminput/openmminputdialog.cpp:510
+#: qtplugins/openmminput/openmminputdialog.cpp:538
+#: qtplugins/openmminput/openmminputdialog.cpp:954
+#: qtplugins/openmminput/openmminputdialog.cpp:1065
+#, fuzzy
+msgid "gro"
+msgstr "프롤린(Pro)"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
+#: qtplugins/openmminput/openmminputdialog.cpp:509:1153
+msgid "input.prmtop"
+msgstr ""
+
+#: qtplugins/openmminput/openmminputdialog.cpp:511
+msgid "input.top"
+msgstr ""
+
+#: qtplugins/openmminput/openmminputdialog.cpp:514
+#: qtplugins/openmminput/openmminputdialog.cpp:938
+#: qtplugins/openmminput/openmminputdialog.cpp:1054
+#: qtplugins/openmminput/openmminputdialog.cpp:1061
+msgid "pdb"
+msgstr ""
+
+#: qtplugins/openmminput/openmminputdialog.cpp:535
+msgid "prmtop"
+msgstr ""
+
+#: qtplugins/openmminput/openmminputdialog.cpp:539
+#, fuzzy
+msgid "top"
+msgstr "중지"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
+#. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:452
+#. i18n: ectx: property (text), item, widget (QComboBox, initVelCombo)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
+#. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
+#: qtplugins/openmminput/openmminputdialog.cpp:1072
+#: qtplugins/openmminput/openmminputdialog.cpp:1081:1270 rc.cpp:1285
+msgid "True"
+msgstr ""
+
 #: qtplugins/overlayaxes/overlayaxes.h:41
 msgid "Reference Axes Overlay"
 msgstr ""
@@ -2540,68 +2964,137 @@ msgstr ""
 msgid "Render reference axes in the corner of the display."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:51
+#: qtplugins/playertool/playertool.cpp:61
 msgid "Player"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:69
+#: qtplugins/playertool/playertool.cpp:77
 msgid "Play"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:72
+#: qtplugins/playertool/playertool.cpp:80
 msgid "Stop"
 msgstr "중지"
 
-#: qtplugins/playertool/playertool.cpp:82
+#: qtplugins/playertool/playertool.cpp:91
 #, fuzzy
 msgid "Frame rate:"
 msgstr "매개 변수:"
 
-#: qtplugins/playertool/playertool.cpp:88
+#: qtplugins/playertool/playertool.cpp:97
 msgctxt "frames per second"
 msgid " FPS"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:94
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: qtplugins/playertool/playertool.cpp:121:1579
+#, fuzzy
+msgid "Frame:"
+msgstr "매개 변수:"
+
+#: qtplugins/playertool/playertool.cpp:128
+#: qtplugins/playertool/playertool.cpp:400
+#: qtplugins/surfaces/surfacedialog.cpp:178
+#, qt-format
+msgid " of %0"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:139
 #, fuzzy
 msgid "Dynamic bonding?"
 msgstr "동역학 결합"
 
-#: qtplugins/playertool/playertool.cpp:102
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:382
+#. i18n: ectx: property (text), widget (QPushButton, recordButton)
+#: qtplugins/playertool/playertool.cpp:147:1585
 #, fuzzy
 msgid "Record Movie..."
 msgstr "제거..."
 
-#: qtplugins/playertool/playertool.cpp:108
-#: qtplugins/playertool/playertool.cpp:161
-#, fuzzy
-msgid "Stopped"
-msgstr "중지"
-
-#: qtplugins/playertool/playertool.cpp:180
-#, qt-format
-msgid "Frame %0 of %1"
+#: qtplugins/playertool/playertool.cpp:241
+#: qtplugins/playertool/playertool.cpp:339
+msgid "Movie (*.mp4)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:197
+#: qtplugins/playertool/playertool.cpp:243
 msgid "Export Bitmap Graphics"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:233
+#: qtplugins/playertool/playertool.cpp:244
+msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:258 qtplugins/surfaces/surfaces.cpp:408
+msgid "GIF (*.gif)"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:262
+msgid "GIF FPS support warning"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:263
+msgid "The GIF file format does not support frame rates over 100 FPS."
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:305
+#, fuzzy
+msgid "Movie (*.avi)"
+msgstr "비디오 파일 (*.avi)"
+
+#: qtplugins/playertool/playertool.cpp:334
+#: qtplugins/playertool/playertool.cpp:364 qtplugins/surfaces/surfaces.cpp:436
+#: qtplugins/surfaces/surfaces.cpp:479 qtplugins/surfaces/surfaces.cpp:491
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:234
+#: qtplugins/playertool/playertool.cpp:335 qtplugins/surfaces/surfaces.cpp:480
+msgid "Error: cannot add frame to video."
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:365 qtplugins/surfaces/surfaces.cpp:492
 #, fuzzy, qt-format
 msgid "Cannot save file %1."
 msgstr "%1 파일을 읽을 수 없습니다."
 
-#: qtplugins/playertool/playertool.h:44
+#: qtplugins/playertool/playertool.h:46
 msgid "Player tool"
 msgstr ""
 
-#: qtplugins/playertool/playertool.h:45
+#: qtplugins/playertool/playertool.h:47
 msgid "Play back trajectories"
+msgstr ""
+
+#: qtplugins/plotpdf/plotpdf.cpp:48
+msgid "Plot Pair Distribution Function..."
+msgstr ""
+
+#: qtplugins/plotpdf/plotpdf.cpp:132
+msgid "Failed to generate PDF pattern"
+msgstr ""
+
+#: qtplugins/plotpdf/plotpdf.cpp:133 qtplugins/plotxrd/plotxrd.cpp:131
+msgid "Error message: "
+msgstr ""
+
+#: qtplugins/plotpdf/plotpdf.h:44
+msgid "PlotPdf"
+msgstr ""
+
+#: qtplugins/plotpdf/plotpdf.h:78
+msgid "Generate and plot a Pair Distribution Function curve."
+msgstr ""
+
+#: qtplugins/plotrmsd/plotrmsd.cpp:43
+msgid "Plot RMSD curve..."
+msgstr ""
+
+#: qtplugins/plotrmsd/plotrmsd.h:44
+msgid "PlotRmsd"
+msgstr ""
+
+#: qtplugins/plotrmsd/plotrmsd.h:73
+msgid "Generate and plot an RMSD curve."
 msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:45
@@ -2612,24 +3105,20 @@ msgstr ""
 msgid "Failed to generate XRD pattern"
 msgstr ""
 
-#: qtplugins/plotxrd/plotxrd.cpp:131
-msgid "Error message: "
-msgstr ""
-
-#: qtplugins/plotxrd/plotxrd.cpp:147
+#: qtplugins/plotxrd/plotxrd.cpp:165
 msgid "Failed to convert molecule to CIF format."
 msgstr ""
 
-#: qtplugins/plotxrd/plotxrd.cpp:182
+#: qtplugins/plotxrd/plotxrd.cpp:200
 msgid "Data read from genXrdPattern appears to be corrupt!"
 msgstr ""
 
-#: qtplugins/plotxrd/plotxrd.cpp:220
+#: qtplugins/plotxrd/plotxrd.cpp:238
 msgid "Error: could not find genXrdPattern executable!"
 msgstr ""
 
-#: qtplugins/plotxrd/plotxrd.cpp:230 qtplugins/plotxrd/plotxrd.cpp:242
-#: qtplugins/plotxrd/plotxrd.cpp:253 qtplugins/plotxrd/plotxrd.cpp:260
+#: qtplugins/plotxrd/plotxrd.cpp:248 qtplugins/plotxrd/plotxrd.cpp:260
+#: qtplugins/plotxrd/plotxrd.cpp:271 qtplugins/plotxrd/plotxrd.cpp:278
 #, fuzzy
 msgid "Error: "
 msgstr "오류"
@@ -2644,7 +3133,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.h:46:570
+#: qtplugins/plugindownloader/plugindownloader.h:46:1492
 msgid "Plugin Downloader"
 msgstr ""
 
@@ -2712,10 +3201,14 @@ msgstr ""
 msgid "QTAIM extension"
 msgstr ""
 
-#: qtplugins/quantuminput/quantuminput.cpp:180
+#: qtplugins/quantuminput/quantuminput.cpp:183
 msgid ""
 "Select the python interpreter used to run input generator scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
+msgstr ""
+
+#: qtplugins/quantuminput/quantuminput.cpp:215
+msgid "Set Python Path..."
 msgstr ""
 
 #: qtplugins/quantuminput/quantuminput.h:56
@@ -2727,66 +3220,21 @@ msgstr ""
 msgid "Generate input for quantum codes."
 msgstr "양자 화학 패키지를 위해 입력 파일을 생성"
 
-#: qtplugins/quantumoutput/quantumoutput.cpp:60
-#, fuzzy
-msgid "Calculate electronic surfaces..."
-msgstr "전자 밀도 계산하기"
-
-#: qtplugins/quantumoutput/quantumoutput.cpp:155
-#, fuzzy
-msgid "Calculating electron density"
-msgstr "전자 밀도 계산하기"
-
-#: qtplugins/quantumoutput/quantumoutput.cpp:162
-#, fuzzy, qt-format
-msgid "Calculating molecular orbital %L1"
-msgstr "분자 오비탈과 다른 표면 계산"
-
-#: qtplugins/quantumoutput/quantumoutput.h:57
-msgid "Quantum output"
-msgstr ""
-
-#: qtplugins/quantumoutput/quantumoutput.h:59
-msgid "Read output from quantum codes."
-msgstr ""
-
-#: qtplugins/quantumoutput/surfacedialog.cpp:83
-#, qt-format
-msgctxt "Molecular orbital"
-msgid "MO %L1"
-msgstr ""
-
-#: qtplugins/quantumoutput/surfacedialog.cpp:85
-msgctxt "Highest occupied molecular orbital"
-msgid "(HOMO)"
-msgstr ""
-
-#: qtplugins/quantumoutput/surfacedialog.cpp:87
-msgctxt "Lowest unoccupied molecular orbital"
-msgid "(LUMO)"
-msgstr ""
-
-#: qtplugins/quantumoutput/surfacedialog.cpp:105
-#, qt-format
-msgctxt "Cube File"
-msgid "Cube %L1"
-msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:29
+#: qtplugins/resetview/resetview.cpp:37
 msgid "Center"
 msgstr ""
 
-#: qtplugins/resetview/resetview.cpp:30
+#: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
 
-#: qtplugins/resetview/resetview.h:40
+#: qtplugins/resetview/resetview.h:37
 #, fuzzy
-msgid "ResetView"
+msgid "Reset view"
 msgstr "초기화"
 
-#: qtplugins/resetview/resetview.h:44
-msgid "Adjust the camera and view"
+#: qtplugins/resetview/resetview.h:40
+msgid "Manipulate the view camera."
 msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:39
@@ -2822,19 +3270,19 @@ msgstr "선택"
 msgid "&Select"
 msgstr "선택(&S)"
 
-#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:183
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:35:678
+#: qtplugins/select/select.h:35:1618
 #, fuzzy
 msgid "Select"
 msgstr "선택(&S)"
 
-#: qtplugins/selectiontool/selectiontool.cpp:55
+#: qtplugins/selectiontool/selectiontool.cpp:59
 msgid "Selection"
 msgstr "선택"
 
-#: qtplugins/selectiontool/selectiontool.h:45
 #: qtplugins/selectiontool/selectiontool.h:46
+#: qtplugins/selectiontool/selectiontool.h:47
 #, fuzzy
 msgid "Selection tool"
 msgstr "선택"
@@ -2845,7 +3293,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:81:663
+#: qtplugins/spacegroup/spacegroup.cpp:81:1603
 msgid "Symmetrize"
 msgstr ""
 
@@ -2936,7 +3384,7 @@ msgstr ""
 msgid "Space group features for crystals."
 msgstr ""
 
-#: qtplugins/spectra/spectra.cpp:40
+#: qtplugins/spectra/spectra.cpp:38
 #, fuzzy
 msgid "Vibrational modes..."
 msgstr "진동"
@@ -2948,6 +3396,71 @@ msgstr "스펙트럼 시각화"
 
 #: qtplugins/spectra/spectra.h:47
 msgid "Display spectra and vibrational modes."
+msgstr ""
+
+#: qtplugins/surfaces/surfacedialog.cpp:115
+#, fuzzy
+msgid "Molecular Orbital"
+msgstr "분자 오비탈"
+
+#: qtplugins/surfaces/surfacedialog.cpp:117
+msgid "Electron Density"
+msgstr "전자 밀도"
+
+#: qtplugins/surfaces/surfacedialog.cpp:136
+#, qt-format
+msgctxt "Molecular orbital"
+msgid "MO %L1"
+msgstr ""
+
+#: qtplugins/surfaces/surfacedialog.cpp:138
+msgctxt "Highest occupied molecular orbital"
+msgid "(HOMO)"
+msgstr ""
+
+#: qtplugins/surfaces/surfacedialog.cpp:140
+msgctxt "Lowest unoccupied molecular orbital"
+msgid "(LUMO)"
+msgstr ""
+
+#: qtplugins/surfaces/surfacedialog.cpp:155
+msgid "From File"
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:78
+msgid "Create Surfaces..."
+msgstr "표면 형성..."
+
+#: qtplugins/surfaces/surfaces.cpp:244
+#, fuzzy
+msgid "Calculating electron density"
+msgstr "전자 밀도 계산하기"
+
+#: qtplugins/surfaces/surfaces.cpp:254
+#, fuzzy, qt-format
+msgid "Calculating molecular orbital %L1"
+msgstr "분자 오비탈과 다른 표면 계산"
+
+#: qtplugins/surfaces/surfaces.cpp:385 qtplugins/surfaces/surfaces.cpp:413
+#, fuzzy
+msgid "Movie AVI (*.avi)"
+msgstr "비디오 파일 (*.avi)"
+
+#: qtplugins/surfaces/surfaces.cpp:387
+#, fuzzy
+msgid "Export Movie"
+msgstr "이미지 내보내기(&E)"
+
+#: qtplugins/surfaces/surfaces.cpp:388
+msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.h:70
+msgid "Surfaces"
+msgstr "표면"
+
+#: qtplugins/surfaces/surfaces.h:71
+msgid "Read and render surfaces."
 msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:60
@@ -2962,17 +3475,17 @@ msgstr ""
 msgid "Element"
 msgstr "원소"
 
-#: qtplugins/symmetry/symmetry.cpp:51
+#: qtplugins/symmetry/symmetry.cpp:53
 msgid "Symmetry Properties..."
 msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:44:648
+#: qtplugins/symmetry/symmetry.h:45:1588
 msgid "Symmetry"
 msgstr ""
 
-#: qtplugins/symmetry/symmetry.h:77
+#: qtplugins/symmetry/symmetry.h:78
 msgid "Provide symmetry functionality."
 msgstr ""
 
@@ -2981,7 +3494,7 @@ msgstr ""
 msgid "Symmetry Elements"
 msgstr "원소에 의한 선택..."
 
-#: qtplugins/symmetry/symmetryscene.h:46
+#: qtplugins/symmetry/symmetryscene.h:48
 #, fuzzy
 msgid "Render symmetry elements."
 msgstr "쌍극자 모멘트 분자 표시"
@@ -2990,11 +3503,21 @@ msgstr "쌍극자 모멘트 분자 표시"
 msgid "∞"
 msgstr ""
 
+#: qtplugins/symmetry/symmetrywidget.cpp:360
+#, fuzzy, qt-format
+msgid "Group %1"
+msgstr "그룹 이름"
+
+#: qtplugins/symmetry/symmetrywidget.cpp:368
+#, qt-format
+msgid "%1 %2"
+msgstr ""
+
 #: qtplugins/vanderwaals/vanderwaals.h:40
 msgid "Van der Waals"
 msgstr "반 데르 발스"
 
-#: qtplugins/vanderwaals/vanderwaals.h:42
+#: qtplugins/vanderwaals/vanderwaals.h:44
 msgid "Simple display of VdW spheres."
 msgstr ""
 
@@ -3042,6 +3565,8 @@ msgstr "막대 모형으로 분자를 표시하기"
 #. i18n: ectx: property (windowTitle), widget (QDialog, FileDialog)
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::MolecularPropertiesDialog)
+#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, SubmitCalculationDialog)
 msgid "Dialog"
 msgstr ""
 
@@ -3049,8 +3574,14 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::MoleQueue::InputGeneratorWidget)
 #. i18n: file: molequeue/molequeuewidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::MoleQueue::MoleQueueWidget)
+#. i18n: file: qtplugins/bonding/bondingdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, BondingDialog)
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::EditorToolWidget)
+#. i18n: file: qtplugins/mongochem/mongochemwidget.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, MongoChemWidget)
+#. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SelectionToolWidget)
 msgid "Form"
 msgstr "형식"
 
@@ -3077,8 +3608,12 @@ msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:113
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/mongochem/mongochemwidget.ui:73
+#. i18n: ectx: property (text), widget (QPushButton, pushSubmitCalculation)
 #, fuzzy
 msgid "Submit Calculation..."
 msgstr "계산 중단"
@@ -3287,6 +3822,39 @@ msgstr "구조:"
 msgid "Load Cube File"
 msgstr "파일 불러오기..."
 
+#. i18n: file: qtplugins/bonding/bondingdialog.ui:20
+#. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
+msgid "Distance Tolerance:"
+msgstr "거리"
+
+#. i18n: file: qtplugins/bonding/bondingdialog.ui:27
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
+msgid "Minimum Distance:"
+msgstr "거리"
+
+#. i18n: file: qtplugins/bonding/bondingdialog.ui:41
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
+#. i18n: file: qtplugins/bonding/bondingdialog.ui:60
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, minimumSpinBox)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:40
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, a)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:72
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, b)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:104
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, c)
+#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:30
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_maxRadius)
+#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:59
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_step)
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:100
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
+msgid " Å"
+msgstr ""
+
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConnectionSettingsDialog)
 #, fuzzy
@@ -3352,6 +3920,38 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, Cancel)
 msgid "Cancel"
 msgstr "취소"
+
+#. i18n: file: qtplugins/coloropacitymap/comdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, ComDialog)
+#, fuzzy
+msgid "Volume Rendering"
+msgstr "렌더링:"
+
+#. i18n: file: qtplugins/coloropacitymap/comdialog.ui:32
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Cube"
+msgstr ""
+
+#. i18n: file: qtplugins/coloropacitymap/comdialog.ui:42
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+msgid "Enable volume rendering"
+msgstr ""
+
+#. i18n: file: qtplugins/coloropacitymap/comdialog.ui:59
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Enable surface rendering"
+msgstr ""
+
+#. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Isovalue"
+msgstr ""
+
+#. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
+msgid "Opacity"
+msgstr "투명도:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
@@ -3427,6 +4027,167 @@ msgstr ""
 msgid "Apply"
 msgstr "적용"
 
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Cp2kInputDialog)
+#, fuzzy
+msgid "CP2K Input"
+msgstr "MOLPRO 입력"
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:22
+#. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:258
+#. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
+msgid "Reset All"
+msgstr "모두 초기화"
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:29
+#. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:265
+#. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
+msgid "Defaults"
+msgstr "기본값"
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
+#. i18n: ectx: property (text), widget (QPushButton, generateButton)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
+#. i18n: ectx: property (text), widget (QPushButton, generateButton)
+#, fuzzy
+msgid "Save File..."
+msgstr "파일 불러오기..."
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
+#. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:34
+#. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
+msgid "&Basic Setup"
+msgstr "기본 설정(&B)"
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:101
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:99
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:40
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+msgid "Title:"
+msgstr "제목:"
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:114
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:235
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:60
+#. i18n: ectx: property (text), widget (QLabel, label_12)
+#, fuzzy
+msgid "Filename Base:"
+msgstr "파일 이름:"
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:124
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:245
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:70
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
+msgid "job"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:131
+#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:209
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Calculate:"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+msgid "Method:"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:197
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
+msgid "Basis set:"
+msgstr "기본 설정(&B)"
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:215
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+msgid "Functional"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:258
+#. i18n: ectx: attribute (title), widget (QWidget, tab)
+msgid "MM"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:264
+#. i18n: ectx: property (text), widget (QLabel, emaxSplineSpin_label)
+msgid "FF Emax Spline Spin"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:304
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+msgid "FF RCUT NB"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:341
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+msgid "Poisson EWALD type"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:368
+#. i18n: ectx: property (text), widget (QLabel, label_11)
+msgid "Poisson EWALD Alpha"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:399
+#. i18n: ectx: property (text), widget (QLabel, label_23)
+msgid "Poiosson EWALD GMAX"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
+#. i18n: ectx: attribute (title), widget (QWidget, tab_2)
+msgid "QM"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:440
+#. i18n: ectx: property (text), widget (QLabel, LSD_label)
+msgid "LSD"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:449
+#. i18n: ectx: property (text), widget (QCheckBox, lsdcheckBox)
+msgid "TRUE"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:471
+#. i18n: ectx: property (text), widget (QLabel, label_12)
+msgid "MAX SCF"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:505
+#. i18n: ectx: property (text), widget (QLabel, label_14)
+msgid "EPS SCF"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:539
+#. i18n: ectx: property (text), widget (QLabel, label_13)
+msgid "SCF GUESS"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:566
+#. i18n: ectx: property (text), widget (QLabel, label_24)
+msgid "OUTER MAX SCF"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:600
+#. i18n: ectx: property (text), widget (QLabel, label_25)
+msgid "OUTER EPS SCF"
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:634
+#. i18n: ectx: property (text), widget (QLabel, label_26)
+msgid "OT T MINIMIZER"
+msgstr ""
+
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
 msgid "Import Crystal"
@@ -3473,17 +4234,6 @@ msgstr "단위 세포 채우기"
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "A:"
 msgstr "A:"
-
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:40
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, a)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:72
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, b)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:104
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, c)
-#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:100
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
-msgid " Å"
-msgstr ""
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:62
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -3590,15 +4340,111 @@ msgstr "원소:"
 msgid "Bond Order:"
 msgstr "결합 차수:"
 
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
+#, fuzzy
+msgid "Geometry Optimization Parameters"
+msgstr "구조 최적화"
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:39
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#, fuzzy
+msgid "Convergence Criteria"
+msgstr "융합"
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:45
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
+msgid "\"Energy\" convergence:"
+msgstr "융합"
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:52
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+msgid "Step limit:"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:59
+#. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
+#. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
+#, fuzzy
+msgid " units"
+msgstr "단위:"
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:62
+#. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
+#. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
+msgid "10^"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:78
+#. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:185
+#. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
+#. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
+msgid " steps"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:100
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#, fuzzy
+msgid "Optimization Method"
+msgstr "최적화"
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:106
+#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
+#. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
+msgid "Force field:"
+msgstr "역장:"
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:116
+#. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
+#. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
+#, fuzzy
+msgid "Autodetect"
+msgstr "자동 회전"
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:130
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
+msgid "Optimization algorithm:"
+msgstr "최적화"
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:138
+#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
+#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+msgid "Steepest Descent"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:143
+#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
+#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+msgid "Conjugate Gradient"
+msgstr ""
+
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
 msgid "GAMESS Input"
 msgstr "GAMESS 입력"
-
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:34
-#. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
-msgid "&Basic Setup"
-msgstr "기본 설정(&B)"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -3615,50 +4461,15 @@ msgstr ""
 msgid "With:"
 msgstr ""
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:99
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-msgid "Title:"
-msgstr "제목:"
-
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:176
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Charge:"
 msgstr ""
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:209
-#. i18n: ectx: property (text), widget (QLabel, label)
-msgid "Calculate:"
-msgstr ""
-
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:235
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
-msgid "Filename Base:"
-msgstr "파일 이름:"
-
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:245
-#. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
-msgid "job"
-msgstr ""
-
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:258
-#. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
-msgid "Reset All"
-msgstr "모두 초기화"
-
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:265
-#. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
-msgid "Defaults"
-msgstr "기본값"
-
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
-#. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
-msgid "Save File..."
-msgstr "파일 불러오기..."
-
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
+#. i18n: file: qtplugins/mongochem/mongochemwidget.ui:66
+#. i18n: ectx: property (text), widget (QPushButton, pushSearch)
 msgid "Search"
 msgstr ""
 
@@ -3700,6 +4511,8 @@ msgstr "형식:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
+#. i18n: file: qtplugins/mongochem/mongochemwidget.ui:52
+#. i18n: ectx: property (text), widget (QPushButton, pushDownload)
 msgid "Download"
 msgstr ""
 
@@ -3707,6 +4520,571 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Name:"
 msgstr ""
+
+#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::InsertFragmentDialog)
+msgid "Insert Fragment..."
+msgstr "파편 삽입..."
+
+#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:22
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Filter:"
+msgstr ""
+
+#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:29
+#. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
+msgid "Type a name or part of a name to show only matching files."
+msgstr ""
+
+#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:36
+#. i18n: ectx: property (text), widget (QToolButton, clearToolButton)
+msgid "X"
+msgstr ""
+
+#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:70
+#. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
+#, fuzzy
+msgid "Insert"
+msgstr "삽입(&I)"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
+#, fuzzy
+msgid "LAMMPS Input"
+msgstr "GAMESS 입력"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:37
+#. i18n: ectx: property (toolTip), widget (QLabel, label_7)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:50
+#. i18n: ectx: property (toolTip), widget (QLineEdit, titleLine)
+#, fuzzy
+msgid "Input file comments"
+msgstr "%1 로 이미지가 성공적으로 쓰여졌습니다"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:77
+#. i18n: ectx: property (toolTip), widget (QLabel, label_units)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:97
+#. i18n: ectx: property (toolTip), widget (QComboBox, unitsCombo)
+msgid "Select the unit style to be used during the simulation."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:84
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_units)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:104
+#. i18n: ectx: property (whatsThis), widget (QComboBox, unitsCombo)
+msgid ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
+"#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
+"html>"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
+#. i18n: ectx: property (text), widget (QLabel, label_units)
+#, fuzzy
+msgid "Units"
+msgstr "단위:"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:111
+#. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
+msgid "lj"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:116
+#. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
+msgid "real"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:121
+#. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
+msgid "metal"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:126
+#. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
+msgid "si"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:131
+#. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
+msgid "cgs"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:136
+#. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:236
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+#, fuzzy
+msgid "electron"
+msgstr "선택"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:144
+#. i18n: ectx: property (text), widget (QLabel, label_waterPotential)
+msgid "Water Potential"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:157
+#. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
+msgid "SPC"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:162
+#. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:140
+#. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
+msgid "SPC/E"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:177
+#. i18n: ectx: property (toolTip), widget (QLabel, label_atomstyle)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:197
+#. i18n: ectx: property (toolTip), widget (QComboBox, atomStyleCombo)
+msgid "Select atom_style used by the data file."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:184
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_atomstyle)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:204
+#. i18n: ectx: property (whatsThis), widget (QComboBox, atomStyleCombo)
+msgid ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
+"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
+"p></body></html>"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
+#. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
+#, fuzzy
+msgid "Atom Style"
+msgstr "모양:"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:211
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+#, fuzzy
+msgid "angle"
+msgstr "각도"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:216
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+msgid "atomic"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:221
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+msgid "bond"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:226
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+msgid "charge"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:231
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+#, fuzzy
+msgid "dipole"
+msgstr "쌍극자"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:241
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+msgid "ellipsoid"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:246
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+msgid "full"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:251
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+#, fuzzy
+msgid "line"
+msgstr "발린"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:256
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+msgid "meso"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:261
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+#, fuzzy
+msgid "molecular"
+msgstr "분자"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:266
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+msgid "peri"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:271
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+msgid "sphere"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:276
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+#, fuzzy
+msgid "tri"
+msgstr "이트륨"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:281
+#. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+msgid "wavepacket"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:289
+#. i18n: ectx: property (toolTip), widget (QLabel, label_readdata)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:299
+#. i18n: ectx: property (toolTip), widget (QLineEdit, readDataLine)
+msgid "Specify the name to be used for the coordinate file."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:292
+#. i18n: ectx: property (text), widget (QLabel, label_readdata)
+#, fuzzy
+msgid "Coordinate Data File"
+msgstr "Cartesian 편집기..."
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:306
+#. i18n: ectx: property (text), widget (QLabel, label_therm)
+msgid "Ensemble"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:314
+#. i18n: ectx: property (text), item, widget (QComboBox, ensembleCombo)
+msgid "NVT"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:319
+#. i18n: ectx: property (text), item, widget (QComboBox, ensembleCombo)
+msgid "NVE"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:327
+#. i18n: ectx: property (text), widget (QLabel, label_temp)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:745
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:918
+#. i18n: ectx: property (text), widget (QCheckBox, temperatureCheck)
+msgid "Temperature"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:347
+#. i18n: ectx: property (toolTip), widget (QLabel, label)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:357
+#. i18n: ectx: property (toolTip), widget (QSpinBox, nhChainSpin)
+msgid "Select the number of Nosé-Hoover chains in the NVT ensemble."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:350
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "NH Chains"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:393
+#. i18n: ectx: property (toolTip), widget (QLabel, label_2)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:403
+#. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, stepSpin)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:534
+#. i18n: ectx: property (toolTip), widget (QLabel, label_timestep)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:544
+#. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, stepSpin)
+msgid ""
+"Time step for the simulation in units according to \"Units\" specification."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:396
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Time Step"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:416
+#. i18n: ectx: property (toolTip), widget (QLabel, label_4)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:642
+#. i18n: ectx: property (toolTip), widget (QLineEdit, dumpXYZEdit)
+msgid "Filename of the XYZ file to write during the simulation."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:419
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+msgid "Dump XYZ"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:433
+#. i18n: ectx: property (toolTip), widget (QLabel, label_dimension)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:847
+#. i18n: ectx: property (toolTip), widget (QComboBox, dimensionCombo)
+msgid "Number of dimensions in the system."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:436
+#. i18n: ectx: property (text), widget (QLabel, label_dimension)
+#, fuzzy
+msgid "Dimensions"
+msgstr "확장 기능"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:446
+#. i18n: ectx: property (toolTip), widget (QComboBox, zBoundaryCombo)
+#, fuzzy
+msgid "Change Z boundary style."
+msgstr "결합 차수 변경"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:453
+#. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:493
+#. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:533
+#. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
+#, fuzzy
+msgid "p"
+msgstr "픽셀"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:458
+#. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:498
+#. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:538
+#. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
+msgid "s"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:463
+#. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:503
+#. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:543
+#. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
+msgid "f"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:468
+#. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:508
+#. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:548
+#. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
+#, fuzzy
+msgid "m"
+msgstr "qm"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:473
+#. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:513
+#. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:553
+#. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
+#, fuzzy
+msgid "fs"
+msgstr "초당 프레임 수"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:478
+#. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:518
+#. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:558
+#. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
+msgid "fm"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:486
+#. i18n: ectx: property (toolTip), widget (QComboBox, yBoundaryCombo)
+#, fuzzy
+msgid "Change Y boundary style."
+msgstr "결합 차수 변경"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:526
+#. i18n: ectx: property (toolTip), widget (QComboBox, xBoundaryCombo)
+#, fuzzy
+msgid "Change X boundary style."
+msgstr "결합 차수 변경"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
+#. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
+msgid "Select bondary Styles in X, Y and Z directions."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
+#. i18n: ectx: property (text), widget (QLabel, label_boundary)
+msgid "Boundary"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:589
+#. i18n: ectx: property (toolTip), widget (QLabel, label_5)
+msgid "Number of replicants in X, Y and Z directions."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:592
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+msgid "Replicate"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:612
+#. i18n: ectx: property (toolTip), widget (QSpinBox, xReplicateSpin)
+msgid "Replicate the X direction."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:622
+#. i18n: ectx: property (toolTip), widget (QSpinBox, yReplicateSpin)
+msgid "Replicate the Y direction."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:632
+#. i18n: ectx: property (toolTip), widget (QSpinBox, zReplicateSpin)
+msgid "Replicate the Z direction."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:649
+#. i18n: ectx: property (toolTip), widget (QLabel, label_3)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:659
+#. i18n: ectx: property (toolTip), widget (QSpinBox, runSpin)
+msgid "Total number of timesteps to run the simulation."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:652
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Total Steps"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:685
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+msgid "Dump Interval"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:715
+#. i18n: ectx: property (toolTip), widget (QLabel, label_8)
+msgid "Set the initial atom velocities for the simulation."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:718
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+msgid "Initial Velocities"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:725
+#. i18n: ectx: property (toolTip), widget (QComboBox, velocityDistCombo)
+msgid "Select the distribution of initial atom velocities."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:729
+#. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
+#, fuzzy
+msgid "gaussian"
+msgstr "&Gaussian..."
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:734
+#. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
+msgid "uniform"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:742
+#. i18n: ectx: property (toolTip), widget (QLabel, label_9)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:752
+#. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, velocityTempSpin)
+msgid "Set the initial atom velocities to match this temperature."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:768
+#. i18n: ectx: property (toolTip), widget (QCheckBox, zeroMOMCheck)
+msgid "Remove system linear momentum from initial velocities."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:771
+#. i18n: ectx: property (text), widget (QCheckBox, zeroMOMCheck)
+msgid "Zero Linear Momentum"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:781
+#. i18n: ectx: property (toolTip), widget (QCheckBox, zeroLCheck)
+msgid "Remove system angular momentum from initial velocities."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:784
+#. i18n: ectx: property (text), widget (QCheckBox, zeroLCheck)
+msgid "Zero Angular Momentum"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:807
+#. i18n: ectx: property (toolTip), widget (QLabel, label_10)
+msgid "Control the thermodynamic output during the simulation."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:810
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+#, fuzzy
+msgid "Output"
+msgstr "출력:"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:817
+#. i18n: ectx: property (text), widget (QLabel, label_11)
+msgid "Output Interval"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:854
+#. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
+msgid "2d"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:859
+#. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
+msgid "3d"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:867
+#. i18n: ectx: property (toolTip), widget (QComboBox, thermoStyleCombo)
+msgid "Thermodynamic output style."
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:871
+#. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
+msgid "One Line"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:876
+#. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
+msgid "Multi Line"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:918
+#. i18n: ectx: property (text), widget (QPushButton, resetButton)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:982
+#. i18n: ectx: property (text), widget (QPushButton, resetButton)
+#, fuzzy
+msgid "Reset"
+msgstr "초기화"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:928
+#. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:992
+#. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
+#, fuzzy
+msgid "Use Form"
+msgstr "형식"
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:948
+#. i18n: ectx: property (text), widget (QPushButton, generateButton)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
+#. i18n: ectx: property (text), widget (QPushButton, generateButton)
+#, fuzzy
+msgid "Generate..."
+msgstr "산출..."
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -3746,43 +5124,101 @@ msgstr "원자의 수:"
 msgid "Number of Bonds:"
 msgstr "결합의 수:"
 
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
-#, fuzzy
-msgid "Geometry Optimization Parameters"
-msgstr "구조 최적화"
+#. i18n: file: qtplugins/mongochem/configdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, ConfigDialog)
+msgid "MongoChem Config"
+msgstr ""
 
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#, fuzzy
-msgid "Optimization Method"
-msgstr "최적화"
+#. i18n: file: qtplugins/mongochem/configdialog.ui:20
+#. i18n: ectx: property (text), widget (QLineEdit, girderUrl)
+msgid "http://localhost:8080/api/v1"
+msgstr ""
 
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
+#. i18n: file: qtplugins/mongochem/configdialog.ui:34
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "API Key:"
+msgstr ""
+
+#. i18n: file: qtplugins/mongochem/configdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-msgid "Force field:"
-msgstr "역장:"
+msgid "Base URL:"
+msgstr ""
 
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
-#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: file: qtplugins/mongochem/mongochemwidget.ui:45
+#. i18n: ectx: property (text), widget (QPushButton, pushConfig)
+msgid "Config"
+msgstr ""
+
+#. i18n: file: qtplugins/mongochem/mongochemwidget.ui:59
+#. i18n: ectx: property (text), widget (QPushButton, pushUpload)
+msgid "Upload"
+msgstr ""
+
+#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:21
+#. i18n: ectx: property (text), item, widget (QComboBox, container)
+msgid "Docker"
+msgstr ""
+
+#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:26
+#. i18n: ectx: property (text), item, widget (QComboBox, container)
 #, fuzzy
-msgid "Optimization algorithm:"
-msgstr "최적화"
+msgid "Singularity"
+msgstr "단일체"
+
+#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:34
+#. i18n: ectx: property (text), widget (QLabel, labelContainer)
+msgid "Container:"
+msgstr ""
+
+#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:44
+#. i18n: ectx: property (text), widget (QLabel, labelImage)
+msgid "Image:"
+msgstr ""
+
+#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:54
+#. i18n: ectx: property (text), widget (QLineEdit, image)
+msgid "openchemistry/psi4:latest"
+msgstr ""
+
+#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:99
+#. i18n: ectx: property (html), widget (QTextEdit, inputParameters)
+msgid ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">{</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">    \"theory\": \"dft\",</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">    \"functional\": \"b3lyp\",</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">    \"basis\": \"6-31g\",</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">    \"task\": \"energy\" </span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">}</span></p></body></html>"
+msgstr ""
+
+#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:109
+#. i18n: ectx: property (text), widget (QLabel, labelInputParameters)
+#, fuzzy
+msgid "Input Parameters:"
+msgstr "생성기 입력..."
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Line search technique:"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
-#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
-msgid "Steepest Descent"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
-#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
-msgid "Conjugate Gradient"
 msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
@@ -3794,12 +5230,6 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
 msgid "Newton's Method"
 msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
-#. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
-#, fuzzy
-msgid "Autodetect"
-msgstr "자동 회전"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
@@ -3830,39 +5260,473 @@ msgstr "정전기 전위"
 msgid "Å"
 msgstr ""
 
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:185
-#. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
-#. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
-msgid " steps"
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
+#, fuzzy
+msgid "OpenMM Script Builder"
+msgstr "펩티드 빌더"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:37
+#. i18n: ectx: property (text), widget (QLabel, label_jobScript)
+#, fuzzy
+msgid "Job script:"
+msgstr "설명 없음"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:47
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, jobScriptEdit)
+#, fuzzy
+msgid "script"
+msgstr "스크립트(&S)"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:54
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#, fuzzy
+msgid "Input Coords:"
+msgstr "생성기 입력..."
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:64
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, inputCoordEdit)
+msgid "input.pdb"
 msgstr ""
 
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-#, fuzzy
-msgid "Convergence Criteria"
-msgstr "융합"
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:71
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-msgid "\"Energy\" convergence:"
-msgstr "융합"
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Step limit:"
+msgid "Input Topology:"
 msgstr ""
 
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
-#. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:91
+#. i18n: ectx: property (text), widget (QLabel, label_forceField)
 #, fuzzy
-msgid " units"
-msgstr "단위:"
+msgid "Forcefield:"
+msgstr "역장:"
 
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
-#. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
-msgid "10^"
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:99
+#. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
+msgid "AMBER96"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:104
+#. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
+msgid "AMBER99sb"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:109
+#. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
+msgid "AMBER99sb-ildn"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:114
+#. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
+msgid "AMBER99sb-nmr"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:119
+#. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
+msgid "AMBER03"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:124
+#. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
+msgid "AMBER10"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:132
+#. i18n: ectx: property (text), widget (QLabel, label_waterModel)
+msgid "Water Model:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:145
+#. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
+msgid "TIP3P"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:150
+#. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
+msgid "TIP4P-Ew"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:155
+#. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
+msgid "TIP5P"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:160
+#. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
+msgid "Implicit Solvent (OBC)"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:168
+#. i18n: ectx: property (text), widget (QLabel, label_platform)
+msgid "Platform:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:176
+#. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
+#, fuzzy
+msgid "Reference"
+msgstr "참조(&R):"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
+#. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
+msgid "OpenCL"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:186
+#. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
+msgid "CPU"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:191
+#. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
+msgid "CUDA"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:199
+#. i18n: ectx: property (text), widget (QLabel, label_precision)
+msgid "Precision:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:207
+#. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
+#, fuzzy
+msgid "single"
+msgstr "단일"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:212
+#. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
+msgid "mixed"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:217
+#. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
+#, fuzzy
+msgid "double"
+msgstr "이중"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:225
+#. i18n: ectx: property (text), widget (QLabel, label_deviceIndex)
+msgid "Device Index:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:245
+#. i18n: ectx: property (text), widget (QLabel, label_openCLIndex)
+msgid "OpenCL Platform Index:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:275
+#. i18n: ectx: property (text), widget (QLabel, label_nonbondedMethod)
+msgid "Nonbonded method:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:283
+#. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
+msgid "NoCutoff"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:288
+#. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
+msgid "CutoffNonPeriodic"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:293
+#. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
+msgid "CutoffPeriodic"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:298
+#. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
+msgid "Ewald"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:311
+#. i18n: ectx: property (text), widget (QLabel, label_ewaldTolerance)
+msgid "Ewald Tolerance:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:337
+#. i18n: ectx: property (text), widget (QLabel, label_constraints)
+#, fuzzy
+msgid "Constraints:"
+msgstr "제약조건"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
+#. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:640
+#. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:108
+#. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
+msgid "None"
+msgstr "없음"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
+#. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
+#, fuzzy
+msgid "HBonds"
+msgstr "결합: %L1"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:355
+#. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
+#, fuzzy
+msgid "AllBonds"
+msgstr "결합 제거"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:360
+#. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
+#, fuzzy
+msgid "HAngles"
+msgstr "각:"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:368
+#. i18n: ectx: property (text), widget (QLabel, label_constraintTolerance)
+#, fuzzy
+msgid "Constraint Tolerance:"
+msgstr "제약조건"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:394
+#. i18n: ectx: property (text), widget (QLabel, label_rigidWater)
+msgid "Rigid water?"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:407
+#. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:457
+#. i18n: ectx: property (text), item, widget (QComboBox, initVelCombo)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:813
+#. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
+msgid "False"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:415
+#. i18n: ectx: property (text), widget (QLabel, label_nonBondedCutoff)
+msgid "Nonbonded cutoff:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:437
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, nonBondedCutoffSpin)
+msgid " nm"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:444
+#. i18n: ectx: property (text), widget (QLabel, label_randomInitVel)
+msgid "Random initial velocity:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:465
+#. i18n: ectx: property (text), widget (QLabel, label_generationTemp)
+#, fuzzy
+msgid "Generation Temp:"
+msgstr "세포 생성"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:481
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, generationTemperatureSpin)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:625
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, temperatureSpin)
+msgid " K"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:498
+#. i18n: ectx: property (text), widget (QLabel, label_integrator)
+#, fuzzy
+msgid "Integrator:"
+msgstr "생성기 입력..."
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:506
+#. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
+msgid "Langevin"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:511
+#. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
+msgid "Verlet"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:516
+#. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
+msgid "Brownian"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:521
+#. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
+msgid "VariableLangevin"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:526
+#. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
+msgid "VariableVerlet"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
+#. i18n: ectx: property (text), widget (QLabel, label_timestep)
+msgid "Timestep:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:553
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, stepSpin)
+#, fuzzy
+msgid " fs"
+msgstr "초당 프레임 수"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
+#. i18n: ectx: property (text), widget (QLabel, label_errorTol)
+msgid "Error tolerance:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:586
+#. i18n: ectx: property (text), widget (QLabel, label_collisionRate)
+msgid "Collision rate:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:602
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, collisionRateSpin)
+#, fuzzy
+msgid "/ps"
+msgstr "초당 프레임 수"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
+#. i18n: ectx: property (text), widget (QLabel, label_temperature)
+msgid "Temperature:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:632
+#. i18n: ectx: property (text), widget (QLabel, label_barostat)
+msgid "Barostat:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:645
+#. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
+msgid "Monte Carlo"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:653
+#. i18n: ectx: property (text), widget (QLabel, label_pressure)
+#, fuzzy
+msgid "Pressure:"
+msgstr "초기화"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:669
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, pressureSpin)
+msgid " atm"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:676
+#. i18n: ectx: property (text), widget (QLabel, label_barostatInterval)
+msgid "Barostat Interval"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:703
+#. i18n: ectx: property (text), widget (QLabel, label_reporters)
+msgid "Reporters:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:710
+#. i18n: ectx: property (text), widget (QCheckBox, stateDataCheck)
+#, fuzzy
+msgid "StateData"
+msgstr "자료"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:720
+#. i18n: ectx: property (text), widget (QCheckBox, dcdCheck)
+msgid "DCD"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:730
+#. i18n: ectx: property (text), widget (QCheckBox, pdbCheck)
+#, fuzzy
+msgid "PDB"
+msgstr "PDF"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:740
+#. i18n: ectx: property (text), widget (QLabel, label_reportInterval)
+msgid "Report Interval:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
+#. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
+msgid "Equilibriation Steps:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
+#. i18n: ectx: property (text), widget (QLabel, label_productionSteps)
+msgid "Production Steps:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:800
+#. i18n: ectx: property (text), widget (QLabel, label_minimize)
+msgid "Minimize?"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:821
+#. i18n: ectx: property (text), widget (QLabel, label_minimizeSteps)
+msgid "Max. Minimize Steps:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:841
+#. i18n: ectx: property (text), widget (QLabel, label_stateDataOptions)
+msgid "StateData options:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:848
+#. i18n: ectx: property (text), widget (QCheckBox, stepIndexCheck)
+msgid "Step Index"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
+#. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
+msgid "Time"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:868
+#. i18n: ectx: property (text), widget (QCheckBox, speedCheck)
+msgid "Speed"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:878
+#. i18n: ectx: property (text), widget (QCheckBox, progressCheck)
+msgid "Progress"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:888
+#. i18n: ectx: property (text), widget (QCheckBox, potentialEnergyCheck)
+msgid "Potential Energy"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:898
+#. i18n: ectx: property (text), widget (QCheckBox, kineticEnergyCheck)
+#, fuzzy
+msgid "Kinetic Energy"
+msgstr "에너지"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:908
+#. i18n: ectx: property (text), widget (QCheckBox, totalEnergyCheck)
+#, fuzzy
+msgid "Total Energy"
+msgstr "에너지"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:928
+#. i18n: ectx: property (text), widget (QCheckBox, volumeCheck)
+msgid "Volume"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
+#. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
+#, fuzzy
+msgid "Density"
+msgstr "강도"
+
+#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
+msgid "PDF Plot Options"
+msgstr ""
+
+#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:20
+#. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
+msgid "Maximum Radius:"
+msgstr "최대:"
+
+#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:49
+#. i18n: ectx: property (text), widget (QLabel, label2)
+msgid "Step (dr):"
 msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
@@ -3958,75 +5822,11 @@ msgstr ""
 msgid "Opacity:"
 msgstr "투명도:"
 
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:23
-#. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
-#, fuzzy
-msgid "Surface Dialog"
-msgstr "표면"
-
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:41
-#. i18n: ectx: attribute (title), widget (QWidget, surfaceTab)
-msgid "Surfaces"
-msgstr "표면"
-
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:54
-#. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:71
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "Medium"
-msgstr ""
-
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:61
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "Very Low"
-msgstr ""
-
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:66
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "Low"
-msgstr ""
-
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:76
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "High"
-msgstr ""
-
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:81
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "Very High"
-msgstr ""
-
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:97
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
-msgid " Ang."
-msgstr ""
-
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:166
-#. i18n: ectx: property (text), widget (QLineEdit, isosurfaceLineEdit)
-msgid "0.03"
-msgstr ""
-
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:191
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-msgid "Isosurface Val.:"
-msgstr "등곡면 절단 값"
-
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:201
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-msgid "Resolution:"
-msgstr "해상도:"
-
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:211
+#. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
-msgid "Surface:"
-msgstr "표면"
-
-#. i18n: file: qtplugins/quantumoutput/surfacedialog.ui:228
-#. i18n: ectx: property (text), widget (QPushButton, calculateButton)
-msgid "Calculate"
-msgstr "계산"
+msgid "Apply Color"
+msgstr "매핑된 색상"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
@@ -4050,6 +5850,76 @@ msgstr "애니메이션 시작(&A)"
 #, fuzzy
 msgid "Stop Animation"
 msgstr "애니메이션 중지(&A)"
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
+#. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
+msgid "Create Surfaces"
+msgstr "표면 생성"
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:37
+#. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
+msgid "Surface:"
+msgstr "표면"
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:67
+#. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
+msgid "alpha"
+msgstr ""
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:72
+#. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
+msgid "beta"
+msgstr ""
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
+msgid "Color by:"
+msgstr "채색:"
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:138
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Resolution:"
+msgstr "해상도:"
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:153
+#. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:170
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Medium"
+msgstr ""
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:160
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Very Low"
+msgstr ""
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:165
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Low"
+msgstr ""
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:175
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "High"
+msgstr ""
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:180
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Very High"
+msgstr ""
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:230
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
+msgid "Isosurface Value:"
+msgstr "등곡면 절단 값"
+
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:369
+#. i18n: ectx: property (text), widget (QPushButton, calculateButton)
+msgid "Calculate"
+msgstr "계산"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
@@ -4092,27 +5962,27 @@ msgstr ""
 msgid "Subgroups:"
 msgstr ""
 
-#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:211
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:214
 #. i18n: ectx: property (text), widget (QLabel, toleranceLabel)
 msgid "Tolerance:"
 msgstr ""
 
-#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:222
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:225
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Tight"
 msgstr ""
 
-#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:227
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:230
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Normal"
 msgstr ""
 
-#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:232
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:235
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Loose"
 msgstr ""
 
-#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:240
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:243
 #. i18n: ectx: property (text), widget (QPushButton, detectSymmetryButton)
 msgid "Detect Symmetry"
 msgstr ""
@@ -4152,6 +6022,30 @@ msgstr ""
 "devel@lists.sourceforge.net,lordmiss@lordmiss.com,,loniedavid@gmail.com,,,"
 "avogadro-devel@lists.sourceforge.net,lordmiss@lordmiss.com,,loniedavid@gmail."
 "com"
+
+#, fuzzy
+#~ msgid "Optimize geometry"
+#~ msgstr "&구조 최적화"
+
+#, fuzzy
+#~ msgid "Configure geometry optimization..."
+#~ msgstr "구조 최적화"
+
+#, fuzzy
+#~ msgid "Add hydrogens"
+#~ msgstr "수소 추가"
+
+#, fuzzy
+#~ msgid "Stopped"
+#~ msgstr "중지"
+
+#, fuzzy
+#~ msgid "Calculate electronic surfaces..."
+#~ msgstr "전자 밀도 계산하기"
+
+#, fuzzy
+#~ msgid "Surface Dialog"
+#~ msgstr "표면"
 
 #~ msgid "Color by Index"
 #~ msgstr "색인에 따라 채색"
@@ -4218,12 +6112,6 @@ msgstr ""
 
 #~ msgid "Renders protein secondary structure"
 #~ msgstr "단백질 이차 구조 표현"
-
-#~ msgid "Dipole"
-#~ msgstr "쌍극자"
-
-#~ msgid "Force"
-#~ msgstr "힘"
 
 #~ msgid "Renders force displacements on atoms"
 #~ msgstr "원자의 힘 변위 표시"
@@ -4295,9 +6183,6 @@ msgstr ""
 
 #~ msgid "%1/%2"
 #~ msgstr "%1/%2"
-
-#~ msgid "video files (*.avi)"
-#~ msgstr "비디오 파일 (*.avi)"
 
 #~ msgid "Adding .avi extension"
 #~ msgstr ".avi 확장기능 추가"
@@ -4404,9 +6289,6 @@ msgstr ""
 #~ msgid "Import trajectory files"
 #~ msgstr "궤도 파일 불러오기"
 
-#~ msgid "Setup Force Field..."
-#~ msgstr "힘 영역 설정하기"
-
 #~ msgid "Calculate Energy"
 #~ msgstr "에너지 계산"
 
@@ -4422,14 +6304,8 @@ msgstr ""
 #~ msgid "Fix Selected Atoms"
 #~ msgstr "선택한 원자를 고정"
 
-#~ msgid "&Molecular Mechanics"
-#~ msgstr "&분자 역학"
-
 #~ msgid "Energy = %L1 %2"
 #~ msgstr "에너지 = %L1 %2"
-
-#~ msgid "Geometric Optimization"
-#~ msgstr "구조 최적화"
 
 #~ msgid "Forcefield Optimization"
 #~ msgstr "힘 영역 최적화"
@@ -4444,9 +6320,6 @@ msgstr ""
 
 #~ msgid "&Vector Graphics..."
 #~ msgstr "벡터 그래픽(&V)"
-
-#~ msgid "PDF"
-#~ msgstr "PDF"
 
 #~ msgid "Common vector image formats"
 #~ msgstr "일반적인 벡터 이미지 포맷"
@@ -4492,21 +6365,6 @@ msgstr ""
 
 #~ msgid "Cannot read molecular file %1."
 #~ msgstr "분자 파일 %1을 읽을 수 없습니다."
-
-#~ msgid "Fragment..."
-#~ msgstr "조각..."
-
-#~ msgid "Insert SMILES"
-#~ msgstr "SMILES 삽입"
-
-#~ msgid "Insert SMILES fragment:"
-#~ msgstr "SMILES 조각 삽입:"
-
-#~ msgid "Insert Fragment"
-#~ msgstr "조각 삽입"
-
-#~ msgid "Insert molecular fragments for building larger molecules"
-#~ msgstr "더 큰 분자를 만들기 위해 분자 조각 삽입"
 
 #~ msgid "Peptide..."
 #~ msgstr "펩티드..."
@@ -4673,9 +6531,6 @@ msgstr ""
 #~ msgid "Angle %1"
 #~ msgstr "각 %1"
 
-#~ msgid "Angle"
-#~ msgstr "각도"
-
 #~ msgid "Atom %1"
 #~ msgstr "원자 %1"
 
@@ -4713,14 +6568,8 @@ msgstr ""
 #~ msgid "SMILES Format Conversion Not Available!"
 #~ msgstr "SMILES 포맷 변환이 불가능합니다!"
 
-#~ msgid "Group Name"
-#~ msgstr "그룹 이름"
-
 #~ msgid " ("
 #~ msgstr " ("
-
-#~ msgid "qm"
-#~ msgstr "qm"
 
 #~ msgid "efp"
 #~ msgstr "efp"
@@ -4767,13 +6616,6 @@ msgstr ""
 #~ msgid "Gaussian Input Deck Generator Warning"
 #~ msgstr "가우스 입력 데크 생성기 경고"
 
-#~ msgid ""
-#~ "Would you like to update the preview text, losing all changes made in the "
-#~ "Gaussian input deck preview pane?"
-#~ msgstr ""
-#~ "가우스 입력 데크 미리보기 창에서 만들어진 모든 변경사항을 잃고, 이전의 텍"
-#~ "스트를 업데이트 하시겠습니까?"
-
 #~ msgid "Gaussian Running."
 #~ msgstr "가우스 실행중"
 
@@ -4804,14 +6646,8 @@ msgstr ""
 #~ "가우스가 정확하게 동작하지 않습니다. 아마도 완전히 설치되지 않은 것으로 보"
 #~ "입니다."
 
-#~ msgid "&Gaussian..."
-#~ msgstr "&Gaussian..."
-
 #~ msgid "&MOLPRO..."
 #~ msgstr "&MOLPRO..."
-
-#~ msgid "M&OPAC..."
-#~ msgstr "M&OPAC..."
 
 #~ msgid "&NWChem..."
 #~ msgstr "&NWChem..."
@@ -4821,13 +6657,6 @@ msgstr ""
 
 #~ msgid "MOPAC Input Warning"
 #~ msgstr "MOPAC 입력 경고"
-
-#~ msgid ""
-#~ "Would you like to update the preview text, losing all changes made in the "
-#~ "MOPAC input deck preview pane?"
-#~ msgstr ""
-#~ "MOPAC 입력 데크 미리보기에서 만들어진 모든 변경사항을 잃고, 이전의 텍스트"
-#~ "를 업데이트 하시겠습니까?"
 
 #~ msgid "MOPAC Running."
 #~ msgstr "MOPAC 실행중."
@@ -4933,9 +6762,6 @@ msgstr ""
 #~ "지금 연 분자의 vibration 데이터에는 intensity 값이 없습니다. Intensity는 "
 #~ "시각화를 위해 임의의 값이 주어집니다."
 
-#~ msgid "Intensity"
-#~ msgstr "강도"
-
 #~ msgid "X Axis"
 #~ msgstr "X 축"
 
@@ -4944,9 +6770,6 @@ msgstr ""
 
 #~ msgid "&Appearance"
 #~ msgstr "모양(&A)"
-
-#~ msgid "E&xport Image"
-#~ msgstr "이미지 내보내기(&E)"
 
 #~ msgctxt "Infrared spectra option"
 #~ msgid "Infrared"
@@ -5103,19 +6926,9 @@ msgstr ""
 #~ msgid "Electron Density"
 #~ msgstr "전자 밀도"
 
-#~ msgctxt "Molecular orbital surface type"
-#~ msgid "Molecular Orbital"
-#~ msgstr "분자 오비탈"
-
 #~ msgctxt "Undefined cube type"
 #~ msgid "Error - undefined type"
 #~ msgstr "오류 - 정의되지 않은 타입"
-
-#~ msgid "Create Surfaces..."
-#~ msgstr "표면 형성..."
-
-#~ msgid "Electron Density"
-#~ msgstr "전자 밀도"
 
 #~ msgid "Insert Nanotube"
 #~ msgstr "나노튜브 삽입"
@@ -5146,9 +6959,6 @@ msgstr ""
 
 #~ msgid "Atoms: %L1"
 #~ msgstr "원자: %L1"
-
-#~ msgid "Bonds: %L1"
-#~ msgstr "결합: %L1"
 
 #~ msgid "Could not open file '%1' for writing."
 #~ msgstr "쓰기 위한 '%1' 파일을 불러올 수 없습니다."
@@ -5234,9 +7044,6 @@ msgstr ""
 
 #~ msgid "Algorithm:"
 #~ msgstr "알고리즘:"
-
-#~ msgid "Molecular Dynamics (300K)"
-#~ msgstr "분자동역학 (300K)"
 
 #~ msgid "Molecular Dynamics (600K)"
 #~ msgstr "분자동역학 (600K)"
@@ -5440,9 +7247,6 @@ msgstr ""
 #~ msgid "Cut-off angle:"
 #~ msgstr "각 잘라내기:"
 
-#~ msgid "None"
-#~ msgstr "없음"
-
 #~ msgid "Symbol & Atom number"
 #~ msgstr "기호 & 원자 번호"
 
@@ -5460,9 +7264,6 @@ msgstr ""
 
 #~ msgid "Bond order"
 #~ msgstr "결합 차수"
-
-#~ msgid "Rendering:"
-#~ msgstr "렌더링:"
 
 #~ msgid "Radius:"
 #~ msgstr "반지름:"
@@ -5485,14 +7286,8 @@ msgstr ""
 #~ msgid "Draw Box:"
 #~ msgstr "그리기 상자:"
 
-#~ msgid "Style:"
-#~ msgstr "모양:"
-
 #~ msgid "Selected Colors"
 #~ msgstr "선택된 색상"
-
-#~ msgid "Mapped Colors"
-#~ msgstr "매핑된 색상"
 
 #~ msgid "Colors:"
 #~ msgstr "색상:"
@@ -5516,9 +7311,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "반복"
 
-#~ msgid "fps"
-#~ msgstr "초당 프레임 수"
-
 #~ msgid "Save as .avi..."
 #~ msgstr "avi 형식으로 저장하기"
 
@@ -5527,12 +7319,6 @@ msgstr ""
 
 #~ msgid "Number of rotatable bonds:"
 #~ msgstr "회전가능한 결합의 수:"
-
-#~ msgid "Energy"
-#~ msgstr "에너지"
-
-#~ msgid "Constraints"
-#~ msgstr "제약조건"
 
 #~ msgid "Add Constraints"
 #~ msgstr "제약조건 추가"
@@ -5590,12 +7376,6 @@ msgstr ""
 
 #~ msgid "Other"
 #~ msgstr "기타"
-
-#~ msgid "Insert Fragment..."
-#~ msgstr "파편 삽입..."
-
-#~ msgid "Peptide Builder"
-#~ msgstr "펩티드 빌더"
 
 #~ msgid "Alanine"
 #~ msgstr "알라닌"
@@ -5657,9 +7437,6 @@ msgstr ""
 #~ msgid "Ile"
 #~ msgstr "이소류신(Ile)"
 
-#~ msgid "Valine"
-#~ msgstr "발린"
-
 #~ msgid "Val"
 #~ msgstr "발린(Val)"
 
@@ -5689,9 +7466,6 @@ msgstr ""
 
 #~ msgid "Proline"
 #~ msgstr "프롤린"
-
-#~ msgid "Pro"
-#~ msgstr "프롤린(Pro)"
 
 #~ msgid "Phenylalanine"
 #~ msgstr "페닐알라닌"
@@ -5771,9 +7545,6 @@ msgstr ""
 #~ msgid "Advanced"
 #~ msgstr "고급"
 
-#~ msgid "Data"
-#~ msgstr "자료"
-
 #~ msgid "Nothing"
 #~ msgstr "없음"
 
@@ -5801,17 +7572,11 @@ msgstr ""
 #~ msgid "Alpha transparency"
 #~ msgstr "알파 투명"
 
-#~ msgid "Command:"
-#~ msgstr "명령:"
-
 #~ msgid "Compute..."
 #~ msgstr "계산..."
 
 #~ msgid "AM1"
 #~ msgstr "AM1"
-
-#~ msgid "PM3"
-#~ msgstr "PM3"
 
 #~ msgid "&Advanced Setup"
 #~ msgstr "고급 설정(&A)"
@@ -5881,9 +7646,6 @@ msgstr ""
 #~ msgid "Grid-Free"
 #~ msgstr "격자 없애기"
 
-#~ msgid "Maximum:"
-#~ msgstr "최대:"
-
 #~ msgid "Minimum:"
 #~ msgstr "최소:"
 
@@ -5892,9 +7654,6 @@ msgstr ""
 
 #~ msgid "Standard"
 #~ msgstr "표준"
-
-#~ msgid "MOLPRO Input"
-#~ msgstr "MOLPRO 입력"
 
 #~ msgid "NWChem Input"
 #~ msgstr "NWChem 입력"
@@ -5965,9 +7724,6 @@ msgstr ""
 #~ msgid "in"
 #~ msgstr "in"
 
-#~ msgid "px"
-#~ msgstr "픽셀"
-
 #~ msgid "&Save Image..."
 #~ msgstr "이미지 저장(&S)..."
 
@@ -5976,9 +7732,6 @@ msgstr ""
 
 #~ msgid "Nucleus:"
 #~ msgstr "원자핵:"
-
-#~ msgid "&Reference:"
-#~ msgstr "참조(&R):"
 
 #~ msgid "ppm"
 #~ msgstr "ppm"
@@ -5995,17 +7748,8 @@ msgstr ""
 #~ msgid "Display force &vectors"
 #~ msgstr "힘, 벡터 표시"
 
-#~ msgid "Generate Cell"
-#~ msgstr "세포 생성"
-
-#~ msgid "Create Surfaces"
-#~ msgstr "표면 생성"
-
 #~ msgid "Surface Type:"
 #~ msgstr "표면 형식:"
-
-#~ msgid "Color By:"
-#~ msgstr "채색:"
 
 #~ msgctxt "low resolution"
 #~ msgid "Low"
