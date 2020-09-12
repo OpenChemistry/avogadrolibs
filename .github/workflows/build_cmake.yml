@@ -8,10 +8,10 @@ on: [push, pull_request]
 
 env:
   BUILD_TYPE: Release
-  QT_VERSION: 5.12.8
+  QT_VERSION: 5.12.9
   MACOSX_DEPLOYMENT_TARGET: 10.12
   CCACHE_VERSION: 3.7.7
-  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON 
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON
 
 jobs:
   build:
@@ -22,8 +22,15 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu Latest GCC", artifact: "Linux.tar.gz",
-            os: ubuntu-latest,
+            name: "Ubuntu 20.04 GCC", artifact: "Ubuntu2004.tar.gz",
+            os: ubuntu-20.04,
+            cc: "gcc", cxx: "g++",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
+            cpack: "",
+          }
+        - {
+            name: "Ubuntu 18.04 GCC", artifact: "Ubuntu1804.tar.gz",
+            os: ubuntu-18.04,
             cc: "gcc", cxx: "g++",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
             cpack: "",
@@ -47,7 +54,9 @@ jobs:
 
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
-      run: sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
