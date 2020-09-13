@@ -149,6 +149,5 @@ jobs:
       uses: peter-evans/repository-dispatch@v1
       with:
         token: ${{ secrets.PAT }}
-        repository: openchemistry/avogadrolibs
-        event-type: my-event
+        event-type: pr-build
         client-payload: '{"prnumber": "${{ github.event.number }}", "checkrunid": "${{ github.run_id }}"}'
