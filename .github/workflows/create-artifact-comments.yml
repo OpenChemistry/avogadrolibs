@@ -1,0 +1,45 @@
+# Many thanks to weide-zhou
+# https://github.community/t/making-links-to-artifacts-available-from-pull-requests/18236
+
+name: create comment with artifacts
+on:
+  repository_dispatch:
+jobs:
+  repoBjobs:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: echo values for debugging
+        run: |
+          echo ${{ github.event.client_payload.prnumber }}
+          echo ${{ github.event.client_payload.checkrunid }}
+
+      - name: get check_suite_id
+        id: getsuiteid
+        run: |
+          URL="https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.client_payload.checkrunid }}"
+          check_suite_id=$(curl -s -u admin:${{ secrets.GITHUB_TOKEN }} $URL | jq -r '.check_suite_url' | awk -F "/" '{print $NF}')
+          echo $check_suite_id
+          echo "::set-output name=suiteid::$check_suite_id"
+
+      - name: get artifacts_id
+        id: getartid
+        run: |
+          URL="https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.client_payload.checkrunid }}/artifacts"
+          artifacts_id=$(curl -s -u admin:${{ secrets.GITHUB_TOKEN }} $URL | jq '.artifacts[].id')
+          echo $artifacts_id
+          echo "::set-output name=artid::$artifacts_id"
+
+      - name: check url
+        id: checkurl
+        run: |
+          echo https://github.com/${{ github.repository }}/suites/${{ steps.getsuiteid.outputs.suiteid }}/artifacts/${{ steps.getartid.outputs.artid }}
+          expire_date=$(date -d "+90 days")
+          echo $expire_date
+          echo "::set-output name=expire::$expire_date"
+
+      - name: comment pr
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.client_payload.prnumber }}
+          body: |
+            Binary builds are available until ${{ steps.checkurl.outputs.expire }} at https://github.com/${{ github.repository }}/suites/${{ steps.getsuiteid.outputs.suiteid }}/artifacts/${{ steps.getartid.outputs.artid }}
