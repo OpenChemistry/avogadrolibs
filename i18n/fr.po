@@ -1,17 +1,20 @@
+# Éfrit <efrit@posteo.net>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2017-02-06 21:31+0000\n"
-"Last-Translator: Jean-Marc <Unknown>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2020-09-19 22:39+0000\n"
+"Last-Translator: Éfrit <efrit@posteo.net>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/fr/>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.3-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -573,15 +576,15 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Aucune molécule définie dans le format du fichier d’arrière-plan !"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Aucun Io::FileFormat défini dans le format du fichier d’arrière-plan !"
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Aucun nom de fichier défini dans le format du fichier d’arrière-plan !"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
@@ -1139,9 +1142,8 @@ msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
-#, fuzzy
 msgid "Untitled"
-msgstr "sans titre"
+msgstr "Sans titre"
 
 #: qtgui/multiviewwidget.cpp:203
 #, fuzzy
@@ -1362,9 +1364,8 @@ msgstr "&Fichier"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/vrml/vrml.cpp:58
-#, fuzzy
 msgid "&Export"
-msgstr "Exporter"
+msgstr "&Exporter"
 
 #: qtplugins/3dmol/3dmol.h:42
 #, fuzzy
@@ -1394,9 +1395,8 @@ msgstr "Fichiers de résultat Orca"
 #: qtplugins/openmminput/openmminput.cpp:57
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
 msgid "&Extensions"
-msgstr "Extensions"
+msgstr "&Extensions"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -1883,33 +1883,30 @@ msgstr "Entrée Turbomole"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:42:258
-#, fuzzy
 msgid "Copy"
-msgstr "Tout copier"
+msgstr "Copier"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
 #: qtplugins/copypaste/copypaste.cpp:43:255
-#, fuzzy
 msgid "Cut"
-msgstr "Personnalisée"
+msgstr "Couper"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:44:267
-#, fuzzy
 msgid "Clear"
-msgstr "Tout effacer"
+msgstr "Effacer"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
 #: qtplugins/copypaste/copypaste.cpp:45:261
 msgid "Paste"
-msgstr ""
+msgstr "Coller"
 
 #: qtplugins/copypaste/copypaste.cpp:78
 msgid "&Edit"
-msgstr ""
+msgstr "&Éditer"
 
 #: qtplugins/copypaste/copypaste.cpp:96
 msgid "Error Clipping Molecule"
@@ -2417,9 +2414,8 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
-#, fuzzy
 msgid "&Import"
-msgstr "Importer"
+msgstr "&Importer"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
@@ -2530,13 +2526,12 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:55
 msgid "InChI"
-msgstr ""
+msgstr "InChI"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:56
 #: qtplugins/mongochem/listmoleculesmodel.cpp:83
-#, fuzzy
 msgid "SMILES"
-msgstr "SMILES..."
+msgstr "SMILES"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:98
 #: qtplugins/lineformatinput/lineformatinput.cpp:122
@@ -2669,9 +2664,8 @@ msgid "Navigate"
 msgstr "Naviguer"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Naviguer"
+msgstr "Naviguer dans l’outil"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
@@ -3074,9 +3068,8 @@ msgid "Movie (*.mp4)"
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:243
-#, fuzzy
 msgid "Export Bitmap Graphics"
-msgstr "Exporter les graphismes vectoriels"
+msgstr "Exporter les graphismes matriciels"
 
 #: qtplugins/playertool/playertool.cpp:244
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
@@ -3110,9 +3103,9 @@ msgid "Error: cannot add frame to video."
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:365 qtplugins/surfaces/surfaces.cpp:492
-#, fuzzy, qt-format
+#, qt-format
 msgid "Cannot save file %1."
-msgstr "Impossible de lire le fichier %1."
+msgstr "Impossible d’enregistrer le fichier %1."
 
 #: qtplugins/playertool/playertool.h:46
 msgid "Player tool"
@@ -3281,7 +3274,7 @@ msgstr "Créer des fichiers d'entrée pour les logiciels de chimie quantique"
 
 #: qtplugins/resetview/resetview.cpp:37
 msgid "Center"
-msgstr ""
+msgstr "Centrer"
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
@@ -3306,14 +3299,12 @@ msgid "Load file reader/writers from external scripts."
 msgstr ""
 
 #: qtplugins/select/select.cpp:34
-#, fuzzy
 msgid "Select All"
-msgstr "Tout supprimer"
+msgstr "Tout sélectionner"
 
 #: qtplugins/select/select.cpp:39
-#, fuzzy
 msgid "Select None"
-msgstr "Sélection"
+msgstr "Ne rien sélectionner"
 
 #: qtplugins/select/select.cpp:48
 #, fuzzy
@@ -3793,9 +3784,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
-#, fuzzy
 msgid "Ctrl+C"
-msgstr "Ctrl+Alt+O"
+msgstr "Ctrl+C"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
 #. i18n: ectx: property (text), widget (QPushButton, exitButton)
