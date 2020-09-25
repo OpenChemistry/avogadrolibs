@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Oğuz Ersen <oguzersen@protonmail.com>, 2020.
+# Talking Panda <memredogan3626@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
 "PO-Revision-Date: 2020-09-26 17:40+0000\n"
-"Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
+"Last-Translator: Talking Panda <memredogan3626@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
 "Language: tr\n"
@@ -1543,7 +1544,7 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragmentextension.cpp:97
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
-msgstr "İnşa Et"
+msgstr "&İnşa Et"
 
 #: qtplugins/bonding/bonding.cpp:65
 msgid "Bond"
@@ -1853,29 +1854,29 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:42:258
 msgid "Copy"
-msgstr ""
+msgstr "Kopyala"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
 #: qtplugins/copypaste/copypaste.cpp:43:255
 msgid "Cut"
-msgstr ""
+msgstr "Kes"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:44:267
 msgid "Clear"
-msgstr ""
+msgstr "Temizle"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
 #: qtplugins/copypaste/copypaste.cpp:45:261
 msgid "Paste"
-msgstr ""
+msgstr "Yapıştır"
 
 #: qtplugins/copypaste/copypaste.cpp:78
 msgid "&Edit"
-msgstr ""
+msgstr "&Düzenle"
 
 #: qtplugins/copypaste/copypaste.cpp:96
 msgid "Error Clipping Molecule"
@@ -2585,7 +2586,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
 #: qtplugins/resetview/resetview.cpp:54 qtplugins/symmetry/symmetry.cpp:94
 msgid "&View"
-msgstr "&Görünüm"
+msgstr "&Göster"
 
 #: qtplugins/molecularproperties/molecularproperties.h:42
 msgid "Molecular Properties"
@@ -3048,9 +3049,9 @@ msgid "Error: cannot add frame to video."
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:365 qtplugins/surfaces/surfaces.cpp:492
-#, fuzzy, qt-format
+#, qt-format
 msgid "Cannot save file %1."
-msgstr "%1 dosyası okunamıyor."
+msgstr "Dosya kaydedilemiyor %1."
 
 #: qtplugins/playertool/playertool.h:46
 msgid "Player tool"
@@ -3215,7 +3216,7 @@ msgstr "Kuantum kimya paketleri için girdi dosyaları yarat"
 
 #: qtplugins/resetview/resetview.cpp:37
 msgid "Center"
-msgstr ""
+msgstr "Ortala"
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
@@ -3238,14 +3239,13 @@ msgid "Load file reader/writers from external scripts."
 msgstr ""
 
 #: qtplugins/select/select.cpp:34
-#, fuzzy
 msgid "Select All"
-msgstr "&Seç"
+msgstr "Tümünü Seç"
 
 #: qtplugins/select/select.cpp:39
 #, fuzzy
 msgid "Select None"
-msgstr "Seçimler"
+msgstr "Hiçbirini Seçme"
 
 #: qtplugins/select/select.cpp:48
 #, fuzzy
@@ -3711,9 +3711,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
-#, fuzzy
 msgid "Ctrl+C"
-msgstr "Ctrl+Alt+O"
+msgstr "Ctrl+C"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
 #. i18n: ectx: property (text), widget (QPushButton, exitButton)
