@@ -231,7 +231,6 @@ void QTAIMLSODAIntegrator::f(int neq, double t, double* y, double* ydot)
       break;
     default:
       qDebug() << "Catastrophic: No ODE parameters for this property.";
-      exit(1);
       break;
   }
 
