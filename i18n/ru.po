@@ -4,20 +4,24 @@
 #
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Yuri Kozlov <yuray@komyakino.ru>, 2011.
+# Artem <KovalevArtem.ru@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2016-06-10 06:53+0000\n"
-"Last-Translator: ManDrive <roman_romul@mail.ru>\n"
-"Language-Team: Russian <debian-l10n-russian@lists.debian.org>\n"
+"PO-Revision-Date: 2020-09-29 13:40+0000\n"
+"Last-Translator: Artem <KovalevArtem.ru@gmail.com>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.3-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -1128,9 +1132,8 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:258
-#, fuzzy
 msgid "All files (*);;"
-msgstr "Все файлы"
+msgstr "Все файлы (*);;"
 
 #: qtgui/fileformatdialog.cpp:261
 #, qt-format
@@ -1499,9 +1502,8 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:190
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:75:147
-#, fuzzy
 msgid "Success"
-msgstr "Успешно!"
+msgstr "Успешно"
 
 #: qtplugins/apbs/apbsdialog.cpp:191
 #, fuzzy, qt-format
@@ -2538,9 +2540,8 @@ msgstr "SMILES..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:98
 #: qtplugins/lineformatinput/lineformatinput.cpp:122
-#, fuzzy
 msgid "No descriptors found!"
-msgstr "Нет описания"
+msgstr "Нет описания!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:99
 msgid "No line format readers found!"
@@ -3127,9 +3128,8 @@ msgid "Failed to generate PDF pattern"
 msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.cpp:133 qtplugins/plotxrd/plotxrd.cpp:131
-#, fuzzy
 msgid "Error message: "
-msgstr "Это сообщение об ошибке!"
+msgstr "Сообщение об ошибке: "
 
 #: qtplugins/plotpdf/plotpdf.h:44
 msgid "PlotPdf"
