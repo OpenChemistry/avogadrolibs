@@ -527,6 +527,24 @@ public:
   double mass() const;
 
   /**
+   * @return The center of geometry of the molecule obtained by summing the
+   * coordinates of the atoms.
+   */
+  Vector3 centerOfGeometry() const;
+
+  /**
+   * @return The center of mass of the molecule obtained by summing the
+   * coordinates of the atoms weighted by mass.
+   */
+  Vector3 centerOfMass() const;
+
+  /**
+   * @return The minimum radius of a sphere centered on centerOfGeometry
+   * containing all the centers of the atoms.
+   */
+  double radius() const;
+
+  /**
    * Set the basis set for the molecule, note that the molecule takes ownership
    * of the object.
    */
