@@ -694,6 +694,35 @@ double Molecule::mass() const
   return m;
 }
 
+Vector3 Molecule::centerOfGeometry() const
+{
+  Vector3 center(0.0, 0.0, 0.0);
+  for (Index i = 0; i < atomCount(); ++i)
+    center += atom(i).position3d();
+  return center / atomCount();
+}
+
+Vector3 Molecule::centerOfMass() const
+{
+  Vector3 center(0.0, 0.0, 0.0);
+  for (Index i = 0; i < atomCount(); ++i) {
+    AtomType curr_atom = atom(i);
+    center += (curr_atom.position3d() * Elements::mass(curr_atom.atomicNumber()));
+  }
+  center /= mass();
+  center /= atomCount();
+  return center;
+}
+
+double Molecule::radius() const
+{
+  double radius = 0.0;
+  if (atomCount() > 0) {
+    radius = (centerOfGeometry() - atom(0).position3d()).norm();
+  }
+  return radius;
+}
+
 Array<double> Molecule::vibrationFrequencies() const
 {
   return m_vibrationFrequencies;
