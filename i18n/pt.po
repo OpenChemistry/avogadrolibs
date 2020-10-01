@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Editor Do Sonic BR <sonicbr12345@gmail.com>, 2020.
+# ssantos <ssantos@web.de>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2020-09-12 19:10+0000\n"
-"Last-Translator: Editor Do Sonic BR <sonicbr12345@gmail.com>\n"
+"PO-Revision-Date: 2020-10-02 15:04+0000\n"
+"Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
 "Language: pt\n"
@@ -36,7 +37,7 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:187 qtgui/interfacescript.cpp:193
 #: qtgui/interfacescript.cpp:289
 msgid "Non-string warning returned."
-msgstr "Aviso não-string retornado."
+msgstr "Aviso não-cadeia retornado."
 
 #: molequeue/inputgenerator.cpp:190 qtgui/interfacescript.cpp:196
 #: qtgui/interfacescript.cpp:292
@@ -3100,9 +3101,9 @@ msgid "Error: cannot add frame to video."
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:365 qtplugins/surfaces/surfaces.cpp:492
-#, fuzzy, qt-format
+#, qt-format
 msgid "Cannot save file %1."
-msgstr "Não foi possível ler o arquivo %1"
+msgstr "Não foi possível gravar o ficheiro %1."
 
 #: qtplugins/playertool/playertool.h:46
 msgid "Player tool"
@@ -3241,7 +3242,7 @@ msgstr "Abrir Ficheiro WFN"
 
 #: qtplugins/qtaim/qtaimextension.cpp:123
 msgid "WFN files (*.wfn);;All files (*.*)"
-msgstr "Arquivos WFN (*.wfn);;Todos os ficheiros (*.*)"
+msgstr "Ficheiros WFN (*.wfn);;Todos os ficheiros (*.*)"
 
 #: qtplugins/qtaim/qtaimextension.h:36
 msgid "QTAIM extension"
