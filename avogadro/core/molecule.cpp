@@ -723,6 +723,35 @@ double Molecule::radius() const
   return radius;
 }
 
+std::pair<Vector3, Vector3> Molecule::bestFitPlane() const
+{
+  return bestFitPlane(atomPositions3d());
+}
+
+std::pair<Vector3, Vector3> Molecule::bestFitPlane(const Array<Vector3>& pos)
+{
+  // copy coordinates to matrix in Eigen format
+  size_t num_atoms = pos.size();
+  assert(num_atoms >= 3);
+  Eigen::Matrix<Vector3::Scalar, Eigen::Dynamic, Eigen::Dynamic> coord(
+    3, num_atoms);
+  for (size_t i = 0; i < num_atoms; ++i) {
+    coord.col(i) = pos[i];
+  }
+
+  // calculate centroid
+  Vector3 centroid = coord.rowwise().mean();
+
+  // subtract centroid
+  coord.colwise() -= centroid;
+
+  // we only need the left-singular matrix
+  auto svd = coord.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
+  Vector3 plane_normal = svd.matrixU().rightCols<1>();
+
+  return std::make_pair(centroid, plane_normal);
+}
+
 Array<double> Molecule::vibrationFrequencies() const
 {
   return m_vibrationFrequencies;
