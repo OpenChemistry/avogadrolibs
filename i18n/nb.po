@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2020-10-09 09:26+0000\n"
+"PO-Revision-Date: 2020-10-13 14:26+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/nb_NO/>\n"
@@ -218,9 +218,9 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:333
-#, fuzzy, qt-format
+#, qt-format
 msgid "Submit %1 Calculation"
-msgstr "Avbryt beregning"
+msgstr "Send inn %1-beregning"
 
 #: molequeue/inputgeneratorwidget.cpp:349
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1025
@@ -289,7 +289,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:479
 #, fuzzy, qt-format
 msgid "Failed to write to file %1."
-msgstr "Kan ikke skrive til fil."
+msgstr "Kan ikke skrive til filen %1."
 
 #: molequeue/inputgeneratorwidget.cpp:507
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:255
@@ -1881,12 +1881,14 @@ msgid "Error generating clipboard data."
 msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:98
-#, fuzzy, qt-format
+#, qt-format
 msgctxt "file format"
 msgid ""
 "Output format: %1\n"
 "%2"
-msgstr "Kunne ikke velge formatet: %1"
+msgstr ""
+"Utdataformat: %1\n"
+"%2"
 
 #: qtplugins/copypaste/copypaste.cpp:102 qtplugins/copypaste/copypaste.cpp:192
 #, qt-format
@@ -1908,12 +1910,14 @@ msgid "Error reading clipboard data."
 msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:188
-#, fuzzy, qt-format
+#, qt-format
 msgctxt "file format description"
 msgid ""
 "Detected format: %1\n"
 "%2"
-msgstr "Kunne ikke velge formatet: %1"
+msgstr ""
+"Oppdaget format: %1\n"
+"%2"
 
 #: qtplugins/copypaste/copypaste.h:42
 msgid "Copy and paste"
@@ -2195,9 +2199,9 @@ msgid "Distance:"
 msgstr "Avstand(er):"
 
 #: qtplugins/editor/editor.cpp:235
-#, fuzzy, qt-format
+#, qt-format
 msgid "Distance: %L1 Å"
-msgstr "Avstand(er):"
+msgstr "Avstand: %L1 Å"
 
 #: qtplugins/editor/editor.h:44 qtplugins/editor/editor.h:45
 msgid "Editor tool"
@@ -3472,9 +3476,9 @@ msgid "∞"
 msgstr ""
 
 #: qtplugins/symmetry/symmetrywidget.cpp:360
-#, fuzzy, qt-format
+#, qt-format
 msgid "Group %1"
-msgstr "Gruppenavn"
+msgstr "Gruppe %1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:368
 #, qt-format
