@@ -4,13 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Oğuz Ersen <oguzersen@protonmail.com>, 2020.
 # Talking Panda <memredogan3626@gmail.com>, 2020.
+# Suleyman Poyraz <zaryob.dev@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2020-09-26 17:40+0000\n"
-"Last-Translator: Talking Panda <memredogan3626@gmail.com>\n"
+"PO-Revision-Date: 2020-10-12 20:26+0000\n"
+"Last-Translator: Suleyman Poyraz <zaryob.dev@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
 "Language: tr\n"
@@ -24,7 +25,7 @@ msgstr ""
 #: molequeue/batchjob.cpp:84
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "Toplu İş #%L1 (%2)"
 
 #: molequeue/inputgenerator.cpp:81 qtgui/interfacescript.cpp:70
 #, qt-format
@@ -570,15 +571,15 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "BackgroundFileFormat'ta molekül ayarlanmadı!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Arka Plan Dosya Biçiminde Io::FileFormat ayarlanmadı!"
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "BackgroundFileFormat'ta dosya adı ayarlanmadı!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
@@ -1133,9 +1134,8 @@ msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
-#, fuzzy
 msgid "Untitled"
-msgstr "Başlık"
+msgstr "İsimsiz"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
@@ -1349,9 +1349,8 @@ msgstr "&Dosya"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/vrml/vrml.cpp:58
-#, fuzzy
 msgid "&Export"
-msgstr "Dışa Aktar"
+msgstr "&Dışa Aktar"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1380,9 +1379,8 @@ msgstr "Parametre dosyası aç"
 #: qtplugins/openmminput/openmminput.cpp:57
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
 msgid "&Extensions"
-msgstr "Genişletmeler"
+msgstr "&Eklentiler"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -2372,9 +2370,8 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
-#, fuzzy
 msgid "&Import"
-msgstr "İçe Aktar"
+msgstr "&İçe Aktar"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
@@ -2618,9 +2615,8 @@ msgid "Navigate"
 msgstr "Gezinme"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Gezinme"
+msgstr "Gezinme aracı"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
@@ -3243,7 +3239,6 @@ msgid "Select All"
 msgstr "Tümünü Seç"
 
 #: qtplugins/select/select.cpp:39
-#, fuzzy
 msgid "Select None"
 msgstr "Hiçbirini Seçme"
 
