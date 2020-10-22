@@ -2,21 +2,23 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-#
+# Gustavo Sousa Jr <grsousajunior@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2017-08-31 19:31+0000\n"
-"Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
-"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"PO-Revision-Date: 2020-10-22 13:26+0000\n"
+"Last-Translator: Gustavo Sousa Jr <grsousajunior@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
+"avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.3.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:00+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -575,15 +577,15 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Nenhuma molécula definida em BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Nenhum Io::FileFormat definido em BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Nenhum nome de arquivo definido em BackgroundFileFormat!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
@@ -1141,9 +1143,8 @@ msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
-#, fuzzy
 msgid "Untitled"
-msgstr "sem título"
+msgstr "Sem título"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
@@ -1362,9 +1363,8 @@ msgstr "&Arquivo"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/vrml/vrml.cpp:58
-#, fuzzy
 msgid "&Export"
-msgstr "Exportar"
+msgstr "&Exportar"
 
 #: qtplugins/3dmol/3dmol.h:42
 #, fuzzy
@@ -1394,9 +1394,8 @@ msgstr "Arquivo de Saída Orca"
 #: qtplugins/openmminput/openmminput.cpp:57
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
 msgid "&Extensions"
-msgstr "Extensões"
+msgstr "&Extensões"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -1900,30 +1899,29 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:42:258
 msgid "Copy"
-msgstr ""
+msgstr "Copiar"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
 #: qtplugins/copypaste/copypaste.cpp:43:255
-#, fuzzy
 msgid "Cut"
-msgstr "Personalizar"
+msgstr "Recortar"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:44:267
 msgid "Clear"
-msgstr ""
+msgstr "Limpar"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
 #: qtplugins/copypaste/copypaste.cpp:45:261
 msgid "Paste"
-msgstr ""
+msgstr "Colar"
 
 #: qtplugins/copypaste/copypaste.cpp:78
 msgid "&Edit"
-msgstr ""
+msgstr "&Editar"
 
 #: qtplugins/copypaste/copypaste.cpp:96
 msgid "Error Clipping Molecule"
@@ -2427,9 +2425,8 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
-#, fuzzy
 msgid "&Import"
-msgstr "Importar"
+msgstr "&Importar"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
@@ -2539,13 +2536,12 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:55
 msgid "InChI"
-msgstr ""
+msgstr "InChI"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:56
 #: qtplugins/mongochem/listmoleculesmodel.cpp:83
-#, fuzzy
 msgid "SMILES"
-msgstr "SMILES..."
+msgstr "SMILES"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:98
 #: qtplugins/lineformatinput/lineformatinput.cpp:122
@@ -2678,9 +2674,8 @@ msgid "Navigate"
 msgstr "Navegação"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Navegação"
+msgstr "Ferramenta de navegação"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
@@ -3084,7 +3079,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:243
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Exportar gráficos em bitmap"
 
 #: qtplugins/playertool/playertool.cpp:244
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
@@ -3118,9 +3113,9 @@ msgid "Error: cannot add frame to video."
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:365 qtplugins/surfaces/surfaces.cpp:492
-#, fuzzy, qt-format
+#, qt-format
 msgid "Cannot save file %1."
-msgstr "Não foi possível ler o arquivo %1."
+msgstr "Não foi possível salvar o arquivo %1."
 
 #: qtplugins/playertool/playertool.h:46
 msgid "Player tool"
@@ -3287,7 +3282,7 @@ msgstr "Criar arquivos de entrada para pacotes de química quântica"
 
 #: qtplugins/resetview/resetview.cpp:37
 msgid "Center"
-msgstr ""
+msgstr "Centralizar"
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
@@ -3312,14 +3307,12 @@ msgid "Load file reader/writers from external scripts."
 msgstr ""
 
 #: qtplugins/select/select.cpp:34
-#, fuzzy
 msgid "Select All"
-msgstr "Apagar Tudo"
+msgstr "Selecionar Tudo"
 
 #: qtplugins/select/select.cpp:39
-#, fuzzy
 msgid "Select None"
-msgstr "Seleção"
+msgstr "Limpar Seleção"
 
 #: qtplugins/select/select.cpp:48
 #, fuzzy
@@ -3794,9 +3787,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
-#, fuzzy
 msgid "Ctrl+C"
-msgstr "Ctrl+Alt+O"
+msgstr "Ctrl+C"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
 #. i18n: ectx: property (text), widget (QPushButton, exitButton)
@@ -6105,72 +6097,11 @@ msgstr ""
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
-",Launchpad Contributions:,Alexandre R Soares,André Gondim,Ciniro Nametala,"
-"Enrico Nicoletto,Geoff Hutchison,Leandro Boscariol,Myres Hopkins,Petrus "
-"Henrique Gonçalves Freire,Rafael Porto Rodrigues,Rosiney Gomes Pereira, ,"
-"Launchpad Contributions:,Alexandre R Soares,André Gondim,Ciniro Nametala,"
-"Enrico Nicoletto,Geoff Hutchison,Leandro Boscariol,Myres Hopkins,Petrus "
-"Henrique Gonçalves Freire,Rafael Porto Rodrigues,Rosiney Gomes Pereira, ,"
-"Launchpad Contributions:,Alexandre R Soares,Avogadro Team, ,Launchpad "
-"Contributions:,Alexandre R Soares,André Gondim,Avogadro Team,Felipe Vieira "
-"Borges,Geoff Hutchison,leoazul, ,Launchpad Contributions:,Alexandre R Soares,"
-"André Gondim,Avogadro Team,Daniel Eric Maier,Felipe Vieira Borges,Geoff "
-"Hutchison,leoazul, ,Launchpad Contributions:,Alexandre R Soares,André Gondim,"
-"Avogadro Team,Daniel Eric Maier,Felipe Vieira Borges,Geoff Hutchison,VictorP,"
-"leoazul, ,Launchpad Contributions:,Alexandre R Soares,André Gondim,Avogadro "
-"Team,Daniel Eric Maier,Felipe Vieira Borges,Geoff Hutchison,Gustavo "
-"Guidorizzi,VictorP,leoazul, ,Launchpad Contributions:,Alexandre R Soares,"
-"André Gondim,Avogadro Team,Daniel Eric Maier,Felipe Vieira Borges,Geoff "
-"Hutchison,Gustavo Guidorizzi,VictorP,leoazul, ,Launchpad Contributions:,"
-"Alexandre R Soares,André Gondim,Avogadro Team,Daniel Eric Maier,Felipe "
-"Vieira Borges,Geoff Hutchison,Gustavo Guidorizzi,VictorP,leoazul, ,Launchpad "
-"Contributions:,Alexandre R Soares,André Gondim,Avogadro Team,Daniel Eric "
-"Maier,Felipe Vieira Borges,Geoff Hutchison,Gustavo Guidorizzi,VictorP,"
-"leoazul, ,Launchpad Contributions:,Alexandre R Soares,André Gondim,Avogadro "
-"Team,Daniel Maier,Felipe Vieira Borges,Geoff Hutchison,Gustavo Guidorizzi,"
-"Júlio Cezar Santos Pires,VictorP,leoazul, ,Launchpad Contributions:,Alex "
-"Massabni,Alexandre R Soares,Alexandre R Soares,André Gondim,André Luiz "
-"Bellafronte Kutianski,Avogadro Team,Daniel Maier,Eugênio F,Fabiana de "
-"Oliveira,Felipe Nascimento,Felipe Vieira Borges,Geoff Hutchison,Gustavo "
-"Guidorizzi,JOÃO PAULO MACEDO DA SILVA,João Paulo Brígido Tostes,Júlio Cezar "
-"Santos Pires,Leocello,Norgeon,Rafael,Raykachu,Ricardo Paupitz,Rogério Zonta,"
-"Tomas Abril,VictorP,leoazul,netocostax, ,Launchpad Contributions:,Alex "
-"Massabni,Alexandre R Soares,Alexandre R Soares,André Gondim,André Luiz "
-"Bellafronte Kutianski,Avogadro Team,Daniel Maier,Eugênio F,Fabiana de "
-"Oliveira,Felipe Nascimento,Felipe Vieira Borges,Geoff Hutchison,Gustavo "
-"Guidorizzi,JOÃO PAULO MACEDO DA SILVA,João Paulo Brígido Tostes,Júlio Cezar "
-"Santos Pires,Leocello,Norgeon,Rafael,Raykachu,Ricardo Paupitz,Rogério Zonta,"
-"Sabrina,Tomas Abril,VictorP,leoazul,netocostax, ,Launchpad Contributions:,"
-"Alex Massabni,Alexandre R Soares,Alexandre R Soares,André Gondim,André Luiz "
-"Bellafronte Kutianski,Avogadro Team,Daniel Maier,Eugênio F,Fabiana de "
-"Oliveira,Felipe Nascimento,Felipe Vieira Borges,Geoff Hutchison,Gustavo "
-"Guidorizzi,JOÃO PAULO MACEDO DA SILVA,João Paulo Brígido Tostes,Júlio Cezar "
-"Santos Pires,Leocello,Norgeon,Rafael,Raykachu,Ricardo Paupitz,Robson,Rogério "
-"Zonta,Sabrina,Tomas Abril,VictorP,netocostax"
+msgstr "Seus nomes"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
-",,,andregondim@ubuntu.com,ciniro@gmail.com,liverig@gmail.com,,,,,"
-"rafporto@gmail.com,rosiney.gp@gmail.com,,,,andregondim@ubuntu.com,"
-"ciniro@gmail.com,liverig@gmail.com,,,,,rafporto@gmail.com,rosiney.gp@gmail."
-"com,,,,avogadro-devel@lists.sourceforge.net,,,,andregondim@ubuntu.com,"
-"avogadro-devel@lists.sourceforge.net,,,,,,,andregondim@ubuntu.com,avogadro-"
-"devel@lists.sourceforge.net,,,,,,,,andregondim@ubuntu.com,avogadro-"
-"devel@lists.sourceforge.net,,,,,,,,,andregondim@ubuntu.com,avogadro-"
-"devel@lists.sourceforge.net,,,,,,,,,,andregondim@ubuntu.com,avogadro-"
-"devel@lists.sourceforge.net,,,,,,,,,,andregondim@ubuntu.com,avogadro-"
-"devel@lists.sourceforge.net,,,,,,,,,,andregondim@ubuntu.com,avogadro-"
-"devel@lists.sourceforge.net,,,,,,,,,,andregondim@ubuntu.com,avogadro-"
-"devel@lists.sourceforge.net,,,,,,,,,,,,ntegti@zipmail.com.br,,andre."
-"bellafronte@gmail.com,avogadro-devel@lists.sourceforge.net,,,,,,,,,"
-"joao@tostes.org,,,,,,ricardopaupitz@gmail.com,,,,,,,,,,ntegti@zipmail.com."
-"br,,andre.bellafronte@gmail.com,avogadro-devel@lists.sourceforge.net,,,,,,,,,"
-"joao@tostes.org,,,,,,ricardopaupitz@gmail.com,,smcanato@gmail.com,,,,,,,,,"
-"ntegti@zipmail.com.br,,andre.bellafronte@gmail.com,avogadro-devel@lists."
-"sourceforge.net,,,,,,,,,joao@tostes.org,,,,,,ricardopaupitz@gmail.com,,,"
-"smcanato@gmail.com,,,"
+msgstr "Seus e-mails"
 
 #, fuzzy
 #~ msgid "Optimize geometry"
