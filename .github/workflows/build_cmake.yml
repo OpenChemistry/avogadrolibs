@@ -68,7 +68,9 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         echo "::set-env name=MACOSX_DEPLOYMENT_TARGET::${{ env.MACOSX_DEPLOYMENT_TARGET }}"
-        brew install ninja boost qt eigen glew open-babel
+        brew install ninja boost eigen glew open-babel
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
     - name: Xcode Selection (macOS)
       if: matrix.config.os == 'macos-11.0'
       run: |
