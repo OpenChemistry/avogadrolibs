@@ -74,7 +74,7 @@ jobs:
     - name: Xcode Selection (macOS)
       if: matrix.config.os == 'macos-11.0'
       run: |
-        sudo xcode-select -switch '/Applications/Xcode_12.app'
+        sudo xcode-select -switch /Applications/Xcode_12.2.app
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
