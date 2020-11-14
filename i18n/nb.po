@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2020-10-13 14:26+0000\n"
+"PO-Revision-Date: 2020-11-15 07:28+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/nb_NO/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"X-Generator: Weblate 4.4-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:84
@@ -46,7 +46,7 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:210 qtgui/interfacescript.cpp:312
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "Referansefilen «%1» finnes ikke."
 
 #: molequeue/inputgenerator.cpp:212 qtgui/interfacescript.cpp:314
 #, qt-format
@@ -309,16 +309,16 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:374
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: Mappen er skrivebeskyttet!"
 
 #: molequeue/inputgeneratorwidget.cpp:540
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:284
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:299
 #: qtplugins/openmminput/openmminputdialog.cpp:382
 #: qtplugins/openmminput/openmminputdialog.cpp:397
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: Filen vil bli overskrevet."
 
 #: molequeue/inputgeneratorwidget.cpp:545
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:291
@@ -327,7 +327,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: Filen er skrivebeskyttet."
 
 #: molequeue/inputgeneratorwidget.cpp:558
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:318
@@ -543,16 +543,16 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:143
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Klarte ikke å sende inn jobb"
 
 #: molequeue/molequeuedialog.cpp:144
 #, qt-format
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "Jobben har blitt avvist av MoleQueue: %1"
 
 #: molequeue/molequeuedialog.cpp:211 molequeue/molequeuewidget.cpp:156
 msgid "No program selected."
-msgstr ""
+msgstr "Velg et program først."
 
 #: molequeue/molequeuedialog.cpp:212 molequeue/molequeuewidget.cpp:157
 msgid "Please select the target program from the \"Queue and Program\" list."
@@ -564,31 +564,33 @@ msgstr ""
 
 #: molequeue/molequeuewidget.cpp:165
 msgid "Internal error."
-msgstr ""
+msgstr "Intern feil."
 
 #: molequeue/molequeuewidget.cpp:166
 msgid "Unable to resolve program selection. This is a bug."
-msgstr ""
+msgstr "Klarte ikke å løse valg av program. Dette er en feil."
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
+#, fuzzy
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Ingen molekyl satt i BackGroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
 msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
+#, fuzzy
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Inget filnavn satt i BackGroundFileFormat!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
-msgstr ""
+msgstr "Del vannrett"
 
 #: qtgui/containerwidget.cpp:44
 msgid "Split Vertical"
-msgstr ""
+msgstr "Del loddrett"
 
 #: qtgui/elementtranslator.cpp:32
 msgid "Hydrogen"
@@ -1049,7 +1051,7 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:374
 msgid "Moscovium"
-msgstr ""
+msgstr "Moscovium"
 
 #: qtgui/elementtranslator.cpp:377
 msgid "Livermorium"
@@ -1098,22 +1100,22 @@ msgstr ""
 #: qtgui/fileformatdialog.cpp:160
 msgctxt "File readers"
 msgid "readers"
-msgstr ""
+msgstr "lesere"
 
 #: qtgui/fileformatdialog.cpp:161
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
-msgstr ""
+msgstr "les"
 
 #: qtgui/fileformatdialog.cpp:165
 msgctxt "File writers"
 msgid "writers"
-msgstr ""
+msgstr "skrivere"
 
 #: qtgui/fileformatdialog.cpp:166
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
-msgstr ""
+msgstr "skriv"
 
 #: qtgui/fileformatdialog.cpp:171
 #, qt-format
@@ -1137,11 +1139,11 @@ msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
 msgid "Untitled"
-msgstr ""
+msgstr "Uten tittel"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
-msgstr ""
+msgstr "Opprett en ny visning"
 
 #: qtgui/periodictableview.cpp:44
 msgid "Periodic Table"
@@ -1180,11 +1182,11 @@ msgstr "MOPAC mislyktes i å starte."
 
 #: qtgui/pythonscript.cpp:149
 msgid "Script crashed."
-msgstr ""
+msgstr "Skript krasjet."
 
 #: qtgui/pythonscript.cpp:152
 msgid "Script timed out."
-msgstr ""
+msgstr "Tidsavbrudd for skript."
 
 #: qtgui/pythonscript.cpp:155
 #, fuzzy
@@ -1193,7 +1195,7 @@ msgstr "OpenGL-feil"
 
 #: qtgui/pythonscript.cpp:158
 msgid "Write error."
-msgstr ""
+msgstr "Skrivefeil."
 
 #: qtgui/pythonscript.cpp:162
 #, fuzzy
@@ -1428,15 +1430,15 @@ msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:92
 msgid "PDB Files (*.pdb)"
-msgstr ""
+msgstr "PDB-filer (*.pdb)"
 
 #: qtplugins/apbs/apbsdialog.cpp:102
 msgid "Open PQR File"
-msgstr ""
+msgstr "Åpne PQR-fil"
 
 #: qtplugins/apbs/apbsdialog.cpp:103
 msgid "PQR Files (*.pqr)"
-msgstr ""
+msgstr "PQR-filer (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:143 qtplugins/apbs/apbsdialog.cpp:153
 #: qtplugins/commandscripts/command.cpp:97 qtplugins/cp2kinput/cp2kinput.cpp:96
@@ -1542,7 +1544,7 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragmentextension.cpp:97
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
-msgstr ""
+msgstr "&Bygg"
 
 #: qtplugins/bonding/bonding.cpp:65
 #, fuzzy
@@ -1564,11 +1566,11 @@ msgstr ""
 
 #: qtplugins/clientserver/clientserver.cpp:83
 msgid "S&erver"
-msgstr ""
+msgstr "T&jener"
 
 #: qtplugins/clientserver/clientserver.cpp:159
 msgid "Connection failed"
-msgstr ""
+msgstr "Tilkobling mislyktes"
 
 #: qtplugins/clientserver/clientserver.cpp:160
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:68
@@ -1921,7 +1923,7 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.h:42
 msgid "Copy and paste"
-msgstr ""
+msgstr "Kopier og lim inn"
 
 #: qtplugins/copypaste/copypaste.h:46
 msgid "Interact with the clipboard."
@@ -2240,7 +2242,7 @@ msgstr ""
 #: qtplugins/openbabel/obforcefielddialog.cpp:331
 #, qt-format
 msgid "Autodetect (%1)"
-msgstr ""
+msgstr "Oppdag automatisk (%1)"
 
 #: qtplugins/gamessinput/gamessinput.cpp:45
 msgid "&GAMESS"
@@ -2526,7 +2528,7 @@ msgstr "Manipuler atom"
 
 #: qtplugins/measuretool/measuretool.cpp:63
 msgid "Measure"
-msgstr ""
+msgstr "Mål"
 
 #: qtplugins/measuretool/measuretool.cpp:192
 #: qtplugins/measuretool/measuretool.cpp:203
@@ -2559,7 +2561,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.h:48
 #: qtplugins/measuretool/measuretool.h:49
 msgid "Measure tool"
-msgstr ""
+msgstr "Måleverktøy"
 
 #: qtplugins/meshes/meshes.h:40
 msgid "Meshes"
@@ -2648,7 +2650,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:52 qtplugins/openbabel/openbabel.cpp:471
 msgid "Optimize Geometry"
-msgstr ""
+msgstr "Optimiser geometri"
 
 #: qtplugins/openbabel/openbabel.cpp:59
 msgid "Configure Force Field..."
@@ -2676,7 +2678,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:111
 msgid "&Open Babel"
-msgstr ""
+msgstr "&Åpne Babel"
 
 #: qtplugins/openbabel/openbabel.cpp:118
 msgid "The Open Babel file formats are not ready to be added."
@@ -2762,7 +2764,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:480
 msgid "Cannot open file with Open Babel."
-msgstr ""
+msgstr "Kan ikke åpne fil med Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:486
 msgid "Invalid molecule: Cannot perceive bonds."
@@ -2867,11 +2869,11 @@ msgstr ""
 
 #: qtplugins/openmminput/openmminput.h:42
 msgid "OpenMM input"
-msgstr ""
+msgstr "OpenMM-inndata"
 
 #: qtplugins/openmminput/openmminput.h:46
 msgid "Generate input for OpenMM."
-msgstr ""
+msgstr "Generer inndata for OpenMM."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:213
 msgid ""
@@ -2942,11 +2944,11 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:61
 msgid "Player"
-msgstr ""
+msgstr "Spiller"
 
 #: qtplugins/playertool/playertool.cpp:77
 msgid "Play"
-msgstr ""
+msgstr "Spill"
 
 #: qtplugins/playertool/playertool.cpp:80
 msgid "Stop"
@@ -2960,7 +2962,7 @@ msgstr "Parametre:"
 #: qtplugins/playertool/playertool.cpp:97
 msgctxt "frames per second"
 msgid " FPS"
-msgstr ""
+msgstr " Førstepersonsskytespill"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2990,7 +2992,7 @@ msgstr "Fjern …"
 #: qtplugins/playertool/playertool.cpp:241
 #: qtplugins/playertool/playertool.cpp:339
 msgid "Movie (*.mp4)"
-msgstr ""
+msgstr "Film (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:243
 #, fuzzy
@@ -2999,11 +3001,11 @@ msgstr "Eksporter bitmap-grafikk"
 
 #: qtplugins/playertool/playertool.cpp:244
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Film (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:258 qtplugins/surfaces/surfaces.cpp:408
 msgid "GIF (*.gif)"
-msgstr ""
+msgstr "GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:262
 msgid "GIF FPS support warning"
@@ -3052,7 +3054,7 @@ msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.cpp:133 qtplugins/plotxrd/plotxrd.cpp:131
 msgid "Error message: "
-msgstr ""
+msgstr "Feilmelding: "
 
 #: qtplugins/plotpdf/plotpdf.h:44
 msgid "PlotPdf"
@@ -3213,7 +3215,7 @@ msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:39
 msgid "Script File Formats"
-msgstr ""
+msgstr "Skript-filformater"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:43
 msgid "Load file reader/writers from external scripts."
@@ -3504,23 +3506,23 @@ msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:41
 msgid "VRML Render"
-msgstr ""
+msgstr "VRML-opptegner"
 
 #: qtplugins/vrml/vrml.cpp:83
 msgid "VRML (*.wrl);;Text file (*.txt)"
-msgstr ""
+msgstr "VRML (*.wrl);;Tekstfil (*.txt)"
 
 #: qtplugins/vrml/vrml.h:36
 msgid "VRML"
-msgstr ""
+msgstr "VRML"
 
 #: qtplugins/vrml/vrml.h:40
 msgid "Render the scene using VRML."
-msgstr ""
+msgstr "Tegn scenen ved bruk av VRML."
 
 #: qtplugins/wireframe/wireframe.h:39
 msgid "Wireframe"
-msgstr ""
+msgstr "Kantlinjer"
 
 #: qtplugins/wireframe/wireframe.h:43
 #, fuzzy
@@ -3553,7 +3555,7 @@ msgstr "Dialogvindu"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SelectionToolWidget)
 msgid "Form"
-msgstr ""
+msgstr "Skjema"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
@@ -3564,17 +3566,17 @@ msgstr "Utvalgsinnstillinger"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
 msgid "Placeholder text..."
-msgstr ""
+msgstr "Plassholdertekst …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:83
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Reset to Default Values"
-msgstr ""
+msgstr "Gjenopprett forvalgte verdier"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:90
 #. i18n: ectx: property (text), widget (QCheckBox, debugCheckBox)
 msgid "Debug script..."
-msgstr ""
+msgstr "Avlus skript …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:113
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
@@ -3591,7 +3593,7 @@ msgstr "Avbryt beregning"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:120
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Write files to disk..."
-msgstr ""
+msgstr "Skriv filer til disk …"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -3601,7 +3603,7 @@ msgstr ""
 #. i18n: file: molequeue/molequeuewidget.ui:50
 #. i18n: ectx: property (text), widget (QToolButton, refreshProgramsButton)
 msgid "Refresh"
-msgstr ""
+msgstr "Gjenoppfrisk"
 
 #. i18n: file: molequeue/molequeuewidget.ui:85
 #. i18n: ectx: property (toolTip), widget (QLabel, label_7)
@@ -3639,7 +3641,7 @@ msgstr ""
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Hide job in MoleQueue:"
-msgstr ""
+msgstr "Skjul jobb i MoleQueue:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:158
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -3683,7 +3685,7 @@ msgstr "Ctrl+Alt+O"
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
 #. i18n: ectx: property (text), widget (QPushButton, exitButton)
 msgid "&Exit"
-msgstr ""
+msgstr "&Avslutt"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:47
 #. i18n: ectx: property (shortcut), widget (QPushButton, exitButton)
@@ -3831,12 +3833,12 @@ msgstr "Utvalgsinnstillinger"
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label7)
 msgid "&Hostname:"
-msgstr ""
+msgstr "&Vertsnavn:"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:64
 #. i18n: ectx: property (text), widget (QLabel, label8)
 msgid "Port"
-msgstr ""
+msgstr "Port"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, pushTestConnection)
@@ -3880,7 +3882,7 @@ msgstr "OK"
 #. i18n: file: qtplugins/clientserver/filedialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Files of type:"
-msgstr ""
+msgstr "Filer av type:"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:174
 #. i18n: ectx: property (text), widget (QPushButton, Cancel)
@@ -4065,7 +4067,7 @@ msgstr ""
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Method:"
-msgstr ""
+msgstr "Metode:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:197
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -4176,17 +4178,17 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
 msgid "A repeat:"
-msgstr ""
+msgstr "A-gjentagelse:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
 msgid "B repeat:"
-msgstr ""
+msgstr "B-gjentagelse:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C repeat:"
-msgstr ""
+msgstr "C-gjentagelse:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
@@ -4196,32 +4198,32 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "A:"
-msgstr ""
+msgstr "A:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:62
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "B:"
-msgstr ""
+msgstr "B:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:94
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "C:"
-msgstr ""
+msgstr "C:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "α:"
-msgstr ""
+msgstr "α:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "β:"
-msgstr ""
+msgstr "β:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:153
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "γ:"
-msgstr ""
+msgstr "γ:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:163
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, alpha)
@@ -4234,7 +4236,7 @@ msgstr ""
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:48
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_peakWidth)
 msgid "°"
-msgstr ""
+msgstr "°"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:231
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -4257,17 +4259,17 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:300
 #. i18n: ectx: property (text), widget (QPushButton, apply)
 msgid "&Apply"
-msgstr ""
+msgstr "&Bruk"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:307
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "&Revert"
-msgstr ""
+msgstr "&Angre"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:314
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 msgid "&Hide"
-msgstr ""
+msgstr "&Skjul"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::VolumeScalingDialog)
@@ -4998,8 +5000,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:854
 #. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
+#, fuzzy
 msgid "2d"
-msgstr ""
+msgstr "2D"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:859
 #. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
