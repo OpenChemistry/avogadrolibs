@@ -2,21 +2,23 @@
 # Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
-#
+# Apostol Penkov <apostol.penkov@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2016-06-10 06:28+0000\n"
-"Last-Translator: Svetoslav Stefanov <svetlisashkov@yahoo.com>\n"
-"Language-Team: Bulgarian <bg@li.org>\n"
+"PO-Revision-Date: 2020-12-09 12:29+0000\n"
+"Last-Translator: Apostol Penkov <apostol.penkov@gmail.com>\n"
+"Language-Team: Bulgarian <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.4-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -1130,9 +1132,8 @@ msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
-#, fuzzy
 msgid "Untitled"
-msgstr "Име"
+msgstr "Без заглавие"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
@@ -1621,18 +1622,20 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
 msgid "Scripts"
-msgstr ""
+msgstr "Скриптове"
 
 #: qtplugins/commandscripts/command.cpp:98 qtplugins/cp2kinput/cp2kinput.cpp:97
 #: qtplugins/gamessinput/gamessinput.cpp:100
 #: qtplugins/lammpsinput/lammpsinput.cpp:76
 #: qtplugins/openmminput/openmminput.cpp:74
 #: qtplugins/quantuminput/quantuminput.cpp:116
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Error reading output file '%1':\n"
 "%2"
-msgstr "Проблем с четенето на файла с траектория %1"
+msgstr ""
+"Проблем с четенето на файла с траектория '%1':\n"
+"%2"
 
 #: qtplugins/commandscripts/command.cpp:207
 #: qtplugins/quantuminput/quantuminput.cpp:182
@@ -1677,7 +1680,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:365
 msgid "Too few entries on line."
-msgstr ""
+msgstr "Прекалено малко записи на линията."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:381
 #, fuzzy
@@ -1744,7 +1747,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:559
 msgid "Error applying geometry"
-msgstr ""
+msgstr "Грешка при прикагане на геометрията"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:560
 msgid ""
@@ -1814,7 +1817,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:42:258
 msgid "Copy"
-msgstr ""
+msgstr "Копирай"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
@@ -2558,7 +2561,7 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
 msgid "Navigate tool"
-msgstr ""
+msgstr "Навигация"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
@@ -2944,7 +2947,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:243
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Износ на Bitmap Графика"
 
 #: qtplugins/playertool/playertool.cpp:244
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
@@ -2971,7 +2974,7 @@ msgstr "видео файлове (*.avi)"
 #: qtplugins/playertool/playertool.cpp:364 qtplugins/surfaces/surfaces.cpp:436
 #: qtplugins/surfaces/surfaces.cpp:479 qtplugins/surfaces/surfaces.cpp:491
 msgid "Avogadro"
-msgstr "Avogadro"
+msgstr "Авогадро"
 
 #: qtplugins/playertool/playertool.cpp:335 qtplugins/surfaces/surfaces.cpp:480
 msgid "Error: cannot add frame to video."
