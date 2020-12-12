@@ -1,21 +1,24 @@
 # Serbian translation for avogadro
 # Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the avogadro package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012—2016.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012—2016, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2016-06-10 06:45+0000\n"
+"PO-Revision-Date: 2020-12-13 08:29+0000\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
-"Language-Team: Serbian <gnom@prevod.org>\n"
+"Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/sr/>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.4-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -576,15 +579,15 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Није постављен молекул у „Формату_датотеке_позадине“!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Није постављен „Io::Формат_датотеке“ у „Формату_датотеке_позадине“!"
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Није постављен назив датотеке у „Формату_датотеке_позадине“!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
@@ -1142,9 +1145,8 @@ msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
-#, fuzzy
 msgid "Untitled"
-msgstr "без наслова"
+msgstr "Без наслова"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
@@ -1364,9 +1366,8 @@ msgstr "&Датотека"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/vrml/vrml.cpp:58
-#, fuzzy
 msgid "&Export"
-msgstr "Извези"
+msgstr "&Извези"
 
 #: qtplugins/3dmol/3dmol.h:42
 #, fuzzy
@@ -1396,9 +1397,8 @@ msgstr "Излазна датотека Орке"
 #: qtplugins/openmminput/openmminput.cpp:57
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
 msgid "&Extensions"
-msgstr "Проширења"
+msgstr "&Проширења"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -1869,33 +1869,30 @@ msgstr "Улаз турбомола"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:42:258
-#, fuzzy
 msgid "Copy"
-msgstr "Умножи све"
+msgstr "Умножи"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
 #: qtplugins/copypaste/copypaste.cpp:43:255
-#, fuzzy
 msgid "Cut"
-msgstr "Произвољно"
+msgstr "Исеци"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:44:267
-#, fuzzy
 msgid "Clear"
-msgstr "Очисти све"
+msgstr "Очисти"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
 #: qtplugins/copypaste/copypaste.cpp:45:261
 msgid "Paste"
-msgstr ""
+msgstr "Убаци"
 
 #: qtplugins/copypaste/copypaste.cpp:78
 msgid "&Edit"
-msgstr ""
+msgstr "&Уреди"
 
 #: qtplugins/copypaste/copypaste.cpp:96
 msgid "Error Clipping Molecule"
@@ -2401,9 +2398,8 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
-#, fuzzy
 msgid "&Import"
-msgstr "Увези"
+msgstr "&Увези"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
@@ -2512,13 +2508,12 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:55
 msgid "InChI"
-msgstr ""
+msgstr "МенХеО"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:56
 #: qtplugins/mongochem/listmoleculesmodel.cpp:83
-#, fuzzy
 msgid "SMILES"
-msgstr "ПЛУМУС..."
+msgstr "СМАЈЛИЋИ"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:98
 #: qtplugins/lineformatinput/lineformatinput.cpp:122
@@ -2651,9 +2646,8 @@ msgid "Navigate"
 msgstr "Крећите се"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Крећите се"
+msgstr "Управљање алата"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
@@ -3055,9 +3049,8 @@ msgid "Movie (*.mp4)"
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:243
-#, fuzzy
 msgid "Export Bitmap Graphics"
-msgstr "Извези векторску графику"
+msgstr "Извези Битмап графику"
 
 #: qtplugins/playertool/playertool.cpp:244
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
@@ -3091,9 +3084,9 @@ msgid "Error: cannot add frame to video."
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:365 qtplugins/surfaces/surfaces.cpp:492
-#, fuzzy, qt-format
+#, qt-format
 msgid "Cannot save file %1."
-msgstr "Не могу да прочитам датотеку „%1“."
+msgstr "Не могу да сачувам датотеку „%1“."
 
 #: qtplugins/playertool/playertool.h:46
 msgid "Player tool"
@@ -3262,7 +3255,7 @@ msgstr "Направите улазне датотеке из квантних �
 
 #: qtplugins/resetview/resetview.cpp:37
 msgid "Center"
-msgstr ""
+msgstr "Средина"
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
@@ -3287,14 +3280,12 @@ msgid "Load file reader/writers from external scripts."
 msgstr ""
 
 #: qtplugins/select/select.cpp:34
-#, fuzzy
 msgid "Select All"
-msgstr "Обриши све"
+msgstr "Изабери све"
 
 #: qtplugins/select/select.cpp:39
-#, fuzzy
 msgid "Select None"
-msgstr "Избор"
+msgstr "Поништи избор"
 
 #: qtplugins/select/select.cpp:48
 #, fuzzy
@@ -3774,9 +3765,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
-#, fuzzy
 msgid "Ctrl+C"
-msgstr "Ктрл+Алт+О"
+msgstr "Ктрл+С"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
 #. i18n: ectx: property (text), widget (QPushButton, exitButton)
@@ -6121,15 +6111,12 @@ msgstr "Откриј симетрију"
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-",Launchpad Contributions:,Мирослав Николић, ,Launchpad Contributions:,"
-"Мирослав Николић, ,Launchpad Contributions:,Мирослав Николић, ,Launchpad "
-"Contributions:,Мирослав Николић"
+",Доприносиоци на „Launchpad“-у:,Danilo Nusic,Nikola Petković,Иван "
+"Старчевић,Мирослав Николић"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
-",,miroslavnikolic@rocketmail.com,,,miroslavnikolic@rocketmail.com,,,"
-"miroslavnikolic@rocketmail.com,,,miroslavnikolic@rocketmail.com"
+msgstr ",,miroslavnikolic@rocketmail.com,,,,ivanstar61@gmail.com,,"
 
 #, fuzzy
 #~ msgid "Optimize geometry"
