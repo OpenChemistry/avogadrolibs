@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Andika Tulus Pangestu <andhikatuluspangestu@gmail.com>, 2020.
+# Ferdinand Tampubolon <dnandz@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2020-11-11 06:28+0000\n"
-"Last-Translator: Andika Tulus Pangestu <andhikatuluspangestu@gmail.com>\n"
+"PO-Revision-Date: 2021-01-08 17:32+0000\n"
+"Last-Translator: Ferdinand Tampubolon <dnandz@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
 "Language: id\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.4-dev\n"
+"X-Generator: Weblate 4.4.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:84
@@ -1367,9 +1368,8 @@ msgstr "&Berkas"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/vrml/vrml.cpp:58
-#, fuzzy
 msgid "&Export"
-msgstr "Ekspor"
+msgstr "&Ekspor"
 
 #: qtplugins/3dmol/3dmol.h:42
 #, fuzzy
@@ -1880,33 +1880,30 @@ msgstr "Masukan Turbomole"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:42:258
-#, fuzzy
 msgid "Copy"
-msgstr "Salin Semua"
+msgstr "Salin"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
 #: qtplugins/copypaste/copypaste.cpp:43:255
-#, fuzzy
 msgid "Cut"
-msgstr "Suaian"
+msgstr "Potong"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:44:267
-#, fuzzy
 msgid "Clear"
-msgstr "Hapus Semua"
+msgstr "Hapus"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
 #: qtplugins/copypaste/copypaste.cpp:45:261
 msgid "Paste"
-msgstr ""
+msgstr "Tempelkan"
 
 #: qtplugins/copypaste/copypaste.cpp:78
 msgid "&Edit"
-msgstr ""
+msgstr "&Dirubah"
 
 #: qtplugins/copypaste/copypaste.cpp:96
 msgid "Error Clipping Molecule"
@@ -2630,7 +2627,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
 #: qtplugins/resetview/resetview.cpp:54 qtplugins/symmetry/symmetry.cpp:94
 msgid "&View"
-msgstr "Tam&pilan"
+msgstr "&Tampilkan"
 
 #: qtplugins/molecularproperties/molecularproperties.h:42
 msgid "Molecular Properties"
@@ -2662,9 +2659,8 @@ msgid "Navigate"
 msgstr "Navigasi"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Navigasi"
+msgstr "Alat Navigasi"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
@@ -3066,9 +3062,8 @@ msgid "Movie (*.mp4)"
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:243
-#, fuzzy
 msgid "Export Bitmap Graphics"
-msgstr "Ekspor Vector Graphics"
+msgstr "Ekspor gambar Bitmap"
 
 #: qtplugins/playertool/playertool.cpp:244
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
@@ -3102,9 +3097,9 @@ msgid "Error: cannot add frame to video."
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:365 qtplugins/surfaces/surfaces.cpp:492
-#, fuzzy, qt-format
+#, qt-format
 msgid "Cannot save file %1."
-msgstr "Tidak bisa membaca berkas %1."
+msgstr "Tidak bisa menyimpan berkas %1."
 
 #: qtplugins/playertool/playertool.h:46
 msgid "Player tool"
@@ -3273,7 +3268,7 @@ msgstr "Membuat berkas masukan untuk program kimia kuantum"
 
 #: qtplugins/resetview/resetview.cpp:37
 msgid "Center"
-msgstr ""
+msgstr "Tengah"
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
@@ -3298,14 +3293,12 @@ msgid "Load file reader/writers from external scripts."
 msgstr ""
 
 #: qtplugins/select/select.cpp:34
-#, fuzzy
 msgid "Select All"
-msgstr "Hapus Semua"
+msgstr "Pilih Semua"
 
 #: qtplugins/select/select.cpp:39
-#, fuzzy
 msgid "Select None"
-msgstr "Pemilihan"
+msgstr "Tidak Ada yang dipilih"
 
 #: qtplugins/select/select.cpp:48
 #, fuzzy
@@ -3319,7 +3312,7 @@ msgstr " elektron valensi"
 
 #: qtplugins/select/select.cpp:69
 msgid "&Select"
-msgstr "&Pilihan"
+msgstr "&Pilih"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -3783,9 +3776,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
-#, fuzzy
 msgid "Ctrl+C"
-msgstr "Ctrl+Alt+O"
+msgstr "Ctrl+C"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
 #. i18n: ectx: property (text), widget (QPushButton, exitButton)
@@ -3989,7 +3981,7 @@ msgstr "Nama berkas:"
 #. i18n: file: qtplugins/clientserver/filedialog.ui:153
 #. i18n: ectx: property (text), widget (QPushButton, OK)
 msgid "OK"
-msgstr "Oke"
+msgstr "Ok"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, label)
