@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-01-10 13:32+0000\n"
+"PO-Revision-Date: 2021-01-11 14:32+0000\n"
 "Last-Translator: Ferdinand Tampubolon <dnandz@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: molequeue/batchjob.cpp:84
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "Pekerjaan Batch number #%L1 (%2)"
 
 #: molequeue/inputgenerator.cpp:81 qtgui/interfacescript.cpp:70
 #, qt-format
@@ -33,11 +33,14 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
+"script --Opsi keluaran print harus di objek JSON pada level atas. Diterima :"
+"\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:187 qtgui/interfacescript.cpp:193
 #: qtgui/interfacescript.cpp:289
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "Peringatan Non-string kembali."
 
 #: molequeue/inputgenerator.cpp:190 qtgui/interfacescript.cpp:196
 #: qtgui/interfacescript.cpp:292
