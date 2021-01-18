@@ -6,13 +6,14 @@
 # ssantos <ssantos@web.de>, 2020.
 # Joana Vieira <joanaoliveiravieira8@gmail.com>, 2020.
 # João Tiago Antunes <jtiago.cbr@gmail.com>, 2020.
+# Andre Azevedo <andreazevedo2015@hotmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2020-12-24 15:29+0000\n"
-"Last-Translator: João Tiago Antunes <jtiago.cbr@gmail.com>\n"
+"PO-Revision-Date: 2021-01-19 18:32+0000\n"
+"Last-Translator: Andre Azevedo <andreazevedo2015@hotmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
 "Language: pt\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.4.1-dev\n"
+"X-Generator: Weblate 4.5-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:84
@@ -73,11 +74,14 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Entrada de arquivo malformada: nome de arquivo / conteúdo ausente ou sem "
+"strings:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:254 qtgui/interfacescript.cpp:357
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "Entrada de arquivo malformada no índice % 1: Não é um objeto"
 
 #: molequeue/inputgenerator.cpp:260 qtgui/interfacescript.cpp:363
 msgid "'files' member not an array."
@@ -89,15 +93,15 @@ msgstr "Membro 'files' faltando."
 
 #: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:378
 msgid "'mainFile' member does not refer to an entry in 'files'."
-msgstr ""
+msgstr "O membro 'mainFile' não se refere a uma entrada em 'arquivos'."
 
 #: molequeue/inputgenerator.cpp:280 qtgui/interfacescript.cpp:383
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "O membro 'mainFile' deve ser uma string."
 
 #: molequeue/inputgenerator.cpp:291 qtgui/interfacescript.cpp:394
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "A resposta deve ser um objeto JSON de nível superior."
 
 #: molequeue/inputgenerator.cpp:295 qtgui/interfacescript.cpp:398
 #, qt-format
@@ -105,6 +109,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Resultado do script:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:338 qtgui/interfacescript.cpp:442
 #, qt-format
@@ -114,6 +120,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Erro de análise no deslocamento % L1: '% 2'\n"
+"JSON bruto:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:362 qtgui/interfacescript.cpp:474
 #, qt-format
