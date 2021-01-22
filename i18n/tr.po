@@ -5,13 +5,14 @@
 # Oğuz Ersen <oguzersen@protonmail.com>, 2020.
 # Talking Panda <memredogan3626@gmail.com>, 2020.
 # Suleyman Poyraz <zaryob.dev@gmail.com>, 2020.
+# Yunus AK <akyunus@live.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2020-10-12 20:26+0000\n"
-"Last-Translator: Suleyman Poyraz <zaryob.dev@gmail.com>\n"
+"PO-Revision-Date: 2021-01-23 06:32+0000\n"
+"Last-Translator: Yunus AK <akyunus@live.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
 "Language: tr\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"X-Generator: Weblate 4.5-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:84
@@ -1119,9 +1120,8 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:258
-#, fuzzy
 msgid "All files (*);;"
-msgstr "Tüm Dosyalar"
+msgstr "TümDosyalar (*);;"
 
 #: qtgui/fileformatdialog.cpp:261
 #, qt-format
@@ -3011,7 +3011,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:243
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Dışa Aktar Bitmap"
 
 #: qtplugins/playertool/playertool.cpp:244
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
