@@ -129,7 +129,13 @@ void CopyPaste::cut()
 
 void CopyPaste::clear()
 {
-  m_molecule->undoMolecule()->clearAtoms();
+  if (m_molecule->isSelectionEmpty())
+    m_molecule->undoMolecule()->clearAtoms();
+  else {
+    for (Index i = 0; i < m_molecule->atomCount(); ++i)
+      if (m_molecule->atomSelected(i))
+        m_molecule->undoMolecule()->removeAtom(i);
+  }
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |
                           QtGui::Molecule::Removed);
 }
