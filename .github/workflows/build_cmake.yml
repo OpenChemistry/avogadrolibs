@@ -8,8 +8,10 @@ on: [push, pull_request]
 
 env:
   BUILD_TYPE: Release
-  QT_VERSION: 5.12.9
-  MACOSX_DEPLOYMENT_TARGET: 10.12
+  QT_VERSION: 5.12.10
+  # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
+  # we set MACOSX_DEPLOYMENT_TARGET later
+  MACOS_TARGET: 10.12
   CCACHE_VERSION: 3.7.7
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON
 
@@ -56,12 +58,11 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        echo "::set-env name=MACOSX_DEPLOYMENT_TARGET::${{ env.MACOSX_DEPLOYMENT_TARGET }}"
-        brew install ninja boost qt eigen glew open-babel
+        brew install ninja boost eigen glew open-babel
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
@@ -106,6 +107,8 @@ jobs:
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
+        # won't have any effect except on Mac
+        echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
         CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
       shell: bash
 
