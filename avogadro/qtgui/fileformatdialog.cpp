@@ -120,7 +120,7 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
     result.first = format;
     result.second = fileName;
 
-  } while (true);
+  } while (false);
 
   return result;
 }
