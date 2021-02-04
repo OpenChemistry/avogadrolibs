@@ -4,8 +4,19 @@ from skbuild import setup
 
 
 def extra_cmake_args():
+    # FIXME: this doesn't seem to work if we supply more than one argument.
+    # I really am not sure why.
     env = os.getenv('EXTRA_CMAKE_ARGS')
     return env.split(';') if env else []
+
+
+def wheel_args():
+    # Check if we are building wheels...
+    env = os.getenv('GITHUB_WORKFLOW')
+    args = [
+      '-DPYTHON_WHEEL_BUILD:BOOL=TRUE',
+    ]
+    return args if env == 'Build Wheels' else []
 
 
 cmake_args = [
@@ -18,7 +29,7 @@ cmake_args = [
     '-DUSE_HDF5:BOOL=FALSE',
     '-DUSE_LIBARCHIVE:BOOL=FALSE',
     '-DUSE_LIBMSYM:BOOL=FALSE',
-] + extra_cmake_args()
+] + extra_cmake_args() + wheel_args()
 
 # Add pybind11 if it is installed
 try:
