@@ -1,4 +1,24 @@
+import os
+
 from skbuild import setup
+
+
+def extra_cmake_args():
+    env = os.getenv('EXTRA_CMAKE_ARGS')
+    return env.split(';') if env else []
+
+
+cmake_args = [
+    '-DUSE_SPGLIB:BOOL=FALSE',
+    '-DUSE_OPENGL:BOOL=FALSE',
+    '-DUSE_QT:BOOL=FALSE',
+    '-DUSE_MMTF:BOOL=FALSE',
+    '-DUSE_PYTHON:BOOL=TRUE',
+    '-DUSE_MOLEQUEUE:BOOL=FALSE',
+    '-DUSE_HDF5:BOOL=FALSE',
+    '-DUSE_LIBARCHIVE:BOOL=FALSE',
+    '-DUSE_LIBMSYM:BOOL=FALSE',
+] + extra_cmake_args()
 
 setup(
     name='avogadro',
@@ -24,16 +44,5 @@ setup(
         'Operating System :: MacOS'
         ],
     packages=['avogadro'],
-    cmake_args=[
-        '-DUSE_SPGLIB:BOOL=FALSE',
-        '-DUSE_OPENGL:BOOL=FALSE',
-        '-DUSE_QT:BOOL=FALSE',
-        '-DUSE_MMTF:BOOL=FALSE',
-        '-DUSE_PYTHON:BOOL=TRUE',
-        '-DUSE_MOLEQUEUE:BOOL=FALSE',
-        '-DUSE_HDF5:BOOL=FALSE',
-        '-DUSE_LIBARCHIVE:BOOL=FALSE',
-        '-DUSE_LIBMSYM:BOOL=FALSE'
-    ]
+    cmake_args=cmake_args,
 )
-
