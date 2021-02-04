@@ -20,6 +20,14 @@ cmake_args = [
     '-DUSE_LIBMSYM:BOOL=FALSE',
 ] + extra_cmake_args()
 
+# Add pybind11 if it is installed
+try:
+    from pybind11 import get_cmake_dir
+except ImportError:
+    pass
+else:
+    cmake_args.append('-Dpybind11_DIR:PATH=' + get_cmake_dir())
+
 setup(
     name='avogadro',
     use_scm_version=True,
