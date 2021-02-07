@@ -4,13 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Andika Tulus Pangestu <andhikatuluspangestu@gmail.com>, 2020.
 # Ferdinand Tampubolon <dnandz@gmail.com>, 2021.
+# Reza Almanda <rezaalmanda27@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-01-11 14:32+0000\n"
-"Last-Translator: Ferdinand Tampubolon <dnandz@gmail.com>\n"
+"PO-Revision-Date: 2021-02-13 01:19+0000\n"
+"Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
 "Language: id\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.4.1-dev\n"
+"X-Generator: Weblate 4.5-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:84
@@ -55,7 +56,7 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:212 qtgui/interfacescript.cpp:314
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Galat saat mengisi file %1: %2"
 
 #: molequeue/inputgenerator.cpp:216 qtgui/interfacescript.cpp:318
 #, qt-format
@@ -101,6 +102,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Keluaran script:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:338 qtgui/interfacescript.cpp:442
 #, qt-format
@@ -139,14 +142,13 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:53
-#, fuzzy
 msgid "Input Generator (error)"
-msgstr "Masukan Pembuat..."
+msgstr "Masukan Pembuat (galat)"
 
 #: molequeue/inputgeneratordialog.cpp:55
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Input Generator"
-msgstr "Masukan Pembuat..."
+msgstr "%1 Masukan Pembuat"
 
 #: molequeue/inputgeneratorwidget.cpp:129
 msgid "Continue"
@@ -196,23 +198,22 @@ msgstr[1] ""
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:159
 #: qtplugins/openmminput/openmminputdialog.cpp:216
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Timpa file masukan yang telah diubah?"
 
 #: molequeue/inputgeneratorwidget.cpp:203
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Masalah terjadi selama pembuatan masukan:"
 
 #: molequeue/inputgeneratorwidget.cpp:292
-#, fuzzy
 msgid "No input files to save!"
-msgstr "abinit gagal dijalankan."
+msgstr "Tidak ada file masukan untuk disimpan!"
 
 #: molequeue/inputgeneratorwidget.cpp:300
 #: molequeue/inputgeneratorwidget.cpp:618 molequeue/molequeuewidget.cpp:84
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:988
 #: qtplugins/gamessinput/gamessinputdialog.cpp:697
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Tidak dapat terhubung ke MoleQueue"
 
 #: molequeue/inputgeneratorwidget.cpp:301
 #: molequeue/inputgeneratorwidget.cpp:619 molequeue/molequeuewidget.cpp:85
@@ -222,56 +223,55 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Tidak dapat terhubung ke server MoleQueue. Pastikan ia berjalan dan coba "
+"lagi."
 
 #: molequeue/inputgeneratorwidget.cpp:333
-#, fuzzy, qt-format
+#, qt-format
 msgid "Submit %1 Calculation"
-msgstr "Membatalkan perhitungan"
+msgstr "Submit %1 Kalkulasi"
 
 #: molequeue/inputgeneratorwidget.cpp:349
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1025
 #: qtplugins/gamessinput/gamessinputdialog.cpp:734
 msgid "Job Failed"
-msgstr ""
+msgstr "Pekerjaan gagal"
 
 #: molequeue/inputgeneratorwidget.cpp:350
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1026
 #: qtplugins/gamessinput/gamessinputdialog.cpp:735
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Pekerjaan tidak berhasil diselesaikan."
 
 #: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:68
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Script mengembalikan peringatan:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:384
-#, fuzzy
 msgid "Hide &Warnings"
-msgstr "Peringatan"
+msgstr "Sembunyikan &Peringatan"
 
 #: molequeue/inputgeneratorwidget.cpp:390
-#, fuzzy
 msgid "Show &Warnings"
-msgstr "Peringatan"
+msgstr "Tampilkan &Peringatan"
 
 #: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:84
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Sebuah galat telah terjadi:"
 
 #: molequeue/inputgeneratorwidget.cpp:458
-#, fuzzy
 msgid "Select output filename"
-msgstr "Pilih Pelarut"
+msgstr "Pilih nama keluaran berkas"
 
 #: molequeue/inputgeneratorwidget.cpp:473
 #, qt-format
 msgid "%1: File exists and is not writable."
-msgstr ""
+msgstr "%1: File ada dan tidak bisa ditulis."
 
 #: molequeue/inputgeneratorwidget.cpp:479
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
-msgstr ""
+msgstr "Galat internal: tidak dapat menemukan widget teks untuk nama berkas'%1'"
 
 #: molequeue/inputgeneratorwidget.cpp:495
 #: molequeue/inputgeneratorwidget.cpp:606
@@ -283,9 +283,8 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:434
 #: qtplugins/openmminput/openmminputdialog.cpp:464
 #: qtplugins/openmminput/openmminputdialog.cpp:478
-#, fuzzy
 msgid "Output Error"
-msgstr "Keluaran:"
+msgstr "Galat Keluaran"
 
 #: molequeue/inputgeneratorwidget.cpp:496
 #: molequeue/inputgeneratorwidget.cpp:607
@@ -6116,7 +6115,7 @@ msgstr ""
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:243
 #. i18n: ectx: property (text), widget (QPushButton, detectSymmetryButton)
 msgid "Detect Symmetry"
-msgstr ""
+msgstr "Deteksi Simetri"
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
@@ -6137,13 +6136,7 @@ msgstr ""
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
-",,,,,,,,,,,,,avogadro-devel@lists.sourceforge.net,,,,,avogadro-devel@lists."
-"sourceforge.net,,,,,avogadro-devel@lists.sourceforge.net,,,,,avogadro-"
-"devel@lists.sourceforge.net,,,,,avogadro-devel@lists.sourceforge.net,,,,,"
-"avogadro-devel@lists.sourceforge.net,,,,,avogadro-devel@lists.sourceforge."
-"net,,,,,,avogadro-devel@lists.sourceforge.net,,,mail@samsul.web.id,,,,"
-"avogadro-devel@lists.sourceforge.net,,,hay@samsul.web.id,"
+msgstr "Email anda"
 
 #, fuzzy
 #~ msgid "Optimize geometry"
