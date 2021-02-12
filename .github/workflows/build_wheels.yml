@@ -12,9 +12,6 @@ env:
   # Need to do some setup before repairing the wheel on linux...
   CIBW_REPAIR_WHEEL_COMMAND_LINUX: bash scripts/github-actions/repair_command_linux.sh
 
-  # Install these before each build...
-  CIBW_BEFORE_BUILD: pip install -r requirements-dev.txt
-
   # Specify eigen location for windows
   CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen"
 
