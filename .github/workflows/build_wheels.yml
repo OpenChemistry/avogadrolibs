@@ -10,13 +10,19 @@ env:
   CIBW_MANYLINUX_X86_64_IMAGE: openchemistry/avogadro_manylinux2010_x86_64
 
   # Need to do some setup before repairing the wheel on linux...
-  CIBW_REPAIR_WHEEL_COMMAND_LINUX: bash ./scripts/github-actions/repair_command_linux.sh
+  CIBW_REPAIR_WHEEL_COMMAND_LINUX: bash scripts/github-actions/repair_command_linux.sh
 
   # Install these before each build...
   CIBW_BEFORE_BUILD: pip install -r requirements-dev.txt
 
   # Specify eigen location for windows
   CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen"
+
+  CIBW_TEST_REQUIRES: pytest
+
+  # Run a very simple test to make sure the wheels are working
+  CIBW_TEST_COMMAND: pytest {project}/scripts/github-actions/simple_test.py
+
 
 # Use bash by default for the run command
 defaults:
