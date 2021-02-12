@@ -179,7 +179,12 @@ void DownloaderWidget::showREADME()
         m_root["content"].is_string()) {
       content = m_root["content"].get<std::string>().c_str();
     }
+
+#if QT_VERSION >= 0x050E00
+    m_ui->readmeBrowser->setMarkdown(QByteArray::fromBase64(content).data());
+#else
     m_ui->readmeBrowser->append(QByteArray::fromBase64(content).data());
+#endif
   }
 }
 
