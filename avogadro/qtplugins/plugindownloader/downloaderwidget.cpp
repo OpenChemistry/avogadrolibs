@@ -44,6 +44,9 @@ DownloaderWidget::DownloaderWidget(QWidget* parent)
     QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
   m_NetworkAccessManager = new QNetworkAccessManager(this);
   m_ui->setupUi(this);
+  // enable links in the readme to open an external browser
+  m_ui->readmeBrowser->setOpenExternalLinks(true);
+
   connect(m_ui->downloadButton, SIGNAL(clicked(bool)), this,
           SLOT(getCheckedRepos()));
   connect(m_ui->repoTable, SIGNAL(cellClicked(int, int)), this,
