@@ -1,18 +1,21 @@
 # translation of _avogadro-de.po to
+# Alex <alexandersimm2@googlemail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2016-06-10 06:29+0000\n"
-"Last-Translator: Ivan Panchenko <pivan@opmbx.org>\n"
-"Language-Team: <de@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2021-02-13 01:19+0000\n"
+"Last-Translator: Alex <alexandersimm2@googlemail.com>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.5-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -2690,9 +2693,8 @@ msgid "Navigate"
 msgstr "Navigieren"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Navigieren"
+msgstr "Navigationswerkzeug"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"

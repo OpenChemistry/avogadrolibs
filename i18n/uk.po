@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-01-30 08:32+0000\n"
+"PO-Revision-Date: 2021-02-13 23:38+0000\n"
 "Last-Translator: Tymofij Lytvynenko <till.svit@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -587,11 +587,11 @@ msgstr "У backgroundFileFormat не встановлено молекулу!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Нема Io::FileFormat встановленого у BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Назви файлу не встановлено у BackgroundFileFormat!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
@@ -1149,9 +1149,8 @@ msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
-#, fuzzy
 msgid "Untitled"
-msgstr "без назви"
+msgstr "Без назви"
 
 #: qtgui/multiviewwidget.cpp:203
 #, fuzzy
@@ -1372,9 +1371,8 @@ msgstr "&Файл"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/vrml/vrml.cpp:58
-#, fuzzy
 msgid "&Export"
-msgstr "Експортувати"
+msgstr "&Експорт"
 
 #: qtplugins/3dmol/3dmol.h:42
 #, fuzzy
@@ -1404,9 +1402,8 @@ msgstr "файл виведених даних Orca"
 #: qtplugins/openmminput/openmminput.cpp:57
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
 msgid "&Extensions"
-msgstr "Розширення"
+msgstr "&Розширення"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -2416,9 +2413,8 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
-#, fuzzy
 msgid "&Import"
-msgstr "Імпортувати"
+msgstr "&Імпорт"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
@@ -2666,9 +2662,8 @@ msgid "Navigate"
 msgstr "Навігація"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Навігація"
+msgstr "Знаряддя навігації"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
