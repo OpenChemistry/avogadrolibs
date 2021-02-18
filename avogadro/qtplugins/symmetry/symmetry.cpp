@@ -126,7 +126,7 @@ void Symmetry::moleculeChanged(unsigned int c)
       if (changes & Molecule::Added || changes & Molecule::Removed)
         updateActions();
     }*/
-  qDebug() << "moleculeChanged";
+
   if ((changes & Molecule::Atoms) &&
       (changes & Molecule::Modified || changes & Molecule::Added ||
        changes & Molecule::Removed)) {
