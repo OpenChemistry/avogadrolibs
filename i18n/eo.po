@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-03-14 09:42+0000\n"
+"PO-Revision-Date: 2021-03-15 14:02+0000\n"
 "Last-Translator: phlostically <phlostically@mailinator.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -1632,7 +1632,7 @@ msgstr "Mapo de Kolora Opakeco"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:58
 msgid "Edit color opacity maps, primarily for volume rendering."
-msgstr ""
+msgstr "Redakti mapon de kolora opakeco, ĉefe por volumena bildigo."
 
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
@@ -1697,7 +1697,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:365
 msgid "Too few entries on line."
-msgstr ""
+msgstr "Tro malmulte da eroj en linio."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:381
 msgid "Invalid element name."
@@ -1758,7 +1758,7 @@ msgstr "Krada koordinato 'c'."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:559
 msgid "Error applying geometry"
-msgstr ""
+msgstr "Eraro pri geometrio"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:560
 msgid ""
@@ -1770,7 +1770,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:594
 msgid "Edit Atomic Coordinates"
-msgstr ""
+msgstr "Redakti Atomajn Koordinatojn"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:185
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
@@ -1792,27 +1792,27 @@ msgstr "XYZ-dosierformo (atomnumeroj)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:611
 msgid "Lattice coordinates (symbols)"
-msgstr ""
+msgstr "Kradaj koordinatoj (simboloj)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612
 msgid "Lattice coordinates (names)"
-msgstr ""
+msgstr "Kradaj koordinatoj (nomoj)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:613
 msgid "Lattice coordinates (atomic numbers)"
-msgstr ""
+msgstr "Kradaj koordinatoj (atomnumeroj)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "GAMESS format (symbols)"
-msgstr ""
+msgstr "GAMESS-dosierformo (simboloj)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:616
 msgid "GAMESS format (names)"
-msgstr ""
+msgstr "GAMESS-dosierformo (nomoj)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:617
 msgid "Turbomole format"
-msgstr ""
+msgstr "Turbomole-dosierformo"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
@@ -1893,7 +1893,7 @@ msgstr "Kopii kaj alglui"
 
 #: qtplugins/copypaste/copypaste.h:46
 msgid "Interact with the clipboard."
-msgstr ""
+msgstr "Interagi kun la tondujo."
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:44
 msgid "&CP2K"
@@ -2040,7 +2040,7 @@ msgstr "Submeti CP2K-Kalkulon"
 
 #: qtplugins/crystal/crystal.cpp:54 qtplugins/crystal/crystal.cpp:182
 msgid "Import Crystal from Clipboard"
-msgstr ""
+msgstr "Importi Kristalon el Tondujo"
 
 #: qtplugins/crystal/crystal.cpp:61
 msgid "Toggle Unit Cell"
@@ -2098,7 +2098,7 @@ msgstr "Kristalo"
 
 #: qtplugins/crystal/crystal.h:75
 msgid "Tools for crystal-specific editing/analysis."
-msgstr ""
+msgstr "Iloj por kristal-specifaj redaktado/analizo."
 
 #: qtplugins/crystal/crystalscene.h:39
 msgid "Crystal Lattice"
@@ -3217,12 +3217,16 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"La tolero estas aktuale: %1.\n"
+"Ĉu daŭrigi laŭ tiu tolero?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:222
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Primitiva redukto malsukcesis.\n"
+"Bonvolu kontroli vian kristalon kaj reprovi laŭ alia tolero."
 
 #: qtplugins/spacegroup/spacegroup.cpp:247
 msgid ""
@@ -3237,6 +3241,8 @@ msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Simetriigo malsukcesis.\n"
+"Bonvolu kontroli vian kristalon kaj reprovi laŭ alia tolero."
 
 #: qtplugins/spacegroup/spacegroup.cpp:326
 msgid "Avogadro2"
@@ -3268,7 +3274,7 @@ msgstr "Spacgrupo"
 
 #: qtplugins/spacegroup/spacegroup.h:76
 msgid "Space group features for crystals."
-msgstr ""
+msgstr "Funkcioj pri spacgrupoj de kristaloj."
 
 #: qtplugins/spectra/spectra.cpp:38
 msgid "Vibrational modes..."
@@ -3280,7 +3286,7 @@ msgstr "Spektroj kaj Vibroj"
 
 #: qtplugins/spectra/spectra.h:47
 msgid "Display spectra and vibrational modes."
-msgstr ""
+msgstr "Montru spektrojn kaj vibrajn modojn."
 
 #: qtplugins/surfaces/surfacedialog.cpp:115
 msgid "Molecular Orbital"
@@ -3341,7 +3347,7 @@ msgstr "Surfacoj"
 
 #: qtplugins/surfaces/surfaces.h:71
 msgid "Read and render surfaces."
-msgstr ""
+msgstr "Legi kaj montri surfacojn."
 
 #: qtplugins/symmetry/operationstablemodel.cpp:60
 msgid "Type"
@@ -4667,7 +4673,7 @@ msgstr "Temperaturo"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:357
 #. i18n: ectx: property (toolTip), widget (QSpinBox, nhChainSpin)
 msgid "Select the number of Nosé-Hoover chains in the NVT ensemble."
-msgstr ""
+msgstr "Elektu la nombron de Nosé-Hoover-ĉenoj en la NVT-ensemblo."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:350
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5590,7 +5596,7 @@ msgstr "Paŝo (dr):"
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
 msgid "Theoretical XRD Pattern Options"
-msgstr ""
+msgstr "Opcioj pri Teoria Ikradia Difrakto"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:17
 #. i18n: ectx: property (toolTip), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
