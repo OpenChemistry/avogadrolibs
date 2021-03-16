@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-03-15 14:02+0000\n"
+"PO-Revision-Date: 2021-03-17 15:18+0000\n"
 "Last-Translator: phlostically <phlostically@mailinator.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -205,13 +205,25 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"La jena dosiero estis modifita:\n"
+"\n"
+"%1\n"
+"\n"
+"Ĉu superskribi viajn ŝanĝojn por uzi la novajn geometrion aŭ opciojn pri "
+"tasko?"
 msgstr[1] ""
+"La jenaj dosieroj estis modifitaj:\n"
+"\n"
+"%1\n"
+"\n"
+"Ĉu superskribi viajn ŝanĝojn por uzi la novajn geometrion aŭ opciojn pri "
+"tasko?"
 
 #: molequeue/inputgeneratorwidget.cpp:177
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:159
 #: qtplugins/openmminput/openmminputdialog.cpp:216
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Ĉu superskribi modifitajn enigajn dosierojn?"
 
 #: molequeue/inputgeneratorwidget.cpp:203
 msgid "Problems occurred during input generation:"
@@ -236,6 +248,8 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Ne eblas konekti al MoleQueue-servilo. Bonvolu certigi ke ĝi funkcias kaj "
+"provi denove."
 
 #: molequeue/inputgeneratorwidget.cpp:333
 #, qt-format
@@ -282,7 +296,7 @@ msgstr "%1: Dosiero ekzistas kaj ne estas surskribebla."
 #: molequeue/inputgeneratorwidget.cpp:479
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
-msgstr ""
+msgstr "Interna eraro: ne troviĝis teksta fenestraĵo por dosiernomo '%1'"
 
 #: molequeue/inputgeneratorwidget.cpp:495
 #: molequeue/inputgeneratorwidget.cpp:606
@@ -507,6 +521,7 @@ msgstr "Nekonata opciotipo '%1' de opcio '%2'."
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
+"Eraro pri agordado de aprioro de opcio '%1'. Netaŭga tipo de fenestraĵo."
 
 #: molequeue/inputgeneratorwidget.cpp:994
 #: molequeue/inputgeneratorwidget.cpp:1031
@@ -518,7 +533,7 @@ msgstr ""
 #: qtgui/interfacewidget.cpp:629
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
-msgstr ""
+msgstr "Eraro pri agordado de aprioro de opcio '%1'. Netaŭga apriora valoro:"
 
 #: molequeue/inputgeneratorwidget.cpp:1008 qtgui/interfacewidget.cpp:514
 #, qt-format
@@ -526,11 +541,13 @@ msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
+"Eraro pri agordado de aprioro de opcio '%1'. Ne troviĝis valida kombina "
+"erindico respondanta al valoro:"
 
 #: molequeue/inputgeneratorwidget.cpp:1160 qtgui/interfacewidget.cpp:691
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
-msgstr ""
+msgstr "Ne pritraktita fenestraĵo en collectOptions por opcio '%1'."
 
 #: molequeue/inputgeneratorwidget.cpp:1202 qtgui/interfacewidget.cpp:726
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:467
@@ -589,6 +606,7 @@ msgstr "Neniu programo elektita."
 #: molequeue/molequeuedialog.cpp:212 molequeue/molequeuewidget.cpp:157
 msgid "Please select the target program from the \"Queue and Program\" list."
 msgstr ""
+"Bonvolu elekti la celitan programon el la listo \"Taskovico kaj Programo\"."
 
 #: molequeue/molequeuewidget.cpp:112
 msgid "Client failed to submit job to MoleQueue."
@@ -1108,11 +1126,11 @@ msgstr "Elekti ruleblaĵon:"
 
 #: qtgui/fileformatdialog.cpp:65
 msgid "Unable to find a suitable file reader for the selected file."
-msgstr ""
+msgstr "Ne troviĝis taŭga dosierlegilo por la elektita dosiero."
 
 #: qtgui/fileformatdialog.cpp:108
 msgid "Unable to find a suitable file writer for the selected format."
-msgstr ""
+msgstr "Ne troviĝis taŭga dosierskribilo por la elektita dosiero."
 
 #: qtgui/fileformatdialog.cpp:155
 msgctxt "File handlers"
@@ -1147,7 +1165,7 @@ msgstr "skribi"
 #: qtgui/fileformatdialog.cpp:171
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
-msgstr ""
+msgstr "Troviĝis pluro da %1 kiu povas %2 ĉi tiun dosierformon. Kiun uzi?"
 
 #: qtgui/fileformatdialog.cpp:258
 msgid "All files (*);;"
@@ -1179,6 +1197,8 @@ msgstr "Perioda Tabelo"
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
+"Eraro pri rulado de programeto '%1 %2': Templimo elĉerpiĝis dum atendado de "
+"komenco (%3)."
 
 #: qtgui/pythonscript.cpp:101
 #, qt-format
@@ -1186,11 +1206,15 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
+"Eraro pri rulado de programeto '%1 %2': malsukcesis skribi al ĉefenigujo ("
+"longo=%3, skribis %4 bajtojn, QProcess-eraro: %5)."
 
 #: qtgui/pythonscript.cpp:114
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
+"Eraro pri rulado de programeto '%1 %2': Templimo elĉerpiĝis dum atendado de "
+"fino (%3)."
 
 #: qtgui/pythonscript.cpp:122
 #, qt-format
@@ -1200,6 +1224,10 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
+"Eraro pri rulado de programeto '%1 %2': Nenormala elirstato %3 (%4: %5)\n"
+"\n"
+"Eligo:\n"
+"%6"
 
 #: qtgui/pythonscript.cpp:146
 msgid "Script failed to start."
@@ -1527,6 +1555,7 @@ msgstr "Ilo por manipulado pri ligoj."
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
+"Ilo por redakti molekulan geometrion ŝanĝante longojn kaj angulojn de ligoj."
 
 #: qtplugins/bonding/bonding.cpp:40
 msgid "Bond Atoms"
@@ -1662,7 +1691,7 @@ msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
-"Elekti la Python-interpretilon por lanĉi eksterajn programetojn.\n"
+"Elektu la Python-interpretilon por lanĉi eksterajn programetojn.\n"
 "Avogadro devas restarti por efektivigi ŝanĝojn."
 
 #: qtplugins/commandscripts/command.h:45
@@ -1687,13 +1716,15 @@ msgstr "Teksta redaktado de atomaj koordinatoj."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:237
 msgid "Overwrite changes?"
-msgstr ""
+msgstr "Ĉu superskribi ŝanĝojn?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:238
 msgid ""
 "The text document has been modified. Would you like to discard your changes "
 "and revert to the current molecule?"
 msgstr ""
+"La tekstodokumento estis modifita. Ĉu vi volas forĵeti viajn ŝanĝojn kaj "
+"aktualigi la molekulon?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:365
 msgid "Too few entries on line."
@@ -1767,6 +1798,10 @@ msgid ""
 "\n"
 "(Hint: Hold the mouse over red text for a description of the error.)"
 msgstr ""
+"Malsukcesis analizi specifon de geometrio. Korektu la elstarigitajn erarojn "
+"kaj reprovu.\n"
+"\n"
+"(Konsilo: Ŝvebigu musmontrilon super ruĝa teksto por priskribo de la eraro.)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:594
 msgid "Edit Atomic Coordinates"
@@ -1776,7 +1811,7 @@ msgstr "Redakti Atomajn Koordinatojn"
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607 :1570
 msgid "Custom"
-msgstr ""
+msgstr "Laŭmenda"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:608
 msgid "XYZ format (symbols)"
@@ -1844,11 +1879,11 @@ msgstr "R&edakti"
 
 #: qtplugins/copypaste/copypaste.cpp:96
 msgid "Error Clipping Molecule"
-msgstr ""
+msgstr "Eraro pri Tondado de Molekulo"
 
 #: qtplugins/copypaste/copypaste.cpp:97
 msgid "Error generating clipboard data."
-msgstr ""
+msgstr "Eraro pri generado de tonduja dateno."
 
 #: qtplugins/copypaste/copypaste.cpp:98
 #, qt-format
@@ -1857,6 +1892,8 @@ msgid ""
 "Output format: %1\n"
 "%2"
 msgstr ""
+"Eliga dosierformo: %1\n"
+"%2"
 
 #: qtplugins/copypaste/copypaste.cpp:102 qtplugins/copypaste/copypaste.cpp:192
 #, qt-format
@@ -1864,6 +1901,8 @@ msgid ""
 "Reader error:\n"
 "%1"
 msgstr ""
+"Eraro de legilo:\n"
+"%1"
 
 #: qtplugins/copypaste/copypaste.cpp:153 qtplugins/copypaste/copypaste.cpp:186
 msgid "Error Pasting Molecule"
@@ -1871,11 +1910,11 @@ msgstr "Eraro pri Algluado de Molekulo"
 
 #: qtplugins/copypaste/copypaste.cpp:154
 msgid "Cannot paste molecule: Clipboard empty!"
-msgstr ""
+msgstr "Ne eblas alglui molekulon: Tondujo malplena!"
 
 #: qtplugins/copypaste/copypaste.cpp:187
 msgid "Error reading clipboard data."
-msgstr ""
+msgstr "Eraro pri legado de tonduja dateno."
 
 #: qtplugins/copypaste/copypaste.cpp:188
 #, qt-format
@@ -1917,7 +1956,7 @@ msgstr "CP2K-enigo"
 
 #: qtplugins/cp2kinput/cp2kinput.h:48
 msgid "Generate input for CP2K."
-msgstr ""
+msgstr "Generi enigon por CP2K."
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:272
 msgid "Energy"
@@ -2008,7 +2047,7 @@ msgstr "BROYDEN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:435
 msgid "Conjugate Gradients"
-msgstr ""
+msgstr "Konjugaj Gradientoj"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:438
 msgid "DIIS"
@@ -2016,7 +2055,7 @@ msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:441
 msgid "Steepest descent"
-msgstr ""
+msgstr "Plej kruta malsupreniro"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:545
 #: qtplugins/gamessinput/gamessinputdialog.cpp:430
@@ -2024,11 +2063,13 @@ msgid ""
 "The input file has been modified. Would you like to overwrite your changes "
 "to reflect the new geometry or job options?"
 msgstr ""
+"La eniga dosiero estis modifita. Ĉu superskribi viajn ŝanĝojn por uzi la "
+"novajn geometrion aŭ opciojn pri tasko?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:549
 #: qtplugins/gamessinput/gamessinputdialog.cpp:434
 msgid "Overwrite modified input file?"
-msgstr ""
+msgstr "Ĉu superskribi modifitan enigan dosieron?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:960
 msgid "Save CP2K input file"
@@ -2114,7 +2155,7 @@ msgstr "Ne Povas Sintakse Analizi Tekston"
 
 #: qtplugins/crystal/importcrystaldialog.cpp:82
 msgid "Failed to read the data with the supplied format."
-msgstr ""
+msgstr "Malsukcesis legi la datenojn laŭ la provizita dosierformo."
 
 #: qtplugins/crystal/unitcelldialog.cpp:262
 #: qtplugins/crystal/unitcelldialog.cpp:275
@@ -2123,15 +2164,15 @@ msgstr "Neniu unita ĉelo ĉeestas."
 
 #: qtplugins/customelements/customelements.cpp:31
 msgid "Reassign &Custom Elements..."
-msgstr ""
+msgstr "Reasigni Laŭmendajn Elementojn… (&C)"
 
 #: qtplugins/customelements/customelements.cpp:44
 msgid "Manipulate custom element types in the current molecule."
-msgstr ""
+msgstr "Manipuli laŭmendajn elementajn tipojn en la aktuala molekulo."
 
 #: qtplugins/customelements/customelements.h:35
 msgid "Custom Elements"
-msgstr ""
+msgstr "Laŭmendaj Elementoj"
 
 #: qtplugins/editor/editor.cpp:84 qtplugins/editor/editor.cpp:118
 msgid "Draw"
@@ -2189,7 +2230,7 @@ msgstr "Forto"
 
 #: qtplugins/force/force.h:44
 msgid "Render the force field visualizations for the atoms of the molecule."
-msgstr ""
+msgstr "Montri la fortokampon de la atomoj en la molekulo."
 
 #: qtplugins/forcefield/forcefielddialog.cpp:331
 #: qtplugins/openbabel/obforcefielddialog.cpp:331
@@ -2219,7 +2260,7 @@ msgstr "Ekvilibra Geometrio"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:243
 msgid "Transition State"
-msgstr ""
+msgstr "Transira Stato"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:246
 msgid "Frequencies"
@@ -2239,15 +2280,15 @@ msgstr "Akvo"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:348
 msgid "Singlet"
-msgstr ""
+msgstr "Unuopo"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:351
 msgid "Doublet"
-msgstr ""
+msgstr "Duopo"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:354
 msgid "Triplet"
-msgstr ""
+msgstr "Triopo"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:369
 msgid "Dication"
@@ -2287,7 +2328,7 @@ msgstr "Aldoni Hidrogenojn"
 
 #: qtplugins/hydrogens/hydrogens.cpp:42
 msgid "Remove E&xtra Hydrogens"
-msgstr ""
+msgstr "Forigi Nenecesajn Hidrogenojn (&X)"
 
 #: qtplugins/hydrogens/hydrogens.cpp:46
 msgid "&Remove All Hydrogens"
@@ -2341,7 +2382,7 @@ msgstr "Enmeti Fragmenton"
 
 #: qtplugins/insertfragment/insertfragment.h:69
 msgid "Insert molecular fragments for building larger molecules."
-msgstr ""
+msgstr "Enmeti molekulajn fragmentojn por konstrui pli grandajn molekulojn."
 
 #: qtplugins/insertfragment/insertfragmentextension.cpp:59
 msgid "Crystal..."
@@ -2377,7 +2418,7 @@ msgstr "Enmeti Kristalon"
 
 #: qtplugins/insertfragment/insertfragmentextension.h:37
 msgid "Insert molecular fragments for building larger molecules"
-msgstr ""
+msgstr "Enmeti molekulajn fragmentojn por konstrui pli grandajn molekulojn"
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:41
 msgid "&LAMMPS Input"
@@ -2396,6 +2437,8 @@ msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
 msgstr ""
+"Ĉu ĝisdatigi la antaŭrigardan tekston, perdante ĉiujn ŝanĝojn faritajn en la "
+"antaŭrigarda panelo de Lammps?"
 
 #: qtplugins/licorice/licorice.h:40
 msgid "Licorice"
@@ -2425,7 +2468,7 @@ msgstr "Neniu priskriboj trovitaj!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:99
 msgid "No line format readers found!"
-msgstr ""
+msgstr "Troviĝis neniu legilo de liniformo!"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
@@ -2436,7 +2479,7 @@ msgstr "Enmeti Molekulon…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:123
 msgid "Unable to load requested format reader."
-msgstr ""
+msgstr "Ne eblas ŝargi petitan formolegilon."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:134
 msgid "Generating 3D molecule..."
@@ -2444,20 +2487,20 @@ msgstr "Generante 3D-molekulon…"
 
 #: qtplugins/lineformatinput/lineformatinput.h:42
 msgid "LineFormatInput"
-msgstr ""
+msgstr "Liniforma Enigo"
 
 #: qtplugins/lineformatinput/lineformatinput.h:65
 msgid "Load single-line molecule descriptors through an input dialog."
-msgstr ""
+msgstr "Ŝargi unulinian molekulan priskribon per eniga dialogo."
 
 #: qtplugins/manipulator/manipulator.cpp:52
 msgid "Manipulate"
-msgstr ""
+msgstr "Manipuli"
 
 #: qtplugins/manipulator/manipulator.h:44
 #: qtplugins/manipulator/manipulator.h:45
 msgid "Manipulate tool"
-msgstr ""
+msgstr "Manipula ilo"
 
 #: qtplugins/measuretool/measuretool.cpp:63
 msgid "Measure"
@@ -2466,7 +2509,7 @@ msgstr "Mezuri"
 #: qtplugins/measuretool/measuretool.cpp:192
 #: qtplugins/measuretool/measuretool.cpp:203
 msgid "Dihedral:"
-msgstr ""
+msgstr "Duedra:"
 
 #: qtplugins/measuretool/measuretool.cpp:193
 msgid "Angle:"
@@ -2497,15 +2540,15 @@ msgstr "Mezura ilo"
 
 #: qtplugins/meshes/meshes.h:40
 msgid "Meshes"
-msgstr ""
+msgstr "Maŝoj"
 
 #: qtplugins/meshes/meshes.h:42
 msgid "Render triangle meshes."
-msgstr ""
+msgstr "Montri triangulajan maŝojn."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 msgid "View general properties of a molecule."
-msgstr ""
+msgstr "Vidi ĝeneralajn atributojn de molekulo."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
 #: qtplugins/resetview/resetview.cpp:54 qtplugins/symmetry/symmetry.cpp:94
@@ -2514,7 +2557,7 @@ msgstr "&Vidi"
 
 #: qtplugins/molecularproperties/molecularproperties.h:42
 msgid "Molecular Properties"
-msgstr ""
+msgstr "Atributoj de Molekulo"
 
 #: qtplugins/mongochem/listmoleculesmodel.cpp:80
 msgid "Formula"
@@ -2534,7 +2577,7 @@ msgstr "MongoChem-Servilo"
 
 #: qtplugins/mongochem/mongochem.h:44
 msgid "Interface with Mongo Chem Server."
-msgstr ""
+msgstr "Interfaco al MongoChem-Servilo."
 
 #: qtplugins/navigator/navigator.cpp:45
 msgid "Navigate"
@@ -2555,7 +2598,7 @@ msgstr "Elŝutota kemia strukturo."
 #: qtplugins/networkdatabases/networkdatabases.cpp:102
 #, qt-format
 msgid "Querying for %1"
-msgstr ""
+msgstr "Serĉante %1"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:113
 #: qtplugins/networkdatabases/networkdatabases.cpp:124
@@ -2564,20 +2607,20 @@ msgstr "Malsukcesis Reta Elŝuto"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:114
 msgid "Network timeout or other error."
-msgstr ""
+msgstr "Reta templimo aŭ alia eraro."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:125
 #, qt-format
 msgid "Specified molecule could not be found: %1"
-msgstr ""
+msgstr "Specifita molekulo ne troviĝis: %1"
 
 #: qtplugins/networkdatabases/networkdatabases.h:47
 msgid "Network Databases"
-msgstr ""
+msgstr "Retaj Datenbankoj"
 
 #: qtplugins/networkdatabases/networkdatabases.h:51
 msgid "Interact with online databases, query structures etc."
-msgstr ""
+msgstr "Interagi kun retaj datenbankoj, serĉi strukturojn, ktp."
 
 #: qtplugins/openbabel/openbabel.cpp:52 qtplugins/openbabel/openbabel.cpp:471
 msgid "Optimize Geometry"
@@ -2589,7 +2632,7 @@ msgstr "Agordi Fortokampon…"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
-msgstr ""
+msgstr "Trovi Ligojn"
 
 #: qtplugins/openbabel/openbabel.cpp:77
 msgid "Add Hydrogens for pH..."
@@ -2602,34 +2645,36 @@ msgstr "Forigi Hidrogenojn"
 #: qtplugins/openbabel/openbabel.cpp:93
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
-msgstr ""
+msgstr "%1 ne troviĝis! Malŝaltante agojn de OpenBabel-kromprogramo."
 
 #: qtplugins/openbabel/openbabel.cpp:111
 msgid "&Open Babel"
-msgstr ""
+msgstr "&OpenBabel"
 
 #: qtplugins/openbabel/openbabel.cpp:118
 msgid "The Open Babel file formats are not ready to be added."
-msgstr ""
+msgstr "La OpenBabel-dosierformoj ne pretas aldoniĝi."
 
 #: qtplugins/openbabel/openbabel.cpp:194
 msgid "Loading molecule from CML..."
-msgstr ""
+msgstr "Ŝargante molekulon el CML…"
 
 #: qtplugins/openbabel/openbabel.cpp:200
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
+"Okazis interna eraro: alvokiĝis OpenBabel::readMolecule, sed neniu analizota "
+"OpenBabel-eligo disponeblas!"
 
 #: qtplugins/openbabel/openbabel.cpp:209
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
-msgstr ""
+msgstr "Okazis eraro dum rulado de OpenBabel (%1)."
 
 #: qtplugins/openbabel/openbabel.cpp:219
 msgid "Error parsing openbabel output."
-msgstr ""
+msgstr "Eraro pri sintakso de OpenBabel-eligo."
 
 #: qtplugins/openbabel/openbabel.cpp:312 qtplugins/openbabel/openbabel.cpp:347
 #, qt-format
@@ -2637,34 +2682,35 @@ msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
+"Okazis eraro akirante la liston de subtenataj fortokampoj. (uzante '%1')."
 
 #: qtplugins/openbabel/openbabel.cpp:338
 msgid "Molecule invalid. Cannot optimize geometry."
-msgstr ""
+msgstr "Molekulo ne estas valida. Ne eblas optimumigi geometrion."
 
 #: qtplugins/openbabel/openbabel.cpp:356
 msgid "Cannot optimize geometry with Open Babel."
-msgstr ""
+msgstr "Ne eblas optimumigi geometrion per OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:381
 msgid "Optimizing Geometry (Open Babel)"
-msgstr ""
+msgstr "Optimumigante Geometrion (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:382
 msgid "Generating MDL..."
-msgstr ""
+msgstr "Generante MDL…"
 
 #: qtplugins/openbabel/openbabel.cpp:399
 msgid ""
 "An internal error occurred while generating an CML representation of the "
 "current molecule."
-msgstr ""
+msgstr "Interna eraro okazis generante CML-prezenton de la aktuala molekulo."
 
 #: qtplugins/openbabel/openbabel.cpp:405
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1..."
-msgstr ""
+msgstr "Lanĉante %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:418 qtplugins/openbabel/openbabel.cpp:426
 #, qt-format
@@ -2683,7 +2729,7 @@ msgstr "Ĝisdatigante molekulon…"
 
 #: qtplugins/openbabel/openbabel.cpp:448 qtplugins/openbabel/openbabel.cpp:703
 msgid "Error interpreting Open Babel output."
-msgstr ""
+msgstr "Eraro pri interpretado de OpenBabel-eligo."
 
 #: qtplugins/openbabel/openbabel.cpp:461 qtplugins/openbabel/openbabel.cpp:540
 #, qt-format
@@ -2691,18 +2737,20 @@ msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
+"Nombro de atomoj en OpenBabel-eligo (%1) ne kongruas kun la nombro de atomoj "
+"en la originala molekulo (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:480
 msgid "Cannot open file with Open Babel."
-msgstr ""
+msgstr "Ne eblas malfermi dosieron per OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:486
 msgid "Invalid molecule: Cannot perceive bonds."
-msgstr ""
+msgstr "Ne valida molekulo: Ne eblas trovi ligojn."
 
 #: qtplugins/openbabel/openbabel.cpp:492
 msgid "Perceiving Bonds (Open Babel)"
-msgstr ""
+msgstr "Trovante Ligojn (per OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:493
 msgid "Generating XYZ representation..."
@@ -2719,15 +2767,15 @@ msgstr "Konvertante XYZ al CML laŭ %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:520
 msgid "Updating molecule from CML..."
-msgstr ""
+msgstr "Ĝisdatigante molekulon laŭ CML…"
 
 #: qtplugins/openbabel/openbabel.cpp:528
 msgid "Error interpreting obabel CML output."
-msgstr ""
+msgstr "Eraro pri interpretado de CML-eligo de OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:572 qtplugins/openbabel/openbabel.cpp:612
 msgid "Cannot add hydrogens with Open Babel."
-msgstr ""
+msgstr "Ne eblas aldoni hidrogenojn per OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:577 qtplugins/openbabel/openbabel.cpp:625
 msgid "Adding Hydrogens (Open Babel)"
@@ -2735,11 +2783,11 @@ msgstr "Aldonante Hidrogenojn (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:578
 msgid "Generating Open Babel input..."
-msgstr ""
+msgstr "Generante enigon de OpenBabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:585 qtplugins/openbabel/openbabel.cpp:633
 msgid "Error generating Open Babel input."
-msgstr ""
+msgstr "Eraro pri generado de enigo de OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:598 qtplugins/openbabel/openbabel.cpp:646
 #: qtplugins/openbabel/openbabel.cpp:685
@@ -2757,7 +2805,7 @@ msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:626 qtplugins/openbabel/openbabel.cpp:666
 msgid "Generating obabel input..."
-msgstr ""
+msgstr "Generante enigon de OpenBabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:660
 msgid "Cannot remove hydrogens with Open Babel."
@@ -2779,7 +2827,7 @@ msgstr "Legante eligon de OpenBabel…"
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
-msgstr ""
+msgstr "Jam ruliĝas OpenBabel. Atendu la finon de la alia operacio kaj reprovu."
 
 #: qtplugins/openbabel/openbabel.h:47
 msgid "OpenBabel"
@@ -2787,7 +2835,7 @@ msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:51
 msgid "Interact with OpenBabel utilities."
-msgstr ""
+msgstr "Interagi kun OpenBabel-utilaĵoj."
 
 #: qtplugins/openmminput/openmminput.cpp:41
 msgid "&OpenMM Script Builder"
@@ -2795,7 +2843,7 @@ msgstr "Konstruilo de &OpenMM-Programetoj"
 
 #: qtplugins/openmminput/openmminput.h:42
 msgid "OpenMM input"
-msgstr ""
+msgstr "OpenMM-enigo"
 
 #: qtplugins/openmminput/openmminput.h:46
 msgid "Generate input for OpenMM."
@@ -2806,6 +2854,8 @@ msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
 msgstr ""
+"Ĉu ĝisdatigi la antaŭrigardan tekston, perdante ĉiujn ŝanĝojn faritajn en la "
+"antaŭrigarda panelo de OpenMM?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:505
 #: qtplugins/openmminput/openmminputdialog.cpp:508
@@ -2861,11 +2911,11 @@ msgstr "Vera"
 
 #: qtplugins/overlayaxes/overlayaxes.h:41
 msgid "Reference Axes Overlay"
-msgstr ""
+msgstr "Surmeto de Referencaj Aksoj"
 
 #: qtplugins/overlayaxes/overlayaxes.h:45
 msgid "Render reference axes in the corner of the display."
-msgstr ""
+msgstr "Montri referencajn aksojn ĉe angulo de la montrejo."
 
 #: qtplugins/playertool/playertool.cpp:61
 msgid "Player"
@@ -2930,11 +2980,11 @@ msgstr "GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:262
 msgid "GIF FPS support warning"
-msgstr ""
+msgstr "Averto pri nombro de filmeroj en GIF-dosiero"
 
 #: qtplugins/playertool/playertool.cpp:263
 msgid "The GIF file format does not support frame rates over 100 FPS."
-msgstr ""
+msgstr "La GIF-dosierformo ne subtenas filmerojn pli ol po 100 en sekundo."
 
 #: qtplugins/playertool/playertool.cpp:305
 msgid "Movie (*.avi)"
@@ -2965,11 +3015,11 @@ msgstr "Reludi trajektorion"
 
 #: qtplugins/plotpdf/plotpdf.cpp:48
 msgid "Plot Pair Distribution Function..."
-msgstr ""
+msgstr "Desegni Paro-Distribuan Funkcion…"
 
 #: qtplugins/plotpdf/plotpdf.cpp:132
 msgid "Failed to generate PDF pattern"
-msgstr ""
+msgstr "Malsukcesis generado de paro-distribua funkcio"
 
 #: qtplugins/plotpdf/plotpdf.cpp:133 qtplugins/plotxrd/plotxrd.cpp:131
 msgid "Error message: "
@@ -2981,11 +3031,11 @@ msgstr "PlotPdf"
 
 #: qtplugins/plotpdf/plotpdf.h:78
 msgid "Generate and plot a Pair Distribution Function curve."
-msgstr ""
+msgstr "Generi kaj dezegni kurbon de paro-distribua funkcio."
 
 #: qtplugins/plotrmsd/plotrmsd.cpp:43
 msgid "Plot RMSD curve..."
-msgstr ""
+msgstr "Desegni RMSD-kurbon…"
 
 #: qtplugins/plotrmsd/plotrmsd.h:44
 msgid "PlotRmsd"
@@ -2993,27 +3043,27 @@ msgstr "PlotRmsd"
 
 #: qtplugins/plotrmsd/plotrmsd.h:73
 msgid "Generate and plot an RMSD curve."
-msgstr ""
+msgstr "Generi kaj desegni RMSD-kurbon."
 
 #: qtplugins/plotxrd/plotxrd.cpp:45
 msgid "Plot Theoretical XRD Pattern..."
-msgstr ""
+msgstr "Desegni Teorian Formon de Iksradia Difrakto…"
 
 #: qtplugins/plotxrd/plotxrd.cpp:130
 msgid "Failed to generate XRD pattern"
-msgstr ""
+msgstr "Malsukcesis generado de teoria formo de ikradia difrakto"
 
 #: qtplugins/plotxrd/plotxrd.cpp:165
 msgid "Failed to convert molecule to CIF format."
-msgstr ""
+msgstr "Malsukcesis konverti molekulon al dosierformo CIF."
 
 #: qtplugins/plotxrd/plotxrd.cpp:200
 msgid "Data read from genXrdPattern appears to be corrupt!"
-msgstr ""
+msgstr "Datenoj legitaj el genXrdPattern ŝajnas koruptitaj!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:238
 msgid "Error: could not find genXrdPattern executable!"
-msgstr ""
+msgstr "Eraro: ne troviĝis ruleblaĵo genXrdPattern!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:248 qtplugins/plotxrd/plotxrd.cpp:260
 #: qtplugins/plotxrd/plotxrd.cpp:271 qtplugins/plotxrd/plotxrd.cpp:278
@@ -3026,21 +3076,21 @@ msgstr "PlotXrd"
 
 #: qtplugins/plotxrd/plotxrd.h:93
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
-msgstr ""
+msgstr "Generi kaj desegni teorian formon de iksradia difrakto per ObjCryst++."
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
 #: qtplugins/plugindownloader/plugindownloader.h:46 :1492
 msgid "Plugin Downloader"
-msgstr ""
+msgstr "Kromprogramo-Elŝutilo"
 
 #: qtplugins/plugindownloader/plugindownloader.h:50
 msgid "Downloader plugins from Github repositories."
-msgstr ""
+msgstr "Elŝuti kromprogramojn el Github-deponejoj."
 
 #: qtplugins/povray/povray.cpp:41
 msgid "POV-Ray Render"
-msgstr ""
+msgstr "Bildigi per POV-Ray"
 
 #: qtplugins/povray/povray.cpp:82 qtplugins/vrml/vrml.cpp:82
 msgid "Save File"
@@ -3056,7 +3106,7 @@ msgstr "POVRay"
 
 #: qtplugins/povray/povray.h:40
 msgid "Render the scene using POV-Ray."
-msgstr ""
+msgstr "Bildigi la scenon per POV-Ray."
 
 #: qtplugins/qtaim/qtaimengine.h:39 qtplugins/qtaim/qtaimextension.cpp:90
 #: qtplugins/qtaim/qtaimextension.h:35
@@ -3065,7 +3115,7 @@ msgstr "QTAIM"
 
 #: qtplugins/qtaim/qtaimengine.h:43
 msgid "Renders primitives using QTAIM properties"
-msgstr ""
+msgstr "Montri primitivaĵojn laŭ QTAIM-atributoj"
 
 #: qtplugins/qtaim/qtaimextension.cpp:59
 msgid "Molecular Graph..."
@@ -3073,7 +3123,7 @@ msgstr "Molekula Grafo…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:66
 msgid "Molecular Graph with Lone Pairs..."
-msgstr ""
+msgstr "Molekula Grafo kun Solaj Paroj…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:73
 msgid "Atomic Charge..."
@@ -3081,7 +3131,7 @@ msgstr "Atoma Ŝargo…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:90
 msgid "E&xtensions"
-msgstr ""
+msgstr "Etendaĵoj (&X)"
 
 #: qtplugins/qtaim/qtaimextension.cpp:122
 msgid "Open WFN File"
@@ -3100,6 +3150,8 @@ msgid ""
 "Select the python interpreter used to run input generator scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Elektu la Python-interpretilon por lanĉi enigo-generajn programetojn.\n"
+"Avogadro devas restarti por efektivigi ŝanĝojn."
 
 #: qtplugins/quantuminput/quantuminput.cpp:215
 msgid "Set Python Path..."
@@ -3135,7 +3187,7 @@ msgstr "Dosierformoj de Programetoj"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:43
 msgid "Load file reader/writers from external scripts."
-msgstr ""
+msgstr "Ŝargi dosierlegilojn/dosierskribilojn el eksteraj programetoj."
 
 #: qtplugins/select/select.cpp:34
 msgid "Select All"
@@ -3204,6 +3256,8 @@ msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
+"Trovado de spacgrupo malsukcesis.\n"
+"Ĉu reprovi laŭ alia tolero?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:208
 msgid "Primitive Reduction"
@@ -4077,6 +4131,7 @@ msgstr "Importi Kristalon"
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
 msgstr ""
+"Dosiera etendaĵo por konverti al OpenBabel (apriore - Avogadro::POSCAR):"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
@@ -4302,14 +4357,14 @@ msgstr "Optimumiga algoritmo:"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "Steepest Descent"
-msgstr ""
+msgstr "Plej Kruta Malsupreniro"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:143
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "Conjugate Gradient"
-msgstr ""
+msgstr "Konjuga Gradiento"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
@@ -4403,7 +4458,7 @@ msgstr "Filtri:"
 #. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:29
 #. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
 msgid "Type a name or part of a name to show only matching files."
-msgstr ""
+msgstr "Tajpu nomon aŭ parton de nomo por montri nur kongruajn dosierojn."
 
 #. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:36
 #. i18n: ectx: property (text), widget (QToolButton, clearToolButton)
@@ -4637,7 +4692,7 @@ msgstr "ondopaketo"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:299
 #. i18n: ectx: property (toolTip), widget (QLineEdit, readDataLine)
 msgid "Specify the name to be used for the coordinate file."
-msgstr ""
+msgstr "Specifu la nomon uzotan por la koordinata dosiero."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:292
 #. i18n: ectx: property (text), widget (QLabel, label_readdata)
@@ -4691,6 +4746,7 @@ msgstr "NH-Ĉenoj"
 msgid ""
 "Time step for the simulation in units according to \"Units\" specification."
 msgstr ""
+"Tempopaŝo por la simulado en mezurunuoj laŭ la specifo de \"Mezurunuoj\"."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:396
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -4830,7 +4886,7 @@ msgstr "Repliki la Z-direkton."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:659
 #. i18n: ectx: property (toolTip), widget (QSpinBox, runSpin)
 msgid "Total number of timesteps to run the simulation."
-msgstr ""
+msgstr "Totala nombro de tempopaŝoj por la simulado."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:652
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -4897,7 +4953,7 @@ msgstr "Nul Momanto de Movokvanto"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:807
 #. i18n: ectx: property (toolTip), widget (QLabel, label_10)
 msgid "Control the thermodynamic output during the simulation."
-msgstr ""
+msgstr "Regi la termodinamikan eligon dum la simulado."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:810
 #. i18n: ectx: property (text), widget (QLabel, label_10)
@@ -5461,7 +5517,7 @@ msgstr "Temperaturo:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:632
 #. i18n: ectx: property (text), widget (QLabel, label_barostat)
 msgid "Barostat:"
-msgstr ""
+msgstr "Premkonstantigilo:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:645
 #. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
@@ -5481,7 +5537,7 @@ msgstr " atm"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:676
 #. i18n: ectx: property (text), widget (QLabel, label_barostatInterval)
 msgid "Barostat Interval"
-msgstr ""
+msgstr "Intervalo de Premkonstantigado"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:703
 #. i18n: ectx: property (text), widget (QLabel, label_reporters)
@@ -5516,7 +5572,7 @@ msgstr "Paŝoj de Ekvilibrigo:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
 #. i18n: ectx: property (text), widget (QLabel, label_productionSteps)
 msgid "Production Steps:"
-msgstr ""
+msgstr "Paŝoj de Produktado:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:800
 #. i18n: ectx: property (text), widget (QLabel, label_minimize)
@@ -5526,7 +5582,7 @@ msgstr "Ĉu minimumigi?"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:821
 #. i18n: ectx: property (text), widget (QLabel, label_minimizeSteps)
 msgid "Max. Minimize Steps:"
-msgstr ""
+msgstr "Maksimuma nombro de paŝoj por minimumigo:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:841
 #. i18n: ectx: property (text), widget (QLabel, label_stateDataOptions)
@@ -5581,7 +5637,7 @@ msgstr "Denso"
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
 msgid "PDF Plot Options"
-msgstr ""
+msgstr "Opcioj pri PDF-Desegno"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5596,7 +5652,7 @@ msgstr "Paŝo (dr):"
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
 msgid "Theoretical XRD Pattern Options"
-msgstr "Opcioj pri Teoria Ikradia Difrakto"
+msgstr "Opcioj pri Teoria Iksradia Difrakto"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:17
 #. i18n: ectx: property (toolTip), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
