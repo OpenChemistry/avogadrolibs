@@ -1,20 +1,23 @@
 # English (United Kingdom) translation for avogadro
 # Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same licence as the avogadro package.
+# My Random Thoughts <weblate@myrandomthoughts.co.uk>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2016-06-10 06:31+0000\n"
-"Last-Translator: Geoff Hutchison <Unknown>\n"
-"Language-Team: English (United Kingdom) <en_GB@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2021-03-26 23:29+0000\n"
+"Last-Translator: My Random Thoughts <weblate@myrandomthoughts.co.uk>\n"
+"Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
+"avogadro/avogadrolibs/en_GB/>\n"
+"Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.6-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -1073,9 +1076,8 @@ msgid "Browse"
 msgstr "Browse..."
 
 #: qtgui/filebrowsewidget.cpp:113
-#, fuzzy
 msgid "Select file:"
-msgstr " Selection failure"
+msgstr "Select file:"
 
 #: qtgui/filebrowsewidget.cpp:116
 #, fuzzy
@@ -1283,7 +1285,7 @@ msgstr "Change Bond Order"
 #: qtgui/rwmolecule.cpp:901
 #, fuzzy
 msgid "Update Bonds"
-msgstr " Snap-to Bonds"
+msgstr "Update Bonds"
 
 #: qtgui/rwmolecule.cpp:940
 #, fuzzy
@@ -1412,7 +1414,7 @@ msgstr ""
 #: qtplugins/apbs/apbs.cpp:127
 #, fuzzy
 msgid "IO Error"
-msgstr " Error "
+msgstr "IO Error"
 
 #: qtplugins/apbs/apbs.cpp:128
 #, fuzzy, qt-format
@@ -1597,9 +1599,8 @@ msgid "S&erver"
 msgstr ""
 
 #: qtplugins/clientserver/clientserver.cpp:159
-#, fuzzy
 msgid "Connection failed"
-msgstr " Selection failure"
+msgstr "Connection failed"
 
 #: qtplugins/clientserver/clientserver.cpp:160
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:68
@@ -3136,9 +3137,8 @@ msgid "Failed to generate PDF pattern"
 msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.cpp:133 qtplugins/plotxrd/plotxrd.cpp:131
-#, fuzzy
 msgid "Error message: "
-msgstr "I'm an error message!"
+msgstr "Error message: "
 
 #: qtplugins/plotpdf/plotpdf.h:44
 msgid "PlotPdf"
@@ -3182,9 +3182,8 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:248 qtplugins/plotxrd/plotxrd.cpp:260
 #: qtplugins/plotxrd/plotxrd.cpp:271 qtplugins/plotxrd/plotxrd.cpp:278
-#, fuzzy
 msgid "Error: "
-msgstr " Error "
+msgstr "Error: "
 
 #: qtplugins/plotxrd/plotxrd.h:46
 msgid "PlotXrd"
@@ -3325,9 +3324,8 @@ msgid "Invert Selection"
 msgstr "&Invert Selection"
 
 #: qtplugins/select/select.cpp:59
-#, fuzzy
 msgid "Change selections"
-msgstr " valence electrons"
+msgstr "Change selections"
 
 #: qtplugins/select/select.cpp:69
 msgid "&Select"
@@ -4484,7 +4482,7 @@ msgstr "Time Limit:"
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
 #, fuzzy
 msgid " units"
-msgstr "Units"
+msgstr " units"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:62
 #. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
@@ -4499,9 +4497,8 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
 #. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
-#, fuzzy
 msgid " steps"
-msgstr "steps"
+msgstr " steps"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:100
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
@@ -5392,9 +5389,8 @@ msgstr "Electrostatic Potential"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:166
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, eleCutoff)
-#, fuzzy
 msgid "Å"
-msgstr " Å"
+msgstr "Å"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
@@ -5703,9 +5699,8 @@ msgstr "Time Step"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:553
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, stepSpin)
-#, fuzzy
 msgid " fs"
-msgstr "fs"
+msgstr " fs"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
