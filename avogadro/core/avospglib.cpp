@@ -25,7 +25,7 @@
 #include <iostream>
 
 extern "C" {
-#include "spglib/spglib.h"
+#include "spglib.h"
 }
 
 namespace Avogadro {
