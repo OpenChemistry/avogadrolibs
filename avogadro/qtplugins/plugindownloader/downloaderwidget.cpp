@@ -71,9 +71,8 @@ DownloaderWidget::~DownloaderWidget()
 }
 
 // download master plugin.json from Avogadro.cc
-void DownloaderWidget::getRepoData()
+void DownloaderWidget::getRepoData(QString url)
 {
-  QString url = "https://avogadro.cc/plugins.json";
   QNetworkRequest request;
   request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/"
                                  "xml;q=0.9,image/webp,*/*;q=0.8");
@@ -120,17 +119,30 @@ void DownloaderWidget::updateRepoData()
           m_repoList[i].zipballUrl = it.value().get<std::string>().c_str();
         else if (it.key() == "has_release" && it.value().is_boolean())
           m_repoList[i].hasRelease = it.value().get<bool>();
+        else if (it.key() == "repo_url" && it.value().is_string())
+          m_repoList[i].baseUrl = it.value().get<std::string>().c_str();
+        else if (it.key() == "readme_url" && it.value().is_string())
+          m_repoList[i].readmeUrl = it.value().get<std::string>().c_str();
       }
 
-      // readme should be included or at least the repo url so we don't have to
-      // do this
-      QStringList urlParts = m_repoList[i].zipballUrl.split("/");
-      urlParts.removeLast();
-      urlParts.removeLast(); // remove /zipball/(version/branch)
-      urlParts.append("readme");
-      QString readmeUrl = urlParts.join("/");
+      QStringList urlParts;
+      QString readmeUrl;
+      // If the readme wasn't supplied with the JSON, figure it out
+      if (m_repoList[i].readmeUrl == "Error") {
+        if (m_repoList[i].baseUrl != "Error")
+          urlParts = m_repoList[i].baseUrl.split("/");
+        else {
+          urlParts = m_repoList[i].zipballUrl.split("/");
+          urlParts.removeLast();
+          urlParts.removeLast(); // remove /zipball/(version/branch)
+          // save this as the base URL
+          m_repoList[i].baseUrl = urlParts.join("/");
+        }
+        urlParts.append("readme");
+        readmeUrl = urlParts.join("/");
+        m_repoList[i].readmeUrl = readmeUrl;
+      }
 
-      m_repoList[i].readmeUrl = readmeUrl;
       QTableWidgetItem* checkbox = new QTableWidgetItem();
       checkbox->setCheckState(Qt::Unchecked);
       m_ui->repoTable->setItem(i, 0, checkbox);
