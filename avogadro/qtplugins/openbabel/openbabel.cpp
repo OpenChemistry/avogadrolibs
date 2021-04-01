@@ -115,7 +115,7 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
 {
   // Return empty list if not ready yet, and print a warning.
   if (m_readFormatsPending || m_writeFormatsPending) {
-    qWarning() << tr("The Open Babel file formats are not ready to be added.");
+    qDebug() << tr("The Open Babel file formats are not ready to be added.");
     return QList<Io::FileFormat*>();
   }
 
@@ -170,6 +170,8 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
     fmt->setReadWriteFlags(rw);
     result.append(fmt);
   }
+
+  qDebug() << "Open Babel formats ready: " << result.size();
 
   return result;
 }
