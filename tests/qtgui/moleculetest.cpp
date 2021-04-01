@@ -528,6 +528,51 @@ TEST_F(MoleculeTest, radius)
   EXPECT_DOUBLE_EQ(mol.radius(), sqrt(3.));
 }
 
+TEST_F(MoleculeTest, bestFitPlane)
+{
+  Array<Avogadro::Vector3> coords;
+  coords.push_back(Avogadro::Vector3(0.0, 1.0, 1.0));
+  coords.push_back(Avogadro::Vector3(0.0, 1.0, -1.0));
+  coords.push_back(Avogadro::Vector3(0.0, -1.0, 1.0));
+  coords.push_back(Avogadro::Vector3(0.0, -1.0, -1.0));
+  std::pair<Avogadro::Vector3, Avogadro::Vector3> bestFitPlane =
+    Molecule::bestFitPlane(coords);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.x(), 0.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.y(), 0.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.z(), 0.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.x(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.y(), 0.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.z(), 0.0);
+
+  coords.clear();
+
+  coords.push_back(Avogadro::Vector3(3.0, 0.0, 0.0));
+  coords.push_back(Avogadro::Vector3(0.0, 3.0, 0.0));
+  coords.push_back(Avogadro::Vector3(0.0, 0.0, 3.0));
+  bestFitPlane = Molecule::bestFitPlane(coords);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.x(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.y(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.z(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.x(), -sqrt(3.) / 3.);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.y(), -sqrt(3.) / 3.);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.z(), -sqrt(3.) / 3.);
+
+  Molecule mol;
+  Atom a = mol.addAtom(8);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(3.0, 0.0, 0.0));
+  a = mol.addAtom(1);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(0.0, 3.0, 0.0));
+  a = mol.addAtom(1);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(0.0, 0.0, 3.0));
+  bestFitPlane = mol.bestFitPlane();
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.x(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.y(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.z(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.x(), -sqrt(3.) / 3.);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.y(), -sqrt(3.) / 3.);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.z(), -sqrt(3.) / 3.);
+}
+
 TEST_F(MoleculeTest, persistentBond)
 {
   Molecule molecule;

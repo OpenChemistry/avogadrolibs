@@ -545,6 +545,17 @@ public:
   double radius() const;
 
   /**
+   * @return The (centroid, normal vector) pair of the best-fit plane of
+   * the atoms of the molecule.
+   */
+  std::pair<Vector3, Vector3> bestFitPlane() const;
+
+  /**
+   * @return The normal vector of the best-fit plane of some specific atoms.
+   */
+  static std::pair<Vector3, Vector3> bestFitPlane(const Array<Vector3>& pos);
+
+  /**
    * Set the basis set for the molecule, note that the molecule takes ownership
    * of the object.
    */
