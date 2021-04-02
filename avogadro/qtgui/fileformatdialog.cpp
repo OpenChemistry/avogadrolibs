@@ -90,9 +90,10 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
   FormatFilePair result(nullptr, QString());
   // Use the default read filter if none specified:
   const QString realFilter = filter.isEmpty() ? writeFileFilter() : filter;
-
+  
+QString fileName;
   do { // jump point for continue statements on retry
-    QString fileName =
+    fileName =
       QFileDialog::getSaveFileName(parentWidget, caption, dir, realFilter);
 
     if (fileName.isEmpty()) // user cancel
@@ -120,7 +121,7 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
     result.first = format;
     result.second = fileName;
 
-  } while (true);
+  } while (fileName.isEmpty());
 
   return result;
 }
