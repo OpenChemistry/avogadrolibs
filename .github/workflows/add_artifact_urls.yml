@@ -1,0 +1,20 @@
+name: add artifact links to pull request and related issues
+on:
+  workflow_run:
+    workflows: ['CMake Build Matrix']
+    types: [completed]
+
+jobs:
+  artifacts-url-comments:
+    name: add artifact links to pull request and related issues job
+    runs-on: windows-2019
+    steps:
+      - name: add artifact links to pull request and related issues step
+        uses: tonyhallett/artifacts-url-comments@v1.0.0
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            prefix: Here are the build results
+            suffix: Artifacts will only be retained for 90 days.
+            format: name
+            addTo: pullandissues
