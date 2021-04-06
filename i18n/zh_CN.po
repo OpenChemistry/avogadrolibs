@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-02-17 05:50+0000\n"
+"PO-Revision-Date: 2021-04-03 11:26+0000\n"
 "Last-Translator: Liu Tao <lyuutau@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hans/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.5\n"
+"X-Generator: Weblate 4.6-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:84
@@ -58,7 +58,7 @@ msgstr "填充文件时出错%1。%2"
 #, fuzzy, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
-msgstr "文件'{6}'格式不正确。缺少字符串\"内容\"或\"filePath\"成员。"
+msgstr "文件'%1'格式不正确。缺少字符串\"内容\"或\"filePath\"成员。"
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:351
 #, qt-format
@@ -1220,8 +1220,9 @@ msgid "Script crashed."
 msgstr "脚本崩溃。"
 
 #: qtgui/pythonscript.cpp:152
+#, fuzzy
 msgid "Script timed out."
-msgstr ""
+msgstr "脚本超时。"
 
 #: qtgui/pythonscript.cpp:155
 msgid "Read error."
@@ -1229,7 +1230,7 @@ msgstr "读取错误。"
 
 #: qtgui/pythonscript.cpp:158
 msgid "Write error."
-msgstr ""
+msgstr "写入错误。"
 
 #: qtgui/pythonscript.cpp:162
 msgid "Unknown error."
@@ -1271,7 +1272,7 @@ msgstr "更改元素"
 
 #: qtgui/rwmolecule.cpp:560
 msgid "Change Atom Hybridization"
-msgstr ""
+msgstr "改变原子杂化"
 
 #: qtgui/rwmolecule.cpp:592
 #, fuzzy
@@ -1351,7 +1352,7 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:1198
 msgid "Rotate to Standard Orientation"
-msgstr ""
+msgstr "旋转到标准方向"
 
 #: qtgui/rwmolecule.cpp:1223 qtplugins/spacegroup/spacegroup.cpp:69
 msgid "Reduce to Primitive"
@@ -2511,7 +2512,7 @@ msgstr ""
 #: qtplugins/licorice/licorice.h:44
 #, fuzzy
 msgid "Render atoms as licorice."
-msgstr "渲染原子和键标签"
+msgstr "将原子渲染成甘草。"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:48
 msgid "InChI..."
