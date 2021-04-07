@@ -62,7 +62,7 @@ jobs:
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install ninja boost eigen glew open-babel
+        brew install ninja boost eigen glew
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
@@ -92,10 +92,8 @@ jobs:
         key: ${{ runner.os }}-QtCache
 
     - name: Install Qt
+      if: runner.os != 'Linux'
       uses: jurplel/install-qt-action@v2
-      with:
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
-        version: ${{ env.QT_VERSION }}
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
