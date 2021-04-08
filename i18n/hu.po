@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Szabolcs Kalapos <kalapos.szabolcs@gmail.com>, 2020.
+# SoftwareByRedline <krajczar.david41@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2020-10-27 08:26+0000\n"
-"Last-Translator: Szabolcs Kalapos <kalapos.szabolcs@gmail.com>\n"
+"PO-Revision-Date: 2021-04-08 12:26+0000\n"
+"Last-Translator: SoftwareByRedline <krajczar.david41@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
 "Language: hu\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.2-dev\n"
+"X-Generator: Weblate 4.6-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:84
@@ -1145,9 +1146,8 @@ msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
-#, fuzzy
 msgid "Untitled"
-msgstr "névtelen"
+msgstr "Névtelen"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
