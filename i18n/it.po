@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Alessandro Mandelli <mandelli.alessandro@ngi.it>, 2021.
+# Will Owy <willowy@tutanota.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-03-24 20:29+0000\n"
-"Last-Translator: Alessandro Mandelli <mandelli.alessandro@ngi.it>\n"
+"PO-Revision-Date: 2021-04-11 19:26+0000\n"
+"Last-Translator: Will Owy <willowy@tutanota.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.2-dev\n"
+"X-Generator: Weblate 4.6-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:84
@@ -579,15 +580,15 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Nessuna molecola definita in BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Nessun Io::FileFormat impostato in BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Nessun nome file impostato in BackgroundFileFormat!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
@@ -1145,9 +1146,8 @@ msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
-#, fuzzy
 msgid "Untitled"
-msgstr "senza titolo"
+msgstr "Senza Titolo"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
@@ -1366,9 +1366,8 @@ msgstr "&File"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/vrml/vrml.cpp:58
-#, fuzzy
 msgid "&Export"
-msgstr "Esporta"
+msgstr "&Esporta"
 
 #: qtplugins/3dmol/3dmol.h:42
 #, fuzzy
@@ -1398,9 +1397,8 @@ msgstr "Apri file WFN"
 #: qtplugins/openmminput/openmminput.cpp:57
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
 msgid "&Extensions"
-msgstr "Estensioni"
+msgstr "&Estensioni"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -2435,9 +2433,8 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
-#, fuzzy
 msgid "&Import"
-msgstr "Importa"
+msgstr "&Importa"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
@@ -2686,9 +2683,8 @@ msgid "Navigate"
 msgstr "Naviga"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Naviga"
+msgstr "Strumento di navigazione"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
