@@ -50,8 +50,8 @@ documentation. Our API is [documented using Doxygen][Doxygen] with updated
 documentation generated nightly. We have several [mailing lists][MailingLists]
 to coordinate development and to provide support.
 
-  [Avogadro2Logo]: http://openchemistry.org/files/logos/avogadro2.png "Avogadro2"
-  [OpenChemistry]: http://openchemistry.org/ "Open Chemistry Project"
+  [Avogadro2Logo]: https://www.openchemistry.org/wp-content/uploads/2014/04/Avogadro2_256-150x150.png "Avogadro2"
+  [OpenChemistry]: https://www.openchemistry.org/wp-content/uploads/2014/04/OpenChemistry_Full_512.png "Open Chemistry Project"
   [OpenChemistryLogo]: http://openchemistry.org/files/logos/openchem128.png "Open Chemistry"
   [Kitware]: http://kitware.com/ "Kitware, Inc."
   [KitwareLogo]: http://www.kitware.com/img/small_logo_over.png "Kitware"
