@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-04-11 19:26+0000\n"
-"Last-Translator: Will Owy <willowy@tutanota.com>\n"
+"PO-Revision-Date: 2021-04-16 13:26+0000\n"
+"Last-Translator: Alessandro Mandelli <mandelli.alessandro@ngi.it>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -1283,9 +1283,8 @@ msgid "Change Bond Order"
 msgstr "Cambia l'ordine dei legami"
 
 #: qtgui/rwmolecule.cpp:901
-#, fuzzy
 msgid "Update Bonds"
-msgstr " Aggancia i legami"
+msgstr "Aggiorna legami"
 
 #: qtgui/rwmolecule.cpp:940
 #, fuzzy
@@ -3333,9 +3332,8 @@ msgid "Invert Selection"
 msgstr "&Inverti la selezione"
 
 #: qtplugins/select/select.cpp:59
-#, fuzzy
 msgid "Change selections"
-msgstr " elettroni di valenza"
+msgstr "Cambia selezioni"
 
 #: qtplugins/select/select.cpp:69
 msgid "&Select"
@@ -4472,9 +4470,8 @@ msgstr "Limite di Tempo"
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
-#, fuzzy
 msgid " units"
-msgstr "Unità"
+msgstr " unità"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:62
 #. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
@@ -4489,9 +4486,8 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
 #. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
-#, fuzzy
 msgid " steps"
-msgstr "passi"
+msgstr " passi"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:100
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
@@ -5356,9 +5352,8 @@ msgstr "Potenziale elettrostatico"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:166
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, eleCutoff)
-#, fuzzy
 msgid "Å"
-msgstr " Å"
+msgstr "Å"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
@@ -5663,9 +5658,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:553
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, stepSpin)
-#, fuzzy
 msgid " fs"
-msgstr "fs"
+msgstr " fs"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
