@@ -61,6 +61,7 @@ private:
     QString type;
     QString updatedAt;
     QString zipballUrl;
+    QString baseUrl;
     QString readmeUrl;
     bool hasRelease;
 
@@ -68,7 +69,7 @@ private:
     repo()
       : name("Error"), description("Error"), releaseVersion("Error"),
         type("other"), updatedAt("Error"), zipballUrl("Error"),
-        readmeUrl("Error"), hasRelease(false)
+        baseUrl("Error"), readmeUrl("Error"), hasRelease(false)
     {}
   };
 
@@ -80,7 +81,8 @@ private:
   };
 
   void downloadNextPlugin();
-  void getRepoData();
+  // for now, the default path
+  void getRepoData(QString url = "https://avogadro.cc/plugins.json");
   void downloadNext();
   bool checkSHA1(QByteArray);
 
