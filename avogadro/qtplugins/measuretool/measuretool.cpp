@@ -36,6 +36,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QAction>
@@ -201,7 +202,7 @@ void MeasureTool::draw(Rendering::GroupNode& node)
       overlayText +=
         QString("%1 %L2\n")
           .arg(tr("Dihedral:"), labelWidth)
-          .arg(tr("%L1°").arg(dihedralAngle(v1, v2, v3), 10, 'f', 5), 10);
+          .arg(tr("%L1°").arg(dihedralAngle(v1, v2, v3), 10, 'f', 3), 10);
       angle23 =
         static_cast<float>(std::acos((-v2).dot(v3) / (v2Norm * v3Norm))) *
         RAD_TO_DEG_F;
@@ -213,8 +214,8 @@ void MeasureTool::draw(Rendering::GroupNode& node)
       overlayText +=
         QString("%1 %L2 %L3\n")
           .arg(tr("Angles:"), labelWidth)
-          .arg(tr("%L1°").arg(angle12, 10, 'f', 5), 10)
-          .arg(angle23 < 360.f ? tr("%L1°").arg(angle23, 10, 'f', 5)
+          .arg(tr("%L1°").arg(angle12, 10, 'f', 3), 10)
+          .arg(angle23 < 360.f ? tr("%L1°").arg(angle23, 10, 'f', 3)
                                : QString(),
                10);
     // fall through
@@ -222,10 +223,10 @@ void MeasureTool::draw(Rendering::GroupNode& node)
       overlayText +=
         QString("%1 %L2 %L3 %L4")
           .arg(tr("Distance:"), labelWidth)
-          .arg(tr("%L1 Å").arg(v1Norm, 10, 'f', 5), 10)
-          .arg(v2Norm >= 0.f ? tr("%L1 Å").arg(v2Norm, 10, 'f', 5) : QString(),
+          .arg(tr("%L1 Å").arg(v1Norm, 10, 'f', 3), 10)
+          .arg(v2Norm >= 0.f ? tr("%L1 Å").arg(v2Norm, 10, 'f', 3) : QString(),
                10)
-          .arg(v3Norm >= 0.f ? tr("%L1 Å").arg(v3Norm, 10, 'f', 5) : QString(),
+          .arg(v3Norm >= 0.f ? tr("%L1 Å").arg(v3Norm, 10, 'f', 3) : QString(),
                10);
     default:
       break;
@@ -238,6 +239,9 @@ void MeasureTool::draw(Rendering::GroupNode& node)
   overlayTProp.setFontFamily(TextProperties::Mono);
   overlayTProp.setColorRgb(64, 255, 220);
   overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
+  // adjust font size for pixel scale in 2D
+  // TODO: should use per-window scale
+  overlayTProp.setPixelHeight(overlayTProp.pixelHeight() * qGuiApp->devicePixelRatio());
 
   TextLabel2D* label = new TextLabel2D;
   label->setText(overlayText.toStdString());
