@@ -31,6 +31,7 @@
 
 #include <bitset>
 #include <cmath>
+#include <locale>
 #include <map>
 #include <sstream>
 #include <streambuf>
@@ -432,6 +433,11 @@ bool CmlFormat::read(std::istream& file, Core::Molecule& mol)
 bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
 {
   xml_document document;
+
+  // Imbue the output stream with the C numeric locale
+  //   i.e. modify current stream locale with "C" numeric
+  std::locale numLocale(out.getloc(), "C", std::locale::numeric);
+  out.imbue(numLocale);  // imbue modified locale
 
   // Add a custom declaration node.
   xml_node declaration = document.prepend_child(pugi::node_declaration);
