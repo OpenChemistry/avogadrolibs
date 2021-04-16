@@ -38,6 +38,7 @@
 #include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
 
+#include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
@@ -238,6 +239,9 @@ void Editor::draw(Rendering::GroupNode& node)
   overlayTProp.setFontFamily(TextProperties::Mono);
   overlayTProp.setColorRgb(64, 255, 220);
   overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
+  // adjust font size for pixel scale in 2D
+  // TODO: should use per-window scale
+  overlayTProp.setPixelHeight(overlayTProp.pixelHeight() * qGuiApp->devicePixelRatio());
 
   TextLabel2D* label = new TextLabel2D;
   label->setText(overlayText.toStdString());
