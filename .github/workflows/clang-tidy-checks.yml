@@ -1,0 +1,84 @@
+name: Check code with clang-tidy
+
+on: [push, pull_request]
+  paths:
+  - '**.cpp'
+  - '**.h'
+
+env:
+  BUILD_TYPE: Release
+  QT_VERSION: 5.12.10
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON
+
+jobs:
+  build:
+    name: ${{ matrix.buildname }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-20.04
+            buildname: 'clang-tidy'
+            triplet: x64-linux
+            compiler: clang_64
+
+    steps:
+
+    - name: Install Dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev
+
+    - name: Checkout openchemistry
+      uses: actions/checkout@v2
+      with:
+        repository: openchemistry/openchemistry
+        submodules: recursive
+
+    - name: Checkout avogadroapp
+      uses: actions/checkout@v2
+      with:
+        repository: openchemistry/avogadroapp
+        path: avogadroapp
+
+    - name: Checkout avogadrolibs
+      uses: actions/checkout@v2
+      with:
+        path: avogadrolibs
+
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v1
+      with:
+        path: ../Qt
+        key: ${{matrix.os}}-qt-${{env.QT_VERSION}}-cache
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        cached: ${{ steps.cache-qt.outputs.cache-hit }}
+        version: ${{ env.QT_VERSION }}
+
+    - name: Configure
+      run: |
+        mkdir "${{ runner.workspace }}/build"
+        cd "${{ runner.workspace }}/build"
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}} 
+      shell: bash
+
+    - name: Build
+      run: |
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}}
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Check C++ changes against style guide
+      uses: ZedThree/clang-tidy-review@v0.6.0
+      id: static_analysis
+      with:
+        build_dir: ${{ runner.workspace }}/build
+        # PLACEMARKER: list of clang-tidy checks
+        # the action doesn't see system-level libraries, need to replicate them here
+        apt_packages: 'libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev'
