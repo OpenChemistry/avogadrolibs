@@ -26,7 +26,9 @@ jobs:
           - os: ubuntu-20.04
             buildname: 'clang-tidy'
             triplet: x64-linux
-            compiler: clang_64
+            cc: clang
+            cxx: clang++
+            cmake_flags: '-DUSE_SYSTEM_LIBXML2=ON -USE_SYSTEM_ZLIB=ON'
 
     steps:
 
@@ -70,12 +72,12 @@ jobs:
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}} 
+        CC=${{matrix.cc}} CXX=${{matrix.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.cmake_flags}} 
       shell: bash
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}}
+        CC=${{matrix.cc}} CXX=${{matrix.cxx}} cmake --build . --config ${{env.BUILD_TYPE}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
