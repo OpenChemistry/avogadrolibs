@@ -1,9 +1,14 @@
 name: Check code with clang-tidy
 
-on: [push, pull_request]
-  paths:
-  - '**.cpp'
-  - '**.h'
+on: 
+  pull_request:
+    paths:
+    - 'avogadro/**.cpp'
+    - 'avogadro/**.h'
+  push:
+    paths:
+    - 'avogadro/**.cpp'
+    - 'avogadro/**.h'
 
 env:
   BUILD_TYPE: Release
