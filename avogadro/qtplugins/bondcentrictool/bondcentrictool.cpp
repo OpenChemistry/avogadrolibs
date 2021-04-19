@@ -40,6 +40,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <QtGui/QtGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QAction>
@@ -972,6 +973,9 @@ void BondCentricTool::drawBondAngle(Rendering::GeometryNode& node,
                  Rendering::TextProperties::VCenter);
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
   tprop.setColorRgb(255, 200, 64);
+  // adjust font size for pixel scale in 2D
+  // TODO: should use per-window scale
+  overlayTProp.setPixelHeight(overlayTProp.pixelHeight() * qGuiApp->devicePixelRatio());
   label->setTextProperties(tprop);
 }
 
