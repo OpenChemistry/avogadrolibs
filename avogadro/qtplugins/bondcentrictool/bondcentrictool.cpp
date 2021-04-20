@@ -40,7 +40,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-#include <QtGui/QtGuiApplication>
+#include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QAction>
@@ -975,8 +975,10 @@ void BondCentricTool::drawBondAngle(Rendering::GeometryNode& node,
   tprop.setColorRgb(255, 200, 64);
   // adjust font size for pixel scale in 2D
   // TODO: should use per-window scale
-  overlayTProp.setPixelHeight(overlayTProp.pixelHeight() * qGuiApp->devicePixelRatio());
+  tprop.setPixelHeight(tprop.pixelHeight() * qGuiApp->devicePixelRatio());
   label->setTextProperties(tprop);
+
+  bool test = 1;
 }
 
 void BondCentricTool::drawBondLengthLabel(Rendering::GeometryNode& node,
@@ -999,6 +1001,9 @@ void BondCentricTool::drawBondLengthLabel(Rendering::GeometryNode& node,
                  Rendering::TextProperties::VCenter);
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
   tprop.setColorRgb(255, 200, 64);
+  // adjust font size for pixel scale in 2D
+  // TODO: should use per-window scale
+  tprop.setPixelHeight(tprop.pixelHeight() * qGuiApp->devicePixelRatio());
   label->setTextProperties(tprop);
 }
 
@@ -1065,6 +1070,9 @@ void BondCentricTool::drawAtomBondAngle(Rendering::GeometryNode& node,
                  Rendering::TextProperties::VCenter);
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
   tprop.setColorRgb(color);
+  // adjust font size for pixel scale in 2D
+  // TODO: should use per-window scale
+  tprop.setPixelHeight(tprop.pixelHeight() * qGuiApp->devicePixelRatio());
   label->setTextProperties(tprop);
 }
 
