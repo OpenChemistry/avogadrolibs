@@ -16,6 +16,13 @@
 
 #include "symmetryutil.h"
 
+#define _ORIENT_HORIZONTAL                                                     \
+  msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_ORIENTATION_HORIZONTAL
+#define _ORIENT_VERTICAL                                                       \
+  msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_ORIENTATION_VERTICAL
+#define _ORIENT_DIHEDRAL                                                       \
+  msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_ORIENTATION_DIHEDRAL
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -40,33 +47,32 @@ QString pointGroupSymbol(const char* point_group)
 
 QString operationSymbol(const msym::msym_symmetry_operation_t* operation)
 {
+  // omit first power
   QString symbol;
-  switch (operation->type) {
-    case IDENTITY:
-      symbol = QString("E");
-      break;
-    case INVERSION:
-      symbol = QString("i");
-      break;
-    case PROPER_ROTATION:
-      symbol = QString("C<sub>%1</sub><sup>%2</sup>")
-                 .arg(QString::number(operation->order),
-                      QString::number(operation->power));
-      break;
-    case IMPROPER_ROTATION:
-      symbol = QString("S<sub>%1</sub><sup>%2</sup>")
-                 .arg(QString::number(operation->order),
-                      QString::number(operation->power));
-      break;
-    case REFLECTION:
-      symbol = QString("&sigma;");
-      break;
-    default:
-      symbol = QString();
+  if (operation->type == IDENTITY) {
+    symbol = QString("E");
+  } else if (operation->type == INVERSION) {
+    symbol = QString("i");
+  } else if (operation->type == PROPER_ROTATION) {
+    symbol = QString("C<sub>%1</sub>").arg(operation->order);
+    if (operation->power > 1) // add the power for ^2, ^3, etc.
+      symbol.append(QString("<sup>%2</sup>").arg(operation->power));
+  } else if (operation->type == IMPROPER_ROTATION) {
+    symbol = QString("S<sub>%1</sub>").arg(operation->order);
+    if (operation->power > 1) // add the power for ^2, ^3, etc.
+      symbol.append(QString("<sup>%2</sup>").arg(operation->power));
+  } else if (operation->type == REFLECTION) {
+    symbol = QString("&sigma;");
+    if (operation->orientation == _ORIENT_HORIZONTAL)
+      symbol.append("<sub>h</sub>");
+    else if (operation->orientation == _ORIENT_DIHEDRAL)
+      symbol.append("<sub>d</sub>");
+    else if (operation->orientation == _ORIENT_VERTICAL)
+      symbol.append("<sub>v</sub>");
   }
 
   return symbol;
 }
-}
-}
-}
+} // namespace SymmetryUtil
+} // namespace QtPlugins
+} // namespace Avogadro
