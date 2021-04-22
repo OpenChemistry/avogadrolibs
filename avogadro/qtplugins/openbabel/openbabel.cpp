@@ -89,14 +89,16 @@ OpenBabel::OpenBabel(QObject* p)
   refreshForceFields();
 
   QString info = openBabelInfo();
+  /*
   if (info.isEmpty()) {
     qWarning() << tr("%1 not found! Disabling Open Babel plugin actions.")
                     .arg(OBProcess().obabelExecutable());
     foreach (QAction* a, m_actions)
       a->setEnabled(false);
   } else {
+  */
     qDebug() << OBProcess().obabelExecutable() << " found: " << info;
-  }
+  // }
 }
 
 OpenBabel::~OpenBabel() {}
