@@ -160,16 +160,6 @@ public:
   int height() const { return m_height; }
 
   /**
-   * Set the resolution of the viewport (i.e., from physical to logical pixels)
-   */
-  void setDevicePixelRatio(float scale);
-
-  /**
-   * Get the scale of the viewport pixels.
-   */
-  float devicePixelRatio() const { return m_pixelScale; }
-
-  /**
    * Set the model view matrix to the identity. This resets the model view
    * matrix.
    */
@@ -221,7 +211,6 @@ public:
 private:
   int m_width;
   int m_height;
-  float m_pixelScale;
   Projection m_projectionType;
   float m_orthographicScale;
   std::unique_ptr<EigenData> m_data;
