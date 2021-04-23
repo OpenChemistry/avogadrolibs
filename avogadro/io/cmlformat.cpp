@@ -430,14 +430,27 @@ bool CmlFormat::read(std::istream& file, Core::Molecule& mol)
   return parser.success;
 }
 
+std::string formatNumber(std::stringstream &s, double n)
+{
+  s.str(""); // clear it
+  s.precision(6);
+  s << n;
+  return s.str();
+}
+
 bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
 {
   xml_document document;
 
   // Imbue the output stream with the C numeric locale
   //   i.e. modify current stream locale with "C" numeric
+  std::locale currentLocale("");
   std::locale numLocale(out.getloc(), "C", std::locale::numeric);
   out.imbue(numLocale);  // imbue modified locale
+
+  // We also need to set the locale temporarily for XML string formatting
+  std::stringstream floatStream; // use this to format floats as C-format strings
+  floatStream.imbue(numLocale);
 
   // Add a custom declaration node.
   xml_node declaration = document.prepend_child(pugi::node_declaration);
@@ -494,12 +507,12 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
     crystalBetaNode.append_attribute("units") = "units:degree";
     crystalGammaNode.append_attribute("units") = "units:degree";
 
-    crystalANode.text() = static_cast<double>(cell->a());
-    crystalBNode.text() = static_cast<double>(cell->b());
-    crystalCNode.text() = static_cast<double>(cell->c());
-    crystalAlphaNode.text() = static_cast<double>(cell->alpha() * RAD_TO_DEG);
-    crystalBetaNode.text() = static_cast<double>(cell->beta() * RAD_TO_DEG);
-    crystalGammaNode.text() = static_cast<double>(cell->gamma() * RAD_TO_DEG);
+    crystalANode.text() = formatNumber(floatStream, cell->a()).c_str();
+    crystalBNode.text() = formatNumber(floatStream, cell->b()).c_str();
+    crystalCNode.text() = formatNumber(floatStream, cell->c()).c_str();
+    crystalAlphaNode.text() = formatNumber(floatStream, cell->alpha() * RAD_TO_DEG).c_str();
+    crystalBetaNode.text() = formatNumber(floatStream, cell->beta() * RAD_TO_DEG).c_str();
+    crystalGammaNode.text() = formatNumber(floatStream, cell->gamma() * RAD_TO_DEG).c_str();
   }
 
   xml_node atomArrayNode = moleculeNode.append_child("atomArray");
@@ -513,13 +526,13 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
       Elements::symbol(a.atomicNumber());
     if (cell) {
       Vector3 fracPos = cell->toFractional(a.position3d());
-      atomNode.append_attribute("xFract") = fracPos.x();
-      atomNode.append_attribute("yFract") = fracPos.y();
-      atomNode.append_attribute("zFract") = fracPos.z();
+      atomNode.append_attribute("xFract") = formatNumber(floatStream,fracPos.x()).c_str();
+      atomNode.append_attribute("yFract") = formatNumber(floatStream,fracPos.y()).c_str();
+      atomNode.append_attribute("zFract") = formatNumber(floatStream,fracPos.z()).c_str();
     } else {
-      atomNode.append_attribute("x3") = a.position3d().x();
-      atomNode.append_attribute("y3") = a.position3d().y();
-      atomNode.append_attribute("z3") = a.position3d().z();
+      atomNode.append_attribute("x3") = formatNumber(floatStream,a.position3d().x()).c_str();
+      atomNode.append_attribute("y3") = formatNumber(floatStream,a.position3d().y()).c_str();
+      atomNode.append_attribute("z3") = formatNumber(floatStream,a.position3d().z()).c_str();
     }
   }
 
