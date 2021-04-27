@@ -1,0 +1,92 @@
+name:  Build AppImage Ubuntu LTS
+
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Release
+  QT_VERSION: 5.12.10
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Ubuntu 18.04 AppImage", artifact: "Ubuntu1804.tar.gz",
+            os: ubuntu-18.04,
+            cc: "gcc", cxx: "g++",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
+            cpack: "",
+          }
+
+    steps:
+
+    - name: Install Dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev
+    - name: Install LinuxDeploy
+      uses: miurahr/install-linuxdeploy-action@v1
+      with:
+        plugins: qt appimage
+        dir: ${{ github.workspace }}
+
+    - name: Checkout openchemistry
+      uses: actions/checkout@v2
+      with:
+        repository: openchemistry/openchemistry
+        submodules: recursive
+
+    - name: Checkout avogadroapp
+      uses: actions/checkout@v2
+      with:
+        repository: openchemistry/avogadroapp
+        path: avogadroapp
+
+    - name: Checkout avogadrolibs
+      uses: actions/checkout@v2
+      with:
+        path: avogadrolibs
+
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v1
+      with:
+        path: ../Qt
+        key: ${{ runner.os }}-QtCache
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        cached: ${{ steps.cache-qt.outputs.cache-hit }}
+        version: ${{ env.QT_VERSION }}
+
+    - name: Configure
+      run: |
+        mkdir "${{ runner.workspace }}/build"
+        cd "${{ runner.workspace }}/build"
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX=/usr ${{matrix.config.cmake_flags}}
+      shell: bash
+
+    - name: Build
+      run: |
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}} --target install DESTDIR=AppDir
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Run LinuxDeploy
+      run: |
+        linuxdeploy-x86_64.AppImage -e Avogadro2 --plugin=qt --output=appimage --create-desktop-file --executable=Apps --appdir AppDir
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{ runner.workspace }}/build/*.AppImage
+        name: ${{ matrix.config.artifact }}
