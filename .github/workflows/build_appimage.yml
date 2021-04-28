@@ -75,9 +75,12 @@ jobs:
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}} --target install DESTDIR=AppDir
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}} DESTDIR=AppDir
       shell: bash
       working-directory: ${{ runner.workspace }}/build
+
+    - name: Debugging with tmate
+      uses: mxschmitt/action-tmate@v3.5
 
     - name: Run LinuxDeploy
       run: |
