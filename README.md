@@ -1,5 +1,6 @@
-![Avogadro 2][Avogadro2Logo] Avogadro 2 [![Latest Release](https://img.shields.io/github/v/release/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/releases) [![BSD License](https://img.shields.io/github/license/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/blob/master/LICENSE) ![Build Status](https://img.shields.io/github/workflow/status/openchemistry/avogadrolibs/CMake%20Build%20Matrix)
+![Avogadro 2][Avogadro2Logo] Avogadro 2
 ==========
+[![Latest Release](https://img.shields.io/github/v/release/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/releases) [![BSD License](https://img.shields.io/github/license/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/blob/master/LICENSE) ![Build Status](https://img.shields.io/github/workflow/status/openchemistry/avogadrolibs/CMake%20Build%20Matrix) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub contributors](https://img.shields.io/github/contributors/openchemistry/avogadrolibs.svg?style=flat)]()  [![OpenCollective Backers](https://img.shields.io/opencollective/all/open-chemistry)](https://opencollective.com/open-chemistry)
 
 Introduction
 ------------
