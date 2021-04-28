@@ -80,6 +80,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/build
 
     - name: Debugging with tmate
+      if: always()
       uses: mxschmitt/action-tmate@v3.5
 
     - name: Run LinuxDeploy
