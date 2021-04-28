@@ -62,9 +62,9 @@ to coordinate development and to provide support.
 Contributors Hall of Fame:
 [![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/0)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/0)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/1)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/1)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/2)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/2)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/3)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/3)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/4)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/4)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/5)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/5)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/6)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/6)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/7)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/7)
 
-  [Avogadro2Logo]: http://openchemistry.org/files/logos/avogadro2.png "Avogadro2"
+  [Avogadro2Logo]: https://raw.githubusercontent.com/OpenChemistry/avogadrolibs/master/docs/avogadro2_64.png "Avogadro2"
   [OpenChemistry]: http://openchemistry.org/ "Open Chemistry Project"
-  [OpenChemistryLogo]: http://openchemistry.org/files/logos/openchem128.png "Open Chemistry"
+  [OpenChemistryLogo]: https://raw.githubusercontent.com/OpenChemistry/avogadrolibs/master/docs/OpenChemistry128.png "Open Chemistry"
   [Kitware]: http://kitware.com/ "Kitware, Inc."
   [KitwareLogo]: http://www.kitware.com/img/small_logo_over.png "Kitware"
   [Avogadro1]: http://avogadro.cc/ "Avogadro 1"
