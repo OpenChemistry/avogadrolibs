@@ -117,7 +117,7 @@ QList<QAction*> Surfaces::actions() const
 QStringList Surfaces::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Extensions");
+  path << tr("&Analysis");
   return path;
 }
 

@@ -50,6 +50,8 @@ using MoleQueue::InputGenerator;
 using MoleQueue::InputGeneratorDialog;
 using ::MoleQueue::JobObject;
 
+const int ConfigureAction = -1; // to find the configuration action
+
 QuantumInput::QuantumInput(QObject* parent_)
   : ExtensionPlugin(parent_)
   , m_molecule(nullptr)
@@ -69,10 +71,16 @@ QList<QAction*> QuantumInput::actions() const
   return m_actions;
 }
 
-QStringList QuantumInput::menuPath(QAction*) const
+QStringList QuantumInput::menuPath(QAction*action) const
 {
   QStringList path;
-  path << tr("&Quantum") << tr("Input Generators");
+  if (action == nullptr)
+    return path;
+    
+  if (action->data() == ConfigureAction)
+    path << tr("&Extensions");
+  else
+    path << tr("&Input");
   return path;
 }
 
@@ -212,10 +220,6 @@ void QuantumInput::updateActions()
 {
   m_actions.clear();
 
-  QAction* action = new QAction(tr("Set Python Path..."), this);
-  connect(action, SIGNAL(triggered()), SLOT(configurePython()));
-  m_actions << action;
-
   foreach (const QString& programName, m_inputGeneratorScripts.uniqueKeys()) {
     QStringList scripts = m_inputGeneratorScripts.values(programName);
     // Include the full path if there are multiple generators with the same
@@ -228,6 +232,13 @@ void QuantumInput::updateActions()
       }
     }
   }
+
+  // Last one is the configuration action
+  // TODO: set this globally via the app
+  QAction* action = new QAction(tr("Set Python Path..."), this);
+  action->setData(ConfigureAction);
+  connect(action, SIGNAL(triggered()), SLOT(configurePython()));
+  m_actions << action;
 }
 
 void QuantumInput::addAction(const QString& label,

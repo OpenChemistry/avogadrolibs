@@ -57,7 +57,7 @@ QList<QAction*> Cp2kInput::actions() const
 QStringList Cp2kInput::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Quantum") << tr("Input Generators");
+  path << tr("&Input");
   return path;
 }
 
