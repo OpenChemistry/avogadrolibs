@@ -83,7 +83,6 @@ jobs:
         CC=clang CXX=clang++ bear ninja
 
     - name: Check C++ changes with clang-tidy
-      working-directory: ${{ runner.workspace }}/avogadrolibs/avogadrolibs
       uses: ZedThree/clang-tidy-review@v0.6.0
       id: static_analysis
       with:
