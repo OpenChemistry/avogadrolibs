@@ -36,7 +36,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev
+        sudo apt-get -qq install ninja-build bear libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev
 
     - name: Checkout openchemistry
       uses: actions/checkout@v2
@@ -75,24 +75,24 @@ jobs:
         CC=${{matrix.cc}} CXX=${{matrix.cxx}} CMAKE_EXPORT_COMPILE_COMMANDS=ON cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.cmake_flags}} 
       shell: bash
 
-#    - name: Build
-#      run: |
-#        CC=${{matrix.cc}} CXX=${{matrix.cxx}} CMAKE_EXPORT_COMPILE_COMMANDS=ON cmake --build . --config ${{env.BUILD_TYPE}} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-#      shell: bash
-#      working-directory: ${{ runner.workspace }}/build
-
-    - name: Check C++ changes with clang-tidy
-      uses: ZedThree/clang-tidy-review@v0.6.0
-      id: static_analysis
-      with:
-        build_dir: build
-        # PLACEMARKER: list of clang-tidy checks
-        # the action doesn't see system-level libraries, need to replicate them here
-        apt_packages: 'libeigen3-dev,libboost-all-dev,libglew-dev,libxml2-dev,qt5-default,libqt5x11extras5-dev'
-
     - name: Tmate debugging
       if: always()
       uses: mxschmitt/action-tmate@v3.5
+
+#    - name: Build
+#      run: |
+#        bear ninja
+#      shell: bash
+#      working-directory: ${{ runner.workspace }}/build
+
+#    - name: Check C++ changes with clang-tidy
+#      uses: ZedThree/clang-tidy-review@v0.6.0
+#      id: static_analysis
+#      with:
+#        build_dir: build
+#        # PLACEMARKER: list of clang-tidy checks
+#        # the action doesn't see system-level libraries, need to replicate them here
+#        apt_packages: 'libeigen3-dev,libboost-all-dev,libglew-dev,libxml2-dev,qt5-default,libqt5x11extras5-dev'
 
     - name: Passed C++ clang-tidy checks
       if: steps.static_analysis.outputs.total_comments > 0
