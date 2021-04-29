@@ -85,15 +85,16 @@ jobs:
     - name: Check C++ changes with clang-tidy
       uses: ZedThree/clang-tidy-review@v0.6.0
       id: static_analysis
+      working-directory: ${{ runner.workspace }}/avogadrolibs/avogadrolibs
       with:
-        build_dir: build
+        build_dir: ../../build
         # PLACEMARKER: list of clang-tidy checks
         # the action doesn't see system-level libraries, need to replicate them here
         apt_packages: 'libeigen3-dev,libboost-all-dev,libglew-dev,libxml2-dev,qt5-default,libqt5x11extras5-dev'
 
-    - name: Tmate debugging
-      if: always()
-      uses: mxschmitt/action-tmate@v3.5
+#    - name: Tmate debugging
+#      if: always()
+#      uses: mxschmitt/action-tmate@v3.5
 
     - name: Passed C++ clang-tidy checks
       if: steps.static_analysis.outputs.total_comments > 0
