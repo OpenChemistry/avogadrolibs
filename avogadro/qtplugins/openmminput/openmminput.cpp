@@ -54,7 +54,7 @@ QList<QAction*> OpenMMInput::actions() const
 QStringList OpenMMInput::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Extensions") << tr("Molecular Dynamics");
+  path << tr("&Input");
   return path;
 }
 

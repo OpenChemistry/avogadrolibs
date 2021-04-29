@@ -58,7 +58,7 @@ Apbs::~Apbs()
 
 QStringList Apbs::menuPath(QAction*) const
 {
-  return QStringList() << tr("&Extensions") << tr("&APBS");
+  return QStringList() << tr("&Input") << tr("&APBS");
 }
 
 void Apbs::setMolecule(QtGui::Molecule* mol)

@@ -60,7 +60,7 @@ QList<QAction*> GamessInput::actions() const
 QStringList GamessInput::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Quantum") << tr("Input Generators");
+  path << tr("&Input");
   return path;
 }
 
