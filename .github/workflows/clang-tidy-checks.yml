@@ -11,7 +11,7 @@ on:
     - 'avogadro/**.h'
 
 env:
-  BUILD_TYPE: Release
+  BUILD_TYPE: RelDebInfo
   QT_VERSION: 5.12.10
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON
 
@@ -28,7 +28,7 @@ jobs:
             triplet: x64-linux
             cc: clang
             cxx: clang++
-            cmake_flags: '-DUSE_SYSTEM_LIBXML2=ON -USE_SYSTEM_ZLIB=ON'
+            cmake_flags: '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DUSE_SYSTEM_LIBXML2=ON -USE_SYSTEM_ZLIB=ON'
 
     steps:
 
