@@ -28,7 +28,7 @@ jobs:
             triplet: x64-linux
             cc: clang
             cxx: clang++
-            cmake_flags: '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DUSE_SYSTEM_LIBXML2=ON -USE_SYSTEM_ZLIB=ON'
+            cmake_flags: '-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DUSE_SYSTEM_LIBXML2=ON -USE_SYSTEM_ZLIB=ON'
 
     steps:
 
@@ -72,7 +72,7 @@ jobs:
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
-        CC=${{matrix.cc}} CXX=${{matrix.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.cmake_flags}} 
+        CC=${{matrix.cc}} CXX=${{matrix.cxx}} CMAKE_EXPORT_COMPILE_COMMANDS=ON cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.cmake_flags}} 
       shell: bash
 
     - name: Build
