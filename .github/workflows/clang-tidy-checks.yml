@@ -14,6 +14,7 @@ env:
   BUILD_TYPE: RelWithDebInfo
   QT_VERSION: 5.12.10
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+  CMAKE_EXPORT_COMPILE_COMMANDS: ON
 
 jobs:
   build:
@@ -25,7 +26,6 @@ jobs:
         include:
           - os: ubuntu-20.04
             buildname: 'clang-tidy'
-            triplet: x64-linux
             cc: clang
             cxx: clang++
             cmake_flags: '-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DUSE_SYSTEM_LIBXML2=ON -USE_SYSTEM_ZLIB=ON'
@@ -72,27 +72,28 @@ jobs:
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
-        CC=${{matrix.cc}} CXX=${{matrix.cxx}} CMAKE_EXPORT_COMPILE_COMMANDS=ON cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.cmake_flags}} 
+        CC=clang CXX=clang++ CMAKE_EXPORT_COMPILE_COMMANDS=ON cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.cmake_flags}} 
       shell: bash
 
     - name: Tmate debugging
       if: always()
       uses: mxschmitt/action-tmate@v3.5
 
-#    - name: Build
-#      run: |
-#        bear ninja
-#      shell: bash
-#      working-directory: ${{ runner.workspace }}/build
+    - name: Build
+      # intercept build commands to get the JSON database
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+      run: |
+        CC=clang CXX=clang++ bear ninja
 
-#    - name: Check C++ changes with clang-tidy
-#      uses: ZedThree/clang-tidy-review@v0.6.0
-#      id: static_analysis
-#      with:
-#        build_dir: build
-#        # PLACEMARKER: list of clang-tidy checks
-#        # the action doesn't see system-level libraries, need to replicate them here
-#        apt_packages: 'libeigen3-dev,libboost-all-dev,libglew-dev,libxml2-dev,qt5-default,libqt5x11extras5-dev'
+    - name: Check C++ changes with clang-tidy
+      uses: ZedThree/clang-tidy-review@v0.6.0
+      id: static_analysis
+      with:
+        build_dir: build
+        # PLACEMARKER: list of clang-tidy checks
+        # the action doesn't see system-level libraries, need to replicate them here
+        apt_packages: 'libeigen3-dev,libboost-all-dev,libglew-dev,libxml2-dev,qt5-default,libqt5x11extras5-dev'
 
     - name: Passed C++ clang-tidy checks
       if: steps.static_analysis.outputs.total_comments > 0
