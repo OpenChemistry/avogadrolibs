@@ -11,9 +11,9 @@ on:
     - 'avogadro/**.h'
 
 env:
-  BUILD_TYPE: RelDebInfo
+  BUILD_TYPE: RelWithDebInfo
   QT_VERSION: 5.12.10
-  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON
+  FEATURES: -DBUILD_GPL_PLUGINS=ON
 
 jobs:
   build:
