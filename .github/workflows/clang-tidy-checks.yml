@@ -13,7 +13,7 @@ on:
 env:
   BUILD_TYPE: RelWithDebInfo
   QT_VERSION: 5.12.10
-  FEATURES: -DBUILD_GPL_PLUGINS=ON
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
             triplet: x64-linux
             cc: clang
             cxx: clang++
-            cmake_flags: '-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DUSE_SYSTEM_LIBXML2=ON -USE_SYSTEM_ZLIB=ON'
+            cmake_flags: '-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DUSE_SYSTEM_LIBXML2=ON -USE_SYSTEM_ZLIB=ON'
 
     steps:
 
@@ -75,11 +75,11 @@ jobs:
         CC=${{matrix.cc}} CXX=${{matrix.cxx}} CMAKE_EXPORT_COMPILE_COMMANDS=ON cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.cmake_flags}} 
       shell: bash
 
-    - name: Build
-      run: |
-        CC=${{matrix.cc}} CXX=${{matrix.cxx}} CMAKE_EXPORT_COMPILE_COMMANDS=ON cmake --build . --config ${{env.BUILD_TYPE}} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-      shell: bash
-      working-directory: ${{ runner.workspace }}/build
+#    - name: Build
+#      run: |
+#        CC=${{matrix.cc}} CXX=${{matrix.cxx}} CMAKE_EXPORT_COMPILE_COMMANDS=ON cmake --build . --config ${{env.BUILD_TYPE}} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+#      shell: bash
+#      working-directory: ${{ runner.workspace }}/build
 
     - name: Check C++ changes with clang-tidy
       uses: ZedThree/clang-tidy-review@v0.6.0
