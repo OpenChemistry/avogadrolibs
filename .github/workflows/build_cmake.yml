@@ -24,6 +24,13 @@ jobs:
       matrix:
         config:
         - {
+            name: "Ubuntu Latest Clang", artifact: "",
+            os: ubuntu-latest,
+            cc: "clang", cxx: "clang++",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=1",
+            cpack: "",
+          }
+        - {
             name: "Ubuntu 20.04 GCC", artifact: "Ubuntu2004.tar.gz",
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
@@ -141,7 +148,13 @@ jobs:
 
     - name: Upload
       if: matrix.config.artifact != 0
-      uses: actions/upload-artifact@v2-preview
+      uses: actions/upload-artifact@v2
       with:
         path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
+
+    - name: Save Clang compile-commands.json
+      if: ${{ matrix.config.artifact == 0 && matrix.config.cc == 'clang' }}
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{ runner.workspace }}/build/compile-commands.json

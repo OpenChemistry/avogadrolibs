@@ -1,7 +1,7 @@
 name: clang-tidy check
 
 on: 
-  pull_request:
+  pull_request_target:
     paths:
     - 'avogadro/**.cpp'
     - 'avogadro/**.h'
