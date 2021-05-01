@@ -294,6 +294,9 @@ if __name__ == "__main__":
         "--path_prefix", help="Directory path to remove from filenames", default=""
     )
     parser.add_argument(
+        "--src_dir", help="Directory path to source files", default=""
+    )
+    parser.add_argument(
         "--clang_tidy_checks",
         help="checks argument",
         default="'-*,performance-*,readability-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,mpi-*,misc-*'",
@@ -367,7 +370,10 @@ if __name__ == "__main__":
                 )
             basedir = original_directory[:build_dir_index]
 
-        newbasedir = os.getcwd()
+        if args.src_dir:
+            newbasedir = args.src_dir
+        else:
+            newbasedir = os.getcwd()
 
         print(f"Replacing '{basedir}' with '{newbasedir}'", flush=True)
         print("Current directory: ", os.listdir(os.getcwd()))
