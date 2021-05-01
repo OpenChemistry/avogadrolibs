@@ -83,14 +83,11 @@ jobs:
         CC=clang CXX=clang++ bear ninja
 
     - name: Check C++ changes with clang-tidy
-      uses: ghutchis/clang-tidy-review@path-prefix
       id: static_analysis
-      with:
-        build_dir: build
-        path_prefix: /home/runner/work/avogadrolibs
-        # PLACEMARKER: list of clang-tidy checks
-        # the action doesn't see system-level libraries, need to replicate them here
-        apt_packages: 'libeigen3-dev,libboost-all-dev,libglew-dev,libxml2-dev,qt5-default,libqt5x11extras5-dev'
+      working-directory: build
+      run : |
+        sudo apt-get -qq install clang-tidy-11
+        python3 ../avogadrolibs/scripts/clang-tidy-review.py --repo=${{ github.repository }} --token=${{ github.token }} --${{ github.event.pull_request.number }}
 
 #    - name: Tmate debugging
 #      if: always()
