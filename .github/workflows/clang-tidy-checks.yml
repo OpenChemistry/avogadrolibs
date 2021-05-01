@@ -90,9 +90,9 @@ jobs:
         pip3 install --upgrade pip && pip3 install PyGithub~=1.51 unidiff~=0.6.0 requests~=2.23
         python3 ../avogadrolibs/scripts/clang-tidy-review.py --repo=${{ github.repository }} --token=${{ github.token }} --pr=${{ github.event.pull_request.number }}
 
-#    - name: Tmate debugging
-#      if: always()
-#      uses: mxschmitt/action-tmate@v3.5
+    - name: Tmate debugging
+      if: always()
+      uses: mxschmitt/action-tmate@v3.5
 
     - name: Passed C++ clang-tidy checks
       if: steps.static_analysis.outputs.total_comments > 0
