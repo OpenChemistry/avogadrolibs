@@ -88,7 +88,7 @@ jobs:
       run : |
         sudo apt-get -qq install clang-tidy-11 python3 python3-pip 
         pip3 install --upgrade pip && pip3 install PyGithub~=1.51 unidiff~=0.6.0 requests~=2.23
-        python3 ../avogadrolibs/scripts/clang-tidy-review.py --repo=${{ github.repository }} --token=${{ github.token }} --${{ github.event.pull_request.number }}
+        python3 ../avogadrolibs/scripts/clang-tidy-review.py --repo=${{ github.repository }} --token=${{ github.token }} --pr=${{ github.event.pull_request.number }}
 
 #    - name: Tmate debugging
 #      if: always()
