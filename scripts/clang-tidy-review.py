@@ -153,7 +153,7 @@ def get_clang_tidy_warnings(
 
     try:
         output = subprocess.run(
-            command, capture_output=True, shell=True, check=True, encoding="utf-8"
+            command, capture_output=True, check=True, encoding="utf-8"
         )
     except subprocess.CalledProcessError as e:
         print(
