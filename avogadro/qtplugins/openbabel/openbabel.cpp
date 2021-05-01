@@ -89,14 +89,16 @@ OpenBabel::OpenBabel(QObject* p)
   refreshForceFields();
 
   QString info = openBabelInfo();
+  /*
   if (info.isEmpty()) {
     qWarning() << tr("%1 not found! Disabling Open Babel plugin actions.")
                     .arg(OBProcess().obabelExecutable());
     foreach (QAction* a, m_actions)
       a->setEnabled(false);
   } else {
+  */
     qDebug() << OBProcess().obabelExecutable() << " found: " << info;
-  }
+  // }
 }
 
 OpenBabel::~OpenBabel() {}
@@ -115,7 +117,7 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
 {
   // Return empty list if not ready yet, and print a warning.
   if (m_readFormatsPending || m_writeFormatsPending) {
-    qWarning() << tr("The Open Babel file formats are not ready to be added.");
+    qDebug() << tr("The Open Babel file formats are not ready to be added.");
     return QList<Io::FileFormat*>();
   }
 
@@ -170,6 +172,8 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
     fmt->setReadWriteFlags(rw);
     result.append(fmt);
   }
+
+  qDebug() << "Open Babel formats ready: " << result.size();
 
   return result;
 }
