@@ -5,13 +5,14 @@
 # Andika Tulus Pangestu <andhikatuluspangestu@gmail.com>, 2020.
 # Ferdinand Tampubolon <dnandz@gmail.com>, 2021.
 # Reza Almanda <rezaalmanda27@gmail.com>, 2021.
+# RIDHO NURUL ADILLA <ridhonuruladilla@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-02-13 01:19+0000\n"
-"Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
+"PO-Revision-Date: 2021-05-04 04:31+0000\n"
+"Last-Translator: RIDHO NURUL ADILLA <ridhonuruladilla@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
 "Language: id\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.5-dev\n"
+"X-Generator: Weblate 4.7-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:84
@@ -51,7 +52,7 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:210 qtgui/interfacescript.cpp:312
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "file referensi '%1' tidak ada."
 
 #: molequeue/inputgenerator.cpp:212 qtgui/interfacescript.cpp:314
 #, qt-format
@@ -90,11 +91,11 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:280 qtgui/interfacescript.cpp:383
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "'mainFile' member harus sebuah string."
 
 #: molequeue/inputgenerator.cpp:291 qtgui/interfacescript.cpp:394
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "Respon harus sebuah objek JSON pada top-level."
 
 #: molequeue/inputgenerator.cpp:295 qtgui/interfacescript.cpp:398
 #, qt-format
