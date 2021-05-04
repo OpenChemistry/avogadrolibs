@@ -245,6 +245,16 @@ public:
    */
   bool atomSelected(Index atomId) const;
 
+  /**
+   * Set whether the specified atom has a frozen geometry
+   */
+  void setAtomFrozen(Index atomId, bool frozen);
+
+  /**
+   * Query whether the supplied atom index has been frozen for optimization.
+   */
+  bool atomFrozen(Index atomId) const;
+
   bool setAtomPosition2d(Index, const Vector2&) { return false; }
   Vector2 atomPosition2d(Index) { return Vector2(0, 0); }
   const Core::Array<Vector2>& atomPositions2d() const
