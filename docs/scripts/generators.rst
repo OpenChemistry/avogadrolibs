@@ -1,3 +1,17 @@
+.. _Input Generators:
+
+Input Generators
+================
+
+Input generators offer several unique capabilities for formatting text
+input for programs, including syntax highlighting rules and capabilities
+for creating multiple files as part of one input (e.g., separate files
+for geometry and keywords).
+
+Avogadro will call input generator scripts using several command-line arguments
+to generate JSON both for the user interface form and for the input to send
+to the external programs.
+
 Script Entry Points
 ===================
 
@@ -17,7 +31,9 @@ Specifying parameters with `--print-options`
 
 The format of the `--print-options` output must be a JSON object of
 the following form:
-~~~{.js}
+
+::
+
 {
   "userOptions": {
     ...
@@ -37,7 +53,7 @@ the following form:
   ],
   "inputMoleculeFormat": "cjson"
 }
-~~~
+
 The `userOptions` block contains a JSON object keyed with option names
 (e.g. "First option name"), which are used in the GUI to label simulation
 parameter settings. Various parameter types are supported:
@@ -48,7 +64,9 @@ Fixed Mutually-Exclusive Parameter Lists
 Parameters that have a fixed number of mutually-exclusive string values will
 be presented using a QComboBox. Such a parameter can be specified in the
 `userOptions` block as:
-~~~{.js}
+
+::
+
 {
   "userOptions": {
     "Parameter Name": {
@@ -58,7 +76,7 @@ be presented using a QComboBox. Such a parameter can be specified in the
     }
   }
 }
-~~~
+
 Here, `Parameter Name` is the label that will be displayed in the GUI as a
 label next to the combo box.
 The array of strings in `values` will be used as the available entries in
@@ -71,7 +89,9 @@ Short Free-Form Text Parameters
 
 A short text string can be requested (e.g. for the "title" of an
 optimization) via:
-~~~{.js}
+
+::
+
 {
   "userOptions": {
     "Parameter Name": {
@@ -80,7 +100,7 @@ optimization) via:
     }
   }
 }
-~~~
+
 This will add a QLineEdit to the GUI, initialized with the text specified by
 `default`.
 
@@ -89,7 +109,9 @@ Existing files
 
 An input generator can ask for the absolute path to an existing file using
 the following option block:
-~~~{.js}
+
+::
+
 {
   "userOptions": {
     "Parameter Name": {
@@ -98,7 +120,7 @@ the following option block:
     }
   }
 }
-~~~
+
 This will add an Avogadro::QtGui::FileBrowseWidget to the GUI, initialized to
 the file pointed to by default.
 
@@ -107,7 +129,9 @@ Clamped Integer Values
 
 Scripts may request integer values from a specified range by adding a
 user-option of the following form:
-~~~{.js}
+
+::
+
 {
   "userOptions": {
     "Parameter Name": {
@@ -120,7 +144,7 @@ user-option of the following form:
     }
   }
 }
-~~~
+
 This block will result in a QSpinBox, configured as follows:
 - `minimum` and `maximum` indicate the valid range of integers for the
   parameter.
@@ -136,7 +160,9 @@ Boolean Parameters
 ------------------
 
 If a simple on/off value is needed, a boolean type option can be requested:
-~~~{.js}
+
+:: 
+
 {
   "userOptions": {
     "Parameter Name": {
@@ -145,7 +171,7 @@ If a simple on/off value is needed, a boolean type option can be requested:
     }
   }
 }
-~~~
+
 This will result in a QCheckBox in the dynamically generated GUI, with
 the inital check state shown in `default`.
 
@@ -160,67 +186,119 @@ It is recommended to use the names below for these options to provide a
 consistent interface and ensure that MoleQueue job staging uses correct
 values where appropriate.
 
+| :----------------: | :--------: |:------------------------------------------------------------------ |
 | Option name        | type       | description |
-| :----------------: | :--------: |
-:------------------------------------------------------------------ |
-| "Title"            | string     | Input file title comment, MoleQueue job
-description.                |
-| "Filename Base"    | string     | Input file base name, e.g. "job" in
-"job.inp".                      |
-| "Processor Cores"  | integer    | Number of cores to use. Will be passed to
-MoleQueue.                |
-| "Calculation Type" | stringList | Type of calculation, e.g. "Single Point"
-or "Equilibrium Geometry". |
-| "Theory"           | stringList | Levels of QM theory, e.g. "RHF", "B3LYP",
-"MP2", "CCSD", etc.       |
-| "Basis"            | stringList | Available basis sets, e.g. "STO-3G",
-"6-31G**", etc.                |
+| :----------------: | :--------: |:------------------------------------------------------------------ |
+| "Title"            | string     | Input file title comment, MoleQueue job description.                |
+| "Filename Base"    | string     | Input file base name, e.g. "job" in "job.inp".                      |
+| "Processor Cores"  | integer    | Number of cores to use. Will be passed to MoleQueue.                |
+| "Calculation Type" | stringList | Type of calculation, e.g. "Single Point" or "Equilibrium Geometry". |
+| "Theory"           | stringList | Levels of QM theory, e.g. "RHF", "B3LYP", "MP2", "CCSD", etc.       |
+| "Basis"            | stringList | Available basis sets, e.g. "STO-3G", "6-31G**", etc.                |
 | "Charge"           | integer    | Charge on the system. |
 | "Multiplicity"     | integer    | Spin multiplicity of the system. |
 
 Syntax Highlighting
--------------------
+~~~~~~~~~~~~~~~~~~~
 
-Rules for syntax highlighting can be specified as a collection of regular
-expressions or wildcard patterns and text format specifications in the
-"highlightRules" array. The `highlightRules` format is:
-~~~{.js}
-  "highlightStyles": [
-    {
-      "style": "Style 1",
-      "rules": [ (list of highlight rules, see below) ],
-    },
-    {
-      "style": "Style 2",
-      "rules": [ (list of highlight rules, see below) ],
-    },
-    ...
-  ],
-~~~
-The `style` name is unique to the style object, and used to associate a
+Rules for syntax highlighting can be specified as a collection of
+regular expressions or wildcard patterns and text format specifications
+in the "highlightRules" array. The highlightRules format is:
+
+::
+
+   "highlightStyles": [
+     {
+       "style": "Style 1",
+       "rules": [ (list of highlight rules, see below) ],
+     },
+     {
+       "style": "Style 2",
+       "rules": [ (list of highlight rules, see below) ],
+     },
+     ...
+   ],
+
+The style name is unique to the style object, and used to associate a
 set of highlighting rules with particular output files. See the
-`--generate-input` documentation for more details.
+--generate-input documentation for more details.
 
 The general form of a highlight rule is:
-~~~{.js}
-{
-  "patterns": [
-    { "regexp": "^Some regexp?$" },
-    { "wildcard": "A * wildcard expression" },
-    { "string": "An exact string to match.",
-      "caseSensitive": false
-    },
-    ...
-  ],
-  "format": {
-    "preset": "<preset name>"
-  }
-}
-~~~
+
+::
+
+   {
+     "patterns": [
+       { "regexp": "^Some regexp?$" },
+       { "wildcard": "A * wildcard expression" },
+       { "string": "An exact string to match.",
+         "caseSensitive": false
+       },
+       ...
+     ],
+     "format": {
+       "preset": "<preset name>"
+     }
+   }
 
 or,
 
-~~~{.js}
+::
+
+   {
+     "patterns": [
+       ...
+     ],
+     "format": {
+       "foreground": [ 255, 128,  64 ],
+       "background": [   0, 128, 128 ],
+       "attributes": ["bold", "italic", "underline"],
+       "family": "serif"
+     }
+   }
+
+The patterns array contains a collection of fixed strings, wildcard
+expressions, and regular expressions (using the QRegExp syntax flavor,
+see the QRegExp documentation) that are used to identify strings that
+should be formatted. There must be one of the following members present
+in each pattern object:
+
+-  regexp A QRegExp-style regular expression. If no capture groups
+   ("(...)") are defined, the entire match is formatted. If one or more
+   capture groups, only the captured texts will be marked.
+-  wildcard A wildcard expression
+-  string An exact string to match. Any pattern object may also set a
+   boolean caseSensitive member to indicate whether the match should
+   consider character case. If omitted, a case-sensitive match is
+   assumed.
+
+The preferred form of the format member is simply a specification of a
+preset format. This allows for consistent color schemes across input
+generators. The recognized presets are:
+
+-  "title": A human readable title string.
+-  "keyword": directives defined by the target input format
+   specification to have special meaning, such as tags indicating where
+   coordinates are to be found.
+-  "property": A property of the simulation, such as level of theory,
+   basis set, minimization method, etc.
+-  "literal": A numeric literal (i.e. a raw number, such as a
+   coordinate).
+-  "comment": Sections of the input that are ignored by the simulation
+   code.
+
+If advanced formatting is desired, the second form of the format member
+allows fine-tuning of the font properties:
+
+-  foreground color as an RGB tuple, ranged 0-255
+-  background color as an RGB tuple, ranged 0-255
+-  attributes array of font attributes, valid strings are "bold", "italic", or "underline"
+-  family of font. Valid values are "serif", "sans", or "mono" Any of the font property members may be omitted and default QTextCharFormat settings will be substituted.
+
+The input generator extension will apply the entries in the highlightRules object to the text in the order they appear. Thus, later rules will override the formatting of earlier rules should a conflict arise.
+
+::
+
 {
   "patterns": [
     ...
@@ -232,7 +310,6 @@ or,
     "family": "serif"
   }
 }
-~~~
 
 The `patterns` array contains a collection of fixed strings, wildcard
 expressions, and regular expressions (using the QRegExp syntax flavor, see
@@ -296,7 +373,9 @@ Handling User Selections: `--generate-input`
 When `--generate-input` is passed, the information needed to generate
 the input file will be written to the script's standard input
 channel as JSON string of the following form:
-~~~{.js}
+
+::
+
 {
   "cjson": {...},
   "options": {
@@ -305,7 +384,6 @@ channel as JSON string of the following form:
     ...
   }
 }
-~~~
 
 The `cjson` entry will contain a Chemical JSON representation
 of the molecule if `inputMoleculeFormat` is set to "cjson" in the
@@ -320,7 +398,9 @@ pairs for each of the options specified in the `userOptions` block of the
 
 If the script is called with `--generate-input`, it must write a JSON
 string to standard output with the following format:
-~~~{.js}
+
+::
+
 {
   "files": [
     {
@@ -337,7 +417,7 @@ string to standard output with the following format:
   "warnings": ["First warning.", "Second warning.", ... ],
   "mainFile": "file2.ext"
 }
-~~~
+
 The `files` block is an array of objects, which define the actual input
 files. The `filename` member provides the name of the file, and
 either `contents` or `filePath` provide the text that goes into the file.
@@ -375,9 +455,12 @@ Automatic Generation of Geometry
 The generation of molecular geometry descriptions may be skipped in the
 script and deferred to the InputGenerator class by use of a special keyword.
 The "contents" string may contain a keyword of the form
-~~~
+
+::
+
 $$coords:[coordSpec]$$
-~~~
+
+
 where `[coordSpec]` is a sequence of characters.
 The characters in `[coordSpec]` indicate the information needed about each
 atom in the coordinate block.
