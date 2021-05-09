@@ -13,7 +13,7 @@ to generate JSON both for the user interface form and for the input to send
 to the external programs.
 
 Script Entry Points
-===================
+-------------------
 
 The script must handle the following command-line arguments:
 - `--debug` Enable extra debugging output. Used with other commands.
@@ -27,179 +27,63 @@ The script must handle the following command-line arguments:
   This is used in the GUI for menu entries, window titles, etc.
 
 Specifying parameters with `--print-options`
-============================================
+--------------------------------------------
 
 The format of the `--print-options` output must be a JSON object of
 the following form:
 
 ::
 
-{
-  "userOptions": {
-    ...
-  },
-  "highlightStyles": [
-    {
-      "style": "Descriptive name",
-      "rules": [
-        {
-          "patterns": [ ... ],
-          "format": { ... }
-        },
-        ...
-      ],
+ {
+    "userOptions": {
+      ...
     },
-    ...
-  ],
-  "inputMoleculeFormat": "cjson"
-}
+    "highlightStyles": [
+       {
+         "style": "Descriptive name",
+         "rules": [
+          {
+            "patterns": [ ... ],
+             "format": { ... }
+           },
+          ...
+         ],
+      },
+      ...
+     ],
+    "inputMoleculeFormat": "cjson"
+  }
 
 The `userOptions` block contains a JSON object keyed with option names
 (e.g. "First option name"), which are used in the GUI to label simulation
-parameter settings. Various parameter types are supported:
-
-Fixed Mutually-Exclusive Parameter Lists
-----------------------------------------
-
-Parameters that have a fixed number of mutually-exclusive string values will
-be presented using a QComboBox. Such a parameter can be specified in the
-`userOptions` block as:
-
-::
-
-{
-  "userOptions": {
-    "Parameter Name": {
-      "type": "stringList",
-      "values": ["Option 1", "Option 2", "Option 3"],
-      "default": 0
-    }
-  }
-}
-
-Here, `Parameter Name` is the label that will be displayed in the GUI as a
-label next to the combo box.
-The array of strings in `values` will be used as the available entries in
-the combo box in the order they are written.
-`default` is a zero-based index into the `values` array and indicates
-which value should be initially selected by default.
-
-Short Free-Form Text Parameters
--------------------------------
-
-A short text string can be requested (e.g. for the "title" of an
-optimization) via:
-
-::
-
-{
-  "userOptions": {
-    "Parameter Name": {
-      "type": "string",
-      "default": "blah blah blah"
-    }
-  }
-}
-
-This will add a QLineEdit to the GUI, initialized with the text specified by
-`default`.
-
-Existing files
---------------
-
-An input generator can ask for the absolute path to an existing file using
-the following option block:
-
-::
-
-{
-  "userOptions": {
-    "Parameter Name": {
-      "type": "filePath",
-      "default": "/path/to/some/file"
-    }
-  }
-}
-
-This will add an Avogadro::QtGui::FileBrowseWidget to the GUI, initialized to
-the file pointed to by default.
-
-Clamped Integer Values
-----------------------
-
-Scripts may request integer values from a specified range by adding a
-user-option of the following form:
-
-::
-
-{
-  "userOptions": {
-    "Parameter Name": {
-      "type": "integer",
-      "minimum": -5,
-      "maximum": 5,
-      "default": 0,
-      "prefix": "some text ",
-      "suffix": " units"
-    }
-  }
-}
-
-This block will result in a QSpinBox, configured as follows:
-- `minimum` and `maximum` indicate the valid range of integers for the
-  parameter.
-- `default` is the integer value that will be shown initially.
-- (optional) `prefix` and `suffix` are used to insert text before or
-  after the integer value in the spin box.
-  This is handy for specifying units.
-  Note that any prefix or suffix will be stripped out of the corresponding
-  entry in the call to `--generate-input`, and just the raw integer value
-  will be sent.
-
-Boolean Parameters
-------------------
-
-If a simple on/off value is needed, a boolean type option can be requested:
-
-:: 
-
-{
-  "userOptions": {
-    "Parameter Name": {
-      "type": "boolean",
-      "default": true,
-    }
-  }
-}
-
-This will result in a QCheckBox in the dynamically generated GUI, with
-the inital check state shown in `default`.
+parameter settings. Various parameter types are supported.
 
 Special Parameters
 ------------------
 
 Some parameters are common to most calculation codes.
 If the following parameter names are found, they will be handled specially
-while creating the GUI.
+while creating the GUI (e.g., the charge and spin will be placed on one line)
 
 It is recommended to use the names below for these options to provide a
 consistent interface and ensure that MoleQueue job staging uses correct
 values where appropriate.
 
-| :----------------: | :--------: |:------------------------------------------------------------------ |
-| Option name        | type       | description |
-| :----------------: | :--------: |:------------------------------------------------------------------ |
-| "Title"            | string     | Input file title comment, MoleQueue job description.                |
-| "Filename Base"    | string     | Input file base name, e.g. "job" in "job.inp".                      |
-| "Processor Cores"  | integer    | Number of cores to use. Will be passed to MoleQueue.                |
-| "Calculation Type" | stringList | Type of calculation, e.g. "Single Point" or "Equilibrium Geometry". |
-| "Theory"           | stringList | Levels of QM theory, e.g. "RHF", "B3LYP", "MP2", "CCSD", etc.       |
-| "Basis"            | stringList | Available basis sets, e.g. "STO-3G", "6-31G**", etc.                |
-| "Charge"           | integer    | Charge on the system. |
-| "Multiplicity"     | integer    | Spin multiplicity of the system. |
+====================   ===========  ====================================================================
+ Option Name            Type         Description  
+====================   ===========  ====================================================================
+ "Title"                string      Input file title comment, MoleQueue job description.         
+ "Filename Base"        string      Input file base name, e.g. "job" in "job.inp".                      
+ "Processor Cores"      integer     Number of cores to use. Will be passed to MoleQueue.                
+ "Calculation Type"     stringList  Type of calculation, e.g. "Single Point" or "Equilibrium Geometry".
+ "Theory"               stringList  Levels of QM theory, e.g. "RHF", "B3LYP", "MP2", "CCSD", etc.
+ "Basis"                stringList  Available basis sets, e.g. "STO-3G", "6-31G**", etc.              
+ "Charge"               integer     Charge on the system.
+ "Multiplicity"         integer     Spin multiplicity of the system. 
+====================   ===========  ====================================================================
 
 Syntax Highlighting
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Rules for syntax highlighting can be specified as a collection of
 regular expressions or wildcard patterns and text format specifications
@@ -276,40 +160,40 @@ The preferred form of the format member is simply a specification of a
 preset format. This allows for consistent color schemes across input
 generators. The recognized presets are:
 
--  "title": A human readable title string.
--  "keyword": directives defined by the target input format
+*  "title": A human readable title string.
+*  "keyword": directives defined by the target input format
    specification to have special meaning, such as tags indicating where
    coordinates are to be found.
--  "property": A property of the simulation, such as level of theory,
+*  "property": A property of the simulation, such as level of theory,
    basis set, minimization method, etc.
--  "literal": A numeric literal (i.e. a raw number, such as a
+*  "literal": A numeric literal (i.e. a raw number, such as a
    coordinate).
--  "comment": Sections of the input that are ignored by the simulation
+*  "comment": Sections of the input that are ignored by the simulation
    code.
 
 If advanced formatting is desired, the second form of the format member
 allows fine-tuning of the font properties:
 
--  foreground color as an RGB tuple, ranged 0-255
--  background color as an RGB tuple, ranged 0-255
--  attributes array of font attributes, valid strings are "bold", "italic", or "underline"
--  family of font. Valid values are "serif", "sans", or "mono" Any of the font property members may be omitted and default QTextCharFormat settings will be substituted.
+*  foreground color as an RGB tuple, ranged 0-255
+*  background color as an RGB tuple, ranged 0-255
+*  attributes array of font attributes, valid strings are "bold", "italic", or "underline"
+*  family of font. Valid values are "serif", "sans", or "mono" Any of the font property members may be omitted and default QTextCharFormat settings will be substituted.
 
 The input generator extension will apply the entries in the highlightRules object to the text in the order they appear. Thus, later rules will override the formatting of earlier rules should a conflict arise.
 
 ::
 
-{
-  "patterns": [
-    ...
-  ],
-  "format": {
-    "foreground": [ 255, 128,  64 ],
-    "background": [   0, 128, 128 ],
-    "attributes": ["bold", "italic", "underline"],
-    "family": "serif"
+  {
+    "patterns": [
+      ...
+    ],
+    "format": {
+      "foreground": [ 255, 128,  64 ],
+      "background": [   0, 128, 128 ],
+      "attributes": ["bold", "italic", "underline"],
+      "family": "serif"
+    }
   }
-}
 
 The `patterns` array contains a collection of fixed strings, wildcard
 expressions, and regular expressions (using the QRegExp syntax flavor, see
@@ -317,11 +201,11 @@ the QRegExp documentation) that are used to identify strings that should be
 formatted.
 
 There must be one of the following members present in each pattern object:
-- `regexp` A QRegExp-style regular expression. If no capture groups ("(...)")
+* `regexp` A QRegExp-style regular expression. If no capture groups ("(...)")
   are defined, the entire match is formatted. If one or more capture groups,
   only the captured texts will be marked.
-- `wildcard` A wildcard expression
-- `string` An exact string to match.
+* `wildcard` A wildcard expression
+* `string` An exact string to match.
 
 Any pattern object may also set a boolean `caseSensitive` member to indicate
 whether the match should consider character case. If omitted, a
@@ -331,22 +215,22 @@ The preferred form of the `format` member is simply a specification of a
 preset format.
 This allows for consistent color schemes across input generators.
 The recognized presets are:
-- `"title"`: A human readable title string.
-- `"keyword"`: directives defined by the target input format specification
+* `"title"`: A human readable title string.
+* `"keyword"`: directives defined by the target input format specification
   to have special meaning, such as tags indicating where coordinates are
   to be found.
-- `"property"`: A property of the simulation, such as level of theory, basis
+* `"property"`: A property of the simulation, such as level of theory, basis
   set, minimization method, etc.
-- `"literal"`: A numeric literal (i.e. a raw number, such as a coordinate).
-- `"comment"`: Sections of the input that are ignored by the simulation code.
+* `"literal"`: A numeric literal (i.e. a raw number, such as a coordinate).
+* `"comment"`: Sections of the input that are ignored by the simulation code.
 
 If advanced formatting is desired, the second form of the `format` member
 allows fine-tuning of the font properties:
-- `foreground` color as an RGB tuple, ranged 0-255
-- `background` color as an RGB tuple, ranged 0-255
-- `attributes` array of font attributes, valid strings are `"bold"`,
+* `foreground` color as an RGB tuple, ranged 0-255
+* `background` color as an RGB tuple, ranged 0-255
+* `attributes` array of font attributes, valid strings are `"bold"`,
   `"italic"`, or `"underline"`
-- `family` of font. Valid values are `"serif"`, `"sans"`, or `"mono"`
+* `family` of font. Valid values are `"serif"`, `"sans"`, or `"mono"`
 
 Any of the font property members may be omitted and default QTextCharFormat
 settings will be substituted.
@@ -368,7 +252,7 @@ note Currently valid options for inputMoleculeFormat are "cjson" for
 Chemical JSON or "cml" for Chemical Markup Language.
 
 Handling User Selections: `--generate-input`
-============================================
+---------------------------------------------
 
 When `--generate-input` is passed, the information needed to generate
 the input file will be written to the script's standard input
@@ -376,14 +260,14 @@ channel as JSON string of the following form:
 
 ::
 
-{
-  "cjson": {...},
-  "options": {
-    "First option name": "Value 2",
-    "Second option name": "Value 1",
-    ...
+  {
+    "cjson": {...},
+    "options": {
+     "First option name": "Value 2",
+      "Second option name": "Value 1",
+      ...
+    }
   }
-}
 
 The `cjson` entry will contain a Chemical JSON representation
 of the molecule if `inputMoleculeFormat` is set to "cjson" in the
@@ -401,22 +285,22 @@ string to standard output with the following format:
 
 ::
 
-{
-  "files": [
-    {
-      "filename": "file1.ext",
-      "contents": "...",
-      "highlightStyles": [ ... ]
-    },
-    {
-      "filename": "file2.ext",
-      "filePath": "/path/to/file/on/local/filesystem"
-    },
-    ...
-  ],
-  "warnings": ["First warning.", "Second warning.", ... ],
-  "mainFile": "file2.ext"
-}
+  {
+    "files": [
+      {
+        "filename": "file1.ext",
+        "contents": "...",
+        "highlightStyles": [ ... ]
+      },
+      {
+        "filename": "file2.ext",
+        "filePath": "/path/to/file/on/local/filesystem"
+      },
+      ...
+    ],
+    "warnings": ["First warning.", "Second warning.", ... ],
+    "mainFile": "file2.ext"
+  }
 
 The `files` block is an array of objects, which define the actual input
 files. The `filename` member provides the name of the file, and
@@ -450,7 +334,7 @@ If absent and only one file is specified in `files`, the single input file
 will be used. Otherwise, the main file will be left unspecified.
 
 Automatic Generation of Geometry
-================================
+--------------------------------
 
 The generation of molecular geometry descriptions may be skipped in the
 script and deferred to the InputGenerator class by use of a special keyword.
@@ -473,7 +357,7 @@ Other keywords that can be used in the input files are:
 - `$$bondCount$$`: Number of bonds in the molecule.
 
 Error Handling
-==============
+--------------
 
 In general, these scripts should be written robustly so that they will not
 fail under normal circumstances. However, if for some reason an error
@@ -482,7 +366,7 @@ standard output as plain text (i.e. not JSON), and it will be shown to the
 user.
 
 Debugging
-=========
+---------
 
 Debugging may be enabled by defining AVO_QM_INPUT_DEBUG in the process's
 environment. This will cause the <tt>--debug</tt> option to be passed in
