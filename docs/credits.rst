@@ -1,7 +1,12 @@
+.. _Credits:
+
+Thanks
+=======
+
 Avogadro, like many open source projects is helped by a cast of many. We
 are fundamentally a community project and aim to offer open development,
 responsive to users and contributors alike. Our hope is that many will
-build plugins on top of the core Avogadro framework, so we are very
+build on top of the core Avogadro framework, so we are very
 grateful to all contributors:
 
 Code:
@@ -32,7 +37,7 @@ Funding
 Financial support for Avogadro and its contributors has come from many
 sources. We would particularly like to thank:
 
--  `Google Summer of Code`_ -- Support in 2007, 2008, 2011, and 2016
+-  `Google Summer of Code`_ -- Support in 2007, 2008, 2011, 2016, 2021
 -  `Kitware, Inc.`_
 -  `University of Pittsburgh`_
 -  US Department of Defense (DoD) through the PETTT program
@@ -49,12 +54,8 @@ Avogadro relies on a number of projects for dependencies and other
 -  `Chemical Structures Database`_
 -  `CMake`_
 -  `Eigen`_
--  `Gerrit Code Review`_
--  `GL2PS`_
--  Jason Harris for the `KDE`_ KPlotWidget
 -  `Nokia & Qt Software`_
 -  `Open Babel`_
--  Andrey Ponomarenko and `ISPRAS`_ for the `Upstream Tracker`_
 
 And of course, we'd like to thank `Johann Loschmidt`_ and `Amedeo
 Avogadro`_ for their fundamental work in chemistry.

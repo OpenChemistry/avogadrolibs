@@ -16,20 +16,21 @@ Script Entry Points
 -------------------
 
 The script must handle the following command-line arguments:
-- `--debug` Enable extra debugging output. Used with other commands.
+
+- ``--debug`` Enable extra debugging output. Used with other commands.
   It is not required that the script support extra debugging, but it should
   not crash when this option is passed.
-- `--print-options` Print the available options supported by the
+- ``--print-options`` Print the available options supported by the
   script, e.g. simulation parameters, etc. See below for more details.
-- `--generate-input` Read an option block from stdin and print
+- ``--generate-input`` Read an option block from stdin and print
   input files to stdout. See below for more details.
-- `--display-name` Print a user-friendly name for the input generator.
+- ``--display-name`` Print a user-friendly name for the input generator.
   This is used in the GUI for menu entries, window titles, etc.
 
-Specifying parameters with `--print-options`
---------------------------------------------
+Specifying parameters with ``--print-options``
+----------------------------------------------
 
-The format of the `--print-options` output must be a JSON object of
+The format of the ``--print-options`` output must be a JSON object of
 the following form:
 
 ::
@@ -201,6 +202,7 @@ the QRegExp documentation) that are used to identify strings that should be
 formatted.
 
 There must be one of the following members present in each pattern object:
+
 * `regexp` A QRegExp-style regular expression. If no capture groups ("(...)")
   are defined, the entire match is formatted. If one or more capture groups,
   only the captured texts will be marked.
@@ -212,9 +214,9 @@ whether the match should consider character case. If omitted, a
 case-sensitive match is assumed.
 
 The preferred form of the `format` member is simply a specification of a
-preset format.
-This allows for consistent color schemes across input generators.
+preset format. This allows for consistent color schemes across input generators.
 The recognized presets are:
+
 * `"title"`: A human readable title string.
 * `"keyword"`: directives defined by the target input format specification
   to have special meaning, such as tags indicating where coordinates are
@@ -226,6 +228,7 @@ The recognized presets are:
 
 If advanced formatting is desired, the second form of the `format` member
 allows fine-tuning of the font properties:
+
 * `foreground` color as an RGB tuple, ranged 0-255
 * `background` color as an RGB tuple, ranged 0-255
 * `attributes` array of font attributes, valid strings are `"bold"`,
@@ -251,10 +254,10 @@ is omitted, no representation of the structure will be provided.
 note Currently valid options for inputMoleculeFormat are "cjson" for
 Chemical JSON or "cml" for Chemical Markup Language.
 
-Handling User Selections: `--generate-input`
----------------------------------------------
+Handling User Selections: ``--generate-input``
+-----------------------------------------------
 
-When `--generate-input` is passed, the information needed to generate
+When ``--generate-input`` is passed, the information needed to generate
 the input file will be written to the script's standard input
 channel as JSON string of the following form:
 
@@ -269,18 +272,18 @@ channel as JSON string of the following form:
     }
   }
 
-The `cjson` entry will contain a Chemical JSON representation
+The ``cjson`` entry will contain a Chemical JSON representation
 of the molecule if `inputMoleculeFormat` is set to "cjson" in the
-`--print-options` output.
-Similarly, a `cml` entry and CML string will exist if a Chemical Markup
+``--print-options`` output.
+Similarly, a ``cml`` entry and CML string will exist if a Chemical Markup
 Language representation was requested.
 It will be omitted entirely if `inputMoleculeFormat` is not set.
 
-The `options` block contains key/value
+The ``options`` block contains key/value
 pairs for each of the options specified in the `userOptions` block of the
-`--print-options` output.
+``--print-options`` output.
 
-If the script is called with `--generate-input`, it must write a JSON
+If the script is called with ``--generate-input``, it must write a JSON
 string to standard output with the following format:
 
 ::
@@ -310,9 +313,9 @@ should contain an absolute path to a file on the filesystem to read and use
 as the input file contents.
 
 The optional `highlightStyles` member is an array of strings describing any
-highlight styles to apply to the file (see `--print-options` documentation).
+highlight styles to apply to the file (see ``--print-options`` documentation).
 Each string in this array must match a `style` description in a highlighting
-rule in the `--print-options` output.
+rule in the ``--print-options`` output.
 Zero or more highlighting styles may be applied to any file.
 
 The order of the files in the
@@ -348,13 +351,52 @@ $$coords:[coordSpec]$$
 where `[coordSpec]` is a sequence of characters.
 The characters in `[coordSpec]` indicate the information needed about each
 atom in the coordinate block.
-
-See the CoordinateBlockGenerator documentation for a list of recognized
-characters.
  
 Other keywords that can be used in the input files are:
 - `$$atomCount$$`: Number of atoms in the molecule.
 - `$$bondCount$$`: Number of bonds in the molecule.
+
+Coordinate Blocks
+~~~~~~~~~~~~~~~~~
+
+The characters in the specification string indicate the information
+needed about each atom in the coordinate block.
+
+-  ``#``: Atom index (one-based index)
+-  ``Z``: Atomic number (e.g. "6" for carbon)
+-  ``G``: GAMESS-styled Atomic number (e.g. "6.0" for carbon)
+-  ``S``: Element symbol (e.g. "C" for carbon)
+-  ``N``: Element name (e.g. "Carbon")
+-  ``x``: X cartesian coordinate
+-  ``y``: Y cartesian coordinate
+-  ``z``: Z cartesian coordinate
+-  ``a``: 'a' lattice coordinate (unit cell required)
+-  ``b``: 'b' lattice coordinate (unit cell required)
+-  ``c``: 'c' lattice coordinate (unit cell required)
+-  ``0``: A literal "0". Useful for optimization flags.
+-  ``1``: A literal "1". Useful for optimization flags.
+-  ``_``: A space character. Useful for alignment.
+
+For example, the specification string
+
+::
+
+   __SZxyz110
+
+will be replaced by a molecule-specific block of text similar to the
+following:
+
+::
+
+     C  6    1.126214  0.765886  0.000000 1 1 0
+     C  6    0.819345 -0.564955  0.000000 1 1 0
+     C  6   -0.598383 -0.795127  0.000000 1 1 0
+     C  6   -1.310706  0.370165  0.000000 1 1 0
+     S  16  -0.285330  1.757144  0.000000 1 1 0
+     H  1    2.130424  1.185837  0.000000 1 1 0
+     H  1    1.548377 -1.375303  0.000000 1 1 0
+     H  1   -1.033768 -1.794407  0.000000 1 1 0
+     H  1   -2.396173  0.450760  0.000000 1 1 0
 
 Error Handling
 --------------
@@ -369,7 +411,7 @@ Debugging
 ---------
 
 Debugging may be enabled by defining AVO_QM_INPUT_DEBUG in the process's
-environment. This will cause the <tt>--debug</tt> option to be passed in
+environment. This will cause the ``--debug`` option to be passed in
 all calls to generator scripts, and will print extra information to the
 qDebug() stream from within avogadro. The script is free to handle the
 debug flag as the author wishes.

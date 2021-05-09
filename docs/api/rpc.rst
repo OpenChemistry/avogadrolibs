@@ -1,3 +1,5 @@
+.. _RPC:
+
 Avogadro Remote Procedure Call (RPC)
 ====================================
 

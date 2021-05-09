@@ -1,10 +1,10 @@
+.. _API:
 
 Library API
 ===========
 
-.. include:: class_view_hierarchy.rst
+.. doxygenclass:: Avogadro::Core::Molecule
 
-.. include:: file_view_hierarchy.rst
+.. toctree::
 
-.. include:: unabridged_api.rst
-
+    rpc.rst

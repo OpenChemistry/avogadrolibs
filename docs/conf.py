@@ -82,7 +82,7 @@ html_context = {
     "github_user": "openchemistry",
     "github_repo": "avogadrolibs",
     "github_version": "master",
-    "doc_path": "docs/sphinx",
+    "doc_path": "docs/",
 }
 
 html_sidebars = {
