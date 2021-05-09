@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-05-08 21:31+0000\n"
+"PO-Revision-Date: 2021-05-10 15:31+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
@@ -97,7 +97,7 @@ msgstr "O membro 'mainFile' não se refere a uma entrada em 'arquivos'."
 
 #: molequeue/inputgenerator.cpp:280 qtgui/interfacescript.cpp:383
 msgid "'mainFile' member must be a string."
-msgstr "O membro 'mainFile' deve ser uma string."
+msgstr "O membro 'mainFile' deve ser uma cadeia."
 
 #: molequeue/inputgenerator.cpp:291 qtgui/interfacescript.cpp:394
 msgid "Response must be a JSON object at top-level."
@@ -2647,7 +2647,7 @@ msgstr "Nome Químico"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
 msgid "Chemical structure to download."
-msgstr "Estrutura química para download."
+msgstr "Estrutura química para descarregar."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:102
 #, qt-format
