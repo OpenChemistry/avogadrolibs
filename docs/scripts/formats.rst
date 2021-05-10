@@ -8,17 +8,21 @@ handles and new formats (e.g., to use packages like cclib).
 
 The script must handle the following command line arguments:
 
-* `--metadata` Print metadata describing the format and the script's
+* ``--metadata`` Print metadata describing the format and the script's
   abilities and exit.
-* `--read` Read data from standard input and produce a standard
+* ``--read`` Read data from standard input and produce a standard
   representation on standard output.
-* `--write` Read a standard representation from standard input and write
+* ``--write`` Read a standard representation from standard input and write
   the formatted result to standard output.
 
-Identify the Format with `--metadata`
---------------------------------------
+Format scripts do not need to handle both ``--read`` and ``--write`` options.
+For example a format could be intended to only read in a new format by converting
+to `cjson`.
 
-Running the script with the `--metadata` option should print a JSON object
+Identify the Format with ``--metadata``
+----------------------------------------
+
+Running the script with the ``--metadata`` option should print a JSON object
 of the following form:
 
 ::
@@ -38,14 +42,14 @@ of the following form:
 Details:
 
 * `inputFormat` indicates the format that the script can convert to the
-  implemented format by the `--write` command. Allowed values are `"cml"`,
-  `"cjson"`, or `"xyz"`. See the `--write` documentation for more detail.
+  implemented format by the ``--write`` command. Allowed values are `"cml"`,
+  `"cjson"`, or `"xyz"`. See the ``--write`` documentation for more detail.
 * `outputFormat` indicates the format that the script can convert to from the
-  implemented format by the `--read` command. Allowed values are `"cml"`,
-  `"cjson"`, or `"xyz"`. See the `--read` documentation for more detail.
+  implemented format by the ``--read`` command. Allowed values are `"cml"`,
+  `"cjson"`, or `"xyz"`. See the ``--read`` documentation for more detail.
 * `operations` specifies the scripts capabilies. The array should contain
-  `"read"` if the script implements the `--read` option, and/or `"write"` if
-  `--write` is available.
+  `"read"` if the script implements the ``--read`` option, and/or `"write"` if
+  ``--write`` is available.
 * `identifier` is a unique identifier. The value must only be unique amongst
   script formats, as it will be prefixed with "User Script: " internally by
   Avogadro.
@@ -72,18 +76,18 @@ Optional members are:
   - `fileExtensions`
   - `mimeTypes`
 
-Reading a format with `--read`
-------------------------------
+Reading a format with ``--read``
+--------------------------------
 
-If `"read"` is specified in the `operations` `--metadata` output along with
-a valid `outputFormat`, Avogadro will call the script with `--read` and
+If `"read"` is specified in the `operations` ``--metadata`` output along with
+a valid `outputFormat`, Avogadro will call the script with ``--read`` and
 write the implemented format to the script's standard input. The script shall
 convert the input to `outputFormat` and print it to standard output.
 
-Writing a format with `--write`
--------------------------------
+Writing a format with ``--write``
+---------------------------------
 
-If `"write"` is specified in the `operations` `--metadata` output along with
-a valid `inputFormat`, Avogadro will call the script with `--write` and
-write the `inputFormat` to the script's standard input. The script shall
+If `"write"` is specified in the `operations` ``--metadata`` output along with
+a valid ``inputFormat``, Avogadro will call the script with ``--write`` and
+write the ``inputFormat`` to the script's standard input. The script shall
 convert the input to the implemented format and print it to standard output.

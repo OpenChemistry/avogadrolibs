@@ -52,7 +52,7 @@ You can also find more information about Avogadro on `Twitter`_.
 
     scripts/index
     api/index
-    credits
+    contrib/index
 
 .. _Avogadro Discussion: https://discuss.avogadro.cc/
 .. _`AvogadroLib GitHub repository`: https://github.com/openchemistry/avogadrolibs

@@ -9,7 +9,7 @@ responsive to users and contributors alike. Our hope is that many will
 build on top of the core Avogadro framework, so we are very
 grateful to all contributors:
 
-Code:
+Code
 -----
 
 -  Shahzad Ali
@@ -21,12 +21,12 @@ Code:
 -  `Marcus Hanwell`_
 -  `Geoff Hutchison`_
 -  `Benoît Jacob`_
--  `David Lonie`_
 -  Jordan Mantha
 -  Thomas Margraf
 -  `Carsten Niehaus`_
 -  Simon Ochsenreither
 -  Konstantin Tokarev
+-  Allison Vacanti
 -  `Tim Vandermeersch`_
 
 All the Avogadro `Translators`_
