@@ -2000,30 +2000,6 @@ ResidueData IMDData("IMD",
                       { "C5", "H5" } },
                     // Double Bonds
                     { { "C2", "N3" }, { "C4", "C5" } });
-ResidueData 1PEData(
-  "1PE",
-  // Atoms
-  { { "OH2", 8 },  { "C12", 6 },  { "C22", 6 },  { "OH3", 8 },  { "C13", 6 },
-    { "C23", 6 },  { "OH4", 8 },  { "C14", 6 },  { "C24", 6 },  { "OH5", 8 },
-    { "C15", 6 },  { "C25", 6 },  { "OH6", 8 },  { "C16", 6 },  { "C26", 6 },
-    { "OH7", 8 },  { "HO2", 1 },  { "H121", 1 }, { "H122", 1 }, { "H221", 1 },
-    { "H222", 1 }, { "H131", 1 }, { "H132", 1 }, { "H231", 1 }, { "H232", 1 },
-    { "H141", 1 }, { "H142", 1 }, { "H241", 1 }, { "H242", 1 }, { "H151", 1 },
-    { "H152", 1 }, { "H251", 1 }, { "H252", 1 }, { "H161", 1 }, { "H162", 1 },
-    { "H261", 1 }, { "H262", 1 }, { "H262", 1 } },
-  // Single Bonds
-  { { "OH2", "C12" },  { "OH2", "HO2" },  { "C12", "C22" },  { "C12", "H121" },
-    { "C12", "H122" }, { "C22", "OH3" },  { "C22", "H221" }, { "C22", "H222" },
-    { "OH3", "C23" },  { "C13", "C23" },  { "C13", "OH4" },  { "C13", "H131" },
-    { "C13", "H132" }, { "C23", "H231" }, { "C23", "H232" }, { "OH4", "C24" },
-    { "C14", "C24" },  { "C14", "OH5" },  { "C14", "H141" }, { "C14", "H142" },
-    { "C24", "H241" }, { "C24", "H242" }, { "OH5", "C25" },  { "C15", "C25" },
-    { "C15", "OH6" },  { "C15", "H151" }, { "C15", "H152" }, { "C25", "H251" },
-    { "C25", "H252" }, { "OH6", "C26" },  { "C16", "C26" },  { "C16", "OH7" },
-    { "C16", "H161" }, { "C16", "H162" }, { "C26", "H261" }, { "C26", "H262" },
-    { "OH7", "HO7" } },
-  // Double Bonds
-  {});
 ResidueData PCAData("PCA",
                     // Atoms
                     { { "N", 7 },
@@ -2478,12 +2454,11 @@ std::map<std::string, ResidueData> residueDict = {
   { "EPE", EPEData }, { "TPO", TPOData }, { "PLP", PLPData },
   { "GTP", GTPData }, { "SAH", SAHData }, { "BME", BMEData },
   { "ACY", ACYData }, { "ANP", ANPData }, { "IMD", IMDData },
-  { "HEC", HECData }, { "1PE", 1PEData }, { "PCA", PCAData },
-  { "CSO", CSOData }, { "MLI", MLIData }, { "FES", FESData },
-  { "NDP", NDPData }, { "AMP", AMPData }, { "NO3", NO3Data },
-  { "PTR", PTRData }, { "IPA", IPAData }, { "COA", COAData },
-  { "KCX", KCXData }, { "H4B", H4BData }, { "SAM", SAMData },
-  { "GNP", GNPData }, { "FLC", FLCData },
+  { "PCA", PCAData }, { "CSO", CSOData }, { "MLI", MLIData },
+  { "FES", FESData }, { "NDP", NDPData }, { "AMP", AMPData },
+  { "NO3", NO3Data }, { "PTR", PTRData }, { "IPA", IPAData },
+  { "COA", COAData }, { "KCX", KCXData }, { "H4B", H4BData },
+  { "SAM", SAMData }, { "GNP", GNPData }, { "FLC", FLCData },
 
 };
 } // namespace Core
