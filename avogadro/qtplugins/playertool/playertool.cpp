@@ -237,7 +237,7 @@ void PlayerTool::recordMovie()
 #if QT_VERSION >= 0x050E00
   qreal scaling = m_glWidget->screen()->devicePixelRatio();
 #else
-  qreal scaling = qApp()->devicePixelRatio();
+  qreal scaling = qApp->devicePixelRatio();
 #endif
   int EXPORT_WIDTH = m_glWidget->width() * scaling; 
   int EXPORT_HEIGHT = m_glWidget->height() * scaling;
