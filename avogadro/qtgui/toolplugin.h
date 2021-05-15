@@ -148,7 +148,7 @@ class AVOGADROQTGUI_EXPORT ToolPluginFactory
 public:
   virtual ~ToolPluginFactory();
 
-  virtual ToolPlugin* createInstance() = 0;
+  virtual ToolPlugin* createInstance(QObject *parent = nullptr) = 0;
   virtual QString identifier() const = 0;
 };
 
