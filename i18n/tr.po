@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-05-11 22:34+0000\n"
+"PO-Revision-Date: 2021-05-16 19:31+0000\n"
 "Last-Translator: udo pton <udopton@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
@@ -40,7 +40,7 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:187 qtgui/interfacescript.cpp:193
 #: qtgui/interfacescript.cpp:289
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "Dize olmayan uyarı döndürüldü."
 
 #: molequeue/inputgenerator.cpp:190 qtgui/interfacescript.cpp:196
 #: qtgui/interfacescript.cpp:292
@@ -82,7 +82,7 @@ msgstr "%1 dizininde hatalı biçimlendirilmiş dosya girişi: Bir nesne değil.
 
 #: molequeue/inputgenerator.cpp:260 qtgui/interfacescript.cpp:363
 msgid "'files' member not an array."
-msgstr ""
+msgstr "'dosyalar' üyesi bir dizi değil."
 
 #: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:367
 msgid "'files' member missing."
@@ -90,11 +90,11 @@ msgstr "\"dosyalar\" üyesi eksik."
 
 #: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:378
 msgid "'mainFile' member does not refer to an entry in 'files'."
-msgstr ""
+msgstr "'anaDosya' üyesi 'dosyalar' içinde bir girdiye başvurmaz."
 
 #: molequeue/inputgenerator.cpp:280 qtgui/interfacescript.cpp:383
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "'anaDosya' üyesi bir dize olmalıdır."
 
 #: molequeue/inputgenerator.cpp:291 qtgui/interfacescript.cpp:394
 msgid "Response must be a JSON object at top-level."
@@ -274,7 +274,7 @@ msgstr "İş başarıyla tamamlanmadı."
 
 #: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:68
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Komut dosyası şu uyarıları döndürür:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:384
 msgid "Hide &Warnings"
