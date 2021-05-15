@@ -30,7 +30,7 @@ namespace QtPlugins {
 /**
  * @class Navigator navigator.h <avogadro/qtplugins/navigator/navigator.h>
  * @brief The Navigator tool updates the camera in response to user input.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 class Navigator : public QtGui::ToolPlugin
 {

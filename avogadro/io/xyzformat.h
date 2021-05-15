@@ -25,7 +25,7 @@ namespace Io {
 /**
  * @class XyzFormat xyzformat.h <avogadro/io/xyzformat.h>
  * @brief Implementation of the generic xyz format.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 
 class AVOGADROIO_EXPORT XyzFormat : public FileFormat
