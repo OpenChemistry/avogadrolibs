@@ -43,7 +43,7 @@ namespace QtPlugins {
 /**
  * @brief The QuantumInput class implements the extension interface for
  * simulation input generators.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 class QuantumInput : public QtGui::ExtensionPlugin
 {

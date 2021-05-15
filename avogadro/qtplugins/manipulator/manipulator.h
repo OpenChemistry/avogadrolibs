@@ -32,7 +32,7 @@ namespace QtPlugins {
  * @class Manipulator manipulator.h
  * <avogadro/qtplugins/manipulator/manipulator.h>
  * @brief The Manipulator class manipulates a molecule's geometry.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 class Manipulator : public QtGui::ToolPlugin
 {

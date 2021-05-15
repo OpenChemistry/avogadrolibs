@@ -35,7 +35,7 @@ namespace Io {
 /**
  * @class Hdf5DataFormat hdf5dataformat.h <avogadro/io/hdf5dataformat.h>
  * @brief The Hdf5DataFormat class provides access to data stored in HDF5 files.
- * @author David C. Lonie
+ * @author Allison Vacanti
  *
  * This class is intended to supplement an existing format reader/writer by
  * providing the option to write large data to an HDF5 file store. The purpose
