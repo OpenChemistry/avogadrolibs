@@ -6,13 +6,14 @@
 # Ferdinand Tampubolon <dnandz@gmail.com>, 2021.
 # Reza Almanda <rezaalmanda27@gmail.com>, 2021.
 # RIDHO NURUL ADILLA <ridhonuruladilla@gmail.com>, 2021.
+# Jacque Fresco <aidter@use.startmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-05-04 04:31+0000\n"
-"Last-Translator: RIDHO NURUL ADILLA <ridhonuruladilla@gmail.com>\n"
+"PO-Revision-Date: 2021-05-19 04:33+0000\n"
+"Last-Translator: Jacque Fresco <aidter@use.startmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
 "Language: id\n"
@@ -1620,7 +1621,7 @@ msgstr ""
 #: qtplugins/clientserver/clientserver.cpp:252
 #, qt-format
 msgid "clientServer/%1:%2/lastOpenDir"
-msgstr ""
+msgstr "clientServer/%1:%2/lastOpenDir"
 
 #: qtplugins/clientserver/clientserver.cpp:264
 #, qt-format
