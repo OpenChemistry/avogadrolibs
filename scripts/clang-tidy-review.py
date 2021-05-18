@@ -345,7 +345,7 @@ if __name__ == "__main__":
     parser.add_argument("--token", help="github auth token")
     parser.add_argument(
         "--read-review", 
-        help="read old review"
+        help="read old review",
         type=str,
         default="",
         )
