@@ -97,10 +97,6 @@ jobs:
         path: ${{ runner.workspace }}/build/*.json
         name: clang-tidy-review.json
 
-#    - name: Tmate debugging
-#      if: always()
-#      uses: mxschmitt/action-tmate@v3.5
-
     - name: Passed C++ clang-tidy checks
       if: steps.static_analysis.outputs.total_comments > 0
       run: exit 1
