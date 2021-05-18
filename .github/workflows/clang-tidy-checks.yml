@@ -91,7 +91,7 @@ jobs:
         ln -s ../avogadrolibs/avogadro . # install symlink to make paths work
         python3 ../avogadrolibs/scripts/clang-tidy-review.py --repo=${{ github.repository }} --token=${{ github.token }} --pr=${{ github.event.pull_request.number }} --src_dir=${{ runner.workspace }}/avogadrolibs --path_prefix=${{ runner.workspace }}/build
 
-     - name: Upload saved review
+    - name: Upload saved review
       uses: actions/upload-artifact@v2
       with:
         path: ${{ runner.workspace }}/build/*.json

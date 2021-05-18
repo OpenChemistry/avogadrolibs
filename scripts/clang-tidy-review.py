@@ -239,7 +239,7 @@ def main(
         print("No files to check!")
         return
 
-    print(f"Checking these files: {files}", flush=True)
+    print(f"Checking these files: {files}", files, flush=True)
 
     line_ranges = get_line_ranges(diff, files)
     if line_ranges == "[]":
