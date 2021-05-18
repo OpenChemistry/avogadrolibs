@@ -13,7 +13,7 @@ on:
 env:
   BUILD_TYPE: RelWithDebInfo
   QT_VERSION: 5.12.10
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=1
   CMAKE_EXPORT_COMPILE_COMMANDS: ON
 
 jobs:
@@ -91,9 +91,15 @@ jobs:
         ln -s ../avogadrolibs/avogadro . # install symlink to make paths work
         python3 ../avogadrolibs/scripts/clang-tidy-review.py --repo=${{ github.repository }} --token=${{ github.token }} --pr=${{ github.event.pull_request.number }} --src_dir=${{ runner.workspace }}/avogadrolibs --path_prefix=${{ runner.workspace }}/build
 
-    - name: Tmate debugging
-      if: always()
-      uses: mxschmitt/action-tmate@v3.5
+     - name: Upload saved review
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{ runner.workspace }}/build/*.json
+        name: clang-tidy-review.json
+
+#    - name: Tmate debugging
+#      if: always()
+#      uses: mxschmitt/action-tmate@v3.5
 
     - name: Passed C++ clang-tidy checks
       if: steps.static_analysis.outputs.total_comments > 0

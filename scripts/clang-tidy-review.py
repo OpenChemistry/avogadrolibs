@@ -220,6 +220,7 @@ def main(
     include,
     exclude,
     max_comments,
+    read_review,
 ):
 
     diff = get_pr_diff(repo, pr_number, token)
@@ -247,35 +248,50 @@ def main(
 
     print(f"Line filter for clang-tidy:\n{line_ranges}\n")
 
-    clang_tidy_warnings = get_clang_tidy_warnings(
-        line_ranges, build_dir, clang_tidy_checks, clang_tidy_binary, " ".join(files)
-    )
-    print("clang-tidy had the following warnings:\n", clang_tidy_warnings, flush=True)
+    if not read_review:
+        # do things normally
 
-    lookup = make_file_line_lookup(diff)
-    review = make_review(clang_tidy_warnings, lookup)
+        clang_tidy_warnings = get_clang_tidy_warnings(
+            line_ranges, build_dir, clang_tidy_checks, clang_tidy_binary, " ".join(files)
+        )
+        print("clang-tidy had the following warnings:\n", clang_tidy_warnings, flush=True)
+
+        lookup = make_file_line_lookup(diff)
+        review = make_review(clang_tidy_warnings, lookup)
+        with open("review.json", "w") as save_review:
+            json.dump(review, save_review, indent=2)
+    else:
+        # we saved the review JSON, read it
+        with open(read_review, "r") as save_review:
+            review = json.load(save_review)
 
     print("Created the following review:\n", pprint.pformat(review), flush=True)
 
-    github = Github(token)
-    repo = github.get_repo(f"{repo}")
-    pull_request = repo.get_pull(pr_number)
+    try:
+        # This can fail if the script is run on a fork
+        # https://github.com/actions/first-interaction/issues/10
+        github = Github(token)
+        repo = github.get_repo(f"{repo}")
+        pull_request = repo.get_pull(pr_number)
 
-    if review["comments"] == []:
-        post_lgtm_comment(pull_request)
+        if review["comments"] == []:
+            post_lgtm_comment(pull_request)
+            return
+
+        print("Removing already posted or extra comments", flush=True)
+        trimmed_review = cull_comments(pull_request, review, max_comments)
+
+        print(f"::set-output name=total_comments::{len(review['comments'])}")
+
+        if trimmed_review["comments"] == []:
+            print("Everything already posted!")
+            return review
+
+        print("Posting the review:\n", pprint.pformat(trimmed_review), flush=True)
+        pull_request.create_review(**trimmed_review)
+    except github.GithubException.GithubException:
+        print("This script will fail when run on a fork.\n", flush=True)
         return
-
-    print("Removing already posted or extra comments", flush=True)
-    trimmed_review = cull_comments(pull_request, review, max_comments)
-
-    print(f"::set-output name=total_comments::{len(review['comments'])}")
-
-    if trimmed_review["comments"] == []:
-        print("Everything already posted!")
-        return review
-
-    print("Posting the review:\n", pprint.pformat(trimmed_review), flush=True)
-    pull_request.create_review(**trimmed_review)
 
 
 if __name__ == "__main__":
@@ -327,6 +343,12 @@ if __name__ == "__main__":
         default=25,
     )
     parser.add_argument("--token", help="github auth token")
+    parser.add_argument(
+        "--read-review", 
+        help="read old review"
+        type=str,
+        default="",
+        )
 
     args = parser.parse_args()
 
@@ -395,4 +417,5 @@ if __name__ == "__main__":
         include=include,
         exclude=exclude,
         max_comments=args.max_comments,
+        read_review=args.read_review,
     )
