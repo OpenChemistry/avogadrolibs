@@ -41,6 +41,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
+    'sphinx_panels',
     'breathe',
 ]
 
@@ -75,6 +76,7 @@ html_theme_options = {
     "use_edit_page_button": True,
     'show_toc_level': 2,
     'twitter_url': 'https://twitter.com/AvogadroChem',
+    "collapse_navigation": True,
 }
 
 html_context = {
@@ -89,10 +91,12 @@ html_sidebars = {
   "index": []
 }
 
+html_logo = "_images/avogadro2.png"
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['_static', '_images']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
