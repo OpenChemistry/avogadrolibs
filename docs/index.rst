@@ -16,29 +16,34 @@ This documentation site is for Avogadro 2, currently in development.
 - Extensible: Plugin architecture for developers, including rendering, interactive tools, commands, and Python scripts.
 
 
-Downloading
+Install
 -----------------------------------------
 
 .. panels::
   :container: container-fluid pb-3
   :column: col-lg-4 col-md-4 col-sm-12 col-xs-12 p-2
+  :header: text-center
 
-  MacOS
-  ^^^^^^^^^^^^^^^^^^^^^^^
-
-  Download DMG
-
-  ---
-  Windows (64-bit)
-  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-  Download package
+  :fa:`apple, fa-2x style=fab` **MacOS**
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/latest
+      :text: Download DMG
+      :classes: btn-outline-primary btn-block stretched-link
 
   ---
-  Linux
-  ^^^^^^
+  :fa:`windows, fa-2x style=fab` **Windows (64-bit)**  
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  Download packages
+  .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/latest
+      :text: Download Installer
+      :classes: btn-outline-primary btn-block stretched-link
+
+  ---
+  :fa:`linux, fa-2x style=fab` **Linux** 
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  - Download Flatpak
+  - Build from Source
 
 Graphics
 -----------------------------------  
@@ -46,6 +51,7 @@ Graphics
 .. panels::
   :container: container-fluid pb-3  
   :column: col-lg-4 col-md-4 col-sm-12 col-xs-12 p-2
+  :header: text-center
 
   .. image:: /_images/400px/benzene-mo.png
     :alt: Thumbnail for benzene molecular orbital
@@ -71,35 +77,36 @@ Resources
 .. panels::
   :container: container-fluid pb-3
   :column: col-lg-4 col-md-4 col-sm-12 col-xs-12 p-2
-
-  User Guide
-  ^^^^^^^^^^
+  :header: text-center
+  
+  :fa:`book, fa-2x style=fab` **User Guide**
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   Coming Soon for Avogadro2:
-  
+
   * Getting Started
   * Tutorials
   * Manual
 
   ---
-  API Documentation
-  ^^^^^^^^^^^^^^^^^^
+  :fa:`laptop-code, fa-2x style=fas` **API Documentation**
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   Develop scripts and C++ code with Avogadro:
 
-  * Script Plugins
+  * :ref:`Script Plugins<Scripts>`
   * Jupyter Notebooks
-  * C++ API
+  * :ref:`C++ API<API>`
 
   ---
-  Contribute
-  ^^^^^^^^^^
+  :fa:`users, fa-2x style=fas` **Contribute**
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  We want your help:
+  We want your help to make Avogadro better for everyone:
 
   * Roadmap
-  * Translation / Localization
-  * Bugs
+  * :ref:`Translation / Localization<Translate>`
+  * Bugs / Issues
   * Feature Requests
 
 
@@ -128,3 +135,5 @@ You can also find more information about Avogadro on `Twitter`_.
 .. _Avogadro Discussion: https://discuss.avogadro.cc/
 .. _`AvogadroLibs GitHub repository`: https://github.com/openchemistry/avogadrolibs
 .. _Twitter: https://twitter.com/AvogadroChem
+.. _Issues: https://github.com/OpenChemistry/avogadrolibs/issues
+.. _Features: https://github.com/OpenChemistry/avogadrolibs/issues

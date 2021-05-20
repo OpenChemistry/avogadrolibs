@@ -1,7 +1,7 @@
 .. _Core Classes:
 
 Core Classes
-==========
+=============
 
 .. toctree::
     :glob:

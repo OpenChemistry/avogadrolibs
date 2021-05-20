@@ -7,7 +7,7 @@ Fixed String Lists (Pop-up menus)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Parameters that have a fixed number of mutually-exclusive string values
-will be presented using a popup menu (combo box). Such a parameter can
+will be presented using a pop-up menu (combo box). Such a parameter can
 be specified in the ``userOptions`` block as:
 
 ::

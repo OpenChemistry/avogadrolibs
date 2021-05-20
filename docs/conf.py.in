@@ -20,7 +20,7 @@ from datetime import date
 project = 'Avogadro'
 author = 'The OpenChemistry / Avogadro Teams'
 # The full version, including alpha/beta/rc tags
-release = '1.94'
+release = @AvogadroLibs_VERSION@
 
 year = date.today().year
 copyright = f"©{year} {author}."
@@ -58,7 +58,7 @@ intersphinx_mapping = {
 
 # -- Options for Breathe --------
 
-breathe_projects = { "AvogadroLibs": "/Users/ghutchis/Devel/build/openchemistry/avogadrolibs/docs/xml/" }
+breathe_projects = { "AvogadroLibs": "@doxygen_output_dir@/xml/" }
 breathe_default_project = "AvogadroLibs"
 
 # -- Options for HTML output -------------------------------------------------
