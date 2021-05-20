@@ -24,14 +24,14 @@ Install
   :column: col-lg-4 col-md-4 col-sm-12 col-xs-12 p-2
   :header: text-center
 
-  :fa:`apple, fa-2x style=fab` **MacOS**
+  :fa:`apple,fa-2x,style=fab` **MacOS**
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/latest
       :text: Download DMG
       :classes: btn-outline-primary btn-block stretched-link
 
   ---
-  :fa:`windows, fa-2x style=fab` **Windows (64-bit)**  
+  :fa:`windows,fa-2x,style=fab` **Windows (64-bit)**  
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/latest
@@ -39,11 +39,11 @@ Install
       :classes: btn-outline-primary btn-block stretched-link
 
   ---
-  :fa:`linux, fa-2x style=fab` **Linux** 
+  :fa:`linux,fa-2x,style=fab` **Linux** 
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   - Download Flatpak
-  - Build from Source
+  - :doc:`Build from Source<install/build>`
 
 Graphics
 -----------------------------------  
@@ -79,7 +79,7 @@ Resources
   :column: col-lg-4 col-md-4 col-sm-12 col-xs-12 p-2
   :header: text-center
   
-  :fa:`book, fa-2x style=fab` **User Guide**
+  :fa:`book,fa-2x,style=fas` **User Guide**
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   Coming Soon for Avogadro2:
@@ -89,7 +89,7 @@ Resources
   * Manual
 
   ---
-  :fa:`laptop-code, fa-2x style=fas` **API Documentation**
+  :fa:`laptop-code,fa-2x,style=fas` **API Documentation**
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   Develop scripts and C++ code with Avogadro:
@@ -99,7 +99,7 @@ Resources
   * :ref:`C++ API<API>`
 
   ---
-  :fa:`users, fa-2x style=fas` **Contribute**
+  :fa:`users,fa-2x,style=fas` **Contribute**
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   We want your help to make Avogadro better for everyone:
@@ -128,6 +128,7 @@ You can also find more information about Avogadro on `Twitter`_.
     :maxdepth: 2
     :hidden:
 
+    install/index
     scripts/index
     api/index
     contrib/index

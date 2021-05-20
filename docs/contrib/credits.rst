@@ -16,7 +16,7 @@ Code
 -  Michael Banck
 -  Ross Braithwaite
 -  James Bunt
--  `Donald Curtis`_
+-  Donald Curtis
 -  Naomi Fox
 -  `Marcus Hanwell`_
 -  `Geoff Hutchison`_
@@ -29,7 +29,7 @@ Code
 -  Allison Vacanti
 -  `Tim Vandermeersch`_
 
-All the Avogadro `Translators`_
+All the Avogadro Translatorss
 
 Funding
 -------
@@ -37,7 +37,7 @@ Funding
 Financial support for Avogadro and its contributors has come from many
 sources. We would particularly like to thank:
 
--  `Google Summer of Code`_ -- Support in 2007, 2008, 2011, 2016, 2021
+-  `Google Summer of Code`_ -- Support in 2007, 2008, 2011, 2016, 2018, 2019, 2021
 -  `Kitware, Inc.`_
 -  `University of Pittsburgh`_
 -  US Department of Defense (DoD) through the PETTT program
@@ -62,13 +62,12 @@ Avogadro`_ for their fundamental work in chemistry.
 
 .. _Donald Curtis: http://www.cs.uiowa.edu/~dcurtis/
 .. _Marcus Hanwell: http://blog.cryos.net/
-.. _Geoff Hutchison: http://hutchison.chem.pitt.edu/
-.. _Benoît Jacob: http://www.math.toronto.edu/bjacob
-.. _David Lonie: http://code.google.com/soc/
+.. _Geoff Hutchison: https://hutchison.chem.pitt.edu/
+.. _Benoît Jacob: http://www.math.toronto.edu/bjaco
 .. _Carsten Niehaus: http://cniehaus.livejournal.com/
 .. _Tim Vandermeersch: http://timvdm.blogspot.com/
 .. _Translators: /translators
-.. _Google Summer of Code: http://code.google.com/soc/
+.. _Google Summer of Code: https://summerofcode.withgoogle.com
 .. _Kitware, Inc.: http://www.kitware.com/
 .. _University of Pittsburgh: http://www.chem.pitt.edu/
 .. _Research Corporation: http://www.rescorp.org/
