@@ -25,14 +25,14 @@ Install
   :header: text-center
 
   :fa:`apple, fa-2x style=fab` **MacOS**
-  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/latest
       :text: Download DMG
       :classes: btn-outline-primary btn-block stretched-link
 
   ---
   :fa:`windows, fa-2x style=fab` **Windows (64-bit)**  
-  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/latest
       :text: Download Installer
@@ -40,7 +40,7 @@ Install
 
   ---
   :fa:`linux, fa-2x style=fab` **Linux** 
-  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   - Download Flatpak
   - Build from Source
@@ -59,7 +59,7 @@ Graphics
   .. image:: /_images/400px/zeolite.png
     :alt: Thumbnail for zeolite rendering
   ---
-  .. image:: /_images/400px/qtaim.png
+  .. image:: /_images/400px/phenol-qtaim.png
     :alt: Thumbnail for QTAim analysis
   ---
   .. image:: /_images/400px/bondcentric.png
@@ -68,8 +68,8 @@ Graphics
   .. image:: /_images/400px/C180.png
     :alt: Thumbnail for symmetry analysis of C180
   ---
-  .. image:: /_images/400px/gromacs-2.8M.png
-    :alt: Thumbnail for 2.8M atom molecular dynamics
+  .. image:: /_images/400px/covid-spike.png
+    :alt: Thumbnail for COVID spike protein
 
 Resources
 ---------

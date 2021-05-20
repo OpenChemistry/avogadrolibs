@@ -20,10 +20,10 @@ from datetime import date
 project = 'Avogadro'
 author = 'The OpenChemistry / Avogadro Teams'
 # The full version, including alpha/beta/rc tags
-release = @AvogadroLibs_VERSION@
+release = '@AvogadroLibs_VERSION@'
 
 year = date.today().year
-copyright = f"©{year} {author}."
+copyright = f'©{year} {author}.'
 
 
 
@@ -58,8 +58,8 @@ intersphinx_mapping = {
 
 # -- Options for Breathe --------
 
-breathe_projects = { "AvogadroLibs": "@doxygen_output_dir@/xml/" }
-breathe_default_project = "AvogadroLibs"
+breathe_projects = { 'AvogadroLibs': '@doxygen_output_dir@/xml/' }
+breathe_default_project = 'AvogadroLibs'
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -73,29 +73,29 @@ html_theme_options = {
         {'name': 'Discuss', 'url': 'https://discuss.avogadro.cc'}
     ],
     'github_url': 'https://github.com/openchemistry/avogadrolibs',
-    "use_edit_page_button": True,
+    'use_edit_page_button': True,
     'show_toc_level': 2,
     'twitter_url': 'https://twitter.com/AvogadroChem',
-    "collapse_navigation": True,
+    'collapse_navigation': True,
 }
 
 html_context = {
-    # "github_url": "https://github.com", # or your GitHub Enterprise interprise
-    "github_user": "openchemistry",
-    "github_repo": "avogadrolibs",
-    "github_version": "master",
-    "doc_path": "docs/",
+    # 'github_url': 'https://github.com', # or your GitHub Enterprise interprise
+    'github_user': 'openchemistry',
+    'github_repo': 'avogadrolibs',
+    'github_version': 'master',
+    'doc_path': 'docs/',
 }
 
 html_sidebars = {
-  "index": []
+  'index': []
 }
 
-html_logo = "_images/avogadro2.png"
+html_logo = '_images/avogadro2.png'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
+# so a file named 'default.css' will overwrite the builtin 'default.css'.
 html_static_path = ['_static', '_images']
 
 # Add any paths that contain templates here, relative to this directory.
