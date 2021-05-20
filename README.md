@@ -1,6 +1,6 @@
 ![Avogadro 2][Avogadro2Logo] Avogadro 2
 ==========
-[![Latest Release](https://img.shields.io/github/v/release/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/releases) [![BSD License](https://img.shields.io/github/license/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/blob/master/LICENSE) ![Build Status](https://img.shields.io/github/workflow/status/openchemistry/avogadrolibs/CMake%20Build%20Matrix) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub contributors](https://img.shields.io/github/contributors/openchemistry/avogadrolibs.svg?style=flat)]()  [![OpenCollective Backers](https://img.shields.io/opencollective/all/open-chemistry)](https://opencollective.com/open-chemistry)
+[![Latest Release](https://img.shields.io/github/v/release/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/releases) [![BSD License](https://img.shields.io/github/license/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/blob/master/LICENSE) [![Build Status](https://img.shields.io/github/workflow/status/openchemistry/avogadrolibs/CMake%20Build%20Matrix)](https://github.com/OpenChemistry/avogadrolibs/actions) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub contributors](https://img.shields.io/github/contributors/openchemistry/avogadrolibs.svg?style=flat)](https://github.com/OpenChemistry/avogadrolibs/graphs/contributors)  [![OpenCollective Backers](https://img.shields.io/opencollective/all/open-chemistry)](https://opencollective.com/open-chemistry)
 
 Introduction
 ------------
@@ -61,7 +61,9 @@ documentation generated nightly. We have several [mailing lists][MailingLists]
 to coordinate development and to provide support.
 
 Contributors Hall of Fame:
-[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/0)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/0)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/1)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/1)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/2)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/2)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/3)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/3)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/4)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/4)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/5)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/5)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/6)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/6)[![](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/images/7)](https://sourcerer.io/fame/ghutchis/openchemistry/avogadrolibs/links/7)
+<a href="https://github.com/openchemistry/avogadrolibs/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=openchemistry/avogadrolibs" />
+</a>
 
   [Avogadro2Logo]: https://raw.githubusercontent.com/OpenChemistry/avogadrolibs/master/docs/avogadro2_64.png "Avogadro2"
   [OpenChemistry]: http://openchemistry.org/ "Open Chemistry Project"
