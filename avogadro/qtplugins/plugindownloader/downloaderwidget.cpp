@@ -38,16 +38,16 @@ using json = nlohmann::json;
 namespace Avogadro {
 namespace QtPlugins {
 
-void setRawHeaders(QNetworkRequest *request)
+void setRawHeaders(QNetworkRequest* request)
 {
   request->setRawHeader("Accept", "text/html,application/xhtml+xml,application/"
-                                 "xml;q=0.9,image/webp,*/*;q=0.8");
+                                  "xml;q=0.9,image/webp,*/*;q=0.8");
   request->setRawHeader("User-Agent",
-                       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                       "AppleWebKit/537.36 (KHTML, like Gecko) "
-                       "Chrome/54.0.2840.71 Safari/537.36");
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/54.0.2840.71 Safari/537.36");
   request->setRawHeader("Accept-Language", "en - US, en; q = 0.8");
-  
+
   return;
 }
 
@@ -68,12 +68,12 @@ DownloaderWidget::DownloaderWidget(QWidget* parent)
 
   m_ui->repoTable->setColumnCount(4);
   m_ui->repoTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-  m_ui->repoTable->setHorizontalHeaderLabels(QStringList() << tr("Update")
-                                                           << tr("Name")
-                                                           << tr("Releasese")
-                                                           << tr("Description"));
-  m_ui->repoTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-  m_ui->repoTable->horizontalHeader()->setStretchLastSection(true);  
+  m_ui->repoTable->setHorizontalHeaderLabels(
+    QStringList() << tr("Update") << tr("Name") << tr("Releasese")
+                  << tr("Description"));
+  m_ui->repoTable->horizontalHeader()->setSectionResizeMode(
+    QHeaderView::ResizeToContents);
+  m_ui->repoTable->horizontalHeader()->setStretchLastSection(true);
 
   m_ui->repoTable->setRowCount(0);
   m_ui->repoTable->verticalHeader()->hide();
@@ -126,10 +126,11 @@ void DownloaderWidget::updateRepoData()
         else if (it.key() == "updated_at" && it.value().is_string()) {
           // format the date, e.g. 2021-05-21T15:25:32Z
           QString format("yyyy-MM-ddTHH:mm:ssZ");
-          QDateTime dateTime = QDateTime::fromString(it.value().get<std::string>().c_str(), format);
-          m_repoList[i].updatedAt =  QLocale().toString(dateTime.date(), QLocale::ShortFormat);
-        }
-        else if (it.key() == "zipball_url" && it.value().is_string())
+          QDateTime dateTime = QDateTime::fromString(
+            it.value().get<std::string>().c_str(), format);
+          m_repoList[i].updatedAt =
+            QLocale().toString(dateTime.date(), QLocale::ShortFormat);
+        } else if (it.key() == "zipball_url" && it.value().is_string())
           m_repoList[i].zipballUrl = it.value().get<std::string>().c_str();
         else if (it.key() == "has_release" && it.value().is_boolean())
           m_repoList[i].hasRelease = it.value().get<bool>();
@@ -204,42 +205,47 @@ void DownloaderWidget::showREADME()
     }
 
 #if QT_VERSION >= 0x050E00
-  m_ui->readmeBrowser->setMarkdown(QByteArray::fromBase64(content).data());
+    m_ui->readmeBrowser->setMarkdown(QByteArray::fromBase64(content).data());
 #else
-  // adapt some of the text to HTML using regex
-  QString readme(QByteArray::fromBase64(content).data());
+    // adapt some of the text to HTML using regex
+    QString readme(QByteArray::fromBase64(content).data());
 
-  // This isn't ideal, but works for a bunch of common markdown
-  // adapted from Slimdown - MIT license
-  // https://gist.github.com/jbroadway/2836900
+    // This isn't ideal, but works for a bunch of common markdown
+    // adapted from Slimdown - MIT license
+    // https://gist.github.com/jbroadway/2836900
 
-  // h4 through h1
-  readme.replace(QRegularExpression("#### (.*)"), "<h4>\\1</h4>");
-  readme.replace(QRegularExpression("### (.*)"), "<h3>\\1</h3>");
-  readme.replace(QRegularExpression("## (.*)"), "<h2>\\1</h2>");
-  readme.replace(QRegularExpression("# (.*)"), "<h1>\\1</h1>");
-  // headers using text && -----
-  readme.replace(QRegularExpression("\\n([a-zA-Z].*)\\n-{5,}\\n"), "<h2>\\1</h2>");
-  // headers using text && =====
-  readme.replace(QRegularExpression("\\n([a-zA-Z].*)\\n={5,}\\n"), "<h1>\\1</h1>");
-  // links
-  readme.replace(QRegularExpression("\\[([^\\[]+)\\]\\(([^\\)]+)\\)"),"<a href=\'\\2\'>\\1</a>");
-  // bold
-  readme.replace(QRegularExpression("(\\*\\*|__)(.*?)\\1"), "<strong>\\2</strong>");
-  // italic
-  readme.replace(QRegularExpression("(\\*|_)(.*?)\\1"), "<em>\\2</em>");
-  // code
-  readme.replace(QRegularExpression("`(.*?)`"), "<code>\\1</code>");
-  // horizontal lines
-  readme.replace(QRegularExpression("\\n-{5,}"), "\n<hr />");
-  // bullets (e.g., * or -)
-  readme.replace(QRegularExpression("\\n\\*(.*)"), "\n<ul>\n\t<li>\\1</li>\n</ul>");
-  readme.replace(QRegularExpression("\\n-(.*)"), "\n<ul>\n\t<li>\\1</li>\n</ul>");
-  // fixup multiple </ul><ul> bits
-  readme.replace(QRegularExpression("<\\/ul>\\s?<ul>"), "");
-  // paragraphs .. doesn't seem needed
-  //readme.replace(QRegularExpression("\\n([^\\n]+)\\n"), "<p>\\1</p>");
-  m_ui->readmeBrowser->setHtml(readme);
+    // h3 through h1
+    readme.replace(QRegularExpression("### (.*)"), "<h3>\\1</h3>");
+    readme.replace(QRegularExpression("## (.*)"), "<h2>\\1</h2>");
+    readme.replace(QRegularExpression("# (.*)"), "<h1>\\1</h1>");
+    // headers using text && -----
+    readme.replace(QRegularExpression("\\n([a-zA-Z].*)\\n-{5,}\\n"),
+                   "<h2>\\1</h2>");
+    // headers using text && =====
+    readme.replace(QRegularExpression("\\n([a-zA-Z].*)\\n={5,}\\n"),
+                   "<h1>\\1</h1>");
+    // links
+    readme.replace(QRegularExpression("\\[([^\\[]+)\\]\\(([^\\)]+)\\)"),
+                   "<a href=\'\\2\'>\\1</a>");
+    // bold
+    readme.replace(QRegularExpression("(\\*\\*|__)(.*?)\\1"),
+                   "<strong>\\2</strong>");
+    // italic
+    readme.replace(QRegularExpression("(\\*|_)(.*?)\\1"), "<em>\\2</em>");
+    // code
+    readme.replace(QRegularExpression("`(.*?)`"), "<code>\\1</code>");
+    // horizontal lines
+    readme.replace(QRegularExpression("\\n-{5,}"), "\n<hr />");
+    // bullets (e.g., * or -)
+    readme.replace(QRegularExpression("\\n\\*(.*)"),
+                   "\n<ul>\n\t<li>\\1</li>\n</ul>");
+    readme.replace(QRegularExpression("\\n-(.*)"),
+                   "\n<ul>\n\t<li>\\1</li>\n</ul>");
+    // fixup multiple </ul><ul> bits
+    readme.replace(QRegularExpression("<\\/ul>\\s?<ul>"), "");
+    // paragraphs .. doesn't seem needed
+    // readme.replace(QRegularExpression("\\n([^\\n]+)\\n"), "<p>\\1</p>");
+    m_ui->readmeBrowser->setHtml(readme);
 #endif
   }
 }
@@ -250,7 +256,11 @@ void DownloaderWidget::getCheckedRepos()
   m_ui->readmeBrowser->clear();
   m_downloadList.clear();
   for (size_t i = 0; i < m_repoList.size(); i++) {
-    if (m_ui->repoTable->item(i, 0)->checkState() == Qt::Checked) {
+    QTableWidgetItem *row = m_ui->repoTable->item(i, 0);
+    if (row == nullptr)
+      continue;
+
+    if (row->checkState() == Qt::Checked || row->isSelected()) {
       downloadEntry newEntry;
       newEntry.url = m_repoList[i].zipballUrl;
       newEntry.name = m_repoList[i].name;
@@ -311,12 +321,13 @@ void DownloaderWidget::unzipPlugin()
     QString filename = repoName + ".zip";
 
     QString absolutePath = m_filePath + "/" + filename;
-    QString extractdirectory;
+    QString extractDirectory;
     QString subdir = m_downloadList.last().type;
 
-    extractdirectory = m_filePath + "/" + subdir + "/";
+    extractDirectory = m_filePath + "/" + subdir + "/";
 
-    QDir().mkpath(extractdirectory);
+    // create it if it doesn't exist
+    QDir().mkpath(extractDirectory);
 
     m_ui->readmeBrowser->append("\nDownloading " + filename + " to " +
                                 m_filePath);
@@ -326,17 +337,39 @@ void DownloaderWidget::unzipPlugin()
     QDataStream outstr(&out);
     outstr << fileData;
 
-    std::string extractdir = extractdirectory.toStdString();
+    std::string extractdir = extractDirectory.toStdString();
     std::string absolutep = absolutePath.toStdString();
 
     ZipExtracter unzip;
 
     m_ui->readmeBrowser->append("Extracting " + absolutePath + " to " +
-                                extractdirectory);
+                                extractDirectory);
     QList<QString> ret = unzip.extract(extractdir, absolutep);
-
+    
     if (ret.empty()) {
-      m_ui->readmeBrowser->append("Extraction successful");
+      m_ui->readmeBrowser->append("Extraction successful\n");
+
+      // get the list of files / directories we unzipped
+      // the first one is the main directory name
+      QList<QString> newFiles = unzip.listFiles(absolutep);
+
+      // check for a previous version of this plugin and remove it
+      // e.g. we extracted to a path like User-Repo-GitHash
+      //     OpenChemistry-crystals-a7c672d
+      // we want to check for OpenChemistry-crystals
+      QStringList namePieces = newFiles[0].split('-');
+      namePieces.removeLast(); // drop the hash
+      QString component = namePieces.join('-');
+
+      // Check if there's a previous install
+      QString destination(extractDirectory + '/' + component);
+      QDir previousInstall(destination);
+      if (previousInstall.exists())
+        previousInstall.removeRecursively();
+
+      // and move the directory into place, e.g. OpenChemistry-crystals-a7c672d
+      QDir().rename(extractDirectory + '/' + newFiles[0], destination);
+
     } else {
       m_ui->readmeBrowser->append("Error while extracting: " + ret.first());
     }

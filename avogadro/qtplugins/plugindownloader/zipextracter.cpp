@@ -58,6 +58,36 @@ char* ZipExtracter::convert(const std::string& str)
   return result;
 }
 
+  QList<QString> ZipExtracter::listFiles(const std::string absolutepath)
+  {
+    struct archive *a;
+    struct archive_entry *entry;
+    int r;
+
+    a = archive_read_new();
+    archive_read_support_filter_all(a);
+    archive_read_support_format_all(a);
+
+    QList<QString> toReturn;
+
+    if ((r = archive_read_open_filename(a, convert(absolutepath), 10240))) {
+      toReturn.append("ERROR - archive_read_open_filename == true");
+      toReturn.append(QString::number(r));
+      QString errorMsg = archive_error_string(a);
+      toReturn.append(errorMsg);
+      return toReturn;
+    }
+
+    while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
+      toReturn.append(archive_entry_pathname(entry));
+      archive_read_data_skip(a);  // Note 2
+    }
+    r = archive_read_free(a);
+
+    return toReturn;
+  }
+
+
 // Extract method from libarchive docs, changed to return QList of errors
 QList<QString> ZipExtracter::extract(std::string extractdir,
                                      std::string absolutepath)

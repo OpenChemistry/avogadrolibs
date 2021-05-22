@@ -31,6 +31,7 @@ public:
   char* convert(const std::string&);
   int copyData(struct archive* ar, struct archive* aw);
   QList<QString> extract(std::string extractdir, std::string absolutepath);
+  QList<QString> listFiles(const std::string absolutepath);
 };
 }
 }
