@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>950</width>
-    <height>700</height>
+    <width>965</width>
+    <height>432</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Plugin Downloader</string>
+   <string>Download Plugins...</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">

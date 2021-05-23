@@ -36,7 +36,7 @@ PluginDownloader::PluginDownloader(QObject* parent_)
     m_network(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText(tr("Plugin Downloader..."));
+  m_action->setText(tr("Download Plugins..."));
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 

@@ -56,6 +56,7 @@ DownloaderWidget::DownloaderWidget(QWidget* parent)
 {
   m_filePath =
     QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
   m_NetworkAccessManager = new QNetworkAccessManager(this);
   m_ui->setupUi(this);
   // enable links in the readme to open an external browser

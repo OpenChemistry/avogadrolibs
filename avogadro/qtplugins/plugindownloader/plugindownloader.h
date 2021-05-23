@@ -43,11 +43,11 @@ public:
   explicit PluginDownloader(QObject* parent = 0);
   ~PluginDownloader() override;
 
-  QString name() const override { return tr("Plugin Downloader"); }
+  QString name() const override { return tr("Download Plugins"); }
 
   QString description() const override
   {
-    return tr("Downloader plugins from Github repositories.");
+    return tr("Download plugins from GitHub repositories.");
   }
 
   QList<QAction*> actions() const override;
