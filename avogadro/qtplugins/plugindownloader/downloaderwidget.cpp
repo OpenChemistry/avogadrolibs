@@ -56,7 +56,6 @@ DownloaderWidget::DownloaderWidget(QWidget* parent)
 {
   m_filePath =
     QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-
   m_NetworkAccessManager = new QNetworkAccessManager(this);
   m_ui->setupUi(this);
   // enable links in the readme to open an external browser
@@ -257,7 +256,7 @@ void DownloaderWidget::getCheckedRepos()
   m_ui->readmeBrowser->clear();
   m_downloadList.clear();
   for (size_t i = 0; i < m_repoList.size(); i++) {
-    QTableWidgetItem *row = m_ui->repoTable->item(i, 0);
+    QTableWidgetItem* row = m_ui->repoTable->item(i, 0);
     if (row == nullptr)
       continue;
 
@@ -317,7 +316,7 @@ void DownloaderWidget::unzipPlugin()
   if (m_reply->error() == QNetworkReply::NoError) {
     // done with redirect
     QByteArray fileData = m_reply->readAll();
-    QDir().mkpath(m_filePath);
+    QDir().mkpath(m_filePath); // create any needed directories for the download
     QString repoName = m_downloadList.last().name;
     QString filename = repoName + ".zip";
 
@@ -327,55 +326,60 @@ void DownloaderWidget::unzipPlugin()
 
     extractDirectory = m_filePath + "/" + subdir + "/";
 
-    // create it if it doesn't exist
+    // create the destination directory if it doesn't exist
     QDir().mkpath(extractDirectory);
 
-    m_ui->readmeBrowser->append("\nDownloading " + filename + " to " +
-                                m_filePath);
+    m_ui->readmeBrowser->append(
+      tr("Downloading %1 to %2\n").arg(filename).arg(m_filePath));
 
     QFile out(absolutePath);
     out.open(QIODevice::WriteOnly);
-    QDataStream outstr(&out);
-    outstr << fileData;
+    out.write(fileData);
+    out.close();
 
     std::string extractdir = extractDirectory.toStdString();
     std::string absolutep = absolutePath.toStdString();
 
     ZipExtracter unzip;
 
-    m_ui->readmeBrowser->append("Extracting " + absolutePath + " to " +
-                                extractDirectory);
+    m_ui->readmeBrowser->append(
+      tr("Extracting %1 to %2\n").arg(absolutePath).arg(extractDirectory));
+    QList<QString> newFiles = unzip.listFiles(absolutep);
+    m_ui->readmeBrowser->append(
+      tr("Finished %1 files\n").arg(newFiles.length()));
+
     QList<QString> ret = unzip.extract(extractdir, absolutep);
-    
     if (ret.empty()) {
-      m_ui->readmeBrowser->append("Extraction successful\n");
+      m_ui->readmeBrowser->append(tr("Extraction successful\n"));
 
       // get the list of files / directories we unzipped
       // the first one is the main directory name
-      QList<QString> newFiles = unzip.listFiles(absolutep);
+      if (newFiles.length() > 0) // got an empty archive
+      {
+        // check for a previous version of this plugin and remove it
+        // e.g. we extracted to a path like User-Repo-GitHash
+        //     OpenChemistry-crystals-a7c672d
+        // we want to check for OpenChemistry-crystals
+        QStringList namePieces = newFiles[0].split('-');
+        namePieces.removeLast(); // drop the hash
+        QString component = namePieces.join('-');
 
-      // check for a previous version of this plugin and remove it
-      // e.g. we extracted to a path like User-Repo-GitHash
-      //     OpenChemistry-crystals-a7c672d
-      // we want to check for OpenChemistry-crystals
-      QStringList namePieces = newFiles[0].split('-');
-      namePieces.removeLast(); // drop the hash
-      QString component = namePieces.join('-');
+        // Check if there's a previous install
+        QString destination(extractDirectory + '/' + component);
+        QDir previousInstall(destination);
+        if (previousInstall.exists())
+          previousInstall.removeRecursively();
 
-      // Check if there's a previous install
-      QString destination(extractDirectory + '/' + component);
-      QDir previousInstall(destination);
-      if (previousInstall.exists())
-        previousInstall.removeRecursively();
-
-      // and move the directory into place, e.g. OpenChemistry-crystals-a7c672d
-      QDir().rename(extractDirectory + '/' + newFiles[0], destination);
-
+        // and move the directory into place, e.g.
+        // OpenChemistry-crystals-a7c672d
+        QDir().rename(extractDirectory + '/' + newFiles[0], destination);
+      }
     } else {
-      m_ui->readmeBrowser->append("Error while extracting: " + ret.first());
+      m_ui->readmeBrowser->append(
+        tr("Error while extracting: %1").arg(ret.first()));
     }
 
-    out.remove();
+    out.remove(); // remove the ZIP file
     m_reply->deleteLater();
     m_downloadList.removeLast();
     downloadNext();
