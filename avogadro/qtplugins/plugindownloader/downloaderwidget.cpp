@@ -69,7 +69,7 @@ DownloaderWidget::DownloaderWidget(QWidget* parent)
   m_ui->repoTable->setColumnCount(4);
   m_ui->repoTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   m_ui->repoTable->setHorizontalHeaderLabels(
-    QStringList() << tr("Update") << tr("Name") << tr("Releasese")
+    QStringList() << tr("Update") << tr("Name") << tr("Version")
                   << tr("Description"));
   m_ui->repoTable->horizontalHeader()->setSectionResizeMode(
     QHeaderView::ResizeToContents);

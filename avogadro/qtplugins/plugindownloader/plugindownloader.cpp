@@ -33,7 +33,7 @@ namespace QtPlugins {
 
 PluginDownloader::PluginDownloader(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
-    m_network(nullptr)
+    m_network(nullptr), m_widget(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("Download Plugins..."));
@@ -63,9 +63,10 @@ bool PluginDownloader::readMolecule(QtGui::Molecule& mol)
 
 void PluginDownloader::showDialog()
 {
-  DownloaderWidget* widget =
-    new DownloaderWidget(qobject_cast<QWidget*>(parent()));
-  widget->show();
+  if (m_widget == nullptr) {
+    m_widget = new DownloaderWidget(qobject_cast<QWidget*>(parent()));
+  }
+  m_widget->show();
 }
 
 void PluginDownloader::replyFinished(QNetworkReply* reply)

@@ -121,7 +121,6 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
     return toReturn;
   }
   long itrCount = 0;
-  ssize_t size;
 
   for (;;) {
     r = archive_read_next_header(a, &entry);

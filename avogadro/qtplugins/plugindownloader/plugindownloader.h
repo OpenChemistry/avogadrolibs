@@ -30,6 +30,8 @@ class QProgressDialog;
 namespace Avogadro {
 namespace QtPlugins {
 
+class DownloaderWidget;
+
 /**
  * @brief Downloads Github repos and extracts their contents into a Avogadro
  * folder for plugins, molecule data, etc..
@@ -67,6 +69,7 @@ private:
   QtGui::Molecule* m_molecule;
   QNetworkAccessManager* m_network;
   QString m_moleculeName;
+  DownloaderWidget* m_widget;
 };
 }
 }
