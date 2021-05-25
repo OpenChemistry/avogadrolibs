@@ -577,6 +577,15 @@ public:
   const UnitCell* unitCell() const { return m_unitCell; }
   /** @} */
 
+  /**
+   * The space group for this molecule. It is updated after every
+   * space group operation.
+   * @{
+   */
+  void setHallNumber(unsigned short hallNumber) { m_hallNumber = hallNumber; }
+  unsigned short hallNumber() const { return m_hallNumber; }
+  /** @} */
+
   Array<double> vibrationFrequencies() const;
   void setVibrationFrequencies(const Array<double>& freq);
   Array<double> vibrationIntensities() const;
@@ -675,6 +684,9 @@ protected:
   BasisSet* m_basisSet;
   UnitCell* m_unitCell;
   Array<Residue> m_residues;
+
+  // This will be stored from the last space group operation
+  unsigned short m_hallNumber = 0;
 
   /** Update the graph to correspond to the current molecule. */
   void updateGraph() const;

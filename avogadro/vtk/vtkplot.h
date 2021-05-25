@@ -27,6 +27,7 @@
 #include <vector>
 
 class QVTKOpenGLWidget;
+class vtkAxis;
 class vtkChartXY;
 class vtkContextView;
 class vtkGenericOpenGLRenderWindow;
@@ -43,6 +44,24 @@ class AVOGADROVTK_EXPORT VtkPlot
 public:
   explicit VtkPlot();
   ~VtkPlot();
+
+  // Enum for the different axes
+  enum class Axis
+  {
+    xAxis,
+    yAxis
+  };
+
+  // Enum for the different line styles
+  enum class LineStyle
+  {
+    noLine,
+    solidLine,
+    dashLine,
+    dotLine,
+    dashDotLine,
+    dashDotDotLine
+  };
 
   // data[0] is the x data, and data[i] for i != 0 is the y data for the
   // line i != 0.
@@ -61,9 +80,25 @@ public:
   {
     m_lineColors = colors;
   }
+  void setLineStyles(const std::vector<LineStyle>& styles)
+  {
+    m_lineStyles = styles;
+  }
+
   void show();
 
+  // customTickPositions must be equal in size to customTickLabels
+  void setCustomTickLabels(Axis axis,
+                           const std::vector<double>& customTickPositions,
+                           const std::vector<std::string>& customTickLabels);
+
+  // Set the limits for a particular axis
+  void setAxisLimits(Axis axis, double min, double max);
+
 private:
+  // Get a pointer to a particular axis. Returns nullptr if invalid.
+  vtkAxis* getAxis(Axis axis);
+
   std::unique_ptr<QVTKOpenGLWidget> m_widget;
   vtkNew<vtkTable> m_table;
   vtkNew<vtkGenericOpenGLRenderWindow> m_renderWindow;
@@ -71,6 +106,7 @@ private:
   vtkNew<vtkChartXY> m_chart;
   std::vector<std::string> m_lineLabels;
   std::vector<std::array<double, 4>> m_lineColors;
+  std::vector<LineStyle> m_lineStyles;
 };
 
 } // namespace VTK

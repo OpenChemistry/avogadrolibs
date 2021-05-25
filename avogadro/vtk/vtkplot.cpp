@@ -21,18 +21,20 @@
 #include <vtkChartXY.h>
 #include <vtkContextScene.h>
 #include <vtkContextView.h>
+#include <vtkDoubleArray.h>
 #include <vtkFloatArray.h>
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkNew.h>
+#include <vtkPen.h>
 #include <vtkPlot.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
+#include <vtkStringArray.h>
 #include <vtkTable.h>
 #include <vtkTextProperty.h>
 
+#include <QSurfaceFormat>
 #include <QVTKOpenGLWidget.h>
-
-#include <QtGui/QSurfaceFormat>
 
 #include "vtkplot.h"
 
@@ -126,6 +128,59 @@ void VtkPlot::setYTitle(const char* yTitle)
   leftAxis->SetTitle(yTitle);
 }
 
+void VtkPlot::setCustomTickLabels(Axis _axis,
+                                  const vector<double>& customTickPositions,
+                                  const vector<string>& customTickLabels)
+{
+  vtkAxis* axis = getAxis(_axis);
+  if (!axis) {
+    std::cerr << "Error in " << __FUNCTION__ << ": invalid axis\n";
+    return;
+  }
+
+  // These must be equal in size
+  if (customTickPositions.size() != customTickLabels.size()) {
+    std::cerr << "Error in " << __FUNCTION__ << ": custom tick labels "
+              << "must be equal in size to custom tick positions!\n";
+    return;
+  }
+
+  vtkNew<vtkDoubleArray> doubleArray;
+  doubleArray->SetName("Custom Tick Positions");
+  for (const auto& pos : customTickPositions)
+    doubleArray->InsertNextValue(pos);
+
+  vtkNew<vtkStringArray> stringArray;
+  stringArray->SetName("Custom Tick Labels");
+
+  for (const auto& label : customTickLabels)
+    stringArray->InsertNextValue(label);
+
+  axis->SetCustomTickPositions(doubleArray, stringArray);
+}
+
+static int convertLineStyleEnum(VTK::VtkPlot::LineStyle style)
+{
+  using LineStyle = VTK::VtkPlot::LineStyle;
+
+  if (style == LineStyle::noLine)
+    return vtkPen::NO_PEN;
+  else if (style == LineStyle::solidLine)
+    return vtkPen::SOLID_LINE;
+  else if (style == LineStyle::dashLine)
+    return vtkPen::DASH_LINE;
+  else if (style == LineStyle::dotLine)
+    return vtkPen::DOT_LINE;
+  else if (style == LineStyle::dashDotLine)
+    return vtkPen::DASH_DOT_LINE;
+  else if (style == LineStyle::dashDotDotLine)
+    return vtkPen::DASH_DOT_DOT_LINE;
+
+  std::cerr << "Error in " << __FUNCTION__ << ": unknown line style.\n";
+  std::cerr << "Defaulting to solid line.\n";
+  return vtkPen::SOLID_LINE;
+}
+
 void VtkPlot::show()
 {
   // First, clear all previous plots
@@ -146,10 +201,39 @@ void VtkPlot::show()
                      m_lineColors[i - 1][2], m_lineColors[i - 1][3]);
     }
 
+    // If we have a line style for this line, set it
+    if (i <= m_lineStyles.size() && line->GetPen())
+      line->GetPen()->SetLineType(convertLineStyleEnum(m_lineStyles[i - 1]));
+
     line->SetWidth(2.0);
   }
 
   m_widget->show();
+}
+
+void VtkPlot::setAxisLimits(Axis _axis, double min, double max)
+{
+  vtkAxis* axis = getAxis(_axis);
+  if (!axis) {
+    std::cerr << "Error in " << __FUNCTION__ << ": invalid axis\n";
+    return;
+  }
+
+  axis->SetMinimumLimit(min);
+  axis->SetMaximumLimit(max);
+}
+
+vtkAxis* VtkPlot::getAxis(Axis axis)
+{
+  if (axis == Axis::xAxis) {
+    return m_chart->GetAxis(vtkAxis::BOTTOM);
+  } else if (axis == Axis::yAxis) {
+    return m_chart->GetAxis(vtkAxis::LEFT);
+  }
+
+  // If we get here, there is an error...
+  std::cerr << "Error in " << __FUNCTION__ << ": unknown axis\n";
+  return nullptr;
 }
 
 } // namespace VTK

@@ -125,10 +125,14 @@ add_subdirectory(surfaces)
 add_subdirectory(spectra)
 add_subdirectory(vrml)
 
+# Plugins that require VTK
 if(USE_VTK)
   add_subdirectory(plotpdf)
   add_subdirectory(plotrmsd)
   add_subdirectory(plotxrd)
+  if(BUILD_YAEHMOP_PLUGIN)
+    add_subdirectory(yaehmop)
+  endif()
   add_subdirectory(coloropacitymap)
 endif()
 
