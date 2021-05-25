@@ -150,8 +150,16 @@ void PlotXrd::displayDialog()
   const char* yTitle = "Intensity";
   const char* windowName = "Theoretical XRD Pattern";
 
-  VTK::VtkPlot::generatePlot(data, lineLabels, lineColors, xTitle, yTitle,
-                             windowName);
+  if (!m_plot)
+    m_plot.reset(new VTK::VtkPlot);
+
+  m_plot->setData(data);
+  m_plot->setWindowName(windowName);
+  m_plot->setXTitle(xTitle);
+  m_plot->setYTitle(yTitle);
+  m_plot->setLineLabels(lineLabels);
+  m_plot->setLineColors(lineColors);
+  m_plot->show();
 }
 
 bool PlotXrd::generateXrdPattern(const QtGui::Molecule& mol, XrdData& results,

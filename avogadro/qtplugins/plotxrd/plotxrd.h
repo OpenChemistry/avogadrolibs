@@ -25,6 +25,10 @@
 class QByteArray;
 class QStringList;
 
+namespace VTK {
+class VtkPlot;
+}
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -86,6 +90,7 @@ private:
 
   std::unique_ptr<XrdOptionsDialog> m_xrdOptionsDialog;
   std::unique_ptr<QAction> m_displayDialogAction;
+  QScopedPointer<VTK::VtkPlot> m_plot;
 };
 
 inline QString PlotXrd::description() const
