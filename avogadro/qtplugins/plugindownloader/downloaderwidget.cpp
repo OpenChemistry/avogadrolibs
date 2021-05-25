@@ -361,18 +361,22 @@ void DownloaderWidget::unzipPlugin()
         //     OpenChemistry-crystals-a7c672d
         // we want to check for OpenChemistry-crystals
         QStringList namePieces = newFiles[0].split('-');
-        namePieces.removeLast(); // drop the hash
-        QString component = namePieces.join('-');
+        if (namePieces.length() >= 3) {
+          namePieces.removeLast();  // drop the hash
+          namePieces.removeFirst(); // drop the org
 
-        // Check if there's a previous install
-        QString destination(extractDirectory + '/' + component);
-        QDir previousInstall(destination);
-        if (previousInstall.exists())
-          previousInstall.removeRecursively();
+          QString component = namePieces.join('-');
 
-        // and move the directory into place, e.g.
-        // OpenChemistry-crystals-a7c672d
-        QDir().rename(extractDirectory + '/' + newFiles[0], destination);
+          // Check if there's a previous install
+          QString destination(extractDirectory + '/' + component);
+          QDir previousInstall(destination);
+          if (previousInstall.exists())
+            previousInstall.removeRecursively();
+
+          // and move the directory into place, e.g.
+          // OpenChemistry-crystals-a7c672d
+          QDir().rename(extractDirectory + '/' + newFiles[0], destination);
+        }
       }
     } else {
       m_ui->readmeBrowser->append(
