@@ -23,6 +23,10 @@
 class QByteArray;
 class QStringList;
 
+namespace VTK {
+class VtkPlot;
+}
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -71,6 +75,7 @@ private:
 
   QScopedPointer<PdfOptionsDialog> m_pdfOptionsDialog;
   QScopedPointer<QAction> m_displayDialogAction;
+  QScopedPointer<VTK::VtkPlot> m_plot;
 };
 
 inline QString PlotPdf::description() const

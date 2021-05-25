@@ -152,8 +152,16 @@ void PlotPdf::displayDialog()
   const char* yTitle = "g(r)";
   const char* windowName = "Pair Distribution Function";
 
-  VTK::VtkPlot::generatePlot(data, lineLabels, lineColors, xTitle, yTitle,
-                             windowName);
+  if (!m_plot)
+    m_plot.reset(new VTK::VtkPlot);
+
+  m_plot->setData(data);
+  m_plot->setWindowName(windowName);
+  m_plot->setXTitle(xTitle);
+  m_plot->setYTitle(yTitle);
+  m_plot->setLineLabels(lineLabels);
+  m_plot->setLineColors(lineColors);
+  m_plot->show();
 }
 
 bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,
