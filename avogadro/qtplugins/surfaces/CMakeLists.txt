@@ -18,4 +18,8 @@ avogadro_plugin(Surfaces
 )
 
 target_link_libraries(Surfaces
-  LINK_PRIVATE AvogadroQuantumIO ${Qt5Concurrent_LIBRARIES})
+  LINK_PRIVATE
+    AvogadroQuantumIO
+    AvogadroQtOpenGL
+    Qt5::Concurrent
+    gwavi)

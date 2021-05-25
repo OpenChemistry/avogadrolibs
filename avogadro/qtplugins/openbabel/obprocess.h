@@ -184,7 +184,7 @@ public slots:
    * The conversion is performed as:
    * `obabel -i<inFormat> -o<outFormat> <options> < input > output`
    *
-   * @return True if the process started succesfully, false otherwise.
+   * @return True if the process started successfully, false otherwise.
    */
   bool convert(const QByteArray& input, const QString& inFormat,
                const QString& outFormat,
@@ -207,7 +207,7 @@ public slots:
    * The conversion is performed as:
    * `obabel -i<inFormat> <filename> -o<outFormat> <options> > output`
    *
-   * @return True if the process started succesfully, false otherwise.
+   * @return True if the process started successfully, false otherwise.
    */
   bool convert(const QString& filename, const QString& inFormat,
                const QString& outFormat,

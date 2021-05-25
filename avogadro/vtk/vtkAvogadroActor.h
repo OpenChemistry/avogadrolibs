@@ -51,7 +51,7 @@ public:
   /** Render the translucent geometry. */
   int RenderTranslucentPolygonalGeometry(vtkViewport* viewport);
 
-  /** Does the actor have transluscent geometry? */
+  /** Does the actor have translucent geometry? */
   int HasTranslucentPolygonalGeometry();
 
   /**

@@ -252,7 +252,7 @@ bool MopacAux::readOverlapMatrix(std::istream& in, unsigned int n)
   unsigned int cnt = 0;
   unsigned int i = 0, j = 0;
   unsigned int f = 1;
-  // Skip the first commment line...
+  // Skip the first comment line...
   string line;
   getline(in, line);
   while (cnt < n) {
@@ -303,7 +303,7 @@ bool MopacAux::readDensityMatrix(std::istream& in, unsigned int n)
   unsigned int cnt = 0;
   unsigned int i = 0, j = 0;
   unsigned int f = 1;
-  // Skip the first commment line...
+  // Skip the first comment line...
   string line;
   getline(in, line);
   while (cnt < n) {

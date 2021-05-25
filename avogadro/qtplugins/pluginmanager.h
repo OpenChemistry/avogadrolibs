@@ -86,7 +86,7 @@ public:
                  pluginFactories<Avogadro::QtGui::ScenePluginFactory>("name");
    * @endcode
    *
-   * @param name The identifier of the plugin factory.
+   * @param id The identifier of the plugin factory.
    * @return The plugin factory if the plugin was found, nullptr otherwise.
    */
   template<typename T>

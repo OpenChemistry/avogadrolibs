@@ -1,0 +1,76 @@
+name: Build Wheels
+
+on: [push, pull_request]
+
+env:
+  # Don't build python 2.7, pypy, or 32-bit wheels
+  CIBW_SKIP: "cp27-* pp* *-manylinux_i686 *-win32"
+
+  # This has some of the software we need pre-installed on it
+  CIBW_MANYLINUX_X86_64_IMAGE: openchemistry/avogadro_manylinux2010_x86_64
+
+  # Need to do some setup before repairing the wheel on linux...
+  CIBW_REPAIR_WHEEL_COMMAND_LINUX: bash scripts/github-actions/repair_command_linux.sh
+
+  # Specify eigen location for windows
+  CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen"
+
+  CIBW_TEST_REQUIRES: pytest
+
+  # Run a very simple test to make sure the wheels are working
+  CIBW_TEST_COMMAND: pytest {project}/scripts/github-actions/simple_test.py
+
+
+# Use bash by default for the run command
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # For Windows, we have to use visual studio 2017, which is on windows-2016
+        os: [ubuntu-20.04, macos-latest, windows-2016]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Grab the whole history so that setuptools-scm can see the tags and
+          # give it a correct version even on non-tag push.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v2
+        name: Install Python
+        with:
+          python-version: '3.7'
+
+      - name: Install dependencies
+        run: . ./scripts/github-actions/install.sh
+
+      - name: Build wheels
+        run:  cibuildwheel --output-dir wheelhouse
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ./wheelhouse/*.whl
+
+  upload_pypi:
+    needs: build_wheels
+    name: Upload wheels to PyPI
+    runs-on: ubuntu-latest
+    # upload to PyPI on every tag push
+    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+
+      - uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_api_token }}

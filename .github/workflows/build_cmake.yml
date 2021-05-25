@@ -1,0 +1,147 @@
+name: CMake Build Matrix
+# Many thanks to Cristian Adam for examples
+# e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
+# https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
+
+
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Release
+  QT_VERSION: 5.12.10
+  # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
+  # we set MACOSX_DEPLOYMENT_TARGET later
+  MACOS_TARGET: 10.12
+  CCACHE_VERSION: 3.7.7
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Ubuntu 20.04 GCC", artifact: "Ubuntu2004.tar.gz",
+            os: ubuntu-20.04,
+            cc: "gcc", cxx: "g++",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
+            cpack: "",
+          }
+        - {
+            name: "Ubuntu 18.04 GCC", artifact: "Ubuntu1804.tar.gz",
+            os: ubuntu-18.04,
+            cc: "gcc", cxx: "g++",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
+            cpack: "",
+          }
+        - {
+            name: "macOS Latest Clang", artifact: "macOS.dmg",
+            os: macos-latest,
+            cc: "clang", cxx: "clang++",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
+            cpack_flags: "-G DragNDrop",
+          }
+        - {
+            name: "Windows Latest MSVC", artifact: "Win64.exe",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            cmake_flags: "",
+            cpack_flags: "-G NSIS",
+          }
+
+    steps:
+
+    - name: Install Dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev
+    - name: Install Dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew install ninja boost eigen glew open-babel
+    - name: Install Dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: choco install ninja
+
+    - name: Checkout openchemistry
+      uses: actions/checkout@v2
+      with:
+        repository: openchemistry/openchemistry
+        submodules: recursive
+
+    - name: Checkout avogadroapp
+      uses: actions/checkout@v2
+      with:
+        repository: openchemistry/avogadroapp
+        path: avogadroapp
+
+    - name: Checkout avogadrolibs
+      uses: actions/checkout@v2
+      with:
+        path: avogadrolibs
+
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v1
+      with:
+        path: ../Qt
+        key: ${{ runner.os }}-QtCache
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        cached: ${{ steps.cache-qt.outputs.cache-hit }}
+        version: ${{ env.QT_VERSION }}
+
+    - name: Configure MSVC Command Prompt
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+
+    - name: Configure
+      run: |
+        mkdir "${{ runner.workspace }}/build"
+        cd "${{ runner.workspace }}/build"
+        # won't have any effect except on Mac
+        echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
+      shell: bash
+
+    - name: Build
+      run: |
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}}
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Run tests
+      if: runner.os != 'Windows'
+      shell: cmake -P {0}
+      run: |
+        include(ProcessorCount)
+        ProcessorCount(N)
+        set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
+        execute_process(
+          COMMAND ctest -j ${N}
+          WORKING_DIRECTORY ${{ runner.workspace }}/build
+          RESULT_VARIABLE result
+        )
+        if (NOT result EQUAL 0)
+          message(FATAL_ERROR "Running tests failed!")
+        endif()
+
+    - name: Pack
+      if: matrix.config.artifact != 0
+      run: cpack ${{ matrix.config.cpack_flags }}
+      working-directory: ${{ runner.workspace }}/build/avogadroapp
+
+    - name: Upload
+      if: matrix.config.artifact != 0
+      uses: actions/upload-artifact@v2-preview
+      with:
+        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
+        name: ${{ matrix.config.artifact }}

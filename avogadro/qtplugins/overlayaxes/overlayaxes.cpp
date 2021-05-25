@@ -58,8 +58,13 @@ void CustomMesh::render(const Camera& camera)
   Affine3f mv(camera.modelView());
   mv.matrix().block<3, 1>(0, 3) = Vector3f::Zero();
 
+  // Save the actual viewport - works better on high resolution screens
+  GLint viewport[4];
+  glGetIntegerv(GL_VIEWPORT, viewport);
+
   // The largest window dimension, used to scale the axes
-  const int maxDim = std::max(camera.width(), camera.height());
+  // (again, grab from the actual viewport)
+  const int maxDim = std::max(viewport[2], viewport[3]);
 
   Camera meshCamera(camera);
   meshCamera.setViewport(maxDim / 10, maxDim / 10);
@@ -72,9 +77,7 @@ void CustomMesh::render(const Camera& camera)
 
   MeshGeometry::render(meshCamera);
 
-  glViewport(static_cast<GLint>(0), static_cast<GLsizei>(0),
-             static_cast<GLint>(camera.width()),
-             static_cast<GLsizei>(camera.height()));
+  glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
 }
 } // end anon namespace
 

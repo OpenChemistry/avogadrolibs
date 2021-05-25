@@ -36,7 +36,7 @@ class AVOGADROPROTOCALL_EXPORT MoleculeDeserializer
 {
 public:
   /**
-   * @param The molecule to deserialize into.
+   * @param molecule The molecule to deserialize into.
    */
   MoleculeDeserializer(Molecule* molecule);
 

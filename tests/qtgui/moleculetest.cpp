@@ -320,7 +320,7 @@ TEST_F(MoleculeTest, persistentAtom)
   molecule.addBond(a1, a4, 1);
 
   // Check we can get the invalid atom, and also resolve the unique IDs to the
-  // correct atom objects from their peristent atom containers.
+  // correct atom objects from their persistent atom containers.
   Atom test = pa1.atom();
   EXPECT_TRUE(a1 == test);
   test = pa2.atom();
@@ -446,6 +446,131 @@ TEST_F(MoleculeTest, mass)
   EXPECT_DOUBLE_EQ(mol.mass(), 18.01508);
   a.setAtomicNumber(9);
   EXPECT_DOUBLE_EQ(mol.mass(), 21.01408);
+}
+
+TEST_F(MoleculeTest, centerOfGeometry)
+{
+  Molecule mol;
+  Avogadro::Vector3 center = mol.centerOfGeometry();
+
+  Atom a8 = mol.addAtom(8);
+  mol.setAtomPosition3d(a8.index(), Avogadro::Vector3(0.0, 0.0, 0.0));
+  center = mol.centerOfGeometry();
+  EXPECT_DOUBLE_EQ(center.x(), 0.0);
+  EXPECT_DOUBLE_EQ(center.y(), 0.0);
+  EXPECT_DOUBLE_EQ(center.z(), 0.0);
+
+  Atom a = mol.addAtom(1);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(1.0, 0.0, 0.0));
+  center = mol.centerOfGeometry();
+  EXPECT_DOUBLE_EQ(center.x(), 0.5);
+  EXPECT_DOUBLE_EQ(center.y(), 0.0);
+  EXPECT_DOUBLE_EQ(center.z(), 0.0);
+
+  a = mol.addAtom(1);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(0.0, 1.0, -1.0));
+  center = mol.centerOfGeometry();
+  EXPECT_DOUBLE_EQ(center.x(), 1./3.);
+  EXPECT_DOUBLE_EQ(center.y(), 1./3.);
+  EXPECT_DOUBLE_EQ(center.z(), -1./3.);
+
+  a8.setAtomicNumber(9);
+  center = mol.centerOfGeometry();
+  EXPECT_DOUBLE_EQ(center.x(), 1./3.);
+  EXPECT_DOUBLE_EQ(center.y(), 1./3.);
+  EXPECT_DOUBLE_EQ(center.z(), -1./3.);
+}
+
+TEST_F(MoleculeTest, centerOfMass)
+{
+  Molecule mol;
+  Avogadro::Vector3 center = mol.centerOfMass();
+
+  Atom a8 = mol.addAtom(8);
+  mol.setAtomPosition3d(a8.index(), Avogadro::Vector3(0.0, 0.0, 0.0));
+  center = mol.centerOfMass();
+  EXPECT_DOUBLE_EQ(center.x(), 0.0);
+  EXPECT_DOUBLE_EQ(center.y(), 0.0);
+  EXPECT_DOUBLE_EQ(center.z(), 0.0);
+
+  Atom a = mol.addAtom(2);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(2.0, 0.0, 0.0));
+  center = mol.centerOfMass();
+  EXPECT_DOUBLE_EQ(center.x(), (2.0 * Avogadro::Core::Elements::mass(2) / mol.atomCount()) / mol.mass());
+  EXPECT_DOUBLE_EQ(center.y(), 0.0);
+  EXPECT_DOUBLE_EQ(center.z(), 0.0);
+
+  a = mol.addAtom(3);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(1.0, 3.0, -4.0));
+  center = mol.centerOfMass();
+  EXPECT_DOUBLE_EQ(center.x(), ((2.0 * Avogadro::Core::Elements::mass(2) + 1.0 * Avogadro::Core::Elements::mass(3)) / mol.atomCount()) / mol.mass());
+  EXPECT_DOUBLE_EQ(center.y(), (3.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) / mol.mass());
+  EXPECT_DOUBLE_EQ(center.z(), (-4.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) / mol.mass());
+
+  a8.setAtomicNumber(9);
+  center = mol.centerOfMass();
+  EXPECT_DOUBLE_EQ(center.x(), ((2.0 * Avogadro::Core::Elements::mass(2) + 1.0 * Avogadro::Core::Elements::mass(3)) / mol.atomCount()) / mol.mass());
+  EXPECT_DOUBLE_EQ(center.y(), (3.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) / mol.mass());
+  EXPECT_DOUBLE_EQ(center.z(), (-4.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) / mol.mass());
+}
+
+TEST_F(MoleculeTest, radius)
+{
+  Molecule mol;
+  EXPECT_DOUBLE_EQ(mol.radius(), 0.0);
+  Atom a = mol.addAtom(8);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(0.0, 0.0, 0.0));
+  EXPECT_DOUBLE_EQ(mol.radius(), 0.0);
+  a = mol.addAtom(1);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(2.0, 0.0, -1.0));
+  a = mol.addAtom(1);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(1.0, 3.0, -2.0));
+  EXPECT_DOUBLE_EQ(mol.radius(), sqrt(3.));
+}
+
+TEST_F(MoleculeTest, bestFitPlane)
+{
+  Array<Avogadro::Vector3> coords;
+  coords.push_back(Avogadro::Vector3(0.0, 1.0, 1.0));
+  coords.push_back(Avogadro::Vector3(0.0, 1.0, -1.0));
+  coords.push_back(Avogadro::Vector3(0.0, -1.0, 1.0));
+  coords.push_back(Avogadro::Vector3(0.0, -1.0, -1.0));
+  std::pair<Avogadro::Vector3, Avogadro::Vector3> bestFitPlane =
+    Molecule::bestFitPlane(coords);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.x(), 0.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.y(), 0.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.z(), 0.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.x(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.y(), 0.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.z(), 0.0);
+
+  coords.clear();
+
+  coords.push_back(Avogadro::Vector3(3.0, 0.0, 0.0));
+  coords.push_back(Avogadro::Vector3(0.0, 3.0, 0.0));
+  coords.push_back(Avogadro::Vector3(0.0, 0.0, 3.0));
+  bestFitPlane = Molecule::bestFitPlane(coords);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.x(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.y(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.z(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.x(), -sqrt(3.) / 3.);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.y(), -sqrt(3.) / 3.);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.z(), -sqrt(3.) / 3.);
+
+  Molecule mol;
+  Atom a = mol.addAtom(8);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(3.0, 0.0, 0.0));
+  a = mol.addAtom(1);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(0.0, 3.0, 0.0));
+  a = mol.addAtom(1);
+  mol.setAtomPosition3d(a.index(), Avogadro::Vector3(0.0, 0.0, 3.0));
+  bestFitPlane = mol.bestFitPlane();
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.x(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.y(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.first.z(), 1.0);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.x(), -sqrt(3.) / 3.);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.y(), -sqrt(3.) / 3.);
+  EXPECT_DOUBLE_EQ(bestFitPlane.second.z(), -sqrt(3.) / 3.);
 }
 
 TEST_F(MoleculeTest, persistentBond)

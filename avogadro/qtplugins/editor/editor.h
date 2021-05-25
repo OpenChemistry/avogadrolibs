@@ -32,7 +32,7 @@ class EditorToolWidget;
 /**
  * @class Editor editor.h <avogadro/qtplugins/editor/editor.h>
  * @brief The Editor tool extends and modifies molecules.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 class Editor : public QtGui::ToolPlugin
 {

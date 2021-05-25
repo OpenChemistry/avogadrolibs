@@ -45,7 +45,7 @@ class RWMolecule;
 /**
  * @class ToolPlugin toolplugin.h <avogadro/qtgui/toolplugin.h>
  * @brief The base class for plugins that interact with QtOpenGL::GLWidget.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 class AVOGADROQTGUI_EXPORT ToolPlugin : public QObject
 {
@@ -141,7 +141,7 @@ public slots:
 /**
  * @class ToolPluginFactory toolplugin.h <avogadro/qtgui/toolplugin.h>
  * @brief The base class for tool plugin factories in Avogadro.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 class AVOGADROQTGUI_EXPORT ToolPluginFactory
 {

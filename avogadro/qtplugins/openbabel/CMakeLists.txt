@@ -1,3 +1,5 @@
+include_directories("${AvogadroLibs_SOURCE_DIR}/thirdparty")
+
 set(openbabel_srcs
   obfileformat.cpp
   obforcefielddialog.cpp

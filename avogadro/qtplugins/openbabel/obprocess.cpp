@@ -53,7 +53,8 @@ OBProcess::OBProcess(QObject* parent_)
 #else
       QDir dir(QCoreApplication::applicationDirPath() + "/../share/openbabel");
       QStringList filters;
-      filters << "2.*";
+      filters << "3.*"
+              << "2.*";
       QStringList dirs = dir.entryList(filters);
       if (dirs.size() == 1) {
         env.insert("BABEL_DATADIR", QCoreApplication::applicationDirPath() +
@@ -63,7 +64,10 @@ OBProcess::OBProcess(QObject* parent_)
       }
       dir.setPath(QCoreApplication::applicationDirPath() + "/../lib/openbabel");
       dirs = dir.entryList(filters);
-      if (dirs.size() == 1) {
+      if (dirs.size() == 0) {
+        env.insert("BABEL_LIBDIR", QCoreApplication::applicationDirPath() +
+                                     "/../lib/openbabel/");
+      } else if (dirs.size() == 1) {
         env.insert("BABEL_LIBDIR", QCoreApplication::applicationDirPath() +
                                      "/../lib/openbabel/" + dirs[0]);
       } else {
@@ -301,9 +305,10 @@ bool OBProcess::optimizeGeometry(const QByteArray& mol,
   }
 
   QStringList realOptions;
-  realOptions << "-imol"
-              << "-omol"
+  realOptions << "-icml"
+              << "-ocml"
               << "--minimize"
+              << "--noh" // new in OB 3.0.1
               << "--log" << options;
 
   // We'll need to read the log (printed to stderr) to update progress

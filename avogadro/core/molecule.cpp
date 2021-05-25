@@ -40,7 +40,7 @@ Molecule::Molecule(const Molecule& other)
     m_atomicNumbers(other.atomicNumbers()), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d), m_coordinates3d(other.m_coordinates3d),
     m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
-    m_formalCharges(other.m_formalCharges),
+    m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIntensities(other.m_vibrationIntensities),
     m_vibrationLx(other.m_vibrationLx), m_bondPairs(other.m_bondPairs),
@@ -75,6 +75,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_timesteps(std::move(other.m_timesteps)),
     m_hybridizations(std::move(other.m_hybridizations)),
     m_formalCharges(std::move(other.m_formalCharges)),
+    m_colors(std::move(other.m_colors)),
     m_vibrationFrequencies(std::move(other.m_vibrationFrequencies)),
     m_vibrationIntensities(std::move(other.m_vibrationIntensities)),
     m_vibrationLx(std::move(other.m_vibrationLx)),
@@ -105,6 +106,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
     m_formalCharges = other.m_formalCharges;
+    m_colors = other.m_colors,
     m_vibrationFrequencies = other.m_vibrationFrequencies;
     m_vibrationIntensities = other.m_vibrationIntensities;
     m_vibrationLx = other.m_vibrationLx;
@@ -152,6 +154,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_timesteps = std::move(other.m_timesteps);
     m_hybridizations = std::move(other.m_hybridizations);
     m_formalCharges = std::move(other.m_formalCharges);
+    m_colors = std::move(other.m_colors);
     m_vibrationFrequencies = std::move(other.m_vibrationFrequencies);
     m_vibrationIntensities = std::move(other.m_vibrationIntensities);
     m_vibrationLx = std::move(other.m_vibrationLx);
@@ -244,6 +247,16 @@ Array<signed char>& Molecule::formalCharges()
 const Array<signed char>& Molecule::formalCharges() const
 {
   return m_formalCharges;
+}
+
+Array<Vector3ub>& Molecule::colors()
+{
+  return m_colors;
+}
+
+const Array<Vector3ub>& Molecule::colors() const
+{
+  return m_colors;
 }
 
 Array<Vector2>& Molecule::atomPositions2d()
@@ -354,6 +367,8 @@ bool Molecule::removeAtom(Index index)
       m_hybridizations[index] = m_hybridizations.back();
     if (m_formalCharges.size() == m_atomicNumbers.size())
       m_formalCharges[index] = m_formalCharges.back();
+    if (m_colors.size() == m_atomicNumbers.size())
+      m_colors[index] = m_colors.back();
 
     // Find any bonds to the moved atom and update their index.
     atomBonds = bonds(atom(newSize));
@@ -377,6 +392,8 @@ bool Molecule::removeAtom(Index index)
     m_hybridizations.pop_back();
   if (m_formalCharges.size() == m_atomicNumbers.size())
     m_formalCharges.pop_back();
+  if (m_colors.size() == m_atomicNumbers.size())
+    m_colors.pop_back();
   m_atomicNumbers.pop_back();
 
   return true;
@@ -677,6 +694,64 @@ double Molecule::mass() const
   return m;
 }
 
+Vector3 Molecule::centerOfGeometry() const
+{
+  Vector3 center(0.0, 0.0, 0.0);
+  for (Index i = 0; i < atomCount(); ++i)
+    center += atom(i).position3d();
+  return center / atomCount();
+}
+
+Vector3 Molecule::centerOfMass() const
+{
+  Vector3 center(0.0, 0.0, 0.0);
+  for (Index i = 0; i < atomCount(); ++i) {
+    AtomType curr_atom = atom(i);
+    center += (curr_atom.position3d() * Elements::mass(curr_atom.atomicNumber()));
+  }
+  center /= mass();
+  center /= atomCount();
+  return center;
+}
+
+double Molecule::radius() const
+{
+  double radius = 0.0;
+  if (atomCount() > 0) {
+    radius = (centerOfGeometry() - atom(0).position3d()).norm();
+  }
+  return radius;
+}
+
+std::pair<Vector3, Vector3> Molecule::bestFitPlane() const
+{
+  return bestFitPlane(atomPositions3d());
+}
+
+std::pair<Vector3, Vector3> Molecule::bestFitPlane(const Array<Vector3>& pos)
+{
+  // copy coordinates to matrix in Eigen format
+  size_t num_atoms = pos.size();
+  assert(num_atoms >= 3);
+  Eigen::Matrix<Vector3::Scalar, Eigen::Dynamic, Eigen::Dynamic> coord(
+    3, num_atoms);
+  for (size_t i = 0; i < num_atoms; ++i) {
+    coord.col(i) = pos[i];
+  }
+
+  // calculate centroid
+  Vector3 centroid = coord.rowwise().mean();
+
+  // subtract centroid
+  coord.colwise() -= centroid;
+
+  // we only need the left-singular matrix
+  auto svd = coord.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
+  Vector3 plane_normal = svd.matrixU().rightCols<1>();
+
+  return std::make_pair(centroid, plane_normal);
+}
+
 Array<double> Molecule::vibrationFrequencies() const
 {
   return m_vibrationFrequencies;
@@ -809,6 +884,16 @@ void Molecule::updateGraph() const
   for (IterType it = m_bondPairs.begin(); it != m_bondPairs.end(); ++it) {
     m_graph.addEdge(it->first, it->second);
   }
+}
+
+Array<Vector3>& Molecule::forceVectors()
+{
+  return m_forceVectors;
+}
+
+const Array<Vector3>& Molecule::forceVectors() const
+{
+  return m_forceVectors;
 }
 
 Residue& Molecule::addResidue(std::string& name, Index& number, char& id)

@@ -42,7 +42,7 @@ class AVOGADROQTGUI_EXPORT PeriodicTableView : public QGraphicsView
 
 public:
   /**
-   * Constructor - contructs a new PeriodicTableView with an internal instance
+   * Constructor - constructs a new PeriodicTableView with an internal instance
    * of PeriodicTableScene.
    */
   explicit PeriodicTableView(QWidget* parent_ = 0);
@@ -55,7 +55,7 @@ public:
 
 public slots:
   /**
-   * @param element The currently selected element.
+   * @param element_ The currently selected element.
    */
   void setElement(int element_);
 

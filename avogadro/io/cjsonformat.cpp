@@ -1,20 +1,10 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "cjsonformat.h"
+
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
@@ -103,13 +93,15 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     return false;
   }
 
-  auto jsonValue = jsonRoot.find("chemical json");
+  auto jsonValue = jsonRoot.find("chemicalJson");
+  if (jsonValue == jsonRoot.end())
+    jsonValue = jsonRoot.find("chemical json");
   if (jsonValue == jsonRoot.end()) {
     appendError("Error: no \"chemical json\" key found.");
     return false;
   }
-  if (*jsonValue != 0) {
-    appendError("Warning: chemical json version is not 0.");
+  if (*jsonValue != 0 && *jsonValue != 1) {
+    appendError("Warning: chemical json version is not 0 or 1.");
   }
 
   // Read some basic key-value pairs (all strings).
@@ -190,26 +182,39 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     }
   }
 
-  json unitCell = jsonRoot["unit cell"];
+  json unitCell = jsonRoot["unitCell"];
   if (!unitCell.is_object())
-    unitCell = jsonRoot["unitCell"];
-  if (unitCell.is_object() && unitCell["a"].is_number() &&
-      unitCell["b"].is_number() && unitCell["c"].is_number() &&
-      unitCell["alpha"].is_number() && unitCell["beta"].is_number() &&
-      unitCell["gamma"].is_number()) {
-    Real a = static_cast<Real>(unitCell["a"]);
-    Real b = static_cast<Real>(unitCell["b"]);
-    Real c = static_cast<Real>(unitCell["c"]);
-    Real alpha = static_cast<Real>(unitCell["alpha"]) * DEG_TO_RAD;
-    Real beta = static_cast<Real>(unitCell["beta"]) * DEG_TO_RAD;
-    Real gamma = static_cast<Real>(unitCell["gamma"]) * DEG_TO_RAD;
-    Core::UnitCell* unitCellObject =
-      new Core::UnitCell(a, b, c, alpha, beta, gamma);
-    molecule.setUnitCell(unitCellObject);
+    unitCell = jsonRoot["unit cell"];
+
+  if (unitCell.is_object()) {
+    Core::UnitCell* unitCellObject = nullptr;
+
+    // read in cell vectors in preference to a, b, c parameters
+    json cellVectors = unitCell["cellVectors"];
+    if (cellVectors.is_array() && cellVectors.size() == 9 &&
+        isNumericArray(cellVectors)) {
+      Vector3 aVector(cellVectors[0], cellVectors[1], cellVectors[2]);
+      Vector3 bVector(cellVectors[3], cellVectors[4], cellVectors[5]);
+      Vector3 cVector(cellVectors[6], cellVectors[7], cellVectors[8]);
+      unitCellObject = new Core::UnitCell(aVector, bVector, cVector);
+    } else if (unitCell["a"].is_number() && unitCell["b"].is_number() &&
+               unitCell["c"].is_number() && unitCell["alpha"].is_number() &&
+               unitCell["beta"].is_number() && unitCell["gamma"].is_number()) {
+      Real a = static_cast<Real>(unitCell["a"]);
+      Real b = static_cast<Real>(unitCell["b"]);
+      Real c = static_cast<Real>(unitCell["c"]);
+      Real alpha = static_cast<Real>(unitCell["alpha"]) * DEG_TO_RAD;
+      Real beta = static_cast<Real>(unitCell["beta"]) * DEG_TO_RAD;
+      Real gamma = static_cast<Real>(unitCell["gamma"]) * DEG_TO_RAD;
+      unitCellObject = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+    }
+    if (unitCellObject != nullptr)
+      molecule.setUnitCell(unitCellObject);
   }
-  json fractional = atoms["coords"]["3d fractional"];
+
+  json fractional = atoms["coords"]["3dFractional"];
   if (!fractional.is_array())
-    fractional = atoms["coords"]["3dFractional"];
+    fractional = atoms["coords"]["3d fractional"];
   if (fractional.is_array() && fractional.size() == 3 * atomCount &&
       isNumericArray(fractional) && molecule.unitCell()) {
     Array<Vector3> fcoords;
@@ -267,6 +272,27 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     json orbitals = jsonRoot["orbitals"];
     if (orbitals.is_object() && basis->isValid()) {
       basis->setElectronCount(orbitals["electronCount"]);
+      json occupations = orbitals["occupations"];
+      if (isNumericArray(occupations)) {
+        std::vector<unsigned char> occs;
+        for (unsigned int i = 0; i < occupations.size(); ++i)
+          occs.push_back(static_cast<unsigned char>(occupations[i]));
+        basis->setMolecularOrbitalOccupancy(occupations);
+      }
+      json energies = orbitals["energies"];
+      if (isNumericArray(energies)) {
+        std::vector<double> energyArray;
+        for (unsigned int i = 0; i < energies.size(); ++i)
+          energyArray.push_back(static_cast<double>(energies[i]));
+        basis->setMolecularOrbitalEnergy(energyArray);
+      }
+      json numbers = orbitals["numbers"];
+      if (isNumericArray(numbers)) {
+        std::vector<unsigned int> numArray;
+        for (unsigned int i = 0; i < numbers.size(); ++i)
+          numArray.push_back(static_cast<unsigned int>(numbers[i]));
+        basis->setMolecularOrbitalNumber(numArray);
+      }
       json moCoefficients = orbitals["moCoefficients"];
       json moCoefficientsA = orbitals["alphaCoefficients"];
       json moCoefficientsB = orbitals["betaCoefficients"];
@@ -371,7 +397,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
   json root;
 
-  root["chemical json"] = 0;
+  root["chemicalJson"] = 1;
 
   if (opts.value("properties", true)) {
     if (molecule.data("name").type() == Variant::String)
@@ -388,7 +414,22 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     unitCell["alpha"] = molecule.unitCell()->alpha() * RAD_TO_DEG;
     unitCell["beta"] = molecule.unitCell()->beta() * RAD_TO_DEG;
     unitCell["gamma"] = molecule.unitCell()->gamma() * RAD_TO_DEG;
-    root["unit cell"] = unitCell;
+
+    json vectors;
+    vectors.push_back(molecule.unitCell()->aVector().x());
+    vectors.push_back(molecule.unitCell()->aVector().y());
+    vectors.push_back(molecule.unitCell()->aVector().z());
+
+    vectors.push_back(molecule.unitCell()->bVector().x());
+    vectors.push_back(molecule.unitCell()->bVector().y());
+    vectors.push_back(molecule.unitCell()->bVector().z());
+
+    vectors.push_back(molecule.unitCell()->cVector().x());
+    vectors.push_back(molecule.unitCell()->cVector().y());
+    vectors.push_back(molecule.unitCell()->cVector().z());
+    unitCell["cellVectors"] = vectors;
+
+    root["unitCell"] = unitCell;
   }
 
   // Create a basis set/MO matrix we can round trip.
@@ -422,31 +463,35 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     basis["shellTypes"] = shellTypes;
 
     // This bit is slightly tricky, map from our index to primitives per shell.
-    auto gtoIndices = gaussian->gtoIndices();
-    auto gtoA = gaussian->gtoA();
-    json primitivesPerShell;
-    for (size_t i = 0; i < gtoIndices.size() - 1; ++i)
-      primitivesPerShell.push_back(gtoIndices[i + 1] - gtoIndices[i]);
-    primitivesPerShell.push_back(gtoA.size() - gtoIndices.back());
-    basis["primitivesPerShell"] = primitivesPerShell;
+    if (gaussian->gtoIndices().size() && gaussian->atomIndices().size()) {
+      auto gtoIndices = gaussian->gtoIndices();
+      auto gtoA = gaussian->gtoA();
+      json primitivesPerShell;
+      for (size_t i = 0; i < gtoIndices.size() - 1; ++i)
+        primitivesPerShell.push_back(gtoIndices[i + 1] - gtoIndices[i]);
+      primitivesPerShell.push_back(gtoA.size() - gtoIndices.back());
+      basis["primitivesPerShell"] = primitivesPerShell;
 
-    auto atomIndices = gaussian->atomIndices();
-    json shellToAtomMap;
-    for (size_t i = 0; i < atomIndices.size(); ++i)
-      shellToAtomMap.push_back(atomIndices[i]);
-    basis["shellToAtomMap"] = shellToAtomMap;
+      auto atomIndices = gaussian->atomIndices();
+      json shellToAtomMap;
+      std::cout << "atomIndices " << atomIndices.size() << std::endl;
+      for (size_t i = 0; i < atomIndices.size(); ++i)
+        shellToAtomMap.push_back(atomIndices[i]);
+      basis["shellToAtomMap"] = shellToAtomMap;
 
-    auto gtoC = gaussian->gtoC();
-    json exponents;
-    json coefficients;
-    for (size_t i = 0; i < gtoA.size(); ++i) {
-      exponents.push_back(gtoA[i]);
-      coefficients.push_back(gtoC[i]);
+      auto gtoC = gaussian->gtoC();
+      json exponents;
+      json coefficients;
+      for (size_t i = 0; i < gtoA.size(); ++i) {
+        exponents.push_back(gtoA[i]);
+        coefficients.push_back(gtoC[i]);
+      }
+      basis["exponents"] = exponents;
+      basis["coefficients"] = coefficients;
+
+      // Write out the basis set if a valid one exists.
+      root["basisSet"] = basis;
     }
-    basis["exponents"] = exponents;
-    basis["coefficients"] = coefficients;
-
-    root["basisSet"] = basis;
 
     // Now get the MO matrix, potentially other things. Need to get a handle on
     // when we have just one (paired), or two (alpha and beta) to write.
@@ -468,6 +513,32 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     } else {
       root["orbitals"]["moCoefficients"] = moCoefficients;
     }
+
+    // Some energy, occupation, and number data potentially.
+    auto energies = gaussian->moEnergy();
+    if (energies.size() > 0) {
+      json energyData;
+      for (auto it = energies.begin(), itEnd = energies.end(); it != itEnd;
+           ++it) {
+        energyData.push_back(*it);
+      }
+      root["orbitals"]["energies"] = energyData;
+    }
+    auto occ = gaussian->moOccupancy();
+    if (occ.size() > 0) {
+      json occData;
+      for (auto it = occ.begin(), itEnd = occ.end(); it != itEnd; ++it)
+        occData.push_back(static_cast<int>(*it));
+      root["orbitals"]["occupations"] = occData;
+    }
+    auto num = gaussian->moNumber();
+    if (num.size() > 0) {
+      json numData;
+      for (auto it = num.begin(), itEnd = num.end(); it != itEnd; ++it)
+        numData.push_back(*it);
+      root["orbitals"]["numbers"] = numData;
+    }
+
     root["orbitals"]["electronCount"] = gaussian->electronCount();
   }
 
@@ -514,6 +585,19 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
     // 3d positions:
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
+      // everything gets real-space Cartesians
+      json coords3d;
+      for (vector<Vector3>::const_iterator
+             it = molecule.atomPositions3d().begin(),
+             itEnd = molecule.atomPositions3d().end();
+           it != itEnd; ++it) {
+        coords3d.push_back(it->x());
+        coords3d.push_back(it->y());
+        coords3d.push_back(it->z());
+      }
+      root["atoms"]["coords"]["3d"] = coords3d;
+
+      // if the unit cell exists, also write fractional coords
       if (molecule.unitCell()) {
         json coordsFractional;
         Array<Vector3> fcoords;
@@ -526,18 +610,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
           coordsFractional.push_back(it->y());
           coordsFractional.push_back(it->z());
         }
-        root["atoms"]["coords"]["3d fractional"] = coordsFractional;
-      } else {
-        json coords3d;
-        for (vector<Vector3>::const_iterator
-               it = molecule.atomPositions3d().begin(),
-               itEnd = molecule.atomPositions3d().end();
-             it != itEnd; ++it) {
-          coords3d.push_back(it->x());
-          coords3d.push_back(it->y());
-          coords3d.push_back(it->z());
-        }
-        root["atoms"]["coords"]["3d"] = coords3d;
+        root["atoms"]["coords"]["3dFractional"] = coordsFractional;
       }
     }
 
@@ -618,5 +691,5 @@ vector<std::string> CjsonFormat::mimeTypes() const
   return mime;
 }
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro

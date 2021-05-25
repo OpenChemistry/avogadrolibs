@@ -20,9 +20,13 @@
 
 #include <avogadro/io/cmlformat.h>
 
+#include <nlohmann/json.hpp>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
+
+using json = nlohmann::json;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -90,6 +94,12 @@ OBFileFormat::~OBFileFormat()
 
 bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 {
+  json opts;
+  if (!options().empty())
+    opts = json::parse(options(), nullptr, false);
+  else
+    opts = json::object();
+
   // Allow blocking until the read is completed.
   OBProcess proc;
   ProcessListener listener;
@@ -111,6 +121,15 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
             << "can";
   if (formats2D.contains(QString::fromStdString(m_fileExtensions.front())))
     options << "--gen3d";
+
+  // Check if we have extra arguments for open babel
+  json extraArgs = opts.value("arguments", json::object());
+  if (extraArgs.is_array()) {
+    for (const auto& arg : extraArgs) {
+      if (arg.is_string())
+        options << arg.get<std::string>().c_str();
+    }
+  }
 
   if (!m_fileOnly) {
     // Determine length of data
@@ -175,6 +194,22 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 
 bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
 {
+  json opts;
+  if (!options().empty())
+    opts = json::parse(options(), nullptr, false);
+  else
+    opts = json::object();
+
+  // Check if we have extra arguments for open babel
+  QStringList options;
+  json extraArgs = opts.value("arguments", json::object());
+  if (extraArgs.is_array()) {
+    for (const auto& arg : extraArgs) {
+      if (arg.is_string())
+        options << arg.get<std::string>().c_str();
+    }
+  }
+
   // Generate CML to give to OpenBabel
   std::string cml;
   Io::CmlFormat cmlWriter;
@@ -197,7 +232,7 @@ bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
     return false;
   }
   proc.convert(QByteArray(cml.c_str()), "cml",
-               QString::fromStdString(m_fileExtensions.front()));
+               QString::fromStdString(m_fileExtensions.front()), options);
 
   QByteArray output;
   if (!listener.waitForOutput(output)) {

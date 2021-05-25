@@ -131,7 +131,9 @@ void PlotRmsd::displayDialog()
   const char* yTitle = "RMSD (Angstrom)";
   const char* windowName = "RMSD Curve";
 
-  m_plot.reset(new VTK::VtkPlot());
+  if (!m_plot)
+    m_plot.reset(new VTK::VtkPlot);
+
   m_plot->setData(data);
   m_plot->setWindowName(windowName);
   m_plot->setXTitle(xTitle);

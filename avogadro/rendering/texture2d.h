@@ -145,7 +145,7 @@ public:
    * @param internalFormat The internal storage ordering of components in the
    * buffer data.
    *
-   * The buffer must contain homogenous elements of the follow types: unsigned
+   * The buffer must contain homogeneous elements of the follow types: unsigned
    * char, char, unsigned short, short, unsigned int, int, or float.
    *
    * The first element of @a buffer is the lower-left texel. Subsequent elements

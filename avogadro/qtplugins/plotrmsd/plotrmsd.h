@@ -70,7 +70,7 @@ private:
   QtGui::Molecule* m_molecule;
 
   std::unique_ptr<QAction> m_displayDialogAction;
-  std::unique_ptr<VTK::VtkPlot> m_plot;
+  QScopedPointer<VTK::VtkPlot> m_plot;
 };
 
 inline QString PlotRmsd::description() const

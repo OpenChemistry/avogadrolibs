@@ -52,7 +52,7 @@ QList<QAction*> Spectra::actions() const
 QStringList Spectra::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Quantum");
+  path << tr("&Analysis");
   return path;
 }
 

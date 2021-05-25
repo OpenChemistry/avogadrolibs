@@ -41,6 +41,8 @@ using std::endl;
 namespace Avogadro {
 namespace Rendering {
 
+using Core::Array;
+
 class SphereGeometry::Private
 {
 public:
@@ -192,6 +194,9 @@ void SphereGeometry::render(const Camera& camera)
   if (!d->program.setUniformValue("projection", camera.projection().matrix())) {
     cout << d->program.error() << endl;
   }
+  if (!d->program.setUniformValue("opacity", m_opacity)) {
+    cout << d->program.error() << endl;
+  }
 
   // Render the loaded spheres using the shader and bound VBO.
   glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),
@@ -239,6 +244,33 @@ std::multimap<float, Identifier> SphereGeometry::hits(
       float rootD = static_cast<float>(sqrt(D));
       float depth = std::min(std::abs(B + rootD), std::abs(B - rootD));
       result.insert(std::pair<float, Identifier>(depth, id));
+    }
+  }
+  return result;
+}
+
+Array<Identifier> SphereGeometry::areaHits(const Frustrum& f) const
+{
+  Array<Identifier> result;
+  // Check for intersection.
+  for (size_t i = 0; i < m_spheres.size(); ++i) {
+    const SphereColor& sphere = m_spheres[i];
+
+    int in = 0;
+    for (in = 0; in < 4; ++in) {
+      float dist = (sphere.center - f.points[2 * in]).dot(f.planes[in]);
+      if (dist > 0.0f) {
+        // Outside of our frustrum, break.
+        break;
+      }
+    }
+    if (in == 4) {
+      // The center is within the four planes that make our frustrum - hit.
+      Identifier id;
+      id.molecule = m_identifier.molecule;
+      id.type = m_identifier.type;
+      id.index = i;
+      result.push_back(id);
     }
   }
   return result;

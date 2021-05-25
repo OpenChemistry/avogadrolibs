@@ -155,12 +155,12 @@ public:
   T* data()
   {
     detachWithCopy();
-    return &d->data[0];
+    return d->data.data();
   }
 
-  const T* data() const { return &d->data[0]; }
+  const T* data() const { return d->data.data(); }
 
-  const T* constData() const { return &d->data[0]; }
+  const T* constData() const { return d->data.data(); }
 
   size_t size() const { return d->data.size(); }
 

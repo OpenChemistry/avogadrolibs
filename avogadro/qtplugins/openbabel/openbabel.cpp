@@ -49,38 +49,38 @@ OpenBabel::OpenBabel(QObject* p)
 {
   QAction* action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Optimize geometry"));
+  action->setText(tr("Optimize Geometry"));
   action->setShortcut(QKeySequence("Ctrl+Alt+O"));
   connect(action, SIGNAL(triggered()), SLOT(onOptimizeGeometry()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Configure geometry optimization..."));
+  action->setText(tr("Configure Force Field..."));
   connect(action, SIGNAL(triggered()), SLOT(onConfigureGeometryOptimization()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Perceive bonds"));
+  action->setText(tr("Perceive Bonds"));
   connect(action, SIGNAL(triggered()), SLOT(onPerceiveBonds()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Add hydrogens"));
+  action->setText(tr("Add Hydrogens"));
   connect(action, SIGNAL(triggered()), SLOT(onAddHydrogens()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Add hydrogens for pH..."));
+  action->setText(tr("Add Hydrogens for pH..."));
   connect(action, SIGNAL(triggered()), SLOT(onAddHydrogensPh()));
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Remove hydrogens"));
+  action->setText(tr("Remove Hydrogens"));
   connect(action, SIGNAL(triggered()), SLOT(onRemoveHydrogens()));
   m_actions.push_back(action);
 
@@ -89,19 +89,19 @@ OpenBabel::OpenBabel(QObject* p)
   refreshForceFields();
 
   QString info = openBabelInfo();
+  /*
   if (info.isEmpty()) {
     qWarning() << tr("%1 not found! Disabling Open Babel plugin actions.")
                     .arg(OBProcess().obabelExecutable());
     foreach (QAction* a, m_actions)
       a->setEnabled(false);
   } else {
+  */
     qDebug() << OBProcess().obabelExecutable() << " found: " << info;
-  }
+  // }
 }
 
-OpenBabel::~OpenBabel()
-{
-}
+OpenBabel::~OpenBabel() {}
 
 QList<QAction*> OpenBabel::actions() const
 {
@@ -117,7 +117,7 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
 {
   // Return empty list if not ready yet, and print a warning.
   if (m_readFormatsPending || m_writeFormatsPending) {
-    qWarning() << tr("The obabel file formats are not ready to be added.");
+    qDebug() << tr("The Open Babel file formats are not ready to be added.");
     return QList<Io::FileFormat*>();
   }
 
@@ -173,6 +173,8 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
     result.append(fmt);
   }
 
+  qDebug() << "Open Babel formats ready: " << result.size();
+
   return result;
 }
 
@@ -208,7 +210,7 @@ bool OpenBabel::readMolecule(QtGui::Molecule& mol)
     // Empty output means openbabel crashed, etc.
     if (output.isEmpty()) {
       QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
-                            tr("An error occurred while running OpenBabel "
+                            tr("An error occurred while running Open Babel "
                                "(%1).")
                               .arg(m_process->obabelExecutable()),
                             QMessageBox::Ok);
@@ -355,7 +357,7 @@ void OpenBabel::onOptimizeGeometry()
 
   // Fail here if the process is already in use
   if (m_process->inUse()) {
-    showProcessInUseError(tr("Cannot optimize geometry with OpenBabel."));
+    showProcessInUseError(tr("Cannot optimize geometry with Open Babel."));
     return;
   }
 
@@ -380,7 +382,7 @@ void OpenBabel::onOptimizeGeometry()
   }
 
   // Setup progress dialog
-  initializeProgressDialog(tr("Optimizing Geometry (OpenBabel)"),
+  initializeProgressDialog(tr("Optimizing Geometry (Open Babel)"),
                            tr("Generating MDL..."), 0, 0, 0);
 
   // Connect process
@@ -395,11 +397,11 @@ void OpenBabel::onOptimizeGeometry()
 
   // Generate CML
   std::string mol;
-  if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol, "mol")) {
+  if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol, "cml")) {
     m_progress->reset();
     QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
                           tr("An internal error occurred while generating an "
-                             "MDL representation of the current molecule."),
+                             "CML representation of the current molecule."),
                           QMessageBox::Ok);
     return;
   }
@@ -444,10 +446,10 @@ void OpenBabel::onOptimizeGeometryFinished(const QByteArray& output)
   // CML --> molecule
   Core::Molecule mol;
   if (!Io::FileFormatManager::instance().readString(mol, output.constData(),
-                                                    "mol")) {
+                                                    "cml")) {
     m_progress->reset();
     QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
-                          tr("Error interpreting obabel MDL output."),
+                          tr("Error interpreting Open Babel output."),
                           QMessageBox::Ok);
     qDebug() << "MDL:" << output;
     return;
@@ -479,7 +481,7 @@ void OpenBabel::onPerceiveBonds()
 {
   // Fail here if the process is already in use
   if (m_process->inUse()) {
-    showProcessInUseError(tr("Cannot open file with OpenBabel."));
+    showProcessInUseError(tr("Cannot open file with Open Babel."));
     return;
   }
 
@@ -491,7 +493,7 @@ void OpenBabel::onPerceiveBonds()
   }
 
   // Setup progress dialog
-  initializeProgressDialog(tr("Perceiving Bonds (OpenBabel)"),
+  initializeProgressDialog(tr("Perceiving Bonds (Open Babel)"),
                            tr("Generating XYZ representation..."), 0, 0, 0);
 
   // Generate XYZ
@@ -576,15 +578,16 @@ void OpenBabel::onAddHydrogens()
   }
 
   // Setup progress dialog
-  initializeProgressDialog(tr("Adding Hydrogens (OpenBabel)"),
-                           tr("Generating obabel input..."), 0, 0, 0);
+  initializeProgressDialog(tr("Adding Hydrogens (Open Babel)"),
+                           tr("Generating Open Babel input..."), 0, 0, 0);
 
   // Generate MDL
   std::string mol;
-  if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol, "mol")) {
+  if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol, "cml")) {
     m_progress->reset();
     QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
-                          tr("Error generating MDL string."), QMessageBox::Ok);
+                          tr("Error generating Open Babel input."),
+                          QMessageBox::Ok);
     return;
   }
 
@@ -599,7 +602,7 @@ void OpenBabel::onAddHydrogens()
     tr("Running %1...").arg(m_process->obabelExecutable()));
 
   // Run process
-  m_process->convert(QByteArray(mol.c_str(), mol.size()), "mol", "mol",
+  m_process->convert(QByteArray(mol.c_str(), mol.size()), "cml", "cml",
                      QStringList() << "-h");
 }
 
@@ -623,15 +626,16 @@ void OpenBabel::onAddHydrogensPh()
     return;
 
   // Setup progress dialog
-  initializeProgressDialog(tr("Adding Hydrogens (OpenBabel)"),
+  initializeProgressDialog(tr("Adding Hydrogens (Open Babel)"),
                            tr("Generating obabel input..."), 0, 0, 0);
 
   // Generate MDL
   std::string mol;
-  if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol, "mol")) {
+  if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol, "cml")) {
     m_progress->reset();
     QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
-                          tr("Error generating MDL string."), QMessageBox::Ok);
+                          tr("Error generating Open Babel input."),
+                          QMessageBox::Ok);
     return;
   }
 
@@ -646,7 +650,7 @@ void OpenBabel::onAddHydrogensPh()
     tr("Running %1...").arg(m_process->obabelExecutable()));
 
   // Run process
-  m_process->convert(QByteArray(mol.c_str(), mol.size()), "mol", "mol",
+  m_process->convert(QByteArray(mol.c_str(), mol.size()), "cml", "cml",
                      QStringList() << "-p" << QString::number(pH));
 }
 
@@ -662,15 +666,15 @@ void OpenBabel::onRemoveHydrogens()
   }
 
   // Setup progress dialog
-  initializeProgressDialog(tr("Removing Hydrogens (OpenBabel)"),
+  initializeProgressDialog(tr("Removing Hydrogens (Open Babel)"),
                            tr("Generating obabel input..."), 0, 0, 0);
 
   // Generate MDL
   std::string mol;
-  if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol, "mol")) {
+  if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol, "cml")) {
     m_progress->reset();
     QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
-                          tr("Error generating MDL string."), QMessageBox::Ok);
+                          tr("Error generating CML data."), QMessageBox::Ok);
     return;
   }
 
@@ -685,7 +689,7 @@ void OpenBabel::onRemoveHydrogens()
     tr("Running %1...").arg(m_process->obabelExecutable()));
 
   // Run process
-  m_process->convert(QByteArray(mol.c_str(), mol.size()), "mol", "mol",
+  m_process->convert(QByteArray(mol.c_str(), mol.size()), "cml", "cml",
                      QStringList() << "-d");
 }
 
@@ -696,11 +700,11 @@ void OpenBabel::onHydrogenOperationFinished(const QByteArray& mdl)
   // MDL --> molecule
   Core::Molecule mol;
   if (!Io::FileFormatManager::instance().readString(mol, mdl.constData(),
-                                                    "mol")) {
+                                                    "cml")) {
     m_progress->reset();
     qWarning() << "Bad MDL: " << mdl;
     QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
-                          tr("Error interpreting obabel MDL output."),
+                          tr("Error interpreting Open Babel output."),
                           QMessageBox::Ok);
     qDebug() << "MDL:" << mdl;
     return;
@@ -754,7 +758,7 @@ void OpenBabel::initializeProgressDialog(const QString& title,
 void OpenBabel::showProcessInUseError(const QString& title) const
 {
   QMessageBox::critical(qobject_cast<QWidget*>(parent()), title,
-                        tr("Already running OpenBabel. Wait for the other "
+                        tr("Already running Open Babel. Wait for the other "
                            "operation to complete and try again."),
                         QMessageBox::Ok);
 }
@@ -803,5 +807,5 @@ QString OpenBabel::autoDetectForceField() const
 
   return result;
 }
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

@@ -2,11 +2,13 @@
 
 from __future__ import print_function
 
-import requests
-import pybel
-import openbabel as ob
 import os
 import sys
+
+import requests
+
+from openbabel import pybel
+from openbabel import openbabel as ob
 
 # TODO: process Open Babel resdata.txt
 #   if we can find certain non-standard residues
@@ -30,7 +32,8 @@ sdfTemplate = "http://ligand-expo.rcsb.org/reports/{}/{}/{}_ideal.sdf"
 # URL for the ideal geometry (PDB)
 pdbTemplate = "http://ligand-expo.rcsb.org/reports/{}/{}/{}_ideal.pdb"
 # save ligands with at least this # of occurrences
-ligandThresh = 1000
+
+ligandThresh = 500
 
 # default ligand list
 ligands = [
@@ -73,13 +76,14 @@ class ResidueData
 {
 private:
   std::string m_residueName;
-  std::vector<std::string> m_residueAtomNames;
+  std::map<std::string, int> m_residueAtomNames;
   std::vector<std::pair<std::string, std::string>> m_residueSingleBonds;
   std::vector<std::pair<std::string, std::string>> m_residueDoubleBonds;
 
 public:
   ResidueData() {}
-  ResidueData(std::string name, std::vector<std::string> atomNames,
+  ResidueData(std::string name,
+              std::map<std::string, int> atomNames,
               std::vector<std::pair<std::string, std::string>> singleBonds,
               std::vector<std::pair<std::string, std::string>> doubleBonds)
   {
@@ -104,6 +108,10 @@ public:
     return *this;
   }
 
+  std::map<std::string, int> residueAtoms() {
+    return m_residueAtomNames;
+  }
+
   std::vector<std::pair<std::string, std::string>> residueSingleBonds()
   {
     return m_residueSingleBonds;
@@ -125,7 +133,11 @@ for ligand in ligands:
         for block in sdf.iter_content(1024):
             handle.write(block)
 
-    mol_sdf = next(pybel.readfile("sdf", 'temp.sdf'))
+    try:
+      mol_sdf = next(pybel.readfile("sdf", 'temp.sdf'))
+    except StopIteration:
+      continue
+
     if len(mol_sdf.atoms) < 2:
         continue
     final_ligands.append(ligand)
@@ -135,14 +147,18 @@ for ligand in ligands:
         for block in pdb.iter_content(1024):
             handle.write(block)
 
-    mol_pdb = next(pybel.readfile("pdb", 'temp.pdb'))
+    try:
+      mol_pdb = next(pybel.readfile("pdb", 'temp.pdb'))
+    except StopIteration:
+      continue
+    
     atom_map = {}
     for i in range(len(mol_sdf.atoms)):
         idx = mol_sdf.atoms[i].idx
         atom = mol_pdb.atoms[i].OBAtom
         res = atom.GetResidue()
         # build up a map between atom index and atom ID
-        atom_map[idx] = res.GetAtomID(atom).strip().rstrip()
+        atom_map[idx] = res.GetAtomID(atom).strip().rstrip(), atom.GetAtomicNum()
 
     # go through bonds
     single_bonds = []
@@ -150,18 +166,18 @@ for ligand in ligands:
     for bond in ob.OBMolBondIter(mol_sdf.OBMol):
         begin = bond.GetBeginAtomIdx()
         end = bond.GetEndAtomIdx()
-        if bond.GetBO() == 2:
-            double_bonds.append((atom_map[begin], atom_map[end]))
-        elif bond.GetBO() == 1:
-            single_bonds.append((atom_map[begin], atom_map[end]))
+        if bond.GetBondOrder() == 2:
+            double_bonds.append((atom_map[begin][0], atom_map[end][0]))
+        elif bond.GetBondOrder() == 1:
+            single_bonds.append((atom_map[begin][0], atom_map[end][0]))
 
     # print out the residue data
     print('ResidueData %sData("%s",' % (ligand, ligand))
     print('// Atoms')
     print('{')
-    for atom in atom_map.values()[:-1]:
-        print('"%s", ' % (atom), end='')
-    print('"%s"' % atom_map.values()[-1])
+    for atom in list(atom_map.values())[:-1]:
+        print('{ "%s", %d },' % (atom[0], atom[1]), end='')
+    print('{"%s", %d }' % (atom[0], atom[1]))
     print('},')
 
     print('// Single Bonds')

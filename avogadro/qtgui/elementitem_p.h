@@ -30,7 +30,7 @@ namespace QtGui {
  * @brief An element item, intended to display a single element.
  *
  * This class implements a QGraphicsItem for displaying single elements in a
- * perdiodic table. It currently allows the setting of the proton number and
+ * periodic table. It currently allows the setting of the proton number and
  * gets all other information from OpenBabel.
  */
 class ElementItem : public QGraphicsItem

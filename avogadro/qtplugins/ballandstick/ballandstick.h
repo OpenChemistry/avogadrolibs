@@ -24,7 +24,7 @@ namespace QtPlugins {
 
 /**
  * @brief Render a molecule in the ball and stick style.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 class BallAndStick : public QtGui::ScenePlugin
 {

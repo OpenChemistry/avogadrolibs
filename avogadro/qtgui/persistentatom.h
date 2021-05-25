@@ -65,7 +65,7 @@ public:
   void set(const AtomType& a);
 
   /**
-   * @brief Reset the the object to an invalid state.
+   * @brief Reset the object to an invalid state.
    */
   void reset();
 

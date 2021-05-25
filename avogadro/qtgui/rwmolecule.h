@@ -285,6 +285,24 @@ public:
   bool setFormalCharge(Index atomId, signed char charge);
 
   /**
+   * Get the color for the requested atom.
+   * @param atomId The index of the atom.
+   * @return The color of the atom indexed at @a atomId, or
+   * (0, 0, 0) if @a atomId is invalid. If no color is set for the
+   * given atomId, the default color for the atomic number of
+   * the atomId is returned.
+   */
+  Vector3ub color(Index atomId) const;
+
+  /**
+   * Set the color of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param color The new color.
+   * @return True on success, false otherwise.
+   */
+  bool setColor(Index atomId, Vector3ub color);
+
+  /**
    * Create a new bond in the molecule.
    * @param atom1 The first atom in the bond.
    * @param atom2 The second order in the bond.
@@ -607,6 +625,19 @@ public:
   class UndoCommand;
   friend class UndoCommand;
 
+  /** Returns a vector of forces for the atoms in the molecule. */
+  const Core::Array<Vector3>& forceVectors() const;
+
+  /**
+   * Replace the current array of force vectors.
+   * @param pos The new force vector array. Must be of length atomCount().
+   * @param undoText The undo text to be displayed for undo commands.
+   * @return True on success, false otherwise.
+   */
+  bool setForceVector(
+    Index atomId, const Vector3& pos,
+    const QString& undoText = QStringLiteral("Change Force Vectors"));
+
 public slots:
   /**
    * @brief Force the molecule to emit the changed() signal.
@@ -644,23 +675,15 @@ protected:
 class AVOGADROQTGUI_EXPORT RWAtom : public Core::AtomTemplate<RWMolecule>
 {
 public:
-  RWAtom()
-    : Core::AtomTemplate<RWMolecule>()
-  {}
-  RWAtom(RWMolecule* m, Index i)
-    : Core::AtomTemplate<RWMolecule>(m, i)
-  {}
+  RWAtom() : Core::AtomTemplate<RWMolecule>() {}
+  RWAtom(RWMolecule* m, Index i) : Core::AtomTemplate<RWMolecule>(m, i) {}
 };
 
 class AVOGADROQTGUI_EXPORT RWBond : public Core::BondTemplate<RWMolecule>
 {
 public:
-  RWBond()
-    : Core::BondTemplate<RWMolecule>()
-  {}
-  RWBond(RWMolecule* m, Index i)
-    : Core::BondTemplate<RWMolecule>(m, i)
-  {}
+  RWBond() : Core::BondTemplate<RWMolecule>() {}
+  RWBond(RWMolecule* m, Index i) : Core::BondTemplate<RWMolecule>(m, i) {}
 };
 
 inline RWMolecule::AtomType RWMolecule::atom(Index atomId) const
@@ -724,6 +747,11 @@ inline Core::AtomHybridization RWMolecule::hybridization(Index atomId) const
 inline signed char RWMolecule::formalCharge(Index atomId) const
 {
   return m_molecule.formalCharge(atomId);
+}
+
+inline Vector3ub RWMolecule::color(Index atomId) const
+{
+  return m_molecule.color(atomId);
 }
 
 inline RWMolecule::BondType RWMolecule::addBond(const AtomType& atom1,
@@ -856,6 +884,11 @@ inline QUndoStack& RWMolecule::undoStack()
 inline const QUndoStack& RWMolecule::undoStack() const
 {
   return m_undoStack;
+}
+
+inline const Core::Array<Vector3>& RWMolecule::forceVectors() const
+{
+  return m_molecule.forceVectors();
 }
 
 } // namespace QtGui

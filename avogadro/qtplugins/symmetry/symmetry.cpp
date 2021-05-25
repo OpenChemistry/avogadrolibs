@@ -50,7 +50,7 @@ Symmetry::Symmetry(QObject* parent_)
 
   m_ctx = msymCreateContext();
 
-  m_viewSymmetryAction->setText(tr("Symmetry Properties..."));
+  m_viewSymmetryAction->setText(tr("Symmetry..."));
   connect(m_viewSymmetryAction, SIGNAL(triggered()), SLOT(viewSymmetry()));
   m_actions.push_back(m_viewSymmetryAction);
   m_viewSymmetryAction->setProperty("menu priority", -50);
@@ -91,7 +91,7 @@ QList<QAction*> Symmetry::actions() const
 
 QStringList Symmetry::menuPath(QAction*) const
 {
-  return QStringList() << tr("&View");
+  return QStringList() << tr("&Analysis") << tr("&Properties");
 }
 
 void Symmetry::setMolecule(QtGui::Molecule* mol)
@@ -126,7 +126,7 @@ void Symmetry::moleculeChanged(unsigned int c)
       if (changes & Molecule::Added || changes & Molecule::Removed)
         updateActions();
     }*/
-  qDebug() << "moleculeChanged";
+
   if ((changes & Molecule::Atoms) &&
       (changes & Molecule::Modified || changes & Molecule::Added ||
        changes & Molecule::Removed)) {

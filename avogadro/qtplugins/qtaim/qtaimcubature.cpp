@@ -924,7 +924,7 @@ static heap_item heap_pop(heap* h)
 
   if (!(h->n)) {
     fprintf(stderr, "attempted to pop an empty heap\n");
-    exit(EXIT_FAILURE);
+    return ret; // error
   }
 
   ret = h->items[0];
@@ -1017,7 +1017,7 @@ static int ruleadapt_integrate(rule* r, unsigned int fdim, integrand_v f,
       error over the bound.
 
       [Note: Bull and Freeman claim that the Gladwell
-      approach is intrinsically inefficent because it
+      approach is intrinsically inefficient because it
       "requires sorting", and propose an alternative
       algorithm that "only" requires three passes over the
       entire set of regions.  Apparently, they didn't

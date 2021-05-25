@@ -90,7 +90,7 @@ private:
 
   std::unique_ptr<XrdOptionsDialog> m_xrdOptionsDialog;
   std::unique_ptr<QAction> m_displayDialogAction;
-  std::unique_ptr<VTK::VtkPlot> m_plot;
+  QScopedPointer<VTK::VtkPlot> m_plot;
 };
 
 inline QString PlotXrd::description() const

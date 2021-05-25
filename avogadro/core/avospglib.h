@@ -40,6 +40,7 @@ public:
    *
    * If the algorithm succeeds, the hall number will be set in the molecule.
    *
+   * @param mol The molecule to be handled.
    * @param cartTol The cartesian tolerance for spglib.
    * @return The Hall number for the crystal.
    */

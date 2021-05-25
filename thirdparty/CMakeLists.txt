@@ -1,2 +1,5 @@
 add_subdirectory(struct)
-add_subdirectory(libgwavi)
+# Only used by Qt plugin
+if (USE_QT)
+  add_subdirectory(libgwavi)
+endif()

@@ -391,7 +391,7 @@ void GaussianSet::initCalculation()
             m_gtoC[j] *
             pow(2048 * pow(m_gtoA[j], 7.0) / (M_PI * M_PI * M_PI), 0.25));
           m_gtoCN.push_back(m_gtoCN.back());
-          // I think this is correct but reaally need to check...
+          // I think this is correct but really need to check...
           m_gtoCN.push_back(
             m_gtoC[j] *
             pow(128 * pow(m_gtoA[j], 7.0) / (M_PI * M_PI * M_PI), 0.25));

@@ -25,6 +25,7 @@
 #include <avogadro/rendering/cylindergeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
+#include <avogadro/rendering/meshgeometry.h>
 #include <avogadro/rendering/spheregeometry.h>
 
 #include <QtCore/QDebug>
@@ -36,10 +37,81 @@ using namespace Avogadro;
 namespace Avogadro {
 namespace QtPlugins {
 
+using Core::Array;
+using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
+using Rendering::MeshGeometry;
 using Rendering::SphereGeometry;
-using Rendering::CylinderGeometry;
+
+namespace {
+// Convenience arc sector drawable:
+class ArcSector : public MeshGeometry
+{
+public:
+  ArcSector() {}
+  ~ArcSector() override {}
+
+  /**
+   * Define the sector.
+   * @param origin Center of the circle from which the arc is cut.
+   * @param startEdge A vector defining an leading edge of the sector. The
+   * direction is used to fix the sector's rotation about the origin, and the
+   * length defines the radius of the sector.
+   * @param normal The normal direction to the plane of the sector.
+   * @param degreesCCW The extent of the sector, measured counter-clockwise from
+   * startEdge in degrees.
+   * @param resolutionDeg The radial width of each triangle used in the sector
+   * approximation in degrees. This will be adjusted to fit an integral number
+   * of triangles in the sector. Smaller triangles (better approximations) are
+   * chosen if adjustment is needed.
+   */
+  void setArcSector(const Vector3f& origin, const Vector3f& startEdge,
+                    const Vector3f& normal, float degreesCCW,
+                    float resolutionDeg);
+};
+
+void ArcSector::setArcSector(const Vector3f& origin, const Vector3f& startEdge,
+                             const Vector3f& normal, float degreesCCW,
+                             float resolutionDeg)
+{
+  // Prepare rotation, calculate sizes
+  const unsigned int numTriangles =
+    static_cast<unsigned int>(std::fabs(std::ceil(degreesCCW / resolutionDeg)));
+  const size_t numVerts = static_cast<size_t>(numTriangles + 2);
+  const float stepAngleRads =
+    (degreesCCW / static_cast<float>(numTriangles)) * DEG_TO_RAD_F;
+  const Eigen::AngleAxisf rot(stepAngleRads, normal);
+
+  // Generate normal array
+  Array<Vector3f> norms(numVerts, normal);
+
+  // Generate vertices
+  Array<Vector3f> verts(numVerts);
+  Array<Vector3f>::iterator vertsInserter(verts.begin());
+  Array<Vector3f>::iterator vertsEnd(verts.end());
+  Vector3f radial = startEdge;
+  *(vertsInserter++) = origin;
+  *(vertsInserter++) = origin + radial;
+  while (vertsInserter != vertsEnd)
+    *(vertsInserter++) = origin + (radial = rot * radial);
+
+  // Generate indices
+  Array<unsigned int> indices(numTriangles * 3);
+  Array<unsigned int>::iterator indexInserter(indices.begin());
+  Array<unsigned int>::iterator indexEnd(indices.end());
+  for (unsigned int i = 1; indexInserter != indexEnd; ++i) {
+    *(indexInserter++) = 0;
+    *(indexInserter++) = i;
+    *(indexInserter++) = i + 1;
+  }
+
+  clear();
+  addVertices(verts, norms);
+  addTriangles(indices);
+}
+
+}
 
 SymmetryScene::SymmetryScene(QObject* p)
   : QtGui::ScenePlugin(p), m_enabled(true)
@@ -115,9 +187,27 @@ void SymmetryScene::process(const Core::Molecule& coreMolecule,
 
     foreach (QVariant qv, reflectionVariantList) {
       QVector3D qvec = qv.value<QVector3D>();
-      Vector3f fvec = Vector3f(qvec.x(), qvec.y(), qvec.z());
-      cylinders->addCylinder(forigo - fvec * 0.025f, forigo + fvec * 0.025f,
-                             fradius, color);
+      // normal to the mirror plane
+      Vector3f vecNormal = Vector3f(qvec.x(), qvec.y(), qvec.z());
+
+      // get an arbitrary vector in the plane, scaled by fradius
+      Vector3f vecPlane;
+      if (qvec.z() < qvec.x())
+        vecPlane = Vector3f(-qvec.y(), qvec.x(), 0);
+      else
+        vecPlane = Vector3f(0, -qvec.z(), qvec.y());
+
+      vecPlane = vecPlane.normalized() * fradius;
+
+      ArcSector* sect = new ArcSector;
+      geometry->addDrawable(sect);
+      sect->setColor(Vector3ub(color));
+      sect->setOpacity(127); // 50%
+      sect->setRenderPass(Rendering::TranslucentPass);
+      sect->setArcSector(forigo, vecPlane, vecNormal, 360.0f, 5.f);
+
+//      cylinders->addCylinder(forigo - fvec * 0.025f, forigo + fvec * 0.025f,
+//                             fradius, color);
     }
   }
 }

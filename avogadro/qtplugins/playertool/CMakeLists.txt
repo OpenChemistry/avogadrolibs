@@ -11,4 +11,4 @@ avogadro_plugin(PlayerTool
   playertool.qrc
 )
 
-target_link_libraries(PlayerTool LINK_PRIVATE libgwavi)
+target_link_libraries(PlayerTool LINK_PRIVATE gwavi)

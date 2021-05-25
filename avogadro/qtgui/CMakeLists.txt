@@ -17,21 +17,19 @@ if(USE_SPGLIB)
   add_definitions(-DUSE_SPGLIB)
 endif()
 
-# Find python2 for input generator scripts:
-find_package(PythonInterp 2)
-if(PYTHON_EXECUTABLE)
-  set(PYTHON2_EXECUTABLE "${PYTHON_EXECUTABLE}")
-endif()
+# Find python for input generator scripts:
+find_package(PythonInterp 3)
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
 "namespace Avogadro {
-static const char *pythonInterpreterPath = \"${PYTHON2_EXECUTABLE}\";
+static const char *pythonInterpreterPath = \"${PYTHON_EXECUTABLE}\";
 }
 ")
 configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h")
 
 set(HEADERS
+  backgroundfileformat.h
   containerwidget.h
   customelementdialog.h
   elementtranslator.h
@@ -60,6 +58,7 @@ set(HEADERS
 )
 
 set(SOURCES
+  backgroundfileformat.cpp
   containerwidget.cpp
   customelementdialog.cpp
   elementdetail_p.cpp

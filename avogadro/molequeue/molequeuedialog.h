@@ -111,7 +111,7 @@ public:
 
     /**
      * The user requested that the job output be opened when finished, and
-     * the the job completed without error. The jobTemplate argument of
+     * the job completed without error. The jobTemplate argument of
      * submitJob will be overwritten with the current job details, fetched
      * from the server after the job enters the "Finished" state.
      */

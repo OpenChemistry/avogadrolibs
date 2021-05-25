@@ -56,7 +56,7 @@ QList<QAction*> LammpsInput::actions() const
 QStringList LammpsInput::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Extensions") << tr("Molecular Dynamics");
+  path << tr("&Input");
   return path;
 }
 

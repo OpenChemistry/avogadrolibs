@@ -252,14 +252,13 @@ void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
   // output: 0xAABBGGRR (little endian)
 
   quint32* cur = reinterpret_cast<quint32*>(buffer);
-  quint32* end = cur + pixels;
+  quint32* end = &cur[pixels];
 
   while (cur < end) {
-    // Skip empty pixels
-    while (*cur == 0 && cur < end)
-      ++cur;
-    argbToRgbaWorker<QSysInfo::ByteOrder>(*cur, *cur);
-    ++cur;
+    // Ignore empty pixels
+    if (*cur)
+      argbToRgbaWorker<QSysInfo::ByteOrder>(*cur, *cur);
+    cur++;
   }
 }
 

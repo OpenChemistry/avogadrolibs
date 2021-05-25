@@ -150,7 +150,9 @@ void PlotXrd::displayDialog()
   const char* yTitle = "Intensity";
   const char* windowName = "Theoretical XRD Pattern";
 
-  m_plot.reset(new VTK::VtkPlot());
+  if (!m_plot)
+    m_plot.reset(new VTK::VtkPlot);
+
   m_plot->setData(data);
   m_plot->setWindowName(windowName);
   m_plot->setXTitle(xTitle);
