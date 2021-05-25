@@ -7,13 +7,14 @@
 # Reza Almanda <rezaalmanda27@gmail.com>, 2021.
 # RIDHO NURUL ADILLA <ridhonuruladilla@gmail.com>, 2021.
 # Jacque Fresco <aidter@use.startmail.com>, 2021.
+# fikril Ha <fikrilha099@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-05-19 04:33+0000\n"
-"Last-Translator: Jacque Fresco <aidter@use.startmail.com>\n"
+"PO-Revision-Date: 2021-05-26 02:33+0000\n"
+"Last-Translator: fikril Ha <fikrilha099@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
 "Language: id\n"
@@ -47,8 +48,9 @@ msgstr "Peringatan Non-string kembali."
 
 #: molequeue/inputgenerator.cpp:190 qtgui/interfacescript.cpp:196
 #: qtgui/interfacescript.cpp:292
+#, fuzzy
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "anggota yang 'cemas' bukanlah satu-kesatuan."
 
 #: molequeue/inputgenerator.cpp:210 qtgui/interfacescript.cpp:312
 #, qt-format
@@ -80,11 +82,11 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:260 qtgui/interfacescript.cpp:363
 msgid "'files' member not an array."
-msgstr ""
+msgstr "anggota 'dokumen' bukanlah satu formasi."
 
 #: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:367
 msgid "'files' member missing."
-msgstr ""
+msgstr "anggota 'dokumen' menghilang."
 
 #: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:378
 msgid "'mainFile' member does not refer to an entry in 'files'."
@@ -5691,9 +5693,8 @@ msgstr "fps"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
-#, fuzzy
 msgid "Error tolerance:"
-msgstr "Saya adalah pesan kesalahan!"
+msgstr "toleransi kesalahan:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:586
 #. i18n: ectx: property (text), widget (QLabel, label_collisionRate)
@@ -5768,23 +5769,22 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
 msgid "Equilibriation Steps:"
-msgstr ""
+msgstr "langkah-langkah mengkalibrasi:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
 #. i18n: ectx: property (text), widget (QLabel, label_productionSteps)
 msgid "Production Steps:"
-msgstr ""
+msgstr "langkah-langkah produksi:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:800
 #. i18n: ectx: property (text), widget (QLabel, label_minimize)
 msgid "Minimize?"
-msgstr ""
+msgstr "memperkecil?"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:821
 #. i18n: ectx: property (text), widget (QLabel, label_minimizeSteps)
-#, fuzzy
 msgid "Max. Minimize Steps:"
-msgstr "Maksimum Step:"
+msgstr "Maksimum langkah-langkah yang diperkecil:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:841
 #. i18n: ectx: property (text), widget (QLabel, label_stateDataOptions)
@@ -5793,36 +5793,33 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:848
 #. i18n: ectx: property (text), widget (QCheckBox, stepIndexCheck)
-#, fuzzy
 msgid "Step Index"
-msgstr "Ukuran Step"
+msgstr "urutan langkah"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
 msgid "Time"
-msgstr ""
+msgstr "waktu"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:868
 #. i18n: ectx: property (text), widget (QCheckBox, speedCheck)
 msgid "Speed"
-msgstr ""
+msgstr "kecepatan"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:878
 #. i18n: ectx: property (text), widget (QCheckBox, progressCheck)
 msgid "Progress"
-msgstr ""
+msgstr "perkembangan"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:888
 #. i18n: ectx: property (text), widget (QCheckBox, potentialEnergyCheck)
-#, fuzzy
 msgid "Potential Energy"
-msgstr "Energi Total"
+msgstr "Energi potensial"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:898
 #. i18n: ectx: property (text), widget (QCheckBox, kineticEnergyCheck)
-#, fuzzy
 msgid "Kinetic Energy"
-msgstr "Eksitasi Energi"
+msgstr "energi kinetik"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:908
 #. i18n: ectx: property (text), widget (QCheckBox, totalEnergyCheck)
@@ -5831,9 +5828,8 @@ msgstr "Energi Total"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:928
 #. i18n: ectx: property (text), widget (QCheckBox, volumeCheck)
-#, fuzzy
 msgid "Volume"
-msgstr "Enter volume baru:"
+msgstr "volume:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
@@ -5885,14 +5881,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
 msgid "Number of points:"
-msgstr "Nomor dari Ikatan:"
+msgstr "Nomor dari poin-poin:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Peak width:"
-msgstr ""
+msgstr "luas terpuncak:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5917,13 +5912,12 @@ msgstr ""
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Max 2*theta:"
-msgstr ""
+msgstr "maksimum 2*teta:"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
-#, fuzzy
 msgid "Download Selected"
-msgstr "Hapus Pilihan"
+msgstr "mengunduh dokumen terpilih"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:19
 #. i18n: ectx: property (text), widget (QLabel, atomRadiusLabel)
@@ -5952,15 +5946,13 @@ msgstr "Opasitas:"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Apply Color"
-msgstr "Warna pilihan"
+msgstr "pilih warna"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
-#, fuzzy
 msgid "Vibrational Modes"
-msgstr "Getaran"
+msgstr "mode getar"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5969,15 +5961,13 @@ msgstr "Amplitudo:"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
-#, fuzzy
 msgid "Start Animation"
-msgstr "Memulai &Animasi"
+msgstr "Memulai Animasi"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
-#, fuzzy
 msgid "Stop Animation"
-msgstr "Menghentikan &Animasi"
+msgstr "Menghentikan Animasi"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
@@ -5993,18 +5983,17 @@ msgstr "Bidang Permukaan"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
 msgid "alpha"
-msgstr ""
+msgstr "alpha"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
 msgid "beta"
-msgstr ""
+msgstr "beta"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
 msgid "Color by:"
-msgstr "Warna Berdasarkan:"
+msgstr "Warna dengan:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:138
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -6053,7 +6042,7 @@ msgstr "Menghitung"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
 msgid "C<sub>1"
-msgstr ""
+msgstr "c<bagian>1"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:42
 #. i18n: ectx: attribute (title), widget (QWidget, esTab)
@@ -6063,7 +6052,7 @@ msgstr "Molekul"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, esLabel)
 msgid "Symmetrically equivalent atoms:"
-msgstr ""
+msgstr "atom yang sama secara simetris:"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:79
 #. i18n: ectx: property (text), widget (QCheckBox, lockSymmetryCheckBox)
