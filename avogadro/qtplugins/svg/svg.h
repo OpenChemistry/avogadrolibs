@@ -55,16 +55,16 @@ private slots:
   void render();
 
 private:
-  struct Mol
+  struct SVGAtom
   {
     Eigen::Vector3f pos_model, pos_view, pos_image;
-    unsigned int r;
+    unsigned int radius;
     unsigned int id;
 
-    Mol(Vector3f m, Vector3f v, unsigned int i, unsigned int bonds)
+    SVGAtom(Vector3f m, Vector3f v, unsigned int i, unsigned int bonds)
       : pos_model(m), pos_view(v), id(i)
     {
-      r = (bonds <= 0 ? 1 : bonds);
+      radius = (bonds <= 0 ? 1 : bonds);
     }
   };
   QtGui::Molecule* m_molecule;
@@ -74,23 +74,28 @@ private:
   QAction* m_action;
   int m_width, m_height;
   Eigen::Vector3f m_min, m_max;
-  std::vector<Mol> m_mols;
+  std::vector<SVGAtom> m_atoms;
   std::vector<Eigen::Vector4f> m_frustrum;
   std::map<unsigned int, unsigned int> m_idToindex;
 
-  static const float RADIUS, PEN_WIDTH_MOL, PEN_WIDTH_BOND, OFF_SET_PARALEL,
-    IMAGE_PADDING;
+  static const float DEFAULT_RADIUS, DEFAULT_PEN_WIDTH_MOL,
+    DEFAULT_PEN_WIDTH_BOND, DEFAULT_OFF_SET_PARALEL, DEFAULT_IMAGE_PADDING;
+  static const Vector3ub DEFAULT_BOND_COLOR;
 
+  float m_radius, m_penWidthMol, m_penWidthBond, m_offSetParalel,
+    m_ImagePadding;
+  Vector3ub m_BondColor;
   void paintSVG(QPainter& painter);
-  void paintMol(QPainter& painter, const Mol& mol);
-  void paintBonds(QPainter& painter, const Mol& mol, unsigned int i,
+  void paintCore(QPainter& painter, const SVGAtom& atom);
+  void paintBonds(QPainter& painter, const SVGAtom& atom, unsigned int i,
                   const NeighborListType& bonds);
 
   bool defaultChecks();
+  void setOptions();
   void getPositions();
   void calculateCamera();
-  bool frustrumCulling(const Mol& mol);
-  Eigen::Vector3f posToImage(const Vector3f& mol, float r);
+  bool frustrumCulling(const SVGAtom& atom);
+  Eigen::Vector3f posToSVGImage(const SVGAtom& atom);
 };
 } // namespace QtPlugins
 } // namespace Avogadro
