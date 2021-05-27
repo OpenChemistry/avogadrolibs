@@ -57,9 +57,17 @@ void CoordinateEditor::triggered()
   if (!m_dialog) {
     m_dialog = new CoordinateEditorDialog(qobject_cast<QWidget*>(parent()));
     m_dialog->setMolecule(m_molecule);
+    connect(m_dialog, SIGNAL(pastedMolecule()), SLOT(pastedMolecule()));
   }
 
   m_dialog->show();
+}
+
+void CoordinateEditor::pastedMolecule()
+{
+  // We went from no atoms to something, don't edit by default
+  // PR#394
+  requestActiveTool("Navigator");
 }
 
 } // namespace QtPlugins

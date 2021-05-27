@@ -45,6 +45,7 @@ public:
 
 signals:
   void validationFinished(bool valid);
+  void pastedMolecule();
 
 private slots:
   void moleculeChanged(uint);
