@@ -26,6 +26,7 @@
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/glrenderer.h>
 
+#include <QtCore/QDebug>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
@@ -39,23 +40,24 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro {
 namespace QtPlugins {
 
+using QtGui::Molecule;
 using QtGui::RWAtom;
 using QtGui::RWBond;
-using QtGui::Molecule;
 using QtGui::RWMolecule;
 using Rendering::Identifier;
 
+#define ROTATION_SPEED 0.5
+
 Manipulator::Manipulator(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_renderer(nullptr), m_pressedButtons(Qt::NoButton)
+    m_molecule(nullptr), m_renderer(nullptr), m_pressedButtons(Qt::NoButton),
+    m_currentAction(Nothing)
 {
   m_activateAction->setText(tr("Manipulate"));
   m_activateAction->setIcon(QIcon(":/icons/manipulator.png"));
 }
 
-Manipulator::~Manipulator()
-{
-}
+Manipulator::~Manipulator() {}
 
 QWidget* Manipulator::toolWidget() const
 {
@@ -120,16 +122,15 @@ QUndoCommand* Manipulator::mouseReleaseEvent(QMouseEvent* e)
 
 QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
 {
+  updatePressedButtons(e, false);
   e->ignore();
-  if (!(m_pressedButtons & Qt::LeftButton))
-    return nullptr;
 
   const Core::Molecule* mol = &m_molecule->molecule();
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
 
   if (mol->isSelectionEmpty() && m_object.type == Rendering::AtomType &&
       m_object.molecule == mol) {
-    // Update single atom position
+    // translate single atom position
     RWAtom atom = m_molecule->atom(m_object.index);
     Vector3f oldPos(atom.position3d().cast<float>());
     Vector3f newPos = m_renderer->camera().unProject(windowPos, oldPos);
@@ -137,13 +138,30 @@ QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
   } else if (!mol->isSelectionEmpty()) {
     // update all selected atoms
     Vector3f newPos = m_renderer->camera().unProject(windowPos);
-    Vector3f delta = newPos - m_lastMouse3D;
-    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-      if (!m_molecule->atomSelected(i))
-        continue;
+    Vector3 delta = (newPos - m_lastMouse3D).cast<double>();
 
-      Vector3 currentPos = m_molecule->atomPosition3d(i);
-      m_molecule->setAtomPosition3d(i, currentPos + delta.cast<double>());
+    if (m_currentAction == Translation) {
+      translate(delta);
+    }
+    else {
+      // get the center of the selected atoms
+      Vector3 centroid(0.0, 0.0, 0.0);
+      unsigned long selectedAtomCount = 0;
+      for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+        if (!m_molecule->atomSelected(i))
+          continue;
+
+      centroid += m_molecule->atomPosition3d(i);
+        selectedAtomCount++;
+      }
+      if (selectedAtomCount > 0)
+        centroid /= selectedAtomCount;
+
+      if (m_currentAction == Rotation) {
+        rotate(delta, centroid);
+      } else if (m_currentAction == ZoomTilt) {
+        tilt(delta, centroid);
+      }
     }
 
     // now that we've moved things, save the position
@@ -155,13 +173,91 @@ QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
   return nullptr;
 }
 
+void Manipulator::translate(Vector3 delta)
+{
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (!m_molecule->atomSelected(i))
+      continue;
+
+    Vector3 currentPos = m_molecule->atomPosition3d(i);
+    m_molecule->setAtomPosition3d(i, currentPos + delta.cast<double>());
+  }
+}
+
+void Manipulator::rotate(Vector3 delta, Vector3 centroid)
+{
+  // Rotate the selected atoms about the center
+  // rotate only selected primitives
+  Rendering::Camera* camera = &m_renderer->camera();
+  Eigen::Vector3d backTransformX =
+    camera->modelView().cast<double>().linear().row(0).transpose().normalized();
+  Eigen::Vector3d backTransformY =
+    camera->modelView().cast<double>().linear().row(1).transpose().normalized();
+
+  Eigen::Projective3d fragmentRotation;
+  fragmentRotation.matrix().setIdentity();
+  fragmentRotation.translation() = centroid;
+  fragmentRotation.rotate(
+    Eigen::AngleAxisd(delta[1] * ROTATION_SPEED, backTransformX));
+  fragmentRotation.rotate(
+    Eigen::AngleAxisd(delta[0] * ROTATION_SPEED, backTransformY));
+  fragmentRotation.translate(-centroid);
+
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (!m_molecule->atomSelected(i))
+      continue;
+
+    Vector3 currentPos = m_molecule->atomPosition3d(i);
+    m_molecule->setAtomPosition3d(
+      i, (fragmentRotation * currentPos.homogeneous()).head<3>());
+  }
+}
+
+void Manipulator::tilt(Vector3 delta, Vector3 centroid)
+{
+  // Rotate the selected atoms about the center
+  // rotate only selected primitives
+  Rendering::Camera* camera = &m_renderer->camera();
+  Eigen::Vector3d backTransformZ =
+    camera->modelView().cast<double>().linear().row(2).transpose().normalized();
+
+  Eigen::Projective3d fragmentRotation;
+  fragmentRotation.matrix().setIdentity();
+  fragmentRotation.translation() = centroid;
+  fragmentRotation.rotate(
+    Eigen::AngleAxisd(delta[0] * ROTATION_SPEED, backTransformZ));
+  fragmentRotation.translate(-centroid);
+
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (!m_molecule->atomSelected(i))
+      continue;
+
+    Vector3 currentPos = m_molecule->atomPosition3d(i);
+    m_molecule->setAtomPosition3d(
+      i, (fragmentRotation * currentPos.homogeneous()).head<3>());
+  }
+}
+
 void Manipulator::updatePressedButtons(QMouseEvent* e, bool release)
 {
-  /// @todo Use modifier keys on mac
   if (release)
     m_pressedButtons &= e->buttons();
   else
     m_pressedButtons |= e->buttons();
+
+  // check for modifier keys (e.g., Mac)
+  if (e->buttons() & Qt::LeftButton && e->modifiers() == Qt::NoModifier) {
+    m_currentAction = Translation;
+  } else if (e->buttons() & Qt::MidButton ||
+             (e->buttons() & Qt::LeftButton &&
+              e->modifiers() == Qt::ShiftModifier)) {
+    m_currentAction = ZoomTilt;
+  } else if (e->buttons() & Qt::RightButton ||
+             (e->buttons() & Qt::LeftButton &&
+              (e->modifiers() == Qt::ControlModifier ||
+               e->modifiers() == Qt::MetaModifier))) {
+    m_currentAction = Rotation;
+  }
 }
 
 } // namespace QtPlugins
