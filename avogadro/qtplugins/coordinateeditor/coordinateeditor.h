@@ -52,6 +52,7 @@ public slots:
 
 private slots:
   void triggered();
+  void pastedMolecule();
 
 private:
   CoordinateEditorDialog* m_dialog;
