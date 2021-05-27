@@ -19,10 +19,13 @@
 
 #include "sortfiltertreeproxymodel.h"
 
+#include <avogadro/qtgui/utilities.h>
+
 #include <QtCore/QSettings>
 
 #include <QtCore/QDir>
 #include <QtCore/QSortFilterProxyModel>
+#include <QtCore/QStandardPaths>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QFileSystemModel>
 #include <QtWidgets/QMessageBox>
@@ -60,26 +63,44 @@ InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory,
   m_ui->setupUi(this);
 
   m_implementation->currentFileName.clear();
-
-  //@todo: it would be great to allow multiple directories, but that needs our
-  // own directory model
-  QString m_directory;
-#ifdef Q_WS_X11
-  m_directory = QString(INSTALL_PREFIX) + "/share/avogadro/";
-#else
-  // Mac and Windows use relative path from application location
-  m_directory = QCoreApplication::applicationDirPath() + "/../share/avogadro/";
-#endif
-  m_directory += directory; // fragments or crystals or whatever
   if (directory.contains(QLatin1String("crystals")))
     m_implementation->crystalFiles = true;
   else
     m_implementation->crystalFiles = false;
 
-  QDir dir(m_directory);
-  if (!dir.exists() || !dir.isReadable()) {
-    qWarning() << "Cannot find the directory: " << m_directory;
+  // we check for the downloaded version first
+  QStringList dirs;
+  QStringList stdPaths =
+    QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation);
+  foreach (const QString& dirStr, stdPaths) {
+    QString path = dirStr + "/data";
+    dirs << path; // we'll check if these exist below
+  }
 
+  // add in paths relative to the binary (e.g. for development)
+  dirs << QCoreApplication::applicationDirPath() + "/../" +
+            QtGui::Utilities::dataDirectory() + "/avogadro2";
+
+#ifdef Q_WS_X11
+  dirs << QString(INSTALL_PREFIX) + "/share/avogadro2/";
+#else
+  // Mac and Windows use relative path from application location
+  dirs << QCoreApplication::applicationDirPath() + "/../share/avogadro2";
+#endif
+
+  QString m_directory;
+  QDir dir;
+
+  foreach (const QString& dirStr, dirs) {
+    qDebug() << "Checking for " << directory << " data in" << dirStr;
+    QDir dir(dirStr + '/' + directory);
+    if (dir.exists() && dir.isReadable()) {
+      m_directory = dir.absolutePath();
+      break;
+    }
+  }
+
+  if (m_directory.isEmpty()) {
     // Can't really do anything!
     m_ui->directoryTreeView->setEnabled(false);
     m_ui->insertFragmentButton->setEnabled(false);
