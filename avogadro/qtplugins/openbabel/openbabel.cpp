@@ -140,6 +140,8 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
   // These can only be read directly from file:
   QList<QString> multifileFormatDescriptions;
   multifileFormatDescriptions << "VASP format";
+  multifileFormatDescriptions << "Gaussian Output"; // Issue #571
+  multifileFormatDescriptions <<"Generic Output";
 
   foreach (const QString& qdesc, formatDescriptions) {
     mapDesc = qdesc.toStdString();
