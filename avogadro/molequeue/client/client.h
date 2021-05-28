@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#ifndef MOLEQUEUE_CLIENT_H
-#define MOLEQUEUE_CLIENT_H
+#ifndef AVOGADRO_MOLEQUEUE_CLIENT_H
+#define AVOGADRO_MOLEQUEUE_CLIENT_H
 
 #include "avogadromolequeueexport.h"
 
@@ -25,8 +25,8 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QHash>
 
-namespace MoleQueue
-{
+namespace Avogadro {
+namespace MoleQueue {
 
 class JsonRpcClient;
 class JobObject;
@@ -256,5 +256,6 @@ private:
 };
 
 } // End namespace MoleQueue
+} // End namespace Avogadro
 
-#endif // MOLEQUEUE_CLIENT_H
+#endif // AVOGADRO_MOLEQUEUE_CLIENT_H

@@ -50,10 +50,10 @@ public:
    * that will be submitted by submitJobRequest.
    * @{
    */
-  ::MoleQueue::JobObject& jobTemplate();
-  const ::MoleQueue::JobObject& jobTemplate() const;
+  JobObject& jobTemplate();
+  const JobObject& jobTemplate() const;
 public slots:
-  void setJobTemplate(const ::MoleQueue::JobObject& job);
+  void setJobTemplate(const JobObject& job);
 
 public:
   /** @} */
@@ -147,7 +147,7 @@ public:
    * @return A JobObject with the GUI options. Any settings in jobTemplate that
    * are not handled by the GUI are passed through untouched to the new object.
    */
-  ::MoleQueue::JobObject configuredJob() const;
+  JobObject configuredJob() const;
 
 public slots:
   /**
@@ -182,7 +182,7 @@ signals:
    * Emitted after a successful call to requestJobLookup().
    * @param job The result of the lookupJob() RPC query.
    */
-  void jobUpdated(const ::MoleQueue::JobObject& job);
+  void jobUpdated(const JobObject& job);
 
 private slots:
   void showAndSelectProgramHandler();
@@ -201,7 +201,7 @@ private:
   void listenForJobStateChange(bool listen = true);
 
   Ui::MoleQueueWidget* m_ui;
-  ::MoleQueue::JobObject m_jobTemplate;
+  JobObject m_jobTemplate;
   QString m_jobState;
   QString m_submissionError;
   int m_requestId;

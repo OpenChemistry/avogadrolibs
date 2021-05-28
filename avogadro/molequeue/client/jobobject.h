@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#ifndef MOLEQUEUE_JOBOBJECT_H
-#define MOLEQUEUE_JOBOBJECT_H
+#ifndef AVOGADRO_MOLEQUEUE_JOBOBJECT_H
+#define AVOGADRO_MOLEQUEUE_JOBOBJECT_H
 
 #include "avogadromolequeueexport.h"
 
@@ -24,8 +24,8 @@
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 
-namespace MoleQueue
-{
+namespace Avogadro {
+namespace MoleQueue {
 
 /**
  * @class JobObject jobobject.h <molequeue/client/jobobject.h>
@@ -170,5 +170,6 @@ protected:
 };
 
 } // End namespace MoleQueue
+} // End namespace Avogadro
 
-#endif // MOLEQUEUE_JOBOBJECT_H
+#endif // AVOGADRO_MOLEQUEUE_JOBOBJECT_H

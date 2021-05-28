@@ -28,9 +28,6 @@
 namespace Avogadro {
 namespace MoleQueue {
 
-using ::MoleQueue::JobObject;
-using ::MoleQueue::Client;
-
 const unsigned int MoleQueueWidget::InvalidMoleQueueId(
   std::numeric_limits<unsigned int>::max());
 

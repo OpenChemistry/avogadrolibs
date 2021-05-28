@@ -27,16 +27,13 @@ class QJsonValue;
 class QTextEdit;
 class QWidget;
 
-namespace MoleQueue {
-class JobObject;
-}
-
 namespace Avogadro {
 namespace QtGui {
 class Molecule;
 }
 
 namespace MoleQueue {
+class JobObject;
 namespace Ui {
 class InputGeneratorWidget;
 }
@@ -117,7 +114,7 @@ signals:
   /**
    * Emitted when the user requests that a job's output be loaded in Avogadro.
    */
-  void openJobOutput(const ::MoleQueue::JobObject& job);
+  void openJobOutput(const JobObject& job);
 
 protected:
   /**

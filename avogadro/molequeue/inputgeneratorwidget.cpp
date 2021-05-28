@@ -43,8 +43,6 @@
 namespace Avogadro {
 namespace MoleQueue {
 
-using ::MoleQueue::JobObject;
-
 InputGeneratorWidget::InputGeneratorWidget(QWidget* parent_)
   : QWidget(parent_), m_ui(new Ui::InputGeneratorWidget), m_molecule(nullptr),
     m_updatePending(false), m_batchMode(false), m_inputGenerator(QString())
@@ -96,7 +94,7 @@ bool InputGeneratorWidget::configureBatchJob(BatchJob& batch) const
   if (mqOpts.empty())
     return false;
 
-  MoleQueue::JobObject job;
+  JobObject job;
   job.fromJson(mqOpts);
 
   QJsonObject calcOpts;
@@ -623,7 +621,7 @@ QJsonObject InputGeneratorWidget::promptForBatchJobOptions() const
   int numCores =
     optionString("Processor Cores", coresString) ? coresString.toInt() : 1;
 
-  MoleQueue::JobObject job;
+  JobObject job;
   job.setProgram(m_inputGenerator.displayName());
   job.setValue("numberOfCores", numCores);
 

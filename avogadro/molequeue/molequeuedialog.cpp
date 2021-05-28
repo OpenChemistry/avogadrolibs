@@ -27,8 +27,6 @@
 namespace Avogadro {
 namespace MoleQueue {
 
-using ::MoleQueue::JobObject;
-
 MoleQueueDialog::MoleQueueDialog(QWidget* parent_)
   : QDialog(parent_), m_ui(new Ui::MoleQueueDialog)
 {

@@ -59,11 +59,11 @@ public:
   bool connectIfNeeded();
 
   /**
-   * @return A reference to the managed MoleQueue::Client instance.
+   * @return A reference to the managed Client instance.
    * @{
    */
-  ::MoleQueue::Client& client();
-  const ::MoleQueue::Client& client() const;
+  Client& client();
+  const Client& client() const;
   /** @} */
 
   /**
@@ -89,7 +89,7 @@ private slots:
 
 private:
   static MoleQueueManager* m_instance;
-  ::MoleQueue::Client m_client;
+  Client m_client;
   MoleQueueQueueListModel m_queueModel;
 };
 

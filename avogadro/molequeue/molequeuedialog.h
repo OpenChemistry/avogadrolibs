@@ -22,12 +22,9 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace MoleQueue {
-class JobObject;
-}
-
 namespace Avogadro {
 namespace MoleQueue {
+class JobObject;
 class MoleQueueWidget;
 
 namespace Ui {
@@ -139,7 +136,7 @@ public:
    * @return A SubmitStatus enum value indicating the result of the submission.
    */
   static SubmitStatus submitJob(QWidget* parent_, const QString& caption,
-                                ::MoleQueue::JobObject& jobTemplate,
+                                JobObject& jobTemplate,
                                 SubmitOptions options,
                                 unsigned int* moleQueueId = nullptr,
                                 int* submissionRequestId = nullptr);
@@ -153,7 +150,7 @@ public:
    * @return True on success, false otherwise.
    */
   static bool promptForJobOptions(QWidget* windowParent, const QString& caption,
-                                  ::MoleQueue::JobObject& jobTemplate);
+                                  JobObject& jobTemplate);
 
   /**
    * @return A reference to the internal MoleQueueWidget instance.

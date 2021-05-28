@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#ifndef MOLEQUEUE_JSONRPCCLIENT_H
-#define MOLEQUEUE_JSONRPCCLIENT_H
+#ifndef AVOGADRO_MOLEQUEUE_JSONRPCCLIENT_H
+#define AVOGADRO_MOLEQUEUE_JSONRPCCLIENT_H
 
 #include "avogadromolequeueexport.h"
 
@@ -24,8 +24,8 @@
 
 class QLocalSocket;
 
-namespace MoleQueue
-{
+namespace Avogadro {
+namespace MoleQueue {
 
 /**
  * @class JsonRpcClient jsonrpcclient.h <molequeue/client/jsonrpcclient.h>
@@ -149,5 +149,6 @@ protected:
 };
 
 } // End namespace MoleQueue
+} // End namespace Avogadro
 
-#endif // MOLEQUEUE_JSONRPCCLIENT_H
+#endif // AVOGADRO_MOLEQUEUE_JSONRPCCLIENT_H

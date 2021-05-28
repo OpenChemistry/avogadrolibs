@@ -42,12 +42,12 @@ bool MoleQueueManager::connectIfNeeded()
   return m_client.isConnected() || m_client.connectToServer();
 }
 
-::MoleQueue::Client& MoleQueueManager::client()
+Client& MoleQueueManager::client()
 {
   return m_client;
 }
 
-const ::MoleQueue::Client& MoleQueueManager::client() const
+const Client& MoleQueueManager::client() const
 {
   return m_client;
 }

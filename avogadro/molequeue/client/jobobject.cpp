@@ -18,8 +18,8 @@
 
 #include <QtCore/QJsonArray>
 
-namespace MoleQueue
-{
+namespace Avogadro {
+namespace MoleQueue {
 
 JobObject::JobObject()
 {
@@ -140,3 +140,4 @@ QJsonObject JobObject::fileSpec(const QString &path)
 }
 
 } // End namespace MoleQueue
+} // End namespace Avogadro

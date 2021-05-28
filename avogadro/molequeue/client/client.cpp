@@ -21,8 +21,8 @@
 
 #include <QtCore/QJsonDocument>
 
-namespace MoleQueue
-{
+namespace Avogadro {
+namespace MoleQueue {
 
 Client::Client(QObject *parent_) : QObject(parent_), m_jsonRpcClient(NULL)
 {
@@ -308,3 +308,4 @@ QJsonObject Client::buildRegisterOpenWithRequest(
 }
 
 } // End namespace MoleQueue
+} // End namespace Avogadro
