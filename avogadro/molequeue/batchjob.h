@@ -23,7 +23,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-#include <molequeue/client/jobobject.h>
+#include "client/jobobject.h"
 
 #include <QtCore/QJsonObject>
 #include <QtCore/QMap>

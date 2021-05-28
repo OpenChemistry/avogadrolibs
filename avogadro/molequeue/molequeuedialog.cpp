@@ -18,8 +18,6 @@
 #include "molequeuewidget.h"
 #include "ui_molequeuedialog.h"
 
-#include <molequeue/client/jobobject.h>
-
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 

@@ -22,7 +22,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-#include <molequeue/client/jobobject.h>
+#include "client/jobobject.h"
 
 namespace Avogadro {
 namespace MoleQueue {
