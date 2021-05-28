@@ -89,9 +89,36 @@ bool CopyPaste::copy()
     return false;
 
   std::string output;
+  QtGui::Molecule* copy = m_molecule;
+
+  if (!m_molecule->isSelectionEmpty()) {
+    // create a copy of the selected atoms only
+    copy = new QtGui::Molecule(m_molecule->parent());
+
+    // go through the selected atoms and add them
+    // make sure to track the new index
+    std::vector atomIndex(m_molecule->atomCount(), 0);
+    for (Index i = 0; i < m_molecule->atomCount(); ++i)
+      if (m_molecule->atomSelected(i)) {
+        auto a = copy->addAtom(m_molecule->atomicNumber(i));
+        a.setPosition3d(m_molecule->atomPosition3d(i));
+
+        // track the index
+        atomIndex[i] = a.index();
+      }
+
+    for (Index i = 0; i < m_molecule->bondCount(); ++i) {
+      Core::Bond bond = m_molecule->bond(i);
+      Index start = bond.atom1().index();
+      Index end = bond.atom2().index();
+      if (m_molecule->atomSelected(start) && m_molecule->atomSelected(start)) {
+        copy->addBond(atomIndex[start], atomIndex[end], bond.order());
+      }
+    }
+  }
 
   Io::CjsonFormat cjson;
-  if (!cjson.writeString(output, *m_molecule)) {
+  if (!cjson.writeString(output, *copy)) {
     QMessageBox::warning(
       qobject_cast<QWidget*>(this->parent()), tr("Error Clipping Molecule"),
       tr("Error generating clipboard data.") + "\n" +
@@ -114,6 +141,10 @@ bool CopyPaste::copy()
 
   mimeData->setData("text/plain", outputBA);
   QApplication::clipboard()->setMimeData(mimeData);
+
+  if (!m_molecule->isSelectionEmpty())
+    copy->deleteLater(); // don't leak our copy
+
   return true;
 }
 
@@ -122,7 +153,14 @@ void CopyPaste::cut()
   if (!copy())
     return;
 
-  m_molecule->undoMolecule()->clearAtoms();
+  if (m_molecule->isSelectionEmpty())
+    m_molecule->undoMolecule()->clearAtoms();
+  else {
+    for (Index i = 0; i < m_molecule->atomCount(); ++i)
+      if (m_molecule->atomSelected(i))
+        m_molecule->undoMolecule()->removeAtom(i);
+  }
+
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |
                           QtGui::Molecule::Removed);
 }
@@ -151,6 +189,10 @@ void CopyPaste::paste()
 
   if (!m_molecule)
     return; // nothing to do
+
+  // make sure we clear the current selection
+  for (Index i = 0; i < m_molecule->atomCount(); ++i)
+    m_molecule->setAtomSelected(i, false);
 
   const QMimeData* mimeData(QApplication::clipboard()->mimeData());
 
