@@ -22,13 +22,12 @@
 class QAction;
 class QDialog;
 
-namespace MoleQueue {
-class JobObject;
-}
-
 namespace Avogadro {
 namespace Io {
 class FileFormat;
+}
+namespace MoleQueue {
+class JobObject;
 }
 
 namespace QtPlugins {

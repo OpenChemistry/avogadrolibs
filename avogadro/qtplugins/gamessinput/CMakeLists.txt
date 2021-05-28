@@ -1,6 +1,3 @@
-find_package(MoleQueue)
-include_directories(${MoleQueue_INCLUDE_DIRS})
-
 # Extension
 set(gamessinput_srcs
   gamessinputdialog.cpp

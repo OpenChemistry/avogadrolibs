@@ -27,11 +27,10 @@
 
 class QJsonObject;
 
+namespace Avogadro {
 namespace MoleQueue {
 class JobObject;
 }
-
-namespace Avogadro {
 namespace QtGui {
 class Molecule;
 }
@@ -53,7 +52,7 @@ signals:
   /**
    * Emitted when the user requests that a job's output be loaded in Avogadro.
    */
-  void openJobOutput(const MoleQueue::JobObject& job);
+  void openJobOutput(const Avogadro::MoleQueue::JobObject& job);
 
 protected:
   void showEvent(QShowEvent* e);

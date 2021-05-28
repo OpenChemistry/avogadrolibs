@@ -25,10 +25,6 @@
 class QAction;
 class QDialog;
 
-namespace MoleQueue {
-class JobObject;
-}
-
 namespace Avogadro {
 namespace Io {
 class FileFormat;
@@ -36,6 +32,7 @@ class FileFormat;
 
 namespace MoleQueue {
 class InputGeneratorDialog;
+class JobObject;
 }
 
 namespace QtPlugins {
@@ -75,7 +72,7 @@ public slots:
   /**
    * Emitted when the user requests that a job's output be loaded in Avogadro.
    */
-  void openJobOutput(const ::MoleQueue::JobObject& job);
+  void openJobOutput(const MoleQueue::JobObject& job);
 
   bool readMolecule(QtGui::Molecule& mol) override;
 

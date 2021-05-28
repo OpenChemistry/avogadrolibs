@@ -1,7 +1,3 @@
-# Pull in MoleQueue (needed for QtJson)
-find_package(MoleQueue REQUIRED NO_MODULE)
-include_directories(${MoleQueue_INCLUDE_DIRS})
-
 set(apbs_srcs
   apbs.cpp
   apbsdialog.cpp
@@ -24,4 +20,4 @@ avogadro_plugin(apbs
 )
 
 target_link_libraries(apbs
-  LINK_PRIVATE AvogadroIO AvogadroMoleQueue MoleQueueClient)
+  LINK_PRIVATE AvogadroIO AvogadroMoleQueue)
