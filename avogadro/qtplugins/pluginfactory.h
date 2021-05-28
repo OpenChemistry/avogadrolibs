@@ -33,7 +33,7 @@ class PluginFactory
 public:
   virtual ~PluginFactory() {}
 
-  virtual T* createInstance() = 0;
+  virtual T* createInstance(QObject *parent = nullptr) = 0;
   virtual QString identifier() const = 0;
   virtual QString description() const = 0;
 };

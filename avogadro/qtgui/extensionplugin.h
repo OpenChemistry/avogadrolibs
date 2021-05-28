@@ -52,7 +52,7 @@ class AVOGADROQTGUI_EXPORT ExtensionPlugin : public QObject
   Q_OBJECT
 
 public:
-  explicit ExtensionPlugin(QObject* parent = 0);
+  explicit ExtensionPlugin(QObject* parent = nullptr);
   ~ExtensionPlugin() override;
 
   /**

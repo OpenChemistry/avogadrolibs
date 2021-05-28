@@ -30,9 +30,9 @@ class @PluginName@Factory : public QObject, public QtGui::@PluginType@Factory
 public:
   explicit @PluginName@Factory(QObject *parent_ = 0) : QObject(parent_) {}
 
-  QtGui::@PluginType@ * createInstance()
+  QtGui::@PluginType@ * createInstance(QObject *parent_ = nullptr)
   {
-    @PluginClass@ *object = new @PluginClass@(parent());
+    @PluginClass@ *object = new @PluginClass@(parent_);
     object->setObjectName("@PluginName@");
     return object;
   }
