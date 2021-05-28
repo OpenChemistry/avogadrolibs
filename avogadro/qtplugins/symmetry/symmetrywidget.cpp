@@ -55,7 +55,7 @@ msym_thresholds_t medium_thresholds = {
 
 msym_thresholds_t loose_thresholds = {
   /*.zero =*/0.06,
-  /*.geometry =*/0.06,
+  /*.geometry =*/0.1,
   /*.angle =*/0.06,
   /*.equivalence =*/0.025,
   /*.eigfact =*/1.0e-3,
@@ -64,10 +64,10 @@ msym_thresholds_t loose_thresholds = {
 };
 
 msym_thresholds_t sloppy_thresholds = {
-  /*.zero =*/0.08,
+  /*.zero =*/0.1,
   /*.geometry =*/0.1,
   /*.angle =*/0.1,
-  /*.equivalence =*/0.06,
+  /*.equivalence =*/0.075,
   /*.eigfact =*/1.0e-3,
   /*.permutation =*/1.0e-1,
   /*.orthogonalization =*/0.1
@@ -403,6 +403,9 @@ msym_thresholds_t* SymmetryWidget::getThresholds() const
 {
   msym_thresholds_t* thresholds = NULL;
   switch (m_ui->toleranceCombo->currentIndex()) {
+    case 3: // sloppy
+      thresholds = &sloppy_thresholds;
+      break;
     case 2: // loose
       thresholds = &loose_thresholds;
       break;

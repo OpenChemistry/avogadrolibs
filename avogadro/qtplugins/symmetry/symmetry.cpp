@@ -213,6 +213,8 @@ void Symmetry::detectSymmetry()
   for (Index i = 0; i < length; ++i) {
     Vector3 ipos = m_molecule->atomPositions3d()[i];
     a[i].n = m_molecule->atomicNumbers()[i];
+    if (a[i].n < 1 || a[i].n > 118)
+      a[i].n = 1; // pretend to be an H atom for libmsym
     a[i].v[0] = ipos[0];
     a[i].v[1] = ipos[1];
     a[i].v[2] = ipos[2];
