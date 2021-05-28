@@ -26,7 +26,7 @@
 #include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
-#include <molequeue/client/jobobject.h>
+#include <avogadro/molequeue/client/jobobject.h>
 
 #include <QtWidgets/QAction>
 #include <QtWidgets/QDialog>
@@ -48,7 +48,7 @@ namespace QtPlugins {
 
 using MoleQueue::InputGenerator;
 using MoleQueue::InputGeneratorDialog;
-using ::MoleQueue::JobObject;
+using MoleQueue::JobObject;
 
 const int ConfigureAction = -1; // to find the configuration action
 
@@ -151,8 +151,8 @@ void QuantumInput::menuActivated()
   if (!dlg) {
     dlg = new InputGeneratorDialog(scriptFileName, theParent);
     connect(&dlg->widget(),
-            SIGNAL(openJobOutput(const ::MoleQueue::JobObject&)), this,
-            SLOT(openJobOutput(const ::MoleQueue::JobObject&)));
+            SIGNAL(openJobOutput(const MoleQueue::JobObject&)), this,
+            SLOT(openJobOutput(const MoleQueue::JobObject&)));
     m_dialogs.insert(scriptFileName, dlg);
   }
   dlg->setMolecule(m_molecule);

@@ -22,7 +22,7 @@
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <molequeue/client/jobobject.h>
+#include <avogadro/molequeue/client/jobobject.h>
 
 #include <QtCore/QDebug>
 #include <QtWidgets/QAction>
@@ -34,7 +34,7 @@ class Molecule;
 }
 namespace QtPlugins {
 
-using ::MoleQueue::JobObject;
+using Avogadro::MoleQueue::JobObject;
 
 Cp2kInput::Cp2kInput(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(NULL),
@@ -109,8 +109,8 @@ void Cp2kInput::menuActivated()
 {
   if (!m_dialog) {
     m_dialog = new Cp2kInputDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(openJobOutput(MoleQueue::JobObject)), this,
-            SLOT(openJobOutput(MoleQueue::JobObject)));
+    connect(m_dialog, SIGNAL(openJobOutput(Avogadro::MoleQueue::JobObject)), this,
+            SLOT(openJobOutput(Avogadro::MoleQueue::JobObject)));
   }
   m_dialog->setMolecule(m_molecule);
   m_dialog->show();

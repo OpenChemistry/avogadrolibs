@@ -25,7 +25,7 @@
 #include <avogadro/molequeue/molequeuemanager.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <molequeue/client/jobobject.h>
+#include <avogadro/molequeue/client/jobobject.h>
 #include <qjsonarray.h>
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
@@ -44,7 +44,7 @@
 
 using Avogadro::MoleQueue::MoleQueueDialog;
 using Avogadro::MoleQueue::MoleQueueManager;
-using MoleQueue::JobObject;
+using Avogadro::MoleQueue::JobObject;
 
 namespace Avogadro {
 namespace QtPlugins {

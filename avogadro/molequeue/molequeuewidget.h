@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEWIDGET_H
@@ -22,7 +11,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-#include <molequeue/client/jobobject.h>
+#include "client/jobobject.h"
 
 namespace Avogadro {
 namespace MoleQueue {
@@ -50,10 +39,10 @@ public:
    * that will be submitted by submitJobRequest.
    * @{
    */
-  ::MoleQueue::JobObject& jobTemplate();
-  const ::MoleQueue::JobObject& jobTemplate() const;
+  JobObject& jobTemplate();
+  const JobObject& jobTemplate() const;
 public slots:
-  void setJobTemplate(const ::MoleQueue::JobObject& job);
+  void setJobTemplate(const JobObject& job);
 
 public:
   /** @} */
@@ -147,7 +136,7 @@ public:
    * @return A JobObject with the GUI options. Any settings in jobTemplate that
    * are not handled by the GUI are passed through untouched to the new object.
    */
-  ::MoleQueue::JobObject configuredJob() const;
+  JobObject configuredJob() const;
 
 public slots:
   /**
@@ -182,7 +171,7 @@ signals:
    * Emitted after a successful call to requestJobLookup().
    * @param job The result of the lookupJob() RPC query.
    */
-  void jobUpdated(const ::MoleQueue::JobObject& job);
+  void jobUpdated(const JobObject& job);
 
 private slots:
   void showAndSelectProgramHandler();
@@ -201,7 +190,7 @@ private:
   void listenForJobStateChange(bool listen = true);
 
   Ui::MoleQueueWidget* m_ui;
-  ::MoleQueue::JobObject m_jobTemplate;
+  JobObject m_jobTemplate;
   QString m_jobState;
   QString m_submissionError;
   int m_requestId;

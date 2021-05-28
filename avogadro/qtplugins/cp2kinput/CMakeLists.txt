@@ -1,6 +1,3 @@
-find_package(MoleQueue)
-include_directories(${MoleQueue_INCLUDE_DIRS})
-
 # Extension
 set(cp2kinput_srcs
   cp2kinputdialog.cpp

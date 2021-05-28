@@ -58,7 +58,6 @@ option(USE_LIBMSYM "Enable optional features using libmsym" ON)
 option(USE_SPGLIB "Enable optional features using spglib" ON)
 option(USE_MMTF "Enable optional features using mmtf" ON)
 option(USE_PROTOCALL "Enable libraries that use ProtoCall" OFF)
-option(USE_MOLEQUEUE "Enable the MoleQueue dependent functionality" ON)
 option(USE_PYTHON "Use Python to wrap some of our API" OFF)
 
 add_subdirectory(utilities)
