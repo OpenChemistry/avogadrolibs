@@ -29,8 +29,6 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
 
-#include <QDebug>
-
 #include <string>
 #include <vector>
 
@@ -46,8 +44,6 @@ CopyPaste::CopyPaste(QObject* parent_)
     m_clearAction(new QAction(tr("Clear"), this)),
     m_pasteAction(new QAction(tr("Paste"), this))
 {
-  qDebug() << " CopyPaste  ctor " << (parent_ == nullptr);
-
   m_copyAction->setShortcut(QKeySequence::Copy);
   m_copyAction->setIcon(QIcon::fromTheme("edit-copy"));
   connect(m_copyAction, SIGNAL(triggered()), SLOT(copy()));
@@ -67,8 +63,6 @@ CopyPaste::CopyPaste(QObject* parent_)
 
 CopyPaste::~CopyPaste()
 {
-  qDebug() << " CopyPaste  dtor " << (parent() == nullptr);
-
   delete m_pastedFormat;
 }
 
