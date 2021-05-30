@@ -100,17 +100,44 @@ public:
   QByteArray execute(const QStringList& args,
                      const QByteArray& scriptStdin = QByteArray());
 
+  /**
+   * Start a new process to execute asynchronously
+   * "<m_pythonInterpreter> <scriptFilePath()> [args ...]",
+   * optionally passing scriptStdin to the processes standard input.
+   * 
+   * Will send asyncFinished() signal when finished
+   */
+  void asyncExecute(const QStringList& args,
+                          const QByteArray& scriptStdin = QByteArray());
+
+  /**
+   * Returns the standard output of the asynchronous process when finished.
+   */
+  QByteArray asyncResponse();
+
+public signals:
+/**
+ * The asynchronous execution is finished or timed out
+ */
+  void asyncFinished();
+
 public slots:
   /**
    * Enable/disable debugging.
    */
   void setDebug(bool d) { m_debug = d; }
 
+  /**
+   * Handle a finished process;
+   */
+  void processFinish();
+
 protected:
   bool m_debug;
   QString m_pythonInterpreter;
   QString m_scriptFilePath;
   QStringList m_errors;
+  QProcess* m_process;
 
 private:
   QString processErrorString(const QProcess& proc) const;

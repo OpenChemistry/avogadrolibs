@@ -30,6 +30,7 @@ PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
   : QObject(parent_)
   , m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty())
   , m_scriptFilePath(scriptFilePath_)
+  , m_process(nullptr)
 {
   setDefaultPythonInterpretor();
 }
@@ -37,6 +38,7 @@ PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
 PythonScript::PythonScript(QObject* parent_)
   : QObject(parent_)
   , m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty())
+  , m_process(nullptr)
 {
   setDefaultPythonInterpretor();
 }
@@ -138,9 +140,85 @@ QByteArray PythonScript::execute(const QStringList& args,
   return result;
 }
 
+void PythonScript::asyncExecute(const QStringList& args,
+                                 const QByteArray& scriptStdin)
+{
+  clearErrors();
+  if (m_process != nullptr) {
+    // bad news
+    m_process->terminate();
+    disconnect(m_process, SIGNAL(finished()), this, SLOT(processsFinished()));,
+    m_process->deleteLater();
+  }
+  m_process = new QProcess(parent());
+
+  // Merge stdout and stderr
+  m_process->setProcessChannelMode(QProcess::MergedChannels);
+
+  // Add debugging flag if needed.
+  QStringList realArgs(args);
+  if (m_debug)
+    realArgs.prepend(QStringLiteral("--debug"));
+
+  // Add the global language / locale to *all* calls
+  realArgs.append("--lang");
+  realArgs.append(QLocale::system().name());
+
+  // Start script
+  realArgs.prepend(m_scriptFilePath);
+  if (m_debug) {
+    qDebug() << "Executing" << m_pythonInterpreter
+             << realArgs.join(QStringLiteral(" ")) << "<" << scriptStdin;
+  }
+  m_process->start(m_pythonInterpreter, realArgs);
+
+  // Write scriptStdin to the process's stdin
+  if (!scriptStdin.isNull()) {
+    if (!m_process->waitForStarted(5000)) {
+      m_errors << tr("Error running script '%1 %2': Timed out waiting for "
+                     "start (%3).")
+                    .arg(m_pythonInterpreter,
+                         realArgs.join(QStringLiteral(" ")),
+                         processErrorString(proc));
+      return;
+    }
+
+    qint64 len = m_process->write(scriptStdin);
+    if (len != static_cast<qint64>(scriptStdin.size())) {
+      m_errors << tr("Error running script '%1 %2': failed to write to stdin "
+                     "(len=%3, wrote %4 bytes, QProcess error: %5).")
+                    .arg(m_pythonInterpreter)
+                    .arg(realArgs.join(QStringLiteral(" ")))
+                    .arg(scriptStdin.size())
+                    .arg(len)
+                    .arg(processErrorString(proc));
+      return;
+    }
+    m_process->closeWriteChannel();
+  }
+
+  // let the script run
+  connect(m_process, SIGNAL(finished(), this, SLOT(processFinished()));
+}
+
+void PythonScript::processFinished()
+{
+  emit asyncFinished();
+}
+
+QByteArray PythonScript::asyncResponse()
+{
+  if (m_process == nullptr || m_process->state() == QProcess::Running)
+  {
+    return QByteArray(); // wait
+  }
+
+  return m_process->readAll();
+}
+
 QString PythonScript::processErrorString(const QProcess& proc) const
 {
-  QString result;
+  QString result; 
   switch (proc.error()) {
     case QProcess::FailedToStart:
       result = tr("Script failed to start.");

@@ -65,6 +65,8 @@ public slots:
 
   bool readMolecule(QtGui::Molecule& mol) override;
 
+  void processFinished();
+
 private slots:
   void menuActivated();
   void configurePython();
