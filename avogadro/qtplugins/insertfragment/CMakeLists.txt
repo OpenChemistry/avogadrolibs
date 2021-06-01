@@ -24,6 +24,8 @@ ExternalProject_Add(molecules
     # or https://github.com/OpenChemistry/molecules/archive/refs/heads/master.zip
     SOURCE_DIR "${AvogadroLibs_SOURCE_DIR}/../molecules"
     CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
 )
 endif()
 
@@ -40,6 +42,8 @@ ExternalProject_Add(crystals
     # or https://github.com/OpenChemistry/crystals/archive/refs/heads/master.zip
     SOURCE_DIR "${AvogadroLibs_SOURCE_DIR}/../crystals"
     CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
 )
 install(DIRECTORY "${AvogadroLibs_SOURCE_DIR}/../crystals"
 DESTINATION "${INSTALL_DATA_DIR}/avogadro2"
