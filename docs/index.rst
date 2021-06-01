@@ -29,22 +29,35 @@ Install
   .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/latest
       :text: Download DMG
       :classes: btn-outline-primary btn-block stretched-link
+  ++++++++++++++
+  .. link-button:: https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_cmake/master/macOS.dmg.zip
+      :text: Download Nightly Build
+      :classes: btn-outline-primary btn-block stretched-link
 
   ---
-  :fa:`windows,fa-2x,style=fab` **Windows (64-bit)**  
+  :fa:`windows,fa-2x,style=fab` **Windows**  
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/latest
       :text: Download Installer
       :classes: btn-outline-primary btn-block stretched-link
-
+  ++++++++++++++
+  .. link-button:: https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_cmake/master/Win64.exe.zip
+      :text: Download Nightly Build
+      :classes: btn-outline-primary btn-block stretched-link
+    
   ---
   :fa:`linux,fa-2x,style=fab` **Linux** 
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  - Download Flatpak
-  - :doc:`Build from Source<install/build>`
-
+  .. link-button:: https://dl.flathub.org/repo/appstream/org.openchemistry.Avogadro2.flatpakref
+      :text: Download Flatpak
+      :classes: btn-outline-primary btn-block stretched-link
+  +++++++++++++++++++++++++++++++++++++++
+  .. link-button:: build.html
+        :text: Build from source
+        :classes: btn-outline-primary btn-block stretched-link
+    
 Graphics
 -----------------------------------  
   

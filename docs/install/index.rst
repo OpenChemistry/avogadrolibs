@@ -22,7 +22,7 @@ and anyone can build Avogadro from source code.
       :classes: btn-outline-primary btn-block stretched-link
 
   ---
-  :fa:`windows,fa-2x,style=fab` **Windows (64-bit)**  
+  :fa:`windows,fa-2x,style=fab` **Windows**  
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/latest
@@ -37,9 +37,13 @@ and anyone can build Avogadro from source code.
   :fa:`linux,fa-2x,style=fab` **Linux** 
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  - Download Flatpak
+  .. link-button:: https://dl.flathub.org/repo/appstream/org.openchemistry.Avogadro2.flatpakref
+      :text: Download Flatpak
+      :classes: btn-outline-primary btn-block stretched-link
   +++++++++++++++++++++++++++++++++++++++
-  - :doc:`Build from Source<build>`
+  .. link-button:: build.html
+        :text: Build from source
+        :classes: btn-outline-primary btn-block stretched-link
 
 
 .. toctree::
