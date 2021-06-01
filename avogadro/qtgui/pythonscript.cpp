@@ -16,18 +16,15 @@ namespace Avogadro {
 namespace QtGui {
 
 PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
-  : QObject(parent_)
-  , m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty())
-  , m_scriptFilePath(scriptFilePath_)
-  , m_process(nullptr)
+  : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
+    m_scriptFilePath(scriptFilePath_), m_process(nullptr)
 {
   setDefaultPythonInterpretor();
 }
 
 PythonScript::PythonScript(QObject* parent_)
-  : QObject(parent_)
-  , m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty())
-  , m_process(nullptr)
+  : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
+    m_process(nullptr)
 {
   setDefaultPythonInterpretor();
 }
@@ -130,7 +127,7 @@ QByteArray PythonScript::execute(const QStringList& args,
 }
 
 void PythonScript::asyncExecute(const QStringList& args,
-                                 const QByteArray& scriptStdin)
+                                const QByteArray& scriptStdin)
 {
   clearErrors();
   if (m_process != nullptr) {
@@ -187,19 +184,19 @@ void PythonScript::asyncExecute(const QStringList& args,
   }
 
   // let the script run
-  connect(m_process, SIGNAL(finished(int , QProcess::ExitStatus )), 
-        this, SLOT(processFinished(int , QProcess::ExitStatus )));
+  connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this,
+          SLOT(processFinished(int, QProcess::ExitStatus)));
 }
 
-void PythonScript::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void PythonScript::processFinished(int exitCode,
+                                   QProcess::ExitStatus exitStatus)
 {
   emit finished();
 }
 
 QByteArray PythonScript::asyncResponse()
 {
-  if (m_process == nullptr || m_process->state() == QProcess::Running)
-  {
+  if (m_process == nullptr || m_process->state() == QProcess::Running) {
     return QByteArray(); // wait
   }
 
@@ -208,7 +205,7 @@ QByteArray PythonScript::asyncResponse()
 
 QString PythonScript::processErrorString(const QProcess& proc) const
 {
-  QString result; 
+  QString result;
   switch (proc.error()) {
     case QProcess::FailedToStart:
       result = tr("Script failed to start.");

@@ -37,7 +37,8 @@ using Avogadro::QtGui::InterfaceWidget;
 
 Command::Command(QObject* parent_)
   : ExtensionPlugin(parent_), m_molecule(nullptr), m_currentDialog(nullptr),
-    m_currentInterface(nullptr), m_outputFormat(nullptr)
+    m_currentInterface(nullptr), m_currentScript(nullptr),
+    m_outputFormat(nullptr)
 {
   refreshScripts();
 }
@@ -169,7 +170,8 @@ void Command::run()
       m_currentInterface->interfaceScript().scriptFilePath();
 
     if (m_currentScript) {
-      disconnect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
+      disconnect(m_currentScript, SIGNAL(finished()), this,
+                 SLOT(processFinished()));
       m_currentScript->deleteLater();
     }
     m_currentScript = new InterfaceScript(scriptFilePath, parent());
@@ -182,13 +184,13 @@ void Command::run()
 void Command::processFinished()
 {
   if (m_currentScript == nullptr)
-  return;
+    return;
 
   m_currentScript->processCommand(m_molecule);
 
   // collect errors
   if (m_currentScript->hasErrors()) {
-      qWarning() << m_currentScript->errorList();
+    qWarning() << m_currentScript->errorList();
   }
 }
 
