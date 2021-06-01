@@ -26,8 +26,10 @@ namespace QtGui {
 namespace Utilities {
 
 AVOGADROQTGUI_EXPORT QString libraryDirectory();
-}
-}
-}
+AVOGADROQTGUI_EXPORT QString dataDirectory();
+
+} // namespace Utilities
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_UTILITIES_H
