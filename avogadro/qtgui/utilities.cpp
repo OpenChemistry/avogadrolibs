@@ -24,6 +24,12 @@ QString libraryDirectory()
 {
   return QString(AvogadroLibs_LIB_DIR);
 }
+
+QString dataDirectory()
+{
+  return QString(AvogadroLibs_DATA_DIR);
 }
-}
-}
+
+} // namespace Utilities
+} // namespace QtGui
+} // namespace Avogadro
