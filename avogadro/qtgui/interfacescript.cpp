@@ -1,7 +1,6 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "interfacescript.h"
@@ -164,9 +163,24 @@ bool InterfaceScript::runCommand(const QJsonObject& options_,
   if (!insertMolecule(allOptions, *mol))
     return false;
 
-  QByteArray json(
-    m_interpreter->execute(QStringList() << QStringLiteral("--run-command"),
-                           QJsonDocument(allOptions).toJson()));
+  connect(m_interpreter, SIGNAL(finished()), this, SLOT(commandFinshed()));
+    m_interpreter->asyncExecute(QStringList()
+                                  << QStringLiteral("--run-command"),
+                                QJsonDocument(allOptions).toJson());
+  return true;
+}
+
+void InterfaceScript::commandFinished()
+{
+  emit finished();
+}
+
+bool InterfaceScript::processCommand(Core::Molecule* mol)
+{
+  if (m_interpreter == nullptr)
+    return false;
+
+  QByteArray json(m_interpreter->asyncResponse());
 
   if (m_interpreter->hasErrors()) {
     m_errors << m_interpreter->errorList();

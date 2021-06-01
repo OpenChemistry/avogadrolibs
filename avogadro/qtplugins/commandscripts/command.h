@@ -1,9 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
   This source code is released under the New BSD License, (the "License").
-
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_COMMAND_H
@@ -82,6 +79,7 @@ private:
   QMap<QString, QtGui::InterfaceWidget*> m_dialogs;
   QDialog* m_currentDialog;
   QtGui::InterfaceWidget* m_currentInterface;
+  QtGui::InterfaceScript* m_currentScript;
 
   // maps program name --> script file path
   QMap<QString, QString> m_commandScripts;

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "pythonscript.h"
@@ -147,7 +136,7 @@ void PythonScript::asyncExecute(const QStringList& args,
   if (m_process != nullptr) {
     // bad news
     m_process->terminate();
-    disconnect(m_process, SIGNAL(finished()), this, SLOT(processsFinished()));,
+    disconnect(m_process, SIGNAL(finished()), this, SLOT(processsFinished()));
     m_process->deleteLater();
   }
   m_process = new QProcess(parent());
@@ -179,7 +168,7 @@ void PythonScript::asyncExecute(const QStringList& args,
                      "start (%3).")
                     .arg(m_pythonInterpreter,
                          realArgs.join(QStringLiteral(" ")),
-                         processErrorString(proc));
+                         processErrorString(*m_process));
       return;
     }
 
@@ -191,19 +180,19 @@ void PythonScript::asyncExecute(const QStringList& args,
                     .arg(realArgs.join(QStringLiteral(" ")))
                     .arg(scriptStdin.size())
                     .arg(len)
-                    .arg(processErrorString(proc));
+                    .arg(processErrorString(*m_process));
       return;
     }
     m_process->closeWriteChannel();
   }
 
   // let the script run
-  connect(m_process, SIGNAL(finished(), this, SLOT(processFinished()));
+  connect(m_process, SIGNAL(finished()), this, SLOT(processFinished()));
 }
 
 void PythonScript::processFinished()
 {
-  emit asyncFinished();
+  emit finished();
 }
 
 QByteArray PythonScript::asyncResponse()

@@ -1,6 +1,5 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
   This source code is released under the New BSD License, (the "License").
 ******************************************************************************/
 
@@ -168,12 +167,28 @@ void Command::run()
     QJsonObject options = m_currentInterface->collectOptions();
     QString scriptFilePath =
       m_currentInterface->interfaceScript().scriptFilePath();
-    InterfaceScript gen(scriptFilePath);
-    gen.runCommand(options, m_molecule);
-    // collect errors
-    if (gen.hasErrors()) {
-      qWarning() << gen.errorList();
+
+    if (m_currentScript) {
+      disconnect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
+      m_currentScript->deleteLater();
     }
+    m_currentScript = new InterfaceScript(scriptFilePath, parent());
+    connect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
+
+    m_currentScript->runCommand(options, m_molecule);
+  }
+}
+
+void Command::processFinished()
+{
+  if (m_currentScript == nullptr)
+  return;
+
+  m_currentScript->processCommand(m_molecule);
+
+  // collect errors
+  if (m_currentScript->hasErrors()) {
+      qWarning() << m_currentScript->errorList();
   }
 }
 
