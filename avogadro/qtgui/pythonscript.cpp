@@ -187,10 +187,11 @@ void PythonScript::asyncExecute(const QStringList& args,
   }
 
   // let the script run
-  connect(m_process, SIGNAL(finished()), this, SLOT(processFinished()));
+  connect(m_process, SIGNAL(finished(int , QProcess::ExitStatus )), 
+        this, SLOT(processFinished(int , QProcess::ExitStatus )));
 }
 
-void PythonScript::processFinished()
+void PythonScript::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
   emit finished();
 }

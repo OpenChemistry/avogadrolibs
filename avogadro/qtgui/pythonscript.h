@@ -14,8 +14,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-
-class QProcess;
+#include <QtCore/QProcess>
 
 namespace Avogadro {
 namespace QtGui {
@@ -119,7 +118,7 @@ public slots:
   /**
    * Handle a finished process;
    */
-  void processFinished();
+  void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 protected:
   bool m_debug;

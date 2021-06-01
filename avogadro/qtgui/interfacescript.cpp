@@ -163,10 +163,9 @@ bool InterfaceScript::runCommand(const QJsonObject& options_,
   if (!insertMolecule(allOptions, *mol))
     return false;
 
-  connect(m_interpreter, SIGNAL(finished()), this, SLOT(commandFinshed()));
-    m_interpreter->asyncExecute(QStringList()
-                                  << QStringLiteral("--run-command"),
-                                QJsonDocument(allOptions).toJson());
+  connect(m_interpreter, &PythonScript::finished, this, &::Avogadro::QtGui::InterfaceScript::commandFinished);
+  m_interpreter->asyncExecute(QStringList() << QStringLiteral("--run-command"),
+                              QJsonDocument(allOptions).toJson());
   return true;
 }
 
