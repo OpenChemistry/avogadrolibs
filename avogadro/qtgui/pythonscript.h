@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTGUI_PYTHONSCRIPT_H
@@ -25,8 +14,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-
-class QProcess;
+#include <QtCore/QProcess>
 
 namespace Avogadro {
 namespace QtGui {
@@ -100,17 +88,44 @@ public:
   QByteArray execute(const QStringList& args,
                      const QByteArray& scriptStdin = QByteArray());
 
+  /**
+   * Start a new process to execute asynchronously
+   * "<m_pythonInterpreter> <scriptFilePath()> [args ...]",
+   * optionally passing scriptStdin to the processes standard input.
+   * 
+   * Will send asyncFinished() signal when finished
+   */
+  void asyncExecute(const QStringList& args,
+                          const QByteArray& scriptStdin = QByteArray());
+
+  /**
+   * Returns the standard output of the asynchronous process when finished.
+   */
+  QByteArray asyncResponse();
+
+signals:
+/**
+ * The asynchronous execution is finished or timed out
+ */
+  void finished();
+
 public slots:
   /**
    * Enable/disable debugging.
    */
   void setDebug(bool d) { m_debug = d; }
 
+  /**
+   * Handle a finished process;
+   */
+  void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
+
 protected:
   bool m_debug;
   QString m_pythonInterpreter;
   QString m_scriptFilePath;
   QStringList m_errors;
+  QProcess* m_process;
 
 private:
   QString processErrorString(const QProcess& proc) const;

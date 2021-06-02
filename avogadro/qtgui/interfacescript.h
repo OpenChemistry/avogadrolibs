@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTGUI_INTERFACESCRIPT_H
@@ -525,7 +514,7 @@ public:
   void reset();
 
   /**
-   * Request input files from the script using the supplied options object and
+   * Asynchronously run a command script using the supplied options object and
    * molecule. See the class documentation for details on the @p options_
    * object format.
    *
@@ -535,6 +524,11 @@ public:
    * user-friendly description of the error.
    */
   bool runCommand(const QJsonObject& options_, Core::Molecule* mol);
+
+  /**
+   * Finish processing an aynchronous command script
+   */
+  bool processCommand(Core::Molecule* mol);
 
   /**
    * Request input files from the script using the supplied options object and
@@ -613,11 +607,19 @@ public:
    */
   QStringList warningList() const { return m_warnings; }
 
+signals:
+  void finished();
+
 public slots:
   /**
    * Enable/disable debugging.
    */
   void setDebug(bool d);
+
+  /**
+   * Receives a signal when asynchronous command scripts are finished
+   */
+  void commandFinished();
 
 private:
   QtGui::PythonScript* m_interpreter;

@@ -1,9 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
   This source code is released under the New BSD License, (the "License").
-
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_COMMAND_H
@@ -16,6 +13,7 @@
 
 class QAction;
 class QDialog;
+class QProgressDialog;
 
 namespace Avogadro {
 namespace Io {
@@ -65,6 +63,8 @@ public slots:
 
   bool readMolecule(QtGui::Molecule& mol) override;
 
+  void processFinished();
+
 private slots:
   void menuActivated();
   void configurePython();
@@ -80,6 +80,8 @@ private:
   QMap<QString, QtGui::InterfaceWidget*> m_dialogs;
   QDialog* m_currentDialog;
   QtGui::InterfaceWidget* m_currentInterface;
+  QtGui::InterfaceScript* m_currentScript;
+  QProgressDialog* m_progress;
 
   // maps program name --> script file path
   QMap<QString, QString> m_commandScripts;
