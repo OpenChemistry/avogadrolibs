@@ -19,6 +19,7 @@
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QVBoxLayout>
 
 #include <QtCore/QCoreApplication>
@@ -37,7 +38,7 @@ using Avogadro::QtGui::InterfaceWidget;
 
 Command::Command(QObject* parent_)
   : ExtensionPlugin(parent_), m_molecule(nullptr), m_currentDialog(nullptr),
-    m_currentInterface(nullptr), m_currentScript(nullptr),
+    m_currentInterface(nullptr), m_currentScript(nullptr), m_progress(nullptr),
     m_outputFormat(nullptr)
 {
   refreshScripts();
@@ -164,18 +165,29 @@ void Command::run()
   if (m_currentDialog)
     m_currentDialog->accept();
 
+  if (m_progress)
+    m_progress->deleteLater();
+
+  if (m_currentScript) {
+    disconnect(m_currentScript, SIGNAL(finished()), this,
+                SLOT(processFinished()));
+    m_currentScript->deleteLater();
+  }
+
   if (m_currentInterface) {
     QJsonObject options = m_currentInterface->collectOptions();
+
+    // @todo - need a cleaner way to get a script pointer from the widget
     QString scriptFilePath =
       m_currentInterface->interfaceScript().scriptFilePath();
-
-    if (m_currentScript) {
-      disconnect(m_currentScript, SIGNAL(finished()), this,
-                 SLOT(processFinished()));
-      m_currentScript->deleteLater();
-    }
+ 
     m_currentScript = new InterfaceScript(scriptFilePath, parent());
     connect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
+
+    // no cancel button - just an indication we're waiting...
+    QString title = tr("Processing %1").arg(m_currentScript->displayName()));
+    m_progress = new QProgressDialog(title, QString(), 0, 0, qobject_cast<QWidget*>(parent()));
+    m_progress->setMinimumDuration(1000); // 1 second
 
     m_currentScript->runCommand(options, m_molecule);
   }
@@ -185,6 +197,12 @@ void Command::processFinished()
 {
   if (m_currentScript == nullptr)
     return;
+
+  if (m_progress) {
+    m_progress->close();
+    m_progress->deleteLater();
+    m_progress = nullptr;
+  }
 
   m_currentScript->processCommand(m_molecule);
 

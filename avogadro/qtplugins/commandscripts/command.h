@@ -13,6 +13,7 @@
 
 class QAction;
 class QDialog;
+class QProgressDialog;
 
 namespace Avogadro {
 namespace Io {
@@ -80,6 +81,7 @@ private:
   QDialog* m_currentDialog;
   QtGui::InterfaceWidget* m_currentInterface;
   QtGui::InterfaceScript* m_currentScript;
+  QProgressDialog* m_progress;
 
   // maps program name --> script file path
   QMap<QString, QString> m_commandScripts;
