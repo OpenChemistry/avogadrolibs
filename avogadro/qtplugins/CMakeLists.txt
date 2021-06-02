@@ -123,6 +123,7 @@ if(USE_SPGLIB)
   add_subdirectory(spacegroup)
 endif()
 add_subdirectory(surfaces)
+add_subdirectory(svg)
 add_subdirectory(spectra)
 add_subdirectory(vrml)
 
