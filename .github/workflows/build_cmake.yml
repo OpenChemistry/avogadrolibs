@@ -24,14 +24,14 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu 20.04 GCC", artifact: "Ubuntu2004.tar.gz",
+            name: "Ubuntu 20.04 GCC", artifact: "Ubuntu-2004.tar.gz",
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
             cpack: "",
           }
         - {
-            name: "Ubuntu 18.04 GCC", artifact: "Ubuntu1804.tar.gz",
+            name: "Ubuntu 18.04 GCC", artifact: "",
             os: ubuntu-18.04,
             cc: "gcc", cxx: "g++",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
@@ -141,7 +141,81 @@ jobs:
 
     - name: Upload
       if: matrix.config.artifact != 0
-      uses: actions/upload-artifact@v2-preview
+      uses: actions/upload-artifact@v2
       with:
         path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
+
+  release:
+    if: contains(github.ref, 'tags/')
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Avogadro ${{ github.ref }}
+        draft: true
+        prerelease: true
+
+    - name: Store Release url
+      run: |
+        echo "${{ steps.create_release.outputs.upload_url }}" > ./upload_url
+    - uses: actions/upload-artifact@v2
+      with:
+        path: ./upload_url
+        name: upload_url
+
+  publish:
+    if: contains(github.ref, 'tags/')
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Ubuntu Latest GCC", artifact: "Ubuntu-2004.tar.gz",
+            os: ubuntu-latest
+          }
+        - {
+            name: "Windows Latest MSVC", artifact: "Win64.exe",
+            os: ubuntu-latest
+          }
+        - {
+            name: "macOS Latest Clang", artifact: "macOS.dmg",
+            os: ubuntu-latest
+          }
+    needs: release
+
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: ${{ matrix.config.artifact }}
+        path: ./
+
+    - name: Download URL
+      uses: actions/download-artifact@v1
+      with:
+        name: upload_url
+        path: ./
+    - id: set_upload_url
+      run: |
+        upload_url=`cat ./upload_url`
+        echo ::set-output name=upload_url::$upload_url
+    - name: Upload to Release
+      id: upload_to_release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
+        asset_path: ./${{ matrix.config.artifact }}
+        asset_name: ${{ matrix.config.artifact }}
+        asset_content_type: application/x-gtar
