@@ -13,25 +13,25 @@ and anyone can build Avogadro from source code.
 
   :fa:`apple,fa-2x,style=fab` **MacOS**
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/latest
+  .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/download/1.94.0/Avogadro2-1.94.0-Darwin.dmg
       :text: Download DMG
-      :classes: btn-outline-primary btn-block stretched-link
+      :classes: btn-outline-primary btn-block
   ++++++++++++++
   .. link-button:: https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_cmake/master/macOS.dmg.zip
       :text: Download Nightly Build
-      :classes: btn-outline-primary btn-block stretched-link
+      :classes: btn-outline-primary btn-block
 
   ---
   :fa:`windows,fa-2x,style=fab` **Windows**  
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/latest
+  .. link-button:: https://github.com/OpenChemistry/avogadrolibs/releases/download/1.94.0/Avogadro2-1.94.0-win64.exe
       :text: Download Installer
-      :classes: btn-outline-primary btn-block stretched-link
+      :classes: btn-outline-primary btn-block
   ++++++++++++++
   .. link-button:: https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_cmake/master/Win64.exe.zip
       :text: Download Nightly Build
-      :classes: btn-outline-primary btn-block stretched-link
+      :classes: btn-outline-primary btn-block
     
   ---
   :fa:`linux,fa-2x,style=fab` **Linux** 
@@ -39,11 +39,11 @@ and anyone can build Avogadro from source code.
 
   .. link-button:: https://dl.flathub.org/repo/appstream/org.openchemistry.Avogadro2.flatpakref
       :text: Download Flatpak
-      :classes: btn-outline-primary btn-block stretched-link
+      :classes: btn-outline-primary btn-block
   +++++++++++++++++++++++++++++++++++++++
   .. link-button:: build.html
         :text: Build from source
-        :classes: btn-outline-primary btn-block stretched-link
+        :classes: btn-outline-primary btn-block
 
 
 .. toctree::
