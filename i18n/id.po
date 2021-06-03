@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-05-29 12:44+0000\n"
+"PO-Revision-Date: 2021-06-04 02:33+0000\n"
 "Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -4706,7 +4706,7 @@ msgstr "Psi:"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:131
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
 msgid "cgs"
-msgstr ""
+msgstr "cgs"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:136
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
@@ -4723,16 +4723,15 @@ msgstr "Inti Potensial"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:157
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
-#, fuzzy
 msgid "SPC"
-msgstr "SCF"
+msgstr "SPC"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:162
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:140
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "SPC/E"
-msgstr ""
+msgstr "SPC/E"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:177
 #. i18n: ectx: property (toolTip), widget (QLabel, label_atomstyle)
@@ -4813,13 +4812,12 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:246
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "full"
-msgstr ""
+msgstr "penuh"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:251
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "line"
-msgstr "Valin"
+msgstr "garis"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:256
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -4874,12 +4872,12 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:314
 #. i18n: ectx: property (text), item, widget (QComboBox, ensembleCombo)
 msgid "NVT"
-msgstr ""
+msgstr "NVT"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:319
 #. i18n: ectx: property (text), item, widget (QComboBox, ensembleCombo)
 msgid "NVE"
-msgstr ""
+msgstr "NVE"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:327
 #. i18n: ectx: property (text), widget (QLabel, label_temp)
@@ -4887,9 +4885,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:918
 #. i18n: ectx: property (text), widget (QCheckBox, temperatureCheck)
-#, fuzzy
 msgid "Temperature"
-msgstr "Suhu:"
+msgstr "Suhu"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:347
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
@@ -4958,9 +4955,8 @@ msgstr "Merubah Orde Ikatan"
 #. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:533
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-#, fuzzy
 msgid "p"
-msgstr "px"
+msgstr "p"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:458
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -4969,7 +4965,7 @@ msgstr "px"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:538
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
 msgid "s"
-msgstr ""
+msgstr "s"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:463
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -4978,7 +4974,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:543
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
 msgid "f"
-msgstr ""
+msgstr "f"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:468
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -4986,9 +4982,8 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:548
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-#, fuzzy
 msgid "m"
-msgstr "qm"
+msgstr "m"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:473
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -4996,9 +4991,8 @@ msgstr "qm"
 #. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:553
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-#, fuzzy
 msgid "fs"
-msgstr "fps"
+msgstr "fs"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:478
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -5007,7 +5001,7 @@ msgstr "fps"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:558
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
 msgid "fm"
-msgstr ""
+msgstr "fm"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:486
 #. i18n: ectx: property (toolTip), widget (QComboBox, yBoundaryCombo)
@@ -5039,7 +5033,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:592
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Replicate"
-msgstr ""
+msgstr "Replikasi"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:612
 #. i18n: ectx: property (toolTip), widget (QSpinBox, xReplicateSpin)
@@ -5092,15 +5086,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:729
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
-#, fuzzy
 msgid "gaussian"
-msgstr "Gaussian 9x"
+msgstr "gaussian"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:734
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
-#, fuzzy
 msgid "uniform"
-msgstr "Conformer"
+msgstr "seragam"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:742
 #. i18n: ectx: property (toolTip), widget (QLabel, label_9)
@@ -5143,7 +5135,7 @@ msgstr "Keluaran:"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:817
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 msgid "Output Interval"
-msgstr ""
+msgstr "Interval Keluaran"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:854
 #. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
@@ -5202,7 +5194,6 @@ msgstr "Tidak ada penjelasan"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
 msgid "Molecular Mass (g/mol):"
 msgstr "Berat Molekul (g/mol):"
 
@@ -5269,20 +5260,18 @@ msgstr ""
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:26
 #. i18n: ectx: property (text), item, widget (QComboBox, container)
-#, fuzzy
 msgid "Singularity"
-msgstr "Singlet"
+msgstr "Singularitas"
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:34
 #. i18n: ectx: property (text), widget (QLabel, labelContainer)
-#, fuzzy
 msgid "Container:"
-msgstr "Lanjutkan"
+msgstr "Kontainer:"
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:44
 #. i18n: ectx: property (text), widget (QLabel, labelImage)
 msgid "Image:"
-msgstr ""
+msgstr "Gambar:"
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:54
 #. i18n: ectx: property (text), widget (QLineEdit, image)
@@ -5321,14 +5310,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:109
 #. i18n: ectx: property (text), widget (QLabel, labelInputParameters)
-#, fuzzy
 msgid "Input Parameters:"
-msgstr "Parameter Sel"
+msgstr "Parameter Masukan:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Line search technique:"
-msgstr ""
+msgstr "Teknik pencarian garis:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
@@ -5384,20 +5372,18 @@ msgstr "Tidak ada penjelasan"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:47
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, jobScriptEdit)
-#, fuzzy
 msgid "script"
-msgstr "&Skrip"
+msgstr "Skrip"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:54
 #. i18n: ectx: property (text), widget (QLabel, label_1)
-#, fuzzy
 msgid "Input Coords:"
-msgstr "Masukan Pembuat..."
+msgstr "Coord Masukan:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:64
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputCoordEdit)
 msgid "input.pdb"
-msgstr ""
+msgstr "input.pdb"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:71
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5413,57 +5399,57 @@ msgstr "Bidang Gaya:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:99
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER96"
-msgstr ""
+msgstr "AMBER96"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:104
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb"
-msgstr ""
+msgstr "AMBER99sb"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb-ildn"
-msgstr ""
+msgstr "AMBER99sb-ildn"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:114
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb-nmr"
-msgstr ""
+msgstr "AMBER99sb-nmr"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:119
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER03"
-msgstr ""
+msgstr "AMBER03"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:124
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER10"
-msgstr ""
+msgstr "AMBER10"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_waterModel)
 msgid "Water Model:"
-msgstr ""
+msgstr "Model Air:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:145
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP3P"
-msgstr ""
+msgstr "TIP3P"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:150
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP4P-Ew"
-msgstr ""
+msgstr "TIP4P-Ew"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:155
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP5P"
-msgstr ""
+msgstr "TIP5P"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:160
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "Implicit Solvent (OBC)"
-msgstr ""
+msgstr "Pelarut Implisit (OBC)"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:168
 #. i18n: ectx: property (text), widget (QLabel, label_platform)
@@ -5518,12 +5504,12 @@ msgstr "Indeks Perangkat:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:245
 #. i18n: ectx: property (text), widget (QLabel, label_openCLIndex)
 msgid "OpenCL Platform Index:"
-msgstr ""
+msgstr "Indeks Platform OpenCL:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:275
 #. i18n: ectx: property (text), widget (QLabel, label_nonbondedMethod)
 msgid "Nonbonded method:"
-msgstr ""
+msgstr "Metode nonbonded:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:283
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
@@ -5543,19 +5529,17 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:298
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "Ewald"
-msgstr ""
+msgstr "Ewald"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:311
 #. i18n: ectx: property (text), widget (QLabel, label_ewaldTolerance)
-#, fuzzy
 msgid "Ewald Tolerance:"
-msgstr "Toleransi SCF:"
+msgstr "Toleransi Ewald:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:337
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
-#, fuzzy
 msgid "Constraints:"
-msgstr "Kendala"
+msgstr "Kendala:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -5568,9 +5552,8 @@ msgstr "Kosong"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
-#, fuzzy
 msgid "HBonds"
-msgstr "Ikatan: %L1"
+msgstr "HBonds"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:355
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -5593,7 +5576,7 @@ msgstr "Angka Kendala"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:394
 #. i18n: ectx: property (text), widget (QLabel, label_rigidWater)
 msgid "Rigid water?"
-msgstr ""
+msgstr "Air kaku?"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:407
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -5612,18 +5595,17 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:437
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, nonBondedCutoffSpin)
 msgid " nm"
-msgstr ""
+msgstr " nm"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:444
 #. i18n: ectx: property (text), widget (QLabel, label_randomInitVel)
 msgid "Random initial velocity:"
-msgstr ""
+msgstr "Kecepatan awal acak:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_generationTemp)
-#, fuzzy
 msgid "Generation Temp:"
-msgstr "Menghasilkan Sel"
+msgstr "Suhu Generasi:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:481
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, generationTemperatureSpin)
@@ -5634,19 +5616,18 @@ msgstr " K"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:498
 #. i18n: ectx: property (text), widget (QLabel, label_integrator)
-#, fuzzy
 msgid "Integrator:"
-msgstr "Integrasi muatan:"
+msgstr "Integrator:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:506
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Langevin"
-msgstr ""
+msgstr "Langevin"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:511
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Verlet"
-msgstr ""
+msgstr "Verlet"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
@@ -5656,23 +5637,22 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:521
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "VariableLangevin"
-msgstr ""
+msgstr "VariabelLangevin"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:526
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "VariableVerlet"
-msgstr ""
+msgstr "VariabelVerlet"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
 #. i18n: ectx: property (text), widget (QLabel, label_timestep)
 msgid "Timestep:"
-msgstr ""
+msgstr "Langkah waktu:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:553
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, stepSpin)
-#, fuzzy
 msgid " fs"
-msgstr "fps"
+msgstr " fs"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
@@ -5686,9 +5666,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:602
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, collisionRateSpin)
-#, fuzzy
 msgid "/ps"
-msgstr "fps"
+msgstr "/ps"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
 #. i18n: ectx: property (text), widget (QLabel, label_temperature)
@@ -5727,26 +5706,23 @@ msgstr "Reporter:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:710
 #. i18n: ectx: property (text), widget (QCheckBox, stateDataCheck)
-#, fuzzy
 msgid "StateData"
-msgstr "Data"
+msgstr "StatusData"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:720
 #. i18n: ectx: property (text), widget (QCheckBox, dcdCheck)
-#, fuzzy
 msgid "DCD"
-msgstr "CD"
+msgstr "DCD"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:730
 #. i18n: ectx: property (text), widget (QCheckBox, pdbCheck)
-#, fuzzy
 msgid "PDB"
-msgstr "PDF"
+msgstr "PDB"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:740
 #. i18n: ectx: property (text), widget (QLabel, label_reportInterval)
 msgid "Report Interval:"
-msgstr ""
+msgstr "Interval Laporan:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
@@ -5825,19 +5801,18 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Maximum Radius:"
-msgstr "Maksimum:"
+msgstr "Radius Maksimum:"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label2)
 msgid "Step (dr):"
-msgstr ""
+msgstr "Tahap (dr):"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
 msgid "Theoretical XRD Pattern Options"
-msgstr ""
+msgstr "Opsi Pola XRD Teoritis"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:17
 #. i18n: ectx: property (toolTip), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
