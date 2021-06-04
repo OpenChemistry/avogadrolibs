@@ -29,6 +29,7 @@ find_package(VTK
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ${VTK_DEFINITIONS})
 
 set(HEADERS
+  qvtkopenglwidget.h
   vtkAvogadroActor.h
   vtkglwidget.h
   vtkplot.h
@@ -42,6 +43,7 @@ set(SOURCES
 
 avogadro_add_library(AvogadroVtk ${HEADERS} ${SOURCES})
 set_target_properties(AvogadroVtk PROPERTIES AUTOMOC TRUE)
+target_include_directories(AvogadroVtk PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 target_link_libraries(AvogadroVtk AvogadroRendering AvogadroQtGui
   ${VMP}RenderingOpenGL2 ${VMP}GUISupportQt ${VMP}RenderingVolumeOpenGL2
   ${VMP}RenderingFreeType ${VMP}InteractionStyle ${VMP}ChartsCore ${VMP}ViewsContext2D

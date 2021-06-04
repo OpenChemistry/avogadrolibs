@@ -26,7 +26,8 @@
 #include <string>
 #include <vector>
 
-class QVTKOpenGLWidget;
+#include "qvtkopenglwidget.h"
+
 class vtkAxis;
 class vtkChartXY;
 class vtkContextView;
