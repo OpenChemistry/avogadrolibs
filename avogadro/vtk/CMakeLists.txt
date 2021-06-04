@@ -11,13 +11,21 @@ endif()
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
+find_package(VTK QUIET REQUIRED)
+if(VTK_MAJOR_VERSION GREATER 8)
+  set(VCP "") # shorthand for VTK_COMPONENT_PREFIX
+  set(VMP "VTK::") # shorthand for VTK_MODULE_PREFIX
+else()
+  set(VCP "vtk")
+  set(VMP "vtk")
+  include_directories(SYSTEM ${VTK_INCLUDE_DIRS})
+endif()
+
 find_package(VTK
-  COMPONENTS
-    vtkRenderingOpenGL2 vtkGUISupportQt vtkDomainsChemistry
-    vtkRenderingVolumeOpenGL2 vtkViewsCore vtkRenderingFreeType
-    vtkChartsCore vtkViewsContext2D vtkRenderingContextOpenGL2
-  REQUIRED)
-include_directories(SYSTEM ${VTK_INCLUDE_DIRS})
+  REQUIRED COMPONENTS
+    ${VCP}RenderingOpenGL2 ${VCP}GUISupportQt ${VCP}DomainsChemistry
+    ${VCP}RenderingVolumeOpenGL2 ${VCP}ViewsCore ${VCP}RenderingFreeType
+    ${VCP}ChartsCore ${VCP}ViewsContext2D ${VCP}RenderingContextOpenGL2)
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ${VTK_DEFINITIONS})
 
 set(HEADERS
@@ -35,6 +43,6 @@ set(SOURCES
 avogadro_add_library(AvogadroVtk ${HEADERS} ${SOURCES})
 set_target_properties(AvogadroVtk PROPERTIES AUTOMOC TRUE)
 target_link_libraries(AvogadroVtk AvogadroRendering AvogadroQtGui
-  vtkRenderingOpenGL2 vtkGUISupportQt vtkRenderingVolumeOpenGL2
-  vtkRenderingFreeType vtkInteractionStyle vtkChartsCore vtkViewsContext2D
-  vtkRenderingContextOpenGL2 vtkDomainsChemistryOpenGL2 Qt5::Widgets)
+  ${VMP}RenderingOpenGL2 ${VMP}GUISupportQt ${VMP}RenderingVolumeOpenGL2
+  ${VMP}RenderingFreeType ${VMP}InteractionStyle ${VMP}ChartsCore ${VMP}ViewsContext2D
+  ${VMP}RenderingContextOpenGL2 ${VMP}DomainsChemistryOpenGL2 Qt5::Widgets)
