@@ -7,13 +7,14 @@
 # Suleyman Poyraz <zaryob.dev@gmail.com>, 2020.
 # Yunus AK <akyunus@live.com>, 2021.
 # udo pton <udopton@gmail.com>, 2021.
+# Acun <acun1993@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-05-16 19:31+0000\n"
-"Last-Translator: udo pton <udopton@gmail.com>\n"
+"PO-Revision-Date: 2021-06-06 23:35+0000\n"
+"Last-Translator: Acun <acun1993@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
 "Language: tr\n"
@@ -625,7 +626,7 @@ msgstr "Program seçimi çözülemiyor. Bu bir hata."
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr "BackgroundFileFormat'ta molekül ayarlanmadı!"
+msgstr "BackgroundFileFormat'da molekül ayarlanmadı!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -633,7 +634,7 @@ msgstr "Arka Plan Dosya Biçiminde Io::FileFormat ayarlanmadı!"
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr "BackgroundFileFormat'ta dosya adı ayarlanmadı!"
+msgstr "BackgroundFileFormat'da dosya adı ayarlanmadı!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
