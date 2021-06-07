@@ -45,8 +45,9 @@ ExternalProject_Add(crystals
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
 )
+endif()
+
 install(DIRECTORY "${AvogadroLibs_SOURCE_DIR}/../crystals"
 DESTINATION "${INSTALL_DATA_DIR}/avogadro2"
 PATTERN ".git" EXCLUDE
 )
-endif()
