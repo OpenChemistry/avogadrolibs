@@ -76,8 +76,10 @@ QWidget* SelectionTool::toolWidget() const
 
 QUndoCommand* SelectionTool::mousePressEvent(QMouseEvent* e)
 {
-  if (e->button() != Qt::LeftButton || !m_renderer)
+  if (e->button() != Qt::LeftButton || !m_renderer) {
+    m_initSelectionBox = false;
     return nullptr;
+  }
 
   m_drawSelectionBox = false;
   m_initSelectionBox = true;
@@ -154,11 +156,12 @@ QUndoCommand* SelectionTool::mouseDoubleClickEvent(QMouseEvent* e)
 QUndoCommand* SelectionTool::mouseMoveEvent(QMouseEvent* e)
 {
   // Disable this code until rectangle selection is ready.
-  m_drawSelectionBox = true;
-  m_end = Vector2(e->pos().x(), e->pos().y());
-  emit drawablesChanged();
-
-  e->accept();
+  if (m_initSelectionBox) {
+    m_drawSelectionBox = true;
+    m_end = Vector2(e->pos().x(), e->pos().y());
+    emit drawablesChanged();
+    e->accept();
+  }
   return nullptr;
 }
 
