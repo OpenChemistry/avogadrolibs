@@ -65,15 +65,19 @@ private slots:
 
 private:
   void clearAtoms();
-  bool addAtom(const Rendering::Identifier& atom);
-  bool removeAtom(const Rendering::Identifier& atom);
-  bool toggleAtom(const Rendering::Identifier& atom);
+  bool selectAtom(QMouseEvent* e, const Index& atom);
+  bool addAtom(const Index& atom);
+  bool removeAtom(const Index& atom);
+  bool toggleAtom(const Index& atom);
+
+  bool shouldClean(QMouseEvent* e);
+  void selectLinkedMolecule(QMouseEvent* e, Index atom);
 
   QAction* m_activateAction;
   QtGui::Molecule* m_molecule;
   Rendering::GLRenderer* m_renderer;
   SelectionToolWidget* m_toolWidget;
-  bool m_drawSelectionBox;
+  bool m_drawSelectionBox, m_initSelectionBox, m_doubleClick;
   Vector2 m_start;
   Vector2 m_end;
 };
