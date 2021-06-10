@@ -39,7 +39,6 @@
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QAction>
 
-#include <iostream>
 #include <queue>
 #include <set>
 
@@ -96,7 +95,6 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
     m_doubleClick = false;
     return nullptr;
   }
-  shouldClean(e);
   // Assess whether the selection box is big enough to use, or a mis-click.
   m_end = Vector2(e->pos().x(), e->pos().y());
   Vector2f start(m_start.x() < m_end.x() ? m_start.x() : m_end.x(),
@@ -107,11 +105,12 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
     fabs(start.x() - end.x()) > 2 && fabs(start.y() - end.y()) > 2;
 
   if (m_drawSelectionBox && bigEnough) {
+    shouldClean(e);
     m_initSelectionBox = false;
     auto hits = m_renderer->hits(start.x(), start.y(), end.x(), end.y());
-    for (auto it = hits.begin(); it != hits.end(); ++it) {
-      if (it->type == Rendering::AtomType) {
-        selectAtom(e, it->index);
+    for (const auto& hit : hits) {
+      if (hit.type == Rendering::AtomType) {
+        selectAtom(e, hit.index);
       }
     }
   } else {
@@ -121,7 +120,14 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
     Identifier hit = m_renderer->hit(e->pos().x(), e->pos().y());
     // Now add the atom on release.
     if (hit.type == Rendering::AtomType) {
-      toggleAtom(hit.index);
+      // store the result in case it's a toggle
+      bool selected = selectAtom(e, hit.index);
+      shouldClean(e);
+      if (selected) {
+        addAtom(hit.index);
+      } else {
+        removeAtom(hit.index);
+      }
     }
   }
   m_drawSelectionBox = false;
@@ -144,7 +150,10 @@ QUndoCommand* SelectionTool::mouseDoubleClickEvent(QMouseEvent* e)
     } else {
       shouldClean(e);
       m_drawSelectionBox = false;
-      selectAtom(e, hit.index);
+      // resync the select from simple click only on control
+      if (e->modifiers() & Qt::ControlModifier) {
+        toggleAtom(hit.index);
+      }
       selectLinkedMolecule(e, hit.index);
       emit drawablesChanged();
       e->accept();
@@ -235,10 +244,10 @@ void SelectionTool::selectLinkedMolecule(QMouseEvent* e, Index atom)
     toSelect.pop();
     selectAtom(e, atom);
     auto bonds = m_molecule->bonds(atom);
-    for (auto it = bonds.begin(); it != bonds.end(); ++it) {
-      Index nextAtom = it->atom2().index();
+    for (const auto& bond : bonds) {
+      Index nextAtom = bond.atom2().index();
       if (nextAtom == atom) {
-        nextAtom = it->atom1().index();
+        nextAtom = bond.atom1().index();
       }
       if (done.find(nextAtom) == done.end()) {
         done.insert(atom);
@@ -270,7 +279,7 @@ bool SelectionTool::toggleAtom(const Index& atom)
 {
   Atom a = m_molecule->atom(atom);
   a.setSelected(!a.selected());
-  return true;
+  return a.selected();
 }
 
 bool SelectionTool::shouldClean(QMouseEvent* e)
@@ -290,9 +299,13 @@ bool SelectionTool::selectAtom(QMouseEvent* e, const Index& index)
   if (e->modifiers() & Qt::ControlModifier) {
     return toggleAtom(index);
   }
-  // shift and default adds
-  else {
+  // shift and default selection adds
+  else if (e->modifiers() & Qt::ShiftModifier || m_drawSelectionBox) {
     return addAtom(index);
+  }
+  // default toggle
+  else {
+    return toggleAtom(index);
   }
 }
 
