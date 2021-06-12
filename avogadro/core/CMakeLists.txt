@@ -13,7 +13,8 @@ configure_file("${PROJECT_SOURCE_DIR}/cmake/version.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/version.h")
 
 set(HEADERS
-  color3f.h
+  angletools.h
+  angleiterator.h
   array.h
   atom.h
   atomtyper.h
@@ -21,10 +22,12 @@ set(HEADERS
   avogadrocore.h
   basisset.h
   bond.h
+  color3f.h
   coordinateset.h
   coordinateblockgenerator.h
   crystaltools.h
   cube.h
+  dihedraliterator.h
   elements.h
   gaussianset.h
   gaussiansettools.h
@@ -51,10 +54,12 @@ set(HEADERS
 )
 
 set(SOURCES
+  angleiterator.cpp
   coordinateblockgenerator.cpp
   crystaltools.cpp
   cube.cpp
   elements.cpp
+  dihedraliterator.cpp
   gaussianset.cpp
   gaussiansettools.cpp
   graph.cpp
