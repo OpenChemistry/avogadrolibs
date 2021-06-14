@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the Avogadro package.
 # Lihan Zhu <zhulihan@seas.upenn.edu>, 2021.
 # Danial K <danial@proctorio.com>, 2021.
+# Dillon Schultz <dillonschultz93@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
 "PO-Revision-Date: 2021-06-16 17:34+0000\n"
-"Last-Translator: Lihan Zhu <zhulihan@seas.upenn.edu>\n"
+"Last-Translator: Dillon Schultz <dillonschultz93@gmail.com>\n"
 "Language-Team: Afrikaans <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/af/>\n"
 "Language: af\n"
@@ -570,7 +571,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "##101TEST102102**Hello**"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
