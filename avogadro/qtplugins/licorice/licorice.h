@@ -31,7 +31,7 @@ class Licorice : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit Licorice(QObject* parent = 0);
+  explicit Licorice(QObject* parent = nullptr);
   ~Licorice() override;
 
   void process(const Core::Molecule& molecule,

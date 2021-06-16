@@ -29,7 +29,7 @@ class OverlayAxes : public QtGui::ScenePlugin
 {
   Q_OBJECT
 public:
-  explicit OverlayAxes(QObject* parent = 0);
+  explicit OverlayAxes(QObject* parent = nullptr);
   ~OverlayAxes() override;
 
   void process(const Core::Molecule& molecule,

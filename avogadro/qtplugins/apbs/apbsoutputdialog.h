@@ -41,7 +41,7 @@ public:
   /**
    * Constructor for ApbsOutputDialog.
    */
-  ApbsOutputDialog(QWidget* parent_ = 0);
+  ApbsOutputDialog(QWidget* parent_ = nullptr);
 
   /**
    * Destructor for ApbsOutputDialog.

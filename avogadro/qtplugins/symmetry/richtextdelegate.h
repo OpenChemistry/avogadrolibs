@@ -29,7 +29,7 @@ class RichTextDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  RichTextDelegate(QObject* parent = 0)
+  RichTextDelegate(QObject* parent = nullptr)
     : QStyledItemDelegate(parent){};
   QSize sizeHint(const QStyleOptionViewItem& o,
                  const QModelIndex& index) const override;

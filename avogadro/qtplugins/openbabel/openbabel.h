@@ -41,7 +41,7 @@ class OpenBabel : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit OpenBabel(QObject* parent = 0);
+  explicit OpenBabel(QObject* parent = nullptr);
   ~OpenBabel() override;
 
   QString name() const override { return tr("OpenBabel"); }

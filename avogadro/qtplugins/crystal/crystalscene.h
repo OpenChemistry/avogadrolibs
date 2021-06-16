@@ -30,7 +30,7 @@ class CrystalScene : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit CrystalScene(QObject* parent = 0);
+  explicit CrystalScene(QObject* parent = nullptr);
   ~CrystalScene() override;
 
   void process(const Core::Molecule& molecule,

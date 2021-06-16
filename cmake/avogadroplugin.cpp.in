@@ -28,7 +28,7 @@ class @PluginName@Factory : public QObject, public QtGui::@PluginType@Factory
   Q_INTERFACES(Avogadro::QtGui::@PluginType@Factory)
 
 public:
-  explicit @PluginName@Factory(QObject *parent_ = 0) : QObject(parent_) {}
+  explicit @PluginName@Factory(QObject *parent_ = nullptr) : QObject(parent_) {}
 
   QtGui::@PluginType@ * createInstance(QObject *parent_ = nullptr)
   {

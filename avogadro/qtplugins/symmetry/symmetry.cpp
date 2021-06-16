@@ -43,7 +43,7 @@ namespace QtPlugins {
 
 Symmetry::Symmetry(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_)
-  , m_molecule(NULL)
+  , m_molecule(nullptr)
   , m_symmetryWidget(nullptr)
   , m_viewSymmetryAction(new QAction(this))
 {
@@ -79,7 +79,7 @@ Symmetry::~Symmetry()
   qDeleteAll(m_actions);
   m_actions.clear();
 
-  if (m_ctx != NULL) {
+  if (m_ctx != nullptr) {
     msymReleaseContext(m_ctx);
   }
 }
@@ -183,7 +183,7 @@ void Symmetry::detectSymmetry()
 
   unsigned int length = m_molecule->atomCount();
 
-  if (m_molecule == NULL || m_molecule->atomPositions3d().size() != length ||
+  if (m_molecule == nullptr || m_molecule->atomPositions3d().size() != length ||
       length < 2)
     return; // if one atom = Kh
 
@@ -194,15 +194,15 @@ void Symmetry::detectSymmetry()
 
   // interface with libmsym
   msym_error_t ret = MSYM_SUCCESS;
-  msym_element_t* elements = NULL;
-  const char* error = NULL;
+  msym_element_t* elements = nullptr;
+  const char* error = nullptr;
   char point_group[6];
   double cm[3], radius = 0.0, symerr = 0.0;
 
   /* Do not free these variables */
-  const msym_symmetry_operation_t* msops = NULL;
-  const msym_subgroup_t* msg = NULL;
-  const msym_equivalence_set_t* mes = NULL;
+  const msym_symmetry_operation_t* msops = nullptr;
+  const msym_subgroup_t* msg = nullptr;
+  const msym_equivalence_set_t* mes = nullptr;
   int mesl = 0, msgl = 0, msopsl = 0, mlength = 0;
 
   // initialize the c-style array of atom names and coordinates
@@ -221,7 +221,7 @@ void Symmetry::detectSymmetry()
   }
   elements = a;
 
-  if (m_ctx != NULL) {
+  if (m_ctx != nullptr) {
     msymReleaseContext(m_ctx);
     m_ctx = msymCreateContext();
   }
@@ -235,10 +235,10 @@ void Symmetry::detectSymmetry()
 
   if (MSYM_SUCCESS != (ret = msymSetElements(m_ctx, length, elements))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
-    m_symmetryWidget->setEquivalenceSets(0, NULL);
-    m_symmetryWidget->setSymmetryOperations(0, NULL);
-    m_symmetryWidget->setSubgroups(0, NULL);
+    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
+    m_symmetryWidget->setEquivalenceSets(0, nullptr);
+    m_symmetryWidget->setSymmetryOperations(0, nullptr);
+    m_symmetryWidget->setSubgroups(0, nullptr);
     qDebug() << "Error:" << msymErrorString(ret) << " "
              << msymGetErrorDetails();
     return;
@@ -246,10 +246,10 @@ void Symmetry::detectSymmetry()
 
   if (MSYM_SUCCESS != (ret = msymFindSymmetry(m_ctx))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
-    m_symmetryWidget->setEquivalenceSets(0, NULL);
-    m_symmetryWidget->setSymmetryOperations(0, NULL);
-    m_symmetryWidget->setSubgroups(0, NULL);
+    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
+    m_symmetryWidget->setEquivalenceSets(0, nullptr);
+    m_symmetryWidget->setSymmetryOperations(0, nullptr);
+    m_symmetryWidget->setSubgroups(0, nullptr);
     qDebug() << "Error:" << msymErrorString(ret) << " "
              << msymGetErrorDetails();
     return;
@@ -259,10 +259,10 @@ void Symmetry::detectSymmetry()
   if (MSYM_SUCCESS !=
       (ret = msymGetPointGroupName(m_ctx, sizeof(char[6]), point_group))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
-    m_symmetryWidget->setEquivalenceSets(0, NULL);
-    m_symmetryWidget->setSymmetryOperations(0, NULL);
-    m_symmetryWidget->setSubgroups(0, NULL);
+    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
+    m_symmetryWidget->setEquivalenceSets(0, nullptr);
+    m_symmetryWidget->setSymmetryOperations(0, nullptr);
+    m_symmetryWidget->setSubgroups(0, nullptr);
     qDebug() << "Error:" << msymErrorString(ret) << " "
              << msymGetErrorDetails();
     return;
@@ -271,10 +271,10 @@ void Symmetry::detectSymmetry()
   if (MSYM_SUCCESS !=
       (ret = msymGetSymmetryOperations(m_ctx, &msopsl, &msops))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
-    m_symmetryWidget->setEquivalenceSets(0, NULL);
-    m_symmetryWidget->setSymmetryOperations(0, NULL);
-    m_symmetryWidget->setSubgroups(0, NULL);
+    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
+    m_symmetryWidget->setEquivalenceSets(0, nullptr);
+    m_symmetryWidget->setSymmetryOperations(0, nullptr);
+    m_symmetryWidget->setSubgroups(0, nullptr);
     qDebug() << "Error:" << msymErrorString(ret) << " "
              << msymGetErrorDetails();
     return;
@@ -282,10 +282,10 @@ void Symmetry::detectSymmetry()
 
   if (MSYM_SUCCESS != (ret = msymGetEquivalenceSets(m_ctx, &mesl, &mes))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
-    m_symmetryWidget->setEquivalenceSets(0, NULL);
-    m_symmetryWidget->setSymmetryOperations(0, NULL);
-    m_symmetryWidget->setSubgroups(0, NULL);
+    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
+    m_symmetryWidget->setEquivalenceSets(0, nullptr);
+    m_symmetryWidget->setSymmetryOperations(0, nullptr);
+    m_symmetryWidget->setSubgroups(0, nullptr);
     qDebug() << "Error:" << msymErrorString(ret) << " "
              << msymGetErrorDetails();
     return;
@@ -293,10 +293,10 @@ void Symmetry::detectSymmetry()
 
   if (MSYM_SUCCESS != (ret = msymGetCenterOfMass(m_ctx, cm))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
-    m_symmetryWidget->setEquivalenceSets(0, NULL);
-    m_symmetryWidget->setSymmetryOperations(0, NULL);
-    m_symmetryWidget->setSubgroups(0, NULL);
+    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
+    m_symmetryWidget->setEquivalenceSets(0, nullptr);
+    m_symmetryWidget->setSymmetryOperations(0, nullptr);
+    m_symmetryWidget->setSubgroups(0, nullptr);
     qDebug() << "Error:" << msymErrorString(ret) << " "
              << msymGetErrorDetails();
     return;
@@ -304,10 +304,10 @@ void Symmetry::detectSymmetry()
 
   if (MSYM_SUCCESS != (ret = msymGetRadius(m_ctx, &radius))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
-    m_symmetryWidget->setEquivalenceSets(0, NULL);
-    m_symmetryWidget->setSymmetryOperations(0, NULL);
-    m_symmetryWidget->setSubgroups(0, NULL);
+    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
+    m_symmetryWidget->setEquivalenceSets(0, nullptr);
+    m_symmetryWidget->setSymmetryOperations(0, nullptr);
+    m_symmetryWidget->setSubgroups(0, nullptr);
     qDebug() << "Error:" << msymErrorString(ret) << " "
              << msymGetErrorDetails();
     return;
@@ -316,16 +316,16 @@ void Symmetry::detectSymmetry()
   if (point_group[1] != '0') {
     if (MSYM_SUCCESS != (ret = msymGetSubgroups(m_ctx, &msgl, &msg))) {
       free(elements);
-      m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(0));
-      m_symmetryWidget->setEquivalenceSets(0, NULL);
-      m_symmetryWidget->setSymmetryOperations(0, NULL);
-      m_symmetryWidget->setSubgroups(0, NULL);
+      m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
+      m_symmetryWidget->setEquivalenceSets(0, nullptr);
+      m_symmetryWidget->setSymmetryOperations(0, nullptr);
+      m_symmetryWidget->setSubgroups(0, nullptr);
       qDebug() << "Error:" << msymErrorString(ret) << " "
                << msymGetErrorDetails();
       return;
     }
   } else {
-    m_symmetryWidget->setSubgroups(0, NULL);
+    m_symmetryWidget->setSubgroups(0, nullptr);
   }
 
   // TODO: Subgroups
@@ -352,11 +352,11 @@ void Symmetry::symmetrizeMolecule()
   qDebug() << "symmetrize";
   unsigned int length = m_molecule->atomCount();
 
-  if (m_molecule == NULL || m_molecule->atomPositions3d().size() != length ||
+  if (m_molecule == nullptr || m_molecule->atomPositions3d().size() != length ||
       length < 2)
     return; // if one atom = Kh
 
-  msym_element_t* melements = NULL;
+  msym_element_t* melements = nullptr;
   int mlength = 0;
   double symerr = 0.0;
   msym_error_t ret = MSYM_SUCCESS;

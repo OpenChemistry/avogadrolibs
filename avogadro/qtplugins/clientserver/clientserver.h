@@ -50,7 +50,7 @@ class ClientServer : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit ClientServer(QObject* parent_ = 0);
+  explicit ClientServer(QObject* parent_ = nullptr);
   ~ClientServer();
 
   QString name() const { return tr("Client server"); }

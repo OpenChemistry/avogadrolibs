@@ -34,7 +34,7 @@ class CoordinateTextEdit : public QTextEdit
 {
   Q_OBJECT
 public:
-  explicit CoordinateTextEdit(QWidget* p = 0);
+  explicit CoordinateTextEdit(QWidget* p = nullptr);
 
   bool hasInvalidMarks() const { return m_hasInvalidMarks; }
 

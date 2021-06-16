@@ -37,7 +37,7 @@ class OBProcess : public QObject
 {
   Q_OBJECT
 public:
-  explicit OBProcess(QObject* parent_ = 0);
+  explicit OBProcess(QObject* parent_ = nullptr);
 
   /**
    * @return The output of obabel -V.

@@ -30,12 +30,12 @@ TEST(CoordinateSetTest, StoreType)
   EXPECT_TRUE(array->isType(Vector3()));
 
   delete array;
-  array = 0;
+  array = nullptr;
 
   array = new CoordinateSet<float>;
   EXPECT_TRUE(array->isType(float()));
   delete array;
-  array = 0;
+  array = nullptr;
 }
 
 TEST(CoordinateSetTest, Resize)

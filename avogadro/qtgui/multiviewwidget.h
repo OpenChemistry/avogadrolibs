@@ -41,7 +41,7 @@ class AVOGADROQTGUI_EXPORT MultiViewWidget : public QWidget
   Q_OBJECT
 
 public:
-  explicit MultiViewWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+  explicit MultiViewWidget(QWidget* parent = nullptr, Qt::WindowFlags f = 0);
   ~MultiViewWidget() override;
 
   void addWidget(QWidget* widget);
@@ -72,7 +72,7 @@ private:
   QWidget* m_activeWidget;
   ActiveWidgetFilter* m_activeFilter;
 
-  ContainerWidget* createContainer(QWidget* widget = 0);
+  ContainerWidget* createContainer(QWidget* widget = nullptr);
 
   void splitView(Qt::Orientation orient, ContainerWidget* container);
 };

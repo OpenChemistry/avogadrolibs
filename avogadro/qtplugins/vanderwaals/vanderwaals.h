@@ -31,7 +31,7 @@ class VanDerWaals : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit VanDerWaals(QObject* parent = 0);
+  explicit VanDerWaals(QObject* parent = nullptr);
   ~VanDerWaals() override;
 
   void process(const Core::Molecule& molecule,

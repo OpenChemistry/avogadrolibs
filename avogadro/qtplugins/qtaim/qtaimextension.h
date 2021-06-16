@@ -29,7 +29,7 @@ class QTAIMExtension : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit QTAIMExtension(QObject* parent = 0);
+  explicit QTAIMExtension(QObject* parent = nullptr);
   ~QTAIMExtension() override;
 
   QString name() const override { return tr("QTAIM"); }

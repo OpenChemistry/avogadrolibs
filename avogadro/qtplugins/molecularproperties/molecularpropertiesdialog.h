@@ -46,7 +46,7 @@ class MolecularPropertiesDialog : public QDialog
 
 public:
   explicit MolecularPropertiesDialog(QtGui::Molecule* mol,
-                                     QWidget* parent_ = 0);
+                                     QWidget* parent_ = nullptr);
   ~MolecularPropertiesDialog() override;
 
   QtGui::Molecule* molecule() { return m_molecule; }

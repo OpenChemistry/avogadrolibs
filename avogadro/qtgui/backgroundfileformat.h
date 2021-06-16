@@ -45,7 +45,8 @@ public:
   /**
    * This class takes ownership of @a format and will delete it when destructed.
    */
-  explicit BackgroundFileFormat(Io::FileFormat* format, QObject* aparent = 0);
+  explicit BackgroundFileFormat(Io::FileFormat* format,
+                                QObject* aparent = nullptr);
   ~BackgroundFileFormat();
 
   /**

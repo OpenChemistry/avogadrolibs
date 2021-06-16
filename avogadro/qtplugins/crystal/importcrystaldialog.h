@@ -42,7 +42,7 @@ class ImportCrystalDialog : public QDialog
 {
   Q_OBJECT
 public:
-  ImportCrystalDialog(QWidget* p = 0);
+  ImportCrystalDialog(QWidget* p = nullptr);
   ~ImportCrystalDialog() override;
 
   // Avogadro::Core::Molecule is required for the format function

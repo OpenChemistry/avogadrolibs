@@ -39,7 +39,7 @@ class Cp2kInput : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit Cp2kInput(QObject* parent = 0);
+  explicit Cp2kInput(QObject* parent = nullptr);
   ~Cp2kInput();
 
   QString name() const { return tr("CP2K input"); }

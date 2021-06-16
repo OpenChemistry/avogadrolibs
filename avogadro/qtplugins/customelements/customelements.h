@@ -29,7 +29,7 @@ class CustomElements : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit CustomElements(QObject* parent_ = 0);
+  explicit CustomElements(QObject* parent_ = nullptr);
   ~CustomElements() override;
 
   QString name() const override { return tr("Custom Elements"); }

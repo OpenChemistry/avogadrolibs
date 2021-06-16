@@ -38,7 +38,7 @@ class AVOGADROQTGUI_EXPORT ContainerWidget : public QWidget
   Q_OBJECT
 
 public:
-  explicit ContainerWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+  explicit ContainerWidget(QWidget* parent = nullptr, Qt::WindowFlags f = 0);
   ~ContainerWidget() override;
 
   void setViewWidget(QWidget* widget);

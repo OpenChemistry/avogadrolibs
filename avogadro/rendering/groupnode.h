@@ -36,7 +36,7 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT GroupNode : public Node
 {
 public:
-  explicit GroupNode(GroupNode* parent = 0);
+  explicit GroupNode(GroupNode* parent = nullptr);
   ~GroupNode() override;
 
   /**

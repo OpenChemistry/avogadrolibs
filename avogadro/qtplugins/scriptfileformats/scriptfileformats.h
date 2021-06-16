@@ -33,7 +33,7 @@ class ScriptFileFormats : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit ScriptFileFormats(QObject* parent = 0);
+  explicit ScriptFileFormats(QObject* parent = nullptr);
   ~ScriptFileFormats() override;
 
   QString name() const override { return tr("Script File Formats"); }

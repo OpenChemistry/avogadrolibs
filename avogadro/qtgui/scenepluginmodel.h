@@ -38,7 +38,7 @@ class AVOGADROQTGUI_EXPORT ScenePluginModel : public QAbstractItemModel
   Q_OBJECT
 
 public:
-  explicit ScenePluginModel(QObject* parent = 0);
+  explicit ScenePluginModel(QObject* parent = nullptr);
 
   QModelIndex parent(const QModelIndex& child) const override;
   int rowCount(const QModelIndex& parent) const override;

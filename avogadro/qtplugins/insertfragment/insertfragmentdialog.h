@@ -34,7 +34,9 @@ class InsertFragmentDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit InsertFragmentDialog(QWidget* parent = 0, QString directory = "molecules", Qt::WindowFlags f = 0);
+  explicit InsertFragmentDialog(QWidget* parent = nullptr,
+                                QString directory = "molecules",
+                                Qt::WindowFlags f = 0);
   ~InsertFragmentDialog() override;
 
   const QString fileName();

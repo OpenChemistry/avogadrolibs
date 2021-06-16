@@ -44,7 +44,7 @@ class PlotXrd : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit PlotXrd(QObject* parent_ = 0);
+  explicit PlotXrd(QObject* parent_ = nullptr);
   ~PlotXrd();
 
   QString name() const { return tr("PlotXrd"); }

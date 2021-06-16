@@ -52,7 +52,7 @@ class AVOGADROQTGUI_EXPORT ToolPlugin : public QObject
   Q_OBJECT
 
 public:
-  explicit ToolPlugin(QObject* parent = 0);
+  explicit ToolPlugin(QObject* parent = nullptr);
   ~ToolPlugin() override;
 
   /**

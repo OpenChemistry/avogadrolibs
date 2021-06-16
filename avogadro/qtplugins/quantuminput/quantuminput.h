@@ -47,7 +47,7 @@ class QuantumInput : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit QuantumInput(QObject* parent = 0);
+  explicit QuantumInput(QObject* parent = nullptr);
   ~QuantumInput() override;
 
   QString name() const override { return tr("Quantum input"); }

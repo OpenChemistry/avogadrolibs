@@ -33,7 +33,7 @@ class ActiveWidgetFilter : public QObject
   Q_OBJECT
 
 public:
-  ActiveWidgetFilter(MultiViewWidget* p = 0)
+  ActiveWidgetFilter(MultiViewWidget* p = nullptr)
     : QObject(p)
     , m_widget(p)
   {}

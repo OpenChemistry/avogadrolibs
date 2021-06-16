@@ -257,7 +257,7 @@ static void destroy_region(region* R)
 {
   destroy_hypercube(&R->h);
   free(R->ee);
-  R->ee = 0;
+  R->ee = nullptr;
 }
 
 static int cut_region(region* R, region* R2)
@@ -830,7 +830,7 @@ static rule* make_rule15gauss(unsigned int dim, unsigned int fdim)
   if (dim != 1)
     return nullptr; /* this rule is only for 1d integrals */
 
-  return make_rule(sizeof(rule), dim, fdim, 15, rule15gauss_evalError, 0);
+  return make_rule(sizeof(rule), dim, fdim, 15, rule15gauss_evalError, nullptr);
 }
 
 /***************************************************************************/
@@ -861,7 +861,7 @@ static heap heap_alloc(unsigned int nalloc, unsigned int fdim)
   unsigned int i;
   h.n = 0;
   h.nalloc = 0;
-  h.items = 0;
+  h.items = nullptr;
   h.fdim = fdim;
   h.ee = (esterr*)malloc(sizeof(esterr) * fdim);
   if (h.ee) {
