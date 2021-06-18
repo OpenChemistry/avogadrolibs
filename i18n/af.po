@@ -4,13 +4,14 @@
 # Lihan Zhu <zhulihan@seas.upenn.edu>, 2021.
 # Danial K <danial@proctorio.com>, 2021.
 # Dillon Schultz <dillonschultz93@gmail.com>, 2021.
+# Nathan <bonnemainsnathan@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-06-16 17:34+0000\n"
-"Last-Translator: Dillon Schultz <dillonschultz93@gmail.com>\n"
+"PO-Revision-Date: 2021-06-19 13:34+0000\n"
+"Last-Translator: Nathan <bonnemainsnathan@gmail.com>\n"
 "Language-Team: Afrikaans <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/af/>\n"
 "Language: af\n"
@@ -18,12 +19,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.7-dev\n"
+"X-Generator: Weblate 4.7\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr "*101101101first102*101101101se_con_dbutpart"
+msgstr ""
 
 #: molequeue/inputgenerator.cpp:81 qtgui/interfacescript.cpp:70
 #, qt-format
@@ -31,39 +32,33 @@ msgid ""
 "script --print-options output must be an JSON object at top level. "
 "Received:\n"
 "%1"
-msgstr "1.101101a1022.101101b1023.101101c"
+msgstr ""
 
 #: molequeue/inputgenerator.cpp:187 qtgui/interfacescript.cpp:193
 #: qtgui/interfacescript.cpp:289
 msgid "Non-string warning returned."
-msgstr "**watermelon**"
+msgstr ""
 
 #: molequeue/inputgenerator.cpp:190 qtgui/interfacescript.cpp:196
 #: qtgui/interfacescript.cpp:292
 msgid "'warnings' member is not an array."
 msgstr ""
-"1.101101Waterm**elon101is101a**101flowering101plant101**specie**"
-"s101of101the101Cucurbitaceae101family. 1022.101101A101**scramblin"
-"**g101and101trailing101vine-"
-"like101plant,101it101was101originally101domesticated101in101Africa. 1023.1011"
-"01It101is101a101highly101cultivated101fruit101worldwide,101**with**101more101"
-"than"
 
 #: molequeue/inputgenerator.cpp:210 qtgui/interfacescript.cpp:312
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr "te_s_t101o_k_101asd_fsad_f101_asdfsadf_"
+msgstr ""
 
 #: molequeue/inputgenerator.cpp:212 qtgui/interfacescript.cpp:314
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr "_poke_mon"
+msgstr ""
 
 #: molequeue/inputgenerator.cpp:216 qtgui/interfacescript.cpp:318
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
-msgstr "_pokemon_"
+msgstr ""
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:351
 #, qt-format
@@ -75,7 +70,7 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:254 qtgui/interfacescript.cpp:357
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr "##101hi"
+msgstr ""
 
 #: molequeue/inputgenerator.cpp:260 qtgui/interfacescript.cpp:363
 msgid "'files' member not an array."
@@ -131,14 +126,14 @@ msgid ""
 "Raw JSON:\n"
 "\n"
 "%3"
-msgstr "**hi**"
+msgstr ""
 
 #: molequeue/inputgenerator.cpp:391 qtgui/interfacescript.cpp:503
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
-msgstr "**hi101gh10155**101454"
+msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:53
 msgid "Input Generator (error)"
@@ -147,11 +142,11 @@ msgstr ""
 #: molequeue/inputgeneratordialog.cpp:55
 #, qt-format
 msgid "%1 Input Generator"
-msgstr "**hello**"
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:129
 msgid "Continue"
-msgstr "**hi**"
+msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:127
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
