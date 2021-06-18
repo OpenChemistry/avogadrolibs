@@ -31,7 +31,7 @@ namespace Avogadro {
 namespace Core {
 
 Molecule::Molecule()
-  : m_graphDirty(false), m_basisSet(nullptr), m_unitCell(nullptr)
+  : m_graphDirty(true), m_basisSet(nullptr), m_unitCell(nullptr)
 {}
 
 Molecule::Molecule(const Molecule& other)

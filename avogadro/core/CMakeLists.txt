@@ -20,6 +20,7 @@ set(HEADERS
   atomtyper-inline.h
   avogadrocore.h
   basisset.h
+  connectedgroup.h
   bond.h
   coordinateset.h
   coordinateblockgenerator.h
@@ -51,6 +52,7 @@ set(HEADERS
 )
 
 set(SOURCES
+  connectedgroup.cpp
   coordinateblockgenerator.cpp
   crystaltools.cpp
   cube.cpp

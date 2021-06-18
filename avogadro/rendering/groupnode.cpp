@@ -54,6 +54,19 @@ void GroupNode::addChild(Node* node)
   m_children.push_back(node);
 }
 
+bool GroupNode::hasChild(Node* node)
+{
+  if (!node)
+    return false;
+  for (std::vector<Node*>::const_iterator it = m_children.begin();
+       it != m_children.end(); ++it) {
+    if (*it == node) {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool GroupNode::removeChild(Node* node)
 {
   if (!node)

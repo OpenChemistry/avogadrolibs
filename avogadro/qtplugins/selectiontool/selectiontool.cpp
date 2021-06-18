@@ -236,24 +236,9 @@ void SelectionTool::applyColor(Vector3ub color)
 
 void SelectionTool::selectLinkedMolecule(QMouseEvent* e, Index atom)
 {
-  std::queue<Index> toSelect;
-  std::set<Index> done;
-  toSelect.push(atom);
-  while (!toSelect.empty()) {
-    atom = toSelect.front();
-    toSelect.pop();
-    selectAtom(e, atom);
-    auto bonds = m_molecule->bonds(atom);
-    for (const auto& bond : bonds) {
-      Index nextAtom = bond.atom2().index();
-      if (nextAtom == atom) {
-        nextAtom = bond.atom1().index();
-      }
-      if (done.find(nextAtom) == done.end()) {
-        done.insert(atom);
-        toSelect.push(nextAtom);
-      }
-    }
+  auto connectedAtoms = m_molecule->graph().connectedComponent(atom);
+  for (auto a : connectedAtoms) {
+    selectAtom(e, a);
   }
 }
 
