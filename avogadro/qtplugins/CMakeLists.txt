@@ -72,7 +72,7 @@ function(avogadro_plugin name description type header pluginClass sources)
     ${rc_srcs}
     ${name}Plugin.cpp
   )
-  target_link_libraries(${name} LINK_PRIVATE AvogadroCore AvogadroQtGui)
+  target_link_libraries(${name} PRIVATE AvogadroCore AvogadroQtGui)
 
   if("${_plugin_object}" STREQUAL "STATIC")
     set_target_properties(${name} PROPERTIES COMPILE_DEFINITIONS
@@ -219,5 +219,5 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroQtPlugins ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroQtPlugins LINK_PUBLIC ${Qt5Core_LIBRARIES}
-  LINK_PRIVATE ${AvogadroLibs_STATIC_PLUGINS} AvogadroQtGui)
+target_link_libraries(AvogadroQtPlugins PUBLIC ${Qt5Core_LIBRARIES}
+  PRIVATE ${AvogadroLibs_STATIC_PLUGINS} AvogadroQtGui)

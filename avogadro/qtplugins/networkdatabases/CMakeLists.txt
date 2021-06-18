@@ -12,4 +12,4 @@ avogadro_plugin(NetworkDatabases
 )
 
 target_link_libraries(NetworkDatabases
-  LINK_PRIVATE AvogadroIO ${Qt5Network_LIBRARIES})
+  PRIVATE AvogadroIO ${Qt5Network_LIBRARIES})

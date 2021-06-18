@@ -12,4 +12,4 @@ avogadro_plugin(FetchPDB
 )
 
 target_link_libraries(FetchPDB
-  LINK_PRIVATE AvogadroIO ${Qt5Network_LIBRARIES})
+  PRIVATE AvogadroIO ${Qt5Network_LIBRARIES})

@@ -9,4 +9,4 @@ avogadro_plugin(ResetView
   ""
 )
 
-target_link_libraries(ResetView LINK_PRIVATE AvogadroRendering)
+target_link_libraries(ResetView PRIVATE AvogadroRendering)

@@ -95,4 +95,4 @@ endif()
 
 avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroCore
-  LINK_PRIVATE ${SPGLIB_LIBRARY} ${EXTRA_LINK_LIB})
+  PRIVATE ${SPGLIB_LIBRARY} ${EXTRA_LINK_LIB})
