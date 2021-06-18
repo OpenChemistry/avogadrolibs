@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012—2016, 2020.
 # Danial K <danial@proctorio.com>, 2021.
+# Nathan <bonnemainsnathan@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2021-06-18 00:36+0000\n"
-"Last-Translator: Danial K <danial@proctorio.com>\n"
+"PO-Revision-Date: 2021-06-19 13:34+0000\n"
+"Last-Translator: Nathan <bonnemainsnathan@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
 "Language: sr\n"
@@ -25,8 +26,6 @@ msgstr ""
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
 msgstr ""
-"*7$%17$%17$%1 first7$%1**bullet**8$%27$%17$%17$%17$%11."
-"7$%17$%1numbers8$%27$%17$%17$%17$%12.7$%17$%1 7$%1 7$%1 7$%1 7$%1 spaces"
 
 #: molequeue/inputgenerator.cpp:81 qtgui/interfacescript.cpp:70
 #, qt-format
@@ -35,15 +34,11 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
-"####7$%1**bolded**7$%1heading7$%138$%28$%2para7$%1_graph_8$%28$%2##7$%17$%1_h"
-"ed_"
 
 #: molequeue/inputgenerator.cpp:187 qtgui/interfacescript.cpp:193
 #: qtgui/interfacescript.cpp:289
 msgid "Non-string warning returned."
 msgstr ""
-">7$%1quote8$%2>7$%18$%2>7$%1###7$%1hed7$%1**2**7$%1or7$%1_**1**_8$%2>7$%18$%2"
-">7$%1*7$%17$%17$%1_**ex**_"
 
 #: molequeue/inputgenerator.cpp:190 qtgui/interfacescript.cpp:196
 #: qtgui/interfacescript.cpp:292
@@ -59,8 +54,6 @@ msgstr ""
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr ""
-"yee.7$%1 7$%1 7$%1haw8$%28$%2*7$%17$%17$%1 7$%1 7$%1 7$%1 7$%1 "
-"yoinhk8$%2*7$%17$%17$%1spaces.7$%1 7$%1 7$%1 7$%1 more7$%1spaces"
 
 #: molequeue/inputgenerator.cpp:216 qtgui/interfacescript.cpp:318
 #, qt-format
@@ -74,9 +67,6 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
-"*7$%17$%17$%1test.7$%1 7$%1 space8$%27$%17$%17$%17$%1*7$%17$%17$%1indent8$%28"
-"$%2>7$%1*7$%17$%17$%1quotes8$%2>7$%1*7$%17$%17$%1 7$%1 7$%1 "
-"7$%1_**space7$%1before**_"
 
 #: molequeue/inputgenerator.cpp:254 qtgui/interfacescript.cpp:357
 #, qt-format
