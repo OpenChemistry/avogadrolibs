@@ -1042,9 +1042,8 @@ msgid "Copernicium"
 msgstr "Cô-péc-ni-xi"
 
 #: qtgui/elementtranslator.cpp:368
-#, fuzzy
 msgid "Nihonium"
-msgstr "Zi-cô-ni"
+msgstr ""
 
 #: qtgui/elementtranslator.cpp:371
 msgid "Flerovium"

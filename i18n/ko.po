@@ -1041,29 +1041,28 @@ msgid "Copernicium"
 msgstr "코페르니슘"
 
 #: qtgui/elementtranslator.cpp:368
-#, fuzzy
 msgid "Nihonium"
-msgstr "지르코늄"
+msgstr ""니호늄
 
 #: qtgui/elementtranslator.cpp:371
 msgid "Flerovium"
-msgstr ""
+msgstr "플레로븀"
 
 #: qtgui/elementtranslator.cpp:374
 msgid "Moscovium"
-msgstr ""
+msgstr "모스코븀"
 
 #: qtgui/elementtranslator.cpp:377
 msgid "Livermorium"
-msgstr ""
+msgstr "리버모륨"
 
 #: qtgui/elementtranslator.cpp:380
 msgid "Tennessine"
-msgstr ""
+msgstr "테네신"
 
 #: qtgui/elementtranslator.cpp:383
 msgid "Oganesson"
-msgstr ""
+msgstr "오가네손"
 
 #: qtgui/filebrowsewidget.cpp:39
 #, fuzzy
