@@ -36,6 +36,8 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <avogadro/core/angletools.h>
+
 #include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
@@ -203,14 +205,10 @@ void MeasureTool::draw(Rendering::GroupNode& node)
         QString("%1 %L2\n")
           .arg(tr("Dihedral:"), labelWidth)
           .arg(tr("%L1°").arg(dihedralAngle(v1, v2, v3), 10, 'f', 3), 10);
-      angle23 =
-        static_cast<float>(std::acos((-v2).dot(v3) / (v2Norm * v3Norm))) *
-        RAD_TO_DEG_F;
+      angle23 = bondAngle(v2, v3);
     // fall through
     case 3:
-      angle12 =
-        static_cast<float>(std::acos((-v1).dot(v2) / (v1Norm * v2Norm))) *
-        RAD_TO_DEG_F;
+      angle12 = bondAngle(v1, v2);
       overlayText +=
         QString("%1 %L2 %L3\n")
           .arg(tr("Angles:"), labelWidth)
@@ -269,20 +267,6 @@ inline Vector3ub MeasureTool::contrastingColor(const Vector3ub& rgb) const
   }
 
   return result;
-}
-
-float MeasureTool::dihedralAngle(const Vector3& b1, const Vector3& b2,
-                                 const Vector3& b3) const
-{
-  // See http://math.stackexchange.com/questions/47059/
-  // how-do-i-calculate-a-dihedral-angle-given-cartesian-coordinates
-  // for description of algorithm
-  const Vector3 n1 = b1.cross(b2).normalized();
-  const Vector3 n2 = b2.cross(b3).normalized();
-  const Vector3 m1 = n1.cross(b2.normalized());
-  const Real x(n1.dot(n2));
-  const Real y(m1.dot(n2));
-  return static_cast<float>(std::atan2(y, x)) * RAD_TO_DEG_F;
 }
 
 bool MeasureTool::toggleAtom(const Rendering::Identifier& atom)
