@@ -2,21 +2,23 @@
 # Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Dillon Schultz <dillonschultz93@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-09-12 15:22-0400\n"
-"PO-Revision-Date: 2016-06-10 06:48+0000\n"
-"Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
-"Language-Team: Albanian <sq@li.org>\n"
+"PO-Revision-Date: 2021-06-16 17:34+0000\n"
+"Last-Translator: Dillon Schultz <dillonschultz93@gmail.com>\n"
+"Language-Team: Albanian <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/sq/>\n"
 "Language: sq\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.7-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:00+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:84
 #, qt-format
@@ -40,6 +42,12 @@ msgstr ""
 #: qtgui/interfacescript.cpp:292
 msgid "'warnings' member is not an array."
 msgstr ""
+"1.101101Waterm**elon101is101a**101flowering101plant101**specie**"
+"s101of101the101Cucurbitaceae101family. 1022.101101A101**scramblin"
+"**g101and101trailing101vine-"
+"like101plant,101it101was101originally101domesticated101in101Africa. 1023.1011"
+"01It101is101a101highly101cultivated101fruit101worldwide,101**with**101more101"
+"than"
 
 #: molequeue/inputgenerator.cpp:210 qtgui/interfacescript.cpp:312
 #, qt-format
