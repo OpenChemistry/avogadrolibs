@@ -1042,12 +1042,11 @@ msgstr "Roentgenium (錀)"
 
 #: qtgui/elementtranslator.cpp:365
 msgid "Copernicium"
-msgstr "Copernicium 鎶"
+msgstr "Copernicium (鎶)"
 
 #: qtgui/elementtranslator.cpp:368
-#, fuzzy
 msgid "Nihonium"
-msgstr "Zirconium (鋯)"
+msgstr ""
 
 #: qtgui/elementtranslator.cpp:371
 msgid "Flerovium"

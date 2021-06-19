@@ -1055,9 +1055,8 @@ msgid "Copernicium"
 msgstr "Copernício"
 
 #: qtgui/elementtranslator.cpp:368
-#, fuzzy
 msgid "Nihonium"
-msgstr "Zircónio"
+msgstr "Nihônio"
 
 #: qtgui/elementtranslator.cpp:371
 msgid "Flerovium"
@@ -1065,7 +1064,7 @@ msgstr "Fleróvio"
 
 #: qtgui/elementtranslator.cpp:374
 msgid "Moscovium"
-msgstr ""
+msgstr "Moscóvio"
 
 #: qtgui/elementtranslator.cpp:377
 msgid "Livermorium"
@@ -1073,11 +1072,11 @@ msgstr "Livermório"
 
 #: qtgui/elementtranslator.cpp:380
 msgid "Tennessine"
-msgstr ""
+msgstr "Tenesso"
 
 #: qtgui/elementtranslator.cpp:383
 msgid "Oganesson"
-msgstr ""
+msgstr "Oganesson"
 
 #: qtgui/filebrowsewidget.cpp:39
 msgid "Browse"
