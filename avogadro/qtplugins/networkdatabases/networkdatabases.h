@@ -41,7 +41,7 @@ class NetworkDatabases : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit NetworkDatabases(QObject* parent = 0);
+  explicit NetworkDatabases(QObject* parent = nullptr);
   ~NetworkDatabases() override;
 
   QString name() const override { return tr("Network Databases"); }

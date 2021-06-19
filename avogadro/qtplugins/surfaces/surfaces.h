@@ -51,7 +51,7 @@ class Surfaces : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit Surfaces(QObject* parent = 0);
+  explicit Surfaces(QObject* parent = nullptr);
   ~Surfaces();
 
   enum Type

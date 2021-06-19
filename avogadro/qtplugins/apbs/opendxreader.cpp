@@ -27,7 +27,7 @@ namespace QtPlugins {
 
 using Core::Cube;
 
-OpenDxReader::OpenDxReader() : m_cube(0)
+OpenDxReader::OpenDxReader() : m_cube(nullptr)
 {
 }
 

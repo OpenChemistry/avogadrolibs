@@ -34,7 +34,7 @@ namespace QtPlugins {
 using MoleQueue::InputGenerator;
 
 ApbsDialog::ApbsDialog(QWidget* parent_)
-  : QDialog(parent_), m_ui(new Ui::ApbsDialog), m_molecule(0),
+  : QDialog(parent_), m_ui(new Ui::ApbsDialog), m_molecule(nullptr),
     m_inputGenerator(
       new InputGenerator(QCoreApplication::applicationDirPath() + "/../" +
                          QtGui::Utilities::libraryDirectory() +

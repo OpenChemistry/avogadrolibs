@@ -42,7 +42,7 @@ class FetchPDB : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit FetchPDB(QObject* parent = 0);
+  explicit FetchPDB(QObject* parent = nullptr);
   ~FetchPDB() override;
 
   QString name() const override { return tr("Fetch from PDB"); }

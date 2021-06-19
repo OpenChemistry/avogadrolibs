@@ -42,7 +42,7 @@ class PluginDownloader : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit PluginDownloader(QObject* parent = 0);
+  explicit PluginDownloader(QObject* parent = nullptr);
   ~PluginDownloader() override;
 
   QString name() const override { return tr("Download Plugins"); }

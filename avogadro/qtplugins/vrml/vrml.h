@@ -30,7 +30,7 @@ class VRML : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit VRML(QObject* p = 0);
+  explicit VRML(QObject* p = nullptr);
   ~VRML() override;
 
   QString name() const override { return tr("VRML"); }

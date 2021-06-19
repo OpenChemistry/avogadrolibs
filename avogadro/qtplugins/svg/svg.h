@@ -22,7 +22,7 @@ class SVG : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit SVG(QObject* parent_ = 0);
+  explicit SVG(QObject* parent_ = nullptr);
   ~SVG() override;
   QString name() const override { return tr("SVG"); }
 

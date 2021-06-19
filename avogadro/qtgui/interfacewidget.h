@@ -53,7 +53,8 @@ public:
    * Construct a widget that dynamically generates a GUI to configure the
    * script specified by scriptFilePath.
    */
-  explicit InterfaceWidget(const QString& scriptFilePath, QWidget* parent_ = 0);
+  explicit InterfaceWidget(const QString& scriptFilePath,
+                           QWidget* parent_ = nullptr);
   ~InterfaceWidget() override;
 
   /**

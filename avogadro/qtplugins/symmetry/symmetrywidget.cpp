@@ -76,13 +76,13 @@ msym_thresholds_t sloppy_thresholds = {
 SymmetryWidget::SymmetryWidget(QWidget* parent_)
   : QWidget(parent_)
   , m_ui(new Ui::SymmetryWidget)
-  , m_molecule(NULL)
+  , m_molecule(nullptr)
   , m_equivalenceTreeModel(new QStandardItemModel(this))
   , m_operationsTableModel(new OperationsTableModel(this))
   , m_subgroupsTreeModel(new QStandardItemModel(this))
-  , m_es(NULL)
-  , m_sops(NULL)
-  , m_sg(NULL)
+  , m_es(nullptr)
+  , m_sops(nullptr)
+  , m_sg(nullptr)
   , m_sopsl(0)
   , m_sgl(0)
   , m_radius(0.0)
@@ -292,7 +292,7 @@ void SymmetryWidget::equivalenceSelectionChanged(
 
   const msym_equivalence_set_t* smes = &m_es[group];
   const msym_element_t* a = smes->elements[atomInGroup];
-  if (a == NULL)
+  if (a == nullptr)
     return;
 
   unsigned int length = m_molecule->atomCount();
@@ -385,7 +385,7 @@ void SymmetryWidget::setSubgroups(int sgl, const msym::msym_subgroup_t* sg)
     parent->setData(i, Qt::UserRole);
     m_subgroupsTreeModel->appendRow(parent);
     for (int j = 0; j < 2; j++) {
-      if (sg[i].generators[j] == NULL)
+      if (sg[i].generators[j] == nullptr)
         continue;
       // qDebug() << "child " << sg[i].generators[j] - m_sg << " "
       //         << sg[i].generators[j] << " " << m_sg;
@@ -401,7 +401,7 @@ void SymmetryWidget::setSubgroups(int sgl, const msym::msym_subgroup_t* sg)
 
 msym_thresholds_t* SymmetryWidget::getThresholds() const
 {
-  msym_thresholds_t* thresholds = NULL;
+  msym_thresholds_t* thresholds = nullptr;
   switch (m_ui->toleranceCombo->currentIndex()) {
     case 3: // sloppy
       thresholds = &sloppy_thresholds;

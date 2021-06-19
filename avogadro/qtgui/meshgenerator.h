@@ -58,7 +58,7 @@ public:
   /**
    * Constructor.
    */
-  explicit MeshGenerator(QObject* parent = 0);
+  explicit MeshGenerator(QObject* parent = nullptr);
 
   /**
    * Constructor. Can be used to initialize the MeshGenerator.
@@ -68,7 +68,7 @@ public:
    * @return True if the MeshGenerator was successfully initialized.
    */
   MeshGenerator(const Core::Cube* cube, Core::Mesh* mesh, float iso,
-                bool reverse = false, QObject* parent = 0);
+                bool reverse = false, QObject* parent = nullptr);
 
   /**
    * Destructor.

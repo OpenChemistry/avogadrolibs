@@ -40,7 +40,7 @@ namespace {
 
 inline Qt::Alignment textPropertiesToAlignment(const TextProperties& prop)
 {
-  Qt::Alignment result = 0;
+  Qt::Alignment result = nullptr;
 
   switch (prop.hAlign()) {
     default:

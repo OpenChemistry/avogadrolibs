@@ -26,7 +26,9 @@ namespace Avogadro {
   {
     Q_OBJECT
   public:
-    SortFilterTreeProxyModel(QObject *parent = 0): QSortFilterProxyModel(parent), m_sourceRoot() {};
+    SortFilterTreeProxyModel(QObject* parent = nullptr)
+      : QSortFilterProxyModel(parent), m_sourceRoot()
+    {}
     // From http://kodeclutz.blogspot.com/2008/12/filtering-qtreeview.html
     bool filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const;
 

@@ -45,7 +45,7 @@ class AVOGADROMOLEQUEUE_EXPORT JsonRpcClient : public QObject
   Q_OBJECT
 
 public:
-  explicit JsonRpcClient(QObject *parent_ = 0);
+  explicit JsonRpcClient(QObject *parent_ = nullptr);
   ~JsonRpcClient();
 
   /**

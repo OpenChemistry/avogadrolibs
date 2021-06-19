@@ -82,7 +82,7 @@ void SlaterSetConcurrent::calculationComplete()
 {
   (*m_shells)[0].tCube->lock()->unlock();
   delete m_shells;
-  m_shells = 0;
+  m_shells = nullptr;
   emit finished();
 }
 

@@ -36,7 +36,8 @@ class OpenMMInputDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit OpenMMInputDialog(QWidget* parent = 0, Qt::WindowFlags flag = 0);
+  explicit OpenMMInputDialog(QWidget* parent = nullptr,
+                             Qt::WindowFlags flag = 0);
   ~OpenMMInputDialog();
 
   void readSettings(QSettings&);

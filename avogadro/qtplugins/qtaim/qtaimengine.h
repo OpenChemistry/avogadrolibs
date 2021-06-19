@@ -30,7 +30,7 @@ class QTAIMEngine : public QtGui::ScenePlugin
 {
   Q_OBJECT
 public:
-  explicit QTAIMEngine(QObject* parent = 0);
+  explicit QTAIMEngine(QObject* parent = nullptr);
   virtual ~QTAIMEngine() override;
 
   void process(const Core::Molecule& molecule,

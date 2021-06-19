@@ -688,7 +688,7 @@ private:
                  0,                            // border
                  GL_DEPTH_COMPONENT,           // format
                  GL_FLOAT,                     // type
-                 0);                           // data
+                 nullptr);                     // data
 
     // set the filtering modes
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -757,7 +757,7 @@ private:
                  0,                            // border
                  GL_RGBA,                      // format
                  GL_UNSIGNED_BYTE,             // type
-                 0);                           // data
+                 nullptr);                     // data
 
     // set the filtering modes
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

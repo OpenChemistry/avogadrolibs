@@ -41,7 +41,7 @@ class DownloaderWidget : public QDialog
   Q_OBJECT
 
 public:
-  DownloaderWidget(QWidget* parent = 0);
+  DownloaderWidget(QWidget* parent = nullptr);
   ~DownloaderWidget() override;
 
 public slots:

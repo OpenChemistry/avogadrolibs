@@ -48,7 +48,7 @@ class AVOGADROQTGUI_EXPORT ScenePlugin : public QObject
   Q_OBJECT
 
 public:
-  explicit ScenePlugin(QObject* parent = 0);
+  explicit ScenePlugin(QObject* parent = nullptr);
   ~ScenePlugin() override;
 
   /**

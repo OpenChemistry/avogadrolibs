@@ -31,7 +31,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueDialog : public QDialog
 {
   Q_OBJECT
 public:
-  explicit MoleQueueDialog(QWidget* parent_ = 0);
+  explicit MoleQueueDialog(QWidget* parent_ = nullptr);
   ~MoleQueueDialog() override;
 
   /**

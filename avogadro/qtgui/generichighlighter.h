@@ -63,7 +63,7 @@ public:
   };
 
   /** Construct a highlighter with an empty rule set. */
-  explicit GenericHighlighter(QObject* parent_ = 0);
+  explicit GenericHighlighter(QObject* parent_ = nullptr);
 
   ~GenericHighlighter() override;
 

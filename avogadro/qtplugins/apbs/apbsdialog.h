@@ -46,7 +46,7 @@ public:
   /**
    * Constructor for ApbsDialog.
    */
-  ApbsDialog(QWidget* parent_ = 0);
+  ApbsDialog(QWidget* parent_ = nullptr);
 
   /**
    * Destructor for ApbsDialog.

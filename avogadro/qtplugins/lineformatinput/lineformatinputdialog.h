@@ -34,7 +34,7 @@ class LineFormatInputDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit LineFormatInputDialog(QWidget* parent = 0);
+  explicit LineFormatInputDialog(QWidget* parent = nullptr);
   ~LineFormatInputDialog() override;
 
   void setFormats(const QStringList& indents);

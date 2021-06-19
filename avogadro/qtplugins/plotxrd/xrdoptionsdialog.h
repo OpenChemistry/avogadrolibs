@@ -36,7 +36,7 @@ class XrdOptionsDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit XrdOptionsDialog(QWidget* parent = 0);
+  explicit XrdOptionsDialog(QWidget* parent = nullptr);
   ~XrdOptionsDialog();
 
   double wavelength() const;

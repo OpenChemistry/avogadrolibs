@@ -29,7 +29,7 @@ class Select : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit Select(QObject* parent_ = 0);
+  explicit Select(QObject* parent_ = nullptr);
   ~Select() override;
 
   QString name() const override { return tr("Select"); }

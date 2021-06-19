@@ -43,7 +43,7 @@ class Molecule;
 class AVOGADROCORE_EXPORT GaussianSetTools
 {
 public:
-  explicit GaussianSetTools(Molecule* mol = 0);
+  explicit GaussianSetTools(Molecule* mol = nullptr);
   ~GaussianSetTools();
 
   /**

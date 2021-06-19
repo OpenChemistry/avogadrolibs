@@ -33,7 +33,7 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT TransformNode : public GroupNode
 {
 public:
-  explicit TransformNode(GroupNode* parent = 0);
+  explicit TransformNode(GroupNode* parent = nullptr);
   ~TransformNode() override;
 };
 

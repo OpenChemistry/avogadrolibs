@@ -42,7 +42,7 @@ class PlotRmsd : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit PlotRmsd(QObject* parent_ = 0);
+  explicit PlotRmsd(QObject* parent_ = nullptr);
   ~PlotRmsd();
 
   QString name() const { return tr("PlotRmsd"); }

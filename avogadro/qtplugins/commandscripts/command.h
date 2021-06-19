@@ -37,7 +37,7 @@ class Command : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit Command(QObject* parent = 0);
+  explicit Command(QObject* parent = nullptr);
   ~Command() override;
 
   QString name() const override { return tr("Command scripts"); }

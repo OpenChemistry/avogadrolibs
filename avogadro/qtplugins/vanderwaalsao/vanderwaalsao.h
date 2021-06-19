@@ -32,7 +32,7 @@ class VanDerWaalsAO : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit VanDerWaalsAO(QObject* parent = 0);
+  explicit VanDerWaalsAO(QObject* parent = nullptr);
   ~VanDerWaalsAO() override;
 
   void process(const Core::Molecule& molecule,

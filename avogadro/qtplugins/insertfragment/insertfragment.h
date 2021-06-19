@@ -40,7 +40,7 @@ class InsertFragment : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit InsertFragment(QObject* parent_ = 0);
+  explicit InsertFragment(QObject* parent_ = nullptr);
   ~InsertFragment() override;
 
   QString name() const override { return tr("InsertFragment"); }
