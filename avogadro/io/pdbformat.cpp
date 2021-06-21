@@ -79,6 +79,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         }
 
         r = &mol.addResidue(residueName, currentResidueId, chainId);
+        if (startsWith(buffer, "HETATM"))
+          r->setHeterogen(true);
       }
 
       string atomName = lexicalCast<string>(buffer.substr(12, 4), ok);

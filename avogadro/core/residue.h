@@ -70,20 +70,29 @@ public:
   /** Adds an atom to the residue class */
   void addResidueAtom(std::string& name, Atom& atom);
 
-  /** Returns a vector containing the atoms added to the residue */
+  /** \return a vector containing the atoms added to the residue */
   std::vector<Atom> residueAtoms();
 
   /** Sets bonds to atoms in the residue based on data from residuedata header
    */
   void resolveResidueBonds(Molecule& mol);
 
+  Atom getAtomByName(std::string name);
+
   int getAtomicNumber(std::string name);
+
+  void setHeterogen(bool heterogen) { m_heterogen = heterogen;}
+
+  /** \return is this residue a heterogen (HET / HETATM)
+   */
+  bool isHeterogen() { return m_heterogen; }
 
 protected:
   std::string m_residueName;
   Index m_residueId;
   char m_chainId;
   AtomNameMap m_atomNameMap;
+  bool m_heterogen;
 };
 
 } // namespace Core

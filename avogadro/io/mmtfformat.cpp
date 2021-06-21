@@ -122,8 +122,9 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
                   static_cast<Real>(structure.yCoordList[atomIndex]),
                   static_cast<Real>(structure.zCoordList[atomIndex])));
 
-        // Stores if the compounds is a heteroatom
-        // mmtf::is_hetatm(group.chemCompType.c_str());
+        // Stores if the group / residue is a heteroatom
+        if (mmtf::is_hetatm(group.chemCompType.c_str()))
+          residue.setHeterogen(true);
         std::string atomName = group.atomNameList[l];
         residue.addResidueAtom(atomName, atom);
         atomIndex++;

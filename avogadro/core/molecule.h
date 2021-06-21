@@ -619,7 +619,7 @@ public:
   bool setTimeStep(double timestep, int index);
   double timeStep(int index, bool& status);
 
-  /** Returns a vector of forces for the atoms in the molecule. */
+  /** @return a vector of forces for the atoms in the molecule. */
   const Array<Vector3>& forceVectors() const;
 
   /** \overload */
@@ -650,7 +650,9 @@ public:
 
   Residue& addResidue(std::string& name, Index& number, char& id);
   void addResidue(Residue& residue);
-  Residue& residue(int index);
+  Residue& residue(Index index);
+
+  Array<Residue>& residues() { return m_residues;}
 
 protected:
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
