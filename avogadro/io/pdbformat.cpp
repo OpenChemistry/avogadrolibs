@@ -1,3 +1,8 @@
+/******************************************************************************
+  This source file is part of the Avogadro project.
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
+
 #include "pdbformat.h"
 
 #include <avogadro/core/elements.h>
@@ -79,6 +84,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         }
 
         r = &mol.addResidue(residueName, currentResidueId, chainId);
+        if (startsWith(buffer, "HETATM"))
+          r->setHeterogen(true);
       }
 
       string atomName = lexicalCast<string>(buffer.substr(12, 4), ok);

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "residue.h"
@@ -23,19 +12,19 @@ namespace Core {
 
 Residue::Residue() {}
 
-Residue::Residue(std::string& name) : m_residueName(name) {}
+Residue::Residue(std::string& name) : m_residueName(name), m_heterogen(false) {}
 
 Residue::Residue(std::string& name, Index& number)
-  : m_residueName(name), m_residueId(number)
+  : m_residueName(name), m_residueId(number), m_heterogen(false)
 {}
 
 Residue::Residue(std::string& name, Index& number, char& id)
-  : m_residueName(name), m_residueId(number), m_chainId(id)
+  : m_residueName(name), m_residueId(number), m_chainId(id), m_heterogen(false)
 {}
 
 Residue::Residue(const Residue& other)
   : m_residueName(other.m_residueName), m_residueId(other.m_residueId),
-    m_atomNameMap(other.m_atomNameMap)
+    m_atomNameMap(other.m_atomNameMap), m_heterogen(other.m_heterogen)
 {}
 
 Residue& Residue::operator=(Residue other)
@@ -43,6 +32,7 @@ Residue& Residue::operator=(Residue other)
   m_residueName = other.m_residueName;
   m_residueId = other.m_residueId;
   m_atomNameMap = other.m_atomNameMap;
+  m_heterogen = other.m_heterogen;
   return *this;
 }
 
@@ -61,6 +51,17 @@ std::vector<Atom> Residue::residueAtoms()
     res.push_back(it->second);
   }
   return res;
+}
+
+Atom Residue::getAtomByName(std::string name)
+{
+  Atom empty;
+  auto search = m_atomNameMap.find(name);
+  if (search != m_atomNameMap.end()) {
+    return search->second;
+  }
+
+  return empty;
 }
 
 void Residue::resolveResidueBonds(Molecule& mol)
@@ -89,11 +90,9 @@ void Residue::resolveResidueBonds(Molecule& mol)
 
 int Residue::getAtomicNumber(std::string name)
 {
-  std::map<std::string, int> resAtoms;
-  if (residueDict.find(m_residueName) != residueDict.end()) {
-    resAtoms = residueDict[m_residueName].residueAtoms();
-    if (resAtoms.find(name) != resAtoms.end())
-      return resAtoms[name];
+  auto search = m_atomNameMap.find(name);
+  if (search != m_atomNameMap.end()) {
+    return search->second.atomicNumber();
   }
 
   return 0;

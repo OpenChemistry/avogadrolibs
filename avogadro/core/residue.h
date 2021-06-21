@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_RESIDUE_H
@@ -70,20 +59,29 @@ public:
   /** Adds an atom to the residue class */
   void addResidueAtom(std::string& name, Atom& atom);
 
-  /** Returns a vector containing the atoms added to the residue */
+  /** \return a vector containing the atoms added to the residue */
   std::vector<Atom> residueAtoms();
 
   /** Sets bonds to atoms in the residue based on data from residuedata header
    */
   void resolveResidueBonds(Molecule& mol);
 
+  Atom getAtomByName(std::string name);
+
   int getAtomicNumber(std::string name);
+
+  void setHeterogen(bool heterogen) { m_heterogen = heterogen;}
+
+  /** \return is this residue a heterogen (HET / HETATM)
+   */
+  bool isHeterogen() { return m_heterogen; }
 
 protected:
   std::string m_residueName;
   Index m_residueId;
   char m_chainId;
   AtomNameMap m_atomNameMap;
+  bool m_heterogen;
 };
 
 } // namespace Core
