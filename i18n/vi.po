@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-22 11:28-0400\n"
+"POT-Creation-Date: 2021-06-28 07:55+0900\n"
 "PO-Revision-Date: 2016-06-10 06:38+0000\n"
 "Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
@@ -1453,15 +1453,15 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinput.cpp:99
 #: qtplugins/insertfragment/insertfragment.cpp:104
 #: qtplugins/lammpsinput/lammpsinput.cpp:75
-#: qtplugins/openbabel/openbabel.cpp:205 qtplugins/openbabel/openbabel.cpp:214
-#: qtplugins/openbabel/openbabel.cpp:224 qtplugins/openbabel/openbabel.cpp:317
-#: qtplugins/openbabel/openbabel.cpp:343 qtplugins/openbabel/openbabel.cpp:352
-#: qtplugins/openbabel/openbabel.cpp:404 qtplugins/openbabel/openbabel.cpp:453
-#: qtplugins/openbabel/openbabel.cpp:466 qtplugins/openbabel/openbabel.cpp:491
-#: qtplugins/openbabel/openbabel.cpp:505 qtplugins/openbabel/openbabel.cpp:533
-#: qtplugins/openbabel/openbabel.cpp:545 qtplugins/openbabel/openbabel.cpp:590
-#: qtplugins/openbabel/openbabel.cpp:638 qtplugins/openbabel/openbabel.cpp:678
-#: qtplugins/openbabel/openbabel.cpp:708
+#: qtplugins/openbabel/openbabel.cpp:195 qtplugins/openbabel/openbabel.cpp:204
+#: qtplugins/openbabel/openbabel.cpp:214 qtplugins/openbabel/openbabel.cpp:328
+#: qtplugins/openbabel/openbabel.cpp:354 qtplugins/openbabel/openbabel.cpp:363
+#: qtplugins/openbabel/openbabel.cpp:415 qtplugins/openbabel/openbabel.cpp:464
+#: qtplugins/openbabel/openbabel.cpp:477 qtplugins/openbabel/openbabel.cpp:502
+#: qtplugins/openbabel/openbabel.cpp:516 qtplugins/openbabel/openbabel.cpp:544
+#: qtplugins/openbabel/openbabel.cpp:556 qtplugins/openbabel/openbabel.cpp:601
+#: qtplugins/openbabel/openbabel.cpp:649 qtplugins/openbabel/openbabel.cpp:689
+#: qtplugins/openbabel/openbabel.cpp:719
 #: qtplugins/openmminput/openmminput.cpp:73
 #: qtplugins/quantuminput/quantuminput.cpp:123
 msgid "Error"
@@ -1558,7 +1558,6 @@ msgid "&Build"
 msgstr "&Dựng"
 
 #: qtplugins/bonding/bonding.cpp:65
-#: qtplugins/propertytables/propertymodel.cpp:387
 #, fuzzy
 msgid "Bond"
 msgstr "Liên kết"
@@ -1580,7 +1579,7 @@ msgstr ""
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:89
 #: qtplugins/commandscripts/command.cpp:65
 #: qtplugins/commandscripts/command.cpp:73 qtplugins/mongochem/mongochem.cpp:45
-#: qtplugins/openbabel/openbabel.cpp:113
+#: qtplugins/openbabel/openbabel.cpp:103
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/quantuminput/quantuminput.cpp:81 qtplugins/yaehmop/yaehmop.cpp:80
 #, fuzzy
@@ -1816,7 +1815,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:185
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612:1567
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612:1528
 msgid "Custom"
 msgstr ""
 
@@ -2001,13 +2000,13 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:374
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:409:662
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:409:623
 msgid "NONE"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:377:1240
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:377:1201
 #, fuzzy
 msgid "PME"
 msgstr "PM6"
@@ -2296,12 +2295,6 @@ msgstr "Lực"
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
 
-#: qtplugins/forcefield/forcefielddialog.cpp:331
-#: qtplugins/openbabel/obforcefielddialog.cpp:331
-#, qt-format
-msgid "Autodetect (%1)"
-msgstr ""
-
 #: qtplugins/gamessinput/gamessinput.cpp:45
 msgid "&GAMESS"
 msgstr "&GAMESS"
@@ -2391,7 +2384,7 @@ msgstr "Hủy bỏ tính toán"
 msgid "&Adjust Hydrogens"
 msgstr "Chỉnh nguyên tử hi-đrô"
 
-#: qtplugins/hydrogens/hydrogens.cpp:38 qtplugins/openbabel/openbabel.cpp:71
+#: qtplugins/hydrogens/hydrogens.cpp:38 qtplugins/openbabel/openbabel.cpp:60
 msgid "Add Hydrogens"
 msgstr "Thêm hi-đrô"
 
@@ -2424,7 +2417,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
-#: qtplugins/importpqr/importpqr.h:45:552
+#: qtplugins/importpqr/importpqr.h:45:513
 msgid "Import From PQR"
 msgstr ""
 
@@ -2521,7 +2514,7 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133:964
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:925
 #, fuzzy
 msgid "Insert Molecule..."
 msgstr "Phân tử"
@@ -2605,7 +2598,6 @@ msgid "View general properties of a molecule."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
-#: qtplugins/propertytables/propertytables.cpp:52
 #: qtplugins/qtaim/qtaimextension.cpp:90 qtplugins/spectra/spectra.cpp:55
 #: qtplugins/surfaces/surfaces.cpp:120 qtplugins/symmetry/symmetry.cpp:94
 #, fuzzy
@@ -2613,7 +2605,6 @@ msgid "&Analysis"
 msgstr "Giải tích"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
-#: qtplugins/propertytables/propertytables.cpp:52
 #: qtplugins/symmetry/symmetry.cpp:94
 msgid "&Properties"
 msgstr "&Thuộc tính"
@@ -2665,98 +2656,103 @@ msgstr "Việc tải xuống từ mạng không thành công"
 msgid "Interact with online databases, query structures etc."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:52 qtplugins/openbabel/openbabel.cpp:477
+#: qtplugins/openbabel/obforcefielddialog.cpp:331
+#, qt-format
+msgid "Autodetect (%1)"
+msgstr ""
+
+#: qtplugins/openbabel/openbabel.cpp:41 qtplugins/openbabel/openbabel.cpp:488
 #, fuzzy
 msgid "Optimize Geometry"
 msgstr "&Tối ưu hình học"
 
-#: qtplugins/openbabel/openbabel.cpp:59
+#: qtplugins/openbabel/openbabel.cpp:48
 #, fuzzy
 msgid "Configure Force Field..."
 msgstr "Thiết lập trường lực..."
 
-#: qtplugins/openbabel/openbabel.cpp:65
+#: qtplugins/openbabel/openbabel.cpp:54
 #, fuzzy
 msgid "Perceive Bonds"
 msgstr "Bỏ hi-đrô"
 
-#: qtplugins/openbabel/openbabel.cpp:77
+#: qtplugins/openbabel/openbabel.cpp:66
 #, fuzzy
 msgid "Add Hydrogens for pH..."
 msgstr "Thêm hi-đrô cho pH..."
 
-#: qtplugins/openbabel/openbabel.cpp:83
+#: qtplugins/openbabel/openbabel.cpp:72
 #, fuzzy
 msgid "Remove Hydrogens"
 msgstr "Bỏ hi-đrô"
 
-#: qtplugins/openbabel/openbabel.cpp:113
+#: qtplugins/openbabel/openbabel.cpp:103
 msgid "&Open Babel"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:120
+#: qtplugins/openbabel/openbabel.cpp:110
 msgid "The Open Babel file formats are not ready to be added."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:200
+#: qtplugins/openbabel/openbabel.cpp:190
 #, fuzzy
 msgid "Loading molecule from CML..."
 msgstr "Không đọc được thông tin về một phân tử trong file '%1'."
 
-#: qtplugins/openbabel/openbabel.cpp:206
+#: qtplugins/openbabel/openbabel.cpp:196
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:215
+#: qtplugins/openbabel/openbabel.cpp:205
 #, fuzzy, qt-format
 msgid "An error occurred while running Open Babel (%1)."
 msgstr "Có lỗi trong khi ghi file %1"
 
-#: qtplugins/openbabel/openbabel.cpp:225
+#: qtplugins/openbabel/openbabel.cpp:215
 msgid "Error parsing openbabel output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:318 qtplugins/openbabel/openbabel.cpp:353
+#: qtplugins/openbabel/openbabel.cpp:329 qtplugins/openbabel/openbabel.cpp:364
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:344
+#: qtplugins/openbabel/openbabel.cpp:355
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:362
+#: qtplugins/openbabel/openbabel.cpp:373
 #, fuzzy
 msgid "Cannot optimize geometry with Open Babel."
 msgstr "&Tối ưu hình học"
 
-#: qtplugins/openbabel/openbabel.cpp:387
+#: qtplugins/openbabel/openbabel.cpp:398
 #, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
 msgstr "&Tối ưu hình học"
 
-#: qtplugins/openbabel/openbabel.cpp:388
+#: qtplugins/openbabel/openbabel.cpp:399
 #, fuzzy
 msgid "Generating MDL..."
 msgstr "Phát sinh..."
 
-#: qtplugins/openbabel/openbabel.cpp:405
+#: qtplugins/openbabel/openbabel.cpp:416
 msgid ""
 "An internal error occurred while generating an CML representation of the "
 "current molecule."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:411
+#: qtplugins/openbabel/openbabel.cpp:422
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:424 qtplugins/openbabel/openbabel.cpp:432
+#: qtplugins/openbabel/openbabel.cpp:435 qtplugins/openbabel/openbabel.cpp:443
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -2764,15 +2760,15 @@ msgid ""
 "dE: %4"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:446
+#: qtplugins/openbabel/openbabel.cpp:457
 msgid "Updating molecule..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:454 qtplugins/openbabel/openbabel.cpp:709
+#: qtplugins/openbabel/openbabel.cpp:465 qtplugins/openbabel/openbabel.cpp:720
 msgid "Error interpreting Open Babel output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:546
+#: qtplugins/openbabel/openbabel.cpp:478 qtplugins/openbabel/openbabel.cpp:557
 #, fuzzy, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
@@ -2781,108 +2777,108 @@ msgstr ""
 "Trong file quỹ đạo %1 không có sự thống nhất về số phân tử trong nguyên tử "
 "hiện tại"
 
-#: qtplugins/openbabel/openbabel.cpp:486
+#: qtplugins/openbabel/openbabel.cpp:497
 msgid "Cannot open file with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:492
+#: qtplugins/openbabel/openbabel.cpp:503
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:498
+#: qtplugins/openbabel/openbabel.cpp:509
 #, fuzzy
 msgid "Perceiving Bonds (Open Babel)"
 msgstr "Bỏ hi-đrô"
 
-#: qtplugins/openbabel/openbabel.cpp:499
+#: qtplugins/openbabel/openbabel.cpp:510
 msgid "Generating XYZ representation..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:506
+#: qtplugins/openbabel/openbabel.cpp:517
 msgid "Error generating XYZ string."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:518
+#: qtplugins/openbabel/openbabel.cpp:529
 #, qt-format
 msgid "Converting XYZ to CML with %1..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:526
+#: qtplugins/openbabel/openbabel.cpp:537
 msgid "Updating molecule from CML..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:534
+#: qtplugins/openbabel/openbabel.cpp:545
 msgid "Error interpreting obabel CML output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:578 qtplugins/openbabel/openbabel.cpp:618
+#: qtplugins/openbabel/openbabel.cpp:589 qtplugins/openbabel/openbabel.cpp:629
 msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:583 qtplugins/openbabel/openbabel.cpp:631
+#: qtplugins/openbabel/openbabel.cpp:594 qtplugins/openbabel/openbabel.cpp:642
 #, fuzzy
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "Thêm hi-đrô"
 
-#: qtplugins/openbabel/openbabel.cpp:584
+#: qtplugins/openbabel/openbabel.cpp:595
 #, fuzzy
 msgid "Generating Open Babel input..."
 msgstr "Phát sinh..."
 
-#: qtplugins/openbabel/openbabel.cpp:591 qtplugins/openbabel/openbabel.cpp:639
+#: qtplugins/openbabel/openbabel.cpp:602 qtplugins/openbabel/openbabel.cpp:650
 #, fuzzy
 msgid "Error generating Open Babel input."
 msgstr "Có trục trặc khi đọc file quỹ đạo %1"
 
-#: qtplugins/openbabel/openbabel.cpp:604 qtplugins/openbabel/openbabel.cpp:652
-#: qtplugins/openbabel/openbabel.cpp:691
+#: qtplugins/openbabel/openbabel.cpp:615 qtplugins/openbabel/openbabel.cpp:663
+#: qtplugins/openbabel/openbabel.cpp:702
 #, fuzzy, qt-format
 msgid "Running %1..."
 msgstr "Dunning"
 
-#: qtplugins/openbabel/openbabel.cpp:625
+#: qtplugins/openbabel/openbabel.cpp:636
 #, fuzzy
 msgid "Add hydrogens for pH"
 msgstr "Thêm hi-đrô cho pH"
 
-#: qtplugins/openbabel/openbabel.cpp:625
+#: qtplugins/openbabel/openbabel.cpp:636
 #, fuzzy
 msgid "pH:"
 msgstr "pH"
 
-#: qtplugins/openbabel/openbabel.cpp:632 qtplugins/openbabel/openbabel.cpp:672
+#: qtplugins/openbabel/openbabel.cpp:643 qtplugins/openbabel/openbabel.cpp:683
 msgid "Generating obabel input..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:666
+#: qtplugins/openbabel/openbabel.cpp:677
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:671
+#: qtplugins/openbabel/openbabel.cpp:682
 #, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "Bỏ hi-đrô"
 
-#: qtplugins/openbabel/openbabel.cpp:679
+#: qtplugins/openbabel/openbabel.cpp:690
 #, fuzzy
 msgid "Error generating CML data."
 msgstr "Phát sinh..."
 
-#: qtplugins/openbabel/openbabel.cpp:700
+#: qtplugins/openbabel/openbabel.cpp:711
 msgid "Reading obabel output..."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:763
+#: qtplugins/openbabel/openbabel.cpp:774
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.h:47
+#: qtplugins/openbabel/openbabel.h:36
 msgid "OpenBabel"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.h:51
+#: qtplugins/openbabel/openbabel.h:40
 msgid "Interact with OpenBabel utilities."
 msgstr ""
 
@@ -2924,7 +2920,7 @@ msgstr "Pro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:509:1150
+#: qtplugins/openmminput/openmminputdialog.cpp:509:1111
 msgid "input.prmtop"
 msgstr ""
 
@@ -2955,7 +2951,7 @@ msgstr "Dừng"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1072
-#: qtplugins/openmminput/openmminputdialog.cpp:1081:1267 rc.cpp:1282
+#: qtplugins/openmminput/openmminputdialog.cpp:1081:1228 rc.cpp:1243
 msgid "True"
 msgstr ""
 
@@ -2991,7 +2987,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/playertool/playertool.cpp:124:1576
+#: qtplugins/playertool/playertool.cpp:124:1537
 #, fuzzy
 msgid "Frame:"
 msgstr "Thông số:"
@@ -3010,7 +3006,7 @@ msgstr "Liên kết động"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:382
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:150:1582
+#: qtplugins/playertool/playertool.cpp:150:1543
 #, fuzzy
 msgid "Record Movie..."
 msgstr "Xóa bỏ..."
@@ -3181,7 +3177,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.cpp:39:1489
+#: qtplugins/plugindownloader/plugindownloader.cpp:39:1450
 msgid "Download Plugins..."
 msgstr ""
 
@@ -3217,167 +3213,6 @@ msgstr ""
 #, fuzzy
 msgid "Render the scene using POV-Ray."
 msgstr "Lên hình bằng POV-Ray"
-
-#: qtplugins/propertytables/propertymodel.cpp:325
-#: qtplugins/symmetry/operationstablemodel.cpp:64
-msgid "Element"
-msgstr "Nguyên tố"
-
-#: qtplugins/propertytables/propertymodel.cpp:327
-#: qtplugins/propertytables/propertymodel.cpp:370
-#: qtplugins/propertytables/propertymodel.cpp:393
-#: qtplugins/propertytables/propertymodel.cpp:413
-#: qtplugins/symmetry/operationstablemodel.cpp:60
-msgid "Type"
-msgstr "Kiểu"
-
-#: qtplugins/propertytables/propertymodel.cpp:329
-msgid "Valence"
-msgstr "Hóa trị"
-
-#: qtplugins/propertytables/propertymodel.cpp:331
-#, fuzzy
-msgid "Formal Charge"
-msgstr "Điện tích riêng phần"
-
-#: qtplugins/propertytables/propertymodel.cpp:333
-msgid "Partial Charge"
-msgstr "Điện tích riêng phần"
-
-#: qtplugins/propertytables/propertymodel.cpp:364
-msgid "Atom"
-msgstr "Nguyên tử"
-
-#: qtplugins/propertytables/propertymodel.cpp:372
-#: qtplugins/propertytables/propertymodel.cpp:395
-msgid "Start Atom"
-msgstr "Bắt đầu nguyên tử"
-
-#: qtplugins/propertytables/propertymodel.cpp:374
-#: qtplugins/propertytables/propertymodel.cpp:399
-#, fuzzy
-msgid "End Atom"
-msgstr "Kết thúc nguyên tử"
-
-#: qtplugins/propertytables/propertymodel.cpp:376
-#, fuzzy
-msgid "Bond Order"
-msgstr "Thứ tự liên kết:"
-
-#: qtplugins/propertytables/propertymodel.cpp:378
-msgid "Rotatable"
-msgstr "Xoay được"
-
-#: qtplugins/propertytables/propertymodel.cpp:381
-#, fuzzy, qt-format
-msgctxt "in Angstrom"
-msgid ""
-"Conformer %1\n"
-"Length %2"
-msgstr "Đồng phân %1"
-
-#: qtplugins/propertytables/propertymodel.cpp:383
-#, qt-format
-msgctxt "in Angstrom"
-msgid "Length %1"
-msgstr "Chiều dài %1"
-
-#: qtplugins/propertytables/propertymodel.cpp:397
-msgid "Vertex"
-msgstr "Đỉnh"
-
-#: qtplugins/propertytables/propertymodel.cpp:402
-#, fuzzy, qt-format
-msgctxt "Degree symbol"
-msgid ""
-"Conformer %1\n"
-"Angle %2"
-msgstr "Đồng phân %1"
-
-#: qtplugins/propertytables/propertymodel.cpp:404
-#, qt-format
-msgctxt "Degree symbol"
-msgid "Angle %1"
-msgstr "Angle %1"
-
-#: qtplugins/propertytables/propertymodel.cpp:407
-#, fuzzy
-msgid "Angle"
-msgstr "Angle:"
-
-#: qtplugins/propertytables/propertymodel.cpp:418
-#, qt-format
-msgid "Atom %1"
-msgstr "Nguyên tử %1"
-
-#: qtplugins/propertytables/propertymodel.cpp:421
-#, fuzzy, qt-format
-msgctxt "Degree symbol"
-msgid ""
-"Conformer %1\n"
-"Torsion %2"
-msgstr "Đồng phân %1"
-
-#: qtplugins/propertytables/propertymodel.cpp:423
-#, qt-format
-msgctxt "Degree symbol"
-msgid "Torsion %1"
-msgstr "Xoắn %1"
-
-#: qtplugins/propertytables/propertymodel.cpp:427
-msgid "Torsion"
-msgstr "Xoắn"
-
-#: qtplugins/propertytables/propertymodel.cpp:444
-#, fuzzy
-msgid "Energy (kJ/mol)"
-msgstr "Năng lượng (kJ/mol):"
-
-#: qtplugins/propertytables/propertymodel.cpp:447
-#, fuzzy
-msgid "Conformer"
-msgstr "Đồng phân %1"
-
-#: qtplugins/propertytables/propertymodel.cpp:908
-msgid "Yes"
-msgstr "Có"
-
-#: qtplugins/propertytables/propertymodel.cpp:910
-msgid "No"
-msgstr "Không"
-
-#: qtplugins/propertytables/propertytables.cpp:42
-#, fuzzy
-msgid ""
-"Tables for displaying and editng atom, bond, angle and torsion properties."
-msgstr ""
-"Cửa sổ hiện các thuộc tính nguyên tử, liên kết, góc và xoắn. Nó cũng bao gồm "
-"một trình soạn thảo tọa độ Đề-các"
-
-#: qtplugins/propertytables/propertytables.h:30
-#, fuzzy
-msgid "PropertyTables"
-msgstr "Thuộc tính"
-
-#: qtplugins/propertytables/propertyview.cpp:34
-msgid "Atom Properties"
-msgstr "Thuộc tính của nguyên tử"
-
-#: qtplugins/propertytables/propertyview.cpp:37
-msgid "Bond Properties"
-msgstr "Thuộc tính của liên kết"
-
-#: qtplugins/propertytables/propertyview.cpp:40
-msgid "Angle Properties"
-msgstr "Thuộc tính góc"
-
-#: qtplugins/propertytables/propertyview.cpp:43
-msgid "Torsion Properties"
-msgstr "Thuộc tính xoắn"
-
-#: qtplugins/propertytables/propertyview.cpp:46
-msgid "Conformer Properties"
-msgstr "Thuộc tính đồng phân"
 
 #: qtplugins/qtaim/qtaimengine.h:39 qtplugins/qtaim/qtaimextension.cpp:90
 #: qtplugins/qtaim/qtaimextension.h:35
@@ -3461,33 +3296,66 @@ msgstr "Phát sinh file đầu vào"
 msgid "Load file reader/writers from external scripts."
 msgstr ""
 
-#: qtplugins/select/select.cpp:34
+#: qtplugins/select/select.cpp:40
 #, fuzzy
 msgid "Select All"
 msgstr "Xoá tất cả"
 
-#: qtplugins/select/select.cpp:39
+#: qtplugins/select/select.cpp:45
 #, fuzzy
 msgid "Select None"
 msgstr "Lựa chọn"
 
-#: qtplugins/select/select.cpp:48
+#: qtplugins/select/select.cpp:54
 #, fuzzy
 msgid "Invert Selection"
 msgstr "Chọn đảo &lại"
 
-#: qtplugins/select/select.cpp:59
+#: qtplugins/select/select.cpp:58
+#, fuzzy
+msgid "Select by Element..."
+msgstr "Chọn màu theo nguyên tố"
+
+#: qtplugins/select/select.cpp:62
+msgid "Select by Atom Index..."
+msgstr ""
+
+#: qtplugins/select/select.cpp:66
+#, fuzzy
+msgid "Select by Residue..."
+msgstr "Chọn..."
+
+#: qtplugins/select/select.cpp:79
 #, fuzzy
 msgid "Change selections"
 msgstr "Các lựa chọn"
 
-#: qtplugins/select/select.cpp:69
+#: qtplugins/select/select.cpp:89
 msgid "&Select"
 msgstr "&Chọn"
 
+#: qtplugins/select/select.cpp:153
+#, fuzzy
+msgid "Select Atoms by Index"
+msgstr "Chọn phông chữ cho nhãn nguyên tử"
+
+#: qtplugins/select/select.cpp:154
+#, fuzzy
+msgid "Atoms to Select:"
+msgstr "Kiểu:"
+
+#: qtplugins/select/select.cpp:190
+#, fuzzy
+msgid "Select Atoms by Residue"
+msgstr "Chọn phông chữ cho nhãn nguyên tử"
+
+#: qtplugins/select/select.cpp:191
+msgid "Residues to Select:"
+msgstr ""
+
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:35:1615
+#: qtplugins/select/select.h:39:1576
 #, fuzzy
 msgid "Select"
 msgstr "&Chọn"
@@ -3508,7 +3376,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:81:1600
+#: qtplugins/spacegroup/spacegroup.cpp:81:1561
 msgid "Symmetrize"
 msgstr ""
 
@@ -3695,9 +3563,17 @@ msgstr ""
 msgid "Render the scene in a SVG file."
 msgstr "Lên hình bằng POV-Ray"
 
+#: qtplugins/symmetry/operationstablemodel.cpp:60
+msgid "Type"
+msgstr "Kiểu"
+
 #: qtplugins/symmetry/operationstablemodel.cpp:62
 msgid "Class"
 msgstr ""
+
+#: qtplugins/symmetry/operationstablemodel.cpp:64
+msgid "Element"
+msgstr "Nguyên tố"
 
 #: qtplugins/symmetry/symmetry.cpp:53
 msgid "Symmetry..."
@@ -3705,7 +3581,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:45:1585
+#: qtplugins/symmetry/symmetry.h:45:1546
 msgid "Symmetry"
 msgstr ""
 
@@ -4613,110 +4489,6 @@ msgstr "Nguyên tố"
 msgid "Bond Order:"
 msgstr "Thứ tự liên kết:"
 
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
-#, fuzzy
-msgid "Geometry Optimization Parameters"
-msgstr "Tối ưu hoá hình học"
-
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:39
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-#, fuzzy
-msgid "Convergence Criteria"
-msgstr "Tiêu chí hội tụ gradient:"
-
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:45
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-msgid "\"Energy\" convergence:"
-msgstr "Hội tụ"
-
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:52
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-msgid "Step limit:"
-msgstr "Giới hạn thời gian:"
-
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:59
-#. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
-#. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
-#, fuzzy
-msgid " units"
-msgstr "Đơn vị:"
-
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:62
-#. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
-#. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
-msgid "10^"
-msgstr ""
-
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:78
-#. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:185
-#. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
-#. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
-#, fuzzy
-msgid " steps"
-msgstr "bước"
-
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:100
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#, fuzzy
-msgid "Optimization Method"
-msgstr "Phương pháp tối ưu:"
-
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:106
-#. i18n: ectx: property (text), widget (QLabel, label)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
-#. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-msgid "Force field:"
-msgstr "Trường lực:"
-
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:116
-#. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
-#. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
-#, fuzzy
-msgid "Autodetect"
-msgstr "Xoay tự động"
-
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:130
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-msgid "Optimization algorithm:"
-msgstr "Phương pháp tối ưu:"
-
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:138
-#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
-#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
-msgid "Steepest Descent"
-msgstr "Dốc xuống nhất"
-
-#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:143
-#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
-#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
-#, fuzzy
-msgid "Conjugate Gradient"
-msgstr "Gra-đien liên hợp"
-
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
 msgid "GAMESS Input"
@@ -5520,10 +5292,45 @@ msgstr ""
 msgid "Input Parameters:"
 msgstr "Phát sinh đầu vào..."
 
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
+#, fuzzy
+msgid "Geometry Optimization Parameters"
+msgstr "Tối ưu hoá hình học"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#, fuzzy
+msgid "Optimization Method"
+msgstr "Phương pháp tối ưu:"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
+#. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
+msgid "Force field:"
+msgstr "Trường lực:"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
+msgid "Optimization algorithm:"
+msgstr "Phương pháp tối ưu:"
+
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Line search technique:"
 msgstr ""
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
+#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+msgid "Steepest Descent"
+msgstr "Dốc xuống nhất"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
+#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+#, fuzzy
+msgid "Conjugate Gradient"
+msgstr "Gra-đien liên hợp"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
@@ -5534,6 +5341,12 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
 msgid "Newton's Method"
 msgstr ""
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
+#. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
+#, fuzzy
+msgid "Autodetect"
+msgstr "Xoay tự động"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
@@ -5562,6 +5375,43 @@ msgstr "Thế tĩnh điện"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:166
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, eleCutoff)
 msgid "Å"
+msgstr ""
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:185
+#. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
+#. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
+#, fuzzy
+msgid " steps"
+msgstr "bước"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#, fuzzy
+msgid "Convergence Criteria"
+msgstr "Tiêu chí hội tụ gradient:"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
+msgid "\"Energy\" convergence:"
+msgstr "Hội tụ"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
+msgid "Step limit:"
+msgstr "Giới hạn thời gian:"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
+#. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
+#, fuzzy
+msgid " units"
+msgstr "Đơn vị:"
+
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
+#. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
+msgid "10^"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
@@ -6472,6 +6322,119 @@ msgstr ""
 "sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,avogadro-"
 "devel@lists.sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,"
 
+#~ msgid "Valence"
+#~ msgstr "Hóa trị"
+
+#, fuzzy
+#~ msgid "Formal Charge"
+#~ msgstr "Điện tích riêng phần"
+
+#~ msgid "Partial Charge"
+#~ msgstr "Điện tích riêng phần"
+
+#~ msgid "Atom"
+#~ msgstr "Nguyên tử"
+
+#~ msgid "Start Atom"
+#~ msgstr "Bắt đầu nguyên tử"
+
+#, fuzzy
+#~ msgid "End Atom"
+#~ msgstr "Kết thúc nguyên tử"
+
+#, fuzzy
+#~ msgid "Bond Order"
+#~ msgstr "Thứ tự liên kết:"
+
+#~ msgid "Rotatable"
+#~ msgstr "Xoay được"
+
+#, fuzzy
+#~ msgctxt "in Angstrom"
+#~ msgid ""
+#~ "Conformer %1\n"
+#~ "Length %2"
+#~ msgstr "Đồng phân %1"
+
+#~ msgctxt "in Angstrom"
+#~ msgid "Length %1"
+#~ msgstr "Chiều dài %1"
+
+#~ msgid "Vertex"
+#~ msgstr "Đỉnh"
+
+#, fuzzy
+#~ msgctxt "Degree symbol"
+#~ msgid ""
+#~ "Conformer %1\n"
+#~ "Angle %2"
+#~ msgstr "Đồng phân %1"
+
+#~ msgctxt "Degree symbol"
+#~ msgid "Angle %1"
+#~ msgstr "Angle %1"
+
+#, fuzzy
+#~ msgid "Angle"
+#~ msgstr "Angle:"
+
+#~ msgid "Atom %1"
+#~ msgstr "Nguyên tử %1"
+
+#, fuzzy
+#~ msgctxt "Degree symbol"
+#~ msgid ""
+#~ "Conformer %1\n"
+#~ "Torsion %2"
+#~ msgstr "Đồng phân %1"
+
+#~ msgctxt "Degree symbol"
+#~ msgid "Torsion %1"
+#~ msgstr "Xoắn %1"
+
+#~ msgid "Torsion"
+#~ msgstr "Xoắn"
+
+#, fuzzy
+#~ msgid "Energy (kJ/mol)"
+#~ msgstr "Năng lượng (kJ/mol):"
+
+#, fuzzy
+#~ msgid "Conformer"
+#~ msgstr "Đồng phân %1"
+
+#~ msgid "Yes"
+#~ msgstr "Có"
+
+#~ msgid "No"
+#~ msgstr "Không"
+
+#, fuzzy
+#~ msgid ""
+#~ "Tables for displaying and editng atom, bond, angle and torsion properties."
+#~ msgstr ""
+#~ "Cửa sổ hiện các thuộc tính nguyên tử, liên kết, góc và xoắn. Nó cũng bao "
+#~ "gồm một trình soạn thảo tọa độ Đề-các"
+
+#, fuzzy
+#~ msgid "PropertyTables"
+#~ msgstr "Thuộc tính"
+
+#~ msgid "Atom Properties"
+#~ msgstr "Thuộc tính của nguyên tử"
+
+#~ msgid "Bond Properties"
+#~ msgstr "Thuộc tính của liên kết"
+
+#~ msgid "Angle Properties"
+#~ msgstr "Thuộc tính góc"
+
+#~ msgid "Torsion Properties"
+#~ msgstr "Thuộc tính xoắn"
+
+#~ msgid "Conformer Properties"
+#~ msgstr "Thuộc tính đồng phân"
+
 #, fuzzy
 #~ msgid "Input Generators"
 #~ msgstr "Phát sinh đầu vào..."
@@ -6545,9 +6508,6 @@ msgstr ""
 #~ msgid "Color by distance from the first atom."
 #~ msgstr "Chọn màu theo khoảng cách từ nguyên tử thứ nhất."
 
-#~ msgid "Color by Element"
-#~ msgstr "Chọn màu theo nguyên tố"
-
 #~ msgid "Color by Element (carbon = grey, oxygen = red, ...)."
 #~ msgstr "Chọn màu theo nguyên tố (các-bon = xám, ô-xi = đỏ, ...)."
 
@@ -6606,9 +6566,6 @@ msgstr ""
 
 #~ msgid "Select Bond Labels Color"
 #~ msgstr "Chọn màu cho nhãn liên kết"
-
-#~ msgid "Select Atom Labels Font"
-#~ msgstr "Chọn phông chữ cho nhãn nguyên tử"
 
 #~ msgid "Select Bond Labels Font"
 #~ msgstr "Chọn phông chữ cho nhãn liên kết"
@@ -8267,9 +8224,6 @@ msgstr ""
 
 #~ msgid "POV-Ray Export"
 #~ msgstr "Xuất dưới dạng POV-Ray"
-
-#~ msgid "Select..."
-#~ msgstr "Chọn..."
 
 #~ msgid "povray"
 #~ msgstr "povray"
