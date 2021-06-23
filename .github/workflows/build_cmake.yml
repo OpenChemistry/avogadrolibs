@@ -129,6 +129,15 @@ jobs:
             install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
           done
         done
+        cd .. # build/prefix/lib
+        for plugin in libinchi.?.?.?.dylib; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $plugin $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
+          done
+        done
+        cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
 
     - name: Run tests
       if: runner.os != 'Windows'
