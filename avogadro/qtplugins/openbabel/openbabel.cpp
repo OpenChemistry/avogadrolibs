@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "openbabel.h"
@@ -87,6 +76,7 @@ OpenBabel::OpenBabel(QObject* p)
   refreshReadFormats();
   refreshWriteFormats();
   refreshForceFields();
+  refreshCharges();
 
   QString info = openBabelInfo();
   /*
@@ -141,7 +131,7 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
   QList<QString> multifileFormatDescriptions;
   multifileFormatDescriptions << "VASP format";
   multifileFormatDescriptions << "Gaussian Output"; // Issue #571
-  multifileFormatDescriptions <<"Generic Output";
+  multifileFormatDescriptions << "Generic Output";
 
   foreach (const QString& qdesc, formatDescriptions) {
     mapDesc = qdesc.toStdString();
@@ -307,6 +297,27 @@ void OpenBabel::handleForceFieldsUpdate(const QMap<QString, QString>& ffMap)
     proc->deleteLater();
 
   m_forceFields = ffMap;
+}
+
+void OpenBabel::refreshCharges()
+{
+  // No need to check if the member process is in use -- we use a temporary
+  // process for the refresh methods.
+  OBProcess* proc = new OBProcess(this);
+
+  connect(proc, SIGNAL(queryChargesFinished(QMap<QString, QString>)),
+          SLOT(handleChargesUpdate(QMap<QString, QString>)));
+
+  proc->queryCharges();
+}
+
+void OpenBabel::handleChargesUpdate(const QMap<QString, QString>& chargeMap)
+{
+  OBProcess* proc = qobject_cast<OBProcess*>(sender());
+  if (proc)
+    proc->deleteLater();
+
+  m_charges = chargeMap;
 }
 
 void OpenBabel::onConfigureGeometryOptimization()

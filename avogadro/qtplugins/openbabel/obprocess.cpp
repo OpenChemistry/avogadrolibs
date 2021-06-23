@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "obprocess.h"
@@ -294,6 +283,45 @@ void OBProcess::queryForceFieldsPrepare()
 
   releaseProcess();
   emit queryForceFieldsFinished(result);
+}
+
+bool OBProcess::queryCharges()
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::queryCharges(): process already in use.";
+    return false;
+  }
+
+  QStringList options;
+  options << "-L"
+          << "charges";
+
+  executeObabel(options, this, SLOT(queryChargesPrepare()));
+  return true;
+}
+
+void OBProcess::queryChargesPrepare()
+{
+  if (m_aborted) {
+    releaseProcess();
+    return;
+  }
+
+  QMap<QString, QString> result;
+
+  QString output = QString::fromLatin1(m_process->readAllStandardOutput());
+
+  QRegExp parser("([^\\s]+)\\s+(\\S[^\\n]*[^\\n\\.]+)\\.?\\n");
+  int pos = 0;
+  while ((pos = parser.indexIn(output, pos)) != -1) {
+    QString key = parser.cap(1);
+    QString desc = parser.cap(2);
+    result.insertMulti(key, desc);
+    pos += parser.matchedLength();
+  }
+
+  releaseProcess();
+  emit queryChargesFinished(result);
 }
 
 bool OBProcess::optimizeGeometry(const QByteArray& mol,
