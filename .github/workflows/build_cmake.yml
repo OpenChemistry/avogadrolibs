@@ -124,7 +124,8 @@ jobs:
       run: |
         for plugin in *.so; do
           for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
-            lib=`echo $x | cut -d '/' -f 9`
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $plugin $lib $libpath"
             install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
           done
         done
