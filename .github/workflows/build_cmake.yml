@@ -12,8 +12,8 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  CCACHE_VERSION: 3.7.7
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+  CCACHE: -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
 jobs:
   build:
@@ -103,13 +103,18 @@ jobs:
       with:
         arch: x64
 
+    - name: Set up ccache
+      uses: hendrikmuhs/ccache-action@v1
+      with:
+        key: ${{ matrix.os }}-${{ matrix.type }}
+
     - name: Configure
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}} ${{env.CCACHE}}
       shell: bash
 
     - name: Build
@@ -129,6 +134,7 @@ jobs:
             install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
           done
         done
+        # fix libinchi
         cd .. # build/prefix/lib
         for plugin in libinchi.?.?.?.dylib; do
           for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
@@ -137,6 +143,7 @@ jobs:
             install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
           done
         done
+        otool -L libinchi.?.?.?.dylib
         cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
 
     - name: Run tests
