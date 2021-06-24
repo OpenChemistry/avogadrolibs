@@ -13,6 +13,7 @@ env:
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+  CCACHE_VERSION: 4.2.1
   CCACHE: -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
 jobs:
@@ -89,7 +90,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ../Qt
-        key: ${{ runner.os }}-QtCache
+        key: ${{ runner.os }}-Qt${{ env.QT_VERSION }}
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
@@ -103,10 +104,19 @@ jobs:
       with:
         arch: x64
 
-    - name: Set up ccache
-      uses: hendrikmuhs/ccache-action@v1
+    - name: Download ccache
+      id: ccache
+      shell: cmake -P {0}
+      run: |
+        set(ccache_url "https://github.com/cristianadam/ccache/releases/download/v$ENV{CCACHE_VERSION}/${{ runner.os }}.tar.xz")
+        file(DOWNLOAD "${ccache_url}" ./ccache.tar.xz SHOW_PROGRESS)
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./ccache.tar.xz)
+
+    - name: Grab ccache files
+      uses: actions/cache@v2
       with:
-        key: ${{ matrix.os }}-${{ matrix.type }}
+        path: .ccache
+        key: ${{ matrix.config.name }}-ccache
 
     - name: Configure
       run: |
