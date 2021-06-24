@@ -6,4 +6,4 @@ avogadro_plugin(Force
   force.cpp
   "")
 
-target_link_libraries(Force LINK_PRIVATE AvogadroRendering)
+target_link_libraries(Force PRIVATE AvogadroRendering)

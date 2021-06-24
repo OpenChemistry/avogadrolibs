@@ -14,7 +14,7 @@ avogadro_plugin(QuantumInput
   "${quantuminput_srcs}"
 )
 
-target_link_libraries(QuantumInput LINK_PRIVATE AvogadroIO AvogadroMoleQueue)
+target_link_libraries(QuantumInput PRIVATE AvogadroIO AvogadroMoleQueue)
 
 set(_prefix "${AvogadroLibs_SOURCE_DIR}/../avogadrogenerators")
 # Look in parallel directory for the avogadrogenerators repository.

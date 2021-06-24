@@ -14,7 +14,7 @@ avogadro_plugin(commands
   "${command_srcs}"
 )
 
-target_link_libraries(commands LINK_PRIVATE AvogadroIO)
+target_link_libraries(commands PRIVATE AvogadroIO)
 
 # Bundled command scripts
 set(commands

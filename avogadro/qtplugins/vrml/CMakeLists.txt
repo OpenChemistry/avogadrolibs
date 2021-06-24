@@ -9,4 +9,4 @@ avogadro_plugin(VRML
   ""
 )
 
-target_link_libraries(VRML LINK_PRIVATE AvogadroRendering)
+target_link_libraries(VRML PRIVATE AvogadroRendering)

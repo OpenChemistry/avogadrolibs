@@ -38,7 +38,7 @@ add_executable(avogadroserver
   )
 
 target_link_libraries(avogadroserver
-  LINK_PRIVATE vtkParallelCore AvogadroProtoCall)
+  PRIVATE vtkParallelCore AvogadroProtoCall)
 
 install(TARGETS avogadroserver
   RUNTIME DESTINATION ${INSTALL_RUNTIME_DIR}
@@ -72,4 +72,4 @@ avogadro_plugin(ClientServer
   )
 
 target_link_libraries(ClientServer
-  LINK_PRIVATE AvogadroIO vtkParallelCore AvogadroProtoCall)
+  PRIVATE AvogadroIO vtkParallelCore AvogadroProtoCall)
