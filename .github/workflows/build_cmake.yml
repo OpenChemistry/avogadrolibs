@@ -62,7 +62,7 @@ jobs:
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install ninja boost eigen glew open-babel
+        brew install ninja eigen glew
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
@@ -86,7 +86,7 @@ jobs:
 
     - name: Cache Qt
       id: cache-qt
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: ../Qt
         key: ${{ runner.os }}-QtCache
@@ -102,6 +102,12 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
+
+    - name: Grab cache files
+      uses: actions/cache@v2
+      with:
+        path: ${{ runner.workspace }}/build/thirdparty
+        key: ${{ matrix.config.name }}-thirdparty
 
     - name: Configure
       run: |
