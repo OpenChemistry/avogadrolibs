@@ -5,10 +5,6 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}"
 
 find_package(Qt5 COMPONENTS Widgets Network Test REQUIRED)
 
-# Pull in MoleQueue for QtJson
-find_package(MoleQueue REQUIRED NO_MODULE)
-include_directories(${MoleQueue_INCLUDE_DIRS})
-
 # Find python interpreter for input generator
 find_package(PythonInterp 3)
 
@@ -24,9 +20,16 @@ set(tests
   GenericHighlighter
   HydrogenTools
   Molecule
-  MoleQueueQueueListModel
   RWMolecule
   )
+
+if(BUILD_MOLEQUEUE)
+# FIXME This doesn't work quite right
+# Pull in MoleQueue for QtJson
+#find_package(MoleQueue REQUIRED NO_MODULE)
+#include_directories(${MoleQueue_INCLUDE_DIRS})
+#list(APPEND tests   MoleQueueQueueListModel)
+endif()
 
 if(PYTHON_EXECUTABLE AND AVOGADRO_DATA)
   list(APPEND tests
@@ -47,8 +50,8 @@ endforeach()
 
 # Add a single executable for all of our tests.
 add_executable(AvogadroQtGuiTests ${testSrcs})
-target_link_libraries(AvogadroQtGuiTests AvogadroQtGui AvogadroMoleQueue
-  MoleQueueClient ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB} Qt5::Widgets Qt5::Test)
+target_link_libraries(AvogadroQtGuiTests AvogadroQtGui
+ ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB} Qt5::Widgets Qt5::Test)
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
