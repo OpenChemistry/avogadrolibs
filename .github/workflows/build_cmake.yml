@@ -4,7 +4,7 @@ name: CMake Build Matrix
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
 
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 env:
   BUILD_TYPE: Release
@@ -47,7 +47,7 @@ jobs:
             name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
-            cmake_flags: "-G Ninja",
+            cmake_flags: "-G Ninja ",
             cpack_flags: "-G NSIS",
           }
 
@@ -104,9 +104,10 @@ jobs:
 
     - name: Grab cache files
       uses: actions/cache@v2
+      if: runner.os != 'Windows'
       with:
         path: ${{ runner.workspace }}/build/thirdparty
-        key: ${{ matrix.config.name }}-thirdparty-ninja
+        key: ${{ matrix.config.name }}-thirdparty
 
     - name: Configure
       run: |
