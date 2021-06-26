@@ -106,7 +106,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ runner.workspace }}/build/thirdparty
-        key: ${{ matrix.config.name }}-thirdparty
+        key: ${{ matrix.config.name }}-thirdparty-ninja
 
     - name: Configure
       run: |
