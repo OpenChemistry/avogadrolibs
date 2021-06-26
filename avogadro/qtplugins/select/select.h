@@ -20,6 +20,10 @@
 #include <avogadro/qtgui/extensionplugin.h>
 
 namespace Avogadro {
+
+namespace QtGui{
+class PeriodicTableView;
+}
 namespace QtPlugins {
 
 /**
@@ -44,10 +48,14 @@ private slots:
   void selectAll();
   void selectNone();
   void invertSelection();
+  void selectElement();
+  void selectAtomIndex();
+  void selectElement(int element);
 
 private:
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
+  QtGui::PeriodicTableView* m_elements;
 };
 
 } // namespace QtPlugins
