@@ -51,6 +51,7 @@ private slots:
   void selectElement();
   void selectAtomIndex();
   void selectElement(int element);
+  void selectResidue();
 
 private:
   QList<QAction*> m_actions;

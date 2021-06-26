@@ -16,9 +16,12 @@
 
 #include "select.h"
 
+#include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/periodictableview.h>
 
+#include <QtCore/QRegularExpression>
+#include <QtCore/QRegularExpressionMatch>
 #include <QtGui/QKeySequence>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QInputDialog>
@@ -58,6 +61,10 @@ Select::Select(QObject* parent_)
 
   action = new QAction(tr("Select by Atom Index..."), this);
   connect(action, SIGNAL(triggered()), SLOT(selectAtomIndex()));
+  m_actions.append(action);
+
+  action = new QAction(tr("Select by Residue..."), this);
+  connect(action, SIGNAL(triggered()), SLOT(selectResidue()));
   m_actions.append(action);
 }
 
@@ -150,7 +157,7 @@ void Select::selectAtomIndex()
     return;
 
   auto list = text.simplified().split(',');
-  foreach (QString item, list) {
+  foreach (const QString item, list) {
     // check if it's a range
     if (item.contains('-')) {
       auto range = item.split('-');
@@ -168,6 +175,69 @@ void Select::selectAtomIndex()
       if (ok)
         m_molecule->atom(i).setSelected(true);
     }
+  }
+
+  m_molecule->emitChanged(Molecule::Atoms);
+}
+
+void Select::selectResidue()
+{
+  if (!m_molecule)
+    return;
+
+  bool ok;
+  QString text = QInputDialog::getText(
+    qobject_cast<QWidget*>(parent()), tr("Select Atoms by Residue"),
+    tr("Residues to Select:"), QLineEdit::Normal, QString(), &ok);
+
+  if (!ok || text.isEmpty())
+    return;
+
+  auto list = text.simplified().split(',');
+  foreach (const QString item, list) {
+    const QString label = item.simplified(); // get rid of whitespace
+    // check if it's a number - select that residue index
+    bool ok;
+    int index = label.toInt(&ok);
+    if (ok) {
+      auto residueList = m_molecule->residues();
+      if (index >= 1 && index < residueList.size()) {
+        auto residue = residueList[index];
+        for (auto atom : residue.residueAtoms()) {
+          atom.setSelected(true);
+        }
+      } // index makes sense
+      continue;
+    }
+
+    // okay it's not just a number, so see if it's HIS57, etc.
+    QRegularExpression re("([a-zA-Z]+)([0-9]+)");
+    QRegularExpressionMatch match = re.match(label);
+    if (match.hasMatch()) {
+      QString name = match.captured(1);
+      int index = match.captured(2).toInt();
+
+      auto residueList = m_molecule->residues();
+      if (index >= 1 && index < residueList.size()) {
+        auto residue = residueList[index];
+        if (name == residue.residueName().c_str()) {
+          for (auto atom : residue.residueAtoms()) {
+            atom.setSelected(true);
+          }
+        } // check if name matches specified (e.g. HIS57 is really a HIS)
+      }   // index makes sense
+    } else {
+      // standard residue name
+      for (auto residue : m_molecule->residues()) {
+        if (label == residue.residueName().c_str()) {
+          // select the atoms of the residue
+          for (auto atom : residue.residueAtoms()) {
+            atom.setSelected(true);
+          }
+        } // residue matches label
+      }   // for(residues)
+      continue;
+    } // 3-character labels
   }
 
   m_molecule->emitChanged(Molecule::Atoms);
