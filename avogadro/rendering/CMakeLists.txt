@@ -14,6 +14,7 @@ set(HEADERS
   arrowgeometry.h
   avogadrogl.h
   avogadrorendering.h
+  beziergeometry.h
   bufferobject.h
   camera.h
   cylindergeometry.h
@@ -46,6 +47,7 @@ set(HEADERS
 
 set(SOURCES
   arrowgeometry.cpp
+  beziergeometry.cpp
   bufferobject.cpp
   camera.cpp
   cylindergeometry.cpp

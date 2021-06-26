@@ -11,6 +11,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/rwmolecule.h>
+#include <avogadro/rendering/beziergeometry.h>
 #include <avogadro/rendering/cylindergeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
@@ -29,6 +30,7 @@ namespace QtPlugins {
 using Core::AtomicNumber;
 using Core::Elements;
 using Core::Molecule;
+using Rendering::BezierGeometry;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
@@ -143,6 +145,30 @@ void renderBackbone(const AtomsPairList& backbone, const Molecule& molecule,
   }
 }
 
+void renderRope(const AtomsPairList& backbone, const Molecule& molecule,
+                Rendering::GroupNode& node)
+{
+  GeometryNode* geometry = new GeometryNode;
+  node.addChild(geometry);
+
+  SphereGeometry* spheres = new SphereGeometry;
+  spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
+  spheres->identifier().type = Rendering::AtomType;
+  geometry->addDrawable(spheres);
+
+  BezierGeometry* bezier = new BezierGeometry;
+  bezier->identifier().molecule = &molecule;
+  bezier->identifier().type = Rendering::BondType;
+  geometry->addDrawable(bezier);
+
+  float bondRadius = 1.5f;
+  for (const auto& atom : backbone) {
+    Vector3ub color = atom.first.color();
+    Vector3f pos = atom.first.position3d().cast<float>();
+    bezier->addPoint(pos, color, bondRadius, 0);
+  }
+}
+
 void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
   AtomsPairList alphaAndHydrogen;
@@ -166,6 +192,7 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
   if (m_showCartoon) {
   }
   if (m_showRope) {
+    renderRope(alphaAndHydrogen, molecule, node);
   }
 
 } // namespace QtPlugins

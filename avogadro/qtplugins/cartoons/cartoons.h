@@ -49,8 +49,8 @@ private slots:
   void showRibbon(bool show);
   // the classic
   void showCartoon(bool show);
-  // In this representation a tube follows the center points of local axes as
-  // defined by helixorient.
+  // same as tube but instead of creating a b-spline (cuadratic bezier, segments
+  // of 3) we crea a big N-bezier line
   void showRope(bool show);
 
 private:
