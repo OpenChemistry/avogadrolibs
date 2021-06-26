@@ -110,7 +110,7 @@ jobs:
 
     - name: Configure
       run: |
-        if [ ! -d ${{ runner.workspace }}/build ]; then mkdir -f "${{ runner.workspace }}/build"; fi
+        if [ ! -d ${{ runner.workspace }}/build ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
