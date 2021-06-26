@@ -47,7 +47,8 @@ jobs:
             name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
-            cmake_flags: "-G Ninja ",
+            cmake_flags: " ",
+            build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
 
@@ -120,7 +121,7 @@ jobs:
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
