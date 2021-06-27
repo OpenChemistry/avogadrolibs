@@ -51,6 +51,14 @@ jobs:
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
+        - {
+            name: "Windows MinGW", artifact: "Win64m.exe",
+            os: windows-latest,
+            cc: "gcc", cxx: "g++",
+            cmake_flags: "-G Ninja ",
+            cpack_flags: "-G NSIS",
+            qt_arch: "win64_mingw73",
+          }
 
     steps:
 
@@ -96,19 +104,21 @@ jobs:
       with:
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
         version: ${{ env.QT_VERSION }}
+        arch: $${{ matrix.config.qt_arch }}
 
     - name: Configure MSVC Command Prompt
-      if: runner.os == 'Windows'
+      if: runner.os == 'Windows' && matrix.config.cc == 'cl'
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
 
     - name: Grab cache files
       uses: actions/cache@v2
-      if: runner.os != 'Windows'
+      if: matrix.config.cc != 'cl'
       with:
         path: ${{ runner.workspace }}/build/thirdparty
-        key: ${{ matrix.config.name }}-thirdparty
+        key: ${{ matrix.config.name }}-${{ matrix.config.cc }}
+        restore-keys: ${{ matrix.config.name }}-thirdparty
 
     - name: Configure
       run: |
