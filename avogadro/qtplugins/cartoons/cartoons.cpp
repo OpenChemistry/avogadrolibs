@@ -12,6 +12,7 @@
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/rendering/beziergeometry.h>
+#include <avogadro/rendering/bsplinegeometry.h>
 #include <avogadro/rendering/cylindergeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
@@ -31,6 +32,7 @@ using Core::AtomicNumber;
 using Core::Elements;
 using Core::Molecule;
 using Rendering::BezierGeometry;
+using Rendering::BSplineGeometry;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
@@ -151,17 +153,30 @@ void renderRope(const AtomsPairList& backbone, const Molecule& molecule,
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  SphereGeometry* spheres = new SphereGeometry;
-  spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
-  spheres->identifier().type = Rendering::AtomType;
-  geometry->addDrawable(spheres);
-
   BezierGeometry* bezier = new BezierGeometry;
   bezier->identifier().molecule = &molecule;
   bezier->identifier().type = Rendering::BondType;
   geometry->addDrawable(bezier);
 
-  float bondRadius = 1.5f;
+  float bondRadius = 1.0f;
+  for (const auto& atom : backbone) {
+    Vector3ub color = atom.first.color();
+    Vector3f pos = atom.first.position3d().cast<float>();
+    bezier->addPoint(pos, color, bondRadius, 0);
+  }
+}
+
+void renderTube(const AtomsPairList& backbone, const Molecule& molecule,
+                Rendering::GroupNode& node, float bondRadius)
+{
+  GeometryNode* geometry = new GeometryNode;
+  node.addChild(geometry);
+
+  BSplineGeometry* bezier = new BSplineGeometry;
+  bezier->identifier().molecule = &molecule;
+  bezier->identifier().type = Rendering::BondType;
+  geometry->addDrawable(bezier);
+
   for (const auto& atom : backbone) {
     Vector3ub color = atom.first.color();
     Vector3f pos = atom.first.position3d().cast<float>();
@@ -184,8 +199,10 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
     renderBackbone(alphaAndHydrogen, molecule, node);
   }
   if (m_showTrace) {
+    renderTube(alphaAndHydrogen, molecule, node, -0.15f);
   }
   if (m_showTube) {
+    renderTube(alphaAndHydrogen, molecule, node, 0.15f);
   }
   if (m_showRibbon) {
   }

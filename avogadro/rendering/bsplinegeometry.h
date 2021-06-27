@@ -3,18 +3,18 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_RENDERING_BEZIERGEOMETRY_H
-#define AVOGADRO_RENDERING_BEZIERGEOMETRY_H
+#ifndef AVOGADRO_RENDERING_BSPLINEGEOMETRY_H
+#define AVOGADRO_RENDERING_BSPLINEGEOMETRY_H
 
 #include "curvegeometry.h"
 
 namespace Avogadro {
 namespace Rendering {
 
-class AVOGADRORENDERING_EXPORT BezierGeometry : public CurveGeometry
+class AVOGADRORENDERING_EXPORT BSplineGeometry : public CurveGeometry
 {
 public:
-  BezierGeometry();
+  BSplineGeometry();
 
 protected:
   void update(int index) override;

@@ -3,61 +3,86 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include "beziergeometry.h"
+#include "bsplinegeometry.h"
 
 namespace Avogadro {
 namespace Rendering {
 
-BezierGeometry::BezierGeometry() : CurveGeometry() {}
+BSplineGeometry::BSplineGeometry() : CurveGeometry() {}
 
-Vector3f BezierGeometry::computeCurvePoint(float t,
-                                           const std::list<Point*>& points)
+float B(float i, float k, float t, float knot)
 {
-  Vector3f h;
-  h << 1.0f, 1.0f, 1.0f;
-  float u = 1.0f - t;
-  float n1 = points.size();
-  float w = 1.0f / n1;
-  float k = 0.0f;
-  Vector3f Q;
-  Q << w, w, w;
-  for (const auto& p : points) {
-    for (size_t i = 0; i < 3; ++i) {
-      h[i] = h[i] * t * (n1 - k) * w;
-      h[i] = h[i] / (k * u * w + h[i]);
-      Q[i] = (1.0f - h[i]) * Q[i] + h[i] * p->pos[i];
+  float ti = knot * i;           // t_i
+  float ti1 = knot * (i + 1.0f); // t_(i+1)
+  if (k == 1) {
+    if (ti <= t && t < ti1) {
+      return 1.0f;
+    } else {
+      return 0.0f;
     }
-    k += 1.0f;
+  }
+
+  float tik = knot * (i + k);         // t_(i+k)
+  float tik1 = knot * (i + k - 1.0f); // t_(i+k-1)
+
+  float a1 = (t - ti) / (tik1 - ti);
+  float a2 = B(i, k - 1, t, knot);
+
+  float b1 = (tik - t) / (tik - ti1);
+  float b2 = B(i + 1, k - 1, t, knot);
+  return a1 * a2 + b1 * b2;
+}
+
+Vector3f BSplineGeometry::computeCurvePoint(float t,
+                                            const std::list<Point*>& points)
+{
+  // degree: line = 1, cuadratic = 2, cube = 3
+  float k = 3.0f;
+  // #knot segments = #control points + #degree + 1
+  float m = points.size() + k + 1.0f;
+  float knot = 1.0f / m;
+  Vector3f Q;
+  Q << 0.0f, 0.0f, 0.0f;
+  float i = 0.0f;
+  for (const auto& p : points) {
+    Q += p->pos * B(i, k, t, knot);
+    i += 1.0f;
   }
   return Q;
 }
 
-void BezierGeometry::update(int index)
+void BSplineGeometry::update(int index)
 {
   // compute the intermidian bezier points
   Line* line = m_lines[index];
-  unsigned int lineResolution = 12;
+  unsigned int lineResolution = line->flat ? 30 : 12;
   size_t qttyPoints = line->points.size();
+  std::vector<Vector3f> points;
   size_t qttySegments = lineResolution * qttyPoints;
-  std::vector<Vector3f> points(qttySegments);
   for (size_t i = 0; i < qttyPoints; ++i) {
     for (size_t j = 0; j < lineResolution; ++j) {
-      points[i * lineResolution + j] = computeCurvePoint(
-        (i * lineResolution + j) / float(qttySegments), line->points);
+      auto p = computeCurvePoint((i * lineResolution + j) / float(qttySegments),
+                                 line->points);
+      // workarround p is exactly (0,0,0)
+      if (p.norm() > 0.0f) {
+        points.push_back(p);
+      }
     }
   }
 
   // prepare VBO and EBO
   std::vector<unsigned int> indices;
   std::vector<ColorNormalVertex> vertices;
-  unsigned int circleResolution = 12;
+  unsigned int circleResolution = line->flat ? 1 : 12;
   const float resolutionRadians =
     2.0f * static_cast<float>(M_PI) / static_cast<float>(circleResolution);
   std::vector<Vector3f> radials(circleResolution);
 
   auto it = line->points.begin();
   float radius = line->radius;
-  for (size_t i = 1; i < qttySegments; ++i) {
+  qttySegments = points.size();
+  for (size_t i = lineResolution * 2; i < (qttySegments - (lineResolution * 2));
+       ++i) {
     if (i % lineResolution == 0) {
       ++it;
     }
@@ -108,9 +133,9 @@ void BezierGeometry::update(int index)
   line->dirty = false;
 }
 
-std::multimap<float, Identifier> BezierGeometry::hits(const Vector3f&,
-                                                      const Vector3f&,
-                                                      const Vector3f&) const
+std::multimap<float, Identifier> BSplineGeometry::hits(const Vector3f&,
+                                                       const Vector3f&,
+                                                       const Vector3f&) const
 {
   return std::multimap<float, Identifier>();
 }
