@@ -33,14 +33,14 @@ jobs:
             name: "Ubuntu 18.04 GCC", artifact: "",
             os: ubuntu-18.04,
             cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DUSE_SYSTEM_ZLIB=ON -DUSE_SYSTEM_LIBXML2=ON",
             cpack: "",
           }
         - {
             name: "macOS Latest Clang", artifact: "macOS.dmg",
             os: macos-latest,
             cc: "clang", cxx: "clang++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DUSE_SYSTEM_ZLIB=ON -DUSE_SYSTEM_LIBXML2=ON",
             cpack_flags: "-G DragNDrop",
           }
         - {
@@ -56,7 +56,7 @@ jobs:
             name: "Windows MinGW", artifact: "Win64m.exe",
             os: windows-latest,
             cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja ",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_ZLIB=ON",
             cpack_flags: "-G NSIS",
             qt_arch: "win64_mingw73",
           }
