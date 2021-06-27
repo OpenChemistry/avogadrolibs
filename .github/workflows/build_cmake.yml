@@ -50,6 +50,7 @@ jobs:
             cmake_flags: " ",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
+            qt_arch: "win64_msvc2017_64"
           }
         - {
             name: "Windows MinGW", artifact: "Win64m.exe",
@@ -97,7 +98,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ../Qt
-        key: ${{ runner.os }}-QtCache
+        key: ${{ runner.os }}-QtCache${{ matrix.config.qt_arch }}
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
