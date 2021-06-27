@@ -60,6 +60,7 @@ intersphinx_mapping = {
 
 breathe_projects = { 'AvogadroLibs': '@doxygen_output_dir@/xml/' }
 breathe_default_project = 'AvogadroLibs'
+breathe_default_members = ('members', 'undoc-members', 'protected-members')
 
 # -- Options for HTML output -------------------------------------------------
 
