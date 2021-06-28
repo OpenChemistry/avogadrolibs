@@ -5,6 +5,7 @@
 
 #include "residue.h"
 #include "molecule.h"
+#include "residuecolors.h"
 #include "residuedata.h"
 
 namespace Avogadro {
@@ -12,27 +13,33 @@ namespace Core {
 
 Residue::Residue() {}
 
-Residue::Residue(std::string& name) : m_residueName(name), m_heterogen(false) {}
+Residue::Residue(std::string& name)
+  : m_residueName(name), m_chainId('A'), m_heterogen(false), m_color(0,0,0), m_customColorSet(false)
+{}
 
 Residue::Residue(std::string& name, Index& number)
-  : m_residueName(name), m_residueId(number), m_heterogen(false)
+  : m_residueName(name), m_residueId(number), m_chainId('A'), m_heterogen(false), m_color(0,0,0), m_customColorSet(false)
 {}
 
 Residue::Residue(std::string& name, Index& number, char& id)
-  : m_residueName(name), m_residueId(number), m_chainId(id), m_heterogen(false)
+  : m_residueName(name), m_residueId(number), m_chainId(id), m_heterogen(false), m_color(0,0,0), m_customColorSet(false)
 {}
 
 Residue::Residue(const Residue& other)
   : m_residueName(other.m_residueName), m_residueId(other.m_residueId),
-    m_atomNameMap(other.m_atomNameMap), m_heterogen(other.m_heterogen)
+    m_chainId(other.m_chainId), m_atomNameMap(other.m_atomNameMap),
+    m_heterogen(other.m_heterogen), m_color(other.m_color), m_customColorSet(other.m_customColorSet)
 {}
 
 Residue& Residue::operator=(Residue other)
 {
   m_residueName = other.m_residueName;
   m_residueId = other.m_residueId;
+  m_chainId = other.m_chainId;
   m_atomNameMap = other.m_atomNameMap;
   m_heterogen = other.m_heterogen;
+  m_color = other.m_color;
+  m_customColorSet = other.m_customColorSet;
   return *this;
 }
 
@@ -96,6 +103,29 @@ int Residue::getAtomicNumber(std::string name)
   }
 
   return 0;
+}
+
+void Residue::setColor(const Vector3ub color)
+{
+  m_customColorSet = true;
+  m_color = color;
+}
+
+const Vector3ub Residue::color() const
+{
+  if (m_customColorSet)
+  return m_color;
+
+  // default return a color for the chain
+  int offset = 0;
+  if (m_chainId >= 'A' && m_chainId <= 'Z')
+     offset = m_chainId - 'A';
+  else if (m_chainId >= 'a' && m_chainId <= 'z')
+     offset = m_chainId - 'a';
+  else if (m_chainId >= '0' && m_chainId <= '9')
+     offset = m_chainId - '0' + 15;// starts at 'P'
+
+  return Vector3ub(chain_color[offset]);
 }
 
 } // namespace Core
