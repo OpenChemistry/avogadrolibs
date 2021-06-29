@@ -152,6 +152,7 @@ RWMolecule::AtomType RWMolecule::addAtom(unsigned char num, bool usingPositions)
     new AddAtomCommand(*this, num, usingPositions, atomId, atomUid);
   comm->setText(tr("Add Atom"));
   m_undoStack.push(comm);
+  m_molecule.m_graphDirty = true;
   return AtomType(this, atomId);
 }
 
@@ -287,6 +288,7 @@ bool RWMolecule::removeAtom(Index atomId)
   RemoveAtomCommand* comm = new RemoveAtomCommand(
     *this, atomId, uniqueId, atomicNumber(atomId), atomPosition3d(atomId));
   comm->setText(tr("Remove Atom"));
+  m_molecule.m_graphDirty = true;
 
   m_undoStack.push(comm);
 
@@ -685,6 +687,7 @@ RWMolecule::BondType RWMolecule::addBond(Index atom1, Index atom2,
     *this, order, makeBondPair(atom1, atom2), bondId, bondUid);
   comm->setText(tr("Add Bond"));
   m_undoStack.push(comm);
+  m_molecule.m_graphDirty = true;
   return BondType(this, bondId);
 }
 
@@ -772,6 +775,7 @@ bool RWMolecule::removeBond(Index bondId)
     m_molecule.m_bondOrders[bondId]);
   comm->setText(tr("Removed Bond"));
   m_undoStack.push(comm);
+  m_molecule.m_graphDirty = true;
   return true;
 }
 

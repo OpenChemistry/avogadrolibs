@@ -104,16 +104,16 @@ void ConnectedGroup::removeConnection(size_t a, std::vector<size_t> a_neighbors,
   assert(m_elementToGroup.find(b) != m_elementToGroup.end());
   assert(m_elementToGroup[a] == m_elementToGroup[b]);
 
-  bool stillCOnected = false;
+  bool stillConected = false;
   if (a_neighbors.size() < b_neighbors.size()) {
-    stillCOnected =
+    stillConected =
       checkConectivity(m_groupToElement[m_elementToGroup[a]], b_neighbors);
   } else {
-    stillCOnected =
+    stillConected =
       checkConectivity(m_groupToElement[m_elementToGroup[b]], a_neighbors);
   }
 
-  if (!stillCOnected) {
+  if (!stillConected) {
     removeConnection(a);
     size_t group = m_elementToGroup[a];
     for (const auto& n : a_neighbors) {

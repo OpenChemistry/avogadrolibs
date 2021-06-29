@@ -24,20 +24,11 @@
 namespace Avogadro {
 namespace Core {
 
-Graph::Graph()
-{
-  connectedGroup = new ConnectedGroup();
-}
+Graph::Graph() : m_connectedGroup() {}
 
-Graph::Graph(size_t n) : m_adjacencyList(n)
-{
-  connectedGroup = new ConnectedGroup(n);
-}
+Graph::Graph(size_t n) : m_adjacencyList(n), m_connectedGroup(n) {}
 
-Graph::~Graph()
-{
-  delete connectedGroup;
-}
+Graph::~Graph() {}
 
 void Graph::setSize(size_t n)
 {
@@ -45,10 +36,10 @@ void Graph::setSize(size_t n)
   // from the soon to be removed vertices.
   for (size_t i = n; i < m_adjacencyList.size(); ++i) {
     removeEdges(i);
-    connectedGroup->removeElement(i);
+    m_connectedGroup.removeElement(i);
   }
   if (m_adjacencyList.size() < n) {
-    connectedGroup->addElements(n - m_adjacencyList.size());
+    m_connectedGroup.addElements(n - m_adjacencyList.size());
   }
 
   m_adjacencyList.resize(n);
@@ -66,13 +57,13 @@ bool Graph::isEmpty() const
 
 void Graph::clear()
 {
-  setSize(0);
-  connectedGroup->clear();
+  m_adjacencyList.clear();
+  m_connectedGroup.clear();
 }
 
 size_t Graph::addVertex()
 {
-  connectedGroup->addElement(size() + 1);
+  m_connectedGroup.addElement(size() + 1);
   setSize(size() + 1);
   return size() - 1;
 }
@@ -80,7 +71,7 @@ size_t Graph::addVertex()
 void Graph::removeVertex(size_t index)
 {
   assert(index < size());
-  connectedGroup->removeConnection(index);
+  m_connectedGroup.removeConnection(index);
   // Remove the edges to the vertex.
   removeEdges(index);
 
@@ -104,7 +95,7 @@ void Graph::addEdge(size_t a, size_t b)
   if (std::find(neighborsA.begin(), neighborsA.end(), b) != neighborsA.end())
     return;
 
-  connectedGroup->addConnection(a, b);
+  m_connectedGroup.addConnection(a, b);
 
   // Add the edge to each verticies adjacency list.
   neighborsA.push_back(b);
@@ -119,7 +110,7 @@ void Graph::removeEdge(size_t a, size_t b)
   std::vector<size_t>& neighborsA = m_adjacencyList[a];
   std::vector<size_t>& neighborsB = m_adjacencyList[b];
 
-  connectedGroup->removeConnection(a, neighborsA, b, neighborsB);
+  m_connectedGroup.removeConnection(a, neighborsA, b, neighborsB);
 
   std::vector<size_t>::iterator iter =
     std::find(neighborsA.begin(), neighborsA.end(), b);
@@ -132,14 +123,14 @@ void Graph::removeEdge(size_t a, size_t b)
 
 void Graph::removeEdges()
 {
-  connectedGroup->removeConnections();
+  m_connectedGroup.removeConnections();
   for (size_t i = 0; i < m_adjacencyList.size(); ++i)
     m_adjacencyList[i].clear();
 }
 
 void Graph::removeEdges(size_t index)
 {
-  connectedGroup->removeConnection(index);
+  m_connectedGroup.removeConnection(index);
   const std::vector<size_t>& nbrs = m_adjacencyList[index];
 
   for (size_t i = 0; i < nbrs.size(); ++i) {
@@ -184,13 +175,13 @@ bool Graph::containsEdge(size_t a, size_t b) const
 
 std::vector<std::set<size_t>> Graph::connectedComponents() const
 {
-  return connectedGroup->getAllGroups();
+  return m_connectedGroup.getAllGroups();
 }
 
 std::set<size_t> Graph::connectedComponent(size_t index) const
 {
-  size_t group = connectedGroup->getGroup(index);
-  return connectedGroup->getElements(group);
+  size_t group = m_connectedGroup.getGroup(index);
+  return m_connectedGroup.getElements(group);
 }
 
 } // namespace Core

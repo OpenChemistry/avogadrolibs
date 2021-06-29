@@ -31,12 +31,12 @@ namespace Avogadro {
 namespace Core {
 
 Molecule::Molecule()
-  : m_graphDirty(true), m_basisSet(nullptr), m_unitCell(nullptr)
+  : m_graphDirty(false), m_basisSet(nullptr), m_unitCell(nullptr)
 {}
 
 Molecule::Molecule(const Molecule& other)
-  : m_graph(other.m_graph), m_graphDirty(true), m_data(other.m_data),
-    m_customElementMap(other.m_customElementMap),
+  : m_graph(other.m_graph), m_graphDirty(other.m_graphDirty),
+    m_data(other.m_data), m_customElementMap(other.m_customElementMap),
     m_atomicNumbers(other.atomicNumbers()), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d), m_coordinates3d(other.m_coordinates3d),
     m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
@@ -96,7 +96,7 @@ Molecule& Molecule::operator=(const Molecule& other)
 {
   if (this != &other) {
     m_graph = other.m_graph;
-    m_graphDirty = true;
+    m_graphDirty = other.m_graphDirty;
     m_data = other.m_data;
     m_customElementMap = other.m_customElementMap;
     m_atomicNumbers = other.m_atomicNumbers;
@@ -493,6 +493,8 @@ bool Molecule::removeBond(Index index)
   }
   m_bondOrders.pop_back();
   m_bondPairs.pop_back();
+
+  m_graphDirty = true;
   return true;
 }
 
@@ -707,7 +709,8 @@ Vector3 Molecule::centerOfMass() const
   Vector3 center(0.0, 0.0, 0.0);
   for (Index i = 0; i < atomCount(); ++i) {
     AtomType curr_atom = atom(i);
-    center += (curr_atom.position3d() * Elements::mass(curr_atom.atomicNumber()));
+    center +=
+      (curr_atom.position3d() * Elements::mass(curr_atom.atomicNumber()));
   }
   center /= mass();
   center /= atomCount();

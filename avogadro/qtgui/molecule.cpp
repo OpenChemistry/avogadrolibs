@@ -79,9 +79,7 @@ Molecule& Molecule::operator=(const Core::Molecule& other)
   return *this;
 }
 
-Molecule::~Molecule()
-{
-}
+Molecule::~Molecule() {}
 
 Molecule::AtomType Molecule::addAtom(unsigned char number)
 {
@@ -109,7 +107,7 @@ bool Molecule::removeAtom(Index index)
   Index uniqueId = findAtomUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
-
+  m_graphDirty = true;
   // Unique ID of an atom that was removed:
   m_atomUniqueIds[uniqueId] = MaxIndex;
 
@@ -219,6 +217,7 @@ bool Molecule::removeBond(Index index)
   Index uniqueId = findBondUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
+  m_graphDirty = true;
 
   m_bondUniqueIds[uniqueId] = MaxIndex; // Unique ID of a bond that was removed.
 
@@ -304,5 +303,5 @@ RWMolecule* Molecule::undoMolecule()
   return m_undoMolecule;
 }
 
-} // end QtGui namespace
-} // end Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro

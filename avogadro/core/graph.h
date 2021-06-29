@@ -18,6 +18,7 @@
 #define AVOGADRO_CORE_GRAPH_H
 
 #include "avogadrocore.h"
+#include "connectedgroup.h"
 
 #include <cstddef>
 #include <set>
@@ -26,12 +27,10 @@
 namespace Avogadro {
 namespace Core {
 
-class ConnectedGroup;
 /**
  * @class Graph graph.h <avogadro/core/graph.h>
  * @brief The Graph class represents a graph data structure.
  */
-
 class AVOGADROCORE_EXPORT Graph
 {
 public:
@@ -111,7 +110,7 @@ public:
 
 private:
   std::vector<std::vector<size_t>> m_adjacencyList;
-  ConnectedGroup* connectedGroup;
+  ConnectedGroup m_connectedGroup;
 };
 
 } // namespace Core
