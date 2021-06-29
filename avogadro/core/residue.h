@@ -59,22 +59,38 @@ public:
   /** Adds an atom to the residue class */
   void addResidueAtom(std::string& name, Atom& atom);
 
-  /** \return a vector containing the atoms added to the residue */
+  /** \return a vector containing all atoms added in the residue */
   std::vector<Atom> residueAtoms();
 
   /** Sets bonds to atoms in the residue based on data from residuedata header
    */
   void resolveResidueBonds(Molecule& mol);
 
+  /**
+   * \return the atom with the name specified (e.g., "CA")
+   */
   Atom getAtomByName(std::string name);
 
+  /**
+   * \return the atomic number of the atom with the name specified (e.g., "CA" = "C")
+   */
   int getAtomicNumber(std::string name);
 
+  /** Set whether this residue is a "HET" / "HETATOM" ligand
+   */
   void setHeterogen(bool heterogen) { m_heterogen = heterogen;}
 
   /** \return is this residue a heterogen (HET / HETATM)
    */
   bool isHeterogen() { return m_heterogen; }
+
+  /** Set a custom color for this residue
+   */
+  void setColor(const Vector3ub color);
+
+  /** \return the color set for this residue, or a default from the chain id
+   */
+  const Vector3ub color() const;
 
 protected:
   std::string m_residueName;
@@ -82,6 +98,8 @@ protected:
   char m_chainId;
   AtomNameMap m_atomNameMap;
   bool m_heterogen;
+  Vector3ub m_color;
+  bool m_customColorSet;
 };
 
 } // namespace Core
