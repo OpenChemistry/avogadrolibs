@@ -38,9 +38,9 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 using std::list;
+using std::map;
 using std::pair;
 using std::reference_wrapper;
-using std::set;
 using std::vector;
 
 typedef list<pair<const Core::Atom, const Core::Atom>> AtomsPairList;
@@ -48,8 +48,8 @@ typedef list<pair<const Core::Atom, const Core::Atom>> AtomsPairList;
 Cartoons::Cartoons(QObject* parent)
   : ScenePlugin(parent), m_group(nullptr), m_setupWidget(nullptr),
     m_enabled(false), m_showBackbone(false), m_showTrace(false),
-    m_showTube(false), m_showRibbon(false), m_showRope(false),
-    m_showCartoon(true)
+    m_showTube(true), m_showRibbon(false), m_showRope(false),
+    m_showCartoon(false)
 {}
 
 Cartoons::~Cartoons()
@@ -58,53 +58,30 @@ Cartoons::~Cartoons()
     m_setupWidget->deleteLater();
 }
 
-AtomsPairList getBackboneByResidues(const Molecule& molecule)
+map<size_t, AtomsPairList> getBackboneByResidues(const Molecule& molecule)
 {
-  AtomsPairList result;
+  auto graph = molecule.graph();
+  map<size_t, AtomsPairList> result;
   for (const auto& residue : molecule.residues()) {
     if (!residue.isHeterogen()) {
       Core::Atom ac = residue.getAtomByName("CA");
       Core::Atom h = residue.getAtomByName("H");
       if (ac.isValid()) {
-        result.push_back(std::make_pair(ac, h));
+        size_t index = graph.getConnectedID(ac.index());
+        if (result.find(index) == result.end()) {
+          result[index] = AtomsPairList();
+        }
+        result[index].push_back(std::make_pair(ac, h));
       }
     }
   }
   return result;
 }
 
-AtomsPairList getBackboneManually(const Molecule& molecule)
+map<size_t, AtomsPairList> getBackboneManually(const Molecule& molecule)
 {
   // manual filter
-  AtomsPairList result;
-  for (Index i = 0; i < molecule.atomCount(); ++i) {
-    const auto& atom = molecule.atom(i);
-    // ^ O(n) time
-    if (atom.atomicNumber() == AtomicNumber::Carbon ||
-        atom.atomicNumber() == AtomicNumber::Nitrogen) {
-      bool isResidue = false;
-      for (const auto& residue : molecule.residues()) {
-        if (residue.isHeterogen() && residue.hasAtomByIndex(atom.index())) {
-          isResidue = true;
-          break;
-        }
-      }
-      if (!isResidue) {
-        unsigned int qtty = 0;
-        Core::Atom pair;
-        for (auto& bond : molecule.bonds(i)) {
-          const Core::Atom& connected = (bond->atom1().index() == atom.index())
-                                          ? bond->atom2()
-                                          : bond->atom1();
-          if (connected.atomicNumber() == AtomicNumber::Hydrogen) {
-            ++qtty;
-            pair = connected;
-          }
-        }
-        result.push_back(std::make_pair(atom, pair));
-      }
-    }
-  }
+  map<size_t, AtomsPairList> result;
   return result;
 }
 
@@ -186,32 +163,36 @@ void renderTube(const AtomsPairList& backbone, const Molecule& molecule,
 
 void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
-  AtomsPairList alphaAndHydrogen;
-  if (molecule.residues().size() > 0) {
-    alphaAndHydrogen = getBackboneByResidues(molecule);
+  if (m_showBackbone || m_showTrace || m_showTube || m_showRibbon ||
+      m_showCartoon || m_showRope) {
+    map<size_t, AtomsPairList> alphaAndHydrogens;
+    if (molecule.residues().size() > 0) {
+      alphaAndHydrogens = getBackboneByResidues(molecule);
+    }
+    if (alphaAndHydrogens.size() == 0) {
+      alphaAndHydrogens = getBackboneManually(molecule);
+    }
+    for (const auto& group : alphaAndHydrogens) {
+      const auto& alphaAndHydrogen = group.second;
+      m_group = &node;
+      if (m_showBackbone) {
+        renderBackbone(alphaAndHydrogen, molecule, node);
+      }
+      if (m_showTrace) {
+        renderTube(alphaAndHydrogen, molecule, node, -0.15f);
+      }
+      if (m_showTube) {
+        renderTube(alphaAndHydrogen, molecule, node, 0.15f);
+      }
+      if (m_showRibbon) {
+      }
+      if (m_showCartoon) {
+      }
+      if (m_showRope) {
+        renderRope(alphaAndHydrogen, molecule, node);
+      }
+    }
   }
-  if (alphaAndHydrogen.size() == 0) {
-    alphaAndHydrogen = getBackboneManually(molecule);
-  }
-
-  m_group = &node;
-  if (m_showBackbone) {
-    renderBackbone(alphaAndHydrogen, molecule, node);
-  }
-  if (m_showTrace) {
-    renderTube(alphaAndHydrogen, molecule, node, -0.15f);
-  }
-  if (m_showTube) {
-    renderTube(alphaAndHydrogen, molecule, node, 0.15f);
-  }
-  if (m_showRibbon) {
-  }
-  if (m_showCartoon) {
-  }
-  if (m_showRope) {
-    renderRope(alphaAndHydrogen, molecule, node);
-  }
-
 } // namespace QtPlugins
 
 void Cartoons::processEditable(const QtGui::RWMolecule& molecule,

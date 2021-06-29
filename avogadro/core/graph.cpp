@@ -22,17 +22,11 @@
 namespace Avogadro {
 namespace Core {
 
-Graph::Graph()
-{
-}
+Graph::Graph() {}
 
-Graph::Graph(size_t n) : m_adjacencyList(n)
-{
-}
+Graph::Graph(size_t n) : m_adjacencyList(n) {}
 
-Graph::~Graph()
-{
-}
+Graph::~Graph() {}
 
 void Graph::setSize(size_t n)
 {
@@ -221,5 +215,10 @@ std::vector<std::vector<size_t>> Graph::connectedComponents() const
   return components;
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+size_t Graph::getConnectedID(size_t index) const
+{
+  return m_connectedGroup.getGroup(index);
+}
+
+} // namespace Core
+} // namespace Avogadro
