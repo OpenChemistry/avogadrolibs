@@ -29,7 +29,7 @@ class Hydrogens : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit Hydrogens(QObject* parent_ = 0);
+  explicit Hydrogens(QObject* parent_ = nullptr);
   ~Hydrogens() override;
 
   QString name() const override { return tr("Hydrogens"); }

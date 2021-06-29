@@ -19,4 +19,4 @@ avogadro_plugin(Manipulator
   "${manipulator_rcs}"
 )
 
-target_link_libraries(Manipulator LINK_PRIVATE AvogadroQtOpenGL)
+target_link_libraries(Manipulator PRIVATE AvogadroQtOpenGL)

@@ -33,7 +33,7 @@ class CoordinateEditor : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit CoordinateEditor(QObject* parent_ = 0);
+  explicit CoordinateEditor(QObject* parent_ = nullptr);
   ~CoordinateEditor() override;
 
   QString name() const override { return tr("Coordinate editor"); }

@@ -57,7 +57,7 @@ public:
   /** Typedef for PersistentBond class. */
   typedef PersistentBond<Molecule> PersistentBondType;
 
-  Molecule(QObject* parent_ = 0);
+  Molecule(QObject* parent_ = nullptr);
   ~Molecule() override;
   /** copy constructor */
   Molecule(const Molecule& other);

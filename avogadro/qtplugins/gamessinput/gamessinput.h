@@ -39,7 +39,7 @@ class GamessInput : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit GamessInput(QObject* parent = 0);
+  explicit GamessInput(QObject* parent = nullptr);
   ~GamessInput() override;
 
   QString name() const override { return tr("GAMESS input"); }

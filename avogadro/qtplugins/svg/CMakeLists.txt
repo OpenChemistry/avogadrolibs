@@ -11,4 +11,4 @@ avogadro_plugin(SVG
   ""
 )
 
-target_link_libraries(SVG LINK_PRIVATE AvogadroRendering Qt5::Svg)
+target_link_libraries(SVG PRIVATE AvogadroRendering Qt5::Svg)

@@ -72,11 +72,11 @@ endif()
 avogadro_add_library(AvogadroIO ${HEADERS} ${SOURCES})
 
 target_link_libraries(AvogadroIO
-  LINK_PUBLIC AvogadroCore
-  LINK_PRIVATE struct)
+  PUBLIC AvogadroCore
+  PRIVATE struct)
 if(USE_HDF5)
-  target_link_libraries(AvogadroIO LINK_PRIVATE ${HDF5_LIBRARIES})
+  target_link_libraries(AvogadroIO PRIVATE ${HDF5_LIBRARIES})
 endif()
 if(WIN32)
-  target_link_libraries(AvogadroIO LINK_PRIVATE ws2_32)
+  target_link_libraries(AvogadroIO PRIVATE ws2_32)
 endif()

@@ -35,7 +35,7 @@ class AVOGADROMOLEQUEUE_EXPORT Client : public QObject
   Q_OBJECT
 
 public:
-  explicit Client(QObject *parent_ = 0);
+  explicit Client(QObject *parent_ = nullptr);
   ~Client();
 
   /**

@@ -839,7 +839,7 @@ TEST(RWMoleculeTest, MoleculeToRWMolecule)
   a1.setPosition3d(Vector3(0, 6, 9));
   b0.setOrder(3);
 
-  RWMolecule rwmol(mol, 0);
+  RWMolecule rwmol(mol, nullptr);
   EXPECT_EQ(rwmol.atomCount(), mol.atomCount());
   EXPECT_EQ(rwmol.bondCount(), mol.bondCount());
   EXPECT_EQ(rwmol.atom(2).atomicNumber(), mol.atom(2).atomicNumber());

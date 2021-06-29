@@ -35,7 +35,7 @@ class OverlayAxes : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit OverlayAxes(QObject* parent = 0);
+  explicit OverlayAxes(QObject* parent = nullptr);
   ~OverlayAxes() override;
 
   QString name() const override { return tr("Reference Axes Overlay"); }

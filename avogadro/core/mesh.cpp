@@ -42,7 +42,7 @@ Mesh::Mesh(const Mesh& other)
 Mesh::~Mesh()
 {
   delete m_lock;
-  m_lock = 0;
+  m_lock = nullptr;
 }
 
 bool Mesh::reserve(unsigned int size, bool useColors)

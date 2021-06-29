@@ -32,7 +32,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueManager : public QObject
 {
   Q_OBJECT
 public:
-  explicit MoleQueueManager(QObject* parent_ = 0);
+  explicit MoleQueueManager(QObject* parent_ = nullptr);
   ~MoleQueueManager() override;
 
   /**

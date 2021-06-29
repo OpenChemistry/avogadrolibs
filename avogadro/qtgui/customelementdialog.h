@@ -39,7 +39,7 @@ class AVOGADROQTGUI_EXPORT CustomElementDialog : public QDialog
 {
   Q_OBJECT
 public:
-  explicit CustomElementDialog(Molecule& mol, QWidget* parent = 0);
+  explicit CustomElementDialog(Molecule& mol, QWidget* parent = nullptr);
   ~CustomElementDialog() override;
 
   /**

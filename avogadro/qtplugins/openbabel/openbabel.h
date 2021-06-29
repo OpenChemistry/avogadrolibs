@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_OPENBABEL_H
@@ -41,7 +30,7 @@ class OpenBabel : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit OpenBabel(QObject* parent = 0);
+  explicit OpenBabel(QObject* parent = nullptr);
   ~OpenBabel() override;
 
   QString name() const override { return tr("OpenBabel"); }
@@ -74,6 +63,9 @@ private slots:
   void refreshForceFields();
   void handleForceFieldsUpdate(const QMap<QString, QString>& ffMap);
 
+  void refreshCharges();
+  void handleChargesUpdate(const QMap<QString, QString>& chargeMap);
+
   void onConfigureGeometryOptimization();
 
   void onOptimizeGeometry();
@@ -105,6 +97,7 @@ private:
   QMap<QString, QString> m_readFormats;
   QMap<QString, QString> m_writeFormats;
   QMap<QString, QString> m_forceFields;
+  QMap<QString, QString> m_charges;
   QProgressDialog* m_progress;
 };
 }

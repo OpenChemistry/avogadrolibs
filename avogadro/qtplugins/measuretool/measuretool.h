@@ -63,9 +63,6 @@ public:
 
 private:
   Vector3ub contrastingColor(const Vector3ub& rgb) const;
-  // for four atoms a,b,c,d, b1 = b-a, b2 = c-b, b3 = d-c. Returns degrees.
-  float dihedralAngle(const Vector3& b1, const Vector3& b2,
-                      const Vector3& b3) const;
   bool toggleAtom(const Rendering::Identifier& atom);
   template<typename T>
   void createLabels(T* mol, Rendering::GeometryNode* geo,

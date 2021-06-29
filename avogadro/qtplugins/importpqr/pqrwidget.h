@@ -41,7 +41,7 @@ class PQRWidget : public QDialog
   Q_OBJECT
 
 public:
-  PQRWidget(QWidget* parent = 0, ImportPQR* p = nullptr);
+  PQRWidget(QWidget* parent = nullptr, ImportPQR* p = nullptr);
   ~PQRWidget() override;
   void loadMolecule(QByteArray&, QString);
   void loadPNG(QByteArray&);

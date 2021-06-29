@@ -31,17 +31,17 @@ using Core::Cube;
 using Core::Mesh;
 
 MeshGenerator::MeshGenerator(QObject* p)
-  : QThread(p), m_iso(0.0), m_reverseWinding(false), m_cube(0), m_mesh(0),
-    m_stepSize(0.0, 0.0, 0.0), m_min(0.0, 0.0, 0.0), m_dim(0, 0, 0),
-    m_progmin(0), m_progmax(0)
+  : QThread(p), m_iso(0.0), m_reverseWinding(false), m_cube(nullptr),
+    m_mesh(nullptr), m_stepSize(0.0, 0.0, 0.0), m_min(0.0, 0.0, 0.0),
+    m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
 }
 
 MeshGenerator::MeshGenerator(const Cube* cube_, Mesh* mesh_, float iso,
                              bool reverse, QObject* p)
-  : QThread(p), m_iso(0.0), m_reverseWinding(reverse), m_cube(0), m_mesh(0),
-    m_stepSize(0.0, 0.0, 0.0), m_min(0.0, 0.0, 0.0), m_dim(0, 0, 0),
-    m_progmin(0), m_progmax(0)
+  : QThread(p), m_iso(0.0), m_reverseWinding(reverse), m_cube(nullptr),
+    m_mesh(nullptr), m_stepSize(0.0, 0.0, 0.0), m_min(0.0, 0.0, 0.0),
+    m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
   initialize(cube_, mesh_, iso);
 }
@@ -119,8 +119,8 @@ void MeshGenerator::run()
 void MeshGenerator::clear()
 {
   m_iso = 0.0;
-  m_cube = 0;
-  m_mesh = 0;
+  m_cube = nullptr;
+  m_mesh = nullptr;
   m_stepSize.setZero();
   m_min.setZero();
   m_dim.setZero();

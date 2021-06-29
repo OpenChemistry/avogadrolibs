@@ -57,7 +57,7 @@ class AVOGADROQTOPENGL_EXPORT GLWidget : public QOpenGLWidget
   Q_OBJECT
 
 public:
-  explicit GLWidget(QWidget* parent = 0);
+  explicit GLWidget(QWidget* parent = nullptr);
   ~GLWidget() override;
 
   /** Set the molecule the widget will render. */

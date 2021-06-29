@@ -30,7 +30,7 @@ class Wireframe : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit Wireframe(QObject* parent = 0);
+  explicit Wireframe(QObject* parent = nullptr);
   ~Wireframe() override;
 
   void process(const Core::Molecule& molecule,

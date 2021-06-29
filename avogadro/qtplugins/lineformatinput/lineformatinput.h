@@ -36,7 +36,7 @@ class LineFormatInput : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit LineFormatInput(QObject* parent_ = 0);
+  explicit LineFormatInput(QObject* parent_ = nullptr);
   ~LineFormatInput() override;
 
   QString name() const override { return tr("LineFormatInput"); }

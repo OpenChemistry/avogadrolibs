@@ -31,7 +31,7 @@ class Meshes : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit Meshes(QObject* parent = 0);
+  explicit Meshes(QObject* parent = nullptr);
   ~Meshes() override;
 
   void process(const Core::Molecule& molecule,

@@ -30,7 +30,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueWidget : public QWidget
 {
   Q_OBJECT
 public:
-  explicit MoleQueueWidget(QWidget* parent_ = 0);
+  explicit MoleQueueWidget(QWidget* parent_ = nullptr);
   ~MoleQueueWidget() override;
 
   /**

@@ -55,7 +55,7 @@ void GLWidget::setMolecule(QtGui::Molecule* mol)
 {
   clearScene();
   if (m_molecule)
-    disconnect(m_molecule, 0, 0, 0);
+    disconnect(m_molecule, nullptr, nullptr, nullptr);
   m_molecule = mol;
   foreach (QtGui::ToolPlugin* tool, m_tools)
     tool->setMolecule(m_molecule);

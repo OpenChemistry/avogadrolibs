@@ -56,7 +56,7 @@ public:
    * Construct a widget that dynamically generates a GUI to configure the
    * InputGenerator script specified by scriptFilePath.
    */
-  explicit InputGeneratorWidget(QWidget* parent_ = 0);
+  explicit InputGeneratorWidget(QWidget* parent_ = nullptr);
   ~InputGeneratorWidget() override;
 
   /**

@@ -26,7 +26,7 @@ class Bonding : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit Bonding(QObject* parent_ = 0);
+  explicit Bonding(QObject* parent_ = nullptr);
   ~Bonding() override;
 
   QString name() const override { return tr("Bonding"); }

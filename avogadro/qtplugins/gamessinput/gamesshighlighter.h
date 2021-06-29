@@ -33,7 +33,7 @@ class GamessHighlighter : public QSyntaxHighlighter
   Q_OBJECT
 
 public:
-  GamessHighlighter(QTextDocument* parent_ = 0);
+  GamessHighlighter(QTextDocument* parent_ = nullptr);
 
 protected:
   void highlightBlock(const QString& text) override;

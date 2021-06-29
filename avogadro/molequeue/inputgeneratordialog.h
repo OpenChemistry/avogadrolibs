@@ -34,9 +34,9 @@ class AVOGADROMOLEQUEUE_EXPORT InputGeneratorDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit InputGeneratorDialog(QWidget* parent_ = 0);
+  explicit InputGeneratorDialog(QWidget* parent_ = nullptr);
   explicit InputGeneratorDialog(const QString& scriptFileName,
-                                QWidget* parent_ = 0);
+                                QWidget* parent_ = nullptr);
   ~InputGeneratorDialog() override;
 
   /**

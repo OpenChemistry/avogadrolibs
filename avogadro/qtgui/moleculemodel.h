@@ -52,7 +52,7 @@ class AVOGADROQTGUI_EXPORT MoleculeModel : public QAbstractItemModel
   Q_OBJECT
 
 public:
-  explicit MoleculeModel(QObject* p = 0);
+  explicit MoleculeModel(QObject* p = nullptr);
 
   QModelIndex parent(const QModelIndex& child) const override;
   int rowCount(const QModelIndex& parent) const override;

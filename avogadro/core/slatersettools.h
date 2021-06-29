@@ -41,7 +41,7 @@ class SlaterSet;
 class AVOGADROCORE_EXPORT SlaterSetTools
 {
 public:
-  explicit SlaterSetTools(Molecule* mol = 0);
+  explicit SlaterSetTools(Molecule* mol = nullptr);
   ~SlaterSetTools();
 
   /**

@@ -39,7 +39,7 @@ class Symmetry : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit Symmetry(QObject* parent_ = 0);
+  explicit Symmetry(QObject* parent_ = nullptr);
   ~Symmetry() override;
 
   QString name() const override { return tr("Symmetry"); }

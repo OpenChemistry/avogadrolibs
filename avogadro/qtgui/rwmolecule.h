@@ -79,7 +79,7 @@ public:
   typedef PersistentBond<RWMolecule> PersistentBondType;
 
   /** Construct a molecule with the atoms/bonds of mol. */
-  explicit RWMolecule(Molecule& mol, QObject* parent = 0);
+  explicit RWMolecule(Molecule& mol, QObject* parent = nullptr);
 
   ~RWMolecule() override;
 

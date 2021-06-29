@@ -39,7 +39,7 @@ class ImportPQR : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit ImportPQR(QObject* parent = 0);
+  explicit ImportPQR(QObject* parent = nullptr);
   ~ImportPQR() override;
 
   QString name() const override { return tr("Import From PQR"); }

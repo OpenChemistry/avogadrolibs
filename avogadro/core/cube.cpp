@@ -33,7 +33,7 @@ Cube::Cube()
 Cube::~Cube()
 {
   delete m_lock;
-  m_lock = 0;
+  m_lock = nullptr;
 }
 
 bool Cube::setLimits(const Vector3& min_, const Vector3& max_,

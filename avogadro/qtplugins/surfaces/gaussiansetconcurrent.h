@@ -45,7 +45,7 @@ class GaussianSetConcurrent : public QObject
   Q_OBJECT
 
 public:
-  explicit GaussianSetConcurrent(QObject* p = 0);
+  explicit GaussianSetConcurrent(QObject* p = nullptr);
   ~GaussianSetConcurrent() override;
 
   void setMolecule(Core::Molecule* mol);

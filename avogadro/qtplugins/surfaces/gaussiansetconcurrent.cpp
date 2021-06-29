@@ -100,7 +100,7 @@ void GaussianSetConcurrent::calculationComplete()
 {
   (*m_gaussianShells)[0].tCube->lock()->unlock();
   delete m_gaussianShells;
-  m_gaussianShells = 0;
+  m_gaussianShells = nullptr;
   emit finished();
 }
 

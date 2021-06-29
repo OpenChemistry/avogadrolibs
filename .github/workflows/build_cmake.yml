@@ -4,7 +4,7 @@ name: CMake Build Matrix
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
 
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 env:
   BUILD_TYPE: Release
@@ -12,7 +12,6 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  CCACHE_VERSION: 3.7.7
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
 
 jobs:
@@ -48,7 +47,8 @@ jobs:
             name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
-            cmake_flags: "",
+            cmake_flags: " ",
+            build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
 
@@ -62,7 +62,7 @@ jobs:
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install ninja boost eigen glew open-babel
+        brew install ninja eigen glew
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
@@ -86,7 +86,7 @@ jobs:
 
     - name: Cache Qt
       id: cache-qt
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: ../Qt
         key: ${{ runner.os }}-QtCache
@@ -103,9 +103,16 @@ jobs:
       with:
         arch: x64
 
+    - name: Grab cache files
+      uses: actions/cache@v2
+      if: runner.os != 'Windows'
+      with:
+        path: ${{ runner.workspace }}/build/thirdparty
+        key: ${{ matrix.config.name }}-thirdparty
+
     - name: Configure
       run: |
-        mkdir "${{ runner.workspace }}/build"
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
@@ -114,9 +121,31 @@ jobs:
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
+
+    - name: Fix Mac plugins
+      if: runner.os == 'macOS'
+      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel 
+      run: |
+        for plugin in *.so; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $plugin $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
+          done
+        done
+        cd .. # build/prefix/lib
+        for plugin in libinchi.?.?.?.dylib; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $plugin $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
+          done
+        done
+        otool -L libinchi.?.?.?.dylib
+        cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
 
     - name: Run tests
       if: runner.os != 'Windows'

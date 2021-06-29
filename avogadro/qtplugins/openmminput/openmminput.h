@@ -36,7 +36,7 @@ class OpenMMInput : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit OpenMMInput(QObject* parent = 0);
+  explicit OpenMMInput(QObject* parent = nullptr);
   ~OpenMMInput() override;
 
   QString name() const override { return tr("OpenMM input"); }

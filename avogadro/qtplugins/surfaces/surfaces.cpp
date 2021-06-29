@@ -413,7 +413,7 @@ void Surfaces::recordMovie()
   } else if (selectedFilter == tr("Movie AVI (*.avi)")) {
     d->gifWriter = nullptr;
     d->gwaviWriter = gwavi_open((baseName + ".avi").toLatin1().data(), 800, 600,
-                                "MJPG", 4, NULL);
+                                "MJPG", 4, nullptr);
   } else {
     d->gwaviWriter = nullptr;
     d->gifWriter = nullptr;

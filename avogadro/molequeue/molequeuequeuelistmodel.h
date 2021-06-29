@@ -99,7 +99,7 @@ protected:
   /**
    * Protected constructor. Keeps objects isolated to MoleQueueManager ivars.
    */
-  explicit MoleQueueQueueListModel(QObject* parent_ = 0);
+  explicit MoleQueueQueueListModel(QObject* parent_ = nullptr);
 
   /**
    * Used to retrieve a QStringList with [queueName, programName] from data()

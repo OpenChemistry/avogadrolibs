@@ -36,7 +36,7 @@ class LammpsInput : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit LammpsInput(QObject* parent = 0);
+  explicit LammpsInput(QObject* parent = nullptr);
   ~LammpsInput() override;
 
   QString name() const override { return tr("LAMMPS input"); }

@@ -127,7 +127,7 @@ enum OTMinimizerOption
 };
 
 Cp2kInputDialog::Cp2kInputDialog(QWidget* parent_, Qt::WindowFlags f)
-  : QDialog(parent_, f), m_molecule(NULL),
+  : QDialog(parent_, f), m_molecule(nullptr),
     // m_highlighter(NULL),
     m_updatePending(false)
 {

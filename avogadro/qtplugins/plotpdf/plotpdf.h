@@ -42,7 +42,7 @@ class PlotPdf : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit PlotPdf(QObject* parent_ = 0);
+  explicit PlotPdf(QObject* parent_ = nullptr);
   ~PlotPdf();
 
   QString name() const { return tr("PlotPdf"); }
