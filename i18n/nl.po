@@ -24,9 +24,8 @@ msgid "Batch Job #%L1 (%2)"
 msgstr ""
 
 #: molequeue/client/client.cpp:245
-#, fuzzy
 msgid "No message specified."
-msgstr "Geen bestandsnaam voorzien."
+msgstr ""
 
 #: molequeue/inputgenerator.cpp:70 qtgui/interfacescript.cpp:69
 #, qt-format
@@ -138,9 +137,8 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:42
-#, fuzzy
 msgid "Input Generator (error)"
-msgstr "Input Generator..."
+msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:44
 #, fuzzy, qt-format
@@ -222,9 +220,9 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:318
-#, fuzzy, qt-format
+#, qt-format
 msgid "Submit %1 Calculation"
-msgstr "Stop Berekeningen"
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:334
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1025
@@ -243,23 +241,20 @@ msgid "Script returns warnings:\n"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:369
-#, fuzzy
 msgid "Hide &Warnings"
-msgstr "Waarschuwing"
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:375
-#, fuzzy
 msgid "Show &Warnings"
-msgstr "Waarschuwing"
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:392 qtgui/interfacewidget.cpp:84
 msgid "An error has occurred:"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:443
-#, fuzzy
 msgid "Select output filename"
-msgstr "Selecteer Solvent"
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:458
 #, qt-format
@@ -281,9 +276,8 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:434
 #: qtplugins/openmminput/openmminputdialog.cpp:464
 #: qtplugins/openmminput/openmminputdialog.cpp:478
-#, fuzzy
 msgid "Output Error"
-msgstr "Output:"
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:481
 #: molequeue/inputgeneratorwidget.cpp:592
@@ -293,9 +287,9 @@ msgstr "Output:"
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:381
 #: qtplugins/openmminput/openmminputdialog.cpp:465
 #: qtplugins/openmminput/openmminputdialog.cpp:479
-#, fuzzy, qt-format
+#, qt-format
 msgid "Failed to write to file %1."
-msgstr "Kan bestand niet beschrijven."
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:492
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:255
@@ -322,18 +316,18 @@ msgstr ""
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:299
 #: qtplugins/openmminput/openmminputdialog.cpp:382
 #: qtplugins/openmminput/openmminputdialog.cpp:397
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1: File will be overwritten."
-msgstr "Video bestand is niet geschreven"
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:530
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:291
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:389
 #: qtplugins/openmminput/openmminputdialog.cpp:404
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1: File is not writable."
-msgstr "Video bestand is niet geschreven"
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:543
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:318
@@ -421,19 +415,16 @@ msgid "Title"
 msgstr "Titel"
 
 #: molequeue/inputgeneratorwidget.cpp:706 qtgui/interfacewidget.cpp:173
-#, fuzzy
 msgid "Filename Base"
-msgstr "Bestandsnaam:"
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:710 qtgui/interfacewidget.cpp:178
-#, fuzzy
 msgid "Processor Cores"
-msgstr "Processoren:"
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:714 qtgui/interfacewidget.cpp:183
-#, fuzzy
 msgid "Calculation Type"
-msgstr "Berekening:"
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:735 qtgui/interfacewidget.cpp:207
 msgid "Theory:"
@@ -532,9 +523,8 @@ msgid "Waiting for job %1 '%2' to finish..."
 msgstr ""
 
 #: molequeue/molequeuedialog.cpp:87
-#, fuzzy
 msgid "Stop waiting"
-msgstr "Stop &Animatie"
+msgstr ""
 
 #: molequeue/molequeuedialog.cpp:106
 msgid "Fetching completed job information..."
@@ -558,9 +548,8 @@ msgid "The job has been rejected by MoleQueue: %1"
 msgstr ""
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
-#, fuzzy
 msgid "No program selected."
-msgstr "Geen Atomen Geselecteerd"
+msgstr ""
 
 #: molequeue/molequeuedialog.cpp:197 molequeue/molequeuewidget.cpp:143
 msgid "Please select the target program from the \"Queue and Program\" list."
@@ -1076,14 +1065,12 @@ msgid "Browse"
 msgstr "Bladeren..."
 
 #: qtgui/filebrowsewidget.cpp:113
-#, fuzzy
 msgid "Select file:"
-msgstr "Selecteer Solvent"
+msgstr ""
 
 #: qtgui/filebrowsewidget.cpp:116
-#, fuzzy
 msgid "Select executable:"
-msgstr "Delete geselecteerde"
+msgstr ""
 
 #: qtgui/fileformatdialog.cpp:65
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1094,10 +1081,9 @@ msgid "Unable to find a suitable file writer for the selected format."
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:156
-#, fuzzy
 msgctxt "File handlers"
 msgid "handlers"
-msgstr "McLean/Chandler"
+msgstr ""
 
 #: qtgui/fileformatdialog.cpp:157
 msgctxt "e.g. file handlers that can 'handle' this file."
@@ -1184,37 +1170,32 @@ msgid ""
 msgstr ""
 
 #: qtgui/pythonscript.cpp:211
-#, fuzzy
 msgid "Script failed to start."
-msgstr "G03 start mislukt."
+msgstr ""
 
 #: qtgui/pythonscript.cpp:214
-#, fuzzy
 msgid "Script crashed."
-msgstr "&Scripts"
+msgstr ""
 
 #: qtgui/pythonscript.cpp:217
 msgid "Script timed out."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:220
-#, fuzzy
 msgid "Read error."
-msgstr "OpenGL error"
+msgstr ""
 
 #: qtgui/pythonscript.cpp:223
 msgid "Write error."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:227
-#, fuzzy
 msgid "Unknown error."
-msgstr "Onbekend"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:48
-#, fuzzy
 msgid "Modify Molecule"
-msgstr "Molecule"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:153 qtgui/rwmolecule.cpp:162
 msgid "Add Atom"
@@ -1226,9 +1207,8 @@ msgid "Remove Atom"
 msgstr "verwijder atoom"
 
 #: qtgui/rwmolecule.cpp:299
-#, fuzzy
 msgid "Clear Atoms"
-msgstr "Start Atoom"
+msgstr ""
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -1250,23 +1230,20 @@ msgid "Change Atom Hybridization"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:592
-#, fuzzy
 msgid "Change Atom Formal Charge"
-msgstr "Formele lading"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:624
-#, fuzzy
 msgid "Change Atom Color"
-msgstr "Formele lading"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:686
 msgid "Add Bond"
 msgstr "Voeg Binding Toe"
 
 #: qtgui/rwmolecule.cpp:773
-#, fuzzy
 msgid "Removed Bond"
-msgstr "verwijder atoom"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:780
 #, fuzzy
@@ -1288,9 +1265,8 @@ msgid "Update Bonds"
 msgstr " Aanhaakbindingen"
 
 #: qtgui/rwmolecule.cpp:940
-#, fuzzy
 msgid "Update Bond"
-msgstr "Verwijder Binding"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:979
 #, fuzzy
@@ -1303,9 +1279,8 @@ msgid "Remove Unit Cell"
 msgstr "Verwijder &Unit Cell"
 
 #: qtgui/rwmolecule.cpp:1092
-#, fuzzy
 msgid "Edit Unit Cell"
-msgstr "Vul Celeenheid"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:1109
 #, fuzzy
@@ -1387,18 +1362,16 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinput.cpp:80
 #: qtplugins/gamessinput/gamessinput.cpp:83
 #: qtplugins/quantuminput/quantuminput.cpp:107
-#, fuzzy
 msgid "Open Output File"
-msgstr "Open parameter bestand"
+msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:61 qtplugins/cp2kinput/cp2kinput.cpp:60
 #: qtplugins/gamessinput/gamessinput.cpp:63
 #: qtplugins/lammpsinput/lammpsinput.cpp:59
 #: qtplugins/openmminput/openmminput.cpp:57
 #: qtplugins/quantuminput/quantuminput.cpp:83
-#, fuzzy
 msgid "&Input"
-msgstr "GAMESS Input"
+msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -1414,19 +1387,18 @@ msgid "IO Error"
 msgstr "FOUT"
 
 #: qtplugins/apbs/apbs.cpp:128
-#, fuzzy, qt-format
+#, qt-format
 msgid "Error reading structure file (%1)."
-msgstr "Probleem tijdens het lezen van het traj bestand %1"
+msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:148 qtplugins/apbs/apbs.cpp:155
-#, fuzzy
 msgid "OpenDX Error"
-msgstr "OpenGL error"
+msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:149
-#, fuzzy, qt-format
+#, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr "Probleem tijdens het lezen van het traj bestand %1"
+msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:156
 msgid "Error reading OpenDX file: No cube found"
@@ -1443,18 +1415,16 @@ msgid "Interact with APBS utilities."
 msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:91
-#, fuzzy
 msgid "Open PDB File"
-msgstr "Open Traject bestand"
+msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:92
 msgid "PDB Files (*.pdb)"
 msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:102
-#, fuzzy
 msgid "Open PQR File"
-msgstr "Open Traject bestand"
+msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:103
 msgid "PQR Files (*.pqr)"
@@ -1505,9 +1475,9 @@ msgid "Success"
 msgstr "Succes!"
 
 #: qtplugins/apbs/apbsdialog.cpp:191
-#, fuzzy, qt-format
+#, qt-format
 msgid "Input file written to '%1'"
-msgstr "Beeld Succesvol geschreven naar %1"
+msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
@@ -1526,9 +1496,8 @@ msgid "Ball and Stick"
 msgstr "Bal en staaf"
 
 #: qtplugins/ballandstick/ballandstick.h:47
-#, fuzzy
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr "Geef atoom en binding labels weer."
+msgstr ""
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:316
 #, fuzzy
@@ -1546,14 +1515,12 @@ msgid ""
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:40
-#, fuzzy
 msgid "Bond Atoms"
-msgstr "Beëindig Atoom"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:41
-#, fuzzy
 msgid "Remove Bonds"
-msgstr "Verwijder Waterstof"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:42
 msgid "Configure Bonding…"
@@ -1574,9 +1541,8 @@ msgid "Bond"
 msgstr "Binding"
 
 #: qtplugins/bonding/bonding.h:32
-#, fuzzy
 msgid "Bonding"
-msgstr "Binding"
+msgstr ""
 
 #: qtplugins/bonding/bonding.h:36
 msgid "Perform bonding operations."
@@ -1659,9 +1625,8 @@ msgid "Edit Color Opacity Map..."
 msgstr ""
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:26
-#, fuzzy
 msgid "ColorOpacityMap"
-msgstr "Ondoorzichtigheid:"
+msgstr ""
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:58
 msgid "Edit color opacity maps, primarily for volume rendering."
@@ -1678,11 +1643,11 @@ msgstr "&Scripts"
 #: qtplugins/lammpsinput/lammpsinput.cpp:76
 #: qtplugins/openmminput/openmminput.cpp:74
 #: qtplugins/quantuminput/quantuminput.cpp:124
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Error reading output file '%1':\n"
 "%2"
-msgstr "Probleem tijdens het lezen van het traj bestand %1"
+msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:188
 #, qt-format
@@ -1701,18 +1666,16 @@ msgid ""
 msgstr ""
 
 #: qtplugins/commandscripts/command.h:43
-#, fuzzy
 msgid "Command scripts"
-msgstr "Commando:"
+msgstr ""
 
 #: qtplugins/commandscripts/command.h:47
 msgid "Run external script commands"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:29
-#, fuzzy
 msgid "Atomic &Coordinate Editor..."
-msgstr "Cartesiaanse coördinaten editor"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:39
 #, fuzzy
@@ -1738,9 +1701,8 @@ msgid "Too few entries on line."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:381
-#, fuzzy
 msgid "Invalid element name."
-msgstr "Ongeldige Bestandsnaam"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:383
 #, fuzzy
@@ -1758,9 +1720,8 @@ msgid "Element symbol."
 msgstr "Element symbool"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
-#, fuzzy
 msgid "Invalid atomic number."
-msgstr "Ongeldige Bestandsnaam"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
 #, fuzzy
@@ -1773,9 +1734,8 @@ msgstr "Atoom nummer"
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
-#, fuzzy
 msgid "Invalid coordinate."
-msgstr "Ongeldige Bestandsnaam"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 #, fuzzy
@@ -1793,19 +1753,16 @@ msgid "Z coordinate."
 msgstr "Cartesische Coördinaten"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:453
-#, fuzzy
 msgid "'a' lattice coordinate."
-msgstr "Cartesische Coördinaten"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:464
-#, fuzzy
 msgid "'b' lattice coordinate."
-msgstr "Cartesische Coördinaten"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:475
-#, fuzzy
 msgid "'c' coordinate."
-msgstr "Cartesische Coördinaten"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:559
 msgid "Error applying geometry"
@@ -1834,7 +1791,6 @@ msgid "XYZ format (symbols)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
-#, fuzzy
 msgid "XYZ format (names)"
 msgstr ""
 ",Launchpad Contributions:,Kristof Bal,Sander Deryckere,Vincent Tijms,ubby, ,"
@@ -1862,28 +1818,24 @@ msgid "XYZ format (atomic numbers)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:616
-#, fuzzy
 msgid "Lattice coordinates (symbols)"
-msgstr "Cartesische Coördinaten"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:617
-#, fuzzy
 msgid "Lattice coordinates (names)"
-msgstr "Cartesische Coördinaten"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:618
 msgid "Lattice coordinates (atomic numbers)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:620
-#, fuzzy
 msgid "GAMESS format (symbols)"
-msgstr "GAMESS EFP Informatie"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:621
-#, fuzzy
 msgid "GAMESS format (names)"
-msgstr "GAMESS EFP Informatie"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:622
 msgid "Turbomole format"
@@ -1898,9 +1850,8 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
 #: qtplugins/copypaste/copypaste.cpp:43:255
-#, fuzzy
 msgid "Cut"
-msgstr "Vrij:"
+msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
@@ -1978,18 +1929,16 @@ msgid "CP2K input"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinput.h:47
-#, fuzzy
 msgid "Generate input for CP2K."
-msgstr "Creeer invoer bestanden voor quantum chemie pakketten"
+msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:272
 msgid "Energy"
 msgstr "Energie"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:275
-#, fuzzy
 msgid "Energy and Forces"
-msgstr "Energie Oppervlakte"
+msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:278
 #, fuzzy
@@ -2028,9 +1977,8 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:377:1201
-#, fuzzy
 msgid "PME"
-msgstr "PM3"
+msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:380
 msgid "SPME"
@@ -2053,9 +2001,8 @@ msgid "HISTORY_RESTART"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:406
-#, fuzzy
 msgid "MOPAC"
-msgstr "M&OPAC..."
+msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:412
 msgid "RANDOM"
@@ -2100,28 +2047,24 @@ msgid "Overwrite modified input file?"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:960
-#, fuzzy
 msgid "Save CP2K input file"
-msgstr "GAMESS Input"
+msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1009
-#, fuzzy
 msgid "Submit CP2K Calculation"
-msgstr "Stop Berekeningen"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:54 qtplugins/crystal/crystal.cpp:182
 msgid "Import Crystal from Clipboard"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:61
-#, fuzzy
 msgid "Toggle Unit Cell"
-msgstr "Vul Celeenheid"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:66
-#, fuzzy
 msgid "Edit Unit Cell..."
-msgstr "Vul Celeenheid"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:71
 #, fuzzy
@@ -2139,9 +2082,8 @@ msgid "Scale Cell &Volume"
 msgstr "Schaal Celeenheidsvolume"
 
 #: qtplugins/crystal/crystal.cpp:88
-#, fuzzy
 msgid "Build &Supercell"
-msgstr "Super Cel"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:93
 msgid "Reduce Cell (&Niggli)"
@@ -2184,9 +2126,8 @@ msgid "Crystal Lattice"
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.h:43
-#, fuzzy
 msgid "Render the unit cell boundaries."
-msgstr "Geef atoom en binding labels weer."
+msgstr ""
 
 #: qtplugins/crystal/importcrystaldialog.cpp:81
 msgid "Cannot Parse Text"
@@ -2210,9 +2151,8 @@ msgid "Manipulate custom element types in the current molecule."
 msgstr ""
 
 #: qtplugins/customelements/customelements.h:35
-#, fuzzy
 msgid "Custom Elements"
-msgstr "Kleur door element"
+msgstr ""
 
 #: qtplugins/editor/editor.cpp:85 qtplugins/editor/editor.cpp:117
 msgid "Draw"
@@ -2223,14 +2163,12 @@ msgid "Draw Atom"
 msgstr "Teken Atoom"
 
 #: qtplugins/editor/editor.cpp:121
-#, fuzzy
 msgid "Change Bond Type"
-msgstr "Wijzig bindings Orde"
+msgstr ""
 
 #: qtplugins/editor/editor.cpp:134
-#, fuzzy
 msgid "Remove Bond"
-msgstr "verwijder atoom"
+msgstr ""
 
 #: qtplugins/editor/editor.cpp:231 qtplugins/measuretool/measuretool.cpp:197
 #: qtplugins/measuretool/measuretool.cpp:223
@@ -2252,9 +2190,8 @@ msgid "Other..."
 msgstr "Ande..."
 
 #: qtplugins/editor/editortoolwidget.cpp:217
-#, fuzzy
 msgid "Automatic"
-msgstr "AutoOptimalisatie"
+msgstr ""
 
 #: qtplugins/editor/editortoolwidget.cpp:218
 msgid "Single"
@@ -2399,14 +2336,12 @@ msgid "Dianion"
 msgstr "Dianion"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:668
-#, fuzzy
 msgid "Save GAMESS input file"
-msgstr "GAMESS Input"
+msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:718
-#, fuzzy
 msgid "Submit GAMESS Calculation"
-msgstr "Stop Berekeningen"
+msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:33
 #, fuzzy
@@ -2423,9 +2358,8 @@ msgid "Remove E&xtra Hydrogens"
 msgstr "Verwijder Waterstof"
 
 #: qtplugins/hydrogens/hydrogens.cpp:46
-#, fuzzy
 msgid "&Remove All Hydrogens"
-msgstr "Verwijder Waterstof"
+msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:57
 msgid "Add/remove hydrogens from the current molecule."
@@ -2464,9 +2398,9 @@ msgid "&Insert"
 msgstr "Voeg &In"
 
 #: qtplugins/insertfragment/insertfragment.cpp:105
-#, fuzzy, qt-format
+#, qt-format
 msgid "Error reading file (%1)."
-msgstr "Probleem tijdens het lezen van het traj bestand %1"
+msgstr ""
 
 #: qtplugins/insertfragment/insertfragment.cpp:110
 msgid "Insert Fragment"
@@ -2483,19 +2417,16 @@ msgid "Insert molecular fragments for building larger molecules."
 msgstr "voeg moleculaire fragmenten in om grotere moleculen te bouwen"
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:41
-#, fuzzy
 msgid "&LAMMPS Input"
-msgstr "GAMESS Input"
+msgstr ""
 
 #: qtplugins/lammpsinput/lammpsinput.h:42
-#, fuzzy
 msgid "LAMMPS input"
-msgstr "GAMESS Input"
+msgstr ""
 
 #: qtplugins/lammpsinput/lammpsinput.h:46
-#, fuzzy
 msgid "Generate input for LAMMPS."
-msgstr "Creeer invoer bestanden voor quantum chemie pakketten"
+msgstr ""
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:156
 #, fuzzy
@@ -2511,9 +2442,8 @@ msgid "Licorice"
 msgstr ""
 
 #: qtplugins/licorice/licorice.h:44
-#, fuzzy
 msgid "Render atoms as licorice."
-msgstr "Geef atoom en binding labels weer."
+msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:43
 msgid "SMILES..."
@@ -2547,18 +2477,16 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
 #: qtplugins/lineformatinput/lineformatinput.cpp:133:925
-#, fuzzy
 msgid "Insert Molecule..."
-msgstr "Molecule"
+msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:123
 msgid "Unable to load requested format reader."
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:134
-#, fuzzy
 msgid "Generating 3D molecule..."
-msgstr "Genereer..."
+msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.h:42
 msgid "LineFormatInput"
@@ -2574,9 +2502,8 @@ msgstr "Aanpassen"
 
 #: qtplugins/manipulator/manipulator.h:44
 #: qtplugins/manipulator/manipulator.h:45
-#, fuzzy
 msgid "Manipulate tool"
-msgstr "Manipuleer Atoom"
+msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:66
 msgid "Measure"
@@ -2621,9 +2548,8 @@ msgid "Meshes"
 msgstr ""
 
 #: qtplugins/meshes/meshes.h:42
-#, fuzzy
 msgid "Render triangle meshes."
-msgstr "Rendert moleculaire isosurface meshes"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 msgid "View general properties of a molecule."
@@ -2646,9 +2572,8 @@ msgid "Molecular Properties"
 msgstr "Moleculaire Eigenschappen"
 
 #: qtplugins/mongochem/listmoleculesmodel.cpp:80
-#, fuzzy
 msgid "Formula"
-msgstr "Formaat:"
+msgstr ""
 
 #: qtplugins/mongochem/listmoleculesmodel.cpp:86
 msgid "InChIKey"
@@ -2680,9 +2605,8 @@ msgid "Chemical Name"
 msgstr "Chemische naam"
 
 #: qtplugins/networkdatabases/networkdatabases.h:47
-#, fuzzy
 msgid "Network Databases"
-msgstr "Netwerk Download Gefaald"
+msgstr ""
 
 #: qtplugins/networkdatabases/networkdatabases.h:51
 msgid "Interact with online databases, query structures etc."
@@ -2727,9 +2651,8 @@ msgid "The Open Babel file formats are not ready to be added."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:190
-#, fuzzy
 msgid "Loading molecule from CML..."
-msgstr "Het lezen van een molecule van '%1' gefaald."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:196
 msgid ""
@@ -2738,9 +2661,9 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:205
-#, fuzzy, qt-format
+#, qt-format
 msgid "An error occurred while running Open Babel (%1)."
-msgstr "Er is een probleem gebeurt tijdens het schrijven naar bestand %1"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:215
 msgid "Error parsing openbabel output."
@@ -2758,9 +2681,8 @@ msgid "Molecule invalid. Cannot optimize geometry."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:373
-#, fuzzy
 msgid "Cannot optimize geometry with Open Babel."
-msgstr "&Optimaliseer geometrie"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:398
 #, fuzzy
@@ -2768,9 +2690,8 @@ msgid "Optimizing Geometry (Open Babel)"
 msgstr "&Optimaliseer geometrie"
 
 #: qtplugins/openbabel/openbabel.cpp:399
-#, fuzzy
 msgid "Generating MDL..."
-msgstr "Genereer..."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:416
 msgid ""
@@ -2801,7 +2722,7 @@ msgid "Error interpreting Open Babel output."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:478 qtplugins/openbabel/openbabel.cpp:557
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
@@ -2818,9 +2739,8 @@ msgid "Invalid molecule: Cannot perceive bonds."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:509
-#, fuzzy
 msgid "Perceiving Bonds (Open Babel)"
-msgstr "Verwijder Waterstof"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:510
 msgid "Generating XYZ representation..."
@@ -2853,14 +2773,12 @@ msgid "Adding Hydrogens (Open Babel)"
 msgstr "Voeg Waterstoffen"
 
 #: qtplugins/openbabel/openbabel.cpp:595
-#, fuzzy
 msgid "Generating Open Babel input..."
-msgstr "Genereer..."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:602 qtplugins/openbabel/openbabel.cpp:650
-#, fuzzy
 msgid "Error generating Open Babel input."
-msgstr "Probleem tijdens het lezen van het traj bestand %1"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:615 qtplugins/openbabel/openbabel.cpp:663
 #: qtplugins/openbabel/openbabel.cpp:702
@@ -2892,9 +2810,8 @@ msgid "Removing Hydrogens (Open Babel)"
 msgstr "Verwijder Waterstof"
 
 #: qtplugins/openbabel/openbabel.cpp:690
-#, fuzzy
 msgid "Error generating CML data."
-msgstr "Genereer..."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:711
 msgid "Reading obabel output..."
@@ -2923,9 +2840,8 @@ msgid "OpenMM input"
 msgstr ""
 
 #: qtplugins/openmminput/openmminput.h:46
-#, fuzzy
 msgid "Generate input for OpenMM."
-msgstr "Creeer invoer bestanden voor quantum chemie pakketten"
+msgstr ""
 
 #: qtplugins/openmminput/openmminputdialog.cpp:213
 #, fuzzy
@@ -2949,9 +2865,8 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:538
 #: qtplugins/openmminput/openmminputdialog.cpp:954
 #: qtplugins/openmminput/openmminputdialog.cpp:1065
-#, fuzzy
 msgid "gro"
-msgstr "Pro"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
@@ -2975,9 +2890,8 @@ msgid "prmtop"
 msgstr ""
 
 #: qtplugins/openmminput/openmminputdialog.cpp:539
-#, fuzzy
 msgid "top"
-msgstr "Stop"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -3011,9 +2925,8 @@ msgid "Stop"
 msgstr "Stop"
 
 #: qtplugins/playertool/playertool.cpp:94
-#, fuzzy
 msgid "Frame rate:"
-msgstr "Parameters:"
+msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:100
 msgctxt "frames per second"
@@ -3042,9 +2955,8 @@ msgstr "Dynamische Bindingen"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:382
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
 #: qtplugins/playertool/playertool.cpp:150:1543
-#, fuzzy
 msgid "Record Movie..."
-msgstr "Verwijder..."
+msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:254
 #: qtplugins/playertool/playertool.cpp:355
@@ -3087,9 +2999,9 @@ msgid "Error: cannot add frame to video."
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:492
-#, fuzzy, qt-format
+#, qt-format
 msgid "Cannot save file %1."
-msgstr "Kan het bestand %1 niet lezen."
+msgstr ""
 
 #: qtplugins/playertool/playertool.h:46
 msgid "Player tool"
@@ -3155,9 +3067,8 @@ msgstr ""
 #: qtplugins/plotxrd/plotxrd.cpp:279 qtplugins/plotxrd/plotxrd.cpp:286
 #: qtplugins/yaehmop/yaehmop.cpp:541 qtplugins/yaehmop/yaehmop.cpp:553
 #: qtplugins/yaehmop/yaehmop.cpp:564 qtplugins/yaehmop/yaehmop.cpp:571
-#, fuzzy
 msgid "Error: "
-msgstr "FOUT"
+msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.h:50
 msgid "PlotXrd"
@@ -3168,23 +3079,20 @@ msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
-#, fuzzy
 msgid "Update"
-msgstr "Verwijder Binding"
+msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
 msgid "Name"
 msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
-#, fuzzy
 msgid "Version"
-msgstr "Torsie"
+msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:73
-#, fuzzy
 msgid "Description"
-msgstr "Geen Beschrijving"
+msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:333
 #, qt-format
@@ -3217,9 +3125,8 @@ msgid "Download Plugins..."
 msgstr ""
 
 #: qtplugins/plugindownloader/plugindownloader.h:48
-#, fuzzy
 msgid "Download Plugins"
-msgstr "Delete geselecteerde"
+msgstr ""
 
 #: qtplugins/plugindownloader/plugindownloader.h:52
 msgid "Download plugins from GitHub repositories."
@@ -3296,9 +3203,8 @@ msgid "Quantum input"
 msgstr ""
 
 #: qtplugins/quantuminput/quantuminput.h:57
-#, fuzzy
 msgid "Generate input for quantum codes."
-msgstr "Creeer invoer bestanden voor quantum chemie pakketten"
+msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:37
 msgid "Center"
@@ -3322,71 +3228,60 @@ msgid "Manipulate the view camera."
 msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:39
-#, fuzzy
 msgid "Script File Formats"
-msgstr "Invoer Bestanden Generatoren"
+msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:43
 msgid "Load file reader/writers from external scripts."
 msgstr ""
 
 #: qtplugins/select/select.cpp:40
-#, fuzzy
 msgid "Select All"
-msgstr "Delete alles"
+msgstr ""
 
 #: qtplugins/select/select.cpp:45
-#, fuzzy
 msgid "Select None"
-msgstr "Selectie"
+msgstr ""
 
 #: qtplugins/select/select.cpp:54
-#, fuzzy
 msgid "Invert Selection"
-msgstr "&Keer Selectie om"
+msgstr ""
 
 #: qtplugins/select/select.cpp:58
-#, fuzzy
 msgid "Select by Element..."
-msgstr "Selecteer per Residu"
+msgstr ""
 
 #: qtplugins/select/select.cpp:62
-#, fuzzy
 msgid "Select by Atom Index..."
-msgstr "Selecteer per Residu"
+msgstr ""
 
 #: qtplugins/select/select.cpp:66
 msgid "Select by Residue..."
 msgstr "Selecteer per Residu"
 
 #: qtplugins/select/select.cpp:79
-#, fuzzy
 msgid "Change selections"
-msgstr "selecties"
+msgstr ""
 
 #: qtplugins/select/select.cpp:89
 msgid "&Select"
 msgstr "&Selecteer"
 
 #: qtplugins/select/select.cpp:153
-#, fuzzy
 msgid "Select Atoms by Index"
-msgstr "Selecteer Atoom Labels Lettertype"
+msgstr ""
 
 #: qtplugins/select/select.cpp:154
-#, fuzzy
 msgid "Atoms to Select:"
-msgstr "Wikkel Atomen om Cel"
+msgstr ""
 
 #: qtplugins/select/select.cpp:190
-#, fuzzy
 msgid "Select Atoms by Residue"
-msgstr "Selecteer per residu"
+msgstr ""
 
 #: qtplugins/select/select.cpp:191
-#, fuzzy
 msgid "Residues to Select:"
-msgstr "Residue Kleur Instellingen"
+msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -3401,9 +3296,8 @@ msgstr "Selectie"
 
 #: qtplugins/selectiontool/selectiontool.h:46
 #: qtplugins/selectiontool/selectiontool.h:47
-#, fuzzy
 msgid "Selection tool"
-msgstr "Selectie"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:63
 #, fuzzy
@@ -3479,9 +3373,8 @@ msgid "Avogadro2"
 msgstr "Avogadro"
 
 #: qtplugins/spacegroup/spacegroup.cpp:327
-#, fuzzy
 msgid "Select tolerance in Å:"
-msgstr "Selecteer tolerantie in huidige cartesiaanse eenheden:"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:343
 msgid "International"
@@ -3515,9 +3408,8 @@ msgid "Vibrational modes..."
 msgstr "Vibratie Analyse"
 
 #: qtplugins/spectra/spectra.h:43
-#, fuzzy
 msgid "Spectra and Vibrations"
-msgstr "Spectra Visualizatie"
+msgstr ""
 
 #: qtplugins/spectra/spectra.h:47
 msgid "Display spectra and vibrational modes."
@@ -3564,14 +3456,13 @@ msgid "Calculating electron density"
 msgstr "Berekenen van Elektronen Dichtheid"
 
 #: qtplugins/surfaces/surfaces.cpp:254
-#, fuzzy, qt-format
+#, qt-format
 msgid "Calculating molecular orbital %L1"
-msgstr "Berekenen van moleculaire orbitalen en andere oppervlaktes"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:385 qtplugins/surfaces/surfaces.cpp:413
-#, fuzzy
 msgid "Movie AVI (*.avi)"
-msgstr "video bestanden (*.avi)"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:387
 #, fuzzy
@@ -3599,9 +3490,8 @@ msgid "SVG (*.svg)"
 msgstr ""
 
 #: qtplugins/svg/svg.h:31
-#, fuzzy
 msgid "Render the scene in a SVG file."
-msgstr "Geef moleculen weer als stokjes"
+msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:60
 msgid "Type"
@@ -3630,14 +3520,12 @@ msgid "Provide symmetry functionality."
 msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:44
-#, fuzzy
 msgid "Symmetry Elements"
-msgstr "Selecteer per Element"
+msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:48
-#, fuzzy
 msgid "Render symmetry elements."
-msgstr "Geef dipoolmomenten weer"
+msgstr ""
 
 #: qtplugins/symmetry/symmetryutil.cpp:39
 msgid "∞"
@@ -3691,14 +3579,12 @@ msgid "Wireframe"
 msgstr "Dradenframe"
 
 #: qtplugins/wireframe/wireframe.h:43
-#, fuzzy
 msgid "Render the molecule as a wireframe."
-msgstr "Geef moleculen weer als stokjes"
+msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:60
-#, fuzzy
 msgid "Calculate band structure..."
-msgstr "Berekenen van Elektronen Dichtheid"
+msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:80
 msgid "&Yaehmop"
@@ -3727,9 +3613,8 @@ msgid "Error: could not find yaehmop executable!"
 msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:596
-#, fuzzy
 msgid "Yaehmop Input"
-msgstr "NWChem Input"
+msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.h:51
 msgid "Yaehmop"
@@ -3769,9 +3654,8 @@ msgstr "Vorm"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
-#, fuzzy
 msgid "Calculation Settings"
-msgstr "Selectie instellingen"
+msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
@@ -3796,9 +3680,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/mongochem/mongochemwidget.ui:73
 #. i18n: ectx: property (text), widget (QPushButton, pushSubmitCalculation)
-#, fuzzy
 msgid "Submit Calculation..."
-msgstr "Stop Berekeningen"
+msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:120
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -3807,9 +3690,8 @@ msgstr ""
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
 msgid "Queue and Program:"
-msgstr "Shader Programma:"
+msgstr ""
 
 #. i18n: file: molequeue/molequeuewidget.ui:50
 #. i18n: ectx: property (text), widget (QToolButton, refreshProgramsButton)
@@ -3825,9 +3707,8 @@ msgstr ""
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#, fuzzy
 msgid "Processor cores:"
-msgstr "Processoren:"
+msgstr ""
 
 #. i18n: file: molequeue/molequeuewidget.ui:125
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
@@ -3873,9 +3754,8 @@ msgstr ""
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
-#, fuzzy
 msgid "Rename Elements"
-msgstr "Wijzig Element"
+msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
@@ -3889,9 +3769,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
-#, fuzzy
 msgid "Ctrl+C"
-msgstr "Ctrl+Alt+O"
+msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
 #. i18n: ectx: property (text), widget (QPushButton, exitButton)
@@ -3900,15 +3779,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:47
 #. i18n: ectx: property (shortcut), widget (QPushButton, exitButton)
-#, fuzzy
 msgid "Ctrl+E"
-msgstr "Ctrl+Alt+O"
+msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
-#, fuzzy
 msgid "Structure Input File"
-msgstr "Structuur:"
+msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:28
 #. i18n: ectx: property (text), widget (QRadioButton, generateFromPdbButton)
@@ -3917,9 +3794,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, pdbFileLabel)
-#, fuzzy
 msgid "PDB File:"
-msgstr "Par Bestand:"
+msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:50
 #. i18n: ectx: property (text), widget (QPushButton, openPdbFileButton)
@@ -3975,9 +3851,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, pqrFileLabel)
-#, fuzzy
 msgid "PQR File:"
-msgstr "Par Bestand:"
+msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:156
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
@@ -3986,9 +3861,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:170
 #. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
-#, fuzzy
 msgid "Save Input File"
-msgstr "Sla Video Bestand op"
+msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4009,15 +3883,13 @@ msgstr "Bestand laden..."
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Distance Tolerance:"
-msgstr "Afstand"
+msgstr ""
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "Minimum Distance:"
-msgstr "Afstand"
+msgstr ""
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
@@ -4042,15 +3914,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConnectionSettingsDialog)
-#, fuzzy
 msgid "Server settings"
-msgstr "Meet instellingen"
+msgstr ""
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label7)
-#, fuzzy
 msgid "&Hostname:"
-msgstr "&Bestandsnaam:"
+msgstr ""
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:64
 #. i18n: ectx: property (text), widget (QLabel, label8)
@@ -4081,15 +3951,13 @@ msgstr "Navigeren"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:92
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateUp)
-#, fuzzy
 msgid "Navigate Up"
-msgstr "Navigeren"
+msgstr ""
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "File name:"
-msgstr "Bestandsnaam:"
+msgstr ""
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:153
 #. i18n: ectx: property (text), widget (QPushButton, OK)
@@ -4128,39 +3996,33 @@ msgstr ""
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "Isovalue"
-msgstr "Iso Waarde:"
+msgstr ""
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
 msgid "Opacity"
-msgstr "Ondoorzichtigheid:"
+msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
-#, fuzzy
 msgid "Coordinate Editor"
-msgstr "Cartesiaanse coördinaten editor"
+msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Preset:"
-msgstr "Reset"
+msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
 msgid "Distance Unit:"
-msgstr "Afstand"
+msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:46
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
-#, fuzzy
 msgid "Angstrom"
-msgstr "Ǻngstrom"
+msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
@@ -4215,9 +4077,8 @@ msgstr "Toepassen"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Cp2kInputDialog)
-#, fuzzy
 msgid "CP2K Input"
-msgstr "MOPAC Input"
+msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:22
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
@@ -4237,9 +4098,8 @@ msgstr "Standaarden"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
 msgid "Save File..."
-msgstr "Bestand laden..."
+msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -4263,9 +4123,8 @@ msgstr "Titel"
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_12)
-#, fuzzy
 msgid "Filename Base:"
-msgstr "Bestandsnaam:"
+msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:124
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -4290,15 +4149,13 @@ msgstr "Methode:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:197
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "Basis set:"
-msgstr "Basis Verzameling:"
+msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:215
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#, fuzzy
 msgid "Functional"
-msgstr "Internationaal"
+msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:258
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
@@ -4387,9 +4244,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
-#, fuzzy
 msgid "Supercell Parameters"
-msgstr "Super Cel Parameters"
+msgstr ""
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:22
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
@@ -4413,9 +4269,8 @@ msgstr "C herhaal:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
-#, fuzzy
 msgid "Unit Cell Editor"
-msgstr "Verberg &Editors"
+msgstr ""
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4462,9 +4317,8 @@ msgstr "°"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:231
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#, fuzzy
 msgid "Cell Matrix:"
-msgstr "MOPAC Z-Matrix"
+msgstr ""
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:248
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -4475,9 +4329,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QCheckBox, transformAtoms)
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:114
 #. i18n: ectx: property (text), widget (QCheckBox, transformAtoms)
-#, fuzzy
 msgid "&Transform Atoms"
-msgstr "Transformatie Methode"
+msgstr ""
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:300
 #. i18n: ectx: property (text), widget (QPushButton, apply)
@@ -4501,9 +4354,8 @@ msgstr "Schaal Celeenheidsvolume"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "New &Volume:"
-msgstr "Voer nieuw volume in:"
+msgstr ""
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -4594,9 +4446,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
 msgid "Formula:"
-msgstr "Formaat:"
+msgstr ""
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
@@ -4627,23 +4478,20 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
-#, fuzzy
 msgid "Insert"
-msgstr "Voeg &In"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
-#, fuzzy
 msgid "LAMMPS Input"
-msgstr "GAMESS Input"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:37
 #. i18n: ectx: property (toolTip), widget (QLabel, label_7)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:50
 #. i18n: ectx: property (toolTip), widget (QLineEdit, titleLine)
-#, fuzzy
 msgid "Input file comments"
-msgstr "Beeld Succesvol geschreven naar %1"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:77
 #. i18n: ectx: property (toolTip), widget (QLabel, label_units)
@@ -4673,9 +4521,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
-#, fuzzy
 msgid "Units"
-msgstr "Eenheden:"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:111
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
@@ -4694,9 +4541,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:126
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
-#, fuzzy
 msgid "si"
-msgstr "Psi:"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:131
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
@@ -4707,21 +4553,18 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:236
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "electron"
-msgstr "Selectie"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_waterPotential)
-#, fuzzy
 msgid "Water Potential"
-msgstr "Kern Potentiaal"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:157
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
-#, fuzzy
 msgid "SPC"
-msgstr "SCF"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:162
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
@@ -4758,15 +4601,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
-#, fuzzy
 msgid "Atom Style"
-msgstr "Stijl"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:211
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "angle"
-msgstr "Hoek"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:216
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -4780,15 +4621,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:226
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "charge"
-msgstr "Lading:"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:231
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "dipole"
-msgstr "Dipolair"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:241
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -4802,9 +4641,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:251
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "line"
-msgstr "Valine"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:256
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -4813,9 +4651,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:261
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "molecular"
-msgstr "Molecule"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:266
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -4829,9 +4666,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:276
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "tri"
-msgstr "Yttrium"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:281
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -4847,9 +4683,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:292
 #. i18n: ectx: property (text), widget (QLabel, label_readdata)
-#, fuzzy
 msgid "Coordinate Data File"
-msgstr "Coordinaat Type:"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:306
 #. i18n: ectx: property (text), widget (QLabel, label_therm)
@@ -4901,9 +4736,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:396
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "Time Step"
-msgstr "Maximum Stappen:"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:416
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
@@ -4926,15 +4760,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:436
 #. i18n: ectx: property (text), widget (QLabel, label_dimension)
-#, fuzzy
 msgid "Dimensions"
-msgstr "Extensies"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:446
 #. i18n: ectx: property (toolTip), widget (QComboBox, zBoundaryCombo)
-#, fuzzy
 msgid "Change Z boundary style."
-msgstr "Wijzig bindings Orde"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:453
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -4942,9 +4774,8 @@ msgstr "Wijzig bindings Orde"
 #. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:533
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-#, fuzzy
 msgid "p"
-msgstr "px"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:458
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -4970,9 +4801,8 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:548
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-#, fuzzy
 msgid "m"
-msgstr "qm"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:473
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -4980,9 +4810,8 @@ msgstr "qm"
 #. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:553
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-#, fuzzy
 msgid "fs"
-msgstr "fps"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:478
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -4995,15 +4824,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:486
 #. i18n: ectx: property (toolTip), widget (QComboBox, yBoundaryCombo)
-#, fuzzy
 msgid "Change Y boundary style."
-msgstr "Wijzig bindings Orde"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:526
 #. i18n: ectx: property (toolTip), widget (QComboBox, xBoundaryCombo)
-#, fuzzy
 msgid "Change X boundary style."
-msgstr "Wijzig bindings Orde"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
@@ -5064,9 +4891,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:718
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#, fuzzy
 msgid "Initial Velocities"
-msgstr "Begin Gok:"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:725
 #. i18n: ectx: property (toolTip), widget (QComboBox, velocityDistCombo)
@@ -5075,9 +4901,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:729
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
-#, fuzzy
 msgid "gaussian"
-msgstr "Gaussian 9x"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:734
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
@@ -5118,9 +4943,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:810
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#, fuzzy
 msgid "Output"
-msgstr "Output:"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:817
 #. i18n: ectx: property (text), widget (QLabel, label_11)
@@ -5144,9 +4968,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:871
 #. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
-#, fuzzy
 msgid "One Line"
-msgstr "Lijnen"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:876
 #. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
@@ -5157,9 +4980,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, resetButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:982
 #. i18n: ectx: property (text), widget (QPushButton, resetButton)
-#, fuzzy
 msgid "Reset"
-msgstr "Reset"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:928
 #. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
@@ -5172,15 +4994,13 @@ msgstr "Gebruiksvorm"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
 msgid "Generate..."
-msgstr "Genereer..."
+msgstr ""
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "Descriptor:"
-msgstr "Geen Beschrijving"
+msgstr ""
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5251,9 +5071,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:26
 #. i18n: ectx: property (text), item, widget (QComboBox, container)
-#, fuzzy
 msgid "Singularity"
-msgstr "Singlet"
+msgstr ""
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:34
 #. i18n: ectx: property (text), widget (QLabel, labelContainer)
@@ -5302,33 +5121,28 @@ msgstr ""
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:109
 #. i18n: ectx: property (text), widget (QLabel, labelInputParameters)
-#, fuzzy
 msgid "Input Parameters:"
-msgstr "Input Generator..."
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
-#, fuzzy
 msgid "Geometry Optimization Parameters"
-msgstr "Geometrie Optimalisation"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#, fuzzy
 msgid "Optimization Method"
-msgstr "Optimalisatie Methode:St"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Force field:"
-msgstr "Krachtveld"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
 msgid "Optimization algorithm:"
-msgstr "Optimalisatie Methode:St"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5342,9 +5156,8 @@ msgstr "Stijlste Afdaling"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
-#, fuzzy
 msgid "Conjugate Gradient"
-msgstr "Vervoeg Gradienten"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
@@ -5358,9 +5171,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
-#, fuzzy
 msgid "Autodetect"
-msgstr "AutoRotatie"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
@@ -5369,9 +5181,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#, fuzzy
 msgid "Van der Waals cutoff distance:"
-msgstr "Van der Waals, isosurface = %L1"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -5380,9 +5191,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:140
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#, fuzzy
 msgid "electrostatic cutoff distance:"
-msgstr "Elektrostatisch Potentiaal"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:147
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
@@ -5395,33 +5205,28 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
 #. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
-#, fuzzy
 msgid " steps"
-msgstr "stappen"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-#, fuzzy
 msgid "Convergence Criteria"
-msgstr "Convergentie"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "\"Energy\" convergence:"
-msgstr "Convergentie"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
 msgid "Step limit:"
-msgstr "Tijds Limiet:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
-#, fuzzy
 msgid " units"
-msgstr "Eenheden:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
 #. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
@@ -5430,27 +5235,23 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
-#, fuzzy
 msgid "OpenMM Script Builder"
-msgstr "Peptide Bouwer"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:37
 #. i18n: ectx: property (text), widget (QLabel, label_jobScript)
-#, fuzzy
 msgid "Job script:"
-msgstr "Geen Beschrijving"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:47
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, jobScriptEdit)
-#, fuzzy
 msgid "script"
-msgstr "&Scripts"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:54
 #. i18n: ectx: property (text), widget (QLabel, label_1)
-#, fuzzy
 msgid "Input Coords:"
-msgstr "Input Generator..."
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:64
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputCoordEdit)
@@ -5628,27 +5429,23 @@ msgstr "Geen"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
-#, fuzzy
 msgid "HBonds"
-msgstr "Bindingen: %L1"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:355
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
-#, fuzzy
 msgid "AllBonds"
-msgstr "Verwijder Binding"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:360
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
-#, fuzzy
 msgid "HAngles"
-msgstr "Hoek:"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:368
 #. i18n: ectx: property (text), widget (QLabel, label_constraintTolerance)
-#, fuzzy
 msgid "Constraint Tolerance:"
-msgstr "Beperkingen"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:394
 #. i18n: ectx: property (text), widget (QLabel, label_rigidWater)
@@ -5681,9 +5478,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_generationTemp)
-#, fuzzy
 msgid "Generation Temp:"
-msgstr "Genereer Cel"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:481
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, generationTemperatureSpin)
@@ -5694,9 +5490,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:498
 #. i18n: ectx: property (text), widget (QLabel, label_integrator)
-#, fuzzy
 msgid "Integrator:"
-msgstr "AO Gehele Opslag"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:506
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
@@ -5730,9 +5525,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:553
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, stepSpin)
-#, fuzzy
 msgid " fs"
-msgstr "fps"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
@@ -5746,9 +5540,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:602
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, collisionRateSpin)
-#, fuzzy
 msgid "/ps"
-msgstr "fps"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
 #. i18n: ectx: property (text), widget (QLabel, label_temperature)
@@ -5767,9 +5560,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:653
 #. i18n: ectx: property (text), widget (QLabel, label_pressure)
-#, fuzzy
 msgid "Pressure:"
-msgstr "Reset"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:669
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, pressureSpin)
@@ -5788,21 +5580,18 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:710
 #. i18n: ectx: property (text), widget (QCheckBox, stateDataCheck)
-#, fuzzy
 msgid "StateData"
-msgstr "Data"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:720
 #. i18n: ectx: property (text), widget (QCheckBox, dcdCheck)
-#, fuzzy
 msgid "DCD"
-msgstr "CD"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:730
 #. i18n: ectx: property (text), widget (QCheckBox, pdbCheck)
-#, fuzzy
 msgid "PDB"
-msgstr "PDF"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:740
 #. i18n: ectx: property (text), widget (QLabel, label_reportInterval)
@@ -5826,9 +5615,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:821
 #. i18n: ectx: property (text), widget (QLabel, label_minimizeSteps)
-#, fuzzy
 msgid "Max. Minimize Steps:"
-msgstr "Maximum Stappen:"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:841
 #. i18n: ectx: property (text), widget (QLabel, label_stateDataOptions)
@@ -5837,9 +5625,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:848
 #. i18n: ectx: property (text), widget (QCheckBox, stepIndexCheck)
-#, fuzzy
 msgid "Step Index"
-msgstr "Stap Grootte:"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
@@ -5858,33 +5645,28 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:888
 #. i18n: ectx: property (text), widget (QCheckBox, potentialEnergyCheck)
-#, fuzzy
 msgid "Potential Energy"
-msgstr "Kern Potentiaal"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:898
 #. i18n: ectx: property (text), widget (QCheckBox, kineticEnergyCheck)
-#, fuzzy
 msgid "Kinetic Energy"
-msgstr "Energie"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:908
 #. i18n: ectx: property (text), widget (QCheckBox, totalEnergyCheck)
-#, fuzzy
 msgid "Total Energy"
-msgstr "Energie"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:928
 #. i18n: ectx: property (text), widget (QCheckBox, volumeCheck)
-#, fuzzy
 msgid "Volume"
-msgstr "Voer nieuw volume in:"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
-#, fuzzy
 msgid "Density"
-msgstr "Intensiteit"
+msgstr ""
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
@@ -5893,9 +5675,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Maximum Radius:"
-msgstr "Maximum:"
+msgstr ""
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label2)
@@ -5930,9 +5711,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
 msgid "Number of points:"
-msgstr "Aantal Bindingen"
+msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5966,9 +5746,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
-#, fuzzy
 msgid "Download Selected"
-msgstr "Delete geselecteerde"
+msgstr ""
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:19
 #. i18n: ectx: property (text), widget (QLabel, atomRadiusLabel)
@@ -5997,15 +5776,13 @@ msgstr "Ondoorzichtigheid:"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Apply Color"
-msgstr "Vormkleuren"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
-#, fuzzy
 msgid "Vibrational Modes"
-msgstr "Vibratie Analyse"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6031,9 +5808,8 @@ msgstr "Creëer Oppervlaktes"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:37
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Surface:"
-msgstr "Oppervlaktes"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
@@ -6116,9 +5892,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:109
 #. i18n: ectx: attribute (title), widget (QWidget, operationsTab)
-#, fuzzy
 msgid "Operations"
-msgstr "Opties"
+msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:115
 #. i18n: ectx: property (text), widget (QLabel, operationsLabel)
@@ -6127,9 +5902,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:145
 #. i18n: ectx: attribute (title), widget (QWidget, subgroupsTab)
-#, fuzzy
 msgid "Subgroups"
-msgstr "Ruimte&group"
+msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:151
 #. i18n: ectx: property (text), widget (QLabel, subgroupsLabel)
@@ -6223,9 +5997,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "Special k-points"
-msgstr "Spectra importering"
+msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:98
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_maxY)
@@ -6303,9 +6076,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
 msgid "Num Dimensions:"
-msgstr "Extensies"
+msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)

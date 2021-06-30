@@ -287,9 +287,9 @@ msgstr ""
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:381
 #: qtplugins/openmminput/openmminputdialog.cpp:465
 #: qtplugins/openmminput/openmminputdialog.cpp:479
-#, fuzzy, qt-format
+#, qt-format
 msgid "Failed to write to file %1."
-msgstr "לא מזהה את מבנה הקובץ %1."
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:492
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:255
@@ -1185,9 +1185,8 @@ msgid "Write error."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:227
-#, fuzzy
 msgid "Unknown error."
-msgstr "בלתי ידוע"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:48
 msgid "Modify Molecule"
@@ -1229,9 +1228,8 @@ msgid "Change Atom Formal Charge"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:624
-#, fuzzy
 msgid "Change Atom Color"
-msgstr "צבע מותאם אישית"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:686
 msgid "Add Bond"
@@ -1759,7 +1757,6 @@ msgid "XYZ format (symbols)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
-#, fuzzy
 msgid "XYZ format (names)"
 msgstr ""
 ",Launchpad Contributions:,ofir, ,Launchpad Contributions:,dlonie,ofir, ,"
@@ -2002,9 +1999,8 @@ msgid "Overwrite modified input file?"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:960
-#, fuzzy
 msgid "Save CP2K input file"
-msgstr "שמור קובץ וידאו"
+msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1009
 msgid "Submit CP2K Calculation"
@@ -2102,9 +2098,8 @@ msgid "Manipulate custom element types in the current molecule."
 msgstr ""
 
 #: qtplugins/customelements/customelements.h:35
-#, fuzzy
 msgid "Custom Elements"
-msgstr "צבע על פי יסוד"
+msgstr ""
 
 #: qtplugins/editor/editor.cpp:85 qtplugins/editor/editor.cpp:117
 msgid "Draw"
@@ -2813,9 +2808,8 @@ msgid "prmtop"
 msgstr ""
 
 #: qtplugins/openmminput/openmminputdialog.cpp:539
-#, fuzzy
 msgid "top"
-msgstr "נחושת"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -2921,9 +2915,9 @@ msgid "Error: cannot add frame to video."
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:492
-#, fuzzy, qt-format
+#, qt-format
 msgid "Cannot save file %1."
-msgstr "לא מזהה את מבנה הקובץ %1."
+msgstr ""
 
 #: qtplugins/playertool/playertool.h:46
 msgid "Player tool"
@@ -3168,9 +3162,8 @@ msgid "Invert Selection"
 msgstr ""
 
 #: qtplugins/select/select.cpp:58
-#, fuzzy
 msgid "Select by Element..."
-msgstr "צבע על פי יסוד"
+msgstr ""
 
 #: qtplugins/select/select.cpp:62
 msgid "Select by Atom Index..."
@@ -3189,18 +3182,16 @@ msgid "&Select"
 msgstr ""
 
 #: qtplugins/select/select.cpp:153
-#, fuzzy
 msgid "Select Atoms by Index"
-msgstr "בחר צבע תוויות אטומים"
+msgstr ""
 
 #: qtplugins/select/select.cpp:154
 msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:190
-#, fuzzy
 msgid "Select Atoms by Residue"
-msgstr "בחר צבע תוויות אטומים"
+msgstr ""
 
 #: qtplugins/select/select.cpp:191
 msgid "Residues to Select:"
@@ -3361,9 +3352,8 @@ msgid "From File"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:78
-#, fuzzy
 msgid "Create Surfaces..."
-msgstr "משטחים"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:244
 msgid "Calculating electron density"
@@ -3375,9 +3365,8 @@ msgid "Calculating molecular orbital %L1"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:385 qtplugins/surfaces/surfaces.cpp:413
-#, fuzzy
 msgid "Movie AVI (*.avi)"
-msgstr "קבצי וידאו (*.avi)"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:387
 msgid "Export Movie"
@@ -3434,9 +3423,8 @@ msgid "Provide symmetry functionality."
 msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:44
-#, fuzzy
 msgid "Symmetry Elements"
-msgstr "צבע על פי יסוד"
+msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:48
 msgid "Render symmetry elements."
@@ -3776,9 +3764,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:170
 #. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
-#, fuzzy
 msgid "Save Input File"
-msgstr "שמור קובץ וידאו"
+msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3797,15 +3784,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Distance Tolerance:"
-msgstr "צבע על פי מרחק"
+msgstr ""
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "Minimum Distance:"
-msgstr "צבע על פי מרחק"
+msgstr ""
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
@@ -4012,9 +3997,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
 msgid "Save File..."
-msgstr "שמור קובץ וידאו"
+msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -4541,9 +4525,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:231
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "dipole"
-msgstr "דיפול"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:241
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -4582,9 +4565,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:276
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "tri"
-msgstr "איטריום"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:281
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -4677,9 +4659,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:436
 #. i18n: ectx: property (text), widget (QLabel, label_dimension)
-#, fuzzy
 msgid "Dimensions"
-msgstr "הרחבות"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:446
 #. i18n: ectx: property (toolTip), widget (QComboBox, zBoundaryCombo)
@@ -5182,9 +5163,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_forceField)
-#, fuzzy
 msgid "Forcefield:"
-msgstr "כוח"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:99
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
@@ -5703,27 +5683,23 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
-#, fuzzy
 msgid "Start Animation"
-msgstr "הנפשה..."
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
-#, fuzzy
 msgid "Stop Animation"
-msgstr "הנפשה..."
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
-#, fuzzy
 msgid "Create Surfaces"
-msgstr "משטחים"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:37
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Surface:"
-msgstr "משטחים"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
@@ -5737,9 +5713,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
 msgid "Color by:"
-msgstr "צבע על פי אינדקס"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:138
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -5989,9 +5964,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
 msgid "Num Dimensions:"
-msgstr "הרחבות"
+msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)

@@ -1228,9 +1228,8 @@ msgid "Change Atom Formal Charge"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:624
-#, fuzzy
 msgid "Change Atom Color"
-msgstr "मनपसंद रंग"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:686
 msgid "Add Bond"
@@ -1757,7 +1756,6 @@ msgid "XYZ format (symbols)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
-#, fuzzy
 msgid "XYZ format (names)"
 msgstr ""
 ",Launchpad Contributions:,Geoff Hutchison, ,Launchpad Contributions:,Geoff "
@@ -2099,9 +2097,8 @@ msgid "Manipulate custom element types in the current molecule."
 msgstr ""
 
 #: qtplugins/customelements/customelements.h:35
-#, fuzzy
 msgid "Custom Elements"
-msgstr "तत्व द्वारा रंग"
+msgstr ""
 
 #: qtplugins/editor/editor.cpp:85 qtplugins/editor/editor.cpp:117
 msgid "Draw"
@@ -2810,9 +2807,8 @@ msgid "prmtop"
 msgstr ""
 
 #: qtplugins/openmminput/openmminputdialog.cpp:539
-#, fuzzy
 msgid "top"
-msgstr "तांबा"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -3163,18 +3159,16 @@ msgid "Invert Selection"
 msgstr ""
 
 #: qtplugins/select/select.cpp:58
-#, fuzzy
 msgid "Select by Element..."
-msgstr "तत्व द्वारा रंग"
+msgstr ""
 
 #: qtplugins/select/select.cpp:62
 msgid "Select by Atom Index..."
 msgstr ""
 
 #: qtplugins/select/select.cpp:66
-#, fuzzy
 msgid "Select by Residue..."
-msgstr "अवशेष द्वारा रंग"
+msgstr ""
 
 #: qtplugins/select/select.cpp:79
 msgid "Change selections"
@@ -3193,9 +3187,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:190
-#, fuzzy
 msgid "Select Atoms by Residue"
-msgstr "अवशेष द्वारा रंग"
+msgstr ""
 
 #: qtplugins/select/select.cpp:191
 msgid "Residues to Select:"
@@ -3426,9 +3419,8 @@ msgid "Provide symmetry functionality."
 msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:44
-#, fuzzy
 msgid "Symmetry Elements"
-msgstr "तत्व द्वारा रंग"
+msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:48
 msgid "Render symmetry elements."
@@ -3560,9 +3552,8 @@ msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
-#, fuzzy
 msgid "Calculation Settings"
-msgstr "पाइथन  सेटिंग्स"
+msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
@@ -3788,15 +3779,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Distance Tolerance:"
-msgstr "दूरी के अनुसार रंग"
+msgstr ""
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "Minimum Distance:"
-msgstr "दूरी के अनुसार रंग"
+msgstr ""
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
@@ -4571,9 +4560,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:276
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "tri"
-msgstr "विट्रियम"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:281
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -5720,9 +5708,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
 msgid "Color by:"
-msgstr "सूचकांक से रंग"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:138
 #. i18n: ectx: property (text), widget (QLabel, label_3)

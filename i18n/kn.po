@@ -1186,9 +1186,8 @@ msgid "Write error."
 msgstr ""
 
 #: qtgui/pythonscript.cpp:227
-#, fuzzy
 msgid "Unknown error."
-msgstr "ತಿಳಿಯದ"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:48
 msgid "Modify Molecule"
@@ -1230,9 +1229,8 @@ msgid "Change Atom Formal Charge"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:624
-#, fuzzy
 msgid "Change Atom Color"
-msgstr "ನನ್ನಿಚ್ಛೆಯ ಬಣ್ಣ"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:686
 msgid "Add Bond"
@@ -1762,7 +1760,6 @@ msgid "XYZ format (symbols)"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
-#, fuzzy
 msgid "XYZ format (names)"
 msgstr ""
 ",Launchpad Contributions:,ಸುಧೀಂದ್ರ,ಸುಭಾಸ್ ಭಟ್(Subhas Bhat), ,Launchpad "
@@ -2510,9 +2507,8 @@ msgid "Molecular Properties"
 msgstr ""
 
 #: qtplugins/mongochem/listmoleculesmodel.cpp:80
-#, fuzzy
 msgid "Formula"
-msgstr "ಫಾರ್ಮ್"
+msgstr ""
 
 #: qtplugins/mongochem/listmoleculesmodel.cpp:86
 msgid "InChIKey"
@@ -2815,9 +2811,8 @@ msgid "prmtop"
 msgstr ""
 
 #: qtplugins/openmminput/openmminputdialog.cpp:539
-#, fuzzy
 msgid "top"
-msgstr "ತಾಮ್ರ"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -3164,9 +3159,8 @@ msgid "Select None"
 msgstr ""
 
 #: qtplugins/select/select.cpp:54
-#, fuzzy
 msgid "Invert Selection"
-msgstr "ಆಯ್ಕೆಯನ್ನು ನಿರ್ಲಕ್ಷಿಸು"
+msgstr ""
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Element..."
@@ -3181,9 +3175,8 @@ msgid "Select by Residue..."
 msgstr ""
 
 #: qtplugins/select/select.cpp:79
-#, fuzzy
 msgid "Change selections"
-msgstr "ಆಯ್ಕೆಯನ್ನು ನಿರ್ಲಕ್ಷಿಸು"
+msgstr ""
 
 #: qtplugins/select/select.cpp:89
 msgid "&Select"
@@ -3217,9 +3210,8 @@ msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.h:46
 #: qtplugins/selectiontool/selectiontool.h:47
-#, fuzzy
 msgid "Selection tool"
-msgstr "ಆಯ್ಕೆಯನ್ನು ನಿರ್ಲಕ್ಷಿಸು"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:63
 msgid "Perceive Space Group"
@@ -4354,9 +4346,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
 msgid "Formula:"
-msgstr "ಫಾರ್ಮ್"
+msgstr ""
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
@@ -4462,9 +4453,8 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:236
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "electron"
-msgstr "ಆಯ್ಕೆಯನ್ನು ನಿರ್ಲಕ್ಷಿಸು"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_waterPotential)
@@ -4536,9 +4526,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:231
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "dipole"
-msgstr "ದ್ವಿಧ್ರುವ"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:241
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -4671,9 +4660,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:436
 #. i18n: ectx: property (text), widget (QLabel, label_dimension)
-#, fuzzy
 msgid "Dimensions"
-msgstr "ವಿಸ್ತರಣೆಗಳು"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:446
 #. i18n: ectx: property (toolTip), widget (QComboBox, zBoundaryCombo)
@@ -4899,9 +4887,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:992
 #. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
-#, fuzzy
 msgid "Use Form"
-msgstr "ಫಾರ್ಮ್"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:948
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -5177,9 +5164,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_forceField)
-#, fuzzy
 msgid "Forcefield:"
-msgstr "ಒತ್ತಾಯಪೂರ್ವಕ"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:99
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
@@ -5698,15 +5684,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
-#, fuzzy
 msgid "Start Animation"
-msgstr "ಅನಿಮೇಶನ್"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
-#, fuzzy
 msgid "Stop Animation"
-msgstr "ಅನಿಮೇಶನ್"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
@@ -5981,9 +5965,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
 msgid "Num Dimensions:"
-msgstr "ವಿಸ್ತರಣೆಗಳು"
+msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)

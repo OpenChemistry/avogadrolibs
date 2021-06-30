@@ -1421,9 +1421,8 @@ msgstr "Malfermi Eligan Dosieron"
 #: qtplugins/lammpsinput/lammpsinput.cpp:59
 #: qtplugins/openmminput/openmminput.cpp:57
 #: qtplugins/quantuminput/quantuminput.cpp:83
-#, fuzzy
 msgid "&Input"
-msgstr "&LAMMPS-Enigo"
+msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -2414,9 +2413,9 @@ msgid "&Insert"
 msgstr "Enmet&i"
 
 #: qtplugins/insertfragment/insertfragment.cpp:105
-#, fuzzy, qt-format
+#, qt-format
 msgid "Error reading file (%1)."
-msgstr "Eraro dum legado de struktura dosiero (%1)."
+msgstr ""
 
 #: qtplugins/insertfragment/insertfragment.cpp:110
 msgid "Insert Fragment"
@@ -2572,9 +2571,8 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
 #: qtplugins/symmetry/symmetry.cpp:94
-#, fuzzy
 msgid "&Properties"
-msgstr "Atributoj de Molekulo"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.h:42
 msgid "Molecular Properties"
@@ -3080,23 +3078,20 @@ msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr "Generi kaj desegni teorian formon de iksradia difrakto per ObjCryst++."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
-#, fuzzy
 msgid "Update"
-msgstr "Ĝisdatigi Ligon"
+msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
-#, fuzzy
 msgid "Name"
-msgstr "Nomo:"
+msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
 msgid "Version"
 msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:73
-#, fuzzy
 msgid "Description"
-msgstr "Priskribo:"
+msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:333
 #, qt-format
@@ -3129,14 +3124,12 @@ msgid "Download Plugins..."
 msgstr ""
 
 #: qtplugins/plugindownloader/plugindownloader.h:48
-#, fuzzy
 msgid "Download Plugins"
-msgstr "Elŝuti"
+msgstr ""
 
 #: qtplugins/plugindownloader/plugindownloader.h:52
-#, fuzzy
 msgid "Download plugins from GitHub repositories."
-msgstr "Elŝuti kromprogramojn el Github-deponejoj."
+msgstr ""
 
 #: qtplugins/povray/povray.cpp:41
 msgid "POV-Ray Render"
@@ -3253,9 +3246,8 @@ msgid "Invert Selection"
 msgstr "Inversigi Elekton"
 
 #: qtplugins/select/select.cpp:58
-#, fuzzy
 msgid "Select by Element..."
-msgstr "Simetriaj Elementoj"
+msgstr ""
 
 #: qtplugins/select/select.cpp:62
 msgid "Select by Atom Index..."
@@ -3274,14 +3266,12 @@ msgid "&Select"
 msgstr "Elekti (&S)"
 
 #: qtplugins/select/select.cpp:153
-#, fuzzy
 msgid "Select Atoms by Index"
-msgstr "Elekti Nenion"
+msgstr ""
 
 #: qtplugins/select/select.cpp:154
-#, fuzzy
 msgid "Atoms to Select:"
-msgstr "Faldi Atomojn en Ĉelon"
+msgstr ""
 
 #: qtplugins/select/select.cpp:190
 msgid "Select Atoms by Residue"
@@ -3492,14 +3482,12 @@ msgid "SVG"
 msgstr ""
 
 #: qtplugins/svg/svg.cpp:259
-#, fuzzy
 msgid "SVG (*.svg)"
-msgstr "GIF (*.gif)"
+msgstr ""
 
 #: qtplugins/svg/svg.h:31
-#, fuzzy
 msgid "Render the scene in a SVG file."
-msgstr "Bildigi ĉi tiun scenon per VRML."
+msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:60
 msgid "Type"
@@ -3617,9 +3605,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:528
-#, fuzzy
 msgid "Error: could not find yaehmop executable!"
-msgstr "Eraro: ne troviĝis ruleblaĵo genXrdPattern!"
+msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:596
 msgid "Yaehmop Input"
@@ -6014,9 +6001,8 @@ msgstr "Malstrikta"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:240
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
-#, fuzzy
 msgid "Very Loose"
-msgstr "Malgrandega"
+msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:248
 #. i18n: ectx: property (text), widget (QPushButton, detectSymmetryButton)
@@ -6062,14 +6048,11 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:68
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_zeroFermi)
-#, fuzzy
 msgid ""
 "<html><head/><body><p>Adjust the energies so that the zero is the Fermi? "
 "Only available if we are plotting the Fermi level.</p><p><br/></"
 "p><p>Default: off</p></body></html>"
 msgstr ""
-"<html><head/><body><p>La plilarĝiĝo de la pintoj ĉe la bazo en gradoj.</"
-"p><p>Aprioro: 0,52958°</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
@@ -6093,11 +6076,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_fermi)
-#, fuzzy
 msgid "<html><head/><body><p>The Fermi Level</p></body></html>"
 msgstr ""
-"<html><head/><body><p>La plilarĝiĝo de la pinto ĉe la bazo (en gradoj).</p></"
-"body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:142
 #. i18n: ectx: property (toolTip), widget (QTextEdit, edit_specialKPoints)
@@ -6117,7 +6097,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
-#, fuzzy
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
@@ -6130,18 +6109,6 @@ msgid ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
 "family:'Ubuntu';\">GM 0.0 0.0 0.0</span></p></body></html>"
 msgstr ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
-"REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
-"weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
-"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
-"#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
-"html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numKPoints)
@@ -6153,13 +6120,10 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
-#, fuzzy
 msgid ""
 "<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>La maksimuma valoro de 2θ en gradoj.</p><p>Aprioro: "
-"162,00°</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)
@@ -6181,9 +6145,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
 msgid "Num Dimensions:"
-msgstr "Dimensioj"
+msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
