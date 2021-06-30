@@ -8,6 +8,9 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QtGui/QColor>
+
+class QColorDialog;
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -30,13 +33,15 @@ public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 
 private slots:
-//  void applyCustomColor();
+  void openColorDialog();
+  void applyCustomColor(const QColor& color);
   void applyIndexColors();
   void resetColors();
 
 private:
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
+  QColorDialog* m_dialog;
 };
 
 } // namespace QtPlugins
