@@ -18,6 +18,7 @@
 #define AVOGADRO_CORE_GRAPH_H
 
 #include "avogadrocore.h"
+#include "connectedgroup.h"
 
 #include <cstddef>
 #include <vector>
@@ -29,7 +30,6 @@ namespace Core {
  * @class Graph graph.h <avogadro/core/graph.h>
  * @brief The Graph class represents a graph data structure.
  */
-
 class AVOGADROCORE_EXPORT Graph
 {
 public:
@@ -100,13 +100,19 @@ public:
    * Returns a vector of vector containing the indicies of each vertex in each
    * connected component in the graph.
    */
-  std::vector<std::vector<size_t>> connectedComponents() const;
+  std::vector<std::set<size_t>> connectedComponents() const;
+
+  /**
+   * Returns a set containing the indicies of each vertex connected with index.
+   */
+  std::set<size_t> connectedComponent(size_t index) const;
 
 private:
   std::vector<std::vector<size_t>> m_adjacencyList;
+  ConnectedGroup m_connectedGroup;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_GRAPH_H
