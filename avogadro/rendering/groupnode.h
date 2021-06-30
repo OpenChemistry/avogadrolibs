@@ -67,6 +67,13 @@ public:
   Node* child(size_t index);
 
   /**
+   * @brief check if the Node exists in this GroupNode.
+   * @param node Node to search.
+   * @return True if the node was found, false otherwise.
+   */
+  bool hasChild(Node* node) const;
+
+  /**
    * @return The number of child nodes contained by the GroupNode.
    */
   size_t childCount() const { return m_children.size(); }
