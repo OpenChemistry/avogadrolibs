@@ -271,7 +271,7 @@ void OverlayAxes::procesAxis()
   Rendering::GroupNode* engineNode = m_widgetToNode[m_glWidget];
   GroupNode& node = m_scene->rootNode();
   if (node.hasChild(engineNode)) {
-    engineNode->clear();
+    engineNode->clearUI();
     m_scene->rootNode().removeChild(engineNode);
     delete engineNode;
     m_widgetToNode[m_glWidget] = nullptr;
@@ -298,7 +298,7 @@ void OverlayAxes::process(const Core::Molecule&, Rendering::GroupNode& node)
   // Since our geometry doesn't change, we just make a copy of the pre-built
   // set of axes.
   geo->addDrawable(new CustomMesh(*m_render->mesh));
-  node.addChild(geo);
+  node.addChild(geo, GroupNode::UiType::UI);
 }
 
 void OverlayAxes::setMolecule(QtGui::Molecule* molecule)

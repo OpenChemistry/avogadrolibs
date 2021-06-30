@@ -29,38 +29,33 @@ GroupNode::GroupNode(GroupNode* parent_)
 GroupNode::~GroupNode()
 {
   // Like all good parents, we destroy our children before we go...
-  clear();
+  clear(ALL);
 }
 
 void GroupNode::accept(Visitor& visitor)
 {
   visitor.visit(*this);
-  for (std::vector<Node*>::iterator it = m_children.begin();
-       it != m_children.end(); ++it) {
-    (*it)->accept(visitor);
+  for (auto it = m_children.begin(); it != m_children.end(); ++it) {
+    it->node->accept(visitor);
   }
 }
 
-void GroupNode::addChild(Node* node)
+void GroupNode::addChild(Node* node, UiType ui)
 {
   if (!node || node == this)
     return;
-  for (std::vector<Node*>::const_iterator it = m_children.begin();
-       it != m_children.end(); ++it) {
-    if (*it == node)
-      return;
+  if (!hasChild(node)) {
+    node->setParent(this);
+    m_children.push_back(NodeInfo(node, ui));
   }
-  node->setParent(this);
-  m_children.push_back(node);
 }
 
 bool GroupNode::hasChild(Node* node) const
 {
   if (!node)
     return false;
-  for (std::vector<Node*>::const_iterator it = m_children.begin();
-       it != m_children.end(); ++it) {
-    if (*it == node) {
+  for (auto it = m_children.begin(); it != m_children.end(); ++it) {
+    if (it->node == node) {
       return true;
     }
   }
@@ -71,10 +66,9 @@ bool GroupNode::removeChild(Node* node)
 {
   if (!node)
     return false;
-  for (std::vector<Node*>::iterator it = m_children.begin();
-       it != m_children.end(); ++it) {
-    if (*it == node) {
-      (*it)->setParent(nullptr);
+  for (auto it = m_children.begin(); it != m_children.end(); ++it) {
+    if (it->node == node) {
+      it->node->setParent(nullptr);
       m_children.erase(it);
       return true;
     }
@@ -86,18 +80,53 @@ Node* GroupNode::child(size_t index)
 {
   if (index >= m_children.size())
     return nullptr;
-  else
-    return m_children[index];
+  else {
+    // this is only used in test so we can us a O(n) function
+    auto it = m_children.begin();
+    it = std::next(it, index);
+    return it->node;
+  }
+}
+
+void GroupNode::clear(UiType ui)
+{
+  // Like all good parents, we destroy our children before we go...
+  for (auto it = m_children.begin(); it != m_children.end();) {
+    auto itNext = std::next(it);
+    if (it->ui == ui || ui == ALL) {
+      auto groupNode = it->node->cast<GroupNode>();
+      if (groupNode != nullptr && ui != ALL) {
+        switch (ui) {
+          case UI:
+            groupNode->clearUI();
+            break;
+          default:
+          case GEOMETRY:
+            groupNode->clear();
+            break;
+        }
+        // like a good parent, kill your son if you don't have nieces
+        if (groupNode->childCount() == 0) {
+          delete it->node;
+          m_children.erase(it);
+        }
+      } else {
+        delete it->node;
+        m_children.erase(it);
+      }
+    }
+    it = itNext;
+  }
 }
 
 void GroupNode::clear()
 {
-  // Like all good parents, we destroy our children before we go...
-  for (std::vector<Node*>::const_iterator it = m_children.begin();
-       it != m_children.end(); ++it) {
-    delete (*it);
-  }
-  m_children.clear();
+  clear(GEOMETRY);
+}
+
+void GroupNode::clearUI()
+{
+  clear(UI);
 }
 
 } // End namespace Rendering
