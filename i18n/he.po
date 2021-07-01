@@ -1789,16 +1789,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,ofir, ,Launchpad Contributions:,dlonie,ofir, ,"
-"Launchpad Contributions:,Avogadro Team,dlonie,ofir, ,Launchpad "
-"Contributions:,Avogadro Team,dlonie,ofir, ,Launchpad Contributions:,Avogadro "
-"Team,dlonie,ofir, ,Launchpad Contributions:,Avogadro Team,Moshe Jonathan "
-"Gordon Radian,dlonie,ofir, ,Launchpad Contributions:,Avogadro Team,Moshe "
-"Jonathan Gordon Radian,dlonie,ofir, ,Launchpad Contributions:,Avogadro Team,"
-"Moshe Jonathan Gordon Radian,david volokita,dlonie,ofir, ,Launchpad "
-"Contributions:,Avogadro Team,Moshe Jonathan Gordon Radian,david volokita,"
-"dlonie,ofir, ,Launchpad Contributions:,Avogadro Team,Moshe Jonathan Gordon "
-"Radian,david volokita,dlonie,ofir"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"

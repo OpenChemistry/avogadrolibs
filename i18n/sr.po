@@ -1828,9 +1828,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Мирослав Николић, ,Launchpad Contributions:,"
-"Мирослав Николић, ,Launchpad Contributions:,Мирослав Николић, ,Launchpad "
-"Contributions:,Мирослав Николић"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"

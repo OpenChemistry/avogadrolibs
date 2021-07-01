@@ -1823,10 +1823,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:, ,Launchpad Contributions:,Avogadro Team, ,"
-"Launchpad Contributions:,Avogadro Team,Damir Zubanović,Samir Ribić, ,"
-"Launchpad Contributions:,Avogadro Team,Damir Zubanović,Samir Ribić, ,"
-"Launchpad Contributions:,Avogadro Team,Damir Zubanović,Samir Ribić"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"

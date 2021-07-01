@@ -46,10 +46,6 @@ msgstr ""
 #: qtgui/interfacescript.cpp:305
 msgid "'warnings' member is not an array."
 msgstr ""
-"1.101101Waterm**elon101is101a**101flowering101plant101**specie**s101of101the101Cucurbitaceae101family. "
-"1022.101101A101**scramblin**g101and101trailing101vine-"
-"like101plant,101it101was101originally101domesticated101in101Africa. "
-"1023.101101It101is101a101highly101cultivated101fruit101worldwide,101**with**101more101than"
 
 #: molequeue/inputgenerator.cpp:199 qtgui/interfacescript.cpp:325
 #, qt-format
@@ -1796,9 +1792,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Vilson Gjeci, ,Launchpad Contributions:,Avogadro "
-"Team,Vilson Gjeci, ,Launchpad Contributions:,Avogadro Team,Vilson Gjeci, ,"
-"Launchpad Contributions:,Avogadro Team,Vilson Gjeci"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"

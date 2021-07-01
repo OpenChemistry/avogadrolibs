@@ -1823,12 +1823,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Ken Sharp, ,Launchpad Contributions:,Avogadro Team,"
-"Ken Sharp, ,Launchpad Contributions:,Avogadro Team,Ken Sharp, ,Launchpad "
-"Contributions:,Avogadro Team,Ken Sharp, ,Launchpad Contributions:,Avogadro "
-"Team,Joel Pickett,Ken Sharp,Robert Readman, ,Launchpad Contributions:,"
-"Avogadro Team,Joel Pickett,Ken Sharp,Robert Readman, ,Launchpad "
-"Contributions:,Avogadro Team,Joel Pickett,Ken Sharp,Robert Readman"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -2742,7 +2736,6 @@ msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
-"Trajectory file %1 disagrees on the number of atoms in the present molecule"
 
 #: qtplugins/openbabel/openbabel.cpp:497
 msgid "Cannot open file with Open Babel."
