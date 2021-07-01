@@ -54,7 +54,7 @@ QList<QAction*> ApplyColors::actions() const
 
 QStringList ApplyColors::menuPath(QAction*) const
 {
-  return QStringList() << tr("&View") << tr("&Apply Colors");
+  return QStringList() << tr("&View") << tr("Color Atoms");
 }
 
 void ApplyColors::setMolecule(QtGui::Molecule* mol)
