@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2016-06-10 06:57+0000\n"
 "Last-Translator: Cédric VALMARY (Tot en òc) <cvalmary@yahoo.fr>\n"
 "Language-Team: Occitan (post 1500) <oc@li.org>\n"
@@ -1470,6 +1470,40 @@ msgstr "Òsca !"
 #, qt-format
 msgid "Input file written to '%1'"
 msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Color personalizada :"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Numèro de l'atòm"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Element"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Vista"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Colors"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Colors"
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
@@ -3171,10 +3205,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Vista"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6179,9 +6209,6 @@ msgstr ""
 #~ msgid "Color by Index (red, orange, yellow, green, blue, violet)."
 #~ msgstr "Coloriar segon l'indici (roge, irange, jaune, verd, blau, violet)."
 
-#~ msgid "Custom Color:"
-#~ msgstr "Color personalizada :"
-
 #~ msgid "Color by Distance"
 #~ msgstr "Coloriar segon la distància"
 
@@ -6803,9 +6830,6 @@ msgstr ""
 
 #~ msgid "Loop"
 #~ msgstr "En bocla"
-
-#~ msgid "Colors"
-#~ msgstr "Colors"
 
 #~ msgid "Dipole:"
 #~ msgstr "Dipòl :"

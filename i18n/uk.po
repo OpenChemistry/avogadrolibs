@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-04-22 10:31+0000\n"
 "Last-Translator: Tymofij Lytvynenko <till.svit@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
@@ -1481,6 +1481,40 @@ msgstr "Успіх!"
 #, qt-format
 msgid "Input file written to '%1'"
 msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "інший колір"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Номери атомів"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Елемент"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "П&ерегляд"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Кольори"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Кольори"
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
@@ -3206,10 +3240,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "П&ерегляд"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6319,9 +6349,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "Інший колір:"
 
-#~ msgid "Custom Color"
-#~ msgstr "інший колір"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Вказати інші кольори для об’єктів"
 
@@ -8572,9 +8599,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "Цикл"
 
-#~ msgid "Colors"
-#~ msgstr "Кольори"
-
 #~ msgid "Dipole:"
 #~ msgstr "Диполь:"
 
@@ -8849,9 +8873,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "Кут перекручування"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Номери атомів"
 
 #~ msgid "Add"
 #~ msgstr "Додати"

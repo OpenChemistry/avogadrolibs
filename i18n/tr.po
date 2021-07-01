@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-06-06 23:35+0000\n"
 "Last-Translator: Acun <acun1993@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
@@ -1538,6 +1538,39 @@ msgstr "Başarı"
 #, qt-format
 msgid "Input file written to '%1'"
 msgstr "Giriş dosyası '%1' e yazılmış"
+
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Özel Renk:"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Atom numarası."
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Element"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Göster"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Atom Çiz"
+
+#: qtplugins/applycolors/applycolors.h:27
+msgid "ApplyColors"
+msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
@@ -3292,10 +3325,6 @@ msgstr "Ortala"
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr "Görünümü Eksene Hizala"
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Göster"
 
 #: qtplugins/resetview/resetview.h:37
 msgid "Reset view"
@@ -6393,9 +6422,6 @@ msgstr ""
 #~ msgid "Color by atomic partial charge (blue = positive, red = negative."
 #~ msgstr ""
 #~ "Atomik Kısmı Yüke Göre Renklendir (mavi = pozitif, kırmızı = negatif)"
-
-#~ msgid "Custom Color:"
-#~ msgstr "Özel Renk:"
 
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Nesneler için özel renkler belirle"

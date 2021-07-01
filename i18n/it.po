@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-06-10 17:45+0000\n"
 "Last-Translator: Giacomo <gradaellig@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
@@ -1475,6 +1475,40 @@ msgstr "Successo"
 #, qt-format
 msgid "Input file written to '%1'"
 msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Colore personalizzato"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Indici Atomici"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Elemento"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Visualizza"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Colori"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Colori"
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
@@ -3213,10 +3247,6 @@ msgstr "Centra"
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Visualizza"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6352,9 +6382,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "Colore personalizzato:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Colore personalizzato"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Imposta colori personalizzati per gli oggetti"
 
@@ -8125,9 +8152,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "Ciclo"
 
-#~ msgid "Colors"
-#~ msgstr "Colori"
-
 #~ msgid "Dipole:"
 #~ msgstr "Dipolo:"
 
@@ -8362,9 +8386,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "Angolo di Torsione"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Indici Atomici"
 
 #~ msgid "Add"
 #~ msgstr "Aggiungi"

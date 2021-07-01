@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2016-06-10 06:44+0000\n"
 "Last-Translator: Dostojevskji <darkangel_nr1@hotmail.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -1462,6 +1462,38 @@ msgstr ""
 #: qtplugins/apbs/apbsdialog.cpp:191
 #, qt-format
 msgid "Input file written to '%1'"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Anpassa färg:"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+msgid "By Atomic Index"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Gundämne:"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Vy"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Rita atom"
+
+#: qtplugins/applycolors/applycolors.h:27
+msgid "ApplyColors"
 msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
@@ -3153,10 +3185,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Vy"
 
 #: qtplugins/resetview/resetview.h:37
 msgid "Reset view"
@@ -6116,9 +6144,6 @@ msgstr ""
 
 #~ msgid "Color by atomic partial charge (blue = positive, red = negative."
 #~ msgstr "Färg efter atomär partiell laddning (blå = positiv, röd = negativ."
-
-#~ msgid "Custom Color:"
-#~ msgstr "Anpassa färg:"
 
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Anpassa färg för objekt"

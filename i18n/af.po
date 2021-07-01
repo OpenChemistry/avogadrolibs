@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-06-19 13:34+0000\n"
 "Last-Translator: Nathan <bonnemainsnathan@gmail.com>\n"
 "Language-Team: Afrikaans <https://hosted.weblate.org/projects/avogadro/"
@@ -1460,6 +1460,35 @@ msgstr ""
 #: qtplugins/apbs/apbsdialog.cpp:191
 #, qt-format
 msgid "Input file written to '%1'"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:23
+msgid "By Custom Color..."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:27
+msgid "By Atomic Index"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:31
+msgid "By Element"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+msgid "Color Atoms"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.h:27
+msgid "ApplyColors"
 msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
@@ -3111,10 +3140,6 @@ msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
-msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
 msgstr ""
 
 #: qtplugins/resetview/resetview.h:37

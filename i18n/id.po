@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-06-06 23:34+0000\n"
 "Last-Translator: Jacque Fresco <aidter@use.startmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
@@ -1491,6 +1491,40 @@ msgstr "Sukses!"
 #, qt-format
 msgid "Input file written to '%1'"
 msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Warna Atur Sendiri"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Indeks Atom"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Unsur"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Tampilkan"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Warna"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "pilih warna"
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
@@ -3219,10 +3253,6 @@ msgstr "Tengah"
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Tampilkan"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6293,9 +6323,6 @@ msgstr "Email anda"
 #~ msgid "Custom Color:"
 #~ msgstr "Warna Atur Sendiri:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Warna Atur Sendiri"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Atur warna untuk obyek"
 
@@ -8155,9 +8182,6 @@ msgstr "Email anda"
 #~ msgid "Loop"
 #~ msgstr "Loop"
 
-#~ msgid "Colors"
-#~ msgstr "Warna"
-
 #~ msgid "Dipole:"
 #~ msgstr "Duakutub:"
 
@@ -8383,9 +8407,6 @@ msgstr "Email anda"
 
 #~ msgid "Torsion angle"
 #~ msgstr "Sudut Torsi"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Indeks Atom"
 
 #~ msgid "Add"
 #~ msgstr "Tambah"

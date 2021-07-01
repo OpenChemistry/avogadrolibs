@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-04-03 11:26+0000\n"
 "Last-Translator: Liu Tao <lyuutau@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -1504,6 +1504,40 @@ msgstr "完成"
 #, qt-format
 msgid "Input file written to '%1'"
 msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "自定义颜色"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "原子索引"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "元素"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "视图(&V)"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "颜色"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "颜色"
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
@@ -3220,10 +3254,6 @@ msgstr "居中"
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "视图(&V)"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6331,9 +6361,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "自定义颜色："
 
-#~ msgid "Custom Color"
-#~ msgstr "自定义颜色"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "为物体设置自定义颜色"
 
@@ -7620,9 +7647,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "环"
 
-#~ msgid "Colors"
-#~ msgstr "颜色"
-
 #~ msgid "Dipole:"
 #~ msgstr "偶极:"
 
@@ -7763,9 +7787,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "扭转角"
-
-#~ msgid "Atom Indices"
-#~ msgstr "原子索引"
 
 #~ msgid "Add"
 #~ msgstr "添加"

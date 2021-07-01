@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-06-16 17:34+0000\n"
 "Last-Translator: Lihan Zhu <zhulihan@seas.upenn.edu>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/avogadro/"
@@ -1468,6 +1468,38 @@ msgstr "نجاح!"
 #, qt-format
 msgid "Input file written to '%1'"
 msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "لون مخصص:"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+msgid "By Atomic Index"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "عنصر"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&اعرض"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+msgid "Color Atoms"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "طبّق"
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
@@ -3162,10 +3194,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&اعرض"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6143,9 +6171,6 @@ msgstr ""
 
 #~ msgid "Color by atomic partial charge (blue = positive, red = negative."
 #~ msgstr "اللون عن طريق الشحن الجزئي الذري (أزرق = إيجابي، أحمر = سلبي."
-
-#~ msgid "Custom Color:"
-#~ msgstr "لون مخصص:"
 
 #~ msgid "Set custom colors for objects"
 #~ msgstr "مجموعة الألوان المخصصة للكائنات"
