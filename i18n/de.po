@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-03-17 15:18+0000\n"
 "Last-Translator: Jörg S. <joerg.schwerdtfeger@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
@@ -1478,6 +1478,40 @@ msgstr "Erfolg!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Benutzerdefinierte Farbe"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Atomindizes"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Element"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Ansicht"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Farben"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Farben"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
@@ -1791,51 +1825,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Alexander Minges,Erik Hahn,Geoff Hutchison,"
-"HUWagner,Hans Christof,Keruskerfuerst,Photon,Steve Markgraf,dlonie,kuede,"
-"mogli,soc, ,Launchpad Contributions:,Alexander Minges,Erik Hahn,Geoff "
-"Hutchison,HUWagner,Hans Christof,Keruskerfuerst,Photon,Steve Markgraf,dlonie,"
-"kuede,mogli,soc, ,Launchpad Contributions:,Avogadro Team,jochenheil,kuede, ,"
-"Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Keruskerfuerst,"
-"carsten,jochenheil,kuede,soc, ,Launchpad Contributions:,Alexander Hausmann,"
-"Alexander Minges,Avogadro Team,Geoff Hutchison,Keruskerfuerst,MartinK,"
-"carsten,jochenheil,kuede,soc,ucn|, ,Launchpad Contributions:,Alexander "
-"Hausmann,Alexander Minges,Avogadro Team,Eduard Gotwig,Geoff Hutchison,"
-"Keruskerfuerst,MartinK,carsten,jochenheil,kuede,soc,ucn|, ,Launchpad "
-"Contributions:,Alexander Hausmann,Alexander Minges,Avogadro Team,Eduard "
-"Gotwig,Geoff Hutchison,Keruskerfuerst,MartinK,Simon Janich,carsten,"
-"jochenheil,kuede,soc,ucn|, ,Launchpad Contributions:,Alexander Hausmann,"
-"Alexander Minges,Avogadro Team,Eduard Gotwig,Geoff Hutchison,Keruskerfuerst,"
-"MartinK,Matthias Mailänder,Simon Janich,carsten,jochenheil,kuede,soc,"
-"spaceflower,ucn|, ,Launchpad Contributions:,.lu,Alexander Hausmann,Alexander "
-"Minges,Avogadro Team,Eduard Gotwig,Florian Selent,Geoff Hutchison,Jens "
-"Maucher,Keruskerfuerst,MartinK,Matthias Mailänder,Simon Janich,carsten,"
-"jochenheil,kuede,soc,spaceflower,ucn|, ,Launchpad Contributions:,.lu,"
-"Alexander Hausmann,Alexander Minges,Avogadro Team,Eduard Gotwig,Florian "
-"Selent,Geoff Hutchison,Jens Maucher,Keruskerfuerst,MartinK,Matthias "
-"Mailänder,Michael Schwarz,Simon Janich,carsten,jochenheil,kuede,soc,"
-"spaceflower,ucn|, ,Launchpad Contributions:,.lu,Alexander Hausmann,Alexander "
-"Minges,Avogadro Team,Eduard Gotwig,Florian Selent,Geoff Hutchison,Jens "
-"Maucher,Keruskerfuerst,MartinK,Matthias Mailänder,Michael Schwarz,Simon "
-"Janich,carsten,jochenheil,kuede,soc,spaceflower,ucn|, ,Launchpad "
-"Contributions:,.lu,Alexander Hausmann,Alexander Minges,Avogadro Team,Daniel "
-"Schury,Daniel Winzen,David Lauenstein,Dennis Baudys,Eduard Gotwig,Florian "
-"Selent,Friedrich Herbst,Geoff Hutchison,Hendrik Knackstedt,Jan Sonntag,Jens "
-"Maucher,Keruskerfuerst,MartinK,Matthias Mailänder,Maximilian Mühlbauer,"
-"Michael Schwarz,Niklas,Phillip Sz,Salesome,Scott,Simon Janich,Tobias Bannert,"
-"carsten,jochenheil,kuede,soc,spaceflower,ucn|, ,Launchpad Contributions:,.lu,"
-"Alexander Hausmann,Alexander Minges,Avogadro Team,Daniel Schury,Daniel "
-"Winzen,David Lauenstein,Dennis Baudys,Eduard Gotwig,Florian Selent,Friedrich "
-"Herbst,Geoff Hutchison,Hendrik Knackstedt,Ivan Panchenko,Jan Sonntag,Jens "
-"Maucher,Keruskerfuerst,MartinK,Matthias Mailänder,Maximilian Mühlbauer,"
-"Michael Schwarz,Niklas,Phillip Sz,Salesome,Scott,Simon Janich,Tobias Bannert,"
-"carsten,jochenheil,kuede,soc,spaceflower,ucn|, ,Launchpad Contributions:,.lu,"
-"Alexander Hausmann,Alexander Minges,Avogadro Team,Daniel Schury,Daniel "
-"Winzen,David Lauenstein,Dennis Baudys,Eduard Gotwig,Florian Selent,Friedrich "
-"Herbst,Geoff Hutchison,Hendrik Knackstedt,Ivan Panchenko,Jan Sonntag,Jens "
-"Maucher,Keruskerfuerst,MartinK,Matthias Mailänder,Maximilian Mühlbauer,"
-"Michael Schwarz,Niklas,Phillip Sz,Salesome,Scott,Simon Janich,Tobias Bannert,"
-"carsten,jochenheil,kuede,soc,spaceflower,ucn|"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3241,10 +3230,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Ansicht"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6387,9 +6372,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "Benutzerdefinierte Farbe:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Benutzerdefinierte Farbe"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Benutzerdefinierte Farben für Objekte festlegen"
 
@@ -8500,9 +8482,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "Schleife"
 
-#~ msgid "Colors"
-#~ msgstr "Farben"
-
 #~ msgid "Dipole:"
 #~ msgstr "Dipol:"
 
@@ -8752,9 +8731,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "Torsionswinkel"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Atomindizes"
 
 #~ msgid "Add"
 #~ msgstr "Hinzufügen"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2016-06-28 12:51+0000\n"
 "Last-Translator: Maarten van Druten <m.vandruten@smoose.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -1479,6 +1479,40 @@ msgstr "Succes!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Willekeurig Kleur"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Atoom Indices"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Element"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Beeld"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Kleuren"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Kleuren"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
@@ -1793,25 +1827,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Kristof Bal,Sander Deryckere,Vincent Tijms,ubby, ,"
-"Launchpad Contributions:,Sander Deryckere, ,Launchpad Contributions:,Sander "
-"Deryckere,Water,cumulus007, ,Launchpad Contributions:,Geoff Hutchison,Sander "
-"Deryckere,Water,Willem1,Yentl,cumulus007,goto, ,Launchpad Contributions:,"
-"Avogadro Team,Geoff Hutchison,Joostkam,Sander Deryckere,Water,Willem1,Yentl,"
-"cumulus007,goto, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,"
-"Joostkam,Sander Deryckere,Water,Willem1,Yentl,cumulus007,goto, ,Launchpad "
-"Contributions:,Avogadro Team,Geoff Hutchison,Joostkam,Sander Deryckere,Water,"
-"Willem1,Yentl,cumulus007,goto, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Joostkam,Sander Deryckere,Water,Willem1,Yentl,cumulus007,goto, ,"
-"Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Joostkam,Sander "
-"Deryckere,Water,Willem1,Yentl,cumulus007,goto, ,Launchpad Contributions:,"
-"Avogadro Team,Geoff Hutchison,Joostkam,Sander Deryckere,Water,Willem1,Yentl,"
-"cumulus007,goto, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,"
-"Joostkam,Sander Deryckere,Water,Willem Sonke,Yentl,cumulus007,goto, ,"
-"Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Joostkam,Sander "
-"Deryckere,Water,Willem Sonke,Yentl,cumulus007,goto, ,Launchpad "
-"Contributions:,Avogadro Team,Geoff Hutchison,Joostkam,Maarten van Druten,"
-"Sander Deryckere,Timo Herngreen,Water,Willem Sonke,Yentl,cumulus007,goto"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3213,10 +3228,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Beeld"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6310,9 +6321,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "Aangepaste Kleur:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Willekeurig Kleur"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Stel aangepaste kleuren in voor objecten"
 
@@ -7693,9 +7701,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "Lus"
 
-#~ msgid "Colors"
-#~ msgstr "Kleuren"
-
 #~ msgid "Dipole:"
 #~ msgstr "Dipool"
 
@@ -7825,9 +7830,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "Torsie hoek"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Atoom Indices"
 
 #~ msgid "Add"
 #~ msgstr "Toevoegen"

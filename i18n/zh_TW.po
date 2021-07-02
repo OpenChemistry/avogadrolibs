@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-01-25 09:32+0000\n"
 "Last-Translator: crlambda <lm3c@protonmail.ch>\n"
 "Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
@@ -1475,6 +1475,40 @@ msgstr "成功了!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "自訂顏色"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "原子指數"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "元素"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "檢視"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "顏色"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "顏色"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
@@ -1788,13 +1822,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
-"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
-"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
-"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
-"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
-"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang, ,"
-"Launchpad Contributions:,iychiang, ,Launchpad Contributions:,iychiang"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3188,10 +3215,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "檢視"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6255,9 +6278,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "自訂顏色："
 
-#~ msgid "Custom Color"
-#~ msgstr "自訂顏色"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "為物件設定顏色"
 
@@ -7784,9 +7804,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "圈"
 
-#~ msgid "Colors"
-#~ msgstr "顏色"
-
 #~ msgid "Dipole:"
 #~ msgstr "偶極:"
 
@@ -8006,9 +8023,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "扭轉角度"
-
-#~ msgid "Atom Indices"
-#~ msgstr "原子指數"
 
 #~ msgid "Add"
 #~ msgstr "新增"

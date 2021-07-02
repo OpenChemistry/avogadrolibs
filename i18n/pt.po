@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-05-10 15:31+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
@@ -1494,6 +1494,40 @@ msgstr "Sucesso"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Cor Personalizada"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Número Atômico."
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Elemento"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Ver"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Cores"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Cores"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 msgid "Show multiple bonds?"
@@ -1799,28 +1833,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Ivo Fernandes,Leandro Boscariol,Tiago Silva,"
-"nitrofurano, ,Launchpad Contributions:,Ivo Fernandes, ,Launchpad "
-"Contributions:,Arrepiadd,Ivo Fernandes, ,Launchpad Contributions:,Arrepiadd,"
-"Frederico Tavares,Geoff Hutchison,Ivo Fernandes,Tiago Silva, ,Launchpad "
-"Contributions:,Arrepiadd,Avogadro Team,Frederico Tavares,Geoff Hutchison,Ivo "
-"Fernandes,Tiago Silva, ,Launchpad Contributions:,Arrepiadd,Avogadro Team,"
-"Frederico Tavares,Geoff Hutchison,Ivo Fernandes,Tiago, ,Launchpad "
-"Contributions:,Arrepiadd,Avogadro Team,Frederico Tavares,Geoff Hutchison,Ivo "
-"Fernandes,Tiago, ,Launchpad Contributions:,Arrepiadd,Avogadro Team,Frederico "
-"Tavares,Geoff Hutchison,Ivo Fernandes,Tiago Silva, ,Launchpad Contributions:,"
-"Almufadado,Arrepiadd,Avogadro Team,David Rodrigues,Frederico Tavares,Geoff "
-"Hutchison,Ivo Fernandes,Nuno Sousa Cerqueira,Tiago Silva, ,Launchpad "
-"Contributions:,Almufadado,Arrepiadd,Avogadro Team,David Rodrigues,Frederico "
-"Tavares,Geoff Hutchison,Ivo Fernandes,Nuno Sousa Cerqueira,Tiago Silva, ,"
-"Launchpad Contributions:,Almufadado,Arrepiadd,Avogadro Team,David Rodrigues,"
-"Frederico Tavares,Geoff Hutchison,Ivo Xavier,Nuno Sousa Cerqueira,Tharmas,"
-"Tiago Silva,danielagos, ,Launchpad Contributions:,Almufadado,Arrepiadd,"
-"Avogadro Team,David Rodrigues,Frederico Tavares,Geoff Hutchison,Ivo Xavier,"
-"Manuel Silva,Nuno Sousa Cerqueira,Tharmas,Tiago S.,Tiago S.,Tiago Silva,"
-"danielagos, ,Launchpad Contributions:,Almufadado,Arrepiadd,Avogadro Team,"
-"David Rodrigues,Frederico Tavares,Geoff Hutchison,Ivo Xavier,Manuel Silva,"
-"Nuno Sousa Cerqueira,Tharmas,Tiago S.,Tiago Santos,Tiago Silva,danielagos"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3215,10 +3227,6 @@ msgstr "Centralizar"
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Ver"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6321,9 +6329,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "Cor Personalizada:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Cor Personalizada"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Definir cor personalizada para objectos"
 
@@ -8026,9 +8031,6 @@ msgstr ""
 
 #~ msgid "Loop"
 #~ msgstr "Ciclo"
-
-#~ msgid "Colors"
-#~ msgstr "Cores"
 
 #~ msgid "Dipole:"
 #~ msgstr "Dipolo:"

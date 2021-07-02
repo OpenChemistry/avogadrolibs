@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-06-19 13:34+0000\n"
 "Last-Translator: Nathan <bonnemainsnathan@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
@@ -1481,6 +1481,40 @@ msgstr "Успешно!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Произвољна боја"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Показатељ атома"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Елемент"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Преглед"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Боје"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Боје"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
@@ -1794,9 +1828,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Мирослав Николић, ,Launchpad Contributions:,"
-"Мирослав Николић, ,Launchpad Contributions:,Мирослав Николић, ,Launchpad "
-"Contributions:,Мирослав Николић"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3196,10 +3227,6 @@ msgstr "Средина"
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Преглед"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6292,9 +6319,6 @@ msgstr ",,miroslavnikolic@rocketmail.com,,,,ivanstar61@gmail.com,,"
 #~ msgid "Custom Color:"
 #~ msgstr "Произвољна боја:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Произвољна боја"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Подесите произвољне боје за објекте"
 
@@ -8505,9 +8529,6 @@ msgstr ",,miroslavnikolic@rocketmail.com,,,,ivanstar61@gmail.com,,"
 #~ msgid "Loop"
 #~ msgstr "Понављање"
 
-#~ msgid "Colors"
-#~ msgstr "Боје"
-
 #~ msgid "Dipole:"
 #~ msgstr "Дипол:"
 
@@ -8782,9 +8803,6 @@ msgstr ",,miroslavnikolic@rocketmail.com,,,,ivanstar61@gmail.com,,"
 
 #~ msgid "Torsion angle"
 #~ msgstr "Угао увијања"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Показатељ атома"
 
 #~ msgid "Add"
 #~ msgstr "Додај"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2016-06-10 06:51+0000\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -1483,6 +1483,40 @@ msgstr "Uspešno končano!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Barva po meri"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Atomski indeksi"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Element"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Pogled"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Barve"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Barve"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
@@ -1797,9 +1831,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Grega P,Matej Urbančič, ,Launchpad Contributions:,"
-"Grega P,Matej Urbančič, ,Launchpad Contributions:,Grega P,Matej Urbančič, ,"
-"Launchpad Contributions:,Grega P,Matej Urbančič"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3206,10 +3237,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Pogled"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6282,9 +6309,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "Barva po meri:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Barva po meri"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Določitev barv po meri za predmete"
 
@@ -8425,9 +8449,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "Zanka"
 
-#~ msgid "Colors"
-#~ msgstr "Barve"
-
 #~ msgid "Dipole:"
 #~ msgstr "Dipol:"
 
@@ -8677,9 +8698,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "Kot torzije"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Atomski indeksi"
 
 #~ msgid "Add"
 #~ msgstr "Dodaj"

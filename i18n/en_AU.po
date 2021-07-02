@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2016-06-10 06:29+0000\n"
 "Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
 "Language-Team: English (Australia) <en_AU@li.org>\n"
@@ -1475,6 +1475,40 @@ msgstr "Success!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Custom Colour"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Atom Indices"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Element"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&View"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Colours"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Colours"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
@@ -1789,12 +1823,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Ken Sharp, ,Launchpad Contributions:,Avogadro Team,"
-"Ken Sharp, ,Launchpad Contributions:,Avogadro Team,Ken Sharp, ,Launchpad "
-"Contributions:,Avogadro Team,Ken Sharp, ,Launchpad Contributions:,Avogadro "
-"Team,Joel Pickett,Ken Sharp,Robert Readman, ,Launchpad Contributions:,"
-"Avogadro Team,Joel Pickett,Ken Sharp,Robert Readman, ,Launchpad "
-"Contributions:,Avogadro Team,Joel Pickett,Ken Sharp,Robert Readman"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -2708,7 +2736,6 @@ msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
-"Trajectory file %1 disagrees on the number of atoms in the present molecule"
 
 #: qtplugins/openbabel/openbabel.cpp:497
 msgid "Cannot open file with Open Babel."
@@ -3193,10 +3220,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&View"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6254,9 +6277,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "Custom Colour:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Custom Colour"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Set custom colours for objects"
 
@@ -7631,9 +7651,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "Loop"
 
-#~ msgid "Colors"
-#~ msgstr "Colours"
-
 #~ msgid "Dipole:"
 #~ msgstr "Dipole:"
 
@@ -7847,9 +7864,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "Torsion angle"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Atom Indices"
 
 #~ msgid "Add"
 #~ msgstr "Add"

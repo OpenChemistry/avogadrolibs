@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2016-06-10 07:06+0000\n"
 "Last-Translator: aoyama iwao <iwao.aoyama@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
@@ -1479,6 +1479,40 @@ msgstr "成功しました!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "カスタムカラー"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "原子のインデックス"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "元素"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "表示(&V)"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "カラー"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "カラー"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
@@ -1793,21 +1827,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Andrzej MoST (Marcin Ostajewski),Geoff Hutchison, ,"
-"Launchpad Contributions:,Avogadro Team,Geoff Hutchison, ,Launchpad "
-"Contributions:,Avogadro Team,Geoff Hutchison,tomo, ,Launchpad Contributions:,"
-"Avogadro Team,Geoff Hutchison,tomo, ,Launchpad Contributions:,Avogadro Team,"
-"Geoff Hutchison,hide D,tomo, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,hide D,tomo, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,hide D,tomo, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,hide D,tomo, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,hide D,tomo, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,hide D,tomo, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Katsuhiko Nishimra,Kenichi Ito,Rubia,aoyama iwao,hide D,tomo, ,"
-"Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Katsuhiko Nishimra,"
-"Kenichi Ito,Rubia,aoyama iwao,hide D,tomo, ,Launchpad Contributions:,"
-"Avogadro Team,Geoff Hutchison,Katsuhiko Nishimra,Kenichi Ito,Rubia,aoyama "
-"iwao,hide D,tomo"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3212,10 +3231,6 @@ msgstr ""
 msgid "Align View to Axes"
 msgstr ""
 
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "表示(&V)"
-
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
 msgid "Reset view"
@@ -4524,12 +4539,12 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-" <html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
 "\">\n"
-" p, li { white-space: pre-wrap; }\n"
-" </style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; "
-"font-weight:400; font-style:normal;\">\n"
-" <p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
 "sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
 "#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
@@ -4616,12 +4631,12 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-" <html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
 "\">\n"
-" p, li { white-space: pre-wrap; }\n"
-" </style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; "
-"font-weight:400; font-style:normal;\">\n"
-" <p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
 "sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
 "color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
@@ -6325,9 +6340,6 @@ msgstr ""
 
 #~ msgid "Custom Color:"
 #~ msgstr "カスタムカラー:"
-
-#~ msgid "Custom Color"
-#~ msgstr "カスタムカラー"
 
 #~ msgid "Set custom colors for objects"
 #~ msgstr "オブジェクトのカスタムカラーを設定"
@@ -8521,9 +8533,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "ループ"
 
-#~ msgid "Colors"
-#~ msgstr "カラー"
-
 #~ msgid "Dipole:"
 #~ msgstr "双極子"
 
@@ -8798,9 +8807,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "ねじれ角"
-
-#~ msgid "Atom Indices"
-#~ msgstr "原子のインデックス"
 
 #~ msgid "Add"
 #~ msgstr "追加"

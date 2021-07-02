@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-06-16 17:34+0000\n"
 "Last-Translator: Lihan Zhu <zhulihan@seas.upenn.edu>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/avogadro/"
@@ -1469,6 +1469,38 @@ msgstr "نجاح!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "لون مخصص:"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+msgid "By Atomic Index"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "عنصر"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&اعرض"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+msgid "Color Atoms"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "طبّق"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 msgid "Show multiple bonds?"
@@ -1774,19 +1806,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,AtomCell,عبد الله شلي (Abdellah Chelli), ,"
-"Launchpad Contributions:,AtomCell,TheLight,عبد الله شلي (Abdellah Chelli), ,"
-"Launchpad Contributions:,TheLight, ,Launchpad Contributions:,Nizar Kerkeni,"
-"TheLight, ,Launchpad Contributions:,Nizar Kerkeni,TheLight, ,Launchpad "
-"Contributions:,Nizar Kerkeni,TheLight, ,Launchpad Contributions:,Nizar "
-"Kerkeni,TheLight, ,Launchpad Contributions:,Nizar Kerkeni,TheLight, ,"
-"Launchpad Contributions:,Hsn,Nizar Kerkeni,TheLight,منصور اليوسف, ,Launchpad "
-"Contributions:,Avogadro Team,Hsn,Nizar Kerkeni,TheLight,منصور اليوسف, ,"
-"Launchpad Contributions:,Avogadro Team,Hsn,Nizar Kerkeni,TheLight,منصور "
-"اليوسف, ,Launchpad Contributions:,Avogadro Team,Hsn,Nizar Kerkeni,TheLight,"
-"منصور اليوسف, ,Launchpad Contributions:,Avogadro Team,Hsn,Nizar Kerkeni,"
-"TheLight,mohamed gamal,منصور اليوسف, ,Launchpad Contributions:,Avogadro Team,"
-"Hsn,Nizar Kerkeni,TheLight,mohamed gamal,منصور اليوسف"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3162,10 +3181,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&اعرض"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6143,9 +6158,6 @@ msgstr ""
 
 #~ msgid "Color by atomic partial charge (blue = positive, red = negative."
 #~ msgstr "اللون عن طريق الشحن الجزئي الذري (أزرق = إيجابي، أحمر = سلبي."
-
-#~ msgid "Custom Color:"
-#~ msgstr "لون مخصص:"
 
 #~ msgid "Set custom colors for objects"
 #~ msgstr "مجموعة الألوان المخصصة للكائنات"

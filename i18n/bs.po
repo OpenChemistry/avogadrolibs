@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2016-06-10 06:28+0000\n"
 "Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -1475,6 +1475,40 @@ msgstr "Uspjeh!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Boja po izboru"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Indikacije atoma"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Element"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Pogled"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Boje"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Boje"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
@@ -1789,10 +1823,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:, ,Launchpad Contributions:,Avogadro Team, ,"
-"Launchpad Contributions:,Avogadro Team,Damir Zubanović,Samir Ribić, ,"
-"Launchpad Contributions:,Avogadro Team,Damir Zubanović,Samir Ribić, ,"
-"Launchpad Contributions:,Avogadro Team,Damir Zubanović,Samir Ribić"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3187,10 +3217,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Pogled"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6246,9 +6272,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "Proizvoljna boja:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Boja po izboru"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Postavi  vlastite boje za objekte"
 
@@ -7434,9 +7457,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "Petlja"
 
-#~ msgid "Colors"
-#~ msgstr "Boje"
-
 #~ msgid "Dipole:"
 #~ msgstr "Dipol:"
 
@@ -7581,9 +7601,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "Ugao torzije"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Indikacije atoma"
 
 #~ msgid "Add"
 #~ msgstr "Dodaj"

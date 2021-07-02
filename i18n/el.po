@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-02-13 01:19+0000\n"
 "Last-Translator: Michalis <michalisntovas@yahoo.gr>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/avogadro/"
@@ -1482,6 +1482,40 @@ msgstr "Επιτυχία!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Προσαρμοσμένο χρώμα"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Δείκτες ατόμου"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Στοιχείο"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "Π&ροβολή"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Χρώματα"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Χρώματα"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
@@ -1796,19 +1830,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Anastasios Bourazanis,Eleftherios Kosmas, ,"
-"Launchpad Contributions:,Anastasios Bourazanis,Eleftherios Kosmas,farkoius, ,"
-"Launchpad Contributions:,Anastasios Bourazanis,Eleftherios Kosmas,farkoius, ,"
-"Launchpad Contributions:,Anastasios Bourazanis,Eleftherios Kosmas,farkoius, ,"
-"Launchpad Contributions:,Anastasios Bourazanis,Eleftherios Kosmas,farkoius, ,"
-"Launchpad Contributions:,Anastasios Bourazanis,Eleftherios Kosmas,farkoius, ,"
-"Launchpad Contributions:,Anastasios Bourazanis,Eleftherios Kosmas,farkoius, ,"
-"Launchpad Contributions:,Anastasios Bourazanis,Eleftherios Kosmas,farkoius, ,"
-"Launchpad Contributions:,Aggelos Arnaoutis,Anastasios Bourazanis,Dimitris "
-"Spingos,Eleftherios Kosmas,farkoius,tzem, ,Launchpad Contributions:,Aggelos "
-"Arnaoutis,Anastasios Bourazanis,Dimitris Spingos,Eleftherios Kosmas,farkoius,"
-"tzem, ,Launchpad Contributions:,Aggelos Arnaoutis,Anastasios Bourazanis,"
-"Dimitris Spingos,Eleftherios Kosmas,farkoius,tzem"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3217,10 +3238,6 @@ msgstr ""
 msgid "Align View to Axes"
 msgstr ""
 
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "Π&ροβολή"
-
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
 msgid "Reset view"
@@ -4535,7 +4552,7 @@ msgstr ""
 "REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
 "\">\n"
-"p, li { white-space: pre-wrap· }\n"
+"p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
@@ -4628,7 +4645,7 @@ msgstr ""
 "REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
 "\">\n"
-"p, li { white-space: pre-wrap· }\n"
+"p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
@@ -6336,9 +6353,6 @@ msgstr ""
 
 #~ msgid "Custom Color:"
 #~ msgstr "Προσαρμοσμένο χρώμα:"
-
-#~ msgid "Custom Color"
-#~ msgstr "Προσαρμοσμένο χρώμα"
 
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Επιλογή προσαρμοσμένων χρωμάτων για τα αντικείμενα"
@@ -8484,9 +8498,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "Βρόχος"
 
-#~ msgid "Colors"
-#~ msgstr "Χρώματα"
-
 #~ msgid "Dipole:"
 #~ msgstr "Δίπολο:"
 
@@ -8761,9 +8772,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "Γωνία στρέψης"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Δείκτες ατόμου"
 
 #~ msgid "Add"
 #~ msgstr "Προσθήκη"

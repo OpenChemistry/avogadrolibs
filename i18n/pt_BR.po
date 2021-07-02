@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2021-06-06 23:35+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -1541,6 +1541,40 @@ msgstr "Sucesso"
 #, qt-format
 msgid "Input file written to '%1'"
 msgstr "Arquivo de entrada gravado em %1"
+
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Cor Personalizada"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Índices dos Átomos"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Elemento"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Exibir"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Cores"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Aplicar Cor"
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
@@ -3251,10 +3285,6 @@ msgstr "Centralizar"
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr "Alinhar Visão aos Eixos"
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Exibir"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6357,9 +6387,6 @@ msgstr "Seus e-mails"
 #~ msgid "Custom Color:"
 #~ msgstr "Cor personalizada:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Cor Personalizada"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Definir cores personalizadas para os objetos"
 
@@ -7842,9 +7869,6 @@ msgstr "Seus e-mails"
 #~ msgid "Loop"
 #~ msgstr "Repetir"
 
-#~ msgid "Colors"
-#~ msgstr "Cores"
-
 #~ msgid "Dipole:"
 #~ msgstr "Dipolo:"
 
@@ -8003,9 +8027,6 @@ msgstr "Seus e-mails"
 
 #~ msgid "Torsion angle"
 #~ msgstr "Ângulo de Torsão"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Índices dos Átomos"
 
 #~ msgid "Add"
 #~ msgstr "Adicionar"

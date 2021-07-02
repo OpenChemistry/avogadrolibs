@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2016-06-10 06:40+0000\n"
 "Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
 "Language-Team: Uyghur <ug@li.org>\n"
@@ -1467,6 +1467,39 @@ msgstr "مۇۋەپپەقىيەتلىك!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "رەڭ بەلگىلە…"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+msgid "By Atomic Index"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "ئېلېمېنت"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "كۆرۈنۈش(&V)"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "رەڭلەر"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "رەڭلەر"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 msgid "Show multiple bonds?"
@@ -1770,9 +1803,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:, ,Launchpad Contributions:,Avogadro Team,Gheyret T."
-"Kenji,Sahran, ,Launchpad Contributions:,Avogadro Team,Gheyret T.Kenji,"
-"Sahran, ,Launchpad Contributions:,Avogadro Team,Gheyret T.Kenji,Sahran"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3136,10 +3166,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "كۆرۈنۈش(&V)"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6185,9 +6211,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "دەۋرىي"
 
-#~ msgid "Colors"
-#~ msgstr "رەڭلەر"
-
 #~ msgid "Width:"
 #~ msgstr "كەڭلىك:"
 
@@ -6339,9 +6362,6 @@ msgstr ""
 
 #~ msgid "&Close"
 #~ msgstr "ياپ(&C)"
-
-#~ msgid "Set Color..."
-#~ msgstr "رەڭ بەلگىلە…"
 
 #~ msgid "Font:"
 #~ msgstr "خەت نۇسخا:"

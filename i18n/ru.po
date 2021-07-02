@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2020-11-29 09:28+0000\n"
 "Last-Translator: Artem <KovalevArtem.ru@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
@@ -1479,6 +1479,40 @@ msgstr "Успешно"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Другой цвет"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Номера атомов"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Элемент"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Вид"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Цвета"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Цвета"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
@@ -1793,31 +1827,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Alexei Klimenko,Andrey Smolenkov,Konstantin "
-"Tokarev,Koptev Oleg,Nick Gorbunov,Nkolay Parukhin,Petr E. Antonov,Vasily "
-"Astanin,Vladimir Kurg,dn2010, ,Launchpad Contributions:,Alexei Klimenko,"
-"Andrey Smolenkov,Konstantin Tokarev,Koptev Oleg,Nick Gorbunov,Nkolay "
-"Parukhin,Petr E. Antonov,Vasily Astanin,Vladimir Kurg,dn2010, ,Launchpad "
-"Contributions:,Konstantin Tokarev, ,Launchpad Contributions:,Konstantin "
-"Tokarev,Vasily Astanin, ,Launchpad Contributions:,Konstantin Tokarev,Nkolay "
-"Parukhin,Solodukhin D.,Vasily Astanin,dn2010, ,Launchpad Contributions:,"
-"Konstantin Tokarev,Nkolay Parukhin,Oleg,Solodukhin D.,Vasily Astanin,"
-"dn2010, ,Launchpad Contributions:,Avogadro Team,Konstantin Tokarev,Nkolay "
-"Parukhin,Oleg,Solodukhin D.,Vasily Astanin,dn2010, ,Launchpad Contributions:,"
-"Avogadro Team,Konstantin Tokarev,Nkolay Parukhin,Oleg,Solodukhin D.,Vasily "
-"Astanin,dn2010, ,Launchpad Contributions:,Avogadro Team,Konstantin Tokarev,"
-"Nkolay Parukhin,Oleg,Solodukhin D.,Vasily Astanin,dn2010, ,Launchpad "
-"Contributions:,Avogadro Team,Konstantin Tokarev,Nkolay Parukhin,Oleg,"
-"Solodukhin D.,Vasily Astanin,Wladimir Rossinski,dn2010, ,Launchpad "
-"Contributions:,Avogadro Team,Konstantin Tokarev,Nkolay Parukhin,Oleg,"
-"Solodukhin D.,Vasily Astanin,Wladimir Rossinski,dn2010, ,Launchpad "
-"Contributions:,Auduf,Avogadro Team,Konstantin Tokarev,ManDrive,Nkolay "
-"Parukhin,Oleg,Solodukhin D.,Vasily Astanin,Wladimir Rossinski,Yuri Kozlov,"
-"dn2010, ,Launchpad Contributions:,Auduf,Avogadro Team,Konstantin Tokarev,"
-"ManDrive,Nkolay Parukhin,Oleg,Solodukhin D.,Vasily Astanin,Wladimir "
-"Rossinski,Yuri Kozlov,dn2010, ,Launchpad Contributions:,Auduf,Avogadro Team,"
-"Konstantin Tokarev,ManDrive,Nkolay Parukhin,Oleg,Solodukhin D.,Vasily "
-"Astanin,Wladimir Rossinski,Yuri Kozlov,dn2010"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3219,10 +3228,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Вид"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6323,9 +6328,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "Другой цвет:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Другой цвет"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Настроить цвета объектов"
 
@@ -7966,9 +7968,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "Петля"
 
-#~ msgid "Colors"
-#~ msgstr "Цвета"
-
 #~ msgid "Dipole:"
 #~ msgstr "Диполь:"
 
@@ -8200,9 +8199,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "Двугранный угол"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Номера атомов"
 
 #~ msgid "Add"
 #~ msgstr "Добавить"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2016-06-29 05:59+0000\n"
 "Last-Translator: fri <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -1481,6 +1481,40 @@ msgstr "Úspěch!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Vlastní barva"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Atomové indexy"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Prvek"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Zobrazit"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Barvy"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Barvy"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
@@ -1795,22 +1829,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Vaclav Rehak,Vojtěch Trefný, ,Launchpad "
-"Contributions:,Vaclav Rehak,Vojtěch Trefný,milboy, ,Launchpad Contributions:,"
-"Avogadro Team,fri, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,"
-"fri, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Roman Horník,"
-"fri, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Roman Horník,"
-"fri, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Roman Horník,"
-"fri, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Roman Horník,"
-"fri, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Roman Horník,"
-"fri, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Roman Horník,"
-"fri, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Roman Horník,"
-"fri, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Roman Horník,"
-"Zbyněk Schwarz,fri, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,"
-"Pepa,Roman Horník,Zbyněk Schwarz,Zdeněk Chalupský,fri, ,Launchpad "
-"Contributions:,Avogadro Team,Geoff Hutchison,Pepa,Roman Horník,Zbyněk "
-"Schwarz,Zdeněk Chalupský,fri, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Martin Slavík,Pepa,Roman Horník,Zbyněk Schwarz,Zdeněk Chalupský,fri"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3216,10 +3234,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Zobrazit"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6342,9 +6356,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "Vlastní barva:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Vlastní barva"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Nastavit vlastní barvy předmětů"
 
@@ -8519,9 +8530,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "Smyčka"
 
-#~ msgid "Colors"
-#~ msgstr "Barvy"
-
 #~ msgid "Dipole:"
 #~ msgstr "Dipól:"
 
@@ -8796,9 +8804,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "Úhel zkroucení"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Atomové indexy"
 
 #~ msgid "Add"
 #~ msgstr "Přidat"

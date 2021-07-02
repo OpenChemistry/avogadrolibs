@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-28 07:55+0900\n"
+"POT-Creation-Date: 2021-07-02 05:24+0900\n"
 "PO-Revision-Date: 2016-06-10 06:31+0000\n"
 "Last-Translator: Miguel de Dios <tres.14159@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -1479,6 +1479,40 @@ msgstr "¡Éxito!"
 msgid "Input file written to '%1'"
 msgstr ""
 
+#: qtplugins/applycolors/applycolors.cpp:23
+#, fuzzy
+msgid "By Custom Color..."
+msgstr "Color personalizado"
+
+#: qtplugins/applycolors/applycolors.cpp:27
+#, fuzzy
+msgid "By Atomic Index"
+msgstr "Índices Atómicos"
+
+#: qtplugins/applycolors/applycolors.cpp:31
+#, fuzzy
+msgid "By Element"
+msgstr "Elemento"
+
+#: qtplugins/applycolors/applycolors.cpp:47
+msgid "Apply color schemes to atoms and residues."
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/resetview/resetview.cpp:54
+msgid "&View"
+msgstr "&Ver"
+
+#: qtplugins/applycolors/applycolors.cpp:57
+#, fuzzy
+msgid "Color Atoms"
+msgstr "Colores"
+
+#: qtplugins/applycolors/applycolors.h:27
+#, fuzzy
+msgid "ApplyColors"
+msgstr "Colores"
+
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
@@ -1793,70 +1827,6 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
 msgstr ""
-",Launchpad Contributions:,Andres Montejo Martinez,DiegoJ,Edgardo Fredz,"
-"Enterhase,Feder Sáiz,Federico Vera,Gabriel Ruiz,Geoff Hutchison,Gothmog,"
-"Javier García Díaz,Luis J. Claros,Pablo Catarecha,Rogelio Castillo A.,"
-"cocoloco, ,Launchpad Contributions:,Andres Montejo Martinez,DiegoJ,Edgardo "
-"Fredz,Enterhase,Feder Sáiz,Federico Vera,Gabriel Ruiz,Geoff Hutchison,"
-"Gothmog,Javier García Díaz,Luis J. Claros,Pablo Catarecha,Rogelio Castillo "
-"A.,cocoloco, ,Launchpad Contributions:,Avogadro Team,niniocompu, ,Launchpad "
-"Contributions:,Alejandro Del Rincón,Angel Herráez,Ariel Cabral,Avogadro Team,"
-"DiegoJ,DiegoSuarez uy,Edgardo Fredz,FJModrego,Feder Sáiz,Francisco J. Aviles "
-"Noreña,Geoff Hutchison,Mauro de Carvalho,Nicolás M. Zahlut,Victor Herrero,"
-"memaljo,niniocompu, ,Launchpad Contributions:,Alejandro Del Rincón,Angel "
-"Herráez,Ariel Cabral,Avogadro Team,Daniel Ferreira,DiegoJ,DiegoSuarez uy,"
-"Edgardo Fredz,FJModrego,Feder Sáiz,Francisco J. Aviles Noreña,Geoff "
-"Hutchison,Mauro de Carvalho,Nicolás M. Zahlut,Victor Herrero,memaljo,"
-"niniocompu, ,Launchpad Contributions:,Alejandro Del Rincón,Angel Herráez,"
-"Ariel Cabral,Avogadro Team,Daniel Ferreira,DiegoJ,DiegoSuarez uy,Edgardo "
-"Fredz,FJModrego,Feder Sáiz,Francisco J. Aviles Noreña,Geoff Hutchison,Mauro "
-"de Carvalho,Nicolás M. Zahlut,Victor Herrero,memaljo,niniocompu, ,Launchpad "
-"Contributions:,Alejandro Del Rincón,Angel Herráez,Ariel Cabral,Avogadro Team,"
-"Daniel Ferreira,DiegoJ,DiegoSuarez uy,Edgardo Fredz,FJModrego,Feder Sáiz,"
-"Francisco J. Aviles Noreña,Geoff Hutchison,Mauro de Carvalho,Nicolás M. "
-"Zahlut,Victor Herrero,memaljo,niniocompu, ,Launchpad Contributions:,"
-"Alejandro Del Rincón,Angel Herráez,Ariel Cabral,Avogadro Team,Daniel "
-"Ferreira,DiegoJ,DiegoSuarez uy,Edgardo Fredz,FJModrego,Feder Sáiz,Francisco "
-"J. Aviles Noreña,Geoff Hutchison,JoseRoberto,Mauro de Carvalho,Nicolás M. "
-"Zahlut,Victor Herrero,memaljo,niniocompu, ,Launchpad Contributions:,"
-"Alejandro Del Rincón,Angel Herráez,Ariel Cabral,Avogadro Team,Daniel "
-"Ferreira,DiegoJ,DiegoSuarez uy,Edgardo Fredz,FJModrego,Feder Sáiz,Francisco "
-"J. Aviles Noreña,Geoff Hutchison,JoseRoberto,Mauro de Carvalho,Monkey,"
-"Nicolás M. Zahlut,Victor Herrero,memaljo,niniocompu, ,Launchpad "
-"Contributions:,Alejandro Del Rincón,Angel Herráez,Ariel Cabral,Avogadro Team,"
-"Daniel Ferreira,DiegoJ,DiegoSuarez uy,Edgardo Fredz,FJModrego,Feder Sáiz,"
-"Francisco J. Aviles Noreña,Geoff Hutchison,JoseRoberto,Mauro de Carvalho,"
-"Monkey,Nicolás M. Zahlut,Victor Herrero,memaljo,niniocompu, ,Launchpad "
-"Contributions:,Alejandro Del Rincón,Angel Herráez,Ariel Cabral,Avogadro Team,"
-"Daniel Ferreira,DiegoJ,DiegoSuarez uy,Edgardo Fredz,FJModrego,Feder Sáiz,"
-"Francisco J. Aviles Noreña,Geoff Hutchison,JoseRoberto,Mauro de Carvalho,"
-"Maximiliano,Miguel Valdiri Badillo,Monkey,Nicolás M. Zahlut,Victor Herrero,"
-"memaljo,niniocompu, ,Launchpad Contributions:,Alejandro Del Rincón,Angel "
-"Herráez,Ariel Cabral,Avogadro Team,Daniel Ferreira,DiegoJ,DiegoSuarez uy,"
-"Edgardo Fredz,FJModrego,Feder Sáiz,Fitoschido,Francisco J. Aviles Noreña,"
-"Geoff Hutchison,JoseRoberto,Lu,Mauro de Carvalho,Maximiliano,Miguel Valdiri "
-"Badillo,Monkey,Nicolás M. Zahlut,Victor Herrero,memaljo,niniocompu, ,"
-"Launchpad Contributions:,Adolfo Jayme,Alejandro Del Rincón,Alejandro Moulia "
-"Cap Saint Jean,Angel Herráez,Ariel Cabral,Avogadro Team,Daniel Ferreira,"
-"DiegoJ,DiegoSuarez uy,Dj Dracaufeu,Edgardo Fredz,Eduardo Alberto Calvo,"
-"Eduardo Echeverria,FJModrego,Feder Sáiz,Francisco J. Aviles Noreña,Geoff "
-"Hutchison,Gróver Adán Tapia Domínguez,Jellby,Jose Gutierrez,JoseRoberto,"
-"LinuxNerdo,Lu,Maximiliano,Miguel de Dios,Monkey,Nicolás M. Zahlut,Pablo de "
-"Castro,Paco Molinero,Rogelio Meza Torres,Victor Herrero,memaljo,niniocompu, ,"
-"Launchpad Contributions:,Adolfo Jayme,Alejandro Del Rincón,Alejandro Moulia "
-"Cap Saint Jean,Angel Herráez,Ariel Cabral,Avogadro Team,Daniel Ferreira,"
-"DiegoJ,DiegoSuarez uy,Dj Dracaufeu,Edgardo Fredz,Eduardo Alberto Calvo,"
-"Eduardo Echeverria,FJModrego,Feder Sáiz,Francisco J. Aviles Noreña,Geoff "
-"Hutchison,Gróver Adán Tapia Domínguez,Jellby,Jose Gutierrez,JoseRoberto,"
-"LinuxNerdo,Lu,Maximiliano,Miguel de Dios,Monkey,Nicolás M. Zahlut,Pablo de "
-"Castro,Paco Molinero,Rogelio Meza Torres,Victor Herrero,memaljo,niniocompu, ,"
-"Launchpad Contributions:,Adolfo Jayme,Alejandro Del Rincón,Alejandro Moulia "
-"Cap Saint Jean,Angel Herráez,Ariel Cabral,Avogadro Team,Daniel,DiegoJ,"
-"DiegoSuarez uy,Dj Dracaufeu,Edgardo Fredz,Eduardo Alberto Calvo,Eduardo "
-"Echeverria,FJModrego,Feder Sáiz,Francisco J. Aviles Noreña,Geoff Hutchison,"
-"Gróver Adán Tapia Domínguez,Jellby,Jose Gutierrez,JoseRoberto,LinuxNerdo,Lu,"
-"Maximiliano,Miguel de Dios,Monkey,Nicolás M. Zahlut,Pablo de Castro,Paco "
-"Molinero,Rogelio Meza Torres,Victor Herrero,memaljo,niniocompu"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -3262,10 +3232,6 @@ msgstr ""
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr ""
-
-#: qtplugins/resetview/resetview.cpp:54
-msgid "&View"
-msgstr "&Ver"
 
 #: qtplugins/resetview/resetview.h:37
 #, fuzzy
@@ -6455,9 +6421,6 @@ msgstr ""
 #~ msgid "Custom Color:"
 #~ msgstr "Color personalizado:"
 
-#~ msgid "Custom Color"
-#~ msgstr "Color personalizado"
-
 #~ msgid "Set custom colors for objects"
 #~ msgstr "Establecer colores personalizados para los objetos"
 
@@ -8513,9 +8476,6 @@ msgstr ""
 #~ msgid "Loop"
 #~ msgstr "Ciclo"
 
-#~ msgid "Colors"
-#~ msgstr "Colores"
-
 #~ msgid "Dipole:"
 #~ msgstr "Dipolo:"
 
@@ -8723,9 +8683,6 @@ msgstr ""
 
 #~ msgid "Torsion angle"
 #~ msgstr "Ángulo de Torsión"
-
-#~ msgid "Atom Indices"
-#~ msgstr "Índices Atómicos"
 
 #~ msgid "Add"
 #~ msgstr "Añadir"
