@@ -34,10 +34,10 @@ using Core::CrystalTools;
 using Core::Cube;
 using Core::Elements;
 using Core::GaussianSet;
-using Core::lexicalCast;
 using Core::Molecule;
-using Core::split;
 using Core::Variant;
+using Core::lexicalCast;
+using Core::split;
 
 CjsonFormat::CjsonFormat() = default;
 
@@ -154,6 +154,15 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     }
     // Make sure the first step is active once we are done loading the sets.
     molecule.setCoordinate3d(0);
+  }
+
+  // Read in colors if they are present.
+  json colors = atoms["colors"];
+  if (colors.is_array() && colors.size() == 3 * atomCount) {
+    for (Index i = 0; i < atomCount; ++i) {
+      Vector3ub color(colors[3 * i], colors[3 * i + 1], colors[3 * i + 2]);
+      molecule.setColor(i, color);
+    }
   }
 
   // Selection is optional, but if present should be loaded.
@@ -474,7 +483,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
       auto atomIndices = gaussian->atomIndices();
       json shellToAtomMap;
-      std::cout << "atomIndices " << atomIndices.size() << std::endl;
+      // std::cout << "atomIndices " << atomIndices.size() << std::endl;
       for (size_t i = 0; i < atomIndices.size(); ++i)
         shellToAtomMap.push_back(atomIndices[i]);
       basis["shellToAtomMap"] = shellToAtomMap;
@@ -576,12 +585,22 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
   if (molecule.atomCount()) {
     json elements;
     json selected;
+    json colors;
+
+    Vector3ub color;
     for (Index i = 0; i < molecule.atomCount(); ++i) {
       elements.push_back(molecule.atom(i).atomicNumber());
       selected.push_back(molecule.atomSelected(i));
+
+      color = molecule.color(i);
+      colors.push_back(color.x());
+      colors.push_back(color.y());
+      colors.push_back(color.z());
     }
     root["atoms"]["elements"]["number"] = elements;
-    root["atoms"]["selected"] = selected;
+    if (!molecule.isSelectionEmpty())
+      root["atoms"]["selected"] = selected;
+    root["atoms"]["colors"] = colors;
 
     // 3d positions:
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
