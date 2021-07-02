@@ -17,11 +17,14 @@
 #include "molecule.h"
 #include "rwmolecule.h"
 
+#include <iostream>
+
 namespace Avogadro {
 namespace QtGui {
 
 Molecule::Molecule(QObject* parent_)
-  : QObject(parent_), m_undoMolecule(new RWMolecule(*this, this))
+  : QObject(parent_),
+    m_undoMolecule(new RWMolecule(*this, this)), Core::Molecule()
 {
   m_undoMolecule->setInteractive(true);
 }
@@ -107,48 +110,18 @@ bool Molecule::removeAtom(Index index)
   Index uniqueId = findAtomUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
-  m_graphDirty = true;
   // Unique ID of an atom that was removed:
   m_atomUniqueIds[uniqueId] = MaxIndex;
+  Index newSize = static_cast<Index>(atomCount() - 1);
 
   // Before removing the atom we must first remove any bonds to it.
-  Core::Array<BondType> atomBonds = Core::Molecule::bonds(atom(index));
-  while (atomBonds.size()) {
-    removeBond(atomBonds.back());
-    atomBonds = Core::Molecule::bonds(atom(index));
-  }
+  Core::Molecule::removeAtom(index);
 
-  Index newSize = static_cast<Index>(m_atomicNumbers.size() - 1);
   if (index != newSize) {
-    // We need to move the last atom to this position, and update its unique ID.
-    m_atomicNumbers[index] = m_atomicNumbers.back();
-    if (m_positions2d.size() == m_atomicNumbers.size())
-      m_positions2d[index] = m_positions2d.back();
-    if (m_positions3d.size() == m_atomicNumbers.size())
-      m_positions3d[index] = m_positions3d.back();
-
-    // Find any bonds to the moved atom and update their index.
-    atomBonds = Core::Molecule::bonds(atom(newSize));
-    foreach (const BondType& currentBond, atomBonds) {
-      std::pair<Index, Index> pair = m_bondPairs[currentBond.index()];
-      if (pair.first == newSize)
-        pair.first = index;
-      else if (pair.second == newSize)
-        pair.second = index;
-      m_bondPairs[currentBond.index()] = pair;
-    }
-
     Index movedAtomUID = findAtomUniqueId(newSize);
     assert(movedAtomUID != MaxIndex);
     m_atomUniqueIds[movedAtomUID] = index;
   }
-  // Resize the arrays for the smaller molecule.
-  if (m_positions2d.size() == m_atomicNumbers.size())
-    m_positions2d.resize(newSize);
-  if (m_positions3d.size() == m_atomicNumbers.size())
-    m_positions3d.resize(newSize);
-  m_atomicNumbers.resize(newSize);
-
   return true;
 }
 
@@ -217,25 +190,15 @@ bool Molecule::removeBond(Index index)
   Index uniqueId = findBondUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
-  m_graphDirty = true;
-
   m_bondUniqueIds[uniqueId] = MaxIndex; // Unique ID of a bond that was removed.
 
-  Index newSize = static_cast<Index>(m_bondOrders.size() - 1);
+  Index newSize = static_cast<Index>(bondCount() - 1);
   if (index != newSize) {
-    // We need to move the last bond to this position, and update its unique ID.
-    m_bondOrders[index] = m_bondOrders.back();
-    m_bondPairs[index] = m_bondPairs.back();
-
     Index movedBondUID = findBondUniqueId(newSize);
     assert(movedBondUID != MaxIndex);
     m_bondUniqueIds[movedBondUID] = index;
   }
-
-  // Resize the arrays for the smaller molecule.
-  m_bondOrders.resize(newSize);
-  m_bondPairs.resize(newSize);
-
+  Core::Molecule::removeBond(index);
   return true;
 }
 

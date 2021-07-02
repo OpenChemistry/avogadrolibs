@@ -36,6 +36,7 @@ set(HEADERS
   matrix.h
   mesh.h
   molecule.h
+  moleculegraph.h
   mutex.h
   nameatomtyper.h
   residue.h
@@ -68,6 +69,7 @@ set(SOURCES
   mesh.cpp
   mdlvalence_p.h
   molecule.cpp
+  moleculegraph.cpp
   mutex.cpp
   nameatomtyper.cpp
   residue.cpp

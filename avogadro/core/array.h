@@ -44,18 +44,15 @@ public:
   explicit ArrayRefContainer(const size_t n,
                              const ValueType& value = ValueType())
     : m_ref(1), data(n, value)
-  {
-  }
+  {}
 
   ArrayRefContainer(const ArrayRefContainer& other) : m_ref(1), data(other.data)
-  {
-  }
+  {}
 
   template <typename InputIterator>
   ArrayRefContainer(InputIterator first, InputIterator last)
     : m_ref(1), data(first, last)
-  {
-  }
+  {}
 
   // Increment the reference count.
   void reref() { ++m_ref; }
@@ -77,7 +74,7 @@ public:
   std::vector<T> data;
 };
 
-} // End internal namespace
+} // namespace internal
 
 /**
  * @class Array array.h <avogadro/core/array.h>
@@ -121,13 +118,11 @@ public:
 
   explicit Array(const size_t n, const ValueType& value = ValueType())
     : d(new Container(n, value))
-  {
-  }
+  {}
 
   template <typename InputIterator>
   Array(InputIterator first, InputIterator last) : d(new Container(first, last))
-  {
-  }
+  {}
 
   /** Copy constructor, note the copy made of the internal data of other. */
   Array(const Array& other)
@@ -336,6 +331,17 @@ public:
     swap(d, other.d);
   }
 
+  void swapAndPop(Index index)
+  {
+    if (index >= d->data.size()) {
+      return;
+    }
+    if (index != d->data.size() - 1) {
+      d->data[index] = d->data.back();
+    }
+    d->data.pop_back();
+  }
+
 protected:
   Container* d;
 };
@@ -410,7 +416,7 @@ inline void swap(Array<T>& lhs, Array<T>& rhs)
   lhs.swap(rhs);
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_ARRAY_H

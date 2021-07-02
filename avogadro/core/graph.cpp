@@ -20,6 +20,9 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
+#include <set>
+#include <stack>
 
 namespace Avogadro {
 namespace Core {
@@ -63,7 +66,7 @@ void Graph::clear()
 
 size_t Graph::addVertex()
 {
-  m_connectedGroup.addElement(size() + 1);
+  m_connectedGroup.addElement(size());
   setSize(size() + 1);
   return size() - 1;
 }
@@ -102,6 +105,38 @@ void Graph::addEdge(size_t a, size_t b)
   neighborsB.push_back(a);
 }
 
+std::set<size_t> Graph::checkConectivity(size_t a, size_t b) const
+{
+  if (a == b) {
+    return std::set<size_t>();
+  }
+  std::set<size_t> visited;
+  bool connected = false;
+  std::stack<size_t> nextNeighbors;
+  visited.insert(a);
+  nextNeighbors.push(a);
+
+  while (!nextNeighbors.empty()) {
+    size_t visiting = nextNeighbors.top();
+    visited.insert(visiting);
+    nextNeighbors.pop();
+    const std::vector<size_t>& neighbors = m_adjacencyList[visiting];
+    for (const auto& n : neighbors) {
+      if (visiting == b) {
+        connected = true;
+      }
+      if (visited.find(n) == visited.end()) {
+        visited.insert(n);
+        nextNeighbors.push(n);
+      }
+    }
+  }
+  if (connected) {
+    return std::set<size_t>();
+  }
+  return visited;
+}
+
 void Graph::removeEdge(size_t a, size_t b)
 {
   assert(a < size());
@@ -110,14 +145,17 @@ void Graph::removeEdge(size_t a, size_t b)
   std::vector<size_t>& neighborsA = m_adjacencyList[a];
   std::vector<size_t>& neighborsB = m_adjacencyList[b];
 
-  m_connectedGroup.removeConnection(a, neighborsA, b, neighborsB);
-
   std::vector<size_t>::iterator iter =
     std::find(neighborsA.begin(), neighborsA.end(), b);
 
   if (iter != neighborsA.end()) {
     neighborsA.erase(iter);
     neighborsB.erase(std::find(neighborsB.begin(), neighborsB.end(), a));
+  }
+
+  std::set<size_t> connected = checkConectivity(a, b);
+  if (!connected.empty()) {
+    m_connectedGroup.removeConnection(a, b, connected);
   }
 }
 

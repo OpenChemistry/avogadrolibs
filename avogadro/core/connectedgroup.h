@@ -52,8 +52,7 @@ public:
 
   /** Checks if @p a and @p b whould be still connected and separate them if
    * they don't */
-  void removeConnection(size_t a, std::vector<size_t> a_neighbors, size_t b,
-                        std::vector<size_t> b_neighbors);
+  void removeConnection(size_t a, size_t b, const std::set<size_t>& neighbors);
 
   /** Removes all elements and groups. */
   void clear();
@@ -73,6 +72,8 @@ private:
 
   void resetToSize(size_t n);
   void mergeGroups(size_t a, size_t b);
+  void cleanConnection(size_t newGroup, size_t oldGroup,
+                       const std::vector<size_t>& neighbors);
 };
 
 } // namespace Core

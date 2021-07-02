@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 
 void checkRemove(std::vector<std::set<size_t>>& vector)
 {
@@ -29,10 +30,12 @@ ConnectedGroup::~ConnectedGroup() {}
 
 void ConnectedGroup::addElement(size_t index)
 {
-  m_elementToGroup[index] = m_groupToElement.size();
-  std::set<size_t> group;
-  group.insert(index);
-  m_groupToElement.push_back(group);
+  if (m_elementToGroup.find(index) == m_elementToGroup.end()) {
+    m_elementToGroup[index] = m_groupToElement.size();
+    std::set<size_t> group;
+    group.insert(index);
+    m_groupToElement.push_back(group);
+  }
 }
 
 void ConnectedGroup::addElements(size_t n)
@@ -79,51 +82,27 @@ void ConnectedGroup::removeConnection(size_t index)
 {
   assert(m_elementToGroup.find(index) != m_elementToGroup.end());
   size_t group = m_elementToGroup[index];
-  if (m_groupToElement[group].size() > 1) {
-    m_groupToElement[group].erase(index);
-    checkRemove(m_groupToElement);
-    addElement(index);
-  }
+  m_elementToGroup.erase(index);
+  m_groupToElement[group].erase(index);
+  addElement(index);
+  checkRemove(m_groupToElement);
 }
 
-// check if the group has more than 1 element (the removed one)
-bool checkConectivity(const std::set<size_t>& group,
-                      std::vector<size_t>& neighbors)
-{
-  std::sort(neighbors.begin(), neighbors.end());
-  std::vector<size_t> intersection;
-  std::set_intersection(neighbors.begin(), neighbors.end(), group.begin(),
-                        group.end(), std::back_inserter(intersection));
-  return intersection.size() > 1;
-}
-
-void ConnectedGroup::removeConnection(size_t a, std::vector<size_t> a_neighbors,
-                                      size_t b, std::vector<size_t> b_neighbors)
+void ConnectedGroup::removeConnection(size_t a, size_t b,
+                                      const std::set<size_t>& neighbors)
 {
   assert(m_elementToGroup.find(a) != m_elementToGroup.end());
   assert(m_elementToGroup.find(b) != m_elementToGroup.end());
   assert(m_elementToGroup[a] == m_elementToGroup[b]);
-
-  bool stillConected = false;
-  if (a_neighbors.size() < b_neighbors.size()) {
-    stillConected =
-      checkConectivity(m_groupToElement[m_elementToGroup[a]], b_neighbors);
-  } else {
-    stillConected =
-      checkConectivity(m_groupToElement[m_elementToGroup[b]], a_neighbors);
+  removeConnection(a);
+  size_t aGroup = m_elementToGroup[a];
+  size_t bGroup = m_elementToGroup[b];
+  for (const auto& n : neighbors) {
+    m_groupToElement[bGroup].erase(n);
+    m_groupToElement[aGroup].insert(n);
+    m_elementToGroup[n] = aGroup;
   }
-
-  if (!stillConected) {
-    removeConnection(a);
-    size_t group = m_elementToGroup[a];
-    for (const auto& n : a_neighbors) {
-      size_t oldGroup = m_elementToGroup[n];
-      m_groupToElement[oldGroup].erase(n);
-      checkRemove(m_groupToElement);
-      m_groupToElement[group].insert(n);
-      m_elementToGroup[n] = group;
-    }
-  }
+  checkRemove(m_groupToElement);
 }
 
 void ConnectedGroup::clear()
