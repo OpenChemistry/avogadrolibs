@@ -642,6 +642,7 @@ public:
   Residue& residue(Index index);
 
   Array<Residue>& residues() { return m_residues;}
+  const Array<Residue>& residues() const { return m_residues;}
 
 protected:
   mutable Graph m_graph;     // A transformation of the molecule to a graph.

@@ -62,13 +62,14 @@ public:
   /** \return a vector containing all atoms added in the residue */
   std::vector<Atom> residueAtoms();
 
+  /** \return the atom map for the residue */
+  AtomNameMap& atomNameMap() { return m_atomNameMap; }
+
   /** Sets bonds to atoms in the residue based on data from residuedata header
    */
   void resolveResidueBonds(Molecule& mol);
 
-  /**
-   * \return the atom with the name specified (e.g., "CA")
-   */
+  /** \return the atom with the name specified (e.g., "CA") */
   Atom getAtomByName(std::string name);
 
   /**

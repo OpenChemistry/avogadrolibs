@@ -10,6 +10,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/residue.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
@@ -35,6 +36,7 @@ using Core::Cube;
 using Core::Elements;
 using Core::GaussianSet;
 using Core::Molecule;
+using Core::Residue;
 using Core::Variant;
 using Core::lexicalCast;
 using Core::split;
@@ -659,6 +661,34 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     }
     root["bonds"]["connections"]["index"] = connections;
     root["bonds"]["order"] = order;
+  }
+
+  // Create and populate any residue arrays
+  if (molecule.residues().size() > 0) {
+    json residues; // array of objects
+    for (auto residue : molecule.residues()) {
+      json entry;
+      entry["name"] = residue.residueName();
+      entry["id"] = residue.residueId();
+      entry["chainId"] = residue.chainId();
+      if (residue.isHeterogen())
+        entry["hetero"] = true;
+
+      json color;
+      color.push_back(residue.color()[0]);
+      color.push_back(residue.color()[1]);
+      color.push_back(residue.color()[2]);
+      entry["color"] = color;
+
+      json atoms;
+      for (auto item : residue.atomNameMap()) {
+        // dictionary between names and atom Id
+        atoms[item.first] = item.second.index();
+      }
+      entry["atoms"] = atoms;
+      residues.push_back(entry);
+    }
+    root["residues"] = residues;
   }
 
   // If there is vibrational data write this out too.
