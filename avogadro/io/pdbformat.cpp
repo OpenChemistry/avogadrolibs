@@ -8,6 +8,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
@@ -23,6 +24,7 @@ using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
+using Avogadro::Core::UnitCell;
 
 using std::getline;
 using std::istringstream;
@@ -58,6 +60,20 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       }
     }
 
+    // e.g.   CRYST1    4.912    4.912    6.696  90.00  90.00 120.00 P1          1
+    // https://www.wwpdb.org/documentation/file-format-content/format33/sect8.html
+    else if (startsWith(buffer, "CRYST1")) {
+      Real a = lexicalCast<Real>(buffer.substr(6, 9), ok);
+      Real b = lexicalCast<Real>(buffer.substr(15, 9), ok);
+      Real c = lexicalCast<Real>(buffer.substr(24, 9), ok);
+      Real alpha = lexicalCast<Real>(buffer.substr(33, 7), ok);
+      Real beta = lexicalCast<Real>(buffer.substr(40, 7), ok);
+      Real gamma = lexicalCast<Real>(buffer.substr(47, 8), ok);
+
+      Core::UnitCell* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+      mol.setUnitCell(cell);
+    }
+
     else if (startsWith(buffer, "ATOM") || startsWith(buffer, "HETATM")) {
       // First we initialize the residue instance
       size_t residueId = lexicalCast<size_t>(buffer.substr(22, 4), ok);
@@ -78,9 +94,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 
         char chainId = lexicalCast<char>(buffer.substr(21, 1), ok);
         if (!ok) {
-          appendError("Failed to parse chain identifier: " +
-                      buffer.substr(21, 1));
-          return false;
+          chainId = 'A'; // it's a non-standard "PDB"-like file
         }
 
         r = &mol.addResidue(residueName, currentResidueId, chainId);
