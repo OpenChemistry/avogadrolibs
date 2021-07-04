@@ -193,6 +193,35 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     }
   }
 
+  // residues are optionala, but should be loaded
+  json residues = jsonRoot["residues"];
+  if (residues.is_array()) {
+    for (unsigned int i = 0; i < residues.size(); ++i) {
+      json residue = residues[i];
+      if (!residue.is_object())
+        continue; // malformed
+
+      auto name = residue["name"].get<std::string>();
+      auto id = static_cast<Index>(residue["id"]);
+      auto chainId = residue["chainId"].get<char>();
+      auto newResidue = molecule.addResidue(name, id, chainId);
+
+      json hetero = residue["hetero"];
+      if (hetero == true)
+        newResidue.setHeterogen(true);
+
+      json atoms = residue["atoms"];
+      if (atoms.is_object()) {
+        for (auto& item : atoms.items()) {
+          auto atom = molecule.atom(item.value());
+          newResidue.addResidueAtom(item.key(), atom);
+        }
+      }
+
+      // todo colors
+    }
+  }
+
   json unitCell = jsonRoot["unitCell"];
   if (!unitCell.is_object())
     unitCell = jsonRoot["unit cell"];

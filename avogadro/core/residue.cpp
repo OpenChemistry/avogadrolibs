@@ -45,7 +45,7 @@ Residue& Residue::operator=(Residue other)
 
 Residue::~Residue() {}
 
-void Residue::addResidueAtom(std::string& name, Atom& atom)
+void Residue::addResidueAtom(const std::string& name, const Atom& atom)
 {
   m_atomNameMap.insert(std::pair<std::string, Atom>(name, atom));
 }
@@ -60,7 +60,7 @@ std::vector<Atom> Residue::residueAtoms()
   return res;
 }
 
-Atom Residue::getAtomByName(std::string name)
+Atom Residue::getAtomByName(const std::string name)
 {
   Atom empty;
   auto search = m_atomNameMap.find(name);
@@ -95,7 +95,7 @@ void Residue::resolveResidueBonds(Molecule& mol)
   }
 }
 
-int Residue::getAtomicNumber(std::string name)
+int Residue::getAtomicNumber(const std::string name)
 {
   auto search = m_atomNameMap.find(name);
   if (search != m_atomNameMap.end()) {

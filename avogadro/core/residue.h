@@ -54,10 +54,10 @@ public:
 
   inline char chainId() { return m_chainId; }
 
-  inline void setChainId(char& id) { m_chainId = id; }
+  inline void setChainId(const char& id) { m_chainId = id; }
 
   /** Adds an atom to the residue class */
-  void addResidueAtom(std::string& name, Atom& atom);
+  void addResidueAtom(const std::string& name, const Atom& atom);
 
   /** \return a vector containing all atoms added in the residue */
   std::vector<Atom> residueAtoms();
@@ -70,12 +70,12 @@ public:
   void resolveResidueBonds(Molecule& mol);
 
   /** \return the atom with the name specified (e.g., "CA") */
-  Atom getAtomByName(std::string name);
+  Atom getAtomByName(const std::string name);
 
   /**
    * \return the atomic number of the atom with the name specified (e.g., "CA" = "C")
    */
-  int getAtomicNumber(std::string name);
+  int getAtomicNumber(const std::string name);
 
   /** Set whether this residue is a "HET" / "HETATOM" ligand
    */
