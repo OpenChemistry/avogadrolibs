@@ -18,24 +18,10 @@ public:
   {}
 
 protected:
-  Array<Index>& atomUniqueIds() { return m_molecule.atomUniqueIds(); }
-  Array<Index>& bondUniqueIds() { return m_molecule.bondUniqueIds(); }
   Array<Vector3>& positions3d() { return m_molecule.atomPositions3d(); }
-  Array<AtomHybridization>& hybridizations()
-  {
-    return m_molecule.hybridizations();
-  }
-  Array<signed char>& formalCharges() { return m_molecule.formalCharges(); }
-  Array<Vector3ub>& colors() { return m_molecule.colors(); }
 
-  Array<Vector3>& forceVectors() { return m_molecule.forceVectors(); }
   RWMolecule& m_mol;
   QtGui::Molecule& m_molecule;
-
-  // ToDo delete this
-  Array<unsigned char>& atomicNumbers() { return m_molecule.atomicNumbers(); }
-  Array<std::pair<Index, Index>>& bondPairs() { return m_molecule.bondPairs(); }
-  Array<unsigned char>& bondOrders() { return m_molecule.bondOrders(); }
 };
 
 namespace {
@@ -72,21 +58,22 @@ class AddAtomCommand : public RWMolecule::UndoCommand
   unsigned char m_atomicNumber;
   bool m_usingPositions;
   Index m_atomId;
-  Index m_uniqueId;
+  Index m_atomUid;
 
 public:
   AddAtomCommand(RWMolecule& m, unsigned char aN, bool usingPositions,
                  Index atomId, Index uid)
     : UndoCommand(m), m_atomicNumber(aN), m_usingPositions(usingPositions),
-      m_atomId(atomId), m_uniqueId(uid)
+      m_atomId(atomId), m_atomUid(uid)
   {}
 
   void redo() override
   {
     assert(m_molecule.atomCount() == m_atomId);
-    m_molecule.addAtom(m_atomicNumber);
     if (m_usingPositions)
-      positions3d().push_back(Vector3::Zero());
+      m_molecule.addAtom(m_atomicNumber, Vector3::Zero());
+    else
+      m_molecule.addAtom(m_atomicNumber);
   }
 
   void undo() override
@@ -104,6 +91,8 @@ class RemoveAtomCommand : public RWMolecule::UndoCommand
   Index m_atomUid;
   unsigned char m_atomicNumber;
   Vector3 m_position3d;
+  Array<std::pair<Index, Index>> m_bonds;
+  Array<unsigned char> m_orders;
 
 public:
   RemoveAtomCommand(RWMolecule& m, Index atomId, Index uid, unsigned char aN,
@@ -114,77 +103,20 @@ public:
 
   void redo() override
   {
-    assert(m_atomUid < atomUniqueIds().size());
-    atomUniqueIds()[m_atomUid] = MaxIndex;
-
-    // Move the last atom to the removed atom's position:
-    Index movedId = m_mol.atomCount() - 1;
-    if (m_atomId != movedId) {
-      atomicNumbers()[m_atomId] = atomicNumbers().back();
-      if (positions3d().size() == atomicNumbers().size())
-        positions3d()[m_atomId] = positions3d().back();
-
-      // Update any bond pairs that have changed:
-      Array<RWMolecule::BondType> atomBonds = m_mol.bonds(movedId);
-      for (Array<RWMolecule::BondType>::const_iterator it = atomBonds.begin(),
-                                                       itEnd = atomBonds.end();
-           it != itEnd; ++it) {
-        std::pair<Index, Index>& bondPair = bondPairs()[it->index()];
-        if (bondPair.first == movedId)
-          bondPair.first = m_atomId;
-        else
-          bondPair.second = m_atomId;
-      }
-
-      // Update the moved atom's uid
-      Index movedUid = m_mol.atomUniqueId(movedId);
-      assert(movedUid != MaxIndex);
-      atomUniqueIds()[movedUid] = m_atomId;
-    }
-
-    // Resize the arrays:
-    if (positions3d().size() == atomicNumbers().size())
-      positions3d().resize(movedId, Vector3::Zero());
-    atomicNumbers().resize(movedId, 0);
-    m_molecule.setGraphDirty(true);
+    assert(m_atomId < m_molecule.atomCount());
+    m_bonds = m_molecule.getBonds(m_atomId);
+    m_orders = m_molecule.getOrders(m_atomId);
+    m_molecule.removeAtom(m_atomId);
   }
 
   void undo() override
   {
-    // Append removed atom's info to the end of the arrays:
-    if (positions3d().size() == atomicNumbers().size())
-      positions3d().push_back(m_position3d);
-    atomicNumbers().push_back(m_atomicNumber);
-
+    m_molecule.addAtom(m_atomicNumber, m_position3d);
     // Swap the moved and unremoved atom data if needed
     Index movedId = m_mol.atomCount() - 1;
-    if (m_atomId != movedId) {
-      using std::swap;
-      if (positions3d().size() == atomicNumbers().size())
-        swap(positions3d()[m_atomId], positions3d().back());
-      swap(atomicNumbers()[m_atomId], atomicNumbers().back());
-
-      // Update any bond pairs that have changed:
-      Array<RWMolecule::BondType> atomBonds(m_mol.bonds(m_atomId));
-      for (Array<RWMolecule::BondType>::iterator it = atomBonds.begin(),
-                                                 itEnd = atomBonds.end();
-           it != itEnd; ++it) {
-        std::pair<Index, Index>& bondPair = bondPairs()[it->index()];
-        if (bondPair.first == m_atomId)
-          bondPair.first = movedId;
-        else
-          bondPair.second = movedId;
-      }
-
-      // Update the moved atom's UID
-      Index movedUid = m_mol.atomUniqueId(m_atomId);
-      assert(movedUid != MaxIndex);
-      atomUniqueIds()[movedUid] = movedId;
-    }
-
-    // Update the removed atom's UID
-    atomUniqueIds()[m_atomUid] = m_atomId;
-    m_molecule.setGraphDirty(true);
+    m_molecule.swapAtom(m_atomId, movedId);
+    m_molecule.addBonds(m_bonds, m_orders);
+    m_bonds.clear();
   }
 };
 } // namespace
@@ -203,9 +135,9 @@ public:
       m_newAtomicNumbers(newAtomicNumbers)
   {}
 
-  void redo() override { atomicNumbers() = m_newAtomicNumbers; }
+  void redo() override { m_molecule.setAtomicNumbers(m_newAtomicNumbers); }
 
-  void undo() override { atomicNumbers() = m_oldAtomicNumbers; }
+  void undo() override { m_molecule.setAtomicNumbers(m_oldAtomicNumbers); }
 };
 } // namespace
 
@@ -224,9 +156,15 @@ public:
       m_newAtomicNumber(newAtomicNumber)
   {}
 
-  void redo() override { atomicNumbers()[m_atomId] = m_newAtomicNumber; }
+  void redo() override
+  {
+    m_molecule.setAtomicNumber(m_atomId, m_newAtomicNumber);
+  }
 
-  void undo() override { atomicNumbers()[m_atomId] = m_oldAtomicNumber; }
+  void undo() override
+  {
+    m_molecule.setAtomicNumber(m_atomId, m_oldAtomicNumber);
+  }
 };
 } // namespace
 
@@ -343,9 +281,15 @@ public:
       m_newHybridization(newHybridization)
   {}
 
-  void redo() override { hybridizations()[m_atomId] = m_newHybridization; }
+  void redo() override
+  {
+    m_molecule.setHybridization(m_atomId, m_newHybridization);
+  }
 
-  void undo() override { hybridizations()[m_atomId] = m_oldHybridization; }
+  void undo() override
+  {
+    m_molecule.setHybridization(m_atomId, m_oldHybridization);
+  }
 };
 } // namespace
 
@@ -363,9 +307,9 @@ public:
       m_newCharge(newCharge)
   {}
 
-  void redo() override { formalCharges()[m_atomId] = m_newCharge; }
+  void redo() override { m_molecule.setFormalCharge(m_atomId, m_newCharge); }
 
-  void undo() override { formalCharges()[m_atomId] = m_oldCharge; }
+  void undo() override { m_molecule.setFormalCharge(m_atomId, m_oldCharge); }
 };
 } // namespace
 
@@ -383,9 +327,9 @@ public:
       m_newColor(newColor)
   {}
 
-  void redo() override { colors()[m_atomId] = m_newColor; }
+  void redo() override { m_molecule.colors()[m_atomId] = m_newColor; }
 
-  void undo() override { colors()[m_atomId] = m_oldColor; }
+  void undo() override { m_molecule.colors()[m_atomId] = m_oldColor; }
 };
 } // end namespace
 
@@ -395,14 +339,14 @@ class AddBondCommand : public RWMolecule::UndoCommand
   unsigned char m_bondOrder;
   std::pair<Index, Index> m_bondPair;
   Index m_bondId;
-  Index m_uniqueId;
+  Index m_bondUid;
 
 public:
   AddBondCommand(RWMolecule& m, unsigned char order,
                  const std::pair<Index, Index>& bondPair, Index bondId,
                  Index uid)
     : UndoCommand(m), m_bondOrder(order), m_bondPair(bondPair),
-      m_bondId(bondId), m_uniqueId(uid)
+      m_bondId(bondId), m_bondUid(uid)
   {}
 
   void redo() override
@@ -413,7 +357,7 @@ public:
 
   void undo() override
   {
-    assert(m_molecule.bondCount() == m_bondId + 1);
+    // we know this is the top so just a simple remove
     m_molecule.removeBond(m_bondId);
   }
 };
@@ -448,6 +392,8 @@ public:
   void undo() override
   {
     m_molecule.addBond(m_bondPair.first, m_bondPair.second, m_bondOrder);
+    Index movedId = m_molecule.bondCount() - 1;
+    m_molecule.swapBond(m_bondId, movedId);
   }
 };
 } // namespace
@@ -617,13 +563,13 @@ public:
   void redo() override
   {
     for (size_t i = 0; i < m_atomIds.size(); ++i)
-      forceVectors()[m_atomIds[i]] = m_newForceVectors[i];
+      m_molecule.setForceVector(m_atomIds[i], m_newForceVectors[i]);
   }
 
   void undo() override
   {
     for (size_t i = 0; i < m_atomIds.size(); ++i)
-      forceVectors()[m_atomIds[i]] = m_oldForceVectors[i];
+      m_molecule.setForceVector(m_atomIds[i], m_oldForceVectors[i]);
   }
 
   bool mergeWith(const QUndoCommand* o) override

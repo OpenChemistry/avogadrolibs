@@ -259,6 +259,7 @@ public:
 
   /**  Adds an atom to the molecule. */
   virtual AtomType addAtom(unsigned char atomicNumber);
+  AtomType addAtom(unsigned char atomicNumber, Vector3 position3d);
 
   /**
    * @brief Remove the specified atom from the molecule.
@@ -523,6 +524,9 @@ public:
   Residue& residue(Index index);
 
   Array<Residue>& residues() { return m_residues; }
+
+  void swapBond(Index newIndex, Index oldIndex);
+  void swapAtom(Index newIndex, Index oldIndex);
 
 protected:
   VariantMap m_data;

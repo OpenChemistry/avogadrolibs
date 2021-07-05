@@ -17,10 +17,10 @@
 #include "molecule.h"
 #include "rwmolecule.h"
 
-#include <iostream>
-
 namespace Avogadro {
 namespace QtGui {
+
+using std::swap;
 
 Molecule::Molecule(QObject* parent_)
   : QObject(parent_),
@@ -103,6 +103,12 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Index uniqueId)
   return a;
 }
 
+Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
+{
+  m_atomUniqueIds.push_back(atomCount());
+  return Core::Molecule::addAtom(number, position3d);
+}
+
 bool Molecule::removeAtom(Index index)
 {
   if (index >= atomCount())
@@ -169,6 +175,32 @@ Molecule::BondType Molecule::addBond(Avogadro::Index atomId1,
 {
   m_bondUniqueIds.push_back(bondCount());
   return Core::Molecule::addBond(atomId1, atomId2, order);
+}
+
+void Molecule::addBonds(const Core::Array<std::pair<Index, Index>>& bonds,
+                        const Core::Array<unsigned char>& orders)
+{
+  assert(orders.size() == bonds.size());
+  for (Index i = 0; i < orders.size(); ++i) {
+    addBond(bonds[i].first, bonds[i].second, orders[i]);
+  }
+}
+void Molecule::swapBond(Index a, Index b)
+{
+  Index uniqueA = findBondUniqueId(a);
+  Index uniqueB = findBondUniqueId(b);
+  assert(uniqueA != MaxIndex && uniqueB != MaxIndex);
+  swap(m_bondUniqueIds[uniqueA], m_bondUniqueIds[uniqueB]);
+  Core::Molecule::swapBond(a, b);
+}
+
+void Molecule::swapAtom(Index a, Index b)
+{
+  Index uniqueA = findAtomUniqueId(a);
+  Index uniqueB = findAtomUniqueId(b);
+  assert(uniqueA != MaxIndex && uniqueB != MaxIndex);
+  swap(m_atomUniqueIds[uniqueA], m_atomUniqueIds[uniqueB]);
+  Core::Molecule::swapAtom(a, b);
 }
 
 Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,

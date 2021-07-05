@@ -107,6 +107,21 @@ public:
    */
   std::set<size_t> connectedComponent(size_t index) const;
 
+  /**
+   * Returns a the number of connected groups.
+   */
+  size_t groupCount() const;
+
+  /**
+   * Get the group ID from the element.
+   */
+  size_t getGroup(size_t element) const;
+
+  /**
+   * Get the group size from the element.
+   */
+  size_t getGroupSize(size_t element) const;
+
 private:
   std::set<size_t> checkConectivity(size_t a, size_t b) const;
   std::vector<std::vector<size_t>> m_adjacencyList;

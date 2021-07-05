@@ -15,10 +15,11 @@
 
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 
 namespace Avogadro {
 namespace Core {
+
+using std::swap;
 
 Molecule::Molecule() : m_basisSet(nullptr), m_unitCell(nullptr) {}
 
@@ -258,16 +259,50 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   MoleculeGraph::addAtom(number);
   return AtomType(this, static_cast<Index>(atomCount() - 1));
 }
+
+Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
+{
+  if (m_positions3d.size() == atomCount()) {
+    m_positions3d.push_back(position3d);
+  }
+  return addAtom(number);
+}
+
+void Molecule::swapBond(Index a, Index b)
+{
+  MoleculeGraph::swapBond(a, b);
+}
+void Molecule::swapAtom(Index a, Index b)
+{
+  Index max = a > b ? a : b;
+  if (m_positions2d.size() >= max)
+    swap(m_positions2d[a], m_positions2d[b]);
+  if (m_positions3d.size() >= max)
+    swap(m_positions3d[a], m_positions3d[b]);
+  if (m_hybridizations.size() >= max)
+    swap(m_hybridizations[a], m_hybridizations[b]);
+  if (m_formalCharges.size() >= max)
+    swap(m_formalCharges[a], m_formalCharges[b]);
+  if (m_colors.size() >= max)
+    swap(m_colors[a], m_colors[b]);
+
+  MoleculeGraph::swapAtom(a, b);
+}
+
 bool Molecule::removeAtom(Index index)
 {
   if (index >= atomCount())
     return false;
-  Index newSize = static_cast<Index>(atomCount() - 1);
-  m_positions2d.swapAndPop(index);
-  m_positions3d.swapAndPop(index);
-  m_hybridizations.swapAndPop(index);
-  m_formalCharges.swapAndPop(index);
-  m_colors.swapAndPop(index);
+  if (m_positions2d.size() == atomCount())
+    m_positions2d.swapAndPop(index);
+  if (m_positions3d.size() == atomCount())
+    m_positions3d.swapAndPop(index);
+  if (m_hybridizations.size() == atomCount())
+    m_hybridizations.swapAndPop(index);
+  if (m_formalCharges.size() == atomCount())
+    m_formalCharges.swapAndPop(index);
+  if (m_colors.size() == atomCount())
+    m_colors.swapAndPop(index);
   Core::MoleculeGraph::removeAtom(index);
   return true;
 }

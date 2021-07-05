@@ -20,7 +20,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 
 #ifdef USE_SPGLIB
 #include <avogadro/core/avospglib.h>

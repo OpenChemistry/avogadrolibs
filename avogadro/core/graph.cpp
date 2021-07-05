@@ -20,7 +20,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 #include <set>
 #include <stack>
 
@@ -153,9 +152,11 @@ void Graph::removeEdge(size_t a, size_t b)
     neighborsB.erase(std::find(neighborsB.begin(), neighborsB.end(), a));
   }
 
-  std::set<size_t> connected = checkConectivity(a, b);
-  if (!connected.empty()) {
-    m_connectedGroup.removeConnection(a, b, connected);
+  if (m_connectedGroup.getGroup(a) == m_connectedGroup.getGroup(b)) {
+    std::set<size_t> connected = checkConectivity(a, b);
+    if (!connected.empty()) {
+      m_connectedGroup.removeConnection(a, b, connected);
+    }
   }
 }
 
@@ -220,6 +221,21 @@ std::set<size_t> Graph::connectedComponent(size_t index) const
 {
   size_t group = m_connectedGroup.getGroup(index);
   return m_connectedGroup.getElements(group);
+}
+
+size_t Graph::groupCount() const
+{
+  return m_connectedGroup.groupCount();
+}
+
+size_t Graph::getGroup(size_t element) const
+{
+  return m_connectedGroup.getGroup(element);
+}
+
+size_t Graph::getGroupSize(size_t element) const
+{
+  return m_connectedGroup.getGroupSize(element);
 }
 
 } // namespace Core

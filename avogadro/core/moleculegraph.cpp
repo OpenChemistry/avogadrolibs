@@ -6,11 +6,13 @@
 #include "moleculegraph.h"
 
 #include <cassert>
-#include <iostream>
 
 namespace Avogadro {
 namespace Core {
 namespace {
+
+using std::swap;
+
 // Make an std::pair where the lower index is always first in the pair. This
 // offers us the guarantee that any given pair of atoms will always result in
 // a pair that is the same no matter what the order of the atoms given.
@@ -129,10 +131,11 @@ bool MoleculeGraph::setBondPair(Index bondId,
                                 const std::pair<Index, Index>& pair)
 {
   if (bondId < bondCount()) {
-    updateGraph();
-    m_graph.removeEdge(m_bondPairs[bondId].first, m_bondPairs[bondId].second);
+    if (!m_graphDirty) {
+      m_graph.removeEdge(m_bondPairs[bondId].first, m_bondPairs[bondId].second);
+      m_graph.addEdge(pair.first, pair.second);
+    }
     m_bondPairs[bondId] = pair;
-    m_graph.removeEdge(pair.first, pair.second);
     return true;
   }
   return false;
@@ -242,13 +245,48 @@ void MoleculeGraph::setGraphDirty(bool dirty) const
   m_graphDirty = dirty;
 }
 
+void MoleculeGraph::swapBond(Index a, Index b)
+{
+  swap(m_bondPairs[a], m_bondPairs[b]);
+  swap(m_bondOrders[a], m_bondOrders[b]);
+}
+
+void MoleculeGraph::swapAtom(Index a, Index b)
+{
+  swap(m_atomicNumbers[a], m_atomicNumbers[b]);
+  for (auto& pair : m_bondPairs) {
+    auto oldPair = pair;
+    bool changed = false;
+    if (pair.first == a) {
+      pair.first = b;
+      changed = true;
+    } else if (pair.first == b) {
+      pair.first = a;
+      changed = true;
+    }
+    if (pair.second == a) {
+      pair.second = b;
+      changed = true;
+    } else if (pair.second == b) {
+      pair.second = a;
+      changed = true;
+    }
+
+    if (changed && !m_graphDirty) {
+      m_graph.removeEdge(oldPair.first, oldPair.second);
+      m_graph.addEdge(pair.first, pair.second);
+    }
+  }
+}
+
 //// protected and private
 
 bool MoleculeGraph::addAtom(unsigned char number)
 {
+  if (!m_graphDirty) {
+    m_graph.addVertex();
+  }
   m_atomicNumbers.push_back(number);
-  updateGraph();
-  m_graph.addVertex();
   return true;
 }
 
@@ -258,10 +296,11 @@ bool MoleculeGraph::addBond(Index atom1, Index atom2, unsigned char order)
   assert(atom2 < m_atomicNumbers.size());
   Index index = findBond(atom1, atom2);
   if (index == bondCount()) {
+    if (!m_graphDirty) {
+      m_graph.addEdge(atom1, atom2);
+    }
     m_bondPairs.push_back(makeBondPair(atom1, atom2));
     m_bondOrders.push_back(order);
-    updateGraph();
-    m_graph.addEdge(atom1, atom2);
     return true;
   } else {
     m_bondOrders[index] = order;
@@ -273,12 +312,15 @@ bool MoleculeGraph::removeAtom(Index index)
 {
   if (index >= atomCount())
     return false;
-  updateGraph();
-  m_graph.removeVertex(index);
+
+  Index affectedIndex = static_cast<Index>(m_atomicNumbers.size() - 1);
   m_atomicNumbers.swapAndPop(index);
   removeBonds(index);
+  if (!m_graphDirty) {
+    m_graph.removeVertex(index);
+  }
   // the bonds from back() now are in index, so we need to rebond it
-  rebondBond(m_atomicNumbers.size() - 1, index);
+  rebondBond(index, affectedIndex);
   return true;
 }
 
@@ -298,16 +340,73 @@ bool MoleculeGraph::removeBonds(Index atom)
   return true;
 }
 
+size_t calcNlogN(size_t n)
+{
+  size_t aproxLog = 1;
+  float aux = n;
+  while (aux > 2.0f) {
+    aux /= 2.0f;
+    ++aproxLog;
+  }
+  return n * aproxLog;
+}
+
 bool MoleculeGraph::removeBond(Index index)
 {
   if (index >= bondCount())
     return false;
-  updateGraph();
-  m_graph.removeEdge(m_bondPairs[index].first, m_bondPairs[index].second);
-  Index newSize = static_cast<Index>(m_bondOrders.size() - 1);
+  if (!m_graphDirty) {
+    // mark dirty the graph O(n) only if is more effitien than remove an edge
+    // O(nlogn)
+    size_t n = atomCount();
+    size_t m = calcNlogN(m_graph.getGroupSize(m_bondPairs[index].first));
+    if (m < n) {
+      m_graph.removeEdge(m_bondPairs[index].first, m_bondPairs[index].second);
+    } else {
+      m_graphDirty = true;
+    }
+  }
   m_bondOrders.swapAndPop(index);
   m_bondPairs.swapAndPop(index);
   return true;
+}
+
+Array<std::pair<Index, Index>> MoleculeGraph::getBonds(Index index) const
+{
+  Array<std::pair<Index, Index>> result;
+  for (auto& pair : m_bondPairs) {
+    if (pair.first == index) {
+      result.push_back(pair);
+    } else if (pair.second == index) {
+      result.push_back(pair);
+    }
+  }
+  return result;
+}
+
+Array<unsigned char> MoleculeGraph::getOrders(Index index) const
+{
+  Array<unsigned char> result;
+  Index i = 0;
+  for (auto& pair : m_bondPairs) {
+    if (pair.first == index) {
+      result.push_back(m_bondOrders[i]);
+    } else if (pair.second == index) {
+      result.push_back(m_bondOrders[i]);
+    }
+    ++i;
+  }
+  return result;
+}
+
+void MoleculeGraph::addBonds(const Array<std::pair<Index, Index>>& bonds,
+                             const Array<unsigned char>& orders)
+{
+  Index i = 0;
+  for (auto p : bonds) {
+    addBond(p.first, p.second, orders[i]);
+    ++i;
+  }
 }
 
 void MoleculeGraph::clearAtoms()
@@ -337,7 +436,9 @@ void MoleculeGraph::updateGraph() const
   m_graph.setSize(atomCount());
   typedef Array<std::pair<Index, Index>>::const_iterator IterType;
   for (IterType it = m_bondPairs.begin(); it != m_bondPairs.end(); ++it) {
-    m_graph.addEdge(it->first, it->second);
+    if (it->first < atomCount() && it->second < atomCount()) {
+      m_graph.addEdge(it->first, it->second);
+    }
   }
 }
 

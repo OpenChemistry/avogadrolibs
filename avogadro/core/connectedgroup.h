@@ -60,11 +60,17 @@ public:
   /** Get the group ID from the element. */
   size_t getGroup(size_t element) const;
 
+  /** Get the group size from the element. */
+  size_t getGroupSize(size_t element) const;
+
   /** Get all the groups and their elemenets. */
   std::vector<std::set<size_t>> getAllGroups() const;
 
   /** Get all the elements in the @p group. */
   std::set<size_t> getElements(size_t group) const;
+
+  /** */
+  size_t groupCount() const;
 
 private:
   std::map<size_t, size_t> m_elementToGroup;

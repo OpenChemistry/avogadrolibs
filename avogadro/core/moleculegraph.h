@@ -150,6 +150,17 @@ public:
 
   void setGraphDirty(bool dirty) const;
 
+  Array<std::pair<Index, Index>> getBonds(Index index) const;
+  Array<unsigned char> getOrders(Index index) const;
+
+  void addBonds(const Array<std::pair<Index, Index>>& bonds,
+                const Array<unsigned char>& orders);
+
+  // chenge the bond index position
+  void swapBond(Index a, Index b);
+  // channge the Atom index position
+  void swapAtom(Index a, Index b);
+
 protected:
   // update base info first, next derivated
   bool addAtom(unsigned char number);

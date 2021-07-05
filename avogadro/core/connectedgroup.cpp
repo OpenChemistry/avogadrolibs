@@ -7,7 +7,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 
 void checkRemove(std::vector<std::set<size_t>>& vector)
 {
@@ -93,7 +92,9 @@ void ConnectedGroup::removeConnection(size_t a, size_t b,
 {
   assert(m_elementToGroup.find(a) != m_elementToGroup.end());
   assert(m_elementToGroup.find(b) != m_elementToGroup.end());
-  assert(m_elementToGroup[a] == m_elementToGroup[b]);
+  if (m_elementToGroup[a] != m_elementToGroup[b]) {
+    return;
+  }
   removeConnection(a);
   size_t aGroup = m_elementToGroup[a];
   size_t bGroup = m_elementToGroup[b];
@@ -134,6 +135,16 @@ void ConnectedGroup::resetToSize(size_t n)
     m_elementToGroup[i] = i;
     m_groupToElement[i].insert(i);
   }
+}
+
+size_t ConnectedGroup::groupCount() const
+{
+  return m_groupToElement.size();
+}
+
+size_t ConnectedGroup::getGroupSize(size_t element) const
+{
+  return m_groupToElement.at(m_elementToGroup.at(element)).size();
 }
 
 } // namespace Core
