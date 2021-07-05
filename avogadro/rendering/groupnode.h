@@ -36,7 +36,7 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT GroupNode : public Node
 {
 public:
-  enum UiType
+  enum NodeType
   {
     ALL = 0,
     NONE = -1,
@@ -46,8 +46,8 @@ public:
   struct NodeInfo
   {
     NodeInfo() : node(nullptr), ui(NONE) {}
-    NodeInfo(Node* n, UiType u) : node(n), ui(u) {}
-    UiType ui;
+    NodeInfo(Node* n, NodeType u) : node(n), ui(u) {}
+    NodeType ui;
     Node* node;
   };
 
@@ -64,7 +64,7 @@ public:
    * deleted by this node upon destruction.
    * @param node Node to be added.
    */
-  void addChild(Node* node, UiType ui = UiType::GEOMETRY);
+  void addChild(Node* node, NodeType ui = NodeType::GEOMETRY);
   /**
    * @brief Add a child node, this node will have its parent set and will be
    * deleted by this node upon destruction.
@@ -117,7 +117,7 @@ public:
   void clearUI();
 
 protected:
-  void clear(UiType type);
+  void clear(NodeType type);
   std::list<NodeInfo> m_children;
 };
 

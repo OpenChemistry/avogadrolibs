@@ -298,7 +298,7 @@ void OverlayAxes::process(const Core::Molecule&, Rendering::GroupNode& node)
   // Since our geometry doesn't change, we just make a copy of the pre-built
   // set of axes.
   geo->addDrawable(new CustomMesh(*m_render->mesh));
-  node.addChild(geo, GroupNode::UiType::UI);
+  node.addChild(geo, GroupNode::NodeType::UI);
 }
 
 void OverlayAxes::setMolecule(QtGui::Molecule* molecule)

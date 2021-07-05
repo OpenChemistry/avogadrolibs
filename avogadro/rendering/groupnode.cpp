@@ -40,7 +40,7 @@ void GroupNode::accept(Visitor& visitor)
   }
 }
 
-void GroupNode::addChild(Node* node, UiType ui)
+void GroupNode::addChild(Node* node, NodeType ui)
 {
   if (!node || node == this)
     return;
@@ -88,7 +88,7 @@ Node* GroupNode::child(size_t index)
   }
 }
 
-void GroupNode::clear(UiType ui)
+void GroupNode::clear(NodeType ui)
 {
   // Like all good parents, we destroy our children before we go...
   for (auto it = m_children.begin(); it != m_children.end();) {
