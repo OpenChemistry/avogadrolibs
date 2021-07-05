@@ -1,6 +1,3 @@
-find_package(MoleQueue)
-include_directories(${MoleQueue_INCLUDE_DIRS})
-
 # Extension
 set(gamessinput_srcs
   gamessinputdialog.cpp
@@ -17,4 +14,4 @@ avogadro_plugin(GamessInput
   gamessinputdialog.ui
 )
 
-target_link_libraries(GamessInput LINK_PRIVATE AvogadroMoleQueue)
+target_link_libraries(GamessInput PRIVATE AvogadroMoleQueue)

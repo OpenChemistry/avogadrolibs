@@ -30,7 +30,7 @@ class POVRay : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit POVRay(QObject* p = 0);
+  explicit POVRay(QObject* p = nullptr);
   ~POVRay() override;
 
   QString name() const override { return tr("POVRay"); }

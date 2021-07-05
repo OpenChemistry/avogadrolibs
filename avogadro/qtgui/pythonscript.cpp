@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "pythonscript.h"
@@ -27,16 +16,15 @@ namespace Avogadro {
 namespace QtGui {
 
 PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
-  : QObject(parent_)
-  , m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty())
-  , m_scriptFilePath(scriptFilePath_)
+  : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
+    m_scriptFilePath(scriptFilePath_), m_process(nullptr)
 {
   setDefaultPythonInterpretor();
 }
 
 PythonScript::PythonScript(QObject* parent_)
-  : QObject(parent_)
-  , m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty())
+  : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
+    m_process(nullptr)
 {
   setDefaultPythonInterpretor();
 }
@@ -136,6 +124,83 @@ QByteArray PythonScript::execute(const QStringList& args,
     qDebug() << "Output:" << result;
 
   return result;
+}
+
+void PythonScript::asyncExecute(const QStringList& args,
+                                const QByteArray& scriptStdin)
+{
+  clearErrors();
+  if (m_process != nullptr) {
+    // bad news
+    m_process->terminate();
+    disconnect(m_process, SIGNAL(finished()), this, SLOT(processsFinished()));
+    m_process->deleteLater();
+  }
+  m_process = new QProcess(parent());
+
+  // Merge stdout and stderr
+  m_process->setProcessChannelMode(QProcess::MergedChannels);
+
+  // Add debugging flag if needed.
+  QStringList realArgs(args);
+  if (m_debug)
+    realArgs.prepend(QStringLiteral("--debug"));
+
+  // Add the global language / locale to *all* calls
+  realArgs.append("--lang");
+  realArgs.append(QLocale::system().name());
+
+  // Start script
+  realArgs.prepend(m_scriptFilePath);
+  if (m_debug) {
+    qDebug() << "Executing" << m_pythonInterpreter
+             << realArgs.join(QStringLiteral(" ")) << "<" << scriptStdin;
+  }
+  m_process->start(m_pythonInterpreter, realArgs);
+
+  // Write scriptStdin to the process's stdin
+  if (!scriptStdin.isNull()) {
+    if (!m_process->waitForStarted(5000)) {
+      m_errors << tr("Error running script '%1 %2': Timed out waiting for "
+                     "start (%3).")
+                    .arg(m_pythonInterpreter,
+                         realArgs.join(QStringLiteral(" ")),
+                         processErrorString(*m_process));
+      return;
+    }
+
+    qint64 len = m_process->write(scriptStdin);
+    if (len != static_cast<qint64>(scriptStdin.size())) {
+      m_errors << tr("Error running script '%1 %2': failed to write to stdin "
+                     "(len=%3, wrote %4 bytes, QProcess error: %5).")
+                    .arg(m_pythonInterpreter)
+                    .arg(realArgs.join(QStringLiteral(" ")))
+                    .arg(scriptStdin.size())
+                    .arg(len)
+                    .arg(processErrorString(*m_process));
+      return;
+    }
+    m_process->closeWriteChannel();
+  }
+
+  // let the script run
+  connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this,
+          SLOT(processFinished(int, QProcess::ExitStatus)));
+}
+
+void PythonScript::processFinished(int exitCode,
+                                   QProcess::ExitStatus exitStatus)
+{
+  emit finished();
+}
+
+QByteArray PythonScript::asyncResponse()
+{
+  if (m_process == nullptr || m_process->state() == QProcess::Running) {
+    return QByteArray(); // wait
+  }
+
+  return m_process->readAll();
 }
 
 QString PythonScript::processErrorString(const QProcess& proc) const

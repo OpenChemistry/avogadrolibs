@@ -20,4 +20,4 @@ avogadro_plugin(OpenBabel
   "${openbabel_uis}"
 )
 
-target_link_libraries(OpenBabel LINK_PRIVATE AvogadroIO)
+target_link_libraries(OpenBabel PRIVATE AvogadroIO)

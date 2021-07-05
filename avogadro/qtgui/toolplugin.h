@@ -45,14 +45,14 @@ class RWMolecule;
 /**
  * @class ToolPlugin toolplugin.h <avogadro/qtgui/toolplugin.h>
  * @brief The base class for plugins that interact with QtOpenGL::GLWidget.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 class AVOGADROQTGUI_EXPORT ToolPlugin : public QObject
 {
   Q_OBJECT
 
 public:
-  explicit ToolPlugin(QObject* parent = 0);
+  explicit ToolPlugin(QObject* parent = nullptr);
   ~ToolPlugin() override;
 
   /**
@@ -141,14 +141,14 @@ public slots:
 /**
  * @class ToolPluginFactory toolplugin.h <avogadro/qtgui/toolplugin.h>
  * @brief The base class for tool plugin factories in Avogadro.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 class AVOGADROQTGUI_EXPORT ToolPluginFactory
 {
 public:
   virtual ~ToolPluginFactory();
 
-  virtual ToolPlugin* createInstance() = 0;
+  virtual ToolPlugin* createInstance(QObject *parent = nullptr) = 0;
   virtual QString identifier() const = 0;
 };
 

@@ -36,7 +36,7 @@ class Apbs : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit Apbs(QObject* parent_ = 0);
+  explicit Apbs(QObject* parent_ = nullptr);
   ~Apbs() override;
 
   QString name() const override { return tr("APBS"); }

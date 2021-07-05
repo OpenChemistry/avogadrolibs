@@ -9,4 +9,4 @@ avogadro_plugin(CopyPaste
   ""
 )
 
-target_link_libraries(CopyPaste LINK_PRIVATE AvogadroIO)
+target_link_libraries(CopyPaste PRIVATE AvogadroIO)

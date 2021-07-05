@@ -25,7 +25,7 @@
 #include <avogadro/molequeue/molequeuemanager.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <molequeue/client/jobobject.h>
+#include <avogadro/molequeue/client/jobobject.h>
 #include <qjsonarray.h>
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
@@ -44,7 +44,7 @@
 
 using Avogadro::MoleQueue::MoleQueueDialog;
 using Avogadro::MoleQueue::MoleQueueManager;
-using MoleQueue::JobObject;
+using Avogadro::MoleQueue::JobObject;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -127,7 +127,7 @@ enum OTMinimizerOption
 };
 
 Cp2kInputDialog::Cp2kInputDialog(QWidget* parent_, Qt::WindowFlags f)
-  : QDialog(parent_, f), m_molecule(NULL),
+  : QDialog(parent_, f), m_molecule(nullptr),
     // m_highlighter(NULL),
     m_updatePending(false)
 {

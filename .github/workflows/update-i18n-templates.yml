@@ -1,0 +1,25 @@
+name: update-i18n-templates
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # run weekly, every Sunday at 01:31
+    - cron:  '31 1 * * 0'
+
+jobs:
+  update-i18n:
+    name: Update translation templates
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run extract-messages
+      run: |
+        sh scripts/extract-messages.sh
+
+    - name: Create pull request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        commit-message: "Automated translation updates"
+        signoff: true
+        branch-suffix: timestamp

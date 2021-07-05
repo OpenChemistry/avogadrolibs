@@ -203,7 +203,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   if (NAMNF != 0) {
     int** FREEINDEXES =
       reinterpret_cast<int**>(calloc((NATOMS - NAMNF), sizeof(int)));
-    if (*FREEINDEXES == NULL) {
+    if (*FREEINDEXES == nullptr) {
       appendError("MALLOC failed.");
       return false;
     }

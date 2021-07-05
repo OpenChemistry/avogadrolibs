@@ -30,4 +30,4 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroQuantumIO ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroQuantumIO LINK_PUBLIC AvogadroIO)
+target_link_libraries(AvogadroQuantumIO PUBLIC AvogadroIO)

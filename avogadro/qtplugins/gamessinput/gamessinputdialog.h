@@ -27,11 +27,10 @@
 
 class QJsonObject;
 
+namespace Avogadro {
 namespace MoleQueue {
 class JobObject;
 }
-
-namespace Avogadro {
 namespace QtGui {
 class Molecule;
 }
@@ -44,7 +43,7 @@ class GamessInputDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit GamessInputDialog(QWidget* parent_ = 0, Qt::WindowFlags f = 0);
+  explicit GamessInputDialog(QWidget* parent_ = nullptr, Qt::WindowFlags f = 0);
   ~GamessInputDialog() override;
 
   void setMolecule(QtGui::Molecule* mol);
@@ -53,7 +52,7 @@ signals:
   /**
    * Emitted when the user requests that a job's output be loaded in Avogadro.
    */
-  void openJobOutput(const MoleQueue::JobObject& job);
+  void openJobOutput(const Avogadro::MoleQueue::JobObject& job);
 
 protected:
   void showEvent(QShowEvent* e) override;

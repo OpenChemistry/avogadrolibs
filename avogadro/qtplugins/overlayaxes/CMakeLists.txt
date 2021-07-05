@@ -9,10 +9,10 @@ endif()
 
 avogadro_plugin(OverlayAxes
   "Reference Axes Overlay"
-  ScenePlugin
+  ExtensionPlugin
   overlayaxes.h
   OverlayAxes
   overlayaxes.cpp
   "")
 
-target_link_libraries(OverlayAxes LINK_PRIVATE AvogadroRendering)
+target_link_libraries(OverlayAxes PRIVATE AvogadroRendering)

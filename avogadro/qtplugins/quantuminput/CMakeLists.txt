@@ -1,7 +1,3 @@
-# Pull in MoleQueue
-find_package(MoleQueue REQUIRED NO_MODULE)
-include_directories(${MoleQueue_INCLUDE_DIRS})
-
 # Needed to find avogadroioexport.h:
 include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/io/")
 
@@ -18,7 +14,7 @@ avogadro_plugin(QuantumInput
   "${quantuminput_srcs}"
 )
 
-target_link_libraries(QuantumInput LINK_PRIVATE AvogadroIO AvogadroMoleQueue)
+target_link_libraries(QuantumInput PRIVATE AvogadroIO AvogadroMoleQueue)
 
 set(_prefix "${AvogadroLibs_SOURCE_DIR}/../avogadrogenerators")
 # Look in parallel directory for the avogadrogenerators repository.

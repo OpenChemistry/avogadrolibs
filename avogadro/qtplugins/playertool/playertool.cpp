@@ -26,7 +26,10 @@
 #include <QtCore/QProcess>
 #include <QtGui/QIcon>
 #include <QtGui/QOpenGLFramebufferObject>
+#include <QtGui/QScreen>
+#include <QtGui/QWindow>
 #include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QHBoxLayout>
@@ -230,7 +233,15 @@ void PlayerTool::animate(int advance)
 
 void PlayerTool::recordMovie()
 {
-  int EXPORT_WIDTH = 800, EXPORT_HEIGHT = 600;
+  // Qt 5.14 or later gives the more reliable way for multi-screen
+#if QT_VERSION >= 0x050E00
+  qreal scaling = m_glWidget->screen()->devicePixelRatio();
+#else
+  qreal scaling = qApp->devicePixelRatio();
+#endif
+  int EXPORT_WIDTH = m_glWidget->width() * scaling; 
+  int EXPORT_HEIGHT = m_glWidget->height() * scaling;
+
   if (m_timer.isActive())
     m_timer.stop();
 
@@ -238,6 +249,8 @@ void PlayerTool::recordMovie()
   if (m_molecule)
     baseFileName = m_molecule->data("fileName").toString().c_str();
 
+  // TODO: check path for avconv and disable MP4 if not found
+  // TODO: add PNG as an export (i.e., pile of PNG for later use)
   QString selfFilter = tr("Movie (*.mp4)");
   QString baseName = QFileDialog::getSaveFileName(
     qobject_cast<QWidget*>(parent()), tr("Export Bitmap Graphics"), "",
@@ -253,14 +266,17 @@ void PlayerTool::recordMovie()
   bool bonding = m_dynamicBonding->isChecked();
   int numberLength = static_cast<int>(
     ceil(log10(static_cast<float>(m_molecule->coordinate3dCount()) + 1)));
-  m_glWidget->resize(EXPORT_WIDTH, EXPORT_HEIGHT);
+  //m_glWidget->resize(EXPORT_WIDTH, EXPORT_HEIGHT);
 
   if (selfFilter == tr("GIF (*.gif)")) {
     GifWriter writer;
     // GIF only supports up to 100 FPS, this minimizes breakage when FPS>100
-    QMessageBox::warning(
-      qobject_cast<QWidget*>(parent()), tr("GIF FPS support warning"),
-      tr("The GIF file format does not support frame rates over 100 FPS."));
+
+    if (m_animationFPS->value() > 100) {
+      QMessageBox::warning(
+        qobject_cast<QWidget*>(parent()), tr("GIF FPS support warning"),
+        tr("The GIF file format does not support frame rates over 100 FPS."));
+    }
     GifBegin(&writer, (baseName + ".gif").toLatin1().data(), EXPORT_WIDTH,
              EXPORT_HEIGHT, 100 / std::min(m_animationFPS->value(), 100));
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
@@ -305,7 +321,7 @@ void PlayerTool::recordMovie()
   } else if (selfFilter == tr("Movie (*.avi)")) {
     gwavi_t* gwavi;
     gwavi = gwavi_open((baseName + ".avi").toLatin1().data(), EXPORT_WIDTH,
-                       EXPORT_HEIGHT, "MJPG", m_animationFPS->value(), NULL);
+                       EXPORT_HEIGHT, "MJPG", m_animationFPS->value(), nullptr);
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
       m_molecule->setCoordinate3d(i);
       if (bonding) {

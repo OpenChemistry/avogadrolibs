@@ -72,7 +72,7 @@ function(avogadro_plugin name description type header pluginClass sources)
     ${rc_srcs}
     ${name}Plugin.cpp
   )
-  target_link_libraries(${name} LINK_PRIVATE AvogadroCore AvogadroQtGui)
+  target_link_libraries(${name} PRIVATE AvogadroCore AvogadroQtGui)
 
   if("${_plugin_object}" STREQUAL "STATIC")
     set_target_properties(${name} PROPERTIES COMPILE_DEFINITIONS
@@ -92,17 +92,19 @@ endfunction()
 
 # Now to make the plugins.
 add_subdirectory(3dmol)
+add_subdirectory(applycolors)
 add_subdirectory(bondcentrictool)
 add_subdirectory(bonding)
 add_subdirectory(commandscripts)
 add_subdirectory(coordinateeditor)
 add_subdirectory(copypaste)
-add_subdirectory(cp2kinput)
 add_subdirectory(crystal)
 add_subdirectory(customelements)
 add_subdirectory(editor)
+add_subdirectory(fetchpdb)
 add_subdirectory(hydrogens)
 add_subdirectory(importpqr)
+add_subdirectory(insertfragment)
 add_subdirectory(lammpsinput)
 add_subdirectory(lineformatinput)
 add_subdirectory(manipulator)
@@ -122,22 +124,26 @@ if(USE_SPGLIB)
   add_subdirectory(spacegroup)
 endif()
 add_subdirectory(surfaces)
+add_subdirectory(svg)
 add_subdirectory(spectra)
 add_subdirectory(vrml)
 
+# Plugins that require VTK
 if(USE_VTK)
   add_subdirectory(plotpdf)
   add_subdirectory(plotrmsd)
   add_subdirectory(plotxrd)
+  if(BUILD_YAEHMOP_PLUGIN)
+    add_subdirectory(yaehmop)
+  endif()
   add_subdirectory(coloropacitymap)
 endif()
 
-if(USE_MOLEQUEUE)
-  add_subdirectory(apbs)
-  add_subdirectory(gamessinput)
-  add_subdirectory(quantuminput)
-  add_subdirectory(scriptfileformats)
-endif()
+add_subdirectory(apbs)
+add_subdirectory(cp2kinput)
+add_subdirectory(gamessinput)
+add_subdirectory(quantuminput)
+add_subdirectory(scriptfileformats)
 
 if(USE_LIBARCHIVE)
   add_subdirectory(plugindownloader)
@@ -214,5 +220,5 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroQtPlugins ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroQtPlugins LINK_PUBLIC ${Qt5Core_LIBRARIES}
-  LINK_PRIVATE ${AvogadroLibs_STATIC_PLUGINS} AvogadroQtGui)
+target_link_libraries(AvogadroQtPlugins PUBLIC ${Qt5Core_LIBRARIES}
+  PRIVATE ${AvogadroLibs_STATIC_PLUGINS} AvogadroQtGui)

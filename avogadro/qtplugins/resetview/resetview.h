@@ -31,7 +31,7 @@ class ResetView : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit ResetView(QObject* parent_ = 0);
+  explicit ResetView(QObject* parent_ = nullptr);
   ~ResetView() override;
 
   QString name() const override { return tr("Reset view"); }

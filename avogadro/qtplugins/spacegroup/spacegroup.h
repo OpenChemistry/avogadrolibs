@@ -29,7 +29,7 @@ class SpaceGroup : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit SpaceGroup(QObject* parent_ = 0);
+  explicit SpaceGroup(QObject* parent_ = nullptr);
   ~SpaceGroup();
 
   QString name() const { return tr("SpaceGroup"); }

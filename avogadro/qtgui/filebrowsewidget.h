@@ -39,7 +39,7 @@ public:
     ExecutableFile
   };
 
-  explicit FileBrowseWidget(QWidget* theParent = 0);
+  explicit FileBrowseWidget(QWidget* theParent = nullptr);
   ~FileBrowseWidget() override;
 
   QString fileName() const;

@@ -32,7 +32,7 @@ class SymmetryScene : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit SymmetryScene(QObject* parent = 0);
+  explicit SymmetryScene(QObject* parent = nullptr);
   ~SymmetryScene() override;
 
   void process(const Core::Molecule& molecule,

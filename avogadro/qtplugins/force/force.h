@@ -30,7 +30,7 @@ class Force : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit Force(QObject* parent = 0);
+  explicit Force(QObject* parent = nullptr);
   ~Force() override;
 
   void process(const Core::Molecule& molecule,

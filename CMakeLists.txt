@@ -27,7 +27,7 @@ include(DetermineVersion)
 
 # Set up our version.
 set(AvogadroLibs_VERSION_MAJOR   "1")
-set(AvogadroLibs_VERSION_MINOR   "93")
+set(AvogadroLibs_VERSION_MINOR   "94")
 set(AvogadroLibs_VERSION_PATCH   "0")
 set(AvogadroLibs_VERSION
   "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
@@ -58,7 +58,6 @@ option(USE_LIBMSYM "Enable optional features using libmsym" ON)
 option(USE_SPGLIB "Enable optional features using spglib" ON)
 option(USE_MMTF "Enable optional features using mmtf" ON)
 option(USE_PROTOCALL "Enable libraries that use ProtoCall" OFF)
-option(USE_MOLEQUEUE "Enable the MoleQueue dependent functionality" ON)
 option(USE_PYTHON "Use Python to wrap some of our API" OFF)
 
 add_subdirectory(utilities)

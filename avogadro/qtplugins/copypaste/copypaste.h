@@ -36,7 +36,7 @@ class CopyPaste : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit CopyPaste(QObject* parent_ = 0);
+  explicit CopyPaste(QObject* parent_ = nullptr);
   ~CopyPaste() override;
 
   QString name() const override { return tr("Copy and paste"); }

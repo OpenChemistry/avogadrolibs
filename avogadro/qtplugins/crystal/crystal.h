@@ -30,7 +30,7 @@ class Crystal : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit Crystal(QObject* parent_ = 0);
+  explicit Crystal(QObject* parent_ = nullptr);
   ~Crystal() override;
 
   QString name() const override { return tr("Crystal"); }

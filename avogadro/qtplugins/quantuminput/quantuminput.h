@@ -25,10 +25,6 @@
 class QAction;
 class QDialog;
 
-namespace MoleQueue {
-class JobObject;
-}
-
 namespace Avogadro {
 namespace Io {
 class FileFormat;
@@ -36,6 +32,7 @@ class FileFormat;
 
 namespace MoleQueue {
 class InputGeneratorDialog;
+class JobObject;
 }
 
 namespace QtPlugins {
@@ -43,14 +40,14 @@ namespace QtPlugins {
 /**
  * @brief The QuantumInput class implements the extension interface for
  * simulation input generators.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 class QuantumInput : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 
 public:
-  explicit QuantumInput(QObject* parent = 0);
+  explicit QuantumInput(QObject* parent = nullptr);
   ~QuantumInput() override;
 
   QString name() const override { return tr("Quantum input"); }
@@ -75,7 +72,7 @@ public slots:
   /**
    * Emitted when the user requests that a job's output be loaded in Avogadro.
    */
-  void openJobOutput(const ::MoleQueue::JobObject& job);
+  void openJobOutput(const MoleQueue::JobObject& job);
 
   bool readMolecule(QtGui::Molecule& mol) override;
 

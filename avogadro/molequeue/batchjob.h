@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTGUI_BATCHJOB_H
@@ -23,7 +12,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-#include <molequeue/client/jobobject.h>
+#include "client/jobobject.h"
 
 #include <QtCore/QJsonObject>
 #include <QtCore/QMap>
@@ -107,7 +96,7 @@ public:
    */
   void setMoleQueueOptions(const QJsonObject& opts);
   QJsonObject moleQueueOptions() const;
-  ::MoleQueue::JobObject moleQueueJobTemplate() const;
+  JobObject moleQueueJobTemplate() const;
   /**@}*/
 
   /**
@@ -138,7 +127,7 @@ public:
    * @return The most recent JobObject for the job with the batch id @a batchId.
    * These are updated for each change in job state.
    */
-  ::MoleQueue::JobObject jobObject(BatchId batchId) const;
+  JobObject jobObject(BatchId batchId) const;
 
   /**
    * @return True if @a state corresponds to a job that is finished running.
@@ -237,7 +226,7 @@ private: // variables
   QJsonObject m_moleQueueOptions;
 
   /// Cached job states.
-  QList<::MoleQueue::JobObject> m_jobObjects;
+  QList<JobObject> m_jobObjects;
   /// Lookup batch ids from server ids.
   QMap<ServerId, BatchId> m_serverIds;
   /// Job states. For fast lookups without string conversions.
@@ -270,9 +259,9 @@ inline QJsonObject BatchJob::moleQueueOptions() const
   return m_moleQueueOptions;
 }
 
-inline ::MoleQueue::JobObject BatchJob::moleQueueJobTemplate() const
+inline JobObject BatchJob::moleQueueJobTemplate() const
 {
-  ::MoleQueue::JobObject result;
+  JobObject result;
   result.fromJson(m_moleQueueOptions);
   return result;
 }
@@ -306,9 +295,9 @@ inline BatchJob::ServerId BatchJob::serverId(BatchJob::BatchId id) const
            : InvalidServerId;
 }
 
-inline ::MoleQueue::JobObject BatchJob::jobObject(BatchJob::BatchId id) const
+inline JobObject BatchJob::jobObject(BatchJob::BatchId id) const
 {
-  return id < m_jobObjects.size() ? m_jobObjects[id] : ::MoleQueue::JobObject();
+  return id < m_jobObjects.size() ? m_jobObjects[id] : JobObject();
 }
 
 inline bool BatchJob::isTerminal(BatchJob::JobState state)

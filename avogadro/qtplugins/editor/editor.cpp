@@ -60,19 +60,19 @@ const unsigned char INVALID_ATOMIC_NUMBER =
 namespace Avogadro {
 namespace QtPlugins {
 
+using QtGui::Molecule;
 using QtGui::RWAtom;
 using QtGui::RWBond;
-using QtGui::Molecule;
 using QtGui::RWMolecule;
 using QtOpenGL::GLWidget;
 
+using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::TextLabel2D;
 using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
-using Avogadro::Core::Elements;
 
 Editor::Editor(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
@@ -87,9 +87,7 @@ Editor::Editor(QObject* parent_)
   reset();
 }
 
-Editor::~Editor()
-{
-}
+Editor::~Editor() {}
 
 QWidget* Editor::toolWidget() const
 {
@@ -239,9 +237,6 @@ void Editor::draw(Rendering::GroupNode& node)
   overlayTProp.setFontFamily(TextProperties::Mono);
   overlayTProp.setColorRgb(64, 255, 220);
   overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
-  // adjust font size for pixel scale in 2D
-  // TODO: should use per-window scale
-  overlayTProp.setPixelHeight(overlayTProp.pixelHeight() * qGuiApp->devicePixelRatio());
 
   TextLabel2D* label = new TextLabel2D;
   label->setText(overlayText.toStdString());
@@ -537,7 +532,18 @@ void Editor::atomLeftDrag(QMouseEvent* e)
         }
         m_molecule->addBond(clickedAtom, bondedAtom, bondOrder);
         m_bondAdded = true;
+      } // we have a bond, but it might be the wrong order
+      else {
+        RWBond bond = m_molecule->bond(clickedAtom, bondedAtom);
+        int bondOrder = m_toolWidget->bondOrder();
+        if (bondOrder == 0) {
+          // automatic - guess the size
+          bondOrder = expectedBondOrder(clickedAtom, bondedAtom);
+        }
+        if (bond.order() != bondOrder)
+          bond.setOrder(bondOrder);
       }
+
       m_bondedAtom = atomToBond;
       changes |= Molecule::Bonds | Molecule::Added;
     }
@@ -606,6 +612,14 @@ void Editor::atomLeftDrag(QMouseEvent* e)
 
           changes |= Molecule::Bonds | Molecule::Modified;
         }
+      } // otherwise see if the bond order is different than what's there
+      else {
+        int bondOrder = m_toolWidget->bondOrder();
+        RWBond bond = m_molecule->bond(newAtom, clickedAtom);
+        if (bond.isValid() && bondOrder != bond.order())
+          bond.setOrder(bondOrder);
+
+        changes |= Molecule::Bonds | Molecule::Modified;
       }
     }
   }
@@ -614,5 +628,5 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   return;
 }
 
-} // namespace QtOpenGL
+} // namespace QtPlugins
 } // namespace Avogadro

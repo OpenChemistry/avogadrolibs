@@ -1,18 +1,8 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
+
 
 #ifndef AVOGADRO_QTPLUGINS_OBPROCESS_H
 #define AVOGADRO_QTPLUGINS_OBPROCESS_H
@@ -37,7 +27,7 @@ class OBProcess : public QObject
 {
   Q_OBJECT
 public:
-  explicit OBProcess(QObject* parent_ = 0);
+  explicit OBProcess(QObject* parent_ = nullptr);
 
   /**
    * @return The output of obabel -V.
@@ -245,7 +235,7 @@ public slots:
    *
    * and parses the output.
    *
-   * If an error occurs, queryReadFormatsFinished will be emitted with an empty
+   * If an error occurs, queryForceFieldsFinished will be emitted with an empty
    * argument.
    *
    * @return True if the process started successfully, false otherwise.
@@ -313,6 +303,46 @@ private slots:
   void optimizeGeometryReadLog();
 
   // end Force Fields doxygen group
+  /**@}*/
+
+  /**
+   * @name Charge Models
+   * Methods, signals, and slots pertaining to partial charges
+   * @{
+   */
+
+public slots:
+  /**
+   * Request a list of all supported charge models from obabel.
+   *
+   * After calling this method, the queryChargesFinished signal will be
+   * emitted. This method executes
+   *
+   * `obabel -L charges`
+   *
+   * and parses the output.
+   *
+   * If an error occurs, queryChargesFinished will be emitted with an empty
+   * argument.
+   *
+   * @return True if the process started successfully, false otherwise.
+   */
+  bool queryCharges();
+
+  signals:
+  /**
+   * Triggered when the process started by queryCharges() completes.
+   * @param charges The charge models supported by OpenBabel. Keys
+   * are unique identifiers for the charge models, and the values are
+   * non-translated (english), human-readable descriptions.
+   *
+   * If an error occurs, charges will be empty.
+   */
+  void queryChargesFinished(const QMap<QString, QString>& charges);
+
+private slots:
+  void queryChargesPrepare();
+  // end Charge Models doxygen group
   /**@}*/
 
 private:

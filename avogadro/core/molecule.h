@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2011-2012 Kitware, Inc. and Geoffrey Hutchison
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_MOLECULE_H
@@ -577,6 +566,15 @@ public:
   const UnitCell* unitCell() const { return m_unitCell; }
   /** @} */
 
+  /**
+   * The space group for this molecule. It is updated after every
+   * space group operation.
+   * @{
+   */
+  void setHallNumber(unsigned short hallNumber) { m_hallNumber = hallNumber; }
+  unsigned short hallNumber() const { return m_hallNumber; }
+  /** @} */
+
   Array<double> vibrationFrequencies() const;
   void setVibrationFrequencies(const Array<double>& freq);
   Array<double> vibrationIntensities() const;
@@ -610,7 +608,7 @@ public:
   bool setTimeStep(double timestep, int index);
   double timeStep(int index, bool& status);
 
-  /** Returns a vector of forces for the atoms in the molecule. */
+  /** @return a vector of forces for the atoms in the molecule. */
   const Array<Vector3>& forceVectors() const;
 
   /** \overload */
@@ -641,7 +639,9 @@ public:
 
   Residue& addResidue(std::string& name, Index& number, char& id);
   void addResidue(Residue& residue);
-  Residue& residue(int index);
+  Residue& residue(Index index);
+
+  Array<Residue>& residues() { return m_residues;}
 
 protected:
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
@@ -675,6 +675,9 @@ protected:
   BasisSet* m_basisSet;
   UnitCell* m_unitCell;
   Array<Residue> m_residues;
+
+  // This will be stored from the last space group operation
+  unsigned short m_hallNumber = 0;
 
   /** Update the graph to correspond to the current molecule. */
   void updateGraph() const;

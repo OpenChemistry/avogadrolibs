@@ -593,6 +593,11 @@ void CoordinateEditorDialog::applyFinish(bool valid)
 
   QString undoText = tr("Edit Atomic Coordinates");
   m_molecule->undoMolecule()->modifyMolecule(newMolecule, change, undoText);
+
+  // We went from no atoms to something, don't edit by default
+  // PR#394
+  if (!hadAtoms)
+    emit pastedMolecule();
 }
 
 void CoordinateEditorDialog::textModified(bool modified)

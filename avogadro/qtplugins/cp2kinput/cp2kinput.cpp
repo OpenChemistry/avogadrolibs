@@ -22,7 +22,7 @@
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <molequeue/client/jobobject.h>
+#include <avogadro/molequeue/client/jobobject.h>
 
 #include <QtCore/QDebug>
 #include <QtWidgets/QAction>
@@ -34,11 +34,11 @@ class Molecule;
 }
 namespace QtPlugins {
 
-using ::MoleQueue::JobObject;
+using Avogadro::MoleQueue::JobObject;
 
 Cp2kInput::Cp2kInput(QObject* parent_)
-  : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(NULL),
-    m_dialog(NULL), m_outputFormat(NULL)
+  : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
+    m_dialog(nullptr), m_outputFormat(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("&CP2K"));
@@ -57,7 +57,7 @@ QList<QAction*> Cp2kInput::actions() const
 QStringList Cp2kInput::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Quantum") << tr("Input Generators");
+  path << tr("&Input");
   return path;
 }
 
@@ -70,7 +70,7 @@ void Cp2kInput::setMolecule(QtGui::Molecule* mol)
 
 void Cp2kInput::openJobOutput(const JobObject& job)
 {
-  m_outputFormat = NULL;
+  m_outputFormat = nullptr;
   m_outputFileName.clear();
 
   QString outputPath(job.value("outputDirectory").toString());
@@ -79,7 +79,7 @@ void Cp2kInput::openJobOutput(const JobObject& job)
   FileFormatDialog::FormatFilePair result = FileFormatDialog::fileToRead(
     qobject_cast<QWidget*>(parent()), tr("Open Output File"), outputPath);
 
-  if (result.first == NULL) // User canceled
+  if (result.first == nullptr) // User canceled
     return;
 
   m_outputFormat = result.first;
@@ -99,7 +99,7 @@ bool Cp2kInput::readMolecule(QtGui::Molecule& mol)
                                .arg(QString::fromStdString(reader->error())));
   }
 
-  m_outputFormat = NULL;
+  m_outputFormat = nullptr;
   m_outputFileName.clear();
 
   return success;
@@ -109,8 +109,8 @@ void Cp2kInput::menuActivated()
 {
   if (!m_dialog) {
     m_dialog = new Cp2kInputDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(openJobOutput(MoleQueue::JobObject)), this,
-            SLOT(openJobOutput(MoleQueue::JobObject)));
+    connect(m_dialog, SIGNAL(openJobOutput(Avogadro::MoleQueue::JobObject)), this,
+            SLOT(openJobOutput(Avogadro::MoleQueue::JobObject)));
   }
   m_dialog->setMolecule(m_molecule);
   m_dialog->show();

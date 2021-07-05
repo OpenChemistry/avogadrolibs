@@ -32,7 +32,7 @@ namespace QtPlugins {
  * @class Manipulator manipulator.h
  * <avogadro/qtplugins/manipulator/manipulator.h>
  * @brief The Manipulator class manipulates a molecule's geometry.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 class Manipulator : public QtGui::ToolPlugin
 {
@@ -72,14 +72,27 @@ private:
   void updatePressedButtons(QMouseEvent*, bool release);
 
   void resetObject() { m_object = Rendering::Identifier(); }
+  void translate(Vector3 delta);
+  void rotate(Vector3 delta, Vector3 centroid);
+  void tilt(Vector3 delta, Vector3 centroid);
 
   QAction* m_activateAction;
   QtGui::RWMolecule* m_molecule;
   Rendering::GLRenderer* m_renderer;
   Rendering::Identifier m_object;
-  Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;
   Vector3f m_lastMouse3D;
+  Qt::MouseButtons m_pressedButtons;
+
+  enum ToolAction
+  {
+    Nothing = 0,
+    Rotation,
+    Translation,
+    ZoomTilt,
+    Zoom
+  };
+  ToolAction m_currentAction;
 };
 
 } // namespace QtOpenGL

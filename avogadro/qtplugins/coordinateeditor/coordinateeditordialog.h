@@ -38,13 +38,14 @@ class CoordinateEditorDialog : public QDialog
 {
   Q_OBJECT
 public:
-  explicit CoordinateEditorDialog(QWidget* parent_ = 0);
+  explicit CoordinateEditorDialog(QWidget* parent_ = nullptr);
   ~CoordinateEditorDialog() override;
 
   void setMolecule(QtGui::Molecule* mol);
 
 signals:
   void validationFinished(bool valid);
+  void pastedMolecule();
 
 private slots:
   void moleculeChanged(uint);

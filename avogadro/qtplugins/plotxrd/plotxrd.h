@@ -25,6 +25,10 @@
 class QByteArray;
 class QStringList;
 
+namespace VTK {
+class VtkPlot;
+}
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -40,7 +44,7 @@ class PlotXrd : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit PlotXrd(QObject* parent_ = 0);
+  explicit PlotXrd(QObject* parent_ = nullptr);
   ~PlotXrd();
 
   QString name() const { return tr("PlotXrd"); }
@@ -86,6 +90,7 @@ private:
 
   std::unique_ptr<XrdOptionsDialog> m_xrdOptionsDialog;
   std::unique_ptr<QAction> m_displayDialogAction;
+  QScopedPointer<VTK::VtkPlot> m_plot;
 };
 
 inline QString PlotXrd::description() const

@@ -9,8 +9,10 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 if(APPLE)
   # It is a special case, the app bundle logic breaks the relative pathing.
   add_definitions(-DAvogadroLibs_LIB_DIR=\"lib\")
+  add_definitions(-DAvogadroLibs_DATA_DIR=\"share\")
 else()
   add_definitions(-DAvogadroLibs_LIB_DIR=\"${INSTALL_LIBRARY_DIR}\")
+  add_definitions(-DAvogadroLibs_DATA_DIR=\"${INSTALL_DATA_DIR}\")
 endif()
 
 if(USE_SPGLIB)

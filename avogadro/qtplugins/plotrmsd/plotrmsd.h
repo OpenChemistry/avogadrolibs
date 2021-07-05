@@ -25,6 +25,10 @@
 class QByteArray;
 class QStringList;
 
+namespace VTK {
+class VtkPlot;
+}
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -38,7 +42,7 @@ class PlotRmsd : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit PlotRmsd(QObject* parent_ = 0);
+  explicit PlotRmsd(QObject* parent_ = nullptr);
   ~PlotRmsd();
 
   QString name() const { return tr("PlotRmsd"); }
@@ -66,6 +70,7 @@ private:
   QtGui::Molecule* m_molecule;
 
   std::unique_ptr<QAction> m_displayDialogAction;
+  QScopedPointer<VTK::VtkPlot> m_plot;
 };
 
 inline QString PlotRmsd::description() const

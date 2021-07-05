@@ -21,18 +21,21 @@
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/meshgeometry.h>
+#include <avogadro/rendering/scene.h>
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
+#include <QtWidgets/QAction>
+
 #include <Eigen/Geometry>
 
+using Avogadro::Vector3f;
 using Avogadro::Core::Array;
 using Avogadro::Rendering::Camera;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::MeshGeometry;
-using Avogadro::Vector3f;
 using Eigen::Affine3f;
 
 namespace {
@@ -58,8 +61,13 @@ void CustomMesh::render(const Camera& camera)
   Affine3f mv(camera.modelView());
   mv.matrix().block<3, 1>(0, 3) = Vector3f::Zero();
 
+  // Save the actual viewport - works better on high resolution screens
+  GLint viewport[4];
+  glGetIntegerv(GL_VIEWPORT, viewport);
+
   // The largest window dimension, used to scale the axes
-  const int maxDim = std::max(camera.width(), camera.height());
+  // (again, grab from the actual viewport)
+  const int maxDim = std::max(viewport[2], viewport[3]);
 
   Camera meshCamera(camera);
   meshCamera.setViewport(maxDim / 10, maxDim / 10);
@@ -72,11 +80,9 @@ void CustomMesh::render(const Camera& camera)
 
   MeshGeometry::render(meshCamera);
 
-  glViewport(static_cast<GLint>(0), static_cast<GLsizei>(0),
-             static_cast<GLint>(camera.width()),
-             static_cast<GLsizei>(camera.height()));
+  glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
 }
-} // end anon namespace
+} // namespace
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -235,14 +241,55 @@ void OverlayAxes::RenderImpl::addAxis(const Vector3f& axis,
   mesh->addTriangles(triangles);
 }
 
-OverlayAxes::OverlayAxes(QObject* p)
-  : ScenePlugin(p), m_enabled(true), m_render(new RenderImpl)
+OverlayAxes::OverlayAxes(QObject* parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_enabled(false),
+    m_render(new RenderImpl),
+    m_axesAction(new QAction(tr("Reference Axes"), this))
 {
+  connect(m_axesAction, SIGNAL(triggered()), SLOT(procesAxis()));
 }
 
 OverlayAxes::~OverlayAxes()
 {
   delete m_render;
+}
+
+QList<QAction*> OverlayAxes::actions() const
+{
+  QList<QAction*> result;
+  return result << m_axesAction;
+}
+
+QStringList OverlayAxes::menuPath(QAction*) const
+{
+  return QStringList() << tr("&View");
+}
+
+void OverlayAxes::procesAxis()
+{
+  m_enabled = !m_enabled;
+  Rendering::GroupNode* engineNode = m_widgetToNode[m_glWidget];
+  GroupNode& node = m_scene->rootNode();
+  if (node.hasChild(engineNode)) {
+    engineNode->clearUI();
+    m_scene->rootNode().removeChild(engineNode);
+    delete engineNode;
+    m_widgetToNode[m_glWidget] = nullptr;
+  } else {
+    engineNode = new Rendering::GroupNode(&node);
+    m_widgetToNode[m_glWidget] = engineNode;
+    process(*m_molecule, *engineNode);
+  }
+} // namespace QtPlugins
+
+void OverlayAxes::setActiveWidget(QWidget* widget)
+{
+  if (widget != nullptr) {
+    m_glWidget = widget;
+    if (m_widgetToNode.find(m_glWidget) == m_widgetToNode.end()) {
+      m_widgetToNode[m_glWidget] = nullptr;
+    }
+  }
 }
 
 void OverlayAxes::process(const Core::Molecule&, Rendering::GroupNode& node)
@@ -251,27 +298,18 @@ void OverlayAxes::process(const Core::Molecule&, Rendering::GroupNode& node)
   // Since our geometry doesn't change, we just make a copy of the pre-built
   // set of axes.
   geo->addDrawable(new CustomMesh(*m_render->mesh));
-  node.addChild(geo);
+  node.addChild(geo, GroupNode::NodeType::UI);
 }
 
-void OverlayAxes::processEditable(const QtGui::RWMolecule&,
-                                  Rendering::GroupNode& node)
+void OverlayAxes::setMolecule(QtGui::Molecule* molecule)
 {
-  GeometryNode* geo = new GeometryNode;
-  // Since our geometry doesn't change, we just make a copy of the pre-built
-  // set of axes.
-  geo->addDrawable(new CustomMesh(*m_render->mesh));
-  node.addChild(geo);
+  m_molecule = molecule;
 }
 
-bool OverlayAxes::isEnabled() const
+void OverlayAxes::setScene(Rendering::Scene* scene)
 {
-  return m_enabled;
+  m_scene = scene;
 }
 
-void OverlayAxes::setEnabled(bool enable)
-{
-  m_enabled = enable;
-}
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

@@ -22,13 +22,12 @@
 class QAction;
 class QDialog;
 
-namespace MoleQueue {
-class JobObject;
-}
-
 namespace Avogadro {
 namespace Io {
 class FileFormat;
+}
+namespace MoleQueue {
+class JobObject;
 }
 
 namespace QtPlugins {
@@ -40,7 +39,7 @@ class Cp2kInput : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit Cp2kInput(QObject* parent = 0);
+  explicit Cp2kInput(QObject* parent = nullptr);
   ~Cp2kInput();
 
   QString name() const { return tr("CP2K input"); }
@@ -57,7 +56,7 @@ public slots:
   /**
    * Emitted when the user requests that a job's output be loaded in Avogadro.
    */
-  void openJobOutput(const MoleQueue::JobObject& job);
+  void openJobOutput(const Avogadro::MoleQueue::JobObject& job);
 
   bool readMolecule(QtGui::Molecule& mol);
 

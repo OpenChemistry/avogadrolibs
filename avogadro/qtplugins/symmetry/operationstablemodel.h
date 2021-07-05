@@ -45,7 +45,7 @@ public:
     ColumnVector = 2
   };
 
-  explicit OperationsTableModel(QObject* parent = 0);
+  explicit OperationsTableModel(QObject* parent = nullptr);
   ~OperationsTableModel() override;
 
   int rowCount(const QModelIndex&) const override { return m_operations_size; };

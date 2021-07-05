@@ -36,7 +36,7 @@ class ConnectionSettingsDialog : public QDialog
 {
   Q_OBJECT
 public:
-  explicit ConnectionSettingsDialog(QWidget* parent_ = 0);
+  explicit ConnectionSettingsDialog(QWidget* parent_ = nullptr);
   virtual ~ConnectionSettingsDialog();
 
   static const QString defaultHost;

@@ -25,7 +25,7 @@ namespace QtPlugins {
 OperationsTableModel::OperationsTableModel(QObject* parent)
   : QAbstractTableModel(parent)
 {
-  m_operations = NULL;
+  m_operations = nullptr;
   m_operations_size = 0;
 }
 

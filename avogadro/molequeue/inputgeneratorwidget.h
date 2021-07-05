@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_MOLEQUEUE_INPUTGENERATORWIDGET_H
@@ -27,16 +16,13 @@ class QJsonValue;
 class QTextEdit;
 class QWidget;
 
-namespace MoleQueue {
-class JobObject;
-}
-
 namespace Avogadro {
 namespace QtGui {
 class Molecule;
 }
 
 namespace MoleQueue {
+class JobObject;
 namespace Ui {
 class InputGeneratorWidget;
 }
@@ -70,7 +56,7 @@ public:
    * Construct a widget that dynamically generates a GUI to configure the
    * InputGenerator script specified by scriptFilePath.
    */
-  explicit InputGeneratorWidget(QWidget* parent_ = 0);
+  explicit InputGeneratorWidget(QWidget* parent_ = nullptr);
   ~InputGeneratorWidget() override;
 
   /**
@@ -117,7 +103,7 @@ signals:
   /**
    * Emitted when the user requests that a job's output be loaded in Avogadro.
    */
-  void openJobOutput(const ::MoleQueue::JobObject& job);
+  void openJobOutput(const JobObject& job);
 
 protected:
   /**

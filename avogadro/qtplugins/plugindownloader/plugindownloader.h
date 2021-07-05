@@ -30,6 +30,8 @@ class QProgressDialog;
 namespace Avogadro {
 namespace QtPlugins {
 
+class DownloaderWidget;
+
 /**
  * @brief Downloads Github repos and extracts their contents into a Avogadro
  * folder for plugins, molecule data, etc..
@@ -40,14 +42,14 @@ class PluginDownloader : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit PluginDownloader(QObject* parent = 0);
+  explicit PluginDownloader(QObject* parent = nullptr);
   ~PluginDownloader() override;
 
-  QString name() const override { return tr("Plugin Downloader"); }
+  QString name() const override { return tr("Download Plugins"); }
 
   QString description() const override
   {
-    return tr("Downloader plugins from Github repositories.");
+    return tr("Download plugins from GitHub repositories.");
   }
 
   QList<QAction*> actions() const override;
@@ -67,6 +69,7 @@ private:
   QtGui::Molecule* m_molecule;
   QNetworkAccessManager* m_network;
   QString m_moleculeName;
+  DownloaderWidget* m_widget;
 };
 }
 }

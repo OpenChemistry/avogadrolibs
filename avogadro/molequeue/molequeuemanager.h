@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEMANAGER_H
@@ -23,7 +12,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-#include <molequeue/client/client.h>
+#include "client/client.h"
 
 namespace Avogadro {
 namespace MoleQueue {
@@ -43,7 +32,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueManager : public QObject
 {
   Q_OBJECT
 public:
-  explicit MoleQueueManager(QObject* parent_ = 0);
+  explicit MoleQueueManager(QObject* parent_ = nullptr);
   ~MoleQueueManager() override;
 
   /**
@@ -59,11 +48,11 @@ public:
   bool connectIfNeeded();
 
   /**
-   * @return A reference to the managed MoleQueue::Client instance.
+   * @return A reference to the managed Client instance.
    * @{
    */
-  ::MoleQueue::Client& client();
-  const ::MoleQueue::Client& client() const;
+  Client& client();
+  const Client& client() const;
   /** @} */
 
   /**
@@ -89,7 +78,7 @@ private slots:
 
 private:
   static MoleQueueManager* m_instance;
-  ::MoleQueue::Client m_client;
+  Client m_client;
   MoleQueueQueueListModel m_queueModel;
 };
 

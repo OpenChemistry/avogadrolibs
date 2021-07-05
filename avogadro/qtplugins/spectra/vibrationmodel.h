@@ -28,7 +28,7 @@ namespace QtPlugins {
 class VibrationModel : public QAbstractItemModel
 {
 public:
-  explicit VibrationModel(QObject* p = 0);
+  explicit VibrationModel(QObject* p = nullptr);
 
   QModelIndex parent(const QModelIndex& child) const override;
   int rowCount(const QModelIndex& parent) const override;

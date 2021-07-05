@@ -34,7 +34,7 @@ class MongoChem : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit MongoChem(QObject* parent = 0);
+  explicit MongoChem(QObject* parent = nullptr);
   ~MongoChem() override;
 
   QString name() const override { return tr("Mongo Chem Server"); }

@@ -44,7 +44,7 @@ class ThreeDMolDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit ThreeDMolDialog(QtGui::Molecule* mol, QWidget* parent_ = 0);
+  explicit ThreeDMolDialog(QtGui::Molecule* mol, QWidget* parent_ = nullptr);
   ~ThreeDMolDialog() override;
 
   QtGui::Molecule* molecule() { return m_molecule; }

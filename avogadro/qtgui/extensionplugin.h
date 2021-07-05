@@ -52,7 +52,7 @@ class AVOGADROQTGUI_EXPORT ExtensionPlugin : public QObject
   Q_OBJECT
 
 public:
-  explicit ExtensionPlugin(QObject* parent = 0);
+  explicit ExtensionPlugin(QObject* parent = nullptr);
   ~ExtensionPlugin() override;
 
   /**
@@ -76,7 +76,7 @@ public:
    * action was not recognized, or contain two or more strings (top level, plus
    * name, e.g. File, &Open).
    */
-  virtual QStringList menuPath(QAction* action = 0) const = 0;
+  virtual QStringList menuPath(QAction* action = nullptr) const = 0;
 
   /**
    * @return A list of file format readers/writers.

@@ -24,14 +24,14 @@ namespace QtPlugins {
 
 /**
  * @brief Render a molecule in the ball and stick style.
- * @author David C. Lonie
+ * @author Allison Vacanti
  */
 class BallAndStick : public QtGui::ScenePlugin
 {
   Q_OBJECT
 
 public:
-  explicit BallAndStick(QObject* parent = 0);
+  explicit BallAndStick(QObject* parent = nullptr);
   ~BallAndStick() override;
 
   void process(const Core::Molecule& molecule,

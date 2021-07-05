@@ -16,19 +16,14 @@
 
 #include "zipextracter.h"
 
-#include <QString>
-
+#include <QtCore/QString>
 namespace Avogadro {
 
 namespace QtPlugins {
 
-ZipExtracter::ZipExtracter()
-{
-}
+ZipExtracter::ZipExtracter() {}
 
-ZipExtracter::~ZipExtracter()
-{
-}
+ZipExtracter::~ZipExtracter() {}
 
 int ZipExtracter::copyData(struct archive* ar, struct archive* aw)
 {
@@ -58,6 +53,39 @@ char* ZipExtracter::convert(const std::string& str)
   return result;
 }
 
+QList<QString> ZipExtracter::listFiles(const std::string absolutepath)
+{
+  struct archive* a;
+  struct archive_entry* entry;
+  int r;
+
+  a = archive_read_new();
+  archive_read_support_format_zip(a);
+  archive_read_support_filter_all(a);
+
+  QList<QString> toReturn;
+
+  if ((r = archive_read_open_filename(a, convert(absolutepath), 512))) {
+    toReturn.append("ERROR - archive_read_open_filename == true");
+    toReturn.append(QString::number(r));
+    QString errorMsg = archive_error_string(a);
+    toReturn.append(errorMsg);
+    return toReturn;
+  }
+
+  for (;;) {
+    r = archive_read_next_header(a, &entry);
+    if (r < ARCHIVE_OK)
+      break;
+
+    toReturn.append(archive_entry_pathname(entry));
+    archive_read_data_skip(a); // Note 2
+  }
+  r = archive_read_free(a);
+
+  return toReturn;
+}
+
 // Extract method from libarchive docs, changed to return QList of errors
 QList<QString> ZipExtracter::extract(std::string extractdir,
                                      std::string absolutepath)
@@ -80,6 +108,8 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
 
   a = archive_read_new();
   archive_read_support_format_all(a);
+  archive_read_support_filter_all(a);
+
   ext = archive_write_disk_new();
   archive_write_disk_set_options(ext, flags);
   archive_write_disk_set_standard_lookup(ext);
@@ -91,11 +121,13 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
     return toReturn;
   }
   long itrCount = 0;
+
   for (;;) {
     r = archive_read_next_header(a, &entry);
 
-    if (r == ARCHIVE_EOF)
+    if (r == ARCHIVE_EOF) {
       break;
+    }
     if (r < ARCHIVE_OK)
       fprintf(stderr, "%s\n", archive_error_string(a));
     if (r < ARCHIVE_WARN) {
@@ -134,5 +166,6 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
   archive_write_free(ext);
   return toReturn;
 }
-}
-}
+
+} // namespace QtPlugins
+} // namespace Avogadro

@@ -27,4 +27,4 @@ avogadro_plugin(MongoChem
   "${uis}"
 )
 
-target_link_libraries(MongoChem LINK_PRIVATE ${Qt5Network_LIBRARIES})
+target_link_libraries(MongoChem PRIVATE ${Qt5Network_LIBRARIES})

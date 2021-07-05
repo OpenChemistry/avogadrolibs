@@ -34,7 +34,7 @@ class PdfOptionsDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit PdfOptionsDialog(QWidget* parent = 0);
+  explicit PdfOptionsDialog(QWidget* parent = nullptr);
   ~PdfOptionsDialog();
 
   double maxRadius() const;

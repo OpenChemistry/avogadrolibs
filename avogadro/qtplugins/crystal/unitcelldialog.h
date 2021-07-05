@@ -55,7 +55,7 @@ public:
     FractionalMatrix
   };
 
-  explicit UnitCellDialog(QWidget* parent = 0);
+  explicit UnitCellDialog(QWidget* parent = nullptr);
   ~UnitCellDialog() override;
 
   void setMolecule(QtGui::Molecule* molecule);

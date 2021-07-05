@@ -30,7 +30,7 @@ MolecularProperties::MolecularProperties(QObject* parent_)
     m_dialog(nullptr), m_molecule(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText("&Molecular Properties...");
+  m_action->setText("&Molecular...");
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
@@ -50,7 +50,7 @@ QList<QAction*> MolecularProperties::actions() const
 
 QStringList MolecularProperties::menuPath(QAction*) const
 {
-  return QStringList() << tr("&View");
+  return QStringList() << tr("&Analysis") << tr("&Properties");
 }
 
 void MolecularProperties::setMolecule(QtGui::Molecule* mol)

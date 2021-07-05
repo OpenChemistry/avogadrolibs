@@ -33,7 +33,7 @@ class SelectionToolWidget : public QWidget
   Q_OBJECT
 
 public:
-  explicit SelectionToolWidget(QWidget* parent = 0);
+  explicit SelectionToolWidget(QWidget* parent = nullptr);
   ~SelectionToolWidget();
 
   void setColor(Vector3ub color);

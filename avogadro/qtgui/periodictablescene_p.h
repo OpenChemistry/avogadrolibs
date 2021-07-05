@@ -40,7 +40,7 @@ class PeriodicTableScene : public QGraphicsScene
 
 public:
   /** Constructor. */
-  explicit PeriodicTableScene(QObject* parent = 0);
+  explicit PeriodicTableScene(QObject* parent = nullptr);
 
 signals:
   /**

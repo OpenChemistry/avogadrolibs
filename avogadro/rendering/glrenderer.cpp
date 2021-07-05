@@ -179,17 +179,17 @@ std::multimap<float, Identifier> GLRenderer::hits(
   if (!group)
     return result;
 
-  for (std::vector<Node*>::const_iterator it = group->children().begin();
-       it != group->children().end(); ++it) {
+  for (auto it = group->children().begin(); it != group->children().end();
+       ++it) {
     std::multimap<float, Identifier> loopHits;
-    const Node* itNode = *it;
+    const Node* itNode = it->node;
     const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
       loopHits = hits(childGroup, rayOrigin, rayEnd, rayDirection);
       result.insert(loopHits.begin(), loopHits.end());
       continue;
     }
-    const GeometryNode* childGeometry = (*it)->cast<GeometryNode>();
+    const GeometryNode* childGeometry = itNode->cast<GeometryNode>();
     if (childGeometry) {
       loopHits = hits(childGeometry, rayOrigin, rayEnd, rayDirection);
       result.insert(loopHits.begin(), loopHits.end());
@@ -228,14 +228,14 @@ Array<Identifier> GLRenderer::hits(const GroupNode* group,
   for (auto it = group->children().begin(); it != group->children().end();
        ++it) {
     Array<Identifier> loopHits;
-    const Node* itNode = *it;
+    const Node* itNode = it->node;
     const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
       loopHits = hits(childGroup, f);
       result.insert(result.end(), loopHits.begin(), loopHits.end());
       continue;
     }
-    const auto childGeometry = (*it)->cast<GeometryNode>();
+    const auto childGeometry = itNode->cast<GeometryNode>();
     if (childGeometry) {
       loopHits = childGeometry->areaHits(f);
       result.insert(result.end(), loopHits.begin(), loopHits.end());

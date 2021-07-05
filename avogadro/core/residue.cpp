@@ -1,21 +1,11 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "residue.h"
 #include "molecule.h"
+#include "residuecolors.h"
 #include "residuedata.h"
 
 namespace Avogadro {
@@ -23,26 +13,33 @@ namespace Core {
 
 Residue::Residue() {}
 
-Residue::Residue(std::string& name) : m_residueName(name) {}
+Residue::Residue(std::string& name)
+  : m_residueName(name), m_chainId('A'), m_heterogen(false), m_color(0,0,0), m_customColorSet(false)
+{}
 
 Residue::Residue(std::string& name, Index& number)
-  : m_residueName(name), m_residueId(number)
+  : m_residueName(name), m_residueId(number), m_chainId('A'), m_heterogen(false), m_color(0,0,0), m_customColorSet(false)
 {}
 
 Residue::Residue(std::string& name, Index& number, char& id)
-  : m_residueName(name), m_residueId(number), m_chainId(id)
+  : m_residueName(name), m_residueId(number), m_chainId(id), m_heterogen(false), m_color(0,0,0), m_customColorSet(false)
 {}
 
 Residue::Residue(const Residue& other)
   : m_residueName(other.m_residueName), m_residueId(other.m_residueId),
-    m_atomNameMap(other.m_atomNameMap)
+    m_chainId(other.m_chainId), m_atomNameMap(other.m_atomNameMap),
+    m_heterogen(other.m_heterogen), m_color(other.m_color), m_customColorSet(other.m_customColorSet)
 {}
 
 Residue& Residue::operator=(Residue other)
 {
   m_residueName = other.m_residueName;
   m_residueId = other.m_residueId;
+  m_chainId = other.m_chainId;
   m_atomNameMap = other.m_atomNameMap;
+  m_heterogen = other.m_heterogen;
+  m_color = other.m_color;
+  m_customColorSet = other.m_customColorSet;
   return *this;
 }
 
@@ -61,6 +58,17 @@ std::vector<Atom> Residue::residueAtoms()
     res.push_back(it->second);
   }
   return res;
+}
+
+Atom Residue::getAtomByName(std::string name)
+{
+  Atom empty;
+  auto search = m_atomNameMap.find(name);
+  if (search != m_atomNameMap.end()) {
+    return search->second;
+  }
+
+  return empty;
 }
 
 void Residue::resolveResidueBonds(Molecule& mol)
@@ -89,14 +97,35 @@ void Residue::resolveResidueBonds(Molecule& mol)
 
 int Residue::getAtomicNumber(std::string name)
 {
-  std::map<std::string, int> resAtoms;
-  if (residueDict.find(m_residueName) != residueDict.end()) {
-    resAtoms = residueDict[m_residueName].residueAtoms();
-    if (resAtoms.find(name) != resAtoms.end())
-      return resAtoms[name];
+  auto search = m_atomNameMap.find(name);
+  if (search != m_atomNameMap.end()) {
+    return search->second.atomicNumber();
   }
 
   return 0;
+}
+
+void Residue::setColor(const Vector3ub color)
+{
+  m_customColorSet = true;
+  m_color = color;
+}
+
+const Vector3ub Residue::color() const
+{
+  if (m_customColorSet)
+  return m_color;
+
+  // default return a color for the chain
+  int offset = 0;
+  if (m_chainId >= 'A' && m_chainId <= 'Z')
+     offset = m_chainId - 'A';
+  else if (m_chainId >= 'a' && m_chainId <= 'z')
+     offset = m_chainId - 'a';
+  else if (m_chainId >= '0' && m_chainId <= '9')
+     offset = m_chainId - '0' + 15;// starts at 'P'
+
+  return Vector3ub(chain_color[offset]);
 }
 
 } // namespace Core

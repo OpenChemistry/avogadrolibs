@@ -69,7 +69,8 @@ bool colorFromString(const std::string &str, Color &color)
   }
 
   for (unsigned char i = 0; i < 3; ++i)
-    color.c[i] = static_cast<unsigned char>(255.0 * strtod(tokens[i].c_str(), 0));
+    color.c[i] =
+      static_cast<unsigned char>(255.0 * strtod(tokens[i].c_str(), nullptr));
 
   return true;
 }
@@ -137,14 +138,15 @@ int main(int argc, char* argv[])
                 static_cast<unsigned char>(atoi(scalarNode.child_value()));
           }
           else if (value == "bo:mass") {
-            elements.back().mass = strtod(scalarNode.child_value(), 0);
+            elements.back().mass = strtod(scalarNode.child_value(), nullptr);
           }
           else if (value == "bo:radiusCovalent") {
             elements.back().radiusCovalent =
-                strtod(scalarNode.child_value(), 0);
+                strtod(scalarNode.child_value(), nullptr);
           }
           else if (value == "bo:radiusVDW") {
-            elements.back().radiusVDW = strtod(scalarNode.child_value(), 0);
+            elements.back().radiusVDW =
+              strtod(scalarNode.child_value(), nullptr);
           }
         }
         scalarNode = scalarNode.next_sibling("scalar");

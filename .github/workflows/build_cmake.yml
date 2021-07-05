@@ -4,7 +4,7 @@ name: CMake Build Matrix
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
 
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 env:
   BUILD_TYPE: Release
@@ -12,8 +12,7 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  CCACHE_VERSION: 3.7.7
-  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
 
 jobs:
   build:
@@ -31,14 +30,14 @@ jobs:
             cpack: "",
           }
         - {
-            name: "Ubuntu 20.04 GCC", artifact: "Ubuntu2004.tar.gz",
+            name: "Ubuntu 20.04 GCC", artifact: "Ubuntu-2004.tar.gz",
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
             cpack: "",
           }
         - {
-            name: "Ubuntu 18.04 GCC", artifact: "Ubuntu1804.tar.gz",
+            name: "Ubuntu 18.04 GCC", artifact: "",
             os: ubuntu-18.04,
             cc: "gcc", cxx: "g++",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
@@ -55,7 +54,8 @@ jobs:
             name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
-            cmake_flags: "",
+            cmake_flags: " ",
+            build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
 
@@ -65,11 +65,11 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev libqt5svg5-dev
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install ninja boost eigen glew open-babel
+        brew install ninja eigen glew
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
@@ -93,7 +93,7 @@ jobs:
 
     - name: Cache Qt
       id: cache-qt
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: ../Qt
         key: ${{ runner.os }}-QtCache
@@ -110,9 +110,16 @@ jobs:
       with:
         arch: x64
 
+    - name: Grab cache files
+      uses: actions/cache@v2
+      if: runner.os != 'Windows'
+      with:
+        path: ${{ runner.workspace }}/build/thirdparty
+        key: ${{ matrix.config.name }}-thirdparty
+
     - name: Configure
       run: |
-        mkdir "${{ runner.workspace }}/build"
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
@@ -121,9 +128,31 @@ jobs:
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
+
+    - name: Fix Mac plugins
+      if: runner.os == 'macOS'
+      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel 
+      run: |
+        for plugin in *.so; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $plugin $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
+          done
+        done
+        cd .. # build/prefix/lib
+        for plugin in libinchi.?.?.?.dylib; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $plugin $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
+          done
+        done
+        otool -L libinchi.?.?.?.dylib
+        cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
 
     - name: Run tests
       if: runner.os != 'Windows'
@@ -158,3 +187,78 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         path: ${{ runner.workspace }}/build/compile-commands.json
+
+  release:
+    if: contains(github.ref, 'tags/')
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Avogadro ${{ github.ref }}
+        draft: true
+        prerelease: true
+
+    - name: Store Release url
+      run: |
+        echo "${{ steps.create_release.outputs.upload_url }}" > ./upload_url
+    - uses: actions/upload-artifact@v2
+      with:
+        path: ./upload_url
+        name: upload_url
+
+  publish:
+    if: contains(github.ref, 'tags/')
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Ubuntu Latest GCC", artifact: "Ubuntu-2004.tar.gz",
+            os: ubuntu-latest
+          }
+        - {
+            name: "Windows Latest MSVC", artifact: "Win64.exe",
+            os: ubuntu-latest
+          }
+        - {
+            name: "macOS Latest Clang", artifact: "macOS.dmg",
+            os: ubuntu-latest
+          }
+    needs: release
+
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: ${{ matrix.config.artifact }}
+        path: ./
+
+    - name: Download URL
+      uses: actions/download-artifact@v1
+      with:
+        name: upload_url
+        path: ./
+    - id: set_upload_url
+      run: |
+        upload_url=`cat ./upload_url`
+        echo ::set-output name=upload_url::$upload_url
+    - name: Upload to Release
+      id: upload_to_release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
+        asset_path: ./${{ matrix.config.artifact }}
+        asset_name: ${{ matrix.config.artifact }}
+        asset_content_type: application/x-gtar
+

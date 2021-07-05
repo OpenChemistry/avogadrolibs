@@ -36,7 +36,7 @@ class MolecularPropertiesDialog;
  * <avogadrolibs/qtgui/molecularpropertiesdialog.h>
  * @brief The MolecularPropertiesDialog class provides a dialog which displays
  * basic molecular properties.
- * @author David C. Lonie
+ * @author Allison Vacanti
  *
  * @todo IUPAC name fetch (need inchi key).
  */
@@ -46,7 +46,7 @@ class MolecularPropertiesDialog : public QDialog
 
 public:
   explicit MolecularPropertiesDialog(QtGui::Molecule* mol,
-                                     QWidget* parent_ = 0);
+                                     QWidget* parent_ = nullptr);
   ~MolecularPropertiesDialog() override;
 
   QtGui::Molecule* molecule() { return m_molecule; }
