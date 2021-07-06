@@ -1,8 +1,5 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
 
   Adapted from Avogadro 1.x with the following authors' permission:
   Copyright (C) 2007 by Shahzad Ali
@@ -11,14 +8,7 @@
   Copyright (C) 2007,2008 by Marcus D. Hanwell
   Copyright (C) 2006,2007 by Benoit Jacob
 
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "bondcentrictool.h"
@@ -302,18 +292,14 @@ void ArcStrip::setArc(const Vector3f& origin, const Vector3f& start,
   addLineStrip(verts, lineWidth);
 }
 
-} // end anon namespace
+} // namespace
 
 BondCentricTool::BondCentricTool(QObject* parent_)
-  : QtGui::ToolPlugin(parent_)
-  , m_activateAction(new QAction(this))
-  , m_molecule(nullptr)
-  , m_renderer(nullptr)
-  , m_moveState(IgnoreMove)
-  , m_planeSnapIncr(10.f)
-  , m_snapPlaneToBonds(true)
+  : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
+    m_molecule(nullptr), m_renderer(nullptr), m_moveState(IgnoreMove),
+    m_planeSnapIncr(10.f), m_snapPlaneToBonds(true)
 {
-  m_activateAction->setText(tr("Bond-centric manipulation"));
+  m_activateAction->setText(tr("Bond-Centric Manipulation"));
   m_activateAction->setIcon(QIcon(":/icons/bondcentrictool.png"));
 }
 
@@ -961,8 +947,7 @@ void BondCentricTool::drawBondAngle(Rendering::GeometryNode& node,
   const Vector3f& textPos(a1);
 
   Rendering::TextLabel3D* label = new Rendering::TextLabel3D;
-  label->setText(QString::number(displayAngle, 'f', 1).toStdString() +
-                 degreeString);
+  label->setText(tr("%L1°").arg(displayAngle, 5, 'f', 1).toStdString());
   label->setRenderPass(Rendering::Overlay3DPass);
   label->setAnchor(textPos);
   node.addDrawable(label);
@@ -984,8 +969,7 @@ void BondCentricTool::drawBondLengthLabel(Rendering::GeometryNode& node,
   const Vector3f bondVector(endPos - startPos);
 
   Rendering::TextLabel3D* label = new Rendering::TextLabel3D;
-  label->setText(QString::number(bondVector.norm(), 'f', 2).toStdString() +
-                 angstromString);
+  label->setText(tr("%L1 Å").arg(bondVector.norm(), 4, 'f', 2).toStdString());
   label->setRenderPass(Rendering::Overlay3DPass);
   label->setAnchor(bondCenter);
   node.addDrawable(label);
@@ -1051,7 +1035,7 @@ void BondCentricTool::drawAtomBondAngle(Rendering::GeometryNode& node,
   arc->setArc(origin, start, axis, angle, 5.f, 1.f);
 
   Rendering::TextLabel3D* label = new Rendering::TextLabel3D;
-  label->setText(QString::number(angle, 'f', 1).toStdString() + degreeString);
+  label->setText(tr("%L1°").arg(angle, 6, 'f', 1).toStdString());
   label->setRenderPass(Rendering::Overlay3DPass);
   label->setAnchor(labelPos);
   node.addDrawable(label);

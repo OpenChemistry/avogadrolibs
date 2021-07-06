@@ -1,21 +1,11 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
 
   Adapted from Avogadro 1.x with the following authors' permission:
   Copyright 2007 Donald Ephraim Curtis
   Copyright 2008 Marcus D. Hanwell
 
   This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
 ******************************************************************************/
 
 #include "measuretool.h"
@@ -204,7 +194,7 @@ void MeasureTool::draw(Rendering::GroupNode& node)
       overlayText +=
         QString("%1 %L2\n")
           .arg(tr("Dihedral:"), labelWidth)
-          .arg(tr("%L1°").arg(dihedralAngle(v1, v2, v3), 10, 'f', 3), 10);
+          .arg(tr("%L1°").arg(dihedralAngle(v1, v2, v3), 9, 'f', 3), 9);
       angle23 = bondAngle(v2, v3);
     // fall through
     case 3:
@@ -212,20 +202,20 @@ void MeasureTool::draw(Rendering::GroupNode& node)
       overlayText +=
         QString("%1 %L2 %L3\n")
           .arg(tr("Angles:"), labelWidth)
-          .arg(tr("%L1°").arg(angle12, 10, 'f', 3), 10)
-          .arg(angle23 < 360.f ? tr("%L1°").arg(angle23, 10, 'f', 3)
+          .arg(tr("%L1°").arg(angle12, 9, 'f', 3), 9)
+          .arg(angle23 < 360.f ? tr("%L1°").arg(angle23, 9, 'f', 3)
                                : QString(),
                10);
     // fall through
     case 2:
       overlayText +=
-        QString("%1 %L2 %L3 %L4")
+        QString("%1 %L2%L3%L4")
           .arg(tr("Distance:"), labelWidth)
-          .arg(tr("%L1 Å").arg(v1Norm, 10, 'f', 3), 10)
-          .arg(v2Norm >= 0.f ? tr("%L1 Å").arg(v2Norm, 10, 'f', 3) : QString(),
-               10)
-          .arg(v3Norm >= 0.f ? tr("%L1 Å").arg(v3Norm, 10, 'f', 3) : QString(),
-               10);
+          .arg(tr("%L1 Å").arg(v1Norm, 9, 'f', 3), 9)
+          .arg(v2Norm >= 0.f ? tr("%L1 Å").arg(v2Norm, 9, 'f', 3) : QString(),
+               9)
+          .arg(v3Norm >= 0.f ? tr("%L1 Å").arg(v3Norm, 9, 'f', 3) : QString(),
+               9);
     default:
       break;
   }
