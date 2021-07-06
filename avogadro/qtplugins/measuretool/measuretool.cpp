@@ -147,7 +147,7 @@ void MeasureTool::createLabels(T* mol, GeometryNode* geo,
     label->setTextProperties(atomLabelProp);
     label->setAnchor(positions[i].cast<float>());
     label->setRadius(
-      static_cast<float>(Elements::radiusCovalent(atomicNumber)));
+      static_cast<float>(Elements::radiusCovalent(atomicNumber)) + 0.1f);
     geo->addDrawable(label);
   }
 }
