@@ -648,6 +648,7 @@ public:
 protected:
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
   mutable bool m_graphDirty; // Should the graph be rebuilt before returning it?
+  size_t m_historyID;        // count the changes done
   VariantMap m_data;
   CustomElementMap m_customElementMap;
   Array<unsigned char> m_atomicNumbers;

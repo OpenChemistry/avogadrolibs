@@ -27,8 +27,11 @@ struct ShaderInfo
 
 struct Point
 {
-  Point(const Vector3f& p, const Vector3ub& c) : pos(p), color(c) {}
+  Point(const Vector3f& p, const Eigen::Matrix3f& r, const Vector3ub& c)
+    : pos(p), rot(r), color(c)
+  {}
   Vector3f pos;
+  Eigen::Matrix3f rot;
   Vector3ub color;
 };
 
@@ -63,6 +66,7 @@ class AVOGADRORENDERING_EXPORT CurveGeometry : public Drawable
 {
 public:
   CurveGeometry();
+  CurveGeometry(bool flat);
   ~CurveGeometry() override;
   /**
    * Accept a visit from our friendly visitor.
@@ -74,8 +78,8 @@ public:
    */
   void render(const Camera& camera) override;
 
-  void addPoint(const Vector3f& pos, const Vector3ub& color, float radius,
-                size_t i);
+  void addPoint(const Eigen::Matrix3f& frenet, const Vector3f& pos,
+                const Vector3ub& color, float radius, size_t i);
 
 protected:
   std::vector<Line*> m_lines;
@@ -83,11 +87,19 @@ protected:
   ShaderInfo m_shaderInfo;
   bool m_dirty;
   std::vector<size_t> m_factorials;
+  bool m_canBeFlat;
 
-  virtual void update(int index) = 0;
+  virtual void update(int index);
   virtual Vector3f computeCurvePoint(float t,
                                      const std::list<Point*>& points) = 0;
+  virtual std::vector<ColorNormalVertex> computeCirclePoints(
+    const Eigen::Affine3f& a, const Eigen::Affine3f& b, float radius,
+    bool flat);
   void processShaderError(bool error);
+
+  virtual std::multimap<float, Identifier> hits(const Vector3f&,
+                                                const Vector3f&,
+                                                const Vector3f&) const override;
 };
 
 } // End namespace Rendering

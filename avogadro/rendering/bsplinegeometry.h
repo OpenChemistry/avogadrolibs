@@ -15,12 +15,10 @@ class AVOGADRORENDERING_EXPORT BSplineGeometry : public CurveGeometry
 {
 public:
   BSplineGeometry();
+  BSplineGeometry(bool flat);
 
 protected:
-  void update(int index) override;
   Vector3f computeCurvePoint(float t, const std::list<Point*>& points) override;
-  std::multimap<float, Identifier> hits(const Vector3f&, const Vector3f&,
-                                        const Vector3f&) const override;
 };
 
 } // End namespace Rendering

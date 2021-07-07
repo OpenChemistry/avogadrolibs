@@ -18,6 +18,7 @@ set(HEADERS
   bsplinegeometry.h
   bufferobject.h
   camera.h
+  cartoongeometry.h
   curvegeometry.h
   cylindergeometry.h
   drawable.h
@@ -52,6 +53,7 @@ set(SOURCES
   beziergeometry.cpp
   bufferobject.cpp
   bsplinegeometry.cpp
+  cartoongeometry.cpp
   camera.cpp
   curvegeometry.cpp
   cylindergeometry.cpp

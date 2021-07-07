@@ -217,7 +217,7 @@ std::vector<std::vector<size_t>> Graph::connectedComponents() const
 
 size_t Graph::getConnectedID(size_t index) const
 {
-  return m_connectedGroup.getGroup(index);
+  return connectedGroup->getGroup(index);
 }
 
 } // namespace Core

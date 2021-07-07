@@ -13,6 +13,7 @@
 #include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/rendering/beziergeometry.h>
 #include <avogadro/rendering/bsplinegeometry.h>
+#include <avogadro/rendering/cartoongeometry.h>
 #include <avogadro/rendering/cylindergeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
@@ -33,6 +34,7 @@ using Core::Elements;
 using Core::Molecule;
 using Rendering::BezierGeometry;
 using Rendering::BSplineGeometry;
+using Rendering::Cartoon;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
@@ -43,13 +45,27 @@ using std::pair;
 using std::reference_wrapper;
 using std::vector;
 
-typedef list<pair<const Core::Atom, const Core::Atom>> AtomsPairList;
+struct BackboneResidue
+{
+  BackboneResidue() {}
+  BackboneResidue(const Matrix3f& f, const Vector3f p, const Vector3ub& c1,
+                  const Vector3ub& c2, const size_t& g)
+    : frenet(f), pos(p), color1(c1), color2(c2), group(g)
+  {}
+  Matrix3f frenet;
+  Vector3f pos;
+  Vector3ub color1;
+  Vector3ub color2;
+  size_t group;
+};
+
+typedef list<BackboneResidue> AtomsPairList;
 
 Cartoons::Cartoons(QObject* parent)
   : ScenePlugin(parent), m_group(nullptr), m_setupWidget(nullptr),
     m_enabled(false), m_showBackbone(false), m_showTrace(false),
-    m_showTube(true), m_showRibbon(false), m_showRope(false),
-    m_showCartoon(false)
+    m_showTube(false), m_showRibbon(false), m_showRope(false),
+    m_showCartoon(true)
 {}
 
 Cartoons::~Cartoons()
@@ -58,20 +74,76 @@ Cartoons::~Cartoons()
     m_setupWidget->deleteLater();
 }
 
+Matrix3f makeFrenet(const Eigen::Vector3f& ca, const Eigen::Vector3f& h,
+                    const Eigen::Vector3f& nextCa, bool fliped)
+{
+  // calculate the frenet trihedron from direction between this point and
+  // next, and the hidrogen bond
+  Vector3f dirY;
+  if (fliped) {
+    dirY = (nextCa - ca).normalized();
+  } else {
+    dirY = (ca - nextCa).normalized();
+  }
+  Vector3f dirX = (h - ca).normalized();
+  Vector3f dirZ = dirY.cross(dirX);
+  dirX = dirZ.cross(dirY);
+
+  Matrix3f linear;
+  linear.col(0) = dirX;
+  linear.col(1) = dirY;
+  linear.col(2) = dirZ;
+  linear.normalize();
+  return linear;
+}
+
 map<size_t, AtomsPairList> getBackboneByResidues(const Molecule& molecule)
 {
-  auto graph = molecule.graph();
+  const auto& graph = molecule.graph();
   map<size_t, AtomsPairList> result;
+
+  map<size_t, BackboneResidue> previousCA;
   for (const auto& residue : molecule.residues()) {
     if (!residue.isHeterogen()) {
-      Core::Atom ac = residue.getAtomByName("CA");
-      Core::Atom h = residue.getAtomByName("H");
-      if (ac.isValid()) {
-        size_t index = graph.getConnectedID(ac.index());
-        if (result.find(index) == result.end()) {
-          result[index] = AtomsPairList();
+      Core::Atom caAtom = residue.getAtomByName("CA");
+      Core::Atom oAtom = residue.getAtomByName("O");
+      if (caAtom.isValid() && oAtom.isValid()) {
+        // get the group ID and check if it's initialized in the map
+        size_t group = graph.getConnectedID(caAtom.index());
+        if (result.find(group) == result.end()) {
+          result[group] = AtomsPairList();
         }
-        result[index].push_back(std::make_pair(ac, h));
+
+        Matrix3f frenet;
+        Vector3f ca = caAtom.position3d().cast<float>();
+        Vector3f o = oAtom.position3d().cast<float>();
+        Vector3ub color2;
+        if (previousCA.find(group) == previousCA.end()) {
+          frenet = Matrix3f::Zero();
+          frenet.col(0) = o;
+          color2 = caAtom.color();
+        } else {
+          auto previous = previousCA[group];
+          auto nextCa = previous.pos;
+          auto previousO = previous.frenet.col(0);
+          if (result[group].size() == 1) {
+            result[group].begin()->frenet =
+              makeFrenet(nextCa, previousO, ca, false);
+            previousO = result[group].begin()->frenet.col(0);
+          }
+
+          if (o.dot(previousO) <= 0.0f) {
+            o = -1.0f * o;
+          }
+
+          color2 = previous.color1;
+          frenet = makeFrenet(ca, o, nextCa, true);
+        }
+
+        auto backBone =
+          BackboneResidue(frenet, ca, caAtom.color(), color2, group);
+        previousCA[group] = backBone;
+        result[group].push_back(backBone);
       }
     }
   }
@@ -86,7 +158,7 @@ map<size_t, AtomsPairList> getBackboneManually(const Molecule& molecule)
 }
 
 void renderBackbone(const AtomsPairList& backbone, const Molecule& molecule,
-                    Rendering::GroupNode& node)
+                    Rendering::GroupNode& node, float radius)
 {
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
@@ -102,30 +174,23 @@ void renderBackbone(const AtomsPairList& backbone, const Molecule& molecule,
   geometry->addDrawable(cylinders);
 
   Index i = 0;
-  float bondRadius = 0.1f;
   for (AtomsPairList::const_iterator it = backbone.begin();
        it != backbone.end(); ++it) {
-    const auto& atom = *it;
-    Vector3ub color = atom.first.color();
-    Vector3f pos = atom.first.position3d().cast<float>();
-    spheres->addSphere(pos, color, bondRadius);
+    const auto& bone = *it;
+    const Vector3f& pos = bone.pos;
+    spheres->addSphere(pos, bone.color1, radius);
     if (std::next(it) != backbone.end()) {
-      const auto& nextAtom = *std::next(it);
-      Vector3f pos = atom.first.position3d().cast<float>();
-      Vector3f pos2 = nextAtom.first.position3d().cast<float>();
-      Vector3ub color = atom.first.color();
-      Vector3ub color2 = nextAtom.first.color();
-      Vector3f bondVector = pos2 - pos;
-      float bondLength = bondVector.norm();
-      bondVector /= bondLength;
-      cylinders->addCylinder(pos, pos2, bondRadius, color, color2, i);
+      const auto& nextBone = *std::next(it);
+      const Vector3f& pos2 = nextBone.pos;
+      cylinders->addCylinder(pos, pos2, radius, bone.color1, bone.color2,
+                             bone.group);
     }
     ++i;
   }
 }
 
 void renderRope(const AtomsPairList& backbone, const Molecule& molecule,
-                Rendering::GroupNode& node)
+                Rendering::GroupNode& node, float radius, size_t id)
 {
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
@@ -135,16 +200,13 @@ void renderRope(const AtomsPairList& backbone, const Molecule& molecule,
   bezier->identifier().type = Rendering::BondType;
   geometry->addDrawable(bezier);
 
-  float bondRadius = 1.0f;
-  for (const auto& atom : backbone) {
-    Vector3ub color = atom.first.color();
-    Vector3f pos = atom.first.position3d().cast<float>();
-    bezier->addPoint(pos, color, bondRadius, 0);
+  for (const auto& bone : backbone) {
+    bezier->addPoint(bone.frenet, bone.pos, bone.color1, radius, bone.group);
   }
 }
 
 void renderTube(const AtomsPairList& backbone, const Molecule& molecule,
-                Rendering::GroupNode& node, float bondRadius)
+                Rendering::GroupNode& node, float radius, size_t id)
 {
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
@@ -154,10 +216,24 @@ void renderTube(const AtomsPairList& backbone, const Molecule& molecule,
   bezier->identifier().type = Rendering::BondType;
   geometry->addDrawable(bezier);
 
-  for (const auto& atom : backbone) {
-    Vector3ub color = atom.first.color();
-    Vector3f pos = atom.first.position3d().cast<float>();
-    bezier->addPoint(pos, color, bondRadius, 0);
+  for (const auto& bone : backbone) {
+    bezier->addPoint(bone.frenet, bone.pos, bone.color1, radius, bone.group);
+  }
+}
+
+void renderCartoon(const AtomsPairList& backbone, const Molecule& molecule,
+                   Rendering::GroupNode& node, float radius, size_t id)
+{
+  GeometryNode* geometry = new GeometryNode;
+  node.addChild(geometry);
+
+  Cartoon* cartoon = new Cartoon;
+  cartoon->identifier().molecule = &molecule;
+  cartoon->identifier().type = Rendering::BondType;
+  geometry->addDrawable(cartoon);
+
+  for (const auto& bone : backbone) {
+    cartoon->addPoint(bone.frenet, bone.pos, bone.color1, radius, bone.group);
   }
 }
 
@@ -172,28 +248,33 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
     if (alphaAndHydrogens.size() == 0) {
       alphaAndHydrogens = getBackboneManually(molecule);
     }
+    size_t i = 0;
     for (const auto& group : alphaAndHydrogens) {
       const auto& alphaAndHydrogen = group.second;
       m_group = &node;
       if (m_showBackbone) {
-        renderBackbone(alphaAndHydrogen, molecule, node);
+        renderBackbone(alphaAndHydrogen, molecule, node, 0.1f);
       }
       if (m_showTrace) {
-        renderTube(alphaAndHydrogen, molecule, node, -0.15f);
+        renderTube(alphaAndHydrogen, molecule, node, -0.15f, i);
       }
       if (m_showTube) {
-        renderTube(alphaAndHydrogen, molecule, node, 0.15f);
+        renderTube(alphaAndHydrogen, molecule, node, 0.15f, i);
       }
       if (m_showRibbon) {
+        renderCartoon(alphaAndHydrogen, molecule, node,
+                      -1.0f * Cartoon::ELIPSE_RATIO, i);
       }
       if (m_showCartoon) {
+        renderCartoon(alphaAndHydrogen, molecule, node, 1.0f, i);
       }
       if (m_showRope) {
-        renderRope(alphaAndHydrogen, molecule, node);
+        renderRope(alphaAndHydrogen, molecule, node, 1.0f, i);
       }
+      ++i;
     }
   }
-} // namespace QtPlugins
+}
 
 void Cartoons::processEditable(const QtGui::RWMolecule& molecule,
                                Rendering::GroupNode& node)
