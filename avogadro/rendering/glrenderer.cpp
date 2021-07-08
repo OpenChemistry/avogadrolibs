@@ -94,7 +94,15 @@ void GLRenderer::render()
   // Setup for transparent geometry
   visitor.setRenderPass(TranslucentPass);
   glEnable(GL_BLEND);
+  // nvidia drivers have a bug where they don't like blending
+  //  so on Mac we can use this (they don't use nvidia)
+#ifdef __APPLE__
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+#else
+  // Thanks to Giuseppe D'Angelo for a related comment:
+  // https://bugreports.qt.io/browse/QTBUG-36739
+  glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+#endif
   m_scene.rootNode().accept(visitor);
 
   // Setup for 3d overlay rendering
