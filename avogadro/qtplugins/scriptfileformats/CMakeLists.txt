@@ -17,7 +17,6 @@ target_link_libraries(ScriptFileFormats PRIVATE AvogadroQuantumIO)
 # Bundled format scripts:
 set(format_scripts
   formatScripts/zyx.py
-  formatScripts/cclibScript.py
 )
 
 install(PROGRAMS ${format_scripts}
