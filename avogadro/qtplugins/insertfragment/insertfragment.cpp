@@ -40,8 +40,8 @@ namespace Avogadro {
 namespace QtPlugins {
 
 InsertFragment::InsertFragment(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_dialog(nullptr),
-    m_reader(nullptr), m_molecule(nullptr)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_crystalDialog(nullptr),
+    m_moleculeDialog(nullptr), m_reader(nullptr), m_molecule(nullptr)
 {
   QAction* action = new QAction(tr("Fragment..."), this);
   action->setData("molecules"); // will also work for crystals
@@ -86,22 +86,29 @@ void InsertFragment::showDialog()
   QAction* theSender = qobject_cast<QAction*>(sender());
 
   // Prompt user for input:
-  if (!m_dialog) {
-    m_dialog =
-      new InsertFragmentDialog(parentAsWidget, theSender->data().toString());
-    connect(m_dialog, &InsertFragmentDialog::performInsert, this,
-            &InsertFragment::performInsert);
+  bool crystal = theSender->data().toString() == "crystals";
+  if (crystal) {
+    // create the dialog if it doesn't exist
+    if (!m_crystalDialog) {
+      m_crystalDialog = new InsertFragmentDialog(parentAsWidget, "crystals");
+      connect(m_crystalDialog, &InsertFragmentDialog::performInsert, this,
+              &InsertFragment::performInsert);
+    }
+    m_crystalDialog->show();
+  } else {
+    // fragments - create the dialog if it doesn't exist
+    if (!m_moleculeDialog) {
+      m_moleculeDialog = new InsertFragmentDialog(parentAsWidget, "molecules");
+      connect(m_moleculeDialog, &InsertFragmentDialog::performInsert, this,
+              &InsertFragment::performInsert);
+    }
+    m_moleculeDialog->show();
   }
-  m_dialog->show();
 }
 
 void InsertFragment::performInsert(const QString& fileName, bool crystal)
 {
-  if (m_dialog == nullptr || m_molecule == nullptr)
-    return;
-
-  // check to see if it's an actual file and not a directory
-  if (!QFile::exists(fileName))
+  if (m_molecule == nullptr)
     return;
 
   // read the file into the new fragment
