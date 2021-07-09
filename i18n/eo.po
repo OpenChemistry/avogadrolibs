@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-22 11:28-0400\n"
-"PO-Revision-Date: 2021-06-30 17:35+0000\n"
+"PO-Revision-Date: 2021-07-10 14:32+0000\n"
 "Last-Translator: phlostically <phlostically@mailinator.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.7.1-dev\n"
+"X-Generator: Weblate 4.8-dev\n"
 
 #: molequeue/batchjob.cpp:71
 #, qt-format
@@ -3405,11 +3405,11 @@ msgstr "Inversigi Elekton"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Element..."
-msgstr ""
+msgstr "Elekti laŭ Elemento…"
 
 #: qtplugins/select/select.cpp:62
 msgid "Select by Atom Index..."
-msgstr ""
+msgstr "Elekti laŭ Atoma Indico…"
 
 #: qtplugins/select/select.cpp:66
 msgid "Select by Residue..."
@@ -3425,11 +3425,11 @@ msgstr "Elekti (&S)"
 
 #: qtplugins/select/select.cpp:153
 msgid "Select Atoms by Index"
-msgstr ""
+msgstr "Elekti Atomojn laŭ Indico"
 
 #: qtplugins/select/select.cpp:154
 msgid "Atoms to Select:"
-msgstr ""
+msgstr "Elektotaj Atomoj:"
 
 #: qtplugins/select/select.cpp:190
 msgid "Select Atoms by Residue"
