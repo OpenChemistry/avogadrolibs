@@ -221,7 +221,7 @@ void Editor::draw(Rendering::GroupNode& node)
   int labelWidth = -1 * distanceLabel.size();
 
   QString overlayText = tr("%1 %L2").arg(distanceLabel, labelWidth)
-                          .arg((tr("%L1 Å").arg(m_bondDistance, 9, 'f', 3), 9));
+                          .arg(tr("%L1 Å").arg(m_bondDistance, 9, 'f', 3), 9);
 
   TextProperties overlayTProp;
   overlayTProp.setFontFamily(TextProperties::Mono);
