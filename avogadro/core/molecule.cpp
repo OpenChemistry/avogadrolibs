@@ -709,7 +709,8 @@ Vector3 Molecule::centerOfMass() const
   Vector3 center(0.0, 0.0, 0.0);
   for (Index i = 0; i < atomCount(); ++i) {
     AtomType curr_atom = atom(i);
-    center += (curr_atom.position3d() * Elements::mass(curr_atom.atomicNumber()));
+    center +=
+      (curr_atom.position3d() * Elements::mass(curr_atom.atomicNumber()));
   }
   center /= mass();
   center /= atomCount();

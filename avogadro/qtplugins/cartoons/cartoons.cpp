@@ -24,11 +24,10 @@
 #include <utility>
 #include <vector>
 
-#include <iostream>
-
 namespace Avogadro {
 namespace QtPlugins {
 
+using Core::Atom;
 using Core::AtomicNumber;
 using Core::Elements;
 using Core::Molecule;
@@ -48,11 +47,10 @@ using std::vector;
 struct BackboneResidue
 {
   BackboneResidue() {}
-  BackboneResidue(const Matrix3f& f, const Vector3f p, const Vector3ub& c1,
-                  const Vector3ub& c2, const size_t& g)
-    : frenet(f), pos(p), color1(c1), color2(c2), group(g)
+  BackboneResidue(const Vector3f p, const Vector3ub& c1, const Vector3ub& c2,
+                  const size_t& g)
+    : pos(p), color1(c1), color2(c2), group(g)
   {}
-  Matrix3f frenet;
   Vector3f pos;
   Vector3ub color1;
   Vector3ub color2;
@@ -63,7 +61,7 @@ typedef list<BackboneResidue> AtomsPairList;
 
 Cartoons::Cartoons(QObject* parent)
   : ScenePlugin(parent), m_group(nullptr), m_setupWidget(nullptr),
-    m_enabled(false), m_showBackbone(false), m_showTrace(false),
+    m_enabled(true), m_showBackbone(true), m_showTrace(false),
     m_showTube(false), m_showRibbon(false), m_showRope(false),
     m_showCartoon(true)
 {}
@@ -74,76 +72,57 @@ Cartoons::~Cartoons()
     m_setupWidget->deleteLater();
 }
 
-Matrix3f makeFrenet(const Eigen::Vector3f& ca, const Eigen::Vector3f& h,
-                    const Eigen::Vector3f& nextCa, bool fliped)
+BackboneResidue createBackBone(const Atom& caAtom, const Atom& auxAtom,
+                               const Atom* nextAtom, Index group, bool fliped)
 {
-  // calculate the frenet trihedron from direction between this point and
-  // next, and the hidrogen bond
-  Vector3f dirY;
-  if (fliped) {
-    dirY = (nextCa - ca).normalized();
+  Vector3f ca = caAtom.position3d().cast<float>();
+  Vector3f aux = auxAtom.position3d().cast<float>();
+  Vector3ub color2;
+  // incompleat orientation
+  if (nextAtom == nullptr) {
+    color2 = Vector3ub::Zero();
   } else {
-    dirY = (ca - nextCa).normalized();
+    Vector3f next = nextAtom->position3d().cast<float>();
+    color2 = nextAtom->color();
   }
-  Vector3f dirX = (h - ca).normalized();
-  Vector3f dirZ = dirY.cross(dirX);
-  dirX = dirZ.cross(dirY);
+  return BackboneResidue(ca, caAtom.color(), color2, group);
+}
 
-  Matrix3f linear;
-  linear.col(0) = dirX;
-  linear.col(1) = dirY;
-  linear.col(2) = dirZ;
-  linear.normalize();
-  return linear;
+void addBackBone(map<size_t, AtomsPairList>& result,
+                 map<size_t, pair<Atom, Atom>>& previousCA, const Atom& caAtom,
+                 const Atom& auxAtom, Index group)
+{
+  Atom* next;
+  if (result.find(group) == result.end()) {
+    result[group] = AtomsPairList();
+    next = nullptr;
+  } else {
+    next = &(previousCA[group].first);
+  }
+  BackboneResidue backBone =
+    createBackBone(caAtom, auxAtom, next, group, false);
+  // the 1º insertion will always be incompleated, so fix it
+  if (result[group].size() == 1) {
+    result[group].front() = createBackBone(
+      previousCA[group].first, previousCA[group].second, &caAtom, group, true);
+  }
+  previousCA[group] = std::make_pair(caAtom, auxAtom);
+  result[group].push_back(backBone);
 }
 
 map<size_t, AtomsPairList> getBackboneByResidues(const Molecule& molecule)
 {
   const auto& graph = molecule.graph();
   map<size_t, AtomsPairList> result;
-
-  map<size_t, BackboneResidue> previousCA;
+  map<size_t, pair<Atom, Atom>> previousCA;
   for (const auto& residue : molecule.residues()) {
     if (!residue.isHeterogen()) {
-      Core::Atom caAtom = residue.getAtomByName("CA");
-      Core::Atom oAtom = residue.getAtomByName("O");
+      Atom caAtom = residue.getAtomByName("CA");
+      Atom oAtom = residue.getAtomByName("O");
       if (caAtom.isValid() && oAtom.isValid()) {
         // get the group ID and check if it's initialized in the map
         size_t group = graph.getConnectedID(caAtom.index());
-        if (result.find(group) == result.end()) {
-          result[group] = AtomsPairList();
-        }
-
-        Matrix3f frenet;
-        Vector3f ca = caAtom.position3d().cast<float>();
-        Vector3f o = oAtom.position3d().cast<float>();
-        Vector3ub color2;
-        if (previousCA.find(group) == previousCA.end()) {
-          frenet = Matrix3f::Zero();
-          frenet.col(0) = o;
-          color2 = caAtom.color();
-        } else {
-          auto previous = previousCA[group];
-          auto nextCa = previous.pos;
-          auto previousO = previous.frenet.col(0);
-          if (result[group].size() == 1) {
-            result[group].begin()->frenet =
-              makeFrenet(nextCa, previousO, ca, false);
-            previousO = result[group].begin()->frenet.col(0);
-          }
-
-          if (o.dot(previousO) <= 0.0f) {
-            o = -1.0f * o;
-          }
-
-          color2 = previous.color1;
-          frenet = makeFrenet(ca, o, nextCa, true);
-        }
-
-        auto backBone =
-          BackboneResidue(frenet, ca, caAtom.color(), color2, group);
-        previousCA[group] = backBone;
-        result[group].push_back(backBone);
+        addBackBone(result, previousCA, caAtom, oAtom, group);
       }
     }
   }
@@ -153,7 +132,32 @@ map<size_t, AtomsPairList> getBackboneByResidues(const Molecule& molecule)
 map<size_t, AtomsPairList> getBackboneManually(const Molecule& molecule)
 {
   // manual filter
+  // const auto& graph = molecule.graph();
   map<size_t, AtomsPairList> result;
+  map<size_t, pair<Atom, Atom>> previousCA;
+
+  for (size_t i = 0; i < molecule.atomCount(); ++i) {
+    const auto atom = molecule.atom(i);
+    if (atom.atomicNumber() == AtomicNumber::Carbon) {
+      Atom aux = Atom();
+      for (const auto& bond : molecule.bonds(atom.index())) {
+        if (int(bond->atom1().atomicNumber()) == int(AtomicNumber::Oxygen) ||
+            int(bond->atom1().atomicNumber()) == int(AtomicNumber::Hydrogen)) {
+          aux = bond->atom1();
+          break;
+        }
+        if (int(bond->atom2().atomicNumber()) == int(AtomicNumber::Oxygen) ||
+            int(bond->atom2().atomicNumber()) == int(AtomicNumber::Hydrogen)) {
+          aux = bond->atom2();
+          break;
+        }
+      }
+      if (aux.isValid()) {
+        size_t group = 0; // graph.getConnectedID(atom.index());
+        addBackBone(result, previousCA, atom, aux, group);
+      }
+    }
+  }
   return result;
 }
 
@@ -201,7 +205,7 @@ void renderRope(const AtomsPairList& backbone, const Molecule& molecule,
   geometry->addDrawable(bezier);
 
   for (const auto& bone : backbone) {
-    bezier->addPoint(bone.frenet, bone.pos, bone.color1, radius, bone.group);
+    bezier->addPoint(bone.pos, bone.color1, radius, bone.group);
   }
 }
 
@@ -217,7 +221,7 @@ void renderTube(const AtomsPairList& backbone, const Molecule& molecule,
   geometry->addDrawable(bezier);
 
   for (const auto& bone : backbone) {
-    bezier->addPoint(bone.frenet, bone.pos, bone.color1, radius, bone.group);
+    bezier->addPoint(bone.pos, bone.color1, radius, bone.group);
   }
 }
 
@@ -231,45 +235,44 @@ void renderCartoon(const AtomsPairList& backbone, const Molecule& molecule,
   cartoon->identifier().molecule = &molecule;
   cartoon->identifier().type = Rendering::BondType;
   geometry->addDrawable(cartoon);
-
   for (const auto& bone : backbone) {
-    cartoon->addPoint(bone.frenet, bone.pos, bone.color1, radius, bone.group);
+    cartoon->addPoint(bone.pos, bone.color1, radius, bone.group);
   }
 }
 
 void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
+  m_group = &node;
   if (m_showBackbone || m_showTrace || m_showTube || m_showRibbon ||
       m_showCartoon || m_showRope) {
-    map<size_t, AtomsPairList> alphaAndHydrogens;
+    map<size_t, AtomsPairList> backbones;
     if (molecule.residues().size() > 0) {
-      alphaAndHydrogens = getBackboneByResidues(molecule);
+      backbones = getBackboneByResidues(molecule);
     }
-    if (alphaAndHydrogens.size() == 0) {
-      alphaAndHydrogens = getBackboneManually(molecule);
+    if (backbones.size() == 0) {
+      backbones = getBackboneManually(molecule);
     }
     size_t i = 0;
-    for (const auto& group : alphaAndHydrogens) {
-      const auto& alphaAndHydrogen = group.second;
-      m_group = &node;
+    for (const auto& group : backbones) {
+      const auto& backbone = group.second;
       if (m_showBackbone) {
-        renderBackbone(alphaAndHydrogen, molecule, node, 0.1f);
+        renderBackbone(backbone, molecule, node, 0.1f);
       }
       if (m_showTrace) {
-        renderTube(alphaAndHydrogen, molecule, node, -0.15f, i);
+        renderTube(backbone, molecule, node, -0.15f, i);
       }
       if (m_showTube) {
-        renderTube(alphaAndHydrogen, molecule, node, 0.15f, i);
+        renderTube(backbone, molecule, node, 0.15f, i);
       }
       if (m_showRibbon) {
-        renderCartoon(alphaAndHydrogen, molecule, node,
-                      -1.0f * Cartoon::ELIPSE_RATIO, i);
+        renderCartoon(backbone, molecule, node, -1.0f * Cartoon::ELIPSE_RATIO,
+                      i);
       }
       if (m_showCartoon) {
-        renderCartoon(alphaAndHydrogen, molecule, node, 1.0f, i);
+        renderCartoon(backbone, molecule, node, 1.0f, i);
       }
       if (m_showRope) {
-        renderRope(alphaAndHydrogen, molecule, node, 1.0f, i);
+        renderRope(backbone, molecule, node, 1.0f, i);
       }
       ++i;
     }

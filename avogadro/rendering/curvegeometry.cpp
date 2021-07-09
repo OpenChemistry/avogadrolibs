@@ -40,56 +40,54 @@ std::vector<ColorNormalVertex> CurveGeometry::computeCirclePoints(
   unsigned int circleResolution = flat ? 1 : 12;
   const float resolutionRadians =
     2.0f * static_cast<float>(M_PI) / static_cast<float>(circleResolution);
-  std::vector<ColorNormalVertex> vertices;
-  Vector3f direction = (b.translation() - a.translation()).normalized();
-  Vector3f radial = (direction).unitOrthogonal() * radius;
-  Eigen::AngleAxisf transform(resolutionRadians, direction);
-  for (unsigned int i = 0; i < circleResolution;
-       ++i, radial = transform * radial) {
+  std::vector<ColorNormalVertex> result;
+
+  for (unsigned int i = 0; i < circleResolution; ++i) {
+    float theta = i * resolutionRadians;
+    Vector3f circle = Vector3f(std::cos(theta), 0.0f, std::sin(theta)) * radius;
     ColorNormalVertex vert1;
-    vert1.normal = radial;
-    vert1.vertex = a.translation() + radial;
+    vert1.normal = a.linear() * circle;
+    vert1.vertex = a * circle;
     vert1.color = Vector3ub(0.7f, 0.7f, 0.7f);
-    vertices.push_back(vert1);
+    result.push_back(vert1);
 
     ColorNormalVertex vert2;
-    vert2.normal = radial;
-    vert2.vertex = b.translation() + radial;
+    vert2.normal = b.linear() * circle;
+    vert2.vertex = b * circle;
     vert2.color = Vector3ub(0.7f, 0.7f, 0.7f);
-    vertices.push_back(vert2);
+    result.push_back(vert2);
   }
-  return vertices;
+  return result;
 }
 
 void CurveGeometry::update(int index)
 {
   // compute the middle points
   Line* line = m_lines[index];
-  unsigned int lineResolution = line->flat ? 30 : 12;
+  unsigned int lineResolution = line->flat ? 20 : 15;
   size_t qttyPoints = line->points.size();
-  std::vector<Eigen::Affine3f> points;
 
-  size_t qttySegments = lineResolution * qttyPoints;
-  auto it = line->points.begin();
-  for (size_t i = 2; i < qttyPoints - 4; ++i) {
-    if (i == 2) {
-      ++it;
-    }
-    ++it;
-    auto itPrev = it == line->points.begin() ? it : std::prev(it);
-    auto itNext = it == line->points.end() ? it : std::next(it);
+  const size_t qttySegments = lineResolution * qttyPoints;
+  Vector3f previous;
+  const size_t skip = 1;
+  std::vector<Eigen::Affine3f> points;
+  size_t top = qttyPoints <= 4 ? 0 : line->points.size() - 4;
+  for (size_t i = skip; i < top; ++i) {
     for (size_t j = 0; j < lineResolution; ++j) {
       auto p = computeCurvePoint((i * lineResolution + j) / float(qttySegments),
                                  line->points);
-      float t = j / float(lineResolution);
-      Eigen::Quaternionf quaternion =
-        Eigen::Quaternionf((*it)->rot)
-          .slerp(t, Eigen::Quaternionf((*itNext)->rot))
-          .normalized();
-      Eigen::Affine3f affine;
-      affine.fromPositionOrientationScale(p, quaternion,
-                                          Vector3f(1.0f, 1.0f, 1.0f));
-      points.push_back(affine);
+      if (i > skip) {
+        Eigen::Matrix3f m;
+        m.col(1) = (p - previous).normalized();
+        m.col(0) = m.col(1).unitOrthogonal() * -1.0f;
+        m.col(2) = m.col(0).cross(m.col(1)) * -1.0f;
+
+        Eigen::Affine3f affine;
+        affine.translation() = p;
+        affine.linear() = m;
+        points.push_back(affine);
+      }
+      previous = p;
     }
   }
 
@@ -97,7 +95,7 @@ void CurveGeometry::update(int index)
   std::vector<unsigned int> indices;
   std::vector<ColorNormalVertex> vertices;
 
-  it = line->points.begin();
+  auto it = line->points.begin();
   for (size_t i = 1; i < points.size(); ++i) {
     if (i % lineResolution == 0) {
       ++it;
@@ -108,9 +106,8 @@ void CurveGeometry::update(int index)
       r.color = (*it)->color;
       vertices.push_back(r);
     }
-
-    // Now to stitch it together. we select the indices
-    const unsigned int tubeStart = static_cast<unsigned int>(vertices.size());
+    const unsigned int tubeStart = static_cast<unsigned int>(
+      vertices.size() - (line->flat && m_canBeFlat ? radials.size() : 0));
     for (unsigned int j = 0; j < radials.size() / 2; ++j) {
       unsigned int r1 = j + j;
       unsigned int r2 = (j != 0 ? r1 : radials.size()) - 2;
@@ -221,8 +218,8 @@ void CurveGeometry::render(const Camera& camera)
   }
 }
 
-void CurveGeometry::addPoint(const Eigen::Matrix3f& frenet, const Vector3f& pos,
-                             const Vector3ub& color, float radius, size_t i)
+void CurveGeometry::addPoint(const Vector3f& pos, const Vector3ub& color,
+                             float radius, size_t i)
 {
   if (m_indexMap.find(i) == m_indexMap.end()) {
     m_indexMap[i] = m_lines.size();
@@ -230,7 +227,7 @@ void CurveGeometry::addPoint(const Eigen::Matrix3f& frenet, const Vector3f& pos,
   }
   m_lines[m_indexMap[i]]->radius = radius;
   m_lines[m_indexMap[i]]->flat = radius < 0.0f;
-  m_lines[m_indexMap[i]]->add(new Point(pos, frenet, color));
+  m_lines[m_indexMap[i]]->add(new Point(pos, color));
 }
 
 std::multimap<float, Identifier> CurveGeometry::hits(const Vector3f&,

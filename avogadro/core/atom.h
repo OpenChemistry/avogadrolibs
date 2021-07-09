@@ -40,11 +40,12 @@ enum AtomHybridization
   Octahedral = 6
 };
 
-enum AtomicNumber
+enum AtomicNumber : unsigned char
 {
   Hydrogen = 1,
   Carbon = 6,
-  Nitrogen = 7
+  Nitrogen = 7,
+  Oxygen = 8
 };
 
 /**

@@ -27,11 +27,8 @@ struct ShaderInfo
 
 struct Point
 {
-  Point(const Vector3f& p, const Eigen::Matrix3f& r, const Vector3ub& c)
-    : pos(p), rot(r), color(c)
-  {}
+  Point(const Vector3f& p, const Vector3ub& c) : pos(p), color(c) {}
   Vector3f pos;
-  Eigen::Matrix3f rot;
   Vector3ub color;
 };
 
@@ -78,8 +75,8 @@ public:
    */
   void render(const Camera& camera) override;
 
-  void addPoint(const Eigen::Matrix3f& frenet, const Vector3f& pos,
-                const Vector3ub& color, float radius, size_t i);
+  void addPoint(const Vector3f& pos, const Vector3ub& color, float radius,
+                size_t i);
 
 protected:
   std::vector<Line*> m_lines;

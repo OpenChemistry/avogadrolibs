@@ -17,6 +17,7 @@ public:
   static const float ELIPSE_RATIO;
 
 protected:
+  // create an elipse and adapt it to the affine A
   std::vector<ColorNormalVertex> computeCirclePoints(const Eigen::Affine3f& a,
                                                      const Eigen::Affine3f& b,
                                                      float radius,
