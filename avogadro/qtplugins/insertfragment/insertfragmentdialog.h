@@ -49,7 +49,7 @@ public Q_SLOTS:
   void activated();
 
 Q_SIGNALS:
-  void performInsert(const QString &fileName);
+  void performInsert(const QString &fileName, bool crystal);
 
 private:
   Ui::InsertFragmentDialog* m_ui;

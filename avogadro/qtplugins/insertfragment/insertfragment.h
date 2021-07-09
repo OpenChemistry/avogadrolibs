@@ -53,7 +53,7 @@ public slots:
 
 private slots:
   void showDialog();
-  void performInsert(const QString &fileName);
+  void performInsert(const QString &fileName, bool crystal);
 
 private:
   QList<QAction*> m_actions;
