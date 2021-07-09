@@ -333,7 +333,7 @@ public:
    * @param order The new order of the bond.
    * @return True on success, false on failure.
    */
-  bool setBondOrder(Index bondId, unsigned char order);
+  bool setBondOrder(Index bondId, unsigned char order) const;
 
   /** Returns the graph for the molecule. */
   Graph& graph();
@@ -463,6 +463,7 @@ public:
    */
   Array<BondType> bonds(const AtomType& a);
   Array<BondType> bonds(Index a);
+  Array<const BondType*> bonds(Index a) const;
   /** @} */
 
   /** Returns the number of bonds in the molecule. */
@@ -641,7 +642,8 @@ public:
   void addResidue(Residue& residue);
   Residue& residue(Index index);
 
-  Array<Residue>& residues() { return m_residues;}
+  Array<Residue>& residues() { return m_residues; }
+  const Array<Residue>& residues() const { return m_residues; }
 
 protected:
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
@@ -664,7 +666,7 @@ protected:
   Array<Array<Vector3>> m_vibrationLx;
 
   Array<std::pair<Index, Index>> m_bondPairs;
-  Array<unsigned char> m_bondOrders;
+  mutable Array<unsigned char> m_bondOrders;
 
   // Array declaring whether atoms are selected or not.
   std::vector<bool> m_selectedAtoms;
@@ -922,7 +924,7 @@ inline bool Molecule::setBondOrders(const Array<unsigned char>& orders)
   return false;
 }
 
-inline bool Molecule::setBondOrder(Index bondId, unsigned char order)
+inline bool Molecule::setBondOrder(Index bondId, unsigned char order) const
 {
   if (bondId < bondCount()) {
     m_bondOrders[bondId] = order;

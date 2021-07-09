@@ -547,6 +547,19 @@ Array<Molecule::BondType> Molecule::bonds(const AtomType& a)
   return bonds(a.index());
 }
 
+Array<const Molecule::BondType*> Molecule::bonds(Index a) const
+{
+  Array<const BondType*> atomBonds;
+  if (a < atomCount()) {
+    for (Index i = 0; i < m_bondPairs.size(); ++i)
+      if (m_bondPairs[i].first == a || m_bondPairs[i].second == a) {
+        // work arround to consult bonds without breaking constantness
+        atomBonds.push_back(new BondType(const_cast<Molecule*>(this), i));
+      }
+  }
+  return atomBonds;
+}
+
 Array<Molecule::BondType> Molecule::bonds(Index a)
 {
   Array<BondType> atomBonds;
