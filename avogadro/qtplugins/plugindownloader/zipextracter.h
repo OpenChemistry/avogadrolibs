@@ -32,6 +32,9 @@ public:
   int copyData(struct archive* ar, struct archive* aw);
   QList<QString> extract(std::string extractdir, std::string absolutepath);
   QList<QString> listFiles(const std::string absolutepath);
+
+  static QByteArray decompress(const std::string &absolutepath);
+
 };
 }
 }

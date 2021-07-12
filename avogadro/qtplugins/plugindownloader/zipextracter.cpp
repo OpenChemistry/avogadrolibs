@@ -17,6 +17,8 @@
 #include "zipextracter.h"
 
 #include <QtCore/QString>
+
+#include <iostream>
 namespace Avogadro {
 
 namespace QtPlugins {
@@ -165,6 +167,52 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
   archive_write_close(ext);
   archive_write_free(ext);
   return toReturn;
+}
+
+QByteArray ZipExtracter::decompress(const std::string& absolutepath)
+{
+  // based on the example code in the docs
+  // https://github.com/libarchive/libarchive/wiki/Examples#A_Universal_Decompressor
+
+  // should decompress anything to a buffer
+  QByteArray toReturn;
+  int r;
+  ssize_t size;
+  void* buff;
+  size_t buffsize;
+
+  struct archive* a = archive_read_new();
+  struct archive_entry* entry;
+  archive_read_support_compression_all(a);
+  archive_read_support_format_raw(a);
+  std::cout << " decompressing " << absolutepath << std::endl;
+  r = archive_read_open_filename(a, absolutepath.c_str(), 16384);
+  if (r != ARCHIVE_OK) {
+    return toReturn;
+  }
+  r = archive_read_next_header(a, &entry);
+  if (r != ARCHIVE_OK) {
+    return toReturn;
+  }
+
+  buffsize = archive_entry_size(entry); //get the size of the file
+  buff = malloc(buffsize);
+
+  for (;;) {
+    std::cout << "reading" << std::endl;
+    size = archive_read_data(a, buff, buffsize);
+    if (size < 0) {
+      return toReturn;
+    }
+    if (size == 0)
+      break;
+    write(1, buff, size);
+  }
+
+  std::cout << " decompressed: " << buff << std::endl;
+
+archive_read_free(a);
+return QByteArray(static_cast<char *>(buff), buffsize);
 }
 
 } // namespace QtPlugins
