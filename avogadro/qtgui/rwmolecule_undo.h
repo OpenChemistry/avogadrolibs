@@ -2,6 +2,19 @@
   This source file is part of the Avogadro project.
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
+#ifndef AVOGADRO_QTGUI_RWMOLECULE_UNDO_H
+#define AVOGADRO_QTGUI_RWMOLECULE_UNDO_H
+
+#include "rwmolecule.h"
+#include <QtWidgets/QUndoCommand>
+#include <cassert>
+
+namespace Avogadro {
+namespace QtGui {
+
+using Core::Array;
+using Core::AtomHybridization;
+using Core::UnitCell;
 
 // Base class for all undo commands used by this class.
 // Used to expose molecule internals without needing to add explicit friendships
@@ -270,13 +283,13 @@ namespace {
 class SetAtomHybridizationCommand : public RWMolecule::UndoCommand
 {
   Index m_atomId;
-  Core::AtomHybridization m_oldHybridization;
-  Core::AtomHybridization m_newHybridization;
+  AtomHybridization m_oldHybridization;
+  AtomHybridization m_newHybridization;
 
 public:
   SetAtomHybridizationCommand(RWMolecule& m, Index atomId,
-                              Core::AtomHybridization oldHybridization,
-                              Core::AtomHybridization newHybridization)
+                              AtomHybridization oldHybridization,
+                              AtomHybridization newHybridization)
     : UndoCommand(m), m_atomId(atomId), m_oldHybridization(oldHybridization),
       m_newHybridization(newHybridization)
   {}
@@ -362,14 +375,6 @@ public:
   }
 };
 } // namespace
-
-// Make an std::pair where the lower index is always first in the pair. This
-// offers us the guarantee that any given pair of atoms will always result in
-// a pair that is the same no matter what the order of the atoms given.
-inline std::pair<Index, Index> makeBondPair(Index a, Index b)
-{
-  return a < b ? std::make_pair(a, b) : std::make_pair(b, a);
-}
 
 namespace {
 class RemoveBondCommand : public RWMolecule::UndoCommand
@@ -611,3 +616,6 @@ public:
   }
 };
 } // namespace
+} // namespace QtGui
+} // namespace Avogadro
+#endif

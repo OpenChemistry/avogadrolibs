@@ -18,7 +18,8 @@ namespace Core {
 /**
  * @class ConnectedGroup bimap.h <avogadro/core/graph.h>
  * @brief The ConnectedGroup class represents a bidirectional Map data structure
- * between size_t and a size_t set.
+ * between size_t (group) and a size_t set (nodes).
+ * @example graph.h where it computes the bonded atom sets
  */
 class AVOGADROCORE_EXPORT ConnectedGroup
 {
@@ -32,19 +33,19 @@ public:
   /** Destroys the ConnectedGroup. */
   ~ConnectedGroup();
 
-  /** Adds a element to the graph and returns its index. */
-  void addElement(size_t index);
+  /** check if @p index is already in a group otherwise create one for it */
+  void addNode(size_t index);
 
-  /** Adds N element to the graph and returns its index. */
-  void addElements(size_t n);
+  /** create @p n groups with 1 node each */
+  void addNodes(size_t n);
 
-  /** Merge the two groups between two IDs @p a and @p b. */
+  /** node @p a and @p b will be in the same group */
   void addConnection(size_t a, size_t b);
 
-  /** Removes the element at @p index. */
-  void removeElement(size_t index);
+  /** Removes the node at @p index. */
+  void removeNode(size_t index);
 
-  /** Makes all the element individual groups. */
+  /** Makes all the nodes individual groups. */
   void removeConnections();
 
   /** Makes @p index an individual group. */
@@ -54,27 +55,30 @@ public:
    * they don't */
   void removeConnection(size_t a, size_t b, const std::set<size_t>& neighbors);
 
-  /** Removes all elements and groups. */
+  /** Removes everything. */
   void clear();
 
-  /** Get the group ID from the element. */
-  size_t getGroup(size_t element) const;
+  /** @return the group ID from the node . */
+  size_t getGroup(size_t node) const;
 
-  /** Get the group size from the element. */
-  size_t getGroupSize(size_t element) const;
+  /** @return the group size from the node. */
+  size_t getGroupSize(size_t node) const;
 
-  /** Get all the groups and their elemenets. */
+  /** @return all groups and their nodes */
   std::vector<std::set<size_t>> getAllGroups() const;
 
-  /** Get all the elements in the @p group. */
-  std::set<size_t> getElements(size_t group) const;
+  /** @return all the nodes in the @p group. */
+  std::set<size_t> getNodes(size_t group) const;
+
+  /** @return the total groups existing */
+  size_t groupCount() const;
 
   /** */
   size_t groupCount() const;
 
 private:
-  std::map<size_t, size_t> m_elementToGroup;
-  std::vector<std::set<size_t>> m_groupToElement;
+  std::map<size_t, size_t> m_nodeToGroup;
+  std::vector<std::set<size_t>> m_groupToNode;
 
   void resetToSize(size_t n);
   void mergeGroups(size_t a, size_t b);

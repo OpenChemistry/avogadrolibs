@@ -15,8 +15,7 @@
 ******************************************************************************/
 
 #include "rwmolecule.h"
-
-#include <QtWidgets/QUndoCommand>
+#include "rwmolecule_undo.h"
 
 #include <algorithm>
 #include <cassert>
@@ -34,8 +33,7 @@ using Core::Array;
 using Core::AtomHybridization;
 using Core::CrystalTools;
 using Core::UnitCell;
-
-#include "rwmolecule.inl"
+using std::swap;
 
 RWMolecule::RWMolecule(Molecule& mol, QObject* p) : QObject(p), m_molecule(mol)
 {}
@@ -244,7 +242,7 @@ RWMolecule::BondType RWMolecule::addBond(Index atom1, Index atom2,
   Index bondUid = static_cast<Index>(m_molecule.m_bondUniqueIds.size());
 
   AddBondCommand* comm = new AddBondCommand(
-    *this, order, makeBondPair(atom1, atom2), bondId, bondUid);
+    *this, order, Molecule::makeBondPair(atom1, atom2), bondId, bondUid);
   comm->setText(tr("Add Bond"));
   m_undoStack.push(comm);
   return BondType(this, bondId);
@@ -322,7 +320,6 @@ bool RWMolecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
   Array<BondPair> p(pairs);
   // Use for reading to prevent copies unless needed (Array is copy-on-write):
   const Array<BondPair>& p_const = p;
-  using std::swap;
   for (size_t i = 0; i < p.size(); ++i)
     if (p_const[i].first > p_const[i].second)
       swap(p[i].first, p[i].second);
@@ -344,8 +341,9 @@ bool RWMolecule::setBondPair(Index bondId, const std::pair<Index, Index>& pair)
     comm =
       new SetBondPairCommand(*this, bondId, m_molecule.bondPair(bondId), pair);
   } else {
-    comm = new SetBondPairCommand(*this, bondId, m_molecule.bondPair(bondId),
-                                  makeBondPair(pair.first, pair.second));
+    comm =
+      new SetBondPairCommand(*this, bondId, m_molecule.bondPair(bondId),
+                             Molecule::makeBondPair(pair.first, pair.second));
   }
   comm->setText(tr("Update Bond"));
   m_undoStack.push(comm);

@@ -45,10 +45,10 @@ public:
   /** Sets the number of verticies in the graph to size @p n. */
   void setSize(size_t n);
 
-  /** Returns the number of verticies in the graph. */
+  /** @return the number of verticies in the graph. */
   size_t size() const;
 
-  /** Returns \c true if the graph is empty (i.e. size() == \c 0). */
+  /** @return \c true if the graph is empty (i.e. size() == \c 0). */
   bool isEmpty() const;
 
   /** Removes all verticies and edges from the graph. */
@@ -60,7 +60,7 @@ public:
   /** Removes the vertex at @p index from the graph. */
   void removeVertex(size_t index);
 
-  /** Returns the number of verticies in the graph. */
+  /** @return the number of verticies in the graph. */
   size_t vertexCount() const;
 
   /** Adds an edge between verticies @p a and @p b. */
@@ -78,54 +78,49 @@ public:
    */
   void removeEdges(size_t index);
 
-  /** Returns the number of edges in the graph. */
+  /** @return the number of edges in the graph. */
   size_t edgeCount() const;
 
   /**
-   * Returns a vector containing the indicies of each vertex that the vertex at
+   * @return a vector containing the indicies of each vertex that the vertex at
    * index shares an edge with.
    */
   const std::vector<size_t>& neighbors(size_t index) const;
 
-  /** Returns the degree of the vertex at @p index. */
+  /** @return the degree of the vertex at @p index. */
   size_t degree(size_t index) const;
 
   /**
-   * Returns \c true if the graph contains an edge between verticies @p a and
+   * @return \c true if the graph contains an edge between verticies @p a and
    * @p b.
    */
   bool containsEdge(size_t a, size_t b) const;
 
   /**
-   * Returns a vector of vector containing the indicies of each vertex in each
+   * @return a vector of vector containing the indicies of each vertex in each
    * connected component in the graph.
    */
   std::vector<std::set<size_t>> connectedComponents() const;
 
   /**
-   * Returns a set containing the indicies of each vertex connected with index.
+   * @return a set containing the indicies of each vertex connected with @p
+   * index.
    */
   std::set<size_t> connectedComponent(size_t index) const;
 
-  /**
-   * Returns a the number of connected groups.
-   */
-  size_t groupCount() const;
+  /** @return the number of connected subgraphs. */
+  size_t subgraphsCount() const;
 
-  /**
-   * Get the group ID from the element.
-   */
-  size_t getGroup(size_t element) const;
+  /**  @return the subgraphs ID from the @p index. */
+  size_t getSubgraph(size_t index) const;
 
-  /**
-   * Get the group size from the element.
-   */
-  size_t getGroupSize(size_t element) const;
+  /**  @return the group size from the @p index. */
+  size_t getSubgraphSize(size_t index) const;
 
 private:
   std::set<size_t> checkConectivity(size_t a, size_t b) const;
   std::vector<std::vector<size_t>> m_adjacencyList;
-  ConnectedGroup m_connectedGroup;
+  ConnectedGroup m_subgraphs;
 };
 
 } // namespace Core

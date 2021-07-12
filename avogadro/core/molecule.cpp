@@ -21,7 +21,13 @@ namespace Core {
 
 using std::swap;
 
+<<<<<<< Updated upstream
 Molecule::Molecule() : m_basisSet(nullptr), m_unitCell(nullptr) {}
+=======
+Molecule::Molecule()
+  : m_basisSet(nullptr), m_unitCell(nullptr), m_graphDirty(false)
+{}
+>>>>>>> Stashed changes
 
 Molecule::Molecule(const Molecule& other)
   : m_data(other.m_data), m_customElementMap(other.m_customElementMap),
@@ -35,7 +41,9 @@ Molecule::Molecule(const Molecule& other)
     m_meshes(std::vector<Mesh*>()), m_cubes(std::vector<Cube*>()),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
-    m_residues(other.m_residues), MoleculeGraph(other)
+    m_residues(other.m_residues), m_graph(other.m_graph),
+    m_graphDirty(other.m_graphDirty), m_bondPairs(other.m_bondPairs),
+    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers)
 {
   // Copy over any meshes
   for (Index i = 0; i < other.meshCount(); ++i) {
@@ -65,7 +73,11 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_vibrationLx(std::move(other.m_vibrationLx)),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
-    m_residues(std::move(other.m_residues)), MoleculeGraph(other)
+    m_residues(std::move(other.m_residues)), m_graph(std::move(other.m_graph)),
+    m_graphDirty(std::move(other.m_graphDirty)),
+    m_bondPairs(std::move(other.m_bondPairs)),
+    m_bondOrders(std::move(other.m_bondOrders)),
+    m_atomicNumbers(std::move(other.m_atomicNumbers))
 {
   m_basisSet = other.m_basisSet;
   other.m_basisSet = nullptr;
@@ -76,7 +88,6 @@ Molecule::Molecule(Molecule&& other) noexcept
 
 Molecule& Molecule::operator=(const Molecule& other)
 {
-  MoleculeGraph::operator=(other);
   if (this != &other) {
     m_data = other.m_data;
     m_customElementMap = other.m_customElementMap;
@@ -92,6 +103,11 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_vibrationLx = other.m_vibrationLx;
     m_selectedAtoms = other.m_selectedAtoms;
     m_residues = other.m_residues;
+    m_graph = other.m_graph;
+    m_graphDirty = other.m_graphDirty;
+    m_bondPairs = other.m_bondPairs;
+    m_bondOrders = other.m_bondOrders;
+    m_atomicNumbers = other.m_atomicNumbers;
 
     clearMeshes();
 
@@ -120,7 +136,6 @@ Molecule& Molecule::operator=(const Molecule& other)
 
 Molecule& Molecule::operator=(Molecule&& other) noexcept
 {
-  MoleculeGraph::operator=(other);
   if (this != &other) {
     m_data = std::move(other.m_data);
     m_customElementMap = std::move(other.m_customElementMap);
@@ -136,6 +151,11 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_vibrationLx = std::move(other.m_vibrationLx);
     m_selectedAtoms = std::move(other.m_selectedAtoms);
     m_residues = std::move(other.m_residues);
+    m_graph = std::move(other.m_graph);
+    m_graphDirty = std::move(other.m_graphDirty);
+    m_bondPairs = std::move(other.m_bondPairs);
+    m_bondOrders = std::move(other.m_bondOrders);
+    m_atomicNumbers = std::move(other.m_atomicNumbers);
 
     clearMeshes();
     m_meshes = std::move(other.m_meshes);
@@ -255,8 +275,10 @@ void Molecule::setCustomElementMap(const Molecule::CustomElementMap& map)
 
 Molecule::AtomType Molecule::addAtom(unsigned char number)
 {
-  // Add the atomic number.
-  MoleculeGraph::addAtom(number);
+  if (!m_graphDirty) {
+    m_graph.addVertex();
+  }
+  m_atomicNumbers.push_back(number);
   return AtomType(this, static_cast<Index>(atomCount() - 1));
 }
 
@@ -270,7 +292,12 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
 
 void Molecule::swapBond(Index a, Index b)
 {
+<<<<<<< Updated upstream
   MoleculeGraph::swapBond(a, b);
+=======
+  swap(m_bondPairs[a], m_bondPairs[b]);
+  swap(m_bondOrders[a], m_bondOrders[b]);
+>>>>>>> Stashed changes
 }
 void Molecule::swapAtom(Index a, Index b)
 {
@@ -286,7 +313,34 @@ void Molecule::swapAtom(Index a, Index b)
   if (m_colors.size() >= max)
     swap(m_colors[a], m_colors[b]);
 
+<<<<<<< Updated upstream
   MoleculeGraph::swapAtom(a, b);
+=======
+  swap(m_atomicNumbers[a], m_atomicNumbers[b]);
+  for (auto& pair : m_bondPairs) {
+    auto oldPair = pair;
+    bool changed = false;
+    if (pair.first == a) {
+      pair.first = b;
+      changed = true;
+    } else if (pair.first == b) {
+      pair.first = a;
+      changed = true;
+    }
+    if (pair.second == a) {
+      pair.second = b;
+      changed = true;
+    } else if (pair.second == b) {
+      pair.second = a;
+      changed = true;
+    }
+
+    if (changed && !m_graphDirty) {
+      m_graph.removeEdge(oldPair.first, oldPair.second);
+      m_graph.addEdge(pair.first, pair.second);
+    }
+  }
+>>>>>>> Stashed changes
 }
 
 bool Molecule::removeAtom(Index index)
@@ -303,7 +357,20 @@ bool Molecule::removeAtom(Index index)
     m_formalCharges.swapAndPop(index);
   if (m_colors.size() == atomCount())
     m_colors.swapAndPop(index);
+<<<<<<< Updated upstream
   Core::MoleculeGraph::removeAtom(index);
+=======
+
+  Index affectedIndex = static_cast<Index>(m_atomicNumbers.size() - 1);
+  m_atomicNumbers.swapAndPop(index);
+  removeBonds(index);
+  if (!m_graphDirty) {
+    m_graph.removeVertex(index);
+  }
+  // the bonds from back() now are in index, so we need to rebond it
+  rebondBond(index, affectedIndex);
+  return true;
+>>>>>>> Stashed changes
   return true;
 }
 
@@ -319,7 +386,11 @@ void Molecule::clearAtoms()
   m_hybridizations.clear();
   m_formalCharges.clear();
   m_colors.clear();
-  Core::MoleculeGraph::clearAtoms();
+  m_atomicNumbers.clear();
+  m_bondOrders.clear();
+  m_bondPairs.clear();
+  m_graph.clear();
+  m_graphDirty = false;
 }
 
 Molecule::AtomType Molecule::atom(Index index) const
@@ -331,10 +402,19 @@ Molecule::AtomType Molecule::atom(Index index) const
 Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
                                      unsigned char order)
 {
-  if (Core::MoleculeGraph::addBond(atom1, atom2, order)) {
-    return BondType(this, bondCount() - 1);
+  assert(atom1 < m_atomicNumbers.size());
+  assert(atom2 < m_atomicNumbers.size());
+  Index index = findBond(atom1, atom2);
+  if (index == bondCount()) {
+    if (!m_graphDirty) {
+      m_graph.addEdge(atom1, atom2);
+    }
+    m_bondPairs.push_back(Molecule::makeBondPair(atom1, atom2));
+    m_bondOrders.push_back(order);
+  } else {
+    m_bondOrders[index] = order;
   }
-  return BondType();
+  return BondType(this, index);
 }
 
 Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
@@ -346,9 +426,35 @@ Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
   return addBond(a.index(), b.index(), order);
 }
 
+size_t calcNlogN(size_t n)
+{
+  size_t aproxLog = 1;
+  float aux = n;
+  while (aux > 2.0f) {
+    aux /= 2.0f;
+    ++aproxLog;
+  }
+  return n * aproxLog;
+}
+
 bool Molecule::removeBond(Index index)
 {
-  return Core::MoleculeGraph::removeBond(index);
+  if (index >= bondCount())
+    return false;
+  if (!m_graphDirty) {
+    // mark dirty the graph O(n) only if is more effitien than remove an edge
+    // O(nlogn)
+    size_t n = atomCount();
+    size_t m = calcNlogN(m_graph.getSubgraphSize(m_bondPairs[index].first));
+    if (m < n) {
+      m_graph.removeEdge(m_bondPairs[index].first, m_bondPairs[index].second);
+    } else {
+      m_graphDirty = true;
+    }
+  }
+  m_bondOrders.swapAndPop(index);
+  m_bondPairs.swapAndPop(index);
+  return true;
 }
 
 bool Molecule::removeBond(const BondType& bond_)
@@ -368,7 +474,11 @@ bool Molecule::removeBond(const AtomType& a, const AtomType& b)
 
 void Molecule::clearBonds()
 {
-  Core::MoleculeGraph::clearBonds();
+  m_bondOrders.clear();
+  m_bondPairs.clear();
+  m_graph.removeEdges();
+  m_graph.setSize(atomCount());
+  m_graphDirty = false;
 }
 
 Molecule::BondType Molecule::bond(Index index) const
@@ -735,6 +845,204 @@ void Molecule::addResidue(Residue& residue)
 Residue& Molecule::residue(Index index)
 {
   return m_residues[index];
+}
+
+bool Molecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
+{
+  if (pairs.size() == bondCount()) {
+    Index bond = 0;
+    for (const auto& pair : pairs) {
+      setBondPair(bond, pair);
+      ++bond;
+    }
+    return true;
+  }
+  return false;
+}
+
+bool Molecule::setBondPair(Index bondId, const std::pair<Index, Index>& pair)
+{
+  if (bondId < bondCount()) {
+    if (!m_graphDirty) {
+      m_graph.removeEdge(m_bondPairs[bondId].first, m_bondPairs[bondId].second);
+      m_graph.addEdge(pair.first, pair.second);
+    }
+    m_bondPairs[bondId] = pair;
+    return true;
+  }
+  return false;
+}
+
+unsigned char Molecule::bondOrder(Index bondId) const
+{
+  return bondId < m_bondOrders.size() ? m_bondOrders[bondId] : 0;
+}
+
+bool Molecule::setBondOrders(const Array<unsigned char>& orders)
+{
+  if (orders.size() == bondCount()) {
+    m_bondOrders = orders;
+    return true;
+  }
+  return false;
+}
+
+bool Molecule::setBondOrder(Index bondId, unsigned char order)
+{
+  if (bondId < bondCount()) {
+    m_bondOrders[bondId] = order;
+    return true;
+  }
+  return false;
+}
+
+Index Molecule::atomCount(unsigned char number) const
+{
+  Index count(0);
+  for (Array<unsigned char>::const_iterator it = m_atomicNumbers.begin();
+       it != m_atomicNumbers.end(); ++it) {
+    if (*it == number)
+      ++count;
+  }
+  return count;
+}
+
+bool Molecule::setAtomicNumbers(const Core::Array<unsigned char>& nums)
+{
+  if (nums.size() == atomCount()) {
+    m_atomicNumbers = nums;
+    return true;
+  }
+  return false;
+}
+
+bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
+{
+  if (atomId < atomCount()) {
+    m_atomicNumbers[atomId] = number;
+    return true;
+  }
+  return false;
+}
+
+bool Molecule::hasCustomElements() const
+{
+  for (Array<unsigned char>::const_iterator it = m_atomicNumbers.begin(),
+                                            itEnd = m_atomicNumbers.end();
+       it != itEnd; ++it) {
+    if (Core::isCustomElement(*it))
+      return true;
+  }
+  return false;
+}
+
+std::map<unsigned char, size_t> Molecule::composition() const
+{
+  // A map of atomic symbols to their quantity.
+  std::map<unsigned char, size_t> composition;
+  for (Array<unsigned char>::const_iterator it = m_atomicNumbers.begin(),
+                                            itEnd = m_atomicNumbers.end();
+       it != itEnd; ++it) {
+    ++composition[*it];
+  }
+  return composition;
+}
+
+Index Molecule::findBond(Index atomId1, Index atomId2) const
+{
+  assert(atomId1 < atomCount());
+  assert(atomId2 < atomCount());
+
+  std::pair<Index, Index> pair = Molecule::makeBondPair(atomId1, atomId2);
+  Array<std::pair<Index, Index>>::const_iterator iter =
+    std::find(m_bondPairs.begin(), m_bondPairs.end(), pair);
+
+  Index index = static_cast<Index>(std::distance(m_bondPairs.begin(), iter));
+  return index;
+}
+
+bool Molecule::removeBonds(Index atom)
+{
+  if (atom >= bondCount())
+    return false;
+  Index i = 0;
+  while (i < m_bondPairs.size()) {
+    auto& bond = m_bondPairs[i];
+    if (bond.first == atom || bond.second == atom) {
+      removeBond(i);
+    } else {
+      ++i;
+    }
+  }
+  return true;
+}
+
+Array<std::pair<Index, Index>> Molecule::getBonds(Index index) const
+{
+  Array<std::pair<Index, Index>> result;
+  for (auto& pair : m_bondPairs) {
+    if (pair.first == index) {
+      result.push_back(pair);
+    } else if (pair.second == index) {
+      result.push_back(pair);
+    }
+  }
+  return result;
+}
+
+Array<unsigned char> Molecule::getOrders(Index index) const
+{
+  Array<unsigned char> result;
+  Index i = 0;
+  for (auto& pair : m_bondPairs) {
+    if (pair.first == index) {
+      result.push_back(m_bondOrders[i]);
+    } else if (pair.second == index) {
+      result.push_back(m_bondOrders[i]);
+    }
+    ++i;
+  }
+  return result;
+}
+
+void Molecule::addBonds(const Array<std::pair<Index, Index>>& bonds,
+                        const Array<unsigned char>& orders)
+{
+  Index i = 0;
+  for (auto p : bonds) {
+    addBond(p.first, p.second, orders[i]);
+    ++i;
+  }
+}
+
+void Molecule::updateGraph() const
+{
+  if (!m_graphDirty)
+    return;
+  m_graphDirty = false;
+  m_graph.clear();
+  m_graph.setSize(atomCount());
+  typedef Array<std::pair<Index, Index>>::const_iterator IterType;
+  for (IterType it = m_bondPairs.begin(); it != m_bondPairs.end(); ++it) {
+    if (it->first < atomCount() && it->second < atomCount()) {
+      m_graph.addEdge(it->first, it->second);
+    }
+  }
+}
+
+void Molecule::rebondBond(Index newIndex, Index oldIndex)
+{
+  // nothing to do
+  if (newIndex == oldIndex)
+    return;
+  for (auto& pair : m_bondPairs) {
+    if (pair.first == oldIndex) {
+      pair.first = newIndex;
+    } else if (pair.second == oldIndex) {
+      pair.second = newIndex;
+    }
+  }
+  m_graphDirty = true;
 }
 
 } // namespace Core

@@ -22,12 +22,12 @@
 #include <algorithm>
 #include <utility>
 
-using Avogadro::Core::Array;
-using Avogadro::QtGui::RWMolecule;
-using Avogadro::QtGui::Molecule;
 using Avogadro::Index;
 using Avogadro::Real;
 using Avogadro::Vector3;
+using Avogadro::Core::Array;
+using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::RWMolecule;
 
 // TODO move this to an algorithms header
 #include <avogadro/core/elements.h>
@@ -671,13 +671,6 @@ TEST(RWMoleculeTest, setBondOrder)
 #undef VALIDATE_BOND
 }
 
-namespace {
-inline std::pair<Index, Index> makeBondPair(Index a, Index b)
-{
-  return a < b ? std::make_pair(a, b) : std::make_pair(b, a);
-}
-} // end anon namespace
-
 TEST(RWMoleculeTest, setBondPairs)
 {
   Molecule m;
@@ -691,9 +684,9 @@ TEST(RWMoleculeTest, setBondPairs)
   mol.addBond(1, 2, 2);
   mol.addBond(2, 3, 3);
   ASSERT_EQ(3, mol.bondCount());
-  ASSERT_EQ(makeBondPair(0, 1), mol.bondPair(0));
-  ASSERT_EQ(makeBondPair(1, 2), mol.bondPair(1));
-  ASSERT_EQ(makeBondPair(2, 3), mol.bondPair(2));
+  ASSERT_EQ(Molecule::makeBondPair(0, 1), mol.bondPair(0));
+  ASSERT_EQ(Molecule::makeBondPair(1, 2), mol.bondPair(1));
+  ASSERT_EQ(Molecule::makeBondPair(2, 3), mol.bondPair(2));
   mol.undoStack().clear();
 
   typedef std::pair<Index, Index> BondPair;
@@ -725,13 +718,13 @@ TEST(RWMoleculeTest, setBondPair)
   mol.addBond(1, 2, 2);
   mol.addBond(2, 3, 3);
   ASSERT_EQ(3, mol.bondCount());
-  ASSERT_EQ(makeBondPair(0, 1), mol.bondPair(0));
-  ASSERT_EQ(makeBondPair(1, 2), mol.bondPair(1));
-  ASSERT_EQ(makeBondPair(2, 3), mol.bondPair(2));
+  ASSERT_EQ(Molecule::makeBondPair(0, 1), mol.bondPair(0));
+  ASSERT_EQ(Molecule::makeBondPair(1, 2), mol.bondPair(1));
+  ASSERT_EQ(Molecule::makeBondPair(2, 3), mol.bondPair(2));
   mol.undoStack().clear();
 
-  mol.setBondPair(0, makeBondPair(0, 2));
-  mol.setBondPair(2, makeBondPair(2, 4));
+  mol.setBondPair(0, Molecule::makeBondPair(0, 2));
+  mol.setBondPair(2, Molecule::makeBondPair(2, 4));
 
 #define VALIDATE_BOND(ind, atom1, atom2, order, uid)                           \
   EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind));    \

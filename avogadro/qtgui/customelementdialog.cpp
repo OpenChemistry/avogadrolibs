@@ -70,7 +70,7 @@ struct RemapAtomicNumbers
     return old;
   }
 };
-}
+} // namespace
 
 void CustomElementDialog::apply()
 {
@@ -98,9 +98,10 @@ void CustomElementDialog::apply()
   }
 
   if (newMap.size() != oldMap.size()) {
-    Core::Array<unsigned char>& atomicNumbers = m_molecule.atomicNumbers();
+    Core::Array<unsigned char> atomicNumbers = m_molecule.atomicNumbers();
     std::transform(atomicNumbers.begin(), atomicNumbers.end(),
                    atomicNumbers.begin(), RemapAtomicNumbers(oldToNew));
+    m_molecule.setAtomicNumbers(atomicNumbers);
     m_molecule.setCustomElementMap(newMap);
     m_molecule.emitChanged(Molecule::Atoms | Molecule::Modified);
   }
@@ -126,7 +127,7 @@ struct CustomElementFilter
 
   operator std::set<unsigned char>() const { return customElements; }
 };
-}
+} // namespace
 
 void CustomElementDialog::prepareForm()
 {

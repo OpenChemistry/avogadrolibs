@@ -331,6 +331,11 @@ public:
     swap(d, other.d);
   }
 
+  /**
+   * @param index array position to delete
+   * if the index is valid swap it with the last position and pop back.
+   * This function does not preserve the elements order.
+   */
   void swapAndPop(Index index)
   {
     if (index >= d->data.size()) {
