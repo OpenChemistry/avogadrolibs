@@ -21,13 +21,9 @@ namespace Core {
 
 using std::swap;
 
-<<<<<<< Updated upstream
-Molecule::Molecule() : m_basisSet(nullptr), m_unitCell(nullptr) {}
-=======
 Molecule::Molecule()
   : m_basisSet(nullptr), m_unitCell(nullptr), m_graphDirty(false)
 {}
->>>>>>> Stashed changes
 
 Molecule::Molecule(const Molecule& other)
   : m_data(other.m_data), m_customElementMap(other.m_customElementMap),
@@ -292,12 +288,8 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
 
 void Molecule::swapBond(Index a, Index b)
 {
-<<<<<<< Updated upstream
-  MoleculeGraph::swapBond(a, b);
-=======
   swap(m_bondPairs[a], m_bondPairs[b]);
   swap(m_bondOrders[a], m_bondOrders[b]);
->>>>>>> Stashed changes
 }
 void Molecule::swapAtom(Index a, Index b)
 {
@@ -313,9 +305,6 @@ void Molecule::swapAtom(Index a, Index b)
   if (m_colors.size() >= max)
     swap(m_colors[a], m_colors[b]);
 
-<<<<<<< Updated upstream
-  MoleculeGraph::swapAtom(a, b);
-=======
   swap(m_atomicNumbers[a], m_atomicNumbers[b]);
   for (auto& pair : m_bondPairs) {
     auto oldPair = pair;
@@ -340,7 +329,6 @@ void Molecule::swapAtom(Index a, Index b)
       m_graph.addEdge(pair.first, pair.second);
     }
   }
->>>>>>> Stashed changes
 }
 
 bool Molecule::removeAtom(Index index)
@@ -357,9 +345,6 @@ bool Molecule::removeAtom(Index index)
     m_formalCharges.swapAndPop(index);
   if (m_colors.size() == atomCount())
     m_colors.swapAndPop(index);
-<<<<<<< Updated upstream
-  Core::MoleculeGraph::removeAtom(index);
-=======
 
   Index affectedIndex = static_cast<Index>(m_atomicNumbers.size() - 1);
   m_atomicNumbers.swapAndPop(index);
@@ -370,7 +355,6 @@ bool Molecule::removeAtom(Index index)
   // the bonds from back() now are in index, so we need to rebond it
   rebondBond(index, affectedIndex);
   return true;
->>>>>>> Stashed changes
   return true;
 }
 
@@ -445,7 +429,7 @@ bool Molecule::removeBond(Index index)
     // mark dirty the graph O(n) only if is more effitien than remove an edge
     // O(nlogn)
     size_t n = atomCount();
-    size_t m = calcNlogN(m_graph.getSubgraphSize(m_bondPairs[index].first));
+    size_t m = calcNlogN(m_graph.subgraphCount(m_bondPairs[index].first));
     if (m < n) {
       m_graph.removeEdge(m_bondPairs[index].first, m_bondPairs[index].second);
     } else {

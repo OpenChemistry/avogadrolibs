@@ -228,29 +228,14 @@ size_t Graph::subgraphsCount() const
   return m_subgraphs.groupCount();
 }
 
-size_t Graph::getSubgraph(size_t element) const
+size_t Graph::subgraph(size_t element) const
 {
   return m_subgraphs.getGroup(element);
 }
 
-size_t Graph::getSubgraphSize(size_t element) const
+size_t Graph::subgraphCount(size_t element) const
 {
   return m_subgraphs.getGroupSize(element);
-}
-
-size_t Graph::groupCount() const
-{
-  return m_connectedGroup.groupCount();
-}
-
-size_t Graph::getGroup(size_t element) const
-{
-  return m_connectedGroup.getGroup(element);
-}
-
-size_t Graph::getGroupSize(size_t element) const
-{
-  return m_connectedGroup.getGroupSize(element);
 }
 
 } // namespace Core

@@ -112,10 +112,10 @@ public:
   size_t subgraphsCount() const;
 
   /**  @return the subgraphs ID from the @p index. */
-  size_t getSubgraph(size_t index) const;
+  size_t subgraph(size_t index) const;
 
   /**  @return the group size from the @p index. */
-  size_t getSubgraphSize(size_t index) const;
+  size_t subgraphCount(size_t index) const;
 
 private:
   std::set<size_t> checkConectivity(size_t a, size_t b) const;

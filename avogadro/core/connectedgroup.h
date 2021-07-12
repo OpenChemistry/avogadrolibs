@@ -73,9 +73,6 @@ public:
   /** @return the total groups existing */
   size_t groupCount() const;
 
-  /** */
-  size_t groupCount() const;
-
 private:
   std::map<size_t, size_t> m_nodeToGroup;
   std::vector<std::set<size_t>> m_groupToNode;
