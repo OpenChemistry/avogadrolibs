@@ -13,14 +13,12 @@ BezierGeometry::BezierGeometry() : CurveGeometry() {}
 Vector3f BezierGeometry::computeCurvePoint(float t,
                                            const std::list<Point*>& points)
 {
-  Vector3f h;
-  h << 1.0f, 1.0f, 1.0f;
+  Vector3f h = Vector3f::Ones();
   float u = 1.0f - t;
   float n1 = points.size();
   float w = 1.0f / n1;
   float k = 0.0f;
-  Vector3f Q;
-  Q << w, w, w;
+  Vector3f Q(w, w, w);
   for (const auto& p : points) {
     for (size_t i = 0; i < 3; ++i) {
       h[i] = h[i] * t * (n1 - k) * w;

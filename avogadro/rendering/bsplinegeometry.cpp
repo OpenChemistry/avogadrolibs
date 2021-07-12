@@ -42,8 +42,7 @@ Vector3f BSplineGeometry::computeCurvePoint(float t,
   // #knot segments = #control points + #degree + 1
   float m = points.size() + k + 1.0f;
   float knot = 1.0f / m;
-  Vector3f Q;
-  Q << 0.0f, 0.0f, 0.0f;
+  Vector3f Q = Vector3f::Zero();
   float i = 0.0f;
   for (const auto& p : points) {
     Q += p->pos * B(i, k, t, knot);

@@ -298,8 +298,9 @@ QWidget* Cartoons::setupWidget()
   if (!m_setupWidget) {
     m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
     QVBoxLayout* v = new QVBoxLayout;
-    const char* boxesText[] = { "Backbone", "Trace",   "Tube",
-                                "Ribbon",   "Cartoon", "Rope" };
+    QStringList boxesText;
+    boxesText << tr("Backbone") << tr("Trace") << tr("Tube") << tr("Ribbon")
+              << tr("Cartoon") << tr("Rope");
     vector<reference_wrapper<bool>> boxesBools = { m_showBackbone, m_showTrace,
                                                    m_showTube,     m_showRibbon,
                                                    m_showCartoon,  m_showRope };
@@ -310,7 +311,7 @@ QWidget* Cartoons::setupWidget()
     m_jumpTable[4] = &Cartoons::showCartoon;
     m_jumpTable[5] = &Cartoons::showRope;
     for (size_t i = 0; i < 6; ++i) {
-      QCheckBox* check = new QCheckBox(tr(boxesText[i]));
+      QCheckBox* check = new QCheckBox(boxesText[i]);
       check->setChecked(boxesBools[i]);
       connect(check, &QCheckBox::clicked, this, m_jumpTable[i]);
       v->addWidget(check);
