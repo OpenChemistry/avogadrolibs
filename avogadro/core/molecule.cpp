@@ -388,8 +388,8 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
 {
   assert(atom1 < m_atomicNumbers.size());
   assert(atom2 < m_atomicNumbers.size());
-  Index index = findBond(atom1, atom2);
-  if (index == bondCount()) {
+  Index index = bond(atom1, atom2).index();
+  if (index >= bondCount()) {
     if (!m_graphDirty) {
       m_graph.addEdge(atom1, atom2);
     }
@@ -482,8 +482,16 @@ Molecule::BondType Molecule::bond(const AtomType& a, const AtomType& b) const
 
 Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
 {
-  Index index = findBond(atomId1, atomId2);
-  if (index == bondCount())
+  assert(atomId1 < atomCount());
+  assert(atomId2 < atomCount());
+
+  std::pair<Index, Index> pair = Molecule::makeBondPair(atomId1, atomId2);
+  Array<std::pair<Index, Index>>::const_iterator iter =
+    std::find(m_bondPairs.begin(), m_bondPairs.end(), pair);
+
+  Index index = static_cast<Index>(std::distance(m_bondPairs.begin(), iter));
+
+  if (index >= bondCount())
     return BondType();
   return BondType(const_cast<Molecule*>(this), index);
 }
@@ -930,19 +938,6 @@ std::map<unsigned char, size_t> Molecule::composition() const
     ++composition[*it];
   }
   return composition;
-}
-
-Index Molecule::findBond(Index atomId1, Index atomId2) const
-{
-  assert(atomId1 < atomCount());
-  assert(atomId2 < atomCount());
-
-  std::pair<Index, Index> pair = Molecule::makeBondPair(atomId1, atomId2);
-  Array<std::pair<Index, Index>>::const_iterator iter =
-    std::find(m_bondPairs.begin(), m_bondPairs.end(), pair);
-
-  Index index = static_cast<Index>(std::distance(m_bondPairs.begin(), iter));
-  return index;
 }
 
 bool Molecule::removeBonds(Index atom)
