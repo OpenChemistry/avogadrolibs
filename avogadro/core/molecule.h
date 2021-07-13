@@ -635,8 +635,8 @@ public:
   // search if the bond exists, if not returns maxSize
   Index findBond(Index atomId1, Index atomId2) const;
 
-  Array<std::pair<Index, Index>> getBonds(Index index) const;
-  Array<unsigned char> getOrders(Index index) const;
+  Array<std::pair<Index, Index>> getAtomBonds(Index index) const;
+  Array<unsigned char> getAtomOrders(Index index) const;
 
   inline static std::pair<Index, Index> makeBondPair(const Index& a,
                                                      const Index& b);

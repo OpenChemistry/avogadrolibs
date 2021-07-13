@@ -426,7 +426,7 @@ bool Molecule::removeBond(Index index)
   if (index >= bondCount())
     return false;
   if (!m_graphDirty) {
-    // mark dirty the graph O(n) only if is more effitien than remove an edge
+    // mark dirty the graph O(n) only if is more efficient than remove an edge
     // O(nlogn)
     size_t n = atomCount();
     size_t m = calcNlogN(m_graph.subgraphCount(m_bondPairs[index].first));
@@ -961,7 +961,7 @@ bool Molecule::removeBonds(Index atom)
   return true;
 }
 
-Array<std::pair<Index, Index>> Molecule::getBonds(Index index) const
+Array<std::pair<Index, Index>> Molecule::getAtomBonds(Index index) const
 {
   Array<std::pair<Index, Index>> result;
   for (auto& pair : m_bondPairs) {
@@ -974,7 +974,7 @@ Array<std::pair<Index, Index>> Molecule::getBonds(Index index) const
   return result;
 }
 
-Array<unsigned char> Molecule::getOrders(Index index) const
+Array<unsigned char> Molecule::getAtomOrders(Index index) const
 {
   Array<unsigned char> result;
   Index i = 0;

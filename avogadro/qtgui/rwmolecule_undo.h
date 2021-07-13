@@ -117,8 +117,8 @@ public:
   void redo() override
   {
     assert(m_atomId < m_molecule.atomCount());
-    m_bonds = m_molecule.getBonds(m_atomId);
-    m_orders = m_molecule.getOrders(m_atomId);
+    m_bonds = m_molecule.getAtomBonds(m_atomId);
+    m_orders = m_molecule.getAtomOrders(m_atomId);
     m_molecule.removeAtom(m_atomId);
   }
 
