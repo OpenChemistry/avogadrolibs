@@ -73,13 +73,14 @@ jobs:
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      #if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
+        
     - name: Check C++ changes with clang-tidy
       id: static_analysis
       working-directory: build
       run : |
         sudo apt-get -qq install clang-tidy-11
         clang-tidy-11 --export-fixes=fixes.yaml
-    
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      #if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
+
