@@ -10,8 +10,8 @@
 
 #include <QtCore/QJsonObject>
 #include <QtCore/QMap>
-#include <QtWidgets/QWidget>
 #include <QtWidgets/QFormLayout>
+#include <QtWidgets/QWidget>
 
 class QJsonValue;
 class QTextEdit;
@@ -31,7 +31,7 @@ class Molecule;
  * The JsonWidget creates a GUI to represent the options given by an
  * script, turning JSON from the script into a form and passing the results
  * back to the script via command-line.
- * 
+ *
  * It's used by a range of different scripts, including:
  * - Commands
  * - InterfaceGenerators
@@ -80,7 +80,9 @@ protected:
    */
   virtual void updateOptions();
   void buildOptionGui();
-  void combinedOptionRow(const QString& label1, const QString& label2, const QString& tr1, const QString& tr2, QJsonObject& options);
+  void combinedOptionRow(const QString& label1, const QString& label2,
+                         const QString& tr1, const QString& tr2,
+                         QJsonObject& options);
   void addOptionRow(const QString& label, const QJsonValue& option);
 
   QWidget* createOptionWidget(const QJsonValue& option);

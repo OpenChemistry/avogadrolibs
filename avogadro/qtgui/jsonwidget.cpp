@@ -29,8 +29,9 @@
 namespace Avogadro {
 namespace QtGui {
 
-JsonWidget::JsonWidget(QWidget* parent_) : QWidget(parent_), m_molecule(nullptr),
-m_currentLayout(nullptr), m_centralWidget(nullptr)
+JsonWidget::JsonWidget(QWidget* parent_)
+  : QWidget(parent_), m_molecule(nullptr), m_currentLayout(nullptr),
+    m_centralWidget(nullptr)
 {}
 
 JsonWidget::~JsonWidget() {}
@@ -115,7 +116,7 @@ void JsonWidget::buildOptionGui()
 
   m_widgets.clear();
   delete m_centralWidget->layout();
-  
+
   if (!m_options.contains("userOptions")) {
     return;
   }
@@ -192,12 +193,10 @@ void JsonWidget::buildOptionGui()
 
     // Other special cases: Charge / Multiplicity
     if (userOptions.contains("Charge"))
-      addOptionRow(tr("Charge"),
-                   userOptions.take("Charge"));
+      addOptionRow(tr("Charge"), userOptions.take("Charge"));
 
     if (userOptions.contains("Multiplicity"))
-      addOptionRow(tr("Multiplicity"),
-                   userOptions.take("Multiplicity"));
+      addOptionRow(tr("Multiplicity"), userOptions.take("Multiplicity"));
 
     // Add remaining keys at bottom.
     for (QJsonObject::const_iterator it = userOptions.constBegin(),
@@ -376,7 +375,7 @@ QWidget* JsonWidget::createStringListWidget(const QJsonObject& obj)
 QWidget* JsonWidget::createStringWidget(const QJsonObject& obj)
 {
   QLineEdit* edit = new QLineEdit(this);
-  //  connect(edit, SIGNAL(textChanged(QString)), SLOT(updatePreviewText()));
+  connect(edit, SIGNAL(textChanged(QString)), SLOT(updatePreviewText()));
   if (obj.contains(QStringLiteral("toolTip")) &&
       obj.value(QStringLiteral("toolTip")).isString()) {
     edit->setToolTip(obj[QStringLiteral("toolTip")].toString());
@@ -473,29 +472,52 @@ QWidget* JsonWidget::createBooleanWidget(const QJsonObject& obj)
 
 void JsonWidget::setOptionDefaults()
 {
-  if (!m_options.contains(QStringLiteral("userOptions")) ||
-      !m_options[QStringLiteral("userOptions")].isObject()) {
-    //    showError(tr("'userOptions' missing, or not an object:\n%1")
-    //                .arg(QString(QJsonDocument(m_options).toJson())));
+  if (!m_options.contains(QStringLiteral("userOptions"))) {
     return;
   }
 
-  QJsonObject userOptions = m_options[QStringLiteral("userOptions")].toObject();
+  // if we have tabs, then userOptions is an array of objects
+  // need to loop through to find the right one
+  unsigned int size;
+  bool isArray = m_options["userOptions"].isArray();
+  QJsonArray options;
+  QJsonObject userOptions;
+  if (isArray) {
+    size = m_options["userOptions"].toArray().size();
+    options = m_options["userOptions"].toArray();
+  } else
+    size = 1;
 
-  for (QJsonObject::ConstIterator it = userOptions.constBegin(),
-                                  itEnd = userOptions.constEnd();
-       it != itEnd; ++it) {
-    QString label = it.key();
-    QJsonValue val = it.value();
+  for (unsigned int i = 0; i < size; ++i) {
+    // loop over tabs
 
-    if (!val.isObject()) {
-      qWarning() << tr("Error: value must be object for key '%1'.").arg(label);
-      continue;
+    if (isArray) {
+      userOptions = options.at(i).toObject();
+    } else if (m_options["userOptions"].isObject()) {
+      userOptions = m_options["userOptions"].toObject();
+    } else {
+      break;
     }
 
-    QJsonObject obj = val.toObject();
-    if (obj.contains(QStringLiteral("default")))
-      setOption(label, obj[QStringLiteral("default")]);
+    // loop over widgets in the tab
+    for (QJsonObject::ConstIterator it = userOptions.constBegin(),
+                                    itEnd = userOptions.constEnd();
+         it != itEnd; ++it) {
+      QString label = it.key();
+      QJsonValue val = it.value();
+
+      if (!val.isObject()) {
+        qWarning()
+          << tr("Error: value must be object for key '%1'.").arg(label);
+        continue;
+      }
+
+      QJsonObject obj = val.toObject();
+      if (obj.contains("default")) {
+        // TODO - check QSettings for a value too
+        setOption(label, obj[QStringLiteral("default")]);
+      }
+    }
   }
 }
 
@@ -532,7 +554,7 @@ void JsonWidget::setStringListOption(const QString& name,
     return;
   }
 
-  if (!value.isDouble() && !value.isString()) {
+  if (!value.isDouble() && !value.isString() && !value.isInt()) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad default value:")
                     .arg(name)
@@ -541,12 +563,14 @@ void JsonWidget::setStringListOption(const QString& name,
   }
 
   int index = -1;
-  if (value.isDouble())
+  if (value.isInt())
+    index = value.toInt();
+  else if (value.isDouble())
     index = static_cast<int>(value.toDouble() + 0.5);
   else if (value.isString())
     index = combo->findText(value.toString());
 
-  if (index < 0) {
+  if (index < 0 || index > combo->count()) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Could not find valid combo entry index from value:")
                     .arg(name)
