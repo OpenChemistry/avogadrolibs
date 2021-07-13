@@ -1,0 +1,97 @@
+name: Static Analysis
+
+on: [push, pull_request]
+#  workflow_dispatch:
+#    inputs:
+#      debug_enabled:
+#        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'     
+#        required: false
+#        default: false
+
+env:
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Ubuntu clang-tidy", artifact: "Ubuntu-2004.tar.gz",
+            os: ubuntu-20.04,
+            cc: "clang", cxx: "clang++",
+            cmake_flags: "-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DUSE_SYSTEM_LIBXML2=ON -USE_SYSTEM_ZLIB=ON",
+            cpack: "",
+          }
+
+    steps:
+
+    - name: Install Dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev libqt5svg5-dev
+
+    - name: Checkout openchemistry
+      uses: actions/checkout@v2
+      with:
+        repository: openchemistry/openchemistry
+        submodules: recursive
+
+    - name: Checkout avogadroapp
+      uses: actions/checkout@v2
+      with:
+        repository: openchemistry/avogadroapp
+        path: avogadroapp
+
+    - name: Checkout avogadrolibs
+      uses: actions/checkout@v2
+      with:
+        path: avogadrolibs
+
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v2
+      with:
+        path: ../Qt
+        key: ${{ runner.os }}-QtCache
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        cached: ${{ steps.cache-qt.outputs.cache-hit }}
+        version: ${{ env.QT_VERSION }}
+
+    - name: Grab cache files
+      uses: actions/cache@v2
+      if: runner.os != 'Windows'
+      with:
+        path: ${{ runner.workspace }}/build/thirdparty
+        key: ${{ matrix.config.name }}-thirdparty
+
+    - name: Configure
+      run: |
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
+        cd "${{ runner.workspace }}/build"
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
+      shell: bash
+
+    - name: Build
+      run: |
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}} ${{matrix.config.build_flags}}
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Check C++ changes with clang-tidy
+       id: static_analysis
+       working-directory: build
+       run : |
+          sudo apt-get -qq install clang-tidy-11
+          clang-tidy-11 --export-fixes=fixes.yaml
+    
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      #if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
