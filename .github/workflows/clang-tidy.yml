@@ -83,7 +83,7 @@ jobs:
         
     - name: Check C++ changes with clang-tidy
       id: static_analysis
-      working-directory: build
+      working-directory: ${{ runner.workspace }}/build
       run : |
         sudo apt-get -qq install clang-tidy-11
         run-clang-tidy-11 -checks='-*,performance-*,readability-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,mpi-*,misc-*' -export-fixes=fixes.yaml
