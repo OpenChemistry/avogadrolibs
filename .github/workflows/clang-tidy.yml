@@ -1,12 +1,16 @@
 name: Static Analysis
 
-on: [push, pull_request]
-#  workflow_dispatch:
-#    inputs:
-#      debug_enabled:
-#        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'     
-#        required: false
-#        default: false
+on: 
+  push:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'     
+        required: false
+        default: false
 
 env:
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
@@ -34,7 +38,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev libqt5svg5-dev
+        sudo apt-get -qq install ninja-build bear libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev libqt5svg5-dev
 
     - name: Checkout openchemistry
       uses: actions/checkout@v2
@@ -69,18 +73,24 @@ jobs:
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}} ${{matrix.config.build_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} bear ninja
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
-      #if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
+      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
         
     - name: Check C++ changes with clang-tidy
       id: static_analysis
       working-directory: build
       run : |
         sudo apt-get -qq install clang-tidy-11
-        clang-tidy-11 --export-fixes=fixes.yaml
+        run-clang-tidy-11 -checks='-*,performance-*,readability-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,mpi-*,misc-*' -export-fixes=fixes.yaml
+
+    - name: Run clang-tidy-pr-comments action
+      uses: platisd/clang-tidy-pr-comments@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        clang_tidy_fixes: ${{ runner.workspace }}/build/fixes.yaml
 
