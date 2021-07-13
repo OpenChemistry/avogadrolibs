@@ -86,11 +86,11 @@ jobs:
       working-directory: ${{ runner.workspace }}/build
 
     - name: Check C++ changes with clang-tidy
-       id: static_analysis
-       working-directory: build
-       run : |
-          sudo apt-get -qq install clang-tidy-11
-          clang-tidy-11 --export-fixes=fixes.yaml
+      id: static_analysis
+      working-directory: build
+      run : |
+        sudo apt-get -qq install clang-tidy-11
+        clang-tidy-11 --export-fixes=fixes.yaml
     
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
