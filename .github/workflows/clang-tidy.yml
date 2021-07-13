@@ -10,6 +10,7 @@ on: [push, pull_request]
 
 env:
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+  BUILD_TYPE: RelWitDebInfo
 
 jobs:
   build:
