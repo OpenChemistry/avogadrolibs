@@ -107,7 +107,9 @@ jobs:
       uses: actions/cache@v2
       if: runner.os != 'Windows'
       with:
-        path: ${{ runner.workspace }}/build/thirdparty
+        path: |
+          ${{ runner.workspace }}/build/thirdparty
+          ${{ runner.workspace }}/build/Downloads
         key: ${{ matrix.config.name }}-thirdparty
 
     - name: Configure
