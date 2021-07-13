@@ -52,19 +52,6 @@ jobs:
       with:
         path: avogadrolibs
 
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v2
-      with:
-        path: ../Qt
-        key: ${{ runner.os }}-QtCache
-
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v2
-      with:
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
-        version: ${{ env.QT_VERSION }}
-
     - name: Grab cache files
       uses: actions/cache@v2
       if: runner.os != 'Windows'
