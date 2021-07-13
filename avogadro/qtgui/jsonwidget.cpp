@@ -554,7 +554,7 @@ void JsonWidget::setStringListOption(const QString& name,
     return;
   }
 
-  if (!value.isDouble() && !value.isString() && !value.isInt()) {
+  if (!value.isDouble() && !value.isString()) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad default value:")
                     .arg(name)
@@ -563,9 +563,7 @@ void JsonWidget::setStringListOption(const QString& name,
   }
 
   int index = -1;
-  if (value.isInt())
-    index = value.toInt();
-  else if (value.isDouble())
+  if (value.isDouble())
     index = static_cast<int>(value.toDouble() + 0.5);
   else if (value.isString())
     index = combo->findText(value.toString());
