@@ -272,7 +272,7 @@ void JsonWidget::addOptionRow(const QString& name, const QJsonValue& option)
   if (!widget)
     return;
 
-  QFormLayout* form = qobject_cast<QFormLayout*>(this->layout());
+  QFormLayout* form = m_currentLayout;
   if (!form) {
     qWarning() << "Cannot add option" << name
                << "to GUI -- layout is not a form.";
