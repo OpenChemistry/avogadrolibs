@@ -117,8 +117,10 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
   QStringList options;
   QStringList formats2D;
   formats2D << "smi"
+            << "smiles"
+            << "can"
             << "inchi"
-            << "can";
+            << "wln";
   if (formats2D.contains(QString::fromStdString(m_fileExtensions.front())))
     options << "--gen3d";
 

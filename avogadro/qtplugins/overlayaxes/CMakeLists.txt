@@ -9,7 +9,7 @@ endif()
 
 avogadro_plugin(OverlayAxes
   "Reference Axes Overlay"
-  ScenePlugin
+  ExtensionPlugin
   overlayaxes.h
   OverlayAxes
   overlayaxes.cpp

@@ -193,7 +193,13 @@ void InsertFragmentDialog::filterTextChanged(const QString& newFilter)
 void InsertFragmentDialog::activated()
 {
   QString currentFileName = fileName();
-  emit performInsert(currentFileName);
+
+  // check to see if it's an actual file and not a directory
+  if (currentFileName.isEmpty() || !QFileInfo(currentFileName).isFile()) {
+    return;
+  }
+
+  emit performInsert(currentFileName, m_implementation->crystalFiles);
 }
 
 } // namespace QtPlugins

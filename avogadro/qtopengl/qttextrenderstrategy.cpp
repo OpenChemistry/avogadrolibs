@@ -75,18 +75,31 @@ inline QFont textPropertiesToQFont(const TextProperties& prop)
 {
   QString family;
   switch (prop.fontFamily()) {
+    case TextProperties::SansSerif:
+#ifndef Q_OS_MAC
+      family = "SansSerif";
+#else
+      family = QApplication::font().family();
+#endif
+      break;
+    case TextProperties::Serif:
+#ifndef Q_OS_MAC
+      family = "serif";
+#else
+      family = "Times";
+#endif
+      break;
+    case TextProperties::Mono:
+#ifndef Q_OS_MAC
+      family = "mono";
+#else
+      family = "Menlo";
+#endif
+      break;
     default:
       qWarning() << "Unknown font family id: " << prop.fontFamily()
                  << "Defaulting to SansSerif.";
-    case TextProperties::SansSerif:
-      family = "sans";
-      break;
-    case TextProperties::Serif:
-      family = "serif";
-      break;
-    case TextProperties::Mono:
-      family = "mono";
-      break;
+      family = QApplication::font().family();
   }
 
   TextProperties::FontStyles style = prop.fontStyles();
@@ -114,18 +127,14 @@ inline QFont textPropertiesToQFont(const TextProperties& prop)
   return result;
 }
 
-} // end anon namespace
+} // namespace
 
 namespace Avogadro {
 namespace QtOpenGL {
 
-QtTextRenderStrategy::QtTextRenderStrategy()
-{
-}
+QtTextRenderStrategy::QtTextRenderStrategy() {}
 
-QtTextRenderStrategy::~QtTextRenderStrategy()
-{
-}
+QtTextRenderStrategy::~QtTextRenderStrategy() {}
 
 Rendering::TextRenderStrategy* QtTextRenderStrategy::newInstance() const
 {
@@ -241,7 +250,7 @@ inline void argbToRgbaWorker<QSysInfo::LittleEndian>(quint32 in, quint32& out)
   out = ((in << 16) & 0xff0000) | ((in >> 16) & 0xff) | (in & 0xff00ff00);
 }
 
-} // end anon namespace
+} // namespace
 
 void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
 {

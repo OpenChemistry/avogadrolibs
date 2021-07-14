@@ -19,7 +19,7 @@
 
 #include "node.h"
 
-#include <vector>
+#include <list>
 
 namespace Avogadro {
 namespace Rendering {
@@ -36,6 +36,21 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT GroupNode : public Node
 {
 public:
+  enum NodeType
+  {
+    ALL = 0,
+    NONE = -1,
+    UI = 1,
+    GEOMETRY = 2,
+  };
+  struct NodeInfo
+  {
+    NodeInfo() : node(nullptr), ui(NONE) {}
+    NodeInfo(Node* n, NodeType u) : node(n), ui(u) {}
+    NodeType ui;
+    Node* node;
+  };
+
   explicit GroupNode(GroupNode* parent = nullptr);
   ~GroupNode() override;
 
@@ -49,7 +64,13 @@ public:
    * deleted by this node upon destruction.
    * @param node Node to be added.
    */
-  void addChild(Node* node);
+  void addChild(Node* node, NodeType ui = NodeType::GEOMETRY);
+  /**
+   * @brief Add a child node, this node will have its parent set and will be
+   * deleted by this node upon destruction.
+   * @param node Node to be added.
+   */
+  void addUIChild(Node* node);
 
   /**
    * @brief Remove child node, this node will no longer be deleted.
@@ -63,8 +84,16 @@ public:
    * @param index The index of the child.
    * @return A pointer to the child node, or nullptr if the index is out of
    * range.
+   * time complexity: O(n)
    */
   Node* child(size_t index);
+
+  /**
+   * @brief check if the Node exists in this GroupNode.
+   * @param node Node to search.
+   * @return True if the node was found, false otherwise.
+   */
+  bool hasChild(Node* node) const;
 
   /**
    * @return The number of child nodes contained by the GroupNode.
@@ -74,16 +103,22 @@ public:
   /**
    * @brief Get a reference to the child nodes list.
    */
-  std::vector<Node*>& children() { return m_children; }
-  const std::vector<Node*>& children() const { return m_children; }
+  std::list<NodeInfo>& children() { return m_children; }
+  const std::list<NodeInfo>& children() const { return m_children; }
 
   /**
-   * @brief Remove all children.
+   * @brief Remove all non UI-children.
    */
   void clear();
 
+  /**
+   * @brief Remove all UI-children.
+   */
+  void clearUI();
+
 protected:
-  std::vector<Node*> m_children;
+  void clear(NodeType type);
+  std::list<NodeInfo> m_children;
 };
 
 } // End namespace Rendering

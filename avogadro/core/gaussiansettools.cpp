@@ -337,17 +337,31 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
     for (int j = 0; j < 10; ++j)
       components[j] += gtoCN[cIndex++] * tmpGTO;
   }
+
+  double xxx = delta.x() * delta.x() * delta.x(); // xxx
+  double xxy = delta.x() * delta.x() * delta.y(); // xxy
+  double xxz = delta.x() * delta.x() * delta.z(); // xxz
+  double xyy = delta.x() * delta.y() * delta.y(); // xyy
+  double xyz = delta.x() * delta.y() * delta.z(); // xyz
+  double xzz = delta.x() * delta.z() * delta.z(); // xzz
+  double yyy = delta.y() * delta.y() * delta.y(); // yyy
+  double yyz = delta.y() * delta.y() * delta.z(); // yyz
+  double yzz = delta.y() * delta.z() * delta.z(); // yzz
+  double zzz = delta.z() * delta.z() * delta.z(); // zzz
+
   double componentsF[10] = {
-    delta.x() * delta.x() * delta.x(), // xxx
-    delta.x() * delta.x() * delta.y(), // xxy
-    delta.x() * delta.x() * delta.z(), // xxz
-    delta.x() * delta.y() * delta.y(), // xyy
-    delta.x() * delta.y() * delta.z(), // xyz
-    delta.x() * delta.z() * delta.z(), // xzz
-    delta.y() * delta.y() * delta.y(), // yyy
-    delta.y() * delta.y() * delta.z(), // yyz
-    delta.y() * delta.z() * delta.z(), // yzz
-    delta.z() * delta.z() * delta.z()  // zzz
+    // molden order
+    // e.g https://gau2grid.readthedocs.io/en/latest/order.html
+    xxx,
+    yyy,
+    zzz,
+    xyy,
+    xxy,
+    xxz,
+    xzz,
+    yzz,
+    yyz,
+    xyz
   };
 
   for (int i = 0; i < 10; ++i)

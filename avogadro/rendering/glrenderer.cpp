@@ -94,7 +94,15 @@ void GLRenderer::render()
   // Setup for transparent geometry
   visitor.setRenderPass(TranslucentPass);
   glEnable(GL_BLEND);
+  // nvidia drivers have a bug where they don't like blending
+  //  so on Mac we can use this (they don't use nvidia)
+#ifdef __APPLE__
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+#else
+  // Thanks to Giuseppe D'Angelo for a related comment:
+  // https://bugreports.qt.io/browse/QTBUG-36739
+  glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+#endif
   m_scene.rootNode().accept(visitor);
 
   // Setup for 3d overlay rendering
@@ -179,17 +187,17 @@ std::multimap<float, Identifier> GLRenderer::hits(
   if (!group)
     return result;
 
-  for (std::vector<Node*>::const_iterator it = group->children().begin();
-       it != group->children().end(); ++it) {
+  for (auto it = group->children().begin(); it != group->children().end();
+       ++it) {
     std::multimap<float, Identifier> loopHits;
-    const Node* itNode = *it;
+    const Node* itNode = it->node;
     const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
       loopHits = hits(childGroup, rayOrigin, rayEnd, rayDirection);
       result.insert(loopHits.begin(), loopHits.end());
       continue;
     }
-    const GeometryNode* childGeometry = (*it)->cast<GeometryNode>();
+    const GeometryNode* childGeometry = itNode->cast<GeometryNode>();
     if (childGeometry) {
       loopHits = hits(childGeometry, rayOrigin, rayEnd, rayDirection);
       result.insert(loopHits.begin(), loopHits.end());
@@ -228,14 +236,14 @@ Array<Identifier> GLRenderer::hits(const GroupNode* group,
   for (auto it = group->children().begin(); it != group->children().end();
        ++it) {
     Array<Identifier> loopHits;
-    const Node* itNode = *it;
+    const Node* itNode = it->node;
     const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
       loopHits = hits(childGroup, f);
       result.insert(result.end(), loopHits.begin(), loopHits.end());
       continue;
     }
-    const auto childGeometry = (*it)->cast<GeometryNode>();
+    const auto childGeometry = itNode->cast<GeometryNode>();
     if (childGeometry) {
       loopHits = childGeometry->areaHits(f);
       result.insert(result.end(), loopHits.begin(), loopHits.end());

@@ -38,9 +38,7 @@ class RWMolecule;
  * @brief A QObject derived molecule object with signals/slots.
  */
 
-class AVOGADROQTGUI_EXPORT Molecule
-  : public QObject
-  , public Core::Molecule
+class AVOGADROQTGUI_EXPORT Molecule : public QObject, public Core::Molecule
 {
   Q_OBJECT
 
@@ -103,6 +101,8 @@ public:
    */
   virtual AtomType addAtom(unsigned char atomicNumber, Index uniqueId);
 
+  AtomType addAtom(unsigned char number, Vector3 position3d);
+
   /**
    * @brief Remove the specified atom from the molecule.
    * @param index The index of the atom to be removed.
@@ -160,6 +160,8 @@ public:
   BondType addBond(Index atomId1, Index atomId2,
                    unsigned char bondOrder = 1) override;
 
+  void addBonds(const Core::Array<std::pair<Index, Index>>& bonds,
+                const Core::Array<unsigned char>& orders);
   /**
    * @brief Add a bond between the specified atoms.
    * @param a The first atom in the bond.
@@ -226,6 +228,9 @@ public:
 
   RWMolecule* undoMolecule();
 
+  void swapBond(Index a, Index b);
+  void swapAtom(Index a, Index b);
+
 public slots:
   /**
    * @brief Force the molecule to emit the changed() signal.
@@ -255,7 +260,7 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Molecule::MoleculeChanges)
 
-} // end QtGui namespace
-} // end Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_MOLECULE_H

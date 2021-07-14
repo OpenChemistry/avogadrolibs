@@ -43,7 +43,6 @@ public:
 
   /** Typedef for Bond class. */
   typedef Bond BondType;
-
   /** Type for custom element map. */
   typedef std::map<unsigned char, std::string> CustomElementMap;
 
@@ -84,35 +83,6 @@ public:
 
   /** \overload */
   VariantMap& dataMap();
-
-  /** Returns a vector of atomic numbers for the atoms in the molecule. */
-  Array<unsigned char>& atomicNumbers();
-
-  /** \overload */
-  const Array<unsigned char>& atomicNumbers() const;
-
-  /**
-   * Get the atomic number for the requested atom.
-   * @param atomId The index of the atom.
-   * @return The atomic number of the atom indexed at @a atomId, or
-   * Avogadro::InvalidElement if @a atomId is invalid.
-   */
-  unsigned char atomicNumber(Index atomId) const;
-
-  /**
-   * Replace the current array of atomic numbers.
-   * @param nums The new atomic number array. Must be of length atomCount().
-   * @return True on success, false otherwise.
-   */
-  bool setAtomicNumbers(const Core::Array<unsigned char>& nums);
-
-  /**
-   * Set the atomic number of a single atom.
-   * @param atomId The index of the atom to modify.
-   * @param atomicNumber The new atomic number.
-   * @return True on success, false otherwise.
-   */
-  bool setAtomicNumber(Index atomId, unsigned char atomicNumber);
 
   /** Returns a vector of hybridizations for the atoms in the molecule. */
   Array<AtomHybridization>& hybridizations();
@@ -274,73 +244,6 @@ public:
   /** Returns whether the selection is empty or not */
   bool isSelectionEmpty() const;
 
-  /** Returns a vector of pairs of atom indices of the bonds in the molecule. */
-  Array<std::pair<Index, Index>>& bondPairs();
-
-  /** \overload */
-  const Array<std::pair<Index, Index>>& bondPairs() const;
-
-  /**
-   * Get the set of bonded atoms corresponding to @a bondId.
-   * @param bondId The index of the requested bond.
-   * @return The bonded atom pair, represented as a pair of atom indices.
-   */
-  std::pair<Index, Index> bondPair(Index bondId) const;
-
-  /**
-   * Replace the current array of bonded atoms.
-   * @param pairs The array.
-   * @return True on success, false on failure.
-   * @note The bonded atoms are represented as a pair of bond indices.
-   * @note If needed, the elements in @a pairs will be modified to ensure that
-   * the first atom index is less than the second.
-   */
-  bool setBondPairs(const Array<std::pair<Index, Index>>& pairs);
-
-  /**
-   * Set the bonded atoms for a bond.
-   * @param bondId The bond to modify.
-   * @param pair The new bond pair.
-   * @return True on success, false otherwise.
-   * @note If needed, @a pair will be modified to ensure that the first atom
-   * index is less than the second.
-   */
-  bool setBondPair(Index bondId, const std::pair<Index, Index>& pair);
-
-  /** Returns a vector of the bond orders for the bonds in the molecule. */
-  Array<unsigned char>& bondOrders();
-
-  /** \overload */
-  const Array<unsigned char>& bondOrders() const;
-
-  /**
-   * Get the order of a bond.
-   * @param bondId The id of the bond.
-   * @return The bond order.
-   */
-  unsigned char bondOrder(Index bondId) const;
-
-  /**
-   * Replace the current array of bond orders.
-   * @param orders The new array.
-   * @return True on success, false on failure.
-   */
-  bool setBondOrders(const Array<unsigned char>& orders);
-
-  /**
-   * Set the order of a bond in the molecule.
-   * @param bondId The bond's index.
-   * @param order The new order of the bond.
-   * @return True on success, false on failure.
-   */
-  bool setBondOrder(Index bondId, unsigned char order);
-
-  /** Returns the graph for the molecule. */
-  Graph& graph();
-
-  /** \overload */
-  const Graph& graph() const;
-
   /** A map of custom element atomic numbers to string identifiers. These ids
    * can be used to override the generic custom element names returned by the
    * Elements class, and should be somewhat meaningful to the user.
@@ -354,15 +257,9 @@ public:
   void setCustomElementMap(const CustomElementMap& map);
   /** @} */
 
-  /**
-   * @return True if custom elements exist in the molecule.
-   * @note Custom element atomic numbers lie between CustomElementMin and
-   * CustomElementMax.
-   */
-  bool hasCustomElements() const;
-
   /**  Adds an atom to the molecule. */
   virtual AtomType addAtom(unsigned char atomicNumber);
+  AtomType addAtom(unsigned char atomicNumber, Vector3 position3d);
 
   /**
    * @brief Remove the specified atom from the molecule.
@@ -388,18 +285,6 @@ public:
    * @return the atom at @p index in the molecule.
    */
   AtomType atom(Index index) const;
-
-  /**
-   * @return The number of atoms in the molecule.
-   */
-  Index atomCount() const;
-
-  /**
-   * @brief Get the number of atoms in the molecule that match atomicNumber.
-   * @param atomicNumber The atomic number to match on.
-   * @return The number of atoms with the supplied atomic number.
-   */
-  Index atomCount(unsigned char atomicNumber) const;
 
   /**
    * Create a new bond in the molecule.
@@ -464,9 +349,6 @@ public:
   Array<BondType> bonds(const AtomType& a);
   Array<BondType> bonds(Index a);
   /** @} */
-
-  /** Returns the number of bonds in the molecule. */
-  Index bondCount() const;
 
   /**
    * @brief Add a mesh to the molecule.
@@ -644,12 +526,131 @@ public:
   Array<Residue>& residues() { return m_residues;}
   const Array<Residue>& residues() const { return m_residues;}
 
+  /**  @return The number of atoms in the molecule. */
+  Index atomCount() const;
+
+  /**
+   * @brief Get the number of atoms in the molecule that match atomicNumber.
+   * @param atomicNumber The atomic number to match on.
+   * @return The number of atoms with the supplied atomic number.
+   */
+  Index atomCount(unsigned char atomicNumber) const;
+  /** Returns the number of bonds in the molecule. */
+  inline Index bondCount() const;
+
+  // getters and setters
+  /**
+   * Get the set of bonded atoms corresponding to @a bondId.
+   * @param bondId The index of the requested bond.
+   * @return The bonded atom pair, represented as a pair of atom indices.
+   */
+  inline std::pair<Index, Index> bondPair(Index bondId) const;
+
+  /**
+   * Replace the current array of bonded atoms.
+   * @param pairs The array.
+   * @return True on success, false on failure.
+   * @note The bonded atoms are represented as a pair of bond indices.
+   * @note If needed, the elements in @a pairs will be modified to ensure that
+   * the first atom index is less than the second.
+   */
+  bool setBondPairs(const Array<std::pair<Index, Index>>& pairs);
+
+  /** @return a vector of pairs of atom indices of the bonds in the molecule. */
+  inline const Array<std::pair<Index, Index>>& bondPairs() const;
+
+  /** @return a vector of the bond orders for the bonds in the molecule. */
+  inline const Array<unsigned char>& bondOrders() const;
+
+  /** @return the graph for the molecule. */
+  inline const Graph& graph() const;
+
+  /** @return a vector of atomic numbers for the atoms in the molecule. */
+  inline const Array<unsigned char>& atomicNumbers() const;
+
+  /**
+   * Get the atomic number for the requested atom.
+   * @param atomId The index of the atom.
+   * @return The atomic number of the atom indexed at @a atomId, or
+   * Avogadro::InvalidElement if @a atomId is invalid.
+   */
+  unsigned char atomicNumber(Index atomId) const;
+
+  /**
+   * Replace the current array of bond orders.
+   * @param orders The new array.
+   * @return True on success, false on failure.
+   */
+  bool setBondOrders(const Array<unsigned char>& orders);
+
+  /**
+   * Set the order of a bond in the molecule.
+   * @param bondId The bond's index.
+   * @param order The new order of the bond.
+   * @return True on success, false on failure.
+   */
+  bool setBondOrder(Index bondId, unsigned char order);
+  /**
+   * @return True if custom elements exist in the molecule.
+   * @note Custom element atomic numbers lie between CustomElementMin and
+   * CustomElementMax.
+   */
+  bool hasCustomElements() const;
+
+  /**
+   * Set the bonded atoms for a bond.
+   * @param bondId The bond to modify.
+   * @param pair The new bond pair.
+   * @return True on success, false otherwise.
+   * @note If needed, @a pair will be modified to ensure that the first atom
+   * index is less than the second.
+   */
+  bool setBondPair(Index bondId, const std::pair<Index, Index>& pair);
+
+  /**
+   * Get the order of a bond.
+   * @param bondId The id of the bond.
+   * @return The bond order.
+   */
+  unsigned char bondOrder(Index bondId) const;
+  /**
+   * Replace the current array of atomic numbers.
+   * @param nums The new atomic number array. Must be of length atomCount().
+   * @return True on success, false otherwise.
+   */
+  bool setAtomicNumbers(const Core::Array<unsigned char>& nums);
+
+  /**
+   * Set the atomic number of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param atomicNumber The new atomic number.
+   * @return True on success, false otherwise.
+   */
+  bool setAtomicNumber(Index atomId, unsigned char atomicNumber);
+
+  /**
+   * @return a map of components and count.
+   */
+  std::map<unsigned char, size_t> composition() const;
+
+  Array<std::pair<Index, Index>> getAtomBonds(Index index) const;
+  Array<unsigned char> getAtomOrders(Index index) const;
+
+  inline static std::pair<Index, Index> makeBondPair(const Index& a,
+                                                     const Index& b);
+  bool removeBonds(Index atom);
+
+  void addBonds(const Array<std::pair<Index, Index>>& bonds,
+                const Array<unsigned char>& orders);
+
+  // chenge the bond index position
+  void swapBond(Index a, Index b);
+  // channge the Atom index position
+  void swapAtom(Index a, Index b);
+
 protected:
-  mutable Graph m_graph;     // A transformation of the molecule to a graph.
-  mutable bool m_graphDirty; // Should the graph be rebuilt before returning it?
   VariantMap m_data;
   CustomElementMap m_customElementMap;
-  Array<unsigned char> m_atomicNumbers;
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
   Array<Array<Vector3>> m_coordinates3d; // Used for conformers/trajectories.
@@ -658,14 +659,10 @@ protected:
   Array<signed char> m_formalCharges;
   Array<Vector3> m_forceVectors;
   Array<Vector3ub> m_colors;
-
   // Vibration data if available.
   Array<double> m_vibrationFrequencies;
   Array<double> m_vibrationIntensities;
   Array<Array<Vector3>> m_vibrationLx;
-
-  Array<std::pair<Index, Index>> m_bondPairs;
-  Array<unsigned char> m_bondOrders;
 
   // Array declaring whether atoms are selected or not.
   std::vector<bool> m_selectedAtoms;
@@ -680,8 +677,19 @@ protected:
   // This will be stored from the last space group operation
   unsigned short m_hallNumber = 0;
 
+private:
   /** Update the graph to correspond to the current molecule. */
   void updateGraph() const;
+  // the old atom is dirty and needs a update
+  void rebondBond(Index newIndex, Index oldIndex);
+
+  mutable Graph m_graph;     // A transformation of the molecule to a graph.
+  mutable bool m_graphDirty; // Should the graph be rebuilt?
+  // edge information
+  Array<std::pair<Index, Index>> m_bondPairs;
+  Array<unsigned char> m_bondOrders;
+  // vertex information
+  Array<unsigned char> m_atomicNumbers;
 };
 
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
@@ -697,30 +705,6 @@ public:
   Bond() : BondTemplate<Molecule>() {}
   Bond(Molecule* m, Index i) : BondTemplate<Molecule>(m, i) {}
 };
-
-inline unsigned char Molecule::atomicNumber(Index atomId) const
-{
-  return atomId < m_atomicNumbers.size() ? m_atomicNumbers[atomId]
-                                         : InvalidElement;
-}
-
-inline bool Molecule::setAtomicNumbers(const Core::Array<unsigned char>& nums)
-{
-  if (nums.size() == atomCount()) {
-    m_atomicNumbers = nums;
-    return true;
-  }
-  return false;
-}
-
-inline bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
-{
-  if (atomId < atomCount()) {
-    m_atomicNumbers[atomId] = number;
-    return true;
-  }
-  return false;
-}
 
 inline AtomHybridization Molecule::hybridization(Index atomId) const
 {
@@ -884,54 +868,6 @@ inline bool Molecule::isSelectionEmpty() const
   return true;
 }
 
-inline std::pair<Index, Index> Molecule::bondPair(Index bondId) const
-{
-  return bondId < bondCount() ? m_bondPairs[bondId]
-                              : std::make_pair(MaxIndex, MaxIndex);
-}
-
-inline bool Molecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
-{
-  if (pairs.size() == bondCount()) {
-    m_bondPairs = pairs;
-    return true;
-  }
-  return false;
-}
-
-inline bool Molecule::setBondPair(Index bondId,
-                                  const std::pair<Index, Index>& pair)
-{
-  if (bondId < bondCount()) {
-    m_bondPairs[bondId] = pair;
-    return true;
-  }
-  return false;
-}
-
-inline unsigned char Molecule::bondOrder(Index bondId) const
-{
-  return bondId < m_bondOrders.size() ? m_bondOrders[bondId] : 0;
-}
-
-inline bool Molecule::setBondOrders(const Array<unsigned char>& orders)
-{
-  if (orders.size() == bondCount()) {
-    m_bondOrders = orders;
-    return true;
-  }
-  return false;
-}
-
-inline bool Molecule::setBondOrder(Index bondId, unsigned char order)
-{
-  if (bondId < bondCount()) {
-    m_bondOrders[bondId] = order;
-    return true;
-  }
-  return false;
-}
-
 inline Vector3 Molecule::forceVector(Index atomId) const
 {
   return atomId < m_forceVectors.size() ? m_forceVectors[atomId] : Vector3();
@@ -955,6 +891,58 @@ inline bool Molecule::setForceVector(Index atomId, const Vector3& force)
     return true;
   }
   return false;
+}
+
+// Make an std::pair where the lower index is always first in the pair. This
+// offers us the guarantee that any given pair of atoms will always result in
+// a pair that is the same no matter what the order of the atoms given.
+std::pair<Index, Index> Molecule::makeBondPair(const Index& a, const Index& b)
+{
+  return a < b ? std::make_pair(a, b) : std::make_pair(b, a);
+}
+
+inline Index Molecule::bondCount() const
+{
+  assert(m_bondPairs.size() == m_bondOrders.size());
+  return m_bondPairs.size();
+}
+
+inline const Array<std::pair<Index, Index>>& Molecule::bondPairs() const
+{
+  return m_bondPairs;
+}
+
+inline const Array<unsigned char>& Molecule::bondOrders() const
+{
+  return m_bondOrders;
+}
+
+inline const Graph& Molecule::graph() const
+{
+  updateGraph();
+  return m_graph;
+}
+
+inline const Array<unsigned char>& Molecule::atomicNumbers() const
+{
+  return m_atomicNumbers;
+}
+
+inline std::pair<Index, Index> Molecule::bondPair(Index bondId) const
+{
+  return bondId < bondCount() ? m_bondPairs[bondId]
+                              : std::make_pair(MaxIndex, MaxIndex);
+}
+
+inline Index Molecule::atomCount() const
+{
+  return static_cast<Index>(m_atomicNumbers.size());
+}
+
+inline unsigned char Molecule::atomicNumber(Index atomId) const
+{
+  return atomId < m_atomicNumbers.size() ? m_atomicNumbers[atomId]
+                                         : InvalidElement;
 }
 
 } // namespace Core

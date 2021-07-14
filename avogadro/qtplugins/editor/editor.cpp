@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-13 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "editor.h"
@@ -231,7 +220,8 @@ void Editor::draw(Rendering::GroupNode& node)
   QString distanceLabel = tr("Distance:");
   int labelWidth = -1 * distanceLabel.size();
 
-  QString overlayText = tr("Distance: %L1 Å").arg(m_bondDistance, 10, 'f', 3);
+  QString overlayText = tr("%1 %L2").arg(distanceLabel, labelWidth)
+                          .arg(tr("%L1 Å").arg(m_bondDistance, 9, 'f', 3), 9);
 
   TextProperties overlayTProp;
   overlayTProp.setFontFamily(TextProperties::Mono);
