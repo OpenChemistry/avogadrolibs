@@ -73,7 +73,10 @@ jobs:
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} bear ninja
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} ninja
+        # only re-compile avogadrolibs
+        (cd avogadrolibs; ninja clean)
+        bear ninja
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
@@ -89,6 +92,7 @@ jobs:
         run-clang-tidy-11 -checks='-*,performance-*,readability-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,mpi-*,misc-*' -export-fixes=fixes.yaml
 
     - name: Run clang-tidy-pr-comments action
+      if: always()
       uses: platisd/clang-tidy-pr-comments@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
