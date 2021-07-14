@@ -2,21 +2,23 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-#
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-02 05:24+0900\n"
-"PO-Revision-Date: 2016-06-10 07:06+0000\n"
-"Last-Translator: aoyama iwao <iwao.aoyama@gmail.com>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"PO-Revision-Date: 2021-07-15 17:34+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.7.2-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:71
 #, qt-format
@@ -208,7 +210,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:988
 #: qtplugins/gamessinput/gamessinputdialog.cpp:697
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "MoleQueueに接続できません"
 
 #: molequeue/inputgeneratorwidget.cpp:286
 #: molequeue/inputgeneratorwidget.cpp:604 molequeue/molequeuewidget.cpp:71
@@ -428,10 +430,9 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:735 qtgui/interfacewidget.cpp:207
 msgid "Theory:"
-msgstr "理論"
+msgstr "理論:"
 
 #: molequeue/inputgeneratorwidget.cpp:738 qtgui/interfacewidget.cpp:210
-#, fuzzy
 msgid "Theory"
 msgstr "理論"
 
@@ -581,11 +582,11 @@ msgstr ""
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
-msgstr ""
+msgstr "左右に分割"
 
 #: qtgui/containerwidget.cpp:44
 msgid "Split Vertical"
-msgstr ""
+msgstr "上下に分割"
 
 #: qtgui/elementtranslator.cpp:32
 msgid "Hydrogen"
@@ -1060,9 +1061,8 @@ msgid "Oganesson"
 msgstr "オガネソン (Oganesson)"
 
 #: qtgui/filebrowsewidget.cpp:39
-#, fuzzy
 msgid "Browse"
-msgstr "参照..."
+msgstr "参照"
 
 #: qtgui/filebrowsewidget.cpp:113
 msgid "Select file:"
@@ -1116,9 +1116,8 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:259
-#, fuzzy
 msgid "All files (*);;"
-msgstr "すべてのファイル"
+msgstr "すべてのファイル (*);;"
 
 #: qtgui/fileformatdialog.cpp:262
 #, qt-format
@@ -1131,7 +1130,6 @@ msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:105
-#, fuzzy
 msgid "Untitled"
 msgstr "無題"
 
@@ -1191,11 +1189,11 @@ msgstr ""
 
 #: qtgui/pythonscript.cpp:227
 msgid "Unknown error."
-msgstr ""
+msgstr "不明なエラー"
 
 #: qtgui/rwmolecule.cpp:48
 msgid "Modify Molecule"
-msgstr ""
+msgstr "分子の編集"
 
 #: qtgui/rwmolecule.cpp:153 qtgui/rwmolecule.cpp:162
 msgid "Add Atom"
@@ -1217,7 +1215,6 @@ msgid "Adjust Hydrogens"
 msgstr "自動的に水素を付加"
 
 #: qtgui/rwmolecule.cpp:353
-#, fuzzy
 msgid "Change Elements"
 msgstr "元素を変更"
 
@@ -1231,11 +1228,11 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:592
 msgid "Change Atom Formal Charge"
-msgstr ""
+msgstr "原子の形式電荷を変更"
 
 #: qtgui/rwmolecule.cpp:624
 msgid "Change Atom Color"
-msgstr ""
+msgstr "原子の色を変更"
 
 #: qtgui/rwmolecule.cpp:686
 msgid "Add Bond"
@@ -1251,46 +1248,42 @@ msgid "Clear Bonds"
 msgstr "結合を削除"
 
 #: qtgui/rwmolecule.cpp:814
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "結合次数"
+msgstr "結合次数を設定"
 
 #: qtgui/rwmolecule.cpp:858
 msgid "Change Bond Order"
 msgstr "結合次数を変更"
 
 #: qtgui/rwmolecule.cpp:901
-#, fuzzy
 msgid "Update Bonds"
-msgstr " 結合に吸着させる"
+msgstr "結合の更新"
 
 #: qtgui/rwmolecule.cpp:940
 msgid "Update Bond"
-msgstr ""
+msgstr "結合の更新"
 
 #: qtgui/rwmolecule.cpp:979
-#, fuzzy
 msgid "Add Unit Cell"
-msgstr "ユニットセルを追加(&U)"
+msgstr "ユニットセルを追加"
 
 #: qtgui/rwmolecule.cpp:1011
-#, fuzzy
 msgid "Remove Unit Cell"
-msgstr "ユニットセルを削除(&U)"
+msgstr "ユニットセルを削除"
 
 #: qtgui/rwmolecule.cpp:1092
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "ユニットセルを編集"
 
 #: qtgui/rwmolecule.cpp:1109
 #, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "原子をセルに移動(&W)"
+msgstr "原子をセルに移動"
 
 #: qtgui/rwmolecule.cpp:1132
 #, fuzzy
 msgid "Scale Cell Volume"
-msgstr "体積を指定してユニットセルを拡大縮小"
+msgstr "セル体積の拡大縮小"
 
 #: qtgui/rwmolecule.cpp:1152
 #, fuzzy
@@ -1316,11 +1309,11 @@ msgid "Conventionalize Cell"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:1273 qtplugins/spacegroup/spacegroup.cpp:258
-#, fuzzy
 msgid "Symmetrize Cell"
-msgstr "対称化"
+msgstr "セルを対称化"
 
 #: qtgui/rwmolecule.cpp:1292 qtplugins/spacegroup/spacegroup.cpp:86
+#, fuzzy
 msgid "Fill Unit Cell"
 msgstr "ユニットセルを構成"
 
@@ -1344,9 +1337,8 @@ msgstr "ファイル(&F)"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/svg/svg.cpp:46 qtplugins/vrml/vrml.cpp:58
-#, fuzzy
 msgid "&Export"
-msgstr "エクスポート"
+msgstr "エクスポート(&E)"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1371,7 +1363,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminput.cpp:57
 #: qtplugins/quantuminput/quantuminput.cpp:83
 msgid "&Input"
-msgstr ""
+msgstr "インプット(&I)"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
@@ -1382,9 +1374,8 @@ msgid "OpenDX File (*.dx)"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:127
-#, fuzzy
 msgid "IO Error"
-msgstr " 誤差 "
+msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:128
 #, qt-format
@@ -1472,7 +1463,7 @@ msgstr ""
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:75:147
 #, fuzzy
 msgid "Success"
-msgstr "成功しました!"
+msgstr "成功"
 
 #: qtplugins/apbs/apbsdialog.cpp:191
 #, qt-format
@@ -1595,15 +1586,15 @@ msgstr ""
 #: qtplugins/quantuminput/quantuminput.cpp:81 qtplugins/yaehmop/yaehmop.cpp:80
 #, fuzzy
 msgid "&Extensions"
-msgstr "エクステンション"
+msgstr "エクステンション(&E)"
 
 #: qtplugins/clientserver/clientserver.cpp:83
 msgid "S&erver"
-msgstr ""
+msgstr "サーバ(&S)"
 
 #: qtplugins/clientserver/clientserver.cpp:159
 msgid "Connection failed"
-msgstr ""
+msgstr "接続に失敗しました"
 
 #: qtplugins/clientserver/clientserver.cpp:160
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:68
@@ -1638,11 +1629,11 @@ msgstr ""
 
 #: qtplugins/clientserver/clientserver.h:56
 msgid "Client server"
-msgstr ""
+msgstr "クライアントサーバ"
 
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:67
 msgid "Connection refused"
-msgstr ""
+msgstr "接続が拒否されました"
 
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:76
 #, qt-format
@@ -1650,9 +1641,8 @@ msgid "Connection to %2:%3 succeeded!"
 msgstr ""
 
 #: qtplugins/clientserver/filedialogmodel.cpp:666
-#, fuzzy
 msgid "Filename"
-msgstr "ファイル名:"
+msgstr "ファイル名"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:71
 msgid "Edit Color Opacity Map..."
@@ -1668,9 +1658,8 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:65
 #: qtplugins/commandscripts/command.cpp:73
-#, fuzzy
 msgid "Scripts"
-msgstr "スクリプト(&S)"
+msgstr "スクリプト"
 
 #: qtplugins/commandscripts/command.cpp:99 qtplugins/cp2kinput/cp2kinput.cpp:97
 #: qtplugins/gamessinput/gamessinput.cpp:100
@@ -1701,20 +1690,20 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.h:43
 msgid "Command scripts"
-msgstr ""
+msgstr "コマンドスクリプト"
 
 #: qtplugins/commandscripts/command.h:47
 msgid "Run external script commands"
-msgstr ""
+msgstr "外部スクリプトコマンドの実行"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:29
+#, fuzzy
 msgid "Atomic &Coordinate Editor..."
-msgstr ""
+msgstr "原子座標エディタ(&C)"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:39
-#, fuzzy
 msgid "Coordinate editor"
-msgstr "カルテシアン座標エディタ"
+msgstr "デカルト座標エディタ"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:43
 msgid "Text editing of atomic coordinates."
@@ -1722,7 +1711,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:237
 msgid "Overwrite changes?"
-msgstr ""
+msgstr "変更を上書きしますか？"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:238
 msgid ""
@@ -1735,8 +1724,9 @@ msgid "Too few entries on line."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:381
+#, fuzzy
 msgid "Invalid element name."
-msgstr ""
+msgstr "不正な元素名"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:383
 #, fuzzy
@@ -1754,8 +1744,9 @@ msgid "Element symbol."
 msgstr "元素記号"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
+#, fuzzy
 msgid "Invalid atomic number."
-msgstr ""
+msgstr "不正な原子番号"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
 #, fuzzy
@@ -1774,17 +1765,17 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 #, fuzzy
 msgid "X coordinate."
-msgstr "カルテシアン座標エディタ"
+msgstr "X座標"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:431
 #, fuzzy
 msgid "Y coordinate."
-msgstr "カルテシアン座標エディタ"
+msgstr "Y座標"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:442
 #, fuzzy
 msgid "Z coordinate."
-msgstr "カルテシアン座標エディタ"
+msgstr "Z座標"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:453
 msgid "'a' lattice coordinate."
@@ -1812,7 +1803,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:594
 msgid "Edit Atomic Coordinates"
-msgstr ""
+msgstr "原子座標の編集"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:185
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
@@ -1860,15 +1851,14 @@ msgstr "Turbomole インプット"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:42:258
-#, fuzzy
 msgid "Copy"
-msgstr "すべてをコピー"
+msgstr "コピー"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
 #: qtplugins/copypaste/copypaste.cpp:43:255
 msgid "Cut"
-msgstr ""
+msgstr "カット"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
@@ -1881,11 +1871,11 @@ msgstr "すべてをクリア"
 #. i18n: ectx: property (text), widget (QToolButton, paste)
 #: qtplugins/copypaste/copypaste.cpp:45:261
 msgid "Paste"
-msgstr ""
+msgstr "貼り付け"
 
 #: qtplugins/copypaste/copypaste.cpp:78
 msgid "&Edit"
-msgstr ""
+msgstr "編集(&E)"
 
 #: qtplugins/copypaste/copypaste.cpp:123
 msgid "Error Clipping Molecule"
@@ -1940,11 +1930,11 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:44
 msgid "&CP2K"
-msgstr ""
+msgstr "&CP2K"
 
 #: qtplugins/cp2kinput/cp2kinput.h:45
 msgid "CP2K input"
-msgstr ""
+msgstr "CP2Kインプット"
 
 #: qtplugins/cp2kinput/cp2kinput.h:47
 msgid "Generate input for CP2K."
@@ -1959,23 +1949,21 @@ msgid "Energy and Forces"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:278
-#, fuzzy
 msgid "Molecular Dynamics"
-msgstr "分子動力学法 (300K)"
+msgstr "分子動力学法"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:281
-#, fuzzy
 msgid "Geometry Optimization"
 msgstr "構造最適化"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:350
+#, fuzzy
 msgid "Electronic structure methods (DFT)"
-msgstr ""
+msgstr "電子構造的手法 (DFT)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:353
-#, fuzzy
 msgid "Molecular Mechanics"
-msgstr "&分子力学"
+msgstr "分子力学"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:356
 msgid "Hybrid quantum classical (Not yet supported)"
@@ -2048,7 +2036,6 @@ msgid "DIIS"
 msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:441
-#, fuzzy
 msgid "Steepest descent"
 msgstr "最急降下法"
 
@@ -2062,28 +2049,28 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:549
 #: qtplugins/gamessinput/gamessinputdialog.cpp:434
 msgid "Overwrite modified input file?"
-msgstr ""
+msgstr "変更されたインプットファイルを上書きしますか？"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:960
 msgid "Save CP2K input file"
-msgstr ""
+msgstr "CP2Kインプットファイルの保存"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1009
 msgid "Submit CP2K Calculation"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:54 qtplugins/crystal/crystal.cpp:182
-#, fuzzy
 msgid "Import Crystal from Clipboard"
-msgstr "クリップボードから結晶構造を読み込む(&I)"
+msgstr "クリップボードから結晶構造を読み込む"
 
 #: qtplugins/crystal/crystal.cpp:61
 msgid "Toggle Unit Cell"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:66
+#, fuzzy
 msgid "Edit Unit Cell..."
-msgstr ""
+msgstr "ユニットセルの編集"
 
 #: qtplugins/crystal/crystal.cpp:71
 #, fuzzy
@@ -2111,9 +2098,8 @@ msgstr "セルを既約化(&Niggli)"
 #: qtplugins/crystal/crystal.cpp:117 qtplugins/plotpdf/plotpdf.cpp:66
 #: qtplugins/plotrmsd/plotrmsd.cpp:61 qtplugins/plotxrd/plotxrd.cpp:63
 #: qtplugins/spacegroup/spacegroup.cpp:118
-#, fuzzy
 msgid "&Crystal"
-msgstr "結晶..."
+msgstr "結晶(&C)"
 
 #: qtplugins/crystal/crystal.cpp:163
 msgid "Remove &Unit Cell"
@@ -2133,9 +2119,8 @@ msgid "The unit cell is already reduced."
 msgstr "このユニットセルは、既にNiggli既約表現されています。"
 
 #: qtplugins/crystal/crystal.h:36
-#, fuzzy
 msgid "Crystal"
-msgstr "結晶..."
+msgstr "結晶"
 
 #: qtplugins/crystal/crystal.h:75
 msgid "Tools for crystal-specific editing/analysis."
@@ -2143,11 +2128,12 @@ msgstr ""
 
 #: qtplugins/crystal/crystalscene.h:39
 msgid "Crystal Lattice"
-msgstr ""
+msgstr "結晶格子"
 
 #: qtplugins/crystal/crystalscene.h:43
+#, fuzzy
 msgid "Render the unit cell boundaries."
-msgstr ""
+msgstr "ユニットセルの境界を描画"
 
 #: qtplugins/crystal/importcrystaldialog.cpp:81
 msgid "Cannot Parse Text"
@@ -2176,11 +2162,11 @@ msgstr ""
 
 #: qtplugins/editor/editor.cpp:85 qtplugins/editor/editor.cpp:117
 msgid "Draw"
-msgstr "作成"
+msgstr "描画"
 
 #: qtplugins/editor/editor.cpp:111
 msgid "Draw Atom"
-msgstr "原子を作成"
+msgstr "原子を描画"
 
 #: qtplugins/editor/editor.cpp:121
 msgid "Change Bond Type"
@@ -2188,22 +2174,21 @@ msgstr ""
 
 #: qtplugins/editor/editor.cpp:134
 msgid "Remove Bond"
-msgstr ""
+msgstr "結合を削除"
 
 #: qtplugins/editor/editor.cpp:231 qtplugins/measuretool/measuretool.cpp:197
 #: qtplugins/measuretool/measuretool.cpp:223
-#, fuzzy
 msgid "Distance:"
-msgstr "距離"
+msgstr "距離:"
 
 #: qtplugins/editor/editor.cpp:234
-#, fuzzy, qt-format
+#, qt-format
 msgid "Distance: %L1 Å"
-msgstr "距離(1->2): %L1 %2"
+msgstr "距離: %L1 Å"
 
 #: qtplugins/editor/editor.h:44 qtplugins/editor/editor.h:45
 msgid "Editor tool"
-msgstr ""
+msgstr "エディターツール"
 
 #: qtplugins/editor/editortoolwidget.cpp:138
 msgid "Other..."
@@ -2211,7 +2196,7 @@ msgstr "その他..."
 
 #: qtplugins/editor/editortoolwidget.cpp:217
 msgid "Automatic"
-msgstr ""
+msgstr "自動"
 
 #: qtplugins/editor/editortoolwidget.cpp:218
 msgid "Single"
@@ -2228,9 +2213,8 @@ msgstr "三重結合"
 #: qtplugins/fetchpdb/fetchpdb.cpp:54 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:66
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
-#, fuzzy
 msgid "&Import"
-msgstr "インポート"
+msgstr "インポート(&I)"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:88
 msgid "PDB Code"
@@ -2286,7 +2270,6 @@ msgid "&GAMESS"
 msgstr "GAMESS(&G)"
 
 #: qtplugins/gamessinput/gamessinput.h:45
-#, fuzzy
 msgid "GAMESS input"
 msgstr "GAMESS インプット"
 
@@ -2297,7 +2280,7 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinputdialog.cpp:237
 #, fuzzy
 msgid "Single Point"
-msgstr "1点エネルギー"
+msgstr "一点計算"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:240
 msgid "Equilibrium Geometry"
@@ -2321,7 +2304,7 @@ msgstr "気相"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:333
 msgid "Water"
-msgstr "水溶液"
+msgstr "水"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:348
 msgid "Singlet"
@@ -2357,7 +2340,7 @@ msgstr "ジアニオン"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:668
 msgid "Save GAMESS input file"
-msgstr ""
+msgstr "GAMESSインプットファイルの保存"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:718
 msgid "Submit GAMESS Calculation"
@@ -2375,20 +2358,19 @@ msgstr "水素を追加"
 #: qtplugins/hydrogens/hydrogens.cpp:42
 #, fuzzy
 msgid "Remove E&xtra Hydrogens"
-msgstr "水素を取り除く"
+msgstr "水素を取り除く(&X)"
 
 #: qtplugins/hydrogens/hydrogens.cpp:46
 msgid "&Remove All Hydrogens"
-msgstr ""
+msgstr "全ての水素を削除(&R)"
 
 #: qtplugins/hydrogens/hydrogens.cpp:57
 msgid "Add/remove hydrogens from the current molecule."
 msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:67
-#, fuzzy
 msgid "&Hydrogens"
-msgstr "水素"
+msgstr "水素(&H)"
 
 #: qtplugins/hydrogens/hydrogens.h:35
 msgid "Hydrogens"
@@ -2438,11 +2420,11 @@ msgstr "分子のフラグメントを挿入してより大きな分子を構築
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:41
 msgid "&LAMMPS Input"
-msgstr ""
+msgstr "LAMMPSインプット(&L)"
 
 #: qtplugins/lammpsinput/lammpsinput.h:42
 msgid "LAMMPS input"
-msgstr ""
+msgstr "LAMMPSインプット"
 
 #: qtplugins/lammpsinput/lammpsinput.h:46
 msgid "Generate input for LAMMPS."
@@ -2474,13 +2456,12 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:55
 msgid "InChI"
-msgstr ""
+msgstr "InChI"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:56
 #: qtplugins/mongochem/listmoleculesmodel.cpp:83
-#, fuzzy
 msgid "SMILES"
-msgstr "SMILES..."
+msgstr "SMILES"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:98
 #: qtplugins/lineformatinput/lineformatinput.cpp:122
@@ -2542,10 +2523,9 @@ msgstr "角度:"
 #: qtplugins/measuretool/measuretool.cpp:216
 #, qt-format
 msgid "%L1°"
-msgstr ""
+msgstr "%L1°"
 
 #: qtplugins/measuretool/measuretool.cpp:214
-#, fuzzy
 msgid "Angles:"
 msgstr "角度:"
 
@@ -2554,7 +2534,7 @@ msgstr "角度:"
 #: qtplugins/measuretool/measuretool.cpp:227
 #, qt-format
 msgid "%L1 Å"
-msgstr ""
+msgstr "%L1 Å"
 
 #: qtplugins/measuretool/measuretool.h:48
 #: qtplugins/measuretool/measuretool.h:49
@@ -2564,7 +2544,7 @@ msgstr "測定"
 
 #: qtplugins/meshes/meshes.h:40
 msgid "Meshes"
-msgstr ""
+msgstr "メッシュ"
 
 #: qtplugins/meshes/meshes.h:42
 msgid "Render triangle meshes."
@@ -2579,7 +2559,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:120 qtplugins/symmetry/symmetry.cpp:94
 #, fuzzy
 msgid "&Analysis"
-msgstr "解析的"
+msgstr "解析(&A)"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
 #: qtplugins/symmetry/symmetry.cpp:94
@@ -2625,7 +2605,7 @@ msgstr "化学名"
 
 #: qtplugins/networkdatabases/networkdatabases.h:47
 msgid "Network Databases"
-msgstr ""
+msgstr "ネットワークデータベース"
 
 #: qtplugins/networkdatabases/networkdatabases.h:51
 msgid "Interact with online databases, query structures etc."
@@ -2637,14 +2617,13 @@ msgid "Autodetect (%1)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:41 qtplugins/openbabel/openbabel.cpp:488
-#, fuzzy
 msgid "Optimize Geometry"
-msgstr "&ジオメトリ最適化"
+msgstr "構造最適化"
 
 #: qtplugins/openbabel/openbabel.cpp:48
 #, fuzzy
 msgid "Configure Force Field..."
-msgstr "力場のセットアップ"
+msgstr "力場の設定"
 
 #: qtplugins/openbabel/openbabel.cpp:54
 #, fuzzy
@@ -3343,13 +3322,11 @@ msgid "Failure"
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:193
-#, fuzzy
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
 "空間群の検出に失敗しました。\n"
-"\n"
 "許容値を変更して再試行しますか？"
 
 #: qtplugins/spacegroup/spacegroup.cpp:208
