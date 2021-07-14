@@ -346,6 +346,9 @@ bool Molecule::removeAtom(Index index)
   if (m_colors.size() == atomCount())
     m_colors.swapAndPop(index);
 
+  if (m_selectedAtoms.size() == atomCount())
+    m_selectedAtoms.erase(m_selectedAtoms.begin() + index);
+
   Index affectedIndex = static_cast<Index>(m_atomicNumbers.size() - 1);
   m_atomicNumbers.swapAndPop(index);
   removeBonds(index);
