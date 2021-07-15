@@ -140,7 +140,7 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
 {
   /// @todo Use scale for orthographic projections
   // Zoom
-  zoom(m_renderer->scene().center(), e->delta() * 0.1);
+  zoom(m_renderer->scene().center(), -e->angleDelta() * 0.125);
 
   e->accept();
   emit updateRequested();
