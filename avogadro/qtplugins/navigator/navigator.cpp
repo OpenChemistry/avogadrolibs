@@ -139,8 +139,18 @@ QUndoCommand* Navigator::mouseDoubleClickEvent(QMouseEvent* e)
 QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
 {
   /// @todo Use scale for orthographic projections
-  // Zoom
-  zoom(m_renderer->scene().center(), -e->angleDelta() * 0.125);
+  // Amount to zoom
+  float d = 0.0f;
+
+  QPoint numPixels = e->pixelDelta();
+  QPoint numDegrees = e->angleDelta() * 0.125;
+
+  if (!numPixels.isNull())
+    d = numPixels.y();
+  else if (!numDegrees.isNull())
+    d = numDegrees.y();
+
+  zoom(m_renderer->scene().center(), -d);
 
   e->accept();
   emit updateRequested();
