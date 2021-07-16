@@ -346,8 +346,13 @@ bool Molecule::removeAtom(Index index)
   if (m_colors.size() == atomCount())
     m_colors.swapAndPop(index);
 
-  if (m_selectedAtoms.size() == atomCount())
-    m_selectedAtoms.erase(m_selectedAtoms.begin() + index);
+  if (m_selectedAtoms.size() == atomCount()) {
+    // swap and pop on std::vector<bool>
+    if (index != m_selectedAtoms.size() - 1) {
+      m_selectedAtoms[index] = m_selectedAtoms.back();
+    }
+    m_selectedAtoms.pop_back();
+  }
 
   Index affectedIndex = static_cast<Index>(m_atomicNumbers.size() - 1);
   m_atomicNumbers.swapAndPop(index);
