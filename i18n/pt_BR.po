@@ -2,7 +2,7 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-# Gustavo Sousa Jr <grsousajunior@gmail.com>, 2020.
+# Gustavo Sousa Jr <grsousajunior@gmail.com>, 2020, 2021.
 # Pietro Valente Benevenga <pvbenevenga@gmail.com>, 2020.
 # Alexandre R Soares <ntegti@zipmail.com.br>, 2021.
 msgid ""
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-02 05:24+0900\n"
-"PO-Revision-Date: 2021-06-06 23:35+0000\n"
+"PO-Revision-Date: 2021-07-16 14:24+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.7-dev\n"
+"X-Generator: Weblate 4.7.2-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:00+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -29,7 +29,7 @@ msgstr "Trabalho em Lote #%L1 (%2)"
 
 #: molequeue/client/client.cpp:245
 msgid "No message specified."
-msgstr ""
+msgstr "Nenhuma mensagem especificada."
 
 #: molequeue/inputgenerator.cpp:70 qtgui/interfacescript.cpp:69
 #, qt-format
@@ -45,12 +45,12 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:176 qtgui/interfacescript.cpp:206
 #: qtgui/interfacescript.cpp:302
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "Aviso de não string retornado."
 
 #: molequeue/inputgenerator.cpp:179 qtgui/interfacescript.cpp:209
 #: qtgui/interfacescript.cpp:305
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "Membro 'warnings' não é um array."
 
 #: molequeue/inputgenerator.cpp:199 qtgui/interfacescript.cpp:325
 #, qt-format
@@ -585,7 +585,7 @@ msgstr "Esperando o trabalho %1 '%2' para terminar..."
 
 #: molequeue/molequeuedialog.cpp:87
 msgid "Stop waiting"
-msgstr ""
+msgstr "Parar de esperar"
 
 #: molequeue/molequeuedialog.cpp:106
 msgid "Fetching completed job information..."
@@ -1164,7 +1164,7 @@ msgstr "leitores"
 #: qtgui/fileformatdialog.cpp:162
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
-msgstr ""
+msgstr "ler"
 
 #: qtgui/fileformatdialog.cpp:166
 msgctxt "File writers"
@@ -1284,7 +1284,7 @@ msgstr "Remover Átomo"
 
 #: qtgui/rwmolecule.cpp:299
 msgid "Clear Atoms"
-msgstr ""
+msgstr "Limpar Átomos"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -1543,9 +1543,8 @@ msgid "Input file written to '%1'"
 msgstr "Arquivo de entrada gravado em %1"
 
 #: qtplugins/applycolors/applycolors.cpp:23
-#, fuzzy
 msgid "By Custom Color..."
-msgstr "Cor Personalizada"
+msgstr "Por Cor Personalizada..."
 
 #: qtplugins/applycolors/applycolors.cpp:27
 #, fuzzy
@@ -1559,7 +1558,7 @@ msgstr "Elemento"
 
 #: qtplugins/applycolors/applycolors.cpp:47
 msgid "Apply color schemes to atoms and residues."
-msgstr ""
+msgstr "Aplicar o esquema de cores aos átomos e resíduos."
 
 #: qtplugins/applycolors/applycolors.cpp:57
 #: qtplugins/resetview/resetview.cpp:54
@@ -1612,7 +1611,7 @@ msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:40
 msgid "Bond Atoms"
-msgstr ""
+msgstr "Ligar Átomos"
 
 #: qtplugins/bonding/bonding.cpp:41
 msgid "Remove Bonds"
@@ -1766,7 +1765,7 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.h:43
 msgid "Command scripts"
-msgstr "Scripts de comando"
+msgstr "Scripts de comandos"
 
 #: qtplugins/commandscripts/command.h:47
 msgid "Run external script commands"
@@ -2321,9 +2320,8 @@ msgid "Specified molecule could not be found: %1"
 msgstr "A molécula especificada não pode ser encontrada: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.h:48
-#, fuzzy
 msgid "Fetch from PDB"
-msgstr "Buscar no PDB..."
+msgstr "Buscar no PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.h:52
 msgid "Download PDB models from the Protein Data Bank"
@@ -2512,7 +2510,7 @@ msgstr "Bastão"
 
 #: qtplugins/licorice/licorice.h:44
 msgid "Render atoms as licorice."
-msgstr "Renderizar átomos como bastão (palito ou alcaçuz)."
+msgstr "Renderizar átomos como palito/bastão."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:43
 msgid "SMILES..."
@@ -2913,7 +2911,7 @@ msgstr "Entrada OpenMM"
 
 #: qtplugins/openmminput/openmminput.h:46
 msgid "Generate input for OpenMM."
-msgstr "Criar entrada para OpenMM."
+msgstr "Gerar entrada para OpenMM."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:213
 msgid ""
@@ -3276,7 +3274,7 @@ msgstr "Entrada Quantum"
 
 #: qtplugins/quantuminput/quantuminput.h:57
 msgid "Generate input for quantum codes."
-msgstr ""
+msgstr "Gerar entrada para pacotes de química quântica."
 
 #: qtplugins/resetview/resetview.cpp:37
 msgid "Center"
@@ -3577,9 +3575,8 @@ msgid "Element"
 msgstr "Elemento"
 
 #: qtplugins/symmetry/symmetry.cpp:53
-#, fuzzy
 msgid "Symmetry..."
-msgstr "Simetria"
+msgstr "Simetria..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
@@ -3840,7 +3837,7 @@ msgstr "Renomear Elementos"
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
 msgid "3DMol HTML Snippet"
-msgstr ""
+msgstr "Trecho de código 3DMol HTML"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, copyButton)
@@ -3855,7 +3852,7 @@ msgstr "Ctrl+C"
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
 #. i18n: ectx: property (text), widget (QPushButton, exitButton)
 msgid "&Exit"
-msgstr "&Sair"
+msgstr "Sai&r"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:47
 #. i18n: ectx: property (shortcut), widget (QPushButton, exitButton)
