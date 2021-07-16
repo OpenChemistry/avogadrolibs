@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "copypaste.h"
@@ -156,7 +145,9 @@ void CopyPaste::cut()
   if (m_molecule->isSelectionEmpty())
     m_molecule->undoMolecule()->clearAtoms();
   else {
-    for (Index i = 0; i < m_molecule->atomCount(); ++i)
+    // Remove atoms from the largest to the smallest index
+    // (that way, the index doesn't change)
+    for (Index i = m_molecule->atomCount(); i > 0; --i)
       if (m_molecule->atomSelected(i))
         m_molecule->undoMolecule()->removeAtom(i);
   }
@@ -170,7 +161,9 @@ void CopyPaste::clear()
   if (m_molecule->isSelectionEmpty())
     m_molecule->undoMolecule()->clearAtoms();
   else {
-    for (Index i = 0; i < m_molecule->atomCount(); ++i)
+    // Remove atoms from the largest to the smallest index
+    // (that way, the index doesn't change)
+    for (Index i = m_molecule->atomCount(); i > 0; --i)
       if (m_molecule->atomSelected(i))
         m_molecule->undoMolecule()->removeAtom(i);
   }
