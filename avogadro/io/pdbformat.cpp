@@ -8,6 +8,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/core/secondarystructure.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
@@ -199,6 +200,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   } // End while loop
   mol.perceiveBondsSimple();
   mol.perceiveBondsFromResidueData();
+  assignSecondaryStructure(&mol);
   return true;
 } // End read
 
