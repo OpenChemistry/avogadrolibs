@@ -16,9 +16,15 @@ namespace Core {
 
 using namespace std;
 
+SecondaryStructureAssigner::SecondaryStructureAssigner(Molecule* mol)
+  : m_molecule(mol)
+{}
+
+SecondaryStructureAssigner::~SecondaryStructureAssigner() {}
+
 //! Adapted from 3DMol.js parsers.js
 //! https://github.com/3dmol/3Dmol.js/blob/master/3Dmol/parsers.js
-void assignSecondaryStructure(Molecule* mol)
+void SecondaryStructureAssigner::assign(Molecule* mol)
 {
   // Clear the current secondary structure
   auto allResidues = mol->residues();
@@ -54,8 +60,8 @@ void assignSecondaryStructure(Molecule* mol)
     auto previous = allResidues[i - 1].secondaryStructure();
     auto next = allResidues[i + 1].secondaryStructure();
     // is there a gap in a helix (before and after are helix, so this should be)
-    if (previous != Residue::SecondaryStructure::undefined && previous == next &&
-        current != previous)
+    if (previous != Residue::SecondaryStructure::undefined &&
+        previous == next && current != previous)
       allResidues[i].setSecondaryStructure(previous);
   }
 
@@ -126,7 +132,8 @@ void assignSecondaryStructure(Molecule* mol)
 
 //! Adapted from 3DMol.js parsers.js  assignBackboneHBond
 //! https://github.com/3dmol/3Dmol.js/blob/master/3Dmol/parsers.js
-std::vector<hBondRecord> assignBackboneHydrogenBonds(Molecule* mol)
+std::vector<hBondRecord>
+SecondaryStructureAssigner::assignBackboneHydrogenBonds(Molecule* mol)
 {
   const float maxDist = 3.2;                 // in Angstroms
   const float maxDistSq = maxDist * maxDist; // 10.24
@@ -162,7 +169,8 @@ std::vector<hBondRecord> assignBackboneHydrogenBonds(Molecule* mol)
   std::sort(hBonds.begin(), hBonds.end(),
             // lambda for sorting by z-coordinate [2]
             [](hBondRecord const& a, hBondRecord const& b) {
-              return a.atomZ < b.atomZ; });
+              return a.atomZ < b.atomZ;
+            });
 
   // now loop through the sorted list (so we can exit quickly)
   int n = hBonds.size();

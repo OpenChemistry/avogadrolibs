@@ -31,10 +31,21 @@ struct hBondRecord
   float distSquared;
 };
 
-void assignSecondaryStructure(Molecule* mol);
+class AVOGADROCORE_EXPORT SecondaryStructureAssigner
+{
+public:
+  // construction and destruction
+  explicit SecondaryStructureAssigner(Molecule* m = nullptr);
+  ~SecondaryStructureAssigner();
 
-//! \internal
-std::vector<hBondRecord> assignBackboneHydrogenBonds(Molecule *mol);
+  static void assign(Avogadro::Core::Molecule* mol);
+
+private:
+  static std::vector<hBondRecord> assignBackboneHydrogenBonds(
+    Avogadro::Core::Molecule* mol);
+
+  Molecule* m_molecule;
+};
 
 } // namespace Core
 } // namespace Avogadro

@@ -23,6 +23,7 @@ using Avogadro::Core::Elements;
 using Avogadro::Core::lexicalCast;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;
+using Avogadro::Core::SecondaryStructureAssigner;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
 using Avogadro::Core::UnitCell;
@@ -200,7 +201,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   } // End while loop
   mol.perceiveBondsSimple();
   mol.perceiveBondsFromResidueData();
-  assignSecondaryStructure(&mol);
+  SecondaryStructureAssigner::assign(&mol);
   return true;
 } // End read
 
