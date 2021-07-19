@@ -38,13 +38,13 @@ public:
   explicit SecondaryStructureAssigner(Molecule* m = nullptr);
   ~SecondaryStructureAssigner();
 
-  static void assign(Avogadro::Core::Molecule* mol);
+  void assign(Molecule* mol);
 
 private:
-  static std::vector<hBondRecord> assignBackboneHydrogenBonds(
-    Avogadro::Core::Molecule* mol);
+  void assignBackboneHydrogenBonds();
 
   Molecule* m_molecule;
+  std::vector<hBondRecord*> m_hBonds;
 };
 
 } // namespace Core

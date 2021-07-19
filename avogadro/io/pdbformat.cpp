@@ -20,13 +20,13 @@ using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
-using Avogadro::Core::lexicalCast;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;
 using Avogadro::Core::SecondaryStructureAssigner;
+using Avogadro::Core::UnitCell;
+using Avogadro::Core::lexicalCast;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
-using Avogadro::Core::UnitCell;
 
 using std::getline;
 using std::istringstream;
@@ -62,7 +62,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       }
     }
 
-    // e.g.   CRYST1    4.912    4.912    6.696  90.00  90.00 120.00 P1          1
+    // e.g.   CRYST1    4.912    4.912    6.696  90.00  90.00 120.00 P1 1
     // https://www.wwpdb.org/documentation/file-format-content/format33/sect8.html
     else if (startsWith(buffer, "CRYST1")) {
       Real a = lexicalCast<Real>(buffer.substr(6, 9), ok);
@@ -201,7 +201,9 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   } // End while loop
   mol.perceiveBondsSimple();
   mol.perceiveBondsFromResidueData();
-  SecondaryStructureAssigner::assign(&mol);
+  SecondaryStructureAssigner ssa;
+  ssa.assign(&mol);
+
   return true;
 } // End read
 
