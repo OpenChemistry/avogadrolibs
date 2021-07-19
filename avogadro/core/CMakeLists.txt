@@ -40,6 +40,7 @@ set(HEADERS
   nameatomtyper.h
   residue.h
   ringperceiver.h
+  secondarystructure.h
   slaterset.h
   slatersettools.h
   spacegroups.h
@@ -72,6 +73,7 @@ set(SOURCES
   nameatomtyper.cpp
   residue.cpp
   ringperceiver.cpp
+  secondarystructure.cpp
   slaterset.cpp
   slatersettools.cpp
   spacegroups.cpp
