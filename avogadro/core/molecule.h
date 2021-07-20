@@ -526,6 +526,9 @@ public:
   Array<Residue>& residues() { return m_residues;}
   const Array<Residue>& residues() const { return m_residues;}
 
+  /** @return The number of residues in the molecule. */
+  Index residueCount() const;
+
   /**  @return The number of atoms in the molecule. */
   Index atomCount() const;
 
