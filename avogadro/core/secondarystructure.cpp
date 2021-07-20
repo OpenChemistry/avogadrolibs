@@ -35,7 +35,7 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   m_molecule = mol;
 
   // Clear the current secondary structure
-  auto allResidues = m_molecule->residues();
+  auto residueCount = m_molecule->residues().size();
   for (auto residue : m_molecule->residues())
     residue.setSecondaryStructure(Residue::SecondaryStructure::undefined);
 
@@ -61,11 +61,11 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // Plug gaps in the helix
-  for (auto i = 1; i < allResidues.size() - 1; ++i) {
+  for (auto i = 1; i < residueCount - 1; ++i) {
     // check that before and after this residue are in the same chain
-    if (m_molecule->residue(i).chainId() ==
+    if (m_molecule->residue(i).chainId() !=
           m_molecule->residue(i - 1).chainId() ||
-        m_molecule->residue(i).chainId() ==
+        m_molecule->residue(i).chainId() !=
           m_molecule->residue(i + 1).chainId())
       continue;
 
@@ -102,22 +102,20 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
            match.secondaryStructure() ==
              Residue::SecondaryStructure::betaSheet)) {
         // we can be sure now
-        current.setSecondaryStructure(Residue::SecondaryStructure::betaSheet);
-        match.setSecondaryStructure(Residue::SecondaryStructure::betaSheet);
-      }
-      else {
-        // we're not matched with another beta
-        current.setSecondaryStructure(Residue::SecondaryStructure::undefined);
+        m_molecule->residue(hBond->residue)
+          .setSecondaryStructure(Residue::SecondaryStructure::betaSheet);
+        m_molecule->residue(hBond->residuePair)
+          .setSecondaryStructure(Residue::SecondaryStructure::betaSheet);
       }
     }
   }
 
   // Plug gaps in the beta sheet
-  for (auto i = 1; i < allResidues.size() - 1; ++i) {
+  for (auto i = 1; i < residueCount - 1; ++i) {
     // check that before and after this residue are in the same chain
-    if (m_molecule->residue(i).chainId() ==
+    if (m_molecule->residue(i).chainId() !=
           m_molecule->residue(i - 1).chainId() ||
-        m_molecule->residue(i).chainId() ==
+        m_molecule->residue(i).chainId() !=
           m_molecule->residue(i + 1).chainId())
       continue;
 
@@ -131,18 +129,19 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // remove singletons
-  for (auto i = 1; i < allResidues.size() - 1; ++i) {
+  for (auto i = 1; i < residueCount - 1; ++i) {
     // check that before and after this residue are in the same chain
-    if (m_molecule->residue(i).chainId() ==
+    if (m_molecule->residue(i).chainId() !=
           m_molecule->residue(i - 1).chainId() ||
-        m_molecule->residue(i).chainId() ==
+        m_molecule->residue(i).chainId() !=
           m_molecule->residue(i + 1).chainId())
       continue;
 
     auto current = m_molecule->residue(i);
     // clear maybeBeta assignments (e.g. short bits)
     if (current.secondaryStructure() == maybeBeta)
-      current.setSecondaryStructure(Residue::SecondaryStructure::undefined);
+      m_molecule->residue(i).setSecondaryStructure(
+        Residue::SecondaryStructure::undefined);
 
     if (current.secondaryStructure() !=
         Residue::SecondaryStructure::undefined) {
@@ -151,7 +150,8 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
             m_molecule->residue(i - 1).secondaryStructure() &&
           current.secondaryStructure() !=
             m_molecule->residue(i + 1).secondaryStructure()) {
-        current.setSecondaryStructure(Residue::SecondaryStructure::undefined);
+        m_molecule->residue(i).setSecondaryStructure(
+          Residue::SecondaryStructure::undefined);
       }
     }
   } // end loop over residues (for singletons)
@@ -174,7 +174,9 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
 
   // Loop over the backbone atoms
   // we're just considering N and O (on a peptide)
+  unsigned int i = 0; // track the residue index
   for (auto residue : m_molecule->residues()) {
+    unsigned int residueId = i++;
     if (residue.isHeterogen())
       continue;
 
@@ -183,8 +185,8 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
     oRecord->atom = oxygen.index();
     oRecord->atomZ = oxygen.position3d()[2];
     oRecord->distSquared = std::numeric_limits<float>::max();
-    oRecord->residue = residue.residueId();
-    oRecord->residuePair = residue.residueId(); // just a placeholder
+    oRecord->residue = residueId;
+    oRecord->residuePair = residueId; // just a placeholder
     m_hBonds.push_back(oRecord);
 
     auto nitrogen = residue.getAtomByName("N");
@@ -192,8 +194,8 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
     nRecord->atom = nitrogen.index();
     nRecord->atomZ = nitrogen.position3d()[2];
     nRecord->distSquared = std::numeric_limits<float>::max();
-    nRecord->residue = residue.residueId();
-    nRecord->residuePair = residue.residueId();
+    nRecord->residue = residueId;
+    nRecord->residuePair = residueId;
     m_hBonds.push_back(nRecord);
   }
 
@@ -213,6 +215,10 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
     for (unsigned int j = i + 1; j < n; ++j) {
       auto recordJ = m_hBonds[j];
       auto residueJ = m_molecule->residue(recordJ->residue);
+
+      // skip if we're not on the same chain
+      if (residueI.chainId() != residueJ.chainId())
+        continue;
 
       if (residueI.chainId() == residueJ.chainId() &&
           std::abs(int(residueI.residueId() - residueJ.residueId())) < 3)
