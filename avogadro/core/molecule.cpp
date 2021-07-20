@@ -847,6 +847,11 @@ Residue& Molecule::residue(Index index)
   return m_residues[index];
 }
 
+Index Molecule::residueCount() const
+{
+  return static_cast<Index>(m_residues.size());
+}
+
 bool Molecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
 {
   if (pairs.size() == bondCount()) {
