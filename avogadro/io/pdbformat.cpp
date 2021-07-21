@@ -65,12 +65,14 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
     // e.g.   CRYST1    4.912    4.912    6.696  90.00  90.00 120.00 P1 1
     // https://www.wwpdb.org/documentation/file-format-content/format33/sect8.html
     else if (startsWith(buffer, "CRYST1")) {
+      // PDB reports in degrees and Angstroms
+      //   Avogadro uses radians internally
       Real a = lexicalCast<Real>(buffer.substr(6, 9), ok);
       Real b = lexicalCast<Real>(buffer.substr(15, 9), ok);
       Real c = lexicalCast<Real>(buffer.substr(24, 9), ok);
-      Real alpha = lexicalCast<Real>(buffer.substr(33, 7), ok);
-      Real beta = lexicalCast<Real>(buffer.substr(40, 7), ok);
-      Real gamma = lexicalCast<Real>(buffer.substr(47, 8), ok);
+      Real alpha = lexicalCast<Real>(buffer.substr(33, 7), ok) * DEG_TO_RAD;
+      Real beta = lexicalCast<Real>(buffer.substr(40, 7), ok) * DEG_TO_RAD;
+      Real gamma = lexicalCast<Real>(buffer.substr(47, 8), ok) * DEG_TO_RAD;
 
       Core::UnitCell* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
       mol.setUnitCell(cell);
