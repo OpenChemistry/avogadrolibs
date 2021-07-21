@@ -550,14 +550,14 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   if (!m_newObject.isValid()) {
     // Add a new atom bonded to the clicked atom
     RWAtom clickedAtom = m_molecule->atom(m_clickedObject.index);
-    newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber());
+    newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber(), clickedAtom.position3d());
 
     // Handle the automatic bond order
     int bondOrder = m_toolWidget->bondOrder();
     if (bondOrder == 0) {
       // automatic - guess the size
       bondOrder = expectedBondOrder(clickedAtom, newAtom);
-    }
+    } 
     m_molecule->addBond(clickedAtom, newAtom, bondOrder);
 
     // now if we need to adjust hydrogens, do it
