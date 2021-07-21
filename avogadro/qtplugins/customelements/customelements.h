@@ -19,7 +19,15 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+class QProgressDialog;
+class QThread;
+
 namespace Avogadro {
+
+namespace QtGui {
+class BackgroundFileFormat;
+}
+
 namespace QtPlugins {
 
 /**
@@ -43,12 +51,21 @@ public slots:
 private slots:
   void moleculeChanged(unsigned int changes);
   void reassign();
+  void importMapFile();
+  void backgroundReaderFinished();
 
 private:
   QtGui::Molecule* m_molecule;
-  QAction* m_reassignAction;
+  QAction* m_reassignUsingTool;
+  QAction* m_reassignFromFile;
+  QThread* m_fileReadThread;
+  QtGui::BackgroundFileFormat* m_threadedReader;
+  QtGui::Molecule* m_fileReadMolecule;
+  QProgressDialog* m_progressDialog;
 
   void updateReassignAction();
+  bool openFile(const QString& fileName, Io::FileFormat* reader);
+  void setMapFromMolecule(QtGui::Molecule* mol);
 };
 
 } // namespace QtPlugins
