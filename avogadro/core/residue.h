@@ -32,6 +32,20 @@ public:
   /** Type for atom name map. */
   typedef std::map<std::string, Atom> AtomNameMap;
 
+  // using codes from MMTF specification
+  // https://github.com/rcsb/mmtf/blob/master/spec.md#secstructlist
+  enum SecondaryStructure { 
+    piHelix = 0, // DSSP "I"
+    bend = 1, // DSSP "S"
+    alphaHelix = 2, // DSSP "H"
+    betaSheet = 3, // DSSP "E"
+    helix310 = 4, // DSSP "G"
+    betaBridge = 5, // DSSP "B"
+    turn = 6, // DSSP "T"
+    coil = 7, // DSSP "C"
+    undefined = -1
+  };
+
   /** Creates a new, empty residue. */
   Residue();
   Residue(std::string& name);
@@ -54,13 +68,20 @@ public:
 
   inline char chainId() const { return m_chainId; }
 
-  inline void setChainId(char& id) { m_chainId = id; }
+  inline void setChainId(const char& id) { m_chainId = id; }
+
+  inline SecondaryStructure secondaryStructure() { return m_secondaryStructure; }
+
+  inline void setSecondaryStructure(const SecondaryStructure& ss) { m_secondaryStructure = ss; }
 
   /** Adds an atom to the residue class */
-  void addResidueAtom(std::string& name, Atom& atom);
+  void addResidueAtom(const std::string& name, const Atom& atom);
 
   /** \return a vector containing the atoms added to the residue */
   std::vector<Atom> residueAtoms() const;
+
+  /** \return the atom map for the residue */
+  AtomNameMap& atomNameMap() { return m_atomNameMap; }
 
   /** Sets bonds to atoms in the residue based on data from residuedata header
    */
@@ -101,6 +122,7 @@ protected:
   bool m_heterogen;
   Vector3ub m_color;
   bool m_customColorSet;
+  SecondaryStructure m_secondaryStructure;
 };
 
 } // namespace Core

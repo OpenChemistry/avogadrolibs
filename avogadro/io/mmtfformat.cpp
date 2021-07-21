@@ -32,15 +32,31 @@ using Core::CrystalTools;
 using Core::Cube;
 using Core::Elements;
 using Core::GaussianSet;
-using Core::lexicalCast;
 using Core::Molecule;
 using Core::Residue;
-using Core::split;
 using Core::Variant;
+using Core::lexicalCast;
+using Core::split;
 
 MMTFFormat::MMTFFormat() = default;
 
 MMTFFormat::~MMTFFormat() = default;
+
+// from latest MMTF code, under the MIT license
+// https://github.com/rcsb/mmtf-cpp/blob/master/include/mmtf/structure_data.hpp
+bool is_polymer(const unsigned int chain_index,
+                const std::vector<mmtf::Entity>& entity_list) {
+  for (std::size_t i = 0; i < entity_list.size(); ++i) {
+    if ( std::find(entity_list[i].chainIndexList.begin(),
+                   entity_list[i].chainIndexList.end(),
+                   chain_index)
+        != entity_list[i].chainIndexList.end()) {
+      return ( entity_list[i].type == "polymer"
+              || entity_list[i].type == "POLYMER");
+    }
+  }
+  return false;
+}
 
 bool MMTFFormat::read(std::istream& file, Molecule& molecule)
 {
@@ -69,9 +85,13 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
       new Core::UnitCell(a, b, c, alpha, beta, gamma);
     molecule.setUnitCell(unitCellObject);
   }
+  // spaceGroup
 
   Index modelChainCount =
     static_cast<Index>(structure.chainsPerModel[modelIndex]);
+
+  auto entityList = structure.entityList;
+  auto secStructList = structure.secStructList;
 
   for (Index j = 0; j < modelChainCount; j++) {
 
@@ -81,6 +101,8 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
     bool ok;
     std::string chainid_string = structure.chainIdList[chainIndex];
     char chainid = lexicalCast<char>(chainid_string.substr(0, 1), ok);
+
+    bool isPolymer = is_polymer(chainIndex, entityList);
 
     // A group is like a residue or other molecule in a PDB file.
     for (size_t k = 0; k < chainGroupCount; k++) {
@@ -93,6 +115,22 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
       auto resname = group.groupName;
 
       auto& residue = molecule.addResidue(resname, groupId, chainid);
+      // Stores if the group / residue is a heterogen
+      // 
+      if (!isPolymer || mmtf::is_hetatm(group.chemCompType.c_str()))
+        residue.setHeterogen(true);
+
+      // Unfortunately, while the spec says secondary structure
+      // is (optionally) in groups, the code doesn't make it available.
+      // group.secStruct is a binary type
+      // https://github.com/rcsb/mmtf/blob/master/spec.md#secstructlist
+      // 0 = pi helix, 1 = bend, 2 = alpha helix, 3 = extended beta, 4 = 3-10
+      // helix, etc.
+      // residue.setSecondaryStructure(group.secStruct);
+      //
+      // instead, we'll get it from secStructList
+      auto secStructure = structure.secStructList[groupIndex];
+      residue.setSecondaryStructure(static_cast<Avogadro::Core::Residue::SecondaryStructure>(secStructure));
 
       // Save the offset before we go changing it
       Index atomOffset = atomIndex - atomSkip;
@@ -111,9 +149,6 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
                   static_cast<Real>(structure.yCoordList[atomIndex]),
                   static_cast<Real>(structure.zCoordList[atomIndex])));
 
-        // Stores if the group / residue is a heteroatom
-        if (mmtf::is_hetatm(group.chemCompType.c_str()))
-          residue.setHeterogen(true);
         std::string atomName = group.atomNameList[l];
         residue.addResidueAtom(atomName, atom);
         atomIndex++;
@@ -130,7 +165,7 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
         molecule.addBond(atomOffset + atom1, atomOffset + atom2, bo);
       }
 
-      // This is the origianl PDB Chain name
+      // This is the original PDB Chain name
       // if (!structure_.chainNameList.empty()) {
       //  structure.chainNameList[chainIndex_];
       //}

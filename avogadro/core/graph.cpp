@@ -16,15 +16,19 @@
 
 #include "graph.h"
 
+#include <avogadro/core/connectedgroup.h>
+
 #include <algorithm>
 #include <cassert>
+#include <set>
+#include <stack>
 
 namespace Avogadro {
 namespace Core {
 
-Graph::Graph() {}
+Graph::Graph() : m_subgraphs() {}
 
-Graph::Graph(size_t n) : m_adjacencyList(n) {}
+Graph::Graph(size_t n) : m_adjacencyList(n), m_subgraphs(n) {}
 
 Graph::~Graph() {}
 
@@ -32,8 +36,13 @@ void Graph::setSize(size_t n)
 {
   // If the graph is being made smaller we first need to remove all of the edges
   // from the soon to be removed vertices.
-  for (size_t i = n; i < m_adjacencyList.size(); i++)
+  for (size_t i = n; i < m_adjacencyList.size(); ++i) {
     removeEdges(i);
+    m_subgraphs.removeNode(i);
+  }
+  if (m_adjacencyList.size() < n) {
+    m_subgraphs.addNodes(n - m_adjacencyList.size());
+  }
 
   m_adjacencyList.resize(n);
 }
@@ -50,11 +59,13 @@ bool Graph::isEmpty() const
 
 void Graph::clear()
 {
-  setSize(0);
+  m_adjacencyList.clear();
+  m_subgraphs.clear();
 }
 
 size_t Graph::addVertex()
 {
+  m_subgraphs.addNode(size());
   setSize(size() + 1);
   return size() - 1;
 }
@@ -62,7 +73,7 @@ size_t Graph::addVertex()
 void Graph::removeVertex(size_t index)
 {
   assert(index < size());
-
+  m_subgraphs.removeConnection(index);
   // Remove the edges to the vertex.
   removeEdges(index);
 
@@ -79,7 +90,6 @@ void Graph::addEdge(size_t a, size_t b)
 {
   assert(a < size());
   assert(b < size());
-
   std::vector<size_t>& neighborsA = m_adjacencyList[a];
   std::vector<size_t>& neighborsB = m_adjacencyList[b];
 
@@ -87,9 +97,43 @@ void Graph::addEdge(size_t a, size_t b)
   if (std::find(neighborsA.begin(), neighborsA.end(), b) != neighborsA.end())
     return;
 
+  m_subgraphs.addConnection(a, b);
+
   // Add the edge to each verticies adjacency list.
   neighborsA.push_back(b);
   neighborsB.push_back(a);
+}
+
+std::set<size_t> Graph::checkConectivity(size_t a, size_t b) const
+{
+  if (a == b) {
+    return std::set<size_t>();
+  }
+  std::set<size_t> visited;
+  bool connected = false;
+  std::stack<size_t> nextNeighbors;
+  visited.insert(a);
+  nextNeighbors.push(a);
+
+  while (!nextNeighbors.empty()) {
+    size_t visiting = nextNeighbors.top();
+    visited.insert(visiting);
+    nextNeighbors.pop();
+    const std::vector<size_t>& neighbors = m_adjacencyList[visiting];
+    for (const auto& n : neighbors) {
+      if (visiting == b) {
+        connected = true;
+      }
+      if (visited.find(n) == visited.end()) {
+        visited.insert(n);
+        nextNeighbors.push(n);
+      }
+    }
+  }
+  if (connected) {
+    return std::set<size_t>();
+  }
+  return visited;
 }
 
 void Graph::removeEdge(size_t a, size_t b)
@@ -107,16 +151,25 @@ void Graph::removeEdge(size_t a, size_t b)
     neighborsA.erase(iter);
     neighborsB.erase(std::find(neighborsB.begin(), neighborsB.end(), a));
   }
+
+  if (m_subgraphs.getGroup(a) == m_subgraphs.getGroup(b)) {
+    std::set<size_t> connected = checkConectivity(a, b);
+    if (!connected.empty()) {
+      m_subgraphs.removeConnection(a, b, connected);
+    }
+  }
 }
 
 void Graph::removeEdges()
 {
+  m_subgraphs.removeConnections();
   for (size_t i = 0; i < m_adjacencyList.size(); ++i)
     m_adjacencyList[i].clear();
 }
 
 void Graph::removeEdges(size_t index)
 {
+  m_subgraphs.removeConnection(index);
   const std::vector<size_t>& nbrs = m_adjacencyList[index];
 
   for (size_t i = 0; i < nbrs.size(); ++i) {
@@ -159,66 +212,35 @@ bool Graph::containsEdge(size_t a, size_t b) const
   return std::find(neighborsA.begin(), neighborsA.end(), b) != neighborsA.end();
 }
 
-std::vector<std::vector<size_t>> Graph::connectedComponents() const
+std::vector<std::set<size_t>> Graph::connectedComponents() const
 {
-  std::vector<std::vector<size_t>> components;
+  return m_subgraphs.getAllGroups();
+}
 
-  // Position of next vertex to the root of the depth-first search.
-  size_t position = 0;
+std::set<size_t> Graph::connectedComponent(size_t index) const
+{
+  size_t group = m_subgraphs.getGroup(index);
+  return m_subgraphs.getNodes(group);
+}
 
-  // The bitset containing each vertex that has been visited.
-  std::vector<bool> visited(size());
+size_t Graph::subgraphsCount() const
+{
+  return m_subgraphs.groupCount();
+}
 
-  for (;;) {
-    std::vector<size_t> component(size());
-    std::vector<size_t> row;
-    row.push_back(position);
+size_t Graph::subgraph(size_t element) const
+{
+  return m_subgraphs.getGroup(element);
+}
 
-    while (!row.empty()) {
-      std::vector<size_t> nextRow;
-
-      for (size_t i = 0; i < row.size(); i++) {
-        size_t vertex = row[i];
-
-        // Add vertex to the component.
-        component.push_back(vertex);
-
-        // Mark the vertex as visited.
-        visited[vertex] = true;
-
-        // Iterate through each neighbor.
-        const std::vector<size_t>& nbrs = m_adjacencyList[vertex];
-        for (size_t j = 0; j < nbrs.size(); ++j)
-          if (visited[nbrs[j]] == false)
-            nextRow.push_back(nbrs[j]);
-      }
-      row = nextRow;
-    }
-
-    // Add this component to the list of components.
-    components.push_back(component);
-
-    // Find the next unvisited vertex.
-    bool done = true;
-    for (size_t i = position + 1; i < size(); ++i) {
-      if (visited[i] == false) {
-        position = i;
-        done = false;
-        break;
-      }
-    }
-
-    if (done)
-      break;
-  }
-
-  return components;
+size_t Graph::subgraphCount(size_t element) const
+{
+  return m_subgraphs.getGroupSize(element);
 }
 
 size_t Graph::getConnectedID(size_t index) const
 {
-  return connectedGroup->getGroup(index);
+  return m_subgraphs.getGroup(index);
 }
-
 } // namespace Core
 } // namespace Avogadro

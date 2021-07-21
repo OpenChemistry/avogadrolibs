@@ -20,7 +20,7 @@
 #include "avogadroqtguiexport.h"
 #include <QtCore/QObject>
 
-#include "molecule.h"
+#include "molecule.h" //qtgui::Molecule
 #include "persistentatom.h"
 #include "persistentbond.h"
 
@@ -827,9 +827,9 @@ inline Core::Array<RWMolecule::BondType> RWMolecule::bonds(
   const Index& atomId) const
 {
   Core::Array<RWMolecule::BondType> result;
-  for (Index i = 0; i < m_molecule.m_bondPairs.size(); ++i)
-    if (m_molecule.m_bondPairs[i].first == atomId ||
-        m_molecule.m_bondPairs[i].second == atomId)
+  for (Index i = 0; i < m_molecule.bondCount(); ++i)
+    if (m_molecule.bondPair(i).first == atomId ||
+        m_molecule.bondPair(i).second == atomId)
       result.push_back(BondType(const_cast<RWMolecule*>(this), i));
   return result;
 }

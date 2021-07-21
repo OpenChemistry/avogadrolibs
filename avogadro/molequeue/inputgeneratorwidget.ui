@@ -79,8 +79,11 @@
     <layout class="QHBoxLayout">
      <item>
       <widget class="QPushButton" name="defaultsButton">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="text">
-        <string>Reset to Default Values</string>
+        <string>Reset</string>
        </property>
       </widget>
      </item>
@@ -117,7 +120,7 @@
      <item>
       <widget class="QPushButton" name="generateButton">
        <property name="text">
-        <string>Write files to disk...</string>
+        <string>Save Input...</string>
        </property>
       </widget>
      </item>

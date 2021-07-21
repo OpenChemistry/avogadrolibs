@@ -20,8 +20,11 @@
 namespace Avogadro {
 namespace QtGui {
 
+using std::swap;
+
 Molecule::Molecule(QObject* parent_)
-  : QObject(parent_), m_undoMolecule(new RWMolecule(*this, this))
+  : QObject(parent_),
+    m_undoMolecule(new RWMolecule(*this, this)), Core::Molecule()
 {
   m_undoMolecule->setInteractive(true);
 }
@@ -79,9 +82,7 @@ Molecule& Molecule::operator=(const Core::Molecule& other)
   return *this;
 }
 
-Molecule::~Molecule()
-{
-}
+Molecule::~Molecule() {}
 
 Molecule::AtomType Molecule::addAtom(unsigned char number)
 {
@@ -102,6 +103,12 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Index uniqueId)
   return a;
 }
 
+Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
+{
+  m_atomUniqueIds.push_back(atomCount());
+  return Core::Molecule::addAtom(number, position3d);
+}
+
 bool Molecule::removeAtom(Index index)
 {
   if (index >= atomCount())
@@ -109,48 +116,18 @@ bool Molecule::removeAtom(Index index)
   Index uniqueId = findAtomUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
-
   // Unique ID of an atom that was removed:
   m_atomUniqueIds[uniqueId] = MaxIndex;
+  Index newSize = static_cast<Index>(atomCount() - 1);
 
   // Before removing the atom we must first remove any bonds to it.
-  Core::Array<BondType> atomBonds = Core::Molecule::bonds(atom(index));
-  while (atomBonds.size()) {
-    removeBond(atomBonds.back());
-    atomBonds = Core::Molecule::bonds(atom(index));
-  }
+  Core::Molecule::removeAtom(index);
 
-  Index newSize = static_cast<Index>(m_atomicNumbers.size() - 1);
   if (index != newSize) {
-    // We need to move the last atom to this position, and update its unique ID.
-    m_atomicNumbers[index] = m_atomicNumbers.back();
-    if (m_positions2d.size() == m_atomicNumbers.size())
-      m_positions2d[index] = m_positions2d.back();
-    if (m_positions3d.size() == m_atomicNumbers.size())
-      m_positions3d[index] = m_positions3d.back();
-
-    // Find any bonds to the moved atom and update their index.
-    atomBonds = Core::Molecule::bonds(atom(newSize));
-    foreach (const BondType& currentBond, atomBonds) {
-      std::pair<Index, Index> pair = m_bondPairs[currentBond.index()];
-      if (pair.first == newSize)
-        pair.first = index;
-      else if (pair.second == newSize)
-        pair.second = index;
-      m_bondPairs[currentBond.index()] = pair;
-    }
-
     Index movedAtomUID = findAtomUniqueId(newSize);
     assert(movedAtomUID != MaxIndex);
     m_atomUniqueIds[movedAtomUID] = index;
   }
-  // Resize the arrays for the smaller molecule.
-  if (m_positions2d.size() == m_atomicNumbers.size())
-    m_positions2d.resize(newSize);
-  if (m_positions3d.size() == m_atomicNumbers.size())
-    m_positions3d.resize(newSize);
-  m_atomicNumbers.resize(newSize);
-
   return true;
 }
 
@@ -200,6 +177,32 @@ Molecule::BondType Molecule::addBond(Avogadro::Index atomId1,
   return Core::Molecule::addBond(atomId1, atomId2, order);
 }
 
+void Molecule::addBonds(const Core::Array<std::pair<Index, Index>>& bonds,
+                        const Core::Array<unsigned char>& orders)
+{
+  assert(orders.size() == bonds.size());
+  for (Index i = 0; i < orders.size(); ++i) {
+    addBond(bonds[i].first, bonds[i].second, orders[i]);
+  }
+}
+void Molecule::swapBond(Index a, Index b)
+{
+  Index uniqueA = findBondUniqueId(a);
+  Index uniqueB = findBondUniqueId(b);
+  assert(uniqueA != MaxIndex && uniqueB != MaxIndex);
+  swap(m_bondUniqueIds[uniqueA], m_bondUniqueIds[uniqueB]);
+  Core::Molecule::swapBond(a, b);
+}
+
+void Molecule::swapAtom(Index a, Index b)
+{
+  Index uniqueA = findAtomUniqueId(a);
+  Index uniqueB = findAtomUniqueId(b);
+  assert(uniqueA != MaxIndex && uniqueB != MaxIndex);
+  swap(m_atomUniqueIds[uniqueA], m_atomUniqueIds[uniqueB]);
+  Core::Molecule::swapAtom(a, b);
+}
+
 Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
                                      unsigned char order, Index uniqueId)
 {
@@ -219,24 +222,15 @@ bool Molecule::removeBond(Index index)
   Index uniqueId = findBondUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
-
   m_bondUniqueIds[uniqueId] = MaxIndex; // Unique ID of a bond that was removed.
 
-  Index newSize = static_cast<Index>(m_bondOrders.size() - 1);
+  Index newSize = static_cast<Index>(bondCount() - 1);
   if (index != newSize) {
-    // We need to move the last bond to this position, and update its unique ID.
-    m_bondOrders[index] = m_bondOrders.back();
-    m_bondPairs[index] = m_bondPairs.back();
-
     Index movedBondUID = findBondUniqueId(newSize);
     assert(movedBondUID != MaxIndex);
     m_bondUniqueIds[movedBondUID] = index;
   }
-
-  // Resize the arrays for the smaller molecule.
-  m_bondOrders.resize(newSize);
-  m_bondPairs.resize(newSize);
-
+  Core::Molecule::removeBond(index);
   return true;
 }
 
@@ -304,5 +298,5 @@ RWMolecule* Molecule::undoMolecule()
   return m_undoMolecule;
 }
 
-} // end QtGui namespace
-} // end Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro

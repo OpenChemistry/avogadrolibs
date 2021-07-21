@@ -38,6 +38,13 @@ private slots:
   void applyIndexColors();
   void resetColors();
 
+  void openColorDialogResidue();
+  void applyCustomColorResidue(const QColor& color);
+  void applyAminoColors();
+  void applyShapelyColors();
+  void applySecondaryStructureColors();
+  void resetColorsResidue();
+
 private:
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;

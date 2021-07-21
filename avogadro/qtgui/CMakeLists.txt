@@ -42,6 +42,7 @@ set(HEADERS
   hydrogentools.h
   interfacescript.h
   interfacewidget.h
+  jsonwidget.h
   meshgenerator.h
   molecule.h
   moleculemodel.h
@@ -73,6 +74,7 @@ set(SOURCES
   hydrogentools.cpp
   interfacescript.cpp
   interfacewidget.cpp
+  jsonwidget.cpp
   meshgenerator.cpp
   molecule.cpp
   moleculemodel.cpp

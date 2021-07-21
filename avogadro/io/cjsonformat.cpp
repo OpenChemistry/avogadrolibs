@@ -10,6 +10,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/residue.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
@@ -34,10 +35,11 @@ using Core::CrystalTools;
 using Core::Cube;
 using Core::Elements;
 using Core::GaussianSet;
-using Core::lexicalCast;
 using Core::Molecule;
-using Core::split;
+using Core::Residue;
 using Core::Variant;
+using Core::lexicalCast;
+using Core::split;
 
 CjsonFormat::CjsonFormat() = default;
 
@@ -156,6 +158,15 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     molecule.setCoordinate3d(0);
   }
 
+  // Read in colors if they are present.
+  json colors = atoms["colors"];
+  if (colors.is_array() && colors.size() == 3 * atomCount) {
+    for (Index i = 0; i < atomCount; ++i) {
+      Vector3ub color(colors[3 * i], colors[3 * i + 1], colors[3 * i + 2]);
+      molecule.setColor(i, color);
+    }
+  }
+
   // Selection is optional, but if present should be loaded.
   json selection = atoms["selected"];
   if (isBooleanArray(selection) && selection.size() == atomCount)
@@ -179,6 +190,35 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
            ++i) {
         molecule.bond(i).setOrder(static_cast<int>(order[i]));
       }
+    }
+  }
+
+  // residues are optionala, but should be loaded
+  json residues = jsonRoot["residues"];
+  if (residues.is_array()) {
+    for (unsigned int i = 0; i < residues.size(); ++i) {
+      json residue = residues[i];
+      if (!residue.is_object())
+        continue; // malformed
+
+      auto name = residue["name"].get<std::string>();
+      auto id = static_cast<Index>(residue["id"]);
+      auto chainId = residue["chainId"].get<char>();
+      auto newResidue = molecule.addResidue(name, id, chainId);
+
+      json hetero = residue["hetero"];
+      if (hetero == true)
+        newResidue.setHeterogen(true);
+
+      json atoms = residue["atoms"];
+      if (atoms.is_object()) {
+        for (auto& item : atoms.items()) {
+          auto atom = molecule.atom(item.value());
+          newResidue.addResidueAtom(item.key(), atom);
+        }
+      }
+
+      // todo colors
     }
   }
 
@@ -474,7 +514,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
       auto atomIndices = gaussian->atomIndices();
       json shellToAtomMap;
-      std::cout << "atomIndices " << atomIndices.size() << std::endl;
+      // std::cout << "atomIndices " << atomIndices.size() << std::endl;
       for (size_t i = 0; i < atomIndices.size(); ++i)
         shellToAtomMap.push_back(atomIndices[i]);
       basis["shellToAtomMap"] = shellToAtomMap;
@@ -576,12 +616,22 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
   if (molecule.atomCount()) {
     json elements;
     json selected;
+    json colors;
+
+    Vector3ub color;
     for (Index i = 0; i < molecule.atomCount(); ++i) {
       elements.push_back(molecule.atom(i).atomicNumber());
       selected.push_back(molecule.atomSelected(i));
+
+      color = molecule.color(i);
+      colors.push_back(color.x());
+      colors.push_back(color.y());
+      colors.push_back(color.z());
     }
     root["atoms"]["elements"]["number"] = elements;
-    root["atoms"]["selected"] = selected;
+    if (!molecule.isSelectionEmpty())
+      root["atoms"]["selected"] = selected;
+    root["atoms"]["colors"] = colors;
 
     // 3d positions:
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
@@ -640,6 +690,34 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     }
     root["bonds"]["connections"]["index"] = connections;
     root["bonds"]["order"] = order;
+  }
+
+  // Create and populate any residue arrays
+  if (molecule.residues().size() > 0) {
+    json residues; // array of objects
+    for (auto residue : molecule.residues()) {
+      json entry;
+      entry["name"] = residue.residueName();
+      entry["id"] = residue.residueId();
+      entry["chainId"] = residue.chainId();
+      if (residue.isHeterogen())
+        entry["hetero"] = true;
+
+      json color;
+      color.push_back(residue.color()[0]);
+      color.push_back(residue.color()[1]);
+      color.push_back(residue.color()[2]);
+      entry["color"] = color;
+
+      json atoms;
+      for (auto item : residue.atomNameMap()) {
+        // dictionary between names and atom Id
+        atoms[item.first] = item.second.index();
+      }
+      entry["atoms"] = atoms;
+      residues.push_back(entry);
+    }
+    root["residues"] = residues;
   }
 
   // If there is vibrational data write this out too.

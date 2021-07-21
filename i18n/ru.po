@@ -6,13 +6,14 @@
 # Yuri Kozlov <yuray@komyakino.ru>, 2011.
 # Artem <KovalevArtem.ru@gmail.com>, 2020.
 # koffevar <egor.kafisov@gmail.com>, 2020.
+# Anna Malinovskaia <tacitcoast@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-02 05:24+0900\n"
-"PO-Revision-Date: 2020-11-29 09:28+0000\n"
-"Last-Translator: Artem <KovalevArtem.ru@gmail.com>\n"
+"PO-Revision-Date: 2021-07-19 18:32+0000\n"
+"Last-Translator: Anna Malinovskaia <tacitcoast@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.4-dev\n"
+"X-Generator: Weblate 4.7.2-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -40,6 +41,9 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
+"script --вывод параметров печати должен быть объектом JSON на верхнем "
+"уровне. Получено:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:176 qtgui/interfacescript.cpp:206
 #: qtgui/interfacescript.cpp:302
@@ -1932,11 +1936,11 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.h:42
 msgid "Copy and paste"
-msgstr ""
+msgstr "Копирование и вставка"
 
 #: qtplugins/copypaste/copypaste.h:46
 msgid "Interact with the clipboard."
-msgstr ""
+msgstr "Взаимодействуйте с буфером обмена."
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:44
 msgid "&CP2K"
@@ -1948,7 +1952,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinput.h:47
 msgid "Generate input for CP2K."
-msgstr ""
+msgstr "Сгенерируйте входные данные для CP2K."
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:272
 msgid "Energy"
@@ -1959,27 +1963,24 @@ msgid "Energy and Forces"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:278
-#, fuzzy
 msgid "Molecular Dynamics"
-msgstr "Молекулярная динамика (300K)"
+msgstr "Молекулярная динамика"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:281
-#, fuzzy
 msgid "Geometry Optimization"
 msgstr "Геометрическая оптимизация"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:350
 msgid "Electronic structure methods (DFT)"
-msgstr ""
+msgstr "Методы электронной структуры (DFT)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:353
-#, fuzzy
 msgid "Molecular Mechanics"
-msgstr "&Молекулярная механика"
+msgstr "Молекулярная механика"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:356
 msgid "Hybrid quantum classical (Not yet supported)"
-msgstr ""
+msgstr "Гибридный квантово-классический (Пока не поддерживается)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:371
 msgid "EWALD"
@@ -2058,36 +2059,37 @@ msgid ""
 "The input file has been modified. Would you like to overwrite your changes "
 "to reflect the new geometry or job options?"
 msgstr ""
+"Входной файл был изменен. Хотели бы вы перезаписать свои изменения, чтобы "
+"отразить новую геометрию или параметры задания?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:549
 #: qtplugins/gamessinput/gamessinputdialog.cpp:434
 msgid "Overwrite modified input file?"
-msgstr ""
+msgstr "Переписать измененный входной файл?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:960
 msgid "Save CP2K input file"
-msgstr ""
+msgstr "Сохранить входной файл CP2K"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1009
 msgid "Submit CP2K Calculation"
-msgstr ""
+msgstr "Отправить расчет CP2K"
 
 #: qtplugins/crystal/crystal.cpp:54 qtplugins/crystal/crystal.cpp:182
-#, fuzzy
 msgid "Import Crystal from Clipboard"
-msgstr "Импорт кристалла из буфера обмена..."
+msgstr "Импорт кристаллов из буфера обмена"
 
 #: qtplugins/crystal/crystal.cpp:61
 msgid "Toggle Unit Cell"
-msgstr ""
+msgstr "Ячейка тумблера"
 
 #: qtplugins/crystal/crystal.cpp:66
 msgid "Edit Unit Cell..."
-msgstr ""
+msgstr "Редактировать ячейку..."
 
 #: qtplugins/crystal/crystal.cpp:71
 msgid "&Wrap Atoms to Unit Cell"
-msgstr ""
+msgstr "&Вернуть атомы в элементарную ячейку"
 
 #: qtplugins/crystal/crystal.cpp:77
 msgid "Rotate to Standard &Orientation"

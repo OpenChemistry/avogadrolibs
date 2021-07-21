@@ -43,7 +43,9 @@ PYBIND11_MODULE(core, m)
 
   py::class_<Molecule>(m, "Molecule")
     .def(py::init<>())
-    .def("add_atom", &Molecule::addAtom, "Add an atom")
+    .def("add_atom",
+         static_cast<Atom (Molecule::*)(unsigned char)>(&Molecule::addAtom),
+         "Add an atom")
     .def("atom_count", atomCount0, "The number of atoms")
     .def("atom_count", atomCount1,
          "The number of atoms with the supplied atomic number")
