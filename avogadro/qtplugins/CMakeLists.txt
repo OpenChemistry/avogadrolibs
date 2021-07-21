@@ -155,6 +155,7 @@ endif()
 
 # The scene plugins
 add_subdirectory(ballandstick)
+add_subdirectory(labels)
 add_subdirectory(licorice)
 add_subdirectory(vanderwaals)
 add_subdirectory(wireframe)
