@@ -238,5 +238,9 @@ size_t Graph::subgraphCount(size_t element) const
   return m_subgraphs.getGroupSize(element);
 }
 
+size_t Graph::getConnectedID(size_t index) const
+{
+  return m_subgraphs.getGroup(index);
+}
 } // namespace Core
 } // namespace Avogadro

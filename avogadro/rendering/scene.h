@@ -59,8 +59,7 @@ struct ColorTextureVertex
   ColorTextureVertex(const Vector3f& p, const Vector3ub& c, const Vector2f& t,
                      const Vector2f& t2 = Vector2f::Zero())
     : vertex(p), color(c), textureCoord(t), textureCoord2(t2)
-  {
-  }
+  {}
 
   static int vertexOffset() { return 0; }
   static int colorOffset() { return static_cast<int>(sizeof(Vector3f)); }
@@ -83,11 +82,10 @@ struct ColorNormalVertex
   Vector3f normal;           // 12 bytes
   Vector3f vertex;           // 12 bytes
   unsigned char padding[4];  //  4 bytes
-
+  ColorNormalVertex() {}
   ColorNormalVertex(const Vector3ub& c, const Vector3f& n, const Vector3f& v)
     : color(c), normal(n), vertex(v)
-  {
-  }
+  {}
 
   static int colorOffset() { return 0; }
   static int normalOffset()
@@ -153,7 +151,7 @@ private:
   mutable float m_radius;
 };
 
-} // End Rendering namespace
-} // End Avogadro namespace
+} // namespace Rendering
+} // namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_SCENE_H

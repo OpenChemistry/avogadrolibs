@@ -40,6 +40,14 @@ enum AtomHybridization
   Octahedral = 6
 };
 
+enum AtomicNumber : unsigned char
+{
+  Hydrogen = 1,
+  Carbon = 6,
+  Nitrogen = 7,
+  Oxygen = 8
+};
+
 /**
  * @class Atom atom.h <avogadro/core/atom.h>
  * The atom class represents an atom in a molecule.

@@ -58,15 +58,15 @@ public:
 
   virtual ~Residue();
 
-  inline std::string residueName() { return m_residueName; }
+  inline std::string residueName() const { return m_residueName; }
 
   inline void setResidueName(std::string& name) { m_residueName = name; }
 
-  inline Index residueId() { return m_residueId; }
+  inline Index residueId() const { return m_residueId; }
 
   inline void setResidueId(Index& number) { m_residueId = number; }
 
-  inline char chainId() { return m_chainId; }
+  inline char chainId() const { return m_chainId; }
 
   inline void setChainId(const char& id) { m_chainId = id; }
 
@@ -77,8 +77,8 @@ public:
   /** Adds an atom to the residue class */
   void addResidueAtom(const std::string& name, const Atom& atom);
 
-  /** \return a vector containing all atoms added in the residue */
-  std::vector<Atom> residueAtoms();
+  /** \return a vector containing the atoms added to the residue */
+  std::vector<Atom> residueAtoms() const;
 
   /** \return the atom map for the residue */
   AtomNameMap& atomNameMap() { return m_atomNameMap; }
@@ -87,21 +87,24 @@ public:
    */
   void resolveResidueBonds(Molecule& mol);
 
-  /** \return the atom with the name specified (e.g., "CA") */
-  Atom getAtomByName(const std::string name);
-
   /**
-   * \return the atomic number of the atom with the name specified (e.g., "CA" = "C")
+   * \return the atom with the name specified (e.g., "CA")
    */
-  int getAtomicNumber(const std::string name);
+  Atom getAtomByName(std::string name) const;
+  /**
+   * \return the atomic number of the atom with the name specified (e.g., "CA" =
+   * "C")
+   */
+  int getAtomicNumber(std::string name) const;
 
+  bool hasAtomByIndex(Index index) const;
   /** Set whether this residue is a "HET" / "HETATOM" ligand
    */
-  void setHeterogen(bool heterogen) { m_heterogen = heterogen;}
+  void setHeterogen(bool heterogen) { m_heterogen = heterogen; }
 
   /** \return is this residue a heterogen (HET / HETATM)
    */
-  bool isHeterogen() { return m_heterogen; }
+  bool isHeterogen() const { return m_heterogen; }
 
   /** Set a custom color for this residue
    */

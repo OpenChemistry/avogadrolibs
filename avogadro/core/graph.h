@@ -117,6 +117,11 @@ public:
   /**  @return the group size from the @p index. */
   size_t subgraphCount(size_t index) const;
 
+  /**
+   * Get the group ID
+   */
+  size_t getConnectedID(size_t index) const;
+
 private:
   std::set<size_t> checkConectivity(size_t a, size_t b) const;
   std::vector<std::vector<size_t>> m_adjacencyList;

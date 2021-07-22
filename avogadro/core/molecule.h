@@ -348,6 +348,7 @@ public:
    */
   Array<BondType> bonds(const AtomType& a);
   Array<BondType> bonds(Index a);
+  Array<const BondType*> bonds(Index a) const;
   /** @} */
 
   /**
