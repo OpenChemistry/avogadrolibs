@@ -18,6 +18,8 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
 
+#include <QDebug>
+
 #include <string>
 #include <vector>
 
@@ -148,8 +150,9 @@ void CopyPaste::cut()
     // Remove atoms from the largest to the smallest index
     // (that way, the index doesn't change)
     for (Index i = m_molecule->atomCount(); i > 0; --i)
-      if (m_molecule->atomSelected(i))
-        m_molecule->undoMolecule()->removeAtom(i);
+      // atoms go from 0 to atomCount()-1
+      if (m_molecule->atomSelected(i-1))
+        m_molecule->undoMolecule()->removeAtom(i-1);
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |
@@ -163,9 +166,11 @@ void CopyPaste::clear()
   else {
     // Remove atoms from the largest to the smallest index
     // (that way, the index doesn't change)
-    for (Index i = m_molecule->atomCount(); i > 0; --i)
-      if (m_molecule->atomSelected(i))
-        m_molecule->undoMolecule()->removeAtom(i);
+    for (Index i = m_molecule->atomCount(); i > 0; --i) {
+      // atoms go from 0 to atomCount()-1
+      if (m_molecule->atomSelected(i-1))
+        m_molecule->undoMolecule()->removeAtom(i-1);
+    }
   }
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |
                           QtGui::Molecule::Removed);
