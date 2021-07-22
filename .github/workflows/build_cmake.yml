@@ -47,7 +47,7 @@ jobs:
             name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
-            cmake_flags: "–G \"NMake Makefiles JOM\" ",
+            cmake_flags: '–G\"NMake Makefiles JOM\"',
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
@@ -120,6 +120,9 @@ jobs:
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
         CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
       shell: bash
+
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
 
     - name: Build
       run: |
