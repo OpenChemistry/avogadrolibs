@@ -47,7 +47,7 @@ jobs:
             name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
-            cmake_flags: '–G\"NMake Makefiles JOM\"',
+            cmake_flags: '–G "NMake Makefiles JOM"',
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
@@ -122,6 +122,7 @@ jobs:
       shell: bash
 
     - name: Setup tmate session
+      if: ${{ failure() }}
       uses: mxschmitt/action-tmate@v3
 
     - name: Build
