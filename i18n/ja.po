@@ -2427,7 +2427,9 @@ msgstr ""
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
-msgstr "プレビューテキストを更新しますか? Lammpsインプットプレビュー画面での変更は失われます。"
+msgstr ""
+"プレビューテキストを更新しますか? Lammpsインプットプレビュー画面での変更は失"
+"われます。"
 
 #: qtplugins/licorice/licorice.h:40
 msgid "Licorice"
