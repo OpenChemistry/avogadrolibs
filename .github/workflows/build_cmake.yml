@@ -118,7 +118,7 @@ jobs:
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}} $GITHUB_WORKSPACE
       shell: bash
 
     - name: Setup tmate session
