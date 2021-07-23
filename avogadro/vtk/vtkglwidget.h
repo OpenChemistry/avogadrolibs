@@ -19,7 +19,6 @@
 
 #include "avogadrovtkexport.h"
 
-#include <QVTKOpenGLWidget.h>
 #include <vtkNew.h>
 #include <vtkSmartPointer.h>
 
@@ -27,6 +26,8 @@
 #include <avogadro/rendering/glrenderer.h>
 
 #include <QtCore/QPointer>
+
+#include "qvtkopenglwidget.h"
 
 class vtkActor;
 class vtkColorTransferFunction;

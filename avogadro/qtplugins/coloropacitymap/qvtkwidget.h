@@ -4,7 +4,7 @@
 #ifndef AVOGADRO_QTPLUGINS_QVTKGLWidget_H
 #define AVOGADRO_QTPLUGINS_QVTKGLWidget_H
 
-#include <QVTKOpenGLWidget.h>
+#include <qvtkopenglwidget.h>
 
 namespace Avogadro {
 
@@ -17,7 +17,7 @@ public:
                Qt::WindowFlags f = Qt::WindowFlags());
   ~QVTKGLWidget() override;
 
-  void setEnableHiDPI(bool enable) override;
+  void setEnableHiDPI(bool enable) AVOGADRO_SETENABLEHIDPI_OVERRIDE;
 };
 } // namespace Avogadro
 
