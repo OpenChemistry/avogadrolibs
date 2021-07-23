@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2015 Marcus Johansson <mcodev31@gmail.com>
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "symmetry.h"
@@ -212,6 +201,8 @@ void Symmetry::detectSymmetry()
 
   for (Index i = 0; i < length; ++i) {
     Vector3 ipos = m_molecule->atomPositions3d()[i];
+    // this is yucky, but msym uses type <void*> for id :-(
+    a[i].id = reinterpret_cast<void*>(i);
     a[i].n = m_molecule->atomicNumbers()[i];
     if (a[i].n < 1 || a[i].n > 118)
       a[i].n = 1; // pretend to be an H atom for libmsym
