@@ -77,13 +77,13 @@ public:
 
   void addPoint(const Vector3f& pos, const Vector3ub& color, float radius,
                 size_t i);
+  const std::vector<Line*>& lines() const { return m_lines; };
 
 protected:
   std::vector<Line*> m_lines;
   std::map<size_t, size_t> m_indexMap;
   ShaderInfo m_shaderInfo;
   bool m_dirty;
-  std::vector<size_t> m_factorials;
   bool m_canBeFlat;
 
   virtual void update(int index);

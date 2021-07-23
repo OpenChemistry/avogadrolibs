@@ -51,6 +51,7 @@ public:
   void visit(Drawable&) override;
   void visit(SphereGeometry&) override;
   void visit(AmbientOcclusionSphereGeometry&) override;
+  void visit(CurveGeometry&) override;
   void visit(CylinderGeometry&) override { return; }
   void visit(MeshGeometry&) override { return; }
   void visit(TextLabel2D&) override { return; }
