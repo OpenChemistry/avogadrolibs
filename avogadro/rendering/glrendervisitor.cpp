@@ -17,6 +17,7 @@
 #include "glrendervisitor.h"
 
 #include "ambientocclusionspheregeometry.h"
+#include "curvegeometry.h"
 #include "cylindergeometry.h"
 #include "linestripgeometry.h"
 #include "meshgeometry.h"
@@ -50,6 +51,12 @@ void GLRenderVisitor::visit(SphereGeometry& geometry)
 }
 
 void GLRenderVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
+{
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
+}
+
+void GLRenderVisitor::visit(CurveGeometry& geometry)
 {
   if (geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);

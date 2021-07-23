@@ -145,6 +145,7 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
       void visit(Drawable&) override { return; }
       void visit(SphereGeometry&) override { return; }
       void visit(AmbientOcclusionSphereGeometry&) override { return; }
+      void visit(CurveGeometry&) override { return; }
       void visit(CylinderGeometry&) override { return; }
       void visit(MeshGeometry&) override { return; }
       void visit(Texture2D&) { return; }
