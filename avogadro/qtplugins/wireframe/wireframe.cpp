@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2014 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "wireframe.h"
@@ -22,27 +11,32 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/linestripgeometry.h>
 
+#include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
-#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 namespace Avogadro {
 namespace QtPlugins {
 
+using Core::Array;
 using Core::Elements;
 using Core::Molecule;
-using Core::Array;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
 
 Wireframe::Wireframe(QObject* p)
-  : ScenePlugin(p), m_enabled(false), m_group(nullptr), m_setupWidget(nullptr),
-    m_multiBonds(true), m_showHydrogens(true)
-{
+  : ScenePlugin(p), m_enabled(false), m_group(nullptr), m_setupWidget(nullptr)
+{ 
+  QSettings settings;
+  m_multiBonds = settings.value("wireframe/multiBonds", true).toBool();
+  m_showHydrogens = settings.value("wireframe/showHydrogens", true).toBool();
+  m_lineWidth = settings.value("wireframe/lineWidth", 1.0).toDouble();
 }
 
 Wireframe::~Wireframe()
@@ -53,7 +47,7 @@ Wireframe::~Wireframe()
 
 void Wireframe::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
-  // Add a sphere node to contain all of the spheres.
+  // Add a node to contain all of the lines.
   m_group = &node;
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
@@ -78,7 +72,10 @@ void Wireframe::process(const Molecule& molecule, Rendering::GroupNode& node)
     points.push_back(pos2);
     colors.push_back(color1);
     colors.push_back(color2);
-    lines->addLineStrip(points, colors, 1.0f);
+    float lineWidth = m_lineWidth;
+    if (m_multiBonds)
+      lineWidth *= bond.order();
+    lines->addLineStrip(points,  colors, lineWidth);
   }
 }
 
@@ -97,14 +94,30 @@ QWidget* Wireframe::setupWidget()
   if (!m_setupWidget) {
     m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
     QVBoxLayout* v = new QVBoxLayout;
+
+    // line width
+    QDoubleSpinBox* spin = new QDoubleSpinBox;
+    spin->setRange(0.5, 5.0);
+    spin->setSingleStep(0.25);
+    spin->setDecimals(2);
+    spin->setValue(m_lineWidth);
+    connect(spin, SIGNAL(valueChanged(double)), SLOT(setWidth(double)));
+    QFormLayout* form = new QFormLayout;
+    form->addRow(tr("Line width:"), spin);
+    v->addLayout(form);
+
+    // options
     QCheckBox* check = new QCheckBox(tr("Show multiple bonds?"));
     check->setChecked(m_multiBonds);
     connect(check, SIGNAL(clicked(bool)), SLOT(multiBonds(bool)));
     v->addWidget(check);
+
     check = new QCheckBox(tr("Show hydrogens?"));
     check->setChecked(m_showHydrogens);
     connect(check, SIGNAL(toggled(bool)), SLOT(showHydrogens(bool)));
     v->addWidget(check);
+
+    v->addStretch(1);
     m_setupWidget->setLayout(v);
   }
   return m_setupWidget;
@@ -116,6 +129,8 @@ void Wireframe::multiBonds(bool show)
     m_multiBonds = show;
     emit drawablesChanged();
   }
+  QSettings settings;
+  settings.setValue("wireframe/multiBonds", show);
 }
 
 void Wireframe::showHydrogens(bool show)
@@ -124,6 +139,18 @@ void Wireframe::showHydrogens(bool show)
     m_showHydrogens = show;
     emit drawablesChanged();
   }
+  QSettings settings;
+  settings.setValue("wireframe/showHydrogens", show);
 }
+
+void Wireframe::setWidth(double width)
+{
+  m_lineWidth = float(width);
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("wireframe/lineWidth", m_lineWidth);
 }
-}
+
+} // namespace QtPlugins
+} // namespace Avogadro
