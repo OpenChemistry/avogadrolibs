@@ -24,6 +24,7 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
 
+#include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QHBoxLayout>
@@ -36,15 +37,17 @@ namespace QtPlugins {
 
 using Core::Elements;
 using Core::Molecule;
+using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::SphereGeometry;
-using Rendering::CylinderGeometry;
 
 BallAndStick::BallAndStick(QObject* p)
-  : ScenePlugin(p), m_enabled(true), m_group(nullptr), m_setupWidget(nullptr),
-    m_multiBonds(true), m_showHydrogens(true)
+  : ScenePlugin(p), m_enabled(true), m_group(nullptr), m_setupWidget(nullptr)
 {
+  QSettings settings;
+  m_multiBonds = settings.value("ballandstick/multiBonds", true).toBool();
+  m_showHydrogens = settings.value("ballandstick/showHydrogens", true).toBool();
 }
 
 BallAndStick::~BallAndStick()
@@ -204,14 +207,18 @@ QWidget* BallAndStick::setupWidget()
   if (!m_setupWidget) {
     m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
     QVBoxLayout* v = new QVBoxLayout;
-    QCheckBox* check = new QCheckBox(tr("Show multiple bonds?"));
+
+    QCheckBox* check = new QCheckBox(tr("Show multiple bonds"));
     check->setChecked(m_multiBonds);
     connect(check, SIGNAL(clicked(bool)), SLOT(multiBonds(bool)));
     v->addWidget(check);
-    check = new QCheckBox(tr("Show hydrogens?"));
+
+    check = new QCheckBox(tr("Show hydrogens"));
     check->setChecked(m_showHydrogens);
     connect(check, SIGNAL(toggled(bool)), SLOT(showHydrogens(bool)));
     v->addWidget(check);
+
+    v->addStretch(1);
     m_setupWidget->setLayout(v);
   }
   return m_setupWidget;
@@ -223,6 +230,8 @@ void BallAndStick::multiBonds(bool show)
     m_multiBonds = show;
     emit drawablesChanged();
   }
+  QSettings settings;
+  settings.setValue("BallAndStick/multiBonds", show);
 }
 
 void BallAndStick::showHydrogens(bool show)
@@ -231,6 +240,9 @@ void BallAndStick::showHydrogens(bool show)
     m_showHydrogens = show;
     emit drawablesChanged();
   }
+  QSettings settings;
+  settings.setValue("BallAndStick/showHydrogens", show);
 }
-}
-}
+
+} // namespace QtPlugins
+} // namespace Avogadro

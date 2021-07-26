@@ -107,12 +107,12 @@ QWidget* Wireframe::setupWidget()
     v->addLayout(form);
 
     // options
-    QCheckBox* check = new QCheckBox(tr("Show multiple bonds?"));
+    QCheckBox* check = new QCheckBox(tr("Show multiple bonds"));
     check->setChecked(m_multiBonds);
     connect(check, SIGNAL(clicked(bool)), SLOT(multiBonds(bool)));
     v->addWidget(check);
 
-    check = new QCheckBox(tr("Show hydrogens?"));
+    check = new QCheckBox(tr("Show hydrogens"));
     check->setChecked(m_showHydrogens);
     connect(check, SIGNAL(toggled(bool)), SLOT(showHydrogens(bool)));
     v->addWidget(check);
