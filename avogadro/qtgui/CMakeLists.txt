@@ -32,6 +32,7 @@ configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
 
 set(HEADERS
   backgroundfileformat.h
+  colorbutton.h
   containerwidget.h
   customelementdialog.h
   elementtranslator.h
@@ -62,6 +63,7 @@ set(HEADERS
 
 set(SOURCES
   backgroundfileformat.cpp
+  colorbutton.cpp
   containerwidget.cpp
   customelementdialog.cpp
   elementdetail_p.cpp
