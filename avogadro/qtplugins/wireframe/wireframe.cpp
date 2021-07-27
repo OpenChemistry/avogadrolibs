@@ -10,6 +10,7 @@
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/linestripgeometry.h>
+#include <avogadro/rendering/spheregeometry.h>
 
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
@@ -29,6 +30,7 @@ using Core::Molecule;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
+using Rendering::SphereGeometry;
 
 Wireframe::Wireframe(QObject* p)
   : ScenePlugin(p), m_enabled(false), m_group(nullptr), m_setupWidget(nullptr)
@@ -55,7 +57,12 @@ void Wireframe::process(const Molecule& molecule, Rendering::GroupNode& node)
   LineStripGeometry* lines = new LineStripGeometry;
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
+  auto selectedAtoms = new SphereGeometry;
+  selectedAtoms->setOpacity(0.42);
+  Vector3ub selectedColor(0, 0, 255);
+
   geometry->addDrawable(lines);
+  geometry->addDrawable(selectedAtoms);
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
     if (!m_showHydrogens && (bond.atom1().atomicNumber() == 1 ||
@@ -76,6 +83,10 @@ void Wireframe::process(const Molecule& molecule, Rendering::GroupNode& node)
     if (m_multiBonds)
       lineWidth *= bond.order();
     lines->addLineStrip(points,  colors, lineWidth);
+    if (bond.atom1().selected())
+      selectedAtoms->addSphere(pos1, selectedColor, 0.3f);
+    if (bond.atom2().selected())
+      selectedAtoms->addSphere(pos2, selectedColor, 0.3f);
   }
 }
 

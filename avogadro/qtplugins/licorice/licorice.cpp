@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "licorice.h"
@@ -28,23 +17,20 @@ namespace QtPlugins {
 
 using Core::Elements;
 using Core::Molecule;
+using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::SphereGeometry;
-using Rendering::CylinderGeometry;
 
-Licorice::Licorice(QObject* p) : ScenePlugin(p), m_enabled(false)
-{
-}
+Licorice::Licorice(QObject* p) : ScenePlugin(p), m_enabled(false) {}
 
-Licorice::~Licorice()
-{
-}
+Licorice::~Licorice() {}
 
 void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
   // Use a common radius for all spheres and cylinders.
   float radius(0.2f);
+  float selectedRadius(radius * 2.0f);
 
   // Add a sphere node to contain all of the spheres.
   GeometryNode* geometry = new GeometryNode;
@@ -52,11 +38,21 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
   SphereGeometry* spheres = new SphereGeometry;
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
+  auto selectedSpheres = new SphereGeometry;
+  selectedSpheres->setOpacity(0.42);
   geometry->addDrawable(spheres);
+  geometry->addDrawable(selectedSpheres);
+
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
     Vector3ub color = atom.color();
     spheres->addSphere(atom.position3d().cast<float>(), color, radius);
+
+    if (atom.selected()) {
+      color = Vector3ub(0, 0, 255);
+      selectedSpheres->addSphere(atom.position3d().cast<float>(), color,
+                                 selectedRadius);
+    }
   }
 
   CylinderGeometry* cylinders = new CylinderGeometry;
@@ -86,5 +82,5 @@ void Licorice::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
