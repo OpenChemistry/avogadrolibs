@@ -5,6 +5,7 @@
 
 #include "cartoons.h"
 
+#include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -31,8 +32,8 @@ using Core::Atom;
 using Core::AtomicNumber;
 using Core::Elements;
 using Core::Molecule;
-using Rendering::BezierGeometry;
 using Rendering::BSplineGeometry;
+using Rendering::BezierGeometry;
 using Rendering::Cartoon;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
@@ -61,10 +62,16 @@ typedef list<BackboneResidue> AtomsPairList;
 
 Cartoons::Cartoons(QObject* parent)
   : ScenePlugin(parent), m_group(nullptr), m_setupWidget(nullptr),
-    m_enabled(true), m_showBackbone(true), m_showTrace(false),
-    m_showTube(false), m_showRibbon(false), m_showRope(false),
-    m_showCartoon(true)
-{}
+    m_enabled(true)
+{
+  QSettings settings;
+  m_showBackbone = settings.value("cartoon/backbone", true).toBool();
+  m_showCartoon = settings.value("cartoon/cartoon", true).toBool();
+  m_showTrace = settings.value("cartoon/trace", false).toBool();
+  m_showTube = settings.value("cartoon/tube", false).toBool();
+  m_showRibbon = settings.value("cartoon/ribbon", false).toBool();
+  m_showRope = settings.value("cartoon/rope", false).toBool();
+}
 
 Cartoons::~Cartoons()
 {
@@ -299,8 +306,12 @@ QWidget* Cartoons::setupWidget()
     m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
     QVBoxLayout* v = new QVBoxLayout;
     QStringList boxesText;
-    boxesText << tr("Backbone") << tr("Trace") << tr("Tube") << tr("Ribbon")
-              << tr("Cartoon") << tr("Rope");
+    boxesText << tr("Backbone", "protein rendering style")
+              << tr("Trace", "protein rendering style")
+              << tr("Tube", "protein rendering style")
+              << tr("Ribbon", "protein rendering style")
+              << tr("Cartoon", "protein rendering style")
+              << tr("Rope", "protein rendering style");
     vector<reference_wrapper<bool>> boxesBools = { m_showBackbone, m_showTrace,
                                                    m_showTube,     m_showRibbon,
                                                    m_showCartoon,  m_showRope };
@@ -310,13 +321,15 @@ QWidget* Cartoons::setupWidget()
     m_jumpTable[3] = &Cartoons::showRibbon;
     m_jumpTable[4] = &Cartoons::showCartoon;
     m_jumpTable[5] = &Cartoons::showRope;
-    for (size_t i = 0; i < 6; ++i) {
+    for (size_t i = 0; i < boxesText.size(); ++i) {
       QCheckBox* check = new QCheckBox(boxesText[i]);
       check->setChecked(boxesBools[i]);
       connect(check, &QCheckBox::clicked, this, m_jumpTable[i]);
       v->addWidget(check);
     }
 
+    // make sure there's empty space at the bottom,s otherwise the
+    v->addStretch(1);
     m_setupWidget->setLayout(v);
   }
   return m_setupWidget;
@@ -328,6 +341,8 @@ void Cartoons::showBackbone(bool show)
     m_showBackbone = show;
     emit drawablesChanged();
   }
+  QSettings settings;
+  settings.setValue("cartoon/backbone", show);
 }
 
 void Cartoons::showTrace(bool show)
@@ -336,6 +351,8 @@ void Cartoons::showTrace(bool show)
     m_showTrace = show;
     emit drawablesChanged();
   }
+  QSettings settings;
+  settings.setValue("cartoon/trace", show);
 }
 
 void Cartoons::showTube(bool show)
@@ -344,6 +361,8 @@ void Cartoons::showTube(bool show)
     m_showTube = show;
     emit drawablesChanged();
   }
+  QSettings settings;
+  settings.setValue("cartoon/tube", show);
 }
 
 void Cartoons::showRibbon(bool show)
@@ -352,6 +371,8 @@ void Cartoons::showRibbon(bool show)
     m_showRibbon = show;
     emit drawablesChanged();
   }
+  QSettings settings;
+  settings.setValue("cartoon/ribbon", show);
 }
 
 void Cartoons::showCartoon(bool show)
@@ -360,6 +381,8 @@ void Cartoons::showCartoon(bool show)
     m_showCartoon = show;
     emit drawablesChanged();
   }
+  QSettings settings;
+  settings.setValue("cartoon/cartoon", show);
 }
 
 void Cartoons::showRope(bool show)
@@ -368,6 +391,8 @@ void Cartoons::showRope(bool show)
     m_showRope = show;
     emit drawablesChanged();
   }
+  QSettings settings;
+  settings.setValue("cartoon/rope", show);
 }
 
 } // namespace QtPlugins
