@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "overlayaxes.h"
@@ -26,6 +15,7 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
+#include <QtCore/QSettings>
 #include <QtWidgets/QAction>
 
 #include <Eigen/Geometry>
@@ -242,11 +232,16 @@ void OverlayAxes::RenderImpl::addAxis(const Vector3f& axis,
 }
 
 OverlayAxes::OverlayAxes(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_enabled(false),
+  : Avogadro::QtGui::ExtensionPlugin(parent_),
     m_render(new RenderImpl),
     m_axesAction(new QAction(tr("Reference Axes"), this))
 {
-  connect(m_axesAction, SIGNAL(triggered()), SLOT(procesAxis()));
+  connect(m_axesAction, SIGNAL(triggered()), SLOT(processAxis()));
+
+  QSettings settings;
+  m_enabled = settings.value("overlayAxes/enabled", true).toBool();
+  m_axesAction->setCheckable(true);
+  m_axesAction->setChecked(m_enabled);
 }
 
 OverlayAxes::~OverlayAxes()
@@ -265,9 +260,13 @@ QStringList OverlayAxes::menuPath(QAction*) const
   return QStringList() << tr("&View");
 }
 
-void OverlayAxes::procesAxis()
+void OverlayAxes::processAxis()
 {
   m_enabled = !m_enabled;
+  QSettings settings;
+  settings.setValue("overlayAxes/enabled", m_enabled);
+  m_axesAction->setChecked(m_enabled);
+
   Rendering::GroupNode* engineNode = m_widgetToNode[m_glWidget];
   GroupNode& node = m_scene->rootNode();
   if (node.hasChild(engineNode)) {
