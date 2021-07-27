@@ -47,7 +47,7 @@ void VanDerWaals::process(const Core::Molecule& molecule,
     spheres->addSphere(atom.position3d().cast<float>(), color, radius);
     if (atom.selected()) {
       color = Vector3ub(0, 0, 255);
-      radius += 0.2f;
+      radius += 0.3f;
       selectedSpheres->addSphere(atom.position3d().cast<float>(), color,
                                  radius);
     }

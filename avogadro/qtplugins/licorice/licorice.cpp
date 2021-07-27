@@ -30,7 +30,7 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
   // Use a common radius for all spheres and cylinders.
   float radius(0.2f);
-  float selectedRadius(radius * 1.5f);
+  float selectedRadius(radius * 2.0f);
 
   // Add a sphere node to contain all of the spheres.
   GeometryNode* geometry = new GeometryNode;
