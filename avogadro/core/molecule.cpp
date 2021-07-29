@@ -929,6 +929,14 @@ bool Molecule::setAtomicNumbers(const Core::Array<unsigned char>& nums)
 {
   if (nums.size() == atomCount()) {
     m_atomicNumbers = nums;
+
+    // update colors too
+    if (nums.size() == m_colors.size()) {
+      for (Index i = 0; i < nums.size(); ++i) {
+        m_colors[i] = Vector3ub(Elements::color(atomicNumber(i)));
+      }
+    }
+
     return true;
   }
   return false;
@@ -938,6 +946,11 @@ bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
 {
   if (atomId < atomCount()) {
     m_atomicNumbers[atomId] = number;
+
+    // update colors too
+    if (atomId < m_colors.size())
+      m_colors[atomId] = Vector3ub(Elements::color(number));
+
     return true;
   }
   return false;
