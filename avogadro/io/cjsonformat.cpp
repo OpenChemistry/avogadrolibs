@@ -619,6 +619,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     json colors;
 
     Vector3ub color;
+    bool hasCustomColors = molecule.colors().size() == molecule.atomCount();
     for (Index i = 0; i < molecule.atomCount(); ++i) {
       elements.push_back(molecule.atom(i).atomicNumber());
       selected.push_back(molecule.atomSelected(i));
@@ -631,7 +632,8 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     root["atoms"]["elements"]["number"] = elements;
     if (!molecule.isSelectionEmpty())
       root["atoms"]["selected"] = selected;
-    root["atoms"]["colors"] = colors;
+    if (hasCustomColors)
+      root["atoms"]["colors"] = colors;
 
     // 3d positions:
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
