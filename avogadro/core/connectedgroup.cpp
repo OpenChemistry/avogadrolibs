@@ -25,6 +25,21 @@ ConnectedGroup::ConnectedGroup(size_t n) : m_groupToNode(n)
   resetToSize(n);
 }
 
+void ConnectedGroup::resizeGroups(size_t n)
+{
+  m_groupToNode.resize(n, std::set<size_t>());
+}
+
+void ConnectedGroup::addGroup(size_t group)
+{
+  for (auto& nodeGroup : m_nodeToGroup) {
+    if (nodeGroup.second >= group) {
+      ++nodeGroup.second;
+    }
+  }
+  m_groupToNode.insert(m_groupToNode.begin() + group, std::set<size_t>());
+}
+
 ConnectedGroup::~ConnectedGroup() {}
 
 void ConnectedGroup::addNode(size_t index)
@@ -37,11 +52,36 @@ void ConnectedGroup::addNode(size_t index)
   }
 }
 
+void ConnectedGroup::addNode(size_t node, size_t group)
+{
+  assert(group < m_groupToNode.size());
+  auto it = m_nodeToGroup.find(node);
+  // if node already exists, remove it
+  if (it == m_nodeToGroup.end()) {
+    m_nodeToGroup[node] = group;
+    m_groupToNode[group].insert(node);
+  } else {
+    auto old_group = m_nodeToGroup[node];
+    m_nodeToGroup[node] = group;
+
+    m_groupToNode[old_group].erase(node);
+    m_groupToNode[group].insert(node);
+  }
+}
+
 void ConnectedGroup::addNodes(size_t n)
 {
   size_t offset = m_nodeToGroup.size();
   for (size_t i = 0; i < n; ++i) {
     addNode(i + offset);
+  }
+}
+
+void ConnectedGroup::addNodes(size_t n, size_t group)
+{
+  size_t offset = m_nodeToGroup.size();
+  for (size_t i = 0; i < n; ++i) {
+    addNode(i + offset, group);
   }
 }
 
@@ -64,10 +104,13 @@ void ConnectedGroup::addConnection(size_t a, size_t b)
 
 void ConnectedGroup::removeNode(size_t index)
 {
-  assert(m_nodeToGroup.find(index) != m_nodeToGroup.end());
-  removeConnection(index);
-  size_t group = m_nodeToGroup[index];
-  m_nodeToGroup.erase(group);
+  auto it = m_nodeToGroup.find(index);
+  if (it != m_nodeToGroup.end()) {
+    size_t group = it->second;
+    m_nodeToGroup.erase(it);
+    m_groupToNode[group].erase(index);
+    checkRemove(m_groupToNode);
+  }
 }
 
 void ConnectedGroup::removeConnections()
@@ -106,6 +149,24 @@ void ConnectedGroup::removeConnection(size_t a, size_t b,
   checkRemove(m_groupToNode);
 }
 
+void ConnectedGroup::removeGroup(size_t group)
+{
+  assert(group < m_nodeToGroup.size());
+  auto it = m_nodeToGroup.begin();
+  while (it != m_nodeToGroup.end()) {
+    if (it->second > group) {
+      --it->second;
+      ++it;
+    } else if (it->second == group) {
+      it = m_nodeToGroup.erase(it);
+    } else {
+      ++it;
+    }
+  }
+
+  m_groupToNode.erase(m_groupToNode.begin() + group);
+}
+
 void ConnectedGroup::clear()
 {
   m_nodeToGroup.clear();
@@ -142,9 +203,19 @@ size_t ConnectedGroup::groupCount() const
   return m_groupToNode.size();
 }
 
+size_t ConnectedGroup::nodesCount() const
+{
+  return m_nodeToGroup.size();
+}
+
 size_t ConnectedGroup::getGroupSize(size_t node) const
 {
   return m_groupToNode.at(m_nodeToGroup.at(node)).size();
+}
+
+bool ConnectedGroup::hasAtom(size_t atom) const
+{
+  return m_nodeToGroup.find(atom) != m_nodeToGroup.end();
 }
 
 } // namespace Core

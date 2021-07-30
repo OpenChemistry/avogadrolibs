@@ -33,6 +33,7 @@ set(HEADERS
   gaussianset.h
   gaussiansettools.h
   graph.h
+  layer.h
   matrix.h
   mesh.h
   molecule.h
@@ -66,6 +67,7 @@ set(SOURCES
   gaussianset.cpp
   gaussiansettools.cpp
   graph.cpp
+  layer.cpp
   mesh.cpp
   mdlvalence_p.h
   molecule.cpp

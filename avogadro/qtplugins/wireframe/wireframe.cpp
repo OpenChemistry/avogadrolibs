@@ -6,7 +6,7 @@
 #include "wireframe.h"
 
 #include <avogadro/core/elements.h>
-#include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/linestripgeometry.h>
@@ -14,10 +14,10 @@
 
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLabel>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFormLayout>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -26,19 +26,20 @@ namespace QtPlugins {
 
 using Core::Array;
 using Core::Elements;
-using Core::Molecule;
+using QtGui::LayerManager;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
 using Rendering::SphereGeometry;
 
 Wireframe::Wireframe(QObject* p)
-  : ScenePlugin(p), m_enabled(false), m_group(nullptr), m_setupWidget(nullptr)
-{ 
+  : ScenePlugin(p), m_group(nullptr), m_setupWidget(nullptr)
+{
   QSettings settings;
   m_multiBonds = settings.value("wireframe/multiBonds", true).toBool();
   m_showHydrogens = settings.value("wireframe/showHydrogens", true).toBool();
   m_lineWidth = settings.value("wireframe/lineWidth", 1.0).toDouble();
+  m_layerManager = LayerManager(name());
 }
 
 Wireframe::~Wireframe()
@@ -47,7 +48,8 @@ Wireframe::~Wireframe()
     m_setupWidget->deleteLater();
 }
 
-void Wireframe::process(const Molecule& molecule, Rendering::GroupNode& node)
+void Wireframe::process(const QtGui::Molecule& molecule,
+                        Rendering::GroupNode& node)
 {
   // Add a node to contain all of the lines.
   m_group = &node;
@@ -65,6 +67,10 @@ void Wireframe::process(const Molecule& molecule, Rendering::GroupNode& node)
   geometry->addDrawable(selectedAtoms);
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
+    if (!m_layerManager.bondEnabled(bond.atom1().index(),
+                                    bond.atom2().index())) {
+      continue;
+    }
     if (!m_showHydrogens && (bond.atom1().atomicNumber() == 1 ||
                              bond.atom2().atomicNumber() == 1)) {
       continue;
@@ -82,22 +88,12 @@ void Wireframe::process(const Molecule& molecule, Rendering::GroupNode& node)
     float lineWidth = m_lineWidth;
     if (m_multiBonds)
       lineWidth *= bond.order();
-    lines->addLineStrip(points,  colors, lineWidth);
+    lines->addLineStrip(points, colors, lineWidth);
     if (bond.atom1().selected())
-      selectedAtoms->addSphere(pos1, selectedColor, 0.3f);
+      selectedAtoms->addSphere(pos1, selectedColor, 0.3f, i);
     if (bond.atom2().selected())
-      selectedAtoms->addSphere(pos2, selectedColor, 0.3f);
+      selectedAtoms->addSphere(pos2, selectedColor, 0.3f, i);
   }
-}
-
-bool Wireframe::isEnabled() const
-{
-  return m_enabled;
-}
-
-void Wireframe::setEnabled(bool enable)
-{
-  m_enabled = enable;
 }
 
 QWidget* Wireframe::setupWidget()

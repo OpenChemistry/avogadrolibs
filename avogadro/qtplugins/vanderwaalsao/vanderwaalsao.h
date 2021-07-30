@@ -35,7 +35,7 @@ public:
   explicit VanDerWaalsAO(QObject* parent = nullptr);
   ~VanDerWaalsAO() override;
 
-  void process(const Core::Molecule& molecule,
+  void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("Van der Waals (AO)"); }
@@ -45,14 +45,9 @@ public:
     return tr("Simple display of VdW spheres with ambient occlusion.");
   }
 
-  bool isEnabled() const override;
-
-  void setEnabled(bool enable) override;
-
 private:
-  bool m_enabled;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_VANDERWAALSAO_H

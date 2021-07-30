@@ -7,9 +7,14 @@
 #define AVOGADRO_QTPLUGINS_CARTOONS_H
 
 #include <avogadro/qtgui/sceneplugin.h>
+#include <list>
+#include <map>
 
 namespace Avogadro {
 namespace QtPlugins {
+
+struct BackboneResidue;
+typedef std::list<BackboneResidue> AtomsPairList;
 
 class Cartoons : public QtGui::ScenePlugin
 {
@@ -19,11 +24,8 @@ public:
   explicit Cartoons(QObject* parent = 0);
   ~Cartoons() override;
 
-  void process(const Core::Molecule& molecule,
+  void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
-
-  void processEditable(const QtGui::RWMolecule& molecule,
-                       Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("Cartoons"); }
 
@@ -31,10 +33,6 @@ public:
   {
     return tr("Simple display of Cartoons family.");
   }
-
-  bool isEnabled() const override;
-
-  void setEnabled(bool enable) override;
 
   QWidget* setupWidget() override;
 
@@ -54,8 +52,6 @@ private slots:
   void showRope(bool show);
 
 private:
-  bool m_enabled;
-
   Rendering::GroupNode* m_group;
 
   QWidget* m_setupWidget;
@@ -67,6 +63,11 @@ private:
   bool m_showRope;
   typedef void (Cartoons::*JumpTable)(bool);
   JumpTable m_jumpTable[6];
+
+  std::map<size_t, AtomsPairList> getBackboneByResidues(
+    const QtGui::Molecule& molecule);
+  std::map<size_t, AtomsPairList> getBackboneManually(
+    const QtGui::Molecule& molecule);
 };
 } // namespace QtPlugins
 } // namespace Avogadro

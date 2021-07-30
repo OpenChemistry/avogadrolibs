@@ -21,7 +21,6 @@
 #include <avogadro/rendering/spheregeometry.h>
 
 #include <functional>
-#include <list>
 #include <utility>
 #include <vector>
 
@@ -31,9 +30,10 @@ namespace QtPlugins {
 using Core::Atom;
 using Core::AtomicNumber;
 using Core::Elements;
-using Core::Molecule;
-using Rendering::BSplineGeometry;
+using QtGui::LayerManager;
+using QtGui::Molecule;
 using Rendering::BezierGeometry;
+using Rendering::BSplineGeometry;
 using Rendering::Cartoon;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
@@ -61,8 +61,7 @@ struct BackboneResidue
 typedef list<BackboneResidue> AtomsPairList;
 
 Cartoons::Cartoons(QObject* parent)
-  : ScenePlugin(parent), m_group(nullptr), m_setupWidget(nullptr),
-    m_enabled(true)
+  : ScenePlugin(parent), m_group(nullptr), m_setupWidget(nullptr)
 {
   QSettings settings;
   m_showBackbone = settings.value("cartoon/backbone", true).toBool();
@@ -71,6 +70,8 @@ Cartoons::Cartoons(QObject* parent)
   m_showTube = settings.value("cartoon/tube", false).toBool();
   m_showRibbon = settings.value("cartoon/ribbon", false).toBool();
   m_showRope = settings.value("cartoon/rope", false).toBool();
+
+  m_layerManager = LayerManager(name());
 }
 
 Cartoons::~Cartoons()
@@ -117,7 +118,8 @@ void addBackBone(map<size_t, AtomsPairList>& result,
   result[group].push_back(backBone);
 }
 
-map<size_t, AtomsPairList> getBackboneByResidues(const Molecule& molecule)
+map<size_t, AtomsPairList> Cartoons::getBackboneByResidues(
+  const Molecule& molecule)
 {
   const auto& graph = molecule.graph();
   map<size_t, AtomsPairList> result;
@@ -127,6 +129,10 @@ map<size_t, AtomsPairList> getBackboneByResidues(const Molecule& molecule)
       Atom caAtom = residue.getAtomByName("CA");
       Atom oAtom = residue.getAtomByName("O");
       if (caAtom.isValid() && oAtom.isValid()) {
+        if (!m_layerManager.atomEnabled(caAtom.index()) ||
+            !m_layerManager.atomEnabled(oAtom.index())) {
+          continue;
+        }
         // get the group ID and check if it's initialized in the map
         size_t group = graph.getConnectedID(caAtom.index());
         addBackBone(result, previousCA, caAtom, oAtom, group);
@@ -136,7 +142,8 @@ map<size_t, AtomsPairList> getBackboneByResidues(const Molecule& molecule)
   return result;
 }
 
-map<size_t, AtomsPairList> getBackboneManually(const Molecule& molecule)
+map<size_t, AtomsPairList> Cartoons::getBackboneManually(
+  const Molecule& molecule)
 {
   // manual filter
   // const auto& graph = molecule.graph();
@@ -158,6 +165,9 @@ map<size_t, AtomsPairList> getBackboneManually(const Molecule& molecule)
           aux = bond->atom2();
           break;
         }
+      }
+      if (!m_layerManager.atomEnabled(aux.index())) {
+        continue;
       }
       if (aux.isValid()) {
         size_t group = 0; // graph.getConnectedID(atom.index());
@@ -284,20 +294,6 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
       ++i;
     }
   }
-}
-
-void Cartoons::processEditable(const QtGui::RWMolecule& molecule,
-                               Rendering::GroupNode& node)
-{}
-
-bool Cartoons::isEnabled() const
-{
-  return m_enabled;
-}
-
-void Cartoons::setEnabled(bool enable)
-{
-  m_enabled = enable;
 }
 
 QWidget* Cartoons::setupWidget()

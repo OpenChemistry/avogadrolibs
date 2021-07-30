@@ -19,22 +19,39 @@
 namespace Avogadro {
 namespace QtGui {
 
-ScenePlugin::ScenePlugin(QObject* parent_) : QObject(parent_)
-{
-}
+ScenePlugin::ScenePlugin(QObject* parent_) : QObject(parent_) {}
 
-ScenePlugin::~ScenePlugin()
-{
-}
+ScenePlugin::~ScenePlugin() {}
 
-void ScenePlugin::processEditable(const RWMolecule&, Rendering::GroupNode&)
-{
-}
+void ScenePlugin::process(const Core::Molecule& molecule,
+                          Rendering::GroupNode& node)
+{}
+
+void ScenePlugin::process(const QtGui::Molecule& molecule,
+                          Rendering::GroupNode& node)
+{}
+
+void ScenePlugin::processEditable(const RWMolecule&, Rendering::GroupNode&) {}
 
 QWidget* ScenePlugin::setupWidget()
 {
   return nullptr;
 }
 
-} // End QtGui namespace
-} // End Avogadro namespace
+bool ScenePlugin::isEnabled() const
+{
+  return m_layerManager.isEnabled();
+}
+
+bool ScenePlugin::isActiveLayerEnabled() const
+{
+  return m_layerManager.isActiveLayerEnabled();
+}
+
+void ScenePlugin::setEnabled(bool enable)
+{
+  m_layerManager.setEnabled(enable);
+}
+
+} // namespace QtGui
+} // namespace Avogadro

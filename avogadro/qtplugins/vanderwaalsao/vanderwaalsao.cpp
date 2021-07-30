@@ -18,7 +18,7 @@
 #include "vanderwaalsao.h"
 
 #include <avogadro/core/elements.h>
-#include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/ambientocclusionspheregeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
@@ -27,19 +27,19 @@ namespace Avogadro {
 namespace QtPlugins {
 
 using Core::Elements;
+using QtGui::LayerManager;
+using Rendering::AmbientOcclusionSphereGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
-using Rendering::AmbientOcclusionSphereGeometry;
 
-VanDerWaalsAO::VanDerWaalsAO(QObject* p) : ScenePlugin(p), m_enabled(false)
+VanDerWaalsAO::VanDerWaalsAO(QObject* p) : ScenePlugin(p)
 {
+  m_layerManager = LayerManager(name());
 }
 
-VanDerWaalsAO::~VanDerWaalsAO()
-{
-}
+VanDerWaalsAO::~VanDerWaalsAO() {}
 
-void VanDerWaalsAO::process(const Core::Molecule& molecule,
+void VanDerWaalsAO::process(const QtGui::Molecule& molecule,
                             Rendering::GroupNode& node)
 {
   // Add a sphere node to contain all of the VdW spheres.
@@ -52,22 +52,17 @@ void VanDerWaalsAO::process(const Core::Molecule& molecule,
 
   for (size_t i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
+    if (!m_layerManager.atomEnabled(i)) {
+      continue;
+    }
     unsigned char atomicNumber = atom.atomicNumber();
     const unsigned char* c = Elements::color(atomicNumber);
     Vector3ub color(c[0], c[1], c[2]);
     spheres->addSphere(atom.position3d().cast<float>(), color,
-                       static_cast<float>(Elements::radiusVDW(atomicNumber)));
+                       static_cast<float>(Elements::radiusVDW(atomicNumber)),
+                       i);
   }
 }
 
-bool VanDerWaalsAO::isEnabled() const
-{
-  return m_enabled;
-}
-
-void VanDerWaalsAO::setEnabled(bool enable)
-{
-  m_enabled = enable;
-}
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

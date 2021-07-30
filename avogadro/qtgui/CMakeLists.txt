@@ -44,6 +44,8 @@ set(HEADERS
   interfacescript.h
   interfacewidget.h
   jsonwidget.h
+  layermodel.h
+  layermanager.h
   meshgenerator.h
   molecule.h
   moleculemodel.h
@@ -77,6 +79,8 @@ set(SOURCES
   interfacescript.cpp
   interfacewidget.cpp
   jsonwidget.cpp
+  layermodel.cpp
+  layermanager.cpp
   meshgenerator.cpp
   molecule.cpp
   moleculemodel.cpp

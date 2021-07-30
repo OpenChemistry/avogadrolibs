@@ -29,7 +29,7 @@
 namespace {
 #include "spheres_fs.h"
 #include "spheres_vs.h"
-}
+} // namespace
 
 #include "avogadrogl.h"
 
@@ -59,15 +59,12 @@ public:
   size_t numberOfIndices;
 };
 
-SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private)
-{
-}
+SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private) {}
 
 SphereGeometry::SphereGeometry(const SphereGeometry& other)
   : Drawable(other), m_spheres(other.m_spheres), m_indices(other.m_indices),
     m_dirty(true), d(new Private)
-{
-}
+{}
 
 SphereGeometry::~SphereGeometry()
 {
@@ -94,12 +91,12 @@ void SphereGeometry::update()
     std::vector<size_t>::const_iterator itIndex = m_indices.begin();
     std::vector<SphereColor>::const_iterator itSphere = m_spheres.begin();
 
-    for (unsigned int i = 0;
+    for (size_t i = 0;
          itIndex != m_indices.end() && itSphere != m_spheres.end();
          ++i, ++itIndex, ++itSphere) {
       // Use our packed data structure...
       float r = itSphere->radius;
-      unsigned int index = 4 * static_cast<unsigned int>(*itIndex);
+      unsigned int index = 4 * static_cast<unsigned int>(i);
       ColorTextureVertex vert(itSphere->center, itSphere->color,
                               Vector2f(-r, -r));
       sphereVertices.push_back(vert);
@@ -229,17 +226,17 @@ std::multimap<float, Identifier> SphereGeometry::hits(
     float D = B * B - C;
 
     // Test for intersection
-    if (D < 0)
+    if (D < 0.0f)
       continue;
 
     // Test for clipping
-    if (B < 0 || (sphere.center - rayEnd).dot(rayDirection) > 0)
+    if (B < 0.0f || (sphere.center - rayEnd).dot(rayDirection) > 0.0f)
       continue;
 
     Identifier id;
     id.molecule = m_identifier.molecule;
     id.type = m_identifier.type;
-    id.index = i;
+    id.index = m_indices[i];
     if (id.type != InvalidType) {
       float rootD = static_cast<float>(sqrt(D));
       float depth = std::min(std::abs(B + rootD), std::abs(B - rootD));
@@ -269,7 +266,7 @@ Array<Identifier> SphereGeometry::areaHits(const Frustrum& f) const
       Identifier id;
       id.molecule = m_identifier.molecule;
       id.type = m_identifier.type;
-      id.index = i;
+      id.index = m_indices[i];
       result.push_back(id);
     }
   }
@@ -277,11 +274,11 @@ Array<Identifier> SphereGeometry::areaHits(const Frustrum& f) const
 }
 
 void SphereGeometry::addSphere(const Vector3f& position, const Vector3ub& color,
-                               float radius)
+                               float radius, size_t index)
 {
   m_dirty = true;
   m_spheres.push_back(SphereColor(position, radius, color));
-  m_indices.push_back(m_indices.size());
+  m_indices.push_back(index == MaxIndex ? m_indices.size() : index);
 }
 
 void SphereGeometry::clear()

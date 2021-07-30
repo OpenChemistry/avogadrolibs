@@ -23,7 +23,7 @@ public:
   explicit Licorice(QObject* parent = nullptr);
   ~Licorice() override;
 
-  void process(const Core::Molecule& molecule,
+  void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("Licorice"); }
@@ -32,13 +32,6 @@ public:
   {
     return tr("Render atoms as licorice / sticks.");
   }
-
-  bool isEnabled() const override;
-
-  void setEnabled(bool enable) override;
-
-private:
-  bool m_enabled;
 };
 
 } // end namespace QtPlugins

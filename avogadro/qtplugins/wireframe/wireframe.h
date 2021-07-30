@@ -22,7 +22,7 @@ public:
   explicit Wireframe(QObject* parent = nullptr);
   ~Wireframe() override;
 
-  void process(const Core::Molecule& molecule,
+  void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("Wireframe"); }
@@ -32,10 +32,6 @@ public:
     return tr("Render the molecule as a wireframe.");
   }
 
-  bool isEnabled() const override;
-
-  void setEnabled(bool enable) override;
-
   QWidget* setupWidget() override;
 
 private slots:
@@ -44,8 +40,6 @@ private slots:
   void setWidth(double width);
 
 private:
-  bool m_enabled;
-
   Rendering::GroupNode* m_group;
 
   QWidget* m_setupWidget;
