@@ -69,6 +69,8 @@ private:
   mutable int m_rowCount;
   QtGui::Molecule* m_molecule;
 
+  QString secStructure(unsigned int type) const;
+
   /*
    * For each category (atom, bond etc), an enum specifies which columns hold
    * which data.

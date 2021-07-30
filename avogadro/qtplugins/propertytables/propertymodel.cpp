@@ -28,6 +28,8 @@ using std::numeric_limits;
 using std::pair;
 using std::vector;
 
+using SecondaryStructure = Avogadro::Core::Residue::SecondaryStructure;
+
 const int AtomColumns = 6;    // element, valence, x, y, z, color
 const int BondColumns = 5;    // type, atom 1, atom 2, bond order, length
 const int AngleColumns = 5;   // type, atom 1, atom 2, atom 3, angle
@@ -224,11 +226,11 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case ResidueDataChain:
         return QString(residue.chainId());
       case ResidueDataSecStructure:
-        return residue.secondaryStructure(); // TODO map to strings
+        return secStructure(residue.secondaryStructure()); // TODO map to strings
       case ResidueDataHeterogen:
         return QString(residue.isHeterogen() ? "X" : "");
       default:
-        return QVariant() ;
+        return QVariant();
     }
   }
 
@@ -352,6 +354,30 @@ void PropertyModel::moleculeChanged()
   }
   beginInsertRows(QModelIndex(), 0, rowCount() - 1);
   endInsertRows();
+}
+
+QString PropertyModel::secStructure(unsigned int type) const
+{
+  switch (type) {
+    case SecondaryStructure::piHelix:
+      return tr("π Helix", "pi helix");
+    case SecondaryStructure::bend:
+      return tr("Bend", "protein bend secondary structure");
+    case SecondaryStructure::alphaHelix:
+      return tr("α Helix", "alpha helix");
+    case SecondaryStructure::betaSheet:
+      return tr("β Sheet", "beta sheet");
+    case SecondaryStructure::helix310:
+      return tr("3-10 helix", "3-10 helix");
+    case SecondaryStructure::betaBridge:
+      return tr("β Bridge", "beta bridge");
+    case SecondaryStructure::turn:
+      return tr("Turn", "protein turn secondary structure");
+    case SecondaryStructure::coil:
+      return tr("Coil", "protein coil secondary structure");
+    default:
+      return QString(); // implied unknown
+  }
 }
 
 /*  void PropertyModel::updateTable()
