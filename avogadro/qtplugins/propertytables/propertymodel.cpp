@@ -17,6 +17,7 @@
 
 #include <QBrush>
 #include <QColor>
+#include <QDebug>
 
 #include <limits>
 
@@ -86,13 +87,11 @@ int PropertyModel::columnCount(const QModelIndex& parent) const
   return 0;
 }
 
+// Qt calls this for multiple "roles" across row / columns in the index
+//   we also combine multiple types into this class, so lots of special cases
 QVariant PropertyModel::data(const QModelIndex& index, int role) const
 {
-
   if (!index.isValid())
-    return QVariant();
-
-  if (role != Qt::UserRole && role != Qt::DisplayRole)
     return QVariant();
 
   int row = index.row();
@@ -103,22 +102,22 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     if (m_type == ConformerType) {
       return Qt::AlignRight + Qt::AlignVCenter; // energies
     } else if (m_type == AtomType) {
-      if (index.column() == 3)
+      if (index.column() == AtomDataCharge)
         return Qt::AlignRight + Qt::AlignVCenter; // partial charge
       else
         return Qt::AlignHCenter + Qt::AlignVCenter;
     } else if (m_type == BondType) {
-      if (index.column() >= 5)
+      if (index.column() == BondDataLength)
         return Qt::AlignRight + Qt::AlignVCenter; // bond length
       else
         return Qt::AlignHCenter + Qt::AlignVCenter;
     } else if (m_type == AngleType) {
-      if (index.column() >= 4)
+      if (index.column() == AngleDataValue)
         return Qt::AlignRight + Qt::AlignVCenter; // angle
       else
         return Qt::AlignHCenter + Qt::AlignVCenter;
     } else if (m_type == TorsionType) {
-      if (index.column() >= 5)
+      if (index.column() == TorsionDataValue)
         return Qt::AlignRight + Qt::AlignVCenter; // dihedral angle
       else
         return Qt::AlignHCenter + Qt::AlignVCenter;
@@ -145,6 +144,9 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
   bool sortRole =
     (role == Qt::UserRole); // from the proxy model to handle floating-point
+
+  if (role != Qt::UserRole && role != Qt::DisplayRole)
+    return QVariant();
 
   //  if (!m_validCache)
   //    updateCache();
@@ -225,6 +227,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return residue.secondaryStructure(); // TODO map to strings
       case ResidueDataHeterogen:
         return QString(residue.isHeterogen() ? "X" : "");
+      default:
+        return QVariant() ;
     }
   }
 

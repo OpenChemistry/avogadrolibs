@@ -83,6 +83,8 @@ private:
     AtomDataY,
     AtomDataZ,
     AtomDataColor,
+    AtomDataCharge,
+    AtomDataCustom,
   };
 
   // Bond Data
@@ -91,7 +93,8 @@ private:
     BondDataType = 0,
     BondDataAtom1,
     BondDataAtom2,
-    BondDataOrder
+    BondDataOrder,
+    BondDataLength
   };
 
   // Angle Data
@@ -101,7 +104,7 @@ private:
     AngleDataAtom1,
     AngleDataAtom2,
     AngleDataAtom3,
-    AngleDataAngle
+    AngleDataValue
   };
 
   // Torsion Data
@@ -112,7 +115,7 @@ private:
     TorsionDataAtom2,
     TorsionDataAtom3,
     TorsionDataAtom4,
-    TorsionDataAngle
+    TorsionDataValue
   };
 
   // Conformer Data
