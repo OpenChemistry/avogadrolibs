@@ -64,8 +64,8 @@ struct LayerCartoon : Core::LayerData
   {
     return boolToString(showBackbone) + " " + boolToString(showTrace) + " " +
            boolToString(showTube) + " " + boolToString(showRibbon) + " " +
-           boolToString(showSimpleCartoon) + " " +
-           boolToString(showCartoon) + " " + boolToString(showRope);
+           boolToString(showSimpleCartoon) + " " + boolToString(showCartoon) +
+           " " + boolToString(showRope);
   }
   void deserialize(std::string text) override final
   {
@@ -100,10 +100,10 @@ struct LayerCartoon : Core::LayerData
                 << QObject::tr("Simple Cartoon", "protein rendering style")
                 << QObject::tr("Cartoon", "protein rendering style")
                 << QObject::tr("Rope", "protein rendering style");
-      vector<reference_wrapper<bool>> boxesBools = { showBackbone, showTrace,
-                                                     showTube,     showRibbon,
-                                                     showSimpleCartoon,
-                                                     showCartoon,  showRope };
+      vector<reference_wrapper<bool>> boxesBools = {
+        showBackbone,      showTrace,   showTube, showRibbon,
+        showSimpleCartoon, showCartoon, showRope
+      };
       jumpTable[0] = &Cartoons::showBackbone;
       jumpTable[1] = &Cartoons::showTrace;
       jumpTable[2] = &Cartoons::showTube;
@@ -206,11 +206,9 @@ map<size_t, AtomsPairList> Cartoons::getBackboneByResidues(
     if (!residue.isHeterogen()) {
       Atom caAtom = residue.getAtomByName("CA");
       Atom oAtom = residue.getAtomByName("O");
-      if (caAtom.isValid() && oAtom.isValid()) {
-        if (!m_layerManager.atomEnabled(layer, caAtom.index()) ||
-            !m_layerManager.atomEnabled(layer, oAtom.index())) {
-          continue;
-        }
+      if (caAtom.isValid() && oAtom.isValid() &&
+          m_layerManager.atomEnabled(layer, caAtom.index()) &&
+          m_layerManager.atomEnabled(layer, oAtom.index())) {
         // get the group ID and check if it's initialized in the map
         size_t group = graph.getConnectedID(caAtom.index());
         addBackBone(result, previousCA, caAtom, residue.color(), group,
@@ -231,7 +229,8 @@ map<size_t, AtomsPairList> Cartoons::getBackboneManually(
 
   for (size_t i = 0; i < molecule.atomCount(); ++i) {
     const auto atom = molecule.atom(i);
-    if (atom.atomicNumber() == AtomicNumber::Carbon) {
+    if (atom.atomicNumber() == AtomicNumber::Carbon &&
+        m_layerManager.atomEnabled(layer, atom.index())) {
       size_t group = graph.getConnectedID(atom.index());
       addBackBone(result, previousCA, atom, atom.color(), group,
                   Residue::SecondaryStructure::undefined);
@@ -354,11 +353,12 @@ void renderCartoon(const AtomsPairList& backbone, const Molecule& molecule,
 
 void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
+  m_group = &node;
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
     LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>(layer);
-    m_group = &node;
     if (interface.showBackbone || interface.showTrace || interface.showTube ||
-        interface.showRibbon || interface.showCartoon || interface.showRope) {
+        interface.showRibbon || interface.showSimpleCartoon ||
+        interface.showCartoon || interface.showRope) {
       map<size_t, AtomsPairList> backbones;
       if (molecule.residues().size() > 0) {
         backbones = getBackboneByResidues(molecule, layer);
@@ -373,23 +373,23 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
           renderBackbone(backbone, molecule, node, 0.1f);
         }
         if (interface.showTrace) {
-          renderTube(backbone, molecule, node, -0.15f, i);
+          renderTube(backbone, molecule, node, -0.15f);
         }
         if (interface.showTube) {
-          renderTube(backbone, molecule, node, 0.15f, i);
+          renderTube(backbone, molecule, node, 0.15f);
         }
         if (interface.showRibbon) {
-          renderCartoon(backbone, molecule, node, -1.0f * Cartoon::ELIPSE_RATIO,
-                        i);
-        } 
+          renderCartoon(backbone, molecule, node,
+                        -1.0f * Cartoon::ELIPSE_RATIO);
+        }
         if (interface.showSimpleCartoon) {
           renderSimpleCartoon(backbone, molecule, node, 1.0f);
         }
         if (interface.showCartoon) {
-          renderCartoon(backbone, molecule, node, 1.0f, i);
+          renderCartoon(backbone, molecule, node, 1.0f);
         }
         if (interface.showRope) {
-          renderRope(backbone, molecule, node, 1.0f, i);
+          renderRope(backbone, molecule, node, 1.0f);
         }
         ++i;
       }
@@ -450,8 +450,9 @@ void Cartoons::showRibbon(bool show)
 
 void Cartoons::showSimpleCartoon(bool show)
 {
-  if (show != m_showSimpleCartoon) {
-    m_showSimpleCartoon = show;
+  LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface.showSimpleCartoon) {
+    interface.showSimpleCartoon = show;
     emit drawablesChanged();
   }
   QSettings settings;
