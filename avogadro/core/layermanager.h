@@ -14,6 +14,7 @@
 #include <cassert>
 #include <map>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace Avogadro {
@@ -30,11 +31,7 @@ struct LayerData
   LayerData(std::string save = "") { deserialize(save); }
 
   /** save custom data, base save should never be called */
-  virtual std::string serialize()
-  {
-    assert(true);
-    return "";
-  }
+  virtual std::string serialize() { return ""; }
 
   /** load the saved @p save data and wait to know the class type to recreate it
    */
