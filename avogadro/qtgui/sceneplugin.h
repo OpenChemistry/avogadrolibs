@@ -20,7 +20,7 @@
 #include "avogadroqtguiexport.h"
 
 #include <avogadro/core/avogadrocore.h>
-#include <avogadro/qtgui/layermanager.h>
+#include <avogadro/core/layermanager.h>
 #include <avogadro/qtplugins/pluginfactory.h>
 
 #include <QtCore/QObject>
@@ -97,7 +97,7 @@ signals:
   void drawablesChanged();
 
 protected:
-  QtGui::LayerManager m_layerManager;
+  Core::LayerManager m_layerManager;
 };
 
 /**

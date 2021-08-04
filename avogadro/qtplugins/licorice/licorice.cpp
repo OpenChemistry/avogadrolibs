@@ -16,7 +16,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 using Core::Elements;
-using QtGui::LayerManager;
+using Core::LayerManager;
 using QtGui::Molecule;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
@@ -25,7 +25,7 @@ using Rendering::SphereGeometry;
 
 Licorice::Licorice(QObject* p) : ScenePlugin(p)
 {
-  m_layerManager = LayerManager(name());
+  m_layerManager = LayerManager(m_name);
 }
 
 Licorice::~Licorice() {}

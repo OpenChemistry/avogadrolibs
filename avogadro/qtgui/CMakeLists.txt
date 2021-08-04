@@ -45,7 +45,7 @@ set(HEADERS
   interfacewidget.h
   jsonwidget.h
   layermodel.h
-  layermanager.h
+  rwlayermanager.h
   meshgenerator.h
   molecule.h
   moleculemodel.h
@@ -80,7 +80,7 @@ set(SOURCES
   interfacewidget.cpp
   jsonwidget.cpp
   layermodel.cpp
-  layermanager.cpp
+  rwlayermanager.cpp
   meshgenerator.cpp
   molecule.cpp
   moleculemodel.cpp

@@ -26,7 +26,7 @@ namespace QtPlugins {
 
 using Core::Array;
 using Core::Elements;
-using QtGui::LayerManager;
+using Core::LayerManager;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
@@ -39,7 +39,7 @@ Wireframe::Wireframe(QObject* p)
   m_multiBonds = settings.value("wireframe/multiBonds", true).toBool();
   m_showHydrogens = settings.value("wireframe/showHydrogens", true).toBool();
   m_lineWidth = settings.value("wireframe/lineWidth", 1.0).toDouble();
-  m_layerManager = LayerManager(name());
+  m_layerManager = LayerManager(m_name);
 }
 
 Wireframe::~Wireframe()

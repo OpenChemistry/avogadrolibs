@@ -35,7 +35,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 using Core::Elements;
-using QtGui::LayerManager;
+using Core::LayerManager;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
@@ -47,7 +47,7 @@ BallAndStick::BallAndStick(QObject* p)
   QSettings settings;
   m_multiBonds = settings.value("ballandstick/multiBonds", true).toBool();
   m_showHydrogens = settings.value("ballandstick/showHydrogens", true).toBool();
-  m_layerManager = LayerManager(name());
+  m_layerManager = LayerManager(m_name);
 }
 
 BallAndStick::~BallAndStick()

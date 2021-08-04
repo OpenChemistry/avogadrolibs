@@ -7,10 +7,10 @@
 #define AVOGADRO_QTGUI_LAYERMODEL_H
 
 #include "avogadroqtguiexport.h"
+#include "rwlayermanager.h"
 
 #include <Eigen/Geometry>
 #include <QtCore/QAbstractItemModel>
-#include <avogadro/qtgui/layermanager.h>
 
 namespace Avogadro {
 namespace QtGui {
@@ -23,7 +23,7 @@ class RWMolecule;
  * @brief
  */
 class AVOGADROQTGUI_EXPORT LayerModel : public QAbstractItemModel,
-                                        public QtGui::LayerManager
+                                        public QtGui::RWLayerManager
 {
   Q_OBJECT
 public:

@@ -25,7 +25,7 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Wireframe"); }
+  QString name() const override { return tr(m_name.c_str()); }
 
   QString description() const override
   {
@@ -46,6 +46,7 @@ private:
   bool m_multiBonds;
   bool m_showHydrogens;
   float m_lineWidth;
+  std::string m_name = "Wireframe";
 };
 
 } // end namespace QtPlugins

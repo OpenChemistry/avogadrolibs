@@ -29,6 +29,7 @@ public:
   size_t getLayerID(Index atom) const;
   size_t activeLayer() const;
   size_t maxLayer() const;
+  size_t atomCount() const;
 
   void clear();
   void addLayer();

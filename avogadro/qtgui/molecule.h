@@ -23,7 +23,6 @@
 #include "persistentbond.h"
 
 #include <avogadro/core/avogadrocore.h>
-#include <avogadro/core/layer.h>
 #include <avogadro/core/molecule.h>
 
 #include <QtCore/QObject>
@@ -233,11 +232,6 @@ public:
   void swapBond(Index a, Index b);
   void swapAtom(Index a, Index b);
 
-  std::list<Index> getAtomsAtLayer(size_t layer);
-
-  Core::Layer& layer();
-  const Core::Layer& layer() const;
-
 public slots:
   /**
    * @brief Force the molecule to emit the changed() signal.
@@ -259,7 +253,6 @@ signals:
 private:
   Core::Array<Index> m_atomUniqueIds;
   Core::Array<Index> m_bondUniqueIds;
-  Core::Layer& m_layers;
 
   friend class RWMolecule;
 

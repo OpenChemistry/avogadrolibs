@@ -93,6 +93,11 @@ size_t Layer::maxLayer() const
   return m_maxLayer;
 }
 
+size_t Layer::atomCount() const
+{
+  return m_atomAndLayers.size();
+}
+
 void Layer::removeLayer(size_t layer)
 {
   assert(layer <= m_maxLayer);

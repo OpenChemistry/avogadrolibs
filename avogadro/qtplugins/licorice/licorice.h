@@ -26,12 +26,15 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Licorice"); }
+  QString name() const override { return tr(m_name.c_str()); }
 
   QString description() const override
   {
     return tr("Render atoms as licorice / sticks.");
   }
+
+private:
+  std::string m_name = "Licorice";
 };
 
 } // end namespace QtPlugins

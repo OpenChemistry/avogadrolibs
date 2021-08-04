@@ -12,8 +12,8 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/vector.h>
 
+#include <avogadro/core/layermanager.h>
 #include <avogadro/qtgui/hydrogentools.h>
-#include <avogadro/qtgui/layermanager.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -50,7 +50,7 @@ const unsigned char INVALID_ATOMIC_NUMBER =
 namespace Avogadro {
 namespace QtPlugins {
 
-using QtGui::LayerManager;
+using Core::LayerManager;
 using QtGui::Molecule;
 using QtGui::RWAtom;
 using QtGui::RWBond;
@@ -568,14 +568,15 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   if (!m_newObject.isValid()) {
     // Add a new atom bonded to the clicked atom
     RWAtom clickedAtom = m_molecule->atom(m_clickedObject.index);
-    newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber(), clickedAtom.position3d());
+    newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber(),
+                                  clickedAtom.position3d());
 
     // Handle the automatic bond order
     int bondOrder = m_toolWidget->bondOrder();
     if (bondOrder == 0) {
       // automatic - guess the size
       bondOrder = expectedBondOrder(clickedAtom, newAtom);
-    } 
+    }
     m_molecule->addBond(clickedAtom, newAtom, bondOrder);
 
     // now if we need to adjust hydrogens, do it

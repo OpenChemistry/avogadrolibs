@@ -30,7 +30,7 @@ namespace QtPlugins {
 using Core::Atom;
 using Core::AtomicNumber;
 using Core::Elements;
-using QtGui::LayerManager;
+using Core::LayerManager;
 using QtGui::Molecule;
 using Rendering::BezierGeometry;
 using Rendering::BSplineGeometry;
@@ -71,7 +71,7 @@ Cartoons::Cartoons(QObject* parent)
   m_showRibbon = settings.value("cartoon/ribbon", false).toBool();
   m_showRope = settings.value("cartoon/rope", false).toBool();
 
-  m_layerManager = LayerManager(name());
+  m_layerManager = LayerManager(m_name);
 }
 
 Cartoons::~Cartoons()

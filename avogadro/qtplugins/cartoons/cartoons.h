@@ -27,7 +27,7 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Cartoons"); }
+  QString name() const override { return tr(m_name.c_str()); }
 
   QString description() const override
   {
@@ -53,7 +53,7 @@ private slots:
 
 private:
   Rendering::GroupNode* m_group;
-
+  std::string m_name = "Cartoons";
   QWidget* m_setupWidget;
   bool m_showBackbone;
   bool m_showTrace;

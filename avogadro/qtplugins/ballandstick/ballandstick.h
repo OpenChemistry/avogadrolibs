@@ -37,7 +37,7 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Ball and Stick"); }
+  QString name() const override { return tr(m_name.c_str()); }
 
   QString description() const override
   {
@@ -52,7 +52,7 @@ private slots:
 
 private:
   Rendering::GroupNode* m_group;
-
+  std::string m_name = "Ball and Stick";
   QWidget* m_setupWidget;
   bool m_multiBonds;
   bool m_showHydrogens;

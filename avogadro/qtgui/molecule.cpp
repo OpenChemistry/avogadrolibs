@@ -17,26 +17,23 @@
 #include "molecule.h"
 #include "rwmolecule.h"
 
-#include <avogadro/qtgui/layermanager.h>
+#include <iostream>
 
 namespace Avogadro {
 namespace QtGui {
 
-using QtGui::LayerManager;
 using std::swap;
 
 Molecule::Molecule(QObject* parent_)
   : QObject(parent_),
-    m_undoMolecule(new RWMolecule(*this, this)), Core::Molecule(),
-    m_layers(LayerManager::getMoleculeLayer(this))
+    m_undoMolecule(new RWMolecule(*this, this)), Core::Molecule()
 {
   m_undoMolecule->setInteractive(true);
 }
 
 Molecule::Molecule(const Molecule& other)
   : QObject(), Core::Molecule(other),
-    m_undoMolecule(new RWMolecule(*this, this)),
-    m_layers(LayerManager::getMoleculeLayer(&other, this))
+    m_undoMolecule(new RWMolecule(*this, this))
 {
   m_undoMolecule->setInteractive(true);
   // Now assign the unique ids
@@ -48,8 +45,7 @@ Molecule::Molecule(const Molecule& other)
 }
 
 Molecule::Molecule(const Core::Molecule& other)
-  : QObject(), Core::Molecule(other),
-    m_layers(LayerManager::getMoleculeLayer(&other, this))
+  : QObject(), Core::Molecule(other)
 {
   // Now assign the unique ids
   for (Index i = 0; i < atomCount(); i++)
@@ -68,8 +64,6 @@ Molecule& Molecule::operator=(const Molecule& other)
   m_atomUniqueIds = other.m_atomUniqueIds;
   m_bondUniqueIds = other.m_bondUniqueIds;
 
-  m_layers = LayerManager::getMoleculeLayer(&other, this);
-
   return *this;
 }
 
@@ -87,26 +81,14 @@ Molecule& Molecule::operator=(const Core::Molecule& other)
   for (Index i = 0; i < bondCount(); ++i)
     m_bondUniqueIds.push_back(i);
 
-  m_layers = LayerManager::getMoleculeLayer(&other, this);
-
   return *this;
 }
 
 Molecule::~Molecule() {}
 
-Core::Layer& Molecule::layer()
-{
-  return m_layers;
-}
-const Core::Layer& Molecule::layer() const
-{
-  return m_layers;
-}
-
 Molecule::AtomType Molecule::addAtom(unsigned char number)
 {
   m_atomUniqueIds.push_back(atomCount());
-  m_layers.addAtomToActiveLayer(atomCount());
   AtomType a = Core::Molecule::addAtom(number);
   return a;
 }
@@ -117,7 +99,6 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Index uniqueId)
       m_atomUniqueIds[uniqueId] != MaxIndex) {
     return AtomType();
   }
-  m_layers.addAtomToActiveLayer(atomCount());
   m_atomUniqueIds[uniqueId] = atomCount();
   AtomType a = Core::Molecule::addAtom(number);
   return a;
@@ -126,7 +107,6 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Index uniqueId)
 Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
 {
   m_atomUniqueIds.push_back(atomCount());
-  m_layers.addAtomToActiveLayer(atomCount());
   return Core::Molecule::addAtom(number, position3d);
 }
 
@@ -139,7 +119,6 @@ bool Molecule::removeAtom(Index index)
     return false;
   // Unique ID of an atom that was removed:
   m_atomUniqueIds[uniqueId] = MaxIndex;
-  m_layers.removeAtom(index);
   Index newSize = static_cast<Index>(atomCount() - 1);
 
   // Before removing the atom we must first remove any bonds to it.
@@ -225,7 +204,6 @@ void Molecule::swapAtom(Index a, Index b)
   Index uniqueA = findAtomUniqueId(a);
   Index uniqueB = findAtomUniqueId(b);
   assert(uniqueA != MaxIndex && uniqueB != MaxIndex);
-  m_layers.swapLayer(a, b);
   swap(m_atomUniqueIds[uniqueA], m_atomUniqueIds[uniqueB]);
   Core::Molecule::swapAtom(a, b);
 }
@@ -323,18 +301,6 @@ Index Molecule::findBondUniqueId(Index index) const
 RWMolecule* Molecule::undoMolecule()
 {
   return m_undoMolecule;
-}
-
-std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
-{
-  std::list<Index> result;
-  // get the index in decreasing order so deleting won't corrupt data
-  for (Index i = atomCount(); i > 0; --i) {
-    if (m_layers.getLayerID(i - 1) == layer) {
-      result.push_back(i - 1);
-    }
-  }
-  return result;
 }
 
 } // namespace QtGui

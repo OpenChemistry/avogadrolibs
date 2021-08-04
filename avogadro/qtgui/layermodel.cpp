@@ -15,6 +15,7 @@ namespace Avogadro {
 namespace QtGui {
 
 using Core::Layer;
+using Core::LayerManager;
 
 const int LayerModel::QTTY_COLUMNS = 6;
 
@@ -65,7 +66,7 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
     }
     return QVariant();
   }
-  auto name = names[idx.row()].second.toStdString();
+  auto name = tr(names[idx.row()].second.c_str()).toStdString();
   auto layer = names[idx.row()].first;
   bool isLayer = name == tr("Layer").toStdString();
   if (isLayer) {
@@ -127,7 +128,7 @@ QModelIndex LayerModel::index(int row, int column, const QModelIndex& p) const
 void LayerModel::addLayer(RWMolecule* rwmolecule)
 {
   addItem();
-  LayerManager::addLayer(rwmolecule);
+  RWLayerManager::addLayer(rwmolecule);
 }
 
 void LayerModel::addItem()
@@ -161,7 +162,7 @@ void LayerModel::setActiveLayer(int index, RWMolecule* rwmolecule)
 {
   auto names = activeMoleculeNames();
   assert(index < names.size());
-  LayerManager::setActiveLayer(names[index].first, rwmolecule);
+  RWLayerManager::setActiveLayer(names[index].first, rwmolecule);
   updateRows();
 }
 void LayerModel::removeItem(int row, RWMolecule* rwmolecule)

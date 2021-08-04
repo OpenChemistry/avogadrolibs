@@ -38,7 +38,7 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Van der Waals (AO)"); }
+  QString name() const override { return tr(m_name.c_str()); }
 
   QString description() const override
   {
@@ -46,6 +46,7 @@ public:
   }
 
 private:
+  std::string m_name = "Van der Waals (AO)";
 };
 } // namespace QtPlugins
 } // namespace Avogadro

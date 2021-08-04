@@ -34,6 +34,7 @@ set(HEADERS
   gaussiansettools.h
   graph.h
   layer.h
+  layermanager.h
   matrix.h
   mesh.h
   molecule.h
@@ -68,6 +69,7 @@ set(SOURCES
   gaussiansettools.cpp
   graph.cpp
   layer.cpp
+  layermanager.cpp
   mesh.cpp
   mdlvalence_p.h
   molecule.cpp
