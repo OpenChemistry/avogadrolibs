@@ -8,9 +8,13 @@
 
 #include "avogadroqtguiexport.h"
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/layermanager.h>
 
 namespace Avogadro {
+namespace Core {
+class Molecule;
+}
 namespace QtGui {
 
 class RWMolecule;
@@ -21,6 +25,16 @@ public:
   void removeLayer(size_t layer, RWMolecule* rwmolecule);
   void addLayer(RWMolecule* rwmolecule);
   void setActiveLayer(size_t layer, RWMolecule* rwmolecule);
+
+protected:
+  bool visible(size_t layer) const;
+  bool locked(size_t layer) const;
+  void flipVisible(size_t layer);
+  void flipLocked(size_t layer);
+
+  void addMolecule(const Core::Molecule* mol);
+
+  Core::Array<std::pair<size_t, std::string>> activeMoleculeNames() const;
 };
 
 } // namespace QtGui

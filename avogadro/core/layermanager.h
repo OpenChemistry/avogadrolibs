@@ -8,15 +8,35 @@
 
 #include "avogadrocore.h"
 
-#include "array.h"
 #include "layer.h"
 
+#include <cassert>
+#include <map>
 #include <memory>
+#include <vector>
 
 namespace Avogadro {
 namespace Core {
 
 class Molecule;
+struct LayerData
+{
+  LayerData(std::string save = "") { load(save); }
+  virtual std::string save()
+  {
+    assert(true);
+    return "";
+  }
+  virtual void load(std::string save) { m_save = save; }
+  virtual ~LayerData() = default;
+
+  std::string getSave() const { return m_save; }
+
+protected:
+  std::string boolToString(bool b) { return b ? "true" : "false"; }
+  bool stringToBool(std::string b) { return b == "true"; }
+  std::string m_save;
+};
 
 struct MoleculeInfo
 {
@@ -24,6 +44,7 @@ struct MoleculeInfo
   std::vector<bool> visible;
   std::vector<bool> locked;
   std::map<std::string, std::vector<bool>> enable;
+  std::map<std::string, std::vector<LayerData*>> settings;
   Layer layer;
 
   MoleculeInfo(const Molecule* m) : mol(m)
@@ -44,38 +65,21 @@ struct MoleculeInfo
 class AVOGADROCORE_EXPORT LayerManager
 {
 public:
-  LayerManager();
-  LayerManager(const std::string& name);
-
   // active Layer
-  static Core::Layer& getMoleculeLayer();
-  static Core::Layer& getMoleculeLayer(const Core::Molecule* mol);
-  static std::shared_ptr<MoleculeInfo> getMoleculeInfo();
-  static std::shared_ptr<MoleculeInfo> getMoleculeInfo(
-    const Core::Molecule* mol);
-  static void deleteMolecule(const Core::Molecule* mol);
-  static Core::Layer& getMoleculeLayer(const Core::Molecule* original,
-                                       const Core::Molecule* copy);
-  static bool activeLayerLocked();
+  static Layer& getMoleculeLayer();
+  static Layer& getMoleculeLayer(const Molecule* mol);
+  static Layer& getMoleculeLayer(const Molecule* original,
+                                 const Molecule* copy);
 
-  bool isEnabled() const;
-  bool isActiveLayerEnabled() const;
-  void setEnabled(bool enable);
-  bool atomEnabled(Index atom) const;
-  bool bondEnabled(Index atom1, Index atom2) const;
-  size_t layerCount() const;
+  static std::shared_ptr<MoleculeInfo> getMoleculeInfo();
+  static std::shared_ptr<MoleculeInfo> getMoleculeInfo(const Molecule* mol);
+
+  static void deleteMolecule(const Molecule* mol);
+  static size_t layerCount();
 
 protected:
-  bool visible(size_t layer) const;
-  bool locked(size_t layer) const;
-  void flipVisible(size_t layer);
-  void flipLocked(size_t layer);
-  void addMolecule(const Molecule* mol);
-  Core::Array<std::pair<size_t, std::string>> activeMoleculeNames() const;
-
   static const Molecule* m_activeMolecule;
   static std::map<const Molecule*, std::shared_ptr<MoleculeInfo>> m_molToInfo;
-  std::string m_name;
 };
 
 } // namespace Core

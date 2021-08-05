@@ -34,18 +34,13 @@ public:
 
   QWidget* setupWidget() override;
 
-private slots:
+public slots:
   void multiBonds(bool show);
   void showHydrogens(bool show);
   void setWidth(double width);
 
 private:
   Rendering::GroupNode* m_group;
-
-  QWidget* m_setupWidget;
-  bool m_multiBonds;
-  bool m_showHydrogens;
-  float m_lineWidth;
   std::string m_name = "Wireframe";
 };
 

@@ -1,0 +1,138 @@
+/******************************************************************************
+  This source file is part of the Avogadro project.
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
+
+#include "pluginlayermanager.h"
+
+#include <cassert>
+#include <iostream>
+#include <vector>
+
+namespace Avogadro {
+namespace QtGui {
+
+using Core::LayerData;
+using std::string;
+using std::vector;
+
+PluginLayerManager::PluginLayerManager(const string& name) : m_name(name) {}
+
+PluginLayerManager::~PluginLayerManager()
+{
+  for (auto& info : m_molToInfo) {
+    auto itEnable = info.second->enable.find(m_name);
+    if (itEnable != info.second->enable.end()) {
+      info.second->enable.erase(itEnable);
+    }
+
+    auto itSettings = info.second->settings.find(m_name);
+    if (itSettings != info.second->settings.end()) {
+      info.second->settings.erase(itSettings);
+    }
+  }
+}
+
+bool PluginLayerManager::isEnabled() const
+{
+  if (m_activeMolecule == nullptr ||
+      m_molToInfo[m_activeMolecule]->enable.find(m_name) ==
+        m_molToInfo[m_activeMolecule]->enable.end()) {
+    return false;
+  }
+  for (const auto& b : m_molToInfo[m_activeMolecule]->enable[m_name]) {
+    if (b) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool PluginLayerManager::isActiveLayerEnabled() const
+{
+  if (m_activeMolecule == nullptr ||
+      m_molToInfo[m_activeMolecule]->enable.find(m_name) ==
+        m_molToInfo[m_activeMolecule]->enable.end()) {
+    return false;
+  }
+  auto& molecule = m_molToInfo[m_activeMolecule];
+  size_t active = molecule->layer.activeLayer();
+  if (active < molecule->enable[m_name].size()) {
+    return molecule->enable[m_name][active];
+  }
+  return false;
+}
+
+void PluginLayerManager::setEnabled(bool enable)
+{
+  if (m_activeMolecule == nullptr) {
+    return;
+  }
+  auto& molecule = m_molToInfo[m_activeMolecule];
+  auto it = molecule->enable.find(m_name);
+  if (it == molecule->enable.end()) {
+    molecule->enable[m_name] = vector<bool>();
+  }
+  size_t qttyLayers = molecule->layer.maxLayer() + 1;
+  if (molecule->enable[m_name].size() != qttyLayers) {
+    molecule->enable[m_name].resize(qttyLayers, false);
+  }
+
+  size_t activeLayer = molecule->layer.activeLayer();
+  molecule->enable[m_name][activeLayer] = enable;
+}
+
+bool PluginLayerManager::atomEnabled(Index atom) const
+{
+  if (m_activeMolecule == nullptr ||
+      m_molToInfo[m_activeMolecule]->enable.find(m_name) ==
+        m_molToInfo[m_activeMolecule]->enable.end()) {
+    return false;
+  }
+  auto& molecule = m_molToInfo[m_activeMolecule];
+  size_t layer = molecule->layer.getLayerID(atom);
+  if (layer == MaxIndex) {
+    return false;
+  }
+  return layer < molecule->enable[m_name].size() &&
+         molecule->enable[m_name][layer] && molecule->visible[layer];
+}
+
+size_t PluginLayerManager::getLayerID(Index atom) const
+{
+  assert(m_activeMolecule != nullptr);
+  auto& molecule = m_molToInfo[m_activeMolecule];
+  assert(atom < molecule->layer.atomCount());
+  return molecule->layer.getLayerID(atom);
+}
+
+bool PluginLayerManager::atomEnabled(size_t layerFilter, Index atom) const
+{
+  bool enabled = atomEnabled(atom);
+  if (!enabled) {
+    return false;
+  }
+  auto& molecule = m_molToInfo[m_activeMolecule];
+  size_t layer = molecule->layer.getLayerID(atom);
+  return layer == layerFilter;
+}
+
+bool PluginLayerManager::bondEnabled(Index atom1, Index atom2) const
+{
+  return atomEnabled(atom1) || atomEnabled(atom2);
+}
+
+bool PluginLayerManager::activeLayerLocked()
+{
+  assert(m_activeMolecule != nullptr);
+  auto& molecule = m_molToInfo[m_activeMolecule];
+  size_t active = molecule->layer.activeLayer();
+  return molecule->locked[active];
+}
+
+size_t PluginLayerManager::count() const
+{
+  return layerCount();
+}
+} // namespace QtGui
+} // namespace Avogadro

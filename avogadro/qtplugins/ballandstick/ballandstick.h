@@ -46,16 +46,13 @@ public:
 
   QWidget* setupWidget() override;
 
-private slots:
+public slots:
   void multiBonds(bool show);
   void showHydrogens(bool show);
 
 private:
   Rendering::GroupNode* m_group;
   std::string m_name = "Ball and Stick";
-  QWidget* m_setupWidget;
-  bool m_multiBonds;
-  bool m_showHydrogens;
 };
 
 } // end namespace QtPlugins

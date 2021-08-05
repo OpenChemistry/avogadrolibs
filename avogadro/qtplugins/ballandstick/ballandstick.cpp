@@ -35,26 +35,76 @@ namespace Avogadro {
 namespace QtPlugins {
 
 using Core::Elements;
-using Core::LayerManager;
+using QtGui::PluginLayerManager;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 
-BallAndStick::BallAndStick(QObject* p)
-  : ScenePlugin(p), m_group(nullptr), m_setupWidget(nullptr)
+struct LayerBallAndStick : Core::LayerData
 {
-  QSettings settings;
-  m_multiBonds = settings.value("ballandstick/multiBonds", true).toBool();
-  m_showHydrogens = settings.value("ballandstick/showHydrogens", true).toBool();
-  m_layerManager = LayerManager(m_name);
+  QWidget* widget;
+  bool multiBonds;
+  bool showHydrogens;
+
+  LayerBallAndStick()
+  {
+    widget = nullptr;
+    QSettings settings;
+    multiBonds = settings.value("ballandstick/multiBonds", true).toBool();
+    showHydrogens = settings.value("ballandstick/showHydrogens", true).toBool();
+  }
+
+  ~LayerBallAndStick()
+  {
+    if (widget)
+      widget->deleteLater();
+  }
+
+  std::string save() override final
+  {
+    return boolToString(multiBonds) + " " + boolToString(showHydrogens);
+  }
+  void load(std::string text) override final
+  {
+    std::stringstream ss(text);
+    std::string aux;
+    ss >> aux;
+    multiBonds = stringToBool(aux);
+    ss >> aux;
+    showHydrogens = stringToBool(aux);
+  }
+
+  void setupWidget(BallAndStick* slot)
+  {
+    if (!widget) {
+      widget = new QWidget(qobject_cast<QWidget*>(slot->parent()));
+      QVBoxLayout* v = new QVBoxLayout;
+
+      QCheckBox* check = new QCheckBox(QObject::tr("Show multiple bonds"));
+      check->setChecked(multiBonds);
+      QObject::connect(check, &QCheckBox::clicked, slot,
+                       &BallAndStick::multiBonds);
+      v->addWidget(check);
+
+      check = new QCheckBox(QObject::tr("Show hydrogens"));
+      check->setChecked(showHydrogens);
+      QObject::connect(check, &QCheckBox::clicked, slot,
+                       &BallAndStick::showHydrogens);
+      v->addWidget(check);
+
+      v->addStretch(1);
+      widget->setLayout(v);
+    }
+  }
+};
+
+BallAndStick::BallAndStick(QObject* p) : ScenePlugin(p), m_group(nullptr)
+{
+  m_layerManager = PluginLayerManager(m_name);
 }
 
-BallAndStick::~BallAndStick()
-{
-  if (m_setupWidget)
-    m_setupWidget->deleteLater();
-}
+BallAndStick::~BallAndStick() {}
 
 void BallAndStick::process(const QtGui::Molecule& molecule,
                            Rendering::GroupNode& node)
@@ -77,7 +127,9 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
       continue;
     }
     unsigned char atomicNumber = atom.atomicNumber();
-    if (atomicNumber == 1 && !m_showHydrogens)
+    LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>(
+      m_layerManager.getLayerID(i));
+    if (atomicNumber == 1 && !interface.showHydrogens)
       continue;
     Vector3ub color = atom.color();
     float radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
@@ -102,8 +154,17 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
                                     bond.atom2().index())) {
       continue;
     }
-    if (!m_showHydrogens && (bond.atom1().atomicNumber() == 1 ||
-                             bond.atom2().atomicNumber() == 1)) {
+
+    LayerBallAndStick& interface1 =
+      m_layerManager.getSetting<LayerBallAndStick>(
+        m_layerManager.getLayerID(bond.atom1().index()));
+    LayerBallAndStick& interface2 =
+      m_layerManager.getSetting<LayerBallAndStick>(
+        m_layerManager.getLayerID(bond.atom2().index()));
+
+    if (!interface1.showHydrogens && !interface2.showHydrogens &&
+        (bond.atom1().atomicNumber() == 1 ||
+         bond.atom2().atomicNumber() == 1)) {
       continue;
     }
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
@@ -113,7 +174,7 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
     Vector3f bondVector = pos2 - pos1;
     float bondLength = bondVector.norm();
     bondVector /= bondLength;
-    switch (m_multiBonds ? bond.order() : 1) {
+    switch (interface1.multiBonds || interface2.multiBonds ? bond.order() : 1) {
       case 3: {
         Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
         cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius, color1,
@@ -138,30 +199,16 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
 
 QWidget* BallAndStick::setupWidget()
 {
-  if (!m_setupWidget) {
-    m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
-    QVBoxLayout* v = new QVBoxLayout;
-
-    QCheckBox* check = new QCheckBox(tr("Show multiple bonds"));
-    check->setChecked(m_multiBonds);
-    connect(check, SIGNAL(clicked(bool)), SLOT(multiBonds(bool)));
-    v->addWidget(check);
-
-    check = new QCheckBox(tr("Show hydrogens"));
-    check->setChecked(m_showHydrogens);
-    connect(check, SIGNAL(toggled(bool)), SLOT(showHydrogens(bool)));
-    v->addWidget(check);
-
-    v->addStretch(1);
-    m_setupWidget->setLayout(v);
-  }
-  return m_setupWidget;
+  LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>();
+  interface.setupWidget(this);
+  return interface.widget;
 }
 
 void BallAndStick::multiBonds(bool show)
 {
-  if (show != m_multiBonds) {
-    m_multiBonds = show;
+  LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>();
+  if (show != interface.multiBonds) {
+    interface.multiBonds = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -170,8 +217,9 @@ void BallAndStick::multiBonds(bool show)
 
 void BallAndStick::showHydrogens(bool show)
 {
-  if (show != m_showHydrogens) {
-    m_showHydrogens = show;
+  LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>();
+  if (show != interface.showHydrogens) {
+    interface.showHydrogens = show;
     emit drawablesChanged();
   }
   QSettings settings;

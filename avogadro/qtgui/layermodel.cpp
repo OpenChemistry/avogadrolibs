@@ -153,7 +153,7 @@ void LayerModel::updateRows()
 
 void LayerModel::addMolecule(const Molecule* mol)
 {
-  LayerManager::addMolecule(mol);
+  RWLayerManager::addMolecule(mol);
   m_item = 0;
   updateRows();
 }
@@ -183,13 +183,13 @@ void LayerModel::flipVisible(size_t row)
 {
   auto names = activeMoleculeNames();
   auto layer = names[row].first;
-  LayerManager::flipVisible(layer);
+  RWLayerManager::flipVisible(layer);
 }
 void LayerModel::flipLocked(size_t row)
 {
   auto names = activeMoleculeNames();
   auto layer = names[row].first;
-  LayerManager::flipLocked(layer);
+  RWLayerManager::flipLocked(layer);
 }
 
 } // namespace QtGui

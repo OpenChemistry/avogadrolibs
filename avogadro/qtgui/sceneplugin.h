@@ -19,8 +19,8 @@
 
 #include "avogadroqtguiexport.h"
 
+#include "pluginlayermanager.h"
 #include <avogadro/core/avogadrocore.h>
-#include <avogadro/core/layermanager.h>
 #include <avogadro/qtplugins/pluginfactory.h>
 
 #include <QtCore/QObject>
@@ -97,7 +97,7 @@ signals:
   void drawablesChanged();
 
 protected:
-  Core::LayerManager m_layerManager;
+  PluginLayerManager m_layerManager;
 };
 
 /**

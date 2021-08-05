@@ -12,9 +12,9 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/vector.h>
 
-#include <avogadro/core/layermanager.h>
 #include <avogadro/qtgui/hydrogentools.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/pluginlayermanager.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
 #include <avogadro/qtopengl/glwidget.h>
@@ -50,8 +50,8 @@ const unsigned char INVALID_ATOMIC_NUMBER =
 namespace Avogadro {
 namespace QtPlugins {
 
-using Core::LayerManager;
 using QtGui::Molecule;
+using QtGui::PluginLayerManager;
 using QtGui::RWAtom;
 using QtGui::RWBond;
 using QtGui::RWMolecule;
@@ -96,7 +96,7 @@ QUndoCommand* Editor::mousePressEvent(QMouseEvent* e)
 
   if (m_pressedButtons & Qt::LeftButton) {
     m_clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
-    if (LayerManager::activeLayerLocked()) {
+    if (PluginLayerManager::activeLayerLocked()) {
       e->accept();
       return nullptr;
     }
@@ -140,7 +140,7 @@ QUndoCommand* Editor::mouseReleaseEvent(QMouseEvent* e)
 {
   if (!m_renderer || !m_molecule)
     return nullptr;
-  if (LayerManager::activeLayerLocked()) {
+  if (PluginLayerManager::activeLayerLocked()) {
     e->accept();
     return nullptr;
   }
@@ -174,7 +174,7 @@ QUndoCommand* Editor::mouseMoveEvent(QMouseEvent* e)
     return nullptr;
   if (m_pressedButtons & Qt::LeftButton)
     if (m_clickedObject.type == Rendering::AtomType) {
-      if (LayerManager::activeLayerLocked()) {
+      if (PluginLayerManager::activeLayerLocked()) {
         e->accept();
         return nullptr;
       }
@@ -190,7 +190,7 @@ QUndoCommand* Editor::keyPressEvent(QKeyEvent* e)
     return nullptr;
   e->accept();
 
-  if (LayerManager::activeLayerLocked()) {
+  if (PluginLayerManager::activeLayerLocked()) {
     return nullptr;
   }
   // Set a timer to clear the buffer on first keypress:

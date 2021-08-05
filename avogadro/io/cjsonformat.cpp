@@ -36,6 +36,7 @@ using Core::CrystalTools;
 using Core::Cube;
 using Core::Elements;
 using Core::GaussianSet;
+using Core::LayerData;
 using Core::LayerManager;
 using Core::lexicalCast;
 using Core::Molecule;
@@ -459,6 +460,14 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
         names->enable[enable.key()].push_back(e);
       }
     }
+
+    json settings = jsonRoot["layer"]["settings"];
+    for (const auto& setting : settings.items()) {
+      names->settings[setting.key()] = std::vector<LayerData*>();
+      for (const auto& s : setting.value()) {
+        names->settings[setting.key()].push_back(new LayerData(s));
+      }
+    }
   }
 
   return true;
@@ -813,6 +822,14 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
       enable.push_back(e);
     }
     root["layer"]["enable"][enables.first] = enable;
+  }
+
+  for (const auto& settings : names->settings) {
+    json setting;
+    for (const auto& e : settings.second) {
+      setting.push_back(e->save());
+    }
+    root["layer"]["settings"][settings.first] = setting;
   }
 
   // Write out the file, use a two space indent to "pretty print".

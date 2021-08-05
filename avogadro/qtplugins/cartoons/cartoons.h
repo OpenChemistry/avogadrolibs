@@ -36,7 +36,7 @@ public:
 
   QWidget* setupWidget() override;
 
-private slots:
+public slots:
   // straights line between alpha carbons
   void showBackbone(bool show);
   // A flat line is displayed along the main backbone trace.
@@ -54,20 +54,11 @@ private slots:
 private:
   Rendering::GroupNode* m_group;
   std::string m_name = "Cartoons";
-  QWidget* m_setupWidget;
-  bool m_showBackbone;
-  bool m_showTrace;
-  bool m_showTube;
-  bool m_showRibbon;
-  bool m_showCartoon;
-  bool m_showRope;
-  typedef void (Cartoons::*JumpTable)(bool);
-  JumpTable m_jumpTable[6];
 
   std::map<size_t, AtomsPairList> getBackboneByResidues(
-    const QtGui::Molecule& molecule);
+    const QtGui::Molecule& molecule, size_t layer);
   std::map<size_t, AtomsPairList> getBackboneManually(
-    const QtGui::Molecule& molecule);
+    const QtGui::Molecule& molecule, size_t layer);
 };
 } // namespace QtPlugins
 } // namespace Avogadro

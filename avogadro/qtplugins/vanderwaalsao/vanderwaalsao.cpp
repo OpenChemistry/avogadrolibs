@@ -27,14 +27,14 @@ namespace Avogadro {
 namespace QtPlugins {
 
 using Core::Elements;
-using Core::LayerManager;
+using QtGui::PluginLayerManager;
 using Rendering::AmbientOcclusionSphereGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 
 VanDerWaalsAO::VanDerWaalsAO(QObject* p) : ScenePlugin(p)
 {
-  m_layerManager = LayerManager(m_name);
+  m_layerManager = PluginLayerManager(m_name);
 }
 
 VanDerWaalsAO::~VanDerWaalsAO() {}

@@ -6,6 +6,8 @@
 #include "rwlayermanager.h"
 #include "rwmolecule.h"
 
+#include <avogadro/core/molecule.h>
+
 #include <QtCore/QObject>
 #include <QtWidgets/QUndoCommand>
 #include <QtWidgets/QUndoStack>
@@ -18,8 +20,10 @@ using Core::Array;
 using Core::Layer;
 using Core::MoleculeInfo;
 using std::map;
+using std::set;
 using std::shared_ptr;
 using std::string;
+using std::vector;
 
 namespace {
 class AddLayerCommand : public QUndoCommand
@@ -171,6 +175,65 @@ void RWLayerManager::setActiveLayer(size_t layer, RWMolecule* rwmolecule)
   comm->setText(QObject::tr("Change Layer"));
   rwmolecule->undoStack().push(comm);
   rwmolecule->undoStack().endMacro();
+}
+
+bool RWLayerManager::visible(size_t layer) const
+{
+  return m_molToInfo[m_activeMolecule]->visible[layer];
+}
+
+bool RWLayerManager::locked(size_t layer) const
+{
+  return m_molToInfo[m_activeMolecule]->locked[layer];
+}
+
+void RWLayerManager::flipVisible(size_t layer)
+{
+  auto& molecule = m_molToInfo[m_activeMolecule];
+  molecule->visible[layer] = !molecule->visible[layer];
+}
+
+void RWLayerManager::flipLocked(size_t layer)
+{
+  auto& molecule = m_molToInfo[m_activeMolecule];
+  molecule->locked[layer] = !molecule->locked[layer];
+}
+
+void RWLayerManager::addMolecule(const Core::Molecule* mol)
+{
+  m_activeMolecule = mol;
+  auto it = m_molToInfo.find(mol);
+  if (it == m_molToInfo.end()) {
+    m_molToInfo[mol] = std::make_shared<MoleculeInfo>(mol);
+  }
+}
+
+Array<std::pair<size_t, string>> RWLayerManager::activeMoleculeNames() const
+{
+  if (m_activeMolecule == nullptr) {
+    return Array<std::pair<size_t, string>>();
+  }
+  auto& molecule = m_molToInfo[m_activeMolecule];
+  size_t qttyLayer = molecule->layer.maxLayer() + 1;
+  vector<set<string>> active(qttyLayer, set<string>());
+  for (const auto& names : molecule->enable) {
+    for (size_t i = 0; i < names.second.size(); ++i) {
+      if (names.second[i]) {
+        active[i].insert(names.first);
+      }
+    }
+  }
+
+  Array<std::pair<size_t, string>> result;
+  size_t layer = 0;
+  for (const auto& names : active) {
+    result.push_back(std::make_pair(layer, "Layer"));
+    for (const auto& name : names) {
+      result.push_back(std::make_pair(layer, name));
+    }
+    ++layer;
+  }
+  return result;
 }
 
 } // namespace QtGui

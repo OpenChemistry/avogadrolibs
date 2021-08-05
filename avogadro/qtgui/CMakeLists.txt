@@ -53,6 +53,7 @@ set(HEADERS
   periodictableview.h
   persistentatom.h
   persistentbond.h
+  pluginlayermanager.h
   pythonscript.h
   rwmolecule.h
   sceneplugin.h
@@ -87,6 +88,7 @@ set(SOURCES
   multiviewwidget.cpp
   periodictablescene_p.cpp
   periodictableview.cpp
+  pluginlayermanager.cpp
   pythonscript.cpp
   rwmolecule.cpp
   sceneplugin.cpp
