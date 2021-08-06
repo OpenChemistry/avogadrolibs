@@ -152,6 +152,7 @@ typedef list<BackboneResidue> AtomsPairList;
 Cartoons::Cartoons(QObject* parent) : ScenePlugin(parent), m_group(nullptr)
 {
   m_layerManager = PluginLayerManager(m_name);
+  m_layerManager.load<LayerCartoon>();
 }
 
 Cartoons::~Cartoons() {}
@@ -335,7 +336,7 @@ void renderCartoon(const AtomsPairList& backbone, const Molecule& molecule,
 
 void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
-  for (size_t layer = 0; layer < m_layerManager.count(); ++layer) {
+  for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
     LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>(layer);
     m_group = &node;
     if (interface.showBackbone || interface.showTrace || interface.showTube ||

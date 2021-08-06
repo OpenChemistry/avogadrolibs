@@ -20,14 +20,21 @@ class RWMolecule;
 
 /**
  * @class LayerModel layermodel.h <avogadro/qtgui/layermodel.h>
- * @brief
+ * @brief UI for the layer dock.
  */
 class AVOGADROQTGUI_EXPORT LayerModel : public QAbstractItemModel,
                                         public QtGui::RWLayerManager
 {
   Q_OBJECT
 public:
-  static const int QTTY_COLUMNS;
+  enum ColumnType
+  {
+    Name = 0,
+    Menu = 1,
+    Visible = 2,
+    Lock = 3,
+    Remove = 5
+  };
 
   explicit LayerModel(QObject* p = 0);
 
@@ -54,6 +61,7 @@ public:
 
   void flipVisible(size_t row);
   void flipLocked(size_t row);
+  size_t layerCount() const;
 
 public slots:
   void updateRows();

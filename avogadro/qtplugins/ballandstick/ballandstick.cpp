@@ -102,6 +102,7 @@ struct LayerBallAndStick : Core::LayerData
 BallAndStick::BallAndStick(QObject* p) : ScenePlugin(p), m_group(nullptr)
 {
   m_layerManager = PluginLayerManager(m_name);
+  m_layerManager.load<LayerBallAndStick>();
 }
 
 BallAndStick::~BallAndStick() {}

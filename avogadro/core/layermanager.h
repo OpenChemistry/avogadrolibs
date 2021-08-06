@@ -8,6 +8,7 @@
 
 #include "avogadrocore.h"
 
+#include "array.h"
 #include "layer.h"
 
 #include <cassert>
@@ -19,17 +20,29 @@ namespace Avogadro {
 namespace Core {
 
 class Molecule;
+
+/**
+ * @class LayerData layermanager.h <avogadro/core/layermanager.h>
+ * @brief Interface to store layer data structure.
+ */
 struct LayerData
 {
   LayerData(std::string save = "") { load(save); }
+
+  /** save custom data, base save should never be called */
   virtual std::string save()
   {
     assert(true);
     return "";
   }
+
+  /** load the saved @p save data and wait to know the class type to recreate it
+   */
   virtual void load(std::string save) { m_save = save; }
+
   virtual ~LayerData() = default;
 
+  /** get the saved data */
   std::string getSave() const { return m_save; }
 
 protected:
@@ -38,13 +51,19 @@ protected:
   std::string m_save;
 };
 
+/**
+ * @class MoleculeInfo layermanager.h <avogadro/core/layermanager.h>
+ * @brief All layer dependent data. Original molecule @p mol, is layer hidden
+ * @p visible, accepts eddits @p locked, and key-value data like @p enable,
+ * and custom data @p settings.
+ */
 struct MoleculeInfo
 {
   const Molecule* mol;
   std::vector<bool> visible;
   std::vector<bool> locked;
   std::map<std::string, std::vector<bool>> enable;
-  std::map<std::string, std::vector<LayerData*>> settings;
+  std::map<std::string, Core::Array<LayerData*>> settings;
   Layer layer;
 
   MoleculeInfo(const Molecule* m) : mol(m)
@@ -61,20 +80,34 @@ struct MoleculeInfo
     layer.clear();
   }
 };
-
+/**
+ * @class LayerManager layermanager.h <avogadro/core/layermanager.h>
+ * @brief
+ */
 class AVOGADROCORE_EXPORT LayerManager
 {
 public:
-  // active Layer
+  /** @return active molecule Layer */
   static Layer& getMoleculeLayer();
+
+  /** @return Layer from @p mol and creates MoleculeInfo if not exists */
   static Layer& getMoleculeLayer(const Molecule* mol);
+
+  /** @return Layer from @p original and links @p original MoleculeInfo to @p
+   * copy */
   static Layer& getMoleculeLayer(const Molecule* original,
                                  const Molecule* copy);
 
+  /** @return the MoleculeInfo from active molecule */
   static std::shared_ptr<MoleculeInfo> getMoleculeInfo();
+
+  /** @return the MoleculeInfo from @p mol */
   static std::shared_ptr<MoleculeInfo> getMoleculeInfo(const Molecule* mol);
 
+  /** remove all data related to @p mol */
   static void deleteMolecule(const Molecule* mol);
+
+  /** @return the layer quantity from activeMolecule */
   static size_t layerCount();
 
 protected:

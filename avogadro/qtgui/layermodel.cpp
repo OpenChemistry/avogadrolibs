@@ -17,7 +17,9 @@ namespace QtGui {
 using Core::Layer;
 using Core::LayerManager;
 
-const int LayerModel::QTTY_COLUMNS = 6;
+namespace {
+const int QTTY_COLUMNS = 6;
+}
 
 LayerModel::LayerModel(QObject* p) : QAbstractItemModel(p), m_item(0) {}
 
@@ -70,7 +72,7 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
   auto layer = names[idx.row()].first;
   bool isLayer = name == tr("Layer").toStdString();
   if (isLayer) {
-    if (idx.column() == 0) {
+    if (idx.column() == ColumnType::Name) {
       switch (role) {
         case Qt::DisplayRole: {
           return (name + " " + std::to_string(layer)).c_str();
@@ -83,29 +85,29 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
         default:
           return QVariant();
       }
-    } else if (idx.column() == (QTTY_COLUMNS - 5)) {
+    } else if (idx.column() == ColumnType::Menu) {
       if (role == Qt::DecorationRole)
         return QIcon(":/icons/fallback/32x32/dots.png");
-    } else if (idx.column() == (QTTY_COLUMNS - 4)) {
+    } else if (idx.column() == ColumnType::Visible) {
       if (role == Qt::DecorationRole) {
         if (visible(layer))
           return QIcon(":/icons/fallback/32x32/preview.png");
         else
           return QIcon(":/icons/fallback/32x32/dashed-preview.png");
       }
-    } else if (idx.column() == (QTTY_COLUMNS - 3)) {
+    } else if (idx.column() == ColumnType::Lock) {
       if (role == Qt::DecorationRole) {
         if (locked(layer))
           return QIcon(":/icons/fallback/32x32/lock.png");
         else
           return QIcon(":/icons/fallback/32x32/lock-open.png");
       }
-    } else if (idx.column() == (QTTY_COLUMNS - 1)) {
+    } else if (idx.column() == ColumnType::Remove) {
       if (role == Qt::DecorationRole)
         return QIcon(":/icons/fallback/32x32/cross.png");
     }
   } else {
-    if (idx.column() == 0) {
+    if (idx.column() == ColumnType::Name) {
       switch (role) {
         case Qt::DisplayRole: {
           return ("  " + name).c_str();
@@ -190,6 +192,11 @@ void LayerModel::flipLocked(size_t row)
   auto names = activeMoleculeNames();
   auto layer = names[row].first;
   RWLayerManager::flipLocked(layer);
+}
+
+size_t LayerModel::layerCount() const
+{
+  return LayerManager::layerCount();
 }
 
 } // namespace QtGui

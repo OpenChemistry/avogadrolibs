@@ -16,7 +16,7 @@ namespace Avogadro {
 namespace Core {
 
 /**
- * @class ConnectedGroup bimap.h <avogadro/core/graph.h>
+ * @class ConnectedGroup ConnectedGroup.h <avogadro/core/ConnectedGroup.h>
  * @brief The ConnectedGroup class represents a bidirectional Map data structure
  * between size_t (group) and a size_t set (nodes).
  * @example graph.h where it computes the bonded atom sets
@@ -78,9 +78,8 @@ public:
 
   /** @return the total groups existing */
   size_t groupCount() const;
-  size_t nodesCount() const;
+  size_t atomCount() const;
 
-  void resizeGroups(size_t n);
   bool hasAtom(size_t atom) const;
 
 private:

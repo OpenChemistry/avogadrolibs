@@ -25,11 +25,6 @@ ConnectedGroup::ConnectedGroup(size_t n) : m_groupToNode(n)
   resetToSize(n);
 }
 
-void ConnectedGroup::resizeGroups(size_t n)
-{
-  m_groupToNode.resize(n, std::set<size_t>());
-}
-
 void ConnectedGroup::addGroup(size_t group)
 {
   for (auto& nodeGroup : m_nodeToGroup) {
@@ -203,7 +198,7 @@ size_t ConnectedGroup::groupCount() const
   return m_groupToNode.size();
 }
 
-size_t ConnectedGroup::nodesCount() const
+size_t ConnectedGroup::atomCount() const
 {
   return m_nodeToGroup.size();
 }

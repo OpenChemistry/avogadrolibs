@@ -13,11 +13,6 @@ using std::swap;
 
 Layer::Layer() : m_activeLayer(0), m_maxLayer(0) {}
 
-void Layer::addAtom()
-{
-  addAtom(m_activeLayer, m_atomAndLayers.size());
-}
-
 void Layer::addAtom(size_t layer)
 {
   addAtom(layer, m_atomAndLayers.size());
@@ -43,7 +38,7 @@ void Layer::addAtomToActiveLayer(Index atom)
 
 void Layer::setActiveLayer(size_t layer)
 {
-  assert(layer != MaxIndex);
+  assert(layer <= m_maxLayer + 1);
   m_activeLayer = layer;
 }
 

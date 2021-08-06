@@ -130,9 +130,9 @@ bool PluginLayerManager::activeLayerLocked()
   return molecule->locked[active];
 }
 
-size_t PluginLayerManager::count() const
+size_t PluginLayerManager::layerCount() const
 {
-  return layerCount();
+  return LayerManager::layerCount();
 }
 } // namespace QtGui
 } // namespace Avogadro

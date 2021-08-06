@@ -463,7 +463,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 
     json settings = jsonRoot["layer"]["settings"];
     for (const auto& setting : settings.items()) {
-      names->settings[setting.key()] = std::vector<LayerData*>();
+      names->settings[setting.key()] = Core::Array<LayerData*>();
       for (const auto& s : setting.value()) {
         names->settings[setting.key()].push_back(new LayerData(s));
       }
