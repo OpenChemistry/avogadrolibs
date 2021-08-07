@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>labeltool.png</file>
+        <file>labeltool@2x.png</file>
+    </qresource>
+</RCC>

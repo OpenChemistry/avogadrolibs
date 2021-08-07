@@ -168,6 +168,15 @@ bool RWMolecule::setAtomPositions3d(const Core::Array<Vector3>& pos,
   return true;
 }
 
+bool RWMolecule::setLabel(Index atomId, const std::string& label,
+                          const QString& undoText)
+{
+  ModifyLabelCommand* comm = new ModifyLabelCommand(*this, atomId, label);
+  comm->setText(undoText);
+  m_undoStack.push(comm);
+  return true;
+}
+
 bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3& pos,
                                    const QString& undoText)
 {

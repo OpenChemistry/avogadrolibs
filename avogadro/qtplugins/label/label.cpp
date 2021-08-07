@@ -30,6 +30,26 @@ using std::map;
 
 typedef Array<Molecule::BondType> NeighborListType;
 
+namespace {
+TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
+                         float radius)
+{
+  Rendering::TextProperties tprop;
+  tprop.setAlign(Rendering::TextProperties::HCenter,
+                 Rendering::TextProperties::VCenter);
+  tprop.setFontFamily(Rendering::TextProperties::SansSerif);
+
+  tprop.setColorRgb(255, 255, 255);
+  TextLabel3D* label = new TextLabel3D;
+  label->setText(text);
+  label->setRenderPass(Rendering::OpaquePass);
+  label->setTextProperties(tprop);
+  label->setRadius(radius);
+  label->setAnchor(pos);
+  return label;
+}
+} // namespace
+
 Label::Label(QObject* parent_)
   : QtGui::ScenePlugin(parent_), m_enabled(false), m_setupWidget(nullptr)
 {
@@ -52,24 +72,6 @@ void Label::process(const Core::Molecule& molecule, Rendering::GroupNode& node)
   if (m_atomLabel) {
     processAtom(molecule, node);
   }
-}
-
-TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
-                         float radius)
-{
-  Rendering::TextProperties tprop;
-  tprop.setAlign(Rendering::TextProperties::HCenter,
-                 Rendering::TextProperties::VCenter);
-  tprop.setFontFamily(Rendering::TextProperties::SansSerif);
-
-  tprop.setColorRgb(255, 255, 255);
-  TextLabel3D* label = new TextLabel3D;
-  label->setText(text);
-  label->setRenderPass(Rendering::OpaquePass);
-  label->setTextProperties(tprop);
-  label->setRadius(radius);
-  label->setAnchor(pos);
-  return label;
 }
 
 void Label::processResidue(const Core::Molecule& molecule,
@@ -118,8 +120,11 @@ void Label::processAtom(const Core::Molecule& molecule,
     } else {
       ++atomCount[atomicNumber];
     }
-    auto text =
-      Elements::symbol(atomicNumber) + std::to_string(atomCount[atomicNumber]);
+    auto text = atom.label();
+    if (text == "") {
+      text = Elements::symbol(atomicNumber) +
+             std::to_string(atomCount[atomicNumber]);
+    }
     const Vector3f pos(atom.position3d().cast<float>());
     float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) * 0.6f;
 

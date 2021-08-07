@@ -35,11 +35,11 @@ using Core::CrystalTools;
 using Core::Cube;
 using Core::Elements;
 using Core::GaussianSet;
+using Core::lexicalCast;
 using Core::Molecule;
 using Core::Residue;
-using Core::Variant;
-using Core::lexicalCast;
 using Core::split;
+using Core::Variant;
 
 CjsonFormat::CjsonFormat() = default;
 
@@ -140,6 +140,13 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     }
   }
 
+  // todo? 2d position
+  // labels
+  json labels = atoms["labels"];
+  for (size_t i = 0; i < atomCount; ++i) {
+    molecule.atom(i).setLabel(labels[i]);
+  }
+
   // Check for coordinate sets, and read them in if found, e.g. trajectories.
   json coordSets = atoms["coords"]["3dSets"];
   if (coordSets.is_array() && coordSets.size()) {
@@ -217,8 +224,9 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
           newResidue.addResidueAtom(item.key(), atom);
         }
       }
-
-      // todo colors
+      json color = residue["color"];
+      Vector3ub col = Vector3ub(color[0], color[1], color[2]);
+      newResidue.setColor(col);
     }
   }
 
@@ -679,6 +687,13 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
       root["atoms"]["coords"]["2d"] = coords2d;
     }
   }
+
+  // labels
+  json labels;
+  for (size_t i = 0; i < molecule.atomCount(); ++i) {
+    labels.push_back(molecule.label(i));
+  }
+  root["atoms"]["labels"] = labels;
 
   // Create and populate the bond arrays.
   if (molecule.bondCount()) {
