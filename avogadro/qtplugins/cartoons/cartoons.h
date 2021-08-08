@@ -48,6 +48,8 @@ private slots:
   // same as trace but a flat plane
   void showRibbon(bool show);
   // the classic
+  void showSimpleCartoon(bool show);
+  // the classic + sheets and elix
   void showCartoon(bool show);
   // same as tube but instead of creating a b-spline (cuadratic bezier, segments
   // of 3) we crea a big N-bezier line
@@ -63,10 +65,12 @@ private:
   bool m_showTrace;
   bool m_showTube;
   bool m_showRibbon;
+  bool m_showSimpleCartoon;
   bool m_showCartoon;
   bool m_showRope;
+
   typedef void (Cartoons::*JumpTable)(bool);
-  JumpTable m_jumpTable[6];
+  JumpTable m_jumpTable[7];
 };
 } // namespace QtPlugins
 } // namespace Avogadro

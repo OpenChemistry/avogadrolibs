@@ -10,8 +10,8 @@ namespace Rendering {
 
 BezierGeometry::BezierGeometry() : CurveGeometry() {}
 
-Vector3f BezierGeometry::computeCurvePoint(float t,
-                                           const std::list<Point*>& points)
+Vector3f BezierGeometry::computeCurvePoint(
+  float t, const std::list<Point*>& points) const
 {
   Vector3f h = Vector3f::Ones();
   float u = 1.0f - t;
