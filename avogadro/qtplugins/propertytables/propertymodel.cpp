@@ -12,8 +12,8 @@
 #include <avogadro/qtgui/molecule.h>
 
 #include <avogadro/core/angleiterator.h>
-//#include <avogadro/core/angletools.h>
-//#include <avogadro/core/dihedraliterator.h>
+#include <avogadro/core/angletools.h>
+#include <avogadro/core/dihedraliterator.h>
 
 #include <QBrush>
 #include <QColor>
@@ -34,34 +34,56 @@ const int AtomColumns = 6;    // element, valence, x, y, z, color
 const int BondColumns = 5;    // type, atom 1, atom 2, bond order, length
 const int AngleColumns = 5;   // type, atom 1, atom 2, atom 3, angle
 const int TorsionColumns = 6; // type, atom 1, atom 2, atom 3, atom 4, dihedral
-const int ResidueColumns = 6; // name, number, chain, secondary structure, heterogen, color
+const int ResidueColumns =
+  6; // name, number, chain, secondary structure, heterogen, color
 const int ConformerColumns = 2; // number, energy
 
-double distance(Vector3 v1, Vector3 v2)
+inline double distance(Vector3 v1, Vector3 v2)
 {
   Vector3 v3 = v1 - v2;
   return v3.norm();
 }
 
+inline QString angleTypeString(unsigned char a, unsigned char b,
+                               unsigned char c)
+{
+  return QString("%1%2%3")
+    .arg(Core::Elements::symbol(a))
+    .arg(Core::Elements::symbol(b))
+    .arg(Core::Elements::symbol(c));
+}
+
+inline QString torsionTypeString(unsigned char a, unsigned char b,
+                                 unsigned char c, unsigned char d)
+{
+  return QString("%1%2%3%4")
+    .arg(Core::Elements::symbol(a))
+    .arg(Core::Elements::symbol(b))
+    .arg(Core::Elements::symbol(c))
+    .arg(Core::Elements::symbol(d));
+}
+
 PropertyModel::PropertyModel(PropertyType type, QObject* parent)
-  : QAbstractTableModel(parent), m_type(type), m_rowCount(0),
-    m_molecule(nullptr)
+  : QAbstractTableModel(parent), m_type(type), m_molecule(nullptr)
 {}
 
 int PropertyModel::rowCount(const QModelIndex& parent) const
 {
   Q_UNUSED(parent);
 
+  if (!m_validCache)
+    updateCache();
+
   if (m_type == AtomType) {
     return m_molecule->atomCount();
   } else if (m_type == BondType) {
     return m_molecule->bondCount();
   } else if (m_type == ResidueType) {
-    return m_molecule->residueCount();
+    return m_molecule->residueCount();  
   } else if (m_type == AngleType) {
-    return 0; // TODO
+    return m_angles.size();
   } else if (m_type == TorsionType) {
-    return 0; // TODO
+    return m_torsions.size();
   } else if (m_type == ConformerType) {
     return m_molecule->coordinate3dCount();
   }
@@ -226,12 +248,37 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case ResidueDataChain:
         return QString(residue.chainId());
       case ResidueDataSecStructure:
-        return secStructure(residue.secondaryStructure()); // TODO map to strings
+        return secStructure(
+          residue.secondaryStructure()); // TODO map to strings
       case ResidueDataHeterogen:
         return QString(residue.isHeterogen() ? "X" : "");
       default:
         return QVariant();
     }
+  } else if (m_type == AngleType) {
+    if (row > m_angles.size() ||
+        static_cast<unsigned int>(index.column()) > AngleColumns)
+      return QVariant(); // invalid index
+
+    AngleColumn column = static_cast<AngleColumn>(index.column());
+    auto angle = m_angles[row];
+    switch (column) {
+      case AngleDataType:
+        return QString("%1-%2-%3");
+      case AngleDataAtom1:
+        return QVariant::fromValue(std::get<0>(angle) + 1);
+      case AngleDataAtom2:
+        return QVariant::fromValue(std::get<1>(angle) + 1);
+      case AngleDataAtom3:
+        return QVariant::fromValue(std::get<2>(angle) + 1);
+      case AngleDataValue:
+        return 109.5f;
+      default:
+        return QVariant();
+    }
+
+  } else if (m_type == TorsionType) {
+            return QVariant();
   }
 
   return QVariant();
@@ -292,21 +339,58 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
   } else if (m_type == ResidueType) {
 
     if (orientation == Qt::Horizontal) {
-    unsigned int column = static_cast<ResidueColumn>(section);
-    switch (column) {
-      case ResidueDataName:
-        return tr("Name");
-      case ResidueDataID:
-        return tr("ID");
-      case ResidueDataChain:
-        return tr("Chain");
-      case ResidueDataSecStructure:
-        return tr("Secondary Structure");
-      case ResidueDataHeterogen:
-        return tr("Heterogen");
-      case ResidueDataColor:
-        return tr("Color");
-    } 
+      unsigned int column = static_cast<ResidueColumn>(section);
+      switch (column) {
+        case ResidueDataName:
+          return tr("Name");
+        case ResidueDataID:
+          return tr("ID");
+        case ResidueDataChain:
+          return tr("Chain");
+        case ResidueDataSecStructure:
+          return tr("Secondary Structure");
+        case ResidueDataHeterogen:
+          return tr("Heterogen");
+        case ResidueDataColor:
+          return tr("Color");
+      }
+    } else // row headers
+      return QString("%L1").arg(section + 1);
+  } else if (m_type == AngleType) {
+
+    if (orientation == Qt::Horizontal) {
+      unsigned int column = static_cast<AngleColumn>(section);
+      switch (column) {
+        case AngleDataType:
+          return tr("Type");
+        case AngleDataAtom1:
+          return tr("Atom 1");
+        case AngleDataAtom2:
+          return tr("Vertex");
+        case AngleDataAtom3:
+          return tr("Atom 3");
+        case AngleDataValue:
+          return tr("Angle (°)");
+      }
+    } else // row headers
+      return QString("%L1").arg(section + 1);
+  } else if (m_type == TorsionType) {
+    if (orientation == Qt::Horizontal) {
+      unsigned int column = static_cast<TorsionColumn>(section);
+      switch (column) {
+        case TorsionDataType:
+          return tr("Type");
+        case TorsionDataAtom1:
+          return tr("Atom 1");
+        case TorsionDataAtom2:
+          return tr("Atom 2");
+        case TorsionDataAtom3:
+          return tr("Atom 3");
+        case TorsionDataAtom4:
+          return tr("Atom 4");
+        case TorsionDataValue:
+          return tr("Angle (°)");
+      }
     } else // row headers
       return QString("%L1").arg(section + 1);
   }
@@ -380,14 +464,35 @@ QString PropertyModel::secStructure(unsigned int type) const
   }
 }
 
-/*  void PropertyModel::updateTable()
-  {
-    emit dataChanged(
-      QAbstractItemModel::createIndex(0, 0),
-      QAbstractItemModel::createIndex(rowCount(), columnCount()));
-  }
-  */
+/*
+void PropertyModel::updateTable()
+{
+  emit dataChanged(QAbstractItemModel::createIndex(0, 0),
+                   QAbstractItemModel::createIndex(rowCount(), columnCount()));
+}
+*/
 
-void PropertyModel::updateCache() const {} // end updateCache
+void PropertyModel::updateCache() const
+{
+  m_validCache = true;
+  m_angles.clear();
+  m_torsions.clear();
+
+  if (m_molecule == nullptr)
+    return;
+
+  Core::AngleIterator aIter(m_molecule);
+  // auto it = customContainer.begin(); it != customContainer.end(); it++
+  for (auto it = aIter.begin(); it != aIter.end(); ++aIter) {
+    const auto angle = it;
+    m_angles.push_back(angle);
+  }
+
+  Core::DihedralIterator dIter(m_molecule);
+  for (auto it = dIter.begin(); it != dIter.end(); ++dIter) {
+    const auto dihedral = it;
+    m_torsions.push_back(dihedral);
+  }
+}
 
 } // end namespace Avogadro

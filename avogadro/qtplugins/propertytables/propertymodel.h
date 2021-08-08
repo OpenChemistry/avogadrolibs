@@ -10,6 +10,10 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QAbstractTableModel>
+
+#include <avogadro/core/angleiterator.h>
+#include <avogadro/core/dihedraliterator.h>
+
 namespace Avogadro {
 
 namespace QtGui {
@@ -58,16 +62,13 @@ public:
   // Empty all items in the cache
   //void clearCache() const;
 
-  // Return the number of conformers we are displaying
-  // unsigned int numConformers() const;
-
-  // Given a model index, return the conformer it refers to
-  // unsigned int conformerFromIndex(const QModelIndex &index) const;
-
 private:
   PropertyType m_type;
-  mutable int m_rowCount;
   QtGui::Molecule* m_molecule;
+  
+  mutable bool m_validCache;
+  mutable std::vector<Core::Angle> m_angles;
+  mutable std::vector<Core::Dihedral> m_torsions;
 
   QString secStructure(unsigned int type) const;
 

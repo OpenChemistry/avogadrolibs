@@ -12,7 +12,7 @@
 
 namespace Avogadro {
 
-Real bondAngle(const Vector3& b0, const Vector3& b1) {
+inline Real bondAngle(const Vector3& b0, const Vector3& b1) {
   // standard formula, e.g.
   // https://scicomp.stackexchange.com/q/27689/14517
   // Since we're using bonds, v. small angles are okay
@@ -23,7 +23,7 @@ Real bondAngle(const Vector3& b0, const Vector3& b1) {
   return std::acos(dot / norms) * RAD_TO_DEG_D;
 }
 
-Real dihedralAngle(const Vector3& b0, const Vector3& b1, const Vector3& b2)
+inline Real dihedralAngle(const Vector3& b0, const Vector3& b1, const Vector3& b2)
 {
   // See https://stackoverflow.com/a/34245697/131896
   // Thanks to @Praxeolitic

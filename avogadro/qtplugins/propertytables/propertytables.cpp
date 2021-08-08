@@ -37,23 +37,23 @@ PropertyTables::PropertyTables(QObject* parent_)
   m_actions.append(action);
 
   action = new QAction(this);
-  action->setText(tr("Residue Properties..."));
-  action->setData(PropertyType::ResidueType);
+  action->setText(tr("Angle Properties..."));
+  action->setData(PropertyType::AngleType);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
-  /*
-    // TODO
-    action = new QAction( this );
-    action->setText( tr("Angle Properties..." ));
-    action->setData(AnglePropIndex);
-    m_actions.append( action );
+  action = new QAction(this);
+  action->setText(tr("Torsion Properties..."));
+  action->setData(PropertyType::TorsionType);
+  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  m_actions.append(action);
 
-    action = new QAction( this );
-    action->setText( tr("Torsion Properties..." ));
-    action->setData(TorsionPropIndex);
-    m_actions.append( action );
-*/
+  action = new QAction(this);
+  action->setText(tr("Residue Properties..."));
+  action->setData(PropertyType::ResidueType);
+  action->setEnabled(false); // changed by molecule
+  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  m_actions.append(action);
 }
 
 PropertyTables::~PropertyTables() {}
@@ -80,6 +80,14 @@ void PropertyTables::setMolecule(QtGui::Molecule* mol)
     return;
 
   m_molecule = mol;
+
+  // check if there are residues
+  if (m_molecule->residueCount() > 0) {
+    for (const auto& action : m_actions) {
+      if (action->data().toInt() == PropertyType::ResidueType)
+        action->setEnabled(true);
+    }
+  }
 }
 
 void PropertyTables::showDialog()
@@ -88,8 +96,8 @@ void PropertyTables::showDialog()
   if (action == nullptr || m_molecule == nullptr)
     return;
 
-  if (action->data().toInt() == PropertyType::ResidueType 
-    && m_molecule->residueCount() == 0)
+  if (action->data().toInt() == PropertyType::ResidueType &&
+      m_molecule->residueCount() == 0)
     return;
 
   QDialog* dialog = new QDialog(qobject_cast<QWidget*>(parent()));
