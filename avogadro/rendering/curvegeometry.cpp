@@ -27,7 +27,7 @@ namespace Rendering {
 
 using Core::Array;
 
-const size_t CurveGeometry::SKIPED = 1;
+const size_t CurveGeometry::SKIPPED = 1;
 
 CurveGeometry::CurveGeometry() : m_dirty(true), m_canBeFlat(true) {}
 CurveGeometry::CurveGeometry(bool flat) : m_dirty(true), m_canBeFlat(flat) {}
@@ -82,15 +82,15 @@ void CurveGeometry::update(int index)
   std::vector<Eigen::Affine3f> points;
   size_t top = qttyPoints <= 4 ? 0 : line->points.size() - 4;
   auto it = line->points.begin();
-  for (size_t i = SKIPED; i < top; ++i) {
+  for (size_t i = SKIPPED; i < top; ++i) {
     for (size_t j = 0; j < lineResolution; ++j) {
       float t = (i * lineResolution + j) / float(qttySegments);
       auto p = computeCurvePoint(t, line->points);
-      if (i > SKIPED) {
+      if (i > SKIPPED) {
         Eigen::Matrix3f m;
         m.col(1) = (p - previous).normalized();
         m.col(0) = m.col(1).unitOrthogonal() * -1.0f;
-        if (i > SKIPED + 1) {
+        if (i > SKIPPED + 1) {
           const auto& previousAngle = points.back().linear().col(0);
           float angle = previousAngle.dot(m.col(0));
           // avoid nans
@@ -104,14 +104,14 @@ void CurveGeometry::update(int index)
           angle = previousAngle.dot(m.col(0));
           float degrees =
             (std::acos(angle / (m.col(0).norm() * previousAngle.norm())) *
-             180.0f / 3.1415f);
+             RAD_TO_DEG_F);
           // if angle is > 25º get the bisector
           while (degrees > 25.0f) {
             m.col(0) = (m.col(0) + previousAngle).normalized();
             angle = previousAngle.dot(m.col(0));
             degrees =
               (std::acos(angle / (m.col(0).norm() * previousAngle.norm())) *
-               180.0f / 3.1415f);
+               RAD_TO_DEG_F);
           }
         }
         m.col(2) = m.col(0).cross(m.col(1)) * -1.0f;

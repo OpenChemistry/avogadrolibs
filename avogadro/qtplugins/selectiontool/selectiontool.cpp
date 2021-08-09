@@ -39,7 +39,6 @@
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QAction>
 
-#include <iostream>
 #include <queue>
 #include <set>
 

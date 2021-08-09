@@ -82,7 +82,7 @@ public:
                 size_t group, size_t id);
   const std::vector<Line*>& lines() const { return m_lines; };
 
-  const static size_t SKIPED;
+  const static size_t SKIPPED;
 
 protected:
   std::vector<Line*> m_lines;

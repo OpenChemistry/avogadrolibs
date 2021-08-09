@@ -21,7 +21,6 @@
 #include <avogadro/rendering/spheregeometry.h>
 
 #include <functional>
-#include <iostream>
 #include <list>
 #include <utility>
 #include <vector>

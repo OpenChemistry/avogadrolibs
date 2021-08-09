@@ -49,7 +49,7 @@ private slots:
   void showRibbon(bool show);
   // the classic
   void showSimpleCartoon(bool show);
-  // the classic + sheets and elix
+  // the classic + sheets and helix
   void showCartoon(bool show);
   // same as tube but instead of creating a b-spline (cuadratic bezier, segments
   // of 3) we crea a big N-bezier line
