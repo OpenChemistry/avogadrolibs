@@ -42,7 +42,7 @@ public slots:
   void setActiveWidget(QWidget* widget) override;
 
 private slots:
-  void processAxis();
+  void processAxes();
 
 private:
   void process(const Core::Molecule& molecule, Rendering::GroupNode& node);

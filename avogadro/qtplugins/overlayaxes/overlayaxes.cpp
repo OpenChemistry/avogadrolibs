@@ -236,12 +236,14 @@ OverlayAxes::OverlayAxes(QObject* parent_)
     m_render(new RenderImpl),
     m_axesAction(new QAction(tr("Reference Axes"), this))
 {
-  connect(m_axesAction, SIGNAL(triggered()), SLOT(processAxis()));
+  connect(m_axesAction, SIGNAL(triggered()), SLOT(processAxes()));
 
   QSettings settings;
-  m_enabled = settings.value("overlayAxes/enabled", true).toBool();
+  // processAxes() will flip the value when called
+  //   so we need to invert it here
+  m_enabled = !settings.value("overlayAxes/enabled", true).toBool();
   m_axesAction->setCheckable(true);
-  m_axesAction->setChecked(m_enabled);
+  processAxes();
 }
 
 OverlayAxes::~OverlayAxes()
@@ -260,7 +262,7 @@ QStringList OverlayAxes::menuPath(QAction*) const
   return QStringList() << tr("&View");
 }
 
-void OverlayAxes::processAxis()
+void OverlayAxes::processAxes()
 {
   m_enabled = !m_enabled;
   QSettings settings;
@@ -274,7 +276,9 @@ void OverlayAxes::processAxis()
     m_scene->rootNode().removeChild(engineNode);
     delete engineNode;
     m_widgetToNode[m_glWidget] = nullptr;
-  } else {
+  }
+
+  if (m_enabled) {
     engineNode = new Rendering::GroupNode(&node);
     m_widgetToNode[m_glWidget] = engineNode;
     process(*m_molecule, *engineNode);
