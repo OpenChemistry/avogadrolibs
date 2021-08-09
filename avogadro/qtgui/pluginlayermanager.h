@@ -42,7 +42,7 @@ public:
           dynamic_cast<T*>(info->settings[m_name][0]) == nullptr) {
         for (size_t i = 0; i < info->settings[m_name].size(); ++i) {
           T* aux = new T;
-          aux->load(info->settings[m_name][i]->getSave());
+          aux->deserialize(info->settings[m_name][i]->getSave());
           delete info->settings[m_name][i];
           info->settings[m_name][i] = aux;
         }

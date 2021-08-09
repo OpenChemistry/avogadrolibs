@@ -73,7 +73,7 @@ void PluginLayerManager::setEnabled(bool enable)
   if (it == molecule->enable.end()) {
     molecule->enable[m_name] = vector<bool>();
   }
-  size_t qttyLayers = molecule->layer.maxLayer() + 1;
+  size_t qttyLayers = molecule->layer.layerCount();
   if (molecule->enable[m_name].size() != qttyLayers) {
     molecule->enable[m_name].resize(qttyLayers, false);
   }

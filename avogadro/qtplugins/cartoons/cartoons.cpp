@@ -58,13 +58,13 @@ struct LayerCartoon : Core::LayerData
   typedef void (Cartoons::*JumpTable)(bool);
   JumpTable jumpTable[6];
 
-  std::string save() override final
+  std::string serialize() override final
   {
     return boolToString(showBackbone) + " " + boolToString(showTrace) + " " +
            boolToString(showTube) + " " + boolToString(showRibbon) + " " +
            boolToString(showCartoon) + " " + boolToString(showRope);
   }
-  void load(std::string text) override final
+  void deserialize(std::string text) override final
   {
     std::stringstream ss(text);
     std::string aux;

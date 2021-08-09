@@ -116,5 +116,10 @@ void Layer::swapLayer(Index a, Index b)
   swap(m_atomAndLayers[a], m_atomAndLayers[b]);
 }
 
+size_t Layer::layerCount() const
+{
+  return m_maxLayer + 1;
+}
+
 } // namespace Core
 } // namespace Avogadro

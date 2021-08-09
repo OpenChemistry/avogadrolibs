@@ -27,10 +27,10 @@ class Molecule;
  */
 struct LayerData
 {
-  LayerData(std::string save = "") { load(save); }
+  LayerData(std::string save = "") { deserialize(save); }
 
   /** save custom data, base save should never be called */
-  virtual std::string save()
+  virtual std::string serialize()
   {
     assert(true);
     return "";
@@ -38,7 +38,7 @@ struct LayerData
 
   /** load the saved @p save data and wait to know the class type to recreate it
    */
-  virtual void load(std::string save) { m_save = save; }
+  virtual void deserialize(std::string save) { m_save = save; }
 
   virtual ~LayerData() = default;
 

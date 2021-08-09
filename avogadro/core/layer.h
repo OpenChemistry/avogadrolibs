@@ -41,6 +41,9 @@ public:
   /**  @return the maximum layer allowed. */
   size_t maxLayer() const;
 
+  /** @return the number of layers. */
+  size_t layerCount() const;
+
   /**  @return The number of atoms. */
   size_t atomCount() const;
 

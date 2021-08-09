@@ -54,12 +54,12 @@ struct LayerWireframe : Core::LayerData
       widget->deleteLater();
   }
 
-  std::string save() override final
+  std::string serialize() override final
   {
     return boolToString(multiBonds) + " " + boolToString(showHydrogens) + " " +
            std::to_string(lineWidth);
   }
-  void load(std::string text) override final
+  void deserialize(std::string text) override final
   {
     std::stringstream ss(text);
     std::string aux;

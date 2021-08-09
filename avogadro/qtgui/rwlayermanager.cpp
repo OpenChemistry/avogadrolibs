@@ -56,7 +56,7 @@ public:
 
     m_moleculeInfo->visible.pop_back();
     m_moleculeInfo->locked.pop_back();
-    size_t qttyLayer = m_moleculeInfo->layer.maxLayer() + 1;
+    size_t qttyLayer = m_moleculeInfo->layer.layerCount();
     for (auto& enable : m_moleculeInfo->enable) {
       if (enable.second.size() == qttyLayer) {
         m_enable[enable.first] = enable.second[enable.second.size() - 1];
@@ -246,7 +246,7 @@ Array<std::pair<size_t, string>> RWLayerManager::activeMoleculeNames() const
     return Array<std::pair<size_t, string>>();
   }
   auto& molecule = m_molToInfo[m_activeMolecule];
-  size_t qttyLayer = molecule->layer.maxLayer() + 1;
+  size_t qttyLayer = molecule->layer.layerCount();
   vector<set<string>> active(qttyLayer, set<string>());
   for (const auto& names : molecule->enable) {
     for (size_t i = 0; i < names.second.size(); ++i) {

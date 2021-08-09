@@ -827,7 +827,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
   for (const auto& settings : names->settings) {
     json setting;
     for (const auto& e : settings.second) {
-      setting.push_back(e->save());
+      setting.push_back(e->serialize());
     }
     root["layer"]["settings"][settings.first] = setting;
   }
