@@ -7,9 +7,14 @@
 #define AVOGADRO_QTPLUGINS_CARTOONS_H
 
 #include <avogadro/qtgui/sceneplugin.h>
+#include <list>
+#include <map>
 
 namespace Avogadro {
 namespace QtPlugins {
+
+struct BackboneResidue;
+typedef std::list<BackboneResidue> AtomsPairList;
 
 class Cartoons : public QtGui::ScenePlugin
 {
@@ -19,26 +24,19 @@ public:
   explicit Cartoons(QObject* parent = 0);
   ~Cartoons() override;
 
-  void process(const Core::Molecule& molecule,
+  void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  void processEditable(const QtGui::RWMolecule& molecule,
-                       Rendering::GroupNode& node) override;
-
-  QString name() const override { return tr("Cartoons"); }
+  QString name() const override { return tr(m_name.c_str()); }
 
   QString description() const override
   {
     return tr("Simple display of Cartoons family.");
   }
 
-  bool isEnabled() const override;
-
-  void setEnabled(bool enable) override;
-
   QWidget* setupWidget() override;
 
-private slots:
+public slots:
   // straights line between alpha carbons
   void showBackbone(bool show);
   // A flat line is displayed along the main backbone trace.
@@ -56,21 +54,13 @@ private slots:
   void showRope(bool show);
 
 private:
-  bool m_enabled;
-
   Rendering::GroupNode* m_group;
+  std::string m_name = "Cartoons";
 
-  QWidget* m_setupWidget;
-  bool m_showBackbone;
-  bool m_showTrace;
-  bool m_showTube;
-  bool m_showRibbon;
-  bool m_showSimpleCartoon;
-  bool m_showCartoon;
-  bool m_showRope;
-
-  typedef void (Cartoons::*JumpTable)(bool);
-  JumpTable m_jumpTable[7];
+  std::map<size_t, AtomsPairList> getBackboneByResidues(
+    const QtGui::Molecule& molecule, size_t layer);
+  std::map<size_t, AtomsPairList> getBackboneManually(
+    const QtGui::Molecule& molecule, size_t layer);
 };
 } // namespace QtPlugins
 } // namespace Avogadro

@@ -44,6 +44,8 @@ set(HEADERS
   interfacescript.h
   interfacewidget.h
   jsonwidget.h
+  layermodel.h
+  rwlayermanager.h
   meshgenerator.h
   molecule.h
   moleculemodel.h
@@ -51,6 +53,7 @@ set(HEADERS
   periodictableview.h
   persistentatom.h
   persistentbond.h
+  pluginlayermanager.h
   pythonscript.h
   rwmolecule.h
   sceneplugin.h
@@ -77,12 +80,15 @@ set(SOURCES
   interfacescript.cpp
   interfacewidget.cpp
   jsonwidget.cpp
+  layermodel.cpp
+  rwlayermanager.cpp
   meshgenerator.cpp
   molecule.cpp
   moleculemodel.cpp
   multiviewwidget.cpp
   periodictablescene_p.cpp
   periodictableview.cpp
+  pluginlayermanager.cpp
   pythonscript.cpp
   rwmolecule.cpp
   sceneplugin.cpp

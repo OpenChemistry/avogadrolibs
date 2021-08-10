@@ -9,6 +9,7 @@
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/gaussianset.h>
+#include <avogadro/core/layermanager.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/core/unitcell.h>
@@ -35,11 +36,13 @@ using Core::CrystalTools;
 using Core::Cube;
 using Core::Elements;
 using Core::GaussianSet;
+using Core::LayerData;
+using Core::LayerManager;
+using Core::lexicalCast;
 using Core::Molecule;
 using Core::Residue;
-using Core::Variant;
-using Core::lexicalCast;
 using Core::split;
+using Core::Variant;
 
 CjsonFormat::CjsonFormat() = default;
 
@@ -175,6 +178,18 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
   else if (isNumericArray(selection) && selection.size() == atomCount)
     for (Index i = 0; i < atomCount; ++i)
       molecule.setAtomSelected(i, selection[i] != 0);
+  if (atoms.find("layer") != atoms.end()) {
+    json layerJson = atoms["layer"];
+    if (isNumericArray(layerJson)) {
+      auto& layer = LayerManager::getMoleculeInfo(&molecule)->layer;
+      for (Index i = 0; i < atomCount; ++i) {
+        while (layerJson[i] > layer.maxLayer()) {
+          layer.addLayer();
+        }
+        layer.addAtom(layerJson[i], i);
+      }
+    }
+  }
 
   // Bonds are optional, but if present should be loaded.
   json bonds = jsonRoot["bonds"];
@@ -210,9 +225,9 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       if (hetero == true)
         newResidue.setHeterogen(true);
 
-      json atoms = residue["atoms"];
-      if (atoms.is_object()) {
-        for (auto& item : atoms.items()) {
+      json atomsResidue = residue["atoms"];
+      if (atomsResidue.is_object()) {
+        for (auto& item : atomsResidue.items()) {
           auto atom = molecule.atom(item.value());
           newResidue.addResidueAtom(item.key(), atom);
         }
@@ -423,6 +438,37 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       molecule.setVibrationLx(disps);
     }
   }
+  if (jsonRoot.find("layer") != jsonRoot.end()) {
+    auto names = LayerManager::getMoleculeInfo(&molecule);
+    json visible = jsonRoot["layer"]["visible"];
+    if (isBooleanArray(visible)) {
+      for (const auto& v : visible) {
+        names->visible.push_back(v);
+      }
+    }
+    json locked = jsonRoot["layer"]["locked"];
+    if (isBooleanArray(locked)) {
+      for (const auto& l : locked) {
+        names->locked.push_back(l);
+      }
+    }
+
+    json enables = jsonRoot["layer"]["enable"];
+    for (const auto& enable : enables.items()) {
+      names->enable[enable.key()] = std::vector<bool>();
+      for (const auto& e : enable.value()) {
+        names->enable[enable.key()].push_back(e);
+      }
+    }
+
+    json settings = jsonRoot["layer"]["settings"];
+    for (const auto& setting : settings.items()) {
+      names->settings[setting.key()] = Core::Array<LayerData*>();
+      for (const auto& s : setting.value()) {
+        names->settings[setting.key()].push_back(new LayerData(s));
+      }
+    }
+  }
 
   return true;
 }
@@ -514,7 +560,6 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
       auto atomIndices = gaussian->atomIndices();
       json shellToAtomMap;
-      // std::cout << "atomIndices " << atomIndices.size() << std::endl;
       for (size_t i = 0; i < atomIndices.size(); ++i)
         shellToAtomMap.push_back(atomIndices[i]);
       basis["shellToAtomMap"] = shellToAtomMap;
@@ -680,6 +725,15 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     }
   }
 
+  auto layer = LayerManager::getMoleculeInfo(&molecule)->layer;
+  if (layer.atomCount()) {
+    json atomLayer;
+    for (Index i = 0; i < layer.atomCount(); ++i) {
+      atomLayer.push_back(layer.getLayerID(i));
+    }
+    root["atoms"]["layer"] = atomLayer;
+  }
+
   // Create and populate the bond arrays.
   if (molecule.bondCount()) {
     json connections;
@@ -749,6 +803,33 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     root["vibrations"]["frequencies"] = freqs;
     root["vibrations"]["intensities"] = inten;
     root["vibrations"]["eigenVectors"] = eigenVectors;
+  }
+
+  auto names = LayerManager::getMoleculeInfo(&molecule);
+  json visible;
+  for (const bool v : names->visible) {
+    visible.push_back(v);
+  }
+  root["layer"]["visible"] = visible;
+  json locked;
+  for (const bool l : names->locked) {
+    locked.push_back(l);
+  }
+  root["layer"]["locked"] = locked;
+  for (const auto& enables : names->enable) {
+    json enable;
+    for (const bool e : enables.second) {
+      enable.push_back(e);
+    }
+    root["layer"]["enable"][enables.first] = enable;
+  }
+
+  for (const auto& settings : names->settings) {
+    json setting;
+    for (const auto& e : settings.second) {
+      setting.push_back(e->serialize());
+    }
+    root["layer"]["settings"][settings.first] = setting;
   }
 
   // Write out the file, use a two space indent to "pretty print".

@@ -8,15 +8,17 @@
 
 #include "avogadrocore.h"
 
-#include <map>
-#include <string>
-
 #include "array.h"
 #include "bond.h"
 #include "elements.h"
 #include "graph.h"
+#include "layer.h"
 #include "variantmap.h"
 #include "vector.h"
+
+#include <list>
+#include <map>
+#include <string>
 
 namespace Avogadro {
 namespace Core {
@@ -524,8 +526,8 @@ public:
   void addResidue(Residue& residue);
   Residue& residue(Index index);
 
-  Array<Residue>& residues() { return m_residues;}
-  const Array<Residue>& residues() const { return m_residues;}
+  Array<Residue>& residues() { return m_residues; }
+  const Array<Residue>& residues() const { return m_residues; }
 
   /** @return The number of residues in the molecule. */
   Index residueCount() const;
@@ -652,6 +654,11 @@ public:
   // channge the Atom index position
   void swapAtom(Index a, Index b);
 
+  std::list<Index> getAtomsAtLayer(size_t layer);
+
+  Layer& layer();
+  const Layer& layer() const;
+
 protected:
   VariantMap m_data;
   CustomElementMap m_customElementMap;
@@ -694,6 +701,7 @@ private:
   Array<unsigned char> m_bondOrders;
   // vertex information
   Array<unsigned char> m_atomicNumbers;
+  Layer& m_layers;
 };
 
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>

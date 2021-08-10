@@ -16,7 +16,7 @@ namespace Avogadro {
 namespace Core {
 
 /**
- * @class ConnectedGroup bimap.h <avogadro/core/graph.h>
+ * @class ConnectedGroup ConnectedGroup.h <avogadro/core/ConnectedGroup.h>
  * @brief The ConnectedGroup class represents a bidirectional Map data structure
  * between size_t (group) and a size_t set (nodes).
  * @example graph.h where it computes the bonded atom sets
@@ -35,9 +35,11 @@ public:
 
   /** check if @p index is already in a group otherwise create one for it */
   void addNode(size_t index);
+  void addNode(size_t node, size_t group);
 
   /** create @p n groups with 1 node each */
   void addNodes(size_t n);
+  void addNodes(size_t n, size_t group);
 
   /** node @p a and @p b will be in the same group */
   void addConnection(size_t a, size_t b);
@@ -54,6 +56,10 @@ public:
   /** Checks if @p a and @p b whould be still connected and separate them if
    * they don't */
   void removeConnection(size_t a, size_t b, const std::set<size_t>& neighbors);
+
+  void removeGroup(size_t group);
+
+  void addGroup(size_t group);
 
   /** Removes everything. */
   void clear();
@@ -72,6 +78,9 @@ public:
 
   /** @return the total groups existing */
   size_t groupCount() const;
+  size_t atomCount() const;
+
+  bool hasAtom(size_t atom) const;
 
 private:
   std::map<size_t, size_t> m_nodeToGroup;

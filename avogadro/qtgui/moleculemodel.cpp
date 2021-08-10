@@ -14,8 +14,8 @@
 
 ******************************************************************************/
 
-#include "moleculemodel.h"
 #include "molecule.h"
+#include "moleculemodel.h"
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>
@@ -26,8 +26,7 @@ namespace QtGui {
 
 MoleculeModel::MoleculeModel(QObject* p)
   : QAbstractItemModel(p), m_activeMolecule(nullptr)
-{
-}
+{}
 
 QModelIndex MoleculeModel::parent(const QModelIndex&) const
 {
@@ -173,16 +172,8 @@ void MoleculeModel::setActiveMolecule(QObject* active)
 {
   if (m_activeMolecule == active)
     return;
-
-  int rowS = m_molecules.indexOf(qobject_cast<Molecule*>(m_activeMolecule));
-
   m_activeMolecule = active;
-  int row = m_molecules.indexOf(qobject_cast<Molecule*>(active));
-
-  if (rowS >= 0)
-    emit dataChanged(createIndex(rowS, 0), createIndex(rowS, 0));
-  if (row >= 0)
-    emit dataChanged(createIndex(row, 0), createIndex(row, 0));
+  emit dataChanged(createIndex(0, 0), createIndex(m_molecules.size(), 0));
 }
 
 void MoleculeModel::addItem(Molecule* item)
@@ -218,5 +209,5 @@ void MoleculeModel::itemChanged()
   }
 }
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro

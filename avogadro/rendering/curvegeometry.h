@@ -100,7 +100,7 @@ protected:
 
   void processShaderError(bool error);
 
-  Core::Array<Identifier> areaHits(const Frustrum& f) const;
+  Core::Array<Identifier> areaHits(const Frustrum& f) const override;
 };
 
 } // End namespace Rendering
