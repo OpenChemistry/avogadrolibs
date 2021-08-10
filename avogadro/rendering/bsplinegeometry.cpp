@@ -34,8 +34,8 @@ float B(float i, float k, float t, float knot)
   return a1 * a2 + b1 * b2;
 }
 
-Vector3f BSplineGeometry::computeCurvePoint(float t,
-                                            const std::list<Point*>& points)
+Vector3f BSplineGeometry::computeCurvePoint(
+  float t, const std::list<Point*>& points) const
 {
   // degree: line = 1, cuadratic = 2, cube = 3
   float k = 3.0f;

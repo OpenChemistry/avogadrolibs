@@ -232,8 +232,9 @@ void ApplyColors::applyCustomColorResidue(const QColor& new_color)
 
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
-    auto residue = m_molecule->residue(i);
-    if (isSelection && !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+    auto& residue = m_molecule->residue(i);
+    if (isSelection &&
+        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
       continue;
 
     residue.setColor(color);
@@ -251,8 +252,9 @@ void ApplyColors::resetColorsResidue()
 
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
-    auto residue = m_molecule->residue(i);
-    if (isSelection && !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+    auto& residue = m_molecule->residue(i);
+    if (isSelection &&
+        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
       continue;
 
     int offset = 0;
@@ -280,17 +282,17 @@ void ApplyColors::applySecondaryStructureColors()
 
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
-    auto residue = m_molecule->residue(i);
-    if (isSelection && !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+    auto& residue = m_molecule->residue(i);
+    if (isSelection &&
+        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
       continue;
 
     Core::Residue::SecondaryStructure type = residue.secondaryStructure();
     if (type < 0 || type > 7) {
       type = Core::Residue::SecondaryStructure::coil;
-
-      Vector3ub color(Core::secondary_color[type]);
-      residue.setColor(color);
     }
+    Vector3ub color(Core::secondary_color[type]);
+    residue.setColor(color);
   } // end loop
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
@@ -364,8 +366,9 @@ void ApplyColors::applyAminoColors()
 
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
-    auto residue = m_molecule->residue(i);
-    if (isSelection && !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+    auto& residue = m_molecule->residue(i);
+    if (isSelection &&
+        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
       continue;
 
     int offset = residueNameToOffset(residue.residueName());
@@ -386,8 +389,9 @@ void ApplyColors::applyShapelyColors()
 
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
-    auto residue = m_molecule->residue(i);
-    if (isSelection && !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+    auto& residue = m_molecule->residue(i);
+    if (isSelection &&
+        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
       continue;
 
     int offset = residueNameToOffset(residue.residueName());
