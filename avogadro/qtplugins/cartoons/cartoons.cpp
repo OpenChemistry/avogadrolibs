@@ -30,6 +30,7 @@ namespace QtPlugins {
 using Core::Atom;
 using Core::AtomicNumber;
 using Core::Elements;
+using Core::Residue;
 using QtGui::Molecule;
 using QtGui::PluginLayerManager;
 using Rendering::BezierGeometry;
@@ -52,17 +53,19 @@ struct LayerCartoon : Core::LayerData
   bool showTrace;
   bool showTube;
   bool showRibbon;
+  bool showSimpleCartoon;
   bool showCartoon;
   bool showRope;
 
   typedef void (Cartoons::*JumpTable)(bool);
-  JumpTable jumpTable[6];
+  JumpTable jumpTable[7];
 
   std::string serialize() override final
   {
     return boolToString(showBackbone) + " " + boolToString(showTrace) + " " +
            boolToString(showTube) + " " + boolToString(showRibbon) + " " +
-           boolToString(showCartoon) + " " + boolToString(showRope);
+           boolToString(showSimpleCartoon) + " " + boolToString(showCartoon) +
+           " " + boolToString(showRope);
   }
   void deserialize(std::string text) override final
   {
@@ -76,6 +79,8 @@ struct LayerCartoon : Core::LayerData
     showTube = stringToBool(aux);
     ss >> aux;
     showRibbon = stringToBool(aux);
+    ss >> aux;
+    showSimpleCartoon = stringToBool(aux);
     ss >> aux;
     showCartoon = stringToBool(aux);
     ss >> aux;
@@ -92,17 +97,20 @@ struct LayerCartoon : Core::LayerData
                 << QObject::tr("Trace", "protein rendering style")
                 << QObject::tr("Tube", "protein rendering style")
                 << QObject::tr("Ribbon", "protein rendering style")
+                << QObject::tr("Simple Cartoon", "protein rendering style")
                 << QObject::tr("Cartoon", "protein rendering style")
                 << QObject::tr("Rope", "protein rendering style");
-      vector<reference_wrapper<bool>> boxesBools = { showBackbone, showTrace,
-                                                     showTube,     showRibbon,
-                                                     showCartoon,  showRope };
+      vector<reference_wrapper<bool>> boxesBools = {
+        showBackbone,      showTrace,   showTube, showRibbon,
+        showSimpleCartoon, showCartoon, showRope
+      };
       jumpTable[0] = &Cartoons::showBackbone;
       jumpTable[1] = &Cartoons::showTrace;
       jumpTable[2] = &Cartoons::showTube;
       jumpTable[3] = &Cartoons::showRibbon;
-      jumpTable[4] = &Cartoons::showCartoon;
-      jumpTable[5] = &Cartoons::showRope;
+      jumpTable[4] = &Cartoons::showSimpleCartoon;
+      jumpTable[5] = &Cartoons::showCartoon;
+      jumpTable[6] = &Cartoons::showRope;
       for (size_t i = 0; i < boxesText.size(); ++i) {
         QCheckBox* check = new QCheckBox(boxesText[i]);
         check->setChecked(boxesBools[i]);
@@ -125,6 +133,7 @@ struct LayerCartoon : Core::LayerData
     showTube = settings.value("cartoon/tube", false).toBool();
     showRibbon = settings.value("cartoon/ribbon", false).toBool();
     showRope = settings.value("cartoon/rope", false).toBool();
+    showSimpleCartoon = settings.value("cartoon/simplecartoon", true).toBool();
   }
 
   ~LayerCartoon()
@@ -138,13 +147,19 @@ struct BackboneResidue
 {
   BackboneResidue() {}
   BackboneResidue(const Vector3f p, const Vector3ub& c1, const Vector3ub& c2,
-                  const size_t& g)
-    : pos(p), color1(c1), color2(c2), group(g)
+                  const size_t& g, size_t id, bool sel,
+                  Residue::SecondaryStructure sec)
+    : pos(p), color1(c1), color2(c2), group(g), residueID(id), selected(sel),
+      secondaryStructure(sec)
+
   {}
   Vector3f pos;
   Vector3ub color1;
   Vector3ub color2;
   size_t group;
+  size_t residueID;
+  bool selected;
+  Residue::SecondaryStructure secondaryStructure;
 };
 
 typedef list<BackboneResidue> AtomsPairList;
@@ -157,41 +172,27 @@ Cartoons::Cartoons(QObject* parent) : ScenePlugin(parent), m_group(nullptr)
 
 Cartoons::~Cartoons() {}
 
-BackboneResidue createBackBone(const Atom& caAtom, const Atom& auxAtom,
-                               const Atom* nextAtom, Index group, bool fliped)
-{
-  Vector3f ca = caAtom.position3d().cast<float>();
-  Vector3f aux = auxAtom.position3d().cast<float>();
-  Vector3ub color2;
-  // incompleat orientation
-  if (nextAtom == nullptr) {
-    color2 = Vector3ub::Zero();
-  } else {
-    Vector3f next = nextAtom->position3d().cast<float>();
-    color2 = nextAtom->color();
-  }
-  return BackboneResidue(ca, caAtom.color(), color2, group);
-}
-
 void addBackBone(map<size_t, AtomsPairList>& result,
-                 map<size_t, pair<Atom, Atom>>& previousCA, const Atom& caAtom,
-                 const Atom& auxAtom, Index group)
+                 map<size_t, BackboneResidue>& previousCA, const Atom& caAtom,
+                 const Vector3ub& color, Index group,
+                 Residue::SecondaryStructure sec)
 {
-  Atom* next;
+  Vector3ub color1;
   if (result.find(group) == result.end()) {
     result[group] = AtomsPairList();
-    next = nullptr;
+    color1 = Vector3ub(0, 0, 0);
   } else {
-    next = &(previousCA[group].first);
+    color1 = previousCA[group].color2;
   }
-  BackboneResidue backBone =
-    createBackBone(caAtom, auxAtom, next, group, false);
+
+  Vector3f ca = caAtom.position3d().cast<float>();
+  BackboneResidue backBone = BackboneResidue(
+    ca, color1, color, group, caAtom.index(), caAtom.selected(), sec);
   // the 1º insertion will always be incompleated, so fix it
   if (result[group].size() == 1) {
-    result[group].front() = createBackBone(
-      previousCA[group].first, previousCA[group].second, &caAtom, group, true);
+    result[group].front().color1 = color1;
   }
-  previousCA[group] = std::make_pair(caAtom, auxAtom);
+  previousCA[group] = backBone;
   result[group].push_back(backBone);
 }
 
@@ -200,19 +201,18 @@ map<size_t, AtomsPairList> Cartoons::getBackboneByResidues(
 {
   const auto& graph = molecule.graph();
   map<size_t, AtomsPairList> result;
-  map<size_t, pair<Atom, Atom>> previousCA;
+  map<size_t, BackboneResidue> previousCA;
   for (const auto& residue : molecule.residues()) {
     if (!residue.isHeterogen()) {
       Atom caAtom = residue.getAtomByName("CA");
       Atom oAtom = residue.getAtomByName("O");
-      if (caAtom.isValid() && oAtom.isValid()) {
-        if (!m_layerManager.atomEnabled(layer, caAtom.index()) ||
-            !m_layerManager.atomEnabled(layer, oAtom.index())) {
-          continue;
-        }
+      if (caAtom.isValid() && oAtom.isValid() &&
+          m_layerManager.atomEnabled(layer, caAtom.index()) &&
+          m_layerManager.atomEnabled(layer, oAtom.index())) {
         // get the group ID and check if it's initialized in the map
         size_t group = graph.getConnectedID(caAtom.index());
-        addBackBone(result, previousCA, caAtom, oAtom, group);
+        addBackBone(result, previousCA, caAtom, residue.color(), group,
+                    residue.secondaryStructure());
       }
     }
   }
@@ -223,33 +223,17 @@ map<size_t, AtomsPairList> Cartoons::getBackboneManually(
   const Molecule& molecule, size_t layer)
 {
   // manual filter
-  // const auto& graph = molecule.graph();
+  const auto& graph = molecule.graph();
   map<size_t, AtomsPairList> result;
-  map<size_t, pair<Atom, Atom>> previousCA;
+  map<size_t, BackboneResidue> previousCA;
 
   for (size_t i = 0; i < molecule.atomCount(); ++i) {
     const auto atom = molecule.atom(i);
-    if (atom.atomicNumber() == AtomicNumber::Carbon) {
-      Atom aux = Atom();
-      for (const auto& bond : molecule.bonds(atom.index())) {
-        if (int(bond->atom1().atomicNumber()) == int(AtomicNumber::Oxygen) ||
-            int(bond->atom1().atomicNumber()) == int(AtomicNumber::Hydrogen)) {
-          aux = bond->atom1();
-          break;
-        }
-        if (int(bond->atom2().atomicNumber()) == int(AtomicNumber::Oxygen) ||
-            int(bond->atom2().atomicNumber()) == int(AtomicNumber::Hydrogen)) {
-          aux = bond->atom2();
-          break;
-        }
-      }
-      if (!m_layerManager.atomEnabled(layer, aux.index())) {
-        continue;
-      }
-      if (aux.isValid()) {
-        size_t group = 0; // graph.getConnectedID(atom.index());
-        addBackBone(result, previousCA, atom, aux, group);
-      }
+    if (atom.atomicNumber() == AtomicNumber::Carbon &&
+        m_layerManager.atomEnabled(layer, atom.index())) {
+      size_t group = graph.getConnectedID(atom.index());
+      addBackBone(result, previousCA, atom, atom.color(), group,
+                  Residue::SecondaryStructure::undefined);
     }
   }
   return result;
@@ -268,79 +252,113 @@ void renderBackbone(const AtomsPairList& backbone, const Molecule& molecule,
 
   CylinderGeometry* cylinders = new CylinderGeometry;
   cylinders->identifier().molecule = &molecule;
-  cylinders->identifier().type = Rendering::BondType;
+  cylinders->identifier().type = Rendering::AtomType;
   geometry->addDrawable(cylinders);
 
   Index i = 0;
   for (AtomsPairList::const_iterator it = backbone.begin();
        it != backbone.end(); ++it) {
     const auto& bone = *it;
+    auto color1 = bone.color1;
+    auto color2 = bone.color2;
+    if (bone.selected) {
+      color1 += Vector3ub(155, 0, 0);
+      color2 += Vector3ub(155, 0, 0);
+    }
     const Vector3f& pos = bone.pos;
-    spheres->addSphere(pos, bone.color1, radius);
+    spheres->addSphere(pos, color1, radius, bone.residueID);
     if (std::next(it) != backbone.end()) {
       const auto& nextBone = *std::next(it);
       const Vector3f& pos2 = nextBone.pos;
-      cylinders->addCylinder(pos, pos2, radius, bone.color1, bone.color2,
-                             bone.group);
+      cylinders->addCylinder(pos, pos2, radius, color1, color2, bone.residueID);
     }
     ++i;
   }
 }
 
 void renderRope(const AtomsPairList& backbone, const Molecule& molecule,
-                Rendering::GroupNode& node, float radius, size_t id)
+                Rendering::GroupNode& node, float radius)
 {
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
 
   BezierGeometry* bezier = new BezierGeometry;
   bezier->identifier().molecule = &molecule;
-  bezier->identifier().type = Rendering::BondType;
+  bezier->identifier().type = Rendering::AtomType;
   geometry->addDrawable(bezier);
 
+  Vector3ub color = Vector3ub::Zero();
   for (const auto& bone : backbone) {
-    bezier->addPoint(bone.pos, bone.color1, radius, bone.group);
+    bezier->addPoint(bone.pos, bone.color1 + color, radius, bone.group,
+                     bone.residueID);
+    color = bone.selected ? Vector3ub(155, 0, 0) : Vector3ub::Zero();
   }
 }
 
 void renderTube(const AtomsPairList& backbone, const Molecule& molecule,
-                Rendering::GroupNode& node, float radius, size_t id)
+                Rendering::GroupNode& node, float radius)
 {
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
 
   BSplineGeometry* bezier = new BSplineGeometry;
   bezier->identifier().molecule = &molecule;
-  bezier->identifier().type = Rendering::BondType;
+  bezier->identifier().type = Rendering::AtomType;
   geometry->addDrawable(bezier);
 
+  Vector3ub color = Vector3ub::Zero();
   for (const auto& bone : backbone) {
-    bezier->addPoint(bone.pos, bone.color1, radius, bone.group);
+    bezier->addPoint(bone.pos, bone.color1 + color, radius, bone.group,
+                     bone.residueID);
+    color = bone.selected ? Vector3ub(155, 0, 0) : Vector3ub::Zero();
   }
 }
 
-void renderCartoon(const AtomsPairList& backbone, const Molecule& molecule,
-                   Rendering::GroupNode& node, float radius, size_t id)
+void renderSimpleCartoon(const AtomsPairList& backbone,
+                         const Molecule& molecule, Rendering::GroupNode& node,
+                         float radius)
 {
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
 
   Cartoon* cartoon = new Cartoon;
   cartoon->identifier().molecule = &molecule;
-  cartoon->identifier().type = Rendering::BondType;
+  cartoon->identifier().type = Rendering::AtomType;
   geometry->addDrawable(cartoon);
+  Vector3ub color = Vector3ub::Zero();
   for (const auto& bone : backbone) {
-    cartoon->addPoint(bone.pos, bone.color1, radius, bone.group);
+    cartoon->CurveGeometry::addPoint(bone.pos, bone.color1 + color, radius,
+                                     bone.group, bone.residueID);
+    color = bone.selected ? Vector3ub(155, 0, 0) : Vector3ub::Zero();
+  }
+}
+
+void renderCartoon(const AtomsPairList& backbone, const Molecule& molecule,
+                   Rendering::GroupNode& node, float radius)
+{
+  GeometryNode* geometry = new GeometryNode;
+  node.addChild(geometry);
+
+  Cartoon* cartoon = new Cartoon(radius * 0.2f, radius * 1.5f);
+  cartoon->identifier().molecule = &molecule;
+  cartoon->identifier().type = Rendering::AtomType;
+  geometry->addDrawable(cartoon);
+  Vector3ub color = Vector3ub::Zero();
+  for (const auto& bone : backbone) {
+    cartoon->addPoint(bone.pos, bone.color1 + color, bone.group, bone.residueID,
+                      bone.secondaryStructure);
+    color = bone.selected ? Vector3ub(155, 0, 0) : Vector3ub::Zero();
   }
 }
 
 void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
+  m_group = &node;
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
     LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>(layer);
-    m_group = &node;
     if (interface.showBackbone || interface.showTrace || interface.showTube ||
-        interface.showRibbon || interface.showCartoon || interface.showRope) {
+        interface.showRibbon || interface.showSimpleCartoon ||
+        interface.showCartoon || interface.showRope) {
       map<size_t, AtomsPairList> backbones;
       if (molecule.residues().size() > 0) {
         backbones = getBackboneByResidues(molecule, layer);
@@ -355,20 +373,23 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
           renderBackbone(backbone, molecule, node, 0.1f);
         }
         if (interface.showTrace) {
-          renderTube(backbone, molecule, node, -0.15f, i);
+          renderTube(backbone, molecule, node, -0.15f);
         }
         if (interface.showTube) {
-          renderTube(backbone, molecule, node, 0.15f, i);
+          renderTube(backbone, molecule, node, 0.15f);
         }
         if (interface.showRibbon) {
-          renderCartoon(backbone, molecule, node, -1.0f * Cartoon::ELIPSE_RATIO,
-                        i);
+          renderCartoon(backbone, molecule, node,
+                        -1.0f * Cartoon::ELIPSE_RATIO);
+        }
+        if (interface.showSimpleCartoon) {
+          renderSimpleCartoon(backbone, molecule, node, 1.0f);
         }
         if (interface.showCartoon) {
-          renderCartoon(backbone, molecule, node, 1.0f, i);
+          renderCartoon(backbone, molecule, node, 1.0f);
         }
         if (interface.showRope) {
-          renderRope(backbone, molecule, node, 1.0f, i);
+          renderRope(backbone, molecule, node, 1.0f);
         }
         ++i;
       }
@@ -425,6 +446,17 @@ void Cartoons::showRibbon(bool show)
   }
   QSettings settings;
   settings.setValue("cartoon/ribbon", show);
+}
+
+void Cartoons::showSimpleCartoon(bool show)
+{
+  LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface.showSimpleCartoon) {
+    interface.showSimpleCartoon = show;
+    emit drawablesChanged();
+  }
+  QSettings settings;
+  settings.setValue("cartoon/simpleCartoon", show);
 }
 
 void Cartoons::showCartoon(bool show)
