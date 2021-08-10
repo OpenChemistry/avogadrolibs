@@ -16,6 +16,7 @@ namespace {
 #include "avogadrogl.h"
 
 #include <iostream>
+#include <queue>
 #include <vector>
 
 using std::cout;
@@ -23,6 +24,10 @@ using std::endl;
 
 namespace Avogadro {
 namespace Rendering {
+
+using Core::Array;
+
+const size_t CurveGeometry::SKIPPED = 1;
 
 CurveGeometry::CurveGeometry() : m_dirty(true), m_canBeFlat(true) {}
 CurveGeometry::CurveGeometry(bool flat) : m_dirty(true), m_canBeFlat(flat) {}
@@ -35,7 +40,7 @@ CurveGeometry::~CurveGeometry()
 }
 
 std::vector<ColorNormalVertex> CurveGeometry::computeCirclePoints(
-  const Eigen::Affine3f& a, const Eigen::Affine3f& b, float radius, bool flat)
+  const Eigen::Affine3f& a, const Eigen::Affine3f& b, bool flat) const
 {
   unsigned int circleResolution = flat ? 1 : 12;
   const float resolutionRadians =
@@ -44,7 +49,7 @@ std::vector<ColorNormalVertex> CurveGeometry::computeCirclePoints(
 
   for (unsigned int i = 0; i < circleResolution; ++i) {
     float theta = i * resolutionRadians;
-    Vector3f circle = Vector3f(std::cos(theta), 0.0f, std::sin(theta)) * radius;
+    Vector3f circle = Vector3f(std::cos(theta), 0.0f, std::sin(theta));
     ColorNormalVertex vert1;
     vert1.normal = a.linear() * circle;
     vert1.vertex = a * circle;
@@ -60,6 +65,11 @@ std::vector<ColorNormalVertex> CurveGeometry::computeCirclePoints(
   return result;
 }
 
+float CurveGeometry::computeScale(size_t, float, float scale) const
+{
+  return scale;
+}
+
 void CurveGeometry::update(int index)
 {
   // compute the middle points
@@ -69,39 +79,71 @@ void CurveGeometry::update(int index)
 
   const size_t qttySegments = lineResolution * qttyPoints;
   Vector3f previous;
-  const size_t skip = 1;
   std::vector<Eigen::Affine3f> points;
   size_t top = qttyPoints <= 4 ? 0 : line->points.size() - 4;
-  for (size_t i = skip; i < top; ++i) {
+  auto it = line->points.begin();
+  for (size_t i = SKIPPED; i < top; ++i) {
     for (size_t j = 0; j < lineResolution; ++j) {
-      auto p = computeCurvePoint((i * lineResolution + j) / float(qttySegments),
-                                 line->points);
-      if (i > skip) {
+      float t = (i * lineResolution + j) / float(qttySegments);
+      auto p = computeCurvePoint(t, line->points);
+      if (i > SKIPPED) {
         Eigen::Matrix3f m;
         m.col(1) = (p - previous).normalized();
         m.col(0) = m.col(1).unitOrthogonal() * -1.0f;
+        if (i > SKIPPED + 1) {
+          const auto& previousAngle = points.back().linear().col(0);
+          float angle = previousAngle.dot(m.col(0));
+          // avoid nans
+          if (std::isnan(angle)) {
+            m.col(0) = previousAngle;
+            break;
+            // if angle > 90 flip it
+          } else if (angle <= 0.0f) {
+            m.col(0) *= -1.0f;
+          }
+          angle = previousAngle.dot(m.col(0));
+          float degrees =
+            (std::acos(angle / (m.col(0).norm() * previousAngle.norm())) *
+             RAD_TO_DEG_F);
+          // if angle is > 25º get the bisector
+          while (degrees > 25.0f) {
+            m.col(0) = (m.col(0) + previousAngle).normalized();
+            angle = previousAngle.dot(m.col(0));
+            degrees =
+              (std::acos(angle / (m.col(0).norm() * previousAngle.norm())) *
+               RAD_TO_DEG_F);
+          }
+        }
         m.col(2) = m.col(0).cross(m.col(1)) * -1.0f;
-
         Eigen::Affine3f affine;
         affine.translation() = p;
         affine.linear() = m;
+        float r = !m_canBeFlat || !line->flat
+                    ? computeScale(i, j / static_cast<float>(lineResolution),
+                                   line->radius)
+                    : 0.01f;
+        affine.scale(r);
         points.push_back(affine);
       }
       previous = p;
     }
+    ++it;
   }
 
   // prepare VBO and EBO
   std::vector<unsigned int> indices;
   std::vector<ColorNormalVertex> vertices;
 
-  auto it = line->points.begin();
+  it = line->points.begin();
+  if (line->points.size() > 3) {
+    it = std::next(it, 3);
+  }
   for (size_t i = 1; i < points.size(); ++i) {
     if (i % lineResolution == 0) {
       ++it;
     }
     std::vector<ColorNormalVertex> radials =
-      computeCirclePoints(points[i], points[i - 1], line->radius, line->flat);
+      computeCirclePoints(points[i], points[i - 1], line->flat);
     for (auto r : radials) {
       r.color = (*it)->color;
       vertices.push_back(r);
@@ -219,22 +261,50 @@ void CurveGeometry::render(const Camera& camera)
 }
 
 void CurveGeometry::addPoint(const Vector3f& pos, const Vector3ub& color,
-                             float radius, size_t i)
+                             float radius, size_t group, size_t id)
 {
-  if (m_indexMap.find(i) == m_indexMap.end()) {
-    m_indexMap[i] = m_lines.size();
+  if (m_indexMap.find(group) == m_indexMap.end()) {
+    m_indexMap[group] = m_lines.size();
     m_lines.push_back(new Line(radius));
   }
-  m_lines[m_indexMap[i]]->radius = radius;
-  m_lines[m_indexMap[i]]->flat = radius < 0.0f;
-  m_lines[m_indexMap[i]]->add(new Point(pos, color));
+  m_lines[m_indexMap[group]]->radius = radius;
+  m_lines[m_indexMap[group]]->flat = radius < 0.0f;
+  m_lines[m_indexMap[group]]->add(new Point(pos, color, id));
 }
 
-std::multimap<float, Identifier> CurveGeometry::hits(const Vector3f&,
-                                                     const Vector3f&,
-                                                     const Vector3f&) const
+Array<Identifier> CurveGeometry::areaHits(const Frustrum& f) const
 {
-  return std::multimap<float, Identifier>();
+  Array<Identifier> result;
+  // Check for intersection.
+  for (const auto& line : m_lines) {
+    size_t skip = 0;
+    std::queue<size_t> previous;
+    for (const auto& point : line->points) {
+      previous.push(point->id);
+      if (skip < 2) {
+        ++skip;
+        continue;
+      }
+      int in = 0;
+      for (; in < 4; ++in) {
+        float dist = (point->pos - f.points[2 * in]).dot(f.planes[in]);
+        if (dist > 0.0f) {
+          // Outside of our frustrum, break.
+          break;
+        }
+      }
+      if (in == 4) {
+        // The center is within the four planes that make our frustrum - hit.
+        Identifier id;
+        id.molecule = m_identifier.molecule;
+        id.type = m_identifier.type;
+        id.index = previous.front();
+        result.push_back(id);
+      }
+      previous.pop();
+    }
+  }
+  return result;
 }
 
 } // namespace Rendering
