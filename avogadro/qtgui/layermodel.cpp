@@ -75,7 +75,7 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
     if (idx.column() == ColumnType::Name) {
       switch (role) {
         case Qt::DisplayRole: {
-          return (name + " " + std::to_string(layer)).c_str();
+          return QString("%1 %2").arg(name.c_str()).arg(layer + 1); // count starts at 0 internally
         }
         case Qt::ForegroundRole:
           if (layer == static_cast<int>(getMoleculeLayer().activeLayer()))
