@@ -233,6 +233,10 @@ public:
    */
   bool setAtomPosition3d(Index atomId, const Vector3& pos);
 
+  std::string label(Index atomId) const;
+  bool setLabel(const Core::Array<std::string>& label);
+  bool setLabel(Index atomId, const std::string& label);
+
   /**
    * Set whether the specified atom is selected or not.
    */
@@ -664,6 +668,7 @@ protected:
   CustomElementMap m_customElementMap;
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
+  Array<std::string> m_label;
   Array<Array<Vector3>> m_coordinates3d; // Used for conformers/trajectories.
   Array<double> m_timesteps;
   Array<AtomHybridization> m_hybridizations;
@@ -852,6 +857,31 @@ inline bool Molecule::setAtomPosition3d(Index atomId, const Vector3& pos)
     if (atomId >= m_positions3d.size())
       m_positions3d.resize(atomCount(), Vector3::Zero());
     m_positions3d[atomId] = pos;
+    return true;
+  }
+  return false;
+}
+
+inline std::string Molecule::label(Index atomId) const
+{
+  return atomId < m_label.size() ? m_label[atomId] : "";
+}
+
+inline bool Molecule::setLabel(const Core::Array<std::string>& label)
+{
+  if (label.size() == atomCount() || label.size() == 0) {
+    m_label = label;
+    return true;
+  }
+  return false;
+}
+
+inline bool Molecule::setLabel(Index atomId, const std::string& label)
+{
+  if (atomId < atomCount()) {
+    if (atomId >= m_label.size())
+      m_label.resize(atomCount(), "");
+    m_label[atomId] = label;
     return true;
   }
   return false;

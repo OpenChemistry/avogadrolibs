@@ -31,8 +31,8 @@ Molecule::Molecule()
 Molecule::Molecule(const Molecule& other)
   : m_data(other.m_data), m_customElementMap(other.m_customElementMap),
     m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
-    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
-    m_hybridizations(other.m_hybridizations),
+    m_label(other.m_label), m_coordinates3d(other.m_coordinates3d),
+    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIntensities(other.m_vibrationIntensities),
@@ -63,6 +63,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_customElementMap(std::move(other.m_customElementMap)),
     m_positions2d(std::move(other.m_positions2d)),
     m_positions3d(std::move(other.m_positions3d)),
+    m_label(std::move(other.m_label)),
     m_coordinates3d(std::move(other.m_coordinates3d)),
     m_timesteps(std::move(other.m_timesteps)),
     m_hybridizations(std::move(other.m_hybridizations)),
@@ -94,6 +95,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_customElementMap = other.m_customElementMap;
     m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
+    m_label = other.m_label;
     m_coordinates3d = other.m_coordinates3d;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
@@ -144,6 +146,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_customElementMap = std::move(other.m_customElementMap);
     m_positions2d = std::move(other.m_positions2d);
     m_positions3d = std::move(other.m_positions3d);
+    m_label = std::move(other.m_label);
     m_coordinates3d = std::move(other.m_coordinates3d);
     m_timesteps = std::move(other.m_timesteps);
     m_hybridizations = std::move(other.m_hybridizations);
@@ -397,6 +400,7 @@ void Molecule::clearAtoms()
 {
   m_positions2d.clear();
   m_positions3d.clear();
+  m_label.clear();
   m_hybridizations.clear();
   m_formalCharges.clear();
   m_colors.clear();

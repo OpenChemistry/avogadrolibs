@@ -624,6 +624,27 @@ public:
   }
 };
 } // namespace
+
+namespace {
+class ModifyLabelCommand : public RWMolecule::UndoCommand
+{
+  Index m_atomId;
+  std::string m_newLabel;
+  std::string m_oldLabel;
+
+public:
+  ModifyLabelCommand(RWMolecule& m, Index atomId, const std::string& label)
+    : UndoCommand(m), m_atomId(atomId), m_newLabel(label)
+  {
+    m_oldLabel = m_mol.molecule().label(m_atomId);
+  }
+
+  void redo() override { m_mol.molecule().setLabel(m_atomId, m_newLabel); }
+
+  void undo() override { m_mol.molecule().setLabel(m_atomId, m_oldLabel); }
+};
+} // namespace
+
 } // namespace QtGui
 } // namespace Avogadro
 #endif
