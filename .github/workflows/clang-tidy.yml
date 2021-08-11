@@ -15,6 +15,7 @@ on:
 env:
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
   BUILD_TYPE: RelWithDebInfo
+  CLAZY_VERSION: 1.8
 
 jobs:
   build:
@@ -25,7 +26,7 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu clang-tidy", artifact: "Ubuntu-2004.tar.gz",
+            name: "Ubuntu Analysis",
             os: ubuntu-20.04,
             cc: "clang", cxx: "clang++",
             cmake_flags: "-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DUSE_SYSTEM_LIBXML2=ON -USE_SYSTEM_ZLIB=ON",
@@ -91,10 +92,19 @@ jobs:
         sudo apt-get -qq install clang-tidy-11
         run-clang-tidy-11 -j=2 -checks='-*,performance-*,readability-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,concurrency-*,modernize-*,portability-*,misc-*' -export-fixes=fixes.yaml 
 
+    - name: Download and run Clazy
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+      run : |
+        wget https://downloads.kdab.com/clazy/${{ env.CLAZY_VERSION }}/Clazy-x86_64-${{env.CLAZY_VERSION}}.AppImage
+        export CLAZY_CHECKS="level0,level1,qt6-deprecated-api-fixes,qt6-header-fixes,function-args-by-value,missing-qobject-macro"
+        chmod u+x ./Clazy-x86_64-${{env.CLAZY_VERSION}}.AppImage
+        ./Clazy-x86_64-${{env.CLAZY_VERSION}}.AppImage -j 2 --standalone -export-fixes=clazy.yaml
+
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        path: ${{ runner.workspace }}/build/fixes.yaml
+        path: ${{ runner.workspace }}/build/*.yaml
         name: clang-tidy-fixes.yaml
 
     - name: Run clang-tidy-pr-comments action
