@@ -11,6 +11,7 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/meshgeometry.h>
 #include <avogadro/rendering/scene.h>
+#include <avogadro/qtopengl/glwidget.h>
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
@@ -289,19 +290,23 @@ void OverlayAxes::setActiveWidget(QWidget* widget)
 {
   if (widget != nullptr) {
     m_glWidget = widget;
+    connect(this, SIGNAL(updateRequested()), m_glWidget, SLOT(requestUpdate()));
+
     if (m_widgetToNode.find(m_glWidget) == m_widgetToNode.end()) {
       m_widgetToNode[m_glWidget] = nullptr;
     }
   }
 }
 
-void OverlayAxes::process(const Core::Molecule&, Rendering::GroupNode& node)
+void OverlayAxes::process(const Core::Molecule& mol, Rendering::GroupNode& node)
 {
   GeometryNode* geo = new GeometryNode;
   // Since our geometry doesn't change, we just make a copy of the pre-built
   // set of axes.
   geo->addDrawable(new CustomMesh(*m_render->mesh));
   node.addChild(geo, GroupNode::NodeType::UI);
+
+  emit updateRequested();
 }
 
 void OverlayAxes::setMolecule(QtGui::Molecule* molecule)

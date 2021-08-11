@@ -41,6 +41,9 @@ public slots:
   void setScene(Rendering::Scene* scene) override;
   void setActiveWidget(QWidget* widget) override;
 
+signals:
+  void updateRequested();
+
 private slots:
   void processAxes();
 
