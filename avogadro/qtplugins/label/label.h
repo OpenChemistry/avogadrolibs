@@ -22,36 +22,29 @@ public:
   explicit Label(QObject* parent = nullptr);
   ~Label() override;
 
-  QString name() const override { return tr("Labels"); }
+  QString name() const override { return tr(m_name.c_str()); }
+
   QString description() const override
   {
     return tr("Display labels on ball and stick style.");
   }
 
-  bool isEnabled() const override;
-
-  void setEnabled(bool enable) override;
-
   QWidget* setupWidget() override;
   void process(const Core::Molecule& molecule, Rendering::GroupNode& node);
 
-private slots:
+public slots:
   void atomLabel(bool show);
   void residueLabel(bool show);
+  void setRadiusScalar(double radius);
 
 private:
-  void processAtom(const Core::Molecule& molecule, Rendering::GroupNode& node);
+  void processAtom(const Core::Molecule& molecule, Rendering::GroupNode& node,
+                   size_t layer);
   void processResidue(const Core::Molecule& molecule,
-                      Rendering::GroupNode& node);
-
-  bool m_enabled;
+                      Rendering::GroupNode& node, size_t layer);
 
   Rendering::GroupNode* m_group;
-
-  QWidget* m_setupWidget;
-
-  bool m_atomLabel;
-  bool m_residueLabel;
+  std::string m_name = "Labels";
 };
 
 } // end namespace QtPlugins
