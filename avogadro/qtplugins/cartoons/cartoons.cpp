@@ -364,7 +364,8 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
         backbones = getBackboneByResidues(molecule, layer);
       }
       if (backbones.size() == 0) {
-        backbones = getBackboneManually(molecule, layer);
+        return;
+        //        backbones = getBackboneManually(molecule, layer);
       }
       size_t i = 0;
       for (const auto& group : backbones) {
