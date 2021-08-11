@@ -83,8 +83,8 @@ public:
   /**
    * Add a sphere to the geometry object.
    */
-  void addSphere(const Vector3f& position, const Vector3ub& color,
-                 float radius);
+  void addSphere(const Vector3f& position, const Vector3ub& color, float radius,
+                 size_t index = MaxIndex);
 
   /**
    * Get a reference to the spheres.

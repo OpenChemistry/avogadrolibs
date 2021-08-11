@@ -22,36 +22,26 @@ public:
   explicit Wireframe(QObject* parent = nullptr);
   ~Wireframe() override;
 
-  void process(const Core::Molecule& molecule,
+  void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Wireframe"); }
+  QString name() const override { return tr(m_name.c_str()); }
 
   QString description() const override
   {
     return tr("Render the molecule as a wireframe.");
   }
 
-  bool isEnabled() const override;
-
-  void setEnabled(bool enable) override;
-
   QWidget* setupWidget() override;
 
-private slots:
+public slots:
   void multiBonds(bool show);
   void showHydrogens(bool show);
   void setWidth(double width);
 
 private:
-  bool m_enabled;
-
   Rendering::GroupNode* m_group;
-
-  QWidget* m_setupWidget;
-  bool m_multiBonds;
-  bool m_showHydrogens;
-  float m_lineWidth;
+  std::string m_name = "Wireframe";
 };
 
 } // end namespace QtPlugins

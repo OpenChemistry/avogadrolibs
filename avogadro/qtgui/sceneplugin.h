@@ -19,6 +19,7 @@
 
 #include "avogadroqtguiexport.h"
 
+#include "pluginlayermanager.h"
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtplugins/pluginfactory.h>
 
@@ -37,6 +38,7 @@ class GroupNode;
 namespace QtGui {
 
 class RWMolecule;
+class Molecule;
 
 /**
  * @class ScenePluginFactory sceneplugin.h <avogadro/qtgui/sceneplugin.h>
@@ -55,7 +57,10 @@ public:
    * Process the supplied atom, and add the necessary primitives to the scene.
    */
   virtual void process(const Core::Molecule& molecule,
-                       Rendering::GroupNode& node) = 0;
+                       Rendering::GroupNode& node);
+
+  virtual void process(const QtGui::Molecule& molecule,
+                       Rendering::GroupNode& node);
 
   virtual void processEditable(const RWMolecule& molecule,
                                Rendering::GroupNode& node);
@@ -73,17 +78,26 @@ public:
   /**
    * Returns true if the scene plugin has been enabled and is active.
    */
-  virtual bool isEnabled() const = 0;
+  virtual bool isEnabled() const;
+
+  /**
+   * Returns true if the scene plugin has been enabled and is active in the
+   * active scene.
+   */
+  virtual bool isActiveLayerEnabled() const;
 
   /**
    * Set the enabled state of the plugin (default should be false).
    */
-  virtual void setEnabled(bool enable) = 0;
+  virtual void setEnabled(bool enable);
 
   virtual QWidget* setupWidget();
 
 signals:
   void drawablesChanged();
+
+protected:
+  PluginLayerManager m_layerManager;
 };
 
 /**
@@ -98,8 +112,8 @@ public:
   ~ScenePluginFactory() override {}
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 Q_DECLARE_INTERFACE(Avogadro::QtGui::ScenePluginFactory,
                     "org.openchemistry.avogadro.ScenePluginFactory")

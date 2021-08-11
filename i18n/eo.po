@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-22 11:28-0400\n"
-"PO-Revision-Date: 2021-07-10 14:32+0000\n"
+"PO-Revision-Date: 2021-08-07 17:34+0000\n"
 "Last-Translator: phlostically <phlostically@mailinator.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -3413,7 +3413,7 @@ msgstr "Elekti laŭ Atoma Indico…"
 
 #: qtplugins/select/select.cpp:66
 msgid "Select by Residue..."
-msgstr ""
+msgstr "Elekti laŭ restaĵo…"
 
 #: qtplugins/select/select.cpp:79
 msgid "Change selections"
@@ -3433,11 +3433,11 @@ msgstr "Elektotaj Atomoj:"
 
 #: qtplugins/select/select.cpp:190
 msgid "Select Atoms by Residue"
-msgstr ""
+msgstr "Elekti atomojn laŭ restaĵo"
 
 #: qtplugins/select/select.cpp:191
 msgid "Residues to Select:"
-msgstr ""
+msgstr "Elektotaj restaĵoj:"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -3737,7 +3737,7 @@ msgstr "Montri molekulon kiel dratan kadron."
 
 #: qtplugins/yaehmop/yaehmop.cpp:60
 msgid "Calculate band structure..."
-msgstr ""
+msgstr "Kalkuli bendostrukturon…"
 
 #: qtplugins/yaehmop/yaehmop.cpp:80
 msgid "&Yaehmop"
@@ -3745,7 +3745,7 @@ msgstr "&Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.cpp:178 qtplugins/yaehmop/yaehmop.cpp:411
 msgid "Cannot calculate band structure: no unit cell!"
-msgstr ""
+msgstr "Malsukcesis kalkuli bendostrukturon: mankas unita ĉelo!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:268
 msgid "Yaehmop execution failed with the following error:\n"
@@ -3753,7 +3753,7 @@ msgstr "Yaehmop kolapsis pro la jena eraro:\n"
 
 #: qtplugins/yaehmop/yaehmop.cpp:278
 msgid "Failed to read band structure output from Yaehmop!"
-msgstr ""
+msgstr "Malsukcesis legi eligaĵon pri bendostrukturo el Yaehmop!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:291
 msgid ""
@@ -6171,7 +6171,7 @@ msgstr "Trovi Simetrion"
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
 msgid "Yaehmop Band"
-msgstr ""
+msgstr "Bendo de Yaehmop"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:33
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_minY)
@@ -6199,6 +6199,13 @@ msgid ""
 "level is set in the spinbox on the right.</p><p>Default: off</p></body></"
 "html>"
 msgstr ""
+"<html><head/><body><p>La Fermi-nivelo estu konata antaŭ ol elekti ĉi tiun "
+"elektobutonon. Vi povas trovi la Fermi-nivelon kalkulante la statodenson kaj "
+"montrante la datenojn (ĝi estos supre de la datenoj). Krome, se la "
+"statodenso kalkuliĝos, la Fermi-nivelo ĉi tie aŭtomate agordiĝos al tiu, kiu "
+"estis trovita dum la kalkulo de la statodenso.</p><p>Se ĉi tiu elektobutonon "
+"estas elektita, certigu, ke la ĝusta Fermi-nivelo estas starigita en la "
+"dekstra kampo.</p><p>Implicite: malŝaltita</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
@@ -6243,7 +6250,6 @@ msgstr "<html><head/><body><p>La Fermi-Nivelo</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:142
 #. i18n: ectx: property (toolTip), widget (QTextEdit, edit_specialKPoints)
-#, fuzzy
 msgid ""
 "<html><head/><body><p>Enter special k-points as such:</p><p>L 0.5 0.5 0.5</"
 "p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>That is, &lt;symbol&gt; &lt;"
@@ -6259,15 +6265,15 @@ msgid ""
 msgstr ""
 "<html><head/><body><p>Tajpu specialajn k-punktojn jene:</p><p>L 0.5 0.5 0.5</"
 "p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>T.e. ‹simbolo› ‹x› ‹y› ‹z› en "
-"kiu x, y, kaj z estas fractional reciprocal space coordinates. Lines will be "
-"drawn connecting these k-points on the graph in the order you put them in. "
-"Please note that the orientation of your cell may have an effect on the "
-"locations of these reciprocal space points.</p><p>If the space group of the "
-"crystal has been perceived or set, the special k points will be "
-"automatically filled up with the primitive cell high symmetry points for "
-"that space group. There are a few space groups will different high symmetry "
-"points depending on the lattice (ekz. se a &gt; b aŭ a &lt; b) — that is "
-"taken into account automatically.</p></body></html>"
+"kiu x, y, kaj z estas fractional reciprocal space coordinates. Linioj "
+"desegniĝos konektante ĉi tiujn k-punktojn sur la grafo laŭ la ordo, laŭ kiu "
+"vi metis ilin. Bonvolu noti, ke la orientiĝo de via ĉelo povas efiki sur la "
+"lokojn de ĉi tiuj reciprokspacaj punktoj.</p><p>Se la spacgrupo de la "
+"kristalo estis trovita aŭ starigita, la specialaj k-punktoj aŭtomate "
+"pleniĝos per la altsimetriaj punktoj de la primitiva ĉelo por tiu spacgrupo. "
+"Ekzistas kelkaj spacgrupoj kun malsamaj altsimetriaj punktoj depende de la "
+"krado (ekz. se a &gt; b aŭ a &lt; b) — tio estas aŭtomate "
+"konsiderata.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)

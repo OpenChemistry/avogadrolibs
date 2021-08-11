@@ -7,13 +7,14 @@
 # Artem <KovalevArtem.ru@gmail.com>, 2020.
 # koffevar <egor.kafisov@gmail.com>, 2020.
 # Anna Malinovskaia <tacitcoast@gmail.com>, 2021.
+# Alex Brohovsky <san4ito94@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-02 05:24+0900\n"
-"PO-Revision-Date: 2021-07-19 18:32+0000\n"
-"Last-Translator: Anna Malinovskaia <tacitcoast@gmail.com>\n"
+"PO-Revision-Date: 2021-07-25 17:32+0000\n"
+"Last-Translator: Alex Brohovsky <san4ito94@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -58,7 +59,7 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:199 qtgui/interfacescript.cpp:325
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "Ссылочный файл '%1' не существует."
 
 #: molequeue/inputgenerator.cpp:201 qtgui/interfacescript.cpp:327
 #, qt-format

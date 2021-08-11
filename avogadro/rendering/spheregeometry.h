@@ -28,9 +28,7 @@ namespace Rendering {
 struct SphereColor
 {
   SphereColor(Vector3f centre, float r, Vector3ub c)
-    : center(centre)
-    , radius(r)
-    , color(c)
+    : center(centre), radius(r), color(c)
   {}
   Vector3f center;
   float radius;
@@ -104,8 +102,8 @@ public:
   /**
    * Add a sphere to the geometry object.
    */
-  void addSphere(const Vector3f& position, const Vector3ub& color,
-                 float radius);
+  void addSphere(const Vector3f& position, const Vector3ub& color, float radius,
+                 size_t index = MaxIndex);
 
   /**
    * Get a reference to the spheres.

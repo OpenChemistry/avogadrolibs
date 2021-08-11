@@ -29,11 +29,7 @@ class Molecule;
 
 struct MoleculeSystem
 {
-  MoleculeSystem()
-    : m_molecule(nullptr)
-    , m_dirty(false)
-    , m_active(false)
-  {}
+  MoleculeSystem() : m_molecule(nullptr), m_dirty(false), m_active(false) {}
 
   Molecule* m_molecule;
   Eigen::Affine3f m_modelView;
@@ -88,7 +84,7 @@ private:
   QObject* m_activeMolecule;
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_MOLECULEMODEL_H

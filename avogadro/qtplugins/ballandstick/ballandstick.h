@@ -34,37 +34,25 @@ public:
   explicit BallAndStick(QObject* parent = nullptr);
   ~BallAndStick() override;
 
-  void process(const Core::Molecule& molecule,
+  void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  void processEditable(const QtGui::RWMolecule& molecule,
-                       Rendering::GroupNode& node) override;
-
-  QString name() const override { return tr("Ball and Stick"); }
+  QString name() const override { return tr(m_name.c_str()); }
 
   QString description() const override
   {
     return tr("Render atoms as spheres and bonds as cylinders.");
   }
 
-  bool isEnabled() const override;
-
-  void setEnabled(bool enable) override;
-
   QWidget* setupWidget() override;
 
-private slots:
+public slots:
   void multiBonds(bool show);
   void showHydrogens(bool show);
 
 private:
-  bool m_enabled;
-
   Rendering::GroupNode* m_group;
-
-  QWidget* m_setupWidget;
-  bool m_multiBonds;
-  bool m_showHydrogens;
+  std::string m_name = "Ball and Stick";
 };
 
 } // end namespace QtPlugins
