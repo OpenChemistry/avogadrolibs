@@ -49,7 +49,7 @@ struct Sequence
   void reset() { i = 0; }
   unsigned int i;
 };
-}
+} // namespace
 
 void Meshes::process(const Molecule& mol, GroupNode& node)
 {
@@ -103,9 +103,14 @@ bool Meshes::isEnabled() const
   return m_enabled;
 }
 
+bool Meshes::isActiveLayerEnabled() const
+{
+  return m_enabled;
+}
+
 void Meshes::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

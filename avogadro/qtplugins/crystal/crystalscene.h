@@ -1,24 +1,15 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_CRYSTALSCENE_H
 #define AVOGADRO_QTPLUGINS_CRYSTALSCENE_H
 
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
+#include <QtGui/QColor> 
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -45,10 +36,22 @@ public:
 
   bool isEnabled() const override;
 
+  bool isActiveLayerEnabled() const override;
+
   void setEnabled(bool enable) override;
+
+  QWidget* setupWidget() override;
+
+private slots:
+  void setColor(const QColor &color);
+  void setLineWidth(double width);
 
 private:
   bool m_enabled;
+
+  QWidget* m_setupWidget;
+  float m_lineWidth;
+  Vector3ub m_color;
 };
 
 } // end namespace QtPlugins

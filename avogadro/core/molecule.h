@@ -8,15 +8,17 @@
 
 #include "avogadrocore.h"
 
-#include <map>
-#include <string>
-
 #include "array.h"
 #include "bond.h"
 #include "elements.h"
 #include "graph.h"
+#include "layer.h"
 #include "variantmap.h"
 #include "vector.h"
+
+#include <list>
+#include <map>
+#include <string>
 
 namespace Avogadro {
 namespace Core {
@@ -230,6 +232,10 @@ public:
    * @return True on success, false otherwise.
    */
   bool setAtomPosition3d(Index atomId, const Vector3& pos);
+
+  std::string label(Index atomId) const;
+  bool setLabel(const Core::Array<std::string>& label);
+  bool setLabel(Index atomId, const std::string& label);
 
   /**
    * Set whether the specified atom is selected or not.
@@ -524,8 +530,8 @@ public:
   void addResidue(Residue& residue);
   Residue& residue(Index index);
 
-  Array<Residue>& residues() { return m_residues;}
-  const Array<Residue>& residues() const { return m_residues;}
+  Array<Residue>& residues() { return m_residues; }
+  const Array<Residue>& residues() const { return m_residues; }
 
   /** @return The number of residues in the molecule. */
   Index residueCount() const;
@@ -652,11 +658,17 @@ public:
   // channge the Atom index position
   void swapAtom(Index a, Index b);
 
+  std::list<Index> getAtomsAtLayer(size_t layer);
+
+  Layer& layer();
+  const Layer& layer() const;
+
 protected:
   VariantMap m_data;
   CustomElementMap m_customElementMap;
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
+  Array<std::string> m_label;
   Array<Array<Vector3>> m_coordinates3d; // Used for conformers/trajectories.
   Array<double> m_timesteps;
   Array<AtomHybridization> m_hybridizations;
@@ -694,6 +706,7 @@ private:
   Array<unsigned char> m_bondOrders;
   // vertex information
   Array<unsigned char> m_atomicNumbers;
+  Layer& m_layers;
 };
 
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
@@ -844,6 +857,31 @@ inline bool Molecule::setAtomPosition3d(Index atomId, const Vector3& pos)
     if (atomId >= m_positions3d.size())
       m_positions3d.resize(atomCount(), Vector3::Zero());
     m_positions3d[atomId] = pos;
+    return true;
+  }
+  return false;
+}
+
+inline std::string Molecule::label(Index atomId) const
+{
+  return atomId < m_label.size() ? m_label[atomId] : "";
+}
+
+inline bool Molecule::setLabel(const Core::Array<std::string>& label)
+{
+  if (label.size() == atomCount() || label.size() == 0) {
+    m_label = label;
+    return true;
+  }
+  return false;
+}
+
+inline bool Molecule::setLabel(Index atomId, const std::string& label)
+{
+  if (atomId < atomCount()) {
+    if (atomId >= m_label.size())
+      m_label.resize(atomCount(), "");
+    m_label[atomId] = label;
     return true;
   }
   return false;

@@ -214,6 +214,9 @@ public:
    */
   Vector3 atomPosition3d(Index atomId) const;
 
+  std::string label(Index atomId) const;
+  bool setLabel(Index atomId, const std::string& label,
+                const QString& undoText = QStringLiteral("Change Atom Label"));
   /**
    * Replace the current array of 3D atomic coordinates.
    * @param pos The new coordinate array. Must be of length atomCount().
@@ -737,6 +740,11 @@ inline const Core::Array<Vector3>& RWMolecule::atomPositions3d() const
 inline Vector3 RWMolecule::atomPosition3d(Index atomId) const
 {
   return m_molecule.atomPosition3d(atomId);
+}
+
+inline std::string RWMolecule::label(Index atomId) const
+{
+  return m_molecule.label(atomId);
 }
 
 inline Core::AtomHybridization RWMolecule::hybridization(Index atomId) const

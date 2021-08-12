@@ -9,12 +9,14 @@
 #include "color3f.h"
 #include "cube.h"
 #include "elements.h"
+#include "layermanager.h"
 #include "mesh.h"
 #include "residue.h"
 #include "unitcell.h"
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 
 namespace Avogadro {
 namespace Core {
@@ -22,14 +24,15 @@ namespace Core {
 using std::swap;
 
 Molecule::Molecule()
-  : m_basisSet(nullptr), m_unitCell(nullptr), m_graphDirty(false)
+  : m_basisSet(nullptr), m_unitCell(nullptr), m_graphDirty(false),
+    m_layers(LayerManager::getMoleculeLayer(this))
 {}
 
 Molecule::Molecule(const Molecule& other)
   : m_data(other.m_data), m_customElementMap(other.m_customElementMap),
     m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
-    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
-    m_hybridizations(other.m_hybridizations),
+    m_label(other.m_label), m_coordinates3d(other.m_coordinates3d),
+    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIntensities(other.m_vibrationIntensities),
@@ -39,7 +42,8 @@ Molecule::Molecule(const Molecule& other)
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
     m_residues(other.m_residues), m_graph(other.m_graph),
     m_graphDirty(other.m_graphDirty), m_bondPairs(other.m_bondPairs),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers)
+    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
+    m_layers(LayerManager::getMoleculeLayer(&other, this))
 {
   // Copy over any meshes
   for (Index i = 0; i < other.meshCount(); ++i) {
@@ -59,6 +63,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_customElementMap(std::move(other.m_customElementMap)),
     m_positions2d(std::move(other.m_positions2d)),
     m_positions3d(std::move(other.m_positions3d)),
+    m_label(std::move(other.m_label)),
     m_coordinates3d(std::move(other.m_coordinates3d)),
     m_timesteps(std::move(other.m_timesteps)),
     m_hybridizations(std::move(other.m_hybridizations)),
@@ -73,7 +78,8 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_graphDirty(std::move(other.m_graphDirty)),
     m_bondPairs(std::move(other.m_bondPairs)),
     m_bondOrders(std::move(other.m_bondOrders)),
-    m_atomicNumbers(std::move(other.m_atomicNumbers))
+    m_atomicNumbers(std::move(other.m_atomicNumbers)),
+    m_layers(LayerManager::getMoleculeLayer(&other, this))
 {
   m_basisSet = other.m_basisSet;
   other.m_basisSet = nullptr;
@@ -89,6 +95,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_customElementMap = other.m_customElementMap;
     m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
+    m_label = other.m_label;
     m_coordinates3d = other.m_coordinates3d;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
@@ -127,6 +134,8 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr;
   }
 
+  m_layers = LayerManager::getMoleculeLayer(&other, this);
+
   return *this;
 }
 
@@ -137,6 +146,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_customElementMap = std::move(other.m_customElementMap);
     m_positions2d = std::move(other.m_positions2d);
     m_positions3d = std::move(other.m_positions3d);
+    m_label = std::move(other.m_label);
     m_coordinates3d = std::move(other.m_coordinates3d);
     m_timesteps = std::move(other.m_timesteps);
     m_hybridizations = std::move(other.m_hybridizations);
@@ -168,15 +178,27 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     other.m_unitCell = nullptr;
   }
 
+  m_layers = LayerManager::getMoleculeLayer(&other, this);
+
   return *this;
 }
 
 Molecule::~Molecule()
 {
+  LayerManager::deleteMolecule(this);
   delete m_basisSet;
   delete m_unitCell;
   clearMeshes();
   clearCubes();
+}
+
+Layer& Molecule::layer()
+{
+  return m_layers;
+}
+const Layer& Molecule::layer() const
+{
+  return m_layers;
 }
 
 void Molecule::setData(const std::string& name, const Variant& value)
@@ -275,6 +297,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
     m_graph.addVertex();
   }
   m_atomicNumbers.push_back(number);
+  m_layers.addAtomToActiveLayer(atomCount() - 1);
   return AtomType(this, static_cast<Index>(atomCount() - 1));
 }
 
@@ -283,7 +306,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
   if (m_positions3d.size() == atomCount()) {
     m_positions3d.push_back(position3d);
   }
-  return addAtom(number);
+  return Molecule::addAtom(number);
 }
 
 void Molecule::swapBond(Index a, Index b)
@@ -329,6 +352,7 @@ void Molecule::swapAtom(Index a, Index b)
       m_graph.addEdge(pair.first, pair.second);
     }
   }
+  m_layers.swapLayer(a, b);
 }
 
 bool Molecule::removeAtom(Index index)
@@ -362,6 +386,7 @@ bool Molecule::removeAtom(Index index)
   }
   // the bonds from back() now are in index, so we need to rebond it
   rebondBond(index, affectedIndex);
+  m_layers.removeAtom(index);
   return true;
   return true;
 }
@@ -375,6 +400,7 @@ void Molecule::clearAtoms()
 {
   m_positions2d.clear();
   m_positions3d.clear();
+  m_label.clear();
   m_hybridizations.clear();
   m_formalCharges.clear();
   m_colors.clear();
@@ -929,6 +955,14 @@ bool Molecule::setAtomicNumbers(const Core::Array<unsigned char>& nums)
 {
   if (nums.size() == atomCount()) {
     m_atomicNumbers = nums;
+
+    // update colors too
+    if (nums.size() == m_colors.size()) {
+      for (Index i = 0; i < nums.size(); ++i) {
+        m_colors[i] = Vector3ub(Elements::color(atomicNumber(i)));
+      }
+    }
+
     return true;
   }
   return false;
@@ -938,6 +972,11 @@ bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
 {
   if (atomId < atomCount()) {
     m_atomicNumbers[atomId] = number;
+
+    // update colors too
+    if (atomId < m_colors.size())
+      m_colors[atomId] = Vector3ub(Elements::color(number));
+
     return true;
   }
   return false;
@@ -1048,6 +1087,18 @@ void Molecule::rebondBond(Index newIndex, Index oldIndex)
     }
   }
   m_graphDirty = true;
+}
+
+std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
+{
+  std::list<Index> result;
+  // get the index in decreasing order so deleting won't corrupt data
+  for (Index i = atomCount(); i > 0; --i) {
+    if (m_layers.getLayerID(i - 1) == layer) {
+      result.push_back(i - 1);
+    }
+  }
+  return result;
 }
 
 } // namespace Core

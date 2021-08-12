@@ -19,6 +19,7 @@
 #include "qttextrenderstrategy.h"
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/qtgui/sceneplugin.h>
 #include <avogadro/qtgui/scenepluginmodel.h>
 #include <avogadro/qtgui/toolplugin.h>
@@ -47,9 +48,7 @@ GLWidget::GLWidget(QWidget* p)
   m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
 }
 
-GLWidget::~GLWidget()
-{
-}
+GLWidget::~GLWidget() {}
 
 void GLWidget::setMolecule(QtGui::Molecule* mol)
 {
@@ -82,11 +81,14 @@ void GLWidget::updateScene()
     Rendering::GroupNode& node = m_renderer.scene().rootNode();
     node.clear();
     Rendering::GroupNode* moleculeNode = new Rendering::GroupNode(&node);
+    QtGui::RWMolecule* rwmol = new QtGui::RWMolecule(*mol, this);
 
     foreach (QtGui::ScenePlugin* scenePlugin,
              m_scenePlugins.activeScenePlugins()) {
       Rendering::GroupNode* engineNode = new Rendering::GroupNode(moleculeNode);
+      scenePlugin->process(static_cast<Core::Molecule>(*mol), *engineNode);
       scenePlugin->process(*mol, *engineNode);
+      scenePlugin->processEditable(*rwmol, *engineNode);
     }
 
     // Let the tools perform any drawing they need to do.
@@ -340,5 +342,5 @@ void GLWidget::keyReleaseEvent(QKeyEvent* e)
     QOpenGLWidget::keyReleaseEvent(e);
 }
 
-} // End QtOpenGL namespace
-} // End Avogadro namespace
+} // namespace QtOpenGL
+} // namespace Avogadro

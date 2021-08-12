@@ -151,8 +151,8 @@ void CopyPaste::cut()
     // (that way, the index doesn't change)
     for (Index i = m_molecule->atomCount(); i > 0; --i)
       // atoms go from 0 to atomCount()-1
-      if (m_molecule->atomSelected(i-1))
-        m_molecule->undoMolecule()->removeAtom(i-1);
+      if (m_molecule->atomSelected(i - 1))
+        m_molecule->undoMolecule()->removeAtom(i - 1);
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |
@@ -168,8 +168,8 @@ void CopyPaste::clear()
     // (that way, the index doesn't change)
     for (Index i = m_molecule->atomCount(); i > 0; --i) {
       // atoms go from 0 to atomCount()-1
-      if (m_molecule->atomSelected(i-1))
-        m_molecule->undoMolecule()->removeAtom(i-1);
+      if (m_molecule->atomSelected(i - 1))
+        m_molecule->undoMolecule()->removeAtom(i - 1);
     }
   }
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |

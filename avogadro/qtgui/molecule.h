@@ -26,6 +26,7 @@
 #include <avogadro/core/molecule.h>
 
 #include <QtCore/QObject>
+#include <list>
 
 namespace Avogadro {
 namespace QtGui {

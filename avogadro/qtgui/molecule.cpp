@@ -17,6 +17,8 @@
 #include "molecule.h"
 #include "rwmolecule.h"
 
+#include <iostream>
+
 namespace Avogadro {
 namespace QtGui {
 
@@ -97,7 +99,6 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Index uniqueId)
       m_atomUniqueIds[uniqueId] != MaxIndex) {
     return AtomType();
   }
-
   m_atomUniqueIds[uniqueId] = atomCount();
   AtomType a = Core::Molecule::addAtom(number);
   return a;
@@ -124,9 +125,10 @@ bool Molecule::removeAtom(Index index)
   Core::Molecule::removeAtom(index);
 
   if (index != newSize) {
-    Index movedAtomUID = findAtomUniqueId(newSize);
-    assert(movedAtomUID != MaxIndex);
-    m_atomUniqueIds[movedAtomUID] = index;
+    // movedAtomUID
+    uniqueId = findAtomUniqueId(newSize);
+    assert(uniqueId != MaxIndex);
+    m_atomUniqueIds[uniqueId] = index;
   }
   return true;
 }
@@ -196,6 +198,9 @@ void Molecule::swapBond(Index a, Index b)
 
 void Molecule::swapAtom(Index a, Index b)
 {
+  if (a == b) {
+    return;
+  }
   Index uniqueA = findAtomUniqueId(a);
   Index uniqueB = findAtomUniqueId(b);
   assert(uniqueA != MaxIndex && uniqueB != MaxIndex);

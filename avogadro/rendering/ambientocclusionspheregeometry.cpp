@@ -524,7 +524,7 @@ const float ao_points[] = {
   -0.26286555606f,
   -0.951056516295f,
 };
-}
+} // namespace
 
 #include "avogadrogl.h"
 
@@ -552,12 +552,8 @@ class AmbientOcclusionBaker
 {
 public:
   AmbientOcclusionBaker(AmbientOcclusionRenderer* renderer, GLint textureSize_)
-    : m_renderer(renderer)
-    , m_textureSize(textureSize_)
-    , m_depthTexture(0)
-    , m_depthFBO(0)
-    , m_aoTexture(0)
-    , m_aoFBO(0)
+    : m_renderer(renderer), m_textureSize(textureSize_), m_depthTexture(0),
+      m_depthFBO(0), m_aoTexture(0), m_aoFBO(0)
   {
     initialize();
   }
@@ -883,11 +879,8 @@ public:
   SphereAmbientOcclusionRenderer(BufferObject& vbo, BufferObject& ibo,
                                  int numSpheres, int numVertices,
                                  int numIndices)
-    : m_vbo(vbo)
-    , m_ibo(ibo)
-    , m_numSpheres(numSpheres)
-    , m_numVertices(numVertices)
-    , m_numIndices(numIndices)
+    : m_vbo(vbo), m_ibo(ibo), m_numSpheres(numSpheres),
+      m_numVertices(numVertices), m_numIndices(numIndices)
   {
     initialize();
   }
@@ -1082,9 +1075,7 @@ private:
 class AmbientOcclusionSphereGeometry::Private
 {
 public:
-  Private()
-    : aoTextureSize(1024)
-  {}
+  Private() : aoTextureSize(1024) {}
 
   BufferObject vbo;
   BufferObject ibo;
@@ -1102,17 +1093,13 @@ public:
 };
 
 AmbientOcclusionSphereGeometry::AmbientOcclusionSphereGeometry()
-  : m_dirty(false)
-  , d(new Private)
+  : m_dirty(false), d(new Private)
 {}
 
 AmbientOcclusionSphereGeometry::AmbientOcclusionSphereGeometry(
   const AmbientOcclusionSphereGeometry& other)
-  : Drawable(other)
-  , m_spheres(other.m_spheres)
-  , m_indices(other.m_indices)
-  , m_dirty(true)
-  , d(new Private)
+  : Drawable(other), m_spheres(other.m_spheres), m_indices(other.m_indices),
+    m_dirty(true), d(new Private)
 {}
 
 AmbientOcclusionSphereGeometry::~AmbientOcclusionSphereGeometry()
@@ -1377,11 +1364,11 @@ std::multimap<float, Identifier> AmbientOcclusionSphereGeometry::hits(
 
 void AmbientOcclusionSphereGeometry::addSphere(const Vector3f& position,
                                                const Vector3ub& color,
-                                               float radius)
+                                               float radius, size_t index)
 {
   m_dirty = true;
   m_spheres.push_back(SphereColor(position, radius, color));
-  m_indices.push_back(m_indices.size());
+  m_indices.push_back(index == MaxIndex ? m_indices.size() : index);
 }
 
 void AmbientOcclusionSphereGeometry::clear()

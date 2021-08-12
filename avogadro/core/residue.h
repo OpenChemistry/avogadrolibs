@@ -34,15 +34,16 @@ public:
 
   // using codes from MMTF specification
   // https://github.com/rcsb/mmtf/blob/master/spec.md#secstructlist
-  enum SecondaryStructure { 
-    piHelix = 0, // DSSP "I"
-    bend = 1, // DSSP "S"
+  enum SecondaryStructure
+  {
+    piHelix = 0,    // DSSP "I"
+    bend = 1,       // DSSP "S"
     alphaHelix = 2, // DSSP "H"
-    betaSheet = 3, // DSSP "E"
-    helix310 = 4, // DSSP "G"
+    betaSheet = 3,  // DSSP "E"
+    helix310 = 4,   // DSSP "G"
     betaBridge = 5, // DSSP "B"
-    turn = 6, // DSSP "T"
-    coil = 7, // DSSP "C"
+    turn = 6,       // DSSP "T"
+    coil = 7,       // DSSP "C"
     undefined = -1
   };
 
@@ -70,9 +71,15 @@ public:
 
   inline void setChainId(const char& id) { m_chainId = id; }
 
-  inline SecondaryStructure secondaryStructure() { return m_secondaryStructure; }
+  inline SecondaryStructure secondaryStructure() const
+  {
+    return m_secondaryStructure;
+  }
 
-  inline void setSecondaryStructure(const SecondaryStructure& ss) { m_secondaryStructure = ss; }
+  inline void setSecondaryStructure(const SecondaryStructure& ss)
+  {
+    m_secondaryStructure = ss;
+  }
 
   /** Adds an atom to the residue class */
   void addResidueAtom(const std::string& name, const Atom& atom);

@@ -23,8 +23,7 @@ namespace QtGui {
 
 ScenePluginModel::ScenePluginModel(QObject* parent_)
   : QAbstractItemModel(parent_)
-{
-}
+{}
 
 QModelIndex ScenePluginModel::parent(const QModelIndex&) const
 {
@@ -65,10 +64,10 @@ bool ScenePluginModel::setData(const QModelIndex& index_, const QVariant& value,
 
   switch (role) {
     case Qt::CheckStateRole:
-      if (value == Qt::Checked && !item->isEnabled()) {
+      if (value == Qt::Checked && !item->isActiveLayerEnabled()) {
         item->setEnabled(true);
         emit pluginStateChanged(item);
-      } else if (value == Qt::Unchecked && item->isEnabled()) {
+      } else if (value == Qt::Unchecked && item->isActiveLayerEnabled()) {
         item->setEnabled(false);
         emit pluginStateChanged(item);
       }
@@ -94,7 +93,7 @@ QVariant ScenePluginModel::data(const QModelIndex& index_, int role) const
       case Qt::EditRole:
         return item->name();
       case Qt::CheckStateRole:
-        if (item->isEnabled())
+        if (item->isActiveLayerEnabled())
           return Qt::Checked;
         else
           return Qt::Unchecked;
@@ -161,5 +160,5 @@ void ScenePluginModel::itemChanged()
   }
 }
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro

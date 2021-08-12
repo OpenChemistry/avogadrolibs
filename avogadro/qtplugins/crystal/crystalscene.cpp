@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "crystalscene.h"
@@ -19,9 +8,15 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
+#include <avogadro/qtgui/colorbutton.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/linestripgeometry.h>
+
+#include <QtCore/QSettings>
+#include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QVBoxLayout>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -33,13 +28,20 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
 
-CrystalScene::CrystalScene(QObject* p) : ScenePlugin(p), m_enabled(true)
+CrystalScene::CrystalScene(QObject* p)
+  : ScenePlugin(p), m_enabled(true), m_setupWidget(nullptr)
 {
+  QSettings settings;
+  m_lineWidth = settings.value("crystal/lineWidth", 2.0).toDouble();
+
+  QColor color =
+    settings.value("crystal/color", QColor(Qt::white)).value<QColor>();
+  m_color[0] = static_cast<unsigned char>(color.red());
+  m_color[1] = static_cast<unsigned char>(color.green());
+  m_color[2] = static_cast<unsigned char>(color.blue());
 }
 
-CrystalScene::~CrystalScene()
-{
-}
+CrystalScene::~CrystalScene() {}
 
 void CrystalScene::process(const Molecule& molecule, GroupNode& node)
 {
@@ -49,9 +51,8 @@ void CrystalScene::process(const Molecule& molecule, GroupNode& node)
     LineStripGeometry* lines = new LineStripGeometry;
     geometry->addDrawable(lines);
 
-    lines->setColor(Vector3ub(255, 255, 255));
-
-    float width = 2.0;
+    lines->setColor(m_color);
+    float width = m_lineWidth;
 
     Vector3f a = cell->aVector().cast<float>();
     Vector3f b = cell->bVector().cast<float>();
@@ -98,9 +99,65 @@ bool CrystalScene::isEnabled() const
   return m_enabled;
 }
 
+bool CrystalScene::isActiveLayerEnabled() const
+{
+  return m_enabled;
+}
+
 void CrystalScene::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
+
+void CrystalScene::setLineWidth(double width)
+{
+  m_lineWidth = width;
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("crystal/lineWidth", width);
 }
+
+void CrystalScene::setColor(const QColor& color)
+{
+  m_color[0] = static_cast<unsigned char>(color.red());
+  m_color[1] = static_cast<unsigned char>(color.green());
+  m_color[2] = static_cast<unsigned char>(color.blue());
+
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("crystal/color", color);
 }
+
+QWidget* CrystalScene::setupWidget()
+{
+  if (!m_setupWidget) {
+    m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
+    QVBoxLayout* v = new QVBoxLayout;
+
+    // line width
+    QDoubleSpinBox* spin = new QDoubleSpinBox;
+    spin->setRange(0.5, 5.0);
+    spin->setSingleStep(0.25);
+    spin->setDecimals(2);
+    spin->setValue(m_lineWidth);
+    connect(spin, SIGNAL(valueChanged(double)), SLOT(setLineWidth(double)));
+    QFormLayout* form = new QFormLayout;
+    form->addRow(tr("Line width:"), spin);
+
+    QtGui::ColorButton* color = new QtGui::ColorButton;
+    connect(color, SIGNAL(colorChanged(const QColor&)),
+            SLOT(setColor(const QColor&)));
+    form->addRow(tr("Line color:"), color);
+
+    v->addLayout(form);
+
+    v->addStretch(1);
+    m_setupWidget->setLayout(v);
+  }
+  return m_setupWidget;
+}
+
+} // namespace QtPlugins
+} // namespace Avogadro

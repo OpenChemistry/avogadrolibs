@@ -32,6 +32,7 @@ configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
 
 set(HEADERS
   backgroundfileformat.h
+  colorbutton.h
   containerwidget.h
   customelementdialog.h
   elementtranslator.h
@@ -43,6 +44,8 @@ set(HEADERS
   interfacescript.h
   interfacewidget.h
   jsonwidget.h
+  layermodel.h
+  rwlayermanager.h
   meshgenerator.h
   molecule.h
   moleculemodel.h
@@ -50,6 +53,7 @@ set(HEADERS
   periodictableview.h
   persistentatom.h
   persistentbond.h
+  pluginlayermanager.h
   pythonscript.h
   rwmolecule.h
   sceneplugin.h
@@ -62,6 +66,7 @@ set(HEADERS
 
 set(SOURCES
   backgroundfileformat.cpp
+  colorbutton.cpp
   containerwidget.cpp
   customelementdialog.cpp
   elementdetail_p.cpp
@@ -75,12 +80,15 @@ set(SOURCES
   interfacescript.cpp
   interfacewidget.cpp
   jsonwidget.cpp
+  layermodel.cpp
+  rwlayermanager.cpp
   meshgenerator.cpp
   molecule.cpp
   moleculemodel.cpp
   multiviewwidget.cpp
   periodictablescene_p.cpp
   periodictableview.cpp
+  pluginlayermanager.cpp
   pythonscript.cpp
   rwmolecule.cpp
   sceneplugin.cpp
