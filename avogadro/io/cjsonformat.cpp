@@ -146,8 +146,10 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
   // todo? 2d position
   // labels
   json labels = atoms["labels"];
-  for (size_t i = 0; i < atomCount; ++i) {
-    molecule.atom(i).setLabel(labels[i]);
+  if (labels.is_array() && labels.size() == atomCount) {
+    for (size_t i = 0; i < atomCount; ++i) {
+      molecule.atom(i).setLabel(labels[i]);
+    }
   }
 
   // Check for coordinate sets, and read them in if found, e.g. trajectories.
@@ -215,7 +217,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     }
   }
 
-  // residues are optionala, but should be loaded
+  // residues are optional, but should be loaded
   json residues = jsonRoot["residues"];
   if (residues.is_array()) {
     for (unsigned int i = 0; i < residues.size(); ++i) {
@@ -240,8 +242,10 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
         }
       }
       json color = residue["color"];
+      if (color.is_array() && color.size() == 3) {
       Vector3ub col = Vector3ub(color[0], color[1], color[2]);
       newResidue.setColor(col);
+      }
     }
   }
 
@@ -446,6 +450,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       molecule.setVibrationLx(disps);
     }
   }
+
   if (jsonRoot.find("layer") != jsonRoot.end()) {
     auto names = LayerManager::getMoleculeInfo(&molecule);
     json visible = jsonRoot["layer"]["visible"];
