@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "ballandstick.h"
@@ -25,9 +14,10 @@
 
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
-#include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -46,11 +36,15 @@ struct LayerBallAndStick : Core::LayerData
   QWidget* widget;
   bool multiBonds;
   bool showHydrogens;
+  float atomScale;
+  float bondRadius;
 
   LayerBallAndStick()
   {
     widget = nullptr;
     QSettings settings;
+    atomScale = settings.value("ballandstick/atomScale", 0.3).toDouble();
+    bondRadius = settings.value("ballandstick/bondRadius", 0.1).toDouble();
     multiBonds = settings.value("ballandstick/multiBonds", true).toBool();
     showHydrogens = settings.value("ballandstick/showHydrogens", true).toBool();
   }
@@ -63,8 +57,10 @@ struct LayerBallAndStick : Core::LayerData
 
   std::string serialize() override final
   {
-    return boolToString(multiBonds) + " " + boolToString(showHydrogens);
+    return boolToString(multiBonds) + " " + boolToString(showHydrogens) + " " +
+           std::to_string(atomScale) + " " + std::to_string(bondRadius);
   }
+
   void deserialize(std::string text) override final
   {
     std::stringstream ss(text);
@@ -73,6 +69,10 @@ struct LayerBallAndStick : Core::LayerData
     multiBonds = stringToBool(aux);
     ss >> aux;
     showHydrogens = stringToBool(aux);
+    ss >> aux;
+    atomScale = std::stof(aux);
+    ss >> aux;
+    bondRadius = std::stof(aux);
   }
 
   void setupWidget(BallAndStick* slot)
@@ -80,6 +80,26 @@ struct LayerBallAndStick : Core::LayerData
     if (!widget) {
       widget = new QWidget(qobject_cast<QWidget*>(slot->parent()));
       QVBoxLayout* v = new QVBoxLayout;
+
+      QFormLayout* f = new QFormLayout;
+      QSlider* atomRadiusSlider = new QSlider(Qt::Horizontal);
+      atomRadiusSlider->setMinimum(1);
+      atomRadiusSlider->setMaximum(9);
+      atomRadiusSlider->setTickInterval(1);
+      atomRadiusSlider->setValue(atomScale * 10);
+      QObject::connect(atomRadiusSlider, &QSlider::valueChanged, slot,
+                       &BallAndStick::atomRadiusChanged);
+      f->addRow(QObject::tr("Atom scale"), atomRadiusSlider);
+
+      QSlider* bondRadiusSlider = new QSlider(Qt::Horizontal);
+      bondRadiusSlider->setMinimum(1);
+      bondRadiusSlider->setMaximum(8);
+      bondRadiusSlider->setTickInterval(1);
+      bondRadiusSlider->setValue(bondRadius * 10);
+      QObject::connect(bondRadiusSlider, &QSlider::valueChanged, slot,
+                       &BallAndStick::bondRadiusChanged);
+      f->addRow(QObject::tr("Bond scale"), bondRadiusSlider);
+      v->addLayout(f);
 
       QCheckBox* check = new QCheckBox(QObject::tr("Show multiple bonds"));
       check->setChecked(multiBonds);
@@ -132,19 +152,20 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
       m_layerManager.getLayerID(i));
     if (atomicNumber == 1 && !interface.showHydrogens)
       continue;
+
     Vector3ub color = atom.color();
     float radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
-    spheres->addSphere(atom.position3d().cast<float>(), color, radius * 0.3f,
+    float scale = interface.atomScale;
+    spheres->addSphere(atom.position3d().cast<float>(), color, radius * scale,
                        i);
     if (atom.selected()) {
       color = Vector3ub(0, 0, 255);
       radius *= 1.2;
       selectedSpheres->addSphere(atom.position3d().cast<float>(), color,
-                                 radius * 0.3f, i);
+                                 radius * scale, i);
     }
   }
 
-  float bondRadius = 0.1f;
   CylinderGeometry* cylinders = new CylinderGeometry;
   cylinders->identifier().molecule = &molecule;
   cylinders->identifier().type = Rendering::BondType;
@@ -168,6 +189,9 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
          bond.atom2().atomicNumber() == 1)) {
       continue;
     }
+
+    float bondRadius = (interface1.bondRadius + interface2.bondRadius) * 0.5f;
+
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
     Vector3ub color1 = bond.atom1().color();
@@ -185,7 +209,7 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
       }
       default:
       case 1:
-        cylinders->addCylinder(pos1, pos2, bondRadius, color1, color2, i);
+        cylinders->addCylinder(pos1, pos2, m_bondRadius, color1, color2, i);
         break;
       case 2: {
         Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
@@ -203,6 +227,34 @@ QWidget* BallAndStick::setupWidget()
   LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>();
   interface.setupWidget(this);
   return interface.widget;
+}
+
+void BallAndStick::atomRadiusChanged(int value)
+{
+  m_atomScale = static_cast<float>(value) / 10.0f;
+
+  LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>();
+  if (m_atomScale != interface.atomScale) {
+    interface.atomScale = m_atomScale;
+    emit drawablesChanged();
+  }
+
+  QSettings settings;
+  settings.setValue("BallAndStick/atomScale", m_atomScale);
+}
+
+void BallAndStick::bondRadiusChanged(int value)
+{
+  m_bondRadius = static_cast<float>(value) / 10.0f;
+
+  LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>();
+  if (m_bondRadius != interface.bondRadius) {
+    interface.bondRadius = m_bondRadius;
+    emit drawablesChanged();
+  }
+
+  QSettings settings;
+  settings.setValue("BallAndStick/bondRadius", m_bondRadius);
 }
 
 void BallAndStick::multiBonds(bool show)
