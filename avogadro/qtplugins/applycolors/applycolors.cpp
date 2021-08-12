@@ -36,6 +36,11 @@ ApplyColors::ApplyColors(QObject* parent_)
   connect(action, SIGNAL(triggered()), SLOT(applyIndexColors()));
   m_actions.append(action);
 
+  action = new QAction(tr("By Distance"), this);
+  action->setData(atomColors);
+  connect(action, SIGNAL(triggered()), SLOT(applyDistanceColors()));
+  m_actions.append(action);
+
   action = new QAction(tr("By Element"), this);
   action->setData(atomColors);
   connect(action, SIGNAL(triggered()), SLOT(resetColors()));
@@ -159,6 +164,33 @@ void ApplyColors::applyIndexColors()
     float indexFraction = float(i) / float(numAtoms);
 
     m_molecule->atom(i).setColor(rainbowGradient(indexFraction));
+  }
+
+  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+}
+
+void ApplyColors::applyDistanceColors()
+{
+  if (m_molecule == nullptr && m_molecule->atomCount() == 0)
+    return;
+
+  bool isSelection = !m_molecule->isSelectionEmpty();
+  Vector3 firstPos = m_molecule->atomPosition3d(0);
+  Real size = 2.0 * m_molecule->radius();
+
+  // probably better to get color scales, but for now do it manually
+  auto numAtoms = m_molecule->atomCount();
+  for (Index i = 0; i < numAtoms; ++i) {
+    // if there's a selection and this atom isn't selected, skip  it
+    if (isSelection && !m_molecule->atomSelected(i))
+      continue;
+
+    Vector3 currPos = m_molecule->atomPosition3d(i);
+    Vector3 diff = currPos - firstPos;
+    Real distance = diff.norm();
+    Real distanceFraction = distance / size;
+
+    m_molecule->atom(i).setColor(rainbowGradient(distanceFraction));
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
