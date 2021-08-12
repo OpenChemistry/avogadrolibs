@@ -23,18 +23,29 @@
 #include <QTimer>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QOpenGLWidget>
+#include <limits>
 
 #define CAMERA_NEAR_DISTANCE 13.35f // Experimental number
 
 namespace Avogadro {
 namespace QtPlugins {
 
+using Avogadro::QtGui::ExtensionPlugin;
+using Core::Array;
+using Eigen::Affine3f;
+using Eigen::EigenSolver;
+using Eigen::Matrix3d;
+using Eigen::Matrix3f;
+using Eigen::Quaternionf;
+using Eigen::Vector3d;
+using Rendering::Projection;
+using std::numeric_limits;
+
 const float ResetView::DELTA_TIME = 100.0f / 3.0f; // 33.3 ms ~ 30 fps
 const int ResetView::TOTAL_FRAMES = 25;            // ~1 sec
 
 ResetView::ResetView(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_),
-    m_centerAction(new QAction(tr("Center"), this)),
+  : ExtensionPlugin(parent_), m_centerAction(new QAction(tr("Center"), this)),
     m_viewToAxesAction(new QAction(tr("Align View to Axes"), this))
 {
   connect(m_centerAction, SIGNAL(triggered()), SLOT(centerView()));
@@ -89,10 +100,10 @@ bool ResetView::defaultChecks()
   return false;
 }
 
-inline float getZDistance(const Eigen::Affine3f& projection, float x,
-                          Rendering::Projection perspective)
+inline float getZDistance(const Affine3f& projection, float x,
+                          Projection perspective)
 {
-  if (perspective == Rendering::Projection::Perspective) {
+  if (perspective == Projection::Perspective) {
     float fov = 2.0f * std::atan(1.0f / projection(1, 1));
     // float aspect = projection(1,1) / projection(0,0);
     // tan (fov/2) = (x/2) / z -> z =  (x/2) / tan (fov/2)
@@ -101,12 +112,12 @@ inline float getZDistance(const Eigen::Affine3f& projection, float x,
     return 3.0f * CAMERA_NEAR_DISTANCE;
   }
 }
-inline void getBB(const Core::Array<Vector3>& mols, Vector3& min, Vector3& max)
+inline void getBB(const Array<Vector3>& mols, Vector3& min, Vector3& max)
 {
   if (mols.size() > 0) {
     min = mols[0];
     max = mols[0];
-    for (unsigned int i = 1; i < mols.size(); ++i) {
+    for (size_t i = 1; i < mols.size(); ++i) {
       min.x() = std::min(mols[i].x(), min.x());
       max.x() = std::max(mols[i].x(), max.x());
 
@@ -123,40 +134,40 @@ inline void getBB(const Core::Array<Vector3>& mols, Vector3& min, Vector3& max)
 
 void ResetView::animationCameraDefault(bool animate)
 {
-  Eigen::Matrix3f linearGoal;
+  Matrix3f linearGoal;
   linearGoal.row(0) = Vector3f::UnitX();
   linearGoal.row(1) = Vector3f::UnitY();
   linearGoal.row(2) = Vector3f::UnitZ();
   // calculate the translation matrix
-  Eigen::Affine3f goal = Eigen::Affine3f(linearGoal);
+  Affine3f goal = Affine3f(linearGoal);
 
-  const Core::Array<Vector3> mols = m_molecule->atomPositions3d();
+  const Array<Vector3>& mols = m_molecule->atomPositions3d();
   Vector3 min, max;
   getBB(mols, min, max);
   Vector3f mid = (max.cast<float>() + min.cast<float>()) / 2.0f;
   float d = getZDistance(m_camera->projection(), max.x() - min.x(),
                          m_camera->projectionType());
 
-  Vector3f eye = -mid + (Vector3f::UnitZ() * -1.0f * d);
+  Vector3f eye = -mid + (Vector3f::UnitZ() * -d);
   goal.translate(eye);
   animationCamera(goal, animate);
 }
 
-void ResetView::animationCamera(const Eigen::Affine3f& goal, bool animate)
+void ResetView::animationCamera(const Affine3f& goal, bool animate)
 {
   if (animate) {
     Matrix3f rot_aux = goal.rotation();
     Vector3f posGoal = goal.translation();
-    Eigen::Quaternionf rotGoal = Eigen::Quaternionf(rot_aux);
+    Quaternionf rotGoal = Quaternionf(rot_aux);
 
-    Eigen::Affine3f start = m_camera->modelView();
+    Affine3f start = m_camera->modelView();
 
     rot_aux = start.rotation();
     Vector3f posStart = start.translation();
-    Eigen::Quaternionf rotStart = Eigen::Quaternionf(rot_aux);
+    Quaternionf rotStart = Quaternionf(rot_aux);
 
-    for (int frame = 0; frame < ResetView::TOTAL_FRAMES; ++frame) {
-      Eigen::Affine3f interpolation;
+    for (int frame = 0; frame <= ResetView::TOTAL_FRAMES; ++frame) {
+      Affine3f interpolation;
       float alpha = frame / float(ResetView::TOTAL_FRAMES);
       interpolation.fromPositionOrientationScale(
         ((1.0f - alpha) * posStart) + (alpha * posGoal),
@@ -169,12 +180,6 @@ void ResetView::animationCamera(const Eigen::Affine3f& goal, bool animate)
       });
     }
 
-    float time = ResetView::TOTAL_FRAMES * ResetView::DELTA_TIME;
-    QTimer::singleShot(time, this, [this, goal]() {
-      m_camera->setModelView(goal);
-      emit updateRequested();
-    });
-
   } else {
     m_camera->setModelView(goal);
     emit updateRequested();
@@ -183,30 +188,29 @@ void ResetView::animationCamera(const Eigen::Affine3f& goal, bool animate)
 
 // Calculate the oriented bounding box to get the most significand
 // axis base and the centroid
-inline void getOBB(const Core::Array<Vector3>& mols, Vector3& centroid,
-                   Vector3& min, Vector3& mid, Vector3& max)
+inline void getOBB(const Array<Vector3>& mols, Vector3d& centroid,
+                   Vector3d& min, Vector3d& mid, Vector3d& max)
 {
   centroid = Vector3::Zero();
 
   for (unsigned int i = 0; i < mols.size(); ++i)
     centroid += mols[i];
 
-  centroid /= mols.size();
-  Matrix3 covariance = Matrix3::Zero();
+  centroid /= (double)mols.size();
+  Matrix3d covariance = Matrix3::Zero();
 
   for (unsigned int i = 0; i < mols.size(); ++i) {
-    Vector3 adjusted = mols[i] - centroid;
+    Vector3d adjusted = mols[i] - centroid;
     covariance += adjusted * adjusted.transpose();
   }
+  covariance /= (double)mols.size();
 
-  Eigen::EigenSolver<Matrix3> solver = Eigen::EigenSolver<Matrix3>(covariance);
-  Eigen::Matrix3cd vectors = solver.eigenvectors();
+  EigenSolver<Matrix3d> solver = EigenSolver<Matrix3>(covariance);
+  Eigen::Matrix3d vectors = solver.eigenvectors().real();
 
-  std::vector<Vector3> l{ vectors.col(0).real(), vectors.col(1).real(),
-                          vectors.col(2).real() };
-  max = l[0];
-  mid = l[1];
-  min = l[2];
+  max = vectors.row(0);
+  mid = vectors.row(1);
+  min = vectors.row(2);
 }
 
 void ResetView::centerView()
@@ -214,24 +218,40 @@ void ResetView::centerView()
   if (defaultChecks())
     return;
 
-  const Core::Array<Vector3> mols = m_molecule->atomPositions3d();
-  Vector3 centroid, min, mid, max;
+  const Array<Vector3>& mols = m_molecule->atomPositions3d();
+  Vector3d centroid, min, mid, max;
   getOBB(mols, centroid, min, mid, max);
 
-  Eigen::Matrix3f linearGoal;
-  linearGoal.row(0) = (max.normalized()).cast<float>(); // x
-  linearGoal.row(1) = (mid.normalized()).cast<float>(); // y
-  linearGoal.row(2) = (min.normalized()).cast<float>(); // z
+  Matrix3f linearGoal;
+  linearGoal.col(0) = (max.normalized()).cast<float>(); // x
+  linearGoal.col(1) = (mid.normalized()).cast<float>(); // y
+  linearGoal.col(2) = (min.normalized()).cast<float>(); // z
   // calculate the translation matrix
-  Eigen::Affine3f goal = Eigen::Affine3f(linearGoal);
+  Affine3f goal = Affine3f(linearGoal);
 
   // eigen return the eigenvectors normalized, but we need a non-normalized
-  getBB(mols, min, max);
-  float d = getZDistance(m_camera->projection(), max.x() - min.x(),
+  // so we project all the points to the axis and get the min/max
+  float infinity = numeric_limits<float>::infinity();
+  Vector3f minScreen{ infinity, infinity, infinity };
+  Vector3f maxScreen{ -infinity, -infinity, -infinity };
+  for (const auto& atom : mols) {
+    Vector3f aux = linearGoal * Vector3f(atom.x(), atom.y(), atom.z());
+    minScreen.x() = std::min(aux.x(), minScreen.x());
+    maxScreen.x() = std::max(aux.x(), maxScreen.x());
+
+    minScreen.y() = std::min(aux.y(), minScreen.y());
+    maxScreen.y() = std::max(aux.y(), maxScreen.y());
+
+    minScreen.z() = std::min(aux.z(), minScreen.z());
+    maxScreen.z() = std::max(aux.z(), maxScreen.z());
+  }
+  Vector3f midScreen = (maxScreen + minScreen) / 2.0f;
+  float d = getZDistance(m_camera->projection(), maxScreen.x() - minScreen.x(),
                          m_camera->projectionType());
-  Vector3f eye =
-    (-centroid.cast<float>()) + (linearGoal.row(2).transpose() * -1.0f * d);
-  goal.translate(eye);
+  midScreen.z() = 0;
+  Vector3f eye = -midScreen + (Vector3f::UnitZ() * -d);
+  goal.pretranslate(eye);
+
   animationCamera(goal);
 }
 
