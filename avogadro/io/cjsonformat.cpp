@@ -228,24 +228,31 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       auto name = residue["name"].get<std::string>();
       auto id = static_cast<Index>(residue["id"]);
       auto chainId = residue["chainId"].get<char>();
-      auto newResidue = molecule.addResidue(name, id, chainId);
+      Residue newResidue(name, id, chainId);
 
       json hetero = residue["hetero"];
       if (hetero == true)
         newResidue.setHeterogen(true);
 
+      int secStruct = residue.value("secStruct", -1);
+      if (secStruct != -1)
+        newResidue.setSecondaryStructure(
+          static_cast<Avogadro::Core::Residue::SecondaryStructure>(secStruct));
+
       json atomsResidue = residue["atoms"];
       if (atomsResidue.is_object()) {
         for (auto& item : atomsResidue.items()) {
-          auto atom = molecule.atom(item.value());
+          const Atom& atom = molecule.atom(item.value());
           newResidue.addResidueAtom(item.key(), atom);
         }
       }
       json color = residue["color"];
       if (color.is_array() && color.size() == 3) {
-      Vector3ub col = Vector3ub(color[0], color[1], color[2]);
-      newResidue.setColor(col);
+        Vector3ub col = Vector3ub(color[0], color[1], color[2]);
+        newResidue.setColor(col);
       }
+
+      molecule.addResidue(newResidue);
     }
   }
 
@@ -776,6 +783,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
       entry["name"] = residue.residueName();
       entry["id"] = residue.residueId();
       entry["chainId"] = residue.chainId();
+      entry["secStruct"] = residue.secondaryStructure();
       if (residue.isHeterogen())
         entry["hetero"] = true;
 
