@@ -6,8 +6,8 @@
 #ifndef AVOGADRO_QTPLUGINS_LABEL_H
 #define AVOGADRO_QTPLUGINS_LABEL_H
 
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
-
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -22,7 +22,7 @@ public:
   explicit Label(QObject* parent = nullptr);
   ~Label() override;
 
-  QString name() const override { return tr(m_name.c_str()); }
+  QString name() const override { return tr("Labels"); }
 
   QString description() const override
   {
@@ -30,12 +30,13 @@ public:
   }
 
   QWidget* setupWidget() override;
-  void process(const Core::Molecule& molecule, Rendering::GroupNode& node);
+  void process(const Core::Molecule& molecule, Rendering::GroupNode& node) override;
 
 public slots:
   void atomLabel(bool show);
   void residueLabel(bool show);
   void setRadiusScalar(double radius);
+  void setColor(const QColor& color);
 
 private:
   void processAtom(const Core::Molecule& molecule, Rendering::GroupNode& node,
@@ -45,6 +46,7 @@ private:
 
   Rendering::GroupNode* m_group;
   std::string m_name = "Labels";
+  Vector3ub m_color;
 };
 
 } // end namespace QtPlugins
