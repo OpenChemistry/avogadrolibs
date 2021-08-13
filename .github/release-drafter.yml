@@ -1,7 +1,7 @@
 name-template: 'Avogadro $RESOLVED_VERSION'
 tag-template: '$RESOLVED_VERSION'
 categories:
-  - title: 'Features'
+  - title: '✨ Features'
     labels:
       - 'feature'
       - 'enhancement'
@@ -14,6 +14,9 @@ categories:
     labels:
       - 'chore'
       - 'build'
+  - title: '📚 Translations'
+    labels:
+      - 'i18n'
 autolabeler:
   - label: 'build'
     branch:
@@ -25,6 +28,9 @@ autolabeler:
       - '/fix\/.+/'
     title:
       - '/fix/i'
+  - label: 'i18n'
+    branch:
+      - '/weblate\/.+/'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
 version-resolver:
