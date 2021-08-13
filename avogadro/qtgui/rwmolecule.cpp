@@ -232,6 +232,18 @@ bool RWMolecule::setColor(Index atomId, Vector3ub color)
   return true;
 }
 
+bool RWMolecule::setLayer(Index atomId, size_t layer)
+{
+  if (atomId >= atomCount())
+    return false;
+
+  SetLayerCommand* comm =
+    new SetLayerCommand(*this, atomId, m_molecule.layer(atomId), layer);
+  comm->setText(tr("Change Atom Layer"));
+  m_undoStack.push(comm);
+  return true;
+}
+
 RWMolecule::BondType RWMolecule::addBond(Index atom1, Index atom2,
                                          unsigned char order)
 {

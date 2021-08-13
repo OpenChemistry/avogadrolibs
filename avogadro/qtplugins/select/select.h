@@ -18,10 +18,11 @@
 #define AVOGADRO_QTPLUGINS_SELECT_H
 
 #include <avogadro/qtgui/extensionplugin.h>
+#include <avogadro/qtgui/pluginlayermanager.h>
 
 namespace Avogadro {
 
-namespace QtGui{
+namespace QtGui {
 class PeriodicTableView;
 }
 namespace QtPlugins {
@@ -57,6 +58,9 @@ private:
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
   QtGui::PeriodicTableView* m_elements;
+  QtGui::PluginLayerManager m_layerManager;
+
+  bool evalSelect(bool input, Index index) const;
 };
 
 } // namespace QtPlugins

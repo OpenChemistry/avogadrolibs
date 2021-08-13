@@ -302,6 +302,9 @@ public:
    */
   bool setColor(Index atomId, Vector3ub color);
 
+  bool setLayer(Index atomId, size_t layer);
+  size_t layer(Index atomId) const;
+
   /**
    * Create a new bond in the molecule.
    * @param atom1 The first atom in the bond.
@@ -752,6 +755,11 @@ inline signed char RWMolecule::formalCharge(Index atomId) const
 inline Vector3ub RWMolecule::color(Index atomId) const
 {
   return m_molecule.color(atomId);
+}
+
+inline size_t RWMolecule::layer(Index atomId) const
+{
+  return m_molecule.layer(atomId);
 }
 
 inline RWMolecule::BondType RWMolecule::addBond(const AtomType& atom1,

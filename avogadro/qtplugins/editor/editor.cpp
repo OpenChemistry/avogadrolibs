@@ -14,7 +14,6 @@
 
 #include <avogadro/qtgui/hydrogentools.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/qtgui/pluginlayermanager.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
 #include <avogadro/qtopengl/glwidget.h>
@@ -51,7 +50,6 @@ namespace Avogadro {
 namespace QtPlugins {
 
 using QtGui::Molecule;
-using QtGui::PluginLayerManager;
 using QtGui::RWAtom;
 using QtGui::RWBond;
 using QtGui::RWMolecule;
@@ -71,7 +69,7 @@ Editor::Editor(QObject* parent_)
     m_toolWidget(new EditorToolWidget(qobject_cast<QWidget*>(parent_))),
     m_pressedButtons(Qt::NoButton),
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER), m_bondAdded(false),
-    m_fixValenceLater(false)
+    m_fixValenceLater(false), m_layerManager("Rditor")
 {
   m_activateAction->setText(tr("Draw"));
   m_activateAction->setIcon(QIcon(":/icons/editor.png"));
@@ -96,7 +94,7 @@ QUndoCommand* Editor::mousePressEvent(QMouseEvent* e)
 
   if (m_pressedButtons & Qt::LeftButton) {
     m_clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
-    if (PluginLayerManager::activeLayerLocked()) {
+    if (m_layerManager.activeLayerLocked()) {
       e->accept();
       return nullptr;
     }
@@ -140,7 +138,7 @@ QUndoCommand* Editor::mouseReleaseEvent(QMouseEvent* e)
 {
   if (!m_renderer || !m_molecule)
     return nullptr;
-  if (PluginLayerManager::activeLayerLocked()) {
+  if (m_layerManager.activeLayerLocked()) {
     e->accept();
     return nullptr;
   }
@@ -174,7 +172,7 @@ QUndoCommand* Editor::mouseMoveEvent(QMouseEvent* e)
     return nullptr;
   if (m_pressedButtons & Qt::LeftButton)
     if (m_clickedObject.type == Rendering::AtomType) {
-      if (PluginLayerManager::activeLayerLocked()) {
+      if (m_layerManager.activeLayerLocked()) {
         e->accept();
         return nullptr;
       }
@@ -190,7 +188,7 @@ QUndoCommand* Editor::keyPressEvent(QKeyEvent* e)
     return nullptr;
   e->accept();
 
-  if (PluginLayerManager::activeLayerLocked()) {
+  if (m_layerManager.activeLayerLocked()) {
     return nullptr;
   }
   // Set a timer to clear the buffer on first keypress:

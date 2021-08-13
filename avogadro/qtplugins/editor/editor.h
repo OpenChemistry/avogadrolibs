@@ -21,6 +21,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/pluginlayermanager.h>
 #include <avogadro/rendering/primitive.h>
 
 #include <QtCore/QPoint>
@@ -107,6 +108,7 @@ private:
   bool m_bondAdded;
   bool m_fixValenceLater;
   QString m_keyPressBuffer;
+  QtGui::PluginLayerManager m_layerManager;
 
   Real m_bondDistance;
 };

@@ -24,6 +24,7 @@
 #include <avogadro/qtgui/toolplugin.h>
 
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/qtgui/pluginlayermanager.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/primitive.h>
 
@@ -62,6 +63,7 @@ public:
 
 private slots:
   void applyColor(Vector3ub color);
+  void applyLayer(int layer);
 
 private:
   void clearAtoms();
@@ -80,6 +82,7 @@ private:
   bool m_drawSelectionBox, m_initSelectionBox, m_doubleClick;
   Vector2 m_start;
   Vector2 m_end;
+  QtGui::PluginLayerManager m_layerManager;
 };
 
 inline void SelectionTool::setMolecule(QtGui::Molecule* mol)

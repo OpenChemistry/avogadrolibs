@@ -34,6 +34,7 @@
 #include <avogadro/core/atom.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
@@ -45,6 +46,8 @@
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::PluginLayerManager;
+using Avogadro::QtGui::RWMolecule;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
@@ -57,13 +60,15 @@ SelectionTool::SelectionTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
     m_molecule(nullptr), m_renderer(nullptr),
     m_toolWidget(new SelectionToolWidget(qobject_cast<QWidget*>(parent_))),
-    m_drawSelectionBox(false), m_doubleClick(false), m_initSelectionBox(false)
+    m_drawSelectionBox(false), m_doubleClick(false), m_initSelectionBox(false),
+    m_layerManager("Selection Tool")
 {
   m_activateAction->setText(tr("Selection"));
   m_activateAction->setIcon(QIcon(":/icons/selectiontool.png"));
 
   connect(m_toolWidget, SIGNAL(colorApplied(Vector3ub)), this,
           SLOT(applyColor(Vector3ub)));
+  connect(m_toolWidget, SIGNAL(changeLayer(int)), this, SLOT(applyLayer(int)));
 }
 
 SelectionTool::~SelectionTool() {}
@@ -104,13 +109,16 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
   bool bigEnough =
     fabs(start.x() - end.x()) > 2 && fabs(start.y() - end.y()) > 2;
 
+  bool anySelect = false;
+  Index selectedIndex = MaxIndex;
   if (m_drawSelectionBox && bigEnough) {
     shouldClean(e);
     m_initSelectionBox = false;
     auto hits = m_renderer->hits(start.x(), start.y(), end.x(), end.y());
     for (const auto& hit : hits) {
       if (hit.type == Rendering::AtomType) {
-        selectAtom(e, hit.index);
+        anySelect = selectAtom(e, hit.index) || anySelect;
+        selectedIndex = hit.index;
       }
     }
   } else {
@@ -124,11 +132,17 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
       bool selected = selectAtom(e, hit.index);
       shouldClean(e);
       if (selected) {
-        addAtom(hit.index);
+        anySelect = addAtom(hit.index);
+        selectedIndex = hit.index;
       } else {
-        removeAtom(hit.index);
+        anySelect = removeAtom(hit.index);
+        selectedIndex = hit.index;
       }
     }
+  }
+  if (anySelect) {
+    m_toolWidget->setDropDown(m_layerManager.getLayerID(selectedIndex),
+                              m_layerManager.layerCount());
   }
   m_drawSelectionBox = false;
   // Disable this code until rectangle selection is ready.
@@ -226,12 +240,32 @@ void SelectionTool::draw(Rendering::GroupNode& node)
 
 void SelectionTool::applyColor(Vector3ub color)
 {
-  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-    auto a = m_molecule->atom(i);
+  RWMolecule* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Paint Atoms"));
+  for (Index i = 0; i < rwmol->atomCount(); ++i) {
+    auto a = rwmol->atom(i);
     if (a.selected())
       a.setColor(color);
   }
-  m_molecule->emitChanged(Molecule::Atoms);
+  rwmol->endMergeMode();
+  rwmol->emitChanged(Molecule::Atoms | Molecule::Modified);
+}
+
+void SelectionTool::applyLayer(int layer)
+{
+  if (layer < 0) {
+    return;
+  }
+  RWMolecule* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Change Layer"));
+  for (Index i = 0; i < rwmol->atomCount(); ++i) {
+    auto a = rwmol->atom(i);
+    if (a.selected()) {
+      a.setLayer(layer);
+    }
+  }
+  rwmol->endMergeMode();
+  rwmol->emitChanged(Molecule::Atoms | Molecule::Modified);
 }
 
 void SelectionTool::selectLinkedMolecule(QMouseEvent* e, Index atom)
@@ -280,6 +314,9 @@ bool SelectionTool::shouldClean(QMouseEvent* e)
 
 bool SelectionTool::selectAtom(QMouseEvent* e, const Index& index)
 {
+  if (m_layerManager.atomLocked(index)) {
+    return false;
+  }
   // control toggles the selection
   if (e->modifiers() & Qt::ControlModifier) {
     return toggleAtom(index);

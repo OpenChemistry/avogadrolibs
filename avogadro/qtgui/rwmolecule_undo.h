@@ -348,13 +348,28 @@ public:
       m_newColor(newColor)
   {}
 
-  void redo() override { m_molecule.colors()[m_atomId] = m_newColor; }
+  void redo() override { m_molecule.setColor(m_atomId, m_newColor); }
 
-  void undo() override { m_molecule.colors()[m_atomId] = m_oldColor; }
+  void undo() override { m_molecule.setColor(m_atomId, m_oldColor); }
 };
-} // end namespace
 
-namespace {
+class SetLayerCommand : public RWMolecule::UndoCommand
+{
+  Index m_atomId;
+  size_t m_oldLayer;
+  size_t m_newLayer;
+
+public:
+  SetLayerCommand(RWMolecule& m, Index atomId, size_t oldLayer, size_t newLayer)
+    : UndoCommand(m), m_atomId(atomId), m_oldLayer(oldLayer),
+      m_newLayer(newLayer)
+  {}
+
+  void redo() override { m_molecule.setLayer(m_atomId, m_newLayer); }
+
+  void undo() override { m_molecule.setLayer(m_atomId, m_oldLayer); }
+};
+
 class AddBondCommand : public RWMolecule::UndoCommand
 {
   unsigned char m_bondOrder;
