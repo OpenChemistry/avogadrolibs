@@ -181,23 +181,30 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
       continue;
 
     auto oxygen = residue.getAtomByName("O");
-    hBondRecord* oRecord = new hBondRecord();
-    oRecord->atom = oxygen.index();
-    oRecord->atomZ = oxygen.position3d()[2];
-    oRecord->distSquared = std::numeric_limits<float>::max();
-    oRecord->residue = residueId;
-    oRecord->residuePair = residueId; // just a placeholder
-    m_hBonds.push_back(oRecord);
+    if (oxygen.isValid()) {
+      hBondRecord* oRecord = new hBondRecord();
+      oRecord->atom = oxygen.index();
+      oRecord->atomZ = oxygen.position3d()[2];
+      oRecord->distSquared = std::numeric_limits<float>::max();
+      oRecord->residue = residueId;
+      oRecord->residuePair = residueId; // just a placeholder
+      m_hBonds.push_back(oRecord);
+    }
 
     auto nitrogen = residue.getAtomByName("N");
-    hBondRecord* nRecord = new hBondRecord();
-    nRecord->atom = nitrogen.index();
-    nRecord->atomZ = nitrogen.position3d()[2];
-    nRecord->distSquared = std::numeric_limits<float>::max();
-    nRecord->residue = residueId;
-    nRecord->residuePair = residueId;
-    m_hBonds.push_back(nRecord);
+    if (nitrogen.isValid()) {
+      hBondRecord* nRecord = new hBondRecord();
+      nRecord->atom = nitrogen.index();
+      nRecord->atomZ = nitrogen.position3d()[2];
+      nRecord->distSquared = std::numeric_limits<float>::max();
+      nRecord->residue = residueId;
+      nRecord->residuePair = residueId;
+      m_hBonds.push_back(nRecord);
+    }
   }
+
+  if (m_hBonds.size() == 0)
+    return;
 
   // sort by z-coordinate
   std::sort(m_hBonds.begin(), m_hBonds.end(),
