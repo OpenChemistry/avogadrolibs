@@ -8,6 +8,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/qtgui/colorbutton.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/scene.h>
 #include <avogadro/rendering/textlabel3d.h>
@@ -36,14 +37,14 @@ typedef Array<Molecule::BondType> NeighborListType;
 
 namespace {
 TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
-                         float radius)
+                         float radius, const Vector3ub& color)
 {
   Rendering::TextProperties tprop;
   tprop.setAlign(Rendering::TextProperties::HCenter,
                  Rendering::TextProperties::VCenter);
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
 
-  tprop.setColorRgb(255, 255, 255);
+  tprop.setColorRgb(color[0], color[1], color[2]);
   TextLabel3D* label = new TextLabel3D;
   label->setText(text);
   label->setRenderPass(Rendering::OpaquePass);
@@ -60,6 +61,7 @@ struct LayerLabel : Core::LayerData
   bool atomLabel;
   bool residueLabel;
   float radiusScalar;
+  Vector3ub color;
 
   LayerLabel()
   {
@@ -68,6 +70,12 @@ struct LayerLabel : Core::LayerData
     atomLabel = settings.value("label/atomLabel", true).toBool();
     residueLabel = settings.value("label/residueLabel", false).toBool();
     radiusScalar = settings.value("label/radiusScalar", 0.5).toDouble();
+
+    QColor q_color =
+      settings.value("label/color", QColor(Qt::white)).value<QColor>();
+    color[0] = static_cast<unsigned char>(q_color.red());
+    color[1] = static_cast<unsigned char>(q_color.green());
+    color[2] = static_cast<unsigned char>(q_color.blue());
   }
 
   ~LayerLabel()
@@ -79,7 +87,8 @@ struct LayerLabel : Core::LayerData
   std::string serialize() override final
   {
     return boolToString(atomLabel) + " " + boolToString(residueLabel) + " " +
-           std::to_string(radiusScalar);
+             std::to_string(radiusScalar) + " " + std::to_string(color[0]) 
+             + " " + std::to_string(color[1]) + " " + std::to_string(color[2]);
   }
   void deserialize(std::string text) override final
   {
@@ -91,6 +100,12 @@ struct LayerLabel : Core::LayerData
     residueLabel = stringToBool(aux);
     ss >> aux;
     radiusScalar = std::stof(aux);
+    ss >> aux;
+    color[0] = std::stoi(aux);
+    ss >> aux;
+    color[1] = std::stoi(aux);
+    ss >> aux;
+    color[2] = std::stoi(aux);
   }
 
   void setupWidget(Label* slot)
@@ -98,6 +113,13 @@ struct LayerLabel : Core::LayerData
     if (!widget) {
       widget = new QWidget(qobject_cast<QWidget*>(slot->parent()));
       QVBoxLayout* v = new QVBoxLayout;
+
+      QFormLayout* form = new QFormLayout;
+      // color button
+      QtGui::ColorButton* color = new QtGui::ColorButton;
+      QObject::connect(color, SIGNAL(colorChanged(const QColor&)), slot,
+              SLOT(setColor(const QColor&)));
+      form->addRow(QObject::tr("Color:"), color);
 
       // radius scalar
       QDoubleSpinBox* spin = new QDoubleSpinBox;
@@ -107,8 +129,8 @@ struct LayerLabel : Core::LayerData
       spin->setValue(radiusScalar);
       QObject::connect(spin, SIGNAL(valueChanged(double)), slot,
                        SLOT(setRadiusScalar(double)));
-      QFormLayout* form = new QFormLayout;
       form->addRow(QObject::tr("Distance from center:"), spin);
+
       v->addLayout(form);
 
       // residue or atoms?
@@ -179,7 +201,8 @@ void Label::processResidue(const Core::Molecule& molecule,
       }
     }
 
-    TextLabel3D* residueLabel = createLabel(text, pos, radius);
+    Vector3ub color = m_layerManager.getSetting<LayerLabel>(layer).color;
+    TextLabel3D* residueLabel = createLabel(text, pos, radius, color);
     geometry->addDrawable(residueLabel);
   }
 }
@@ -212,12 +235,27 @@ void Label::processAtom(const Core::Molecule& molecule,
     }
     const Vector3f pos(atom.position3d().cast<float>());
     LayerLabel& interface = m_layerManager.getSetting<LayerLabel>(layer);
+    Vector3ub color = interface.color;
     float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) *
                    interface.radiusScalar;
 
-    TextLabel3D* atomLabel = createLabel(text, pos, radius);
+    TextLabel3D* atomLabel = createLabel(text, pos, radius, color);
     geometry->addDrawable(atomLabel);
   }
+}
+
+void Label::setColor(const QColor& color)
+{
+  LayerLabel& interface = m_layerManager.getSetting<LayerLabel>();
+
+  interface.color[0] = static_cast<unsigned char>(color.red());
+  interface.color[1] = static_cast<unsigned char>(color.green());
+  interface.color[2] = static_cast<unsigned char>(color.blue());
+
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/color", color);
 }
 
 void Label::atomLabel(bool show)
