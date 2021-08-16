@@ -69,7 +69,7 @@ Editor::Editor(QObject* parent_)
     m_toolWidget(new EditorToolWidget(qobject_cast<QWidget*>(parent_))),
     m_pressedButtons(Qt::NoButton),
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER), m_bondAdded(false),
-    m_fixValenceLater(false), m_layerManager("Rditor")
+    m_fixValenceLater(false), m_layerManager("Editor")
 {
   m_activateAction->setText(tr("Draw"));
   m_activateAction->setIcon(QIcon(":/icons/editor.png"));
