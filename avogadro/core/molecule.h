@@ -175,6 +175,9 @@ public:
    */
   bool setColor(Index atomId, Vector3ub color);
 
+  bool setLayer(Index atomId, size_t layer);
+  size_t layer(Index atomId) const;
+
   /** Returns a vector of 2d atom positions for the atoms in the molecule. */
   const Array<Vector2>& atomPositions2d() const;
 
@@ -807,6 +810,20 @@ inline bool Molecule::setColor(Index atomId, Vector3ub color)
       }
     }
     m_colors[atomId] = color;
+    return true;
+  }
+  return false;
+}
+
+inline size_t Molecule::layer(Index atomId) const
+{
+  return m_layers.getLayerID(atomId);
+}
+
+inline bool Molecule::setLayer(Index atomId, size_t layer)
+{
+  if (atomId < atomCount()) {
+    m_layers.addAtom(layer, atomId);
     return true;
   }
   return false;

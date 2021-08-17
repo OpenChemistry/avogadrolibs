@@ -172,6 +172,14 @@ public:
   /** @} */
 
   /**
+   * The layer of this atom
+   * @{
+   */
+  void setLayer(size_t layer);
+  size_t layer() const;
+  /** @} */
+
+  /**
    * Is the atom selected.
    * {@
    */
@@ -340,6 +348,18 @@ template <class Molecule_T>
 Vector3ub AtomTemplate<Molecule_T>::color() const
 {
   return m_molecule->color(m_index);
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setLayer(size_t layer)
+{
+  m_molecule->setLayer(m_index, layer);
+}
+
+template <class Molecule_T>
+size_t AtomTemplate<Molecule_T>::layer() const
+{
+  return m_molecule->layer(m_index);
 }
 
 template <class Molecule_T>

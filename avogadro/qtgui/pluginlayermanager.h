@@ -28,7 +28,8 @@ public:
   ~PluginLayerManager();
 
   /** @return if the active layer in the molecule is locked. */
-  static bool activeLayerLocked();
+  bool activeLayerLocked() const;
+  bool atomLocked(size_t atom) const;
 
   /** check if there's existent data in the key and reload it in the custom
    * class. */

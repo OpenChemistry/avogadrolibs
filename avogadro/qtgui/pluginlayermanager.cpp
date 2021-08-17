@@ -121,12 +121,20 @@ bool PluginLayerManager::bondEnabled(Index atom1, Index atom2) const
   return atomEnabled(atom1) || atomEnabled(atom2);
 }
 
-bool PluginLayerManager::activeLayerLocked()
+bool PluginLayerManager::activeLayerLocked() const
 {
   assert(m_activeMolecule != nullptr);
   auto& molecule = m_molToInfo[m_activeMolecule];
   size_t active = molecule->layer.activeLayer();
   return molecule->locked[active];
+}
+
+bool PluginLayerManager::atomLocked(size_t atom) const
+{
+  assert(m_activeMolecule != nullptr);
+  auto& molecule = m_molToInfo[m_activeMolecule];
+  size_t layer = molecule->layer.getLayerID(atom);
+  return molecule->locked[layer];
 }
 
 size_t PluginLayerManager::layerCount() const

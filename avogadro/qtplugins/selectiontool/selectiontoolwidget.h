@@ -36,17 +36,17 @@ public:
   explicit SelectionToolWidget(QWidget* parent = nullptr);
   ~SelectionToolWidget();
 
-  void setColor(Vector3ub color);
+  void setDropDown(size_t current, size_t max);
 
 signals:
   void colorApplied(Vector3ub color);
+  void changeLayer(int layer);
 
 private slots:
   void userClickedColor();
 
 private:
   Ui::SelectionToolWidget* m_ui;
-  Vector3ub m_currentColor;
 };
 
 } // namespace QtPlugins
