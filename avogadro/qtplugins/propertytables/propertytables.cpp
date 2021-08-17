@@ -123,6 +123,7 @@ void PropertyTables::showDialog()
 
   view->setMolecule(m_molecule);
   view->setModel(proxyModel);
+  view->setSourceModel(model);
 
   view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   view->resizeColumnsToContents();

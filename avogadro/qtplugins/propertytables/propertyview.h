@@ -27,11 +27,13 @@ public:
   void selectionChanged(const QItemSelection& selected,
                         const QItemSelection& previous);
   void setMolecule(QtGui::Molecule* molecule);
+  void setSourceModel(PropertyModel* model) { m_model = model; }
   void hideEvent(QHideEvent* event);
 
 private:
   PropertyType m_type;
   QtGui::Molecule* m_molecule;
+  PropertyModel* m_model;
 };
 
 } // end namespace Avogadro

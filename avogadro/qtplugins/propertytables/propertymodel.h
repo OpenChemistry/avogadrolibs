@@ -37,8 +37,7 @@ class PropertyModel : public QAbstractTableModel
   Q_OBJECT
 
 public slots:
-  void moleculeChanged();
-  void updateTable();
+  void updateTable(unsigned int flags);
 
 public:
   explicit PropertyModel(PropertyType type, QObject* parent = 0);
@@ -57,11 +56,14 @@ public:
   // Return what type of model this is
   PropertyType type() const { return m_type; };
 
-  // Generate all data pertaining to atoms, bonds, angles etc
+  // Generate all data pertaining to angles and torsions
   void updateCache() const;
 
-  // Empty all items in the cache
-  //void clearCache() const;
+  // Get the angle for a given index
+  Core::Angle getAngle(unsigned int angle) const;
+
+  // Get the torson for a given index
+  Core::Dihedral getTorsion(unsigned int torsion) const;
 
 private:
   PropertyType m_type;

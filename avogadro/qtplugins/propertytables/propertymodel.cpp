@@ -23,7 +23,7 @@
 
 namespace Avogadro {
 
-using Avogadro::Core::Molecule;
+using Avogadro::QtGui::Molecule;
 using std::numeric_limits;
 using std::pair;
 using std::vector;
@@ -104,7 +104,8 @@ int PropertyModel::columnCount(const QModelIndex& parent) const
     case TorsionType:
       return TorsionColumns; // type, atom 1, atom 2, atom 3, atom 4, dihedral
     case ResidueType:
-      return ResidueColumns; // name, number, chain, secondary structure, heterogen, color
+      return ResidueColumns; // name, number, chain, secondary structure,
+                             // heterogen, color
     case ConformerType:
       return ConformerColumns; // number, energy
   }
@@ -128,8 +129,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     if (m_type == ConformerType) {
       return Qt::AlignRight + Qt::AlignVCenter; // energies
     } else if (m_type == AtomType) {
-      if ((index.column() == AtomDataCharge) 
-      || (index.column() == AtomDataColor))
+      if ((index.column() == AtomDataCharge) ||
+          (index.column() == AtomDataColor))
         return Qt::AlignRight + Qt::AlignVCenter;
       else
         return Qt::AlignHCenter + Qt::AlignVCenter;
@@ -250,8 +251,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case ResidueDataChain:
         return QString(residue.chainId());
       case ResidueDataSecStructure:
-        return secStructure(
-          residue.secondaryStructure());
+        return secStructure(residue.secondaryStructure());
       case ResidueDataHeterogen:
         return QString(residue.isHeterogen() ? "X" : "");
       default:
@@ -446,7 +446,8 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
   if (!index.isValid())
     return Qt::ItemIsEnabled;
 
-  return QAbstractItemModel::flags(index) | Qt::ItemIsEditable | Qt::ItemIsSelectable;
+  return QAbstractItemModel::flags(index) | Qt::ItemIsEditable |
+         Qt::ItemIsSelectable;
 }
 
 bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
@@ -467,22 +468,7 @@ void PropertyModel::setMolecule(QtGui::Molecule* molecule)
   updateCache();
 
   connect(m_molecule, SIGNAL(changed(unsigned int)), this,
-          SLOT(updateTable()));
-}
-
-void PropertyModel::moleculeChanged()
-{
-  // Tear down the model and build it back up again
-  updateCache();
-  /*
-  int rows = rowCount();
-  for (int i = 0; i < rows; ++i) {
-    beginRemoveRows(QModelIndex(), 0, 0);
-    endRemoveRows();
-  }
-  beginInsertRows(QModelIndex(), 0, rowCount() - 1);
-  endInsertRows();
-  */
+          SLOT(updateTable(unsigned int)));
 }
 
 QString PropertyModel::secStructure(unsigned int type) const
@@ -509,14 +495,19 @@ QString PropertyModel::secStructure(unsigned int type) const
   }
 }
 
-void PropertyModel::updateTable()
+void PropertyModel::updateTable(unsigned int flags)
 {
-  /*
-  emit dataChanged(QAbstractItemModel::createIndex(0, 0),
-                   QAbstractItemModel::createIndex(rowCount(), columnCount()));
-                  */
-  beginResetModel();
-  endResetModel();
+  if (flags & Molecule::Added || flags & Molecule::Removed) {
+    // tear it down and rebuild the model
+    updateCache();
+    beginResetModel();
+    endResetModel();
+  } else {
+    // we can just update the current data
+    emit dataChanged(
+      QAbstractItemModel::createIndex(0, 0),
+      QAbstractItemModel::createIndex(rowCount(), columnCount()));
+  }
 }
 
 void PropertyModel::updateCache() const
@@ -543,6 +534,22 @@ void PropertyModel::updateCache() const
       torsion = ++dIter;
     }
   }
+}
+
+Core::Angle PropertyModel::getAngle(unsigned int angle) const
+{
+  if (angle >= m_angles.size())
+    return Core::Angle();
+
+  return m_angles[angle];
+}
+
+Core::Dihedral PropertyModel::getTorsion(unsigned int torsion) const
+{
+  if (torsion >= m_torsions.size())
+    return Core::Dihedral();
+
+  return m_torsions[torsion];
 }
 
 } // end namespace Avogadro
