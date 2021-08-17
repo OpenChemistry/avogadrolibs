@@ -185,6 +185,9 @@ public:
    */
   void setForceVector(const Vector3& force);
   Vector3 forceVector() const;
+
+  void setLabel(const std::string& label);
+  std::string label() const;
   /** @} */
 
 private:
@@ -363,6 +366,18 @@ Vector3 AtomTemplate<Molecule_T>::forceVector() const
   return m_molecule->forceVectors().size() > 0
            ? m_molecule->forceVectors()[m_index]
            : Vector3::Zero();
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setLabel(const std::string& label)
+{
+  m_molecule->setLabel(m_index, label);
+}
+
+template <class Molecule_T>
+std::string AtomTemplate<Molecule_T>::label() const
+{
+  return m_molecule->label(m_index);
 }
 
 } // namespace Core

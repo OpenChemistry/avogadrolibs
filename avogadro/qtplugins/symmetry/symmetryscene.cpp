@@ -111,16 +111,13 @@ void ArcSector::setArcSector(const Vector3f& origin, const Vector3f& startEdge,
   addTriangles(indices);
 }
 
-}
+} // namespace
 
 SymmetryScene::SymmetryScene(QObject* p)
   : QtGui::ScenePlugin(p), m_enabled(true)
-{
-}
+{}
 
-SymmetryScene::~SymmetryScene()
-{
-}
+SymmetryScene::~SymmetryScene() {}
 
 void SymmetryScene::process(const Core::Molecule& coreMolecule,
                             Rendering::GroupNode& node)
@@ -206,8 +203,8 @@ void SymmetryScene::process(const Core::Molecule& coreMolecule,
       sect->setRenderPass(Rendering::TranslucentPass);
       sect->setArcSector(forigo, vecPlane, vecNormal, 360.0f, 5.f);
 
-//      cylinders->addCylinder(forigo - fvec * 0.025f, forigo + fvec * 0.025f,
-//                             fradius, color);
+      //      cylinders->addCylinder(forigo - fvec * 0.025f, forigo + fvec *
+      //      0.025f, fradius, color);
     }
   }
 }
@@ -223,9 +220,14 @@ bool SymmetryScene::isEnabled() const
   return m_enabled;
 }
 
+bool SymmetryScene::isActiveLayerEnabled() const
+{
+  return m_enabled;
+}
+
 void SymmetryScene::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

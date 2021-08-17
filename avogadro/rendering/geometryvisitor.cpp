@@ -17,6 +17,7 @@
 #include "geometryvisitor.h"
 
 #include "ambientocclusionspheregeometry.h"
+#include "curvegeometry.h"
 #include "linestripgeometry.h"
 #include "spheregeometry.h"
 
@@ -92,6 +93,35 @@ void GeometryVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
   tmpRadius = std::sqrt(tmpRadius);
   m_centers.push_back(tmpCenter);
   m_radii.push_back(tmpRadius);
+}
+
+void GeometryVisitor::visit(CurveGeometry& cg)
+{
+  const auto& lines = cg.lines();
+  if (lines.size() == 0) {
+    return;
+  }
+  m_dirty = true;
+  float qtty = 0.0f;
+  Vector3f tmpCenter(Vector3f::Zero());
+  for (const auto& line : lines) {
+    for (const auto& point : line->points) {
+      tmpCenter += point->pos;
+    }
+    qtty += line->points.size();
+  }
+  tmpCenter /= qtty;
+
+  float tmpRadius = 0.0f;
+  for (const auto& line : lines) {
+    for (const auto& point : line->points) {
+      float distance = (point->pos - tmpCenter).squaredNorm();
+      if (distance > tmpRadius)
+        tmpRadius = distance;
+    }
+  }
+  m_centers.push_back(tmpCenter);
+  m_radii.push_back(std::sqrt(tmpRadius));
 }
 
 void GeometryVisitor::visit(LineStripGeometry& lsg)

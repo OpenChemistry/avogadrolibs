@@ -72,13 +72,16 @@ class AddAtomCommand : public RWMolecule::UndoCommand
   bool m_usingPositions;
   Index m_atomId;
   Index m_atomUid;
+  size_t m_layer;
 
 public:
   AddAtomCommand(RWMolecule& m, unsigned char aN, bool usingPositions,
                  Index atomId, Index uid)
     : UndoCommand(m), m_atomicNumber(aN), m_usingPositions(usingPositions),
       m_atomId(atomId), m_atomUid(uid)
-  {}
+  {
+    m_layer = m_molecule.layer().activeLayer();
+  }
 
   void redo() override
   {
@@ -87,11 +90,13 @@ public:
       m_molecule.addAtom(m_atomicNumber, Vector3::Zero());
     else
       m_molecule.addAtom(m_atomicNumber);
+    m_molecule.layer().addAtom(m_layer, m_atomId);
   }
 
   void undo() override
   {
     assert(m_molecule.atomCount() == m_atomId + 1);
+    m_layer = m_molecule.layer().getLayerID(m_atomId);
     m_molecule.removeAtom(m_atomId);
   }
 };
@@ -106,6 +111,7 @@ class RemoveAtomCommand : public RWMolecule::UndoCommand
   Vector3 m_position3d;
   Array<std::pair<Index, Index>> m_bonds;
   Array<unsigned char> m_orders;
+  size_t m_layer;
 
 public:
   RemoveAtomCommand(RWMolecule& m, Index atomId, Index uid, unsigned char aN,
@@ -117,6 +123,7 @@ public:
   void redo() override
   {
     assert(m_atomId < m_molecule.atomCount());
+    m_layer = m_molecule.layer().getLayerID(m_atomId);
     m_bonds = m_molecule.getAtomBonds(m_atomId);
     m_orders = m_molecule.getAtomOrders(m_atomId);
     m_molecule.removeAtom(m_atomId);
@@ -127,6 +134,7 @@ public:
     m_molecule.addAtom(m_atomicNumber, m_position3d);
     // Swap the moved and unremoved atom data if needed
     Index movedId = m_mol.atomCount() - 1;
+    m_molecule.layer().addAtom(m_layer, movedId);
     m_molecule.swapAtom(m_atomId, movedId);
     m_molecule.addBonds(m_bonds, m_orders);
     m_bonds.clear();
@@ -616,6 +624,27 @@ public:
   }
 };
 } // namespace
+
+namespace {
+class ModifyLabelCommand : public RWMolecule::UndoCommand
+{
+  Index m_atomId;
+  std::string m_newLabel;
+  std::string m_oldLabel;
+
+public:
+  ModifyLabelCommand(RWMolecule& m, Index atomId, const std::string& label)
+    : UndoCommand(m), m_atomId(atomId), m_newLabel(label)
+  {
+    m_oldLabel = m_mol.molecule().label(m_atomId);
+  }
+
+  void redo() override { m_mol.molecule().setLabel(m_atomId, m_newLabel); }
+
+  void undo() override { m_mol.molecule().setLabel(m_atomId, m_oldLabel); }
+};
+} // namespace
+
 } // namespace QtGui
 } // namespace Avogadro
 #endif

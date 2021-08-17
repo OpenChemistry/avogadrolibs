@@ -36,6 +36,11 @@ ApplyColors::ApplyColors(QObject* parent_)
   connect(action, SIGNAL(triggered()), SLOT(applyIndexColors()));
   m_actions.append(action);
 
+  action = new QAction(tr("By Distance"), this);
+  action->setData(atomColors);
+  connect(action, SIGNAL(triggered()), SLOT(applyDistanceColors()));
+  m_actions.append(action);
+
   action = new QAction(tr("By Element"), this);
   action->setData(atomColors);
   connect(action, SIGNAL(triggered()), SLOT(resetColors()));
@@ -164,6 +169,33 @@ void ApplyColors::applyIndexColors()
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
+void ApplyColors::applyDistanceColors()
+{
+  if (m_molecule == nullptr && m_molecule->atomCount() == 0)
+    return;
+
+  bool isSelection = !m_molecule->isSelectionEmpty();
+  Vector3 firstPos = m_molecule->atomPosition3d(0);
+  Real size = 2.0 * m_molecule->radius();
+
+  // probably better to get color scales, but for now do it manually
+  auto numAtoms = m_molecule->atomCount();
+  for (Index i = 0; i < numAtoms; ++i) {
+    // if there's a selection and this atom isn't selected, skip  it
+    if (isSelection && !m_molecule->atomSelected(i))
+      continue;
+
+    Vector3 currPos = m_molecule->atomPosition3d(i);
+    Vector3 diff = currPos - firstPos;
+    Real distance = diff.norm();
+    Real distanceFraction = distance / size;
+
+    m_molecule->atom(i).setColor(rainbowGradient(distanceFraction));
+  }
+
+  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+}
+
 void ApplyColors::resetColors()
 {
   if (m_molecule == nullptr)
@@ -232,8 +264,9 @@ void ApplyColors::applyCustomColorResidue(const QColor& new_color)
 
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
-    auto residue = m_molecule->residue(i);
-    if (isSelection && !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+    auto& residue = m_molecule->residue(i);
+    if (isSelection &&
+        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
       continue;
 
     residue.setColor(color);
@@ -251,8 +284,9 @@ void ApplyColors::resetColorsResidue()
 
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
-    auto residue = m_molecule->residue(i);
-    if (isSelection && !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+    auto& residue = m_molecule->residue(i);
+    if (isSelection &&
+        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
       continue;
 
     int offset = 0;
@@ -280,17 +314,17 @@ void ApplyColors::applySecondaryStructureColors()
 
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
-    auto residue = m_molecule->residue(i);
-    if (isSelection && !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+    auto& residue = m_molecule->residue(i);
+    if (isSelection &&
+        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
       continue;
 
     Core::Residue::SecondaryStructure type = residue.secondaryStructure();
     if (type < 0 || type > 7) {
       type = Core::Residue::SecondaryStructure::coil;
-
-      Vector3ub color(Core::secondary_color[type]);
-      residue.setColor(color);
     }
+    Vector3ub color(Core::secondary_color[type]);
+    residue.setColor(color);
   } // end loop
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
@@ -364,8 +398,9 @@ void ApplyColors::applyAminoColors()
 
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
-    auto residue = m_molecule->residue(i);
-    if (isSelection && !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+    auto& residue = m_molecule->residue(i);
+    if (isSelection &&
+        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
       continue;
 
     int offset = residueNameToOffset(residue.residueName());
@@ -386,8 +421,9 @@ void ApplyColors::applyShapelyColors()
 
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
-    auto residue = m_molecule->residue(i);
-    if (isSelection && !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+    auto& residue = m_molecule->residue(i);
+    if (isSelection &&
+        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
       continue;
 
     int offset = residueNameToOffset(residue.residueName());

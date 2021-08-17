@@ -46,6 +46,8 @@ public:
 
   bool isEnabled() const override;
 
+  bool isActiveLayerEnabled() const override;
+
   void setEnabled(bool enable) override;
 
 private:

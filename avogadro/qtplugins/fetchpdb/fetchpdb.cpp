@@ -1,19 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2009 Marcus D. Hanwell
-  Copyright 2013 Kitware, Inc.
-  Copyright 2021 Geoffrey R. Hutchison
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "fetchpdb.h"
@@ -21,6 +8,8 @@
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtWidgets/QAction>
@@ -40,9 +29,7 @@ FetchPDB::FetchPDB(QObject* parent_)
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
-FetchPDB::~FetchPDB()
-{
-}
+FetchPDB::~FetchPDB() {}
 
 QList<QAction*> FetchPDB::actions() const
 {
@@ -64,8 +51,8 @@ bool FetchPDB::readMolecule(QtGui::Molecule& mol)
   if (m_moleculeData.isEmpty() || m_moleculeName.isEmpty())
     return false;
 
-  bool readOK = Io::FileFormatManager::instance().readString(
-    mol, m_moleculeData.data(), "pdb");
+  bool readOK = Io::FileFormatManager::instance().readFile(
+    mol, m_tempFileName.toStdString(), "mmtf");
   if (readOK) // worked, so set the filename
     mol.setData("name", m_moleculeName.toStdString());
 
@@ -93,7 +80,9 @@ void FetchPDB::showDialog()
 
   // Hard coding the PDB download URL
   m_network->get(QNetworkRequest(
-    QUrl("https://files.rcsb.org/download/" + pdbCode + ".pdb")));
+    //    QUrl("https://files.rcsb.org/download/" + pdbCode + ".pdb")));
+    // prefer MMTF - smaller and more efficient (also could use .mmtf.gz)
+    QUrl("https://mmtf.rcsb.org/v1.0/full/" + pdbCode)));
 
   m_moleculeName = pdbCode;
   m_progressDialog->setLabelText(tr("Querying for %1").arg(pdbCode));
@@ -114,6 +103,13 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
   }
 
   m_moleculeData = reply->readAll();
+  m_tempFileName =
+    QDir::tempPath() + QDir::separator() + m_moleculeName + ".mmtf";
+  QFile out(m_tempFileName);
+  out.open(QIODevice::WriteOnly);
+  out.write(m_moleculeData);
+  out.close();
+
   // Check if the file was successfully downloaded
   if (m_moleculeData.contains("Error report") ||
       m_moleculeData.contains("Page not found (404)")) {
@@ -126,5 +122,5 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
   emit moleculeReady(1);
   reply->deleteLater();
 }
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

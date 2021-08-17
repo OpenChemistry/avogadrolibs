@@ -64,6 +64,11 @@ bool Force::isEnabled() const
   return m_enabled;
 }
 
+bool Force::isActiveLayerEnabled() const
+{
+  return m_enabled;
+}
+
 void Force::setEnabled(bool enable)
 {
   m_enabled = enable;

@@ -27,9 +27,12 @@ struct ShaderInfo
 
 struct Point
 {
-  Point(const Vector3f& p, const Vector3ub& c) : pos(p), color(c) {}
+  Point(const Vector3f& p, const Vector3ub& c, size_t i)
+    : pos(p), color(c), id(i)
+  {}
   Vector3f pos;
   Vector3ub color;
+  size_t id;
 };
 
 struct Line
@@ -76,27 +79,28 @@ public:
   void render(const Camera& camera) override;
 
   void addPoint(const Vector3f& pos, const Vector3ub& color, float radius,
-                size_t i);
+                size_t group, size_t id);
+  const std::vector<Line*>& lines() const { return m_lines; };
+
+  const static size_t SKIPPED;
 
 protected:
   std::vector<Line*> m_lines;
   std::map<size_t, size_t> m_indexMap;
   ShaderInfo m_shaderInfo;
   bool m_dirty;
-  std::vector<size_t> m_factorials;
   bool m_canBeFlat;
 
   virtual void update(int index);
   virtual Vector3f computeCurvePoint(float t,
-                                     const std::list<Point*>& points) = 0;
+                                     const std::list<Point*>& points) const = 0;
   virtual std::vector<ColorNormalVertex> computeCirclePoints(
-    const Eigen::Affine3f& a, const Eigen::Affine3f& b, float radius,
-    bool flat);
+    const Eigen::Affine3f& a, const Eigen::Affine3f& b, bool flat) const;
+  virtual float computeScale(size_t index, float t, float scale) const;
+
   void processShaderError(bool error);
 
-  virtual std::multimap<float, Identifier> hits(const Vector3f&,
-                                                const Vector3f&,
-                                                const Vector3f&) const override;
+  Core::Array<Identifier> areaHits(const Frustrum& f) const override;
 };
 
 } // End namespace Rendering

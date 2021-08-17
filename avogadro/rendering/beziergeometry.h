@@ -17,7 +17,8 @@ public:
   BezierGeometry();
 
 protected:
-  Vector3f computeCurvePoint(float t, const std::list<Point*>& points) override;
+  Vector3f computeCurvePoint(float t,
+                             const std::list<Point*>& points) const override;
 };
 
 } // End namespace Rendering

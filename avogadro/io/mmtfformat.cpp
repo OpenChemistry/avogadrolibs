@@ -32,11 +32,11 @@ using Core::CrystalTools;
 using Core::Cube;
 using Core::Elements;
 using Core::GaussianSet;
+using Core::lexicalCast;
 using Core::Molecule;
 using Core::Residue;
-using Core::Variant;
-using Core::lexicalCast;
 using Core::split;
+using Core::Variant;
 
 MMTFFormat::MMTFFormat() = default;
 
@@ -45,14 +45,14 @@ MMTFFormat::~MMTFFormat() = default;
 // from latest MMTF code, under the MIT license
 // https://github.com/rcsb/mmtf-cpp/blob/master/include/mmtf/structure_data.hpp
 bool is_polymer(const unsigned int chain_index,
-                const std::vector<mmtf::Entity>& entity_list) {
+                const std::vector<mmtf::Entity>& entity_list)
+{
   for (std::size_t i = 0; i < entity_list.size(); ++i) {
-    if ( std::find(entity_list[i].chainIndexList.begin(),
-                   entity_list[i].chainIndexList.end(),
-                   chain_index)
-        != entity_list[i].chainIndexList.end()) {
-      return ( entity_list[i].type == "polymer"
-              || entity_list[i].type == "POLYMER");
+    if (std::find(entity_list[i].chainIndexList.begin(),
+                  entity_list[i].chainIndexList.end(),
+                  chain_index) != entity_list[i].chainIndexList.end()) {
+      return (entity_list[i].type == "polymer" ||
+              entity_list[i].type == "POLYMER");
     }
   }
   return false;
@@ -116,7 +116,7 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
 
       auto& residue = molecule.addResidue(resname, groupId, chainid);
       // Stores if the group / residue is a heterogen
-      // 
+      //
       if (!isPolymer || mmtf::is_hetatm(group.chemCompType.c_str()))
         residue.setHeterogen(true);
 
@@ -130,7 +130,8 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
       //
       // instead, we'll get it from secStructList
       auto secStructure = structure.secStructList[groupIndex];
-      residue.setSecondaryStructure(static_cast<Avogadro::Core::Residue::SecondaryStructure>(secStructure));
+      residue.setSecondaryStructure(
+        static_cast<Avogadro::Core::Residue::SecondaryStructure>(secStructure));
 
       // Save the offset before we go changing it
       Index atomOffset = atomIndex - atomSkip;
@@ -162,7 +163,10 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
 
         char bo = static_cast<char>(group.bondOrderList[l]);
 
-        molecule.addBond(atomOffset + atom1, atomOffset + atom2, bo);
+        if (atomOffset + atom1 < molecule.atomCount() &&
+            atomOffset + atom2 < molecule.atomCount()) {
+          molecule.addBond(atomOffset + atom1, atomOffset + atom2, bo);
+        }
       }
 
       // This is the original PDB Chain name
@@ -198,7 +202,8 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
 
     size_t atom_idx1 = atom1 - atomSkip; // atomSkip = 0 for us (1 model)
     size_t atom_idx2 = atom2 - atomSkip;
-    molecule.addBond(atom_idx1, atom_idx2, 1); // Always a single bond
+    if (atom_idx1 < molecule.atomCount() && atom_idx2 < molecule.atomCount())
+      molecule.addBond(atom_idx1, atom_idx2, 1); // Always a single bond
   }
 
   return true;
