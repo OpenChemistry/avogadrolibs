@@ -227,7 +227,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return bond.order();
       default: // length, rounded to 4 decimals
         return QString("%L1").arg(
-          distance(atom1.position3d(), atom2.position3d()), 0, 'f', 4);
+          distance(atom1.position3d(), atom2.position3d()), 0, 'f', 3);
     }
   } else if (m_type == ResidueType) {
 
@@ -279,7 +279,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case AngleDataAtom3:
         return QVariant::fromValue(std::get<2>(angle) + 1);
       case AngleDataValue:
-        return calcAngle(a1, a2, a3);
+        return QString("%L1").arg(calcAngle(a1, a2, a3), 0, 'f', 3);
       default:
         return QVariant();
     }
@@ -315,7 +315,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case TorsionDataAtom4:
         return QVariant::fromValue(std::get<3>(torsion) + 1);
       case TorsionDataValue:
-        return calcDihedral(a1, a2, a3, a4);
+        return QString("%L1").arg(calcDihedral(a1, a2, a3, a4), 0, 'f', 3);
       default:
         return QVariant();
     }
