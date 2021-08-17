@@ -38,6 +38,7 @@ class PropertyModel : public QAbstractTableModel
 
 public slots:
   void moleculeChanged();
+  void updateTable();
 
 public:
   explicit PropertyModel(PropertyType type, QObject* parent = 0);

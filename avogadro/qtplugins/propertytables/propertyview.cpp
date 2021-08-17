@@ -60,7 +60,7 @@ PropertyView::PropertyView(PropertyType type, QWidget* parent)
   vertical->setDefaultAlignment(Qt::AlignCenter);
 
   // You can select everything (e.g., to copy, select all, etc.)
-  // setCornerButtonEnabled(true);
+  setCornerButtonEnabled(true);
   setSelectionBehavior(QAbstractItemView::SelectRows);
   setSelectionMode(QAbstractItemView::ExtendedSelection);
   // Alternating row colors

@@ -104,7 +104,7 @@ int PropertyModel::columnCount(const QModelIndex& parent) const
     case TorsionType:
       return TorsionColumns; // type, atom 1, atom 2, atom 3, atom 4, dihedral
     case ResidueType:
-      return ResidueColumns; // name, number, chain, secondary structure, color
+      return ResidueColumns; // name, number, chain, secondary structure, heterogen, color
     case ConformerType:
       return ConformerColumns; // number, energy
   }
@@ -121,13 +121,16 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   int row = index.row();
   int col = index.column();
 
+  // qDebug() << " data: " << row << " " << col << " " << role;
+
   // handle text alignments
   if (role == Qt::TextAlignmentRole) {
     if (m_type == ConformerType) {
       return Qt::AlignRight + Qt::AlignVCenter; // energies
     } else if (m_type == AtomType) {
-      if (index.column() == AtomDataCharge)
-        return Qt::AlignRight + Qt::AlignVCenter; // partial charge
+      if ((index.column() == AtomDataCharge) 
+      || (index.column() == AtomDataColor))
+        return Qt::AlignRight + Qt::AlignVCenter;
       else
         return Qt::AlignHCenter + Qt::AlignVCenter;
     } else if (m_type == BondType) {
@@ -145,24 +148,25 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return Qt::AlignRight + Qt::AlignVCenter; // dihedral angle
       else
         return Qt::AlignHCenter + Qt::AlignVCenter;
+    } else if (m_type == ResidueType) {
+      return Qt::AlignHCenter + Qt::AlignVCenter;
     }
   }
 
-  if (role == Qt::BackgroundRole) {
-    // color for atom and residues
-
+  if (role == Qt::DecorationRole) {
+    // color for atom and residue
     if (m_type == AtomType && col == AtomDataColor &&
         row < m_molecule->atomCount()) {
 
       auto c = m_molecule->color(row);
       QColor color(c[0], c[1], c[2]);
-      return QBrush(color);
+      return color;
     } else if (m_type == ResidueType && col == ResidueDataColor &&
                row < m_molecule->residueCount()) {
 
       auto c = m_molecule->residue(row).color();
       QColor color(c[0], c[1], c[2]);
-      return QBrush(color);
+      return color;
     }
   }
 
@@ -199,9 +203,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return QString("%L1").arg(m_molecule->atomPosition3d(row).z(), 0, 'f',
                                   4);
       case AtomDataColor:
-        return QVariant(); // nothing to show
       default:
-        return 0;
+        return QVariant(); // nothing to show
     }
 
   } else if (m_type == BondType) {
@@ -464,13 +467,14 @@ void PropertyModel::setMolecule(QtGui::Molecule* molecule)
   updateCache();
 
   connect(m_molecule, SIGNAL(changed(unsigned int)), this,
-          SLOT(moleculeChanged()));
+          SLOT(updateTable()));
 }
 
 void PropertyModel::moleculeChanged()
 {
   // Tear down the model and build it back up again
   updateCache();
+  /*
   int rows = rowCount();
   for (int i = 0; i < rows; ++i) {
     beginRemoveRows(QModelIndex(), 0, 0);
@@ -478,6 +482,7 @@ void PropertyModel::moleculeChanged()
   }
   beginInsertRows(QModelIndex(), 0, rowCount() - 1);
   endInsertRows();
+  */
 }
 
 QString PropertyModel::secStructure(unsigned int type) const
@@ -504,13 +509,15 @@ QString PropertyModel::secStructure(unsigned int type) const
   }
 }
 
-/*
 void PropertyModel::updateTable()
 {
+  /*
   emit dataChanged(QAbstractItemModel::createIndex(0, 0),
                    QAbstractItemModel::createIndex(rowCount(), columnCount()));
+                  */
+  beginResetModel();
+  endResetModel();
 }
-*/
 
 void PropertyModel::updateCache() const
 {
@@ -525,10 +532,6 @@ void PropertyModel::updateCache() const
     Core::AngleIterator aIter(m_molecule);
     auto angle = aIter.begin();
     while (angle != aIter.end()) {
-      /*
-      qDebug() << "angle:  " << std::get<0>(angle) << " " << std::get<1>(angle)
-        << " " << std::get<2>(angle);
-      */
       m_angles.push_back(angle);
       angle = ++aIter;
     }
