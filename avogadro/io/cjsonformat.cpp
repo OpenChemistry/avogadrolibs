@@ -242,8 +242,10 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       json atomsResidue = residue["atoms"];
       if (atomsResidue.is_object()) {
         for (auto& item : atomsResidue.items()) {
-          const Atom& atom = molecule.atom(item.value());
-          newResidue.addResidueAtom(item.key(), atom);
+          if (item.value() < molecule.atomCount()) {
+            const Atom& atom = molecule.atom(item.value());
+            newResidue.addResidueAtom(item.key(), atom);
+          }
         }
       }
       json color = residue["color"];

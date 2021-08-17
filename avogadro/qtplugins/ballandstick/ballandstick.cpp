@@ -122,7 +122,6 @@ struct LayerBallAndStick : Core::LayerData
 BallAndStick::BallAndStick(QObject* p) : ScenePlugin(p), m_group(nullptr)
 {
   m_layerManager = PluginLayerManager(m_name);
-  m_layerManager.load<LayerBallAndStick>();
 }
 
 BallAndStick::~BallAndStick() {}
@@ -130,6 +129,7 @@ BallAndStick::~BallAndStick() {}
 void BallAndStick::process(const QtGui::Molecule& molecule,
                            Rendering::GroupNode& node)
 {
+  m_layerManager.load<LayerBallAndStick>();
   // Add a sphere node to contain all of the spheres.
   m_group = &node;
   GeometryNode* geometry = new GeometryNode;

@@ -36,16 +36,18 @@ public:
   void load()
   {
     if (m_activeMolecule != nullptr) {
-      auto info = m_molToInfo[m_activeMolecule];
-      if (info->settings.find(m_name) != info->settings.end() &&
-          info->settings[m_name].size() > 0 &&
-          dynamic_cast<T*>(info->settings[m_name][0]) == nullptr) {
+      auto& info = m_molToInfo[m_activeMolecule];
+      if (info->loaded.find(m_name) == info->loaded.end()) {
         for (size_t i = 0; i < info->settings[m_name].size(); ++i) {
-          T* aux = new T;
-          aux->deserialize(info->settings[m_name][i]->getSave());
-          delete info->settings[m_name][i];
-          info->settings[m_name][i] = aux;
+          auto serial = info->settings[m_name][i]->getSave();
+          if (serial != "") {
+            T* aux = new T;
+            aux->deserialize(serial);
+            delete info->settings[m_name][i];
+            info->settings[m_name][i] = aux;
+          }
         }
+        info->loaded.insert(m_name);
       }
     }
   }

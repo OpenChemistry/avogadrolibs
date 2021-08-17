@@ -153,13 +153,13 @@ struct LayerLabel : Core::LayerData
 Label::Label(QObject* parent_) : QtGui::ScenePlugin(parent_)
 {
   m_layerManager = PluginLayerManager(m_name);
-  m_layerManager.load<LayerLabel>();
 }
 
 Label::~Label() {}
 
 void Label::process(const Core::Molecule& molecule, Rendering::GroupNode& node)
 {
+  m_layerManager.load<LayerLabel>();
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
     LayerLabel& interface = m_layerManager.getSetting<LayerLabel>(layer);
     if (interface.residueLabel) {

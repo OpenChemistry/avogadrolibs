@@ -6,7 +6,6 @@
 #include "pluginlayermanager.h"
 
 #include <cassert>
-#include <iostream>
 #include <vector>
 
 namespace Avogadro {
