@@ -111,7 +111,6 @@ struct LayerWireframe : Core::LayerData
 Wireframe::Wireframe(QObject* p) : ScenePlugin(p), m_group(nullptr)
 {
   m_layerManager = PluginLayerManager(m_name);
-  m_layerManager.load<LayerWireframe>();
 }
 
 Wireframe::~Wireframe() {}
@@ -119,6 +118,7 @@ Wireframe::~Wireframe() {}
 void Wireframe::process(const QtGui::Molecule& molecule,
                         Rendering::GroupNode& node)
 {
+  m_layerManager.load<LayerWireframe>();
   // Add a node to contain all of the lines.
   m_group = &node;
   GeometryNode* geometry = new GeometryNode;

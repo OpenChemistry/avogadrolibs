@@ -62,6 +62,7 @@ struct MoleculeInfo
   std::map<std::string, std::vector<bool>> enable;
   std::map<std::string, Core::Array<LayerData*>> settings;
   Layer layer;
+  std::set<std::string> loaded;
 
   MoleculeInfo(const Molecule* m) : mol(m)
   {
