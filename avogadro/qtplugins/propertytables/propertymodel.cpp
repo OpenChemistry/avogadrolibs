@@ -79,7 +79,7 @@ int PropertyModel::rowCount(const QModelIndex& parent) const
   } else if (m_type == BondType) {
     return m_molecule->bondCount();
   } else if (m_type == ResidueType) {
-    return m_molecule->residueCount();  
+    return m_molecule->residueCount();
   } else if (m_type == AngleType) {
     return m_angles.size();
   } else if (m_type == TorsionType) {
@@ -178,8 +178,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   if (m_type == AtomType) {
     AtomColumn column = static_cast<AtomColumn>(index.column());
 
-    if (static_cast<unsigned int>(row) >= m_molecule->atomCount() ||
-        column > AtomColumns)
+    if (row >= m_molecule->atomCount() || column > AtomColumns)
       return QVariant(); // invalid index
 
     QString format("%L1");
@@ -207,11 +206,11 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
   } else if (m_type == BondType) {
 
-    if (row >= m_molecule->bondCount() ||
-        static_cast<unsigned int>(index.column()) > BondColumns)
+    BondColumn column = static_cast<BondColumn>(index.column());
+
+    if (row >= m_molecule->bondCount() || column > BondColumns)
       return QVariant(); // invalid index
 
-    BondColumn column = static_cast<BondColumn>(index.column());
     auto bond = m_molecule->bond(row);
     auto atom1 = bond.atom1();
     auto atom2 = bond.atom2();
@@ -232,11 +231,11 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     }
   } else if (m_type == ResidueType) {
 
-    if (row >= m_molecule->residueCount() ||
-        static_cast<unsigned int>(index.column()) > ResidueColumns)
+    ResidueColumn column = static_cast<ResidueColumn>(index.column());
+
+    if (row >= m_molecule->residueCount() || column > ResidueColumns)
       return QVariant(); // invalid index
 
-    ResidueColumn column = static_cast<ResidueColumn>(index.column());
     auto residue = m_molecule->residue(row);
     // name, number, chain, secondary structure
     // color is handled above
@@ -249,22 +248,30 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return QString(residue.chainId());
       case ResidueDataSecStructure:
         return secStructure(
-          residue.secondaryStructure()); // TODO map to strings
+          residue.secondaryStructure());
       case ResidueDataHeterogen:
         return QString(residue.isHeterogen() ? "X" : "");
       default:
         return QVariant();
     }
   } else if (m_type == AngleType) {
-    if (row > m_angles.size() ||
-        static_cast<unsigned int>(index.column()) > AngleColumns)
-      return QVariant(); // invalid index
 
     AngleColumn column = static_cast<AngleColumn>(index.column());
+    if (row > m_angles.size() || column > AngleColumns)
+      return QVariant(); // invalid index
+
     auto angle = m_angles[row];
+    auto atomNumber1 = m_molecule->atomicNumber(std::get<0>(angle));
+    auto atomNumber2 = m_molecule->atomicNumber(std::get<1>(angle));
+    auto atomNumber3 = m_molecule->atomicNumber(std::get<2>(angle));
+
+    Vector3 a1 = m_molecule->atomPosition3d(std::get<0>(angle));
+    Vector3 a2 = m_molecule->atomPosition3d(std::get<1>(angle));
+    Vector3 a3 = m_molecule->atomPosition3d(std::get<2>(angle));
+
     switch (column) {
       case AngleDataType:
-        return QString("%1-%2-%3");
+        return angleTypeString(atomNumber1, atomNumber2, atomNumber3);
       case AngleDataAtom1:
         return QVariant::fromValue(std::get<0>(angle) + 1);
       case AngleDataAtom2:
@@ -272,13 +279,46 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case AngleDataAtom3:
         return QVariant::fromValue(std::get<2>(angle) + 1);
       case AngleDataValue:
-        return 109.5f;
+        return calcAngle(a1, a2, a3);
       default:
         return QVariant();
     }
 
   } else if (m_type == TorsionType) {
-            return QVariant();
+
+    TorsionColumn column = static_cast<TorsionColumn>(index.column());
+    if (row > m_torsions.size() || column > TorsionColumns)
+      return QVariant(); // invalid index
+
+    auto torsion = m_torsions[row];
+    auto atomNumber1 = m_molecule->atomicNumber(std::get<0>(torsion));
+    auto atomNumber2 = m_molecule->atomicNumber(std::get<1>(torsion));
+    auto atomNumber3 = m_molecule->atomicNumber(std::get<2>(torsion));
+    auto atomNumber4 = m_molecule->atomicNumber(std::get<3>(torsion));
+
+    Vector3 a1 = m_molecule->atomPosition3d(std::get<0>(torsion));
+    Vector3 a2 = m_molecule->atomPosition3d(std::get<1>(torsion));
+    Vector3 a3 = m_molecule->atomPosition3d(std::get<2>(torsion));
+    Vector3 a4 = m_molecule->atomPosition3d(std::get<3>(torsion));
+
+    switch (column) {
+      case TorsionDataType:
+        return torsionTypeString(atomNumber1, atomNumber2, atomNumber3,
+                                 atomNumber4);
+
+      case TorsionDataAtom1:
+        return QVariant::fromValue(std::get<0>(torsion) + 1);
+      case TorsionDataAtom2:
+        return QVariant::fromValue(std::get<1>(torsion) + 1);
+      case TorsionDataAtom3:
+        return QVariant::fromValue(std::get<2>(torsion) + 1);
+      case TorsionDataAtom4:
+        return QVariant::fromValue(std::get<3>(torsion) + 1);
+      case TorsionDataValue:
+        return calcDihedral(a1, a2, a3, a4);
+      default:
+        return QVariant();
+    }
   }
 
   return QVariant();
@@ -403,7 +443,7 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
   if (!index.isValid())
     return Qt::ItemIsEnabled;
 
-  return QAbstractItemModel::flags(index);
+  return QAbstractItemModel::flags(index) | Qt::ItemIsEditable | Qt::ItemIsSelectable;
 }
 
 bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
@@ -481,17 +521,24 @@ void PropertyModel::updateCache() const
   if (m_molecule == nullptr)
     return;
 
-  Core::AngleIterator aIter(m_molecule);
-  // auto it = customContainer.begin(); it != customContainer.end(); it++
-  for (auto it = aIter.begin(); it != aIter.end(); ++aIter) {
-    const auto angle = it;
-    m_angles.push_back(angle);
-  }
-
-  Core::DihedralIterator dIter(m_molecule);
-  for (auto it = dIter.begin(); it != dIter.end(); ++dIter) {
-    const auto dihedral = it;
-    m_torsions.push_back(dihedral);
+  if (m_type == AngleType) {
+    Core::AngleIterator aIter(m_molecule);
+    auto angle = aIter.begin();
+    while (angle != aIter.end()) {
+      /*
+      qDebug() << "angle:  " << std::get<0>(angle) << " " << std::get<1>(angle)
+        << " " << std::get<2>(angle);
+      */
+      m_angles.push_back(angle);
+      angle = ++aIter;
+    }
+  } else if (m_type == TorsionType) {
+    Core::DihedralIterator dIter(m_molecule);
+    auto torsion = dIter.begin();
+    while (torsion != dIter.end()) {
+      m_torsions.push_back(torsion);
+      torsion = ++dIter;
+    }
   }
 }
 
