@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "overlayaxes.h"
@@ -22,10 +11,12 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/meshgeometry.h>
 #include <avogadro/rendering/scene.h>
+#include <avogadro/qtopengl/glwidget.h>
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
+#include <QtCore/QSettings>
 #include <QtWidgets/QAction>
 
 #include <Eigen/Geometry>
@@ -242,11 +233,19 @@ void OverlayAxes::RenderImpl::addAxis(const Vector3f& axis,
 }
 
 OverlayAxes::OverlayAxes(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_enabled(false),
-    m_render(new RenderImpl),
-    m_axesAction(new QAction(tr("Reference Axes"), this))
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_render(new RenderImpl),
+    m_axesAction(new QAction(tr("Reference Axes"), this)), m_initialized(false)
 {
-  connect(m_axesAction, SIGNAL(triggered()), SLOT(procesAxis()));
+  connect(m_axesAction, SIGNAL(triggered()), SLOT(processAxes()));
+
+  QSettings settings;
+  m_enabled = settings.value("overlayAxes/enabled", true).toBool();
+  m_axesAction->setCheckable(true);
+  m_axesAction->setChecked(m_enabled);
+
+  // processAxes() will flip the value when called
+  //   so we need to invert it here
+  m_enabled = !m_enabled;
 }
 
 OverlayAxes::~OverlayAxes()
@@ -265,9 +264,13 @@ QStringList OverlayAxes::menuPath(QAction*) const
   return QStringList() << tr("&View");
 }
 
-void OverlayAxes::procesAxis()
+void OverlayAxes::processAxes()
 {
   m_enabled = !m_enabled;
+  QSettings settings;
+  settings.setValue("overlayAxes/enabled", m_enabled);
+  m_axesAction->setChecked(m_enabled);
+
   Rendering::GroupNode* engineNode = m_widgetToNode[m_glWidget];
   GroupNode& node = m_scene->rootNode();
   if (node.hasChild(engineNode)) {
@@ -275,7 +278,9 @@ void OverlayAxes::procesAxis()
     m_scene->rootNode().removeChild(engineNode);
     delete engineNode;
     m_widgetToNode[m_glWidget] = nullptr;
-  } else {
+  }
+
+  if (m_enabled) {
     engineNode = new Rendering::GroupNode(&node);
     m_widgetToNode[m_glWidget] = engineNode;
     process(*m_molecule, *engineNode);
@@ -286,19 +291,23 @@ void OverlayAxes::setActiveWidget(QWidget* widget)
 {
   if (widget != nullptr) {
     m_glWidget = widget;
+    connect(this, SIGNAL(updateRequested()), m_glWidget, SLOT(requestUpdate()));
+
     if (m_widgetToNode.find(m_glWidget) == m_widgetToNode.end()) {
       m_widgetToNode[m_glWidget] = nullptr;
     }
   }
 }
 
-void OverlayAxes::process(const Core::Molecule&, Rendering::GroupNode& node)
+void OverlayAxes::process(const Core::Molecule& mol, Rendering::GroupNode& node)
 {
   GeometryNode* geo = new GeometryNode;
   // Since our geometry doesn't change, we just make a copy of the pre-built
   // set of axes.
   geo->addDrawable(new CustomMesh(*m_render->mesh));
   node.addChild(geo, GroupNode::NodeType::UI);
+
+  emit updateRequested();
 }
 
 void OverlayAxes::setMolecule(QtGui::Molecule* molecule)
@@ -309,6 +318,10 @@ void OverlayAxes::setMolecule(QtGui::Molecule* molecule)
 void OverlayAxes::setScene(Rendering::Scene* scene)
 {
   m_scene = scene;
+  if (!m_initialized) {
+    m_initialized = true;
+    processAxes();
+  }
 }
 
 } // namespace QtPlugins
