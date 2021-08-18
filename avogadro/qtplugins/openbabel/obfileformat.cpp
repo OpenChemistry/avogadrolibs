@@ -19,6 +19,7 @@
 #include "obprocess.h"
 
 #include <avogadro/io/cmlformat.h>
+#include <avogadro/io/pdbformat.h>
 
 #include <nlohmann/json.hpp>
 
@@ -85,12 +86,9 @@ OBFileFormat::OBFileFormat(const std::string& name_,
     m_fileExtensions(fileExtensions_), m_mimeTypes(mimeTypes_),
     m_identifier(identifier_), m_name(name_),
     m_specificationUrl(specificationUrl_), m_fileOnly(fileOnly_)
-{
-}
+{}
 
-OBFileFormat::~OBFileFormat()
-{
-}
+OBFileFormat::~OBFileFormat() {}
 
 bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 {
@@ -133,6 +131,10 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
     }
   }
 
+  // check if we're going to read to a different format
+  // default is CML
+  QString format = QString::fromStdString(opts.value("format", "cml"));
+
   if (!m_fileOnly) {
     // Determine length of data
     in.seekg(0, std::ios_base::end);
@@ -151,7 +153,7 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 
     // Perform the conversion.
     if (!proc.convert(input, QString::fromStdString(m_fileExtensions.front()),
-                      "cml", options)) {
+                      format, options)) {
       appendError("OpenBabel conversion failed!");
       return false;
     }
@@ -166,29 +168,40 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 
     // Perform the conversion.
     if (!proc.convert(filename,
-                      QString::fromStdString(m_fileExtensions.front()), "cml",
+                      QString::fromStdString(m_fileExtensions.front()), format,
                       options)) {
       appendError("OpenBabel conversion failed!");
       return false;
     }
   }
 
-  QByteArray cmlOutput;
-  if (!listener.waitForOutput(cmlOutput)) {
+  QByteArray output;
+  if (!listener.waitForOutput(output)) {
     appendError(std::string("Conversion timed out."));
     return false;
   }
 
-  if (cmlOutput.isEmpty()) {
+  if (output.isEmpty()) {
     appendError(std::string("OpenBabel error: conversion failed."));
     return false;
   }
 
-  Io::CmlFormat cmlReader;
-  if (!cmlReader.readString(std::string(cmlOutput.constData()), molecule)) {
-    appendError(std::string("Error while reading OpenBabel-generated CML:"));
-    appendError(cmlReader.error());
-    return false;
+  if (format == "cml") {
+    Io::CmlFormat cmlReader;
+    if (!cmlReader.readString(std::string(output.constData()), molecule)) {
+      appendError(std::string("Error while reading OpenBabel-generated CML:"));
+      appendError(cmlReader.error());
+      return false;
+    }
+  } else if (format == "pdb") {
+    Io::PdbFormat pdbReader;
+    if (!pdbReader.readString(std::string(output.constData()), molecule)) {
+      appendError(std::string("Error while reading OpenBabel-generated PDB:"));
+      appendError(pdbReader.error());
+      return false;
+    }
+  } else {
+    return false; // unknown format
   }
 
   return true;
