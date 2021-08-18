@@ -51,6 +51,7 @@ private:
   void process(const Core::Molecule& molecule, Rendering::GroupNode& node);
 
   bool m_enabled;
+  bool m_initialized;
 
   class RenderImpl;
   RenderImpl* const m_render;

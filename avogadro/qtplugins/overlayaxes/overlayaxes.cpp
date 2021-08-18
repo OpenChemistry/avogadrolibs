@@ -233,18 +233,19 @@ void OverlayAxes::RenderImpl::addAxis(const Vector3f& axis,
 }
 
 OverlayAxes::OverlayAxes(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_),
-    m_render(new RenderImpl),
-    m_axesAction(new QAction(tr("Reference Axes"), this))
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_render(new RenderImpl),
+    m_axesAction(new QAction(tr("Reference Axes"), this)), m_initialized(false)
 {
   connect(m_axesAction, SIGNAL(triggered()), SLOT(processAxes()));
 
   QSettings settings;
+  m_enabled = settings.value("overlayAxes/enabled", true).toBool();
+  m_axesAction->setCheckable(true);
+  m_axesAction->setChecked(m_enabled);
+
   // processAxes() will flip the value when called
   //   so we need to invert it here
-  m_enabled = !settings.value("overlayAxes/enabled", true).toBool();
-  m_axesAction->setCheckable(true);
-  processAxes();
+  m_enabled = !m_enabled;
 }
 
 OverlayAxes::~OverlayAxes()
@@ -317,6 +318,10 @@ void OverlayAxes::setMolecule(QtGui::Molecule* molecule)
 void OverlayAxes::setScene(Rendering::Scene* scene)
 {
   m_scene = scene;
+  if (!m_initialized) {
+    m_initialized = true;
+    processAxes();
+  }
 }
 
 } // namespace QtPlugins
