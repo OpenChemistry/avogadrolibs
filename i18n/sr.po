@@ -148,8 +148,8 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
-"Greška pri generisanju cjson objekta: Greška raščlanjivanja pri pomaku %1: %"
-"2\n"
+"Greška pri generisanju cjson objekta: Greška raščlanjivanja pri pomaku %1: "
+"%2\n"
 "Sirovi JSON:\n"
 "\n"
 "%3"
@@ -313,8 +313,7 @@ msgstr "%1: Datoteka postoji i nije za pisanje."
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
-"Interna greška: nije moguće pronaći tekstualni vidžet za naziv datoteke "
-"'%1'"
+"Interna greška: nije moguće pronaći tekstualni vidžet za naziv datoteke '%1'"
 
 #: molequeue/inputgeneratorwidget.cpp:480
 #: molequeue/inputgeneratorwidget.cpp:591
@@ -560,8 +559,8 @@ msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
-"Greška pri podešavanju podrazumevane opcije „%1“. Nije moguće pronaći "
-"važeći indeks kombinovanog unosa iz vrednosti:"
+"Greška pri podešavanju podrazumevane opcije „%1“. Nije moguće pronaći važeći "
+"indeks kombinovanog unosa iz vrednosti:"
 
 #: molequeue/inputgeneratorwidget.cpp:1145 qtgui/interfacewidget.cpp:691
 #, qt-format
@@ -1143,8 +1142,7 @@ msgstr "Izaberite izvršnu datoteku:"
 
 #: qtgui/fileformatdialog.cpp:65
 msgid "Unable to find a suitable file reader for the selected file."
-msgstr ""
-"Nije moguće pronaći odgovarajući čitač datoteka za izabranu datoteku."
+msgstr "Nije moguće pronaći odgovarajući čitač datoteka za izabranu datoteku."
 
 #: qtgui/fileformatdialog.cpp:109
 msgid "Unable to find a suitable file writer for the selected format."
