@@ -40,7 +40,7 @@ jobs:
             name: "macOS Latest Clang", artifact: "macOS.dmg",
             os: macos-latest,
             cc: "clang", cxx: "clang++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
+            cmake_flags: "-G Ninja",
             cpack_flags: "-G DragNDrop",
           }
         - {
@@ -150,7 +150,7 @@ jobs:
         cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
 
     - name: Run tests
-      if: runner.os != 'Windows'
+      if: runner.os == 'Linux'
       shell: cmake -P {0}
       run: |
         include(ProcessorCount)
@@ -158,7 +158,7 @@ jobs:
         set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
         execute_process(
           COMMAND ctest -j ${N}
-          WORKING_DIRECTORY ${{ runner.workspace }}/build
+          WORKING_DIRECTORY ${{ runner.workspace }}/build/avogadrolibs
           RESULT_VARIABLE result
         )
         if (NOT result EQUAL 0)
