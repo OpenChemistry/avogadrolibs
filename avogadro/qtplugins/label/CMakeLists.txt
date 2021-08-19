@@ -7,5 +7,23 @@ avogadro_plugin(Label
   label.cpp
   "")
 
+set(label_rcs
+  label.qrc
+)
+
+set(label_srcs
+  labeleditor.cpp
+)
+
+avogadro_plugin(LabelEditor
+  "Labels rendering scheme"
+  ToolPlugin
+  labeleditor.h
+  LabelEditor
+  "${label_srcs}"
+  ""
+  "${label_rcs}"
+)
 
 target_link_libraries(Label LINK_PRIVATE AvogadroRendering)
+target_link_libraries(LabelEditor LINK_PRIVATE AvogadroRendering)

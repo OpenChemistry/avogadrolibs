@@ -43,11 +43,11 @@ TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
   tprop.setAlign(Rendering::TextProperties::HCenter,
                  Rendering::TextProperties::VCenter);
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
+  tprop.setColorRgb(color.data());
 
-  tprop.setColorRgb(color[0], color[1], color[2]);
   TextLabel3D* label = new TextLabel3D;
   label->setText(text);
-  label->setRenderPass(Rendering::OpaquePass);
+  label->setRenderPass(Rendering::TranslucentPass);
   label->setTextProperties(tprop);
   label->setRadius(radius);
   label->setAnchor(pos);
@@ -87,8 +87,8 @@ struct LayerLabel : Core::LayerData
   std::string serialize() override final
   {
     return boolToString(atomLabel) + " " + boolToString(residueLabel) + " " +
-             std::to_string(radiusScalar) + " " + std::to_string(color[0]) 
-             + " " + std::to_string(color[1]) + " " + std::to_string(color[2]);
+           std::to_string(radiusScalar) + " " + std::to_string(color[0]) + " " +
+           std::to_string(color[1]) + " " + std::to_string(color[2]);
   }
   void deserialize(std::string text) override final
   {
@@ -118,7 +118,7 @@ struct LayerLabel : Core::LayerData
       // color button
       QtGui::ColorButton* color = new QtGui::ColorButton;
       QObject::connect(color, SIGNAL(colorChanged(const QColor&)), slot,
-              SLOT(setColor(const QColor&)));
+                       SLOT(setColor(const QColor&)));
       form->addRow(QObject::tr("Color:"), color);
 
       // radius scalar
