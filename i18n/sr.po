@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-02 05:24+0900\n"
-"PO-Revision-Date: 2021-08-19 18:59+0000\n"
+"PO-Revision-Date: 2021-08-20 01:04+0000\n"
 "Last-Translator: Nikola Matić <nikolamatic225@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
@@ -1181,39 +1181,40 @@ msgstr "piši"
 #: qtgui/fileformatdialog.cpp:172
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
-msgstr ""
+msgstr "Otkriveno je više %1 koji mogu %2 u ovom formatu. Koje treba koristiti?"
 
 #: qtgui/fileformatdialog.cpp:259
-#, fuzzy
 msgid "All files (*);;"
-msgstr "Све датотеке"
+msgstr "Sve datoteke (*);;"
 
 #: qtgui/fileformatdialog.cpp:262
 #, qt-format
 msgid "All supported formats (%1);;"
-msgstr ""
+msgstr "Svi podržani formati (%1) ;;"
 
 #: qtgui/interfacescript.cpp:223
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
-msgstr ""
+msgstr "Greška pri čitanju prikaza molekula: Neprepoznat format datoteke: %1"
 
 #: qtgui/moleculemodel.cpp:105
 msgid "Untitled"
-msgstr "Без наслова"
+msgstr "Bez naslova"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
-msgstr ""
+msgstr "Kreirajte novi prikaz"
 
 #: qtgui/periodictableview.cpp:44
 msgid "Periodic Table"
-msgstr "Периодни систем елемената"
+msgstr "Periodična Tabla"
 
 #: qtgui/pythonscript.cpp:79 qtgui/pythonscript.cpp:164
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
+"Greška pri pokretanju skripte „%1%2“: Isteklo je vreme čekanja na početak "
+"(%3)."
 
 #: qtgui/pythonscript.cpp:89 qtgui/pythonscript.cpp:174
 #, qt-format
@@ -1221,11 +1222,15 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
+"Greška pri pokretanju skripte ' %1 %2': nije uspelo pisanje na stdin (len = "
+"%3, upisan %4 bajta, greška QProcess -a: %5)."
 
 #: qtgui/pythonscript.cpp:102
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
+"Greška pri pokretanju skripte „%1%2“: Isteklo je vreme čekanja na završetak "
+"(%3)."
 
 #: qtgui/pythonscript.cpp:110
 #, qt-format
@@ -1235,170 +1240,163 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
+"Greška pri pokretanju skripte ' %1 %2': Abnormalni status izlaska %3 ( %4: "
+"%5)\n"
+"\n"
+"Izlaz:\n"
+"%6"
 
 #: qtgui/pythonscript.cpp:211
 msgid "Script failed to start."
-msgstr ""
+msgstr "Pokretanje skripte nije uspelo."
 
 #: qtgui/pythonscript.cpp:214
 msgid "Script crashed."
-msgstr ""
+msgstr "Skripta se srušila."
 
 #: qtgui/pythonscript.cpp:217
 msgid "Script timed out."
-msgstr ""
+msgstr "Isteklo je vremensko razdoblje za skriptu."
 
 #: qtgui/pythonscript.cpp:220
 msgid "Read error."
-msgstr ""
+msgstr "Greška pri čitanju."
 
 #: qtgui/pythonscript.cpp:223
 msgid "Write error."
-msgstr ""
+msgstr "Greška pri pisanju."
 
 #: qtgui/pythonscript.cpp:227
 msgid "Unknown error."
-msgstr ""
+msgstr "Nepoznata greška."
 
 #: qtgui/rwmolecule.cpp:48
 msgid "Modify Molecule"
-msgstr ""
+msgstr "Modifikuj Molekul"
 
 #: qtgui/rwmolecule.cpp:153 qtgui/rwmolecule.cpp:162
 msgid "Add Atom"
-msgstr "Додај атом"
+msgstr "Dodaj Atom"
 
 #: qtgui/rwmolecule.cpp:274 qtgui/rwmolecule.cpp:289
 #: qtplugins/editor/editor.cpp:130
 msgid "Remove Atom"
-msgstr "Уклони атом"
+msgstr "Ukloni Atom"
 
 #: qtgui/rwmolecule.cpp:299
 msgid "Clear Atoms"
-msgstr ""
+msgstr "Očisti Atome"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
 #: qtgui/rwmolecule.cpp:311 qtgui/rwmolecule.cpp:319:465
 msgid "Adjust Hydrogens"
-msgstr "Дотерај водонике"
+msgstr "Izmeni Vodonike"
 
 #: qtgui/rwmolecule.cpp:353
-#, fuzzy
 msgid "Change Elements"
-msgstr "Измени елемент"
+msgstr "Izmeni Elemente"
 
 #: qtgui/rwmolecule.cpp:386
 msgid "Change Element"
-msgstr "Измени елемент"
+msgstr "Izmeni Element"
 
 #: qtgui/rwmolecule.cpp:560
 msgid "Change Atom Hybridization"
-msgstr ""
+msgstr "Promenite Atom hibridizaciju"
 
 #: qtgui/rwmolecule.cpp:592
 msgid "Change Atom Formal Charge"
-msgstr ""
+msgstr "Promenite formalnu naplatu Atom -a"
 
 #: qtgui/rwmolecule.cpp:624
 msgid "Change Atom Color"
-msgstr ""
+msgstr "Promenite boju atoma"
 
 #: qtgui/rwmolecule.cpp:686
 msgid "Add Bond"
-msgstr "Додај везу"
+msgstr "Dodaj Vezu"
 
 #: qtgui/rwmolecule.cpp:773
 msgid "Removed Bond"
-msgstr ""
+msgstr "Uklonjene Veze"
 
 #: qtgui/rwmolecule.cpp:780
-#, fuzzy
 msgid "Clear Bonds"
-msgstr "Обриши везу"
+msgstr "Obriši Veze"
 
 #: qtgui/rwmolecule.cpp:814
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Поредак везе"
+msgstr "Poredak Veze"
 
 #: qtgui/rwmolecule.cpp:858
 msgid "Change Bond Order"
-msgstr "Измени редослед везе"
+msgstr "Izmeni Redosled Veze"
 
 #: qtgui/rwmolecule.cpp:901
-#, fuzzy
 msgid "Update Bonds"
-msgstr " Приони на везе"
+msgstr "Ispravite Veze"
 
 #: qtgui/rwmolecule.cpp:940
 msgid "Update Bond"
-msgstr ""
+msgstr "Ispravite Vezu"
 
 #: qtgui/rwmolecule.cpp:979
-#, fuzzy
 msgid "Add Unit Cell"
-msgstr "Додај &јединичну ћелију"
+msgstr "Dodajte jedinčnu ćeliju"
 
 #: qtgui/rwmolecule.cpp:1011
-#, fuzzy
 msgid "Remove Unit Cell"
-msgstr "Уклони &јединичну ћелију"
+msgstr "Ukloni jediničnu ćeliju"
 
 #: qtgui/rwmolecule.cpp:1092
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "Izmeni ćeliju jedinice"
 
 #: qtgui/rwmolecule.cpp:1109
-#, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "&Преломи атоме на ћелију"
+msgstr "Prelomi atome na ćeliju"
 
 #: qtgui/rwmolecule.cpp:1132
-#, fuzzy
 msgid "Scale Cell Volume"
-msgstr "Промени запремину јединичне ћелије"
+msgstr "Skaliraj zapreminu ćelije"
 
 #: qtgui/rwmolecule.cpp:1152
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "Супер ћелија"
+msgstr "Napravite super ćeliju"
 
 #: qtgui/rwmolecule.cpp:1176
 msgid "Niggli Reduction"
-msgstr ""
+msgstr "Niggli umanjenje"
 
 #: qtgui/rwmolecule.cpp:1198
 msgid "Rotate to Standard Orientation"
-msgstr "Заокрени на уобичајено усмерење"
+msgstr "Zaokreni na uobičajeno usmerenje"
 
 #: qtgui/rwmolecule.cpp:1223 qtplugins/spacegroup/spacegroup.cpp:69
-#, fuzzy
 msgid "Reduce to Primitive"
-msgstr "Умањи на примитивну ћелију"
+msgstr "Umanji na primitivnu ćeliju"
 
 #: qtgui/rwmolecule.cpp:1248 qtplugins/spacegroup/spacegroup.cpp:75
 #: qtplugins/spacegroup/spacegroup.cpp:233
 msgid "Conventionalize Cell"
-msgstr ""
+msgstr "Konvencionalizujte ćeliju"
 
 #: qtgui/rwmolecule.cpp:1273 qtplugins/spacegroup/spacegroup.cpp:258
-#, fuzzy
 msgid "Symmetrize Cell"
-msgstr "Симетризуј"
+msgstr "Simetrizujte ćeliju"
 
 #: qtgui/rwmolecule.cpp:1292 qtplugins/spacegroup/spacegroup.cpp:86
 msgid "Fill Unit Cell"
-msgstr "Испуни јединичну ћелију"
+msgstr "Ispuni jediničnu ćeliju"
 
 #: qtgui/rwmolecule.cpp:1312
-#, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr "Умањи на асиметричну јединицу"
+msgstr "Umanji na asimetričnu jedinicu"
 
 #: qtplugins/3dmol/3dmol.cpp:43
 msgid "ThreeDMol HTML Block."
-msgstr ""
+msgstr "ThreeDMol HTML Blok."
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/fetchpdb/fetchpdb.cpp:54
 #: qtplugins/importpqr/importpqr.cpp:59
@@ -1407,29 +1405,29 @@ msgstr ""
 #: qtplugins/povray/povray.cpp:58 qtplugins/svg/svg.cpp:46
 #: qtplugins/vrml/vrml.cpp:58
 msgid "&File"
-msgstr "&Датотека"
+msgstr "&Datoteka"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/svg/svg.cpp:46 qtplugins/vrml/vrml.cpp:58
 msgid "&Export"
-msgstr "&Извези"
+msgstr "&Izvezi"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
-msgstr ""
+msgstr "ThreeDMol"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:177
 #. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
 #: qtplugins/apbs/apbs.cpp:43:141
 msgid "Run APBS"
-msgstr ""
+msgstr "Pokrenite APBS"
 
 #: qtplugins/apbs/apbs.cpp:48 qtplugins/apbs/apbs.cpp:73
 #: qtplugins/cp2kinput/cp2kinput.cpp:80
 #: qtplugins/gamessinput/gamessinput.cpp:83
 #: qtplugins/quantuminput/quantuminput.cpp:107
 msgid "Open Output File"
-msgstr ""
+msgstr "Otvorite izlaznu datoteku"
 
 #: qtplugins/apbs/apbs.cpp:61 qtplugins/cp2kinput/cp2kinput.cpp:60
 #: qtplugins/gamessinput/gamessinput.cpp:63
@@ -1437,64 +1435,63 @@ msgstr ""
 #: qtplugins/openmminput/openmminput.cpp:57
 #: qtplugins/quantuminput/quantuminput.cpp:83
 msgid "&Input"
-msgstr ""
+msgstr "&Ulaz"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
-msgstr ""
+msgstr "&APBS"
 
 #: qtplugins/apbs/apbs.cpp:74
 msgid "OpenDX File (*.dx)"
-msgstr ""
+msgstr "OpenDX Datoteka (*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:127
-#, fuzzy
 msgid "IO Error"
-msgstr " Грешка "
+msgstr "IO Greška"
 
 #: qtplugins/apbs/apbs.cpp:128
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr ""
+msgstr "Greška pri čitanju strukture datoteke (%1)."
 
 #: qtplugins/apbs/apbs.cpp:148 qtplugins/apbs/apbs.cpp:155
 msgid "OpenDX Error"
-msgstr ""
+msgstr "OpenDX Greška"
 
 #: qtplugins/apbs/apbs.cpp:149
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "Greška pri čitanju OpenDX datoteke: %1"
 
 #: qtplugins/apbs/apbs.cpp:156
 msgid "Error reading OpenDX file: No cube found"
-msgstr ""
+msgstr "Greška pri čitanju OpenDX datoteke: Kocka nije pronađena"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
 #: qtplugins/apbs/apbs.h:42:87
 msgid "APBS"
-msgstr ""
+msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:45
 msgid "Interact with APBS utilities."
-msgstr ""
+msgstr "Interakcija sa uslužnim programima APBS."
 
 #: qtplugins/apbs/apbsdialog.cpp:91
 msgid "Open PDB File"
-msgstr ""
+msgstr "Otvorite PDB datoteku"
 
 #: qtplugins/apbs/apbsdialog.cpp:92
 msgid "PDB Files (*.pdb)"
-msgstr ""
+msgstr "PDB Datoteke (*.pdb)"
 
 #: qtplugins/apbs/apbsdialog.cpp:102
 msgid "Open PQR File"
-msgstr ""
+msgstr "Otvorite PQR datoteku"
 
 #: qtplugins/apbs/apbsdialog.cpp:103
 msgid "PQR Files (*.pqr)"
-msgstr ""
+msgstr "PQR Datoteke (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:143 qtplugins/apbs/apbsdialog.cpp:153
 #: qtplugins/commandscripts/command.cpp:98 qtplugins/cp2kinput/cp2kinput.cpp:96
@@ -1513,118 +1510,110 @@ msgstr ""
 #: qtplugins/openmminput/openmminput.cpp:73
 #: qtplugins/quantuminput/quantuminput.cpp:123
 msgid "Error"
-msgstr "Грeшкa"
+msgstr "Greška"
 
 #: qtplugins/apbs/apbsdialog.cpp:144
 #, qt-format
 msgid "Error running APBS: %1"
-msgstr ""
+msgstr "Greška pri pokretanju APBS -a: %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:153
 msgid "Please specify PDB file"
-msgstr ""
+msgstr "Molimo navedite PDB datoteku"
 
 #: qtplugins/apbs/apbsdialog.cpp:186
 msgid "Save APBS Input File"
-msgstr ""
+msgstr "Sačuvajte ulaznu datoteku APBS"
 
 #: qtplugins/apbs/apbsdialog.cpp:186
 msgid "ABPS Input (*.in)"
-msgstr ""
+msgstr "ABPS ulaz (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:190
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:75:147
-#, fuzzy
 msgid "Success"
-msgstr "Успешно!"
+msgstr "Uspešno!"
 
 #: qtplugins/apbs/apbsdialog.cpp:191
 #, qt-format
 msgid "Input file written to '%1'"
-msgstr ""
+msgstr "Ulazna datoteka zapisana u '%1'"
 
 #: qtplugins/applycolors/applycolors.cpp:23
-#, fuzzy
 msgid "By Custom Color..."
-msgstr "Произвољна боја"
+msgstr "Proizvoljna boja"
 
 #: qtplugins/applycolors/applycolors.cpp:27
-#, fuzzy
 msgid "By Atomic Index"
-msgstr "Показатељ атома"
+msgstr "Pokazatelj atoma"
 
 #: qtplugins/applycolors/applycolors.cpp:31
-#, fuzzy
 msgid "By Element"
-msgstr "Елемент"
+msgstr "Element"
 
 #: qtplugins/applycolors/applycolors.cpp:47
 msgid "Apply color schemes to atoms and residues."
-msgstr ""
+msgstr "Primenite šeme boja na atome i ostatke."
 
 #: qtplugins/applycolors/applycolors.cpp:57
 #: qtplugins/resetview/resetview.cpp:54
 msgid "&View"
-msgstr "&Преглед"
+msgstr "&Pregled"
 
 #: qtplugins/applycolors/applycolors.cpp:57
-#, fuzzy
 msgid "Color Atoms"
-msgstr "Боје"
+msgstr "Boje atoma"
 
 #: qtplugins/applycolors/applycolors.h:27
-#, fuzzy
 msgid "ApplyColors"
-msgstr "Боје"
+msgstr "Primenite Boje"
 
 #: qtplugins/ballandstick/ballandstick.cpp:207
 #: qtplugins/wireframe/wireframe.cpp:100
-#, fuzzy
 msgid "Show multiple bonds?"
-msgstr "Прикажите вишеструке везе"
+msgstr "Prikažite višestruke veze?"
 
 #: qtplugins/ballandstick/ballandstick.cpp:211
 #: qtplugins/wireframe/wireframe.cpp:104
-#, fuzzy
 msgid "Show hydrogens?"
-msgstr "Водоници"
+msgstr "Prikažite vodonike?"
 
 #: qtplugins/ballandstick/ballandstick.h:43
 msgid "Ball and Stick"
-msgstr "Куглица и штапић"
+msgstr "Lopta i štap"
 
 #: qtplugins/ballandstick/ballandstick.h:47
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr ""
+msgstr "Atome predstavite kao sfere, a veze kao cilindre."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:316
-#, fuzzy
 msgid "Bond-centric manipulation"
-msgstr "Управљање средишњом везом"
+msgstr "Upravljanje središnjom vezom"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:188
-#, fuzzy
 msgid "Bond centric manipulation tool."
-msgstr "Управљање средишњом везом"
+msgstr "Управљање средишњом везом."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:193
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
+"Alat koji se koristi za uređivanje molekularne geometrije promenom dužina i "
+"uglova veze."
 
 #: qtplugins/bonding/bonding.cpp:40
 msgid "Bond Atoms"
-msgstr ""
+msgstr "Vezni Atomi"
 
 #: qtplugins/bonding/bonding.cpp:41
 msgid "Remove Bonds"
-msgstr ""
+msgstr "Uklonite Veze"
 
 #: qtplugins/bonding/bonding.cpp:42
 msgid "Configure Bonding…"
-msgstr ""
+msgstr "Konfigurišite Vezivanje…"
 
 #: qtplugins/bonding/bonding.cpp:65
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:45
@@ -1633,24 +1622,23 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragment.cpp:68
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
-msgstr "&Изгради"
+msgstr "&Izgradi"
 
 #: qtplugins/bonding/bonding.cpp:65
-#, fuzzy
 msgid "Bond"
-msgstr "Веза"
+msgstr "Veza"
 
 #: qtplugins/bonding/bonding.h:32
 msgid "Bonding"
-msgstr ""
+msgstr "Vezivanje"
 
 #: qtplugins/bonding/bonding.h:36
 msgid "Perform bonding operations."
-msgstr ""
+msgstr "Izvršite operacije vezivanja."
 
 #: qtplugins/clientserver/clientserver.cpp:73
 msgid "Client server operations."
-msgstr ""
+msgstr "Operacije klijentskog servera."
 
 #: qtplugins/clientserver/clientserver.cpp:83
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:89
@@ -1660,82 +1648,80 @@ msgstr ""
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/quantuminput/quantuminput.cpp:81 qtplugins/yaehmop/yaehmop.cpp:80
 msgid "&Extensions"
-msgstr "&Проширења"
+msgstr "&Proširenja"
 
 #: qtplugins/clientserver/clientserver.cpp:83
 msgid "S&erver"
-msgstr ""
+msgstr "S&erver"
 
 #: qtplugins/clientserver/clientserver.cpp:159
 msgid "Connection failed"
-msgstr ""
+msgstr "Veza nije uspostavljena"
 
 #: qtplugins/clientserver/clientserver.cpp:160
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:68
 #, qt-format
 msgid "The connection to %2:%3 failed: connection refused."
-msgstr ""
+msgstr "Veza sa %2: %3 nije uspela: veza je odbijena."
 
 #: qtplugins/clientserver/clientserver.cpp:218
 #: qtplugins/clientserver/clientserver.cpp:229
 msgid "Remote service error"
-msgstr ""
+msgstr "Greška u daljinskom servisu"
 
 #: qtplugins/clientserver/clientserver.cpp:230
 #, qt-format
 msgid "Connection failed with: %1"
-msgstr ""
+msgstr "Veza nije uspela sa: %1"
 
 #: qtplugins/clientserver/clientserver.cpp:252
 #, qt-format
 msgid "clientServer/%1:%2/lastOpenDir"
-msgstr ""
+msgstr "clientServer/%1:%2/lastOpenDir"
 
 #: qtplugins/clientserver/clientserver.cpp:264
 #, qt-format
 msgid "%1 ("
-msgstr ""
+msgstr "%1 ("
 
 #: qtplugins/clientserver/clientserver.cpp:266
 #, qt-format
 msgid "*.%1"
-msgstr ""
+msgstr "*.%1"
 
 #: qtplugins/clientserver/clientserver.h:56
 msgid "Client server"
-msgstr ""
+msgstr "Klijent server"
 
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:67
 msgid "Connection refused"
-msgstr ""
+msgstr "Konekcija je odbijena"
 
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:76
 #, qt-format
 msgid "Connection to %2:%3 succeeded!"
-msgstr ""
+msgstr "Povezivanje sa %2: %3 je uspelo!"
 
 #: qtplugins/clientserver/filedialogmodel.cpp:666
-#, fuzzy
 msgid "Filename"
-msgstr "Назив датотеке:"
+msgstr "Naziv datoteke:"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:71
 msgid "Edit Color Opacity Map..."
-msgstr ""
+msgstr "Izmeni boju mape neprozirnosti..."
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:26
 msgid "ColorOpacityMap"
-msgstr ""
+msgstr "ColorOpacityMap"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:58
 msgid "Edit color opacity maps, primarily for volume rendering."
-msgstr ""
+msgstr "Uredite mape neprozirnosti boja, prvenstveno za iscrtavanje volumena."
 
 #: qtplugins/commandscripts/command.cpp:65
 #: qtplugins/commandscripts/command.cpp:73
-#, fuzzy
 msgid "Scripts"
-msgstr "&Скрипте"
+msgstr "&Skripte"
 
 #: qtplugins/commandscripts/command.cpp:99 qtplugins/cp2kinput/cp2kinput.cpp:97
 #: qtplugins/gamessinput/gamessinput.cpp:100
@@ -1747,85 +1733,86 @@ msgid ""
 "Error reading output file '%1':\n"
 "%2"
 msgstr ""
+"Greška pri čitanju izlazne datoteke „%1“:\n"
+"%2"
 
 #: qtplugins/commandscripts/command.cpp:188
 #, qt-format
 msgid "Processing %1"
-msgstr ""
+msgstr "Obrada %1"
 
 #: qtplugins/commandscripts/command.cpp:242
 #: qtplugins/quantuminput/quantuminput.cpp:190
 msgid "Set path to Python interpreter:"
-msgstr ""
+msgstr "Podesite putanju do Python tumača:"
 
 #: qtplugins/commandscripts/command.cpp:244
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Izaberite tumač python-a za pokretanje spoljnih skripti.\n"
+"Avogadro se mora ponovo pokrenuti da bi sve promene stupile na snagu."
 
 #: qtplugins/commandscripts/command.h:43
 msgid "Command scripts"
-msgstr ""
+msgstr "Komandne skripte"
 
 #: qtplugins/commandscripts/command.h:47
 msgid "Run external script commands"
-msgstr ""
+msgstr "Pokrenite spoljne komande skripti"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:29
 msgid "Atomic &Coordinate Editor..."
-msgstr ""
+msgstr "Atomski i koordinatni uređivač ..."
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:39
-#, fuzzy
 msgid "Coordinate editor"
-msgstr "Уређивач Декартовог координатног система"
+msgstr "Uređivač Dekartovog Koordinatnog sistema"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:43
 msgid "Text editing of atomic coordinates."
-msgstr ""
+msgstr "Uređivanje teksta atomskih koordinata."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:237
 msgid "Overwrite changes?"
-msgstr ""
+msgstr "Želite li da zamenite promene?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:238
 msgid ""
 "The text document has been modified. Would you like to discard your changes "
 "and revert to the current molecule?"
 msgstr ""
+"Tekstualni dokument je izmenjen. Da li želite da odbacite promene i vratite "
+"se na trenutni molekul?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:365
 msgid "Too few entries on line."
-msgstr ""
+msgstr "Premalo unosa na liniji."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:381
 msgid "Invalid element name."
-msgstr ""
+msgstr "Nevažeći naziv elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:383
-#, fuzzy
 msgid "Element name."
-msgstr "Назив елемента"
+msgstr "Naziv elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
-#, fuzzy
 msgid "Invalid element symbol."
-msgstr "Симбол елемента"
+msgstr "Nevažeći simbol elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
-#, fuzzy
 msgid "Element symbol."
-msgstr "Симбол елемента"
+msgstr "Simbol elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
 msgid "Invalid atomic number."
-msgstr ""
+msgstr "Nevažeći atomski broj."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
-#, fuzzy
 msgid "Atomic number."
-msgstr "Атомски број"
+msgstr "Atomski broj."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:418
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
@@ -1834,38 +1821,35 @@ msgstr "Атомски број"
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
 msgid "Invalid coordinate."
-msgstr ""
+msgstr "Nevažeća koordinata."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
-#, fuzzy
 msgid "X coordinate."
-msgstr "Координате"
+msgstr "X Koordinata."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:431
-#, fuzzy
 msgid "Y coordinate."
-msgstr "Координате"
+msgstr "Y Koordinata."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:442
-#, fuzzy
 msgid "Z coordinate."
-msgstr "Координате"
+msgstr "Z Koordinata."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:453
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "'a' koordinata rešetke."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:464
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "'b' koordinata rešetke."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:475
 msgid "'c' coordinate."
-msgstr ""
+msgstr "'c' koordinata."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:559
 msgid "Error applying geometry"
-msgstr ""
+msgstr "Greška pri primeni geometrije"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:560
 msgid ""
@@ -1874,89 +1858,92 @@ msgid ""
 "\n"
 "(Hint: Hold the mouse over red text for a description of the error.)"
 msgstr ""
+"Nije moguće raščlaniti specifikaciju geometrije. Popravite istaknute greške "
+"i pokušajte ponovo.\n"
+"\n"
+"(Savet: Držite miša iznad crvenog teksta za opis greške.)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:594
 msgid "Edit Atomic Coordinates"
-msgstr ""
+msgstr "Uređivanje atomskih koordinata"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:185
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612:1528
 msgid "Custom"
-msgstr "Произвољно"
+msgstr "Proizvoljno"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:613
 msgid "XYZ format (symbols)"
-msgstr ""
+msgstr "XYZ format (simboli)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
-msgstr ""
+msgstr "XYZ format (imena)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
-msgstr ""
+msgstr "XYZ format (atomski brojevi)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:616
 msgid "Lattice coordinates (symbols)"
-msgstr ""
+msgstr "Koordinate rešetki (simboli)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:617
 msgid "Lattice coordinates (names)"
-msgstr ""
+msgstr "Koordinate rešetki (imena)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:618
 msgid "Lattice coordinates (atomic numbers)"
-msgstr ""
+msgstr "Koordinate rešetki (atomski brojevi)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:620
 msgid "GAMESS format (symbols)"
-msgstr ""
+msgstr "GAMESS format (simboli)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:621
 msgid "GAMESS format (names)"
-msgstr ""
+msgstr "GAMESS format (imena)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:622
-#, fuzzy
 msgid "Turbomole format"
-msgstr "Улаз турбомола"
+msgstr "Ulaz turbomola"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:42:258
 msgid "Copy"
-msgstr "Умножи"
+msgstr "Kopiraj"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
 #: qtplugins/copypaste/copypaste.cpp:43:255
 msgid "Cut"
-msgstr "Исеци"
+msgstr "Iseci"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:44:267
 msgid "Clear"
-msgstr "Очисти"
+msgstr "Očisti"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
 #: qtplugins/copypaste/copypaste.cpp:45:261
 msgid "Paste"
-msgstr "Убаци"
+msgstr "Nalepi"
 
 #: qtplugins/copypaste/copypaste.cpp:78
 msgid "&Edit"
-msgstr "&Уреди"
+msgstr "&Uredi"
 
 #: qtplugins/copypaste/copypaste.cpp:123
 msgid "Error Clipping Molecule"
-msgstr ""
+msgstr "Greška pri isecanju molekula"
 
 #: qtplugins/copypaste/copypaste.cpp:124
 msgid "Error generating clipboard data."
-msgstr ""
+msgstr "Greška pri generisanju podataka međuspremnika."
 
 #: qtplugins/copypaste/copypaste.cpp:125
 #, qt-format
@@ -1965,6 +1952,8 @@ msgid ""
 "Output format: %1\n"
 "%2"
 msgstr ""
+"Izlazni format: %1\n"
+"%2"
 
 #: qtplugins/copypaste/copypaste.cpp:129 qtplugins/copypaste/copypaste.cpp:240
 #, qt-format
@@ -1972,18 +1961,20 @@ msgid ""
 "Reader error:\n"
 "%1"
 msgstr ""
+"Greška čitača:\n"
+"%1"
 
 #: qtplugins/copypaste/copypaste.cpp:201 qtplugins/copypaste/copypaste.cpp:234
 msgid "Error Pasting Molecule"
-msgstr ""
+msgstr "Greška pri lepljenju molekula"
 
 #: qtplugins/copypaste/copypaste.cpp:202
 msgid "Cannot paste molecule: Clipboard empty!"
-msgstr ""
+msgstr "Ne može se nalepiti molekul: Međuspremnik prazan!"
 
 #: qtplugins/copypaste/copypaste.cpp:235
 msgid "Error reading clipboard data."
-msgstr ""
+msgstr "Greška pri čitanju podataka međuspremnika."
 
 #: qtplugins/copypaste/copypaste.cpp:236
 #, qt-format
@@ -1992,119 +1983,117 @@ msgid ""
 "Detected format: %1\n"
 "%2"
 msgstr ""
+"Otkriveni format: %1\n"
+"%2"
 
 #: qtplugins/copypaste/copypaste.h:42
 msgid "Copy and paste"
-msgstr ""
+msgstr "Kopiraj i nalepi"
 
 #: qtplugins/copypaste/copypaste.h:46
 msgid "Interact with the clipboard."
-msgstr ""
+msgstr "Interakcija sa međuspremnikom."
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:44
 msgid "&CP2K"
-msgstr ""
+msgstr "&CP2K"
 
 #: qtplugins/cp2kinput/cp2kinput.h:45
 msgid "CP2K input"
-msgstr ""
+msgstr "CP2K ulaz"
 
 #: qtplugins/cp2kinput/cp2kinput.h:47
 msgid "Generate input for CP2K."
-msgstr ""
+msgstr "Generiši ulaz za CP2K."
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:272
 msgid "Energy"
-msgstr "Енергија"
+msgstr "Energija"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:275
 msgid "Energy and Forces"
-msgstr ""
+msgstr "Energija i sile"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:278
-#, fuzzy
 msgid "Molecular Dynamics"
-msgstr "Молекуларна динамика (300K)"
+msgstr "Molekularna Dinamika (300K)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:281
-#, fuzzy
 msgid "Geometry Optimization"
-msgstr "Оптимизација геометрије:"
+msgstr "Optimizacija Geometrije"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:350
 msgid "Electronic structure methods (DFT)"
-msgstr ""
+msgstr "Metode elektronske strukture (DFT)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:353
-#, fuzzy
 msgid "Molecular Mechanics"
-msgstr "&Молекуларна механика"
+msgstr "Molekularna Mehanika"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:356
 msgid "Hybrid quantum classical (Not yet supported)"
-msgstr ""
+msgstr "Hibridna kvantna klasika (još nije podržana)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:371
 msgid "EWALD"
-msgstr ""
+msgstr "EWALD"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:374
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:409:623
 msgid "NONE"
-msgstr "НИШТА"
+msgstr "NIŠTA"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:377:1201
 msgid "PME"
-msgstr ""
+msgstr "PME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:380
 msgid "SPME"
-msgstr ""
+msgstr "SPME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
 msgid "ATOMIC"
-msgstr ""
+msgstr "ATOMSKI"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:397
 msgid "CORE"
-msgstr ""
+msgstr "JEZGRO"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:400
 msgid "DENSITIES"
-msgstr ""
+msgstr "GUSTOĆE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:403
 msgid "HISTORY_RESTART"
-msgstr ""
+msgstr "RESTARTUJ_ISTORIJU"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:406
 msgid "MOPAC"
-msgstr ""
+msgstr "MOPAC"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:412
 msgid "RANDOM"
-msgstr ""
+msgstr "NASUMIČNO"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:415
 msgid "RESTART"
-msgstr ""
+msgstr "RESTART"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:418
 msgid "SPARSE"
-msgstr ""
+msgstr "RETKO"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:432
 msgid "BROYDEN"
-msgstr ""
+msgstr "BROYEN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:435
-#, fuzzy
 msgid "Conjugate Gradients"
-msgstr "Конјуговани преливи"
+msgstr "Konjugirani gradijenti"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:438
 msgid "DIIS"
@@ -2112,7 +2101,7 @@ msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:441
 msgid "Steepest descent"
-msgstr ""
+msgstr "Najstrmiji spust"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:545
 #: qtplugins/gamessinput/gamessinputdialog.cpp:430
@@ -2120,633 +2109,611 @@ msgid ""
 "The input file has been modified. Would you like to overwrite your changes "
 "to reflect the new geometry or job options?"
 msgstr ""
+"Ulazna datoteka je izmenjena. Da li želite da zamenite svoje izmene tako da "
+"odražavaju novu geometriju ili opcije posla?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:549
 #: qtplugins/gamessinput/gamessinputdialog.cpp:434
 msgid "Overwrite modified input file?"
-msgstr ""
+msgstr "Želite li da zamenite izmenjenu ulaznu datoteku?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:960
 msgid "Save CP2K input file"
-msgstr ""
+msgstr "Sačuvajte ulaznu datoteku CP2K"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1009
 msgid "Submit CP2K Calculation"
-msgstr ""
+msgstr "Predložite proračun CP2K"
 
 #: qtplugins/crystal/crystal.cpp:54 qtplugins/crystal/crystal.cpp:182
-#, fuzzy
 msgid "Import Crystal from Clipboard"
-msgstr "Увези &кристал из оставе..."
+msgstr "Uvezite kristal iz međuspremnika"
 
 #: qtplugins/crystal/crystal.cpp:61
 msgid "Toggle Unit Cell"
-msgstr ""
+msgstr "Uključi / isključi ćeliju jedinice"
 
 #: qtplugins/crystal/crystal.cpp:66
 msgid "Edit Unit Cell..."
-msgstr ""
+msgstr "Izmeni ćeliju jedinice ..."
 
 #: qtplugins/crystal/crystal.cpp:71
-#, fuzzy
 msgid "&Wrap Atoms to Unit Cell"
-msgstr "&Преломи атоме на ћелију"
+msgstr "&Prelomi atome na jediničnu ćeliju"
 
 #: qtplugins/crystal/crystal.cpp:77
-#, fuzzy
 msgid "Rotate to Standard &Orientation"
-msgstr "Заокрени на уобичајено усмерење"
+msgstr "Zaokreni na uobičajeno usmerenje"
 
 #: qtplugins/crystal/crystal.cpp:83
-#, fuzzy
 msgid "Scale Cell &Volume"
-msgstr "Сразмери ћелију на &запремину..."
+msgstr "Srazmeri ćeliju na &zapreminu"
 
 #: qtplugins/crystal/crystal.cpp:88
 msgid "Build &Supercell"
-msgstr ""
+msgstr "Izgradi &Super ćeliju"
 
 #: qtplugins/crystal/crystal.cpp:93
 msgid "Reduce Cell (&Niggli)"
-msgstr "Умањи ћелију (&Нигли)"
+msgstr "Umanji ćeliju (&Niggli)"
 
 #: qtplugins/crystal/crystal.cpp:117 qtplugins/plotpdf/plotpdf.cpp:66
 #: qtplugins/plotrmsd/plotrmsd.cpp:61 qtplugins/plotxrd/plotxrd.cpp:63
 #: qtplugins/spacegroup/spacegroup.cpp:118
-#, fuzzy
 msgid "&Crystal"
-msgstr "Кристал..."
+msgstr "&Kristal"
 
 #: qtplugins/crystal/crystal.cpp:163
 msgid "Remove &Unit Cell"
-msgstr "Уклони &јединичну ћелију"
+msgstr "Ukloni &jediničnu ćeliju"
 
 #: qtplugins/crystal/crystal.cpp:170
 msgid "Add &Unit Cell"
-msgstr "Додај &јединичну ћелију"
+msgstr "Dodaj &jediničnu ćeliju"
 
 #: qtplugins/crystal/crystal.cpp:207
 msgid "Niggli Reduce Crystal"
-msgstr ""
+msgstr "Niggli umanjenje kristala"
 
 #: qtplugins/crystal/crystal.cpp:208
-#, fuzzy
 msgid "The unit cell is already reduced."
-msgstr ""
-"Ова јединична ћелија је већ умањена на своје утврђено Ниглијево представљање."
+msgstr "Jedinična ćelija je već smanjena."
 
 #: qtplugins/crystal/crystal.h:36
-#, fuzzy
 msgid "Crystal"
-msgstr "Кристал..."
+msgstr "Kristal"
 
 #: qtplugins/crystal/crystal.h:75
 msgid "Tools for crystal-specific editing/analysis."
-msgstr ""
+msgstr "Alati za uređivanje/analizu specifične za kristal."
 
 #: qtplugins/crystal/crystalscene.h:39
 msgid "Crystal Lattice"
-msgstr ""
+msgstr "Kristalne rešetke"
 
 #: qtplugins/crystal/crystalscene.h:43
 msgid "Render the unit cell boundaries."
-msgstr ""
+msgstr "Renderirajte granice jediničnih ćelija."
 
 #: qtplugins/crystal/importcrystaldialog.cpp:81
 msgid "Cannot Parse Text"
-msgstr "Не могу да обрадим текст"
+msgstr "Nije moguće raščlaniti tekst"
 
 #: qtplugins/crystal/importcrystaldialog.cpp:82
 msgid "Failed to read the data with the supplied format."
-msgstr ""
+msgstr "Očitavanje podataka u isporučenom formatu nije uspelo."
 
 #: qtplugins/crystal/unitcelldialog.cpp:262
 #: qtplugins/crystal/unitcelldialog.cpp:275
 msgid "No unit cell present."
-msgstr ""
+msgstr "Nema prisutnih jediničnih ćelija."
 
 #: qtplugins/customelements/customelements.cpp:31
 msgid "Reassign &Custom Elements..."
-msgstr ""
+msgstr "Ponovo dodeli &prilagođene elemente ..."
 
 #: qtplugins/customelements/customelements.cpp:44
 msgid "Manipulate custom element types in the current molecule."
-msgstr ""
+msgstr "Manipulišite prilagođenim tipovima elemenata u trenutnom molekulu."
 
 #: qtplugins/customelements/customelements.h:35
 msgid "Custom Elements"
-msgstr ""
+msgstr "Prilagođeni elementi"
 
 #: qtplugins/editor/editor.cpp:85 qtplugins/editor/editor.cpp:117
 msgid "Draw"
-msgstr "Исцртај"
+msgstr "Iscrtaj"
 
 #: qtplugins/editor/editor.cpp:111
 msgid "Draw Atom"
-msgstr "Нацртај атом"
+msgstr "Nacrtaj Atom"
 
 #: qtplugins/editor/editor.cpp:121
 msgid "Change Bond Type"
-msgstr ""
+msgstr "Promenite tip veze"
 
 #: qtplugins/editor/editor.cpp:134
 msgid "Remove Bond"
-msgstr ""
+msgstr "Uklonite vezu"
 
 #: qtplugins/editor/editor.cpp:231 qtplugins/measuretool/measuretool.cpp:197
 #: qtplugins/measuretool/measuretool.cpp:223
-#, fuzzy
 msgid "Distance:"
-msgstr "Удаљеност"
+msgstr "Udaljenost:"
 
 #: qtplugins/editor/editor.cpp:234
-#, fuzzy, qt-format
+#, qt-format
 msgid "Distance: %L1 Å"
-msgstr "Растојање (1—>2): %L1 %2"
+msgstr "Rastojanje: %L1 Å"
 
 #: qtplugins/editor/editor.h:44 qtplugins/editor/editor.h:45
 msgid "Editor tool"
-msgstr ""
+msgstr "Alat za uređivanje"
 
 #: qtplugins/editor/editortoolwidget.cpp:138
 msgid "Other..."
-msgstr "Друго..."
+msgstr "Drugo..."
 
 #: qtplugins/editor/editortoolwidget.cpp:217
 msgid "Automatic"
-msgstr ""
+msgstr "Automatski"
 
 #: qtplugins/editor/editortoolwidget.cpp:218
 msgid "Single"
-msgstr "Једноструко"
+msgstr "Jednostruko"
 
 #: qtplugins/editor/editortoolwidget.cpp:219
 msgid "Double"
-msgstr "Двоструко"
+msgstr "Dvostruko"
 
 #: qtplugins/editor/editortoolwidget.cpp:220
 msgid "Triple"
-msgstr "Троструко"
+msgstr "Trostruko"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:54 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:66
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
 msgid "&Import"
-msgstr "&Увези"
+msgstr "&Uvezi"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:88
 msgid "PDB Code"
-msgstr ""
+msgstr "PDB Kod"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:89
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
 msgid "Chemical structure to download."
-msgstr "Хемијска структура за преузимање."
+msgstr "Hemijska struktura za preuzimanje."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:102
 #, qt-format
 msgid "Querying for %1"
-msgstr ""
+msgstr "Upit za %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:110 qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:113
 #: qtplugins/networkdatabases/networkdatabases.cpp:124
 msgid "Network Download Failed"
-msgstr "Преузимање са мреже није успело"
+msgstr "Preuzimanje sa mreže nije uspelo"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:111
 #: qtplugins/networkdatabases/networkdatabases.cpp:114
 msgid "Network timeout or other error."
-msgstr "Истекло је време мреже или нека друга грешка."
+msgstr "Isteklo je vreme mreže ili neka druga greška."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:122
 #: qtplugins/networkdatabases/networkdatabases.cpp:125
 #, qt-format
 msgid "Specified molecule could not be found: %1"
-msgstr "Не могу да пронађем наведени молекул: %1"
+msgstr "Ne mogu da pronađem navedeni molekul: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.h:48
-#, fuzzy
 msgid "Fetch from PDB"
-msgstr "Довуци са ПДБ-а..."
+msgstr "Dovuci sa PDB-а..."
 
 #: qtplugins/fetchpdb/fetchpdb.h:52
 msgid "Download PDB models from the Protein Data Bank"
-msgstr ""
+msgstr "Preuzmite PDB modele iz Protein Data Banke"
 
 #: qtplugins/force/force.h:39
 msgid "Force"
-msgstr "Сила"
+msgstr "Sila"
 
 #: qtplugins/force/force.h:44
 msgid "Render the force field visualizations for the atoms of the molecule."
-msgstr ""
+msgstr "Omogućite vizuelizaciju polja sila za atome molekula."
 
 #: qtplugins/gamessinput/gamessinput.cpp:45
 msgid "&GAMESS"
-msgstr "&ГАМЕСС"
+msgstr "&GAMESS"
 
 #: qtplugins/gamessinput/gamessinput.h:45
-#, fuzzy
 msgid "GAMESS input"
-msgstr "ГАМЕСС улаз"
+msgstr "GAMESS ulaz"
 
 #: qtplugins/gamessinput/gamessinput.h:49
 msgid "Generate input for GAMESS."
-msgstr ""
+msgstr "Generišite ulaz za GAMESS."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:237
-#, fuzzy
 msgid "Single Point"
-msgstr "Енергија једне тачке"
+msgstr "Energija jedne tačke"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:240
 msgid "Equilibrium Geometry"
-msgstr "Геометрија равнотеже"
+msgstr "Geometrija ravnoteže"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:243
 msgid "Transition State"
-msgstr "Стање прелаза"
+msgstr "Stanje prelaza"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:246
 msgid "Frequencies"
-msgstr "Учесталост"
+msgstr "Učestalost"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:315
 msgid "Core Potential"
-msgstr "Потенцијал језгра"
+msgstr "Potencijal jezgra"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:330
 msgid "Gas"
-msgstr "Гас"
+msgstr "Gas"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:333
 msgid "Water"
-msgstr "Вода"
+msgstr "Voda"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:348
 msgid "Singlet"
-msgstr "Једноструко"
+msgstr "Jednostruko"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:351
 msgid "Doublet"
-msgstr "Двоструко"
+msgstr "Dvostruko"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:354
 msgid "Triplet"
-msgstr "Троструко"
+msgstr "Trostruko"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:369
 msgid "Dication"
-msgstr "Дикатјон"
+msgstr "Dikatjon"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:372
 msgid "Cation"
-msgstr "Катјон"
+msgstr "Katjon"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:375
 msgid "Neutral"
-msgstr "Неутралан"
+msgstr "Neutralan"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:378
 msgid "Anion"
-msgstr "Анјон"
+msgstr "Anjon"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:381
 msgid "Dianion"
-msgstr "Дианјон"
+msgstr "Dianjon"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:668
 msgid "Save GAMESS input file"
-msgstr ""
+msgstr "Sačuvajte ulaznu datoteku GAMESS"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:718
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "Predložite proračun GAMESS -a"
 
 #: qtplugins/hydrogens/hydrogens.cpp:33
-#, fuzzy
 msgid "&Adjust Hydrogens"
-msgstr "Дотерај водонике"
+msgstr "&Doteraj vodonike"
 
 #: qtplugins/hydrogens/hydrogens.cpp:38 qtplugins/openbabel/openbabel.cpp:60
 msgid "Add Hydrogens"
-msgstr "Додај водонике"
+msgstr "Dodaj vodonike"
 
 #: qtplugins/hydrogens/hydrogens.cpp:42
-#, fuzzy
 msgid "Remove E&xtra Hydrogens"
-msgstr "Уклони водонике"
+msgstr "Ukloni vodonike"
 
 #: qtplugins/hydrogens/hydrogens.cpp:46
 msgid "&Remove All Hydrogens"
-msgstr ""
+msgstr "&Uklonite sve vodonike"
 
 #: qtplugins/hydrogens/hydrogens.cpp:57
 msgid "Add/remove hydrogens from the current molecule."
-msgstr ""
+msgstr "Dodajte/uklonite vodonike iz trenutnog molekula."
 
 #: qtplugins/hydrogens/hydrogens.cpp:67
-#, fuzzy
 msgid "&Hydrogens"
-msgstr "Водоници"
+msgstr "&Vodonici"
 
 #: qtplugins/hydrogens/hydrogens.h:35
 msgid "Hydrogens"
-msgstr "Водоници"
+msgstr "Vodonici"
 
 #: qtplugins/importpqr/importpqr.cpp:38
 msgid "&Import From PQR"
-msgstr ""
+msgstr "&Uvezi iz PQR -a"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
 #: qtplugins/importpqr/importpqr.h:45:513
 msgid "Import From PQR"
-msgstr ""
+msgstr "Uvezi iz PQR -a"
 
 #: qtplugins/importpqr/importpqr.h:49
 msgid "Download a molecule from PQR."
-msgstr ""
+msgstr "Preuzmite molekul iz PQR -a."
 
 #: qtplugins/insertfragment/insertfragment.cpp:47
 msgid "Fragment..."
-msgstr "Одломак..."
+msgstr "Odlomak..."
 
 #: qtplugins/insertfragment/insertfragment.cpp:68
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Insert"
-msgstr "&Уметни"
+msgstr "&Umetni"
 
 #: qtplugins/insertfragment/insertfragment.cpp:105
 #, qt-format
 msgid "Error reading file (%1)."
-msgstr ""
+msgstr "Greška pri čitanju datoteke (%1)."
 
 #: qtplugins/insertfragment/insertfragment.cpp:110
 msgid "Insert Fragment"
-msgstr "Уметни одломак"
+msgstr "Umetni odlomak"
 
 #: qtplugins/insertfragment/insertfragment.h:46
-#, fuzzy
 msgid "InsertFragment"
-msgstr "Уметни одломак"
+msgstr "Umetni Odlomak"
 
 #: qtplugins/insertfragment/insertfragment.h:70
-#, fuzzy
 msgid "Insert molecular fragments for building larger molecules."
-msgstr "Уметните одломке молекула да изградите веће молекуле"
+msgstr "Umetnite odlomke molekula da izgradite veće molekule."
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:41
 msgid "&LAMMPS Input"
-msgstr ""
+msgstr "&LAMMPS Ulaz"
 
 #: qtplugins/lammpsinput/lammpsinput.h:42
 msgid "LAMMPS input"
-msgstr ""
+msgstr "LAMMPS ulaz"
 
 #: qtplugins/lammpsinput/lammpsinput.h:46
 msgid "Generate input for LAMMPS."
-msgstr ""
+msgstr "Generišite ulaz za LAMMPS."
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:156
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
 msgstr ""
-"Да ли желите да ажурирате текст прегледа, тако што ћете изгубити све измене "
-"учињене у окну прегледа улазне плоче Лампса?"
+"Da li želite da ažurirate tekst pregleda, gubeći sve promene izvršene u "
+"oknu za pregled ulazne ploče Lammps?"
 
 #: qtplugins/licorice/licorice.h:40
 msgid "Licorice"
-msgstr ""
+msgstr "Likoriš"
 
 #: qtplugins/licorice/licorice.h:44
 msgid "Render atoms as licorice."
-msgstr ""
+msgstr "Atome pretvoriti u likoriš."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:43
 msgid "SMILES..."
-msgstr "ПЛУМУС..."
+msgstr "SMILES..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:48
 msgid "InChI..."
-msgstr ""
+msgstr "InChI..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:55
 msgid "InChI"
-msgstr "МенХеО"
+msgstr "InChI"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:56
 #: qtplugins/mongochem/listmoleculesmodel.cpp:83
 msgid "SMILES"
-msgstr "СМАЈЛИЋИ"
+msgstr "SMILES"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:98
 #: qtplugins/lineformatinput/lineformatinput.cpp:122
-#, fuzzy
 msgid "No descriptors found!"
-msgstr "Нема описа"
+msgstr "Nema opisa!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:99
 msgid "No line format readers found!"
-msgstr ""
+msgstr "Čitači formata linije nisu pronađeni!"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
 #: qtplugins/lineformatinput/lineformatinput.cpp:133:925
 msgid "Insert Molecule..."
-msgstr ""
+msgstr "Umetni molekul ..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:123
 msgid "Unable to load requested format reader."
-msgstr ""
+msgstr "Nije moguće učitati čitač traženog formata."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:134
 msgid "Generating 3D molecule..."
-msgstr ""
+msgstr "Generiše se 3D molekul ..."
 
 #: qtplugins/lineformatinput/lineformatinput.h:42
 msgid "LineFormatInput"
-msgstr ""
+msgstr "LineFormatInput"
 
 #: qtplugins/lineformatinput/lineformatinput.h:65
 msgid "Load single-line molecule descriptors through an input dialog."
-msgstr ""
+msgstr "Učitajte deskriptore jednorednih molekula kroz dijalog za unos."
 
 #: qtplugins/manipulator/manipulator.cpp:56
 msgid "Manipulate"
-msgstr "Управљај"
+msgstr "Upravljaj"
 
 #: qtplugins/manipulator/manipulator.h:44
 #: qtplugins/manipulator/manipulator.h:45
 msgid "Manipulate tool"
-msgstr ""
+msgstr "Alat za manipulisanje"
 
 #: qtplugins/measuretool/measuretool.cpp:66
 msgid "Measure"
-msgstr "Измери"
+msgstr "Izmeri"
 
 #: qtplugins/measuretool/measuretool.cpp:195
 #: qtplugins/measuretool/measuretool.cpp:206
 msgid "Dihedral:"
-msgstr "Двострани:"
+msgstr "Дvostrani:"
 
 #: qtplugins/measuretool/measuretool.cpp:196
 msgid "Angle:"
-msgstr "Угао:"
+msgstr "Ugao:"
 
 #: qtplugins/measuretool/measuretool.cpp:207
 #: qtplugins/measuretool/measuretool.cpp:215
 #: qtplugins/measuretool/measuretool.cpp:216
 #, qt-format
 msgid "%L1°"
-msgstr ""
+msgstr "%L1°"
 
 #: qtplugins/measuretool/measuretool.cpp:214
-#, fuzzy
 msgid "Angles:"
-msgstr "Угао:"
+msgstr "Uglovi:"
 
 #: qtplugins/measuretool/measuretool.cpp:224
 #: qtplugins/measuretool/measuretool.cpp:225
 #: qtplugins/measuretool/measuretool.cpp:227
 #, qt-format
 msgid "%L1 Å"
-msgstr ""
+msgstr "%L1 Å"
 
 #: qtplugins/measuretool/measuretool.h:48
 #: qtplugins/measuretool/measuretool.h:49
-#, fuzzy
 msgid "Measure tool"
-msgstr "Измери"
+msgstr "Alatka za merenje"
 
 #: qtplugins/meshes/meshes.h:40
 msgid "Meshes"
-msgstr ""
+msgstr "Mreže"
 
 #: qtplugins/meshes/meshes.h:42
 msgid "Render triangle meshes."
-msgstr ""
+msgstr "Renderirajte trouglaste mreže."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 msgid "View general properties of a molecule."
-msgstr ""
+msgstr "Pogledajte opšta svojstva molekula."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
 #: qtplugins/qtaim/qtaimextension.cpp:90 qtplugins/spectra/spectra.cpp:55
 #: qtplugins/surfaces/surfaces.cpp:120 qtplugins/symmetry/symmetry.cpp:94
-#, fuzzy
 msgid "&Analysis"
-msgstr "Аналитички"
+msgstr "&Analitički"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
 #: qtplugins/symmetry/symmetry.cpp:94
 msgid "&Properties"
-msgstr "&Својства"
+msgstr "&Svojstva"
 
 #: qtplugins/molecularproperties/molecularproperties.h:42
 msgid "Molecular Properties"
-msgstr "Својства молекула"
+msgstr "Svojstva Molekula"
 
 #: qtplugins/mongochem/listmoleculesmodel.cpp:80
 msgid "Formula"
-msgstr ""
+msgstr "Formula"
 
 #: qtplugins/mongochem/listmoleculesmodel.cpp:86
 msgid "InChIKey"
-msgstr ""
+msgstr "InChIKey"
 
 #: qtplugins/mongochem/mongochem.cpp:35
 msgid "&MongoChem"
-msgstr ""
+msgstr "&MongoChem"
 
 #: qtplugins/mongochem/mongochem.h:40
 msgid "Mongo Chem Server"
-msgstr ""
+msgstr "Mongo Chem Server"
 
 #: qtplugins/mongochem/mongochem.h:44
 msgid "Interface with Mongo Chem Server."
-msgstr ""
+msgstr "Interfejs sa Mongo Chem serverom."
 
 #: qtplugins/navigator/navigator.cpp:45
 msgid "Navigate"
-msgstr "Крећите се"
+msgstr "Navigacija"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
 msgid "Navigate tool"
-msgstr "Управљање алата"
+msgstr "Alatka za navigaciju"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
-msgstr "Хемијски назив"
+msgstr "Hemijski Naziv"
 
 #: qtplugins/networkdatabases/networkdatabases.h:47
 msgid "Network Databases"
-msgstr ""
+msgstr "Mrežne baze podataka"
 
 #: qtplugins/networkdatabases/networkdatabases.h:51
 msgid "Interact with online databases, query structures etc."
-msgstr ""
+msgstr "Interakcija sa mrežnim bazama podataka, strukturama upita itd."
 
 #: qtplugins/openbabel/obforcefielddialog.cpp:331
 #, qt-format
 msgid "Autodetect (%1)"
-msgstr ""
+msgstr "Automatsko otkrivanje (%1)"
 
 #: qtplugins/openbabel/openbabel.cpp:41 qtplugins/openbabel/openbabel.cpp:488
-#, fuzzy
 msgid "Optimize Geometry"
-msgstr "&Прилагоди геометрију"
+msgstr "&Prilagodi Geometriju"
 
 #: qtplugins/openbabel/openbabel.cpp:48
-#, fuzzy
 msgid "Configure Force Field..."
-msgstr "Подеси поље силе..."
+msgstr "Podesi polje sile..."
 
 #: qtplugins/openbabel/openbabel.cpp:54
-#, fuzzy
 msgid "Perceive Bonds"
-msgstr "Да спознам везе?"
+msgstr "Spoznaj veze"
 
 #: qtplugins/openbabel/openbabel.cpp:66
-#, fuzzy
 msgid "Add Hydrogens for pH..."
-msgstr "Додај водонике за pH..."
+msgstr "Dodaj vodonike za pH..."
 
 #: qtplugins/openbabel/openbabel.cpp:72
-#, fuzzy
 msgid "Remove Hydrogens"
-msgstr "Уклони водонике"
+msgstr "Ukloni vodonike"
 
 #: qtplugins/openbabel/openbabel.cpp:103
 msgid "&Open Babel"
-msgstr ""
+msgstr "&Otvori Babel"
 
 #: qtplugins/openbabel/openbabel.cpp:110
 msgid "The Open Babel file formats are not ready to be added."
-msgstr ""
+msgstr "Formati datoteka Open Babel nisu spremni za dodavanje."
 
 #: qtplugins/openbabel/openbabel.cpp:190
 msgid "Loading molecule from CML..."
-msgstr ""
+msgstr "Učitavanje molekula iz CML -a ..."
 
 #: qtplugins/openbabel/openbabel.cpp:196
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
+"Došlo je do interne greške: OpenBabel :: readMolecule je pozvan, ali nijedan "
+"obabel izlaz nije dostupan za raščlanjivanje!"
 
 #: qtplugins/openbabel/openbabel.cpp:205
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
-msgstr ""
+msgstr "Došlo je do greške pri pokretanju programa Open Babel (%1)."
 
 #: qtplugins/openbabel/openbabel.cpp:215
 msgid "Error parsing openbabel output."
-msgstr ""
+msgstr "Greška pri raščlanjivanju openbabel izlaza."
 
 #: qtplugins/openbabel/openbabel.cpp:329 qtplugins/openbabel/openbabel.cpp:364
 #, qt-format
@@ -2754,35 +2721,37 @@ msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
+"Došlo je do greške pri preuzimanju liste podržanih polja sile. (koristeći "
+"„%1“)."
 
 #: qtplugins/openbabel/openbabel.cpp:355
 msgid "Molecule invalid. Cannot optimize geometry."
-msgstr ""
+msgstr "Molekul nije važeć. Ne može se optimizirati geometrija."
 
 #: qtplugins/openbabel/openbabel.cpp:373
 msgid "Cannot optimize geometry with Open Babel."
-msgstr ""
+msgstr "Ne možete optimizovati geometriju pomoću Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:398
-#, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "&Прилагоди геометрију"
+msgstr "&Prilagodi Geometriju (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:399
 msgid "Generating MDL..."
-msgstr ""
+msgstr "Generiranje MDL -a ..."
 
 #: qtplugins/openbabel/openbabel.cpp:416
 msgid ""
 "An internal error occurred while generating an CML representation of the "
 "current molecule."
 msgstr ""
+"Došlo je do unutrašnje greške pri generisanju CML prikaza trenutnog molekula."
 
 #: qtplugins/openbabel/openbabel.cpp:422
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1..."
-msgstr ""
+msgstr "Pokretanje %1 ..."
 
 #: qtplugins/openbabel/openbabel.cpp:435 qtplugins/openbabel/openbabel.cpp:443
 #, qt-format
@@ -2791,14 +2760,17 @@ msgid ""
 "Current energy: %3\n"
 "dE: %4"
 msgstr ""
+"Korak %1 od %2\n"
+"Trenutna energija: %3\n"
+"dE: %4"
 
 #: qtplugins/openbabel/openbabel.cpp:457
 msgid "Updating molecule..."
-msgstr ""
+msgstr "Ažuriranje molekula ..."
 
 #: qtplugins/openbabel/openbabel.cpp:465 qtplugins/openbabel/openbabel.cpp:720
 msgid "Error interpreting Open Babel output."
-msgstr ""
+msgstr "Greška pri tumačenju izlaza Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:478 qtplugins/openbabel/openbabel.cpp:557
 #, qt-format
@@ -2806,129 +2778,127 @@ msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
-"Датотека трајекторије %1 се не слаже са бројем атома у присутном молекулу"
+"Broj atoma u izlazu obabela (%1) ne odgovara broju atoma u originalnom "
+"molekulu (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:497
 msgid "Cannot open file with Open Babel."
-msgstr ""
+msgstr "Nije moguće otvoriti datoteku sa Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:503
 msgid "Invalid molecule: Cannot perceive bonds."
-msgstr ""
+msgstr "Nevažeći molekul: Ne može da opazi veze."
 
 #: qtplugins/openbabel/openbabel.cpp:509
 msgid "Perceiving Bonds (Open Babel)"
-msgstr ""
+msgstr "Opazivanje Veza (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:510
 msgid "Generating XYZ representation..."
-msgstr ""
+msgstr "Generisanje XYZ predstavljanja ..."
 
 #: qtplugins/openbabel/openbabel.cpp:517
 msgid "Error generating XYZ string."
-msgstr ""
+msgstr "Greška pri generisanju XYZ niza."
 
 #: qtplugins/openbabel/openbabel.cpp:529
 #, qt-format
 msgid "Converting XYZ to CML with %1..."
-msgstr ""
+msgstr "Pretvaranje XYZ u CML sa %1 ..."
 
 #: qtplugins/openbabel/openbabel.cpp:537
 msgid "Updating molecule from CML..."
-msgstr ""
+msgstr "Ažuriranje molekula iz CML -a ..."
 
 #: qtplugins/openbabel/openbabel.cpp:545
 msgid "Error interpreting obabel CML output."
-msgstr ""
+msgstr "Greška pri tumačenju obabel CML izlaza."
 
 #: qtplugins/openbabel/openbabel.cpp:589 qtplugins/openbabel/openbabel.cpp:629
 msgid "Cannot add hydrogens with Open Babel."
-msgstr ""
+msgstr "Ne možete dodati vodonike sa Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:594 qtplugins/openbabel/openbabel.cpp:642
-#, fuzzy
 msgid "Adding Hydrogens (Open Babel)"
-msgstr "Додај водонике"
+msgstr "Dodaj Vodonike (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:595
 msgid "Generating Open Babel input..."
-msgstr ""
+msgstr "Generisanje unosa Open Babel ..."
 
 #: qtplugins/openbabel/openbabel.cpp:602 qtplugins/openbabel/openbabel.cpp:650
 msgid "Error generating Open Babel input."
-msgstr ""
+msgstr "Greška pri generisanju unosa Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:615 qtplugins/openbabel/openbabel.cpp:663
 #: qtplugins/openbabel/openbabel.cpp:702
 #, qt-format
 msgid "Running %1..."
-msgstr ""
+msgstr "Pokreće se %1 ..."
 
 #: qtplugins/openbabel/openbabel.cpp:636
-#, fuzzy
 msgid "Add hydrogens for pH"
-msgstr "Додај водонике за pH"
+msgstr "Dodaj vodonike za pH"
 
 #: qtplugins/openbabel/openbabel.cpp:636
-#, fuzzy
 msgid "pH:"
-msgstr "pH"
+msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:643 qtplugins/openbabel/openbabel.cpp:683
 msgid "Generating obabel input..."
-msgstr ""
+msgstr "Generiranje obabel unosa ..."
 
 #: qtplugins/openbabel/openbabel.cpp:677
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr ""
+msgstr "Ne možete ukloniti vodonike sa Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:682
-#, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "Уклони водонике"
+msgstr "Ukloni Vodonike (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:690
 msgid "Error generating CML data."
-msgstr ""
+msgstr "Greška pri generisanju CML podataka."
 
 #: qtplugins/openbabel/openbabel.cpp:711
 msgid "Reading obabel output..."
-msgstr ""
+msgstr "Čitanje Obabel izlaza ..."
 
 #: qtplugins/openbabel/openbabel.cpp:774
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
+"Već pokrenut Open Babel. Sačekajte da se druga operacija dovrši i pokušajte "
+"ponovo."
 
 #: qtplugins/openbabel/openbabel.h:36
 msgid "OpenBabel"
-msgstr ""
+msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:40
 msgid "Interact with OpenBabel utilities."
-msgstr ""
+msgstr "Interakcija sa uslužnim programima OpenBabel."
 
 #: qtplugins/openmminput/openmminput.cpp:41
 msgid "&OpenMM Script Builder"
-msgstr ""
+msgstr "&OpenMM Izgrađivač Skripte"
 
 #: qtplugins/openmminput/openmminput.h:42
 msgid "OpenMM input"
-msgstr ""
+msgstr "OpenMM ulaz"
 
 #: qtplugins/openmminput/openmminput.h:46
 msgid "Generate input for OpenMM."
-msgstr ""
+msgstr "Generišite ulaz za OpenMM."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:213
-#, fuzzy
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
 msgstr ""
-"Да ли желите да ажурирате текст прегледа, тако што ћете изгубити све измене "
-"учињене у окну прегледа улазне плоче МОПАК-а?"
+"Da li želite da ažurirate tekst pregleda, gubeći sve promene napravljene u "
+"oknu za pregled OpenMM ulazne ploče?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:505
 #: qtplugins/openmminput/openmminputdialog.cpp:508
@@ -2936,7 +2906,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:945
 #: qtplugins/openmminput/openmminputdialog.cpp:1063
 msgid "inpcrd"
-msgstr ""
+msgstr "inpcrd"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:505
 #: qtplugins/openmminput/openmminputdialog.cpp:510
@@ -2944,32 +2914,32 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:954
 #: qtplugins/openmminput/openmminputdialog.cpp:1065
 msgid "gro"
-msgstr ""
+msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
 #: qtplugins/openmminput/openmminputdialog.cpp:509:1111
 msgid "input.prmtop"
-msgstr ""
+msgstr "input.prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:511
 msgid "input.top"
-msgstr ""
+msgstr "input.top"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:514
 #: qtplugins/openmminput/openmminputdialog.cpp:938
 #: qtplugins/openmminput/openmminputdialog.cpp:1054
 #: qtplugins/openmminput/openmminputdialog.cpp:1061
 msgid "pdb"
-msgstr ""
+msgstr "pdb"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:535
 msgid "prmtop"
-msgstr ""
+msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:539
 msgid "top"
-msgstr ""
+msgstr "top"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -2980,442 +2950,433 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:1072
 #: qtplugins/openmminput/openmminputdialog.cpp:1081:1228 rc.cpp:1243
 msgid "True"
-msgstr ""
+msgstr "Tačno"
 
 #: qtplugins/overlayaxes/overlayaxes.h:41
 msgid "Reference Axes Overlay"
-msgstr ""
+msgstr "Preklapanje referentnih osa"
 
 #: qtplugins/overlayaxes/overlayaxes.h:45
 msgid "Render reference axes in the corner of the display."
-msgstr ""
+msgstr "Renderirajte referentne ose u uglu ekrana."
 
 #: qtplugins/playertool/playertool.cpp:64
 msgid "Player"
-msgstr ""
+msgstr "Plejer"
 
 #: qtplugins/playertool/playertool.cpp:80
 msgid "Play"
-msgstr ""
+msgstr "Pusti"
 
 #: qtplugins/playertool/playertool.cpp:83
 msgid "Stop"
-msgstr "Заустави"
+msgstr "Zaustavi"
 
 #: qtplugins/playertool/playertool.cpp:94
 msgid "Frame rate:"
-msgstr ""
+msgstr "Broj slika:"
 
 #: qtplugins/playertool/playertool.cpp:100
 msgctxt "frames per second"
 msgid " FPS"
-msgstr ""
+msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: qtplugins/playertool/playertool.cpp:124:1537
-#, fuzzy
 msgid "Frame:"
-msgstr "Кадрови"
+msgstr "Kadrovi:"
 
 #: qtplugins/playertool/playertool.cpp:131
 #: qtplugins/playertool/playertool.cpp:416
 #: qtplugins/surfaces/surfacedialog.cpp:178
 #, qt-format
 msgid " of %0"
-msgstr ""
+msgstr " od %0"
 
 #: qtplugins/playertool/playertool.cpp:142
-#, fuzzy
 msgid "Dynamic bonding?"
-msgstr "Динамичке везе"
+msgstr "Dinamičke veze?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:382
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
 #: qtplugins/playertool/playertool.cpp:150:1543
 msgid "Record Movie..."
-msgstr ""
+msgstr "Snimi film..."
 
 #: qtplugins/playertool/playertool.cpp:254
 #: qtplugins/playertool/playertool.cpp:355
 msgid "Movie (*.mp4)"
-msgstr ""
+msgstr "Film (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:256
 msgid "Export Bitmap Graphics"
-msgstr "Извези Битмап графику"
+msgstr "Izvezi Bitmap Grafiku"
 
 #: qtplugins/playertool/playertool.cpp:257
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Film (*.mp4);;Film (*.avi);;GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:271 qtplugins/surfaces/surfaces.cpp:408
 msgid "GIF (*.gif)"
-msgstr ""
+msgstr "GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:277
 msgid "GIF FPS support warning"
-msgstr ""
+msgstr "Upozorenje o podršci za GIF FPS"
 
 #: qtplugins/playertool/playertool.cpp:278
 msgid "The GIF file format does not support frame rates over 100 FPS."
-msgstr ""
+msgstr "GIF format datoteke ne podržava brzine kadrova veće od 100 FPS."
 
 #: qtplugins/playertool/playertool.cpp:321
-#, fuzzy
 msgid "Movie (*.avi)"
-msgstr "датотеке снимака (*.avi)"
+msgstr "Film (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:350
 #: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:436
 #: qtplugins/surfaces/surfaces.cpp:479 qtplugins/surfaces/surfaces.cpp:491
 msgid "Avogadro"
-msgstr "Авогадро"
+msgstr "Avogadro"
 
 #: qtplugins/playertool/playertool.cpp:351 qtplugins/surfaces/surfaces.cpp:480
 msgid "Error: cannot add frame to video."
-msgstr ""
+msgstr "Greška: nije moguće dodati okvir u video zapis."
 
 #: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:492
 #, qt-format
 msgid "Cannot save file %1."
-msgstr "Не могу да сачувам датотеку „%1“."
+msgstr "Ne mogu da sačuvam datoteku „%1“."
 
 #: qtplugins/playertool/playertool.h:46
 msgid "Player tool"
-msgstr ""
+msgstr "Alatke za plejer"
 
 #: qtplugins/playertool/playertool.h:47
 msgid "Play back trajectories"
-msgstr ""
+msgstr "Reprodukujte putanje"
 
 #: qtplugins/plotpdf/plotpdf.cpp:48
 msgid "Plot Pair Distribution Function..."
-msgstr ""
+msgstr "Funkcija distribucije parcela..."
 
 #: qtplugins/plotpdf/plotpdf.cpp:132
 msgid "Failed to generate PDF pattern"
-msgstr ""
+msgstr "Generisanje PDF uzorka nije uspelo"
 
 #: qtplugins/plotpdf/plotpdf.cpp:133 qtplugins/plotxrd/plotxrd.cpp:131
 msgid "Error message: "
-msgstr ""
+msgstr "Poruka o grešci: "
 
 #: qtplugins/plotpdf/plotpdf.h:48
 msgid "PlotPdf"
-msgstr ""
+msgstr "PlotPdf"
 
 #: qtplugins/plotpdf/plotpdf.h:83
 msgid "Generate and plot a Pair Distribution Function curve."
-msgstr ""
+msgstr "Generišite i iscrtajte krivu funkcije raspodele parova."
 
 #: qtplugins/plotrmsd/plotrmsd.cpp:43
 msgid "Plot RMSD curve..."
-msgstr ""
+msgstr "Iscrtajte krivu RMSD ..."
 
 #: qtplugins/plotrmsd/plotrmsd.h:48
 msgid "PlotRmsd"
-msgstr ""
+msgstr "PlotRmsd"
 
 #: qtplugins/plotrmsd/plotrmsd.h:78
 msgid "Generate and plot an RMSD curve."
-msgstr ""
+msgstr "Generišite i iscrtajte RMSD krivu."
 
 #: qtplugins/plotxrd/plotxrd.cpp:45
 msgid "Plot Theoretical XRD Pattern..."
-msgstr ""
+msgstr "Teoretski XRD uzorak ..."
 
 #: qtplugins/plotxrd/plotxrd.cpp:130
 msgid "Failed to generate XRD pattern"
-msgstr ""
+msgstr "Generisanje XRD uzorka nije uspelo"
 
 #: qtplugins/plotxrd/plotxrd.cpp:173
 msgid "Failed to convert molecule to CIF format."
-msgstr ""
+msgstr "Pretvaranje molekula u CIF format nije uspelo."
 
 #: qtplugins/plotxrd/plotxrd.cpp:208
 msgid "Data read from genXrdPattern appears to be corrupt!"
-msgstr ""
+msgstr "Čini se da su podaci pročitani iz genXrdPattern oštećeni!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:246
 msgid "Error: could not find genXrdPattern executable!"
-msgstr ""
+msgstr "Greška: nije moguće pronaći izvršnu datoteku genXrdPattern!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:256 qtplugins/plotxrd/plotxrd.cpp:268
 #: qtplugins/plotxrd/plotxrd.cpp:279 qtplugins/plotxrd/plotxrd.cpp:286
 #: qtplugins/yaehmop/yaehmop.cpp:541 qtplugins/yaehmop/yaehmop.cpp:553
 #: qtplugins/yaehmop/yaehmop.cpp:564 qtplugins/yaehmop/yaehmop.cpp:571
 msgid "Error: "
-msgstr ""
+msgstr "Greška: "
 
 #: qtplugins/plotxrd/plotxrd.h:50
 msgid "PlotXrd"
-msgstr ""
+msgstr "PlotXrd"
 
 #: qtplugins/plotxrd/plotxrd.h:98
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
-msgstr ""
+msgstr "Generišite i iscrtajte teorijski XRD obrazac koristeći ObjCryst ++."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
 msgid "Update"
-msgstr ""
+msgstr "Ažuriraj"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
 msgid "Name"
-msgstr ""
+msgstr "Ime"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
 msgid "Version"
-msgstr ""
+msgstr "Verzija"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:73
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:333
 #, qt-format
 msgid "Downloading %1 to %2\n"
-msgstr ""
+msgstr "Preuzimanje %1 u %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:346
 #, qt-format
 msgid "Extracting %1 to %2\n"
-msgstr ""
+msgstr "Izdvajanje %1 u %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:349
 #, qt-format
 msgid "Finished %1 files\n"
-msgstr ""
+msgstr "%1 datoteka je završeno\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:353
 msgid "Extraction successful\n"
-msgstr ""
+msgstr "Ekstrakcija je uspela\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:383
 #, qt-format
 msgid "Error while extracting: %1"
-msgstr ""
+msgstr "Greška pri izdvajanju: %1"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
 #: qtplugins/plugindownloader/plugindownloader.cpp:39:1450
 msgid "Download Plugins..."
-msgstr ""
+msgstr "Preuzmite dodatke ..."
 
 #: qtplugins/plugindownloader/plugindownloader.h:48
 msgid "Download Plugins"
-msgstr ""
+msgstr "Preuzmite dodatke"
 
 #: qtplugins/plugindownloader/plugindownloader.h:52
 msgid "Download plugins from GitHub repositories."
-msgstr ""
+msgstr "Preuzmite dodatke iz spremišta GitHub."
 
 #: qtplugins/povray/povray.cpp:41
-#, fuzzy
 msgid "POV-Ray Render"
-msgstr "ПОВ-реј"
+msgstr "POV-Ray Render"
 
 #: qtplugins/povray/povray.cpp:82 qtplugins/svg/svg.cpp:258
 #: qtplugins/vrml/vrml.cpp:82
-#, fuzzy
 msgid "Save File"
-msgstr "Сачувај датотеку снимка"
+msgstr "Sačuvaj Datoteku"
 
 #: qtplugins/povray/povray.cpp:83
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
-msgstr ""
+msgstr "POV-Ray (*.pov);;Tekstualni fajl (*.txt)"
 
 #: qtplugins/povray/povray.h:36
 msgid "POVRay"
-msgstr ""
+msgstr "POVRay"
 
 #: qtplugins/povray/povray.h:40
 msgid "Render the scene using POV-Ray."
-msgstr ""
+msgstr "Renderirajte scenu koristeći POV-Ray."
 
 #: qtplugins/qtaim/qtaimengine.h:39 qtplugins/qtaim/qtaimextension.cpp:90
 #: qtplugins/qtaim/qtaimextension.h:35
 msgid "QTAIM"
-msgstr "КуТАИМ"
+msgstr "QTAIM"
 
 #: qtplugins/qtaim/qtaimengine.h:43
 msgid "Renders primitives using QTAIM properties"
-msgstr "Исцртајте примитиве користећи КуТАИМ својства"
+msgstr "Renderuje primitive koristeći QTAIM svojstva"
 
 #: qtplugins/qtaim/qtaimextension.cpp:59
 msgid "Molecular Graph..."
-msgstr "Молекуларни график..."
+msgstr "Molekularni grafikon ..."
 
 #: qtplugins/qtaim/qtaimextension.cpp:66
 msgid "Molecular Graph with Lone Pairs..."
-msgstr "Молекуларни график са усамљеним паровима..."
+msgstr "Molekularni grafikon sa usamljenim parovima ..."
 
 #: qtplugins/qtaim/qtaimextension.cpp:73
 msgid "Atomic Charge..."
-msgstr "Наелектрисање атома..."
+msgstr "Naelektrisanje Atoma..."
 
 #: qtplugins/qtaim/qtaimextension.cpp:122
 msgid "Open WFN File"
-msgstr "Отвори ВФН датотеку"
+msgstr "Otvori WFN Datoteku"
 
 #: qtplugins/qtaim/qtaimextension.cpp:123
 msgid "WFN files (*.wfn);;All files (*.*)"
-msgstr "ВФН датотеке (*.wfn);;Све датотеке (*.*)"
+msgstr "WFN Datoteke (*.wfn);;Sve Datoteke (*.*)"
 
 #: qtplugins/qtaim/qtaimextension.h:36
 msgid "QTAIM extension"
-msgstr "КуТАИМ проширење"
+msgstr "QTAIM proširenje"
 
 #: qtplugins/quantuminput/quantuminput.cpp:191
 msgid ""
 "Select the python interpreter used to run input generator scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Izaberite tumač python-a koji se koristi za pokretanje skripti generatora "
+"ulaza.\n"
+"Avogadro se mora ponovo pokrenuti da bi sve promene stupile na snagu."
 
 #: qtplugins/quantuminput/quantuminput.cpp:238
 msgid "Set Python Path..."
-msgstr ""
+msgstr "Podesi Python putanju ..."
 
 #: qtplugins/quantuminput/quantuminput.h:53
 msgid "Quantum input"
-msgstr ""
+msgstr "Kvantni ulaz"
 
 #: qtplugins/quantuminput/quantuminput.h:57
 msgid "Generate input for quantum codes."
-msgstr ""
+msgstr "Generišite ulaz za kvantne kodove."
 
 #: qtplugins/resetview/resetview.cpp:37
 msgid "Center"
-msgstr "Средина"
+msgstr "Centar"
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
-msgstr ""
+msgstr "Poravnajte pogled prema osama"
 
 #: qtplugins/resetview/resetview.h:37
-#, fuzzy
 msgid "Reset view"
-msgstr "Врати"
+msgstr "Resetuj Pregled"
 
 #: qtplugins/resetview/resetview.h:40
 msgid "Manipulate the view camera."
-msgstr ""
+msgstr "Manipulišite kamerom za pregled."
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:39
 msgid "Script File Formats"
-msgstr ""
+msgstr "Formati datoteka skripte"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:43
 msgid "Load file reader/writers from external scripts."
-msgstr ""
+msgstr "Učitajte čitač datoteka/pisače iz spoljnih skripti."
 
 #: qtplugins/select/select.cpp:40
 msgid "Select All"
-msgstr "Изабери све"
+msgstr "Izaberi Sve"
 
 #: qtplugins/select/select.cpp:45
 msgid "Select None"
-msgstr "Поништи избор"
+msgstr "Poništi Izbor"
 
 #: qtplugins/select/select.cpp:54
 msgid "Invert Selection"
-msgstr ""
+msgstr "Obrni selekciju"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Element..."
-msgstr "Изабери према елементу..."
+msgstr "Biraj po elementu ..."
 
 #: qtplugins/select/select.cpp:62
 msgid "Select by Atom Index..."
-msgstr ""
+msgstr "Biraj prema Atom indeksu ..."
 
 #: qtplugins/select/select.cpp:66
 msgid "Select by Residue..."
-msgstr "Изабери према остатку..."
+msgstr "Odaberite prema ostatku ..."
 
 #: qtplugins/select/select.cpp:79
 msgid "Change selections"
-msgstr ""
+msgstr "Promenite izbore"
 
 #: qtplugins/select/select.cpp:89
 msgid "&Select"
-msgstr "&Изабери"
+msgstr "&Izaberi"
 
 #: qtplugins/select/select.cpp:153
 msgid "Select Atoms by Index"
-msgstr ""
+msgstr "Odaberite Atome prema indeksu"
 
 #: qtplugins/select/select.cpp:154
 msgid "Atoms to Select:"
-msgstr ""
+msgstr "Atomi za izbor:"
 
 #: qtplugins/select/select.cpp:190
 msgid "Select Atoms by Residue"
-msgstr ""
+msgstr "Odaberite Atome prema ostatku"
 
 #: qtplugins/select/select.cpp:191
 msgid "Residues to Select:"
-msgstr ""
+msgstr "Ostaci za izbor:"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
 #: qtplugins/select/select.h:39:1576
-#, fuzzy
 msgid "Select"
-msgstr "&Изабери"
+msgstr "&Izaberi"
 
 #: qtplugins/selectiontool/selectiontool.cpp:62
 msgid "Selection"
-msgstr "Избор"
+msgstr "Izbor"
 
 #: qtplugins/selectiontool/selectiontool.h:46
 #: qtplugins/selectiontool/selectiontool.h:47
 msgid "Selection tool"
-msgstr ""
+msgstr "Alat za selekciju"
 
 #: qtplugins/spacegroup/spacegroup.cpp:63
-#, fuzzy
 msgid "Perceive Space Group"
-msgstr "Спознај просторну групу"
+msgstr "Spoznaj Prostornu Grupu"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
 #: qtplugins/spacegroup/spacegroup.cpp:81:1561
 msgid "Symmetrize"
-msgstr "Симетризуј"
+msgstr "Simetrizuj"
 
 #: qtplugins/spacegroup/spacegroup.cpp:91
 #: qtplugins/spacegroup/spacegroup.cpp:305
 msgid "Reduce to Asymmetric Unit"
-msgstr "Умањи на асиметричну јединицу"
+msgstr "Umanji na asimetričnu jedinicu"
 
 #: qtplugins/spacegroup/spacegroup.cpp:97
-#, fuzzy
 msgid "Set Tolerance"
-msgstr "Толеранција:"
+msgstr "Tolerancija"
 
 #: qtplugins/spacegroup/spacegroup.cpp:118
-#, fuzzy
 msgid "Space Group"
-msgstr "Просторна &група"
+msgstr "Prostorna Grupa"
 
 #: qtplugins/spacegroup/spacegroup.cpp:192
 msgid "Failure"
-msgstr ""
+msgstr "Neuspeh"
 
 #: qtplugins/spacegroup/spacegroup.cpp:193
-#, fuzzy
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
-"Није успело опажање просторне групе.\n"
-"\n"
-"Да ли желите да покушате опет са другачијом толеранцијом?"
+"Percepcija svemirske grupe nije uspela.\n"
+"Da li biste želeli da pokušate ponovo sa drugačijom tolerancijom?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:208
 msgid "Primitive Reduction"
-msgstr ""
+msgstr "Primitivno smanjenje"
 
 #: qtplugins/spacegroup/spacegroup.cpp:209
 #: qtplugins/spacegroup/spacegroup.cpp:234
@@ -3425,83 +3386,86 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"Tolerancija je trenutno podešena na: %1.\n"
+"Nastaviti sa ovom tolerancijom?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:222
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Primitivno smanjenje nije uspelo.\n"
+"Proverite kristal i pokušajte ponovo sa drugom tolerancijom."
 
 #: qtplugins/spacegroup/spacegroup.cpp:247
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Konvencionalizacija ćelije nije uspela.\n"
+"Proverite kristal i pokušajte ponovo sa drugom tolerancijom."
 
 #: qtplugins/spacegroup/spacegroup.cpp:271
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Simetrizacija nije uspela.\n"
+"Proverite kristal i pokušajte ponovo sa drugom tolerancijom."
 
 #: qtplugins/spacegroup/spacegroup.cpp:326 qtplugins/yaehmop/yaehmop.cpp:177
 #: qtplugins/yaehmop/yaehmop.cpp:267 qtplugins/yaehmop/yaehmop.cpp:279
 #: qtplugins/yaehmop/yaehmop.cpp:293 qtplugins/yaehmop/yaehmop.cpp:410
-#, fuzzy
 msgid "Avogadro2"
-msgstr "Авогадро"
+msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:327
 msgid "Select tolerance in Å:"
-msgstr ""
+msgstr "Izaberite toleranciju u Å:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:343
 msgid "International"
-msgstr "Међународно"
+msgstr "Međunarodno"
 
 #: qtplugins/spacegroup/spacegroup.cpp:343
 msgid "Hall"
-msgstr "Хал"
+msgstr "Hala"
 
 #: qtplugins/spacegroup/spacegroup.cpp:343
 msgid "Hermann-Mauguin"
-msgstr "Херман-Моген"
+msgstr "Herman-Mogen"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
-#, fuzzy
 msgid "Select Space Group"
-msgstr "Изабери просторну групу"
+msgstr "Izaberi prostornu grupu"
 
 #: qtplugins/spacegroup/spacegroup.h:35
-#, fuzzy
 msgid "SpaceGroup"
-msgstr "Просторна &група"
+msgstr "ProstornaGrupa"
 
 #: qtplugins/spacegroup/spacegroup.h:76
 msgid "Space group features for crystals."
-msgstr ""
+msgstr "Karakteristike svemirske grupe za kristale."
 
 #: qtplugins/spectra/spectra.cpp:38
-#, fuzzy
 msgid "Vibrational modes..."
-msgstr "Вибрације"
+msgstr "Vibracije..."
 
 #: qtplugins/spectra/spectra.h:43
 msgid "Spectra and Vibrations"
-msgstr ""
+msgstr "Spektar i vibracije"
 
 #: qtplugins/spectra/spectra.h:47
 msgid "Display spectra and vibrational modes."
-msgstr ""
+msgstr "Prikaz spektara i vibracionih režima."
 
 #: qtplugins/surfaces/surfacedialog.cpp:115
-#, fuzzy
 msgid "Molecular Orbital"
-msgstr "Молекуларна орбита"
+msgstr "Molekularna Orbita"
 
 #: qtplugins/surfaces/surfacedialog.cpp:117
 msgid "Electron Density"
-msgstr "Густина електрона"
+msgstr "Gustina Elektrona"
 
 #: qtplugins/surfaces/surfacedialog.cpp:136
 #, fuzzy, qt-format
@@ -3510,55 +3474,51 @@ msgid "MO %L1"
 msgstr "МО %L1"
 
 #: qtplugins/surfaces/surfacedialog.cpp:138
-#, fuzzy
 msgctxt "Highest occupied molecular orbital"
 msgid "(HOMO)"
-msgstr "(НвЗМО)"
+msgstr "(HOMO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:140
-#, fuzzy
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
-msgstr "(НнСМО)"
+msgstr "(LUMO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:155
 msgid "From File"
-msgstr ""
+msgstr "Iz Datoteke"
 
 #: qtplugins/surfaces/surfaces.cpp:78
 msgid "Create Surfaces..."
-msgstr "Направи површине..."
+msgstr "Napravi Površine..."
 
 #: qtplugins/surfaces/surfaces.cpp:244
-#, fuzzy
 msgid "Calculating electron density"
-msgstr "Израчунавам густину електрона"
+msgstr "Izračunaj Gustinu Elektrona"
 
 #: qtplugins/surfaces/surfaces.cpp:254
 #, qt-format
 msgid "Calculating molecular orbital %L1"
-msgstr ""
+msgstr "Izračunavanje molekulske orbite %L1"
 
 #: qtplugins/surfaces/surfaces.cpp:385 qtplugins/surfaces/surfaces.cpp:413
 msgid "Movie AVI (*.avi)"
-msgstr ""
+msgstr "Film AVI (*.avi)"
 
 #: qtplugins/surfaces/surfaces.cpp:387
-#, fuzzy
 msgid "Export Movie"
-msgstr "Извези &слику"
+msgstr "Izvezi Film"
 
 #: qtplugins/surfaces/surfaces.cpp:388
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Film MP4 (*.mp4);;Film AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.h:70
 msgid "Surfaces"
-msgstr "Површине"
+msgstr "Površine"
 
 #: qtplugins/surfaces/surfaces.h:71
 msgid "Read and render surfaces."
-msgstr ""
+msgstr "Čitajte i iscrtavajte površine."
 
 #: qtplugins/svg/svg.cpp:31 qtplugins/svg/svg.h:27
 msgid "SVG"
@@ -3566,143 +3526,143 @@ msgstr "SVG"
 
 #: qtplugins/svg/svg.cpp:259
 msgid "SVG (*.svg)"
-msgstr ""
+msgstr "SVG (*.svg)"
 
 #: qtplugins/svg/svg.h:31
 msgid "Render the scene in a SVG file."
-msgstr ""
+msgstr "Renderirajte scenu u SVG datoteci."
 
 #: qtplugins/symmetry/operationstablemodel.cpp:60
 msgid "Type"
-msgstr "Врста"
+msgstr "Vrsta"
 
 #: qtplugins/symmetry/operationstablemodel.cpp:62
 msgid "Class"
-msgstr ""
+msgstr "Klasa"
 
 #: qtplugins/symmetry/operationstablemodel.cpp:64
 msgid "Element"
-msgstr "Елемент"
+msgstr "Element"
 
 #: qtplugins/symmetry/symmetry.cpp:53
-#, fuzzy
 msgid "Symmetry..."
-msgstr "Симетричност"
+msgstr "Simetričnost..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
 #: qtplugins/symmetry/symmetry.h:45:1546
 msgid "Symmetry"
-msgstr "Симетричност"
+msgstr "Simetrija"
 
 #: qtplugins/symmetry/symmetry.h:78
 msgid "Provide symmetry functionality."
-msgstr ""
+msgstr "Obezbedite funkcionalnost simetrije."
 
 #: qtplugins/symmetry/symmetryscene.h:44
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "Elementi simetrije"
 
 #: qtplugins/symmetry/symmetryscene.h:48
 msgid "Render symmetry elements."
-msgstr ""
+msgstr "Renderujte elemente simetrije."
 
 #: qtplugins/symmetry/symmetryutil.cpp:39
 msgid "∞"
 msgstr "∞"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:359
-#, fuzzy, qt-format
+#, qt-format
 msgid "Group %1"
-msgstr "Назив групе"
+msgstr "Grupa %1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:367
 #, qt-format
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: qtplugins/vanderwaals/vanderwaals.h:40
 msgid "Van der Waals"
-msgstr "Ван дер Валс"
+msgstr "Van Der Vals"
 
 #: qtplugins/vanderwaals/vanderwaals.h:44
 msgid "Simple display of VdW spheres."
-msgstr ""
+msgstr "Jednostavan prikaz VdW sfera."
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:41
-#, fuzzy
 msgid "Van der Waals (AO)"
-msgstr "Ван дер Валс"
+msgstr "Van Der Vals (AO)"
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:45
 msgid "Simple display of VdW spheres with ambient occlusion."
-msgstr ""
+msgstr "Jednostavan prikaz VdW sfera sa ambijentalnom okluzijom."
 
 #: qtplugins/vrml/vrml.cpp:41
 msgid "VRML Render"
-msgstr ""
+msgstr "VRML Render"
 
 #: qtplugins/vrml/vrml.cpp:83
 msgid "VRML (*.wrl);;Text file (*.txt)"
-msgstr ""
+msgstr "VRML (*.wrl);;Tekstualna datoteka (*.txt)"
 
 #: qtplugins/vrml/vrml.h:36
 msgid "VRML"
-msgstr ""
+msgstr "VRML"
 
 #: qtplugins/vrml/vrml.h:40
 msgid "Render the scene using VRML."
-msgstr ""
+msgstr "Renderirajte scenu pomoću VRML -a."
 
 #: qtplugins/wireframe/wireframe.h:39
 msgid "Wireframe"
-msgstr "Жичани оквир"
+msgstr "Žičani okvir"
 
 #: qtplugins/wireframe/wireframe.h:43
 msgid "Render the molecule as a wireframe."
-msgstr ""
+msgstr "Predstavi molekul kao žičani okvir."
 
 #: qtplugins/yaehmop/yaehmop.cpp:60
 msgid "Calculate band structure..."
-msgstr ""
+msgstr "Izračunaj strukturu opsega ..."
 
 #: qtplugins/yaehmop/yaehmop.cpp:80
 msgid "&Yaehmop"
-msgstr ""
+msgstr "&Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.cpp:178 qtplugins/yaehmop/yaehmop.cpp:411
 msgid "Cannot calculate band structure: no unit cell!"
-msgstr ""
+msgstr "Ne može se izračunati struktura pojasa: nema jedinične ćelije!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:268
 msgid "Yaehmop execution failed with the following error:\n"
-msgstr ""
+msgstr "Izvršavanje Yaehmop-a nije uspelo sa sledećom greškom:\n"
 
 #: qtplugins/yaehmop/yaehmop.cpp:278
 msgid "Failed to read band structure output from Yaehmop!"
-msgstr ""
+msgstr "Očitavanje izlaza strukture opsega sa  Yaehmop-a nije uspelo!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:291
 msgid ""
 "Only one special k point was found in Yaehmop output! Two or more are "
 "required!"
 msgstr ""
+"U izlazu Yaehmop-a pronađena je samo jedna posebna k tačka! Potrebna su dva "
+"ili više!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:528
 msgid "Error: could not find yaehmop executable!"
-msgstr ""
+msgstr "Greška: nije moguće pronaći izvršnu datoteku yaehmop-a!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:596
 msgid "Yaehmop Input"
-msgstr ""
+msgstr "Yaehmop ulaz"
 
 #: qtplugins/yaehmop/yaehmop.h:51
 msgid "Yaehmop"
-msgstr ""
+msgstr "Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.h:99
 msgid "Perform extended Hückel calculations with yaehmop."
-msgstr ""
+msgstr "Izvršite proširene Hückelove proračune sa yaehmopom."
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -3715,7 +3675,7 @@ msgstr ""
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, SubmitCalculationDialog)
 msgid "Dialog"
-msgstr "Прозорче"
+msgstr "Dijalog"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::MoleQueue::InputGeneratorWidget)
@@ -3730,27 +3690,27 @@ msgstr "Прозорче"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SelectionToolWidget)
 msgid "Form"
-msgstr "Облик"
+msgstr "Oblik"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 msgid "Calculation Settings"
-msgstr ""
+msgstr "Postavke izračunavanja"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
 msgid "Placeholder text..."
-msgstr ""
+msgstr "Tekst čuvara mesta ..."
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:83
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Reset to Default Values"
-msgstr ""
+msgstr "Vrati na podrazumevane vrednosti"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:90
 #. i18n: ectx: property (text), widget (QCheckBox, debugCheckBox)
 msgid "Debug script..."
-msgstr ""
+msgstr "Otkrivanje grešaka ..."
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:113
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
@@ -3761,22 +3721,22 @@ msgstr ""
 #. i18n: file: qtplugins/mongochem/mongochemwidget.ui:73
 #. i18n: ectx: property (text), widget (QPushButton, pushSubmitCalculation)
 msgid "Submit Calculation..."
-msgstr ""
+msgstr "Predloži proračun ..."
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:120
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Write files to disk..."
-msgstr ""
+msgstr "Zapišite datoteke na disk ..."
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Queue and Program:"
-msgstr ""
+msgstr "Red i program:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:50
 #. i18n: ectx: property (text), widget (QToolButton, refreshProgramsButton)
 msgid "Refresh"
-msgstr ""
+msgstr "Osveži"
 
 #. i18n: file: molequeue/molequeuewidget.ui:85
 #. i18n: ectx: property (toolTip), widget (QLabel, label_7)
@@ -3784,11 +3744,13 @@ msgid ""
 "<html><head/><body><p>Number of processor cores to reserve for this job.</"
 "p></body></html>"
 msgstr ""
+"<html><head/><body><p>Broj jezgara procesora koji treba rezervisati za ovaj "
+"posao.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Processor cores:"
-msgstr ""
+msgstr "Jezgra procesora:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:125
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
@@ -3797,11 +3759,14 @@ msgid ""
 "Results will still be copied to the local MoleQueue job cache first.</p></"
 "body></html>"
 msgstr ""
+"<html><head/><body><p>Obrišite udaljene radne datoteke po završetku posla. "
+"Rezultati će se i dalje prvo kopirati u lokalnu predmemoriju poslova "
+"MoleQueue..</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Delete remote files when finished:"
-msgstr ""
+msgstr "Izbrišite udaljene datoteke kada završite:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:145
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
@@ -3809,11 +3774,13 @@ msgid ""
 "<html><head/><body><p>Check to prevent this job from showing up in the "
 "MoleQueue GUI by default.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Potvrdite izbor da biste sprečili da se ovaj posao "
+"podrazumevano prikazuje u grafičkom interfejsu MoleQueue.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Hide job in MoleQueue:"
-msgstr ""
+msgstr "Sakrij posao u MoleQueue:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:158
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -3821,61 +3788,63 @@ msgid ""
 "<html><head/><body><p>Show a system popup notification when the job's status "
 "changes.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Prikažite sistemsko iskačuće obaveštenje kada se "
+"status posla promeni.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:161
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Show progress notifications:"
-msgstr ""
+msgstr "Prikaži obaveštenja o napretku:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, openOutputLabel)
 msgid "Open output when finished:"
-msgstr ""
+msgstr "Otvorite izlaz kada završite:"
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
 msgid "Rename Elements"
-msgstr ""
+msgstr "Preimenujte elemente"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
 msgid "3DMol HTML Snippet"
-msgstr ""
+msgstr "3DMol HTML isečak"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, copyButton)
 msgid "&Copy to Clipboard"
-msgstr ""
+msgstr "&Kopiraj u međuspremnik"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
 msgid "Ctrl+C"
-msgstr "Ктрл+С"
+msgstr "Ctrl+C"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:44
 #. i18n: ectx: property (text), widget (QPushButton, exitButton)
 msgid "&Exit"
-msgstr ""
+msgstr "&Izlaz"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:47
 #. i18n: ectx: property (shortcut), widget (QPushButton, exitButton)
 msgid "Ctrl+E"
-msgstr ""
+msgstr "Ctrl+E"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Structure Input File"
-msgstr ""
+msgstr "Struktura Ulazne datoteke"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:28
 #. i18n: ectx: property (text), widget (QRadioButton, generateFromPdbButton)
 msgid "Generate Input From PDB"
-msgstr ""
+msgstr "Generiši ulaz iz PDB -a"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, pdbFileLabel)
 msgid "PDB File:"
-msgstr ""
+msgstr "PDB Datoteka:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:50
 #. i18n: ectx: property (text), widget (QPushButton, openPdbFileButton)
@@ -3887,89 +3856,87 @@ msgstr "..."
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force Field:"
-msgstr "Поље силе:"
+msgstr "Polje Sile:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:75
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "AMBER"
-msgstr ""
+msgstr "AMBER"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:80
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "CHARMM"
-msgstr ""
+msgstr "CHARMM"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:85
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "PARSE"
-msgstr ""
+msgstr "RAŠČLANITI"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:90
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "TYL06"
-msgstr ""
+msgstr "TYL06"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:95
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "PEOEPB"
-msgstr ""
+msgstr "PEOEPB"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:100
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "SWANSON"
-msgstr ""
+msgstr "SWANSON"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:114
 #. i18n: ectx: property (text), widget (QPushButton, runPdb2PqrButton)
 msgid "Run PDB2PQR"
-msgstr ""
+msgstr "Pokrenite PDB2PQR"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:123
 #. i18n: ectx: property (text), widget (QRadioButton, loadFromPqrButton)
 msgid "Load Existing PQR File"
-msgstr ""
+msgstr "Učitajte postojeću PQR datoteku"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, pqrFileLabel)
 msgid "PQR File:"
-msgstr ""
+msgstr "PQR Datoteka:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:156
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "APBS Input File"
-msgstr ""
+msgstr "APBS ulazna datoteka"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:170
 #. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
 msgid "Save Input File"
-msgstr ""
+msgstr "Sačuvaj ulaznu datoteku"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Success!"
-msgstr "Успешно!"
+msgstr "Uspešno!"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:27
 #. i18n: ectx: property (text), widget (QCheckBox, loadStructureCheckBox)
-#, fuzzy
 msgid "Load Structure File"
-msgstr "Учитај датотеку"
+msgstr "Učitaj strukturu datoteke"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:37
 #. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
-#, fuzzy
 msgid "Load Cube File"
-msgstr "Учитај датотеку"
+msgstr "Učitaj datoteku kocke"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Distance Tolerance:"
-msgstr ""
+msgstr "Tolerancija udaljenosti:"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Minimum Distance:"
-msgstr ""
+msgstr "Minimalna udaljenost:"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
@@ -3995,126 +3962,124 @@ msgstr " Å"
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConnectionSettingsDialog)
 msgid "Server settings"
-msgstr ""
+msgstr "Podešavanja servera"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label7)
 msgid "&Hostname:"
-msgstr ""
+msgstr "&Ime hosta:"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:64
 #. i18n: ectx: property (text), widget (QLabel, label8)
 msgid "Port"
-msgstr ""
+msgstr "Port"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, pushTestConnection)
 msgid "Test C&onnection..."
-msgstr ""
+msgstr "Test K&onekcije..."
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:46
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Look in:"
-msgstr ""
+msgstr "Pogledaj u:"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:66
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateBack)
-#, fuzzy
 msgid "Navigate Back"
-msgstr "Крећите се"
+msgstr "Navigacija nazad"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateForward)
-#, fuzzy
 msgid "Navigate Forward"
-msgstr "Крећите се"
+msgstr "Navigacija napred"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:92
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateUp)
 msgid "Navigate Up"
-msgstr ""
+msgstr "Navigacija gore"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "File name:"
-msgstr ""
+msgstr "Ime datoteke:"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:153
 #. i18n: ectx: property (text), widget (QPushButton, OK)
 msgid "OK"
-msgstr "У реду"
+msgstr "U redu"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Files of type:"
-msgstr ""
+msgstr "Datoteke tipa:"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:174
 #. i18n: ectx: property (text), widget (QPushButton, Cancel)
 msgid "Cancel"
-msgstr "Откажи"
+msgstr "Otkaži"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ComDialog)
 msgid "Volume Rendering"
-msgstr ""
+msgstr "Renderirajte Volum"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Cube"
-msgstr ""
+msgstr "Kocka"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Enable volume rendering"
-msgstr ""
+msgstr "Omogućite renderiranje voluma"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Enable surface rendering"
-msgstr ""
+msgstr "Omogućite renderiranje površine"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Isovalue"
-msgstr ""
+msgstr "Isovalue"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Opacity"
-msgstr ""
+msgstr "Neprozirnost"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
 msgid "Coordinate Editor"
-msgstr ""
+msgstr "Uređivač koordinata"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Preset:"
-msgstr ""
+msgstr "Unapred podešeno:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Distance Unit:"
-msgstr ""
+msgstr "Jedinica udaljenosti:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:46
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
 msgid "Angstrom"
-msgstr ""
+msgstr "Angstrom"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
 msgid "Bohr"
-msgstr "Бор"
+msgstr "Bor"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:31
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Format:"
-msgstr "Запис:"
+msgstr "Format:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:71
 #. i18n: ectx: property (toolTip), widget (QLineEdit, spec)
@@ -4139,54 +4104,73 @@ msgid ""
 "\">1</span> - A literal 1 (\"1\"), useful for optimization flags<br/></p></"
 "body></html>"
 msgstr ""
+"<html><head/><body><p>Specifikacija formata. Svaki znak označava vrednost "
+"koju treba zapisati po atomu:</p><p><span style=\" font-weight:600;\""
+">#</span>- Atom indeks (1, 2, ..., numAtoms)<br/><span style=\" font-"
+"weight:600;\">Z</span>- atomski broj (npr. \"6\" za ugljenik)<br/><span "
+"style=\" font-weight:600;\">G</span>- atomski broj u stilu GAMESS (npr. „6,0“"
+" za ugljenik)<br/><span style=\" font-weight:600;\">N</span>- naziv elementa "
+"(npr. „Ugljenik“)<br/><span style=\" font-weight:600;\">S</span>- simbol "
+"elementa (npr. \"C\" za ugljenik)<br/><span style=\" font-weight:600;\">x</"
+"span> - X position coordinate<br/><span style=\" font-weight:600;\">y</span>-"
+" Y koordinata pozicije<br/><span style=\" font-weight:600;\">z</span> - Z "
+"koordinata pozicije<br/><span style=\" font-weight:600;\">a</span>- 'a' "
+"koordinata rešetke (samo kristali)<br/><span style=\" font-weight:600;\">b</"
+"span> - 'b' koordinata rešetke (samo kristali)<br/><span style=\" font-"
+"weight:600;\">c</span> - 'c' koordinata rešetke (samo kristali)<br/><span "
+"style=\" font-weight:600;\">_</span>- Doslovni prostor (\"\"), koristan za "
+"poravnavanje<br/><span style=\" font-weight:600;\">0</span> - Bukvalno 0 (\"0"
+"\"), korisno za zastavice optimizacije<br/><span style=\" font-weight:600;\""
+">1</span>- Bukvalno 1 (\"1\"), korisno za zastavice optimizacije<br/"
+"></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
 msgid "Help..."
-msgstr ""
+msgstr "Pomoć..."
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:131
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "Revert"
-msgstr ""
+msgstr "Povrati"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:145
 #. i18n: ectx: property (text), widget (QPushButton, apply)
 msgid "Apply"
-msgstr "Примени"
+msgstr "Primeni"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Cp2kInputDialog)
 msgid "CP2K Input"
-msgstr ""
+msgstr "CP2K Ulaz"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:22
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:258
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
 msgid "Reset All"
-msgstr "Поврати све"
+msgstr "Povrati Sve"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:29
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:265
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Defaults"
-msgstr "Основно"
+msgstr "Osnovno"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Save File..."
-msgstr ""
+msgstr "Sačuvaj Datoteku..."
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:34
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
 msgid "&Basic Setup"
-msgstr "&Основна подешавања"
+msgstr "&Osnovna Podešavanja"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:101
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -4195,7 +4179,7 @@ msgstr "&Основна подешавања"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Title:"
-msgstr "Наслов:"
+msgstr "Naslov:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -4204,7 +4188,7 @@ msgstr "Наслов:"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "Filename Base:"
-msgstr ""
+msgstr "Baza imena datoteka:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:124
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -4213,144 +4197,146 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:70
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
 msgid "job"
-msgstr ""
+msgstr "Posao"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:209
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Calculate:"
-msgstr "Израчунај:"
+msgstr "Izračunaj:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Method:"
-msgstr "Начин:"
+msgstr "Metod:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:197
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Basis set:"
-msgstr ""
+msgstr "Osnova:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:215
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "Functional"
-msgstr ""
+msgstr "Funkcionalno"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:258
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 msgid "MM"
-msgstr ""
+msgstr "MM"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:264
 #. i18n: ectx: property (text), widget (QLabel, emaxSplineSpin_label)
 msgid "FF Emax Spline Spin"
-msgstr ""
+msgstr "FF Emax Spline Spin"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:304
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 msgid "FF RCUT NB"
-msgstr ""
+msgstr "FF RCUT NB"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:341
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Poisson EWALD type"
-msgstr ""
+msgstr "Poisson EWALD tip"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:368
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 msgid "Poisson EWALD Alpha"
-msgstr ""
+msgstr "Poisson EWALD Alpha"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_23)
 msgid "Poiosson EWALD GMAX"
-msgstr ""
+msgstr "Poiosson EWALD GMAX"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
 #. i18n: ectx: attribute (title), widget (QWidget, tab_2)
 msgid "QM"
-msgstr ""
+msgstr "QM"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:440
 #. i18n: ectx: property (text), widget (QLabel, LSD_label)
 msgid "LSD"
-msgstr ""
+msgstr "LSD"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:449
 #. i18n: ectx: property (text), widget (QCheckBox, lsdcheckBox)
 msgid "TRUE"
-msgstr ""
+msgstr "TAČNO"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:471
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "MAX SCF"
-msgstr ""
+msgstr "MAX SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:505
 #. i18n: ectx: property (text), widget (QLabel, label_14)
 msgid "EPS SCF"
-msgstr ""
+msgstr "EPS SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:539
 #. i18n: ectx: property (text), widget (QLabel, label_13)
 msgid "SCF GUESS"
-msgstr ""
+msgstr "SCF POGODAK"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:566
 #. i18n: ectx: property (text), widget (QLabel, label_24)
 msgid "OUTER MAX SCF"
-msgstr ""
+msgstr "OUTER MAX SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:600
 #. i18n: ectx: property (text), widget (QLabel, label_25)
 msgid "OUTER EPS SCF"
-msgstr ""
+msgstr "OUTER MAX SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:634
 #. i18n: ectx: property (text), widget (QLabel, label_26)
 msgid "OT T MINIMIZER"
-msgstr ""
+msgstr "OT T MINIMIZER"
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
 msgid "Import Crystal"
-msgstr "Увези кристал"
+msgstr "Uvezi Kristal"
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
 msgstr ""
+"Ekstenzija datoteke za konverziju Open Babel (podrazumevano - Avogadro :: "
+"POSCAR):"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
 msgid "Supercell Parameters"
-msgstr ""
+msgstr "Parametri superćelije"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:22
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Super Cell Options"
-msgstr "Опције супер ћелије"
+msgstr "Opcije Super Ćelije"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
 msgid "A repeat:"
-msgstr "A понављање:"
+msgstr "A Ponavljanje:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
 msgid "B repeat:"
-msgstr "B понављање:"
+msgstr "B Ponavljanje:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C repeat:"
-msgstr "C понављање:"
+msgstr "C Ponavljanje:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
 msgid "Unit Cell Editor"
-msgstr ""
+msgstr "Uređivač ćelija jedinice"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4398,187 +4384,189 @@ msgstr "°"
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:231
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Cell Matrix:"
-msgstr ""
+msgstr "Ćelijska matrica:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:248
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Fractional Matrix:"
-msgstr ""
+msgstr "Frakciona matrica:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:278
 #. i18n: ectx: property (text), widget (QCheckBox, transformAtoms)
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:114
 #. i18n: ectx: property (text), widget (QCheckBox, transformAtoms)
 msgid "&Transform Atoms"
-msgstr ""
+msgstr "&Transformiši Atome"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:300
 #. i18n: ectx: property (text), widget (QPushButton, apply)
 msgid "&Apply"
-msgstr "&Примени"
+msgstr "&Primeni"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:307
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "&Revert"
-msgstr ""
+msgstr "&Povratiti"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:314
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 msgid "&Hide"
-msgstr "&Сакриј"
+msgstr "&Sakrij"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::VolumeScalingDialog)
 msgid "Scale Unit Cell Volume"
-msgstr "Промени запремину јединичне ћелије"
+msgstr "Promeni zapreminu jedinične ćelije"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "New &Volume:"
-msgstr ""
+msgstr "Nova &Zapremina:"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "&Scaling Factor:"
-msgstr ""
+msgstr "&Faktor za skaliranje:"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Current Volume:"
-msgstr ""
+msgstr "Trenutna Zapremina:"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:58
 #. i18n: ectx: property (text), widget (QLabel, currentVolume)
 msgid "TextLabel"
-msgstr "Натпис текста"
+msgstr "Natpis Teksta"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:23
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Element:"
-msgstr "Елемент:"
+msgstr "Element:"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Bond Order:"
-msgstr "Поредак везе:"
+msgstr "Poredak Veze:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
 msgid "GAMESS Input"
-msgstr "ГАМЕСС улаз"
+msgstr "GAMESS ulaz"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "In:"
-msgstr "У:"
+msgstr "u:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Multiplicity:"
-msgstr "Вишеструкост:"
+msgstr "Višestrukost:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:86
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
-msgstr "Са:"
+msgstr "Sa:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:176
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Charge:"
-msgstr "Наелектрисање:"
+msgstr "Naelektrisanje:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
 #. i18n: file: qtplugins/mongochem/mongochemwidget.ui:66
 #. i18n: ectx: property (text), widget (QPushButton, pushSearch)
 msgid "Search"
-msgstr ""
+msgstr "Pretraga"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "name"
-msgstr "назив"
+msgstr "naziv"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "tag"
-msgstr ""
+msgstr "oznaka"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "synonym"
-msgstr ""
+msgstr "sinonim"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "formula"
-msgstr ""
+msgstr "formula"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "inchi"
-msgstr ""
+msgstr "inchi"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:85
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Search By: "
-msgstr ""
+msgstr "Pretraga po: "
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Formula:"
-msgstr ""
+msgstr "Formula:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
 #. i18n: file: qtplugins/mongochem/mongochemwidget.ui:52
 #. i18n: ectx: property (text), widget (QPushButton, pushDownload)
 msgid "Download"
-msgstr ""
+msgstr "Preuzimanje"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Name:"
-msgstr ""
+msgstr "Ime:"
 
 #. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::InsertFragmentDialog)
 msgid "Insert Fragment..."
-msgstr "Уметни одломак..."
+msgstr "Umetni odlomak..."
 
 #. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Filter:"
-msgstr "Пробери:"
+msgstr "Filter:"
 
 #. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:29
 #. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
 msgid "Type a name or part of a name to show only matching files."
-msgstr "Упишите назив или део назива да покажете само одговарајуће датотеке."
+msgstr ""
+"Unesite ime ili deo imena da biste prikazali samo datoteke koje se "
+"podudaraju."
 
 #. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
 msgid "Insert"
-msgstr "Уметни"
+msgstr "Umetni"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
 msgid "LAMMPS Input"
-msgstr ""
+msgstr "LAMMPS Ulaz"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:37
 #. i18n: ectx: property (toolTip), widget (QLabel, label_7)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:50
 #. i18n: ectx: property (toolTip), widget (QLineEdit, titleLine)
 msgid "Input file comments"
-msgstr ""
+msgstr "Unesite komentare datoteke"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:77
 #. i18n: ectx: property (toolTip), widget (QLabel, label_units)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QComboBox, unitsCombo)
 msgid "Select the unit style to be used during the simulation."
-msgstr "Изаберите изглед јединице који ће се користити за време симулације."
+msgstr "Odaberite stil jedinice koji će se koristiti tokom simulacije."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:84
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_units)
@@ -4614,7 +4602,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
 msgid "Units"
-msgstr ""
+msgstr "Jedinice"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:111
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
@@ -4646,12 +4634,12 @@ msgstr "cgs"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:236
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "electron"
-msgstr "електрон"
+msgstr "elektron"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_waterPotential)
 msgid "Water Potential"
-msgstr "Потенцијал воде"
+msgstr "Potencijal vode"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:157
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
@@ -4670,7 +4658,7 @@ msgstr "SPC/E"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:197
 #. i18n: ectx: property (toolTip), widget (QComboBox, atomStyleCombo)
 msgid "Select atom_style used by the data file."
-msgstr "Изаберите изглед атома који користи датотека података."
+msgstr "Izaberite izgled atoma koji koristi datoteka podataka."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:184
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_atomstyle)
@@ -4706,94 +4694,94 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
 msgid "Atom Style"
-msgstr "Изглед атома"
+msgstr "Izgled Atoma"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:211
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "angle"
-msgstr "угао"
+msgstr "ugao"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:216
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "atomic"
-msgstr "атомска"
+msgstr "atomska"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:221
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "bond"
-msgstr "веза"
+msgstr "veza"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:226
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "charge"
-msgstr "наелектрисање"
+msgstr "naelektrisanje"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:231
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "dipole"
-msgstr "дипол"
+msgstr "dipol"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:241
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "ellipsoid"
-msgstr "елипсоид"
+msgstr "elipsoid"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:246
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "full"
-msgstr "пуна"
+msgstr "puna"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:251
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "line"
-msgstr "линија"
+msgstr "linija"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:256
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "meso"
-msgstr "мезо"
+msgstr "meso"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:261
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "molecular"
-msgstr "молекуларан"
+msgstr "molekularan"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:266
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "peri"
-msgstr "пери"
+msgstr "peri"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:271
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "sphere"
-msgstr "сфера"
+msgstr "sfera"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:276
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "tri"
-msgstr "три"
+msgstr "tri"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:281
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "wavepacket"
-msgstr "таласни пакет"
+msgstr "talasni paket"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:289
 #. i18n: ectx: property (toolTip), widget (QLabel, label_readdata)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:299
 #. i18n: ectx: property (toolTip), widget (QLineEdit, readDataLine)
 msgid "Specify the name to be used for the coordinate file."
-msgstr "Наведите назив који ће се користити за датотеку координата."
+msgstr "Navedite ime koje će se koristiti za datoteku koordinata."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:292
 #. i18n: ectx: property (text), widget (QLabel, label_readdata)
 msgid "Coordinate Data File"
-msgstr "Датотека података координата"
+msgstr "Datoteka koordinatnih podataka"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:306
 #. i18n: ectx: property (text), widget (QLabel, label_therm)
 msgid "Ensemble"
-msgstr "Заједништво"
+msgstr "Ansembl"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:314
 #. i18n: ectx: property (text), item, widget (QComboBox, ensembleCombo)
@@ -4812,19 +4800,19 @@ msgstr "NVE"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:918
 #. i18n: ectx: property (text), widget (QCheckBox, temperatureCheck)
 msgid "Temperature"
-msgstr "Температура"
+msgstr "Temperatura"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:347
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:357
 #. i18n: ectx: property (toolTip), widget (QSpinBox, nhChainSpin)
 msgid "Select the number of Nosé-Hoover chains in the NVT ensemble."
-msgstr "Изаберите број Нозе-Хуверових ланаца у НВТ заједништву"
+msgstr "Izaberite broj Nosé-Hoover lanaca u ansamblu NVT."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:350
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "NH Chains"
-msgstr "НХ ланци"
+msgstr "NH Lanci"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:393
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
@@ -4836,41 +4824,42 @@ msgstr "НХ ланци"
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, stepSpin)
 msgid ""
 "Time step for the simulation in units according to \"Units\" specification."
-msgstr "Корак времена за симулацију у јединицама према одредби „Јединице“."
+msgstr ""
+"Vremenski korak za simulaciju u jedinicama prema specifikaciji \"Jedinice\"."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:396
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Time Step"
-msgstr "Корак времена"
+msgstr "Korak vremena"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:416
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:642
 #. i18n: ectx: property (toolTip), widget (QLineEdit, dumpXYZEdit)
 msgid "Filename of the XYZ file to write during the simulation."
-msgstr "Назив „XYZ“ датотеке за упис у току симулације."
+msgstr "Naziv „XYZ“ datoteke za upis u toku simulacije."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:419
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Dump XYZ"
-msgstr "Испиши „XYZ“"
+msgstr "Ispiši „XYZ“"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:433
 #. i18n: ectx: property (toolTip), widget (QLabel, label_dimension)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:847
 #. i18n: ectx: property (toolTip), widget (QComboBox, dimensionCombo)
 msgid "Number of dimensions in the system."
-msgstr "Број димензија у систему."
+msgstr "Broj dimenzija u sistemu."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:436
 #. i18n: ectx: property (text), widget (QLabel, label_dimension)
 msgid "Dimensions"
-msgstr "Димензије"
+msgstr "Dimenzije"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:446
 #. i18n: ectx: property (toolTip), widget (QComboBox, zBoundaryCombo)
 msgid "Change Z boundary style."
-msgstr "Мења изглед Z границе."
+msgstr "Promeni izgled Z granice."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:453
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -4929,188 +4918,187 @@ msgstr "fm"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:486
 #. i18n: ectx: property (toolTip), widget (QComboBox, yBoundaryCombo)
 msgid "Change Y boundary style."
-msgstr "Мења изглед Y границе."
+msgstr "Promeni izgled Y granice."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:526
 #. i18n: ectx: property (toolTip), widget (QComboBox, xBoundaryCombo)
 msgid "Change X boundary style."
-msgstr "Мења изглед Х границе."
+msgstr "Promeni izgled X granice."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
 msgid "Select bondary Styles in X, Y and Z directions."
-msgstr "Изаберите изгледе границе у правцима X, Y и Z."
+msgstr "Izaberite izglede granice u pravcima X, Y i Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
 #. i18n: ectx: property (text), widget (QLabel, label_boundary)
 msgid "Boundary"
-msgstr "Граница"
+msgstr "Granica"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:589
 #. i18n: ectx: property (toolTip), widget (QLabel, label_5)
 msgid "Number of replicants in X, Y and Z directions."
-msgstr "Број удвостручених у правцима X, Y и Z."
+msgstr "Broj udvostručenih u pravcima X, Y i Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:592
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Replicate"
-msgstr "Удвостручи"
+msgstr "Udvostruči"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:612
 #. i18n: ectx: property (toolTip), widget (QSpinBox, xReplicateSpin)
 msgid "Replicate the X direction."
-msgstr "Удвостручи X правац."
+msgstr "Udvostruči X pravac."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:622
 #. i18n: ectx: property (toolTip), widget (QSpinBox, yReplicateSpin)
 msgid "Replicate the Y direction."
-msgstr "Удвостручи Y правац."
+msgstr "Udvostruči Y pravac."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:632
 #. i18n: ectx: property (toolTip), widget (QSpinBox, zReplicateSpin)
 msgid "Replicate the Z direction."
-msgstr "Удвостручи Z правац."
+msgstr "Udvostruči Z pravac."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:649
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:659
 #. i18n: ectx: property (toolTip), widget (QSpinBox, runSpin)
 msgid "Total number of timesteps to run the simulation."
-msgstr "Укупан број временских корака за покретање симулације."
+msgstr "Ukupan broj vremenskih koraka za pokretanje simulacije."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:652
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Total Steps"
-msgstr "Укупно корака"
+msgstr "Ukupno koraka"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:685
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Dump Interval"
-msgstr "Период исписивања"
+msgstr "Period ispisivanja"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:715
 #. i18n: ectx: property (toolTip), widget (QLabel, label_8)
 msgid "Set the initial atom velocities for the simulation."
-msgstr "Подесите почетне брзине атома за симулацију."
+msgstr "Podesite početne brzine atoma za simulaciju."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:718
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Initial Velocities"
-msgstr "Почетне брзине"
+msgstr "Početne brzine"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:725
 #. i18n: ectx: property (toolTip), widget (QComboBox, velocityDistCombo)
 msgid "Select the distribution of initial atom velocities."
-msgstr "Изаберите расподелу почетних брзина атома."
+msgstr "Izaberite raspodelu početnih brzina atoma."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:729
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
 msgid "gaussian"
-msgstr "гаусова"
+msgstr "gausova"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:734
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
 msgid "uniform"
-msgstr "једнолична"
+msgstr "jednolična"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:742
 #. i18n: ectx: property (toolTip), widget (QLabel, label_9)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:752
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, velocityTempSpin)
 msgid "Set the initial atom velocities to match this temperature."
-msgstr "Подесите почетне брзине атома да одговарају овој температури."
+msgstr "Podesite početne brzine atoma da odgovaraju ovoj temperaturi."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:768
 #. i18n: ectx: property (toolTip), widget (QCheckBox, zeroMOMCheck)
 msgid "Remove system linear momentum from initial velocities."
-msgstr "Уклоните линијски моменат система из почетних брзина."
+msgstr "Uklonite linijski momentum sistema iz početnih brzina."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:771
 #. i18n: ectx: property (text), widget (QCheckBox, zeroMOMCheck)
 msgid "Zero Linear Momentum"
-msgstr "Нулти линијски моменат"
+msgstr "Nulti linijski momentum"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:781
 #. i18n: ectx: property (toolTip), widget (QCheckBox, zeroLCheck)
 msgid "Remove system angular momentum from initial velocities."
-msgstr "Уклоните угаони моменат система из почетних брзина."
+msgstr "Uklonite ugaoni momentum sistema iz početnih brzina."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:784
 #. i18n: ectx: property (text), widget (QCheckBox, zeroLCheck)
 msgid "Zero Angular Momentum"
-msgstr "Нулти угаони моменат"
+msgstr "Nulti ugaoni momentum"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:807
 #. i18n: ectx: property (toolTip), widget (QLabel, label_10)
 msgid "Control the thermodynamic output during the simulation."
-msgstr "Управљајте термодинамичким излазом за време симулације."
+msgstr "Upravljajte termodinamičkim izlazom za vreme simulacije."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:810
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 msgid "Output"
-msgstr ""
+msgstr "Izlaz"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:817
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 msgid "Output Interval"
-msgstr "Период излаза"
+msgstr "Period izlaza"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:854
 #. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
 msgid "2d"
-msgstr "2д"
+msgstr "2d"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:859
 #. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
 msgid "3d"
-msgstr "3д"
+msgstr "3d"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:867
 #. i18n: ectx: property (toolTip), widget (QComboBox, thermoStyleCombo)
 msgid "Thermodynamic output style."
-msgstr "Изглед термодинамичког излаза."
+msgstr "Izgled termodinamičkog izlaza."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:871
 #. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
 msgid "One Line"
-msgstr "Једна линија"
+msgstr "Jedna Linija"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:876
 #. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
 msgid "Multi Line"
-msgstr "Више линија"
+msgstr "Više Linija"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:918
 #. i18n: ectx: property (text), widget (QPushButton, resetButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:982
 #. i18n: ectx: property (text), widget (QPushButton, resetButton)
 msgid "Reset"
-msgstr ""
+msgstr "Resetuj"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:928
 #. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:992
 #. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
 msgid "Use Form"
-msgstr "Користи образац"
+msgstr "Koristi obrazac"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:948
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Generate..."
-msgstr ""
+msgstr "Generiši..."
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Descriptor:"
-msgstr ""
+msgstr "Deskriptori:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
 msgid "Molecular Mass (g/mol):"
-msgstr "Молекуларна тежина (g/mol):"
+msgstr "Molekularna masa (g/mol):"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, molMassLabel)
@@ -5121,77 +5109,77 @@ msgstr "Молекуларна тежина (g/mol):"
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:74
 #. i18n: ectx: property (text), widget (QLabel, bondCountLabel)
 msgid "TODO"
-msgstr "УРАДИТИ"
+msgstr "URADITI"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Chemical Formula:"
-msgstr "Хемијска формула:"
+msgstr "Hemijska formula:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:53
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Number of Atoms:"
-msgstr "Број атома:"
+msgstr "Broj atoma:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Number of Bonds:"
-msgstr "Број веза:"
+msgstr "Broj veza:"
 
 #. i18n: file: qtplugins/mongochem/configdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConfigDialog)
 msgid "MongoChem Config"
-msgstr ""
+msgstr "MongoChem Konfiguracija"
 
 #. i18n: file: qtplugins/mongochem/configdialog.ui:20
 #. i18n: ectx: property (text), widget (QLineEdit, girderUrl)
 msgid "http://localhost:8080/api/v1"
-msgstr ""
+msgstr "http://localhost:8080/api/v1"
 
 #. i18n: file: qtplugins/mongochem/configdialog.ui:34
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "API Key:"
-msgstr ""
+msgstr "API Ključ:"
 
 #. i18n: file: qtplugins/mongochem/configdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Base URL:"
-msgstr ""
+msgstr "Osnovni URL:"
 
 #. i18n: file: qtplugins/mongochem/mongochemwidget.ui:45
 #. i18n: ectx: property (text), widget (QPushButton, pushConfig)
 msgid "Config"
-msgstr ""
+msgstr "Konfiguracija"
 
 #. i18n: file: qtplugins/mongochem/mongochemwidget.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, pushUpload)
 msgid "Upload"
-msgstr ""
+msgstr "Otpremiti"
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:21
 #. i18n: ectx: property (text), item, widget (QComboBox, container)
 msgid "Docker"
-msgstr ""
+msgstr "Docker"
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:26
 #. i18n: ectx: property (text), item, widget (QComboBox, container)
 msgid "Singularity"
-msgstr ""
+msgstr "Jedinstvenost"
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:34
 #. i18n: ectx: property (text), widget (QLabel, labelContainer)
 msgid "Container:"
-msgstr ""
+msgstr "Kontejner:"
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:44
 #. i18n: ectx: property (text), widget (QLabel, labelImage)
 msgid "Image:"
-msgstr ""
+msgstr "Slika:"
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:54
 #. i18n: ectx: property (text), widget (QLineEdit, image)
 msgid "openchemistry/psi4:latest"
-msgstr ""
+msgstr "openchemistry/psi4:latest"
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:99
 #. i18n: ectx: property (html), widget (QTextEdit, inputParameters)
@@ -5222,305 +5210,325 @@ msgid ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
 "family:'Ubuntu';\">}</span></p></body></html>"
 msgstr ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
+">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">{</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">    \"teorija\": \"dft\",</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">    \"funkncionalno\": \"b3lyp\",</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">    \"osnovno\": \"6-31g\",</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">    \"zadatak\": \"energija\" </span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">}</span></p></body></html>"
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:109
 #. i18n: ectx: property (text), widget (QLabel, labelInputParameters)
 msgid "Input Parameters:"
-msgstr ""
+msgstr "Ulazni parametri:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
 msgid "Geometry Optimization Parameters"
-msgstr ""
+msgstr "Parametri optimizacije geometrije"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "Optimization Method"
-msgstr ""
+msgstr "Metod optimizacije"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force field:"
-msgstr ""
+msgstr "Polje sile:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Optimization algorithm:"
-msgstr ""
+msgstr "Algoritam optimizacije:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Line search technique:"
-msgstr ""
+msgstr "Tehnika pretraživanja linija:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "Steepest Descent"
-msgstr ""
+msgstr "Najstrmiji spust"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "Conjugate Gradient"
-msgstr ""
+msgstr "Konjugatni gradijent"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
 msgid "Simple"
-msgstr ""
+msgstr "Jednostavno"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
 msgid "Newton's Method"
-msgstr ""
+msgstr "Njutonova Metoda"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
 msgid "Autodetect"
-msgstr ""
+msgstr "Automatska detekcija"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
 msgid "Limit Non-Bonded Interactions"
-msgstr ""
+msgstr "Ograničite neobavezne interakcije"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Van der Waals cutoff distance:"
-msgstr ""
+msgstr "Granična udaljenost Van der Valsa:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Pair update frequency:"
-msgstr ""
+msgstr "Učestalost ažuriranja para:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:140
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "electrostatic cutoff distance:"
-msgstr ""
+msgstr "elektrostatičko granično rastojanje:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:147
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:166
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, eleCutoff)
 msgid "Å"
-msgstr ""
+msgstr "Å"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:185
 #. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
 #. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
 msgid " steps"
-msgstr ""
+msgstr " koraci"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 msgid "Convergence Criteria"
-msgstr ""
+msgstr "Kriterijumi konvergencije"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "\"Energy\" convergence:"
-msgstr ""
+msgstr "Konvergencija \"energije\":"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Step limit:"
-msgstr ""
+msgstr "Ograničenje koraka:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
 msgid " units"
-msgstr ""
+msgstr " jedinice"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
 #. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
 msgid "10^"
-msgstr ""
+msgstr "10^"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
 msgid "OpenMM Script Builder"
-msgstr ""
+msgstr "OpenMM Izgrađivač Skripte"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:37
 #. i18n: ectx: property (text), widget (QLabel, label_jobScript)
 msgid "Job script:"
-msgstr ""
+msgstr "Scenarij posla:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:47
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, jobScriptEdit)
 msgid "script"
-msgstr ""
+msgstr "skripta"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:54
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 msgid "Input Coords:"
-msgstr ""
+msgstr "Ulazni koordinat:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:64
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputCoordEdit)
 msgid "input.pdb"
-msgstr ""
+msgstr "input.pdb"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:71
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Input Topology:"
-msgstr ""
+msgstr "Ulazna topologija:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_forceField)
-#, fuzzy
 msgid "Forcefield:"
-msgstr "Поље силе:"
+msgstr "Polje sile:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:99
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER96"
-msgstr ""
+msgstr "AMBER96"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:104
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb"
-msgstr ""
+msgstr "AMBER99sb"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb-ildn"
-msgstr ""
+msgstr "AMBER99sb-ildn"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:114
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb-nmr"
-msgstr ""
+msgstr "AMBER99sb-nmr"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:119
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER03"
-msgstr ""
+msgstr "AMBER03"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:124
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER10"
-msgstr ""
+msgstr "AMBER10"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_waterModel)
 msgid "Water Model:"
-msgstr ""
+msgstr "Model vode:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:145
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP3P"
-msgstr ""
+msgstr "TIP3P"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:150
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP4P-Ew"
-msgstr ""
+msgstr "TIP4P-Ew"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:155
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP5P"
-msgstr ""
+msgstr "TIP5P"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:160
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "Implicit Solvent (OBC)"
-msgstr ""
+msgstr "Implicitni rastvarač (OBC)"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:168
 #. i18n: ectx: property (text), widget (QLabel, label_platform)
 msgid "Platform:"
-msgstr ""
+msgstr "Platforma:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
-#, fuzzy
 msgid "Reference"
-msgstr "&Упута:"
+msgstr "Reference"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "OpenCL"
-msgstr ""
+msgstr "OpenCL"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:186
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "CPU"
-msgstr ""
+msgstr "CPU"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "CUDA"
-msgstr ""
+msgstr "CUDA"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:199
 #. i18n: ectx: property (text), widget (QLabel, label_precision)
 msgid "Precision:"
-msgstr ""
+msgstr "Preciznost:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:207
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
-#, fuzzy
 msgid "single"
-msgstr "Једноструко"
+msgstr "Jednostruko"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:212
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
 msgid "mixed"
-msgstr ""
+msgstr "pomešano"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:217
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
-#, fuzzy
 msgid "double"
-msgstr "Двоструко"
+msgstr "Dvostruko"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:225
 #. i18n: ectx: property (text), widget (QLabel, label_deviceIndex)
 msgid "Device Index:"
-msgstr ""
+msgstr "Indeks uređaja:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:245
 #. i18n: ectx: property (text), widget (QLabel, label_openCLIndex)
 msgid "OpenCL Platform Index:"
-msgstr ""
+msgstr "Indeks platforme OpenCL:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:275
 #. i18n: ectx: property (text), widget (QLabel, label_nonbondedMethod)
 msgid "Nonbonded method:"
-msgstr ""
+msgstr "Metoda bez veza:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:283
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "NoCutoff"
-msgstr ""
+msgstr "BezOdsecanja"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:288
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "CutoffNonPeriodic"
-msgstr ""
+msgstr "OdsecanjeNePeriodično"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:293
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "CutoffPeriodic"
-msgstr ""
+msgstr "OdsecanjePeriodično"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:298
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "Ewald"
-msgstr ""
+msgstr "Ewald"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:311
 #. i18n: ectx: property (text), widget (QLabel, label_ewaldTolerance)
 msgid "Ewald Tolerance:"
-msgstr ""
+msgstr "Ewald Tolerancija:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:337
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
-#, fuzzy
 msgid "Constraints:"
-msgstr "Ограничења"
+msgstr "Ograničenja:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -5529,32 +5537,32 @@ msgstr "Ограничења"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:108
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 msgid "None"
-msgstr "Ништа"
+msgstr "Ništa"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
 msgid "HBonds"
-msgstr ""
+msgstr "HVeze"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:355
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
 msgid "AllBonds"
-msgstr ""
+msgstr "SveVeze"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:360
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
 msgid "HAngles"
-msgstr ""
+msgstr "HUglovi"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:368
 #. i18n: ectx: property (text), widget (QLabel, label_constraintTolerance)
 msgid "Constraint Tolerance:"
-msgstr ""
+msgstr "Tolerancija ograničenja:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:394
 #. i18n: ectx: property (text), widget (QLabel, label_rigidWater)
 msgid "Rigid water?"
-msgstr ""
+msgstr "Kruta voda?"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:407
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -5563,27 +5571,27 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:813
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 msgid "False"
-msgstr ""
+msgstr "Netačno"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:415
 #. i18n: ectx: property (text), widget (QLabel, label_nonBondedCutoff)
 msgid "Nonbonded cutoff:"
-msgstr ""
+msgstr "Nevezan prekid:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:437
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, nonBondedCutoffSpin)
 msgid " nm"
-msgstr ""
+msgstr " nm"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:444
 #. i18n: ectx: property (text), widget (QLabel, label_randomInitVel)
 msgid "Random initial velocity:"
-msgstr ""
+msgstr "Slučajna početna brzina:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_generationTemp)
 msgid "Generation Temp:"
-msgstr ""
+msgstr "Temperatura generacije:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:481
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, generationTemperatureSpin)
@@ -5595,202 +5603,202 @@ msgstr " K"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:498
 #. i18n: ectx: property (text), widget (QLabel, label_integrator)
 msgid "Integrator:"
-msgstr ""
+msgstr "Integrator:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:506
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Langevin"
-msgstr ""
+msgstr "Langevin"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:511
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Verlet"
-msgstr ""
+msgstr "Verlet"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Brownian"
-msgstr ""
+msgstr "Brownian"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:521
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "VariableLangevin"
-msgstr ""
+msgstr "PromenjivaLangevin"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:526
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "VariableVerlet"
-msgstr ""
+msgstr "PromenjivaVerlet"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
 #. i18n: ectx: property (text), widget (QLabel, label_timestep)
 msgid "Timestep:"
-msgstr ""
+msgstr "Vremenski korak:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:553
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, stepSpin)
 msgid " fs"
-msgstr ""
+msgstr " fs"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
 msgid "Error tolerance:"
-msgstr ""
+msgstr "Tolerancija grešaka:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:586
 #. i18n: ectx: property (text), widget (QLabel, label_collisionRate)
 msgid "Collision rate:"
-msgstr ""
+msgstr "Stopa sudara:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:602
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, collisionRateSpin)
 msgid "/ps"
-msgstr ""
+msgstr "/ps"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
 #. i18n: ectx: property (text), widget (QLabel, label_temperature)
 msgid "Temperature:"
-msgstr "Температура:"
+msgstr "Temperatura:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:632
 #. i18n: ectx: property (text), widget (QLabel, label_barostat)
 msgid "Barostat:"
-msgstr ""
+msgstr "Barostat:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:645
 #. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
 msgid "Monte Carlo"
-msgstr ""
+msgstr "Monte Karlo"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:653
 #. i18n: ectx: property (text), widget (QLabel, label_pressure)
 msgid "Pressure:"
-msgstr ""
+msgstr "Pritisak:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:669
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, pressureSpin)
 msgid " atm"
-msgstr ""
+msgstr " atm"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:676
 #. i18n: ectx: property (text), widget (QLabel, label_barostatInterval)
 msgid "Barostat Interval"
-msgstr ""
+msgstr "Barostatski interval"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:703
 #. i18n: ectx: property (text), widget (QLabel, label_reporters)
 msgid "Reporters:"
-msgstr ""
+msgstr "Reporteri:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:710
 #. i18n: ectx: property (text), widget (QCheckBox, stateDataCheck)
 msgid "StateData"
-msgstr ""
+msgstr "StateData"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:720
 #. i18n: ectx: property (text), widget (QCheckBox, dcdCheck)
 msgid "DCD"
-msgstr ""
+msgstr "DCD"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:730
 #. i18n: ectx: property (text), widget (QCheckBox, pdbCheck)
 msgid "PDB"
-msgstr ""
+msgstr "PDB"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:740
 #. i18n: ectx: property (text), widget (QLabel, label_reportInterval)
 msgid "Report Interval:"
-msgstr ""
+msgstr "Interval izveštaja:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
 msgid "Equilibriation Steps:"
-msgstr ""
+msgstr "Koraci ravnoteže:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
 #. i18n: ectx: property (text), widget (QLabel, label_productionSteps)
 msgid "Production Steps:"
-msgstr ""
+msgstr "Koraci proizvodnje:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:800
 #. i18n: ectx: property (text), widget (QLabel, label_minimize)
 msgid "Minimize?"
-msgstr ""
+msgstr "Minimizirati?"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:821
 #. i18n: ectx: property (text), widget (QLabel, label_minimizeSteps)
 msgid "Max. Minimize Steps:"
-msgstr ""
+msgstr "Maks. Koraci Minimiziranja:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:841
 #. i18n: ectx: property (text), widget (QLabel, label_stateDataOptions)
 msgid "StateData options:"
-msgstr ""
+msgstr "StateData opcije:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:848
 #. i18n: ectx: property (text), widget (QCheckBox, stepIndexCheck)
 msgid "Step Index"
-msgstr ""
+msgstr "Indeks koraka"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
 msgid "Time"
-msgstr ""
+msgstr "Vreme"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:868
 #. i18n: ectx: property (text), widget (QCheckBox, speedCheck)
 msgid "Speed"
-msgstr ""
+msgstr "Brzina"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:878
 #. i18n: ectx: property (text), widget (QCheckBox, progressCheck)
 msgid "Progress"
-msgstr ""
+msgstr "Progres"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:888
 #. i18n: ectx: property (text), widget (QCheckBox, potentialEnergyCheck)
 msgid "Potential Energy"
-msgstr ""
+msgstr "Potencijalna Energija"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:898
 #. i18n: ectx: property (text), widget (QCheckBox, kineticEnergyCheck)
 msgid "Kinetic Energy"
-msgstr ""
+msgstr "Kinetička Energija"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:908
 #. i18n: ectx: property (text), widget (QCheckBox, totalEnergyCheck)
 msgid "Total Energy"
-msgstr "Укупна енергија"
+msgstr "Ukupna Energija"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:928
 #. i18n: ectx: property (text), widget (QCheckBox, volumeCheck)
 msgid "Volume"
-msgstr ""
+msgstr "Zapremina"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
 msgid "Density"
-msgstr ""
+msgstr "Gustina"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
 msgid "PDF Plot Options"
-msgstr ""
+msgstr "Opcije PDF grafikona"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Maximum Radius:"
-msgstr ""
+msgstr "Maksimalni radijus:"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label2)
 msgid "Step (dr):"
-msgstr ""
+msgstr "Korak (dr):"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
 msgid "Theoretical XRD Pattern Options"
-msgstr ""
+msgstr "Opcije teorijskog XRD uzorka"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:17
 #. i18n: ectx: property (toolTip), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
@@ -5798,6 +5806,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
+"<html><head/><body><p>Proširenje vrha u osnovi (u "
+"stepenima).</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -5805,6 +5815,8 @@ msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Maksimalna 2theta vrednost u "
+"stepenima.</p><p>Podrazumevano: 162.00 °</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
@@ -5812,22 +5824,23 @@ msgid ""
 "<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
 "p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Širenje vrhova u osnovi u "
+"stepenima.</p><p>Podrazumevano: 0.52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Number of points:"
-msgstr ""
+msgstr "Broj bodova:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Peak width:"
-msgstr ""
+msgstr "Širina vrha:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Wavelength:"
-msgstr "Таласна дужина (nm)"
+msgstr "Talasna Dužina (nm):"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_wavelength)
@@ -5835,6 +5848,8 @@ msgid ""
 "<html><head/><body><p>The wavelength of the x-ray in Angstroms. </"
 "p><p>Default: 1.50560 Å</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Talasna dužina rendgenskog zraka u Angstromu. "
+"</p><p>Podrazumevano: 1.50560 Å</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:122
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numDataPoints)
@@ -5842,217 +5857,215 @@ msgid ""
 "<html><head/><body><p>The number of 2theta points to generate.</"
 "p><p>Default: 1000</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Broj 2theta poena za generisanje.</p><p>Podrazumevano: "
+"1000</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Max 2*theta:"
-msgstr ""
+msgstr "Max 2*theta:"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
 msgid "Download Selected"
-msgstr ""
+msgstr "Preuzmi Izabrano"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:19
 #. i18n: ectx: property (text), widget (QLabel, atomRadiusLabel)
 msgid "Critical Point Radius:"
-msgstr "Полупречник критичне тачке:"
+msgstr "Poluprečnik kritične tačke:"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, bondRadiusLabel)
 msgid "Bond Path Radius:"
-msgstr "Полупречник путање везе:"
+msgstr "Poluprečnik putanje veze:"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:130
 #. i18n: ectx: property (text), item, widget (QComboBox, combo_radius)
 msgid "Covalent"
-msgstr "Ковалентна"
+msgstr "Kovalentna"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:135
 #. i18n: ectx: property (text), item, widget (QComboBox, combo_radius)
 msgid "Constant Size"
-msgstr "Стална величина"
+msgstr "Stalna Veličina"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 msgid "Opacity:"
-msgstr "Непровидност:"
+msgstr "Neprovidnost:"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Apply Color"
-msgstr ""
+msgstr "Primeni Boju"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
 msgid "Vibrational Modes"
-msgstr ""
+msgstr "Režimi vibracija"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Amplitude:"
-msgstr "Амплитуда:"
+msgstr "Amplituda:"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
-#, fuzzy
 msgid "Start Animation"
-msgstr "Пусти &покретне слике"
+msgstr "Pokreni Animaciju"
 
 #. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
-#, fuzzy
 msgid "Stop Animation"
-msgstr "Заустави &покретне слике"
+msgstr "Zaustavi Animaciju"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
 msgid "Create Surfaces"
-msgstr "Направи површине"
+msgstr "Napravi Površine"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:37
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Surface:"
-msgstr ""
+msgstr "Površina:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
 msgid "alpha"
-msgstr ""
+msgstr "alpha"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
 msgid "beta"
-msgstr ""
+msgstr "beta"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
 msgid "Color by:"
-msgstr "Обој према:"
+msgstr "Oboj prema:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:138
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Resolution:"
-msgstr "Резолуција:"
+msgstr "Rezolucija:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:153
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:170
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 msgid "Medium"
-msgstr "Средња"
+msgstr "Srednja"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:160
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 msgid "Very Low"
-msgstr ""
+msgstr "Veoma niska"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:165
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 msgid "Low"
-msgstr "Ниска"
+msgstr "Niska"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:175
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 msgid "High"
-msgstr "Висока"
+msgstr "Visoka"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:180
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 msgid "Very High"
-msgstr "Врло висока"
+msgstr "Vrlo visoka"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:230
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "Isosurface Value:"
-msgstr "Вредност &исоповрши:"
+msgstr "Vrednost &Isopovršine:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:369
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
 msgid "Calculate"
-msgstr "Израчунај"
+msgstr "Izračunaj"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
 msgid "C<sub>1"
-msgstr ""
+msgstr "C<sub>1"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:42
 #. i18n: ectx: attribute (title), widget (QWidget, esTab)
 msgid "Molecule"
-msgstr "Молекул"
+msgstr "Molekul"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, esLabel)
 msgid "Symmetrically equivalent atoms:"
-msgstr ""
+msgstr "Simetrično ekvivalentni atomi:"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:79
 #. i18n: ectx: property (text), widget (QCheckBox, lockSymmetryCheckBox)
 msgid "Lock Symmetry"
-msgstr ""
+msgstr "Simetrija zaključavanja"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:109
 #. i18n: ectx: attribute (title), widget (QWidget, operationsTab)
 msgid "Operations"
-msgstr ""
+msgstr "Operacije"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:115
 #. i18n: ectx: property (text), widget (QLabel, operationsLabel)
 msgid "Symmetry elements:"
-msgstr ""
+msgstr "Elementi simetrije:"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:145
 #. i18n: ectx: attribute (title), widget (QWidget, subgroupsTab)
 msgid "Subgroups"
-msgstr ""
+msgstr "Podgrupe"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:151
 #. i18n: ectx: property (text), widget (QLabel, subgroupsLabel)
 msgid "Subgroups:"
-msgstr ""
+msgstr "Podgrupe:"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:214
 #. i18n: ectx: property (text), widget (QLabel, toleranceLabel)
 msgid "Tolerance:"
-msgstr "Толеранција:"
+msgstr "Tolerancija:"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:225
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Tight"
-msgstr ""
+msgstr "Usko"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:230
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Normal"
-msgstr "Нормално"
+msgstr "Normalno"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:235
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Loose"
-msgstr ""
+msgstr "Labavo"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:240
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Very Loose"
-msgstr ""
+msgstr "Veoma labavo"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:248
 #. i18n: ectx: property (text), widget (QPushButton, detectSymmetryButton)
 msgid "Detect Symmetry"
-msgstr "Откриј симетрију"
+msgstr "Otkrij Simetriju"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
 msgid "Yaehmop Band"
-msgstr ""
+msgstr "Yaehmop Veza"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:33
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_minY)
 msgid "Min y: "
-msgstr ""
+msgstr "Min y: "
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:36
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_minY)
@@ -6062,7 +6075,7 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_fermi)
 #, fuzzy
 msgid " eV"
-msgstr "eV"
+msgstr " eV"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
@@ -6076,11 +6089,19 @@ msgid ""
 "level is set in the spinbox on the right.</p><p>Default: off</p></body></"
 "html>"
 msgstr ""
+"<html><head/><body><p>Pre nego što označite ovu kućicu, trebalo bi da znate "
+"nivo Fermija. Fermijev nivo možete otkriti tako što ćete izvršiti proračun "
+"gustine stanja i prikazati podatke (on će biti na vrhu podataka). Osim "
+"toga, ako se izvrši proračun gustine stanja, Fermijev nivo će se ovde "
+"automatski postaviti na ono što je otkriveno tokom izračunavanja gustine "
+"stanja.</p><p>Ako je ovo polje označeno, proverite da li je u spinboku sa "
+"desne strane postavljen ispravan nivo Fermija.</p><p>Podrazumevano: "
+"isključeno</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
 msgid "Plot Fermi?"
-msgstr ""
+msgstr "Zaplet Fermi?"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:68
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_zeroFermi)
@@ -6089,31 +6110,34 @@ msgid ""
 "Only available if we are plotting the Fermi level.</p><p><br/></"
 "p><p>Default: off</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Podesiti energije tako da nula bude Fermi? Dostupno "
+"samo ako iscrtavamo nivo Fermija.</p><p><br/></p><p>Podrazumevano: "
+"isključeno</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
 msgid "Zero Fermi?"
-msgstr ""
+msgstr "Nula Fermi?"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:81
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Num k-points connecting special k-points:"
-msgstr ""
+msgstr "Broj k-tačaka koje povezuju posebne k-tačke:"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Special k-points"
-msgstr ""
+msgstr "Posebne k-tačke"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:98
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_maxY)
 msgid "Max y: "
-msgstr ""
+msgstr "Max y: "
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_fermi)
 msgid "<html><head/><body><p>The Fermi Level</p></body></html>"
-msgstr ""
+msgstr "<html><head/><body><p>Nivo Fermija</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:142
 #. i18n: ectx: property (toolTip), widget (QTextEdit, edit_specialKPoints)
@@ -6130,6 +6154,17 @@ msgid ""
 "high symmetry points depending on the lattice (such as if a &gt; b or a &lt; "
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Unesite posebne k-tačke kao takve:</p><p>L 0.5 0.5 0."
+"5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>To je,&lt;symbol&gt; "
+"&lt;x&gt; &lt;y&gt; &lt;z&gt; gde su k, y i z frakcijske koordinate "
+"recipročnog prostora. Linije će biti povučene koje povezuju ove k-tačke na "
+"grafikonu redosledom kojim ste ih uneli. Imajte na umu da orijentacija vaše "
+"ćelije može imati uticaj na lokacije ovih tačaka recipročnog prostora.</"
+"p><p>Ako je svemirska grupa kristala opažena ili postavljena, posebne k "
+"tačke će se automatski popuniti primitivnim ćelijama sa visokom simetrijom "
+"za tu grupu prostora. Postoji nekoliko grupa razmaka sa različitim tačkama "
+"visoke simetrije u zavisnosti od rešetke (na primer ako je a &gt; b ili a "
+"&lt; b)- to se automatski uzima u obzir.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
@@ -6145,6 +6180,16 @@ msgid ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
 "family:'Ubuntu';\">GM 0.0 0.0 0.0</span></p></body></html>"
 msgstr ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
+">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Cantarell'; font-size:11pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">GM 0.0 0.0 0.0</span></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numKPoints)
@@ -6153,6 +6198,9 @@ msgid ""
 "the special k-points. More of these k-points will smooth out the graph, but "
 "the calculation may take longer.</p><p>Default: 40</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Unesite broj k-tačaka koje će povezivati posebne k-"
+"tačke. Više ovih k-tačaka će izravnati grafikon, ali proračun može "
+"potrajati duže.</p><p>Podrazumevano: 40</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
@@ -6160,11 +6208,13 @@ msgid ""
 "<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
 "body></html>"
 msgstr ""
+"<html><head/><body><p>Ograničiti y-raspon na grafikonu?</p><p>Podrazumevano: "
+"isključeno</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)
 msgid "Limit y-range?"
-msgstr ""
+msgstr "Ograničiti y-raspon?"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:188
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -6178,26 +6228,34 @@ msgid ""
 "p><p>If this is set to 3, the material will be periodic along the A, B, and "
 "C vectors of the crystal.</p><p><br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>Broj periodičnih dimenzija.</p><p><br/></p><p>Ako je "
+"ovo podešeno na 1, materijal će biti periodičan samo duž A vektora "
+"kristala.</p><p><br/></p><p>Ako je ovo podešeno na 2, materijal će biti "
+"periodičan duž A i B vektora kristala.</p><p><br/></p><p>Ako je ovo "
+"postavljeno na 3, materijal će biti periodičan duž vektora A, B i C "
+"kristala.</p><p><br/></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Num Dimensions:"
-msgstr ""
+msgstr "Broj dimenzija:"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
 msgid "Display Yaehmop Input?"
-msgstr ""
+msgstr "Prikazati Yaehmop ulaz?"
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-",Доприносиоци на „Launchpad“-у:,Danilo Nusic,Nikola Petković,Иван Старчевић,"
-"Мирослав Николић"
+"Doprinosioci nа „Launchpad“-u:Danilo Nušić,Nikola Petković,Ivan "
+"Starčević,Miroslav Nikolić,Nikola M"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ",,miroslavnikolic@rocketmail.com,,,,ivanstar61@gmail.com,,"
+msgstr ""
+"\"miroslavnikolic@rocketmail.com\",\"ivanstar61@gmail.com\",\"nikolamatic225"
+"@gmail.com\""
 
 #~ msgid "Valence"
 #~ msgstr "Валентност"
