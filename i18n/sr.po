@@ -4,13 +4,14 @@
 # Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012—2016, 2020.
 # Danial K <danial@proctorio.com>, 2021.
 # Nathan <bonnemainsnathan@gmail.com>, 2021.
+# Nikola Matić <nikolamatic225@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-02 05:24+0900\n"
-"PO-Revision-Date: 2021-06-19 13:34+0000\n"
-"Last-Translator: Nathan <bonnemainsnathan@gmail.com>\n"
+"PO-Revision-Date: 2021-08-19 18:59+0000\n"
+"Last-Translator: Nikola Matić <nikolamatic225@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
 "Language: sr\n"
@@ -19,17 +20,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.7\n"
+"X-Generator: Weblate 4.8-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "Пaketni Posao #%L1 (%2)"
 
 #: molequeue/client/client.cpp:245
 msgid "No message specified."
-msgstr ""
+msgstr "Nije navedena poruka."
 
 #: molequeue/inputgenerator.cpp:70 qtgui/interfacescript.cpp:69
 #, qt-format
@@ -38,32 +39,37 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
+"script --print-options izlaz mora biti JSON objekt na najvišem nivou. "
+"Primljen:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:176 qtgui/interfacescript.cpp:206
 #: qtgui/interfacescript.cpp:302
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "Vraćeno je upozorenje bez niza."
 
 #: molequeue/inputgenerator.cpp:179 qtgui/interfacescript.cpp:209
 #: qtgui/interfacescript.cpp:305
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "'upozorenja' član nije niz."
 
 #: molequeue/inputgenerator.cpp:199 qtgui/interfacescript.cpp:325
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "Referentna datoteka '%1' ne postoji."
 
 #: molequeue/inputgenerator.cpp:201 qtgui/interfacescript.cpp:327
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Greška pri popunjavanju datoteke %1: %2"
 
 #: molequeue/inputgenerator.cpp:205 qtgui/interfacescript.cpp:331
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"Datoteka „%1“ je loše formirana. Nedostaju članovi 'contents' ili 'filePath' "
+"stringa."
 
 #: molequeue/inputgenerator.cpp:237 qtgui/interfacescript.cpp:364
 #, qt-format
@@ -71,31 +77,34 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Neispravan unos datoteke: naziv datoteke/sadržaj nedostaju ili ne sadrže "
+"nizove:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:243 qtgui/interfacescript.cpp:370
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "Neispravan unos datoteke u indeksu %1: Nije objekat."
 
 #: molequeue/inputgenerator.cpp:249 qtgui/interfacescript.cpp:376
 msgid "'files' member not an array."
-msgstr ""
+msgstr "'files' član nije niz."
 
 #: molequeue/inputgenerator.cpp:253 qtgui/interfacescript.cpp:380
 msgid "'files' member missing."
-msgstr ""
+msgstr "nedostaje član 'files'."
 
 #: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:391
 msgid "'mainFile' member does not refer to an entry in 'files'."
-msgstr ""
+msgstr "'mainFile' član se ne odnosi na unos u 'files'."
 
 #: molequeue/inputgenerator.cpp:269 qtgui/interfacescript.cpp:396
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "'mainFile' član mora biti string."
 
 #: molequeue/inputgenerator.cpp:280 qtgui/interfacescript.cpp:407
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "Odgovor mora biti JSON objekt na najvišem nivou."
 
 #: molequeue/inputgenerator.cpp:284 qtgui/interfacescript.cpp:411
 #, qt-format
@@ -103,6 +112,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Izlaz skripte:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:327 qtgui/interfacescript.cpp:455
 #, qt-format
@@ -112,17 +123,22 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Greška raščlanjivanja kod pomaka %L1: ' %2'\n"
+"Sirovi JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:351 qtgui/interfacescript.cpp:487
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Greška pri pisanju prikaza molekula u niz: Neprepoznat format datoteke: %1"
 
 #: molequeue/inputgenerator.cpp:359 qtgui/interfacescript.cpp:495
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
-msgstr ""
+msgstr "Greška pri pisanju prikaza molekula u niz: %1"
 
 #: molequeue/inputgenerator.cpp:371 qtgui/interfacescript.cpp:507
 #, qt-format
@@ -132,6 +148,11 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Greška pri generisanju cjson objekta: Greška raščlanjivanja pri pomaku %1: %"
+"2\n"
+"Sirovi JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:380 qtgui/interfacescript.cpp:516
 #, qt-format
@@ -139,19 +160,21 @@ msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
 msgstr ""
+"Generator greške cjson objekt: Raščlanjeni JSON nije objekt:\n"
+"%1"
 
 #: molequeue/inputgeneratordialog.cpp:42
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Generator unosa (greška)"
 
 #: molequeue/inputgeneratordialog.cpp:44
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Input Generator"
-msgstr "Улазни генератор..."
+msgstr "%1 Generator ulaza"
 
 #: molequeue/inputgeneratorwidget.cpp:114
 msgid "Continue"
-msgstr "Настави"
+msgstr "Nastavi"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:127
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
@@ -167,11 +190,11 @@ msgstr "Настави"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:114 qtgui/containerwidget.cpp:47
 msgid "Close"
-msgstr "Затвори"
+msgstr "Zatvori"
 
 #: molequeue/inputgeneratorwidget.cpp:155 qtgui/elementtranslator.cpp:387
 msgid "Unknown"
-msgstr "Непознато"
+msgstr "Nepoznato"
 
 #: molequeue/inputgeneratorwidget.cpp:156
 #, qt-format, qt-plural-format
@@ -191,28 +214,47 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"Sledeci fajl je modifikovan:\n"
+"\n"
+"%1\n"
+"\n"
+"Da li želite da zamenite svoje izmene tako da odražavaju novu geometriju ili "
+"opcije posla?"
 msgstr[1] ""
+"Sledeci fajlovi su modifikovani:\n"
+"\n"
+"%1\n"
+"\n"
+"Da li želite da zamenite svoje izmene tako da odražavaju novu geometriju ili "
+"opcije posla?"
+msgstr[2] ""
+"Sledeci fajlovi su modifikovani:\n"
+"\n"
+"%1\n"
+"\n"
+"Da li želite da zamenite svoje izmene tako da odražavaju novu geometriju ili "
+"opcije posla?"
 
 #: molequeue/inputgeneratorwidget.cpp:162
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:159
 #: qtplugins/openmminput/openmminputdialog.cpp:216
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Želite li da zamenite izmenjene ulazne datoteke?"
 
 #: molequeue/inputgeneratorwidget.cpp:188
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Došlo je do problema tokom generisanja ulaza:"
 
 #: molequeue/inputgeneratorwidget.cpp:277
 msgid "No input files to save!"
-msgstr ""
+msgstr "Nema ulaznih datoteka za čuvanje!"
 
 #: molequeue/inputgeneratorwidget.cpp:285
 #: molequeue/inputgeneratorwidget.cpp:603 molequeue/molequeuewidget.cpp:70
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:988
 #: qtplugins/gamessinput/gamessinputdialog.cpp:697
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Nije moguće povezati se sa MoleQueue"
 
 #: molequeue/inputgeneratorwidget.cpp:286
 #: molequeue/inputgeneratorwidget.cpp:604 molequeue/molequeuewidget.cpp:71
@@ -222,53 +264,57 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Nije moguće povezati se sa serverom MoleQueue. Uverite se da radi i "
+"pokušajte ponovo."
 
 #: molequeue/inputgeneratorwidget.cpp:318
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Predloži %1 proračun"
 
 #: molequeue/inputgeneratorwidget.cpp:334
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1025
 #: qtplugins/gamessinput/gamessinputdialog.cpp:734
 msgid "Job Failed"
-msgstr ""
+msgstr "Posao nije uspeo"
 
 #: molequeue/inputgeneratorwidget.cpp:335
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1026
 #: qtplugins/gamessinput/gamessinputdialog.cpp:735
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Posao nije uspešno završen."
 
 #: molequeue/inputgeneratorwidget.cpp:352 qtgui/interfacewidget.cpp:68
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Skripta vraća upozorenja:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:369
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "Sakrij i upozorenja"
 
 #: molequeue/inputgeneratorwidget.cpp:375
 msgid "Show &Warnings"
-msgstr ""
+msgstr "Prikaži i upozorenja"
 
 #: molequeue/inputgeneratorwidget.cpp:392 qtgui/interfacewidget.cpp:84
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Došlo je do greške:"
 
 #: molequeue/inputgeneratorwidget.cpp:443
 msgid "Select output filename"
-msgstr ""
+msgstr "Odaberite naziv izlazne datoteke"
 
 #: molequeue/inputgeneratorwidget.cpp:458
 #, qt-format
 msgid "%1: File exists and is not writable."
-msgstr ""
+msgstr "%1: Datoteka postoji i nije za pisanje."
 
 #: molequeue/inputgeneratorwidget.cpp:464
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
+"Interna greška: nije moguće pronaći tekstualni vidžet za naziv datoteke "
+"'%1'"
 
 #: molequeue/inputgeneratorwidget.cpp:480
 #: molequeue/inputgeneratorwidget.cpp:591
@@ -281,7 +327,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:464
 #: qtplugins/openmminput/openmminputdialog.cpp:478
 msgid "Output Error"
-msgstr ""
+msgstr "Izlazna Greška"
 
 #: molequeue/inputgeneratorwidget.cpp:481
 #: molequeue/inputgeneratorwidget.cpp:592
@@ -293,27 +339,27 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:479
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Zapisivanje u datoteku %1 nije uspelo."
 
 #: molequeue/inputgeneratorwidget.cpp:492
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:255
 #: qtplugins/openmminput/openmminputdialog.cpp:353
 msgid "Select output directory"
-msgstr ""
+msgstr "Izaberite izlazni direktorijum"
 
 #: molequeue/inputgeneratorwidget.cpp:509
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:270
 #: qtplugins/openmminput/openmminputdialog.cpp:368
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "%1: Direktorijum ne postoji!"
 
 #: molequeue/inputgeneratorwidget.cpp:515
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:276
 #: qtplugins/openmminput/openmminputdialog.cpp:374
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: Direktorijum se ne može čitati!"
 
 #: molequeue/inputgeneratorwidget.cpp:525
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:284
@@ -322,7 +368,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:397
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: Datoteka će biti prepisana."
 
 #: molequeue/inputgeneratorwidget.cpp:530
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:291
@@ -331,13 +377,13 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: Datoteka nije za pisanje."
 
 #: molequeue/inputgeneratorwidget.cpp:543
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:318
 #: qtplugins/openmminput/openmminputdialog.cpp:416
 msgid "The input files cannot be written due to an unknown error."
-msgstr ""
+msgstr "Ulazne datoteke se ne mogu upisati zbog nepoznate greške."
 
 #: molequeue/inputgeneratorwidget.cpp:547
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:322
@@ -348,6 +394,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Ulazne datoteke se ne mogu zapisati:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:556
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:331
@@ -362,6 +411,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Ulazne datoteke se ne mogu zapisati:\n"
+"\n"
+"%1\n"
+"\n"
+"Upozorenja:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:567
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:342
@@ -374,35 +430,40 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Upozorenje:\n"
+"\n"
+"%1\n"
+"\n"
+"Da li želite da nastavite?"
 
 #: molequeue/inputgeneratorwidget.cpp:571
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:346
 #: qtplugins/openmminput/openmminputdialog.cpp:444
 msgid "Write input files"
-msgstr ""
+msgstr "Zapišite ulazne datoteke"
 
 #: molequeue/inputgeneratorwidget.cpp:618
 msgid "Configure Job"
-msgstr ""
+msgstr "Konfigurišite posao"
 
 #: molequeue/inputgeneratorwidget.cpp:643 qtgui/interfacewidget.cpp:113
 msgid "'userOptions' missing, or not an object."
-msgstr ""
+msgstr "'userOptions' nedostaje ili nije objekt."
 
 #: molequeue/inputgeneratorwidget.cpp:650 qtgui/interfacewidget.cpp:120
 #, qt-format
 msgid "Option '%1' not found in userOptions."
-msgstr ""
+msgstr "Opcija „%1“ nije pronađena u userOptions."
 
 #: molequeue/inputgeneratorwidget.cpp:655 qtgui/interfacewidget.cpp:125
 #, qt-format
 msgid "Option '%1' does not refer to an object."
-msgstr ""
+msgstr "Opcija '%1' se ne odnosi na objekat."
 
 #: molequeue/inputgeneratorwidget.cpp:662 qtgui/interfacewidget.cpp:133
 #, qt-format
 msgid "'type' is not a string for option '%1'."
-msgstr ""
+msgstr "'tzpe' nije niz za opciju '%1'."
 
 #: molequeue/inputgeneratorwidget.cpp:693
 #: molequeue/inputgeneratorwidget.cpp:920
@@ -411,60 +472,61 @@ msgid ""
 "'userOptions' missing, or not an object:\n"
 "%1"
 msgstr ""
+"'userOptions' nedostaje ili nije objekt:\n"
+"%1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
 #: molequeue/inputgeneratorwidget.cpp:702 qtgui/interfacewidget.cpp:169
 msgid "Title"
-msgstr "Наслов"
+msgstr "Naslov"
 
 #: molequeue/inputgeneratorwidget.cpp:706 qtgui/interfacewidget.cpp:173
 msgid "Filename Base"
-msgstr ""
+msgstr "Baza imena datoteka"
 
 #: molequeue/inputgeneratorwidget.cpp:710 qtgui/interfacewidget.cpp:178
 msgid "Processor Cores"
-msgstr ""
+msgstr "Jezgra Procesora"
 
 #: molequeue/inputgeneratorwidget.cpp:714 qtgui/interfacewidget.cpp:183
 msgid "Calculation Type"
-msgstr ""
+msgstr "Vrsta proračuna"
 
 #: molequeue/inputgeneratorwidget.cpp:735 qtgui/interfacewidget.cpp:207
 msgid "Theory:"
-msgstr "Теорија:"
+msgstr "Teorija:"
 
 #: molequeue/inputgeneratorwidget.cpp:738 qtgui/interfacewidget.cpp:210
-#, fuzzy
 msgid "Theory"
-msgstr "Теорија:"
+msgstr "Теорија"
 
 #: molequeue/inputgeneratorwidget.cpp:740 qtgui/interfacewidget.cpp:212
 msgid "Basis"
-msgstr "Основно"
+msgstr "Osnovno"
 
 #: molequeue/inputgeneratorwidget.cpp:745 qtgui/interfacewidget.cpp:217
 msgid "Charge"
-msgstr "Наелектрисање"
+msgstr "Naelektrisanje"
 
 #: molequeue/inputgeneratorwidget.cpp:747 qtgui/interfacewidget.cpp:219
 msgid "Multiplicity"
-msgstr "Вишеструкост"
+msgstr "Višestrukost"
 
 #: molequeue/inputgeneratorwidget.cpp:934 qtgui/interfacewidget.cpp:453
 #, qt-format
 msgid "Error: value must be object for key '%1'."
-msgstr ""
+msgstr "Greška: vrednost mora biti objekat za ključ '%1'."
 
 #: molequeue/inputgeneratorwidget.cpp:942 qtgui/interfacewidget.cpp:461
 #, qt-format
 msgid "Default value missing for option '%1'."
-msgstr ""
+msgstr "Podrazumevana vrednost nedostaje za opciju „%1“."
 
 #: molequeue/inputgeneratorwidget.cpp:963 qtgui/interfacewidget.cpp:484
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
-msgstr ""
+msgstr "Neprepoznat tip opcije „%1“ za opciju „%2“."
 
 #: molequeue/inputgeneratorwidget.cpp:972
 #: molequeue/inputgeneratorwidget.cpp:1009
@@ -476,7 +538,7 @@ msgstr ""
 #: qtgui/interfacewidget.cpp:622
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
-msgstr ""
+msgstr "Greška pri podešavanju podrazumevane opcije „%1“. Loš tip vidžeta."
 
 #: molequeue/inputgeneratorwidget.cpp:979
 #: molequeue/inputgeneratorwidget.cpp:1016
@@ -489,6 +551,8 @@ msgstr ""
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
+"Greška pri podešavanju podrazumevane opcije „%1“. Loša podrazumevana "
+"vrednost:"
 
 #: molequeue/inputgeneratorwidget.cpp:993 qtgui/interfacewidget.cpp:514
 #, qt-format
@@ -496,623 +560,625 @@ msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
+"Greška pri podešavanju podrazumevane opcije „%1“. Nije moguće pronaći "
+"važeći indeks kombinovanog unosa iz vrednosti:"
 
 #: molequeue/inputgeneratorwidget.cpp:1145 qtgui/interfacewidget.cpp:691
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
-msgstr ""
+msgstr "Nedozvoljeni vidžet u collectOptions za opciju '%1'."
 
 #: molequeue/inputgeneratorwidget.cpp:1187 qtgui/interfacewidget.cpp:726
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:467
 #: qtplugins/gamessinput/gamessinputdialog.cpp:407
-#, fuzzy
 msgid "[no molecule]"
-msgstr "Није подешен молекул"
+msgstr "Nije podešen molekul"
 
 #: molequeue/molequeuedialog.cpp:58
 msgid "Submitting job to MoleQueue..."
-msgstr ""
+msgstr "Slanje posla u MoleQueue..."
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Vremensko ograničenje za predaju posla"
 
 #: molequeue/molequeuedialog.cpp:68
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Avogadro je istekao čekajući na odgovor od MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:84
 #, qt-format
 msgid "Waiting for job %1 '%2' to finish..."
-msgstr ""
+msgstr "Čeka se završetak posla %1 ' %2' ..."
 
 #: molequeue/molequeuedialog.cpp:87
 msgid "Stop waiting"
-msgstr ""
+msgstr "Prestani čekati"
 
 #: molequeue/molequeuedialog.cpp:106
 msgid "Fetching completed job information..."
-msgstr ""
+msgstr "Preuzimanje završenih informacija o poslu..."
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Vremensko ograničenje za pronalaženje posla"
 
 #: molequeue/molequeuedialog.cpp:119
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
+"Avogadro je istekao u čekanju na detalje o završenom poslu iz MoleQueue -a."
 
 #: molequeue/molequeuedialog.cpp:128
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Greška pri predaji posla"
 
 #: molequeue/molequeuedialog.cpp:129
 #, qt-format
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "MoleQueue je odbio posao: %1"
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "No program selected."
-msgstr ""
+msgstr "Nije izabran nijedan program."
 
 #: molequeue/molequeuedialog.cpp:197 molequeue/molequeuewidget.cpp:143
 msgid "Please select the target program from the \"Queue and Program\" list."
-msgstr ""
+msgstr "Molimo izaberite željeni program sa liste „Red i program“."
 
 #: molequeue/molequeuewidget.cpp:98
 msgid "Client failed to submit job to MoleQueue."
-msgstr ""
+msgstr "Klijent nije uspeo da pošalje posao u MoleQueue."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Internal error."
-msgstr ""
+msgstr "Unutrašnja greška."
 
 #: molequeue/molequeuewidget.cpp:152
 msgid "Unable to resolve program selection. This is a bug."
-msgstr ""
+msgstr "Nije moguće rešiti izbor programa. Ovo je greška."
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr "Није постављен молекул у „Формату_датотеке_позадине“!"
+msgstr "Nijedan molekul nije postavljen u BackgroundFileFormat -u!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr "Није постављен „Io::Формат_датотеке“ у „Формату_датотеке_позадине“!"
+msgstr "Nije postavljen „Io::FileFormat“ u „BackgroundFileFormat“-u!"
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr "Није постављен назив датотеке у „Формату_датотеке_позадине“!"
+msgstr "U BackgroundFileFormat -u nije postavljeno ime datoteke!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
-msgstr ""
+msgstr "Podeli Horizontalno"
 
 #: qtgui/containerwidget.cpp:44
 msgid "Split Vertical"
-msgstr ""
+msgstr "Podeli Vertikalno"
 
 #: qtgui/elementtranslator.cpp:32
 msgid "Hydrogen"
-msgstr "Водоник"
+msgstr "Vodonik"
 
 #: qtgui/elementtranslator.cpp:35
 msgid "Helium"
-msgstr "Хелијум"
+msgstr "Helijum"
 
 #: qtgui/elementtranslator.cpp:38
 msgid "Lithium"
-msgstr "Литијум"
+msgstr "Litijum"
 
 #: qtgui/elementtranslator.cpp:41
 msgid "Beryllium"
-msgstr "Берилијум"
+msgstr "Berilijum"
 
 #: qtgui/elementtranslator.cpp:44
 msgid "Boron"
-msgstr "Бор"
+msgstr "Bor"
 
 #: qtgui/elementtranslator.cpp:47
 msgid "Carbon"
-msgstr "Угљеник"
+msgstr "Ugljenik"
 
 #: qtgui/elementtranslator.cpp:50
 msgid "Nitrogen"
-msgstr "Азот"
+msgstr "Azot"
 
 #: qtgui/elementtranslator.cpp:53
 msgid "Oxygen"
-msgstr "Кисеоник"
+msgstr "Kiseonik"
 
 #: qtgui/elementtranslator.cpp:56
 msgid "Fluorine"
-msgstr "Флуор"
+msgstr "Flor"
 
 #: qtgui/elementtranslator.cpp:59
 msgid "Neon"
-msgstr "Неон"
+msgstr "Neon"
 
 #: qtgui/elementtranslator.cpp:62
 msgid "Sodium"
-msgstr "Натријум"
+msgstr "Natrijum"
 
 #: qtgui/elementtranslator.cpp:65
 msgid "Magnesium"
-msgstr "Магнезијум"
+msgstr "Magnezijum"
 
 #: qtgui/elementtranslator.cpp:68
 msgid "Aluminum"
-msgstr "Алуминијум"
+msgstr "Aluminijum"
 
 #: qtgui/elementtranslator.cpp:71
 msgid "Silicon"
-msgstr "Силицијум"
+msgstr "Silicijum"
 
 #: qtgui/elementtranslator.cpp:74
 msgid "Phosphorus"
-msgstr "Фосфор"
+msgstr "Fosfor"
 
 #: qtgui/elementtranslator.cpp:77
 msgid "Sulfur"
-msgstr "Сумпор"
+msgstr "Sumpor"
 
 #: qtgui/elementtranslator.cpp:80
 msgid "Chlorine"
-msgstr "Хлор"
+msgstr "Hlor"
 
 #: qtgui/elementtranslator.cpp:83
 msgid "Argon"
-msgstr "Аргон"
+msgstr "Argon"
 
 #: qtgui/elementtranslator.cpp:86
 msgid "Potassium"
-msgstr "Калијум"
+msgstr "Kalijum"
 
 #: qtgui/elementtranslator.cpp:89
 msgid "Calcium"
-msgstr "Калцијум"
+msgstr "Kalcijum"
 
 #: qtgui/elementtranslator.cpp:92
 msgid "Scandium"
-msgstr "Скандијум"
+msgstr "Skandijum"
 
 #: qtgui/elementtranslator.cpp:95
 msgid "Titanium"
-msgstr "Титанијум"
+msgstr "Titanijum"
 
 #: qtgui/elementtranslator.cpp:98
 msgid "Vanadium"
-msgstr "Ванадијум"
+msgstr "Vanadijum"
 
 #: qtgui/elementtranslator.cpp:101
 msgid "Chromium"
-msgstr "Хром"
+msgstr "Hrom"
 
 #: qtgui/elementtranslator.cpp:104
 msgid "Manganese"
-msgstr "Манган"
+msgstr "Mangan"
 
 #: qtgui/elementtranslator.cpp:107
 msgid "Iron"
-msgstr "Гвожђе"
+msgstr "Gvožđe"
 
 #: qtgui/elementtranslator.cpp:110
 msgid "Cobalt"
-msgstr "Кобалт"
+msgstr "Kobalt"
 
 #: qtgui/elementtranslator.cpp:113
 msgid "Nickel"
-msgstr "Никал"
+msgstr "Nikl"
 
 #: qtgui/elementtranslator.cpp:116
 msgid "Copper"
-msgstr "Бакар"
+msgstr "Bakar"
 
 #: qtgui/elementtranslator.cpp:119
 msgid "Zinc"
-msgstr "Цинк"
+msgstr "Cink"
 
 #: qtgui/elementtranslator.cpp:122
 msgid "Gallium"
-msgstr "Галијум"
+msgstr "Galijum"
 
 #: qtgui/elementtranslator.cpp:125
 msgid "Germanium"
-msgstr "Германијум"
+msgstr "Germanijum"
 
 #: qtgui/elementtranslator.cpp:128
 msgid "Arsenic"
-msgstr "Арсен"
+msgstr "Arsen"
 
 #: qtgui/elementtranslator.cpp:131
 msgid "Selenium"
-msgstr "Селен"
+msgstr "Selen"
 
 #: qtgui/elementtranslator.cpp:134
 msgid "Bromine"
-msgstr "Бром"
+msgstr "Brom"
 
 #: qtgui/elementtranslator.cpp:137
 msgid "Krypton"
-msgstr "Криптон"
+msgstr "Kripton"
 
 #: qtgui/elementtranslator.cpp:140
 msgid "Rubidium"
-msgstr "Рубидијум"
+msgstr "Rubidijum"
 
 #: qtgui/elementtranslator.cpp:143
 msgid "Strontium"
-msgstr "Стронцијум"
+msgstr "Stroncijum"
 
 #: qtgui/elementtranslator.cpp:146
 msgid "Yttrium"
-msgstr "Итријум"
+msgstr "Itrijum"
 
 #: qtgui/elementtranslator.cpp:149
 msgid "Zirconium"
-msgstr "Цирконијум"
+msgstr "Cirkonijum"
 
 #: qtgui/elementtranslator.cpp:152
 msgid "Niobium"
-msgstr "Ниобијум"
+msgstr "Niobijum"
 
 #: qtgui/elementtranslator.cpp:155
 msgid "Molybdenum"
-msgstr "Молибден"
+msgstr "Molibden"
 
 #: qtgui/elementtranslator.cpp:158
 msgid "Technetium"
-msgstr "Техницијум"
+msgstr "Tehnecijum"
 
 #: qtgui/elementtranslator.cpp:161
 msgid "Ruthenium"
-msgstr "Рутенијум"
+msgstr "Rutenijum"
 
 #: qtgui/elementtranslator.cpp:164
 msgid "Rhodium"
-msgstr "Родијум"
+msgstr "Rodijum"
 
 #: qtgui/elementtranslator.cpp:167
 msgid "Palladium"
-msgstr "Паладијум"
+msgstr "Paladijum"
 
 #: qtgui/elementtranslator.cpp:170
 msgid "Silver"
-msgstr "Сребро"
+msgstr "Srebro"
 
 #: qtgui/elementtranslator.cpp:173
 msgid "Cadmium"
-msgstr "Кадмијум"
+msgstr "Kadmijum"
 
 #: qtgui/elementtranslator.cpp:176
 msgid "Indium"
-msgstr "Индијум"
+msgstr "Indijum"
 
 #: qtgui/elementtranslator.cpp:179
 msgid "Tin"
-msgstr "Калај"
+msgstr "Kalaj"
 
 #: qtgui/elementtranslator.cpp:182
 msgid "Antimony"
-msgstr "Антимон"
+msgstr "Antimon"
 
 #: qtgui/elementtranslator.cpp:185
 msgid "Tellurium"
-msgstr "Телур"
+msgstr "Telur"
 
 #: qtgui/elementtranslator.cpp:188
 msgid "Iodine"
-msgstr "Јод"
+msgstr "Jod"
 
 #: qtgui/elementtranslator.cpp:191
 msgid "Xenon"
-msgstr "Ксенон"
+msgstr "Ksenon"
 
 #: qtgui/elementtranslator.cpp:194
 msgid "Cesium"
-msgstr "Цезијум"
+msgstr "Cesijum"
 
 #: qtgui/elementtranslator.cpp:197
 msgid "Barium"
-msgstr "Баријум"
+msgstr "Barijum"
 
 #: qtgui/elementtranslator.cpp:200
 msgid "Lanthanum"
-msgstr "Лантан"
+msgstr "Lantan"
 
 #: qtgui/elementtranslator.cpp:203
 msgid "Cerium"
-msgstr "Церијум"
+msgstr "Cerijum"
 
 #: qtgui/elementtranslator.cpp:206
 msgid "Praseodymium"
-msgstr "Празеодијум"
+msgstr "Prazeodijum"
 
 #: qtgui/elementtranslator.cpp:209
 msgid "Neodymium"
-msgstr "Неодијум"
+msgstr "Neodijum"
 
 #: qtgui/elementtranslator.cpp:212
 msgid "Promethium"
-msgstr "Прометијум"
+msgstr "Prometijum"
 
 #: qtgui/elementtranslator.cpp:215
 msgid "Samarium"
-msgstr "Самаријум"
+msgstr "Samarijum"
 
 #: qtgui/elementtranslator.cpp:218
 msgid "Europium"
-msgstr "Еуропијум"
+msgstr "Europijum"
 
 #: qtgui/elementtranslator.cpp:221
 msgid "Gadolinium"
-msgstr "Гадолинијум"
+msgstr "Gadolinijum"
 
 #: qtgui/elementtranslator.cpp:224
 msgid "Terbium"
-msgstr "Тербијум"
+msgstr "Terbijum"
 
 #: qtgui/elementtranslator.cpp:227
 msgid "Dysprosium"
-msgstr "Диспрозијум"
+msgstr "Disprozijum"
 
 #: qtgui/elementtranslator.cpp:230
 msgid "Holmium"
-msgstr "Холмијум"
+msgstr "Holmijum"
 
 #: qtgui/elementtranslator.cpp:233
 msgid "Erbium"
-msgstr "Ербијум"
+msgstr "Erbijum"
 
 #: qtgui/elementtranslator.cpp:236
 msgid "Thulium"
-msgstr "Тулијум"
+msgstr "Tulijum"
 
 #: qtgui/elementtranslator.cpp:239
 msgid "Ytterbium"
-msgstr "Итербијум"
+msgstr "Iterbijum"
 
 #: qtgui/elementtranslator.cpp:242
 msgid "Lutetium"
-msgstr "Лутецијум"
+msgstr "Lutecijum"
 
 #: qtgui/elementtranslator.cpp:245
 msgid "Hafnium"
-msgstr "Хафнијум"
+msgstr "Hafnijum"
 
 #: qtgui/elementtranslator.cpp:248
 msgid "Tantalum"
-msgstr "Танталијум"
+msgstr "Tantalijum"
 
 #: qtgui/elementtranslator.cpp:251
 msgid "Tungsten"
-msgstr "Волфрам"
+msgstr "Volfram"
 
 #: qtgui/elementtranslator.cpp:254
 msgid "Rhenium"
-msgstr "Ренијум"
+msgstr "Renijum"
 
 #: qtgui/elementtranslator.cpp:257
 msgid "Osmium"
-msgstr "Осмијум"
+msgstr "Osmijum"
 
 #: qtgui/elementtranslator.cpp:260
 msgid "Iridium"
-msgstr "Иридијум"
+msgstr "Iridijum"
 
 #: qtgui/elementtranslator.cpp:263
 msgid "Platinum"
-msgstr "Платина"
+msgstr "Platina"
 
 #: qtgui/elementtranslator.cpp:266
 msgid "Gold"
-msgstr "Злато"
+msgstr "Zlato"
 
 #: qtgui/elementtranslator.cpp:269
 msgid "Mercury"
-msgstr "Жива"
+msgstr "Živa"
 
 #: qtgui/elementtranslator.cpp:272
 msgid "Thallium"
-msgstr "Талијум"
+msgstr "Talijum"
 
 #: qtgui/elementtranslator.cpp:275
 msgid "Lead"
-msgstr "Олово"
+msgstr "Olovo"
 
 #: qtgui/elementtranslator.cpp:278
 msgid "Bismuth"
-msgstr "Бизмут"
+msgstr "Bizmut"
 
 #: qtgui/elementtranslator.cpp:281
 msgid "Polonium"
-msgstr "Полонијум"
+msgstr "Polonijum"
 
 #: qtgui/elementtranslator.cpp:284
 msgid "Astatine"
-msgstr "Астат"
+msgstr "Astat"
 
 #: qtgui/elementtranslator.cpp:287
 msgid "Radon"
-msgstr "Радон"
+msgstr "Radon"
 
 #: qtgui/elementtranslator.cpp:290
 msgid "Francium"
-msgstr "Францијум"
+msgstr "Francijum"
 
 #: qtgui/elementtranslator.cpp:293
 msgid "Radium"
-msgstr "Радијум"
+msgstr "Radijum"
 
 #: qtgui/elementtranslator.cpp:296
 msgid "Actinium"
-msgstr "Актинијум"
+msgstr "Aktinijum"
 
 #: qtgui/elementtranslator.cpp:299
 msgid "Thorium"
-msgstr "Торијум"
+msgstr "Torijum"
 
 #: qtgui/elementtranslator.cpp:302
 msgid "Protactinium"
-msgstr "Протактинијум"
+msgstr "Protaktinijum"
 
 #: qtgui/elementtranslator.cpp:305
 msgid "Uranium"
-msgstr "Уранијум"
+msgstr "Uranijum"
 
 #: qtgui/elementtranslator.cpp:308
 msgid "Neptunium"
-msgstr "Нептунијум"
+msgstr "Neptunijum"
 
 #: qtgui/elementtranslator.cpp:311
 msgid "Plutonium"
-msgstr "Плутонијум"
+msgstr "Plutonijum"
 
 #: qtgui/elementtranslator.cpp:314
 msgid "Americium"
-msgstr "Америцијум"
+msgstr "Americijum"
 
 #: qtgui/elementtranslator.cpp:317
 msgid "Curium"
-msgstr "Киријум"
+msgstr "Kirijum"
 
 #: qtgui/elementtranslator.cpp:320
 msgid "Berkelium"
-msgstr "Берклијум"
+msgstr "Berklijum"
 
 #: qtgui/elementtranslator.cpp:323
 msgid "Californium"
-msgstr "Калифорнијум"
+msgstr "Kalifornijum"
 
 #: qtgui/elementtranslator.cpp:326
 msgid "Einsteinium"
-msgstr "Ајнштајнијум"
+msgstr "Ajnštajnijum"
 
 #: qtgui/elementtranslator.cpp:329
 msgid "Fermium"
-msgstr "Фермијум"
+msgstr "Fermijum"
 
 #: qtgui/elementtranslator.cpp:332
 msgid "Mendelevium"
-msgstr "Мендељејевиум"
+msgstr "Mendeljevium"
 
 #: qtgui/elementtranslator.cpp:335
 msgid "Nobelium"
-msgstr "Нобелијум"
+msgstr "Nobelijum"
 
 #: qtgui/elementtranslator.cpp:338
 msgid "Lawrencium"
-msgstr "Лоренцијум"
+msgstr "Lorencijum"
 
 #: qtgui/elementtranslator.cpp:341
 msgid "Rutherfordium"
-msgstr "Радефордијум"
+msgstr "Radefordijum"
 
 #: qtgui/elementtranslator.cpp:344
 msgid "Dubnium"
-msgstr "Дубнијум"
+msgstr "Dubnijum"
 
 #: qtgui/elementtranslator.cpp:347
 msgid "Seaborgium"
-msgstr "Сиборгијум"
+msgstr "Siborgijum"
 
 #: qtgui/elementtranslator.cpp:350
 msgid "Bohrium"
-msgstr "Боријум"
+msgstr "Borijum"
 
 #: qtgui/elementtranslator.cpp:353
 msgid "Hassium"
-msgstr "Хасијум"
+msgstr "Hasijum"
 
 #: qtgui/elementtranslator.cpp:356
 msgid "Meitnerium"
-msgstr "Митнеријум"
+msgstr "Mitnerijum"
 
 #: qtgui/elementtranslator.cpp:359
 msgid "Darmstadtium"
-msgstr "Дармштатијум"
+msgstr "Darmštatijum"
 
 #: qtgui/elementtranslator.cpp:362
 msgid "Roentgenium"
-msgstr "Рентгенијум"
+msgstr "Rentgenijum"
 
 #: qtgui/elementtranslator.cpp:365
 msgid "Copernicium"
-msgstr "Коперницијум"
+msgstr "Kopernicijum"
 
 #: qtgui/elementtranslator.cpp:368
 msgid "Nihonium"
-msgstr "Нихонијум"
+msgstr "Nihonijum"
 
 #: qtgui/elementtranslator.cpp:371
 msgid "Flerovium"
-msgstr "Флеровијум"
+msgstr "Flerovijum"
 
 #: qtgui/elementtranslator.cpp:374
 msgid "Moscovium"
-msgstr "Московијум"
+msgstr "Moskovijum"
 
 #: qtgui/elementtranslator.cpp:377
 msgid "Livermorium"
-msgstr "Ливерморијум"
+msgstr "Livermorijum"
 
 #: qtgui/elementtranslator.cpp:380
 msgid "Tennessine"
-msgstr "Тенесин"
+msgstr "Tenesin"
 
 #: qtgui/elementtranslator.cpp:383
 msgid "Oganesson"
-msgstr "Оганесон"
+msgstr "Oganeson"
 
 #: qtgui/filebrowsewidget.cpp:39
-#, fuzzy
 msgid "Browse"
-msgstr "Разгледај..."
+msgstr "Razgledaj..."
 
 #: qtgui/filebrowsewidget.cpp:113
 msgid "Select file:"
-msgstr ""
+msgstr "Izaberi fajl:"
 
 #: qtgui/filebrowsewidget.cpp:116
 msgid "Select executable:"
-msgstr ""
+msgstr "Izaberite izvršnu datoteku:"
 
 #: qtgui/fileformatdialog.cpp:65
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
+"Nije moguće pronaći odgovarajući čitač datoteka za izabranu datoteku."
 
 #: qtgui/fileformatdialog.cpp:109
 msgid "Unable to find a suitable file writer for the selected format."
-msgstr ""
+msgstr "Nije moguće pronaći odgovarajući pisač datoteka za izabrani format."
 
 #: qtgui/fileformatdialog.cpp:156
 msgctxt "File handlers"
 msgid "handlers"
-msgstr ""
+msgstr "manipulatori"
 
 #: qtgui/fileformatdialog.cpp:157
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
-msgstr ""
+msgstr "manipulator"
 
 #: qtgui/fileformatdialog.cpp:161
 msgctxt "File readers"
 msgid "readers"
-msgstr ""
+msgstr "čitači"
 
 #: qtgui/fileformatdialog.cpp:162
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
-msgstr ""
+msgstr "čitaj"
 
 #: qtgui/fileformatdialog.cpp:166
 msgctxt "File writers"
 msgid "writers"
-msgstr ""
+msgstr "pisači"
 
 #: qtgui/fileformatdialog.cpp:167
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
-msgstr ""
+msgstr "piši"
 
 #: qtgui/fileformatdialog.cpp:172
 #, qt-format
