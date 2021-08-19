@@ -224,11 +224,15 @@ void QuantumInput::updateActions()
     QStringList scripts = m_inputGeneratorScripts.values(programName);
     // Include the full path if there are multiple generators with the same
     // name.
+    QString label = programName;
+    if (!label.endsWith("..."))
+      label.append("...");
+
     if (scripts.size() == 1) {
-      addAction(programName, scripts.first());
+      addAction(label, scripts.first());
     } else {
       foreach (const QString& filePath, scripts) {
-        addAction(QString("%1 (%2)").arg(programName, filePath), filePath);
+        addAction(QString("%1 (%2)").arg(label, filePath), filePath);
       }
     }
   }
