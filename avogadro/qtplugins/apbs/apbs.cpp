@@ -40,12 +40,12 @@ Apbs::Apbs(QObject* parent_)
     m_progressDialog(nullptr), m_dialog(nullptr)
 {
   QAction* action = new QAction(this);
-  action->setText(tr("Run APBS"));
+  action->setText(tr("Run APBS..."));
   connect(action, SIGNAL(triggered()), this, SLOT(onRunApbs()));
   m_actions.append(action);
 
   action = new QAction(this);
-  action->setText(tr("Open Output File"));
+  action->setText(tr("Open Output File..."));
   connect(action, SIGNAL(triggered()), this, SLOT(onOpenOutputFile()));
   m_actions.append(action);
 }
