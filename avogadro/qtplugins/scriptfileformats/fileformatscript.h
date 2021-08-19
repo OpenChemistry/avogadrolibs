@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_FILEFORMATSCRIPT_H
@@ -72,7 +61,7 @@ namespace QtPlugins {
  *   `"cjson"`, or `"xyz"`. See the `--write` documentation for more detail.
  * - `outputFormat` indicates the format that the script can convert to from the
  *   implemented format by the `--read` command. Allowed values are `"cml"`,
- *   `"cjson"`, or `"xyz"`. See the `--read` documentation for more detail.
+ *   `"cjson"`, `"sdf"`, `"pdb"` or `"xyz"`. See the `--read` documentation for more detail.
  * - `operations` specifies the scripts capabilies. The array should contain
  *   `"read"` if the script implements the `--read` option, and/or `"write"` if
  *   `--write` is available.
@@ -88,6 +77,8 @@ namespace QtPlugins {
  *   format supports.
  * - `mimeTypes` is an array specifying the mime types that this format
  *   supports.
+ * - `bond` is a boolean indicating whether the format expects Avogadro
+ *   to perceive bonds after reading the file.
  *
  * Required members are
  * - `operations`
@@ -127,6 +118,8 @@ public:
     NotUsed,
     Cjson,
     Cml,
+    Mdl,
+    Pdb,
     Xyz
   };
 
@@ -176,6 +169,7 @@ private:
 private:
   QtGui::PythonScript* m_interpreter;
   bool m_valid;
+  bool m_bondOnRead;
   Operations m_operations;
   Format m_inputFormat;
   Format m_outputFormat;

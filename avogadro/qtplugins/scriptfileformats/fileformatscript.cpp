@@ -1,25 +1,17 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "fileformatscript.h"
 
+#include <avogadro/core/molecule.h>
 #include <avogadro/qtgui/pythonscript.h>
 
 #include <avogadro/io/cjsonformat.h>
 #include <avogadro/io/cmlformat.h>
+#include <avogadro/io/mdlformat.h>
+#include <avogadro/io/pdbformat.h>
 #include <avogadro/io/xyzformat.h>
 
 #include <QtCore/QDebug>
@@ -35,7 +27,7 @@ namespace QtPlugins {
 
 FileFormatScript::FileFormatScript(const QString& scriptFileName_)
   : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(false),
-    m_inputFormat(NotUsed), m_outputFormat(NotUsed)
+    m_bondOnRead(false), m_inputFormat(NotUsed), m_outputFormat(NotUsed)
 {
   readMetaData();
 }
@@ -92,6 +84,10 @@ bool FileFormatScript::read(std::istream& in, Core::Molecule& molecule)
     return false;
   }
 
+  if (m_bondOnRead) {
+    molecule.perceiveBondsSimple();
+  }
+
   return true;
 }
 
@@ -134,6 +130,10 @@ FileFormatScript::Format FileFormatScript::stringToFormat(
     return Cjson;
   else if (str == "cml")
     return Cml;
+  else if (str == "mdl" || str == "mol" || str == "sdf" || str == "sd")
+    return Mdl;
+  else if (str == "pdb")
+    return Pdb;
   else if (str == "xyz")
     return Xyz;
   return NotUsed;
@@ -146,6 +146,10 @@ Io::FileFormat* FileFormatScript::createFileFormat(FileFormatScript::Format fmt)
       return new Io::CjsonFormat;
     case Cml:
       return new Io::CmlFormat;
+    case Mdl:
+      return new Io::MdlFormat;
+    case Pdb:
+      return new Io::PdbFormat;
     case Xyz:
       return new Io::XyzFormat;
     default:
@@ -158,6 +162,7 @@ void FileFormatScript::resetMetaData()
 {
   m_operations = Io::FileFormat::None;
   m_valid = false;
+  m_bondOnRead = false;
   m_inputFormat = NotUsed;
   m_identifier.clear();
   m_name.clear();
@@ -268,7 +273,7 @@ void FileFormatScript::readMetaData()
                  << scriptFilePath() << "\n"
                  << "Member 'inputFormat' not recognized:"
                  << inputFormatStrTmp.c_str()
-                 << "\nValid values are cjson, cml, or xyz.\n"
+                 << "\nValid values are cjson, cml, mdl/sdf, pdb, or xyz.\n"
                  << output;
       return;
     }
@@ -294,7 +299,7 @@ void FileFormatScript::readMetaData()
                  << scriptFilePath() << "\n"
                  << "Member 'outputFormat' not recognized:"
                  << outputFormatStrTmp.c_str()
-                 << "\nValid values are cjson, cml, or xyz.\n"
+                 << "\nValid values are cjson, cml, mdl/sdf, pdb, or xyz.\n"
                  << output;
       return;
     }
@@ -307,6 +312,11 @@ void FileFormatScript::readMetaData()
   m_outputFormat = outputFormatTmp;
   m_identifier = std::string("User Script: ") + identifierTmp;
   m_name = nameTmp;
+
+  // check if we should bond on read:
+  if (metaData["bond"].isBool()) {
+    m_bondOnRead = metaData["bond"].toBool();
+  }
 
   // Everything else is optional:
   parseString(metaData, "description", m_description);
