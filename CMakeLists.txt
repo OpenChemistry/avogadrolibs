@@ -48,7 +48,7 @@ include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR})
 
 option(ENABLE_TESTING "Enable testing and building the tests." OFF)
-option(TEST_QTGL "Build the Qt OpenGL test application" ON)
+option(TEST_QTGL "Build the Qt OpenGL test application" OFF)
 option(ENABLE_TRANSLATIONS "Enable building translations with Qt5 Linguist" OFF)
 option(USE_OPENGL "Enable libraries that use OpenGL" ON)
 option(USE_HDF5 "Enable optional HDF5 features" OFF)
