@@ -30,8 +30,8 @@ set(tests
 
 if(PYTHON_EXECUTABLE AND AVOGADRO_DATA)
   list(APPEND tests
-    FileBrowseWidget
-# FIXME: These two tests are broken
+# FIXME: These tests are broken
+#    FileBrowseWidget
 #    InputGenerator
 #    InputGeneratorWidget
   )

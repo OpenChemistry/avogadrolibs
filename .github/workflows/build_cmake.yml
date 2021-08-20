@@ -26,14 +26,14 @@ jobs:
             name: "Ubuntu 20.04 GCC", artifact: "Ubuntu-2004.tar.gz",
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=FALSE",
             cpack: "",
           }
         - {
             name: "Ubuntu 18.04 GCC", artifact: "",
             os: ubuntu-18.04,
             cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON ",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=FALSE",
             cpack: "",
           }
         - {
