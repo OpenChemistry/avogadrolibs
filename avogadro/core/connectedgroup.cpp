@@ -88,11 +88,13 @@ void ConnectedGroup::addConnection(size_t a, size_t b)
   size_t group_a = m_nodeToGroup[a];
   size_t group_b = m_nodeToGroup[b];
   if (group_a != group_b) {
+    // add everything in b to group a
     for (size_t node : m_groupToNode[group_b]) {
       m_nodeToGroup[node] = group_a;
       m_groupToNode[group_a].insert(node);
     }
     m_groupToNode[group_b].clear();
+    // TODO: remove empty groups
     checkRemove(m_groupToNode);
   }
 }
@@ -182,7 +184,14 @@ std::set<size_t> ConnectedGroup::getNodes(size_t group) const
 
 std::vector<std::set<size_t>> ConnectedGroup::getAllGroups() const
 {
-  return m_groupToNode;
+  // Only return non-empty groups
+  std::vector<std::set<size_t>> groups;
+  for (const auto& group : m_groupToNode) {
+    if (group.size() > 0) {
+      groups.push_back(group);
+    }
+  }
+  return groups;
 }
 
 void ConnectedGroup::resetToSize(size_t n)
