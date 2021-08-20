@@ -63,7 +63,7 @@ QUndoCommand* LabelEditor::keyPressEvent(QKeyEvent* e)
 
 void LabelEditor::save()
 {
-  m_molecule->beginMergeMode(tr("write Label"));
+  m_molecule->beginMergeMode(tr("Create Label"));
   m_selectedAtom.setLabel(m_text.toStdString());
   m_molecule->endMergeMode();
   m_text.clear();
@@ -85,7 +85,7 @@ QUndoCommand* LabelEditor::mousePressEvent(QMouseEvent* e)
     m_selected = (clickedObject.type == Rendering::AtomType);
     if (m_selected) {
       m_selectedAtom = m_molecule->atom(clickedObject.index);
-      m_text = QString::fromUtf8(m_selectedAtom.label().c_str());
+      m_text = QString::fromStdString(m_selectedAtom.label().c_str());
     }
     emit drawablesChanged();
   }
