@@ -1,19 +1,7 @@
-/**********************************************************************
-  SortFilterTreeProxyModel - Sorting / Filter proxy which works on trees
-
+/******************************************************************************
   This source file is part of the Avogadro project.
-  See http://stackoverflow.com/questions/3212392/qtreeview-qfilesystemmodel-setrootpath-and-qsortfilterproxymodel-with-regexp-fo
-
-  Copyright 2020 Geoffrey R. Hutchison
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
- ***********************************************************************/
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
 
 #ifndef SORTFILTERTREEPROXYMODEL_H
 #define SORTFILTERTREEPROXYMODEL_H

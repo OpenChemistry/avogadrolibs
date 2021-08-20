@@ -1,20 +1,7 @@
-/**********************************************************************
-  SortFilterTreeProxyModel - Sorting / Filter proxy which works on trees
-
-  Based on code from http://kodeclutz.blogspot.com/2008/12/filtering-qtreeview.html
-
-  This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation version 2 of the License.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
- ***********************************************************************/
+/******************************************************************************
+  This source file is part of the Avogadro project.
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
 
 #include "sortfiltertreeproxymodel.h"
 
