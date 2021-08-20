@@ -240,7 +240,7 @@ void BallAndStick::atomRadiusChanged(int value)
   }
 
   QSettings settings;
-  settings.setValue("BallAndStick/atomScale", m_atomScale);
+  settings.setValue("ballandstick/atomScale", m_atomScale);
 }
 
 void BallAndStick::bondRadiusChanged(int value)
@@ -254,7 +254,7 @@ void BallAndStick::bondRadiusChanged(int value)
   }
 
   QSettings settings;
-  settings.setValue("BallAndStick/bondRadius", m_bondRadius);
+  settings.setValue("ballandstick/bondRadius", m_bondRadius);
 }
 
 void BallAndStick::multiBonds(bool show)
@@ -265,7 +265,7 @@ void BallAndStick::multiBonds(bool show)
     emit drawablesChanged();
   }
   QSettings settings;
-  settings.setValue("BallAndStick/multiBonds", show);
+  settings.setValue("ballandstick/multiBonds", show);
 }
 
 void BallAndStick::showHydrogens(bool show)
@@ -276,7 +276,7 @@ void BallAndStick::showHydrogens(bool show)
     emit drawablesChanged();
   }
   QSettings settings;
-  settings.setValue("BallAndStick/showHydrogens", show);
+  settings.setValue("ballandstick/showHydrogens", show);
 }
 
 } // namespace QtPlugins

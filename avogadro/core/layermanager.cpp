@@ -88,6 +88,7 @@ void LayerManager::deleteMolecule(const Molecule* mol)
 
 size_t LayerManager::layerCount()
 {
+  assert(m_activeMolecule != nullptr);
   return m_molToInfo[m_activeMolecule]->layer.maxLayer() + 1;
 }
 

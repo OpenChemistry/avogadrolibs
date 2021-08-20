@@ -53,9 +53,11 @@ public slots:
   // of 3) we crea a big N-bezier line
   void showRope(bool show);
 
+  static std::string getName() { return "Cartoons"; }
+
 private:
   Rendering::GroupNode* m_group;
-  std::string m_name = "Cartoons";
+  std::string m_name = getName();
 
   std::map<size_t, AtomsPairList> getBackboneByResidues(
     const QtGui::Molecule& molecule, size_t layer);
