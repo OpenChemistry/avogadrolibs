@@ -35,6 +35,8 @@ public:
 
   QWidget* setupWidget() override;
 
+  static std::string getName() { return "Ball and Stick"; }
+
 public slots:
   void atomRadiusChanged(int value);
   void bondRadiusChanged(int value);
@@ -43,7 +45,7 @@ public slots:
 
 private:
   Rendering::GroupNode* m_group;
-  std::string m_name = "Ball and Stick";
+  std::string m_name = getName();
   float m_atomScale = 0.3f;
   float m_bondRadius = 0.1f;
 };

@@ -5,6 +5,10 @@
 
 #include "pluginlayermanager.h"
 
+#include <avogadro/qtplugins/ballandstick/ballandstick.h>
+#include <avogadro/qtplugins/cartoons/cartoons.h>
+
+#include <QtCore/QSettings>
 #include <cassert>
 #include <vector>
 
@@ -12,6 +16,8 @@ namespace Avogadro {
 namespace QtGui {
 
 using Core::LayerData;
+using QtPlugins::BallAndStick;
+using QtPlugins::Cartoons;
 using std::string;
 using std::vector;
 
@@ -76,7 +82,22 @@ void PluginLayerManager::setEnabled(bool enable)
   if (molecule->enable[m_name].size() != qttyLayers) {
     molecule->enable[m_name].resize(qttyLayers, false);
   }
-
+  // if this is a fully fresh run, set some intial trues
+  if ((m_name == BallAndStick::getName() || m_name == Cartoons::getName())) {
+    QSettings settings;
+    bool enable;
+    if (m_name == BallAndStick::getName()) {
+      enable = settings.value("ballandstick/enable", true).toBool();
+      settings.setValue("ballandstick/enable", false);
+    } else if (m_name == Cartoons::getName()) {
+      enable = settings.value("cartoon/enable", true).toBool();
+      settings.setValue("cartoon/enable", false);
+    }
+    if (enable) {
+      molecule->enable[m_name][0] = true;
+      return;
+    }
+  }
   size_t activeLayer = molecule->layer.activeLayer();
   molecule->enable[m_name][activeLayer] = enable;
 }
