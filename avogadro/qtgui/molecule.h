@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTGUI_MOLECULE_H
@@ -102,7 +91,7 @@ public:
    */
   virtual AtomType addAtom(unsigned char atomicNumber, Index uniqueId);
 
-  AtomType addAtom(unsigned char number, Vector3 position3d);
+  AtomType addAtom(unsigned char number, Vector3 position3d, Index uniqueId = MaxIndex);
 
   /**
    * @brief Remove the specified atom from the molecule.
@@ -173,6 +162,18 @@ public:
    * in use.
    */
   virtual BondType addBond(const AtomType& a, const AtomType& b,
+                           unsigned char bondOrder, Index uniqueId);
+
+  /**
+   * @brief Add a bond between the specified atoms.
+   * @param a The index of the first atom in the bond.
+   * @param b The index of the second atom in the bond.
+   * @param bondOrder The order of the bond.
+   * @param uniqueId The unique ID to use for the bond.
+   * @return The bond created. This can be invalid if the unique ID was already
+   * in use.
+   */
+  virtual BondType addBond(Index atomId1, Index atomId2,
                            unsigned char bondOrder, Index uniqueId);
 
   /**
