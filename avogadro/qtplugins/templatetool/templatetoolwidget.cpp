@@ -43,7 +43,8 @@ TemplateToolWidget::TemplateToolWidget(QWidget *parent_) :
 
   // Show carbon at startup.
   selectElement(6);
-  setCoordination(7); // octahedral
+  // default coordination = octahedral
+  m_ui->preview->setIcon(QIcon(":/icons/centers/6-oct.png"));
 
   // In the same order of the coordinationComboBox
   // append ".png" for the icon and ".cjson" for the template
@@ -102,8 +103,7 @@ void TemplateToolWidget::coordinationChanged(int index)
     return;
   
   // get the icon name
-  QString iconName = m_centers[m_ui->coordinationComboBox->currentIndex()];
-  qDebug() << "Icon name: " << iconName;
+  QString iconName = m_centers[index];
   m_ui->preview->setIcon(QIcon(":/icons/centers/" + iconName + ".png"));
 }
 

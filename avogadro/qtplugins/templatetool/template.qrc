@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/icons">
+    <file>centers/1-lin.png</file>
     <file>centers/2-lin.png</file>
     <file>centers/3-tpl.png</file>
     <file>centers/4-sqp.png</file>
