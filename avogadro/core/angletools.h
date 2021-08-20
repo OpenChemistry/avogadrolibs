@@ -12,18 +12,18 @@
 
 namespace Avogadro {
 
-Real bondAngle(const Vector3& b0, const Vector3& b1) {
+inline Real bondAngle(const Vector3& b0, const Vector3& b1) {
   // standard formula, e.g.
   // https://scicomp.stackexchange.com/q/27689/14517
   // Since we're using bonds, v. small angles are okay
-  // only problem is if bond lengths are v. small
+  // only problem is if bond lengths are v. v. small
   //   but that's unlikely in practice
   const Real dot = -1.0*b0.dot(b1);
   const Real norms = b0.norm() * b1.norm();
   return std::acos(dot / norms) * RAD_TO_DEG_D;
 }
 
-Real dihedralAngle(const Vector3& b0, const Vector3& b1, const Vector3& b2)
+inline Real dihedralAngle(const Vector3& b0, const Vector3& b1, const Vector3& b2)
 {
   // See https://stackoverflow.com/a/34245697/131896
   // Thanks to @Praxeolitic
@@ -36,6 +36,18 @@ Real dihedralAngle(const Vector3& b0, const Vector3& b1, const Vector3& b2)
   return std::atan2(y, x) * RAD_TO_DEG_D;
 }
 
+inline Real calcAngle(const Vector3 &v1, const Vector3 &v2, const Vector3 &v3) {
+  Vector3 v12 = v1 - v2;
+  Vector3 v23 = v2 - v3;
+  return bondAngle(v12, v23);
+}
+
+inline Real calcDihedral(const Vector3 &v1, const Vector3 &v2, const Vector3 &v3, const Vector3 &v4) {
+  Vector3 v12 = v1 - v2;
+  Vector3 v23 = v2 - v3;
+  Vector3 v34 = v3 - v4;
+  return dihedralAngle(v12, v23, v34);
+}
 
 } // end Avogadro namespace
 
