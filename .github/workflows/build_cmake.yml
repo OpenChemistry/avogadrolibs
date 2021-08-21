@@ -30,10 +30,10 @@ jobs:
             cpack: "",
           }
         - {
-            name: "Ubuntu 18.04 GCC", artifact: "",
+            name: "Ubuntu 18.04 AppImage", artifact: "Avogadro2.AppImage",
             os: ubuntu-18.04,
             cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja",
             cpack: "",
           }
         - {
@@ -150,7 +150,7 @@ jobs:
         cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
 
     - name: Run tests
-      if: runner.os == 'Linux'
+      if: matrix.config.os == 'ubuntu-20.04'
       shell: cmake -P {0}
       run: |
         include(ProcessorCount)
@@ -169,6 +169,22 @@ jobs:
       if: matrix.config.artifact != 0
       run: cpack ${{ matrix.config.cpack_flags }}
       working-directory: ${{ runner.workspace }}/build/avogadroapp
+
+    - name: AppImage
+      if: matrix.config.os == 'ubuntu-18.04'
+      shell: bash
+      run: |
+        DESTDIR=./appdir cmake --build . --target install
+        wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+        chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+        ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage -extra-plugins=iconengines
+        ls *.AppImage
+        ls *.tar.gz
+      working-directory: ${{ runner.workspace }}/build/avogadroapp
+
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
 
     - name: Upload
       if: matrix.config.artifact != 0
