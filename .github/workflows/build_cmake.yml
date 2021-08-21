@@ -165,6 +165,10 @@ jobs:
           message(FATAL_ERROR "Running tests failed!")
         endif()
 
+    - name: Setup tmate session
+      if: runner.os == 'macOS'
+      uses: mxschmitt/action-tmate@v3
+
     - name: Install the Apple certificate and provisioning profile
       # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
       if: runner.os == 'macOS'
@@ -197,17 +201,7 @@ jobs:
     - name: Pack
       if: matrix.config.artifact != 0
       run: cpack ${{ matrix.config.cpack_flags }}
-      env:
-        AC_CERTIFICATE_NAME=${{ secrets.AC_CERTIFICATE_NAME }}
       working-directory: ${{ runner.workspace }}/build/avogadroapp
-
-    - name: Notarize Mac DMG
-      if: runner.os == 'macOS'
-      run: |
-        npx notarize-cli --file "build/avogadroapp/Avogadro2*.dmg"
-      env:
-        NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
-        NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
 
     - name: Upload
       if: matrix.config.artifact != 0
