@@ -8,6 +8,7 @@
 #include "avogadropython.h"
 
 #include <QtCore/QDebug>
+#include <QtCore/QFileInfo>
 #include <QtCore/QLocale>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
@@ -45,6 +46,16 @@ void PythonScript::setDefaultPythonInterpretor()
   }
   if (m_pythonInterpreter.isEmpty())
     m_pythonInterpreter = pythonInterpreterPath;
+
+  // check to see if the interpreter exists and is executable
+  QFileInfo info(m_pythonInterpreter);
+  if (!info.exists() || !info.isExecutable()) {
+    qWarning() << "Python interpreter" << m_pythonInterpreter
+               << "does not exist trying \"python\" in your path."
+               << "Please set a path to the python interpreter.";
+    // default to python (i.e. something in the path)
+    m_pythonInterpreter = "python";
+  }
 }
 
 QByteArray PythonScript::execute(const QStringList& args,
