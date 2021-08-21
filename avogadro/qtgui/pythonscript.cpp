@@ -54,7 +54,11 @@ void PythonScript::setDefaultPythonInterpretor()
                << "does not exist trying \"python\" in your path."
                << "Please set a path to the python interpreter.";
     // default to python (i.e. something in the path)
+#ifdef Q_OS_WIN
+    m_pythonInterpreter = "python.exe";
+#else
     m_pythonInterpreter = "python";
+#endif
   }
 }
 
