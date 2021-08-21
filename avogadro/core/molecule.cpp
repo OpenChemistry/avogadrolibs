@@ -429,6 +429,7 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
     }
     m_bondPairs.push_back(Molecule::makeBondPair(atom1, atom2));
     m_bondOrders.push_back(order);
+    index = static_cast<Index>(m_bondPairs.size() - 1);
   } else {
     m_bondOrders[index] = order;
   }

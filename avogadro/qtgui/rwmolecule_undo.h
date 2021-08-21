@@ -32,6 +32,8 @@ public:
 
 protected:
   Array<Vector3>& positions3d() { return m_molecule.atomPositions3d(); }
+  Array<Index>& atomUniqueIds() { return m_mol.m_molecule.atomUniqueIds(); }
+  Array<Index>& bondUniqueIds() { return m_mol.m_molecule.bondUniqueIds(); }
 
   RWMolecule& m_mol;
   QtGui::Molecule& m_molecule;
@@ -87,9 +89,9 @@ public:
   {
     assert(m_molecule.atomCount() == m_atomId);
     if (m_usingPositions)
-      m_molecule.addAtom(m_atomicNumber, Vector3::Zero());
+      m_molecule.addAtom(m_atomicNumber, Vector3::Zero(), m_atomId);
     else
-      m_molecule.addAtom(m_atomicNumber);
+      m_molecule.addAtom(m_atomicNumber, m_atomUid);
     m_molecule.layer().addAtom(m_layer, m_atomId);
   }
 
@@ -131,7 +133,7 @@ public:
 
   void undo() override
   {
-    m_molecule.addAtom(m_atomicNumber, m_position3d);
+    m_molecule.addAtom(m_atomicNumber, m_position3d, m_atomUid);
     // Swap the moved and unremoved atom data if needed
     Index movedId = m_mol.atomCount() - 1;
     m_molecule.layer().addAtom(m_layer, movedId);
@@ -419,7 +421,7 @@ public:
 
   void undo() override
   {
-    m_molecule.addBond(m_bondPair.first, m_bondPair.second, m_bondOrder);
+    m_molecule.addBond(m_bondPair.first, m_bondPair.second, m_bondOrder, m_bondUid);
     Index movedId = m_molecule.bondCount() - 1;
     m_molecule.swapBond(m_bondId, movedId);
   }

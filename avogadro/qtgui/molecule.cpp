@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "molecule.h"
@@ -104,10 +93,18 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Index uniqueId)
   return a;
 }
 
-Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
+Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d,
+                                     Index uniqueId)
 {
-  m_atomUniqueIds.push_back(atomCount());
-  return Core::Molecule::addAtom(number, position3d);
+  if (uniqueId >= static_cast<Index>(m_atomUniqueIds.size())) {
+    m_atomUniqueIds.push_back(atomCount());
+    return Core::Molecule::addAtom(number, position3d);
+  } else {
+    auto atom = Molecule::addAtom(number, uniqueId);
+    if (atom.isValid())
+      atom.setPosition3d(position3d);
+    return atom;
+  }
 }
 
 bool Molecule::removeAtom(Index index)
@@ -206,6 +203,18 @@ void Molecule::swapAtom(Index a, Index b)
   assert(uniqueA != MaxIndex && uniqueB != MaxIndex);
   swap(m_atomUniqueIds[uniqueA], m_atomUniqueIds[uniqueB]);
   Core::Molecule::swapAtom(a, b);
+}
+
+Molecule::BondType Molecule::addBond(Index a, Index b,
+                                     unsigned char order, Index uniqueId)
+{
+  if (uniqueId >= static_cast<Index>(m_bondUniqueIds.size()) ||
+      m_bondUniqueIds[uniqueId] != MaxIndex) {
+    return BondType();
+  }
+
+  m_bondUniqueIds[uniqueId] = bondCount();
+  return Core::Molecule::addBond(a, b, order);
 }
 
 Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
