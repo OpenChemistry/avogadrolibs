@@ -30,11 +30,12 @@ public:
   }
 
   QWidget* setupWidget() override;
-  void process(const Core::Molecule& molecule, Rendering::GroupNode& node) override;
+  void process(const Core::Molecule& molecule,
+               Rendering::GroupNode& node) override;
 
 public slots:
-  void atomLabel(bool show);
-  void residueLabel(bool show);
+  void atomLabelType(int index);
+  void residueLabelType(int index);
   void setRadiusScalar(double radius);
   void setColor(const QColor& color);
 
