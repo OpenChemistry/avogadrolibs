@@ -150,27 +150,30 @@ struct LayerLabel : Core::LayerData
           atom->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
         } else {
           char val = 0x00;
-          QString text;
+          QStringList text;
           if (i & LabelOptions::Custom) {
-            text = QObject::tr("Custom");
+            text << QObject::tr("Custom");
             val = LabelOptions::Custom;
           }
           if (i & LabelOptions::Index) {
-            text += text == "" ? QObject::tr("Index") : QObject::tr(", In.");
+            text << ((text.size() == 0) ? QObject::tr("Index")
+                                        : QObject::tr("In."));
             val |= LabelOptions::Index;
           }
           if (i & LabelOptions::Name) {
-            text += text == "" ? QObject::tr("Element") : QObject::tr(", El.");
+            text << ((text.size() == 0) ? QObject::tr("Element")
+                                        : QObject::tr("El."));
             val |= LabelOptions::Name;
           }
           if (i & LabelOptions::Ordinal) {
-            text += text == "" ? QObject::tr("Element & Ordinal")
-                               : QObject::tr(", El.&Or.");
+            text << ((text.size() == 0) ? QObject::tr("Element & Ordinal")
+                                        : QObject::tr("El.&Or."));
             val |= LabelOptions::Ordinal;
           }
-          atom->addItem(text, QVariant(val));
+          QString join = QObject::tr(", ");
+          atom->addItem(text.join(join), QVariant(val));
           if (val == atomOptions) {
-            atom->setCurrentText(text);
+            atom->setCurrentText(text.join(join));
           }
         }
       }
@@ -178,7 +181,7 @@ struct LayerLabel : Core::LayerData
                        SLOT(atomLabelType(int)));
       int index = atom->findData(int(atomOptions));
       atom->model()->sort(0, Qt::AscendingOrder);
-      form->addRow(QObject::tr("Atom label:"), atom);
+      form->addRow(QObject::tr("Atom Label:"), atom);
 
       QComboBox* residue = new QComboBox;
       residue->setObjectName("residue");
@@ -187,19 +190,20 @@ struct LayerLabel : Core::LayerData
           residue->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
         } else {
           char val = 0x00;
-          QString text;
+          QStringList text;
           if (i & LabelOptions::Index) {
-            text = QObject::tr("ID");
+            text << QObject::tr("ID");
             val |= LabelOptions::Index;
           }
           if (i & LabelOptions::Name) {
-            text += text == "" ? QObject::tr("Name") : QObject::tr(" & Name");
+            text << QObject::tr("Name");
             val |= LabelOptions::Name;
           }
           if (val != 0x00) {
-            residue->addItem(text, QVariant(val));
+            QString join = QObject::tr(" & ");
+            residue->addItem(text.join(join), QVariant(val));
             if (val == residueOptions) {
-              residue->setCurrentText(text);
+              residue->setCurrentText(text.join(join));
             }
           }
         }
@@ -208,7 +212,7 @@ struct LayerLabel : Core::LayerData
                        SLOT(residueLabelType(int)));
       index = residue->findData(int(residueOptions));
       residue->model()->sort(0, Qt::AscendingOrder);
-      form->addRow(QObject::tr("residue label:"), residue);
+      form->addRow(QObject::tr("Residue Label:"), residue);
 
       v->addLayout(form);
       v->addStretch(1);
