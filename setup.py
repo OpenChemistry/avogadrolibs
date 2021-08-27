@@ -38,23 +38,39 @@ except ImportError:
 else:
     cmake_args.append('-Dpybind11_DIR:PATH=' + get_cmake_dir())
 
+with open('README.md') as f:
+    long_description = f.read()
+
 setup(
     name='avogadro',
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
     description='Avogadro provides analysis and data processing useful in computational chemistry, molecular modeling, bioinformatics, materials science, and related areas.',
-    author='Kitware',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    author='Avogadro / OpenChemistry Developers',
     license='BSD',
     url='https://github.com/OpenChemistry/avogadrolibs',
+    project_urls={
+        'Documentation': 'https://two.avogadro.cc',
+        'Funding': 'https://github.com/sponsors/OpenChemistry',
+        'Source': 'https://github.com/OpenChemistry/avogadrolibs',
+        'Tracker': 'https://github.com/OpenChemistry/avogadrolibs/issues',
+        'Forum': 'https://discuss.avogadro.cc'
+    },
     classifiers=[
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
         'Programming Language :: C++',
         'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Intended Audience :: Education',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering',
+        'Topic :: Scientific/Engineering :: Chemistry',
+        'Topic :: Scientific/Engineering :: Physics',
+        'Topic :: Scientific/Engineering :: Visualization',
         'Topic :: Scientific/Engineering :: Information Analysis',
         'Topic :: Software Development :: Libraries',
         'Operating System :: Microsoft :: Windows',
