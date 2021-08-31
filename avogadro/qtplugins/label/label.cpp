@@ -128,10 +128,10 @@ struct LayerLabel : Core::LayerData
 
       QFormLayout* form = new QFormLayout;
       // color button
-      QtGui::ColorButton* color = new QtGui::ColorButton;
-      QObject::connect(color, SIGNAL(colorChanged(const QColor&)), slot,
+      QtGui::ColorButton* colorButton = new QtGui::ColorButton;
+      QObject::connect(colorButton, SIGNAL(colorChanged(const QColor&)), slot,
                        SLOT(setColor(const QColor&)));
-      form->addRow(QObject::tr("Color:"), color);
+      form->addRow(QObject::tr("Color:"), colorButton);
 
       // radius scalar
       QDoubleSpinBox* spin = new QDoubleSpinBox;
@@ -145,27 +145,29 @@ struct LayerLabel : Core::LayerData
 
       QComboBox* atom = new QComboBox;
       atom->setObjectName("atom");
-      for (char i = 0x00; i < std::pow(2, 4); ++i) {
-        if (i == 0) {
+      char elements[] = { None, Index, Name, Custom, Ordinal };
+      for (unsigned char i = 0; i < 5; ++i) {
+        char option = elements[i];
+        if (option == 0) {
           atom->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
         } else {
-          char val = 0x00;
+          char val = LabelOptions::None;
           QStringList text;
-          if (i & LabelOptions::Custom) {
+          if (option & LabelOptions::Custom) {
             text << QObject::tr("Custom");
             val = LabelOptions::Custom;
           }
-          if (i & LabelOptions::Index) {
+          if (option & LabelOptions::Index) {
             text << ((text.size() == 0) ? QObject::tr("Index")
                                         : QObject::tr("In."));
             val |= LabelOptions::Index;
           }
-          if (i & LabelOptions::Name) {
+          if (option & LabelOptions::Name) {
             text << ((text.size() == 0) ? QObject::tr("Element")
                                         : QObject::tr("El."));
             val |= LabelOptions::Name;
           }
-          if (i & LabelOptions::Ordinal) {
+          if (option & LabelOptions::Ordinal) {
             text << ((text.size() == 0) ? QObject::tr("Element & Ordinal")
                                         : QObject::tr("El.&Or."));
             val |= LabelOptions::Ordinal;
