@@ -92,15 +92,6 @@ jobs:
         sudo apt-get -qq install clang-tidy-11
         run-clang-tidy-11 -j=2 -checks='-*,performance-*,readability-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,concurrency-*,modernize-*,portability-*,misc-*' -export-fixes=fixes.yaml 
 
-    - name: Download and run Clazy
-      shell: bash
-      working-directory: ${{ runner.workspace }}/build
-      run : |
-        wget https://downloads.kdab.com/clazy/${{ env.CLAZY_VERSION }}/Clazy-x86_64-${{env.CLAZY_VERSION}}.AppImage
-        export CLAZY_CHECKS="level0,level1,qt6-deprecated-api-fixes,qt6-header-fixes,function-args-by-value,missing-qobject-macro"
-        chmod u+x ./Clazy-x86_64-${{env.CLAZY_VERSION}}.AppImage
-        ./Clazy-x86_64-${{env.CLAZY_VERSION}}.AppImage -j 2 --standalone -export-fixes=clazy.yaml
-
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
