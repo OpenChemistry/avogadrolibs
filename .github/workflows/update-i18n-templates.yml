@@ -13,9 +13,18 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install packages
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install gettext
+
     - name: Run extract-messages
       run: |
         sh scripts/extract-messages.sh
+
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
 
     - name: Create pull request
       uses: peter-evans/create-pull-request@v3
