@@ -1,6 +1,8 @@
 name: update-i18n-templates
 
 on:
+  workflow_dispatch:
+    
   schedule:
     # * is a special character in YAML so you have to quote this string
     # run weekly, every Sunday at 01:31
