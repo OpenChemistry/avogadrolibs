@@ -1195,8 +1195,8 @@ msgstr "Todos os formatos suportados (%1);;"
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
-"Erro ao ler a representação da molécula: Formato de ficheiro não reconhecido:"
-" %1"
+"Erro ao ler a representação da molécula: Formato de ficheiro não "
+"reconhecido: %1"
 
 #: qtgui/moleculemodel.cpp:105
 msgid "Untitled"
@@ -4135,23 +4135,23 @@ msgid ""
 msgstr ""
 "<html><head/><body><p>Especificação de formato. Cada caracter indica um "
 "valor a escrever por átomo:</p><p><span style=\" font-weight:600;\">#</span> "
-"- Índice de átomo (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;\""
-">Z</span> - Número Atômico (e.g. \"6\" para carbono)<br/><span style=\" font-"
-"weight:600;\">G</span> - número atômico estilo GAMESS (e.g. \"6.0\" para "
-"carbono)<br/><span style=\" font-weight:600;\">N</span> - Nome do elemento ("
-"e.g. \"Carbono\")<br/><span style=\" font-weight:600;\">S</span> - Símbolo "
-"do elemento (e.g. \"C\" para carbono)<br/><span style=\" font-weight:600;\""
-">x</span> - posição coordenada X<br/><span style=\" font-weight:600;\">y</"
-"span> - posição coordenada Y<br/><span style=\" font-weight:600;\">z</span> -"
-" posição coordenada Z<br/><span style=\" font-weight:600;\">a</span> - "
-"coordenada de rede 'a' (em cristais)<br/><span style=\" font-weight:600;\""
-">b</span> - coordenada de rede 'b' (em cristais)<br/><span style=\" font-"
-"weight:600;\">c</span> - coordenada de rede 'c' (em cristais)<br/><span "
-"style=\" font-weight:600;\">_</span> - Um espaço literal (\" \"), útil para "
-"alinhar<br/><span style=\" font-weight:600;\">0</span> - Um 0 literal (\"0\")"
-", útil para otimizar marcadores<br/><span style=\" font-weight:600;\">1</"
-"span> - Um 1 literal (\"1\"), útil para otimizar marcadores<br/"
-"></p></body></html>"
+"- Índice de átomo (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;"
+"\">Z</span> - Número Atômico (e.g. \"6\" para carbono)<br/><span style=\" "
+"font-weight:600;\">G</span> - número atômico estilo GAMESS (e.g. \"6.0\" "
+"para carbono)<br/><span style=\" font-weight:600;\">N</span> - Nome do "
+"elemento (e.g. \"Carbono\")<br/><span style=\" font-weight:600;\">S</span> - "
+"Símbolo do elemento (e.g. \"C\" para carbono)<br/><span style=\" font-"
+"weight:600;\">x</span> - posição coordenada X<br/><span style=\" font-"
+"weight:600;\">y</span> - posição coordenada Y<br/><span style=\" font-"
+"weight:600;\">z</span> - posição coordenada Z<br/><span style=\" font-"
+"weight:600;\">a</span> - coordenada de rede 'a' (em cristais)<br/><span "
+"style=\" font-weight:600;\">b</span> - coordenada de rede 'b' (em "
+"cristais)<br/><span style=\" font-weight:600;\">c</span> - coordenada de "
+"rede 'c' (em cristais)<br/><span style=\" font-weight:600;\">_</span> - Um "
+"espaço literal (\" \"), útil para alinhar<br/><span style=\" font-weight:600;"
+"\">0</span> - Um 0 literal (\"0\"), útil para otimizar marcadores<br/><span "
+"style=\" font-weight:600;\">1</span> - Um 1 literal (\"1\"), útil para "
+"otimizar marcadores<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -5789,8 +5789,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
-"<html><head/><body><p>O alargamento do pico na base (em "
-"graus).</p></body></html>"
+"<html><head/><body><p>O alargamento do pico na base (em graus).</p></body></"
+"html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -5798,8 +5798,8 @@ msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>O valor 2theta máximo em graus.</p><p>Predefinição: 162"
-".00°</p></body></html>"
+"<html><head/><body><p>O valor 2theta máximo em graus.</p><p>Predefinição: "
+"162.00°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
@@ -5807,8 +5807,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
 "p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>O alargamento dos picos na base em "
-"graus.</p><p>Predefinição: 0.52958°</p></body></html>"
+"<html><head/><body><p>O alargamento dos picos na base em graus.</"
+"p><p>Predefinição: 0.52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -5831,8 +5831,8 @@ msgid ""
 "<html><head/><body><p>The wavelength of the x-ray in Angstroms. </"
 "p><p>Default: 1.50560 Å</p></body></html>"
 msgstr ""
-"<html><head/><body><p>O comprimento de onda do raio-x em angstroms. "
-"</p><p>Predefinição: 1.50560 Å</p></body></html>"
+"<html><head/><body><p>O comprimento de onda do raio-x em angstroms. </"
+"p><p>Predefinição: 1.50560 Å</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:122
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numDataPoints)
@@ -5840,8 +5840,8 @@ msgid ""
 "<html><head/><body><p>The number of 2theta points to generate.</"
 "p><p>Default: 1000</p></body></html>"
 msgstr ""
-"<html><head/><body><p>A quantidade de pontos 2theta a "
-"criar.</p><p>Predefinição: 1000</p></body></html>"
+"<html><head/><body><p>A quantidade de pontos 2theta a criar.</"
+"p><p>Predefinição: 1000</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
