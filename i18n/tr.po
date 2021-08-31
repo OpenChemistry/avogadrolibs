@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-07-02 05:24+0900\n"
+"POT-Creation-Date: 2021-08-31 16:08-0400\n"
 "PO-Revision-Date: 2021-06-06 23:35+0000\n"
 "Last-Translator: Acun <acun1993@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
@@ -171,11 +171,11 @@ msgstr ""
 msgid "%1 Input Generator"
 msgstr "Girdi Üreteci..."
 
-#: molequeue/inputgeneratorwidget.cpp:114
+#: molequeue/inputgeneratorwidget.cpp:115
 msgid "Continue"
 msgstr "Devam et"
 
-#. i18n: file: molequeue/inputgeneratorwidget.ui:127
+#. i18n: file: molequeue/inputgeneratorwidget.ui:130
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:184
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
@@ -187,15 +187,15 @@ msgstr "Devam et"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#: molequeue/inputgeneratorwidget.cpp:114 qtgui/containerwidget.cpp:47
+#: molequeue/inputgeneratorwidget.cpp:115 qtgui/containerwidget.cpp:47
 msgid "Close"
 msgstr "Kapat"
 
-#: molequeue/inputgeneratorwidget.cpp:155 qtgui/elementtranslator.cpp:387
+#: molequeue/inputgeneratorwidget.cpp:156 qtgui/elementtranslator.cpp:387
 msgid "Unknown"
 msgstr "Bilinmeyen"
 
-#: molequeue/inputgeneratorwidget.cpp:156
+#: molequeue/inputgeneratorwidget.cpp:157
 #, qt-format, qt-plural-format
 msgctxt ""
 msgid ""
@@ -227,28 +227,28 @@ msgstr[1] ""
 "Yeni geometriyi veya iş seçeneklerini yansıtmak için değişikliklerinizin "
 "üzerine yazmak ister misiniz?"
 
-#: molequeue/inputgeneratorwidget.cpp:162
+#: molequeue/inputgeneratorwidget.cpp:163
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:159
 #: qtplugins/openmminput/openmminputdialog.cpp:216
 msgid "Overwrite modified input files?"
 msgstr "Değiştirilmiş girdi dosyalarının üzerine yazılsın mı?"
 
-#: molequeue/inputgeneratorwidget.cpp:188
+#: molequeue/inputgeneratorwidget.cpp:189
 msgid "Problems occurred during input generation:"
 msgstr "Giriş oluşturma sırasında sorunlar oluştu:"
 
-#: molequeue/inputgeneratorwidget.cpp:277
+#: molequeue/inputgeneratorwidget.cpp:278
 msgid "No input files to save!"
 msgstr "Kaydedilecek giriş dosyası yok!"
 
-#: molequeue/inputgeneratorwidget.cpp:285
+#: molequeue/inputgeneratorwidget.cpp:286
 #: molequeue/inputgeneratorwidget.cpp:603 molequeue/molequeuewidget.cpp:70
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:988
 #: qtplugins/gamessinput/gamessinputdialog.cpp:697
 msgid "Cannot connect to MoleQueue"
 msgstr "MoleQueue'ye bağlanılamıyor"
 
-#: molequeue/inputgeneratorwidget.cpp:286
+#: molequeue/inputgeneratorwidget.cpp:287
 #: molequeue/inputgeneratorwidget.cpp:604 molequeue/molequeuewidget.cpp:71
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:989
 #: qtplugins/gamessinput/gamessinputdialog.cpp:698
@@ -276,7 +276,7 @@ msgstr "İş Başarısız Oldu"
 msgid "The job did not complete successfully."
 msgstr "İş başarıyla tamamlanmadı."
 
-#: molequeue/inputgeneratorwidget.cpp:352 qtgui/interfacewidget.cpp:68
+#: molequeue/inputgeneratorwidget.cpp:352 qtgui/interfacewidget.cpp:56
 msgid "Script returns warnings:\n"
 msgstr "Komut dosyası şu uyarıları döndürür:\n"
 
@@ -288,7 +288,7 @@ msgstr ""
 msgid "Show &Warnings"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:392 qtgui/interfacewidget.cpp:84
+#: molequeue/inputgeneratorwidget.cpp:392 qtgui/interfacewidget.cpp:72
 msgid "An error has occurred:"
 msgstr "Bir hata oluştu:"
 
@@ -435,130 +435,6 @@ msgstr "Giriş dosyalarını yaz"
 #: molequeue/inputgeneratorwidget.cpp:618
 msgid "Configure Job"
 msgstr "İşi Yapılandır"
-
-#: molequeue/inputgeneratorwidget.cpp:643 qtgui/interfacewidget.cpp:113
-msgid "'userOptions' missing, or not an object."
-msgstr ""
-
-#: molequeue/inputgeneratorwidget.cpp:650 qtgui/interfacewidget.cpp:120
-#, qt-format
-msgid "Option '%1' not found in userOptions."
-msgstr ""
-
-#: molequeue/inputgeneratorwidget.cpp:655 qtgui/interfacewidget.cpp:125
-#, qt-format
-msgid "Option '%1' does not refer to an object."
-msgstr "'%1' seçeneği bir nesneye başvurmuyor."
-
-#: molequeue/inputgeneratorwidget.cpp:662 qtgui/interfacewidget.cpp:133
-#, qt-format
-msgid "'type' is not a string for option '%1'."
-msgstr ""
-
-#: molequeue/inputgeneratorwidget.cpp:693
-#: molequeue/inputgeneratorwidget.cpp:920
-#, qt-format
-msgid ""
-"'userOptions' missing, or not an object:\n"
-"%1"
-msgstr ""
-
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
-#. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: molequeue/inputgeneratorwidget.cpp:702 qtgui/interfacewidget.cpp:169
-msgid "Title"
-msgstr "Başlık"
-
-#: molequeue/inputgeneratorwidget.cpp:706 qtgui/interfacewidget.cpp:173
-msgid "Filename Base"
-msgstr "Dosya Adı Tabanı"
-
-#: molequeue/inputgeneratorwidget.cpp:710 qtgui/interfacewidget.cpp:178
-msgid "Processor Cores"
-msgstr "İşlemci Çekirdekleri"
-
-#: molequeue/inputgeneratorwidget.cpp:714 qtgui/interfacewidget.cpp:183
-msgid "Calculation Type"
-msgstr ""
-
-#: molequeue/inputgeneratorwidget.cpp:735 qtgui/interfacewidget.cpp:207
-msgid "Theory:"
-msgstr "Teori:"
-
-#: molequeue/inputgeneratorwidget.cpp:738 qtgui/interfacewidget.cpp:210
-msgid "Theory"
-msgstr "Teori"
-
-#: molequeue/inputgeneratorwidget.cpp:740 qtgui/interfacewidget.cpp:212
-msgid "Basis"
-msgstr "Temel"
-
-#: molequeue/inputgeneratorwidget.cpp:745 qtgui/interfacewidget.cpp:217
-msgid "Charge"
-msgstr ""
-
-#: molequeue/inputgeneratorwidget.cpp:747 qtgui/interfacewidget.cpp:219
-msgid "Multiplicity"
-msgstr "Çokluk"
-
-#: molequeue/inputgeneratorwidget.cpp:934 qtgui/interfacewidget.cpp:453
-#, qt-format
-msgid "Error: value must be object for key '%1'."
-msgstr "Hata: '%1' anahtarı için değer nesne olmalıdır."
-
-#: molequeue/inputgeneratorwidget.cpp:942 qtgui/interfacewidget.cpp:461
-#, qt-format
-msgid "Default value missing for option '%1'."
-msgstr "'%1' seçeneği için varsayılan değer eksik."
-
-#: molequeue/inputgeneratorwidget.cpp:963 qtgui/interfacewidget.cpp:484
-#, qt-format
-msgid "Unrecognized option type '%1' for option '%2'."
-msgstr ""
-
-#: molequeue/inputgeneratorwidget.cpp:972
-#: molequeue/inputgeneratorwidget.cpp:1009
-#: molequeue/inputgeneratorwidget.cpp:1032
-#: molequeue/inputgeneratorwidget.cpp:1054
-#: molequeue/inputgeneratorwidget.cpp:1078 qtgui/interfacewidget.cpp:493
-#: qtgui/interfacewidget.cpp:530 qtgui/interfacewidget.cpp:553
-#: qtgui/interfacewidget.cpp:575 qtgui/interfacewidget.cpp:599
-#: qtgui/interfacewidget.cpp:622
-#, qt-format
-msgid "Error setting default for option '%1'. Bad widget type."
-msgstr ""
-
-#: molequeue/inputgeneratorwidget.cpp:979
-#: molequeue/inputgeneratorwidget.cpp:1016
-#: molequeue/inputgeneratorwidget.cpp:1039
-#: molequeue/inputgeneratorwidget.cpp:1061
-#: molequeue/inputgeneratorwidget.cpp:1085 qtgui/interfacewidget.cpp:500
-#: qtgui/interfacewidget.cpp:537 qtgui/interfacewidget.cpp:560
-#: qtgui/interfacewidget.cpp:582 qtgui/interfacewidget.cpp:606
-#: qtgui/interfacewidget.cpp:629
-#, qt-format
-msgid "Error setting default for option '%1'. Bad default value:"
-msgstr "'%1' seçeneği için varsayılan ayar hatası. Hatalı varsayılan değer:"
-
-#: molequeue/inputgeneratorwidget.cpp:993 qtgui/interfacewidget.cpp:514
-#, qt-format
-msgid ""
-"Error setting default for option '%1'. Could not find valid combo entry "
-"index from value:"
-msgstr ""
-"'%1' seçeneği için varsayılan ayar hatası. Değerden geçerli birleşik giriş "
-"dizini bulunamadı:"
-
-#: molequeue/inputgeneratorwidget.cpp:1145 qtgui/interfacewidget.cpp:691
-#, qt-format
-msgid "Unhandled widget in collectOptions for option '%1'."
-msgstr ""
-
-#: molequeue/inputgeneratorwidget.cpp:1187 qtgui/interfacewidget.cpp:726
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:467
-#: qtplugins/gamessinput/gamessinputdialog.cpp:407
-msgid "[no molecule]"
-msgstr "[molekül yok]"
 
 #: molequeue/molequeuedialog.cpp:58
 msgid "Submitting job to MoleQueue..."
@@ -1185,7 +1061,111 @@ msgstr "Desteklenen tüm formatlar (%1) ;;"
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr "Molekül gösterimini okuma hatası: Tanınmayan dosya formatı: %1"
 
-#: qtgui/moleculemodel.cpp:105
+#: qtgui/jsonwidget.cpp:53
+msgid "'userOptions' missing."
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:84
+#, qt-format
+msgid "Option '%1' does not refer to an object."
+msgstr "'%1' seçeneği bir nesneye başvurmuyor."
+
+#: qtgui/jsonwidget.cpp:91
+#, qt-format
+msgid "'type' is not a string for option '%1'."
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:98
+#, fuzzy, qt-format
+msgid "Could not find option '%1'."
+msgstr "povray çalıştırılamıyor"
+
+#: qtgui/jsonwidget.cpp:152
+#, qt-format
+msgid "Tab %1"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
+#. i18n: ectx: property (text), widget (QLineEdit, titleLine)
+#: qtgui/jsonwidget.cpp:175:609
+msgid "Title"
+msgstr "Başlık"
+
+#: qtgui/jsonwidget.cpp:179
+msgid "Filename Base"
+msgstr "Dosya Adı Tabanı"
+
+#: qtgui/jsonwidget.cpp:183
+msgid "Processor Cores"
+msgstr "İşlemci Çekirdekleri"
+
+#: qtgui/jsonwidget.cpp:187
+msgid "Calculation Type"
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:191
+msgid "Theory"
+msgstr "Teori"
+
+#: qtgui/jsonwidget.cpp:191
+msgid "Basis"
+msgstr "Temel"
+
+#: qtgui/jsonwidget.cpp:196
+msgid "Charge"
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:199
+msgid "Multiplicity"
+msgstr "Çokluk"
+
+#: qtgui/jsonwidget.cpp:511
+#, qt-format
+msgid "Error: value must be object for key '%1'."
+msgstr "Hata: '%1' anahtarı için değer nesne olmalıdır."
+
+#: qtgui/jsonwidget.cpp:542
+#, qt-format
+msgid "Unrecognized option type '%1' for option '%2'."
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:551 qtgui/jsonwidget.cpp:587 qtgui/jsonwidget.cpp:609
+#: qtgui/jsonwidget.cpp:630 qtgui/jsonwidget.cpp:653 qtgui/jsonwidget.cpp:675
+#, qt-format
+msgid "Error setting default for option '%1'. Bad widget type."
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:558 qtgui/jsonwidget.cpp:594 qtgui/jsonwidget.cpp:616
+#: qtgui/jsonwidget.cpp:637 qtgui/jsonwidget.cpp:660 qtgui/jsonwidget.cpp:682
+#, qt-format
+msgid "Error setting default for option '%1'. Bad default value:"
+msgstr "'%1' seçeneği için varsayılan ayar hatası. Hatalı varsayılan değer:"
+
+#: qtgui/jsonwidget.cpp:572
+#, qt-format
+msgid ""
+"Error setting default for option '%1'. Could not find valid combo entry "
+"index from value:"
+msgstr ""
+"'%1' seçeneği için varsayılan ayar hatası. Değerden geçerli birleşik giriş "
+"dizini bulunamadı:"
+
+#: qtgui/jsonwidget.cpp:744
+#, qt-format
+msgid "Unhandled widget in collectOptions for option '%1'."
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:786 qtplugins/cp2kinput/cp2kinputdialog.cpp:467
+#: qtplugins/gamessinput/gamessinputdialog.cpp:407
+msgid "[no molecule]"
+msgstr "[molekül yok]"
+
+#: qtgui/layermodel.cpp:73
+#, fuzzy
+msgid "Layer"
+msgstr "Oynatıcı"
+
+#: qtgui/moleculemodel.cpp:104
 msgid "Untitled"
 msgstr "İsimsiz"
 
@@ -1258,147 +1238,183 @@ msgstr "Yazma hatası."
 msgid "Unknown error."
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:48
-msgid "Modify Molecule"
-msgstr "Molekülü Değiştir"
+#: qtgui/rwlayermanager.cpp:34 qtgui/rwlayermanager.cpp:89
+#: qtgui/rwlayermanager.cpp:115
+msgid "Modify Layers"
+msgstr ""
 
-#: qtgui/rwmolecule.cpp:153 qtgui/rwmolecule.cpp:162
+#: qtgui/rwlayermanager.cpp:178
+#, fuzzy
+msgid "Remove Layer"
+msgstr "Hidrojenleri Kaldır"
+
+#: qtgui/rwlayermanager.cpp:185
+#, fuzzy
+msgid "Remove Layer Info"
+msgstr "Hidrojenleri Kaldır"
+
+#: qtgui/rwlayermanager.cpp:194
+msgid "Add Layer"
+msgstr ""
+
+#: qtgui/rwlayermanager.cpp:197
+msgid "Add Layer Info"
+msgstr ""
+
+#. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: qtgui/rwlayermanager.cpp:204 qtgui/rwlayermanager.cpp:207
+#: qtplugins/selectiontool/selectiontool.cpp:260:1516
+#, fuzzy
+msgid "Change Layer"
+msgstr "Bağ Türünü Değiştirin"
+
+#: qtgui/rwmolecule.cpp:50 qtgui/rwmolecule.cpp:59
 msgid "Add Atom"
 msgstr "Atom Ekle"
 
-#: qtgui/rwmolecule.cpp:274 qtgui/rwmolecule.cpp:289
-#: qtplugins/editor/editor.cpp:130
+#: qtgui/rwmolecule.cpp:81 qtgui/rwmolecule.cpp:96
+#: qtplugins/editor/editor.cpp:122
 msgid "Remove Atom"
 msgstr "Atomu Kaldır"
 
-#: qtgui/rwmolecule.cpp:299
+#: qtgui/rwmolecule.cpp:106
 msgid "Clear Atoms"
 msgstr ""
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:311 qtgui/rwmolecule.cpp:319:465
+#: qtgui/rwmolecule.cpp:118 qtgui/rwmolecule.cpp:126:465
 msgid "Adjust Hydrogens"
 msgstr "Hidrojenleri Ayarlayın"
 
-#: qtgui/rwmolecule.cpp:353
+#: qtgui/rwmolecule.cpp:140
 #, fuzzy
 msgid "Change Elements"
 msgstr "Element"
 
-#: qtgui/rwmolecule.cpp:386
+#: qtgui/rwmolecule.cpp:152
 msgid "Change Element"
 msgstr "Elementi Değiştir"
 
-#: qtgui/rwmolecule.cpp:560
+#: qtgui/rwmolecule.cpp:215
 msgid "Change Atom Hybridization"
 msgstr "Atom Hibridizasyonunu Değiştir"
 
-#: qtgui/rwmolecule.cpp:592
+#: qtgui/rwmolecule.cpp:227
 msgid "Change Atom Formal Charge"
 msgstr "Atom Resmi Yükünü Değiştir"
 
-#: qtgui/rwmolecule.cpp:624
+#: qtgui/rwmolecule.cpp:239
 msgid "Change Atom Color"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:686
+#: qtgui/rwmolecule.cpp:251
+#, fuzzy
+msgid "Change Atom Layer"
+msgstr "Atom Hibridizasyonunu Değiştir"
+
+#: qtgui/rwmolecule.cpp:267
 msgid "Add Bond"
 msgstr "Bağ Ekle"
 
-#: qtgui/rwmolecule.cpp:773
+#: qtgui/rwmolecule.cpp:293
 msgid "Removed Bond"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:780
+#: qtgui/rwmolecule.cpp:300
 #, fuzzy
 msgid "Clear Bonds"
 msgstr "Bağ Çiz"
 
-#: qtgui/rwmolecule.cpp:814
+#: qtgui/rwmolecule.cpp:315
 #, fuzzy
 msgid "Set Bond Orders"
 msgstr "Bağ SIrası"
 
-#: qtgui/rwmolecule.cpp:858
+#: qtgui/rwmolecule.cpp:327
 msgid "Change Bond Order"
 msgstr "Bağ Sırasını Değiştir"
 
-#: qtgui/rwmolecule.cpp:901
+#: qtgui/rwmolecule.cpp:350
 msgid "Update Bonds"
 msgstr "Bağları Güncelle"
 
-#: qtgui/rwmolecule.cpp:940
+#: qtgui/rwmolecule.cpp:369
 msgid "Update Bond"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:979
+#: qtgui/rwmolecule.cpp:389
 #, fuzzy
 msgid "Add Unit Cell"
 msgstr "Ekle &Birim Hücre"
 
-#: qtgui/rwmolecule.cpp:1011
+#: qtgui/rwmolecule.cpp:402
 #, fuzzy
 msgid "Remove Unit Cell"
 msgstr "Kaldır &Birim Hücre"
 
-#: qtgui/rwmolecule.cpp:1092
+#: qtgui/rwmolecule.cpp:465
 msgid "Edit Unit Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:1109
+#: qtgui/rwmolecule.cpp:482
 #, fuzzy
 msgid "Wrap Atoms to Cell"
 msgstr "&Atomları Hücreye Sar"
 
-#: qtgui/rwmolecule.cpp:1132
+#: qtgui/rwmolecule.cpp:505
 #, fuzzy
 msgid "Scale Cell Volume"
 msgstr "Birim Hücre Hacmi Uyarla"
 
-#: qtgui/rwmolecule.cpp:1152
+#: qtgui/rwmolecule.cpp:525
 msgid "Build Super Cell"
 msgstr "Süper Hücre Oluştur"
 
-#: qtgui/rwmolecule.cpp:1176
+#: qtgui/rwmolecule.cpp:549
 msgid "Niggli Reduction"
 msgstr "Niggli Redüksiyon"
 
-#: qtgui/rwmolecule.cpp:1198
+#: qtgui/rwmolecule.cpp:571
 msgid "Rotate to Standard Orientation"
 msgstr "Standart Yerleşime Döndür"
 
-#: qtgui/rwmolecule.cpp:1223 qtplugins/spacegroup/spacegroup.cpp:69
+#: qtgui/rwmolecule.cpp:596 qtplugins/spacegroup/spacegroup.cpp:69
 #, fuzzy
 msgid "Reduce to Primitive"
 msgstr "Primitif Hücreye İndirge"
 
-#: qtgui/rwmolecule.cpp:1248 qtplugins/spacegroup/spacegroup.cpp:75
+#: qtgui/rwmolecule.cpp:621 qtplugins/spacegroup/spacegroup.cpp:75
 #: qtplugins/spacegroup/spacegroup.cpp:233
 msgid "Conventionalize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:1273 qtplugins/spacegroup/spacegroup.cpp:258
+#: qtgui/rwmolecule.cpp:646 qtplugins/spacegroup/spacegroup.cpp:258
 #, fuzzy
 msgid "Symmetrize Cell"
 msgstr "Kristali Simetrikleştir"
 
-#: qtgui/rwmolecule.cpp:1292 qtplugins/spacegroup/spacegroup.cpp:86
+#: qtgui/rwmolecule.cpp:665 qtplugins/spacegroup/spacegroup.cpp:86
 msgid "Fill Unit Cell"
 msgstr "Birim Hücreyi Doldur"
 
-#: qtgui/rwmolecule.cpp:1312
+#: qtgui/rwmolecule.cpp:685
 #, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Asimetrik Birime İndirge"
+
+#: qtgui/rwmolecule_undo.h:30
+msgid "Modify Molecule"
+msgstr "Molekülü Değiştir"
 
 #: qtplugins/3dmol/3dmol.cpp:43
 msgid "ThreeDMol HTML Block."
 msgstr ""
 
-#: qtplugins/3dmol/3dmol.cpp:53 qtplugins/fetchpdb/fetchpdb.cpp:54
+#: qtplugins/3dmol/3dmol.cpp:53 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:59
-#: qtplugins/insertfragment/insertfragment.cpp:66
+#: qtplugins/insertfragment/insertfragment.cpp:70
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
 #: qtplugins/povray/povray.cpp:58 qtplugins/svg/svg.cpp:46
 #: qtplugins/vrml/vrml.cpp:58
@@ -1414,18 +1430,15 @@ msgstr "&Dışa Aktar"
 msgid "ThreeDMol"
 msgstr ""
 
-#. i18n: file: qtplugins/apbs/apbsdialog.ui:177
-#. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
-#: qtplugins/apbs/apbs.cpp:43:141
-msgid "Run APBS"
+#: qtplugins/apbs/apbs.cpp:43
+#, fuzzy
+msgid "Run APBS..."
 msgstr "APBS'yi çalıştır"
 
-#: qtplugins/apbs/apbs.cpp:48 qtplugins/apbs/apbs.cpp:73
-#: qtplugins/cp2kinput/cp2kinput.cpp:80
-#: qtplugins/gamessinput/gamessinput.cpp:83
-#: qtplugins/quantuminput/quantuminput.cpp:107
-msgid "Open Output File"
-msgstr ""
+#: qtplugins/apbs/apbs.cpp:48
+#, fuzzy
+msgid "Open Output File..."
+msgstr "WFN Dosyasını Aç"
 
 #: qtplugins/apbs/apbs.cpp:61 qtplugins/cp2kinput/cp2kinput.cpp:60
 #: qtplugins/gamessinput/gamessinput.cpp:63
@@ -1437,6 +1450,12 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
+msgstr ""
+
+#: qtplugins/apbs/apbs.cpp:73 qtplugins/cp2kinput/cp2kinput.cpp:80
+#: qtplugins/gamessinput/gamessinput.cpp:83
+#: qtplugins/quantuminput/quantuminput.cpp:107
+msgid "Open Output File"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:74
@@ -1494,7 +1513,7 @@ msgstr "PQR Dosyaları (* .pqr)"
 #: qtplugins/apbs/apbsdialog.cpp:143 qtplugins/apbs/apbsdialog.cpp:153
 #: qtplugins/commandscripts/command.cpp:98 qtplugins/cp2kinput/cp2kinput.cpp:96
 #: qtplugins/gamessinput/gamessinput.cpp:99
-#: qtplugins/insertfragment/insertfragment.cpp:104
+#: qtplugins/insertfragment/insertfragment.cpp:119
 #: qtplugins/lammpsinput/lammpsinput.cpp:75
 #: qtplugins/openbabel/openbabel.cpp:195 qtplugins/openbabel/openbabel.cpp:204
 #: qtplugins/openbabel/openbabel.cpp:214 qtplugins/openbabel/openbabel.cpp:328
@@ -1539,61 +1558,119 @@ msgstr "Başarı"
 msgid "Input file written to '%1'"
 msgstr "Giriş dosyası '%1' e yazılmış"
 
-#: qtplugins/applycolors/applycolors.cpp:23
+#: qtplugins/applycolors/applycolors.cpp:29
+#: qtplugins/applycolors/applycolors.cpp:50
 #, fuzzy
 msgid "By Custom Color..."
 msgstr "Özel Renk:"
 
-#: qtplugins/applycolors/applycolors.cpp:27
+#: qtplugins/applycolors/applycolors.cpp:34
 #, fuzzy
 msgid "By Atomic Index"
 msgstr "Atom numarası."
 
-#: qtplugins/applycolors/applycolors.cpp:31
+#: qtplugins/applycolors/applycolors.cpp:39
+#, fuzzy
+msgid "By Distance"
+msgstr "Uzaklığa göre Renklendir"
+
+#: qtplugins/applycolors/applycolors.cpp:44
 #, fuzzy
 msgid "By Element"
 msgstr "Element"
 
-#: qtplugins/applycolors/applycolors.cpp:47
+#: qtplugins/applycolors/applycolors.cpp:55
+msgid "By Chain"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:60
+#, fuzzy
+msgid "By Secondary Structure"
+msgstr "Proteinin ikinci yapısını kaplar"
+
+#: qtplugins/applycolors/applycolors.cpp:65
+msgid "By Amino Acid"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:70
+msgid "By Shapely Scheme"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:84
 msgid "Apply color schemes to atoms and residues."
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:57
-#: qtplugins/resetview/resetview.cpp:54
+#: qtplugins/applycolors/applycolors.cpp:95
+#: qtplugins/applycolors/applycolors.cpp:97
+#: qtplugins/overlayaxes/overlayaxes.cpp:264
+#: qtplugins/resetview/resetview.cpp:65
 msgid "&View"
 msgstr "&Göster"
 
-#: qtplugins/applycolors/applycolors.cpp:57
+#: qtplugins/applycolors/applycolors.cpp:95
 #, fuzzy
 msgid "Color Atoms"
 msgstr "Atom Çiz"
+
+#: qtplugins/applycolors/applycolors.cpp:97
+#, fuzzy
+msgid "Color Residues"
+msgstr "Kalıntıya Göre Renk"
 
 #: qtplugins/applycolors/applycolors.h:27
 msgid "ApplyColors"
 msgstr ""
 
-#: qtplugins/ballandstick/ballandstick.cpp:207
-#: qtplugins/wireframe/wireframe.cpp:100
-msgid "Show multiple bonds?"
+#: qtplugins/ballandstick/ballandstick.cpp:92
+msgid "Atom scale"
+msgstr ""
+
+#: qtplugins/ballandstick/ballandstick.cpp:101
+#, fuzzy
+msgid "Bond scale"
+msgstr "Bağ SIrası"
+
+#: qtplugins/ballandstick/ballandstick.cpp:104
+#: qtplugins/wireframe/wireframe.cpp:93
+#, fuzzy
+msgid "Show multiple bonds"
 msgstr "Birden çok bağ gösterilsin mi?"
 
-#: qtplugins/ballandstick/ballandstick.cpp:211
-#: qtplugins/wireframe/wireframe.cpp:104
+#: qtplugins/ballandstick/ballandstick.cpp:110
+#: qtplugins/wireframe/wireframe.cpp:99
 #, fuzzy
-msgid "Show hydrogens?"
+msgid "Show hydrogens"
 msgstr "Hidrojenler"
 
-#: qtplugins/ballandstick/ballandstick.h:43
+#: qtplugins/ballandstick/ballandstick.h:29
 msgid "Ball and Stick"
 msgstr "Top ve Çubuk"
 
-#: qtplugins/ballandstick/ballandstick.h:47
+#: qtplugins/ballandstick/ballandstick.h:33
 msgid "Render atoms as spheres and bonds as cylinders."
 msgstr ""
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:316
-msgid "Bond-centric manipulation"
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:302
+#, fuzzy
+msgid "Bond-Centric Manipulation"
 msgstr "Bağ merkezli manipülasyon"
+
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:950
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:1038
+#: qtplugins/measuretool/measuretool.cpp:197
+#: qtplugins/measuretool/measuretool.cpp:205
+#: qtplugins/measuretool/measuretool.cpp:206
+#, qt-format
+msgid "%L1°"
+msgstr ""
+
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:972
+#: qtplugins/editor/editor.cpp:237 qtplugins/measuretool/measuretool.cpp:214
+#: qtplugins/measuretool/measuretool.cpp:215
+#: qtplugins/measuretool/measuretool.cpp:217
+#, qt-format
+msgid "%L1 Å"
+msgstr ""
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:188
 msgid "Bond centric manipulation tool."
@@ -1622,12 +1699,13 @@ msgstr "Bağ Oluşturmayı Yapılandır…"
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:45
 #: qtplugins/customelements/customelements.cpp:54
 #: qtplugins/hydrogens/hydrogens.cpp:67
-#: qtplugins/insertfragment/insertfragment.cpp:68
+#: qtplugins/insertfragment/insertfragment.cpp:72
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
 msgstr "&İnşa Et"
 
 #: qtplugins/bonding/bonding.cpp:65
+#: qtplugins/propertytables/propertymodel.cpp:381
 msgid "Bond"
 msgstr "Bağ"
 
@@ -1638,6 +1716,49 @@ msgstr "Bağ oluşturma"
 #: qtplugins/bonding/bonding.h:36
 msgid "Perform bonding operations."
 msgstr "Bağlama işlemlerini gerçekleştirin."
+
+#: qtplugins/cartoons/cartoons.cpp:96
+msgctxt "protein rendering style"
+msgid "Backbone"
+msgstr ""
+
+#: qtplugins/cartoons/cartoons.cpp:97
+msgctxt "protein rendering style"
+msgid "Trace"
+msgstr ""
+
+#: qtplugins/cartoons/cartoons.cpp:98
+msgctxt "protein rendering style"
+msgid "Tube"
+msgstr ""
+
+#: qtplugins/cartoons/cartoons.cpp:99
+#, fuzzy
+msgctxt "protein rendering style"
+msgid "Ribbon"
+msgstr "Şerit"
+
+#: qtplugins/cartoons/cartoons.cpp:100
+#, fuzzy
+msgctxt "protein rendering style"
+msgid "Simple Cartoon"
+msgstr "Karikatür"
+
+#: qtplugins/cartoons/cartoons.cpp:101
+#, fuzzy
+msgctxt "protein rendering style"
+msgid "Cartoon"
+msgstr "Karikatür"
+
+#: qtplugins/cartoons/cartoons.cpp:102
+msgctxt "protein rendering style"
+msgid "Rope"
+msgstr ""
+
+#: qtplugins/cartoons/cartoons.h:34
+#, fuzzy
+msgid "Simple display of Cartoons family."
+msgstr "VdW kürelerinin basit gösterimi."
 
 #: qtplugins/clientserver/clientserver.cpp:73
 msgid "Client server operations."
@@ -1876,7 +1997,8 @@ msgstr "Atomik Koordinatları Düzenle"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:185
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612:1528
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612
+#: qtplugins/label/label.cpp:157:1570
 msgid "Custom"
 msgstr "Özel"
 
@@ -1918,41 +2040,41 @@ msgstr "Turbomole biçimi"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:42:258
+#: qtplugins/copypaste/copypaste.cpp:33:258
 msgid "Copy"
 msgstr "Kopyala"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:43:255
+#: qtplugins/copypaste/copypaste.cpp:34:255
 msgid "Cut"
 msgstr "Kes"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:44:267
+#: qtplugins/copypaste/copypaste.cpp:35:267
 msgid "Clear"
 msgstr "Temizle"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
-#: qtplugins/copypaste/copypaste.cpp:45:261
+#: qtplugins/copypaste/copypaste.cpp:36:261
 msgid "Paste"
 msgstr "Yapıştır"
 
-#: qtplugins/copypaste/copypaste.cpp:78
+#: qtplugins/copypaste/copypaste.cpp:69
 msgid "&Edit"
 msgstr "&Düzenle"
 
-#: qtplugins/copypaste/copypaste.cpp:123
+#: qtplugins/copypaste/copypaste.cpp:114
 msgid "Error Clipping Molecule"
 msgstr "Molekülü Kırpma Hatası"
 
-#: qtplugins/copypaste/copypaste.cpp:124
+#: qtplugins/copypaste/copypaste.cpp:115
 msgid "Error generating clipboard data."
 msgstr "Pano verileri oluşturulurken hata meydana geldi."
 
-#: qtplugins/copypaste/copypaste.cpp:125
+#: qtplugins/copypaste/copypaste.cpp:116
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -1960,7 +2082,7 @@ msgid ""
 "%2"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:129 qtplugins/copypaste/copypaste.cpp:240
+#: qtplugins/copypaste/copypaste.cpp:120 qtplugins/copypaste/copypaste.cpp:238
 #, qt-format
 msgid ""
 "Reader error:\n"
@@ -1969,19 +2091,19 @@ msgstr ""
 "Okuyucu hatası:\n"
 "%1"
 
-#: qtplugins/copypaste/copypaste.cpp:201 qtplugins/copypaste/copypaste.cpp:234
+#: qtplugins/copypaste/copypaste.cpp:199 qtplugins/copypaste/copypaste.cpp:232
 msgid "Error Pasting Molecule"
 msgstr "Molekülü Yapıştırma Hatası"
 
-#: qtplugins/copypaste/copypaste.cpp:202
+#: qtplugins/copypaste/copypaste.cpp:200
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr "Molekül yapıştırılamıyor: Pano boş!"
 
-#: qtplugins/copypaste/copypaste.cpp:235
+#: qtplugins/copypaste/copypaste.cpp:233
 msgid "Error reading clipboard data."
 msgstr "Pano verilerini okuma hatası."
 
-#: qtplugins/copypaste/copypaste.cpp:236
+#: qtplugins/copypaste/copypaste.cpp:234
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -1989,16 +2111,16 @@ msgid ""
 "%2"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.h:42
+#: qtplugins/copypaste/copypaste.h:31
 msgid "Copy and paste"
 msgstr "Kopyala ve Yapıştır"
 
-#: qtplugins/copypaste/copypaste.h:46
+#: qtplugins/copypaste/copypaste.h:35
 msgid "Interact with the clipboard."
 msgstr "Pano ile etkileşim kurun."
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:44
-msgid "&CP2K"
+msgid "&CP2K..."
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinput.h:45
@@ -2047,13 +2169,13 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:374
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:409:623
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:409:662
 msgid "NONE"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:377:1201
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:377:1240
 msgid "PME"
 msgstr ""
 
@@ -2200,11 +2322,19 @@ msgstr "Kristal Yapıştır"
 msgid "Tools for crystal-specific editing/analysis."
 msgstr "Kristale özgü düzenleme / analiz araçları."
 
-#: qtplugins/crystal/crystalscene.h:39
+#: qtplugins/crystal/crystalscene.cpp:147 qtplugins/wireframe/wireframe.cpp:89
+msgid "Line width:"
+msgstr ""
+
+#: qtplugins/crystal/crystalscene.cpp:152
+msgid "Line color:"
+msgstr ""
+
+#: qtplugins/crystal/crystalscene.h:30
 msgid "Crystal Lattice"
 msgstr "Kristal Kafes"
 
-#: qtplugins/crystal/crystalscene.h:43
+#: qtplugins/crystal/crystalscene.h:34
 msgid "Render the unit cell boundaries."
 msgstr ""
 
@@ -2233,34 +2363,34 @@ msgstr "Geçerli moleküldeki özel öğe türlerini değiştirin."
 msgid "Custom Elements"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:85 qtplugins/editor/editor.cpp:117
+#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:109
 msgid "Draw"
 msgstr "Çiz"
 
-#: qtplugins/editor/editor.cpp:111
+#: qtplugins/editor/editor.cpp:103
 msgid "Draw Atom"
 msgstr "Atom Çiz"
 
-#: qtplugins/editor/editor.cpp:121
+#: qtplugins/editor/editor.cpp:113
 msgid "Change Bond Type"
 msgstr "Bağ Türünü Değiştirin"
 
-#: qtplugins/editor/editor.cpp:134
+#: qtplugins/editor/editor.cpp:126
 msgid "Remove Bond"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:231 qtplugins/measuretool/measuretool.cpp:197
-#: qtplugins/measuretool/measuretool.cpp:223
+#: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:187
+#: qtplugins/measuretool/measuretool.cpp:213
 #, fuzzy
 msgid "Distance:"
 msgstr "Uzaklığa göre Renklendir"
 
-#: qtplugins/editor/editor.cpp:234
+#: qtplugins/editor/editor.cpp:235
 #, qt-format
-msgid "Distance: %L1 Å"
-msgstr "Mesafe: %L1 Å"
+msgid "%1 %L2"
+msgstr ""
 
-#: qtplugins/editor/editor.h:44 qtplugins/editor/editor.h:45
+#: qtplugins/editor/editor.h:45 qtplugins/editor/editor.h:46
 msgid "Editor tool"
 msgstr "Düzenleyici aracı"
 
@@ -2284,50 +2414,50 @@ msgstr "Çift"
 msgid "Triple"
 msgstr "Üçlü"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:54 qtplugins/importpqr/importpqr.cpp:59
-#: qtplugins/insertfragment/insertfragment.cpp:66
+#: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:59
+#: qtplugins/insertfragment/insertfragment.cpp:70
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
 msgid "&Import"
 msgstr "&İçe Aktar"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:88
+#: qtplugins/fetchpdb/fetchpdb.cpp:75
 msgid "PDB Code"
 msgstr ""
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:89
+#: qtplugins/fetchpdb/fetchpdb.cpp:76
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
 msgid "Chemical structure to download."
 msgstr "İndirme işlemi için kimyasal yapı"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:99
+#: qtplugins/fetchpdb/fetchpdb.cpp:88
 #: qtplugins/networkdatabases/networkdatabases.cpp:102
 #, qt-format
 msgid "Querying for %1"
 msgstr "%1 için sorgulanıyor"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:110 qtplugins/fetchpdb/fetchpdb.cpp:121
+#: qtplugins/fetchpdb/fetchpdb.cpp:99 qtplugins/fetchpdb/fetchpdb.cpp:117
 #: qtplugins/networkdatabases/networkdatabases.cpp:113
 #: qtplugins/networkdatabases/networkdatabases.cpp:124
 msgid "Network Download Failed"
 msgstr "Ağdan İndirme Başarısız"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:111
+#: qtplugins/fetchpdb/fetchpdb.cpp:100
 #: qtplugins/networkdatabases/networkdatabases.cpp:114
 msgid "Network timeout or other error."
 msgstr "Ağ zaman aşımı veya başka bir hata."
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:122
+#: qtplugins/fetchpdb/fetchpdb.cpp:118
 #: qtplugins/networkdatabases/networkdatabases.cpp:125
 #, qt-format
 msgid "Specified molecule could not be found: %1"
 msgstr "Belirtilen molekül bulunamadı : %1"
 
-#: qtplugins/fetchpdb/fetchpdb.h:48
+#: qtplugins/fetchpdb/fetchpdb.h:35
 #, fuzzy
 msgid "Fetch from PDB"
 msgstr "PDB'den Al..."
 
-#: qtplugins/fetchpdb/fetchpdb.h:52
+#: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
 msgstr ""
 
@@ -2339,8 +2469,15 @@ msgstr "Kuvvet"
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Molekülün atomları için kuvvet alanı görselleştirmelerini işle."
 
+#: qtplugins/forcefield/forcefielddialog.cpp:331
+#: qtplugins/openbabel/obforcefielddialog.cpp:331
+#, qt-format
+msgid "Autodetect (%1)"
+msgstr "Otomatik algılama (%1)"
+
 #: qtplugins/gamessinput/gamessinput.cpp:45
-msgid "&GAMESS"
+#, fuzzy
+msgid "&GAMESS..."
 msgstr "&GAMESS"
 
 #: qtplugins/gamessinput/gamessinput.h:45
@@ -2458,7 +2595,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
-#: qtplugins/importpqr/importpqr.h:45:513
+#: qtplugins/importpqr/importpqr.h:45:552
 msgid "Import From PQR"
 msgstr ""
 
@@ -2466,21 +2603,32 @@ msgstr ""
 msgid "Download a molecule from PQR."
 msgstr ""
 
-#: qtplugins/insertfragment/insertfragment.cpp:47
+#: qtplugins/insertfragment/insertfragment.cpp:46
 msgid "Fragment..."
 msgstr "Parçala..."
 
-#: qtplugins/insertfragment/insertfragment.cpp:68
+#: qtplugins/insertfragment/insertfragment.cpp:51
+#, fuzzy
+msgid "Crystal..."
+msgstr "Kristal Yapıştır"
+
+#: qtplugins/insertfragment/insertfragment.cpp:72
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Insert"
 msgstr "&Ekle"
 
-#: qtplugins/insertfragment/insertfragment.cpp:105
+#: qtplugins/insertfragment/insertfragment.cpp:120
 #, qt-format
 msgid "Error reading file (%1)."
 msgstr ""
 
-#: qtplugins/insertfragment/insertfragment.cpp:110
+#. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
+#: qtplugins/insertfragment/insertfragment.cpp:128:360
+msgid "Import Crystal"
+msgstr ""
+
+#: qtplugins/insertfragment/insertfragment.cpp:132
 msgid "Insert Fragment"
 msgstr "Parça Ekle"
 
@@ -2489,13 +2637,109 @@ msgstr "Parça Ekle"
 msgid "InsertFragment"
 msgstr "Parça Ekle"
 
-#: qtplugins/insertfragment/insertfragment.h:70
+#: qtplugins/insertfragment/insertfragment.h:71
 #, fuzzy
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Daha büyük moleküller inşa etmek için molekül parçaları ekle"
 
+#: qtplugins/label/label.cpp:134
+msgid "Color:"
+msgstr ""
+
+#: qtplugins/label/label.cpp:144
+#, fuzzy
+msgid "Distance from center:"
+msgstr "Mesafe Birimi:"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
+#. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:640
+#. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:108
+#. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
+#: qtplugins/label/label.cpp:152 qtplugins/label/label.cpp:192:1249
+msgid "None"
+msgstr "Hiçbiri"
+
+#: qtplugins/label/label.cpp:161
+msgid "Index"
+msgstr ""
+
+#: qtplugins/label/label.cpp:162
+msgid "In."
+msgstr ""
+
+#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:349
+#: qtplugins/symmetry/operationstablemodel.cpp:64
+msgid "Element"
+msgstr "Element"
+
+#: qtplugins/label/label.cpp:167
+msgid "El."
+msgstr ""
+
+#: qtplugins/label/label.cpp:171
+#, fuzzy
+msgid "Element & Ordinal"
+msgstr "Element"
+
+#: qtplugins/label/label.cpp:172
+msgid "El.&Or."
+msgstr ""
+
+#: qtplugins/label/label.cpp:175
+msgid ", "
+msgstr ""
+
+#: qtplugins/label/label.cpp:186
+#, fuzzy
+msgid "Atom Label:"
+msgstr "Etiket"
+
+#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:390
+msgid "ID"
+msgstr ""
+
+#: qtplugins/label/label.cpp:201
+#: qtplugins/plugindownloader/downloaderwidget.cpp:72
+#: qtplugins/propertytables/propertymodel.cpp:388
+msgid "Name"
+msgstr ""
+
+#: qtplugins/label/label.cpp:205
+msgid " & "
+msgstr ""
+
+#: qtplugins/label/label.cpp:217
+msgid "Residue Label:"
+msgstr ""
+
+#: qtplugins/label/label.h:25
+#, fuzzy
+msgid "Labels"
+msgstr "Etiket"
+
+#: qtplugins/label/label.h:29
+msgid "Display labels on ball and stick style."
+msgstr ""
+
+#: qtplugins/label/labeleditor.cpp:31
+#, fuzzy
+msgid "Write"
+msgstr "yaz"
+
+#: qtplugins/label/labeleditor.cpp:66
+#, fuzzy
+msgid "Create Label"
+msgstr "Yeni bir görünüm oluştur"
+
+#: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
+#, fuzzy
+msgid "Label editor tool"
+msgstr "Düzenleyici aracı"
+
 #: qtplugins/lammpsinput/lammpsinput.cpp:41
-msgid "&LAMMPS Input"
+msgid "&LAMMPS..."
 msgstr ""
 
 #: qtplugins/lammpsinput/lammpsinput.h:42
@@ -2515,12 +2759,8 @@ msgstr ""
 "Önceki yazıyı değiştirmek istiyor musunuz, Gaussian girdi destesinin "
 "önizleme bölmesinde yapılan değişikliklerin hepsi kaybedilecek ?"
 
-#: qtplugins/licorice/licorice.h:40
-msgid "Licorice"
-msgstr "Meyan kökü"
-
-#: qtplugins/licorice/licorice.h:44
-msgid "Render atoms as licorice."
+#: qtplugins/licorice/licorice.h:33
+msgid "Render atoms as licorice / sticks."
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:43
@@ -2552,7 +2792,7 @@ msgstr "Satır biçimi okuyucu bulunamadı!"
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133:925
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:964
 msgid "Insert Molecule..."
 msgstr "Molekül Ekle..."
 
@@ -2583,37 +2823,23 @@ msgstr ""
 msgid "Manipulate tool"
 msgstr "Düzenleme aracı"
 
-#: qtplugins/measuretool/measuretool.cpp:66
+#: qtplugins/measuretool/measuretool.cpp:56
 msgid "Measure"
 msgstr "Ölçü"
 
-#: qtplugins/measuretool/measuretool.cpp:195
-#: qtplugins/measuretool/measuretool.cpp:206
+#: qtplugins/measuretool/measuretool.cpp:185
+#: qtplugins/measuretool/measuretool.cpp:196
 msgid "Dihedral:"
 msgstr ""
 
-#: qtplugins/measuretool/measuretool.cpp:196
+#: qtplugins/measuretool/measuretool.cpp:186
 msgid "Angle:"
 msgstr "Açı:"
 
-#: qtplugins/measuretool/measuretool.cpp:207
-#: qtplugins/measuretool/measuretool.cpp:215
-#: qtplugins/measuretool/measuretool.cpp:216
-#, qt-format
-msgid "%L1°"
-msgstr ""
-
-#: qtplugins/measuretool/measuretool.cpp:214
+#: qtplugins/measuretool/measuretool.cpp:204
 #, fuzzy
 msgid "Angles:"
 msgstr "Açı %1"
-
-#: qtplugins/measuretool/measuretool.cpp:224
-#: qtplugins/measuretool/measuretool.cpp:225
-#: qtplugins/measuretool/measuretool.cpp:227
-#, qt-format
-msgid "%L1 Å"
-msgstr ""
 
 #: qtplugins/measuretool/measuretool.h:48
 #: qtplugins/measuretool/measuretool.h:49
@@ -2633,13 +2859,15 @@ msgid "View general properties of a molecule."
 msgstr "Bir molekülün genel özelliklerini görüntüleyin."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
+#: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/qtaim/qtaimextension.cpp:90 qtplugins/spectra/spectra.cpp:55
-#: qtplugins/surfaces/surfaces.cpp:120 qtplugins/symmetry/symmetry.cpp:94
+#: qtplugins/surfaces/surfaces.cpp:120 qtplugins/symmetry/symmetry.cpp:83
 msgid "&Analysis"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:53
-#: qtplugins/symmetry/symmetry.cpp:94
+#: qtplugins/propertytables/propertytables.cpp:74
+#: qtplugins/symmetry/symmetry.cpp:83
 msgid "&Properties"
 msgstr "&Özellikler"
 
@@ -2686,11 +2914,6 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.h:51
 msgid "Interact with online databases, query structures etc."
 msgstr "Çevrimiçi veritabanları, sorgu yapıları vb. ile etkileşim kurun."
-
-#: qtplugins/openbabel/obforcefielddialog.cpp:331
-#, qt-format
-msgid "Autodetect (%1)"
-msgstr "Otomatik algılama (%1)"
 
 #: qtplugins/openbabel/openbabel.cpp:41 qtplugins/openbabel/openbabel.cpp:488
 #, fuzzy
@@ -2912,8 +3135,9 @@ msgid "Interact with OpenBabel utilities."
 msgstr ""
 
 #: qtplugins/openmminput/openmminput.cpp:41
-msgid "&OpenMM Script Builder"
-msgstr ""
+#, fuzzy
+msgid "&OpenMM Script..."
+msgstr "Hata ayıklama komut dosyası ..."
 
 #: qtplugins/openmminput/openmminput.h:42
 msgid "OpenMM input"
@@ -2950,7 +3174,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:509:1111
+#: qtplugins/openmminput/openmminputdialog.cpp:509:1150
 msgid "input.prmtop"
 msgstr ""
 
@@ -2980,15 +3204,20 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1072
-#: qtplugins/openmminput/openmminputdialog.cpp:1081:1228 rc.cpp:1243
+#: qtplugins/openmminput/openmminputdialog.cpp:1081:1267 rc.cpp:1282
 msgid "True"
 msgstr "Doğru"
 
-#: qtplugins/overlayaxes/overlayaxes.h:41
+#: qtplugins/overlayaxes/overlayaxes.cpp:237
+#, fuzzy
+msgid "Reference Axes"
+msgstr "&Referans:"
+
+#: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
 msgstr "Referans Eksen Kaplaması"
 
-#: qtplugins/overlayaxes/overlayaxes.h:45
+#: qtplugins/overlayaxes/overlayaxes.h:33
 msgid "Render reference axes in the corner of the display."
 msgstr "Ekranın köşesinde referans eksenleri işleyin."
 
@@ -3015,7 +3244,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/playertool/playertool.cpp:124:1537
+#: qtplugins/playertool/playertool.cpp:124:1579
 #, fuzzy
 msgid "Frame:"
 msgstr "Kalan İsmi"
@@ -3033,7 +3262,7 @@ msgstr "Dinamik bağ?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:382
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:150:1543
+#: qtplugins/playertool/playertool.cpp:150:1585
 msgid "Record Movie..."
 msgstr "Film Kaydet..."
 
@@ -3162,10 +3391,6 @@ msgid "Update"
 msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
-msgid "Name"
-msgstr ""
-
-#: qtplugins/plugindownloader/downloaderwidget.cpp:72
 msgid "Version"
 msgstr ""
 
@@ -3199,7 +3424,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.cpp:39:1450
+#: qtplugins/plugindownloader/plugindownloader.cpp:39:1489
 msgid "Download Plugins..."
 msgstr ""
 
@@ -3233,6 +3458,208 @@ msgstr ""
 #: qtplugins/povray/povray.h:40
 msgid "Render the scene using POV-Ray."
 msgstr "POV-Ray kullanarak sahneyi işleyin."
+
+#: qtplugins/propertytables/propertymodel.cpp:351
+msgid "Valence"
+msgstr "Değerlik"
+
+#: qtplugins/propertytables/propertymodel.cpp:353
+msgid "X (Å)"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:355
+msgid "Y (Å)"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:357
+msgid "Z Å)"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:359
+#: qtplugins/propertytables/propertymodel.cpp:398
+#, fuzzy
+msgid "Color"
+msgstr "Atom Çiz"
+
+#: qtplugins/propertytables/propertymodel.cpp:362
+#, fuzzy
+msgid "Atom"
+msgstr "Atom %1"
+
+#: qtplugins/propertytables/propertymodel.cpp:369
+#: qtplugins/propertytables/propertymodel.cpp:408
+#: qtplugins/propertytables/propertymodel.cpp:425
+#: qtplugins/symmetry/operationstablemodel.cpp:60
+msgid "Type"
+msgstr "Tip"
+
+#: qtplugins/propertytables/propertymodel.cpp:371
+#, fuzzy
+msgid "Start Atom"
+msgstr "Animasyon"
+
+#: qtplugins/propertytables/propertymodel.cpp:373
+#, fuzzy
+msgid "End Atom"
+msgstr "Atom Bitir"
+
+#: qtplugins/propertytables/propertymodel.cpp:375
+#, fuzzy
+msgid "Bond Order"
+msgstr "Bağ SIrası"
+
+#: qtplugins/propertytables/propertymodel.cpp:377
+#, fuzzy
+msgctxt "in Angstrom"
+msgid "Length (Å)"
+msgstr "Uzunluk %1"
+
+#: qtplugins/propertytables/propertymodel.cpp:392
+msgid "Chain"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:394
+#, fuzzy
+msgid "Secondary Structure"
+msgstr "Yapı Dosyasını Yükle"
+
+#: qtplugins/propertytables/propertymodel.cpp:396
+#, fuzzy
+msgid "Heterogen"
+msgstr "Hidrojen"
+
+#: qtplugins/propertytables/propertymodel.cpp:410
+#: qtplugins/propertytables/propertymodel.cpp:427
+#, fuzzy
+msgid "Atom 1"
+msgstr "Atom %1"
+
+#: qtplugins/propertytables/propertymodel.cpp:412
+msgid "Vertex"
+msgstr "Köşe"
+
+#: qtplugins/propertytables/propertymodel.cpp:414
+#: qtplugins/propertytables/propertymodel.cpp:431
+#, fuzzy
+msgid "Atom 3"
+msgstr "Atom %1"
+
+#: qtplugins/propertytables/propertymodel.cpp:416
+#: qtplugins/propertytables/propertymodel.cpp:435
+#, fuzzy
+msgid "Angle (°)"
+msgstr "Açı:"
+
+#: qtplugins/propertytables/propertymodel.cpp:429
+#, fuzzy
+msgid "Atom 2"
+msgstr "Atom %1"
+
+#: qtplugins/propertytables/propertymodel.cpp:433
+#, fuzzy
+msgid "Atom 4"
+msgstr "Atom %1"
+
+#: qtplugins/propertytables/propertymodel.cpp:478
+msgctxt "pi helix"
+msgid "π Helix"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:480
+msgctxt "protein bend secondary structure"
+msgid "Bend"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:482
+msgctxt "alpha helix"
+msgid "α Helix"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:484
+msgctxt "beta sheet"
+msgid "β Sheet"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:486
+msgctxt "3-10 helix"
+msgid "3-10 helix"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:488
+msgctxt "beta bridge"
+msgid "β Bridge"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:490
+msgctxt "protein turn secondary structure"
+msgid "Turn"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:492
+msgctxt "protein coil secondary structure"
+msgid "Coil"
+msgstr ""
+
+#: qtplugins/propertytables/propertytables.cpp:28
+msgid "Atom Properties..."
+msgstr "Atom Özellikleri..."
+
+#: qtplugins/propertytables/propertytables.cpp:34
+msgid "Bond Properties..."
+msgstr "Bağ Özellikleri..."
+
+#: qtplugins/propertytables/propertytables.cpp:40
+msgid "Angle Properties..."
+msgstr "Açı Özellikleri..."
+
+#: qtplugins/propertytables/propertytables.cpp:46
+msgid "Torsion Properties..."
+msgstr "Bükülme Özellikleri..."
+
+#: qtplugins/propertytables/propertytables.cpp:52
+#, fuzzy
+msgid "Residue Properties..."
+msgstr "Molekük Özellikleri..."
+
+#: qtplugins/propertytables/propertytables.cpp:63
+msgid ""
+"Tables for displaying and editng atom, bond, angle and torsion properties."
+msgstr ""
+
+#: qtplugins/propertytables/propertytables.h:29
+#, fuzzy
+msgid "PropertyTables"
+msgstr "Özellikler"
+
+#: qtplugins/propertytables/propertyview.cpp:31
+msgid "Atom Properties"
+msgstr "Atom Özellikleri"
+
+#: qtplugins/propertytables/propertyview.cpp:34
+msgid "Bond Properties"
+msgstr "Bağ Özellikleri"
+
+#: qtplugins/propertytables/propertyview.cpp:37
+msgid "Angle Properties"
+msgstr "Açı Özellikleri"
+
+#: qtplugins/propertytables/propertyview.cpp:40
+msgid "Torsion Properties"
+msgstr "Bükülme Özellikleri"
+
+#: qtplugins/propertytables/propertyview.cpp:43
+msgid "Conformer Properties"
+msgstr "Uydurma Özellikleri"
+
+#: qtplugins/propertytables/propertyview.cpp:46
+#, fuzzy
+msgid "Residue Properties"
+msgstr "Bağ Özellikleri"
+
+#: qtplugins/propertytables/propertyview.cpp:49
+#, fuzzy
+msgid "Molecule Properties"
+msgstr "Molekük Özellikleri..."
 
 #: qtplugins/qtaim/qtaimengine.h:39 qtplugins/qtaim/qtaimextension.cpp:90
 #: qtplugins/qtaim/qtaimextension.h:35
@@ -3277,7 +3704,7 @@ msgstr ""
 "Herhangi bir değişikliğin etkili olması için Avogadro yeniden "
 "başlatılmalıdır."
 
-#: qtplugins/quantuminput/quantuminput.cpp:238
+#: qtplugins/quantuminput/quantuminput.cpp:242
 msgid "Set Python Path..."
 msgstr "Python Yolunu Ayarla ..."
 
@@ -3289,11 +3716,11 @@ msgstr ""
 msgid "Generate input for quantum codes."
 msgstr ""
 
-#: qtplugins/resetview/resetview.cpp:37
+#: qtplugins/resetview/resetview.cpp:48
 msgid "Center"
 msgstr "Ortala"
 
-#: qtplugins/resetview/resetview.cpp:38
+#: qtplugins/resetview/resetview.cpp:49
 msgid "Align View to Axes"
 msgstr "Görünümü Eksene Hizala"
 
@@ -3345,35 +3772,40 @@ msgstr ""
 msgid "&Select"
 msgstr "&Seç"
 
-#: qtplugins/select/select.cpp:153
+#: qtplugins/select/select.cpp:159
 msgid "Select Atoms by Index"
 msgstr ""
 
-#: qtplugins/select/select.cpp:154
+#: qtplugins/select/select.cpp:160
 msgid "Atoms to Select:"
 msgstr ""
 
-#: qtplugins/select/select.cpp:190
+#: qtplugins/select/select.cpp:197
 msgid "Select Atoms by Residue"
 msgstr ""
 
-#: qtplugins/select/select.cpp:191
+#: qtplugins/select/select.cpp:198
 msgid "Residues to Select:"
 msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:39:1576
+#: qtplugins/select/select.h:40:1618
 #, fuzzy
 msgid "Select"
 msgstr "&Seç"
 
-#: qtplugins/selectiontool/selectiontool.cpp:62
+#: qtplugins/selectiontool/selectiontool.cpp:66
 msgid "Selection"
 msgstr "Seçim"
 
-#: qtplugins/selectiontool/selectiontool.h:46
+#: qtplugins/selectiontool/selectiontool.cpp:244
+#, fuzzy
+msgid "Paint Atoms"
+msgstr "Animasyon"
+
 #: qtplugins/selectiontool/selectiontool.h:47
+#: qtplugins/selectiontool/selectiontool.h:48
 msgid "Selection tool"
 msgstr ""
 
@@ -3384,7 +3816,7 @@ msgstr "Uzay Grubu Algıla"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:81:1561
+#: qtplugins/spacegroup/spacegroup.cpp:81:1603
 msgid "Symmetrize"
 msgstr ""
 
@@ -3573,30 +4005,22 @@ msgstr ""
 msgid "Render the scene in a SVG file."
 msgstr ""
 
-#: qtplugins/symmetry/operationstablemodel.cpp:60
-msgid "Type"
-msgstr "Tip"
-
 #: qtplugins/symmetry/operationstablemodel.cpp:62
 msgid "Class"
 msgstr "Sınıf"
 
-#: qtplugins/symmetry/operationstablemodel.cpp:64
-msgid "Element"
-msgstr "Element"
-
-#: qtplugins/symmetry/symmetry.cpp:53
+#: qtplugins/symmetry/symmetry.cpp:42
 #, fuzzy
 msgid "Symmetry..."
 msgstr "Simetri"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:45:1546
+#: qtplugins/symmetry/symmetry.h:34:1588
 msgid "Symmetry"
 msgstr "Simetri"
 
-#: qtplugins/symmetry/symmetry.h:78
+#: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
 msgstr "Simetri işlevselliği sağlayın."
 
@@ -3612,28 +4036,19 @@ msgstr ""
 msgid "∞"
 msgstr ""
 
-#: qtplugins/symmetry/symmetrywidget.cpp:359
+#: qtplugins/symmetry/symmetrywidget.cpp:341
 #, fuzzy, qt-format
 msgid "Group %1"
 msgstr "Grup Adı"
 
-#: qtplugins/symmetry/symmetrywidget.cpp:367
+#: qtplugins/symmetry/symmetrywidget.cpp:349
 #, qt-format
 msgid "%1 %2"
 msgstr ""
 
-#: qtplugins/vanderwaals/vanderwaals.h:40
-msgid "Van der Waals"
-msgstr ""
-
-#: qtplugins/vanderwaals/vanderwaals.h:44
+#: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
 msgstr "VdW kürelerinin basit gösterimi."
-
-#: qtplugins/vanderwaalsao/vanderwaalsao.h:41
-#, fuzzy
-msgid "Van der Waals (AO)"
-msgstr "Van der Waals Küreleri"
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:45
 msgid "Simple display of VdW spheres with ambient occlusion."
@@ -3655,11 +4070,7 @@ msgstr ""
 msgid "Render the scene using VRML."
 msgstr "Sahneyi VRML kullanarak işleyin."
 
-#: qtplugins/wireframe/wireframe.h:39
-msgid "Wireframe"
-msgstr "Telekafes"
-
-#: qtplugins/wireframe/wireframe.h:43
+#: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
 msgstr ""
 
@@ -3743,17 +4154,21 @@ msgstr ""
 msgid "Placeholder text..."
 msgstr "Yer tutucu metin ..."
 
-#. i18n: file: molequeue/inputgeneratorwidget.ui:83
+#. i18n: file: molequeue/inputgeneratorwidget.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
-msgid "Reset to Default Values"
-msgstr "Varsayılan Değerlere Sıfırla"
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:918
+#. i18n: ectx: property (text), widget (QPushButton, resetButton)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:982
+#. i18n: ectx: property (text), widget (QPushButton, resetButton)
+msgid "Reset"
+msgstr ""
 
-#. i18n: file: molequeue/inputgeneratorwidget.ui:90
+#. i18n: file: molequeue/inputgeneratorwidget.ui:93
 #. i18n: ectx: property (text), widget (QCheckBox, debugCheckBox)
 msgid "Debug script..."
 msgstr "Hata ayıklama komut dosyası ..."
 
-#. i18n: file: molequeue/inputgeneratorwidget.ui:113
+#. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
@@ -3764,10 +4179,11 @@ msgstr "Hata ayıklama komut dosyası ..."
 msgid "Submit Calculation..."
 msgstr ""
 
-#. i18n: file: molequeue/inputgeneratorwidget.ui:120
+#. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-msgid "Write files to disk..."
-msgstr "Dosyaları diske yaz ..."
+#, fuzzy
+msgid "Save Input..."
+msgstr "APBS Giriş Dosyasını Kaydet"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -3946,6 +4362,11 @@ msgstr "APBS Giriş Dosyası"
 #. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
 msgid "Save Input File"
 msgstr ""
+
+#. i18n: file: qtplugins/apbs/apbsdialog.ui:177
+#. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
+msgid "Run APBS"
+msgstr "APBS'yi çalıştır"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4314,11 +4735,6 @@ msgstr ""
 msgid "OT T MINIMIZER"
 msgstr ""
 
-#. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
-msgid "Import Crystal"
-msgstr ""
-
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
@@ -4462,6 +4878,99 @@ msgstr ""
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Bond Order:"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
+msgid "Geometry Optimization Parameters"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:39
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+msgid "Convergence Criteria"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:45
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "\"Energy\" convergence:"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:52
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+msgid "Step limit:"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:59
+#. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
+#. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
+msgid " units"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:62
+#. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
+#. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
+msgid "10^"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:78
+#. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:185
+#. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
+#. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
+msgid " steps"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:100
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+msgid "Optimization Method"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:106
+#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Force field:"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:116
+#. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
+#. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
+msgid "Autodetect"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:130
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Optimization algorithm:"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:138
+#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
+#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+msgid "Steepest Descent"
+msgstr ""
+
+#. i18n: file: qtplugins/forcefield/forcefielddialog.ui:143
+#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
+#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+msgid "Conjugate Gradient"
 msgstr ""
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
@@ -5058,13 +5567,6 @@ msgstr ""
 msgid "Multi Line"
 msgstr ""
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:918
-#. i18n: ectx: property (text), widget (QPushButton, resetButton)
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:982
-#. i18n: ectx: property (text), widget (QPushButton, resetButton)
-msgid "Reset"
-msgstr ""
-
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:928
 #. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:992
@@ -5205,39 +5707,9 @@ msgstr ""
 msgid "Input Parameters:"
 msgstr ""
 
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
-msgid "Geometry Optimization Parameters"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-msgid "Optimization Method"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
-#. i18n: ectx: property (text), widget (QLabel, label)
-msgid "Force field:"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-msgid "Optimization algorithm:"
-msgstr ""
-
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Line search technique:"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
-#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
-msgid "Steepest Descent"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
-#. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
-msgid "Conjugate Gradient"
 msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
@@ -5248,11 +5720,6 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
 msgid "Newton's Method"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
-#. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
-msgid "Autodetect"
 msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
@@ -5280,38 +5747,6 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:166
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, eleCutoff)
 msgid "Å"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:185
-#. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
-#. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
-msgid " steps"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-msgid "Convergence Criteria"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-msgid "\"Energy\" convergence:"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Step limit:"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
-#. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
-msgid " units"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
-#. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
-msgid "10^"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
@@ -5495,15 +5930,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
 msgid "Constraints:"
 msgstr ""
-
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
-#. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:640
-#. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:108
-#. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
-msgid "None"
-msgstr "Hiçbiri"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -5851,7 +6277,7 @@ msgstr ""
 msgid "Opacity:"
 msgstr ""
 
-#. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:20
+#. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:21
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Apply Color"
 msgstr ""
@@ -6230,8 +6656,32 @@ msgstr ""
 "para4360@gmail.com,,cankacan.47@gmail.com,hhaydarakdag@gmail.com,"
 "hayros@gmail.com,,snow6.junk@gmail.com,,"
 
-#~ msgid "Valence"
-#~ msgstr "Değerlik"
+#~ msgid "Theory:"
+#~ msgstr "Teori:"
+
+#, qt-format
+#~ msgid "Default value missing for option '%1'."
+#~ msgstr "'%1' seçeneği için varsayılan değer eksik."
+
+#, qt-format
+#~ msgid "Distance: %L1 Å"
+#~ msgstr "Mesafe: %L1 Å"
+
+#~ msgid "Licorice"
+#~ msgstr "Meyan kökü"
+
+#, fuzzy
+#~ msgid "Van der Waals (AO)"
+#~ msgstr "Van der Waals Küreleri"
+
+#~ msgid "Wireframe"
+#~ msgstr "Telekafes"
+
+#~ msgid "Reset to Default Values"
+#~ msgstr "Varsayılan Değerlere Sıfırla"
+
+#~ msgid "Write files to disk..."
+#~ msgstr "Dosyaları diske yaz ..."
 
 #, fuzzy
 #~ msgid "Formal Charge"
@@ -6239,22 +6689,6 @@ msgstr ""
 
 #~ msgid "Partial Charge"
 #~ msgstr "Kısmi Yük"
-
-#, fuzzy
-#~ msgid "Atom"
-#~ msgstr "Atom %1"
-
-#, fuzzy
-#~ msgid "Start Atom"
-#~ msgstr "Animasyon"
-
-#, fuzzy
-#~ msgid "End Atom"
-#~ msgstr "Atom Bitir"
-
-#, fuzzy
-#~ msgid "Bond Order"
-#~ msgstr "Bağ SIrası"
 
 #~ msgid "Rotatable"
 #~ msgstr "Döndürülebilir"
@@ -6265,13 +6699,6 @@ msgstr ""
 #~ "Conformer %1\n"
 #~ "Length %2"
 #~ msgstr "Uydurucu %1"
-
-#~ msgctxt "in Angstrom"
-#~ msgid "Length %1"
-#~ msgstr "Uzunluk %1"
-
-#~ msgid "Vertex"
-#~ msgstr "Köşe"
 
 #, fuzzy
 #~ msgctxt "Degree symbol"
@@ -6284,13 +6711,6 @@ msgstr ""
 #~ msgctxt "Degree symbol"
 #~ msgid "Angle %1"
 #~ msgstr "Açı:"
-
-#, fuzzy
-#~ msgid "Angle"
-#~ msgstr "Açı:"
-
-#~ msgid "Atom %1"
-#~ msgstr "Atom %1"
 
 #, fuzzy
 #~ msgctxt "Degree symbol"
@@ -6316,31 +6736,8 @@ msgstr ""
 #~ msgstr "Neon"
 
 #, fuzzy
-#~ msgid "PropertyTables"
-#~ msgstr "Özellikler"
-
-#~ msgid "Atom Properties"
-#~ msgstr "Atom Özellikleri"
-
-#~ msgid "Bond Properties"
-#~ msgstr "Bağ Özellikleri"
-
-#~ msgid "Angle Properties"
-#~ msgstr "Açı Özellikleri"
-
-#~ msgid "Torsion Properties"
-#~ msgstr "Bükülme Özellikleri"
-
-#~ msgid "Conformer Properties"
-#~ msgstr "Uydurma Özellikleri"
-
-#, fuzzy
 #~ msgid "Input Generators"
 #~ msgstr "Girdi Üreteci..."
-
-#, fuzzy
-#~ msgid "Crystal..."
-#~ msgstr "Kristal Yapıştır"
 
 #, fuzzy
 #~ msgid "Import"
@@ -6403,9 +6800,6 @@ msgstr ""
 #~ msgid "Color by Element (carbon = grey, oxygen = red, ...)."
 #~ msgstr "Elemente Göre Renk (karbon = gri, oksijen = kırmızı, ...)."
 
-#~ msgid "Color by Residue"
-#~ msgstr "Kalıntıya Göre Renk"
-
 #~ msgid "Color by Residue (amino acid type, hydrophobicity, ..."
 #~ msgstr "Kalıntıya Göre Renk (amino asit tipi, kuzu hastalığına ait,...)"
 
@@ -6446,12 +6840,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Primitifleri Toplar (Atomlar) ve Çubuklar (Bağlar) kullanarak kaplar"
 
-#~ msgid "Cartoon"
-#~ msgstr "Karikatür"
-
-#~ msgid "Renders protein secondary structure"
-#~ msgstr "Proteinin ikinci yapısını kaplar"
-
 #~ msgid "Renders force displacements on atoms"
 #~ msgstr "Atomlar üzerindeki kuvvet yerdeğişimlerini kaplar"
 
@@ -6470,17 +6858,11 @@ msgstr ""
 #~ msgid "Select Bond Labels Font"
 #~ msgstr "Bağ Etiketi Fontu Seç"
 
-#~ msgid "Label"
-#~ msgstr "Etiket"
-
 #~ msgid "Polygon"
 #~ msgstr "Çokgen"
 
 #~ msgid "Renders atoms as tetrahedra, octahedra, and other polygons"
 #~ msgstr "Atomları dört yüzlü, sekiz yüzlü ve diğer çokgenler olarak kaplar"
-
-#~ msgid "Ribbon"
-#~ msgstr "Şerit"
 
 #~ msgid "Renders protein backbones as ribbons"
 #~ msgstr "Protein omurgasını şerit olarak kaplar"
@@ -6846,9 +7228,6 @@ msgstr ""
 #~ msgid "Insert oligopeptide sequences"
 #~ msgstr "Zayıf peptit dizisi ekle"
 
-#~ msgid "Molecule Properties..."
-#~ msgstr "Molekük Özellikleri..."
-
 #~ msgid "Estimated Dipole Moment (D):"
 #~ msgstr "Tahmini Çift Kutuplu Zamanı (D):"
 
@@ -6934,18 +7313,6 @@ msgstr ""
 #~ msgstr ""
 #~ "POV-Ray dosyalarını oluştur ve POV-Ray komut satırı programını kullanarak "
 #~ "kaplama yap."
-
-#~ msgid "Atom Properties..."
-#~ msgstr "Atom Özellikleri..."
-
-#~ msgid "Bond Properties..."
-#~ msgstr "Bağ Özellikleri..."
-
-#~ msgid "Angle Properties..."
-#~ msgstr "Açı Özellikleri..."
-
-#~ msgid "Torsion Properties..."
-#~ msgstr "Bükülme Özellikleri..."
 
 #~ msgid "Conformer Properties..."
 #~ msgstr "Uydurma Özellikleri..."
@@ -7215,9 +7582,6 @@ msgstr ""
 #~ msgctxt "Molecular Orbital"
 #~ msgid "Calculating MO %L1"
 #~ msgstr "MO %L1 Hesaplanıyor"
-
-#~ msgid "Could not run povray."
-#~ msgstr "povray çalıştırılamıyor"
 
 #~ msgid "Could not run mencoder."
 #~ msgstr "mencoder çalıştırılamıyor"
