@@ -6493,7 +6493,7 @@ msgstr ""
 "pl,,,,avogadro-devel@lists.sourceforge.net,gosimek@gmail.com,,,pogoma@o2."
 "pl,,,,avogadro-devel@lists.sourceforge.net,gosimek@gmail.com,,,pogoma@o2.pl,"
 
-#, fuzzy, qt-format
+#, fuzzy
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Odległość"
 

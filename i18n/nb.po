@@ -6518,7 +6518,6 @@ msgstr ""
 "comradekingu@gmail.com,avogadro-devel@lists.sourceforge.net,jacob."
 "benoit.1@gmail.com,,simenheg@gmail.com,,"
 
-#, qt-format
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Avstand: %L1 Å"
 

@@ -6541,7 +6541,7 @@ msgstr ""
 #~ msgid "Theory:"
 #~ msgstr "Elmélet:"
 
-#, fuzzy, qt-format
+#, fuzzy
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Távolság (3->4): %L1 %2"
 

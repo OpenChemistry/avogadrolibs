@@ -6702,11 +6702,9 @@ msgstr ""
 "\"miroslavnikolic@rocketmail.com\",\"ivanstar61@gmail.com\","
 "\"nikolamatic225@gmail.com\""
 
-#, qt-format
 #~ msgid "Option '%1' not found in userOptions."
 #~ msgstr "Opcija „%1“ nije pronađena u userOptions."
 
-#, qt-format
 #~ msgid ""
 #~ "'userOptions' missing, or not an object:\n"
 #~ "%1"
@@ -6717,11 +6715,9 @@ msgstr ""
 #~ msgid "Theory:"
 #~ msgstr "Teorija:"
 
-#, qt-format
 #~ msgid "Default value missing for option '%1'."
 #~ msgstr "Podrazumevana vrednost nedostaje za opciju „%1“."
 
-#, qt-format
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Rastojanje: %L1 Å"
 

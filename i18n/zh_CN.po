@@ -6596,7 +6596,7 @@ msgstr ""
 #~ msgid "Theory:"
 #~ msgstr "理论:"
 
-#, fuzzy, qt-format
+#, fuzzy
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "距离：%L1 Å"
 

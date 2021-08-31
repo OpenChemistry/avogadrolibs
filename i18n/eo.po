@@ -6666,11 +6666,9 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "phlostically@example.com"
 
-#, qt-format
 #~ msgid "Option '%1' not found in userOptions."
 #~ msgstr "Opcio '%1' ne troviĝas en 'userOptions'."
 
-#, qt-format
 #~ msgid ""
 #~ "'userOptions' missing, or not an object:\n"
 #~ "%1"
@@ -6681,11 +6679,9 @@ msgstr "phlostically@example.com"
 #~ msgid "Theory:"
 #~ msgstr "Teorio:"
 
-#, qt-format
 #~ msgid "Default value missing for option '%1'."
 #~ msgstr "Apriora valoro mankas pri opcio '%1'."
 
-#, qt-format
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Distanco: %L1 Å"
 
@@ -6701,7 +6697,6 @@ msgstr "phlostically@example.com"
 #~ msgid "Rotatable"
 #~ msgstr "Turnebla"
 
-#, qt-format
 #~ msgctxt "in Angstrom"
 #~ msgid ""
 #~ "Conformer %1\n"
@@ -6710,7 +6705,6 @@ msgstr "phlostically@example.com"
 #~ "Formizomero %1\n"
 #~ "Longo %2"
 
-#, qt-format
 #~ msgctxt "Degree symbol"
 #~ msgid ""
 #~ "Conformer %1\n"
@@ -6719,12 +6713,10 @@ msgstr "phlostically@example.com"
 #~ "Formizomero %1\n"
 #~ "Angulo %2"
 
-#, qt-format
 #~ msgctxt "Degree symbol"
 #~ msgid "Angle %1"
 #~ msgstr "Angulo %1"
 
-#, qt-format
 #~ msgctxt "Degree symbol"
 #~ msgid ""
 #~ "Conformer %1\n"
@@ -6733,7 +6725,6 @@ msgstr "phlostically@example.com"
 #~ "Formizomero %1\n"
 #~ "Tordo %2"
 
-#, qt-format
 #~ msgctxt "Degree symbol"
 #~ msgid "Torsion %1"
 #~ msgstr "Tordo %1"

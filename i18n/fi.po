@@ -6478,7 +6478,7 @@ msgstr ""
 #~ msgid "Theory:"
 #~ msgstr "Teoria:"
 
-#, fuzzy, qt-format
+#, fuzzy
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Etäisyys"
 

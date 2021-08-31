@@ -6590,7 +6590,7 @@ msgstr ""
 #~ msgid "Theory:"
 #~ msgstr "Teoria:"
 
-#, fuzzy, qt-format
+#, fuzzy
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Distantzia (1->2): %L1 %2"
 
