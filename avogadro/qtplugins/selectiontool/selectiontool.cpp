@@ -263,6 +263,13 @@ void SelectionTool::applyLayer(int layer)
   if (layer < 0) {
     return;
   }
+  if (layer > m_layerManager.layerCount()) {
+    // add a new layer
+    auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
+    layerInfo.addLayer();
+    layer = layerInfo.maxLayer();
+  }
+
   RWMolecule* rwmol = m_molecule->undoMolecule();
   rwmol->beginMergeMode(tr("Change Layer"));
   for (Index i = 0; i < rwmol->atomCount(); ++i) {

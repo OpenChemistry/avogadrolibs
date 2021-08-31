@@ -43,6 +43,7 @@ void SelectionToolWidget::setDropDown(size_t current, size_t max)
   for (size_t i = 0; i < max; ++i) {
     m_ui->changeLayerDropDown->addItem(QString::number(i + 1));
   }
+  m_ui->changeLayerDropDown->addItem(tr("New Layer"));
   m_ui->changeLayerDropDown->setCurrentIndex(current);
 }
 
