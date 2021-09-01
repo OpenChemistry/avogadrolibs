@@ -5,8 +5,8 @@ on:
     
   schedule:
     # * is a special character in YAML so you have to quote this string
-    # run weekly, every Sunday at 01:31
-    - cron:  '31 1 * * 0'
+    # run weekly, every Sunday at 01:23
+    - cron:  '23 1 * * 0'
 
 jobs:
   update-i18n:
@@ -24,13 +24,12 @@ jobs:
       run: |
         sh scripts/extract-messages.sh
 
-    - name: Setup tmate session
-      if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@v3
-
     - name: Create pull request
       uses: peter-evans/create-pull-request@v3
       with:
         commit-message: "Automated translation updates"
         signoff: true
-        branch-suffix: timestamp
+        title: "Automated translation updates"
+        branch: update-i18n-templates
+        delete-branch: true
+        labels: i18n
