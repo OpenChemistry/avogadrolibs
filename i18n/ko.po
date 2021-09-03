@@ -6533,7 +6533,7 @@ msgstr ""
 #~ msgid "Theory:"
 #~ msgstr "이론:"
 
-#, fuzzy, qt-format
+#, fuzzy
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "거리 (1->2): %L1 %2"
 

@@ -6463,7 +6463,7 @@ msgstr ""
 "darkangel_nr1@hotmail.com,,,,,,yeager@ubuntu.com,darkangel_nr1@hotmail."
 "com,,,,,,yeager@ubuntu.com,darkangel_nr1@hotmail.com,"
 
-#, fuzzy, qt-format
+#, fuzzy
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Avstånd:"
 

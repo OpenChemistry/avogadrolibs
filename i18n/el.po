@@ -6608,7 +6608,7 @@ msgstr ""
 #~ msgid "Theory:"
 #~ msgstr "Θεωρία:"
 
-#, fuzzy, qt-format
+#, fuzzy
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Απόσταση (1->2): %L1 %2"
 

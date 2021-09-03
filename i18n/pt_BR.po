@@ -6634,11 +6634,9 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Seus e-mails"
 
-#, qt-format
 #~ msgid "Option '%1' not found in userOptions."
 #~ msgstr "Opção '%1' não encontrada em userOptions."
 
-#, qt-format
 #~ msgid ""
 #~ "'userOptions' missing, or not an object:\n"
 #~ "%1"
@@ -6649,11 +6647,9 @@ msgstr "Seus e-mails"
 #~ msgid "Theory:"
 #~ msgstr "Teoria:"
 
-#, qt-format
 #~ msgid "Default value missing for option '%1'."
 #~ msgstr "Valor padrão ausente para a opção '%1'."
 
-#, qt-format
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Distância: %L1 Å"
 

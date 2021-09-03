@@ -6600,7 +6600,6 @@ msgstr ""
 #~ msgid "Theory:"
 #~ msgstr "Teoria:"
 
-#, qt-format
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Distanza: %L1 Å"
 

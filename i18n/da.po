@@ -6531,7 +6531,7 @@ msgstr ""
 "devel@lists.sourceforge.net,,olegb@omgwtf.dk,,loniedavid@gmail.com,jvd@tuta."
 "io,"
 
-#, fuzzy, qt-format
+#, fuzzy
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Afstand (1->2): %L1 %2"
 

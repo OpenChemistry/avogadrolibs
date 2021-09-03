@@ -6659,11 +6659,9 @@ msgstr ""
 #~ msgid "Theory:"
 #~ msgstr "Teori:"
 
-#, qt-format
 #~ msgid "Default value missing for option '%1'."
 #~ msgstr "'%1' seçeneği için varsayılan değer eksik."
 
-#, qt-format
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Mesafe: %L1 Å"
 

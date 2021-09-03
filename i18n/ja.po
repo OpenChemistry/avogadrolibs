@@ -6554,7 +6554,6 @@ msgstr ""
 #~ msgid "Theory:"
 #~ msgstr "理論:"
 
-#, qt-format
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "距離: %L1 Å"
 

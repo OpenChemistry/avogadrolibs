@@ -6560,7 +6560,7 @@ msgstr "Email anda"
 #~ msgid "Theory:"
 #~ msgstr "Teori:"
 
-#, fuzzy, qt-format
+#, fuzzy
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Jarak (1->2): %L1 %2"
 
