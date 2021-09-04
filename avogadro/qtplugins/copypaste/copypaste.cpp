@@ -88,7 +88,7 @@ bool CopyPaste::copy()
 
     // go through the selected atoms and add them
     // make sure to track the new index
-    std::vector atomIndex(m_molecule->atomCount(), 0);
+    std::vector<Index> atomIndex(m_molecule->atomCount(), 0);
     for (Index i = 0; i < m_molecule->atomCount(); ++i)
       if (m_molecule->atomSelected(i)) {
         auto a = copy->addAtom(m_molecule->atomicNumber(i));
