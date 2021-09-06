@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-08-31 16:08-0400\n"
+"POT-Creation-Date: 2021-09-05 02:07+0000\n"
 "PO-Revision-Date: 2021-09-06 00:53+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
@@ -1251,7 +1251,7 @@ msgstr "Rétegadatok hozzáadása"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:204 qtgui/rwlayermanager.cpp:207
-#: qtplugins/selectiontool/selectiontool.cpp:260:1516
+#: qtplugins/selectiontool/selectiontool.cpp:260:1477
 msgid "Change Layer"
 msgstr "Réteg módosítása"
 
@@ -3332,7 +3332,8 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.h:98
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
-msgstr "Elméleti XRD-minta létrehozása és ábrázolása ObjCryst ++ használatával."
+msgstr ""
+"Elméleti XRD-minta létrehozása és ábrázolása ObjCryst ++ használatával."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
 msgid "Update"
@@ -3651,8 +3652,8 @@ msgid ""
 "Select the python interpreter used to run input generator scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
-"Python értelmező kijelölésa a bemeneti létrehozó parancsfájlok futtatásához."
-"\n"
+"Python értelmező kijelölésa a bemeneti létrehozó parancsfájlok "
+"futtatásához.\n"
 "Kérjük, indítsa újra az Avogadro alkalmazást, hogy a módosítások érvénybe "
 "lépjenek."
 
@@ -6169,8 +6170,8 @@ msgid ""
 "<html><head/><body><p>The number of 2theta points to generate.</"
 "p><p>Default: 1000</p></body></html>"
 msgstr ""
-"<html><head/><body><p>A létrehozandó 2-théta pont "
-"száma.</p><p>Alapértelmezett: 1000</p></body></html>"
+"<html><head/><body><p>A létrehozandó 2-théta pont száma.</"
+"p><p>Alapértelmezett: 1000</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
