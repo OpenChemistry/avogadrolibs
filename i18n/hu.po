@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-05 02:07+0000\n"
-"PO-Revision-Date: 2021-09-04 10:52+0000\n"
+"PO-Revision-Date: 2021-09-06 00:53+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -163,12 +163,12 @@ msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:42
 msgid "Input Generator (error)"
-msgstr "Bemeneti generátor (hiba)"
+msgstr "Bemeneti létrehozó (hiba)"
 
 #: molequeue/inputgeneratordialog.cpp:44
 #, qt-format
 msgid "%1 Input Generator"
-msgstr "%1 bemeneti generátor"
+msgstr "%1 bemeneti létrehozó"
 
 #: molequeue/inputgeneratorwidget.cpp:115
 msgid "Continue"
@@ -230,22 +230,22 @@ msgstr[1] ""
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:159
 #: qtplugins/openmminput/openmminputdialog.cpp:216
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Felülírja a módosított bemeneti fájlokat?"
 
 #: molequeue/inputgeneratorwidget.cpp:189
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Problémák történtek a bemenet létrehozása során:"
 
 #: molequeue/inputgeneratorwidget.cpp:278
 msgid "No input files to save!"
-msgstr ""
+msgstr "Nincs mentendő bemeneti fájl!"
 
 #: molequeue/inputgeneratorwidget.cpp:286
 #: molequeue/inputgeneratorwidget.cpp:603 molequeue/molequeuewidget.cpp:70
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:988
 #: qtplugins/gamessinput/gamessinputdialog.cpp:697
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Nem sikerült a MoleQueue csatlakozása"
 
 #: molequeue/inputgeneratorwidget.cpp:287
 #: molequeue/inputgeneratorwidget.cpp:604 molequeue/molequeuewidget.cpp:71
@@ -255,11 +255,13 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Nem sikerült a MoleQueue-kiszolgáló csatlakozása. Kérjük, ellenőrizze, hogy "
+"az fut, és próbálja újra."
 
 #: molequeue/inputgeneratorwidget.cpp:318
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "%1 számítás elküldése"
 
 #: molequeue/inputgeneratorwidget.cpp:334
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1025
@@ -279,29 +281,29 @@ msgstr "Parancsfájl figyelmeztetéseket ad vissza:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:369
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "&Figyelmeztetések elrejtése"
 
 #: molequeue/inputgeneratorwidget.cpp:375
 msgid "Show &Warnings"
-msgstr ""
+msgstr "&Figyelmeztetések megjelenítése"
 
 #: molequeue/inputgeneratorwidget.cpp:392 qtgui/interfacewidget.cpp:72
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Hiba történt:"
 
 #: molequeue/inputgeneratorwidget.cpp:443
 msgid "Select output filename"
-msgstr ""
+msgstr "Kimeneti fájlnév kijelölése"
 
 #: molequeue/inputgeneratorwidget.cpp:458
 #, qt-format
 msgid "%1: File exists and is not writable."
-msgstr ""
+msgstr "%1: A fájl létezik és nem írható."
 
 #: molequeue/inputgeneratorwidget.cpp:464
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
-msgstr ""
+msgstr "Belső hiba: a(z) „%1” fájlnév szöveges vezérlő nem található"
 
 #: molequeue/inputgeneratorwidget.cpp:480
 #: molequeue/inputgeneratorwidget.cpp:591
@@ -314,7 +316,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:464
 #: qtplugins/openmminput/openmminputdialog.cpp:478
 msgid "Output Error"
-msgstr ""
+msgstr "Kimeneti hiba"
 
 #: molequeue/inputgeneratorwidget.cpp:481
 #: molequeue/inputgeneratorwidget.cpp:592
@@ -326,27 +328,27 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:479
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "A(z) %1 fájl mentése nem sikerült."
 
 #: molequeue/inputgeneratorwidget.cpp:492
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:255
 #: qtplugins/openmminput/openmminputdialog.cpp:353
 msgid "Select output directory"
-msgstr ""
+msgstr "Kimeneti könyvtár kijelölése"
 
 #: molequeue/inputgeneratorwidget.cpp:509
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:270
 #: qtplugins/openmminput/openmminputdialog.cpp:368
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "%1: A könyvtár nem létezik!"
 
 #: molequeue/inputgeneratorwidget.cpp:515
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:276
 #: qtplugins/openmminput/openmminputdialog.cpp:374
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: A könyvtár nem olvasható!"
 
 #: molequeue/inputgeneratorwidget.cpp:525
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:284
@@ -355,7 +357,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:397
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: A fájl felülírásra kerül."
 
 #: molequeue/inputgeneratorwidget.cpp:530
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:291
@@ -364,13 +366,13 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: A fájl nem menthető."
 
 #: molequeue/inputgeneratorwidget.cpp:543
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:318
 #: qtplugins/openmminput/openmminputdialog.cpp:416
 msgid "The input files cannot be written due to an unknown error."
-msgstr ""
+msgstr "A bemeneti fájlok ismeretlen hiba miatt nem menthetők."
 
 #: molequeue/inputgeneratorwidget.cpp:547
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:322
@@ -381,6 +383,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"A bemeneti fájlok nem menthetők:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:556
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:331
@@ -395,6 +400,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"A bemeneti fájlok nem menthetők:\n"
+"\n"
+"%1\n"
+"\n"
+"Figyelmeztetések:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:567
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:342
@@ -417,7 +429,7 @@ msgstr ""
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:346
 #: qtplugins/openmminput/openmminputdialog.cpp:444
 msgid "Write input files"
-msgstr ""
+msgstr "Bemeneti fájlok mentése"
 
 #: molequeue/inputgeneratorwidget.cpp:618
 msgid "Configure Job"
@@ -434,6 +446,8 @@ msgstr "Feladatküldési időtúllépés"
 #: molequeue/molequeuedialog.cpp:68
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
 msgstr ""
+"Az Avogadro alkalmazás időtúllépése a MoleQueue alkalmazás válaszának "
+"várakozása miatt."
 
 #: molequeue/molequeuedialog.cpp:84
 #, qt-format
@@ -442,7 +456,7 @@ msgstr "Várakozás a(z) %1 „%2” feladat befejezésére…"
 
 #: molequeue/molequeuedialog.cpp:87
 msgid "Stop waiting"
-msgstr ""
+msgstr "Várás leállítása"
 
 #: molequeue/molequeuedialog.cpp:106
 msgid "Fetching completed job information..."
@@ -469,11 +483,12 @@ msgstr "A feladatot a „MoleQueue” (Molekulasor) elutasította: %1"
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "No program selected."
-msgstr ""
+msgstr "Nincs kijelölt program."
 
 #: molequeue/molequeuedialog.cpp:197 molequeue/molequeuewidget.cpp:143
 msgid "Please select the target program from the \"Queue and Program\" list."
 msgstr ""
+"Kérjük, jelölje ki a célprogramot a „Várakozási sor és program” listából."
 
 #: molequeue/molequeuewidget.cpp:98
 msgid "Client failed to submit job to MoleQueue."
@@ -481,7 +496,7 @@ msgstr "Az ügyfél feladatküldése a MoleQueue-hoz nem sikerült."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Internal error."
-msgstr ""
+msgstr "Belső hiba."
 
 #: molequeue/molequeuewidget.cpp:152
 msgid "Unable to resolve program selection. This is a bug."
@@ -501,11 +516,11 @@ msgstr "Nincs beállítva fájlnév a HáttérFájlFormátum alkalmazásban!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
-msgstr ""
+msgstr "Felosztás vízszintesen"
 
 #: qtgui/containerwidget.cpp:44
 msgid "Split Vertical"
-msgstr ""
+msgstr "Felosztás függőlegesen"
 
 #: qtgui/elementtranslator.cpp:32
 msgid "Hydrogen"
@@ -985,11 +1000,11 @@ msgstr "Tallózás"
 
 #: qtgui/filebrowsewidget.cpp:113
 msgid "Select file:"
-msgstr ""
+msgstr "Fájl kijelölése:"
 
 #: qtgui/filebrowsewidget.cpp:116
 msgid "Select executable:"
-msgstr ""
+msgstr "Végrehajtható fájl kijelölése:"
 
 #: qtgui/fileformatdialog.cpp:65
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1088,7 +1103,7 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:187
 msgid "Calculation Type"
-msgstr ""
+msgstr "Számítás típusa"
 
 #: qtgui/jsonwidget.cpp:191
 msgid "Theory"
@@ -1155,7 +1170,7 @@ msgstr "Névtelen"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
-msgstr ""
+msgstr "Új nézet létrehozása"
 
 #: qtgui/periodictableview.cpp:44
 msgid "Periodic Table"
@@ -1190,15 +1205,15 @@ msgstr ""
 
 #: qtgui/pythonscript.cpp:211
 msgid "Script failed to start."
-msgstr ""
+msgstr "A parancsfájl indítása nem sikerült."
 
 #: qtgui/pythonscript.cpp:214
 msgid "Script crashed."
-msgstr ""
+msgstr "A parancsfájl összeomlott."
 
 #: qtgui/pythonscript.cpp:217
 msgid "Script timed out."
-msgstr ""
+msgstr "A parancsfájl ideje lejárt."
 
 #: qtgui/pythonscript.cpp:220
 msgid "Read error."
@@ -1210,7 +1225,7 @@ msgstr ""
 
 #: qtgui/pythonscript.cpp:227
 msgid "Unknown error."
-msgstr ""
+msgstr "Ismeretlen hiba."
 
 #: qtgui/rwlayermanager.cpp:34 qtgui/rwlayermanager.cpp:89
 #: qtgui/rwlayermanager.cpp:115
@@ -1236,7 +1251,7 @@ msgstr "Rétegadatok hozzáadása"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:204 qtgui/rwlayermanager.cpp:207
-#: qtplugins/selectiontool/selectiontool.cpp:260:1516
+#: qtplugins/selectiontool/selectiontool.cpp:260:1477
 msgid "Change Layer"
 msgstr "Réteg módosítása"
 
@@ -1251,7 +1266,7 @@ msgstr "Atom eltávolítása"
 
 #: qtgui/rwmolecule.cpp:106
 msgid "Clear Atoms"
-msgstr ""
+msgstr "Atomok törlése"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -1517,9 +1532,8 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:190
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:75:147
-#, fuzzy
 msgid "Success"
-msgstr "Sikerült!"
+msgstr "Sikerült"
 
 #: qtplugins/apbs/apbsdialog.cpp:191
 #, qt-format
@@ -1793,9 +1807,8 @@ msgid "Connection to %2:%3 succeeded!"
 msgstr ""
 
 #: qtplugins/clientserver/filedialogmodel.cpp:666
-#, fuzzy
 msgid "Filename"
-msgstr "Fájl neve:"
+msgstr "Fájlnév"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:71
 msgid "Edit Color Opacity Map..."
@@ -1852,16 +1865,15 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:29
 msgid "Atomic &Coordinate Editor..."
-msgstr ""
+msgstr "Atom&koordináta -szerkesztő…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:39
-#, fuzzy
 msgid "Coordinate editor"
-msgstr "Koordinátatípus:"
+msgstr "Koordináta-szerkesztő"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:43
 msgid "Text editing of atomic coordinates."
-msgstr ""
+msgstr "Az atomkoordináták szövegszerkesztése."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:237
 msgid "Overwrite changes?"
@@ -1908,31 +1920,31 @@ msgstr "Atomszám."
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
 msgid "Invalid coordinate."
-msgstr ""
+msgstr "Érvénytelen koordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 msgid "X coordinate."
-msgstr "X-koordináta."
+msgstr "X koordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:431
 msgid "Y coordinate."
-msgstr "Y-koordináta."
+msgstr "Y koordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:442
 msgid "Z coordinate."
-msgstr "Z-koordináta."
+msgstr "Z koordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:453
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "a-hálókoordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:464
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "b-hálókoordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:475
 msgid "'c' coordinate."
-msgstr ""
+msgstr "c-hálókoordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:559
 msgid "Error applying geometry"
@@ -1952,7 +1964,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:594
 msgid "Edit Atomic Coordinates"
-msgstr ""
+msgstr "Atomkoordináták szerkesztése"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:185
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
@@ -1963,7 +1975,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:613
 msgid "XYZ format (symbols)"
-msgstr ""
+msgstr "XYZ-formátum (szimbólumok)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
@@ -1975,7 +1987,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:616
 msgid "Lattice coordinates (symbols)"
-msgstr ""
+msgstr "Háló koordinátái (szimbólumok)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:617
 msgid "Lattice coordinates (names)"
@@ -1987,7 +1999,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:620
 msgid "GAMESS format (symbols)"
-msgstr ""
+msgstr "GAMESS-formátum (szimbólumok)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:621
 msgid "GAMESS format (names)"
@@ -2031,7 +2043,7 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:115
 msgid "Error generating clipboard data."
-msgstr ""
+msgstr "Hiba a vágólapra vonatkozó adatok létrehozásakor."
 
 #: qtplugins/copypaste/copypaste.cpp:116
 #, qt-format
@@ -2086,7 +2098,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinput.h:47
 msgid "Generate input for CP2K."
-msgstr ""
+msgstr "Bemenet létrehozása a CP2K számára."
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:272
 msgid "Energy"
@@ -2279,9 +2291,8 @@ msgid "Line width:"
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:152
-#, fuzzy
 msgid "Line color:"
-msgstr "Amino színek"
+msgstr "Vonal színe:"
 
 #: qtplugins/crystal/crystalscene.h:30
 msgid "Crystal Lattice"
@@ -2334,9 +2345,8 @@ msgstr ""
 
 #: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:187
 #: qtplugins/measuretool/measuretool.cpp:213
-#, fuzzy
 msgid "Distance:"
-msgstr "Távolság"
+msgstr "Távolság:"
 
 #: qtplugins/editor/editor.cpp:235
 #, qt-format
@@ -2433,7 +2443,7 @@ msgstr "GAMESS bevitel"
 
 #: qtplugins/gamessinput/gamessinput.h:49
 msgid "Generate input for GAMESS."
-msgstr ""
+msgstr "Bemenet létrehozása a GAMESS számára."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:237
 #, fuzzy
@@ -2588,14 +2598,12 @@ msgid "Insert molecular fragments for building larger molecules."
 msgstr "Molekulatöredék beillesztése nagyobb molekulák létrehozásához."
 
 #: qtplugins/label/label.cpp:134
-#, fuzzy
 msgid "Color:"
-msgstr "Színek"
+msgstr "Szín:"
 
 #: qtplugins/label/label.cpp:144
-#, fuzzy
 msgid "Distance from center:"
-msgstr "Távolság"
+msgstr "Távolság a központtól:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -2612,9 +2620,8 @@ msgid "Index"
 msgstr ""
 
 #: qtplugins/label/label.cpp:162
-#, fuzzy
 msgid "In."
-msgstr "Ebben:"
+msgstr "Ebben."
 
 #: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:349
 #: qtplugins/symmetry/operationstablemodel.cpp:64
@@ -2639,9 +2646,8 @@ msgid ", "
 msgstr ""
 
 #: qtplugins/label/label.cpp:186
-#, fuzzy
 msgid "Atom Label:"
-msgstr "Csoport cimkéje"
+msgstr "Atomi címke:"
 
 #: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:390
 #, fuzzy
@@ -2695,7 +2701,7 @@ msgstr ""
 
 #: qtplugins/lammpsinput/lammpsinput.h:46
 msgid "Generate input for LAMMPS."
-msgstr ""
+msgstr "Bemenet létrehozása a LAMMPS számára."
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:156
 msgid ""
@@ -2746,7 +2752,7 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:134
 msgid "Generating 3D molecule..."
-msgstr ""
+msgstr "3D molekula létrehozása…"
 
 #: qtplugins/lineformatinput/lineformatinput.h:42
 msgid "LineFormatInput"
@@ -2939,13 +2945,14 @@ msgstr "&geometria optimalizáció"
 
 #: qtplugins/openbabel/openbabel.cpp:399
 msgid "Generating MDL..."
-msgstr ""
+msgstr "MDL létrehozása…"
 
 #: qtplugins/openbabel/openbabel.cpp:416
 msgid ""
 "An internal error occurred while generating an CML representation of the "
 "current molecule."
 msgstr ""
+"Belső hiba történt a jelenlegi molekula CML-képviseletének létrehozásakor."
 
 #: qtplugins/openbabel/openbabel.cpp:422
 #, qt-format
@@ -2992,11 +2999,11 @@ msgstr "Kötések érzékelése (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:510
 msgid "Generating XYZ representation..."
-msgstr ""
+msgstr "XYZ-képviselet létrehozása…"
 
 #: qtplugins/openbabel/openbabel.cpp:517
 msgid "Error generating XYZ string."
-msgstr ""
+msgstr "Hiba az XYZ karakterlánc létrehozásakor."
 
 #: qtplugins/openbabel/openbabel.cpp:529
 #, qt-format
@@ -3022,11 +3029,11 @@ msgstr "Hidrogének hozzáadása"
 
 #: qtplugins/openbabel/openbabel.cpp:595
 msgid "Generating Open Babel input..."
-msgstr ""
+msgstr "Open Babel bemenet létrehozása…"
 
 #: qtplugins/openbabel/openbabel.cpp:602 qtplugins/openbabel/openbabel.cpp:650
 msgid "Error generating Open Babel input."
-msgstr ""
+msgstr "Hiba törtent az Open Babel bemenet létrehozásakor."
 
 #: qtplugins/openbabel/openbabel.cpp:615 qtplugins/openbabel/openbabel.cpp:663
 #: qtplugins/openbabel/openbabel.cpp:702
@@ -3059,7 +3066,7 @@ msgstr "Hidrogének eltávolítása"
 
 #: qtplugins/openbabel/openbabel.cpp:690
 msgid "Error generating CML data."
-msgstr ""
+msgstr "Hiba törtent a CML-adatok létrehozásakor."
 
 #: qtplugins/openbabel/openbabel.cpp:711
 msgid "Reading obabel output..."
@@ -3089,7 +3096,7 @@ msgstr ""
 
 #: qtplugins/openmminput/openmminput.h:46
 msgid "Generate input for OpenMM."
-msgstr ""
+msgstr "Bemenet létrehozása az OpenMM számára."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:213
 msgid ""
@@ -3266,7 +3273,7 @@ msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.cpp:132
 msgid "Failed to generate PDF pattern"
-msgstr ""
+msgstr "Nem sikerült létrehozni a pár elosztási függvény (PDF) mintát"
 
 #: qtplugins/plotpdf/plotpdf.cpp:133 qtplugins/plotxrd/plotxrd.cpp:131
 msgid "Error message: "
@@ -3278,7 +3285,7 @@ msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.h:83
 msgid "Generate and plot a Pair Distribution Function curve."
-msgstr ""
+msgstr "Páros eloszlási függvény (PDF) görbe létrehozása és ábrázolása."
 
 #: qtplugins/plotrmsd/plotrmsd.cpp:43
 msgid "Plot RMSD curve..."
@@ -3290,7 +3297,7 @@ msgstr ""
 
 #: qtplugins/plotrmsd/plotrmsd.h:78
 msgid "Generate and plot an RMSD curve."
-msgstr ""
+msgstr "RMSD görbe létrehozása és ábrázolása."
 
 #: qtplugins/plotxrd/plotxrd.cpp:45
 msgid "Plot Theoretical XRD Pattern..."
@@ -3298,7 +3305,7 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:130
 msgid "Failed to generate XRD pattern"
-msgstr ""
+msgstr "Az XRD-minta létrehozása nem sikerült"
 
 #: qtplugins/plotxrd/plotxrd.cpp:173
 msgid "Failed to convert molecule to CIF format."
@@ -3326,6 +3333,7 @@ msgstr ""
 #: qtplugins/plotxrd/plotxrd.h:98
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr ""
+"Elméleti XRD-minta létrehozása és ábrázolása ObjCryst ++ használatával."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
 msgid "Update"
@@ -3644,6 +3652,10 @@ msgid ""
 "Select the python interpreter used to run input generator scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Python értelmező kijelölésa a bemeneti létrehozó parancsfájlok "
+"futtatásához.\n"
+"Kérjük, indítsa újra az Avogadro alkalmazást, hogy a módosítások érvénybe "
+"lépjenek."
 
 #: qtplugins/quantuminput/quantuminput.cpp:242
 msgid "Set Python Path..."
@@ -3655,7 +3667,7 @@ msgstr ""
 
 #: qtplugins/quantuminput/quantuminput.h:57
 msgid "Generate input for quantum codes."
-msgstr ""
+msgstr "Bemenet létrehozása a kvantumkódok számára."
 
 #: qtplugins/resetview/resetview.cpp:48
 msgid "Center"
@@ -4122,7 +4134,7 @@ msgstr "Kép &mentése..."
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Queue and Program:"
-msgstr ""
+msgstr "Várakozási sor és program:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:50
 #. i18n: ectx: property (text), widget (QToolButton, refreshProgramsButton)
@@ -4230,7 +4242,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:28
 #. i18n: ectx: property (text), widget (QRadioButton, generateFromPdbButton)
 msgid "Generate Input From PDB"
-msgstr ""
+msgstr "Bemenet létrehozása a (PDB) fehérjeadatbankból"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, pdbFileLabel)
@@ -5426,7 +5438,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Generate..."
-msgstr ""
+msgstr "Létrehozás…"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5900,7 +5912,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_generationTemp)
 msgid "Generation Temp:"
-msgstr ""
+msgstr "Hőmérséklet létrehozása:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:481
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, generationTemperatureSpin)
@@ -6158,6 +6170,8 @@ msgid ""
 "<html><head/><body><p>The number of 2theta points to generate.</"
 "p><p>Default: 1000</p></body></html>"
 msgstr ""
+"<html><head/><body><p>A létrehozandó 2-théta pont száma.</"
+"p><p>Alapértelmezett: 1000</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
