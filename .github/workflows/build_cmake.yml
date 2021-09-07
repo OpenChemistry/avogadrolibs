@@ -47,7 +47,7 @@ jobs:
             name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
-            cmake_flags: " ",
+            cmake_flags: "-DOPENSSL_ROOT_DIR=D:\a\avogadrolibs/Qt ",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
