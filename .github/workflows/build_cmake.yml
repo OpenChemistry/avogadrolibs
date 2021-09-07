@@ -174,13 +174,14 @@ jobs:
       if: matrix.config.os == 'ubuntu-18.04'
       shell: bash
       run: |
-        cmake --install . --prefix "./appdir/usr"
+        mkdir appdir
+        mv prefix appdir/usr
         wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
         chmod a+x linuxdeployqt-continuous-x86_64.AppImage
         ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage -extra-plugins=iconengines
         ls *.AppImage
         ls *.tar.gz
-      working-directory: ${{ runner.workspace }}/build/avogadroapp
+      working-directory: ${{ runner.workspace }}/build
 
     - name: Setup tmate session
       if: ${{ failure() }}
