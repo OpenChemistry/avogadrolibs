@@ -182,10 +182,10 @@ jobs:
         ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -extra-plugins=iconengines
         # add the custom AppRun
         rm appdir/AppRun
-        cp avogadrolibs/scripts/AppImage.sh appdir/AppRun
+        cp ../avogadrolibs/avogadrolibs/scripts/AppImage.sh appdir/AppRun
         chmod a+x appdir/AppRun
         ./appimagetool-x86_64.AppImage appdir
-        mv *.AppImage avogadroapp # for upload
+        mv Avogadro2*.AppImage avogadroapp # for upload
         # remove the cpack files
         rm avogadroapp/Avogadro2*Linux.*
       working-directory: ${{ runner.workspace }}/build
