@@ -97,6 +97,14 @@ jobs:
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
         version: ${{ env.QT_VERSION }}
 
+    - name: Install OpenSSL (Win64)
+      if: runner.os == 'Windows'
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: ${{ env.QT_VERSION }}
+        tools-only: true
+        tools: "tools_openssl_x64,1.1.1-10,qt.tools.openssl.win_x64"
+
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
       uses: ilammy/msvc-dev-cmd@v1
