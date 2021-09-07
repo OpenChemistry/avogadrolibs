@@ -177,9 +177,15 @@ jobs:
         mkdir appdir
         mv prefix appdir/usr
         wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-        chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-        ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage -extra-plugins=iconengines
-        mv *.AppImage avogadroapp # for upload
+        wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+        chmod a+x *.AppImage
+        ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -extra-plugins=iconengines
+        # add the custom AppRun
+        rm appdir/AppRun
+        cp ../avogadrolibs/avogadrolibs/scripts/AppImage.sh appdir/AppRun
+        chmod a+x appdir/AppRun
+        ./appimagetool-x86_64.AppImage appdir
+        mv Avogadro2*.AppImage avogadroapp # for upload
         # remove the cpack files
         rm avogadroapp/Avogadro2*Linux.*
       working-directory: ${{ runner.workspace }}/build
