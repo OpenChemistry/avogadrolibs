@@ -47,7 +47,7 @@ jobs:
             name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
-            cmake_flags: "-DOPENSSL_ROOT_DIR=D:\a\avogadrolibs/Qt ",
+            cmake_flags: "-DOPENSSL_ROOT_DIR=D:\a\avogadrolibs\Qt\Tools\OpenSSL\Win_x64 ",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
@@ -120,9 +120,6 @@ jobs:
           ${{ runner.workspace }}/build/Downloads
         key: ${{ matrix.config.name }}-thirdparty
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-
     - name: Configure
       run: |
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
@@ -175,6 +172,10 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Running tests failed!")
         endif()
+
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
 
     - name: Pack
       if: matrix.config.artifact != 0
