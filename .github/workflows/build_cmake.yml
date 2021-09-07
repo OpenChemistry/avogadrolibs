@@ -180,6 +180,8 @@ jobs:
         chmod a+x linuxdeployqt-continuous-x86_64.AppImage
         ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage -extra-plugins=iconengines
         mv *.AppImage avogadroapp # for upload
+        # remove the cpack files
+        rm avogadroapp/Avogadro2*Linux.*
       working-directory: ${{ runner.workspace }}/build
 
     - name: Setup tmate session
