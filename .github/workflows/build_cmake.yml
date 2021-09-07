@@ -120,6 +120,9 @@ jobs:
           ${{ runner.workspace }}/build/Downloads
         key: ${{ matrix.config.name }}-thirdparty
 
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+
     - name: Configure
       run: |
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
@@ -191,10 +194,6 @@ jobs:
         # remove the cpack files
         rm avogadroapp/Avogadro2*Linux.*
       working-directory: ${{ runner.workspace }}/build
-
-    - name: Setup tmate session
-      if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@v3
 
     - name: Upload
       if: matrix.config.artifact != 0
