@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-05 02:07+0000\n"
-"PO-Revision-Date: 2021-09-08 11:10+0000\n"
+"PO-Revision-Date: 2021-09-09 04:39+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -1635,7 +1635,7 @@ msgstr "Hidrogénatomok megjelenítése"
 
 #: qtplugins/ballandstick/ballandstick.h:29
 msgid "Ball and Stick"
-msgstr "Golyók és pálcikák"
+msgstr "Labda és bot modell"
 
 #: qtplugins/ballandstick/ballandstick.h:33
 msgid "Render atoms as spheres and bonds as cylinders."
@@ -2414,7 +2414,7 @@ msgstr "Letöltendő kémiai szerkezet."
 #: qtplugins/networkdatabases/networkdatabases.cpp:102
 #, qt-format
 msgid "Querying for %1"
-msgstr ""
+msgstr "%1 lekérdezése"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:99 qtplugins/fetchpdb/fetchpdb.cpp:117
 #: qtplugins/networkdatabases/networkdatabases.cpp:113
@@ -2439,7 +2439,7 @@ msgstr "PDB (Protein Data Bank - Fehérje adatbank) lekérése"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
-msgstr ""
+msgstr "PDB-modellek letöltése a fehérjeadatbankból"
 
 #: qtplugins/force/force.h:39
 msgid "Force"
@@ -2524,11 +2524,11 @@ msgstr "Dianion"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:668
 msgid "Save GAMESS input file"
-msgstr ""
+msgstr "GAMESS bemeneti fájl mentése"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:718
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "GAMESS számítás elküldése"
 
 #: qtplugins/hydrogens/hydrogens.cpp:33
 msgid "&Adjust Hydrogens"
@@ -2560,13 +2560,13 @@ msgstr "Hidrogénatomok"
 
 #: qtplugins/importpqr/importpqr.cpp:38
 msgid "&Import From PQR"
-msgstr ""
+msgstr "PQR &importálása"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
 #: qtplugins/importpqr/importpqr.h:45:513
 msgid "Import From PQR"
-msgstr ""
+msgstr "PQR importálása"
 
 #: qtplugins/importpqr/importpqr.h:49
 msgid "Download a molecule from PQR."
@@ -2578,7 +2578,7 @@ msgstr "Töredék..."
 
 #: qtplugins/insertfragment/insertfragment.cpp:51
 msgid "Crystal..."
-msgstr ""
+msgstr "Kristály…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:72
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
@@ -2594,7 +2594,7 @@ msgstr "Hiba történt a fájl olvasásakor (%1)."
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
 #: qtplugins/insertfragment/insertfragment.cpp:128:360
 msgid "Import Crystal"
-msgstr ""
+msgstr "Kristály importálása"
 
 #: qtplugins/insertfragment/insertfragment.cpp:132
 msgid "Insert Fragment"
@@ -2628,7 +2628,7 @@ msgstr "Nincs"
 
 #: qtplugins/label/label.cpp:161
 msgid "Index"
-msgstr ""
+msgstr "Tárgymutató"
 
 #: qtplugins/label/label.cpp:162
 msgid "In."
@@ -2653,7 +2653,7 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:175
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #: qtplugins/label/label.cpp:186
 msgid "Atom Label:"
@@ -2667,11 +2667,11 @@ msgstr "Azonosító"
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
 #: qtplugins/propertytables/propertymodel.cpp:388
 msgid "Name"
-msgstr ""
+msgstr "Név"
 
 #: qtplugins/label/label.cpp:205
 msgid " & "
-msgstr ""
+msgstr " és "
 
 #: qtplugins/label/label.cpp:217
 msgid "Residue Label:"
@@ -2683,11 +2683,11 @@ msgstr "Felszínek"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
-msgstr ""
+msgstr "Címkék megjelenítése labda és bot modellben."
 
 #: qtplugins/label/labeleditor.cpp:31
 msgid "Write"
-msgstr ""
+msgstr "Mentés"
 
 #: qtplugins/label/labeleditor.cpp:66
 msgid "Create Label"
@@ -2695,15 +2695,15 @@ msgstr "Címke létrehozása"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
-msgstr ""
+msgstr "Címkeszerkesztő eszköz"
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:41
 msgid "&LAMMPS..."
-msgstr ""
+msgstr "&LAMMPS…"
 
 #: qtplugins/lammpsinput/lammpsinput.h:42
 msgid "LAMMPS input"
-msgstr ""
+msgstr "LAMMPS bemenet"
 
 #: qtplugins/lammpsinput/lammpsinput.h:46
 msgid "Generate input for LAMMPS."
@@ -2714,10 +2714,14 @@ msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
 msgstr ""
+"Szeretné frissíteni az előnézeti szöveget, elveszítve a LAMMPS (Large-scale "
+"Atomic/Molecular Massively Parallel Simulator - nagyméretű atomi/molekuláris "
+"tömegesen párhuzamos szimulátor) bemeneti fedélzet előnézeti ablaka összes "
+"módosítását?"
 
 #: qtplugins/licorice/licorice.h:33
 msgid "Render atoms as licorice / sticks."
-msgstr ""
+msgstr "Atom megjelenítése vonal- vagy pálcamodell szerint."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:43
 msgid "SMILES..."
@@ -2725,7 +2729,7 @@ msgstr "SMILES..."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:48
 msgid "InChI..."
-msgstr ""
+msgstr "InChI…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:55
 msgid "InChI"
@@ -2743,7 +2747,7 @@ msgstr "Leírók nem találhatók!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:99
 msgid "No line format readers found!"
-msgstr ""
+msgstr "Nem található sorformátumú olvasó!"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
@@ -2754,7 +2758,7 @@ msgstr "Molekula beszúrása…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:123
 msgid "Unable to load requested format reader."
-msgstr ""
+msgstr "A kért formátumolvasó betöltése nem sikerült."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:134
 msgid "Generating 3D molecule..."
@@ -2762,7 +2766,7 @@ msgstr "3D molekula létrehozása…"
 
 #: qtplugins/lineformatinput/lineformatinput.h:42
 msgid "LineFormatInput"
-msgstr ""
+msgstr "SorFormátumúBemenet"
 
 #: qtplugins/lineformatinput/lineformatinput.h:65
 msgid "Load single-line molecule descriptors through an input dialog."
@@ -2771,12 +2775,12 @@ msgstr ""
 
 #: qtplugins/manipulator/manipulator.cpp:56
 msgid "Manipulate"
-msgstr ""
+msgstr "Manipulálás"
 
 #: qtplugins/manipulator/manipulator.h:44
 #: qtplugins/manipulator/manipulator.h:45
 msgid "Manipulate tool"
-msgstr ""
+msgstr "Manipuláló eszköz"
 
 #: qtplugins/measuretool/measuretool.cpp:56
 msgid "Measure"
@@ -2802,11 +2806,11 @@ msgstr "Méretezőeszköz"
 
 #: qtplugins/meshes/meshes.h:40
 msgid "Meshes"
-msgstr ""
+msgstr "Hálók"
 
 #: qtplugins/meshes/meshes.h:42
 msgid "Render triangle meshes."
-msgstr ""
+msgstr "Háromszöghálók megjelenítése."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 msgid "View general properties of a molecule."
@@ -3243,7 +3247,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:321
 msgid "Movie (*.avi)"
-msgstr "Filmfájlok (*.avi)"
+msgstr "Rajzfilmfájl (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:350
 #: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:436
@@ -3903,7 +3907,7 @@ msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:387
 msgid "Export Movie"
-msgstr "Film exportálása"
+msgstr "Rajzfilmfájl exportálása"
 
 #: qtplugins/surfaces/surfaces.cpp:388
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
