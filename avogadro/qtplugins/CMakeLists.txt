@@ -5,6 +5,11 @@ find_package(Qt5 COMPONENTS Widgets Network Concurrent REQUIRED)
 include_directories(SYSTEM ${Qt5Widgets_INCLUDE_DIRS})
 add_definitions(${Qt5Widgets_DEFINITIONS})
 
+if(WIN32)
+  # used for HTTPS (e.g., PQR)
+  find_package(OpenSSL)
+endif()
+
 # Modify the output directory for the build tree.
 set(original_library_output_dir "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY

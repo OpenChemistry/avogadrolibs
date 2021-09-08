@@ -21,6 +21,5 @@ target_link_libraries(ImportPQR PRIVATE ${Qt5Network_LIBRARIES})
 
 if(WIN32)
   # for https support
-  include(FindOpenSSL)
-  target_link_libraries(ImportPQR PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+  target_link_libraries(ImportPQR PRIVATE OpenSSL::SSL OpenSSL::Crypto OpenSSL::applink)
 endif()
