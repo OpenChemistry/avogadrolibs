@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-05 02:07+0000\n"
-"PO-Revision-Date: 2021-09-09 22:21+0000\n"
+"PO-Revision-Date: 2021-09-10 01:39+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -1745,7 +1745,7 @@ msgstr "Kötél"
 
 #: qtplugins/cartoons/cartoons.h:34
 msgid "Simple display of Cartoons family."
-msgstr "Egyszerű kijelző rajzfilmes család."
+msgstr "Rajzfilmi család egyszerű megjelenítése."
 
 #: qtplugins/clientserver/clientserver.cpp:73
 msgid "Client server operations."
@@ -3792,6 +3792,8 @@ msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
+"Tércsoport észlelése nem sikerült.\n"
+"Új tűréshatárral próbálja újra?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:208
 msgid "Primitive Reduction"
@@ -3805,6 +3807,8 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"A tűréshatár jelenleg: %1.\n"
+"Folytassa ezzel a tűréshatárral?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:222
 msgid ""
@@ -3838,31 +3842,31 @@ msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:327
 msgid "Select tolerance in Å:"
-msgstr ""
+msgstr "Tűréshatár kijelölése (Å):"
 
 #: qtplugins/spacegroup/spacegroup.cpp:343
 msgid "International"
-msgstr ""
+msgstr "Külföldi"
 
 #: qtplugins/spacegroup/spacegroup.cpp:343
 msgid "Hall"
-msgstr ""
+msgstr "Terem"
 
 #: qtplugins/spacegroup/spacegroup.cpp:343
 msgid "Hermann-Mauguin"
-msgstr ""
+msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select Space Group"
-msgstr ""
+msgstr "Tércsoport kijelölése"
 
 #: qtplugins/spacegroup/spacegroup.h:35
 msgid "SpaceGroup"
-msgstr ""
+msgstr "Tércsoport"
 
 #: qtplugins/spacegroup/spacegroup.h:76
 msgid "Space group features for crystals."
-msgstr ""
+msgstr "A tércsoport jellemzői a kristályokhoz."
 
 #: qtplugins/spectra/spectra.cpp:38
 msgid "Vibrational modes..."
@@ -3870,11 +3874,11 @@ msgstr "Rezgési módok…"
 
 #: qtplugins/spectra/spectra.h:43
 msgid "Spectra and Vibrations"
-msgstr ""
+msgstr "Spektrumok és rezgések"
 
 #: qtplugins/spectra/spectra.h:47
 msgid "Display spectra and vibrational modes."
-msgstr ""
+msgstr "Spektrumok és rezgési módok megjelenítése."
 
 #: qtplugins/surfaces/surfacedialog.cpp:115
 msgid "Molecular Orbital"
@@ -3902,11 +3906,11 @@ msgstr "(Legalacsonyabb szabad molekulapálya)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:155
 msgid "From File"
-msgstr ""
+msgstr "Fájlból"
 
 #: qtplugins/surfaces/surfaces.cpp:78
 msgid "Create Surfaces..."
-msgstr "Felszín létrehozása..."
+msgstr "Felületek létrehozása..."
 
 #: qtplugins/surfaces/surfaces.cpp:244
 msgid "Calculating electron density"
@@ -3915,11 +3919,11 @@ msgstr "Elektronsűrűség számítása folyamatban van…"
 #: qtplugins/surfaces/surfaces.cpp:254
 #, qt-format
 msgid "Calculating molecular orbital %L1"
-msgstr ""
+msgstr "Molekuláris pálya kiszámítása: %L1"
 
 #: qtplugins/surfaces/surfaces.cpp:385 qtplugins/surfaces/surfaces.cpp:413
 msgid "Movie AVI (*.avi)"
-msgstr ""
+msgstr "AVI-rajzfilmfájl (*.avi)"
 
 #: qtplugins/surfaces/surfaces.cpp:387
 msgid "Export Movie"
@@ -3927,7 +3931,7 @@ msgstr "Rajzfilmfájl exportálása"
 
 #: qtplugins/surfaces/surfaces.cpp:388
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "MP4-rajzfilmfájl (*.mp4);;AVI-rajzfilmfájl (*.avi);;GIF-fájl (*.gif)"
 
 #: qtplugins/surfaces/surfaces.h:70
 msgid "Surfaces"
@@ -3935,23 +3939,23 @@ msgstr "Felületek"
 
 #: qtplugins/surfaces/surfaces.h:71
 msgid "Read and render surfaces."
-msgstr ""
+msgstr "Felületek beolvasása és megjelenítése."
 
 #: qtplugins/svg/svg.cpp:31 qtplugins/svg/svg.h:27
 msgid "SVG"
-msgstr ""
+msgstr "SVG-fájl"
 
 #: qtplugins/svg/svg.cpp:259
 msgid "SVG (*.svg)"
-msgstr ""
+msgstr "SVG-fájl (*.svg)"
 
 #: qtplugins/svg/svg.h:31
 msgid "Render the scene in a SVG file."
-msgstr ""
+msgstr "A jelenet megjelenítése SVG-fájlban."
 
 #: qtplugins/symmetry/operationstablemodel.cpp:62
 msgid "Class"
-msgstr ""
+msgstr "Osztály"
 
 #: qtplugins/symmetry/symmetry.cpp:42
 msgid "Symmetry..."
@@ -3977,7 +3981,7 @@ msgstr "Szimmetria elemek megjelenítése."
 
 #: qtplugins/symmetry/symmetryutil.cpp:39
 msgid "∞"
-msgstr ""
+msgstr "∞"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:341
 #, qt-format
@@ -3987,31 +3991,31 @@ msgstr "Csoport név %1"
 #: qtplugins/symmetry/symmetrywidget.cpp:349
 #, qt-format
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
-msgstr ""
+msgstr "Van der Waals gömbök egyszerű megjelenítése."
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:45
 msgid "Simple display of VdW spheres with ambient occlusion."
-msgstr ""
+msgstr "Van der Waals gömbök egyszerű megjelenítése környezeti elzáródással."
 
 #: qtplugins/vrml/vrml.cpp:41
 msgid "VRML Render"
-msgstr ""
+msgstr "Virtuális valóságot modellező nyelv megjelenítése"
 
 #: qtplugins/vrml/vrml.cpp:83
 msgid "VRML (*.wrl);;Text file (*.txt)"
-msgstr ""
+msgstr "VRML-fájl (*.wrl);;Szövegfájl (*.txt)"
 
 #: qtplugins/vrml/vrml.h:36
 msgid "VRML"
-msgstr ""
+msgstr "VRML-fájl"
 
 #: qtplugins/vrml/vrml.h:40
 msgid "Render the scene using VRML."
-msgstr ""
+msgstr "A jelenet megjelenítése a virtuális valóságot modellező nyelvvel."
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
@@ -4019,7 +4023,7 @@ msgstr "Drótkeret molekulai diagram megjelenítése."
 
 #: qtplugins/yaehmop/yaehmop.cpp:60
 msgid "Calculate band structure..."
-msgstr ""
+msgstr "Sávszerkezet kiszámítása…"
 
 #: qtplugins/yaehmop/yaehmop.cpp:80
 msgid "&Yaehmop"
@@ -4027,7 +4031,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:178 qtplugins/yaehmop/yaehmop.cpp:411
 msgid "Cannot calculate band structure: no unit cell!"
-msgstr ""
+msgstr "Sávstruktúra kiszámítása nem sikerült: nincs egységsejt!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:268
 msgid "Yaehmop execution failed with the following error:\n"
@@ -4447,7 +4451,7 @@ msgstr ""
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Enable surface rendering"
-msgstr ""
+msgstr "Felületi megjelenítés engedélyezése"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -6277,12 +6281,12 @@ msgstr "Animáció leállítása"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
 msgid "Create Surfaces"
-msgstr "Felszínek létrehozása"
+msgstr "Felületek létrehozása"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:37
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Surface:"
-msgstr ""
+msgstr "Felület:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
