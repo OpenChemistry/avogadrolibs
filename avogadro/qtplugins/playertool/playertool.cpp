@@ -63,6 +63,7 @@ PlayerTool::PlayerTool(QObject* parent_)
 {
   m_activateAction->setText(tr("Player"));
   m_activateAction->setIcon(QIcon(":/icons/player.png"));
+  m_activateAction->setToolTip(tr("Animation Tool"));
 }
 
 PlayerTool::~PlayerTool() {}
@@ -140,7 +141,7 @@ QWidget* PlayerTool::toolWidget() const
     QHBoxLayout* bonding = new QHBoxLayout;
     bonding->addStretch(1);
     m_dynamicBonding = new QCheckBox(tr("Dynamic bonding?"));
-    m_dynamicBonding->setChecked(true);
+    m_dynamicBonding->setChecked(false);
     bonding->addWidget(m_dynamicBonding);
     bonding->addStretch(1);
     layout->addLayout(bonding);

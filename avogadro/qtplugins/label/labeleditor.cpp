@@ -28,8 +28,11 @@ LabelEditor::LabelEditor(QObject* parent_)
     m_molecule(nullptr), m_glWidget(nullptr), m_renderer(nullptr),
     m_selected(false), m_text("")
 {
-  m_activateAction->setText(tr("Write"));
+  m_activateAction->setText(tr("Edit Labels"));
   m_activateAction->setIcon(QIcon(":/icons/labeltool.png"));
+  m_activateAction->setToolTip(
+    tr("Atom Label Tool\n\n"
+       "Left Mouse: \tClick on Atoms to add Custom Labels"));
 }
 
 LabelEditor::~LabelEditor() {}

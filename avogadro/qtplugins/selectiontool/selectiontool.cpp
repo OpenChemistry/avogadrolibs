@@ -65,6 +65,13 @@ SelectionTool::SelectionTool(QObject* parent_)
 {
   m_activateAction->setText(tr("Selection"));
   m_activateAction->setIcon(QIcon(":/icons/selectiontool.png"));
+  m_activateAction->setToolTip(
+    tr("Selection Tool\n\n"
+       "Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
+       "\tDrag to select a range of atoms\n"
+       "Right Mouse: \tClick outside the molecule to clear selection\n"
+       "Use Ctrl to toggle the selection and shift to add to the selection.\n"
+       "Double-Click: \tSelect an entire fragment."));
 
   connect(m_toolWidget, SIGNAL(colorApplied(Vector3ub)), this,
           SLOT(applyColor(Vector3ub)));

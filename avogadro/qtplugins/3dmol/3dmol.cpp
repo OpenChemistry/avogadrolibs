@@ -40,7 +40,7 @@ ThreeDMol::~ThreeDMol()
 
 QString ThreeDMol::description() const
 {
-  return tr("ThreeDMol HTML Block.");
+  return tr("3DMol HTML Block.");
 }
 
 QList<QAction*> ThreeDMol::actions() const
