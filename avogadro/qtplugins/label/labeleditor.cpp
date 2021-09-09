@@ -30,6 +30,9 @@ LabelEditor::LabelEditor(QObject* parent_)
 {
   m_activateAction->setText(tr("Write"));
   m_activateAction->setIcon(QIcon(":/icons/labeltool.png"));
+  m_activateAction->setToolTip(
+    tr("Atom Label Tool\n\n"
+       "Left Mouse: \tClick on Atoms to add Custom Labels"));
 }
 
 LabelEditor::~LabelEditor() {}

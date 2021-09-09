@@ -63,6 +63,7 @@ PlayerTool::PlayerTool(QObject* parent_)
 {
   m_activateAction->setText(tr("Player"));
   m_activateAction->setIcon(QIcon(":/icons/player.png"));
+  m_activateAction->setToolTip(tr("Animation Tool"));
 }
 
 PlayerTool::~PlayerTool() {}
