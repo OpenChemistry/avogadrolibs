@@ -6,6 +6,7 @@
 #include "pythonscript.h"
 
 #include "avogadropython.h"
+#include "utilities.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
@@ -39,26 +40,36 @@ void PythonScript::setScriptFilePath(const QString& scriptFile)
 
 void PythonScript::setDefaultPythonInterpretor()
 {
-  m_pythonInterpreter = qgetenv("AVO_PYTHON_INTERPRETER");
   if (m_pythonInterpreter.isEmpty()) {
     m_pythonInterpreter =
       QSettings().value(QStringLiteral("interpreters/python")).toString();
   }
   if (m_pythonInterpreter.isEmpty())
+    // compiled-in default
     m_pythonInterpreter = pythonInterpreterPath;
 
   // check to see if the interpreter exists and is executable
   QFileInfo info(m_pythonInterpreter);
-  if (!info.exists() || !info.isExecutable()) {
+  if (!info.isExecutable()) {
     qWarning() << "Python interpreter" << m_pythonInterpreter
                << "does not exist trying \"python\" in your path."
                << "Please set a path to the python interpreter.";
-    // default to python (i.e. something in the path)
+
+    // let's try to find a python
 #ifdef Q_OS_WIN
-    m_pythonInterpreter = "python.exe";
+    QString python("python.exe");
 #else
-    m_pythonInterpreter = "python";
+    QString python("python3");
 #endif
+
+    QString path = Utilities::findExecutablePath(python);
+    if (path.isEmpty()) {
+      qWarning() << "Can't find python in your path";
+    } else {
+      // add a "/" to the end
+      path.append('/');
+    }
+    m_pythonInterpreter = path + python;
   }
 }
 
