@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-05 02:07+0000\n"
-"PO-Revision-Date: 2021-09-09 04:39+0000\n"
+"PO-Revision-Date: 2021-09-09 13:08+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -2389,11 +2389,11 @@ msgstr "Egyszeres"
 
 #: qtplugins/editor/editortoolwidget.cpp:219
 msgid "Double"
-msgstr "Kettős"
+msgstr "Kétszeres"
 
 #: qtplugins/editor/editortoolwidget.cpp:220
 msgid "Triple"
-msgstr "Hármas"
+msgstr "Háromszoros"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:70
@@ -2835,27 +2835,27 @@ msgstr "Molekula tulajdonságai"
 
 #: qtplugins/mongochem/listmoleculesmodel.cpp:80
 msgid "Formula"
-msgstr ""
+msgstr "Képlet"
 
 #: qtplugins/mongochem/listmoleculesmodel.cpp:86
 msgid "InChIKey"
-msgstr ""
+msgstr "InChI kulcs"
 
 #: qtplugins/mongochem/mongochem.cpp:35
 msgid "&MongoChem"
-msgstr ""
+msgstr "&MongoChem"
 
 #: qtplugins/mongochem/mongochem.h:40
 msgid "Mongo Chem Server"
-msgstr ""
+msgstr "MongoChem kiszolgáló"
 
 #: qtplugins/mongochem/mongochem.h:44
 msgid "Interface with Mongo Chem Server."
-msgstr ""
+msgstr "Felület a MongoChem kiszolgálóval."
 
 #: qtplugins/navigator/navigator.cpp:45
 msgid "Navigate"
-msgstr ""
+msgstr "Navigálás"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
 msgid "Navigate tool"
@@ -2867,7 +2867,7 @@ msgstr "Kémiai név"
 
 #: qtplugins/networkdatabases/networkdatabases.h:47
 msgid "Network Databases"
-msgstr ""
+msgstr "Hálózati adatbázisok"
 
 #: qtplugins/networkdatabases/networkdatabases.h:51
 msgid "Interact with online databases, query structures etc."
@@ -2876,7 +2876,7 @@ msgstr "Online adatbázisokkal, lekérdezési struktúrákkal kölcsönhatása."
 #: qtplugins/openbabel/obforcefielddialog.cpp:331
 #, qt-format
 msgid "Autodetect (%1)"
-msgstr ""
+msgstr "Automatikus felismerés (%1)"
 
 #: qtplugins/openbabel/openbabel.cpp:41 qtplugins/openbabel/openbabel.cpp:488
 msgid "Optimize Geometry"
@@ -2905,6 +2905,8 @@ msgstr "&Open Babel kémiai eszköztár"
 #: qtplugins/openbabel/openbabel.cpp:110
 msgid "The Open Babel file formats are not ready to be added."
 msgstr ""
+"Az „Open Babel” kémiai eszköztár fájlformátumok nem állnak készen a "
+"hozzáadásra."
 
 #: qtplugins/openbabel/openbabel.cpp:190
 msgid "Loading molecule from CML..."
@@ -2964,7 +2966,7 @@ msgstr ""
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1..."
-msgstr ""
+msgstr "%1 indítása…"
 
 #: qtplugins/openbabel/openbabel.cpp:435 qtplugins/openbabel/openbabel.cpp:443
 #, qt-format
@@ -2973,6 +2975,9 @@ msgid ""
 "Current energy: %3\n"
 "dE: %4"
 msgstr ""
+"%1. lépés, összesen: %2\n"
+"Jelenlegi energia: %3\n"
+"ΔE: %4"
 
 #: qtplugins/openbabel/openbabel.cpp:457
 msgid "Updating molecule..."
@@ -2994,6 +2999,8 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:497
 msgid "Cannot open file with Open Babel."
 msgstr ""
+"A fájl megnyitása nem sikerült az „Open Babel” kémiai eszköztár "
+"használatával."
 
 #: qtplugins/openbabel/openbabel.cpp:503
 msgid "Invalid molecule: Cannot perceive bonds."
@@ -3046,7 +3053,7 @@ msgstr "Hiba történt az „Open Babel” kémiai eszköztári bemenet létreho
 #: qtplugins/openbabel/openbabel.cpp:702
 #, qt-format
 msgid "Running %1..."
-msgstr ""
+msgstr "%1 futtatása…"
 
 #: qtplugins/openbabel/openbabel.cpp:636
 msgid "Add hydrogens for pH"
@@ -3083,6 +3090,8 @@ msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
+"Az „Open Babel” kémiai eszköztár futtatása folyamatban van. Várja meg a "
+"másik művelet befejeződését, majd próbálja meg újból."
 
 #: qtplugins/openbabel/openbabel.h:36
 msgid "OpenBabel"
@@ -3094,11 +3103,11 @@ msgstr "„Open Babel” kémiai eszköztár kölcsönhatása."
 
 #: qtplugins/openmminput/openmminput.cpp:41
 msgid "&OpenMM Script..."
-msgstr ""
+msgstr "&OpenMM parancsfájl…"
 
 #: qtplugins/openmminput/openmminput.h:42
 msgid "OpenMM input"
-msgstr ""
+msgstr "OpenMM bemenet"
 
 #: qtplugins/openmminput/openmminput.h:46
 msgid "Generate input for OpenMM."
@@ -3109,6 +3118,8 @@ msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
 msgstr ""
+"Szeretné frissíteni az előnézeti szöveget, elveszítve az OpenMM bemeneti "
+"fedélzet előnézeti ablaka összes módosítását?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:505
 #: qtplugins/openmminput/openmminputdialog.cpp:508
@@ -3116,7 +3127,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:945
 #: qtplugins/openmminput/openmminputdialog.cpp:1063
 msgid "inpcrd"
-msgstr ""
+msgstr "inpcrd"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:505
 #: qtplugins/openmminput/openmminputdialog.cpp:510
@@ -3124,32 +3135,32 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:954
 #: qtplugins/openmminput/openmminputdialog.cpp:1065
 msgid "gro"
-msgstr ""
+msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
 #: qtplugins/openmminput/openmminputdialog.cpp:509:1111
 msgid "input.prmtop"
-msgstr ""
+msgstr "input.prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:511
 msgid "input.top"
-msgstr ""
+msgstr "input.top"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:514
 #: qtplugins/openmminput/openmminputdialog.cpp:938
 #: qtplugins/openmminput/openmminputdialog.cpp:1054
 #: qtplugins/openmminput/openmminputdialog.cpp:1061
 msgid "pdb"
-msgstr ""
+msgstr "pdb"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:535
 msgid "prmtop"
-msgstr ""
+msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:539
 msgid "top"
-msgstr ""
+msgstr "top"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -3160,7 +3171,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:1072
 #: qtplugins/openmminput/openmminputdialog.cpp:1081:1228 rc.cpp:1243
 msgid "True"
-msgstr ""
+msgstr "Igaz"
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 msgid "Reference Axes"
@@ -3180,7 +3191,7 @@ msgstr "Lejátszó"
 
 #: qtplugins/playertool/playertool.cpp:80
 msgid "Play"
-msgstr ""
+msgstr "Lejátszás"
 
 #: qtplugins/playertool/playertool.cpp:83
 msgid "Stop"
@@ -3206,7 +3217,7 @@ msgstr "Képkocka:"
 #: qtplugins/surfaces/surfacedialog.cpp:178
 #, qt-format
 msgid " of %0"
-msgstr ""
+msgstr " / %0"
 
 #: qtplugins/playertool/playertool.cpp:142
 msgid "Dynamic bonding?"
@@ -3216,12 +3227,12 @@ msgstr "Dinamikus kötések?"
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
 #: qtplugins/playertool/playertool.cpp:150:1546
 msgid "Record Movie..."
-msgstr ""
+msgstr "Rajzfilmfájl felvétele…"
 
 #: qtplugins/playertool/playertool.cpp:254
 #: qtplugins/playertool/playertool.cpp:355
 msgid "Movie (*.mp4)"
-msgstr ""
+msgstr "Rajzfilmfájl (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:256
 msgid "Export Bitmap Graphics"
@@ -3229,15 +3240,15 @@ msgstr "Bittérképes grafika exportálása"
 
 #: qtplugins/playertool/playertool.cpp:257
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Rajzfilmfájl (*.mp4);;Rajzfilmfájl (*.avi);;GIF-fájl (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:271 qtplugins/surfaces/surfaces.cpp:408
 msgid "GIF (*.gif)"
-msgstr ""
+msgstr "GIF-fájl (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:277
 msgid "GIF FPS support warning"
-msgstr ""
+msgstr "GIF-fájl képkocka/másodperc támogatási figyelmeztetés"
 
 #: qtplugins/playertool/playertool.cpp:278
 msgid "The GIF file format does not support frame rates over 100 FPS."
@@ -3270,15 +3281,15 @@ msgstr "Lejátszó eszköz"
 
 #: qtplugins/playertool/playertool.h:47
 msgid "Play back trajectories"
-msgstr ""
+msgstr "Pályák lejátszása"
 
 #: qtplugins/plotpdf/plotpdf.cpp:48
 msgid "Plot Pair Distribution Function..."
-msgstr ""
+msgstr "Pár eloszlásfüggvény ábrázolása…"
 
 #: qtplugins/plotpdf/plotpdf.cpp:132
 msgid "Failed to generate PDF pattern"
-msgstr "Nem sikerült létrehozni a pár elosztási függvény (PDF) mintát"
+msgstr "Nem sikerült létrehozni a pár eloszlásfüggvény (PDF) mintát"
 
 #: qtplugins/plotpdf/plotpdf.cpp:133 qtplugins/plotxrd/plotxrd.cpp:131
 msgid "Error message: "
@@ -3286,39 +3297,41 @@ msgstr "Hibaüzenet: "
 
 #: qtplugins/plotpdf/plotpdf.h:48
 msgid "PlotPdf"
-msgstr ""
+msgstr "Pár eloszlásfüggvény ábrázolása"
 
 #: qtplugins/plotpdf/plotpdf.h:83
 msgid "Generate and plot a Pair Distribution Function curve."
-msgstr "Páros eloszlási függvény (PDF) görbe létrehozása és ábrázolása."
+msgstr "Pár elosztásfüggvény létrehozása és ábrázolása."
 
 #: qtplugins/plotrmsd/plotrmsd.cpp:43
 msgid "Plot RMSD curve..."
-msgstr ""
+msgstr "Gyök-közép-négyzet eltérés függvény ábrázolása…"
 
 #: qtplugins/plotrmsd/plotrmsd.h:48
 msgid "PlotRmsd"
-msgstr ""
+msgstr "Gyök-közép-négyzet eltérés függvény ábrázolása"
 
 #: qtplugins/plotrmsd/plotrmsd.h:78
 msgid "Generate and plot an RMSD curve."
-msgstr "RMSD görbe létrehozása és ábrázolása."
+msgstr "Gyök-közép-négyzet eltérés függvény létrehozása és ábrázolása."
 
 #: qtplugins/plotxrd/plotxrd.cpp:45
 msgid "Plot Theoretical XRD Pattern..."
-msgstr ""
+msgstr "Elméleti röntgendiffrakciós minta ábrázolása…"
 
 #: qtplugins/plotxrd/plotxrd.cpp:130
 msgid "Failed to generate XRD pattern"
-msgstr "Az XRD-minta létrehozása nem sikerült"
+msgstr "Röntgendiffrakciós minta létrehozása nem sikerült"
 
 #: qtplugins/plotxrd/plotxrd.cpp:173
 msgid "Failed to convert molecule to CIF format."
 msgstr ""
+"Nem sikerült átalakítani a molekulát kristálytani információs fájlformátumba "
+"(CIF-fájl)."
 
 #: qtplugins/plotxrd/plotxrd.cpp:208
 msgid "Data read from genXrdPattern appears to be corrupt!"
-msgstr ""
+msgstr "A genXrdPattern-ből olvasott adatok sérültnek tűnnek!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:246
 msgid "Error: could not find genXrdPattern executable!"
@@ -3333,43 +3346,44 @@ msgstr "Hiba történt: "
 
 #: qtplugins/plotxrd/plotxrd.h:50
 msgid "PlotXrd"
-msgstr ""
+msgstr "Röntgendiffrakciós minta ábrázolása"
 
 #: qtplugins/plotxrd/plotxrd.h:98
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr ""
-"Elméleti XRD-minta létrehozása és ábrázolása ObjCryst ++ használatával."
+"Elméleti röntgendiffrakciós minta létrehozása és ábrázolása ObjCryst ++ "
+"használatával."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
 msgid "Update"
-msgstr ""
+msgstr "Frissítés"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
 msgid "Version"
-msgstr ""
+msgstr "Verzió"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:73
 msgid "Description"
-msgstr ""
+msgstr "Leírás"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:333
 #, qt-format
 msgid "Downloading %1 to %2\n"
-msgstr ""
+msgstr "%1-%2 letöltése\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:346
 #, qt-format
 msgid "Extracting %1 to %2\n"
-msgstr ""
+msgstr "%1-%2 kicsomagolása\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:349
 #, qt-format
 msgid "Finished %1 files\n"
-msgstr ""
+msgstr "%1 fájl befejezve\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:353
 msgid "Extraction successful\n"
-msgstr ""
+msgstr "A fájlok kicsomagolása sikeresen megtörtént.\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:383
 #, qt-format
@@ -3380,15 +3394,15 @@ msgstr "Hiba történt a kivonás során: %1"
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
 #: qtplugins/plugindownloader/plugindownloader.cpp:39:1450
 msgid "Download Plugins..."
-msgstr ""
+msgstr "Beépülő modulok letöltése…"
 
 #: qtplugins/plugindownloader/plugindownloader.h:48
 msgid "Download Plugins"
-msgstr ""
+msgstr "Beépülő modulok letöltése"
 
 #: qtplugins/plugindownloader/plugindownloader.h:52
 msgid "Download plugins from GitHub repositories."
-msgstr ""
+msgstr "Beépülő modulok letöltése a GitHub adattáraiból."
 
 #: qtplugins/povray/povray.cpp:41
 msgid "POV-Ray Render"
@@ -3401,11 +3415,11 @@ msgstr "Fájl mentése"
 
 #: qtplugins/povray/povray.cpp:83
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
-msgstr ""
+msgstr "POV-Ray-fájl (*.pov);;Szövegfájl (*.txt)"
 
 #: qtplugins/povray/povray.h:36
 msgid "POVRay"
-msgstr ""
+msgstr "POVRay"
 
 #: qtplugins/povray/povray.h:40
 msgid "Render the scene using POV-Ray."
@@ -3417,15 +3431,15 @@ msgstr "Vegyérték"
 
 #: qtplugins/propertytables/propertymodel.cpp:353
 msgid "X (Å)"
-msgstr ""
+msgstr "X (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:355
 msgid "Y (Å)"
-msgstr ""
+msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:357
 msgid "Z Å)"
-msgstr ""
+msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:359
 #: qtplugins/propertytables/propertymodel.cpp:398
@@ -3527,7 +3541,7 @@ msgstr "3_10-hélix"
 #: qtplugins/propertytables/propertymodel.cpp:488
 msgctxt "beta bridge"
 msgid "β Bridge"
-msgstr ""
+msgstr "β-híd"
 
 #: qtplugins/propertytables/propertymodel.cpp:490
 msgctxt "protein turn secondary structure"
@@ -3601,7 +3615,7 @@ msgstr "Molekula tulajdonságai"
 #: qtplugins/qtaim/qtaimengine.h:39 qtplugins/qtaim/qtaimextension.cpp:90
 #: qtplugins/qtaim/qtaimextension.h:35
 msgid "QTAIM"
-msgstr ""
+msgstr "Molekulák atomjainak kvantumelmélete"
 
 #: qtplugins/qtaim/qtaimengine.h:43
 msgid "Renders primitives using QTAIM properties"
@@ -4613,7 +4627,7 @@ msgstr ""
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:215
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "Functional"
-msgstr ""
+msgstr "Függvényes"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:258
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
@@ -5484,7 +5498,7 @@ msgstr "Kötések száma:"
 #. i18n: file: qtplugins/mongochem/configdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConfigDialog)
 msgid "MongoChem Config"
-msgstr ""
+msgstr "MongoChem beállítása"
 
 #. i18n: file: qtplugins/mongochem/configdialog.ui:20
 #. i18n: ectx: property (text), widget (QLineEdit, girderUrl)
@@ -5565,6 +5579,31 @@ msgid ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
 "family:'Ubuntu';\">}</span></p></body></html>"
 msgstr ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
+">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">{</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">    \"elmélet\": \"dft\",</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">    \"függvényes\": \"b3lyp\",</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">    \"bázis\": \"6-31g\",</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">    \"feladat\": \"energia\" </span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu';\">}</span></p></body></html>"
 
 #. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:109
 #. i18n: ectx: property (text), widget (QLabel, labelInputParameters)
@@ -6054,7 +6093,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:841
 #. i18n: ectx: property (text), widget (QLabel, label_stateDataOptions)
 msgid "StateData options:"
-msgstr ""
+msgstr "StateData (ÁllapotAdatok) beállításai:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:848
 #. i18n: ectx: property (text), widget (QCheckBox, stepIndexCheck)
@@ -6104,7 +6143,7 @@ msgstr ""
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
 msgid "PDF Plot Options"
-msgstr ""
+msgstr "Pár eloszlásfüggvény ábrázolása beállításai"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6119,7 +6158,7 @@ msgstr ""
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
 msgid "Theoretical XRD Pattern Options"
-msgstr ""
+msgstr "Elméleti röntgendiffrakciós minta beállításai"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:17
 #. i18n: ectx: property (toolTip), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
