@@ -24,10 +24,13 @@
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/scene.h>
 
+#include <QtCore/QSettings>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
 #include <QtWidgets/QAction>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QVBoxLayout>
 
 #include <Eigen/Geometry>
 
@@ -39,8 +42,9 @@ const float ROTATION_SPEED = 0.005f;
 
 Navigator::Navigator(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_glWidget(nullptr), m_renderer(nullptr),
-    m_pressedButtons(Qt::NoButton), m_currentAction(Nothing)
+    m_molecule(nullptr), m_glWidget(nullptr), m_toolWidget(nullptr),
+    m_renderer(nullptr), m_pressedButtons(Qt::NoButton),
+    m_currentAction(Nothing)
 {
   m_activateAction->setText(tr("Navigate"));
   m_activateAction->setIcon(QIcon(":/icons/navigator.png"));
@@ -49,13 +53,40 @@ Navigator::Navigator(QObject* parent_)
        "Left Mouse: \tClick and drag to rotate the view.\n"
        "Middle Mouse: \tClick and drag to zoom in or out.\n"
        "Right Mouse: \tClick and drag to move the view.\n"));
+      
+  QSettings settings;
+  m_zoomDirection = settings.value("navigator/zoom", 1).toInt();
 }
 
 Navigator::~Navigator() {}
 
 QWidget* Navigator::toolWidget() const
 {
-  return nullptr;
+  if (!m_toolWidget) {
+    m_toolWidget = new QWidget(qobject_cast<QWidget*>(parent()));
+    QVBoxLayout* layout = new QVBoxLayout;
+
+    QCheckBox* swapZoom =
+      new QCheckBox(tr("Reverse Direction of Zoom on Scroll"));
+    swapZoom->setToolTip(
+      tr("Default:\t Scroll down to shrink, scroll up to zoom\n"
+         "Reversed:\t Scroll up to shrink, scroll down to zoom"));
+    connect(swapZoom, SIGNAL(toggled(bool)), this,
+            SLOT(swapZoomDirection(bool)));
+    layout->addWidget(swapZoom);
+
+    layout->addStretch(1);
+    m_toolWidget->setLayout(layout);
+  }
+  return m_toolWidget;
+}
+
+void Navigator::swapZoomDirection(bool checked)
+{
+  m_zoomDirection = (checked ? -1 : 1);
+
+  QSettings settings;
+  settings.setValue("navigator/zoom", m_zoomDirection);
 }
 
 QUndoCommand* Navigator::mousePressEvent(QMouseEvent* e)
@@ -142,8 +173,18 @@ QUndoCommand* Navigator::mouseDoubleClickEvent(QMouseEvent* e)
 QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
 {
   /// @todo Use scale for orthographic projections
-  // Zoom
-  zoom(m_renderer->scene().center(), e->delta() * 0.1);
+  // Amount to zoom
+  float d = 0.0f;
+
+  QPoint numPixels = e->pixelDelta();
+  QPoint numDegrees = e->angleDelta() * 0.125;
+
+  if (!numPixels.isNull())
+    d = numPixels.y();
+  else if (!numDegrees.isNull())
+    d = numDegrees.y();
+
+  zoom(m_renderer->scene().center(), m_zoomDirection * d);
 
   e->accept();
   emit updateRequested();

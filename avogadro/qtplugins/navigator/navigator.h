@@ -60,6 +60,9 @@ public:
   QUndoCommand* keyPressEvent(QKeyEvent* e) override;
   QUndoCommand* keyReleaseEvent(QKeyEvent* e) override;
 
+protected slots:
+  void swapZoomDirection(bool checked);
+
 private:
   /**
    * Update the currently pressed buttons, accounting for modifier keys.
@@ -75,9 +78,11 @@ private:
   QAction* m_activateAction;
   QtGui::Molecule* m_molecule;
   QtOpenGL::GLWidget* m_glWidget;
+  mutable QWidget* m_toolWidget;
   Rendering::GLRenderer* m_renderer;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;
+  int m_zoomDirection;
 
   enum ToolAction
   {
