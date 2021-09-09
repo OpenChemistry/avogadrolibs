@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-05 02:07+0000\n"
-"PO-Revision-Date: 2021-09-09 13:08+0000\n"
+"PO-Revision-Date: 2021-09-09 22:21+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -3424,6 +3424,7 @@ msgstr "POVRay"
 #: qtplugins/povray/povray.h:40
 msgid "Render the scene using POV-Ray."
 msgstr ""
+"A jelenet megjelenítése a látás kitartása sugárjelző (POV-Ray) segítségével."
 
 #: qtplugins/propertytables/propertymodel.cpp:351
 msgid "Valence"
@@ -3521,7 +3522,7 @@ msgstr "π-hélix"
 #: qtplugins/propertytables/propertymodel.cpp:480
 msgctxt "protein bend secondary structure"
 msgid "Bend"
-msgstr ""
+msgstr "Hajlítás"
 
 #: qtplugins/propertytables/propertymodel.cpp:482
 msgctxt "alpha helix"
@@ -3546,12 +3547,12 @@ msgstr "β-híd"
 #: qtplugins/propertytables/propertymodel.cpp:490
 msgctxt "protein turn secondary structure"
 msgid "Turn"
-msgstr ""
+msgstr "Fordulás"
 
 #: qtplugins/propertytables/propertymodel.cpp:492
 msgctxt "protein coil secondary structure"
 msgid "Coil"
-msgstr ""
+msgstr "Tekercs"
 
 #: qtplugins/propertytables/propertytables.cpp:28
 msgid "Atom Properties..."
@@ -3619,7 +3620,8 @@ msgstr "Molekulák atomjainak kvantumelmélete"
 
 #: qtplugins/qtaim/qtaimengine.h:43
 msgid "Renders primitives using QTAIM properties"
-msgstr "Simple display with QTAIM properties"
+msgstr ""
+"Egyszerű kijelző az atomok kvantumelméletével a molekulák tulajdonságaiban"
 
 #: qtplugins/qtaim/qtaimextension.cpp:59
 msgid "Molecular Graph..."
@@ -3627,23 +3629,23 @@ msgstr "Molekuladiagram…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:66
 msgid "Molecular Graph with Lone Pairs..."
-msgstr ""
+msgstr "Molekuláris ábrázolása magányos párral…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:73
 msgid "Atomic Charge..."
-msgstr ""
+msgstr "Atomi töltés…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:122
 msgid "Open WFN File"
-msgstr ""
+msgstr "WFN-fájl megnyitása"
 
 #: qtplugins/qtaim/qtaimextension.cpp:123
 msgid "WFN files (*.wfn);;All files (*.*)"
-msgstr ""
+msgstr "WFN-fájlok (*.wfn);;Minden fájl (*.*)"
 
 #: qtplugins/qtaim/qtaimextension.h:36
 msgid "QTAIM extension"
-msgstr ""
+msgstr "Molekulák atomjainak kvantumelmélete kiterjesztése"
 
 #: qtplugins/quantuminput/quantuminput.cpp:191
 msgid ""
@@ -3657,11 +3659,11 @@ msgstr ""
 
 #: qtplugins/quantuminput/quantuminput.cpp:242
 msgid "Set Python Path..."
-msgstr ""
+msgstr "Python elérési útja beállítása…"
 
 #: qtplugins/quantuminput/quantuminput.h:53
 msgid "Quantum input"
-msgstr ""
+msgstr "Kvantum bemenet"
 
 #: qtplugins/quantuminput/quantuminput.h:57
 msgid "Generate input for quantum codes."
@@ -3673,7 +3675,7 @@ msgstr "Középre"
 
 #: qtplugins/resetview/resetview.cpp:49
 msgid "Align View to Axes"
-msgstr ""
+msgstr "Nézet igazítása a tengelyekhez"
 
 #: qtplugins/resetview/resetview.h:37
 msgid "Reset view"
@@ -3681,11 +3683,11 @@ msgstr "Nézet visszaállítása"
 
 #: qtplugins/resetview/resetview.h:40
 msgid "Manipulate the view camera."
-msgstr ""
+msgstr "Nézet kamera manipulálása."
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:39
 msgid "Script File Formats"
-msgstr ""
+msgstr "Parancsfájl formátumok"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:43
 msgid "Load file reader/writers from external scripts."
@@ -3701,7 +3703,7 @@ msgstr "Kijelölés megszüntetése"
 
 #: qtplugins/select/select.cpp:54
 msgid "Invert Selection"
-msgstr ""
+msgstr "Kijelölés megfordítása"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Element..."
@@ -3717,7 +3719,7 @@ msgstr "Maradék szerint kijelölése…"
 
 #: qtplugins/select/select.cpp:79
 msgid "Change selections"
-msgstr ""
+msgstr "Kijelölések módosítása"
 
 #: qtplugins/select/select.cpp:89
 msgid "&Select"
@@ -3729,7 +3731,7 @@ msgstr "Index szerint atom kijelölése"
 
 #: qtplugins/select/select.cpp:160
 msgid "Atoms to Select:"
-msgstr ""
+msgstr "Atomok kijelölése:"
 
 #: qtplugins/select/select.cpp:197
 msgid "Select Atoms by Residue"
@@ -3756,7 +3758,7 @@ msgstr "Atomok kirajzolása"
 #: qtplugins/selectiontool/selectiontool.h:47
 #: qtplugins/selectiontool/selectiontool.h:48
 msgid "Selection tool"
-msgstr ""
+msgstr "Kijelölőeszköz"
 
 #: qtplugins/spacegroup/spacegroup.cpp:63
 msgid "Perceive Space Group"
@@ -3775,15 +3777,15 @@ msgstr "Aszimmetriaegységre csökkentése"
 
 #: qtplugins/spacegroup/spacegroup.cpp:97
 msgid "Set Tolerance"
-msgstr ""
+msgstr "Tűréshatár beállítása"
 
 #: qtplugins/spacegroup/spacegroup.cpp:118
 msgid "Space Group"
-msgstr ""
+msgstr "Tércsoport"
 
 #: qtplugins/spacegroup/spacegroup.cpp:192
 msgid "Failure"
-msgstr ""
+msgstr "Hiba"
 
 #: qtplugins/spacegroup/spacegroup.cpp:193
 msgid ""
