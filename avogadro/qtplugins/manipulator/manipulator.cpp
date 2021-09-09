@@ -55,6 +55,10 @@ Manipulator::Manipulator(QObject* parent_)
 {
   m_activateAction->setText(tr("Manipulate"));
   m_activateAction->setIcon(QIcon(":/icons/manipulator.png"));
+  m_activateAction->setToolTip(
+    tr("Manipulation Tool\n\n"
+       "Left Mouse: \tClick and drag to move atoms\n"
+       "Right Mouse: \tClick and drag to rotate selected atoms.\n"));
 }
 
 Manipulator::~Manipulator() {}
@@ -142,8 +146,7 @@ QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
 
     if (m_currentAction == Translation) {
       translate(delta);
-    }
-    else {
+    } else {
       // get the center of the selected atoms
       Vector3 centroid(0.0, 0.0, 0.0);
       unsigned long selectedAtomCount = 0;
@@ -151,7 +154,7 @@ QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
         if (!m_molecule->atomSelected(i))
           continue;
 
-      centroid += m_molecule->atomPosition3d(i);
+        centroid += m_molecule->atomPosition3d(i);
         selectedAtomCount++;
       }
       if (selectedAtomCount > 0)

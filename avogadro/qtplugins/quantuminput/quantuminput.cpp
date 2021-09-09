@@ -225,8 +225,8 @@ void QuantumInput::updateActions()
     // Include the full path if there are multiple generators with the same
     // name.
     QString label = programName;
-    if (!label.endsWith("..."))
-      label.append("...");
+    if (!label.endsWith("...") && !label.endsWith("…"))
+      label.append("…");
 
     if (scripts.size() == 1) {
       addAction(label, scripts.first());
@@ -239,7 +239,7 @@ void QuantumInput::updateActions()
 
   // Last one is the configuration action
   // TODO: set this globally via the app
-  QAction* action = new QAction(tr("Set Python Path..."), this);
+  QAction* action = new QAction(tr("Set Python Path…"), this);
   action->setData(ConfigureAction);
   connect(action, SIGNAL(triggered()), SLOT(configurePython()));
   m_actions << action;

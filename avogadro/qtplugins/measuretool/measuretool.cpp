@@ -55,11 +55,16 @@ MeasureTool::MeasureTool(QObject* parent_)
 {
   m_activateAction->setText(tr("Measure"));
   m_activateAction->setIcon(QIcon(":/icons/measuretool.png"));
+  m_activateAction->setToolTip(
+    tr("Measure Tool\n\n"
+       "Left Mouse: \tSelect up to four Atoms.\n"
+       "\tDistances are measured between 1-2 and 2-3\n"
+       "\tAngle is measured between 1-3 using 2 as the common point\n"
+       "\tDihedral is measured between 1-2-3-4\n"
+       "Right Mouse: \tReset the measurements."));
 }
 
-MeasureTool::~MeasureTool()
-{
-}
+MeasureTool::~MeasureTool() {}
 
 QWidget* MeasureTool::toolWidget() const
 {
@@ -203,8 +208,7 @@ void MeasureTool::draw(Rendering::GroupNode& node)
         QString("%1 %L2 %L3\n")
           .arg(tr("Angles:"), labelWidth)
           .arg(tr("%L1°").arg(angle12, 9, 'f', 3), 9)
-          .arg(angle23 < 360.f ? tr("%L1°").arg(angle23, 9, 'f', 3)
-                               : QString(),
+          .arg(angle23 < 360.f ? tr("%L1°").arg(angle23, 9, 'f', 3) : QString(),
                10);
     // fall through
     case 2:
