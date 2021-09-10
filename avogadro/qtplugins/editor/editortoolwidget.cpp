@@ -135,7 +135,7 @@ void EditorToolWidget::updateElementCombo()
       atomicNum);
   }
   m_ui->element->insertSeparator(m_ui->element->count());
-  m_ui->element->addItem(tr("Other..."), ELEMENT_SELECTOR_TAG);
+  m_ui->element->addItem(tr("Other…"), ELEMENT_SELECTOR_TAG);
 
   // Reset the element if it still exists
   selectElement(static_cast<unsigned char>(

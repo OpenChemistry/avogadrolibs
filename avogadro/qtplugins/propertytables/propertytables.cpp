@@ -25,31 +25,31 @@ PropertyTables::PropertyTables(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr)
 {
   QAction* action = new QAction(this);
-  action->setText(tr("Atom Properties..."));
+  action->setText(tr("Atom Properties…"));
   action->setData(PropertyType::AtomType);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(this);
-  action->setText(tr("Bond Properties..."));
+  action->setText(tr("Bond Properties…"));
   action->setData(PropertyType::BondType);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(this);
-  action->setText(tr("Angle Properties..."));
+  action->setText(tr("Angle Properties…"));
   action->setData(PropertyType::AngleType);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(this);
-  action->setText(tr("Torsion Properties..."));
+  action->setText(tr("Torsion Properties…"));
   action->setData(PropertyType::TorsionType);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(this);
-  action->setText(tr("Residue Properties..."));
+  action->setText(tr("Residue Properties…"));
   action->setData(PropertyType::ResidueType);
   action->setEnabled(false); // changed by molecule
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));

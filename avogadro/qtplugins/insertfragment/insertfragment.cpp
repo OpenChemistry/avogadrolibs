@@ -43,12 +43,12 @@ InsertFragment::InsertFragment(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_crystalDialog(nullptr),
     m_moleculeDialog(nullptr), m_reader(nullptr), m_molecule(nullptr)
 {
-  QAction* action = new QAction(tr("Fragment..."), this);
+  QAction* action = new QAction(tr("Fragment…"), this);
   action->setData("molecules"); // will also work for crystals
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
-  action = new QAction(tr("Crystal..."), this);
+  action = new QAction(tr("Crystal…"), this);
   action->setData("crystals"); // will also work for crystals
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);

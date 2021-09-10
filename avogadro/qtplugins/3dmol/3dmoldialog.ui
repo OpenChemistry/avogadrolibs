@@ -39,12 +39,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="exitButton">
+        <widget class="QPushButton" name="closeButton">
          <property name="text">
-          <string>&amp;Exit</string>
-         </property>
-         <property name="shortcut">
-          <string>Ctrl+E</string>
+          <string>Close</string>
          </property>
         </widget>
        </item>

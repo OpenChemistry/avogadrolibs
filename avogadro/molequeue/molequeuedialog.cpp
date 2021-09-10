@@ -55,7 +55,7 @@ MoleQueueDialog::SubmitStatus MoleQueueDialog::submitJob(
     if (options & WaitForSubmissionResponse || dlg.widget().openOutput()) {
       QProgressDialog progress;
       progress.setCancelButton(nullptr);
-      progress.setLabelText(tr("Submitting job to MoleQueue..."));
+      progress.setLabelText(tr("Submitting job to MoleQueue…"));
       progress.setRange(0, 0);
       progress.setValue(0);
       progress.show();
@@ -81,7 +81,7 @@ MoleQueueDialog::SubmitStatus MoleQueueDialog::submitJob(
           return SubmissionSuccessful;
 
         // Update progress dialog
-        progress.setLabelText(tr("Waiting for job %1 '%2' to finish...")
+        progress.setLabelText(tr("Waiting for job %1 “%2” to finish…", "%1 = job ID, %2 = description")
                                 .arg(dlg.widget().moleQueueId())
                                 .arg(jobTemplate.description()));
         progress.setCancelButtonText(tr("Stop waiting"));
@@ -103,7 +103,7 @@ MoleQueueDialog::SubmitStatus MoleQueueDialog::submitJob(
           return JobFailed;
 
         // Update progress bar:
-        progress.setLabelText(tr("Fetching completed job information..."));
+        progress.setLabelText(tr("Fetching completed job information…"));
         progress.setCancelButton(nullptr);
 
         // Job completed -- overwrite job template with updated job details.
@@ -126,7 +126,7 @@ MoleQueueDialog::SubmitStatus MoleQueueDialog::submitJob(
       } else {
         progress.hide();
         QMessageBox::warning(&dlg, tr("Error Submitting Job"),
-                             tr("The job has been rejected by MoleQueue: %1")
+                             tr("The job has been rejected by MoleQueue: %1", "%1 = error")
                                .arg(dlg.widget().submissionError()));
         continue;
       }
