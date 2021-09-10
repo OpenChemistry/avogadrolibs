@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-05 02:07+0000\n"
-"PO-Revision-Date: 2021-09-08 11:10+0000\n"
+"PO-Revision-Date: 2021-09-09 04:39+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/nb_NO/>\n"
@@ -92,8 +92,9 @@ msgid "'mainFile' member must be a string."
 msgstr ""
 
 #: molequeue/inputgenerator.cpp:280 qtgui/interfacescript.cpp:407
+#, fuzzy
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "Svaret må være et JSON-objekt på øverste nivå."
 
 #: molequeue/inputgenerator.cpp:284 qtgui/interfacescript.cpp:411
 #, qt-format
@@ -101,6 +102,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Skriptutdata:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:327 qtgui/interfacescript.cpp:455
 #, qt-format
@@ -1044,15 +1047,15 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:183
 msgid "Processor Cores"
-msgstr ""
+msgstr "Prosessorkjerner"
 
 #: qtgui/jsonwidget.cpp:187
 msgid "Calculation Type"
-msgstr ""
+msgstr "Utregningstype"
 
 #: qtgui/jsonwidget.cpp:191
 msgid "Theory"
-msgstr ""
+msgstr "Teori"
 
 #: qtgui/jsonwidget.cpp:191
 msgid "Basis"
@@ -1060,7 +1063,7 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:196
 msgid "Charge"
-msgstr ""
+msgstr "Ladning"
 
 #: qtgui/jsonwidget.cpp:199
 msgid "Multiplicity"
@@ -1176,7 +1179,7 @@ msgstr ""
 #: qtgui/rwlayermanager.cpp:34 qtgui/rwlayermanager.cpp:89
 #: qtgui/rwlayermanager.cpp:115
 msgid "Modify Layers"
-msgstr ""
+msgstr "Endre lag"
 
 #: qtgui/rwlayermanager.cpp:178
 #, fuzzy
@@ -1190,11 +1193,11 @@ msgstr "Legg til eller fjern hydrogener"
 
 #: qtgui/rwlayermanager.cpp:194
 msgid "Add Layer"
-msgstr ""
+msgstr "Legg til lag"
 
 #: qtgui/rwlayermanager.cpp:197
 msgid "Add Layer Info"
-msgstr ""
+msgstr "Legg til laginfo"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1215,7 +1218,7 @@ msgstr "Fjern Atom"
 
 #: qtgui/rwmolecule.cpp:106
 msgid "Clear Atoms"
-msgstr ""
+msgstr "Fjern atomer"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -1388,7 +1391,7 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:74
 msgid "OpenDX File (*.dx)"
-msgstr ""
+msgstr "OpenDX-fil (*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:127
 #, fuzzy
@@ -1398,16 +1401,16 @@ msgstr "Feil"
 #: qtplugins/apbs/apbs.cpp:128
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr ""
+msgstr "Kunne ikke lese strukturfil (%1)."
 
 #: qtplugins/apbs/apbs.cpp:148 qtplugins/apbs/apbs.cpp:155
 msgid "OpenDX Error"
-msgstr ""
+msgstr "OpenDX-feil"
 
 #: qtplugins/apbs/apbs.cpp:149
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "Kunne ikke lese OpenDX-fil: %1"
 
 #: qtplugins/apbs/apbs.cpp:156
 msgid "Error reading OpenDX file: No cube found"
@@ -1425,7 +1428,7 @@ msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:91
 msgid "Open PDB File"
-msgstr ""
+msgstr "Åpne PDB-fil"
 
 #: qtplugins/apbs/apbsdialog.cpp:92
 msgid "PDB Files (*.pdb)"
@@ -1461,15 +1464,15 @@ msgstr "Feil"
 #: qtplugins/apbs/apbsdialog.cpp:144
 #, qt-format
 msgid "Error running APBS: %1"
-msgstr ""
+msgstr "Kunne ikke kjøre APBS: %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:153
 msgid "Please specify PDB file"
-msgstr ""
+msgstr "Angi PDB-fil"
 
 #: qtplugins/apbs/apbsdialog.cpp:186
 msgid "Save APBS Input File"
-msgstr ""
+msgstr "Lagre APBS-inndatafil"
 
 #: qtplugins/apbs/apbsdialog.cpp:186
 msgid "ABPS Input (*.in)"
@@ -1511,11 +1514,11 @@ msgstr "Grunnstoff"
 
 #: qtplugins/applycolors/applycolors.cpp:55
 msgid "By Chain"
-msgstr ""
+msgstr "Etter kjede"
 
 #: qtplugins/applycolors/applycolors.cpp:60
 msgid "By Secondary Structure"
-msgstr ""
+msgstr "Etter sekundær struktur"
 
 #: qtplugins/applycolors/applycolors.cpp:65
 #, fuzzy
@@ -1788,12 +1791,12 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:188
 #, qt-format
 msgid "Processing %1"
-msgstr ""
+msgstr "Behandler %1"
 
 #: qtplugins/commandscripts/command.cpp:242
 #: qtplugins/quantuminput/quantuminput.cpp:190
 msgid "Set path to Python interpreter:"
-msgstr ""
+msgstr "Sett sti til Python-fortolker:"
 
 #: qtplugins/commandscripts/command.cpp:244
 msgid ""
@@ -1803,7 +1806,7 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.h:43
 msgid "Command scripts"
-msgstr ""
+msgstr "Kommando-skript"
 
 #: qtplugins/commandscripts/command.h:47
 msgid "Run external script commands"
@@ -1837,7 +1840,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:381
 msgid "Invalid element name."
-msgstr ""
+msgstr "Ugyldig elementnavn."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:383
 #, fuzzy
@@ -1870,7 +1873,7 @@ msgstr "Atomnummer"
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
 msgid "Invalid coordinate."
-msgstr ""
+msgstr "Ugyldig koordinat."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 #, fuzzy
@@ -1920,15 +1923,15 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612
 #: qtplugins/label/label.cpp:157:1531
 msgid "Custom"
-msgstr ""
+msgstr "Egendefinert"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:613
 msgid "XYZ format (symbols)"
-msgstr ""
+msgstr "XYZ-format (symboler)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (names)"
-msgstr ""
+msgstr "XYZ-format (navn)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "XYZ format (atomic numbers)"
@@ -2021,7 +2024,7 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:233
 msgid "Error reading clipboard data."
-msgstr ""
+msgstr "Klarte ikke å lese utklippstavledata."
 
 #: qtplugins/copypaste/copypaste.cpp:234
 #, qt-format
@@ -2316,7 +2319,7 @@ msgstr ""
 
 #: qtplugins/editor/editortoolwidget.cpp:217
 msgid "Automatic"
-msgstr ""
+msgstr "Automatisk"
 
 #: qtplugins/editor/editortoolwidget.cpp:218
 msgid "Single"
@@ -2338,7 +2341,7 @@ msgstr "&Importer"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:75
 msgid "PDB Code"
-msgstr ""
+msgstr "PDB-kode"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:76
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
@@ -2355,12 +2358,12 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:113
 #: qtplugins/networkdatabases/networkdatabases.cpp:124
 msgid "Network Download Failed"
-msgstr ""
+msgstr "Nettverksnedlasting mislyktes"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:100
 #: qtplugins/networkdatabases/networkdatabases.cpp:114
 msgid "Network timeout or other error."
-msgstr ""
+msgstr "Nettverkstidsavbrudd eller annen feil."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:118
 #: qtplugins/networkdatabases/networkdatabases.cpp:125
@@ -2705,11 +2708,11 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:123
 msgid "Unable to load requested format reader."
-msgstr ""
+msgstr "Kunne ikke laste inn forespurt formatleser."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:134
 msgid "Generating 3D molecule..."
-msgstr ""
+msgstr "Genererer 3D-molekyl …"
 
 #: qtplugins/lineformatinput/lineformatinput.h:42
 msgid "LineFormatInput"
@@ -2909,7 +2912,7 @@ msgstr ""
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1..."
-msgstr ""
+msgstr "Starter %1 …"
 
 #: qtplugins/openbabel/openbabel.cpp:435 qtplugins/openbabel/openbabel.cpp:443
 #, qt-format
@@ -2918,10 +2921,14 @@ msgid ""
 "Current energy: %3\n"
 "dE: %4"
 msgstr ""
+"Steg %1 av %2\n"
+"Nåværende energi: %3\n"
+"dE: %4"
 
 #: qtplugins/openbabel/openbabel.cpp:457
+#, fuzzy
 msgid "Updating molecule..."
-msgstr ""
+msgstr "Oppdaterer molekyl …"
 
 #: qtplugins/openbabel/openbabel.cpp:465 qtplugins/openbabel/openbabel.cpp:720
 msgid "Error interpreting Open Babel output."
@@ -3027,7 +3034,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.h:36
 msgid "OpenBabel"
-msgstr ""
+msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:40
 msgid "Interact with OpenBabel utilities."
@@ -3287,49 +3294,50 @@ msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
 msgid "Version"
-msgstr ""
+msgstr "Versjon"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:73
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:333
 #, qt-format
 msgid "Downloading %1 to %2\n"
-msgstr ""
+msgstr "Laster ned %1 til %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:346
 #, qt-format
 msgid "Extracting %1 to %2\n"
-msgstr ""
+msgstr "Pakker ut %1 til %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:349
 #, qt-format
 msgid "Finished %1 files\n"
-msgstr ""
+msgstr "Fullførte %1 filer\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:353
+#, fuzzy
 msgid "Extraction successful\n"
-msgstr ""
+msgstr "Utpakket\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:383
 #, qt-format
 msgid "Error while extracting: %1"
-msgstr ""
+msgstr "Klarte ikke å pakke ut: %1"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
 #: qtplugins/plugindownloader/plugindownloader.cpp:39:1450
 msgid "Download Plugins..."
-msgstr ""
+msgstr "Laster ned programtillegg …"
 
 #: qtplugins/plugindownloader/plugindownloader.h:48
 msgid "Download Plugins"
-msgstr ""
+msgstr "Laster ned programtillegg"
 
 #: qtplugins/plugindownloader/plugindownloader.h:52
 msgid "Download plugins from GitHub repositories."
-msgstr ""
+msgstr "Last ned programtillegg fra GitHub-pakkebrønner."
 
 #: qtplugins/povray/povray.cpp:41
 msgid "POV-Ray Render"
@@ -3894,17 +3902,18 @@ msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:62
 msgid "Class"
-msgstr ""
+msgstr "Klasse"
 
 #: qtplugins/symmetry/symmetry.cpp:42
+#, fuzzy
 msgid "Symmetry..."
-msgstr ""
+msgstr "Symmetri …"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
 #: qtplugins/symmetry/symmetry.h:34:1549
 msgid "Symmetry"
-msgstr ""
+msgstr "Symmetri"
 
 #: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
@@ -3912,7 +3921,7 @@ msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:44
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "Symmetrielementer"
 
 #: qtplugins/symmetry/symmetryscene.h:48
 msgid "Render symmetry elements."
@@ -3920,7 +3929,7 @@ msgstr ""
 
 #: qtplugins/symmetry/symmetryutil.cpp:39
 msgid "∞"
-msgstr ""
+msgstr "∞"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:341
 #, qt-format
@@ -3930,7 +3939,7 @@ msgstr "Gruppe %1"
 #: qtplugins/symmetry/symmetrywidget.cpp:349
 #, qt-format
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -6454,8 +6463,8 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-"epost@anotheragency.no, anders.oftedal@gmail.com, simen@simenh.com, simenheg@"
-"gmail.com, sol-moe@online.no"
+"epost@anotheragency.no, anders.oftedal@gmail.com, simen@simenh.com, "
+"simenheg@gmail.com, sol-moe@online.no"
 
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Avstand: %L1 Å"
