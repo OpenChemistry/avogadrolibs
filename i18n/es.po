@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # M3CG <cgmario1999@gmail.com>, 2021.
+# J. Lavoie <j.lavoie@net-c.ca>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-05 02:07+0000\n"
-"PO-Revision-Date: 2021-09-06 00:53+0000\n"
-"Last-Translator: M3CG <cgmario1999@gmail.com>\n"
+"PO-Revision-Date: 2021-09-12 03:33+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8.1-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -447,7 +448,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "¡Ninguna molécula establecida en BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -455,7 +456,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "¡Ningún nombre de archivo establecido en BackgroundFileFormat!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
@@ -1113,7 +1114,7 @@ msgstr ""
 
 #: qtgui/moleculemodel.cpp:104
 msgid "Untitled"
-msgstr "sin título"
+msgstr "Sin título"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
@@ -1360,9 +1361,8 @@ msgstr "&Archivo"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/svg/svg.cpp:46 qtplugins/vrml/vrml.cpp:58
-#, fuzzy
 msgid "&Export"
-msgstr "Exportar"
+msgstr "&Exportar"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1993,9 +1993,8 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:35:267
-#, fuzzy
 msgid "Clear"
-msgstr "Limpiar todo"
+msgstr "Borrar"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
@@ -2357,9 +2356,8 @@ msgstr "Triple"
 #: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:70
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
-#, fuzzy
 msgid "&Import"
-msgstr "Importar"
+msgstr "&Importar"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:75
 msgid "PDB Code"
@@ -2838,9 +2836,8 @@ msgid "Navigate"
 msgstr "Navegar"
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Navegar"
+msgstr "Navegar herramienta"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
