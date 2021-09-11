@@ -1,13 +1,14 @@
 # translation of _avogadro-de.po to
 # Alex <alexandersimm2@googlemail.com>, 2021.
 # Jörg S. <joerg.schwerdtfeger@gmail.com>, 2021.
+# J. Lavoie <j.lavoie@net-c.ca>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-05 02:07+0000\n"
-"PO-Revision-Date: 2021-03-17 15:18+0000\n"
-"Last-Translator: Jörg S. <joerg.schwerdtfeger@gmail.com>\n"
+"PO-Revision-Date: 2021-09-12 03:33+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -15,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.2-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -445,7 +446,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr "Kein Molekül für das Hintergrunddateiformat definiert!"
+msgstr "Kein Molekül in BackgroundFileFormat gesetzt!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -453,7 +454,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "In BackgroundFileFormat wurde kein Dateiname festgelegt!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
@@ -1110,9 +1111,8 @@ msgid "Layer"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:104
-#, fuzzy
 msgid "Untitled"
-msgstr "unbenannt"
+msgstr "Unbenannt"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
@@ -1992,9 +1992,8 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:35:267
-#, fuzzy
 msgid "Clear"
-msgstr "Alle Löschen"
+msgstr "Löschen"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
