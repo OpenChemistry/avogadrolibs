@@ -6,13 +6,14 @@
 # Will Owy <willowy@tutanota.com>, 2021.
 # Ludovico Besana <ludovicobesanaguide@gmail.com>, 2021.
 # Giacomo <gradaellig@gmail.com>, 2021.
+# J. Lavoie <j.lavoie@net-c.ca>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-05 02:07+0000\n"
-"PO-Revision-Date: 2021-06-10 17:45+0000\n"
-"Last-Translator: Giacomo <gradaellig@gmail.com>\n"
+"PO-Revision-Date: 2021-09-12 03:33+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.7-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -1113,7 +1114,7 @@ msgstr ""
 
 #: qtgui/moleculemodel.cpp:104
 msgid "Untitled"
-msgstr "Senza Titolo"
+msgstr "Senza titolo"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
