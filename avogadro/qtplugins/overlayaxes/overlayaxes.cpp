@@ -242,6 +242,7 @@ OverlayAxes::OverlayAxes(QObject* parent_)
   m_enabled = settings.value("overlayAxes/enabled", true).toBool();
   m_axesAction->setCheckable(true);
   m_axesAction->setChecked(m_enabled);
+  m_axesAction->setProperty("menu priority", 80);
 
   // processAxes() will flip the value when called
   //   so we need to invert it here

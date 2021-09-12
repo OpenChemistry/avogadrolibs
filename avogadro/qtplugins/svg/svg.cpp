@@ -28,7 +28,7 @@ const Vector3ub SVG::DEFAULT_BOND_COLOR = Vector3ub(125, 125, 125);
 
 SVG::SVG(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
-    m_scene(nullptr), m_camera(nullptr), m_action(new QAction(tr("SVG…"), this))
+    m_scene(nullptr), m_camera(nullptr), m_action(new QAction(tr("&SVG…"), this))
 {
   connect(m_action, SIGNAL(triggered()), SLOT(render()));
 }
