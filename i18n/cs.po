@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-09-05 02:07+0000\n"
+"POT-Creation-Date: 2021-09-12 02:08+0000\n"
 "PO-Revision-Date: 2016-06-29 05:59+0000\n"
 "Last-Translator: fri <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -1124,24 +1124,24 @@ msgstr ""
 msgid "Periodic Table"
 msgstr "Periodická tabulka"
 
-#: qtgui/pythonscript.cpp:79 qtgui/pythonscript.cpp:164
+#: qtgui/pythonscript.cpp:105 qtgui/pythonscript.cpp:190
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:89 qtgui/pythonscript.cpp:174
+#: qtgui/pythonscript.cpp:115 qtgui/pythonscript.cpp:200
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:102
+#: qtgui/pythonscript.cpp:128
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:110
+#: qtgui/pythonscript.cpp:136
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1150,27 +1150,27 @@ msgid ""
 "%6"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:211
+#: qtgui/pythonscript.cpp:237
 msgid "Script failed to start."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:214
+#: qtgui/pythonscript.cpp:240
 msgid "Script crashed."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:217
+#: qtgui/pythonscript.cpp:243
 msgid "Script timed out."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:220
+#: qtgui/pythonscript.cpp:246
 msgid "Read error."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:223
+#: qtgui/pythonscript.cpp:249
 msgid "Write error."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:227
+#: qtgui/pythonscript.cpp:253
 msgid "Unknown error."
 msgstr ""
 
@@ -1200,7 +1200,7 @@ msgstr ""
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:204 qtgui/rwlayermanager.cpp:207
-#: qtplugins/selectiontool/selectiontool.cpp:260:1477
+#: qtplugins/selectiontool/selectiontool.cpp:267:1477
 #, fuzzy
 msgid "Change Layer"
 msgstr "Změnit druh vazby"
@@ -1210,7 +1210,7 @@ msgid "Add Atom"
 msgstr "Přidat atom"
 
 #: qtgui/rwmolecule.cpp:81 qtgui/rwmolecule.cpp:96
-#: qtplugins/editor/editor.cpp:122
+#: qtplugins/editor/editor.cpp:126
 msgid "Remove Atom"
 msgstr "Odstranit atom"
 
@@ -1347,7 +1347,7 @@ msgid "Modify Molecule"
 msgstr ""
 
 #: qtplugins/3dmol/3dmol.cpp:43
-msgid "ThreeDMol HTML Block."
+msgid "3DMol HTML Block."
 msgstr ""
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/fetchpdb/fetchpdb.cpp:41
@@ -1599,19 +1599,46 @@ msgstr ""
 msgid "Bond-Centric Manipulation"
 msgstr "Úpravy zaměřené na vazbu"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:950
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:1038
-#: qtplugins/measuretool/measuretool.cpp:197
-#: qtplugins/measuretool/measuretool.cpp:205
-#: qtplugins/measuretool/measuretool.cpp:206
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:305
+#, fuzzy
+msgid ""
+"Bond Centric Manipulation Tool\n"
+"\n"
+"Left Mouse: \tClick and drag to rotate the view.\n"
+"Middle Mouse: \tClick and drag to zoom in or out.\n"
+"Right Mouse: \tClick and drag to move the view.\n"
+"Double-Click: \tReset the view.\n"
+"\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag one of the Atoms in the Bond to change the angle\n"
+"Right Click & Drag one of the Atoms in the Bond to change the length"
+msgstr ""
+"Nástroj pro zacházení s vazbami\n"
+"\n"
+"Levé tlačítko myši: \tKlepněte a táhněte pro otočení pohledu\n"
+"Prostřední tlačítko myši: Klepněte a táhněte pro přiblížení nebo oddálení\n"
+"Pravé tlačítko myši: \tKlepněte a táhněte pro posunutí pohledu\n"
+"Dvojité klepnutí: \t Nastavit pohled znovu\n"
+"\n"
+"Klepnutí levým tlačítkem myši & tažení vazby pro nastavení roviny pro "
+"zacházení:\n"
+"Klepnutí levým tlačítkem myši & tažení jedním atomem ve vazbě pro změnu "
+"úhlu\n"
+"Klepnutí levým tlačítkem myši & tažení jedním atomem ve vazbě pro změnu délky"
+
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:959
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:1047
+#: qtplugins/measuretool/measuretool.cpp:202
+#: qtplugins/measuretool/measuretool.cpp:210
+#: qtplugins/measuretool/measuretool.cpp:211
 #, qt-format
 msgid "%L1°"
 msgstr ""
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:972
-#: qtplugins/editor/editor.cpp:237 qtplugins/measuretool/measuretool.cpp:214
-#: qtplugins/measuretool/measuretool.cpp:215
-#: qtplugins/measuretool/measuretool.cpp:217
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:981
+#: qtplugins/editor/editor.cpp:241 qtplugins/measuretool/measuretool.cpp:218
+#: qtplugins/measuretool/measuretool.cpp:219
+#: qtplugins/measuretool/measuretool.cpp:221
 #, qt-format
 msgid "%L1 Å"
 msgstr ""
@@ -2308,29 +2335,41 @@ msgstr ""
 msgid "Custom Elements"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:109
+#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:113
 msgid "Draw"
 msgstr "Nakreslit"
 
-#: qtplugins/editor/editor.cpp:103
+#: qtplugins/editor/editor.cpp:77
+#, fuzzy
+msgid ""
+"Draw Tool\n"
+"\n"
+"Left Mouse: \tClick and Drag to create Atoms and Bond\n"
+"Right Mouse: \tDelete Atom"
+msgstr ""
+"Nástroj na kreslení (F8)\n"
+"Levé tlačítko myši: \tKlepnout a táhnout pro vytvoření atomů a vazeb\n"
+"Pravé tlačítko myši: \tSmazat atom"
+
+#: qtplugins/editor/editor.cpp:107
 msgid "Draw Atom"
 msgstr "Nakreslit Atom"
 
-#: qtplugins/editor/editor.cpp:113
+#: qtplugins/editor/editor.cpp:117
 msgid "Change Bond Type"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:126
+#: qtplugins/editor/editor.cpp:130
 msgid "Remove Bond"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:187
-#: qtplugins/measuretool/measuretool.cpp:213
+#: qtplugins/editor/editor.cpp:236 qtplugins/measuretool/measuretool.cpp:192
+#: qtplugins/measuretool/measuretool.cpp:217
 #, fuzzy
 msgid "Distance:"
 msgstr "Vzdálenost"
 
-#: qtplugins/editor/editor.cpp:235
+#: qtplugins/editor/editor.cpp:239
 #, qt-format
 msgid "%1 %L2"
 msgstr ""
@@ -2667,10 +2706,18 @@ msgid "Display labels on ball and stick style."
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:31
-msgid "Write"
+#, fuzzy
+msgid "Edit Labels"
+msgstr "Vazební štítky"
+
+#: qtplugins/label/labeleditor.cpp:34
+msgid ""
+"Atom Label Tool\n"
+"\n"
+"Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
 
-#: qtplugins/label/labeleditor.cpp:66
+#: qtplugins/label/labeleditor.cpp:69
 #, fuzzy
 msgid "Create Label"
 msgstr "Vytvořit povrchy"
@@ -2758,6 +2805,22 @@ msgstr ""
 msgid "Manipulate"
 msgstr "Upravit"
 
+#: qtplugins/manipulator/manipulator.cpp:59
+#, fuzzy
+msgid ""
+"Manipulation Tool\n"
+"\n"
+"Left Mouse: \tClick and drag to move atoms\n"
+"Right Mouse: \tClick and drag to rotate selected atoms.\n"
+msgstr ""
+"Nástroj pro úpravy (F 10)\n"
+"\n"
+"Levé tlačítko myši: \tKlepněte a táhněte pro přesunutí atomů\n"
+"Prostřední tlačítko myši: Klepněte a táhněte pro přesunutí atomů dál pryč "
+"nebo blíž\n"
+"Pravé tlačítko myši: \tKlepněte a táhněte pro otočení vybraných atomů\n"
+"Dvojité klepnutí: \t Nastavit pohled znovu"
+
 #: qtplugins/manipulator/manipulator.h:44
 #: qtplugins/manipulator/manipulator.h:45
 msgid "Manipulate tool"
@@ -2767,16 +2830,35 @@ msgstr ""
 msgid "Measure"
 msgstr "Měření"
 
-#: qtplugins/measuretool/measuretool.cpp:185
-#: qtplugins/measuretool/measuretool.cpp:196
+#: qtplugins/measuretool/measuretool.cpp:59
+#, fuzzy
+msgid ""
+"Measure Tool\n"
+"\n"
+"Left Mouse: \tSelect up to four Atoms.\n"
+"\tDistances are measured between 1-2 and 2-3\n"
+"\tAngle is measured between 1-3 using 2 as the common point\n"
+"\tDihedral is measured between 1-2-3-4\n"
+"Right Mouse: \tReset the measurements."
+msgstr ""
+"Klepněte pro změření (F 12)\n"
+"\n"
+"Levé tlačítko myši: \tVyberte až tři atomy\n"
+"\tVzdálenosti jsou měřeny mezi 1-2 a 2-3\n"
+"\tÚhel je měřen mezi 1-3 za použití 2 jako společného bodu\n"
+"Pravé tlačítko myši: \tNastavte měření znovu. Dvojité klepnutí: \tNastavte "
+"pohled znovu."
+
+#: qtplugins/measuretool/measuretool.cpp:190
+#: qtplugins/measuretool/measuretool.cpp:201
 msgid "Dihedral:"
 msgstr "Střechan:"
 
-#: qtplugins/measuretool/measuretool.cpp:186
+#: qtplugins/measuretool/measuretool.cpp:191
 msgid "Angle:"
 msgstr "Úhel:"
 
-#: qtplugins/measuretool/measuretool.cpp:204
+#: qtplugins/measuretool/measuretool.cpp:209
 #, fuzzy
 msgid "Angles:"
 msgstr "Úhel:"
@@ -2837,9 +2919,35 @@ msgstr ""
 msgid "Interface with Mongo Chem Server."
 msgstr ""
 
-#: qtplugins/navigator/navigator.cpp:45
+#: qtplugins/navigator/navigator.cpp:49
 msgid "Navigate"
 msgstr "Pohyb"
+
+#: qtplugins/navigator/navigator.cpp:52
+#, fuzzy
+msgid ""
+"Navigation Tool\n"
+"\n"
+"Left Mouse: \tClick and drag to rotate the view.\n"
+"Middle Mouse: \tClick and drag to zoom in or out.\n"
+"Right Mouse: \tClick and drag to move the view.\n"
+msgstr ""
+"Nástroj pro pohyb (F 9)\n"
+"\n"
+"Levé tlačítko myši: \tKlepněte a táhněte pro otočení pohledu\n"
+"Prostřední tlačítko myši: Klepněte a táhněte pro přiblížení nebo oddálení\n"
+"Pravé tlačítko myši: \tKlepněte a táhněte pro posunutí pohledu\n"
+"Dvojité klepnutí: \t Nastavit pohled znovu"
+
+#: qtplugins/navigator/navigator.cpp:70
+msgid "Reverse Direction of Zoom on Scroll"
+msgstr ""
+
+#: qtplugins/navigator/navigator.cpp:72
+msgid ""
+"Default:\t Scroll down to shrink, scroll up to zoom\n"
+"Reversed:\t Scroll up to shrink, scroll down to zoom"
+msgstr ""
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
 #, fuzzy
@@ -3165,89 +3273,94 @@ msgstr ""
 msgid "Player"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:80
+#: qtplugins/playertool/playertool.cpp:66
+#, fuzzy
+msgid "Animation Tool"
+msgstr "Animace"
+
+#: qtplugins/playertool/playertool.cpp:81
 msgid "Play"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:83
+#: qtplugins/playertool/playertool.cpp:84
 msgid "Stop"
 msgstr "Zastavit"
 
-#: qtplugins/playertool/playertool.cpp:94
+#: qtplugins/playertool/playertool.cpp:95
 msgid "Frame rate:"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:100
+#: qtplugins/playertool/playertool.cpp:101
 msgctxt "frames per second"
 msgid " FPS"
 msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/playertool/playertool.cpp:124:1540
+#: qtplugins/playertool/playertool.cpp:125:1540
 #, fuzzy
 msgid "Frame:"
 msgstr "Snímky"
 
-#: qtplugins/playertool/playertool.cpp:131
-#: qtplugins/playertool/playertool.cpp:416
+#: qtplugins/playertool/playertool.cpp:132
+#: qtplugins/playertool/playertool.cpp:417
 #: qtplugins/surfaces/surfacedialog.cpp:178
 #, qt-format
 msgid " of %0"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:142
+#: qtplugins/playertool/playertool.cpp:143
 #, fuzzy
 msgid "Dynamic bonding?"
 msgstr "Dynamické vazby"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:382
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:150:1546
+#: qtplugins/playertool/playertool.cpp:151:1546
 msgid "Record Movie..."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:254
-#: qtplugins/playertool/playertool.cpp:355
+#: qtplugins/playertool/playertool.cpp:255
+#: qtplugins/playertool/playertool.cpp:356
 msgid "Movie (*.mp4)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:256
+#: qtplugins/playertool/playertool.cpp:257
 msgid "Export Bitmap Graphics"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:257
+#: qtplugins/playertool/playertool.cpp:258
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:271 qtplugins/surfaces/surfaces.cpp:408
+#: qtplugins/playertool/playertool.cpp:272 qtplugins/surfaces/surfaces.cpp:408
 msgid "GIF (*.gif)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:277
+#: qtplugins/playertool/playertool.cpp:278
 msgid "GIF FPS support warning"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:278
+#: qtplugins/playertool/playertool.cpp:279
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:321
+#: qtplugins/playertool/playertool.cpp:322
 #, fuzzy
 msgid "Movie (*.avi)"
 msgstr "Video soubory (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:350
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:436
+#: qtplugins/playertool/playertool.cpp:351
+#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:436
 #: qtplugins/surfaces/surfaces.cpp:479 qtplugins/surfaces/surfaces.cpp:491
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:351 qtplugins/surfaces/surfaces.cpp:480
+#: qtplugins/playertool/playertool.cpp:352 qtplugins/surfaces/surfaces.cpp:480
 msgid "Error: cannot add frame to video."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:492
+#: qtplugins/playertool/playertool.cpp:382 qtplugins/surfaces/surfaces.cpp:492
 #, qt-format
 msgid "Cannot save file %1."
 msgstr ""
@@ -3647,7 +3760,7 @@ msgid ""
 msgstr ""
 
 #: qtplugins/quantuminput/quantuminput.cpp:242
-msgid "Set Python Path..."
+msgid "Set Python Path…"
 msgstr ""
 
 #: qtplugins/quantuminput/quantuminput.h:53
@@ -3742,7 +3855,26 @@ msgstr "&Vybrat"
 msgid "Selection"
 msgstr "Výběr"
 
-#: qtplugins/selectiontool/selectiontool.cpp:244
+#: qtplugins/selectiontool/selectiontool.cpp:69
+#, fuzzy
+msgid ""
+"Selection Tool\n"
+"\n"
+"Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
+"\tDrag to select a range of atoms\n"
+"Right Mouse: \tClick outside the molecule to clear selection\n"
+"Use Ctrl to toggle the selection and shift to add to the selection.\n"
+"Double-Click: \tSelect an entire fragment."
+msgstr ""
+"Nástroj pro výběr (F 11)\n"
+"\n"
+"Levé tlačítko myši: \tKlepněte pro výběr jednotlivých atomů, zbytků nebo "
+"fragmentů\n"
+"\tTáhněte pro výběr rozsahu atomů\n"
+"Pravé tlačítko myši: \tKlepněte vně molekuly pro zbavení se výběru\n"
+"Dvojité klepnutí: \t Vyberte celý fragment."
+
+#: qtplugins/selectiontool/selectiontool.cpp:251
 #, fuzzy
 msgid "Paint Atoms"
 msgstr "Počáteční atom"
@@ -6886,9 +7018,6 @@ msgstr ""
 #~ msgid "Could not determine format from filename: %1"
 #~ msgstr "Z názvu souboru nelze určit formát: %1"
 
-#~ msgid "Animation"
-#~ msgstr "Animace"
-
 #~ msgid "Animate trajectories, reactions, and vibrations."
 #~ msgstr "Animovat dráhy, reakce a vibrace."
 
@@ -8544,33 +8673,6 @@ msgstr ""
 #~ msgid "AutoRotate Settings"
 #~ msgstr "Nastavení automatického otáčení"
 
-#~ msgid ""
-#~ "Bond Centric Manipulation Tool\n"
-#~ "\n"
-#~ "Left Mouse: \tClick and drag to rotate the view.\n"
-#~ "Middle Mouse: Click and drag to zoom in or out.\n"
-#~ "Right Mouse: \tClick and drag to move the view.\n"
-#~ "Double-Click: \tReset the view.\n"
-#~ "\n"
-#~ "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
-#~ "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
-#~ "Right Click & Drag one of the Atoms in the Bond to change the length"
-#~ msgstr ""
-#~ "Nástroj pro zacházení s vazbami\n"
-#~ "\n"
-#~ "Levé tlačítko myši: \tKlepněte a táhněte pro otočení pohledu\n"
-#~ "Prostřední tlačítko myši: Klepněte a táhněte pro přiblížení nebo "
-#~ "oddálení\n"
-#~ "Pravé tlačítko myši: \tKlepněte a táhněte pro posunutí pohledu\n"
-#~ "Dvojité klepnutí: \t Nastavit pohled znovu\n"
-#~ "\n"
-#~ "Klepnutí levým tlačítkem myši & tažení vazby pro nastavení roviny pro "
-#~ "zacházení:\n"
-#~ "Klepnutí levým tlačítkem myši & tažení jedním atomem ve vazbě pro změnu "
-#~ "úhlu\n"
-#~ "Klepnutí levým tlačítkem myši & tažení jedním atomem ve vazbě pro změnu "
-#~ "délky"
-
 #~ msgctxt "%L1 is the length of the bond"
 #~ msgid "Bond Length: %L1"
 #~ msgstr "Délka vazby: %L1"
@@ -8589,22 +8691,6 @@ msgstr ""
 
 #~ msgid "Bond Centric Manipulate Settings"
 #~ msgstr "Nastavení úprav zaměřených na vazbu"
-
-#~ msgid ""
-#~ "Click to Measure (F12)\n"
-#~ "\n"
-#~ "Left Mouse: \tSelect up to three Atoms.\n"
-#~ "\tDistances are measured between 1-2 and 2-3\n"
-#~ "\tAngle is measured between 1-3 using 2 as the common point\n"
-#~ "Right Mouse: \tReset the measurements.Double-Click: \tReset the view."
-#~ msgstr ""
-#~ "Klepněte pro změření (F 12)\n"
-#~ "\n"
-#~ "Levé tlačítko myši: \tVyberte až tři atomy\n"
-#~ "\tVzdálenosti jsou měřeny mezi 1-2 a 2-3\n"
-#~ "\tÚhel je měřen mezi 1-3 za použití 2 jako společného bodu\n"
-#~ "Pravé tlačítko myši: \tNastavte měření znovu. Dvojité klepnutí: "
-#~ "\tNastavte pohled znovu."
 
 #~ msgctxt "%L1 is distance, %2 is Angstrom symbol"
 #~ msgid "Distance (2->3): %L1 %2"
@@ -8642,16 +8728,6 @@ msgstr ""
 #~ msgid "Delete Atom"
 #~ msgstr "Smazat atom"
 
-#~ msgid ""
-#~ "Draw Tool (F8)\n"
-#~ "\n"
-#~ "Left Mouse: \tClick and Drag to create Atoms and Bonds\n"
-#~ "Right Mouse: \tDelete Atom"
-#~ msgstr ""
-#~ "Nástroj na kreslení (F8)\n"
-#~ "Levé tlačítko myši: \tKlepnout a táhnout pro vytvoření atomů a vazeb\n"
-#~ "Pravé tlačítko myši: \tSmazat atom"
-
 #~ msgid "Draw Bond"
 #~ msgstr "Nakreslit vazbu"
 
@@ -8661,66 +8737,17 @@ msgstr ""
 #~ msgid "Draw Settings"
 #~ msgstr "Nastavení kreslení"
 
-#~ msgid ""
-#~ "Manipulation Tool (F10)\n"
-#~ "\n"
-#~ "Left Mouse: \tClick and drag to move atoms\n"
-#~ "Middle Mouse: Click and drag to move atoms further away or closer\n"
-#~ "Right Mouse: \tClick and drag to rotate selected atoms.\n"
-#~ "Double-Click: \tReset the view."
-#~ msgstr ""
-#~ "Nástroj pro úpravy (F 10)\n"
-#~ "\n"
-#~ "Levé tlačítko myši: \tKlepněte a táhněte pro přesunutí atomů\n"
-#~ "Prostřední tlačítko myši: Klepněte a táhněte pro přesunutí atomů dál pryč "
-#~ "nebo blíž\n"
-#~ "Pravé tlačítko myši: \tKlepněte a táhněte pro otočení vybraných atomů\n"
-#~ "Dvojité klepnutí: \t Nastavit pohled znovu"
-
 #~ msgid "Translate, rotate, and adjust atoms and fragments"
 #~ msgstr "Přesunout, otočit a srovnat atomy a fragmenty"
 
 #~ msgid "Manipulate Settings"
 #~ msgstr "Nastavení úprav"
 
-#~ msgid ""
-#~ "Navigation Tool (F9)\n"
-#~ "\n"
-#~ "Left Mouse: \tClick and drag to rotate the view.\n"
-#~ "Middle Mouse: Click and drag to zoom in or out.\n"
-#~ "Right Mouse: \tClick and drag to move the view.\n"
-#~ "Double-Click: \tReset the view."
-#~ msgstr ""
-#~ "Nástroj pro pohyb (F 9)\n"
-#~ "\n"
-#~ "Levé tlačítko myši: \tKlepněte a táhněte pro otočení pohledu\n"
-#~ "Prostřední tlačítko myši: Klepněte a táhněte pro přiblížení nebo "
-#~ "oddálení\n"
-#~ "Pravé tlačítko myši: \tKlepněte a táhněte pro posunutí pohledu\n"
-#~ "Dvojité klepnutí: \t Nastavit pohled znovu"
-
 #~ msgid "Translate, rotate, and zoom around the current view"
 #~ msgstr "Přesunout, otočit a přibližovat a oddalovat současný pohled"
 
 #~ msgid "Navigate Settings"
 #~ msgstr "Nastavení pohybu"
-
-#~ msgid ""
-#~ "Selection Tool (F11)\n"
-#~ "\n"
-#~ "Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
-#~ "\tDrag to select a range of atoms\n"
-#~ "Right Mouse: \tClick outside the molecule to clear selection\n"
-#~ "Use Ctrl to toggle the selection and shift to add to the selection.\n"
-#~ "Double-Click: \tSelect an entire fragment."
-#~ msgstr ""
-#~ "Nástroj pro výběr (F 11)\n"
-#~ "\n"
-#~ "Levé tlačítko myši: \tKlepněte pro výběr jednotlivých atomů, zbytků nebo "
-#~ "fragmentů\n"
-#~ "\tTáhněte pro výběr rozsahu atomů\n"
-#~ "Pravé tlačítko myši: \tKlepněte vně molekuly pro zbavení se výběru\n"
-#~ "Dvojité klepnutí: \t Vyberte celý fragment."
 
 #~ msgid "Selection Mode:"
 #~ msgstr "Režim výběru:"
@@ -8908,9 +8935,6 @@ msgstr ""
 
 #~ msgid "Label Shift:"
 #~ msgstr "Posun štítku:"
-
-#~ msgid "Bond Labels"
-#~ msgstr "Vazební štítky"
 
 #~ msgid "Bond length"
 #~ msgstr "Délka vazby"

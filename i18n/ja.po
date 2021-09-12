@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-09-05 02:07+0000\n"
+"POT-Creation-Date: 2021-09-12 02:08+0000\n"
 "PO-Revision-Date: 2021-07-19 18:32+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
@@ -1120,24 +1120,24 @@ msgstr "新しいビューを作る"
 msgid "Periodic Table"
 msgstr "周期表"
 
-#: qtgui/pythonscript.cpp:79 qtgui/pythonscript.cpp:164
+#: qtgui/pythonscript.cpp:105 qtgui/pythonscript.cpp:190
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:89 qtgui/pythonscript.cpp:174
+#: qtgui/pythonscript.cpp:115 qtgui/pythonscript.cpp:200
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:102
+#: qtgui/pythonscript.cpp:128
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:110
+#: qtgui/pythonscript.cpp:136
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1146,27 +1146,27 @@ msgid ""
 "%6"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:211
+#: qtgui/pythonscript.cpp:237
 msgid "Script failed to start."
 msgstr "スクリプトの開始に失敗しました。"
 
-#: qtgui/pythonscript.cpp:214
+#: qtgui/pythonscript.cpp:240
 msgid "Script crashed."
 msgstr "スクリプトがクラッシュしました。"
 
-#: qtgui/pythonscript.cpp:217
+#: qtgui/pythonscript.cpp:243
 msgid "Script timed out."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:220
+#: qtgui/pythonscript.cpp:246
 msgid "Read error."
 msgstr "読み込みエラー。"
 
-#: qtgui/pythonscript.cpp:223
+#: qtgui/pythonscript.cpp:249
 msgid "Write error."
 msgstr "書き込みエラー。"
 
-#: qtgui/pythonscript.cpp:227
+#: qtgui/pythonscript.cpp:253
 msgid "Unknown error."
 msgstr "不明なエラー。"
 
@@ -1196,7 +1196,7 @@ msgstr ""
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:204 qtgui/rwlayermanager.cpp:207
-#: qtplugins/selectiontool/selectiontool.cpp:260:1477
+#: qtplugins/selectiontool/selectiontool.cpp:267:1477
 #, fuzzy
 msgid "Change Layer"
 msgstr "結合次数を変更"
@@ -1206,7 +1206,7 @@ msgid "Add Atom"
 msgstr "原子を追加"
 
 #: qtgui/rwmolecule.cpp:81 qtgui/rwmolecule.cpp:96
-#: qtplugins/editor/editor.cpp:122
+#: qtplugins/editor/editor.cpp:126
 msgid "Remove Atom"
 msgstr "原子を削除"
 
@@ -1338,7 +1338,7 @@ msgid "Modify Molecule"
 msgstr "分子の編集"
 
 #: qtplugins/3dmol/3dmol.cpp:43
-msgid "ThreeDMol HTML Block."
+msgid "3DMol HTML Block."
 msgstr ""
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/fetchpdb/fetchpdb.cpp:41
@@ -1589,19 +1589,43 @@ msgstr ""
 msgid "Bond-Centric Manipulation"
 msgstr "結合中心操作"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:950
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:1038
-#: qtplugins/measuretool/measuretool.cpp:197
-#: qtplugins/measuretool/measuretool.cpp:205
-#: qtplugins/measuretool/measuretool.cpp:206
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:305
+#, fuzzy
+msgid ""
+"Bond Centric Manipulation Tool\n"
+"\n"
+"Left Mouse: \tClick and drag to rotate the view.\n"
+"Middle Mouse: \tClick and drag to zoom in or out.\n"
+"Right Mouse: \tClick and drag to move the view.\n"
+"Double-Click: \tReset the view.\n"
+"\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag one of the Atoms in the Bond to change the angle\n"
+"Right Click & Drag one of the Atoms in the Bond to change the length"
+msgstr ""
+"結合中心操作ツール\n"
+"\n"
+"左クリック: \tドラッグして表示領域を移動\n"
+"中クリック: ドラッグしてズームイン・ズームアウト\n"
+"右クリック: \t表示をリセット\n"
+"\n"
+"結合を左クリック&ドラッグで操作平面を選択:\n"
+"原子を左クリック&ドラッグで結合角を変更\n"
+"原子を右クリック&ドラッグで結合長を変更"
+
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:959
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:1047
+#: qtplugins/measuretool/measuretool.cpp:202
+#: qtplugins/measuretool/measuretool.cpp:210
+#: qtplugins/measuretool/measuretool.cpp:211
 #, qt-format
 msgid "%L1°"
 msgstr "%L1°"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:972
-#: qtplugins/editor/editor.cpp:237 qtplugins/measuretool/measuretool.cpp:214
-#: qtplugins/measuretool/measuretool.cpp:215
-#: qtplugins/measuretool/measuretool.cpp:217
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:981
+#: qtplugins/editor/editor.cpp:241 qtplugins/measuretool/measuretool.cpp:218
+#: qtplugins/measuretool/measuretool.cpp:219
+#: qtplugins/measuretool/measuretool.cpp:221
 #, qt-format
 msgid "%L1 Å"
 msgstr "%L1 Å"
@@ -2287,28 +2311,41 @@ msgstr ""
 msgid "Custom Elements"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:109
+#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:113
 msgid "Draw"
 msgstr "描画"
 
-#: qtplugins/editor/editor.cpp:103
+#: qtplugins/editor/editor.cpp:77
+#, fuzzy
+msgid ""
+"Draw Tool\n"
+"\n"
+"Left Mouse: \tClick and Drag to create Atoms and Bond\n"
+"Right Mouse: \tDelete Atom"
+msgstr ""
+"作成ツール(F8)\n"
+"\n"
+"左クリック: \tクリック&ドラッグで原子・結合を作成\n"
+"右クリック: \t原子を削除"
+
+#: qtplugins/editor/editor.cpp:107
 msgid "Draw Atom"
 msgstr "原子を描画"
 
-#: qtplugins/editor/editor.cpp:113
+#: qtplugins/editor/editor.cpp:117
 msgid "Change Bond Type"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:126
+#: qtplugins/editor/editor.cpp:130
 msgid "Remove Bond"
 msgstr "結合を削除"
 
-#: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:187
-#: qtplugins/measuretool/measuretool.cpp:213
+#: qtplugins/editor/editor.cpp:236 qtplugins/measuretool/measuretool.cpp:192
+#: qtplugins/measuretool/measuretool.cpp:217
 msgid "Distance:"
 msgstr "距離:"
 
-#: qtplugins/editor/editor.cpp:235
+#: qtplugins/editor/editor.cpp:239
 #, fuzzy, qt-format
 msgid "%1 %L2"
 msgstr "%1 %2"
@@ -2641,10 +2678,18 @@ msgid "Display labels on ball and stick style."
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:31
-msgid "Write"
+#, fuzzy
+msgid "Edit Labels"
+msgstr "結合のラベル"
+
+#: qtplugins/label/labeleditor.cpp:34
+msgid ""
+"Atom Label Tool\n"
+"\n"
+"Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
 
-#: qtplugins/label/labeleditor.cpp:66
+#: qtplugins/label/labeleditor.cpp:69
 #, fuzzy
 msgid "Create Label"
 msgstr "表面を作成する"
@@ -2732,6 +2777,21 @@ msgstr ""
 msgid "Manipulate"
 msgstr "操作"
 
+#: qtplugins/manipulator/manipulator.cpp:59
+#, fuzzy
+msgid ""
+"Manipulation Tool\n"
+"\n"
+"Left Mouse: \tClick and drag to move atoms\n"
+"Right Mouse: \tClick and drag to rotate selected atoms.\n"
+msgstr ""
+"操作ツール(F10)\n"
+"\n"
+"左クリック: \tクリック&ドラッグで原子を移動\n"
+"中クリック: クリック&ドラッグで原子を視線方向に移動\n"
+"右クリック: \tクリック&ドラッグで原子を回転\n"
+"ダブルクリック: \t表示をリセット"
+
 #: qtplugins/manipulator/manipulator.h:44
 #: qtplugins/manipulator/manipulator.h:45
 msgid "Manipulate tool"
@@ -2741,16 +2801,34 @@ msgstr ""
 msgid "Measure"
 msgstr "測定"
 
-#: qtplugins/measuretool/measuretool.cpp:185
-#: qtplugins/measuretool/measuretool.cpp:196
+#: qtplugins/measuretool/measuretool.cpp:59
+#, fuzzy
+msgid ""
+"Measure Tool\n"
+"\n"
+"Left Mouse: \tSelect up to four Atoms.\n"
+"\tDistances are measured between 1-2 and 2-3\n"
+"\tAngle is measured between 1-3 using 2 as the common point\n"
+"\tDihedral is measured between 1-2-3-4\n"
+"Right Mouse: \tReset the measurements."
+msgstr ""
+"クリックして測定(F12)\n"
+"\n"
+"左クリック: \t三つまでの原子を選択できます。\n"
+"\t1-2および2-3の距離を測定します。\n"
+"\t2から見た1と3の間の角度を測定します。\n"
+"右クリック: \t測定をリセットします。ダブルクリック: \t表示をリセットします。"
+
+#: qtplugins/measuretool/measuretool.cpp:190
+#: qtplugins/measuretool/measuretool.cpp:201
 msgid "Dihedral:"
 msgstr "二面角:"
 
-#: qtplugins/measuretool/measuretool.cpp:186
+#: qtplugins/measuretool/measuretool.cpp:191
 msgid "Angle:"
 msgstr "角度:"
 
-#: qtplugins/measuretool/measuretool.cpp:204
+#: qtplugins/measuretool/measuretool.cpp:209
 msgid "Angles:"
 msgstr "角度:"
 
@@ -2809,9 +2887,35 @@ msgstr ""
 msgid "Interface with Mongo Chem Server."
 msgstr ""
 
-#: qtplugins/navigator/navigator.cpp:45
+#: qtplugins/navigator/navigator.cpp:49
 msgid "Navigate"
 msgstr "ナビゲーション"
+
+#: qtplugins/navigator/navigator.cpp:52
+#, fuzzy
+msgid ""
+"Navigation Tool\n"
+"\n"
+"Left Mouse: \tClick and drag to rotate the view.\n"
+"Middle Mouse: \tClick and drag to zoom in or out.\n"
+"Right Mouse: \tClick and drag to move the view.\n"
+msgstr ""
+"ナビゲーションツール(F9)\n"
+"\n"
+"左クリック: \tクリック&ドラッグで表示領域を回転\n"
+"中クリック: クリック&ドラッグでズームイン・ズームアウト\n"
+"右クリック: \tクリック&ドラッグで表示領域を移動\n"
+"ダブルクリック: \t表示をリセット"
+
+#: qtplugins/navigator/navigator.cpp:70
+msgid "Reverse Direction of Zoom on Scroll"
+msgstr ""
+
+#: qtplugins/navigator/navigator.cpp:72
+msgid ""
+"Default:\t Scroll down to shrink, scroll up to zoom\n"
+"Reversed:\t Scroll up to shrink, scroll down to zoom"
+msgstr ""
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
 #, fuzzy
@@ -3136,89 +3240,94 @@ msgstr ""
 msgid "Player"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:80
+#: qtplugins/playertool/playertool.cpp:66
+#, fuzzy
+msgid "Animation Tool"
+msgstr "アニメーション"
+
+#: qtplugins/playertool/playertool.cpp:81
 msgid "Play"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:83
+#: qtplugins/playertool/playertool.cpp:84
 msgid "Stop"
 msgstr "ストップ"
 
-#: qtplugins/playertool/playertool.cpp:94
+#: qtplugins/playertool/playertool.cpp:95
 msgid "Frame rate:"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:100
+#: qtplugins/playertool/playertool.cpp:101
 msgctxt "frames per second"
 msgid " FPS"
 msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/playertool/playertool.cpp:124:1540
+#: qtplugins/playertool/playertool.cpp:125:1540
 #, fuzzy
 msgid "Frame:"
 msgstr "コマ数"
 
-#: qtplugins/playertool/playertool.cpp:131
-#: qtplugins/playertool/playertool.cpp:416
+#: qtplugins/playertool/playertool.cpp:132
+#: qtplugins/playertool/playertool.cpp:417
 #: qtplugins/surfaces/surfacedialog.cpp:178
 #, qt-format
 msgid " of %0"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:142
+#: qtplugins/playertool/playertool.cpp:143
 #, fuzzy
 msgid "Dynamic bonding?"
 msgstr "動的結合"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:382
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:150:1546
+#: qtplugins/playertool/playertool.cpp:151:1546
 msgid "Record Movie..."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:254
-#: qtplugins/playertool/playertool.cpp:355
+#: qtplugins/playertool/playertool.cpp:255
+#: qtplugins/playertool/playertool.cpp:356
 msgid "Movie (*.mp4)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:256
+#: qtplugins/playertool/playertool.cpp:257
 msgid "Export Bitmap Graphics"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:257
+#: qtplugins/playertool/playertool.cpp:258
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:271 qtplugins/surfaces/surfaces.cpp:408
+#: qtplugins/playertool/playertool.cpp:272 qtplugins/surfaces/surfaces.cpp:408
 msgid "GIF (*.gif)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:277
+#: qtplugins/playertool/playertool.cpp:278
 msgid "GIF FPS support warning"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:278
+#: qtplugins/playertool/playertool.cpp:279
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:321
+#: qtplugins/playertool/playertool.cpp:322
 #, fuzzy
 msgid "Movie (*.avi)"
 msgstr "動画ファイル (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:350
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:436
+#: qtplugins/playertool/playertool.cpp:351
+#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:436
 #: qtplugins/surfaces/surfaces.cpp:479 qtplugins/surfaces/surfaces.cpp:491
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:351 qtplugins/surfaces/surfaces.cpp:480
+#: qtplugins/playertool/playertool.cpp:352 qtplugins/surfaces/surfaces.cpp:480
 msgid "Error: cannot add frame to video."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:492
+#: qtplugins/playertool/playertool.cpp:382 qtplugins/surfaces/surfaces.cpp:492
 #, qt-format
 msgid "Cannot save file %1."
 msgstr ""
@@ -3617,7 +3726,7 @@ msgid ""
 msgstr ""
 
 #: qtplugins/quantuminput/quantuminput.cpp:242
-msgid "Set Python Path..."
+msgid "Set Python Path…"
 msgstr ""
 
 #: qtplugins/quantuminput/quantuminput.h:53
@@ -3711,7 +3820,26 @@ msgstr "選択"
 msgid "Selection"
 msgstr "選択"
 
-#: qtplugins/selectiontool/selectiontool.cpp:244
+#: qtplugins/selectiontool/selectiontool.cpp:69
+#, fuzzy
+msgid ""
+"Selection Tool\n"
+"\n"
+"Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
+"\tDrag to select a range of atoms\n"
+"Right Mouse: \tClick outside the molecule to clear selection\n"
+"Use Ctrl to toggle the selection and shift to add to the selection.\n"
+"Double-Click: \tSelect an entire fragment."
+msgstr ""
+"設定ツール(F11)\n"
+"\n"
+"左クリック: \tクリックして原子・残基・フラグメントを選択\n"
+"\tドラッグして領域を指定して原子を選択\n"
+"右クリック: \t分子のない場所をクリックして選択をリセット\n"
+"Ctrlキー・Shiftキーで原子を追加選択\n"
+"ダブルクリック: \tフラグメント全体を選択"
+
+#: qtplugins/selectiontool/selectiontool.cpp:251
 #, fuzzy
 msgid "Paint Atoms"
 msgstr "始めの原子"
@@ -6832,9 +6960,6 @@ msgstr ""
 #~ msgid "Could not determine format from filename: %1"
 #~ msgstr "ファイル名からフォーマットを特定できません : %1"
 
-#~ msgid "Animation"
-#~ msgstr "アニメーション"
-
 #~ msgid "Animate trajectories, reactions, and vibrations."
 #~ msgstr "トラジェクトリ, 反応, 振動をアニメーションで表示"
 
@@ -8518,28 +8643,6 @@ msgstr ""
 #~ msgid "AutoRotate Settings"
 #~ msgstr "自動回転の設定"
 
-#~ msgid ""
-#~ "Bond Centric Manipulation Tool\n"
-#~ "\n"
-#~ "Left Mouse: \tClick and drag to rotate the view.\n"
-#~ "Middle Mouse: Click and drag to zoom in or out.\n"
-#~ "Right Mouse: \tClick and drag to move the view.\n"
-#~ "Double-Click: \tReset the view.\n"
-#~ "\n"
-#~ "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
-#~ "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
-#~ "Right Click & Drag one of the Atoms in the Bond to change the length"
-#~ msgstr ""
-#~ "結合中心操作ツール\n"
-#~ "\n"
-#~ "左クリック: \tドラッグして表示領域を移動\n"
-#~ "中クリック: ドラッグしてズームイン・ズームアウト\n"
-#~ "右クリック: \t表示をリセット\n"
-#~ "\n"
-#~ "結合を左クリック&ドラッグで操作平面を選択:\n"
-#~ "原子を左クリック&ドラッグで結合角を変更\n"
-#~ "原子を右クリック&ドラッグで結合長を変更"
-
 #~ msgctxt "%L1 is the length of the bond"
 #~ msgid "Bond Length: %L1"
 #~ msgstr "結合長: %L1"
@@ -8558,22 +8661,6 @@ msgstr ""
 
 #~ msgid "Bond Centric Manipulate Settings"
 #~ msgstr "結合中心操作の設定"
-
-#~ msgid ""
-#~ "Click to Measure (F12)\n"
-#~ "\n"
-#~ "Left Mouse: \tSelect up to three Atoms.\n"
-#~ "\tDistances are measured between 1-2 and 2-3\n"
-#~ "\tAngle is measured between 1-3 using 2 as the common point\n"
-#~ "Right Mouse: \tReset the measurements.Double-Click: \tReset the view."
-#~ msgstr ""
-#~ "クリックして測定(F12)\n"
-#~ "\n"
-#~ "左クリック: \t三つまでの原子を選択できます。\n"
-#~ "\t1-2および2-3の距離を測定します。\n"
-#~ "\t2から見た1と3の間の角度を測定します。\n"
-#~ "右クリック: \t測定をリセットします。ダブルクリック: \t表示をリセットしま"
-#~ "す。"
 
 #~ msgctxt "%L1 is distance, %2 is Angstrom symbol"
 #~ msgid "Distance (2->3): %L1 %2"
@@ -8611,17 +8698,6 @@ msgstr ""
 #~ msgid "Delete Atom"
 #~ msgstr "原子を削除"
 
-#~ msgid ""
-#~ "Draw Tool (F8)\n"
-#~ "\n"
-#~ "Left Mouse: \tClick and Drag to create Atoms and Bonds\n"
-#~ "Right Mouse: \tDelete Atom"
-#~ msgstr ""
-#~ "作成ツール(F8)\n"
-#~ "\n"
-#~ "左クリック: \tクリック&ドラッグで原子・結合を作成\n"
-#~ "右クリック: \t原子を削除"
-
 #~ msgid "Draw Bond"
 #~ msgstr "結合を作成"
 
@@ -8631,64 +8707,17 @@ msgstr ""
 #~ msgid "Draw Settings"
 #~ msgstr "作成の設定"
 
-#~ msgid ""
-#~ "Manipulation Tool (F10)\n"
-#~ "\n"
-#~ "Left Mouse: \tClick and drag to move atoms\n"
-#~ "Middle Mouse: Click and drag to move atoms further away or closer\n"
-#~ "Right Mouse: \tClick and drag to rotate selected atoms.\n"
-#~ "Double-Click: \tReset the view."
-#~ msgstr ""
-#~ "操作ツール(F10)\n"
-#~ "\n"
-#~ "左クリック: \tクリック&ドラッグで原子を移動\n"
-#~ "中クリック: クリック&ドラッグで原子を視線方向に移動\n"
-#~ "右クリック: \tクリック&ドラッグで原子を回転\n"
-#~ "ダブルクリック: \t表示をリセット"
-
 #~ msgid "Translate, rotate, and adjust atoms and fragments"
 #~ msgstr "原子及びフラグメントの移動・回転・調整"
 
 #~ msgid "Manipulate Settings"
 #~ msgstr "操作の設定"
 
-#~ msgid ""
-#~ "Navigation Tool (F9)\n"
-#~ "\n"
-#~ "Left Mouse: \tClick and drag to rotate the view.\n"
-#~ "Middle Mouse: Click and drag to zoom in or out.\n"
-#~ "Right Mouse: \tClick and drag to move the view.\n"
-#~ "Double-Click: \tReset the view."
-#~ msgstr ""
-#~ "ナビゲーションツール(F9)\n"
-#~ "\n"
-#~ "左クリック: \tクリック&ドラッグで表示領域を回転\n"
-#~ "中クリック: クリック&ドラッグでズームイン・ズームアウト\n"
-#~ "右クリック: \tクリック&ドラッグで表示領域を移動\n"
-#~ "ダブルクリック: \t表示をリセット"
-
 #~ msgid "Translate, rotate, and zoom around the current view"
 #~ msgstr "表示領域を移動・回転・拡大縮小"
 
 #~ msgid "Navigate Settings"
 #~ msgstr "ナビゲーションの設定"
-
-#~ msgid ""
-#~ "Selection Tool (F11)\n"
-#~ "\n"
-#~ "Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
-#~ "\tDrag to select a range of atoms\n"
-#~ "Right Mouse: \tClick outside the molecule to clear selection\n"
-#~ "Use Ctrl to toggle the selection and shift to add to the selection.\n"
-#~ "Double-Click: \tSelect an entire fragment."
-#~ msgstr ""
-#~ "設定ツール(F11)\n"
-#~ "\n"
-#~ "左クリック: \tクリックして原子・残基・フラグメントを選択\n"
-#~ "\tドラッグして領域を指定して原子を選択\n"
-#~ "右クリック: \t分子のない場所をクリックして選択をリセット\n"
-#~ "Ctrlキー・Shiftキーで原子を追加選択\n"
-#~ "ダブルクリック: \tフラグメント全体を選択"
 
 #~ msgid "Selection Mode:"
 #~ msgstr "選択モード:"
@@ -8876,9 +8905,6 @@ msgstr ""
 
 #~ msgid "Label Shift:"
 #~ msgstr "ラベルのオフセット:"
-
-#~ msgid "Bond Labels"
-#~ msgstr "結合のラベル"
 
 #~ msgid "Bond length"
 #~ msgstr "結合距離"

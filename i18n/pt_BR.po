@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-09-05 02:07+0000\n"
+"POT-Creation-Date: 2021-09-12 02:08+0000\n"
 "PO-Revision-Date: 2021-07-16 14:24+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -1187,14 +1187,14 @@ msgstr "Crie uma nova vista"
 msgid "Periodic Table"
 msgstr "Tabela Periódica"
 
-#: qtgui/pythonscript.cpp:79 qtgui/pythonscript.cpp:164
+#: qtgui/pythonscript.cpp:105 qtgui/pythonscript.cpp:190
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "Erro ao executar o script '%1 %2': Tempo limite esgotado ao aguardar o "
 "início (%3)."
 
-#: qtgui/pythonscript.cpp:89 qtgui/pythonscript.cpp:174
+#: qtgui/pythonscript.cpp:115 qtgui/pythonscript.cpp:200
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1203,14 +1203,14 @@ msgstr ""
 "Erro ao executar o script '%1 %2': falha ao gravar em stdin (len= %3, gravou "
 "%4 bytes, erro QProcess: %5)."
 
-#: qtgui/pythonscript.cpp:102
+#: qtgui/pythonscript.cpp:128
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 "Erro ao executar o script '%1 %2': Tempo limite esgotado ao aguardar "
 "conclusão (%3)."
 
-#: qtgui/pythonscript.cpp:110
+#: qtgui/pythonscript.cpp:136
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1223,27 +1223,27 @@ msgstr ""
 "Resultado:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:211
+#: qtgui/pythonscript.cpp:237
 msgid "Script failed to start."
 msgstr "Script falhou ao iniciar."
 
-#: qtgui/pythonscript.cpp:214
+#: qtgui/pythonscript.cpp:240
 msgid "Script crashed."
 msgstr "O código falhou."
 
-#: qtgui/pythonscript.cpp:217
+#: qtgui/pythonscript.cpp:243
 msgid "Script timed out."
 msgstr "O script expirou."
 
-#: qtgui/pythonscript.cpp:220
+#: qtgui/pythonscript.cpp:246
 msgid "Read error."
 msgstr "Erro de leitura."
 
-#: qtgui/pythonscript.cpp:223
+#: qtgui/pythonscript.cpp:249
 msgid "Write error."
 msgstr "Erro de escrita."
 
-#: qtgui/pythonscript.cpp:227
+#: qtgui/pythonscript.cpp:253
 msgid "Unknown error."
 msgstr "Erro desconhecido."
 
@@ -1273,7 +1273,7 @@ msgstr ""
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:204 qtgui/rwlayermanager.cpp:207
-#: qtplugins/selectiontool/selectiontool.cpp:260:1477
+#: qtplugins/selectiontool/selectiontool.cpp:267:1477
 #, fuzzy
 msgid "Change Layer"
 msgstr "Trocar Tipo de Ligação"
@@ -1283,7 +1283,7 @@ msgid "Add Atom"
 msgstr "Adicionar Átomo"
 
 #: qtgui/rwmolecule.cpp:81 qtgui/rwmolecule.cpp:96
-#: qtplugins/editor/editor.cpp:122
+#: qtplugins/editor/editor.cpp:126
 msgid "Remove Atom"
 msgstr "Remover Átomo"
 
@@ -1410,7 +1410,8 @@ msgid "Modify Molecule"
 msgstr "Modificar Molécula"
 
 #: qtplugins/3dmol/3dmol.cpp:43
-msgid "ThreeDMol HTML Block."
+#, fuzzy
+msgid "3DMol HTML Block."
 msgstr "Bloco HTML ThreeDMol."
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/fetchpdb/fetchpdb.cpp:41
@@ -1659,19 +1660,33 @@ msgstr "Desenha átomos como esferas e ligações como cilindros."
 msgid "Bond-Centric Manipulation"
 msgstr "Manipulação Ligação-Centrada"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:950
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:1038
-#: qtplugins/measuretool/measuretool.cpp:197
-#: qtplugins/measuretool/measuretool.cpp:205
-#: qtplugins/measuretool/measuretool.cpp:206
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:305
+msgid ""
+"Bond Centric Manipulation Tool\n"
+"\n"
+"Left Mouse: \tClick and drag to rotate the view.\n"
+"Middle Mouse: \tClick and drag to zoom in or out.\n"
+"Right Mouse: \tClick and drag to move the view.\n"
+"Double-Click: \tReset the view.\n"
+"\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag one of the Atoms in the Bond to change the angle\n"
+"Right Click & Drag one of the Atoms in the Bond to change the length"
+msgstr ""
+
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:959
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:1047
+#: qtplugins/measuretool/measuretool.cpp:202
+#: qtplugins/measuretool/measuretool.cpp:210
+#: qtplugins/measuretool/measuretool.cpp:211
 #, qt-format
 msgid "%L1°"
 msgstr "%L1°"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:972
-#: qtplugins/editor/editor.cpp:237 qtplugins/measuretool/measuretool.cpp:214
-#: qtplugins/measuretool/measuretool.cpp:215
-#: qtplugins/measuretool/measuretool.cpp:217
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:981
+#: qtplugins/editor/editor.cpp:241 qtplugins/measuretool/measuretool.cpp:218
+#: qtplugins/measuretool/measuretool.cpp:219
+#: qtplugins/measuretool/measuretool.cpp:221
 #, qt-format
 msgid "%L1 Å"
 msgstr "%L1 Å"
@@ -2366,28 +2381,36 @@ msgstr "Manipular tipos de elementos personalizados na molécula atual."
 msgid "Custom Elements"
 msgstr "Elementos Definidos pelo Usuário"
 
-#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:109
+#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:113
 msgid "Draw"
 msgstr "Desenho"
 
-#: qtplugins/editor/editor.cpp:103
+#: qtplugins/editor/editor.cpp:77
+msgid ""
+"Draw Tool\n"
+"\n"
+"Left Mouse: \tClick and Drag to create Atoms and Bond\n"
+"Right Mouse: \tDelete Atom"
+msgstr ""
+
+#: qtplugins/editor/editor.cpp:107
 msgid "Draw Atom"
 msgstr "Desenhar Átomo"
 
-#: qtplugins/editor/editor.cpp:113
+#: qtplugins/editor/editor.cpp:117
 msgid "Change Bond Type"
 msgstr "Trocar Tipo de Ligação"
 
-#: qtplugins/editor/editor.cpp:126
+#: qtplugins/editor/editor.cpp:130
 msgid "Remove Bond"
 msgstr "Remover Ligação"
 
-#: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:187
-#: qtplugins/measuretool/measuretool.cpp:213
+#: qtplugins/editor/editor.cpp:236 qtplugins/measuretool/measuretool.cpp:192
+#: qtplugins/measuretool/measuretool.cpp:217
 msgid "Distance:"
 msgstr "Distância:"
 
-#: qtplugins/editor/editor.cpp:235
+#: qtplugins/editor/editor.cpp:239
 #, fuzzy, qt-format
 msgid "%1 %L2"
 msgstr "%1 %2"
@@ -2717,10 +2740,17 @@ msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:31
 #, fuzzy
-msgid "Write"
-msgstr "escrevem"
+msgid "Edit Labels"
+msgstr "Rótulo"
 
-#: qtplugins/label/labeleditor.cpp:66
+#: qtplugins/label/labeleditor.cpp:34
+msgid ""
+"Atom Label Tool\n"
+"\n"
+"Left Mouse: \tClick on Atoms to add Custom Labels"
+msgstr ""
+
+#: qtplugins/label/labeleditor.cpp:69
 #, fuzzy
 msgid "Create Label"
 msgstr "Criar Superfícies"
@@ -2811,6 +2841,14 @@ msgstr ""
 msgid "Manipulate"
 msgstr "Manipulação"
 
+#: qtplugins/manipulator/manipulator.cpp:59
+msgid ""
+"Manipulation Tool\n"
+"\n"
+"Left Mouse: \tClick and drag to move atoms\n"
+"Right Mouse: \tClick and drag to rotate selected atoms.\n"
+msgstr ""
+
 #: qtplugins/manipulator/manipulator.h:44
 #: qtplugins/manipulator/manipulator.h:45
 msgid "Manipulate tool"
@@ -2820,16 +2858,27 @@ msgstr "Ferramenta de manipulação"
 msgid "Measure"
 msgstr "Medir"
 
-#: qtplugins/measuretool/measuretool.cpp:185
-#: qtplugins/measuretool/measuretool.cpp:196
+#: qtplugins/measuretool/measuretool.cpp:59
+msgid ""
+"Measure Tool\n"
+"\n"
+"Left Mouse: \tSelect up to four Atoms.\n"
+"\tDistances are measured between 1-2 and 2-3\n"
+"\tAngle is measured between 1-3 using 2 as the common point\n"
+"\tDihedral is measured between 1-2-3-4\n"
+"Right Mouse: \tReset the measurements."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:190
+#: qtplugins/measuretool/measuretool.cpp:201
 msgid "Dihedral:"
 msgstr "Diédrico:"
 
-#: qtplugins/measuretool/measuretool.cpp:186
+#: qtplugins/measuretool/measuretool.cpp:191
 msgid "Angle:"
 msgstr "Ângulo:"
 
-#: qtplugins/measuretool/measuretool.cpp:204
+#: qtplugins/measuretool/measuretool.cpp:209
 msgid "Angles:"
 msgstr "Ângulos:"
 
@@ -2889,9 +2938,28 @@ msgstr "Servidor Mongo Chem"
 msgid "Interface with Mongo Chem Server."
 msgstr "Interface com Servidor Mongo Chem."
 
-#: qtplugins/navigator/navigator.cpp:45
+#: qtplugins/navigator/navigator.cpp:49
 msgid "Navigate"
 msgstr "Navegação"
+
+#: qtplugins/navigator/navigator.cpp:52
+msgid ""
+"Navigation Tool\n"
+"\n"
+"Left Mouse: \tClick and drag to rotate the view.\n"
+"Middle Mouse: \tClick and drag to zoom in or out.\n"
+"Right Mouse: \tClick and drag to move the view.\n"
+msgstr ""
+
+#: qtplugins/navigator/navigator.cpp:70
+msgid "Reverse Direction of Zoom on Scroll"
+msgstr ""
+
+#: qtplugins/navigator/navigator.cpp:72
+msgid ""
+"Default:\t Scroll down to shrink, scroll up to zoom\n"
+"Reversed:\t Scroll up to shrink, scroll down to zoom"
+msgstr ""
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
 msgid "Navigate tool"
@@ -3223,88 +3291,93 @@ msgstr "Renderize os eixos de referência no canto da tela."
 msgid "Player"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:80
+#: qtplugins/playertool/playertool.cpp:66
+#, fuzzy
+msgid "Animation Tool"
+msgstr "Animação"
+
+#: qtplugins/playertool/playertool.cpp:81
 msgid "Play"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:83
+#: qtplugins/playertool/playertool.cpp:84
 msgid "Stop"
 msgstr "Parar"
 
-#: qtplugins/playertool/playertool.cpp:94
+#: qtplugins/playertool/playertool.cpp:95
 msgid "Frame rate:"
 msgstr "Taxa de quadros:"
 
-#: qtplugins/playertool/playertool.cpp:100
+#: qtplugins/playertool/playertool.cpp:101
 msgctxt "frames per second"
 msgid " FPS"
 msgstr " QPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/playertool/playertool.cpp:124:1540
+#: qtplugins/playertool/playertool.cpp:125:1540
 msgid "Frame:"
 msgstr "Quadro:"
 
-#: qtplugins/playertool/playertool.cpp:131
-#: qtplugins/playertool/playertool.cpp:416
+#: qtplugins/playertool/playertool.cpp:132
+#: qtplugins/playertool/playertool.cpp:417
 #: qtplugins/surfaces/surfacedialog.cpp:178
 #, qt-format
 msgid " of %0"
 msgstr " de %0"
 
-#: qtplugins/playertool/playertool.cpp:142
+#: qtplugins/playertool/playertool.cpp:143
 msgid "Dynamic bonding?"
 msgstr "Ligações dinâmicas?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:382
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:150:1546
+#: qtplugins/playertool/playertool.cpp:151:1546
 msgid "Record Movie..."
 msgstr "Gravar Vídeo..."
 
-#: qtplugins/playertool/playertool.cpp:254
-#: qtplugins/playertool/playertool.cpp:355
+#: qtplugins/playertool/playertool.cpp:255
+#: qtplugins/playertool/playertool.cpp:356
 msgid "Movie (*.mp4)"
 msgstr "Vídeo (*.mp4)"
 
-#: qtplugins/playertool/playertool.cpp:256
+#: qtplugins/playertool/playertool.cpp:257
 msgid "Export Bitmap Graphics"
 msgstr "Exportar Gráficos BMP"
 
-#: qtplugins/playertool/playertool.cpp:257
+#: qtplugins/playertool/playertool.cpp:258
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Filme (*.mp4);;Filme (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:271 qtplugins/surfaces/surfaces.cpp:408
+#: qtplugins/playertool/playertool.cpp:272 qtplugins/surfaces/surfaces.cpp:408
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:277
+#: qtplugins/playertool/playertool.cpp:278
 msgid "GIF FPS support warning"
 msgstr "Aviso GIF FPS suportado"
 
-#: qtplugins/playertool/playertool.cpp:278
+#: qtplugins/playertool/playertool.cpp:279
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
 "O formato de arquivo GIF não oferece suporte a taxas de quadros acima de 100 "
 "FPS (qps)."
 
-#: qtplugins/playertool/playertool.cpp:321
+#: qtplugins/playertool/playertool.cpp:322
 msgid "Movie (*.avi)"
 msgstr "Vídeo (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:350
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:436
+#: qtplugins/playertool/playertool.cpp:351
+#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:436
 #: qtplugins/surfaces/surfaces.cpp:479 qtplugins/surfaces/surfaces.cpp:491
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:351 qtplugins/surfaces/surfaces.cpp:480
+#: qtplugins/playertool/playertool.cpp:352 qtplugins/surfaces/surfaces.cpp:480
 msgid "Error: cannot add frame to video."
 msgstr "Erro: não é possível adicionar quadro ao vídeo."
 
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:492
+#: qtplugins/playertool/playertool.cpp:382 qtplugins/surfaces/surfaces.cpp:492
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Não foi possível salvar o arquivo %1."
@@ -3706,7 +3779,8 @@ msgstr ""
 "O Avogadro deve ser reiniciado para que as alterações tenham efeito."
 
 #: qtplugins/quantuminput/quantuminput.cpp:242
-msgid "Set Python Path..."
+#, fuzzy
+msgid "Set Python Path…"
 msgstr "Definir Caminho Python..."
 
 #: qtplugins/quantuminput/quantuminput.h:53
@@ -3800,7 +3874,18 @@ msgstr "Selecionar"
 msgid "Selection"
 msgstr "Seleção"
 
-#: qtplugins/selectiontool/selectiontool.cpp:244
+#: qtplugins/selectiontool/selectiontool.cpp:69
+msgid ""
+"Selection Tool\n"
+"\n"
+"Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
+"\tDrag to select a range of atoms\n"
+"Right Mouse: \tClick outside the molecule to clear selection\n"
+"Use Ctrl to toggle the selection and shift to add to the selection.\n"
+"Double-Click: \tSelect an entire fragment."
+msgstr ""
+
+#: qtplugins/selectiontool/selectiontool.cpp:251
 #, fuzzy
 msgid "Paint Atoms"
 msgstr "Ligar Átomos"
@@ -6607,6 +6692,10 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Seus e-mails"
 
+#, fuzzy
+#~ msgid "Write"
+#~ msgstr "escrevem"
+
 #~ msgid "Option '%1' not found in userOptions."
 #~ msgstr "Opção '%1' não encontrada em userOptions."
 
@@ -6942,9 +7031,6 @@ msgstr "Seus e-mails"
 
 #~ msgid "Could not determine format from filename: %1"
 #~ msgstr "Não foi possível determinar o formato do arquivo: %1"
-
-#~ msgid "Animation"
-#~ msgstr "Animação"
 
 #~ msgid "Animate trajectories, reactions, and vibrations."
 #~ msgstr "Animar trajetórias, reações e vibrações."
