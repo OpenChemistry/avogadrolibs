@@ -33,6 +33,11 @@ public:
     return tr("Simple display of VdW spheres.");
   }
 
+  DefaultBehavior defaultBehavior() const override
+  {
+    return DefaultBehavior::False;
+  }
+
 private:
   std::string m_name = "Van der Waals";
 };

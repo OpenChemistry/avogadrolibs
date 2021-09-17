@@ -45,6 +45,11 @@ public:
     return tr("Simple display of VdW spheres with ambient occlusion.");
   }
 
+  DefaultBehavior defaultBehavior() const override
+  {
+    return DefaultBehavior::False;
+  }
+
 private:
   std::string m_name = "Van der Waals (AO)";
 };

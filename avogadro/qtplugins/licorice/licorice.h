@@ -33,6 +33,11 @@ public:
     return tr("Render atoms as licorice / sticks.");
   }
 
+  DefaultBehavior defaultBehavior() const override
+  {
+    return DefaultBehavior::False;
+  }
+
 private:
   std::string m_name = "Licorice";
 };

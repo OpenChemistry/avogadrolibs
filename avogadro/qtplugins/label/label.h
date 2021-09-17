@@ -30,8 +30,13 @@ public:
   }
 
   QWidget* setupWidget() override;
-  void process(const Core::Molecule& molecule, Rendering::GroupNode& node) override;
+  void process(const Core::Molecule& molecule,
+               Rendering::GroupNode& node) override;
 
+  DefaultBehavior defaultBehavior() const override
+  {
+    return DefaultBehavior::False;
+  }
 public slots:
   void atomLabel(bool show);
   void residueLabel(bool show);
