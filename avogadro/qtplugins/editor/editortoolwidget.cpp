@@ -70,7 +70,7 @@ unsigned char EditorToolWidget::atomicNumber() const
 
   unsigned char atomicNum = static_cast<unsigned char>(itemData.toUInt());
 
-  // "Other..." selected....
+  // "Other…" selected....
   if (atomicNum == 0 && m_elementSelector)
     atomicNum = static_cast<unsigned char>(m_elementSelector->element());
 

@@ -40,7 +40,7 @@ PlotRmsd::PlotRmsd(QObject* parent_)
   , m_molecule(nullptr)
   , m_displayDialogAction(new QAction(this))
 {
-  m_displayDialogAction->setText(tr("Plot RMSD curve..."));
+  m_displayDialogAction->setText(tr("Plot RMSD curve…"));
   connect(m_displayDialogAction.get(), &QAction::triggered, this,
           &PlotRmsd::displayDialog);
   m_actions.push_back(m_displayDialogAction.get());

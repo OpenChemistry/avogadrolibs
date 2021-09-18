@@ -42,7 +42,7 @@ PlotXrd::PlotXrd(QObject* parent_)
     m_xrdOptionsDialog(new XrdOptionsDialog(qobject_cast<QWidget*>(parent()))),
     m_displayDialogAction(new QAction(this))
 {
-  m_displayDialogAction->setText(tr("Plot Theoretical XRD Pattern..."));
+  m_displayDialogAction->setText(tr("Plot Theoretical XRD Pattern…"));
   connect(m_displayDialogAction.get(), &QAction::triggered, this,
           &PlotXrd::displayDialog);
   m_actions.push_back(m_displayDialogAction.get());

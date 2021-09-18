@@ -57,7 +57,7 @@ Yaehmop::Yaehmop(QObject* parent_)
       new BandDialog(qobject_cast<QWidget*>(parent()), m_yaehmopSettings)),
     m_displayBandDialogAction(new QAction(this))
 {
-  m_displayBandDialogAction->setText(tr("Calculate band structure..."));
+  m_displayBandDialogAction->setText(tr("Calculate Band Structure…"));
   connect(m_displayBandDialogAction.get(), &QAction::triggered, this,
           &Yaehmop::displayBandDialog);
   m_actions.push_back(m_displayBandDialogAction.get());
@@ -265,7 +265,7 @@ void Yaehmop::calculateBandStructure()
   if (!executeYaehmop(input.toLocal8Bit(), output, err)) {
     QMessageBox::warning(
       nullptr, tr("Avogadro2"),
-      tr("Yaehmop execution failed with the following error:\n") + err);
+      tr("Yaehmop execution failed with the following error:\n%1").arg(err);
     qDebug() << "Yaehmop execution failed with the following error:\n" << err;
     return;
   }
@@ -360,7 +360,7 @@ void Yaehmop::calculateBandStructure()
     }
 
     // Create a horizontal, black, dashed line for the fermi level
-    lineLabels.push_back("Fermi Level");
+    lineLabels.push_back(tr("Fermi Level"));
     lineColors.push_back({ 0, 0, 0, 255 });
     lineStyles.push_back(VtkPlot::LineStyle::dashLine);
 
@@ -369,8 +369,8 @@ void Yaehmop::calculateBandStructure()
   }
 
   const char* xTitle = "";
-  const char* yTitle = "Energy (eV)";
-  const char* windowName = "YAeHMOP Band Structure";
+  const char* yTitle = tr("Energy (eV)");
+  const char* windowName = tr("YAeHMOP Band Structure");
 
   m_bandPlot.reset(new VtkPlot);
   m_bandPlot->setData(data);
@@ -561,16 +561,16 @@ bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
   output = p.readAll();
 
   if (exitStatus == QProcess::CrashExit) {
-    err = tr("Error: " + program.toLocal8Bit() + " crashed!");
+    err = tr("Error: %1 crashed!").arg(program.toLocal8Bit());
     qDebug() << err;
     qDebug() << "Output is as follows:\n" << qPrintable(output);
     return false;
   }
 
   if (exitStatus != QProcess::NormalExit) {
-    err = tr("Error: " + program.toLocal8Bit() +
-             " finished abnormally with exit code " +
-             QString::number(exitStatus).toLocal8Bit());
+    err = tr("Error: %1 finished abnormally with exit code %2")
+            .arg(program.toLocal8Bit())
+            .arg(exitStatus);
     qDebug() << err;
     qDebug() << "Output is as follows:\n" << qPrintable(output);
     return false;

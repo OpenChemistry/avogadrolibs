@@ -149,6 +149,8 @@ const Io::FileFormat* FileFormatDialog::findFileFormat(
   QString verb;
   QString key;
 
+  // TODO: This does not work for translation... 
+  //  particularly since len(matches) is known
   if ((formatFlags & FileFormat::Read && formatFlags & FileFormat::Write) ||
       ((formatFlags & FileFormat::Read) == 0 &&
        (formatFlags & FileFormat::Write) == 0)) {

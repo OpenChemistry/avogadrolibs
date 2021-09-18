@@ -60,7 +60,7 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
   m_iso = iso;
   m_reverseWinding = reverse;
   if (!m_cube->lock()->tryLock()) {
-    qDebug() << "Cannot get a read lock...";
+    qDebug() << "Cannot get a read lock…";
     return false;
   }
   for (unsigned int i = 0; i < 3; ++i)
@@ -75,7 +75,7 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
 void MeshGenerator::run()
 {
   if (!m_cube || !m_mesh) {
-    qDebug() << "No mesh or cube set - nothing to find isosurface of...";
+    qDebug() << "No mesh or cube set - nothing to find isosurface of…";
     return;
   }
 

@@ -45,7 +45,7 @@ OpenBabel::OpenBabel(QObject* p)
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Configure Force Field..."));
+  action->setText(tr("Configure Force Field…"));
   connect(action, SIGNAL(triggered()), SLOT(onConfigureGeometryOptimization()));
   m_actions.push_back(action);
 
@@ -63,7 +63,7 @@ OpenBabel::OpenBabel(QObject* p)
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Add Hydrogens for pH..."));
+  action->setText(tr("Add Hydrogens for pH…"));
   connect(action, SIGNAL(triggered()), SLOT(onAddHydrogensPh()));
   m_actions.push_back(action);
 
@@ -187,7 +187,7 @@ void OpenBabel::setMolecule(QtGui::Molecule* mol)
 
 bool OpenBabel::readMolecule(QtGui::Molecule& mol)
 {
-  m_progress->setLabelText(tr("Loading molecule from CML..."));
+  m_progress->setLabelText(tr("Loading molecule from CML…"));
 
   bool result = false;
 
@@ -396,7 +396,7 @@ void OpenBabel::onOptimizeGeometry()
 
   // Setup progress dialog
   initializeProgressDialog(tr("Optimizing Geometry (Open Babel)"),
-                           tr("Generating MDL..."), 0, 0, 0);
+                           tr("Generating MDL…"), 0, 0, 0);
 
   // Connect process
   disconnect(m_process);
@@ -419,7 +419,7 @@ void OpenBabel::onOptimizeGeometry()
     return;
   }
 
-  m_progress->setLabelText(tr("Starting %1...", "arg is an executable file.")
+  m_progress->setLabelText(tr("Starting %1…", "arg is an executable file.")
                              .arg(m_process->obabelExecutable()));
 
   // Run obabel
@@ -454,7 +454,7 @@ void OpenBabel::onOptimizeGeometryStatusUpdate(int step, int numSteps,
 
 void OpenBabel::onOptimizeGeometryFinished(const QByteArray& output)
 {
-  m_progress->setLabelText(tr("Updating molecule..."));
+  m_progress->setLabelText(tr("Updating molecule…"));
 
   // CML --> molecule
   Core::Molecule mol;
@@ -507,7 +507,7 @@ void OpenBabel::onPerceiveBonds()
 
   // Setup progress dialog
   initializeProgressDialog(tr("Perceiving Bonds (Open Babel)"),
-                           tr("Generating XYZ representation..."), 0, 0, 0);
+                           tr("Generating XYZ representation…"), 0, 0, 0);
 
   // Generate XYZ
   std::string xyz;
@@ -526,7 +526,7 @@ void OpenBabel::onPerceiveBonds()
           SLOT(onPerceiveBondsFinished(QByteArray)));
 
   m_progress->setLabelText(
-    tr("Converting XYZ to CML with %1...").arg(m_process->obabelExecutable()));
+    tr("Converting XYZ to CML with %1…").arg(m_process->obabelExecutable()));
 
   // Run process
   m_process->convert(QByteArray(xyz.c_str(), xyz.size()), "xyz", "cml");
@@ -534,7 +534,7 @@ void OpenBabel::onPerceiveBonds()
 
 void OpenBabel::onPerceiveBondsFinished(const QByteArray& output)
 {
-  m_progress->setLabelText(tr("Updating molecule from CML..."));
+  m_progress->setLabelText(tr("Updating molecule from CML…"));
 
   // CML --> molecule
   Core::Molecule mol;
@@ -592,7 +592,7 @@ void OpenBabel::onAddHydrogens()
 
   // Setup progress dialog
   initializeProgressDialog(tr("Adding Hydrogens (Open Babel)"),
-                           tr("Generating Open Babel input..."), 0, 0, 0);
+                           tr("Generating Open Babel input…"), 0, 0, 0);
 
   // Generate MDL
   std::string mol;
@@ -612,7 +612,7 @@ void OpenBabel::onAddHydrogens()
           SLOT(onHydrogenOperationFinished(QByteArray)));
 
   m_progress->setLabelText(
-    tr("Running %1...").arg(m_process->obabelExecutable()));
+    tr("Running %1…").arg(m_process->obabelExecutable()));
 
   // Run process
   m_process->convert(QByteArray(mol.c_str(), mol.size()), "cml", "cml",
@@ -640,7 +640,7 @@ void OpenBabel::onAddHydrogensPh()
 
   // Setup progress dialog
   initializeProgressDialog(tr("Adding Hydrogens (Open Babel)"),
-                           tr("Generating obabel input..."), 0, 0, 0);
+                           tr("Generating obabel input…"), 0, 0, 0);
 
   // Generate MDL
   std::string mol;
@@ -660,7 +660,7 @@ void OpenBabel::onAddHydrogensPh()
           SLOT(onHydrogenOperationFinished(QByteArray)));
 
   m_progress->setLabelText(
-    tr("Running %1...").arg(m_process->obabelExecutable()));
+    tr("Running %1…").arg(m_process->obabelExecutable()));
 
   // Run process
   m_process->convert(QByteArray(mol.c_str(), mol.size()), "cml", "cml",
@@ -680,7 +680,7 @@ void OpenBabel::onRemoveHydrogens()
 
   // Setup progress dialog
   initializeProgressDialog(tr("Removing Hydrogens (Open Babel)"),
-                           tr("Generating obabel input..."), 0, 0, 0);
+                           tr("Generating obabel input…"), 0, 0, 0);
 
   // Generate MDL
   std::string mol;
@@ -699,7 +699,7 @@ void OpenBabel::onRemoveHydrogens()
           SLOT(onHydrogenOperationFinished(QByteArray)));
 
   m_progress->setLabelText(
-    tr("Running %1...").arg(m_process->obabelExecutable()));
+    tr("Running %1…").arg(m_process->obabelExecutable()));
 
   // Run process
   m_process->convert(QByteArray(mol.c_str(), mol.size()), "cml", "cml",
@@ -708,7 +708,7 @@ void OpenBabel::onRemoveHydrogens()
 
 void OpenBabel::onHydrogenOperationFinished(const QByteArray& mdl)
 {
-  m_progress->setLabelText(tr("Reading obabel output..."));
+  m_progress->setLabelText(tr("Reading obabel output…"));
 
   // MDL --> molecule
   Core::Molecule mol;

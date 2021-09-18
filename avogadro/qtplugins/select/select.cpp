@@ -55,15 +55,15 @@ Select::Select(QObject* parent_)
   connect(action, SIGNAL(triggered()), SLOT(invertSelection()));
   m_actions.append(action);
 
-  action = new QAction(tr("Select by Element..."), this);
+  action = new QAction(tr("Select by Element…"), this);
   connect(action, SIGNAL(triggered()), SLOT(selectElement()));
   m_actions.append(action);
 
-  action = new QAction(tr("Select by Atom Index..."), this);
+  action = new QAction(tr("Select by Atom Index…"), this);
   connect(action, SIGNAL(triggered()), SLOT(selectAtomIndex()));
   m_actions.append(action);
 
-  action = new QAction(tr("Select by Residue..."), this);
+  action = new QAction(tr("Select by Residue…"), this);
   connect(action, SIGNAL(triggered()), SLOT(selectResidue()));
   m_actions.append(action);
 }

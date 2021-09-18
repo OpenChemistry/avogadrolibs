@@ -75,7 +75,7 @@ public:
 Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
 {
   auto action = new QAction(this);
-  action->setText(tr("Create Surfaces..."));
+  action->setText(tr("Create Surfaces…"));
   connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
   m_actions.push_back(action);
 
@@ -365,7 +365,7 @@ void Surfaces::meshFinished()
   if (m_meshesLeft == 0) {
     if (m_recordingMovie) {
       // Move to the next frame.
-      qDebug() << "Let's get to the next frame...";
+      qDebug() << "Let's get to the next frame…";
       m_molecule->emitChanged(QtGui::Molecule::Added);
       movieFrame();
     } else {
@@ -497,7 +497,7 @@ void Surfaces::movieFrame()
   // Increment current frame.
   ++m_currentFrame;
   if (m_currentFrame <= m_frameCount) {
-    qDebug() << "Starting next frame...";
+    qDebug() << "Starting next frame…";
     stepChanged(m_currentFrame);
     m_dialog->setStep(m_currentFrame);
     calculateSurface();

@@ -152,7 +152,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // If we never filled up the atomic numbers, fill them up
-  // now with "1, 2, 3..."
+  // now with "1, 2, 3…"
   if (atomicNumbers.size() == 0)
     for (size_t i = 1; i <= atomCounts.size(); ++i)
       atomicNumbers.push_back(i);

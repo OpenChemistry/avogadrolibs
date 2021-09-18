@@ -35,7 +35,7 @@ ImportPQR::ImportPQR(QObject* parent_)
     m_dialog(nullptr), m_outputFormat(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText(tr("&Import From PQR"));
+  m_action->setText(tr("&Search PQR…"));
   connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
 }
 

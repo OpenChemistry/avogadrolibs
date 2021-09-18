@@ -348,7 +348,7 @@ bool InputGenerator::insertMolecule(QJsonObject& json,
     formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
 
   if (format.isNull()) {
-    m_errors << tr("Error writing molecule representation to string: "
+    m_errors << tr("Error saving molecule representation to string: "
                    "Unrecognized file format: %1")
                   .arg(m_moleculeExtension);
     return false;
@@ -356,7 +356,7 @@ bool InputGenerator::insertMolecule(QJsonObject& json,
 
   std::string str;
   if (!format->writeString(str, mol)) {
-    m_errors << tr("Error writing molecule representation to string: %1")
+    m_errors << tr("Error saving molecule representation to string: %1", "%1 = error message")
                   .arg(QString::fromStdString(format->error()));
     return false;
   }
