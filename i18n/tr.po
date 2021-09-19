@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-05 02:07+0000\n"
-"PO-Revision-Date: 2021-09-08 11:10+0000\n"
+"PO-Revision-Date: 2021-09-19 23:43+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8.1-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -1337,28 +1337,24 @@ msgid "Update Bond"
 msgstr "Bağı Güncelle"
 
 #: qtgui/rwmolecule.cpp:389
-#, fuzzy
 msgid "Add Unit Cell"
-msgstr "Ekle &Birim Hücre"
+msgstr "Birim Hücresi Ekle"
 
 #: qtgui/rwmolecule.cpp:402
-#, fuzzy
 msgid "Remove Unit Cell"
-msgstr "Kaldır &Birim Hücre"
+msgstr "Birim Hücresini Kaldır"
 
 #: qtgui/rwmolecule.cpp:465
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "Birim Hücresini Düzenle"
 
 #: qtgui/rwmolecule.cpp:482
-#, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "&Atomları Hücreye Sar"
+msgstr "Atomları Hücreye Sar"
 
 #: qtgui/rwmolecule.cpp:505
-#, fuzzy
 msgid "Scale Cell Volume"
-msgstr "Birim Hücre Hacmi Uyarla"
+msgstr "Hücre Hacmini Uyarla"
 
 #: qtgui/rwmolecule.cpp:525
 msgid "Build Super Cell"
@@ -1373,9 +1369,8 @@ msgid "Rotate to Standard Orientation"
 msgstr "Standart Yerleşime Döndür"
 
 #: qtgui/rwmolecule.cpp:596 qtplugins/spacegroup/spacegroup.cpp:69
-#, fuzzy
 msgid "Reduce to Primitive"
-msgstr "Primitif Hücreye İndirge"
+msgstr "Temel Ögeye İndirge"
 
 #: qtgui/rwmolecule.cpp:621 qtplugins/spacegroup/spacegroup.cpp:75
 #: qtplugins/spacegroup/spacegroup.cpp:233
@@ -1383,18 +1378,16 @@ msgid "Conventionalize Cell"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:646 qtplugins/spacegroup/spacegroup.cpp:258
-#, fuzzy
 msgid "Symmetrize Cell"
-msgstr "Kristali Simetrikleştir"
+msgstr "Hücreyi Simetrikleştir"
 
 #: qtgui/rwmolecule.cpp:665 qtplugins/spacegroup/spacegroup.cpp:86
 msgid "Fill Unit Cell"
 msgstr "Birim Hücreyi Doldur"
 
 #: qtgui/rwmolecule.cpp:685
-#, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr "Asimetrik Birime İndirge"
+msgstr "Hücreyi Asimetrik Birime İndirge"
 
 #: qtgui/rwmolecule_undo.h:30
 msgid "Modify Molecule"
@@ -1423,9 +1416,8 @@ msgid "ThreeDMol"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:43
-#, fuzzy
 msgid "Run APBS..."
-msgstr "APBS'yi çalıştır"
+msgstr "APBS'yi çalıştır..."
 
 #: qtplugins/apbs/apbs.cpp:48
 msgid "Open Output File..."
@@ -1441,7 +1433,7 @@ msgstr "&Girdi"
 
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
-msgstr ""
+msgstr "&APBS"
 
 #: qtplugins/apbs/apbs.cpp:73 qtplugins/cp2kinput/cp2kinput.cpp:80
 #: qtplugins/gamessinput/gamessinput.cpp:83
@@ -1460,7 +1452,7 @@ msgstr "G/Ç Hatası"
 #: qtplugins/apbs/apbs.cpp:128
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr ""
+msgstr "Yapı dosyası okunurken hata oluştu (%1)."
 
 #: qtplugins/apbs/apbs.cpp:148 qtplugins/apbs/apbs.cpp:155
 msgid "OpenDX Error"
@@ -1473,13 +1465,13 @@ msgstr "OpenDX dosyası okunurken hata oluştu: %1"
 
 #: qtplugins/apbs/apbs.cpp:156
 msgid "Error reading OpenDX file: No cube found"
-msgstr ""
+msgstr "OpenDX dosyası okunurken hata oluştu: Küp bulunamadı"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
 #: qtplugins/apbs/apbs.h:42:87
 msgid "APBS"
-msgstr ""
+msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:45
 msgid "Interact with APBS utilities."
@@ -1487,7 +1479,7 @@ msgstr "APBS yardımcı programlarıyla etkileşim kurun."
 
 #: qtplugins/apbs/apbsdialog.cpp:91
 msgid "Open PDB File"
-msgstr ""
+msgstr "PDB Dosyası Aç"
 
 #: qtplugins/apbs/apbsdialog.cpp:92
 msgid "PDB Files (*.pdb)"
@@ -1495,7 +1487,7 @@ msgstr "PDB Dosyaları (* .pdb)"
 
 #: qtplugins/apbs/apbsdialog.cpp:102
 msgid "Open PQR File"
-msgstr ""
+msgstr "PQR Dosyası Aç"
 
 #: qtplugins/apbs/apbsdialog.cpp:103
 msgid "PQR Files (*.pqr)"
@@ -1551,45 +1543,40 @@ msgstr "Giriş dosyası '%1' e yazılmış"
 
 #: qtplugins/applycolors/applycolors.cpp:29
 #: qtplugins/applycolors/applycolors.cpp:50
-#, fuzzy
 msgid "By Custom Color..."
-msgstr "Özel Renk:"
+msgstr "Özel Renge Göre..."
 
 #: qtplugins/applycolors/applycolors.cpp:34
-#, fuzzy
 msgid "By Atomic Index"
-msgstr "Atom numarası."
+msgstr "Atom Dizinine Göre"
 
 #: qtplugins/applycolors/applycolors.cpp:39
-#, fuzzy
 msgid "By Distance"
-msgstr "Uzaklığa göre Renklendir"
+msgstr "Uzaklığa Göre"
 
 #: qtplugins/applycolors/applycolors.cpp:44
-#, fuzzy
 msgid "By Element"
-msgstr "Element"
+msgstr "Elemente Göre"
 
 #: qtplugins/applycolors/applycolors.cpp:55
 msgid "By Chain"
-msgstr ""
+msgstr "Zincire Göre"
 
 #: qtplugins/applycolors/applycolors.cpp:60
-#, fuzzy
 msgid "By Secondary Structure"
-msgstr "Proteinin ikinci yapısını kaplar"
+msgstr "İkincil Yapıya Göre"
 
 #: qtplugins/applycolors/applycolors.cpp:65
 msgid "By Amino Acid"
-msgstr ""
+msgstr "Amino Aside Göre"
 
 #: qtplugins/applycolors/applycolors.cpp:70
 msgid "By Shapely Scheme"
-msgstr ""
+msgstr "Şekil Düzenine Göre"
 
 #: qtplugins/applycolors/applycolors.cpp:84
 msgid "Apply color schemes to atoms and residues."
-msgstr ""
+msgstr "Atomlara ve kalıntılara renk düzenleri uygula."
 
 #: qtplugins/applycolors/applycolors.cpp:95
 #: qtplugins/applycolors/applycolors.cpp:97
@@ -1599,33 +1586,29 @@ msgid "&View"
 msgstr "&Göster"
 
 #: qtplugins/applycolors/applycolors.cpp:95
-#, fuzzy
 msgid "Color Atoms"
-msgstr "Atom Çiz"
+msgstr "Atomları Renklendir"
 
 #: qtplugins/applycolors/applycolors.cpp:97
-#, fuzzy
 msgid "Color Residues"
-msgstr "Kalıntıya Göre Renk"
+msgstr "Kalıntıları Renklendir"
 
 #: qtplugins/applycolors/applycolors.h:27
 msgid "ApplyColors"
-msgstr ""
+msgstr "Renkleri Uygula"
 
 #: qtplugins/ballandstick/ballandstick.cpp:92
 msgid "Atom scale"
-msgstr ""
+msgstr "Atom ölçeği"
 
 #: qtplugins/ballandstick/ballandstick.cpp:101
-#, fuzzy
 msgid "Bond scale"
-msgstr "Bağ SIrası"
+msgstr "Bağ ölçeği"
 
 #: qtplugins/ballandstick/ballandstick.cpp:104
 #: qtplugins/wireframe/wireframe.cpp:93
-#, fuzzy
 msgid "Show multiple bonds"
-msgstr "Birden çok bağ gösterilsin mi?"
+msgstr "Çoklu bağları göster"
 
 #: qtplugins/ballandstick/ballandstick.cpp:110
 #: qtplugins/wireframe/wireframe.cpp:99
@@ -1638,12 +1621,11 @@ msgstr "Top ve Çubuk"
 
 #: qtplugins/ballandstick/ballandstick.h:33
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr ""
+msgstr "Atomları küre, bağları silindir olarak işle."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:302
-#, fuzzy
 msgid "Bond-Centric Manipulation"
-msgstr "Bağ merkezli manipülasyon"
+msgstr "Bağ Merkezli Yönlendirme"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:950
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:1038
@@ -1652,7 +1634,7 @@ msgstr "Bağ merkezli manipülasyon"
 #: qtplugins/measuretool/measuretool.cpp:206
 #, qt-format
 msgid "%L1°"
-msgstr ""
+msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:972
 #: qtplugins/editor/editor.cpp:237 qtplugins/measuretool/measuretool.cpp:214
@@ -1660,7 +1642,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:217
 #, qt-format
 msgid "%L1 Å"
-msgstr ""
+msgstr "%L1 Å"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:188
 msgid "Bond centric manipulation tool."
@@ -1670,16 +1652,16 @@ msgstr "Bağ merkezli manipülasyon aracı."
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
-"Bağ uzunluklarını ve açılarını değiştirerek moleküler geometriyi düzenlemek "
+"Bağ uzunluklarını ve açılarını değiştirerek molekül geometrisini düzenlemek "
 "için kullanılan araç."
 
 #: qtplugins/bonding/bonding.cpp:40
 msgid "Bond Atoms"
-msgstr ""
+msgstr "Atomları Bağla"
 
 #: qtplugins/bonding/bonding.cpp:41
 msgid "Remove Bonds"
-msgstr ""
+msgstr "Bağları Kaldır"
 
 #: qtplugins/bonding/bonding.cpp:42
 msgid "Configure Bonding…"
@@ -1710,32 +1692,29 @@ msgstr "Bağlama işlemlerini gerçekleştirin."
 #: qtplugins/cartoons/cartoons.cpp:96
 msgctxt "protein rendering style"
 msgid "Backbone"
-msgstr ""
+msgstr "Omurga"
 
 #: qtplugins/cartoons/cartoons.cpp:97
 msgctxt "protein rendering style"
 msgid "Trace"
-msgstr ""
+msgstr "İz"
 
 #: qtplugins/cartoons/cartoons.cpp:98
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr ""
+msgstr "Tüp"
 
 #: qtplugins/cartoons/cartoons.cpp:99
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Ribbon"
 msgstr "Şerit"
 
 #: qtplugins/cartoons/cartoons.cpp:100
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "Karikatür"
+msgstr "Basit Karikatür"
 
 #: qtplugins/cartoons/cartoons.cpp:101
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Cartoon"
 msgstr "Karikatür"
@@ -1743,16 +1722,15 @@ msgstr "Karikatür"
 #: qtplugins/cartoons/cartoons.cpp:102
 msgctxt "protein rendering style"
 msgid "Rope"
-msgstr ""
+msgstr "İp"
 
 #: qtplugins/cartoons/cartoons.h:34
-#, fuzzy
 msgid "Simple display of Cartoons family."
-msgstr "VdW kürelerinin basit gösterimi."
+msgstr "Karikatürler ailesinin basit gösterimi."
 
 #: qtplugins/clientserver/clientserver.cpp:73
 msgid "Client server operations."
-msgstr ""
+msgstr "İstemci sunucu işlemleri."
 
 #: qtplugins/clientserver/clientserver.cpp:83
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:89
@@ -1766,7 +1744,7 @@ msgstr "&Eklentiler"
 
 #: qtplugins/clientserver/clientserver.cpp:83
 msgid "S&erver"
-msgstr ""
+msgstr "&Sunucu"
 
 #: qtplugins/clientserver/clientserver.cpp:159
 msgid "Connection failed"
@@ -1791,7 +1769,7 @@ msgstr "Bağlantı başarısız oldu: %1"
 #: qtplugins/clientserver/clientserver.cpp:252
 #, qt-format
 msgid "clientServer/%1:%2/lastOpenDir"
-msgstr ""
+msgstr "istemciSunucu/%1:%2/açılanSonDizin"
 
 #: qtplugins/clientserver/clientserver.cpp:264
 #, qt-format
@@ -1882,9 +1860,8 @@ msgid "Atomic &Coordinate Editor..."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:39
-#, fuzzy
 msgid "Coordinate editor"
-msgstr "Kartezyen koordinatları editörü"
+msgstr "Koordinat düzenleyicisi"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:43
 msgid "Text editing of atomic coordinates."
@@ -2132,23 +2109,20 @@ msgid "Energy and Forces"
 msgstr "Enerji ve Kuvvetler"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:278
-#, fuzzy
 msgid "Molecular Dynamics"
-msgstr "Molekül Özellikleri"
+msgstr "Molekül Dinamikleri"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:281
-#, fuzzy
 msgid "Geometry Optimization"
-msgstr "Geometrik Optimizasyon"
+msgstr "Geometri İyileştirmesi"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:350
 msgid "Electronic structure methods (DFT)"
 msgstr "Elektronik yapı yöntemleri (DFT)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:353
-#, fuzzy
 msgid "Molecular Mechanics"
-msgstr "Molekül Özellikleri"
+msgstr "Molekül Mekanikleri"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:356
 msgid "Hybrid quantum classical (Not yet supported)"
@@ -2246,9 +2220,8 @@ msgid "Submit CP2K Calculation"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:54 qtplugins/crystal/crystal.cpp:182
-#, fuzzy
 msgid "Import Crystal from Clipboard"
-msgstr "&Panodan Kristal Al"
+msgstr "Kristali Panodan İçe Aktar"
 
 #: qtplugins/crystal/crystal.cpp:61
 msgid "Toggle Unit Cell"
@@ -2259,19 +2232,16 @@ msgid "Edit Unit Cell..."
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:71
-#, fuzzy
 msgid "&Wrap Atoms to Unit Cell"
-msgstr "&Atomları Hücreye Sar"
+msgstr "&Atomları Birim Hücreye Sar"
 
 #: qtplugins/crystal/crystal.cpp:77
-#, fuzzy
 msgid "Rotate to Standard &Orientation"
-msgstr "Standart Yerleşime Döndür"
+msgstr "Standart &Yerleşime Döndür"
 
 #: qtplugins/crystal/crystal.cpp:83
-#, fuzzy
 msgid "Scale Cell &Volume"
-msgstr "Hücreyi %Hacme... Uyarla"
+msgstr "Hücre &Hacmini Uyarla"
 
 #: qtplugins/crystal/crystal.cpp:88
 msgid "Build &Supercell"
@@ -2284,9 +2254,8 @@ msgstr "Hücre İndirge (&Niggli)"
 #: qtplugins/crystal/crystal.cpp:117 qtplugins/plotpdf/plotpdf.cpp:66
 #: qtplugins/plotrmsd/plotrmsd.cpp:61 qtplugins/plotxrd/plotxrd.cpp:63
 #: qtplugins/spacegroup/spacegroup.cpp:118
-#, fuzzy
 msgid "&Crystal"
-msgstr "&Kristalografi"
+msgstr "&Kristal"
 
 #: qtplugins/crystal/crystal.cpp:163
 msgid "Remove &Unit Cell"
@@ -2301,14 +2270,12 @@ msgid "Niggli Reduce Crystal"
 msgstr "Niggli Kristali Azalt"
 
 #: qtplugins/crystal/crystal.cpp:208
-#, fuzzy
 msgid "The unit cell is already reduced."
-msgstr "Bu birim hücre zaten standart Niggli gösterimine indirgenmiş."
+msgstr "Birim hücre zaten indirgendi."
 
 #: qtplugins/crystal/crystal.h:36
-#, fuzzy
 msgid "Crystal"
-msgstr "Kristal Yapıştır"
+msgstr "Kristal"
 
 #: qtplugins/crystal/crystal.h:75
 msgid "Tools for crystal-specific editing/analysis."
@@ -2418,7 +2385,7 @@ msgstr ""
 #: qtplugins/fetchpdb/fetchpdb.cpp:76
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
 msgid "Chemical structure to download."
-msgstr "İndirme işlemi için kimyasal yapı"
+msgstr "İndirilecek kimyasal yapı."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:88
 #: qtplugins/networkdatabases/networkdatabases.cpp:102
@@ -2444,9 +2411,8 @@ msgid "Specified molecule could not be found: %1"
 msgstr "Belirtilen molekül bulunamadı : %1"
 
 #: qtplugins/fetchpdb/fetchpdb.h:35
-#, fuzzy
 msgid "Fetch from PDB"
-msgstr "PDB'den Al..."
+msgstr "PDB'den Al"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
@@ -2461,23 +2427,20 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Molekülün atomları için kuvvet alanı görselleştirmelerini işle."
 
 #: qtplugins/gamessinput/gamessinput.cpp:45
-#, fuzzy
 msgid "&GAMESS..."
-msgstr "&GAMESS"
+msgstr "&GAMESS..."
 
 #: qtplugins/gamessinput/gamessinput.h:45
-#, fuzzy
 msgid "GAMESS input"
-msgstr "GAMESS"
+msgstr "GAMESS girdisi"
 
 #: qtplugins/gamessinput/gamessinput.h:49
 msgid "Generate input for GAMESS."
 msgstr "GAMESS için girdi oluşturun."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:237
-#, fuzzy
 msgid "Single Point"
-msgstr "&Açı Birimi"
+msgstr "Tek Nokta"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:240
 msgid "Equilibrium Geometry"
@@ -2614,14 +2577,12 @@ msgid "Insert Fragment"
 msgstr "Parça Ekle"
 
 #: qtplugins/insertfragment/insertfragment.h:46
-#, fuzzy
 msgid "InsertFragment"
 msgstr "Parça Ekle"
 
 #: qtplugins/insertfragment/insertfragment.h:71
-#, fuzzy
 msgid "Insert molecular fragments for building larger molecules."
-msgstr "Daha büyük moleküller inşa etmek için molekül parçaları ekle"
+msgstr "Daha büyük moleküller inşa etmek için molekül parçaları ekle."
 
 #: qtplugins/label/label.cpp:134
 msgid "Color:"
@@ -2659,9 +2620,8 @@ msgid "El."
 msgstr ""
 
 #: qtplugins/label/label.cpp:171
-#, fuzzy
 msgid "Element & Ordinal"
-msgstr "Element"
+msgstr "Element ve Sıra"
 
 #: qtplugins/label/label.cpp:172
 msgid "El.&Or."
@@ -2702,9 +2662,8 @@ msgid "Display labels on ball and stick style."
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:31
-#, fuzzy
 msgid "Write"
-msgstr "yaz"
+msgstr "Yaz"
 
 #: qtplugins/label/labeleditor.cpp:66
 msgid "Create Label"
@@ -2727,13 +2686,12 @@ msgid "Generate input for LAMMPS."
 msgstr ""
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:156
-#, fuzzy
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
 msgstr ""
-"Önceki yazıyı değiştirmek istiyor musunuz, Gaussian girdi destesinin "
-"önizleme bölmesinde yapılan değişikliklerin hepsi kaybedilecek ?"
+"Ön izleme metnini güncellemek istiyor musunuz, Lammps girdi destesinin ön "
+"izleme bölmesinde yapılan tüm değişiklikler kaybedilecek?"
 
 #: qtplugins/licorice/licorice.h:33
 msgid "Render atoms as licorice / sticks."
@@ -2813,9 +2771,8 @@ msgid "Angle:"
 msgstr "Açı:"
 
 #: qtplugins/measuretool/measuretool.cpp:204
-#, fuzzy
 msgid "Angles:"
-msgstr "Açı %1"
+msgstr "Açılar:"
 
 #: qtplugins/measuretool/measuretool.h:48
 #: qtplugins/measuretool/measuretool.h:49
@@ -2897,14 +2854,12 @@ msgid "Autodetect (%1)"
 msgstr "Otomatik algılama (%1)"
 
 #: qtplugins/openbabel/openbabel.cpp:41 qtplugins/openbabel/openbabel.cpp:488
-#, fuzzy
 msgid "Optimize Geometry"
-msgstr "Geometriyi &Optimize Et"
+msgstr "Geometriyi İyileştir"
 
 #: qtplugins/openbabel/openbabel.cpp:48
-#, fuzzy
 msgid "Configure Force Field..."
-msgstr "Kuvvet Alanı Kur..."
+msgstr "Kuvvet Alanını Yapılandır..."
 
 #: qtplugins/openbabel/openbabel.cpp:54
 #, fuzzy
@@ -2959,7 +2914,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:355
 msgid "Molecule invalid. Cannot optimize geometry."
-msgstr "Molekül geçersiz. Geometriyi optimize edemez."
+msgstr "Molekül geçersiz. Geometri iyileştirilemiyor."
 
 #: qtplugins/openbabel/openbabel.cpp:373
 msgid "Cannot optimize geometry with Open Babel."
@@ -3011,8 +2966,8 @@ msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
-"%1 eğri dosyasındaki atom sayısı şimdiki moleküldeki atom sayısıyla "
-"uyuşmuyor."
+"obabel çıktısındaki atom sayısı (%1), orijinal moleküldeki atom sayısıyla "
+"(%2) eşleşmiyor."
 
 #: qtplugins/openbabel/openbabel.cpp:497
 msgid "Cannot open file with Open Babel."
@@ -3189,9 +3144,8 @@ msgid "True"
 msgstr "Doğru"
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
-#, fuzzy
 msgid "Reference Axes"
-msgstr "&Referans:"
+msgstr "Referans Eksenleri"
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
@@ -3225,9 +3179,8 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: qtplugins/playertool/playertool.cpp:124:1540
-#, fuzzy
 msgid "Frame:"
-msgstr "Kalan İsmi"
+msgstr "Kare:"
 
 #: qtplugins/playertool/playertool.cpp:131
 #: qtplugins/playertool/playertool.cpp:416
@@ -3284,7 +3237,7 @@ msgstr "Avogadro"
 
 #: qtplugins/playertool/playertool.cpp:351 qtplugins/surfaces/surfaces.cpp:480
 msgid "Error: cannot add frame to video."
-msgstr "Hata: videoya çerçeve eklenemiyor."
+msgstr "Hata: videoya kare eklenemiyor."
 
 #: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:492
 #, qt-format
@@ -3526,9 +3479,8 @@ msgstr "Atom %1"
 
 #: qtplugins/propertytables/propertymodel.cpp:416
 #: qtplugins/propertytables/propertymodel.cpp:435
-#, fuzzy
 msgid "Angle (°)"
-msgstr "Açı:"
+msgstr "Açı (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:429
 #, fuzzy
@@ -3637,9 +3589,8 @@ msgid "Residue Properties"
 msgstr "Bağ Özellikleri"
 
 #: qtplugins/propertytables/propertyview.cpp:49
-#, fuzzy
 msgid "Molecule Properties"
-msgstr "Molekük Özellikleri..."
+msgstr "Molekül Özellikleri"
 
 #: qtplugins/qtaim/qtaimengine.h:39 qtplugins/qtaim/qtaimextension.cpp:90
 #: qtplugins/qtaim/qtaimextension.h:35
@@ -3648,11 +3599,11 @@ msgstr "QTAIM (MAKT)"
 
 #: qtplugins/qtaim/qtaimengine.h:43
 msgid "Renders primitives using QTAIM properties"
-msgstr "QTAIM özellikleri ile en basit öğeleri işler."
+msgstr "Temel ögeleri QTAIM özelliklerini kullanarak işler"
 
 #: qtplugins/qtaim/qtaimextension.cpp:59
 msgid "Molecular Graph..."
-msgstr "Moleküler Grafik ..."
+msgstr "Molekül Grafiği..."
 
 #: qtplugins/qtaim/qtaimextension.cpp:66
 msgid "Molecular Graph with Lone Pairs..."
@@ -3990,9 +3941,8 @@ msgid "Class"
 msgstr "Sınıf"
 
 #: qtplugins/symmetry/symmetry.cpp:42
-#, fuzzy
 msgid "Symmetry..."
-msgstr "Simetri"
+msgstr "Simetri..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
@@ -4017,9 +3967,9 @@ msgid "∞"
 msgstr ""
 
 #: qtplugins/symmetry/symmetrywidget.cpp:341
-#, fuzzy, qt-format
+#, qt-format
 msgid "Group %1"
-msgstr "Grup Adı"
+msgstr "Grup %1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:349
 #, qt-format
@@ -4161,9 +4111,8 @@ msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
 msgid "Save Input..."
-msgstr "APBS Giriş Dosyasını Kaydet"
+msgstr "Girdiyi Kaydet..."
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -4181,6 +4130,8 @@ msgid ""
 "<html><head/><body><p>Number of processor cores to reserve for this job.</"
 "p></body></html>"
 msgstr ""
+"<html><head/><body><p>Bu iş için ayrılacak işlemci çekirdeği "
+"sayısı.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -4194,6 +4145,9 @@ msgid ""
 "Results will still be copied to the local MoleQueue job cache first.</p></"
 "body></html>"
 msgstr ""
+"<html><head/><body><p>İş tamamlandıktan sonra uzaktaki çalışma dosyalarını "
+"sil. Sonuçlar yine de ilk olarak yerel MoleQueue iş önbelleğine "
+"kopyalanacaktır.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4220,6 +4174,8 @@ msgid ""
 "<html><head/><body><p>Show a system popup notification when the job's status "
 "changes.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>İşin durumu değiştiğinde bir sistem açılır bildirimi "
+"göster.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:161
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -4229,7 +4185,7 @@ msgstr "İlerleme bildirimlerini göster:"
 #. i18n: file: molequeue/molequeuewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, openOutputLabel)
 msgid "Open output when finished:"
-msgstr ""
+msgstr "Bittiğinde çıktıyı aç:"
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
@@ -4360,9 +4316,8 @@ msgstr "Yapı Dosyasını Yükle"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:37
 #. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
-#, fuzzy
 msgid "Load Cube File"
-msgstr "Dosya yükle..."
+msgstr "Küp Dosyasını Yükle"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5735,9 +5690,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_forceField)
-#, fuzzy
 msgid "Forcefield:"
-msgstr "Kuvvet Alanı"
+msgstr "Kuvvet Alanı:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:99
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
@@ -5801,9 +5755,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
-#, fuzzy
 msgid "Reference"
-msgstr "&Referans:"
+msgstr "Referans"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
@@ -6542,73 +6495,14 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-",Launchpad Contributions:,Osman Tosun,Yahuda,aLsanCaK,hknrgl, ,Launchpad "
-"Contributions:,Osman Tosun,huseyinkozan, ,Launchpad Contributions:,Efe "
-"Çiftci,Osman Tosun,hayrettin çevik,huseyinkozan, ,Launchpad Contributions:,"
-"Efe Çiftci,Mustafa Yılmaz,Osman Tosun,Serdar Delican,Yiğit Ateş,hayrettin "
-"çevik,huseyinkozan, ,Launchpad Contributions:,Can Bülbül,Efe Çiftci,Mustafa "
-"Yılmaz,Osman Tosun,Serdar Delican,Yiğit Ateş,hayrettin çevik,huseyinkozan, ,"
-"Launchpad Contributions:,Can Bülbül,Devrim Şahin,Efe Çiftci,Mustafa Yılmaz,"
-"Osman Tosun,Yiğit Ateş,efuyam,hayrettin çevik,huseyinkozan, ,Launchpad "
-"Contributions:,Can Bülbül,Devrim Şahin,Efe Çiftci,Mustafa Yılmaz,Osman Tosun,"
-"Yiğit Ateş,efuyam,hayrettin çevik,huseyinkozan, ,Launchpad Contributions:,"
-"Can Bülbül,Devrim Şahin,Efe Çiftci,Engin BAHADIR,Mustafa Yılmaz,Osman Tosun,"
-"Yiğit Ateş,efuyam,hayrettin çevik,huseyinkozan, ,Launchpad Contributions:,"
-"Avogadro Team,Can Bülbül,Devrim Şahin,Efe Çiftci,Engin BAHADIR,Mustafa "
-"Yılmaz,Osman Tosun,Yiğit Ateş,efuyam,hayrettin çevik,huseyinkozan, ,"
-"Launchpad Contributions:,Avogadro Team,Can Bülbül,Devrim Şahin,Efe Çiftci,"
-"Engin BAHADIR,Mustafa Yılmaz,Osman Tosun,Yiğit Ateş,efuyam,hayrettin çevik,"
-"huseyinkozan, ,Launchpad Contributions:,Avogadro Team,Can Bülbül,Devrim "
-"Şahin,Ebru Ersoy,Efe Çiftci,Enes Ateş,Engin BAHADIR,Fatih Bostancı,Hüseyin "
-"Kozan,Kudret EMRE,Mesut Yaver,Mustafa Yılmaz,Osman Tosun,Serdar Delican,"
-"Sinan Özgün,Yiğit Ateş,can kaçan,hayrettin çevik,kulkke,ozan,ubuntuki,yasin "
-"özdemir, ,Launchpad Contributions:,Avogadro Team,Can Bülbül,Devrim Şahin,"
-"Ebru Ersoy,Efe Çiftci,Enes Ateş,Engin BAHADIR,Fatih Bostancı,Hüseyin Kozan,"
-"Kudret EMRE,Mesut Yaver,Mustafa Yılmaz,Osman Tosun,Serdar Delican,Sinan "
-"Özgün,Yiğit Ateş,can kaçan,haydar,hayrettin çevik,kulkke,ozan,ubuntuki,yasin "
-"özdemir, ,Launchpad Contributions:,Avogadro Team,Can Bülbül,Devrim Şahin,"
-"Ebru Ersoy,Efe Çiftci,Enes Ateş,Engin BAHADIR,Fatih Bostancı,Hüseyin Kozan,"
-"Kudret EMRE,Mesut Yaver,Mustafa Yılmaz,Osman Tosun,Serdar Delican,Sinan "
-"Özgün,Yiğit Ateş,can kaçan,haydar,hayrettin çevik,kulkke,ozan,ubuntuki,yasin "
-"özdemir"
+"Launchpad Contributors\n"
+"Oğuz Ersen"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-",,rainman.neu@gmail.com,,,hknrgl@gmail.com,,,rainman.neu@gmail.com,"
-"huseyinkozan@gmail.com,,,efeciftci@gmail.com,rainman.neu@gmail.com,"
-"hayros@gmail.com,huseyinkozan@gmail.com,,,efe.ciftci@linux.org.tr,"
-"apshalasha@gmail.com,rainman.neu@gmail.com,,yigitates52@gmail.com,"
-"hayros@gmail.com,huseyinkozan@gmail.com,,,a_bulbul@ug.bilkent.edu.tr,efe."
-"ciftci@linux.org.tr,apshalasha@gmail.com,rainman.neu@gmail.com,,"
-"yigitates52@gmail.com,hayros@gmail.com,huseyinkozan@gmail.com,,,a_bulbul@ug."
-"bilkent.edu.tr,room449@gmail.com,efe.ciftci@linux.org.tr,apshalasha@gmail."
-"com,rainman.neu@gmail.com,yigitates52@gmail.com,,hayros@gmail.com,"
-"huseyinkozan@gmail.com,,,a_bulbul@ug.bilkent.edu.tr,room449@gmail.com,efe."
-"ciftci@linux.org.tr,apshalasha@gmail.com,rainman.neu@gmail.com,"
-"yigitates@ceviri.ubuntu-tr.net,,hayros@gmail.com,huseyinkozan@gmail.com,,,"
-"a_bulbul@ug.bilkent.edu.tr,room449@gmail.com,efe.ciftci@linux.org.tr,,"
-"apshalasha@gmail.com,rainman.neu@gmail.com,yigitates@ceviri.ubuntu-tr.net,,"
-"hayros@gmail.com,huseyinkozan@gmail.com,,,avogadro-devel@lists.sourceforge."
-"net,a_bulbul@ug.bilkent.edu.tr,room449@gmail.com,efe.ciftci@linux.org.tr,,"
-"apshalasha@gmail.com,rainman.neu@gmail.com,yigitates@ceviri.ubuntu-tr.net,,"
-"hayros@gmail.com,huseyinkozan@gmail.com,,,avogadro-devel@lists.sourceforge."
-"net,a_bulbul@ug.bilkent.edu.tr,room449@gmail.com,efe.ciftci@linux.org.tr,,"
-"apshalasha@gmail.com,rainman.neu@gmail.com,yigitates@ceviri.ubuntu-tr.net,,"
-"hayros@gmail.com,huseyinkozan@gmail.com,,,avogadro-devel@lists.sourceforge."
-"net,a_bulbul@ug.bilkent.edu.tr,room449@gmail.com,,efe.ciftci@linux.org.tr,,,"
-"faopera@gmail.com,posta@huseyinkozan.com.tr,kudretemre@hotmail.com,,"
-"apshalasha@gmail.com,rainman.neu@gmail.com,,para4360@gmail.com,,"
-"cankacan.47@gmail.com,hayros@gmail.com,,snow6.junk@gmail.com,,,,,avogadro-"
-"devel@lists.sourceforge.net,a_bulbul@ug.bilkent.edu.tr,room449@gmail.com,,"
-"efe.ciftci@linux.org.tr,,,faopera@gmail.com,,kudretemre@hotmail.com,,"
-"apshalasha@gmail.com,rainman.neu@gmail.com,,para4360@gmail.com,,"
-"cankacan.47@gmail.com,hhaydarakdag@gmail.com,hayros@gmail.com,,snow6."
-"junk@gmail.com,,,,,avogadro-devel@lists.sourceforge.net,a_bulbul@ug.bilkent."
-"edu.tr,room449@gmail.com,,efe.ciftci@linux.org.tr,,,faopera@gmail.com,,"
-"kudretemre@hotmail.com,,apshalasha@gmail.com,rainman.neu@gmail.com,,"
-"para4360@gmail.com,,cankacan.47@gmail.com,hhaydarakdag@gmail.com,"
-"hayros@gmail.com,,snow6.junk@gmail.com,,"
+"avogadro-devel@lists.sourceforge.net\n"
+"oguzersen@protonmail.com"
 
 #~ msgid "Theory:"
 #~ msgstr "Teori:"
