@@ -68,7 +68,7 @@ ColorOpacityMap::ColorOpacityMap(QObject* p)
   : Avogadro::QtGui::ExtensionPlugin(p), m_actions(QList<QAction*>()),
     m_displayDialogAction(new QAction(this))
 {
-  m_displayDialogAction->setText(tr("Edit Color Opacity Map..."));
+  m_displayDialogAction->setText(tr("Edit Color Opacity Map…"));
   connect(m_displayDialogAction.data(), &QAction::triggered, this,
           &ColorOpacityMap::displayDialog);
   m_actions.push_back(m_displayDialogAction.data());

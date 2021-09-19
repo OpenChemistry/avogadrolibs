@@ -45,7 +45,7 @@ PlotPdf::PlotPdf(QObject* parent_)
   , m_pdfOptionsDialog(new PdfOptionsDialog(qobject_cast<QWidget*>(parent())))
   , m_displayDialogAction(new QAction(this))
 {
-  m_displayDialogAction->setText(tr("Plot Pair Distribution Function..."));
+  m_displayDialogAction->setText(tr("Plot Pair Distribution Function…"));
   connect(m_displayDialogAction.data(), &QAction::triggered, this,
           &PlotPdf::displayDialog);
   m_actions.push_back(m_displayDialogAction.data());

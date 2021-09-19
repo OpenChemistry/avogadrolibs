@@ -42,7 +42,7 @@ GamessInput::GamessInput(QObject* parent_)
     m_dialog(nullptr), m_outputFormat(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText(tr("&GAMESS..."));
+  m_action->setText(tr("&GAMESS…"));
   connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
 }
 

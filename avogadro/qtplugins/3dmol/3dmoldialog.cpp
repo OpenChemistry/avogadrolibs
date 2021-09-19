@@ -58,7 +58,7 @@ void ThreeDMolDialog::setMolecule(QtGui::Molecule* mol)
 
   connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateLabels()));
   connect(m_molecule, SIGNAL(destroyed()), SLOT(moleculeDestroyed()));
-  connect(m_ui->exitButton, SIGNAL(clicked()), SLOT(close()));
+  connect(m_ui->closeButton, SIGNAL(clicked()), SLOT(close()));
   connect(m_ui->copyButton, SIGNAL(clicked()), SLOT(copyToClipboard()));
 
   updateLabels();

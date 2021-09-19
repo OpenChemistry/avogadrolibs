@@ -26,7 +26,7 @@ ApplyColors::ApplyColors(QObject* parent_)
 {
   QAction* action;
 
-  action = new QAction(tr("By Custom Color..."), this);
+  action = new QAction(tr("By Custom Color…"), this);
   action->setData(atomColors);
   connect(action, SIGNAL(triggered()), SLOT(openColorDialog()));
   m_actions.append(action);
@@ -47,7 +47,7 @@ ApplyColors::ApplyColors(QObject* parent_)
   m_actions.append(action);
 
   // not sure if we want to color atoms by residue or not...
-  action = new QAction(tr("By Custom Color..."), this);
+  action = new QAction(tr("By Custom Color…"), this);
   action->setData(residueColors);
   connect(action, SIGNAL(triggered()), SLOT(openColorDialogResidue()));
   m_actions.append(action);

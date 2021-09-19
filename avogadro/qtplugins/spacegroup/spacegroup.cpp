@@ -60,7 +60,7 @@ SpaceGroup::SpaceGroup(QObject* parent_)
     m_reduceToAsymmetricUnitAction(new QAction(this)),
     m_setToleranceAction(new QAction(this))
 {
-  m_perceiveSpaceGroupAction->setText(tr("Perceive Space Group"));
+  m_perceiveSpaceGroupAction->setText(tr("Perceive Space Group…"));
   connect(m_perceiveSpaceGroupAction, SIGNAL(triggered()),
           SLOT(perceiveSpaceGroup()));
   m_actions.push_back(m_perceiveSpaceGroupAction);
@@ -83,7 +83,7 @@ SpaceGroup::SpaceGroup(QObject* parent_)
   m_actions.push_back(m_symmetrizeAction);
   m_symmetrizeAction->setProperty("menu priority", 60);
 
-  m_fillUnitCellAction->setText(tr("Fill Unit Cell"));
+  m_fillUnitCellAction->setText(tr("Fill Unit Cell…"));
   connect(m_fillUnitCellAction, SIGNAL(triggered()), SLOT(fillUnitCell()));
   m_actions.push_back(m_fillUnitCellAction);
   m_fillUnitCellAction->setProperty("menu priority", 50);
@@ -94,7 +94,7 @@ SpaceGroup::SpaceGroup(QObject* parent_)
   m_actions.push_back(m_reduceToAsymmetricUnitAction);
   m_reduceToAsymmetricUnitAction->setProperty("menu priority", 40);
 
-  m_setToleranceAction->setText(tr("Set Tolerance"));
+  m_setToleranceAction->setText(tr("Set Tolerance…"));
   connect(m_setToleranceAction, SIGNAL(triggered()), SLOT(setTolerance()));
   m_actions.push_back(m_setToleranceAction);
   m_setToleranceAction->setProperty("menu priority", 0);

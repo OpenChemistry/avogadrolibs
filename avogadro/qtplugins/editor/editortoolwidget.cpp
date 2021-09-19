@@ -70,7 +70,7 @@ unsigned char EditorToolWidget::atomicNumber() const
 
   unsigned char atomicNum = static_cast<unsigned char>(itemData.toUInt());
 
-  // "Other..." selected....
+  // "Other…" selected....
   if (atomicNum == 0 && m_elementSelector)
     atomicNum = static_cast<unsigned char>(m_elementSelector->element());
 
@@ -135,7 +135,7 @@ void EditorToolWidget::updateElementCombo()
       atomicNum);
   }
   m_ui->element->insertSeparator(m_ui->element->count());
-  m_ui->element->addItem(tr("Other..."), ELEMENT_SELECTOR_TAG);
+  m_ui->element->addItem(tr("Other…"), ELEMENT_SELECTOR_TAG);
 
   // Reset the element if it still exists
   selectElement(static_cast<unsigned char>(

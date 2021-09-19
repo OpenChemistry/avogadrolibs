@@ -148,7 +148,7 @@ QWidget* PlayerTool::toolWidget() const
 
     QHBoxLayout* recordLayout = new QHBoxLayout;
     recordLayout->addStretch(1);
-    QPushButton* recordButton = new QPushButton(tr("Record Movie..."));
+    QPushButton* recordButton = new QPushButton(tr("Record Movie…"));
     connect(recordButton, SIGNAL(clicked()), SLOT(recordMovie()));
     recordLayout->addWidget(recordButton);
     recordLayout->addStretch(1);

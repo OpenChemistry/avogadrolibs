@@ -48,6 +48,9 @@ ResetView::ResetView(QObject* parent_)
   : ExtensionPlugin(parent_), m_centerAction(new QAction(tr("Center"), this)),
     m_viewToAxesAction(new QAction(tr("Align View to Axes"), this))
 {
+  m_centerAction->setProperty("menu priority", 210);
+  m_viewToAxesAction->setProperty("menu priority", 200);
+
   connect(m_centerAction, SIGNAL(triggered()), SLOT(centerView()));
   connect(m_viewToAxesAction, SIGNAL(triggered()), SLOT(alignToAxes()));
 }

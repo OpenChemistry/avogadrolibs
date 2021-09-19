@@ -38,7 +38,7 @@ LammpsInput::LammpsInput(QObject* parent_)
     m_dialog(nullptr), m_outputFormat(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText(tr("&LAMMPS..."));
+  m_action->setText(tr("&LAMMPS…"));
   connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
 }
 

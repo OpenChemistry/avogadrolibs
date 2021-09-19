@@ -51,7 +51,7 @@ Crystal::Crystal(QObject* parent_)
     m_toggleUnitCellAction(new QAction(this)),
     m_wrapAtomsToCellAction(new QAction(this))
 {
-  m_importCrystalClipboardAction->setText(tr("Import Crystal from Clipboard"));
+  m_importCrystalClipboardAction->setText(tr("Import Crystal from Clipboard…"));
   connect(m_importCrystalClipboardAction, SIGNAL(triggered()),
           SLOT(importCrystalClipboard()));
   m_actions.push_back(m_importCrystalClipboardAction);
@@ -63,7 +63,7 @@ Crystal::Crystal(QObject* parent_)
   m_actions.push_back(m_toggleUnitCellAction);
   m_toggleUnitCellAction->setProperty("menu priority", 210);
 
-  m_editUnitCellAction->setText(tr("Edit Unit Cell..."));
+  m_editUnitCellAction->setText(tr("Edit Unit Cell…"));
   connect(m_editUnitCellAction, SIGNAL(triggered()), SLOT(editUnitCell()));
   m_actions.push_back(m_editUnitCellAction);
   m_editUnitCellAction->setProperty("menu priority", 190);
@@ -80,12 +80,12 @@ Crystal::Crystal(QObject* parent_)
   m_actions.push_back(m_standardOrientationAction);
   m_standardOrientationAction->setProperty("menu priority", 170);
 
-  m_scaleVolumeAction->setText(tr("Scale Cell &Volume"));
+  m_scaleVolumeAction->setText(tr("Scale Cell &Volume…"));
   connect(m_scaleVolumeAction, SIGNAL(triggered()), SLOT(scaleVolume()));
   m_actions.push_back(m_scaleVolumeAction);
   m_scaleVolumeAction->setProperty("menu priority", 160);
 
-  m_buildSupercellAction->setText(tr("Build &Supercell"));
+  m_buildSupercellAction->setText(tr("Build &Supercell…"));
   connect(m_buildSupercellAction, SIGNAL(triggered()), SLOT(buildSupercell()));
   m_actions.push_back(m_buildSupercellAction);
   m_buildSupercellAction->setProperty("menu priority", 150);

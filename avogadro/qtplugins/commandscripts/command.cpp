@@ -272,7 +272,7 @@ void Command::updateActions()
 {
   m_actions.clear();
 
-  //  QAction* action = new QAction(tr("Set Python Path..."), this);
+  //  QAction* action = new QAction(tr("Set Python Path…"), this);
   //  connect(action, SIGNAL(triggered()), SLOT(configurePython()));
   //  m_actions << action;
 

@@ -30,7 +30,7 @@ MolecularProperties::MolecularProperties(QObject* parent_)
     m_dialog(nullptr), m_molecule(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText("&Molecular...");
+  m_action->setText("&Molecular…");
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 

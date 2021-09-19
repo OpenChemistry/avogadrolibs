@@ -35,7 +35,7 @@ Spectra::Spectra(QObject* p)
 {
   QAction* action = new QAction(this);
   action->setEnabled(false);
-  action->setText(tr("Vibrational modes..."));
+  action->setText(tr("Vibrational Modes…"));
   connect(action, SIGNAL(triggered()), SLOT(openDialog()));
   m_actions.push_back(action);
 }

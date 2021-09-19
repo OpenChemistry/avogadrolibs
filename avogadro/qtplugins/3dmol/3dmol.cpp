@@ -30,7 +30,7 @@ ThreeDMol::ThreeDMol(QObject* parent_)
     m_dialog(nullptr), m_molecule(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText("&3DMol HTML Snippet...");
+  m_action->setText("&3DMol HTML Snippet…");
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
