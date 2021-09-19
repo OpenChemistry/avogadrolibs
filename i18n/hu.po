@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-09-05 02:07+0000\n"
+"POT-Creation-Date: 2021-09-19 02:08+0000\n"
 "PO-Revision-Date: 2021-09-12 03:33+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
@@ -1194,14 +1194,14 @@ msgstr "Új nézet létrehozása"
 msgid "Periodic Table"
 msgstr "Periódusos rendszer"
 
-#: qtgui/pythonscript.cpp:79 qtgui/pythonscript.cpp:164
+#: qtgui/pythonscript.cpp:105 qtgui/pythonscript.cpp:190
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "Hiba történt a parancsfájl futtatásakor „%1 %2”: Időtúllépés várt a kezdésre "
 "(%3)."
 
-#: qtgui/pythonscript.cpp:89 qtgui/pythonscript.cpp:174
+#: qtgui/pythonscript.cpp:115 qtgui/pythonscript.cpp:200
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1210,14 +1210,14 @@ msgstr ""
 "Hiba történt a(z) „%1 %2” parancsfájl futtatásakor: nem sikerült írni az "
 "„stdin”-nek (len=%3, %4 bájtot írt, QProcess hiba: %5)."
 
-#: qtgui/pythonscript.cpp:102
+#: qtgui/pythonscript.cpp:128
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 "Hiba történt a(z) „%1 %2” parancsfájl futtatásakor: Időtúllépés vár a "
 "befejezésre (%3)."
 
-#: qtgui/pythonscript.cpp:110
+#: qtgui/pythonscript.cpp:136
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1231,27 +1231,27 @@ msgstr ""
 "Kimenet:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:211
+#: qtgui/pythonscript.cpp:237
 msgid "Script failed to start."
 msgstr "A parancsfájl indítása nem sikerült."
 
-#: qtgui/pythonscript.cpp:214
+#: qtgui/pythonscript.cpp:240
 msgid "Script crashed."
 msgstr "A parancsfájl összeomlott."
 
-#: qtgui/pythonscript.cpp:217
+#: qtgui/pythonscript.cpp:243
 msgid "Script timed out."
 msgstr "A parancsfájl ideje lejárt."
 
-#: qtgui/pythonscript.cpp:220
+#: qtgui/pythonscript.cpp:246
 msgid "Read error."
 msgstr "Olvasási hiba."
 
-#: qtgui/pythonscript.cpp:223
+#: qtgui/pythonscript.cpp:249
 msgid "Write error."
 msgstr "Írási hiba."
 
-#: qtgui/pythonscript.cpp:227
+#: qtgui/pythonscript.cpp:253
 msgid "Unknown error."
 msgstr "Ismeretlen hiba."
 
@@ -1279,7 +1279,7 @@ msgstr "Rétegadatok hozzáadása"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:204 qtgui/rwlayermanager.cpp:207
-#: qtplugins/selectiontool/selectiontool.cpp:260:1477
+#: qtplugins/selectiontool/selectiontool.cpp:267:1477
 msgid "Change Layer"
 msgstr "Réteg módosítása"
 
@@ -1288,7 +1288,7 @@ msgid "Add Atom"
 msgstr "Atom hozzáadása"
 
 #: qtgui/rwmolecule.cpp:81 qtgui/rwmolecule.cpp:96
-#: qtplugins/editor/editor.cpp:122
+#: qtplugins/editor/editor.cpp:126
 msgid "Remove Atom"
 msgstr "Atom eltávolítása"
 
@@ -1412,7 +1412,8 @@ msgid "Modify Molecule"
 msgstr "Molekula módosítása"
 
 #: qtplugins/3dmol/3dmol.cpp:43
-msgid "ThreeDMol HTML Block."
+#, fuzzy
+msgid "3DMol HTML Block."
 msgstr "3Dmol HTML-blokk."
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/fetchpdb/fetchpdb.cpp:41
@@ -1646,19 +1647,33 @@ msgstr ""
 msgid "Bond-Centric Manipulation"
 msgstr "Kötésközpontú kezelése"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:950
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:1038
-#: qtplugins/measuretool/measuretool.cpp:197
-#: qtplugins/measuretool/measuretool.cpp:205
-#: qtplugins/measuretool/measuretool.cpp:206
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:305
+msgid ""
+"Bond Centric Manipulation Tool\n"
+"\n"
+"Left Mouse: \tClick and drag to rotate the view.\n"
+"Middle Mouse: \tClick and drag to zoom in or out.\n"
+"Right Mouse: \tClick and drag to move the view.\n"
+"Double-Click: \tReset the view.\n"
+"\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag one of the Atoms in the Bond to change the angle\n"
+"Right Click & Drag one of the Atoms in the Bond to change the length"
+msgstr ""
+
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:959
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:1047
+#: qtplugins/measuretool/measuretool.cpp:202
+#: qtplugins/measuretool/measuretool.cpp:210
+#: qtplugins/measuretool/measuretool.cpp:211
 #, qt-format
 msgid "%L1°"
 msgstr "%L1°"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:972
-#: qtplugins/editor/editor.cpp:237 qtplugins/measuretool/measuretool.cpp:214
-#: qtplugins/measuretool/measuretool.cpp:215
-#: qtplugins/measuretool/measuretool.cpp:217
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:981
+#: qtplugins/editor/editor.cpp:241 qtplugins/measuretool/measuretool.cpp:218
+#: qtplugins/measuretool/measuretool.cpp:219
+#: qtplugins/measuretool/measuretool.cpp:221
 #, qt-format
 msgid "%L1 Å"
 msgstr "%L1 Å"
@@ -2345,28 +2360,36 @@ msgstr "Egyéni elemtípusok manipulálása a jelenlegi molekulában."
 msgid "Custom Elements"
 msgstr "Egyéni elemek"
 
-#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:109
+#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:113
 msgid "Draw"
 msgstr "Rajzolás"
 
-#: qtplugins/editor/editor.cpp:103
+#: qtplugins/editor/editor.cpp:77
+msgid ""
+"Draw Tool\n"
+"\n"
+"Left Mouse: \tClick and Drag to create Atoms and Bond\n"
+"Right Mouse: \tDelete Atom"
+msgstr ""
+
+#: qtplugins/editor/editor.cpp:107
 msgid "Draw Atom"
 msgstr "Atom rajzolása"
 
-#: qtplugins/editor/editor.cpp:113
+#: qtplugins/editor/editor.cpp:117
 msgid "Change Bond Type"
 msgstr "Kötés típusának módosítása"
 
-#: qtplugins/editor/editor.cpp:126
+#: qtplugins/editor/editor.cpp:130
 msgid "Remove Bond"
 msgstr "Kötés eltávolítása"
 
-#: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:187
-#: qtplugins/measuretool/measuretool.cpp:213
+#: qtplugins/editor/editor.cpp:236 qtplugins/measuretool/measuretool.cpp:192
+#: qtplugins/measuretool/measuretool.cpp:217
 msgid "Distance:"
 msgstr "Távolság:"
 
-#: qtplugins/editor/editor.cpp:235
+#: qtplugins/editor/editor.cpp:239
 #, qt-format
 msgid "%1 %L2"
 msgstr "%1 %L2"
@@ -2686,10 +2709,18 @@ msgid "Display labels on ball and stick style."
 msgstr "Címkék megjelenítése labda és bot modellben."
 
 #: qtplugins/label/labeleditor.cpp:31
-msgid "Write"
-msgstr "Mentés"
+#, fuzzy
+msgid "Edit Labels"
+msgstr "Felszínek"
 
-#: qtplugins/label/labeleditor.cpp:66
+#: qtplugins/label/labeleditor.cpp:34
+msgid ""
+"Atom Label Tool\n"
+"\n"
+"Left Mouse: \tClick on Atoms to add Custom Labels"
+msgstr ""
+
+#: qtplugins/label/labeleditor.cpp:69
 msgid "Create Label"
 msgstr "Címke létrehozása"
 
@@ -2777,6 +2808,14 @@ msgstr ""
 msgid "Manipulate"
 msgstr "Manipulálás"
 
+#: qtplugins/manipulator/manipulator.cpp:59
+msgid ""
+"Manipulation Tool\n"
+"\n"
+"Left Mouse: \tClick and drag to move atoms\n"
+"Right Mouse: \tClick and drag to rotate selected atoms.\n"
+msgstr ""
+
 #: qtplugins/manipulator/manipulator.h:44
 #: qtplugins/manipulator/manipulator.h:45
 msgid "Manipulate tool"
@@ -2786,16 +2825,27 @@ msgstr "Manipuláló eszköz"
 msgid "Measure"
 msgstr "Mérés"
 
-#: qtplugins/measuretool/measuretool.cpp:185
-#: qtplugins/measuretool/measuretool.cpp:196
+#: qtplugins/measuretool/measuretool.cpp:59
+msgid ""
+"Measure Tool\n"
+"\n"
+"Left Mouse: \tSelect up to four Atoms.\n"
+"\tDistances are measured between 1-2 and 2-3\n"
+"\tAngle is measured between 1-3 using 2 as the common point\n"
+"\tDihedral is measured between 1-2-3-4\n"
+"Right Mouse: \tReset the measurements."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:190
+#: qtplugins/measuretool/measuretool.cpp:201
 msgid "Dihedral:"
 msgstr "Diéderes:"
 
-#: qtplugins/measuretool/measuretool.cpp:186
+#: qtplugins/measuretool/measuretool.cpp:191
 msgid "Angle:"
 msgstr "Szög:"
 
-#: qtplugins/measuretool/measuretool.cpp:204
+#: qtplugins/measuretool/measuretool.cpp:209
 msgid "Angles:"
 msgstr "Szögek:"
 
@@ -2853,9 +2903,28 @@ msgstr "MongoChem kiszolgáló"
 msgid "Interface with Mongo Chem Server."
 msgstr "Felület a MongoChem kiszolgálóval."
 
-#: qtplugins/navigator/navigator.cpp:45
+#: qtplugins/navigator/navigator.cpp:49
 msgid "Navigate"
 msgstr "Navigálás"
+
+#: qtplugins/navigator/navigator.cpp:52
+msgid ""
+"Navigation Tool\n"
+"\n"
+"Left Mouse: \tClick and drag to rotate the view.\n"
+"Middle Mouse: \tClick and drag to zoom in or out.\n"
+"Right Mouse: \tClick and drag to move the view.\n"
+msgstr ""
+
+#: qtplugins/navigator/navigator.cpp:70
+msgid "Reverse Direction of Zoom on Scroll"
+msgstr ""
+
+#: qtplugins/navigator/navigator.cpp:72
+msgid ""
+"Default:\t Scroll down to shrink, scroll up to zoom\n"
+"Reversed:\t Scroll up to shrink, scroll down to zoom"
+msgstr ""
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
 msgid "Navigate tool"
@@ -3189,88 +3258,93 @@ msgstr "A referenciatengelyek megjelenítése a kijelző sarkában."
 msgid "Player"
 msgstr "Lejátszó"
 
-#: qtplugins/playertool/playertool.cpp:80
+#: qtplugins/playertool/playertool.cpp:66
+#, fuzzy
+msgid "Animation Tool"
+msgstr "Animáció"
+
+#: qtplugins/playertool/playertool.cpp:81
 msgid "Play"
 msgstr "Lejátszás"
 
-#: qtplugins/playertool/playertool.cpp:83
+#: qtplugins/playertool/playertool.cpp:84
 msgid "Stop"
 msgstr "Leállítás"
 
-#: qtplugins/playertool/playertool.cpp:94
+#: qtplugins/playertool/playertool.cpp:95
 msgid "Frame rate:"
 msgstr "Képkockasebesség:"
 
-#: qtplugins/playertool/playertool.cpp:100
+#: qtplugins/playertool/playertool.cpp:101
 msgctxt "frames per second"
 msgid " FPS"
 msgstr " képkocka/másodperc"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/playertool/playertool.cpp:124:1540
+#: qtplugins/playertool/playertool.cpp:125:1540
 msgid "Frame:"
 msgstr "Képkocka:"
 
-#: qtplugins/playertool/playertool.cpp:131
-#: qtplugins/playertool/playertool.cpp:416
+#: qtplugins/playertool/playertool.cpp:132
+#: qtplugins/playertool/playertool.cpp:417
 #: qtplugins/surfaces/surfacedialog.cpp:178
 #, qt-format
 msgid " of %0"
 msgstr " / %0"
 
-#: qtplugins/playertool/playertool.cpp:142
+#: qtplugins/playertool/playertool.cpp:143
 msgid "Dynamic bonding?"
 msgstr "Dinamikus kötések?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:382
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:150:1546
+#: qtplugins/playertool/playertool.cpp:151:1546
 msgid "Record Movie..."
 msgstr "Rajzfilmfájl felvétele…"
 
-#: qtplugins/playertool/playertool.cpp:254
-#: qtplugins/playertool/playertool.cpp:355
+#: qtplugins/playertool/playertool.cpp:255
+#: qtplugins/playertool/playertool.cpp:356
 msgid "Movie (*.mp4)"
 msgstr "Rajzfilmfájl (*.mp4)"
 
-#: qtplugins/playertool/playertool.cpp:256
+#: qtplugins/playertool/playertool.cpp:257
 msgid "Export Bitmap Graphics"
 msgstr "Bittérképes grafika exportálása"
 
-#: qtplugins/playertool/playertool.cpp:257
+#: qtplugins/playertool/playertool.cpp:258
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Rajzfilmfájl (*.mp4);;Rajzfilmfájl (*.avi);;GIF-fájl (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:271 qtplugins/surfaces/surfaces.cpp:408
+#: qtplugins/playertool/playertool.cpp:272 qtplugins/surfaces/surfaces.cpp:408
 msgid "GIF (*.gif)"
 msgstr "GIF-fájl (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:277
+#: qtplugins/playertool/playertool.cpp:278
 msgid "GIF FPS support warning"
 msgstr "GIF-fájl képkocka/másodperc támogatási figyelmeztetés"
 
-#: qtplugins/playertool/playertool.cpp:278
+#: qtplugins/playertool/playertool.cpp:279
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
 "A GIF-fájlformátum nem támogatja a 100 képkocka/másodperc feletti "
 "képsebességet."
 
-#: qtplugins/playertool/playertool.cpp:321
+#: qtplugins/playertool/playertool.cpp:322
 msgid "Movie (*.avi)"
 msgstr "Rajzfilmfájl (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:350
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:436
+#: qtplugins/playertool/playertool.cpp:351
+#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:436
 #: qtplugins/surfaces/surfaces.cpp:479 qtplugins/surfaces/surfaces.cpp:491
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:351 qtplugins/surfaces/surfaces.cpp:480
+#: qtplugins/playertool/playertool.cpp:352 qtplugins/surfaces/surfaces.cpp:480
 msgid "Error: cannot add frame to video."
 msgstr "Hiba történt: nem sikerült képkockát hozzáadni a videóhoz."
 
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:492
+#: qtplugins/playertool/playertool.cpp:382 qtplugins/surfaces/surfaces.cpp:492
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "%1 fájl mentése nem sikerult."
@@ -3658,7 +3732,8 @@ msgstr ""
 "lépjenek."
 
 #: qtplugins/quantuminput/quantuminput.cpp:242
-msgid "Set Python Path..."
+#, fuzzy
+msgid "Set Python Path…"
 msgstr "Python elérési útja beállítása…"
 
 #: qtplugins/quantuminput/quantuminput.h:53
@@ -3751,7 +3826,18 @@ msgstr "Kijelölés"
 msgid "Selection"
 msgstr "Kijelölés"
 
-#: qtplugins/selectiontool/selectiontool.cpp:244
+#: qtplugins/selectiontool/selectiontool.cpp:69
+msgid ""
+"Selection Tool\n"
+"\n"
+"Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
+"\tDrag to select a range of atoms\n"
+"Right Mouse: \tClick outside the molecule to clear selection\n"
+"Use Ctrl to toggle the selection and shift to add to the selection.\n"
+"Double-Click: \tSelect an entire fragment."
+msgstr ""
+
+#: qtplugins/selectiontool/selectiontool.cpp:251
 msgid "Paint Atoms"
 msgstr "Atomok kirajzolása"
 
@@ -4999,16 +5085,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"https://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"https://lammps."
-"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">https://lammps.sandia.gov/doc/units."
-"html</span></a></p></body></html>"
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
+"#0057ae;\">https://lammps.sandia.gov/doc/units.html</span></a></p></body></"
+"html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -5091,16 +5177,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"https://lammps."
 "sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">https://lammps.sandia.gov/doc/atom_style."
-"html</span></a></p></body></html>"
+"color:#0057ae;\">https://lammps.sandia.gov/doc/atom_style.html</span></a></"
+"p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
@@ -5615,8 +5701,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"https://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -6200,8 +6286,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
-"<html><head/><body><p>A csúcs kiszélesítése az alapnál "
-"(fokban).</p></body></html>"
+"<html><head/><body><p>A csúcs kiszélesítése az alapnál (fokban).</p></body></"
+"html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -6218,8 +6304,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
 "p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>A csúcsok kiszélesedése a tövében "
-"fokban.</p><p>Alapértelmezett: 0.52958°</p></body></html>"
+"<html><head/><body><p>A csúcsok kiszélesedése a tövében fokban.</"
+"p><p>Alapértelmezett: 0.52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -6242,8 +6328,8 @@ msgid ""
 "<html><head/><body><p>The wavelength of the x-ray in Angstroms. </"
 "p><p>Default: 1.50560 Å</p></body></html>"
 msgstr ""
-"<html><head/><body><p>A röntgen hullámhossza "
-"Angströmben.</p><p>Alapértelmezett: 1.50560 Å</p></body></html>"
+"<html><head/><body><p>A röntgen hullámhossza Angströmben.</"
+"p><p>Alapértelmezett: 1.50560 Å</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:122
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numDataPoints)
@@ -6504,8 +6590,8 @@ msgid ""
 "p><p>Default: off</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Energiák beállítása úgy, hogy a Fermi-szint nullát? "
-"Csak akkor érhető el, ha a Fermi-szintet meg van ábrázolva.</p><p><br/"
-"></p><p>Alapértelmezett: kikapcsolva</p></body></html>"
+"Csak akkor érhető el, ha a Fermi-szintet meg van ábrázolva.</p><p><br/></"
+"p><p>Alapértelmezett: kikapcsolva</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
@@ -6548,16 +6634,16 @@ msgid ""
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Adja meg a különleges k-pontokat, mint ilyeneket:</"
-"p><p>L 0.5 0.5 0.5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>Amely "
-"&lt;symbol&gt; &lt;x&gt; &lt;y&gt; &lt;z&gt; ahol x, y és z töredékes "
-"kölcsönös térkoordináták. Ezeket a grafikonon lévő k-pontokat összekötő "
-"vonalakat húzunk a sorrendben. Kérjük, vegye figyelembe, hogy a sejt "
-"tájolása hatással lehet ezeknek a kölcsönös térközöknek a helyére.</p><p>Ha "
-"a kristály tércsoportját észleltük vagy beállítottuk, a különleges k-pontok "
-"önműködően feltöltődnek az adott tércsoport egyszerűsejt magas "
-"szimmetriapontjaival. Van néhány tércsoport, amelyek a rács függvényében "
-"különböző magas szimmetriapontokkal rendelkeznek (például ha a &gt; b vagy a "
-"&lt; b) – amelyet önműködően figyelembe vesz.</p></body></html>"
+"p><p>L 0.5 0.5 0.5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>Amely &lt;"
+"symbol&gt; &lt;x&gt; &lt;y&gt; &lt;z&gt; ahol x, y és z töredékes kölcsönös "
+"térkoordináták. Ezeket a grafikonon lévő k-pontokat összekötő vonalakat "
+"húzunk a sorrendben. Kérjük, vegye figyelembe, hogy a sejt tájolása hatással "
+"lehet ezeknek a kölcsönös térközöknek a helyére.</p><p>Ha a kristály "
+"tércsoportját észleltük vagy beállítottuk, a különleges k-pontok önműködően "
+"feltöltődnek az adott tércsoport egyszerűsejt magas szimmetriapontjaival. "
+"Van néhány tércsoport, amelyek a rács függvényében különböző magas "
+"szimmetriapontokkal rendelkeznek (például ha a &gt; b vagy a &lt; b) – "
+"amelyet önműködően figyelembe vesz.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
@@ -6575,8 +6661,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"https://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Cantarell'; font-size:11pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -6601,8 +6687,8 @@ msgid ""
 "<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>Korlátozza az ábrán az "
-"y-tartományt?</p><p>Alapértelmezett: kikapcsolva</p></body></html>"
+"<html><head/><body><p>Korlátozza az ábrán az y-tartományt?</"
+"p><p>Alapértelmezett: kikapcsolva</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)
@@ -6645,6 +6731,9 @@ msgstr "Nevek"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "E-mail-címek"
+
+#~ msgid "Write"
+#~ msgstr "Mentés"
 
 #~ msgid "Theory:"
 #~ msgstr "Elmélet:"
@@ -6910,9 +6999,6 @@ msgstr "E-mail-címek"
 #~ msgstr ""
 #~ "Érvénytelen video fájl név. Tartalmaznia kell az teljes elérési utat, "
 #~ "valamint a fájlnévnek .avi-ra kell végződnie."
-
-#~ msgid "Animation"
-#~ msgstr "Animáció"
 
 #~ msgid "Animate trajectories, reactions, and vibrations."
 #~ msgstr "Animált trajektóriák, reakciók és vibrációk."
