@@ -4,10 +4,19 @@ name: CMake Build Matrix
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
 
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push: # to anything
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'     
+        required: false
+        default: false
 
 env:
-  BUILD_TYPE: Release
+  BUILD_TYPE: Debug
   QT_VERSION: 5.12.10
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
@@ -164,6 +173,11 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Running tests failed!")
         endif()
+
+    # Enable tmate debugging of manually-triggered workflows if the input option was provided
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
 
     - name: Pack
       if: matrix.config.artifact != 0
