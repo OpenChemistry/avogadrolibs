@@ -163,7 +163,8 @@ bool InterfaceScript::runCommand(const QJsonObject& options_,
   if (!insertMolecule(allOptions, *mol))
     return false;
 
-  connect(m_interpreter, &PythonScript::finished, this, &::Avogadro::QtGui::InterfaceScript::commandFinished);
+  connect(m_interpreter, &PythonScript::finished, this,
+          &::Avogadro::QtGui::InterfaceScript::commandFinished);
   m_interpreter->asyncExecute(QStringList() << QStringLiteral("--run-command"),
                               QJsonDocument(allOptions).toJson());
   return true;
@@ -471,18 +472,20 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
   if (m_moleculeExtension == QLatin1String("None"))
     return true;
 
-  // insert the selected atoms
+  // Always insert the selected atoms
   QJsonArray selectedList;
   for (Index i = 0; i < mol.atomCount(); ++i) {
     if (mol.atomSelected(i))
       selectedList.append(static_cast<qint64>(i));
   }
-  json.insert("selectedatoms", selectedList);
+  json.insert("selectedAtoms", selectedList);
 
   Io::FileFormatManager& formats = Io::FileFormatManager::instance();
   QScopedPointer<Io::FileFormat> format(
     formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
+  QScopedPointer<Io::FileFormat> cjsonFormat(formats.newFormatFromFileExtension("cjson"));
 
+  // If we want something *other* than CJSON, check that we can supply that format
   if (format.isNull()) {
     m_errors << tr("Error writing molecule representation to string: "
                    "Unrecognized file format: %1")
@@ -499,28 +502,30 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
 
   if (m_moleculeExtension != QLatin1String("cjson")) {
     json.insert(m_moleculeExtension, QJsonValue(QString::fromStdString(str)));
-  } else {
-    // If cjson was requested, embed the actual JSON, rather than the string.
-    QJsonParseError error;
-    QJsonDocument doc = QJsonDocument::fromJson(str.c_str(), &error);
-    if (error.error != QJsonParseError::NoError) {
-      m_errors << tr("Error generating cjson object: Parse error at offset %1: "
-                     "%2\nRaw JSON:\n\n%3")
-                    .arg(error.offset)
-                    .arg(error.errorString())
-                    .arg(QString::fromStdString(str));
-      return false;
-    }
-
-    if (!doc.isObject()) {
-      m_errors << tr("Error generator cjson object: Parsed JSON is not an "
-                     "object:\n%1")
-                    .arg(QString::fromStdString(str));
-      return false;
-    }
-
-    json.insert(m_moleculeExtension, doc.object());
   }
+
+  // And we *always* write the CJSON representation
+  // Embed CJSON as actual JSON, rather than a string, so we have to parse it again
+  cjsonFormat->writeString(str, mol);
+  QJsonParseError error;
+  QJsonDocument doc = QJsonDocument::fromJson(str.c_str(), &error);
+  if (error.error != QJsonParseError::NoError) {
+    m_errors << tr("Error generating cjson object: Parse error at offset %1: "
+                   "%2\nRaw JSON:\n\n%3")
+                  .arg(error.offset)
+                  .arg(error.errorString())
+                  .arg(QString::fromStdString(str));
+    return false;
+  }
+
+  if (!doc.isObject()) {
+    m_errors << tr("Error generator cjson object: Parsed JSON is not an "
+                   "object:\n%1")
+                  .arg(QString::fromStdString(str));
+    return false;
+  }
+
+  json.insert("cjson", doc.object());
 
   return true;
 }
@@ -604,7 +609,7 @@ bool InterfaceScript::parseHighlightStyles(const QJsonArray& json) const
     GenericHighlighter* highlighter(
       new GenericHighlighter(const_cast<InterfaceScript*>(this)));
     if (!parseRules(rulesArray, *highlighter)) {
-      qDebug() << "Error parsing style" << styleName << endl
+      qDebug() << "Error parsing style" << styleName << Qt::endl
                << QString(QJsonDocument(styleObj).toJson());
       highlighter->deleteLater();
       result = false;
@@ -629,13 +634,13 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
     QJsonObject ruleObj(ruleVal.toObject());
 
     if (!ruleObj.contains(QStringLiteral("patterns"))) {
-      qDebug() << "Rule missing 'patterns' array:" << endl
+      qDebug() << "Rule missing 'patterns' array:" << Qt::endl
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
     if (!ruleObj.value(QStringLiteral("patterns")).isArray()) {
-      qDebug() << "Rule 'patterns' member is not an array:" << endl
+      qDebug() << "Rule 'patterns' member is not an array:" << Qt::endl
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
@@ -644,13 +649,13 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
       ruleObj.value(QStringLiteral("patterns")).toArray());
 
     if (!ruleObj.contains(QStringLiteral("format"))) {
-      qDebug() << "Rule missing 'format' object:" << endl
+      qDebug() << "Rule missing 'format' object:" << Qt::endl
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
     if (!ruleObj.value(QStringLiteral("format")).isObject()) {
-      qDebug() << "Rule 'format' member is not an object:" << endl
+      qDebug() << "Rule 'format' member is not an object:" << Qt::endl
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
@@ -662,7 +667,7 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
     foreach (QJsonValue patternVal, patternsArray) {
       QRegExp pattern;
       if (!parsePattern(patternVal, pattern)) {
-        qDebug() << "Error while parsing pattern:" << endl
+        qDebug() << "Error while parsing pattern:" << Qt::endl
                  << QString(QJsonDocument(patternVal.toObject()).toJson());
         result = false;
         continue;
@@ -672,7 +677,7 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
 
     QTextCharFormat format;
     if (!parseFormat(formatObj, format)) {
-      qDebug() << "Error while parsing format:" << endl
+      qDebug() << "Error while parsing format:" << Qt::endl
                << QString(QJsonDocument(formatObj).toJson());
       result = false;
     }
