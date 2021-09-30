@@ -2,21 +2,23 @@
 # Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
-#
+# J. Lavoie <j.lavoie@net-c.ca>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-19 03:11+0000\n"
-"PO-Revision-Date: 2016-06-10 06:30+0000\n"
-"Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
-"Language-Team: English (Canada) <en_CA@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2021-09-26 12:57+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"Language-Team: English (Canada) <https://hosted.weblate.org/projects/"
+"avogadro/avogadrolibs/en_CA/>\n"
+"Language: en_CA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:71
 #, qt-format
@@ -450,7 +452,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "No molecule set in BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -458,7 +460,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "No file name set in BackgroundFileFormat!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
@@ -1126,9 +1128,8 @@ msgid "Layer"
 msgstr ""
 
 #: qtgui/moleculemodel.cpp:104
-#, fuzzy
 msgid "Untitled"
-msgstr "untitled"
+msgstr "Untitled"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
@@ -1371,9 +1372,8 @@ msgstr "&File"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/svg/svg.cpp:46 qtplugins/vrml/vrml.cpp:58
-#, fuzzy
 msgid "&Export"
-msgstr "Export"
+msgstr "&Export"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1737,9 +1737,8 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:103
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/quantuminput/quantuminput.cpp:81 qtplugins/yaehmop/yaehmop.cpp:80
-#, fuzzy
 msgid "&Extensions"
-msgstr "Extensions"
+msgstr "&Extensions"
 
 #: qtplugins/clientserver/clientserver.cpp:83
 msgid "S&erver"
@@ -2019,9 +2018,8 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:35:264
-#, fuzzy
 msgid "Clear"
-msgstr "Clear All"
+msgstr "Clear"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
@@ -2392,9 +2390,8 @@ msgstr "Triple"
 #: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:70
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
-#, fuzzy
 msgid "&Import"
-msgstr "Import"
+msgstr "&Import"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:75
 msgid "PDB Code"
@@ -2923,9 +2920,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Navigate"
+msgstr "Navigate tool"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
@@ -6682,16 +6678,8 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-",,imolenaar28@gmail.com,,,imolenaar28@gmail.com,,,bburns@aundae.com,"
-"imolenaar28@gmail.com,,,bburns@aundae.com,imolenaar28@gmail.com,,,"
-"bburns@aundae.com,imolenaar28@gmail.com,,,bburns@aundae.com,"
-"imolenaar28@gmail.com,,,,avogadro-devel@lists.sourceforge.net,bburns@aundae."
-"com,imolenaar28@gmail.com,,,,,avogadro-devel@lists.sourceforge.net,"
-"bburns@aundae.com,,,,,,avogadro-devel@lists.sourceforge.net,bburns@aundae."
-"com,,,,,,avogadro-devel@lists.sourceforge.net,bburns@aundae.com,,,,,,"
-"avogadro-devel@lists.sourceforge.net,bburns@aundae.com,,,,,avogadro-"
-"devel@lists.sourceforge.net,bburns@aundae.com,,,,,avogadro-devel@lists."
-"sourceforge.net,bburns@aundae.com,,"
+",,bburns@aundae.com,debianmaster@gmail.com,jenfraggleubuntu@googlemail."
+"com,,,,,bburns@aundae.com"
 
 #~ msgid "Other..."
 #~ msgstr "Other..."

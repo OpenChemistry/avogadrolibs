@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-19 03:11+0000\n"
-"PO-Revision-Date: 2021-08-07 17:34+0000\n"
+"PO-Revision-Date: 2021-09-26 12:57+0000\n"
 "Last-Translator: phlostically <phlostically@mailinator.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: molequeue/batchjob.cpp:71
 #, qt-format
@@ -1188,9 +1188,8 @@ msgid "[no molecule]"
 msgstr "[neniu molekulo]"
 
 #: qtgui/layermodel.cpp:73
-#, fuzzy
 msgid "Layer"
-msgstr "Ludilo"
+msgstr "Tavolo"
 
 #: qtgui/moleculemodel.cpp:104
 msgid "Untitled"
@@ -1267,33 +1266,30 @@ msgstr "Nekonata eraro."
 #: qtgui/rwlayermanager.cpp:34 qtgui/rwlayermanager.cpp:89
 #: qtgui/rwlayermanager.cpp:115
 msgid "Modify Layers"
-msgstr ""
+msgstr "Modifi tavolojn"
 
 #: qtgui/rwlayermanager.cpp:178
-#, fuzzy
 msgid "Remove Layer"
-msgstr "Forigi Hidrogenojn"
+msgstr "Forigi tavolon"
 
 #: qtgui/rwlayermanager.cpp:185
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "Forigi Hidrogenojn"
+msgstr "Forigi informojn pri tavolo"
 
 #: qtgui/rwlayermanager.cpp:194
 msgid "Add Layer"
-msgstr ""
+msgstr "Aldoni tavolon"
 
 #: qtgui/rwlayermanager.cpp:197
 msgid "Add Layer Info"
-msgstr ""
+msgstr "Aldoni informojn pri tavolo"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:204 qtgui/rwlayermanager.cpp:207
 #: qtplugins/selectiontool/selectiontool.cpp:267:1474
-#, fuzzy
 msgid "Change Layer"
-msgstr "Ŝanĝi Ligan Tipon"
+msgstr "Ŝanĝi tavolon"
 
 #: qtgui/rwmolecule.cpp:50 qtgui/rwmolecule.cpp:59
 msgid "Add Atom"
@@ -1335,9 +1331,8 @@ msgid "Change Atom Color"
 msgstr "Ŝanĝi Atoman Koloron"
 
 #: qtgui/rwmolecule.cpp:251
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Ŝanĝi Atoman Koloron"
+msgstr "Ŝanĝi atoman tavolon"
 
 #: qtgui/rwmolecule.cpp:267
 msgid "Add Bond"
@@ -1425,10 +1420,8 @@ msgid "Modify Molecule"
 msgstr "Modifi Molekulon"
 
 #: qtplugins/3dmol/3dmol.cpp:43
-#, fuzzy
-#| msgid "ThreeDMol HTML Block."
 msgid "3DMol HTML Block."
-msgstr "HTML-Bloko de ThreeDMol."
+msgstr "HTML-Bloko de 3DMol."
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:59
@@ -1449,16 +1442,12 @@ msgid "ThreeDMol"
 msgstr "ThreeDMol"
 
 #: qtplugins/apbs/apbs.cpp:43
-#, fuzzy
-#| msgid "Run APBS"
 msgid "Run APBS…"
-msgstr "Ruli APBS"
+msgstr "Ruli APBS…"
 
 #: qtplugins/apbs/apbs.cpp:48
-#, fuzzy
-#| msgid "Open Output File"
 msgid "Open Output File…"
-msgstr "Malfermi Eligan Dosieron"
+msgstr "Malfermi Eligan Dosieron…"
 
 #: qtplugins/apbs/apbs.cpp:61 qtplugins/cp2kinput/cp2kinput.cpp:60
 #: qtplugins/gamessinput/gamessinput.cpp:63
