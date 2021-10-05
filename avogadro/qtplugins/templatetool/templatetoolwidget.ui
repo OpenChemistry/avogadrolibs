@@ -146,7 +146,7 @@
       <string>octahedral</string>
      </property>
      <property name="icon">
-      <iconset theme="/icons/coord/6-octahedral.png">
+      <iconset theme=":/icons/coord/6-octahedral.png">
        <normaloff>.</normaloff>.</iconset>
      </property>
      <property name="iconSize">
