@@ -25,14 +25,14 @@ inline Real bondAngle(const Vector3& b0, const Vector3& b1) {
 
 inline Real dihedralAngle(const Vector3& b0, const Vector3& b1, const Vector3& b2)
 {
-  // See https://stackoverflow.com/a/34245697/131896
-  // Thanks to @Praxeolitic
+  // See wikipedia
   const Vector3 n0 = -1.0*b0;
-  const Vector3 n1 = b1.normalized();
-  const Vector3 v = n0 - n0.dot(n1)*n1;
-  const Vector3 w = b2 - b2.dot(n1)*n1;
-  const Real x(v.dot(w));
-  const Real y(w.dot(b1.cross(v)));
+  const Vector3 b0xb1 = n0.cross(b1);
+  const Vector3 b1xb2 = b2.cross(b1);
+  const Vector3 b0xb1_x_b1xb2 = b0xb1.cross(b1xb2);
+
+  const Real x(b0xb1.dot(b1xb2));
+  const Real y( (b0xb1_x_b1xb2.dot(b1)) * 1.0 / (b1.norm()));
   return std::atan2(y, x) * RAD_TO_DEG_D;
 }
 
@@ -43,9 +43,9 @@ inline Real calcAngle(const Vector3 &v1, const Vector3 &v2, const Vector3 &v3) {
 }
 
 inline Real calcDihedral(const Vector3 &v1, const Vector3 &v2, const Vector3 &v3, const Vector3 &v4) {
-  Vector3 v12 = v1 - v2;
-  Vector3 v23 = v2 - v3;
-  Vector3 v34 = v3 - v4;
+  Vector3 v12 = v2 - v1;
+  Vector3 v23 = v3 - v2;
+  Vector3 v34 = v4 - v3;
   return dihedralAngle(v12, v23, v34);
 }
 
