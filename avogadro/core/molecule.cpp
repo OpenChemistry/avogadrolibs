@@ -43,8 +43,12 @@ Molecule::Molecule(const Molecule& other)
     m_residues(other.m_residues), m_graph(other.m_graph),
     m_graphDirty(other.m_graphDirty), m_bondPairs(other.m_bondPairs),
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
-    m_layers(LayerManager::getMoleculeLayer(&other, this))
+    m_layers(LayerManager::getMoleculeLayer(this))
 {
+  // Copy the layers, if they exist
+  if (other.m_layers.maxLayer() > 0)
+    m_layers = LayerManager::getMoleculeLayer(&other, this);
+
   // Copy over any meshes
   for (Index i = 0; i < other.meshCount(); ++i) {
     Mesh* m = addMesh();
@@ -79,8 +83,12 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_bondPairs(std::move(other.m_bondPairs)),
     m_bondOrders(std::move(other.m_bondOrders)),
     m_atomicNumbers(std::move(other.m_atomicNumbers)),
-    m_layers(LayerManager::getMoleculeLayer(&other, this))
+    m_layers(LayerManager::getMoleculeLayer(this))
 {
+  // Copy the layers, if they exist
+  if (other.m_layers.maxLayer() > 0)
+    m_layers = LayerManager::getMoleculeLayer(&other, this);
+
   m_basisSet = other.m_basisSet;
   other.m_basisSet = nullptr;
 
@@ -134,7 +142,9 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr;
   }
 
-  m_layers = LayerManager::getMoleculeLayer(&other, this);
+  // Copy the layers, if they exist
+  if (other.m_layers.maxLayer() > 0)
+    m_layers = LayerManager::getMoleculeLayer(&other, this);
 
   return *this;
 }
@@ -176,9 +186,11 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     delete m_unitCell;
     m_unitCell = other.m_unitCell;
     other.m_unitCell = nullptr;
-  }
 
-  m_layers = LayerManager::getMoleculeLayer(&other, this);
+    // Copy the layers, if they exist
+    if (other.m_layers.maxLayer() > 0)
+      m_layers = LayerManager::getMoleculeLayer(&other, this);
+  }
 
   return *this;
 }
@@ -461,8 +473,8 @@ bool Molecule::removeBond(Index index)
   if (index >= bondCount())
     return false;
   if (!m_graphDirty) {
-    // mark dirty the graph O(n) only if is more efficient than remove an edge
-    // O(nlogn)
+    // mark dirty the graph O(n) only if is more efficient than remove
+    // an edge O(nlogn)
     size_t n = atomCount();
     size_t m = calcNlogN(m_graph.subgraphCount(m_bondPairs[index].first));
     if (m < n) {
