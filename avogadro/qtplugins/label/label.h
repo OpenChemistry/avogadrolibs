@@ -33,6 +33,10 @@ public:
   void process(const Core::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
+  DefaultBehavior defaultBehavior() const override
+  {
+    return DefaultBehavior::False;
+  }
 public slots:
   void atomLabelType(int index);
   void residueLabelType(int index);

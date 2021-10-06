@@ -34,6 +34,11 @@ public:
 
   QWidget* setupWidget() override;
 
+  DefaultBehavior defaultBehavior() const override
+  {
+    return DefaultBehavior::False;
+  }
+
 public slots:
   void multiBonds(bool show);
   void showHydrogens(bool show);

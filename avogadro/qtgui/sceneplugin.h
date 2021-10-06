@@ -93,6 +93,13 @@ public:
 
   virtual QWidget* setupWidget();
 
+  /**
+  * Returns if this plugin should be considered in the default behavior,
+  * or it should reset to true or false.
+  */
+  enum DefaultBehavior { Ignore, False, True };
+  virtual DefaultBehavior defaultBehavior() const { return Ignore; }
+
 signals:
   void drawablesChanged();
 
