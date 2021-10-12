@@ -15,6 +15,7 @@
 ******************************************************************************/
 
 #include <gtest/gtest.h>
+#include <limits>
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/crystaltools.h>
@@ -260,11 +261,11 @@ TEST(UnitCellTest, wrapAtomsToUnitCell)
   for (std::vector<Vector3>::const_iterator it = fcoords.begin(),
                                             itEnd = fcoords.end();
        it != itEnd; ++it) {
-    EXPECT_GE(it->x(), static_cast<Real>(0.0));
+    EXPECT_GT(it->x(), static_cast<Real>(-std::numeric_limits<Real>::epsilon())); // x >= 0, "mostly" zero
     EXPECT_LE(it->x(), static_cast<Real>(1.0));
-    EXPECT_GE(it->y(), static_cast<Real>(0.0));
+    EXPECT_GT(it->y(), static_cast<Real>(-std::numeric_limits<Real>::epsilon())); // y >= 0, "mostly" zero
     EXPECT_LE(it->y(), static_cast<Real>(1.0));
-    EXPECT_GE(it->z(), static_cast<Real>(0.0));
+    EXPECT_GT(it->z(), static_cast<Real>(-std::numeric_limits<Real>::epsilon())); // z >= 0, "mostly" zero
     EXPECT_LE(it->z(), static_cast<Real>(1.0));
   }
 }
