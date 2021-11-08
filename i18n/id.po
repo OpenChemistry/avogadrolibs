@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-19 03:11+0000\n"
-"PO-Revision-Date: 2021-06-06 23:34+0000\n"
-"Last-Translator: Jacque Fresco <aidter@use.startmail.com>\n"
+"PO-Revision-Date: 2021-11-09 00:47+0000\n"
+"Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
 "Language: id\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.7-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -32,7 +32,7 @@ msgstr "Pekerjaan Batch number #%L1 (%2)"
 
 #: molequeue/client/client.cpp:245
 msgid "No message specified."
-msgstr ""
+msgstr "Tidak ada pesan spesifik."
 
 #: molequeue/inputgenerator.cpp:70 qtgui/interfacescript.cpp:69
 #, qt-format
@@ -70,6 +70,8 @@ msgstr "Galat saat mengisi file %1: %2"
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"File '%1' tidak terbentuk dengan baik. Tidak ada anggota string 'content' "
+"atau 'filePath'."
 
 #: molequeue/inputgenerator.cpp:237 qtgui/interfacescript.cpp:364
 #, qt-format
@@ -77,11 +79,13 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Entri file yang cacat: nama file /konten hilang atau tidak string:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:243 qtgui/interfacescript.cpp:370
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "Entri file yang cacat pada indeks %1: Bukan objek."
 
 #: molequeue/inputgenerator.cpp:249 qtgui/interfacescript.cpp:376
 msgid "'files' member not an array."
@@ -3262,7 +3266,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:1072
 #: qtplugins/openmminput/openmminputdialog.cpp:1081:1225 rc.cpp:1240
 msgid "True"
-msgstr ""
+msgstr "Benar"
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 #, fuzzy
@@ -3282,14 +3286,12 @@ msgid "Player"
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:66
-#, fuzzy
-#| msgid "Animation"
 msgid "Animation Tool"
-msgstr "Animasi"
+msgstr "Alat Animasi"
 
 #: qtplugins/playertool/playertool.cpp:81
 msgid "Play"
-msgstr ""
+msgstr "Mulai"
 
 #: qtplugins/playertool/playertool.cpp:84
 msgid "Stop"
@@ -3297,40 +3299,38 @@ msgstr "Berhenti"
 
 #: qtplugins/playertool/playertool.cpp:95
 msgid "Frame rate:"
-msgstr ""
+msgstr "Frame rate:"
 
 #: qtplugins/playertool/playertool.cpp:101
 msgctxt "frames per second"
 msgid " FPS"
-msgstr ""
+msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: qtplugins/playertool/playertool.cpp:125:1537
-#, fuzzy
 msgid "Frame:"
-msgstr "Parameter:"
+msgstr "Frame:"
 
 #: qtplugins/playertool/playertool.cpp:132
 #: qtplugins/playertool/playertool.cpp:417
 #: qtplugins/surfaces/surfacedialog.cpp:178
 #, qt-format
 msgid " of %0"
-msgstr ""
+msgstr " dari %0"
 
 #: qtplugins/playertool/playertool.cpp:143
-#, fuzzy
 msgid "Dynamic bonding?"
-msgstr "Ikatan Dinamik"
+msgstr "Ikatan Dinamik?"
 
 #: qtplugins/playertool/playertool.cpp:151
 msgid "Record Movie…"
-msgstr ""
+msgstr "Rekam Film…"
 
 #: qtplugins/playertool/playertool.cpp:255
 #: qtplugins/playertool/playertool.cpp:356
 msgid "Movie (*.mp4)"
-msgstr ""
+msgstr "Film (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:257
 msgid "Export Bitmap Graphics"
@@ -3338,24 +3338,23 @@ msgstr "Ekspor gambar Bitmap"
 
 #: qtplugins/playertool/playertool.cpp:258
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Film (*.mp4);; Film (*.avi);; GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:272 qtplugins/surfaces/surfaces.cpp:408
 msgid "GIF (*.gif)"
-msgstr ""
+msgstr "GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:278
 msgid "GIF FPS support warning"
-msgstr ""
+msgstr "Peringatan dukungan GIF FPS"
 
 #: qtplugins/playertool/playertool.cpp:279
 msgid "The GIF file format does not support frame rates over 100 FPS."
-msgstr ""
+msgstr "Format file GIF tidak mendukung frame rate lebih dari 100 FPS."
 
 #: qtplugins/playertool/playertool.cpp:322
-#, fuzzy
 msgid "Movie (*.avi)"
-msgstr "berkas video (*.avi)"
+msgstr "Film (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:351
 #: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:436
@@ -3365,7 +3364,7 @@ msgstr "Avogadro"
 
 #: qtplugins/playertool/playertool.cpp:352 qtplugins/surfaces/surfaces.cpp:480
 msgid "Error: cannot add frame to video."
-msgstr ""
+msgstr "Galat: tidak dapat menambahkan frame ke video."
 
 #: qtplugins/playertool/playertool.cpp:382 qtplugins/surfaces/surfaces.cpp:492
 #, qt-format
@@ -3390,11 +3389,11 @@ msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.cpp:133 qtplugins/plotxrd/plotxrd.cpp:131
 msgid "Error message: "
-msgstr ""
+msgstr "Pesan error: "
 
 #: qtplugins/plotpdf/plotpdf.h:48
 msgid "PlotPdf"
-msgstr ""
+msgstr "PlotPdf"
 
 #: qtplugins/plotpdf/plotpdf.h:83
 msgid "Generate and plot a Pair Distribution Function curve."
@@ -3454,70 +3453,68 @@ msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
 msgid "Version"
-msgstr ""
+msgstr "Versi"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:73
 msgid "Description"
-msgstr ""
+msgstr "Deskripsi"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:333
 #, qt-format
 msgid "Downloading %1 to %2\n"
-msgstr ""
+msgstr "Mengunduh %1 ke %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:346
 #, qt-format
 msgid "Extracting %1 to %2\n"
-msgstr ""
+msgstr "Mengekstrak %1 ke %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:349
 #, qt-format
 msgid "Finished %1 files\n"
-msgstr ""
+msgstr "Selesai %1 file\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:353
 msgid "Extraction successful\n"
-msgstr ""
+msgstr "Ekstraksi berhasil\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:383
 #, qt-format
 msgid "Error while extracting: %1"
-msgstr ""
+msgstr "Error saat mengekstraksi: %1"
 
 #: qtplugins/plugindownloader/plugindownloader.cpp:39
 msgid "Download Plugins…"
-msgstr ""
+msgstr "Unduh Plugin…"
 
 #: qtplugins/plugindownloader/plugindownloader.h:48
 msgid "Download Plugins"
-msgstr ""
+msgstr "Unduh Plugin"
 
 #: qtplugins/plugindownloader/plugindownloader.h:52
 msgid "Download plugins from GitHub repositories."
-msgstr ""
+msgstr "Unduh plugin dari repositori GitHub."
 
 #: qtplugins/povray/povray.cpp:41
-#, fuzzy
 msgid "POV-Ray Render…"
-msgstr "POV-Ray"
+msgstr "Render POV-Ray…"
 
 #: qtplugins/povray/povray.cpp:82 qtplugins/svg/svg.cpp:258
 #: qtplugins/vrml/vrml.cpp:82
-#, fuzzy
 msgid "Save File"
-msgstr "Simpan berkas video"
+msgstr "Simpan Berkas"
 
 #: qtplugins/povray/povray.cpp:83
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
-msgstr ""
+msgstr "POV-Ray (*.pov);; Berkas teks (*.txt)"
 
 #: qtplugins/povray/povray.h:36
 msgid "POVRay"
-msgstr ""
+msgstr "POVRay"
 
 #: qtplugins/povray/povray.h:40
 msgid "Render the scene using POV-Ray."
-msgstr ""
+msgstr "Render adegan menggunakan POV-Ray."
 
 #: qtplugins/propertytables/propertymodel.cpp:351
 msgid "Valence"
@@ -3525,21 +3522,20 @@ msgstr "Valensi"
 
 #: qtplugins/propertytables/propertymodel.cpp:353
 msgid "X (Å)"
-msgstr ""
+msgstr "X (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:355
 msgid "Y (Å)"
-msgstr ""
+msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:357
 msgid "Z Å)"
-msgstr ""
+msgstr "Z Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:359
 #: qtplugins/propertytables/propertymodel.cpp:398
-#, fuzzy
 msgid "Color"
-msgstr "Warna:"
+msgstr "Warna"
 
 #: qtplugins/propertytables/propertymodel.cpp:362
 msgid "Atom"
@@ -3557,20 +3553,17 @@ msgid "Start Atom"
 msgstr "Awal Atom"
 
 #: qtplugins/propertytables/propertymodel.cpp:373
-#, fuzzy
 msgid "End Atom"
 msgstr "Akhir Atom"
 
 #: qtplugins/propertytables/propertymodel.cpp:375
-#, fuzzy
 msgid "Bond Order"
-msgstr "Orde Ikatan:"
+msgstr "Orde Ikatan"
 
 #: qtplugins/propertytables/propertymodel.cpp:377
-#, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr "Panjang %1"
+msgstr "Panjang (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:392
 msgid "Chain"
@@ -3582,15 +3575,13 @@ msgid "Secondary Structure"
 msgstr "Struktur:"
 
 #: qtplugins/propertytables/propertymodel.cpp:396
-#, fuzzy
 msgid "Heterogen"
-msgstr "Hidrogen"
+msgstr "Heterogen"
 
 #: qtplugins/propertytables/propertymodel.cpp:410
 #: qtplugins/propertytables/propertymodel.cpp:427
-#, fuzzy
 msgid "Atom 1"
-msgstr "Atom %1"
+msgstr "Atom 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:412
 msgid "Vertex"
@@ -3598,31 +3589,26 @@ msgstr "Verteks"
 
 #: qtplugins/propertytables/propertymodel.cpp:414
 #: qtplugins/propertytables/propertymodel.cpp:431
-#, fuzzy
 msgid "Atom 3"
-msgstr "Atom"
+msgstr "Atom 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:416
 #: qtplugins/propertytables/propertymodel.cpp:435
-#, fuzzy
 msgid "Angle (°)"
-msgstr "Sudut: %L1 °"
+msgstr "Sudut (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:429
-#, fuzzy
 msgid "Atom 2"
-msgstr "Atom"
+msgstr "Atom 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:433
-#, fuzzy
 msgid "Atom 4"
-msgstr "Atom"
+msgstr "Atom 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:478
-#, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr "Heliks"
+msgstr "π Heliks"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 msgctxt "protein bend secondary structure"
@@ -3642,7 +3628,6 @@ msgid "β Sheet"
 msgstr "Lembar"
 
 #: qtplugins/propertytables/propertymodel.cpp:486
-#, fuzzy
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10 Helix"
@@ -3663,33 +3648,24 @@ msgid "Coil"
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:28
-#, fuzzy
-#| msgid "Atom Properties"
 msgid "Atom Properties…"
-msgstr "Properti Atom"
+msgstr "Properti Atom…"
 
 #: qtplugins/propertytables/propertytables.cpp:34
-#, fuzzy
-#| msgid "Bond Properties"
 msgid "Bond Properties…"
-msgstr "Properti Ikatan"
+msgstr "Properti Ikatan…"
 
 #: qtplugins/propertytables/propertytables.cpp:40
-#, fuzzy
-#| msgid "Angle Properties"
 msgid "Angle Properties…"
-msgstr "Properti Sudut"
+msgstr "Properti Sudut…"
 
 #: qtplugins/propertytables/propertytables.cpp:46
-#, fuzzy
-#| msgid "Torsion Properties"
 msgid "Torsion Properties…"
-msgstr "Properti Torsi"
+msgstr "Properti Torsi…"
 
 #: qtplugins/propertytables/propertytables.cpp:52
-#, fuzzy
 msgid "Residue Properties…"
-msgstr "Properti Molekul"
+msgstr "Properti Residu…"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 #, fuzzy
@@ -3743,18 +3719,16 @@ msgid "Renders primitives using QTAIM properties"
 msgstr "Citrakan bentuk primitif menggunakan properti QTAIM"
 
 #: qtplugins/qtaim/qtaimextension.cpp:59
-#, fuzzy
 msgid "Molecular Graph…"
-msgstr "Orbit Molekuler"
+msgstr "Grafik Molekuler…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:66
 msgid "Molecular Graph with Lone Pairs…"
-msgstr ""
+msgstr "Grafik Molekuler dengan Pasangan Tunggal…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:73
-#, fuzzy
 msgid "Atomic Charge…"
-msgstr "Muatan formal"
+msgstr "Muatan Atom…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:122
 msgid "Open WFN File"
@@ -3867,9 +3841,8 @@ msgstr ""
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
 #: qtplugins/select/select.h:40:1576
-#, fuzzy
 msgid "Select"
-msgstr "&Pilihan"
+msgstr "Pilih"
 
 #: qtplugins/selectiontool/selectiontool.cpp:66
 msgid "Selection"
@@ -3905,13 +3878,11 @@ msgstr "Mengambil grup ruang..."
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
 #: qtplugins/spacegroup/spacegroup.cpp:81:1561
 msgid "Symmetrize"
-msgstr ""
+msgstr "Simetris"
 
 #: qtplugins/spacegroup/spacegroup.cpp:86
-#, fuzzy
-#| msgid "Fill Unit Cell"
 msgid "Fill Unit Cell…"
-msgstr "Isi Unit Sel"
+msgstr "Isi Unit Sel…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:91
 #: qtplugins/spacegroup/spacegroup.cpp:305
@@ -3976,13 +3947,12 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:326 qtplugins/yaehmop/yaehmop.cpp:177
 #: qtplugins/yaehmop/yaehmop.cpp:267 qtplugins/yaehmop/yaehmop.cpp:279
 #: qtplugins/yaehmop/yaehmop.cpp:293 qtplugins/yaehmop/yaehmop.cpp:410
-#, fuzzy
 msgid "Avogadro2"
-msgstr "Avogadro"
+msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:327
 msgid "Select tolerance in Å:"
-msgstr ""
+msgstr "Pilih toleransi di Å:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:343
 msgid "International"
