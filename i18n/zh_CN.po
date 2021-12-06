@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Liu Tao <lyuutau@outlook.com>, 2021.
+# 刘韬 <lyuutau@outlook.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-19 03:11+0000\n"
-"PO-Revision-Date: 2021-04-03 11:26+0000\n"
-"Last-Translator: Liu Tao <lyuutau@outlook.com>\n"
+"PO-Revision-Date: 2021-12-07 16:50+0000\n"
+"Last-Translator: 刘韬 <lyuutau@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.6-dev\n"
+"X-Generator: Weblate 4.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -1069,9 +1070,9 @@ msgid "'type' is not a string for option '%1'."
 msgstr ""
 
 #: qtgui/jsonwidget.cpp:98
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not find option '%1'."
-msgstr "无法运行povray。"
+msgstr "找不到选项“%1”。"
 
 #: qtgui/jsonwidget.cpp:152
 #, qt-format
@@ -1549,9 +1550,8 @@ msgid "By Atomic Index"
 msgstr "原子索引"
 
 #: qtplugins/applycolors/applycolors.cpp:39
-#, fuzzy
 msgid "By Distance"
-msgstr "距离："
+msgstr "按距离"
 
 #: qtplugins/applycolors/applycolors.cpp:44
 #, fuzzy
@@ -1568,9 +1568,8 @@ msgid "By Secondary Structure"
 msgstr "渲染蛋白质二级结构"
 
 #: qtplugins/applycolors/applycolors.cpp:65
-#, fuzzy
 msgid "By Amino Acid"
-msgstr "氨基酸:"
+msgstr "按氨基酸"
 
 #: qtplugins/applycolors/applycolors.cpp:70
 msgid "By Shapely Scheme"
@@ -1619,9 +1618,8 @@ msgstr "显示多重键？"
 
 #: qtplugins/ballandstick/ballandstick.cpp:110
 #: qtplugins/wireframe/wireframe.cpp:99
-#, fuzzy
 msgid "Show hydrogens"
-msgstr "显示氢？"
+msgstr "显示氢"
 
 #: qtplugins/ballandstick/ballandstick.h:29
 msgid "Ball and Stick"
@@ -3532,9 +3530,8 @@ msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:359
 #: qtplugins/propertytables/propertymodel.cpp:398
-#, fuzzy
 msgid "Color"
-msgstr "颜色:"
+msgstr "颜色"
 
 #: qtplugins/propertytables/propertymodel.cpp:362
 msgid "Atom"
@@ -3913,10 +3910,8 @@ msgid "Reduce to Asymmetric Unit"
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:97
-#, fuzzy
-#| msgid "Tolerance:"
 msgid "Set Tolerance…"
-msgstr "容差："
+msgstr "设置容差…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:118
 #, fuzzy
