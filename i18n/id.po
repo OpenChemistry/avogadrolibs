@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-19 03:11+0000\n"
-"PO-Revision-Date: 2021-11-09 00:47+0000\n"
+"PO-Revision-Date: 2021-12-22 05:54+0000\n"
 "Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.10\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -6520,7 +6520,7 @@ msgstr "Longgar"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:240
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Very Loose"
-msgstr ""
+msgstr "Sangat Longgar"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:248
 #. i18n: ectx: property (text), widget (QPushButton, detectSymmetryButton)
@@ -6535,7 +6535,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:33
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_minY)
 msgid "Min y: "
-msgstr ""
+msgstr "Min y: "
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:36
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_minY)
@@ -6543,9 +6543,8 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_maxY)
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:123
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_fermi)
-#, fuzzy
 msgid " eV"
-msgstr "eV"
+msgstr " eV"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
@@ -6664,21 +6663,19 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Number of Bonds:"
 msgid "Number of Dimensions:"
-msgstr "Nomor dari Ikatan:"
+msgstr "Nomor dari Dimensi:"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
 msgid "Display Yaehmop Input?"
-msgstr ""
+msgstr "Tampilkan Input Yaehmop?"
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-",Launchpad Contributions:,Waluyo Adi Siswanto, ,Launchpad Contributions:,"
-"Geoff Hutchison,Waluyo Adi Siswanto, ,Launchpad Contributions:,Geoff "
+",Launchpad Contributions:,Waluyo Adi Siswanto, ,Launchpad Contributions:"
+",Geoff Hutchison,Waluyo Adi Siswanto, ,Launchpad Contributions:,Geoff "
 "Hutchison,Waluyo Adi Siswanto, ,Launchpad Contributions:,Avogadro Team,Geoff "
 "Hutchison,Waluyo Adi Siswanto, ,Launchpad Contributions:,Avogadro Team,Geoff "
 "Hutchison,Waluyo Adi Siswanto, ,Launchpad Contributions:,Avogadro Team,Geoff "
@@ -6686,8 +6683,8 @@ msgstr ""
 "Hutchison,Waluyo Adi Siswanto, ,Launchpad Contributions:,Avogadro Team,Geoff "
 "Hutchison,Waluyo Adi Siswanto, ,Launchpad Contributions:,Avogadro Team,Geoff "
 "Hutchison,Waluyo Adi Siswanto, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Muhammad Radifar,Waluyo Adi Siswanto, ,Launchpad Contributions:,"
-"Avogadro Team,Geoff Hutchison,Muhammad Radifar,Samsul Ma'arif,Waluyo Adi "
+"Hutchison,Muhammad Radifar,Waluyo Adi Siswanto, ,Launchpad Contributions:"
+",Avogadro Team,Geoff Hutchison,Muhammad Radifar,Samsul Ma'arif,Waluyo Adi "
 "Siswanto, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Muhammad "
 "Radifar,Samsul Ma'arif,Waluyo Adi Siswanto"
 
