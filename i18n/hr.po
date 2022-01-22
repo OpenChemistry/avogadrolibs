@@ -1,22 +1,23 @@
 # Translations for the Avogadro molecular builder.
 # Copyright (C) 2006-2018 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Milo Ivir <mail@milotype.de>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-19 03:11+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-11-07 22:51+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/hr/>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: molequeue/batchjob.cpp:71
 #, qt-format
@@ -451,7 +452,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "U BackgroundFileFormat nije postavljena molekula!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -459,7 +460,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "U BackgroundFileFormat nije postavljeno nijedno ime datoteke!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
@@ -1124,7 +1125,7 @@ msgstr ""
 
 #: qtgui/moleculemodel.cpp:104
 msgid "Untitled"
-msgstr ""
+msgstr "Bez naslova"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
@@ -1356,7 +1357,7 @@ msgstr ""
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/svg/svg.cpp:46 qtplugins/vrml/vrml.cpp:58
 msgid "&Export"
-msgstr ""
+msgstr "&Izvezi"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1530,7 +1531,7 @@ msgstr ""
 #: qtplugins/overlayaxes/overlayaxes.cpp:265
 #: qtplugins/resetview/resetview.cpp:68
 msgid "&View"
-msgstr ""
+msgstr "&Prikaz"
 
 #: qtplugins/applycolors/applycolors.cpp:95
 msgid "Color Atoms"
@@ -1699,7 +1700,7 @@ msgstr ""
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/quantuminput/quantuminput.cpp:81 qtplugins/yaehmop/yaehmop.cpp:80
 msgid "&Extensions"
-msgstr ""
+msgstr "&Proširenja"
 
 #: qtplugins/clientserver/clientserver.cpp:83
 msgid "S&erver"
@@ -1967,7 +1968,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:35:264
 msgid "Clear"
-msgstr ""
+msgstr "Očisti"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
@@ -2328,7 +2329,7 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragment.cpp:70
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
 msgid "&Import"
-msgstr ""
+msgstr "&Uvezi"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:75
 msgid "PDB Code"
@@ -2825,7 +2826,7 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
 msgid "Navigate tool"
-msgstr ""
+msgstr "Alat za kretanje"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
@@ -6468,7 +6469,7 @@ msgstr ""
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "Oliver Mucafir, Geoff Hutchison, gogo, Milo Ivir"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
