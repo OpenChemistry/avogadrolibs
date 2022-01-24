@@ -8,7 +8,7 @@ on: [push, pull_request, workflow_dispatch]
 
 env:
   BUILD_TYPE: Release
-  QT_VERSION: 5.12.10
+  QT_VERSION: 5.12.12
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
