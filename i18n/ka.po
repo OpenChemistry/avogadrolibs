@@ -7,23 +7,25 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-09-19 03:11+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-01-27 08:52+0000\n"
+"Last-Translator: Temuri Doghonadze <temuri@delta-net.ge>\n"
+"Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/ka/>\n"
 "Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.11-dev\n"
 
 #: molequeue/batchjob.cpp:71
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "დავალებების კრებული #%L1 (%2)"
 
 #: molequeue/client/client.cpp:245
 msgid "No message specified."
-msgstr ""
+msgstr "შეტყობინება მითითებული არაა."
 
 #: molequeue/inputgenerator.cpp:70 qtgui/interfacescript.cpp:69
 #, qt-format
