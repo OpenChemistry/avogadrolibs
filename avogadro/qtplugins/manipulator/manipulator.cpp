@@ -133,7 +133,7 @@ QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
 
   if (mol->isSelectionEmpty() && m_object.type == Rendering::AtomType &&
-      m_object.molecule == mol) {
+      m_object.molecule == &m_molecule->molecule()) {
     // translate single atom position
     RWAtom atom = m_molecule->atom(m_object.index);
     Vector3f oldPos(atom.position3d().cast<float>());
