@@ -1046,7 +1046,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:175 :567
+#: qtgui/jsonwidget.cpp:175:567
 msgid "Title"
 msgstr ""
 
@@ -1207,7 +1207,7 @@ msgstr ""
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:204 qtgui/rwlayermanager.cpp:207
-#: qtplugins/selectiontool/selectiontool.cpp:267 :1474
+#: qtplugins/selectiontool/selectiontool.cpp:267:1474
 msgid "Change Layer"
 msgstr ""
 
@@ -1226,7 +1226,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:118 qtgui/rwmolecule.cpp:126 :462
+#: qtgui/rwmolecule.cpp:118 qtgui/rwmolecule.cpp:126:462
 msgid "Adjust Hydrogens"
 msgstr ""
 
@@ -1415,7 +1415,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
-#: qtplugins/apbs/apbs.h:42 :84
+#: qtplugins/apbs/apbs.h:42:84
 msgid "APBS"
 msgstr ""
 
@@ -1478,7 +1478,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:190
-#: qtplugins/clientserver/connectionsettingsdialog.cpp:75 :144
+#: qtplugins/clientserver/connectionsettingsdialog.cpp:75:144
 msgid "Success"
 msgstr ""
 
@@ -1910,7 +1910,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:185
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612
-#: qtplugins/label/label.cpp:157 :1528
+#: qtplugins/label/label.cpp:157:1528
 msgid "Custom"
 msgstr ""
 
@@ -1952,25 +1952,25 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:33 :255
+#: qtplugins/copypaste/copypaste.cpp:33:255
 msgid "Copy"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:34 :252
+#: qtplugins/copypaste/copypaste.cpp:34:252
 msgid "Cut"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:35 :264
+#: qtplugins/copypaste/copypaste.cpp:35:264
 msgid "Clear"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
-#: qtplugins/copypaste/copypaste.cpp:36 :258
+#: qtplugins/copypaste/copypaste.cpp:36:258
 msgid "Paste"
 msgstr ""
 
@@ -2076,13 +2076,13 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:374
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:409 :620
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:409:620
 msgid "NONE"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:377 :1198
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:377:1198
 msgid "PME"
 msgstr ""
 
@@ -2517,7 +2517,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
-#: qtplugins/insertfragment/insertfragment.cpp:128 :357
+#: qtplugins/insertfragment/insertfragment.cpp:128:357
 msgid "Import Crystal"
 msgstr ""
 
@@ -2547,7 +2547,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:108
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
-#: qtplugins/label/label.cpp:152 qtplugins/label/label.cpp:192 :1207
+#: qtplugins/label/label.cpp:152 qtplugins/label/label.cpp:192:1207
 msgid "None"
 msgstr ""
 
@@ -2680,7 +2680,7 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133 :922
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:922
 msgid "Insert Molecule…"
 msgstr ""
 
@@ -3081,7 +3081,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:509 :1108
+#: qtplugins/openmminput/openmminputdialog.cpp:509:1108
 msgid "input.prmtop"
 msgstr ""
 
@@ -3111,7 +3111,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1072
-#: qtplugins/openmminput/openmminputdialog.cpp:1081 :1225 rc.cpp:1240
+#: qtplugins/openmminput/openmminputdialog.cpp:1081:1225 rc.cpp:1240
 msgid "True"
 msgstr ""
 
@@ -3154,7 +3154,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/playertool/playertool.cpp:125 :1537
+#: qtplugins/playertool/playertool.cpp:125:1537
 msgid "Frame:"
 msgstr ""
 
@@ -3670,7 +3670,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:40 :1576
+#: qtplugins/select/select.h:40:1576
 msgid "Select"
 msgstr ""
 
@@ -3704,7 +3704,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:81 :1561
+#: qtplugins/spacegroup/spacegroup.cpp:81:1561
 msgid "Symmetrize"
 msgstr ""
 
@@ -3899,7 +3899,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34 :1546
+#: qtplugins/symmetry/symmetry.h:34:1546
 msgid "Symmetry"
 msgstr ""
 
