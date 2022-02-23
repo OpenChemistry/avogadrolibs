@@ -351,8 +351,7 @@ QUndoCommand* BondCentricTool::mousePressEvent(QMouseEvent* e)
   Rendering::Identifier ident = m_renderer->hit(e->pos().x(), e->pos().y());
 
   // If no hits, return. Also ensure that the hit molecule is the one we expect.
-  const Core::Molecule* mol = &m_molecule->molecule();
-  if (!ident.isValid() || ident.molecule != mol)
+  if (!ident.isValid() || ident.molecule != &m_molecule->molecule())
     return nullptr;
 
   // If the hit is a left click on a bond, make it the selected bond and map
