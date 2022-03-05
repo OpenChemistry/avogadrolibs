@@ -237,6 +237,13 @@ public:
         }
       }
 
+      // Check formal charge.
+      attribute = node.attribute("formalCharge");
+      if (attribute) {
+        signed int formalCharge = lexicalCast<signed int>(attribute.value());
+        atom.setFormalCharge(formalCharge);
+      }
+
       // Move on to the next atom node (if there is one).
       node = node.next_sibling("atom");
     }
