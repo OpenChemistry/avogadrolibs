@@ -431,7 +431,9 @@ void RWMolecule::appendMolecule(const Molecule& mol, const QString& undoText)
   Index offset = atomCount();
   for (size_t i = 0; i < mol.atomCount(); ++i) {
     Core::Atom atom = mol.atom(i);
-    addAtom(atom.atomicNumber(), atom.position3d());
+    AtomType new_atom = addAtom(atom.atomicNumber(), atom.position3d());
+    new_atom.setFormalCharge(atom.formalCharge());
+
     setAtomSelected(atomCount() - 1, true);
   }
   // now loop through and add the bonds
