@@ -203,6 +203,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   } // End while loop
   mol.perceiveBondsSimple();
   mol.perceiveBondsFromResidueData();
+  mol.perceiveSubstitutedCations();
   SecondaryStructureAssigner ssa;
   ssa.assign(&mol);
 
