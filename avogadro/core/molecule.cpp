@@ -579,11 +579,13 @@ Array<const Molecule::BondType*> Molecule::bonds(Index a) const
 {
   Array<const BondType*> atomBonds;
   if (a < atomCount()) {
-    for (Index i = 0; i < m_bondPairs.size(); ++i)
-      if (m_bondPairs[i].first == a || m_bondPairs[i].second == a) {
+    for (Index i = 0; i < m_bondMap[a].size(); ++i) {
+      Index index = m_bondMap[a][i];
+      if (m_bondPairs[index].first == a || m_bondPairs[index].second == a) {
         // work arround to consult bonds without breaking constantness
-        atomBonds.push_back(new BondType(const_cast<Molecule*>(this), i));
+        atomBonds.push_back(new BondType(const_cast<Molecule*>(this), index));
       }
+    }
   }
   return atomBonds;
 }
@@ -592,10 +594,11 @@ Array<Molecule::BondType> Molecule::bonds(Index a)
 {
   Array<BondType> atomBonds;
   if (a < atomCount()) {
-    for (Index i = 0; i < bondCount(); ++i) {
-      auto bond = bondPair(i);
+    for (Index i = 0; i < m_bondMap[a].size(); ++i) {
+      Index index = m_bondMap[a][i];
+      auto bond = bondPair(index);
       if (bond.first == a || bond.second == a)
-        atomBonds.push_back(BondType(this, i));
+        atomBonds.push_back(BondType(this, index));
     }
   }
   return atomBonds;
@@ -1076,12 +1079,8 @@ bool Molecule::removeBonds(Index atom)
 Array<std::pair<Index, Index>> Molecule::getAtomBonds(Index index) const
 {
   Array<std::pair<Index, Index>> result;
-  for (auto& pair : m_bondPairs) {
-    if (pair.first == index) {
-      result.push_back(pair);
-    } else if (pair.second == index) {
-      result.push_back(pair);
-    }
+  for (Index i = 0; i < m_bondMap[index].size(); i++) {
+    result.push_back(m_bondPairs[m_bondMap[index][i]]);
   }
   return result;
 }
@@ -1089,14 +1088,8 @@ Array<std::pair<Index, Index>> Molecule::getAtomBonds(Index index) const
 Array<unsigned char> Molecule::getAtomOrders(Index index) const
 {
   Array<unsigned char> result;
-  Index i = 0;
-  for (auto& pair : m_bondPairs) {
-    if (pair.first == index) {
-      result.push_back(m_bondOrders[i]);
-    } else if (pair.second == index) {
-      result.push_back(m_bondOrders[i]);
-    }
-    ++i;
+  for (Index i = 0; i < m_bondMap[index].size(); i++) {
+    result.push_back(m_bondOrders[m_bondMap[index][i]]);
   }
   return result;
 }
