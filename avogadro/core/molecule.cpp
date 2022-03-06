@@ -446,6 +446,7 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
     if (!m_graphDirty) {
       m_graph.addEdge(atom1, atom2);
       m_bondMap[atom1].push_back(m_bondPairs.size());
+      m_bondMap[atom2].push_back(m_bondPairs.size());
     }
     m_bondPairs.push_back(Molecule::makeBondPair(atom1, atom2));
     m_bondOrders.push_back(order);
