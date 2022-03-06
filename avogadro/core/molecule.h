@@ -704,6 +704,8 @@ private:
 
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
   mutable bool m_graphDirty; // Should the graph be rebuilt?
+  // Bond indices connected to each atom index.
+  mutable std::vector<std::vector<Index>> m_bondMap;
   // edge information
   Array<std::pair<Index, Index>> m_bondPairs;
   Array<unsigned char> m_bondOrders;
