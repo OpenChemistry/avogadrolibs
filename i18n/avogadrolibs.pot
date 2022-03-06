@@ -1,5 +1,5 @@
 # Translations for the Avogadro molecular builder.
-# Copyright (C) 2006-2021 The Avogadro Project
+# Copyright (C) 2006-2022 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-09-19 03:11+0000\n"
+"POT-Creation-Date: 2022-03-06 02:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1587,8 +1587,8 @@ msgid ""
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:959
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:1047
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:958
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:1046
 #: qtplugins/measuretool/measuretool.cpp:202
 #: qtplugins/measuretool/measuretool.cpp:210
 #: qtplugins/measuretool/measuretool.cpp:211
@@ -1596,7 +1596,7 @@ msgstr ""
 msgid "%L1°"
 msgstr ""
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:981
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:980
 #: qtplugins/editor/editor.cpp:241 qtplugins/measuretool/measuretool.cpp:218
 #: qtplugins/measuretool/measuretool.cpp:219
 #: qtplugins/measuretool/measuretool.cpp:221
