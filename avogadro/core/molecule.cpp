@@ -557,15 +557,14 @@ Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
   assert(atomId1 < atomCount());
   assert(atomId2 < atomCount());
 
-  std::pair<Index, Index> pair = Molecule::makeBondPair(atomId1, atomId2);
-  Array<std::pair<Index, Index>>::const_iterator iter =
-    std::find(m_bondPairs.begin(), m_bondPairs.end(), pair);
-
-  Index index = static_cast<Index>(std::distance(m_bondPairs.begin(), iter));
-
-  if (index >= bondCount())
-    return BondType();
-  return BondType(const_cast<Molecule*>(this), index);
+  Index index;
+  for (Index i = 0; i < m_bondMap[atomId1].size(); i++) {
+    Index index = m_bondMap[atomId1][i];
+    auto& pair = m_bondPairs[index];
+    if (pair.first == atomId2 || pair.second == atomId2)
+      return BondType(const_cast<Molecule*>(this), index);
+  }
+  return BondType();
 }
 
 Array<Molecule::BondType> Molecule::bonds(const AtomType& a)
