@@ -842,11 +842,13 @@ inline Core::Array<RWMolecule::BondType> RWMolecule::bonds(
 inline Core::Array<RWMolecule::BondType> RWMolecule::bonds(
   const Index& atomId) const
 {
+  auto atomBonds = m_molecule.bonds(atomId);
   Core::Array<RWMolecule::BondType> result;
-  for (Index i = 0; i < m_molecule.bondCount(); ++i)
-    if (m_molecule.bondPair(i).first == atomId ||
-        m_molecule.bondPair(i).second == atomId)
-      result.push_back(BondType(const_cast<RWMolecule*>(this), i));
+  for (Index i = 0; i < atomBonds.size(); ++i) {
+    result.push_back(BondType(
+      const_cast<RWMolecule*>(this), atomBonds[i].index()
+    ));
+  }
   return result;
 }
 
