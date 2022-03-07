@@ -847,16 +847,16 @@ void Molecule::perceiveSubstitutedCations()
 
     unsigned char bondCount(0);
     Index j = 0;
-    for (auto& pair : m_bondPairs) {
+    for (auto& bond : bonds(i)) {
       unsigned char otherAtomicNumber(0);
-      if (pair.first == pair.second) {
-      }
-      if (pair.first == i) {
-        otherAtomicNumber = atomicNumber(pair.second);
-        bondCount += m_bondOrders[j];
-      } else if (pair.second == i) {
-        otherAtomicNumber = atomicNumber(pair.first);
-        bondCount += m_bondOrders[j];
+      Index index1(bond.atom1().index());
+      Index index2(bond.atom2().index());
+      if (index1 == i) {
+        otherAtomicNumber = atomicNumber(index2);
+        bondCount += bond.order();
+      } else if (index2 == i) {
+        otherAtomicNumber = atomicNumber(index1);
+        bondCount += bond.order();
       }
       if (otherAtomicNumber && otherAtomicNumber != 6) {
         bondCount = 0;
