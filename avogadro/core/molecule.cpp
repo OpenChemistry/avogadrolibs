@@ -840,7 +840,7 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
   // note that the "worst case" here would need to be an invalid molecule
   for (Index i = 0; i < atomCount(); i++) {
     Vector3 ipos = m_positions3d[i];
-    const std::array<size_t, 3>& bin_index = atoms_bin[i];
+    const std::array<size_t, 3> &bin_index = atoms_bin[i];
     for (Index xi = std::max(0, signed(bin_index[0]) - 1);
         xi < std::min(bin_count[0], bin_index[0] + 2); xi++) {
       for (Index yi = std::max(0, signed(bin_index[1]) - 1);
