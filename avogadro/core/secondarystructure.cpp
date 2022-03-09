@@ -217,11 +217,11 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
   int n = m_hBonds.size();
   for (unsigned int i = 0; i < n; ++i) {
     auto recordI = m_hBonds[i];
-    auto residueI = m_molecule->residue(recordI->residue);
+    const Residue &residueI = m_molecule->residue(recordI->residue);
 
     for (unsigned int j = i + 1; j < n; ++j) {
       auto recordJ = m_hBonds[j];
-      auto residueJ = m_molecule->residue(recordJ->residue);
+      const Residue &residueJ = m_molecule->residue(recordJ->residue);
 
       // skip if we're not on the same chain
       if (residueI.chainId() != residueJ.chainId())
