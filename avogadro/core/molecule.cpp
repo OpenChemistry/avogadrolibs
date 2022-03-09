@@ -847,7 +847,7 @@ void Molecule::perceiveSubstitutedCations()
 
     unsigned char bondCount(0);
     Index j = 0;
-    for (auto& bond : bonds(i)) {
+    for (auto &bond : bonds(i)) {
       unsigned char otherAtomicNumber(0);
       Index index1(bond.atom1().index());
       Index index2(bond.atom2().index());
