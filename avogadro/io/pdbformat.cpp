@@ -136,6 +136,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       element = trimmed(element);
       if (element == "SE") // For Sulphur
         element = 'S';
+      if (element.length() == 2)
+        element[1] = std::tolower(element[1]);
 
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
       if (atomicNum == 255)
