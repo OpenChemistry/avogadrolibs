@@ -557,10 +557,12 @@ Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
   assert(atomId1 < atomCount());
   assert(atomId2 < atomCount());
 
+  updateGraph(); // Because we are reading m_bondMap
+
   Index index;
   for (Index i = 0; i < m_bondMap[atomId1].size(); i++) {
     Index index = m_bondMap[atomId1][i];
-    auto& pair = m_bondPairs[index];
+    auto &pair = m_bondPairs[index];
     if (pair.first == atomId2 || pair.second == atomId2)
       return BondType(const_cast<Molecule*>(this), index);
   }
