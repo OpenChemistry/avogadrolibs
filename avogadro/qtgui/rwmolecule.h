@@ -846,7 +846,7 @@ inline Core::Array<RWMolecule::BondType> RWMolecule::bonds(
   Core::Array<RWMolecule::BondType> result;
   for (Index i = 0; i < atomBonds.size(); ++i) {
     result.push_back(BondType(
-      const_cast<RWMolecule*>(this), atomBonds[i].index()
+      const_cast<RWMolecule *>(this), atomBonds[i].index()
     ));
   }
   return result;

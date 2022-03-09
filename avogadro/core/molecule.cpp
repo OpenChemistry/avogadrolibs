@@ -530,9 +530,8 @@ void Molecule::clearBonds()
   m_bondPairs.clear();
   m_graph.removeEdges();
   m_graph.setSize(atomCount());
-  for (Index i = 0; i < m_bondMap.size(); i++) {
+  for (Index i = 0; i < m_bondMap.size(); i++)
     m_bondMap[i].clear();
-  }
   m_bondMap.resize(atomCount());
   m_graphDirty = false;
 }
@@ -564,7 +563,7 @@ Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
     Index index = m_bondMap[atomId1][i];
     auto &pair = m_bondPairs[index];
     if (pair.first == atomId2 || pair.second == atomId2)
-      return BondType(const_cast<Molecule*>(this), index);
+      return BondType(const_cast<Molecule *>(this), index);
   }
   return BondType();
 }
@@ -577,15 +576,15 @@ Array<Molecule::BondType> Molecule::bonds(const AtomType& a)
   return bonds(a.index());
 }
 
-Array<const Molecule::BondType*> Molecule::bonds(Index a) const
+Array<const Molecule::BondType *> Molecule::bonds(Index a) const
 {
-  Array<const BondType*> atomBonds;
+  Array<const BondType *> atomBonds;
   if (a < atomCount()) {
     for (Index i = 0; i < m_bondMap[a].size(); ++i) {
       Index index = m_bondMap[a][i];
       if (m_bondPairs[index].first == a || m_bondPairs[index].second == a) {
         // work arround to consult bonds without breaking constantness
-        atomBonds.push_back(new BondType(const_cast<Molecule*>(this), index));
+        atomBonds.push_back(new BondType(const_cast<Molecule *>(this), index));
       }
     }
   }
