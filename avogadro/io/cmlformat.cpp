@@ -550,7 +550,7 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
     }
     if(a.formalCharge() != 0) {
       atomNode.append_attribute("formalCharge") =
-          formatNumber(numberStream, int(a.formalCharge())).c_str();
+          formatNumber(numberStream, a.formalCharge()).c_str();
     }
   }
 
