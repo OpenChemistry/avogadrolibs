@@ -835,11 +835,13 @@ void Molecule::perceiveSubstitutedCations()
       case 7:
       case 15:
       case 33:
+      case 51:
         requiredBondCount = 4;
         break;
       case 8:
       case 16:
-      case 32:
+      case 34:
+      case 52:
         requiredBondCount = 3;
     }
     if (!requiredBondCount)
@@ -847,7 +849,7 @@ void Molecule::perceiveSubstitutedCations()
 
     unsigned char bondCount(0);
     Index j = 0;
-    for (auto &bond : bonds(i)) {
+    for (const auto &bond : bonds(i)) {
       unsigned char otherAtomicNumber(0);
       Index index1(bond.atom1().index());
       Index index2(bond.atom2().index());
