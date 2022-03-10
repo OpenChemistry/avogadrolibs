@@ -203,7 +203,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   } // End while loop
   mol.perceiveBondsSimple();
   mol.perceiveBondsFromResidueData();
-  mol.perceiveSubstitutedCations();
+  perceiveSubstitutedCations(mol);
   SecondaryStructureAssigner ssa;
   ssa.assign(&mol);
 
@@ -222,6 +222,52 @@ std::vector<std::string> PdbFormat::mimeTypes() const
   std::vector<std::string> mime;
   mime.push_back("chemical/x-pdb");
   return mime;
+}
+
+void PdbFormat::perceiveSubstitutedCations(Core::Molecule mol)
+{
+  for (Index i = 0; i < mol.atomCount(); i++) {
+    unsigned char requiredBondCount(0);
+    switch(mol.atomicNumber(i)) {
+      case 7:
+      case 15:
+      case 33:
+      case 51:
+        requiredBondCount = 4;
+        break;
+      case 8:
+      case 16:
+      case 34:
+      case 52:
+        requiredBondCount = 3;
+    }
+    if (!requiredBondCount)
+      continue;
+
+    unsigned char bondCount(0);
+    Index j = 0;
+    for (const auto &bond : mol.bonds(i)) {
+      unsigned char otherAtomicNumber(0);
+      Index index1(bond.atom1().index());
+      Index index2(bond.atom2().index());
+      if (index1 == i) {
+        otherAtomicNumber = mol.atomicNumber(index2);
+        bondCount += bond.order();
+      } else if (index2 == i) {
+        otherAtomicNumber = mol.atomicNumber(index1);
+        bondCount += bond.order();
+      }
+      if (otherAtomicNumber && otherAtomicNumber != 6) {
+        bondCount = 0;
+        break;
+      }
+      j++;
+    }
+
+    if (bondCount == requiredBondCount) {
+      mol.setFormalCharge(i, 1);
+    }
+  }
 }
 
 } // namespace Io

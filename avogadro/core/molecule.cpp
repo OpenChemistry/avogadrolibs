@@ -827,52 +827,6 @@ void Molecule::perceiveBondsFromResidueData()
   }
 }
 
-void Molecule::perceiveSubstitutedCations()
-{
-  for (Index i = 0; i < atomCount(); i++) {
-    unsigned char requiredBondCount(0);
-    switch(atomicNumber(i)) {
-      case 7:
-      case 15:
-      case 33:
-      case 51:
-        requiredBondCount = 4;
-        break;
-      case 8:
-      case 16:
-      case 34:
-      case 52:
-        requiredBondCount = 3;
-    }
-    if (!requiredBondCount)
-      continue;
-
-    unsigned char bondCount(0);
-    Index j = 0;
-    for (const auto &bond : bonds(i)) {
-      unsigned char otherAtomicNumber(0);
-      Index index1(bond.atom1().index());
-      Index index2(bond.atom2().index());
-      if (index1 == i) {
-        otherAtomicNumber = atomicNumber(index2);
-        bondCount += bond.order();
-      } else if (index2 == i) {
-        otherAtomicNumber = atomicNumber(index1);
-        bondCount += bond.order();
-      }
-      if (otherAtomicNumber && otherAtomicNumber != 6) {
-        bondCount = 0;
-        break;
-      }
-      j++;
-    }
-
-    if (bondCount == requiredBondCount) {
-      setFormalCharge(i, 1);
-    }
-  }
-}
-
 int Molecule::coordinate3dCount()
 {
   return static_cast<int>(m_coordinates3d.size());
