@@ -275,7 +275,7 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   for (size_t i = 0; i < chargeList.size(); ++i) {
     Index atomIndex = chargeList[i].first;
     signed int atomCharge = chargeList[i].second;
-    out << "M  CHG " << setw(3) << std::right << atomIndex + 1 << " "
+    out << "M  CHG  1 " << setw(3) << std::right << atomIndex + 1 << " "
         << setw(3) << atomCharge << "\n";
   }
   out << "M  END\n";
