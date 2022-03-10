@@ -224,11 +224,11 @@ std::vector<std::string> PdbFormat::mimeTypes() const
   return mime;
 }
 
-void PdbFormat::perceiveSubstitutedCations(Core::Molecule mol)
+void PdbFormat::perceiveSubstitutedCations(Core::Molecule& molecule)
 {
-  for (Index i = 0; i < mol.atomCount(); i++) {
+  for (Index i = 0; i < molecule.atomCount(); i++) {
     unsigned char requiredBondCount(0);
-    switch(mol.atomicNumber(i)) {
+    switch(molecule.atomicNumber(i)) {
       case 7:
       case 15:
       case 33:
@@ -246,15 +246,15 @@ void PdbFormat::perceiveSubstitutedCations(Core::Molecule mol)
 
     unsigned char bondCount(0);
     Index j = 0;
-    for (const auto &bond : mol.bonds(i)) {
+    for (const auto &bond : molecule.bonds(i)) {
       unsigned char otherAtomicNumber(0);
       Index index1(bond.atom1().index());
       Index index2(bond.atom2().index());
       if (index1 == i) {
-        otherAtomicNumber = mol.atomicNumber(index2);
+        otherAtomicNumber = molecule.atomicNumber(index2);
         bondCount += bond.order();
       } else if (index2 == i) {
-        otherAtomicNumber = mol.atomicNumber(index1);
+        otherAtomicNumber = molecule.atomicNumber(index1);
         bondCount += bond.order();
       }
       if (otherAtomicNumber && otherAtomicNumber != 6) {
@@ -265,7 +265,7 @@ void PdbFormat::perceiveSubstitutedCations(Core::Molecule mol)
     }
 
     if (bondCount == requiredBondCount) {
-      mol.setFormalCharge(i, 1);
+      molecule.setFormalCharge(i, 1);
     }
   }
 }

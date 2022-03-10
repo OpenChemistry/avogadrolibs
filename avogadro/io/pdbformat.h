@@ -53,7 +53,7 @@ public:
     return false;
   }
 
-  void perceiveSubstitutedCations(Core::Molecule);
+  void perceiveSubstitutedCations(Core::Molecule& molecule);
 };
 
 } // namespace Io
