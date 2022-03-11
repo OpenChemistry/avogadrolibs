@@ -252,16 +252,17 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   for (size_t i = 0; i < mol.atomCount(); ++i) {
     Atom atom = mol.atom(i);
     signed int charge = atom.formalCharge();
-    chargeList.push_back(std::pair(atom.index(), charge));
+    if (charge)
+      chargeList.push_back(std::pair(atom.index(), charge));
     unsigned int chargeField = (charge < 0)?
         ((charge >= -3)? 4 - charge : 0) :
         ((charge <= 3)? charge : 0);
     out << setw(10) << std::right << std::fixed << setprecision(4)
         << atom.position3d().x() << setw(10) << atom.position3d().y()
         << setw(10) << atom.position3d().z() << " " << setw(3) << std::left
-        << Elements::symbol(atom.atomicNumber()) << "0 "
+        << Elements::symbol(atom.atomicNumber()) << " 0"
         << setw(3) << std::right << chargeField /* for compatibility */
-        << "0  0  0  0  0  0  0  0  0  0  \n";
+        << "  0  0  0  0  0  0  0  0  0  0\n";
   }
   // Bond block.
   for (size_t i = 0; i < mol.bondCount(); ++i) {
