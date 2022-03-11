@@ -803,7 +803,7 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
   // find molecule bounding box
   Vector3 min_pos = m_positions3d[0];
   Vector3 max_pos = m_positions3d[0];
-  for (Index i = 0; i < atomCount(); i++) {
+  for (Index i = 1; i < atomCount(); i++) {
     Vector3 ipos = m_positions3d[i];
     for (size_t c = 0; c < 3; c++) {
       min_pos(c) = std::min(ipos(c), min_pos(c));
@@ -841,11 +841,11 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
   for (Index i = 0; i < atomCount(); i++) {
     Vector3 ipos = m_positions3d[i];
     const std::array<size_t, 3> &bin_index = atoms_bin[i];
-    for (Index xi = std::max(0, signed(bin_index[0]) - 1);
+    for (Index xi = std::max(size_t(1), bin_index[0]) - 1;
         xi < std::min(bin_count[0], bin_index[0] + 2); xi++) {
-      for (Index yi = std::max(0, signed(bin_index[1]) - 1);
+      for (Index yi = std::max(size_t(1), bin_index[1]) - 1;
           yi < std::min(bin_count[1], bin_index[1] + 2); yi++) {
-        for (Index zi = std::max(0, signed(bin_index[2]) - 1);
+        for (Index zi = std::max(size_t(1), bin_index[2]) - 1;
             zi < std::min(bin_count[2], bin_index[2] + 2); zi++) {
           std::vector<Index> bin = bins[xi][yi][zi];
           for (size_t bj = 0; bj < bin.size(); ++bj) {
