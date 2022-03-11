@@ -30,13 +30,18 @@ using std::vector;
 
 using SecondaryStructure = Avogadro::Core::Residue::SecondaryStructure;
 
-const int AtomColumns = 6;    // element, valence, x, y, z, color
-const int BondColumns = 5;    // type, atom 1, atom 2, bond order, length
-const int AngleColumns = 5;   // type, atom 1, atom 2, atom 3, angle
-const int TorsionColumns = 6; // type, atom 1, atom 2, atom 3, atom 4, dihedral
-const int ResidueColumns =
-  6; // name, number, chain, secondary structure, heterogen, color
-const int ConformerColumns = 2; // number, energy
+// element, valence, formal charge, x, y, z, color TODO: partial charge
+const int AtomColumns = 7;
+// type, atom 1, atom 2, bond order, length
+const int BondColumns = 5;
+// type, atom 1, atom 2, atom 3, angle
+const int AngleColumns = 5;
+// type, atom 1, atom 2, atom 3, atom 4, dihedral
+const int TorsionColumns = 6;
+// name, number, chain, secondary structure, heterogen, color
+const int ResidueColumns = 6;
+// number, energy, ??
+const int ConformerColumns = 2;
 
 inline double distance(Vector3 v1, Vector3 v2)
 {
@@ -96,18 +101,17 @@ int PropertyModel::columnCount(const QModelIndex& parent) const
   Q_UNUSED(parent);
   switch (m_type) {
     case AtomType:
-      return AtomColumns; // element, valence, X, Y, Z, color
+      return AtomColumns; // see above
     case BondType:
-      return BondColumns; // type, atom 1, atom 2, order, length
+      return BondColumns; // see above
     case AngleType:
-      return AngleColumns; // type, atom 1, atom 2, atom 3, angle
+      return AngleColumns; // see above
     case TorsionType:
-      return TorsionColumns; // type, atom 1, atom 2, atom 3, atom 4, dihedral
+      return TorsionColumns;
     case ResidueType:
-      return ResidueColumns; // name, number, chain, secondary structure,
-                             // heterogen, color
+      return ResidueColumns;
     case ConformerType:
-      return ConformerColumns; // number, energy
+      return ConformerColumns;
   }
   return 0;
 }
@@ -194,6 +198,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return Core::Elements::symbol(m_molecule->atomicNumber(row));
       case AtomDataValence:
         return QVariant::fromValue(m_molecule->bonds(row).size());
+      case AtomDataFormalCharge:
+        return m_molecule->formalCharge(row);
       case AtomDataX:
         return QString("%L1").arg(m_molecule->atomPosition3d(row).x(), 0, 'f',
                                   4);
@@ -349,6 +355,8 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           return tr("Element");
         case AtomDataValence:
           return tr("Valence");
+        case AtomDataFormalCharge:
+          return tr("Formal Charge");
         case AtomDataX:
           return tr("X (Å)");
         case AtomDataY:
