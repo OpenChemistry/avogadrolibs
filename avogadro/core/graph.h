@@ -18,6 +18,7 @@
 #define AVOGADRO_CORE_GRAPH_H
 
 #include "avogadrocore.h"
+#include "array.h"
 #include "connectedgroup.h"
 
 #include <cstddef>
@@ -42,16 +43,16 @@ public:
   /** Destroys the graph. */
   ~Graph();
 
-  /** Sets the number of verticies in the graph to size @p n. */
+  /** Sets the number of vertices in the graph to size @p n. */
   void setSize(size_t n);
 
-  /** @return the number of verticies in the graph. */
+  /** @return the number of vertices in the graph. */
   size_t size() const;
 
   /** @return \c true if the graph is empty (i.e. size() == \c 0). */
   bool isEmpty() const;
 
-  /** Removes all verticies and edges from the graph. */
+  /** Removes all vertices and edges from the graph. */
   void clear();
 
   /** Adds a vertex to the graph and returns its index. */
@@ -60,13 +61,13 @@ public:
   /** Removes the vertex at @p index from the graph. */
   void removeVertex(size_t index);
 
-  /** @return the number of verticies in the graph. */
+  /** @return the number of vertices in the graph. */
   size_t vertexCount() const;
 
-  /** Adds an edge between verticies @p a and @p b. */
+  /** Adds an edge between vertices @p a and @p b. */
   void addEdge(size_t a, size_t b);
 
-  /** Removes the edge between veritices @p a and @p b. */
+  /** Removes the edge between vertices @p a and @p b. */
   void removeEdge(size_t a, size_t b);
 
   /** Removes all of the edges from the graph. */
@@ -82,28 +83,34 @@ public:
   size_t edgeCount() const;
 
   /**
-   * @return a vector containing the indicies of each vertex that the vertex at
+   * @return a vector containing the indices of each vertex that the vertex at
    * index shares an edge with.
    */
   const std::vector<size_t>& neighbors(size_t index) const;
+
+  /**
+   * @return a vector containing the indices of each edge that the vertex at
+   * index is an endpoint of.
+   */
+  //const std::vector<size_t>& incidentEdges(size_t index) const;
 
   /** @return the degree of the vertex at @p index. */
   size_t degree(size_t index) const;
 
   /**
-   * @return \c true if the graph contains an edge between verticies @p a and
+   * @return \c true if the graph contains an edge between vertices @p a and
    * @p b.
    */
   bool containsEdge(size_t a, size_t b) const;
 
   /**
-   * @return a vector of vector containing the indicies of each vertex in each
+   * @return a vector of vector containing the indices of each vertex in each
    * connected component in the graph.
    */
   std::vector<std::set<size_t>> connectedComponents() const;
 
   /**
-   * @return a set containing the indicies of each vertex connected with @p
+   * @return a set containing the indices of each vertex connected with @p
    * index.
    */
   std::set<size_t> connectedComponent(size_t index) const;
@@ -125,6 +132,8 @@ public:
 private:
   std::set<size_t> checkConectivity(size_t a, size_t b) const;
   std::vector<std::vector<size_t>> m_adjacencyList;
+  std::vector<std::vector<size_t>> m_edgeMap;
+  Array<std::pair<size_t, size_t>> m_edgePairs;
   ConnectedGroup m_subgraphs;
 };
 

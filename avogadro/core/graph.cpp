@@ -22,6 +22,7 @@
 #include <cassert>
 #include <set>
 #include <stack>
+#include <iostream>
 
 namespace Avogadro {
 namespace Core {
@@ -45,6 +46,7 @@ void Graph::setSize(size_t n)
   }
 
   m_adjacencyList.resize(n);
+  m_edgeMap.resize(n);
 }
 
 size_t Graph::size() const
@@ -60,6 +62,7 @@ bool Graph::isEmpty() const
 void Graph::clear()
 {
   m_adjacencyList.clear();
+  m_edgeMap.clear();
   m_subgraphs.clear();
 }
 
@@ -73,12 +76,20 @@ size_t Graph::addVertex()
 void Graph::removeVertex(size_t index)
 {
   assert(index < size());
+  std::cout << "Remove " << index << "\n";
   m_subgraphs.removeConnection(index);
   // Remove the edges to the vertex.
   removeEdges(index);
 
   // Remove vertex's adjacency list.
   m_adjacencyList.erase(m_adjacencyList.begin() + index);
+  m_edgeMap.erase(m_edgeMap.begin() + index);
+
+  for (size_t i = 0; i < m_adjacencyList.size(); i++) {
+    for (size_t j = 0; j < m_adjacencyList[i].size(); j++) {
+      std::cout << i << " -> " << m_adjacencyList[i][j] << "\n";
+    }
+  }
 }
 
 size_t Graph::vertexCount() const
@@ -99,9 +110,14 @@ void Graph::addEdge(size_t a, size_t b)
 
   m_subgraphs.addConnection(a, b);
 
-  // Add the edge to each verticies adjacency list.
+  // Add the edge to each vertex' adjacency list.
   neighborsA.push_back(b);
   neighborsB.push_back(a);
+
+  // Add the edge to each vertex' incident edge list.
+  size_t newEdgeIndex = edgeCount();
+  m_edgeMap[a].push_back(newEdgeIndex);
+  m_edgeMap[b].push_back(newEdgeIndex);
 }
 
 std::set<size_t> Graph::checkConectivity(size_t a, size_t b) const
@@ -151,6 +167,25 @@ void Graph::removeEdge(size_t a, size_t b)
     neighborsA.erase(iter);
     neighborsB.erase(std::find(neighborsB.begin(), neighborsB.end(), a));
   }
+
+  size_t index;
+  for (size_t i = 0; i < m_edgeMap[a].size(); i++) {
+    index = m_edgeMap[a][i];
+    const std::pair<size_t, size_t> &pair = m_edgePairs[index];
+    if (pair.first == b || pair.second == b) {
+      m_edgeMap[a].erase(m_edgeMap[a].begin() + i);
+      break;
+    }
+  }
+
+  for (size_t i = 0; i < m_edgeMap[b].size(); i++) {
+    if (m_edgeMap[b][i] == index) {
+      m_edgeMap[b].erase(m_edgeMap[b].begin() + i);
+      break;
+    }
+  }
+
+  m_edgePairs.erase(m_edgePairs.begin() + index);
 
   if (m_subgraphs.getGroup(a) == m_subgraphs.getGroup(b)) {
     std::set<size_t> connected = checkConectivity(a, b);

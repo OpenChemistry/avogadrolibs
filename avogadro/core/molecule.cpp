@@ -398,7 +398,9 @@ bool Molecule::removeAtom(Index index)
   removeBonds(index);
   Index affectedIndex = static_cast<Index>(m_atomicNumbers.size() - 1);
   m_atomicNumbers.swapAndPop(index);
+  std::cout << "Removing atom...\n";
   if (!m_graphDirty) {
+    std::cout << "Removing graph vertex...\n";
     m_graph.removeVertex(index);
     m_bondMap[index] = m_bondMap.back();
     m_bondMap.pop_back();
