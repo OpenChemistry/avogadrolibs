@@ -90,9 +90,9 @@ public:
 
   /**
    * @return a vector containing the indices of each edge that the vertex at
-   * index is an endpoint of.
+   * @p index is an endpoint of; that is, the edges incident at it.
    */
-  //const std::vector<size_t>& incidentEdges(size_t index) const;
+  const std::vector<size_t>& edges(size_t index) const;
 
   /** @return the degree of the vertex at @p index. */
   size_t degree(size_t index) const;

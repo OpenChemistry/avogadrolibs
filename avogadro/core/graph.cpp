@@ -232,6 +232,12 @@ const std::vector<size_t>& Graph::neighbors(size_t index) const
   return m_adjacencyList[index];
 }
 
+const std::vector<size_t>& Graph::edges(size_t index) const
+{
+  assert(index < size());
+  return m_edgeMap[index];
+}
+
 size_t Graph::degree(size_t index) const
 {
   return neighbors(index).size();
