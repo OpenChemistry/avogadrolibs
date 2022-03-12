@@ -395,17 +395,19 @@ bool Molecule::removeAtom(Index index)
     m_selectedAtoms.pop_back();
   }
 
+  removeBonds(index);
   Index affectedIndex = static_cast<Index>(m_atomicNumbers.size() - 1);
   m_atomicNumbers.swapAndPop(index);
-  removeBonds(index);
   if (!m_graphDirty) {
     m_graph.removeVertex(index);
-    m_bondMap.erase(m_bondMap.begin() + index);
+    m_bondMap[index] = m_bondMap.back();
+    m_bondMap.pop_back();
   }
+
   // the bonds from back() now are in index, so we need to rebond it
   rebondBond(index, affectedIndex);
   m_layers.removeAtom(index);
-  return true;
+
   return true;
 }
 
