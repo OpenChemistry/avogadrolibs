@@ -153,10 +153,10 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
   }
 
   // formal charges
-  json charges = atoms["charges"];
-  if (charges.is_array() && charges.size() == atomCount) {
+  json formalCharges = atoms["formalCharges"];
+  if (formalCharges.is_array() && formalCharges.size() == atomCount) {
     for (size_t i = 0; i < atomCount; ++i) {
-      molecule.atom(i).setFormalCharge(charges[i]);
+      molecule.atom(i).setFormalCharge(formalCharges[i]);
     }
   }
 
@@ -763,11 +763,11 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
   root["atoms"]["labels"] = labels;
 
   // formal charges
-  json charges;
+  json formalCharges;
   for (size_t i = 0; i < molecule.atomCount(); ++i) {
-    charges.push_back(molecule.formalCharge(i));
+    formalCharges.push_back(molecule.formalCharge(i));
   }
-  root["atoms"]["charges"] = charges;
+  root["atoms"]["formalCharges"] = formalCharges;
 
   auto layer = LayerManager::getMoleculeInfo(&molecule)->layer;
   if (layer.atomCount()) {
