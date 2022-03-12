@@ -26,6 +26,7 @@
 #include <ostream>
 #include <sstream>
 #include <string>
+#include <iostream>
 
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
@@ -91,6 +92,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   }
 
   // Parse the atom block.
+  std::vector<std::pair<size_t, signed int>> chargeList;
   for (int i = 0; i < numAtoms; ++i) {
     Vector3 pos;
     getline(in, buffer);
@@ -111,10 +113,17 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     string element(trimmed(buffer.substr(31, 3)));
+    signed int charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))));
     if (!buffer.empty()) {
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
       Atom newAtom = mol.addAtom(atomicNum);
       newAtom.setPosition3d(pos);
+      // In case there's no CHG property
+      charge = (charge > 4)?
+        ((charge <= 7)? 4 - charge : 0) :
+        ((charge < 4)? charge : 0);
+      if (charge)
+        chargeList.push_back(std::pair(newAtom.index(), charge));
       continue;
     } else {
       appendError("Error parsing atom block: " + buffer);
@@ -149,17 +158,46 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                 static_cast<unsigned char>(order));
   }
 
-  // Look for the end tag.
+  // Parse the properties block until the end of the file.
+  // Property lines count is not used, as it it now unsupported.
   bool foundEnd(false);
+  bool foundChgProperty(false);
   while (getline(in, buffer)) {
-    if (trimmed(buffer) == "M  END") {
+    string prefix = buffer.substr(0, 6);
+    if (prefix == "M  END") {
       foundEnd = true;
       break;
+    } else if (prefix == "M  CHG") {
+      if (!foundChgProperty)
+        chargeList.clear(); // Forget old-style charges
+      size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
+      for(size_t i = 0; i < entryCount; i++) {
+        size_t index(lexicalCast<size_t>(buffer.substr(10+8*i, 3), ok) - 1);
+        if (!ok) {
+          appendError("Error parsing charged atom index:" + buffer.substr(10+8*i, 3));
+          return false;
+        }
+        signed int charge(lexicalCast<int>(buffer.substr(14+8*i, 3), ok));
+        if (!ok) {
+          appendError("Error parsing atom charge:" + buffer.substr(14+8*i, 3));
+          return false;
+        }
+        if (charge)
+          chargeList.push_back(std::pair(index, charge));
+      }
     }
   }
+
   if (!foundEnd) {
     appendError("Error, ending tag for file not found.");
     return false;
+  }
+
+  // Apply charges.
+  for (size_t i = 0; i < chargeList.size(); i++) {
+    size_t index = chargeList[i].first;
+    signed int charge = chargeList[i].second;
+    mol.setFormalCharge(index, charge);
   }
 
   // Check that all atoms were handled.
@@ -210,13 +248,21 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   out << setw(3) << std::right << mol.atomCount() << setw(3) << mol.bondCount()
       << "  0  0  0  0  0  0  0  0999 V2000\n";
   // Atom block.
+  std::vector<std::pair<size_t, signed int>> chargeList;
   for (size_t i = 0; i < mol.atomCount(); ++i) {
     Atom atom = mol.atom(i);
+    signed int charge = atom.formalCharge();
+    if (charge)
+      chargeList.push_back(std::pair(atom.index(), charge));
+    unsigned int chargeField = (charge < 0)?
+        ((charge >= -3)? 4 - charge : 0) :
+        ((charge <= 3)? charge : 0);
     out << setw(10) << std::right << std::fixed << setprecision(4)
         << atom.position3d().x() << setw(10) << atom.position3d().y()
         << setw(10) << atom.position3d().z() << " " << setw(3) << std::left
-        << Elements::symbol(atom.atomicNumber())
-        << "  0  0  0  0  0  0  0  0  0  0  0  0\n";
+        << Elements::symbol(atom.atomicNumber()) << " 0"
+        << setw(3) << std::right << chargeField /* for compatibility */
+        << "  0  0  0  0  0  0  0  0  0  0\n";
   }
   // Bond block.
   for (size_t i = 0; i < mol.bondCount(); ++i) {
@@ -225,6 +271,13 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
     out << setw(3) << std::right << bond.atom1().index() + 1 << setw(3)
         << bond.atom2().index() + 1 << setw(3) << static_cast<int>(bond.order())
         << "  0  0  0  0\n";
+  }
+  // Properties block.
+  for (size_t i = 0; i < chargeList.size(); ++i) {
+    Index atomIndex = chargeList[i].first;
+    signed int atomCharge = chargeList[i].second;
+    out << "M  CHG  1 " << setw(3) << std::right << atomIndex + 1 << " "
+        << setw(3) << atomCharge << "\n";
   }
   out << "M  END\n";
 

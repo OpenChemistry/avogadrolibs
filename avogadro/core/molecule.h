@@ -489,6 +489,12 @@ public:
    */
   void perceiveBondsFromResidueData();
 
+  /**
+   * Perceives all-carbon-substituted onium ions of nitrogen, oxygen,
+   * phosphorus, sulfur, arsenic and selenium.
+   */
+  void perceiveSubstitutedCations();
+
   int coordinate3dCount();
   bool setCoordinate3d(int coord);
   Array<Vector3> coordinate3d(int index) const;

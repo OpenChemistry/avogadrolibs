@@ -51,8 +51,11 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://download.accelrys.com/freeware/ctfile-formats/"
-           "ctfile-formats.zip";
+    return "http://help.accelrysonline.com/ulm/onelab/1.0/content/ulm_pdfs/direct/"
+           "reference/ctfileformats2016.pdf";
+    /* for previous (2011) version, see:
+    https://web.archive.org/web/20180329184712/http://download.accelrys.com/freeware/ctfile-formats/ctfile-formats.zip
+    */
   }
 
   std::vector<std::string> fileExtensions() const override;

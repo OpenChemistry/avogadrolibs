@@ -152,6 +152,14 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     }
   }
 
+  // formal charges
+  json formalCharges = atoms["formalCharges"];
+  if (formalCharges.is_array() && formalCharges.size() == atomCount) {
+    for (size_t i = 0; i < atomCount; ++i) {
+      molecule.atom(i).setFormalCharge(formalCharges[i]);
+    }
+  }
+
   // Check for coordinate sets, and read them in if found, e.g. trajectories.
   json coordSets = atoms["coords"]["3dSets"];
   if (coordSets.is_array() && coordSets.size()) {
@@ -753,6 +761,13 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     labels.push_back(molecule.label(i));
   }
   root["atoms"]["labels"] = labels;
+
+  // formal charges
+  json formalCharges;
+  for (size_t i = 0; i < molecule.atomCount(); ++i) {
+    formalCharges.push_back(molecule.formalCharge(i));
+  }
+  root["atoms"]["formalCharges"] = formalCharges;
 
   auto layer = LayerManager::getMoleculeInfo(&molecule)->layer;
   if (layer.atomCount()) {

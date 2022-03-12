@@ -237,6 +237,13 @@ public:
         }
       }
 
+      // Check formal charge.
+      attribute = node.attribute("formalCharge");
+      if (attribute) {
+        signed int formalCharge = lexicalCast<signed int>(attribute.value());
+        atom.setFormalCharge(formalCharge);
+      }
+
       // Move on to the next atom node (if there is one).
       node = node.next_sibling("atom");
     }
@@ -438,6 +445,13 @@ std::string formatNumber(std::stringstream &s, double n)
   return s.str();
 }
 
+std::string formatNumber(std::stringstream &s, int n)
+{
+  s.str(""); // clear it
+  s << n;
+  return s.str();
+}
+
 bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
 {
   xml_document document;
@@ -449,8 +463,8 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
   out.imbue(numLocale);  // imbue modified locale
 
   // We also need to set the locale temporarily for XML string formatting
-  std::stringstream floatStream; // use this to format floats as C-format strings
-  floatStream.imbue(numLocale);
+  std::stringstream numberStream; // use this to format floats as C-format strings
+  numberStream.imbue(numLocale);
 
   // Add a custom declaration node.
   xml_node declaration = document.prepend_child(pugi::node_declaration);
@@ -507,12 +521,12 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
     crystalBetaNode.append_attribute("units") = "units:degree";
     crystalGammaNode.append_attribute("units") = "units:degree";
 
-    crystalANode.text() = formatNumber(floatStream, cell->a()).c_str();
-    crystalBNode.text() = formatNumber(floatStream, cell->b()).c_str();
-    crystalCNode.text() = formatNumber(floatStream, cell->c()).c_str();
-    crystalAlphaNode.text() = formatNumber(floatStream, cell->alpha() * RAD_TO_DEG).c_str();
-    crystalBetaNode.text() = formatNumber(floatStream, cell->beta() * RAD_TO_DEG).c_str();
-    crystalGammaNode.text() = formatNumber(floatStream, cell->gamma() * RAD_TO_DEG).c_str();
+    crystalANode.text() = formatNumber(numberStream, cell->a()).c_str();
+    crystalBNode.text() = formatNumber(numberStream, cell->b()).c_str();
+    crystalCNode.text() = formatNumber(numberStream, cell->c()).c_str();
+    crystalAlphaNode.text() = formatNumber(numberStream, cell->alpha() * RAD_TO_DEG).c_str();
+    crystalBetaNode.text() = formatNumber(numberStream, cell->beta() * RAD_TO_DEG).c_str();
+    crystalGammaNode.text() = formatNumber(numberStream, cell->gamma() * RAD_TO_DEG).c_str();
   }
 
   xml_node atomArrayNode = moleculeNode.append_child("atomArray");
@@ -526,13 +540,17 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
       Elements::symbol(a.atomicNumber());
     if (cell) {
       Vector3 fracPos = cell->toFractional(a.position3d());
-      atomNode.append_attribute("xFract") = formatNumber(floatStream,fracPos.x()).c_str();
-      atomNode.append_attribute("yFract") = formatNumber(floatStream,fracPos.y()).c_str();
-      atomNode.append_attribute("zFract") = formatNumber(floatStream,fracPos.z()).c_str();
+      atomNode.append_attribute("xFract") = formatNumber(numberStream,fracPos.x()).c_str();
+      atomNode.append_attribute("yFract") = formatNumber(numberStream,fracPos.y()).c_str();
+      atomNode.append_attribute("zFract") = formatNumber(numberStream,fracPos.z()).c_str();
     } else {
-      atomNode.append_attribute("x3") = formatNumber(floatStream,a.position3d().x()).c_str();
-      atomNode.append_attribute("y3") = formatNumber(floatStream,a.position3d().y()).c_str();
-      atomNode.append_attribute("z3") = formatNumber(floatStream,a.position3d().z()).c_str();
+      atomNode.append_attribute("x3") = formatNumber(numberStream,a.position3d().x()).c_str();
+      atomNode.append_attribute("y3") = formatNumber(numberStream,a.position3d().y()).c_str();
+      atomNode.append_attribute("z3") = formatNumber(numberStream,a.position3d().z()).c_str();
+    }
+    if(a.formalCharge() != 0) {
+      atomNode.append_attribute("formalCharge") =
+          formatNumber(numberStream, a.formalCharge()).c_str();
     }
   }
 
