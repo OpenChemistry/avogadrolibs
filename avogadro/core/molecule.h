@@ -697,13 +697,7 @@ protected:
   unsigned short m_hallNumber = 0;
 
 private:
-  /** Update the graph to correspond to the current molecule. */
-  void updateGraph() const;
-
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
-  mutable bool m_graphDirty; // Should the graph be rebuilt?
-  // Bond indices connected to each atom index.
-  mutable std::vector<std::vector<Index>> m_bondMap;
   // edge information
   Array<unsigned char> m_bondOrders;
   // vertex information
@@ -961,7 +955,6 @@ std::pair<Index, Index> Molecule::makeBondPair(const Index& a, const Index& b)
 
 inline Index Molecule::bondCount() const
 {
-  updateGraph();
   assert(m_graph.edgeCount() == m_bondOrders.size());
   return m_graph.edgeCount();
 }
@@ -978,7 +971,6 @@ inline const Array<unsigned char>& Molecule::bondOrders() const
 
 inline const Graph& Molecule::graph() const
 {
-  updateGraph();
   return m_graph;
 }
 
