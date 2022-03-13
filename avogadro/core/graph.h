@@ -30,6 +30,10 @@ namespace Core {
 /**
  * @class Graph graph.h <avogadro/core/graph.h>
  * @brief The Graph class represents a graph data structure.
+ *
+ * A graph consists of vertices and edges, wherein every edge connects two
+ * vertices. Each vertex is assigned an index, starting from 0 up to size() - 1.
+ * Each edge is also assigned an index, from 0 to edgeCount() - 1.
  */
 class AVOGADROCORE_EXPORT Graph
 {
@@ -43,7 +47,18 @@ public:
   /** Destroys the graph. */
   ~Graph();
 
-  /** Sets the number of vertices in the graph to size @p n. */
+  /**
+   * Sets the number of vertices in the graph to size @p n.
+   *
+   * If @p n is smaller than \c size(), this removes all vertices with index
+   * @p n or higher, as well as any edges connected to them, while preserving
+   * all other vertices and edges. These vertices keep their existing indices,
+   * while no guarantee is made regarding preserved edge indices.
+   *
+   * If @p n is larger than \c size(), a number of unconnected vertices are
+   * added, up to the requested size. All existing vertices and edges are
+   * preserved in their current form.
+   */
   void setSize(size_t n);
 
   /** @return the number of vertices in the graph. */
@@ -55,25 +70,54 @@ public:
   /** Removes all vertices and edges from the graph. */
   void clear();
 
-  /** Adds a vertex to the graph and returns its index. */
+  /**
+   * Adds a vertex to the graph and returns its index.
+   * The new vertex is initially not connected. All existing vertices and edges
+   * are preserved and their indices unchanged.
+   */
   size_t addVertex();
 
-  /** Removes the vertex at @p index from the graph. */
+  /**
+   * Removes the vertex at @p index from the graph, as well as all edges to it.
+   * If @p index is not the highest vertex index in the graph, the vertex with
+   * highest index will be assigned the index of the removed vertex. All other
+   * vertices will keep their indices. No guarantees are made regarding edge
+   * indices.
+   */
   void removeVertex(size_t index);
 
-  /** Swaps two vertices' indices, without affecting connectivity */
+  /**
+   * Swaps two vertices' indices, without affecting connectivity.
+   * All other vertices and all edges keep their existing indices.
+   */
   void swapVertexIndices(size_t a, size_t b);
 
   /** @return the number of vertices in the graph. */
   size_t vertexCount() const;
 
-  /** Adds an edge between vertices @p a and @p b. */
-  void addEdge(size_t a, size_t b);
+  /**
+   * Adds an edge between vertices @p a and @p b and returns its index.
+   * All existing vertices and edges are preserved unchanged.
+   */
+  size_t addEdge(size_t a, size_t b);
 
-  /** Removes the edge between vertices @p a and @p b. */
+  /**
+   * Removes the edge between vertices @p a and @p b.
+   * All vertices keep their indices. If the removed edge has an index lower
+   * than the highest edge index in the graph, the edge with the highest index
+   * is given the index of the removed edge. All other edges remain unchanged.
+   */
   void removeEdge(size_t a, size_t b);
 
-  /** Removes all of the edges from the graph. */
+  /**
+   * Removes edge with index @p edgeIndex.
+   * All vertices keep their indices. If @p edgeIndex is lower than the highest
+   * edge index in the graph, the edge with the highest index is given the index
+   * of the removed edge. All other edges remain unchanged.
+   */
+  void removeEdge(size_t edgeIndex);
+
+  /** Removes all of the edges from the graph, without affecting vertices. */
   void removeEdges();
 
   /**
@@ -84,11 +128,15 @@ public:
 
   /**
    * Removes the edge at @p edgeIndex, and creates a new one between vertices
-   * @p a and @p b, with the same index as the removed edge.
+   * @p a and @p b, with the same index as the removed edge. All other edges and
+   * vertices keep their current indices.
    */
   void editEdgeInPlace(size_t edgeIndex, size_t a, size_t b);
 
-  /** Swaps two edges' indices, without affecting connectivity */
+  /**
+   * Swaps two edges' indices, without affecting connectivity.
+   * All other edges and all vertices keep their current indices.
+   */
   void swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2);
 
   /** @return the number of edges in the graph. */

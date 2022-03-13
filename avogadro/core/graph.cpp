@@ -50,7 +50,7 @@ void Graph::setSize(size_t n)
 
 size_t Graph::size() const
 {
-  return m_adjacencyList.size();
+  return vertexCount();
 }
 
 bool Graph::isEmpty() const
@@ -62,6 +62,7 @@ void Graph::clear()
 {
   m_adjacencyList.clear();
   m_edgeMap.clear();
+  m_edgePairs.clear();
   m_subgraphs.clear();
 }
 
@@ -79,9 +80,28 @@ void Graph::removeVertex(size_t index)
   // Remove the edges to the vertex.
   removeEdges(index);
 
-  // Remove vertex's adjacency list.
-  m_adjacencyList.erase(m_adjacencyList.begin() + index);
-  m_edgeMap.erase(m_edgeMap.begin() + index);
+  // Swap with last vertex.
+  if (index < size() - 1) {
+    std::swap(m_adjacencyList[index], m_adjacencyList.back());
+    size_t affectedIndex = m_adjacencyList.size() - 1;
+    for (size_t i = 0; i < m_adjacencyList[index].size(); i++) {
+      size_t otherIndex = m_adjacencyList[index][i];
+      for (size_t j = 0; i < m_adjacencyList[otherIndex].size(); i++) {
+        if (m_adjacencyList[otherIndex][j] == affectedIndex)
+          m_adjacencyList[otherIndex][j] = index;
+      }
+    }
+    std::swap(m_edgeMap[index], m_edgeMap.back());
+    for (size_t i = 0; i < m_edgeMap[index].size(); i++) {
+      size_t edgeIndex = m_edgeMap[index][i];
+      if (m_edgePairs[edgeIndex].first == affectedIndex)
+        m_edgePairs[edgeIndex].first = index;
+      if (m_edgePairs[edgeIndex].second == affectedIndex)
+        m_edgePairs[edgeIndex].second = index;
+    }
+  }
+  m_adjacencyList.pop_back();
+  m_edgeMap.pop_back();
 }
 
 void Graph::swapVertexIndices(size_t a, size_t b)
@@ -142,16 +162,21 @@ size_t Graph::vertexCount() const
   return m_adjacencyList.size();
 }
 
-void Graph::addEdge(size_t a, size_t b)
+size_t Graph::addEdge(size_t a, size_t b)
 {
   assert(a < size());
   assert(b < size());
-  std::vector<size_t>& neighborsA = m_adjacencyList[a];
-  std::vector<size_t>& neighborsB = m_adjacencyList[b];
+  std::vector<size_t> &neighborsA = m_adjacencyList[a];
+  std::vector<size_t> &neighborsB = m_adjacencyList[b];
 
   // Ensure edge does not exist already.
-  if (std::find(neighborsA.begin(), neighborsA.end(), b) != neighborsA.end())
-    return;
+  if (std::find(neighborsA.begin(), neighborsA.end(), b) != neighborsA.end()) {
+    for (size_t i = 0; i < m_edgeMap[a].size(); i++) {
+      size_t edgeIndex = m_edgeMap[a][i];
+      if (m_edgePairs[edgeIndex].first == b || m_edgePairs[edgeIndex].second == b)
+        return edgeIndex;
+    }
+  }
 
   m_subgraphs.addConnection(a, b);
 
@@ -165,6 +190,8 @@ void Graph::addEdge(size_t a, size_t b)
   m_edgeMap[b].push_back(newEdgeIndex);
 
   m_edgePairs.push_back(std::pair<size_t, size_t>(a, b));
+
+  return newEdgeIndex;
 }
 
 std::set<size_t> Graph::checkConectivity(size_t a, size_t b) const
@@ -210,29 +237,45 @@ void Graph::removeEdge(size_t a, size_t b)
   std::vector<size_t>::iterator iter =
     std::find(neighborsA.begin(), neighborsA.end(), b);
 
-  if (iter != neighborsA.end()) {
-    neighborsA.erase(iter);
-    neighborsB.erase(std::find(neighborsB.begin(), neighborsB.end(), a));
-  }
+  if (iter == neighborsA.end())
+    return;
 
-  size_t index;
+  std::swap(*iter, neighborsA.back());
+  neighborsA.pop_back();
+  std::swap(
+      *std::find(neighborsB.begin(), neighborsB.end(), a),
+      neighborsB.back()
+  );
+  neighborsB.pop_back();
+
+  size_t edgeIndex;
   for (size_t i = 0; i < m_edgeMap[a].size(); i++) {
-    index = m_edgeMap[a][i];
-    const std::pair<size_t, size_t> &pair = m_edgePairs[index];
+    edgeIndex = m_edgeMap[a][i];
+    const std::pair<size_t, size_t> &pair = m_edgePairs[edgeIndex];
     if (pair.first == b || pair.second == b) {
-      m_edgeMap[a].erase(m_edgeMap[a].begin() + i);
+      std::swap(m_edgeMap[a][i], m_edgeMap[a].back());
+      m_edgeMap[a].pop_back();
       break;
     }
   }
 
   for (size_t i = 0; i < m_edgeMap[b].size(); i++) {
-    if (m_edgeMap[b][i] == index) {
+    if (m_edgeMap[b][i] == edgeIndex) {
       m_edgeMap[b].erase(m_edgeMap[b].begin() + i);
       break;
     }
   }
 
-  m_edgePairs.erase(m_edgePairs.begin() + index);
+  std::swap(m_edgePairs[edgeIndex], m_edgePairs.back());
+  m_edgePairs.pop_back();
+
+  size_t affectedIndex = m_edgePairs.size();
+  if (affectedIndex != edgeIndex) {
+    auto edgeList1 = m_edgeMap[m_edgePairs[edgeIndex].first];
+    *std::find(edgeList1.begin(), edgeList1.end(), affectedIndex) = edgeIndex;
+    auto edgeList2 = m_edgeMap[m_edgePairs[edgeIndex].second];
+    *std::find(edgeList2.begin(), edgeList2.end(), affectedIndex) = edgeIndex;
+  }
 
   if (m_subgraphs.getGroup(a) == m_subgraphs.getGroup(b)) {
     std::set<size_t> connected = checkConectivity(a, b);
@@ -242,25 +285,30 @@ void Graph::removeEdge(size_t a, size_t b)
   }
 }
 
+void Graph::removeEdge(size_t edgeIndex)
+{
+  assert(edgeIndex < edgeCount());
+  const std::pair<size_t, size_t> &pair = m_edgePairs[edgeIndex];
+  removeEdge(pair.first, pair.second);
+}
+
 void Graph::removeEdges()
 {
   m_subgraphs.removeConnections();
-  for (size_t i = 0; i < m_adjacencyList.size(); ++i)
+  for (size_t i = 0; i < m_adjacencyList.size(); ++i) {
     m_adjacencyList[i].clear();
+    m_edgeMap[i].clear();
+  }
+  m_edgePairs.clear();
 }
 
 void Graph::removeEdges(size_t index)
 {
   m_subgraphs.removeConnection(index);
-  const std::vector<size_t>& nbrs = m_adjacencyList[index];
 
-  for (size_t i = 0; i < nbrs.size(); ++i) {
-    std::vector<size_t>& neighborsList = m_adjacencyList[nbrs[i]];
-
-    // Remove vertex from its neighbors' adjacency list.
-    neighborsList.erase(
-      std::find(neighborsList.begin(), neighborsList.end(), index));
-  }
+  const std::vector<size_t> &edges = m_edgeMap[index];
+  for (size_t i = 0; i < edges.size(); ++i)
+    removeEdge(edges[i]);
 }
 
 void Graph::editEdgeInPlace(size_t edgeIndex, size_t a, size_t b)

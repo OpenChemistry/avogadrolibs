@@ -434,9 +434,7 @@ bool Molecule::removeBond(Index index)
 {
   if (index >= bondCount())
     return false;
-  auto first = m_graph.endpoints(index).first;
-  auto second = m_graph.endpoints(index).second;
-  m_graph.removeEdge(first, second);
+  m_graph.removeEdge(index);
   m_bondOrders.swapAndPop(index);
   return true;
 }
