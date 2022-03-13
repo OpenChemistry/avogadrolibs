@@ -61,6 +61,9 @@ public:
   /** Removes the vertex at @p index from the graph. */
   void removeVertex(size_t index);
 
+  /** Swaps two vertices' indices, without affecting connectivity */
+  void swapVertexIndices(size_t a, size_t b);
+
   /** @return the number of vertices in the graph. */
   size_t vertexCount() const;
 
@@ -79,6 +82,15 @@ public:
    */
   void removeEdges(size_t index);
 
+  /**
+   * Removes the edge at @p edgeIndex, and creates a new one between vertices
+   * @p a and @p b, with the same index as the removed edge.
+   */
+  void editEdgeInPlace(size_t edgeIndex, size_t a, size_t b);
+
+  /** Swaps two edges' indices, without affecting connectivity */
+  void swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2);
+
   /** @return the number of edges in the graph. */
   size_t edgeCount() const;
 
@@ -94,6 +106,12 @@ public:
    */
   const std::vector<size_t>& edges(size_t index) const;
 
+  /**
+   * @return the indices of the two vertices that the edge at @p index connects;
+   * that is, its endpoints.
+   */
+  const std::pair<size_t, size_t>& endpoints(size_t edgeIndex) const;
+
   /** @return the degree of the vertex at @p index. */
   size_t degree(size_t index) const;
 
@@ -102,6 +120,12 @@ public:
    * @p b.
    */
   bool containsEdge(size_t a, size_t b) const;
+
+  /**
+   * @return an array with all edges, where every element contains the indices
+   * of both endpoints of the edge with index equal to the element's array index.
+   */
+  const Array<std::pair<size_t, size_t>>& edgePairs() const;
 
   /**
    * @return a vector of vector containing the indices of each vertex in each

@@ -22,7 +22,6 @@
 #include <cassert>
 #include <set>
 #include <stack>
-#include <iostream>
 
 namespace Avogadro {
 namespace Core {
@@ -76,7 +75,6 @@ size_t Graph::addVertex()
 void Graph::removeVertex(size_t index)
 {
   assert(index < size());
-  std::cout << "Remove " << index << "\n";
   m_subgraphs.removeConnection(index);
   // Remove the edges to the vertex.
   removeEdges(index);
@@ -84,12 +82,59 @@ void Graph::removeVertex(size_t index)
   // Remove vertex's adjacency list.
   m_adjacencyList.erase(m_adjacencyList.begin() + index);
   m_edgeMap.erase(m_edgeMap.begin() + index);
+}
 
-  for (size_t i = 0; i < m_adjacencyList.size(); i++) {
-    for (size_t j = 0; j < m_adjacencyList[i].size(); j++) {
-      std::cout << i << " -> " << m_adjacencyList[i][j] << "\n";
+void Graph::swapVertexIndices(size_t a, size_t b)
+{
+  // Swap all references to a and b in m_adjacencyList
+  for (size_t i = 0; i < m_adjacencyList[a].size(); i++) {
+    size_t otherIndex = m_adjacencyList[a][i];
+    if (otherIndex == b)
+      continue;
+    for (size_t j = 0; j < m_adjacencyList[otherIndex].size(); j++) {
+      if (m_adjacencyList[otherIndex][j] == a) {
+        m_adjacencyList[otherIndex][j] = b;
+        break;
+      }
     }
   }
+  for (size_t i = 0; i < m_adjacencyList[b].size(); i++) {
+    size_t otherIndex = m_adjacencyList[b][i];
+    if (otherIndex == a)
+      continue;
+    for (size_t j = 0; j < m_adjacencyList[otherIndex].size(); j++) {
+      if (m_adjacencyList[otherIndex][j] == b) {
+        m_adjacencyList[otherIndex][j] = a;
+        break;
+      }
+    }
+  }
+
+  std::swap(m_adjacencyList[a], m_adjacencyList[b]);
+
+  // Update m_edgePairs using info from m_edgeMap
+  for (size_t i = 0; i < m_edgeMap[a].size(); i++) {
+    size_t edgeIndex = m_edgeMap[a][i];
+    if (m_edgePairs[edgeIndex].first == a) {
+      m_edgePairs[edgeIndex].first = b;
+      if (m_edgePairs[edgeIndex].second == b)
+        m_edgePairs[edgeIndex].second = a;
+    }
+    if (m_edgePairs[edgeIndex].second == a) {
+      m_edgePairs[edgeIndex].second = b;
+      if (m_edgePairs[edgeIndex].first == b)
+        m_edgePairs[edgeIndex].first = a;
+    }
+  }
+  for (size_t i = 0; i < m_edgeMap[b].size(); i++) {
+    size_t edgeIndex = m_edgeMap[b][i];
+    if (m_edgePairs[edgeIndex].first == b && m_edgePairs[edgeIndex].second != a)
+      m_edgePairs[edgeIndex].first = a;
+    if (m_edgePairs[edgeIndex].second == b && m_edgePairs[edgeIndex].first != a)
+      m_edgePairs[edgeIndex].second = a;
+  }
+
+  std::swap(m_edgeMap[a], m_edgeMap[b]);
 }
 
 size_t Graph::vertexCount() const
@@ -118,6 +163,8 @@ void Graph::addEdge(size_t a, size_t b)
   size_t newEdgeIndex = edgeCount();
   m_edgeMap[a].push_back(newEdgeIndex);
   m_edgeMap[b].push_back(newEdgeIndex);
+
+  m_edgePairs.push_back(std::pair<size_t, size_t>(a, b));
 }
 
 std::set<size_t> Graph::checkConectivity(size_t a, size_t b) const
@@ -216,14 +263,69 @@ void Graph::removeEdges(size_t index)
   }
 }
 
+void Graph::editEdgeInPlace(size_t edgeIndex, size_t a, size_t b)
+{
+  auto &pair = m_edgePairs[edgeIndex];
+
+  // Remove references to the deleted edge from both endpoints.
+  for(size_t i = 0; i < m_edgeMap[pair.first].size(); i++) {
+    std::swap(m_edgeMap[pair.first][i], m_edgeMap[pair.first].back());
+    m_edgeMap[pair.first].pop_back();
+  }
+  for(size_t i = 0; i < m_edgeMap[pair.second].size(); i++) {
+    std::swap(m_edgeMap[pair.second][i], m_edgeMap[pair.second].back());
+    m_edgeMap[pair.second].pop_back();
+  }
+
+  m_edgeMap[a].push_back(edgeIndex);
+  m_edgeMap[b].push_back(edgeIndex);
+
+  pair.first = a;
+  pair.second = b;
+}
+
+void Graph::swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2)
+{
+  // Find the 4 endpoints of both edges.
+  const std::pair<size_t, size_t> &pair1 = m_edgePairs[edgeIndex1];
+  std::array<size_t *, 2> changeTo2;
+  for (size_t i = 0; i < m_edgeMap[pair1.first].size(); i++) {
+    if (m_edgeMap[pair1.first][i] == edgeIndex1) {
+      changeTo2[0] = &m_edgeMap[pair1.first][i];
+    }
+  }
+  for (size_t i = 0; i < m_edgeMap[pair1.second].size(); i++) {
+    if (m_edgeMap[pair1.second][i] == edgeIndex1) {
+      changeTo2[0] = &m_edgeMap[pair1.second][i];
+    }
+  }
+  const std::pair<size_t, size_t> &pair2 = m_edgePairs[edgeIndex2];
+  std::array<size_t *, 2> changeTo1;
+  for (size_t i = 0; i < m_edgeMap[pair2.first].size(); i++) {
+    if (m_edgeMap[pair2.first][i] == edgeIndex2) {
+      changeTo1[0] = &m_edgeMap[pair2.first][i];
+    }
+  }
+  for (size_t i = 0; i < m_edgeMap[pair2.second].size(); i++) {
+    if (m_edgeMap[pair2.second][i] == edgeIndex2) {
+      changeTo1[0] = &m_edgeMap[pair2.second][i];
+    }
+  }
+
+  /*
+  Swap m_edgeMap values only after reading everything, to avoid race condition.
+  */
+  *changeTo2[0] = edgeIndex2;
+  *changeTo2[0] = edgeIndex2;
+  *changeTo1[0] = edgeIndex1;
+  *changeTo1[0] = edgeIndex1;
+
+  std::swap(m_edgePairs[edgeIndex1], m_edgePairs[edgeIndex2]);
+}
+
 size_t Graph::edgeCount() const
 {
-  size_t count = 0;
-
-  for (size_t i = 0; i < size(); ++i)
-    count += neighbors(i).size();
-
-  return count / 2;
+  return m_edgePairs.size();
 }
 
 const std::vector<size_t>& Graph::neighbors(size_t index) const
@@ -236,6 +338,12 @@ const std::vector<size_t>& Graph::edges(size_t index) const
 {
   assert(index < size());
   return m_edgeMap[index];
+}
+
+const std::pair<size_t, size_t>& Graph::endpoints(size_t index) const
+{
+  assert(index < edgeCount());
+  return m_edgePairs[index];
 }
 
 size_t Graph::degree(size_t index) const
@@ -251,6 +359,11 @@ bool Graph::containsEdge(size_t a, size_t b) const
   const std::vector<size_t>& neighborsA = neighbors(a);
 
   return std::find(neighborsA.begin(), neighborsA.end(), b) != neighborsA.end();
+}
+
+const Array<std::pair<size_t, size_t>>& Graph::edgePairs() const
+{
+  return m_edgePairs;
 }
 
 std::vector<std::set<size_t>> Graph::connectedComponents() const
