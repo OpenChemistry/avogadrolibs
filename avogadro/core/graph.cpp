@@ -86,7 +86,7 @@ void Graph::removeVertex(size_t index)
     size_t affectedIndex = m_adjacencyList.size() - 1;
     for (size_t i = 0; i < m_adjacencyList[index].size(); i++) {
       size_t otherIndex = m_adjacencyList[index][i];
-      for (size_t j = 0; i < m_adjacencyList[otherIndex].size(); i++) {
+      for (size_t j = 0; j < m_adjacencyList[otherIndex].size(); j++) {
         if (m_adjacencyList[otherIndex][j] == affectedIndex)
           m_adjacencyList[otherIndex][j] = index;
       }
@@ -231,8 +231,8 @@ void Graph::removeEdge(size_t a, size_t b)
   assert(a < size());
   assert(b < size());
 
-  std::vector<size_t>& neighborsA = m_adjacencyList[a];
-  std::vector<size_t>& neighborsB = m_adjacencyList[b];
+  std::vector<size_t> &neighborsA = m_adjacencyList[a];
+  std::vector<size_t> &neighborsB = m_adjacencyList[b];
 
   std::vector<size_t>::iterator iter =
     std::find(neighborsA.begin(), neighborsA.end(), b);
@@ -261,7 +261,8 @@ void Graph::removeEdge(size_t a, size_t b)
 
   for (size_t i = 0; i < m_edgeMap[b].size(); i++) {
     if (m_edgeMap[b][i] == edgeIndex) {
-      m_edgeMap[b].erase(m_edgeMap[b].begin() + i);
+      std::swap(m_edgeMap[b][i], m_edgeMap[b].back());
+      m_edgeMap[b].pop_back();
       break;
     }
   }
@@ -271,9 +272,9 @@ void Graph::removeEdge(size_t a, size_t b)
 
   size_t affectedIndex = m_edgePairs.size();
   if (affectedIndex != edgeIndex) {
-    auto edgeList1 = m_edgeMap[m_edgePairs[edgeIndex].first];
+    std::vector<size_t> &edgeList1 = m_edgeMap[m_edgePairs[edgeIndex].first];
     *std::find(edgeList1.begin(), edgeList1.end(), affectedIndex) = edgeIndex;
-    auto edgeList2 = m_edgeMap[m_edgePairs[edgeIndex].second];
+    std::vector<size_t> &edgeList2 = m_edgeMap[m_edgePairs[edgeIndex].second];
     *std::find(edgeList2.begin(), edgeList2.end(), affectedIndex) = edgeIndex;
   }
 

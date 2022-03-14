@@ -485,7 +485,7 @@ Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
   const std::vector<Index> &edgeIndices = m_graph.edges(atomId1);
   for (Index i = 0; i < edgeIndices.size(); i++) {
     Index index = edgeIndices[i];
-    auto &pair = m_graph.endpoints(index);
+    const std::pair<Index, Index> &pair = m_graph.endpoints(index);
     if (pair.first == atomId2 || pair.second == atomId2)
       return BondType(const_cast<Molecule *>(this), index);
   }
@@ -972,16 +972,12 @@ std::map<unsigned char, size_t> Molecule::composition() const
 
 bool Molecule::removeBonds(Index atom)
 {
-  if (atom >= bondCount())
+  if (atom >= atomCount())
     return false;
-  Index i = 0;
-  while (i < m_graph.edgeCount()) {
-    auto& bond = m_graph.endpoints(i);
-    if (bond.first == atom || bond.second == atom) {
-      removeBond(i);
-    } else {
-      ++i;
-    }
+
+  const std::vector<size_t> &bondList = m_graph.edges(atom);
+  for (Index i = 0; i < bondList.size(); i++) {
+    removeBond(bondList[i]);
   }
   return true;
 }
