@@ -28,7 +28,9 @@ namespace Core {
 
 Graph::Graph() : m_subgraphs() {}
 
-Graph::Graph(size_t n) : m_adjacencyList(n), m_subgraphs(n) {}
+Graph::Graph(size_t n) :
+    m_adjacencyList(n), m_edgeMap(n), m_edgePairs(), m_subgraphs(n)
+{}
 
 Graph::~Graph() {}
 
@@ -166,6 +168,8 @@ size_t Graph::addEdge(size_t a, size_t b)
 {
   assert(a < size());
   assert(b < size());
+  if (b < a)
+    std::swap(a, b);
   std::vector<size_t> &neighborsA = m_adjacencyList[a];
   std::vector<size_t> &neighborsB = m_adjacencyList[b];
 
@@ -345,7 +349,7 @@ void Graph::swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2)
   }
   for (size_t i = 0; i < m_edgeMap[pair1.second].size(); i++) {
     if (m_edgeMap[pair1.second][i] == edgeIndex1) {
-      changeTo2[0] = &m_edgeMap[pair1.second][i];
+      changeTo2[1] = &m_edgeMap[pair1.second][i];
     }
   }
   const std::pair<size_t, size_t> &pair2 = m_edgePairs[edgeIndex2];
@@ -357,7 +361,7 @@ void Graph::swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2)
   }
   for (size_t i = 0; i < m_edgeMap[pair2.second].size(); i++) {
     if (m_edgeMap[pair2.second][i] == edgeIndex2) {
-      changeTo1[0] = &m_edgeMap[pair2.second][i];
+      changeTo1[1] = &m_edgeMap[pair2.second][i];
     }
   }
 
@@ -365,9 +369,9 @@ void Graph::swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2)
   Swap m_edgeMap values only after reading everything, to avoid race condition.
   */
   *changeTo2[0] = edgeIndex2;
-  *changeTo2[0] = edgeIndex2;
+  *changeTo2[1] = edgeIndex2;
   *changeTo1[0] = edgeIndex1;
-  *changeTo1[0] = edgeIndex1;
+  *changeTo1[1] = edgeIndex1;
 
   std::swap(m_edgePairs[edgeIndex1], m_edgePairs[edgeIndex2]);
 }
@@ -377,22 +381,22 @@ size_t Graph::edgeCount() const
   return m_edgePairs.size();
 }
 
-const std::vector<size_t>& Graph::neighbors(size_t index) const
+const std::vector<size_t> Graph::neighbors(size_t index) const
 {
   assert(index < size());
-  return m_adjacencyList[index];
+  return std::vector<size_t>(m_adjacencyList[index]);
 }
 
-const std::vector<size_t>& Graph::edges(size_t index) const
+const std::vector<size_t> Graph::edges(size_t index) const
 {
   assert(index < size());
-  return m_edgeMap[index];
+  return std::vector<size_t>(m_edgeMap[index]);
 }
 
-const std::pair<size_t, size_t>& Graph::endpoints(size_t index) const
+const std::pair<size_t, size_t> Graph::endpoints(size_t index) const
 {
   assert(index < edgeCount());
-  return m_edgePairs[index];
+  return std::pair<size_t, size_t>(m_edgePairs[index]);
 }
 
 size_t Graph::degree(size_t index) const

@@ -975,9 +975,12 @@ bool Molecule::removeBonds(Index atom)
   if (atom >= atomCount())
     return false;
 
-  const std::vector<size_t> &bondList = m_graph.edges(atom);
-  for (Index i = 0; i < bondList.size(); i++) {
-    removeBond(bondList[i]);
+  while(true) {
+    const std::vector<size_t> &bondList = m_graph.edges(atom);
+    if (!bondList.size())
+      break;
+    size_t bond = bondList[0];
+    removeBond(bond);
   }
   return true;
 }
