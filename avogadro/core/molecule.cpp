@@ -361,7 +361,6 @@ bool Molecule::removeAtom(Index index)
   }
 
   removeBonds(index);
-  Index affectedIndex = static_cast<Index>(m_atomicNumbers.size() - 1);
   m_atomicNumbers.swapAndPop(index);
   m_graph.removeVertex(index);
 
@@ -481,7 +480,6 @@ Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
   assert(atomId1 < atomCount());
   assert(atomId2 < atomCount());
 
-  Index index;
   const std::vector<Index> &edgeIndices = m_graph.edges(atomId1);
   for (Index i = 0; i < edgeIndices.size(); i++) {
     Index index = edgeIndices[i];
@@ -515,6 +513,10 @@ Array<const Molecule::BondType *> Molecule::bonds(Index a) const
       }
     }
   }
+
+  std::sort(atomBonds.begin(), atomBonds.end(), [](auto a, auto b) {
+    return a->index() < b->index();
+  });
   return atomBonds;
 }
 
@@ -530,6 +532,10 @@ Array<Molecule::BondType> Molecule::bonds(Index a)
         atomBonds.push_back(BondType(this, index));
     }
   }
+
+  std::sort(atomBonds.begin(), atomBonds.end(), [](auto a, auto b) {
+    return a.index() < b.index();
+  });
   return atomBonds;
 }
 
