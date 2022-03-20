@@ -1,5 +1,5 @@
 # Translations for the Avogadro molecular builder.
-# Copyright (C) 2006-2021 The Avogadro Project
+# Copyright (C) 2006-2022 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-09-19 03:11+0000\n"
+"POT-Creation-Date: 2022-03-20 02:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1290,48 +1290,48 @@ msgstr ""
 msgid "Remove Unit Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:465
+#: qtgui/rwmolecule.cpp:467
 msgid "Edit Unit Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:482
+#: qtgui/rwmolecule.cpp:484
 msgid "Wrap Atoms to Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:505
+#: qtgui/rwmolecule.cpp:507
 msgid "Scale Cell Volume"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:525
+#: qtgui/rwmolecule.cpp:527
 msgid "Build Super Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:549
+#: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:571
+#: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:596 qtplugins/spacegroup/spacegroup.cpp:69
+#: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:69
 msgid "Reduce to Primitive"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:621 qtplugins/spacegroup/spacegroup.cpp:75
+#: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:75
 #: qtplugins/spacegroup/spacegroup.cpp:233
 msgid "Conventionalize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:646 qtplugins/spacegroup/spacegroup.cpp:258
+#: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:258
 msgid "Symmetrize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:665
+#: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:685
+#: qtgui/rwmolecule.cpp:687
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr ""
 
@@ -1587,8 +1587,8 @@ msgid ""
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:959
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:1047
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:958
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:1046
 #: qtplugins/measuretool/measuretool.cpp:202
 #: qtplugins/measuretool/measuretool.cpp:210
 #: qtplugins/measuretool/measuretool.cpp:211
@@ -1596,7 +1596,7 @@ msgstr ""
 msgid "%L1°"
 msgstr ""
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:981
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:980
 #: qtplugins/editor/editor.cpp:241 qtplugins/measuretool/measuretool.cpp:218
 #: qtplugins/measuretool/measuretool.cpp:219
 #: qtplugins/measuretool/measuretool.cpp:221
@@ -1635,7 +1635,7 @@ msgid "&Build"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:65
-#: qtplugins/propertytables/propertymodel.cpp:381
+#: qtplugins/propertytables/propertymodel.cpp:389
 msgid "Bond"
 msgstr ""
 
@@ -2559,7 +2559,7 @@ msgstr ""
 msgid "In."
 msgstr ""
 
-#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:349
+#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:355
 #: qtplugins/symmetry/operationstablemodel.cpp:64
 msgid "Element"
 msgstr ""
@@ -2584,13 +2584,13 @@ msgstr ""
 msgid "Atom Label:"
 msgstr ""
 
-#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:390
+#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:398
 msgid "ID"
 msgstr ""
 
 #: qtplugins/label/label.cpp:201
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
-#: qtplugins/propertytables/propertymodel.cpp:388
+#: qtplugins/propertytables/propertymodel.cpp:396
 msgid "Name"
 msgstr ""
 
@@ -3360,130 +3360,134 @@ msgstr ""
 msgid "Render the scene using POV-Ray."
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:351
+#: qtplugins/propertytables/propertymodel.cpp:357
 msgid "Valence"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:353
+#: qtplugins/propertytables/propertymodel.cpp:359
+msgid "Formal Charge"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:361
 msgid "X (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:355
+#: qtplugins/propertytables/propertymodel.cpp:363
 msgid "Y (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:357
+#: qtplugins/propertytables/propertymodel.cpp:365
 msgid "Z Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:359
-#: qtplugins/propertytables/propertymodel.cpp:398
+#: qtplugins/propertytables/propertymodel.cpp:367
+#: qtplugins/propertytables/propertymodel.cpp:406
 msgid "Color"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:362
+#: qtplugins/propertytables/propertymodel.cpp:370
 msgid "Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:369
-#: qtplugins/propertytables/propertymodel.cpp:408
-#: qtplugins/propertytables/propertymodel.cpp:425
+#: qtplugins/propertytables/propertymodel.cpp:377
+#: qtplugins/propertytables/propertymodel.cpp:416
+#: qtplugins/propertytables/propertymodel.cpp:433
 #: qtplugins/symmetry/operationstablemodel.cpp:60
 msgid "Type"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:371
+#: qtplugins/propertytables/propertymodel.cpp:379
 msgid "Start Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:373
+#: qtplugins/propertytables/propertymodel.cpp:381
 msgid "End Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:375
+#: qtplugins/propertytables/propertymodel.cpp:383
 msgid "Bond Order"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:377
+#: qtplugins/propertytables/propertymodel.cpp:385
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:392
+#: qtplugins/propertytables/propertymodel.cpp:400
 msgid "Chain"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:394
+#: qtplugins/propertytables/propertymodel.cpp:402
 msgid "Secondary Structure"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:396
+#: qtplugins/propertytables/propertymodel.cpp:404
 msgid "Heterogen"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:410
-#: qtplugins/propertytables/propertymodel.cpp:427
+#: qtplugins/propertytables/propertymodel.cpp:418
+#: qtplugins/propertytables/propertymodel.cpp:435
 msgid "Atom 1"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:412
+#: qtplugins/propertytables/propertymodel.cpp:420
 msgid "Vertex"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:414
-#: qtplugins/propertytables/propertymodel.cpp:431
+#: qtplugins/propertytables/propertymodel.cpp:422
+#: qtplugins/propertytables/propertymodel.cpp:439
 msgid "Atom 3"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:416
-#: qtplugins/propertytables/propertymodel.cpp:435
+#: qtplugins/propertytables/propertymodel.cpp:424
+#: qtplugins/propertytables/propertymodel.cpp:443
 msgid "Angle (°)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:429
+#: qtplugins/propertytables/propertymodel.cpp:437
 msgid "Atom 2"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:433
+#: qtplugins/propertytables/propertymodel.cpp:441
 msgid "Atom 4"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:478
+#: qtplugins/propertytables/propertymodel.cpp:486
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:480
+#: qtplugins/propertytables/propertymodel.cpp:488
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:482
+#: qtplugins/propertytables/propertymodel.cpp:490
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:484
+#: qtplugins/propertytables/propertymodel.cpp:492
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:486
+#: qtplugins/propertytables/propertymodel.cpp:494
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:488
+#: qtplugins/propertytables/propertymodel.cpp:496
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:490
+#: qtplugins/propertytables/propertymodel.cpp:498
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:492
+#: qtplugins/propertytables/propertymodel.cpp:500
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
