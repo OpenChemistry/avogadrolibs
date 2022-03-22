@@ -89,7 +89,7 @@ QByteArray PythonScript::execute(const QStringList& args,
 
   // Add the global language / locale to *all* calls
   realArgs.append("--lang");
-  realArgs.append(QLocale::system().name());
+  realArgs.append(QLocale().name());
 
   // Start script
   realArgs.prepend(m_scriptFilePath);
@@ -174,7 +174,7 @@ void PythonScript::asyncExecute(const QStringList& args,
 
   // Add the global language / locale to *all* calls
   realArgs.append("--lang");
-  realArgs.append(QLocale::system().name());
+  realArgs.append(QLocale().name());
 
   // Start script
   realArgs.prepend(m_scriptFilePath);

@@ -492,8 +492,9 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
         zmax = std::max(coords[2], zmax);
       }
 
-      char atomline[200];
-      sprintf(atomline, "%-*d %d %10f %10f %10f\n",
+      const unsigned int lineSize = 256;
+      char atomline[lineSize];
+      snprintf(atomline, lineSize - 1, "%-*d %d %10f %10f %10f\n",
               static_cast<int>(log(numAtoms)) + 1, static_cast<int>(i + 1),
               static_cast<int>(composition[atomicNumbers[i]]), coords.x(),
               coords.y(), coords.z());
@@ -508,13 +509,14 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
     std::map<std::pair<unsigned char, unsigned char>, int> bondIds;
     int bondItr = 1;
     bondStream << "Bonds\n\n";
+    const unsigned int lineSize = 256;
     for (Index i = 0; i < numBonds; ++i) {
-      char bondline[200];
+      char bondline[lineSize];
       Bond b = mol2.bond(i);
       if (bondIds.find(std::make_pair(b.atom1().atomicNumber(),
                                       b.atom2().atomicNumber())) !=
           bondIds.end()) {
-        sprintf(bondline, "%-*d %7d %7d %7d\n",
+        snprintf(bondline, lineSize - 1, "%-*d %7d %7d %7d\n",
                 static_cast<int>(log(numAtoms) + 1), static_cast<int>(i + 1),
                 bondIds[std::make_pair(b.atom1().atomicNumber(),
                                        b.atom2().atomicNumber())],
@@ -524,7 +526,7 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
       } else if (bondIds.find(std::make_pair(b.atom2().atomicNumber(),
                                              b.atom1().atomicNumber())) !=
                  bondIds.end()) {
-        sprintf(bondline, "%-*d %7d %7d %7d\n",
+        snprintf(bondline, lineSize - 1, "%-*d %7d %7d %7d\n",
                 static_cast<int>(log(numAtoms) + 1), static_cast<int>(i + 1),
                 bondIds[std::make_pair(b.atom1().atomicNumber(),
                                        b.atom2().atomicNumber())],
@@ -535,7 +537,7 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
         bondIds.insert(std::make_pair(
           std::make_pair(b.atom1().atomicNumber(), b.atom2().atomicNumber()),
           bondItr++));
-        sprintf(bondline, "%-*d %7d %7d %7d\n",
+        snprintf(bondline, lineSize - 1, "%-*d %7d %7d %7d\n",
                 static_cast<int>(log(numAtoms) + 1), static_cast<int>(i + 1),
                 bondIds[std::make_pair(b.atom1().atomicNumber(),
                                        b.atom2().atomicNumber())],
@@ -547,17 +549,18 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   }
 
   UnitCell* unitcell = mol2.unitCell();
-  char simBoxBlock[200];
+  const unsigned int lineSize = 256;
+  char simBoxBlock[lineSize];
   if (unitcell) {
     const Matrix3& mat = unitcell->cellMatrix().transpose();
-    sprintf(simBoxBlock,
+    snprintf(simBoxBlock, lineSize - 1,
             "%10f %10f xlo xhi\n%10f %10f ylo yhi\n%10f %10f zlo zhi\n%10f "
             "%10f %10f xy xz yz",
             0.0, mat(0, 0), 0.0, mat(1, 1), 0.0, mat(2, 2), mat(1, 0),
             mat(2, 0), mat(2, 1));
     outStream << simBoxBlock;
   } else {
-    sprintf(simBoxBlock,
+    snprintf(simBoxBlock, lineSize - 1,
             "%10f %10f xlo xhi\n%10f %10f ylo yhi\n%10f %10f zlo zhi\n%10f "
             "%10f %10f xy xz yz",
             xmin - 0.5, xmax - 0.5, ymin - 0.5, ymax - 0.5, zmin - 0.5,
