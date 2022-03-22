@@ -15,6 +15,7 @@
 #include "unitcell.h"
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <iostream>
 

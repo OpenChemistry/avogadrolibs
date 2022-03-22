@@ -22,36 +22,35 @@
 #include <avogadro/core/vector.h>
 
 #include <iomanip>
+#include <iostream>
 #include <istream>
 #include <ostream>
 #include <sstream>
 #include <string>
-#include <iostream>
+#include <utility>
 
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
-using Avogadro::Core::Molecule;
 using Avogadro::Core::lexicalCast;
+using Avogadro::Core::Molecule;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
 
-using std::string;
-using std::istringstream;
 using std::getline;
-using std::setw;
+using std::istringstream;
 using std::setprecision;
+using std::setw;
+using std::string;
 
 namespace Avogadro {
 namespace Io {
 
-MdlFormat::MdlFormat()
-{
-}
+typedef std::pair<size_t, signed int> chargePair;
 
-MdlFormat::~MdlFormat()
-{
-}
+MdlFormat::MdlFormat() {}
+
+MdlFormat::~MdlFormat() {}
 
 bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 {
@@ -92,7 +91,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   }
 
   // Parse the atom block.
-  std::vector<std::pair<size_t, signed int>> chargeList;
+  std::vector<chargePair> chargeList;
   for (int i = 0; i < numAtoms; ++i) {
     Vector3 pos;
     getline(in, buffer);
@@ -119,11 +118,10 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       Atom newAtom = mol.addAtom(atomicNum);
       newAtom.setPosition3d(pos);
       // In case there's no CHG property
-      charge = (charge > 4)?
-        ((charge <= 7)? 4 - charge : 0) :
-        ((charge < 4)? charge : 0);
+      charge = (charge > 4) ? ((charge <= 7) ? 4 - charge : 0)
+                            : ((charge < 4) ? charge : 0);
       if (charge)
-        chargeList.push_back(std::pair(newAtom.index(), charge));
+        chargeList.push_back(chargePair(newAtom.index(), charge));
       continue;
     } else {
       appendError("Error parsing atom block: " + buffer);
@@ -171,19 +169,21 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       if (!foundChgProperty)
         chargeList.clear(); // Forget old-style charges
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
-      for(size_t i = 0; i < entryCount; i++) {
-        size_t index(lexicalCast<size_t>(buffer.substr(10+8*i, 3), ok) - 1);
+      for (size_t i = 0; i < entryCount; i++) {
+        size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
         if (!ok) {
-          appendError("Error parsing charged atom index:" + buffer.substr(10+8*i, 3));
+          appendError("Error parsing charged atom index:" +
+                      buffer.substr(10 + 8 * i, 3));
           return false;
         }
-        signed int charge(lexicalCast<int>(buffer.substr(14+8*i, 3), ok));
+        signed int charge(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
         if (!ok) {
-          appendError("Error parsing atom charge:" + buffer.substr(14+8*i, 3));
+          appendError("Error parsing atom charge:" +
+                      buffer.substr(14 + 8 * i, 3));
           return false;
         }
         if (charge)
-          chargeList.push_back(std::pair(index, charge));
+          chargeList.push_back(chargePair(index, charge));
       }
     }
   }
@@ -248,20 +248,19 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   out << setw(3) << std::right << mol.atomCount() << setw(3) << mol.bondCount()
       << "  0  0  0  0  0  0  0  0999 V2000\n";
   // Atom block.
-  std::vector<std::pair<size_t, signed int>> chargeList;
+  std::vector<chargePair> chargeList;
   for (size_t i = 0; i < mol.atomCount(); ++i) {
     Atom atom = mol.atom(i);
     signed int charge = atom.formalCharge();
     if (charge)
-      chargeList.push_back(std::pair(atom.index(), charge));
-    unsigned int chargeField = (charge < 0)?
-        ((charge >= -3)? 4 - charge : 0) :
-        ((charge <= 3)? charge : 0);
+      chargeList.push_back(chargePair(atom.index(), charge));
+    unsigned int chargeField = (charge < 0) ? ((charge >= -3) ? 4 - charge : 0)
+                                            : ((charge <= 3) ? charge : 0);
     out << setw(10) << std::right << std::fixed << setprecision(4)
         << atom.position3d().x() << setw(10) << atom.position3d().y()
         << setw(10) << atom.position3d().z() << " " << setw(3) << std::left
-        << Elements::symbol(atom.atomicNumber()) << " 0"
-        << setw(3) << std::right << chargeField /* for compatibility */
+        << Elements::symbol(atom.atomicNumber()) << " 0" << setw(3)
+        << std::right << chargeField /* for compatibility */
         << "  0  0  0  0  0  0  0  0  0  0\n";
   }
   // Bond block.
@@ -302,5 +301,5 @@ std::vector<std::string> MdlFormat::mimeTypes() const
   return mime;
 }
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro

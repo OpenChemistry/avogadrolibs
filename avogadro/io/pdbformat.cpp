@@ -13,6 +13,7 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <cctype>
 #include <istream>
 #include <string>
 
