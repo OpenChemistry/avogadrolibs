@@ -49,7 +49,7 @@ int ZipExtracter::copyData(struct archive* ar, struct archive* aw)
 char* ZipExtracter::convert(const std::string& str)
 {
   char* result = new char[str.length() + 1];
-  strcpy(result, str.c_str());
+  strncpy(result, str.c_str(), str.length()+1); // make sure to nul-terminate
   return result;
 }
 

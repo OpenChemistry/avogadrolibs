@@ -112,7 +112,7 @@ struct gwavi_t* gwavi_open(const char* filename, unsigned int width,
   gwavi->avi_header.buffer_size = (width * height * 3);
 
   /* set stream header */
-  (void)strcpy(gwavi->stream_header_v.data_type, "vids");
+  (void)strncpy(gwavi->stream_header_v.data_type, "vids", 5);
   (void)memcpy(gwavi->stream_header_v.codec, fourcc, 4);
   gwavi->stream_header_v.time_scale = 1;
   gwavi->stream_header_v.data_rate = fps;
