@@ -87,7 +87,7 @@ OpenBabel::OpenBabel(QObject* p)
       a->setEnabled(false);
   } else {
   */
-    qDebug() << OBProcess().obabelExecutable() << " found: " << info;
+  qDebug() << OBProcess().obabelExecutable() << " found: " << info;
   // }
 }
 
@@ -130,8 +130,8 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
   // These can only be read directly from file:
   QList<QString> multifileFormatDescriptions;
   multifileFormatDescriptions << "VASP format";
-  multifileFormatDescriptions << "Gaussian Output"; // Issue #571
-  multifileFormatDescriptions << "Generic Output";
+  multifileFormatDescriptions << "Gaussian Output";            // Issue #571
+  multifileFormatDescriptions << "Generic Output file format"; // #571 and 827
 
   foreach (const QString& qdesc, formatDescriptions) {
     mapDesc = qdesc.toStdString();
