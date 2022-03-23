@@ -196,6 +196,7 @@ std::vector<std::set<size_t>> ConnectedGroup::getAllGroups() const
 
 void ConnectedGroup::resetToSize(size_t n)
 {
+  m_groupToNode.resize(n);
   for (size_t i = 0; i < n; ++i) {
     m_nodeToGroup[i] = i;
     m_groupToNode[i].insert(i);
