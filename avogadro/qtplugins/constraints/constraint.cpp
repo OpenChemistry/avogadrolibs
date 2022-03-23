@@ -24,7 +24,11 @@ namespace Avogadro {
 
       switch (ConstraintType)
         {
-        case 0 ... 4:
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
           // AtomA
           Atoms << c_model->c_molecule->atomUniqueId(a);
           break;
@@ -140,7 +144,11 @@ namespace Avogadro {
 
       switch (GetConstraintType())
         {
-        case 0 ... 4:
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
           ConstraintAtoms << static_cast<int>(GetConstraintAtomA());
           break;
         case 5:
