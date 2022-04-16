@@ -19,6 +19,7 @@
 #include <avogadro/core/connectedgroup.h>
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <set>
 #include <stack>
