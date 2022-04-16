@@ -514,7 +514,7 @@ Array<const Molecule::BondType *> Molecule::bonds(Index a) const
     }
   }
 
-  std::sort(atomBonds.begin(), atomBonds.end(), [](auto a, auto b) {
+  std::sort(atomBonds.begin(), atomBonds.end(), [](const BondType *&a, const BondType *&b) {
     return a->index() < b->index();
   });
   return atomBonds;
@@ -533,7 +533,7 @@ Array<Molecule::BondType> Molecule::bonds(Index a)
     }
   }
 
-  std::sort(atomBonds.begin(), atomBonds.end(), [](auto a, auto b) {
+  std::sort(atomBonds.begin(), atomBonds.end(), [](BondType &a, BondType &b) {
     return a.index() < b.index();
   });
   return atomBonds;
