@@ -141,10 +141,11 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
     }
     case ZoomTilt: {
       QPoint delta = e->pos() - m_lastMousePosition;
+      Vector3f ref = m_renderer->scene().center() - m_translation;
       // Tilt
-      rotate(m_renderer->scene().center(), 0, 0, delta.x());
+      rotate(ref, 0, 0, delta.x());
       // Zoom
-      zoom(m_renderer->scene().center(), delta.y());
+      zoom(ref, delta.y());
       e->accept();
       break;
     }
