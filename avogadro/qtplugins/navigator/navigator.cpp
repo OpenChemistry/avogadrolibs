@@ -44,7 +44,7 @@ Navigator::Navigator(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
     m_molecule(nullptr), m_glWidget(nullptr), m_toolWidget(nullptr),
     m_renderer(nullptr), m_pressedButtons(Qt::NoButton),
-    m_currentAction(Nothing)
+    m_currentAction(Nothing), m_translation(0.0f, 0.0f, 0.0f)
 {
   m_activateAction->setText(tr("Navigate"));
   m_activateAction->setIcon(QIcon(":/icons/navigator.png"));
@@ -126,14 +126,15 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
   switch (m_currentAction) {
     case Rotation: {
       QPoint delta = e->pos() - m_lastMousePosition;
-      rotate(m_renderer->scene().center(), delta.y(), delta.x(), 0);
+      Vector3f ref = m_renderer->scene().center() - m_translation;
+      rotate(ref, delta.y(), delta.x(), 0);
       e->accept();
       break;
     }
     case Translation: {
       Vector2f fromScreen(m_lastMousePosition.x(), m_lastMousePosition.y());
       Vector2f toScreen(e->localPos().x(), e->localPos().y());
-      translate(m_renderer->scene().center(), fromScreen, toScreen);
+      translate(m_renderer->scene().center()/* + m_renderer->camera().translation()*/, fromScreen, toScreen);
       e->accept();
       break;
     }
@@ -307,6 +308,7 @@ inline void Navigator::translate(const Vector3f& ref, const Vector2f& fromScr,
   Vector3f from(m_renderer->camera().unProject(fromScr, ref));
   Vector3f to(m_renderer->camera().unProject(toScr, ref));
   m_renderer->camera().translate(to - from);
+  m_translation += to - from;
 }
 
 } // namespace QtPlugins

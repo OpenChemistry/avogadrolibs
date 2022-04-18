@@ -83,6 +83,7 @@ private:
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;
   int m_zoomDirection;
+  Vector3f m_translation;
 
   enum ToolAction
   {
