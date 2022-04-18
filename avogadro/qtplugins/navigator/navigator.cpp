@@ -197,7 +197,7 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
 
 QUndoCommand* Navigator::keyPressEvent(QKeyEvent* e)
 {
-  Vector3f ref = m_renderer->scene().center();
+  Vector3f ref = m_renderer->scene().center() + m_translation;
   switch (e->key()) {
     case Qt::Key_Left:
     case Qt::Key_H:
