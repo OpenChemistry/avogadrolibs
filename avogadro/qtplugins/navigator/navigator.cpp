@@ -185,7 +185,8 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
   else if (!numDegrees.isNull())
     d = numDegrees.y();
 
-  zoom(m_renderer->scene().center(), m_zoomDirection * d);
+  Vector3f ref = m_renderer->scene().center() - m_translation;
+  zoom(ref, m_zoomDirection * d);
 
   e->accept();
   emit updateRequested();
