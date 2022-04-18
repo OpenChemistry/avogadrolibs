@@ -134,7 +134,8 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
     case Translation: {
       Vector2f fromScreen(m_lastMousePosition.x(), m_lastMousePosition.y());
       Vector2f toScreen(e->localPos().x(), e->localPos().y());
-      translate(m_renderer->scene().center()/* + m_renderer->camera().translation()*/, fromScreen, toScreen);
+      Vector3f ref = m_renderer->scene().center() - m_translation;
+      translate(ref, fromScreen, toScreen);
       e->accept();
       break;
     }
