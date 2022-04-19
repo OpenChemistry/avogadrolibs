@@ -9,6 +9,7 @@
 #include "avogadrocore.h"
 
 #include <map>
+#include <memory>
 #include <string>
 
 #include "array.h"
@@ -30,7 +31,66 @@ class AVOGADROCORE_EXPORT Residue
 {
 public:
   /** Type for atom name map. */
-  typedef std::map<std::string, Atom> AtomNameMap;
+  template<typename AtomType>
+  class AtomNameMapTemplate
+  {
+  private:
+    void cloneIfNecessary()
+    {
+      if (p.use_count() > 1)
+      {
+        p = std::make_shared<std::map<std::string, AtomType>>(*p);
+      }
+    }
+
+  public:
+    typedef typename std::map<std::string, AtomType>::const_iterator const_iterator;
+
+    AtomNameMapTemplate()
+      : p(std::make_shared<std::map<std::string, AtomType>>())
+    {}
+
+    AtomNameMapTemplate(const AtomNameMapTemplate &other)
+      : p(other.p)
+    {}
+
+    AtomNameMapTemplate &operator=(const AtomNameMapTemplate &other)
+    {
+      p = other.p;
+      return *this;
+    }
+
+    const AtomType &operator[](const std::string &key) const
+    {
+      return (*p.get())[key];
+    }
+
+    const_iterator find(const std::string &key) const
+    {
+      return p->find(key);
+    }
+
+    void insert(std::pair<std::string, AtomType> pair)
+    {
+      cloneIfNecessary();
+      p->insert(pair);
+    }
+
+    const_iterator begin() const
+    {
+      return p->begin();
+    }
+
+    const_iterator end() const
+    {
+      return p->end();
+    }
+
+  private:
+    std::shared_ptr<std::map<std::string, AtomType>> p;
+  };
+
+  typedef AtomNameMapTemplate<Atom> AtomNameMap;
 
   // using codes from MMTF specification
   // https://github.com/rcsb/mmtf/blob/master/spec.md#secstructlist
