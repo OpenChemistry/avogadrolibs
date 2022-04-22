@@ -11,6 +11,9 @@
 #include "array.h"
 #include "vector.h"
 
+#include <array>
+#include <vector>
+
 namespace Avogadro {
 namespace Core {
 

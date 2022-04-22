@@ -5,9 +5,6 @@
 
 #include "neighborperceiver.h"
 
-#include <array>
-#include <vector>
-
 namespace Avogadro {
 namespace Core {
 
