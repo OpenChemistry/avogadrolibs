@@ -11,6 +11,7 @@
 #include "elements.h"
 #include "layermanager.h"
 #include "mesh.h"
+#include "neighborperceiver.h"
 #include "residue.h"
 #include "unitcell.h"
 
@@ -801,73 +802,31 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
       max_radius = radii[i];
   }
 
-  // find molecule bounding box
-  Vector3 min_pos = m_positions3d[0];
-  Vector3 max_pos = m_positions3d[0];
-  for (Index i = 1; i < atomCount(); i++) {
-    Vector3 ipos = m_positions3d[i];
-    for (size_t c = 0; c < 3; c++) {
-      min_pos(c) = std::min(ipos(c), min_pos(c));
-      max_pos(c) = std::max(ipos(c), max_pos(c));
-    }
-  }
-
-  // group atoms into cubic bins so that each atom is only checked against
-  // other atoms inside bins within a 3-dimensional Moore neighborhood
-  double bin_size = 2.0 * max_radius + tolerance;
-  std::array<size_t, 3> bin_count;
-  for (size_t c = 0; c < 3; c++)
-    bin_count[c] = std::floor((max_pos(c) + 0.1 - min_pos(c)) / bin_size) + 1;
-  std::vector<std::vector<std::vector<std::vector<Index>>>> bins(
-    bin_count[0], std::vector<std::vector<std::vector<Index>>>(
-      bin_count[1], std::vector<std::vector<Index>>(
-        bin_count[2], std::vector<Index>()
-      )
-    )
-  );
-  std::vector<std::array<size_t, 3>> atoms_bin(atomCount());
-  for (Index i = 0; i < atomCount(); i++) {
-    Vector3 ipos = m_positions3d[i];
-    std::array<size_t, 3> bin_index;
-    for (size_t c = 0; c < 3; c++) {
-      bin_index[c] = std::floor((ipos(c) - min_pos(c)) / bin_size);
-    }
-    bins.at(bin_index[0]).at(bin_index[1]).at(bin_index[2]).push_back(i);
-    atoms_bin[i] = bin_index;
-  }
+  float maxDistance = 2.0 * max_radius + tolerance;
+  auto neighborPerceiver = NeighborPerceiver(m_positions3d, maxDistance);
 
   // check for bonds
   // O(n) average-case, O(n^2) worst-case
   // note that the "worst case" here would need to be an invalid molecule
   for (Index i = 0; i < atomCount(); i++) {
     Vector3 ipos = m_positions3d[i];
-    const std::array<size_t, 3> &bin_index = atoms_bin[i];
-    for (Index xi = std::max(size_t(1), bin_index[0]) - 1;
-        xi < std::min(bin_count[0], bin_index[0] + 2); xi++) {
-      for (Index yi = std::max(size_t(1), bin_index[1]) - 1;
-          yi < std::min(bin_count[1], bin_index[1] + 2); yi++) {
-        for (Index zi = std::max(size_t(1), bin_index[2]) - 1;
-            zi < std::min(bin_count[2], bin_index[2] + 2); zi++) {
-          std::vector<Index> bin = bins[xi][yi][zi];
-          for (size_t bj = 0; bj < bin.size(); ++bj) {
-            Index j = bin[bj];
-            double cutoff = radii[i] + radii[j] + tolerance;
-            Vector3 jpos = m_positions3d[j];
-            Vector3 diff = jpos - ipos;
+    Array<Index> neighbors = neighborPerceiver.getNeighbors(ipos);
+    for (Index nj = 0; nj < neighbors.size(); ++nj) {
+      Index j = neighbors[nj];
+      double cutoff = radii[i] + radii[j] + tolerance;
+      Vector3 jpos = m_positions3d[j];
+      Vector3 diff = jpos - ipos;
 
-            if (std::fabs(diff[0]) > cutoff || std::fabs(diff[1]) > cutoff ||
-                std::fabs(diff[2]) > cutoff ||
-                (atomicNumber(i) == 1 && atomicNumber(j) == 1))
-              continue;
+      if (std::fabs(diff[0]) > cutoff || std::fabs(diff[1]) > cutoff ||
+          std::fabs(diff[2]) > cutoff ||
+          (atomicNumber(i) == 1 && atomicNumber(j) == 1))
+        continue;
 
-            // check radius and add bond if needed
-            double cutoffSq = cutoff * cutoff;
-            double diffsq = diff.squaredNorm();
-            if (diffsq < cutoffSq && diffsq > min * min)
-              addBond(atom(i), atom(j), 1);
-          }
-        }
-      }
+      // check radius and add bond if needed
+      double cutoffSq = cutoff * cutoff;
+      double diffsq = diff.squaredNorm();
+      if (diffsq < cutoffSq && diffsq > min * min)
+        addBond(atom(i), atom(j), 1);
     }
   }
 }
