@@ -15,8 +15,11 @@ NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points, float maxDista
  : m_maxDistance(maxDistance)
 {
   // find bounding box
-  m_minPos = points[0];
-  m_maxPos = points[0];
+  if (points.size() > 0)
+  {
+    m_minPos = points[0];
+    m_maxPos = points[0];
+  }
   for (Index i = 1; i < points.size(); i++) {
     Vector3 ipos = points[i];
     for (size_t c = 0; c < 3; c++) {
