@@ -54,7 +54,7 @@ Vector3f BSplineGeometry::computeCurvePoint(
   if (startIndex < 0) startIndex = 0;
   else if (startIndex > size - 2 * lookahead) startIndex = size - 2 * lookahead;
   float t2 = (t - startIndex / (float) size) * size / (2 * lookahead);
-  for (; startIndex > 0 && it != end; --startIndex, ++it) ;
+  for (; startIndex > 0 && it != end; --startIndex, ++it) {}
   // only read a certain number of elements from here
   size_t count = 2 * lookahead;
   for (; count && it != end; --count, ++it) {
