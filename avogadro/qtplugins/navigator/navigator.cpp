@@ -126,8 +126,7 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
   switch (m_currentAction) {
     case Rotation: {
       QPoint delta = e->pos() - m_lastMousePosition;
-      Vector3f ref = m_renderer->scene().center() - m_translation;
-      rotate(ref, delta.y(), delta.x(), 0);
+      rotate(m_renderer->scene().center(), delta.y(), delta.x(), 0);
       e->accept();
       break;
     }
@@ -141,11 +140,10 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
     }
     case ZoomTilt: {
       QPoint delta = e->pos() - m_lastMousePosition;
-      Vector3f ref = m_renderer->scene().center() - m_translation;
       // Tilt
-      rotate(ref, 0, 0, delta.x());
+      rotate(m_renderer->scene().center(), 0, 0, delta.x());
       // Zoom
-      zoom(ref, delta.y());
+      zoom(m_renderer->scene().center(), delta.y());
       e->accept();
       break;
     }
@@ -197,7 +195,7 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
 
 QUndoCommand* Navigator::keyPressEvent(QKeyEvent* e)
 {
-  Vector3f ref = m_renderer->scene().center() + m_translation;
+  Vector3f ref = m_renderer->scene().center();
   switch (e->key()) {
     case Qt::Key_Left:
     case Qt::Key_H:
