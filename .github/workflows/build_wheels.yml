@@ -34,7 +34,7 @@ jobs:
       fail-fast: false
       matrix:
         # For Windows, we have to use visual studio 2017, which is on windows-2016
-        os: [ubuntu-20.04, macos-latest, windows-2016]
+        os: [ubuntu-20.04, macos-latest, windows-2019]
 
     steps:
       - uses: actions/checkout@v2
