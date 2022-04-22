@@ -2,3 +2,5 @@
 engines:
   cppcheck:
     language: c++
+exclude_paths:
+  - "thirdparty/**"
