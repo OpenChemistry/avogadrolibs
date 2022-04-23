@@ -279,6 +279,11 @@ inline void Navigator::rotate(const Vector3f& ref, float x, float y, float z)
   m_renderer->camera().rotate(y * ROTATION_SPEED, yAxis);
   m_renderer->camera().rotate(z * ROTATION_SPEED, zAxis);
   m_renderer->camera().translate(-ref);
+  m_translation = (
+    Eigen::AngleAxisf(-x * ROTATION_SPEED, xAxis) *
+    Eigen::AngleAxisf(-y * ROTATION_SPEED, yAxis) *
+    Eigen::AngleAxisf(-z * ROTATION_SPEED, zAxis)
+  ) * m_translation;
 }
 
 inline void Navigator::zoom(const Vector3f& ref, float d)
