@@ -8,9 +8,8 @@ if [[ $RUNNER_OS == "Windows" ]]; then
     cd /c/eigen
       mkdir build
       cd build
-        cmake ..
-        make
-        make install 
+        cmake .. -DCMAKE_INSTALL_PREFIX=/c/eigen-34
+        cmake --build . --target install 
 elif [[ $RUNNER_OS == "macOS" ]]; then
     brew install eigen
 else
