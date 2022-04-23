@@ -1,6 +1,3 @@
-find_package(Eigen3 REQUIRED)
-include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
-
 find_package(protobuf REQUIRED NO_MODULE)
 include_directories(SYSTEM ${protobuf_INCLUDE_DIRS})
 

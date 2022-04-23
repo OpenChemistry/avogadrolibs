@@ -1,5 +1,8 @@
 # AvogadroLibs CMake configuration file - http://www.openchemistry.org/
 
+include(CMakeFindDependencyMacro)
+find_dependency(Eigen3 REQUIRED)
+
 # If this file was found, then OpenQube has been found
 set(AvogadroLibs_FOUND 1)
 
