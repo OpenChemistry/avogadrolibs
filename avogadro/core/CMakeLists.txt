@@ -37,6 +37,7 @@ set(HEADERS
   molecule.h
   mutex.h
   nameatomtyper.h
+  neighborperceiver.h
   residue.h
   ringperceiver.h
   secondarystructure.h
@@ -72,6 +73,7 @@ set(SOURCES
   molecule.cpp
   mutex.cpp
   nameatomtyper.cpp
+  neighborperceiver.cpp
   residue.cpp
   ringperceiver.cpp
   secondarystructure.cpp
