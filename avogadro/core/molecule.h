@@ -703,15 +703,8 @@ protected:
   unsigned short m_hallNumber = 0;
 
 private:
-  /** Update the graph to correspond to the current molecule. */
-  void updateGraph() const;
-  // the old atom is dirty and needs a update
-  void rebondBond(Index newIndex, Index oldIndex);
-
   mutable Graph m_graph;     // A transformation of the molecule to a graph.
-  mutable bool m_graphDirty; // Should the graph be rebuilt?
   // edge information
-  Array<std::pair<Index, Index>> m_bondPairs;
   Array<unsigned char> m_bondOrders;
   // vertex information
   Array<unsigned char> m_atomicNumbers;
@@ -968,13 +961,13 @@ std::pair<Index, Index> Molecule::makeBondPair(const Index& a, const Index& b)
 
 inline Index Molecule::bondCount() const
 {
-  assert(m_bondPairs.size() == m_bondOrders.size());
-  return m_bondPairs.size();
+  assert(m_graph.edgeCount() == m_bondOrders.size());
+  return m_graph.edgeCount();
 }
 
 inline const Array<std::pair<Index, Index>>& Molecule::bondPairs() const
 {
-  return m_bondPairs;
+  return m_graph.edgePairs();
 }
 
 inline const Array<unsigned char>& Molecule::bondOrders() const
@@ -984,7 +977,6 @@ inline const Array<unsigned char>& Molecule::bondOrders() const
 
 inline const Graph& Molecule::graph() const
 {
-  updateGraph();
   return m_graph;
 }
 
@@ -995,7 +987,7 @@ inline const Array<unsigned char>& Molecule::atomicNumbers() const
 
 inline std::pair<Index, Index> Molecule::bondPair(Index bondId) const
 {
-  return bondId < bondCount() ? m_bondPairs[bondId]
+  return bondId < bondCount() ? m_graph.endpoints(bondId)
                               : std::make_pair(MaxIndex, MaxIndex);
 }
 
