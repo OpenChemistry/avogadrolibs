@@ -13,5 +13,10 @@ if [[ $RUNNER_OS == "Windows" ]]; then
 elif [[ $RUNNER_OS == "macOS" ]]; then
     brew install eigen
 else
-    sudo apt install libeigen3-dev
+    git clone --recursive -b 3.4.0 --depth 1 https://gitlab.com/libeigen/eigen
+    cd eigen
+      mkdir build
+      cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=../../eigen-34
+        cmake --build . --target install
 fi
